@@ -128,6 +128,78 @@
   }
 }
 
+@layer utilities {
+  .center {
+    @apply flex items-center justify-center;
+  }
+
+  .center-x {
+    @apply flex justify-center;
+  }
+
+  .center-y {
+    @apply flex items-center;
+  }
+
+  .full {
+    @apply w-full h-full;
+  }
+
+  @for $i from 0 through 12 {
+    .t-#{$i} {
+      @apply top-#{$i};
+    }
+    .b-#{$i} {
+      @apply bottom-#{$i};
+    }
+    .r-#{$i} {
+      @apply right-#{$i};
+    }
+    .l-#{$i} {
+      @apply left-#{$i};
+    }
+
+    .br-#{$i} {
+      @apply b-#{$i} r-#{$i};
+    }
+    .bl-#{$i} {
+      @apply b-#{$i} l-#{$i};
+    }
+    .tr-#{$i} {
+      @apply t-#{$i} r-#{$i};
+    }
+    .tl-#{$i} {
+      @apply t-#{$i} l-#{$i};
+    }
+
+    .at-#{$i} {
+      @apply absolute t-#{$i};
+    }
+    .ab-#{$i} {
+      @apply absolute b-#{$i};
+    }
+    .ar-#{$i} {
+      @apply absolute r-#{$i};
+    }
+    .al-#{$i} {
+      @apply absolute l-#{$i};
+    }
+
+    .abr-#{$i} {
+      @apply absolute br-#{$i};
+    }
+    .abl-#{$i} {
+      @apply absolute bl-#{$i};
+    }
+    .atr-#{$i} {
+      @apply absolute tr-#{$i};
+    }
+    .atl-#{$i} {
+      @apply absolute tl-#{$i};
+    }
+  }
+}
+
 html {
   @apply bg-primary-1;
   @apply text-primary-dark;

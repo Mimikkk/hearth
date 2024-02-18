@@ -5,10 +5,7 @@ import path from 'path';
 
 export default defineConfig({
   base: './',
-  plugins: [
-    solid(),
-    svgr(),
-  ],
+  plugins: [solid(), svgr()],
   server: {
     port: 8080,
     open: true,

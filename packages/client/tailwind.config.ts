@@ -66,6 +66,8 @@ const colors = {
     9: 'var(--accent-9)',
     dark: 'var(--accent-dark)',
   },
+  transparent: 'transparent',
+  current: 'currentColor',
 } satisfies Config['theme']['colors'];
 
 export default {
@@ -74,9 +76,11 @@ export default {
   theme: {
     colors,
     fontSize: {
+      xs: '0.666rem',
       sm: '0.750rem',
       base: '1rem',
-      xl: '1.333rem',
+      lg: '1.333rem',
+      xl: '1.500rem',
       '2xl': '1.777rem',
       '3xl': '2.369rem',
       '4xl': '3.158rem',

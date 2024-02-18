@@ -1,0 +1,36 @@
+.field {
+  @apply relative px-2 py-1 border rounded-sm;
+  @apply transition-all;
+
+  .label {
+    @apply first-letter:uppercase;
+    @apply absolute transition-all;
+    @apply rounded-sm;
+  }
+
+  &:hover {
+    @apply border-accent-8;
+
+    .label {
+      @apply text-accent-7;
+    }
+  }
+
+  &:has(.input:not(:placeholder-shown)), &:focus-within {
+    @apply border-accent-5;
+
+    .label {
+      @apply top-0 -mt-2 -ml-1.5;
+      @apply px-1;
+      @apply bg-secondary-7;
+      @apply text-accent-2;
+      @apply text-xs;
+    }
+  }
+
+  .input {
+    @apply w-full bg-transparent text-primary-dark placeholder-primary-white;
+
+    @apply focus:outline-none focus:border-transparent;
+  }
+}

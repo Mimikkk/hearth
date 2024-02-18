@@ -1,0 +1,86 @@
+.button {
+  @apply center gap-2 aspect-square;
+  @apply rounded-full transition-all;
+
+  &.size {
+    &-xs {
+      @apply h-5 text-xs;
+    }
+
+    &-sm {
+      @apply h-6 text-sm;
+    }
+
+    &-md {
+      @apply h-8;
+    }
+
+    &-lg {
+      @apply h-10 text-lg;
+    }
+
+    &-xl {
+      @apply h-14 text-xl;
+    }
+
+    &-2xl {
+      @apply h-24 text-2xl;
+    }
+
+    &-3xl {
+      @apply h-36 text-3xl;
+    }
+  }
+
+  @apply text-primary-1;
+
+  &.variant {
+    &-text {
+      @apply border-opacity-0 border border-accent-3;
+      @apply bg-opacity-0 bg-primary-7;
+      @apply rounded-full;
+
+      &:hover, &:focus-visible {
+        @apply shadow-md;
+
+        @apply border-opacity-100;
+        @apply bg-opacity-40;
+        @apply text-accent-1;
+      }
+
+      &:active {
+        @apply bg-opacity-60;
+      }
+
+      &[data-active] {
+        @apply border-accent-3;
+
+        &:hover {
+          @apply border-accent-5;
+        }
+      }
+    }
+
+
+    &-contained {
+      @apply border border-primary-5 bg-primary-8 rounded-sm;
+      @apply shadow-md shadow-primary-8;
+
+      &:hover, &:focus-visible {
+        @apply border-accent-4 bg-primary-7;
+      }
+
+      &:active {
+        @apply border-accent-5 bg-primary-dark
+      }
+
+      &[data-active] {
+        @apply border-accent-3;
+
+        &:hover {
+          @apply border-accent-5;
+        }
+      }
+    }
+  }
+}
