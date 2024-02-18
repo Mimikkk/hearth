@@ -1,8 +1,8 @@
 import { createStorageSignal } from '@logic/Storage/createStorageSignal.js';
 import { createMemo, createRenderEffect } from 'solid-js';
 
-const system = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 export const createTheme = (key: string) => {
+  const system = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
   const [get, set] = createStorageSignal<undefined | 'dark' | 'light'>(key, undefined);
 
   createRenderEffect(() => {
@@ -13,29 +13,33 @@ export const createTheme = (key: string) => {
     list.add(theme);
   });
 
-  return {
-    mode: createMemo(() => get() ?? system),
-    set,
-    toggle() {
-      const theme = get();
+  const next = createMemo(() => {
+    const theme = get();
 
-      if (system == 'dark') {
-        if (theme === undefined) {
-          set('light');
-        } else if (theme === 'light') {
-          set('dark');
-        } else if (theme === 'dark') {
-          set(undefined);
-        }
-      } else {
-        if (theme === undefined) {
-          set('dark');
-        } else if (theme === 'dark') {
-          set('light');
-        } else if (theme === 'light') {
-          set(undefined);
-        }
+    if (system === 'dark') {
+      if (theme === undefined) {
+        return 'light';
+      } else if (theme === 'light') {
+        return 'dark';
+      } else if (theme === 'dark') {
+        return undefined;
       }
-    },
+    } else {
+      if (theme === undefined) {
+        return 'dark';
+      } else if (theme === 'dark') {
+        return 'light';
+      } else if (theme === 'light') {
+        return undefined;
+      }
+    }
+  });
+
+  return {
+    mode: get,
+    system,
+    set,
+    next,
+    toggle: () => set(next()),
   };
 };

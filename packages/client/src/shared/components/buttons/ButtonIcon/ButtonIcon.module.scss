@@ -68,6 +68,7 @@
     &-contained {
       @apply border border-secondary-3 bg-secondary-4 rounded-sm;
       @apply shadow-sm shadow-secondary-3;
+      @apply px-1;
 
       &:hover, &:focus-visible {
         @apply text-secondary-9;
