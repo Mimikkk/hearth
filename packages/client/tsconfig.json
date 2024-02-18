@@ -25,26 +25,20 @@
       "./node_modules/@types"
     ],
     "paths": {
-      "@/": [
-        "src/*"
+      "@shared/*": [
+        "src/shared/*"
       ],
-      "@assets/*": [
-        "assets/*"
+      "@modules/*": [
+        "src/modules/*"
+      ],
+      "@logic/*": [
+        "src/shared/logic/*"
       ],
       "@components/*": [
-        "src/components/*"
+        "src/shared/components/*"
       ],
-      "@layout/*": [
-        "src/layout/*"
-      ],
-      "@typings/*": [
-        "src/types/*"
-      ],
-      "@context/*": [
-        "src/context/*"
-      ],
-      "@hooks/*": [
-        "src/hooks/*"
+      "@utils/*": [
+        "src/shared/utils/*"
       ]
     }
   },

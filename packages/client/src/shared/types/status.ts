@@ -15,8 +15,8 @@ export namespace Status {
     isError(statuses)
       ? Status.Error
       : isPending(statuses)
-      ? Status.Pending
-      : isSuccess(statuses)
-      ? Status.Success
-      : Status.Idle;
+        ? Status.Pending
+        : isSuccess(statuses)
+          ? Status.Success
+          : Status.Idle;
 }

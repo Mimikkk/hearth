@@ -19,12 +19,11 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
-      '@assets': path.resolve(__dirname, './assets'),
-      '@components': path.resolve(__dirname, './src/components'),
-      '@layout': path.resolve(__dirname, './src/layout'),
-      '@typings': path.resolve(__dirname, './src/types'),
-      '@context': path.resolve(__dirname, './src/context'),
-      '@hooks': path.resolve(__dirname, './src/hooks'),
+      '@shared': path.resolve(__dirname, './src/shared'),
+      '@modules': path.resolve(__dirname, './src/modules'),
+      '@logic': path.resolve(__dirname, './src/shared/logic'),
+      '@components': path.resolve(__dirname, './src/shared/components'),
+      '@utils': path.resolve(__dirname, './src/shared/utils'),
     },
   },
 });

@@ -1,8 +1,8 @@
 import { Config } from 'tailwindcss';
 
 const colors = {
-  'text': {
-    'white': 'var(--text-white)',
+  text: {
+    white: 'var(--text-white)',
     1: 'var(--text-1)',
     2: 'var(--text-2)',
     3: 'var(--text-3)',
@@ -12,10 +12,10 @@ const colors = {
     7: 'var(--text-7)',
     8: 'var(--text-8)',
     9: 'var(--text-9)',
-    'dark': 'var(--text-dark)',
+    dark: 'var(--text-dark)',
   },
-  'background': {
-    'white': 'var(--background-white)',
+  background: {
+    white: 'var(--background-white)',
     1: 'var(--background-1)',
     2: 'var(--background-2)',
     3: 'var(--background-3)',
@@ -25,10 +25,10 @@ const colors = {
     7: 'var(--background-7)',
     8: 'var(--background-8)',
     9: 'var(--background-9)',
-    'dark': 'var(--background-dark)',
+    dark: 'var(--background-dark)',
   },
-  'primary': {
-    'white': 'var(--primary-white)',
+  primary: {
+    white: 'var(--primary-white)',
     1: 'var(--primary-1)',
     2: 'var(--primary-2)',
     3: 'var(--primary-3)',
@@ -38,10 +38,10 @@ const colors = {
     7: 'var(--primary-7)',
     8: 'var(--primary-8)',
     9: 'var(--primary-9)',
-    'dark': 'var(--primary-dark)',
+    dark: 'var(--primary-dark)',
   },
-  'secondary': {
-    'white': 'var(--secondary-white)',
+  secondary: {
+    white: 'var(--secondary-white)',
     1: 'var(--secondary-1)',
     2: 'var(--secondary-2)',
     3: 'var(--secondary-3)',
@@ -51,10 +51,10 @@ const colors = {
     7: 'var(--secondary-7)',
     8: 'var(--secondary-8)',
     9: 'var(--secondary-9)',
-    'dark': 'var(--secondary-dark)',
+    dark: 'var(--secondary-dark)',
   },
-  'accent': {
-    'white': 'var(--accent-white)',
+  accent: {
+    white: 'var(--accent-white)',
     1: 'var(--accent-1)',
     2: 'var(--accent-2)',
     3: 'var(--accent-3)',
@@ -64,15 +64,12 @@ const colors = {
     7: 'var(--accent-7)',
     8: 'var(--accent-8)',
     9: 'var(--accent-9)',
-    'dark': 'var(--accent-dark)',
+    dark: 'var(--accent-dark)',
   },
 } satisfies Config['theme']['colors'];
 
 export default {
-  content: [
-    './index.html',
-    './src/**/*.{js,ts,jsx,tsx}',
-  ],
+  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   darkMode: 'class',
   theme: {
     colors,

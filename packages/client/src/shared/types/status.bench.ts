@@ -1,4 +1,4 @@
-import { describe, bench } from 'vitest';
+import { bench, describe } from 'vitest';
 import { Status } from './status.js';
 import { faker } from '@faker-js/faker';
 
