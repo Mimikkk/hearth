@@ -1,6 +1,6 @@
 .button {
   @apply center px-2;
-  @apply transition-all;
+  @apply transition-all duration-75;
 
 
   &.size {
@@ -34,33 +34,33 @@
   }
 
   &.variant {
-    &-text {
-      @apply border-opacity-0 border border-accent-3 rounded-sm;
-      @apply bg-opacity-0 bg-primary-7;
-
+    &-contained {
+      @apply border border-accent-3 bg-secondary-3 rounded-sm;
+      @apply shadow-sm shadow-secondary-3;
 
       &:hover, &:focus-visible {
-        @apply shadow-md shadow-primary-7;
-        @apply bg-opacity-40;
-        @apply border-opacity-100;
+        @apply border-accent-3 bg-secondary-4;
+        @apply text-accent-dark;
       }
 
       &:active {
-        @apply bg-opacity-60;
-        @apply border-accent-5;
+        @apply border-accent-1 bg-secondary-3;
+        @apply text-accent-9;
       }
     }
 
-    &-contained {
-      @apply border border-primary-5 bg-primary-8 rounded-sm;
-      @apply shadow-md shadow-primary-8;
+    &-outlined {
+      @apply border border-accent-5 bg-transparent rounded-sm;
+      @apply shadow-sm shadow-secondary-3;
 
       &:hover, &:focus-visible {
-        @apply border-accent-4 bg-primary-7;
+        @apply border-accent-5 bg-secondary-3;
+        @apply text-accent-dark;
       }
 
       &:active {
-        @apply border-accent-5 bg-primary-dark;
+        @apply border-accent-5 bg-secondary-2;
+        @apply text-accent-9;
       }
     }
   }

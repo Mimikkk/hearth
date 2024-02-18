@@ -200,7 +200,17 @@
   }
 }
 
+@import url('https://fonts.googleapis.com/css?family=Encode%20Sans:700|Encode%20Sans:400');
+
 html {
+
+
+  body {
+    font-family: 'Encode Sans';
+    font-weight: 400;
+  }
+
+
   @apply bg-primary-1;
   @apply text-primary-dark;
 }

@@ -8,8 +8,9 @@ const Layout = () => {
 
   return (
     <main>
-      <Button>Lets Go</Button>
-      <ButtonIcon icon={'AiFillAlert'} />
+      <Button variant="contained">Lets Go</Button>
+      <Button variant="outlined">Lets Go</Button>
+      <ButtonIcon variant="contained" icon={'AiFillAlert'} />
       <ButtonIcon variant="text" icon={'AiFillAlert'} />
       <button onclick={theme.toggle}>123</button>
       <div>Left SideBar</div>

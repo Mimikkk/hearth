@@ -1,6 +1,6 @@
 .button {
   @apply center gap-2 aspect-square;
-  @apply rounded-full transition-all;
+  @apply rounded-full transition-all duration-75;
 
   &.size {
     &-xs {
@@ -32,24 +32,27 @@
     }
   }
 
-  @apply text-primary-1;
+  @apply text-primary-9;
 
   &.variant {
     &-text {
       @apply border-opacity-0 border border-accent-3;
-      @apply bg-opacity-0 bg-primary-7;
+      @apply bg-opacity-0 bg-secondary-4;
       @apply rounded-full;
 
       &:hover, &:focus-visible {
-        @apply shadow-md;
+        @apply text-secondary-9;
+        @apply shadow-sm shadow-secondary-3;
 
         @apply border-opacity-100;
         @apply bg-opacity-40;
-        @apply text-accent-1;
+        @apply border-accent-4 bg-secondary-3;
       }
 
       &:active {
+        @apply text-secondary-8;
         @apply bg-opacity-60;
+        @apply border-accent-5 bg-secondary-2
       }
 
       &[data-active] {
@@ -63,15 +66,17 @@
 
 
     &-contained {
-      @apply border border-primary-5 bg-primary-8 rounded-sm;
-      @apply shadow-md shadow-primary-8;
+      @apply border border-secondary-3 bg-secondary-4 rounded-sm;
+      @apply shadow-sm shadow-secondary-3;
 
       &:hover, &:focus-visible {
-        @apply border-accent-4 bg-primary-7;
+        @apply text-secondary-9;
+        @apply border-accent-4 bg-secondary-3;
       }
 
       &:active {
-        @apply border-accent-5 bg-primary-dark
+        @apply text-secondary-8;
+        @apply border-accent-5 bg-secondary-2
       }
 
       &[data-active] {
