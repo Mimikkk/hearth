@@ -1,0 +1,61 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "inlineSourceMap": true,
+    "inlineSources": true,
+    "module": "ESNext",
+    "target": "ESNext",
+    "allowJs": true,
+    "noImplicitAny": true,
+    "moduleResolution": "NodeNext",
+    "importHelpers": true,
+    "isolatedModules": true,
+    "strictNullChecks": true,
+    "jsx": "react-jsx",
+    "lib": [
+      "DOM",
+      "ESNext"
+    ],
+    "types": [
+      "vite/client"
+    ],
+    "typeRoots": [
+      "./node_modules/@webgpu/types",
+      "./node_modules/@types"
+    ],
+    "paths": {
+      "@/": [
+        "src/*"
+      ],
+      "@assets/*": [
+        "assets/*"
+      ],
+      "@components/*": [
+        "src/components/*"
+      ],
+      "@layout/*": [
+        "src/layout/*"
+      ],
+      "@typings/*": [
+        "src/types/*"
+      ],
+      "@context/*": [
+        "src/context/*"
+      ],
+      "@hooks/*": [
+        "src/hooks/*"
+      ]
+    }
+  },
+  "include": [
+    "../../node_modules/@webgpu/types",
+    "declarations",
+    "assets",
+    "src"
+  ],
+  "references": [
+    {
+      "path": "./tsconfig.vite.json"
+    }
+  ]
+}

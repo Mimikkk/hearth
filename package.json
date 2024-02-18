@@ -1,0 +1,28 @@
+{
+  "author": "Daniel Zdancewicz <zdancewicz.daniel@gmail.com>",
+  "description": "Implementation and usage of a 3D render pipeline using WebGPU",
+  "devDependencies": {
+    "@types/node": "^20.11.19",
+    "builtin-modules": "3.3.0",
+    "concurrently": "^8.2.2",
+    "copyfiles": "^2.4.1",
+    "prettier": "^3.2.5",
+    "rimraf": "^5.0.5",
+    "typescript": "5.3.3"
+  },
+  "homepage": "https://www.github.com/Mimikkk/webgpgu",
+  "keywords": [
+    "WebGPU"
+  ],
+  "license": "MIT",
+  "name": "zd",
+  "scripts": {
+    "preinstall": "npx only-allow pnpm",
+    "build": "pnpm run build:library -c blue.bold",
+    "build:library": "cd packages/engine && pnpm run build",
+    "dev": "concurrently 'pnpm:dev:client' -c blue.bold",
+    "redev": "pnpm run build && pnpm run dev",
+    "dev:client": "cd ./packages/client && pnpm run dev"
+  },
+  "version": "0.0.0"
+}
