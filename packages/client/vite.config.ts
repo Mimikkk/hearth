@@ -1,14 +1,12 @@
 import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
+import solid from 'vite-plugin-solid';
 import svgr from 'vite-plugin-svgr';
 import path from 'path';
-import million from 'million/compiler';
 
 export default defineConfig({
   base: './',
   plugins: [
-    million.vite({}),
-    react(),
+    solid(),
     svgr(),
   ],
   server: {
