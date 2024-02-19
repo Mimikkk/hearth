@@ -1,26 +1,43 @@
-import { type JSX, mergeProps, splitProps } from 'solid-js';
+import { createMemo, type JSX, mergeProps, on, splitProps } from 'solid-js';
 import cx from 'clsx';
 import s from './Button.module.scss';
+import { Dynamic } from 'solid-js/web';
 
-export interface ButtonProps extends JSX.ButtonHTMLAttributes<HTMLButtonElement> {
+interface ButtonTagProps extends JSX.ButtonHTMLAttributes<HTMLButtonElement> {
+  href?: never;
+}
+interface AnchorTagProps extends JSX.AnchorHTMLAttributes<HTMLAnchorElement> {
+  href?: string;
+}
+export type ButtonProps = {
   square?: boolean;
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl';
-  variant?: 'contained' | 'outlined';
-}
+  variant?: 'text' | 'contained';
+  class?: string;
+} & (ButtonTagProps | AnchorTagProps);
 
-const keys = ['square', 'size', 'variant', 'class'] satisfies (keyof ButtonProps)[];
+const keys = ['square', 'size', 'variant', 'class', 'href'] satisfies (keyof ButtonProps)[];
 const initial = { type: 'button', variant: 'contained' } satisfies Partial<ButtonProps>;
 export const Button = (props: ButtonProps) => {
-  const [button, $] = splitProps(mergeProps(initial, props), keys);
+  const [local, $] = splitProps(mergeProps(initial, props), keys);
+  const tag = createMemo(
+    on(
+      () => local.href,
+      () => (local.href ? 'a' : 'button'),
+    ),
+  );
 
   return (
-    <button
+    <Dynamic
+      component={tag()}
+      href={local.href}
+      target={local.href?.startsWith('http') ? '_blank' : undefined}
       class={cx(
         s.button,
-        s[`size-${button.size}`],
-        s[`variant-${button.variant}`],
-        button.square && 'aspect-square',
-        button.class,
+        s[`size-${local.size}`],
+        s[`variant-${local.variant}`],
+        local.square && 'aspect-square',
+        local.class,
       )}
       {...$}
     />

@@ -32,26 +32,23 @@
     }
   }
 
-  @apply text-primary-9;
+  @apply text-primary-7;
 
   &.variant {
     &-text {
-      @apply border-opacity-0 border border-accent-3;
-      @apply bg-opacity-0 bg-secondary-4;
+      @apply border border-accent-3;
+      @apply bg-secondary-4;
       @apply rounded-full;
 
       &:hover, &:focus-visible {
         @apply text-secondary-9;
         @apply shadow-sm shadow-secondary-3;
 
-        @apply border-opacity-100;
-        @apply bg-opacity-40;
         @apply border-accent-4 bg-secondary-3;
       }
 
       &:active {
         @apply text-secondary-8;
-        @apply bg-opacity-60;
         @apply border-accent-5 bg-secondary-2
       }
 

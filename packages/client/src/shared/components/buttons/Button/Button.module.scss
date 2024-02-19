@@ -1,5 +1,6 @@
 .button {
   @apply center px-2;
+
   @apply transition-all duration-75;
 
 
@@ -61,6 +62,22 @@
       &:active {
         @apply border-accent-5 bg-secondary-2;
         @apply text-accent-9;
+      }
+    }
+
+    &-text {
+      @apply rounded-full;
+
+      &:hover, &:focus-visible {
+        @apply text-secondary-9;
+        @apply shadow-sm shadow-secondary-3;
+
+        @apply border-accent-4 bg-secondary-3;
+      }
+
+      &:active {
+        @apply text-secondary-8;
+        @apply border-accent-5 bg-secondary-2;
       }
     }
   }
