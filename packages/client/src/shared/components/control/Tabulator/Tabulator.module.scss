@@ -1,0 +1,46 @@
+.tabulator {
+  @apply flex flex-col relative overflow-hidden;
+
+  .nav {
+    @apply flex w-full;
+
+    .navtab {
+      @apply border-x border-accent-5 flex justify-center items-center cursor-pointer px-1 py-0.5 w-full;
+
+      &:not(.selected) {
+        @apply border-opacity-0;
+      }
+
+      &:hover {
+        @apply border-accent-5 border-opacity-100;
+      }
+
+      @apply transition-all;
+      .text {
+        @apply text-center select-none;
+        @apply transition-all;
+
+
+        &.selected {
+          @apply text-accent-7;
+        }
+      }
+
+      &:active {
+        @apply border-accent-5;
+
+        @apply text-accent-5;
+        .text {
+          @apply text-accent-5;
+        }
+      }
+
+      &:hover .text:not(.selected) {
+        @apply text-accent-6;
+      }
+    }
+
+  }
+
+}
+
