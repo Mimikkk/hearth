@@ -1,17 +1,19 @@
-import { createSignal } from "solid-js";
+import { createSignal } from 'solid-js';
 
 export namespace Search {
   export const read = () => new URL(window.location.href).searchParams;
 
   export const [params, set] = createSignal(read());
-  window.addEventListener("popstate", () => set(read()));
+  window.addEventListener('popstate', () => set(read()));
 
   export const update = (fn: (params: URLSearchParams) => void) =>
-    set((params) => {
+    set(params => {
       fn(params);
 
-      window.history.pushState(null, "", `?${params}`);
+      window.history.pushState(null, '', `?${params}`);
 
       return new URLSearchParams(params);
     });
+
+  export const clear = (key: string) => update(params => params.delete(key));
 }

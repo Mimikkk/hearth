@@ -1,6 +1,7 @@
-import { createEffect, createSignal, createUniqueId, type Ref, Show } from 'solid-js';
+import { createUniqueId, type Ref, Show } from 'solid-js';
 import cx from 'clsx';
 import s from './TextField.module.scss';
+import { createSearchString } from '@logic/Search/createSearchString.js';
 
 type ChangeEvent = Event & { currentTarget?: HTMLInputElement; target?: HTMLInputElement };
 export interface TextFieldProps {
@@ -9,16 +10,12 @@ export interface TextFieldProps {
   onChange?: (value: string, event: ChangeEvent) => void;
   class?: string;
   ref?: Ref<HTMLInputElement>;
+  searchId: string;
 }
 
 export const TextField = (props: TextFieldProps) => {
   const id = createUniqueId();
-  const [value, setValue] = createSignal(props.value ?? '');
-
-  createEffect(() => {
-    if (props.value === undefined || props.value === value()) return;
-    setValue(props.value ?? '');
-  });
+  const [value, setValue, clear] = createSearchString(props.searchId, props.value ?? '');
 
   return (
     <div class={cx(s.field, props.class)}>
@@ -36,7 +33,8 @@ export const TextField = (props: TextFieldProps) => {
         onInput={event => {
           const { value } = event.currentTarget;
 
-          setValue(value);
+          setValue(value.trim());
+          if (value.trim() === '') clear();
           props.onChange?.(value, event);
         }}
       />
