@@ -17,10 +17,11 @@ export interface TabulatorProps {
   searchId: string;
   storageId: string;
   tabs: TabItem[];
-  tabclass?: string;
-  navclass?: string;
   class?: string;
   default?: string;
+  tabclass?: string;
+  navclass?: string;
+  contentclass?: string;
 }
 
 export const Tabulator = (props: TabulatorProps) => {
@@ -38,7 +39,7 @@ export const Tabulator = (props: TabulatorProps) => {
           )}
         </For>
       </div>
-      {$.tabs.find(tab => tab.id === selected())?.children()}
+      <div class={$.contentclass}>{$.tabs.find(tab => tab.id === selected())?.children()}</div>
     </div>
   );
 };

@@ -36,6 +36,7 @@ export const createTheme = (key: string) => {
   });
 
   return {
+    get,
     mode: createMemo(() => get() ?? system),
     system,
     set,

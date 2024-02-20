@@ -1,3 +1,14 @@
+:global(.dark) {
+  .button {
+    &.variant {
+      &-text {
+        @apply bg-opacity-0;
+      }
+    }
+  }
+}
+
+
 .button {
   @apply center gap-2 aspect-square;
   @apply rounded-full transition-all duration-75;
@@ -34,7 +45,7 @@
 
   @apply text-primary-7;
 
-  &.variant {
+    &.variant {
     &-text {
       @apply border border-accent-3;
       @apply bg-secondary-4;

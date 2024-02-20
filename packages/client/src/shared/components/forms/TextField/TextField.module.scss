@@ -1,11 +1,22 @@
 .field {
   @apply relative px-2 py-1 border rounded-sm;
-  @apply transition-all;
+  @apply transition-all center-y;
+
+  &.with-icon {
+    .label {
+      @apply pl-7;
+    }
+
+    .input {
+      @apply pl-7;
+    }
+  }
 
   .label {
     @apply first-letter:uppercase;
     @apply absolute transition-all;
     @apply rounded-sm;
+    @apply select-none;
   }
 
   &:hover {
@@ -20,10 +31,10 @@
     @apply border-accent-5;
 
     .label {
-      @apply top-0 -mt-2 -ml-1.5;
+      @apply top-0 -mt-2 -ml-0.5;
       @apply px-1;
-      @apply bg-secondary-7;
-      @apply text-accent-2;
+      @apply bg-secondary-3;
+      @apply text-accent-8;
       @apply text-xs;
     }
   }

@@ -6,7 +6,7 @@ export const ThemeButton = () => {
   const theme = useTheme();
 
   const icon = createMemo(
-    on(theme.mode, mode => {
+    on(theme.get, mode => {
       if (mode === 'light') return 'CgSun';
       if (mode === 'dark') return 'CgMoon';
       return 'SiCompilerexplorer';
