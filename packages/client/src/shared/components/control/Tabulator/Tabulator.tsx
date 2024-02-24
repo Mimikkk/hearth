@@ -1,9 +1,9 @@
 import type { IconName } from '@components/buttons/Icon/Icon.js';
-import type { JSX } from 'solid-js';
-import { For, mergeProps } from 'solid-js';
+import { createSignal, For, JSX, mergeProps } from 'solid-js';
 import { createSearchStorageString } from '@logic/SearchStorage/createSearchStorageString.js';
 import cx from 'clsx';
 import s from './Tabulator.module.scss';
+import { Dynamic } from 'solid-js/web';
 
 export interface TabItem {
   icon?: IconName;
@@ -13,20 +13,20 @@ export interface TabItem {
   class?: string;
 }
 
-export interface TabulatorProps {
-  searchId: string;
-  storageId: string;
+export type TabulatorProps = ({ id: string } | { storageId: string; searchId: string }) & {
   tabs: TabItem[];
   class?: string;
   default?: string;
   tabclass?: string;
   navclass?: string;
   contentclass?: string;
-}
+};
 
 export const Tabulator = (props: TabulatorProps) => {
   const $ = mergeProps({ default: props.tabs[0].id }, props);
-  const [selected, select] = createSearchStorageString($.searchId, $.storageId, $.default);
+
+  const [selected, select] =
+    'id' in $ ? createSignal($.default) : createSearchStorageString($.searchId, $.storageId, $.default);
 
   return (
     <div class={cx(s.tabulator, $.class)}>
@@ -39,7 +39,10 @@ export const Tabulator = (props: TabulatorProps) => {
           )}
         </For>
       </div>
-      <div class={$.contentclass}>{$.tabs.find(tab => tab.id === selected())?.children()}</div>
+
+      <div class={$.contentclass}>
+        <Dynamic component={$.tabs.find(tab => tab.id === selected())?.children} />
+      </div>
     </div>
   );
 };

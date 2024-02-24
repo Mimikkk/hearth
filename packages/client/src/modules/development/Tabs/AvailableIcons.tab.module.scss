@@ -1,0 +1,23 @@
+.tab {
+  @apply flex flex-col gap-4 justify-center items-center;
+
+  .search {
+    @apply w-48;
+  }
+
+  .container {
+    @apply flex justify-center items-center border rounded-sm transition-all;
+
+    &:hover {
+      @apply text-accent-5 bg-primary-8 border-accent-5;
+    }
+
+    &:active {
+      @apply text-accent-4 bg-primary-9 border-accent-4;
+    }
+
+    .icon {
+      @apply flex flex-col items-center justify-center;
+    }
+  }
+}

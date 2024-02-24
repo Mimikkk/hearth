@@ -1,0 +1,44 @@
+.tools {
+  @apply fixed bottom-0;
+  @apply w-full bg-primary-white;
+  @apply transition-all;
+
+  .tabs {
+    &[data-active*="true"] {
+      height: 600px;
+    }
+
+    &[data-active*="false"] {
+      height: 0;
+    }
+
+    .tabulator {
+      @apply transition-all;
+      @apply border-t-2 px-4 py-2 flex;
+    }
+  }
+
+  .container {
+    @apply transition-all;
+    @apply relative;
+
+    .expand {
+      @apply transition-all;
+      @apply absolute right-0 bottom-[-2px];
+      @apply flex justify-center items-center;
+      @apply bg-primary-white p-1 rounded-l;
+
+      @apply border-t-2 border-l-2;
+    }
+  }
+
+  &:is(:focus-within, :hover) {
+    .tabulator {
+      @apply border-t-accent-5;
+    }
+
+    .container .expand {
+      @apply border-t-accent-5 border-l-accent-5;
+    }
+  }
+}

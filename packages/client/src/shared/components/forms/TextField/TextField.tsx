@@ -4,27 +4,30 @@ import s from './TextField.module.scss';
 import { createSearchString } from '@logic/Search/createSearchString.js';
 import { ButtonIcon } from '@components/buttons/ButtonIcon/ButtonIcon.js';
 import { IconName } from '@components/buttons/Icon/Icon.js';
+import { createString } from '@logic/createString.js';
 
 type ChangeEvent = Event & { currentTarget?: HTMLInputElement; target?: HTMLInputElement };
-export interface TextFieldProps {
+export type TextFieldProps = ({ searchId: string } | { id: string }) & {
   label?: string;
   value?: string;
   onChange?: (value: string, event: ChangeEvent) => void;
   class?: string;
   ref?: Ref<HTMLInputElement>;
-  searchId: string;
   icon?: IconName;
   onIconClick?: (event: MouseEvent) => void;
-}
+};
 
 export const TextField = (props: TextFieldProps) => {
-  const [value, setValue, clear] = createSearchString(props.searchId, props.value ?? '');
+  const [get, set, clear] =
+    'id' in props ? createString(props.value ?? '') : createSearchString(props.searchId, props.value ?? '');
+
   let ref: HTMLInputElement;
+  let id = 'id' in props ? props.id : props.searchId;
 
   return (
     <div class={cx(s.field, props.icon && s.withIcon, props.class)}>
       <Show when={props.label}>
-        <label for={props.searchId} class={s.label}>
+        <label for={id} class={s.label}>
           {props.label}
         </label>
       </Show>
@@ -40,7 +43,7 @@ export const TextField = (props: TextFieldProps) => {
             if (props.onIconClick) {
               props.onIconClick?.(event);
             } else {
-              if (value()) {
+              if (get()) {
                 clear();
                 props.onChange?.('', new Event('change') as ChangeEvent);
               }
@@ -50,18 +53,18 @@ export const TextField = (props: TextFieldProps) => {
         />
       </Show>
       <input
-        id={props.searchId}
+        id={id}
         ref={element => {
           ref = element;
           props.ref = element;
         }}
         class={s.input}
         placeholder=" "
-        value={value()}
+        value={get()}
         onInput={event => {
           const { value } = event.currentTarget;
 
-          setValue(value.trim());
+          set(value.trim());
           if (value.trim() === '') clear();
           props.onChange?.(value, event);
         }}

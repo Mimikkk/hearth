@@ -21,7 +21,7 @@ export const Examples = () => {
       <div class="flex ml-auto">
         <ButtonIcon icon="BiRegularChevronDown" />
         <div class="relative flex">
-          <Icon class="absolute left-1/4 self-center text-accent-2 pointer-events-none" name="FaSolidX" />
+          <Icon class="absolute left-1/4 self-center text-secondary-dark pointer-events-none" name="FaSolidX" />
           <ButtonIcon icon="BiRegularCategory" onClick={() => {}} />
         </div>
       </div>

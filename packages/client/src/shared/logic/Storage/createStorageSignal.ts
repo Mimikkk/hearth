@@ -4,7 +4,7 @@ import { Storage } from '@logic/Storage/Storage.js';
 
 type ClearFn = () => void;
 
-export const createStorageSignal = <const T>(
+export const createStorageSignal = <T>(
   name: string,
   initial: T,
 ): [get: Accessor<T>, set: Setter<T>, clear: ClearFn] => {
