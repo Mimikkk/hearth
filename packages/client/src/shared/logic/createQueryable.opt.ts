@@ -2,49 +2,45 @@ import { TextSearch } from './searcher/textSearch.js';
 import { type Accessor, createEffect, createMemo, createSignal, on, type Setter } from 'solid-js';
 import { Defer } from '@utils/constants.js';
 
-export type QueryableReturn<T> = [results: Accessor<T[]>, get: Accessor<string>, set: Setter<string>];
+export type QueryableReturn<T> = [list: Accessor<T[]>, get: Accessor<string>, set: Setter<string>];
 
-export interface SearchOptions<T> extends TextSearch.Options<T>, TextSearch.SearchOptions {}
+export interface SearchOptions<T> extends TextSearch.Options<T> {
+  limit: number;
+}
 
 const createQueryableStatic = <T>(items: T[], options?: Partial<SearchOptions<T>>): QueryableReturn<T> => {
-  const s = TextSearch.create(items, options);
+  const searchFn = TextSearch.create(items, options);
 
-  const search = (query: string, limit: undefined | number = options?.limit) =>
-    query === ''
-      ? items
-      : limit === undefined
-        ? s(query).map(({ item }) => item)
-        : s(query, { limit }).map(({ item }) => item);
+  const search = (query: string) => (query ? searchFn(query, options?.limit).map(({ item }) => item) : items);
 
   const [get, set] = createSignal('');
-  const queried = createMemo(() => search(get()));
+  const list = createMemo(() => search(get()));
 
-  return [queried, get, set];
+  return [list, get, set];
 };
 
 const createQueryableSignal = <T>(items: Accessor<T[]>, options?: Partial<SearchOptions<T>>): QueryableReturn<T> => {
   const initial = items();
-  const s = TextSearch.create(initial, options);
-  const search = (query: string, limit: undefined | number = options?.limit) =>
-    query === '' ? items() : s(query, limit ? { limit } : undefined).map(({ item }) => item);
+  let searchFn = TextSearch.create(initial, options);
+  const search = (query: string) => (query ? searchFn(query, options?.limit).map(({ item }) => item) : items);
 
   const [get, set] = createSignal('');
-  const [queried, setQueried] = createSignal(initial);
+  const [list, setList] = createSignal(initial);
 
   createEffect(
     on(
       items,
       items => {
-        s.set(items);
-        setQueried(search(get()));
+        searchFn = TextSearch.create(items, options);
+        setList(search(get()));
       },
       Defer,
     ),
   );
 
-  createEffect(() => setQueried(search(get())));
+  createEffect(() => setList(search(get())));
 
-  return [queried, get, set];
+  return [list, get, set];
 };
 
 export const createQueryable = <T>(

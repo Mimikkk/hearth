@@ -8,12 +8,9 @@ const calculateScore = (
   distance: number,
 ) => {
   const accuracy = errors / pattern.length;
-
   const proximity = Math.abs(expectedLocation - currentLocation);
 
-  if (!distance) return proximity ? 1.0 : accuracy;
-
-  return accuracy + proximity / distance;
+  return distance ? accuracy + proximity / distance : proximity ? 1.0 : accuracy;
 };
 
 const convertMaskToIndices = (mask: number[], minLength: number): [number, number][] => {
@@ -23,21 +20,18 @@ const convertMaskToIndices = (mask: number[], minLength: number): [number, numbe
   let i = 0;
 
   for (let len = mask.length; i < len; ++i) {
-    let match = mask[i];
+    const match = mask[i];
+
     if (match && start === -1) {
       start = i;
     } else if (!match && start !== -1) {
       end = i - 1;
-      if (end - start + 1 >= minLength) {
-        indices.push([start, end]);
-      }
+      if (end - start + 1 >= minLength) indices.push([start, end]);
       start = -1;
     }
   }
 
-  if (mask[i - 1] && i - start >= minLength) {
-    indices.push([start, i - 1]);
-  }
+  if (mask[i - 1] && i - start >= minLength) indices.push([start, i - 1]);
 
   return indices;
 };
@@ -50,7 +44,7 @@ export const search = (
   text: string,
   pattern: string,
   patternMask: PatternMask,
-  { distance, threshold, minMatchSize }: TextSearch.Options,
+  { distance, threshold, minMatch }: TextSearch.Options,
 ): SearchResult => {
   const patternLen = pattern.length;
   const textLen = text.length;
@@ -138,7 +132,7 @@ export const search = (
 
   const isMatch = bestLocation >= 0;
   return isMatch
-    ? { isMatch, score, indices: convertMaskToIndices(matchMask, minMatchSize) }
+    ? { isMatch, score, indices: convertMaskToIndices(matchMask, minMatch) }
     : { isMatch, score, indices: undefined };
 };
 
@@ -202,11 +196,11 @@ export type SearchEngine = (pattern: string) => SearchEngine.Result;
 
 export namespace SearchEngine {
   export const create = (pattern: string, options: TextSearch.Options): SearchEngine => {
-    if (!options.isCaseSensitive) pattern = pattern.toLowerCase();
+    if (!options.sensitive) pattern = pattern.toLowerCase();
     const chunks = Chunk.create(pattern);
 
-    return (text: string): SearchEngine.Result => {
-      if (!options.isCaseSensitive) text = text.toLowerCase();
+    return text => {
+      if (!options.sensitive) text = text.toLowerCase();
 
       if (pattern === text) return { isMatch: true, score: 0, indices: [[0, text.length - 1]] };
 

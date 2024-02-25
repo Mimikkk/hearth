@@ -37,7 +37,7 @@ describe('Query - benchmark', () => {
     fn(() => {
       const [queried, , setQuery] = createQueryable2(items, {
         threshold: 0.4,
-        isCaseSensitive: false,
+        sensitive: false,
       });
 
       test(setQuery, queried);

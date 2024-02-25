@@ -16,8 +16,8 @@ const namess = Object.keys(IconRegistry).slice(0, 10) as IconName[];
 export const AvailableIconsTab = () => {
   const [queried, query, setQuery] = createQueryable(names, {
     threshold: 0.4,
-    isCaseSensitive: true,
-    minMatchSize: 2,
+    sensitive: true,
+    minMatch: 2,
     keys: ['outer.name', 'inner', { weight: 5, name: 'inner' }],
   });
   const [tooltip, setTooltip] = createSignal<string | null>(null);
