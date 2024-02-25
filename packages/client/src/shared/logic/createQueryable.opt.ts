@@ -1,5 +1,5 @@
-import type { FuseResult, IFuseOptions } from 'fuse.js';
-import Fuse from './fuse.basic.opt.js';
+import type { FuseResult } from 'fuse.js';
+import { Searcher } from './fuse.basic.opt.js';
 import { type Accessor, createEffect, createMemo, createSignal, on, type Setter } from 'solid-js';
 import { Defer } from '@utils/constants.js';
 
@@ -7,12 +7,10 @@ const extract = <T>({ item }: FuseResult<T>) => item;
 
 export type QueryableReturn<T> = [results: Accessor<T[]>, get: Accessor<string>, set: Setter<string>];
 
-export interface SearchOptions<T> extends IFuseOptions<T> {
-  limit?: number;
-}
+export interface SearchOptions<T> extends Searcher.Options<T>, Searcher.SearchOptions {}
 
-const createQueryableStatic = <T>(items: T[], options?: SearchOptions<T>): QueryableReturn<T> => {
-  const fuse = new Fuse(items, options);
+const createQueryableStatic = <T>(items: T[], options?: Partial<SearchOptions<T>>): QueryableReturn<T> => {
+  const fuse = new Searcher(items, options);
 
   const search = (query: string, limit: undefined | number = options?.limit) =>
     query === ''
@@ -27,9 +25,9 @@ const createQueryableStatic = <T>(items: T[], options?: SearchOptions<T>): Query
   return [queried, get, set];
 };
 
-const createQueryableSignal = <T>(items: Accessor<T[]>, options?: SearchOptions<T>): QueryableReturn<T> => {
+const createQueryableSignal = <T>(items: Accessor<T[]>, options?: Partial<SearchOptions<T>>): QueryableReturn<T> => {
   const initial = items();
-  const fuse = new Fuse(initial, options);
+  const fuse = new Searcher(initial, options);
   const search = (query: string, limit: undefined | number = options?.limit) =>
     query === '' ? items() : fuse.search(query, limit ? { limit } : undefined).map(extract);
 
@@ -40,7 +38,7 @@ const createQueryableSignal = <T>(items: Accessor<T[]>, options?: SearchOptions<
     on(
       items,
       items => {
-        fuse.setCollection(items);
+        fuse.set(items);
         setQueried(search(get()));
       },
       Defer,
@@ -52,5 +50,8 @@ const createQueryableSignal = <T>(items: Accessor<T[]>, options?: SearchOptions<
   return [queried, get, set];
 };
 
-export const createQueryable = <T>(items: Accessor<T[]> | T[], options?: SearchOptions<T>): QueryableReturn<T> =>
+export const createQueryable = <T>(
+  items: Accessor<T[]> | T[],
+  options?: Partial<SearchOptions<T>>,
+): QueryableReturn<T> =>
   typeof items === 'function' ? createQueryableSignal(items, options) : createQueryableStatic(items, options);

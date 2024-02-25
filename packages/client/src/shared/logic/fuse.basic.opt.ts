@@ -1,512 +1,241 @@
-type FuseGetFn<T> = (obj: T, path: string | string[]) => string[] | string;
+type SortFn<T> = (a: SearchResult<T>, b: SearchResult<T>) => number;
+const sortFn = <T>(a: SearchResult<T>, b: SearchResult<T>) =>
+  a.score === b.score ? (a.index < b.index ? -1 : 1) : a.score < b.score ? -1 : 1;
 
-interface FuseOptionKeyObject<T> {
-  name: string | string[];
-  weight?: number;
-  getFn?: (obj: T) => string[] | string;
-}
+type GetFn<T> = (obj: T, path: string | string[]) => string | string[];
+const getFn = <T>(obj: T, path: string | string[]) => {
+  const items: string[] = [];
+  let isArray = false;
 
-type FuseOptionKey<T> = FuseOptionKeyObject<T> | string | string[];
-
-interface FuseSortFunctionItem {
-  [key: string]: { $: string } | { $: string; idx: number }[];
-}
-
-interface FuseSortFnMatch {
-  score: number;
-  key: string;
-  value: string;
-  indices: number[];
-}
-
-interface FuseSortFnMatchList extends FuseSortFnMatch {
-  idx: number;
-}
-
-interface FuseSortFunctionArg {
-  idx: number;
-  item: FuseSortFunctionItem;
-  score: number;
-  matches?: (FuseSortFnMatch | FuseSortFnMatchList)[];
-}
-
-type FuseSortFn = (a: FuseSortFunctionArg, b: FuseSortFunctionArg) => number;
-
-const Config: Fuse.Options = {
-  includeMatches: false,
-  findAllMatches: false,
-  minMatchCharLength: 1,
-  isCaseSensitive: false,
-  includeScore: false,
-  keys: [],
-  shouldSort: true,
-  sortFn: (a, b) => (a.score === b.score ? (a.idx < b.idx ? -1 : 1) : a.score < b.score ? -1 : 1),
-  location: 0,
-  threshold: 0.6,
-  distance: 100,
-  getFn: get,
-  ignoreLocation: false,
-  ignoreFieldNorm: false,
-  fieldNormWeight: 1,
-};
-
-const baseToString = (value: any): string => {
-  if (typeof value == 'string') return value;
-
-  let result = value + '';
-  return result == '0' && 1 / value == -Infinity ? '-0' : result;
-};
-
-const getTag = (value: any) => {
-  return value == null
-    ? value === undefined
-      ? '[object Undefined]'
-      : '[object Null]'
-    : Object.prototype.toString.call(value);
-};
-
-const toString = (value: any) => (value == null ? '' : baseToString(value));
-
-const isString = (value: any) => typeof value === 'string';
-
-const isNumber = (value: any) => typeof value === 'number';
-
-const isObjectLike = (value: any) => isObject(value) && value !== null;
-
-const isBoolean = (value: any) =>
-  value === true || value === false || (isObjectLike(value) && getTag(value) == '[object Boolean]');
-
-const isObject = (value: any) => typeof value === 'object';
-
-const isDefined = (value: any) => value !== undefined && value !== null;
-
-const isBlank = (value: any) => !value.trim().length;
-
-const MISSING_KEY_PROPERTY = (name: string) => `Missing ${name} property in key`;
-
-const INVALID_KEY_WEIGHT_VALUE = (key: string) => `Property 'weight' in key '${key}' must be a positive integer`;
-
-const hasOwn = Object.prototype.hasOwnProperty;
-
-class KeyStore {
-  _keys: any[];
-  _keyMap: any;
-
-  constructor(keys: any[]) {
-    this._keys = [];
-    this._keyMap = {};
-
-    let count = keys.length;
-    let totalWeight = 0;
-    for (let i = 0; i < count; ++i) {
-      let obj = createKey(keys[i]);
-
-      this._keys.push(obj);
-      this._keyMap[obj.id] = obj;
-
-      totalWeight += obj.weight;
-    }
-
-    for (let i = 0; i < count; ++i) this._keys[i].weight /= totalWeight;
-  }
-
-  get(keyId: number) {
-    return this._keyMap[keyId];
-  }
-
-  keys() {
-    return this._keys;
-  }
-
-  toJSON() {
-    return JSON.stringify(this._keys);
-  }
-}
-
-function createKey(key) {
-  let path = null;
-  let id = null;
-  let src = null;
-  let weight = 1;
-  let getFn = null;
-
-  if (isString(key) || Array.isArray(key)) {
-    src = key;
-    path = createKeyPath(key);
-    id = createKeyId(key);
-  } else {
-    if (!hasOwn.call(key, 'name')) {
-      throw new Error(MISSING_KEY_PROPERTY('name'));
-    }
-
-    const name = key.name;
-    src = name;
-
-    if (hasOwn.call(key, 'weight')) {
-      weight = key.weight;
-
-      if (weight <= 0) {
-        throw new Error(INVALID_KEY_WEIGHT_VALUE(name));
-      }
-    }
-
-    path = createKeyPath(name);
-    id = createKeyId(name);
-    getFn = key.getFn;
-  }
-
-  return { path, id, weight, src, getFn };
-}
-
-function createKeyPath(key) {
-  return Array.isArray(key) ? key : key.split('.');
-}
-
-function createKeyId(key) {
-  return Array.isArray(key) ? key.join('.') : key;
-}
-
-function get(obj, path) {
-  let list = [];
-  let arr = false;
-
-  const deepGet = (obj, path, index) => {
-    if (!isDefined(obj)) {
-      return;
-    }
-    if (!path[index]) {
-      // If there's no path left, we've arrived at the object we care about.
-      list.push(obj);
+  const recurse = (obj: any, path: string[], depth: number): any => {
+    if (!path[depth]) {
+      items.push(obj);
     } else {
-      let key = path[index];
-
+      const key = path[depth];
       const value = obj[key];
 
-      if (!isDefined(value)) {
-        return;
-      }
-
-      // If we're at the last value in the path, and if it's a string/number/bool,
-      // add it to the list
-      if (index === path.length - 1 && (isString(value) || isNumber(value) || isBoolean(value))) {
-        list.push(toString(value));
+      const type = typeof value;
+      if (depth === path.length - 1 && (type === 'string' || type === 'number' || type === 'boolean')) {
+        items.push(`${value}`);
       } else if (Array.isArray(value)) {
-        arr = true;
-        // Search each item in the array.
-        for (let i = 0, len = value.length; i < len; i += 1) {
-          deepGet(value[i], path, index + 1);
-        }
+        isArray = true;
+
+        for (let i = 0, len = value.length; i < len; i += 1) recurse(value[i], path, depth + 1);
       } else if (path.length) {
-        // An object. Recurse further.
-        deepGet(value, path, index + 1);
+        recurse(value, path, depth + 1);
       }
     }
   };
 
-  // Backwards compatibility (since path used to be a string)
-  deepGet(obj, isString(path) ? path.split('.') : path, 0);
+  recurse(obj, typeof path === 'string' ? path.split('.') : path, 0);
 
-  return arr ? list : list[0];
+  return isArray ? items : items[0];
+};
+
+const SpaceRegex = /[^ ]+/g;
+
+interface NormFn {
+  (value: string): number;
+  clear(): void;
 }
-
-const SPACE = /[^ ]+/g;
-
-function norm(weight = 1, mantissa = 3) {
+const normFn = (weight: number, mantissa: number): NormFn => {
   const cache = new Map();
   const m = Math.pow(10, mantissa);
 
-  return {
-    get(value) {
-      const numTokens = value.match(SPACE).length;
+  const normalize = (value: string): number => {
+    const numTokens = value.match(SpaceRegex)?.length ?? 0;
 
-      if (cache.has(numTokens)) {
-        return cache.get(numTokens);
-      }
+    let n = cache.get(numTokens);
+    if (n !== undefined) return n;
+    const norm = 1 / Math.pow(numTokens, 0.5 * weight);
+    n = +(Math.round(norm * m) / m);
+    cache.set(numTokens, n);
+    return n;
+  };
+  normalize.clear = () => cache.clear();
 
-      // Default function is 1/sqrt(x), weight makes that variable
-      const norm = 1 / Math.pow(numTokens, 0.5 * weight);
+  return normalize;
+};
 
-      // In place of `toFixed(mantissa)`, for faster computation
-      const n = parseFloat(Math.round(norm * m) / m);
+interface IndexKey<T> {
+  path: string | string[];
+  id: string;
+  weight: number;
+  src: string | string[];
+  getFn?: ((obj: T) => string | string[]) | null;
+}
 
-      cache.set(numTokens, n);
+namespace IndexKey {
+  const createPath = (key: string | string[]): string[] => (Array.isArray(key) ? key : key.split('.'));
 
-      return n;
-    },
-    clear() {
-      cache.clear();
-    },
+  const keyId = (key: string | string[]): string => (Array.isArray(key) ? key.join('.') : key);
+
+  export const create = <T>(key: SearchKey<T>): IndexKey<T> => {
+    if (typeof key === 'string' || Array.isArray(key)) {
+      return {
+        path: createPath(key),
+        id: keyId(key),
+        weight: 1,
+        src: key,
+      };
+    }
+
+    return {
+      path: createPath(key.name),
+      id: keyId(key.name),
+      weight: key.weight ?? 1,
+      src: key.name,
+      getFn: key.access,
+    };
   };
 }
 
-class FuseIndex<T> {
-  constructor({ getFn = Config.getFn, fieldNormWeight = Config.fieldNormWeight } = {}) {
-    this.norm = norm(fieldNormWeight, 3);
-    this.getFn = getFn;
-    this.isCreated = false;
+interface SearchRecordString {
+  value: string;
+  index: number;
+  norm: number;
+}
 
-    this.setIndexRecords();
-  }
+interface SearchRecordObject {
+  index: number;
+  children: (SearchRecordString[] | { value: string; norm: number })[];
+}
 
+type SearchRecord = SearchRecordString | SearchRecordObject;
+
+class SearchIndex<T> {
+  records: SearchRecord[];
+  keys: IndexKey<T>[];
+  #norm: NormFn;
+  #get: GetFn<T>;
   docs: T[];
 
-  setSources(docs: T[]) {
+  constructor(docs: T[], keys: SearchKey<T>[], options: Searcher.Options<T>) {
+    this.#norm = normFn(1, 3);
+    this.#get = options.accessFn;
+
+    this.records = [];
+    this.keys = keys.map(IndexKey.create);
     this.docs = docs;
+
+    const method = typeof this.docs[0] === 'string' ? this._createString : this._createObject;
+    for (let i = 0, it = this.docs.length; i < it; ++i) this.records.push(method.call(this, this.docs[i], i));
+    this.#norm.clear();
   }
 
-  setIndexRecords(records = []) {
-    this.records = records;
+  _createString(value: string, index: number): SearchRecordString {
+    return { value, index, norm: this.#norm(value) };
   }
 
-  setKeys(keys = []) {
-    this.keys = keys;
-    this._keysMap = {};
-    keys.forEach((key, idx) => {
-      this._keysMap[key.id] = idx;
-    });
-  }
+  _createObject(doc: T, index: number): SearchRecordObject {
+    const record: SearchRecordObject = { index, children: [] };
 
-  create() {
-    if (this.isCreated || !this.docs.length) {
-      return;
-    }
+    for (let i = 0, len = this.keys.length; i < len; ++i) {
+      const key = this.keys[i];
+      const value = key.getFn?.(doc) ?? this.#get(doc, key.path);
 
-    this.isCreated = true;
-
-    // List is Array<String>
-    if (isString(this.docs[0])) {
-      this.docs.forEach((doc, docIndex) => {
-        this._addString(doc, docIndex);
-      });
-    } else {
-      // List is Array<Object>
-      this.docs.forEach((doc, docIndex) => {
-        this._addObject(doc, docIndex);
-      });
-    }
-
-    this.norm.clear();
-  }
-
-  // Adds a doc to the end of the index
-  add(doc) {
-    const idx = this.size();
-
-    if (isString(doc)) {
-      this._addString(doc, idx);
-    } else {
-      this._addObject(doc, idx);
-    }
-  }
-
-  // Removes the doc at the specified index of the index
-  removeAt(idx) {
-    this.records.splice(idx, 1);
-
-    // Change ref index of every subsquent doc
-    for (let i = idx, len = this.size(); i < len; i += 1) {
-      this.records[i].i -= 1;
-    }
-  }
-
-  getValueForItemAtKeyId(item, keyId) {
-    return item[this._keysMap[keyId]];
-  }
-
-  size() {
-    return this.records.length;
-  }
-
-  _addString(doc, docIndex) {
-    if (!isDefined(doc) || isBlank(doc)) {
-      return;
-    }
-
-    let record = {
-      v: doc,
-      i: docIndex,
-      n: this.norm.get(doc),
-    };
-
-    this.records.push(record);
-  }
-
-  _addObject(doc, docIndex) {
-    let record = { i: docIndex, $: {} };
-
-    // Iterate over every key (i.e, path), and fetch the value at that key
-    this.keys.forEach((key, keyIndex) => {
-      let value = key.getFn ? key.getFn(doc) : this.getFn(doc, key.path);
-
-      if (!isDefined(value)) {
-        return;
-      }
-
-      if (Array.isArray(value)) {
-        let subRecords = [];
-        const stack = [{ nestedArrIndex: -1, value }];
+      if (typeof value === 'string') {
+        record.children.push({ value: value, norm: this.#norm(value) });
+      } else if (Array.isArray(value)) {
+        const records = [];
+        type Item = [number, string | string[]];
+        const stack: Item[] = [[-1, value]];
 
         while (stack.length) {
-          const { nestedArrIndex, value } = stack.pop();
+          const [k, value] = stack.pop()!;
 
-          if (!isDefined(value)) {
-            continue;
-          }
-
-          if (isString(value) && !isBlank(value)) {
-            let subRecord = {
-              v: value,
-              i: nestedArrIndex,
-              n: this.norm.get(value),
-            };
-
-            subRecords.push(subRecord);
+          if (typeof value === 'string') {
+            records.push({ value, index: k, norm: this.#norm(value) });
           } else if (Array.isArray(value)) {
-            value.forEach((item, k) => {
-              stack.push({
-                nestedArrIndex: k,
-                value: item,
-              });
-            });
-          } else;
+            stack.push(...value.map((value, k) => [k, value] as Item));
+          }
         }
-        record.$[keyIndex] = subRecords;
-      } else if (isString(value) && !isBlank(value)) {
-        let subRecord = {
-          v: value,
-          n: this.norm.get(value),
-        };
 
-        record.$[keyIndex] = subRecord;
+        record.children.push(records);
       }
-    });
+    }
 
-    this.records.push(record);
-  }
-
-  toJSON() {
-    return {
-      keys: this.keys,
-      records: this.records,
-    };
+    return record;
   }
 }
 
-function createIndex(
-  keys: string[],
-  docs: any,
-  { getFn = Config.getFn, fieldNormWeight = Config.fieldNormWeight } = {},
-) {
-  const myIndex = new FuseIndex({ getFn, fieldNormWeight });
-  myIndex.setKeys(keys.map(createKey));
-  myIndex.setSources(docs);
-  myIndex.create();
-  return myIndex;
+interface ComputeScoreOptions {
+  errors: number;
+  currentLocation: number;
+  expectedLocation: number;
+  distance: number;
 }
 
-function computeScore$1(
+const computeScore$1 = (
   pattern: string,
-  {
-    errors = 0,
-    currentLocation = 0,
-    expectedLocation = 0,
-    distance = Config.distance,
-    ignoreLocation = Config.ignoreLocation,
-  } = {},
-) {
+  { errors, currentLocation, expectedLocation, distance }: ComputeScoreOptions,
+) => {
   const accuracy = errors / pattern.length;
-
-  if (ignoreLocation) return accuracy;
 
   const proximity = Math.abs(expectedLocation - currentLocation);
 
   if (!distance) return proximity ? 1.0 : accuracy;
 
   return accuracy + proximity / distance;
-}
+};
 
-function convertMaskToIndices(matchmask: any[] = [], minMatchCharLength: number): [number, number][] {
-  let indices: [number, number][] = [];
+const convertMaskToIndices = (mask: number[], minLength: number): [number, number][] => {
+  const indices: [number, number][] = [];
   let start = -1;
   let end = -1;
   let i = 0;
 
-  for (let len = matchmask.length; i < len; i += 1) {
-    let match = matchmask[i];
+  for (let len = mask.length; i < len; ++i) {
+    let match = mask[i];
     if (match && start === -1) {
       start = i;
     } else if (!match && start !== -1) {
       end = i - 1;
-      if (end - start + 1 >= minMatchCharLength) {
+      if (end - start + 1 >= minLength) {
         indices.push([start, end]);
       }
       start = -1;
     }
   }
 
-  if (matchmask[i - 1] && i - start >= minMatchCharLength) {
+  if (mask[i - 1] && i - start >= minLength) {
     indices.push([start, i - 1]);
   }
 
   return indices;
-}
+};
 
-const MaxSize = 32;
-
-function search(
+const search = (
   text: string,
   pattern: string,
-  patternMask: PatternMask,
-  {
-    location,
-    distance,
-    threshold,
-    findAllMatches,
-    minMatchCharLength,
-    includeMatches,
-    ignoreLocation,
-  }: BitapSearch.Options,
-): BitapSearch.Result {
+  patternMask: SearchEngine.PatternMask,
+  { distance, threshold, minMatchCharLength }: SearchEngine.Options,
+): SearchEngine.Result => {
   const patternLen = pattern.length;
-  // Set starting location at beginning text and initialize the alphabet.
   const textLen = text.length;
-  // Handle the case when location > text.length
-  const expectedLocation = Math.max(0, Math.min(location, textLen));
-  // Highest score beyond which we give up.
+  const expectedLocation = Math.max(0, Math.min(0, textLen));
   let currentThreshold = threshold;
-  // Is there a nearby exact match? (speedup)
   let bestLocation = expectedLocation;
-
-  // Performance: only computer matches when the minMatchCharLength > 1
-  // OR if `includeMatches` is true.
-  const computeMatches = minMatchCharLength > 1 || includeMatches;
-  // A mask of the matches, used for building the indices
-  const matchMask = computeMatches ? Array(textLen) : [];
+  const matchMask: number[] = Array(textLen);
 
   let index;
-
-  // Get all exact matches, here for speed up
   while ((index = text.indexOf(pattern, bestLocation)) > -1) {
-    let score = computeScore$1(pattern, {
+    const score = computeScore$1(pattern, {
+      errors: 0,
       currentLocation: index,
       expectedLocation,
       distance,
-      ignoreLocation,
     });
 
     currentThreshold = Math.min(score, currentThreshold);
     bestLocation = index + patternLen;
 
-    if (computeMatches) {
-      let i = 0;
-      while (i < patternLen) {
-        matchMask[index + i] = 1;
-        i += 1;
-      }
+    let i = 0;
+    while (i < patternLen) {
+      matchMask[index + i] = 1;
+      ++i;
     }
   }
-
-  // Reset the best location
   bestLocation = -1;
 
   let lastBitArr = [];
@@ -514,7 +243,6 @@ function search(
   let binMax = patternLen + textLen;
 
   const mask = 1 << (patternLen - 1);
-
   for (let i = 0; i < patternLen; ++i) {
     let binMin = 0;
     let binMid = binMax;
@@ -525,7 +253,6 @@ function search(
         currentLocation: expectedLocation + binMid,
         expectedLocation,
         distance,
-        ignoreLocation,
       });
 
       if (score <= currentThreshold) {
@@ -540,7 +267,7 @@ function search(
     binMax = binMid;
 
     let start = Math.max(1, expectedLocation - binMid + 1);
-    let finish = findAllMatches ? textLen : Math.min(expectedLocation + binMid, textLen) + patternLen;
+    let finish = Math.min(expectedLocation + binMid, textLen) + patternLen;
 
     let bitArr = Array(finish + 2);
 
@@ -548,12 +275,9 @@ function search(
 
     for (let j = finish; j >= start; j -= 1) {
       let currentLocation = j - 1;
-      let charMatch = patternMask[text.charAt(currentLocation)];
+      let charMatch = patternMask.get(text[currentLocation])!;
 
-      if (computeMatches) {
-        // Speed up: quick bool to int conversion (i.e, `charMatch ? 1 : 0`)
-        matchMask[currentLocation] = +!!charMatch;
-      }
+      matchMask[currentLocation] = +!!charMatch;
 
       bitArr[j] = ((bitArr[j + 1] << 1) | 1) & charMatch;
       if (i) bitArr[j] |= ((lastBitArr[j + 1] | lastBitArr[j]) << 1) | 1 | lastBitArr[j + 1];
@@ -564,34 +288,22 @@ function search(
           currentLocation,
           expectedLocation,
           distance,
-          ignoreLocation,
         });
 
-        // This match will almost certainly be better than any existing match.
-        // But check anyway.
         if (finalScore <= currentThreshold) {
-          // Indeed it is
           currentThreshold = finalScore;
           bestLocation = currentLocation;
-
-          // Already passed `loc`, downhill from here on in.
-          if (bestLocation <= expectedLocation) {
-            break;
-          }
-
-          // When passing `bestLocation`, don't exceed our current distance from `expectedLocation`.
+          if (bestLocation <= expectedLocation) break;
           start = Math.max(1, 2 * expectedLocation - bestLocation);
         }
       }
     }
 
-    // No hope for a (better) match at greater error levels.
     const score = computeScore$1(pattern, {
       errors: i + 1,
       currentLocation: expectedLocation,
       expectedLocation,
       distance,
-      ignoreLocation,
     });
 
     if (score > currentThreshold) {
@@ -601,394 +313,319 @@ function search(
     lastBitArr = bitArr;
   }
 
-  const result: BitapSearch.Result = {
-    isMatch: bestLocation >= 0,
-    score: Math.max(0.001, finalScore),
-  };
+  const score = Math.max(0.001, finalScore);
 
-  if (computeMatches) {
-    const indices = convertMaskToIndices(matchMask, minMatchCharLength);
-
-    if (!indices.length) result.isMatch = false;
-    else if (includeMatches) result.indices = indices;
-  }
-
-  return result;
-}
-
-type PatternMask = Record<string, number>;
-
-const createPatternMask = (pattern: string): PatternMask => {
-  const mask: Record<string, number> = {};
-
-  for (let i = 0, len = pattern.length; i < len; ++i) {
-    const char = pattern[i];
-
-    mask[char] = (mask[char] || 0) | (1 << (len - i - 1));
-  }
-
-  return mask;
-};
-const createChunks = (pattern: string): BitapSearch.Chunk[] => {
-  const createChunk = (pattern: string, startIndex: number): BitapSearch.Chunk => ({
-    pattern,
-    alphabet: createPatternMask(pattern),
-    startIndex,
-  });
-  const chunks = [];
-
-  const len = pattern.length;
-  if (len > MaxSize) {
-    let i = 0;
-    const remainder = len % MaxSize;
-    const end = len - remainder;
-
-    while (i < end) {
-      chunks.push(createChunk(pattern.substring(i, MaxSize), i));
-      i += MaxSize;
-    }
-
-    if (remainder) {
-      const startIndex = len - MaxSize;
-      chunks.push(createChunk(pattern.substring(startIndex), startIndex));
-    }
-  } else if (len > 0) {
-    chunks.push(createChunk(pattern, 0));
-  }
-
-  return chunks;
+  const isMatch = bestLocation >= 0;
+  return isMatch
+    ? { isMatch, score, indices: convertMaskToIndices(matchMask, minMatchCharLength) }
+    : { isMatch, score, indices: undefined };
 };
 
-class BitapSearch {
-  options: BitapSearch.Options;
+class SearchEngine {
   pattern: string;
-  chunks: BitapSearch.Chunk[];
+  options: SearchEngine.Options;
+  chunks: SearchEngine.Chunk[];
 
-  constructor(pattern: string, options: BitapSearch.Options) {
+  constructor(pattern: string, options: SearchEngine.Options) {
     this.options = options;
     this.pattern = this.options.isCaseSensitive ? pattern : pattern.toLowerCase();
-    this.chunks = createChunks(this.pattern);
+    this.chunks = SearchEngine.Chunk.create(pattern);
   }
 
-  searchIn(text: string): BitapSearch.Result {
+  searchIn(text: string): SearchEngine.InResult {
     if (!this.options.isCaseSensitive) text = text.toLowerCase();
-    if (this.pattern === text) {
-      return {
-        isMatch: true,
-        score: 0,
-        indices: this.options.includeMatches ? [[0, text.length - 1]] : undefined,
-      };
-    }
+    if (this.pattern === text) return { isMatch: true, score: 0, indices: [[0, text.length - 1]] };
 
-    let indices: undefined | [number, number][] = this.options.includeMatches ? [] : undefined;
+    const indices: [number, number][] = [];
     let score = 0;
     let isMatch = false;
 
-    const { location } = this.options;
-    for (let i = 0; i < this.chunks.length; ++i) {
-      const { pattern, alphabet, startIndex } = this.chunks[i];
-      this.options.location = location + startIndex;
-      const match = search(text, pattern, alphabet, this.options);
-
-      if (match.isMatch) isMatch = true;
+    for (let i = 0, len = this.chunks.length; i < len; ++i) {
+      const { pattern, mask } = this.chunks[i];
+      const match = search(text, pattern, mask, this.options);
 
       score += match.score;
-
-      if (match.isMatch && match.indices) indices?.push(...match.indices);
+      if (match.isMatch) {
+        isMatch = true;
+        indices.push(...match.indices);
+      }
     }
-    this.options.location = location;
 
-    return {
-      isMatch,
-      score: isMatch ? score / this.chunks.length : 1,
-      indices: isMatch ? indices : undefined,
-    };
+    score /= this.chunks.length;
+
+    return isMatch ? { isMatch, score, indices } : { isMatch, score: undefined, indices: undefined };
   }
 }
 
-namespace BitapSearch {
+namespace SearchEngine {
   export interface Options {
-    location: number;
     threshold: number;
     distance: number;
-    includeMatches: boolean;
-    findAllMatches: boolean;
     minMatchCharLength: number;
     isCaseSensitive: boolean;
-    ignoreLocation: boolean;
+  }
+
+  export type PatternMask = Map<string, number>;
+
+  export namespace PatternMask {
+    export const create = (pattern: string): PatternMask => {
+      const mask = new Map();
+
+      for (let i = 0, len = pattern.length; i < len; ++i) {
+        const char = pattern[i];
+
+        mask.set(char, (mask.get(char) ?? 0) | (1 << (len - i - 1)));
+      }
+
+      return mask;
+    };
   }
 
   export interface Chunk {
     pattern: string;
-    alphabet: Record<string, number>;
+    mask: PatternMask;
     startIndex: number;
   }
 
-  export interface Result {
-    isMatch: boolean;
-    score: number;
-    indices?: [number, number][];
+  export namespace Chunk {
+    const single = (pattern: string, startIndex: number): SearchEngine.Chunk => ({
+      pattern,
+      mask: PatternMask.create(pattern),
+      startIndex,
+    });
+    const MaxSize = 32;
+
+    export const create = (pattern: string): Chunk[] => {
+      const chunks = [];
+
+      const len = pattern.length;
+      if (len > MaxSize) {
+        let i = 0;
+        const remainder = len % MaxSize;
+        const end = len - remainder;
+
+        while (i < end) {
+          chunks.push(single(pattern.substring(i, MaxSize), i));
+          i += MaxSize;
+        }
+
+        if (remainder) {
+          const startIndex = len - MaxSize;
+          chunks.push(single(pattern.substring(startIndex), startIndex));
+        }
+      } else if (len > 0) {
+        chunks.push(single(pattern, 0));
+      }
+
+      return chunks;
+    };
   }
+
+  export type Result =
+    | { isMatch: false; score: number; indices: undefined }
+    | { isMatch: true; score: number; indices: [number, number][] };
+
+  export type InResult =
+    | { isMatch: false; score: undefined; indices: undefined }
+    | { isMatch: true; score: number; indices: [number, number][] };
 }
 
-const createSearcher = (pattern: string, options: BitapSearch.Options) => new BitapSearch(pattern, options);
-
-function computeScore(results, options: Fuse.Options) {
-  results.forEach(result => {
+const computeScore = <T>(results: SearchResult<T>[]): void => {
+  for (let i = 0, it = results.length; i < it; ++i) {
+    const result = results[i];
     let totalScore = 1;
 
-    result.matches.forEach(({ key, norm, score }) => {
-      const weight = key ? key.weight : null;
+    for (let j = 0, len = result.matches.length; j < len; ++j) {
+      const { key, norm, score } = result.matches[j];
 
-      totalScore *= Math.pow(
-        score === 0 && weight ? Number.EPSILON : score,
-        (weight || 1) * (options.ignoreFieldNorm ? 1 : norm),
-      );
-    });
-
-    result.score = totalScore;
-  });
-}
-
-function transformMatches(result, data) {
-  const matches = result.matches;
-  data.matches = [];
-
-  if (!isDefined(matches)) {
-    return;
-  }
-
-  matches.forEach(match => {
-    if (!isDefined(match.indices) || !match.indices.length) {
-      return;
+      totalScore *= Math.pow(score === 0 && key ? Number.EPSILON : score, (key?.weight || 1) * norm);
     }
 
-    const { indices, value } = match;
+    result.score = totalScore;
+  }
+};
 
-    let obj = {
+interface TransformedMatch {
+  key?: string | string[];
+  norm: number;
+  score: number;
+  indices?: [number, number][];
+  value: string;
+  refIndex?: number;
+}
+
+namespace TransformedMatch {
+  export const single = <T>({ indices, value, key, index }: Match<T>): TransformedMatch => {
+    const match: TransformedMatch = {
+      key: undefined,
+      norm: 0,
+      score: 0,
       indices,
       value,
     };
 
-    if (match.key) {
-      obj.key = match.key.src;
-    }
+    if (key) match.key = key.src;
 
-    if (match.idx > -1) {
-      obj.refIndex = match.idx;
-    }
+    if (index! > -1) match.refIndex = index;
 
-    data.matches.push(obj);
-  });
+    return match;
+  };
+
+  export const create = <T>(matches: Match<T>[]): TransformedMatch[] => matches.map(single);
 }
 
-function transformScore(result, data) {
-  data.score = result.score;
+interface FormattedSearchResult<T> {
+  item: T;
+  index: number;
+  matches: TransformedMatch[];
+  score: number;
 }
 
-function format(results, docs, { includeMatches = Config.includeMatches, includeScore = Config.includeScore } = {}) {
-  const transformers = [];
-
-  if (includeMatches) transformers.push(transformMatches);
-  if (includeScore) transformers.push(transformScore);
-
-  return results.map(result => {
-    const { idx } = result;
-
-    const data = {
-      item: docs[idx],
-      refIndex: idx,
-    };
-
-    if (transformers.length) {
-      transformers.forEach(transformer => {
-        transformer(result, data);
-      });
-    }
-
-    return data;
-  });
+namespace FormattedSearchResult {
+  export const create = <T>(results: SearchResult<T>[], items: T[]): FormattedSearchResult<T>[] =>
+    results.map(({ index, matches, score }) => ({
+      item: items[index],
+      matches: TransformedMatch.create(matches),
+      score,
+      index,
+    }));
 }
 
-class Fuse<T> {
-  options: Fuse.Options<T>;
-  store: KeyStore;
-  index: FuseIndex<T>;
-  items: T[];
+interface Match<T> {
+  score: number;
+  key?: IndexKey<T>;
+  value: string;
+  norm: number;
+  indices?: [number, number][];
+  index?: number;
+}
 
-  constructor(items: T[], options?: Partial<Fuse.Options<T>>, index?: FuseIndex<T>) {
+interface SearchResult<T> {
+  index: number;
+  score: number;
+  record: SearchRecordObject['children'][number] | SearchRecordObject['children'] | string;
+  matches: Match<T>[];
+}
+
+type SearchKey<T> =
+  | string
+  | string[]
+  | { name: string | string[]; weight?: number; access?: (obj: T) => string | string[] };
+
+export class Searcher<T> {
+  options: Searcher.Options<T>;
+  #index: SearchIndex<T>;
+  #items: T[];
+
+  constructor(items: T[], options?: Partial<Searcher.Options<T>>) {
     this.options = {
-      getFn: options?.getFn ?? Config.getFn,
-      keys: options?.keys ?? Config.keys,
-      includeMatches: options?.includeMatches ?? Config.includeMatches,
-      includeScore: options?.includeScore ?? Config.includeScore,
-      ignoreLocation: options?.ignoreLocation ?? Config.ignoreLocation,
-      minMatchCharLength: options?.minMatchCharLength ?? Config.minMatchCharLength,
-      shouldSort: options?.shouldSort ?? Config.shouldSort,
-      sortFn: options?.sortFn ?? Config.sortFn,
-      location: options?.location ?? Config.location,
-      threshold: options?.threshold ?? Config.threshold,
-      distance: options?.distance ?? Config.distance,
-      findAllMatches: options?.findAllMatches ?? Config.findAllMatches,
-      isCaseSensitive: options?.isCaseSensitive ?? Config.isCaseSensitive,
-      ignoreFieldNorm: options?.ignoreFieldNorm ?? Config.ignoreFieldNorm,
-      fieldNormWeight: options?.fieldNormWeight ?? Config.fieldNormWeight,
+      accessFn: options?.accessFn ?? getFn,
+      keys: options?.keys ?? [],
+      minMatchCharLength: options?.minMatchCharLength ?? 1,
+      sortFn: options?.sortFn ?? sortFn,
+      threshold: options?.threshold ?? 0.6,
+      distance: options?.distance ?? 100,
+      isCaseSensitive: options?.isCaseSensitive ?? false,
     };
-
-    this.store = new KeyStore(this.options.keys);
-
-    this.setCollection(items, index);
+    this.items = items;
   }
 
-  setCollection(docs: T[], index?: FuseIndex<T>): void {
-    this.items = docs;
-
-    this.index =
-      index ??
-      createIndex(this.options.keys, this.items, {
-        getFn: this.options.getFn,
-        fieldNormWeight: this.options.fieldNormWeight,
-      });
+  get items(): T[] {
+    return this.#items;
   }
 
-  add(doc: T): void {
-    this.items.push(doc);
-    this.index.add(doc);
+  set items(items: T[]) {
+    this.#items = items;
+    this.#index = new SearchIndex(this.#items, this.options.keys, this.options);
   }
 
-  search(query: string, options?: Partial<Fuse.SearchOptions>) {
-    let results = typeof this.items[0] === 'string' ? this._searchStringList(query) : this._searchObjectList(query);
+  search(query: string, options?: Partial<Searcher.SearchOptions>): FormattedSearchResult<T>[] {
+    let results = typeof this.#items[0] === 'string' ? this.#searchString(query) : this.#searchObject(query);
 
-    computeScore(results, this.options);
+    computeScore(results);
 
-    if (this.options.shouldSort) results.sort(this.options.sortFn);
+    if (this.options.sortFn) results.sort(this.options.sortFn);
     if (options?.limit) results = results.slice(0, options.limit);
 
-    return format(results, this.items, this.options);
+    return FormattedSearchResult.create(results, this.#items);
   }
 
-  _searchStringList(query: string): FuseSortFunctionArg[] {
-    const searcher = createSearcher(query, this.options);
-    const { records } = this.index;
-    const results = [];
-
-    // Iterate over every string in the index
-    records.forEach(({ v: text, i: idx, n: norm }) => {
-      if (!isDefined(text)) return;
-
-      const { isMatch, score, indices } = searcher.searchIn(text);
-
-      if (isMatch) {
-        results.push({
-          item: text,
-          idx,
-          matches: [{ score, value: text, norm, indices }],
-        });
-      }
-    });
-
-    return results;
-  }
-
-  _searchObjectList(query: string): FuseSortFunctionArg[] {
-    const searcher = createSearcher(query, this.options);
-    const { keys, records } = this.index;
-    const results = [];
+  #searchString(query: string): SearchResult<T>[] {
+    const searcher = new SearchEngine(query, this.options);
+    const { records } = this.#index;
+    const results: SearchResult<T>[] = [];
 
     for (let i = 0, len = records.length; i < len; ++i) {
-      const { $: item, i: idx } = records[i];
+      const { value: record, index: index, norm: norm } = records[i] as SearchRecordString;
+      const { isMatch, score, indices } = searcher.searchIn(record);
 
-      if (!isDefined(item)) continue;
-
-      let matches = [];
-
-      for (let j = 0, len = keys.length; j < len; ++j) {
-        matches.push(...this._findMatches({ key: keys[j], value: item[j], searcher }));
-      }
-
-      if (matches.length) results.push({ idx, item, matches });
+      if (isMatch) results.push({ record, index, matches: [{ score, value: record, norm, indices }], score: 0 });
     }
 
     return results;
   }
 
-  _findMatches({ key, value, searcher }: any) {
-    if (!isDefined(value)) {
-      return [];
+  #searchObject(query: string): SearchResult<T>[] {
+    const searcher = new SearchEngine(query, this.options);
+    const { keys, records } = this.#index;
+    const results: SearchResult<T>[] = [];
+
+    for (let i = 0, len = records.length; i < len; ++i) {
+      const { children: record, index: index } = (records as SearchRecordObject[])[i];
+
+      let matches: Match<T>[] = [];
+
+      for (let j = 0, len = keys.length; j < len; ++j) {
+        matches.push(...this.#findMatches({ key: keys[j], record: record[j], searcher }));
+      }
+
+      if (matches.length) results.push({ index, record, matches, score: 0 });
     }
 
-    let matches = [];
+    return results;
+  }
 
-    if (Array.isArray(value)) {
-      value.forEach(({ v: text, i: idx, n: norm }) => {
-        if (!isDefined(text)) {
-          return;
-        }
+  #findMatches({
+    key,
+    record,
+    searcher,
+  }: {
+    key: IndexKey<T>;
+    record: SearchResult<T>['record'];
+    searcher: SearchEngine;
+  }): Match<T>[] {
+    const matches: Match<T>[] = [];
 
-        const { isMatch, score, indices } = searcher.searchIn(text);
+    if (Array.isArray(record)) {
+      for (let index = 0, len = record.length; index < len; ++index) {
+        const { value, norm } = record[index] as SearchRecordString;
+        const { isMatch, score, indices } = searcher.searchIn(value);
 
-        if (isMatch) {
-          matches.push({
-            score,
-            key,
-            value: text,
-            idx,
-            norm,
-            indices,
-          });
-        }
-      });
-    } else {
-      const { v: text, n: norm } = value;
-
-      const { isMatch, score, indices } = searcher.searchIn(text);
-
-      if (isMatch) {
-        matches.push({ score, key, value: text, norm, indices });
+        if (isMatch) matches.push({ score, key, value, index, norm, indices });
       }
+    } else {
+      const { value, norm } = record as SearchRecordString;
+      const { isMatch, score, indices } = searcher.searchIn(value);
+
+      if (isMatch) matches.push({ score, key, value, norm, indices });
     }
 
     return matches;
   }
 }
 
-namespace Fuse {
+export namespace Searcher {
   export interface Options<T = unknown> {
-    /** Indicates whether comparisons should be case-sensitive. */
-    isCaseSensitive: boolean;
-    /** Determines how close the match must be to the fuzzy location (specified by `location`). An exact letter match which is `distance` characters away from the fuzzy location would score as a complete mismatch. A `distance` of `0` requires the match be at the exact `location` specified. A distance of `1000` would require a perfect match to be within `800` characters of the `location` to be found using a `threshold` of `0.8`. */
-    distance: number;
-    /** When true, the matching function will continue to the end of a search pattern even if a perfect match has already been located in the string. */
-    findAllMatches: boolean;
-    /** The function to use to retrieve an object's value at the provided path. The default will also search nested paths. */
-    getFn: FuseGetFn<T>;
-    /** When `true`, search will ignore `location` and `distance`, so it won't matter where in the string the pattern appears. */
-    ignoreLocation: boolean;
-    /** When `true`, the calculation for the relevance score (used for sorting) will ignore the `field-length norm`. */
-    ignoreFieldNorm: boolean;
-    /** Determines how much the `field-length norm` affects scoring. A value of `0` is equivalent to ignoring the field-length norm. A value of `0.5` will greatly reduce the effect of field-length norm, while a value of `2.0` will greatly increase it. */
-    fieldNormWeight: number;
-    /** Whether the matches should be included in the result set. When `true`, each record in the result set will include the indices of the matched characters. These can consequently be used for highlighting purposes. */
-    includeMatches: boolean;
-    /** Whether the score should be included in the result set. A score of `0`indicates a perfect match, while a score of `1` indicates a complete mismatch. */
-    includeScore: boolean;
-    /** List of keys that will be searched. This supports nested paths, weighted search, searching in arrays of `strings` and `objects`. */
-    keys: FuseOptionKey<T>[];
-    /** Determines approximately where in the text is the pattern expected to be found. */
-    location: number;
-    /** Only the matches whose length exceeds this value will be returned. (For instance, if you want to ignore single character matches in the result, set it to `2`). */
-    minMatchCharLength: number;
-    /** Whether to sort the result list, by score. */
-    shouldSort: boolean;
-    /** The function to use to sort all the results. The default will sort by ascending relevance score, ascending index. */
-    sortFn: FuseSortFn;
-    /** At what point does the match algorithm give up. A threshold of `0.0` requires a perfect match (of both letters and location), a threshold of `1.0` would match anything. */
     threshold: number;
+    distance: number;
+    sortFn: SortFn<T>;
+    accessFn: GetFn<T>;
+    keys: SearchKey<T>[];
+    isCaseSensitive: boolean;
+    minMatchCharLength: number;
   }
 
   export interface SearchOptions {
     limit: number;
   }
 }
-
-export default Fuse;
