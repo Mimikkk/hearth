@@ -10,7 +10,12 @@ export const DevelopmentTools = () => {
 
   return (
     <div class={s.tools}>
-      <div class={cx('fixed border top-0 p-1 pt-0 rounded-br-sm border-t-0 border-l-0 left-52')}>
+      <div
+        class={cx(
+          'transition-all fixed border-2 top-0 p-1 pt-0 rounded-br-sm border-t-0 left-52',
+          Devtools.active() && 'border-accent-5 bg-primary-2',
+        )}
+      >
         <div class={s.expand}>
           <ButtonIcon
             cross={Devtools.active()}
