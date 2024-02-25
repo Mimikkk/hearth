@@ -1,9 +1,6 @@
-import type { FuseResult } from 'fuse.js';
-import { Searcher } from './fuse.basic.opt.js';
+import { Searcher } from './searcher/searcher.js';
 import { type Accessor, createEffect, createMemo, createSignal, on, type Setter } from 'solid-js';
 import { Defer } from '@utils/constants.js';
-
-const extract = <T>({ item }: FuseResult<T>) => item;
 
 export type QueryableReturn<T> = [results: Accessor<T[]>, get: Accessor<string>, set: Setter<string>];
 
@@ -16,8 +13,8 @@ const createQueryableStatic = <T>(items: T[], options?: Partial<SearchOptions<T>
     query === ''
       ? items
       : limit === undefined
-        ? fuse.search(query).map(extract)
-        : fuse.search(query, { limit }).map(extract);
+        ? fuse.search(query).map(({ item }) => item)
+        : fuse.search(query, { limit }).map(({ item }) => item);
 
   const [get, set] = createSignal('');
   const queried = createMemo(() => search(get()));
@@ -29,7 +26,7 @@ const createQueryableSignal = <T>(items: Accessor<T[]>, options?: Partial<Search
   const initial = items();
   const fuse = new Searcher(initial, options);
   const search = (query: string, limit: undefined | number = options?.limit) =>
-    query === '' ? items() : fuse.search(query, limit ? { limit } : undefined).map(extract);
+    query === '' ? items() : fuse.search(query, limit ? { limit } : undefined).map(({ item }) => item);
 
   const [get, set] = createSignal('');
   const [queried, setQueried] = createSignal(initial);
@@ -38,7 +35,7 @@ const createQueryableSignal = <T>(items: Accessor<T[]>, options?: Partial<Search
     on(
       items,
       items => {
-        fuse.set(items);
+        fuse.items = items;
         setQueried(search(get()));
       },
       Defer,

@@ -17,7 +17,7 @@ export const AvailableIconsTab = () => {
   const [queried, query, setQuery] = createQueryable(names, {
     threshold: 0.4,
     isCaseSensitive: true,
-    minMatchCharLength: 2,
+    minMatchSize: 2,
     keys: ['outer.name', 'inner', { weight: 5, name: 'inner' }],
   });
   const [tooltip, setTooltip] = createSignal<string | null>(null);
@@ -36,7 +36,7 @@ export const AvailableIconsTab = () => {
       <div class="grid grid-cols-8 w-1/2 gap-x-1 gap-y-2 p-2 border" onPointerLeave={() => setTooltip('')}>
         <For each={queried()}>
           {icon => (
-            <div class="center w-12 h-12 border rounded-sm bg-primary-2" onPointerEnter={() => setTooltip(icon)}>
+            <div class="center w-12 h-12 border rounded-sm bg-primary-2" onPointerEnter={() => setTooltip(icon.inner)}>
               <Icon class="w-full" name={icon.inner} />
             </div>
           )}

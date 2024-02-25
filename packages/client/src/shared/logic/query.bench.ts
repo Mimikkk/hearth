@@ -10,7 +10,7 @@ const fn =
     createRoot(async dispose => (await fn(), dispose()));
 
 describe('Query - benchmark', () => {
-  const items = times(1000, () => faker.lorem.words({ min: 1, max: 5 }));
+  const items = times(25000, () => faker.lorem.words({ min: 1, max: 5 }));
 
   const test = (set: (query: string) => void, queried: () => void) => {
     set('abc');
