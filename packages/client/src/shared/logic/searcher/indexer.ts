@@ -1,4 +1,4 @@
-import type { Searcher, SearchKey } from '@logic/searcher/searcher.js';
+import type { TextSearch } from '@logic/searcher/textSearch.js';
 
 export type AccessFn<T> = (item: T) => string | string[];
 
@@ -24,7 +24,7 @@ export namespace IndexKey {
 
   const createId = (key: string | string[]): string => (Array.isArray(key) ? key.join('.') : key);
 
-  export const create = <T>(key: SearchKey<T>, options: Searcher.Options<T>): IndexKey<T> => {
+  export const create = <T>(key: TextSearch.Key<T>, options: TextSearch.Options<T>): IndexKey<T> => {
     if (typeof key === 'string' || Array.isArray(key)) {
       return {
         path: createPath(key),
@@ -78,6 +78,9 @@ export namespace IndexRecordObject {
   export const create = <T>(item: T, index: number, keys: IndexKey<T>[]): IndexRecordObject => {
     const record: IndexRecordObject = { index, children: [] };
 
+    type Item = readonly [string | string[], number];
+    const stack: Item[] = [];
+
     for (let i = 0, len = keys.length; i < len; ++i) {
       const key = keys[i];
       const value = key.access(item);
@@ -86,10 +89,9 @@ export namespace IndexRecordObject {
         record.children.push(IndexRecordObject.Item.create(value));
       } else if (Array.isArray(value)) {
         const records = [];
-        type Item = readonly [string | string[], number];
-        const stack: Item[] = [[value, -1]];
 
-        while (stack.length) {
+        stack.push([value, -1]);
+        do {
           const [value, k] = stack.pop()!;
 
           if (typeof value === 'string') {
@@ -97,7 +99,7 @@ export namespace IndexRecordObject {
           } else if (Array.isArray(value)) {
             stack.push(...value.map((value, k) => [value, k] as const));
           }
-        }
+        } while (stack.length);
 
         record.children.push(records);
       }
@@ -115,7 +117,7 @@ export interface SearchIndex<T> {
 }
 
 export namespace SearchIndex {
-  export const create = <T>(values: T[], options: Searcher.Options<T>): SearchIndex<T> => {
+  export const create = <T>(values: T[], options: TextSearch.Options<T>): SearchIndex<T> => {
     const keys = options.keys.map(key => IndexKey.create(key, options));
 
     const records = values.map<IndexRecord>(

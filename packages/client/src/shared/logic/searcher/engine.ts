@@ -1,4 +1,4 @@
-import type { Searcher } from '@logic/searcher/searcher.js';
+import type { TextSearch } from '@logic/searcher/textSearch.js';
 
 const calculateScore = (
   pattern: string,
@@ -50,7 +50,7 @@ export const search = (
   text: string,
   pattern: string,
   patternMask: PatternMask,
-  { distance, threshold, minMatchSize }: Searcher.Options,
+  { distance, threshold, minMatchSize }: TextSearch.Options,
 ): SearchResult => {
   const patternLen = pattern.length;
   const textLen = text.length;
@@ -198,44 +198,40 @@ export namespace Chunk {
   };
 }
 
-export class SearchEngine {
-  pattern: string;
-  options: Searcher.Options;
-  chunks: Chunk[];
-
-  constructor(pattern: string, options: Searcher.Options) {
-    this.options = options;
-    this.pattern = this.options.isCaseSensitive ? pattern : pattern.toLowerCase();
-    this.chunks = Chunk.create(pattern);
-  }
-
-  searchIn(text: string): SearchEngine.InResult {
-    if (!this.options.isCaseSensitive) text = text.toLowerCase();
-    if (this.pattern === text) return { isMatch: true, score: 0, indices: [[0, text.length - 1]] };
-
-    const indices: [number, number][] = [];
-    let score = 0;
-    let isMatch = false;
-
-    for (let i = 0, len = this.chunks.length; i < len; ++i) {
-      const { pattern, mask } = this.chunks[i];
-      const match = search(text, pattern, mask, this.options);
-
-      score += match.score;
-      if (match.isMatch) {
-        isMatch = true;
-        indices.push(...match.indices);
-      }
-    }
-
-    score /= this.chunks.length;
-
-    return isMatch ? { isMatch, score, indices } : { isMatch, score: undefined, indices: undefined };
-  }
-}
+export type SearchEngine = (pattern: string) => SearchEngine.Result;
 
 export namespace SearchEngine {
-  export type InResult =
+  export const create = (pattern: string, options: TextSearch.Options): SearchEngine => {
+    if (!options.isCaseSensitive) pattern = pattern.toLowerCase();
+    const chunks = Chunk.create(pattern);
+
+    return (text: string): SearchEngine.Result => {
+      if (!options.isCaseSensitive) text = text.toLowerCase();
+
+      if (pattern === text) return { isMatch: true, score: 0, indices: [[0, text.length - 1]] };
+
+      const indices: [number, number][] = [];
+      let score = 0;
+
+      for (let i = 0, len = chunks.length; i < len; ++i) {
+        const { pattern, mask } = chunks[i];
+        const match = search(text, pattern, mask, options);
+
+        score += match.score;
+        if (match.isMatch) indices.push(...match.indices);
+      }
+      score /= chunks.length;
+
+      return indices.length ? Result.Match(score, indices) : Result.False;
+    };
+  };
+
+  export type Result =
     | { isMatch: false; score: undefined; indices: undefined }
     | { isMatch: true; score: number; indices: [number, number][] };
+
+  export namespace Result {
+    export const Match = (score: number, indices: [number, number][]): Result => ({ isMatch: true, score, indices });
+    export const False: Result = { isMatch: false, score: undefined, indices: undefined };
+  }
 }

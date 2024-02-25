@@ -1,4 +1,5 @@
-import { AccessFn, IndexKey, IndexRecordObject, IndexRecordString, SearchIndex } from '@logic/searcher/indexer.js';
+import type { AccessFn, IndexKey, IndexRecordObject, IndexRecordString } from '@logic/searcher/indexer.js';
+import { SearchIndex } from '@logic/searcher/indexer.js';
 import { SearchEngine } from '@logic/searcher/engine.js';
 
 export interface TransformMatch {
@@ -58,36 +59,30 @@ export interface SearchResult<T> {
   matches: Match<T>[];
 }
 
-export type SearchKey<T> = string | string[] | { name: string | string[]; weight?: number; access?: AccessFn<T> };
-
-export class Searcher<T> {
-  options: Searcher.Options<T>;
+export class TextSearch<T> {
+  options: TextSearch.Options<T>;
   #index: SearchIndex<T>;
   #items: T[];
 
-  constructor(items: T[], options?: Partial<Searcher.Options<T>>) {
+  constructor(items: T[], options?: Partial<TextSearch.Options<T>>) {
     this.options = {
-      readFn: options?.readFn ?? Searcher.readFn,
+      readFn: options?.readFn ?? TextSearch.readFn,
       keys: options?.keys ?? [],
       minMatchSize: options?.minMatchSize ?? 1,
-      sortFn: options?.sortFn ?? Searcher.sortFn,
+      sortFn: options?.sortFn ?? TextSearch.sortFn,
       threshold: options?.threshold ?? 0.6,
       distance: options?.distance ?? 100,
       isCaseSensitive: options?.isCaseSensitive ?? false,
     };
-    this.items = items;
+    this.set(items);
   }
 
-  get items(): T[] {
-    return this.#items;
-  }
-
-  set items(items: T[]) {
+  set(items: T[]) {
     this.#items = items;
-    this.#index = SearchIndex.create(this.#items, this.options);
+    this.#index = SearchIndex.create(items, this.options);
   }
 
-  search(query: string, options?: Partial<Searcher.SearchOptions>): FormattedSearchResult<T>[] {
+  search(query: string, options?: Partial<TextSearch.SearchOptions>): FormattedSearchResult<T>[] {
     let results = typeof this.#items[0] === 'string' ? this.#searchString(query) : this.#searchObject(query);
 
     if (this.options.sortFn) results.sort(this.options.sortFn);
@@ -97,29 +92,24 @@ export class Searcher<T> {
   }
 
   #searchString(query: string): SearchResult<T>[] {
-    const searcher = new SearchEngine(query, this.options);
+    const search = SearchEngine.create(query, this.options);
     const { records } = this.#index;
     const results: SearchResult<T>[] = [];
 
     for (let i = 0, len = records.length; i < len; ++i) {
-      const { value: record, index, norm } = records[i] as IndexRecordString;
-      const { isMatch, score, indices } = searcher.searchIn(record);
+      const { value, index, norm } = records[i] as IndexRecordString;
+      const { isMatch, score, indices } = search(value);
 
       if (!isMatch) continue;
 
-      results.push({
-        record,
-        index,
-        matches: [{ score, value: record, norm, indices }],
-        score: Math.pow(score, norm),
-      });
+      results.push({ record: value, index, matches: [{ score, value, norm, indices }], score: Math.pow(score, norm) });
     }
 
     return results;
   }
 
   #searchObject(query: string): SearchResult<T>[] {
-    const searcher = new SearchEngine(query, this.options);
+    const search = SearchEngine.create(query, this.options);
     const { keys, records } = this.#index;
     const results: SearchResult<T>[] = [];
 
@@ -135,13 +125,13 @@ export class Searcher<T> {
         if (Array.isArray(record)) {
           for (let index = 0, len = record.length; index < len; ++index) {
             const { value, norm } = record[index];
-            const { isMatch, score, indices } = searcher.searchIn(value);
+            const { isMatch, score, indices } = search(value);
 
             if (isMatch) matches.push({ score, key, value, index, norm, indices });
           }
         } else {
           const { value, norm } = record;
-          const { isMatch, score, indices } = searcher.searchIn(value);
+          const { isMatch, score, indices } = search(value);
 
           if (isMatch) matches.push({ score, key, value, norm, indices });
         }
@@ -162,7 +152,23 @@ export class Searcher<T> {
   }
 }
 
-export namespace Searcher {
+interface FnSearch<T> {
+  (query: string, options?: Partial<TextSearch.SearchOptions>): FormattedSearchResult<T>[];
+  set(items: T[]): void;
+}
+
+export namespace TextSearch {
+  export const create = <T>(items: T[], options?: Partial<Options>): FnSearch<T> => {
+    const search = new TextSearch<T>(items, options);
+
+    const fn = (query: string, options?: Partial<TextSearch.SearchOptions>) => search.search(query, options);
+    fn.set = (items: T[]) => search.set(items);
+
+    return fn;
+  };
+
+  export type Key<T> = string | string[] | { name: string | string[]; weight?: number; access?: AccessFn<T> };
+
   export type SortFn<T> = (a: SearchResult<T>, b: SearchResult<T>) => number;
   export const sortFn: SortFn<unknown> = (a, b) => (a.score === b.score ? a.index - b.index : a.score - b.score);
 
@@ -196,7 +202,7 @@ export namespace Searcher {
     distance: number;
     sortFn: SortFn<T>;
     readFn: ReadFn<T>;
-    keys: SearchKey<T>[];
+    keys: Key<T>[];
     isCaseSensitive: boolean;
     minMatchSize: number;
   }
