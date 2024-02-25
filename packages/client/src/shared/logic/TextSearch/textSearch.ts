@@ -1,5 +1,5 @@
-import { SearchIndex } from '@logic/searcher/indexer.js';
-import { SearchEngine } from '@logic/searcher/engine.js';
+import { SearchIndex } from './indexer.js';
+import { SearchEngine } from './engine.js';
 
 export interface Match<T> {
   value: string;

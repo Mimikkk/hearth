@@ -1,4 +1,4 @@
-import type { TextSearch } from '@logic/searcher/textSearch.js';
+import type { TextSearch } from './textSearch.js';
 
 const calculateScore = (
   pattern: string,

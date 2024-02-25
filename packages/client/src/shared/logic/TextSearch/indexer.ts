@@ -1,4 +1,4 @@
-import type { TextSearch } from '@logic/searcher/textSearch.js';
+import type { TextSearch } from './textSearch.js';
 
 const countTokens = (string: string): number => {
   let count = 0;
