@@ -40,6 +40,15 @@ export type SearchResult =
   | { isMatch: false; score: number; indices: undefined }
   | { isMatch: true; score: number; indices: [number, number][] };
 
+export namespace SearchResult {
+  export const Match = (score: number, indices: [number, number][]): SearchResult => ({
+    isMatch: true,
+    score,
+    indices,
+  });
+  export const False = (score: number): SearchResult => ({ isMatch: false, score, indices: undefined });
+}
+
 export const search = (
   text: string,
   pattern: string,
@@ -130,10 +139,9 @@ export const search = (
 
   const score = Math.max(0.001, finalScore);
 
-  const isMatch = bestLocation >= 0;
-  return isMatch
-    ? { isMatch, score, indices: convertMaskToIndices(matchMask, minMatch) }
-    : { isMatch, score, indices: undefined };
+  return bestLocation !== 0
+    ? SearchResult.Match(score, convertMaskToIndices(matchMask, minMatch))
+    : SearchResult.False(score);
 };
 
 export type PatternMask = Map<string, number>;
@@ -210,8 +218,8 @@ export namespace SearchEngine {
       for (let i = 0, len = chunks.length; i < len; ++i) {
         const { pattern, mask } = chunks[i];
         const match = search(text, pattern, mask, options);
-
         score += match.score;
+
         if (match.isMatch) indices.push(...match.indices);
       }
       score /= chunks.length;

@@ -10,38 +10,36 @@ export interface Match<T> {
   index?: number;
 }
 
-type SearchFn = <T>(
+const searchString = <T>(
   query: string,
-  index: SearchIndex<T>,
-  options: TextSearch.Options,
-) => {
-  index: number;
-  score: number;
-  matches: Match<T>[];
-}[];
-
-const searchString: SearchFn = (query, { records }, options) => {
+  { records }: SearchIndex<T>,
+  options: TextSearch.Options<T>,
+): TextSearch.Result<string>[] => {
   const search = SearchEngine.create(query, options);
-  const results = [];
+  const results: TextSearch.Result<string>[] = [];
 
   for (let i = 0, len = records.length; i < len; ++i) {
-    const { value, index, norm } = records[i] as SearchIndex.RecordString;
-    const { isMatch, score, indices } = search(value);
+    const { item, index, norm } = records[i] as SearchIndex.RecordString;
+    const { isMatch, score, indices } = search(item);
 
     if (!isMatch) continue;
 
-    results.push({ index, matches: [{ score, value, norm, indices }], score: Math.pow(score, norm) });
+    results.push({ item, index, matches: [{ score, value: item, norm, indices }], score: Math.pow(score, norm) });
   }
 
   return results;
 };
 
-const searchObject: SearchFn = (query, { keys, records }, options) => {
+const searchObject = <T>(
+  query: string,
+  { keys, records }: SearchIndex<T>,
+  options: TextSearch.Options<T>,
+): TextSearch.Result<T>[] => {
   const search = SearchEngine.create(query, options);
-  const results = [];
+  const results: TextSearch.Result<T>[] = [];
 
   for (let i = 0, len = records.length; i < len; ++i) {
-    const { index, children } = records[i] as SearchIndex.RecordObject;
+    const { item, index, children } = records[i] as SearchIndex.RecordObject<T>;
     const matches = [];
 
     for (let j = 0, len = keys.length; j < len; ++j) {
@@ -50,13 +48,13 @@ const searchObject: SearchFn = (query, { keys, records }, options) => {
 
       if (Array.isArray(record)) {
         for (let index = 0, len = record.length; index < len; ++index) {
-          const { value, norm } = record[index];
+          const { item: value, norm } = record[index];
           const { isMatch, score, indices } = search(value);
 
           if (isMatch) matches.push({ score, key, value, index, norm, indices });
         }
       } else {
-        const { value, norm } = record;
+        const { item: value, norm } = record;
         const { isMatch, score, indices } = search(value);
 
         if (isMatch) matches.push({ score, key, value, norm, indices });
@@ -71,7 +69,8 @@ const searchObject: SearchFn = (query, { keys, records }, options) => {
 
       total *= Math.pow(score, (key?.weight ?? 1) * norm);
     }
-    results.push({ index, matches, score: total });
+
+    results.push({ item, index, matches, score: total });
   }
 
   return results;
@@ -98,12 +97,7 @@ export namespace TextSearch {
     const search = typeof items[0] === 'string' ? searchString : searchObject;
 
     return (query, limit) => {
-      const results = search(query, index, configuration).map(({ index, matches, score }) => ({
-        item: items[index],
-        matches,
-        score,
-        index,
-      }));
+      const results = search(query, index, configuration) as Result<T>[];
 
       if (configuration.sortBy) results.sort(configuration.sortBy);
       if (limit) results.length = Math.min(results.length, limit);

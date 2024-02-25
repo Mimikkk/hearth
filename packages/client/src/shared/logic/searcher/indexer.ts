@@ -10,7 +10,7 @@ const countTokens = (string: string): number => {
 const normalize = (value: string): number => Math.round((1 / Math.pow(countTokens(value), 0.5)) * 1000) / 1000;
 
 export interface SearchIndex<T> {
-  records: SearchIndex.Record[];
+  records: SearchIndex.Record<T>[];
   keys: SearchIndex.Key<T>[];
 }
 
@@ -18,7 +18,7 @@ export namespace SearchIndex {
   export const create = <T>(values: T[], options: TextSearch.Options<T>): SearchIndex<T> => {
     const keys = options.keys.map(key => Key.create<T>(key, options));
 
-    const records = values.map<Record>(
+    const records = values.map<Record<T>>(
       typeof values[0] === 'string'
         ? (item, index) => RecordString.create(item as string, index)
         : (item, index) => RecordObject.create(item, index, keys),
@@ -65,36 +65,37 @@ export namespace SearchIndex {
   }
 
   export interface RecordString {
-    value: string;
+    item: string;
     index: number;
     norm: number;
   }
 
   export namespace RecordString {
-    export const create = (value: string, index: number): RecordString => ({
-      value,
+    export const create = (item: string, index: number): RecordString => ({
+      item,
       index,
-      norm: normalize(value),
+      norm: normalize(item),
     });
   }
 
-  export interface RecordObject {
+  export interface RecordObject<T> {
+    item: T;
     index: number;
     children: (RecordString[] | RecordObject.Item)[];
   }
 
   export namespace RecordObject {
     export interface Item {
-      value: string;
+      item: string;
       norm: number;
     }
 
     export namespace Item {
-      export const create = (value: string): Item => ({ value, norm: normalize(value) });
+      export const create = (item: string): Item => ({ item, norm: normalize(item) });
     }
 
-    export const create = <T>(item: T, index: number, keys: Key<T>[]): RecordObject => {
-      const record: RecordObject = { index, children: [] };
+    export const create = <T>(item: T, index: number, keys: Key<T>[]): RecordObject<T> => {
+      const record: RecordObject<T> = { item, index, children: [] };
 
       type Item = readonly [string | string[], number];
       const stack: Item[] = [];
@@ -127,5 +128,5 @@ export namespace SearchIndex {
     };
   }
 
-  export type Record = RecordString | RecordObject;
+  export type Record<T> = RecordString | RecordObject<T>;
 }
