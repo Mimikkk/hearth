@@ -5,6 +5,7 @@ import s from './AvailableIcons.tab.module.scss';
 import { Devtools } from '@modules/development/devtools.js';
 import { createQueryable } from '@logic/createQueryable.js';
 import { Grid } from '@components/control/Grid/Grid.js';
+import { createEffectListener } from '@logic/createListener.js';
 
 const names = Object.keys(IconRegistry) as IconName[];
 
@@ -25,7 +26,7 @@ export const AvailableIconsTab = () => {
     <div class={s.tab}>
       <TextField id="query" ref={ref} class={s.search} label="search..." value={query()} onChange={setQuery} />
       <div class="h-6">{tooltip()}</div>
-      <div class="border border-2 rounded-sm p-2 pr-0.5 pb-0.5" onPointerLeave={() => setTooltip('')}>
+      <div class="border rounded-sm p-2 pr-0.5 pb-0.5" onPointerLeave={() => setTooltip('')}>
         <Grid
           itemprops={name => ({
             onClick: () => navigator.clipboard.writeText(name),

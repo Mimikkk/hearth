@@ -2,28 +2,29 @@ import { TextField } from '@components/forms/TextField/TextField.js';
 import { onCleanup } from 'solid-js';
 import { Search } from '@logic/Search/Search.js';
 import { ButtonIcon } from '@components/buttons/ButtonIcon/ButtonIcon.js';
-import { Icon } from '@components/buttons/Icon/Icon.js';
-import { createSearchStorageString } from '@logic/SearchStorage/createSearchStorageString.js';
+import { SearchStorage } from '@logic/SearchStorage/SearchStorage.js';
 
 const QueryId = 'query';
 const ModeId = 'mode';
+const PreviewId = 'preview';
+const CollapseId = 'collapse';
 export const Examples = () => {
   onCleanup(() => {
     Search.clear(QueryId);
     Search.clear(ModeId);
+    Search.clear(PreviewId);
+    Search.clear(CollapseId);
   });
 
-  const [mode, setMode] = createSearchStorageString(ModeId, 'example-mode', 'none');
+  const [isPreview, , togglePreview] = SearchStorage.bool(PreviewId, 'example-preview', true);
+  const [isCollapsed, , toggleCollapse] = SearchStorage.bool(CollapseId, 'example-collapse', false);
 
   return (
     <div>
       <TextField searchId={QueryId} icon="FaSolidMagnifyingGlass" label="search..." />
       <div class="flex ml-auto">
-        <ButtonIcon icon="BiRegularChevronDown" />
-        <div class="relative flex">
-          <Icon class="absolute left-1/4 self-center text-secondary-dark pointer-events-none" name="FaSolidX" />
-          <ButtonIcon icon="BiRegularCategory" onClick={() => {}} />
-        </div>
+        <ButtonIcon crossed={isCollapsed()} icon="BiRegularChevronDown" onClick={toggleCollapse} />
+        <ButtonIcon crossed={isPreview()} icon="BiRegularCategory" onClick={togglePreview} />
       </div>
     </div>
   );

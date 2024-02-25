@@ -9,11 +9,11 @@
     @apply flex justify-center items-center border rounded-sm transition-all;
 
     &:hover {
-      @apply text-accent-5 bg-primary-8 border-accent-5;
+      @apply text-accent-5 bg-primary-1 border-accent-5;
     }
 
     &:active {
-      @apply text-accent-4 bg-primary-9 border-accent-4;
+      @apply text-accent-4 bg-primary-2 border-accent-4;
     }
 
     .icon {
