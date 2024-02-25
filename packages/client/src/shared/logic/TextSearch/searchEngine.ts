@@ -139,7 +139,7 @@ export const search = (
 
   const score = Math.max(0.001, finalScore);
 
-  return bestLocation !== 0
+  return bestLocation >= 0
     ? SearchResult.Match(score, convertMaskToIndices(matchMask, minMatch))
     : SearchResult.False(score);
 };
