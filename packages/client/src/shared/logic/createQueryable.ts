@@ -1,4 +1,4 @@
-import { TextSearch } from './searcher/textSearch.js';
+import { TextSearch } from '@logic/TextSearch/textSearch.js';
 import { type Accessor, createEffect, createMemo, createSignal, on, type Setter } from 'solid-js';
 import { Defer } from '@utils/constants.js';
 

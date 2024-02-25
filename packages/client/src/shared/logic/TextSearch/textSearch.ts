@@ -1,5 +1,5 @@
-import { SearchIndex } from './indexer.js';
-import { SearchEngine } from './engine.js';
+import { SearchIndex } from './searchIndex.js';
+import { SearchEngine } from './searchEngine.js';
 
 export interface Match<T> {
   value: string;
