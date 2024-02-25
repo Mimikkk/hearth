@@ -1,24 +1,16 @@
 import { Icon, type IconName, IconRegistry } from '@components/buttons/Icon/Icon.js';
-import { createEffect, createSignal, For } from 'solid-js';
+import { createEffect, createSignal } from 'solid-js';
 import { TextField } from '@components/forms/TextField/TextField.js';
 import s from './AvailableIcons.tab.module.scss';
 import { Devtools } from '@modules/development/devtools.js';
 import { createQueryable } from '@logic/createQueryable.js';
+import { Grid } from '@components/control/Grid/Grid.js';
 
-const names = Object.keys(IconRegistry)
-  .slice(0, 10)
-  .map(name => ({ outer: { name }, inner: name })) as {
-  outer: { name: IconName };
-  inner: IconName;
-}[];
-const namess = Object.keys(IconRegistry).slice(0, 10) as IconName[];
+const names = Object.keys(IconRegistry) as IconName[];
 
 export const AvailableIconsTab = () => {
   const [queried, query, setQuery] = createQueryable(names, {
     threshold: 0.4,
-    sensitive: true,
-    minMatch: 2,
-    keys: ['outer.name', 'inner', { weight: 5, name: 'inner' }],
   });
   const [tooltip, setTooltip] = createSignal<string | null>(null);
 
@@ -33,14 +25,21 @@ export const AvailableIconsTab = () => {
     <div class={s.tab}>
       <TextField id="query" ref={ref} class={s.search} label="search..." value={query()} onChange={setQuery} />
       <div class="h-6">{tooltip()}</div>
-      <div class="grid grid-cols-8 w-1/2 gap-x-1 gap-y-2 p-2 border" onPointerLeave={() => setTooltip('')}>
-        <For each={queried()}>
-          {icon => (
-            <div class="center w-12 h-12 border rounded-sm bg-primary-2" onPointerEnter={() => setTooltip(icon.inner)}>
-              <Icon class="w-full" name={icon.inner} />
-            </div>
-          )}
-        </For>
+      <div class="border border-2 rounded-sm p-2 pr-0.5 pb-0.5" onPointerLeave={() => setTooltip('')}>
+        <Grid
+          itemprops={name => ({
+            onClick: () => navigator.clipboard.writeText(name),
+            onPointerEnter: () => setTooltip(name),
+          })}
+          itemclass={s.container}
+          items={queried()}
+          rows={6}
+          columns={8}
+          sizes={{ width: 64, height: 64 }}
+          gap={4}
+        >
+          {name => <Icon class="w-full" name={name} onPointerEnter={() => setTooltip(name)} />}
+        </Grid>
       </div>
     </div>
   );
