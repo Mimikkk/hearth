@@ -3,7 +3,7 @@ import { createEffect, createSignal, For } from 'solid-js';
 import { TextField } from '@components/forms/TextField/TextField.js';
 import s from './AvailableIcons.tab.module.scss';
 import { Devtools } from '@modules/development/devtools.js';
-import { createQueryable } from '@logic/createQueryable.opt.js';
+import { createQueryable } from '@logic/createQueryable.js';
 
 const names = Object.keys(IconRegistry)
   .slice(0, 10)
