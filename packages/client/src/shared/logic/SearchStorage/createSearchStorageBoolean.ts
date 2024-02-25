@@ -17,8 +17,8 @@ export const createSearchStorageBoolean = (
   const set: Setter<boolean> = value => {
     const update = value instanceof Function ? value(get()) : value;
 
-    setSearch(update === 'y' ? 'y' : 'n');
-    setStorage(update === 'y' ? 'y' : 'n');
+    setSearch(update ? 'y' : 'n');
+    setStorage(update ? 'y' : 'n');
   };
   const toggle = () => set(!get());
 

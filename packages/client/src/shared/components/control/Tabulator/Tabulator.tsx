@@ -1,9 +1,9 @@
 import type { IconName } from '@components/buttons/Icon/Icon.js';
 import { createSignal, For, JSX, mergeProps } from 'solid-js';
-import { createSearchStorageString } from '@logic/SearchStorage/createSearchStorageString.js';
 import cx from 'clsx';
 import s from './Tabulator.module.scss';
 import { Dynamic } from 'solid-js/web';
+import { SearchStorage } from '@logic/SearchStorage/SearchStorage.js';
 
 export interface TabItem {
   icon?: IconName;
@@ -26,7 +26,7 @@ export const Tabulator = (props: TabulatorProps) => {
   const $ = mergeProps({ default: props.tabs[0].id }, props);
 
   const [selected, select] =
-    'id' in $ ? createSignal($.default) : createSearchStorageString($.searchId, $.storageId, $.default);
+    'id' in $ ? createSignal($.default) : SearchStorage.text($.searchId, $.storageId, $.default);
 
   return (
     <div class={cx(s.tabulator, $.class)}>

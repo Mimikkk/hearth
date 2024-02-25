@@ -13,7 +13,7 @@ export interface ButtonIconProps extends JSX.ButtonHTMLAttributes<HTMLButtonElem
   iconclass?: string;
   variant?: 'text' | 'contained';
   active?: boolean;
-  crossed?: boolean;
+  cross?: boolean;
 }
 
 const keys = [
@@ -25,7 +25,7 @@ const keys = [
   'children',
   'variant',
   'active',
-  'crossed',
+  'cross',
 ] satisfies (keyof ButtonIconProps)[];
 const initial = { variant: 'contained', size: 'md' } satisfies Partial<ButtonIconProps>;
 export const ButtonIcon = (props: ButtonIconProps) => {
@@ -33,9 +33,9 @@ export const ButtonIcon = (props: ButtonIconProps) => {
 
   const Cross = createMemo(
     on(
-      () => icon.crossed,
-      () => {
-        if (icon.crossed)
+      () => icon.cross,
+      () => () => {
+        if (icon.cross)
           return (
             <Icon
               class="stroke stroke-accent-8 w-max -rotate-45 top-1 left-1 absolute pointer-events-none"
@@ -55,7 +55,7 @@ export const ButtonIcon = (props: ButtonIconProps) => {
       class={cx(s.button, 'relative', s[`size-${icon.size}`], s[`variant-${icon.variant}`], icon.class)}
       {...$}
     >
-      <Dynamic component={Cross} />
+      <Dynamic component={Cross()} />
       <Icon name={icon.icon} class={icon.iconclass} />
       {icon.children}
     </button>
