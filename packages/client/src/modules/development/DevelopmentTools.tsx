@@ -157,7 +157,7 @@ export const DevelopmentTools = () => {
           />
         </div>
       </div>
-      <DevelopmentToolButton />
+      <DevelopmentToolsButton />
     </div>
   );
 };
