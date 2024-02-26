@@ -25,11 +25,12 @@ export const createStorageSignal = <T>(
   return [get, set, clear];
 };
 
-export const createStorageStore = <const T extends {}>(
+export const createStorageStore = <T extends {}>(
   name: string,
   initial: T,
 ): [get: Store<T>, set: SetStoreFunction<T>, clear: ClearFn] => {
-  const [get, set] = createStore(Storage.read(name, initial) as never);
+  const [get, set] = createStore(Storage.read(name, initial) as T);
+  get;
 
   createEffect(() => Storage.set(name, get));
 

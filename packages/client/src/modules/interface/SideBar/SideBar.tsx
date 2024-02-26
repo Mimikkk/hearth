@@ -6,23 +6,27 @@ interface SideBarProps {
   class?: string;
 }
 
-export const SideBar = (props: SideBarProps) => (
-  <Tabulator
-    searchId="tab"
-    storageId="selected-tab"
-    tabs={[
-      {
-        id: 'docs',
-        title: 'Docs',
-        children: Docs,
-      },
-      {
-        id: 'examples',
-        title: 'Examples',
-        children: Examples,
-      },
-    ]}
-    class={props.class}
-    contentclass="py-2 px-4"
-  />
-);
+export const SideBar = (props: SideBarProps) => {
+  return (
+    <div>
+      <Tabulator
+        searchId="tab"
+        storageId="selected-tab"
+        tabs={[
+          {
+            id: 'docs',
+            title: 'Docs',
+            children: Docs,
+          },
+          {
+            id: 'examples',
+            title: 'Examples',
+            children: Examples,
+          },
+        ]}
+        class={props.class}
+        contentclass="py-2 px-4"
+      />
+    </div>
+  );
+};
