@@ -9,7 +9,7 @@ interface FooterProps {
 
 export const Footer = (props: FooterProps) => (
   <footer class={cx(props.class, 'relative flex gap-2 justify-between')}>
-    <div class="flex items-center gap-1">
+    <div class="select-none flex items-center gap-1">
       <GithubButton />
       <WebGpuButton />
       Prototype

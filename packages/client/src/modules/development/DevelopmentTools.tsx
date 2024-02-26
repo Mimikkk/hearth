@@ -6,7 +6,7 @@ import { Tabulator } from '@components/control/Tabulator/Tabulator.js';
 import cx from 'clsx';
 import { createEffect, createMemo, createSignal } from 'solid-js';
 import { createListener } from '@logic/createListener.js';
-import { createStorageSignal, createStorageStore } from '@logic/Storage/createStorageSignal.js';
+import { createStorageSignal } from '@logic/Storage/createStorageSignal.js';
 
 const clamp = (min: number, max: number, value: number) => Math.max(min, Math.min(max, value));
 
@@ -58,11 +58,10 @@ const createDrag = (options?: DragOptions) => {
 
     const sp = { x: event.clientX, y: event.clientY };
 
-    const { borderLeftWidth: ox, borderTopWidth: oy, left, top, bottom, right } = getComputedStyle(element);
+    const { borderLeftWidth: ox, borderTopWidth: oy, left, top } = getComputedStyle(element);
     const tx = parseInt(left);
     const ty = parseInt(top);
 
-    console.log({ left, right, top, bottom });
     select(element);
     setStartPosition(sp);
     setOffset({ x: event.offsetX + parseInt(ox) + tx, y: event.offsetY + parseInt(oy) + ty });
@@ -97,8 +96,7 @@ const createDrag = (options?: DragOptions) => {
   return { selected, select, onDown, position, startPosition, movePosition, offset };
 };
 
-export const DevelopmentTools = () => {
-  Devtools.createKeyboardShortcut();
+export const DevelopmentToolsButton = () => {
   const [position, setPosition] = createStorageSignal('devtools-offset', { x: 0, y: 0 });
   const drag = createDrag();
 
@@ -116,25 +114,32 @@ export const DevelopmentTools = () => {
   });
 
   return (
-    <div class={s.tools}>
-      <div
-        onPointerDown={drag.onDown}
-        class={cx(
-          'transition-color fixed border border-t-0 top-0 right-0 p-1 rounded-b-sm bg-primary-white cursor-move',
-          Devtools.active() && 'border-accent-5 bg-primary-2',
-        )}
-        style={dragTransform()}
-      >
-        <div class={s.expand}>
-          <ButtonIcon
-            cross={Devtools.active()}
-            icon="CgToolbox"
-            variant="text"
-            class={s.expander}
-            onClick={Devtools.toggle}
-          />
-        </div>
+    <div
+      onPointerDown={drag.onDown}
+      class={cx(
+        'transition-color fixed border border-t-0 top-0 right-0 p-1 rounded-b-sm bg-primary-white cursor-move',
+        Devtools.active() && 'border-accent-5 bg-primary-2',
+      )}
+      style={dragTransform()}
+    >
+      <div class={s.expand}>
+        <ButtonIcon
+          cross={Devtools.active()}
+          icon="CgToolbox"
+          variant="text"
+          class={s.expander}
+          onClick={Devtools.toggle}
+        />
       </div>
+    </div>
+  );
+};
+
+export const DevelopmentTools = () => {
+  Devtools.createKeyboardShortcut();
+
+  return (
+    <div class={s.tools}>
       <div class={s.tabs} data-active={Devtools.active()}>
         <div class={s.tabulator}>
           <Tabulator
@@ -152,6 +157,7 @@ export const DevelopmentTools = () => {
           />
         </div>
       </div>
+      <DevelopmentToolButton />
     </div>
   );
 };
