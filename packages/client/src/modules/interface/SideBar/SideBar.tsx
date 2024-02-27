@@ -1,14 +1,18 @@
 import { Tabulator } from '@components/control/Tabulator/Tabulator.js';
 import { Examples } from '@modules/interface/SideBar/Examples/Examples.js';
 import { Docs } from '@modules/interface/SideBar/Docs/Docs.js';
+import { createListener } from '@logic/createListener.js';
+import { createDrag } from '@logic/createDrag.js';
 
 interface SideBarProps {
   class?: string;
 }
 
 export const SideBar = (props: SideBarProps) => {
+  const drag = createDrag();
+
   return (
-    <div>
+    <div onPointerDown={drag}>
       <Tabulator
         searchId="tab"
         storageId="selected-tab"
