@@ -18,8 +18,7 @@ export type TextFieldProps = ({ searchId: string } | { id: string }) & {
 };
 
 export const TextField = (props: TextFieldProps) => {
-  const [get, set, clear] =
-    'id' in props ? createString(props.value ?? '') : createSearchString(props.searchId, props.value ?? '');
+  const [get, set, clear] = 'id' in props ? createString(props.value) : createSearchString(props.searchId, props.value);
 
   let ref: HTMLInputElement;
   let id = 'id' in props ? props.id : props.searchId;

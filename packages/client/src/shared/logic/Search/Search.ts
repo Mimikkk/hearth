@@ -16,4 +16,5 @@ export namespace Search {
     });
 
   export const clear = (key: string) => update(params => params.delete(key));
+  export const clears = (key: string[]) => update(params => key.forEach(key => params.delete(key)));
 }

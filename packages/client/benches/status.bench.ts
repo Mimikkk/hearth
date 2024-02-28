@@ -1,5 +1,5 @@
 import { bench, describe } from 'vitest';
-import { Status } from './status.js';
+import { Status } from '../src/shared/types/status.js';
 import { faker } from '@faker-js/faker';
 
 describe('Types - status', () => {
