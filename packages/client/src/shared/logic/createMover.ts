@@ -22,8 +22,8 @@ export const createMover = (options?: Mover.Options): Mover => {
     },
     onMove: event => {
       if (!start || !offset || !move || !style) return;
-      move.x = event.clientX;
-      move.y = event.clientY;
+      move.x = options?.horizontal !== false ? event.clientX : start.x;
+      move.y = options?.vertical !== false ? event.clientY : start.y;
 
       const within = options?.within ?? document.documentElement;
       const left = within.offsetLeft - target.ref.offsetLeft;
@@ -79,5 +79,7 @@ export namespace Mover {
     onMove?: Handler;
     onEnd?: Handler;
     within?: HTMLElement;
+    vertical?: boolean;
+    horizontal?: boolean;
   }
 }

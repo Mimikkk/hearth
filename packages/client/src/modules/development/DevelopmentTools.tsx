@@ -23,7 +23,7 @@ export const DevelopmentToolsButton = () => {
   const bottomRightResizer = createResizer({ onEnd: saveResize });
   const bottomResizer = createResizer({ onEnd: saveResize, horizontal: false });
   const rightResizer = createResizer({ onEnd: saveResize, vertical: false });
-  const mover = createMover({ onEnd: saveMove });
+  const mover = createMover({ onEnd: saveMove, vertical: false });
 
   return (
     <div
