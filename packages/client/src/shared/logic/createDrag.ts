@@ -24,7 +24,7 @@ export const createDrag = (options?: DragOptions): DragHandler => {
     event.stopPropagation();
   };
   const handleEnd: DragHandler = event => {
-    options?.onMove?.(event);
+    options?.onEnd?.(event);
     event.preventDefault();
     event.stopPropagation();
 

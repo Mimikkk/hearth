@@ -3,46 +3,62 @@ import s from './DevelopmentTools.module.scss';
 import { AvailableIconsTab } from '@modules/development/Tabs/AvailableIcons.tab.js';
 import { Devtools } from '@modules/development/devtools.js';
 import { Tabulator } from '@components/control/Tabulator/Tabulator.js';
-import { createEffect, createMemo } from 'solid-js';
-import { createStorageSignal } from '@logic/Storage/createStorageSignal.js';
-import { createResizeV1 } from '@logic/createResizeV1.js';
 import cx from 'clsx';
+import { createStorageSignal } from '@logic/Storage/createStorageSignal.js';
+import { DragCorner } from '@components/control/DragCorner/DragCorner.js';
+import { createResizer, Resizer } from '@logic/createResizer.js';
+import { createMover, Mover } from '@logic/createMover.js';
 
 export const DevelopmentToolsButton = () => {
-  const [position, setPosition] = createStorageSignal('devtools-offset', { x: 0, y: 0 });
-  const drag = createResizeV1();
+  const [size, setSize] = createStorageSignal<{
+    width: string;
+    height: string;
+  } | null>('devtools-size', null);
 
-  createEffect(() => {
-    const pos = drag.position();
-    if (!pos) return;
+  const [transform, setTransform] = createStorageSignal<string | null>('devtools-transform', null);
 
-    setPosition(pos);
-  });
+  const saveResize: Resizer.Handler = ({ style: { height, width } }) => setSize({ height, width });
+  const saveMove: Mover.Handler = ({ style: { transform } }) => setTransform(transform);
 
-  const dragTransform = createMemo(() => {
-    const { x } = position();
-
-    return { transform: `translate(${x}px, 0px)` };
-  });
+  const bottomRightResizer = createResizer({ onEnd: saveResize });
+  const bottomResizer = createResizer({ onEnd: saveResize, horizontal: false });
+  const rightResizer = createResizer({ onEnd: saveResize, vertical: false });
+  const mover = createMover({ onEnd: saveMove });
 
   return (
     <div
-      onPointerDown={drag.onDown}
+      ref={ref => {
+        bottomRightResizer.target.ref = ref;
+        bottomResizer.target.ref = ref;
+        rightResizer.target.ref = ref;
+        mover.target.ref = ref;
+
+        const o = size();
+        if (!o) return;
+        ref.style.width = o.width;
+        ref.style.height = o.height;
+        const t = transform();
+        if (!t) return;
+
+        ref.style.transform = t;
+      }}
       class={cx(
-        'transition-colors fixed border-2 border-t-0 top-0 right-0 p-1 rounded-b-sm bg-primary-white cursor-move',
+        'fixed transition-colors border-2 top-24 left-56 max-w-40 max-h-40 min-w-8 min-h-8 rounded-b-sm bg-primary-white p-1 center cursor-move',
         Devtools.active() && 'border-accent-5 bg-primary-2',
       )}
-      style={dragTransform()}
+      onPointerDown={mover.start}
+      onDblClick={mover.reset}
     >
-      <div class={s.expand}>
-        <ButtonIcon
-          cross={Devtools.active()}
-          icon="CgToolbox"
-          variant="text"
-          class={s.expander}
-          onClick={Devtools.toggle}
-        />
-      </div>
+      <ButtonIcon
+        cross={Devtools.active()}
+        icon="CgToolbox"
+        variant="text"
+        class={s.expander}
+        onClick={Devtools.toggle}
+      />
+      <DragCorner onDoubleClick={rightResizer.reset} onDrag={rightResizer.start} type="right" />
+      <DragCorner onDoubleClick={bottomResizer.reset} onDrag={bottomResizer.start} type="bottom" />
+      <DragCorner onDoubleClick={bottomRightResizer.reset} onDrag={bottomRightResizer.start} type="bottom-right" />
     </div>
   );
 };

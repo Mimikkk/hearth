@@ -1,18 +1,21 @@
 import { Tabulator } from '@components/control/Tabulator/Tabulator.js';
 import { Examples } from '@modules/interface/SideBar/Examples/Examples.js';
 import { Docs } from '@modules/interface/SideBar/Docs/Docs.js';
-import { createListener } from '@logic/createListener.js';
-import { createDrag } from '@logic/createDrag.js';
+import { createResizer } from '@logic/createResizer.js';
+import { DragCorner } from '@components/control/DragCorner/DragCorner.js';
+import cx from 'clsx';
 
 interface SideBarProps {
   class?: string;
 }
 
 export const SideBar = (props: SideBarProps) => {
-  const drag = createDrag();
+  const drag = createResizer({
+    vertical: false,
+  });
 
   return (
-    <div onPointerDown={drag}>
+    <div ref={drag.target.ref} class={cx('bg-background-2 relative min-w-4 w-52 max-w-80 flex-shrink-0', props.class)}>
       <Tabulator
         searchId="tab"
         storageId="selected-tab"
@@ -31,6 +34,7 @@ export const SideBar = (props: SideBarProps) => {
         class={props.class}
         contentclass="py-2 px-4"
       />
+      <DragCorner onDoubleClick={drag.reset} onDrag={drag.start} type="right" />
     </div>
   );
 };
