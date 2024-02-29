@@ -203,9 +203,14 @@
 @import url('https://fonts.googleapis.com/css?family=Encode%20Sans:700|Encode%20Sans:500');
 
 html {
-
+  @apply h-full w-full;
 
   body {
+    @apply h-full w-full;
+    #root {
+      @apply h-full w-full;
+    }
+
     font-family: 'Encode Sans';
     font-weight: 500;
   }

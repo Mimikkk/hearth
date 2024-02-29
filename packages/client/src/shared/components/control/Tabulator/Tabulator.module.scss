@@ -1,5 +1,5 @@
 .tabulator {
-  @apply flex flex-col relative overflow-hidden;
+  @apply flex flex-col relative h-full overflow-auto;
 
   .nav {
     @apply flex w-full;

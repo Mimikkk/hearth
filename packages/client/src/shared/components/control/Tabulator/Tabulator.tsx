@@ -40,7 +40,7 @@ export const Tabulator = (props: TabulatorProps) => {
         </For>
       </div>
 
-      <div class={$.contentclass}>
+      <div class={cx('overflow-auto', $.contentclass)}>
         <Dynamic component={$.tabs.find(tab => tab.id === selected())?.children} />
       </div>
     </div>

@@ -4,8 +4,8 @@ import { Content } from '@modules/interface/Content/Content.js';
 import { DevelopmentTools } from '@modules/development/DevelopmentTools.js';
 
 export const Layout = () => (
-  <main class="flex flex-col gap-1 pb-1 w-screen h-screen">
-    <div class="flex h-full rounded-sm">
+  <main class="flex flex-col gap-1 pb-1 h-full overflow-auto">
+    <div class="flex rounded-sm h-full overflow-auto">
       <SideBar />
       <Content class="px-1 py-2" />
     </div>

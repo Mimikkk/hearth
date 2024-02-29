@@ -32,7 +32,6 @@ export const SideBar = (props: SideBarProps) => {
           },
         ]}
         class={props.class}
-        contentclass="py-2 px-4"
       />
       <DragCorner onDoubleClick={drag.reset} onDrag={drag.start} type="right" />
     </div>

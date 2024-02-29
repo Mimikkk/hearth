@@ -76,6 +76,116 @@ const items: AccordionItem[] = [
     icon: 'BiRegularCategory',
     id: 'c',
   },
+  {
+    title: 'Category - 3',
+    icon: 'BiRegularCategory',
+    id: 'c',
+  },
+  {
+    title: 'Category - 3',
+    icon: 'BiRegularCategory',
+    id: 'c',
+  },
+  {
+    title: 'Category - 3',
+    icon: 'BiRegularCategory',
+    id: 'c',
+  },
+  {
+    title: 'Category - 3',
+    icon: 'BiRegularCategory',
+    id: 'c',
+  },
+  {
+    title: 'Category - 3',
+    icon: 'BiRegularCategory',
+    id: 'c',
+  },
+  {
+    title: 'Category - 3',
+    icon: 'BiRegularCategory',
+    id: 'c',
+  },
+  {
+    title: 'Category - 3',
+    icon: 'BiRegularCategory',
+    id: 'c',
+  },
+  {
+    title: 'Category - 3',
+    icon: 'BiRegularCategory',
+    id: 'c',
+  },
+  {
+    title: 'Category - 3',
+    icon: 'BiRegularCategory',
+    id: 'c',
+  },
+  {
+    title: 'Category - 3',
+    icon: 'BiRegularCategory',
+    id: 'c',
+  },
+  {
+    title: 'Category - 3',
+    icon: 'BiRegularCategory',
+    id: 'c',
+  },
+  {
+    title: 'Category - 3',
+    icon: 'BiRegularCategory',
+    id: 'c',
+  },
+  {
+    title: 'Category - 3',
+    icon: 'BiRegularCategory',
+    id: 'c',
+  },
+  {
+    title: 'Category - 3',
+    icon: 'BiRegularCategory',
+    id: 'c',
+  },
+  {
+    title: 'Category - 3',
+    icon: 'BiRegularCategory',
+    id: 'c',
+  },
+  {
+    title: 'Category - 3',
+    icon: 'BiRegularCategory',
+    id: 'c',
+  },
+  {
+    title: 'Category - 3',
+    icon: 'BiRegularCategory',
+    id: 'c',
+  },
+  {
+    title: 'Category - 3',
+    icon: 'BiRegularCategory',
+    id: 'c',
+  },
+  {
+    title: 'Category - 3',
+    icon: 'BiRegularCategory',
+    id: 'c',
+  },
+  {
+    title: 'Category - 3',
+    icon: 'BiRegularCategory',
+    id: 'c',
+  },
+  {
+    title: 'Category - 3',
+    icon: 'BiRegularCategory',
+    id: 'c',
+  },
+  {
+    title: 'Category - 3',
+    icon: 'BiRegularCategory',
+    id: 'c',
+  },
 ];
 export const Examples = () => {
   onCleanup(() => Search.clears([QueryId, ModeId, PreviewId, CollapseId, SelectedId]));
@@ -99,7 +209,7 @@ export const Examples = () => {
   });
 
   return (
-    <div class="flex flex-col gap-1">
+    <div class="flex flex-col gap-1 h-full">
       <TextField searchId={QueryId} icon="FaSolidMagnifyingGlass" label="search..." value={get()} onChange={set} />
       <div class="flex ml-auto gap-2">
         <CollapseButton />
@@ -149,13 +259,18 @@ const Accordion = (props: AccordionProps) => {
           select(item.path);
         }}
       >
-        <div class="flex gap-2">
+        <div class="flex justify-between p-1 rounded-sm">
+          <div class="flex gap-2">
+            <Show when={item.icon}>
+              <ButtonIcon size="sm" variant="text" icon={item.icon!} />
+            </Show>
+            <span>{item.title}</span>
+          </div>
           <Show when={item.icon}>
-            <ButtonIcon size="sm" variant="text" icon={item.icon!} />
+            <ButtonIcon size="sm" variant="text" icon="CgChevronDown" />
           </Show>
-          <span>{item.title}</span>
         </div>
-        <ul class="ml-4 flex flex-col gap-1">
+        <ul class="ml-4 flex flex-col gap-1 transition-all overflow-hidden">
           <For each={item.children!} children={Item} />
         </ul>
       </li>
@@ -163,7 +278,7 @@ const Accordion = (props: AccordionProps) => {
   };
 
   return (
-    <ul class={cx('flex flex-col gap-1', props.class)}>
+    <ul class={cx('flex flex-col h-full overflow-auto', props.class)}>
       <For each={items} children={Item} />
     </ul>
   );

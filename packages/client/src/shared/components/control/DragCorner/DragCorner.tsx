@@ -15,7 +15,7 @@ export const classByType = {
   'bottom-right': 'cursor-se-resize -mr-1.5 -mb-1.5 w-4 h-4 bottom-0 right-0',
   'bottom-left': 'cursor-sw-resize -ml-1.5 -mb-1.5 w-4 h-4 bottom-0 left-0',
   top: 'cursor-row-resize -mt-1 w-full h-2 left-0 top-0',
-  right: 'cursor-col-resize -mr-1 w-2 h-full top-0 right-0',
+  right: 'cursor-col-resize w-2 h-full top-0 -right-1',
   bottom: 'cursor-row-resize -mb-1 w-full h-2 left-0 bottom-0',
   left: 'cursor-col-resize -ml-1 w-2 h-full top-0 left-0',
 };
