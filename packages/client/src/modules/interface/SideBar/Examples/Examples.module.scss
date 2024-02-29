@@ -1,0 +1,20 @@
+
+.grid-rows {
+  display: grid;
+  grid-template-rows: min-content 0fr;
+  transition: grid-template-rows 1s;
+}
+//
+//.grid-rows li {
+//  visibility: hidden;
+//  overflow: hidden;
+//  margin: 0;
+//}
+//
+//.grid-rows li:target {
+//  visibility: visible;
+//}
+//
+//.grid-rows:has(li:target) {
+//  grid-template-rows: min-content 1fr;
+//}

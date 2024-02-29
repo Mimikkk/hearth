@@ -16,7 +16,7 @@ import * as VsRegistry from 'solid-icons/vs';
 import * as WiRegistry from 'solid-icons/wi';
 import type { IconProps as SolidIconProps } from 'solid-icons';
 import cx from 'clsx';
-import { createMemo, mergeProps, on, splitProps } from 'solid-js';
+import { mergeProps, splitProps } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
 import s from './Icon.module.scss';
 
@@ -68,12 +68,5 @@ const initial = { size: 'md' } satisfies Partial<IconProps>;
 export const Icon = (props: IconProps) => {
   const [icon, $] = splitProps(mergeProps(initial, props), keys);
 
-  const Element = createMemo(
-    on(
-      () => props.name,
-      () => IconRegistry[props.name],
-    ),
-  );
-
-  return <Dynamic component={Element()} class={cx(s.icon, s[`size-${icon.size}`], icon.class)} {...$} />;
+  return <Dynamic component={IconRegistry[props.name]} class={cx(s.icon, s[`size-${icon.size}`], icon.class)} {...$} />;
 };

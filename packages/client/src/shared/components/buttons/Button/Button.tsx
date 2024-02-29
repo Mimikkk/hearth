@@ -1,4 +1,4 @@
-import { createMemo, type JSX, mergeProps, on, splitProps } from 'solid-js';
+import { createMemo, type JSX, mergeProps, splitProps } from 'solid-js';
 import cx from 'clsx';
 import s from './Button.module.scss';
 import { Dynamic } from 'solid-js/web';
@@ -20,12 +20,7 @@ const keys = ['square', 'size', 'variant', 'class', 'href'] satisfies (keyof But
 const initial = { type: 'button', variant: 'contained' } satisfies Partial<ButtonProps>;
 export const Button = (props: ButtonProps) => {
   const [local, $] = splitProps(mergeProps(initial, props), keys);
-  const tag = createMemo(
-    on(
-      () => local.href,
-      () => (local.href ? 'a' : 'button'),
-    ),
-  );
+  const tag = createMemo(() => (local.href ? 'a' : 'button'));
 
   return (
     <Dynamic
