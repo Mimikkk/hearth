@@ -1,15 +1,11 @@
 import { TextField } from '@components/forms/TextField/TextField.js';
-import { createMemo, createSignal, For, onCleanup, Show } from 'solid-js';
+import { createMemo, onCleanup } from 'solid-js';
 import { Search } from '@logic/Search/Search.js';
-import { ButtonIcon } from '@components/buttons/ButtonIcon/ButtonIcon.js';
-import { IconName } from '@components/buttons/Icon/Icon.js';
-import cx from 'clsx';
 import { createQueryable } from '@logic/createQueryable.js';
 import { Example } from '@modules/managment/example.js';
 import { PreviewButton } from '@modules/interface/SideBar/Examples/PreviewButton.js';
 import { CollapseButton } from '@modules/interface/SideBar/Examples/CollapseButton.js';
-import { createToggle } from '@logic/createToggle.js';
-import { paused } from '@utils/paused.js';
+import { Accordion, AccordionItem } from '@shared/components/control/Accordion/Accordion.jsx';
 
 const items: AccordionItem[] = [
   {
@@ -102,7 +98,6 @@ export const Examples = () => {
   );
 
   const [queried, get, set] = createQueryable(flatten(items), { keys: ['title'] });
-
   const filtered = createMemo(() => findNested(items, new Set(queried().map(({ item }) => item))));
 
   return (
@@ -120,105 +115,7 @@ export const Examples = () => {
           <PreviewButton />
         </div>
       </div>
-      <Accordion items={filtered()} />
+      <Accordion items={filtered()} expanded />
     </div>
-  );
-};
-
-export interface AccordionItem {
-  icon?: IconName;
-  title: string;
-  id: string;
-  nested?: { a: string; b: number };
-  children?: AccordionItem[];
-}
-
-export interface AccordionProps {
-  items: AccordionItem[];
-  class?: string;
-}
-
-type WithPath = {
-  icon?: IconName;
-  title: string;
-  id: string;
-  path: string;
-  children?: WithPath[];
-};
-const assignPath = (item: AccordionItem, path: string = ''): WithPath => ({
-  children: item.children ? assignPaths(item.children, path + '.' + item.id) : undefined,
-  title: item.title,
-  icon: item.icon,
-  id: item.id,
-  path: path + '.' + item.id,
-});
-
-const assignPaths = (items: AccordionItem[], path: string = ''): WithPath[] =>
-  items.map(item => assignPath(item, path));
-
-const isSomeSelected = (selected: undefined | string, items: WithPath[]): boolean =>
-  !selected ||
-  items.some(({ children, path }) => path === selected || (children && isSomeSelected(selected, children)));
-
-const Accordion = (props: AccordionProps) => {
-  const [selected, select] = createSignal<string>();
-
-  const items = createMemo(() => assignPaths(props.items));
-
-  const Item = (item: WithPath) => {
-    const [expanded, , toggleExpand] = createToggle(false);
-
-    return (
-      <li
-        class={cx('flex flex-col gap-1 group peer')}
-        onClick={paused(() => {
-          if (!item.children) return select(item.path);
-
-          if (expanded() && isSomeSelected(selected(), item.children)) select(undefined);
-          toggleExpand();
-        })}
-      >
-        <div
-          class={cx(
-            'cursor-pointer transition-all flex justify-between p-1 rounded-sm select-none',
-            selected() === item.path
-              ? 'bg-accent-5 hover:bg-accent-4 active:bg-accent-3'
-              : 'hover:bg-accent-4 active:bg-accent-3 active',
-          )}
-        >
-          <div class="flex gap-2">
-            <Show when={item.icon}>
-              <ButtonIcon size="sm" variant="text" icon={item.icon!} />
-            </Show>
-            <span>{item.title}</span>
-          </div>
-          <Show when={item.children}>
-            <ButtonIcon
-              class={expanded() ? 'rotate-0' : 'rotate-90'}
-              size="sm"
-              variant="text"
-              icon="CgChevronDown"
-              onClick={paused(toggleExpand)}
-            />
-          </Show>
-        </div>
-        <ul
-          class={cx(
-            'ml-4 grid transition-[grid-template-rows] duration-100',
-            expanded() ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]',
-          )}
-        >
-          <div class="overflow-hidden">
-            <For each={item.children!} children={Item} />
-          </div>
-        </ul>
-      </li>
-    );
-  };
-
-  return (
-    <ul class={cx('flex flex-col h-full overflow-auto px-2', props.class)}>
-      <For each={items()} children={Item} />
-    </ul>
   );
 };
