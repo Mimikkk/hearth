@@ -1,6 +1,5 @@
 import { TextSearch } from '@logic/TextSearch/textSearch.js';
-import { type Accessor, createEffect, createMemo, createSignal, on, type Setter } from 'solid-js';
-import { Defer } from '@utils/constants.js';
+import { type Accessor, createEffect, createMemo, createSignal, type Setter } from 'solid-js';
 
 export type QueryableReturn<T> = [list: Accessor<T[]>, get: Accessor<string>, set: Setter<string>];
 
@@ -27,18 +26,10 @@ const createQueryableSignal = <T>(items: Accessor<T[]>, options?: Partial<Search
   const [get, set] = createSignal('');
   const [list, setList] = createSignal(initial);
 
-  createEffect(
-    on(
-      items,
-      items => {
-        searchFn = TextSearch.create(items, options);
-        setList(search(get()));
-      },
-      Defer,
-    ),
-  );
-
-  createEffect(() => setList(search(get())));
+  createEffect(() => {
+    searchFn = TextSearch.create(items(), options);
+    setList(search(get()));
+  });
 
   return [list, get, set];
 };

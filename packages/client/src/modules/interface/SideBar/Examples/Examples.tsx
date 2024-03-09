@@ -125,10 +125,11 @@ export const Examples = () => {
   );
 };
 
-interface AccordionItem {
+export interface AccordionItem {
   icon?: IconName;
   title: string;
   id: string;
+  nested?: { a: string; b: number };
   children?: AccordionItem[];
 }
 
@@ -155,7 +156,7 @@ const assignPath = (item: AccordionItem, path: string = ''): WithPath => ({
 const assignPaths = (items: AccordionItem[], path: string = ''): WithPath[] =>
   items.map(item => assignPath(item, path));
 
-const isSomeSelected = (selected?: string, items: WithPath[]): boolean =>
+const isSomeSelected = (selected: undefined | string, items: WithPath[]): boolean =>
   !selected ||
   items.some(({ children, path }) => path === selected || (children && isSomeSelected(selected, children)));
 

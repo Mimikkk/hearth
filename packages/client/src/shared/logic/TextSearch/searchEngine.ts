@@ -49,11 +49,11 @@ export namespace SearchResult {
   export const False = (score: number): SearchResult => ({ isMatch: false, score, indices: undefined });
 }
 
-export const search = (
+export const search = <T>(
   text: string,
   pattern: string,
   patternMask: PatternMask,
-  { distance, threshold, minMatch }: TextSearch.Options,
+  { distance, threshold, minMatch }: TextSearch.Options<T>,
 ): SearchResult => {
   const patternLen = pattern.length;
   const textLen = text.length;
@@ -203,7 +203,7 @@ export namespace Chunk {
 export type SearchEngine = (pattern: string) => SearchEngine.Result;
 
 export namespace SearchEngine {
-  export const create = (pattern: string, options: TextSearch.Options): SearchEngine => {
+  export const create = <T>(pattern: string, options: TextSearch.Options<T>): SearchEngine => {
     if (!options.sensitive) pattern = pattern.toLowerCase();
     const chunks = Chunk.create(pattern);
 
@@ -217,7 +217,7 @@ export namespace SearchEngine {
 
       for (let i = 0, len = chunks.length; i < len; ++i) {
         const { pattern, mask } = chunks[i];
-        const match = search(text, pattern, mask, options);
+        const match = search<T>(text, pattern, mask, options);
         score += match.score;
 
         if (match.isMatch) indices.push(...match.indices);

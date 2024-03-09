@@ -91,7 +91,7 @@ export interface TextSearch<T> {
 }
 
 export namespace TextSearch {
-  export const create = <T>(items: T[], options?: Partial<TextSearch.Options>): TextSearch<T> => {
+  export const create = <T>(items: T[], options?: Partial<TextSearch.Options<T>>): TextSearch<T> => {
     const configuration = createConfiguration(options);
     const index = SearchIndex.create<T>(items, configuration);
     const search = typeof items[0] === 'string' ? searchString : searchObject;
@@ -107,9 +107,9 @@ export namespace TextSearch {
   };
 
   export type Key<T> =
+    | { name: string | string[]; weight?: number; access?: SearchIndex.AccessFn<T> }
     | string
-    | string[]
-    | { name: string | string[]; weight?: number; access?: SearchIndex.AccessFn<T> };
+    | string[];
 
   export type SortFn<T> = (a: Result<T>, b: Result<T>) => number;
   export const sort: SortFn<unknown> = (a, b) => (a.score === b.score ? a.index - b.index : a.score - b.score);
@@ -136,10 +136,12 @@ export namespace TextSearch {
 
     flatten(item, 0);
 
+    console.log({ items });
+
     return isArray ? items : items[0];
   };
 
-  export interface Options<T = unknown> {
+  export interface Options<T> {
     threshold: number;
     distance: number;
     sortBy: SortFn<T>;
