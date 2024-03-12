@@ -40,15 +40,6 @@ export type SearchResult =
   | { isMatch: false; score: number; indices: undefined }
   | { isMatch: true; score: number; indices: [number, number][] };
 
-export namespace SearchResult {
-  export const Match = (score: number, indices: [number, number][]): SearchResult => ({
-    isMatch: true,
-    score,
-    indices,
-  });
-  export const False = (score: number): SearchResult => ({ isMatch: false, score, indices: undefined });
-}
-
 export const search = <T>(
   text: string,
   pattern: string,
@@ -140,8 +131,8 @@ export const search = <T>(
   const score = Math.max(0.001, finalScore);
 
   return bestLocation >= 0
-    ? SearchResult.Match(score, convertMaskToIndices(matchMask, minMatch))
-    : SearchResult.False(score);
+    ? { isMatch: true, score, indices: convertMaskToIndices(matchMask, minMatch) }
+    : { isMatch: false, score, indices: undefined };
 };
 
 export type PatternMask = Map<string, number>;

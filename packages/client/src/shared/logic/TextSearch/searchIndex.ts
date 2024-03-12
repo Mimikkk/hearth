@@ -1,13 +1,6 @@
-import type { TextSearch } from './textSearch.js';
-
-const countTokens = (string: string): number => {
-  let count = 0;
-
-  for (let i = 0, len = string.length; i < len; ++i) if (string[i] !== ' ') ++count;
-
-  return count;
-};
-const normalize = (value: string): number => Math.round((1 / Math.pow(countTokens(value), 0.5)) * 1000) / 1000;
+import { TextSearch } from './textSearch.js';
+import { Path } from 'a-path';
+import { normalize } from './utils.js';
 
 export interface SearchIndex<T> {
   records: SearchIndex.Record<T>[];
@@ -16,7 +9,7 @@ export interface SearchIndex<T> {
 
 export namespace SearchIndex {
   export const create = <T>(values: T[], options: TextSearch.Options<T>): SearchIndex<T> => {
-    const keys = options.keys.map(key => Key.create<T>(key, options));
+    const keys = options.keys.map(Key.create);
 
     const records = values.map<Record<T>>(
       typeof values[0] === 'string'
@@ -27,41 +20,14 @@ export namespace SearchIndex {
     return { records, keys };
   };
 
-  export type AccessFn<T> = (item: T) => string | string[];
-
   export interface Key<T> {
-    path: string | string[];
-    id: string;
+    path: Path<T>;
     weight: number;
-    src: string | string[];
-    access: AccessFn<T>;
   }
 
   export namespace Key {
-    const createPath = (key: string | string[]): string[] => (Array.isArray(key) ? key : key.split('.'));
-
-    const createId = (key: string | string[]): string => (Array.isArray(key) ? key.join('.') : key);
-
-    export const create = <T>(key: TextSearch.Key<T>, options: TextSearch.Options<T>): Key<T> => {
-      if (typeof key === 'string' || Array.isArray(key)) {
-        return {
-          path: createPath(key),
-          id: createId(key),
-          weight: 1,
-          src: key,
-          access: (item: T) => options.readBy(item, key),
-        };
-      }
-
-      const path = createPath(key.name);
-      return {
-        path,
-        id: createId(key.name),
-        weight: key.weight ?? 1,
-        src: key.name,
-        access: key.access ?? ((item: T) => options.readBy(item, path)),
-      };
-    };
+    export const create = <T>(key: TextSearch.Key<T>): Key<T> =>
+      TextSearch.ValueKey.is(key) ? { path: key, weight: 1 } : { path: key.path, weight: key.weight ?? 1 };
   }
 
   export interface RecordString {
@@ -71,11 +37,7 @@ export namespace SearchIndex {
   }
 
   export namespace RecordString {
-    export const create = (item: string, index: number): RecordString => ({
-      item,
-      index,
-      norm: normalize(item),
-    });
+    export const create = (item: string, index: number): RecordString => ({ item, index, norm: normalize(item) });
   }
 
   export interface RecordObject<T> {
@@ -102,7 +64,7 @@ export namespace SearchIndex {
 
       for (let i = 0, len = keys.length; i < len; ++i) {
         const key = keys[i];
-        const value = key.access(item);
+        const value = Path.get(item as any, key.path) as string | string[];
 
         if (typeof value === 'string') {
           record.children.push(RecordObject.Item.create(value));

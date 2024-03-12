@@ -90,6 +90,9 @@ importers:
       '@webgpu/types':
         specifier: ^0.1.40
         version: 0.1.40
+      a-path:
+        specifier: ^1.1.0
+        version: 1.1.0
       autoprefixer:
         specifier: ^10.4.17
         version: 10.4.17(postcss@8.4.35)
@@ -1085,6 +1088,11 @@ packages:
 
   /@webgpu/types@0.1.40:
     resolution: {integrity: sha512-/BBkHLS6/eQjyWhY2H7Dx5DHcVrS2ICj9owvSRdgtQT6KcafLZA86tPze0xAOsd4FbsYKCUBUQyNi87q7gV7kw==}
+    dev: true
+
+  /a-path@1.1.0:
+    resolution: {integrity: sha512-pGwopis4fjKJhl8NyI5NpJqCTs3wRARfTMP/he+edggYUNNsnDR+xszyuWa5tQPP8MWljo0+d8s+4TimTUywHQ==}
+    requiresBuild: true
     dev: true
 
   /acorn-walk@8.3.2:

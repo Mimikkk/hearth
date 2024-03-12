@@ -10,7 +10,6 @@ export interface AccordionItem {
   icon?: IconName;
   title: string;
   id: string;
-  nested?: { a: string; b: number };
   children?: AccordionItem[];
 }
 
