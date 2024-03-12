@@ -11,7 +11,7 @@ describe('TextSearch', () => {
       {
         item: 'a',
         index: 0,
-        matches: [{ score: 0, value: 'a', norm: 1, indices: [[0, 0]] }],
+        matches: [{ score: 0, item: 'a', norm: 1, indices: [[0, 0]] }],
         score: 0,
       },
     ]);
@@ -27,7 +27,7 @@ describe('TextSearch', () => {
       {
         item: { name: 'a' },
         index: 0,
-        matches: [{ score: 0, key: { path: 'name', weight: 1 }, value: 'a', norm: 1, indices: [[0, 0]] }],
+        matches: [{ score: 0, key: { path: 'name', weight: 1 }, item: 'a', norm: 1, indices: [[0, 0]] }],
         score: 0,
       },
     ]);
@@ -50,7 +50,7 @@ describe('TextSearch', () => {
       {
         item: { name: { name: 'a' } },
         index: 0,
-        matches: [{ score: 0, key: { path: 'name.name', weight: 1 }, value: 'a', norm: 1, indices: [[0, 0]] }],
+        matches: [{ score: 0, key: { path: 'name.name', weight: 1 }, item: 'a', norm: 1, indices: [[0, 0]] }],
         score: 0,
       },
     ]);
@@ -64,9 +64,18 @@ describe('TextSearch', () => {
 
     expect(search('a')).toEqual([
       {
-        item: { name: { name: 'a' } },
+        item: { name: { name: ['a', 'b'] } },
         index: 0,
-        matches: [{ score: 0, key: { path: 'name.name', weight: 1 }, value: 'a', norm: 1, indices: [[0, 0]] }],
+        matches: [
+          {
+            score: 0,
+            key: { path: 'name.name', weight: 1 },
+            index: 0,
+            item: 'a',
+            norm: 1,
+            indices: [[0, 0]],
+          },
+        ],
         score: 0,
       },
     ]);
