@@ -56,7 +56,7 @@ export namespace TextSearch {
     }
   }
 
-  const notNull = <T>(value: T | null): value is T => value !== null;
+  const isSome = <T>(value: T | null): value is T => value !== null;
 
   const matchValue = <T>(
     { item, norm }: SearchRecord.Value,
@@ -113,7 +113,7 @@ export namespace TextSearch {
     'norm' in record ? searchString<T>(record, engine) : searchObject(record, engine);
 
   const search = <T>(engine: SearchEngine, records: SearchRecord<T>[]): Result<T>[] =>
-    records.map(record => searchRecord(record, engine)).filter(notNull);
+    records.map(record => searchRecord(record, engine)).filter(isSome);
 
   export interface Options<T> {
     threshold: number;
