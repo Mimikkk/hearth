@@ -56,12 +56,7 @@ export namespace TextSearch {
     }
   }
 
-  const searchString = <T>({ item, index, norm }: SearchRecord.Array, engine: SearchEngine): Result<T> | null => {
-    const { isMatch, score, indices } = engine(item);
-
-    if (!isMatch) return null;
-    return { item: item as T, index, matches: [{ score, item, norm, indices }], score: Math.pow(score, norm) };
-  };
+  const notNull = <T>(value: T | null): value is T => value !== null;
 
   const matchValue = <T>(
     { item, norm }: SearchRecord.Value,
@@ -74,8 +69,6 @@ export namespace TextSearch {
     return { score, key, item, norm, indices };
   };
 
-  const notNull = <T>(value: T | null): value is T => value !== null;
-
   const matchArray = <T>(
     { item, norm, index }: SearchRecord.Array,
     key: Configuration.Key<T>,
@@ -85,6 +78,13 @@ export namespace TextSearch {
 
     if (!isMatch) return null;
     return { score, key, index, item, norm, indices };
+  };
+
+  const searchString = <T>({ item, index, norm }: SearchRecord.Array, engine: SearchEngine): Result<T> | null => {
+    const { isMatch, score, indices } = engine(item);
+
+    if (!isMatch) return null;
+    return { item: item as T, index, matches: [{ score, item, norm, indices }], score: Math.pow(score, norm) };
   };
 
   const searchObject = <T>({ item, index, byKey }: SearchRecord.Object<T>, engine: SearchEngine): Result<T> | null => {
