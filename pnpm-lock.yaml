@@ -93,6 +93,9 @@ importers:
       a-path:
         specifier: ^2.0.1
         version: 2.0.1
+      a-textsearch:
+        specifier: ^1.0.0
+        version: 1.0.0
       autoprefixer:
         specifier: ^10.4.17
         version: 10.4.17(postcss@8.4.35)
@@ -1093,6 +1096,13 @@ packages:
   /a-path@2.0.1:
     resolution: {integrity: sha512-1w5foyOYj9e3MZWCdV5YDEsIhCpHgQH0/yjGsy37PaBceVlfeA6Xm0sifMEINZnfWk9+MtrRXXzEH/mOvYhtnw==}
     requiresBuild: true
+    dev: true
+
+  /a-textsearch@1.0.0:
+    resolution: {integrity: sha512-EGcNEIdP98Q3Atx31NC03VydU8AzHJWu/LLdVjl+h6MzNPL+qDHSUIciDXyFRbaUYajZnkysQ8F3/cTfVU2JHg==}
+    requiresBuild: true
+    dependencies:
+      a-path: 2.0.1
     dev: true
 
   /acorn-walk@8.3.2:

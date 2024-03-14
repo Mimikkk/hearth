@@ -1,5 +1,5 @@
-import { TextSearch } from '@logic/TextSearch/textSearch.js';
 import { type Accessor, createEffect, createMemo, createSignal, type Setter } from 'solid-js';
+import { TextSearch } from 'a-textsearch';
 
 export type QueryableReturn<T> = [list: Accessor<T[]>, get: Accessor<string>, set: Setter<string>];
 
@@ -10,10 +10,7 @@ export interface SearchOptions<T> extends TextSearch.Options<T> {
 const createQueryableStatic = <T>(items: T[], options?: Partial<SearchOptions<T>>): QueryableReturn<T> => {
   const searchFn = TextSearch.create(items, options);
 
-  const search = (query: string) => {
-    console.log({ r: searchFn(query, options?.limit) });
-    return query ? searchFn(query, options?.limit).map(({ item }) => item) : items;
-  };
+  const search = (query: string) => (query ? searchFn(query, options?.limit).map(({ item }) => item) : items);
 
   const [get, set] = createSignal('');
   const list = createMemo(() => search(get()));
