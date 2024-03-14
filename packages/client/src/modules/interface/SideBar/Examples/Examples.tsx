@@ -6,6 +6,7 @@ import { Example } from '@modules/managment/example.js';
 import { PreviewButton } from '@modules/interface/SideBar/Examples/PreviewButton.js';
 import { CollapseButton } from '@modules/interface/SideBar/Examples/CollapseButton.js';
 import { Accordion, AccordionItem } from '@shared/components/control/Accordion/Accordion.jsx';
+import { Path } from 'a-path';
 
 const items: AccordionItem[] = [
   {
@@ -56,32 +57,34 @@ const items: AccordionItem[] = [
   },
 ];
 
-const flatten = (items: AccordionItem[]): { item: AccordionItem; title: string }[] => {
-  const flattened = [];
-  const stack = items.map(item => [item, item.title] as const);
+const flatBy = <T extends Record<string, any>>(items: T[], key: Path.Of<T, T[] | undefined>): T[] => {
+  const results = [];
+  const stack = [...items];
 
   while (stack.length) {
-    const [item, title] = stack.pop()!;
-    flattened.push({ item, title });
+    const item = stack.pop()!;
 
-    if (item.children) stack.push(...item.children.map(child => [child, title + ' ' + child.title] as const));
+    results.push(item);
+
+    const children = Path.get(item, key);
+    if (children) stack.push(...(children as T[]));
   }
 
-  return flattened;
+  return results;
 };
 
 const findNested = (items: AccordionItem[], filtered: Set<AccordionItem>) => {
   const visible: AccordionItem[] = [];
 
   for (const item of items) {
-    if (item.children) {
-      const children = findNested(item.children, filtered);
+    let { id, title, children, icon } = item;
+
+    if (children) {
+      children = findNested(children, filtered);
       if (!children.length) continue;
 
-      visible.push({ id: item.id, icon: item.icon, title: item.title, children });
-    } else {
-      if (filtered.has(item)) visible.push(item);
-    }
+      visible.push({ id, icon, title, children });
+    } else if (filtered.has(item)) visible.push(item);
   }
 
   return visible;
@@ -97,8 +100,8 @@ export const Examples = () => {
     ]),
   );
 
-  const [queried, get, set] = createQueryable(flatten(items), { keys: ['title'] });
-  const filtered = createMemo(() => findNested(items, new Set(queried().map(({ item }) => item))));
+  const [results, get, set] = createQueryable(items, { keys: ['title'], recursiveBy: 'children' });
+  const filtered = createMemo(() => findNested(items, new Set(flatBy(results(), 'children'))));
 
   return (
     <div class="flex flex-col gap-1 h-full">

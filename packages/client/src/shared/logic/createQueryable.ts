@@ -10,7 +10,10 @@ export interface SearchOptions<T> extends TextSearch.Options<T> {
 const createQueryableStatic = <T>(items: T[], options?: Partial<SearchOptions<T>>): QueryableReturn<T> => {
   const searchFn = TextSearch.create(items, options);
 
-  const search = (query: string) => (query ? searchFn(query, options?.limit).map(({ item }) => item) : items);
+  const search = (query: string) => {
+    console.log({ r: searchFn(query, options?.limit) });
+    return query ? searchFn(query, options?.limit).map(({ item }) => item) : items;
+  };
 
   const [get, set] = createSignal('');
   const list = createMemo(() => search(get()));
@@ -28,6 +31,7 @@ const createQueryableSignal = <T>(items: Accessor<T[]>, options?: Partial<Search
 
   createEffect(() => {
     searchFn = TextSearch.create(items(), options);
+
     setList(search(get()));
   });
 

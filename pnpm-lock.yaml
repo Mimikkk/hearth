@@ -10,7 +10,7 @@ importers:
     devDependencies:
       '@arktype/attest':
         specifier: ^0.6.2
-        version: 0.6.2(typescript@5.3.3)
+        version: 0.6.2(typescript@5.4.2)
       '@types/node':
         specifier: ^20.11.19
         version: 20.11.19
@@ -30,8 +30,8 @@ importers:
         specifier: ^5.0.5
         version: 5.0.5
       typescript:
-        specifier: 5.3.3
-        version: 5.3.3
+        specifier: 5.4.2
+        version: 5.4.2
       vite-node:
         specifier: ^1.3.1
         version: 1.3.1(@types/node@20.11.19)(sass@1.71.0)
@@ -91,8 +91,8 @@ importers:
         specifier: ^0.1.40
         version: 0.1.40
       a-path:
-        specifier: ^1.1.0
-        version: 1.1.0
+        specifier: ^2.0.1
+        version: 2.0.1
       autoprefixer:
         specifier: ^10.4.17
         version: 10.4.17(postcss@8.4.35)
@@ -154,7 +154,7 @@ packages:
       '@jridgewell/trace-mapping': 0.3.18
     dev: true
 
-  /@arktype/attest@0.6.2(typescript@5.3.3):
+  /@arktype/attest@0.6.2(typescript@5.4.2):
     resolution: {integrity: sha512-wMHBB9RTH61+MLJbFqsdhSaUrCYR9b0abEUuttLbzmRpqK3XkgJPBMH1NvL1JR1pHm9aFoyFxfrl32jg3nO28A==}
     hasBin: true
     peerDependencies:
@@ -165,7 +165,7 @@ packages:
       '@typescript/analyze-trace': 0.10.1
       '@typescript/vfs': 1.5.0
       arktype: 1.0.29-alpha
-      typescript: 5.3.3
+      typescript: 5.4.2
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -1090,8 +1090,8 @@ packages:
     resolution: {integrity: sha512-/BBkHLS6/eQjyWhY2H7Dx5DHcVrS2ICj9owvSRdgtQT6KcafLZA86tPze0xAOsd4FbsYKCUBUQyNi87q7gV7kw==}
     dev: true
 
-  /a-path@1.1.0:
-    resolution: {integrity: sha512-pGwopis4fjKJhl8NyI5NpJqCTs3wRARfTMP/he+edggYUNNsnDR+xszyuWa5tQPP8MWljo0+d8s+4TimTUywHQ==}
+  /a-path@2.0.1:
+    resolution: {integrity: sha512-1w5foyOYj9e3MZWCdV5YDEsIhCpHgQH0/yjGsy37PaBceVlfeA6Xm0sifMEINZnfWk9+MtrRXXzEH/mOvYhtnw==}
     requiresBuild: true
     dev: true
 
@@ -2955,6 +2955,12 @@ packages:
 
   /typescript@5.3.3:
     resolution: {integrity: sha512-pXWcraxM0uxAS+tN0AG/BF2TyqmHO014Z070UsJ+pFvYuRSq8KH8DmWpnbXe0pEPDHXZV3FcAbJkijJ5oNEnWw==}
+    engines: {node: '>=14.17'}
+    hasBin: true
+    dev: true
+
+  /typescript@5.4.2:
+    resolution: {integrity: sha512-+2/g0Fds1ERlP6JsakQQDXjZdZMM+rqpamFZJEKh4kwTIn3iDkgKtby0CeNd5ATNZ4Ry1ax15TMx0W2V+miizQ==}
     engines: {node: '>=14.17'}
     hasBin: true
     dev: true
