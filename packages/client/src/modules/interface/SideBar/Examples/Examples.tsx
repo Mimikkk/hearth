@@ -7,55 +7,8 @@ import { PreviewButton } from '@modules/interface/SideBar/Examples/PreviewButton
 import { CollapseButton } from '@modules/interface/SideBar/Examples/CollapseButton.js';
 import { Accordion, AccordionItem } from '@shared/components/control/Accordion/Accordion.jsx';
 import { Path } from 'a-path';
-
-const items: AccordionItem[] = [
-  {
-    title: 'a',
-    icon: 'BiRegularCategory',
-    id: 'a',
-    children: [
-      {
-        title: 'b',
-        icon: 'BiRegularCategory',
-        id: 'b',
-        children: [
-          {
-            icon: 'BiRegularCategory',
-            title: 'c',
-            id: 'a',
-          },
-          {
-            title: 'd',
-            icon: 'BiRegularCategory',
-            id: 'b',
-          },
-        ],
-      },
-    ],
-  },
-  {
-    title: 'e',
-    icon: 'BiRegularCategory',
-    id: 'b',
-    children: [
-      {
-        title: 'f',
-        icon: 'BiRegularCategory',
-        id: 'c',
-      },
-      {
-        title: 'f',
-        icon: 'BiRegularCategory',
-        id: 'd',
-      },
-    ],
-  },
-  {
-    title: 'f',
-    icon: 'BiRegularCategory',
-    id: 'c',
-  },
-];
+import { SideBarItems } from '@modules/interface/SideBar/SideBar.items.js';
+import { useContent } from '@modules/managment/useContent.js';
 
 const flatBy = <T extends Record<string, any>>(items: T[], key: Path.Of<T, T[] | undefined>): T[] => {
   const results = [];
@@ -91,6 +44,8 @@ const findNested = (items: AccordionItem[], filtered: Set<AccordionItem>) => {
 };
 
 export const Examples = () => {
+  const { selected, select } = useContent();
+
   onCleanup(() =>
     Search.clears([
       Example.Search.SelectedId,
@@ -100,8 +55,8 @@ export const Examples = () => {
     ]),
   );
 
-  const [results, get, set] = createQueryable(items, { keys: ['title'], recursiveBy: 'children' });
-  const filtered = createMemo(() => findNested(items, new Set(flatBy(results(), 'children'))));
+  const [results, get, set] = createQueryable(SideBarItems, { keys: ['title'], recursiveBy: 'children' });
+  const filtered = createMemo(() => findNested(SideBarItems, new Set(flatBy(results(), 'children'))));
 
   return (
     <div class="flex flex-col gap-1 h-full">
@@ -118,7 +73,7 @@ export const Examples = () => {
           <PreviewButton />
         </div>
       </div>
-      <Accordion items={filtered()} expanded />
+      <Accordion items={filtered()} selected={selected()} onSelect={select} expanded />
     </div>
   );
 };

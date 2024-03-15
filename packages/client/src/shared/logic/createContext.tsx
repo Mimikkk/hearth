@@ -3,6 +3,7 @@ import { createContext as createSolidContext, splitProps, useContext } from 'sol
 
 export const createContext = <State, Args>(
   provider: (props: Args) => State,
+  initial?: State,
 ): [() => State, (props: ParentProps<Args>) => JSXElement] => {
   const Context = createSolidContext(undefined as State);
 
@@ -10,7 +11,10 @@ export const createContext = <State, Args>(
     () => {
       const context = useContext(Context);
 
-      if (context === undefined) throw Error('useContext must be used within a Provider');
+      if (context === undefined) {
+        if (initial !== undefined) return initial;
+        throw Error('useContext must be used within a Provider');
+      }
 
       return context;
     },

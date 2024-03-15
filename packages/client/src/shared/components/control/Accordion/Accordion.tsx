@@ -1,10 +1,9 @@
 import { IconName } from '@components/buttons/Icon/Icon.js';
-import { createMemo, createSignal, For, Show } from 'solid-js';
+import { createEffect, createSignal, For, Show } from 'solid-js';
 import { createToggle } from '@logic/createToggle.js';
 import cx from 'clsx';
 import { paused } from '@utils/paused.js';
 import { ButtonIcon } from '@components/buttons/ButtonIcon/ButtonIcon.js';
-import { AccordionPath } from '@components/control/Accordion/AccordionPath.js';
 
 export interface AccordionItem {
   icon?: IconName;
@@ -13,33 +12,41 @@ export interface AccordionItem {
   children?: AccordionItem[];
 }
 
+const within = (items: AccordionItem[], id?: string): boolean =>
+  !id || items.some(item => id === item.id || (item.children && within(item.children, id)));
+
 export interface AccordionProps {
+  onSelect?: (id: string | null) => void;
   items: AccordionItem[];
   expanded?: boolean;
+  selected?: string;
   class?: string;
 }
 
 export const Accordion = (props: AccordionProps) => {
-  const [selected, select] = createSignal<string>();
-  const items = createMemo(() => AccordionPath.assign(props.items));
+  const [selected, select] = createSignal<string | undefined>(props.selected);
 
-  const Item = (item: AccordionPath.WithPath) => {
+  createEffect(() => {
+    props.onSelect?.(selected() ?? '');
+  });
+
+  const Item = (item: AccordionItem) => {
     const [expanded, , toggleExpand] = createToggle(props.expanded);
 
     return (
       <li
         class={cx('flex flex-col gap-1 group peer')}
         onClick={paused(() => {
-          if (!item.children) return select(item.path);
+          if (!item.children) return select(item.id);
 
-          if (expanded() && AccordionPath.within(item.children, selected())) select(undefined);
+          if (expanded() && within(item.children, selected())) select(undefined);
           toggleExpand();
         })}
       >
         <div
           class={cx(
             'cursor-pointer transition-all flex justify-between p-1 rounded-sm select-none',
-            selected() === item.path
+            selected() === item.id
               ? 'bg-accent-5 hover:bg-accent-4 active:bg-accent-3'
               : 'hover:bg-accent-4 active:bg-accent-3 active',
           )}
@@ -76,7 +83,7 @@ export const Accordion = (props: AccordionProps) => {
 
   return (
     <ul class={cx('flex flex-col h-full overflow-auto px-2', props.class)}>
-      <For each={items()} children={Item} />
+      <For each={props.items} children={Item} />
     </ul>
   );
 };
