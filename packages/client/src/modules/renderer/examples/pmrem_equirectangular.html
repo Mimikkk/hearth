@@ -7,30 +7,19 @@
 		<link type="text/css" rel="stylesheet" href="main.css">
 	</head>
 	<body>
+<script type="module">
 
-		<script type="importmap">
-			{
-				"imports": {
-					"three": "../threejs/Three.js",
-					"three/addons/": "../jsm/",
-					"three/nodes": "../jsm/nodes/Nodes.js"
-				}
-			}
-		</script>
+			import * as THREE from '../threejs/Three.js';
 
-		<script type="module">
+			import { normalWorld, uniform, normalView, positionViewDirection, cameraViewMatrix, pmremTexture, MeshBasicNodeMaterial } from '../jsm/nodes/Nodes.js';
 
-			import * as THREE from 'three';
+			import WebGPURenderer from '../jsm/renderers/webgpu/WebGPURenderer.js';
 
-			import { normalWorld, uniform, normalView, positionViewDirection, cameraViewMatrix, pmremTexture, MeshBasicNodeMaterial } from 'three/nodes';
+			import { RGBELoader } from '../jsm/loaders/RGBELoader.js';
 
-			import WebGPURenderer from 'three/addons/renderers/webgpu/WebGPURenderer.js';
+			import { OrbitControls } from '../jsm/controls/OrbitControls.js';
 
-			import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
-
-			import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-
-			import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+			import { GUI } from '../jsm/libs/lil-gui.module.min.js';
 
 			let camera, scene, renderer;
 

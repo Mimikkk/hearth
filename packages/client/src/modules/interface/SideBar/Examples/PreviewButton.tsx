@@ -1,9 +1,9 @@
 import { ButtonIcon } from '@components/buttons/ButtonIcon/ButtonIcon.js';
 import { SearchStorage } from '@logic/SearchStorage/SearchStorage.js';
-import { Example } from '@modules/managment/example.js';
+import { ExampleNs } from '@modules/managment/exampleNs.js';
 
 export const PreviewButton = () => {
-  const [isPreview, , togglePreview] = SearchStorage.bool(Example.Search.PreviewId, 'example-preview', true);
+  const [isPreview, , togglePreview] = SearchStorage.bool(ExampleNs.Search.PreviewId, 'example-preview', true);
 
   return (
     <ButtonIcon

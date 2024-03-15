@@ -17,34 +17,24 @@
 			<a href="https://threejs.org" target="_blank" rel="noopener">three.js</a> webgpu - morph targets - face<br/>
 			model by <a href="https://www.bannaflak.com/face-cap" target="_blank" rel="noopener">Face Cap</a>
 		</div>
+<script type="module">
 
-		<script type="importmap">
-			{
-				"imports": {
-					"three": "../threejs/Three.js",
-					"three/addons/": "../jsm/"
-				}
-			}
-		</script>
+			import * as THREE from '../threejs/Three.js';
 
-		<script type="module">
+			import WebGPU from '../jsm/capabilities/WebGPU.js';
+			import WebGL from '../jsm/capabilities/WebGL.js';
 
-			import * as THREE from 'three';
+			import WebGPURenderer from '../jsm/renderers/webgpu/WebGPURenderer.js';
 
-			import WebGPU from 'three/addons/capabilities/WebGPU.js';
-			import WebGL from 'three/addons/capabilities/WebGL.js';
+			import Stats from '../jsm/libs/stats.module.js';
 
-			import WebGPURenderer from 'three/addons/renderers/webgpu/WebGPURenderer.js';
+			import { OrbitControls } from '../jsm/controls/OrbitControls.js';
 
-			import Stats from 'three/addons/libs/stats.module.js';
+			import { GLTFLoader } from '../jsm/loaders/GLTFLoader.js';
+			import { KTX2Loader } from '../jsm/loaders/KTX2Loader.js';
+			import { MeshoptDecoder } from '../jsm/libs/meshopt_decoder.module.js';
 
-			import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-
-			import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-			import { KTX2Loader } from 'three/addons/loaders/KTX2Loader.js';
-			import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
-
-			import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+			import { GUI } from '../jsm/libs/lil-gui.module.min.js';
 
 			init();
 

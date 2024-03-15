@@ -10,33 +10,22 @@
 		<div id="info">
 			<a href="https://threejs.org" target="_blank" rel="noopener">three.js</a> WebGPU - GPU Compute Rain
 		</div>
+<script type="module">
 
-		<script type="importmap">
-			{
-				"imports": {
-					"three": "../threejs/Three.js",
-					"three/addons/": "../jsm/",
-					"three/nodes": "../jsm/nodes/Nodes.js"
-				}
-			}
-		</script>
+			import * as THREE from '../threejs/Three.js';
+			import { tslFn, texture, uv, uint, positionWorld, modelWorldMatrix, cameraViewMatrix, timerLocal, timerDelta, cameraProjectionMatrix, vec2, instanceIndex, positionGeometry, storage, MeshBasicNodeMaterial, If } from '../jsm/nodes/Nodes.js';
 
-		<script type="module">
+			import WebGPU from '../jsm/capabilities/WebGPU.js';
+			import WebGL from '../jsm/capabilities/WebGL.js';
+			import WebGPURenderer from '../jsm/renderers/webgpu/WebGPURenderer.js';
+			import StorageInstancedBufferAttribute from '../jsm/renderers/common/StorageInstancedBufferAttribute.js';
 
-			import * as THREE from 'three';
-			import { tslFn, texture, uv, uint, positionWorld, modelWorldMatrix, cameraViewMatrix, timerLocal, timerDelta, cameraProjectionMatrix, vec2, instanceIndex, positionGeometry, storage, MeshBasicNodeMaterial, If } from 'three/nodes';
+			import { OrbitControls } from '../jsm/controls/OrbitControls.js';
+			import Stats from '../jsm/libs/stats.module.js';
 
-			import WebGPU from 'three/addons/capabilities/WebGPU.js';
-			import WebGL from 'three/addons/capabilities/WebGL.js';
-			import WebGPURenderer from 'three/addons/renderers/webgpu/WebGPURenderer.js';
-			import StorageInstancedBufferAttribute from 'three/addons/renderers/common/StorageInstancedBufferAttribute.js';
+			import { GUI } from '../jsm/libs/lil-gui.module.min.js';
 
-			import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-			import Stats from 'three/addons/libs/stats.module.js';
-
-			import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
-
-			import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js';
+			import * as BufferGeometryUtils from '../jsm/utils/BufferGeometryUtils.js';
 
 			const maxParticleCount = 50000;
 			const instanceCount = maxParticleCount / 2;

@@ -16,27 +16,16 @@
 		<div id="info">
 			<a href="https://threejs.org" target="_blank" rel="noopener">three.js</a> webgpu - MaterialXLoader<br />
 		</div>
+<script type="module">
 
-		<script type="importmap">
-			{
-				"imports": {
-					"three": "../threejs/Three.js",
-					"three/addons/": "../jsm/",
-					"three/nodes": "../jsm/nodes/Nodes.js"
-				}
-			}
-		</script>
-
-		<script type="module">
-
-			import * as THREE from 'three';
+			import * as THREE from '../threejs/Three.js';
 
 			import { MaterialXLoader } from './jsm/loaders/MaterialXLoader.js';
 			import { OrbitControls } from './jsm/controls/OrbitControls.js';
 			import { RGBELoader } from './jsm/loaders/RGBELoader.js';
 			import { GLTFLoader } from './jsm/loaders/GLTFLoader.js';
 
-			import WebGPURenderer from 'three/addons/renderers/webgpu/WebGPURenderer.js';
+			import WebGPURenderer from '../jsm/renderers/webgpu/WebGPURenderer.js';
 
 			import { nodeFrame } from './jsm/renderers/webgl-legacy/nodes/WebGLNodes.js';
 

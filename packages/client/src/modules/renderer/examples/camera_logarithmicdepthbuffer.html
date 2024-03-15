@@ -61,29 +61,19 @@
 			<a href="https://threejs.org" target="_blank" rel="noopener">three.js</a> - cameras - logarithmic depth buffer<br/>
 			mousewheel to dolly out
 		</div>
+<script type="module">
 
-		<script type="importmap">
-			{
-				"imports": {
-					"three": "../threejs/Three.js",
-					"three/addons/": "../jsm/"
-				}
-			}
-		</script>
+			import * as THREE from '../threejs/Three.js';
 
-		<script type="module">
+			import { FontLoader } from '../jsm/loaders/FontLoader.js';
+			import { TextGeometry } from '../jsm/geometries/TextGeometry.js';
 
-			import * as THREE from 'three';
+			import WebGPU from '../jsm/capabilities/WebGPU.js';
+			import WebGL from '../jsm/capabilities/WebGL.js';
 
-			import { FontLoader } from 'three/addons/loaders/FontLoader.js';
-			import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
+			import WebGPURenderer from '../jsm/renderers/webgpu/WebGPURenderer.js';
 
-			import WebGPU from 'three/addons/capabilities/WebGPU.js';
-			import WebGL from 'three/addons/capabilities/WebGL.js';
-
-			import WebGPURenderer from 'three/addons/renderers/webgpu/WebGPURenderer.js';
-
-			import Stats from 'three/addons/libs/stats.module.js';
+			import Stats from '../jsm/libs/stats.module.js';
 
 			// 1 micrometer to 100 billion light years in one scene, with 1 unit = 1 meter?  preposterous!  and yet...
 			const NEAR = 1e-6, FAR = 1e27;

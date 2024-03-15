@@ -10,28 +10,17 @@
 		<div id="info">
 			<a href="https://threejs.org" target="_blank" rel="noopener">three.js</a> WebGPU - RTT
 		</div>
+<script type="module">
 
-		<script type="importmap">
-			{
-				"imports": {
-					"three": "../threejs/Three.js",
-					"three/addons/": "../jsm/",
-					"three/nodes": "../jsm/nodes/Nodes.js"
-				}
-			}
-		</script>
+			import * as THREE from '../threejs/Three.js';
+			import { texture, uniform, MeshBasicNodeMaterial } from '../jsm/nodes/Nodes.js';
 
-		<script type="module">
+			import WebGPU from '../jsm/capabilities/WebGPU.js';
+			import WebGL from '../jsm/capabilities/WebGL.js';
 
-			import * as THREE from 'three';
-			import { texture, uniform, MeshBasicNodeMaterial } from 'three/nodes';
+			import WebGPURenderer from '../jsm/renderers/webgpu/WebGPURenderer.js';
 
-			import WebGPU from 'three/addons/capabilities/WebGPU.js';
-			import WebGL from 'three/addons/capabilities/WebGL.js';
-
-			import WebGPURenderer from 'three/addons/renderers/webgpu/WebGPURenderer.js';
-
-			import QuadMesh from 'three/addons/objects/QuadMesh.js';
+			import QuadMesh from '../jsm/objects/QuadMesh.js';
 
 			let camera, scene, renderer;
 			const mouse = new THREE.Vector2();

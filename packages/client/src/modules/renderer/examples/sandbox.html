@@ -10,26 +10,15 @@
 		<div id="info">
 			<a href="https://threejs.org" target="_blank" rel="noopener">three.js</a> WebGPU - Sandbox
 		</div>
+<script type="module">
 
-		<script type="importmap">
-			{
-				"imports": {
-					"three": "../threejs/Three.js",
-					"three/addons/": "../jsm/",
-					"three/nodes": "../jsm/nodes/Nodes.js"
-				}
-			}
-		</script>
+			import * as THREE from '../threejs/Three.js';
+			import { timerLocal, vec2, uv, texture, mix, checker, normalLocal, positionLocal, color, oscSine, attribute, MeshBasicNodeMaterial, PointsNodeMaterial, LineBasicNodeMaterial } from '../jsm/nodes/Nodes.js';
 
-		<script type="module">
+			import { KTX2Loader } from '../jsm/loaders/KTX2Loader.js';
 
-			import * as THREE from 'three';
-			import { timerLocal, vec2, uv, texture, mix, checker, normalLocal, positionLocal, color, oscSine, attribute, MeshBasicNodeMaterial, PointsNodeMaterial, LineBasicNodeMaterial } from 'three/nodes';
-
-			import { KTX2Loader } from 'three/addons/loaders/KTX2Loader.js';
-
-			import WebGPU from 'three/addons/capabilities/WebGPU.js';
-			import WebGPURenderer from 'three/addons/renderers/webgpu/WebGPURenderer.js';
+			import WebGPU from '../jsm/capabilities/WebGPU.js';
+			import WebGPURenderer from '../jsm/renderers/webgpu/WebGPURenderer.js';
 
 			let camera, scene, renderer;
 

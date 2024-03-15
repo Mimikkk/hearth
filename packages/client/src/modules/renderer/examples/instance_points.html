@@ -12,37 +12,26 @@
 		<div id="container"></div>
 
 		<div id="info"><a href="https://threejs.org" target="_blank">three.js</a> - instanced points</div>
+<script type="module">
 
-		<script type="importmap">
-			{
-				"imports": {
-					"three": "../threejs/Three.js",
-					"three/addons/": "../jsm/",
-					"three/nodes": "../jsm/nodes/Nodes.js"
-				}
-			}
-		</script>
+			import * as THREE from '../threejs/Three.js';
 
-		<script type="module">
+			import WebGPU from '../jsm/capabilities/WebGPU.js';
+			import WebGL from '../jsm/capabilities/WebGL.js';
 
-			import * as THREE from 'three';
+			import WebGPURenderer from '../jsm/renderers/webgpu/WebGPURenderer.js';
 
-			import WebGPU from 'three/addons/capabilities/WebGPU.js';
-			import WebGL from 'three/addons/capabilities/WebGL.js';
+			import Stats from '../jsm/libs/stats.module.js';
 
-			import WebGPURenderer from 'three/addons/renderers/webgpu/WebGPURenderer.js';
+			import { GUI } from '../jsm/libs/lil-gui.module.min.js';
+			import { OrbitControls } from '../jsm/controls/OrbitControls.js';
 
-			import Stats from 'three/addons/libs/stats.module.js';
+			import InstancedPoints from '../jsm/objects/InstancedPoints.js';
+			import InstancedPointsGeometry from '../jsm/geometries/InstancedPointsGeometry.js';
 
-			import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
-			import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+			import { color, InstancedPointsNodeMaterial } from '../jsm/nodes/Nodes.js';
 
-			import InstancedPoints from 'three/addons/objects/InstancedPoints.js';
-			import InstancedPointsGeometry from 'three/addons/geometries/InstancedPointsGeometry.js';
-
-			import { color, InstancedPointsNodeMaterial } from 'three/nodes';
-
-			import * as GeometryUtils from 'three/addons/utils/GeometryUtils.js';
+			import * as GeometryUtils from '../jsm/utils/GeometryUtils.js';
 
 			let renderer, scene, camera, camera2, controls, backgroundNode;
 			let material;

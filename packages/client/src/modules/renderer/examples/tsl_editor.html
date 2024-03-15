@@ -37,31 +37,20 @@
 		<div id="result"></div>
 		<div id="renderer"></div>
 		<script src="https://cdn.jsdelivr.net/npm/monaco-editor@latest/min/vs/loader.min.js"></script>
+<script type="module">
 
-		<script type="importmap">
-			{
-				"imports": {
-					"three": "../threejs/Three.js",
-					"three/addons/": "../jsm/",
-					"three/nodes": "../jsm/nodes/Nodes.js"
-				}
-			}
-		</script>
+			import * as THREE from '../threejs/Three.js';
+			import * as Nodes from '../jsm/nodes/Nodes.js';
 
-		<script type="module">
+			import WebGPU from '../jsm/capabilities/WebGPU.js';
+			import WebGL from '../jsm/capabilities/WebGL.js';
 
-			import * as THREE from 'three';
-			import * as Nodes from 'three/nodes';
+			import WebGPURenderer from '../jsm/renderers/webgpu/WebGPURenderer.js';
+			import WGSLNodeBuilder from '../jsm/renderers/webgpu/nodes/WGSLNodeBuilder.js';
+			import GLSLNodeBuilder from '../jsm/renderers/webgl/nodes/GLSLNodeBuilder.js';
+			import GLSL1NodeBuilder from '../jsm/renderers/webgl-legacy/nodes/GLSL1NodeBuilder.js';
 
-			import WebGPU from 'three/addons/capabilities/WebGPU.js';
-			import WebGL from 'three/addons/capabilities/WebGL.js';
-
-			import WebGPURenderer from 'three/addons/renderers/webgpu/WebGPURenderer.js';
-			import WGSLNodeBuilder from 'three/addons/renderers/webgpu/nodes/WGSLNodeBuilder.js';
-			import GLSLNodeBuilder from 'three/addons/renderers/webgl/nodes/GLSLNodeBuilder.js';
-			import GLSL1NodeBuilder from 'three/addons/renderers/webgl-legacy/nodes/GLSL1NodeBuilder.js';
-
-			import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+			import { GUI } from '../jsm/libs/lil-gui.module.min.js';
 
 			init();
 

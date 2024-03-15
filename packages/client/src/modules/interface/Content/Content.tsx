@@ -1,6 +1,7 @@
 import { ButtonIcon } from '@components/buttons/ButtonIcon/ButtonIcon.js';
 import cx from 'clsx';
 import { SearchStorage } from '@logic/SearchStorage/SearchStorage.js';
+import { Canvas } from '@modules/interface/Content/Canvas.js';
 interface ContentProps {
   class?: string;
 }
@@ -13,6 +14,7 @@ export const Content = (props: ContentProps) => {
       <div class="absolute left-2">
         <ButtonIcon cross={showCode()} variant="text" icon="VsCode" onClick={toggleCode} />
       </div>
+      <Canvas />
     </div>
   );
 };

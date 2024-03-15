@@ -14,29 +14,18 @@
 			licensed under
 			<a href="https://www.codeproject.com/info/cpol10.aspx" target="_blank" rel="noopener">CPOL</a>
 		</div>
+<script type="module">
 
-		<script type="importmap">
-			{
-				"imports": {
-					"three": "../threejs/Three.js",
-					"three/addons/": "../jsm/",
-					"three/nodes": "../jsm/nodes/Nodes.js"
-				}
-			}
-		</script>
+			import * as THREE from '../threejs/Three.js';
+			import { MeshBasicNodeMaterial, texture, uv, oscTriangle, timerLocal } from '../jsm/nodes/Nodes.js';
 
-		<script type="module">
+			import WebGPU from '../jsm/capabilities/WebGPU.js';
+			import WebGL from '../jsm/capabilities/WebGL.js';
 
-			import * as THREE from 'three';
-			import { MeshBasicNodeMaterial, texture, uv, oscTriangle, timerLocal } from 'three/nodes';
+			import WebGPURenderer from '../jsm/renderers/webgpu/WebGPURenderer.js';
 
-			import WebGPU from 'three/addons/capabilities/WebGPU.js';
-			import WebGL from 'three/addons/capabilities/WebGL.js';
-
-			import WebGPURenderer from 'three/addons/renderers/webgpu/WebGPURenderer.js';
-
-			import Stats from 'three/addons/libs/stats.module.js';
-			import { unzipSync } from 'three/addons/libs/fflate.module.js';
+			import Stats from '../jsm/libs/stats.module.js';
+			import { unzipSync } from '../jsm/libs/fflate.module.js';
 
 			if ( WebGPU.isAvailable() === false && WebGL.isWebGL2Available() === false ) {
 

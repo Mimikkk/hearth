@@ -2,7 +2,7 @@ import { TextField } from '@components/forms/TextField/TextField.js';
 import { createMemo, onCleanup } from 'solid-js';
 import { Search } from '@logic/Search/Search.js';
 import { createQueryable } from '@logic/createQueryable.js';
-import { Example } from '@modules/managment/example.js';
+import { ExampleNs } from '@modules/managment/exampleNs.js';
 import { PreviewButton } from '@modules/interface/SideBar/Examples/PreviewButton.js';
 import { CollapseButton } from '@modules/interface/SideBar/Examples/CollapseButton.js';
 import { Accordion, AccordionItem } from '@shared/components/control/Accordion/Accordion.jsx';
@@ -48,10 +48,10 @@ export const Examples = () => {
 
   onCleanup(() =>
     Search.clears([
-      Example.Search.SelectedId,
-      Example.Search.CollapseId,
-      Example.Search.PreviewId,
-      Example.Search.QueryId,
+      ExampleNs.Search.SelectedId,
+      ExampleNs.Search.CollapseId,
+      ExampleNs.Search.PreviewId,
+      ExampleNs.Search.QueryId,
     ]),
   );
 
@@ -62,7 +62,7 @@ export const Examples = () => {
     <div class="flex flex-col gap-1 h-full">
       <div class="flex flex-col gap-1 px-2">
         <TextField
-          searchId={Example.Search.QueryId}
+          searchId={ExampleNs.Search.QueryId}
           icon="FaSolidMagnifyingGlass"
           label="search..."
           value={get()}

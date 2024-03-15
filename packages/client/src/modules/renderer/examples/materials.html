@@ -11,30 +11,19 @@
 		<div id="info">
 			<a href="https://threejs.org" target="_blank" rel="noopener">three.js</a> WebGPU - Materials
 		</div>
+<script type="module">
 
-		<script type="importmap">
-			{
-				"imports": {
-					"three": "../threejs/Three.js",
-					"three/addons/": "../jsm/",
-					"three/nodes": "../jsm/nodes/Nodes.js"
-				}
-			}
-		</script>
+			import * as THREE from '../threejs/Three.js';
+			import * as Nodes from '../jsm/nodes/Nodes.js';
 
-		<script type="module">
+			import { tslFn, wgslFn, positionLocal, positionWorld, normalLocal, normalWorld, normalView, color, texture, uv, float, vec2, vec3, vec4, oscSine, triplanarTexture, viewportBottomLeft, js, string, global, loop, MeshBasicNodeMaterial, NodeObjectLoader } from '../jsm/nodes/Nodes.js';
 
-			import * as THREE from 'three';
-			import * as Nodes from 'three/nodes';
+			import WebGPU from '../jsm/capabilities/WebGPU.js';
+			import WebGPURenderer from '../jsm/renderers/webgpu/WebGPURenderer.js';
 
-			import { tslFn, wgslFn, positionLocal, positionWorld, normalLocal, normalWorld, normalView, color, texture, uv, float, vec2, vec3, vec4, oscSine, triplanarTexture, viewportBottomLeft, js, string, global, loop, MeshBasicNodeMaterial, NodeObjectLoader } from 'three/nodes';
+			import { TeapotGeometry } from '../jsm/geometries/TeapotGeometry.js';
 
-			import WebGPU from 'three/addons/capabilities/WebGPU.js';
-			import WebGPURenderer from 'three/addons/renderers/webgpu/WebGPURenderer.js';
-
-			import { TeapotGeometry } from 'three/addons/geometries/TeapotGeometry.js';
-
-			import Stats from 'three/addons/libs/stats.module.js';
+			import Stats from '../jsm/libs/stats.module.js';
 
 			let stats;
 

@@ -10,31 +10,20 @@
 		<div id="info">
 			<a href="https://threejs.org" target="_blank">threejs</a> webgpu - Multiple RenderTargets
 		</div>
+<script type="module">
 
-		<script type="importmap">
-			{
-				"imports": {
-					"three": "../threejs/Three.js",
-					"three/addons/": "../jsm/",
-					"three/nodes": "../jsm/nodes/Nodes.js"
-				}
-			}
-		</script>
+			import * as THREE from '../threejs/Three.js';
 
-		<script type="module">
+			import { OrbitControls } from '../jsm/controls/OrbitControls.js';
+			//import { GUI } from '../jsm/libs/lil-gui.module.min.js';
 
-			import * as THREE from 'three';
+			import { NodeMaterial, mix, modelNormalMatrix, normalGeometry, normalize, outputStruct, step, texture, uniform, uv, varying, vec2, vec4 } from '../jsm/nodes/Nodes.js';
+			import WebGPU from '../jsm/capabilities/WebGPU.js';
+			import WebGL from '../jsm/capabilities/WebGL.js';
 
-			import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-			//import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+			import WebGPURenderer from '../jsm/renderers/webgpu/WebGPURenderer.js';
 
-			import { NodeMaterial, mix, modelNormalMatrix, normalGeometry, normalize, outputStruct, step, texture, uniform, uv, varying, vec2, vec4 } from 'three/nodes';
-			import WebGPU from 'three/addons/capabilities/WebGPU.js';
-			import WebGL from 'three/addons/capabilities/WebGL.js';
-
-			import WebGPURenderer from 'three/addons/renderers/webgpu/WebGPURenderer.js';
-
-			import QuadMesh from 'three/addons/objects/QuadMesh.js';
+			import QuadMesh from '../jsm/objects/QuadMesh.js';
 
 			let camera, scene, renderer, torus;
 			let quadMesh, renderTarget;

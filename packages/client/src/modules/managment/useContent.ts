@@ -1,18 +1,13 @@
 import { createContext } from '@logic/createContext.js';
 import { createSearchString } from '@logic/Search/createSearchString.js';
-import { Example } from '@modules/managment/example.js';
+import { ExampleNs } from '@modules/managment/exampleNs.js';
+import { Example } from '@modules/renderer/examples/examples.js';
 
-export const [useContent, ContentProvider] = createContext(
-  () => {
-    const [selected, select] = createSearchString(Example.Search.SelectedId);
+export const [useContent, ContentProvider] = createContext(() => {
+  const [selected, select] = createSearchString<Example>(ExampleNs.Search.SelectedId);
 
-    return {
-      selected,
-      select,
-    };
-  },
-  {
-    selected: () => '',
-    select: () => {},
-  },
-);
+  return {
+    selected,
+    select,
+  };
+});

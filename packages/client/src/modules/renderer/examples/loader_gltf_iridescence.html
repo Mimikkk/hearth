@@ -13,28 +13,18 @@
 			Iridescence Lamp from <a href="https://github.com/KhronosGroup/glTF-Sample-Models/tree/master/2.0/IridescenceLamp" target="_blank" rel="noopener">glTF-Sample-Models</a><br />
 			<a href="https://hdrihaven.com/hdri/?h=venice_sunset" target="_blank" rel="noopener">Venice Sunset</a> from <a href="https://hdrihaven.com/" target="_blank" rel="noopener">HDRI Haven</a>
 		</div>
+<script type="module">
 
-		<script type="importmap">
-			{
-				"imports": {
-					"three": "../threejs/Three.js",
-					"three/addons/": "../jsm/"
-				}
-			}
-		</script>
+			import * as THREE from '../threejs/Three.js';
 
-		<script type="module">
+			import WebGPU from '../jsm/capabilities/WebGPU.js';
+			import WebGL from '../jsm/capabilities/WebGL.js';
 
-			import * as THREE from 'three';
+			import WebGPURenderer from '../jsm/renderers/webgpu/WebGPURenderer.js';
 
-			import WebGPU from 'three/addons/capabilities/WebGPU.js';
-			import WebGL from 'three/addons/capabilities/WebGL.js';
-
-			import WebGPURenderer from 'three/addons/renderers/webgpu/WebGPURenderer.js';
-
-			import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-			import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-			import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
+			import { OrbitControls } from '../jsm/controls/OrbitControls.js';
+			import { GLTFLoader } from '../jsm/loaders/GLTFLoader.js';
+			import { RGBELoader } from '../jsm/loaders/RGBELoader.js';
 
 			let renderer, scene, camera, controls;
 

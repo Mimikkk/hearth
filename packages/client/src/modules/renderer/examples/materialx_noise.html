@@ -10,31 +10,20 @@
 		<div id="info">
 			<a href="https://threejs.org" target="_blank" rel="noopener">three.js</a> webgpu - MaterialX - Noise
 		</div>
+<script type="module">
 
-		<script type="importmap">
-			{
-				"imports": {
-					"three": "../threejs/Three.js",
-					"three/addons/": "../jsm/",
-					"three/nodes": "../jsm/nodes/Nodes.js"
-				}
-			}
-		</script>
+			import * as THREE from '../threejs/Three.js';
+			import { MeshPhysicalNodeMaterial, normalWorld, timerLocal, mx_noise_vec3, mx_worley_noise_vec3, mx_cell_noise_float, mx_fractal_noise_vec3 } from '../jsm/nodes/Nodes.js';
 
-		<script type="module">
+			import Stats from '../jsm/libs/stats.module.js';
 
-			import * as THREE from 'three';
-			import { MeshPhysicalNodeMaterial, normalWorld, timerLocal, mx_noise_vec3, mx_worley_noise_vec3, mx_cell_noise_float, mx_fractal_noise_vec3 } from 'three/nodes';
+			import { OrbitControls } from '../jsm/controls/OrbitControls.js';
+			import { HDRCubeTextureLoader } from '../jsm/loaders/HDRCubeTextureLoader.js';
 
-			import Stats from 'three/addons/libs/stats.module.js';
+			import WebGPURenderer from '../jsm/renderers/webgpu/WebGPURenderer.js';
 
-			import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-			import { HDRCubeTextureLoader } from 'three/addons/loaders/HDRCubeTextureLoader.js';
-
-			import WebGPURenderer from 'three/addons/renderers/webgpu/WebGPURenderer.js';
-
-			import WebGPU from 'three/addons/capabilities/WebGPU.js';
-			import WebGL from 'three/addons/capabilities/WebGL.js';
+			import WebGPU from '../jsm/capabilities/WebGPU.js';
+			import WebGL from '../jsm/capabilities/WebGL.js';
 
 			let container, stats;
 

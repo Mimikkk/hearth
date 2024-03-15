@@ -10,25 +10,14 @@
 		<div id="info">
 			<a href="https://threejs.org" target="_blank" rel="noopener">three.js</a> WebGPU - Compute Ping/Pong Texture
 		</div>
+<script type="module">
 
-		<script type="importmap">
-			{
-				"imports": {
-					"three": "../threejs/Three.js",
-					"three/addons/": "../jsm/",
-					"three/nodes": "../jsm/nodes/Nodes.js"
-				}
-			}
-		</script>
+			import * as THREE from '../threejs/Three.js';
+			import { texture, textureStore, wgslFn, code, instanceIndex, uniform } from '../jsm/nodes/Nodes.js';
 
-		<script type="module">
-
-			import * as THREE from 'three';
-			import { texture, textureStore, wgslFn, code, instanceIndex, uniform } from 'three/nodes';
-
-			import WebGPU from 'three/addons/capabilities/WebGPU.js';
-			import WebGPURenderer from 'three/addons/renderers/webgpu/WebGPURenderer.js';
-			import StorageTexture from 'three/addons/renderers/common/StorageTexture.js';
+			import WebGPU from '../jsm/capabilities/WebGPU.js';
+			import WebGPURenderer from '../jsm/renderers/webgpu/WebGPURenderer.js';
+			import StorageTexture from '../jsm/renderers/common/StorageTexture.js';
 
 			let camera, scene, renderer;
 			let computeInitNode, computeToPing, computeToPong;

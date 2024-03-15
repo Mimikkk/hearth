@@ -12,33 +12,22 @@
 			<a href="https://threejs.org" target="_blank" rel="noopener">three.js</a> - WebGPU - Selective Lights<br />
 			<b style="color:red">Left: Red lights</b> - <b>Center: All lights</b> - <b style="color:blue">Right: blue light</b>
 		</div>
+<script type="module">
 
-		<script type="importmap">
-			{
-				"imports": {
-					"three": "../threejs/Three.js",
-					"three/addons/": "../jsm/",
-					"three/nodes": "../jsm/nodes/Nodes.js"
-				}
-			}
-		</script>
+			import * as THREE from '../threejs/Three.js';
+			import { rangeFog, color, lights, texture, normalMap, MeshStandardNodeMaterial } from '../jsm/nodes/Nodes.js';
 
-		<script type="module">
+			import Stats from '../jsm/libs/stats.module.js';
 
-			import * as THREE from 'three';
-			import { rangeFog, color, lights, texture, normalMap, MeshStandardNodeMaterial } from 'three/nodes';
+			import { GUI } from '../jsm/libs/lil-gui.module.min.js';
 
-			import Stats from 'three/addons/libs/stats.module.js';
+			import { OrbitControls } from '../jsm/controls/OrbitControls.js';
+			import { TeapotGeometry } from '../jsm/geometries/TeapotGeometry.js';
 
-			import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+			import WebGPU from '../jsm/capabilities/WebGPU.js';
+			import WebGL from '../jsm/capabilities/WebGL.js';
 
-			import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-			import { TeapotGeometry } from 'three/addons/geometries/TeapotGeometry.js';
-
-			import WebGPU from 'three/addons/capabilities/WebGPU.js';
-			import WebGL from 'three/addons/capabilities/WebGL.js';
-
-			import WebGPURenderer from 'three/addons/renderers/webgpu/WebGPURenderer.js';
+			import WebGPURenderer from '../jsm/renderers/webgpu/WebGPURenderer.js';
 
 			let camera, scene, renderer,
 				light1, light2, light3, light4,

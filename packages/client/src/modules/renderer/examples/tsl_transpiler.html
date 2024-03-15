@@ -27,18 +27,7 @@
 		<div id="source"></div>
 		<div id="result"></div>
 		<script src="https://cdn.jsdelivr.net/npm/monaco-editor@latest/min/vs/loader.min.js"></script>
-
-		<script type="importmap">
-			{
-				"imports": {
-					"three": "../threejs/Three.js",
-					"three/addons/": "../jsm/",
-					"three/nodes": "../jsm/nodes/Nodes.js"
-				}
-			}
-		</script>
-
-		<script type="module">
+<script type="module">
 
 			import Transpiler from './jsm/transpiler/Transpiler.js';
 			import GLSLDecoder from './jsm/transpiler/GLSLDecoder.js';

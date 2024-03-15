@@ -38,24 +38,13 @@
 			text-align: left;
 		"></div>
 		</div>
+<script type="module">
 
-		<script type="importmap">
-			{
-				"imports": {
-					"three": "../threejs/Three.js",
-					"three/addons/": "../jsm/",
-					"three/nodes": "../jsm/nodes/Nodes.js"
-				}
-			}
-		</script>
+			import * as THREE from '../threejs/Three.js';
+			import { storageObject, If, vec3, uv, uint, float, tslFn, instanceIndex, MeshBasicNodeMaterial } from '../jsm/nodes/Nodes.js';
 
-		<script type="module">
-
-			import * as THREE from 'three';
-			import { storageObject, If, vec3, uv, uint, float, tslFn, instanceIndex, MeshBasicNodeMaterial } from 'three/nodes';
-
-			import WebGPURenderer from 'three/addons/renderers/webgpu/WebGPURenderer.js';
-			import StorageInstancedBufferAttribute from 'three/addons/renderers/common/StorageInstancedBufferAttribute.js';
+			import WebGPURenderer from '../jsm/renderers/webgpu/WebGPURenderer.js';
+			import StorageInstancedBufferAttribute from '../jsm/renderers/common/StorageInstancedBufferAttribute.js';
 
 			const timestamps = {
 				webgpu: document.getElementById( 'timestamps' ),

@@ -13,29 +13,18 @@
 			<br/>Fast subsurface scattering<br/>
 			[Thanks for the art support from <a href="https://github.com/shaochun" target="_blank" rel="noopener">Shaochun Lin</a>]
 		</div>
+<script type="module">
 
-		<script type="importmap">
-			{
-				"imports": {
-					"three": "../threejs/Three.js",
-					"three/addons/": "../jsm/",
-					"three/nodes": "../jsm/nodes/Nodes.js"
-				}
-			}
-		</script>
+			import * as THREE from '../threejs/Three.js';
+			import * as Nodes from '../jsm/nodes/Nodes.js';
 
-		<script type="module">
+			import WebGPURenderer from '../jsm/renderers/webgpu/WebGPURenderer.js';
 
-			import * as THREE from 'three';
-			import * as Nodes from 'three/nodes';
+			import Stats from '../jsm/libs/stats.module.js';
 
-			import WebGPURenderer from 'three/addons/renderers/webgpu/WebGPURenderer.js';
-
-			import Stats from 'three/addons/libs/stats.module.js';
-
-			import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
-			import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-			import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
+			import { GUI } from '../jsm/libs/lil-gui.module.min.js';
+			import { OrbitControls } from '../jsm/controls/OrbitControls.js';
+			import { FBXLoader } from '../jsm/loaders/FBXLoader.js';
 
 			let container, stats;
 			let camera, scene, renderer;

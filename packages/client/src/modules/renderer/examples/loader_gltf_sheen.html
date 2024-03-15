@@ -17,30 +17,20 @@
 			<a href="https://threejs.org" target="_blank" rel="noopener">three.js</a> - GLTFLoader + <a href="https://github.com/KhronosGroup/glTF/tree/master/extensions/2.0/Khronos/KHR_materials_sheen" target="_blank" rel="noopener">KHR_materials_sheen</a><br />
 			Sheen Chair from <a href="https://github.com/KhronosGroup/glTF-Sample-Models/tree/master/2.0/SheenChair" target="_blank" rel="noopener">glTF-Sample-Models</a>
 		</div>
+<script type="module">
 
-		<script type="importmap">
-			{
-				"imports": {
-					"three": "../threejs/Three.js",
-					"three/addons/": "../jsm/"
-				}
-			}
-		</script>
+			import * as THREE from '../threejs/Three.js';
 
-		<script type="module">
+			import WebGPU from '../jsm/capabilities/WebGPU.js';
+			import WebGL from '../jsm/capabilities/WebGL.js';
 
-			import * as THREE from 'three';
+			import WebGPURenderer from '../jsm/renderers/webgpu/WebGPURenderer.js';
 
-			import WebGPU from 'three/addons/capabilities/WebGPU.js';
-			import WebGL from 'three/addons/capabilities/WebGL.js';
+			import { OrbitControls } from '../jsm/controls/OrbitControls.js';
+			import { GLTFLoader } from '../jsm/loaders/GLTFLoader.js';
+			import { RGBELoader } from '../jsm/loaders/RGBELoader.js';
 
-			import WebGPURenderer from 'three/addons/renderers/webgpu/WebGPURenderer.js';
-
-			import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-			import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-			import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
-
-			import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+			import { GUI } from '../jsm/libs/lil-gui.module.min.js';
 
 			let camera, scene, renderer, controls;
 

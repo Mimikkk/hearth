@@ -12,34 +12,23 @@
 		<div id="container"></div>
 
 		<div id="info"><a href="https://threejs.org" target="_blank">three.js</a> - fat lines</div>
+<script type="module">
 
-		<script type="importmap">
-			{
-				"imports": {
-					"three": "../threejs/Three.js",
-					"three/addons/": "../jsm/",
-					"three/nodes": "../jsm/nodes/Nodes.js"
-				}
-			}
-		</script>
+			import * as THREE from '../threejs/Three.js';
 
-		<script type="module">
+			import WebGPU from '../jsm/capabilities/WebGPU.js';
+			import WebGL from '../jsm/capabilities/WebGL.js';
 
-			import * as THREE from 'three';
+			import WebGPURenderer from '../jsm/renderers/webgpu/WebGPURenderer.js';
 
-			import WebGPU from 'three/addons/capabilities/WebGPU.js';
-			import WebGL from 'three/addons/capabilities/WebGL.js';
+			import Stats from '../jsm/libs/stats.module.js';
 
-			import WebGPURenderer from 'three/addons/renderers/webgpu/WebGPURenderer.js';
-
-			import Stats from 'three/addons/libs/stats.module.js';
-
-			import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
-			import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-			import { Line2NodeMaterial, LineDashedNodeMaterial, LineBasicNodeMaterial, color } from 'three/nodes';
-			import { Line2 } from 'three/addons/lines/Line2.js';
-			import { LineGeometry } from 'three/addons/lines/LineGeometry.js';
-			import * as GeometryUtils from 'three/addons/utils/GeometryUtils.js';
+			import { GUI } from '../jsm/libs/lil-gui.module.min.js';
+			import { OrbitControls } from '../jsm/controls/OrbitControls.js';
+			import { Line2NodeMaterial, LineDashedNodeMaterial, LineBasicNodeMaterial, color } from '../jsm/nodes/Nodes.js';
+			import { Line2 } from '../jsm/lines/Line2.js';
+			import { LineGeometry } from '../jsm/lines/LineGeometry.js';
+			import * as GeometryUtils from '../jsm/utils/GeometryUtils.js';
 
 			let line, renderer, scene, camera, camera2, controls, backgroundNode;
 			let line1;

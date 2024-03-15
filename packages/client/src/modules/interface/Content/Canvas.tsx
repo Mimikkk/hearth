@@ -1,8 +1,9 @@
 import { Example, ExampleName } from '@modules/renderer/examples/examples.js';
-import { createSearchString } from '@logic/Search/createSearchString.js';
+import { createEffect } from 'solid-js';
+import { useContent } from '@modules/managment/useContent.js';
 
 export const Canvas = () => {
-  const example: ExampleName = 'Backdrop';
+  const { selected } = useContent();
   // const example = useGpu(s => s.example);
   // const [[object, parent], setRef] = useStateRef(
   //   useCallback((node: HTMLObjectElement) => [node, node?.parentElement ?? null] as const, []),
@@ -21,5 +22,5 @@ export const Canvas = () => {
 
   let ref: HTMLObjectElement | undefined = undefined;
 
-  return <object ref={ref} type="text/html" data={`src/renderers/three/examples/${Example[example]}.html`} />;
+  return <object ref={ref} type="text/html" data={`src/modules/renderer/examples/${selected()}.html`} />;
 };

@@ -22,21 +22,11 @@
 			<source src="textures/pano.webm">
 			<source src="textures/pano.mp4">
 		</video>
+<script type="module">
 
-		<script type="importmap">
-			{
-				"imports": {
-					"three": "../threejs/Three.js",
-					"three/addons/": "../jsm/"
-				}
-			}
-		</script>
+			import * as THREE from '../threejs/Three.js';
 
-		<script type="module">
-
-			import * as THREE from 'three';
-
-			import WebGPURenderer from 'three/addons/renderers/webgpu/WebGPURenderer.js';
+			import WebGPURenderer from '../jsm/renderers/webgpu/WebGPURenderer.js';
 
 			let camera, scene, renderer;
 

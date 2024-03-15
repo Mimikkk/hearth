@@ -11,18 +11,7 @@
 			<a href="https://threejs.org" target="_blank" rel="noopener">three.js</a> - ShaderToy
 			<br />Shader created by <a href="https://www.shadertoy.com/view/Mt2SzR" target="_blank" rel="noopener">jackdavenport</a> and <a href="https://www.shadertoy.com/view/3tcBzH" target="_blank" rel="noopener">trinketMage</a>.
 		</div>
-
-		<script type="importmap">
-			{
-				"imports": {
-					"three": "../threejs/Three.js",
-					"three/addons/": "../jsm/",
-					"three/nodes": "../jsm/nodes/Nodes.js"
-				}
-			}
-		</script>
-
-		<script type="x-shader/x-fragment" id="example1">
+<script type="x-shader/x-fragment" id="example1">
 			// https://www.shadertoy.com/view/Mt2SzR
 
 			float random(float x) {
@@ -166,17 +155,17 @@
 
 		<script type="module">
 
-			import * as THREE from 'three';
-			import * as Nodes from 'three/nodes';
+			import * as THREE from '../threejs/Three.js';
+			import * as Nodes from '../jsm/nodes/Nodes.js';
 
 			import Transpiler from './jsm/transpiler/Transpiler.js';
 			import ShaderToyDecoder from './jsm/transpiler/ShaderToyDecoder.js';
 			import TSLEncoder from './jsm/transpiler/TSLEncoder.js';
 
-			import WebGPU from 'three/addons/capabilities/WebGPU.js';
-			import WebGL from 'three/addons/capabilities/WebGL.js';
+			import WebGPU from '../jsm/capabilities/WebGPU.js';
+			import WebGL from '../jsm/capabilities/WebGL.js';
 
-			import WebGPURenderer from 'three/addons/renderers/webgpu/WebGPURenderer.js';
+			import WebGPURenderer from '../jsm/renderers/webgpu/WebGPURenderer.js';
 
 			class ShaderToyNode extends Nodes.Node {
 

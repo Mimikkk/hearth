@@ -12,21 +12,10 @@
 			<a href="https://threejs.org" target="_blank" rel="noopener noreferrer">three.js</a> - partial webgpu texture update <br/>
 			replace parts of an existing texture with all data of another texture
 		</div>
+<script type="module">
 
-		<script type="importmap">
-			{
-				"imports": {
-					"three": "../threejs/Three.js",
-					"three/addons/": "../jsm/",
-					"three/nodes": "../jsm/nodes/Nodes.js"
-				}
-			}
-		</script>
-
-		<script type="module">
-
-			import * as THREE from 'three';
-			import WebGPURenderer from 'three/addons/renderers/webgpu/WebGPURenderer.js';
+			import * as THREE from '../threejs/Three.js';
+			import WebGPURenderer from '../jsm/renderers/webgpu/WebGPURenderer.js';
 
 			let camera, scene, renderer, clock, dataTexture, diffuseMap;
 

@@ -13,25 +13,14 @@
 			Textures by <a href="https://ambientcg.com/view?id=Ice002" target="_blank" rel="noopener">ambientCG</a><br />
 			
 		</div>
+<script type="module">
 
-		<script type="importmap">
-			{
-				"imports": {
-					"three": "../threejs/Three.js",
-					"three/addons/": "../jsm/",
-					"three/nodes": "../jsm/nodes/Nodes.js"
-				}
-			}
-		</script>
+			import * as THREE from '../threejs/Three.js';
+			import { MeshStandardNodeMaterial, texture, parallaxUV, uv } from '../jsm/nodes/Nodes.js';
 
-		<script type="module">
+			import WebGPURenderer from '../jsm/renderers/webgpu/WebGPURenderer.js';
 
-			import * as THREE from 'three';
-			import { MeshStandardNodeMaterial, texture, parallaxUV, uv } from 'three/nodes';
-
-			import WebGPURenderer from 'three/addons/renderers/webgpu/WebGPURenderer.js';
-
-			import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+			import { OrbitControls } from '../jsm/controls/OrbitControls.js';
 
 			let camera, scene, renderer;
 
