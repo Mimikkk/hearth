@@ -73,7 +73,7 @@ export const Examples = () => {
           <PreviewButton />
         </div>
       </div>
-      <Accordion items={filtered()} selected={selected()} onSelect={select} expanded />
+      <Accordion items={filtered()} selected={selected()} onSelect={select} />
     </div>
   );
 };
