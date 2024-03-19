@@ -14,9 +14,9 @@ export const ThemeButton = () => {
   );
   const title = createMemo(
     on(theme.next, mode => {
-      if (mode === 'light') return 'Switch to Light Mode';
-      if (mode === 'dark') return 'Switch to Dark Mode';
-      return 'Switch to System Mode';
+      if (mode === 'light') return 'Switch to light mode';
+      if (mode === 'dark') return 'Switch to dark mode';
+      return 'Switch to system mode';
     }),
   );
 
