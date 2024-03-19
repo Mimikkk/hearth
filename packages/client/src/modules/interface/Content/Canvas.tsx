@@ -1,11 +1,16 @@
 import { useContent } from '@modules/managment/useContent.js';
 import { Show } from 'solid-js';
+import { Icon } from '@components/buttons/Icon/Icon.js';
+import { ExampleNs } from '@modules/managment/exampleNs.js';
 
-const Backdrop = () => {
-  // write a component which asks to select an example from the sidebar
-
-  return <div class="w-full h-full bg-gray-300 rounded-sm center">Select an example from the sidebar</div>;
-};
+const Backdrop = () => (
+  <div class="w-full h-full center bg-gray-300 rounded-sm">
+    <label for={ExampleNs.Search.QueryId} class="center gap-2 hover:text-primary-7 transition">
+      <Icon name="CgAdd" />
+      Select an example from the sidebar
+    </label>
+  </div>
+);
 
 export const Canvas = () => {
   const { selected } = useContent();
