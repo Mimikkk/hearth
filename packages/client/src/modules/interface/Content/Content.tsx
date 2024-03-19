@@ -11,7 +11,7 @@ export const Content = (props: ContentProps) => {
 
   return (
     <div class={cx(props.class, 'w-full h-full relative')}>
-      <div class="absolute left-2">
+      <div class="absolute right-2 bottom-1">
         <ButtonIcon cross={showCode()} variant="text" icon="VsCode" onClick={toggleCode} />
       </div>
       <Canvas />

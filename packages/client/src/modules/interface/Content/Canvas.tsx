@@ -1,26 +1,24 @@
-import { Example, ExampleName } from '@modules/renderer/examples/examples.js';
-import { createEffect } from 'solid-js';
 import { useContent } from '@modules/managment/useContent.js';
+import { Show } from 'solid-js';
+
+const Backdrop = () => {
+  // write a component which asks to select an example from the sidebar
+
+  return <div class="w-full h-full bg-gray-300 rounded-sm center">Select an example from the sidebar</div>;
+};
 
 export const Canvas = () => {
   const { selected } = useContent();
-  // const example = useGpu(s => s.example);
-  // const [[object, parent], setRef] = useStateRef(
-  //   useCallback((node: HTMLObjectElement) => [node, node?.parentElement ?? null] as const, []),
-  //   [],
-  // );
 
-  // const resize = useCallback(() => {
-  //   if (!object || !parent) return;
-  //   const { width, height } = parent.getBoundingClientRect();
-  //   object.style.height = `${Math.ceil(height)}px`;
-  //   object.style.width = `${Math.ceil(width)}px`;
-  // }, [object, parent]);
-  //
-  // useEffect(resize, [parent]);
-  // useEvent('resize', resize);
-
-  let ref: HTMLObjectElement | undefined = undefined;
-
-  return <object ref={ref} type="text/html" data={`src/modules/renderer/examples/${selected()}.html`} />;
+  return (
+    <div class="w-full h-full rounded-sm border border-primary-3">
+      <Show when={selected()} fallback={<Backdrop />}>
+        <object
+          class="w-full h-full rounded-sm"
+          type="text/html"
+          data={`src/modules/renderer/examples/${selected()}.html`}
+        />
+      </Show>
+    </div>
+  );
 };

@@ -6,8 +6,8 @@ import { DevelopmentTools } from '@modules/development/DevelopmentTools.js';
 export const Layout = () => (
   <main class="flex flex-col gap-1 pb-1 h-full overflow-auto">
     <div class="flex rounded-sm h-full overflow-auto">
-      <SideBar />
-      <Content class="px-1 py-2" />
+      <SideBar class="rounded-br-sm" />
+      <Content class="p-1 pb-0" />
     </div>
     <Footer class="col-span-full px-2" />
     <DevelopmentTools />

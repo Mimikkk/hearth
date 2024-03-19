@@ -2,6 +2,8 @@ import { GithubButton } from '@modules/interface/Footer/GithubButton.js';
 import { WebGpuButton } from '@modules/interface/Footer/WebGpuButton.js';
 import { ThemeButton } from '@modules/interface/Footer/ThemeButton.js';
 import cx from 'clsx';
+import { DevelopmentToolsButton } from '@modules/development/DevelopmentToolsButton.js';
+import { Devtools } from '@modules/development/devtools.js';
 
 interface FooterProps {
   class?: string;
@@ -14,6 +16,13 @@ export const Footer = (props: FooterProps) => (
       <WebGpuButton />
       Prototype
     </div>
-    <ThemeButton />
+    <div class="relative center gap-2">
+      <DevelopmentToolsButton
+        class={cx(
+          Devtools.active() && 'fixed bottom-[598px] z-10 border-2 bg-primary-1 border-b-primary-1 p-1 rounded-t-sm',
+        )}
+      />
+      <ThemeButton />
+    </div>
   </footer>
 );
