@@ -1,4 +1,4 @@
-import { type Ref, Show } from 'solid-js';
+import { Ref, Show } from 'solid-js';
 import cx from 'clsx';
 import s from './TextField.module.scss';
 import { createSearchString } from '@logic/Search/createSearchString.js';
@@ -55,7 +55,7 @@ export const TextField = (props: TextFieldProps) => {
         id={id}
         ref={element => {
           ref = element;
-          props.ref = element;
+          (props.ref as ((element: HTMLInputElement) => void) | undefined)?.(element);
         }}
         class={s.input}
         placeholder=" "

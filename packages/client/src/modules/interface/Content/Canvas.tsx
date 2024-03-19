@@ -6,8 +6,8 @@ import { ExampleNs } from '@modules/managment/exampleNs.js';
 const Backdrop = () => (
   <div class="w-full h-full center bg-gray-300 rounded-sm">
     <label for={ExampleNs.Search.QueryId} class="center gap-2 hover:text-primary-7 transition">
-      <Icon name="CgAdd" />
-      Select an example from the sidebar
+      <Icon name="BsChevronDoubleLeft" />
+      Select an example from the sidebar on the left
     </label>
   </div>
 );

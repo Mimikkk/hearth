@@ -32,7 +32,7 @@ export const Grid = <T,>(props: GridProps<T>) => {
     },
   });
 
-  let ref: HTMLDivElement = undefined!;
+  let ref!: HTMLDivElement;
   const grid = createGrid(mergeProps({ ref: () => ref }, $));
 
   return (

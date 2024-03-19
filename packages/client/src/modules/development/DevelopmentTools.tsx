@@ -17,7 +17,7 @@ export const DevelopmentTools = () => {
             tabs={[
               {
                 id: 'tab-1',
-                title: 'Available Icons',
+                title: 'Available icons',
                 children: AvailableIconsTab,
                 icon: 'CgAdd',
               },

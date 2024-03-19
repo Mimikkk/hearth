@@ -18,9 +18,7 @@ export const Footer = (props: FooterProps) => (
     </div>
     <div class="relative center gap-2">
       <DevelopmentToolsButton
-        class={cx(
-          Devtools.active() && 'fixed bottom-[598px] z-10 border-2 bg-primary-1 border-b-primary-1 p-1 rounded-t-sm',
-        )}
+        class={cx(Devtools.active() && 'fixed bottom-[598px] z-10 border-2 border-b-primary-white p-1 rounded-t-sm')}
       />
       <ThemeButton />
     </div>
