@@ -17,7 +17,6 @@
 					"three": "../threejs/Three.js",
 					"three/addons/": "../jsm/",
 					"three/nodes": "../jsm/nodes/Nodes.js",
-					"stats-gl": "https://www.unpkg.com/stats-gl@2.2.6/dist/main.js"
 				}
 			}
 		</script>
@@ -38,7 +37,6 @@
 
 			import { OrbitControls } from '../jsm/controls/OrbitControls.js';
 
-			import Stats from 'stats-gl';
 
 			const maxParticleCount = 100000;
 
@@ -286,13 +284,6 @@
 				renderer.setAnimationLoop( animate );
 				document.body.appendChild( renderer.domElement );
 
-				stats = new Stats( {
-					precision: 3,
-					horizontal: false
-				} );
-				stats.init( renderer );
-				document.body.appendChild( stats.dom );
-
 
 				//
 
@@ -370,8 +361,6 @@
 				renderer.setRenderTarget( null );
 
 				await postProcessing.renderAsync();
-			
-				stats.update();
 
 			}
 
