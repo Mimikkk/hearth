@@ -1,93 +1,93 @@
 body {
-  background-color: #000;
-  color: #fff;
-  font-family: Monospace;
-  font-size: 13px;
-  line-height: 24px;
-  margin: 0;
-  overscroll-behavior: none;
+    background-color: #000;
+    color: #fff;
+    font-family: Monospace;
+    font-size: 13px;
+    line-height: 24px;
+    margin: 0;
+    overscroll-behavior: none;
 }
 a {
-  color: #ff0;
-  text-decoration: none;
+    color: #ff0;
+    text-decoration: none;
 }
 
 a:hover {
-  text-decoration: underline;
+    text-decoration: underline;
 }
 
 button {
-  cursor: pointer;
-  text-transform: uppercase;
+    cursor: pointer;
+    text-transform: uppercase;
 }
 
 #info {
-  box-sizing: border-box;
-  padding: 10px;
-  pointer-events: none;
-  position: absolute;
-  text-align: center;
-  top: 0px;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  -webkit-user-select: none;
-  user-select: none;
-  width: 100%;
-  z-index: 1; /* TODO Solve this in HTML */
+    box-sizing: border-box;
+    padding: 10px;
+    pointer-events: none;
+    position: absolute;
+    text-align: center;
+    top: 0px;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+    width: 100%;
+    z-index: 1; /* TODO Solve this in HTML */
 }
 
 a,
 button,
 input,
 select {
-  pointer-events: auto;
+    pointer-events: auto;
 }
 
 .lil-gui {
-  z-index: 2 !important; /* TODO Solve this in HTML */
+    z-index: 2 !important; /* TODO Solve this in HTML */
 }
 
 @media all and (max-width: 640px) {
-  .lil-gui.root {
-    bottom: 0;
-    left: 0;
-    max-height: 50%;
-    max-width: 80%;
-    right: auto;
-    top: auto;
-  }
+    .lil-gui.root {
+        bottom: 0;
+        left: 0;
+        max-height: 50%;
+        max-width: 80%;
+        right: auto;
+        top: auto;
+    }
 }
 
 #overlay {
-  align-items: center;
-  background: rgba(0, 0, 0, 0.7);
-  display: flex;
-  flex-direction: column;
-  font-size: 16px;
-  height: 100%;
-  justify-content: center;
-  left: 0;
-  position: absolute;
-  top: 0;
-  width: 100%;
-  z-index: 2;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    flex-direction: column;
+    font-size: 16px;
+    height: 100%;
+    justify-content: center;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: 2;
 }
 
 #overlay button {
-  background: transparent;
-  border: 0;
-  border: 1px solid rgb(255, 255, 255);
-  border-radius: 4px;
-  color: #ffffff;
-  cursor: pointer;
-  padding: 12px 18px;
-  text-transform: uppercase;
+    background: transparent;
+    border: 0;
+    border: 1px solid rgb(255, 255, 255);
+    border-radius: 4px;
+    color: #ffffff;
+    cursor: pointer;
+    padding: 12px 18px;
+    text-transform: uppercase;
 }
 
 #notSupported {
-  background-color: #f00;
-  margin: auto;
-  margin-top: 20px;
-  padding: 10px;
-  width: 50%;
+    background-color: #f00;
+    margin: auto;
+    margin-top: 20px;
+    padding: 10px;
+    width: 50%;
 }

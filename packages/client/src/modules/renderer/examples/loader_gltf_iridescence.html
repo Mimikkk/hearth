@@ -1,114 +1,20 @@
-<!DOCTYPE html>
 <html lang="en">
-	<head>
-		<title>three.js webgpu - GLTFloader + Iridescence</title>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-		<link type="text/css" rel="stylesheet" href="./styles.css">
-	</head>
-
-	<body>
-		<div id="info">
-			<a href="https://threejs.org" target="_blank" rel="noopener">three.js</a> - GLTFLoader + <a href="https://github.com/KhronosGroup/glTF/tree/master/extensions/2.0/Khronos/KHR_materials_iridescence" target="_blank" rel="noopener">KHR_materials_iridescence</a><br />
-			Iridescence Lamp from <a href="https://github.com/KhronosGroup/glTF-Sample-Models/tree/master/2.0/IridescenceLamp" target="_blank" rel="noopener">glTF-Sample-Models</a><br />
-			<a href="https://hdrihaven.com/hdri/?h=venice_sunset" target="_blank" rel="noopener">Venice Sunset</a> from <a href="https://hdrihaven.com/" target="_blank" rel="noopener">HDRI Haven</a>
-		</div>
-<script type="module">
-
-			import * as THREE from '../threejs/Three.js';
-
-			import WebGPU from '../jsm/capabilities/WebGPU.js';
-			import WebGL from '../jsm/capabilities/WebGL.js';
-
-			import WebGPURenderer from '../jsm/renderers/webgpu/WebGPURenderer.js';
-
-			import { OrbitControls } from '../jsm/controls/OrbitControls.js';
-			import { GLTFLoader } from '../jsm/loaders/GLTFLoader.js';
-			import { RGBELoader } from '../jsm/loaders/RGBELoader.js';
-
-			let renderer, scene, camera, controls;
-
-			init().catch( function ( err ) {
-
-				console.error( err );
-
-			} );
-
-			async function init() {
-
-				if ( WebGPU.isAvailable() === false && WebGL.isWebGL2Available() === false ) {
-
-					document.body.appendChild( WebGPU.getErrorMessage() );
-
-					throw new Error( 'No WebGPU or WebGL2 support' );
-
-				}
-
-				renderer = new WebGPURenderer( { antialias: true } );
-				renderer.setAnimationLoop( render );
-				renderer.setPixelRatio( window.devicePixelRatio );
-				renderer.setSize( window.innerWidth, window.innerHeight );
-				renderer.toneMapping = THREE.ACESFilmicToneMapping;
-				document.body.appendChild( renderer.domElement );
-
-				scene = new THREE.Scene();
-
-				camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 0.05, 20 );
-				camera.position.set( 0.35, 0.05, 0.35 );
-
-				controls = new OrbitControls( camera, renderer.domElement );
-				controls.autoRotate = true;
-				controls.autoRotateSpeed = - 0.5;
-				controls.target.set( 0, 0.2, 0 );
-				controls.update();
-
-				const rgbeLoader = new RGBELoader()
-					.setPath( 'textures/equirectangular/' );
-
-				const gltfLoader = new GLTFLoader().setPath( 'models/gltf/' );
-
-				const [ texture, gltf ] = await Promise.all( [
-					rgbeLoader.loadAsync( 'venice_sunset_1k.hdr' ),
-					gltfLoader.loadAsync( 'IridescenceLamp.glb' ),
-				] );
-
-				// environment
-
-				texture.mapping = THREE.EquirectangularReflectionMapping;
-
-				scene.background = texture;
-				scene.environment = texture;
-
-				// model
-
-				scene.add( gltf.scene );
-
-				render();
-
-				window.addEventListener( 'resize', onWindowResize );
-
-			}
-
-			function onWindowResize() {
-
-				camera.aspect = window.innerWidth / window.innerHeight;
-
-				camera.updateProjectionMatrix();
-
-				renderer.setSize( window.innerWidth, window.innerHeight );
-
-				render();
-
-			}
-
-			function render() {
-
-				controls.update();
-				renderer.render( scene, camera );
-
-			}
-
-		</script>
-
-	</body>
+<head>
+  <title>WebGPU - GLTFloader + Iridescence</title>
+  <meta charset="utf-8">
+  <meta content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" name="viewport">
+  <link href="./styles.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<div id="info">
+  WebGPU - GLTFLoader + <a
+  href="https://github.com/KhronosGroup/glTF/tree/master/extensions/2.0/Khronos/KHR_materials_iridescence"
+  rel="noopener" target="_blank">KHR_materials_iridescence</a><br />
+  Iridescence Lamp from <a href="https://github.com/KhronosGroup/glTF-Sample-Models/tree/master/2.0/IridescenceLamp"
+                           rel="noopener" target="_blank">glTF-Sample-Models</a><br />
+  <a href="https://hdrihaven.com/hdri/?h=venice_sunset" rel="noopener" target="_blank">Venice Sunset</a> from <a
+  href="https://hdrihaven.com/" rel="noopener" target="_blank">HDRI Haven</a>
+</div>
+<script type="module" src="./loader_gltf_iridescence.ts"></script>
+</body>
 </html>
