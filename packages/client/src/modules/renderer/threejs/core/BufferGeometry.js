@@ -2,13 +2,18 @@ import { Vector3 } from '../math/Vector3.js';
 import { Vector2 } from '../math/Vector2.js';
 import { Box3 } from '../math/Box3.js';
 import { EventDispatcher } from './EventDispatcher.js';
-import { BufferAttribute, Float32BufferAttribute, Uint16BufferAttribute, Uint32BufferAttribute } from './BufferAttribute.js';
+import {
+  BufferAttribute,
+  Float32BufferAttribute,
+  Uint16BufferAttribute,
+  Uint32BufferAttribute,
+} from './BufferAttribute.js';
 import { Sphere } from '../math/Sphere.js';
 import { Object3D } from './Object3D.js';
 import { Matrix4 } from '../math/Matrix4.js';
 import { Matrix3 } from '../math/Matrix3.js';
 import * as MathUtils from '../math/MathUtils.js';
-import { arrayNeedsUint32 } from '../utils.js';
+import { isArrayUint32 } from '../utils.ts';
 
 let _id = 0;
 
@@ -20,1054 +25,856 @@ const _boxMorphTargets = /*@__PURE__*/ new Box3();
 const _vector = /*@__PURE__*/ new Vector3();
 
 class BufferGeometry extends EventDispatcher {
+  constructor() {
+    super();
 
-	constructor() {
+    this.isBufferGeometry = true;
 
-		super();
+    Object.defineProperty(this, 'id', { value: _id++ });
 
-		this.isBufferGeometry = true;
+    this.uuid = MathUtils.generateUUID();
 
-		Object.defineProperty( this, 'id', { value: _id ++ } );
+    this.name = '';
+    this.type = 'BufferGeometry';
 
-		this.uuid = MathUtils.generateUUID();
+    this.index = null;
+    this.attributes = {};
 
-		this.name = '';
-		this.type = 'BufferGeometry';
+    this.morphAttributes = {};
+    this.morphTargetsRelative = false;
 
-		this.index = null;
-		this.attributes = {};
+    this.groups = [];
 
-		this.morphAttributes = {};
-		this.morphTargetsRelative = false;
+    this.boundingBox = null;
+    this.boundingSphere = null;
 
-		this.groups = [];
+    this.drawRange = { start: 0, count: Infinity };
 
-		this.boundingBox = null;
-		this.boundingSphere = null;
+    this.userData = {};
+  }
 
-		this.drawRange = { start: 0, count: Infinity };
+  getIndex() {
+    return this.index;
+  }
 
-		this.userData = {};
+  setIndex(index) {
+    if (Array.isArray(index)) {
+      this.index = new (isArrayUint32(index) ? Uint32BufferAttribute : Uint16BufferAttribute)(index, 1);
+    } else {
+      this.index = index;
+    }
 
-	}
+    return this;
+  }
 
-	getIndex() {
+  getAttribute(name) {
+    return this.attributes[name];
+  }
 
-		return this.index;
+  setAttribute(name, attribute) {
+    this.attributes[name] = attribute;
 
-	}
+    return this;
+  }
 
-	setIndex( index ) {
+  deleteAttribute(name) {
+    delete this.attributes[name];
 
-		if ( Array.isArray( index ) ) {
+    return this;
+  }
 
-			this.index = new ( arrayNeedsUint32( index ) ? Uint32BufferAttribute : Uint16BufferAttribute )( index, 1 );
+  hasAttribute(name) {
+    return this.attributes[name] !== undefined;
+  }
 
-		} else {
+  addGroup(start, count, materialIndex = 0) {
+    this.groups.push({
+      start: start,
+      count: count,
+      materialIndex: materialIndex,
+    });
+  }
 
-			this.index = index;
+  clearGroups() {
+    this.groups = [];
+  }
 
-		}
+  setDrawRange(start, count) {
+    this.drawRange.start = start;
+    this.drawRange.count = count;
+  }
 
-		return this;
+  applyMatrix4(matrix) {
+    const position = this.attributes.position;
 
-	}
+    if (position !== undefined) {
+      position.applyMatrix4(matrix);
 
-	getAttribute( name ) {
+      position.needsUpdate = true;
+    }
 
-		return this.attributes[ name ];
+    const normal = this.attributes.normal;
 
-	}
+    if (normal !== undefined) {
+      const normalMatrix = new Matrix3().getNormalMatrix(matrix);
 
-	setAttribute( name, attribute ) {
+      normal.applyNormalMatrix(normalMatrix);
 
-		this.attributes[ name ] = attribute;
+      normal.needsUpdate = true;
+    }
 
-		return this;
+    const tangent = this.attributes.tangent;
 
-	}
+    if (tangent !== undefined) {
+      tangent.transformDirection(matrix);
 
-	deleteAttribute( name ) {
+      tangent.needsUpdate = true;
+    }
 
-		delete this.attributes[ name ];
+    if (this.boundingBox !== null) {
+      this.computeBoundingBox();
+    }
 
-		return this;
+    if (this.boundingSphere !== null) {
+      this.computeBoundingSphere();
+    }
 
-	}
+    return this;
+  }
 
-	hasAttribute( name ) {
+  applyQuaternion(q) {
+    _m1.makeRotationFromQuaternion(q);
 
-		return this.attributes[ name ] !== undefined;
+    this.applyMatrix4(_m1);
 
-	}
+    return this;
+  }
 
-	addGroup( start, count, materialIndex = 0 ) {
+  rotateX(angle) {
+    // rotate geometry around world x-axis
 
-		this.groups.push( {
+    _m1.makeRotationX(angle);
 
-			start: start,
-			count: count,
-			materialIndex: materialIndex
+    this.applyMatrix4(_m1);
 
-		} );
+    return this;
+  }
 
-	}
+  rotateY(angle) {
+    // rotate geometry around world y-axis
 
-	clearGroups() {
+    _m1.makeRotationY(angle);
 
-		this.groups = [];
+    this.applyMatrix4(_m1);
 
-	}
+    return this;
+  }
 
-	setDrawRange( start, count ) {
+  rotateZ(angle) {
+    // rotate geometry around world z-axis
 
-		this.drawRange.start = start;
-		this.drawRange.count = count;
+    _m1.makeRotationZ(angle);
 
-	}
+    this.applyMatrix4(_m1);
 
-	applyMatrix4( matrix ) {
+    return this;
+  }
 
-		const position = this.attributes.position;
+  translate(x, y, z) {
+    // translate geometry
 
-		if ( position !== undefined ) {
+    _m1.makeTranslation(x, y, z);
 
-			position.applyMatrix4( matrix );
+    this.applyMatrix4(_m1);
 
-			position.needsUpdate = true;
+    return this;
+  }
 
-		}
+  scale(x, y, z) {
+    // scale geometry
 
-		const normal = this.attributes.normal;
+    _m1.makeScale(x, y, z);
 
-		if ( normal !== undefined ) {
+    this.applyMatrix4(_m1);
 
-			const normalMatrix = new Matrix3().getNormalMatrix( matrix );
+    return this;
+  }
 
-			normal.applyNormalMatrix( normalMatrix );
+  lookAt(vector) {
+    _obj.lookAt(vector);
 
-			normal.needsUpdate = true;
+    _obj.updateMatrix();
 
-		}
+    this.applyMatrix4(_obj.matrix);
 
-		const tangent = this.attributes.tangent;
+    return this;
+  }
 
-		if ( tangent !== undefined ) {
+  center() {
+    this.computeBoundingBox();
 
-			tangent.transformDirection( matrix );
+    this.boundingBox.getCenter(_offset).negate();
 
-			tangent.needsUpdate = true;
+    this.translate(_offset.x, _offset.y, _offset.z);
 
-		}
+    return this;
+  }
 
-		if ( this.boundingBox !== null ) {
+  setFromPoints(points) {
+    const position = [];
 
-			this.computeBoundingBox();
+    for (let i = 0, l = points.length; i < l; i++) {
+      const point = points[i];
+      position.push(point.x, point.y, point.z || 0);
+    }
 
-		}
+    this.setAttribute('position', new Float32BufferAttribute(position, 3));
 
-		if ( this.boundingSphere !== null ) {
+    return this;
+  }
 
-			this.computeBoundingSphere();
+  computeBoundingBox() {
+    if (this.boundingBox === null) {
+      this.boundingBox = new Box3();
+    }
 
-		}
+    const position = this.attributes.position;
+    const morphAttributesPosition = this.morphAttributes.position;
 
-		return this;
+    if (position && position.isGLBufferAttribute) {
+      console.error(
+        'THREE.BufferGeometry.computeBoundingBox(): GLBufferAttribute requires a manual bounding box.',
+        this,
+      );
 
-	}
+      this.boundingBox.set(new Vector3(-Infinity, -Infinity, -Infinity), new Vector3(+Infinity, +Infinity, +Infinity));
 
-	applyQuaternion( q ) {
+      return;
+    }
 
-		_m1.makeRotationFromQuaternion( q );
+    if (position !== undefined) {
+      this.boundingBox.setFromBufferAttribute(position);
 
-		this.applyMatrix4( _m1 );
+      // process morph attributes if present
 
-		return this;
+      if (morphAttributesPosition) {
+        for (let i = 0, il = morphAttributesPosition.length; i < il; i++) {
+          const morphAttribute = morphAttributesPosition[i];
+          _box.setFromBufferAttribute(morphAttribute);
 
-	}
+          if (this.morphTargetsRelative) {
+            _vector.addVectors(this.boundingBox.min, _box.min);
+            this.boundingBox.expandByPoint(_vector);
 
-	rotateX( angle ) {
+            _vector.addVectors(this.boundingBox.max, _box.max);
+            this.boundingBox.expandByPoint(_vector);
+          } else {
+            this.boundingBox.expandByPoint(_box.min);
+            this.boundingBox.expandByPoint(_box.max);
+          }
+        }
+      }
+    } else {
+      this.boundingBox.makeEmpty();
+    }
 
-		// rotate geometry around world x-axis
+    if (isNaN(this.boundingBox.min.x) || isNaN(this.boundingBox.min.y) || isNaN(this.boundingBox.min.z)) {
+      console.error(
+        'THREE.BufferGeometry.computeBoundingBox(): Computed min/max have NaN values. The "position" attribute is likely to have NaN values.',
+        this,
+      );
+    }
+  }
 
-		_m1.makeRotationX( angle );
+  computeBoundingSphere() {
+    if (this.boundingSphere === null) {
+      this.boundingSphere = new Sphere();
+    }
 
-		this.applyMatrix4( _m1 );
+    const position = this.attributes.position;
+    const morphAttributesPosition = this.morphAttributes.position;
 
-		return this;
+    if (position && position.isGLBufferAttribute) {
+      console.error(
+        'THREE.BufferGeometry.computeBoundingSphere(): GLBufferAttribute requires a manual bounding sphere.',
+        this,
+      );
 
-	}
+      this.boundingSphere.set(new Vector3(), Infinity);
 
-	rotateY( angle ) {
+      return;
+    }
 
-		// rotate geometry around world y-axis
+    if (position) {
+      // first, find the center of the bounding sphere
 
-		_m1.makeRotationY( angle );
+      const center = this.boundingSphere.center;
 
-		this.applyMatrix4( _m1 );
+      _box.setFromBufferAttribute(position);
 
-		return this;
+      // process morph attributes if present
 
-	}
+      if (morphAttributesPosition) {
+        for (let i = 0, il = morphAttributesPosition.length; i < il; i++) {
+          const morphAttribute = morphAttributesPosition[i];
+          _boxMorphTargets.setFromBufferAttribute(morphAttribute);
 
-	rotateZ( angle ) {
+          if (this.morphTargetsRelative) {
+            _vector.addVectors(_box.min, _boxMorphTargets.min);
+            _box.expandByPoint(_vector);
 
-		// rotate geometry around world z-axis
+            _vector.addVectors(_box.max, _boxMorphTargets.max);
+            _box.expandByPoint(_vector);
+          } else {
+            _box.expandByPoint(_boxMorphTargets.min);
+            _box.expandByPoint(_boxMorphTargets.max);
+          }
+        }
+      }
 
-		_m1.makeRotationZ( angle );
+      _box.getCenter(center);
 
-		this.applyMatrix4( _m1 );
+      // second, try to find a boundingSphere with a radius smaller than the
+      // boundingSphere of the boundingBox: sqrt(3) smaller in the best case
 
-		return this;
+      let maxRadiusSq = 0;
 
-	}
+      for (let i = 0, il = position.count; i < il; i++) {
+        _vector.fromBufferAttribute(position, i);
 
-	translate( x, y, z ) {
+        maxRadiusSq = Math.max(maxRadiusSq, center.distanceToSquared(_vector));
+      }
 
-		// translate geometry
+      // process morph attributes if present
 
-		_m1.makeTranslation( x, y, z );
+      if (morphAttributesPosition) {
+        for (let i = 0, il = morphAttributesPosition.length; i < il; i++) {
+          const morphAttribute = morphAttributesPosition[i];
+          const morphTargetsRelative = this.morphTargetsRelative;
 
-		this.applyMatrix4( _m1 );
+          for (let j = 0, jl = morphAttribute.count; j < jl; j++) {
+            _vector.fromBufferAttribute(morphAttribute, j);
 
-		return this;
+            if (morphTargetsRelative) {
+              _offset.fromBufferAttribute(position, j);
+              _vector.add(_offset);
+            }
 
-	}
+            maxRadiusSq = Math.max(maxRadiusSq, center.distanceToSquared(_vector));
+          }
+        }
+      }
 
-	scale( x, y, z ) {
+      this.boundingSphere.radius = Math.sqrt(maxRadiusSq);
 
-		// scale geometry
+      if (isNaN(this.boundingSphere.radius)) {
+        console.error(
+          'THREE.BufferGeometry.computeBoundingSphere(): Computed radius is NaN. The "position" attribute is likely to have NaN values.',
+          this,
+        );
+      }
+    }
+  }
 
-		_m1.makeScale( x, y, z );
+  computeTangents() {
+    const index = this.index;
+    const attributes = this.attributes;
 
-		this.applyMatrix4( _m1 );
+    // based on http://www.terathon.com/code/tangent.html
+    // (per vertex tangents)
 
-		return this;
+    if (
+      index === null ||
+      attributes.position === undefined ||
+      attributes.normal === undefined ||
+      attributes.uv === undefined
+    ) {
+      console.error(
+        'THREE.BufferGeometry: .computeTangents() failed. Missing required attributes (index, position, normal or uv)',
+      );
+      return;
+    }
 
-	}
+    const positionAttribute = attributes.position;
+    const normalAttribute = attributes.normal;
+    const uvAttribute = attributes.uv;
 
-	lookAt( vector ) {
+    if (this.hasAttribute('tangent') === false) {
+      this.setAttribute('tangent', new BufferAttribute(new Float32Array(4 * positionAttribute.count), 4));
+    }
 
-		_obj.lookAt( vector );
+    const tangentAttribute = this.getAttribute('tangent');
 
-		_obj.updateMatrix();
+    const tan1 = [],
+      tan2 = [];
 
-		this.applyMatrix4( _obj.matrix );
+    for (let i = 0; i < positionAttribute.count; i++) {
+      tan1[i] = new Vector3();
+      tan2[i] = new Vector3();
+    }
 
-		return this;
+    const vA = new Vector3(),
+      vB = new Vector3(),
+      vC = new Vector3(),
+      uvA = new Vector2(),
+      uvB = new Vector2(),
+      uvC = new Vector2(),
+      sdir = new Vector3(),
+      tdir = new Vector3();
 
-	}
+    function handleTriangle(a, b, c) {
+      vA.fromBufferAttribute(positionAttribute, a);
+      vB.fromBufferAttribute(positionAttribute, b);
+      vC.fromBufferAttribute(positionAttribute, c);
 
-	center() {
+      uvA.fromBufferAttribute(uvAttribute, a);
+      uvB.fromBufferAttribute(uvAttribute, b);
+      uvC.fromBufferAttribute(uvAttribute, c);
 
-		this.computeBoundingBox();
+      vB.sub(vA);
+      vC.sub(vA);
 
-		this.boundingBox.getCenter( _offset ).negate();
+      uvB.sub(uvA);
+      uvC.sub(uvA);
 
-		this.translate( _offset.x, _offset.y, _offset.z );
+      const r = 1.0 / (uvB.x * uvC.y - uvC.x * uvB.y);
 
-		return this;
+      // silently ignore degenerate uv triangles having coincident or colinear vertices
 
-	}
+      if (!isFinite(r)) return;
 
-	setFromPoints( points ) {
+      sdir.copy(vB).multiplyScalar(uvC.y).addScaledVector(vC, -uvB.y).multiplyScalar(r);
+      tdir.copy(vC).multiplyScalar(uvB.x).addScaledVector(vB, -uvC.x).multiplyScalar(r);
 
-		const position = [];
+      tan1[a].add(sdir);
+      tan1[b].add(sdir);
+      tan1[c].add(sdir);
 
-		for ( let i = 0, l = points.length; i < l; i ++ ) {
+      tan2[a].add(tdir);
+      tan2[b].add(tdir);
+      tan2[c].add(tdir);
+    }
 
-			const point = points[ i ];
-			position.push( point.x, point.y, point.z || 0 );
+    let groups = this.groups;
 
-		}
+    if (groups.length === 0) {
+      groups = [
+        {
+          start: 0,
+          count: index.count,
+        },
+      ];
+    }
 
-		this.setAttribute( 'position', new Float32BufferAttribute( position, 3 ) );
+    for (let i = 0, il = groups.length; i < il; ++i) {
+      const group = groups[i];
 
-		return this;
+      const start = group.start;
+      const count = group.count;
 
-	}
+      for (let j = start, jl = start + count; j < jl; j += 3) {
+        handleTriangle(index.getX(j + 0), index.getX(j + 1), index.getX(j + 2));
+      }
+    }
 
-	computeBoundingBox() {
+    const tmp = new Vector3(),
+      tmp2 = new Vector3();
+    const n = new Vector3(),
+      n2 = new Vector3();
 
-		if ( this.boundingBox === null ) {
+    function handleVertex(v) {
+      n.fromBufferAttribute(normalAttribute, v);
+      n2.copy(n);
 
-			this.boundingBox = new Box3();
+      const t = tan1[v];
 
-		}
+      // Gram-Schmidt orthogonalize
 
-		const position = this.attributes.position;
-		const morphAttributesPosition = this.morphAttributes.position;
+      tmp.copy(t);
+      tmp.sub(n.multiplyScalar(n.dot(t))).normalize();
 
-		if ( position && position.isGLBufferAttribute ) {
+      // Calculate handedness
 
-			console.error( 'THREE.BufferGeometry.computeBoundingBox(): GLBufferAttribute requires a manual bounding box.', this );
+      tmp2.crossVectors(n2, t);
+      const test = tmp2.dot(tan2[v]);
+      const w = test < 0.0 ? -1.0 : 1.0;
 
-			this.boundingBox.set(
-				new Vector3( - Infinity, - Infinity, - Infinity ),
-				new Vector3( + Infinity, + Infinity, + Infinity )
-			);
+      tangentAttribute.setXYZW(v, tmp.x, tmp.y, tmp.z, w);
+    }
 
-			return;
+    for (let i = 0, il = groups.length; i < il; ++i) {
+      const group = groups[i];
 
-		}
+      const start = group.start;
+      const count = group.count;
 
-		if ( position !== undefined ) {
+      for (let j = start, jl = start + count; j < jl; j += 3) {
+        handleVertex(index.getX(j + 0));
+        handleVertex(index.getX(j + 1));
+        handleVertex(index.getX(j + 2));
+      }
+    }
+  }
 
-			this.boundingBox.setFromBufferAttribute( position );
+  computeVertexNormals() {
+    const index = this.index;
+    const positionAttribute = this.getAttribute('position');
 
-			// process morph attributes if present
+    if (positionAttribute !== undefined) {
+      let normalAttribute = this.getAttribute('normal');
 
-			if ( morphAttributesPosition ) {
+      if (normalAttribute === undefined) {
+        normalAttribute = new BufferAttribute(new Float32Array(positionAttribute.count * 3), 3);
+        this.setAttribute('normal', normalAttribute);
+      } else {
+        // reset existing normals to zero
 
-				for ( let i = 0, il = morphAttributesPosition.length; i < il; i ++ ) {
+        for (let i = 0, il = normalAttribute.count; i < il; i++) {
+          normalAttribute.setXYZ(i, 0, 0, 0);
+        }
+      }
 
-					const morphAttribute = morphAttributesPosition[ i ];
-					_box.setFromBufferAttribute( morphAttribute );
+      const pA = new Vector3(),
+        pB = new Vector3(),
+        pC = new Vector3();
+      const nA = new Vector3(),
+        nB = new Vector3(),
+        nC = new Vector3();
+      const cb = new Vector3(),
+        ab = new Vector3();
 
-					if ( this.morphTargetsRelative ) {
+      // indexed elements
 
-						_vector.addVectors( this.boundingBox.min, _box.min );
-						this.boundingBox.expandByPoint( _vector );
+      if (index) {
+        for (let i = 0, il = index.count; i < il; i += 3) {
+          const vA = index.getX(i + 0);
+          const vB = index.getX(i + 1);
+          const vC = index.getX(i + 2);
 
-						_vector.addVectors( this.boundingBox.max, _box.max );
-						this.boundingBox.expandByPoint( _vector );
+          pA.fromBufferAttribute(positionAttribute, vA);
+          pB.fromBufferAttribute(positionAttribute, vB);
+          pC.fromBufferAttribute(positionAttribute, vC);
 
-					} else {
+          cb.subVectors(pC, pB);
+          ab.subVectors(pA, pB);
+          cb.cross(ab);
 
-						this.boundingBox.expandByPoint( _box.min );
-						this.boundingBox.expandByPoint( _box.max );
+          nA.fromBufferAttribute(normalAttribute, vA);
+          nB.fromBufferAttribute(normalAttribute, vB);
+          nC.fromBufferAttribute(normalAttribute, vC);
 
-					}
+          nA.add(cb);
+          nB.add(cb);
+          nC.add(cb);
 
-				}
+          normalAttribute.setXYZ(vA, nA.x, nA.y, nA.z);
+          normalAttribute.setXYZ(vB, nB.x, nB.y, nB.z);
+          normalAttribute.setXYZ(vC, nC.x, nC.y, nC.z);
+        }
+      } else {
+        // non-indexed elements (unconnected triangle soup)
 
-			}
+        for (let i = 0, il = positionAttribute.count; i < il; i += 3) {
+          pA.fromBufferAttribute(positionAttribute, i + 0);
+          pB.fromBufferAttribute(positionAttribute, i + 1);
+          pC.fromBufferAttribute(positionAttribute, i + 2);
 
-		} else {
+          cb.subVectors(pC, pB);
+          ab.subVectors(pA, pB);
+          cb.cross(ab);
 
-			this.boundingBox.makeEmpty();
+          normalAttribute.setXYZ(i + 0, cb.x, cb.y, cb.z);
+          normalAttribute.setXYZ(i + 1, cb.x, cb.y, cb.z);
+          normalAttribute.setXYZ(i + 2, cb.x, cb.y, cb.z);
+        }
+      }
 
-		}
+      this.normalizeNormals();
 
-		if ( isNaN( this.boundingBox.min.x ) || isNaN( this.boundingBox.min.y ) || isNaN( this.boundingBox.min.z ) ) {
+      normalAttribute.needsUpdate = true;
+    }
+  }
 
-			console.error( 'THREE.BufferGeometry.computeBoundingBox(): Computed min/max have NaN values. The "position" attribute is likely to have NaN values.', this );
+  normalizeNormals() {
+    const normals = this.attributes.normal;
 
-		}
+    for (let i = 0, il = normals.count; i < il; i++) {
+      _vector.fromBufferAttribute(normals, i);
 
-	}
+      _vector.normalize();
 
-	computeBoundingSphere() {
+      normals.setXYZ(i, _vector.x, _vector.y, _vector.z);
+    }
+  }
 
-		if ( this.boundingSphere === null ) {
+  toNonIndexed() {
+    function convertBufferAttribute(attribute, indices) {
+      const array = attribute.array;
+      const itemSize = attribute.itemSize;
+      const normalized = attribute.normalized;
 
-			this.boundingSphere = new Sphere();
+      const array2 = new array.constructor(indices.length * itemSize);
 
-		}
+      let index = 0,
+        index2 = 0;
 
-		const position = this.attributes.position;
-		const morphAttributesPosition = this.morphAttributes.position;
+      for (let i = 0, l = indices.length; i < l; i++) {
+        if (attribute.isInterleavedBufferAttribute) {
+          index = indices[i] * attribute.data.stride + attribute.offset;
+        } else {
+          index = indices[i] * itemSize;
+        }
 
-		if ( position && position.isGLBufferAttribute ) {
+        for (let j = 0; j < itemSize; j++) {
+          array2[index2++] = array[index++];
+        }
+      }
 
-			console.error( 'THREE.BufferGeometry.computeBoundingSphere(): GLBufferAttribute requires a manual bounding sphere.', this );
+      return new BufferAttribute(array2, itemSize, normalized);
+    }
 
-			this.boundingSphere.set( new Vector3(), Infinity );
+    //
 
-			return;
+    if (this.index === null) {
+      console.warn('THREE.BufferGeometry.toNonIndexed(): BufferGeometry is already non-indexed.');
+      return this;
+    }
 
-		}
+    const geometry2 = new BufferGeometry();
 
-		if ( position ) {
+    const indices = this.index.array;
+    const attributes = this.attributes;
 
-			// first, find the center of the bounding sphere
+    // attributes
 
-			const center = this.boundingSphere.center;
+    for (const name in attributes) {
+      const attribute = attributes[name];
 
-			_box.setFromBufferAttribute( position );
+      const newAttribute = convertBufferAttribute(attribute, indices);
 
-			// process morph attributes if present
+      geometry2.setAttribute(name, newAttribute);
+    }
 
-			if ( morphAttributesPosition ) {
+    // morph attributes
 
-				for ( let i = 0, il = morphAttributesPosition.length; i < il; i ++ ) {
+    const morphAttributes = this.morphAttributes;
 
-					const morphAttribute = morphAttributesPosition[ i ];
-					_boxMorphTargets.setFromBufferAttribute( morphAttribute );
+    for (const name in morphAttributes) {
+      const morphArray = [];
+      const morphAttribute = morphAttributes[name]; // morphAttribute: array of Float32BufferAttributes
 
-					if ( this.morphTargetsRelative ) {
+      for (let i = 0, il = morphAttribute.length; i < il; i++) {
+        const attribute = morphAttribute[i];
 
-						_vector.addVectors( _box.min, _boxMorphTargets.min );
-						_box.expandByPoint( _vector );
+        const newAttribute = convertBufferAttribute(attribute, indices);
 
-						_vector.addVectors( _box.max, _boxMorphTargets.max );
-						_box.expandByPoint( _vector );
+        morphArray.push(newAttribute);
+      }
 
-					} else {
+      geometry2.morphAttributes[name] = morphArray;
+    }
 
-						_box.expandByPoint( _boxMorphTargets.min );
-						_box.expandByPoint( _boxMorphTargets.max );
+    geometry2.morphTargetsRelative = this.morphTargetsRelative;
 
-					}
+    // groups
 
-				}
+    const groups = this.groups;
 
-			}
+    for (let i = 0, l = groups.length; i < l; i++) {
+      const group = groups[i];
+      geometry2.addGroup(group.start, group.count, group.materialIndex);
+    }
 
-			_box.getCenter( center );
+    return geometry2;
+  }
 
-			// second, try to find a boundingSphere with a radius smaller than the
-			// boundingSphere of the boundingBox: sqrt(3) smaller in the best case
+  toJSON() {
+    const data = {
+      metadata: {
+        version: 4.6,
+        type: 'BufferGeometry',
+        generator: 'BufferGeometry.toJSON',
+      },
+    };
 
-			let maxRadiusSq = 0;
+    // standard BufferGeometry serialization
 
-			for ( let i = 0, il = position.count; i < il; i ++ ) {
+    data.uuid = this.uuid;
+    data.type = this.type;
+    if (this.name !== '') data.name = this.name;
+    if (Object.keys(this.userData).length > 0) data.userData = this.userData;
 
-				_vector.fromBufferAttribute( position, i );
+    if (this.parameters !== undefined) {
+      const parameters = this.parameters;
 
-				maxRadiusSq = Math.max( maxRadiusSq, center.distanceToSquared( _vector ) );
+      for (const key in parameters) {
+        if (parameters[key] !== undefined) data[key] = parameters[key];
+      }
 
-			}
+      return data;
+    }
 
-			// process morph attributes if present
+    // for simplicity the code assumes attributes are not shared across geometries, see #15811
 
-			if ( morphAttributesPosition ) {
+    data.data = { attributes: {} };
 
-				for ( let i = 0, il = morphAttributesPosition.length; i < il; i ++ ) {
+    const index = this.index;
 
-					const morphAttribute = morphAttributesPosition[ i ];
-					const morphTargetsRelative = this.morphTargetsRelative;
+    if (index !== null) {
+      data.data.index = {
+        type: index.array.constructor.name,
+        array: Array.prototype.slice.call(index.array),
+      };
+    }
 
-					for ( let j = 0, jl = morphAttribute.count; j < jl; j ++ ) {
+    const attributes = this.attributes;
 
-						_vector.fromBufferAttribute( morphAttribute, j );
+    for (const key in attributes) {
+      const attribute = attributes[key];
 
-						if ( morphTargetsRelative ) {
+      data.data.attributes[key] = attribute.toJSON(data.data);
+    }
 
-							_offset.fromBufferAttribute( position, j );
-							_vector.add( _offset );
+    const morphAttributes = {};
+    let hasMorphAttributes = false;
 
-						}
+    for (const key in this.morphAttributes) {
+      const attributeArray = this.morphAttributes[key];
 
-						maxRadiusSq = Math.max( maxRadiusSq, center.distanceToSquared( _vector ) );
+      const array = [];
 
-					}
+      for (let i = 0, il = attributeArray.length; i < il; i++) {
+        const attribute = attributeArray[i];
 
-				}
+        array.push(attribute.toJSON(data.data));
+      }
 
-			}
+      if (array.length > 0) {
+        morphAttributes[key] = array;
 
-			this.boundingSphere.radius = Math.sqrt( maxRadiusSq );
+        hasMorphAttributes = true;
+      }
+    }
 
-			if ( isNaN( this.boundingSphere.radius ) ) {
+    if (hasMorphAttributes) {
+      data.data.morphAttributes = morphAttributes;
+      data.data.morphTargetsRelative = this.morphTargetsRelative;
+    }
 
-				console.error( 'THREE.BufferGeometry.computeBoundingSphere(): Computed radius is NaN. The "position" attribute is likely to have NaN values.', this );
+    const groups = this.groups;
 
-			}
+    if (groups.length > 0) {
+      data.data.groups = JSON.parse(JSON.stringify(groups));
+    }
 
-		}
+    const boundingSphere = this.boundingSphere;
 
-	}
+    if (boundingSphere !== null) {
+      data.data.boundingSphere = {
+        center: boundingSphere.center.toArray(),
+        radius: boundingSphere.radius,
+      };
+    }
 
-	computeTangents() {
+    return data;
+  }
 
-		const index = this.index;
-		const attributes = this.attributes;
+  clone() {
+    return new this.constructor().copy(this);
+  }
 
-		// based on http://www.terathon.com/code/tangent.html
-		// (per vertex tangents)
+  copy(source) {
+    // reset
 
-		if ( index === null ||
-			 attributes.position === undefined ||
-			 attributes.normal === undefined ||
-			 attributes.uv === undefined ) {
+    this.index = null;
+    this.attributes = {};
+    this.morphAttributes = {};
+    this.groups = [];
+    this.boundingBox = null;
+    this.boundingSphere = null;
 
-			console.error( 'THREE.BufferGeometry: .computeTangents() failed. Missing required attributes (index, position, normal or uv)' );
-			return;
+    // used for storing cloned, shared data
 
-		}
+    const data = {};
 
-		const positionAttribute = attributes.position;
-		const normalAttribute = attributes.normal;
-		const uvAttribute = attributes.uv;
+    // name
 
-		if ( this.hasAttribute( 'tangent' ) === false ) {
+    this.name = source.name;
 
-			this.setAttribute( 'tangent', new BufferAttribute( new Float32Array( 4 * positionAttribute.count ), 4 ) );
+    // index
 
-		}
+    const index = source.index;
 
-		const tangentAttribute = this.getAttribute( 'tangent' );
+    if (index !== null) {
+      this.setIndex(index.clone(data));
+    }
 
-		const tan1 = [], tan2 = [];
+    // attributes
 
-		for ( let i = 0; i < positionAttribute.count; i ++ ) {
+    const attributes = source.attributes;
 
-			tan1[ i ] = new Vector3();
-			tan2[ i ] = new Vector3();
+    for (const name in attributes) {
+      const attribute = attributes[name];
+      this.setAttribute(name, attribute.clone(data));
+    }
 
-		}
+    // morph attributes
 
-		const vA = new Vector3(),
-			vB = new Vector3(),
-			vC = new Vector3(),
+    const morphAttributes = source.morphAttributes;
 
-			uvA = new Vector2(),
-			uvB = new Vector2(),
-			uvC = new Vector2(),
+    for (const name in morphAttributes) {
+      const array = [];
+      const morphAttribute = morphAttributes[name]; // morphAttribute: array of Float32BufferAttributes
 
-			sdir = new Vector3(),
-			tdir = new Vector3();
+      for (let i = 0, l = morphAttribute.length; i < l; i++) {
+        array.push(morphAttribute[i].clone(data));
+      }
 
-		function handleTriangle( a, b, c ) {
+      this.morphAttributes[name] = array;
+    }
 
-			vA.fromBufferAttribute( positionAttribute, a );
-			vB.fromBufferAttribute( positionAttribute, b );
-			vC.fromBufferAttribute( positionAttribute, c );
+    this.morphTargetsRelative = source.morphTargetsRelative;
 
-			uvA.fromBufferAttribute( uvAttribute, a );
-			uvB.fromBufferAttribute( uvAttribute, b );
-			uvC.fromBufferAttribute( uvAttribute, c );
+    // groups
 
-			vB.sub( vA );
-			vC.sub( vA );
+    const groups = source.groups;
 
-			uvB.sub( uvA );
-			uvC.sub( uvA );
+    for (let i = 0, l = groups.length; i < l; i++) {
+      const group = groups[i];
+      this.addGroup(group.start, group.count, group.materialIndex);
+    }
 
-			const r = 1.0 / ( uvB.x * uvC.y - uvC.x * uvB.y );
+    // bounding box
 
-			// silently ignore degenerate uv triangles having coincident or colinear vertices
+    const boundingBox = source.boundingBox;
 
-			if ( ! isFinite( r ) ) return;
+    if (boundingBox !== null) {
+      this.boundingBox = boundingBox.clone();
+    }
 
-			sdir.copy( vB ).multiplyScalar( uvC.y ).addScaledVector( vC, - uvB.y ).multiplyScalar( r );
-			tdir.copy( vC ).multiplyScalar( uvB.x ).addScaledVector( vB, - uvC.x ).multiplyScalar( r );
+    // bounding sphere
 
-			tan1[ a ].add( sdir );
-			tan1[ b ].add( sdir );
-			tan1[ c ].add( sdir );
+    const boundingSphere = source.boundingSphere;
 
-			tan2[ a ].add( tdir );
-			tan2[ b ].add( tdir );
-			tan2[ c ].add( tdir );
+    if (boundingSphere !== null) {
+      this.boundingSphere = boundingSphere.clone();
+    }
 
-		}
+    // draw range
 
-		let groups = this.groups;
+    this.drawRange.start = source.drawRange.start;
+    this.drawRange.count = source.drawRange.count;
 
-		if ( groups.length === 0 ) {
+    // user data
 
-			groups = [ {
-				start: 0,
-				count: index.count
-			} ];
+    this.userData = source.userData;
 
-		}
+    return this;
+  }
 
-		for ( let i = 0, il = groups.length; i < il; ++ i ) {
-
-			const group = groups[ i ];
-
-			const start = group.start;
-			const count = group.count;
-
-			for ( let j = start, jl = start + count; j < jl; j += 3 ) {
-
-				handleTriangle(
-					index.getX( j + 0 ),
-					index.getX( j + 1 ),
-					index.getX( j + 2 )
-				);
-
-			}
-
-		}
-
-		const tmp = new Vector3(), tmp2 = new Vector3();
-		const n = new Vector3(), n2 = new Vector3();
-
-		function handleVertex( v ) {
-
-			n.fromBufferAttribute( normalAttribute, v );
-			n2.copy( n );
-
-			const t = tan1[ v ];
-
-			// Gram-Schmidt orthogonalize
-
-			tmp.copy( t );
-			tmp.sub( n.multiplyScalar( n.dot( t ) ) ).normalize();
-
-			// Calculate handedness
-
-			tmp2.crossVectors( n2, t );
-			const test = tmp2.dot( tan2[ v ] );
-			const w = ( test < 0.0 ) ? - 1.0 : 1.0;
-
-			tangentAttribute.setXYZW( v, tmp.x, tmp.y, tmp.z, w );
-
-		}
-
-		for ( let i = 0, il = groups.length; i < il; ++ i ) {
-
-			const group = groups[ i ];
-
-			const start = group.start;
-			const count = group.count;
-
-			for ( let j = start, jl = start + count; j < jl; j += 3 ) {
-
-				handleVertex( index.getX( j + 0 ) );
-				handleVertex( index.getX( j + 1 ) );
-				handleVertex( index.getX( j + 2 ) );
-
-			}
-
-		}
-
-	}
-
-	computeVertexNormals() {
-
-		const index = this.index;
-		const positionAttribute = this.getAttribute( 'position' );
-
-		if ( positionAttribute !== undefined ) {
-
-			let normalAttribute = this.getAttribute( 'normal' );
-
-			if ( normalAttribute === undefined ) {
-
-				normalAttribute = new BufferAttribute( new Float32Array( positionAttribute.count * 3 ), 3 );
-				this.setAttribute( 'normal', normalAttribute );
-
-			} else {
-
-				// reset existing normals to zero
-
-				for ( let i = 0, il = normalAttribute.count; i < il; i ++ ) {
-
-					normalAttribute.setXYZ( i, 0, 0, 0 );
-
-				}
-
-			}
-
-			const pA = new Vector3(), pB = new Vector3(), pC = new Vector3();
-			const nA = new Vector3(), nB = new Vector3(), nC = new Vector3();
-			const cb = new Vector3(), ab = new Vector3();
-
-			// indexed elements
-
-			if ( index ) {
-
-				for ( let i = 0, il = index.count; i < il; i += 3 ) {
-
-					const vA = index.getX( i + 0 );
-					const vB = index.getX( i + 1 );
-					const vC = index.getX( i + 2 );
-
-					pA.fromBufferAttribute( positionAttribute, vA );
-					pB.fromBufferAttribute( positionAttribute, vB );
-					pC.fromBufferAttribute( positionAttribute, vC );
-
-					cb.subVectors( pC, pB );
-					ab.subVectors( pA, pB );
-					cb.cross( ab );
-
-					nA.fromBufferAttribute( normalAttribute, vA );
-					nB.fromBufferAttribute( normalAttribute, vB );
-					nC.fromBufferAttribute( normalAttribute, vC );
-
-					nA.add( cb );
-					nB.add( cb );
-					nC.add( cb );
-
-					normalAttribute.setXYZ( vA, nA.x, nA.y, nA.z );
-					normalAttribute.setXYZ( vB, nB.x, nB.y, nB.z );
-					normalAttribute.setXYZ( vC, nC.x, nC.y, nC.z );
-
-				}
-
-			} else {
-
-				// non-indexed elements (unconnected triangle soup)
-
-				for ( let i = 0, il = positionAttribute.count; i < il; i += 3 ) {
-
-					pA.fromBufferAttribute( positionAttribute, i + 0 );
-					pB.fromBufferAttribute( positionAttribute, i + 1 );
-					pC.fromBufferAttribute( positionAttribute, i + 2 );
-
-					cb.subVectors( pC, pB );
-					ab.subVectors( pA, pB );
-					cb.cross( ab );
-
-					normalAttribute.setXYZ( i + 0, cb.x, cb.y, cb.z );
-					normalAttribute.setXYZ( i + 1, cb.x, cb.y, cb.z );
-					normalAttribute.setXYZ( i + 2, cb.x, cb.y, cb.z );
-
-				}
-
-			}
-
-			this.normalizeNormals();
-
-			normalAttribute.needsUpdate = true;
-
-		}
-
-	}
-
-	normalizeNormals() {
-
-		const normals = this.attributes.normal;
-
-		for ( let i = 0, il = normals.count; i < il; i ++ ) {
-
-			_vector.fromBufferAttribute( normals, i );
-
-			_vector.normalize();
-
-			normals.setXYZ( i, _vector.x, _vector.y, _vector.z );
-
-		}
-
-	}
-
-	toNonIndexed() {
-
-		function convertBufferAttribute( attribute, indices ) {
-
-			const array = attribute.array;
-			const itemSize = attribute.itemSize;
-			const normalized = attribute.normalized;
-
-			const array2 = new array.constructor( indices.length * itemSize );
-
-			let index = 0, index2 = 0;
-
-			for ( let i = 0, l = indices.length; i < l; i ++ ) {
-
-				if ( attribute.isInterleavedBufferAttribute ) {
-
-					index = indices[ i ] * attribute.data.stride + attribute.offset;
-
-				} else {
-
-					index = indices[ i ] * itemSize;
-
-				}
-
-				for ( let j = 0; j < itemSize; j ++ ) {
-
-					array2[ index2 ++ ] = array[ index ++ ];
-
-				}
-
-			}
-
-			return new BufferAttribute( array2, itemSize, normalized );
-
-		}
-
-		//
-
-		if ( this.index === null ) {
-
-			console.warn( 'THREE.BufferGeometry.toNonIndexed(): BufferGeometry is already non-indexed.' );
-			return this;
-
-		}
-
-		const geometry2 = new BufferGeometry();
-
-		const indices = this.index.array;
-		const attributes = this.attributes;
-
-		// attributes
-
-		for ( const name in attributes ) {
-
-			const attribute = attributes[ name ];
-
-			const newAttribute = convertBufferAttribute( attribute, indices );
-
-			geometry2.setAttribute( name, newAttribute );
-
-		}
-
-		// morph attributes
-
-		const morphAttributes = this.morphAttributes;
-
-		for ( const name in morphAttributes ) {
-
-			const morphArray = [];
-			const morphAttribute = morphAttributes[ name ]; // morphAttribute: array of Float32BufferAttributes
-
-			for ( let i = 0, il = morphAttribute.length; i < il; i ++ ) {
-
-				const attribute = morphAttribute[ i ];
-
-				const newAttribute = convertBufferAttribute( attribute, indices );
-
-				morphArray.push( newAttribute );
-
-			}
-
-			geometry2.morphAttributes[ name ] = morphArray;
-
-		}
-
-		geometry2.morphTargetsRelative = this.morphTargetsRelative;
-
-		// groups
-
-		const groups = this.groups;
-
-		for ( let i = 0, l = groups.length; i < l; i ++ ) {
-
-			const group = groups[ i ];
-			geometry2.addGroup( group.start, group.count, group.materialIndex );
-
-		}
-
-		return geometry2;
-
-	}
-
-	toJSON() {
-
-		const data = {
-			metadata: {
-				version: 4.6,
-				type: 'BufferGeometry',
-				generator: 'BufferGeometry.toJSON'
-			}
-		};
-
-		// standard BufferGeometry serialization
-
-		data.uuid = this.uuid;
-		data.type = this.type;
-		if ( this.name !== '' ) data.name = this.name;
-		if ( Object.keys( this.userData ).length > 0 ) data.userData = this.userData;
-
-		if ( this.parameters !== undefined ) {
-
-			const parameters = this.parameters;
-
-			for ( const key in parameters ) {
-
-				if ( parameters[ key ] !== undefined ) data[ key ] = parameters[ key ];
-
-			}
-
-			return data;
-
-		}
-
-		// for simplicity the code assumes attributes are not shared across geometries, see #15811
-
-		data.data = { attributes: {} };
-
-		const index = this.index;
-
-		if ( index !== null ) {
-
-			data.data.index = {
-				type: index.array.constructor.name,
-				array: Array.prototype.slice.call( index.array )
-			};
-
-		}
-
-		const attributes = this.attributes;
-
-		for ( const key in attributes ) {
-
-			const attribute = attributes[ key ];
-
-			data.data.attributes[ key ] = attribute.toJSON( data.data );
-
-		}
-
-		const morphAttributes = {};
-		let hasMorphAttributes = false;
-
-		for ( const key in this.morphAttributes ) {
-
-			const attributeArray = this.morphAttributes[ key ];
-
-			const array = [];
-
-			for ( let i = 0, il = attributeArray.length; i < il; i ++ ) {
-
-				const attribute = attributeArray[ i ];
-
-				array.push( attribute.toJSON( data.data ) );
-
-			}
-
-			if ( array.length > 0 ) {
-
-				morphAttributes[ key ] = array;
-
-				hasMorphAttributes = true;
-
-			}
-
-		}
-
-		if ( hasMorphAttributes ) {
-
-			data.data.morphAttributes = morphAttributes;
-			data.data.morphTargetsRelative = this.morphTargetsRelative;
-
-		}
-
-		const groups = this.groups;
-
-		if ( groups.length > 0 ) {
-
-			data.data.groups = JSON.parse( JSON.stringify( groups ) );
-
-		}
-
-		const boundingSphere = this.boundingSphere;
-
-		if ( boundingSphere !== null ) {
-
-			data.data.boundingSphere = {
-				center: boundingSphere.center.toArray(),
-				radius: boundingSphere.radius
-			};
-
-		}
-
-		return data;
-
-	}
-
-	clone() {
-
-		return new this.constructor().copy( this );
-
-	}
-
-	copy( source ) {
-
-		// reset
-
-		this.index = null;
-		this.attributes = {};
-		this.morphAttributes = {};
-		this.groups = [];
-		this.boundingBox = null;
-		this.boundingSphere = null;
-
-		// used for storing cloned, shared data
-
-		const data = {};
-
-		// name
-
-		this.name = source.name;
-
-		// index
-
-		const index = source.index;
-
-		if ( index !== null ) {
-
-			this.setIndex( index.clone( data ) );
-
-		}
-
-		// attributes
-
-		const attributes = source.attributes;
-
-		for ( const name in attributes ) {
-
-			const attribute = attributes[ name ];
-			this.setAttribute( name, attribute.clone( data ) );
-
-		}
-
-		// morph attributes
-
-		const morphAttributes = source.morphAttributes;
-
-		for ( const name in morphAttributes ) {
-
-			const array = [];
-			const morphAttribute = morphAttributes[ name ]; // morphAttribute: array of Float32BufferAttributes
-
-			for ( let i = 0, l = morphAttribute.length; i < l; i ++ ) {
-
-				array.push( morphAttribute[ i ].clone( data ) );
-
-			}
-
-			this.morphAttributes[ name ] = array;
-
-		}
-
-		this.morphTargetsRelative = source.morphTargetsRelative;
-
-		// groups
-
-		const groups = source.groups;
-
-		for ( let i = 0, l = groups.length; i < l; i ++ ) {
-
-			const group = groups[ i ];
-			this.addGroup( group.start, group.count, group.materialIndex );
-
-		}
-
-		// bounding box
-
-		const boundingBox = source.boundingBox;
-
-		if ( boundingBox !== null ) {
-
-			this.boundingBox = boundingBox.clone();
-
-		}
-
-		// bounding sphere
-
-		const boundingSphere = source.boundingSphere;
-
-		if ( boundingSphere !== null ) {
-
-			this.boundingSphere = boundingSphere.clone();
-
-		}
-
-		// draw range
-
-		this.drawRange.start = source.drawRange.start;
-		this.drawRange.count = source.drawRange.count;
-
-		// user data
-
-		this.userData = source.userData;
-
-		return this;
-
-	}
-
-	dispose() {
-
-		this.dispatchEvent( { type: 'dispose' } );
-
-	}
-
+  dispose() {
+    this.dispatchEvent({ type: 'dispose' });
+  }
 }
 
 export { BufferGeometry };

@@ -3,7 +3,6 @@ import { Vector2 } from '../math/Vector2.js';
 import { denormalize, normalize } from '../math/MathUtils.js';
 import { BufferUsage, TextureDataType } from '../constants.ts';
 import { fromHalfFloat, toHalfFloat } from '../extras/DataUtils.js';
-import { warnOnce } from '../utils.js';
 
 const _vector = /*@__PURE__*/ new Vector3();
 const _vector2 = /*@__PURE__*/ new Vector2();
@@ -35,13 +34,6 @@ class BufferAttribute {
 
   set needsUpdate(value) {
     if (value === true) this.version++;
-  }
-
-  get updateRange() {
-    warnOnce(
-      'THREE.BufferAttribute: updateRange() is deprecated and will be removed in r169. Use addUpdateRange() instead.',
-    ); // @deprecated, r159
-    return this._updateRange;
   }
 
   setUsage(value) {

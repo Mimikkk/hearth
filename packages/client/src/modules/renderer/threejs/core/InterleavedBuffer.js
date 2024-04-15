@@ -1,6 +1,5 @@
 import * as MathUtils from '../math/MathUtils.js';
 import { BufferUsage } from '../constants.ts';
-import { warnOnce } from '../utils.js';
 
 class InterleavedBuffer {
   constructor(array, stride) {
@@ -23,13 +22,6 @@ class InterleavedBuffer {
 
   set needsUpdate(value) {
     if (value === true) this.version++;
-  }
-
-  get updateRange() {
-    warnOnce(
-      'THREE.InterleavedBuffer: updateRange() is deprecated and will be removed in r169. Use addUpdateRange() instead.',
-    ); // @deprecated, r159
-    return this._updateRange;
   }
 
   setUsage(value) {

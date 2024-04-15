@@ -42,7 +42,7 @@ import { WebGLUtils } from './webgl/WebGLUtils.js';
 import { WebXRManager } from './webxr/WebXRManager.js';
 import { WebGLMaterials } from './webgl/WebGLMaterials.js';
 import { WebGLUniformsGroups } from './webgl/WebGLUniformsGroups.js';
-import { createCanvasElement } from '../utils.js';
+import { createCanvasElement } from '../utils.ts';
 import { ColorManagement } from '../math/ColorManagement.js';
 
 class WebGLRenderer {

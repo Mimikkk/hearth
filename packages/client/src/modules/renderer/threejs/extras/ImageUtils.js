@@ -1,129 +1,95 @@
-import { createElementNS } from '../utils.js';
+import { createCanvasElement } from '../utils.ts';
 import { SRGBToLinear } from '../math/ColorManagement.js';
 
 let _canvas;
 
 class ImageUtils {
+  static getDataURL(image) {
+    if (/^data:/i.test(image.src)) {
+      return image.src;
+    }
 
-	static getDataURL( image ) {
+    if (typeof HTMLCanvasElement === 'undefined') {
+      return image.src;
+    }
 
-		if ( /^data:/i.test( image.src ) ) {
+    let canvas;
 
-			return image.src;
+    if (image instanceof HTMLCanvasElement) {
+      canvas = image;
+    } else {
+      if (_canvas === undefined) _canvas = createCanvasElement();
 
-		}
+      _canvas.width = image.width;
+      _canvas.height = image.height;
 
-		if ( typeof HTMLCanvasElement === 'undefined' ) {
+      const context = _canvas.getContext('2d');
 
-			return image.src;
+      if (image instanceof ImageData) {
+        context.putImageData(image, 0, 0);
+      } else {
+        context.drawImage(image, 0, 0, image.width, image.height);
+      }
 
-		}
+      canvas = _canvas;
+    }
 
-		let canvas;
+    if (canvas.width > 2048 || canvas.height > 2048) {
+      console.warn('THREE.ImageUtils.getDataURL: Image converted to jpg for performance reasons', image);
 
-		if ( image instanceof HTMLCanvasElement ) {
+      return canvas.toDataURL('image/jpeg', 0.6);
+    } else {
+      return canvas.toDataURL('image/png');
+    }
+  }
 
-			canvas = image;
+  static sRGBToLinear(image) {
+    if (
+      (typeof HTMLImageElement !== 'undefined' && image instanceof HTMLImageElement) ||
+      (typeof HTMLCanvasElement !== 'undefined' && image instanceof HTMLCanvasElement) ||
+      (typeof ImageBitmap !== 'undefined' && image instanceof ImageBitmap)
+    ) {
+      const canvas = createCanvasElement();
 
-		} else {
+      canvas.width = image.width;
+      canvas.height = image.height;
 
-			if ( _canvas === undefined ) _canvas = createElementNS( 'canvas' );
+      const context = canvas.getContext('2d');
+      context.drawImage(image, 0, 0, image.width, image.height);
 
-			_canvas.width = image.width;
-			_canvas.height = image.height;
+      const imageData = context.getImageData(0, 0, image.width, image.height);
+      const data = imageData.data;
 
-			const context = _canvas.getContext( '2d' );
+      for (let i = 0; i < data.length; i++) {
+        data[i] = SRGBToLinear(data[i] / 255) * 255;
+      }
 
-			if ( image instanceof ImageData ) {
+      context.putImageData(imageData, 0, 0);
 
-				context.putImageData( image, 0, 0 );
+      return canvas;
+    } else if (image.data) {
+      const data = image.data.slice(0);
 
-			} else {
+      for (let i = 0; i < data.length; i++) {
+        if (data instanceof Uint8Array || data instanceof Uint8ClampedArray) {
+          data[i] = Math.floor(SRGBToLinear(data[i] / 255) * 255);
+        } else {
+          // assuming float
 
-				context.drawImage( image, 0, 0, image.width, image.height );
+          data[i] = SRGBToLinear(data[i]);
+        }
+      }
 
-			}
-
-			canvas = _canvas;
-
-		}
-
-		if ( canvas.width > 2048 || canvas.height > 2048 ) {
-
-			console.warn( 'THREE.ImageUtils.getDataURL: Image converted to jpg for performance reasons', image );
-
-			return canvas.toDataURL( 'image/jpeg', 0.6 );
-
-		} else {
-
-			return canvas.toDataURL( 'image/png' );
-
-		}
-
-	}
-
-	static sRGBToLinear( image ) {
-
-		if ( ( typeof HTMLImageElement !== 'undefined' && image instanceof HTMLImageElement ) ||
-			( typeof HTMLCanvasElement !== 'undefined' && image instanceof HTMLCanvasElement ) ||
-			( typeof ImageBitmap !== 'undefined' && image instanceof ImageBitmap ) ) {
-
-			const canvas = createElementNS( 'canvas' );
-
-			canvas.width = image.width;
-			canvas.height = image.height;
-
-			const context = canvas.getContext( '2d' );
-			context.drawImage( image, 0, 0, image.width, image.height );
-
-			const imageData = context.getImageData( 0, 0, image.width, image.height );
-			const data = imageData.data;
-
-			for ( let i = 0; i < data.length; i ++ ) {
-
-				data[ i ] = SRGBToLinear( data[ i ] / 255 ) * 255;
-
-			}
-
-			context.putImageData( imageData, 0, 0 );
-
-			return canvas;
-
-		} else if ( image.data ) {
-
-			const data = image.data.slice( 0 );
-
-			for ( let i = 0; i < data.length; i ++ ) {
-
-				if ( data instanceof Uint8Array || data instanceof Uint8ClampedArray ) {
-
-					data[ i ] = Math.floor( SRGBToLinear( data[ i ] / 255 ) * 255 );
-
-				} else {
-
-					// assuming float
-
-					data[ i ] = SRGBToLinear( data[ i ] );
-
-				}
-
-			}
-
-			return {
-				data: data,
-				width: image.width,
-				height: image.height
-			};
-
-		} else {
-
-			console.warn( 'THREE.ImageUtils.sRGBToLinear(): Unsupported image type. No color space conversion applied.' );
-			return image;
-
-		}
-
-	}
-
+      return {
+        data: data,
+        width: image.width,
+        height: image.height,
+      };
+    } else {
+      console.warn('THREE.ImageUtils.sRGBToLinear(): Unsupported image type. No color space conversion applied.');
+      return image;
+    }
+  }
 }
 
 export { ImageUtils };

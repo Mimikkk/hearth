@@ -8,7 +8,7 @@ import {
   TransferFunction,
   Wrapping,
 } from '../../constants.ts';
-import { createElementNS } from '../../utils.js';
+import { createCanvasElement } from '../../utils.ts';
 import { ColorManagement } from '../../math/ColorManagement.js';
 import { Vector2 } from '../../math/Vector2.js';
 
@@ -46,7 +46,7 @@ function WebGLTextures(_gl, extensions, state, properties, capabilities, utils, 
     return useOffscreenCanvas
       ? // eslint-disable-next-line compat/compat
         new OffscreenCanvas(width, height)
-      : createElementNS('canvas');
+      : createCanvasElement();
   }
 
   function resizeImage(image, needsNewCanvas, maxSize) {

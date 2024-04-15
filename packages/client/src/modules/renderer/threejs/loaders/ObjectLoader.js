@@ -41,7 +41,7 @@ import { BufferGeometryLoader } from './BufferGeometryLoader.js';
 import { Loader } from './Loader.js';
 import { FileLoader } from './FileLoader.js';
 import * as Geometries from '../geometries/Geometries.js';
-import { getTypedArray } from '../utils.js';
+import { createTypedArray } from '../utils.ts';
 import { Box3 } from '../math/Box3.js';
 import { Sphere } from '../math/Sphere.js';
 
@@ -311,7 +311,7 @@ class ObjectLoader extends Loader {
       } else {
         if (image.data) {
           return {
-            data: getTypedArray(image.type, image.data),
+            data: createTypedArray(image.type, image.data),
             width: image.width,
             height: image.height,
           };
@@ -383,7 +383,7 @@ class ObjectLoader extends Loader {
       } else {
         if (image.data) {
           return {
-            data: getTypedArray(image.type, image.data),
+            data: createTypedArray(image.type, image.data),
             width: image.width,
             height: image.height,
           };

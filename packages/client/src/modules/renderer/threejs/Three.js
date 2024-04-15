@@ -155,9 +155,8 @@ export { ImageUtils } from './extras/ImageUtils.js';
 export { ShapeUtils } from './extras/ShapeUtils.js';
 export { PMREMGenerator } from './extras/PMREMGenerator.js';
 export { WebGLUtils } from './renderers/webgl/WebGLUtils.js';
-export { createCanvasElement } from './utils.js';
+export { createCanvasElement } from './utils.ts';
 export * from './constants.ts';
-export * from './Three.Legacy.js';
 
 if (typeof __THREE_DEVTOOLS__ !== 'undefined') {
   __THREE_DEVTOOLS__.dispatchEvent(
