@@ -36,7 +36,7 @@ async function init() {
   renderer = new WebGPURenderer({ antialias: true, forceWebGL });
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMapping = THREE.ToneMapping.ACESFilmic;
 
   await renderer.init();
 
@@ -49,7 +49,7 @@ async function init() {
   controls.update();
 
   new RGBELoader().setPath('textures/equirectangular/').load('royal_esplanade_1k.hdr', function (map) {
-    map.mapping = THREE.EquirectangularReflectionMapping;
+    map.mapping = THREE.Mapping.EquirectangularReflection;
 
     const reflectVec = positionViewDirection.negate().reflect(normalView).transformDirection(cameraViewMatrix);
 

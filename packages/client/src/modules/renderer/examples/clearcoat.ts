@@ -45,23 +45,23 @@ function init() {
       const textureLoader = new THREE.TextureLoader();
 
       const diffuse = textureLoader.load('textures/carbon/Carbon.png');
-      diffuse.colorSpace = THREE.SRGBColorSpace;
-      diffuse.wrapS = THREE.RepeatWrapping;
-      diffuse.wrapT = THREE.RepeatWrapping;
+      diffuse.colorSpace = THREE.ColorSpace.SRGB;
+      diffuse.wrapS = THREE.Wrapping.Repeat;
+      diffuse.wrapT = THREE.Wrapping.Repeat;
       diffuse.repeat.x = 10;
       diffuse.repeat.y = 10;
 
       const normalMap = textureLoader.load('textures/carbon/Carbon_Normal.png');
-      normalMap.wrapS = THREE.RepeatWrapping;
-      normalMap.wrapT = THREE.RepeatWrapping;
+      normalMap.wrapS = THREE.Wrapping.Repeat;
+      normalMap.wrapT = THREE.Wrapping.Repeat;
       normalMap.repeat.x = 10;
       normalMap.repeat.y = 10;
 
       const normalMap2 = textureLoader.load('textures/water/Water_1_M_Normal.jpg');
 
       const normalMap3 = new THREE.CanvasTexture(new FlakesTexture());
-      normalMap3.wrapS = THREE.RepeatWrapping;
-      normalMap3.wrapT = THREE.RepeatWrapping;
+      normalMap3.wrapS = THREE.Wrapping.Repeat;
+      normalMap3.wrapT = THREE.Wrapping.Repeat;
       normalMap3.repeat.x = 10;
       normalMap3.repeat.y = 6;
       normalMap3.anisotropy = 16;
@@ -159,7 +159,7 @@ function init() {
 
   //
 
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMapping = THREE.ToneMapping.ACESFilmic;
   renderer.toneMappingExposure = 1.25;
 
   //

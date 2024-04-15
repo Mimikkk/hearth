@@ -53,7 +53,7 @@ function init() {
   renderer = new WebGPURenderer({ antialias: true });
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.toneMapping = THREE.LinearToneMapping;
+  renderer.toneMapping = THREE.ToneMapping.Linear;
   renderer.toneMappingExposure = 0.5;
   renderer.setAnimationLoop(render);
   container.appendChild(renderer.domElement);
@@ -67,7 +67,7 @@ function init() {
   //
 
   new RGBELoader().setPath('./textures/equirectangular/').load('san_giuseppe_bridge_2k.hdr', async texture => {
-    texture.mapping = THREE.EquirectangularReflectionMapping;
+    texture.mapping = THREE.Mapping.EquirectangularReflection;
 
     scene.background = texture;
     scene.environment = texture;

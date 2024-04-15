@@ -62,17 +62,17 @@ function init() {
   const texture1 = textureLoader.load('textures/crate.gif');
   const material1 = new THREE.MeshPhongMaterial({ color: 0xffffff, map: texture1 });
 
-  texture1.colorSpace = THREE.SRGBColorSpace;
+  texture1.colorSpace = THREE.ColorSpace.SRGB;
   texture1.anisotropy = renderer.getMaxAnisotropy();
-  texture1.wrapS = texture1.wrapT = THREE.RepeatWrapping;
+  texture1.wrapS = texture1.wrapT = THREE.Wrapping.Repeat;
   texture1.repeat.set(512, 512);
 
   const texture2 = textureLoader.load('textures/crate.gif');
   const material2 = new THREE.MeshPhongMaterial({ color: 0xffffff, map: texture2 });
 
-  texture2.colorSpace = THREE.SRGBColorSpace;
+  texture2.colorSpace = THREE.ColorSpace.SRGB;
   texture2.anisotropy = 1;
-  texture2.wrapS = texture2.wrapT = THREE.RepeatWrapping;
+  texture2.wrapS = texture2.wrapT = THREE.Wrapping.Repeat;
   texture2.repeat.set(512, 512);
 
   if (maxAnisotropy > 0) {

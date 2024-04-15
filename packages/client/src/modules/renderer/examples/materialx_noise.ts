@@ -115,7 +115,7 @@ function init() {
 
   //
 
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMapping = THREE.ToneMapping.ACESFilmic;
   renderer.toneMappingExposure = 1.25;
 
   //

@@ -32,6 +32,7 @@ import { OrbitControls } from '../jsm/controls/OrbitControls.js';
 import { GUI } from '../jsm/libs/lil-gui.module.min.js';
 
 import Stats from '../jsm/libs/stats.module.js';
+import { ColorSpace, Wrapping } from '../threejs/Three.js';
 
 let camera, scene, renderer;
 let mixer, objects, clock;
@@ -98,9 +99,9 @@ function init() {
 
   const textureLoader = new THREE.TextureLoader();
   const iceDiffuse = textureLoader.load('./textures/water.jpg');
-  iceDiffuse.wrapS = THREE.RepeatWrapping;
-  iceDiffuse.wrapT = THREE.RepeatWrapping;
-  iceDiffuse.colorSpace = THREE.NoColorSpace;
+  iceDiffuse.wrapS = THREE.Wrapping.Repeat;
+  iceDiffuse.wrapT = THREE.Wrapping.Repeat;
+  iceDiffuse.colorSpace = THREE.ColorSpace.No;
 
   const iceColorNode = triplanarTexture(texture(iceDiffuse)).add(color(0x0066ff)).mul(0.8);
 

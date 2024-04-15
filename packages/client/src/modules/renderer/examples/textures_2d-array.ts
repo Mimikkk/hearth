@@ -1,5 +1,5 @@
 import * as THREE from '../threejs/Three.js';
-import { MeshBasicNodeMaterial, texture, uv, oscTriangle, timerLocal } from '../jsm/nodes/Nodes.js';
+import { MeshBasicNodeMaterial, oscTriangle, texture, timerLocal, uv } from '../jsm/nodes/Nodes.js';
 
 import WebGPU from '../jsm/capabilities/WebGPU.js';
 import WebGL from '../jsm/capabilities/WebGL.js';
@@ -38,7 +38,7 @@ function init() {
     const array = new Uint8Array(zip['head256x256x109'].buffer);
 
     const map = new THREE.DataArrayTexture(array, 256, 256, 109);
-    map.format = THREE.RedFormat;
+    map.format = THREE.TextureFormat.Red;
     map.needsUpdate = true;
 
     let coord = uv();

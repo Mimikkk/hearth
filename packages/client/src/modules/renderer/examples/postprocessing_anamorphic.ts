@@ -52,7 +52,7 @@ function init() {
 
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.toneMapping = THREE.LinearToneMapping;
+  renderer.toneMapping = THREE.ToneMapping.Linear;
   renderer.toneMappingExposure = 1;
   renderer.setAnimationLoop(render);
   container.appendChild(renderer.domElement);

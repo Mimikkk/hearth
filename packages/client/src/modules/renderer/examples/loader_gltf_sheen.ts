@@ -48,14 +48,14 @@ function init() {
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(animate);
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMapping = THREE.ToneMapping.ACESFilmic;
   renderer.toneMappingExposure = 1;
   container.appendChild(renderer.domElement);
 
   scene.background = new THREE.Color(0xaaaaaa);
 
   new RGBELoader().setPath('textures/equirectangular/').load('royal_esplanade_1k.hdr', function (texture) {
-    texture.mapping = THREE.EquirectangularReflectionMapping;
+    texture.mapping = THREE.Mapping.EquirectangularReflection;
 
     scene.background = texture;
     //scene.backgroundBlurriness = 1; // @TODO: Needs PMREM

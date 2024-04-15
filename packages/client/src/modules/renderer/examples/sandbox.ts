@@ -20,6 +20,7 @@ import { KTX2Loader } from '../jsm/loaders/KTX2Loader.js';
 
 import WebGPU from '../jsm/capabilities/WebGPU.js';
 import WebGPURenderer from '../jsm/renderers/webgpu/WebGPURenderer.js';
+import { TextureFormat } from '../threejs/Three.js';
 
 let camera, scene, renderer;
 
@@ -52,13 +53,13 @@ async function init() {
 
   const textureLoader = new THREE.TextureLoader();
   const uvTexture = textureLoader.load('./textures/uv_grid_opengl.jpg');
-  uvTexture.wrapS = THREE.RepeatWrapping;
-  uvTexture.wrapT = THREE.RepeatWrapping;
+  uvTexture.wrapS = THREE.Wrapping.Repeat;
+  uvTexture.wrapT = THREE.Wrapping.Repeat;
   uvTexture.name = 'uv_grid';
 
   const textureDisplace = textureLoader.load('./textures/transition/transition1.png');
-  textureDisplace.wrapS = THREE.RepeatWrapping;
-  textureDisplace.wrapT = THREE.RepeatWrapping;
+  textureDisplace.wrapS = THREE.Wrapping.Repeat;
+  textureDisplace.wrapT = THREE.Wrapping.Repeat;
 
   const ktxLoader = await new KTX2Loader().setTranscoderPath('../jsm/libs/basis/').detectSupportAsync(renderer);
 
@@ -203,7 +204,7 @@ function createDataTexture() {
     data[stride + 3] = 255;
   }
 
-  const texture = new THREE.DataTexture(data, width, height, THREE.RGBAFormat);
+  const texture = new THREE.DataTexture(data, width, height, THREE.TextureFormat.RGBA);
   texture.needsUpdate = true;
   return texture;
 }

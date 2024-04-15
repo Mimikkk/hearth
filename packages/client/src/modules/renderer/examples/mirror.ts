@@ -55,11 +55,11 @@ function init() {
   const textureLoader = new THREE.TextureLoader();
 
   const floorNormal = textureLoader.load('textures/floors/FloorsCheckerboard_S_Normal.jpg');
-  floorNormal.wrapS = THREE.RepeatWrapping;
-  floorNormal.wrapT = THREE.RepeatWrapping;
+  floorNormal.wrapS = THREE.Wrapping.Repeat;
+  floorNormal.wrapT = THREE.Wrapping.Repeat;
 
   const decalDiffuse = textureLoader.load('textures/decal/decal-diffuse.png');
-  decalDiffuse.colorSpace = THREE.SRGBColorSpace;
+  decalDiffuse.colorSpace = THREE.ColorSpace.SRGB;
 
   const decalNormal = textureLoader.load('textures/decal/decal-normal.jpg');
 

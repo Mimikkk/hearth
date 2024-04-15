@@ -26,7 +26,7 @@ async function init() {
   renderer.setAnimationLoop(render);
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMapping = THREE.ToneMapping.ACESFilmic;
   document.body.appendChild(renderer.domElement);
 
   scene = new THREE.Scene();
@@ -51,7 +51,7 @@ async function init() {
 
   // environment
 
-  texture.mapping = THREE.EquirectangularReflectionMapping;
+  texture.mapping = THREE.Mapping.EquirectangularReflection;
 
   scene.background = texture;
   scene.environment = texture;

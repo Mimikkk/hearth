@@ -21,6 +21,7 @@ import PostProcessing from '../jsm/renderers/common/PostProcessing.js';
 import { OrbitControls } from '../jsm/controls/OrbitControls.js';
 
 import Stats from '../jsm/libs/stats.module.js';
+import { ColorSpace } from '../threejs/Three.js';
 
 let camera, scene, renderer;
 let model, mixer, clock;
@@ -87,13 +88,13 @@ function init() {
   const textureLoader = new THREE.TextureLoader();
 
   const floorColor = textureLoader.load('textures/floors/FloorsCheckerboard_S_Diffuse.jpg');
-  floorColor.wrapS = THREE.RepeatWrapping;
-  floorColor.wrapT = THREE.RepeatWrapping;
-  floorColor.colorSpace = THREE.SRGBColorSpace;
+  floorColor.wrapS = THREE.Wrapping.Repeat;
+  floorColor.wrapT = THREE.Wrapping.Repeat;
+  floorColor.colorSpace = THREE.ColorSpace.SRGB;
 
   const floorNormal = textureLoader.load('textures/floors/FloorsCheckerboard_S_Normal.jpg');
-  floorNormal.wrapS = THREE.RepeatWrapping;
-  floorNormal.wrapT = THREE.RepeatWrapping;
+  floorNormal.wrapS = THREE.Wrapping.Repeat;
+  floorNormal.wrapT = THREE.Wrapping.Repeat;
 
   // floor
 

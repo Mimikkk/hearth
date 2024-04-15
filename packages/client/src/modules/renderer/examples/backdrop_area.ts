@@ -72,26 +72,26 @@ function init() {
   const blurredBlur = new MeshBasicNodeMaterial();
   blurredBlur.backdropNode = depthBlurred.add(depthAlphaNode.mix(color(0x0066ff), 0));
   blurredBlur.transparent = true;
-  blurredBlur.side = THREE.DoubleSide;
+  blurredBlur.side = THREE.Side.Double;
 
   const volumeMaterial = new MeshBasicNodeMaterial();
   volumeMaterial.colorNode = color(0x0066ff);
   volumeMaterial.backdropNode = viewportSharedTexture();
   volumeMaterial.backdropAlphaNode = depthAlphaNode;
   volumeMaterial.transparent = true;
-  volumeMaterial.side = THREE.DoubleSide;
+  volumeMaterial.side = THREE.Side.Double;
 
   const depthMaterial = new MeshBasicNodeMaterial();
   depthMaterial.backdropNode = depthAlphaNode;
   depthMaterial.transparent = true;
-  depthMaterial.side = THREE.DoubleSide;
+  depthMaterial.side = THREE.Side.Double;
 
   const bicubicMaterial = new MeshBasicNodeMaterial();
   bicubicMaterial.backdropNode = viewportMipTexture().bicubic(5); // @TODO: Move to alpha value [ 0, 1 ]
   bicubicMaterial.backdropAlphaNode = checker(uv().mul(3).mul(modelScale.xy));
   bicubicMaterial.opacityNode = bicubicMaterial.backdropAlphaNode;
   bicubicMaterial.transparent = true;
-  bicubicMaterial.side = THREE.DoubleSide;
+  bicubicMaterial.side = THREE.Side.Double;
 
   const pixelMaterial = new MeshBasicNodeMaterial();
   pixelMaterial.backdropNode = viewportSharedTexture(viewportTopLeft.mul(100).floor().div(100));
@@ -113,7 +113,7 @@ function init() {
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(animate);
-  renderer.toneMappingNode = toneMapping(THREE.LinearToneMapping, 0.15);
+  renderer.toneMappingNode = toneMapping(THREE.ToneMapping.Linear, 0.15);
   document.body.appendChild(renderer.domElement);
 
   const controls = new OrbitControls(camera, renderer.domElement);

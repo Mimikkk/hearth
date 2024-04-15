@@ -10,6 +10,7 @@ import { RGBMLoader } from '../jsm/loaders/RGBMLoader.js';
 
 import { OrbitControls } from '../jsm/controls/OrbitControls.js';
 import { GLTFLoader } from '../jsm/loaders/GLTFLoader.js';
+import { Filter } from '../threejs/Three.js';
 
 let camera, scene, renderer;
 
@@ -34,7 +35,7 @@ function init() {
   const cube1Texture = new RGBMLoader().setMaxRange(16).setPath('./textures/cube/pisaRGBM16/').loadCubemap(rgbmUrls);
 
   cube1Texture.generateMipmaps = true;
-  cube1Texture.minFilter = THREE.LinearMipmapLinearFilter;
+  cube1Texture.minFilter = THREE.Filter.LinearMipmapLinear;
 
   const cube2Urls = [
     'dark-s_px.jpg',
@@ -47,7 +48,7 @@ function init() {
   const cube2Texture = new THREE.CubeTextureLoader().setPath('./textures/cube/MilkyWay/').load(cube2Urls);
 
   cube2Texture.generateMipmaps = true;
-  cube2Texture.minFilter = THREE.LinearMipmapLinearFilter;
+  cube2Texture.minFilter = THREE.Filter.LinearMipmapLinear;
 
   scene.environmentNode = mix(pmremTexture(cube2Texture), pmremTexture(cube1Texture), oscSine(timerLocal(0.1)));
 
@@ -64,7 +65,7 @@ function init() {
 
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.toneMappingNode = toneMapping(THREE.LinearToneMapping, 1);
+  renderer.toneMappingNode = toneMapping(THREE.ToneMapping.Linear, 1);
   renderer.setAnimationLoop(render);
   container.appendChild(renderer.domElement);
 

@@ -31,7 +31,7 @@ function init() {
   scene = new THREE.Scene();
 
   new RGBELoader().setPath('textures/equirectangular/').load('royal_esplanade_1k.hdr', function (texture) {
-    texture.mapping = THREE.EquirectangularReflectionMapping;
+    texture.mapping = THREE.Mapping.EquirectangularReflection;
     //texture.minFilter = THREE.LinearMipmapLinearFilter;
     //texture.generateMipmaps = true;
 
@@ -53,7 +53,7 @@ function init() {
   renderer = new WebGPURenderer({ antialias: true });
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMapping = THREE.ToneMapping.ACESFilmic;
   container.appendChild(renderer.domElement);
 
   const controls = new OrbitControls(camera, renderer.domElement);

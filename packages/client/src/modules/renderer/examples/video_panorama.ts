@@ -1,6 +1,7 @@
 import * as THREE from '../threejs/Three.js';
 
 import WebGPURenderer from '../jsm/renderers/webgpu/WebGPURenderer.js';
+import { ColorSpace } from '../threejs/Three.js';
 
 let camera, scene, renderer;
 
@@ -33,7 +34,7 @@ function init() {
   video.play();
 
   const texture = new THREE.VideoTexture(video);
-  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.colorSpace = THREE.ColorSpace.SRGB;
   const material = new THREE.MeshBasicMaterial({ map: texture });
 
   const mesh = new THREE.Mesh(geometry, material);

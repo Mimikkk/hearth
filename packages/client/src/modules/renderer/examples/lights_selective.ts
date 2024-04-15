@@ -37,12 +37,12 @@ function init() {
   const textureLoader = new THREE.TextureLoader();
 
   const normalMapTexture = textureLoader.load('./textures/water/Water_1_M_Normal.jpg');
-  normalMapTexture.wrapS = THREE.RepeatWrapping;
-  normalMapTexture.wrapT = THREE.RepeatWrapping;
+  normalMapTexture.wrapS = THREE.Wrapping.Repeat;
+  normalMapTexture.wrapT = THREE.Wrapping.Repeat;
 
   const alphaTexture = textureLoader.load('./textures/roughness_map.jpg');
-  alphaTexture.wrapS = THREE.RepeatWrapping;
-  alphaTexture.wrapT = THREE.RepeatWrapping;
+  alphaTexture.wrapS = THREE.Wrapping.Repeat;
+  alphaTexture.wrapT = THREE.Wrapping.Repeat;
 
   //lights
 

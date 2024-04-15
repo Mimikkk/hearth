@@ -32,7 +32,7 @@ async function init() {
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(animate);
-  renderer.toneMapping = THREE.ReinhardToneMapping;
+  renderer.toneMapping = THREE.ToneMapping.Reinhard;
   renderer.toneMappingExposure = 1;
   document.body.appendChild(renderer.domElement);
 

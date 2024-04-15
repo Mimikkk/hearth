@@ -1,358 +1,340 @@
+import * as THREE from '../threejs/Three.js';
+import {
+  tslFn,
+  texture,
+  vec3,
+  pass,
+  color,
+  uint,
+  viewportTopLeft,
+  positionWorld,
+  positionLocal,
+  timerLocal,
+  vec2,
+  MeshStandardNodeMaterial,
+  instanceIndex,
+  storage,
+  MeshBasicNodeMaterial,
+  If,
+} from '../jsm/nodes/Nodes.js';
 
-  import * as THREE from '../threejs/Three.js';
-  import {
-    tslFn,
-    texture,
-    vec3,
-    pass,
-    color,
-    uint,
-    viewportTopLeft,
-    positionWorld,
-    positionLocal,
-    timerLocal,
-    vec2,
-    MeshStandardNodeMaterial,
-    instanceIndex,
-    storage,
-    MeshBasicNodeMaterial,
-    If,
-  } from '../jsm/nodes/Nodes.js';
+import { TeapotGeometry } from '../jsm/geometries/TeapotGeometry.js';
 
-  import { TeapotGeometry } from '../jsm/geometries/TeapotGeometry.js';
+import WebGPU from '../jsm/capabilities/WebGPU.js';
+import WebGL from '../jsm/capabilities/WebGL.js';
+import WebGPURenderer from '../jsm/renderers/webgpu/WebGPURenderer.js';
+import StorageInstancedBufferAttribute from '../jsm/renderers/common/StorageInstancedBufferAttribute.js';
 
-  import WebGPU from '../jsm/capabilities/WebGPU.js';
-  import WebGL from '../jsm/capabilities/WebGL.js';
-  import WebGPURenderer from '../jsm/renderers/webgpu/WebGPURenderer.js';
-  import StorageInstancedBufferAttribute from '../jsm/renderers/common/StorageInstancedBufferAttribute.js';
+import PostProcessing from '../jsm/renderers/common/PostProcessing.js';
 
-  import PostProcessing from '../jsm/renderers/common/PostProcessing.js';
+import { OrbitControls } from '../jsm/controls/OrbitControls.js';
 
-  import { OrbitControls } from '../jsm/controls/OrbitControls.js';
+const maxParticleCount = 100000;
 
+let camera, scene, renderer;
+let controls, stats;
+let computeParticles;
+let postProcessing;
 
-  const maxParticleCount = 100000;
+let collisionCamera, collisionPosRT, collisionPosMaterial;
 
-  let camera, scene, renderer;
-  let controls, stats;
-  let computeParticles;
-  let postProcessing;
+init();
 
-  let collisionCamera, collisionPosRT, collisionPosMaterial;
+async function init() {
+  if (WebGPU.isAvailable() === false && WebGL.isWebGL2Available() === false) {
+    document.body.appendChild(WebGPU.getErrorMessage());
 
-  init();
+    throw new Error('No WebGPU or WebGL2 support');
+  }
 
-  async function init() {
+  const { innerWidth, innerHeight } = window;
 
-    if (WebGPU.isAvailable() === false && WebGL.isWebGL2Available() === false) {
+  camera = new THREE.PerspectiveCamera(60, innerWidth / innerHeight, 0.1, 100);
+  camera.position.set(20, 2, 20);
+  camera.layers.enable(2);
+  camera.lookAt(0, 40, 0);
 
-      document.body.appendChild(WebGPU.getErrorMessage());
+  scene = new THREE.Scene();
+  scene.fog = new THREE.Fog(0x0f3c37, 5, 40);
 
-      throw new Error('No WebGPU or WebGL2 support');
+  const dirLight = new THREE.DirectionalLight(0xf9ff9b, 9);
+  dirLight.castShadow = true;
+  dirLight.position.set(10, 10, 0);
+  dirLight.castShadow = true;
+  dirLight.shadow.camera.near = 1;
+  dirLight.shadow.camera.far = 30;
+  dirLight.shadow.camera.right = 30;
+  dirLight.shadow.camera.left = -30;
+  dirLight.shadow.camera.top = 30;
+  dirLight.shadow.camera.bottom = -30;
+  dirLight.shadow.mapSize.width = 2048;
+  dirLight.shadow.mapSize.height = 2048;
+  dirLight.shadow.bias = -0.009;
+  scene.add(dirLight);
 
-    }
+  scene.add(new THREE.HemisphereLight(0x0f3c37, 0x080d10, 100));
 
-    const { innerWidth, innerHeight } = window;
+  //
 
-    camera = new THREE.PerspectiveCamera(60, innerWidth / innerHeight, .1, 100);
-    camera.position.set(20, 2, 20);
-    camera.layers.enable(2);
-    camera.lookAt(0, 40, 0);
+  collisionCamera = new THREE.OrthographicCamera(-50, 50, 50, -50, 0.1, 50);
+  collisionCamera.position.y = 50;
+  collisionCamera.lookAt(0, 0, 0);
+  collisionCamera.layers.enable(1);
 
-    scene = new THREE.Scene();
-    scene.fog = new THREE.Fog(0x0f3c37, 5, 40);
+  collisionPosRT = new THREE.RenderTarget(1024, 1024);
+  collisionPosRT.texture.type = THREE.TextureDataType.HalfFloat;
 
-    const dirLight = new THREE.DirectionalLight(0xf9ff9b, 9);
-    dirLight.castShadow = true;
-    dirLight.position.set(10, 10, 0);
-    dirLight.castShadow = true;
-    dirLight.shadow.camera.near = 1;
-    dirLight.shadow.camera.far = 30;
-    dirLight.shadow.camera.right = 30;
-    dirLight.shadow.camera.left = -30;
-    dirLight.shadow.camera.top = 30;
-    dirLight.shadow.camera.bottom = -30;
-    dirLight.shadow.mapSize.width = 2048;
-    dirLight.shadow.mapSize.height = 2048;
-    dirLight.shadow.bias = -0.009;
-    scene.add(dirLight);
+  collisionPosMaterial = new MeshBasicNodeMaterial();
+  collisionPosMaterial.fog = false;
+  collisionPosMaterial.toneMapped = false;
+  collisionPosMaterial.colorNode = positionWorld.y;
 
-    scene.add(new THREE.HemisphereLight(0x0f3c37, 0x080d10, 100));
+  //
 
-    //
+  const createBuffer = (type = 'vec3') =>
+    storage(new StorageInstancedBufferAttribute(maxParticleCount, type === 'vec4' ? 4 : 3), type, maxParticleCount);
 
-    collisionCamera = new THREE.OrthographicCamera(-50, 50, 50, -50, .1, 50);
-    collisionCamera.position.y = 50;
-    collisionCamera.lookAt(0, 0, 0);
-    collisionCamera.layers.enable(1);
+  const positionBuffer = createBuffer();
+  const scaleBuffer = createBuffer();
+  const staticPositionBuffer = createBuffer();
+  const dataBuffer = createBuffer('vec4');
 
-    collisionPosRT = new THREE.RenderTarget(1024, 1024);
-    collisionPosRT.texture.type = THREE.HalfFloatType;
+  // compute
 
-    collisionPosMaterial = new MeshBasicNodeMaterial();
-    collisionPosMaterial.fog = false;
-    collisionPosMaterial.toneMapped = false;
-    collisionPosMaterial.colorNode = positionWorld.y;
+  const timer = timerLocal();
 
-    //
+  const randUint = () => uint(Math.random() * 0xffffff);
 
-    const createBuffer = (type = 'vec3') => storage(new StorageInstancedBufferAttribute(maxParticleCount, type === 'vec4' ? 4 : 3), type, maxParticleCount);
+  const computeInit = tslFn(() => {
+    const position = positionBuffer.element(instanceIndex);
+    const scale = scaleBuffer.element(instanceIndex);
+    const particleData = dataBuffer.element(instanceIndex);
 
-    const positionBuffer = createBuffer();
-    const scaleBuffer = createBuffer();
-    const staticPositionBuffer = createBuffer();
-    const dataBuffer = createBuffer('vec4');
+    const randX = instanceIndex.hash();
+    const randY = instanceIndex.add(randUint()).hash();
+    const randZ = instanceIndex.add(randUint()).hash();
 
-    // compute
+    position.x = randX.mul(100).add(-50);
+    position.y = randY.mul(500).add(3);
+    position.z = randZ.mul(100).add(-50);
 
-    const timer = timerLocal();
+    scale.xyz = instanceIndex.add(Math.random()).hash().mul(0.8).add(0.2);
 
-    const randUint = () => uint(Math.random() * 0xFFFFFF);
+    staticPositionBuffer.element(instanceIndex).assign(vec3(1000, 10000, 1000));
 
-    const computeInit = tslFn(() => {
+    particleData.y = randY.mul(-0.1).add(-0.02);
 
-      const position = positionBuffer.element(instanceIndex);
-      const scale = scaleBuffer.element(instanceIndex);
-      const particleData = dataBuffer.element(instanceIndex);
+    particleData.x = position.x;
+    particleData.z = position.z;
+    particleData.w = randX;
+  })().compute(maxParticleCount);
 
-      const randX = instanceIndex.hash();
-      const randY = instanceIndex.add(randUint()).hash();
-      const randZ = instanceIndex.add(randUint()).hash();
+  //
 
-      position.x = randX.mul(100).add(-50);
-      position.y = randY.mul(500).add(3);
-      position.z = randZ.mul(100).add(-50);
+  const surfaceOffset = 0.2;
+  const speed = 0.4;
 
-      scale.xyz = instanceIndex.add(Math.random()).hash().mul(.8).add(.2);
+  const computeUpdate = tslFn(() => {
+    const getCoord = pos => pos.add(50).div(100);
 
-      staticPositionBuffer.element(instanceIndex).assign(vec3(1000, 10000, 1000));
+    const position = positionBuffer.element(instanceIndex);
+    const scale = scaleBuffer.element(instanceIndex);
+    const particleData = dataBuffer.element(instanceIndex);
 
-      particleData.y = randY.mul(-.1).add(-.02);
+    const velocity = particleData.y;
+    const random = particleData.w;
 
-      particleData.x = position.x;
-      particleData.z = position.z;
-      particleData.w = randX;
+    const rippleOnSurface = texture(collisionPosRT.texture, getCoord(position.xz));
+    const rippleFloorArea = rippleOnSurface.y.add(scale.x.mul(surfaceOffset));
 
-    })().compute(maxParticleCount);
+    If(position.y.greaterThan(rippleFloorArea), () => {
+      position.x = particleData.x.add(timer.mul(random.mul(random)).mul(speed).sin().mul(3));
+      position.z = particleData.z.add(timer.mul(random).mul(speed).cos().mul(random.mul(10)));
 
-    //
+      position.y = position.y.add(velocity);
+    }).else(() => {
+      staticPositionBuffer.element(instanceIndex).assign(position);
+    });
+  });
 
-    const surfaceOffset = .2;
-    const speed = .4;
+  computeParticles = computeUpdate().compute(maxParticleCount);
 
-    const computeUpdate = tslFn(() => {
+  // rain
 
-      const getCoord = (pos) => pos.add(50).div(100);
+  const geometry = new THREE.SphereGeometry(surfaceOffset, 5, 5);
 
-      const position = positionBuffer.element(instanceIndex);
-      const scale = scaleBuffer.element(instanceIndex);
-      const particleData = dataBuffer.element(instanceIndex);
+  function particle(staticParticles) {
+    const posBuffer = staticParticles ? staticPositionBuffer : positionBuffer;
+    const layer = staticParticles ? 1 : 2;
 
-      const velocity = particleData.y;
-      const random = particleData.w;
-
-      const rippleOnSurface = texture(collisionPosRT.texture, getCoord(position.xz));
-      const rippleFloorArea = rippleOnSurface.y.add(scale.x.mul(surfaceOffset));
-
-      If(position.y.greaterThan(rippleFloorArea), () => {
-
-        position.x = particleData.x.add(timer.mul(random.mul(random)).mul(speed).sin().mul(3));
-        position.z = particleData.z.add(timer.mul(random).mul(speed).cos().mul(random.mul(10)));
-
-        position.y = position.y.add(velocity);
-
-      }).else(() => {
-
-        staticPositionBuffer.element(instanceIndex).assign(position);
-
-      });
-
+    const staticMaterial = new MeshStandardNodeMaterial({
+      color: 0xeeeeee,
+      roughness: 0.9,
+      metalness: 0,
     });
 
-    computeParticles = computeUpdate().compute(maxParticleCount);
+    staticMaterial.positionNode = positionLocal.mul(scaleBuffer.toAttribute()).add(posBuffer.toAttribute());
 
-    // rain
+    const rainParticles = new THREE.Mesh(geometry, staticMaterial);
+    rainParticles.isInstancedMesh = true;
+    rainParticles.count = maxParticleCount;
+    rainParticles.castShadow = true;
+    rainParticles.layers.disableAll();
+    rainParticles.layers.enable(layer);
 
-    const geometry = new THREE.SphereGeometry(surfaceOffset, 5, 5);
+    return rainParticles;
+  }
 
-    function particle(staticParticles) {
+  const dynamicParticles = particle();
+  const staticParticles = particle(true);
 
-      const posBuffer = staticParticles ? staticPositionBuffer : positionBuffer;
-      const layer = staticParticles ? 1 : 2;
+  scene.add(dynamicParticles);
+  scene.add(staticParticles);
 
-      const staticMaterial = new MeshStandardNodeMaterial({
-        color: 0xeeeeee,
-        roughness: .9,
-        metalness: 0,
-      });
+  // floor geometry
 
-      staticMaterial.positionNode = positionLocal.mul(scaleBuffer.toAttribute()).add(posBuffer.toAttribute());
+  const floorGeometry = new THREE.PlaneGeometry(100, 100);
+  floorGeometry.rotateX(-Math.PI / 2);
 
-      const rainParticles = new THREE.Mesh(geometry, staticMaterial);
-      rainParticles.isInstancedMesh = true;
-      rainParticles.count = maxParticleCount;
-      rainParticles.castShadow = true;
-      rainParticles.layers.disableAll();
-      rainParticles.layers.enable(layer);
-
-      return rainParticles;
-
-    }
-
-    const dynamicParticles = particle();
-    const staticParticles = particle(true);
-
-    scene.add(dynamicParticles);
-    scene.add(staticParticles);
-
-    // floor geometry
-
-    const floorGeometry = new THREE.PlaneGeometry(100, 100);
-    floorGeometry.rotateX(-Math.PI / 2);
-
-    const plane = new THREE.Mesh(floorGeometry, new THREE.MeshStandardMaterial({
+  const plane = new THREE.Mesh(
+    floorGeometry,
+    new THREE.MeshStandardMaterial({
       color: 0x0c1e1e,
-      roughness: .5,
+      roughness: 0.5,
       metalness: 0,
       transparent: true,
-    }));
+    }),
+  );
 
-    plane.material.opacityNode = positionLocal.xz.mul(.05).distance(0).saturate().oneMinus();
+  plane.material.opacityNode = positionLocal.xz.mul(0.05).distance(0).saturate().oneMinus();
 
-    scene.add(plane);
+  scene.add(plane);
 
-    // tree
+  // tree
 
-    function tree(count = 8) {
+  function tree(count = 8) {
+    const coneMaterial = new MeshStandardNodeMaterial({
+      color: 0x0d492c,
+      roughness: 0.6,
+      metalness: 0,
+    });
 
-      const coneMaterial = new MeshStandardNodeMaterial({
-        color: 0x0d492c,
-        roughness: .6,
-        metalness: 0,
-      });
+    const object = new THREE.Group();
 
-      const object = new THREE.Group();
+    for (let i = 0; i < count; i++) {
+      const radius = 1 + i;
 
-      for (let i = 0; i < count; i++) {
+      const coneGeometry = new THREE.ConeGeometry(radius * 0.95, radius * 1.25, 32);
 
-        const radius = 1 + i;
-
-        const coneGeometry = new THREE.ConeGeometry(radius * 0.95, radius * 1.25, 32);
-
-        const cone = new THREE.Mesh(coneGeometry, coneMaterial);
-        cone.castShadow = true;
-        cone.position.y = ((count - i) * 1.5) + (count * .6);
-        object.add(cone);
-
-      }
-
-      const geometry = new THREE.CylinderGeometry(1, 1, count, 32);
-      const cone = new THREE.Mesh(geometry, coneMaterial);
-      cone.position.y = count / 2;
+      const cone = new THREE.Mesh(coneGeometry, coneMaterial);
+      cone.castShadow = true;
+      cone.position.y = (count - i) * 1.5 + count * 0.6;
       object.add(cone);
-
-      return object;
-
     }
 
-    const teapotTree = new THREE.Mesh(new TeapotGeometry(.5, 18), new MeshBasicNodeMaterial({
+    const geometry = new THREE.CylinderGeometry(1, 1, count, 32);
+    const cone = new THREE.Mesh(geometry, coneMaterial);
+    cone.position.y = count / 2;
+    object.add(cone);
+
+    return object;
+  }
+
+  const teapotTree = new THREE.Mesh(
+    new TeapotGeometry(0.5, 18),
+    new MeshBasicNodeMaterial({
       color: 0xfcfb9e,
-    }));
+    }),
+  );
 
-    teapotTree.position.y = 18;
+  teapotTree.position.y = 18;
 
-    scene.add(tree());
-    scene.add(teapotTree);
+  scene.add(tree());
+  scene.add(teapotTree);
 
-    //
+  //
 
-    scene.backgroundNode = viewportTopLeft.distance(.5).mul(2).mix(color(0x0f4140), color(0x060a0d));
+  scene.backgroundNode = viewportTopLeft.distance(0.5).mul(2).mix(color(0x0f4140), color(0x060a0d));
 
-    //
+  //
 
-    renderer = new WebGPURenderer({ antialias: true });
-    renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setAnimationLoop(animate);
-    document.body.appendChild(renderer.domElement);
+  renderer = new WebGPURenderer({ antialias: true });
+  renderer.toneMapping = THREE.ToneMapping.ACESFilmic;
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setAnimationLoop(animate);
+  document.body.appendChild(renderer.domElement);
 
+  //
 
-    //
+  controls = new OrbitControls(camera, renderer.domElement);
+  controls.target.set(0, 10, 0);
+  controls.minDistance = 25;
+  controls.maxDistance = 35;
+  controls.maxPolarAngle = Math.PI / 1.7;
+  controls.autoRotate = true;
+  controls.autoRotateSpeed = -0.7;
+  controls.update();
 
-    controls = new OrbitControls(camera, renderer.domElement);
-    controls.target.set(0, 10, 0);
-    controls.minDistance = 25;
-    controls.maxDistance = 35;
-    controls.maxPolarAngle = Math.PI / 1.7;
-    controls.autoRotate = true;
-    controls.autoRotateSpeed = -0.7;
-    controls.update();
+  // post processing
 
-    // post processing
+  const scenePass = pass(scene, camera);
+  const scenePassColor = scenePass.getTextureNode();
+  const vignet = viewportTopLeft.distance(0.5).mul(1.35).clamp().oneMinus();
 
-    const scenePass = pass(scene, camera);
-    const scenePassColor = scenePass.getTextureNode();
-    const vignet = viewportTopLeft.distance(.5).mul(1.35).clamp().oneMinus();
+  const teapotTreePass = pass(teapotTree, camera).getTextureNode();
+  const teapotTreePassBlurred = teapotTreePass.gaussianBlur(3);
+  teapotTreePassBlurred.resolution = new THREE.Vector2(0.2, 0.2);
 
-    const teapotTreePass = pass(teapotTree, camera).getTextureNode();
-    const teapotTreePassBlurred = teapotTreePass.gaussianBlur(3);
-    teapotTreePassBlurred.resolution = new THREE.Vector2(.2, .2);
+  const scenePassColorBlurred = scenePassColor.gaussianBlur();
+  scenePassColorBlurred.resolution = new THREE.Vector2(0.5, 0.5);
+  scenePassColorBlurred.directionNode = vec2(1);
 
-    const scenePassColorBlurred = scenePassColor.gaussianBlur();
-    scenePassColorBlurred.resolution = new THREE.Vector2(.5, .5);
-    scenePassColorBlurred.directionNode = vec2(1);
+  // compose
 
-    // compose
+  let totalPass = scenePass;
+  totalPass = totalPass.add(scenePassColorBlurred.mul(0.1));
+  totalPass = totalPass.mul(vignet);
+  totalPass = totalPass.add(teapotTreePass.mul(10).add(teapotTreePassBlurred));
 
-    let totalPass = scenePass;
-    totalPass = totalPass.add(scenePassColorBlurred.mul(.1));
-    totalPass = totalPass.mul(vignet);
-    totalPass = totalPass.add(teapotTreePass.mul(10).add(teapotTreePassBlurred));
+  postProcessing = new PostProcessing(renderer);
+  postProcessing.outputNode = totalPass;
 
-    postProcessing = new PostProcessing(renderer);
-    postProcessing.outputNode = totalPass;
+  //
 
-    //
+  await renderer.computeAsync(computeInit);
 
-    await renderer.computeAsync(computeInit);
+  //
 
-    //
+  window.addEventListener('resize', onWindowResize);
+}
 
-    window.addEventListener('resize', onWindowResize);
+function onWindowResize() {
+  const { innerWidth, innerHeight } = window;
 
-  }
+  camera.aspect = innerWidth / innerHeight;
+  camera.updateProjectionMatrix();
 
-  function onWindowResize() {
+  renderer.setSize(innerWidth, innerHeight);
+}
 
-    const { innerWidth, innerHeight } = window;
+async function animate() {
+  controls.update();
 
-    camera.aspect = innerWidth / innerHeight;
-    camera.updateProjectionMatrix();
+  // position
 
-    renderer.setSize(innerWidth, innerHeight);
+  scene.overrideMaterial = collisionPosMaterial;
+  renderer.setRenderTarget(collisionPosRT);
+  await renderer.renderAsync(scene, collisionCamera);
 
-  }
+  // compute
 
-  async function animate() {
+  await renderer.computeAsync(computeParticles);
 
-    controls.update();
+  // result
 
-    // position
+  scene.overrideMaterial = null;
+  renderer.setRenderTarget(null);
 
-    scene.overrideMaterial = collisionPosMaterial;
-    renderer.setRenderTarget(collisionPosRT);
-    await renderer.renderAsync(scene, collisionCamera);
-
-    // compute
-
-    await renderer.computeAsync(computeParticles);
-
-    // result
-
-    scene.overrideMaterial = null;
-    renderer.setRenderTarget(null);
-
-    await postProcessing.renderAsync();
-
-  }
+  await postProcessing.renderAsync();
+}

@@ -40,7 +40,7 @@ async function init() {
   const renderer = new WebGPURenderer({ antialias: true });
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMapping = THREE.ToneMapping.ACESFilmic;
   renderer.setAnimationLoop(animate);
 
   container.appendChild(renderer.domElement);

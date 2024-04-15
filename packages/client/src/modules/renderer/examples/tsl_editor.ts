@@ -35,7 +35,7 @@ function init() {
   const rendererDOM = document.getElementById('renderer');
 
   const renderer = new WebGPURenderer({ antialias: true });
-  renderer.outputColorSpace = THREE.LinearSRGBColorSpace;
+  renderer.outputColorSpace = THREE.ColorSpace.LinearSRGB;
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(200, 200);
   rendererDOM.appendChild(renderer.domElement);
@@ -57,7 +57,7 @@ function init() {
   require(['vs/editor/editor.main'], () => {
     const options = {
       shader: 'fragment',
-      outputColorSpace: THREE.LinearSRGBColorSpace,
+      outputColorSpace: THREE.ColorSpace.LinearSRGB,
       output: 'WGSL',
       preview: true,
     };
@@ -74,8 +74,8 @@ const { texture, uniform, vec2, vec4, uv, oscSine, timerLocal } = TSL;
 
 //const samplerTexture = new THREE.Texture();
 const samplerTexture = new THREE.TextureLoader().load( './textures/uv_grid_opengl.jpg' );
-samplerTexture.wrapS = THREE.RepeatWrapping;
-//samplerTexture.wrapT = THREE.RepeatWrapping;
+samplerTexture.wrapS = THREE.Wrapping.Repeat;
+//samplerTexture.wrapT = THREE.Wrapping.Repeat;
 //samplerTexture.colorSpace = THREE.SRGBColorSpace;
 
 const timer = timerLocal( .5 ); // .5 is speed
@@ -167,7 +167,7 @@ output = vec4( finalColor, opacity );
     gui.add(options, 'output', ['WGSL', 'GLSL ES 3.0', 'GLSL']).onChange(build);
     gui.add(options, 'shader', ['vertex', 'fragment']).onChange(showCode);
 
-    gui.add(options, 'outputColorSpace', [THREE.LinearSRGBColorSpace, THREE.SRGBColorSpace]).onChange(value => {
+    gui.add(options, 'outputColorSpace', [THREE.ColorSpace.LinearSRGB, THREE.ColorSpace.SRGB]).onChange(value => {
       renderer.outputColorSpace = value;
 
       build();

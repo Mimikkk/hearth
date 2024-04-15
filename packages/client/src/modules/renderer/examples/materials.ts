@@ -68,12 +68,12 @@ function init() {
   const textureLoader = new THREE.TextureLoader();
 
   const uvTexture = textureLoader.load('./textures/uv_grid_opengl.jpg');
-  uvTexture.wrapS = THREE.RepeatWrapping;
-  uvTexture.wrapT = THREE.RepeatWrapping;
+  uvTexture.wrapS = THREE.Wrapping.Repeat;
+  uvTexture.wrapT = THREE.Wrapping.Repeat;
 
   const opacityTexture = textureLoader.load('./textures/alphaMap.jpg');
-  opacityTexture.wrapS = THREE.RepeatWrapping;
-  opacityTexture.wrapT = THREE.RepeatWrapping;
+  opacityTexture.wrapS = THREE.Wrapping.Repeat;
+  opacityTexture.wrapT = THREE.Wrapping.Repeat;
 
   let material;
 

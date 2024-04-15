@@ -96,7 +96,7 @@ function init() {
   renderer.setPixelRatio(dpr);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(animate);
-  renderer.outputColorSpace = THREE.LinearSRGBColorSpace;
+  renderer.outputColorSpace = THREE.ColorSpace.LinearSRGB;
   document.body.appendChild(renderer.domElement);
 
   window.addEventListener('resize', onWindowResize);

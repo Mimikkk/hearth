@@ -9,6 +9,7 @@ import WebGL from '../jsm/capabilities/WebGL.js';
 import WebGPURenderer from '../jsm/renderers/webgpu/WebGPURenderer.js';
 
 import { OrbitControls } from '../jsm/controls/OrbitControls.js';
+import { Blending } from '../threejs/Three.js';
 
 let camera, scene, renderer;
 let controls;
@@ -79,7 +80,7 @@ function init() {
   fireNodeMaterial.positionNode = range(new THREE.Vector3(-1, 1, -1), new THREE.Vector3(1, 2, 1)).mul(lifeTime);
   fireNodeMaterial.scaleNode = smokeNodeMaterial.scaleNode;
   fireNodeMaterial.opacityNode = opacityNode;
-  fireNodeMaterial.blending = THREE.AdditiveBlending;
+  fireNodeMaterial.blending = THREE.Blending.Additive;
   fireNodeMaterial.transparent = true;
   fireNodeMaterial.depthWrite = false;
 

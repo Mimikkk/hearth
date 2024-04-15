@@ -11,6 +11,7 @@ import { RGBMLoader } from '../jsm/loaders/RGBMLoader.js';
 
 import { GUI } from '../jsm/libs/lil-gui.module.min.js';
 import Stats from '../jsm/libs/stats.module.js';
+import { Filter } from '../threejs/Three.js';
 
 let camera, scene, renderer, stats;
 let cube, sphere, torus, material;
@@ -32,7 +33,7 @@ function init() {
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(animation);
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMapping = THREE.ToneMapping.ACESFilmic;
   document.body.appendChild(renderer.domElement);
 
   window.addEventListener('resize', onWindowResized);
@@ -51,8 +52,8 @@ function init() {
   const texture = new RGBMLoader().setMaxRange(16).setPath('./textures/cube/pisaRGBM16/').loadCubemap(rgbmUrls);
 
   texture.name = 'pisaRGBM16';
-  texture.minFilter = THREE.LinearMipmapLinearFilter;
-  texture.magFilter = THREE.LinearFilter;
+  texture.minFilter = THREE.Filter.LinearMipmapLinear;
+  texture.magFilter = THREE.Filter.Linear;
 
   scene.background = texture;
   scene.environment = texture;
@@ -60,9 +61,9 @@ function init() {
   //
 
   cubeRenderTarget = new THREE.WebGLCubeRenderTarget(256);
-  cubeRenderTarget.texture.type = THREE.HalfFloatType;
-  cubeRenderTarget.texture.minFilter = THREE.LinearMipmapLinearFilter;
-  cubeRenderTarget.texture.magFilter = THREE.LinearFilter;
+  cubeRenderTarget.texture.type = THREE.TextureDataType.HalfFloat;
+  cubeRenderTarget.texture.minFilter = THREE.Filter.LinearMipmapLinear;
+  cubeRenderTarget.texture.magFilter = THREE.Filter.Linear;
   cubeRenderTarget.texture.generateMipmaps = true;
 
   cubeCamera = new THREE.CubeCamera(1, 1000, cubeRenderTarget);

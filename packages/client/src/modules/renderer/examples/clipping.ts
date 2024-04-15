@@ -11,6 +11,7 @@ import Stats from '../jsm/libs/stats.module.js';
 import { GUI } from '../jsm/libs/lil-gui.module.min.js';
 
 import { OrbitControls } from '../jsm/controls/OrbitControls.js';
+import { Side } from '../threejs/Three.js';
 
 let camera, scene, renderer, startTime, object, stats;
 
@@ -72,7 +73,7 @@ function init() {
   const material = new MeshPhongNodeMaterial({
     color: 0x80ee10,
     shininess: 0,
-    side: THREE.DoubleSide,
+    side: THREE.Side.Double,
 
     // ***** Clipping setup (material): *****
     clippingPlanes: [localPlane, localPlane2],

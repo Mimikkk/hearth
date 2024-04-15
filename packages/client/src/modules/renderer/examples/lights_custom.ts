@@ -97,7 +97,7 @@ function init() {
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(animate);
-  renderer.toneMappingNode = toneMapping(THREE.LinearToneMapping, 1);
+  renderer.toneMappingNode = toneMapping(THREE.ToneMapping.Linear, 1);
   document.body.appendChild(renderer.domElement);
 
   // controls

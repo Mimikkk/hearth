@@ -18,6 +18,7 @@ import { GLTFLoader } from '../jsm/loaders/GLTFLoader.js';
 import WebGPURenderer from '../jsm/renderers/webgpu/WebGPURenderer.js';
 
 import { OrbitControls } from '../jsm/controls/OrbitControls.js';
+import { Side } from '../threejs/Three.js';
 
 let camera, sceneMain, scenePortal, renderer;
 let clock;
@@ -109,7 +110,7 @@ function init() {
   const material = new MeshBasicNodeMaterial();
   material.colorNode = pass(scenePortal, camera).context({ getUV: () => viewportTopLeft });
   material.opacityNode = uv().distance(0.5).remapClamp(0.3, 0.5).oneMinus();
-  material.side = THREE.DoubleSide;
+  material.side = THREE.Side.Double;
   material.transparent = true;
 
   const plane = new THREE.Mesh(geometry, material);
@@ -122,7 +123,7 @@ function init() {
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(animate);
-  renderer.toneMappingNode = toneMapping(THREE.LinearToneMapping, 0.15);
+  renderer.toneMappingNode = toneMapping(THREE.ToneMapping.Linear, 0.15);
   document.body.appendChild(renderer.domElement);
 
   //

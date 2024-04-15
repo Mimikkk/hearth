@@ -36,7 +36,7 @@ async function init() {
   renderer = new WebGPURenderer({ antialias: true, forceWebGL });
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMapping = THREE.ToneMapping.ACESFilmic;
 
   await renderer.init();
 

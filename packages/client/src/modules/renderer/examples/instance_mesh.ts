@@ -44,7 +44,7 @@ function init() {
     geometry.scale(0.5, 0.5, 0.5);
 
     mesh = new THREE.InstancedMesh(geometry, material, count);
-    mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+    mesh.instanceMatrix.setUsage(THREE.BufferUsage.DynamicDraw);
 
     scene.add(mesh);
 

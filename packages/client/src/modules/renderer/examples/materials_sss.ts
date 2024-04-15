@@ -75,10 +75,10 @@ function init() {
 function initMaterial() {
   const loader = new THREE.TextureLoader();
   const imgTexture = loader.load('models/fbx/white.jpg');
-  imgTexture.colorSpace = THREE.SRGBColorSpace;
+  imgTexture.colorSpace = THREE.ColorSpace.SRGB;
 
   const thicknessTexture = loader.load('models/fbx/bunny_thickness.jpg');
-  imgTexture.wrapS = imgTexture.wrapT = THREE.RepeatWrapping;
+  imgTexture.wrapS = imgTexture.wrapT = THREE.Wrapping.Repeat;
 
   const material = new Nodes.MeshSSSNodeMaterial();
   material.color = new THREE.Color(1.0, 0.2, 0.2);

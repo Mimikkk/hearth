@@ -1,195 +1,182 @@
+import * as THREE from '../threejs/Three.js';
+import {
+  uniform,
+  mix,
+  pmremTexture,
+  reference,
+  positionLocal,
+  positionWorld,
+  normalWorld,
+  positionWorldDirection,
+  reflectVector,
+  toneMapping,
+} from '../jsm/nodes/Nodes.js';
 
-  import * as THREE from '../threejs/Three.js';
-  import {
-    uniform,
-    mix,
-    pmremTexture,
-    reference,
-    positionLocal,
-    positionWorld,
-    normalWorld,
-    positionWorldDirection,
-    reflectVector,
-    toneMapping,
-  } from '../jsm/nodes/Nodes.js';
+import WebGPU from '../jsm/capabilities/WebGPU.js';
+import WebGL from '../jsm/capabilities/WebGL.js';
 
-  import WebGPU from '../jsm/capabilities/WebGPU.js';
-  import WebGL from '../jsm/capabilities/WebGL.js';
+import WebGPURenderer from '../jsm/renderers/webgpu/WebGPURenderer.js';
 
-  import WebGPURenderer from '../jsm/renderers/webgpu/WebGPURenderer.js';
+import { RGBMLoader } from '../jsm/loaders/RGBMLoader.js';
 
-  import { RGBMLoader } from '../jsm/loaders/RGBMLoader.js';
+import { OrbitControls } from '../jsm/controls/OrbitControls.js';
+import { GLTFLoader } from '../jsm/loaders/GLTFLoader.js';
 
-  import { OrbitControls } from '../jsm/controls/OrbitControls.js';
-  import { GLTFLoader } from '../jsm/loaders/GLTFLoader.js';
+import { GUI } from '../jsm/libs/lil-gui.module.min.js';
+import { Filter } from '../threejs/Three.js';
 
-  import { GUI } from '../jsm/libs/lil-gui.module.min.js';
+let camera, scene, renderer;
 
-  let camera, scene, renderer;
+init();
 
-  init();
+function init() {
+  if (WebGPU.isAvailable() === false && WebGL.isWebGL2Available() === false) {
+    document.body.appendChild(WebGPU.getErrorMessage());
 
-  function init() {
+    throw new Error('No WebGPU or WebGL2 support');
+  }
 
-    if (WebGPU.isAvailable() === false && WebGL.isWebGL2Available() === false) {
+  const container = document.createElement('div');
+  document.body.appendChild(container);
 
-      document.body.appendChild(WebGPU.getErrorMessage());
+  const initialDistance = 2;
 
-      throw new Error('No WebGPU or WebGL2 support');
+  camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.25, 20);
+  camera.position.set(-1.8 * initialDistance, 0.6 * initialDistance, 2.7 * initialDistance);
 
-    }
+  scene = new THREE.Scene();
 
-    const container = document.createElement('div');
-    document.body.appendChild(container);
+  // cube textures
 
-    const initialDistance = 2;
+  const rgbmUrls = ['px.png', 'nx.png', 'py.png', 'ny.png', 'pz.png', 'nz.png'];
+  const cube1Texture = new RGBMLoader().setMaxRange(16).setPath('./textures/cube/pisaRGBM16/').loadCubemap(rgbmUrls);
 
-    camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.25, 20);
-    camera.position.set(-1.8 * initialDistance, 0.6 * initialDistance, 2.7 * initialDistance);
+  cube1Texture.generateMipmaps = true;
+  cube1Texture.minFilter = THREE.Filter.LinearMipmapLinear;
 
-    scene = new THREE.Scene();
+  const cube2Urls = ['posx.jpg', 'negx.jpg', 'posy.jpg', 'negy.jpg', 'posz.jpg', 'negz.jpg'];
+  const cube2Texture = new THREE.CubeTextureLoader().setPath('./textures/cube/Park2/').load(cube2Urls);
 
-    // cube textures
+  cube2Texture.generateMipmaps = true;
+  cube2Texture.minFilter = THREE.Filter.LinearMipmapLinear;
 
-    const rgbmUrls = ['px.png', 'nx.png', 'py.png', 'ny.png', 'pz.png', 'nz.png'];
-    const cube1Texture = new RGBMLoader()
-      .setMaxRange(16)
-      .setPath('./textures/cube/pisaRGBM16/')
-      .loadCubemap(rgbmUrls);
+  // nodes and environment
 
-    cube1Texture.generateMipmaps = true;
-    cube1Texture.minFilter = THREE.LinearMipmapLinearFilter;
+  const adjustments = {
+    mix: 0,
+    procedural: 0,
+    intensity: 1,
+    hue: 0,
+    saturation: 1,
+  };
 
-    const cube2Urls = ['posx.jpg', 'negx.jpg', 'posy.jpg', 'negy.jpg', 'posz.jpg', 'negz.jpg'];
-    const cube2Texture = new THREE.CubeTextureLoader()
-      .setPath('./textures/cube/Park2/')
-      .load(cube2Urls);
+  const mixNode = reference('mix', 'float', adjustments);
+  const proceduralNode = reference('procedural', 'float', adjustments);
+  const intensityNode = reference('intensity', 'float', adjustments);
+  const hueNode = reference('hue', 'float', adjustments);
+  const saturationNode = reference('saturation', 'float', adjustments);
 
-    cube2Texture.generateMipmaps = true;
-    cube2Texture.minFilter = THREE.LinearMipmapLinearFilter;
+  const rotateY1Matrix = new THREE.Matrix4();
+  const rotateY2Matrix = new THREE.Matrix4();
 
-    // nodes and environment
+  const getEnvironmentNode = (reflectNode, positionNode) => {
+    const custom1UV = reflectNode.xyz.mul(uniform(rotateY1Matrix));
+    const custom2UV = reflectNode.xyz.mul(uniform(rotateY2Matrix));
+    const mixCubeMaps = mix(
+      pmremTexture(cube1Texture, custom1UV),
+      pmremTexture(cube2Texture, custom2UV),
+      positionNode.y.add(mixNode).clamp(),
+    );
 
-    const adjustments = {
-      mix: 0,
-      procedural: 0,
-      intensity: 1,
-      hue: 0,
-      saturation: 1,
-    };
+    const proceduralEnv = mix(mixCubeMaps, normalWorld, proceduralNode);
 
-    const mixNode = reference('mix', 'float', adjustments);
-    const proceduralNode = reference('procedural', 'float', adjustments);
-    const intensityNode = reference('intensity', 'float', adjustments);
-    const hueNode = reference('hue', 'float', adjustments);
-    const saturationNode = reference('saturation', 'float', adjustments);
+    const intensityFilter = proceduralEnv.mul(intensityNode);
+    const hueFilter = intensityFilter.hue(hueNode);
+    return hueFilter.saturation(saturationNode);
+  };
 
-    const rotateY1Matrix = new THREE.Matrix4();
-    const rotateY2Matrix = new THREE.Matrix4();
+  const blurNode = uniform(0);
 
-    const getEnvironmentNode = (reflectNode, positionNode) => {
+  scene.environmentNode = getEnvironmentNode(reflectVector, positionWorld);
 
-      const custom1UV = reflectNode.xyz.mul(uniform(rotateY1Matrix));
-      const custom2UV = reflectNode.xyz.mul(uniform(rotateY2Matrix));
-      const mixCubeMaps = mix(pmremTexture(cube1Texture, custom1UV), pmremTexture(cube2Texture, custom2UV), positionNode.y.add(mixNode).clamp());
+  scene.backgroundNode = getEnvironmentNode(positionWorldDirection, positionLocal).context({
+    getTextureLevel: () => blurNode,
+  });
 
-      const proceduralEnv = mix(mixCubeMaps, normalWorld, proceduralNode);
+  // scene objects
 
-      const intensityFilter = proceduralEnv.mul(intensityNode);
-      const hueFilter = intensityFilter.hue(hueNode);
-      return hueFilter.saturation(saturationNode);
+  const loader = new GLTFLoader().setPath('models/gltf/DamagedHelmet/glTF/');
+  loader.load('DamagedHelmet.gltf', function (gltf) {
+    scene.add(gltf.scene);
+  });
 
-    };
+  const sphereGeometry = new THREE.SphereGeometry(0.5, 64, 32);
 
-    const blurNode = uniform(0);
-
-    scene.environmentNode = getEnvironmentNode(reflectVector, positionWorld);
-
-    scene.backgroundNode = getEnvironmentNode(positionWorldDirection, positionLocal).context({
-      getTextureLevel: () => blurNode,
-    });
-
-    // scene objects
-
-    const loader = new GLTFLoader().setPath('models/gltf/DamagedHelmet/glTF/');
-    loader.load('DamagedHelmet.gltf', function(gltf) {
-
-      scene.add(gltf.scene);
-
-    });
-
-    const sphereGeometry = new THREE.SphereGeometry(.5, 64, 32);
-
-    const sphereRightView = new THREE.Mesh(sphereGeometry, new THREE.MeshStandardMaterial({
+  const sphereRightView = new THREE.Mesh(
+    sphereGeometry,
+    new THREE.MeshStandardMaterial({
       roughness: 0,
       metalness: 1,
-    }));
-    sphereRightView.position.x += 2;
+    }),
+  );
+  sphereRightView.position.x += 2;
 
-    const sphereLeftView = new THREE.Mesh(sphereGeometry, new THREE.MeshStandardMaterial({
+  const sphereLeftView = new THREE.Mesh(
+    sphereGeometry,
+    new THREE.MeshStandardMaterial({
       roughness: 1,
       metalness: 1,
-    }));
-    sphereLeftView.position.x -= 2;
+    }),
+  );
+  sphereLeftView.position.x -= 2;
 
-    scene.add(sphereLeftView);
-    scene.add(sphereRightView);
+  scene.add(sphereLeftView);
+  scene.add(sphereRightView);
 
-    // renderer and controls
+  // renderer and controls
 
-    renderer = new WebGPURenderer({ antialias: true });
-    renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.toneMappingNode = toneMapping(THREE.LinearToneMapping, 1);
-    renderer.setAnimationLoop(render);
-    container.appendChild(renderer.domElement);
+  renderer = new WebGPURenderer({ antialias: true });
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.toneMappingNode = toneMapping(THREE.ToneMapping.Linear, 1);
+  renderer.setAnimationLoop(render);
+  container.appendChild(renderer.domElement);
 
-    const controls = new OrbitControls(camera, renderer.domElement);
-    controls.minDistance = 2;
-    controls.maxDistance = 10;
+  const controls = new OrbitControls(camera, renderer.domElement);
+  controls.minDistance = 2;
+  controls.maxDistance = 10;
 
-    window.addEventListener('resize', onWindowResize);
+  window.addEventListener('resize', onWindowResize);
 
-    // gui
+  // gui
 
-    const gui = new GUI();
+  const gui = new GUI();
 
-    gui.add({ blurBackground: blurNode.value }, 'blurBackground', 0, 1, 0.01).onChange(value => {
+  gui.add({ blurBackground: blurNode.value }, 'blurBackground', 0, 1, 0.01).onChange(value => {
+    blurNode.value = value;
+  });
+  gui.add({ offsetCube1: 0 }, 'offsetCube1', 0, Math.PI * 2, 0.01).onChange(value => {
+    rotateY1Matrix.makeRotationY(value);
+  });
+  gui.add({ offsetCube2: 0 }, 'offsetCube2', 0, Math.PI * 2, 0.01).onChange(value => {
+    rotateY2Matrix.makeRotationY(value);
+  });
+  gui.add(adjustments, 'mix', -1, 2, 0.01);
+  gui.add(adjustments, 'procedural', 0, 1, 0.01);
+  gui.add(adjustments, 'intensity', 0, 5, 0.01);
+  gui.add(adjustments, 'hue', 0, Math.PI * 2, 0.01);
+  gui.add(adjustments, 'saturation', 0, 2, 0.01);
+}
 
-      blurNode.value = value;
+function onWindowResize() {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
 
-    });
-    gui.add({ offsetCube1: 0 }, 'offsetCube1', 0, Math.PI * 2, 0.01).onChange(value => {
+  renderer.setSize(window.innerWidth, window.innerHeight);
+}
 
-      rotateY1Matrix.makeRotationY(value);
+//
 
-    });
-    gui.add({ offsetCube2: 0 }, 'offsetCube2', 0, Math.PI * 2, 0.01).onChange(value => {
-
-      rotateY2Matrix.makeRotationY(value);
-
-    });
-    gui.add(adjustments, 'mix', -1, 2, 0.01);
-    gui.add(adjustments, 'procedural', 0, 1, 0.01);
-    gui.add(adjustments, 'intensity', 0, 5, 0.01);
-    gui.add(adjustments, 'hue', 0, Math.PI * 2, 0.01);
-    gui.add(adjustments, 'saturation', 0, 2, 0.01);
-
-  }
-
-  function onWindowResize() {
-
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-
-    renderer.setSize(window.innerWidth, window.innerHeight);
-
-  }
-
-  //
-
-  function render() {
-
-    renderer.render(scene, camera);
-
-  }
+function render() {
+  renderer.render(scene, camera);
+}

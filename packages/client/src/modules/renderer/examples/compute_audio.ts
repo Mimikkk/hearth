@@ -15,6 +15,7 @@ import { GUI } from '../jsm/libs/lil-gui.module.min.js';
 
 import WebGPURenderer from '../jsm/renderers/webgpu/WebGPURenderer.js';
 import StorageInstancedBufferAttribute from '../jsm/renderers/common/StorageInstancedBufferAttribute.js';
+import { TextureFormat } from '../threejs/Three.js';
 
 let camera, scene, renderer;
 let computeNode;
@@ -144,7 +145,7 @@ async function init() {
 
   // nodes
 
-  analyserTexture = new THREE.DataTexture(analyserBuffer, analyserBuffer.length, 1, THREE.RedFormat);
+  analyserTexture = new THREE.DataTexture(analyserBuffer, analyserBuffer.length, 1, THREE.TextureFormat.Red);
 
   const spectrum = texture(analyserTexture, viewportTopLeft.x).x.mul(viewportTopLeft.y);
   const backgroundNode = color(0x0000ff).mul(spectrum);

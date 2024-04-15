@@ -1,5 +1,6 @@
 import * as THREE from '../threejs/Three.js';
 import WebGPURenderer from '../jsm/renderers/webgpu/WebGPURenderer.js';
+import { Filter } from '../threejs/Three.js';
 
 let camera, scene, renderer, clock, dataTexture, diffuseMap;
 
@@ -19,8 +20,8 @@ function init() {
 
   const loader = new THREE.TextureLoader();
   diffuseMap = loader.load('textures/carbon/Carbon.png', animate);
-  diffuseMap.colorSpace = THREE.SRGBColorSpace;
-  diffuseMap.minFilter = THREE.LinearFilter;
+  diffuseMap.colorSpace = THREE.ColorSpace.SRGB;
+  diffuseMap.minFilter = THREE.Filter.Linear;
   diffuseMap.generateMipmaps = false;
 
   const geometry = new THREE.PlaneGeometry(2, 2);

@@ -74,7 +74,7 @@ function init() {
     spline.getPoint(t, point);
     positions.push(point.x, point.y, point.z);
 
-    pointColor.setHSL(t, 1.0, 0.5, THREE.SRGBColorSpace);
+    pointColor.setHSL(t, 1.0, 0.5, THREE.ColorSpace.SRGB);
     colors.push(pointColor.r, pointColor.g, pointColor.b);
   }
 

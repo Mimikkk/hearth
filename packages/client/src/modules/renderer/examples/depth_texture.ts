@@ -9,6 +9,7 @@ import WebGPURenderer from '../jsm/renderers/webgpu/WebGPURenderer.js';
 import QuadMesh from '../jsm/objects/QuadMesh.js';
 
 import { OrbitControls } from '../jsm/controls/OrbitControls.js';
+import { TextureDataType } from '../threejs/Three.js';
 
 let camera, scene, controls, renderer;
 
@@ -59,7 +60,7 @@ function init() {
   document.body.appendChild(renderer.domElement);
 
   const depthTexture = new THREE.DepthTexture();
-  depthTexture.type = THREE.FloatType;
+  depthTexture.type = THREE.TextureDataType.Float;
 
   renderTarget = new THREE.RenderTarget(window.innerWidth * dpr, window.innerHeight * dpr);
   renderTarget.depthTexture = depthTexture;

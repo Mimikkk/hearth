@@ -4,6 +4,7 @@ import { MeshStandardNodeMaterial, parallaxUV, texture, uv } from '../jsm/nodes/
 import WebGPURenderer from '../jsm/renderers/webgpu/WebGPURenderer.js';
 
 import { OrbitControls } from '../jsm/controls/OrbitControls.js';
+import { ColorSpace } from '../threejs/Three.js';
 
 let camera, scene, renderer;
 
@@ -35,23 +36,23 @@ function init() {
   const loader = new THREE.TextureLoader();
 
   const topTexture = loader.load('textures/ambientcg/Ice002_1K-JPG_Color.jpg');
-  topTexture.colorSpace = THREE.SRGBColorSpace;
+  topTexture.colorSpace = THREE.ColorSpace.SRGB;
 
   const roughnessTexture = loader.load('textures/ambientcg/Ice002_1K-JPG_Roughness.jpg');
-  roughnessTexture.colorSpace = THREE.NoColorSpace;
+  roughnessTexture.colorSpace = THREE.ColorSpace.No;
 
   const normalTexture = loader.load('textures/ambientcg/Ice002_1K-JPG_NormalGL.jpg');
-  normalTexture.colorSpace = THREE.NoColorSpace;
+  normalTexture.colorSpace = THREE.ColorSpace.No;
 
   const displaceTexture = loader.load('textures/ambientcg/Ice002_1K-JPG_Displacement.jpg');
-  displaceTexture.colorSpace = THREE.NoColorSpace;
+  displaceTexture.colorSpace = THREE.ColorSpace.No;
 
   //
 
   const bottomTexture = loader.load('textures/ambientcg/Ice003_1K-JPG_Color.jpg');
-  bottomTexture.colorSpace = THREE.SRGBColorSpace;
-  bottomTexture.wrapS = THREE.RepeatWrapping;
-  bottomTexture.wrapT = THREE.RepeatWrapping;
+  bottomTexture.colorSpace = THREE.ColorSpace.SRGB;
+  bottomTexture.wrapS = THREE.Wrapping.Repeat;
+  bottomTexture.wrapT = THREE.Wrapping.Repeat;
 
   // paralax effect
 
@@ -83,7 +84,7 @@ function init() {
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(animate);
-  renderer.toneMapping = THREE.ReinhardToneMapping;
+  renderer.toneMapping = THREE.ToneMapping.Reinhard;
   renderer.toneMappingExposure = 6;
   document.body.appendChild(renderer.domElement);
 

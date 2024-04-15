@@ -27,7 +27,7 @@ function init() {
   renderer = new WebGPURenderer({ antialias: true });
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
-  //renderer.toneMapping = THREE.ACESFilmicToneMapping; // apply tone mapping in post processing
+  //renderer.toneMapping = THREE.ToneMapping.ACESFilmic; // apply tone mapping in post processing
   container.appendChild(renderer.domElement);
 
   // post processing
@@ -44,7 +44,7 @@ function init() {
   const fogFactor = rangeFog(null, 2.7, 4).context({ getViewZ: () => scenePassViewZ });
 
   // tone mapping scene pass
-  const scenePassTM = scenePass.toneMapping(THREE.ACESFilmicToneMapping);
+  const scenePassTM = scenePass.toneMapping(THREE.ToneMapping.ACESFilmic);
 
   // mix fog from fog factor and background color
   const compose = fogFactor.mix(scenePassTM, backgroundColor);
@@ -55,7 +55,7 @@ function init() {
   //
 
   new RGBELoader().setPath('textures/equirectangular/').load('royal_esplanade_1k.hdr', function (texture) {
-    texture.mapping = THREE.EquirectangularReflectionMapping;
+    texture.mapping = THREE.Mapping.EquirectangularReflection;
 
     scene.environment = texture;
 

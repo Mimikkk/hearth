@@ -24,6 +24,7 @@ import WebGL from '../jsm/capabilities/WebGL.js';
 import WebGPURenderer from '../jsm/renderers/webgpu/WebGPURenderer.js';
 
 import QuadMesh from '../jsm/objects/QuadMesh.js';
+import { Filter } from '../threejs/Three.js';
 
 let camera, scene, renderer, torus;
 let quadMesh, renderTarget;
@@ -102,7 +103,7 @@ function init() {
   renderTarget = new THREE.RenderTarget(
     window.innerWidth * window.devicePixelRatio,
     window.innerHeight * window.devicePixelRatio,
-    { count: 2, minFilter: THREE.NearestFilter, magFilter: THREE.NearestFilter },
+    { count: 2, minFilter: THREE.Filter.Nearest, magFilter: THREE.Filter.Nearest },
   );
 
   // Name our G-Buffer attachments for debugging
@@ -121,9 +122,9 @@ function init() {
   const loader = new THREE.TextureLoader();
 
   const diffuse = loader.load('textures/hardwood2_diffuse.jpg', render);
-  diffuse.colorSpace = THREE.SRGBColorSpace;
-  diffuse.wrapS = THREE.RepeatWrapping;
-  diffuse.wrapT = THREE.RepeatWrapping;
+  diffuse.colorSpace = THREE.ColorSpace.SRGB;
+  diffuse.wrapS = THREE.Wrapping.Repeat;
+  diffuse.wrapT = THREE.Wrapping.Repeat;
 
   torus = new THREE.Mesh(new THREE.TorusKnotGeometry(1, 0.3, 128, 32), new WriteGBufferMaterial(diffuse));
 
