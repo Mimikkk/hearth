@@ -270,7 +270,7 @@ class TrackballControls extends EventDispatcher {
         scope.object.lookAt(scope.target);
 
         if (lastPosition.distanceToSquared(scope.object.position) > EPS) {
-          scope.dispatchEvent(_changeEvent);
+          scope.dispatchEvent(_changeEvent, this);
 
           lastPosition.copy(scope.object.position);
         }
@@ -278,7 +278,7 @@ class TrackballControls extends EventDispatcher {
         scope.object.lookAt(scope.target);
 
         if (lastPosition.distanceToSquared(scope.object.position) > EPS || lastZoom !== scope.object.zoom) {
-          scope.dispatchEvent(_changeEvent);
+          scope.dispatchEvent(_changeEvent, this);
 
           lastPosition.copy(scope.object.position);
           lastZoom = scope.object.zoom;
@@ -303,7 +303,7 @@ class TrackballControls extends EventDispatcher {
 
       scope.object.lookAt(scope.target);
 
-      scope.dispatchEvent(_changeEvent);
+      scope.dispatchEvent(_changeEvent, this);
 
       lastPosition.copy(scope.object.position);
       lastZoom = scope.object.zoom;
@@ -421,7 +421,7 @@ class TrackballControls extends EventDispatcher {
         _panEnd.copy(_panStart);
       }
 
-      scope.dispatchEvent(_startEvent);
+      scope.dispatchEvent(_startEvent, this);
     }
 
     function onMouseMove(event) {
@@ -440,7 +440,7 @@ class TrackballControls extends EventDispatcher {
     function onMouseUp() {
       _state = STATE.NONE;
 
-      scope.dispatchEvent(_endEvent);
+      scope.dispatchEvent(_endEvent, this);
     }
 
     function onMouseWheel(event) {
@@ -467,8 +467,8 @@ class TrackballControls extends EventDispatcher {
           break;
       }
 
-      scope.dispatchEvent(_startEvent);
-      scope.dispatchEvent(_endEvent);
+      scope.dispatchEvent(_startEvent, this);
+      scope.dispatchEvent(_endEvent, this);
     }
 
     function onTouchStart(event) {
@@ -494,7 +494,7 @@ class TrackballControls extends EventDispatcher {
           break;
       }
 
-      scope.dispatchEvent(_startEvent);
+      scope.dispatchEvent(_startEvent, this);
     }
 
     function onTouchMove(event) {
@@ -547,7 +547,7 @@ class TrackballControls extends EventDispatcher {
           break;
       }
 
-      scope.dispatchEvent(_endEvent);
+      scope.dispatchEvent(_endEvent, this);
     }
 
     function contextmenu(event) {

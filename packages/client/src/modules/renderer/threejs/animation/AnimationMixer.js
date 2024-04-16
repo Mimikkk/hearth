@@ -1,5 +1,5 @@
 import { AnimationAction } from './AnimationAction.js';
-import { EventDispatcher } from '../core/EventDispatcher.js';
+import { EventDispatcher } from '../core/EventDispatcher.ts';
 import { LinearInterpolant } from '../math/interpolants/LinearInterpolant.js';
 import { PropertyBinding } from './PropertyBinding.js';
 import { PropertyMixer } from './PropertyMixer.js';

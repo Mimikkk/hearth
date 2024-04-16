@@ -454,7 +454,7 @@ function htmlevent(element, event, x, y) {
       const rect = element.getBoundingClientRect();
 
       if (x > rect.left && x < rect.right && y > rect.top && y < rect.bottom) {
-        element.dispatchEvent(new MouseEvent(event, mouseEventInit));
+        element.dispatchEvent(new MouseEvent(event, mouseEventInit), this);
 
         if (
           element instanceof HTMLInputElement &&
@@ -467,7 +467,7 @@ function htmlevent(element, event, x, y) {
           const offsetX = x - rect.x;
           const proportion = offsetX / width;
           element.value = min + (max - min) * proportion;
-          element.dispatchEvent(new InputEvent('input', { bubbles: true }));
+          element.dispatchEvent(new InputEvent('input', { bubbles: true }), this);
         }
       }
 

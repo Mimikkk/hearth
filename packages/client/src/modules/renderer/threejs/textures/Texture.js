@@ -1,4 +1,4 @@
-import { EventDispatcher } from '../core/EventDispatcher.js';
+import { EventDispatcher } from '../core/EventDispatcher.ts';
 import { ColorSpace, Filter, Mapping, TextureDataType, TextureFormat, Wrapping } from '../constants.ts';
 import * as MathUtils from '../math/MathUtils.js';
 import { Vector2 } from '../math/Vector2.js';
@@ -193,7 +193,7 @@ class Texture extends EventDispatcher {
   }
 
   dispose() {
-    this.dispatchEvent({ type: 'dispose' });
+    this.dispatchEvent({ type: 'dispose' }, this);
   }
 
   transformUv(uv) {

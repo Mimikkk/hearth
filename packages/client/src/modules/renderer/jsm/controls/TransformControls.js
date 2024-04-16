@@ -76,8 +76,8 @@ class TransformControls extends Object3D {
             _plane[propName] = value;
             _gizmo[propName] = value;
 
-            scope.dispatchEvent({ type: propName + '-changed', value: value });
-            scope.dispatchEvent(_changeEvent);
+            scope.dispatchEvent({ type: propName + '-changed', value: value }, this);
+            scope.dispatchEvent(_changeEvent, this);
           }
         },
       });
@@ -229,7 +229,7 @@ class TransformControls extends Object3D {
 
       this.dragging = true;
       _mouseDownEvent.mode = this.mode;
-      this.dispatchEvent(_mouseDownEvent);
+      this.dispatchEvent(_mouseDownEvent, this);
     }
   }
 
@@ -422,8 +422,8 @@ class TransformControls extends Object3D {
       }
     }
 
-    this.dispatchEvent(_changeEvent);
-    this.dispatchEvent(_objectChangeEvent);
+    this.dispatchEvent(_changeEvent, this);
+    this.dispatchEvent(_objectChangeEvent, this);
   }
 
   pointerUp(pointer) {
@@ -431,7 +431,7 @@ class TransformControls extends Object3D {
 
     if (this.dragging && this.axis !== null) {
       _mouseUpEvent.mode = this.mode;
-      this.dispatchEvent(_mouseUpEvent);
+      this.dispatchEvent(_mouseUpEvent, this);
     }
 
     this.dragging = false;
@@ -475,8 +475,8 @@ class TransformControls extends Object3D {
       this.object.quaternion.copy(this._quaternionStart);
       this.object.scale.copy(this._scaleStart);
 
-      this.dispatchEvent(_changeEvent);
-      this.dispatchEvent(_objectChangeEvent);
+      this.dispatchEvent(_changeEvent, this);
+      this.dispatchEvent(_objectChangeEvent, this);
 
       this.pointStart.copy(this.pointEnd);
     }

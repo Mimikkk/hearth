@@ -280,16 +280,3 @@ export * as SortUtils from './utils/SortUtils.js';
 export * from './utils/TextureUtils.js';
 export * from './utils/UVsDebug.js';
 export * from './utils/WorkerPool.js';
-
-export * from './webxr/ARButton.js';
-export * from './webxr/OculusHandModel.js';
-export * from './webxr/OculusHandPointerModel.js';
-export * from './webxr/Text2D.js';
-export * from './webxr/VRButton.js';
-export * from './webxr/XRButton.js';
-export * from './webxr/XRControllerModelFactory.js';
-export * from './webxr/XREstimatedLight.js';
-export * from './webxr/XRHandMeshModel.js';
-export * from './webxr/XRHandModelFactory.js';
-export * from './webxr/XRHandPrimitiveModel.js';
-export * from './webxr/XRPlanes.js';

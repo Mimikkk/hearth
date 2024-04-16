@@ -1,5 +1,5 @@
 import { Color } from '../math/Color.js';
-import { EventDispatcher } from '../core/EventDispatcher.js';
+import { EventDispatcher } from '../core/EventDispatcher.ts';
 import {
   Blending,
   BlendingEquation,
@@ -451,7 +451,7 @@ class Material extends EventDispatcher {
   }
 
   dispose() {
-    this.dispatchEvent({ type: 'dispose' });
+    this.dispatchEvent({ type: 'dispose' }, this);
   }
 
   set needsUpdate(value) {

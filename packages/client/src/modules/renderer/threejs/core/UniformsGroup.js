@@ -1,4 +1,4 @@
-import { EventDispatcher } from './EventDispatcher.js';
+import { EventDispatcher } from './EventDispatcher.ts';
 import { BufferUsage } from '../constants.ts';
 
 let _id = 0;
@@ -44,7 +44,7 @@ class UniformsGroup extends EventDispatcher {
   }
 
   dispose() {
-    this.dispatchEvent({ type: 'dispose' });
+    this.dispatchEvent({ type: 'dispose' }, this);
 
     return this;
   }

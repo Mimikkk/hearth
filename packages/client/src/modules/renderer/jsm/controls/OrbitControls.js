@@ -25,10 +25,10 @@ const _ray = new Ray();
 const _plane = new Plane();
 const TILT_LIMIT = Math.cos(70 * MathUtils.DEG2RAD);
 
-class OrbitControls extends EventDispatcher {
-  constructor(object, domElement) {
-    super();
+class OrbitControls {
+  eventDispatcher = new EventDispatcher();
 
+  constructor(object, domElement) {
     this.object = object;
     this.domElement = domElement;
     this.domElement.style.touchAction = 'none'; // disable touch scroll
@@ -145,7 +145,7 @@ class OrbitControls extends EventDispatcher {
       scope.object.zoom = scope.zoom0;
 
       scope.object.updateProjectionMatrix();
-      scope.dispatchEvent(_changeEvent);
+      scope.eventDispatcher.dispatchEvent(_changeEvent, this);
 
       scope.update();
 
@@ -342,7 +342,7 @@ class OrbitControls extends EventDispatcher {
           8 * (1 - lastQuaternion.dot(scope.object.quaternion)) > EPS ||
           lastTargetPosition.distanceToSquared(scope.target) > EPS
         ) {
-          scope.dispatchEvent(_changeEvent);
+          scope.eventDispatcher.dispatchEvent(_changeEvent, this);
 
           lastPosition.copy(scope.object.position);
           lastQuaternion.copy(scope.object.quaternion);
@@ -373,8 +373,6 @@ class OrbitControls extends EventDispatcher {
         scope._domElementKeyEvents.removeEventListener('keydown', onKeyDown);
         scope._domElementKeyEvents = null;
       }
-
-      //scope.dispatchEvent( { type: 'dispose' } ); // should this be added here?
     };
 
     //
@@ -853,7 +851,7 @@ class OrbitControls extends EventDispatcher {
           scope.domElement.removeEventListener('pointermove', onPointerMove);
           scope.domElement.removeEventListener('pointerup', onPointerUp);
 
-          scope.dispatchEvent(_endEvent);
+          scope.eventDispatcher.dispatchEvent(_endEvent, this);
 
           state = STATE.NONE;
 
@@ -891,7 +889,7 @@ class OrbitControls extends EventDispatcher {
       }
 
       switch (mouseAction) {
-        case MOUSE.DOLLY:
+        case Mouse.Dolly:
           if (scope.enableZoom === false) return;
 
           handleMouseDownDolly(event);
@@ -900,7 +898,7 @@ class OrbitControls extends EventDispatcher {
 
           break;
 
-        case MOUSE.ROTATE:
+        case Mouse.Rotate:
           if (event.ctrlKey || event.metaKey || event.shiftKey) {
             if (scope.enablePan === false) return;
 
@@ -917,7 +915,7 @@ class OrbitControls extends EventDispatcher {
 
           break;
 
-        case MOUSE.PAN:
+        case Mouse.Pan:
           if (event.ctrlKey || event.metaKey || event.shiftKey) {
             if (scope.enableRotate === false) return;
 
@@ -939,7 +937,7 @@ class OrbitControls extends EventDispatcher {
       }
 
       if (state !== STATE.NONE) {
-        scope.dispatchEvent(_startEvent);
+        scope.eventDispatcher.dispatchEvent(_startEvent, this);
       }
     }
 
@@ -973,11 +971,11 @@ class OrbitControls extends EventDispatcher {
 
       event.preventDefault();
 
-      scope.dispatchEvent(_startEvent);
+      scope.eventDispatcher.dispatchEvent(_startEvent, this);
 
       handleMouseWheel(customWheelEvent(event));
 
-      scope.dispatchEvent(_endEvent);
+      scope.eventDispatcher.dispatchEvent(_endEvent, this);
     }
 
     function customWheelEvent(event) {
@@ -1095,7 +1093,7 @@ class OrbitControls extends EventDispatcher {
       }
 
       if (state !== STATE.NONE) {
-        scope.dispatchEvent(_startEvent);
+        scope.eventDispatcher.dispatchEvent(_startEvent, this);
       }
     }
 

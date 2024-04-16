@@ -103,7 +103,7 @@ export * from './core/BufferAttribute.js';
 export { Object3D } from './core/Object3D.js';
 export { Raycaster } from './core/Raycaster.js';
 export { Layers } from './core/Layers.js';
-export { EventDispatcher } from './core/EventDispatcher.js';
+export { EventDispatcher } from './core/EventDispatcher.ts';
 export { Clock } from './core/Clock.js';
 export { QuaternionLinearInterpolant } from './math/interpolants/QuaternionLinearInterpolant.js';
 export { LinearInterpolant } from './math/interpolants/LinearInterpolant.js';
@@ -165,6 +165,7 @@ if (typeof __THREE_DEVTOOLS__ !== 'undefined') {
         revision: Revision,
       },
     }),
+    this,
   );
 }
 

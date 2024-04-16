@@ -33,7 +33,7 @@ class InteractiveGroup extends Group {
         _event.type = event.type;
         _event.data.set(uv.x, 1 - uv.y);
 
-        object.dispatchEvent(_event);
+        object.dispatchEvent(_event, this);
       }
     }
 
@@ -74,7 +74,7 @@ class InteractiveGroup extends Group {
         _event.type = events[event.type];
         _event.data.set(uv.x, 1 - uv.y);
 
-        object.dispatchEvent(_event);
+        object.dispatchEvent(_event, this);
       }
     }
 

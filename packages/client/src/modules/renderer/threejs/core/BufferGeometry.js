@@ -1,7 +1,7 @@
 import { Vector3 } from '../math/Vector3.js';
 import { Vector2 } from '../math/Vector2.js';
 import { Box3 } from '../math/Box3.js';
-import { EventDispatcher } from './EventDispatcher.js';
+import { EventDispatcher } from './EventDispatcher.ts';
 import {
   BufferAttribute,
   Float32BufferAttribute,
@@ -873,7 +873,7 @@ class BufferGeometry extends EventDispatcher {
   }
 
   dispose() {
-    this.dispatchEvent({ type: 'dispose' });
+    this.dispatchEvent({ type: 'dispose' }, this);
   }
 }
 

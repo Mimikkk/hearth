@@ -1,4 +1,4 @@
-import { EventDispatcher } from './EventDispatcher.js';
+import { EventDispatcher } from './EventDispatcher.ts';
 import { Texture } from '../textures/Texture.js';
 import { Filter } from '../constants.ts';
 import { Vector4 } from '../math/Vector4.js';
@@ -137,7 +137,7 @@ class RenderTarget extends EventDispatcher {
   }
 
   dispose() {
-    this.dispatchEvent({ type: 'dispose' });
+    this.dispatchEvent({ type: 'dispose' }, this);
   }
 }
 

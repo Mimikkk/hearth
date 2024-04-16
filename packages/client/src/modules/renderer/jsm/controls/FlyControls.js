@@ -265,7 +265,7 @@ class FlyControls extends EventDispatcher {
         lastPosition.distanceToSquared(scope.object.position) > EPS ||
         8 * (1 - lastQuaternion.dot(scope.object.quaternion)) > EPS
       ) {
-        scope.dispatchEvent(_changeEvent);
+        scope.dispatchEvent(_changeEvent, this);
         lastQuaternion.copy(scope.object.quaternion);
         lastPosition.copy(scope.object.position);
       }
