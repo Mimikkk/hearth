@@ -30,7 +30,7 @@ function WebGLCubeMaps(renderer) {
             renderTarget.fromEquirectangularTexture(renderer, texture);
             cubemaps.set(texture, renderTarget);
 
-            texture.eventDispatcher.addEventListener('dispose', onTextureDispose);
+            texture.eventDispatcher.add('dispose', onTextureDispose);
 
             return mapTextureMapping(renderTarget.texture, texture.mapping);
           } else {

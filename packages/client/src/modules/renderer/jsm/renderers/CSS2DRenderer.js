@@ -15,7 +15,7 @@ class CSS2DObject extends Object3D {
 
     this.center = new Vector2(0.5, 0.5); // ( 0, 0 ) is the lower left; ( 1, 1 ) is the top right
 
-    this.eventDispatcher.addEventListener('removed', function () {
+    this.eventDispatcher.add('removed', function () {
       this.traverse(function (object) {
         if (object.element instanceof Element && object.element.parentNode !== null) {
           object.element.parentNode.removeChild(object.element);

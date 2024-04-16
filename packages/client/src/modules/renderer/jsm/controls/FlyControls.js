@@ -2,8 +2,8 @@ import { EventDispatcher, Quaternion, Vector3 } from '../../threejs/Three.js';
 
 const _changeEvent = { type: 'change' };
 
-class FlyControls  {
-  eventDispatcher  = new EventDispatcher();
+class FlyControls {
+  eventDispatcher = new EventDispatcher();
   constructor(object, domElement) {
     this.object = object;
     this.domElement = domElement;
@@ -264,7 +264,7 @@ class FlyControls  {
         lastPosition.distanceToSquared(scope.object.position) > EPS ||
         8 * (1 - lastQuaternion.dot(scope.object.quaternion)) > EPS
       ) {
-        scope.eventDispatcher.dispatchEvent(_changeEvent, this);
+        scope.eventDispatcher.dispatch(_changeEvent, this);
         lastQuaternion.copy(scope.object.quaternion);
         lastPosition.copy(scope.object.position);
       }

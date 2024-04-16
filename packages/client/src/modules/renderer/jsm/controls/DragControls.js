@@ -83,7 +83,7 @@ class DragControls {
           _selected.rotateOnWorldAxis(_right.normalize(), -_diff.y);
         }
 
-        scope.eventDispatcher.dispatchEvent({ type: 'drag', object: _selected }, this);
+        scope.eventDispatcher.dispatch({ type: 'drag', object: _selected }, this);
 
         _previousPointer.copy(_pointer);
       } else {
@@ -104,21 +104,21 @@ class DragControls {
             );
 
             if (_hovered !== object && _hovered !== null) {
-              scope.eventDispatcher.dispatchEvent({ type: 'hoveroff', object: _hovered }, this);
+              scope.eventDispatcher.dispatch({ type: 'hoveroff', object: _hovered }, this);
 
               _domElement.style.cursor = 'auto';
               _hovered = null;
             }
 
             if (_hovered !== object) {
-              scope.eventDispatcher.dispatchEvent({ type: 'hoveron', object: object }, this);
+              scope.eventDispatcher.dispatch({ type: 'hoveron', object: object }, this);
 
               _domElement.style.cursor = 'pointer';
               _hovered = object;
             }
           } else {
             if (_hovered !== null) {
-              scope.eventDispatcher.dispatchEvent({ type: 'hoveroff', object: _hovered }, this);
+              scope.eventDispatcher.dispatch({ type: 'hoveroff', object: _hovered }, this);
 
               _domElement.style.cursor = 'auto';
               _hovered = null;
@@ -167,7 +167,7 @@ class DragControls {
 
         _domElement.style.cursor = 'move';
 
-        scope.eventDispatcher.dispatchEvent({ type: 'dragstart', object: _selected }, this);
+        scope.eventDispatcher.dispatch({ type: 'dragstart', object: _selected }, this);
       }
 
       _previousPointer.copy(_pointer);
@@ -177,7 +177,7 @@ class DragControls {
       if (scope.enabled === false) return;
 
       if (_selected) {
-        scope.eventDispatcher.dispatchEvent({ type: 'dragend', object: _selected }, this);
+        scope.eventDispatcher.dispatch({ type: 'dragend', object: _selected }, this);
 
         _selected = null;
       }

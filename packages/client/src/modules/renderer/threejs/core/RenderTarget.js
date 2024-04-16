@@ -9,7 +9,7 @@ import { Source } from '../textures/Source.js';
  * Texture parameters for an auto-generated target texture
  * depthBuffer/stencilBuffer: Booleans to indicate if we should generate these buffers
 */
-class RenderTarget  {
+class RenderTarget {
   eventDispatcher = new EventDispatcher();
   constructor(width = 1, height = 1, options = {}) {
     this.isRenderTarget = true;
@@ -136,7 +136,7 @@ class RenderTarget  {
   }
 
   dispose() {
-    this.eventDispatcher.dispatchEvent({ type: 'dispose' }, this);
+    this.eventDispatcher.dispatch({ type: 'dispose' }, this);
   }
 }
 

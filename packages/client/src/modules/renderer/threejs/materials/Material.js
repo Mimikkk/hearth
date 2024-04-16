@@ -451,7 +451,7 @@ class Material {
   }
 
   dispose() {
-    this.eventDispatcher.dispatchEvent({ type: 'dispose' }, this);
+    this.eventDispatcher.dispatch({ type: 'dispose' }, this);
   }
 
   set needsUpdate(value) {

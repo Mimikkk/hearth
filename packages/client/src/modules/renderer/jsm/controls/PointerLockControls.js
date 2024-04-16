@@ -106,16 +106,16 @@ function onMouseMove(event) {
 
   camera.quaternion.setFromEuler(_euler);
 
-  this.eventDispatcher.dispatchEvent(_changeEvent, this);
+  this.eventDispatcher.dispatch(_changeEvent, this);
 }
 
 function onPointerlockChange() {
   if (this.domElement.ownerDocument.pointerLockElement === this.domElement) {
-    this.eventDispatcher.dispatchEvent(_lockEvent, this);
+    this.eventDispatcher.dispatch(_lockEvent, this);
 
     this.isLocked = true;
   } else {
-    this.eventDispatcher.dispatchEvent(_unlockEvent, this);
+    this.eventDispatcher.dispatch(_unlockEvent, this);
 
     this.isLocked = false;
   }

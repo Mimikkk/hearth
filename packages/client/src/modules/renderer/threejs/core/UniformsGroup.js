@@ -3,7 +3,7 @@ import { BufferUsage } from '../constants.ts';
 
 let _id = 0;
 
-class UniformsGroup  {
+class UniformsGroup {
   eventDispatcher = new EventDispatcher();
 
   constructor() {
@@ -44,7 +44,7 @@ class UniformsGroup  {
   }
 
   dispose() {
-    this.eventDispatcher.dispatchEvent({ type: 'dispose' }, this);
+    this.eventDispatcher.dispatch({ type: 'dispose' }, this);
 
     return this;
   }

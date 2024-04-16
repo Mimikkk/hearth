@@ -145,7 +145,7 @@ class OrbitControls {
       scope.object.zoom = scope.zoom0;
 
       scope.object.updateProjectionMatrix();
-      scope.eventDispatcher.dispatchEvent(_changeEvent, this);
+      scope.eventDispatcher.dispatch(_changeEvent, this);
 
       scope.update();
 
@@ -342,7 +342,7 @@ class OrbitControls {
           8 * (1 - lastQuaternion.dot(scope.object.quaternion)) > EPS ||
           lastTargetPosition.distanceToSquared(scope.target) > EPS
         ) {
-          scope.eventDispatcher.dispatchEvent(_changeEvent, this);
+          scope.eventDispatcher.dispatch(_changeEvent, this);
 
           lastPosition.copy(scope.object.position);
           lastQuaternion.copy(scope.object.quaternion);
@@ -851,7 +851,7 @@ class OrbitControls {
           scope.domElement.removeEventListener('pointermove', onPointerMove);
           scope.domElement.removeEventListener('pointerup', onPointerUp);
 
-          scope.eventDispatcher.dispatchEvent(_endEvent, this);
+          scope.eventDispatcher.dispatch(_endEvent, this);
 
           state = STATE.NONE;
 
@@ -937,7 +937,7 @@ class OrbitControls {
       }
 
       if (state !== STATE.NONE) {
-        scope.eventDispatcher.dispatchEvent(_startEvent, this);
+        scope.eventDispatcher.dispatch(_startEvent, this);
       }
     }
 
@@ -971,11 +971,11 @@ class OrbitControls {
 
       event.preventDefault();
 
-      scope.eventDispatcher.dispatchEvent(_startEvent, this);
+      scope.eventDispatcher.dispatch(_startEvent, this);
 
       handleMouseWheel(customWheelEvent(event));
 
-      scope.eventDispatcher.dispatchEvent(_endEvent, this);
+      scope.eventDispatcher.dispatch(_endEvent, this);
     }
 
     function customWheelEvent(event) {
@@ -1093,7 +1093,7 @@ class OrbitControls {
       }
 
       if (state !== STATE.NONE) {
-        scope.eventDispatcher.dispatchEvent(_startEvent, this);
+        scope.eventDispatcher.dispatch(_startEvent, this);
       }
     }
 

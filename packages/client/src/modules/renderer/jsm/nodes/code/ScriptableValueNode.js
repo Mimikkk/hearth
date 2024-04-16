@@ -33,7 +33,7 @@ class ScriptableValueNode extends Node {
 
     this._value = val;
 
-    this.events.dispatchEvent({ type: 'change' }, this);
+    this.events.dispatch({ type: 'change' }, this);
 
     this.refresh();
   }
@@ -43,7 +43,7 @@ class ScriptableValueNode extends Node {
   }
 
   refresh() {
-    this.events.dispatchEvent({ type: 'refresh' }, this);
+    this.events.dispatch({ type: 'refresh' }, this);
   }
 
   getValue() {

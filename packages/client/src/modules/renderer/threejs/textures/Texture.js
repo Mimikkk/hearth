@@ -76,7 +76,7 @@ class Texture {
     return this.source.data;
   }
 
-  set image(value ) {
+  set image(value) {
     this.source.data = value;
   }
 
@@ -193,7 +193,7 @@ class Texture {
   }
 
   dispose() {
-    this.eventDispatcher.dispatchEvent({ type: 'dispose' }, this);
+    this.eventDispatcher.dispatch({ type: 'dispose' }, this);
   }
 
   transformUv(uv) {

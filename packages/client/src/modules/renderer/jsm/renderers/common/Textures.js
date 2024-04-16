@@ -85,7 +85,7 @@ class Textures extends DataMap {
       // dispose
 
       const onDispose = () => {
-        renderTarget.eventDispatcher.removeEventListener('dispose', onDispose);
+        renderTarget.eventDispatcher.remove('dispose', onDispose);
 
         if (textures !== undefined) {
           for (let i = 0; i < textures.length; i++) {
@@ -98,7 +98,7 @@ class Textures extends DataMap {
         this._destroyTexture(depthTexture);
       };
 
-      renderTarget.eventDispatcher.addEventListener('dispose', onDispose);
+      renderTarget.eventDispatcher.add('dispose', onDispose);
     }
   }
 
@@ -200,14 +200,14 @@ class Textures extends DataMap {
       // dispose
 
       const onDispose = () => {
-        texture.eventDispatcher.removeEventListener('dispose', onDispose);
+        texture.eventDispatcher.remove('dispose', onDispose);
 
         this._destroyTexture(texture);
 
         this.info.memory.textures--;
       };
 
-      texture.eventDispatcher.addEventListener('dispose', onDispose);
+      texture.eventDispatcher.add('dispose', onDispose);
     }
 
     //

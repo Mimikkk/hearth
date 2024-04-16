@@ -788,14 +788,14 @@ class Renderer {
 
       if (pipelines.has(computeNode) === false) {
         const dispose = () => {
-          computeNode.eventDispatcher.removeEventListener('dispose', dispose);
+          computeNode.eventDispatcher.remove('dispose', dispose);
 
           pipelines.delete(computeNode);
           bindings.delete(computeNode);
           nodes.delete(computeNode);
         };
 
-        computeNode.eventDispatcher.addEventListener('dispose', dispose);
+        computeNode.eventDispatcher.add('dispose', dispose);
 
         //
 

@@ -212,7 +212,7 @@ class InstancedMesh extends Mesh {
   updateMorphTargets() {}
 
   dispose() {
-    this.dispatchEvent({ type: 'dispose' }, this);
+    this.eventDispatcher.dispatch({ type: 'dispose' }, this);
   }
 }
 

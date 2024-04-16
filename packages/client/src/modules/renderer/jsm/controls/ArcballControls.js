@@ -234,7 +234,7 @@ class ArcballControls {
 
   onSinglePanStart(event, operation) {
     if (this.enabled) {
-      this.eventDispatcher.dispatchEvent(_startEvent, this);
+      this.eventDispatcher.dispatch(_startEvent, this);
 
       this.setCenter(event.clientX, event.clientY);
 
@@ -250,14 +250,14 @@ class ArcballControls {
             this._timeStart = -1;
 
             this.activateGizmos(false);
-            this.eventDispatcher.dispatchEvent(_changeEvent, this);
+            this.eventDispatcher.dispatch(_changeEvent, this);
           }
 
           this.updateTbState(STATE.PAN, true);
           this._startCursorPosition.copy(this.unprojectOnTbPlane(this.camera, _center.x, _center.y, this.domElement));
           if (this.enableGrid) {
             this.drawGrid();
-            this.eventDispatcher.dispatchEvent(_changeEvent, this);
+            this.eventDispatcher.dispatch(_changeEvent, this);
           }
 
           break;
@@ -287,7 +287,7 @@ class ArcballControls {
             this._wPrev = this._wCurr;
           }
 
-          this.eventDispatcher.dispatchEvent(_changeEvent, this);
+          this.eventDispatcher.dispatch(_changeEvent, this);
           break;
 
         case 'FOV':
@@ -301,7 +301,7 @@ class ArcballControls {
             this._timeStart = -1;
 
             this.activateGizmos(false);
-            this.eventDispatcher.dispatchEvent(_changeEvent, this);
+            this.eventDispatcher.dispatch(_changeEvent, this);
           }
 
           this.updateTbState(STATE.FOV, true);
@@ -320,7 +320,7 @@ class ArcballControls {
             this._timeStart = -1;
 
             this.activateGizmos(false);
-            this.eventDispatcher.dispatchEvent(_changeEvent, this);
+            this.eventDispatcher.dispatch(_changeEvent, this);
           }
 
           this.updateTbState(STATE.SCALE, true);
@@ -342,8 +342,8 @@ class ArcballControls {
             if (restart) {
               //switch to pan operation
 
-              this.eventDispatcher.dispatchEvent(_endEvent, this);
-              this.eventDispatcher.dispatchEvent(_startEvent, this);
+              this.eventDispatcher.dispatch(_endEvent, this);
+              this.eventDispatcher.dispatch(_startEvent, this);
 
               this.updateTbState(opState, true);
               this._startCursorPosition.copy(
@@ -370,8 +370,8 @@ class ArcballControls {
             if (restart) {
               //switch to rotate operation
 
-              this.eventDispatcher.dispatchEvent(_endEvent, this);
-              this.eventDispatcher.dispatchEvent(_startEvent, this);
+              this.eventDispatcher.dispatch(_endEvent, this);
+              this.eventDispatcher.dispatch(_startEvent, this);
 
               this.updateTbState(opState, true);
               this._startCursorPosition.copy(
@@ -422,8 +422,8 @@ class ArcballControls {
             if (restart) {
               //switch to zoom operation
 
-              this.eventDispatcher.dispatchEvent(_endEvent, this);
-              this.eventDispatcher.dispatchEvent(_startEvent, this);
+              this.eventDispatcher.dispatch(_endEvent, this);
+              this.eventDispatcher.dispatch(_startEvent, this);
 
               this.updateTbState(opState, true);
               this._startCursorPosition.setY(this.getCursorNDC(_center.x, _center.y, this.domElement).y * 0.5);
@@ -462,8 +462,8 @@ class ArcballControls {
             if (restart) {
               //switch to fov operation
 
-              this.eventDispatcher.dispatchEvent(_endEvent, this);
-              this.eventDispatcher.dispatchEvent(_startEvent, this);
+              this.eventDispatcher.dispatch(_endEvent, this);
+              this.eventDispatcher.dispatch(_startEvent, this);
 
               this.updateTbState(opState, true);
               this._startCursorPosition.setY(this.getCursorNDC(_center.x, _center.y, this.domElement).y * 0.5);
@@ -524,7 +524,7 @@ class ArcballControls {
           break;
       }
 
-      this.eventDispatcher.dispatchEvent(_changeEvent, this);
+      this.eventDispatcher.dispatch(_changeEvent, this);
     }
   }
 
@@ -551,12 +551,12 @@ class ArcballControls {
           //cursor has been standing still for over 120 ms since last movement
           this.updateTbState(STATE.IDLE, false);
           this.activateGizmos(false);
-          this.eventDispatcher.dispatchEvent(_changeEvent, this);
+          this.eventDispatcher.dispatch(_changeEvent, this);
         }
       } else {
         this.updateTbState(STATE.IDLE, false);
         this.activateGizmos(false);
-        this.eventDispatcher.dispatchEvent(_changeEvent, this);
+        this.eventDispatcher.dispatch(_changeEvent, this);
       }
     } else if (this._state == STATE.PAN || this._state == STATE.IDLE) {
       this.updateTbState(STATE.IDLE, false);
@@ -566,15 +566,15 @@ class ArcballControls {
       }
 
       this.activateGizmos(false);
-      this.eventDispatcher.dispatchEvent(_changeEvent, this);
+      this.eventDispatcher.dispatch(_changeEvent, this);
     }
 
-    this.eventDispatcher.dispatchEvent(_endEvent, this);
+    this.eventDispatcher.dispatch(_endEvent, this);
   }
 
   onDoubleTap(event) {
     if (this.enabled && this.enablePan && this.scene != null) {
-      this.eventDispatcher.dispatchEvent(_startEvent, this);
+      this.eventDispatcher.dispatch(_startEvent, this);
 
       this.setCenter(event.clientX, event.clientY);
       const hitP = this.unprojectOnObj(this.getCursorNDC(_center.x, _center.y, this.domElement), this.camera);
@@ -594,16 +594,16 @@ class ArcballControls {
         this.updateTbState(STATE.FOCUS, true);
         this.focus(hitP, this.scaleFactor);
         this.updateTbState(STATE.IDLE, false);
-        this.eventDispatcher.dispatchEvent(_changeEvent, this);
+        this.eventDispatcher.dispatch(_changeEvent, this);
       }
     }
 
-    this.eventDispatcher.dispatchEvent(_endEvent, this);
+    this.eventDispatcher.dispatch(_endEvent, this);
   }
 
   onDoublePanStart() {
     if (this.enabled && this.enablePan) {
-      this.eventDispatcher.dispatchEvent(_startEvent, this);
+      this.eventDispatcher.dispatch(_startEvent, this);
 
       this.updateTbState(STATE.PAN, true);
 
@@ -634,18 +634,18 @@ class ArcballControls {
         this.unprojectOnTbPlane(this.camera, _center.x, _center.y, this.domElement, true),
       );
       this.applyTransformMatrix(this.pan(this._startCursorPosition, this._currentCursorPosition, true));
-      this.eventDispatcher.dispatchEvent(_changeEvent, this);
+      this.eventDispatcher.dispatch(_changeEvent, this);
     }
   }
 
   onDoublePanEnd() {
     this.updateTbState(STATE.IDLE, false);
-    this.eventDispatcher.dispatchEvent(_endEvent, this);
+    this.eventDispatcher.dispatch(_endEvent, this);
   }
 
   onRotateStart() {
     if (this.enabled && this.enableRotate) {
-      this.eventDispatcher.dispatchEvent(_startEvent, this);
+      this.eventDispatcher.dispatch(_startEvent, this);
 
       this.updateTbState(STATE.ZROTATE, true);
 
@@ -695,19 +695,19 @@ class ArcballControls {
       const amount = MathUtils.DEG2RAD * (this._startFingerRotation - this._currentFingerRotation);
 
       this.applyTransformMatrix(this.zRotate(rotationPoint, amount));
-      this.eventDispatcher.dispatchEvent(_changeEvent, this);
+      this.eventDispatcher.dispatch(_changeEvent, this);
     }
   }
 
   onRotateEnd() {
     this.updateTbState(STATE.IDLE, false);
     this.activateGizmos(false);
-    this.eventDispatcher.dispatchEvent(_endEvent, this);
+    this.eventDispatcher.dispatch(_endEvent, this);
   }
 
   onPinchStart() {
     if (this.enabled && this.enableZoom) {
-      this.eventDispatcher.dispatchEvent(_startEvent, this);
+      this.eventDispatcher.dispatch(_startEvent, this);
       this.updateTbState(STATE.SCALE, true);
 
       this._startFingerDistance = this.calculatePointersDistance(this._touchCurrent[0], this._touchCurrent[1]);
@@ -754,18 +754,18 @@ class ArcballControls {
       }
 
       this.applyTransformMatrix(this.scale(amount, scalePoint));
-      this.eventDispatcher.dispatchEvent(_changeEvent, this);
+      this.eventDispatcher.dispatch(_changeEvent, this);
     }
   }
 
   onPinchEnd() {
     this.updateTbState(STATE.IDLE, false);
-    this.eventDispatcher.dispatchEvent(_endEvent, this);
+    this.eventDispatcher.dispatch(_endEvent, this);
   }
 
   onTriplePanStart() {
     if (this.enabled && this.enableZoom) {
-      this.eventDispatcher.dispatchEvent(_startEvent, this);
+      this.eventDispatcher.dispatch(_startEvent, this);
 
       this.updateTbState(STATE.SCALE, true);
 
@@ -853,14 +853,14 @@ class ArcballControls {
         .multiplyScalar(newDistance / x);
       this._m4_1.makeTranslation(_offset.x, _offset.y, _offset.z);
 
-      this.eventDispatcher.dispatchEvent(_changeEvent, this);
+      this.eventDispatcher.dispatch(_changeEvent, this);
     }
   }
 
   onTriplePanEnd() {
     this.updateTbState(STATE.IDLE, false);
-    this.eventDispatcher.dispatchEvent(_endEvent, this);
-    //this.eventDispatcher.dispatchEvent( _changeEvent );
+    this.eventDispatcher.dispatch(_endEvent, this);
+    //this.eventDispatcher.dispatch( _changeEvent );
   }
 
   /**
@@ -1392,7 +1392,7 @@ class ArcballControls {
    */
   setGizmosVisible(value) {
     this._gizmos.visible = value;
-    this.eventDispatcher.dispatchEvent(_changeEvent, this);
+    this.eventDispatcher.dispatch(_changeEvent, this);
   }
 
   /**
@@ -1411,7 +1411,7 @@ class ArcballControls {
       this._gizmos.children[gizmo].geometry = curveGeometry;
     }
 
-    this.eventDispatcher.dispatchEvent(_changeEvent, this);
+    this.eventDispatcher.dispatch(_changeEvent, this);
   }
 
   /**
@@ -1505,7 +1505,7 @@ class ArcballControls {
         this.updateTbState(STATE.IDLE, false);
         this.activateGizmos(false);
 
-        this.eventDispatcher.dispatchEvent(_changeEvent, this);
+        this.eventDispatcher.dispatch(_changeEvent, this);
       } else {
         const amount = this.easeOutCubic(animTime);
         const size = 1 - amount + this.scaleFactor * amount;
@@ -1513,7 +1513,7 @@ class ArcballControls {
         this._gizmoMatrixState.decompose(this._gizmos.position, this._gizmos.quaternion, this._gizmos.scale);
         this.focus(point, size, amount);
 
-        this.eventDispatcher.dispatchEvent(_changeEvent, this);
+        this.eventDispatcher.dispatch(_changeEvent, this);
         const self = this;
         this._animationId = window.requestAnimationFrame(function (t) {
           self.onFocusAnim(t, point, cameraMatrix, gizmoMatrix.clone());
@@ -1550,7 +1550,7 @@ class ArcballControls {
         //tetha = 0.5 * alpha * t^2 + w0 * t + tetha0
         this._angleCurrent = 0.5 * -this.dampingFactor * Math.pow(deltaTime, 2) + w0 * deltaTime + 0;
         this.applyTransformMatrix(this.rotate(rotationAxis, this._angleCurrent));
-        this.eventDispatcher.dispatchEvent(_changeEvent, this);
+        this.eventDispatcher.dispatch(_changeEvent, this);
         const self = this;
         this._animationId = window.requestAnimationFrame(function (t) {
           self.onRotationAnim(t, rotationAxis, w0);
@@ -1562,7 +1562,7 @@ class ArcballControls {
         this.updateTbState(STATE.IDLE, false);
         this.activateGizmos(false);
 
-        this.eventDispatcher.dispatchEvent(_changeEvent, this);
+        this.eventDispatcher.dispatch(_changeEvent, this);
       }
     } else {
       //interrupt animation
@@ -1572,7 +1572,7 @@ class ArcballControls {
 
       if (this._state != STATE.ROTATE) {
         this.activateGizmos(false);
-        this.eventDispatcher.dispatchEvent(_changeEvent, this);
+        this.eventDispatcher.dispatch(_changeEvent, this);
       }
     }
   }
@@ -1635,7 +1635,7 @@ class ArcballControls {
 
     this.updateTbState(STATE.IDLE, false);
 
-    this.eventDispatcher.dispatchEvent(_changeEvent, this);
+    this.eventDispatcher.dispatch(_changeEvent, this);
   }
 
   /**
@@ -2193,7 +2193,7 @@ class ArcballControls {
       this.camera.lookAt(this._gizmos.position);
       this.updateTbState(STATE.IDLE, false);
 
-      this.eventDispatcher.dispatchEvent(_changeEvent, this);
+      this.eventDispatcher.dispatch(_changeEvent, this);
     }
   }
 }
@@ -2213,7 +2213,7 @@ function onWindowResize() {
     this._gizmos.children[gizmo].geometry = curveGeometry;
   }
 
-  this.eventDispatcher.dispatchEvent(_changeEvent, this);
+  this.eventDispatcher.dispatch(_changeEvent, this);
 }
 
 function onContextMenu(event) {
@@ -2474,7 +2474,7 @@ function onWheel(event) {
 
     if (mouseOp != null) {
       event.preventDefault();
-      this.eventDispatcher.dispatchEvent(_startEvent, this);
+      this.eventDispatcher.dispatch(_startEvent, this);
 
       const notchDeltaY = 125; //distance of one notch of mouse wheel
       let sgn = event.deltaY / notchDeltaY;
@@ -2523,8 +2523,8 @@ function onWheel(event) {
 
           this.updateTbState(STATE.IDLE, false);
 
-          this.eventDispatcher.dispatchEvent(_changeEvent, this);
-          this.eventDispatcher.dispatchEvent(_endEvent, this);
+          this.eventDispatcher.dispatch(_changeEvent, this);
+          this.eventDispatcher.dispatch(_endEvent, this);
 
           break;
 
@@ -2590,8 +2590,8 @@ function onWheel(event) {
 
           this.updateTbState(STATE.IDLE, false);
 
-          this.eventDispatcher.dispatchEvent(_changeEvent, this);
-          this.eventDispatcher.dispatchEvent(_endEvent, this);
+          this.eventDispatcher.dispatch(_changeEvent, this);
+          this.eventDispatcher.dispatch(_endEvent, this);
 
           break;
       }

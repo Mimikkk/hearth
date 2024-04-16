@@ -8,7 +8,7 @@ export type EventListener<Content, Type, Target = unknown> = (event: Readonly<Ev
 export class EventDispatcher<EventMap extends {}> {
   listeners = new Map<PropertyKey, EventListener<EventMap[keyof EventMap], keyof EventMap>[]>();
 
-  addEventListener<T extends keyof EventMap>(type: T, listener: EventListener<EventMap[T], T>): void {
+  add<T extends keyof EventMap>(type: T, listener: EventListener<EventMap[T], T>): void {
     const listeners = this.listeners.get(type);
 
     if (listeners === undefined) {
@@ -18,11 +18,11 @@ export class EventDispatcher<EventMap extends {}> {
     }
   }
 
-  hasEventListener<T extends keyof EventMap>(type: T, listener: EventListener<EventMap[T], T>): boolean {
+  has<T extends keyof EventMap>(type: T, listener: EventListener<EventMap[T], T>): boolean {
     return this.listeners.get(type)?.includes(listener) ?? false;
   }
 
-  removeEventListener<T extends keyof EventMap>(type: T, listener: EventListener<EventMap[T], T>): void {
+  remove<T extends keyof EventMap>(type: T, listener: EventListener<EventMap[T], T>): void {
     const listeners = this.listeners.get(type);
     if (listeners === undefined) return;
 
@@ -30,7 +30,7 @@ export class EventDispatcher<EventMap extends {}> {
     if (index !== -1) listeners.splice(index, 1);
   }
 
-  dispatchEvent<T extends keyof EventMap, Target>(event: Event<T, Target> & EventMap[T], target: Target): void {
+  dispatch<T extends keyof EventMap, Target>(event: Event<T, Target> & EventMap[T], target: Target): void {
     const listeners = this.listeners.get(event.type);
     if (listeners === undefined) return;
 

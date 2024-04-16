@@ -42,7 +42,7 @@ export default class RenderObject {
       this.dispose();
     };
 
-    this.material.eventDispatcher.addEventListener('dispose', this.onMaterialDispose);
+    this.material.eventDispatcher.add('dispose', this.onMaterialDispose);
   }
 
   updateClipping(parent) {
@@ -170,7 +170,7 @@ export default class RenderObject {
   }
 
   dispose() {
-    this.material.removeEventListener('dispose', this.onMaterialDispose);
+    this.material.remove('dispose', this.onMaterialDispose);
 
     this.onDispose();
   }

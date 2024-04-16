@@ -276,10 +276,10 @@ class Object3D {
       object.parent = this;
       this.children.push(object);
 
-      object.eventDispatcher.dispatchEvent(_addedEvent, this);
+      object.eventDispatcher.dispatch(_addedEvent, this);
 
       _childaddedEvent.child = object;
-      this.eventDispatcher.dispatchEvent(_childaddedEvent, this);
+      this.eventDispatcher.dispatch(_childaddedEvent, this);
       _childaddedEvent.child = null;
     } else {
       console.error('THREE.Object3D.add: object not an instance of THREE.Object3D.', object);
@@ -303,10 +303,10 @@ class Object3D {
       object.parent = null;
       this.children.splice(index, 1);
 
-      object.eventDispatcher.dispatchEvent(_removedEvent);
+      object.eventDispatcher.dispatch(_removedEvent);
 
       _childremovedEvent.child = object;
-      this.eventDispatcher.dispatchEvent(_childremovedEvent, this);
+      this.eventDispatcher.dispatch(_childremovedEvent, this);
       _childremovedEvent.child = null;
     }
 
@@ -350,10 +350,10 @@ class Object3D {
 
     object.updateWorldMatrix(false, true);
 
-    object.eventDispatcher.dispatchEvent(_addedEvent);
+    object.eventDispatcher.dispatch(_addedEvent);
 
     _childaddedEvent.child = object;
-    this.eventDispatcher.dispatchEvent(_childaddedEvent, this);
+    this.eventDispatcher.dispatch(_childaddedEvent, this);
     _childaddedEvent.child = null;
 
     return this;
