@@ -170,7 +170,7 @@ export default class RenderObject {
   }
 
   dispose() {
-    this.material.remove('dispose', this.onMaterialDispose);
+    this.material.eventDispatcher.remove('dispose', this.onMaterialDispose);
 
     this.onDispose();
   }

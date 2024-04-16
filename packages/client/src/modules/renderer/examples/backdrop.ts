@@ -116,8 +116,8 @@ function init() {
 
   const controls = new OrbitControls(camera, renderer.domElement);
   controls.target.set(0, 1, 0);
-  controls.addEventListener('start', () => (rotate = false));
-  controls.addEventListener('end', () => (rotate = true));
+  controls.eventDispatcher.add('start', () => (rotate = false));
+  controls.eventDispatcher.add('end', () => (rotate = true));
   controls.update();
 
   window.addEventListener('resize', onWindowResize);

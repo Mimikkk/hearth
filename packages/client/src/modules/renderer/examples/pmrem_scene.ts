@@ -33,7 +33,7 @@ async function init() {
   await renderer.init();
 
   const controls = new OrbitControls(camera, renderer.domElement);
-  controls.addEventListener('change', render); // use if there is no animation loop
+  controls.eventDispatcher.add('change', render); // use if there is no animation loop
   controls.minDistance = 2;
   controls.maxDistance = 10;
   controls.update();

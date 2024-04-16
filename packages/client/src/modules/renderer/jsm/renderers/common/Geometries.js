@@ -101,10 +101,10 @@ class Geometries extends DataMap {
         this.attributes.delete(wireframeAttribute);
       }
 
-      geometry.removeEventListener('dispose', onDispose);
+      geometry.eventDispatcher.remove('dispose', onDispose);
     };
 
-    geometry.addEventListener('dispose', onDispose);
+    geometry.eventDispatcher.add('dispose', onDispose);
   }
 
   updateAttributes(renderObject) {
