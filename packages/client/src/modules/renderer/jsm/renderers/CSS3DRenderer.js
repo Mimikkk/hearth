@@ -21,7 +21,7 @@ class CSS3DObject extends Object3D {
 
     this.element.setAttribute('draggable', false);
 
-    this.addEventListener('removed', function () {
+    this.eventDispatcher.addEventListener('removed', function () {
       this.traverse(function (object) {
         if (object.element instanceof Element && object.element.parentNode !== null) {
           object.element.parentNode.removeChild(object.element);

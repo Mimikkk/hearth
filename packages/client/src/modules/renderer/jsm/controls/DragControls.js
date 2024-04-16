@@ -14,10 +14,10 @@ const _inverseMatrix = new Matrix4();
 const _up = new Vector3();
 const _right = new Vector3();
 
-class DragControls extends EventDispatcher {
-  constructor(_objects, _camera, _domElement) {
-    super();
+class DragControls {
+  eventDispatcher = new EventDispatcher();
 
+  constructor(_objects, _camera, _domElement) {
     _domElement.style.touchAction = 'none'; // disable touch scroll
 
     let _selected = null,
@@ -83,7 +83,7 @@ class DragControls extends EventDispatcher {
           _selected.rotateOnWorldAxis(_right.normalize(), -_diff.y);
         }
 
-        scope.dispatchEvent({ type: 'drag', object: _selected }, this);
+        scope.eventDispatcher.dispatchEvent({ type: 'drag', object: _selected }, this);
 
         _previousPointer.copy(_pointer);
       } else {
@@ -104,21 +104,21 @@ class DragControls extends EventDispatcher {
             );
 
             if (_hovered !== object && _hovered !== null) {
-              scope.dispatchEvent({ type: 'hoveroff', object: _hovered }, this);
+              scope.eventDispatcher.dispatchEvent({ type: 'hoveroff', object: _hovered }, this);
 
               _domElement.style.cursor = 'auto';
               _hovered = null;
             }
 
             if (_hovered !== object) {
-              scope.dispatchEvent({ type: 'hoveron', object: object }, this);
+              scope.eventDispatcher.dispatchEvent({ type: 'hoveron', object: object }, this);
 
               _domElement.style.cursor = 'pointer';
               _hovered = object;
             }
           } else {
             if (_hovered !== null) {
-              scope.dispatchEvent({ type: 'hoveroff', object: _hovered }, this);
+              scope.eventDispatcher.dispatchEvent({ type: 'hoveroff', object: _hovered }, this);
 
               _domElement.style.cursor = 'auto';
               _hovered = null;
@@ -167,7 +167,7 @@ class DragControls extends EventDispatcher {
 
         _domElement.style.cursor = 'move';
 
-        scope.dispatchEvent({ type: 'dragstart', object: _selected }, this);
+        scope.eventDispatcher.dispatchEvent({ type: 'dragstart', object: _selected }, this);
       }
 
       _previousPointer.copy(_pointer);
@@ -177,7 +177,7 @@ class DragControls extends EventDispatcher {
       if (scope.enabled === false) return;
 
       if (_selected) {
-        scope.dispatchEvent({ type: 'dragend', object: _selected }, this);
+        scope.eventDispatcher.dispatchEvent({ type: 'dragend', object: _selected }, this);
 
         _selected = null;
       }

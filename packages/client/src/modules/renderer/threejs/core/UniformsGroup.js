@@ -3,10 +3,10 @@ import { BufferUsage } from '../constants.ts';
 
 let _id = 0;
 
-class UniformsGroup extends EventDispatcher {
-  constructor() {
-    super();
+class UniformsGroup  {
+  eventDispatcher = new EventDispatcher();
 
+  constructor() {
     this.isUniformsGroup = true;
 
     Object.defineProperty(this, 'id', { value: _id++ });
@@ -44,7 +44,7 @@ class UniformsGroup extends EventDispatcher {
   }
 
   dispose() {
-    this.dispatchEvent({ type: 'dispose' }, this);
+    this.eventDispatcher.dispatchEvent({ type: 'dispose' }, this);
 
     return this;
   }

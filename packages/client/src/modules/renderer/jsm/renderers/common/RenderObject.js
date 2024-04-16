@@ -3,219 +3,175 @@ import ClippingContext from './ClippingContext.js';
 let id = 0;
 
 export default class RenderObject {
+  constructor(nodes, geometries, renderer, object, material, scene, camera, lightsNode, renderContext) {
+    this._nodes = nodes;
+    this._geometries = geometries;
 
-	constructor( nodes, geometries, renderer, object, material, scene, camera, lightsNode, renderContext ) {
+    this.id = id++;
 
-		this._nodes = nodes;
-		this._geometries = geometries;
+    this.renderer = renderer;
+    this.object = object;
+    this.material = material;
+    this.scene = scene;
+    this.camera = camera;
+    this.lightsNode = lightsNode;
+    this.context = renderContext;
 
-		this.id = id ++;
+    this.geometry = object.geometry;
+    this.version = material.version;
 
-		this.renderer = renderer;
-		this.object = object;
-		this.material = material;
-		this.scene = scene;
-		this.camera = camera;
-		this.lightsNode = lightsNode;
-		this.context = renderContext;
+    this.attributes = null;
+    this.pipeline = null;
+    this.vertexBuffers = null;
 
-		this.geometry = object.geometry;
-		this.version = material.version;
+    this.updateClipping(renderContext.clippingContext);
 
-		this.attributes = null;
-		this.pipeline = null;
-		this.vertexBuffers = null;
+    this.clippingContextVersion = this.clippingContext.version;
 
-		this.updateClipping( renderContext.clippingContext );
+    this.initialNodesCacheKey = this.getNodesCacheKey();
+    this.initialCacheKey = this.getCacheKey();
 
-		this.clippingContextVersion = this.clippingContext.version;
+    this._nodeBuilderState = null;
+    this._bindings = null;
 
-		this.initialNodesCacheKey = this.getNodesCacheKey();
-		this.initialCacheKey = this.getCacheKey();
+    this.onDispose = null;
 
-		this._nodeBuilderState = null;
-		this._bindings = null;
+    this.isRenderObject = true;
 
-		this.onDispose = null;
+    this.onMaterialDispose = () => {
+      this.dispose();
+    };
 
-		this.isRenderObject = true;
+    this.material.eventDispatcher.addEventListener('dispose', this.onMaterialDispose);
+  }
 
-		this.onMaterialDispose = () => {
+  updateClipping(parent) {
+    const material = this.material;
 
-			this.dispose();
+    let clippingContext = this.clippingContext;
 
-		};
+    if (Array.isArray(material.clippingPlanes)) {
+      if (clippingContext === parent || !clippingContext) {
+        clippingContext = new ClippingContext();
+        this.clippingContext = clippingContext;
+      }
 
-		this.material.addEventListener( 'dispose', this.onMaterialDispose );
+      clippingContext.update(parent, material);
+    } else if (this.clippingContext !== parent) {
+      this.clippingContext = parent;
+    }
+  }
 
-	}
+  get clippingNeedsUpdate() {
+    if (this.clippingContext.version === this.clippingContextVersion) return false;
 
-	updateClipping( parent ) {
+    this.clippingContextVersion = this.clippingContext.version;
 
-		const material = this.material;
+    return true;
+  }
 
-		let clippingContext = this.clippingContext;
+  getNodeBuilderState() {
+    return this._nodeBuilderState || (this._nodeBuilderState = this._nodes.getForRender(this));
+  }
 
-		if ( Array.isArray( material.clippingPlanes ) ) {
+  getBindings() {
+    return this._bindings || (this._bindings = this.getNodeBuilderState().createBindings());
+  }
 
-			if ( clippingContext === parent || ! clippingContext ) {
+  getIndex() {
+    return this._geometries.getIndex(this);
+  }
 
-				clippingContext = new ClippingContext();
-				this.clippingContext = clippingContext;
+  getChainArray() {
+    return [this.object, this.material, this.context, this.lightsNode];
+  }
 
-			}
+  getAttributes() {
+    if (this.attributes !== null) return this.attributes;
 
-			clippingContext.update( parent, material );
+    const nodeAttributes = this.getNodeBuilderState().nodeAttributes;
+    const geometry = this.geometry;
 
-		} else if ( this.clippingContext !== parent ) {
+    const attributes = [];
+    const vertexBuffers = new Set();
 
-			this.clippingContext = parent;
+    for (const nodeAttribute of nodeAttributes) {
+      const attribute =
+        nodeAttribute.node && nodeAttribute.node.attribute
+          ? nodeAttribute.node.attribute
+          : geometry.getAttribute(nodeAttribute.name);
 
-		}
+      if (attribute === undefined) continue;
 
-	}
+      attributes.push(attribute);
 
-	get clippingNeedsUpdate() {
+      const bufferAttribute = attribute.isInterleavedBufferAttribute ? attribute.data : attribute;
+      vertexBuffers.add(bufferAttribute);
+    }
 
-		if ( this.clippingContext.version === this.clippingContextVersion ) return false;
+    this.attributes = attributes;
+    this.vertexBuffers = Array.from(vertexBuffers.values());
 
-		this.clippingContextVersion = this.clippingContext.version;
+    return attributes;
+  }
 
-		return true;
+  getVertexBuffers() {
+    if (this.vertexBuffers === null) this.getAttributes();
 
-	}
+    return this.vertexBuffers;
+  }
 
-	getNodeBuilderState() {
+  getMaterialCacheKey() {
+    const { object, material } = this;
 
-		return this._nodeBuilderState || ( this._nodeBuilderState = this._nodes.getForRender( this ) );
+    let cacheKey = material.customProgramCacheKey();
 
-	}
+    for (const property in material) {
+      if (/^(is[A-Z])|^(visible|version|uuid|name|opacity|userData)$/.test(property)) continue;
 
-	getBindings() {
+      let value = material[property];
 
-		return this._bindings || ( this._bindings = this.getNodeBuilderState().createBindings() );
+      if (value !== null) {
+        const type = typeof value;
 
-	}
+        if (type === 'number')
+          value = value !== 0 ? '1' : '0'; // Convert to on/off, important for clearcoat, transmission, etc
+        else if (type === 'object') value = '{}';
+      }
 
-	getIndex() {
+      cacheKey += /*property + ':' +*/ value + ',';
+    }
 
-		return this._geometries.getIndex( this );
+    cacheKey += this.clippingContextVersion + ',';
 
-	}
+    if (object.skeleton) {
+      cacheKey += object.skeleton.bones.length + ',';
+    }
 
-	getChainArray() {
+    if (object.morphTargetInfluences) {
+      cacheKey += object.morphTargetInfluences.length + ',';
+    }
 
-		return [ this.object, this.material, this.context, this.lightsNode ];
+    return cacheKey;
+  }
 
-	}
+  get needsUpdate() {
+    return this.initialNodesCacheKey !== this.getNodesCacheKey() || this.clippingNeedsUpdate;
+  }
 
-	getAttributes() {
+  getNodesCacheKey() {
+    // Environment Nodes Cache Key
 
-		if ( this.attributes !== null ) return this.attributes;
+    return this._nodes.getCacheKey(this.scene, this.lightsNode);
+  }
 
-		const nodeAttributes = this.getNodeBuilderState().nodeAttributes;
-		const geometry = this.geometry;
+  getCacheKey() {
+    return this.getMaterialCacheKey() + ',' + this.getNodesCacheKey();
+  }
 
-		const attributes = [];
-		const vertexBuffers = new Set();
+  dispose() {
+    this.material.removeEventListener('dispose', this.onMaterialDispose);
 
-		for ( const nodeAttribute of nodeAttributes ) {
-
-			const attribute = nodeAttribute.node && nodeAttribute.node.attribute ? nodeAttribute.node.attribute : geometry.getAttribute( nodeAttribute.name );
-
-			if ( attribute === undefined ) continue;
-
-			attributes.push( attribute );
-
-			const bufferAttribute = attribute.isInterleavedBufferAttribute ? attribute.data : attribute;
-			vertexBuffers.add( bufferAttribute );
-
-		}
-
-		this.attributes = attributes;
-		this.vertexBuffers = Array.from( vertexBuffers.values() );
-
-		return attributes;
-
-	}
-
-	getVertexBuffers() {
-
-		if ( this.vertexBuffers === null ) this.getAttributes();
-
-		return this.vertexBuffers;
-
-	}
-
-	getMaterialCacheKey() {
-
-		const { object, material } = this;
-
-		let cacheKey = material.customProgramCacheKey();
-
-		for ( const property in material ) {
-
-			if ( /^(is[A-Z])|^(visible|version|uuid|name|opacity|userData)$/.test( property ) ) continue;
-
-			let value = material[ property ];
-
-			if ( value !== null ) {
-
-				const type = typeof value;
-
-				if ( type === 'number' ) value = value !== 0 ? '1' : '0'; // Convert to on/off, important for clearcoat, transmission, etc
-				else if ( type === 'object' ) value = '{}';
-
-			}
-
-			cacheKey += /*property + ':' +*/ value + ',';
-
-		}
-
-		cacheKey += this.clippingContextVersion + ',';
-
-		if ( object.skeleton ) {
-
-			cacheKey += object.skeleton.bones.length + ',';
-
-		}
-
-		if ( object.morphTargetInfluences ) {
-
-			cacheKey += object.morphTargetInfluences.length + ',';
-
-		}
-
-		return cacheKey;
-
-	}
-
-	get needsUpdate() {
-
-		return this.initialNodesCacheKey !== this.getNodesCacheKey() || this.clippingNeedsUpdate;
-
-	}
-
-	getNodesCacheKey() {
-
-		// Environment Nodes Cache Key
-
-		return this._nodes.getCacheKey( this.scene, this.lightsNode );
-
-	}
-
-	getCacheKey() {
-
-		return this.getMaterialCacheKey() + ',' + this.getNodesCacheKey();
-
-	}
-
-	dispose() {
-
-		this.material.removeEventListener( 'dispose', this.onMaterialDispose );
-
-		this.onDispose();
-
-	}
-
+    this.onDispose();
+  }
 }

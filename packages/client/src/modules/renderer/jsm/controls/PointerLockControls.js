@@ -9,10 +9,10 @@ const _unlockEvent = { type: 'unlock' };
 
 const _PI_2 = Math.PI / 2;
 
-class PointerLockControls extends EventDispatcher {
-  constructor(camera, domElement) {
-    super();
+class PointerLockControls {
+  eventDispatcher = new EventDispatcher();
 
+  constructor(camera, domElement) {
     this.camera = camera;
     this.domElement = domElement;
 
@@ -106,16 +106,16 @@ function onMouseMove(event) {
 
   camera.quaternion.setFromEuler(_euler);
 
-  this.dispatchEvent(_changeEvent, this);
+  this.eventDispatcher.dispatchEvent(_changeEvent, this);
 }
 
 function onPointerlockChange() {
   if (this.domElement.ownerDocument.pointerLockElement === this.domElement) {
-    this.dispatchEvent(_lockEvent, this);
+    this.eventDispatcher.dispatchEvent(_lockEvent, this);
 
     this.isLocked = true;
   } else {
-    this.dispatchEvent(_unlockEvent, this);
+    this.eventDispatcher.dispatchEvent(_unlockEvent, this);
 
     this.isLocked = false;
   }

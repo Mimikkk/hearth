@@ -24,7 +24,7 @@ function WebGLGeometries(gl, attributes, info, bindingStates) {
       }
     }
 
-    geometry.removeEventListener('dispose', onGeometryDispose);
+    geometry.eventDispatcher.removeEventListener('dispose', onGeometryDispose);
 
     delete geometries[geometry.id];
 
@@ -49,7 +49,7 @@ function WebGLGeometries(gl, attributes, info, bindingStates) {
   function get(object, geometry) {
     if (geometries[geometry.id] === true) return geometry;
 
-    geometry.addEventListener('dispose', onGeometryDispose);
+    geometry.eventDispatcher.addEventListener('dispose', onGeometryDispose);
 
     geometries[geometry.id] = true;
 

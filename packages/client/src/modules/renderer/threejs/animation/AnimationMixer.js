@@ -8,9 +8,10 @@ import { AnimationBlendMode } from '../constants.ts';
 
 const _controlInterpolantsResultBuffer = new Float32Array(1);
 
-class AnimationMixer extends EventDispatcher {
+class AnimationMixer {
+  eventDispatcher = new EventDispatcher();
+
   constructor(root) {
-    super();
 
     this._root = root;
     this._initMemoryManager();

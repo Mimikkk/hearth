@@ -28,10 +28,10 @@ const _removedEvent = { type: 'removed' };
 const _childaddedEvent = { type: 'childadded', child: null };
 const _childremovedEvent = { type: 'childremoved', child: null };
 
-class Object3D extends EventDispatcher {
-  constructor() {
-    super();
+class Object3D {
+  eventDispatcher = new EventDispatcher();
 
+  constructor() {
     this.isObject3D = true;
 
     Object.defineProperty(this, 'id', { value: _object3DId++ });
@@ -276,10 +276,10 @@ class Object3D extends EventDispatcher {
       object.parent = this;
       this.children.push(object);
 
-      object.dispatchEvent(_addedEvent, this);
+      object.eventDispatcher.dispatchEvent(_addedEvent, this);
 
       _childaddedEvent.child = object;
-      this.dispatchEvent(_childaddedEvent, this);
+      this.eventDispatcher.dispatchEvent(_childaddedEvent, this);
       _childaddedEvent.child = null;
     } else {
       console.error('THREE.Object3D.add: object not an instance of THREE.Object3D.', object);
@@ -303,10 +303,10 @@ class Object3D extends EventDispatcher {
       object.parent = null;
       this.children.splice(index, 1);
 
-      object.dispatchEvent(_removedEvent);
+      object.eventDispatcher.dispatchEvent(_removedEvent);
 
       _childremovedEvent.child = object;
-      this.dispatchEvent(_childremovedEvent, this);
+      this.eventDispatcher.dispatchEvent(_childremovedEvent, this);
       _childremovedEvent.child = null;
     }
 
@@ -350,10 +350,10 @@ class Object3D extends EventDispatcher {
 
     object.updateWorldMatrix(false, true);
 
-    object.dispatchEvent(_addedEvent);
+    object.eventDispatcher.dispatchEvent(_addedEvent);
 
     _childaddedEvent.child = object;
-    this.dispatchEvent(_childaddedEvent, this);
+    this.eventDispatcher.dispatchEvent(_childaddedEvent, this);
     _childaddedEvent.child = null;
 
     return this;

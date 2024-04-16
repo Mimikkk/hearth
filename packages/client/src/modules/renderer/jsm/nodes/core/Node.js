@@ -7,9 +7,10 @@ const NodeClasses = new Map();
 
 let _nodeId = 0;
 
-class Node extends EventDispatcher {
+class Node  {
+  eventDispatcher = new EventDispatcher();
+
   constructor(nodeType = null) {
-    super();
 
     this.nodeType = nodeType;
 
@@ -59,7 +60,7 @@ class Node extends EventDispatcher {
   }
 
   dispose() {
-    this.dispatchEvent({ type: 'dispose' });
+    this.eventDispatcher.dispatchEvent({ type: 'dispose' }, this);
   }
 
   traverse(callback) {

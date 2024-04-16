@@ -13,10 +13,10 @@ import * as MathUtils from '../math/MathUtils.js';
 
 let _materialId = 0;
 
-class Material extends EventDispatcher {
-  constructor() {
-    super();
+class Material {
+  eventDispatcher = new EventDispatcher();
 
+  constructor() {
     this.isMaterial = true;
 
     Object.defineProperty(this, 'id', { value: _materialId++ });
@@ -451,7 +451,7 @@ class Material extends EventDispatcher {
   }
 
   dispose() {
-    this.dispatchEvent({ type: 'dispose' }, this);
+    this.eventDispatcher.dispatchEvent({ type: 'dispose' }, this);
   }
 
   set needsUpdate(value) {

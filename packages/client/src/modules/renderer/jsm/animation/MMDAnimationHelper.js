@@ -355,7 +355,7 @@ class MMDAnimationHelper {
       }
 
       // TODO: find a workaround not to access ._clip looking like a private property
-      objects.mixer.addEventListener('loop', function (event) {
+      objects.mixer.eventDispatcher.addEventListener('loop', function (event) {
         const tracks = event.action._clip.tracks;
 
         if (tracks.length > 0 && tracks[0].name.slice(0, 6) !== '.bones') return;

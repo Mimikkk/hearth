@@ -7,7 +7,9 @@ import { Source } from './Source.js';
 
 let _textureId = 0;
 
-class Texture extends EventDispatcher {
+class Texture {
+  eventDispatcher = new EventDispatcher();
+
   constructor(
     image = Texture.DEFAULT_IMAGE,
     mapping = Texture.DEFAULT_MAPPING,
@@ -20,8 +22,6 @@ class Texture extends EventDispatcher {
     anisotropy = Texture.DEFAULT_ANISOTROPY,
     colorSpace = ColorSpace.No,
   ) {
-    super();
-
     this.isTexture = true;
 
     Object.defineProperty(this, 'id', { value: _textureId++ });
@@ -76,7 +76,7 @@ class Texture extends EventDispatcher {
     return this.source.data;
   }
 
-  set image(value = null) {
+  set image(value ) {
     this.source.data = value;
   }
 
@@ -193,7 +193,7 @@ class Texture extends EventDispatcher {
   }
 
   dispose() {
-    this.dispatchEvent({ type: 'dispose' }, this);
+    this.eventDispatcher.dispatchEvent({ type: 'dispose' }, this);
   }
 
   transformUv(uv) {

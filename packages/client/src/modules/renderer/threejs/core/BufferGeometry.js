@@ -24,9 +24,10 @@ const _box = /*@__PURE__*/ new Box3();
 const _boxMorphTargets = /*@__PURE__*/ new Box3();
 const _vector = /*@__PURE__*/ new Vector3();
 
-class BufferGeometry extends EventDispatcher {
+class BufferGeometry  {
+  eventDispatcher = new EventDispatcher();
+
   constructor() {
-    super();
 
     this.isBufferGeometry = true;
 
@@ -873,7 +874,7 @@ class BufferGeometry extends EventDispatcher {
   }
 
   dispose() {
-    this.dispatchEvent({ type: 'dispose' }, this);
+    this.eventDispatcher.dispatchEvent({ type: 'dispose' }, this);
   }
 }
 
