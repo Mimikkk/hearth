@@ -1,13 +1,13 @@
 import * as THREE from '../threejs/Three.js';
-import * as Nodes from '../jsm/nodes/Nodes.js';
+import * as Nodes from '../threejs/nodes/Nodes.js';
 
-import WebGPURenderer from '../jsm/renderers/webgpu/WebGPURenderer.js';
+import WebGPURenderer from '../threejs/renderers/webgpu/WebGPURenderer.js';
 
-import Stats from '../jsm/libs/stats.module.js';
+import Stats from '../threejs/libs/stats.module.js';
 
-import { GUI } from '../jsm/libs/lil-gui.module.min.js';
-import { OrbitControls } from '../jsm/controls/OrbitControls.js';
-import { FBXLoader } from '../jsm/loaders/FBXLoader.js';
+import { GUI } from '../threejs/libs/lil-gui.module.min.js';
+import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
+import { FBXLoader } from '../threejs/loaders/FBXLoader.js';
 
 let container, stats;
 let camera, scene, renderer;

@@ -14,12 +14,12 @@ import {
   timerLocal,
   uv,
   vec2,
-} from '../jsm/nodes/Nodes.js';
+} from '../threejs/nodes/Nodes.js';
 
-import { KTX2Loader } from '../jsm/loaders/KTX2Loader.js';
+import { KTX2Loader } from '../threejs/loaders/KTX2Loader.js';
 
-import WebGPU from '../jsm/capabilities/WebGPU.js';
-import WebGPURenderer from '../jsm/renderers/webgpu/WebGPURenderer.js';
+import WebGPU from '@modules/renderer/threejs/capabilities/WebGPU.js';
+import WebGPURenderer from '../threejs/renderers/webgpu/WebGPURenderer.js';
 import { TextureFormat } from '../threejs/Three.js';
 
 let camera, scene, renderer;
@@ -61,7 +61,7 @@ async function init() {
   textureDisplace.wrapS = THREE.Wrapping.Repeat;
   textureDisplace.wrapT = THREE.Wrapping.Repeat;
 
-  const ktxLoader = await new KTX2Loader().setTranscoderPath('../jsm/libs/basis/').detectSupportAsync(renderer);
+  const ktxLoader = await new KTX2Loader().setTranscoderPath('../threejs/libs/basis/').detectSupportAsync(renderer);
 
   const ktxTexture = await ktxLoader.loadAsync('./textures/compressed/sample_uastc_zstd.ktx2');
 

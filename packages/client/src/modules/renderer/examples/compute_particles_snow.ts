@@ -16,18 +16,18 @@ import {
   storage,
   MeshBasicNodeMaterial,
   If,
-} from '../jsm/nodes/Nodes.js';
+} from '../threejs/nodes/Nodes.js';
 
-import { TeapotGeometry } from '../jsm/geometries/TeapotGeometry.js';
+import { TeapotGeometry } from '../threejs/geometries/TeapotGeometry.js';
 
-import WebGPU from '../jsm/capabilities/WebGPU.js';
-import WebGL from '../jsm/capabilities/WebGL.js';
-import WebGPURenderer from '../jsm/renderers/webgpu/WebGPURenderer.js';
-import StorageInstancedBufferAttribute from '../jsm/renderers/common/StorageInstancedBufferAttribute.js';
+import WebGPU from '@modules/renderer/threejs/capabilities/WebGPU.js';
+import WebGL from '@modules/renderer/threejs/capabilities/WebGL.js';
+import WebGPURenderer from '../threejs/renderers/webgpu/WebGPURenderer.js';
+import StorageInstancedBufferAttribute from '../threejs/renderers/common/StorageInstancedBufferAttribute.js';
 
-import PostProcessing from '../jsm/renderers/common/PostProcessing.js';
+import PostProcessing from '../threejs/renderers/common/PostProcessing.js';
 
-import { OrbitControls } from '../jsm/controls/OrbitControls.js';
+import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
 
 const maxParticleCount = 100000;
 

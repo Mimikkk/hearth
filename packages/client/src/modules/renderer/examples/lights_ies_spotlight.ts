@@ -1,15 +1,15 @@
 import * as THREE from '../threejs/Three.js';
 
-import WebGPU from '../jsm/capabilities/WebGPU.js';
-import WebGL from '../jsm/capabilities/WebGL.js';
+import WebGPU from '@modules/renderer/threejs/capabilities/WebGPU.js';
+import WebGL from '@modules/renderer/threejs/capabilities/WebGL.js';
 
-import WebGPURenderer from '../jsm/renderers/webgpu/WebGPURenderer.js';
+import WebGPURenderer from '../threejs/renderers/webgpu/WebGPURenderer.js';
 
-import IESSpotLight from '../jsm/lights/IESSpotLight.js';
+import IESSpotLight from '../threejs/lights/IESSpotLight.js';
 
-import { OrbitControls } from '../jsm/controls/OrbitControls.js';
+import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
 
-import { IESLoader } from '../jsm/loaders/IESLoader.js';
+import { IESLoader } from '../threejs/loaders/IESLoader.js';
 
 let renderer, scene, camera;
 let lights;

@@ -1,14 +1,14 @@
 import * as THREE from '../threejs/Three.js';
-import { texture, MeshBasicNodeMaterial, MeshPhongNodeMaterial } from '../jsm/nodes/Nodes.js';
+import { texture, MeshBasicNodeMaterial, MeshPhongNodeMaterial } from '../threejs/nodes/Nodes.js';
 
-import WebGPU from '../jsm/capabilities/WebGPU.js';
-import WebGL from '../jsm/capabilities/WebGL.js';
+import WebGPU from '@modules/renderer/threejs/capabilities/WebGPU.js';
+import WebGL from '@modules/renderer/threejs/capabilities/WebGL.js';
 
-import { GUI } from '../jsm/libs/lil-gui.module.min.js';
+import { GUI } from '../threejs/libs/lil-gui.module.min.js';
 
-import WebGPURenderer from '../jsm/renderers/webgpu/WebGPURenderer.js';
+import WebGPURenderer from '../threejs/renderers/webgpu/WebGPURenderer.js';
 
-import QuadMesh from '../jsm/objects/QuadMesh.js';
+import QuadMesh from '../threejs/objects/QuadMesh.js';
 
 let camera, scene, renderer;
 const mouse = new THREE.Vector2();

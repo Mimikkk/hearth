@@ -1,14 +1,14 @@
 import * as THREE from '../threejs/Three.js';
 
-import { FontLoader } from '../jsm/loaders/FontLoader.js';
-import { TextGeometry } from '../jsm/geometries/TextGeometry.js';
+import { FontLoader } from '../threejs/loaders/FontLoader.js';
+import { TextGeometry } from '../threejs/geometries/TextGeometry.js';
 
-import WebGPU from '../jsm/capabilities/WebGPU.js';
-import WebGL from '../jsm/capabilities/WebGL.js';
+import WebGPU from '@modules/renderer/threejs/capabilities/WebGPU.js';
+import WebGL from '@modules/renderer/threejs/capabilities/WebGL.js';
 
-import WebGPURenderer from '../jsm/renderers/webgpu/WebGPURenderer.js';
+import WebGPURenderer from '../threejs/renderers/webgpu/WebGPURenderer.js';
 
-import Stats from '../jsm/libs/stats.module.js';
+import Stats from '../threejs/libs/stats.module.js';
 
 // 1 micrometer to 100 billion light years in one scene, with 1 unit = 1 meter?  preposterous!  and yet...
 const NEAR = 1e-6,

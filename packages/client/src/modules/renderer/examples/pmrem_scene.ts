@@ -1,14 +1,14 @@
 import * as THREE from '../threejs/Three.js';
 
-import { MeshBasicNodeMaterial, normalWorld, pmremTexture, uniform } from '../jsm/nodes/Nodes.js';
+import { MeshBasicNodeMaterial, normalWorld, pmremTexture, uniform } from '../threejs/nodes/Nodes.js';
 
-import PMREMGenerator from '../jsm/renderers/common/extras/PMREMGenerator.js';
+import PMREMGenerator from '../threejs/renderers/common/extras/PMREMGenerator.js';
 
-import WebGPURenderer from '../jsm/renderers/webgpu/WebGPURenderer.js';
+import WebGPURenderer from '../threejs/renderers/webgpu/WebGPURenderer.js';
 
-import { OrbitControls } from '../jsm/controls/OrbitControls.js';
+import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
 
-import { GUI } from '../jsm/libs/lil-gui.module.min.js';
+import { GUI } from '../threejs/libs/lil-gui.module.min.js';
 
 let camera, scene, renderer;
 

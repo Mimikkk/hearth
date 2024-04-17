@@ -6,18 +6,18 @@ import {
   nodeObject,
   uniform,
   cubeTexture,
-} from '../jsm/nodes/Nodes.js';
+} from '../threejs/nodes/Nodes.js';
 
-import WebGPU from '../jsm/capabilities/WebGPU.js';
-import WebGL from '../jsm/capabilities/WebGL.js';
+import WebGPU from '@modules/renderer/threejs/capabilities/WebGPU.js';
+import WebGL from '@modules/renderer/threejs/capabilities/WebGL.js';
 
-import WebGPURenderer from '../jsm/renderers/webgpu/WebGPURenderer.js';
+import WebGPURenderer from '../threejs/renderers/webgpu/WebGPURenderer.js';
 
-import { OrbitControls } from '../jsm/controls/OrbitControls.js';
+import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
 
-import { TeapotGeometry } from '../jsm/geometries/TeapotGeometry.js';
+import { TeapotGeometry } from '../threejs/geometries/TeapotGeometry.js';
 
-import Stats from '../jsm/libs/stats.module.js';
+import Stats from '../threejs/libs/stats.module.js';
 
 class InstanceUniformNode extends Node {
   constructor() {

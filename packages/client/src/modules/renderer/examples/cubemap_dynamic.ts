@@ -1,16 +1,16 @@
 import * as THREE from '../threejs/Three.js';
-import * as Nodes from '../jsm/nodes/Nodes.js';
+import * as Nodes from '../threejs/nodes/Nodes.js';
 
-import WebGPU from '../jsm/capabilities/WebGPU.js';
-import WebGL from '../jsm/capabilities/WebGL.js';
+import WebGPU from '@modules/renderer/threejs/capabilities/WebGPU.js';
+import WebGL from '@modules/renderer/threejs/capabilities/WebGL.js';
 
-import WebGPURenderer from '../jsm/renderers/webgpu/WebGPURenderer.js';
+import WebGPURenderer from '../threejs/renderers/webgpu/WebGPURenderer.js';
 
-import { OrbitControls } from '../jsm/controls/OrbitControls.js';
-import { RGBMLoader } from '../jsm/loaders/RGBMLoader.js';
+import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
+import { RGBMLoader } from '../threejs/loaders/RGBMLoader.js';
 
-import { GUI } from '../jsm/libs/lil-gui.module.min.js';
-import Stats from '../jsm/libs/stats.module.js';
+import { GUI } from '../threejs/libs/lil-gui.module.min.js';
+import Stats from '../threejs/libs/stats.module.js';
 import { Filter } from '../threejs/Three.js';
 
 let camera, scene, renderer, stats;

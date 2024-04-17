@@ -1,5 +1,5 @@
 import * as THREE from '../threejs/Three.js';
-import WebGPURenderer from '../jsm/renderers/webgpu/WebGPURenderer.js';
+import WebGPURenderer from '../threejs/renderers/webgpu/WebGPURenderer.js';
 import { Filter } from '../threejs/Three.js';
 
 let camera, scene, renderer, clock, dataTexture, diffuseMap;

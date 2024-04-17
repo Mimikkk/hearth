@@ -1,14 +1,14 @@
 import * as THREE from '../threejs/Three.js';
 
-import WebGPU from '../jsm/capabilities/WebGPU.js';
-import WebGL from '../jsm/capabilities/WebGL.js';
+import WebGPU from '@modules/renderer/threejs/capabilities/WebGPU.js';
+import WebGL from '@modules/renderer/threejs/capabilities/WebGL.js';
 
-import WebGPURenderer from '../jsm/renderers/webgpu/WebGPURenderer.js';
+import WebGPURenderer from '../threejs/renderers/webgpu/WebGPURenderer.js';
 
-import { RGBELoader } from '../jsm/loaders/RGBELoader.js';
+import { RGBELoader } from '../threejs/loaders/RGBELoader.js';
 
-import { OrbitControls } from '../jsm/controls/OrbitControls.js';
-import { GLTFLoader } from '../jsm/loaders/GLTFLoader.js';
+import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
+import { GLTFLoader } from '../threejs/loaders/GLTFLoader.js';
 
 let camera, scene, renderer;
 

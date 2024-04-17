@@ -1,19 +1,19 @@
 import * as THREE from '../threejs/Three.js';
 
-import WebGPU from '../jsm/capabilities/WebGPU.js';
-import WebGL from '../jsm/capabilities/WebGL.js';
+import WebGPU from '@modules/renderer/threejs/capabilities/WebGPU.js';
+import WebGL from '@modules/renderer/threejs/capabilities/WebGL.js';
 
-import WebGPURenderer from '../jsm/renderers/webgpu/WebGPURenderer.js';
+import WebGPURenderer from '../threejs/renderers/webgpu/WebGPURenderer.js';
 
-import Stats from '../jsm/libs/stats.module.js';
+import Stats from '../threejs/libs/stats.module.js';
 
-import { OrbitControls } from '../jsm/controls/OrbitControls.js';
+import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
 
-import { GLTFLoader } from '../jsm/loaders/GLTFLoader.js';
-import { KTX2Loader } from '../jsm/loaders/KTX2Loader.js';
-import { MeshoptDecoder } from '../jsm/libs/meshopt_decoder.module.js';
+import { GLTFLoader } from '../threejs/loaders/GLTFLoader.js';
+import { KTX2Loader } from '../threejs/loaders/KTX2Loader.js';
+import { MeshoptDecoder } from '../threejs/libs/meshopt_decoder.module.js';
 
-import { GUI } from '../jsm/libs/lil-gui.module.min.js';
+import { GUI } from '../threejs/libs/lil-gui.module.min.js';
 
 init();
 
@@ -45,7 +45,7 @@ async function init() {
 
   container.appendChild(renderer.domElement);
 
-  const ktx2Loader = await new KTX2Loader().setTranscoderPath('../jsm/libs/basis/').detectSupportAsync(renderer);
+  const ktx2Loader = await new KTX2Loader().setTranscoderPath('../threejs/libs/basis/').detectSupportAsync(renderer);
 
   new GLTFLoader()
     .setKTX2Loader(ktx2Loader)

@@ -17,21 +17,21 @@ import {
   viewportDepthTexture,
   viewportSharedTexture,
   viewportTopLeft,
-} from '../jsm/nodes/Nodes.js';
+} from '../threejs/nodes/Nodes.js';
 
-import { GLTFLoader } from '../jsm/loaders/GLTFLoader.js';
+import { GLTFLoader } from '../threejs/loaders/GLTFLoader.js';
 
-import WebGPU from '../jsm/capabilities/WebGPU.js';
-import WebGL from '../jsm/capabilities/WebGL.js';
+import WebGPU from '@modules/renderer/threejs/capabilities/WebGPU.js';
+import WebGL from '@modules/renderer/threejs/capabilities/WebGL.js';
 
-import WebGPURenderer from '../jsm/renderers/webgpu/WebGPURenderer.js';
-import PostProcessing from '../jsm/renderers/common/PostProcessing.js';
+import WebGPURenderer from '../threejs/renderers/webgpu/WebGPURenderer.js';
+import PostProcessing from '../threejs/renderers/common/PostProcessing.js';
 
-import { OrbitControls } from '../jsm/controls/OrbitControls.js';
+import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
 
-import { GUI } from '../jsm/libs/lil-gui.module.min.js';
+import { GUI } from '../threejs/libs/lil-gui.module.min.js';
 
-import Stats from '../jsm/libs/stats.module.js';
+import Stats from '../threejs/libs/stats.module.js';
 import { ColorSpace, Wrapping } from '../threejs/Three.js';
 
 let camera, scene, renderer;

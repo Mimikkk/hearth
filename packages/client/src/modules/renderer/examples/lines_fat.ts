@@ -1,18 +1,18 @@
 import * as THREE from '../threejs/Three.js';
 
-import WebGPU from '../jsm/capabilities/WebGPU.js';
-import WebGL from '../jsm/capabilities/WebGL.js';
+import WebGPU from '@modules/renderer/threejs/capabilities/WebGPU.js';
+import WebGL from '@modules/renderer/threejs/capabilities/WebGL.js';
 
-import WebGPURenderer from '../jsm/renderers/webgpu/WebGPURenderer.js';
+import WebGPURenderer from '../threejs/renderers/webgpu/WebGPURenderer.js';
 
-import Stats from '../jsm/libs/stats.module.js';
+import Stats from '../threejs/libs/stats.module.js';
 
-import { GUI } from '../jsm/libs/lil-gui.module.min.js';
-import { OrbitControls } from '../jsm/controls/OrbitControls.js';
-import { color, Line2NodeMaterial, LineBasicNodeMaterial, LineDashedNodeMaterial } from '../jsm/nodes/Nodes.js';
-import { Line2 } from '../jsm/lines/Line2.js';
-import { LineGeometry } from '../jsm/lines/LineGeometry.js';
-import * as GeometryUtils from '../jsm/utils/GeometryUtils.js';
+import { GUI } from '../threejs/libs/lil-gui.module.min.js';
+import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
+import { color, Line2NodeMaterial, LineBasicNodeMaterial, LineDashedNodeMaterial } from '../threejs/nodes/Nodes.js';
+import { Line2 } from '@modules/renderer/threejs/lines/Line2.js';
+import { LineGeometry } from '@modules/renderer/threejs/lines/LineGeometry.js';
+import * as GeometryUtils from '@modules/renderer/threejs/utils/GeometryUtils.js';
 
 let line, renderer, scene, camera, camera2, controls, backgroundNode;
 let line1;

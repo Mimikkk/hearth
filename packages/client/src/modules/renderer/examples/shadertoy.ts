@@ -1,14 +1,14 @@
 import * as THREE from '../threejs/Three.js';
-import * as Nodes from '../jsm/nodes/Nodes.js';
+import * as Nodes from '../threejs/nodes/Nodes.js';
 
-import Transpiler from '../jsm/transpiler/Transpiler.js';
-import ShaderToyDecoder from '../jsm/transpiler/ShaderToyDecoder.js';
-import TSLEncoder from '../jsm/transpiler/TSLEncoder.js';
+import Transpiler from '@modules/renderer/threejs/transpiler/Transpiler.js';
+import ShaderToyDecoder from '@modules/renderer/threejs/transpiler/ShaderToyDecoder.js';
+import TSLEncoder from '@modules/renderer/threejs/transpiler/TSLEncoder.js';
 
-import WebGPU from '../jsm/capabilities/WebGPU.js';
-import WebGL from '../jsm/capabilities/WebGL.js';
+import WebGPU from '@modules/renderer/threejs/capabilities/WebGPU.js';
+import WebGL from '@modules/renderer/threejs/capabilities/WebGL.js';
 
-import WebGPURenderer from '../jsm/renderers/webgpu/WebGPURenderer.js';
+import WebGPURenderer from '../threejs/renderers/webgpu/WebGPURenderer.js';
 
 class ShaderToyNode extends Nodes.Node {
   constructor() {

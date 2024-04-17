@@ -1,12 +1,12 @@
 import * as THREE from '../threejs/Three.js';
 
-import { GLTFLoader } from '../jsm/loaders/GLTFLoader.js';
-import { KTX2Loader } from '../jsm/loaders/KTX2Loader.js';
-import { MeshoptDecoder } from '../jsm/libs/meshopt_decoder.module.js';
+import { GLTFLoader } from '../threejs/loaders/GLTFLoader.js';
+import { KTX2Loader } from '../threejs/loaders/KTX2Loader.js';
+import { MeshoptDecoder } from '../threejs/libs/meshopt_decoder.module.js';
 
-import { OrbitControls } from '../jsm/controls/OrbitControls.js';
+import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
 
-import WebGPURenderer from '../jsm/renderers/webgpu/WebGPURenderer.js';
+import WebGPURenderer from '../threejs/renderers/webgpu/WebGPURenderer.js';
 
 let camera, scene, renderer;
 
@@ -41,7 +41,7 @@ async function init() {
   controls.maxDistance = 6;
   controls.update();
 
-  const ktx2Loader = await new KTX2Loader().setTranscoderPath('../jsm/libs/basis/').detectSupportAsync(renderer);
+  const ktx2Loader = await new KTX2Loader().setTranscoderPath('../threejs/libs/basis/').detectSupportAsync(renderer);
 
   const loader = new GLTFLoader();
   loader.setKTX2Loader(ktx2Loader);

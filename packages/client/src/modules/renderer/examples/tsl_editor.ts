@@ -1,15 +1,15 @@
 import * as THREE from '../threejs/Three.js';
-import * as Nodes from '../jsm/nodes/Nodes.js';
+import * as Nodes from '../threejs/nodes/Nodes.js';
 
-import WebGPU from '../jsm/capabilities/WebGPU.js';
-import WebGL from '../jsm/capabilities/WebGL.js';
+import WebGPU from '@modules/renderer/threejs/capabilities/WebGPU.js';
+import WebGL from '@modules/renderer/threejs/capabilities/WebGL.js';
 
-import WebGPURenderer from '../jsm/renderers/webgpu/WebGPURenderer.js';
-import WGSLNodeBuilder from '../jsm/renderers/webgpu/nodes/WGSLNodeBuilder.js';
-import GLSLNodeBuilder from '../jsm/renderers/webgl/nodes/GLSLNodeBuilder.js';
-import GLSL1NodeBuilder from '../jsm/renderers/webgl-legacy/nodes/GLSL1NodeBuilder.js';
+import WebGPURenderer from '../threejs/renderers/webgpu/WebGPURenderer.js';
+import WGSLNodeBuilder from '@modules/renderer/threejs/renderers/webgpu/nodes/WGSLNodeBuilder.js';
+import GLSLNodeBuilder from '@modules/renderer/threejs/renderers/webgl/nodes/GLSLNodeBuilder.js';
+import GLSL1NodeBuilder from '@modules/renderer/threejs/renderers/webgl-legacy/nodes/GLSL1NodeBuilder.js';
 
-import { GUI } from '../jsm/libs/lil-gui.module.min.js';
+import { GUI } from '../threejs/libs/lil-gui.module.min.js';
 
 init();
 

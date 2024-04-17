@@ -1,10 +1,10 @@
 import * as THREE from '../threejs/Three.js';
 
-import { GUI } from '../jsm/libs/lil-gui.module.min.js';
+import { GUI } from '../threejs/libs/lil-gui.module.min.js';
 
-import WebGPURenderer from '../jsm/renderers/webgpu/WebGPURenderer.js';
-import PostProcessing from '../jsm/renderers/common/PostProcessing.js';
-import { pass } from '../jsm/nodes/Nodes.js';
+import WebGPURenderer from '../threejs/renderers/webgpu/WebGPURenderer.js';
+import PostProcessing from '../threejs/renderers/common/PostProcessing.js';
+import { pass } from '../threejs/nodes/Nodes.js';
 
 let camera, scene, renderer;
 let mesh, postProcessing, combinedPass;

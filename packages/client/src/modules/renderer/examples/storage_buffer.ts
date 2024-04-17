@@ -9,10 +9,10 @@ import {
   tslFn,
   instanceIndex,
   MeshBasicNodeMaterial,
-} from '../jsm/nodes/Nodes.js';
+} from '../threejs/nodes/Nodes.js';
 
-import WebGPURenderer from '../jsm/renderers/webgpu/WebGPURenderer.js';
-import StorageInstancedBufferAttribute from '../jsm/renderers/common/StorageInstancedBufferAttribute.js';
+import WebGPURenderer from '../threejs/renderers/webgpu/WebGPURenderer.js';
+import StorageInstancedBufferAttribute from '../threejs/renderers/common/StorageInstancedBufferAttribute.js';
 
 const timestamps = {
   webgpu: document.getElementById('timestamps'),

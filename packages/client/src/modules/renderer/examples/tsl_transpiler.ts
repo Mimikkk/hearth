@@ -1,6 +1,6 @@
-import Transpiler from '../jsm/transpiler/Transpiler.js';
-import GLSLDecoder from '../jsm/transpiler/GLSLDecoder.js';
-import TSLEncoder from '../jsm/transpiler/TSLEncoder.js';
+import Transpiler from '@modules/renderer/threejs/transpiler/Transpiler.js';
+import GLSLDecoder from '@modules/renderer/threejs/transpiler/GLSLDecoder.js';
+import TSLEncoder from '@modules/renderer/threejs/transpiler/TSLEncoder.js';
 
 init();
 

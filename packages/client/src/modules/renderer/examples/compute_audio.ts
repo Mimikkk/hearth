@@ -9,12 +9,12 @@ import {
   tslFn,
   uniform,
   viewportTopLeft,
-} from '../jsm/nodes/Nodes.js';
+} from '../threejs/nodes/Nodes.js';
 
-import { GUI } from '../jsm/libs/lil-gui.module.min.js';
+import { GUI } from '../threejs/libs/lil-gui.module.min.js';
 
-import WebGPURenderer from '../jsm/renderers/webgpu/WebGPURenderer.js';
-import StorageInstancedBufferAttribute from '../jsm/renderers/common/StorageInstancedBufferAttribute.js';
+import WebGPURenderer from '../threejs/renderers/webgpu/WebGPURenderer.js';
+import StorageInstancedBufferAttribute from '../threejs/renderers/common/StorageInstancedBufferAttribute.js';
 import { TextureFormat } from '../threejs/Three.js';
 
 let camera, scene, renderer;

@@ -1,14 +1,23 @@
 import * as THREE from '../threejs/Three.js';
-import { color, mix, positionLocal, range, SpriteNodeMaterial, texture, timerLocal, uv } from '../jsm/nodes/Nodes.js';
+import {
+  color,
+  mix,
+  positionLocal,
+  range,
+  SpriteNodeMaterial,
+  texture,
+  timerLocal,
+  uv,
+} from '../threejs/nodes/Nodes.js';
 
-import { GUI } from '../jsm/libs/lil-gui.module.min.js';
+import { GUI } from '../threejs/libs/lil-gui.module.min.js';
 
-import WebGPU from '../jsm/capabilities/WebGPU.js';
-import WebGL from '../jsm/capabilities/WebGL.js';
+import WebGPU from '@modules/renderer/threejs/capabilities/WebGPU.js';
+import WebGL from '@modules/renderer/threejs/capabilities/WebGL.js';
 
-import WebGPURenderer from '../jsm/renderers/webgpu/WebGPURenderer.js';
+import WebGPURenderer from '../threejs/renderers/webgpu/WebGPURenderer.js';
 
-import { OrbitControls } from '../jsm/controls/OrbitControls.js';
+import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
 import { Blending } from '../threejs/Three.js';
 
 let camera, scene, renderer;

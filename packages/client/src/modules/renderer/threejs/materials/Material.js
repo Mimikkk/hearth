@@ -92,9 +92,7 @@ class Material {
   }
 
   set alphaTest(value) {
-    if (this._alphaTest > 0 !== value > 0) {
-      this.version++;
-    }
+    if (this._alphaTest > 0 !== value > 0) ++this.version;
 
     this._alphaTest = value;
   }
@@ -455,7 +453,7 @@ class Material {
   }
 
   set needsUpdate(value) {
-    if (value === true) this.version++;
+    if (value === true) ++this.version;
   }
 }
 

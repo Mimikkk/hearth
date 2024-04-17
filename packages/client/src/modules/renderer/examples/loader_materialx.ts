@@ -1,13 +1,13 @@
 import * as THREE from '../threejs/Three.js';
 
-import { MaterialXLoader } from '../jsm/loaders/MaterialXLoader.js';
-import { OrbitControls } from '../jsm/controls/OrbitControls.js';
-import { RGBELoader } from '../jsm/loaders/RGBELoader.js';
-import { GLTFLoader } from '../jsm/loaders/GLTFLoader.js';
+import { MaterialXLoader } from '../threejs/loaders/MaterialXLoader.js';
+import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
+import { RGBELoader } from '../threejs/loaders/RGBELoader.js';
+import { GLTFLoader } from '../threejs/loaders/GLTFLoader.js';
 
-import WebGPURenderer from '../jsm/renderers/webgpu/WebGPURenderer.js';
+import WebGPURenderer from '../threejs/renderers/webgpu/WebGPURenderer.js';
 
-import { nodeFrame } from '../jsm/renderers/webgl-legacy/nodes/WebGLNodes.js';
+import { nodeFrame } from '@modules/renderer/threejs/renderers/webgl-legacy/nodes/WebGLNodes.js';
 
 const SAMPLE_PATH =
   'https://raw.githubusercontent.com/materialx/MaterialX/main/resources/Materials/Examples/StandardSurface/';

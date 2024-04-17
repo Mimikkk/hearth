@@ -1,7 +1,7 @@
 import * as THREE from '../threejs/Three.js';
 
-import { OrbitControls } from '../jsm/controls/OrbitControls.js';
-//import { GUI } from '../jsm/libs/lil-gui.module.min.js';
+import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
+//import { GUI } from '../threejs/libs/lil-gui.module.min.js';
 
 import {
   NodeMaterial,
@@ -17,13 +17,13 @@ import {
   varying,
   vec2,
   vec4,
-} from '../jsm/nodes/Nodes.js';
-import WebGPU from '../jsm/capabilities/WebGPU.js';
-import WebGL from '../jsm/capabilities/WebGL.js';
+} from '../threejs/nodes/Nodes.js';
+import WebGPU from '@modules/renderer/threejs/capabilities/WebGPU.js';
+import WebGL from '@modules/renderer/threejs/capabilities/WebGL.js';
 
-import WebGPURenderer from '../jsm/renderers/webgpu/WebGPURenderer.js';
+import WebGPURenderer from '../threejs/renderers/webgpu/WebGPURenderer.js';
 
-import QuadMesh from '../jsm/objects/QuadMesh.js';
+import QuadMesh from '../threejs/objects/QuadMesh.js';
 import { Filter } from '../threejs/Three.js';
 
 let camera, scene, renderer, torus;
