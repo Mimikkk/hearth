@@ -1,6 +1,6 @@
 import Node, { addNodeClass } from '../core/Node.js';
 import { arrayBufferToBase64, base64ToArrayBuffer } from '../core/NodeUtils.js';
-import { addNodeElement, nodeProxy, float } from '../shadernode/ShaderNode.js';
+import { addNodeElement, float, nodeProxy } from '../shadernode/ShaderNode.js';
 import { EventDispatcher } from '../../../threejs/Three.js';
 
 class ScriptableValueNode extends Node {
@@ -22,6 +22,10 @@ class ScriptableValueNode extends Node {
     return this.outputType !== null;
   }
 
+  get value() {
+    return this._value;
+  }
+
   set value(val) {
     if (this._value === val) return;
 
@@ -36,10 +40,6 @@ class ScriptableValueNode extends Node {
     this.events.dispatch({ type: 'change' }, this);
 
     this.refresh();
-  }
-
-  get value() {
-    return this._value;
   }
 
   refresh() {

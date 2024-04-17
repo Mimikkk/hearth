@@ -2,56 +2,44 @@ import { Light } from './Light.js';
 import { PointLightShadow } from './PointLightShadow.js';
 
 class PointLight extends Light {
+  constructor(color, intensity, distance = 0, decay = 2) {
+    super(color, intensity);
 
-	constructor( color, intensity, distance = 0, decay = 2 ) {
+    this.isPointLight = true;
 
-		super( color, intensity );
+    this.type = 'PointLight';
 
-		this.isPointLight = true;
+    this.distance = distance;
+    this.decay = decay;
 
-		this.type = 'PointLight';
+    this.shadow = new PointLightShadow();
+  }
 
-		this.distance = distance;
-		this.decay = decay;
+  get power() {
+    // compute the light's luminous power (in lumens) from its intensity (in candela)
+    // for an isotropic light source, luminous power (lm) = 4 π luminous intensity (cd)
+    return this.intensity * 4 * Math.PI;
+  }
 
-		this.shadow = new PointLightShadow();
+  set power(power) {
+    // set the light's intensity (in candela) from the desired luminous power (in lumens)
+    this.intensity = power / (4 * Math.PI);
+  }
 
-	}
+  dispose() {
+    this.shadow.dispose();
+  }
 
-	get power() {
+  copy(source, recursive) {
+    super.copy(source, recursive);
 
-		// compute the light's luminous power (in lumens) from its intensity (in candela)
-		// for an isotropic light source, luminous power (lm) = 4 π luminous intensity (cd)
-		return this.intensity * 4 * Math.PI;
+    this.distance = source.distance;
+    this.decay = source.decay;
 
-	}
+    this.shadow = source.shadow.clone();
 
-	set power( power ) {
-
-		// set the light's intensity (in candela) from the desired luminous power (in lumens)
-		this.intensity = power / ( 4 * Math.PI );
-
-	}
-
-	dispose() {
-
-		this.shadow.dispose();
-
-	}
-
-	copy( source, recursive ) {
-
-		super.copy( source, recursive );
-
-		this.distance = source.distance;
-		this.decay = source.decay;
-
-		this.shadow = source.shadow.clone();
-
-		return this;
-
-	}
-
+    return this;
+  }
 }
 
 export { PointLight };

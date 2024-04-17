@@ -5,111 +5,81 @@ const _startP = /*@__PURE__*/ new Vector3();
 const _startEnd = /*@__PURE__*/ new Vector3();
 
 class Line3 {
+  constructor(start = new Vector3(), end = new Vector3()) {
+    this.start = start;
+    this.end = end;
+  }
 
-	constructor( start = new Vector3(), end = new Vector3() ) {
+  set(start, end) {
+    this.start.copy(start);
+    this.end.copy(end);
 
-		this.start = start;
-		this.end = end;
+    return this;
+  }
 
-	}
+  copy(line) {
+    this.start.copy(line.start);
+    this.end.copy(line.end);
 
-	set( start, end ) {
+    return this;
+  }
 
-		this.start.copy( start );
-		this.end.copy( end );
+  getCenter(target) {
+    return target.addVectors(this.start, this.end).multiplyScalar(0.5);
+  }
 
-		return this;
+  delta(target) {
+    return target.subVectors(this.end, this.start);
+  }
 
-	}
+  distanceSq() {
+    return this.start.distanceToSquared(this.end);
+  }
 
-	copy( line ) {
+  distance() {
+    return this.start.distanceTo(this.end);
+  }
 
-		this.start.copy( line.start );
-		this.end.copy( line.end );
+  at(t, target) {
+    return this.delta(target).multiplyScalar(t).add(this.start);
+  }
 
-		return this;
+  closestPointToPointParameter(point, clampToLine) {
+    _startP.subVectors(point, this.start);
+    _startEnd.subVectors(this.end, this.start);
 
-	}
+    const startEnd2 = _startEnd.dot(_startEnd);
+    const startEnd_startP = _startEnd.dot(_startP);
 
-	getCenter( target ) {
+    let t = startEnd_startP / startEnd2;
 
-		return target.addVectors( this.start, this.end ).multiplyScalar( 0.5 );
+    if (clampToLine) {
+      t = MathUtils.clamp(t, 0, 1);
+    }
 
-	}
+    return t;
+  }
 
-	delta( target ) {
+  closestPointToPoint(point, clampToLine, target) {
+    const t = this.closestPointToPointParameter(point, clampToLine);
 
-		return target.subVectors( this.end, this.start );
+    return this.delta(target).multiplyScalar(t).add(this.start);
+  }
 
-	}
+  applyMatrix4(matrix) {
+    this.start.applyMatrix4(matrix);
+    this.end.applyMatrix4(matrix);
 
-	distanceSq() {
+    return this;
+  }
 
-		return this.start.distanceToSquared( this.end );
+  equals(line) {
+    return line.start.equals(this.start) && line.end.equals(this.end);
+  }
 
-	}
-
-	distance() {
-
-		return this.start.distanceTo( this.end );
-
-	}
-
-	at( t, target ) {
-
-		return this.delta( target ).multiplyScalar( t ).add( this.start );
-
-	}
-
-	closestPointToPointParameter( point, clampToLine ) {
-
-		_startP.subVectors( point, this.start );
-		_startEnd.subVectors( this.end, this.start );
-
-		const startEnd2 = _startEnd.dot( _startEnd );
-		const startEnd_startP = _startEnd.dot( _startP );
-
-		let t = startEnd_startP / startEnd2;
-
-		if ( clampToLine ) {
-
-			t = MathUtils.clamp( t, 0, 1 );
-
-		}
-
-		return t;
-
-	}
-
-	closestPointToPoint( point, clampToLine, target ) {
-
-		const t = this.closestPointToPointParameter( point, clampToLine );
-
-		return this.delta( target ).multiplyScalar( t ).add( this.start );
-
-	}
-
-	applyMatrix4( matrix ) {
-
-		this.start.applyMatrix4( matrix );
-		this.end.applyMatrix4( matrix );
-
-		return this;
-
-	}
-
-	equals( line ) {
-
-		return line.start.equals( this.start ) && line.end.equals( this.end );
-
-	}
-
-	clone() {
-
-		return new this.constructor().copy( this );
-
-	}
-
+  clone() {
+    return new this.constructor().copy(this);
+  }
 }
 
 export { Line3 };

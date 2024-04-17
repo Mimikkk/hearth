@@ -4,17 +4,14 @@
  */
 
 const UnpackDepthRGBAShader = {
+  name: 'UnpackDepthRGBAShader',
 
-	name: 'UnpackDepthRGBAShader',
+  uniforms: {
+    tDiffuse: { value: null },
+    opacity: { value: 1.0 },
+  },
 
-	uniforms: {
-
-		'tDiffuse': { value: null },
-		'opacity': { value: 1.0 }
-
-	},
-
-	vertexShader: /* glsl */`
+  vertexShader: /* glsl */ `
 
 		varying vec2 vUv;
 
@@ -25,7 +22,7 @@ const UnpackDepthRGBAShader = {
 
 		}`,
 
-	fragmentShader: /* glsl */`
+  fragmentShader: /* glsl */ `
 
 		uniform float opacity;
 
@@ -40,8 +37,7 @@ const UnpackDepthRGBAShader = {
 			float depth = 1.0 - unpackRGBAToDepth( texture2D( tDiffuse, vUv ) );
 			gl_FragColor = vec4( vec3( depth ), opacity );
 
-		}`
-
+		}`,
 };
 
 export { UnpackDepthRGBAShader };

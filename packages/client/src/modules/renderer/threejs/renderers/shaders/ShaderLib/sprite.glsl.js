@@ -1,4 +1,4 @@
-export const vertex = /* glsl */`
+export const vertex = /* glsl */ `
 uniform float rotation;
 uniform vec2 center;
 
@@ -43,7 +43,7 @@ void main() {
 }
 `;
 
-export const fragment = /* glsl */`
+export const fragment = /* glsl */ `
 uniform vec3 diffuse;
 uniform float opacity;
 

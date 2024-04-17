@@ -5,92 +5,77 @@ import { BufferGeometry } from '../core/BufferGeometry.js';
 import { Color } from '../math/Color.js';
 
 class PolarGridHelper extends LineSegments {
+  constructor(radius = 10, sectors = 16, rings = 8, divisions = 64, color1 = 0x444444, color2 = 0x888888) {
+    color1 = new Color(color1);
+    color2 = new Color(color2);
 
-	constructor( radius = 10, sectors = 16, rings = 8, divisions = 64, color1 = 0x444444, color2 = 0x888888 ) {
+    const vertices = [];
+    const colors = [];
 
-		color1 = new Color( color1 );
-		color2 = new Color( color2 );
+    // create the sectors
 
-		const vertices = [];
-		const colors = [];
+    if (sectors > 1) {
+      for (let i = 0; i < sectors; i++) {
+        const v = (i / sectors) * (Math.PI * 2);
 
-		// create the sectors
+        const x = Math.sin(v) * radius;
+        const z = Math.cos(v) * radius;
 
-		if ( sectors > 1 ) {
+        vertices.push(0, 0, 0);
+        vertices.push(x, 0, z);
 
-			for ( let i = 0; i < sectors; i ++ ) {
+        const color = i & 1 ? color1 : color2;
 
-				const v = ( i / sectors ) * ( Math.PI * 2 );
+        colors.push(color.r, color.g, color.b);
+        colors.push(color.r, color.g, color.b);
+      }
+    }
 
-				const x = Math.sin( v ) * radius;
-				const z = Math.cos( v ) * radius;
+    // create the rings
 
-				vertices.push( 0, 0, 0 );
-				vertices.push( x, 0, z );
+    for (let i = 0; i < rings; i++) {
+      const color = i & 1 ? color1 : color2;
 
-				const color = ( i & 1 ) ? color1 : color2;
+      const r = radius - (radius / rings) * i;
 
-				colors.push( color.r, color.g, color.b );
-				colors.push( color.r, color.g, color.b );
+      for (let j = 0; j < divisions; j++) {
+        // first vertex
 
-			}
+        let v = (j / divisions) * (Math.PI * 2);
 
-		}
+        let x = Math.sin(v) * r;
+        let z = Math.cos(v) * r;
 
-		// create the rings
+        vertices.push(x, 0, z);
+        colors.push(color.r, color.g, color.b);
 
-		for ( let i = 0; i < rings; i ++ ) {
+        // second vertex
 
-			const color = ( i & 1 ) ? color1 : color2;
+        v = ((j + 1) / divisions) * (Math.PI * 2);
 
-			const r = radius - ( radius / rings * i );
+        x = Math.sin(v) * r;
+        z = Math.cos(v) * r;
 
-			for ( let j = 0; j < divisions; j ++ ) {
+        vertices.push(x, 0, z);
+        colors.push(color.r, color.g, color.b);
+      }
+    }
 
-				// first vertex
+    const geometry = new BufferGeometry();
+    geometry.setAttribute('position', new Float32BufferAttribute(vertices, 3));
+    geometry.setAttribute('color', new Float32BufferAttribute(colors, 3));
 
-				let v = ( j / divisions ) * ( Math.PI * 2 );
+    const material = new LineBasicMaterial({ vertexColors: true, toneMapped: false });
 
-				let x = Math.sin( v ) * r;
-				let z = Math.cos( v ) * r;
+    super(geometry, material);
 
-				vertices.push( x, 0, z );
-				colors.push( color.r, color.g, color.b );
+    this.type = 'PolarGridHelper';
+  }
 
-				// second vertex
-
-				v = ( ( j + 1 ) / divisions ) * ( Math.PI * 2 );
-
-				x = Math.sin( v ) * r;
-				z = Math.cos( v ) * r;
-
-				vertices.push( x, 0, z );
-				colors.push( color.r, color.g, color.b );
-
-			}
-
-		}
-
-		const geometry = new BufferGeometry();
-		geometry.setAttribute( 'position', new Float32BufferAttribute( vertices, 3 ) );
-		geometry.setAttribute( 'color', new Float32BufferAttribute( colors, 3 ) );
-
-		const material = new LineBasicMaterial( { vertexColors: true, toneMapped: false } );
-
-		super( geometry, material );
-
-		this.type = 'PolarGridHelper';
-
-	}
-
-	dispose() {
-
-		this.geometry.dispose();
-		this.material.dispose();
-
-	}
-
+  dispose() {
+    this.geometry.dispose();
+    this.material.dispose();
+  }
 }
-
 
 export { PolarGridHelper };

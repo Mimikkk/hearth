@@ -7,21 +7,21 @@ import { BufferGeometry, FileLoader, Float32BufferAttribute, Loader, Color } fro
  * Limitations: ASCII decoding assumes file is UTF-8.
  *
  * Usage:
- *	const loader = new PLYLoader();
- *	loader.load('./models/ply/ascii/dolphins.ply', function (geometry) {
+ *  const loader = new PLYLoader();
+ *  loader.load('./models/ply/ascii/dolphins.ply', function (geometry) {
  *
- *		scene.add( new THREE.Mesh( geometry ) );
+ *    scene.add( new THREE.Mesh( geometry ) );
  *
- *	} );
+ *  } );
  *
  * If the PLY file uses non standard property names, they can be mapped while
  * loading. For example, the following maps the properties
  * “diffuse_(red|green|blue)” in the file to standard color names.
  *
  * loader.setPropertyNameMapping( {
- *	diffuse_red: 'red',
- *	diffuse_green: 'green',
- *	diffuse_blue: 'blue'
+ *  diffuse_red: 'red',
+ *  diffuse_green: 'green',
+ *  diffuse_blue: 'blue'
  * } );
  *
  * Custom properties outside of the defaults for position, uv, normal
@@ -31,7 +31,7 @@ import { BufferGeometry, FileLoader, Float32BufferAttribute, Loader, Color } fro
  * Attribute item sizes are set from the number of element properties in the property array.
  *
  * loader.setCustomPropertyNameMapping( {
- *	customAttribute: ['custom_property_a', 'custom_property_b'],
+ *  customAttribute: ['custom_property_a', 'custom_property_b'],
  * } );
  *
  */

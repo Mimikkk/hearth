@@ -4,98 +4,85 @@ import { Vector3 } from '../math/Vector3.js';
 import { Vector2 } from '../math/Vector2.js';
 
 class CircleGeometry extends BufferGeometry {
+  constructor(radius = 1, segments = 32, thetaStart = 0, thetaLength = Math.PI * 2) {
+    super();
 
-	constructor( radius = 1, segments = 32, thetaStart = 0, thetaLength = Math.PI * 2 ) {
+    this.type = 'CircleGeometry';
 
-		super();
+    this.parameters = {
+      radius: radius,
+      segments: segments,
+      thetaStart: thetaStart,
+      thetaLength: thetaLength,
+    };
 
-		this.type = 'CircleGeometry';
+    segments = Math.max(3, segments);
 
-		this.parameters = {
-			radius: radius,
-			segments: segments,
-			thetaStart: thetaStart,
-			thetaLength: thetaLength
-		};
+    // buffers
 
-		segments = Math.max( 3, segments );
+    const indices = [];
+    const vertices = [];
+    const normals = [];
+    const uvs = [];
 
-		// buffers
+    // helper variables
 
-		const indices = [];
-		const vertices = [];
-		const normals = [];
-		const uvs = [];
+    const vertex = new Vector3();
+    const uv = new Vector2();
 
-		// helper variables
+    // center point
 
-		const vertex = new Vector3();
-		const uv = new Vector2();
+    vertices.push(0, 0, 0);
+    normals.push(0, 0, 1);
+    uvs.push(0.5, 0.5);
 
-		// center point
+    for (let s = 0, i = 3; s <= segments; s++, i += 3) {
+      const segment = thetaStart + (s / segments) * thetaLength;
 
-		vertices.push( 0, 0, 0 );
-		normals.push( 0, 0, 1 );
-		uvs.push( 0.5, 0.5 );
+      // vertex
 
-		for ( let s = 0, i = 3; s <= segments; s ++, i += 3 ) {
+      vertex.x = radius * Math.cos(segment);
+      vertex.y = radius * Math.sin(segment);
 
-			const segment = thetaStart + s / segments * thetaLength;
+      vertices.push(vertex.x, vertex.y, vertex.z);
 
-			// vertex
+      // normal
 
-			vertex.x = radius * Math.cos( segment );
-			vertex.y = radius * Math.sin( segment );
+      normals.push(0, 0, 1);
 
-			vertices.push( vertex.x, vertex.y, vertex.z );
+      // uvs
 
-			// normal
+      uv.x = (vertices[i] / radius + 1) / 2;
+      uv.y = (vertices[i + 1] / radius + 1) / 2;
 
-			normals.push( 0, 0, 1 );
+      uvs.push(uv.x, uv.y);
+    }
 
-			// uvs
+    // indices
 
-			uv.x = ( vertices[ i ] / radius + 1 ) / 2;
-			uv.y = ( vertices[ i + 1 ] / radius + 1 ) / 2;
+    for (let i = 1; i <= segments; i++) {
+      indices.push(i, i + 1, 0);
+    }
 
-			uvs.push( uv.x, uv.y );
+    // build geometry
 
-		}
+    this.setIndex(indices);
+    this.setAttribute('position', new Float32BufferAttribute(vertices, 3));
+    this.setAttribute('normal', new Float32BufferAttribute(normals, 3));
+    this.setAttribute('uv', new Float32BufferAttribute(uvs, 2));
+  }
 
-		// indices
+  copy(source) {
+    super.copy(source);
 
-		for ( let i = 1; i <= segments; i ++ ) {
+    this.parameters = Object.assign({}, source.parameters);
 
-			indices.push( i, i + 1, 0 );
+    return this;
+  }
 
-		}
-
-		// build geometry
-
-		this.setIndex( indices );
-		this.setAttribute( 'position', new Float32BufferAttribute( vertices, 3 ) );
-		this.setAttribute( 'normal', new Float32BufferAttribute( normals, 3 ) );
-		this.setAttribute( 'uv', new Float32BufferAttribute( uvs, 2 ) );
-
-	}
-
-	copy( source ) {
-
-		super.copy( source );
-
-		this.parameters = Object.assign( {}, source.parameters );
-
-		return this;
-
-	}
-
-	static fromJSON( data ) {
-
-		return new CircleGeometry( data.radius, data.segments, data.thetaStart, data.thetaLength );
-
-	}
-
+  static fromJSON(data) {
+    return new CircleGeometry(data.radius, data.segments, data.thetaStart, data.thetaLength);
+  }
 }
-
 
 export { CircleGeometry };

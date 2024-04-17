@@ -62,6 +62,7 @@ const _offset = new Vector3();
 const _gizmoMatrixStateTemp = new Matrix4();
 const _cameraMatrixStateTemp = new Matrix4();
 const _scalePointTemp = new Vector3();
+
 /**
  *
  * @param {Camera} camera Virtual camera used in the scene

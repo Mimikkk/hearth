@@ -154,13 +154,13 @@ function animate() {
   light4.position.y = Math.cos(lightTime * 0.7) * 4;
   light4.position.z = Math.sin(lightTime * 0.5) * 3;
   /*
-    @TODO: Used to test scene light change ( currently unavailable )
+   @TODO: Used to test scene light change ( currently unavailable )
 
-    if ( time > 2.0 && light1.parent === null ) scene.add( light1 );
-    if ( time > 2.5 && light2.parent === null ) scene.add( light2 );
-    if ( time > 3.0 && light3.parent === null ) scene.add( light3 );
-    if ( time > 3.5 && light4.parent === null ) scene.add( light4 );
-    */
+   if ( time > 2.0 && light1.parent === null ) scene.add( light1 );
+   if ( time > 2.5 && light2.parent === null ) scene.add( light2 );
+   if ( time > 3.0 && light3.parent === null ) scene.add( light3 );
+   if ( time > 3.5 && light4.parent === null ) scene.add( light4 );
+   */
   renderer.render(scene, camera);
 
   stats.update();

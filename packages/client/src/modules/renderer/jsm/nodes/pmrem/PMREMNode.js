@@ -10,156 +10,120 @@ let _generator = null;
 
 const _cache = new WeakMap();
 
-function _generateCubeUVSize( imageHeight ) {
+function _generateCubeUVSize(imageHeight) {
+  const maxMip = Math.log2(imageHeight) - 2;
 
-	const maxMip = Math.log2( imageHeight ) - 2;
+  const texelHeight = 1.0 / imageHeight;
 
-	const texelHeight = 1.0 / imageHeight;
+  const texelWidth = 1.0 / (3 * Math.max(Math.pow(2, maxMip), 7 * 16));
 
-	const texelWidth = 1.0 / ( 3 * Math.max( Math.pow( 2, maxMip ), 7 * 16 ) );
-
-	return { texelWidth, texelHeight, maxMip };
-
+  return { texelWidth, texelHeight, maxMip };
 }
 
-function _getPMREMFromTexture( texture ) {
+function _getPMREMFromTexture(texture) {
+  let cacheTexture = _cache.get(texture);
 
-	let cacheTexture = _cache.get( texture );
+  if (cacheTexture === undefined) {
+    if (texture.isCubeTexture) {
+      cacheTexture = _generator.fromCubemap(texture);
+    } else {
+      cacheTexture = _generator.fromEquirectangular(texture);
+    }
 
-	if ( cacheTexture === undefined ) {
+    _cache.set(texture, cacheTexture);
+  }
 
-		if ( texture.isCubeTexture ) {
-
-			cacheTexture = _generator.fromCubemap( texture );
-
-		} else {
-
-			cacheTexture = _generator.fromEquirectangular( texture );
-
-		}
-
-		_cache.set( texture, cacheTexture );
-
-	}
-
-	return cacheTexture.texture;
-
+  return cacheTexture.texture;
 }
 
 class PMREMNode extends TempNode {
+  constructor(value, uvNode = null, levelNode = null) {
+    super('vec3');
 
-	constructor( value, uvNode = null, levelNode = null ) {
+    this._value = value;
+    this._pmrem = null;
 
-		super( 'vec3' );
+    this.uvNode = uvNode;
+    this.levelNode = levelNode;
 
-		this._value = value;
-		this._pmrem = null;
+    this._generator = null;
+    this._texture = texture(null);
+    this._width = uniform(0);
+    this._height = uniform(0);
+    this._maxMip = uniform(0);
 
-		this.uvNode = uvNode;
-		this.levelNode = levelNode;
+    this.updateBeforeType = NodeUpdateType.RENDER;
+  }
 
-		this._generator = null;
-		this._texture = texture( null );
-		this._width = uniform( 0 );
-		this._height = uniform( 0 );
-		this._maxMip = uniform( 0 );
+  set value(value) {
+    this._value = value;
+    this._pmrem = null;
+  }
 
-		this.updateBeforeType = NodeUpdateType.RENDER;
+  get value() {
+    return this._value;
+  }
 
-	}
+  updateFromTexture(texture) {
+    const cubeUVSize = _generateCubeUVSize(texture.image.height);
 
-	set value( value ) {
+    this._texture.value = texture;
+    this._width.value = cubeUVSize.texelWidth;
+    this._height.value = cubeUVSize.texelHeight;
+    this._maxMip.value = cubeUVSize.maxMip;
+  }
 
-		this._value = value;
-		this._pmrem = null;
+  updateBefore(frame) {
+    let pmrem = this._pmrem;
 
-	}
+    if (pmrem === null) {
+      const texture = this._value;
 
-	get value() {
+      if (texture.isPMREMTexture === true) {
+        pmrem = texture;
+      } else {
+        pmrem = _getPMREMFromTexture(texture);
+      }
 
-		return this._value;
+      this._pmrem = pmrem;
 
-	}
+      this.updateFromTexture(pmrem);
+    }
+  }
 
-	updateFromTexture( texture ) {
+  setup(builder) {
+    if (_generator === null) {
+      _generator = builder.createPMREMGenerator();
+    }
 
-		const cubeUVSize = _generateCubeUVSize( texture.image.height );
+    //
 
-		this._texture.value = texture;
-		this._width.value = cubeUVSize.texelWidth;
-		this._height.value = cubeUVSize.texelHeight;
-		this._maxMip.value = cubeUVSize.maxMip;
+    this.updateBefore(builder);
 
-	}
+    //
 
-	updateBefore( frame ) {
+    let uvNode = this.uvNode;
 
-		let pmrem = this._pmrem;
+    if (uvNode === null && builder.context.getUV) {
+      uvNode = builder.context.getUV(this);
+    }
 
-		if ( pmrem === null ) {
+    //
 
-			const texture = this._value;
+    let levelNode = this.levelNode;
 
-			if ( texture.isPMREMTexture === true ) {
+    if (levelNode === null && builder.context.getTextureLevel) {
+      levelNode = builder.context.getTextureLevel(this);
+    }
 
-				pmrem = texture;
+    //
 
-			} else {
-
-				pmrem = _getPMREMFromTexture( texture );
-
-			}
-
-			this._pmrem = pmrem;
-
-			this.updateFromTexture( pmrem );
-
-		}
-
-	}
-
-	setup( builder ) {
-
-		if ( _generator === null ) {
-
-			_generator = builder.createPMREMGenerator();
-
-		}
-
-		//
-
-		this.updateBefore( builder );
-
-		//
-
-		let uvNode = this.uvNode;
-
-		if ( uvNode === null && builder.context.getUV ) {
-
-			uvNode = builder.context.getUV( this );
-
-		}
-
-		//
-
-		let levelNode = this.levelNode;
-
-		if ( levelNode === null && builder.context.getTextureLevel ) {
-
-			levelNode = builder.context.getTextureLevel( this );
-
-		}
-
-		//
-
-		return textureCubeUV( this._texture, uvNode, levelNode, this._width, this._height, this._maxMip );
-
-	}
-
+    return textureCubeUV(this._texture, uvNode, levelNode, this._width, this._height, this._maxMip);
+  }
 }
 
-export const pmremTexture = nodeProxy( PMREMNode );
+export const pmremTexture = nodeProxy(PMREMNode);
 
-addNodeClass( 'PMREMNode', PMREMNode );
+addNodeClass('PMREMNode', PMREMNode);
 
 export default PMREMNode;

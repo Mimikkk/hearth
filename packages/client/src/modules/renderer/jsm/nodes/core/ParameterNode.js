@@ -3,31 +3,23 @@ import { nodeObject } from '../shadernode/ShaderNode.js';
 import PropertyNode from './PropertyNode.js';
 
 class ParameterNode extends PropertyNode {
+  constructor(nodeType, name = null) {
+    super(nodeType, name);
 
-	constructor( nodeType, name = null ) {
+    this.isParameterNode = true;
+  }
 
-		super( nodeType, name );
+  getHash() {
+    return this.uuid;
+  }
 
-		this.isParameterNode = true;
-
-	}
-
-	getHash() {
-
-		return this.uuid;
-
-	}
-
-	generate() {
-
-		return this.name;
-
-	}
-
+  generate() {
+    return this.name;
+  }
 }
 
 export default ParameterNode;
 
-export const parameter = ( type, name ) => nodeObject( new ParameterNode( type, name ) );
+export const parameter = (type, name) => nodeObject(new ParameterNode(type, name));
 
-addNodeClass( 'ParameterNode', ParameterNode );
+addNodeClass('ParameterNode', ParameterNode);

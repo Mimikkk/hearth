@@ -13,7 +13,7 @@ import { PackedPhongMaterial } from './PackedPhongMaterial.js';
  * Also will change the mesh.material to `PackedPhongMaterial` which let the vertex shader program decode the normal data.
  *
  * @param {THREE.Mesh} mesh
- * @param {String} encodeMethod		"DEFAULT" || "OCT1Byte" || "OCT2Byte" || "ANGLES"
+ * @param {String} encodeMethod    "DEFAULT" || "OCT1Byte" || "OCT2Byte" || "ANGLES"
  *
  */
 function compressNormals(mesh, encodeMethod) {

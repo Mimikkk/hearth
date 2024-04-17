@@ -7,33 +7,25 @@ import { addNodeClass } from '../core/Node.js';
 import IESSpotLight from '../../lights/IESSpotLight.js';
 
 class IESSpotLightNode extends SpotLightNode {
+  getSpotAttenuation(angleCosine) {
+    const iesMap = this.light.iesMap;
 
-	getSpotAttenuation( angleCosine ) {
+    let spotAttenuation = null;
 
-		const iesMap = this.light.iesMap;
+    if (iesMap && iesMap.isTexture === true) {
+      const angle = angleCosine.acos().mul(1.0 / Math.PI);
 
-		let spotAttenuation = null;
+      spotAttenuation = texture(iesMap, vec2(angle, 0), 0).r;
+    } else {
+      spotAttenuation = super.getSpotAttenuation(angleCosine);
+    }
 
-		if ( iesMap && iesMap.isTexture === true ) {
-
-			const angle = angleCosine.acos().mul( 1.0 / Math.PI );
-
-			spotAttenuation = texture( iesMap, vec2( angle, 0 ), 0 ).r;
-
-		} else {
-
-			spotAttenuation = super.getSpotAttenuation( angleCosine );
-
-		}
-
-		return spotAttenuation;
-
-	}
-
+    return spotAttenuation;
+  }
 }
 
 export default IESSpotLightNode;
 
-addNodeClass( 'IESSpotLightNode', IESSpotLightNode );
+addNodeClass('IESSpotLightNode', IESSpotLightNode);
 
-addLightNode( IESSpotLight, IESSpotLightNode );
+addLightNode(IESSpotLight, IESSpotLightNode);

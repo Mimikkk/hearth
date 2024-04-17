@@ -1,17 +1,14 @@
 const FilmShader = {
+  name: 'FilmShader',
 
-	name: 'FilmShader',
+  uniforms: {
+    tDiffuse: { value: null },
+    time: { value: 0.0 },
+    intensity: { value: 0.5 },
+    grayscale: { value: false },
+  },
 
-	uniforms: {
-
-		'tDiffuse': { value: null },
-		'time': { value: 0.0 },
-		'intensity': { value: 0.5 },
-		'grayscale': { value: false }
-
-	},
-
-	vertexShader: /* glsl */`
+  vertexShader: /* glsl */ `
 
 		varying vec2 vUv;
 
@@ -22,7 +19,7 @@ const FilmShader = {
 
 		}`,
 
-	fragmentShader: /* glsl */`
+  fragmentShader: /* glsl */ `
 
 		#include <common>
 
@@ -53,7 +50,6 @@ const FilmShader = {
 			gl_FragColor = vec4( color, base.a );
 
 		}`,
-
 };
 
 export { FilmShader };

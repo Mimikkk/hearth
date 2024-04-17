@@ -2,172 +2,130 @@ import DataMap from './DataMap.js';
 import { AttributeType } from './Constants.js';
 
 class Bindings extends DataMap {
+  constructor(backend, nodes, textures, attributes, pipelines, info) {
+    super();
 
-	constructor( backend, nodes, textures, attributes, pipelines, info ) {
+    this.backend = backend;
+    this.textures = textures;
+    this.pipelines = pipelines;
+    this.attributes = attributes;
+    this.nodes = nodes;
+    this.info = info;
 
-		super();
+    this.pipelines.bindings = this; // assign bindings to pipelines
+  }
 
-		this.backend = backend;
-		this.textures = textures;
-		this.pipelines = pipelines;
-		this.attributes = attributes;
-		this.nodes = nodes;
-		this.info = info;
+  getForRender(renderObject) {
+    const bindings = renderObject.getBindings();
 
-		this.pipelines.bindings = this; // assign bindings to pipelines
+    const data = this.get(renderObject);
 
-	}
+    if (data.bindings !== bindings) {
+      // each object defines an array of bindings (ubos, textures, samplers etc.)
 
-	getForRender( renderObject ) {
+      data.bindings = bindings;
 
-		const bindings = renderObject.getBindings();
+      this._init(bindings);
 
-		const data = this.get( renderObject );
+      this.backend.createBindings(bindings);
+    }
 
-		if ( data.bindings !== bindings ) {
+    return data.bindings;
+  }
 
-			// each object defines an array of bindings (ubos, textures, samplers etc.)
+  getForCompute(computeNode) {
+    const data = this.get(computeNode);
 
-			data.bindings = bindings;
+    if (data.bindings === undefined) {
+      const nodeBuilderState = this.nodes.getForCompute(computeNode);
 
-			this._init( bindings );
+      const bindings = nodeBuilderState.bindings;
 
-			this.backend.createBindings( bindings );
+      data.bindings = bindings;
 
-		}
+      this._init(bindings);
 
-		return data.bindings;
+      this.backend.createBindings(bindings);
+    }
 
-	}
+    return data.bindings;
+  }
 
-	getForCompute( computeNode ) {
+  updateForCompute(computeNode) {
+    this._update(computeNode, this.getForCompute(computeNode));
+  }
 
-		const data = this.get( computeNode );
+  updateForRender(renderObject) {
+    this._update(renderObject, this.getForRender(renderObject));
+  }
 
-		if ( data.bindings === undefined ) {
+  _init(bindings) {
+    for (const binding of bindings) {
+      if (binding.isSampledTexture) {
+        this.textures.updateTexture(binding.texture);
+      } else if (binding.isStorageBuffer) {
+        const attribute = binding.attribute;
 
-			const nodeBuilderState = this.nodes.getForCompute( computeNode );
+        this.attributes.update(attribute, AttributeType.STORAGE);
+      }
+    }
+  }
 
-			const bindings = nodeBuilderState.bindings;
+  _update(object, bindings) {
+    const { backend } = this;
 
-			data.bindings = bindings;
+    let needsBindingsUpdate = false;
 
-			this._init( bindings );
+    // iterate over all bindings and check if buffer updates or a new binding group is required
 
-			this.backend.createBindings( bindings );
+    for (const binding of bindings) {
+      if (binding.isNodeUniformsGroup) {
+        const updated = this.nodes.updateGroup(binding);
 
-		}
+        if (!updated) continue;
+      }
 
-		return data.bindings;
+      if (binding.isUniformBuffer) {
+        const updated = binding.update();
 
-	}
+        if (updated) {
+          backend.updateBinding(binding);
+        }
+      } else if (binding.isSampledTexture) {
+        const texture = binding.texture;
 
-	updateForCompute( computeNode ) {
+        if (binding.needsBindingsUpdate) needsBindingsUpdate = true;
 
-		this._update( computeNode, this.getForCompute( computeNode ) );
+        const updated = binding.update();
 
-	}
+        if (updated) {
+          this.textures.updateTexture(binding.texture);
+        }
 
-	updateForRender( renderObject ) {
-
-		this._update( renderObject, this.getForRender( renderObject ) );
-
-	}
-
-	_init( bindings ) {
-
-		for ( const binding of bindings ) {
-
-			if ( binding.isSampledTexture ) {
-
-				this.textures.updateTexture( binding.texture );
-
-			} else if ( binding.isStorageBuffer ) {
-
-				const attribute = binding.attribute;
-
-				this.attributes.update( attribute, AttributeType.STORAGE );
-
-			}
-
-		}
-
-	}
-
-	_update( object, bindings ) {
-
-		const { backend } = this;
-
-		let needsBindingsUpdate = false;
-
-		// iterate over all bindings and check if buffer updates or a new binding group is required
-
-		for ( const binding of bindings ) {
-
-			if ( binding.isNodeUniformsGroup ) {
-
-				const updated = this.nodes.updateGroup( binding );
-
-				if ( ! updated ) continue;
-
-			}
-
-			if ( binding.isUniformBuffer ) {
-
-				const updated = binding.update();
-
-				if ( updated ) {
-
-					backend.updateBinding( binding );
-
-				}
-
-			} else if ( binding.isSampledTexture ) {
-
-				const texture = binding.texture;
-
-				if ( binding.needsBindingsUpdate ) needsBindingsUpdate = true;
-
-				const updated = binding.update();
-
-				if ( updated ) {
-
-					this.textures.updateTexture( binding.texture );
-
-				}
-
-				if ( texture.isStorageTexture === true ) {
-
-					const textureData = this.get( texture );
-
-					if ( binding.store === true ) {
-
-						textureData.needsMipmap = true;
-
-					} else if ( texture.generateMipmaps === true && this.textures.needsMipmaps( texture ) && textureData.needsMipmap === true ) {
-
-						this.backend.generateMipmaps( texture );
-
-						textureData.needsMipmap = false;
-
-					}
-
-				}
-
-			}
-
-		}
-
-		if ( needsBindingsUpdate === true ) {
-
-			const pipeline = this.pipelines.getForRender( object );
-
-			this.backend.updateBindings( bindings, pipeline );
-
-		}
-
-	}
-
+        if (texture.isStorageTexture === true) {
+          const textureData = this.get(texture);
+
+          if (binding.store === true) {
+            textureData.needsMipmap = true;
+          } else if (
+            texture.generateMipmaps === true &&
+            this.textures.needsMipmaps(texture) &&
+            textureData.needsMipmap === true
+          ) {
+            this.backend.generateMipmaps(texture);
+
+            textureData.needsMipmap = false;
+          }
+        }
+      }
+    }
+
+    if (needsBindingsUpdate === true) {
+      const pipeline = this.pipelines.getForRender(object);
+
+      this.backend.updateBindings(bindings, pipeline);
+    }
+  }
 }
 
 export default Bindings;

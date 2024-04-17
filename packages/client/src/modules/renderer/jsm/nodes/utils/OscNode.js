@@ -3,67 +3,52 @@ import { timerLocal } from './TimerNode.js';
 import { nodeObject, nodeProxy } from '../shadernode/ShaderNode.js';
 
 class OscNode extends Node {
+  constructor(method = OscNode.SINE, timeNode = timerLocal()) {
+    super();
 
-	constructor( method = OscNode.SINE, timeNode = timerLocal() ) {
+    this.method = method;
+    this.timeNode = timeNode;
+  }
 
-		super();
+  getNodeType(builder) {
+    return this.timeNode.getNodeType(builder);
+  }
 
-		this.method = method;
-		this.timeNode = timeNode;
+  setup() {
+    const method = this.method;
+    const timeNode = nodeObject(this.timeNode);
 
-	}
+    let outputNode = null;
 
-	getNodeType( builder ) {
+    if (method === OscNode.SINE) {
+      outputNode = timeNode
+        .add(0.75)
+        .mul(Math.PI * 2)
+        .sin()
+        .mul(0.5)
+        .add(0.5);
+    } else if (method === OscNode.SQUARE) {
+      outputNode = timeNode.fract().round();
+    } else if (method === OscNode.TRIANGLE) {
+      outputNode = timeNode.add(0.5).fract().mul(2).sub(1).abs();
+    } else if (method === OscNode.SAWTOOTH) {
+      outputNode = timeNode.fract();
+    }
 
-		return this.timeNode.getNodeType( builder );
+    return outputNode;
+  }
 
-	}
+  serialize(data) {
+    super.serialize(data);
 
-	setup() {
+    data.method = this.method;
+  }
 
-		const method = this.method;
-		const timeNode = nodeObject( this.timeNode );
+  deserialize(data) {
+    super.deserialize(data);
 
-		let outputNode = null;
-
-		if ( method === OscNode.SINE ) {
-
-			outputNode = timeNode.add( 0.75 ).mul( Math.PI * 2 ).sin().mul( 0.5 ).add( 0.5 );
-
-		} else if ( method === OscNode.SQUARE ) {
-
-			outputNode = timeNode.fract().round();
-
-		} else if ( method === OscNode.TRIANGLE ) {
-
-			outputNode = timeNode.add( 0.5 ).fract().mul( 2 ).sub( 1 ).abs();
-
-		} else if ( method === OscNode.SAWTOOTH ) {
-
-			outputNode = timeNode.fract();
-
-		}
-
-		return outputNode;
-
-	}
-
-	serialize( data ) {
-
-		super.serialize( data );
-
-		data.method = this.method;
-
-	}
-
-	deserialize( data ) {
-
-		super.deserialize( data );
-
-		this.method = data.method;
-
-	}
-
+    this.method = data.method;
+  }
 }
 
 OscNode.SINE = 'sine';
@@ -73,9 +58,9 @@ OscNode.SAWTOOTH = 'sawtooth';
 
 export default OscNode;
 
-export const oscSine = nodeProxy( OscNode, OscNode.SINE );
-export const oscSquare = nodeProxy( OscNode, OscNode.SQUARE );
-export const oscTriangle = nodeProxy( OscNode, OscNode.TRIANGLE );
-export const oscSawtooth = nodeProxy( OscNode, OscNode.SAWTOOTH );
+export const oscSine = nodeProxy(OscNode, OscNode.SINE);
+export const oscSquare = nodeProxy(OscNode, OscNode.SQUARE);
+export const oscTriangle = nodeProxy(OscNode, OscNode.TRIANGLE);
+export const oscSawtooth = nodeProxy(OscNode, OscNode.SAWTOOTH);
 
-addNodeClass( 'OscNode', OscNode );
+addNodeClass('OscNode', OscNode);

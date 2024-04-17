@@ -1,4 +1,4 @@
-export default /* glsl */`
+export default /* glsl */ `
 #ifdef OPAQUE
 diffuseColor.a = 1.0;
 #endif

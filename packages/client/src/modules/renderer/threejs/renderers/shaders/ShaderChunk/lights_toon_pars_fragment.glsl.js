@@ -1,4 +1,4 @@
-export default /* glsl */`
+export default /* glsl */ `
 varying vec3 vViewPosition;
 
 struct ToonMaterial {

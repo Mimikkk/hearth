@@ -3,145 +3,110 @@ import { Float32BufferAttribute } from '../core/BufferAttribute.js';
 import { Vector3 } from '../math/Vector3.js';
 
 class WireframeGeometry extends BufferGeometry {
+  constructor(geometry = null) {
+    super();
 
-	constructor( geometry = null ) {
+    this.type = 'WireframeGeometry';
 
-		super();
+    this.parameters = {
+      geometry: geometry,
+    };
 
-		this.type = 'WireframeGeometry';
+    if (geometry !== null) {
+      // buffer
 
-		this.parameters = {
-			geometry: geometry
-		};
+      const vertices = [];
+      const edges = new Set();
 
-		if ( geometry !== null ) {
+      // helper variables
 
-			// buffer
+      const start = new Vector3();
+      const end = new Vector3();
 
-			const vertices = [];
-			const edges = new Set();
+      if (geometry.index !== null) {
+        // indexed BufferGeometry
 
-			// helper variables
+        const position = geometry.attributes.position;
+        const indices = geometry.index;
+        let groups = geometry.groups;
 
-			const start = new Vector3();
-			const end = new Vector3();
+        if (groups.length === 0) {
+          groups = [{ start: 0, count: indices.count, materialIndex: 0 }];
+        }
 
-			if ( geometry.index !== null ) {
+        // create a data structure that contains all edges without duplicates
 
-				// indexed BufferGeometry
+        for (let o = 0, ol = groups.length; o < ol; ++o) {
+          const group = groups[o];
 
-				const position = geometry.attributes.position;
-				const indices = geometry.index;
-				let groups = geometry.groups;
+          const groupStart = group.start;
+          const groupCount = group.count;
 
-				if ( groups.length === 0 ) {
+          for (let i = groupStart, l = groupStart + groupCount; i < l; i += 3) {
+            for (let j = 0; j < 3; j++) {
+              const index1 = indices.getX(i + j);
+              const index2 = indices.getX(i + ((j + 1) % 3));
 
-					groups = [ { start: 0, count: indices.count, materialIndex: 0 } ];
+              start.fromBufferAttribute(position, index1);
+              end.fromBufferAttribute(position, index2);
 
-				}
+              if (isUniqueEdge(start, end, edges) === true) {
+                vertices.push(start.x, start.y, start.z);
+                vertices.push(end.x, end.y, end.z);
+              }
+            }
+          }
+        }
+      } else {
+        // non-indexed BufferGeometry
 
-				// create a data structure that contains all edges without duplicates
+        const position = geometry.attributes.position;
 
-				for ( let o = 0, ol = groups.length; o < ol; ++ o ) {
+        for (let i = 0, l = position.count / 3; i < l; i++) {
+          for (let j = 0; j < 3; j++) {
+            // three edges per triangle, an edge is represented as (index1, index2)
+            // e.g. the first triangle has the following edges: (0,1),(1,2),(2,0)
 
-					const group = groups[ o ];
+            const index1 = 3 * i + j;
+            const index2 = 3 * i + ((j + 1) % 3);
 
-					const groupStart = group.start;
-					const groupCount = group.count;
+            start.fromBufferAttribute(position, index1);
+            end.fromBufferAttribute(position, index2);
 
-					for ( let i = groupStart, l = ( groupStart + groupCount ); i < l; i += 3 ) {
+            if (isUniqueEdge(start, end, edges) === true) {
+              vertices.push(start.x, start.y, start.z);
+              vertices.push(end.x, end.y, end.z);
+            }
+          }
+        }
+      }
 
-						for ( let j = 0; j < 3; j ++ ) {
+      // build geometry
 
-							const index1 = indices.getX( i + j );
-							const index2 = indices.getX( i + ( j + 1 ) % 3 );
+      this.setAttribute('position', new Float32BufferAttribute(vertices, 3));
+    }
+  }
 
-							start.fromBufferAttribute( position, index1 );
-							end.fromBufferAttribute( position, index2 );
+  copy(source) {
+    super.copy(source);
 
-							if ( isUniqueEdge( start, end, edges ) === true ) {
+    this.parameters = Object.assign({}, source.parameters);
 
-								vertices.push( start.x, start.y, start.z );
-								vertices.push( end.x, end.y, end.z );
-
-							}
-
-						}
-
-					}
-
-				}
-
-			} else {
-
-				// non-indexed BufferGeometry
-
-				const position = geometry.attributes.position;
-
-				for ( let i = 0, l = ( position.count / 3 ); i < l; i ++ ) {
-
-					for ( let j = 0; j < 3; j ++ ) {
-
-						// three edges per triangle, an edge is represented as (index1, index2)
-						// e.g. the first triangle has the following edges: (0,1),(1,2),(2,0)
-
-						const index1 = 3 * i + j;
-						const index2 = 3 * i + ( ( j + 1 ) % 3 );
-
-						start.fromBufferAttribute( position, index1 );
-						end.fromBufferAttribute( position, index2 );
-
-						if ( isUniqueEdge( start, end, edges ) === true ) {
-
-							vertices.push( start.x, start.y, start.z );
-							vertices.push( end.x, end.y, end.z );
-
-						}
-
-					}
-
-				}
-
-			}
-
-			// build geometry
-
-			this.setAttribute( 'position', new Float32BufferAttribute( vertices, 3 ) );
-
-		}
-
-	}
-
-	copy( source ) {
-
-		super.copy( source );
-
-		this.parameters = Object.assign( {}, source.parameters );
-
-		return this;
-
-	}
-
+    return this;
+  }
 }
 
-function isUniqueEdge( start, end, edges ) {
+function isUniqueEdge(start, end, edges) {
+  const hash1 = `${start.x},${start.y},${start.z}-${end.x},${end.y},${end.z}`;
+  const hash2 = `${end.x},${end.y},${end.z}-${start.x},${start.y},${start.z}`; // coincident edge
 
-	const hash1 = `${start.x},${start.y},${start.z}-${end.x},${end.y},${end.z}`;
-	const hash2 = `${end.x},${end.y},${end.z}-${start.x},${start.y},${start.z}`; // coincident edge
-
-	if ( edges.has( hash1 ) === true || edges.has( hash2 ) === true ) {
-
-		return false;
-
-	} else {
-
-		edges.add( hash1 );
-		edges.add( hash2 );
-		return true;
-
-	}
-
+  if (edges.has(hash1) === true || edges.has(hash2) === true) {
+    return false;
+  } else {
+    edges.add(hash1);
+    edges.add(hash2);
+    return true;
+  }
 }
-
 
 export { WireframeGeometry };

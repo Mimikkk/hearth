@@ -3,39 +3,33 @@ import { Texture } from '../textures/Texture.js';
 import { Loader } from './Loader.js';
 
 class TextureLoader extends Loader {
+  constructor(manager) {
+    super(manager);
+  }
 
-	constructor( manager ) {
+  load(url, onLoad, onProgress, onError) {
+    const texture = new Texture();
 
-		super( manager );
+    const loader = new ImageLoader(this.manager);
+    loader.setCrossOrigin(this.crossOrigin);
+    loader.setPath(this.path);
 
-	}
+    loader.load(
+      url,
+      function (image) {
+        texture.image = image;
+        texture.needsUpdate = true;
 
-	load( url, onLoad, onProgress, onError ) {
+        if (onLoad !== undefined) {
+          onLoad(texture);
+        }
+      },
+      onProgress,
+      onError,
+    );
 
-		const texture = new Texture();
-
-		const loader = new ImageLoader( this.manager );
-		loader.setCrossOrigin( this.crossOrigin );
-		loader.setPath( this.path );
-
-		loader.load( url, function ( image ) {
-
-			texture.image = image;
-			texture.needsUpdate = true;
-
-			if ( onLoad !== undefined ) {
-
-				onLoad( texture );
-
-			}
-
-		}, onProgress, onError );
-
-		return texture;
-
-	}
-
+    return texture;
+  }
 }
-
 
 export { TextureLoader };

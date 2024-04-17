@@ -1,4 +1,4 @@
-export default /* glsl */`
+export default /* glsl */ `
 #if defined( USE_UV ) || defined( USE_ANISOTROPY )
 
 	varying vec2 vUv;

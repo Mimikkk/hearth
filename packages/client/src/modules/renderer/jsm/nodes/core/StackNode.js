@@ -1,89 +1,71 @@
 import Node, { addNodeClass } from './Node.js';
 import { cond } from '../math/CondNode.js';
-import { ShaderNode, nodeProxy, getCurrentStack, setCurrentStack } from '../shadernode/ShaderNode.js';
+import { getCurrentStack, nodeProxy, setCurrentStack, ShaderNode } from '../shadernode/ShaderNode.js';
 
 class StackNode extends Node {
+  constructor(parent = null) {
+    super();
 
-	constructor( parent = null ) {
+    this.nodes = [];
+    this.outputNode = null;
 
-		super();
+    this.parent = parent;
 
-		this.nodes = [];
-		this.outputNode = null;
+    this._currentCond = null;
 
-		this.parent = parent;
+    this.isStackNode = true;
+  }
 
-		this._currentCond = null;
+  getNodeType(builder) {
+    return this.outputNode ? this.outputNode.getNodeType(builder) : 'void';
+  }
 
-		this.isStackNode = true;
+  add(node) {
+    this.nodes.push(node);
 
-	}
+    return this;
+  }
 
-	getNodeType( builder ) {
+  if(boolNode, method) {
+    const methodNode = new ShaderNode(method);
+    this._currentCond = cond(boolNode, methodNode);
 
-		return this.outputNode ? this.outputNode.getNodeType( builder ) : 'void';
+    return this.add(this._currentCond);
+  }
 
-	}
+  elseif(boolNode, method) {
+    const methodNode = new ShaderNode(method);
+    const ifNode = cond(boolNode, methodNode);
 
-	add( node ) {
+    this._currentCond.elseNode = ifNode;
+    this._currentCond = ifNode;
 
-		this.nodes.push( node );
+    return this;
+  }
 
-		return this;
+  else(method) {
+    this._currentCond.elseNode = new ShaderNode(method);
 
-	}
+    return this;
+  }
 
-	if( boolNode, method ) {
+  build(builder, ...params) {
+    const previousStack = getCurrentStack();
 
-		const methodNode = new ShaderNode( method );
-		this._currentCond = cond( boolNode, methodNode );
+    setCurrentStack(this);
 
-		return this.add( this._currentCond );
+    for (const node of this.nodes) {
+      node.build(builder, 'void');
+    }
 
-	}
+    setCurrentStack(previousStack);
 
-	elseif( boolNode, method ) {
-
-		const methodNode = new ShaderNode( method );
-		const ifNode = cond( boolNode, methodNode );
-
-		this._currentCond.elseNode = ifNode;
-		this._currentCond = ifNode;
-
-		return this;
-
-	}
-
-	else( method ) {
-
-		this._currentCond.elseNode = new ShaderNode( method );
-
-		return this;
-
-	}
-
-	build( builder, ...params ) {
-
-		const previousStack = getCurrentStack();
-
-		setCurrentStack( this );
-
-		for ( const node of this.nodes ) {
-
-			node.build( builder, 'void' );
-
-		}
-
-		setCurrentStack( previousStack );
-
-		return this.outputNode ? this.outputNode.build( builder, ...params ) : super.build( builder, ...params );
-
-	}
-
+    return this.outputNode ? this.outputNode.build(builder, ...params) : super.build(builder, ...params);
+  }
 }
 
 export default StackNode;
 
-export const stack = nodeProxy( StackNode );
+export const stack = nodeProxy(StackNode);
 
-addNodeClass( 'StackNode', StackNode );
+addNodeClass('StackNode', StackNode);

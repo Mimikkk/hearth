@@ -6,50 +6,40 @@ const _start = /*@__PURE__*/ new Vector3();
 const _end = /*@__PURE__*/ new Vector3();
 
 class LineSegments extends Line {
+  constructor(geometry, material) {
+    super(geometry, material);
 
-	constructor( geometry, material ) {
+    this.isLineSegments = true;
 
-		super( geometry, material );
+    this.type = 'LineSegments';
+  }
 
-		this.isLineSegments = true;
+  computeLineDistances() {
+    const geometry = this.geometry;
 
-		this.type = 'LineSegments';
+    // we assume non-indexed geometry
 
-	}
+    if (geometry.index === null) {
+      const positionAttribute = geometry.attributes.position;
+      const lineDistances = [];
 
-	computeLineDistances() {
+      for (let i = 0, l = positionAttribute.count; i < l; i += 2) {
+        _start.fromBufferAttribute(positionAttribute, i);
+        _end.fromBufferAttribute(positionAttribute, i + 1);
 
-		const geometry = this.geometry;
+        lineDistances[i] = i === 0 ? 0 : lineDistances[i - 1];
+        lineDistances[i + 1] = lineDistances[i] + _start.distanceTo(_end);
+      }
 
-		// we assume non-indexed geometry
+      geometry.setAttribute('lineDistance', new Float32BufferAttribute(lineDistances, 1));
+    } else {
+      console.warn(
+        'THREE.LineSegments.computeLineDistances(): Computation only possible with non-indexed BufferGeometry.',
+      );
+    }
 
-		if ( geometry.index === null ) {
-
-			const positionAttribute = geometry.attributes.position;
-			const lineDistances = [];
-
-			for ( let i = 0, l = positionAttribute.count; i < l; i += 2 ) {
-
-				_start.fromBufferAttribute( positionAttribute, i );
-				_end.fromBufferAttribute( positionAttribute, i + 1 );
-
-				lineDistances[ i ] = ( i === 0 ) ? 0 : lineDistances[ i - 1 ];
-				lineDistances[ i + 1 ] = lineDistances[ i ] + _start.distanceTo( _end );
-
-			}
-
-			geometry.setAttribute( 'lineDistance', new Float32BufferAttribute( lineDistances, 1 ) );
-
-		} else {
-
-			console.warn( 'THREE.LineSegments.computeLineDistances(): Computation only possible with non-indexed BufferGeometry.' );
-
-		}
-
-		return this;
-
-	}
-
+    return this;
+  }
 }
 
 export { LineSegments };

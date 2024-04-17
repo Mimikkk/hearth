@@ -4,6 +4,7 @@ const _changeEvent = { type: 'change' };
 
 class FlyControls {
   eventDispatcher = new EventDispatcher();
+
   constructor(object, domElement) {
     this.object = object;
     this.domElement = domElement;

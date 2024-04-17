@@ -373,7 +373,6 @@ class TrackballControls {
       window.removeEventListener('keydown', keydown);
 
       if (_keyState !== STATE.NONE) {
-        return;
       } else if (event.code === scope.keys[STATE.ROTATE] && !scope.noRotate) {
         _keyState = STATE.ROTATE;
       } else if (event.code === scope.keys[STATE.ZOOM] && !scope.noZoom) {

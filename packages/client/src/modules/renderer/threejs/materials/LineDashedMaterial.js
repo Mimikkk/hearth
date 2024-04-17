@@ -1,35 +1,29 @@
 import { LineBasicMaterial } from './LineBasicMaterial.js';
 
 class LineDashedMaterial extends LineBasicMaterial {
+  constructor(parameters) {
+    super();
 
-	constructor( parameters ) {
+    this.isLineDashedMaterial = true;
 
-		super();
+    this.type = 'LineDashedMaterial';
 
-		this.isLineDashedMaterial = true;
+    this.scale = 1;
+    this.dashSize = 3;
+    this.gapSize = 1;
 
-		this.type = 'LineDashedMaterial';
+    this.setValues(parameters);
+  }
 
-		this.scale = 1;
-		this.dashSize = 3;
-		this.gapSize = 1;
+  copy(source) {
+    super.copy(source);
 
-		this.setValues( parameters );
+    this.scale = source.scale;
+    this.dashSize = source.dashSize;
+    this.gapSize = source.gapSize;
 
-	}
-
-	copy( source ) {
-
-		super.copy( source );
-
-		this.scale = source.scale;
-		this.dashSize = source.dashSize;
-		this.gapSize = source.gapSize;
-
-		return this;
-
-	}
-
+    return this;
+  }
 }
 
 export { LineDashedMaterial };

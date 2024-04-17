@@ -3,27 +3,21 @@ import { addNodeClass } from '../core/Node.js';
 import { nodeObject } from '../shadernode/ShaderNode.js';
 
 class RendererReferenceNode extends ReferenceNode {
+  constructor(property, inputType, renderer = null) {
+    super(property, inputType, renderer);
 
-	constructor( property, inputType, renderer = null ) {
+    this.renderer = renderer;
+  }
 
-		super( property, inputType, renderer );
+  setReference(state) {
+    this.reference = this.renderer !== null ? this.renderer : state.renderer;
 
-		this.renderer = renderer;
-
-	}
-
-	setReference( state ) {
-
-		this.reference = this.renderer !== null ? this.renderer : state.renderer;
-
-		return this.reference;
-
-	}
-
+    return this.reference;
+  }
 }
 
 export default RendererReferenceNode;
 
-export const rendererReference = ( name, type, renderer ) => nodeObject( new RendererReferenceNode( name, type, renderer ) );
+export const rendererReference = (name, type, renderer) => nodeObject(new RendererReferenceNode(name, type, renderer));
 
-addNodeClass( 'RendererReferenceNode', RendererReferenceNode );
+addNodeClass('RendererReferenceNode', RendererReferenceNode);

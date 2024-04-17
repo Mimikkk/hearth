@@ -2,60 +2,48 @@ import { addNodeClass } from '../core/Node.js';
 import TempNode from '../core/TempNode.js';
 
 class JoinNode extends TempNode {
+  constructor(nodes = [], nodeType = null) {
+    super(nodeType);
 
-	constructor( nodes = [], nodeType = null ) {
+    this.nodes = nodes;
+  }
 
-		super( nodeType );
+  getNodeType(builder) {
+    if (this.nodeType !== null) {
+      return builder.getVectorType(this.nodeType);
+    }
 
-		this.nodes = nodes;
+    return builder.getTypeFromLength(
+      this.nodes.reduce((count, cur) => count + builder.getTypeLength(cur.getNodeType(builder)), 0),
+    );
+  }
 
-	}
+  generate(builder, output) {
+    const type = this.getNodeType(builder);
+    const nodes = this.nodes;
 
-	getNodeType( builder ) {
+    const primitiveType = builder.getComponentType(type);
 
-		if ( this.nodeType !== null ) {
+    const snippetValues = [];
 
-			return builder.getVectorType( this.nodeType );
+    for (const input of nodes) {
+      let inputSnippet = input.build(builder);
 
-		}
+      const inputPrimitiveType = builder.getComponentType(input.getNodeType(builder));
 
-		return builder.getTypeFromLength( this.nodes.reduce( ( count, cur ) => count + builder.getTypeLength( cur.getNodeType( builder ) ), 0 ) );
+      if (inputPrimitiveType !== primitiveType) {
+        inputSnippet = builder.format(inputSnippet, inputPrimitiveType, primitiveType);
+      }
 
-	}
+      snippetValues.push(inputSnippet);
+    }
 
-	generate( builder, output ) {
+    const snippet = `${builder.getType(type)}( ${snippetValues.join(', ')} )`;
 
-		const type = this.getNodeType( builder );
-		const nodes = this.nodes;
-
-		const primitiveType = builder.getComponentType( type );
-
-		const snippetValues = [];
-
-		for ( const input of nodes ) {
-
-			let inputSnippet = input.build( builder );
-
-			const inputPrimitiveType = builder.getComponentType( input.getNodeType( builder ) );
-
-			if ( inputPrimitiveType !== primitiveType ) {
-
-				inputSnippet = builder.format( inputSnippet, inputPrimitiveType, primitiveType );
-
-			}
-
-			snippetValues.push( inputSnippet );
-
-		}
-
-		const snippet = `${ builder.getType( type ) }( ${ snippetValues.join( ', ' ) } )`;
-
-		return builder.format( snippet, type, output );
-
-	}
-
+    return builder.format(snippet, type, output);
+  }
 }
 
 export default JoinNode;
 
-addNodeClass( 'JoinNode', JoinNode );
+addNodeClass('JoinNode', JoinNode);

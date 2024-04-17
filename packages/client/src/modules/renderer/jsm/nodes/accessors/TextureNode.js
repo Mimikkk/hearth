@@ -9,353 +9,283 @@ import { addNodeElement, nodeProxy, vec3, nodeObject } from '../shadernode/Shade
 import { NodeUpdateType } from '../core/constants.js';
 
 class TextureNode extends UniformNode {
+  constructor(value, uvNode = null, levelNode = null) {
+    super(value);
 
-	constructor( value, uvNode = null, levelNode = null ) {
+    this.isTextureNode = true;
 
-		super( value );
+    this.uvNode = uvNode;
+    this.levelNode = levelNode;
+    this.compareNode = null;
+    this.depthNode = null;
 
-		this.isTextureNode = true;
+    this.sampler = true;
+    this.updateMatrix = false;
+    this.updateType = NodeUpdateType.NONE;
 
-		this.uvNode = uvNode;
-		this.levelNode = levelNode;
-		this.compareNode = null;
-		this.depthNode = null;
+    this.setUpdateMatrix(uvNode === null);
+  }
 
-		this.sampler = true;
-		this.updateMatrix = false;
-		this.updateType = NodeUpdateType.NONE;
+  getUniformHash(/*builder*/) {
+    return this.value.uuid;
+  }
 
-		this.setUpdateMatrix( uvNode === null );
+  getNodeType(/*builder*/) {
+    if (this.value.isDepthTexture === true) return 'float';
 
-	}
+    return 'vec4';
+  }
 
-	getUniformHash( /*builder*/ ) {
+  getInputType(/*builder*/) {
+    return 'texture';
+  }
 
-		return this.value.uuid;
+  getDefaultUV() {
+    return uv(this.value.channel);
+  }
 
-	}
+  setReference(/*state*/) {
+    return this.value;
+  }
 
-	getNodeType( /*builder*/ ) {
+  getTransformedUV(uvNode) {
+    const texture = this.value;
 
-		if ( this.value.isDepthTexture === true ) return 'float';
+    return uniform(texture.matrix).mul(vec3(uvNode, 1)).xy;
+  }
 
-		return 'vec4';
+  setUpdateMatrix(value) {
+    this.updateMatrix = value;
+    this.updateType = value ? NodeUpdateType.FRAME : NodeUpdateType.NONE;
 
-	}
+    return this;
+  }
 
-	getInputType( /*builder*/ ) {
+  setupUV(builder, uvNode) {
+    const texture = this.value;
 
-		return 'texture';
+    if (
+      builder.isFlipY() &&
+      (texture.isRenderTargetTexture === true ||
+        texture.isFramebufferTexture === true ||
+        texture.isDepthTexture === true)
+    ) {
+      uvNode = uvNode.setY(uvNode.y.oneMinus());
+    }
 
-	}
+    return uvNode;
+  }
 
-	getDefaultUV() {
+  setup(builder) {
+    const properties = builder.getNodeProperties(this);
 
-		return uv( this.value.channel );
+    //
 
-	}
+    let uvNode = this.uvNode;
 
-	setReference( /*state*/ ) {
+    if ((uvNode === null || builder.context.forceUVContext === true) && builder.context.getUV) {
+      uvNode = builder.context.getUV(this);
+    }
 
-		return this.value;
+    if (!uvNode) uvNode = this.getDefaultUV();
 
-	}
+    if (this.updateMatrix === true) {
+      uvNode = this.getTransformedUV(uvNode);
+    }
 
-	getTransformedUV( uvNode ) {
+    uvNode = this.setupUV(builder, uvNode);
 
-		const texture = this.value;
+    //
 
-		return uniform( texture.matrix ).mul( vec3( uvNode, 1 ) ).xy;
+    let levelNode = this.levelNode;
 
-	}
+    if (levelNode === null && builder.context.getTextureLevel) {
+      levelNode = builder.context.getTextureLevel(this);
+    }
 
-	setUpdateMatrix( value ) {
+    //
 
-		this.updateMatrix = value;
-		this.updateType = value ? NodeUpdateType.FRAME : NodeUpdateType.NONE;
+    properties.uvNode = uvNode;
+    properties.levelNode = levelNode;
+    properties.compareNode = this.compareNode;
+    properties.depthNode = this.depthNode;
+  }
 
-		return this;
+  generateUV(builder, uvNode) {
+    return uvNode.build(builder, this.sampler === true ? 'vec2' : 'ivec2');
+  }
 
-	}
+  generateSnippet(builder, textureProperty, uvSnippet, levelSnippet, depthSnippet, compareSnippet) {
+    const texture = this.value;
 
-	setupUV( builder, uvNode ) {
+    let snippet;
 
-		const texture = this.value;
+    if (levelSnippet) {
+      snippet = builder.generateTextureLevel(texture, textureProperty, uvSnippet, levelSnippet, depthSnippet);
+    } else if (compareSnippet) {
+      snippet = builder.generateTextureCompare(texture, textureProperty, uvSnippet, compareSnippet, depthSnippet);
+    } else if (this.sampler === false) {
+      snippet = builder.generateTextureLoad(texture, textureProperty, uvSnippet, depthSnippet);
+    } else {
+      snippet = builder.generateTexture(texture, textureProperty, uvSnippet, depthSnippet);
+    }
 
-		if ( builder.isFlipY() && ( texture.isRenderTargetTexture === true || texture.isFramebufferTexture === true || texture.isDepthTexture === true ) ) {
+    return snippet;
+  }
 
-			uvNode = uvNode.setY( uvNode.y.oneMinus() );
+  generate(builder, output) {
+    const properties = builder.getNodeProperties(this);
 
-		}
+    const texture = this.value;
 
-		return uvNode;
+    if (!texture || texture.isTexture !== true) {
+      throw new Error('TextureNode: Need a three.js texture.');
+    }
 
-	}
+    const textureProperty = super.generate(builder, 'property');
 
-	setup( builder ) {
+    if (output === 'sampler') {
+      return textureProperty + '_sampler';
+    } else if (builder.isReference(output)) {
+      return textureProperty;
+    } else {
+      const nodeData = builder.getDataFromNode(this);
 
-		const properties = builder.getNodeProperties( this );
+      let propertyName = nodeData.propertyName;
 
-		//
+      if (propertyName === undefined) {
+        const { uvNode, levelNode, compareNode, depthNode } = properties;
 
-		let uvNode = this.uvNode;
+        const uvSnippet = this.generateUV(builder, uvNode);
+        const levelSnippet = levelNode ? levelNode.build(builder, 'float') : null;
+        const depthSnippet = depthNode ? depthNode.build(builder, 'int') : null;
+        const compareSnippet = compareNode ? compareNode.build(builder, 'float') : null;
 
-		if ( ( uvNode === null || builder.context.forceUVContext === true ) && builder.context.getUV ) {
+        const nodeVar = builder.getVarFromNode(this);
 
-			uvNode = builder.context.getUV( this );
+        propertyName = builder.getPropertyName(nodeVar);
 
-		}
+        const snippet = this.generateSnippet(
+          builder,
+          textureProperty,
+          uvSnippet,
+          levelSnippet,
+          depthSnippet,
+          compareSnippet,
+        );
 
-		if ( ! uvNode ) uvNode = this.getDefaultUV();
+        builder.addLineFlowCode(`${propertyName} = ${snippet}`);
 
-		if ( this.updateMatrix === true ) {
+        if (builder.context.tempWrite !== false) {
+          nodeData.snippet = snippet;
+          nodeData.propertyName = propertyName;
+        }
+      }
 
-			uvNode = this.getTransformedUV( uvNode );
+      let snippet = propertyName;
+      const nodeType = this.getNodeType(builder);
 
-		}
+      if (builder.needsColorSpaceToLinear(texture)) {
+        snippet = colorSpaceToLinear(expression(snippet, nodeType), texture.colorSpace)
+          .setup(builder)
+          .build(builder, nodeType);
+      }
 
-		uvNode = this.setupUV( builder, uvNode );
+      return builder.format(snippet, nodeType, output);
+    }
+  }
 
-		//
+  setSampler(value) {
+    this.sampler = value;
 
-		let levelNode = this.levelNode;
+    return this;
+  }
 
-		if ( levelNode === null && builder.context.getTextureLevel ) {
+  getSampler() {
+    return this.sampler;
+  }
 
-			levelNode = builder.context.getTextureLevel( this );
+  // @TODO: Move to TSL
 
-		}
+  uv(uvNode) {
+    const textureNode = this.clone();
+    textureNode.uvNode = uvNode;
 
-		//
+    return nodeObject(textureNode);
+  }
 
-		properties.uvNode = uvNode;
-		properties.levelNode = levelNode;
-		properties.compareNode = this.compareNode;
-		properties.depthNode = this.depthNode;
+  blur(levelNode) {
+    const textureNode = this.clone();
+    textureNode.levelNode = levelNode.mul(maxMipLevel(textureNode));
 
-	}
+    return nodeObject(textureNode);
+  }
 
-	generateUV( builder, uvNode ) {
+  level(levelNode) {
+    const textureNode = this.clone();
+    textureNode.levelNode = levelNode;
 
-		return uvNode.build( builder, this.sampler === true ? 'vec2' : 'ivec2' );
+    return textureNode;
+  }
 
-	}
+  size(levelNode) {
+    return textureSize(this, levelNode);
+  }
 
-	generateSnippet( builder, textureProperty, uvSnippet, levelSnippet, depthSnippet, compareSnippet ) {
+  compare(compareNode) {
+    const textureNode = this.clone();
+    textureNode.compareNode = nodeObject(compareNode);
 
-		const texture = this.value;
+    return nodeObject(textureNode);
+  }
 
-		let snippet;
+  depth(depthNode) {
+    const textureNode = this.clone();
+    textureNode.depthNode = nodeObject(depthNode);
 
-		if ( levelSnippet ) {
+    return nodeObject(textureNode);
+  }
 
-			snippet = builder.generateTextureLevel( texture, textureProperty, uvSnippet, levelSnippet, depthSnippet );
+  // --
 
-		} else if ( compareSnippet ) {
+  serialize(data) {
+    super.serialize(data);
 
-			snippet = builder.generateTextureCompare( texture, textureProperty, uvSnippet, compareSnippet, depthSnippet );
+    data.value = this.value.toJSON(data.meta).uuid;
+  }
 
-		} else if ( this.sampler === false ) {
+  deserialize(data) {
+    super.deserialize(data);
 
-			snippet = builder.generateTextureLoad( texture, textureProperty, uvSnippet, depthSnippet );
+    this.value = data.meta.textures[data.value];
+  }
 
-		} else {
+  update() {
+    const texture = this.value;
 
-			snippet = builder.generateTexture( texture, textureProperty, uvSnippet, depthSnippet );
+    if (texture.matrixAutoUpdate === true) {
+      texture.updateMatrix();
+    }
+  }
 
-		}
+  clone() {
+    const newNode = new this.constructor(this.value, this.uvNode, this.levelNode);
+    newNode.sampler = this.sampler;
 
-		return snippet;
-
-	}
-
-	generate( builder, output ) {
-
-		const properties = builder.getNodeProperties( this );
-
-		const texture = this.value;
-
-		if ( ! texture || texture.isTexture !== true ) {
-
-			throw new Error( 'TextureNode: Need a three.js texture.' );
-
-		}
-
-		const textureProperty = super.generate( builder, 'property' );
-
-		if ( output === 'sampler' ) {
-
-			return textureProperty + '_sampler';
-
-		} else if ( builder.isReference( output ) ) {
-
-			return textureProperty;
-
-		} else {
-
-			const nodeData = builder.getDataFromNode( this );
-
-			let propertyName = nodeData.propertyName;
-
-			if ( propertyName === undefined ) {
-
-				const { uvNode, levelNode, compareNode, depthNode } = properties;
-
-				const uvSnippet = this.generateUV( builder, uvNode );
-				const levelSnippet = levelNode ? levelNode.build( builder, 'float' ) : null;
-				const depthSnippet = depthNode ? depthNode.build( builder, 'int' ) : null;
-				const compareSnippet = compareNode ? compareNode.build( builder, 'float' ) : null;
-
-				const nodeVar = builder.getVarFromNode( this );
-
-				propertyName = builder.getPropertyName( nodeVar );
-
-				const snippet = this.generateSnippet( builder, textureProperty, uvSnippet, levelSnippet, depthSnippet, compareSnippet );
-
-				builder.addLineFlowCode( `${propertyName} = ${snippet}` );
-
-				if ( builder.context.tempWrite !== false ) {
-
-					nodeData.snippet = snippet;
-					nodeData.propertyName = propertyName;
-
-				}
-
-			}
-
-			let snippet = propertyName;
-			const nodeType = this.getNodeType( builder );
-
-			if ( builder.needsColorSpaceToLinear( texture ) ) {
-
-				snippet = colorSpaceToLinear( expression( snippet, nodeType ), texture.colorSpace ).setup( builder ).build( builder, nodeType );
-
-			}
-
-			return builder.format( snippet, nodeType, output );
-
-		}
-
-	}
-
-	setSampler( value ) {
-
-		this.sampler = value;
-
-		return this;
-
-	}
-
-	getSampler() {
-
-		return this.sampler;
-
-	}
-
-	// @TODO: Move to TSL
-
-	uv( uvNode ) {
-
-		const textureNode = this.clone();
-		textureNode.uvNode = uvNode;
-
-		return nodeObject( textureNode );
-
-	}
-
-	blur( levelNode ) {
-
-		const textureNode = this.clone();
-		textureNode.levelNode = levelNode.mul( maxMipLevel( textureNode ) );
-
-		return nodeObject( textureNode );
-
-	}
-
-	level( levelNode ) {
-
-		const textureNode = this.clone();
-		textureNode.levelNode = levelNode;
-
-		return textureNode;
-
-	}
-
-	size( levelNode ) {
-
-		return textureSize( this, levelNode );
-
-	}
-
-	compare( compareNode ) {
-
-		const textureNode = this.clone();
-		textureNode.compareNode = nodeObject( compareNode );
-
-		return nodeObject( textureNode );
-
-	}
-
-	depth( depthNode ) {
-
-		const textureNode = this.clone();
-		textureNode.depthNode = nodeObject( depthNode );
-
-		return nodeObject( textureNode );
-
-	}
-
-	// --
-
-	serialize( data ) {
-
-		super.serialize( data );
-
-		data.value = this.value.toJSON( data.meta ).uuid;
-
-	}
-
-	deserialize( data ) {
-
-		super.deserialize( data );
-
-		this.value = data.meta.textures[ data.value ];
-
-	}
-
-	update() {
-
-		const texture = this.value;
-
-		if ( texture.matrixAutoUpdate === true ) {
-
-			texture.updateMatrix();
-
-		}
-
-	}
-
-	clone() {
-
-		const newNode = new this.constructor( this.value, this.uvNode, this.levelNode );
-		newNode.sampler = this.sampler;
-
-		return newNode;
-
-	}
-
+    return newNode;
+  }
 }
 
 export default TextureNode;
 
-export const texture = nodeProxy( TextureNode );
-export const textureLoad = ( ...params ) => texture( ...params ).setSampler( false );
+export const texture = nodeProxy(TextureNode);
+export const textureLoad = (...params) => texture(...params).setSampler(false);
 
 //export const textureLevel = ( value, uv, level ) => texture( value, uv ).level( level );
 
-export const sampler = ( aTexture ) => ( aTexture.isNode === true ? aTexture : texture( aTexture ) ).convert( 'sampler' );
+export const sampler = aTexture => (aTexture.isNode === true ? aTexture : texture(aTexture)).convert('sampler');
 
-addNodeElement( 'texture', texture );
+addNodeElement('texture', texture);
 //addNodeElement( 'textureLevel', textureLevel );
 
-addNodeClass( 'TextureNode', TextureNode );
+addNodeClass('TextureNode', TextureNode);

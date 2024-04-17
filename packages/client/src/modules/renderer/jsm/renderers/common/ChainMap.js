@@ -1,89 +1,59 @@
 export default class ChainMap {
+  constructor() {
+    this.weakMap = new WeakMap();
+  }
 
-	constructor() {
+  get(keys) {
+    if (Array.isArray(keys)) {
+      let map = this.weakMap;
 
-		this.weakMap = new WeakMap();
+      for (let i = 0; i < keys.length; i++) {
+        map = map.get(keys[i]);
 
-	}
+        if (map === undefined) return undefined;
+      }
 
-	get( keys ) {
+      return map.get(keys[keys.length - 1]);
+    } else {
+      return super.get(keys);
+    }
+  }
 
-		if ( Array.isArray( keys ) ) {
+  set(keys, value) {
+    if (Array.isArray(keys)) {
+      let map = this.weakMap;
 
-			let map = this.weakMap;
+      for (let i = 0; i < keys.length; i++) {
+        const key = keys[i];
 
-			for ( let i = 0; i < keys.length; i ++ ) {
+        if (map.has(key) === false) map.set(key, new WeakMap());
 
-				map = map.get( keys[ i ] );
+        map = map.get(key);
+      }
 
-				if ( map === undefined ) return undefined;
+      return map.set(keys[keys.length - 1], value);
+    } else {
+      return super.set(keys, value);
+    }
+  }
 
-			}
+  delete(keys) {
+    if (Array.isArray(keys)) {
+      let map = this.weakMap;
 
-			return map.get( keys[ keys.length - 1 ] );
+      for (let i = 0; i < keys.length; i++) {
+        map = map.get(keys[i]);
 
-		} else {
+        if (map === undefined) return false;
+      }
 
-			return super.get( keys );
+      return map.delete(keys[keys.length - 1]);
+    } else {
+      return super.delete(keys);
+    }
+  }
 
-		}
-
-	}
-
-	set( keys, value ) {
-
-		if ( Array.isArray( keys ) ) {
-
-			let map = this.weakMap;
-
-			for ( let i = 0; i < keys.length; i ++ ) {
-
-				const key = keys[ i ];
-
-				if ( map.has( key ) === false ) map.set( key, new WeakMap() );
-
-				map = map.get( key );
-
-			}
-
-			return map.set( keys[ keys.length - 1 ], value );
-
-		} else {
-
-			return super.set( keys, value );
-
-		}
-
-	}
-
-	delete( keys ) {
-
-		if ( Array.isArray( keys ) ) {
-
-			let map = this.weakMap;
-
-			for ( let i = 0; i < keys.length; i ++ ) {
-
-				map = map.get( keys[ i ] );
-
-				if ( map === undefined ) return false;
-
-			}
-
-			return map.delete( keys[ keys.length - 1 ] );
-
-		} else {
-
-			return super.delete( keys );
-
-		}
-
-	}
-
-	dispose() {
-
-		this.weakMap.clear();
-
-	}
-
+  dispose() {
+    this.weakMap.clear();
+  }
 }

@@ -4,54 +4,42 @@ import { objectPosition } from '../accessors/Object3DNode.js';
 import { cameraViewMatrix } from '../accessors/CameraNode.js';
 
 class LightNode extends Node {
+  constructor(scope = LightNode.TARGET_DIRECTION, light = null) {
+    super();
 
-	constructor( scope = LightNode.TARGET_DIRECTION, light = null ) {
+    this.scope = scope;
+    this.light = light;
+  }
 
-		super();
+  setup() {
+    const { scope, light } = this;
 
-		this.scope = scope;
-		this.light = light;
+    let output = null;
 
-	}
+    if (scope === LightNode.TARGET_DIRECTION) {
+      output = cameraViewMatrix.transformDirection(objectPosition(light).sub(objectPosition(light.target)));
+    }
 
-	setup() {
+    return output;
+  }
 
-		const { scope, light } = this;
+  serialize(data) {
+    super.serialize(data);
 
-		let output = null;
+    data.scope = this.scope;
+  }
 
-		if ( scope === LightNode.TARGET_DIRECTION ) {
+  deserialize(data) {
+    super.deserialize(data);
 
-			output = cameraViewMatrix.transformDirection( objectPosition( light ).sub( objectPosition( light.target ) ) );
-
-		}
-
-		return output;
-
-	}
-
-	serialize( data ) {
-
-		super.serialize( data );
-
-		data.scope = this.scope;
-
-	}
-
-	deserialize( data ) {
-
-		super.deserialize( data );
-
-		this.scope = data.scope;
-
-	}
-
+    this.scope = data.scope;
+  }
 }
 
 LightNode.TARGET_DIRECTION = 'targetDirection';
 
 export default LightNode;
 
-export const lightTargetDirection = nodeProxy( LightNode, LightNode.TARGET_DIRECTION );
+export const lightTargetDirection = nodeProxy(LightNode, LightNode.TARGET_DIRECTION);
 
-addNodeClass( 'LightNode', LightNode );
+addNodeClass('LightNode', LightNode);

@@ -617,9 +617,7 @@ class LDrawParsedCache {
       try {
         const text = await fileLoader.loadAsync(subobjectURL);
         return text;
-      } catch (_) {
-        continue;
-      }
+      } catch (_) {}
     }
 
     throw new Error('LDrawLoader: Subobject "' + fileName + '" could not be loaded.');

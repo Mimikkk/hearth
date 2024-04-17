@@ -12,103 +12,87 @@ const _axis = /*@__PURE__*/ new Vector3();
 let _lineGeometry, _coneGeometry;
 
 class ArrowHelper extends Object3D {
+  // dir is assumed to be normalized
 
-	// dir is assumed to be normalized
+  constructor(
+    dir = new Vector3(0, 0, 1),
+    origin = new Vector3(0, 0, 0),
+    length = 1,
+    color = 0xffff00,
+    headLength = length * 0.2,
+    headWidth = headLength * 0.2,
+  ) {
+    super();
 
-	constructor( dir = new Vector3( 0, 0, 1 ), origin = new Vector3( 0, 0, 0 ), length = 1, color = 0xffff00, headLength = length * 0.2, headWidth = headLength * 0.2 ) {
+    this.type = 'ArrowHelper';
 
-		super();
+    if (_lineGeometry === undefined) {
+      _lineGeometry = new BufferGeometry();
+      _lineGeometry.setAttribute('position', new Float32BufferAttribute([0, 0, 0, 0, 1, 0], 3));
 
-		this.type = 'ArrowHelper';
+      _coneGeometry = new CylinderGeometry(0, 0.5, 1, 5, 1);
+      _coneGeometry.translate(0, -0.5, 0);
+    }
 
-		if ( _lineGeometry === undefined ) {
+    this.position.copy(origin);
 
-			_lineGeometry = new BufferGeometry();
-			_lineGeometry.setAttribute( 'position', new Float32BufferAttribute( [ 0, 0, 0, 0, 1, 0 ], 3 ) );
+    this.line = new Line(_lineGeometry, new LineBasicMaterial({ color: color, toneMapped: false }));
+    this.line.matrixAutoUpdate = false;
+    this.add(this.line);
 
-			_coneGeometry = new CylinderGeometry( 0, 0.5, 1, 5, 1 );
-			_coneGeometry.translate( 0, - 0.5, 0 );
+    this.cone = new Mesh(_coneGeometry, new MeshBasicMaterial({ color: color, toneMapped: false }));
+    this.cone.matrixAutoUpdate = false;
+    this.add(this.cone);
 
-		}
+    this.setDirection(dir);
+    this.setLength(length, headLength, headWidth);
+  }
 
-		this.position.copy( origin );
+  setDirection(dir) {
+    // dir is assumed to be normalized
 
-		this.line = new Line( _lineGeometry, new LineBasicMaterial( { color: color, toneMapped: false } ) );
-		this.line.matrixAutoUpdate = false;
-		this.add( this.line );
+    if (dir.y > 0.99999) {
+      this.quaternion.set(0, 0, 0, 1);
+    } else if (dir.y < -0.99999) {
+      this.quaternion.set(1, 0, 0, 0);
+    } else {
+      _axis.set(dir.z, 0, -dir.x).normalize();
 
-		this.cone = new Mesh( _coneGeometry, new MeshBasicMaterial( { color: color, toneMapped: false } ) );
-		this.cone.matrixAutoUpdate = false;
-		this.add( this.cone );
+      const radians = Math.acos(dir.y);
 
-		this.setDirection( dir );
-		this.setLength( length, headLength, headWidth );
+      this.quaternion.setFromAxisAngle(_axis, radians);
+    }
+  }
 
-	}
+  setLength(length, headLength = length * 0.2, headWidth = headLength * 0.2) {
+    this.line.scale.set(1, Math.max(0.0001, length - headLength), 1); // see #17458
+    this.line.updateMatrix();
 
-	setDirection( dir ) {
+    this.cone.scale.set(headWidth, headLength, headWidth);
+    this.cone.position.y = length;
+    this.cone.updateMatrix();
+  }
 
-		// dir is assumed to be normalized
+  setColor(color) {
+    this.line.material.color.set(color);
+    this.cone.material.color.set(color);
+  }
 
-		if ( dir.y > 0.99999 ) {
+  copy(source) {
+    super.copy(source, false);
 
-			this.quaternion.set( 0, 0, 0, 1 );
+    this.line.copy(source.line);
+    this.cone.copy(source.cone);
 
-		} else if ( dir.y < - 0.99999 ) {
+    return this;
+  }
 
-			this.quaternion.set( 1, 0, 0, 0 );
-
-		} else {
-
-			_axis.set( dir.z, 0, - dir.x ).normalize();
-
-			const radians = Math.acos( dir.y );
-
-			this.quaternion.setFromAxisAngle( _axis, radians );
-
-		}
-
-	}
-
-	setLength( length, headLength = length * 0.2, headWidth = headLength * 0.2 ) {
-
-		this.line.scale.set( 1, Math.max( 0.0001, length - headLength ), 1 ); // see #17458
-		this.line.updateMatrix();
-
-		this.cone.scale.set( headWidth, headLength, headWidth );
-		this.cone.position.y = length;
-		this.cone.updateMatrix();
-
-	}
-
-	setColor( color ) {
-
-		this.line.material.color.set( color );
-		this.cone.material.color.set( color );
-
-	}
-
-	copy( source ) {
-
-		super.copy( source, false );
-
-		this.line.copy( source.line );
-		this.cone.copy( source.cone );
-
-		return this;
-
-	}
-
-	dispose() {
-
-		this.line.geometry.dispose();
-		this.line.material.dispose();
-		this.cone.geometry.dispose();
-		this.cone.material.dispose();
-
-	}
-
+  dispose() {
+    this.line.geometry.dispose();
+    this.line.material.dispose();
+    this.cone.geometry.dispose();
+    this.cone.material.dispose();
+  }
 }
-
 
 export { ArrowHelper };

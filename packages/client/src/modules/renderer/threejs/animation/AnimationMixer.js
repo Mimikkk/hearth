@@ -12,7 +12,6 @@ class AnimationMixer {
   eventDispatcher = new EventDispatcher();
 
   constructor(root) {
-
     this._root = root;
     this._initMemoryManager();
     this._accuIndex = 0;

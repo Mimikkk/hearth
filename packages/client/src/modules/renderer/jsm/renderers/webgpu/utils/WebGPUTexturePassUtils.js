@@ -1,12 +1,17 @@
-import { GPUTextureViewDimension, GPUIndexFormat, GPUFilterMode, GPUPrimitiveTopology, GPULoadOp, GPUStoreOp } from './WebGPUConstants.js';
+import {
+  GPUTextureViewDimension,
+  GPUIndexFormat,
+  GPUFilterMode,
+  GPUPrimitiveTopology,
+  GPULoadOp,
+  GPUStoreOp,
+} from './WebGPUConstants.js';
 
 class WebGPUTexturePassUtils {
+  constructor(device) {
+    this.device = device;
 
-	constructor( device ) {
-
-		this.device = device;
-
-		const mipmapVertexSource = `
+    const mipmapVertexSource = `
 struct VarysStruct {
 	@builtin( position ) Position: vec4<f32>,
 	@location( 0 ) vTex : vec2<f32>
@@ -39,7 +44,7 @@ fn main( @builtin( vertex_index ) vertexIndex : u32 ) -> VarysStruct {
 }
 `;
 
-		const mipmapFragmentSource = `
+    const mipmapFragmentSource = `
 @group( 0 ) @binding( 0 )
 var imgSampler : sampler;
 
@@ -54,7 +59,7 @@ fn main( @location( 0 ) vTex : vec2<f32> ) -> @location( 0 ) vec4<f32> {
 }
 `;
 
-		const flipYFragmentSource = `
+    const flipYFragmentSource = `
 @group( 0 ) @binding( 0 )
 var imgSampler : sampler;
 
@@ -68,218 +73,210 @@ fn main( @location( 0 ) vTex : vec2<f32> ) -> @location( 0 ) vec4<f32> {
 
 }
 `;
-		this.mipmapSampler = device.createSampler( { minFilter: GPUFilterMode.Linear } );
-		this.flipYSampler = device.createSampler( { minFilter: GPUFilterMode.Nearest } ); //@TODO?: Consider using textureLoad()
+    this.mipmapSampler = device.createSampler({ minFilter: GPUFilterMode.Linear });
+    this.flipYSampler = device.createSampler({ minFilter: GPUFilterMode.Nearest }); //@TODO?: Consider using textureLoad()
 
-		// We'll need a new pipeline for every texture format used.
-		this.transferPipelines = {};
-		this.flipYPipelines = {};
+    // We'll need a new pipeline for every texture format used.
+    this.transferPipelines = {};
+    this.flipYPipelines = {};
 
-		this.mipmapVertexShaderModule = device.createShaderModule( {
-			label: 'mipmapVertex',
-			code: mipmapVertexSource
-		} );
+    this.mipmapVertexShaderModule = device.createShaderModule({
+      label: 'mipmapVertex',
+      code: mipmapVertexSource,
+    });
 
-		this.mipmapFragmentShaderModule = device.createShaderModule( {
-			label: 'mipmapFragment',
-			code: mipmapFragmentSource
-		} );
+    this.mipmapFragmentShaderModule = device.createShaderModule({
+      label: 'mipmapFragment',
+      code: mipmapFragmentSource,
+    });
 
-		this.flipYFragmentShaderModule = device.createShaderModule( {
-			label: 'flipYFragment',
-			code: flipYFragmentSource
-		} );
+    this.flipYFragmentShaderModule = device.createShaderModule({
+      label: 'flipYFragment',
+      code: flipYFragmentSource,
+    });
+  }
 
-	}
+  getTransferPipeline(format) {
+    let pipeline = this.transferPipelines[format];
 
-	getTransferPipeline( format ) {
+    if (pipeline === undefined) {
+      pipeline = this.device.createRenderPipeline({
+        vertex: {
+          module: this.mipmapVertexShaderModule,
+          entryPoint: 'main',
+        },
+        fragment: {
+          module: this.mipmapFragmentShaderModule,
+          entryPoint: 'main',
+          targets: [{ format }],
+        },
+        primitive: {
+          topology: GPUPrimitiveTopology.TriangleStrip,
+          stripIndexFormat: GPUIndexFormat.Uint32,
+        },
+        layout: 'auto',
+      });
 
-		let pipeline = this.transferPipelines[ format ];
+      this.transferPipelines[format] = pipeline;
+    }
 
-		if ( pipeline === undefined ) {
+    return pipeline;
+  }
 
-			pipeline = this.device.createRenderPipeline( {
-				vertex: {
-					module: this.mipmapVertexShaderModule,
-					entryPoint: 'main'
-				},
-				fragment: {
-					module: this.mipmapFragmentShaderModule,
-					entryPoint: 'main',
-					targets: [ { format } ]
-				},
-				primitive: {
-					topology: GPUPrimitiveTopology.TriangleStrip,
-					stripIndexFormat: GPUIndexFormat.Uint32
-				},
-				layout: 'auto'
-			} );
+  getFlipYPipeline(format) {
+    let pipeline = this.flipYPipelines[format];
 
-			this.transferPipelines[ format ] = pipeline;
+    if (pipeline === undefined) {
+      pipeline = this.device.createRenderPipeline({
+        vertex: {
+          module: this.mipmapVertexShaderModule,
+          entryPoint: 'main',
+        },
+        fragment: {
+          module: this.flipYFragmentShaderModule,
+          entryPoint: 'main',
+          targets: [{ format }],
+        },
+        primitive: {
+          topology: GPUPrimitiveTopology.TriangleStrip,
+          stripIndexFormat: GPUIndexFormat.Uint32,
+        },
+        layout: 'auto',
+      });
 
-		}
+      this.flipYPipelines[format] = pipeline;
+    }
 
-		return pipeline;
+    return pipeline;
+  }
 
-	}
+  flipY(textureGPU, textureGPUDescriptor, baseArrayLayer = 0) {
+    const format = textureGPUDescriptor.format;
+    const { width, height } = textureGPUDescriptor.size;
 
-	getFlipYPipeline( format ) {
+    const transferPipeline = this.getTransferPipeline(format);
+    const flipYPipeline = this.getFlipYPipeline(format);
 
-		let pipeline = this.flipYPipelines[ format ];
+    const tempTexture = this.device.createTexture({
+      size: { width, height, depthOrArrayLayers: 1 },
+      format,
+      usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING,
+    });
 
-		if ( pipeline === undefined ) {
+    const srcView = textureGPU.createView({
+      baseMipLevel: 0,
+      mipLevelCount: 1,
+      dimension: GPUTextureViewDimension.TwoD,
+      baseArrayLayer,
+    });
 
-			pipeline = this.device.createRenderPipeline( {
-				vertex: {
-					module: this.mipmapVertexShaderModule,
-					entryPoint: 'main'
-				},
-				fragment: {
-					module: this.flipYFragmentShaderModule,
-					entryPoint: 'main',
-					targets: [ { format } ]
-				},
-				primitive: {
-					topology: GPUPrimitiveTopology.TriangleStrip,
-					stripIndexFormat: GPUIndexFormat.Uint32
-				},
-				layout: 'auto'
-			} );
+    const dstView = tempTexture.createView({
+      baseMipLevel: 0,
+      mipLevelCount: 1,
+      dimension: GPUTextureViewDimension.TwoD,
+      baseArrayLayer: 0,
+    });
 
-			this.flipYPipelines[ format ] = pipeline;
+    const commandEncoder = this.device.createCommandEncoder({});
 
-		}
+    const pass = (pipeline, sourceView, destinationView) => {
+      const bindGroupLayout = pipeline.getBindGroupLayout(0); // @TODO: Consider making this static.
 
-		return pipeline;
+      const bindGroup = this.device.createBindGroup({
+        layout: bindGroupLayout,
+        entries: [
+          {
+            binding: 0,
+            resource: this.flipYSampler,
+          },
+          {
+            binding: 1,
+            resource: sourceView,
+          },
+        ],
+      });
 
-	}
+      const passEncoder = commandEncoder.beginRenderPass({
+        colorAttachments: [
+          {
+            view: destinationView,
+            loadOp: GPULoadOp.Clear,
+            storeOp: GPUStoreOp.Store,
+            clearValue: [0, 0, 0, 0],
+          },
+        ],
+      });
 
-	flipY( textureGPU, textureGPUDescriptor, baseArrayLayer = 0 ) {
+      passEncoder.setPipeline(pipeline);
+      passEncoder.setBindGroup(0, bindGroup);
+      passEncoder.draw(4, 1, 0, 0);
+      passEncoder.end();
+    };
 
-		const format = textureGPUDescriptor.format;
-		const { width, height } = textureGPUDescriptor.size;
+    pass(transferPipeline, srcView, dstView);
+    pass(flipYPipeline, dstView, srcView);
 
-		const transferPipeline = this.getTransferPipeline( format );
-		const flipYPipeline = this.getFlipYPipeline( format );
+    this.device.queue.submit([commandEncoder.finish()]);
 
-		const tempTexture = this.device.createTexture( {
-			size: { width, height, depthOrArrayLayers: 1 },
-			format,
-			usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING
-		} );
+    tempTexture.destroy();
+  }
 
-		const srcView = textureGPU.createView( {
-			baseMipLevel: 0,
-			mipLevelCount: 1,
-			dimension: GPUTextureViewDimension.TwoD,
-			baseArrayLayer
-		} );
+  generateMipmaps(textureGPU, textureGPUDescriptor, baseArrayLayer = 0) {
+    const pipeline = this.getTransferPipeline(textureGPUDescriptor.format);
 
-		const dstView = tempTexture.createView( {
-			baseMipLevel: 0,
-			mipLevelCount: 1,
-			dimension: GPUTextureViewDimension.TwoD,
-			baseArrayLayer: 0
-		} );
+    const commandEncoder = this.device.createCommandEncoder({});
+    const bindGroupLayout = pipeline.getBindGroupLayout(0); // @TODO: Consider making this static.
 
-		const commandEncoder = this.device.createCommandEncoder( {} );
+    let srcView = textureGPU.createView({
+      baseMipLevel: 0,
+      mipLevelCount: 1,
+      dimension: GPUTextureViewDimension.TwoD,
+      baseArrayLayer,
+    });
 
-		const pass = ( pipeline, sourceView, destinationView ) => {
+    for (let i = 1; i < textureGPUDescriptor.mipLevelCount; i++) {
+      const bindGroup = this.device.createBindGroup({
+        layout: bindGroupLayout,
+        entries: [
+          {
+            binding: 0,
+            resource: this.mipmapSampler,
+          },
+          {
+            binding: 1,
+            resource: srcView,
+          },
+        ],
+      });
 
-			const bindGroupLayout = pipeline.getBindGroupLayout( 0 ); // @TODO: Consider making this static.
+      const dstView = textureGPU.createView({
+        baseMipLevel: i,
+        mipLevelCount: 1,
+        dimension: GPUTextureViewDimension.TwoD,
+        baseArrayLayer,
+      });
 
-			const bindGroup = this.device.createBindGroup( {
-				layout: bindGroupLayout,
-				entries: [ {
-					binding: 0,
-					resource: this.flipYSampler
-				}, {
-					binding: 1,
-					resource: sourceView
-				} ]
-			} );
+      const passEncoder = commandEncoder.beginRenderPass({
+        colorAttachments: [
+          {
+            view: dstView,
+            loadOp: GPULoadOp.Clear,
+            storeOp: GPUStoreOp.Store,
+            clearValue: [0, 0, 0, 0],
+          },
+        ],
+      });
 
-			const passEncoder = commandEncoder.beginRenderPass( {
-				colorAttachments: [ {
-					view: destinationView,
-					loadOp: GPULoadOp.Clear,
-					storeOp: GPUStoreOp.Store,
-					clearValue: [ 0, 0, 0, 0 ]
-				} ]
-			} );
+      passEncoder.setPipeline(pipeline);
+      passEncoder.setBindGroup(0, bindGroup);
+      passEncoder.draw(4, 1, 0, 0);
+      passEncoder.end();
 
-			passEncoder.setPipeline( pipeline );
-			passEncoder.setBindGroup( 0, bindGroup );
-			passEncoder.draw( 4, 1, 0, 0 );
-			passEncoder.end();
+      srcView = dstView;
+    }
 
-		};
-
-		pass( transferPipeline, srcView, dstView );
-		pass( flipYPipeline, dstView, srcView );
-
-		this.device.queue.submit( [ commandEncoder.finish() ] );
-
-		tempTexture.destroy();
-
-	}
-
-	generateMipmaps( textureGPU, textureGPUDescriptor, baseArrayLayer = 0 ) {
-
-		const pipeline = this.getTransferPipeline( textureGPUDescriptor.format );
-
-		const commandEncoder = this.device.createCommandEncoder( {} );
-		const bindGroupLayout = pipeline.getBindGroupLayout( 0 ); // @TODO: Consider making this static.
-
-		let srcView = textureGPU.createView( {
-			baseMipLevel: 0,
-			mipLevelCount: 1,
-			dimension: GPUTextureViewDimension.TwoD,
-			baseArrayLayer
-		} );
-
-		for ( let i = 1; i < textureGPUDescriptor.mipLevelCount; i ++ ) {
-
-			const bindGroup = this.device.createBindGroup( {
-				layout: bindGroupLayout,
-				entries: [ {
-					binding: 0,
-					resource: this.mipmapSampler
-				}, {
-					binding: 1,
-					resource: srcView
-				} ]
-			} );
-
-			const dstView = textureGPU.createView( {
-				baseMipLevel: i,
-				mipLevelCount: 1,
-				dimension: GPUTextureViewDimension.TwoD,
-				baseArrayLayer
-			} );
-
-			const passEncoder = commandEncoder.beginRenderPass( {
-				colorAttachments: [ {
-					view: dstView,
-					loadOp: GPULoadOp.Clear,
-					storeOp: GPUStoreOp.Store,
-					clearValue: [ 0, 0, 0, 0 ]
-				} ]
-			} );
-
-			passEncoder.setPipeline( pipeline );
-			passEncoder.setBindGroup( 0, bindGroup );
-			passEncoder.draw( 4, 1, 0, 0 );
-			passEncoder.end();
-
-			srcView = dstView;
-
-		}
-
-		this.device.queue.submit( [ commandEncoder.finish() ] );
-
-	}
-
+    this.device.queue.submit([commandEncoder.finish()]);
+  }
 }
 
 export default WebGPUTexturePassUtils;

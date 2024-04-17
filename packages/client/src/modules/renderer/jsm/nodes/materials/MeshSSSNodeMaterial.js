@@ -6,79 +6,70 @@ import MeshPhysicalNodeMaterial from './MeshPhysicalNodeMaterial.js';
 import { float, vec3 } from '../shadernode/ShaderNode.js';
 
 class SSSLightingModel extends PhysicalLightingModel {
+  constructor(useClearcoat, useSheen, useIridescence, useSSS) {
+    super(useClearcoat, useSheen, useIridescence);
 
-	constructor( useClearcoat, useSheen, useIridescence, useSSS ) {
+    this.useSSS = useSSS;
+  }
 
-		super( useClearcoat, useSheen, useIridescence );
+  direct({ lightDirection, lightColor, reflectedLight }, stack, builder) {
+    if (this.useSSS === true) {
+      const material = builder.material;
 
-		this.useSSS = useSSS;
+      const {
+        thicknessColorNode,
+        thicknessDistortionNode,
+        thicknessAmbientNode,
+        thicknessAttenuationNode,
+        thicknessPowerNode,
+        thicknessScaleNode,
+      } = material;
 
-	}
+      const scatteringHalf = lightDirection.add(transformedNormalView.mul(thicknessDistortionNode)).normalize();
+      const scatteringDot = float(
+        positionViewDirection.dot(scatteringHalf.negate()).saturate().pow(thicknessPowerNode).mul(thicknessScaleNode),
+      );
+      const scatteringIllu = vec3(scatteringDot.add(thicknessAmbientNode).mul(thicknessColorNode));
 
-	direct( { lightDirection, lightColor, reflectedLight }, stack, builder ) {
+      reflectedLight.directDiffuse.addAssign(scatteringIllu.mul(thicknessAttenuationNode.mul(lightColor)));
+    }
 
-		if ( this.useSSS === true ) {
-
-			const material = builder.material;
-
-			const { thicknessColorNode, thicknessDistortionNode, thicknessAmbientNode, thicknessAttenuationNode, thicknessPowerNode, thicknessScaleNode } = material;
-
-			const scatteringHalf = lightDirection.add( transformedNormalView.mul( thicknessDistortionNode ) ).normalize();
-			const scatteringDot = float( positionViewDirection.dot( scatteringHalf.negate() ).saturate().pow( thicknessPowerNode ).mul( thicknessScaleNode ) );
-			const scatteringIllu = vec3( scatteringDot.add( thicknessAmbientNode ).mul( thicknessColorNode ) );
-
-			reflectedLight.directDiffuse.addAssign( scatteringIllu.mul( thicknessAttenuationNode.mul( lightColor ) ) );
-
-		}
-
-		super.direct( { lightDirection, lightColor, reflectedLight }, stack, builder );
-
-	}
-
+    super.direct({ lightDirection, lightColor, reflectedLight }, stack, builder);
+  }
 }
 
 class MeshSSSNodeMaterial extends MeshPhysicalNodeMaterial {
+  constructor(parameters) {
+    super(parameters);
 
-	constructor( parameters ) {
+    this.thicknessColorNode = null;
+    this.thicknessDistortionNode = float(0.1);
+    this.thicknessAmbientNode = float(0.0);
+    this.thicknessAttenuationNode = float(0.1);
+    this.thicknessPowerNode = float(2.0);
+    this.thicknessScaleNode = float(10.0);
+  }
 
-		super( parameters );
+  get useSSS() {
+    return this.thicknessColorNode !== null;
+  }
 
-		this.thicknessColorNode = null;
-		this.thicknessDistortionNode = float( 0.1 );
-		this.thicknessAmbientNode = float( 0.0 );
-		this.thicknessAttenuationNode = float( .1 );
-		this.thicknessPowerNode = float( 2.0 );
-		this.thicknessScaleNode = float( 10.0 );
+  setupLightingModel(/*builder*/) {
+    return new SSSLightingModel(this.useClearcoat, this.useSheen, this.useIridescence, this.useSSS);
+  }
 
-	}
+  copy(source) {
+    this.thicknessColorNode = source.thicknessColorNode;
+    this.thicknessDistortionNode = source.thicknessDistortionNode;
+    this.thicknessAmbientNode = source.thicknessAmbientNode;
+    this.thicknessAttenuationNode = source.thicknessAttenuationNode;
+    this.thicknessPowerNode = source.thicknessPowerNode;
+    this.thicknessScaleNode = source.thicknessScaleNode;
 
-	get useSSS() {
-
-		return this.thicknessColorNode !== null;
-
-	}
-
-	setupLightingModel( /*builder*/ ) {
-
-		return new SSSLightingModel( this.useClearcoat, this.useSheen, this.useIridescence, this.useSSS );
-
-	}
-
-	copy( source ) {
-
-		this.thicknessColorNode = source.thicknessColorNode;
-		this.thicknessDistortionNode = source.thicknessDistortionNode;
-		this.thicknessAmbientNode = source.thicknessAmbientNode;
-		this.thicknessAttenuationNode = source.thicknessAttenuationNode;
-		this.thicknessPowerNode = source.thicknessPowerNode;
-		this.thicknessScaleNode = source.thicknessScaleNode;
-
-		return super.copy( source );
-
-	}
-
+    return super.copy(source);
+  }
 }
 
 export default MeshSSSNodeMaterial;
 
-addNodeMaterial( 'MeshSSSNodeMaterial', MeshSSSNodeMaterial );
+addNodeMaterial('MeshSSSNodeMaterial', MeshSSSNodeMaterial);

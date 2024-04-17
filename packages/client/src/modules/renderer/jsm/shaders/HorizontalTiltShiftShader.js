@@ -8,18 +8,15 @@
  */
 
 const HorizontalTiltShiftShader = {
+  name: 'HorizontalTiltShiftShader',
 
-	name: 'HorizontalTiltShiftShader',
+  uniforms: {
+    tDiffuse: { value: null },
+    h: { value: 1.0 / 512.0 },
+    r: { value: 0.35 },
+  },
 
-	uniforms: {
-
-		'tDiffuse': { value: null },
-		'h': { value: 1.0 / 512.0 },
-		'r': { value: 0.35 }
-
-	},
-
-	vertexShader: /* glsl */`
+  vertexShader: /* glsl */ `
 
 		varying vec2 vUv;
 
@@ -30,7 +27,7 @@ const HorizontalTiltShiftShader = {
 
 		}`,
 
-	fragmentShader: /* glsl */`
+  fragmentShader: /* glsl */ `
 
 		uniform sampler2D tDiffuse;
 		uniform float h;
@@ -56,8 +53,7 @@ const HorizontalTiltShiftShader = {
 
 			gl_FragColor = sum;
 
-		}`
-
+		}`,
 };
 
 export { HorizontalTiltShiftShader };

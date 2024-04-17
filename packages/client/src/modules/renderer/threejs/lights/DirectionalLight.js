@@ -3,41 +3,33 @@ import { DirectionalLightShadow } from './DirectionalLightShadow.js';
 import { Object3D } from '../core/Object3D.js';
 
 class DirectionalLight extends Light {
+  constructor(color, intensity) {
+    super(color, intensity);
 
-	constructor( color, intensity ) {
+    this.isDirectionalLight = true;
 
-		super( color, intensity );
+    this.type = 'DirectionalLight';
 
-		this.isDirectionalLight = true;
+    this.position.copy(Object3D.DEFAULT_UP);
+    this.updateMatrix();
 
-		this.type = 'DirectionalLight';
+    this.target = new Object3D();
 
-		this.position.copy( Object3D.DEFAULT_UP );
-		this.updateMatrix();
+    this.shadow = new DirectionalLightShadow();
+  }
 
-		this.target = new Object3D();
+  dispose() {
+    this.shadow.dispose();
+  }
 
-		this.shadow = new DirectionalLightShadow();
+  copy(source) {
+    super.copy(source);
 
-	}
+    this.target = source.target.clone();
+    this.shadow = source.shadow.clone();
 
-	dispose() {
-
-		this.shadow.dispose();
-
-	}
-
-	copy( source ) {
-
-		super.copy( source );
-
-		this.target = source.target.clone();
-		this.shadow = source.shadow.clone();
-
-		return this;
-
-	}
-
+    return this;
+  }
 }
 
 export { DirectionalLight };

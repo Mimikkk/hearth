@@ -3,33 +3,31 @@ import { addNodeClass } from '../core/Node.js';
 import { addNodeElement, nodeProxy } from '../shadernode/ShaderNode.js';
 
 class TextureSizeNode extends Node {
+  constructor(textureNode, levelNode = null) {
+    super('uvec2');
 
-	constructor( textureNode, levelNode = null ) {
+    this.isTextureSizeNode = true;
 
-		super( 'uvec2' );
+    this.textureNode = textureNode;
+    this.levelNode = levelNode;
+  }
 
-		this.isTextureSizeNode = true;
+  generate(builder, output) {
+    const textureProperty = this.textureNode.build(builder, 'property');
+    const levelNode = this.levelNode.build(builder, 'int');
 
-		this.textureNode = textureNode;
-		this.levelNode = levelNode;
-
-	}
-
-	generate( builder, output ) {
-
-		const textureProperty = this.textureNode.build( builder, 'property' );
-		const levelNode = this.levelNode.build( builder, 'int' );
-
-		return builder.format( `${builder.getMethod( 'textureDimensions' )}( ${textureProperty}, ${levelNode} )`, this.getNodeType( builder ), output );
-
-	}
-
+    return builder.format(
+      `${builder.getMethod('textureDimensions')}( ${textureProperty}, ${levelNode} )`,
+      this.getNodeType(builder),
+      output,
+    );
+  }
 }
 
 export default TextureSizeNode;
 
-export const textureSize = nodeProxy( TextureSizeNode );
+export const textureSize = nodeProxy(TextureSizeNode);
 
-addNodeElement( 'textureSize', textureSize );
+addNodeElement('textureSize', textureSize);
 
-addNodeClass( 'TextureSizeNode', TextureSizeNode );
+addNodeClass('TextureSizeNode', TextureSizeNode);

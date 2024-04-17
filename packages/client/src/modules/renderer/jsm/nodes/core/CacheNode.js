@@ -3,47 +3,39 @@ import NodeCache from './NodeCache.js';
 import { addNodeElement, nodeProxy } from '../shadernode/ShaderNode.js';
 
 class CacheNode extends Node {
+  constructor(node, cache = new NodeCache()) {
+    super();
 
-	constructor( node, cache = new NodeCache() ) {
+    this.isCacheNode = true;
 
-		super();
+    this.node = node;
+    this.cache = cache;
+  }
 
-		this.isCacheNode = true;
+  getNodeType(builder) {
+    return this.node.getNodeType(builder);
+  }
 
-		this.node = node;
-		this.cache = cache;
+  build(builder, ...params) {
+    const previousCache = builder.getCache();
+    const cache = this.cache || builder.globalCache;
 
-	}
+    builder.setCache(cache);
 
-	getNodeType( builder ) {
+    const data = this.node.build(builder, ...params);
 
-		return this.node.getNodeType( builder );
+    builder.setCache(previousCache);
 
-	}
-
-	build( builder, ...params ) {
-
-		const previousCache = builder.getCache();
-		const cache = this.cache || builder.globalCache;
-
-		builder.setCache( cache );
-
-		const data = this.node.build( builder, ...params );
-
-		builder.setCache( previousCache );
-
-		return data;
-
-	}
-
+    return data;
+  }
 }
 
 export default CacheNode;
 
-export const cache = nodeProxy( CacheNode );
-export const globalCache = ( node ) => cache( node, null );
+export const cache = nodeProxy(CacheNode);
+export const globalCache = node => cache(node, null);
 
-addNodeElement( 'cache', cache );
-addNodeElement( 'globalCache', globalCache );
+addNodeElement('cache', cache);
+addNodeElement('globalCache', globalCache);
 
-addNodeClass( 'CacheNode', CacheNode );
+addNodeClass('CacheNode', CacheNode);

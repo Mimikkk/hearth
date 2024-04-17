@@ -1,36 +1,26 @@
 class WebGLExtensions {
+  constructor(backend) {
+    this.backend = backend;
 
-	constructor( backend ) {
+    this.gl = this.backend.gl;
+    this.availableExtensions = this.gl.getSupportedExtensions();
 
-		this.backend = backend;
+    this.extensions = {};
+  }
 
-		this.gl = this.backend.gl;
-		this.availableExtensions = this.gl.getSupportedExtensions();
+  get(name) {
+    let extension = this.extensions[name];
 
-		this.extensions = {};
+    if (extension === undefined) {
+      extension = this.gl.getExtension(name);
+    }
 
-	}
+    return extension;
+  }
 
-	get( name ) {
-
-		let extension = this.extensions[ name ];
-
-		if ( extension === undefined ) {
-
-			extension = this.gl.getExtension( name );
-
-		}
-
-		return extension;
-
-	}
-
-	has( name ) {
-
-		return this.availableExtensions.includes( name );
-
-	}
-
+  has(name) {
+    return this.availableExtensions.includes(name);
+  }
 }
 
 export default WebGLExtensions;

@@ -8,60 +8,51 @@ import { shininess, specularColor } from '../core/PropertyNode.js';
 import { positionViewDirection } from '../accessors/PositionNode.js';
 import { tslFn, float } from '../shadernode/ShaderNode.js';
 
-const G_BlinnPhong_Implicit = () => float( 0.25 );
+const G_BlinnPhong_Implicit = () => float(0.25);
 
-const D_BlinnPhong = tslFn( ( { dotNH } ) => {
+const D_BlinnPhong = tslFn(({ dotNH }) => {
+  return shininess
+    .mul(0.5 / Math.PI)
+    .add(1.0)
+    .mul(dotNH.pow(shininess));
+});
 
-	return shininess.mul( 0.5 / Math.PI ).add( 1.0 ).mul( dotNH.pow( shininess ) );
+const BRDF_BlinnPhong = tslFn(({ lightDirection }) => {
+  const halfDir = lightDirection.add(positionViewDirection).normalize();
 
-} );
+  const dotNH = transformedNormalView.dot(halfDir).clamp();
+  const dotVH = positionViewDirection.dot(halfDir).clamp();
 
-const BRDF_BlinnPhong = tslFn( ( { lightDirection } ) => {
+  const F = F_Schlick({ f0: specularColor, f90: 1.0, dotVH });
+  const G = G_BlinnPhong_Implicit();
+  const D = D_BlinnPhong({ dotNH });
 
-	const halfDir = lightDirection.add( positionViewDirection ).normalize();
-
-	const dotNH = transformedNormalView.dot( halfDir ).clamp();
-	const dotVH = positionViewDirection.dot( halfDir ).clamp();
-
-	const F = F_Schlick( { f0: specularColor, f90: 1.0, dotVH } );
-	const G = G_BlinnPhong_Implicit();
-	const D = D_BlinnPhong( { dotNH } );
-
-	return F.mul( G ).mul( D );
-
-} );
+  return F.mul(G).mul(D);
+});
 
 class PhongLightingModel extends LightingModel {
+  constructor(specular = true) {
+    super();
 
-	constructor( specular = true ) {
+    this.specular = specular;
+  }
 
-		super();
+  direct({ lightDirection, lightColor, reflectedLight }) {
+    const dotNL = transformedNormalView.dot(lightDirection).clamp();
+    const irradiance = dotNL.mul(lightColor);
 
-		this.specular = specular;
+    reflectedLight.directDiffuse.addAssign(irradiance.mul(BRDF_Lambert({ diffuseColor: diffuseColor.rgb })));
 
-	}
+    if (this.specular === true) {
+      reflectedLight.directSpecular.addAssign(
+        irradiance.mul(BRDF_BlinnPhong({ lightDirection })).mul(materialSpecularStrength),
+      );
+    }
+  }
 
-	direct( { lightDirection, lightColor, reflectedLight } ) {
-
-		const dotNL = transformedNormalView.dot( lightDirection ).clamp();
-		const irradiance = dotNL.mul( lightColor );
-
-		reflectedLight.directDiffuse.addAssign( irradiance.mul( BRDF_Lambert( { diffuseColor: diffuseColor.rgb } ) ) );
-
-		if ( this.specular === true ) {
-
-			reflectedLight.directSpecular.addAssign( irradiance.mul( BRDF_BlinnPhong( { lightDirection } ) ).mul( materialSpecularStrength ) );
-
-		}
-
-	}
-
-	indirectDiffuse( { irradiance, reflectedLight } ) {
-
-		reflectedLight.indirectDiffuse.addAssign( irradiance.mul( BRDF_Lambert( { diffuseColor } ) ) );
-
-	}
-
+  indirectDiffuse({ irradiance, reflectedLight }) {
+    reflectedLight.indirectDiffuse.addAssign(irradiance.mul(BRDF_Lambert({ diffuseColor })));
+  }
 }
 
 export default PhongLightingModel;

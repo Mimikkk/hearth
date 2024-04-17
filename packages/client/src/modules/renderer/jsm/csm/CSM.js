@@ -1,4 +1,4 @@
-import { Vector2, Vector3, DirectionalLight, MathUtils, ShaderChunk, Matrix4, Box3 } from '../../threejs/Three.js';
+import { Box3, DirectionalLight, MathUtils, Matrix4, ShaderChunk, Vector2, Vector3 } from '../../threejs/Three.js';
 import { CSMFrustum } from './CSMFrustum.js';
 import { CSMShader } from './CSMShader.js';
 

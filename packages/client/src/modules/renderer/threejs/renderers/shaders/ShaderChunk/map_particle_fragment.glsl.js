@@ -1,4 +1,4 @@
-export default /* glsl */`
+export default /* glsl */ `
 #if defined( USE_MAP ) || defined( USE_ALPHAMAP )
 
 	#if defined( USE_POINTS_UV )

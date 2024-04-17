@@ -48,10 +48,10 @@ import {
  *
  *  for (let i = 0; i < nGeometryGroups; i++) {
  *
- *		const material = new THREE.MeshPhongMaterial({
- *			color: colorMap[i],
- *			wireframe: false
- *		});
+ *    const material = new THREE.MeshPhongMaterial({
+ *      color: colorMap[i],
+ *      wireframe: false
+ *    });
  *
  *  }
  *

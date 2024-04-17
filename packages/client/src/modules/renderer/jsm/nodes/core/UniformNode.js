@@ -1,80 +1,69 @@
 import InputNode from './InputNode.js';
 import { objectGroup } from './UniformGroupNode.js';
 import { addNodeClass } from './Node.js';
-import { nodeObject, getConstNodeType } from '../shadernode/ShaderNode.js';
+import { getConstNodeType, nodeObject } from '../shadernode/ShaderNode.js';
 
 class UniformNode extends InputNode {
+  constructor(value, nodeType = null) {
+    super(value, nodeType);
 
-	constructor( value, nodeType = null ) {
+    this.isUniformNode = true;
 
-		super( value, nodeType );
+    this.groupNode = objectGroup;
+  }
 
-		this.isUniformNode = true;
+  setGroup(group) {
+    this.groupNode = group;
 
-		this.groupNode = objectGroup;
+    return this;
+  }
 
-	}
+  getGroup() {
+    return this.groupNode;
+  }
 
-	setGroup( group ) {
+  getUniformHash(builder) {
+    return this.getHash(builder);
+  }
 
-		this.groupNode = group;
+  generate(builder, output) {
+    const type = this.getNodeType(builder);
 
-		return this;
+    const hash = this.getUniformHash(builder);
 
-	}
+    let sharedNode = builder.getNodeFromHash(hash);
 
-	getGroup() {
+    if (sharedNode === undefined) {
+      builder.setHashNode(this, hash);
 
-		return this.groupNode;
+      sharedNode = this;
+    }
 
-	}
+    const sharedNodeType = sharedNode.getInputType(builder);
 
-	getUniformHash( builder ) {
+    const nodeUniform = builder.getUniformFromNode(
+      sharedNode,
+      sharedNodeType,
+      builder.shaderStage,
+      builder.context.label,
+    );
+    const propertyName = builder.getPropertyName(nodeUniform);
 
-		return this.getHash( builder );
+    if (builder.context.label !== undefined) delete builder.context.label;
 
-	}
-
-	generate( builder, output ) {
-
-		const type = this.getNodeType( builder );
-
-		const hash = this.getUniformHash( builder );
-
-		let sharedNode = builder.getNodeFromHash( hash );
-
-		if ( sharedNode === undefined ) {
-
-			builder.setHashNode( this, hash );
-
-			sharedNode = this;
-
-		}
-
-		const sharedNodeType = sharedNode.getInputType( builder );
-
-		const nodeUniform = builder.getUniformFromNode( sharedNode, sharedNodeType, builder.shaderStage, builder.context.label );
-		const propertyName = builder.getPropertyName( nodeUniform );
-
-		if ( builder.context.label !== undefined ) delete builder.context.label;
-
-		return builder.format( propertyName, type, output );
-
-	}
-
+    return builder.format(propertyName, type, output);
+  }
 }
 
 export default UniformNode;
 
-export const uniform = ( arg1, arg2 ) => {
+export const uniform = (arg1, arg2) => {
+  const nodeType = getConstNodeType(arg2 || arg1);
 
-	const nodeType = getConstNodeType( arg2 || arg1 );
+  // @TODO: get ConstNode from .traverse() in the future
+  const value = arg1 && arg1.isNode === true ? (arg1.node && arg1.node.value) || arg1.value : arg1;
 
-	// @TODO: get ConstNode from .traverse() in the future
-	const value = ( arg1 && arg1.isNode === true ) ? ( arg1.node && arg1.node.value ) || arg1.value : arg1;
-
-	return nodeObject( new UniformNode( value, nodeType ) );
-
+  return nodeObject(new UniformNode(value, nodeType));
 };
 
-addNodeClass( 'UniformNode', UniformNode );
+addNodeClass('UniformNode', UniformNode);

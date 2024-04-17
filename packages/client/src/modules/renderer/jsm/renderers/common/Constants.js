@@ -1,7 +1,7 @@
 export const AttributeType = {
-	VERTEX: 1,
-	INDEX: 2,
-	STORAGE: 4
+  VERTEX: 1,
+  INDEX: 2,
+  STORAGE: 4,
 };
 
 // size of a chunk in bytes (STD140 layout)

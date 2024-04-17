@@ -5,185 +5,166 @@ import { Vector2 } from '../math/Vector2.js';
 import * as MathUtils from '../math/MathUtils.js';
 
 class LatheGeometry extends BufferGeometry {
+  constructor(
+    points = [new Vector2(0, -0.5), new Vector2(0.5, 0), new Vector2(0, 0.5)],
+    segments = 12,
+    phiStart = 0,
+    phiLength = Math.PI * 2,
+  ) {
+    super();
 
-	constructor( points = [ new Vector2( 0, - 0.5 ), new Vector2( 0.5, 0 ), new Vector2( 0, 0.5 ) ], segments = 12, phiStart = 0, phiLength = Math.PI * 2 ) {
+    this.type = 'LatheGeometry';
 
-		super();
+    this.parameters = {
+      points: points,
+      segments: segments,
+      phiStart: phiStart,
+      phiLength: phiLength,
+    };
 
-		this.type = 'LatheGeometry';
+    segments = Math.floor(segments);
 
-		this.parameters = {
-			points: points,
-			segments: segments,
-			phiStart: phiStart,
-			phiLength: phiLength
-		};
+    // clamp phiLength so it's in range of [ 0, 2PI ]
 
-		segments = Math.floor( segments );
+    phiLength = MathUtils.clamp(phiLength, 0, Math.PI * 2);
 
-		// clamp phiLength so it's in range of [ 0, 2PI ]
+    // buffers
 
-		phiLength = MathUtils.clamp( phiLength, 0, Math.PI * 2 );
+    const indices = [];
+    const vertices = [];
+    const uvs = [];
+    const initNormals = [];
+    const normals = [];
 
-		// buffers
+    // helper variables
 
-		const indices = [];
-		const vertices = [];
-		const uvs = [];
-		const initNormals = [];
-		const normals = [];
+    const inverseSegments = 1.0 / segments;
+    const vertex = new Vector3();
+    const uv = new Vector2();
+    const normal = new Vector3();
+    const curNormal = new Vector3();
+    const prevNormal = new Vector3();
+    let dx = 0;
+    let dy = 0;
 
-		// helper variables
+    // pre-compute normals for initial "meridian"
 
-		const inverseSegments = 1.0 / segments;
-		const vertex = new Vector3();
-		const uv = new Vector2();
-		const normal = new Vector3();
-		const curNormal = new Vector3();
-		const prevNormal = new Vector3();
-		let dx = 0;
-		let dy = 0;
+    for (let j = 0; j <= points.length - 1; j++) {
+      switch (j) {
+        case 0: // special handling for 1st vertex on path
+          dx = points[j + 1].x - points[j].x;
+          dy = points[j + 1].y - points[j].y;
 
-		// pre-compute normals for initial "meridian"
+          normal.x = dy * 1.0;
+          normal.y = -dx;
+          normal.z = dy * 0.0;
 
-		for ( let j = 0; j <= ( points.length - 1 ); j ++ ) {
+          prevNormal.copy(normal);
 
-			switch ( j ) {
+          normal.normalize();
 
-				case 0:				// special handling for 1st vertex on path
+          initNormals.push(normal.x, normal.y, normal.z);
 
-					dx = points[ j + 1 ].x - points[ j ].x;
-					dy = points[ j + 1 ].y - points[ j ].y;
+          break;
 
-					normal.x = dy * 1.0;
-					normal.y = - dx;
-					normal.z = dy * 0.0;
+        case points.length - 1: // special handling for last Vertex on path
+          initNormals.push(prevNormal.x, prevNormal.y, prevNormal.z);
 
-					prevNormal.copy( normal );
+          break;
 
-					normal.normalize();
+        default: // default handling for all vertices in between
+          dx = points[j + 1].x - points[j].x;
+          dy = points[j + 1].y - points[j].y;
 
-					initNormals.push( normal.x, normal.y, normal.z );
+          normal.x = dy * 1.0;
+          normal.y = -dx;
+          normal.z = dy * 0.0;
 
-					break;
+          curNormal.copy(normal);
 
-				case ( points.length - 1 ):	// special handling for last Vertex on path
+          normal.x += prevNormal.x;
+          normal.y += prevNormal.y;
+          normal.z += prevNormal.z;
 
-					initNormals.push( prevNormal.x, prevNormal.y, prevNormal.z );
+          normal.normalize();
 
-					break;
+          initNormals.push(normal.x, normal.y, normal.z);
 
-				default:			// default handling for all vertices in between
+          prevNormal.copy(curNormal);
+      }
+    }
 
-					dx = points[ j + 1 ].x - points[ j ].x;
-					dy = points[ j + 1 ].y - points[ j ].y;
+    // generate vertices, uvs and normals
 
-					normal.x = dy * 1.0;
-					normal.y = - dx;
-					normal.z = dy * 0.0;
+    for (let i = 0; i <= segments; i++) {
+      const phi = phiStart + i * inverseSegments * phiLength;
 
-					curNormal.copy( normal );
+      const sin = Math.sin(phi);
+      const cos = Math.cos(phi);
 
-					normal.x += prevNormal.x;
-					normal.y += prevNormal.y;
-					normal.z += prevNormal.z;
+      for (let j = 0; j <= points.length - 1; j++) {
+        // vertex
 
-					normal.normalize();
+        vertex.x = points[j].x * sin;
+        vertex.y = points[j].y;
+        vertex.z = points[j].x * cos;
 
-					initNormals.push( normal.x, normal.y, normal.z );
+        vertices.push(vertex.x, vertex.y, vertex.z);
 
-					prevNormal.copy( curNormal );
+        // uv
 
-			}
+        uv.x = i / segments;
+        uv.y = j / (points.length - 1);
 
-		}
+        uvs.push(uv.x, uv.y);
 
-		// generate vertices, uvs and normals
+        // normal
 
-		for ( let i = 0; i <= segments; i ++ ) {
+        const x = initNormals[3 * j + 0] * sin;
+        const y = initNormals[3 * j + 1];
+        const z = initNormals[3 * j + 0] * cos;
 
-			const phi = phiStart + i * inverseSegments * phiLength;
+        normals.push(x, y, z);
+      }
+    }
 
-			const sin = Math.sin( phi );
-			const cos = Math.cos( phi );
+    // indices
 
-			for ( let j = 0; j <= ( points.length - 1 ); j ++ ) {
+    for (let i = 0; i < segments; i++) {
+      for (let j = 0; j < points.length - 1; j++) {
+        const base = j + i * points.length;
 
-				// vertex
+        const a = base;
+        const b = base + points.length;
+        const c = base + points.length + 1;
+        const d = base + 1;
 
-				vertex.x = points[ j ].x * sin;
-				vertex.y = points[ j ].y;
-				vertex.z = points[ j ].x * cos;
+        // faces
 
-				vertices.push( vertex.x, vertex.y, vertex.z );
+        indices.push(a, b, d);
+        indices.push(c, d, b);
+      }
+    }
 
-				// uv
+    // build geometry
 
-				uv.x = i / segments;
-				uv.y = j / ( points.length - 1 );
+    this.setIndex(indices);
+    this.setAttribute('position', new Float32BufferAttribute(vertices, 3));
+    this.setAttribute('uv', new Float32BufferAttribute(uvs, 2));
+    this.setAttribute('normal', new Float32BufferAttribute(normals, 3));
+  }
 
-				uvs.push( uv.x, uv.y );
+  copy(source) {
+    super.copy(source);
 
-				// normal
+    this.parameters = Object.assign({}, source.parameters);
 
-				const x = initNormals[ 3 * j + 0 ] * sin;
-				const y = initNormals[ 3 * j + 1 ];
-				const z = initNormals[ 3 * j + 0 ] * cos;
+    return this;
+  }
 
-				normals.push( x, y, z );
-
-			}
-
-		}
-
-		// indices
-
-		for ( let i = 0; i < segments; i ++ ) {
-
-			for ( let j = 0; j < ( points.length - 1 ); j ++ ) {
-
-				const base = j + i * points.length;
-
-				const a = base;
-				const b = base + points.length;
-				const c = base + points.length + 1;
-				const d = base + 1;
-
-				// faces
-
-				indices.push( a, b, d );
-				indices.push( c, d, b );
-
-			}
-
-		}
-
-		// build geometry
-
-		this.setIndex( indices );
-		this.setAttribute( 'position', new Float32BufferAttribute( vertices, 3 ) );
-		this.setAttribute( 'uv', new Float32BufferAttribute( uvs, 2 ) );
-		this.setAttribute( 'normal', new Float32BufferAttribute( normals, 3 ) );
-
-	}
-
-	copy( source ) {
-
-		super.copy( source );
-
-		this.parameters = Object.assign( {}, source.parameters );
-
-		return this;
-
-	}
-
-	static fromJSON( data ) {
-
-		return new LatheGeometry( data.points, data.segments, data.phiStart, data.phiLength );
-
-	}
-
+  static fromJSON(data) {
+    return new LatheGeometry(data.points, data.segments, data.phiStart, data.phiLength);
+  }
 }
-
 
 export { LatheGeometry };

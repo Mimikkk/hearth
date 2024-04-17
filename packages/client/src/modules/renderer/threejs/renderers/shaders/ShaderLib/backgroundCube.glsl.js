@@ -1,4 +1,4 @@
-export const vertex = /* glsl */`
+export const vertex = /* glsl */ `
 varying vec3 vWorldDirection;
 
 #include <common>
@@ -15,7 +15,7 @@ void main() {
 }
 `;
 
-export const fragment = /* glsl */`
+export const fragment = /* glsl */ `
 
 #ifdef ENVMAP_TYPE_CUBE
 

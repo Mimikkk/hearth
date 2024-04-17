@@ -2,26 +2,20 @@ import LightingNode from './LightingNode.js';
 import { addNodeClass } from '../core/Node.js';
 
 class AONode extends LightingNode {
+  constructor(aoNode = null) {
+    super();
 
-	constructor( aoNode = null ) {
+    this.aoNode = aoNode;
+  }
 
-		super();
+  setup(builder) {
+    const aoIntensity = 1;
+    const aoNode = this.aoNode.x.sub(1.0).mul(aoIntensity).add(1.0);
 
-		this.aoNode = aoNode;
-
-	}
-
-	setup( builder ) {
-
-		const aoIntensity = 1;
-		const aoNode = this.aoNode.x.sub( 1.0 ).mul( aoIntensity ).add( 1.0 );
-
-		builder.context.ambientOcclusion.mulAssign( aoNode );
-
-	}
-
+    builder.context.ambientOcclusion.mulAssign(aoNode);
+  }
 }
 
 export default AONode;
 
-addNodeClass( 'AONode', AONode );
+addNodeClass('AONode', AONode);

@@ -14,209 +14,173 @@ const _ray = /*@__PURE__*/ new Ray();
 const _sphere = /*@__PURE__*/ new Sphere();
 
 class Line extends Object3D {
+  constructor(geometry = new BufferGeometry(), material = new LineBasicMaterial()) {
+    super();
 
-	constructor( geometry = new BufferGeometry(), material = new LineBasicMaterial() ) {
+    this.isLine = true;
 
-		super();
+    this.type = 'Line';
 
-		this.isLine = true;
+    this.geometry = geometry;
+    this.material = material;
 
-		this.type = 'Line';
+    this.updateMorphTargets();
+  }
 
-		this.geometry = geometry;
-		this.material = material;
+  copy(source, recursive) {
+    super.copy(source, recursive);
 
-		this.updateMorphTargets();
+    this.material = Array.isArray(source.material) ? source.material.slice() : source.material;
+    this.geometry = source.geometry;
 
-	}
+    return this;
+  }
 
-	copy( source, recursive ) {
+  computeLineDistances() {
+    const geometry = this.geometry;
 
-		super.copy( source, recursive );
+    // we assume non-indexed geometry
 
-		this.material = Array.isArray( source.material ) ? source.material.slice() : source.material;
-		this.geometry = source.geometry;
+    if (geometry.index === null) {
+      const positionAttribute = geometry.attributes.position;
+      const lineDistances = [0];
 
-		return this;
+      for (let i = 1, l = positionAttribute.count; i < l; i++) {
+        _start.fromBufferAttribute(positionAttribute, i - 1);
+        _end.fromBufferAttribute(positionAttribute, i);
 
-	}
+        lineDistances[i] = lineDistances[i - 1];
+        lineDistances[i] += _start.distanceTo(_end);
+      }
 
-	computeLineDistances() {
+      geometry.setAttribute('lineDistance', new Float32BufferAttribute(lineDistances, 1));
+    } else {
+      console.warn('THREE.Line.computeLineDistances(): Computation only possible with non-indexed BufferGeometry.');
+    }
 
-		const geometry = this.geometry;
+    return this;
+  }
 
-		// we assume non-indexed geometry
+  raycast(raycaster, intersects) {
+    const geometry = this.geometry;
+    const matrixWorld = this.matrixWorld;
+    const threshold = raycaster.params.Line.threshold;
+    const drawRange = geometry.drawRange;
 
-		if ( geometry.index === null ) {
+    // Checking boundingSphere distance to ray
 
-			const positionAttribute = geometry.attributes.position;
-			const lineDistances = [ 0 ];
+    if (geometry.boundingSphere === null) geometry.computeBoundingSphere();
 
-			for ( let i = 1, l = positionAttribute.count; i < l; i ++ ) {
+    _sphere.copy(geometry.boundingSphere);
+    _sphere.applyMatrix4(matrixWorld);
+    _sphere.radius += threshold;
 
-				_start.fromBufferAttribute( positionAttribute, i - 1 );
-				_end.fromBufferAttribute( positionAttribute, i );
+    if (raycaster.ray.intersectsSphere(_sphere) === false) return;
 
-				lineDistances[ i ] = lineDistances[ i - 1 ];
-				lineDistances[ i ] += _start.distanceTo( _end );
+    //
 
-			}
+    _inverseMatrix.copy(matrixWorld).invert();
+    _ray.copy(raycaster.ray).applyMatrix4(_inverseMatrix);
 
-			geometry.setAttribute( 'lineDistance', new Float32BufferAttribute( lineDistances, 1 ) );
+    const localThreshold = threshold / ((this.scale.x + this.scale.y + this.scale.z) / 3);
+    const localThresholdSq = localThreshold * localThreshold;
 
-		} else {
+    const vStart = new Vector3();
+    const vEnd = new Vector3();
+    const interSegment = new Vector3();
+    const interRay = new Vector3();
+    const step = this.isLineSegments ? 2 : 1;
 
-			console.warn( 'THREE.Line.computeLineDistances(): Computation only possible with non-indexed BufferGeometry.' );
+    const index = geometry.index;
+    const attributes = geometry.attributes;
+    const positionAttribute = attributes.position;
 
-		}
+    if (index !== null) {
+      const start = Math.max(0, drawRange.start);
+      const end = Math.min(index.count, drawRange.start + drawRange.count);
 
-		return this;
+      for (let i = start, l = end - 1; i < l; i += step) {
+        const a = index.getX(i);
+        const b = index.getX(i + 1);
 
-	}
+        vStart.fromBufferAttribute(positionAttribute, a);
+        vEnd.fromBufferAttribute(positionAttribute, b);
 
-	raycast( raycaster, intersects ) {
+        const distSq = _ray.distanceSqToSegment(vStart, vEnd, interRay, interSegment);
 
-		const geometry = this.geometry;
-		const matrixWorld = this.matrixWorld;
-		const threshold = raycaster.params.Line.threshold;
-		const drawRange = geometry.drawRange;
+        if (distSq > localThresholdSq) continue;
 
-		// Checking boundingSphere distance to ray
+        interRay.applyMatrix4(this.matrixWorld); //Move back to world space for distance calculation
 
-		if ( geometry.boundingSphere === null ) geometry.computeBoundingSphere();
+        const distance = raycaster.ray.origin.distanceTo(interRay);
 
-		_sphere.copy( geometry.boundingSphere );
-		_sphere.applyMatrix4( matrixWorld );
-		_sphere.radius += threshold;
-
-		if ( raycaster.ray.intersectsSphere( _sphere ) === false ) return;
-
-		//
-
-		_inverseMatrix.copy( matrixWorld ).invert();
-		_ray.copy( raycaster.ray ).applyMatrix4( _inverseMatrix );
-
-		const localThreshold = threshold / ( ( this.scale.x + this.scale.y + this.scale.z ) / 3 );
-		const localThresholdSq = localThreshold * localThreshold;
-
-		const vStart = new Vector3();
-		const vEnd = new Vector3();
-		const interSegment = new Vector3();
-		const interRay = new Vector3();
-		const step = this.isLineSegments ? 2 : 1;
-
-		const index = geometry.index;
-		const attributes = geometry.attributes;
-		const positionAttribute = attributes.position;
-
-		if ( index !== null ) {
-
-			const start = Math.max( 0, drawRange.start );
-			const end = Math.min( index.count, ( drawRange.start + drawRange.count ) );
-
-			for ( let i = start, l = end - 1; i < l; i += step ) {
-
-				const a = index.getX( i );
-				const b = index.getX( i + 1 );
-
-				vStart.fromBufferAttribute( positionAttribute, a );
-				vEnd.fromBufferAttribute( positionAttribute, b );
-
-				const distSq = _ray.distanceSqToSegment( vStart, vEnd, interRay, interSegment );
-
-				if ( distSq > localThresholdSq ) continue;
-
-				interRay.applyMatrix4( this.matrixWorld ); //Move back to world space for distance calculation
-
-				const distance = raycaster.ray.origin.distanceTo( interRay );
-
-				if ( distance < raycaster.near || distance > raycaster.far ) continue;
-
-				intersects.push( {
-
-					distance: distance,
-					// What do we want? intersection point on the ray or on the segment??
-					// point: raycaster.ray.at( distance ),
-					point: interSegment.clone().applyMatrix4( this.matrixWorld ),
-					index: i,
-					face: null,
-					faceIndex: null,
-					object: this
-
-				} );
-
-			}
-
-		} else {
-
-			const start = Math.max( 0, drawRange.start );
-			const end = Math.min( positionAttribute.count, ( drawRange.start + drawRange.count ) );
-
-			for ( let i = start, l = end - 1; i < l; i += step ) {
-
-				vStart.fromBufferAttribute( positionAttribute, i );
-				vEnd.fromBufferAttribute( positionAttribute, i + 1 );
-
-				const distSq = _ray.distanceSqToSegment( vStart, vEnd, interRay, interSegment );
-
-				if ( distSq > localThresholdSq ) continue;
-
-				interRay.applyMatrix4( this.matrixWorld ); //Move back to world space for distance calculation
-
-				const distance = raycaster.ray.origin.distanceTo( interRay );
-
-				if ( distance < raycaster.near || distance > raycaster.far ) continue;
-
-				intersects.push( {
-
-					distance: distance,
-					// What do we want? intersection point on the ray or on the segment??
-					// point: raycaster.ray.at( distance ),
-					point: interSegment.clone().applyMatrix4( this.matrixWorld ),
-					index: i,
-					face: null,
-					faceIndex: null,
-					object: this
-
-				} );
-
-			}
-
-		}
-
-	}
-
-	updateMorphTargets() {
-
-		const geometry = this.geometry;
-
-		const morphAttributes = geometry.morphAttributes;
-		const keys = Object.keys( morphAttributes );
-
-		if ( keys.length > 0 ) {
-
-			const morphAttribute = morphAttributes[ keys[ 0 ] ];
-
-			if ( morphAttribute !== undefined ) {
-
-				this.morphTargetInfluences = [];
-				this.morphTargetDictionary = {};
-
-				for ( let m = 0, ml = morphAttribute.length; m < ml; m ++ ) {
-
-					const name = morphAttribute[ m ].name || String( m );
-
-					this.morphTargetInfluences.push( 0 );
-					this.morphTargetDictionary[ name ] = m;
-
-				}
-
-			}
-
-		}
-
-	}
-
+        if (distance < raycaster.near || distance > raycaster.far) continue;
+
+        intersects.push({
+          distance: distance,
+          // What do we want? intersection point on the ray or on the segment??
+          // point: raycaster.ray.at( distance ),
+          point: interSegment.clone().applyMatrix4(this.matrixWorld),
+          index: i,
+          face: null,
+          faceIndex: null,
+          object: this,
+        });
+      }
+    } else {
+      const start = Math.max(0, drawRange.start);
+      const end = Math.min(positionAttribute.count, drawRange.start + drawRange.count);
+
+      for (let i = start, l = end - 1; i < l; i += step) {
+        vStart.fromBufferAttribute(positionAttribute, i);
+        vEnd.fromBufferAttribute(positionAttribute, i + 1);
+
+        const distSq = _ray.distanceSqToSegment(vStart, vEnd, interRay, interSegment);
+
+        if (distSq > localThresholdSq) continue;
+
+        interRay.applyMatrix4(this.matrixWorld); //Move back to world space for distance calculation
+
+        const distance = raycaster.ray.origin.distanceTo(interRay);
+
+        if (distance < raycaster.near || distance > raycaster.far) continue;
+
+        intersects.push({
+          distance: distance,
+          // What do we want? intersection point on the ray or on the segment??
+          // point: raycaster.ray.at( distance ),
+          point: interSegment.clone().applyMatrix4(this.matrixWorld),
+          index: i,
+          face: null,
+          faceIndex: null,
+          object: this,
+        });
+      }
+    }
+  }
+
+  updateMorphTargets() {
+    const geometry = this.geometry;
+
+    const morphAttributes = geometry.morphAttributes;
+    const keys = Object.keys(morphAttributes);
+
+    if (keys.length > 0) {
+      const morphAttribute = morphAttributes[keys[0]];
+
+      if (morphAttribute !== undefined) {
+        this.morphTargetInfluences = [];
+        this.morphTargetDictionary = {};
+
+        for (let m = 0, ml = morphAttribute.length; m < ml; m++) {
+          const name = morphAttribute[m].name || String(m);
+
+          this.morphTargetInfluences.push(0);
+          this.morphTargetDictionary[name] = m;
+        }
+      }
+    }
+  }
 }
 
 export { Line };

@@ -5,37 +5,31 @@ import { addNodeClass } from '../core/Node.js';
 import { nodeObject } from '../shadernode/ShaderNode.js';
 
 class MaterialReferenceNode extends ReferenceNode {
+  constructor(property, inputType, material = null) {
+    super(property, inputType, material);
 
-	constructor( property, inputType, material = null ) {
+    this.material = material;
 
-		super( property, inputType, material );
+    //this.updateType = NodeUpdateType.RENDER;
+  }
 
-		this.material = material;
+  /*setNodeType( node ) {
 
-		//this.updateType = NodeUpdateType.RENDER;
+    super.setNodeType( node );
 
-	}
+    this.node.groupNode = renderGroup;
 
-	/*setNodeType( node ) {
+  }*/
 
-		super.setNodeType( node );
+  setReference(state) {
+    this.reference = this.material !== null ? this.material : state.material;
 
-		this.node.groupNode = renderGroup;
-
-	}*/
-
-	setReference( state ) {
-
-		this.reference = this.material !== null ? this.material : state.material;
-
-		return this.reference;
-
-	}
-
+    return this.reference;
+  }
 }
 
 export default MaterialReferenceNode;
 
-export const materialReference = ( name, type, material ) => nodeObject( new MaterialReferenceNode( name, type, material ) );
+export const materialReference = (name, type, material) => nodeObject(new MaterialReferenceNode(name, type, material));
 
-addNodeClass( 'MaterialReferenceNode', MaterialReferenceNode );
+addNodeClass('MaterialReferenceNode', MaterialReferenceNode);

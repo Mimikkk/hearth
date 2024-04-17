@@ -1,143 +1,101 @@
 import { NodeUpdateType } from './constants.js';
 
 class NodeFrame {
+  constructor() {
+    this.time = 0;
+    this.deltaTime = 0;
 
-	constructor() {
+    this.frameId = 0;
+    this.renderId = 0;
 
-		this.time = 0;
-		this.deltaTime = 0;
+    this.startTime = null;
 
-		this.frameId = 0;
-		this.renderId = 0;
+    this.updateMap = new WeakMap();
+    this.updateBeforeMap = new WeakMap();
 
-		this.startTime = null;
+    this.renderer = null;
+    this.material = null;
+    this.camera = null;
+    this.object = null;
+    this.scene = null;
+  }
 
-		this.updateMap = new WeakMap();
-		this.updateBeforeMap = new WeakMap();
+  _getMaps(referenceMap, nodeRef) {
+    let maps = referenceMap.get(nodeRef);
 
-		this.renderer = null;
-		this.material = null;
-		this.camera = null;
-		this.object = null;
-		this.scene = null;
+    if (maps === undefined) {
+      maps = {
+        renderMap: new WeakMap(),
+        frameMap: new WeakMap(),
+      };
 
-	}
+      referenceMap.set(nodeRef, maps);
+    }
 
-	_getMaps( referenceMap, nodeRef ) {
+    return maps;
+  }
 
-		let maps = referenceMap.get( nodeRef );
+  updateBeforeNode(node) {
+    const updateType = node.getUpdateBeforeType();
+    const reference = node.setReference(this);
 
-		if ( maps === undefined ) {
+    if (updateType === NodeUpdateType.FRAME) {
+      const { frameMap } = this._getMaps(this.updateBeforeMap, reference);
 
-			maps = {
-				renderMap: new WeakMap(),
-				frameMap: new WeakMap()
-			};
+      if (frameMap.get(node) !== this.frameId) {
+        if (node.updateBefore(this) !== false) {
+          frameMap.set(node, this.frameId);
+        }
+      }
+    } else if (updateType === NodeUpdateType.RENDER) {
+      const { renderMap } = this._getMaps(this.updateBeforeMap, reference);
 
-			referenceMap.set( nodeRef, maps );
+      if (renderMap.get(node) !== this.renderId) {
+        if (node.updateBefore(this) !== false) {
+          renderMap.set(node, this.renderId);
+        }
+      }
+    } else if (updateType === NodeUpdateType.OBJECT) {
+      node.updateBefore(this);
+    }
+  }
 
-		}
+  updateNode(node) {
+    const updateType = node.getUpdateType();
+    const reference = node.setReference(this);
 
-		return maps;
+    if (updateType === NodeUpdateType.FRAME) {
+      const { frameMap } = this._getMaps(this.updateMap, reference);
 
-	}
+      if (frameMap.get(node) !== this.frameId) {
+        if (node.update(this) !== false) {
+          frameMap.set(node, this.frameId);
+        }
+      }
+    } else if (updateType === NodeUpdateType.RENDER) {
+      const { renderMap } = this._getMaps(this.updateMap, reference);
 
-	updateBeforeNode( node ) {
+      if (renderMap.get(node) !== this.renderId) {
+        if (node.update(this) !== false) {
+          renderMap.set(node, this.renderId);
+        }
+      }
+    } else if (updateType === NodeUpdateType.OBJECT) {
+      node.update(this);
+    }
+  }
 
-		const updateType = node.getUpdateBeforeType();
-		const reference = node.setReference( this );
+  update() {
+    this.frameId++;
 
-		if ( updateType === NodeUpdateType.FRAME ) {
+    if (this.lastTime === undefined) this.lastTime = performance.now();
 
-			const { frameMap } = this._getMaps( this.updateBeforeMap, reference );
+    this.deltaTime = (performance.now() - this.lastTime) / 1000;
 
-			if ( frameMap.get( node ) !== this.frameId ) {
+    this.lastTime = performance.now();
 
-				if ( node.updateBefore( this ) !== false ) {
-
-					frameMap.set( node, this.frameId );
-
-				}
-
-			}
-
-		} else if ( updateType === NodeUpdateType.RENDER ) {
-
-			const { renderMap } = this._getMaps( this.updateBeforeMap, reference );
-
-			if ( renderMap.get( node ) !== this.renderId ) {
-
-				if ( node.updateBefore( this ) !== false ) {
-
-					renderMap.set( node, this.renderId );
-
-				}
-
-			}
-
-		} else if ( updateType === NodeUpdateType.OBJECT ) {
-
-			node.updateBefore( this );
-
-		}
-
-	}
-
-	updateNode( node ) {
-
-		const updateType = node.getUpdateType();
-		const reference = node.setReference( this );
-
-		if ( updateType === NodeUpdateType.FRAME ) {
-
-			const { frameMap } = this._getMaps( this.updateMap, reference );
-
-			if ( frameMap.get( node ) !== this.frameId ) {
-
-				if ( node.update( this ) !== false ) {
-
-					frameMap.set( node, this.frameId );
-
-				}
-
-			}
-
-		} else if ( updateType === NodeUpdateType.RENDER ) {
-
-			const { renderMap } = this._getMaps( this.updateMap, reference );
-
-			if ( renderMap.get( node ) !== this.renderId ) {
-
-				if ( node.update( this ) !== false ) {
-
-					renderMap.set( node, this.renderId );
-
-				}
-
-			}
-
-		} else if ( updateType === NodeUpdateType.OBJECT ) {
-
-			node.update( this );
-
-		}
-
-	}
-
-	update() {
-
-		this.frameId ++;
-
-		if ( this.lastTime === undefined ) this.lastTime = performance.now();
-
-		this.deltaTime = ( performance.now() - this.lastTime ) / 1000;
-
-		this.lastTime = performance.now();
-
-		this.time += this.deltaTime;
-
-	}
-
+    this.time += this.deltaTime;
+  }
 }
 
 export default NodeFrame;

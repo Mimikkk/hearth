@@ -60,6 +60,69 @@ class ConvexObjectBreaker {
     for (let i = 0; i < n; i++) this.segments[i] = false;
   }
 
+  static transformFreeVector(v, m) {
+    // input:
+    // vector interpreted as a free vector
+    // THREE.Matrix4 orthogonal matrix (matrix without scale)
+
+    const x = v.x,
+      y = v.y,
+      z = v.z;
+    const e = m.elements;
+
+    v.x = e[0] * x + e[4] * y + e[8] * z;
+    v.y = e[1] * x + e[5] * y + e[9] * z;
+    v.z = e[2] * x + e[6] * y + e[10] * z;
+
+    return v;
+  }
+
+  static transformFreeVectorInverse(v, m) {
+    // input:
+    // vector interpreted as a free vector
+    // THREE.Matrix4 orthogonal matrix (matrix without scale)
+
+    const x = v.x,
+      y = v.y,
+      z = v.z;
+    const e = m.elements;
+
+    v.x = e[0] * x + e[1] * y + e[2] * z;
+    v.y = e[4] * x + e[5] * y + e[6] * z;
+    v.z = e[8] * x + e[9] * y + e[10] * z;
+
+    return v;
+  }
+
+  static transformTiedVectorInverse(v, m) {
+    // input:
+    // vector interpreted as a tied (ordinary) vector
+    // THREE.Matrix4 orthogonal matrix (matrix without scale)
+
+    const x = v.x,
+      y = v.y,
+      z = v.z;
+    const e = m.elements;
+
+    v.x = e[0] * x + e[1] * y + e[2] * z - e[12];
+    v.y = e[4] * x + e[5] * y + e[6] * z - e[13];
+    v.z = e[8] * x + e[9] * y + e[10] * z - e[14];
+
+    return v;
+  }
+
+  static transformPlaneToLocalSpace(plane, m, resultPlane) {
+    resultPlane.normal.copy(plane.normal);
+    resultPlane.constant = plane.constant;
+
+    const referencePoint = ConvexObjectBreaker.transformTiedVectorInverse(plane.coplanarPoint(_v1), m);
+
+    ConvexObjectBreaker.transformFreeVectorInverse(resultPlane.normal, m);
+
+    // recalculate constant (like in setFromNormalAndCoplanarPoint)
+    resultPlane.constant = -referencePoint.dot(resultPlane.normal);
+  }
+
   prepareBreakableObject(object, mass, velocity, angularVelocity, breakable) {
     // object is a Object3d (normally a Mesh), must have a buffer geometry, and it must be convex.
     // Its material property is propagated to its children (sub-pieces)
@@ -383,69 +446,6 @@ class ConvexObjectBreaker {
     output.object2 = object2;
 
     return numObjects;
-  }
-
-  static transformFreeVector(v, m) {
-    // input:
-    // vector interpreted as a free vector
-    // THREE.Matrix4 orthogonal matrix (matrix without scale)
-
-    const x = v.x,
-      y = v.y,
-      z = v.z;
-    const e = m.elements;
-
-    v.x = e[0] * x + e[4] * y + e[8] * z;
-    v.y = e[1] * x + e[5] * y + e[9] * z;
-    v.z = e[2] * x + e[6] * y + e[10] * z;
-
-    return v;
-  }
-
-  static transformFreeVectorInverse(v, m) {
-    // input:
-    // vector interpreted as a free vector
-    // THREE.Matrix4 orthogonal matrix (matrix without scale)
-
-    const x = v.x,
-      y = v.y,
-      z = v.z;
-    const e = m.elements;
-
-    v.x = e[0] * x + e[1] * y + e[2] * z;
-    v.y = e[4] * x + e[5] * y + e[6] * z;
-    v.z = e[8] * x + e[9] * y + e[10] * z;
-
-    return v;
-  }
-
-  static transformTiedVectorInverse(v, m) {
-    // input:
-    // vector interpreted as a tied (ordinary) vector
-    // THREE.Matrix4 orthogonal matrix (matrix without scale)
-
-    const x = v.x,
-      y = v.y,
-      z = v.z;
-    const e = m.elements;
-
-    v.x = e[0] * x + e[1] * y + e[2] * z - e[12];
-    v.y = e[4] * x + e[5] * y + e[6] * z - e[13];
-    v.z = e[8] * x + e[9] * y + e[10] * z - e[14];
-
-    return v;
-  }
-
-  static transformPlaneToLocalSpace(plane, m, resultPlane) {
-    resultPlane.normal.copy(plane.normal);
-    resultPlane.constant = plane.constant;
-
-    const referencePoint = ConvexObjectBreaker.transformTiedVectorInverse(plane.coplanarPoint(_v1), m);
-
-    ConvexObjectBreaker.transformFreeVectorInverse(resultPlane.normal, m);
-
-    // recalculate constant (like in setFromNormalAndCoplanarPoint)
-    resultPlane.constant = -referencePoint.dot(resultPlane.normal);
   }
 }
 

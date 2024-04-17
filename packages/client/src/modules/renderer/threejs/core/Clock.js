@@ -1,74 +1,56 @@
 class Clock {
+  constructor(autoStart = true) {
+    this.autoStart = autoStart;
 
-	constructor( autoStart = true ) {
+    this.startTime = 0;
+    this.oldTime = 0;
+    this.elapsedTime = 0;
 
-		this.autoStart = autoStart;
+    this.running = false;
+  }
 
-		this.startTime = 0;
-		this.oldTime = 0;
-		this.elapsedTime = 0;
+  start() {
+    this.startTime = now();
 
-		this.running = false;
+    this.oldTime = this.startTime;
+    this.elapsedTime = 0;
+    this.running = true;
+  }
 
-	}
+  stop() {
+    this.getElapsedTime();
+    this.running = false;
+    this.autoStart = false;
+  }
 
-	start() {
+  getElapsedTime() {
+    this.getDelta();
+    return this.elapsedTime;
+  }
 
-		this.startTime = now();
+  getDelta() {
+    let diff = 0;
 
-		this.oldTime = this.startTime;
-		this.elapsedTime = 0;
-		this.running = true;
+    if (this.autoStart && !this.running) {
+      this.start();
+      return 0;
+    }
 
-	}
+    if (this.running) {
+      const newTime = now();
 
-	stop() {
+      diff = (newTime - this.oldTime) / 1000;
+      this.oldTime = newTime;
 
-		this.getElapsedTime();
-		this.running = false;
-		this.autoStart = false;
+      this.elapsedTime += diff;
+    }
 
-	}
-
-	getElapsedTime() {
-
-		this.getDelta();
-		return this.elapsedTime;
-
-	}
-
-	getDelta() {
-
-		let diff = 0;
-
-		if ( this.autoStart && ! this.running ) {
-
-			this.start();
-			return 0;
-
-		}
-
-		if ( this.running ) {
-
-			const newTime = now();
-
-			diff = ( newTime - this.oldTime ) / 1000;
-			this.oldTime = newTime;
-
-			this.elapsedTime += diff;
-
-		}
-
-		return diff;
-
-	}
-
+    return diff;
+  }
 }
 
 function now() {
-
-	return ( typeof performance === 'undefined' ? Date : performance ).now(); // see #10732
-
+  return (typeof performance === 'undefined' ? Date : performance).now(); // see #10732
 }
 
 export { Clock };

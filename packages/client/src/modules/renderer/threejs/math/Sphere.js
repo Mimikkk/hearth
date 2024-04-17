@@ -6,240 +6,178 @@ const _v1 = /*@__PURE__*/ new Vector3();
 const _v2 = /*@__PURE__*/ new Vector3();
 
 class Sphere {
+  constructor(center = new Vector3(), radius = -1) {
+    this.isSphere = true;
 
-	constructor( center = new Vector3(), radius = - 1 ) {
+    this.center = center;
+    this.radius = radius;
+  }
 
-		this.isSphere = true;
+  set(center, radius) {
+    this.center.copy(center);
+    this.radius = radius;
 
-		this.center = center;
-		this.radius = radius;
+    return this;
+  }
 
-	}
+  setFromPoints(points, optionalCenter) {
+    const center = this.center;
 
-	set( center, radius ) {
+    if (optionalCenter !== undefined) {
+      center.copy(optionalCenter);
+    } else {
+      _box.setFromPoints(points).getCenter(center);
+    }
 
-		this.center.copy( center );
-		this.radius = radius;
+    let maxRadiusSq = 0;
 
-		return this;
+    for (let i = 0, il = points.length; i < il; i++) {
+      maxRadiusSq = Math.max(maxRadiusSq, center.distanceToSquared(points[i]));
+    }
 
-	}
+    this.radius = Math.sqrt(maxRadiusSq);
 
-	setFromPoints( points, optionalCenter ) {
+    return this;
+  }
 
-		const center = this.center;
+  copy(sphere) {
+    this.center.copy(sphere.center);
+    this.radius = sphere.radius;
 
-		if ( optionalCenter !== undefined ) {
+    return this;
+  }
 
-			center.copy( optionalCenter );
+  isEmpty() {
+    return this.radius < 0;
+  }
 
-		} else {
+  makeEmpty() {
+    this.center.set(0, 0, 0);
+    this.radius = -1;
 
-			_box.setFromPoints( points ).getCenter( center );
+    return this;
+  }
 
-		}
+  containsPoint(point) {
+    return point.distanceToSquared(this.center) <= this.radius * this.radius;
+  }
 
-		let maxRadiusSq = 0;
+  distanceToPoint(point) {
+    return point.distanceTo(this.center) - this.radius;
+  }
 
-		for ( let i = 0, il = points.length; i < il; i ++ ) {
+  intersectsSphere(sphere) {
+    const radiusSum = this.radius + sphere.radius;
 
-			maxRadiusSq = Math.max( maxRadiusSq, center.distanceToSquared( points[ i ] ) );
+    return sphere.center.distanceToSquared(this.center) <= radiusSum * radiusSum;
+  }
 
-		}
+  intersectsBox(box) {
+    return box.intersectsSphere(this);
+  }
 
-		this.radius = Math.sqrt( maxRadiusSq );
+  intersectsPlane(plane) {
+    return Math.abs(plane.distanceToPoint(this.center)) <= this.radius;
+  }
 
-		return this;
+  clampPoint(point, target) {
+    const deltaLengthSq = this.center.distanceToSquared(point);
 
-	}
+    target.copy(point);
 
-	copy( sphere ) {
+    if (deltaLengthSq > this.radius * this.radius) {
+      target.sub(this.center).normalize();
+      target.multiplyScalar(this.radius).add(this.center);
+    }
 
-		this.center.copy( sphere.center );
-		this.radius = sphere.radius;
+    return target;
+  }
 
-		return this;
+  getBoundingBox(target) {
+    if (this.isEmpty()) {
+      // Empty sphere produces empty bounding box
+      target.makeEmpty();
+      return target;
+    }
 
-	}
+    target.set(this.center, this.center);
+    target.expandByScalar(this.radius);
 
-	isEmpty() {
+    return target;
+  }
 
-		return ( this.radius < 0 );
+  applyMatrix4(matrix) {
+    this.center.applyMatrix4(matrix);
+    this.radius = this.radius * matrix.getMaxScaleOnAxis();
 
-	}
+    return this;
+  }
 
-	makeEmpty() {
+  translate(offset) {
+    this.center.add(offset);
 
-		this.center.set( 0, 0, 0 );
-		this.radius = - 1;
+    return this;
+  }
 
-		return this;
+  expandByPoint(point) {
+    if (this.isEmpty()) {
+      this.center.copy(point);
 
-	}
+      this.radius = 0;
 
-	containsPoint( point ) {
+      return this;
+    }
 
-		return ( point.distanceToSquared( this.center ) <= ( this.radius * this.radius ) );
+    _v1.subVectors(point, this.center);
 
-	}
+    const lengthSq = _v1.lengthSq();
 
-	distanceToPoint( point ) {
+    if (lengthSq > this.radius * this.radius) {
+      // calculate the minimal sphere
 
-		return ( point.distanceTo( this.center ) - this.radius );
+      const length = Math.sqrt(lengthSq);
 
-	}
+      const delta = (length - this.radius) * 0.5;
 
-	intersectsSphere( sphere ) {
+      this.center.addScaledVector(_v1, delta / length);
 
-		const radiusSum = this.radius + sphere.radius;
+      this.radius += delta;
+    }
 
-		return sphere.center.distanceToSquared( this.center ) <= ( radiusSum * radiusSum );
+    return this;
+  }
 
-	}
+  union(sphere) {
+    if (sphere.isEmpty()) {
+      return this;
+    }
 
-	intersectsBox( box ) {
+    if (this.isEmpty()) {
+      this.copy(sphere);
 
-		return box.intersectsSphere( this );
+      return this;
+    }
 
-	}
+    if (this.center.equals(sphere.center) === true) {
+      this.radius = Math.max(this.radius, sphere.radius);
+    } else {
+      _v2.subVectors(sphere.center, this.center).setLength(sphere.radius);
 
-	intersectsPlane( plane ) {
+      this.expandByPoint(_v1.copy(sphere.center).add(_v2));
 
-		return Math.abs( plane.distanceToPoint( this.center ) ) <= this.radius;
+      this.expandByPoint(_v1.copy(sphere.center).sub(_v2));
+    }
 
-	}
+    return this;
+  }
 
-	clampPoint( point, target ) {
+  equals(sphere) {
+    return sphere.center.equals(this.center) && sphere.radius === this.radius;
+  }
 
-		const deltaLengthSq = this.center.distanceToSquared( point );
-
-		target.copy( point );
-
-		if ( deltaLengthSq > ( this.radius * this.radius ) ) {
-
-			target.sub( this.center ).normalize();
-			target.multiplyScalar( this.radius ).add( this.center );
-
-		}
-
-		return target;
-
-	}
-
-	getBoundingBox( target ) {
-
-		if ( this.isEmpty() ) {
-
-			// Empty sphere produces empty bounding box
-			target.makeEmpty();
-			return target;
-
-		}
-
-		target.set( this.center, this.center );
-		target.expandByScalar( this.radius );
-
-		return target;
-
-	}
-
-	applyMatrix4( matrix ) {
-
-		this.center.applyMatrix4( matrix );
-		this.radius = this.radius * matrix.getMaxScaleOnAxis();
-
-		return this;
-
-	}
-
-	translate( offset ) {
-
-		this.center.add( offset );
-
-		return this;
-
-	}
-
-	expandByPoint( point ) {
-
-		if ( this.isEmpty() ) {
-
-			this.center.copy( point );
-
-			this.radius = 0;
-
-			return this;
-
-		}
-
-		_v1.subVectors( point, this.center );
-
-		const lengthSq = _v1.lengthSq();
-
-		if ( lengthSq > ( this.radius * this.radius ) ) {
-
-			// calculate the minimal sphere
-
-			const length = Math.sqrt( lengthSq );
-
-			const delta = ( length - this.radius ) * 0.5;
-
-			this.center.addScaledVector( _v1, delta / length );
-
-			this.radius += delta;
-
-		}
-
-		return this;
-
-	}
-
-	union( sphere ) {
-
-		if ( sphere.isEmpty() ) {
-
-			return this;
-
-		}
-
-		if ( this.isEmpty() ) {
-
-			this.copy( sphere );
-
-			return this;
-
-		}
-
-		if ( this.center.equals( sphere.center ) === true ) {
-
-			 this.radius = Math.max( this.radius, sphere.radius );
-
-		} else {
-
-			_v2.subVectors( sphere.center, this.center ).setLength( sphere.radius );
-
-			this.expandByPoint( _v1.copy( sphere.center ).add( _v2 ) );
-
-			this.expandByPoint( _v1.copy( sphere.center ).sub( _v2 ) );
-
-		}
-
-		return this;
-
-	}
-
-	equals( sphere ) {
-
-		return sphere.center.equals( this.center ) && ( sphere.radius === this.radius );
-
-	}
-
-	clone() {
-
-		return new this.constructor().copy( this );
-
-	}
-
+  clone() {
+    return new this.constructor().copy(this);
+  }
 }
 
 export { Sphere };

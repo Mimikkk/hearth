@@ -1,40 +1,36 @@
 class FlakesTexture {
+  constructor(width = 512, height = 512) {
+    const canvas = document.createElement('canvas');
+    canvas.width = width;
+    canvas.height = height;
 
-	constructor( width = 512, height = 512 ) {
+    const context = canvas.getContext('2d');
+    context.fillStyle = 'rgb(127,127,255)';
+    context.fillRect(0, 0, width, height);
 
-		const canvas = document.createElement( 'canvas' );
-		canvas.width = width;
-		canvas.height = height;
+    for (let i = 0; i < 4000; i++) {
+      const x = Math.random() * width;
+      const y = Math.random() * height;
+      const r = Math.random() * 3 + 3;
 
-		const context = canvas.getContext( '2d' );
-		context.fillStyle = 'rgb(127,127,255)';
-		context.fillRect( 0, 0, width, height );
+      let nx = Math.random() * 2 - 1;
+      let ny = Math.random() * 2 - 1;
+      let nz = 1.5;
 
-		for ( let i = 0; i < 4000; i ++ ) {
+      const l = Math.sqrt(nx * nx + ny * ny + nz * nz);
 
-			const x = Math.random() * width;
-			const y = Math.random() * height;
-			const r = Math.random() * 3 + 3;
+      nx /= l;
+      ny /= l;
+      nz /= l;
 
-			let nx = Math.random() * 2 - 1;
-			let ny = Math.random() * 2 - 1;
-			let nz = 1.5;
+      context.fillStyle = 'rgb(' + (nx * 127 + 127) + ',' + (ny * 127 + 127) + ',' + nz * 255 + ')';
+      context.beginPath();
+      context.arc(x, y, r, 0, Math.PI * 2);
+      context.fill();
+    }
 
-			const l = Math.sqrt( nx * nx + ny * ny + nz * nz );
-
-			nx /= l; ny /= l; nz /= l;
-
-			context.fillStyle = 'rgb(' + ( nx * 127 + 127 ) + ',' + ( ny * 127 + 127 ) + ',' + ( nz * 255 ) + ')';
-			context.beginPath();
-			context.arc( x, y, r, 0, Math.PI * 2 );
-			context.fill();
-
-		}
-
-		return canvas;
-
-	}
-
+    return canvas;
+  }
 }
 
 export { FlakesTexture };

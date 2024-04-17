@@ -4,32 +4,26 @@ import { addNodeClass } from '../core/Node.js';
 import { addNodeElement, nodeProxy } from '../shadernode/ShaderNode.js';
 
 class FogRangeNode extends FogNode {
+  constructor(colorNode, nearNode, farNode) {
+    super(colorNode);
 
-	constructor( colorNode, nearNode, farNode ) {
+    this.isFogRangeNode = true;
 
-		super( colorNode );
+    this.nearNode = nearNode;
+    this.farNode = farNode;
+  }
 
-		this.isFogRangeNode = true;
+  setup(builder) {
+    const viewZ = this.getViewZNode(builder);
 
-		this.nearNode = nearNode;
-		this.farNode = farNode;
-
-	}
-
-	setup( builder ) {
-
-		const viewZ = this.getViewZNode( builder );
-
-		return smoothstep( this.nearNode, this.farNode, viewZ );
-
-	}
-
+    return smoothstep(this.nearNode, this.farNode, viewZ);
+  }
 }
 
 export default FogRangeNode;
 
-export const rangeFog = nodeProxy( FogRangeNode );
+export const rangeFog = nodeProxy(FogRangeNode);
 
-addNodeElement( 'rangeFog', rangeFog );
+addNodeElement('rangeFog', rangeFog);
 
-addNodeClass( 'FogRangeNode', FogRangeNode );
+addNodeClass('FogRangeNode', FogRangeNode);

@@ -441,7 +441,7 @@ class QueryManager {
 
       if (!!~query.Components.indexOf(Component) && !!~query.entities.indexOf(entity) && !query.match(entity)) {
         query.removeEntity(entity);
-        continue;
+
       }
     }
   }
@@ -1186,23 +1186,6 @@ class World {
 }
 
 class System {
-  canExecute() {
-    if (this._mandatoryQueries.length === 0) return true;
-
-    for (let i = 0; i < this._mandatoryQueries.length; i++) {
-      var query = this._mandatoryQueries[i];
-      if (query.entities.length === 0) {
-        return false;
-      }
-    }
-
-    return true;
-  }
-
-  getName() {
-    return this.constructor.getName();
-  }
-
   constructor(world, attributes) {
     this.world = world;
     this.enabled = true;
@@ -1309,6 +1292,23 @@ class System {
         }
       }
     }
+  }
+
+  canExecute() {
+    if (this._mandatoryQueries.length === 0) return true;
+
+    for (let i = 0; i < this._mandatoryQueries.length; i++) {
+      var query = this._mandatoryQueries[i];
+      if (query.entities.length === 0) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  getName() {
+    return this.constructor.getName();
   }
 
   stop() {

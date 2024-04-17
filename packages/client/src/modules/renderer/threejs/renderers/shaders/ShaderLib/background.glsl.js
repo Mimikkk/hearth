@@ -1,4 +1,4 @@
-export const vertex = /* glsl */`
+export const vertex = /* glsl */ `
 varying vec2 vUv;
 uniform mat3 uvTransform;
 
@@ -11,7 +11,7 @@ void main() {
 }
 `;
 
-export const fragment = /* glsl */`
+export const fragment = /* glsl */ `
 uniform sampler2D t2D;
 uniform float backgroundIntensity;
 

@@ -6,58 +6,61 @@ import { Float32BufferAttribute } from '../core/BufferAttribute.js';
 import { BufferGeometry } from '../core/BufferGeometry.js';
 
 class PlaneHelper extends Line {
+  constructor(plane, size = 1, hex = 0xffff00) {
+    const color = hex;
 
-	constructor( plane, size = 1, hex = 0xffff00 ) {
+    const positions = [1, -1, 0, -1, 1, 0, -1, -1, 0, 1, 1, 0, -1, 1, 0, -1, -1, 0, 1, -1, 0, 1, 1, 0];
 
-		const color = hex;
+    const geometry = new BufferGeometry();
+    geometry.setAttribute('position', new Float32BufferAttribute(positions, 3));
+    geometry.computeBoundingSphere();
 
-		const positions = [ 1, - 1, 0, - 1, 1, 0, - 1, - 1, 0, 1, 1, 0, - 1, 1, 0, - 1, - 1, 0, 1, - 1, 0, 1, 1, 0 ];
+    super(geometry, new LineBasicMaterial({ color: color, toneMapped: false }));
 
-		const geometry = new BufferGeometry();
-		geometry.setAttribute( 'position', new Float32BufferAttribute( positions, 3 ) );
-		geometry.computeBoundingSphere();
+    this.type = 'PlaneHelper';
 
-		super( geometry, new LineBasicMaterial( { color: color, toneMapped: false } ) );
+    this.plane = plane;
 
-		this.type = 'PlaneHelper';
+    this.size = size;
 
-		this.plane = plane;
+    const positions2 = [1, 1, 0, -1, 1, 0, -1, -1, 0, 1, 1, 0, -1, -1, 0, 1, -1, 0];
 
-		this.size = size;
+    const geometry2 = new BufferGeometry();
+    geometry2.setAttribute('position', new Float32BufferAttribute(positions2, 3));
+    geometry2.computeBoundingSphere();
 
-		const positions2 = [ 1, 1, 0, - 1, 1, 0, - 1, - 1, 0, 1, 1, 0, - 1, - 1, 0, 1, - 1, 0 ];
+    this.add(
+      new Mesh(
+        geometry2,
+        new MeshBasicMaterial({
+          color: color,
+          opacity: 0.2,
+          transparent: true,
+          depthWrite: false,
+          toneMapped: false,
+        }),
+      ),
+    );
+  }
 
-		const geometry2 = new BufferGeometry();
-		geometry2.setAttribute( 'position', new Float32BufferAttribute( positions2, 3 ) );
-		geometry2.computeBoundingSphere();
+  updateMatrixWorld(force) {
+    this.position.set(0, 0, 0);
 
-		this.add( new Mesh( geometry2, new MeshBasicMaterial( { color: color, opacity: 0.2, transparent: true, depthWrite: false, toneMapped: false } ) ) );
+    this.scale.set(0.5 * this.size, 0.5 * this.size, 1);
 
-	}
+    this.lookAt(this.plane.normal);
 
-	updateMatrixWorld( force ) {
+    this.translateZ(-this.plane.constant);
 
-		this.position.set( 0, 0, 0 );
+    super.updateMatrixWorld(force);
+  }
 
-		this.scale.set( 0.5 * this.size, 0.5 * this.size, 1 );
-
-		this.lookAt( this.plane.normal );
-
-		this.translateZ( - this.plane.constant );
-
-		super.updateMatrixWorld( force );
-
-	}
-
-	dispose() {
-
-		this.geometry.dispose();
-		this.material.dispose();
-		this.children[ 0 ].geometry.dispose();
-		this.children[ 0 ].material.dispose();
-
-	}
-
+  dispose() {
+    this.geometry.dispose();
+    this.material.dispose();
+    this.children[0].geometry.dispose();
+    this.children[0].material.dispose();
+  }
 }
 
 export { PlaneHelper };

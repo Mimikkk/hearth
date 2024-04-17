@@ -1,4 +1,4 @@
-export const vertex = /* glsl */`
+export const vertex = /* glsl */ `
 #define TOON
 
 varying vec3 vViewPosition;
@@ -48,7 +48,7 @@ void main() {
 }
 `;
 
-export const fragment = /* glsl */`
+export const fragment = /* glsl */ `
 #define TOON
 
 uniform vec3 diffuse;

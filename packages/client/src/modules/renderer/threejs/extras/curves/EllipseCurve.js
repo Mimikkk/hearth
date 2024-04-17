@@ -2,155 +2,138 @@ import { Curve } from '../core/Curve.js';
 import { Vector2 } from '../../math/Vector2.js';
 
 class EllipseCurve extends Curve {
+  constructor(
+    aX = 0,
+    aY = 0,
+    xRadius = 1,
+    yRadius = 1,
+    aStartAngle = 0,
+    aEndAngle = Math.PI * 2,
+    aClockwise = false,
+    aRotation = 0,
+  ) {
+    super();
 
-	constructor( aX = 0, aY = 0, xRadius = 1, yRadius = 1, aStartAngle = 0, aEndAngle = Math.PI * 2, aClockwise = false, aRotation = 0 ) {
+    this.isEllipseCurve = true;
 
-		super();
+    this.type = 'EllipseCurve';
 
-		this.isEllipseCurve = true;
+    this.aX = aX;
+    this.aY = aY;
 
-		this.type = 'EllipseCurve';
+    this.xRadius = xRadius;
+    this.yRadius = yRadius;
 
-		this.aX = aX;
-		this.aY = aY;
+    this.aStartAngle = aStartAngle;
+    this.aEndAngle = aEndAngle;
 
-		this.xRadius = xRadius;
-		this.yRadius = yRadius;
+    this.aClockwise = aClockwise;
 
-		this.aStartAngle = aStartAngle;
-		this.aEndAngle = aEndAngle;
+    this.aRotation = aRotation;
+  }
 
-		this.aClockwise = aClockwise;
+  getPoint(t, optionalTarget = new Vector2()) {
+    const point = optionalTarget;
 
-		this.aRotation = aRotation;
+    const twoPi = Math.PI * 2;
+    let deltaAngle = this.aEndAngle - this.aStartAngle;
+    const samePoints = Math.abs(deltaAngle) < Number.EPSILON;
 
-	}
+    // ensures that deltaAngle is 0 .. 2 PI
+    while (deltaAngle < 0) deltaAngle += twoPi;
+    while (deltaAngle > twoPi) deltaAngle -= twoPi;
 
-	getPoint( t, optionalTarget = new Vector2() ) {
+    if (deltaAngle < Number.EPSILON) {
+      if (samePoints) {
+        deltaAngle = 0;
+      } else {
+        deltaAngle = twoPi;
+      }
+    }
 
-		const point = optionalTarget;
+    if (this.aClockwise === true && !samePoints) {
+      if (deltaAngle === twoPi) {
+        deltaAngle = -twoPi;
+      } else {
+        deltaAngle = deltaAngle - twoPi;
+      }
+    }
 
-		const twoPi = Math.PI * 2;
-		let deltaAngle = this.aEndAngle - this.aStartAngle;
-		const samePoints = Math.abs( deltaAngle ) < Number.EPSILON;
+    const angle = this.aStartAngle + t * deltaAngle;
+    let x = this.aX + this.xRadius * Math.cos(angle);
+    let y = this.aY + this.yRadius * Math.sin(angle);
 
-		// ensures that deltaAngle is 0 .. 2 PI
-		while ( deltaAngle < 0 ) deltaAngle += twoPi;
-		while ( deltaAngle > twoPi ) deltaAngle -= twoPi;
+    if (this.aRotation !== 0) {
+      const cos = Math.cos(this.aRotation);
+      const sin = Math.sin(this.aRotation);
 
-		if ( deltaAngle < Number.EPSILON ) {
+      const tx = x - this.aX;
+      const ty = y - this.aY;
 
-			if ( samePoints ) {
+      // Rotate the point about the center of the ellipse.
+      x = tx * cos - ty * sin + this.aX;
+      y = tx * sin + ty * cos + this.aY;
+    }
 
-				deltaAngle = 0;
+    return point.set(x, y);
+  }
 
-			} else {
+  copy(source) {
+    super.copy(source);
 
-				deltaAngle = twoPi;
+    this.aX = source.aX;
+    this.aY = source.aY;
 
-			}
+    this.xRadius = source.xRadius;
+    this.yRadius = source.yRadius;
 
-		}
+    this.aStartAngle = source.aStartAngle;
+    this.aEndAngle = source.aEndAngle;
 
-		if ( this.aClockwise === true && ! samePoints ) {
+    this.aClockwise = source.aClockwise;
 
-			if ( deltaAngle === twoPi ) {
+    this.aRotation = source.aRotation;
 
-				deltaAngle = - twoPi;
+    return this;
+  }
 
-			} else {
+  toJSON() {
+    const data = super.toJSON();
 
-				deltaAngle = deltaAngle - twoPi;
+    data.aX = this.aX;
+    data.aY = this.aY;
 
-			}
+    data.xRadius = this.xRadius;
+    data.yRadius = this.yRadius;
 
-		}
+    data.aStartAngle = this.aStartAngle;
+    data.aEndAngle = this.aEndAngle;
 
-		const angle = this.aStartAngle + t * deltaAngle;
-		let x = this.aX + this.xRadius * Math.cos( angle );
-		let y = this.aY + this.yRadius * Math.sin( angle );
+    data.aClockwise = this.aClockwise;
 
-		if ( this.aRotation !== 0 ) {
+    data.aRotation = this.aRotation;
 
-			const cos = Math.cos( this.aRotation );
-			const sin = Math.sin( this.aRotation );
+    return data;
+  }
 
-			const tx = x - this.aX;
-			const ty = y - this.aY;
+  fromJSON(json) {
+    super.fromJSON(json);
 
-			// Rotate the point about the center of the ellipse.
-			x = tx * cos - ty * sin + this.aX;
-			y = tx * sin + ty * cos + this.aY;
+    this.aX = json.aX;
+    this.aY = json.aY;
 
-		}
+    this.xRadius = json.xRadius;
+    this.yRadius = json.yRadius;
 
-		return point.set( x, y );
+    this.aStartAngle = json.aStartAngle;
+    this.aEndAngle = json.aEndAngle;
 
-	}
+    this.aClockwise = json.aClockwise;
 
-	copy( source ) {
+    this.aRotation = json.aRotation;
 
-		super.copy( source );
-
-		this.aX = source.aX;
-		this.aY = source.aY;
-
-		this.xRadius = source.xRadius;
-		this.yRadius = source.yRadius;
-
-		this.aStartAngle = source.aStartAngle;
-		this.aEndAngle = source.aEndAngle;
-
-		this.aClockwise = source.aClockwise;
-
-		this.aRotation = source.aRotation;
-
-		return this;
-
-	}
-
-	toJSON() {
-
-		const data = super.toJSON();
-
-		data.aX = this.aX;
-		data.aY = this.aY;
-
-		data.xRadius = this.xRadius;
-		data.yRadius = this.yRadius;
-
-		data.aStartAngle = this.aStartAngle;
-		data.aEndAngle = this.aEndAngle;
-
-		data.aClockwise = this.aClockwise;
-
-		data.aRotation = this.aRotation;
-
-		return data;
-
-	}
-
-	fromJSON( json ) {
-
-		super.fromJSON( json );
-
-		this.aX = json.aX;
-		this.aY = json.aY;
-
-		this.xRadius = json.xRadius;
-		this.yRadius = json.yRadius;
-
-		this.aStartAngle = json.aStartAngle;
-		this.aEndAngle = json.aEndAngle;
-
-		this.aClockwise = json.aClockwise;
-
-		this.aRotation = json.aRotation;
-
-		return this;
-
-	}
-
+    return this;
+  }
 }
 
 export { EllipseCurve };

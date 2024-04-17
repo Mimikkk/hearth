@@ -1,4 +1,4 @@
-export default /* glsl */`
+export default /* glsl */ `
 #ifndef FLAT_SHADED
 
 	varying vec3 vNormal;

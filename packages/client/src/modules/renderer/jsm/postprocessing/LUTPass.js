@@ -1,24 +1,23 @@
 import { ShaderPass } from './ShaderPass.js';
 
 const LUTShader = {
+  name: 'LUTShader',
 
-	name: 'LUTShader',
+  defines: {
+    USE_3DTEXTURE: 1,
+  },
 
-	defines: {
-		USE_3DTEXTURE: 1,
-	},
+  uniforms: {
+    lut3d: { value: null },
 
-	uniforms: {
-		lut3d: { value: null },
+    lut: { value: null },
+    lutSize: { value: 0 },
 
-		lut: { value: null },
-		lutSize: { value: 0 },
+    tDiffuse: { value: null },
+    intensity: { value: 1.0 },
+  },
 
-		tDiffuse: { value: null },
-		intensity: { value: 1.0 },
-	},
-
-	vertexShader: /* glsl */`
+  vertexShader: /* glsl */ `
 
 		varying vec2 vUv;
 
@@ -31,7 +30,7 @@ const LUTShader = {
 
 	`,
 
-	fragmentShader: /* glsl */`
+  fragmentShader: /* glsl */ `
 
 		uniform float lutSize;
 		#if USE_3DTEXTURE
@@ -103,72 +102,49 @@ const LUTShader = {
 		}
 
 	`,
-
 };
 
 class LUTPass extends ShaderPass {
+  set lut(v) {
+    const material = this.material;
+    if (v !== this.lut) {
+      material.uniforms.lut3d.value = null;
+      material.uniforms.lut.value = null;
 
-	set lut( v ) {
+      if (v) {
+        const is3dTextureDefine = v.isData3DTexture ? 1 : 0;
+        if (is3dTextureDefine !== material.defines.USE_3DTEXTURE) {
+          material.defines.USE_3DTEXTURE = is3dTextureDefine;
+          material.needsUpdate = true;
+        }
 
-		const material = this.material;
-		if ( v !== this.lut ) {
+        material.uniforms.lutSize.value = v.image.width;
+        if (v.isData3DTexture) {
+          material.uniforms.lut3d.value = v;
+        } else {
+          material.uniforms.lut.value = v;
+        }
+      }
+    }
+  }
 
-			material.uniforms.lut3d.value = null;
-			material.uniforms.lut.value = null;
+  get lut() {
+    return this.material.uniforms.lut.value || this.material.uniforms.lut3d.value;
+  }
 
-			if ( v ) {
+  set intensity(v) {
+    this.material.uniforms.intensity.value = v;
+  }
 
-				const is3dTextureDefine = v.isData3DTexture ? 1 : 0;
-				if ( is3dTextureDefine !== material.defines.USE_3DTEXTURE ) {
+  get intensity() {
+    return this.material.uniforms.intensity.value;
+  }
 
-					material.defines.USE_3DTEXTURE = is3dTextureDefine;
-					material.needsUpdate = true;
-
-				}
-
-				material.uniforms.lutSize.value = v.image.width;
-				if ( v.isData3DTexture ) {
-
-					material.uniforms.lut3d.value = v;
-
-				} else {
-
-					material.uniforms.lut.value = v;
-
-				}
-
-			}
-
-		}
-
-	}
-
-	get lut() {
-
-		return this.material.uniforms.lut.value || this.material.uniforms.lut3d.value;
-
-	}
-
-	set intensity( v ) {
-
-		this.material.uniforms.intensity.value = v;
-
-	}
-
-	get intensity() {
-
-		return this.material.uniforms.intensity.value;
-
-	}
-
-	constructor( options = {} ) {
-
-		super( LUTShader );
-		this.lut = options.lut || null;
-		this.intensity = 'intensity' in options ? options.intensity : 1;
-
-	}
-
+  constructor(options = {}) {
+    super(LUTShader);
+    this.lut = options.lut || null;
+    this.intensity = 'intensity' in options ? options.intensity : 1;
+  }
 }
 
 export { LUTPass };

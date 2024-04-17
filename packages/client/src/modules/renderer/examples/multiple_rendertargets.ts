@@ -31,17 +31,17 @@ let quadMesh, renderTarget;
 
 /*
 
-  const parameters = {
-    samples: 4,
-    wireframe: false
-  };
+ const parameters = {
+ samples: 4,
+ wireframe: false
+ };
 
-  const gui = new GUI();
-  gui.add( parameters, 'samples', 0, 4 ).step( 1 );
-  gui.add( parameters, 'wireframe' );
-  gui.onChange( render );
+ const gui = new GUI();
+ gui.add( parameters, 'samples', 0, 4 ).step( 1 );
+ gui.add( parameters, 'wireframe' );
+ gui.onChange( render );
 
-  */
+ */
 
 class WriteGBufferMaterial extends NodeMaterial {
   constructor(diffuseTexture) {
@@ -154,21 +154,21 @@ function onWindowResize() {
 function render(time) {
   /*
 
-    // Feature not yet working
+   // Feature not yet working
 
-    renderTarget.samples = parameters.samples;
+   renderTarget.samples = parameters.samples;
 
-    scene.traverse( function ( child ) {
+   scene.traverse( function ( child ) {
 
-      if ( child.material !== undefined ) {
+   if ( child.material !== undefined ) {
 
-        child.material.wireframe = parameters.wireframe;
+   child.material.wireframe = parameters.wireframe;
 
-      }
+   }
 
-    } );
+   } );
 
-    */
+   */
 
   torus.rotation.y = (time / 1000) * 0.4;
 

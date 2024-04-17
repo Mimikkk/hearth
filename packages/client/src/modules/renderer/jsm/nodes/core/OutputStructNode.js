@@ -3,60 +3,48 @@ import StructTypeNode from './StructTypeNode.js';
 import { nodeProxy } from '../shadernode/ShaderNode.js';
 
 class OutputStructNode extends Node {
+  constructor(...members) {
+    super();
 
-	constructor( ...members ) {
+    this.isOutputStructNode = true;
+    this.members = members;
+  }
 
-		super();
+  setup(builder) {
+    super.setup(builder);
 
-		this.isOutputStructNode = true;
-		this.members = members;
+    const members = this.members;
+    const types = [];
 
-	}
+    for (let i = 0; i < members.length; i++) {
+      types.push(members[i].getNodeType(builder));
+    }
 
-	setup( builder ) {
+    this.nodeType = builder.getStructTypeFromNode(new StructTypeNode(types)).name;
+  }
 
-		super.setup( builder );
+  generate(builder, output) {
+    const nodeVar = builder.getVarFromNode(this);
+    nodeVar.isOutputStructVar = true;
 
-		const members = this.members;
-		const types = [];
+    const propertyName = builder.getPropertyName(nodeVar);
 
-		for ( let i = 0; i < members.length; i ++ ) {
+    const members = this.members;
 
-			types.push( members[ i ].getNodeType( builder ) );
+    const structPrefix = propertyName !== '' ? propertyName + '.' : '';
 
-		}
+    for (let i = 0; i < members.length; i++) {
+      const snippet = members[i].build(builder, output);
 
-		this.nodeType = builder.getStructTypeFromNode( new StructTypeNode( types ) ).name;
+      builder.addLineFlowCode(`${structPrefix}m${i} = ${snippet}`);
+    }
 
-	}
-
-	generate( builder, output ) {
-
-		const nodeVar = builder.getVarFromNode( this );
-		nodeVar.isOutputStructVar = true;
-
-		const propertyName = builder.getPropertyName( nodeVar );
-
-		const members = this.members;
-
-		const structPrefix = propertyName !== '' ? propertyName + '.' : '';
-
-		for ( let i = 0; i < members.length; i ++ ) {
-
-			const snippet = members[ i ].build( builder, output );
-
-			builder.addLineFlowCode( `${ structPrefix }m${ i } = ${ snippet }` );
-
-		}
-
-		return propertyName;
-
-	}
-
+    return propertyName;
+  }
 }
 
 export default OutputStructNode;
 
-export const outputStruct = nodeProxy( OutputStructNode );
+export const outputStruct = nodeProxy(OutputStructNode);
 
-addNodeClass( 'OutputStructNode', OutputStructNode );
+addNodeClass('OutputStructNode', OutputStructNode);

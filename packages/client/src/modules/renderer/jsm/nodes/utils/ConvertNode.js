@@ -1,65 +1,49 @@
 import Node, { addNodeClass } from '../core/Node.js';
 
 class ConvertNode extends Node {
+  constructor(node, convertTo) {
+    super();
 
-	constructor( node, convertTo ) {
+    this.node = node;
+    this.convertTo = convertTo;
+  }
 
-		super();
+  getNodeType(builder) {
+    const requestType = this.node.getNodeType(builder);
 
-		this.node = node;
-		this.convertTo = convertTo;
+    let convertTo = null;
 
-	}
+    for (const overloadingType of this.convertTo.split('|')) {
+      if (convertTo === null || builder.getTypeLength(requestType) === builder.getTypeLength(overloadingType)) {
+        convertTo = overloadingType;
+      }
+    }
 
-	getNodeType( builder ) {
+    return convertTo;
+  }
 
-		const requestType = this.node.getNodeType( builder );
+  serialize(data) {
+    super.serialize(data);
 
-		let convertTo = null;
+    data.convertTo = this.convertTo;
+  }
 
-		for ( const overloadingType of this.convertTo.split( '|' ) ) {
+  deserialize(data) {
+    super.deserialize(data);
 
-			if ( convertTo === null || builder.getTypeLength( requestType ) === builder.getTypeLength( overloadingType ) ) {
+    this.convertTo = data.convertTo;
+  }
 
-				convertTo = overloadingType;
+  generate(builder, output) {
+    const node = this.node;
+    const type = this.getNodeType(builder);
 
-			}
+    const snippet = node.build(builder, type);
 
-		}
-
-		return convertTo;
-
-	}
-
-	serialize( data ) {
-
-		super.serialize( data );
-
-		data.convertTo = this.convertTo;
-
-	}
-
-	deserialize( data ) {
-
-		super.deserialize( data );
-
-		this.convertTo = data.convertTo;
-
-	}
-
-	generate( builder, output ) {
-
-		const node = this.node;
-		const type = this.getNodeType( builder );
-
-		const snippet = node.build( builder, type );
-
-		return builder.format( snippet, type, output );
-
-	}
-
+    return builder.format(snippet, type, output);
+  }
 }
 
 export default ConvertNode;
 
-addNodeClass( 'ConvertNode', ConvertNode );
+addNodeClass('ConvertNode', ConvertNode);

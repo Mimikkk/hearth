@@ -36,12 +36,12 @@ const _matrix = new Matrix4();
  * // <-- parent                                  child -->
  * // links[ n ], links[ n - 1 ], ..., links[ 0 ], effector
  * iks = [ {
- *	target: 1,
- *	effector: 2,
- *	links: [ { index: 5, limitation: new Vector3( 1, 0, 0 ) }, { index: 4, enabled: false }, { index : 3 } ],
- *	iteration: 10,
- *	minAngle: 0.0,
- *	maxAngle: 1.0,
+ *  target: 1,
+ *  effector: 2,
+ *  links: [ { index: 5, limitation: new Vector3( 1, 0, 0 ) }, { index: 4, enabled: false }, { index : 3 } ],
+ *  iteration: 10,
+ *  minAngle: 0.0,
+ *  maxAngle: 1.0,
  * } ];
  */
 

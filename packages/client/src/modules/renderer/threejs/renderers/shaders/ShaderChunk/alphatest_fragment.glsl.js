@@ -1,4 +1,4 @@
-export default /* glsl */`
+export default /* glsl */ `
 #ifdef USE_ALPHATEST
 
 	#ifdef ALPHA_TO_COVERAGE

@@ -6,17 +6,14 @@
  */
 
 const MirrorShader = {
+  name: 'MirrorShader',
 
-	name: 'MirrorShader',
+  uniforms: {
+    tDiffuse: { value: null },
+    side: { value: 1 },
+  },
 
-	uniforms: {
-
-		'tDiffuse': { value: null },
-		'side': { value: 1 }
-
-	},
-
-	vertexShader: /* glsl */`
+  vertexShader: /* glsl */ `
 
 		varying vec2 vUv;
 
@@ -27,7 +24,7 @@ const MirrorShader = {
 
 		}`,
 
-	fragmentShader: /* glsl */`
+  fragmentShader: /* glsl */ `
 
 		uniform sampler2D tDiffuse;
 		uniform int side;
@@ -49,8 +46,7 @@ const MirrorShader = {
 			vec4 color = texture2D(tDiffuse, p);
 			gl_FragColor = color;
 
-		}`
-
+		}`,
 };
 
 export { MirrorShader };

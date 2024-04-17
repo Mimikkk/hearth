@@ -5,28 +5,25 @@
  */
 
 const BokehShader = {
+  name: 'BokehShader',
 
-	name: 'BokehShader',
+  defines: {
+    DEPTH_PACKING: 1,
+    PERSPECTIVE_CAMERA: 1,
+  },
 
-	defines: {
-		'DEPTH_PACKING': 1,
-		'PERSPECTIVE_CAMERA': 1,
-	},
+  uniforms: {
+    tColor: { value: null },
+    tDepth: { value: null },
+    focus: { value: 1.0 },
+    aspect: { value: 1.0 },
+    aperture: { value: 0.025 },
+    maxblur: { value: 0.01 },
+    nearClip: { value: 1.0 },
+    farClip: { value: 1000.0 },
+  },
 
-	uniforms: {
-
-		'tColor': { value: null },
-		'tDepth': { value: null },
-		'focus': { value: 1.0 },
-		'aspect': { value: 1.0 },
-		'aperture': { value: 0.025 },
-		'maxblur': { value: 0.01 },
-		'nearClip': { value: 1.0 },
-		'farClip': { value: 1000.0 },
-
-	},
-
-	vertexShader: /* glsl */`
+  vertexShader: /* glsl */ `
 
 		varying vec2 vUv;
 
@@ -37,7 +34,7 @@ const BokehShader = {
 
 		}`,
 
-	fragmentShader: /* glsl */`
+  fragmentShader: /* glsl */ `
 
 		#include <common>
 
@@ -138,8 +135,7 @@ const BokehShader = {
 			gl_FragColor = col / 41.0;
 			gl_FragColor.a = 1.0;
 
-		}`
-
+		}`,
 };
 
 export { BokehShader };

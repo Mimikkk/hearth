@@ -6,67 +6,53 @@ import { varying } from '../core/VaryingNode.js';
 import { storageElement } from '../utils/StorageArrayElementNode.js';
 
 class StorageBufferNode extends BufferNode {
+  constructor(value, bufferType, bufferCount = 0) {
+    super(value, bufferType, bufferCount);
 
-	constructor( value, bufferType, bufferCount = 0 ) {
+    this.isStorageBufferNode = true;
 
-		super( value, bufferType, bufferCount );
+    this.bufferObject = false;
 
-		this.isStorageBufferNode = true;
+    this._attribute = null;
+    this._varying = null;
+  }
 
-		this.bufferObject = false;
+  getInputType(/*builder*/) {
+    return 'storageBuffer';
+  }
 
-		this._attribute = null;
-		this._varying = null;
+  element(indexNode) {
+    return storageElement(this, indexNode);
+  }
 
-	}
+  setBufferObject(value) {
+    this.bufferObject = value;
 
-	getInputType( /*builder*/ ) {
+    return this;
+  }
 
-		return 'storageBuffer';
+  generate(builder) {
+    if (builder.isAvailable('storageBuffer')) return super.generate(builder);
 
-	}
+    const nodeType = this.getNodeType(builder);
 
-	element( indexNode ) {
+    if (this._attribute === null) {
+      this._attribute = bufferAttribute(this.value);
+      this._varying = varying(this._attribute);
+    }
 
-		return storageElement( this, indexNode );
+    const output = this._varying.build(builder, nodeType);
 
-	}
+    builder.registerTransform(output, this._attribute);
 
-	setBufferObject( value ) {
-
-		this.bufferObject = value;
-
-		return this;
-
-	}
-
-	generate( builder ) {
-
-		if ( builder.isAvailable( 'storageBuffer' ) ) return super.generate( builder );
-
-		const nodeType = this.getNodeType( builder );
-
-		if ( this._attribute === null ) {
-
-			this._attribute = bufferAttribute( this.value );
-			this._varying = varying( this._attribute );
-
-		}
-
-
-		const output = this._varying.build( builder, nodeType );
-
-		builder.registerTransform( output, this._attribute );
-
-		return output;
-
-	}
-
+    return output;
+  }
 }
 
 export default StorageBufferNode;
 
-export const storage = ( value, type, count ) => nodeObject( new StorageBufferNode( value, type, count ) );
-export const storageObject = ( value, type, count ) => nodeObject( new StorageBufferNode( value, type, count ).setBufferObject( true ) );
+export const storage = (value, type, count) => nodeObject(new StorageBufferNode(value, type, count));
+export const storageObject = (value, type, count) =>
+  nodeObject(new StorageBufferNode(value, type, count).setBufferObject(true));
 
-addNodeClass( 'StorageBufferNode', StorageBufferNode );
+addNodeClass('StorageBufferNode', StorageBufferNode);

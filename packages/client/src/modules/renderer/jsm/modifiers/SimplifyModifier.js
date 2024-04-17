@@ -2,10 +2,10 @@ import { BufferGeometry, Float32BufferAttribute, Vector2, Vector3, Vector4 } fro
 import * as BufferGeometryUtils from '../utils/BufferGeometryUtils.js';
 
 /**
- *	Simplification Geometry Modifier
+ *  Simplification Geometry Modifier
  *    - based on code and technique
- *	  - by Stan Melax in 1998
- *	  - Progressive Mesh type Polygon Reduction Algorithm
+ *    - by Stan Melax in 1998
+ *    - Progressive Mesh type Polygon Reduction Algorithm
  *    - http://www.melax.com/polychop/
  */
 

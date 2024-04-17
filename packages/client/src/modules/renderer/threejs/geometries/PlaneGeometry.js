@@ -2,97 +2,81 @@ import { BufferGeometry } from '../core/BufferGeometry.js';
 import { Float32BufferAttribute } from '../core/BufferAttribute.js';
 
 class PlaneGeometry extends BufferGeometry {
+  constructor(width = 1, height = 1, widthSegments = 1, heightSegments = 1) {
+    super();
 
-	constructor( width = 1, height = 1, widthSegments = 1, heightSegments = 1 ) {
+    this.type = 'PlaneGeometry';
 
-		super();
+    this.parameters = {
+      width: width,
+      height: height,
+      widthSegments: widthSegments,
+      heightSegments: heightSegments,
+    };
 
-		this.type = 'PlaneGeometry';
+    const width_half = width / 2;
+    const height_half = height / 2;
 
-		this.parameters = {
-			width: width,
-			height: height,
-			widthSegments: widthSegments,
-			heightSegments: heightSegments
-		};
+    const gridX = Math.floor(widthSegments);
+    const gridY = Math.floor(heightSegments);
 
-		const width_half = width / 2;
-		const height_half = height / 2;
+    const gridX1 = gridX + 1;
+    const gridY1 = gridY + 1;
 
-		const gridX = Math.floor( widthSegments );
-		const gridY = Math.floor( heightSegments );
+    const segment_width = width / gridX;
+    const segment_height = height / gridY;
 
-		const gridX1 = gridX + 1;
-		const gridY1 = gridY + 1;
+    //
 
-		const segment_width = width / gridX;
-		const segment_height = height / gridY;
+    const indices = [];
+    const vertices = [];
+    const normals = [];
+    const uvs = [];
 
-		//
+    for (let iy = 0; iy < gridY1; iy++) {
+      const y = iy * segment_height - height_half;
 
-		const indices = [];
-		const vertices = [];
-		const normals = [];
-		const uvs = [];
+      for (let ix = 0; ix < gridX1; ix++) {
+        const x = ix * segment_width - width_half;
 
-		for ( let iy = 0; iy < gridY1; iy ++ ) {
+        vertices.push(x, -y, 0);
 
-			const y = iy * segment_height - height_half;
+        normals.push(0, 0, 1);
 
-			for ( let ix = 0; ix < gridX1; ix ++ ) {
+        uvs.push(ix / gridX);
+        uvs.push(1 - iy / gridY);
+      }
+    }
 
-				const x = ix * segment_width - width_half;
+    for (let iy = 0; iy < gridY; iy++) {
+      for (let ix = 0; ix < gridX; ix++) {
+        const a = ix + gridX1 * iy;
+        const b = ix + gridX1 * (iy + 1);
+        const c = ix + 1 + gridX1 * (iy + 1);
+        const d = ix + 1 + gridX1 * iy;
 
-				vertices.push( x, - y, 0 );
+        indices.push(a, b, d);
+        indices.push(b, c, d);
+      }
+    }
 
-				normals.push( 0, 0, 1 );
+    this.setIndex(indices);
+    this.setAttribute('position', new Float32BufferAttribute(vertices, 3));
+    this.setAttribute('normal', new Float32BufferAttribute(normals, 3));
+    this.setAttribute('uv', new Float32BufferAttribute(uvs, 2));
+  }
 
-				uvs.push( ix / gridX );
-				uvs.push( 1 - ( iy / gridY ) );
+  copy(source) {
+    super.copy(source);
 
-			}
+    this.parameters = Object.assign({}, source.parameters);
 
-		}
+    return this;
+  }
 
-		for ( let iy = 0; iy < gridY; iy ++ ) {
-
-			for ( let ix = 0; ix < gridX; ix ++ ) {
-
-				const a = ix + gridX1 * iy;
-				const b = ix + gridX1 * ( iy + 1 );
-				const c = ( ix + 1 ) + gridX1 * ( iy + 1 );
-				const d = ( ix + 1 ) + gridX1 * iy;
-
-				indices.push( a, b, d );
-				indices.push( b, c, d );
-
-			}
-
-		}
-
-		this.setIndex( indices );
-		this.setAttribute( 'position', new Float32BufferAttribute( vertices, 3 ) );
-		this.setAttribute( 'normal', new Float32BufferAttribute( normals, 3 ) );
-		this.setAttribute( 'uv', new Float32BufferAttribute( uvs, 2 ) );
-
-	}
-
-	copy( source ) {
-
-		super.copy( source );
-
-		this.parameters = Object.assign( {}, source.parameters );
-
-		return this;
-
-	}
-
-	static fromJSON( data ) {
-
-		return new PlaneGeometry( data.width, data.height, data.widthSegments, data.heightSegments );
-
-	}
-
+  static fromJSON(data) {
+    return new PlaneGeometry(data.width, data.height, data.widthSegments, data.heightSegments);
+  }
 }
 
 export { PlaneGeometry };

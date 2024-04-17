@@ -1,17 +1,13 @@
 import { PerspectiveCamera } from './PerspectiveCamera.js';
 
 class ArrayCamera extends PerspectiveCamera {
+  constructor(array = []) {
+    super();
 
-	constructor( array = [] ) {
+    this.isArrayCamera = true;
 
-		super();
-
-		this.isArrayCamera = true;
-
-		this.cameras = array;
-
-	}
-
+    this.cameras = array;
+  }
 }
 
 export { ArrayCamera };

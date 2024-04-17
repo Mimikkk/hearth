@@ -2,103 +2,86 @@ import NodeFunction from '../../../nodes/core/NodeFunction.js';
 import NodeFunctionInput from '../../../nodes/core/NodeFunctionInput.js';
 
 const declarationRegexp = /^[fn]*\s*([a-z_0-9]+)?\s*\(([\s\S]*?)\)\s*[\-\>]*\s*([a-z_0-9]+)?/i;
-const propertiesRegexp = /[a-z_0-9]+|<(.*?)>+/ig;
+const propertiesRegexp = /[a-z_0-9]+|<(.*?)>+/gi;
 
 const wgslTypeLib = {
-	f32: 'float'
+  f32: 'float',
 };
 
-const parse = ( source ) => {
+const parse = source => {
+  source = source.trim();
 
-	source = source.trim();
+  const declaration = source.match(declarationRegexp);
 
-	const declaration = source.match( declarationRegexp );
+  if (declaration !== null && declaration.length === 4) {
+    // tokenizer
 
-	if ( declaration !== null && declaration.length === 4 ) {
+    const inputsCode = declaration[2];
+    const propsMatches = [];
 
-		// tokenizer
+    let nameMatch = null;
 
-		const inputsCode = declaration[ 2 ];
-		const propsMatches = [];
+    while ((nameMatch = propertiesRegexp.exec(inputsCode)) !== null) {
+      propsMatches.push(nameMatch);
+    }
 
-		let nameMatch = null;
+    // parser
 
-		while ( ( nameMatch = propertiesRegexp.exec( inputsCode ) ) !== null ) {
+    const inputs = [];
 
-			propsMatches.push( nameMatch );
+    let i = 0;
 
-		}
+    while (i < propsMatches.length) {
+      // default
 
-		// parser
+      const name = propsMatches[i++][0];
+      let type = propsMatches[i++][0];
 
-		const inputs = [];
+      type = wgslTypeLib[type] || type;
 
-		let i = 0;
+      // precision
 
-		while ( i < propsMatches.length ) {
+      if (i < propsMatches.length && propsMatches[i][0].startsWith('<') === true) i++;
 
-			// default
+      // add input
 
-			const name = propsMatches[ i ++ ][ 0 ];
-			let type = propsMatches[ i ++ ][ 0 ];
+      inputs.push(new NodeFunctionInput(type, name));
+    }
 
-			type = wgslTypeLib[ type ] || type;
+    //
 
-			// precision
+    const blockCode = source.substring(declaration[0].length);
 
-			if ( i < propsMatches.length && propsMatches[ i ][ 0 ].startsWith( '<' ) === true )
-				i ++;
+    const name = declaration[1] !== undefined ? declaration[1] : '';
+    const type = declaration[3] || 'void';
 
-			// add input
-
-			inputs.push( new NodeFunctionInput( type, name ) );
-
-		}
-
-		//
-
-		const blockCode = source.substring( declaration[ 0 ].length );
-
-		const name = declaration[ 1 ] !== undefined ? declaration[ 1 ] : '';
-		const type = declaration[ 3 ] || 'void';
-
-		return {
-			type,
-			inputs,
-			name,
-			inputsCode,
-			blockCode
-		};
-
-	} else {
-
-		throw new Error( 'FunctionNode: Function is not a WGSL code.' );
-
-	}
-
+    return {
+      type,
+      inputs,
+      name,
+      inputsCode,
+      blockCode,
+    };
+  } else {
+    throw new Error('FunctionNode: Function is not a WGSL code.');
+  }
 };
 
 class WGSLNodeFunction extends NodeFunction {
+  constructor(source) {
+    const { type, inputs, name, inputsCode, blockCode } = parse(source);
 
-	constructor( source ) {
+    super(type, inputs, name);
 
-		const { type, inputs, name, inputsCode, blockCode } = parse( source );
+    this.inputsCode = inputsCode;
+    this.blockCode = blockCode;
+  }
 
-		super( type, inputs, name );
+  getCode(name = this.name) {
+    const type = this.type !== 'void' ? '-> ' + this.type : '';
 
-		this.inputsCode = inputsCode;
-		this.blockCode = blockCode;
-
-	}
-
-	getCode( name = this.name ) {
-
-		const type = this.type !== 'void' ? '-> ' + this.type : '';
-
-		return `fn ${ name } ( ${ this.inputsCode.trim() } ) ${ type }` + this.blockCode;
-
-	}
-
+    return `fn ${name} ( ${this.inputsCode.trim()} ) ${type}` + this.blockCode;
+  }
 }
 
 export default WGSLNodeFunction;

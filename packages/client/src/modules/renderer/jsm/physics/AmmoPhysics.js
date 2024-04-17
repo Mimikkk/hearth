@@ -1,306 +1,260 @@
 async function AmmoPhysics() {
+  if ('Ammo' in window === false) {
+    console.error("AmmoPhysics: Couldn't find Ammo.js");
+    return;
+  }
 
-	if ( 'Ammo' in window === false ) {
+  const AmmoLib = await Ammo(); // eslint-disable-line no-undef
 
-		console.error( 'AmmoPhysics: Couldn\'t find Ammo.js' );
-		return;
+  const frameRate = 60;
 
-	}
+  const collisionConfiguration = new AmmoLib.btDefaultCollisionConfiguration();
+  const dispatcher = new AmmoLib.btCollisionDispatcher(collisionConfiguration);
+  const broadphase = new AmmoLib.btDbvtBroadphase();
+  const solver = new AmmoLib.btSequentialImpulseConstraintSolver();
+  const world = new AmmoLib.btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfiguration);
+  world.setGravity(new AmmoLib.btVector3(0, -9.8, 0));
 
-	const AmmoLib = await Ammo(); // eslint-disable-line no-undef
+  const worldTransform = new AmmoLib.btTransform();
 
-	const frameRate = 60;
+  //
 
-	const collisionConfiguration = new AmmoLib.btDefaultCollisionConfiguration();
-	const dispatcher = new AmmoLib.btCollisionDispatcher( collisionConfiguration );
-	const broadphase = new AmmoLib.btDbvtBroadphase();
-	const solver = new AmmoLib.btSequentialImpulseConstraintSolver();
-	const world = new AmmoLib.btDiscreteDynamicsWorld( dispatcher, broadphase, solver, collisionConfiguration );
-	world.setGravity( new AmmoLib.btVector3( 0, - 9.8, 0 ) );
+  function getShape(geometry) {
+    const parameters = geometry.parameters;
 
-	const worldTransform = new AmmoLib.btTransform();
+    // TODO change type to is*
 
-	//
+    if (geometry.type === 'BoxGeometry') {
+      const sx = parameters.width !== undefined ? parameters.width / 2 : 0.5;
+      const sy = parameters.height !== undefined ? parameters.height / 2 : 0.5;
+      const sz = parameters.depth !== undefined ? parameters.depth / 2 : 0.5;
 
-	function getShape( geometry ) {
+      const shape = new AmmoLib.btBoxShape(new AmmoLib.btVector3(sx, sy, sz));
+      shape.setMargin(0.05);
 
-		const parameters = geometry.parameters;
+      return shape;
+    } else if (geometry.type === 'SphereGeometry' || geometry.type === 'IcosahedronGeometry') {
+      const radius = parameters.radius !== undefined ? parameters.radius : 1;
 
-		// TODO change type to is*
+      const shape = new AmmoLib.btSphereShape(radius);
+      shape.setMargin(0.05);
 
-		if ( geometry.type === 'BoxGeometry' ) {
+      return shape;
+    }
 
-			const sx = parameters.width !== undefined ? parameters.width / 2 : 0.5;
-			const sy = parameters.height !== undefined ? parameters.height / 2 : 0.5;
-			const sz = parameters.depth !== undefined ? parameters.depth / 2 : 0.5;
+    return null;
+  }
 
-			const shape = new AmmoLib.btBoxShape( new AmmoLib.btVector3( sx, sy, sz ) );
-			shape.setMargin( 0.05 );
+  const meshes = [];
+  const meshMap = new WeakMap();
 
-			return shape;
+  function addScene(scene) {
+    scene.traverse(function (child) {
+      if (child.isMesh) {
+        const physics = child.userData.physics;
 
-		} else if ( geometry.type === 'SphereGeometry' || geometry.type === 'IcosahedronGeometry' ) {
+        if (physics) {
+          addMesh(child, physics.mass);
+        }
+      }
+    });
+  }
 
-			const radius = parameters.radius !== undefined ? parameters.radius : 1;
+  function addMesh(mesh, mass = 0) {
+    const shape = getShape(mesh.geometry);
 
-			const shape = new AmmoLib.btSphereShape( radius );
-			shape.setMargin( 0.05 );
+    if (shape !== null) {
+      if (mesh.isInstancedMesh) {
+        handleInstancedMesh(mesh, mass, shape);
+      } else if (mesh.isMesh) {
+        handleMesh(mesh, mass, shape);
+      }
+    }
+  }
 
-			return shape;
+  function handleMesh(mesh, mass, shape) {
+    const position = mesh.position;
+    const quaternion = mesh.quaternion;
 
-		}
+    const transform = new AmmoLib.btTransform();
+    transform.setIdentity();
+    transform.setOrigin(new AmmoLib.btVector3(position.x, position.y, position.z));
+    transform.setRotation(new AmmoLib.btQuaternion(quaternion.x, quaternion.y, quaternion.z, quaternion.w));
 
-		return null;
+    const motionState = new AmmoLib.btDefaultMotionState(transform);
 
-	}
+    const localInertia = new AmmoLib.btVector3(0, 0, 0);
+    shape.calculateLocalInertia(mass, localInertia);
 
-	const meshes = [];
-	const meshMap = new WeakMap();
+    const rbInfo = new AmmoLib.btRigidBodyConstructionInfo(mass, motionState, shape, localInertia);
 
-	function addScene( scene ) {
+    const body = new AmmoLib.btRigidBody(rbInfo);
+    // body.setFriction( 4 );
+    world.addRigidBody(body);
 
-		scene.traverse( function ( child ) {
+    if (mass > 0) {
+      meshes.push(mesh);
+      meshMap.set(mesh, body);
+    }
+  }
 
-			if ( child.isMesh ) {
+  function handleInstancedMesh(mesh, mass, shape) {
+    const array = mesh.instanceMatrix.array;
 
-				const physics = child.userData.physics;
+    const bodies = [];
 
-				if ( physics ) {
+    for (let i = 0; i < mesh.count; i++) {
+      const index = i * 16;
 
-					addMesh( child, physics.mass );
+      const transform = new AmmoLib.btTransform();
+      transform.setFromOpenGLMatrix(array.slice(index, index + 16));
 
-				}
+      const motionState = new AmmoLib.btDefaultMotionState(transform);
 
-			}
+      const localInertia = new AmmoLib.btVector3(0, 0, 0);
+      shape.calculateLocalInertia(mass, localInertia);
 
-		} );
+      const rbInfo = new AmmoLib.btRigidBodyConstructionInfo(mass, motionState, shape, localInertia);
 
-	}
+      const body = new AmmoLib.btRigidBody(rbInfo);
+      world.addRigidBody(body);
 
-	function addMesh( mesh, mass = 0 ) {
+      bodies.push(body);
+    }
 
-		const shape = getShape( mesh.geometry );
+    if (mass > 0) {
+      meshes.push(mesh);
 
-		if ( shape !== null ) {
+      meshMap.set(mesh, bodies);
+    }
+  }
 
-			if ( mesh.isInstancedMesh ) {
+  //
 
-				handleInstancedMesh( mesh, mass, shape );
+  function setMeshPosition(mesh, position, index = 0) {
+    if (mesh.isInstancedMesh) {
+      const bodies = meshMap.get(mesh);
+      const body = bodies[index];
 
-			} else if ( mesh.isMesh ) {
+      body.setAngularVelocity(new AmmoLib.btVector3(0, 0, 0));
+      body.setLinearVelocity(new AmmoLib.btVector3(0, 0, 0));
 
-				handleMesh( mesh, mass, shape );
+      worldTransform.setIdentity();
+      worldTransform.setOrigin(new AmmoLib.btVector3(position.x, position.y, position.z));
+      body.setWorldTransform(worldTransform);
+    } else if (mesh.isMesh) {
+      const body = meshMap.get(mesh);
 
-			}
+      body.setAngularVelocity(new AmmoLib.btVector3(0, 0, 0));
+      body.setLinearVelocity(new AmmoLib.btVector3(0, 0, 0));
 
-		}
+      worldTransform.setIdentity();
+      worldTransform.setOrigin(new AmmoLib.btVector3(position.x, position.y, position.z));
+      body.setWorldTransform(worldTransform);
+    }
+  }
 
-	}
+  //
 
-	function handleMesh( mesh, mass, shape ) {
+  let lastTime = 0;
 
-		const position = mesh.position;
-		const quaternion = mesh.quaternion;
+  function step() {
+    const time = performance.now();
 
-		const transform = new AmmoLib.btTransform();
-		transform.setIdentity();
-		transform.setOrigin( new AmmoLib.btVector3( position.x, position.y, position.z ) );
-		transform.setRotation( new AmmoLib.btQuaternion( quaternion.x, quaternion.y, quaternion.z, quaternion.w ) );
+    if (lastTime > 0) {
+      const delta = (time - lastTime) / 1000;
 
-		const motionState = new AmmoLib.btDefaultMotionState( transform );
+      world.stepSimulation(delta, 10);
 
-		const localInertia = new AmmoLib.btVector3( 0, 0, 0 );
-		shape.calculateLocalInertia( mass, localInertia );
+      //
 
-		const rbInfo = new AmmoLib.btRigidBodyConstructionInfo( mass, motionState, shape, localInertia );
+      for (let i = 0, l = meshes.length; i < l; i++) {
+        const mesh = meshes[i];
 
-		const body = new AmmoLib.btRigidBody( rbInfo );
-		// body.setFriction( 4 );
-		world.addRigidBody( body );
+        if (mesh.isInstancedMesh) {
+          const array = mesh.instanceMatrix.array;
+          const bodies = meshMap.get(mesh);
 
-		if ( mass > 0 ) {
+          for (let j = 0; j < bodies.length; j++) {
+            const body = bodies[j];
 
-			meshes.push( mesh );
-			meshMap.set( mesh, body );
+            const motionState = body.getMotionState();
+            motionState.getWorldTransform(worldTransform);
 
-		}
+            const position = worldTransform.getOrigin();
+            const quaternion = worldTransform.getRotation();
 
+            compose(position, quaternion, array, j * 16);
+          }
 
-	}
+          mesh.instanceMatrix.needsUpdate = true;
+          mesh.computeBoundingSphere();
+        } else if (mesh.isMesh) {
+          const body = meshMap.get(mesh);
 
-	function handleInstancedMesh( mesh, mass, shape ) {
+          const motionState = body.getMotionState();
+          motionState.getWorldTransform(worldTransform);
 
-		const array = mesh.instanceMatrix.array;
+          const position = worldTransform.getOrigin();
+          const quaternion = worldTransform.getRotation();
+          mesh.position.set(position.x(), position.y(), position.z());
+          mesh.quaternion.set(quaternion.x(), quaternion.y(), quaternion.z(), quaternion.w());
+        }
+      }
+    }
 
-		const bodies = [];
+    lastTime = time;
+  }
 
-		for ( let i = 0; i < mesh.count; i ++ ) {
+  // animate
 
-			const index = i * 16;
+  setInterval(step, 1000 / frameRate);
 
-			const transform = new AmmoLib.btTransform();
-			transform.setFromOpenGLMatrix( array.slice( index, index + 16 ) );
-
-			const motionState = new AmmoLib.btDefaultMotionState( transform );
-
-			const localInertia = new AmmoLib.btVector3( 0, 0, 0 );
-			shape.calculateLocalInertia( mass, localInertia );
-
-			const rbInfo = new AmmoLib.btRigidBodyConstructionInfo( mass, motionState, shape, localInertia );
-
-			const body = new AmmoLib.btRigidBody( rbInfo );
-			world.addRigidBody( body );
-
-			bodies.push( body );
-
-		}
-
-		if ( mass > 0 ) {
-
-			meshes.push( mesh );
-
-			meshMap.set( mesh, bodies );
-
-		}
-
-	}
-
-	//
-
-	function setMeshPosition( mesh, position, index = 0 ) {
-
-		if ( mesh.isInstancedMesh ) {
-
-			const bodies = meshMap.get( mesh );
-			const body = bodies[ index ];
-
-			body.setAngularVelocity( new AmmoLib.btVector3( 0, 0, 0 ) );
-			body.setLinearVelocity( new AmmoLib.btVector3( 0, 0, 0 ) );
-
-			worldTransform.setIdentity();
-			worldTransform.setOrigin( new AmmoLib.btVector3( position.x, position.y, position.z ) );
-			body.setWorldTransform( worldTransform );
-
-		} else if ( mesh.isMesh ) {
-
-			const body = meshMap.get( mesh );
-
-			body.setAngularVelocity( new AmmoLib.btVector3( 0, 0, 0 ) );
-			body.setLinearVelocity( new AmmoLib.btVector3( 0, 0, 0 ) );
-
-			worldTransform.setIdentity();
-			worldTransform.setOrigin( new AmmoLib.btVector3( position.x, position.y, position.z ) );
-			body.setWorldTransform( worldTransform );
-
-		}
-
-	}
-
-	//
-
-	let lastTime = 0;
-
-	function step() {
-
-		const time = performance.now();
-
-		if ( lastTime > 0 ) {
-
-			const delta = ( time - lastTime ) / 1000;
-
-			world.stepSimulation( delta, 10 );
-
-			//
-
-			for ( let i = 0, l = meshes.length; i < l; i ++ ) {
-
-				const mesh = meshes[ i ];
-
-				if ( mesh.isInstancedMesh ) {
-
-					const array = mesh.instanceMatrix.array;
-					const bodies = meshMap.get( mesh );
-
-					for ( let j = 0; j < bodies.length; j ++ ) {
-
-						const body = bodies[ j ];
-
-						const motionState = body.getMotionState();
-						motionState.getWorldTransform( worldTransform );
-
-						const position = worldTransform.getOrigin();
-						const quaternion = worldTransform.getRotation();
-
-						compose( position, quaternion, array, j * 16 );
-
-					}
-
-					mesh.instanceMatrix.needsUpdate = true;
-					mesh.computeBoundingSphere();
-
-				} else if ( mesh.isMesh ) {
-
-					const body = meshMap.get( mesh );
-
-					const motionState = body.getMotionState();
-					motionState.getWorldTransform( worldTransform );
-
-					const position = worldTransform.getOrigin();
-					const quaternion = worldTransform.getRotation();
-					mesh.position.set( position.x(), position.y(), position.z() );
-					mesh.quaternion.set( quaternion.x(), quaternion.y(), quaternion.z(), quaternion.w() );
-
-				}
-
-			}
-
-		}
-
-		lastTime = time;
-
-	}
-
-	// animate
-
-	setInterval( step, 1000 / frameRate );
-
-	return {
-		addScene: addScene,
-		addMesh: addMesh,
-		setMeshPosition: setMeshPosition
-		// addCompoundMesh
-	};
-
+  return {
+    addScene: addScene,
+    addMesh: addMesh,
+    setMeshPosition: setMeshPosition,
+    // addCompoundMesh
+  };
 }
 
-function compose( position, quaternion, array, index ) {
+function compose(position, quaternion, array, index) {
+  const x = quaternion.x(),
+    y = quaternion.y(),
+    z = quaternion.z(),
+    w = quaternion.w();
+  const x2 = x + x,
+    y2 = y + y,
+    z2 = z + z;
+  const xx = x * x2,
+    xy = x * y2,
+    xz = x * z2;
+  const yy = y * y2,
+    yz = y * z2,
+    zz = z * z2;
+  const wx = w * x2,
+    wy = w * y2,
+    wz = w * z2;
 
-	const x = quaternion.x(), y = quaternion.y(), z = quaternion.z(), w = quaternion.w();
-	const x2 = x + x, y2 = y + y, z2 = z + z;
-	const xx = x * x2, xy = x * y2, xz = x * z2;
-	const yy = y * y2, yz = y * z2, zz = z * z2;
-	const wx = w * x2, wy = w * y2, wz = w * z2;
+  array[index + 0] = 1 - (yy + zz);
+  array[index + 1] = xy + wz;
+  array[index + 2] = xz - wy;
+  array[index + 3] = 0;
 
-	array[ index + 0 ] = ( 1 - ( yy + zz ) );
-	array[ index + 1 ] = ( xy + wz );
-	array[ index + 2 ] = ( xz - wy );
-	array[ index + 3 ] = 0;
+  array[index + 4] = xy - wz;
+  array[index + 5] = 1 - (xx + zz);
+  array[index + 6] = yz + wx;
+  array[index + 7] = 0;
 
-	array[ index + 4 ] = ( xy - wz );
-	array[ index + 5 ] = ( 1 - ( xx + zz ) );
-	array[ index + 6 ] = ( yz + wx );
-	array[ index + 7 ] = 0;
+  array[index + 8] = xz + wy;
+  array[index + 9] = yz - wx;
+  array[index + 10] = 1 - (xx + yy);
+  array[index + 11] = 0;
 
-	array[ index + 8 ] = ( xz + wy );
-	array[ index + 9 ] = ( yz - wx );
-	array[ index + 10 ] = ( 1 - ( xx + yy ) );
-	array[ index + 11 ] = 0;
-
-	array[ index + 12 ] = position.x();
-	array[ index + 13 ] = position.y();
-	array[ index + 14 ] = position.z();
-	array[ index + 15 ] = 1;
-
+  array[index + 12] = position.x();
+  array[index + 13] = position.y();
+  array[index + 14] = position.z();
+  array[index + 15] = 1;
 }
 
 export { AmmoPhysics };

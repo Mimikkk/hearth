@@ -1,13 +1,9 @@
 class UniformGroup {
+  constructor(name) {
+    this.name = name;
 
-	constructor( name ) {
-
-		this.name = name;
-
-		this.isUniformGroup = true;
-
-	}
-
+    this.isUniformGroup = true;
+  }
 }
 
 export default UniformGroup;

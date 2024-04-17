@@ -7,69 +7,49 @@ import { tangentGeometry, tangentLocal, tangentView, tangentWorld, transformedTa
 import { nodeImmutable } from '../shadernode/ShaderNode.js';
 
 class BitangentNode extends Node {
+  constructor(scope = BitangentNode.LOCAL) {
+    super('vec3');
 
-	constructor( scope = BitangentNode.LOCAL ) {
+    this.scope = scope;
+  }
 
-		super( 'vec3' );
+  getHash(/*builder*/) {
+    return `bitangent-${this.scope}`;
+  }
 
-		this.scope = scope;
+  generate(builder) {
+    const scope = this.scope;
 
-	}
+    let crossNormalTangent;
 
-	getHash( /*builder*/ ) {
+    if (scope === BitangentNode.GEOMETRY) {
+      crossNormalTangent = normalGeometry.cross(tangentGeometry);
+    } else if (scope === BitangentNode.LOCAL) {
+      crossNormalTangent = normalLocal.cross(tangentLocal);
+    } else if (scope === BitangentNode.VIEW) {
+      crossNormalTangent = normalView.cross(tangentView);
+    } else if (scope === BitangentNode.WORLD) {
+      crossNormalTangent = normalWorld.cross(tangentWorld);
+    }
 
-		return `bitangent-${this.scope}`;
+    const vertexNode = crossNormalTangent.mul(tangentGeometry.w).xyz;
 
-	}
+    const outputNode = normalize(varying(vertexNode));
 
-	generate( builder ) {
+    return outputNode.build(builder, this.getNodeType(builder));
+  }
 
-		const scope = this.scope;
+  serialize(data) {
+    super.serialize(data);
 
-		let crossNormalTangent;
+    data.scope = this.scope;
+  }
 
-		if ( scope === BitangentNode.GEOMETRY ) {
+  deserialize(data) {
+    super.deserialize(data);
 
-			crossNormalTangent = normalGeometry.cross( tangentGeometry );
-
-		} else if ( scope === BitangentNode.LOCAL ) {
-
-			crossNormalTangent = normalLocal.cross( tangentLocal );
-
-		} else if ( scope === BitangentNode.VIEW ) {
-
-			crossNormalTangent = normalView.cross( tangentView );
-
-		} else if ( scope === BitangentNode.WORLD ) {
-
-			crossNormalTangent = normalWorld.cross( tangentWorld );
-
-		}
-
-		const vertexNode = crossNormalTangent.mul( tangentGeometry.w ).xyz;
-
-		const outputNode = normalize( varying( vertexNode ) );
-
-		return outputNode.build( builder, this.getNodeType( builder ) );
-
-	}
-
-	serialize( data ) {
-
-		super.serialize( data );
-
-		data.scope = this.scope;
-
-	}
-
-	deserialize( data ) {
-
-		super.deserialize( data );
-
-		this.scope = data.scope;
-
-	}
-
+    this.scope = data.scope;
+  }
 }
 
 BitangentNode.GEOMETRY = 'geometry';
@@ -79,11 +59,13 @@ BitangentNode.WORLD = 'world';
 
 export default BitangentNode;
 
-export const bitangentGeometry = nodeImmutable( BitangentNode, BitangentNode.GEOMETRY );
-export const bitangentLocal = nodeImmutable( BitangentNode, BitangentNode.LOCAL );
-export const bitangentView = nodeImmutable( BitangentNode, BitangentNode.VIEW );
-export const bitangentWorld = nodeImmutable( BitangentNode, BitangentNode.WORLD );
-export const transformedBitangentView = normalize( transformedNormalView.cross( transformedTangentView ).mul( tangentGeometry.w ) );
-export const transformedBitangentWorld = normalize( transformedBitangentView.transformDirection( cameraViewMatrix ) );
+export const bitangentGeometry = nodeImmutable(BitangentNode, BitangentNode.GEOMETRY);
+export const bitangentLocal = nodeImmutable(BitangentNode, BitangentNode.LOCAL);
+export const bitangentView = nodeImmutable(BitangentNode, BitangentNode.VIEW);
+export const bitangentWorld = nodeImmutable(BitangentNode, BitangentNode.WORLD);
+export const transformedBitangentView = normalize(
+  transformedNormalView.cross(transformedTangentView).mul(tangentGeometry.w),
+);
+export const transformedBitangentWorld = normalize(transformedBitangentView.transformDirection(cameraViewMatrix));
 
-addNodeClass( 'BitangentNode', BitangentNode );
+addNodeClass('BitangentNode', BitangentNode);

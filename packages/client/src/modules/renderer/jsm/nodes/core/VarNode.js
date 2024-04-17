@@ -2,59 +2,47 @@ import Node, { addNodeClass } from './Node.js';
 import { addNodeElement, nodeProxy } from '../shadernode/ShaderNode.js';
 
 class VarNode extends Node {
+  constructor(node, name = null) {
+    super();
 
-	constructor( node, name = null ) {
+    this.node = node;
+    this.name = name;
 
-		super();
+    this.isVarNode = true;
+  }
 
-		this.node = node;
-		this.name = name;
+  isGlobal() {
+    return true;
+  }
 
-		this.isVarNode = true;
+  getHash(builder) {
+    return this.name || super.getHash(builder);
+  }
 
-	}
+  getNodeType(builder) {
+    return this.node.getNodeType(builder);
+  }
 
-	isGlobal() {
+  generate(builder) {
+    const { node, name } = this;
 
-		return true;
+    const nodeVar = builder.getVarFromNode(this, name, builder.getVectorType(this.getNodeType(builder)));
 
-	}
+    const propertyName = builder.getPropertyName(nodeVar);
 
-	getHash( builder ) {
+    const snippet = node.build(builder, nodeVar.type);
 
-		return this.name || super.getHash( builder );
+    builder.addLineFlowCode(`${propertyName} = ${snippet}`);
 
-	}
-
-	getNodeType( builder ) {
-
-		return this.node.getNodeType( builder );
-
-	}
-
-	generate( builder ) {
-
-		const { node, name } = this;
-
-		const nodeVar = builder.getVarFromNode( this, name, builder.getVectorType( this.getNodeType( builder ) ) );
-
-		const propertyName = builder.getPropertyName( nodeVar );
-
-		const snippet = node.build( builder, nodeVar.type );
-
-		builder.addLineFlowCode( `${propertyName} = ${snippet}` );
-
-		return propertyName;
-
-	}
-
+    return propertyName;
+  }
 }
 
 export default VarNode;
 
-export const temp = nodeProxy( VarNode );
+export const temp = nodeProxy(VarNode);
 
-addNodeElement( 'temp', temp ); // @TODO: Will be removed in the future
-addNodeElement( 'toVar', ( ...params ) => temp( ...params ).append() );
+addNodeElement('temp', temp); // @TODO: Will be removed in the future
+addNodeElement('toVar', (...params) => temp(...params).append());
 
-addNodeClass( 'VarNode', VarNode );
+addNodeClass('VarNode', VarNode);

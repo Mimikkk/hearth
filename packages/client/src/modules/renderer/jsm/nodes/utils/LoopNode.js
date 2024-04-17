@@ -5,196 +5,161 @@ import { context } from '../core/ContextNode.js';
 import { addNodeElement, nodeObject, nodeArray } from '../shadernode/ShaderNode.js';
 
 class LoopNode extends Node {
+  constructor(params = []) {
+    super();
 
-	constructor( params = [] ) {
+    this.params = params;
+  }
 
-		super();
+  getVarName(index) {
+    return String.fromCharCode('i'.charCodeAt() + index);
+  }
 
-		this.params = params;
+  getProperties(builder) {
+    const properties = builder.getNodeProperties(this);
 
-	}
+    if (properties.stackNode !== undefined) return properties;
 
-	getVarName( index ) {
+    //
 
-		return String.fromCharCode( 'i'.charCodeAt() + index );
+    const inputs = {};
 
-	}
+    for (let i = 0, l = this.params.length - 1; i < l; i++) {
+      const param = this.params[i];
+
+      const name = (param.isNode !== true && param.name) || this.getVarName(i);
+      const type = (param.isNode !== true && param.type) || 'int';
 
-	getProperties( builder ) {
+      inputs[name] = expression(name, type);
+    }
 
-		const properties = builder.getNodeProperties( this );
+    properties.returnsNode = this.params[this.params.length - 1](inputs, builder.addStack(), builder);
+    properties.stackNode = builder.removeStack();
 
-		if ( properties.stackNode !== undefined ) return properties;
+    return properties;
+  }
 
-		//
+  getNodeType(builder) {
+    const { returnsNode } = this.getProperties(builder);
 
-		const inputs = {};
+    return returnsNode ? returnsNode.getNodeType(builder) : 'void';
+  }
 
-		for ( let i = 0, l = this.params.length - 1; i < l; i ++ ) {
+  setup(builder) {
+    // setup properties
 
-			const param = this.params[ i ];
+    this.getProperties(builder);
+  }
 
-			const name = ( param.isNode !== true && param.name ) || this.getVarName( i );
-			const type = ( param.isNode !== true && param.type ) || 'int';
+  generate(builder) {
+    const properties = this.getProperties(builder);
 
-			inputs[ name ] = expression( name, type );
+    const contextData = { tempWrite: false };
 
-		}
+    const params = this.params;
+    const stackNode = properties.stackNode;
 
-		properties.returnsNode = this.params[ this.params.length - 1 ]( inputs, builder.addStack(), builder );
-		properties.stackNode = builder.removeStack();
+    for (let i = 0, l = params.length - 1; i < l; i++) {
+      const param = params[i];
 
-		return properties;
+      let start = null,
+        end = null,
+        name = null,
+        type = null,
+        condition = null,
+        update = null;
 
-	}
+      if (param.isNode) {
+        type = 'int';
+        name = this.getVarName(i);
+        start = '0';
+        end = param.build(builder, type);
+        condition = '<';
+      } else {
+        type = param.type || 'int';
+        name = param.name || this.getVarName(i);
+        start = param.start;
+        end = param.end;
+        condition = param.condition;
+        update = param.update;
 
-	getNodeType( builder ) {
+        if (typeof start === 'number') start = start.toString();
+        else if (start && start.isNode) start = start.build(builder, type);
 
-		const { returnsNode } = this.getProperties( builder );
+        if (typeof end === 'number') end = end.toString();
+        else if (end && end.isNode) end = end.build(builder, type);
 
-		return returnsNode ? returnsNode.getNodeType( builder ) : 'void';
+        if (start !== undefined && end === undefined) {
+          start = start + ' - 1';
+          end = '0';
+          condition = '>=';
+        } else if (end !== undefined && start === undefined) {
+          start = '0';
+          condition = '<';
+        }
 
-	}
+        if (condition === undefined) {
+          if (Number(start) > Number(end)) {
+            condition = '>=';
+          } else {
+            condition = '<';
+          }
+        }
+      }
 
-	setup( builder ) {
+      const internalParam = { start, end, condition };
 
-		// setup properties
+      //
 
-		this.getProperties( builder );
+      const startSnippet = internalParam.start;
+      const endSnippet = internalParam.end;
 
-	}
+      let declarationSnippet = '';
+      let conditionalSnippet = '';
+      let updateSnippet = '';
 
-	generate( builder ) {
+      if (!update) {
+        if (type === 'int' || type === 'uint') {
+          if (condition.includes('<')) update = '++';
+          else update = '--';
+        } else {
+          if (condition.includes('<')) update = '+= 1.';
+          else update = '-= 1.';
+        }
+      }
 
-		const properties = this.getProperties( builder );
+      declarationSnippet += builder.getVar(type, name) + ' = ' + startSnippet;
 
-		const contextData = { tempWrite: false };
+      conditionalSnippet += name + ' ' + condition + ' ' + endSnippet;
+      updateSnippet += name + ' ' + update;
 
-		const params = this.params;
-		const stackNode = properties.stackNode;
+      const forSnippet = `for ( ${declarationSnippet}; ${conditionalSnippet}; ${updateSnippet} )`;
 
-		for ( let i = 0, l = params.length - 1; i < l; i ++ ) {
+      builder.addFlowCode((i === 0 ? '\n' : '') + builder.tab + forSnippet + ' {\n\n').addFlowTab();
+    }
 
-			const param = params[ i ];
+    const stackSnippet = context(stackNode, contextData).build(builder, 'void');
 
-			let start = null, end = null, name = null, type = null, condition = null, update = null;
+    const returnsSnippet = properties.returnsNode ? properties.returnsNode.build(builder) : '';
 
-			if ( param.isNode ) {
+    builder.removeFlowTab().addFlowCode('\n' + builder.tab + stackSnippet);
 
-				type = 'int';
-				name = this.getVarName( i );
-				start = '0';
-				end = param.build( builder, type );
-				condition = '<';
+    for (let i = 0, l = this.params.length - 1; i < l; i++) {
+      builder.addFlowCode((i === 0 ? '' : builder.tab) + '}\n\n').removeFlowTab();
+    }
 
-			} else {
+    builder.addFlowTab();
 
-				type = param.type || 'int';
-				name = param.name || this.getVarName( i );
-				start = param.start;
-				end = param.end;
-				condition = param.condition;
-				update = param.update;
-
-				if ( typeof start === 'number' ) start = start.toString();
-				else if ( start && start.isNode ) start = start.build( builder, type );
-
-				if ( typeof end === 'number' ) end = end.toString();
-				else if ( end && end.isNode ) end = end.build( builder, type );
-
-				if ( start !== undefined && end === undefined ) {
-
-					start = start + ' - 1';
-					end = '0';
-					condition = '>=';
-
-				} else if ( end !== undefined && start === undefined ) {
-
-					start = '0';
-					condition = '<';
-
-				}
-
-				if ( condition === undefined ) {
-
-					if ( Number( start ) > Number( end ) ) {
-
-						condition = '>=';
-
-					} else {
-
-						condition = '<';
-
-					}
-
-				}
-
-			}
-
-			const internalParam = { start, end, condition };
-
-			//
-
-			const startSnippet = internalParam.start;
-			const endSnippet = internalParam.end;
-
-			let declarationSnippet = '';
-			let conditionalSnippet = '';
-			let updateSnippet = '';
-
-			if ( ! update ) {
-
-				if ( type === 'int' || type === 'uint' ) {
-
-					if ( condition.includes( '<' ) ) update = '++';
-					else update = '--';
-
-				} else {
-
-					if ( condition.includes( '<' ) ) update = '+= 1.';
-					else update = '-= 1.';
-
-				}
-
-			}
-
-			declarationSnippet += builder.getVar( type, name ) + ' = ' + startSnippet;
-
-			conditionalSnippet += name + ' ' + condition + ' ' + endSnippet;
-			updateSnippet += name + ' ' + update;
-
-			const forSnippet = `for ( ${ declarationSnippet }; ${ conditionalSnippet }; ${ updateSnippet } )`;
-
-			builder.addFlowCode( ( i === 0 ? '\n' : '' ) + builder.tab + forSnippet + ' {\n\n' ).addFlowTab();
-
-		}
-
-		const stackSnippet = context( stackNode, contextData ).build( builder, 'void' );
-
-		const returnsSnippet = properties.returnsNode ? properties.returnsNode.build( builder ) : '';
-
-		builder.removeFlowTab().addFlowCode( '\n' + builder.tab + stackSnippet );
-
-		for ( let i = 0, l = this.params.length - 1; i < l; i ++ ) {
-
-			builder.addFlowCode( ( i === 0 ? '' : builder.tab ) + '}\n\n' ).removeFlowTab();
-
-		}
-
-		builder.addFlowTab();
-
-		return returnsSnippet;
-
-	}
-
+    return returnsSnippet;
+  }
 }
 
 export default LoopNode;
 
-export const loop = ( ...params ) => nodeObject( new LoopNode( nodeArray( params, 'int' ) ) ).append();
-export const Continue = () => expression( 'continue' ).append();
-export const Break = () => expression( 'break' ).append();
+export const loop = (...params) => nodeObject(new LoopNode(nodeArray(params, 'int'))).append();
+export const Continue = () => expression('continue').append();
+export const Break = () => expression('break').append();
 
-addNodeElement( 'loop', ( returns, ...params ) => bypass( returns, loop( ...params ) ) );
+addNodeElement('loop', (returns, ...params) => bypass(returns, loop(...params)));
 
-addNodeClass( 'LoopNode', LoopNode );
+addNodeClass('LoopNode', LoopNode);

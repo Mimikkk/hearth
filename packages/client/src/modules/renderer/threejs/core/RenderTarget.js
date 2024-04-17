@@ -11,6 +11,7 @@ import { Source } from '../textures/Source.js';
 */
 class RenderTarget {
   eventDispatcher = new EventDispatcher();
+
   constructor(width = 1, height = 1, options = {}) {
     this.isRenderTarget = true;
 

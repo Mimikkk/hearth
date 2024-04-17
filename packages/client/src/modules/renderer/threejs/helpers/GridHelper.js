@@ -5,52 +5,48 @@ import { BufferGeometry } from '../core/BufferGeometry.js';
 import { Color } from '../math/Color.js';
 
 class GridHelper extends LineSegments {
+  constructor(size = 10, divisions = 10, color1 = 0x444444, color2 = 0x888888) {
+    color1 = new Color(color1);
+    color2 = new Color(color2);
 
-	constructor( size = 10, divisions = 10, color1 = 0x444444, color2 = 0x888888 ) {
+    const center = divisions / 2;
+    const step = size / divisions;
+    const halfSize = size / 2;
 
-		color1 = new Color( color1 );
-		color2 = new Color( color2 );
+    const vertices = [],
+      colors = [];
 
-		const center = divisions / 2;
-		const step = size / divisions;
-		const halfSize = size / 2;
+    for (let i = 0, j = 0, k = -halfSize; i <= divisions; i++, k += step) {
+      vertices.push(-halfSize, 0, k, halfSize, 0, k);
+      vertices.push(k, 0, -halfSize, k, 0, halfSize);
 
-		const vertices = [], colors = [];
+      const color = i === center ? color1 : color2;
 
-		for ( let i = 0, j = 0, k = - halfSize; i <= divisions; i ++, k += step ) {
+      color.toArray(colors, j);
+      j += 3;
+      color.toArray(colors, j);
+      j += 3;
+      color.toArray(colors, j);
+      j += 3;
+      color.toArray(colors, j);
+      j += 3;
+    }
 
-			vertices.push( - halfSize, 0, k, halfSize, 0, k );
-			vertices.push( k, 0, - halfSize, k, 0, halfSize );
+    const geometry = new BufferGeometry();
+    geometry.setAttribute('position', new Float32BufferAttribute(vertices, 3));
+    geometry.setAttribute('color', new Float32BufferAttribute(colors, 3));
 
-			const color = i === center ? color1 : color2;
+    const material = new LineBasicMaterial({ vertexColors: true, toneMapped: false });
 
-			color.toArray( colors, j ); j += 3;
-			color.toArray( colors, j ); j += 3;
-			color.toArray( colors, j ); j += 3;
-			color.toArray( colors, j ); j += 3;
+    super(geometry, material);
 
-		}
+    this.type = 'GridHelper';
+  }
 
-		const geometry = new BufferGeometry();
-		geometry.setAttribute( 'position', new Float32BufferAttribute( vertices, 3 ) );
-		geometry.setAttribute( 'color', new Float32BufferAttribute( colors, 3 ) );
-
-		const material = new LineBasicMaterial( { vertexColors: true, toneMapped: false } );
-
-		super( geometry, material );
-
-		this.type = 'GridHelper';
-
-	}
-
-	dispose() {
-
-		this.geometry.dispose();
-		this.material.dispose();
-
-	}
-
+  dispose() {
+    this.geometry.dispose();
+    this.material.dispose();
+  }
 }
-
 
 export { GridHelper };

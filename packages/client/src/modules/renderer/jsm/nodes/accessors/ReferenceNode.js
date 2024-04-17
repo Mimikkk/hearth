@@ -8,153 +8,111 @@ import { uniforms } from './UniformsNode.js';
 import ArrayElementNode from '../utils/ArrayElementNode.js';
 
 class ReferenceElementNode extends ArrayElementNode {
+  constructor(referenceNode, indexNode) {
+    super(referenceNode, indexNode);
 
-	constructor( referenceNode, indexNode ) {
+    this.referenceNode = referenceNode;
 
-		super( referenceNode, indexNode );
+    this.isReferenceElementNode = true;
+  }
 
-		this.referenceNode = referenceNode;
+  getNodeType() {
+    return this.referenceNode.uniformType;
+  }
 
-		this.isReferenceElementNode = true;
+  generate(builder) {
+    const snippet = super.generate(builder);
+    const arrayType = this.referenceNode.getNodeType();
+    const elementType = this.getNodeType();
 
-	}
-
-	getNodeType() {
-
-		return this.referenceNode.uniformType;
-
-	}
-
-	generate( builder ) {
-
-		const snippet = super.generate( builder );
-		const arrayType = this.referenceNode.getNodeType();
-		const elementType = this.getNodeType();
-
-		return builder.format( snippet, arrayType, elementType );
-
-	}
-
+    return builder.format(snippet, arrayType, elementType);
+  }
 }
 
 class ReferenceNode extends Node {
+  constructor(property, uniformType, object = null, count = null) {
+    super();
 
-	constructor( property, uniformType, object = null, count = null ) {
+    this.property = property;
+    this.uniformType = uniformType;
+    this.object = object;
+    this.count = count;
 
-		super();
+    this.properties = property.split('.');
+    this.reference = null;
+    this.node = null;
 
-		this.property = property;
-		this.uniformType = uniformType;
-		this.object = object;
-		this.count = count;
+    this.updateType = NodeUpdateType.OBJECT;
+  }
 
-		this.properties = property.split( '.' );
-		this.reference = null;
-		this.node = null;
+  element(indexNode) {
+    return nodeObject(new ReferenceElementNode(this, nodeObject(indexNode)));
+  }
 
-		this.updateType = NodeUpdateType.OBJECT;
+  setNodeType(uniformType) {
+    let node = null;
 
-	}
+    if (this.count !== null) {
+      node = buffer(null, uniformType, this.count);
+    } else if (Array.isArray(this.getValueFromReference())) {
+      node = uniforms(null, uniformType);
+    } else if (uniformType === 'texture') {
+      node = texture(null);
+    } else {
+      node = uniform(null, uniformType);
+    }
 
-	element( indexNode ) {
+    this.node = node;
+  }
 
-		return nodeObject( new ReferenceElementNode( this, nodeObject( indexNode ) ) );
+  getNodeType(builder) {
+    return this.node.getNodeType(builder);
+  }
 
-	}
+  getValueFromReference(object = this.reference) {
+    const { properties } = this;
 
-	setNodeType( uniformType ) {
+    let value = object[properties[0]];
 
-		let node = null;
+    for (let i = 1; i < properties.length; i++) {
+      value = value[properties[i]];
+    }
 
-		if ( this.count !== null ) {
+    return value;
+  }
 
-			node = buffer( null, uniformType, this.count );
+  setReference(state) {
+    this.reference = this.object !== null ? this.object : state.object;
 
-		} else if ( Array.isArray( this.getValueFromReference() ) ) {
+    return this.reference;
+  }
 
-			node = uniforms( null, uniformType );
+  setup() {
+    this.updateValue();
 
-		} else if ( uniformType === 'texture' ) {
+    return this.node;
+  }
 
-			node = texture( null );
+  update(/*frame*/) {
+    this.updateValue();
+  }
 
-		} else {
+  updateValue() {
+    if (this.node === null) this.setNodeType(this.uniformType);
 
-			node = uniform( null, uniformType );
+    const value = this.getValueFromReference();
 
-		}
-
-		this.node = node;
-
-	}
-
-	getNodeType( builder ) {
-
-		return this.node.getNodeType( builder );
-
-	}
-
-	getValueFromReference( object = this.reference ) {
-
-		const { properties } = this;
-
-		let value = object[ properties[ 0 ] ];
-
-		for ( let i = 1; i < properties.length; i ++ ) {
-
-			value = value[ properties[ i ] ];
-
-		}
-
-		return value;
-
-	}
-
-	setReference( state ) {
-
-		this.reference = this.object !== null ? this.object : state.object;
-
-		return this.reference;
-
-	}
-
-	setup() {
-
-		this.updateValue();
-
-		return this.node;
-
-	}
-
-	update( /*frame*/ ) {
-
-		this.updateValue();
-
-	}
-
-	updateValue() {
-
-		if ( this.node === null ) this.setNodeType( this.uniformType );
-
-		const value = this.getValueFromReference();
-
-		if ( Array.isArray( value ) ) {
-
-			this.node.array = value;
-
-		} else {
-
-			this.node.value = value;
-
-		}
-
-	}
-
+    if (Array.isArray(value)) {
+      this.node.array = value;
+    } else {
+      this.node.value = value;
+    }
+  }
 }
 
 export default ReferenceNode;
 
-export const reference = ( name, type, object ) => nodeObject( new ReferenceNode( name, type, object ) );
-export const referenceBuffer = ( name, type, count, object ) => nodeObject( new ReferenceNode( name, type, object, count ) );
+export const reference = (name, type, object) => nodeObject(new ReferenceNode(name, type, object));
+export const referenceBuffer = (name, type, count, object) => nodeObject(new ReferenceNode(name, type, object, count));
 
-addNodeClass( 'ReferenceNode', ReferenceNode );
+addNodeClass('ReferenceNode', ReferenceNode);

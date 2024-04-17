@@ -3,90 +3,76 @@ import { MeshBasicMaterial } from '../materials/MeshBasicMaterial.js';
 import { SphereGeometry } from '../geometries/SphereGeometry.js';
 
 class PointLightHelper extends Mesh {
+  constructor(light, sphereSize, color) {
+    const geometry = new SphereGeometry(sphereSize, 4, 2);
+    const material = new MeshBasicMaterial({ wireframe: true, fog: false, toneMapped: false });
 
-	constructor( light, sphereSize, color ) {
+    super(geometry, material);
 
-		const geometry = new SphereGeometry( sphereSize, 4, 2 );
-		const material = new MeshBasicMaterial( { wireframe: true, fog: false, toneMapped: false } );
+    this.light = light;
 
-		super( geometry, material );
+    this.color = color;
 
-		this.light = light;
+    this.type = 'PointLightHelper';
 
-		this.color = color;
+    this.matrix = this.light.matrixWorld;
+    this.matrixAutoUpdate = false;
 
-		this.type = 'PointLightHelper';
+    this.update();
 
-		this.matrix = this.light.matrixWorld;
-		this.matrixAutoUpdate = false;
+    /*
+  // TODO: delete this comment?
+  const distanceGeometry = new THREE.IcosahedronGeometry( 1, 2 );
+  const distanceMaterial = new THREE.MeshBasicMaterial( { color: hexColor, fog: false, wireframe: true, opacity: 0.1, transparent: true } );
 
-		this.update();
+  this.lightSphere = new THREE.Mesh( bulbGeometry, bulbMaterial );
+  this.lightDistance = new THREE.Mesh( distanceGeometry, distanceMaterial );
 
+  const d = light.distance;
 
-		/*
-	// TODO: delete this comment?
-	const distanceGeometry = new THREE.IcosahedronGeometry( 1, 2 );
-	const distanceMaterial = new THREE.MeshBasicMaterial( { color: hexColor, fog: false, wireframe: true, opacity: 0.1, transparent: true } );
+  if ( d === 0.0 ) {
 
-	this.lightSphere = new THREE.Mesh( bulbGeometry, bulbMaterial );
-	this.lightDistance = new THREE.Mesh( distanceGeometry, distanceMaterial );
+    this.lightDistance.visible = false;
 
-	const d = light.distance;
+  } else {
 
-	if ( d === 0.0 ) {
+    this.lightDistance.scale.set( d, d, d );
 
-		this.lightDistance.visible = false;
+  }
 
-	} else {
+  this.add( this.lightDistance );
+  */
+  }
 
-		this.lightDistance.scale.set( d, d, d );
+  dispose() {
+    this.geometry.dispose();
+    this.material.dispose();
+  }
 
-	}
+  update() {
+    this.light.updateWorldMatrix(true, false);
 
-	this.add( this.lightDistance );
-	*/
+    if (this.color !== undefined) {
+      this.material.color.set(this.color);
+    } else {
+      this.material.color.copy(this.light.color);
+    }
 
-	}
+    /*
+    const d = this.light.distance;
 
-	dispose() {
+    if ( d === 0.0 ) {
 
-		this.geometry.dispose();
-		this.material.dispose();
+      this.lightDistance.visible = false;
 
-	}
+    } else {
 
-	update() {
+      this.lightDistance.visible = true;
+      this.lightDistance.scale.set( d, d, d );
 
-		this.light.updateWorldMatrix( true, false );
-
-		if ( this.color !== undefined ) {
-
-			this.material.color.set( this.color );
-
-		} else {
-
-			this.material.color.copy( this.light.color );
-
-		}
-
-		/*
-		const d = this.light.distance;
-
-		if ( d === 0.0 ) {
-
-			this.lightDistance.visible = false;
-
-		} else {
-
-			this.lightDistance.visible = true;
-			this.lightDistance.scale.set( d, d, d );
-
-		}
-		*/
-
-	}
-
+    }
+    */
+  }
 }
-
 
 export { PointLightHelper };

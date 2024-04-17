@@ -3,10 +3,10 @@ import { Color, Vector3 } from '../../threejs/Three.js';
 /**
  * Currently contains:
  *
- *	toon1
- *	toon2
- *	hatching
- *	dotted
+ *  toon1
+ *  toon2
+ *  hatching
+ *  dotted
  */
 
 const ToonShader1 = {

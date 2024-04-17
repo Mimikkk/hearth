@@ -2,92 +2,88 @@ import ChainMap from './ChainMap.js';
 import RenderObject from './RenderObject.js';
 
 class RenderObjects {
+  constructor(renderer, nodes, geometries, pipelines, bindings, info) {
+    this.renderer = renderer;
+    this.nodes = nodes;
+    this.geometries = geometries;
+    this.pipelines = pipelines;
+    this.bindings = bindings;
+    this.info = info;
 
-	constructor( renderer, nodes, geometries, pipelines, bindings, info ) {
+    this.chainMaps = {};
+  }
 
-		this.renderer = renderer;
-		this.nodes = nodes;
-		this.geometries = geometries;
-		this.pipelines = pipelines;
-		this.bindings = bindings;
-		this.info = info;
+  get(object, material, scene, camera, lightsNode, renderContext, passId) {
+    const chainMap = this.getChainMap(passId);
+    const chainArray = [object, material, renderContext, lightsNode];
 
-		this.chainMaps = {};
+    let renderObject = chainMap.get(chainArray);
 
-	}
+    if (renderObject === undefined) {
+      renderObject = this.createRenderObject(
+        this.nodes,
+        this.geometries,
+        this.renderer,
+        object,
+        material,
+        scene,
+        camera,
+        lightsNode,
+        renderContext,
+        passId,
+      );
 
-	get( object, material, scene, camera, lightsNode, renderContext, passId ) {
+      chainMap.set(chainArray, renderObject);
+    } else {
+      renderObject.updateClipping(renderContext.clippingContext);
 
-		const chainMap = this.getChainMap( passId );
-		const chainArray = [ object, material, renderContext, lightsNode ];
+      if (renderObject.version !== material.version || renderObject.needsUpdate) {
+        if (renderObject.initialCacheKey !== renderObject.getCacheKey()) {
+          renderObject.dispose();
 
-		let renderObject = chainMap.get( chainArray );
+          renderObject = this.get(object, material, scene, camera, lightsNode, renderContext, passId);
+        } else {
+          renderObject.version = material.version;
+        }
+      }
+    }
 
-		if ( renderObject === undefined ) {
+    return renderObject;
+  }
 
-			renderObject = this.createRenderObject( this.nodes, this.geometries, this.renderer, object, material, scene, camera, lightsNode, renderContext, passId );
+  getChainMap(passId = 'default') {
+    return this.chainMaps[passId] || (this.chainMaps[passId] = new ChainMap());
+  }
 
-			chainMap.set( chainArray, renderObject );
+  dispose() {
+    this.chainMaps = {};
+  }
 
-		} else {
+  createRenderObject(nodes, geometries, renderer, object, material, scene, camera, lightsNode, renderContext, passId) {
+    const chainMap = this.getChainMap(passId);
 
-			renderObject.updateClipping( renderContext.clippingContext );
+    const renderObject = new RenderObject(
+      nodes,
+      geometries,
+      renderer,
+      object,
+      material,
+      scene,
+      camera,
+      lightsNode,
+      renderContext,
+    );
 
-			if ( renderObject.version !== material.version || renderObject.needsUpdate ) {
+    renderObject.onDispose = () => {
+      this.pipelines.delete(renderObject);
+      this.bindings.delete(renderObject);
+      this.nodes.delete(renderObject);
 
-				if ( renderObject.initialCacheKey !== renderObject.getCacheKey() ) {
+      chainMap.delete(renderObject.getChainArray());
+    };
 
-					renderObject.dispose();
-
-					renderObject = this.get( object, material, scene, camera, lightsNode, renderContext, passId );
-
-				} else {
-
-					renderObject.version = material.version;
-
-				}
-
-			}
-
-		}
-
-		return renderObject;
-
-	}
-
-	getChainMap( passId = 'default' ) {
-
-		return this.chainMaps[ passId ] || ( this.chainMaps[ passId ] = new ChainMap() );
-
-	}
-
-	dispose() {
-
-		this.chainMaps = {};
-
-	}
-
-	createRenderObject( nodes, geometries, renderer, object, material, scene, camera, lightsNode, renderContext, passId ) {
-
-		const chainMap = this.getChainMap( passId );
-
-		const renderObject = new RenderObject( nodes, geometries, renderer, object, material, scene, camera, lightsNode, renderContext );
-
-		renderObject.onDispose = () => {
-
-			this.pipelines.delete( renderObject );
-			this.bindings.delete( renderObject );
-			this.nodes.delete( renderObject );
-
-			chainMap.delete( renderObject.getChainArray() );
-
-		};
-
-		return renderObject;
-
-	}
-
-
+    return renderObject;
+  }
 }
 
 export default RenderObjects;

@@ -1,112 +1,87 @@
 import Node, { addNodeClass } from '../core/Node.js';
 import { vectorComponents } from '../core/constants.js';
 
-const stringVectorComponents = vectorComponents.join( '' );
+const stringVectorComponents = vectorComponents.join('');
 
 class SplitNode extends Node {
+  constructor(node, components = 'x') {
+    super();
 
-	constructor( node, components = 'x' ) {
+    this.node = node;
+    this.components = components;
 
-		super();
+    this.isSplitNode = true;
+  }
 
-		this.node = node;
-		this.components = components;
+  getVectorLength() {
+    let vectorLength = this.components.length;
 
-		this.isSplitNode = true;
+    for (const c of this.components) {
+      vectorLength = Math.max(vectorComponents.indexOf(c) + 1, vectorLength);
+    }
 
-	}
+    return vectorLength;
+  }
 
-	getVectorLength() {
+  getComponentType(builder) {
+    return builder.getComponentType(this.node.getNodeType(builder));
+  }
 
-		let vectorLength = this.components.length;
+  getNodeType(builder) {
+    return builder.getTypeFromLength(this.components.length, this.getComponentType(builder));
+  }
 
-		for ( const c of this.components ) {
+  generate(builder, output) {
+    const node = this.node;
+    const nodeTypeLength = builder.getTypeLength(node.getNodeType(builder));
 
-			vectorLength = Math.max( vectorComponents.indexOf( c ) + 1, vectorLength );
+    let snippet = null;
 
-		}
+    if (nodeTypeLength > 1) {
+      let type = null;
 
-		return vectorLength;
+      const componentsLength = this.getVectorLength();
 
-	}
+      if (componentsLength >= nodeTypeLength) {
+        // needed expand the input node
 
-	getComponentType( builder ) {
+        type = builder.getTypeFromLength(this.getVectorLength(), this.getComponentType(builder));
+      }
 
-		return builder.getComponentType( this.node.getNodeType( builder ) );
+      const nodeSnippet = node.build(builder, type);
 
-	}
+      if (
+        this.components.length === nodeTypeLength &&
+        this.components === stringVectorComponents.slice(0, this.components.length)
+      ) {
+        // unnecessary swizzle
 
-	getNodeType( builder ) {
+        snippet = builder.format(nodeSnippet, type, output);
+      } else {
+        snippet = builder.format(`${nodeSnippet}.${this.components}`, this.getNodeType(builder), output);
+      }
+    } else {
+      // ignore .components if .node returns float/integer
 
-		return builder.getTypeFromLength( this.components.length, this.getComponentType( builder ) );
+      snippet = node.build(builder, output);
+    }
 
-	}
+    return snippet;
+  }
 
-	generate( builder, output ) {
+  serialize(data) {
+    super.serialize(data);
 
-		const node = this.node;
-		const nodeTypeLength = builder.getTypeLength( node.getNodeType( builder ) );
+    data.components = this.components;
+  }
 
-		let snippet = null;
+  deserialize(data) {
+    super.deserialize(data);
 
-		if ( nodeTypeLength > 1 ) {
-
-			let type = null;
-
-			const componentsLength = this.getVectorLength();
-
-			if ( componentsLength >= nodeTypeLength ) {
-
-				// needed expand the input node
-
-				type = builder.getTypeFromLength( this.getVectorLength(), this.getComponentType( builder ) );
-
-			}
-
-			const nodeSnippet = node.build( builder, type );
-
-			if ( this.components.length === nodeTypeLength && this.components === stringVectorComponents.slice( 0, this.components.length ) ) {
-
-				// unnecessary swizzle
-
-				snippet = builder.format( nodeSnippet, type, output );
-
-			} else {
-
-				snippet = builder.format( `${nodeSnippet}.${this.components}`, this.getNodeType( builder ), output );
-
-			}
-
-		} else {
-
-			// ignore .components if .node returns float/integer
-
-			snippet = node.build( builder, output );
-
-		}
-
-		return snippet;
-
-	}
-
-	serialize( data ) {
-
-		super.serialize( data );
-
-		data.components = this.components;
-
-	}
-
-	deserialize( data ) {
-
-		super.deserialize( data );
-
-		this.components = data.components;
-
-	}
-
+    this.components = data.components;
+  }
 }
 
 export default SplitNode;
 
-addNodeClass( 'SplitNode', SplitNode );
+addNodeClass('SplitNode', SplitNode);

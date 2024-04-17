@@ -3,48 +3,38 @@ import * as MathUtils from '../math/MathUtils.js';
 import { PerspectiveCamera } from '../cameras/PerspectiveCamera.js';
 
 class SpotLightShadow extends LightShadow {
+  constructor() {
+    super(new PerspectiveCamera(50, 1, 0.5, 500));
 
-	constructor() {
+    this.isSpotLightShadow = true;
 
-		super( new PerspectiveCamera( 50, 1, 0.5, 500 ) );
+    this.focus = 1;
+  }
 
-		this.isSpotLightShadow = true;
+  updateMatrices(light) {
+    const camera = this.camera;
 
-		this.focus = 1;
+    const fov = MathUtils.RAD2DEG * 2 * light.angle * this.focus;
+    const aspect = this.mapSize.width / this.mapSize.height;
+    const far = light.distance || camera.far;
 
-	}
+    if (fov !== camera.fov || aspect !== camera.aspect || far !== camera.far) {
+      camera.fov = fov;
+      camera.aspect = aspect;
+      camera.far = far;
+      camera.updateProjectionMatrix();
+    }
 
-	updateMatrices( light ) {
+    super.updateMatrices(light);
+  }
 
-		const camera = this.camera;
+  copy(source) {
+    super.copy(source);
 
-		const fov = MathUtils.RAD2DEG * 2 * light.angle * this.focus;
-		const aspect = this.mapSize.width / this.mapSize.height;
-		const far = light.distance || camera.far;
+    this.focus = source.focus;
 
-		if ( fov !== camera.fov || aspect !== camera.aspect || far !== camera.far ) {
-
-			camera.fov = fov;
-			camera.aspect = aspect;
-			camera.far = far;
-			camera.updateProjectionMatrix();
-
-		}
-
-		super.updateMatrices( light );
-
-	}
-
-	copy( source ) {
-
-		super.copy( source );
-
-		this.focus = source.focus;
-
-		return this;
-
-	}
-
+    return this;
+  }
 }
 
 export { SpotLightShadow };

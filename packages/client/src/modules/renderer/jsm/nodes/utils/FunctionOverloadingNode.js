@@ -2,94 +2,73 @@ import Node, { addNodeClass } from '../core/Node.js';
 import { nodeProxy } from '../shadernode/ShaderNode.js';
 
 class FunctionOverloadingNode extends Node {
+  constructor(functionNodes = [], ...parametersNodes) {
+    super();
 
-	constructor( functionNodes = [], ...parametersNodes ) {
+    this.functionNodes = functionNodes;
+    this.parametersNodes = parametersNodes;
 
-		super();
+    this._candidateFnCall = null;
+  }
 
-		this.functionNodes = functionNodes;
-		this.parametersNodes = parametersNodes;
+  getNodeType() {
+    return this.functionNodes[0].shaderNode.layout.type;
+  }
 
-		this._candidateFnCall = null;
+  setup(builder) {
+    const params = this.parametersNodes;
 
-	}
+    let candidateFnCall = this._candidateFnCall;
 
-	getNodeType() {
+    if (candidateFnCall === null) {
+      let candidateFn = null;
+      let candidateScore = -1;
 
-		return this.functionNodes[ 0 ].shaderNode.layout.type;
+      for (const functionNode of this.functionNodes) {
+        const shaderNode = functionNode.shaderNode;
+        const layout = shaderNode.layout;
 
-	}
+        if (layout === null) {
+          throw new Error('FunctionOverloadingNode: FunctionNode must be a layout.');
+        }
 
-	setup( builder ) {
+        const inputs = layout.inputs;
 
-		const params = this.parametersNodes;
+        if (params.length === inputs.length) {
+          let score = 0;
 
-		let candidateFnCall = this._candidateFnCall;
+          for (let i = 0; i < params.length; i++) {
+            const param = params[i];
+            const input = inputs[i];
 
-		if ( candidateFnCall === null ) {
+            if (param.getNodeType(builder) === input.type) {
+              score++;
+            } else {
+              score = 0;
+            }
+          }
 
-			let candidateFn = null;
-			let candidateScore = - 1;
+          if (score > candidateScore) {
+            candidateFn = functionNode;
+            candidateScore = score;
+          }
+        }
+      }
 
-			for ( const functionNode of this.functionNodes ) {
+      this._candidateFnCall = candidateFnCall = candidateFn(...params);
+    }
 
-				const shaderNode = functionNode.shaderNode;
-				const layout = shaderNode.layout;
-
-				if ( layout === null ) {
-
-					throw new Error( 'FunctionOverloadingNode: FunctionNode must be a layout.' );
-
-				}
-
-				const inputs = layout.inputs;
-
-				if ( params.length === inputs.length ) {
-
-					let score = 0;
-
-					for ( let i = 0; i < params.length; i ++ ) {
-
-						const param = params[ i ];
-						const input = inputs[ i ];
-
-						if ( param.getNodeType( builder ) === input.type ) {
-
-							score ++;
-
-						} else {
-
-							score = 0;
-
-						}
-
-					}
-
-					if ( score > candidateScore ) {
-
-						candidateFn = functionNode;
-						candidateScore = score;
-
-					}
-
-				}
-
-			}
-
-			this._candidateFnCall = candidateFnCall = candidateFn( ...params );
-
-		}
-
-		return candidateFnCall;
-
-	}
-
+    return candidateFnCall;
+  }
 }
 
 export default FunctionOverloadingNode;
 
-const overloadingBaseFn = nodeProxy( FunctionOverloadingNode );
+const overloadingBaseFn = nodeProxy(FunctionOverloadingNode);
 
-export const overloadingFn = ( functionNodes ) => ( ...params ) => overloadingBaseFn( functionNodes, ...params );
+export const overloadingFn =
+  functionNodes =>
+  (...params) =>
+    overloadingBaseFn(functionNodes, ...params);
 
-addNodeClass( 'FunctionOverloadingNode', FunctionOverloadingNode );
+addNodeClass('FunctionOverloadingNode', FunctionOverloadingNode);

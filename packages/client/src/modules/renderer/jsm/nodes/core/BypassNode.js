@@ -2,44 +2,34 @@ import Node, { addNodeClass } from './Node.js';
 import { addNodeElement, nodeProxy } from '../shadernode/ShaderNode.js';
 
 class BypassNode extends Node {
+  constructor(returnNode, callNode) {
+    super();
 
-	constructor( returnNode, callNode ) {
+    this.isBypassNode = true;
 
-		super();
+    this.outputNode = returnNode;
+    this.callNode = callNode;
+  }
 
-		this.isBypassNode = true;
+  getNodeType(builder) {
+    return this.outputNode.getNodeType(builder);
+  }
 
-		this.outputNode = returnNode;
-		this.callNode = callNode;
+  generate(builder) {
+    const snippet = this.callNode.build(builder, 'void');
 
-	}
+    if (snippet !== '') {
+      builder.addLineFlowCode(snippet);
+    }
 
-	getNodeType( builder ) {
-
-		return this.outputNode.getNodeType( builder );
-
-	}
-
-	generate( builder ) {
-
-		const snippet = this.callNode.build( builder, 'void' );
-
-		if ( snippet !== '' ) {
-
-			builder.addLineFlowCode( snippet );
-
-		}
-
-		return this.outputNode.build( builder );
-
-	}
-
+    return this.outputNode.build(builder);
+  }
 }
 
 export default BypassNode;
 
-export const bypass = nodeProxy( BypassNode );
+export const bypass = nodeProxy(BypassNode);
 
-addNodeElement( 'bypass', bypass );
+addNodeElement('bypass', bypass);
 
-addNodeClass( 'BypassNode', BypassNode );
+addNodeClass('BypassNode', BypassNode);

@@ -3,56 +3,40 @@ import { varying } from './VaryingNode.js';
 import { nodeImmutable } from '../shadernode/ShaderNode.js';
 
 class IndexNode extends Node {
+  constructor(scope) {
+    super('uint');
 
-	constructor( scope ) {
+    this.scope = scope;
 
-		super( 'uint' );
+    this.isInstanceIndexNode = true;
+  }
 
-		this.scope = scope;
+  generate(builder) {
+    const nodeType = this.getNodeType(builder);
+    const scope = this.scope;
 
-		this.isInstanceIndexNode = true;
+    let propertyName;
 
-	}
+    if (scope === IndexNode.VERTEX) {
+      propertyName = builder.getVertexIndex();
+    } else if (scope === IndexNode.INSTANCE) {
+      propertyName = builder.getInstanceIndex();
+    } else {
+      throw new Error('THREE.IndexNode: Unknown scope: ' + scope);
+    }
 
-	generate( builder ) {
+    let output;
 
-		const nodeType = this.getNodeType( builder );
-		const scope = this.scope;
+    if (builder.shaderStage === 'vertex' || builder.shaderStage === 'compute') {
+      output = propertyName;
+    } else {
+      const nodeVarying = varying(this);
 
-		let propertyName;
+      output = nodeVarying.build(builder, nodeType);
+    }
 
-		if ( scope === IndexNode.VERTEX ) {
-
-			propertyName = builder.getVertexIndex();
-
-		} else if ( scope === IndexNode.INSTANCE ) {
-
-			propertyName = builder.getInstanceIndex();
-
-		} else {
-
-			throw new Error( 'THREE.IndexNode: Unknown scope: ' + scope );
-
-		}
-
-		let output;
-
-		if ( builder.shaderStage === 'vertex' || builder.shaderStage === 'compute' ) {
-
-			output = propertyName;
-
-		} else {
-
-			const nodeVarying = varying( this );
-
-			output = nodeVarying.build( builder, nodeType );
-
-		}
-
-		return output;
-
-	}
-
+    return output;
+  }
 }
 
 IndexNode.VERTEX = 'vertex';
@@ -60,7 +44,7 @@ IndexNode.INSTANCE = 'instance';
 
 export default IndexNode;
 
-export const vertexIndex = nodeImmutable( IndexNode, IndexNode.VERTEX );
-export const instanceIndex = nodeImmutable( IndexNode, IndexNode.INSTANCE );
+export const vertexIndex = nodeImmutable(IndexNode, IndexNode.VERTEX);
+export const instanceIndex = nodeImmutable(IndexNode, IndexNode.INSTANCE);
 
-addNodeClass( 'IndexNode', IndexNode );
+addNodeClass('IndexNode', IndexNode);

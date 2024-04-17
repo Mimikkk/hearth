@@ -2,60 +2,50 @@ import Node, { addNodeClass } from './Node.js';
 import { addNodeElement, nodeProxy } from '../shadernode/ShaderNode.js';
 
 class ContextNode extends Node {
+  constructor(node, context = {}) {
+    super();
 
-	constructor( node, context = {} ) {
+    this.isContextNode = true;
 
-		super();
+    this.node = node;
+    this.context = context;
+  }
 
-		this.isContextNode = true;
+  getNodeType(builder) {
+    return this.node.getNodeType(builder);
+  }
 
-		this.node = node;
-		this.context = context;
+  setup(builder) {
+    const previousContext = builder.getContext();
 
-	}
+    builder.setContext({ ...builder.context, ...this.context });
 
-	getNodeType( builder ) {
+    const node = this.node.build(builder);
 
-		return this.node.getNodeType( builder );
+    builder.setContext(previousContext);
 
-	}
+    return node;
+  }
 
-	setup( builder ) {
+  generate(builder, output) {
+    const previousContext = builder.getContext();
 
-		const previousContext = builder.getContext();
+    builder.setContext({ ...builder.context, ...this.context });
 
-		builder.setContext( { ...builder.context, ...this.context } );
+    const snippet = this.node.build(builder, output);
 
-		const node = this.node.build( builder );
+    builder.setContext(previousContext);
 
-		builder.setContext( previousContext );
-
-		return node;
-
-	}
-
-	generate( builder, output ) {
-
-		const previousContext = builder.getContext();
-
-		builder.setContext( { ...builder.context, ...this.context } );
-
-		const snippet = this.node.build( builder, output );
-
-		builder.setContext( previousContext );
-
-		return snippet;
-
-	}
-
+    return snippet;
+  }
 }
 
 export default ContextNode;
 
-export const context = nodeProxy( ContextNode );
-export const label = ( node, name ) => context( node, { label: name } );
+export const context = nodeProxy(ContextNode);
+export const label = (node, name) => context(node, { label: name });
 
-addNodeElement( 'context', context );
-addNodeElement( 'label', label );
+addNodeElement('context', context);
+addNodeElement('label', label);
 
-addNodeClass( 'ContextNode', ContextNode );
+addNodeClass('ContextNode', ContextNode);

@@ -1,24 +1,18 @@
 import Node, { addNodeClass } from './Node.js';
 
 class StructTypeNode extends Node {
+  constructor(types) {
+    super();
 
-	constructor( types ) {
+    this.types = types;
+    this.isStructTypeNode = true;
+  }
 
-		super();
-
-		this.types = types;
-		this.isStructTypeNode = true;
-
-	}
-
-	getMemberTypes() {
-
-		return this.types;
-
-	}
-
+  getMemberTypes() {
+    return this.types;
+  }
 }
 
 export default StructTypeNode;
 
-addNodeClass( 'StructTypeNode', StructTypeNode );
+addNodeClass('StructTypeNode', StructTypeNode);

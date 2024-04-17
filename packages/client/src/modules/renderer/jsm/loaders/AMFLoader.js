@@ -15,10 +15,10 @@ import * as fflate from '../libs/fflate.module.js';
  * example loaders in the three.js project.
  *
  * Usage:
- *	const loader = new AMFLoader();
- *	loader.load('/path/to/project.amf', function(objecttree) {
- *		scene.add(objecttree);
- *	});
+ *  const loader = new AMFLoader();
+ *  loader.load('/path/to/project.amf', function(objecttree) {
+ *    scene.add(objecttree);
+ *  });
  *
  * Materials now supported, material colors supported
  * Zip support, requires fflate

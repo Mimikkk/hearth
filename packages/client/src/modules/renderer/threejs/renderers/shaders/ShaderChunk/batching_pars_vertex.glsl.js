@@ -1,4 +1,4 @@
-export default /* glsl */`
+export default /* glsl */ `
 #ifdef USE_BATCHING
 	attribute float batchId;
 	uniform highp sampler2D batchingTexture;

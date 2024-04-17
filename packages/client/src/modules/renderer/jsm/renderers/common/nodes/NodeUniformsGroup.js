@@ -3,42 +3,32 @@ import UniformsGroup from '../UniformsGroup.js';
 let id = 0;
 
 class NodeUniformsGroup extends UniformsGroup {
+  constructor(name, groupNode) {
+    super(name);
 
-	constructor( name, groupNode ) {
+    this.id = id++;
+    this.groupNode = groupNode;
 
-		super( name );
+    this.isNodeUniformsGroup = true;
+  }
 
-		this.id = id ++;
-		this.groupNode = groupNode;
+  get shared() {
+    return this.groupNode.shared;
+  }
 
-		this.isNodeUniformsGroup = true;
+  getNodes() {
+    const nodes = [];
 
-	}
+    for (const uniform of this.uniforms) {
+      const node = uniform.nodeUniform.node;
 
-	get shared() {
+      if (!node) throw new Error('NodeUniformsGroup: Uniform has no node.');
 
-		return this.groupNode.shared;
+      nodes.push(node);
+    }
 
-	}
-
-	getNodes() {
-
-		const nodes = [];
-
-		for ( const uniform of this.uniforms ) {
-
-			const node = uniform.nodeUniform.node;
-
-			if ( ! node ) throw new Error( 'NodeUniformsGroup: Uniform has no node.' );
-
-			nodes.push( node );
-
-		}
-
-		return nodes;
-
-	}
-
+    return nodes;
+  }
 }
 
 export default NodeUniformsGroup;

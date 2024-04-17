@@ -1,80 +1,58 @@
 class NodeKeywords {
+  constructor() {
+    this.keywords = [];
+    this.nodes = [];
+    this.keywordsCallback = {};
+  }
 
-	constructor() {
+  getNode(name) {
+    let node = this.nodes[name];
 
-		this.keywords = [];
-		this.nodes = [];
-		this.keywordsCallback = {};
+    if (node === undefined && this.keywordsCallback[name] !== undefined) {
+      node = this.keywordsCallback[name](name);
 
-	}
+      this.nodes[name] = node;
+    }
 
-	getNode( name ) {
+    return node;
+  }
 
-		let node = this.nodes[ name ];
+  addKeyword(name, callback) {
+    this.keywords.push(name);
+    this.keywordsCallback[name] = callback;
 
-		if ( node === undefined && this.keywordsCallback[ name ] !== undefined ) {
+    return this;
+  }
 
-			node = this.keywordsCallback[ name ]( name );
+  parse(code) {
+    const keywordNames = this.keywords;
 
-			this.nodes[ name ] = node;
+    const regExp = new RegExp(`\\b${keywordNames.join('\\b|\\b')}\\b`, 'g');
 
-		}
+    const codeKeywords = code.match(regExp);
 
-		return node;
+    const keywordNodes = [];
 
-	}
+    if (codeKeywords !== null) {
+      for (const keyword of codeKeywords) {
+        const node = this.getNode(keyword);
 
-	addKeyword( name, callback ) {
+        if (node !== undefined && keywordNodes.indexOf(node) === -1) {
+          keywordNodes.push(node);
+        }
+      }
+    }
 
-		this.keywords.push( name );
-		this.keywordsCallback[ name ] = callback;
+    return keywordNodes;
+  }
 
-		return this;
+  include(builder, code) {
+    const keywordNodes = this.parse(code);
 
-	}
-
-	parse( code ) {
-
-		const keywordNames = this.keywords;
-
-		const regExp = new RegExp( `\\b${keywordNames.join( '\\b|\\b' )}\\b`, 'g' );
-
-		const codeKeywords = code.match( regExp );
-
-		const keywordNodes = [];
-
-		if ( codeKeywords !== null ) {
-
-			for ( const keyword of codeKeywords ) {
-
-				const node = this.getNode( keyword );
-
-				if ( node !== undefined && keywordNodes.indexOf( node ) === - 1 ) {
-
-					keywordNodes.push( node );
-
-				}
-
-			}
-
-		}
-
-		return keywordNodes;
-
-	}
-
-	include( builder, code ) {
-
-		const keywordNodes = this.parse( code );
-
-		for ( const keywordNode of keywordNodes ) {
-
-			keywordNode.build( builder );
-
-		}
-
-	}
-
+    for (const keywordNode of keywordNodes) {
+      keywordNode.build(builder);
+    }
+  }
 }
 
 export default NodeKeywords;

@@ -1,190 +1,132 @@
 import { MathNode, GLSLNodeParser, NodeBuilder } from '../../../nodes/Nodes.js';
 
 const glslMethods = {
-	[ MathNode.ATAN2 ]: 'atan'
+  [MathNode.ATAN2]: 'atan',
 };
 
 const precisionLib = {
-	low: 'lowp',
-	medium: 'mediump',
-	high: 'highp'
+  low: 'lowp',
+  medium: 'mediump',
+  high: 'highp',
 };
 
 class GLSL1NodeBuilder extends NodeBuilder {
+  constructor(object, renderer, scene = null) {
+    super(object, renderer, new GLSLNodeParser(), scene);
+  }
 
-	constructor( object, renderer, scene = null ) {
+  getMethod(method) {
+    return glslMethods[method] || method;
+  }
 
-		super( object, renderer, new GLSLNodeParser(), scene );
+  getTexture(texture, textureProperty, uvSnippet) {
+    if (texture.isTextureCube) {
+      return `textureCube( ${textureProperty}, ${uvSnippet} )`;
+    } else {
+      return `texture2D( ${textureProperty}, ${uvSnippet} )`;
+    }
+  }
 
-	}
+  getTextureBias(texture, textureProperty, uvSnippet, biasSnippet) {
+    return `textureLod( ${textureProperty}, ${uvSnippet}, ${biasSnippet} )`;
+  }
 
-	getMethod( method ) {
+  getVars(shaderStage) {
+    const snippets = [];
 
-		return glslMethods[ method ] || method;
+    const vars = this.vars[shaderStage];
 
-	}
+    for (const variable of vars) {
+      snippets.push(`${this.getVar(variable.type, variable.name)};`);
+    }
 
-	getTexture( texture, textureProperty, uvSnippet ) {
+    return snippets.join('\n\t');
+  }
 
-		if ( texture.isTextureCube ) {
+  getUniforms(shaderStage) {
+    const uniforms = this.uniforms[shaderStage];
 
-			return `textureCube( ${textureProperty}, ${uvSnippet} )`;
+    let output = '';
 
-		} else {
+    for (const uniform of uniforms) {
+      let snippet = null;
 
-			return `texture2D( ${textureProperty}, ${uvSnippet} )`;
+      if (uniform.type === 'texture') {
+        snippet = `sampler2D ${uniform.name};\n`;
+      } else if (uniform.type === 'cubeTexture') {
+        snippet = `samplerCube ${uniform.name};\n`;
+      } else {
+        const vectorType = this.getVectorType(uniform.type);
 
-		}
+        snippet = `${vectorType} ${uniform.name};\n`;
+      }
 
-	}
+      const precision = uniform.node.precision;
 
-	getTextureBias( texture, textureProperty, uvSnippet, biasSnippet ) {
+      if (precision !== null) {
+        snippet = 'uniform ' + precisionLib[precision] + ' ' + snippet;
+      } else {
+        snippet = 'uniform ' + snippet;
+      }
 
-		return `textureLod( ${textureProperty}, ${uvSnippet}, ${biasSnippet} )`;
+      output += snippet;
+    }
 
-	}
+    return output;
+  }
 
-	getVars( shaderStage ) {
+  getAttributes(shaderStage) {
+    let snippet = '';
 
-		const snippets = [];
+    if (shaderStage === 'vertex') {
+      const attributes = this.attributes;
 
-		const vars = this.vars[ shaderStage ];
+      for (const attribute of attributes) {
+        snippet += `attribute ${attribute.type} ${attribute.name};\n`;
+      }
+    }
 
-		for ( const variable of vars ) {
+    return snippet;
+  }
 
-			snippets.push( `${ this.getVar( variable.type, variable.name ) };` );
+  getVaryings(shaderStage) {
+    let snippet = '';
 
-		}
+    const varyings = this.varyings;
 
-		return snippets.join( '\n\t' );
+    if (shaderStage === 'vertex') {
+      for (const varying of varyings) {
+        snippet += `${varying.needsInterpolation ? 'varying' : '/*varying*/'} ${varying.type} ${varying.name};\n`;
+      }
+    } else if (shaderStage === 'fragment') {
+      for (const varying of varyings) {
+        if (varying.needsInterpolation) {
+          snippet += `varying ${varying.type} ${varying.name};\n`;
+        }
+      }
+    }
 
-	}
+    return snippet;
+  }
 
-	getUniforms( shaderStage ) {
+  getVertexIndex() {
+    return 'gl_VertexID';
+  }
 
-		const uniforms = this.uniforms[ shaderStage ];
+  getFrontFacing() {
+    return 'gl_FrontFacing';
+  }
 
-		let output = '';
+  getFragCoord() {
+    return 'gl_FragCoord';
+  }
 
-		for ( const uniform of uniforms ) {
+  isFlipY() {
+    return true;
+  }
 
-			let snippet = null;
-
-			if ( uniform.type === 'texture' ) {
-
-				snippet = `sampler2D ${uniform.name};\n`;
-
-			} else if ( uniform.type === 'cubeTexture' ) {
-
-				snippet = `samplerCube ${uniform.name};\n`;
-
-			} else {
-
-				const vectorType = this.getVectorType( uniform.type );
-
-				snippet = `${vectorType} ${uniform.name};\n`;
-
-			}
-
-			const precision = uniform.node.precision;
-
-			if ( precision !== null ) {
-
-				snippet = 'uniform ' + precisionLib[ precision ] + ' ' + snippet;
-
-			} else {
-
-				snippet = 'uniform ' + snippet;
-
-			}
-
-			output += snippet;
-
-		}
-
-		return output;
-
-	}
-
-	getAttributes( shaderStage ) {
-
-		let snippet = '';
-
-		if ( shaderStage === 'vertex' ) {
-
-			const attributes = this.attributes;
-
-			for ( const attribute of attributes ) {
-
-				snippet += `attribute ${attribute.type} ${attribute.name};\n`;
-
-			}
-
-		}
-
-		return snippet;
-
-	}
-
-	getVaryings( shaderStage ) {
-
-		let snippet = '';
-
-		const varyings = this.varyings;
-
-		if ( shaderStage === 'vertex' ) {
-
-			for ( const varying of varyings ) {
-
-				snippet += `${varying.needsInterpolation ? 'varying' : '/*varying*/'} ${varying.type} ${varying.name};\n`;
-
-			}
-
-		} else if ( shaderStage === 'fragment' ) {
-
-			for ( const varying of varyings ) {
-
-				if ( varying.needsInterpolation ) {
-
-					snippet += `varying ${varying.type} ${varying.name};\n`;
-
-				}
-
-			}
-
-		}
-
-		return snippet;
-
-	}
-
-	getVertexIndex() {
-
-		return 'gl_VertexID';
-
-	}
-
-	getFrontFacing() {
-
-		return 'gl_FrontFacing';
-
-	}
-
-	getFragCoord() {
-
-		return 'gl_FragCoord';
-
-	}
-
-	isFlipY() {
-
-		return true;
-
-	}
-
-	_getGLSLVertexCode( shaderData ) {
-
-		return `${ this.getSignature() }
+  _getGLSLVertexCode(shaderData) {
+    return `${this.getSignature()}
 
 // uniforms
 ${shaderData.uniforms}
@@ -208,12 +150,10 @@ void main() {
 
 }
 `;
+  }
 
-	}
-
-	_getGLSLFragmentCode( shaderData ) {
-
-		return `${ this.getSignature() }
+  _getGLSLFragmentCode(shaderData) {
+    return `${this.getSignature()}
 
 // precision
 precision highp float;
@@ -238,81 +178,61 @@ void main() {
 
 }
 `;
+  }
 
-	}
+  buildCode() {
+    const shadersData = this.material !== null ? { fragment: {}, vertex: {} } : { compute: {} };
 
-	buildCode() {
+    for (const shaderStage in shadersData) {
+      let flow = '// code\n\n';
+      flow += this.flowCode[shaderStage];
 
-		const shadersData = this.material !== null ? { fragment: {}, vertex: {} } : { compute: {} };
+      const flowNodes = this.flowNodes[shaderStage];
+      const mainNode = flowNodes[flowNodes.length - 1];
 
-		for ( const shaderStage in shadersData ) {
+      for (const node of flowNodes) {
+        const flowSlotData = this.getFlowData(node /*, shaderStage*/);
+        const slotName = node.name;
 
-			let flow = '// code\n\n';
-			flow += this.flowCode[ shaderStage ];
+        if (slotName) {
+          if (flow.length > 0) flow += '\n';
 
-			const flowNodes = this.flowNodes[ shaderStage ];
-			const mainNode = flowNodes[ flowNodes.length - 1 ];
+          flow += `\t// flow -> ${slotName}\n\t`;
+        }
 
-			for ( const node of flowNodes ) {
+        flow += `${flowSlotData.code}\n\t`;
 
-				const flowSlotData = this.getFlowData( node/*, shaderStage*/ );
-				const slotName = node.name;
+        if (node === mainNode && shaderStage !== 'compute') {
+          flow += '// result\n\t';
 
-				if ( slotName ) {
+          if (shaderStage === 'vertex') {
+            flow += 'gl_Position = ';
+          } else if (shaderStage === 'fragment') {
+            flow += 'gl_FragColor = ';
+          }
 
-					if ( flow.length > 0 ) flow += '\n';
+          flow += `${flowSlotData.result};`;
+        }
+      }
 
-					flow += `\t// flow -> ${ slotName }\n\t`;
+      const stageData = shadersData[shaderStage];
 
-				}
+      stageData.uniforms = this.getUniforms(shaderStage);
+      stageData.attributes = this.getAttributes(shaderStage);
+      stageData.varyings = this.getVaryings(shaderStage);
+      stageData.vars = this.getVars(shaderStage);
+      stageData.codes = this.getCodes(shaderStage);
+      stageData.flow = flow;
+    }
 
-				flow += `${ flowSlotData.code }\n\t`;
-
-				if ( node === mainNode && shaderStage !== 'compute' ) {
-
-					flow += '// result\n\t';
-
-					if ( shaderStage === 'vertex' ) {
-
-						flow += 'gl_Position = ';
-
-					} else if ( shaderStage === 'fragment' ) {
-
-						flow += 'gl_FragColor = ';
-
-					}
-
-					flow += `${ flowSlotData.result };`;
-
-				}
-
-			}
-
-			const stageData = shadersData[ shaderStage ];
-
-			stageData.uniforms = this.getUniforms( shaderStage );
-			stageData.attributes = this.getAttributes( shaderStage );
-			stageData.varyings = this.getVaryings( shaderStage );
-			stageData.vars = this.getVars( shaderStage );
-			stageData.codes = this.getCodes( shaderStage );
-			stageData.flow = flow;
-
-		}
-
-		if ( this.material !== null ) {
-
-			this.vertexShader = this._getGLSLVertexCode( shadersData.vertex );
-			this.fragmentShader = this._getGLSLFragmentCode( shadersData.fragment );
-
-		} else {
-
-			console.warn( 'GLSLNodeBuilder: compute shaders are not supported.' );
-			//this.computeShader = this._getGLSLComputeCode( shadersData.compute );
-
-		}
-
-	}
-
+    if (this.material !== null) {
+      this.vertexShader = this._getGLSLVertexCode(shadersData.vertex);
+      this.fragmentShader = this._getGLSLFragmentCode(shadersData.fragment);
+    } else {
+      console.warn('GLSLNodeBuilder: compute shaders are not supported.');
+      //this.computeShader = this._getGLSLComputeCode( shadersData.compute );
+    }
+  }
 }
 
 export default GLSL1NodeBuilder;

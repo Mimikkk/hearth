@@ -4,125 +4,95 @@ import { addNodeElement, nodeProxy } from '../shadernode/ShaderNode.js';
 import { vectorComponents } from '../core/constants.js';
 
 class AssignNode extends TempNode {
+  constructor(targetNode, sourceNode) {
+    super();
 
-	constructor( targetNode, sourceNode ) {
+    this.targetNode = targetNode;
+    this.sourceNode = sourceNode;
+  }
 
-		super();
+  hasDependencies() {
+    return false;
+  }
 
-		this.targetNode = targetNode;
-		this.sourceNode = sourceNode;
+  getNodeType(builder, output) {
+    return output !== 'void' ? this.targetNode.getNodeType(builder) : 'void';
+  }
 
-	}
+  needsSplitAssign(builder) {
+    const { targetNode } = this;
 
-	hasDependencies() {
+    if (builder.isAvailable('swizzleAssign') === false && targetNode.isSplitNode && targetNode.components.length > 1) {
+      const targetLength = builder.getTypeLength(targetNode.node.getNodeType(builder));
+      const assignDiferentVector = vectorComponents.join('').slice(0, targetLength) !== targetNode.components;
 
-		return false;
+      return assignDiferentVector;
+    }
 
-	}
+    return false;
+  }
 
-	getNodeType( builder, output ) {
+  generate(builder, output) {
+    const { targetNode, sourceNode } = this;
 
-		return output !== 'void' ? this.targetNode.getNodeType( builder ) : 'void';
+    const needsSplitAssign = this.needsSplitAssign(builder);
 
-	}
+    const targetType = targetNode.getNodeType(builder);
 
-	needsSplitAssign( builder ) {
+    const target = targetNode.context({ assign: true }).build(builder);
+    const source = sourceNode.build(builder, targetType);
 
-		const { targetNode } = this;
+    const sourceType = sourceNode.getNodeType(builder);
 
-		if ( builder.isAvailable( 'swizzleAssign' ) === false && targetNode.isSplitNode && targetNode.components.length > 1 ) {
+    const nodeData = builder.getDataFromNode(this);
 
-			const targetLength = builder.getTypeLength( targetNode.node.getNodeType( builder ) );
-			const assignDiferentVector = vectorComponents.join( '' ).slice( 0, targetLength ) !== targetNode.components;
+    //
 
-			return assignDiferentVector;
+    let snippet;
 
-		}
+    if (nodeData.initialized === true) {
+      if (output !== 'void') {
+        snippet = target;
+      }
+    } else if (needsSplitAssign) {
+      const sourceVar = builder.getVarFromNode(this, null, targetType);
+      const sourceProperty = builder.getPropertyName(sourceVar);
 
-		return false;
+      builder.addLineFlowCode(`${sourceProperty} = ${source}`);
 
-	}
+      const targetRoot = targetNode.node.context({ assign: true }).build(builder);
 
-	generate( builder, output ) {
+      for (let i = 0; i < targetNode.components.length; i++) {
+        const component = targetNode.components[i];
 
-		const { targetNode, sourceNode } = this;
+        builder.addLineFlowCode(`${targetRoot}.${component} = ${sourceProperty}[ ${i} ]`);
+      }
 
-		const needsSplitAssign = this.needsSplitAssign( builder );
+      if (output !== 'void') {
+        snippet = target;
+      }
+    } else {
+      snippet = `${target} = ${source}`;
 
-		const targetType = targetNode.getNodeType( builder );
+      if (output === 'void' || sourceType === 'void') {
+        builder.addLineFlowCode(snippet);
 
-		const target = targetNode.context( { assign: true } ).build( builder );
-		const source = sourceNode.build( builder, targetType );
+        if (output !== 'void') {
+          snippet = target;
+        }
+      }
+    }
 
-		const sourceType = sourceNode.getNodeType( builder );
+    nodeData.initialized = true;
 
-		const nodeData = builder.getDataFromNode( this );
-
-		//
-
-		let snippet;
-
-		if ( nodeData.initialized === true ) {
-
-			if ( output !== 'void' ) {
-
-				snippet = target;
-
-			}
-
-		} else if ( needsSplitAssign ) {
-
-			const sourceVar = builder.getVarFromNode( this, null, targetType );
-			const sourceProperty = builder.getPropertyName( sourceVar );
-
-			builder.addLineFlowCode( `${ sourceProperty } = ${ source }` );
-
-			const targetRoot = targetNode.node.context( { assign: true } ).build( builder );
-
-			for ( let i = 0; i < targetNode.components.length; i ++ ) {
-
-				const component = targetNode.components[ i ];
-
-				builder.addLineFlowCode( `${ targetRoot }.${ component } = ${ sourceProperty }[ ${ i } ]` );
-
-			}
-
-			if ( output !== 'void' ) {
-
-				snippet = target;
-
-			}
-
-		} else {
-
-			snippet = `${ target } = ${ source }`;
-
-			if ( output === 'void' || sourceType === 'void' ) {
-
-				builder.addLineFlowCode( snippet );
-
-				if ( output !== 'void' ) {
-
-					snippet = target;
-
-				}
-
-			}
-
-		}
-
-		nodeData.initialized = true;
-
-		return builder.format( snippet, targetType, output );
-
-	}
-
+    return builder.format(snippet, targetType, output);
+  }
 }
 
 export default AssignNode;
 
-export const assign = nodeProxy( AssignNode );
+export const assign = nodeProxy(AssignNode);
 
-addNodeClass( 'AssignNode', AssignNode );
+addNodeClass('AssignNode', AssignNode);
 
-addNodeElement( 'assign', assign );
+addNodeElement('assign', assign);

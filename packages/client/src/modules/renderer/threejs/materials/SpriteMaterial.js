@@ -2,53 +2,47 @@ import { Material } from './Material.js';
 import { Color } from '../math/Color.js';
 
 class SpriteMaterial extends Material {
+  constructor(parameters) {
+    super();
 
-	constructor( parameters ) {
+    this.isSpriteMaterial = true;
 
-		super();
+    this.type = 'SpriteMaterial';
 
-		this.isSpriteMaterial = true;
+    this.color = new Color(0xffffff);
 
-		this.type = 'SpriteMaterial';
+    this.map = null;
 
-		this.color = new Color( 0xffffff );
+    this.alphaMap = null;
 
-		this.map = null;
+    this.rotation = 0;
 
-		this.alphaMap = null;
+    this.sizeAttenuation = true;
 
-		this.rotation = 0;
+    this.transparent = true;
 
-		this.sizeAttenuation = true;
+    this.fog = true;
 
-		this.transparent = true;
+    this.setValues(parameters);
+  }
 
-		this.fog = true;
+  copy(source) {
+    super.copy(source);
 
-		this.setValues( parameters );
+    this.color.copy(source.color);
 
-	}
+    this.map = source.map;
 
-	copy( source ) {
+    this.alphaMap = source.alphaMap;
 
-		super.copy( source );
+    this.rotation = source.rotation;
 
-		this.color.copy( source.color );
+    this.sizeAttenuation = source.sizeAttenuation;
 
-		this.map = source.map;
+    this.fog = source.fog;
 
-		this.alphaMap = source.alphaMap;
-
-		this.rotation = source.rotation;
-
-		this.sizeAttenuation = source.sizeAttenuation;
-
-		this.fog = source.fog;
-
-		return this;
-
-	}
-
+    return this;
+  }
 }
 
 export { SpriteMaterial };

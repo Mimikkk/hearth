@@ -4,7 +4,7 @@ import { Vector2 } from '../../threejs/Three.js';
  * tool for "unwrapping" and debugging three.js geometries UV mapping
  *
  * Sample usage:
- *	document.body.appendChild( UVsDebug( new THREE.SphereGeometry( 10, 10, 10, 10 ) );
+ *  document.body.appendChild( UVsDebug( new THREE.SphereGeometry( 10, 10, 10, 10 ) );
  *
  */
 

@@ -1,43 +1,37 @@
 import { Material } from './Material.js';
 
 class MeshDistanceMaterial extends Material {
+  constructor(parameters) {
+    super();
 
-	constructor( parameters ) {
+    this.isMeshDistanceMaterial = true;
 
-		super();
+    this.type = 'MeshDistanceMaterial';
 
-		this.isMeshDistanceMaterial = true;
+    this.map = null;
 
-		this.type = 'MeshDistanceMaterial';
+    this.alphaMap = null;
 
-		this.map = null;
+    this.displacementMap = null;
+    this.displacementScale = 1;
+    this.displacementBias = 0;
 
-		this.alphaMap = null;
+    this.setValues(parameters);
+  }
 
-		this.displacementMap = null;
-		this.displacementScale = 1;
-		this.displacementBias = 0;
+  copy(source) {
+    super.copy(source);
 
-		this.setValues( parameters );
+    this.map = source.map;
 
-	}
+    this.alphaMap = source.alphaMap;
 
-	copy( source ) {
+    this.displacementMap = source.displacementMap;
+    this.displacementScale = source.displacementScale;
+    this.displacementBias = source.displacementBias;
 
-		super.copy( source );
-
-		this.map = source.map;
-
-		this.alphaMap = source.alphaMap;
-
-		this.displacementMap = source.displacementMap;
-		this.displacementScale = source.displacementScale;
-		this.displacementBias = source.displacementBias;
-
-		return this;
-
-	}
-
+    return this;
+  }
 }
 
 export { MeshDistanceMaterial };

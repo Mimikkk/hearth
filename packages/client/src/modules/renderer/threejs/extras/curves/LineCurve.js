@@ -2,91 +2,69 @@ import { Vector2 } from '../../math/Vector2.js';
 import { Curve } from '../core/Curve.js';
 
 class LineCurve extends Curve {
+  constructor(v1 = new Vector2(), v2 = new Vector2()) {
+    super();
 
-	constructor( v1 = new Vector2(), v2 = new Vector2() ) {
+    this.isLineCurve = true;
 
-		super();
+    this.type = 'LineCurve';
 
-		this.isLineCurve = true;
+    this.v1 = v1;
+    this.v2 = v2;
+  }
 
-		this.type = 'LineCurve';
+  getPoint(t, optionalTarget = new Vector2()) {
+    const point = optionalTarget;
 
-		this.v1 = v1;
-		this.v2 = v2;
+    if (t === 1) {
+      point.copy(this.v2);
+    } else {
+      point.copy(this.v2).sub(this.v1);
+      point.multiplyScalar(t).add(this.v1);
+    }
 
-	}
+    return point;
+  }
 
-	getPoint( t, optionalTarget = new Vector2() ) {
+  // Line curve is linear, so we can overwrite default getPointAt
+  getPointAt(u, optionalTarget) {
+    return this.getPoint(u, optionalTarget);
+  }
 
-		const point = optionalTarget;
+  getTangent(t, optionalTarget = new Vector2()) {
+    return optionalTarget.subVectors(this.v2, this.v1).normalize();
+  }
 
-		if ( t === 1 ) {
+  getTangentAt(u, optionalTarget) {
+    return this.getTangent(u, optionalTarget);
+  }
 
-			point.copy( this.v2 );
+  copy(source) {
+    super.copy(source);
 
-		} else {
+    this.v1.copy(source.v1);
+    this.v2.copy(source.v2);
 
-			point.copy( this.v2 ).sub( this.v1 );
-			point.multiplyScalar( t ).add( this.v1 );
+    return this;
+  }
 
-		}
+  toJSON() {
+    const data = super.toJSON();
 
-		return point;
+    data.v1 = this.v1.toArray();
+    data.v2 = this.v2.toArray();
 
-	}
+    return data;
+  }
 
-	// Line curve is linear, so we can overwrite default getPointAt
-	getPointAt( u, optionalTarget ) {
+  fromJSON(json) {
+    super.fromJSON(json);
 
-		return this.getPoint( u, optionalTarget );
+    this.v1.fromArray(json.v1);
+    this.v2.fromArray(json.v2);
 
-	}
-
-	getTangent( t, optionalTarget = new Vector2() ) {
-
-		return optionalTarget.subVectors( this.v2, this.v1 ).normalize();
-
-	}
-
-	getTangentAt( u, optionalTarget ) {
-
-		return this.getTangent( u, optionalTarget );
-
-	}
-
-	copy( source ) {
-
-		super.copy( source );
-
-		this.v1.copy( source.v1 );
-		this.v2.copy( source.v2 );
-
-		return this;
-
-	}
-
-	toJSON() {
-
-		const data = super.toJSON();
-
-		data.v1 = this.v1.toArray();
-		data.v2 = this.v2.toArray();
-
-		return data;
-
-	}
-
-	fromJSON( json ) {
-
-		super.fromJSON( json );
-
-		this.v1.fromArray( json.v1 );
-		this.v2.fromArray( json.v2 );
-
-		return this;
-
-	}
-
+    return this;
+  }
 }
 
 export { LineCurve };

@@ -215,7 +215,7 @@ function compressData(inBuffer, info) {
     tmpBuffer,
     sum = 0;
 
-  const chunks = { data: new Array(), totalSize: 0 },
+  const chunks = { data: [], totalSize: 0 },
     size = info.width * info.numOutputChannels * info.blockLines * info.dataSize;
 
   switch (info.compression) {

@@ -2,37 +2,27 @@ import Binding from './Binding.js';
 import { getFloatLength } from './BufferUtils.js';
 
 class Buffer extends Binding {
+  constructor(name, buffer = null) {
+    super(name);
 
-	constructor( name, buffer = null ) {
+    this.isBuffer = true;
 
-		super( name );
+    this.bytesPerElement = Float32Array.BYTES_PER_ELEMENT;
 
-		this.isBuffer = true;
+    this._buffer = buffer;
+  }
 
-		this.bytesPerElement = Float32Array.BYTES_PER_ELEMENT;
+  get byteLength() {
+    return getFloatLength(this._buffer.byteLength);
+  }
 
-		this._buffer = buffer;
+  get buffer() {
+    return this._buffer;
+  }
 
-	}
-
-	get byteLength() {
-
-		return getFloatLength( this._buffer.byteLength );
-
-	}
-
-	get buffer() {
-
-		return this._buffer;
-
-	}
-
-	update() {
-
-		return true;
-
-	}
-
+  update() {
+    return true;
+  }
 }
 
 export default Buffer;

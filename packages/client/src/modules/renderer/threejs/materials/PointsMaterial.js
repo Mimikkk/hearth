@@ -2,49 +2,43 @@ import { Material } from './Material.js';
 import { Color } from '../math/Color.js';
 
 class PointsMaterial extends Material {
+  constructor(parameters) {
+    super();
 
-	constructor( parameters ) {
+    this.isPointsMaterial = true;
 
-		super();
+    this.type = 'PointsMaterial';
 
-		this.isPointsMaterial = true;
+    this.color = new Color(0xffffff);
 
-		this.type = 'PointsMaterial';
+    this.map = null;
 
-		this.color = new Color( 0xffffff );
+    this.alphaMap = null;
 
-		this.map = null;
+    this.size = 1;
+    this.sizeAttenuation = true;
 
-		this.alphaMap = null;
+    this.fog = true;
 
-		this.size = 1;
-		this.sizeAttenuation = true;
+    this.setValues(parameters);
+  }
 
-		this.fog = true;
+  copy(source) {
+    super.copy(source);
 
-		this.setValues( parameters );
+    this.color.copy(source.color);
 
-	}
+    this.map = source.map;
 
-	copy( source ) {
+    this.alphaMap = source.alphaMap;
 
-		super.copy( source );
+    this.size = source.size;
+    this.sizeAttenuation = source.sizeAttenuation;
 
-		this.color.copy( source.color );
+    this.fog = source.fog;
 
-		this.map = source.map;
-
-		this.alphaMap = source.alphaMap;
-
-		this.size = source.size;
-		this.sizeAttenuation = source.sizeAttenuation;
-
-		this.fog = source.fog;
-
-		return this;
-
-	}
-
+    return this;
+  }
 }
 
 export { PointsMaterial };

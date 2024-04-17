@@ -5,31 +5,23 @@ import { positionViewDirection } from './PositionNode.js';
 import { nodeImmutable } from '../shadernode/ShaderNode.js';
 
 class ReflectVectorNode extends Node {
+  constructor() {
+    super('vec3');
+  }
 
-	constructor() {
+  getHash(/*builder*/) {
+    return 'reflectVector';
+  }
 
-		super( 'vec3' );
+  setup() {
+    const reflectView = positionViewDirection.negate().reflect(transformedNormalView);
 
-	}
-
-	getHash( /*builder*/ ) {
-
-		return 'reflectVector';
-
-	}
-
-	setup() {
-
-		const reflectView = positionViewDirection.negate().reflect( transformedNormalView );
-
-		return reflectView.transformDirection( cameraViewMatrix );
-
-	}
-
+    return reflectView.transformDirection(cameraViewMatrix);
+  }
 }
 
 export default ReflectVectorNode;
 
-export const reflectVector = nodeImmutable( ReflectVectorNode );
+export const reflectVector = nodeImmutable(ReflectVectorNode);
 
-addNodeClass( 'ReflectVectorNode', ReflectVectorNode );
+addNodeClass('ReflectVectorNode', ReflectVectorNode);

@@ -1,140 +1,100 @@
 class LoadingManager {
+  constructor(onLoad, onProgress, onError) {
+    const scope = this;
 
-	constructor( onLoad, onProgress, onError ) {
+    let isLoading = false;
+    let itemsLoaded = 0;
+    let itemsTotal = 0;
+    let urlModifier = undefined;
+    const handlers = [];
 
-		const scope = this;
+    // Refer to #5689 for the reason why we don't set .onStart
+    // in the constructor
 
-		let isLoading = false;
-		let itemsLoaded = 0;
-		let itemsTotal = 0;
-		let urlModifier = undefined;
-		const handlers = [];
+    this.onStart = undefined;
+    this.onLoad = onLoad;
+    this.onProgress = onProgress;
+    this.onError = onError;
 
-		// Refer to #5689 for the reason why we don't set .onStart
-		// in the constructor
+    this.itemStart = function (url) {
+      itemsTotal++;
 
-		this.onStart = undefined;
-		this.onLoad = onLoad;
-		this.onProgress = onProgress;
-		this.onError = onError;
+      if (isLoading === false) {
+        if (scope.onStart !== undefined) {
+          scope.onStart(url, itemsLoaded, itemsTotal);
+        }
+      }
 
-		this.itemStart = function ( url ) {
+      isLoading = true;
+    };
 
-			itemsTotal ++;
+    this.itemEnd = function (url) {
+      itemsLoaded++;
 
-			if ( isLoading === false ) {
+      if (scope.onProgress !== undefined) {
+        scope.onProgress(url, itemsLoaded, itemsTotal);
+      }
 
-				if ( scope.onStart !== undefined ) {
+      if (itemsLoaded === itemsTotal) {
+        isLoading = false;
 
-					scope.onStart( url, itemsLoaded, itemsTotal );
+        if (scope.onLoad !== undefined) {
+          scope.onLoad();
+        }
+      }
+    };
 
-				}
+    this.itemError = function (url) {
+      if (scope.onError !== undefined) {
+        scope.onError(url);
+      }
+    };
 
-			}
+    this.resolveURL = function (url) {
+      if (urlModifier) {
+        return urlModifier(url);
+      }
 
-			isLoading = true;
+      return url;
+    };
 
-		};
+    this.setURLModifier = function (transform) {
+      urlModifier = transform;
 
-		this.itemEnd = function ( url ) {
+      return this;
+    };
 
-			itemsLoaded ++;
+    this.addHandler = function (regex, loader) {
+      handlers.push(regex, loader);
 
-			if ( scope.onProgress !== undefined ) {
+      return this;
+    };
 
-				scope.onProgress( url, itemsLoaded, itemsTotal );
+    this.removeHandler = function (regex) {
+      const index = handlers.indexOf(regex);
 
-			}
+      if (index !== -1) {
+        handlers.splice(index, 2);
+      }
 
-			if ( itemsLoaded === itemsTotal ) {
+      return this;
+    };
 
-				isLoading = false;
+    this.getHandler = function (file) {
+      for (let i = 0, l = handlers.length; i < l; i += 2) {
+        const regex = handlers[i];
+        const loader = handlers[i + 1];
 
-				if ( scope.onLoad !== undefined ) {
+        if (regex.global) regex.lastIndex = 0; // see #17920
 
-					scope.onLoad();
+        if (regex.test(file)) {
+          return loader;
+        }
+      }
 
-				}
-
-			}
-
-		};
-
-		this.itemError = function ( url ) {
-
-			if ( scope.onError !== undefined ) {
-
-				scope.onError( url );
-
-			}
-
-		};
-
-		this.resolveURL = function ( url ) {
-
-			if ( urlModifier ) {
-
-				return urlModifier( url );
-
-			}
-
-			return url;
-
-		};
-
-		this.setURLModifier = function ( transform ) {
-
-			urlModifier = transform;
-
-			return this;
-
-		};
-
-		this.addHandler = function ( regex, loader ) {
-
-			handlers.push( regex, loader );
-
-			return this;
-
-		};
-
-		this.removeHandler = function ( regex ) {
-
-			const index = handlers.indexOf( regex );
-
-			if ( index !== - 1 ) {
-
-				handlers.splice( index, 2 );
-
-			}
-
-			return this;
-
-		};
-
-		this.getHandler = function ( file ) {
-
-			for ( let i = 0, l = handlers.length; i < l; i += 2 ) {
-
-				const regex = handlers[ i ];
-				const loader = handlers[ i + 1 ];
-
-				if ( regex.global ) regex.lastIndex = 0; // see #17920
-
-				if ( regex.test( file ) ) {
-
-					return loader;
-
-				}
-
-			}
-
-			return null;
-
-		};
-
-	}
-
+      return null;
+    };
+  }
 }
 
 const DefaultLoadingManager = /*@__PURE__*/ new LoadingManager();

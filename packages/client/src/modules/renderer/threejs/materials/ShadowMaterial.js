@@ -2,36 +2,30 @@ import { Material } from './Material.js';
 import { Color } from '../math/Color.js';
 
 class ShadowMaterial extends Material {
+  constructor(parameters) {
+    super();
 
-	constructor( parameters ) {
+    this.isShadowMaterial = true;
 
-		super();
+    this.type = 'ShadowMaterial';
 
-		this.isShadowMaterial = true;
+    this.color = new Color(0x000000);
+    this.transparent = true;
 
-		this.type = 'ShadowMaterial';
+    this.fog = true;
 
-		this.color = new Color( 0x000000 );
-		this.transparent = true;
+    this.setValues(parameters);
+  }
 
-		this.fog = true;
+  copy(source) {
+    super.copy(source);
 
-		this.setValues( parameters );
+    this.color.copy(source.color);
 
-	}
+    this.fog = source.fog;
 
-	copy( source ) {
-
-		super.copy( source );
-
-		this.color.copy( source.color );
-
-		this.fog = source.fog;
-
-		return this;
-
-	}
-
+    return this;
+  }
 }
 
 export { ShadowMaterial };

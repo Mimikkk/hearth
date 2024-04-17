@@ -1,70 +1,52 @@
 import { DefaultLoadingManager } from './LoadingManager.js';
 
 class Loader {
+  constructor(manager) {
+    this.manager = manager !== undefined ? manager : DefaultLoadingManager;
 
-	constructor( manager ) {
+    this.crossOrigin = 'anonymous';
+    this.withCredentials = false;
+    this.path = '';
+    this.resourcePath = '';
+    this.requestHeader = {};
+  }
 
-		this.manager = ( manager !== undefined ) ? manager : DefaultLoadingManager;
+  load(/* url, onLoad, onProgress, onError */) {}
 
-		this.crossOrigin = 'anonymous';
-		this.withCredentials = false;
-		this.path = '';
-		this.resourcePath = '';
-		this.requestHeader = {};
+  loadAsync(url, onProgress) {
+    const scope = this;
 
-	}
+    return new Promise(function (resolve, reject) {
+      scope.load(url, resolve, onProgress, reject);
+    });
+  }
 
-	load( /* url, onLoad, onProgress, onError */ ) {}
+  parse(/* data */) {}
 
-	loadAsync( url, onProgress ) {
+  setCrossOrigin(crossOrigin) {
+    this.crossOrigin = crossOrigin;
+    return this;
+  }
 
-		const scope = this;
+  setWithCredentials(value) {
+    this.withCredentials = value;
+    return this;
+  }
 
-		return new Promise( function ( resolve, reject ) {
+  setPath(path) {
+    this.path = path;
+    return this;
+  }
 
-			scope.load( url, resolve, onProgress, reject );
+  setResourcePath(resourcePath) {
+    this.resourcePath = resourcePath;
+    return this;
+  }
 
-		} );
-
-	}
-
-	parse( /* data */ ) {}
-
-	setCrossOrigin( crossOrigin ) {
-
-		this.crossOrigin = crossOrigin;
-		return this;
-
-	}
-
-	setWithCredentials( value ) {
-
-		this.withCredentials = value;
-		return this;
-
-	}
-
-	setPath( path ) {
-
-		this.path = path;
-		return this;
-
-	}
-
-	setResourcePath( resourcePath ) {
-
-		this.resourcePath = resourcePath;
-		return this;
-
-	}
-
-	setRequestHeader( requestHeader ) {
-
-		this.requestHeader = requestHeader;
-		return this;
-
-	}
-
+  setRequestHeader(requestHeader) {
+    this.requestHeader = requestHeader;
+    return this;
+  }
 }
 
 Loader.DEFAULT_MATERIAL_NAME = '__DEFAULT';

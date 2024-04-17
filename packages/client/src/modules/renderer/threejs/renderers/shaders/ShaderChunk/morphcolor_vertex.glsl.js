@@ -1,4 +1,4 @@
-export default /* glsl */`
+export default /* glsl */ `
 #if defined( USE_MORPHCOLORS ) && defined( MORPHTARGETS_TEXTURE )
 
 	// morphTargetBaseInfluence is set based on BufferGeometry.morphTargetsRelative value:

@@ -8,104 +8,73 @@ import { BufferGeometry } from '../core/BufferGeometry.js';
 const _vector = /*@__PURE__*/ new Vector3();
 
 class SpotLightHelper extends Object3D {
+  constructor(light, color) {
+    super();
 
-	constructor( light, color ) {
+    this.light = light;
 
-		super();
+    this.matrixAutoUpdate = false;
 
-		this.light = light;
+    this.color = color;
 
-		this.matrixAutoUpdate = false;
+    this.type = 'SpotLightHelper';
 
-		this.color = color;
+    const geometry = new BufferGeometry();
 
-		this.type = 'SpotLightHelper';
+    const positions = [0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, -1, 1];
 
-		const geometry = new BufferGeometry();
+    for (let i = 0, j = 1, l = 32; i < l; i++, j++) {
+      const p1 = (i / l) * Math.PI * 2;
+      const p2 = (j / l) * Math.PI * 2;
 
-		const positions = [
-			0, 0, 0, 	0, 0, 1,
-			0, 0, 0, 	1, 0, 1,
-			0, 0, 0,	- 1, 0, 1,
-			0, 0, 0, 	0, 1, 1,
-			0, 0, 0, 	0, - 1, 1
-		];
+      positions.push(Math.cos(p1), Math.sin(p1), 1, Math.cos(p2), Math.sin(p2), 1);
+    }
 
-		for ( let i = 0, j = 1, l = 32; i < l; i ++, j ++ ) {
+    geometry.setAttribute('position', new Float32BufferAttribute(positions, 3));
 
-			const p1 = ( i / l ) * Math.PI * 2;
-			const p2 = ( j / l ) * Math.PI * 2;
+    const material = new LineBasicMaterial({ fog: false, toneMapped: false });
 
-			positions.push(
-				Math.cos( p1 ), Math.sin( p1 ), 1,
-				Math.cos( p2 ), Math.sin( p2 ), 1
-			);
+    this.cone = new LineSegments(geometry, material);
+    this.add(this.cone);
 
-		}
+    this.update();
+  }
 
-		geometry.setAttribute( 'position', new Float32BufferAttribute( positions, 3 ) );
+  dispose() {
+    this.cone.geometry.dispose();
+    this.cone.material.dispose();
+  }
 
-		const material = new LineBasicMaterial( { fog: false, toneMapped: false } );
+  update() {
+    this.light.updateWorldMatrix(true, false);
+    this.light.target.updateWorldMatrix(true, false);
 
-		this.cone = new LineSegments( geometry, material );
-		this.add( this.cone );
+    // update the local matrix based on the parent and light target transforms
+    if (this.parent) {
+      this.parent.updateWorldMatrix(true);
 
-		this.update();
+      this.matrix.copy(this.parent.matrixWorld).invert().multiply(this.light.matrixWorld);
+    } else {
+      this.matrix.copy(this.light.matrixWorld);
+    }
 
-	}
+    this.matrixWorld.copy(this.light.matrixWorld);
 
-	dispose() {
+    const coneLength = this.light.distance ? this.light.distance : 1000;
+    const coneWidth = coneLength * Math.tan(this.light.angle);
 
-		this.cone.geometry.dispose();
-		this.cone.material.dispose();
+    this.cone.scale.set(coneWidth, coneWidth, coneLength);
 
-	}
+    _vector.setFromMatrixPosition(this.light.target.matrixWorld);
 
-	update() {
+    this.cone.lookAt(_vector);
 
-		this.light.updateWorldMatrix( true, false );
-		this.light.target.updateWorldMatrix( true, false );
-
-		// update the local matrix based on the parent and light target transforms
-		if ( this.parent ) {
-
-			this.parent.updateWorldMatrix( true );
-
-			this.matrix
-				.copy( this.parent.matrixWorld )
-				.invert()
-				.multiply( this.light.matrixWorld );
-
-		} else {
-
-			this.matrix.copy( this.light.matrixWorld );
-
-		}
-
-		this.matrixWorld.copy( this.light.matrixWorld );
-
-		const coneLength = this.light.distance ? this.light.distance : 1000;
-		const coneWidth = coneLength * Math.tan( this.light.angle );
-
-		this.cone.scale.set( coneWidth, coneWidth, coneLength );
-
-		_vector.setFromMatrixPosition( this.light.target.matrixWorld );
-
-		this.cone.lookAt( _vector );
-
-		if ( this.color !== undefined ) {
-
-			this.cone.material.color.set( this.color );
-
-		} else {
-
-			this.cone.material.color.copy( this.light.color );
-
-		}
-
-	}
-
+    if (this.color !== undefined) {
+      this.cone.material.color.set(this.color);
+    } else {
+      this.cone.material.color.copy(this.light.color);
+    }
+  }
 }
-
 
 export { SpotLightHelper };

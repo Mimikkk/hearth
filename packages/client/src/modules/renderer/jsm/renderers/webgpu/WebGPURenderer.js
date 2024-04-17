@@ -3,6 +3,7 @@ import WebGPU from '../../capabilities/WebGPU.js';
 import Renderer from '../common/Renderer.js';
 import WebGLBackend from '../webgl/WebGLBackend.js';
 import WebGPUBackend from './WebGPUBackend.js';
+
 /*
 const debugHandler = {
 
@@ -18,36 +19,26 @@ const debugHandler = {
 };
 */
 class WebGPURenderer extends Renderer {
+  constructor(parameters = {}) {
+    let BackendClass;
 
-	constructor( parameters = {} ) {
+    if (parameters.forceWebGL) {
+      BackendClass = WebGLBackend;
+    } else if (WebGPU.isAvailable()) {
+      BackendClass = WebGPUBackend;
+    } else {
+      BackendClass = WebGLBackend;
 
-		let BackendClass;
+      console.warn('THREE.WebGPURenderer: WebGPU is not available, running under WebGL2 backend.');
+    }
 
-		if ( parameters.forceWebGL ) {
+    const backend = new BackendClass(parameters);
 
-			BackendClass = WebGLBackend;
+    //super( new Proxy( backend, debugHandler ) );
+    super(backend, parameters);
 
-		} else if ( WebGPU.isAvailable() ) {
-
-			BackendClass = WebGPUBackend;
-
-		} else {
-
-			BackendClass = WebGLBackend;
-
-			console.warn( 'THREE.WebGPURenderer: WebGPU is not available, running under WebGL2 backend.' );
-
-		}
-
-		const backend = new BackendClass( parameters );
-
-		//super( new Proxy( backend, debugHandler ) );
-		super( backend, parameters );
-
-		this.isWebGPURenderer = true;
-
-	}
-
+    this.isWebGPURenderer = true;
+  }
 }
 
 export default WebGPURenderer;

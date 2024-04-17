@@ -5,64 +5,47 @@ import { BufferGeometry } from '../core/BufferGeometry.js';
 import { Color } from '../math/Color.js';
 
 class AxesHelper extends LineSegments {
+  constructor(size = 1) {
+    const vertices = [0, 0, 0, size, 0, 0, 0, 0, 0, 0, size, 0, 0, 0, 0, 0, 0, size];
 
-	constructor( size = 1 ) {
+    const colors = [1, 0, 0, 1, 0.6, 0, 0, 1, 0, 0.6, 1, 0, 0, 0, 1, 0, 0.6, 1];
 
-		const vertices = [
-			0, 0, 0,	size, 0, 0,
-			0, 0, 0,	0, size, 0,
-			0, 0, 0,	0, 0, size
-		];
+    const geometry = new BufferGeometry();
+    geometry.setAttribute('position', new Float32BufferAttribute(vertices, 3));
+    geometry.setAttribute('color', new Float32BufferAttribute(colors, 3));
 
-		const colors = [
-			1, 0, 0,	1, 0.6, 0,
-			0, 1, 0,	0.6, 1, 0,
-			0, 0, 1,	0, 0.6, 1
-		];
+    const material = new LineBasicMaterial({ vertexColors: true, toneMapped: false });
 
-		const geometry = new BufferGeometry();
-		geometry.setAttribute( 'position', new Float32BufferAttribute( vertices, 3 ) );
-		geometry.setAttribute( 'color', new Float32BufferAttribute( colors, 3 ) );
+    super(geometry, material);
 
-		const material = new LineBasicMaterial( { vertexColors: true, toneMapped: false } );
+    this.type = 'AxesHelper';
+  }
 
-		super( geometry, material );
+  setColors(xAxisColor, yAxisColor, zAxisColor) {
+    const color = new Color();
+    const array = this.geometry.attributes.color.array;
 
-		this.type = 'AxesHelper';
+    color.set(xAxisColor);
+    color.toArray(array, 0);
+    color.toArray(array, 3);
 
-	}
+    color.set(yAxisColor);
+    color.toArray(array, 6);
+    color.toArray(array, 9);
 
-	setColors( xAxisColor, yAxisColor, zAxisColor ) {
+    color.set(zAxisColor);
+    color.toArray(array, 12);
+    color.toArray(array, 15);
 
-		const color = new Color();
-		const array = this.geometry.attributes.color.array;
+    this.geometry.attributes.color.needsUpdate = true;
 
-		color.set( xAxisColor );
-		color.toArray( array, 0 );
-		color.toArray( array, 3 );
+    return this;
+  }
 
-		color.set( yAxisColor );
-		color.toArray( array, 6 );
-		color.toArray( array, 9 );
-
-		color.set( zAxisColor );
-		color.toArray( array, 12 );
-		color.toArray( array, 15 );
-
-		this.geometry.attributes.color.needsUpdate = true;
-
-		return this;
-
-	}
-
-	dispose() {
-
-		this.geometry.dispose();
-		this.material.dispose();
-
-	}
-
+  dispose() {
+    this.geometry.dispose();
+    this.material.dispose();
+  }
 }
-
 
 export { AxesHelper };

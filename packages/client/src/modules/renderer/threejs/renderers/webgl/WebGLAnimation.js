@@ -1,53 +1,39 @@
 function WebGLAnimation() {
+  let context = null;
+  let isAnimating = false;
+  let animationLoop = null;
+  let requestId = null;
 
-	let context = null;
-	let isAnimating = false;
-	let animationLoop = null;
-	let requestId = null;
+  function onAnimationFrame(time, frame) {
+    animationLoop(time, frame);
 
-	function onAnimationFrame( time, frame ) {
+    requestId = context.requestAnimationFrame(onAnimationFrame);
+  }
 
-		animationLoop( time, frame );
+  return {
+    start: function () {
+      if (isAnimating === true) return;
+      if (animationLoop === null) return;
 
-		requestId = context.requestAnimationFrame( onAnimationFrame );
+      requestId = context.requestAnimationFrame(onAnimationFrame);
 
-	}
+      isAnimating = true;
+    },
 
-	return {
+    stop: function () {
+      context.cancelAnimationFrame(requestId);
 
-		start: function () {
+      isAnimating = false;
+    },
 
-			if ( isAnimating === true ) return;
-			if ( animationLoop === null ) return;
+    setAnimationLoop: function (callback) {
+      animationLoop = callback;
+    },
 
-			requestId = context.requestAnimationFrame( onAnimationFrame );
-
-			isAnimating = true;
-
-		},
-
-		stop: function () {
-
-			context.cancelAnimationFrame( requestId );
-
-			isAnimating = false;
-
-		},
-
-		setAnimationLoop: function ( callback ) {
-
-			animationLoop = callback;
-
-		},
-
-		setContext: function ( value ) {
-
-			context = value;
-
-		}
-
-	};
-
+    setContext: function (value) {
+      context = value;
+    },
+  };
 }
 
 export { WebGLAnimation };

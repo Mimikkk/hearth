@@ -4,283 +4,268 @@ import { Vector3 } from '../math/Vector3.js';
 import { Vector2 } from '../math/Vector2.js';
 
 class CylinderGeometry extends BufferGeometry {
+  constructor(
+    radiusTop = 1,
+    radiusBottom = 1,
+    height = 1,
+    radialSegments = 32,
+    heightSegments = 1,
+    openEnded = false,
+    thetaStart = 0,
+    thetaLength = Math.PI * 2,
+  ) {
+    super();
 
-	constructor( radiusTop = 1, radiusBottom = 1, height = 1, radialSegments = 32, heightSegments = 1, openEnded = false, thetaStart = 0, thetaLength = Math.PI * 2 ) {
+    this.type = 'CylinderGeometry';
 
-		super();
+    this.parameters = {
+      radiusTop: radiusTop,
+      radiusBottom: radiusBottom,
+      height: height,
+      radialSegments: radialSegments,
+      heightSegments: heightSegments,
+      openEnded: openEnded,
+      thetaStart: thetaStart,
+      thetaLength: thetaLength,
+    };
 
-		this.type = 'CylinderGeometry';
+    const scope = this;
 
-		this.parameters = {
-			radiusTop: radiusTop,
-			radiusBottom: radiusBottom,
-			height: height,
-			radialSegments: radialSegments,
-			heightSegments: heightSegments,
-			openEnded: openEnded,
-			thetaStart: thetaStart,
-			thetaLength: thetaLength
-		};
+    radialSegments = Math.floor(radialSegments);
+    heightSegments = Math.floor(heightSegments);
 
-		const scope = this;
+    // buffers
 
-		radialSegments = Math.floor( radialSegments );
-		heightSegments = Math.floor( heightSegments );
+    const indices = [];
+    const vertices = [];
+    const normals = [];
+    const uvs = [];
 
-		// buffers
+    // helper variables
 
-		const indices = [];
-		const vertices = [];
-		const normals = [];
-		const uvs = [];
+    let index = 0;
+    const indexArray = [];
+    const halfHeight = height / 2;
+    let groupStart = 0;
 
-		// helper variables
+    // generate geometry
 
-		let index = 0;
-		const indexArray = [];
-		const halfHeight = height / 2;
-		let groupStart = 0;
+    generateTorso();
 
-		// generate geometry
+    if (openEnded === false) {
+      if (radiusTop > 0) generateCap(true);
+      if (radiusBottom > 0) generateCap(false);
+    }
 
-		generateTorso();
+    // build geometry
 
-		if ( openEnded === false ) {
+    this.setIndex(indices);
+    this.setAttribute('position', new Float32BufferAttribute(vertices, 3));
+    this.setAttribute('normal', new Float32BufferAttribute(normals, 3));
+    this.setAttribute('uv', new Float32BufferAttribute(uvs, 2));
 
-			if ( radiusTop > 0 ) generateCap( true );
-			if ( radiusBottom > 0 ) generateCap( false );
+    function generateTorso() {
+      const normal = new Vector3();
+      const vertex = new Vector3();
 
-		}
+      let groupCount = 0;
 
-		// build geometry
+      // this will be used to calculate the normal
+      const slope = (radiusBottom - radiusTop) / height;
 
-		this.setIndex( indices );
-		this.setAttribute( 'position', new Float32BufferAttribute( vertices, 3 ) );
-		this.setAttribute( 'normal', new Float32BufferAttribute( normals, 3 ) );
-		this.setAttribute( 'uv', new Float32BufferAttribute( uvs, 2 ) );
+      // generate vertices, normals and uvs
 
-		function generateTorso() {
+      for (let y = 0; y <= heightSegments; y++) {
+        const indexRow = [];
 
-			const normal = new Vector3();
-			const vertex = new Vector3();
+        const v = y / heightSegments;
 
-			let groupCount = 0;
+        // calculate the radius of the current row
 
-			// this will be used to calculate the normal
-			const slope = ( radiusBottom - radiusTop ) / height;
+        const radius = v * (radiusBottom - radiusTop) + radiusTop;
 
-			// generate vertices, normals and uvs
+        for (let x = 0; x <= radialSegments; x++) {
+          const u = x / radialSegments;
 
-			for ( let y = 0; y <= heightSegments; y ++ ) {
+          const theta = u * thetaLength + thetaStart;
 
-				const indexRow = [];
+          const sinTheta = Math.sin(theta);
+          const cosTheta = Math.cos(theta);
 
-				const v = y / heightSegments;
+          // vertex
 
-				// calculate the radius of the current row
+          vertex.x = radius * sinTheta;
+          vertex.y = -v * height + halfHeight;
+          vertex.z = radius * cosTheta;
+          vertices.push(vertex.x, vertex.y, vertex.z);
 
-				const radius = v * ( radiusBottom - radiusTop ) + radiusTop;
+          // normal
 
-				for ( let x = 0; x <= radialSegments; x ++ ) {
+          normal.set(sinTheta, slope, cosTheta).normalize();
+          normals.push(normal.x, normal.y, normal.z);
 
-					const u = x / radialSegments;
+          // uv
 
-					const theta = u * thetaLength + thetaStart;
+          uvs.push(u, 1 - v);
 
-					const sinTheta = Math.sin( theta );
-					const cosTheta = Math.cos( theta );
+          // save index of vertex in respective row
 
-					// vertex
+          indexRow.push(index++);
+        }
 
-					vertex.x = radius * sinTheta;
-					vertex.y = - v * height + halfHeight;
-					vertex.z = radius * cosTheta;
-					vertices.push( vertex.x, vertex.y, vertex.z );
+        // now save vertices of the row in our index array
 
-					// normal
+        indexArray.push(indexRow);
+      }
 
-					normal.set( sinTheta, slope, cosTheta ).normalize();
-					normals.push( normal.x, normal.y, normal.z );
+      // generate indices
 
-					// uv
+      for (let x = 0; x < radialSegments; x++) {
+        for (let y = 0; y < heightSegments; y++) {
+          // we use the index array to access the correct indices
 
-					uvs.push( u, 1 - v );
+          const a = indexArray[y][x];
+          const b = indexArray[y + 1][x];
+          const c = indexArray[y + 1][x + 1];
+          const d = indexArray[y][x + 1];
 
-					// save index of vertex in respective row
+          // faces
 
-					indexRow.push( index ++ );
+          indices.push(a, b, d);
+          indices.push(b, c, d);
 
-				}
+          // update group counter
 
-				// now save vertices of the row in our index array
+          groupCount += 6;
+        }
+      }
 
-				indexArray.push( indexRow );
+      // add a group to the geometry. this will ensure multi material support
 
-			}
+      scope.addGroup(groupStart, groupCount, 0);
 
-			// generate indices
+      // calculate new start value for groups
 
-			for ( let x = 0; x < radialSegments; x ++ ) {
+      groupStart += groupCount;
+    }
 
-				for ( let y = 0; y < heightSegments; y ++ ) {
+    function generateCap(top) {
+      // save the index of the first center vertex
+      const centerIndexStart = index;
 
-					// we use the index array to access the correct indices
+      const uv = new Vector2();
+      const vertex = new Vector3();
 
-					const a = indexArray[ y ][ x ];
-					const b = indexArray[ y + 1 ][ x ];
-					const c = indexArray[ y + 1 ][ x + 1 ];
-					const d = indexArray[ y ][ x + 1 ];
+      let groupCount = 0;
 
-					// faces
+      const radius = top === true ? radiusTop : radiusBottom;
+      const sign = top === true ? 1 : -1;
 
-					indices.push( a, b, d );
-					indices.push( b, c, d );
+      // first we generate the center vertex data of the cap.
+      // because the geometry needs one set of uvs per face,
+      // we must generate a center vertex per face/segment
 
-					// update group counter
+      for (let x = 1; x <= radialSegments; x++) {
+        // vertex
 
-					groupCount += 6;
+        vertices.push(0, halfHeight * sign, 0);
 
-				}
+        // normal
 
-			}
+        normals.push(0, sign, 0);
 
-			// add a group to the geometry. this will ensure multi material support
+        // uv
 
-			scope.addGroup( groupStart, groupCount, 0 );
+        uvs.push(0.5, 0.5);
 
-			// calculate new start value for groups
+        // increase index
 
-			groupStart += groupCount;
+        index++;
+      }
 
-		}
+      // save the index of the last center vertex
+      const centerIndexEnd = index;
 
-		function generateCap( top ) {
+      // now we generate the surrounding vertices, normals and uvs
 
-			// save the index of the first center vertex
-			const centerIndexStart = index;
+      for (let x = 0; x <= radialSegments; x++) {
+        const u = x / radialSegments;
+        const theta = u * thetaLength + thetaStart;
 
-			const uv = new Vector2();
-			const vertex = new Vector3();
+        const cosTheta = Math.cos(theta);
+        const sinTheta = Math.sin(theta);
 
-			let groupCount = 0;
+        // vertex
 
-			const radius = ( top === true ) ? radiusTop : radiusBottom;
-			const sign = ( top === true ) ? 1 : - 1;
+        vertex.x = radius * sinTheta;
+        vertex.y = halfHeight * sign;
+        vertex.z = radius * cosTheta;
+        vertices.push(vertex.x, vertex.y, vertex.z);
 
-			// first we generate the center vertex data of the cap.
-			// because the geometry needs one set of uvs per face,
-			// we must generate a center vertex per face/segment
+        // normal
 
-			for ( let x = 1; x <= radialSegments; x ++ ) {
+        normals.push(0, sign, 0);
 
-				// vertex
+        // uv
 
-				vertices.push( 0, halfHeight * sign, 0 );
+        uv.x = cosTheta * 0.5 + 0.5;
+        uv.y = sinTheta * 0.5 * sign + 0.5;
+        uvs.push(uv.x, uv.y);
 
-				// normal
+        // increase index
 
-				normals.push( 0, sign, 0 );
+        index++;
+      }
 
-				// uv
+      // generate indices
 
-				uvs.push( 0.5, 0.5 );
+      for (let x = 0; x < radialSegments; x++) {
+        const c = centerIndexStart + x;
+        const i = centerIndexEnd + x;
 
-				// increase index
+        if (top === true) {
+          // face top
 
-				index ++;
+          indices.push(i, i + 1, c);
+        } else {
+          // face bottom
 
-			}
+          indices.push(i + 1, i, c);
+        }
 
-			// save the index of the last center vertex
-			const centerIndexEnd = index;
+        groupCount += 3;
+      }
 
-			// now we generate the surrounding vertices, normals and uvs
+      // add a group to the geometry. this will ensure multi material support
 
-			for ( let x = 0; x <= radialSegments; x ++ ) {
+      scope.addGroup(groupStart, groupCount, top === true ? 1 : 2);
 
-				const u = x / radialSegments;
-				const theta = u * thetaLength + thetaStart;
+      // calculate new start value for groups
 
-				const cosTheta = Math.cos( theta );
-				const sinTheta = Math.sin( theta );
+      groupStart += groupCount;
+    }
+  }
 
-				// vertex
+  copy(source) {
+    super.copy(source);
 
-				vertex.x = radius * sinTheta;
-				vertex.y = halfHeight * sign;
-				vertex.z = radius * cosTheta;
-				vertices.push( vertex.x, vertex.y, vertex.z );
+    this.parameters = Object.assign({}, source.parameters);
 
-				// normal
+    return this;
+  }
 
-				normals.push( 0, sign, 0 );
-
-				// uv
-
-				uv.x = ( cosTheta * 0.5 ) + 0.5;
-				uv.y = ( sinTheta * 0.5 * sign ) + 0.5;
-				uvs.push( uv.x, uv.y );
-
-				// increase index
-
-				index ++;
-
-			}
-
-			// generate indices
-
-			for ( let x = 0; x < radialSegments; x ++ ) {
-
-				const c = centerIndexStart + x;
-				const i = centerIndexEnd + x;
-
-				if ( top === true ) {
-
-					// face top
-
-					indices.push( i, i + 1, c );
-
-				} else {
-
-					// face bottom
-
-					indices.push( i + 1, i, c );
-
-				}
-
-				groupCount += 3;
-
-			}
-
-			// add a group to the geometry. this will ensure multi material support
-
-			scope.addGroup( groupStart, groupCount, top === true ? 1 : 2 );
-
-			// calculate new start value for groups
-
-			groupStart += groupCount;
-
-		}
-
-	}
-
-	copy( source ) {
-
-		super.copy( source );
-
-		this.parameters = Object.assign( {}, source.parameters );
-
-		return this;
-
-	}
-
-	static fromJSON( data ) {
-
-		return new CylinderGeometry( data.radiusTop, data.radiusBottom, data.height, data.radialSegments, data.heightSegments, data.openEnded, data.thetaStart, data.thetaLength );
-
-	}
-
+  static fromJSON(data) {
+    return new CylinderGeometry(
+      data.radiusTop,
+      data.radiusBottom,
+      data.height,
+      data.radialSegments,
+      data.heightSegments,
+      data.openEnded,
+      data.thetaStart,
+      data.thetaLength,
+    );
+  }
 }
-
 
 export { CylinderGeometry };

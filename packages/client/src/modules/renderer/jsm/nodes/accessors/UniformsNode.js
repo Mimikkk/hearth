@@ -6,135 +6,101 @@ import ArrayElementNode from '../utils/ArrayElementNode.js';
 import BufferNode from './BufferNode.js';
 
 class UniformsElementNode extends ArrayElementNode {
+  constructor(arrayBuffer, indexNode) {
+    super(arrayBuffer, indexNode);
 
-	constructor( arrayBuffer, indexNode ) {
+    this.isArrayBufferElementNode = true;
+  }
 
-		super( arrayBuffer, indexNode );
+  getNodeType(builder) {
+    return this.node.getElementType(builder);
+  }
 
-		this.isArrayBufferElementNode = true;
+  generate(builder) {
+    const snippet = super.generate(builder);
+    const type = this.getNodeType();
 
-	}
-
-	getNodeType( builder ) {
-
-		return this.node.getElementType( builder );
-
-	}
-
-	generate( builder ) {
-
-		const snippet = super.generate( builder );
-		const type = this.getNodeType();
-
-		return builder.format( snippet, 'vec4', type );
-
-	}
-
+    return builder.format(snippet, 'vec4', type);
+  }
 }
 
 class UniformsNode extends BufferNode {
+  constructor(value, elementType = null) {
+    super(null, 'vec4');
 
-	constructor( value, elementType = null ) {
+    this.array = value;
+    this.elementType = elementType;
 
-		super( null, 'vec4' );
+    this._elementType = null;
+    this._elementLength = 0;
 
-		this.array = value;
-		this.elementType = elementType;
+    this.updateType = NodeUpdateType.RENDER;
 
-		this._elementType = null;
-		this._elementLength = 0;
+    this.isArrayBufferNode = true;
+  }
 
-		this.updateType = NodeUpdateType.RENDER;
+  getElementType() {
+    return this.elementType || this._elementType;
+  }
 
-		this.isArrayBufferNode = true;
+  getElementLength() {
+    return this._elementLength;
+  }
 
-	}
+  update(/*frame*/) {
+    const { array, value } = this;
 
-	getElementType() {
+    const elementLength = this.getElementLength();
+    const elementType = this.getElementType();
 
-		return this.elementType || this._elementType;
+    if (elementLength === 1) {
+      for (let i = 0; i < array.length; i++) {
+        const index = i * 4;
 
-	}
+        value[index] = array[i];
+      }
+    } else if (elementType === 'color') {
+      for (let i = 0; i < array.length; i++) {
+        const index = i * 4;
+        const vector = array[i];
 
-	getElementLength() {
+        value[index] = vector.r;
+        value[index + 1] = vector.g;
+        value[index + 2] = vector.b || 0;
+        //value[ index + 3 ] = vector.a || 0;
+      }
+    } else {
+      for (let i = 0; i < array.length; i++) {
+        const index = i * 4;
+        const vector = array[i];
 
-		return this._elementLength;
+        value[index] = vector.x;
+        value[index + 1] = vector.y;
+        value[index + 2] = vector.z || 0;
+        value[index + 3] = vector.w || 0;
+      }
+    }
+  }
 
-	}
+  setup(builder) {
+    const length = this.array.length;
 
-	update( /*frame*/ ) {
+    this._elementType = this.elementType === null ? getValueType(this.array[0]) : this.elementType;
+    this._elementLength = builder.getTypeLength(this._elementType);
 
-		const { array, value } = this;
+    this.value = new Float32Array(length * 4);
+    this.bufferCount = length;
 
-		const elementLength = this.getElementLength();
-		const elementType = this.getElementType();
+    return super.setup(builder);
+  }
 
-		if ( elementLength === 1 ) {
-
-			for ( let i = 0; i < array.length; i ++ ) {
-
-				const index = i * 4;
-
-				value[ index ] = array[ i ];
-
-			}
-
-		} else if ( elementType === 'color' ) {
-
-			for ( let i = 0; i < array.length; i ++ ) {
-
-				const index = i * 4;
-				const vector = array[ i ];
-
-				value[ index ] = vector.r;
-				value[ index + 1 ] = vector.g;
-				value[ index + 2 ] = vector.b || 0;
-				//value[ index + 3 ] = vector.a || 0;
-
-			}
-
-		} else {
-
-			for ( let i = 0; i < array.length; i ++ ) {
-
-				const index = i * 4;
-				const vector = array[ i ];
-
-				value[ index ] = vector.x;
-				value[ index + 1 ] = vector.y;
-				value[ index + 2 ] = vector.z || 0;
-				value[ index + 3 ] = vector.w || 0;
-
-			}
-
-		}
-
-	}
-
-	setup( builder ) {
-
-		const length = this.array.length;
-
-		this._elementType = this.elementType === null ? getValueType( this.array[ 0 ] ) : this.elementType;
-		this._elementLength = builder.getTypeLength( this._elementType );
-
-		this.value = new Float32Array( length * 4 );
-		this.bufferCount = length;
-
-		return super.setup( builder );
-
-	}
-
-	element( indexNode ) {
-
-		return nodeObject( new UniformsElementNode( this, nodeObject( indexNode ) ) );
-
-	}
-
+  element(indexNode) {
+    return nodeObject(new UniformsElementNode(this, nodeObject(indexNode)));
+  }
 }
 
 export default UniformsNode;
 
-export const uniforms = ( values, nodeType ) => nodeObject( new UniformsNode( values, nodeType ) );
+export const uniforms = (values, nodeType) => nodeObject(new UniformsNode(values, nodeType));
 
-addNodeClass( 'UniformsNode', UniformsNode );
+addNodeClass('UniformsNode', UniformsNode);

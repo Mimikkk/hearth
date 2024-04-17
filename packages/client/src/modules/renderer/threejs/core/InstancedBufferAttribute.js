@@ -1,39 +1,31 @@
 import { BufferAttribute } from './BufferAttribute.js';
 
 class InstancedBufferAttribute extends BufferAttribute {
+  constructor(array, itemSize, normalized, meshPerAttribute = 1) {
+    super(array, itemSize, normalized);
 
-	constructor( array, itemSize, normalized, meshPerAttribute = 1 ) {
+    this.isInstancedBufferAttribute = true;
 
-		super( array, itemSize, normalized );
+    this.meshPerAttribute = meshPerAttribute;
+  }
 
-		this.isInstancedBufferAttribute = true;
+  copy(source) {
+    super.copy(source);
 
-		this.meshPerAttribute = meshPerAttribute;
+    this.meshPerAttribute = source.meshPerAttribute;
 
-	}
+    return this;
+  }
 
-	copy( source ) {
+  toJSON() {
+    const data = super.toJSON();
 
-		super.copy( source );
+    data.meshPerAttribute = this.meshPerAttribute;
 
-		this.meshPerAttribute = source.meshPerAttribute;
+    data.isInstancedBufferAttribute = true;
 
-		return this;
-
-	}
-
-	toJSON() {
-
-		const data = super.toJSON();
-
-		data.meshPerAttribute = this.meshPerAttribute;
-
-		data.isInstancedBufferAttribute = true;
-
-		return data;
-
-	}
-
+    return data;
+  }
 }
 
 export { InstancedBufferAttribute };

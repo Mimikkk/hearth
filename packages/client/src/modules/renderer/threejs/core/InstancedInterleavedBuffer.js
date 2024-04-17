@@ -1,48 +1,38 @@
 import { InterleavedBuffer } from './InterleavedBuffer.js';
 
 class InstancedInterleavedBuffer extends InterleavedBuffer {
+  constructor(array, stride, meshPerAttribute = 1) {
+    super(array, stride);
 
-	constructor( array, stride, meshPerAttribute = 1 ) {
+    this.isInstancedInterleavedBuffer = true;
 
-		super( array, stride );
+    this.meshPerAttribute = meshPerAttribute;
+  }
 
-		this.isInstancedInterleavedBuffer = true;
+  copy(source) {
+    super.copy(source);
 
-		this.meshPerAttribute = meshPerAttribute;
+    this.meshPerAttribute = source.meshPerAttribute;
 
-	}
+    return this;
+  }
 
-	copy( source ) {
+  clone(data) {
+    const ib = super.clone(data);
 
-		super.copy( source );
+    ib.meshPerAttribute = this.meshPerAttribute;
 
-		this.meshPerAttribute = source.meshPerAttribute;
+    return ib;
+  }
 
-		return this;
+  toJSON(data) {
+    const json = super.toJSON(data);
 
-	}
+    json.isInstancedInterleavedBuffer = true;
+    json.meshPerAttribute = this.meshPerAttribute;
 
-	clone( data ) {
-
-		const ib = super.clone( data );
-
-		ib.meshPerAttribute = this.meshPerAttribute;
-
-		return ib;
-
-	}
-
-	toJSON( data ) {
-
-		const json = super.toJSON( data );
-
-		json.isInstancedInterleavedBuffer = true;
-		json.meshPerAttribute = this.meshPerAttribute;
-
-		return json;
-
-	}
-
+    return json;
+  }
 }
 
 export { InstancedInterleavedBuffer };

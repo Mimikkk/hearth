@@ -1,56 +1,44 @@
 import { Light } from './Light.js';
 
 class RectAreaLight extends Light {
+  constructor(color, intensity, width = 10, height = 10) {
+    super(color, intensity);
 
-	constructor( color, intensity, width = 10, height = 10 ) {
+    this.isRectAreaLight = true;
 
-		super( color, intensity );
+    this.type = 'RectAreaLight';
 
-		this.isRectAreaLight = true;
+    this.width = width;
+    this.height = height;
+  }
 
-		this.type = 'RectAreaLight';
+  get power() {
+    // compute the light's luminous power (in lumens) from its intensity (in nits)
+    return this.intensity * this.width * this.height * Math.PI;
+  }
 
-		this.width = width;
-		this.height = height;
+  set power(power) {
+    // set the light's intensity (in nits) from the desired luminous power (in lumens)
+    this.intensity = power / (this.width * this.height * Math.PI);
+  }
 
-	}
+  copy(source) {
+    super.copy(source);
 
-	get power() {
+    this.width = source.width;
+    this.height = source.height;
 
-		// compute the light's luminous power (in lumens) from its intensity (in nits)
-		return this.intensity * this.width * this.height * Math.PI;
+    return this;
+  }
 
-	}
+  toJSON(meta) {
+    const data = super.toJSON(meta);
 
-	set power( power ) {
+    data.object.width = this.width;
+    data.object.height = this.height;
 
-		// set the light's intensity (in nits) from the desired luminous power (in lumens)
-		this.intensity = power / ( this.width * this.height * Math.PI );
-
-	}
-
-	copy( source ) {
-
-		super.copy( source );
-
-		this.width = source.width;
-		this.height = source.height;
-
-		return this;
-
-	}
-
-	toJSON( meta ) {
-
-		const data = super.toJSON( meta );
-
-		data.object.width = this.width;
-		data.object.height = this.height;
-
-		return data;
-
-	}
-
+    return data;
+  }
 }
 
 export { RectAreaLight };

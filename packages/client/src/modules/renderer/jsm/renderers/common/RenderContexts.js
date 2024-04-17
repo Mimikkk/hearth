@@ -2,62 +2,46 @@ import ChainMap from './ChainMap.js';
 import RenderContext from './RenderContext.js';
 
 class RenderContexts {
+  constructor() {
+    this.chainMaps = {};
+  }
 
-	constructor() {
+  get(scene, camera, renderTarget = null) {
+    const chainKey = [scene, camera];
 
-		this.chainMaps = {};
+    let attachmentState;
 
-	}
+    if (renderTarget === null) {
+      attachmentState = 'default';
+    } else {
+      const format = renderTarget.texture.format;
+      const count = renderTarget.count;
 
-	get( scene, camera, renderTarget = null ) {
+      attachmentState = `${count}:${format}:${renderTarget.samples}:${renderTarget.depthBuffer}:${renderTarget.stencilBuffer}`;
+    }
 
-		const chainKey = [ scene, camera ];
+    const chainMap = this.getChainMap(attachmentState);
 
-		let attachmentState;
+    let renderState = chainMap.get(chainKey);
 
-		if ( renderTarget === null ) {
+    if (renderState === undefined) {
+      renderState = new RenderContext();
 
-			attachmentState = 'default';
+      chainMap.set(chainKey, renderState);
+    }
 
-		} else {
+    if (renderTarget !== null) renderState.sampleCount = renderTarget.samples === 0 ? 1 : renderTarget.samples;
 
-			const format = renderTarget.texture.format;
-			const count = renderTarget.count;
+    return renderState;
+  }
 
-			attachmentState = `${ count }:${ format }:${ renderTarget.samples }:${ renderTarget.depthBuffer }:${ renderTarget.stencilBuffer }`;
+  getChainMap(attachmentState) {
+    return this.chainMaps[attachmentState] || (this.chainMaps[attachmentState] = new ChainMap());
+  }
 
-		}
-
-		const chainMap = this.getChainMap( attachmentState );
-
-		let renderState = chainMap.get( chainKey );
-
-		if ( renderState === undefined ) {
-
-			renderState = new RenderContext();
-
-			chainMap.set( chainKey, renderState );
-
-		}
-
-		if ( renderTarget !== null ) renderState.sampleCount = renderTarget.samples === 0 ? 1 : renderTarget.samples;
-
-		return renderState;
-
-	}
-
-	getChainMap( attachmentState ) {
-
-		return this.chainMaps[ attachmentState ] || ( this.chainMaps[ attachmentState ] = new ChainMap() );
-
-	}
-
-	dispose() {
-
-		this.chainMaps = {};
-
-	}
-
+  dispose() {
+    this.chainMaps = {};
+  }
 }
 
 export default RenderContexts;

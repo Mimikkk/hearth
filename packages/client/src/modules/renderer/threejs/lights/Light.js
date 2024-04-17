@@ -2,57 +2,47 @@ import { Object3D } from '../core/Object3D.js';
 import { Color } from '../math/Color.js';
 
 class Light extends Object3D {
+  constructor(color, intensity = 1) {
+    super();
 
-	constructor( color, intensity = 1 ) {
+    this.isLight = true;
 
-		super();
+    this.type = 'Light';
 
-		this.isLight = true;
+    this.color = new Color(color);
+    this.intensity = intensity;
+  }
 
-		this.type = 'Light';
+  dispose() {
+    // Empty here in base class; some subclasses override.
+  }
 
-		this.color = new Color( color );
-		this.intensity = intensity;
+  copy(source, recursive) {
+    super.copy(source, recursive);
 
-	}
+    this.color.copy(source.color);
+    this.intensity = source.intensity;
 
-	dispose() {
+    return this;
+  }
 
-		// Empty here in base class; some subclasses override.
+  toJSON(meta) {
+    const data = super.toJSON(meta);
 
-	}
+    data.object.color = this.color.getHex();
+    data.object.intensity = this.intensity;
 
-	copy( source, recursive ) {
+    if (this.groundColor !== undefined) data.object.groundColor = this.groundColor.getHex();
 
-		super.copy( source, recursive );
+    if (this.distance !== undefined) data.object.distance = this.distance;
+    if (this.angle !== undefined) data.object.angle = this.angle;
+    if (this.decay !== undefined) data.object.decay = this.decay;
+    if (this.penumbra !== undefined) data.object.penumbra = this.penumbra;
 
-		this.color.copy( source.color );
-		this.intensity = source.intensity;
+    if (this.shadow !== undefined) data.object.shadow = this.shadow.toJSON();
 
-		return this;
-
-	}
-
-	toJSON( meta ) {
-
-		const data = super.toJSON( meta );
-
-		data.object.color = this.color.getHex();
-		data.object.intensity = this.intensity;
-
-		if ( this.groundColor !== undefined ) data.object.groundColor = this.groundColor.getHex();
-
-		if ( this.distance !== undefined ) data.object.distance = this.distance;
-		if ( this.angle !== undefined ) data.object.angle = this.angle;
-		if ( this.decay !== undefined ) data.object.decay = this.decay;
-		if ( this.penumbra !== undefined ) data.object.penumbra = this.penumbra;
-
-		if ( this.shadow !== undefined ) data.object.shadow = this.shadow.toJSON();
-
-		return data;
-
-	}
-
+    return data;
+  }
 }
 
 export { Light };

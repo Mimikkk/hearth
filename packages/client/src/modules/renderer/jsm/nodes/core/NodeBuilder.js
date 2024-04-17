@@ -124,6 +124,10 @@ class NodeBuilder {
     this.buildStage = null;
   }
 
+  get currentNode() {
+    return this.chaining[this.chaining.length - 1];
+  }
+
   createRenderTarget(width, height, options) {
     return new RenderTarget(width, height, options);
   }
@@ -206,10 +210,6 @@ class NodeBuilder {
         this.updateBeforeNodes.push(node);
       }
     }
-  }
-
-  get currentNode() {
-    return this.chaining[this.chaining.length - 1];
   }
 
   addChain(node) {
