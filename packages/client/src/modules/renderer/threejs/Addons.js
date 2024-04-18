@@ -1,9 +1,9 @@
-export * from './AnimationClipCreator.js';
-export * from './CCDIKSolver.js';
-export * from './MMDAnimationHelper.js';
-export * from './MMDPhysics.js';
+export * from './animation/AnimationClipCreator.js';
+export * from './animation/CCDIKSolver.js';
+export * from './animation/MMDAnimationHelper.js';
+export * from './animation/MMDPhysics.js';
 
-export * from '../cameras/CinematicCamera.js';
+export * from './cameras/CinematicCamera.js';
 
 export { default as WebGL } from '@modules/renderer/threejs/capabilities/WebGL.js';
 
@@ -48,32 +48,32 @@ export * from '@modules/renderer/threejs/exporters/PLYExporter.js';
 export * from '@modules/renderer/threejs/exporters/STLExporter.js';
 export * from '@modules/renderer/threejs/exporters/USDZExporter.js';
 
-export * from '../geometries/BoxLineGeometry.js';
-export * from '../geometries/ConvexGeometry.js';
-export * from '../geometries/DecalGeometry.js';
-export * from '../geometries/ParametricGeometries.js';
-export * from '../geometries/ParametricGeometry.js';
-export * from '../geometries/RoundedBoxGeometry.js';
-export * from '../geometries/TeapotGeometry.js';
-export * from '../geometries/TextGeometry.js';
+export * from './geometries/BoxLineGeometry.js';
+export * from './geometries/ConvexGeometry.js';
+export * from './geometries/DecalGeometry.js';
+export * from './geometries/ParametricGeometries.js';
+export * from './geometries/ParametricGeometry.js';
+export * from './geometries/RoundedBoxGeometry.js';
+export * from './geometries/TeapotGeometry.js';
+export * from './geometries/TextGeometry.js';
 
-export * from '../helpers/LightProbeHelper.js';
-export * from '../helpers/OctreeHelper.js';
-export * from '../helpers/PositionalAudioHelper.js';
-export * from '../helpers/RectAreaLightHelper.js';
-export * from '../helpers/TextureHelper.js';
-export * from '../helpers/VertexNormalsHelper.js';
-export * from '../helpers/VertexTangentsHelper.js';
-export * from '../helpers/ViewHelper.js';
+export * from './helpers/LightProbeHelper.js';
+export * from './helpers/OctreeHelper.js';
+export * from './helpers/PositionalAudioHelper.js';
+export * from './helpers/RectAreaLightHelper.js';
+export * from './helpers/TextureHelper.js';
+export * from './helpers/VertexNormalsHelper.js';
+export * from './helpers/VertexTangentsHelper.js';
+export * from './helpers/ViewHelper.js';
 
 export * from '@modules/renderer/threejs/interactive/HTMLMesh.js';
 export * from '@modules/renderer/threejs/interactive/InteractiveGroup.js';
 export * from '@modules/renderer/threejs/interactive/SelectionBox.js';
 export * from '@modules/renderer/threejs/interactive/SelectionHelper.js';
 
-export { default as IESSpotLight } from '../lights/IESSpotLight.js';
-export * from '../lights/LightProbeGenerator.js';
-export * from '../lights/RectAreaLightUniformsLib.js';
+export { default as IESSpotLight } from './lights/IESSpotLight.js';
+export * from './lights/LightProbeGenerator.js';
+export * from './lights/RectAreaLightUniformsLib.js';
 
 export * from '@modules/renderer/threejs/lines/Line2.js';
 export * from '@modules/renderer/threejs/lines/LineGeometry.js';
@@ -131,17 +131,17 @@ export * from './loaders/VRMLLoader.js';
 export * from './loaders/VTKLoader.js';
 export * from './loaders/XYZLoader.js';
 
-export * from '../materials/MeshGouraudMaterial.js';
+export * from './materials/MeshGouraudMaterial.js';
 
-export * from '../math/Capsule.js';
-export * from '../math/ColorConverter.js';
-export * from '../math/ConvexHull.js';
-export * from '../math/ImprovedNoise.js';
-export * from '../math/Lut.js';
-export * from '../math/MeshSurfaceSampler.js';
-export * from '../math/OBB.js';
-export * from '../math/Octree.js';
-export * from '../math/SimplexNoise.js';
+export * from './math/Capsule.js';
+export * from './math/ColorConverter.js';
+export * from './math/ConvexHull.js';
+export * from './math/ImprovedNoise.js';
+export * from './math/Lut.js';
+export * from './math/MeshSurfaceSampler.js';
+export * from './math/OBB.js';
+export * from './math/Octree.js';
+export * from './math/SimplexNoise.js';
 
 export * from '@modules/renderer/threejs/misc/ConvexObjectBreaker.js';
 export * from '@modules/renderer/threejs/misc/GPUComputationRenderer.js';
@@ -162,16 +162,16 @@ export * from '@modules/renderer/threejs/modifiers/EdgeSplitModifier.js';
 export * from '@modules/renderer/threejs/modifiers/SimplifyModifier.js';
 export * from '@modules/renderer/threejs/modifiers/TessellateModifier.js';
 
-export * from '../objects/GroundedSkybox.js';
-export * from '../objects/Lensflare.js';
-export * from '../objects/MarchingCubes.js';
-export * from '../objects/Reflector.js';
-export * from '../objects/ReflectorForSSRPass.js';
-export * from '../objects/Refractor.js';
-export * from '../objects/ShadowMesh.js';
-export * from '../objects/Sky.js';
-export * from '../objects/Water.js';
-export { Water as Water2 } from '../objects/Water2.js';
+export * from './objects/GroundedSkybox.js';
+export * from './objects/Lensflare.js';
+export * from './objects/MarchingCubes.js';
+export * from './objects/Reflector.js';
+export * from './objects/ReflectorForSSRPass.js';
+export * from './objects/Refractor.js';
+export * from './objects/ShadowMesh.js';
+export * from './objects/Sky.js';
+export * from './objects/Water.js';
+export { Water as Water2 } from './objects/Water2.js';
 
 export * from './physics/AmmoPhysics.js';
 export * from './physics/RapierPhysics.js';
@@ -205,10 +205,10 @@ export * from './postprocessing/TAARenderPass.js';
 export * from './postprocessing/TexturePass.js';
 export * from './postprocessing/UnrealBloomPass.js';
 
-export * from '../renderers/CSS2DRenderer.js';
-export * from '../renderers/CSS3DRenderer.js';
-export * from '../renderers/Projector.js';
-export * from '../renderers/SVGRenderer.js';
+export * from './renderers/CSS2DRenderer.js';
+export * from './renderers/CSS3DRenderer.js';
+export * from './renderers/Projector.js';
+export * from './renderers/SVGRenderer.js';
 
 export * from './shaders/ACESFilmicToneMappingShader.js';
 export * from './shaders/AfterimageShader.js';
@@ -264,7 +264,7 @@ export * from './shaders/VignetteShader.js';
 export * from './shaders/VolumeShader.js';
 export * from './shaders/WaterRefractionShader.js';
 
-export * from '../textures/FlakesTexture.js';
+export * from './textures/FlakesTexture.js';
 
 export * as BufferGeometryUtils from '@modules/renderer/threejs/utils/BufferGeometryUtils.js';
 export * as CameraUtils from '@modules/renderer/threejs/utils/CameraUtils.js';
