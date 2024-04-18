@@ -1,4 +1,5 @@
-import { MathUtils, Quaternion, Vector3 } from '../Three.js';
+import { Quaternion, Vector3 } from '../Three.js';
+import { RadianToDegree } from '../math/MathUtils.ts';
 
 const _va = /*@__PURE__*/ new Vector3(), // from pe to pa
   _vb = /*@__PURE__*/ new Vector3(), // from pe to pb
@@ -69,7 +70,7 @@ function frameCorners(camera, bottomLeftCorner, bottomRightCorner, topLeftCorner
     // Set fieldOfView to a conservative estimate
     // to make frustum tall/wide enough to encompass it
     camera.fov =
-      (MathUtils.RAD2DEG / Math.min(1.0, camera.aspect)) *
+      (RadianToDegree / Math.min(1.0, camera.aspect)) *
       Math.atan((_vec.copy(pb).sub(pa).length() + _vec.copy(pc).sub(pa).length()) / _va.length());
   }
 }

@@ -1,4 +1,4 @@
-import { MathUtils } from '../Three.js';
+import { clamp, euclideanModulo } from './MathUtils.ts';
 
 const _hsl = {};
 
@@ -6,9 +6,9 @@ class ColorConverter {
   static setHSV(color, h, s, v) {
     // https://gist.github.com/xpansive/1337890#file-index-js
 
-    h = MathUtils.euclideanModulo(h, 1);
-    s = MathUtils.clamp(s, 0, 1);
-    v = MathUtils.clamp(v, 0, 1);
+    h = euclideanModulo(h, 1);
+    s = clamp(s, 0, 1);
+    v = clamp(v, 0, 1);
 
     return color.setHSL(h, (s * v) / ((h = (2 - s) * v) < 1 ? h : 2 - h), h * 0.5);
   }

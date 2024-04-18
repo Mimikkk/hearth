@@ -2,14 +2,14 @@ import { TextureDataType, TextureFormat } from '../constants.ts';
 import { Bone } from './Bone.js';
 import { Matrix4 } from '../math/Matrix4.js';
 import { DataTexture } from '../textures/DataTexture.js';
-import * as MathUtils from '../math/MathUtils.js';
+import * as MathUtils from '../math/MathUtils.ts';
 
 const _offsetMatrix = /*@__PURE__*/ new Matrix4();
 const _identityMatrix = /*@__PURE__*/ new Matrix4();
 
 class Skeleton {
   constructor(bones = [], boneInverses = []) {
-    this.uuid = MathUtils.generateUUID();
+    this.uuid = MathUtils.generateUuid();
 
     this.bones = bones.slice(0);
     this.boneInverses = boneInverses;

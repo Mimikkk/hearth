@@ -1,4 +1,5 @@
-import { EventDispatcher, MathUtils, Mouse, Quaternion, Vector2, Vector3 } from '../Three.js';
+import { EventDispatcher, Mouse, Quaternion, Vector2, Vector3 } from '../Three.js';
+import { clamp } from '../math/MathUtils.ts';
 
 const _changeEvent = { type: 'change' };
 const _startEvent = { type: 'start' };
@@ -166,7 +167,7 @@ class TrackballControls {
         if (scope.object.isPerspectiveCamera) {
           _eye.multiplyScalar(factor);
         } else if (scope.object.isOrthographicCamera) {
-          scope.object.zoom = MathUtils.clamp(scope.object.zoom / factor, scope.minZoom, scope.maxZoom);
+          scope.object.zoom = clamp(scope.object.zoom / factor, scope.minZoom, scope.maxZoom);
 
           if (lastZoom !== scope.object.zoom) {
             scope.object.updateProjectionMatrix();
@@ -181,7 +182,7 @@ class TrackballControls {
           if (scope.object.isPerspectiveCamera) {
             _eye.multiplyScalar(factor);
           } else if (scope.object.isOrthographicCamera) {
-            scope.object.zoom = MathUtils.clamp(scope.object.zoom / factor, scope.minZoom, scope.maxZoom);
+            scope.object.zoom = clamp(scope.object.zoom / factor, scope.minZoom, scope.maxZoom);
 
             if (lastZoom !== scope.object.zoom) {
               scope.object.updateProjectionMatrix();

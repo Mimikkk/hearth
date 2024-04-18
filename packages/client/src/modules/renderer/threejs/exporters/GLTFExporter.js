@@ -5,7 +5,6 @@ import {
   CompressedTexture,
   Filter,
   InterpolationMode,
-  MathUtils,
   Matrix4,
   PropertyBinding,
   Quaternion,
@@ -17,6 +16,7 @@ import {
   Wrapping,
 } from '../Three.js';
 import { decompress } from '@modules/renderer/threejs/utils/TextureUtils.js';
+import { degreeToRadian, normalize } from '../math/MathUtils.ts';
 
 /**
  * The KHR_mesh_quantization extension allows these extra attribute component types
@@ -277,7 +277,7 @@ function getMinMax(attribute, start, count) {
         else if (a === 3) value = attribute.getW(i);
 
         if (attribute.normalized === true) {
-          value = MathUtils.normalize(value, attribute.array);
+          value = normalize(value, attribute.array);
         }
       }
 
@@ -803,7 +803,7 @@ class GLTFWriter {
           else if (a === 3) value = attribute.getW(i);
 
           if (attribute.normalized === true) {
-            value = MathUtils.normalize(value, attribute.array);
+            value = normalize(value, attribute.array);
           }
         }
 
@@ -1604,7 +1604,7 @@ class GLTFWriter {
     } else {
       cameraDef.perspective = {
         aspectRatio: camera.aspect,
-        yfov: MathUtils.degToRad(camera.fov),
+        yfov: degreeToRadian(camera.fov),
         zfar: camera.far <= 0 ? 0.001 : camera.far,
         znear: camera.near < 0 ? 0 : camera.near,
       };

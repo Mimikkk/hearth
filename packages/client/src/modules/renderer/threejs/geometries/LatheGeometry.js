@@ -2,7 +2,7 @@ import { Float32BufferAttribute } from '../core/BufferAttribute.js';
 import { BufferGeometry } from '../core/BufferGeometry.js';
 import { Vector3 } from '../math/Vector3.js';
 import { Vector2 } from '../math/Vector2.js';
-import * as MathUtils from '../math/MathUtils.js';
+import * as MathUtils from '../math/MathUtils.ts';
 
 class LatheGeometry extends BufferGeometry {
   constructor(

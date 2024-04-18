@@ -1,13 +1,7 @@
-import {
-  DataTexture,
-  MathUtils,
-  ShaderMaterial,
-  TextureDataType,
-  TextureFormat,
-  UniformsUtils,
-} from '../../threejs/Three.js';
+import { DataTexture, ShaderMaterial, TextureDataType, TextureFormat, UniformsUtils } from '../../threejs/Three.js';
 import { FullScreenQuad, Pass } from './Pass.js';
 import { DigitalGlitch } from '../shaders/DigitalGlitch.js';
+import { randFloat, randInt } from '../math/MathUtils.ts';
 
 class GlitchPass extends Pass {
   constructor(dt_size = 64) {
@@ -41,20 +35,20 @@ class GlitchPass extends Pass {
 
     if (this.curF % this.randX == 0 || this.goWild == true) {
       this.uniforms['amount'].value = Math.random() / 30;
-      this.uniforms['angle'].value = MathUtils.randFloat(-Math.PI, Math.PI);
-      this.uniforms['seed_x'].value = MathUtils.randFloat(-1, 1);
-      this.uniforms['seed_y'].value = MathUtils.randFloat(-1, 1);
-      this.uniforms['distortion_x'].value = MathUtils.randFloat(0, 1);
-      this.uniforms['distortion_y'].value = MathUtils.randFloat(0, 1);
+      this.uniforms['angle'].value = randFloat(-Math.PI, Math.PI);
+      this.uniforms['seed_x'].value = randFloat(-1, 1);
+      this.uniforms['seed_y'].value = randFloat(-1, 1);
+      this.uniforms['distortion_x'].value = randFloat(0, 1);
+      this.uniforms['distortion_y'].value = randFloat(0, 1);
       this.curF = 0;
       this.generateTrigger();
     } else if (this.curF % this.randX < this.randX / 5) {
       this.uniforms['amount'].value = Math.random() / 90;
-      this.uniforms['angle'].value = MathUtils.randFloat(-Math.PI, Math.PI);
-      this.uniforms['distortion_x'].value = MathUtils.randFloat(0, 1);
-      this.uniforms['distortion_y'].value = MathUtils.randFloat(0, 1);
-      this.uniforms['seed_x'].value = MathUtils.randFloat(-0.3, 0.3);
-      this.uniforms['seed_y'].value = MathUtils.randFloat(-0.3, 0.3);
+      this.uniforms['angle'].value = randFloat(-Math.PI, Math.PI);
+      this.uniforms['distortion_x'].value = randFloat(0, 1);
+      this.uniforms['distortion_y'].value = randFloat(0, 1);
+      this.uniforms['seed_x'].value = randFloat(-0.3, 0.3);
+      this.uniforms['seed_y'].value = randFloat(-0.3, 0.3);
     } else if (this.goWild == false) {
       this.uniforms['byp'].value = 1;
     }
@@ -72,7 +66,7 @@ class GlitchPass extends Pass {
   }
 
   generateTrigger() {
-    this.randX = MathUtils.randInt(120, 240);
+    this.randX = randInt(120, 240);
   }
 
   generateHeightmap(dt_size) {
@@ -80,7 +74,7 @@ class GlitchPass extends Pass {
     const length = dt_size * dt_size;
 
     for (let i = 0; i < length; i++) {
-      const val = MathUtils.randFloat(0, 1);
+      const val = randFloat(0, 1);
       data_arr[i] = val;
     }
 

@@ -1,4 +1,5 @@
-import { BufferGeometry, BufferAttribute, LineBasicMaterial, Line, MathUtils } from '../Three.js';
+import { BufferAttribute, BufferGeometry, Line, LineBasicMaterial } from '../Three.js';
+import { degreeToRadian } from '../math/MathUtils.ts';
 
 class PositionalAudioHelper extends Line {
   constructor(audio, range = 1, divisionsInnerAngle = 16, divisionsOuterAngle = 2) {
@@ -27,8 +28,8 @@ class PositionalAudioHelper extends Line {
     const divisionsInnerAngle = this.divisionsInnerAngle;
     const divisionsOuterAngle = this.divisionsOuterAngle;
 
-    const coneInnerAngle = MathUtils.degToRad(audio.panner.coneInnerAngle);
-    const coneOuterAngle = MathUtils.degToRad(audio.panner.coneOuterAngle);
+    const coneInnerAngle = degreeToRadian(audio.panner.coneInnerAngle);
+    const coneOuterAngle = degreeToRadian(audio.panner.coneOuterAngle);
 
     const halfConeInnerAngle = coneInnerAngle / 2;
     const halfConeOuterAngle = coneOuterAngle / 2;

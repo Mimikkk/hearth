@@ -1,4 +1,5 @@
-import { MathUtils, Mesh } from '../Three.js';
+import { Mesh } from '../Three.js';
+import { clamp } from '../math/MathUtils.ts';
 
 class MorphBlendMesh extends Mesh {
   constructor(geometry, material) {
@@ -211,8 +212,7 @@ class MorphBlendMesh extends Mesh {
         if (animation.time < 0) animation.time += animation.duration;
       }
 
-      const keyframe =
-        animation.start + MathUtils.clamp(Math.floor(animation.time / frameTime), 0, animation.length - 1);
+      const keyframe = animation.start + clamp(Math.floor(animation.time / frameTime), 0, animation.length - 1);
       const weight = animation.weight;
 
       if (keyframe !== animation.currentFrame) {

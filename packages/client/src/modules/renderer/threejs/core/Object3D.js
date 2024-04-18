@@ -5,7 +5,7 @@ import { EventDispatcher } from './EventDispatcher.ts';
 import { Euler } from '../math/Euler.js';
 import { Layers } from './Layers.js';
 import { Matrix3 } from '../math/Matrix3.js';
-import * as MathUtils from '../math/MathUtils.js';
+import * as MathUtils from '../math/MathUtils.ts';
 
 let _object3DId = 0;
 
@@ -36,7 +36,7 @@ class Object3D {
 
     Object.defineProperty(this, 'id', { value: _object3DId++ });
 
-    this.uuid = MathUtils.generateUUID();
+    this.uuid = MathUtils.generateUuid();
 
     this.name = '';
     this.type = 'Object3D';

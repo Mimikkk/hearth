@@ -1,4 +1,5 @@
-import { Color, ColorSpace, MathUtils } from '../Three.js';
+import { Color, ColorSpace } from '../Three.js';
+import { clamp } from './MathUtils.ts';
 
 class Lut {
   constructor(colormap, count = 32) {
@@ -85,7 +86,7 @@ class Lut {
   }
 
   getColor(alpha) {
-    alpha = MathUtils.clamp(alpha, this.minV, this.maxV);
+    alpha = clamp(alpha, this.minV, this.maxV);
 
     alpha = (alpha - this.minV) / (this.maxV - this.minV);
 

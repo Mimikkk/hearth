@@ -1,6 +1,7 @@
-import { Box3, DirectionalLight, MathUtils, Matrix4, ShaderChunk, Vector2, Vector3 } from '../Three.js';
+import { Box3, DirectionalLight, Matrix4, ShaderChunk, Vector2, Vector3 } from '../Three.js';
 import { CSMFrustum } from './CSMFrustum.js';
 import { CSMShader } from './CSMShader.js';
+import { lerp } from '../math/MathUtils.ts';
 
 const _cameraToLightMatrix = new Matrix4();
 const _lightSpaceFrustum = new CSMFrustum();
@@ -147,7 +148,7 @@ export class CSM {
       uniformSplit(amount, near, far, _uniformArray);
 
       for (let i = 1; i < amount; i++) {
-        target.push(MathUtils.lerp(_uniformArray[i - 1], _logArray[i - 1], lambda));
+        target.push(lerp(_uniformArray[i - 1], _logArray[i - 1], lambda));
       }
 
       target.push(1);

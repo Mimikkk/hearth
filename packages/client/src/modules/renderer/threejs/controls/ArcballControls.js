@@ -12,9 +12,9 @@ import {
   Vector2,
   Vector3,
   Matrix4,
-  MathUtils,
   EventDispatcher,
 } from '../Three.js';
+import { clamp, DegreeToRadian, RadianToDegree } from '../math/MathUtils.ts';
 
 //trackball state
 const STATE = {
@@ -495,17 +495,17 @@ class ArcballControls {
               let xNew = x / size; //distance between camera and gizmos if scale(size, scalepoint) would be performed
 
               //check min and max distance
-              xNew = MathUtils.clamp(xNew, this.minDistance, this.maxDistance);
+              xNew = clamp(xNew, this.minDistance, this.maxDistance);
 
-              const y = x * Math.tan(MathUtils.DEG2RAD * this._fovState * 0.5);
+              const y = x * Math.tan(DegreeToRadian * this._fovState * 0.5);
 
               //calculate new fov
-              let newFov = MathUtils.RAD2DEG * (Math.atan(y / xNew) * 2);
+              let newFov = RadianToDegree * (Math.atan(y / xNew) * 2);
 
               //check min and max fov
-              newFov = MathUtils.clamp(newFov, this.minFov, this.maxFov);
+              newFov = clamp(newFov, this.minFov, this.maxFov);
 
-              const newDistance = y / Math.tan(MathUtils.DEG2RAD * (newFov / 2));
+              const newDistance = y / Math.tan(DegreeToRadian * (newFov / 2));
               size = x / newDistance;
               this._v3_2.setFromMatrixPosition(this._gizmoMatrixState);
 
@@ -693,7 +693,7 @@ class ArcballControls {
           .add(this._v3_2);
       }
 
-      const amount = MathUtils.DEG2RAD * (this._startFingerRotation - this._currentFingerRotation);
+      const amount = DegreeToRadian * (this._startFingerRotation - this._currentFingerRotation);
 
       this.applyTransformMatrix(this.zRotate(rotationPoint, amount));
       this.eventDispatcher.dispatch(_changeEvent, this);
@@ -829,17 +829,17 @@ class ArcballControls {
       let xNew = x / size; //distance between camera and gizmos if scale(size, scalepoint) would be performed
 
       //check min and max distance
-      xNew = MathUtils.clamp(xNew, this.minDistance, this.maxDistance);
+      xNew = clamp(xNew, this.minDistance, this.maxDistance);
 
-      const y = x * Math.tan(MathUtils.DEG2RAD * this._fovState * 0.5);
+      const y = x * Math.tan(DegreeToRadian * this._fovState * 0.5);
 
       //calculate new fov
-      let newFov = MathUtils.RAD2DEG * (Math.atan(y / xNew) * 2);
+      let newFov = RadianToDegree * (Math.atan(y / xNew) * 2);
 
       //check min and max fov
-      newFov = MathUtils.clamp(newFov, this.minFov, this.maxFov);
+      newFov = clamp(newFov, this.minFov, this.maxFov);
 
-      const newDistance = y / Math.tan(MathUtils.DEG2RAD * (newFov / 2));
+      const newDistance = y / Math.tan(DegreeToRadian * (newFov / 2));
       size = x / newDistance;
       this._v3_2.setFromMatrixPosition(this._gizmoMatrixState);
 
@@ -1181,7 +1181,7 @@ class ArcballControls {
     const distance = camera.position.distanceTo(this._gizmos.position);
 
     if (camera.type == 'PerspectiveCamera') {
-      const halfFovV = MathUtils.DEG2RAD * camera.fov * 0.5; //vertical fov/2 in radians
+      const halfFovV = DegreeToRadian * camera.fov * 0.5; //vertical fov/2 in radians
       const halfFovH = Math.atan(camera.aspect * Math.tan(halfFovV)); //horizontal fov/2 in radians
       return Math.tan(Math.min(halfFovV, halfFovH)) * distance * this.radiusFactor;
     } else if (camera.type == 'OrthographicCamera') {
@@ -1237,7 +1237,7 @@ class ArcballControls {
         divisions = (size / tick) * this.camera.zoom;
       } else if (this.camera.isPerspectiveCamera) {
         const distance = this.camera.position.distanceTo(this._gizmos.position);
-        const halfFovV = MathUtils.DEG2RAD * this.camera.fov * 0.5;
+        const halfFovV = DegreeToRadian * this.camera.fov * 0.5;
         const halfFovH = Math.atan(this.camera.aspect * Math.tan(halfFovV));
 
         maxLength = Math.tan(Math.max(halfFovV, halfFovH)) * distance * 2;
@@ -1814,7 +1814,7 @@ class ArcballControls {
    */
   setFov(value) {
     if (this.camera.isPerspectiveCamera) {
-      this.camera.fov = MathUtils.clamp(value, this.minFov, this.maxFov);
+      this.camera.fov = clamp(value, this.minFov, this.maxFov);
       this.camera.updateProjectionMatrix();
     }
   }
@@ -1974,7 +1974,7 @@ class ArcballControls {
         this._v2_1.setX((-b - Math.sqrt(delta)) / (2 * a));
         this._v2_1.setY(m * this._v2_1.x + q);
 
-        const angle = MathUtils.RAD2DEG * this._v2_1.angle();
+        const angle = RadianToDegree * this._v2_1.angle();
 
         if (angle >= 45) {
           //if angle between intersection point and X' axis is >= 45°, return that point
@@ -2123,7 +2123,7 @@ class ArcballControls {
     if (this.camera.isOrthographicCamera) {
       //check zoom
       if (this.camera.zoom > this.maxZoom || this.camera.zoom < this.minZoom) {
-        const newZoom = MathUtils.clamp(this.camera.zoom, this.minZoom, this.maxZoom);
+        const newZoom = clamp(this.camera.zoom, this.minZoom, this.maxZoom);
         this.applyTransformMatrix(this.scale(newZoom / this.camera.zoom, this._gizmos.position, true));
       }
     } else if (this.camera.isPerspectiveCamera) {
@@ -2131,14 +2131,14 @@ class ArcballControls {
       const distance = this.camera.position.distanceTo(this._gizmos.position);
 
       if (distance > this.maxDistance + EPS || distance < this.minDistance - EPS) {
-        const newDistance = MathUtils.clamp(distance, this.minDistance, this.maxDistance);
+        const newDistance = clamp(distance, this.minDistance, this.maxDistance);
         this.applyTransformMatrix(this.scale(newDistance / distance, this._gizmos.position));
         this.updateMatrixState();
       }
 
       //check fov
       if (this.camera.fov < this.minFov || this.camera.fov > this.maxFov) {
-        this.camera.fov = MathUtils.clamp(this.camera.fov, this.minFov, this.maxFov);
+        this.camera.fov = clamp(this.camera.fov, this.minFov, this.maxFov);
         this.camera.updateProjectionMatrix();
       }
 
@@ -2563,12 +2563,12 @@ function onWheel(event) {
             let xNew = x / size; //distance between camera and gizmos if scale(size, scalepoint) would be performed
 
             //check min and max distance
-            xNew = MathUtils.clamp(xNew, this.minDistance, this.maxDistance);
+            xNew = clamp(xNew, this.minDistance, this.maxDistance);
 
-            const y = x * Math.tan(MathUtils.DEG2RAD * this.camera.fov * 0.5);
+            const y = x * Math.tan(DegreeToRadian * this.camera.fov * 0.5);
 
             //calculate new fov
-            let newFov = MathUtils.RAD2DEG * (Math.atan(y / xNew) * 2);
+            let newFov = RadianToDegree * (Math.atan(y / xNew) * 2);
 
             //check min and max fov
             if (newFov > this.maxFov) {
@@ -2577,7 +2577,7 @@ function onWheel(event) {
               newFov = this.minFov;
             }
 
-            const newDistance = y / Math.tan(MathUtils.DEG2RAD * (newFov / 2));
+            const newDistance = y / Math.tan(DegreeToRadian * (newFov / 2));
             size = x / newDistance;
 
             this.setFov(newFov);

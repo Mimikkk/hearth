@@ -1,4 +1,4 @@
-import { clamp } from '../math/MathUtils.js';
+import { clamp } from '../math/MathUtils.ts';
 
 // Fast Half Float Conversions, http://www.fox-toolkit.org/ftp/fasthalffloatconversion.pdf
 

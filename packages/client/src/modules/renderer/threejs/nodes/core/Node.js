@@ -1,6 +1,7 @@
-import { EventDispatcher, MathUtils } from '../../../threejs/Three.js';
+import { EventDispatcher } from '../../../threejs/Three.js';
 import { NodeUpdateType } from './constants.js';
 import { getCacheKey, getNodeChildren } from './NodeUtils.js';
+import { generateUuid } from '../../math/MathUtils.ts';
 
 const NodeClasses = new Map();
 
@@ -15,7 +16,7 @@ class Node {
     this.updateType = NodeUpdateType.NONE;
     this.updateBeforeType = NodeUpdateType.NONE;
 
-    this.uuid = MathUtils.generateUUID();
+    this.uuid = generateUuid();
 
     this.version = 0;
 

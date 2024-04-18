@@ -237,7 +237,7 @@ class ColladaLoader extends Loader {
       if (hasChildren === false) {
         // since 'id' attributes can be optional, it's necessary to generate a UUID for unqiue assignment
 
-        library.animations[xml.getAttribute('id') || MathUtils.generateUUID()] = data;
+        library.animations[xml.getAttribute('id') || MathUtils.generateUuid()] = data;
       }
     }
 
@@ -2313,7 +2313,7 @@ class ColladaLoader extends Loader {
         case 'rotate':
           data.obj = new Vector3();
           data.obj.fromArray(array);
-          data.angle = MathUtils.degToRad(array[3]);
+          data.angle = MathUtils.degreeToRadian(array[3]);
           break;
       }
 
@@ -2531,7 +2531,7 @@ class ColladaLoader extends Loader {
                 if (transform.sid && transform.sid.indexOf(jointIndex) !== -1) {
                   switch (joint.type) {
                     case 'revolute':
-                      matrix.multiply(m0.makeRotationAxis(axis, MathUtils.degToRad(value)));
+                      matrix.multiply(m0.makeRotationAxis(axis, MathUtils.degreeToRadian(value)));
                       break;
 
                     case 'prismatic':
@@ -2612,7 +2612,7 @@ class ColladaLoader extends Loader {
           case 'rotate':
             array = parseFloats(child.textContent);
             vector = new Vector3().fromArray(array);
-            const angle = MathUtils.degToRad(array[3]);
+            const angle = MathUtils.degreeToRadian(array[3]);
             transforms.push({
               sid: child.getAttribute('sid'),
               type: child.nodeName,
@@ -2709,7 +2709,7 @@ class ColladaLoader extends Loader {
 
           case 'rotate':
             array = parseFloats(child.textContent);
-            const angle = MathUtils.degToRad(array[3]);
+            const angle = MathUtils.degreeToRadian(array[3]);
             data.matrix.multiply(matrix.makeRotationAxis(vector.fromArray(array), angle));
             data.transforms[child.getAttribute('sid')] = child.nodeName;
             break;

@@ -1,4 +1,4 @@
-import * as MathUtils from './MathUtils.js';
+import * as MathUtils from './MathUtils.ts';
 
 class Vector2 {
   constructor(x = 0, y = 0) {

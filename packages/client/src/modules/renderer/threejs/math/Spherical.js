@@ -1,4 +1,4 @@
-import * as MathUtils from './MathUtils.js';
+import * as MathUtils from './MathUtils.ts';
 
 /**
  * Ref: https://en.wikipedia.org/wiki/Spherical_coordinate_system

@@ -1,4 +1,5 @@
-import { Box3, MathUtils, Matrix3, Matrix4, Ray, Vector3 } from '../Three.js';
+import { Box3, Matrix3, Matrix4, Ray, Vector3 } from '../Three.js';
+import { clamp } from './MathUtils.ts';
 
 // module scope helper variables
 
@@ -79,13 +80,13 @@ class OBB {
 
     // project the target onto the OBB axes and walk towards that point
 
-    const x = MathUtils.clamp(v1.dot(xAxis), -halfSize.x, halfSize.x);
+    const x = clamp(v1.dot(xAxis), -halfSize.x, halfSize.x);
     result.add(xAxis.multiplyScalar(x));
 
-    const y = MathUtils.clamp(v1.dot(yAxis), -halfSize.y, halfSize.y);
+    const y = clamp(v1.dot(yAxis), -halfSize.y, halfSize.y);
     result.add(yAxis.multiplyScalar(y));
 
-    const z = MathUtils.clamp(v1.dot(zAxis), -halfSize.z, halfSize.z);
+    const z = clamp(v1.dot(zAxis), -halfSize.z, halfSize.z);
     result.add(zAxis.multiplyScalar(z));
 
     return result;

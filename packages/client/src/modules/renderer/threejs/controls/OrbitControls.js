@@ -1,15 +1,5 @@
-import {
-  EventDispatcher,
-  MathUtils,
-  Mouse,
-  Plane,
-  Quaternion,
-  Ray,
-  Spherical,
-  Touch,
-  Vector2,
-  Vector3,
-} from '../Three.js';
+import { EventDispatcher, Mouse, Plane, Quaternion, Ray, Spherical, Touch, Vector2, Vector3 } from '../Three.js';
+import { DegreeToRadian } from '../math/MathUtils.ts';
 
 // OrbitControls performs orbiting, dollying (zooming), and panning.
 // Unlike TrackballControls, it maintains the "up" direction object.up (+Y by default).
@@ -23,7 +13,7 @@ const _startEvent = { type: 'start' };
 const _endEvent = { type: 'end' };
 const _ray = new Ray();
 const _plane = new Plane();
-const TILT_LIMIT = Math.cos(70 * MathUtils.DEG2RAD);
+const TILT_LIMIT = Math.cos(70 * DegreeToRadian);
 
 class OrbitControls {
   eventDispatcher = new EventDispatcher();

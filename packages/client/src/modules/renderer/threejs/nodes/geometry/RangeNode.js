@@ -1,11 +1,11 @@
 import Node, { addNodeClass } from '../core/Node.js';
 import { getValueType } from '../core/NodeUtils.js';
 import { buffer } from '../accessors/BufferNode.js';
-//import { bufferAttribute } from '../accessors/BufferAttributeNode.js';
 import { instanceIndex } from '../core/IndexNode.js';
-import { nodeProxy, float } from '../shadernode/ShaderNode.js';
+import { float, nodeProxy } from '../shadernode/ShaderNode.js';
 
-import { Vector4, MathUtils } from '../../../threejs/Three.js';
+import { Vector4 } from '../../../threejs/Three.js';
+import { lerp } from '../../math/MathUtils.ts';
 
 let min = null;
 let max = null;
@@ -66,7 +66,7 @@ class RangeNode extends Node {
         const minElementValue = min.getComponent(index);
         const maxElementValue = max.getComponent(index);
 
-        array[i] = MathUtils.lerp(minElementValue, maxElementValue, Math.random());
+        array[i] = lerp(minElementValue, maxElementValue, Math.random());
       }
 
       const nodeType = this.getNodeType(builder);

@@ -1,5 +1,5 @@
 import { PropertyBinding } from './PropertyBinding.js';
-import * as MathUtils from '../math/MathUtils.js';
+import * as MathUtils from '../math/MathUtils.ts';
 
 /**
  *
@@ -34,7 +34,7 @@ class AnimationObjectGroup {
   constructor() {
     this.isAnimationObjectGroup = true;
 
-    this.uuid = MathUtils.generateUUID();
+    this.uuid = MathUtils.generateUuid();
 
     // cached objects followed by the active ones
     this._objects = Array.prototype.slice.call(arguments);

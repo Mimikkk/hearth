@@ -9,7 +9,7 @@ import {
   StencilFunction,
   StencilOperation,
 } from '../constants.ts';
-import * as MathUtils from '../math/MathUtils.js';
+import * as MathUtils from '../math/MathUtils.ts';
 
 let _materialId = 0;
 
@@ -21,7 +21,7 @@ class Material {
 
     Object.defineProperty(this, 'id', { value: _materialId++ });
 
-    this.uuid = MathUtils.generateUUID();
+    this.uuid = MathUtils.generateUuid();
 
     this.name = '';
     this.type = 'Material';

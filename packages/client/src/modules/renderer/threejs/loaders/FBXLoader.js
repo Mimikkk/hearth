@@ -973,7 +973,7 @@ class FBXTreeParser {
           let angle = Math.PI / 3;
 
           if (lightAttribute.InnerAngle !== undefined) {
-            angle = MathUtils.degToRad(lightAttribute.InnerAngle.value);
+            angle = MathUtils.degreeToRadian(lightAttribute.InnerAngle.value);
           }
 
           let penumbra = 0;
@@ -981,7 +981,7 @@ class FBXTreeParser {
             // TODO: this is not correct - FBX calculates outer and inner angle in degrees
             // with OuterAngle > InnerAngle && OuterAngle <= Math.PI
             // while three.js uses a penumbra between (0, 1) to attenuate the inner angle
-            penumbra = MathUtils.degToRad(lightAttribute.OuterAngle.value);
+            penumbra = MathUtils.degreeToRadian(lightAttribute.OuterAngle.value);
             penumbra = Math.max(penumbra, 1);
           }
 
@@ -2246,7 +2246,7 @@ class AnimationParser {
     }
 
     if (preRotation !== undefined) {
-      preRotation = preRotation.map(MathUtils.degToRad);
+      preRotation = preRotation.map(MathUtils.degreeToRadian);
       preRotation.push(eulerOrder);
 
       preRotation = new Euler().fromArray(preRotation);
@@ -2254,7 +2254,7 @@ class AnimationParser {
     }
 
     if (postRotation !== undefined) {
-      postRotation = postRotation.map(MathUtils.degToRad);
+      postRotation = postRotation.map(MathUtils.degreeToRadian);
       postRotation.push(eulerOrder);
 
       postRotation = new Euler().fromArray(postRotation);
@@ -2392,9 +2392,9 @@ class AnimationParser {
 
     // Add first frame
     times.push(curvex.times[0]);
-    values.push(MathUtils.degToRad(curvex.values[0]));
-    values.push(MathUtils.degToRad(curvey.values[0]));
-    values.push(MathUtils.degToRad(curvez.values[0]));
+    values.push(MathUtils.degreeToRadian(curvex.values[0]));
+    values.push(MathUtils.degreeToRadian(curvey.values[0]));
+    values.push(MathUtils.degreeToRadian(curvez.values[0]));
 
     for (let i = 1; i < curvex.values.length; i++) {
       const initialValue = [curvex.values[i - 1], curvey.values[i - 1], curvez.values[i - 1]];
@@ -2403,7 +2403,7 @@ class AnimationParser {
         continue;
       }
 
-      const initialValueRad = initialValue.map(MathUtils.degToRad);
+      const initialValueRad = initialValue.map(MathUtils.degreeToRadian);
 
       const currentValue = [curvex.values[i], curvey.values[i], curvez.values[i]];
 
@@ -2411,7 +2411,7 @@ class AnimationParser {
         continue;
       }
 
-      const currentValueRad = currentValue.map(MathUtils.degToRad);
+      const currentValueRad = currentValue.map(MathUtils.degreeToRadian);
 
       const valuesSpan = [
         currentValue[0] - initialValue[0],
@@ -2455,9 +2455,9 @@ class AnimationParser {
         }
       } else {
         times.push(curvex.times[i]);
-        values.push(MathUtils.degToRad(curvex.values[i]));
-        values.push(MathUtils.degToRad(curvey.values[i]));
-        values.push(MathUtils.degToRad(curvez.values[i]));
+        values.push(MathUtils.degreeToRadian(curvex.values[i]));
+        values.push(MathUtils.degreeToRadian(curvey.values[i]));
+        values.push(MathUtils.degreeToRadian(curvez.values[i]));
       }
     }
 
@@ -3288,19 +3288,19 @@ function generateTransform(transformData) {
   if (transformData.translation) lTranslationM.setPosition(tempVec.fromArray(transformData.translation));
 
   if (transformData.preRotation) {
-    const array = transformData.preRotation.map(MathUtils.degToRad);
+    const array = transformData.preRotation.map(MathUtils.degreeToRadian);
     array.push(transformData.eulerOrder || Euler.DEFAULT_ORDER);
     lPreRotationM.makeRotationFromEuler(tempEuler.fromArray(array));
   }
 
   if (transformData.rotation) {
-    const array = transformData.rotation.map(MathUtils.degToRad);
+    const array = transformData.rotation.map(MathUtils.degreeToRadian);
     array.push(transformData.eulerOrder || Euler.DEFAULT_ORDER);
     lRotationM.makeRotationFromEuler(tempEuler.fromArray(array));
   }
 
   if (transformData.postRotation) {
-    const array = transformData.postRotation.map(MathUtils.degToRad);
+    const array = transformData.postRotation.map(MathUtils.degreeToRadian);
     array.push(transformData.eulerOrder || Euler.DEFAULT_ORDER);
     lPostRotationM.makeRotationFromEuler(tempEuler.fromArray(array));
     lPostRotationM.invert();

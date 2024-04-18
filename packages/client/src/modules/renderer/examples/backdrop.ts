@@ -81,7 +81,7 @@ function init() {
   function addBackdropSphere(backdropNode, backdropAlphaNode = null) {
     const distance = 1;
     const id = portals.children.length;
-    const rotation = THREE.MathUtils.degToRad(id * 45);
+    const rotation = THREE.MathUtils.degreeToRadian(id * 45);
 
     const material = new MeshStandardNodeMaterial({ color: 0x0066ff });
     material.roughnessNode = float(0.2);

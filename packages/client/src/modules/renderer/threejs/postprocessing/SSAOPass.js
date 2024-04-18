@@ -6,7 +6,6 @@ import {
   DataTexture,
   DepthTexture,
   Filter,
-  MathUtils,
   MeshNormalMaterial,
   ShaderMaterial,
   TextureDataType,
@@ -20,6 +19,7 @@ import { FullScreenQuad, Pass } from './Pass.js';
 import { SimplexNoise } from '../../threejs/math/SimplexNoise.js';
 import { SSAOBlurShader, SSAODepthShader, SSAOShader } from '../shaders/SSAOShader.js';
 import { CopyShader } from '../shaders/CopyShader.js';
+import { lerp } from '../math/MathUtils.ts';
 
 class SSAOPass extends Pass {
   constructor(scene, camera, width, height, kernelSize = 32) {
@@ -304,7 +304,7 @@ class SSAOPass extends Pass {
       sample.normalize();
 
       let scale = i / kernelSize;
-      scale = MathUtils.lerp(0.1, 1, scale * scale);
+      scale = lerp(0.1, 1, scale * scale);
       sample.multiplyScalar(scale);
 
       kernel.push(sample);

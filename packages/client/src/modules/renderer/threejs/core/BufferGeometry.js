@@ -12,7 +12,7 @@ import { Sphere } from '../math/Sphere.js';
 import { Object3D } from './Object3D.js';
 import { Matrix4 } from '../math/Matrix4.js';
 import { Matrix3 } from '../math/Matrix3.js';
-import * as MathUtils from '../math/MathUtils.js';
+import * as MathUtils from '../math/MathUtils.ts';
 import { isArrayUint32 } from '../utils.ts';
 
 let _id = 0;
@@ -32,7 +32,7 @@ class BufferGeometry {
 
     Object.defineProperty(this, 'id', { value: _id++ });
 
-    this.uuid = MathUtils.generateUUID();
+    this.uuid = MathUtils.generateUuid();
 
     this.name = '';
     this.type = 'BufferGeometry';

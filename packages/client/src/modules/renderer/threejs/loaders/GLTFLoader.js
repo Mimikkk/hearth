@@ -3062,7 +3062,7 @@ class GLTFParser {
 
     if (cameraDef.type === 'perspective') {
       camera = new PerspectiveCamera(
-        MathUtils.radToDeg(params.yfov),
+        MathUtils.radianToDegree(params.yfov),
         params.aspectRatio || 1,
         params.znear || 1,
         params.zfar || 2e6,

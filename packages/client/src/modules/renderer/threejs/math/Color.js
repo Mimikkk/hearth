@@ -1,4 +1,4 @@
-import { clamp, euclideanModulo, lerp } from './MathUtils.js';
+import { clamp, euclideanModulo, lerp } from './MathUtils.ts';
 import { ColorManagement, LinearToSRGB, SRGBToLinear } from './ColorManagement.js';
 import { ColorSpace } from '../constants.ts';
 

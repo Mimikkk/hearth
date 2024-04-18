@@ -1,4 +1,4 @@
-import * as MathUtils from '../math/MathUtils.js';
+import * as MathUtils from '../math/MathUtils.ts';
 import { BufferUsage } from '../constants.ts';
 
 class InterleavedBuffer {
@@ -15,7 +15,7 @@ class InterleavedBuffer {
 
     this.version = 0;
 
-    this.uuid = MathUtils.generateUUID();
+    this.uuid = MathUtils.generateUuid();
   }
 
   onUploadCallback() {}
@@ -70,7 +70,7 @@ class InterleavedBuffer {
     }
 
     if (this.array.buffer._uuid === undefined) {
-      this.array.buffer._uuid = MathUtils.generateUUID();
+      this.array.buffer._uuid = MathUtils.generateUuid();
     }
 
     if (data.arrayBuffers[this.array.buffer._uuid] === undefined) {
@@ -99,7 +99,7 @@ class InterleavedBuffer {
     // generate UUID for array buffer if necessary
 
     if (this.array.buffer._uuid === undefined) {
-      this.array.buffer._uuid = MathUtils.generateUUID();
+      this.array.buffer._uuid = MathUtils.generateUuid();
     }
 
     if (data.arrayBuffers[this.array.buffer._uuid] === undefined) {
