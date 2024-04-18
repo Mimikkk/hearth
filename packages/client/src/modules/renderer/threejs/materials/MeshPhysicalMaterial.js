@@ -1,4 +1,4 @@
-import { Vector2 } from '../math/Vector2.js';
+import { Vector2 } from '../math/Vector2.ts';
 import { MeshStandardMaterial } from './MeshStandardMaterial.js';
 import { Color } from '../math/Color.js';
 import * as MathUtils from '../math/MathUtils.ts';

@@ -1,5 +1,5 @@
 import { Matrix3 } from './Matrix3.js';
-import { Vector3 } from './Vector3.js';
+import { Vector3 } from './Vector3.ts';
 
 const _vector1 = /*@__PURE__*/ new Vector3();
 const _vector2 = /*@__PURE__*/ new Vector3();

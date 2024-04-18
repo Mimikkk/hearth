@@ -6,7 +6,7 @@ import { MeshBasicMaterial } from '../materials/MeshBasicMaterial.js';
 import { LineBasicMaterial } from '../materials/LineBasicMaterial.js';
 import { Mesh } from '../objects/Mesh.js';
 import { Line } from '../objects/Line.js';
-import { Vector3 } from '../math/Vector3.js';
+import { Vector3 } from '../math/Vector3.ts';
 
 const _axis = /*@__PURE__*/ new Vector3();
 let _lineGeometry, _coneGeometry;

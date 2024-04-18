@@ -1,7 +1,7 @@
 import { TextureDataType } from '../../constants.ts';
 import { DataArrayTexture } from '../../textures/DataArrayTexture.js';
-import { Vector4 } from '../../math/Vector4.js';
-import { Vector2 } from '../../math/Vector2.js';
+import { Vector4 } from '../../math/Vector4.ts';
+import { Vector2 } from '../../math/Vector2.ts';
 
 function WebGLMorphtargets(gl, capabilities, textures) {
   const morphTextures = new WeakMap();

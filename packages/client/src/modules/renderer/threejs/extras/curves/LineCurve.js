@@ -1,4 +1,4 @@
-import { Vector2 } from '../../math/Vector2.js';
+import { Vector2 } from '../../math/Vector2.ts';
 import { Curve } from '../core/Curve.js';
 
 class LineCurve extends Curve {

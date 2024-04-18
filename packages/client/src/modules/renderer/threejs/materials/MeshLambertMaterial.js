@@ -1,6 +1,6 @@
 import { NormalMapType, Operation } from '../constants.ts';
 import { Material } from './Material.js';
-import { Vector2 } from '../math/Vector2.js';
+import { Vector2 } from '../math/Vector2.ts';
 import { Color } from '../math/Color.js';
 import { Euler } from '../math/Euler.js';
 

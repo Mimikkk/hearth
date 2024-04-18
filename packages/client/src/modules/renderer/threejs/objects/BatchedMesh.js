@@ -7,7 +7,7 @@ import { Mesh } from './Mesh.js';
 import { Box3 } from '../math/Box3.js';
 import { Sphere } from '../math/Sphere.js';
 import { Frustum } from '../math/Frustum.js';
-import { Vector3 } from '../math/Vector3.js';
+import { Vector3 } from '../math/Vector3.ts';
 
 function sortOpaque(a, b) {
   return a.z - b.z;

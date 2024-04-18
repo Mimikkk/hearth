@@ -1,18 +1,25 @@
-class Vector4 {
-  constructor(x = 0, y = 0, z = 0, w = 1) {
-    Vector4.prototype.isVector4 = true;
+import type { Vector3 } from './Vector3.js';
+import type { Matrix4 } from './Matrix4.js';
+import type { Quaternion } from './Quaternion.js';
+import type { Matrix3 } from './Matrix3.js';
+import type { BufferAttribute } from '../core/BufferAttribute.js';
 
-    this.x = x;
-    this.y = y;
-    this.z = z;
-    this.w = w;
-  }
+export class Vector4 {
+  declare isVector4: true;
+  declare ['constructor']: typeof Vector4;
+
+  constructor(
+    public x: number = 0,
+    public y: number = 0,
+    public z: number = 0,
+    public w: number = 1,
+  ) {}
 
   get width() {
     return this.z;
   }
 
-  set width(value) {
+  set width(value: number) {
     this.z = value;
   }
 
@@ -20,11 +27,11 @@ class Vector4 {
     return this.w;
   }
 
-  set height(value) {
+  set height(value: number) {
     this.w = value;
   }
 
-  set(x, y, z, w) {
+  set(x: number, y: number, z: number, w: number): this {
     this.x = x;
     this.y = y;
     this.z = z;
@@ -33,7 +40,7 @@ class Vector4 {
     return this;
   }
 
-  setScalar(scalar) {
+  setScalar(scalar: number): this {
     this.x = scalar;
     this.y = scalar;
     this.z = scalar;
@@ -42,31 +49,31 @@ class Vector4 {
     return this;
   }
 
-  setX(x) {
+  setX(x: number): this {
     this.x = x;
 
     return this;
   }
 
-  setY(y) {
+  setY(y: number): this {
     this.y = y;
 
     return this;
   }
 
-  setZ(z) {
+  setZ(z: number): this {
     this.z = z;
 
     return this;
   }
 
-  setW(w) {
+  setW(w: number): this {
     this.w = w;
 
     return this;
   }
 
-  setComponent(index, value) {
+  setComponent(index: 0 | 1 | 2 | 3, value: number): this {
     switch (index) {
       case 0:
         this.x = value;
@@ -81,13 +88,13 @@ class Vector4 {
         this.w = value;
         break;
       default:
-        throw new Error('index is out of range: ' + index);
+        throw Error(`index out of range: ${index}`);
     }
 
     return this;
   }
 
-  getComponent(index) {
+  getComponent(index: 0 | 1 | 2 | 3): number {
     switch (index) {
       case 0:
         return this.x;
@@ -102,38 +109,38 @@ class Vector4 {
     }
   }
 
-  clone() {
+  clone(): Vector4 {
     return new this.constructor(this.x, this.y, this.z, this.w);
   }
 
-  copy(v) {
-    this.x = v.x;
-    this.y = v.y;
-    this.z = v.z;
-    this.w = v.w !== undefined ? v.w : 1;
+  copy(vector: Vector3 | Vector4): this {
+    this.x = vector.x;
+    this.y = vector.y;
+    this.z = vector.z;
+    this.w = 'w' in vector ? vector.w : 1;
 
     return this;
   }
 
-  add(v) {
-    this.x += v.x;
-    this.y += v.y;
-    this.z += v.z;
-    this.w += v.w;
+  add(vector: Vector4): this {
+    this.x += vector.x;
+    this.y += vector.y;
+    this.z += vector.z;
+    this.w += vector.w;
 
     return this;
   }
 
-  addScalar(s) {
-    this.x += s;
-    this.y += s;
-    this.z += s;
-    this.w += s;
+  addScalar(scalar: number): this {
+    this.x += scalar;
+    this.y += scalar;
+    this.z += scalar;
+    this.w += scalar;
 
     return this;
   }
 
-  addVectors(a, b) {
+  addVectors(a: Vector4, b: Vector4): this {
     this.x = a.x + b.x;
     this.y = a.y + b.y;
     this.z = a.z + b.z;
@@ -142,34 +149,34 @@ class Vector4 {
     return this;
   }
 
-  addScaledVector(v, s) {
-    this.x += v.x * s;
-    this.y += v.y * s;
-    this.z += v.z * s;
-    this.w += v.w * s;
+  addScaledVector(vector: Vector4, scale: number): this {
+    this.x += vector.x * scale;
+    this.y += vector.y * scale;
+    this.z += vector.z * scale;
+    this.w += vector.w * scale;
 
     return this;
   }
 
-  sub(v) {
-    this.x -= v.x;
-    this.y -= v.y;
-    this.z -= v.z;
-    this.w -= v.w;
+  sub(vector: Vector4): this {
+    this.x -= vector.x;
+    this.y -= vector.y;
+    this.z -= vector.z;
+    this.w -= vector.w;
 
     return this;
   }
 
-  subScalar(s) {
-    this.x -= s;
-    this.y -= s;
-    this.z -= s;
-    this.w -= s;
+  subScalar(scalar: number): this {
+    this.x -= scalar;
+    this.y -= scalar;
+    this.z -= scalar;
+    this.w -= scalar;
 
     return this;
   }
 
-  subVectors(a, b) {
+  subVectors(a: Vector4, b: Vector4): this {
     this.x = a.x - b.x;
     this.y = a.y - b.y;
     this.z = a.z - b.z;
@@ -178,16 +185,16 @@ class Vector4 {
     return this;
   }
 
-  multiply(v) {
-    this.x *= v.x;
-    this.y *= v.y;
-    this.z *= v.z;
-    this.w *= v.w;
+  multiply(vector: Vector4): this {
+    this.x *= vector.x;
+    this.y *= vector.y;
+    this.z *= vector.z;
+    this.w *= vector.w;
 
     return this;
   }
 
-  multiplyScalar(scalar) {
+  multiplyScalar(scalar: number): this {
     this.x *= scalar;
     this.y *= scalar;
     this.z *= scalar;
@@ -196,12 +203,9 @@ class Vector4 {
     return this;
   }
 
-  applyMatrix4(m) {
-    const x = this.x,
-      y = this.y,
-      z = this.z,
-      w = this.w;
-    const e = m.elements;
+  applyMatrix4(matrix: Matrix4): this {
+    const { x, y, z, w } = this;
+    const e = matrix.elements;
 
     this.x = e[0] * x + e[4] * y + e[8] * z + e[12] * w;
     this.y = e[1] * x + e[5] * y + e[9] * z + e[13] * w;
@@ -211,33 +215,29 @@ class Vector4 {
     return this;
   }
 
-  divideScalar(scalar) {
+  divideScalar(scalar: number): this {
     return this.multiplyScalar(1 / scalar);
   }
 
-  setAxisAngleFromQuaternion(q) {
-    // http://www.euclideanspace.com/maths/geometry/rotations/conversions/quaternionToAngle/index.htm
+  setAxisAngleFromQuaternion(quaternion: Quaternion): this {
+    this.w = 2 * Math.acos(quaternion.w);
 
-    // q is assumed to be normalized
-
-    this.w = 2 * Math.acos(q.w);
-
-    const s = Math.sqrt(1 - q.w * q.w);
+    const s = Math.sqrt(1 - quaternion.w * quaternion.w);
 
     if (s < 0.0001) {
       this.x = 1;
       this.y = 0;
       this.z = 0;
     } else {
-      this.x = q.x / s;
-      this.y = q.y / s;
-      this.z = q.z / s;
+      this.x = quaternion.x / s;
+      this.y = quaternion.y / s;
+      this.z = quaternion.z / s;
     }
 
     return this;
   }
 
-  setAxisAngleFromRotationMatrix(m) {
+  setAxisAngleFromRotationMatrix(matrix: Matrix3 | Matrix4): this {
     // http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToAngle/index.htm
 
     // assumes the upper 3x3 of m is a pure rotation matrix (i.e, unscaled)
@@ -245,7 +245,7 @@ class Vector4 {
     let angle, x, y, z; // variables for result
     const epsilon = 0.01, // margin to allow for rounding errors
       epsilon2 = 0.1, // margin to distinguish between 0 and 180 degrees
-      te = m.elements,
+      te = matrix.elements,
       m11 = te[0],
       m12 = te[4],
       m13 = te[8],
@@ -345,27 +345,25 @@ class Vector4 {
     return this;
   }
 
-  min(v) {
-    this.x = Math.min(this.x, v.x);
-    this.y = Math.min(this.y, v.y);
-    this.z = Math.min(this.z, v.z);
-    this.w = Math.min(this.w, v.w);
+  min(vector: Vector4): this {
+    this.x = Math.min(this.x, vector.x);
+    this.y = Math.min(this.y, vector.y);
+    this.z = Math.min(this.z, vector.z);
+    this.w = Math.min(this.w, vector.w);
 
     return this;
   }
 
-  max(v) {
-    this.x = Math.max(this.x, v.x);
-    this.y = Math.max(this.y, v.y);
-    this.z = Math.max(this.z, v.z);
-    this.w = Math.max(this.w, v.w);
+  max(vector: Vector4): this {
+    this.x = Math.max(this.x, vector.x);
+    this.y = Math.max(this.y, vector.y);
+    this.z = Math.max(this.z, vector.z);
+    this.w = Math.max(this.w, vector.w);
 
     return this;
   }
 
-  clamp(min, max) {
-    // assumes min < max, componentwise
-
+  clamp(min: Vector4, max: Vector4): this {
     this.x = Math.max(min.x, Math.min(max.x, this.x));
     this.y = Math.max(min.y, Math.min(max.y, this.y));
     this.z = Math.max(min.z, Math.min(max.z, this.z));
@@ -374,22 +372,22 @@ class Vector4 {
     return this;
   }
 
-  clampScalar(minVal, maxVal) {
-    this.x = Math.max(minVal, Math.min(maxVal, this.x));
-    this.y = Math.max(minVal, Math.min(maxVal, this.y));
-    this.z = Math.max(minVal, Math.min(maxVal, this.z));
-    this.w = Math.max(minVal, Math.min(maxVal, this.w));
+  clampScalar(min: number, max: number): this {
+    this.x = Math.max(min, Math.min(max, this.x));
+    this.y = Math.max(min, Math.min(max, this.y));
+    this.z = Math.max(min, Math.min(max, this.z));
+    this.w = Math.max(min, Math.min(max, this.w));
 
     return this;
   }
 
-  clampLength(min, max) {
+  clampLength(min: number, max: number): this {
     const length = this.length();
 
     return this.divideScalar(length || 1).multiplyScalar(Math.max(min, Math.min(max, length)));
   }
 
-  floor() {
+  floor(): this {
     this.x = Math.floor(this.x);
     this.y = Math.floor(this.y);
     this.z = Math.floor(this.z);
@@ -398,7 +396,7 @@ class Vector4 {
     return this;
   }
 
-  ceil() {
+  ceil(): this {
     this.x = Math.ceil(this.x);
     this.y = Math.ceil(this.y);
     this.z = Math.ceil(this.z);
@@ -407,7 +405,7 @@ class Vector4 {
     return this;
   }
 
-  round() {
+  round(): this {
     this.x = Math.round(this.x);
     this.y = Math.round(this.y);
     this.z = Math.round(this.z);
@@ -416,7 +414,7 @@ class Vector4 {
     return this;
   }
 
-  roundToZero() {
+  roundToZero(): this {
     this.x = Math.trunc(this.x);
     this.y = Math.trunc(this.y);
     this.z = Math.trunc(this.z);
@@ -425,7 +423,7 @@ class Vector4 {
     return this;
   }
 
-  negate() {
+  negate(): this {
     this.x = -this.x;
     this.y = -this.y;
     this.z = -this.z;
@@ -434,53 +432,53 @@ class Vector4 {
     return this;
   }
 
-  dot(v) {
-    return this.x * v.x + this.y * v.y + this.z * v.z + this.w * v.w;
+  dot(vector: Vector4) {
+    return this.x * vector.x + this.y * vector.y + this.z * vector.z + this.w * vector.w;
   }
 
-  lengthSq() {
+  lengthSq(): number {
     return this.x * this.x + this.y * this.y + this.z * this.z + this.w * this.w;
   }
 
-  length() {
+  length(): number {
     return Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z + this.w * this.w);
   }
 
-  manhattanLength() {
+  manhattanLength(): number {
     return Math.abs(this.x) + Math.abs(this.y) + Math.abs(this.z) + Math.abs(this.w);
   }
 
-  normalize() {
+  normalize(): this {
     return this.divideScalar(this.length() || 1);
   }
 
-  setLength(length) {
+  setLength(length: number): this {
     return this.normalize().multiplyScalar(length);
   }
 
-  lerp(v, alpha) {
-    this.x += (v.x - this.x) * alpha;
-    this.y += (v.y - this.y) * alpha;
-    this.z += (v.z - this.z) * alpha;
-    this.w += (v.w - this.w) * alpha;
+  lerp(vector: Vector4, alpha: number): this {
+    this.x += (vector.x - this.x) * alpha;
+    this.y += (vector.y - this.y) * alpha;
+    this.z += (vector.z - this.z) * alpha;
+    this.w += (vector.w - this.w) * alpha;
 
     return this;
   }
 
-  lerpVectors(v1, v2, alpha) {
-    this.x = v1.x + (v2.x - v1.x) * alpha;
-    this.y = v1.y + (v2.y - v1.y) * alpha;
-    this.z = v1.z + (v2.z - v1.z) * alpha;
-    this.w = v1.w + (v2.w - v1.w) * alpha;
+  lerpVectors(from: Vector4, to: Vector4, alpha: number): this {
+    this.x = from.x + (to.x - from.x) * alpha;
+    this.y = from.y + (to.y - from.y) * alpha;
+    this.z = from.z + (to.z - from.z) * alpha;
+    this.w = from.w + (to.w - from.w) * alpha;
 
     return this;
   }
 
-  equals(v) {
-    return v.x === this.x && v.y === this.y && v.z === this.z && v.w === this.w;
+  equals(vector: Vector4): boolean {
+    return vector.x === this.x && vector.y === this.y && vector.z === this.z && vector.w === this.w;
   }
 
-  fromArray(array, offset = 0) {
+  fromArray(array: number[], offset: number = 0): this {
     this.x = array[offset];
     this.y = array[offset + 1];
     this.z = array[offset + 2];
@@ -489,7 +487,7 @@ class Vector4 {
     return this;
   }
 
-  toArray(array = [], offset = 0) {
+  toArray(array: number[] = [], offset: number = 0): number[] {
     array[offset] = this.x;
     array[offset + 1] = this.y;
     array[offset + 2] = this.z;
@@ -498,7 +496,7 @@ class Vector4 {
     return array;
   }
 
-  fromBufferAttribute(attribute, index) {
+  fromBufferAttribute(attribute: BufferAttribute, index: number): this {
     this.x = attribute.getX(index);
     this.y = attribute.getY(index);
     this.z = attribute.getZ(index);
@@ -507,7 +505,7 @@ class Vector4 {
     return this;
   }
 
-  random() {
+  random(): this {
     this.x = Math.random();
     this.y = Math.random();
     this.z = Math.random();
@@ -516,12 +514,11 @@ class Vector4 {
     return this;
   }
 
-  *[Symbol.iterator]() {
+  *[Symbol.iterator](): Iterator<number> {
     yield this.x;
     yield this.y;
     yield this.z;
     yield this.w;
   }
 }
-
-export { Vector4 };
+Vector4.prototype.isVector4 = true;

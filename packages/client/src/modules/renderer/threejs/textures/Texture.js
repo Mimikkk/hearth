@@ -1,7 +1,7 @@
 import { EventDispatcher } from '../core/EventDispatcher.ts';
 import { ColorSpace, Filter, Mapping, TextureDataType, TextureFormat, Wrapping } from '../constants.ts';
 import * as MathUtils from '../math/MathUtils.ts';
-import { Vector2 } from '../math/Vector2.js';
+import { Vector2 } from '../math/Vector2.ts';
 import { Matrix3 } from '../math/Matrix3.js';
 import { Source } from './Source.js';
 

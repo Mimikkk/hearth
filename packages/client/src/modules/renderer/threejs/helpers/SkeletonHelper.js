@@ -2,7 +2,7 @@ import { LineSegments } from '../objects/LineSegments.js';
 import { Matrix4 } from '../math/Matrix4.js';
 import { LineBasicMaterial } from '../materials/LineBasicMaterial.js';
 import { Color } from '../math/Color.js';
-import { Vector3 } from '../math/Vector3.js';
+import { Vector3 } from '../math/Vector3.ts';
 import { BufferGeometry } from '../core/BufferGeometry.js';
 import { Float32BufferAttribute } from '../core/BufferAttribute.js';
 

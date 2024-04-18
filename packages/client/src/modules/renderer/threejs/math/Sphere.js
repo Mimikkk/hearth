@@ -1,5 +1,5 @@
 import { Box3 } from './Box3.js';
-import { Vector3 } from './Vector3.js';
+import { Vector3 } from './Vector3.ts';
 
 const _box = /*@__PURE__*/ new Box3();
 const _v1 = /*@__PURE__*/ new Vector3();

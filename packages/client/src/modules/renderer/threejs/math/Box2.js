@@ -1,4 +1,4 @@
-import { Vector2 } from './Vector2.js';
+import { Vector2 } from './Vector2.ts';
 
 const _vector = /*@__PURE__*/ new Vector2();
 

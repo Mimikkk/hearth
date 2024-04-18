@@ -2,7 +2,7 @@ import { BufferGeometry } from '../core/BufferGeometry.js';
 import { Float32BufferAttribute } from '../core/BufferAttribute.js';
 import * as MathUtils from '../math/MathUtils.ts';
 import { Triangle } from '../math/Triangle.js';
-import { Vector3 } from '../math/Vector3.js';
+import { Vector3 } from '../math/Vector3.ts';
 
 const _v0 = /*@__PURE__*/ new Vector3();
 const _v1 = /*@__PURE__*/ new Vector3();

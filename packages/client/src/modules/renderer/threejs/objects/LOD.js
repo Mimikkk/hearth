@@ -1,4 +1,4 @@
-import { Vector3 } from '../math/Vector3.js';
+import { Vector3 } from '../math/Vector3.ts';
 import { Object3D } from '../core/Object3D.js';
 
 const _v1 = /*@__PURE__*/ new Vector3();

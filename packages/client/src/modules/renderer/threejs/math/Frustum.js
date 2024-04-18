@@ -1,5 +1,5 @@
 import { CoordinateSystem } from '../constants.ts';
-import { Vector3 } from './Vector3.js';
+import { Vector3 } from './Vector3.ts';
 import { Sphere } from './Sphere.js';
 import { Plane } from './Plane.js';
 

@@ -1,4 +1,4 @@
-import { Vector3 } from '../math/Vector3.js';
+import { Vector3 } from '../math/Vector3.ts';
 import { BufferAttribute } from './BufferAttribute.js';
 import { denormalize, normalize } from '../math/MathUtils.ts';
 

@@ -1,5 +1,5 @@
 import { Quaternion } from '../math/Quaternion.js';
-import { Vector3 } from '../math/Vector3.js';
+import { Vector3 } from '../math/Vector3.ts';
 import { Matrix4 } from '../math/Matrix4.js';
 import { EventDispatcher } from './EventDispatcher.ts';
 import { Euler } from '../math/Euler.js';

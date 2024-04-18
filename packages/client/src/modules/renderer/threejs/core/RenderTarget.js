@@ -1,7 +1,7 @@
 import { EventDispatcher } from './EventDispatcher.ts';
 import { Texture } from '../textures/Texture.js';
 import { Filter } from '../constants.ts';
-import { Vector4 } from '../math/Vector4.js';
+import { Vector4 } from '../math/Vector4.ts';
 import { Source } from '../textures/Source.js';
 
 /*

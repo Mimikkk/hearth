@@ -1,4 +1,4 @@
-import { Vector3 } from './Vector3.js';
+import { Vector3 } from './Vector3.ts';
 import * as MathUtils from './MathUtils.ts';
 
 const _startP = /*@__PURE__*/ new Vector3();

@@ -1,5 +1,5 @@
-import { Vector3 } from '../math/Vector3.js';
-import { Vector2 } from '../math/Vector2.js';
+import { Vector3 } from '../math/Vector3.ts';
+import { Vector2 } from '../math/Vector2.ts';
 import { Sphere } from '../math/Sphere.js';
 import { Ray } from '../math/Ray.js';
 import { Matrix4 } from '../math/Matrix4.js';

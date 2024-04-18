@@ -2,8 +2,8 @@ import { Mesh } from './Mesh.js';
 import { Box3 } from '../math/Box3.js';
 import { Matrix4 } from '../math/Matrix4.js';
 import { Sphere } from '../math/Sphere.js';
-import { Vector3 } from '../math/Vector3.js';
-import { Vector4 } from '../math/Vector4.js';
+import { Vector3 } from '../math/Vector3.ts';
+import { Vector4 } from '../math/Vector4.ts';
 import { Ray } from '../math/Ray.js';
 import { BindMode } from '../constants.ts';
 

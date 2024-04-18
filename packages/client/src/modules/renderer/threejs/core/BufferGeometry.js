@@ -1,5 +1,5 @@
-import { Vector3 } from '../math/Vector3.js';
-import { Vector2 } from '../math/Vector2.js';
+import { Vector3 } from '../math/Vector3.ts';
+import { Vector2 } from '../math/Vector2.ts';
 import { Box3 } from '../math/Box3.js';
 import { EventDispatcher } from './EventDispatcher.ts';
 import {

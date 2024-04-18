@@ -1,5 +1,5 @@
 import { Camera } from '../cameras/Camera.js';
-import { Vector3 } from '../math/Vector3.js';
+import { Vector3 } from '../math/Vector3.ts';
 import { LineSegments } from '../objects/LineSegments.js';
 import { Color } from '../math/Color.js';
 import { LineBasicMaterial } from '../materials/LineBasicMaterial.js';

@@ -1,7 +1,7 @@
 import { Camera } from './Camera.js';
 import * as MathUtils from '../math/MathUtils.ts';
-import { Vector2 } from '../math/Vector2.js';
-import { Vector3 } from '../math/Vector3.js';
+import { Vector2 } from '../math/Vector2.ts';
+import { Vector3 } from '../math/Vector3.ts';
 
 const _v3 = /*@__PURE__*/ new Vector3();
 const _minTarget = /*@__PURE__*/ new Vector2();
