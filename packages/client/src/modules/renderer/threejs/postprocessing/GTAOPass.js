@@ -18,7 +18,7 @@ import { FullScreenQuad, Pass } from './Pass.js';
 import { generateMagicSquareNoise, GTAOBlendShader, GTAODepthShader, GTAOShader } from '../shaders/GTAOShader.js';
 import { generatePdSamplePointInitializer, PoissonDenoiseShader } from '../shaders/PoissonDenoiseShader.js';
 import { CopyShader } from '../shaders/CopyShader.js';
-import { SimplexNoise } from '../../threejs/math/SimplexNoise.js';
+import { SimplexNoise } from '../math/SimplexNoise.ts';
 
 class GTAOPass extends Pass {
   constructor(scene, camera, width, height, parameters, aoParameters, pdParameters) {

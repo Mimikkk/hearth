@@ -1,6 +1,6 @@
 import { LightShadow } from './LightShadow.js';
 import { PerspectiveCamera } from '../cameras/PerspectiveCamera.js';
-import { Matrix4 } from '../math/Matrix4.js';
+import { Matrix4 } from '../math/Matrix4.ts';
 import { Vector2 } from '../math/Vector2.ts';
 import { Vector3 } from '../math/Vector3.ts';
 import { Vector4 } from '../math/Vector4.ts';

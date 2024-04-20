@@ -1,15 +1,65 @@
-class Matrix3 {
-  constructor(n11, n12, n13, n21, n22, n23, n31, n32, n33) {
-    Matrix3.prototype.isMatrix3 = true;
+import { Matrix4 } from './Matrix4.js';
+import { Vector3 } from './Vector3.js';
+import { Vector2 } from './Vector2.js';
 
+export interface Matrix {
+  elements: number[];
+  identity(): Matrix;
+  copy(m: this): this;
+  multiplyScalar(s: number): Matrix;
+  determinant(): number;
+  transpose(): Matrix;
+  invert(): Matrix;
+  clone(): Matrix;
+}
+
+export class Matrix3 implements Matrix {
+  declare ['constructor']: typeof Matrix3;
+  declare isMatrix3: true;
+
+  elements: number[];
+
+  constructor();
+  constructor(
+    n11: number,
+    n12: number,
+    n13: number,
+    n21: number,
+    n22: number,
+    n23: number,
+    n31: number,
+    n32: number,
+    n33: number,
+  );
+  constructor(
+    n11?: number,
+    n12?: number,
+    n13?: number,
+    n21?: number,
+    n22?: number,
+    n23?: number,
+    n31?: number,
+    n32?: number,
+    n33?: number,
+  ) {
     this.elements = [1, 0, 0, 0, 1, 0, 0, 0, 1];
 
     if (n11 !== undefined) {
-      this.set(n11, n12, n13, n21, n22, n23, n31, n32, n33);
+      this.set(n11, n12!, n13!, n21!, n22!, n23!, n31!, n32!, n33!);
     }
   }
 
-  set(n11, n12, n13, n21, n22, n23, n31, n32, n33) {
+  set(
+    n11: number,
+    n12: number,
+    n13: number,
+    n21: number,
+    n22: number,
+    n23: number,
+    n31: number,
+    n32: number,
+    n33: number,
+  ): Matrix3 {
     const te = this.elements;
 
     te[0] = n11;
@@ -25,15 +75,15 @@ class Matrix3 {
     return this;
   }
 
-  identity() {
+  identity(): Matrix3 {
     this.set(1, 0, 0, 0, 1, 0, 0, 0, 1);
 
     return this;
   }
 
-  copy(m) {
+  copy(matrix: Matrix3): this {
     const te = this.elements;
-    const me = m.elements;
+    const me = matrix.elements;
 
     te[0] = me[0];
     te[1] = me[1];
@@ -48,7 +98,7 @@ class Matrix3 {
     return this;
   }
 
-  extractBasis(xAxis, yAxis, zAxis) {
+  extractBasis(xAxis: Vector3, yAxis: Vector3, zAxis: Vector3): Matrix3 {
     xAxis.setFromMatrix3Column(this, 0);
     yAxis.setFromMatrix3Column(this, 1);
     zAxis.setFromMatrix3Column(this, 2);
@@ -56,23 +106,23 @@ class Matrix3 {
     return this;
   }
 
-  setFromMatrix4(m) {
-    const me = m.elements;
+  setFromMatrix4(matrix: Matrix4): Matrix3 {
+    const me = matrix.elements;
 
     this.set(me[0], me[4], me[8], me[1], me[5], me[9], me[2], me[6], me[10]);
 
     return this;
   }
 
-  multiply(m) {
-    return this.multiplyMatrices(this, m);
+  multiply(matrix: Matrix3): Matrix3 {
+    return this.multiplyMatrices(this, matrix);
   }
 
-  premultiply(m) {
-    return this.multiplyMatrices(m, this);
+  premultiply(matrix: Matrix3): Matrix3 {
+    return this.multiplyMatrices(matrix, this);
   }
 
-  multiplyMatrices(a, b) {
+  multiplyMatrices(a: Matrix3, b: Matrix3): Matrix3 {
     const ae = a.elements;
     const be = b.elements;
     const te = this.elements;
@@ -112,23 +162,23 @@ class Matrix3 {
     return this;
   }
 
-  multiplyScalar(s) {
+  multiplyScalar(scalar: number): Matrix3 {
     const te = this.elements;
 
-    te[0] *= s;
-    te[3] *= s;
-    te[6] *= s;
-    te[1] *= s;
-    te[4] *= s;
-    te[7] *= s;
-    te[2] *= s;
-    te[5] *= s;
-    te[8] *= s;
+    te[0] *= scalar;
+    te[3] *= scalar;
+    te[6] *= scalar;
+    te[1] *= scalar;
+    te[4] *= scalar;
+    te[7] *= scalar;
+    te[2] *= scalar;
+    te[5] *= scalar;
+    te[8] *= scalar;
 
     return this;
   }
 
-  determinant() {
+  determinant(): number {
     const te = this.elements;
 
     const a = te[0],
@@ -144,7 +194,7 @@ class Matrix3 {
     return a * e * i - a * f * h - b * d * i + b * f * g + c * d * h - c * e * g;
   }
 
-  invert() {
+  invert(): Matrix3 {
     const te = this.elements,
       n11 = te[0],
       n21 = te[1],
@@ -179,7 +229,7 @@ class Matrix3 {
     return this;
   }
 
-  transpose() {
+  transpose(): Matrix3 {
     let tmp;
     const m = this.elements;
 
@@ -196,37 +246,45 @@ class Matrix3 {
     return this;
   }
 
-  getNormalMatrix(matrix4) {
-    return this.setFromMatrix4(matrix4).invert().transpose();
+  getNormalMatrix(matrix: Matrix4): Matrix3 {
+    return this.setFromMatrix4(matrix).invert().transpose();
   }
 
-  transposeIntoArray(r) {
+  transposeIntoArray(array: number[]): Matrix3 {
     const m = this.elements;
 
-    r[0] = m[0];
-    r[1] = m[3];
-    r[2] = m[6];
-    r[3] = m[1];
-    r[4] = m[4];
-    r[5] = m[7];
-    r[6] = m[2];
-    r[7] = m[5];
-    r[8] = m[8];
+    array[0] = m[0];
+    array[1] = m[3];
+    array[2] = m[6];
+    array[3] = m[1];
+    array[4] = m[4];
+    array[5] = m[7];
+    array[6] = m[2];
+    array[7] = m[5];
+    array[8] = m[8];
 
     return this;
   }
 
-  setUvTransform(tx, ty, sx, sy, rotation, cx, cy) {
-    const c = Math.cos(rotation);
-    const s = Math.sin(rotation);
+  setUvTransform(
+    transformX: number,
+    transformY: number,
+    scaleX: number,
+    scaleY: number,
+    rotation: number,
+    centerX: number,
+    centerY: number,
+  ): Matrix3 {
+    const cosine = Math.cos(rotation);
+    const sine = Math.sin(rotation);
 
     this.set(
-      sx * c,
-      sx * s,
-      -sx * (c * cx + s * cy) + cx + tx,
-      -sy * s,
-      sy * c,
-      -sy * (-s * cx + c * cy) + cy + ty,
+      scaleX * cosine,
+      scaleX * sine,
+      -scaleX * (cosine * centerX + sine * centerY) + centerX + transformX,
+      -scaleY * sine,
+      scaleY * cosine,
+      -scaleY * (-sine * centerX + cosine * centerY) + centerY + transformY,
       0,
       0,
       1,
@@ -235,41 +293,35 @@ class Matrix3 {
     return this;
   }
 
-  //
-
-  scale(sx, sy) {
-    this.premultiply(_m3.makeScale(sx, sy));
+  scale(scaleX: number, scaleY: number): Matrix3 {
+    this.premultiply(new Matrix3().makeScale(scaleX, scaleY));
 
     return this;
   }
 
-  rotate(theta) {
-    this.premultiply(_m3.makeRotation(-theta));
+  rotate(theta: number): Matrix3 {
+    this.premultiply(new Matrix3().makeRotation(-theta));
 
     return this;
   }
 
-  translate(tx, ty) {
-    this.premultiply(_m3.makeTranslation(tx, ty));
+  translate(x: number, y: number): Matrix3 {
+    this.premultiply(new Matrix3().makeTranslation(x, y));
 
     return this;
   }
 
-  // for 2D Transforms
-
-  makeTranslation(x, y) {
-    if (x.isVector2) {
+  makeTranslation(x: number | Vector2, y?: number): this {
+    if (x instanceof Vector2) {
       this.set(1, 0, x.x, 0, 1, x.y, 0, 0, 1);
     } else {
-      this.set(1, 0, x, 0, 1, y, 0, 0, 1);
+      this.set(1, 0, x, 0, 1, y!, 0, 0, 1);
     }
 
     return this;
   }
 
-  makeRotation(theta) {
-    // counterclockwise
-
+  makeRotation(theta: number): Matrix3 {
     const c = Math.cos(theta);
     const s = Math.sin(theta);
 
@@ -278,15 +330,13 @@ class Matrix3 {
     return this;
   }
 
-  makeScale(x, y) {
+  makeScale(x: number, y: number): Matrix3 {
     this.set(x, 0, 0, 0, y, 0, 0, 0, 1);
 
     return this;
   }
 
-  //
-
-  equals(matrix) {
+  equals(matrix: Matrix3): boolean {
     const te = this.elements;
     const me = matrix.elements;
 
@@ -297,7 +347,7 @@ class Matrix3 {
     return true;
   }
 
-  fromArray(array, offset = 0) {
+  fromArray(array: number[], offset: number = 0): Matrix3 {
     for (let i = 0; i < 9; i++) {
       this.elements[i] = array[i + offset];
     }
@@ -305,7 +355,7 @@ class Matrix3 {
     return this;
   }
 
-  toArray(array = [], offset = 0) {
+  toArray(array: number[] = [], offset: number = 0): number[] {
     const te = this.elements;
 
     array[offset] = te[0];
@@ -323,11 +373,8 @@ class Matrix3 {
     return array;
   }
 
-  clone() {
+  clone(): Matrix3 {
     return new this.constructor().fromArray(this.elements);
   }
 }
-
-const _m3 = /*@__PURE__*/ new Matrix3();
-
-export { Matrix3 };
+Matrix3.prototype.isMatrix3 = true;

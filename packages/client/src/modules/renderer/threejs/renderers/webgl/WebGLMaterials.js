@@ -1,7 +1,7 @@
 import { Side } from '../../constants.ts';
 import { getUnlitUniformColorSpace } from '../shaders/UniformsUtils.js';
-import { Euler } from '../../math/Euler.js';
-import { Matrix4 } from '../../math/Matrix4.js';
+import { Euler } from '../../math/Euler.ts';
+import { Matrix4 } from '../../math/Matrix4.ts';
 
 const _e1 = /*@__PURE__*/ new Euler();
 const _m1 = /*@__PURE__*/ new Matrix4();

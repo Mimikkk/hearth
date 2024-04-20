@@ -1,4 +1,4 @@
-import { Matrix4 } from '../math/Matrix4.js';
+import { Matrix4 } from '../math/Matrix4.ts';
 import * as MathUtils from '../math/MathUtils.ts';
 import { PerspectiveCamera } from './PerspectiveCamera.js';
 

@@ -1,4 +1,4 @@
-import { Sphere } from '../math/Sphere.js';
+import { Sphere } from '../math/Sphere.ts';
 import { Vector3 } from '../math/Vector3.ts';
 import { BufferAttribute } from '../core/BufferAttribute.js';
 import { BufferGeometry } from '../core/BufferGeometry.js';

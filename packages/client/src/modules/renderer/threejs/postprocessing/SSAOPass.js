@@ -16,7 +16,7 @@ import {
   Wrapping,
 } from '../../threejs/Three.js';
 import { FullScreenQuad, Pass } from './Pass.js';
-import { SimplexNoise } from '../../threejs/math/SimplexNoise.js';
+import { SimplexNoise } from '../math/SimplexNoise.ts';
 import { SSAOBlurShader, SSAODepthShader, SSAOShader } from '../shaders/SSAOShader.js';
 import { CopyShader } from '../shaders/CopyShader.js';
 import { lerp } from '../math/MathUtils.ts';

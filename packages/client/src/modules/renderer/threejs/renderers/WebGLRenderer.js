@@ -8,9 +8,9 @@ import {
   TextureFormat,
   ToneMapping,
 } from '../constants.ts';
-import { Color } from '../math/Color.js';
-import { Frustum } from '../math/Frustum.js';
-import { Matrix4 } from '../math/Matrix4.js';
+import { Color } from '../math/Color.ts';
+import { Frustum } from '../math/Frustum.ts';
+import { Matrix4 } from '../math/Matrix4.ts';
 import { Vector2 } from '../math/Vector2.ts';
 import { Vector3 } from '../math/Vector3.ts';
 import { Vector4 } from '../math/Vector4.ts';
@@ -42,7 +42,7 @@ import { WebGLUtils } from './webgl/WebGLUtils.js';
 import { WebGLMaterials } from './webgl/WebGLMaterials.js';
 import { WebGLUniformsGroups } from './webgl/WebGLUniformsGroups.js';
 import { createCanvasElement } from '../utils.ts';
-import { ColorManagement } from '../math/ColorManagement.js';
+import { ColorManagement } from '../math/ColorManagement.ts';
 
 class WebGLRenderer {
   constructor(parameters = {}) {

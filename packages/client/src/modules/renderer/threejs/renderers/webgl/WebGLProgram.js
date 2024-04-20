@@ -2,7 +2,7 @@ import { WebGLUniforms } from './WebGLUniforms.js';
 import { WebGLShader } from './WebGLShader.js';
 import { ShaderChunk } from '../shaders/ShaderChunk.js';
 import { ColorPrimary, ColorSpace, GLSLVersion, Mapping, Operation, ShadowMap, ToneMapping } from '../../constants.ts';
-import { ColorManagement } from '../../math/ColorManagement.js';
+import { ColorManagement } from '../../math/ColorManagement.ts';
 
 // From https://www.khronos.org/registry/webgl/extensions/KHR_parallel_shader_compile/
 const COMPLETION_STATUS_KHR = 0x91b1;

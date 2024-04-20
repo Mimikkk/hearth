@@ -1,6 +1,6 @@
 import { Filter, Mapping, Wrapping } from '../constants.ts';
 import { InstancedBufferAttribute } from '../core/InstancedBufferAttribute.js';
-import { Color } from '../math/Color.js';
+import { Color } from '../math/Color.ts';
 import { Object3D } from '../core/Object3D.js';
 import { Group } from '../objects/Group.js';
 import { InstancedMesh } from '../objects/InstancedMesh.js';
@@ -42,8 +42,8 @@ import { Loader } from './Loader.js';
 import { FileLoader } from './FileLoader.js';
 import * as Geometries from '../geometries/Geometries.js';
 import { createTypedArray } from '../utils.ts';
-import { Box3 } from '../math/Box3.js';
-import { Sphere } from '../math/Sphere.js';
+import { Box3 } from '../math/Box3.ts';
+import { Sphere } from '../math/Sphere.ts';
 
 class ObjectLoader extends Loader {
   constructor(manager) {

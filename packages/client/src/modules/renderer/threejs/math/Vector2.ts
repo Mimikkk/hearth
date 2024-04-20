@@ -2,7 +2,12 @@ import { clamp } from './MathUtils.js';
 import type { BufferAttribute } from '../core/BufferAttribute.js';
 import type { Matrix3 } from './Matrix3.js';
 
-export class Vector2 {
+export interface IVector2 {
+  x: number;
+  y: number;
+}
+
+export class Vector2 implements IVector2 {
   declare isVector2: true;
   declare ['constructor']: typeof Vector2;
 

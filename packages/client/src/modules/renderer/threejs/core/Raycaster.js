@@ -1,5 +1,5 @@
-import { Matrix4 } from '../math/Matrix4.js';
-import { Ray } from '../math/Ray.js';
+import { Matrix4 } from '../math/Matrix4.ts';
+import { Ray } from '../math/Ray.ts';
 import { Layers } from './Layers.js';
 
 const _matrix = /*@__PURE__*/ new Matrix4();

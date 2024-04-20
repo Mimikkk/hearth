@@ -9,7 +9,7 @@ import {
   Wrapping,
 } from '../../constants.ts';
 import { createCanvasElement } from '../../utils.ts';
-import { ColorManagement } from '../../math/ColorManagement.js';
+import { ColorManagement } from '../../math/ColorManagement.ts';
 import { Vector2 } from '../../math/Vector2.ts';
 
 function WebGLTextures(_gl, extensions, state, properties, capabilities, utils, info) {

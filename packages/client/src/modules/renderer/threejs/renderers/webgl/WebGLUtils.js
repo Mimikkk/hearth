@@ -5,7 +5,7 @@ import {
   TextureFormat,
   TransferFunction,
 } from '../../constants.ts';
-import { ColorManagement } from '../../math/ColorManagement.js';
+import { ColorManagement } from '../../math/ColorManagement.ts';
 
 function WebGLUtils(gl, extensions) {
   function convert(p, colorSpace = ColorSpace.No) {

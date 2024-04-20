@@ -1,6 +1,6 @@
 import { InterpolationMode } from '../../constants.ts';
 import { KeyframeTrack } from '../KeyframeTrack.js';
-import { QuaternionLinearInterpolant } from '../../math/interpolants/QuaternionLinearInterpolant.js';
+import { QuaternionLinearInterpolant } from '../../math/interpolants/QuaternionLinearInterpolant.ts';
 
 /**
  * A Track of quaternion keyframe values.

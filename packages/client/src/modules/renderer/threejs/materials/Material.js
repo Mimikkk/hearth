@@ -1,4 +1,4 @@
-import { Color } from '../math/Color.js';
+import { Color } from '../math/Color.ts';
 import { EventDispatcher } from '../core/EventDispatcher.ts';
 import {
   Blending,

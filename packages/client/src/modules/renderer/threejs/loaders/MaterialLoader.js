@@ -1,9 +1,9 @@
-import { Color } from '../math/Color.js';
+import { Color } from '../math/Color.ts';
 import { Vector2 } from '../math/Vector2.ts';
 import { Vector3 } from '../math/Vector3.ts';
 import { Vector4 } from '../math/Vector4.ts';
-import { Matrix3 } from '../math/Matrix3.js';
-import { Matrix4 } from '../math/Matrix4.js';
+import { Matrix3 } from '../math/Matrix3.ts';
+import { Matrix4 } from '../math/Matrix4.ts';
 import { FileLoader } from './FileLoader.js';
 import { Loader } from './Loader.js';
 import {

@@ -1,4 +1,4 @@
-import { Quaternion } from '../math/Quaternion.js';
+import { Quaternion } from '../math/Quaternion.ts';
 
 class PropertyMixer {
   constructor(binding, typeName, valueSize) {

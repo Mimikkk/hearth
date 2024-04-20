@@ -8,7 +8,7 @@ import { BufferGeometry } from '../../core/BufferGeometry.js';
 import { Mesh } from '../../objects/Mesh.js';
 import { Vector4 } from '../../math/Vector4.ts';
 import { Vector2 } from '../../math/Vector2.ts';
-import { Frustum } from '../../math/Frustum.js';
+import { Frustum } from '../../math/Frustum.ts';
 
 import * as vsm from '../shaders/ShaderLib/vsm.glsl.js';
 

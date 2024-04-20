@@ -1,8 +1,8 @@
 import { NormalMapType, Operation } from '../constants.ts';
 import { Material } from './Material.js';
 import { Vector2 } from '../math/Vector2.ts';
-import { Color } from '../math/Color.js';
-import { Euler } from '../math/Euler.js';
+import { Color } from '../math/Color.ts';
+import { Euler } from '../math/Euler.ts';
 
 class MeshLambertMaterial extends Material {
   constructor(parameters) {

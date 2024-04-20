@@ -10,7 +10,13 @@ import type { Cylindrical } from '@modules/renderer/threejs/math/Cylindrical.js'
 import type { Spherical } from '@modules/renderer/threejs/math/Spherical.js';
 import type { Camera } from '@modules/renderer/threejs/cameras/Camera.js';
 
-export class Vector3 {
+export interface IVector3 {
+  x: number;
+  y: number;
+  z: number;
+}
+
+export class Vector3 implements IVector3 {
   declare isVector3: true;
   declare ['constructor']: typeof Vector3;
 
@@ -517,9 +523,9 @@ export class Vector3 {
   }
 
   setFromEuler(euler: Euler): this {
-    this.x = euler._x;
-    this.y = euler._y;
-    this.z = euler._z;
+    this.x = euler.x;
+    this.y = euler.y;
+    this.z = euler.z;
 
     return this;
   }

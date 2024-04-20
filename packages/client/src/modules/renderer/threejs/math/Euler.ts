@@ -1,57 +1,66 @@
 import { Quaternion } from './Quaternion.js';
 import { Matrix4 } from './Matrix4.js';
-import { clamp } from './MathUtils.ts';
+import { clamp } from './MathUtils.js';
+import { Vector3 } from '@modules/renderer/threejs/math/Vector3.js';
 
 const _matrix = /*@__PURE__*/ new Matrix4();
 const _quaternion = /*@__PURE__*/ new Quaternion();
 
-class Euler {
-  constructor(x = 0, y = 0, z = 0, order = Euler.DEFAULT_ORDER) {
-    this.isEuler = true;
+type EulerOrder = 'XYZ' | 'YXZ' | 'ZXY' | 'ZYX' | 'YZX' | 'XZY';
+export class Euler {
+  static DEFAULT_ORDER: EulerOrder = 'XYZ';
+  declare isEuler: true;
+  declare ['constructor']: typeof Euler;
 
+  _x: number;
+  _y: number;
+  _z: number;
+  _order: EulerOrder;
+
+  constructor(x = 0, y = 0, z = 0, order = Euler.DEFAULT_ORDER) {
     this._x = x;
     this._y = y;
     this._z = z;
     this._order = order;
   }
 
-  get x() {
+  get x(): number {
     return this._x;
   }
 
-  set x(value) {
+  set x(value: number) {
     this._x = value;
     this._onChangeCallback();
   }
 
-  get y() {
+  get y(): number {
     return this._y;
   }
 
-  set y(value) {
+  set y(value: number) {
     this._y = value;
     this._onChangeCallback();
   }
 
-  get z() {
+  get z(): number {
     return this._z;
   }
 
-  set z(value) {
+  set z(value: number) {
     this._z = value;
     this._onChangeCallback();
   }
 
-  get order() {
+  get order(): EulerOrder {
     return this._order;
   }
 
-  set order(value) {
+  set order(value: EulerOrder) {
     this._order = value;
     this._onChangeCallback();
   }
 
-  set(x, y, z, order = this._order) {
+  set(x: number, y: number, z: number, order: EulerOrder = this._order) {
     this._x = x;
     this._y = y;
     this._z = z;
@@ -62,11 +71,11 @@ class Euler {
     return this;
   }
 
-  clone() {
+  clone(): Euler {
     return new this.constructor(this._x, this._y, this._z, this._order);
   }
 
-  copy(euler) {
+  copy(euler: Euler): this {
     this._x = euler._x;
     this._y = euler._y;
     this._z = euler._z;
@@ -77,19 +86,19 @@ class Euler {
     return this;
   }
 
-  setFromRotationMatrix(m, order = this._order, update = true) {
+  setFromRotationMatrix(m: Matrix4, order: EulerOrder = this._order, update: boolean = true): this {
     // assumes the upper 3x3 of m is a pure rotation matrix (i.e, unscaled)
 
     const te = m.elements;
-    const m11 = te[0],
-      m12 = te[4],
-      m13 = te[8];
-    const m21 = te[1],
-      m22 = te[5],
-      m23 = te[9];
-    const m31 = te[2],
-      m32 = te[6],
-      m33 = te[10];
+    const m11 = te[0];
+    const m12 = te[4];
+    const m13 = te[8];
+    const m21 = te[1];
+    const m22 = te[5];
+    const m23 = te[9];
+    const m31 = te[2];
+    const m32 = te[6];
+    const m33 = te[10];
 
     switch (order) {
       case 'XYZ':
@@ -104,7 +113,6 @@ class Euler {
         }
 
         break;
-
       case 'YXZ':
         this._x = Math.asin(-clamp(m23, -1, 1));
 
@@ -115,9 +123,7 @@ class Euler {
           this._y = Math.atan2(-m31, m11);
           this._z = 0;
         }
-
         break;
-
       case 'ZXY':
         this._x = Math.asin(clamp(m32, -1, 1));
 
@@ -128,9 +134,7 @@ class Euler {
           this._y = 0;
           this._z = Math.atan2(m21, m11);
         }
-
         break;
-
       case 'ZYX':
         this._y = Math.asin(-clamp(m31, -1, 1));
 
@@ -141,9 +145,7 @@ class Euler {
           this._x = 0;
           this._z = Math.atan2(-m12, m22);
         }
-
         break;
-
       case 'YZX':
         this._z = Math.asin(clamp(m21, -1, 1));
 
@@ -154,9 +156,7 @@ class Euler {
           this._x = 0;
           this._y = Math.atan2(m13, m33);
         }
-
         break;
-
       case 'XZY':
         this._z = Math.asin(-clamp(m12, -1, 1));
 
@@ -167,43 +167,38 @@ class Euler {
           this._x = Math.atan2(-m23, m33);
           this._y = 0;
         }
-
         break;
-
       default:
-        console.warn('THREE.Euler: .setFromRotationMatrix() encountered an unknown order: ' + order);
+        console.warn(`THREE.Euler: .setFromRotationMatrix() encountered an unknown order: ${order}`);
     }
-
     this._order = order;
 
-    if (update === true) this._onChangeCallback();
+    if (update) this._onChangeCallback();
 
     return this;
   }
 
-  setFromQuaternion(q, order, update) {
+  setFromQuaternion(q: Quaternion, order: EulerOrder, update: boolean = true): this {
     _matrix.makeRotationFromQuaternion(q);
 
     return this.setFromRotationMatrix(_matrix, order, update);
   }
 
-  setFromVector3(v, order = this._order) {
+  setFromVector3(v: Vector3, order: EulerOrder = this._order): this {
     return this.set(v.x, v.y, v.z, order);
   }
 
-  reorder(newOrder) {
-    // WARNING: this discards revolution information -bhouston
-
+  reorder(newOrder: EulerOrder): this {
     _quaternion.setFromEuler(this);
 
     return this.setFromQuaternion(_quaternion, newOrder);
   }
 
-  equals(euler) {
+  equals(euler: Euler): boolean {
     return euler._x === this._x && euler._y === this._y && euler._z === this._z && euler._order === this._order;
   }
 
-  fromArray(array) {
+  fromArray(array: [number, number, number] | [number, number, number, EulerOrder]): this {
     this._x = array[0];
     this._y = array[1];
     this._z = array[2];
@@ -214,7 +209,10 @@ class Euler {
     return this;
   }
 
-  toArray(array = [], offset = 0) {
+  toArray(
+    array: [number, number, number, EulerOrder] = [] as unknown as [number, number, number, EulerOrder],
+    offset: number = 0,
+  ): [number, number, number, EulerOrder] {
     array[offset] = this._x;
     array[offset + 1] = this._y;
     array[offset + 2] = this._z;
@@ -223,7 +221,7 @@ class Euler {
     return array;
   }
 
-  _onChange(callback) {
+  _onChange(callback: () => void): this {
     this._onChangeCallback = callback;
 
     return this;
@@ -231,14 +229,11 @@ class Euler {
 
   _onChangeCallback() {}
 
-  *[Symbol.iterator]() {
+  *[Symbol.iterator](): Iterator<number | EulerOrder> {
     yield this._x;
     yield this._y;
     yield this._z;
     yield this._order;
   }
 }
-
-Euler.DEFAULT_ORDER = 'XYZ';
-
-export { Euler };
+Euler.prototype.isEuler = true;

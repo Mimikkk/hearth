@@ -1,10 +1,10 @@
 import { Mesh } from './Mesh.js';
-import { Box3 } from '../math/Box3.js';
-import { Matrix4 } from '../math/Matrix4.js';
-import { Sphere } from '../math/Sphere.js';
+import { Box3 } from '../math/Box3.ts';
+import { Matrix4 } from '../math/Matrix4.ts';
+import { Sphere } from '../math/Sphere.ts';
 import { Vector3 } from '../math/Vector3.ts';
 import { Vector4 } from '../math/Vector4.ts';
-import { Ray } from '../math/Ray.js';
+import { Ray } from '../math/Ray.ts';
 import { BindMode } from '../constants.ts';
 
 const _basePosition = /*@__PURE__*/ new Vector3();

@@ -1,5 +1,5 @@
 import { Material } from './Material.js';
-import { Color } from '../math/Color.js';
+import { Color } from '../math/Color.ts';
 
 class PointsMaterial extends Material {
   constructor(parameters) {

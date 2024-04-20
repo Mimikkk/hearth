@@ -1,7 +1,7 @@
 import { InterpolationMode } from '../constants.ts';
-import { CubicInterpolant } from '../math/interpolants/CubicInterpolant.js';
-import { LinearInterpolant } from '../math/interpolants/LinearInterpolant.js';
-import { DiscreteInterpolant } from '../math/interpolants/DiscreteInterpolant.js';
+import { CubicInterpolant } from '../math/interpolants/CubicInterpolant.ts';
+import { LinearInterpolant } from '../math/interpolants/LinearInterpolant.ts';
+import { DiscreteInterpolant } from '../math/interpolants/DiscreteInterpolant.ts';
 import * as AnimationUtils from './AnimationUtils.js';
 
 class KeyframeTrack {

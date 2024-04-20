@@ -1,10 +1,10 @@
-import { Quaternion } from '../math/Quaternion.js';
+import { Quaternion } from '../math/Quaternion.ts';
 import { Vector3 } from '../math/Vector3.ts';
-import { Matrix4 } from '../math/Matrix4.js';
+import { Matrix4 } from '../math/Matrix4.ts';
 import { EventDispatcher } from './EventDispatcher.ts';
-import { Euler } from '../math/Euler.js';
+import { Euler } from '../math/Euler.ts';
 import { Layers } from './Layers.js';
-import { Matrix3 } from '../math/Matrix3.js';
+import { Matrix3 } from '../math/Matrix3.ts';
 import * as MathUtils from '../math/MathUtils.ts';
 
 let _object3DId = 0;

@@ -1,5 +1,5 @@
 import { Object3D } from '../core/Object3D.js';
-import { Color } from '../math/Color.js';
+import { Color } from '../math/Color.ts';
 
 class Light extends Object3D {
   constructor(color, intensity = 1) {

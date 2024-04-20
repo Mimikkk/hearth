@@ -1,8 +1,12 @@
-import { clamp, euclideanModulo, lerp } from './MathUtils.ts';
+import { clamp, euclideanModulo, lerp } from './MathUtils.js';
 import { ColorManagement, LinearToSRGB, SRGBToLinear } from './ColorManagement.js';
-import { ColorSpace } from '../constants.ts';
+import { ColorSpace } from '../constants.js';
+import { BufferAttribute } from '@modules/renderer/threejs/core/BufferAttribute.js';
+import { InterleavedBufferAttribute } from '@modules/renderer/threejs/core/InterleavedBufferAttribute.js';
+import { Vector3 } from '@modules/renderer/threejs/math/Vector3.js';
+import { Matrix3 } from '@modules/renderer/threejs/math/Matrix3.js';
 
-const _colorKeywords = {
+const ColorMap = {
   aliceblue: 0xf0f8ff,
   antiquewhite: 0xfaebd7,
   aqua: 0x00ffff,
@@ -152,21 +156,50 @@ const _colorKeywords = {
   yellow: 0xffff00,
   yellowgreen: 0x9acd32,
 };
+type ColorName = keyof typeof ColorMap;
 
 const _hslA = { h: 0, s: 0, l: 0 };
 const _hslB = { h: 0, s: 0, l: 0 };
 
-function hue2rgb(p, q, t) {
+function hue2rgb(p: number, q: number, t: number): number {
   if (t < 0) t += 1;
   if (t > 1) t -= 1;
+
   if (t < 1 / 6) return p + (q - p) * 6 * t;
   if (t < 1 / 2) return q;
   if (t < 2 / 3) return p + (q - p) * 6 * (2 / 3 - t);
   return p;
 }
 
-class Color {
-  constructor(r, g, b) {
+export type ColorRepresentation = Color | string | number;
+
+export interface HSL {
+  h: number;
+  s: number;
+  l: number;
+}
+
+export interface HSV {
+  h: number;
+  s: number;
+  v: number;
+}
+
+export interface RGB {
+  r: number;
+  g: number;
+  b: number;
+}
+
+export class Color {
+  static NAMES = ColorMap;
+  declare isColor: true;
+  declare ['constructor']: typeof Color;
+  r: number;
+  g: number;
+  b: number;
+
+  constructor(r: number = 1, g: number = 1, b: number = 1) {
     this.isColor = true;
 
     this.r = 1;
@@ -176,27 +209,27 @@ class Color {
     return this.set(r, g, b);
   }
 
-  set(r, g, b) {
+  set(r: ColorRepresentation): this;
+  set(r: number, g: number, b: number): this;
+  set(r: ColorRepresentation, g?: number, b?: number): this {
     if (g === undefined && b === undefined) {
-      // r is THREE.Color, hex or string
-
       const value = r;
 
-      if (value && value.isColor) {
+      if (value && value instanceof Color) {
         this.copy(value);
       } else if (typeof value === 'number') {
         this.setHex(value);
-      } else if (typeof value === 'string') {
+      } else {
         this.setStyle(value);
       }
     } else {
-      this.setRGB(r, g, b);
+      this.setRGB(r as number, g!, b!);
     }
 
     return this;
   }
 
-  setScalar(scalar) {
+  setScalar(scalar: number): this {
     this.r = scalar;
     this.g = scalar;
     this.b = scalar;
@@ -204,7 +237,7 @@ class Color {
     return this;
   }
 
-  setHex(hex, colorSpace = ColorSpace.SRGB) {
+  setHex(hex: number, colorSpace: ColorSpace = ColorSpace.SRGB): this {
     hex = Math.floor(hex);
 
     this.r = ((hex >> 16) & 255) / 255;
@@ -216,7 +249,7 @@ class Color {
     return this;
   }
 
-  setRGB(r, g, b, colorSpace = ColorManagement.workingColorSpace) {
+  setRGB(r: number, g: number, b: number, colorSpace: ColorSpace = ColorManagement.workingColorSpace): this {
     this.r = r;
     this.g = g;
     this.b = b;
@@ -226,7 +259,7 @@ class Color {
     return this;
   }
 
-  setHSL(h, s, l, colorSpace = ColorManagement.workingColorSpace) {
+  setHSL(h: number, s: number, l: number, colorSpace: ColorSpace = ColorManagement.workingColorSpace): this {
     // h,s,l ranges are in 0.0 - 1.0
     h = euclideanModulo(h, 1);
     s = clamp(s, 0, 1);
@@ -248,18 +281,16 @@ class Color {
     return this;
   }
 
-  setStyle(style, colorSpace = ColorSpace.SRGB) {
-    function handleAlpha(string) {
+  setStyle(style: string, colorSpace: ColorSpace = ColorSpace.SRGB): this {
+    function handleAlpha(string: string) {
       if (string === undefined) return;
 
-      if (parseFloat(string) < 1) {
-        console.warn('THREE.Color: Alpha component of ' + style + ' will be ignored.');
-      }
+      if (parseFloat(string) < 1) console.warn(`THREE.Color: Alpha component of ${style} will be ignored.`);
     }
 
     let m;
 
-    if ((m = /^(\w+)\(([^\)]*)\)/.exec(style))) {
+    if ((m = /^(\w+)\(([^)]*)\)/.exec(style))) {
       // rgb / hsl
 
       let color;
@@ -282,7 +313,7 @@ class Color {
             );
           }
 
-          if ((color = /^\s*(\d+)\%\s*,\s*(\d+)\%\s*,\s*(\d+)\%\s*(?:,\s*(\d*\.?\d+)\s*)?$/.exec(components))) {
+          if ((color = /^\s*(\d+)%\s*,\s*(\d+)%\s*,\s*(\d+)%\s*(?:,\s*(\d*\.?\d+)\s*)?$/.exec(components))) {
             // rgb(100%,0%,0%) rgba(100%,0%,0%,0.5)
 
             handleAlpha(color[4]);
@@ -300,7 +331,7 @@ class Color {
         case 'hsl':
         case 'hsla':
           if (
-            (color = /^\s*(\d*\.?\d+)\s*,\s*(\d*\.?\d+)\%\s*,\s*(\d*\.?\d+)\%\s*(?:,\s*(\d*\.?\d+)\s*)?$/.exec(
+            (color = /^\s*(\d*\.?\d+)\s*,\s*(\d*\.?\d+)%\s*,\s*(\d*\.?\d+)%\s*(?:,\s*(\d*\.?\d+)\s*)?$/.exec(
               components,
             ))
           ) {
@@ -321,7 +352,7 @@ class Color {
         default:
           console.warn('THREE.Color: Unknown color model ' + style);
       }
-    } else if ((m = /^\#([A-Fa-f\d]+)$/.exec(style))) {
+    } else if ((m = /^#([A-Fa-f\d]+)$/.exec(style))) {
       // hex color
 
       const hex = m[1];
@@ -342,15 +373,15 @@ class Color {
         console.warn('THREE.Color: Invalid hex color ' + style);
       }
     } else if (style && style.length > 0) {
-      return this.setColorName(style, colorSpace);
+      return this.setColorName(style as ColorName, colorSpace);
     }
 
     return this;
   }
 
-  setColorName(style, colorSpace = ColorSpace.SRGB) {
+  setColorName(style: ColorName, colorSpace: ColorSpace = ColorSpace.SRGB): this {
     // color keywords
-    const hex = _colorKeywords[style.toLowerCase()];
+    const hex = ColorMap[style];
 
     if (hex !== undefined) {
       // red
@@ -363,11 +394,11 @@ class Color {
     return this;
   }
 
-  clone() {
+  clone(): Color {
     return new this.constructor(this.r, this.g, this.b);
   }
 
-  copy(color) {
+  copy(color: Color): this {
     this.r = color.r;
     this.g = color.g;
     this.b = color.b;
@@ -375,7 +406,7 @@ class Color {
     return this;
   }
 
-  copySRGBToLinear(color) {
+  copySRGBToLinear(color: Color): this {
     this.r = SRGBToLinear(color.r);
     this.g = SRGBToLinear(color.g);
     this.b = SRGBToLinear(color.b);
@@ -383,7 +414,7 @@ class Color {
     return this;
   }
 
-  copyLinearToSRGB(color) {
+  copyLinearToSRGB(color: Color): this {
     this.r = LinearToSRGB(color.r);
     this.g = LinearToSRGB(color.g);
     this.b = LinearToSRGB(color.b);
@@ -391,19 +422,19 @@ class Color {
     return this;
   }
 
-  convertSRGBToLinear() {
+  convertSRGBToLinear(): this {
     this.copySRGBToLinear(this);
 
     return this;
   }
 
-  convertLinearToSRGB() {
+  convertLinearToSRGB(): this {
     this.copyLinearToSRGB(this);
 
     return this;
   }
 
-  getHex(colorSpace = ColorSpace.SRGB) {
+  getHex(colorSpace: ColorSpace = ColorSpace.SRGB): number {
     ColorManagement.fromWorkingColorSpace(_color.copy(this), colorSpace);
 
     return (
@@ -413,23 +444,20 @@ class Color {
     );
   }
 
-  getHexString(colorSpace = ColorSpace.SRGB) {
+  getHexString(colorSpace: ColorSpace = ColorSpace.SRGB): string {
     return ('000000' + this.getHex(colorSpace).toString(16)).slice(-6);
   }
 
-  getHSL(target, colorSpace = ColorManagement.workingColorSpace) {
-    // h,s,l ranges are in 0.0 - 1.0
-
+  getHSL(target: HSL, colorSpace: ColorSpace = ColorManagement.workingColorSpace): HSL {
     ColorManagement.fromWorkingColorSpace(_color.copy(this), colorSpace);
 
-    const r = _color.r,
-      g = _color.g,
-      b = _color.b;
+    const { r, g, b } = _color;
 
     const max = Math.max(r, g, b);
     const min = Math.min(r, g, b);
 
-    let hue, saturation;
+    let hue!: number;
+    let saturation!: number;
     const lightness = (min + max) / 2.0;
 
     if (min === max) {
@@ -462,7 +490,7 @@ class Color {
     return target;
   }
 
-  getRGB(target, colorSpace = ColorManagement.workingColorSpace) {
+  getRGB(target: RGB, colorSpace: ColorSpace = ColorManagement.workingColorSpace): RGB {
     ColorManagement.fromWorkingColorSpace(_color.copy(this), colorSpace);
 
     target.r = _color.r;
@@ -472,7 +500,7 @@ class Color {
     return target;
   }
 
-  getStyle(colorSpace = ColorSpace.SRGB) {
+  getStyle(colorSpace: ColorSpace = ColorSpace.SRGB): string {
     ColorManagement.fromWorkingColorSpace(_color.copy(this), colorSpace);
 
     const r = _color.r,
@@ -487,13 +515,13 @@ class Color {
     return `rgb(${Math.round(r * 255)},${Math.round(g * 255)},${Math.round(b * 255)})`;
   }
 
-  offsetHSL(h, s, l) {
+  offsetHSL(h: number, s: number, l: number): this {
     this.getHSL(_hslA);
 
     return this.setHSL(_hslA.h + h, _hslA.s + s, _hslA.l + l);
   }
 
-  add(color) {
+  add(color: Color): this {
     this.r += color.r;
     this.g += color.g;
     this.b += color.b;
@@ -501,7 +529,7 @@ class Color {
     return this;
   }
 
-  addColors(color1, color2) {
+  addColors(color1: Color, color2: Color): this {
     this.r = color1.r + color2.r;
     this.g = color1.g + color2.g;
     this.b = color1.b + color2.b;
@@ -509,7 +537,7 @@ class Color {
     return this;
   }
 
-  addScalar(s) {
+  addScalar(s: number): this {
     this.r += s;
     this.g += s;
     this.b += s;
@@ -517,7 +545,7 @@ class Color {
     return this;
   }
 
-  sub(color) {
+  sub(color: Color): this {
     this.r = Math.max(0, this.r - color.r);
     this.g = Math.max(0, this.g - color.g);
     this.b = Math.max(0, this.b - color.b);
@@ -525,7 +553,7 @@ class Color {
     return this;
   }
 
-  multiply(color) {
+  multiply(color: Color): this {
     this.r *= color.r;
     this.g *= color.g;
     this.b *= color.b;
@@ -533,7 +561,7 @@ class Color {
     return this;
   }
 
-  multiplyScalar(s) {
+  multiplyScalar(s: number): this {
     this.r *= s;
     this.g *= s;
     this.b *= s;
@@ -541,7 +569,7 @@ class Color {
     return this;
   }
 
-  lerp(color, alpha) {
+  lerp(color: Color, alpha: number): this {
     this.r += (color.r - this.r) * alpha;
     this.g += (color.g - this.g) * alpha;
     this.b += (color.b - this.b) * alpha;
@@ -549,7 +577,7 @@ class Color {
     return this;
   }
 
-  lerpColors(color1, color2, alpha) {
+  lerpColors(color1: Color, color2: Color, alpha: number): this {
     this.r = color1.r + (color2.r - color1.r) * alpha;
     this.g = color1.g + (color2.g - color1.g) * alpha;
     this.b = color1.b + (color2.b - color1.b) * alpha;
@@ -557,7 +585,7 @@ class Color {
     return this;
   }
 
-  lerpHSL(color, alpha) {
+  lerpHSL(color: Color, alpha: number): this {
     this.getHSL(_hslA);
     color.getHSL(_hslB);
 
@@ -570,19 +598,19 @@ class Color {
     return this;
   }
 
-  setFromVector3(v) {
-    this.r = v.x;
-    this.g = v.y;
-    this.b = v.z;
+  setFromVector3(vector: Vector3): this {
+    this.r = vector.x;
+    this.g = vector.y;
+    this.b = vector.z;
 
     return this;
   }
 
-  applyMatrix3(m) {
+  applyMatrix3(matrix: Matrix3): this {
     const r = this.r,
       g = this.g,
       b = this.b;
-    const e = m.elements;
+    const e = matrix.elements;
 
     this.r = e[0] * r + e[3] * g + e[6] * b;
     this.g = e[1] * r + e[4] * g + e[7] * b;
@@ -591,11 +619,11 @@ class Color {
     return this;
   }
 
-  equals(c) {
-    return c.r === this.r && c.g === this.g && c.b === this.b;
+  equals(color: Color): boolean {
+    return color.r === this.r && color.g === this.g && color.b === this.b;
   }
 
-  fromArray(array, offset = 0) {
+  fromArray(array: number[], offset: number = 0): this {
     this.r = array[offset];
     this.g = array[offset + 1];
     this.b = array[offset + 2];
@@ -603,7 +631,7 @@ class Color {
     return this;
   }
 
-  toArray(array = [], offset = 0) {
+  toArray(array: number[] = [], offset: number = 0): number[] {
     array[offset] = this.r;
     array[offset + 1] = this.g;
     array[offset + 2] = this.b;
@@ -611,7 +639,7 @@ class Color {
     return array;
   }
 
-  fromBufferAttribute(attribute, index) {
+  fromBufferAttribute(attribute: BufferAttribute | InterleavedBufferAttribute, index: number): this {
     this.r = attribute.getX(index);
     this.g = attribute.getY(index);
     this.b = attribute.getZ(index);
@@ -623,7 +651,7 @@ class Color {
     return this.getHex();
   }
 
-  *[Symbol.iterator]() {
+  *[Symbol.iterator](): Iterator<number> {
     yield this.r;
     yield this.g;
     yield this.b;
@@ -631,7 +659,3 @@ class Color {
 }
 
 const _color = /*@__PURE__*/ new Color();
-
-Color.NAMES = _colorKeywords;
-
-export { Color };

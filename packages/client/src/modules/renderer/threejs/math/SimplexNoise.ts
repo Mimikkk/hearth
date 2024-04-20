@@ -1,16 +1,10 @@
-// Ported from Stefan Gustavson's java implementation
-// http://staffwww.itn.liu.se/~stegu/simplexnoise/simplexnoise.pdf
-// Read Stefan's excellent paper for details on how this code works.
-//
-// Sean McCullough banksean@gmail.com
-//
-// Added 4D noise
+export class SimplexNoise {
+  grad3: number[][];
+  grad4: number[][];
+  p: number[];
+  perm: number[];
+  simplex: number[][];
 
-/**
- * You can pass in a random number generator object if you like.
- * It is assumed to have a random() method.
- */
-class SimplexNoise {
   constructor(r = Math) {
     this.grad3 = [
       [1, 1, 0],
@@ -145,19 +139,19 @@ class SimplexNoise {
     ];
   }
 
-  dot(g, x, y) {
+  dot(g: number[], x: number, y: number): number {
     return g[0] * x + g[1] * y;
   }
 
-  dot3(g, x, y, z) {
+  dot3(g: number[], x: number, y: number, z: number): number {
     return g[0] * x + g[1] * y + g[2] * z;
   }
 
-  dot4(g, x, y, z, w) {
+  dot4(g: number[], x: number, y: number, z: number, w: number): number {
     return g[0] * x + g[1] * y + g[2] * z + g[3] * w;
   }
 
-  noise(xin, yin) {
+  noise(xin: number, yin: number): number {
     let n0; // Noise contributions from the three corners
     let n1;
     let n2;
@@ -228,8 +222,7 @@ class SimplexNoise {
     return 70.0 * (n0 + n1 + n2);
   }
 
-  // 3D simplex noise
-  noise3d(xin, yin, zin) {
+  noise3d(xin: number, yin: number, zin: number): number {
     let n0; // Noise contributions from the four corners
     let n1;
     let n2;
@@ -371,8 +364,7 @@ class SimplexNoise {
     return 32.0 * (n0 + n1 + n2 + n3);
   }
 
-  // 4D simplex noise
-  noise4d(x, y, z, w) {
+  noise4d(x: number, y: number, z: number, w: number): number {
     // For faster and easier lookups
     const grad4 = this.grad4;
     const simplex = this.simplex;
@@ -427,12 +419,12 @@ class SimplexNoise {
     const j1 = simplex[c][1] >= 3 ? 1 : 0;
     const k1 = simplex[c][2] >= 3 ? 1 : 0;
     const l1 = simplex[c][3] >= 3 ? 1 : 0;
-    // The number 2 in the "simplex" array is at the second largest coordinate.
+    // The number 2 in the "simplex" array is at the second-largest coordinate.
     const i2 = simplex[c][0] >= 2 ? 1 : 0;
     const j2 = simplex[c][1] >= 2 ? 1 : 0;
     const k2 = simplex[c][2] >= 2 ? 1 : 0;
     const l2 = simplex[c][3] >= 2 ? 1 : 0;
-    // The number 1 in the "simplex" array is at the second smallest coordinate.
+    // The number 1 in the "simplex" array is at the second-smallest coordinate.
     const i3 = simplex[c][0] >= 1 ? 1 : 0;
     const j3 = simplex[c][1] >= 1 ? 1 : 0;
     const k3 = simplex[c][2] >= 1 ? 1 : 0;
@@ -504,5 +496,3 @@ class SimplexNoise {
     return 27.0 * (n0 + n1 + n2 + n3 + n4);
   }
 }
-
-export { SimplexNoise };

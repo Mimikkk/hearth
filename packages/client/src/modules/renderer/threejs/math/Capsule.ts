@@ -1,38 +1,58 @@
-import { Vector3 } from '../Three.js';
+import { Vector3 } from './Vector3.js';
+import { Box3 } from '@modules/renderer/threejs/math/Box3.js';
 
-class Capsule {
-  constructor(start = new Vector3(0, 0, 0), end = new Vector3(0, 1, 0), radius = 1) {
-    this.start = start;
-    this.end = end;
-    this.radius = radius;
-  }
+export class Capsule {
+  declare ['constructor']: typeof Capsule;
+  declare isCapsule: true;
 
-  clone() {
+  constructor(
+    public start: Vector3 = new Vector3(0, 0, 0),
+    public end: Vector3 = new Vector3(0, 1, 0),
+    public radius: number = 1,
+  ) {}
+
+  clone(): Capsule {
     return new Capsule(this.start.clone(), this.end.clone(), this.radius);
   }
 
-  set(start, end, radius) {
+  set(start: Vector3, end: Vector3, radius: number): this {
     this.start.copy(start);
     this.end.copy(end);
     this.radius = radius;
+
+    return this;
   }
 
-  copy(capsule) {
+  copy(capsule: Capsule): this {
     this.start.copy(capsule.start);
     this.end.copy(capsule.end);
     this.radius = capsule.radius;
+
+    return this;
   }
 
-  getCenter(target) {
+  getCenter(target: Vector3): Vector3 {
     return target.copy(this.end).add(this.start).multiplyScalar(0.5);
   }
 
-  translate(v) {
+  translate(v: Vector3): this {
     this.start.add(v);
     this.end.add(v);
+
+    return this;
   }
 
-  checkAABBAxis(p1x, p1y, p2x, p2y, minx, maxx, miny, maxy, radius) {
+  checkAABBAxis(
+    p1x: number,
+    p1y: number,
+    p2x: number,
+    p2y: number,
+    minx: number,
+    maxx: number,
+    miny: number,
+    maxy: number,
+    radius: number,
+  ): boolean {
     return (
       (minx - p1x < radius || minx - p2x < radius) &&
       (p1x - maxx < radius || p2x - maxx < radius) &&
@@ -41,7 +61,7 @@ class Capsule {
     );
   }
 
-  intersectsBox(box) {
+  intersectsBox(box: Box3): boolean {
     return (
       this.checkAABBAxis(
         this.start.x,
@@ -79,5 +99,4 @@ class Capsule {
     );
   }
 }
-
-export { Capsule };
+Capsule.prototype.isCapsule = true;

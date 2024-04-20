@@ -1,5 +1,5 @@
 import { Vector3 } from '../math/Vector3.ts';
-import { Quaternion } from '../math/Quaternion.js';
+import { Quaternion } from '../math/Quaternion.ts';
 import { Audio } from './Audio.js';
 
 const _position = /*@__PURE__*/ new Vector3();

@@ -1,24 +1,28 @@
-import { CoordinateSystem } from '../constants.ts';
-import { Vector3 } from './Vector3.ts';
+import { CoordinateSystem } from '../constants.js';
+import { Vector3 } from './Vector3.js';
 import { Sphere } from './Sphere.js';
 import { Plane } from './Plane.js';
+import type { Matrix4 } from './Matrix4.js';
+import type { Box3 } from './Box3.js';
+import type { Sprite } from '../objects/Sprite.js';
+import type { Object3D } from '../core/Object3D.js';
 
-const _sphere = /*@__PURE__*/ new Sphere();
-const _vector = /*@__PURE__*/ new Vector3();
+export class Frustum {
+  declare ['constructor']: typeof Frustum;
+  planes: Plane[];
 
-class Frustum {
   constructor(
-    p0 = new Plane(),
-    p1 = new Plane(),
-    p2 = new Plane(),
-    p3 = new Plane(),
-    p4 = new Plane(),
-    p5 = new Plane(),
+    p0: Plane = new Plane(),
+    p1: Plane = new Plane(),
+    p2: Plane = new Plane(),
+    p3: Plane = new Plane(),
+    p4: Plane = new Plane(),
+    p5: Plane = new Plane(),
   ) {
     this.planes = [p0, p1, p2, p3, p4, p5];
   }
 
-  set(p0, p1, p2, p3, p4, p5) {
+  set(p0: Plane, p1: Plane, p2: Plane, p3: Plane, p4: Plane, p5: Plane): this {
     const planes = this.planes;
 
     planes[0].copy(p0);
@@ -31,7 +35,7 @@ class Frustum {
     return this;
   }
 
-  copy(frustum) {
+  copy(frustum: Frustum): this {
     const planes = this.planes;
 
     for (let i = 0; i < 6; i++) {
@@ -41,9 +45,9 @@ class Frustum {
     return this;
   }
 
-  setFromProjectionMatrix(m, coordinateSystem = CoordinateSystem.WebGL) {
+  setFromProjectionMatrix(matrix: Matrix4, coordinateSystem: CoordinateSystem = CoordinateSystem.WebGL): this {
     const planes = this.planes;
-    const me = m.elements;
+    const me = matrix.elements;
     const me0 = me[0],
       me1 = me[1],
       me2 = me[2],
@@ -78,7 +82,9 @@ class Frustum {
     return this;
   }
 
-  intersectsObject(object) {
+  intersectsObject(object: Object3D): boolean {
+    const _sphere = new Sphere();
+
     if (object.boundingSphere !== undefined) {
       if (object.boundingSphere === null) object.computeBoundingSphere();
 
@@ -94,15 +100,14 @@ class Frustum {
     return this.intersectsSphere(_sphere);
   }
 
-  intersectsSprite(sprite) {
-    _sphere.center.set(0, 0, 0);
-    _sphere.radius = 0.7071067811865476;
+  intersectsSprite(sprite: Sprite): boolean {
+    const _sphere = new Sphere(new Vector3(0, 0, 0), 0.7071067811865476);
     _sphere.applyMatrix4(sprite.matrixWorld);
 
     return this.intersectsSphere(_sphere);
   }
 
-  intersectsSphere(sphere) {
+  intersectsSphere(sphere: Sphere): boolean {
     const planes = this.planes;
     const center = sphere.center;
     const negRadius = -sphere.radius;
@@ -118,7 +123,7 @@ class Frustum {
     return true;
   }
 
-  intersectsBox(box) {
+  intersectsBox(box: Box3): boolean {
     const planes = this.planes;
 
     for (let i = 0; i < 6; i++) {
@@ -126,9 +131,11 @@ class Frustum {
 
       // corner at max distance
 
-      _vector.x = plane.normal.x > 0 ? box.max.x : box.min.x;
-      _vector.y = plane.normal.y > 0 ? box.max.y : box.min.y;
-      _vector.z = plane.normal.z > 0 ? box.max.z : box.min.z;
+      const _vector = new Vector3(
+        plane.normal.x > 0 ? box.min.x : box.max.x,
+        plane.normal.y > 0 ? box.min.y : box.max.y,
+        plane.normal.z > 0 ? box.min.z : box.max.z,
+      );
 
       if (plane.distanceToPoint(_vector) < 0) {
         return false;
@@ -138,7 +145,7 @@ class Frustum {
     return true;
   }
 
-  containsPoint(point) {
+  containsPoint(point: Vector3): boolean {
     const planes = this.planes;
 
     for (let i = 0; i < 6; i++) {
@@ -150,9 +157,7 @@ class Frustum {
     return true;
   }
 
-  clone() {
+  clone(): Frustum {
     return new this.constructor().copy(this);
   }
 }
-
-export { Frustum };

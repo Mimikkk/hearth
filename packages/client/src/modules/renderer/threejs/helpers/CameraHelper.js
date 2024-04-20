@@ -1,7 +1,7 @@
 import { Camera } from '../cameras/Camera.js';
 import { Vector3 } from '../math/Vector3.ts';
 import { LineSegments } from '../objects/LineSegments.js';
-import { Color } from '../math/Color.js';
+import { Color } from '../math/Color.ts';
 import { LineBasicMaterial } from '../materials/LineBasicMaterial.js';
 import { BufferGeometry } from '../core/BufferGeometry.js';
 import { Float32BufferAttribute } from '../core/BufferAttribute.js';

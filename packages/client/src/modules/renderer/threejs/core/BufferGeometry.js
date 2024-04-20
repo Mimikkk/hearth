@@ -1,6 +1,6 @@
 import { Vector3 } from '../math/Vector3.ts';
 import { Vector2 } from '../math/Vector2.ts';
-import { Box3 } from '../math/Box3.js';
+import { Box3 } from '../math/Box3.ts';
 import { EventDispatcher } from './EventDispatcher.ts';
 import {
   BufferAttribute,
@@ -8,10 +8,10 @@ import {
   Uint16BufferAttribute,
   Uint32BufferAttribute,
 } from './BufferAttribute.js';
-import { Sphere } from '../math/Sphere.js';
+import { Sphere } from '../math/Sphere.ts';
 import { Object3D } from './Object3D.js';
-import { Matrix4 } from '../math/Matrix4.js';
-import { Matrix3 } from '../math/Matrix3.js';
+import { Matrix4 } from '../math/Matrix4.ts';
+import { Matrix3 } from '../math/Matrix3.ts';
 import * as MathUtils from '../math/MathUtils.ts';
 import { isArrayUint32 } from '../utils.ts';
 

@@ -1,4 +1,4 @@
-import { ColorManagement } from '../../math/ColorManagement.js';
+import { ColorManagement } from '../../math/ColorManagement.ts';
 
 /**
  * Uniform Utilities

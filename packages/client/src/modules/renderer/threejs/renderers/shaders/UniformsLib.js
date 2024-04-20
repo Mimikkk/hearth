@@ -1,6 +1,6 @@
-import { Color } from '../../math/Color.js';
+import { Color } from '../../math/Color.ts';
 import { Vector2 } from '../../math/Vector2.ts';
-import { Matrix3 } from '../../math/Matrix3.js';
+import { Matrix3 } from '../../math/Matrix3.ts';
 
 /**
  * Uniforms library for shared webgl shaders

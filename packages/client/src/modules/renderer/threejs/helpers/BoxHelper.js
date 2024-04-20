@@ -1,4 +1,4 @@
-import { Box3 } from '../math/Box3.js';
+import { Box3 } from '../math/Box3.ts';
 import { LineSegments } from '../objects/LineSegments.js';
 import { LineBasicMaterial } from '../materials/LineBasicMaterial.js';
 import { BufferAttribute } from '../core/BufferAttribute.js';

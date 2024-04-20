@@ -1,44 +1,50 @@
-import { Triangle, Vector2, Vector3 } from '../Three.js';
-
-/**
- * Utility class for sampling weighted random points on the surface of a mesh.
- *
- * Building the sampler is a one-time O(n) operation. Once built, any number of
- * random samples may be selected in O(logn) time. Memory usage is O(n).
- *
- * References:
- * - http://www.joesfer.com/?p=84
- * - https://stackoverflow.com/a/4322940/1314762
- */
+import { Triangle } from './Triangle.js';
+import { Vector3 } from './Vector3.js';
+import { Vector2 } from './Vector2.js';
+import type { Mesh } from '../objects/Mesh.js';
+import type { BufferGeometry } from 'three';
+import type { Material } from '../materials/Material.js';
+import type { BufferAttribute } from '../core/BufferAttribute.js';
+import type { Color } from './Color.js';
 
 const _face = new Triangle();
 const _color = new Vector3();
-const _uva = new Vector2(),
-  _uvb = new Vector2(),
-  _uvc = new Vector2();
+const _uva = new Vector2();
+const _uvb = new Vector2();
+const _uvc = new Vector2();
 
-class MeshSurfaceSampler {
-  constructor(mesh) {
+export class MeshSurfaceSampler<TGeometry extends BufferGeometry, TMaterial extends Material | Material[]> {
+  geometry: BufferGeometry;
+  randomFunction: () => number;
+  indexAttribute: BufferAttribute;
+  positionAttribute: BufferAttribute;
+  normalAttribute: BufferAttribute;
+  colorAttribute: BufferAttribute;
+  uvAttribute: BufferAttribute;
+  weightAttribute: BufferAttribute;
+  distribution: Float32Array;
+
+  constructor(mesh: Mesh) {
     this.geometry = mesh.geometry;
     this.randomFunction = Math.random;
 
-    this.indexAttribute = this.geometry.index;
-    this.positionAttribute = this.geometry.getAttribute('position');
-    this.normalAttribute = this.geometry.getAttribute('normal');
-    this.colorAttribute = this.geometry.getAttribute('color');
-    this.uvAttribute = this.geometry.getAttribute('uv');
-    this.weightAttribute = null;
+    this.indexAttribute = this.geometry.index!;
+    this.positionAttribute = this.geometry.getAttribute('position')!;
+    this.normalAttribute = this.geometry.getAttribute('normal')!;
+    this.colorAttribute = this.geometry.getAttribute('color')!;
+    this.uvAttribute = this.geometry.getAttribute('uv')!;
 
-    this.distribution = null;
+    this.weightAttribute = null!;
+    this.distribution = null!;
   }
 
-  setWeightAttribute(name) {
+  setWeightAttribute(name: string): this {
     this.weightAttribute = name ? this.geometry.getAttribute(name) : null;
 
     return this;
   }
 
-  build() {
+  build(): this {
     const indexAttribute = this.indexAttribute;
     const positionAttribute = this.positionAttribute;
     const weightAttribute = this.weightAttribute;
@@ -88,22 +94,23 @@ class MeshSurfaceSampler {
     return this;
   }
 
-  setRandomGenerator(randomFunction) {
+  setRandomGenerator(randomFunction: () => number): this {
     this.randomFunction = randomFunction;
     return this;
   }
 
-  sample(targetPosition, targetNormal, targetColor, targetUV) {
+  sample(targetPosition: Vector3, targetNormal?: Vector3, targetColor?: Color, targetUV?: Vector2): this {
     const faceIndex = this.sampleFaceIndex();
     return this.sampleFace(faceIndex, targetPosition, targetNormal, targetColor, targetUV);
   }
 
   sampleFaceIndex() {
     const cumulativeTotal = this.distribution[this.distribution.length - 1];
+
     return this.binarySearch(this.randomFunction() * cumulativeTotal);
   }
 
-  binarySearch(x) {
+  binarySearch(x: number): number {
     const dist = this.distribution;
     let start = 0;
     let end = dist.length - 1;
@@ -127,7 +134,13 @@ class MeshSurfaceSampler {
     return index;
   }
 
-  sampleFace(faceIndex, targetPosition, targetNormal, targetColor, targetUV) {
+  sampleFace(
+    faceIndex: number,
+    targetPosition: Vector3,
+    targetNormal?: Vector3,
+    targetColor?: Color,
+    targetUV?: Vector2,
+  ): this {
     let u = this.randomFunction();
     let v = this.randomFunction();
 
@@ -203,5 +216,3 @@ class MeshSurfaceSampler {
     return this;
   }
 }
-
-export { MeshSurfaceSampler };

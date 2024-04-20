@@ -1,7 +1,7 @@
 import { Vector2 } from '../math/Vector2.ts';
 import { Vector3 } from '../math/Vector3.ts';
-import { Matrix4 } from '../math/Matrix4.js';
-import { Triangle } from '../math/Triangle.js';
+import { Matrix4 } from '../math/Matrix4.ts';
+import { Triangle } from '../math/Triangle.ts';
 import { Object3D } from '../core/Object3D.js';
 import { BufferGeometry } from '../core/BufferGeometry.js';
 import { InterleavedBuffer } from '../core/InterleavedBuffer.js';

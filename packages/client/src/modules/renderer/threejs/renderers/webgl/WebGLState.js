@@ -1,5 +1,5 @@
 import { Blending, BlendingEquation, BlendingFactor, CullFace, Depth, Side } from '../../constants.ts';
-import { Color } from '../../math/Color.js';
+import { Color } from '../../math/Color.ts';
 import { Vector4 } from '../../math/Vector4.ts';
 
 function WebGLState(gl) {

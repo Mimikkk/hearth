@@ -1,5 +1,5 @@
 import { createCanvasElement } from '../utils.ts';
-import { SRGBToLinear } from '../math/ColorManagement.js';
+import { SRGBToLinear } from '../math/ColorManagement.ts';
 
 let _canvas;
 

@@ -133,15 +133,15 @@ export * from './loaders/XYZLoader.js';
 
 export * from './materials/MeshGouraudMaterial.js';
 
-export * from './math/Capsule.js';
-export * from './math/ColorConverter.js';
+export * from './math/Capsule.ts';
+export * from './math/ColorConverter.ts';
 export * from './math/ConvexHull.js';
-export * from './math/ImprovedNoise.js';
+export * from './math/PerlinNoise.ts';
 export * from './math/Lut.js';
-export * from './math/MeshSurfaceSampler.js';
+export * from './math/MeshSurfaceSampler.ts';
 export * from './math/OBB.js';
 export * from './math/Octree.js';
-export * from './math/SimplexNoise.js';
+export * from './math/SimplexNoise.ts';
 
 export * from '@modules/renderer/threejs/misc/ConvexObjectBreaker.js';
 export * from '@modules/renderer/threejs/misc/GPUComputationRenderer.js';

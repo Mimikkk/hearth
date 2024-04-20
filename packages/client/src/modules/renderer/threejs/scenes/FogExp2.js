@@ -1,4 +1,4 @@
-import { Color } from '../math/Color.js';
+import { Color } from '../math/Color.ts';
 
 class FogExp2 {
   constructor(color, density = 0.00025) {

@@ -1,7 +1,7 @@
 import * as MathUtils from '../../math/MathUtils.ts';
 import { Vector2 } from '../../math/Vector2.ts';
 import { Vector3 } from '../../math/Vector3.ts';
-import { Matrix4 } from '../../math/Matrix4.js';
+import { Matrix4 } from '../../math/Matrix4.ts';
 
 /**
  * Extensible curve object.

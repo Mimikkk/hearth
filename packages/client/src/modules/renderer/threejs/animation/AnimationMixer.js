@@ -1,6 +1,6 @@
 import { AnimationAction } from './AnimationAction.js';
 import { EventDispatcher } from '../core/EventDispatcher.ts';
-import { LinearInterpolant } from '../math/interpolants/LinearInterpolant.js';
+import { LinearInterpolant } from '../math/interpolants/LinearInterpolant.ts';
 import { PropertyBinding } from './PropertyBinding.js';
 import { PropertyMixer } from './PropertyMixer.js';
 import { AnimationClip } from './AnimationClip.js';

@@ -1,5 +1,5 @@
 import { Vector3 } from '../math/Vector3.ts';
-import { Color } from '../math/Color.js';
+import { Color } from '../math/Color.ts';
 import { Object3D } from '../core/Object3D.js';
 import { Mesh } from '../objects/Mesh.js';
 import { MeshBasicMaterial } from '../materials/MeshBasicMaterial.js';

@@ -1,7 +1,7 @@
 import { NormalMapType } from '../constants.ts';
 import { Material } from './Material.js';
 import { Vector2 } from '../math/Vector2.ts';
-import { Color } from '../math/Color.js';
+import { Color } from '../math/Color.ts';
 
 class MeshMatcapMaterial extends Material {
   constructor(parameters) {

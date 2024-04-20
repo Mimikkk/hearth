@@ -414,7 +414,7 @@ class AnimationAction {
 
         this.time = time;
 
-        this._mixer.dispatchEvent({
+        this._mixer.eventDispatcher.dispatch({
           type: 'finished',
           action: this,
           direction: deltaTime < 0 ? -1 : 1,
@@ -459,7 +459,7 @@ class AnimationAction {
 
           this.time = time;
 
-          this._mixer.dispatchEvent({
+          this._mixer.eventDispatcher.dispatch({
             type: 'finished',
             action: this,
             direction: deltaTime > 0 ? 1 : -1,
@@ -480,7 +480,7 @@ class AnimationAction {
 
           this.time = time;
 
-          this._mixer.dispatchEvent({
+          this._mixer.eventDispatcher.dispatch({
             type: 'loop',
             action: this,
             loopDelta: loopDelta,

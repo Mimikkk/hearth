@@ -3,8 +3,16 @@ import type { Matrix4 } from './Matrix4.js';
 import type { Quaternion } from './Quaternion.js';
 import type { Matrix3 } from './Matrix3.js';
 import type { BufferAttribute } from '../core/BufferAttribute.js';
+import { IVector2 } from '@modules/renderer/threejs/math/Vector2.js';
 
-export class Vector4 {
+export interface IVector4 {
+  x: number;
+  y: number;
+  z: number;
+  w: number;
+}
+
+export class Vector4 implements IVector4 {
   declare isVector4: true;
   declare ['constructor']: typeof Vector4;
 

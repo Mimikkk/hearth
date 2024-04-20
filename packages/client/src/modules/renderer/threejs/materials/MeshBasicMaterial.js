@@ -1,7 +1,7 @@
 import { Material } from './Material.js';
 import { Operation } from '../constants.ts';
-import { Color } from '../math/Color.js';
-import { Euler } from '../math/Euler.js';
+import { Color } from '../math/Color.ts';
+import { Euler } from '../math/Euler.ts';
 
 class MeshBasicMaterial extends Material {
   constructor(parameters) {

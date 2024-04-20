@@ -1,4 +1,4 @@
-import { Quaternion } from '../math/Quaternion.js';
+import { Quaternion } from '../math/Quaternion.ts';
 import { AnimationBlendMode } from '../constants.ts';
 
 // converts an array to a specific type

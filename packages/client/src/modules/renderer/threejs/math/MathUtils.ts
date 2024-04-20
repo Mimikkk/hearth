@@ -321,7 +321,30 @@ export const degreeToRadian = (degrees: number): number => degrees * DegreeToRad
 export const RadianToDegree = 180 / Math.PI;
 export const radianToDegree = (radians: number): number => radians * RadianToDegree;
 
-type TypedArray = Float32Array | Uint32Array | Uint16Array | Uint8Array | Int32Array | Int16Array | Int8Array;
+export type TypedArray = Float32Array | Uint32Array | Uint16Array | Uint8Array | Int32Array | Int16Array | Int8Array;
+export type TypedArrayConstructor =
+  | Float32ArrayConstructor
+  | Uint32ArrayConstructor
+  | Uint16ArrayConstructor
+  | Uint8ArrayConstructor
+  | Int32ArrayConstructor
+  | Int16ArrayConstructor
+  | Int8ArrayConstructor;
+export type ReadTypedArrayConstructor<T extends TypedArray> = T extends Float32Array
+  ? Float32ArrayConstructor
+  : T extends Uint32Array
+    ? Uint32ArrayConstructor
+    : T extends Uint16Array
+      ? Uint16ArrayConstructor
+      : T extends Uint8Array
+        ? Uint8ArrayConstructor
+        : T extends Int32Array
+          ? Int32ArrayConstructor
+          : T extends Int16Array
+            ? Int16ArrayConstructor
+            : T extends Int8Array
+              ? Int8ArrayConstructor
+              : never;
 
 export const denormalize = (value: number, array: TypedArray): number => {
   switch (array.constructor) {

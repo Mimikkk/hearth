@@ -1,6 +1,6 @@
 import { TextureDataType, TextureFormat } from '../constants.ts';
 import { Bone } from './Bone.js';
-import { Matrix4 } from '../math/Matrix4.js';
+import { Matrix4 } from '../math/Matrix4.ts';
 import { DataTexture } from '../textures/DataTexture.js';
 import * as MathUtils from '../math/MathUtils.ts';
 

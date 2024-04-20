@@ -1,5 +1,5 @@
-import { Matrix3 } from '../../math/Matrix3.js';
-import { Plane } from '../../math/Plane.js';
+import { Matrix3 } from '../../math/Matrix3.ts';
+import { Plane } from '../../math/Plane.ts';
 
 function WebGLClipping(properties) {
   const scope = this;

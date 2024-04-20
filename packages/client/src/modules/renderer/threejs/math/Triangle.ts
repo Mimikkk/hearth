@@ -1,28 +1,23 @@
-import { Vector3 } from './Vector3.ts';
+import { Vector3 } from './Vector3.js';
+import { Box3 } from '@modules/renderer/threejs/math/Box3.js';
+import { Plane } from '@modules/renderer/threejs/math/Plane.js';
+import { BufferAttribute } from '@modules/renderer/threejs/core/BufferAttribute.js';
+import { InterleavedBufferAttribute } from '@modules/renderer/threejs/core/InterleavedBufferAttribute.js';
+import { Vector2 } from '@modules/renderer/threejs/math/Vector2.js';
+import { Vector4 } from '@modules/renderer/threejs/math/Vector4.js';
 
-const _v0 = /*@__PURE__*/ new Vector3();
-const _v1 = /*@__PURE__*/ new Vector3();
-const _v2 = /*@__PURE__*/ new Vector3();
-const _v3 = /*@__PURE__*/ new Vector3();
+export class Triangle {
+  declare ['constructor']: typeof Triangle;
 
-const _vab = /*@__PURE__*/ new Vector3();
-const _vac = /*@__PURE__*/ new Vector3();
-const _vbc = /*@__PURE__*/ new Vector3();
-const _vap = /*@__PURE__*/ new Vector3();
-const _vbp = /*@__PURE__*/ new Vector3();
-const _vcp = /*@__PURE__*/ new Vector3();
+  constructor(
+    public a = new Vector3(),
+    public b = new Vector3(),
+    public c = new Vector3(),
+  ) {}
 
-class Triangle {
-  constructor(a = new Vector3(), b = new Vector3(), c = new Vector3()) {
-    this.a = a;
-    this.b = b;
-    this.c = c;
-  }
-
-  static getNormal(a, b, c, target) {
+  static getNormal(a: Vector3, b: Vector3, c: Vector3, target: Vector3): Vector3 {
     target.subVectors(c, b);
-    _v0.subVectors(a, b);
-    target.cross(_v0);
+    target.cross(new Vector3().subVectors(a, b));
 
     const targetLengthSq = target.lengthSq();
     if (targetLengthSq > 0) {
@@ -32,12 +27,10 @@ class Triangle {
     return target.set(0, 0, 0);
   }
 
-  // static/instance method to calculate barycentric coordinates
-  // based on: http://www.blackpawn.com/texts/pointinpoly/default.html
-  static getBarycoord(point, a, b, c, target) {
-    _v0.subVectors(c, a);
-    _v1.subVectors(b, a);
-    _v2.subVectors(point, a);
+  static getBarycoord(point: Vector3, a: Vector3, b: Vector3, c: Vector3, target: Vector3): Vector3 | null {
+    const _v0 = new Vector3().subVectors(c, a);
+    const _v1 = new Vector3().subVectors(b, a);
+    const _v2 = new Vector3().subVectors(point, a);
 
     const dot00 = _v0.dot(_v0);
     const dot01 = _v0.dot(_v1);
@@ -61,8 +54,9 @@ class Triangle {
     return target.set(1 - u - v, v, u);
   }
 
-  static containsPoint(point, a, b, c) {
+  static containsPoint(point: Vector3, a: Vector3, b: Vector3, c: Vector3): boolean {
     // if the triangle is degenerate then we can't contain a point
+    const _v3 = new Vector3();
     if (this.getBarycoord(point, a, b, c, _v3) === null) {
       return false;
     }
@@ -70,7 +64,18 @@ class Triangle {
     return _v3.x >= 0 && _v3.y >= 0 && _v3.x + _v3.y <= 1;
   }
 
-  static getInterpolation(point, p1, p2, p3, v1, v2, v3, target) {
+  static getInterpolation<T extends Vector2 | Vector3 | Vector4>(
+    point: Vector3,
+    p1: Vector3,
+    p2: Vector3,
+    p3: Vector3,
+    v1: T,
+    v2: T,
+    v3: T,
+    target: T,
+  ): T | null {
+    const _v3 = new Vector3();
+
     if (this.getBarycoord(point, p1, p2, p3, _v3) === null) {
       target.x = 0;
       target.y = 0;
@@ -80,22 +85,18 @@ class Triangle {
     }
 
     target.setScalar(0);
-    target.addScaledVector(v1, _v3.x);
-    target.addScaledVector(v2, _v3.y);
-    target.addScaledVector(v3, _v3.z);
+    target.addScaledVector(v1 as never, _v3.x);
+    target.addScaledVector(v2 as never, _v3.y);
+    target.addScaledVector(v3 as never, _v3.z);
 
     return target;
   }
 
-  static isFrontFacing(a, b, c, direction) {
-    _v0.subVectors(c, b);
-    _v1.subVectors(a, b);
-
-    // strictly front facing
-    return _v0.cross(_v1).dot(direction) < 0 ? true : false;
+  static isFrontFacing(a: Vector3, b: Vector3, c: Vector3, direction: Vector3): boolean {
+    return new Vector3().subVectors(c, b).cross(new Vector3().subVectors(a, b)).dot(direction) < 0;
   }
 
-  set(a, b, c) {
+  set(a: Vector3, b: Vector3, c: Vector3): this {
     this.a.copy(a);
     this.b.copy(b);
     this.c.copy(c);
@@ -103,7 +104,7 @@ class Triangle {
     return this;
   }
 
-  setFromPointsAndIndices(points, i0, i1, i2) {
+  setFromPointsAndIndices(points: Vector3[], i0: number, i1: number, i2: number): this {
     this.a.copy(points[i0]);
     this.b.copy(points[i1]);
     this.c.copy(points[i2]);
@@ -111,7 +112,12 @@ class Triangle {
     return this;
   }
 
-  setFromAttributeAndIndices(attribute, i0, i1, i2) {
+  setFromAttributeAndIndices(
+    attribute: BufferAttribute | InterleavedBufferAttribute,
+    i0: number,
+    i1: number,
+    i2: number,
+  ): this {
     this.a.fromBufferAttribute(attribute, i0);
     this.b.fromBufferAttribute(attribute, i1);
     this.c.fromBufferAttribute(attribute, i2);
@@ -119,11 +125,11 @@ class Triangle {
     return this;
   }
 
-  clone() {
+  clone(): Triangle {
     return new this.constructor().copy(this);
   }
 
-  copy(triangle) {
+  copy(triangle: Triangle): this {
     this.a.copy(triangle.a);
     this.b.copy(triangle.b);
     this.c.copy(triangle.c);
@@ -131,49 +137,46 @@ class Triangle {
     return this;
   }
 
-  getArea() {
-    _v0.subVectors(this.c, this.b);
-    _v1.subVectors(this.a, this.b);
-
-    return _v0.cross(_v1).length() * 0.5;
+  getArea(): number {
+    return new Vector3().subVectors(this.c, this.b).cross(new Vector3().subVectors(this.a, this.b)).length() * 0.5;
   }
 
-  getMidpoint(target) {
+  getMidpoint(target: Vector3): Vector3 {
     return target
       .addVectors(this.a, this.b)
       .add(this.c)
       .multiplyScalar(1 / 3);
   }
 
-  getNormal(target) {
+  getNormal(target: Vector3): Vector3 {
     return Triangle.getNormal(this.a, this.b, this.c, target);
   }
 
-  getPlane(target) {
+  getPlane(target: Plane): Plane {
     return target.setFromCoplanarPoints(this.a, this.b, this.c);
   }
 
-  getBarycoord(point, target) {
+  getBarycoord(point: Vector3, target: Vector3): Vector3 | null {
     return Triangle.getBarycoord(point, this.a, this.b, this.c, target);
   }
 
-  getInterpolation(point, v1, v2, v3, target) {
+  getInterpolation<T extends Vector2 | Vector3 | Vector4>(point: Vector3, v1: T, v2: T, v3: T, target: T): T | null {
     return Triangle.getInterpolation(point, this.a, this.b, this.c, v1, v2, v3, target);
   }
 
-  containsPoint(point) {
+  containsPoint(point: Vector3): boolean {
     return Triangle.containsPoint(point, this.a, this.b, this.c);
   }
 
-  isFrontFacing(direction) {
+  isFrontFacing(direction: Vector3): boolean {
     return Triangle.isFrontFacing(this.a, this.b, this.c, direction);
   }
 
-  intersectsBox(box) {
+  intersectsBox(box: Box3): boolean {
     return box.intersectsTriangle(this);
   }
 
-  closestPointToPoint(p, target) {
+  closestPointToPoint(p: Vector3, target: Vector3): Vector3 {
     const a = this.a,
       b = this.b,
       c = this.c;
@@ -185,9 +188,9 @@ class Triangle {
     // basically, we're distinguishing which of the voronoi regions of the triangle
     // the point lies in with the minimum amount of redundant computation.
 
-    _vab.subVectors(b, a);
-    _vac.subVectors(c, a);
-    _vap.subVectors(p, a);
+    const _vab = new Vector3().subVectors(b, a);
+    const _vac = new Vector3().subVectors(c, a);
+    const _vap = new Vector3().subVectors(p, a);
     const d1 = _vab.dot(_vap);
     const d2 = _vac.dot(_vap);
     if (d1 <= 0 && d2 <= 0) {
@@ -195,7 +198,7 @@ class Triangle {
       return target.copy(a);
     }
 
-    _vbp.subVectors(p, b);
+    const _vbp = new Vector3().subVectors(p, b);
     const d3 = _vab.dot(_vbp);
     const d4 = _vac.dot(_vbp);
     if (d3 >= 0 && d4 <= d3) {
@@ -210,7 +213,7 @@ class Triangle {
       return target.copy(a).addScaledVector(_vab, v);
     }
 
-    _vcp.subVectors(p, c);
+    const _vcp = new Vector3().subVectors(p, c);
     const d5 = _vab.dot(_vcp);
     const d6 = _vac.dot(_vcp);
     if (d6 >= 0 && d5 <= d6) {
@@ -227,24 +230,20 @@ class Triangle {
 
     const va = d3 * d6 - d5 * d4;
     if (va <= 0 && d4 - d3 >= 0 && d5 - d6 >= 0) {
-      _vbc.subVectors(c, b);
+      const _vbc = new Vector3().subVectors(c, b);
       w = (d4 - d3) / (d4 - d3 + (d5 - d6));
       // edge region of BC; barycentric coords (0, 1-w, w)
       return target.copy(b).addScaledVector(_vbc, w); // edge region of BC
     }
 
-    // face region
     const denom = 1 / (va + vb + vc);
-    // u = va * denom
     v = vb * denom;
     w = vc * denom;
 
     return target.copy(a).addScaledVector(_vab, v).addScaledVector(_vac, w);
   }
 
-  equals(triangle) {
+  equals(triangle: Triangle): boolean {
     return triangle.a.equals(this.a) && triangle.b.equals(this.b) && triangle.c.equals(this.c);
   }
 }
-
-export { Triangle };

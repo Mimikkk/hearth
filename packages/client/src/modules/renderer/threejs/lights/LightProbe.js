@@ -1,4 +1,4 @@
-import { SphericalHarmonics3 } from '../math/SphericalHarmonics3.js';
+import { SphericalHarmonics3 } from '../math/SphericalHarmonics3.ts';
 import { Light } from './Light.js';
 
 class LightProbe extends Light {
