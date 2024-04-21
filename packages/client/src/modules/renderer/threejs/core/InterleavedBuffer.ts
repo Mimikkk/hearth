@@ -1,16 +1,25 @@
-import * as MathUtils from '../math/MathUtils.ts';
-import { BufferUsage } from '../constants.ts';
+import * as MathUtils from '../math/MathUtils.js';
+import { TypedArray, TypedArrayConstructor } from '../math/MathUtils.js';
+import { BufferUsage } from '../constants.js';
+import { InterleavedBufferAttribute } from 'three';
 
-class InterleavedBuffer {
-  constructor(array, stride) {
-    this.isInterleavedBuffer = true;
+export class InterleavedBuffer {
+  declare ['constructor']: typeof InterleavedBuffer;
+  declare isInterleavedBuffer: true;
+  array: TypedArray;
+  stride: number;
+  count: number;
+  usage: BufferUsage;
+  updateRanges: Array<{ start: number; count: number }>;
+  version: number;
+  uuid: string;
 
+  constructor(array: TypedArray, stride: number) {
     this.array = array;
     this.stride = stride;
     this.count = array !== undefined ? array.length / stride : 0;
 
     this.usage = BufferUsage.StaticDraw;
-    this._updateRange = { offset: 0, count: -1 };
     this.updateRanges = [];
 
     this.version = 0;
@@ -20,26 +29,28 @@ class InterleavedBuffer {
 
   onUploadCallback() {}
 
-  set needsUpdate(value) {
-    if (value === true) this.version++;
+  set needsUpdate(value: boolean) {
+    if (value) ++this.version;
   }
 
-  setUsage(value) {
+  setUsage(value: BufferUsage): this {
     this.usage = value;
 
     return this;
   }
 
-  addUpdateRange(start, count) {
+  addUpdateRange(start: number, count: number): this {
     this.updateRanges.push({ start, count });
+    return this;
   }
 
-  clearUpdateRanges() {
+  clearUpdateRanges(): this {
     this.updateRanges.length = 0;
+    return this;
   }
 
-  copy(source) {
-    this.array = new source.array.constructor(source.array);
+  copy(source: InterleavedBuffer): this {
+    this.array = new (source.array.constructor() as TypedArrayConstructor)(source.array) as TypedArray;
     this.count = source.count;
     this.stride = source.stride;
     this.usage = source.usage;
@@ -47,7 +58,7 @@ class InterleavedBuffer {
     return this;
   }
 
-  copyAt(index1, attribute, index2) {
+  copyAt(index1: number, attribute: InterleavedBuffer, index2: number): this {
     index1 *= this.stride;
     index2 *= attribute.stride;
 
@@ -58,51 +69,65 @@ class InterleavedBuffer {
     return this;
   }
 
-  set(value, offset = 0) {
+  set(value: number[], offset: number = 0): this {
     this.array.set(value, offset);
 
     return this;
   }
 
-  clone(data) {
+  clone(data?: {}): this {
+    //@ts-expect-error
     if (data.arrayBuffers === undefined) {
+      //@ts-expect-error
       data.arrayBuffers = {};
     }
 
+    //@ts-expect-error
     if (this.array.buffer._uuid === undefined) {
+      //@ts-expect-error
       this.array.buffer._uuid = MathUtils.generateUuid();
     }
 
+    //@ts-expect-error
     if (data.arrayBuffers[this.array.buffer._uuid] === undefined) {
+      //@ts-expect-error
       data.arrayBuffers[this.array.buffer._uuid] = this.array.slice(0).buffer;
     }
 
+    //@ts-expect-error
     const array = new this.array.constructor(data.arrayBuffers[this.array.buffer._uuid]);
 
     const ib = new this.constructor(array, this.stride);
     ib.setUsage(this.usage);
 
+    //@ts-expect-error
     return ib;
   }
 
-  onUpload(callback) {
+  onUpload(callback: () => void): this {
     this.onUploadCallback = callback;
 
     return this;
   }
 
-  toJSON(data) {
+  toJSON(data?: {}): any {
+    //@ts-expect-error
     if (data.arrayBuffers === undefined) {
+      //@ts-expect-error
       data.arrayBuffers = {};
     }
 
     // generate UUID for array buffer if necessary
 
+    //@ts-expect-error
     if (this.array.buffer._uuid === undefined) {
+      //@ts-expect-error
       this.array.buffer._uuid = MathUtils.generateUuid();
     }
 
+    //@ts-expect-error
     if (data.arrayBuffers[this.array.buffer._uuid] === undefined) {
+      //@ts-expect-error
       data.arrayBuffers[this.array.buffer._uuid] = Array.from(new Uint32Array(this.array.buffer));
     }
 
@@ -110,11 +135,11 @@ class InterleavedBuffer {
 
     return {
       uuid: this.uuid,
+      //@ts-expect-error
       buffer: this.array.buffer._uuid,
       type: this.array.constructor.name,
       stride: this.stride,
     };
   }
 }
-
-export { InterleavedBuffer };
+InterleavedBuffer.prototype.isInterleavedBuffer = true;

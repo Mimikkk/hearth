@@ -1,6 +1,6 @@
 import { Vector3 } from '../math/Vector3.ts';
 import { Quaternion } from '../math/Quaternion.ts';
-import { Clock } from '../core/Clock.js';
+import { Clock } from '../core/Clock.ts';
 import { Object3D } from '../core/Object3D.js';
 import { AudioContext } from './AudioContext.js';
 

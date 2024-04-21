@@ -1,13 +1,13 @@
 import { Sphere } from '../math/Sphere.ts';
 import { Vector3 } from '../math/Vector3.ts';
-import { BufferAttribute } from '../core/BufferAttribute.js';
-import { BufferGeometry } from '../core/BufferGeometry.js';
+import { BufferAttribute } from '../core/BufferAttribute.ts';
+import { BufferGeometry } from '../core/BufferGeometry.ts';
 import { FileLoader } from './FileLoader.js';
 import { Loader } from './Loader.js';
-import { InstancedBufferGeometry } from '../core/InstancedBufferGeometry.js';
-import { InstancedBufferAttribute } from '../core/InstancedBufferAttribute.js';
-import { InterleavedBufferAttribute } from '../core/InterleavedBufferAttribute.js';
-import { InterleavedBuffer } from '../core/InterleavedBuffer.js';
+import { InstancedBufferGeometry } from '../core/InstancedBufferGeometry.ts';
+import { InstancedBufferAttribute } from '../core/InstancedBufferAttribute.ts';
+import { InterleavedBufferAttribute } from '../core/InterleavedBufferAttribute.ts';
+import { InterleavedBuffer } from '../core/InterleavedBuffer.ts';
 import { createTypedArray } from '../utils.ts';
 
 class BufferGeometryLoader extends Loader {

@@ -7,7 +7,7 @@ import { Object3D } from '../core/Object3D.js';
 import { Triangle } from '../math/Triangle.ts';
 import { Side } from '../constants.ts';
 import { MeshBasicMaterial } from '../materials/MeshBasicMaterial.js';
-import { BufferGeometry } from '../core/BufferGeometry.js';
+import { BufferGeometry } from '../core/BufferGeometry.ts';
 
 const _inverseMatrix = /*@__PURE__*/ new Matrix4();
 const _ray = /*@__PURE__*/ new Ray();

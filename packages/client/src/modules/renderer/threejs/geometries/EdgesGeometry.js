@@ -1,5 +1,5 @@
-import { BufferGeometry } from '../core/BufferGeometry.js';
-import { Float32BufferAttribute } from '../core/BufferAttribute.js';
+import { BufferGeometry } from '../core/BufferGeometry.ts';
+import { Float32BufferAttribute } from '../core/BufferAttribute.ts';
 import * as MathUtils from '../math/MathUtils.ts';
 import { Triangle } from '../math/Triangle.ts';
 import { Vector3 } from '../math/Vector3.ts';

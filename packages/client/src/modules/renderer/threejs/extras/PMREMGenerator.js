@@ -9,8 +9,8 @@ import {
   ToneMapping,
 } from '../constants.ts';
 
-import { BufferAttribute } from '../core/BufferAttribute.js';
-import { BufferGeometry } from '../core/BufferGeometry.js';
+import { BufferAttribute } from '../core/BufferAttribute.ts';
+import { BufferGeometry } from '../core/BufferGeometry.ts';
 import { Mesh } from '../objects/Mesh.js';
 import { OrthographicCamera } from '../cameras/OrthographicCamera.js';
 import { PerspectiveCamera } from '../cameras/PerspectiveCamera.js';

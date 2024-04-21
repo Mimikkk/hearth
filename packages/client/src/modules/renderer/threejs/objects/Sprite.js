@@ -3,9 +3,9 @@ import { Vector3 } from '../math/Vector3.ts';
 import { Matrix4 } from '../math/Matrix4.ts';
 import { Triangle } from '../math/Triangle.ts';
 import { Object3D } from '../core/Object3D.js';
-import { BufferGeometry } from '../core/BufferGeometry.js';
-import { InterleavedBuffer } from '../core/InterleavedBuffer.js';
-import { InterleavedBufferAttribute } from '../core/InterleavedBufferAttribute.js';
+import { BufferGeometry } from '../core/BufferGeometry.ts';
+import { InterleavedBuffer } from '../core/InterleavedBuffer.ts';
+import { InterleavedBufferAttribute } from '../core/InterleavedBufferAttribute.ts';
 import { SpriteMaterial } from '../materials/SpriteMaterial.js';
 
 let _geometry;

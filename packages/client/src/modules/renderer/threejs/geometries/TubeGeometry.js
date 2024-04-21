@@ -1,5 +1,5 @@
-import { BufferGeometry } from '../core/BufferGeometry.js';
-import { Float32BufferAttribute } from '../core/BufferAttribute.js';
+import { BufferGeometry } from '../core/BufferGeometry.ts';
+import { Float32BufferAttribute } from '../core/BufferAttribute.ts';
 import * as Curves from '../extras/curves/Curves.js';
 import { Vector2 } from '../math/Vector2.ts';
 import { Vector3 } from '../math/Vector3.ts';

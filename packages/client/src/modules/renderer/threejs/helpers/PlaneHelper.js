@@ -2,8 +2,8 @@ import { Line } from '../objects/Line.js';
 import { Mesh } from '../objects/Mesh.js';
 import { LineBasicMaterial } from '../materials/LineBasicMaterial.js';
 import { MeshBasicMaterial } from '../materials/MeshBasicMaterial.js';
-import { Float32BufferAttribute } from '../core/BufferAttribute.js';
-import { BufferGeometry } from '../core/BufferGeometry.js';
+import { Float32BufferAttribute } from '../core/BufferAttribute.ts';
+import { BufferGeometry } from '../core/BufferGeometry.ts';
 
 class PlaneHelper extends Line {
   constructor(plane, size = 1, hex = 0xffff00) {

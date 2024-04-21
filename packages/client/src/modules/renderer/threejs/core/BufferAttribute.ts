@@ -1,18 +1,29 @@
-import { Vector3 } from '../math/Vector3.ts';
-import { Vector2 } from '../math/Vector2.ts';
-import { denormalize, normalize } from '../math/MathUtils.ts';
-import { BufferUsage, TextureDataType } from '../constants.ts';
+import { Vector3 } from '../math/Vector3.js';
+import { Vector2 } from '../math/Vector2.js';
+import { denormalize, normalize, TypedArray, TypedArrayConstructor } from '../math/MathUtils.js';
+import { BufferUsage, TextureDataType } from '../constants.js';
 import { fromHalfFloat, toHalfFloat } from '../extras/DataUtils.js';
+import { Matrix3 } from '@modules/renderer/threejs/math/Matrix3.js';
+import { Matrix4 } from '@modules/renderer/threejs/math/Matrix4.js';
 
 const _vector = /*@__PURE__*/ new Vector3();
 const _vector2 = /*@__PURE__*/ new Vector2();
 
-class BufferAttribute {
-  constructor(array, itemSize, normalized = false) {
-    if (Array.isArray(array)) {
-      throw new TypeError('THREE.BufferAttribute: array should be a Typed Array.');
-    }
+export class BufferAttribute<T extends TypedArray> {
+  declare ['constructor']: typeof BufferAttribute<T>;
+  declare isBufferAttribute: true;
+  name: string;
+  array: T;
+  itemSize: number;
+  count: number;
+  normalized: boolean;
+  usage: BufferUsage;
+  _updateRange: { offset: number; count: number };
+  updateRanges: { start: number; count: number }[];
+  gpuType: TextureDataType;
+  version: number;
 
+  constructor(array: T, itemSize: number, normalized: boolean = false) {
     this.isBufferAttribute = true;
 
     this.name = '';
@@ -32,17 +43,16 @@ class BufferAttribute {
 
   onUploadCallback() {}
 
-  set needsUpdate(value) {
-    if (value === true) this.version++;
+  set needsUpdate(value: boolean) {
+    if (value) ++this.version;
   }
 
-  setUsage(value) {
+  setUsage(value: BufferUsage) {
     this.usage = value;
-
     return this;
   }
 
-  addUpdateRange(start, count) {
+  addUpdateRange(start: number, count: number) {
     this.updateRanges.push({ start, count });
   }
 
@@ -50,9 +60,9 @@ class BufferAttribute {
     this.updateRanges.length = 0;
   }
 
-  copy(source) {
+  copy(source: BufferAttribute<T>): this {
     this.name = source.name;
-    this.array = new source.array.constructor(source.array);
+    this.array = new (source.array.constructor as TypedArrayConstructor)(source.array) as T;
     this.itemSize = source.itemSize;
     this.count = source.count;
     this.normalized = source.normalized;
@@ -63,7 +73,7 @@ class BufferAttribute {
     return this;
   }
 
-  copyAt(index1, attribute, index2) {
+  copyAt(index1: number, attribute: BufferAttribute<T>, index2: number): this {
     index1 *= this.itemSize;
     index2 *= attribute.itemSize;
 
@@ -74,13 +84,13 @@ class BufferAttribute {
     return this;
   }
 
-  copyArray(array) {
+  copyArray(array: number[]): this {
     this.array.set(array);
 
     return this;
   }
 
-  applyMatrix3(m) {
+  applyMatrix3(m: Matrix3): this {
     if (this.itemSize === 2) {
       for (let i = 0, l = this.count; i < l; i++) {
         _vector2.fromBufferAttribute(this, i);
@@ -100,7 +110,7 @@ class BufferAttribute {
     return this;
   }
 
-  applyMatrix4(m) {
+  applyMatrix4(m: Matrix4): this {
     for (let i = 0, l = this.count; i < l; i++) {
       _vector.fromBufferAttribute(this, i);
 
@@ -112,7 +122,7 @@ class BufferAttribute {
     return this;
   }
 
-  applyNormalMatrix(m) {
+  applyNormalMatrix(m: Matrix3): this {
     for (let i = 0, l = this.count; i < l; i++) {
       _vector.fromBufferAttribute(this, i);
 
@@ -124,7 +134,7 @@ class BufferAttribute {
     return this;
   }
 
-  transformDirection(m) {
+  transformDirection(m: Matrix4): this {
     for (let i = 0, l = this.count; i < l; i++) {
       _vector.fromBufferAttribute(this, i);
 
@@ -136,14 +146,14 @@ class BufferAttribute {
     return this;
   }
 
-  set(value, offset = 0) {
+  set(value: number[], offset: number = 0): this {
     // Matching BufferAttribute constructor, do not normalize the array.
     this.array.set(value, offset);
 
     return this;
   }
 
-  getComponent(index, component) {
+  getComponent(index: number, component: number): number {
     let value = this.array[index * this.itemSize + component];
 
     if (this.normalized) value = denormalize(value, this.array);
@@ -151,7 +161,7 @@ class BufferAttribute {
     return value;
   }
 
-  setComponent(index, component, value) {
+  setComponent(index: number, component: number, value: number): this {
     if (this.normalized) value = normalize(value, this.array);
 
     this.array[index * this.itemSize + component] = value;
@@ -159,7 +169,7 @@ class BufferAttribute {
     return this;
   }
 
-  getX(index) {
+  getX(index: number): number {
     let x = this.array[index * this.itemSize];
 
     if (this.normalized) x = denormalize(x, this.array);
@@ -167,7 +177,7 @@ class BufferAttribute {
     return x;
   }
 
-  setX(index, x) {
+  setX(index: number, x: number): this {
     if (this.normalized) x = normalize(x, this.array);
 
     this.array[index * this.itemSize] = x;
@@ -175,7 +185,7 @@ class BufferAttribute {
     return this;
   }
 
-  getY(index) {
+  getY(index: number): number {
     let y = this.array[index * this.itemSize + 1];
 
     if (this.normalized) y = denormalize(y, this.array);
@@ -183,7 +193,7 @@ class BufferAttribute {
     return y;
   }
 
-  setY(index, y) {
+  setY(index: number, y: number): this {
     if (this.normalized) y = normalize(y, this.array);
 
     this.array[index * this.itemSize + 1] = y;
@@ -191,7 +201,7 @@ class BufferAttribute {
     return this;
   }
 
-  getZ(index) {
+  getZ(index: number): number {
     let z = this.array[index * this.itemSize + 2];
 
     if (this.normalized) z = denormalize(z, this.array);
@@ -199,7 +209,7 @@ class BufferAttribute {
     return z;
   }
 
-  setZ(index, z) {
+  setZ(index: number, z: number): this {
     if (this.normalized) z = normalize(z, this.array);
 
     this.array[index * this.itemSize + 2] = z;
@@ -207,7 +217,7 @@ class BufferAttribute {
     return this;
   }
 
-  getW(index) {
+  getW(index: number): number {
     let w = this.array[index * this.itemSize + 3];
 
     if (this.normalized) w = denormalize(w, this.array);
@@ -215,7 +225,7 @@ class BufferAttribute {
     return w;
   }
 
-  setW(index, w) {
+  setW(index: number, w: number): this {
     if (this.normalized) w = normalize(w, this.array);
 
     this.array[index * this.itemSize + 3] = w;
@@ -223,7 +233,7 @@ class BufferAttribute {
     return this;
   }
 
-  setXY(index, x, y) {
+  setXY(index: number, x: number, y: number): this {
     index *= this.itemSize;
 
     if (this.normalized) {
@@ -237,7 +247,7 @@ class BufferAttribute {
     return this;
   }
 
-  setXYZ(index, x, y, z) {
+  setXYZ(index: number, x: number, y: number, z: number): this {
     index *= this.itemSize;
 
     if (this.normalized) {
@@ -253,7 +263,7 @@ class BufferAttribute {
     return this;
   }
 
-  setXYZW(index, x, y, z, w) {
+  setXYZW(index: number, x: number, y: number, z: number, w: number): this {
     index *= this.itemSize;
 
     if (this.normalized) {
@@ -271,83 +281,79 @@ class BufferAttribute {
     return this;
   }
 
-  onUpload(callback) {
+  onUpload(callback: () => void): this {
     this.onUploadCallback = callback;
 
     return this;
   }
 
-  clone() {
+  clone(): BufferAttribute<T> {
     return new this.constructor(this.array, this.itemSize).copy(this);
   }
 
   toJSON() {
-    const data = {
+    return {
+      name: this.name,
+      usage: this.usage,
       itemSize: this.itemSize,
       type: this.array.constructor.name,
       array: Array.from(this.array),
       normalized: this.normalized,
     };
-
-    if (this.name !== '') data.name = this.name;
-    if (this.usage !== BufferUsage.StaticDraw) data.usage = this.usage;
-
-    return data;
   }
 }
+BufferAttribute.prototype.isBufferAttribute = true;
 
-//
-
-class Int8BufferAttribute extends BufferAttribute {
-  constructor(array, itemSize, normalized) {
+export class Int8BufferAttribute extends BufferAttribute<Int8Array> {
+  constructor(array: number[], itemSize: number, normalized?: boolean) {
     super(new Int8Array(array), itemSize, normalized);
   }
 }
 
-class Uint8BufferAttribute extends BufferAttribute {
-  constructor(array, itemSize, normalized) {
+export class Uint8BufferAttribute extends BufferAttribute<Uint8Array> {
+  constructor(array: number[], itemSize: number, normalized?: boolean) {
     super(new Uint8Array(array), itemSize, normalized);
   }
 }
 
-class Uint8ClampedBufferAttribute extends BufferAttribute {
-  constructor(array, itemSize, normalized) {
+export class Uint8ClampedBufferAttribute extends BufferAttribute<Uint8ClampedArray> {
+  constructor(array: number[], itemSize: number, normalized?: boolean) {
     super(new Uint8ClampedArray(array), itemSize, normalized);
   }
 }
 
-class Int16BufferAttribute extends BufferAttribute {
-  constructor(array, itemSize, normalized) {
+export class Int16BufferAttribute extends BufferAttribute<Int16Array> {
+  constructor(array: number[], itemSize: number, normalized?: boolean) {
     super(new Int16Array(array), itemSize, normalized);
   }
 }
 
-class Uint16BufferAttribute extends BufferAttribute {
-  constructor(array, itemSize, normalized) {
+export class Uint16BufferAttribute extends BufferAttribute<Uint16Array> {
+  constructor(array: number[], itemSize: number, normalized?: boolean) {
     super(new Uint16Array(array), itemSize, normalized);
   }
 }
 
-class Int32BufferAttribute extends BufferAttribute {
-  constructor(array, itemSize, normalized) {
+export class Int32BufferAttribute extends BufferAttribute<Int32Array> {
+  constructor(array: number[], itemSize: number, normalized?: boolean) {
     super(new Int32Array(array), itemSize, normalized);
   }
 }
 
-class Uint32BufferAttribute extends BufferAttribute {
-  constructor(array, itemSize, normalized) {
+export class Uint32BufferAttribute extends BufferAttribute<Uint32Array> {
+  constructor(array: number[], itemSize: number, normalized?: boolean) {
     super(new Uint32Array(array), itemSize, normalized);
   }
 }
 
-class Float16BufferAttribute extends BufferAttribute {
-  constructor(array, itemSize, normalized) {
-    super(new Uint16Array(array), itemSize, normalized);
+export class Float16BufferAttribute extends BufferAttribute<Uint16Array> {
+  declare isFloat16BufferAttribute: true;
 
-    this.isFloat16BufferAttribute = true;
+  constructor(array: number[], itemSize: number, normalized?: boolean) {
+    super(new Uint16Array(array), itemSize, normalized);
   }
 
-  getX(index) {
+  override getX(index: number): number {
     let x = fromHalfFloat(this.array[index * this.itemSize]);
 
     if (this.normalized) x = denormalize(x, this.array);
@@ -355,7 +361,7 @@ class Float16BufferAttribute extends BufferAttribute {
     return x;
   }
 
-  setX(index, x) {
+  override setX(index: number, x: number): this {
     if (this.normalized) x = normalize(x, this.array);
 
     this.array[index * this.itemSize] = toHalfFloat(x);
@@ -363,7 +369,7 @@ class Float16BufferAttribute extends BufferAttribute {
     return this;
   }
 
-  getY(index) {
+  override getY(index: number): number {
     let y = fromHalfFloat(this.array[index * this.itemSize + 1]);
 
     if (this.normalized) y = denormalize(y, this.array);
@@ -371,7 +377,7 @@ class Float16BufferAttribute extends BufferAttribute {
     return y;
   }
 
-  setY(index, y) {
+  override setY(index: number, y: number): this {
     if (this.normalized) y = normalize(y, this.array);
 
     this.array[index * this.itemSize + 1] = toHalfFloat(y);
@@ -379,7 +385,7 @@ class Float16BufferAttribute extends BufferAttribute {
     return this;
   }
 
-  getZ(index) {
+  override getZ(index: number): number {
     let z = fromHalfFloat(this.array[index * this.itemSize + 2]);
 
     if (this.normalized) z = denormalize(z, this.array);
@@ -387,7 +393,7 @@ class Float16BufferAttribute extends BufferAttribute {
     return z;
   }
 
-  setZ(index, z) {
+  override setZ(index: number, z: number): this {
     if (this.normalized) z = normalize(z, this.array);
 
     this.array[index * this.itemSize + 2] = toHalfFloat(z);
@@ -395,7 +401,7 @@ class Float16BufferAttribute extends BufferAttribute {
     return this;
   }
 
-  getW(index) {
+  override getW(index: number): number {
     let w = fromHalfFloat(this.array[index * this.itemSize + 3]);
 
     if (this.normalized) w = denormalize(w, this.array);
@@ -403,7 +409,7 @@ class Float16BufferAttribute extends BufferAttribute {
     return w;
   }
 
-  setW(index, w) {
+  override setW(index: number, w: number): this {
     if (this.normalized) w = normalize(w, this.array);
 
     this.array[index * this.itemSize + 3] = toHalfFloat(w);
@@ -411,7 +417,7 @@ class Float16BufferAttribute extends BufferAttribute {
     return this;
   }
 
-  setXY(index, x, y) {
+  override setXY(index: number, x: number, y: number): this {
     index *= this.itemSize;
 
     if (this.normalized) {
@@ -425,7 +431,7 @@ class Float16BufferAttribute extends BufferAttribute {
     return this;
   }
 
-  setXYZ(index, x, y, z) {
+  override setXYZ(index: number, x: number, y: number, z: number): this {
     index *= this.itemSize;
 
     if (this.normalized) {
@@ -441,7 +447,7 @@ class Float16BufferAttribute extends BufferAttribute {
     return this;
   }
 
-  setXYZW(index, x, y, z, w) {
+  override setXYZW(index: number, x: number, y: number, z: number, w: number): this {
     index *= this.itemSize;
 
     if (this.normalized) {
@@ -459,24 +465,10 @@ class Float16BufferAttribute extends BufferAttribute {
     return this;
   }
 }
+Float16BufferAttribute.prototype.isFloat16BufferAttribute = true;
 
-class Float32BufferAttribute extends BufferAttribute {
-  constructor(array, itemSize, normalized) {
+export class Float32BufferAttribute extends BufferAttribute<Float32Array> {
+  constructor(array: number[], itemSize: number, normalized?: boolean) {
     super(new Float32Array(array), itemSize, normalized);
   }
 }
-
-//
-
-export {
-  Float32BufferAttribute,
-  Float16BufferAttribute,
-  Uint32BufferAttribute,
-  Int32BufferAttribute,
-  Uint16BufferAttribute,
-  Int16BufferAttribute,
-  Uint8ClampedBufferAttribute,
-  Uint8BufferAttribute,
-  Int8BufferAttribute,
-  BufferAttribute,
-};

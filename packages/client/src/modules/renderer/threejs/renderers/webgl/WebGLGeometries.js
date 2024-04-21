@@ -1,4 +1,4 @@
-import { Uint16BufferAttribute, Uint32BufferAttribute } from '../../core/BufferAttribute.js';
+import { Uint16BufferAttribute, Uint32BufferAttribute } from '../../core/BufferAttribute.ts';
 import { isArrayUint32 } from '../../utils.ts';
 
 function WebGLGeometries(gl, attributes, info, bindingStates) {

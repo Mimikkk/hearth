@@ -1,4 +1,4 @@
-import { InstancedBufferAttribute } from '../core/InstancedBufferAttribute.js';
+import { InstancedBufferAttribute } from '../core/InstancedBufferAttribute.ts';
 import { Mesh } from './Mesh.js';
 import { Box3 } from '../math/Box3.ts';
 import { Matrix4 } from '../math/Matrix4.ts';

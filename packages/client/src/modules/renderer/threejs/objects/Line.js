@@ -4,8 +4,8 @@ import { Matrix4 } from '../math/Matrix4.ts';
 import { Object3D } from '../core/Object3D.js';
 import { Vector3 } from '../math/Vector3.ts';
 import { LineBasicMaterial } from '../materials/LineBasicMaterial.js';
-import { BufferGeometry } from '../core/BufferGeometry.js';
-import { Float32BufferAttribute } from '../core/BufferAttribute.js';
+import { BufferGeometry } from '../core/BufferGeometry.ts';
+import { Float32BufferAttribute } from '../core/BufferAttribute.ts';
 
 const _start = /*@__PURE__*/ new Vector3();
 const _end = /*@__PURE__*/ new Vector3();

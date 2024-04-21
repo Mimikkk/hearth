@@ -1,17 +1,20 @@
-class Clock {
-  constructor(autoStart = true) {
-    this.autoStart = autoStart;
+export class Clock {
+  public autoStart: boolean;
+  public startTime: number;
+  public oldTime: number;
+  public elapsedTime: number;
+  public running: boolean;
 
+  constructor(autoStart: boolean = true) {
+    this.autoStart = autoStart;
     this.startTime = 0;
     this.oldTime = 0;
     this.elapsedTime = 0;
-
     this.running = false;
   }
 
   start() {
-    this.startTime = now();
-
+    this.startTime = performance.now();
     this.oldTime = this.startTime;
     this.elapsedTime = 0;
     this.running = true;
@@ -37,7 +40,7 @@ class Clock {
     }
 
     if (this.running) {
-      const newTime = now();
+      const newTime = performance.now();
 
       diff = (newTime - this.oldTime) / 1000;
       this.oldTime = newTime;
@@ -48,9 +51,3 @@ class Clock {
     return diff;
   }
 }
-
-function now() {
-  return (typeof performance === 'undefined' ? Date : performance).now(); // see #10732
-}
-
-export { Clock };
