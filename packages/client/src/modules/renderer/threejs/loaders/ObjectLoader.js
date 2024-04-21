@@ -1,7 +1,7 @@
 import { Filter, Mapping, Wrapping } from '../constants.ts';
 import { InstancedBufferAttribute } from '../core/InstancedBufferAttribute.ts';
 import { Color } from '../math/Color.ts';
-import { Object3D } from '../core/Object3D.js';
+import { Object3D } from '../core/Object3D.ts';
 import { Group } from '../objects/Group.js';
 import { InstancedMesh } from '../objects/InstancedMesh.js';
 import { BatchedMesh } from '../objects/BatchedMesh.js';

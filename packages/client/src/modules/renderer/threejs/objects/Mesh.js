@@ -3,7 +3,7 @@ import { Vector2 } from '../math/Vector2.ts';
 import { Sphere } from '../math/Sphere.ts';
 import { Ray } from '../math/Ray.ts';
 import { Matrix4 } from '../math/Matrix4.ts';
-import { Object3D } from '../core/Object3D.js';
+import { Object3D } from '../core/Object3D.ts';
 import { Triangle } from '../math/Triangle.ts';
 import { Side } from '../constants.ts';
 import { MeshBasicMaterial } from '../materials/MeshBasicMaterial.js';

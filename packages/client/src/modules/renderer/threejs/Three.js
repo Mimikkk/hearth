@@ -99,7 +99,7 @@ export { InstancedInterleavedBuffer } from './core/InstancedInterleavedBuffer.ts
 export { InterleavedBuffer } from './core/InterleavedBuffer.ts';
 export { InstancedBufferAttribute } from './core/InstancedBufferAttribute.ts';
 export * from './core/BufferAttribute.ts';
-export { Object3D } from './core/Object3D.js';
+export { Object3D } from './core/Object3D.ts';
 export { Raycaster } from './core/Raycaster.ts';
 export { Layers } from './core/Layers.ts';
 export { EventDispatcher } from './core/EventDispatcher.ts';

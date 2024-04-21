@@ -1,6 +1,6 @@
 import { CoordinateSystem } from '../constants.ts';
 import { Matrix4 } from '../math/Matrix4.ts';
-import { Object3D } from '../core/Object3D.js';
+import { Object3D } from '../core/Object3D.ts';
 
 class Camera extends Object3D {
   constructor() {

@@ -1,4 +1,4 @@
-import { Object3D } from '../core/Object3D.js';
+import { Object3D } from '../core/Object3D.ts';
 
 class Group extends Object3D {
   constructor() {

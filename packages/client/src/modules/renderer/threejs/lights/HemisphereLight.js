@@ -1,6 +1,6 @@
 import { Light } from './Light.js';
 import { Color } from '../math/Color.ts';
-import { Object3D } from '../core/Object3D.js';
+import { Object3D } from '../core/Object3D.ts';
 
 class HemisphereLight extends Light {
   constructor(skyColor, groundColor, intensity) {

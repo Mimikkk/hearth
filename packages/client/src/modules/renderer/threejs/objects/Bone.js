@@ -1,4 +1,4 @@
-import { Object3D } from '../core/Object3D.js';
+import { Object3D } from '../core/Object3D.ts';
 
 class Bone extends Object3D {
   constructor() {

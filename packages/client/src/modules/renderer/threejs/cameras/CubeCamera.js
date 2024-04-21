@@ -1,5 +1,5 @@
 import { CoordinateSystem } from '../constants.ts';
-import { Object3D } from '../core/Object3D.js';
+import { Object3D } from '../core/Object3D.ts';
 import { PerspectiveCamera } from './PerspectiveCamera.js';
 
 const fov = -90; // negative fov is not an error

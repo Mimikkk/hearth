@@ -1,6 +1,6 @@
 import { Light } from './Light.js';
 import { SpotLightShadow } from './SpotLightShadow.js';
-import { Object3D } from '../core/Object3D.js';
+import { Object3D } from '../core/Object3D.ts';
 
 class SpotLight extends Light {
   constructor(color, intensity, distance = 0, angle = Math.PI / 3, penumbra = 0, decay = 2) {

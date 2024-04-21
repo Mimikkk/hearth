@@ -1,6 +1,6 @@
 import { Vector3 } from '../math/Vector3.ts';
 import { Color } from '../math/Color.ts';
-import { Object3D } from '../core/Object3D.js';
+import { Object3D } from '../core/Object3D.ts';
 import { Mesh } from '../objects/Mesh.js';
 import { MeshBasicMaterial } from '../materials/MeshBasicMaterial.js';
 import { OctahedronGeometry } from '../geometries/OctahedronGeometry.js';

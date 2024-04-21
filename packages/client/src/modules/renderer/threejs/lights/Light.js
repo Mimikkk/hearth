@@ -1,4 +1,4 @@
-import { Object3D } from '../core/Object3D.js';
+import { Object3D } from '../core/Object3D.ts';
 import { Color } from '../math/Color.ts';
 
 class Light extends Object3D {

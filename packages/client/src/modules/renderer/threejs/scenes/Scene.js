@@ -1,4 +1,4 @@
-import { Object3D } from '../core/Object3D.js';
+import { Object3D } from '../core/Object3D.ts';
 import { Euler } from '../math/Euler.ts';
 
 class Scene extends Object3D {

@@ -1,6 +1,6 @@
 import { Light } from './Light.js';
 import { DirectionalLightShadow } from './DirectionalLightShadow.js';
-import { Object3D } from '../core/Object3D.js';
+import { Object3D } from '../core/Object3D.ts';
 
 class DirectionalLight extends Light {
   constructor(color, intensity) {

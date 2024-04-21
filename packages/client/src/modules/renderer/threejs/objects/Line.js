@@ -1,7 +1,7 @@
 import { Sphere } from '../math/Sphere.ts';
 import { Ray } from '../math/Ray.ts';
 import { Matrix4 } from '../math/Matrix4.ts';
-import { Object3D } from '../core/Object3D.js';
+import { Object3D } from '../core/Object3D.ts';
 import { Vector3 } from '../math/Vector3.ts';
 import { LineBasicMaterial } from '../materials/LineBasicMaterial.js';
 import { BufferGeometry } from '../core/BufferGeometry.ts';
