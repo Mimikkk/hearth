@@ -1,7 +1,7 @@
 import { Vector3 } from './Vector3.js';
 
 type Coefficients = [Vector3, Vector3, Vector3, Vector3, Vector3, Vector3, Vector3, Vector3, Vector3];
-class SphericalHarmonics3 {
+export class SphericalHarmonics3 {
   declare ['constructor']: typeof SphericalHarmonics3;
   declare isSphericalHarmonics3: true;
   coefficients: Coefficients;

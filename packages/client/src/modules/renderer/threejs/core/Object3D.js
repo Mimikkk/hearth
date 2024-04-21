@@ -3,7 +3,7 @@ import { Vector3 } from '../math/Vector3.ts';
 import { Matrix4 } from '../math/Matrix4.ts';
 import { EventDispatcher } from './EventDispatcher.ts';
 import { Euler } from '../math/Euler.ts';
-import { Layers } from './Layers.js';
+import { Layers } from './Layers.ts';
 import { Matrix3 } from '../math/Matrix3.ts';
 import * as MathUtils from '../math/MathUtils.ts';
 
@@ -424,7 +424,7 @@ class Object3D {
     return target.set(e[8], e[9], e[10]).normalize();
   }
 
-  raycast(/* raycaster, intersects */) {}
+  raycast(raycaster, intersects) {}
 
   traverse(callback) {
     callback(this);

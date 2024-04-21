@@ -129,15 +129,15 @@ class ScriptableNode extends Node {
       this.deleteParameter(name);
 
       parameters[name] = value;
-      parameters[name].getDefaultOutput().events.addEventListener('refresh', this.onRefresh);
+      parameters[name].getDefaultOutput().events.add('refresh', this.onRefresh);
     } else if (value && value.isScriptableValueNode) {
       this.deleteParameter(name);
 
       parameters[name] = value;
-      parameters[name].events.addEventListener('refresh', this.onRefresh);
+      parameters[name].events.add('refresh', this.onRefresh);
     } else if (parameters[name] === undefined) {
       parameters[name] = scriptableValue(value);
-      parameters[name].events.addEventListener('refresh', this.onRefresh);
+      parameters[name].events.add('refresh', this.onRefresh);
     } else {
       parameters[name].value = value;
     }
@@ -260,7 +260,7 @@ class ScriptableNode extends Node {
 
       if (valueNode.isScriptableNode) valueNode = valueNode.getDefaultOutput();
 
-      valueNode.events.addEventListener('refresh', this.onRefresh);
+      valueNode.events.add('refresh', this.onRefresh);
     }
   }
 

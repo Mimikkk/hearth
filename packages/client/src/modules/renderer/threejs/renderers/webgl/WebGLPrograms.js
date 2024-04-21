@@ -1,5 +1,5 @@
 import { Blending, ColorSpace, Mapping, NormalMapType, Side, ToneMapping, TransferFunction } from '../../constants.ts';
-import { Layers } from '../../core/Layers.js';
+import { Layers } from '../../core/Layers.ts';
 import { WebGLProgram } from './WebGLProgram.js';
 import { WebGLShaderCache } from './WebGLShaderCache.js';
 import { ShaderLib } from '../shaders/ShaderLib.js';

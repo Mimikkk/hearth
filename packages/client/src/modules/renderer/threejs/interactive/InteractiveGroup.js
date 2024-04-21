@@ -3,8 +3,6 @@ import { Group, Raycaster, Vector2 } from '../Three.js';
 const _pointer = new Vector2();
 const _event = { type: '', data: _pointer };
 
-const _raycaster = new Raycaster();
-
 class InteractiveGroup extends Group {
   listenToPointerEvents(renderer, camera) {
     const scope = this;
@@ -44,44 +42,6 @@ class InteractiveGroup extends Group {
     element.addEventListener('mouseup', onPointerEvent);
     element.addEventListener('mousemove', onPointerEvent);
     element.addEventListener('click', onPointerEvent);
-  }
-
-  listenToXRControllerEvents(controller) {
-    const scope = this;
-
-    // TODO: Dispatch pointerevents too
-
-    const events = {
-      move: 'mousemove',
-      select: 'click',
-      selectstart: 'mousedown',
-      selectend: 'mouseup',
-    };
-
-    function onXRControllerEvent(event) {
-      const controller = event.target;
-
-      _raycaster.setFromXRController(controller);
-
-      const intersections = _raycaster.intersectObjects(scope.children, false);
-
-      if (intersections.length > 0) {
-        const intersection = intersections[0];
-
-        const object = intersection.object;
-        const uv = intersection.uv;
-
-        _event.type = events[event.type];
-        _event.data.set(uv.x, 1 - uv.y);
-
-        object.eventDispatcher.dispatch(_event, this);
-      }
-    }
-
-    controller.addEventListener('move', onXRControllerEvent);
-    controller.addEventListener('select', onXRControllerEvent);
-    controller.addEventListener('selectstart', onXRControllerEvent);
-    controller.addEventListener('selectend', onXRControllerEvent);
   }
 }
 

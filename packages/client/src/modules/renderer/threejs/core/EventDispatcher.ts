@@ -30,13 +30,16 @@ export class EventDispatcher<EventMap extends {}> {
     if (index !== -1) listeners.splice(index, 1);
   }
 
-  dispatch<T extends keyof EventMap, Target>(event: Event<T, Target> & EventMap[T], target: Target): void {
+  dispatch<T extends keyof EventMap, Target>(
+    event: Omit<Event<T, Target>, 'target'> & EventMap[T],
+    target: Target,
+  ): void {
     const listeners = this.listeners.get(event.type);
     if (listeners === undefined) return;
 
-    event.target = target;
+    (event as unknown as Event<T, Target>).target = target;
     const array = listeners.slice(0);
     for (let i = 0, it = array.length; i < it; ++i) array[i].call(this, event);
-    event.target = null!;
+    (event as unknown as Event<T, Target>).target = null!;
   }
 }
