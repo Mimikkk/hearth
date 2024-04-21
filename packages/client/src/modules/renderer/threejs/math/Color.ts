@@ -1,10 +1,10 @@
 import { clamp, euclideanModulo, lerp } from './MathUtils.js';
-import { ColorManagement, LinearToSRGB, SRGBToLinear } from './ColorManagement.js';
+import { ColorManagement, DefinedColorSpace, LinearToSRGB, SRGBToLinear } from './ColorManagement.js';
 import { ColorSpace } from '../constants.js';
-import { BufferAttribute } from '@modules/renderer/threejs/core/BufferAttribute.js';
-import { InterleavedBufferAttribute } from '@modules/renderer/threejs/core/InterleavedBufferAttribute.js';
-import { Vector3 } from '@modules/renderer/threejs/math/Vector3.js';
-import { Matrix3 } from '@modules/renderer/threejs/math/Matrix3.js';
+import type { BufferAttribute } from '@modules/renderer/threejs/core/BufferAttribute.js';
+import type { InterleavedBufferAttribute } from '@modules/renderer/threejs/core/InterleavedBufferAttribute.js';
+import type { Matrix3 } from '@modules/renderer/threejs/math/Matrix3.js';
+import type { Vector3 } from '@modules/renderer/threejs/math/Vector3.js';
 
 const ColorMap = {
   aliceblue: 0xf0f8ff,
@@ -199,14 +199,15 @@ export class Color {
   g: number;
   b: number;
 
-  constructor(r: number = 1, g: number = 1, b: number = 1) {
-    this.isColor = true;
-
+  constructor();
+  constructor(r: ColorRepresentation);
+  constructor(r: number, g: number, b: number);
+  constructor(r?: number | ColorRepresentation, g?: number, b?: number) {
     this.r = 1;
     this.g = 1;
     this.b = 1;
 
-    return this.set(r, g, b);
+    return this.set(r as number, g as number, b as number);
   }
 
   set(r: ColorRepresentation): this;
@@ -237,7 +238,7 @@ export class Color {
     return this;
   }
 
-  setHex(hex: number, colorSpace: ColorSpace = ColorSpace.SRGB): this {
+  setHex(hex: number, colorSpace: DefinedColorSpace = ColorSpace.SRGB): this {
     hex = Math.floor(hex);
 
     this.r = ((hex >> 16) & 255) / 255;
@@ -249,7 +250,7 @@ export class Color {
     return this;
   }
 
-  setRGB(r: number, g: number, b: number, colorSpace: ColorSpace = ColorManagement.workingColorSpace): this {
+  setRGB(r: number, g: number, b: number, colorSpace: DefinedColorSpace = ColorManagement.workingColorSpace): this {
     this.r = r;
     this.g = g;
     this.b = b;
@@ -259,7 +260,7 @@ export class Color {
     return this;
   }
 
-  setHSL(h: number, s: number, l: number, colorSpace: ColorSpace = ColorManagement.workingColorSpace): this {
+  setHSL(h: number, s: number, l: number, colorSpace: DefinedColorSpace = ColorManagement.workingColorSpace): this {
     // h,s,l ranges are in 0.0 - 1.0
     h = euclideanModulo(h, 1);
     s = clamp(s, 0, 1);
@@ -281,7 +282,7 @@ export class Color {
     return this;
   }
 
-  setStyle(style: string, colorSpace: ColorSpace = ColorSpace.SRGB): this {
+  setStyle(style: string, colorSpace: DefinedColorSpace = ColorSpace.SRGB): this {
     function handleAlpha(string: string) {
       if (string === undefined) return;
 
@@ -379,9 +380,9 @@ export class Color {
     return this;
   }
 
-  setColorName(style: ColorName, colorSpace: ColorSpace = ColorSpace.SRGB): this {
+  setColorName(style: ColorName, colorSpace: DefinedColorSpace = ColorSpace.SRGB): this {
     // color keywords
-    const hex = ColorMap[style];
+    const hex = ColorMap[style.toLowerCase() as ColorName];
 
     if (hex !== undefined) {
       // red
@@ -434,8 +435,8 @@ export class Color {
     return this;
   }
 
-  getHex(colorSpace: ColorSpace = ColorSpace.SRGB): number {
-    ColorManagement.fromWorkingColorSpace(_color.copy(this), colorSpace);
+  getHex(colorSpace: DefinedColorSpace = ColorSpace.SRGB): number {
+    const _color = ColorManagement.fromWorkingColorSpace(new Color().copy(this), colorSpace);
 
     return (
       Math.round(clamp(_color.r * 255, 0, 255)) * 65536 +
@@ -444,12 +445,12 @@ export class Color {
     );
   }
 
-  getHexString(colorSpace: ColorSpace = ColorSpace.SRGB): string {
+  getHexString(colorSpace: DefinedColorSpace = ColorSpace.SRGB): string {
     return ('000000' + this.getHex(colorSpace).toString(16)).slice(-6);
   }
 
-  getHSL(target: HSL, colorSpace: ColorSpace = ColorManagement.workingColorSpace): HSL {
-    ColorManagement.fromWorkingColorSpace(_color.copy(this), colorSpace);
+  getHSL(target: HSL, colorSpace: DefinedColorSpace = ColorManagement.workingColorSpace): HSL {
+    const _color = ColorManagement.fromWorkingColorSpace(new Color().copy(this), colorSpace);
 
     const { r, g, b } = _color;
 
@@ -490,8 +491,8 @@ export class Color {
     return target;
   }
 
-  getRGB(target: RGB, colorSpace: ColorSpace = ColorManagement.workingColorSpace): RGB {
-    ColorManagement.fromWorkingColorSpace(_color.copy(this), colorSpace);
+  getRGB(target: RGB, colorSpace: DefinedColorSpace = ColorManagement.workingColorSpace): RGB {
+    const _color = ColorManagement.fromWorkingColorSpace(new Color().copy(this), colorSpace);
 
     target.r = _color.r;
     target.g = _color.g;
@@ -500,8 +501,8 @@ export class Color {
     return target;
   }
 
-  getStyle(colorSpace: ColorSpace = ColorSpace.SRGB): string {
-    ColorManagement.fromWorkingColorSpace(_color.copy(this), colorSpace);
+  getStyle(colorSpace: DefinedColorSpace = ColorSpace.SRGB): string {
+    const _color = ColorManagement.fromWorkingColorSpace(new Color().copy(this), colorSpace);
 
     const r = _color.r,
       g = _color.g,
@@ -657,5 +658,4 @@ export class Color {
     yield this.b;
   }
 }
-
-const _color = /*@__PURE__*/ new Color();
+Color.prototype.isColor = true;
