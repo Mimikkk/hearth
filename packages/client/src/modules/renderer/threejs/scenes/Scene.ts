@@ -1,31 +1,39 @@
-import { Object3D } from '../core/Object3D.ts';
-import { Euler } from '../math/Euler.ts';
+import { Object3D } from '../core/Object3D.js';
+import { Euler } from '../math/Euler.js';
+import type { Fog } from './Fog.js';
+import type { Material } from '../materials/Material.js';
+import type { Color } from '../math/Color.js';
+import type { Texture } from '../textures/Texture.js';
+import type { CubeTexture } from '../textures/CubeTexture.js';
 
-class Scene extends Object3D {
+export class Scene extends Object3D {
+  declare isScene: true;
+  type: string | 'Scene';
+  fog: Fog | null;
+  background: Color | Texture | CubeTexture | null;
+  environment: any;
+  backgroundBlurriness: number;
+  backgroundIntensity: number;
+  backgroundRotation: Euler;
+  environmentRotation: Euler;
+  overrideMaterial: Material | null;
+
   constructor() {
     super();
-
-    this.isScene = true;
 
     this.type = 'Scene';
 
     this.background = null;
     this.environment = null;
     this.fog = null;
-
     this.backgroundBlurriness = 0;
     this.backgroundIntensity = 1;
     this.backgroundRotation = new Euler();
     this.environmentRotation = new Euler();
-
     this.overrideMaterial = null;
-
-    if (typeof __THREE_DEVTOOLS__ !== 'undefined') {
-      __THREE_DEVTOOLS__.dispatch(new CustomEvent('observe', { detail: this }), this);
-    }
   }
 
-  copy(source, recursive) {
+  copy(source: Scene, recursive?: boolean) {
     super.copy(source, recursive);
 
     if (source.background !== null) this.background = source.background.clone();
@@ -44,7 +52,7 @@ class Scene extends Object3D {
     return this;
   }
 
-  toJSON(meta) {
+  toJSON(meta: any) {
     const data = super.toJSON(meta);
 
     if (this.fog !== null) data.object.fog = this.fog.toJSON();
@@ -57,5 +65,4 @@ class Scene extends Object3D {
     return data;
   }
 }
-
-export { Scene };
+Scene.prototype.isScene = true;
