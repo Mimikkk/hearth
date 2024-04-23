@@ -43,7 +43,7 @@ import {
   Wrapping,
 } from '../../threejs/Three.js';
 import * as fflate from '../libs/fflate.module.js';
-import { NURBSCurve } from '@modules/renderer/threejs/curves/NURBSCurve.js';
+import { NURBSCurve } from '@modules/renderer/threejs/curves/NURBSCurve.ts';
 
 /**
  * Loader loads FBX file and generates Group representing FBX scene.

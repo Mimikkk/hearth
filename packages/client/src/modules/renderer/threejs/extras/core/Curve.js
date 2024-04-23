@@ -43,9 +43,9 @@ class Curve {
   // Virtual base class method to overwrite and implement in subclasses
   //	- t [0 .. 1]
 
-  getPoint(/* t, optionalTarget */) {
+  getPoint(t: number, optionalTarget: Vector3) {
     console.warn('THREE.Curve: .getPoint() not implemented.');
-    return null;
+    return new Vector3();
   }
 
   // Get point at relative position in curve according to arc length

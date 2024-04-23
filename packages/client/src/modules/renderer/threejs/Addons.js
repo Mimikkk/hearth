@@ -22,11 +22,11 @@ export * from '@modules/renderer/threejs/csm/CSMFrustum.js';
 export * from '@modules/renderer/threejs/csm/CSMHelper.js';
 export * from '@modules/renderer/threejs/csm/CSMShader.js';
 
-export * as Curves from '@modules/renderer/threejs/curves/CurveExtras.js';
-export * from '@modules/renderer/threejs/curves/NURBSCurve.js';
-export * from '@modules/renderer/threejs/curves/NURBSSurface.js';
-export * from '@modules/renderer/threejs/curves/NURBSVolume.js';
-export * as NURBSUtils from '@modules/renderer/threejs/curves/NURBSUtils.js';
+export * as Curves from '@modules/renderer/threejs/curves/CurveExtras.ts';
+export * from '@modules/renderer/threejs/curves/NURBSCurve.ts';
+export * from '@modules/renderer/threejs/curves/NURBSSurface.ts';
+export * from '@modules/renderer/threejs/curves/NURBSVolume.ts';
+export * as NURBSUtils from '@modules/renderer/threejs/curves/NURBSUtils.ts';
 
 export * from '@modules/renderer/threejs/effects/AnaglyphEffect.js';
 export * from '@modules/renderer/threejs/effects/AsciiEffect.js';

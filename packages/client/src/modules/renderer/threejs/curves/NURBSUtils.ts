@@ -1,15 +1,5 @@
 import { Vector3, Vector4 } from '../Three.js';
 
-/**
- * NURBS utils
- *
- * See NURBSCurve and NURBSSurface.
- **/
-
-/**************************************************************
- *  NURBS Utils
- **************************************************************/
-
 /*
 Finds knot vector span.
 
@@ -19,7 +9,7 @@ U : knot vector
 
 returns the span
 */
-function findSpan(p, u, U) {
+export function findSpan(p: number, u: number, U: number[]): number {
   const n = U.length - p - 1;
 
   if (u >= U[n]) {
@@ -57,10 +47,10 @@ U    : knot vector
 
 returns array[p+1] with basis functions values.
 */
-function calcBasisFunctions(span, u, p, U) {
-  const N = [];
-  const left = [];
-  const right = [];
+export function calcBasisFunctions(span: number, u: number, p: number, U: number[]): number[] {
+  const N: number[] = [];
+  const left: number[] = [];
+  const right: number[] = [];
   N[0] = 1.0;
 
   for (let j = 1; j <= p; ++j) {
@@ -93,7 +83,7 @@ u : parametric point
 
 returns point for given u
 */
-function calcBSplinePoint(p, U, P, u) {
+export function calcBSplinePoint(p: number, U: number[], P: Vector4[], u: number): Vector4 {
   const span = findSpan(p, u, U);
   const N = calcBasisFunctions(span, u, p, U);
   const C = new Vector4(0, 0, 0, 0);
@@ -122,7 +112,7 @@ U    : knot vector
 
 returns array[n+1][p+1] with basis functions derivatives
 */
-function calcBasisFunctionDerivatives(span, u, p, n, U) {
+export function calcBasisFunctionDerivatives(span: number, u: number, p: number, n: number, U: number[]): number[][] {
   const zeroArr = [];
   for (let i = 0; i <= p; ++i) zeroArr[i] = 0.0;
 
@@ -228,7 +218,7 @@ function calcBasisFunctionDerivatives(span, u, p, n, U) {
 
 	returns array[d+1] with derivatives
 	*/
-function calcBSplineDerivatives(p, U, P, u, nd) {
+export function calcBSplineDerivatives(p: number, U: number[], P: Vector4[], u: number, nd: number): Vector4[] {
   const du = nd < p ? nd : p;
   const CK = [];
   const span = findSpan(p, u, U);
@@ -268,7 +258,7 @@ Calculate "K over I"
 
 returns k!/(i!(k-i)!)
 */
-function calcKoverI(k, i) {
+export function calcKoverI(k: number, i: number): number {
   let nom = 1;
 
   for (let j = 2; j <= k; ++j) {
@@ -295,7 +285,7 @@ Pders : result of function calcBSplineDerivatives
 
 returns array with derivatives for rational curve.
 */
-function calcRationalCurveDerivatives(Pders) {
+export function calcRationalCurveDerivatives(Pders: Vector4[]): Vector3[] {
   const nd = Pders.length;
   const Aders = [];
   const wders = [];
@@ -332,7 +322,7 @@ nd : number of derivatives
 
 returns array with derivatives.
 */
-function calcNURBSDerivatives(p, U, P, u, nd) {
+export function calcNURBSDerivatives(p: number, U: number[], P: Vector4[], u: number, nd: number): Vector3[] {
   const Pders = calcBSplineDerivatives(p, U, P, u, nd);
   return calcRationalCurveDerivatives(Pders);
 }
@@ -347,7 +337,16 @@ u, v : parametric values
 
 returns point for given (u, v)
 */
-function calcSurfacePoint(p, q, U, V, P, u, v, target) {
+export function calcSurfacePoint(
+  p: number,
+  q: number,
+  U: number[],
+  V: number[],
+  P: Vector4[][],
+  u: number,
+  v: number,
+  target: Vector3,
+): Vector3 {
   const uspan = findSpan(p, u, U);
   const vspan = findSpan(q, v, V);
   const Nu = calcBasisFunctions(uspan, u, p, U);
@@ -373,6 +372,7 @@ function calcSurfacePoint(p, q, U, V, P, u, v, target) {
 
   Sw.divideScalar(Sw.w);
   target.set(Sw.x, Sw.y, Sw.z);
+  return target;
 }
 
 /*
@@ -385,14 +385,26 @@ u, v, w   : parametric values
 
 returns point for given (u, v, w)
 */
-function calcVolumePoint(p, q, r, U, V, W, P, u, v, w, target) {
+export function calcVolumePoint(
+  p: number,
+  q: number,
+  r: number,
+  U: number[],
+  V: number[],
+  W: number[],
+  P: Vector4[][][],
+  u: number,
+  v: number,
+  w: number,
+  target: Vector3,
+): Vector3 {
   const uspan = findSpan(p, u, U);
   const vspan = findSpan(q, v, V);
   const wspan = findSpan(r, w, W);
   const Nu = calcBasisFunctions(uspan, u, p, U);
   const Nv = calcBasisFunctions(vspan, v, q, V);
   const Nw = calcBasisFunctions(wspan, w, r, W);
-  const temp = [];
+  const temp: Vector4[][] = [];
 
   for (let m = 0; m <= r; ++m) {
     temp[m] = [];
@@ -418,17 +430,5 @@ function calcVolumePoint(p, q, r, U, V, W, P, u, v, w, target) {
 
   Sw.divideScalar(Sw.w);
   target.set(Sw.x, Sw.y, Sw.z);
+  return target;
 }
-
-export {
-  findSpan,
-  calcBasisFunctions,
-  calcBSplinePoint,
-  calcBasisFunctionDerivatives,
-  calcBSplineDerivatives,
-  calcKoverI,
-  calcRationalCurveDerivatives,
-  calcNURBSDerivatives,
-  calcSurfacePoint,
-  calcVolumePoint,
-};
