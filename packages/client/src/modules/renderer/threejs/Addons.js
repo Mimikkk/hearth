@@ -5,7 +5,7 @@ export * from './animation/MMDPhysics.js';
 
 export * from './cameras/CinematicCamera.js';
 
-export { default as WebGL } from '@modules/renderer/threejs/capabilities/WebGL.js';
+export { WebGL } from '@modules/renderer/threejs/capabilities/WebGL.ts';
 
 export * from '@modules/renderer/threejs/controls/ArcballControls.js';
 export * from '@modules/renderer/threejs/controls/DragControls.js';
@@ -71,7 +71,7 @@ export * from '@modules/renderer/threejs/interactive/InteractiveGroup.js';
 export * from '@modules/renderer/threejs/interactive/SelectionBox.js';
 export * from '@modules/renderer/threejs/interactive/SelectionHelper.js';
 
-export { default as IESSpotLight } from './lights/IESSpotLight.js';
+export { IESSpotLight } from './lights/IESSpotLight.js';
 export * from './lights/LightProbeGenerator.js';
 export * from './lights/RectAreaLightUniformsLib.js';
 

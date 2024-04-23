@@ -540,7 +540,7 @@ export class Object3D {
     return this;
   }
 
-  updateMatrixWorld(force: boolean): this {
+  updateMatrixWorld(force?: boolean): this {
     if (this.matrixAutoUpdate) this.updateMatrix();
 
     if (this.matrixWorldNeedsUpdate || force) {

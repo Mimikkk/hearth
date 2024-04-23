@@ -1,18 +1,6 @@
 import { Curve, Vector3 } from '../Three.js';
 
-/**
- * A bunch of parametric curves
- *
- * Formulas collected from various sources
- * http://mathworld.wolfram.com/HeartCurve.html
- * http://en.wikipedia.org/wiki/Viviani%27s_curve
- * http://www.mi.sanu.ac.rs/vismath/taylorapril2011/Taylor.pdf
- * https://prideout.net/blog/old/blog/index.html@p=44.html
- */
-
-// GrannyKnot
-
-class GrannyKnot extends Curve {
+export class GrannyKnot extends Curve {
   getPoint(t, optionalTarget = new Vector3()) {
     const point = optionalTarget;
 
@@ -26,9 +14,7 @@ class GrannyKnot extends Curve {
   }
 }
 
-// HeartCurve
-
-class HeartCurve extends Curve {
+export class HeartCurve extends Curve {
   constructor(scale = 5) {
     super();
 
@@ -48,9 +34,7 @@ class HeartCurve extends Curve {
   }
 }
 
-// Viviani's Curve
-
-class VivianiCurve extends Curve {
+export class VivianiCurve extends Curve {
   constructor(scale = 70) {
     super();
 
@@ -71,9 +55,7 @@ class VivianiCurve extends Curve {
   }
 }
 
-// KnotCurve
-
-class KnotCurve extends Curve {
+export class KnotCurve extends Curve {
   getPoint(t, optionalTarget = new Vector3()) {
     const point = optionalTarget;
 
@@ -90,9 +72,7 @@ class KnotCurve extends Curve {
   }
 }
 
-// HelixCurve
-
-class HelixCurve extends Curve {
+export class HelixCurve extends Curve {
   getPoint(t, optionalTarget = new Vector3()) {
     const point = optionalTarget;
 
@@ -109,9 +89,7 @@ class HelixCurve extends Curve {
   }
 }
 
-// TrefoilKnot
-
-class TrefoilKnot extends Curve {
+export class TrefoilKnot extends Curve {
   constructor(scale = 10) {
     super();
 
@@ -131,9 +109,7 @@ class TrefoilKnot extends Curve {
   }
 }
 
-// TorusKnot
-
-class TorusKnot extends Curve {
+export class TorusKnot extends Curve {
   constructor(scale = 10) {
     super();
 
@@ -156,9 +132,7 @@ class TorusKnot extends Curve {
   }
 }
 
-// CinquefoilKnot
-
-class CinquefoilKnot extends Curve {
+export class CinquefoilKnot extends Curve {
   constructor(scale = 10) {
     super();
 
@@ -181,9 +155,7 @@ class CinquefoilKnot extends Curve {
   }
 }
 
-// TrefoilPolynomialKnot
-
-class TrefoilPolynomialKnot extends Curve {
+export class TrefoilPolynomialKnot extends Curve {
   constructor(scale = 10) {
     super();
 
@@ -208,9 +180,7 @@ function scaleTo(x, y, t) {
   return t * r + x;
 }
 
-// FigureEightPolynomialKnot
-
-class FigureEightPolynomialKnot extends Curve {
+export class FigureEightPolynomialKnot extends Curve {
   constructor(scale = 1) {
     super();
 
@@ -230,9 +200,7 @@ class FigureEightPolynomialKnot extends Curve {
   }
 }
 
-// DecoratedTorusKnot4a
-
-class DecoratedTorusKnot4a extends Curve {
+export class DecoratedTorusKnot4a extends Curve {
   constructor(scale = 40) {
     super();
 
@@ -252,9 +220,7 @@ class DecoratedTorusKnot4a extends Curve {
   }
 }
 
-// DecoratedTorusKnot4b
-
-class DecoratedTorusKnot4b extends Curve {
+export class DecoratedTorusKnot4b extends Curve {
   constructor(scale = 40) {
     super();
 
@@ -274,9 +240,7 @@ class DecoratedTorusKnot4b extends Curve {
   }
 }
 
-// DecoratedTorusKnot5a
-
-class DecoratedTorusKnot5a extends Curve {
+export class DecoratedTorusKnot5a extends Curve {
   constructor(scale = 40) {
     super();
 
@@ -296,9 +260,7 @@ class DecoratedTorusKnot5a extends Curve {
   }
 }
 
-// DecoratedTorusKnot5c
-
-class DecoratedTorusKnot5c extends Curve {
+export class DecoratedTorusKnot5c extends Curve {
   constructor(scale = 40) {
     super();
 
@@ -317,20 +279,3 @@ class DecoratedTorusKnot5c extends Curve {
     return point.set(x, y, z).multiplyScalar(this.scale);
   }
 }
-
-export {
-  GrannyKnot,
-  HeartCurve,
-  VivianiCurve,
-  KnotCurve,
-  HelixCurve,
-  TrefoilKnot,
-  TorusKnot,
-  CinquefoilKnot,
-  TrefoilPolynomialKnot,
-  FigureEightPolynomialKnot,
-  DecoratedTorusKnot4a,
-  DecoratedTorusKnot4b,
-  DecoratedTorusKnot5a,
-  DecoratedTorusKnot5c,
-};

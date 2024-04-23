@@ -1,25 +1,20 @@
-if (self.GPUShaderStage === undefined) {
-  self.GPUShaderStage = { VERTEX: 1, FRAGMENT: 2, COMPUTE: 4 };
-}
-
-// statics
-
 let isAvailable = navigator.gpu !== undefined;
+let adapter!: GPUAdapter;
 
-if (typeof window !== 'undefined' && isAvailable) {
-  isAvailable = await navigator.gpu.requestAdapter();
+if (typeof window !== 'undefined' && adapter) {
+  adapter = (await navigator.gpu.requestAdapter())!;
 }
 
-class WebGPU {
-  static isAvailable() {
-    return Boolean(isAvailable);
-  }
-
-  static getStaticAdapter() {
+export class WebGPU {
+  static isAvailable(): boolean {
     return isAvailable;
   }
 
-  static getErrorMessage() {
+  static getStaticAdapter(): GPUAdapter {
+    return adapter;
+  }
+
+  static getErrorMessage(): HTMLDivElement {
     const message =
       'Your browser does not support <a href="https://gpuweb.github.io/gpuweb/" style="color:blue">WebGPU</a> yet';
 
@@ -34,11 +29,8 @@ class WebGPU {
     element.style.padding = '1.5em';
     element.style.maxWidth = '400px';
     element.style.margin = '5em auto 0';
-
     element.innerHTML = message;
 
     return element;
   }
 }
-
-export default WebGPU;

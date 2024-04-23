@@ -1,4 +1,4 @@
-class WebGL {
+export class WebGL {
   static isWebGLAvailable() {
     try {
       const canvas = document.createElement('canvas');
@@ -20,26 +20,26 @@ class WebGL {
     }
   }
 
-  static isColorSpaceAvailable(colorSpace) {
+  static isColorSpaceAvailable(colorSpace: PredefinedColorSpace): boolean {
     try {
       const canvas = document.createElement('canvas');
-      const ctx = window.WebGL2RenderingContext && canvas.getContext('webgl2');
+      const ctx = window.WebGL2RenderingContext && canvas.getContext('webgl2')!;
       ctx.drawingBufferColorSpace = colorSpace;
-      return ctx.drawingBufferColorSpace === colorSpace; // deepscan-disable-line SAME_OPERAND_VALUE
+      return ctx.drawingBufferColorSpace === colorSpace;
     } catch (e) {
       return false;
     }
   }
 
-  static getWebGLErrorMessage() {
+  static getWebGLErrorMessage(): HTMLDivElement {
     return this.getErrorMessage(1);
   }
 
-  static getWebGL2ErrorMessage() {
+  static getWebGL2ErrorMessage(): HTMLDivElement {
     return this.getErrorMessage(2);
   }
 
-  static getErrorMessage(version) {
+  static getErrorMessage(version: 1 | 2): HTMLDivElement {
     const names = {
       1: 'WebGL',
       2: 'WebGL 2',
@@ -78,5 +78,3 @@ class WebGL {
     return element;
   }
 }
-
-export default WebGL;

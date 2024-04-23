@@ -1,31 +1,31 @@
-import { Vector3 } from '../math/Vector3.ts';
-import { Quaternion } from '../math/Quaternion.ts';
-import { Clock } from '../core/Clock.ts';
-import { Object3D } from '../core/Object3D.ts';
-import { AudioContext } from './AudioContext.js';
+import { Vector3 } from '../math/Vector3.js';
+import { Quaternion } from '../math/Quaternion.js';
+import { Clock } from '../core/Clock.js';
+import { Object3D } from '../core/Object3D.js';
+import { AudioContextManager } from './AudioContextManager.js';
 
 const _position = /*@__PURE__*/ new Vector3();
 const _quaternion = /*@__PURE__*/ new Quaternion();
 const _scale = /*@__PURE__*/ new Vector3();
 const _orientation = /*@__PURE__*/ new Vector3();
 
-class AudioListener extends Object3D {
+export class AudioListener extends Object3D {
+  declare type: string | 'AudioListener';
+  context: AudioContext;
+  gain: GainNode;
+  filter: AudioNode | null;
+  timeDelta: number;
+  _clock: Clock;
+
   constructor() {
     super();
 
-    this.type = 'AudioListener';
-
-    this.context = AudioContext.getContext();
-
+    this.context = AudioContextManager.getContext();
     this.gain = this.context.createGain();
     this.gain.connect(this.context.destination);
 
     this.filter = null;
-
     this.timeDelta = 0;
-
-    // private
-
     this._clock = new Clock();
   }
 
@@ -44,11 +44,11 @@ class AudioListener extends Object3D {
     return this;
   }
 
-  getFilter() {
+  getFilter(): AudioNode | null {
     return this.filter;
   }
 
-  setFilter(value) {
+  setFilter(value: AudioNode): this {
     if (this.filter !== null) {
       this.gain.disconnect(this.filter);
       this.filter.disconnect(this.context.destination);
@@ -63,17 +63,17 @@ class AudioListener extends Object3D {
     return this;
   }
 
-  getMasterVolume() {
+  getMasterVolume(): number {
     return this.gain.gain.value;
   }
 
-  setMasterVolume(value) {
+  setMasterVolume(value: number): number {
     this.gain.gain.setTargetAtTime(value, this.context.currentTime, 0.01);
 
     return this;
   }
 
-  updateMatrixWorld(force) {
+  updateMatrixWorld(force?: boolean): this {
     super.updateMatrixWorld(force);
 
     const listener = this.context.listener;
@@ -103,7 +103,8 @@ class AudioListener extends Object3D {
       listener.setPosition(_position.x, _position.y, _position.z);
       listener.setOrientation(_orientation.x, _orientation.y, _orientation.z, up.x, up.y, up.z);
     }
+
+    return this;
   }
 }
-
-export { AudioListener };
+AudioListener.prototype.type = 'AudioListener';

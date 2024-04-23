@@ -1,5 +1,10 @@
-class AudioAnalyser {
-  constructor(audio, fftSize = 2048) {
+import { Audio } from './Audio.js';
+
+export class AudioAnalyser {
+  analyser: AnalyserNode;
+  data: Uint8Array;
+
+  constructor(audio: Audio<AudioNode>, fftSize: number = 2048) {
     this.analyser = audio.context.createAnalyser();
     this.analyser.fftSize = fftSize;
 
@@ -8,13 +13,13 @@ class AudioAnalyser {
     audio.getOutput().connect(this.analyser);
   }
 
-  getFrequencyData() {
+  getFrequencyData(): Uint8Array {
     this.analyser.getByteFrequencyData(this.data);
 
     return this.data;
   }
 
-  getAverageFrequency() {
+  getAverageFrequency(): number {
     let value = 0;
     const data = this.getFrequencyData();
 
@@ -25,5 +30,3 @@ class AudioAnalyser {
     return value / data.length;
   }
 }
-
-export { AudioAnalyser };

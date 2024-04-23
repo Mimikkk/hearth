@@ -1,4 +1,4 @@
-import WebGPU from '@modules/renderer/threejs/capabilities/WebGPU.js';
+import WebGPU from '@modules/renderer/threejs/capabilities/WebGPU.ts';
 
 import Renderer from '../../../threejs/renderers/common/Renderer.js';
 import WebGLBackend from '../webgl/WebGLBackend.js';
