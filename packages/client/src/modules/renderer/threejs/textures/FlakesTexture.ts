@@ -1,10 +1,10 @@
-class FlakesTexture {
-  constructor(width = 512, height = 512) {
+export class FlakesTexture {
+  constructor(width: number = 512, height: number = 512) {
     const canvas = document.createElement('canvas');
     canvas.width = width;
     canvas.height = height;
 
-    const context = canvas.getContext('2d');
+    const context = canvas.getContext('2d')!;
     context.fillStyle = 'rgb(127,127,255)';
     context.fillRect(0, 0, width, height);
 
@@ -32,5 +32,3 @@ class FlakesTexture {
     return canvas;
   }
 }
-
-export { FlakesTexture };

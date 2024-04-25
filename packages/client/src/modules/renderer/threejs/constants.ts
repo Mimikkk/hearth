@@ -113,6 +113,12 @@ export enum Mapping {
   CubeUVReflection = 306,
 }
 
+export enum CubeMapping {
+  Reflection = Mapping.CubeReflection,
+  Refraction = Mapping.CubeRefraction,
+  UVReflection = Mapping.CubeUVReflection,
+}
+
 export enum Wrapping {
   Repeat = 1000,
   ClampToEdge = 1001,
@@ -126,6 +132,20 @@ export enum Filter {
   Linear = 1006,
   LinearMipmapNearest = 1007,
   LinearMipmapLinear = 1008,
+}
+
+export enum MagnificationTextureFilter {
+  Nearest = Filter.Nearest,
+  Linear = Filter.Linear,
+}
+
+export enum MinificationTextureFilter {
+  Nearest = Filter.Nearest,
+  NearestMipmapNearest = Filter.NearestMipmapNearest,
+  NearestMipmapLinear = Filter.NearestMipmapLinear,
+  Linear = Filter.Linear,
+  LinearMipmapNearest = Filter.LinearMipmapNearest,
+  LinearMipmapLinear = Filter.LinearMipmapLinear,
 }
 
 export enum TextureDataType {
@@ -154,6 +174,11 @@ export enum TextureFormat {
   RG = 1030,
   RGInteger = 1031,
   RGBAInteger = 1033,
+}
+
+export enum DepthTextureFormat {
+  Depth = TextureFormat.Depth,
+  DepthStencil = TextureFormat.DepthStencil,
 }
 
 export enum CompressedPixelFormat {

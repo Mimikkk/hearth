@@ -1,5 +1,5 @@
 import { WebGLRenderTarget } from './WebGLRenderTarget.js';
-import { Data3DTexture } from '../textures/Data3DTexture.js';
+import { Data3DTexture } from '../textures/Data3DTexture.ts';
 
 class WebGL3DRenderTarget extends WebGLRenderTarget {
   constructor(width = 1, height = 1, depth = 1, options = {}) {

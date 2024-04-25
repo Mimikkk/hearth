@@ -1,6 +1,6 @@
 import { Filter, Wrapping } from '../constants.ts';
 import { FileLoader } from './FileLoader.js';
-import { DataTexture } from '../textures/DataTexture.js';
+import { DataTexture } from '../textures/DataTexture.ts';
 import { Loader } from './Loader.js';
 
 /**

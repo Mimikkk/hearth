@@ -3,7 +3,7 @@ import { Mesh } from './Mesh.js';
 import { Box3 } from '../math/Box3.ts';
 import { Matrix4 } from '../math/Matrix4.ts';
 import { Sphere } from '../math/Sphere.ts';
-import { DataTexture } from '../textures/DataTexture.js';
+import { DataTexture } from '../textures/DataTexture.ts';
 import { TextureDataType, TextureFormat } from '../constants.ts';
 
 const _instanceLocalMatrix = /*@__PURE__*/ new Matrix4();

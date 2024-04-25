@@ -1,5 +1,5 @@
 import { TextureDataType } from '../../constants.ts';
-import { DataArrayTexture } from '../../textures/DataArrayTexture.js';
+import { DataArrayTexture } from '../../textures/DataArrayTexture.ts';
 import { Vector4 } from '../../math/Vector4.ts';
 import { Vector2 } from '../../math/Vector2.ts';
 

@@ -264,7 +264,7 @@ export * from './shaders/VignetteShader.js';
 export * from './shaders/VolumeShader.js';
 export * from './shaders/WaterRefractionShader.js';
 
-export * from './textures/FlakesTexture.js';
+export * from './textures/FlakesTexture.ts';
 
 export * as BufferGeometryUtils from '@modules/renderer/threejs/utils/BufferGeometryUtils.js';
 export * as CameraUtils from '@modules/renderer/threejs/utils/CameraUtils.js';

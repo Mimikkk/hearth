@@ -41,11 +41,11 @@
  *
  */
 
-import { CubeTexture } from '../../textures/CubeTexture.js';
-import { Texture } from '../../textures/Texture.js';
-import { DataArrayTexture } from '../../textures/DataArrayTexture.js';
-import { Data3DTexture } from '../../textures/Data3DTexture.js';
-import { DepthTexture } from '../../textures/DepthTexture.js';
+import { CubeTexture } from '../../textures/CubeTexture.ts';
+import { Texture } from '../../textures/Texture.ts';
+import { DataArrayTexture } from '../../textures/DataArrayTexture.ts';
+import { Data3DTexture } from '../../textures/Data3DTexture.ts';
+import { DepthTexture } from '../../textures/DepthTexture.ts';
 import { DepthComparison } from '../../constants.ts';
 
 const emptyTexture = /*@__PURE__*/ new Texture();

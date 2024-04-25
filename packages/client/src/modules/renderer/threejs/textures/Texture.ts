@@ -1,30 +1,71 @@
-import { EventDispatcher } from '../core/EventDispatcher.ts';
-import { ColorSpace, Filter, Mapping, TextureDataType, TextureFormat, Wrapping } from '../constants.ts';
-import * as MathUtils from '../math/MathUtils.ts';
-import { Vector2 } from '../math/Vector2.ts';
-import { Matrix3 } from '../math/Matrix3.ts';
+import { EventDispatcher } from '../core/EventDispatcher.js';
+import {
+  ColorSpace,
+  MagnificationTextureFilter,
+  Mapping,
+  MinificationTextureFilter,
+  TextureDataType,
+  TextureFormat,
+  Wrapping,
+} from '../constants.js';
+import * as MathUtils from '../math/MathUtils.js';
+import { Vector2 } from '../math/Vector2.js';
+import { Matrix3 } from '../math/Matrix3.js';
 import { Source } from './Source.js';
+import type { CubeTexture } from './CubeTexture.js';
+import { PixelFormatGPU } from 'three/src/constants.js';
 
 let _textureId = 0;
 
-class Texture {
-  eventDispatcher = new EventDispatcher();
+export class Texture {
+  declare ['constructor']: typeof Texture;
+  declare isTexture: true;
+  eventDispatcher = new EventDispatcher<{ dispose: {} }>();
+  id: number;
+  uuid: string;
+  name: string;
+  source: Source;
+  mipmaps: (ImageData | CubeTexture)[];
+  mapping: Mapping;
+  channel: number;
+  wrapS: Wrapping;
+  wrapT: Wrapping;
+  magFilter: MagnificationTextureFilter;
+  minFilter: MinificationTextureFilter;
+  anisotropy: number;
+  format: TextureFormat;
+  internalFormat: PixelFormatGPU | null;
+  type: TextureDataType;
+  offset: Vector2;
+  repeat: Vector2;
+  center: Vector2;
+  rotation: number;
+  matrixAutoUpdate: boolean;
+  matrix: Matrix3;
+  generateMipmaps: boolean;
+  premultiplyAlpha: boolean;
+  flipY: boolean;
+  unpackAlignment: number;
+  colorSpace: ColorSpace;
+  version: number;
+  onUpdate: any;
+  isRenderTargetTexture: boolean;
+  needsPMREMUpdate: boolean;
+  userData: any;
 
   constructor(
-    image = Texture.DEFAULT_IMAGE,
-    mapping = Texture.DEFAULT_MAPPING,
-    wrapS = Wrapping.ClampToEdge,
-    wrapT = Wrapping.ClampToEdge,
-    magFilter = Filter.Linear,
-    minFilter = Filter.LinearMipmapLinear,
-    format = TextureFormat.RGBA,
-    type = TextureDataType.UnsignedByte,
-    anisotropy = Texture.DEFAULT_ANISOTROPY,
-    colorSpace = ColorSpace.No,
+    image: TexImageSource | OffscreenCanvas,
+    mapping: Mapping = Mapping.UV,
+    wrapS: Wrapping = Wrapping.ClampToEdge,
+    wrapT: Wrapping = Wrapping.ClampToEdge,
+    magFilter: MagnificationTextureFilter = MagnificationTextureFilter.Linear,
+    minFilter: MinificationTextureFilter = MinificationTextureFilter.LinearMipmapLinear,
+    format: TextureFormat = TextureFormat.RGBA,
+    type: TextureDataType = TextureDataType.UnsignedByte,
+    anisotropy: number = 1,
+    colorSpace: ColorSpace = ColorSpace.No,
   ) {
-    this.isTexture = true;
-
-    Object.defineProperty(this, 'id', { value: _textureId++ });
+    this.id = ++_textureId;
 
     this.uuid = MathUtils.generateUuid();
 
@@ -59,7 +100,8 @@ class Texture {
     this.generateMipmaps = true;
     this.premultiplyAlpha = false;
     this.flipY = true;
-    this.unpackAlignment = 4; // valid values: 1, 2, 4, 8 (see http://www.khronos.org/opengles/sdk/docs/man/xhtml/glPixelStorei.xml)
+    // valid values: 1, 2, 4, 8 (see http://www.khronos.org/opengles/sdk/docs/man/xhtml/glPixelStorei.xml)
+    this.unpackAlignment = 4;
 
     this.colorSpace = colorSpace;
 
@@ -68,8 +110,10 @@ class Texture {
     this.version = 0;
     this.onUpdate = null;
 
-    this.isRenderTargetTexture = false; // indicates whether a texture belongs to a render target or not
-    this.needsPMREMUpdate = false; // indicates whether this texture should be processed by PMREMGenerator or not (only relevant for render target textures)
+    // indicates whether a texture belongs to a render target or not
+    this.isRenderTargetTexture = false;
+    // indicates whether this texture should be processed by PMREMGenerator or not (only relevant for render target textures)
+    this.needsPMREMUpdate = false;
   }
 
   get image() {
@@ -80,7 +124,7 @@ class Texture {
     this.source.data = value;
   }
 
-  updateMatrix() {
+  updateMatrix(): this {
     this.matrix.setUvTransform(
       this.offset.x,
       this.offset.y,
@@ -90,13 +134,14 @@ class Texture {
       this.center.x,
       this.center.y,
     );
+    return this;
   }
 
-  clone() {
-    return new this.constructor().copy(this);
+  clone(): Texture {
+    return new this.constructor(undefined!).copy(this);
   }
 
-  copy(source) {
+  copy(source: Texture): this {
     this.name = source.name;
 
     this.source = source.source;
@@ -138,7 +183,7 @@ class Texture {
     return this;
   }
 
-  toJSON(meta) {
+  toJSON(meta: any): any {
     const isRootObject = meta === undefined || typeof meta === 'string';
 
     if (!isRootObject && meta.textures[this.uuid] !== undefined) {
@@ -183,6 +228,7 @@ class Texture {
       unpackAlignment: this.unpackAlignment,
     };
 
+    //@ts-expect-error
     if (Object.keys(this.userData).length > 0) output.userData = this.userData;
 
     if (!isRootObject) {
@@ -196,7 +242,7 @@ class Texture {
     this.eventDispatcher.dispatch({ type: 'dispose' }, this);
   }
 
-  transformUv(uv) {
+  transformUv(uv: Vector2): Vector2 {
     if (this.mapping !== Mapping.UV) return uv;
 
     uv.applyMatrix3(this.matrix);
@@ -250,16 +296,11 @@ class Texture {
     return uv;
   }
 
-  set needsUpdate(value) {
+  set needsUpdate(value: boolean) {
     if (value === true) {
       this.version++;
       this.source.needsUpdate = true;
     }
   }
 }
-
-Texture.DEFAULT_IMAGE = null;
-Texture.DEFAULT_MAPPING = Mapping.UV;
-Texture.DEFAULT_ANISOTROPY = 1;
-
-export { Texture };
+Texture.prototype.isTexture = true;

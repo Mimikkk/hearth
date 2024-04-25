@@ -5,7 +5,7 @@ import { ShaderMaterial } from '../materials/ShaderMaterial.js';
 import { cloneUniforms } from './shaders/UniformsUtils.js';
 import { WebGLRenderTarget } from './WebGLRenderTarget.js';
 import { CubeCamera } from '../cameras/CubeCamera.js';
-import { CubeTexture } from '../textures/CubeTexture.js';
+import { CubeTexture } from '../textures/CubeTexture.ts';
 
 class WebGLCubeRenderTarget extends WebGLRenderTarget {
   constructor(size = 1, options = {}) {

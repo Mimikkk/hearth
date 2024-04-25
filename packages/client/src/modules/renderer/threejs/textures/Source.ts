@@ -1,13 +1,20 @@
-import { ImageUtils } from '../extras/ImageUtils.ts';
-import * as MathUtils from '../math/MathUtils.ts';
+import { ImageUtils } from '../extras/ImageUtils.js';
+import * as MathUtils from '../math/MathUtils.js';
 
 let _sourceId = 0;
 
-class Source {
-  constructor(data = null) {
-    this.isSource = true;
+export class Source {
+  declare ['constructor']: typeof Source;
+  declare isSource: true;
 
-    Object.defineProperty(this, 'id', { value: _sourceId++ });
+  id: number;
+  uuid: string;
+  data: any;
+  dataReady: boolean;
+  version: number;
+
+  constructor(data: TexImageSource | OffscreenCanvas) {
+    this.id = ++_sourceId;
 
     this.uuid = MathUtils.generateUuid();
 
@@ -17,11 +24,11 @@ class Source {
     this.version = 0;
   }
 
-  set needsUpdate(value) {
-    if (value === true) this.version++;
+  set needsUpdate(value: boolean) {
+    if (value) ++this.version;
   }
 
-  toJSON(meta) {
+  toJSON(meta: any): any {
     const isRootObject = meta === undefined || typeof meta === 'string';
 
     if (!isRootObject && meta.images[this.uuid] !== undefined) {
@@ -56,6 +63,7 @@ class Source {
         url = serializeImage(data);
       }
 
+      //@ts-expect-error
       output.url = url;
     }
 
@@ -67,7 +75,7 @@ class Source {
   }
 }
 
-function serializeImage(image) {
+function serializeImage(image: TexImageSource | OffscreenCanvas) {
   if (
     (typeof HTMLImageElement !== 'undefined' && image instanceof HTMLImageElement) ||
     (typeof HTMLCanvasElement !== 'undefined' && image instanceof HTMLCanvasElement) ||
@@ -77,13 +85,18 @@ function serializeImage(image) {
 
     return ImageUtils.getDataURL(image);
   } else {
+    //@ts-expect-error
     if (image.data) {
       // images of DataTexture
 
       return {
+        //@ts-expect-error
         data: Array.from(image.data),
+        //@ts-expect-error
         width: image.width,
+        //@ts-expect-error
         height: image.height,
+        //@ts-expect-error
         type: image.data.constructor.name,
       };
     } else {
@@ -92,5 +105,4 @@ function serializeImage(image) {
     }
   }
 }
-
-export { Source };
+Source.prototype.isSource = true;

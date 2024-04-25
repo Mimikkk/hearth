@@ -1,5 +1,5 @@
 import { ImageLoader } from './ImageLoader.js';
-import { Texture } from '../textures/Texture.js';
+import { Texture } from '../textures/Texture.ts';
 import { Loader } from './Loader.js';
 
 class TextureLoader extends Loader {

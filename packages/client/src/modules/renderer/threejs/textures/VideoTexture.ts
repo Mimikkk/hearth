@@ -1,14 +1,32 @@
-import { Filter } from '../constants.ts';
 import { Texture } from './Texture.js';
+import {
+  MagnificationTextureFilter,
+  Mapping,
+  MinificationTextureFilter,
+  TextureDataType,
+  TextureFormat,
+  Wrapping,
+} from '../constants.js';
 
 class VideoTexture extends Texture {
-  constructor(video, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy) {
+  declare ['constructor']: typeof VideoTexture;
+  declare isVideoTexture: true;
+
+  constructor(
+    video: HTMLVideoElement,
+    mapping?: Mapping,
+    wrapS?: Wrapping,
+    wrapT?: Wrapping,
+    magFilter?: MagnificationTextureFilter,
+    minFilter?: MinificationTextureFilter,
+    format?: TextureFormat,
+    type?: TextureDataType,
+    anisotropy?: number,
+  ) {
     super(video, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy);
 
-    this.isVideoTexture = true;
-
-    this.minFilter = minFilter !== undefined ? minFilter : Filter.Linear;
-    this.magFilter = magFilter !== undefined ? magFilter : Filter.Linear;
+    this.minFilter = minFilter !== undefined ? minFilter : MinificationTextureFilter.Linear;
+    this.magFilter = magFilter !== undefined ? magFilter : MagnificationTextureFilter.Linear;
 
     this.generateMipmaps = false;
 
@@ -37,5 +55,4 @@ class VideoTexture extends Texture {
     }
   }
 }
-
-export { VideoTexture };
+VideoTexture.prototype.isVideoTexture = true;

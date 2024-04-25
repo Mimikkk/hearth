@@ -1,6 +1,6 @@
 import { BufferAttribute } from '../core/BufferAttribute.ts';
 import { BufferGeometry } from '../core/BufferGeometry.ts';
-import { DataTexture } from '../textures/DataTexture.js';
+import { DataTexture } from '../textures/DataTexture.ts';
 import { TextureDataType, TextureFormat } from '../constants.ts';
 import { Matrix4 } from '../math/Matrix4.ts';
 import { Mesh } from './Mesh.js';

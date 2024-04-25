@@ -1,5 +1,5 @@
 import { WebGLRenderTarget } from './WebGLRenderTarget.js';
-import { DataArrayTexture } from '../textures/DataArrayTexture.js';
+import { DataArrayTexture } from '../textures/DataArrayTexture.ts';
 
 class WebGLArrayRenderTarget extends WebGLRenderTarget {
   constructor(width = 1, height = 1, depth = 1, options = {}) {
