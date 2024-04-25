@@ -1,14 +1,6 @@
-import {
-  BoxGeometry,
-  Mesh,
-  MeshLambertMaterial,
-  MeshStandardMaterial,
-  PointLight,
-  Scene,
-  Side,
-} from '../Three.js';
+import { BoxGeometry, Mesh, MeshLambertMaterial, MeshStandardMaterial, PointLight, Scene, Side } from '../Three.js';
 
-class DebugEnvironment extends Scene {
+export class DebugEnvironment extends Scene {
   constructor() {
     super();
 
@@ -44,5 +36,3 @@ class DebugEnvironment extends Scene {
     this.add(light3);
   }
 }
-
-export { DebugEnvironment };

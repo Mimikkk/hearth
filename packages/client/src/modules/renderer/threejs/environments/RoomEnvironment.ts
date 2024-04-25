@@ -1,19 +1,14 @@
-/**
- * https://github.com/google/model-viewer/blob/master/packages/model-viewer/src/three-components/EnvironmentScene.ts
- */
+import { Scene } from '../scenes/Scene.js';
+import { MeshBasicMaterial } from '../materials/MeshBasicMaterial.js';
+import { BoxGeometry } from '../geometries/BoxGeometry.js';
+import { MeshStandardMaterial } from '../materials/MeshStandardMaterial.js';
+import { Side } from '../constants.js';
+import { PointLight } from '../lights/PointLight.js';
+import { Mesh } from '../objects/Mesh.js';
 
-import {
-  BoxGeometry,
-  Mesh,
-  MeshBasicMaterial,
-  MeshStandardMaterial,
-  PointLight,
-  Scene,
-  Side,
-} from '../Three.js';
-
-class RoomEnvironment extends Scene {
-  constructor(renderer = null) {
+const isMesh = (object: any): object is Mesh => object.isMesh;
+export class RoomEnvironment extends Scene {
+  constructor() {
     super();
 
     const geometry = new BoxGeometry();
@@ -23,8 +18,6 @@ class RoomEnvironment extends Scene {
     const boxMaterial = new MeshStandardMaterial();
 
     let intensity = 5;
-
-    if (renderer !== null && renderer._useLegacyLights === false) intensity = 900;
 
     const mainLight = new PointLight(0xffffff, intensity, 28, 2);
     mainLight.position.set(0.418, 16.199, 0.3);
@@ -112,7 +105,7 @@ class RoomEnvironment extends Scene {
     const resources = new Set();
 
     this.traverse(object => {
-      if (object.isMesh) {
+      if (isMesh(object)) {
         resources.add(object.geometry);
         resources.add(object.material);
       }
@@ -124,10 +117,8 @@ class RoomEnvironment extends Scene {
   }
 }
 
-function createAreaLightMaterial(intensity) {
+function createAreaLightMaterial(intensity: number): MeshBasicMaterial {
   const material = new MeshBasicMaterial();
   material.color.setScalar(intensity);
   return material;
 }
-
-export { RoomEnvironment };

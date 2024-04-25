@@ -35,8 +35,8 @@ export * from '@modules/renderer/threejs/effects/ParallaxBarrierEffect.js';
 export * from '@modules/renderer/threejs/effects/PeppersGhostEffect.js';
 export * from '@modules/renderer/threejs/effects/StereoEffect.js';
 
-export * from '@modules/renderer/threejs/environments/DebugEnvironment.js';
-export * from '@modules/renderer/threejs/environments/RoomEnvironment.js';
+export * from '@modules/renderer/threejs/environments/DebugEnvironment.ts';
+export * from '@modules/renderer/threejs/environments/RoomEnvironment.ts';
 
 export * from '@modules/renderer/threejs/exporters/DRACOExporter.js';
 export * from '@modules/renderer/threejs/exporters/EXRExporter.js';
