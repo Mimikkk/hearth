@@ -1,5 +1,7 @@
-import { Vector2 } from '../../threejs/Three.js';
-
+import { Vector2 } from '../math/Vector2.js';
+export interface IUniform<TValue = any> {
+  value: TValue;
+}
 /**
  * Depth-of-field shader with bokeh
  * ported from GLSL shader by Martins Upitis
@@ -384,3 +386,29 @@ const BokehDepthShader = {
 };
 
 export { BokehShader, BokehDepthShader };
+
+export interface BokehShaderUniforms {
+  textureWidth: IUniform;
+  textureHeight: IUniform;
+  focalDepth: IUniform;
+  focalLength: IUniform;
+  fstop: IUniform;
+  tColor: IUniform;
+  tDepth: IUniform;
+  maxblur: IUniform;
+  showFocus: IUniform;
+  manualdof: IUniform;
+  vignetting: IUniform;
+  depthblur: IUniform;
+  threshold: IUniform;
+  gain: IUniform;
+  bias: IUniform;
+  fringe: IUniform;
+  znear: IUniform;
+  zfar: IUniform;
+  noise: IUniform;
+  dithering: IUniform;
+  pentagon: IUniform;
+  shaderFocus: IUniform;
+  focusCoords: IUniform;
+}

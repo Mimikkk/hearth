@@ -1,4 +1,4 @@
-import { Camera } from '../cameras/Camera.js';
+import { Camera } from '../cameras/Camera.ts';
 import { Vector3 } from '../math/Vector3.ts';
 import { LineSegments } from '../objects/LineSegments.js';
 import { Color } from '../math/Color.ts';

@@ -1,12 +1,27 @@
 import { Camera } from './Camera.js';
 
-class OrthographicCamera extends Camera {
-  constructor(left = -1, right = 1, top = 1, bottom = -1, near = 0.1, far = 2000) {
+export class OrthographicCamera extends Camera {
+  declare isOrthographicCamera: true;
+  declare type: string | 'OrthographicCamera';
+  zoom: number;
+  view: {
+    enabled: boolean;
+    fullWidth: number;
+    fullHeight: number;
+    offsetX: number;
+    offsetY: number;
+    width: number;
+    height: number;
+  } | null;
+  constructor(
+    public left: number = -1,
+    public right: number = 1,
+    public top: number = 1,
+    public bottom: number = -1,
+    public near: number = 0.1,
+    public far: number = 2000,
+  ) {
     super();
-
-    this.isOrthographicCamera = true;
-
-    this.type = 'OrthographicCamera';
 
     this.zoom = 1;
     this.view = null;
@@ -22,7 +37,7 @@ class OrthographicCamera extends Camera {
     this.updateProjectionMatrix();
   }
 
-  copy(source, recursive) {
+  copy(source: OrthographicCamera, recursive?: boolean): this {
     super.copy(source, recursive);
 
     this.left = source.left;
@@ -38,7 +53,7 @@ class OrthographicCamera extends Camera {
     return this;
   }
 
-  setViewOffset(fullWidth, fullHeight, x, y, width, height) {
+  setViewOffset(fullWidth: number, fullHeight: number, x: number, y: number, width: number, height: number): this {
     if (this.view === null) {
       this.view = {
         enabled: true,
@@ -60,17 +75,19 @@ class OrthographicCamera extends Camera {
     this.view.height = height;
 
     this.updateProjectionMatrix();
+    return this;
   }
 
-  clearViewOffset() {
+  clearViewOffset(): this {
     if (this.view !== null) {
       this.view.enabled = false;
     }
 
     this.updateProjectionMatrix();
+    return this;
   }
 
-  updateProjectionMatrix() {
+  updateProjectionMatrix(): this {
     const dx = (this.right - this.left) / (2 * this.zoom);
     const dy = (this.top - this.bottom) / (2 * this.zoom);
     const cx = (this.right + this.left) / 2;
@@ -94,9 +111,10 @@ class OrthographicCamera extends Camera {
     this.projectionMatrix.makeOrthographic(left, right, top, bottom, this.near, this.far, this.coordinateSystem);
 
     this.projectionMatrixInverse.copy(this.projectionMatrix).invert();
+    return this;
   }
 
-  toJSON(meta) {
+  toJSON(meta: any): any {
     const data = super.toJSON(meta);
 
     data.object.zoom = this.zoom;
@@ -112,5 +130,5 @@ class OrthographicCamera extends Camera {
     return data;
   }
 }
-
-export { OrthographicCamera };
+OrthographicCamera.prototype.isOrthographicCamera = true;
+OrthographicCamera.prototype.type = 'OrthographicCamera';

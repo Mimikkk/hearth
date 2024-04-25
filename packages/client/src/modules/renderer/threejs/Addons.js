@@ -3,7 +3,7 @@ export * from './animation/CCDIKSolver.js';
 export * from './animation/MMDAnimationHelper.js';
 export * from './animation/MMDPhysics.js';
 
-export * from './cameras/CinematicCamera.js';
+export * from './cameras/CinematicCamera.ts';
 
 export { WebGL } from '@modules/renderer/threejs/capabilities/WebGL.ts';
 
@@ -215,7 +215,7 @@ export * from './shaders/BasicShader.js';
 export * from './shaders/BleachBypassShader.js';
 export * from './shaders/BlendShader.js';
 export * from './shaders/BokehShader.js';
-export { BokehShader as BokehShader2 } from './shaders/BokehShader2.js';
+export { BokehShader as BokehShader2 } from './shaders/BokehShader2.ts';
 export * from './shaders/BrightnessContrastShader.js';
 export * from './shaders/ColorCorrectionShader.js';
 export * from './shaders/ColorifyShader.js';

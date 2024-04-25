@@ -1,23 +1,44 @@
-import {
-  Mesh,
-  OrthographicCamera,
-  PerspectiveCamera,
-  PlaneGeometry,
-  Scene,
-  ShaderMaterial,
-  UniformsUtils,
-  WebGLRenderTarget,
-} from '../Three.js';
+import { OrthographicCamera } from './OrthographicCamera.js';
+import { Scene } from '../scenes/Scene.js';
+import { WebGLRenderTarget } from '../renderers/WebGLRenderTarget.js';
+import { BokehDepthShader, BokehShader, BokehShaderUniforms } from '../shaders/BokehShader2.js';
+import { UniformsUtils } from '../renderers/shaders/UniformsUtils.js';
+import { ShaderMaterial } from '../materials/ShaderMaterial.js';
+import { PerspectiveCamera } from './PerspectiveCamera.js';
+import { Mesh } from '../objects/Mesh.js';
+import { PlaneGeometry } from '@modules/renderer/threejs/geometries/PlaneGeometry.js';
+import type { WebGLRenderer } from '@modules/renderer/threejs/renderers/WebGLRenderer.js';
 
-import { BokehShader, BokehDepthShader } from '../../threejs/shaders/BokehShader2.js';
+export class CinematicCamera extends PerspectiveCamera {
+  declare type: string | 'CinematicCamera';
 
-class CinematicCamera extends PerspectiveCamera {
-  constructor(fov, aspect, near, far) {
+  postprocessing: {
+    enabled: boolean;
+    scene: Scene;
+    camera: OrthographicCamera;
+    rtTextureDepth: WebGLRenderTarget;
+    rtTextureColor: WebGLRenderTarget;
+    bokeh_uniforms: BokehShaderUniforms;
+    bokeh_material: ShaderMaterial;
+    quad: Mesh;
+  };
+  shaderSettings: {
+    rings: number;
+    samples: number;
+  };
+  materialDepth: ShaderMaterial;
+  coc: number;
+  aperture: number;
+  fNumber: number;
+  hyperFocal: number;
+  filmGauge: number;
+
+  constructor(fov: number, aspect: number, near: number, far: number) {
     super(fov, aspect, near, far);
 
     this.type = 'CinematicCamera';
 
-    this.postprocessing = { enabled: true };
+    this.postprocessing = { enabled: true } as any;
     this.shaderSettings = {
       rings: 3,
       samples: 4,
@@ -31,7 +52,9 @@ class CinematicCamera extends PerspectiveCamera {
       fragmentShader: depthShader.fragmentShader,
     });
 
+    //@ts-expect-error
     this.materialDepth.uniforms['mNear'].value = near;
+    //@ts-expect-error
     this.materialDepth.uniforms['mFar'].value = far;
 
     // In case of cinematicCamera, having a default lens set is important
@@ -43,8 +66,8 @@ class CinematicCamera extends PerspectiveCamera {
   // providing fnumber and coc(Circle of Confusion) as extra arguments
   // In case of cinematicCamera, having a default lens set is important
   // if fnumber and coc are not provided, cinematicCamera tries to act as a basic PerspectiveCamera
-  setLens(focalLength = 35, filmGauge = 35, fNumber = 8, coc = 0.019) {
-    this.filmGauge = filmGauge;
+  setLens(focalLength: number = 35, filmGauge: number = 35, fNumber: number = 8, coc: number = 0.019): this {
+    this.filmGaugeMM = filmGauge;
 
     this.setFocalLength(focalLength);
 
@@ -56,25 +79,26 @@ class CinematicCamera extends PerspectiveCamera {
 
     // hyperFocal is required to calculate depthOfField when a lens tries to focus at a distance with given fNumber and focalLength
     this.hyperFocal = (focalLength * focalLength) / (this.aperture * this.coc);
+    return this;
   }
 
-  linearize(depth) {
+  linearize(depth: number): number {
     const zfar = this.far;
     const znear = this.near;
     return (-zfar * znear) / (depth * (zfar - znear) - zfar);
   }
 
-  smoothstep(near, far, depth) {
+  smoothstep(near: number, far: number, depth: number): number {
     const x = this.saturate((depth - near) / (far - near));
     return x * x * (3 - 2 * x);
   }
 
-  saturate(x) {
+  saturate(x: number): number {
     return Math.max(0, Math.min(1, x));
   }
 
   // function for focusing at a distance from the camera
-  focusAt(focusDistance = 20) {
+  focusAt(focusDistance: number = 20): this {
     const focalLength = this.getFocalLength();
 
     // distance from the camera (normal to frustrum) to focus on
@@ -97,9 +121,16 @@ class CinematicCamera extends PerspectiveCamera {
     this.ldistance = this.linearize(1 - this.sdistance);
 
     this.postprocessing.bokeh_uniforms['focalDepth'].value = this.ldistance;
+    return this;
   }
 
-  initPostProcessing() {
+  nearPoint: number;
+  farPoint: number;
+  depthOfField: number;
+  sdistance: number;
+  ldistance: number;
+
+  initPostProcessing(): this {
     if (this.postprocessing.enabled) {
       this.postprocessing.scene = new Scene();
 
@@ -112,13 +143,14 @@ class CinematicCamera extends PerspectiveCamera {
         10000,
       );
 
-      this.postprocessing.scene.add(this.postprocessing.camera);
+      this.postprocessing.scene.add(this.postprocessing.camera as any);
 
       this.postprocessing.rtTextureDepth = new WebGLRenderTarget(window.innerWidth, window.innerHeight);
       this.postprocessing.rtTextureColor = new WebGLRenderTarget(window.innerWidth, window.innerHeight);
 
       const bokeh_shader = BokehShader;
 
+      //@ts-expect-error
       this.postprocessing.bokeh_uniforms = UniformsUtils.clone(bokeh_shader.uniforms);
 
       this.postprocessing.bokeh_uniforms['tColor'].value = this.postprocessing.rtTextureColor.texture;
@@ -133,8 +165,6 @@ class CinematicCamera extends PerspectiveCamera {
 
       this.postprocessing.bokeh_uniforms['focalDepth'].value = 0.1;
 
-      //console.log( this.postprocessing.bokeh_uniforms[ "focalDepth" ].value );
-
       this.postprocessing.bokeh_uniforms['znear'].value = this.near;
       this.postprocessing.bokeh_uniforms['zfar'].value = this.near;
 
@@ -142,7 +172,7 @@ class CinematicCamera extends PerspectiveCamera {
 
       this.postprocessing.bokeh_uniforms['textureHeight'].value = window.innerHeight;
 
-      this.postprocessing.materialBokeh = new ShaderMaterial({
+      this.postprocessing.bokeh_material = new ShaderMaterial({
         uniforms: this.postprocessing.bokeh_uniforms,
         vertexShader: bokeh_shader.vertexShader,
         fragmentShader: bokeh_shader.fragmentShader,
@@ -155,14 +185,16 @@ class CinematicCamera extends PerspectiveCamera {
 
       this.postprocessing.quad = new Mesh(
         new PlaneGeometry(window.innerWidth, window.innerHeight),
-        this.postprocessing.materialBokeh,
+        //@ts-expect-error
+        this.postprocessing.bokeh_material,
       );
       this.postprocessing.quad.position.z = -500;
       this.postprocessing.scene.add(this.postprocessing.quad);
     }
+    return this;
   }
 
-  renderCinematic(scene, renderer) {
+  renderCinematic(scene: Scene, renderer: WebGLRenderer): this {
     if (this.postprocessing.enabled) {
       const currentRenderTarget = renderer.getRenderTarget();
 
@@ -189,7 +221,8 @@ class CinematicCamera extends PerspectiveCamera {
 
       renderer.setRenderTarget(currentRenderTarget);
     }
+
+    return this;
   }
 }
-
-export { CinematicCamera };
+CinematicCamera.prototype.type = 'CinematicCamera';

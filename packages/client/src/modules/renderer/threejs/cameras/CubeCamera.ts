@@ -1,15 +1,21 @@
-import { CoordinateSystem } from '../constants.ts';
-import { Object3D } from '../core/Object3D.ts';
+import { CoordinateSystem } from '../constants.js';
+import { Object3D } from '../core/Object3D.js';
 import { PerspectiveCamera } from './PerspectiveCamera.js';
+import { WebGLCubeRenderTarget } from '../renderers/WebGLCubeRenderTarget.js';
+import { WebGLRenderer } from '@modules/renderer/threejs/renderers/WebGLRenderer.js';
+import { Scene } from '@modules/renderer/threejs/scenes/Scene.js';
 
 const fov = -90; // negative fov is not an error
 const aspect = 1;
 
-class CubeCamera extends Object3D {
-  constructor(near, far, renderTarget) {
-    super();
+export class CubeCamera extends Object3D {
+  declare type: string | 'CubeCamera';
+  renderTarget: WebGLCubeRenderTarget;
+  coordinateSystem: CoordinateSystem | null;
+  activeMipmapLevel: number;
 
-    this.type = 'CubeCamera';
+  constructor(near: number, far: number, renderTarget: WebGLCubeRenderTarget) {
+    super();
 
     this.renderTarget = renderTarget;
     this.coordinateSystem = null;
@@ -17,27 +23,27 @@ class CubeCamera extends Object3D {
 
     const cameraPX = new PerspectiveCamera(fov, aspect, near, far);
     cameraPX.layers = this.layers;
-    this.add(cameraPX);
+    this.add(cameraPX as unknown as Object3D);
 
     const cameraNX = new PerspectiveCamera(fov, aspect, near, far);
     cameraNX.layers = this.layers;
-    this.add(cameraNX);
+    this.add(cameraNX as unknown as Object3D);
 
     const cameraPY = new PerspectiveCamera(fov, aspect, near, far);
     cameraPY.layers = this.layers;
-    this.add(cameraPY);
+    this.add(cameraPY as unknown as Object3D);
 
     const cameraNY = new PerspectiveCamera(fov, aspect, near, far);
     cameraNY.layers = this.layers;
-    this.add(cameraNY);
+    this.add(cameraNY as unknown as Object3D);
 
     const cameraPZ = new PerspectiveCamera(fov, aspect, near, far);
     cameraPZ.layers = this.layers;
-    this.add(cameraPZ);
+    this.add(cameraPZ as unknown as Object3D);
 
     const cameraNZ = new PerspectiveCamera(fov, aspect, near, far);
     cameraNZ.layers = this.layers;
-    this.add(cameraNZ);
+    this.add(cameraNZ as unknown as Object3D);
   }
 
   updateCoordinateSystem() {
@@ -96,7 +102,7 @@ class CubeCamera extends Object3D {
     }
   }
 
-  update(renderer, scene) {
+  update(renderer: WebGLRenderer, scene: Scene): void {
     if (this.parent === null) this.updateMatrixWorld();
 
     const { renderTarget, activeMipmapLevel } = this;
@@ -151,5 +157,4 @@ class CubeCamera extends Object3D {
     renderTarget.texture.needsPMREMUpdate = true;
   }
 }
-
-export { CubeCamera };
+CubeCamera.prototype.type = 'CubeCamera';

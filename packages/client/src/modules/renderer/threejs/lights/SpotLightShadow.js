@@ -1,6 +1,6 @@
 import { LightShadow } from './LightShadow.js';
 import * as MathUtils from '../math/MathUtils.ts';
-import { PerspectiveCamera } from '../cameras/PerspectiveCamera.js';
+import { PerspectiveCamera } from '../cameras/PerspectiveCamera.ts';
 
 class SpotLightShadow extends LightShadow {
   constructor() {

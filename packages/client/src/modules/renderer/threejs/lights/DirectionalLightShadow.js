@@ -1,5 +1,5 @@
 import { LightShadow } from './LightShadow.js';
-import { OrthographicCamera } from '../cameras/OrthographicCamera.js';
+import { OrthographicCamera } from '../cameras/OrthographicCamera.ts';
 
 class DirectionalLightShadow extends LightShadow {
   constructor() {

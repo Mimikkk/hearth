@@ -1,15 +1,27 @@
-import { Matrix4 } from '../math/Matrix4.ts';
-import * as MathUtils from '../math/MathUtils.ts';
+import { Matrix4 } from '../math/Matrix4.js';
+import * as MathUtils from '../math/MathUtils.js';
 import { PerspectiveCamera } from './PerspectiveCamera.js';
 
 const _eyeRight = /*@__PURE__*/ new Matrix4();
 const _eyeLeft = /*@__PURE__*/ new Matrix4();
 const _projectionMatrix = /*@__PURE__*/ new Matrix4();
 
-class StereoCamera {
+export class StereoCamera {
+  aspect: number;
+  eyeSep: number;
+  cameraL: PerspectiveCamera;
+  cameraR: PerspectiveCamera;
+  declare type: string | 'StereoCamera';
+  _cache: {
+    focus: number | null;
+    fov: number | null;
+    aspect: number | null;
+    near: number | null;
+    far: number | null;
+    zoom: number | null;
+    eyeSep: number | null;
+  };
   constructor() {
-    this.type = 'StereoCamera';
-
     this.aspect = 1;
 
     this.eyeSep = 0.064;
@@ -33,7 +45,7 @@ class StereoCamera {
     };
   }
 
-  update(camera) {
+  update(camera: PerspectiveCamera) {
     const cache = this._cache;
 
     const needsUpdate =
@@ -93,5 +105,4 @@ class StereoCamera {
     this.cameraR.matrixWorld.copy(camera.matrixWorld).multiply(_eyeRight);
   }
 }
-
-export { StereoCamera };
+StereoCamera.prototype.type = 'StereoCamera';

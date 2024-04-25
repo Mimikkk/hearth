@@ -25,8 +25,8 @@ import { DirectionalLight } from '../lights/DirectionalLight.js';
 import { AmbientLight } from '../lights/AmbientLight.js';
 import { RectAreaLight } from '../lights/RectAreaLight.js';
 import { LightProbe } from '../lights/LightProbe.js';
-import { OrthographicCamera } from '../cameras/OrthographicCamera.js';
-import { PerspectiveCamera } from '../cameras/PerspectiveCamera.js';
+import { OrthographicCamera } from '../cameras/OrthographicCamera.ts';
+import { PerspectiveCamera } from '../cameras/PerspectiveCamera.ts';
 import { Scene } from '../scenes/Scene.ts';
 import { CubeTexture } from '../textures/CubeTexture.ts';
 import { Texture } from '../textures/Texture.ts';
@@ -610,8 +610,8 @@ class ObjectLoader extends Loader {
 
         if (data.focus !== undefined) object.focus = data.focus;
         if (data.zoom !== undefined) object.zoom = data.zoom;
-        if (data.filmGauge !== undefined) object.filmGauge = data.filmGauge;
-        if (data.filmOffset !== undefined) object.filmOffset = data.filmOffset;
+        if (data.filmGauge !== undefined) object.filmGaugeMM = data.filmGauge;
+        if (data.filmOffset !== undefined) object.filmOffsetMM = data.filmOffset;
         if (data.view !== undefined) object.view = Object.assign({}, data.view);
 
         break;
