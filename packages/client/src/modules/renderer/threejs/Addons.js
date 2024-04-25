@@ -66,10 +66,9 @@ export * from './helpers/VertexNormalsHelper.js';
 export * from './helpers/VertexTangentsHelper.js';
 export * from './helpers/ViewHelper.js';
 
-export * from '@modules/renderer/threejs/interactive/HTMLMesh.js';
-export * from '@modules/renderer/threejs/interactive/InteractiveGroup.js';
-export * from '@modules/renderer/threejs/interactive/SelectionBox.js';
-export * from '@modules/renderer/threejs/interactive/SelectionHelper.js';
+export * from '@modules/renderer/threejs/interactive/InteractiveGroup.ts';
+export * from '@modules/renderer/threejs/interactive/SelectionBox.ts';
+export * from '@modules/renderer/threejs/interactive/SelectionHelper.ts';
 
 export { IESSpotLight } from './lights/IESSpotLight.js';
 export * from './lights/LightProbeGenerator.js';

@@ -14,6 +14,7 @@ import type { BufferGeometry } from './BufferGeometry.js';
 import type { Camera } from '../cameras/Camera.js';
 import type { Material } from '../materials/Material.js';
 import type { Group } from '../objects/Group.js';
+import type { Vector2 } from '../math/Vector2.js';
 
 let _object3DId = 0;
 
@@ -35,19 +36,26 @@ export interface Object3DEventMap {
   removed: {};
   childadded: { child: Object3D };
   childremoved: { child: Object3D };
+  pointerdown: { data: Vector2 };
+  pointerup: { data: Vector2 };
+  pointermove: { data: Vector2 };
+  mousedown: { data: Vector2 };
+  mouseup: { data: Vector2 };
+  mousemove: { data: Vector2 };
+  click: { data: Vector2 };
 }
 
 const isCamera = (object: any): object is Camera => object.isCamera;
 const isLight = (object: any): object is Light => object.isLight;
 
-export class Object3D {
+export class Object3D<EventMap extends Object3DEventMap = Object3DEventMap> {
   declare ['constructor']: typeof Object3D;
   declare isObject3D: true;
   static DEFAULT_UP: Vector3 = new Vector3(0, 1, 0);
   static DEFAULT_MATRIX_AUTO_UPDATE: boolean = true;
   static DEFAULT_MATRIX_WORLD_AUTO_UPDATE: boolean = true;
 
-  eventDispatcher = new EventDispatcher<Object3DEventMap>();
+  eventDispatcher = new EventDispatcher<EventMap>();
 
   id: number;
   uuid: string;
@@ -347,7 +355,7 @@ export class Object3D {
 
     if (object && object.isObject3D) {
       object.removeFromParent();
-      object.parent = this;
+      object.parent = this!;
       this.children.push(object);
 
       object.eventDispatcher.dispatch({ type: 'added' }, this);

@@ -4,21 +4,7 @@ import Renderer from '../../../threejs/renderers/common/Renderer.js';
 import WebGLBackend from '../webgl/WebGLBackend.js';
 import WebGPUBackend from './WebGPUBackend.js';
 
-/*
-const debugHandler = {
-
-	get: function ( target, name ) {
-
-		// Add |update
-		if ( /^(create|destroy)/.test( name ) ) console.log( 'WebGPUBackend.' + name );
-
-		return target[ name ];
-
-	}
-
-};
-*/
-class WebGPURenderer extends Renderer {
+export class WebGPURenderer extends Renderer {
   constructor(parameters = {}) {
     let BackendClass;
 
@@ -40,5 +26,3 @@ class WebGPURenderer extends Renderer {
     this.isWebGPURenderer = true;
   }
 }
-
-export default WebGPURenderer;

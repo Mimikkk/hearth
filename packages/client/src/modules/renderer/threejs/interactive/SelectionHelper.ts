@@ -1,7 +1,19 @@
 import { Vector2 } from '../Three.js';
+import type { WebGPURenderer } from '../renderers/webgpu/WebGPURenderer.js';
 
-class SelectionHelper {
-  constructor(renderer, cssClassName) {
+export class SelectionHelper {
+  element: HTMLDivElement;
+  renderer: WebGPURenderer;
+  startPoint: Vector2;
+  pointTopLeft: Vector2;
+  pointBottomRight: Vector2;
+  isDown: boolean;
+  enabled: boolean;
+  onPointerDown: (event: PointerEvent) => void;
+  onPointerMove: (event: PointerEvent) => void;
+  onPointerUp: (event: PointerEvent) => void;
+
+  constructor(renderer: WebGPURenderer, cssClassName: string) {
     this.element = document.createElement('div');
     this.element.classList.add(cssClassName);
     this.element.style.pointerEvents = 'none';
@@ -15,27 +27,25 @@ class SelectionHelper {
     this.isDown = false;
     this.enabled = true;
 
-    this.onPointerDown = function (event) {
-      if (this.enabled === false) return;
+    this.onPointerDown = (event: PointerEvent) => {
+      if (!this.enabled) return;
 
       this.isDown = true;
       this.onSelectStart(event);
-    }.bind(this);
+    };
 
-    this.onPointerMove = function (event) {
-      if (this.enabled === false) return;
+    this.onPointerMove = (event: PointerEvent) => {
+      if (!this.enabled) return;
+      if (!this.isDown) return;
+      this.onSelectMove(event);
+    };
 
-      if (this.isDown) {
-        this.onSelectMove(event);
-      }
-    }.bind(this);
-
-    this.onPointerUp = function () {
-      if (this.enabled === false) return;
+    this.onPointerUp = (event: PointerEvent) => {
+      if (!this.enabled) return;
 
       this.isDown = false;
-      this.onSelectOver();
-    }.bind(this);
+      this.onSelectOver(event);
+    };
 
     this.renderer.domElement.addEventListener('pointerdown', this.onPointerDown);
     this.renderer.domElement.addEventListener('pointermove', this.onPointerMove);
@@ -48,7 +58,7 @@ class SelectionHelper {
     this.renderer.domElement.removeEventListener('pointerup', this.onPointerUp);
   }
 
-  onSelectStart(event) {
+  onSelectStart(event: PointerEvent) {
     this.element.style.display = 'none';
 
     this.renderer.domElement.parentElement.appendChild(this.element);
@@ -62,7 +72,7 @@ class SelectionHelper {
     this.startPoint.y = event.clientY;
   }
 
-  onSelectMove(event) {
+  onSelectMove(event: PointerEvent) {
     this.element.style.display = 'block';
 
     this.pointBottomRight.x = Math.max(this.startPoint.x, event.clientX);
@@ -76,9 +86,7 @@ class SelectionHelper {
     this.element.style.height = this.pointBottomRight.y - this.pointTopLeft.y + 'px';
   }
 
-  onSelectOver() {
-    this.element.parentElement.removeChild(this.element);
+  onSelectOver(event: PointerEvent) {
+    this.element.parentElement?.removeChild(this.element);
   }
 }
-
-export { SelectionHelper };

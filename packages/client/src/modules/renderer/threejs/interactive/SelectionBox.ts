@@ -1,8 +1,12 @@
-import { Frustum, Vector3, Matrix4, Quaternion } from '../Three.js';
-
-/**
- * This is a class to check whether objects are in a selection area in 3D space
- */
+import { Vector3 } from '../math/Vector3.js';
+import type { Mesh } from '../objects/Mesh.js';
+import type { Scene } from '../scenes/Scene.js';
+import { Quaternion } from '../math/Quaternion.js';
+import { Matrix4 } from '../math/Matrix4.js';
+import { Frustum } from '../math/Frustum.js';
+import type { Object3D } from '../core/Object3D.js';
+import { PerspectiveCamera } from '@modules/renderer/threejs/cameras/PerspectiveCamera.js';
+import { OrthographicCamera } from '@modules/renderer/threejs/cameras/OrthographicCamera.js';
 
 const _frustum = new Frustum();
 const _center = new Vector3();
@@ -28,18 +32,27 @@ const _matrix = new Matrix4();
 const _quaternion = new Quaternion();
 const _scale = new Vector3();
 
-class SelectionBox {
-  constructor(camera, scene, deep = Number.MAX_VALUE) {
-    this.camera = camera;
-    this.scene = scene;
+const isPerspectiveCamera = (camera: any): camera is PerspectiveCamera => camera.isPerspectiveCamera;
+const isOrthographicCamera = (camera: any): camera is OrthographicCamera => camera.isOrthographicCamera;
+
+export class SelectionBox {
+  startPoint: Vector3 = new Vector3();
+  endPoint: Vector3 = new Vector3();
+  collection: Mesh[] = [];
+  instances: Record<string, number[]> = {};
+
+  constructor(
+    public camera: PerspectiveCamera | OrthographicCamera,
+    public scene: Scene,
+    public deep: number = Number.MAX_VALUE,
+  ) {
     this.startPoint = new Vector3();
     this.endPoint = new Vector3();
     this.collection = [];
     this.instances = {};
-    this.deep = deep;
   }
 
-  select(startPoint, endPoint) {
+  select(startPoint: Vector3, endPoint: Vector3): Mesh[] {
     this.startPoint = startPoint || this.startPoint;
     this.endPoint = endPoint || this.endPoint;
     this.collection = [];
@@ -50,11 +63,9 @@ class SelectionBox {
     return this.collection;
   }
 
-  updateFrustum(startPoint, endPoint) {
+  updateFrustum(startPoint: Vector3, endPoint: Vector3): void {
     startPoint = startPoint || this.startPoint;
     endPoint = endPoint || this.endPoint;
-
-    // Avoid invalid frustum
 
     if (startPoint.x === endPoint.x) {
       endPoint.x += Number.EPSILON;
@@ -67,7 +78,7 @@ class SelectionBox {
     this.camera.updateProjectionMatrix();
     this.camera.updateMatrixWorld();
 
-    if (this.camera.isPerspectiveCamera) {
+    if (isPerspectiveCamera(this.camera)) {
       _tmpPoint.copy(startPoint);
       _tmpPoint.x = Math.min(startPoint.x, endPoint.x);
       _tmpPoint.y = Math.max(startPoint.y, endPoint.y);
@@ -108,7 +119,7 @@ class SelectionBox {
       planes[4].setFromCoplanarPoints(_vecTopRight, _vecDownRight, _vecDownLeft);
       planes[5].setFromCoplanarPoints(_vectemp3, _vectemp2, _vectemp1);
       planes[5].normal.multiplyScalar(-1);
-    } else if (this.camera.isOrthographicCamera) {
+    } else if (isOrthographicCamera(this.camera)) {
       const left = Math.min(startPoint.x, endPoint.x);
       const top = Math.max(startPoint.y, endPoint.y);
       const right = Math.max(startPoint.x, endPoint.x);
@@ -143,12 +154,10 @@ class SelectionBox {
       planes[4].setFromCoplanarPoints(_vecTopRight, _vecDownRight, _vecDownLeft);
       planes[5].setFromCoplanarPoints(_vecFarDownRight, _vecFarTopRight, _vecFarTopLeft);
       planes[5].normal.multiplyScalar(-1);
-    } else {
-      console.error('THREE.SelectionBox: Unsupported camera type.');
     }
   }
 
-  searchChildInFrustum(frustum, object) {
+  searchChildInFrustum(frustum: Frustum, object: Object3D): void {
     if (object.isMesh || object.isLine || object.isPoints) {
       if (object.isInstancedMesh) {
         this.instances[object.uuid] = [];
@@ -182,5 +191,3 @@ class SelectionBox {
     }
   }
 }
-
-export { SelectionBox };

@@ -24,7 +24,7 @@ export { LineSegments } from './objects/LineSegments.js';
 export { LineLoop } from './objects/LineLoop.js';
 export { Line } from './objects/Line.js';
 export { Points } from './objects/Points.js';
-export { Group } from './objects/Group.js';
+export { Group } from './objects/Group.ts';
 export { VideoTexture } from './textures/VideoTexture.ts';
 export { FramebufferTexture } from './textures/FramebufferTexture.ts';
 export { Source } from './textures/Source.ts';
