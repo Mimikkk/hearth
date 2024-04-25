@@ -1,80 +1,41 @@
-import * as MathUtils from '../../math/MathUtils.ts';
-import { Vector2 } from '../../math/Vector2.ts';
-import { Vector3 } from '../../math/Vector3.ts';
-import { Matrix4 } from '../../math/Matrix4.ts';
+import * as MathUtils from '../../math/MathUtils.js';
+import { Vector2 } from '../../math/Vector2.js';
+import { Vector3 } from '../../math/Vector3.js';
+import { Matrix4 } from '../../math/Matrix4.js';
 
-/**
- * Extensible curve object.
- *
- * Some common of curve methods:
- * .getPoint( t, optionalTarget ), .getTangent( t, optionalTarget )
- * .getPointAt( u, optionalTarget ), .getTangentAt( u, optionalTarget )
- * .getPoints(), .getSpacedPoints()
- * .getLength()
- * .updateArcLengths()
- *
- * This following curves inherit from THREE.Curve:
- *
- * -- 2D curves --
- * THREE.ArcCurve
- * THREE.CubicBezierCurve
- * THREE.EllipseCurve
- * THREE.LineCurve
- * THREE.QuadraticBezierCurve
- * THREE.SplineCurve
- *
- * -- 3D curves --
- * THREE.CatmullRomCurve3
- * THREE.CubicBezierCurve3
- * THREE.LineCurve3
- * THREE.QuadraticBezierCurve3
- *
- * A series of curves can be represented as a THREE.CurvePath.
- *
- **/
+export abstract class Curve<T extends Vector2 | Vector3> {
+  type: string | 'Curve';
+  precision: number = 200;
+  needsUpdate: boolean = false;
+  lengths?: number[];
+  declare ['constructor']: typeof Curve<T>;
 
-class Curve {
-  constructor() {
-    this.type = 'Curve';
-
-    this.arcLengthDivisions = 200;
-  }
+  protected constructor() {}
 
   // Virtual base class method to overwrite and implement in subclasses
-  //	- t [0 .. 1]
+  //	- t [0 ... 1]
 
-  getPoint(t, optionalTarget) {
-    console.warn('THREE.Curve: .getPoint() not implemented.');
-    return new Vector3();
+  abstract getPoint(t: number, optionalTarget?: T): T;
+
+  getPointAt(u: number, optionalTarget?: T): T {
+    return this.getPoint(this.getUtoTmapping(u), optionalTarget);
   }
 
-  // Get point at relative position in curve according to arc length
-  // - u [0 .. 1]
+  getPoints(divisions: number): T[] {
+    const points: T[] = [];
 
-  getPointAt(u, optionalTarget) {
-    const t = this.getUtoTmapping(u);
-    return this.getPoint(t, optionalTarget);
-  }
-
-  // Get sequence of points using getPoint( t )
-
-  getPoints(divisions = 5) {
-    const points = [];
-
-    for (let d = 0; d <= divisions; d++) {
-      points.push(this.getPoint(d / divisions));
+    for (let division = 0; division <= divisions; ++division) {
+      points.push(this.getPoint(division / divisions));
     }
 
     return points;
   }
 
-  // Get sequence of points using getPointAt( u )
+  getSpacedPoints(divisions: number): T[] {
+    const points: T[] = [];
 
-  getSpacedPoints(divisions = 5) {
-    const points = [];
-
-    for (let d = 0; d <= divisions; d++) {
-      points.push(this.getPointAt(d / divisions));
+    for (let division = 0; division <= divisions; ++division) {
+      points.push(this.getPointAt(division / divisions));
     }
 
     return points;
@@ -83,47 +44,45 @@ class Curve {
   // Get total curve arc length
 
   getLength() {
-    const lengths = this.getLengths();
+    const lengths = this.getLengths(this.precision);
     return lengths[lengths.length - 1];
   }
 
   // Get list of cumulative segment lengths
 
-  getLengths(divisions = this.arcLengthDivisions) {
-    if (this.cacheArcLengths && this.cacheArcLengths.length === divisions + 1 && !this.needsUpdate) {
-      return this.cacheArcLengths;
+  getLengths(divisions: number): number[] {
+    if (this.lengths && this.lengths.length === divisions + 1 && !this.needsUpdate) {
+      return this.lengths;
     }
 
     this.needsUpdate = false;
 
-    const cache = [];
-    let current,
-      last = this.getPoint(0);
+    const lengths = [];
+    let current;
+    let last = this.getPoint(0);
     let sum = 0;
 
-    cache.push(0);
-
-    for (let p = 1; p <= divisions; p++) {
-      current = this.getPoint(p / divisions);
-      sum += current.distanceTo(last);
-      cache.push(sum);
+    lengths.push(0);
+    for (let division = 1; division <= divisions; division) {
+      current = this.getPoint(division / divisions);
+      sum += current.distanceTo(last as Vector2 & Vector3);
+      lengths.push(sum);
       last = current;
     }
 
-    this.cacheArcLengths = cache;
-
-    return cache; // { sums: cache, sum: sum }; Sum is in the last element.
+    this.lengths = lengths;
+    return lengths;
   }
 
-  updateArcLengths() {
+  updateArcLengths(): number[] {
     this.needsUpdate = true;
-    this.getLengths();
+    return this.getLengths(this.precision);
   }
 
   // Given u ( 0 .. 1 ), get a t to find p. This gives you points which are equidistant
 
-  getUtoTmapping(u, distance) {
-    const arcLengths = this.getLengths();
+  getUtoTmapping(u: number, distance?: number): number {
+    const arcLengths = this.getLengths(this.precision);
 
     let i = 0;
     const il = arcLengths.length;
@@ -188,7 +147,7 @@ class Curve {
   // 2 points a small delta apart will be used to find its gradient
   // which seems to give a reasonable approximation
 
-  getTangent(t, optionalTarget) {
+  getTangent(t: number, optionalTarget?: T): T {
     const delta = 0.0001;
     let t1 = t - delta;
     let t2 = t + delta;
@@ -201,24 +160,34 @@ class Curve {
     const pt1 = this.getPoint(t1);
     const pt2 = this.getPoint(t2);
 
-    const tangent = optionalTarget || (pt1.isVector2 ? new Vector2() : new Vector3());
+    const tangent = optionalTarget || (pt1 instanceof Vector2 ? new Vector2() : new Vector3());
 
-    tangent.copy(pt2).sub(pt1).normalize();
+    tangent
+      .copy(pt2 as Vector2 & Vector3)
+      .sub(pt1 as Vector2 & Vector3)
+      .normalize();
 
-    return tangent;
+    return tangent as T;
   }
 
-  getTangentAt(u, optionalTarget) {
+  getTangentAt(u: number, optionalTarget?: T) {
     const t = this.getUtoTmapping(u);
     return this.getTangent(t, optionalTarget);
   }
 
-  computeFrenetFrames(segments, closed) {
+  computeFrenetFrames(
+    segments: number,
+    closed: boolean,
+  ): {
+    tangents: Vector3[];
+    normals: Vector3[];
+    binormals: Vector3[];
+  } {
     // see http://www.cs.indiana.edu/pub/techreports/TR425.pdf
 
     const normal = new Vector3();
 
-    const tangents = [];
+    const tangents: Vector3[] = [];
     const normals = [];
     const binormals = [];
 
@@ -230,7 +199,7 @@ class Curve {
     for (let i = 0; i <= segments; i++) {
       const u = i / segments;
 
-      tangents[i] = this.getTangentAt(u, new Vector3());
+      tangents[i] = this.getTangentAt(u, new Vector3() as T) as Vector3;
     }
 
     // select an initial normal vector perpendicular to the first tangent vector,
@@ -284,7 +253,7 @@ class Curve {
 
     // if the curve is closed, postprocess the vectors so the first and last normal vectors are the same
 
-    if (closed === true) {
+    if (closed) {
       let theta = Math.acos(MathUtils.clamp(normals[0].dot(normals[segments]), -1, 1));
       theta /= segments;
 
@@ -299,43 +268,44 @@ class Curve {
       }
     }
 
-    return {
-      tangents: tangents,
-      normals: normals,
-      binormals: binormals,
-    };
+    return { tangents, normals, binormals };
   }
 
-  clone() {
+  clone(): this {
+    //@ts-expect-error
     return new this.constructor().copy(this);
   }
 
-  copy(source) {
-    this.arcLengthDivisions = source.arcLengthDivisions;
+  copy(source: Curve<T>): this {
+    this.precision = source.precision;
 
     return this;
   }
 
-  toJSON() {
-    const data = {
+  toJSON(): {
+    metadata: {
+      version: number;
+      type: string;
+      generator: string;
+    };
+    precision: number;
+    type: string;
+  } {
+    return {
       metadata: {
         version: 4.6,
         type: 'Curve',
         generator: 'Curve.toJSON',
       },
+      precision: this.precision,
+      type: this.type,
     };
-
-    data.arcLengthDivisions = this.arcLengthDivisions;
-    data.type = this.type;
-
-    return data;
   }
 
-  fromJSON(json) {
-    this.arcLengthDivisions = json.arcLengthDivisions;
+  fromJSON(json: { precision: number }) {
+    this.precision = json.precision;
 
     return this;
   }
 }
-
-export { Curve };
+Curve.prototype.type = 'Curve';

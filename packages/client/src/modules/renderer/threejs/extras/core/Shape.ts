@@ -1,8 +1,12 @@
 import { Path } from './Path.js';
-import * as MathUtils from '../../math/MathUtils.ts';
+import * as MathUtils from '../../math/MathUtils.js';
+import type { Vector2 } from '../../math/Vector2.js';
 
-class Shape extends Path {
-  constructor(points) {
+export class Shape extends Path {
+  uuid: string;
+  holes: Path[];
+
+  constructor(points?: Vector2[]) {
     super(points);
 
     this.uuid = MathUtils.generateUuid();
@@ -12,7 +16,7 @@ class Shape extends Path {
     this.holes = [];
   }
 
-  getPointsHoles(divisions) {
+  getPointsHoles(divisions: number) {
     const holesPts = [];
 
     for (let i = 0, l = this.holes.length; i < l; i++) {
@@ -22,16 +26,14 @@ class Shape extends Path {
     return holesPts;
   }
 
-  // get points of shape and holes (keypoints based on segments parameter)
-
-  extractPoints(divisions) {
+  extractPoints(divisions: number) {
     return {
       shape: this.getPoints(divisions),
       holes: this.getPointsHoles(divisions),
     };
   }
 
-  copy(source) {
+  copy(source: Shape): this {
     super.copy(source);
 
     this.holes = [];
@@ -45,8 +47,17 @@ class Shape extends Path {
     return this;
   }
 
-  toJSON() {
-    const data = super.toJSON();
+  //@ts-expect-error
+  override toJSON(): {
+    metadata: { version: number };
+    uuid: string;
+    holes: ReturnType<Path['toJSON']>[];
+  } {
+    const data = super.toJSON() as unknown as {
+      metadata: { version: number };
+      uuid: string;
+      holes: ReturnType<Path['toJSON']>[];
+    };
 
     data.uuid = this.uuid;
     data.holes = [];
@@ -59,7 +70,7 @@ class Shape extends Path {
     return data;
   }
 
-  fromJSON(json) {
+  fromJSON(json: { uuid: string; holes: ReturnType<Path['toJSON']>[] }) {
     super.fromJSON(json);
 
     this.uuid = json.uuid;
@@ -73,5 +84,3 @@ class Shape extends Path {
     return this;
   }
 }
-
-export { Shape };

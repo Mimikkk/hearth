@@ -1,19 +1,18 @@
-import { Vector3 } from '../../math/Vector3.ts';
+import { Vector2 } from '../../math/Vector2.js';
 import { Curve } from '../core/Curve.js';
 
-class LineCurve3 extends Curve {
-  constructor(v1 = new Vector3(), v2 = new Vector3()) {
+export class LineCurve extends Curve<Vector2> {
+  declare isLineCurve: true;
+  declare type: 'LineCurve';
+
+  constructor(
+    public v1: Vector2,
+    public v2: Vector2,
+  ) {
     super();
-
-    this.isLineCurve3 = true;
-
-    this.type = 'LineCurve3';
-
-    this.v1 = v1;
-    this.v2 = v2;
   }
 
-  getPoint(t, optionalTarget = new Vector3()) {
+  getPoint(t: number, optionalTarget: Vector2): Vector2 {
     const point = optionalTarget;
 
     if (t === 1) {
@@ -26,21 +25,20 @@ class LineCurve3 extends Curve {
     return point;
   }
 
-  // Line curve is linear, so we can overwrite default getPointAt
-  getPointAt(u, optionalTarget) {
+  getPointAt(u: number, optionalTarget: Vector2): Vector2 {
     return this.getPoint(u, optionalTarget);
   }
 
-  getTangent(t, optionalTarget = new Vector3()) {
+  getTangent(t: number, optionalTarget: Vector2): Vector2 {
     return optionalTarget.subVectors(this.v2, this.v1).normalize();
   }
 
-  getTangentAt(u, optionalTarget) {
+  getTangentAt(u: number, optionalTarget: Vector2): Vector2 {
     return this.getTangent(u, optionalTarget);
   }
 
-  copy(source) {
-    super.copy(source);
+  copy(source: LineCurve): this {
+    super.copy(source) as this;
 
     this.v1.copy(source.v1);
     this.v2.copy(source.v2);
@@ -48,8 +46,8 @@ class LineCurve3 extends Curve {
     return this;
   }
 
-  toJSON() {
-    const data = super.toJSON();
+  toJSON(): any {
+    const data = super.toJSON() as any;
 
     data.v1 = this.v1.toArray();
     data.v2 = this.v2.toArray();
@@ -57,7 +55,7 @@ class LineCurve3 extends Curve {
     return data;
   }
 
-  fromJSON(json) {
+  fromJSON(json: any): any {
     super.fromJSON(json);
 
     this.v1.fromArray(json.v1);
@@ -66,5 +64,5 @@ class LineCurve3 extends Curve {
     return this;
   }
 }
-
-export { LineCurve3 };
+LineCurve.prototype.isLineCurve = true;
+LineCurve.prototype.type = 'LineCurve';

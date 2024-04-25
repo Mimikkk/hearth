@@ -1,32 +1,28 @@
 import { Curve } from './Curve.js';
 import * as Curves from '../curves/Curves.js';
+import type { Vector2 } from '../../math/Vector2.js';
+import type { Vector3 } from '../../math/Vector3.js';
 
-/**************************************************************
- *  Curved Path - a curve path is simply a array of connected
- *  curves, but retains the api of a curve
- **************************************************************/
+export class CurvePath<T extends Vector2 | Vector3> extends Curve<T> {
+  declare type: string | 'CurvePath';
+  autoClose: boolean = false;
+  curves: Curve<T>[] = [];
 
-class CurvePath extends Curve {
-  constructor() {
-    super();
-
-    this.type = 'CurvePath';
-
-    this.curves = [];
-    this.autoClose = false; // Automatically closes the path
-  }
-
-  add(curve) {
+  add(curve: Curve<T>): this {
     this.curves.push(curve);
+
+    return this;
   }
 
-  closePath() {
+  closePath(): this {
     // Add a line curve if start and end of lines are not connected
     const startPoint = this.curves[0].getPoint(0);
     const endPoint = this.curves[this.curves.length - 1].getPoint(1);
 
-    if (!startPoint.equals(endPoint)) {
+    if (!startPoint.equals(endPoint as Vector2 & Vector3)) {
+      //@ts-expect-error
       const lineType = startPoint.isVector2 === true ? 'LineCurve' : 'LineCurve3';
+      //@ts-expect-error
       this.curves.push(new Curves[lineType](endPoint, startPoint));
     }
 
@@ -42,7 +38,8 @@ class CurvePath extends Curve {
   // 3. Get t for the curve
   // 4. Return curve.getPointAt(t')
 
-  getPoint(t, optionalTarget) {
+  //@ts-expect-error
+  getPoint(t: number, optionalTarget?: T): T | null {
     const d = t * this.getLength();
     const curveLengths = this.getCurveLengths();
     let i = 0;
@@ -64,40 +61,27 @@ class CurvePath extends Curve {
     }
 
     return null;
-
-    // loop where sum != 0, sum > d , sum+1 <d
   }
 
-  // We cannot use the default THREE.Curve getPoint() with getLength() because in
-  // THREE.Curve, getLength() depends on getPoint() but in THREE.CurvePath
-  // getPoint() depends on getLength
-
-  getLength() {
+  getLength(): number {
     const lens = this.getCurveLengths();
     return lens[lens.length - 1];
   }
 
   // cacheLengths must be recalculated.
-  updateArcLengths() {
+  updateArcLengths(): number[] {
     this.needsUpdate = true;
-    this.cacheLengths = null;
-    this.getCurveLengths();
+    this.lengths = [];
+
+    return this.getCurveLengths();
   }
 
-  // Compute lengths and cache them
-  // We cannot overwrite getLengths() because UtoT mapping uses it.
-
-  getCurveLengths() {
-    // We use cache values if curves and cache array are same length
-
-    if (this.cacheLengths && this.cacheLengths.length === this.curves.length) {
-      return this.cacheLengths;
+  getCurveLengths(): number[] {
+    if (this.lengths && this.lengths.length === this.curves.length) {
+      return this.lengths;
     }
 
-    // Get length of sub-curve
-    // Push sums into cached array
-
-    const lengths = [];
+    const lengths: number[] = [];
     let sums = 0;
 
     for (let i = 0, l = this.curves.length; i < l; i++) {
@@ -105,16 +89,16 @@ class CurvePath extends Curve {
       lengths.push(sums);
     }
 
-    this.cacheLengths = lengths;
+    this.lengths = lengths;
 
     return lengths;
   }
 
-  getSpacedPoints(divisions = 40) {
-    const points = [];
+  getSpacedPoints(divisions: number): T[] {
+    const points: T[] = [];
 
     for (let i = 0; i <= divisions; i++) {
-      points.push(this.getPoint(i / divisions));
+      points.push(this.getPoint(i / divisions) as T);
     }
 
     if (this.autoClose) {
@@ -124,18 +108,22 @@ class CurvePath extends Curve {
     return points;
   }
 
-  getPoints(divisions = 12) {
-    const points = [];
+  getPoints(divisions: number): T[] {
+    const points: T[] = [];
     let last;
 
     for (let i = 0, curves = this.curves; i < curves.length; i++) {
       const curve = curves[i];
+      //@ts-expect-error
       const resolution = curve.isEllipseCurve
         ? divisions * 2
-        : curve.isLineCurve || curve.isLineCurve3
+        : //@ts-expect-error
+          curve.isLineCurve || curve.isLineCurve3
           ? 1
-          : curve.isSplineCurve
-            ? divisions * curve.points.length
+          : //@ts-expect-error
+            curve.isSplineCurve
+            ? //@ts-expect-error
+              divisions * curve.points.length
             : divisions;
 
       const pts = curve.getPoints(resolution);
@@ -143,13 +131,15 @@ class CurvePath extends Curve {
       for (let j = 0; j < pts.length; j++) {
         const point = pts[j];
 
-        if (last && last.equals(point)) continue; // ensures no consecutive points are duplicates
+        //@ts-expect-error
+        if (last && last.equals(point)) continue;
 
         points.push(point);
         last = point;
       }
     }
 
+    //@ts-expect-error
     if (this.autoClose && points.length > 1 && !points[points.length - 1].equals(points[0])) {
       points.push(points[0]);
     }
@@ -157,8 +147,9 @@ class CurvePath extends Curve {
     return points;
   }
 
-  copy(source) {
-    super.copy(source);
+  // @ts-expect-error
+  copy(source: CurvePath<T>): this {
+    super.copy(source as Curve<T>);
 
     this.curves = [];
 
@@ -173,21 +164,24 @@ class CurvePath extends Curve {
     return this;
   }
 
-  toJSON() {
+  toJSON(): any {
     const data = super.toJSON();
 
+    //@ts-expect-error
     data.autoClose = this.autoClose;
+    //@ts-expect-error
     data.curves = [];
 
     for (let i = 0, l = this.curves.length; i < l; i++) {
       const curve = this.curves[i];
+      //@ts-expect-error
       data.curves.push(curve.toJSON());
     }
 
     return data;
   }
 
-  fromJSON(json) {
+  fromJSON(json: any): this {
     super.fromJSON(json);
 
     this.autoClose = json.autoClose;
@@ -195,11 +189,11 @@ class CurvePath extends Curve {
 
     for (let i = 0, l = json.curves.length; i < l; i++) {
       const curve = json.curves[i];
+      //@ts-expect-error
       this.curves.push(new Curves[curve.type]().fromJSON(curve));
     }
 
     return this;
   }
 }
-
-export { CurvePath };
+CurvePath.prototype.type = 'CurvePath';

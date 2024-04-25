@@ -1,19 +1,16 @@
 import { Curve } from '../core/Curve.js';
 import { CatmullRom } from '../core/Interpolations.js';
-import { Vector2 } from '../../math/Vector2.ts';
+import { Vector2 } from '../../math/Vector2.js';
 
-class SplineCurve extends Curve {
-  constructor(points = []) {
+export class SplineCurve extends Curve<Vector2> {
+  declare isSplineCurve: true;
+  declare type: 'SplineCurve';
+
+  constructor(public points: Vector2[] = []) {
     super();
-
-    this.isSplineCurve = true;
-
-    this.type = 'SplineCurve';
-
-    this.points = points;
   }
 
-  getPoint(t, optionalTarget = new Vector2()) {
+  getPoint(t: number, optionalTarget: Vector2): Vector2 {
     const point = optionalTarget;
 
     const points = this.points;
@@ -32,7 +29,7 @@ class SplineCurve extends Curve {
     return point;
   }
 
-  copy(source) {
+  copy(source: SplineCurve): this {
     super.copy(source);
 
     this.points = [];
@@ -46,20 +43,22 @@ class SplineCurve extends Curve {
     return this;
   }
 
-  toJSON() {
+  toJSON(): any {
     const data = super.toJSON();
 
+    // @ts-expect-error
     data.points = [];
 
     for (let i = 0, l = this.points.length; i < l; i++) {
       const point = this.points[i];
+      // @ts-expect-error
       data.points.push(point.toArray());
     }
 
     return data;
   }
 
-  fromJSON(json) {
+  fromJSON(json: any): any {
     super.fromJSON(json);
 
     this.points = [];
@@ -72,5 +71,5 @@ class SplineCurve extends Curve {
     return this;
   }
 }
-
-export { SplineCurve };
+SplineCurve.prototype.isSplineCurve = true;
+SplineCurve.prototype.type = 'SplineCurve';

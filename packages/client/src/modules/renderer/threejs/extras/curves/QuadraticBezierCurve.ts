@@ -1,21 +1,20 @@
 import { Curve } from '../core/Curve.js';
 import { QuadraticBezier } from '../core/Interpolations.js';
-import { Vector2 } from '../../math/Vector2.ts';
+import { Vector2 } from '../../math/Vector2.js';
 
-class QuadraticBezierCurve extends Curve {
-  constructor(v0 = new Vector2(), v1 = new Vector2(), v2 = new Vector2()) {
+export class QuadraticBezierCurve extends Curve<Vector2> {
+  declare isQuadraticBezierCurve: true;
+  declare type: 'QuadraticBezierCurve';
+
+  constructor(
+    public v0: Vector2,
+    public v1: Vector2,
+    public v2: Vector2,
+  ) {
     super();
-
-    this.isQuadraticBezierCurve = true;
-
-    this.type = 'QuadraticBezierCurve';
-
-    this.v0 = v0;
-    this.v1 = v1;
-    this.v2 = v2;
   }
 
-  getPoint(t, optionalTarget = new Vector2()) {
+  getPoint(t: number, optionalTarget: Vector2): Vector2 {
     const point = optionalTarget;
 
     const v0 = this.v0,
@@ -27,8 +26,8 @@ class QuadraticBezierCurve extends Curve {
     return point;
   }
 
-  copy(source) {
-    super.copy(source);
+  copy(source: QuadraticBezierCurve): this {
+    super.copy(source as Curve<any>);
 
     this.v0.copy(source.v0);
     this.v1.copy(source.v1);
@@ -37,8 +36,8 @@ class QuadraticBezierCurve extends Curve {
     return this;
   }
 
-  toJSON() {
-    const data = super.toJSON();
+  toJSON(): any {
+    const data = super.toJSON() as any;
 
     data.v0 = this.v0.toArray();
     data.v1 = this.v1.toArray();
@@ -47,7 +46,7 @@ class QuadraticBezierCurve extends Curve {
     return data;
   }
 
-  fromJSON(json) {
+  fromJSON(json: any): any {
     super.fromJSON(json);
 
     this.v0.fromArray(json.v0);
@@ -57,5 +56,5 @@ class QuadraticBezierCurve extends Curve {
     return this;
   }
 }
-
-export { QuadraticBezierCurve };
+QuadraticBezierCurve.prototype.isQuadraticBezierCurve = true;
+QuadraticBezierCurve.prototype.type = 'QuadraticBezierCurve';

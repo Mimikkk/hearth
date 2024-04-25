@@ -15,7 +15,7 @@ import { Mesh } from '../objects/Mesh.js';
 import { SkinnedMesh } from '../objects/SkinnedMesh.js';
 import { Bone } from '../objects/Bone.js';
 import { Skeleton } from '../objects/Skeleton.js';
-import { Shape } from '../extras/core/Shape.js';
+import { Shape } from '../extras/core/Shape.ts';
 import { Fog } from '../scenes/Fog.ts';
 import { FogExp2 } from '../scenes/FogExp2.ts';
 import { HemisphereLight } from '../lights/HemisphereLight.js';

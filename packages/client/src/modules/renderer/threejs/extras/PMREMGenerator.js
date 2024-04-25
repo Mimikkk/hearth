@@ -73,7 +73,7 @@ const _axisDirections = [
  * https://drive.google.com/file/d/15y8r_UpKlU9SvV4ILb0C3qCPecS8pvLz/view
  */
 
-class PMREMGenerator {
+export class PMREMGenerator {
   constructor(renderer) {
     this._renderer = renderer;
     this._pingPongRenderTarget = null;
@@ -761,5 +761,3 @@ function _getCommonVertexShader() {
 		}
 	`;
 }
-
-export { PMREMGenerator };

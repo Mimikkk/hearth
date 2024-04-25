@@ -1,19 +1,18 @@
-import { Vector2 } from '../../math/Vector2.ts';
+import { Vector3 } from '../../math/Vector3.js';
 import { Curve } from '../core/Curve.js';
 
-class LineCurve extends Curve {
-  constructor(v1 = new Vector2(), v2 = new Vector2()) {
+export class LineCurve3 extends Curve<Vector3> {
+  declare isLineCurve3: true;
+  declare type: 'LineCurve3';
+
+  constructor(
+    public v1: Vector3,
+    public v2: Vector3,
+  ) {
     super();
-
-    this.isLineCurve = true;
-
-    this.type = 'LineCurve';
-
-    this.v1 = v1;
-    this.v2 = v2;
   }
 
-  getPoint(t, optionalTarget = new Vector2()) {
+  getPoint(t: number, optionalTarget: Vector3): Vector3 {
     const point = optionalTarget;
 
     if (t === 1) {
@@ -27,19 +26,19 @@ class LineCurve extends Curve {
   }
 
   // Line curve is linear, so we can overwrite default getPointAt
-  getPointAt(u, optionalTarget) {
+  getPointAt(u: number, optionalTarget: Vector3) {
     return this.getPoint(u, optionalTarget);
   }
 
-  getTangent(t, optionalTarget = new Vector2()) {
+  getTangent(t: number, optionalTarget: Vector3) {
     return optionalTarget.subVectors(this.v2, this.v1).normalize();
   }
 
-  getTangentAt(u, optionalTarget) {
+  getTangentAt(u: number, optionalTarget: Vector3) {
     return this.getTangent(u, optionalTarget);
   }
 
-  copy(source) {
+  copy(source: LineCurve3): this {
     super.copy(source);
 
     this.v1.copy(source.v1);
@@ -48,8 +47,8 @@ class LineCurve extends Curve {
     return this;
   }
 
-  toJSON() {
-    const data = super.toJSON();
+  toJSON(): any {
+    const data = super.toJSON() as any;
 
     data.v1 = this.v1.toArray();
     data.v2 = this.v2.toArray();
@@ -57,7 +56,7 @@ class LineCurve extends Curve {
     return data;
   }
 
-  fromJSON(json) {
+  fromJSON(json: any): any {
     super.fromJSON(json);
 
     this.v1.fromArray(json.v1);
@@ -66,5 +65,5 @@ class LineCurve extends Curve {
     return this;
   }
 }
-
-export { LineCurve };
+LineCurve3.prototype.isLineCurve3 = true;
+LineCurve3.prototype.type = 'LineCurve3';

@@ -1,45 +1,30 @@
 import { Curve } from '../core/Curve.js';
-import { Vector2 } from '../../math/Vector2.ts';
+import { Vector2 } from '../../math/Vector2.js';
 
-class EllipseCurve extends Curve {
+export class EllipseCurve extends Curve<Vector2> {
+  declare isEllipseCurve: true;
+  declare type: string | 'EllipseCurve';
+
   constructor(
-    aX = 0,
-    aY = 0,
-    xRadius = 1,
-    yRadius = 1,
-    aStartAngle = 0,
-    aEndAngle = Math.PI * 2,
-    aClockwise = false,
-    aRotation = 0,
+    public aX: number = 0,
+    public aY: number = 0,
+    public xRadius: number = 1,
+    public yRadius: number = 1,
+    public aStartAngle: number = 0,
+    public aEndAngle: number = Math.PI * 2,
+    public aClockwise = false,
+    public aRotation: number = 0,
   ) {
     super();
-
-    this.isEllipseCurve = true;
-
-    this.type = 'EllipseCurve';
-
-    this.aX = aX;
-    this.aY = aY;
-
-    this.xRadius = xRadius;
-    this.yRadius = yRadius;
-
-    this.aStartAngle = aStartAngle;
-    this.aEndAngle = aEndAngle;
-
-    this.aClockwise = aClockwise;
-
-    this.aRotation = aRotation;
   }
 
-  getPoint(t, optionalTarget = new Vector2()) {
+  getPoint(t: number, optionalTarget: Vector2): Vector2 {
     const point = optionalTarget;
 
     const twoPi = Math.PI * 2;
     let deltaAngle = this.aEndAngle - this.aStartAngle;
     const samePoints = Math.abs(deltaAngle) < Number.EPSILON;
 
-    // ensures that deltaAngle is 0 .. 2 PI
     while (deltaAngle < 0) deltaAngle += twoPi;
     while (deltaAngle > twoPi) deltaAngle -= twoPi;
 
@@ -78,7 +63,7 @@ class EllipseCurve extends Curve {
     return point.set(x, y);
   }
 
-  copy(source) {
+  copy(source: EllipseCurve): this {
     super.copy(source);
 
     this.aX = source.aX;
@@ -97,8 +82,8 @@ class EllipseCurve extends Curve {
     return this;
   }
 
-  toJSON() {
-    const data = super.toJSON();
+  toJSON(): any {
+    const data = super.toJSON() as any;
 
     data.aX = this.aX;
     data.aY = this.aY;
@@ -116,7 +101,7 @@ class EllipseCurve extends Curve {
     return data;
   }
 
-  fromJSON(json) {
+  fromJSON(json: any): any {
     super.fromJSON(json);
 
     this.aX = json.aX;
@@ -135,5 +120,5 @@ class EllipseCurve extends Curve {
     return this;
   }
 }
-
-export { EllipseCurve };
+EllipseCurve.prototype.isEllipseCurve = true;
+EllipseCurve.prototype.type = 'EllipseCurve';
