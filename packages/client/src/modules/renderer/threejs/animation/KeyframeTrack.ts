@@ -1,16 +1,30 @@
-import { InterpolationMode } from '../constants.ts';
-import { CubicInterpolant } from '../math/interpolants/CubicInterpolant.ts';
-import { LinearInterpolant } from '../math/interpolants/LinearInterpolant.ts';
-import { DiscreteInterpolant } from '../math/interpolants/DiscreteInterpolant.ts';
+import { InterpolationMode } from '../constants.js';
+import { CubicInterpolant } from '../math/interpolants/CubicInterpolant.js';
+import { LinearInterpolant } from '../math/interpolants/LinearInterpolant.js';
+import { DiscreteInterpolant } from '../math/interpolants/DiscreteInterpolant.js';
 import * as AnimationUtils from './AnimationUtils.js';
+import { TypedArray, TypedArrayConstructor } from '../math/MathUtils.js';
+import { Interpolant } from '../math/Interpolant.js';
 
-class KeyframeTrack {
-  constructor(name, times, values, interpolation) {
+export class KeyframeTrack<T extends TypedArray = Float32Array, V extends TypedArray = Float32Array> {
+  declare ['constructor']: typeof KeyframeTrack;
+  declare DefaultInterpolation: InterpolationMode;
+  declare TimeBufferType: TypedArrayConstructor | ArrayConstructor;
+  declare ValueBufferType: TypedArrayConstructor | ArrayConstructor;
+  declare ValueTypeName: string;
+  times: T;
+  values: V;
+  createInterpolant: (result: V) => Interpolant<T, V>;
+
+  constructor(
+    public name: string,
+    times: T,
+    values: V,
+    interpolation: InterpolationMode,
+  ) {
     if (name === undefined) throw new Error('THREE.KeyframeTrack: track name is undefined');
     if (times === undefined || times.length === 0)
       throw new Error('THREE.KeyframeTrack: no keyframes in track named ' + name);
-
-    this.name = name;
 
     this.times = AnimationUtils.convertArray(times, this.TimeBufferType);
     this.values = AnimationUtils.convertArray(values, this.ValueBufferType);
@@ -18,19 +32,14 @@ class KeyframeTrack {
     this.setInterpolation(interpolation || this.DefaultInterpolation);
   }
 
-  // Serialization (in static context, because of constructor invocation
-  // and automatic invocation of .toJSON):
-
-  static toJSON(track) {
+  static toJSON(track: any): any {
     const trackType = track.constructor;
 
     let json;
 
-    // derived classes can define a static toJSON method
     if (trackType.toJSON !== this.toJSON) {
       json = trackType.toJSON(track);
     } else {
-      // by default, we assume the data can be serialized as-is
       json = {
         name: track.name,
         times: AnimationUtils.convertArray(track.times, Array),
@@ -40,28 +49,29 @@ class KeyframeTrack {
       const interpolation = track.getInterpolation();
 
       if (interpolation !== track.DefaultInterpolation) {
+        //@ts-expect-error
         json.interpolation = interpolation;
       }
     }
 
-    json.type = track.ValueTypeName; // mandatory
+    json.type = track.ValueTypeName;
 
     return json;
   }
 
-  InterpolantFactoryMethodDiscrete(result) {
+  InterpolantFactoryMethodDiscrete(result: V): DiscreteInterpolant<T, V> {
     return new DiscreteInterpolant(this.times, this.values, this.getValueSize(), result);
   }
 
-  InterpolantFactoryMethodLinear(result) {
+  InterpolantFactoryMethodLinear(result: V): LinearInterpolant<T, V> {
     return new LinearInterpolant(this.times, this.values, this.getValueSize(), result);
   }
 
-  InterpolantFactoryMethodSmooth(result) {
+  InterpolantFactoryMethodSmooth(result: V): CubicInterpolant<T, V> {
     return new CubicInterpolant(this.times, this.values, this.getValueSize(), result);
   }
 
-  setInterpolation(interpolation) {
+  setInterpolation(interpolation: InterpolationMode): this {
     let factoryMethod;
 
     switch (interpolation) {
@@ -102,25 +112,25 @@ class KeyframeTrack {
     return this;
   }
 
-  getInterpolation() {
+  getInterpolation(): InterpolationMode {
     switch (this.createInterpolant) {
       case this.InterpolantFactoryMethodDiscrete:
         return InterpolationMode.Discrete;
-
       case this.InterpolantFactoryMethodLinear:
         return InterpolationMode.Linear;
-
       case this.InterpolantFactoryMethodSmooth:
         return InterpolationMode.Smooth;
+      default:
+        throw new Error('THREE.KeyframeTrack: Unknown interpolation.');
     }
   }
 
-  getValueSize() {
+  getValueSize(): number {
     return this.values.length / this.times.length;
   }
 
   // move all keyframes either forwards or backwards in time
-  shift(timeOffset) {
+  shift(timeOffset: number): this {
     if (timeOffset !== 0.0) {
       const times = this.times;
 
@@ -133,7 +143,7 @@ class KeyframeTrack {
   }
 
   // scale all keyframe times by a factor (useful for frame <-> seconds conversions)
-  scale(timeScale) {
+  scale(timeScale: number): this {
     if (timeScale !== 1.0) {
       const times = this.times;
 
@@ -147,7 +157,7 @@ class KeyframeTrack {
 
   // removes keyframes before and after animation without changing any values within the range [startTime, endTime].
   // IMPORTANT: We do not shift around keys to the start of the track time, because for interpolated keys this will change their values
-  trim(startTime, endTime) {
+  trim(startTime: number, endTime: number): this {
     const times = this.times,
       nKeys = times.length;
 
@@ -172,15 +182,15 @@ class KeyframeTrack {
       }
 
       const stride = this.getValueSize();
-      this.times = times.slice(from, to);
-      this.values = this.values.slice(from * stride, to * stride);
+      this.times = times.slice(from, to) as T;
+      this.values = this.values.slice(from * stride, to * stride) as V;
     }
 
     return this;
   }
 
   // ensure we do not get a GarbageInGarbageOut situation, make sure tracks are at least minimally viable
-  validate() {
+  validate(): boolean {
     let valid = true;
 
     const valueSize = this.getValueSize();
@@ -237,7 +247,7 @@ class KeyframeTrack {
 
   // removes equivalent sequential keys as common in morph target sequences
   // (0,0,0,0,1,1,1,0,0,0,0,0,0,0) --> (0,0,1,1,0,0)
-  optimize() {
+  optimize(): this {
     // times or values may be shared with other tracks, so overwriting is unsafe
     const times = this.times.slice(),
       values = this.values.slice(),
@@ -307,32 +317,28 @@ class KeyframeTrack {
     }
 
     if (writeIndex !== times.length) {
-      this.times = times.slice(0, writeIndex);
-      this.values = values.slice(0, writeIndex * stride);
+      this.times = times.slice(0, writeIndex) as T;
+      this.values = values.slice(0, writeIndex * stride) as V;
     } else {
-      this.times = times;
-      this.values = values;
+      this.times = times as T;
+      this.values = values as V;
     }
 
     return this;
   }
 
-  clone() {
-    const times = this.times.slice();
-    const values = this.values.slice();
+  clone(): this {
+    const times = this.times.slice() as T;
+    const values = this.values.slice() as V;
 
-    const TypedKeyframeTrack = this.constructor;
-    const track = new TypedKeyframeTrack(this.name, times, values);
+    const track = new this.constructor(this.name, times, values, this.getInterpolation());
 
-    // Interpolant argument to constructor is not saved, so copy the factory method directly.
     track.createInterpolant = this.createInterpolant;
 
-    return track;
+    return track as this;
   }
 }
 
 KeyframeTrack.prototype.TimeBufferType = Float32Array;
 KeyframeTrack.prototype.ValueBufferType = Float32Array;
 KeyframeTrack.prototype.DefaultInterpolation = InterpolationMode.Linear;
-
-export { KeyframeTrack };

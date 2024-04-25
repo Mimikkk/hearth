@@ -1,16 +1,16 @@
 import type { TypedArray, TypedArrayConstructor } from './MathUtils.js';
 
-export abstract class Interpolant<T extends TypedArray> {
+export abstract class Interpolant<T extends TypedArray, V extends TypedArray> {
   _cachedIndex: number = 0;
 
   protected constructor(
-    public parameterPositions: number[],
-    public sampleValues: T,
+    public parameterPositions: T,
+    public sampleValues: V,
     public valueSize: number,
-    public resultBuffer: T = new (sampleValues.constructor as TypedArrayConstructor)(valueSize) as T,
+    public resultBuffer: V = new (sampleValues.constructor as TypedArrayConstructor)(valueSize) as V,
   ) {}
 
-  evaluate(t: number): T {
+  evaluate(t: number): V {
     const pp = this.parameterPositions;
     let i1 = this._cachedIndex;
     let t1 = pp[i1];
@@ -104,7 +104,7 @@ export abstract class Interpolant<T extends TypedArray> {
     return this.interpolate_(i1, t0, t, t1);
   }
 
-  copySampleValue_(index: number): T {
+  copySampleValue_(index: number): V {
     const { resultBuffer, sampleValues, valueSize } = this;
     const offset = index * valueSize;
 
@@ -113,7 +113,7 @@ export abstract class Interpolant<T extends TypedArray> {
     return resultBuffer;
   }
 
-  interpolate_(i1: number, t0: number, t: number, t1: number): T {
+  interpolate_(i1: number, t0: number, t: number, t1: number): V {
     return this.resultBuffer;
   }
 

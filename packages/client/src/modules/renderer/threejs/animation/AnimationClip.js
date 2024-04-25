@@ -1,11 +1,11 @@
 import * as AnimationUtils from './AnimationUtils.js';
-import { KeyframeTrack } from './KeyframeTrack.js';
-import { BooleanKeyframeTrack } from './tracks/BooleanKeyframeTrack.js';
-import { ColorKeyframeTrack } from './tracks/ColorKeyframeTrack.js';
-import { NumberKeyframeTrack } from './tracks/NumberKeyframeTrack.js';
-import { QuaternionKeyframeTrack } from './tracks/QuaternionKeyframeTrack.js';
-import { StringKeyframeTrack } from './tracks/StringKeyframeTrack.js';
-import { VectorKeyframeTrack } from './tracks/VectorKeyframeTrack.js';
+import { KeyframeTrack } from './KeyframeTrack.ts';
+import { BooleanKeyframeTrack } from './tracks/BooleanKeyframeTrack.ts';
+import { ColorKeyframeTrack } from './tracks/ColorKeyframeTrack.ts';
+import { NumberKeyframeTrack } from './tracks/NumberKeyframeTrack.ts';
+import { QuaternionKeyframeTrack } from './tracks/QuaternionKeyframeTrack.ts';
+import { StringKeyframeTrack } from './tracks/StringKeyframeTrack.ts';
+import { VectorKeyframeTrack } from './tracks/VectorKeyframeTrack.ts';
 import * as MathUtils from '../math/MathUtils.ts';
 import { AnimationBlendMode } from '../constants.ts';
 

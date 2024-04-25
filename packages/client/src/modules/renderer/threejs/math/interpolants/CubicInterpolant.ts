@@ -2,7 +2,7 @@ import { InterpolationEndingMode } from '../../constants.js';
 import { Interpolant } from '../Interpolant.js';
 import type { TypedArray } from '../MathUtils.js';
 
-export class CubicInterpolant<T extends TypedArray> extends Interpolant<T> {
+export class CubicInterpolant<T extends TypedArray, V extends TypedArray> extends Interpolant<T, V> {
   endingStart: InterpolationEndingMode = InterpolationEndingMode.ZeroCurvature;
   endingEnd: InterpolationEndingMode = InterpolationEndingMode.ZeroCurvature;
 
@@ -11,7 +11,7 @@ export class CubicInterpolant<T extends TypedArray> extends Interpolant<T> {
   _weightNext: number = -0;
   _offsetNext: number = -0;
 
-  constructor(parameterPositions: number[], sampleValues: T, valueSize: number, resultBuffer?: T) {
+  constructor(parameterPositions: T, sampleValues: V, valueSize: number, resultBuffer?: V) {
     super(parameterPositions, sampleValues, valueSize, resultBuffer);
   }
 
@@ -69,7 +69,7 @@ export class CubicInterpolant<T extends TypedArray> extends Interpolant<T> {
     this._offsetNext = iNext * stride;
   }
 
-  override interpolate_(i1: number, t0: number, t: number, t1: number): T {
+  override interpolate_(i1: number, t0: number, t: number, t1: number): V {
     const result = this.resultBuffer;
     const values = this.sampleValues;
     const stride = this.valueSize;
