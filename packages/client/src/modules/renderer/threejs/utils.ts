@@ -26,8 +26,8 @@ export const createTypedArray = (type: keyof typeof TypedArrayMap, buffer: Array
 
 export const createElementNS = (name: string) => document.createElementNS('http://www.w3.org/1999/xhtml', name);
 
-export const createCanvasElement = () => {
-  const canvas = createElementNS('canvas');
+export const createCanvasElement = (): HTMLCanvasElement => {
+  const canvas = document.createElement('canvas');
   canvas.style.display = 'block';
 
   return canvas;

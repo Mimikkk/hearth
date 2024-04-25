@@ -5,8 +5,8 @@ import Transpiler from '@modules/renderer/threejs/transpiler/Transpiler.js';
 import ShaderToyDecoder from '@modules/renderer/threejs/transpiler/ShaderToyDecoder.js';
 import TSLEncoder from '@modules/renderer/threejs/transpiler/TSLEncoder.js';
 
-import WebGPU from '@modules/renderer/threejs/capabilities/WebGPU.js';
-import WebGL from '@modules/renderer/threejs/capabilities/WebGL.js';
+import { WebGPU } from '@modules/renderer/threejs/capabilities/WebGPU.js';
+import { WebGL } from '@modules/renderer/threejs/capabilities/WebGL.js';
 
 import WebGPURenderer from '../threejs/renderers/webgpu/WebGPURenderer.js';
 

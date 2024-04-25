@@ -1,7 +1,7 @@
 import { BufferGeometry } from '../core/BufferGeometry.ts';
 import { Float32BufferAttribute } from '../core/BufferAttribute.ts';
 import { Shape } from '../extras/core/Shape.js';
-import { ShapeUtils } from '../extras/ShapeUtils.js';
+import { ShapeUtils } from '../extras/ShapeUtils.ts';
 import { Vector2 } from '../math/Vector2.ts';
 
 class ShapeGeometry extends BufferGeometry {

@@ -3,8 +3,8 @@ import { MeshPhongNodeMaterial, Node, nodeObject, NodeUpdateType, uniform } from
 
 import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
 
-import WebGPU from '@modules/renderer/threejs/capabilities/WebGPU.js';
-import WebGL from '@modules/renderer/threejs/capabilities/WebGL.js';
+import { WebGPU } from '@modules/renderer/threejs/capabilities/WebGPU.js';
+import { WebGL } from '@modules/renderer/threejs/capabilities/WebGL.js';
 
 import WebGPURenderer from '../threejs/renderers/webgpu/WebGPURenderer.js';
 

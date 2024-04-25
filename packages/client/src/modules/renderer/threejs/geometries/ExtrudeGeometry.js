@@ -26,7 +26,7 @@ import * as Curves from '../extras/curves/Curves.js';
 import { Vector2 } from '../math/Vector2.ts';
 import { Vector3 } from '../math/Vector3.ts';
 import { Shape } from '../extras/core/Shape.js';
-import { ShapeUtils } from '../extras/ShapeUtils.js';
+import { ShapeUtils } from '../extras/ShapeUtils.ts';
 
 class ExtrudeGeometry extends BufferGeometry {
   constructor(

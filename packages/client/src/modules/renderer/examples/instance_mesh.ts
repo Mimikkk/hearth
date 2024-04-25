@@ -4,8 +4,8 @@ import { mix, normalWorld, oscSine, range, timerLocal } from '../threejs/nodes/N
 import Stats from '../threejs/libs/stats.module.js';
 import { GUI } from '../threejs/libs/lil-gui.module.min.js';
 
-import WebGPU from '@modules/renderer/threejs/capabilities/WebGPU.js';
-import WebGL from '@modules/renderer/threejs/capabilities/WebGL.js';
+import { WebGPU } from '@modules/renderer/threejs/capabilities/WebGPU.js';
+import { WebGL } from '@modules/renderer/threejs/capabilities/WebGL.js';
 
 import WebGPURenderer from '../threejs/renderers/webgpu/WebGPURenderer.js';
 

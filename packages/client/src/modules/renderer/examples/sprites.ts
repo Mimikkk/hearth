@@ -1,8 +1,8 @@
 import * as THREE from '../threejs/Three.js';
 import { color, rangeFog, SpriteNodeMaterial, texture, userData, uv } from '../threejs/nodes/Nodes.js';
 
-import WebGPU from '@modules/renderer/threejs/capabilities/WebGPU.js';
-import WebGL from '@modules/renderer/threejs/capabilities/WebGL.js';
+import { WebGPU } from '@modules/renderer/threejs/capabilities/WebGPU.js';
+import { WebGL } from '@modules/renderer/threejs/capabilities/WebGL.js';
 
 import WebGPURenderer from '../threejs/renderers/webgpu/WebGPURenderer.js';
 

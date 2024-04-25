@@ -2,7 +2,7 @@ import { CoordinateSystem } from '../constants.ts';
 import { Matrix4 } from '../math/Matrix4.ts';
 import { Object3D } from '../core/Object3D.ts';
 
-class Camera extends Object3D {
+export class Camera extends Object3D {
   constructor() {
     super();
 
@@ -51,5 +51,3 @@ class Camera extends Object3D {
     return new this.constructor().copy(this);
   }
 }
-
-export { Camera };

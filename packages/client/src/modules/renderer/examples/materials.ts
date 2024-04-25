@@ -26,7 +26,7 @@ import {
   wgslFn,
 } from '../threejs/nodes/Nodes.js';
 
-import WebGPU from '@modules/renderer/threejs/capabilities/WebGPU.js';
+import { WebGPU } from '@modules/renderer/threejs/capabilities/WebGPU.js';
 import WebGPURenderer from '../threejs/renderers/webgpu/WebGPURenderer.js';
 
 import { TeapotGeometry } from '../threejs/geometries/TeapotGeometry.js';

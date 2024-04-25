@@ -1,7 +1,7 @@
 import { Color } from '../../math/Color.ts';
 import { Path } from './Path.js';
 import { Shape } from './Shape.js';
-import { ShapeUtils } from '../ShapeUtils.js';
+import { ShapeUtils } from '../ShapeUtils.ts';
 
 class ShapePath {
   constructor() {

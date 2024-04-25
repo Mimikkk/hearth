@@ -6,14 +6,14 @@ import { Euler } from '../math/Euler.js';
 import { Layers } from './Layers.js';
 import { Matrix3 } from '../math/Matrix3.js';
 import * as MathUtils from '../math/MathUtils.js';
-import { Intersection, Raycaster } from './Raycaster.js';
-import { Light } from '../lights/Light.js';
-import { WebGLRenderer } from '../renderers/WebGLRenderer.js';
-import { Scene } from '../scenes/Scene.js';
-import { BufferGeometry } from './BufferGeometry.js';
-import { Camera } from '../cameras/Camera.js';
-import { Material } from '../materials/Material.js';
-import { Group } from '../objects/Group.js';
+import type { Intersection, Raycaster } from './Raycaster.js';
+import type { Light } from '../lights/Light.js';
+import type { WebGLRenderer } from '../renderers/WebGLRenderer.js';
+import type { Scene } from '../scenes/Scene.js';
+import type { BufferGeometry } from './BufferGeometry.js';
+import type { Camera } from '../cameras/Camera.js';
+import type { Material } from '../materials/Material.js';
+import type { Group } from '../objects/Group.js';
 
 let _object3DId = 0;
 
@@ -36,6 +36,9 @@ export interface Object3DEventMap {
   childadded: { child: Object3D };
   childremoved: { child: Object3D };
 }
+
+const isCamera = (object: any): object is Camera => object.isCamera;
+const isLight = (object: any): object is Light => object.isLight;
 
 export class Object3D {
   declare ['constructor']: typeof Object3D;
@@ -310,7 +313,7 @@ export class Object3D {
 
     _position.setFromMatrixPosition(this.matrixWorld);
 
-    if (this instanceof Camera || this instanceof Light) {
+    if (isCamera(this) || isLight(this)) {
       _m1.lookAt(_position, _target, this.up);
     } else {
       _m1.lookAt(_target, _position, this.up);

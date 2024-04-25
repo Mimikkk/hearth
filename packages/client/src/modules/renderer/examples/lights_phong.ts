@@ -16,8 +16,8 @@ import Stats from '../threejs/libs/stats.module.js';
 import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
 import { TeapotGeometry } from '../threejs/geometries/TeapotGeometry.js';
 
-import WebGPU from '@modules/renderer/threejs/capabilities/WebGPU.js';
-import WebGL from '@modules/renderer/threejs/capabilities/WebGL.js';
+import { WebGPU } from '@modules/renderer/threejs/capabilities/WebGPU.js';
+import { WebGL } from '@modules/renderer/threejs/capabilities/WebGL.js';
 
 import WebGPURenderer from '../threejs/renderers/webgpu/WebGPURenderer.js';
 

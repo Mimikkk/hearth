@@ -18,7 +18,7 @@ import {
 
 import { KTX2Loader } from '../threejs/loaders/KTX2Loader.js';
 
-import WebGPU from '@modules/renderer/threejs/capabilities/WebGPU.js';
+import { WebGPU } from '@modules/renderer/threejs/capabilities/WebGPU.js';
 import WebGPURenderer from '../threejs/renderers/webgpu/WebGPURenderer.js';
 import { TextureFormat } from '../threejs/Three.js';
 

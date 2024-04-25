@@ -1,10 +1,14 @@
-import { clamp } from '../math/MathUtils.ts';
+import { clamp } from '../math/MathUtils.js';
 
-// Fast Half Float Conversions, http://www.fox-toolkit.org/ftp/fasthalffloatconversion.pdf
-
-const _tables = /*@__PURE__*/ _generateTables();
-
-function _generateTables() {
+const generateTables = (): {
+  floatView: Float32Array;
+  uint32View: Uint32Array;
+  baseTable: Uint32Array;
+  shiftTable: Uint32Array;
+  mantissaTable: Uint32Array;
+  exponentTable: Uint32Array;
+  offsetTable: Uint32Array;
+} => {
   // float32 to float16 helpers
 
   const buffer = new ArrayBuffer(4);
@@ -109,32 +113,28 @@ function _generateTables() {
     exponentTable: exponentTable,
     offsetTable: offsetTable,
   };
-}
-
-// float32 to float16
-
-function toHalfFloat(val) {
-  if (Math.abs(val) > 65504) console.warn('THREE.DataUtils.toHalfFloat(): Value out of range.');
-
-  val = clamp(val, -65504, 65504);
-
-  _tables.floatView[0] = val;
-  const f = _tables.uint32View[0];
-  const e = (f >> 23) & 0x1ff;
-  return _tables.baseTable[e] + ((f & 0x007fffff) >> _tables.shiftTable[e]);
-}
-
-// float16 to float32
-
-function fromHalfFloat(val) {
-  const m = val >> 10;
-  _tables.uint32View[0] = _tables.mantissaTable[_tables.offsetTable[m] + (val & 0x3ff)] + _tables.exponentTable[m];
-  return _tables.floatView[0];
-}
-
-const DataUtils = {
-  toHalfFloat: toHalfFloat,
-  fromHalfFloat: fromHalfFloat,
 };
 
-export { toHalfFloat, fromHalfFloat, DataUtils };
+const tables = generateTables();
+
+export function toHalfFloat(val: number): number {
+  if (Math.abs(val) > 65504) console.warn('THREE.DataUtils.toHalfFloat(): Value out of range.');
+  val = clamp(val, -65504, 65504);
+
+  tables.floatView[0] = val;
+  const f = tables.uint32View[0];
+  const e = (f >> 23) & 0x1ff;
+  return tables.baseTable[e] + ((f & 0x007fffff) >> tables.shiftTable[e]);
+}
+
+export function fromHalfFloat(val: number): number {
+  const m = val >> 10;
+  tables.uint32View[0] = tables.mantissaTable[tables.offsetTable[m] + (val & 0x3ff)] + tables.exponentTable[m];
+
+  return tables.floatView[0];
+}
+
+export const DataUtils = {
+  toHalfFloat,
+  fromHalfFloat,
+};

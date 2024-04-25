@@ -1,4 +1,4 @@
-import { ImageUtils } from '../extras/ImageUtils.js';
+import { ImageUtils } from '../extras/ImageUtils.ts';
 import * as MathUtils from '../math/MathUtils.ts';
 
 let _sourceId = 0;

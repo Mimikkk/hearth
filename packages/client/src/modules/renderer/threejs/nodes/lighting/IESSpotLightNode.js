@@ -4,7 +4,7 @@ import { texture } from '../accessors/TextureNode.js';
 import { vec2 } from '../shadernode/ShaderNode.js';
 import { addNodeClass } from '../core/Node.js';
 
-import IESSpotLight from '../../../threejs/lights/IESSpotLight.js';
+import { IESSpotLight } from '../../../threejs/lights/IESSpotLight.js';
 
 class IESSpotLightNode extends SpotLightNode {
   getSpotAttenuation(angleCosine) {

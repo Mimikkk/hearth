@@ -43,7 +43,7 @@ class Curve {
   // Virtual base class method to overwrite and implement in subclasses
   //	- t [0 .. 1]
 
-  getPoint(t: number, optionalTarget: Vector3) {
+  getPoint(t, optionalTarget) {
     console.warn('THREE.Curve: .getPoint() not implemented.');
     return new Vector3();
   }

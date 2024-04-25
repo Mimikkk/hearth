@@ -12,8 +12,8 @@ import {
 
 import { GLTFLoader } from '../threejs/loaders/GLTFLoader.js';
 
-import WebGPU from '@modules/renderer/threejs/capabilities/WebGPU.js';
-import WebGL from '@modules/renderer/threejs/capabilities/WebGL.js';
+import { WebGPU } from '@modules/renderer/threejs/capabilities/WebGPU.js';
+import { WebGL } from '@modules/renderer/threejs/capabilities/WebGL.js';
 
 import WebGPURenderer from '../threejs/renderers/webgpu/WebGPURenderer.js';
 import PostProcessing from '../threejs/renderers/common/PostProcessing.js';
