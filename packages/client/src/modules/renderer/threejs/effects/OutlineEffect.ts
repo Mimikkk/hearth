@@ -1,63 +1,33 @@
-import { Color, ShaderMaterial, Side, UniformsLib, UniformsUtils } from '../Three.js';
+import { WebGLRenderer } from '../renderers/WebGLRenderer.js';
+import { Color } from '../math/Color.js';
+import { ShaderMaterial } from '../materials/ShaderMaterial.js';
+import { UniformsUtils } from '../renderers/shaders/UniformsUtils.js';
+import { UniformsLib } from '../renderers/shaders/UniformsLib.js';
+import { Side } from '../constants.js';
+import { Vector4 } from '../math/Vector4.js';
+import { Vector2 } from '../math/Vector2.js';
+import { Scene } from '../scenes/Scene.js';
+import { Camera } from '../cameras/Camera.js';
+import { WebGLRenderTarget } from '../renderers/WebGLRenderTarget.js';
+import { WebGLShadowMap } from '../renderers/webgl/WebGLShadowMap.js';
+import { Material } from '@modules/renderer/threejs/materials/Material.js';
+import { Object3D } from '@modules/renderer/threejs/core/Object3D.js';
+import { BufferGeometry } from '@modules/renderer/threejs/core/BufferGeometry.js';
 
-/**
- * Reference: https://en.wikipedia.org/wiki/Cel_shading
- *
- * API
- *
- * 1. Traditional
- *
- * const effect = new OutlineEffect( renderer );
- *
- * function render() {
- *
- *  effect.render( scene, camera );
- *
- * }
- *
- * 2. VR compatible
- *
- * const effect = new OutlineEffect( renderer );
- * let renderingOutline = false;
- *
- * scene.onAfterRender = function () {
- *
- *  if ( renderingOutline ) return;
- *
- *  renderingOutline = true;
- *
- *  effect.renderOutline( scene, camera );
- *
- *  renderingOutline = false;
- *
- * };
- *
- * function render() {
- *
- *  renderer.render( scene, camera );
- *
- * }
- *
- * // How to set default outline parameters
- * new OutlineEffect( renderer, {
- *  defaultThickness: 0.01,
- *  defaultColor: [ 0, 0, 0 ],
- *  defaultAlpha: 0.8,
- *  defaultKeepAlive: true // keeps outline material in cache even if material is removed from scene
- * } );
- *
- * // How to set outline parameters for each material
- * material.userData.outlineParameters = {
- *  thickness: 0.01,
- *  color: [ 0, 0, 0 ],
- *  alpha: 0.8,
- *  visible: true,
- *  keepAlive: true
- * };
- */
+export interface OutlineEffectParameters {
+  defaultThickness?: number;
+  defaultColor?: number[];
+  defaultAlpha?: number;
+  defaultKeepAlive?: boolean;
+}
 
-class OutlineEffect {
-  constructor(renderer, parameters = {}) {
+export class OutlineEffect {
+  enabled: boolean;
+  autoClear: boolean;
+  domElement: HTMLElement;
+  shadowMap: WebGLShadowMap;
+
+  constructor(renderer: WebGLRenderer, parameters: OutlineEffectParameters = {}) {
     this.enabled = true;
 
     const defaultThickness = parameters.defaultThickness !== undefined ? parameters.defaultThickness : 0.003;
@@ -72,7 +42,7 @@ class OutlineEffect {
     // save at the outline material creation and release
     // if it's unused removeThresholdCount frames
     // unless keepAlive is true.
-    const cache = {};
+    const cache: Record<string, ShaderMaterial> = {};
 
     const removeThresholdCount = 60;
 
@@ -174,11 +144,12 @@ class OutlineEffect {
       });
     }
 
-    function getOutlineMaterialFromCache(originalMaterial) {
+    function getOutlineMaterialFromCache(originalMaterial: Material) {
       let data = cache[originalMaterial.uuid];
 
       if (data === undefined) {
         data = {
+          //@ts-expect-error
           material: createMaterial(),
           used: true,
           keepAlive: defaultKeepAlive,
@@ -188,12 +159,14 @@ class OutlineEffect {
         cache[originalMaterial.uuid] = data;
       }
 
+      //@ts-expect-error
       data.used = true;
 
+      //@ts-expect-error
       return data.material;
     }
 
-    function getOutlineMaterial(originalMaterial) {
+    function getOutlineMaterial(originalMaterial: Material) {
       const outlineMaterial = getOutlineMaterialFromCache(originalMaterial);
 
       originalMaterials[outlineMaterial.uuid] = originalMaterial;
@@ -203,14 +176,14 @@ class OutlineEffect {
       return outlineMaterial;
     }
 
-    function isCompatible(object) {
+    function isCompatible(object: Object3D) {
       const geometry = object.geometry;
       const hasNormals = geometry !== undefined && geometry.attributes.normal !== undefined;
 
       return object.isMesh === true && object.material !== undefined && hasNormals === true;
     }
 
-    function setOutlineMaterial(object) {
+    function setOutlineMaterial(object: Object3D) {
       if (isCompatible(object) === false) return;
 
       if (Array.isArray(object.material)) {
@@ -225,7 +198,7 @@ class OutlineEffect {
       object.onBeforeRender = onBeforeRender;
     }
 
-    function restoreOriginalMaterial(object) {
+    function restoreOriginalMaterial(object: Object3D) {
       if (isCompatible(object) === false) return;
 
       if (Array.isArray(object.material)) {
@@ -239,7 +212,13 @@ class OutlineEffect {
       object.onBeforeRender = originalOnBeforeRenders[object.uuid];
     }
 
-    function onBeforeRender(renderer, scene, camera, geometry, material) {
+    function onBeforeRender(
+      renderer: WebGLRenderer,
+      scene: Scene,
+      camera: Camera,
+      geometry: BufferGeometry,
+      material: Material,
+    ) {
       const originalMaterial = originalMaterials[material.uuid];
 
       // just in case
@@ -248,7 +227,7 @@ class OutlineEffect {
       updateUniforms(material, originalMaterial);
     }
 
-    function updateUniforms(material, originalMaterial) {
+    function updateUniforms(material: Material, originalMaterial: Material) {
       const outlineParameters = originalMaterial.userData.outlineParameters;
 
       material.uniforms.outlineAlpha.value = originalMaterial.opacity;
@@ -268,7 +247,7 @@ class OutlineEffect {
       }
     }
 
-    function updateOutlineMaterial(material, originalMaterial) {
+    function updateOutlineMaterial(material: Material, originalMaterial: Material) {
       if (material.name === 'invisible') return;
 
       const outlineParameters = originalMaterial.userData.outlineParameters;
@@ -439,6 +418,16 @@ class OutlineEffect {
       renderer.setRenderTarget(renderTarget);
     };
   }
-}
 
-export { OutlineEffect };
+  clear: (color?: boolean, depth?: boolean, stencil?: boolean) => void;
+  getPixelRatio: () => number;
+  getSize: (target: Vector2) => Vector2;
+  render: (scene: Scene, camera: Camera) => void;
+  renderOutline: (scene: Scene, camera: Camera) => void;
+  setRenderTarget: (renderTarget: WebGLRenderTarget | null) => void;
+  setPixelRatio: (value: number) => void;
+  setScissor: (x: Vector4 | number, y?: number, width?: number, height?: number) => void;
+  setScissorTest: (enable: boolean) => void;
+  setSize: (width: number, height: number, updateStyle?: boolean) => void;
+  setViewport: (x: Vector4 | number, y?: number, width?: number, height?: number) => void;
+}

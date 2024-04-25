@@ -1,28 +1,16 @@
-import {
-  Filter,
-  Matrix3,
-  Mesh,
-  OrthographicCamera,
-  PlaneGeometry,
-  Scene,
-  ShaderMaterial,
-  StereoCamera,
-  TextureFormat,
-  WebGLRenderTarget,
-} from '../Three.js';
+import { OrthographicCamera } from '../cameras/OrthographicCamera.js';
+import { Scene } from '../scenes/Scene.js';
+import { StereoCamera } from '../cameras/StereoCamera.js';
+import { Filter, TextureFormat } from '../constants.js';
+import { WebGLRenderTarget } from '../renderers/WebGLRenderTarget.js';
+import { ShaderMaterial } from '../materials/ShaderMaterial.js';
+import { Mesh } from '../objects/Mesh.js';
+import { PlaneGeometry } from '../geometries/PlaneGeometry.js';
+import { WebGLRenderer } from '../renderers/WebGLRenderer.js';
+import { PerspectiveCamera } from '../cameras/PerspectiveCamera.js';
 
-class AnaglyphEffect {
-  constructor(renderer, width = 512, height = 512) {
-    // Dubois matrices from https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.7.6968&rep=rep1&type=pdf#page=4
-
-    this.colorMatrixLeft = new Matrix3().fromArray([
-      0.4561, -0.0400822, -0.0152161, 0.500484, -0.0378246, -0.0205971, 0.176381, -0.0157589, -0.00546856,
-    ]);
-
-    this.colorMatrixRight = new Matrix3().fromArray([
-      -0.0434706, 0.378476, -0.0721527, -0.0879388, 0.73364, -0.112961, -0.00155529, -0.0184503, 1.2264,
-    ]);
-
+export class ParallaxBarrierEffect {
+  constructor(renderer: WebGLRenderer) {
     const _camera = new OrthographicCamera(-1, 1, 1, -1, 0, 1);
 
     const _scene = new Scene();
@@ -31,16 +19,13 @@ class AnaglyphEffect {
 
     const _params = { minFilter: Filter.Linear, magFilter: Filter.Nearest, format: TextureFormat.RGBA };
 
-    const _renderTargetL = new WebGLRenderTarget(width, height, _params);
-    const _renderTargetR = new WebGLRenderTarget(width, height, _params);
+    const _renderTargetL = new WebGLRenderTarget(512, 512, _params);
+    const _renderTargetR = new WebGLRenderTarget(512, 512, _params);
 
     const _material = new ShaderMaterial({
       uniforms: {
         mapLeft: { value: _renderTargetL.texture },
         mapRight: { value: _renderTargetR.texture },
-
-        colorMatrixLeft: { value: this.colorMatrixLeft },
-        colorMatrixRight: { value: this.colorMatrixRight },
       },
 
       vertexShader: [
@@ -59,23 +44,19 @@ class AnaglyphEffect {
         'uniform sampler2D mapRight;',
         'varying vec2 vUv;',
 
-        'uniform mat3 colorMatrixLeft;',
-        'uniform mat3 colorMatrixRight;',
-
         'void main() {',
 
         '	vec2 uv = vUv;',
 
-        '	vec4 colorL = texture2D( mapLeft, uv );',
-        '	vec4 colorR = texture2D( mapRight, uv );',
+        '	if ( ( mod( gl_FragCoord.y, 2.0 ) ) > 1.00 ) {',
 
-        '	vec3 color = clamp(',
-        '			colorMatrixLeft * colorL.rgb +',
-        '			colorMatrixRight * colorR.rgb, 0., 1. );',
+        '		gl_FragColor = texture2D( mapLeft, uv );',
 
-        '	gl_FragColor = vec4(',
-        '			color.r, color.g, color.b,',
-        '			max( colorL.a, colorR.a ) );',
+        '	} else {',
+
+        '		gl_FragColor = texture2D( mapRight, uv );',
+
+        '	}',
 
         '	#include <tonemapping_fragment>',
         '	#include <colorspace_fragment>',
@@ -84,8 +65,9 @@ class AnaglyphEffect {
       ].join('\n'),
     });
 
-    const _mesh = new Mesh(new PlaneGeometry(2, 2), _material);
-    _scene.add(_mesh);
+    // @ts-expect-error
+    const mesh = new Mesh(new PlaneGeometry(2, 2), _material);
+    _scene.add(mesh);
 
     this.setSize = function (width, height) {
       renderer.setSize(width, height);
@@ -97,8 +79,6 @@ class AnaglyphEffect {
     };
 
     this.render = function (scene, camera) {
-      const currentRenderTarget = renderer.getRenderTarget();
-
       if (scene.matrixWorldAutoUpdate === true) scene.updateMatrixWorld();
 
       if (camera.parent === null && camera.matrixWorldAutoUpdate === true) camera.updateMatrixWorld();
@@ -115,17 +95,9 @@ class AnaglyphEffect {
 
       renderer.setRenderTarget(null);
       renderer.render(_scene, _camera);
-
-      renderer.setRenderTarget(currentRenderTarget);
-    };
-
-    this.dispose = function () {
-      _renderTargetL.dispose();
-      _renderTargetR.dispose();
-      _mesh.geometry.dispose();
-      _mesh.material.dispose();
     };
   }
-}
 
-export { AnaglyphEffect };
+  setSize: (width: number, height: number) => void;
+  render: (scene: Scene, camera: PerspectiveCamera) => void;
+}

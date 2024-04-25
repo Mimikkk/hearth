@@ -1,7 +1,15 @@
-import { StereoCamera, Vector2 } from '../Three.js';
+import { WebGLRenderer } from '../renderers/WebGLRenderer.js';
+import { StereoCamera } from '../cameras/StereoCamera.js';
+import { Vector2 } from '../math/Vector2.js';
+import { Scene } from '../scenes/Scene.js';
+import { PerspectiveCamera } from '../cameras/PerspectiveCamera.js';
 
-class StereoEffect {
-  constructor(renderer) {
+export class StereoEffect {
+  setEyeSeparation: (eyeSep: number) => void;
+  setSize: (width: number, height: number) => void;
+  render: (scene: Scene, camera: PerspectiveCamera) => void;
+
+  constructor(renderer: WebGLRenderer) {
     const _stereo = new StereoCamera();
     _stereo.aspect = 0.5;
     const size = new Vector2();
@@ -15,9 +23,9 @@ class StereoEffect {
     };
 
     this.render = function (scene, camera) {
-      if (scene.matrixWorldAutoUpdate === true) scene.updateMatrixWorld();
+      if (scene.matrixWorldAutoUpdate) scene.updateMatrixWorld();
 
-      if (camera.parent === null && camera.matrixWorldAutoUpdate === true) camera.updateMatrixWorld();
+      if (camera.parent === null && camera.matrixWorldAutoUpdate) camera.updateMatrixWorld();
 
       _stereo.update(camera);
 
@@ -38,5 +46,3 @@ class StereoEffect {
     };
   }
 }
-
-export { StereoEffect };

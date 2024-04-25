@@ -1,11 +1,21 @@
-/**
- * Ascii generation is based on https://github.com/hassadee/jsascii/blob/master/jsascii.js
- *
- * 16 April 2012 - @blurspline
- */
+import { WebGLRenderer } from '@modules/renderer/threejs/renderers/WebGLRenderer.js';
+import { Camera } from '@modules/renderer/threejs/cameras/Camera.js';
+import { Scene } from '@modules/renderer/threejs/scenes/Scene.js';
 
-class AsciiEffect {
-  constructor(renderer, charSet = ' .:-=+*#%@', options = {}) {
+export interface AsciiEffectOptions {
+  resolution?: number;
+  scale?: number;
+  color?: boolean;
+  alpha?: boolean;
+  block?: boolean;
+  invert?: boolean;
+  strResolution?: 'low' | 'medium' | 'high';
+}
+
+export class AsciiEffect {
+  domElement: HTMLElement;
+
+  constructor(renderer: WebGLRenderer, charSet: string = ' .:-=+*#%@', options: AsciiEffectOptions = {}) {
     // ' .,:;=|iI+hHOE#`$';
     // darker bolder character set from https://github.com/saw/Canvas-ASCII-Art/
     // ' .\'`^",:;Il!i~+_-?][}{1)(|/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$'.split('');
@@ -20,7 +30,8 @@ class AsciiEffect {
     const bInvert = options['invert'] || false; // black is white, white is black
     const strResolution = options['strResolution'] || 'low';
 
-    let width, height;
+    let width: number;
+    let height: number;
 
     const domElement = document.createElement('div');
     domElement.style.cursor = 'default';
@@ -28,7 +39,8 @@ class AsciiEffect {
     const oAscii = document.createElement('table');
     domElement.appendChild(oAscii);
 
-    let iWidth, iHeight;
+    let iWidth: number;
+    let iHeight: number;
     let oImg;
 
     this.setSize = function (w, h) {
@@ -45,7 +57,7 @@ class AsciiEffect {
       asciifyImage(oAscii);
     };
 
-    this.domElement = domElement;
+    this.domElement = domElement!;
 
     // Throw in ascii library from https://github.com/hassadee/jsascii/blob/master/jsascii.js (MIT License)
 
@@ -66,8 +78,8 @@ class AsciiEffect {
         oAscii.rows[0].cells[0].style.color = oImg.style.color;
       }
 
-      oAscii.cellSpacing = 0;
-      oAscii.cellPadding = 0;
+      oAscii.cellSpacing = '0';
+      oAscii.cellPadding = '0';
 
       const oStyle = oAscii.style;
       oStyle.whiteSpace = 'pre';
@@ -92,14 +104,14 @@ class AsciiEffect {
       return;
     }
 
-    const oCtx = oCanvas.getContext('2d');
+    const oCtx = oCanvas.getContext('2d')!;
     if (!oCtx.getImageData) {
       return;
     }
 
-    let aCharList = bColor ? aDefaultColorCharList : aDefaultCharList;
+    let aCharList: string[] = bColor ? aDefaultColorCharList : aDefaultCharList;
 
-    if (charSet) aCharList = charSet;
+    if (charSet) aCharList = charSet.split('');
 
     // Setup dom
 
@@ -164,15 +176,12 @@ class AsciiEffect {
 
     // convert img element to ascii
 
-    function asciifyImage(oAscii) {
+    function asciifyImage(oAscii: HTMLTableElement) {
       oCtx.clearRect(0, 0, iWidth, iHeight);
       oCtx.drawImage(oCanvasImg, 0, 0, iWidth, iHeight);
       const oImgData = oCtx.getImageData(0, 0, iWidth, iHeight).data;
 
-      // Coloring loop starts now
       let strChars = '';
-
-      // console.time('rendering');
 
       for (let y = 0; y < iHeight; y += 2) {
         for (let x = 0; x < iWidth; x++) {
@@ -187,23 +196,14 @@ class AsciiEffect {
           let fBrightness;
 
           fBrightness = (0.3 * iRed + 0.59 * iGreen + 0.11 * iBlue) / 255;
-          // fBrightness = (0.3*iRed + 0.5*iGreen + 0.3*iBlue) / 255;
 
-          if (iAlpha == 0) {
-            // should calculate alpha instead, but quick hack :)
-            //fBrightness *= (iAlpha / 255);
-            fBrightness = 1;
-          }
+          if (iAlpha == 0) fBrightness = 1;
 
           iCharIdx = Math.floor((1 - fBrightness) * (aCharList.length - 1));
 
           if (bInvert) {
             iCharIdx = aCharList.length - iCharIdx - 1;
           }
-
-          // good for debugging
-          //fBrightness = Math.floor(fBrightness * 10);
-          //strThisChar = fBrightness;
 
           let strThisChar = aCharList[iCharIdx];
 
@@ -233,12 +233,9 @@ class AsciiEffect {
       }
 
       oAscii.innerHTML = `<tr><td style="display:block;width:${width}px;height:${height}px;overflow:hidden">${strChars}</td></tr>`;
-
-      // console.timeEnd('rendering');
-
-      // return oAscii;
     }
   }
-}
 
-export { AsciiEffect };
+  setSize: (width: number, height: number) => void;
+  render: (scene: Scene, camera: Camera) => void;
+}

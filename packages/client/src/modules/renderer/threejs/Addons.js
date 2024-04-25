@@ -28,12 +28,12 @@ export * from '@modules/renderer/threejs/curves/NURBSSurface.ts';
 export * from '@modules/renderer/threejs/curves/NURBSVolume.ts';
 export * as NURBSUtils from '@modules/renderer/threejs/curves/NURBSUtils.ts';
 
-export * from '@modules/renderer/threejs/effects/AnaglyphEffect.js';
-export * from '@modules/renderer/threejs/effects/AsciiEffect.js';
-export * from '@modules/renderer/threejs/effects/OutlineEffect.js';
-export * from '@modules/renderer/threejs/effects/ParallaxBarrierEffect.js';
-export * from '@modules/renderer/threejs/effects/PeppersGhostEffect.js';
-export * from '@modules/renderer/threejs/effects/StereoEffect.js';
+export * from '@modules/renderer/threejs/effects/AnaglyphEffect.ts';
+export * from '@modules/renderer/threejs/effects/AsciiEffect.ts';
+export * from '@modules/renderer/threejs/effects/OutlineEffect.ts';
+export * from '@modules/renderer/threejs/effects/ParallaxBarrierEffect.ts';
+export * from '@modules/renderer/threejs/effects/PeppersGhostEffect.ts';
+export * from '@modules/renderer/threejs/effects/StereoEffect.ts';
 
 export * from '@modules/renderer/threejs/environments/DebugEnvironment.ts';
 export * from '@modules/renderer/threejs/environments/RoomEnvironment.ts';
