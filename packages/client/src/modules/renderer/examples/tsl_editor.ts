@@ -4,7 +4,7 @@ import * as Nodes from '../threejs/nodes/Nodes.js';
 import { WebGPU } from '@modules/renderer/threejs/capabilities/WebGPU.js';
 import { WebGL } from '@modules/renderer/threejs/capabilities/WebGL.js';
 
-import WebGPURenderer from '../threejs/renderers/webgpu/WebGPURenderer.js';
+import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 import WGSLNodeBuilder from '@modules/renderer/threejs/renderers/webgpu/nodes/WGSLNodeBuilder.js';
 import GLSLNodeBuilder from '@modules/renderer/threejs/renderers/webgl/nodes/GLSLNodeBuilder.js';
 import GLSL1NodeBuilder from '@modules/renderer/threejs/renderers/webgl-legacy/nodes/GLSL1NodeBuilder.js';

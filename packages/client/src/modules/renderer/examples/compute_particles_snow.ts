@@ -22,7 +22,7 @@ import { TeapotGeometry } from '../threejs/geometries/TeapotGeometry.js';
 
 import { WebGPU } from '@modules/renderer/threejs/capabilities/WebGPU.js';
 import { WebGL } from '@modules/renderer/threejs/capabilities/WebGL.js';
-import WebGPURenderer from '../threejs/renderers/webgpu/WebGPURenderer.js';
+import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 import StorageInstancedBufferAttribute from '../threejs/renderers/common/StorageInstancedBufferAttribute.js';
 
 import PostProcessing from '../threejs/renderers/common/PostProcessing.js';

@@ -8,7 +8,7 @@ import {
   Wrapping,
 } from '../constants.js';
 
-class VideoTexture extends Texture {
+export class VideoTexture extends Texture {
   declare ['constructor']: typeof VideoTexture;
   declare isVideoTexture: true;
 

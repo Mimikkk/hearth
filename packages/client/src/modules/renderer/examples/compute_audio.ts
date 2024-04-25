@@ -13,7 +13,7 @@ import {
 
 import { GUI } from '../threejs/libs/lil-gui.module.min.js';
 
-import WebGPURenderer from '../threejs/renderers/webgpu/WebGPURenderer.js';
+import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 import StorageInstancedBufferAttribute from '../threejs/renderers/common/StorageInstancedBufferAttribute.js';
 import { TextureFormat } from '../threejs/Three.js';
 

@@ -2,7 +2,7 @@ import * as THREE from '../threejs/Three.js';
 
 import { GUI } from '../threejs/libs/lil-gui.module.min.js';
 
-import WebGPURenderer from '../threejs/renderers/webgpu/WebGPURenderer.js';
+import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 import PostProcessing from '../threejs/renderers/common/PostProcessing.js';
 import { pass } from '../threejs/nodes/Nodes.js';
 

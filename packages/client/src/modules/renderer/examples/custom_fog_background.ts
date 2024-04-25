@@ -1,6 +1,6 @@
 import * as THREE from '../threejs/Three.js';
 
-import WebGPURenderer from '../threejs/renderers/webgpu/WebGPURenderer.js';
+import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 import PostProcessing from '../threejs/renderers/common/PostProcessing.js';
 
 import { pass, color, rangeFog } from '../threejs/nodes/Nodes.js';

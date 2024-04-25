@@ -6,7 +6,7 @@ import { MeshoptDecoder } from '../threejs/libs/meshopt_decoder.module.js';
 
 import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
 
-import WebGPURenderer from '../threejs/renderers/webgpu/WebGPURenderer.js';
+import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 
 let camera, scene, renderer;
 

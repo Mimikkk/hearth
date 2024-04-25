@@ -6,7 +6,7 @@ import { WebGL } from '@modules/renderer/threejs/capabilities/WebGL.js';
 
 import { GUI } from '../threejs/libs/lil-gui.module.min.js';
 
-import WebGPURenderer from '../threejs/renderers/webgpu/WebGPURenderer.js';
+import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 
 import QuadMesh from '../threejs/objects/QuadMesh.js';
 

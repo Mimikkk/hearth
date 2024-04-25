@@ -11,7 +11,7 @@ import {
   MeshBasicNodeMaterial,
 } from '../threejs/nodes/Nodes.js';
 
-import WebGPURenderer from '../threejs/renderers/webgpu/WebGPURenderer.js';
+import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 import StorageInstancedBufferAttribute from '../threejs/renderers/common/StorageInstancedBufferAttribute.js';
 
 const timestamps = {

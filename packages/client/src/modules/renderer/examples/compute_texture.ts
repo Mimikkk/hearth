@@ -11,7 +11,7 @@ import {
 } from '../threejs/nodes/Nodes.js';
 
 import { WebGPU } from '@modules/renderer/threejs/capabilities/WebGPU.js';
-import WebGPURenderer from '../threejs/renderers/webgpu/WebGPURenderer.js';
+import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 import StorageTexture from '../threejs/renderers/common/StorageTexture.js';
 
 let camera, scene, renderer;

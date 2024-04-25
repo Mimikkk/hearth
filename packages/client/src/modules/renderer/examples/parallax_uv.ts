@@ -1,7 +1,7 @@
 import * as THREE from '../threejs/Three.js';
 import { MeshStandardNodeMaterial, parallaxUV, texture, uv } from '../threejs/nodes/Nodes.js';
 
-import WebGPURenderer from '../threejs/renderers/webgpu/WebGPURenderer.js';
+import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 
 import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
 import { ColorSpace } from '../threejs/Three.js';

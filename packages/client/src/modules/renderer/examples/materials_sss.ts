@@ -1,7 +1,7 @@
 import * as THREE from '../threejs/Three.js';
 import * as Nodes from '../threejs/nodes/Nodes.js';
 
-import WebGPURenderer from '../threejs/renderers/webgpu/WebGPURenderer.js';
+import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 
 import Stats from '../threejs/libs/stats.module.js';
 

@@ -5,7 +5,7 @@ import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.
 import { RGBELoader } from '../threejs/loaders/RGBELoader.js';
 import { GLTFLoader } from '../threejs/loaders/GLTFLoader.js';
 
-import WebGPURenderer from '../threejs/renderers/webgpu/WebGPURenderer.js';
+import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 
 import { nodeFrame } from '@modules/renderer/threejs/renderers/webgl-legacy/nodes/WebGLNodes.js';
 

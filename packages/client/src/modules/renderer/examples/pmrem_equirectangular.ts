@@ -10,7 +10,7 @@ import {
   MeshBasicNodeMaterial,
 } from '../threejs/nodes/Nodes.js';
 
-import WebGPURenderer from '../threejs/renderers/webgpu/WebGPURenderer.js';
+import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 
 import { RGBELoader } from '../threejs/loaders/RGBELoader.js';
 

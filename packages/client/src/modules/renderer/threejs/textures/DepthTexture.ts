@@ -9,7 +9,7 @@ import {
   Wrapping,
 } from '../constants.js';
 
-class DepthTexture extends Texture {
+export class DepthTexture extends Texture {
   //@ts-expect-error
   declare ['constructor']: typeof DepthTexture;
   declare isDepthTexture: true;

@@ -4,7 +4,7 @@ import { MeshBasicNodeMaterial, texture } from '../threejs/nodes/Nodes.js';
 import { WebGPU } from '@modules/renderer/threejs/capabilities/WebGPU.js';
 import { WebGL } from '@modules/renderer/threejs/capabilities/WebGL.js';
 
-import WebGPURenderer from '../threejs/renderers/webgpu/WebGPURenderer.js';
+import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 
 import QuadMesh from '../threejs/objects/QuadMesh.js';
 

@@ -4,7 +4,7 @@ import { MeshBasicNodeMaterial, normalWorld, pmremTexture, uniform } from '../th
 
 import PMREMGenerator from '../threejs/renderers/common/extras/PMREMGenerator.js';
 
-import WebGPURenderer from '../threejs/renderers/webgpu/WebGPURenderer.js';
+import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 
 import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
 

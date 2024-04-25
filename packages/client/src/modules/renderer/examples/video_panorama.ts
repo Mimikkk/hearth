@@ -1,6 +1,6 @@
 import * as THREE from '../threejs/Three.js';
 
-import WebGPURenderer from '../threejs/renderers/webgpu/WebGPURenderer.js';
+import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 import { ColorSpace } from '../threejs/Three.js';
 
 let camera, scene, renderer;

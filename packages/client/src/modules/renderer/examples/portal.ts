@@ -15,7 +15,7 @@ import {
 
 import { GLTFLoader } from '../threejs/loaders/GLTFLoader.js';
 
-import WebGPURenderer from '../threejs/renderers/webgpu/WebGPURenderer.js';
+import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 
 import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
 import { Side } from '../threejs/Three.js';
