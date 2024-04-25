@@ -2,7 +2,7 @@ import { AnimationAction } from './AnimationAction.js';
 import { EventDispatcher } from '../core/EventDispatcher.ts';
 import { LinearInterpolant } from '../math/interpolants/LinearInterpolant.ts';
 import { PropertyBinding } from './PropertyBinding.js';
-import { PropertyMixer } from './PropertyMixer.js';
+import { PropertyMixer } from './PropertyMixer.ts';
 import { AnimationClip } from './AnimationClip.js';
 import { AnimationBlendMode } from '../constants.ts';
 

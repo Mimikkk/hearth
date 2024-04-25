@@ -81,7 +81,7 @@ export { QuaternionKeyframeTrack } from './animation/tracks/QuaternionKeyframeTr
 export { NumberKeyframeTrack } from './animation/tracks/NumberKeyframeTrack.ts';
 export { ColorKeyframeTrack } from './animation/tracks/ColorKeyframeTrack.ts';
 export { BooleanKeyframeTrack } from './animation/tracks/BooleanKeyframeTrack.ts';
-export { PropertyMixer } from './animation/PropertyMixer.js';
+export { PropertyMixer } from './animation/PropertyMixer.ts';
 export { PropertyBinding } from './animation/PropertyBinding.js';
 export { KeyframeTrack } from './animation/KeyframeTrack.ts';
 export { AnimationUtils } from './animation/AnimationUtils.js';

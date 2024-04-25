@@ -1,11 +1,40 @@
-import { Quaternion } from '../math/Quaternion.ts';
+import { Quaternion } from '../math/Quaternion.js';
+import type { PropertyBinding } from './PropertyBinding.js';
 
-class PropertyMixer {
-  constructor(binding, typeName, valueSize) {
+export class PropertyMixer {
+  cumulativeWeight: number;
+  cumulativeWeightAdditive: number;
+  useCount: number;
+  referenceCount: number;
+  buffer: Float64Array | number[];
+  valueSize: number;
+  _workIndex: number;
+  _origIndex: number;
+  _addIndex: number;
+  _mixBufferRegion: (
+    buffer: Float64Array | number[],
+    dstOffset: number,
+    srcOffset: number,
+    t: number,
+    stride: number,
+  ) => void;
+  _mixBufferRegionAdditive: (
+    buffer: Float64Array | number[],
+    dstOffset: number,
+    srcOffset: number,
+    t: number,
+    stride: number,
+  ) => void;
+  _setIdentity: () => void;
+  binding: PropertyBinding;
+
+  constructor(binding: PropertyBinding, typeName: 'quaternion' | 'string' | 'bool' | 'number', valueSize: number) {
     this.binding = binding;
     this.valueSize = valueSize;
 
-    let mixFunction, mixFunctionAdditive, setIdentity;
+    let mixFunction;
+    let mixFunctionAdditive;
+    let setIdentity;
 
     // buffer layout: [ incoming | accu0 | accu1 | orig | addAccu | (optional work) ]
     //
@@ -32,7 +61,6 @@ class PropertyMixer {
         this.buffer = new Float64Array(valueSize * 6);
         this._workIndex = 5;
         break;
-
       case 'string':
       case 'bool':
         mixFunction = this._select;
@@ -45,7 +73,6 @@ class PropertyMixer {
 
         this.buffer = new Array(valueSize * 5);
         break;
-
       default:
         mixFunction = this._lerp;
         mixFunctionAdditive = this._lerpAdditive;
@@ -68,7 +95,7 @@ class PropertyMixer {
   }
 
   // accumulate data in the 'incoming' region into 'accu<i>'
-  accumulate(accuIndex, weight) {
+  accumulate(accuIndex: number, weight: number): this {
     // note: happily accumulating nothing when weight = 0, the caller knows
     // the weight and shouldn't have made the call in the first place
 
@@ -95,10 +122,12 @@ class PropertyMixer {
     }
 
     this.cumulativeWeight = currentWeight;
+
+    return this;
   }
 
   // accumulate data in the 'incoming' region into 'add'
-  accumulateAdditive(weight) {
+  accumulateAdditive(weight: number): this {
     const buffer = this.buffer,
       stride = this.valueSize,
       offset = stride * this._addIndex;
@@ -113,10 +142,11 @@ class PropertyMixer {
 
     this._mixBufferRegionAdditive(buffer, offset, 0, weight, stride);
     this.cumulativeWeightAdditive += weight;
+    return this;
   }
 
   // apply the state of 'accu<i>' to the binding when accus differ
-  apply(accuIndex) {
+  apply(accuIndex: number): this {
     const stride = this.valueSize,
       buffer = this.buffer,
       offset = accuIndex * stride + stride,
@@ -149,10 +179,11 @@ class PropertyMixer {
         break;
       }
     }
+    return this;
   }
 
   // remember the state of the bound property and copy it to both accus
-  saveOriginalState() {
+  saveOriginalState(): this {
     const binding = this.binding;
 
     const buffer = this.buffer,
@@ -171,15 +202,17 @@ class PropertyMixer {
 
     this.cumulativeWeight = 0;
     this.cumulativeWeightAdditive = 0;
+    return this;
   }
 
   // apply the state previously taken via 'saveOriginalState' to the binding
-  restoreOriginalState() {
+  restoreOriginalState(): this {
     const originalValueOffset = this.valueSize * 3;
     this.binding.setValue(this.buffer, originalValueOffset);
+    return this;
   }
 
-  _setAdditiveIdentityNumeric() {
+  _setAdditiveIdentityNumeric(): void {
     const startIndex = this._addIndex * this.valueSize;
     const endIndex = startIndex + this.valueSize;
 
@@ -188,12 +221,12 @@ class PropertyMixer {
     }
   }
 
-  _setAdditiveIdentityQuaternion() {
+  _setAdditiveIdentityQuaternion(): void {
     this._setAdditiveIdentityNumeric();
     this.buffer[this._addIndex * this.valueSize + 3] = 1;
   }
 
-  _setAdditiveIdentityOther() {
+  _setAdditiveIdentityOther(): void {
     const startIndex = this._origIndex * this.valueSize;
     const targetIndex = this._addIndex * this.valueSize;
 
@@ -204,7 +237,7 @@ class PropertyMixer {
 
   // mix functions
 
-  _select(buffer, dstOffset, srcOffset, t, stride) {
+  _select(buffer: Float64Array | number[], dstOffset: number, srcOffset: number, t: number, stride: number): void {
     if (t >= 0.5) {
       for (let i = 0; i !== stride; ++i) {
         buffer[dstOffset + i] = buffer[srcOffset + i];
@@ -212,11 +245,17 @@ class PropertyMixer {
     }
   }
 
-  _slerp(buffer, dstOffset, srcOffset, t) {
+  _slerp(buffer: Float64Array | number[], dstOffset: number, srcOffset: number, t: number, stride: number): void {
     Quaternion.slerpFlat(buffer, dstOffset, buffer, dstOffset, buffer, srcOffset, t);
   }
 
-  _slerpAdditive(buffer, dstOffset, srcOffset, t, stride) {
+  _slerpAdditive(
+    buffer: Float64Array | number[],
+    dstOffset: number,
+    srcOffset: number,
+    t: number,
+    stride: number,
+  ): void {
     const workOffset = this._workIndex * stride;
 
     // Store result in intermediate buffer offset
@@ -226,7 +265,7 @@ class PropertyMixer {
     Quaternion.slerpFlat(buffer, dstOffset, buffer, dstOffset, buffer, workOffset, t);
   }
 
-  _lerp(buffer, dstOffset, srcOffset, t, stride) {
+  _lerp(buffer: Float64Array | number[], dstOffset: number, srcOffset: number, t: number, stride: number): void {
     const s = 1 - t;
 
     for (let i = 0; i !== stride; ++i) {
@@ -236,7 +275,13 @@ class PropertyMixer {
     }
   }
 
-  _lerpAdditive(buffer, dstOffset, srcOffset, t, stride) {
+  _lerpAdditive(
+    buffer: Float64Array | number[],
+    dstOffset: number,
+    srcOffset: number,
+    t: number,
+    stride: number,
+  ): void {
     for (let i = 0; i !== stride; ++i) {
       const j = dstOffset + i;
 
@@ -244,5 +289,3 @@ class PropertyMixer {
     }
   }
 }
-
-export { PropertyMixer };

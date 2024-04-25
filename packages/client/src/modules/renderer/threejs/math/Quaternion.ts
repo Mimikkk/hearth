@@ -1,4 +1,5 @@
 import * as MathUtils from './MathUtils.js';
+import { TypedArray } from './MathUtils.js';
 import type { Euler } from './Euler.js';
 import type { Vector3 } from './Vector3.js';
 import type { Matrix4 } from './Matrix4.js';
@@ -21,14 +22,14 @@ export class Quaternion {
   }
 
   static slerpFlat(
-    dst: number[],
+    dst: TypedArray | number[],
     dstOffset: number,
-    src0: number[],
+    src0: TypedArray | number[],
     srcOffset0: number,
-    src1: number[],
+    src1: TypedArray | number[],
     srcOffset1: number,
     t: number,
-  ) {
+  ): void {
     // fuzz-free, array-based Quaternion SLERP operation
 
     let x0 = src0[srcOffset0];
@@ -97,13 +98,13 @@ export class Quaternion {
   }
 
   static multiplyQuaternionsFlat(
-    dst: number[],
+    dst: TypedArray | number[],
     dstOffset: number,
-    src0: number[],
+    src0: TypedArray | number[],
     srcOffset0: number,
-    src1: number[],
+    src1: TypedArray | number[],
     srcOffset1: number,
-  ): number[] {
+  ): TypedArray | number[] {
     const x0 = src0[srcOffset0];
     const y0 = src0[srcOffset0 + 1];
     const z0 = src0[srcOffset0 + 2];
@@ -565,7 +566,7 @@ export class Quaternion {
     return array;
   }
 
-  fromBufferAttribute(attribute: BufferAttribute | InterleavedBufferAttribute, index: number): this {
+  fromBufferAttribute(attribute: BufferAttribute<any> | InterleavedBufferAttribute, index: number): this {
     this._x = attribute.getX(index);
     this._y = attribute.getY(index);
     this._z = attribute.getZ(index);
