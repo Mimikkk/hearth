@@ -1,10 +1,18 @@
-async function AmmoPhysics() {
-  if ('Ammo' in window === false) {
-    console.error("AmmoPhysics: Couldn't find Ammo.js");
-    return;
-  }
+import { Mesh } from '../objects/Mesh.js';
+import { Object3D } from '../core/Object3D.js';
+import { Vector3 } from '../math/Vector3.js';
+import { Ammo } from '../libs/ammo.wasm.js';
+import { BufferGeometry } from '@modules/renderer/threejs/core/BufferGeometry.js';
+import { Scene } from '@modules/renderer/threejs/scenes/Scene.js';
 
-  const AmmoLib = await Ammo(); // eslint-disable-line no-undef
+export interface AmmoPhysicsObject {
+  addScene: (scene: Object3D) => void;
+  addMesh: (mesh: Mesh, mass?: number) => void;
+  setMeshPosition: (mesh: Mesh, position: Vector3, index?: number) => void;
+}
+export async function AmmoPhysics(): Promise<AmmoPhysicsObject> {
+  // eslint-disable-line no-undef
+  const AmmoLib = await Ammo();
 
   const frameRate = 60;
 
@@ -19,8 +27,8 @@ async function AmmoPhysics() {
 
   //
 
-  function getShape(geometry) {
-    const parameters = geometry.parameters;
+  function getShape(geometry: BufferGeometry) {
+    const parameters = geometry.parameters!;
 
     // TODO change type to is*
 
@@ -45,25 +53,28 @@ async function AmmoPhysics() {
     return null;
   }
 
-  const meshes = [];
+  const meshes: Mesh[] = [];
   const meshMap = new WeakMap();
 
-  function addScene(scene) {
+  function addScene(scene: Scene) {
     scene.traverse(function (child) {
+      //@ts-expect-error
       if (child.isMesh) {
         const physics = child.userData.physics;
 
         if (physics) {
+          //@ts-expect-error
           addMesh(child, physics.mass);
         }
       }
     });
   }
 
-  function addMesh(mesh, mass = 0) {
+  function addMesh(mesh: Mesh, mass: number = 0) {
     const shape = getShape(mesh.geometry);
 
     if (shape !== null) {
+      //@ts-expect-error
       if (mesh.isInstancedMesh) {
         handleInstancedMesh(mesh, mass, shape);
       } else if (mesh.isMesh) {
@@ -72,7 +83,8 @@ async function AmmoPhysics() {
     }
   }
 
-  function handleMesh(mesh, mass, shape) {
+  //@ts-expect-error
+  function handleMesh(mesh: Mesh, mass: number, shape: Ammo.btCollisionShape) {
     const position = mesh.position;
     const quaternion = mesh.quaternion;
 
@@ -98,11 +110,14 @@ async function AmmoPhysics() {
     }
   }
 
-  function handleInstancedMesh(mesh, mass, shape) {
+  //@ts-expect-error
+  function handleInstancedMesh(mesh: Mesh, mass: number, shape: Ammo.btCollisionShape) {
+    //@ts-expect-error
     const array = mesh.instanceMatrix.array;
 
     const bodies = [];
 
+    //@ts-expect-error
     for (let i = 0; i < mesh.count; i++) {
       const index = i * 16;
 
@@ -131,7 +146,8 @@ async function AmmoPhysics() {
 
   //
 
-  function setMeshPosition(mesh, position, index = 0) {
+  function setMeshPosition(mesh: Mesh, position: Vector3, index: number = 0) {
+    //@ts-expect-error
     if (mesh.isInstancedMesh) {
       const bodies = meshMap.get(mesh);
       const body = bodies[index];
@@ -171,7 +187,9 @@ async function AmmoPhysics() {
       for (let i = 0, l = meshes.length; i < l; i++) {
         const mesh = meshes[i];
 
+        //@ts-expect-error
         if (mesh.isInstancedMesh) {
+          //@ts-expect-error
           const array = mesh.instanceMatrix.array;
           const bodies = meshMap.get(mesh);
 
@@ -187,7 +205,9 @@ async function AmmoPhysics() {
             compose(position, quaternion, array, j * 16);
           }
 
+          //@ts-expect-error
           mesh.instanceMatrix.needsUpdate = true;
+          //@ts-expect-error
           mesh.computeBoundingSphere();
         } else if (mesh.isMesh) {
           const body = meshMap.get(mesh);
@@ -218,7 +238,8 @@ async function AmmoPhysics() {
   };
 }
 
-function compose(position, quaternion, array, index) {
+//@ts-expect-error
+function compose(position: Ammo.btVector3, quaternion: Ammo.btQuaternion, array: number[], index: number) {
   const x = quaternion.x(),
     y = quaternion.y(),
     z = quaternion.z(),
@@ -256,5 +277,3 @@ function compose(position, quaternion, array, index) {
   array[index + 14] = position.z();
   array[index + 15] = 1;
 }
-
-export { AmmoPhysics };

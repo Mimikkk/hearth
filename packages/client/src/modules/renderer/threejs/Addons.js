@@ -172,8 +172,8 @@ export * from './objects/Sky.js';
 export * from './objects/Water.js';
 export { Water as Water2 } from './objects/Water2.js';
 
-export * from './physics/AmmoPhysics.js';
-export * from './physics/RapierPhysics.js';
+export * from './physics/AmmoPhysics.ts';
+export * from './physics/RapierPhysics.ts';
 
 export * from './postprocessing/AfterimagePass.js';
 export * from './postprocessing/BloomPass.js';
