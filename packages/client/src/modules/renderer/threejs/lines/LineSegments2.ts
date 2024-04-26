@@ -1,17 +1,22 @@
 import {
   Box3,
+  Camera,
   InstancedInterleavedBuffer,
   InterleavedBufferAttribute,
   Line3,
+  LineSegments,
   MathUtils,
   Matrix4,
   Mesh,
+  Ray,
+  Raycaster,
   Sphere,
   Vector3,
   Vector4,
 } from '../Three.js';
 import { LineSegmentsGeometry } from './LineSegmentsGeometry.js';
 import { LineMaterial } from './LineMaterial.js';
+import { Intersection } from '@modules/renderer/threejs/core/Raycaster.js';
 
 const _start = new Vector3();
 const _end = new Vector3();
@@ -29,11 +34,15 @@ const _box = new Box3();
 const _sphere = new Sphere();
 const _clipToWorldVector = new Vector4();
 
-let _ray, _lineWidth;
+let _ray: Ray, _lineWidth: number;
 
 // Returns the margin required to expand by in world space given the distance from the camera,
 // line width, resolution, and camera projection
-function getWorldSpaceHalfWidth(camera, distance, resolution) {
+function getWorldSpaceHalfWidth(
+  camera: Camera,
+  distance: number,
+  resolution: { width: number; height: number },
+): number {
   // transform into clip space, adjust the x and y values by the pixel width offset, then
   // transform back into world space to get world offset. Note clip space is [-1, 1] so full
   // width does not need to be halved.
@@ -47,7 +56,7 @@ function getWorldSpaceHalfWidth(camera, distance, resolution) {
   return Math.abs(Math.max(_clipToWorldVector.x, _clipToWorldVector.y));
 }
 
-function raycastWorldUnits(lineSegments, intersects) {
+function raycastWorldUnits(lineSegments: LineSegments, intersects: Intersection[]): void {
   const matrixWorld = lineSegments.matrixWorld;
   const geometry = lineSegments.geometry;
   const instanceStart = geometry.attributes.instanceStart;
@@ -74,14 +83,12 @@ function raycastWorldUnits(lineSegments, intersects) {
         object: lineSegments,
         face: null,
         faceIndex: i,
-        uv: null,
-        uv1: null,
       });
     }
   }
 }
 
-function raycastScreenSpace(lineSegments, camera, intersects) {
+function raycastScreenSpace(lineSegments: LineSegments, camera: Camera, intersects: Intersection[]): void {
   const projectionMatrix = camera.projectionMatrix;
   const material = lineSegments.material;
   const resolution = material.resolution;
@@ -195,25 +202,25 @@ function raycastScreenSpace(lineSegments, camera, intersects) {
         object: lineSegments,
         face: null,
         faceIndex: i,
-        uv: null,
-        uv1: null,
       });
     }
   }
 }
 
-class LineSegments2 extends Mesh {
-  constructor(geometry = new LineSegmentsGeometry(), material = new LineMaterial({ color: Math.random() * 0xffffff })) {
+export class LineSegments2 extends Mesh {
+  declare isLineSegments2: true;
+  declare type: string | 'LineSegments2';
+
+  constructor(
+    geometry: LineSegmentsGeometry = new LineSegmentsGeometry(),
+    material: LineMaterial = new LineMaterial({ color: Math.random() * 0xffffff }),
+  ) {
     super(geometry, material);
-
-    this.isLineSegments2 = true;
-
-    this.type = 'LineSegments2';
   }
 
   // for backwards-compatibility, but could be a method of LineSegmentsGeometry...
 
-  computeLineDistances() {
+  computeLineDistances(): this {
     const geometry = this.geometry;
 
     const instanceStart = geometry.attributes.instanceStart;
@@ -236,7 +243,7 @@ class LineSegments2 extends Mesh {
     return this;
   }
 
-  raycast(raycaster, intersects) {
+  raycast(raycaster: Raycaster, intersects: Intersection[]): Intersection[] {
     const worldUnits = this.material.worldUnits;
     const camera = raycaster.camera;
 
@@ -297,7 +304,7 @@ class LineSegments2 extends Mesh {
     _box.expandByScalar(boxMargin);
 
     if (_ray.intersectsBox(_box) === false) {
-      return;
+      return intersects;
     }
 
     if (worldUnits) {
@@ -305,7 +312,9 @@ class LineSegments2 extends Mesh {
     } else {
       raycastScreenSpace(this, camera, intersects);
     }
+
+    return intersects;
   }
 }
-
-export { LineSegments2 };
+LineSegments2.prototype.isLineSegments2 = true;
+LineSegments2.prototype.type = 'LineSegments2';

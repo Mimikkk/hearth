@@ -2,7 +2,7 @@ import { Blending, ColorSpace, Mapping, NormalMapType, Side, ToneMapping, Transf
 import { Layers } from '../../core/Layers.ts';
 import { WebGLProgram } from './WebGLProgram.js';
 import { WebGLShaderCache } from './WebGLShaderCache.js';
-import { ShaderLib } from '../shaders/ShaderLib.js';
+import { ShaderLib } from '../shaders/ShaderLib.ts';
 import { UniformsUtils } from '../shaders/UniformsUtils.js';
 import { ColorManagement } from '../../math/ColorManagement.ts';
 

@@ -219,4 +219,13 @@ export const UniformsLib = Lib as typeof Lib & {
   LTC_FLOAT_2: DataTexture;
   LTC_HALF_1: DataTexture;
   LTC_HALF_2: DataTexture;
+  line: {
+    worldUnits: { value: number };
+    linewidth: { value: number };
+    resolution: { value: Vector2 };
+    dashOffset: { value: number };
+    dashScale: { value: number };
+    dashSize: { value: number };
+    gapSize: { value: number };
+  };
 };

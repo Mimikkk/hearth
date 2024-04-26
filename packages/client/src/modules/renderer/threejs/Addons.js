@@ -74,13 +74,13 @@ export { IESSpotLight } from './lights/IESSpotLight.ts';
 export * from './lights/LightProbeGenerator.ts';
 export * from './lights/RectAreaLightUniformsLib.ts';
 
-export * from '@modules/renderer/threejs/lines/Line2.js';
-export * from '@modules/renderer/threejs/lines/LineGeometry.js';
-export * from '@modules/renderer/threejs/lines/LineMaterial.js';
-export * from '@modules/renderer/threejs/lines/LineSegments2.js';
-export * from '@modules/renderer/threejs/lines/LineSegmentsGeometry.js';
-export * from '@modules/renderer/threejs/lines/Wireframe.js';
-export * from '@modules/renderer/threejs/lines/WireframeGeometry2.js';
+export * from '@modules/renderer/threejs/lines/Line2.ts';
+export * from '@modules/renderer/threejs/lines/LineGeometry.ts';
+export * from '@modules/renderer/threejs/lines/LineMaterial.ts';
+export * from '@modules/renderer/threejs/lines/LineSegments2.ts';
+export * from '@modules/renderer/threejs/lines/LineSegmentsGeometry.ts';
+export * from '@modules/renderer/threejs/lines/Wireframe.ts';
+export * from '@modules/renderer/threejs/lines/WireframeGeometry2.ts';
 
 export * from './loaders/3DMLoader.js';
 export * from './loaders/3MFLoader.js';

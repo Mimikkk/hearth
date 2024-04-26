@@ -1,12 +1,12 @@
 import { ShaderChunk } from './ShaderChunk.js';
 import { mergeUniforms } from './UniformsUtils.js';
-import { Vector2 } from '../../math/Vector2.ts';
-import { Vector3 } from '../../math/Vector3.ts';
-import { UniformsLib } from './UniformsLib.ts';
-import { Color } from '../../math/Color.ts';
-import { Matrix3 } from '../../math/Matrix3.ts';
+import { Vector2 } from '../../math/Vector2.js';
+import { Vector3 } from '../../math/Vector3.js';
+import { UniformsLib } from './UniformsLib.js';
+import { Color } from '../../math/Color.js';
+import { Matrix3 } from '../../math/Matrix3.js';
 
-const ShaderLib = {
+const Lib = {
   basic: {
     uniforms: /*@__PURE__*/ mergeUniforms([
       UniformsLib.common,
@@ -255,6 +255,19 @@ const ShaderLib = {
   },
 };
 
+export const ShaderLib = Lib as typeof Lib & {
+  physical: {
+    uniforms: Record<string, any>;
+    vertexShader: string;
+    fragmentShader: string;
+  };
+  line: {
+    uniforms: Record<string, any>;
+    vertexShader: string;
+    fragmentShader: string;
+  };
+};
+
 ShaderLib.physical = {
   uniforms: /*@__PURE__*/ mergeUniforms([
     ShaderLib.standard.uniforms,
@@ -308,5 +321,3 @@ ShaderLib.physical = {
   vertexShader: ShaderChunk.meshphysical_vert,
   fragmentShader: ShaderChunk.meshphysical_frag,
 };
-
-export { ShaderLib };
