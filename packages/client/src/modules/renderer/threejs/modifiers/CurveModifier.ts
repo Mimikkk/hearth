@@ -1,26 +1,27 @@
 // Original src: https://github.com/zz85/threejs-path-flow
+import { Curve } from '../extras/core/Curve.js';
+import { DataTexture } from '../textures/DataTexture.js';
+import { BufferUsage, MagnificationTextureFilter, TextureDataType, TextureFormat, Wrapping } from '../constants.js';
+import { Vector3 } from '../math/Vector3.js';
+import { Material } from '../materials/Material.js';
+import { Mesh } from '../objects/Mesh.js';
+import { InstancedMesh } from '../objects/InstancedMesh.js';
+import { Matrix4 } from '../math/Matrix4.js';
+import { BufferGeometry } from '../core/BufferGeometry.js';
+import type { IUniform } from '../shaders/BokehShader2.js';
+export interface SplineUniform {
+  spineTexture: IUniform;
+  pathOffset: IUniform;
+  pathSegment: IUniform;
+  spineOffset: IUniform;
+  flow: IUniform;
+}
+
 const CHANNELS = 4;
 const TEXTURE_WIDTH = 1024;
 const TEXTURE_HEIGHT = 4;
 
-import {
-  BufferUsage,
-  DataTexture,
-  Filter,
-  InstancedMesh,
-  Matrix4,
-  Mesh,
-  TextureDataType,
-  TextureFormat,
-  Wrapping,
-} from '../Three.js';
-
-/**
- * Make a new DataTexture to store the descriptions of the curves.
- *
- * @param { number } numberOfCurves the number of curves needed to be described by this texture.
- */
-export function initSplineTexture(numberOfCurves = 1) {
+export function initSplineTexture(numberOfCurves: number = 1): DataTexture {
   const dataArray = new Float32Array(TEXTURE_WIDTH * TEXTURE_HEIGHT * numberOfCurves * CHANNELS);
   const dataTexture = new DataTexture(
     dataArray,
@@ -28,26 +29,27 @@ export function initSplineTexture(numberOfCurves = 1) {
     TEXTURE_HEIGHT * numberOfCurves,
     TextureFormat.RGBA,
     TextureDataType.Float,
+    undefined!,
+    undefined!,
+    undefined!,
+    undefined!,
+    undefined!,
+    undefined!,
+    undefined!,
   );
 
   dataTexture.wrapS = Wrapping.Repeat;
+  //@ts-expect-error
   dataTexture.wrapY = Wrapping.Repeat;
-  dataTexture.magFilter = Filter.Nearest;
+  dataTexture.magFilter = MagnificationTextureFilter.Nearest;
   dataTexture.needsUpdate = true;
 
   return dataTexture;
 }
 
-/**
- * Write the curve description to the data texture
- *
- * @param { DataTexture } texture The DataTexture to write to
- * @param { Curve } splineCurve The curve to describe
- * @param { number } offset Which curve slot to write to
- */
-export function updateSplineTexture(texture, splineCurve, offset = 0) {
+export function updateSplineTexture(texture: DataTexture, splineCurve: Curve<Vector3>, offset: number = 0) {
   const numberOfPoints = Math.floor(TEXTURE_WIDTH * (TEXTURE_HEIGHT / 4));
-  splineCurve.arcLengthDivisions = numberOfPoints / 2;
+  splineCurve.precision = numberOfPoints / 2;
   splineCurve.updateArcLengths();
   const points = splineCurve.getSpacedPoints(numberOfPoints);
   const frenetFrames = splineCurve.computeFrenetFrames(numberOfPoints, true);
@@ -69,7 +71,7 @@ export function updateSplineTexture(texture, splineCurve, offset = 0) {
   texture.needsUpdate = true;
 }
 
-function setTextureValue(texture, index, x, y, z, o) {
+function setTextureValue(texture: DataTexture, index: number, x: number, y: number, z: number, o: number) {
   const image = texture.image;
   const { data } = image;
   const i = CHANNELS * TEXTURE_WIDTH * o; // Row Offset
@@ -79,12 +81,7 @@ function setTextureValue(texture, index, x, y, z, o) {
   data[index * CHANNELS + i + 3] = 1;
 }
 
-/**
- * Create a new set of uniforms for describing the curve modifier
- *
- * @param { DataTexture } Texture which holds the curve description
- */
-export function getUniforms(splineTexture) {
+export function getUniforms(splineTexture: DataTexture) {
   const uniforms = {
     spineTexture: { value: splineTexture },
     pathOffset: { type: 'f', value: 0 }, // time of path curve
@@ -96,10 +93,13 @@ export function getUniforms(splineTexture) {
   return uniforms;
 }
 
-export function modifyShader(material, uniforms, numberOfCurves = 1) {
+export function modifyShader(material: Material, uniforms: any, numberOfCurves: number = 1) {
+  //@ts-expect-error
   if (material.__ok) return;
+  //@ts-expect-error
   material.__ok = true;
 
+  //@ts-expect-error
   material.onBeforeCompile = shader => {
     if (shader.__modified) return;
     shader.__modified = true;
@@ -180,15 +180,14 @@ vec3 transformedNormal = normalMatrix * (basis * objectNormal);
   };
 }
 
-/**
- * A helper class for making meshes bend aroudn curves
- */
 export class Flow {
-  /**
-   * @param {Mesh} mesh The mesh to clone and modify to bend around the curve
-   * @param {number} numberOfCurves The amount of space that should preallocated for additional curves
-   */
-  constructor(mesh, numberOfCurves = 1) {
+  curveArray: Curve<Vector3>[];
+  curveLengthArray: number[];
+  object3D: Mesh;
+  splineTexure: DataTexture;
+  uniforms: SplineUniform;
+
+  constructor(mesh: Mesh, numberOfCurves: number = 1) {
     const obj3D = mesh.clone();
     const splineTexure = initSplineTexture(numberOfCurves);
     const uniforms = getUniforms(splineTexure);
@@ -203,6 +202,7 @@ export class Flow {
             materials.push(newMaterial);
           }
 
+          //@ts-expect-error
           child.material = materials;
         } else {
           child.material = child.material.clone();
@@ -214,39 +214,35 @@ export class Flow {
     this.curveArray = new Array(numberOfCurves);
     this.curveLengthArray = new Array(numberOfCurves);
 
-    this.object3D = obj3D;
+    this.object3D = obj3D as any;
     this.splineTexure = splineTexure;
     this.uniforms = uniforms;
   }
 
-  updateCurve(index, curve) {
+  updateCurve(index: number, curve: Curve<Vector3>) {
     if (index >= this.curveArray.length) throw Error('Index out of range for Flow');
     const curveLength = curve.getLength();
+    //@ts-expect-error
     this.uniforms.spineLength.value = curveLength;
     this.curveLengthArray[index] = curveLength;
     this.curveArray[index] = curve;
     updateSplineTexture(this.splineTexure, curve, index);
   }
 
-  moveAlongCurve(amount) {
+  moveAlongCurve(amount: number) {
     this.uniforms.pathOffset.value += amount;
   }
 }
 
 const matrix = new Matrix4();
 
-/**
- * A helper class for creating instanced versions of flow, where the instances are placed on the curve.
- */
 export class InstancedFlow extends Flow {
-  /**
-   *
-   * @param {number} count The number of instanced elements
-   * @param {number} curveCount The number of curves to preallocate for
-   * @param {Geometry} geometry The geometry to use for the instanced mesh
-   * @param {Material} material The material to use for the instanced mesh
-   */
-  constructor(count, curveCount, geometry, material) {
+  //@ts-expect-error
+  object3D: InstancedMesh;
+  offsets: number[];
+  whichCurve: number[];
+
+  constructor(count: number, curveCount: number, geometry: BufferGeometry, material: Material) {
     const mesh = new InstancedMesh(geometry, material, count);
     mesh.instanceMatrix.setUsage(BufferUsage.DynamicDraw);
     mesh.frustumCulled = false;
@@ -255,37 +251,16 @@ export class InstancedFlow extends Flow {
     this.offsets = new Array(count).fill(0);
     this.whichCurve = new Array(count).fill(0);
   }
-
-  /**
-   * The extra information about which curve and curve position is stored in the translation components of the matrix for the instanced objects
-   * This writes that information to the matrix and marks it as needing update.
-   *
-   * @param {number} index of the instanced element to update
-   */
-  writeChanges(index) {
+  writeChanges(index: number) {
     matrix.makeTranslation(this.curveLengthArray[this.whichCurve[index]], this.whichCurve[index], this.offsets[index]);
     this.object3D.setMatrixAt(index, matrix);
     this.object3D.instanceMatrix.needsUpdate = true;
   }
-
-  /**
-   * Move an individual element along the curve by a specific amount
-   *
-   * @param {number} index Which element to update
-   * @param {number} offset Move by how much
-   */
-  moveIndividualAlongCurve(index, offset) {
+  moveIndividualAlongCurve(index: number, offset: number): void {
     this.offsets[index] += offset;
     this.writeChanges(index);
   }
-
-  /**
-   * Select which curve to use for an element
-   *
-   * @param {number} index the index of the instanced element to update
-   * @param {number} curveNo the index of the curve it should use
-   */
-  setCurve(index, curveNo) {
+  setCurve(index: number, curveNo: number): void {
     if (isNaN(curveNo)) throw Error('curve index being set is Not a Number (NaN)');
     this.whichCurve[index] = curveNo;
     this.writeChanges(index);

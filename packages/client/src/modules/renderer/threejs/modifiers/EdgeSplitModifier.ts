@@ -1,12 +1,13 @@
 import { BufferAttribute, BufferGeometry, Vector3 } from '../Three.js';
 import * as BufferGeometryUtils from '@modules/renderer/threejs/utils/BufferGeometryUtils.js';
+import { TypedArrayConstructor } from '@modules/renderer/threejs/math/MathUtils.js';
 
 const _A = new Vector3();
 const _B = new Vector3();
 const _C = new Vector3();
 
-class EdgeSplitModifier {
-  modify(geometry, cutOffAngle, tryKeepNormals = true) {
+export class EdgeSplitModifier {
+  modify<T extends BufferGeometry>(geometry: T, cutOffAngle: number, tryKeepNormals: boolean = true): T {
     function computeNormals() {
       normals = new Float32Array(indexes.length * 3);
 
@@ -48,7 +49,7 @@ class EdgeSplitModifier {
       }
     }
 
-    function edgeSplitToGroups(indexes, cutOff, firstIndex) {
+    function edgeSplitToGroups(indexes: number[], cutOff: number, firstIndex: number) {
       _A.set(normals[3 * firstIndex], normals[3 * firstIndex + 1], normals[3 * firstIndex + 2]).normalize();
 
       const result = {
@@ -61,7 +62,7 @@ class EdgeSplitModifier {
           _B.set(normals[3 * j], normals[3 * j + 1], normals[3 * j + 2]).normalize();
 
           if (_B.dot(_A) < cutOff) {
-            result.splitGroup.push(j);
+            result.splitGroup.push(j as never);
           } else {
             result.currentGroup.push(j);
           }
@@ -71,7 +72,7 @@ class EdgeSplitModifier {
       return result;
     }
 
-    function edgeSplit(indexes, cutOff, original = null) {
+    function edgeSplit(indexes: number[], cutOff: number, original: number | null = null) {
       if (indexes.length === 0) return;
 
       const groupResults = [];
@@ -106,7 +107,7 @@ class EdgeSplitModifier {
     if (geometry.attributes.normal) {
       hadNormals = true;
 
-      geometry = geometry.clone();
+      geometry = geometry.clone() as T;
 
       if (tryKeepNormals === true && geometry.index !== null) {
         oldNormals = geometry.attributes.normal.array;
@@ -116,28 +117,28 @@ class EdgeSplitModifier {
     }
 
     if (geometry.index == null) {
-      geometry = BufferGeometryUtils.mergeVertices(geometry);
+      geometry = BufferGeometryUtils.mergeVertices(geometry) as T;
     }
 
-    const indexes = geometry.index.array;
+    const indexes = geometry.index!.array;
     const positions = geometry.getAttribute('position').array;
 
-    let normals;
-    let pointToIndexMap;
+    let normals: Float32Array = null!;
+    let pointToIndexMap: number[][] = [];
 
     computeNormals();
     mapPositionsToIndexes();
 
-    const splitIndexes = [];
+    const splitIndexes: { original: number; indexes: number[] }[] = [];
 
     for (const vertexIndexes of pointToIndexMap) {
       edgeSplit(vertexIndexes, Math.cos(cutOffAngle) - 0.001);
     }
 
-    const newAttributes = {};
+    const newAttributes: Record<string, BufferAttribute<any>> = {};
     for (const name of Object.keys(geometry.attributes)) {
       const oldAttribute = geometry.attributes[name];
-      const newArray = new oldAttribute.array.constructor(
+      const newArray = new (oldAttribute.array.constructor as TypedArrayConstructor)(
         (indexes.length + splitIndexes.length) * oldAttribute.itemSize,
       );
       newArray.set(oldAttribute.array);
@@ -163,7 +164,7 @@ class EdgeSplitModifier {
       }
     }
 
-    geometry = new BufferGeometry();
+    geometry = new BufferGeometry() as T;
     geometry.setIndex(new BufferAttribute(newIndexes, 1));
 
     for (const name of Object.keys(newAttributes)) {
@@ -189,5 +190,3 @@ class EdgeSplitModifier {
     return geometry;
   }
 }
-
-export { EdgeSplitModifier };

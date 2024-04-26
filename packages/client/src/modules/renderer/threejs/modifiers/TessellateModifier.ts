@@ -1,16 +1,17 @@
 import { BufferGeometry, Color, Float32BufferAttribute, Vector2, Vector3 } from '../Three.js';
+import { TypedArray } from '@modules/renderer/threejs/math/MathUtils.js';
 
 /**
  * Break faces with edges longer than maxEdgeLength
  */
 
-class TessellateModifier {
-  constructor(maxEdgeLength = 0.1, maxIterations = 6) {
-    this.maxEdgeLength = maxEdgeLength;
-    this.maxIterations = maxIterations;
-  }
+export class TessellateModifier {
+  constructor(
+    public maxEdgeLength: number = 0.1,
+    public maxIterations: number = 6,
+  ) {}
 
-  modify(geometry) {
+  modify<T extends BufferGeometry>(geometry: T): T {
     if (geometry.index !== null) {
       geometry = geometry.toNonIndexed();
     }
@@ -62,16 +63,16 @@ class TessellateModifier {
     let uvs = hasUVs ? attributes.uv.array : null;
     let uv1s = hasUV1s ? attributes.uv1.array : null;
 
-    let positions2 = positions;
-    let normals2 = normals;
-    let colors2 = colors;
-    let uvs2 = uvs;
-    let uv1s2 = uv1s;
+    let positions2 = positions as never as number[];
+    let normals2 = normals as never as number[];
+    let colors2 = colors as never as number[];
+    let uvs2 = uvs as never as number[];
+    let uv1s2 = uv1s as never as number[];
 
     let iteration = 0;
     let tessellating = true;
 
-    function addTriangle(a, b, c) {
+    function addTriangle(a: number, b: number, c: number) {
       const v1 = vs[a];
       const v2 = vs[b];
       const v3 = vs[c];
@@ -125,56 +126,56 @@ class TessellateModifier {
       iteration++;
       tessellating = false;
 
-      positions = positions2;
+      positions = positions2 as never as TypedArray;
       positions2 = [];
 
       if (hasNormals) {
-        normals = normals2;
+        normals = normals2 as never as TypedArray;
         normals2 = [];
       }
 
       if (hasColors) {
-        colors = colors2;
+        colors = colors2 as never as TypedArray;
         colors2 = [];
       }
 
       if (hasUVs) {
-        uvs = uvs2;
+        uvs = uvs2 as never as TypedArray;
         uvs2 = [];
       }
 
       if (hasUV1s) {
-        uv1s = uv1s2;
+        uv1s = uv1s2 as never as TypedArray;
         uv1s2 = [];
       }
 
       for (let i = 0, i2 = 0, il = positions.length; i < il; i += 9, i2 += 6) {
-        va.fromArray(positions, i + 0);
-        vb.fromArray(positions, i + 3);
-        vc.fromArray(positions, i + 6);
+        va.fromArray(positions as never as number[], i + 0);
+        vb.fromArray(positions as never as number[], i + 3);
+        vc.fromArray(positions as never as number[], i + 6);
 
         if (hasNormals) {
-          na.fromArray(normals, i + 0);
-          nb.fromArray(normals, i + 3);
-          nc.fromArray(normals, i + 6);
+          na.fromArray(normals as never as number[], i + 0);
+          nb.fromArray(normals as never as number[], i + 3);
+          nc.fromArray(normals as never as number[], i + 6);
         }
 
         if (hasColors) {
-          ca.fromArray(colors, i + 0);
-          cb.fromArray(colors, i + 3);
-          cc.fromArray(colors, i + 6);
+          ca.fromArray(colors as never as number[], i + 0);
+          cb.fromArray(colors as never as number[], i + 3);
+          cc.fromArray(colors as never as number[], i + 6);
         }
 
         if (hasUVs) {
-          ua.fromArray(uvs, i2 + 0);
-          ub.fromArray(uvs, i2 + 2);
-          uc.fromArray(uvs, i2 + 4);
+          ua.fromArray(uvs as never as number[], i2 + 0);
+          ub.fromArray(uvs as never as number[], i2 + 2);
+          uc.fromArray(uvs as never as number[], i2 + 4);
         }
 
         if (hasUV1s) {
-          u2a.fromArray(uv1s, i2 + 0);
-          u2b.fromArray(uv1s, i2 + 2);
-          u2c.fromArray(uv1s, i2 + 4);
+          u2a.fromArray(uv1s as never as number[], i2 + 0);
+          u2b.fromArray(uv1s as never as number[], i2 + 2);
+          u2c.fromArray(uv1s as never as number[], i2 + 4);
         }
 
         const dab = va.distanceToSquared(vb);
@@ -238,8 +239,6 @@ class TessellateModifier {
       geometry2.setAttribute('uv1', new Float32BufferAttribute(uv1s2, 2));
     }
 
-    return geometry2;
+    return geometry2 as T;
   }
 }
-
-export { TessellateModifier };

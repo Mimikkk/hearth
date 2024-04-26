@@ -1,4 +1,4 @@
-import { BufferGeometry, Float32BufferAttribute, Vector2, Vector3, Vector4 } from '../Three.js';
+import { BufferGeometry, Color, Float32BufferAttribute, Vector2, Vector3, Vector4 } from '../Three.js';
 import * as BufferGeometryUtils from '@modules/renderer/threejs/utils/BufferGeometryUtils.js';
 
 /**
@@ -12,9 +12,9 @@ import * as BufferGeometryUtils from '@modules/renderer/threejs/utils/BufferGeom
 const _cb = new Vector3(),
   _ab = new Vector3();
 
-class SimplifyModifier {
-  modify(geometry, count) {
-    geometry = geometry.clone();
+export class SimplifyModifier {
+  modify<T extends BufferGeometry>(geometry: T, count: number): T {
+    geometry = geometry.clone() as T;
 
     // currently morphAttributes are not supported
     delete geometry.morphAttributes.position;
@@ -28,13 +28,13 @@ class SimplifyModifier {
         geometry.deleteAttribute(name);
     }
 
-    geometry = BufferGeometryUtils.mergeVertices(geometry);
+    geometry = BufferGeometryUtils.mergeVertices(geometry) as T;
 
     //
     // put data of original geometry in different data structures
     //
 
-    const vertices = [];
+    const vertices: Vertex[] = [];
     const faces = [];
 
     // add vertices
@@ -65,10 +65,10 @@ class SimplifyModifier {
       }
 
       if (colorAttribute) {
-        col = new THREE.Color().fromBufferAttribute(colorAttribute, i);
+        col = new Color().fromBufferAttribute(colorAttribute, i);
       }
 
-      const vertex = new Vertex(v, v2, nor, t, col);
+      const vertex = new Vertex(v, v2!, nor!, t!, col!);
       vertices.push(vertex);
     }
 
@@ -114,7 +114,7 @@ class SimplifyModifier {
         break;
       }
 
-      collapse(vertices, faces, nextVertex, nextVertex.collapseNeighbor);
+      collapse(vertices, faces, nextVertex, nextVertex.collapseNeighbor!);
     }
 
     //
@@ -126,12 +126,12 @@ class SimplifyModifier {
     const tangent = [];
     const color = [];
 
-    index = [];
+    index = [] as never;
 
     //
 
     for (let i = 0; i < vertices.length; i++) {
-      const vertex = vertices[i];
+      const vertex = vertices[i] as Vertex;
       position.push(vertex.position.x, vertex.position.y, vertex.position.z);
       if (vertex.uv) {
         uv.push(vertex.uv.x, vertex.uv.y);
@@ -157,7 +157,7 @@ class SimplifyModifier {
 
     for (let i = 0; i < faces.length; i++) {
       const face = faces[i];
-      index.push(face.v1.id, face.v2.id, face.v3.id);
+      (index as number[]).push(face.v1.id, face.v2.id, face.v3.id);
     }
 
     simplifiedGeometry.setAttribute('position', new Float32BufferAttribute(position, 3));
@@ -168,20 +168,20 @@ class SimplifyModifier {
 
     simplifiedGeometry.setIndex(index);
 
-    return simplifiedGeometry;
+    return simplifiedGeometry as T;
   }
 }
 
-function pushIfUnique(array, object) {
+function pushIfUnique(array: any[], object: any) {
   if (array.indexOf(object) === -1) array.push(object);
 }
 
-function removeFromArray(array, object) {
+function removeFromArray(array: any[], object: any) {
   const k = array.indexOf(object);
   if (k > -1) array.splice(k, 1);
 }
 
-function computeEdgeCollapseCost(u, v) {
+function computeEdgeCollapseCost(u: Vertex, v: Vertex) {
   // if we collapse edge uv by moving u to v then how
   // much different will the model change, i.e. the "error".
 
@@ -230,7 +230,7 @@ function computeEdgeCollapseCost(u, v) {
   return amt;
 }
 
-function computeEdgeCostAtVertex(v) {
+function computeEdgeCostAtVertex(v: Vertex) {
   // compute the edge collapse cost for all edges that start
   // from vertex v.  Since we are only interested in reducing
   // the object by selecting the min cost edge at each step, we
@@ -249,13 +249,14 @@ function computeEdgeCostAtVertex(v) {
   v.collapseCost = 100000;
   v.collapseNeighbor = null;
 
-  // search all neighboring edges for "least cost" edge
+  // search all neighboring edges for "the least cost" edge
   for (let i = 0; i < v.neighbors.length; i++) {
     const collapseCost = computeEdgeCollapseCost(v, v.neighbors[i]);
 
     if (!v.collapseNeighbor) {
       v.collapseNeighbor = v.neighbors[i];
       v.collapseCost = collapseCost;
+
       v.minCost = collapseCost;
       v.totalCost = 0;
       v.costCount = 0;
@@ -275,18 +276,18 @@ function computeEdgeCostAtVertex(v) {
   // v.collapseCost = v.minCost;
 }
 
-function removeVertex(v, vertices) {
+function removeVertex(v: Vertex, vertices: Vertex[]) {
   console.assert(v.faces.length === 0);
 
   while (v.neighbors.length) {
-    const n = v.neighbors.pop();
+    const n = v.neighbors.pop()!;
     removeFromArray(n.neighbors, v);
   }
 
   removeFromArray(vertices, v);
 }
 
-function removeFace(f, faces) {
+function removeFace(f: Triangle, faces: Triangle[]) {
   removeFromArray(faces, f);
 
   if (f.v1) removeFromArray(f.v1.faces, f);
@@ -307,7 +308,7 @@ function removeFace(f, faces) {
   }
 }
 
-function collapse(vertices, faces, u, v) {
+function collapse(vertices: Vertex[], faces: Triangle[], u: Vertex, v: Vertex) {
   // Collapse the edge uv by moving vertex u onto v
 
   if (!v) {
@@ -354,7 +355,7 @@ function collapse(vertices, faces, u, v) {
   }
 }
 
-function minimumCostEdge(vertices) {
+function minimumCostEdge(vertices: Vertex[]): Vertex {
   // O(n * n) approach. TODO optimize this
 
   let least = vertices[0];
@@ -371,15 +372,16 @@ function minimumCostEdge(vertices) {
 // we use a triangle class to represent structure of face slightly differently
 
 class Triangle {
-  constructor(v1, v2, v3, a, b, c) {
-    this.a = a;
-    this.b = b;
-    this.c = c;
+  normal: Vector3;
 
-    this.v1 = v1;
-    this.v2 = v2;
-    this.v3 = v3;
-
+  constructor(
+    public v1: Vertex,
+    public v2: Vertex,
+    public v3: Vertex,
+    public a: number,
+    public b: number,
+    public c: number,
+  ) {
     this.normal = new Vector3();
 
     this.computeNormal();
@@ -409,11 +411,11 @@ class Triangle {
     this.normal.copy(_cb);
   }
 
-  hasVertex(v) {
+  hasVertex(v: Vertex): boolean {
     return v === this.v1 || v === this.v2 || v === this.v3;
   }
 
-  replaceVertex(oldv, newv) {
+  replaceVertex(oldv: Vertex, newv: Vertex) {
     if (oldv === this.v1) this.v1 = newv;
     else if (oldv === this.v2) this.v2 = newv;
     else if (oldv === this.v3) this.v3 = newv;
@@ -444,13 +446,22 @@ class Triangle {
 }
 
 class Vertex {
-  constructor(v, uv, normal, tangent, color) {
-    this.position = v;
-    this.uv = uv;
-    this.normal = normal;
-    this.tangent = tangent;
-    this.color = color;
+  id: number;
+  faces: Triangle[];
+  neighbors: Vertex[];
+  collapseCost: number;
+  collapseNeighbor: Vertex | null;
+  minCost: number;
+  totalCost: number;
+  costCount: number;
 
+  constructor(
+    public position: Vector3,
+    public uv: Vector2,
+    public normal: Vector3,
+    public tangent: Vector4,
+    public color: Color,
+  ) {
     this.id = -1; // external use position in vertices list (for e.g. face generation)
 
     this.faces = []; // faces vertex is connected
@@ -458,14 +469,17 @@ class Vertex {
 
     // these will be computed in computeEdgeCostAtVertex()
     this.collapseCost = 0; // cost of collapsing this vertex, the less the better. aka objdist
+    this.minCost = 0; // best collapse cost
+    this.totalCost = 0; // to sort vertices
+    this.costCount = 0; // to sort vertices
     this.collapseNeighbor = null; // best candinate for collapsing
   }
 
-  addUniqueNeighbor(vertex) {
+  addUniqueNeighbor(vertex: Vertex) {
     pushIfUnique(this.neighbors, vertex);
   }
 
-  removeIfNonNeighbor(n) {
+  removeIfNonNeighbor(n: Vertex) {
     const neighbors = this.neighbors;
     const faces = this.faces;
 
@@ -480,5 +494,3 @@ class Vertex {
     neighbors.splice(offset, 1);
   }
 }
-
-export { SimplifyModifier };

@@ -156,10 +156,10 @@ export * from '@modules/renderer/threejs/misc/TubePainter.js';
 export * from '@modules/renderer/threejs/misc/Volume.js';
 export * from '@modules/renderer/threejs/misc/VolumeSlice.js';
 
-export * from '@modules/renderer/threejs/modifiers/CurveModifier.js';
-export * from '@modules/renderer/threejs/modifiers/EdgeSplitModifier.js';
-export * from '@modules/renderer/threejs/modifiers/SimplifyModifier.js';
-export * from '@modules/renderer/threejs/modifiers/TessellateModifier.js';
+export * from '@modules/renderer/threejs/modifiers/CurveModifier.ts';
+export * from '@modules/renderer/threejs/modifiers/EdgeSplitModifier.ts';
+export * from '@modules/renderer/threejs/modifiers/SimplifyModifier.ts';
+export * from '@modules/renderer/threejs/modifiers/TessellateModifier.ts';
 
 export * from './objects/GroundedSkybox.js';
 export * from './objects/Lensflare.js';
