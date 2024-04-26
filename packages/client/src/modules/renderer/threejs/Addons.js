@@ -70,9 +70,9 @@ export * from '@modules/renderer/threejs/interactive/InteractiveGroup.ts';
 export * from '@modules/renderer/threejs/interactive/SelectionBox.ts';
 export * from '@modules/renderer/threejs/interactive/SelectionHelper.ts';
 
-export { IESSpotLight } from './lights/IESSpotLight.js';
-export * from './lights/LightProbeGenerator.js';
-export * from './lights/RectAreaLightUniformsLib.js';
+export { IESSpotLight } from './lights/IESSpotLight.ts';
+export * from './lights/LightProbeGenerator.ts';
+export * from './lights/RectAreaLightUniformsLib.ts';
 
 export * from '@modules/renderer/threejs/lines/Line2.js';
 export * from '@modules/renderer/threejs/lines/LineGeometry.js';

@@ -1,12 +1,9 @@
-import { Color } from '../../math/Color.ts';
-import { Vector2 } from '../../math/Vector2.ts';
-import { Matrix3 } from '../../math/Matrix3.ts';
+import { Color } from '../../math/Color.js';
+import { Vector2 } from '../../math/Vector2.js';
+import { Matrix3 } from '../../math/Matrix3.js';
+import { DataTexture } from '@modules/renderer/threejs/textures/DataTexture.js';
 
-/**
- * Uniforms library for shared webgl shaders
- */
-
-const UniformsLib = {
+const Lib = {
   common: {
     diffuse: { value: /*@__PURE__*/ new Color(0xffffff) },
     opacity: { value: 1.0 },
@@ -217,5 +214,9 @@ const UniformsLib = {
     alphaTest: { value: 0 },
   },
 };
-
-export { UniformsLib };
+export const UniformsLib = Lib as typeof Lib & {
+  LTC_FLOAT_1: DataTexture;
+  LTC_FLOAT_2: DataTexture;
+  LTC_HALF_1: DataTexture;
+  LTC_HALF_2: DataTexture;
+};

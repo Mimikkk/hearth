@@ -2,7 +2,7 @@ import { Color } from '../../math/Color.ts';
 import { Matrix4 } from '../../math/Matrix4.ts';
 import { Vector2 } from '../../math/Vector2.ts';
 import { Vector3 } from '../../math/Vector3.ts';
-import { UniformsLib } from '../shaders/UniformsLib.js';
+import { UniformsLib } from '../shaders/UniformsLib.ts';
 
 function UniformsCache() {
   const lights = {};

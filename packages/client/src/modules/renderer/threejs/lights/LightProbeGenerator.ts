@@ -1,16 +1,28 @@
-import {
-  Color,
-  ColorSpace,
-  DataUtils,
-  LightProbe,
-  SphericalHarmonics3,
-  TextureDataType,
-  Vector3,
-} from '../Three.js';
+import { ColorSpace, TextureDataType } from '@modules/renderer/threejs/constants.js';
+import { Color } from '@modules/renderer/threejs/math/Color.js';
+import { CubeTexture } from '@modules/renderer/threejs/textures/CubeTexture.js';
+import { Vector3 } from '@modules/renderer/threejs/math/Vector3.js';
+import { SphericalHarmonics3 } from '@modules/renderer/threejs/math/SphericalHarmonics3.js';
+import { DataUtils } from '@modules/renderer/threejs/extras/DataUtils.js';
+import { LightProbe } from '@modules/renderer/threejs/lights/LightProbe.js';
+import { WebGLCubeRenderTarget } from '@modules/renderer/threejs/renderers/WebGLCubeRenderTarget.js';
+import { WebGLRenderer } from '@modules/renderer/threejs/renderers/WebGLRenderer.js';
 
-class LightProbeGenerator {
-  // https://www.ppsloan.org/publications/StupidSH36.pdf
-  static fromCubeTexture(cubeTexture) {
+const convertColorToLinear = (color: Color, colorSpace: ColorSpace) => {
+  switch (colorSpace) {
+    case ColorSpace.SRGB:
+      return color.convertSRGBToLinear();
+
+    case ColorSpace.LinearSRGB:
+    case ColorSpace.No:
+      return color;
+    default:
+      throw Error('WARNING: LightProbeGenerator convertColorToLinear() encountered an unsupported color space.');
+  }
+};
+
+export class LightProbeGenerator {
+  static fromCubeTexture(cubeTexture: CubeTexture): LightProbe {
     let totalWeight = 0;
 
     const coord = new Vector3();
@@ -35,7 +47,7 @@ class LightProbeGenerator {
       canvas.width = width;
       canvas.height = height;
 
-      const context = canvas.getContext('2d');
+      const context = canvas.getContext('2d')!;
 
       context.drawImage(image, 0, 0, width, height);
 
@@ -102,7 +114,10 @@ class LightProbeGenerator {
         dir.copy(coord).normalize();
 
         // evaluate SH basis functions in direction dir
-        SphericalHarmonics3.getBasisAt(dir, shBasis);
+        SphericalHarmonics3.getBasisAt(
+          dir,
+          shBasis as [number, number, number, number, number, number, number, number, number],
+        );
 
         // accummuulate
         for (let j = 0; j < 9; j++) {
@@ -125,7 +140,7 @@ class LightProbeGenerator {
     return new LightProbe(sh);
   }
 
-  static fromCubeRenderTarget(renderer, cubeRenderTarget) {
+  static fromCubeRenderTarget(renderer: WebGLRenderer, cubeRenderTarget: WebGLCubeRenderTarget): LightProbe {
     // The renderTarget must be set to RGBA in order to make readRenderTargetPixels works
     let totalWeight = 0;
 
@@ -226,7 +241,10 @@ class LightProbeGenerator {
         dir.copy(coord).normalize();
 
         // evaluate SH basis functions in direction dir
-        SphericalHarmonics3.getBasisAt(dir, shBasis);
+        SphericalHarmonics3.getBasisAt(
+          dir,
+          shBasis as [number, number, number, number, number, number, number, number, number],
+        );
 
         // accummuulate
         for (let j = 0; j < 9; j++) {
@@ -249,23 +267,3 @@ class LightProbeGenerator {
     return new LightProbe(sh);
   }
 }
-
-function convertColorToLinear(color, colorSpace) {
-  switch (colorSpace) {
-    case ColorSpace.SRGB:
-      color.convertSRGBToLinear();
-      break;
-
-    case ColorSpace.LinearSRGB:
-    case ColorSpace.No:
-      break;
-
-    default:
-      console.warn('WARNING: LightProbeGenerator convertColorToLinear() encountered an unsupported color space.');
-      break;
-  }
-
-  return color;
-}
-
-export { LightProbeGenerator };

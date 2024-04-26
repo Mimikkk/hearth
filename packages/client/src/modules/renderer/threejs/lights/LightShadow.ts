@@ -1,17 +1,34 @@
-import { Matrix4 } from '../math/Matrix4.ts';
-import { Vector2 } from '../math/Vector2.ts';
-import { Vector3 } from '../math/Vector3.ts';
-import { Vector4 } from '../math/Vector4.ts';
-import { Frustum } from '../math/Frustum.ts';
+import { Matrix4 } from '../math/Matrix4.js';
+import { Vector2 } from '../math/Vector2.js';
+import { Vector3 } from '../math/Vector3.js';
+import { Vector4 } from '../math/Vector4.js';
+import { Frustum } from '../math/Frustum.js';
+import { Camera } from '../cameras/Camera.js';
+import { WebGLRenderTarget } from '../renderers/WebGLRenderTarget.js';
+import { Light } from './Light.js';
 
 const _projScreenMatrix = /*@__PURE__*/ new Matrix4();
 const _lightPositionWorld = /*@__PURE__*/ new Vector3();
 const _lookTarget = /*@__PURE__*/ new Vector3();
 
-class LightShadow {
-  constructor(camera) {
-    this.camera = camera;
+export class LightShadow<C extends Camera = Camera> {
+  declare ['constructor']: typeof LightShadow;
+  bias: number;
+  normalBias: number;
+  radius: number;
+  blurSamples: number;
+  mapSize: Vector2;
+  map: WebGLRenderTarget | null;
+  mapPass: WebGLRenderTarget | null;
+  matrix: Matrix4;
+  autoUpdate: boolean;
+  needsUpdate: boolean;
+  _frustum: Frustum;
+  _frameExtents: Vector2;
+  _viewportCount: number;
+  _viewports: Vector4[];
 
+  constructor(public camera: C) {
     this.bias = 0;
     this.normalBias = 0;
     this.radius = 1;
@@ -34,15 +51,15 @@ class LightShadow {
     this._viewports = [new Vector4(0, 0, 1, 1)];
   }
 
-  getViewportCount() {
+  getViewportCount(): number {
     return this._viewportCount;
   }
 
-  getFrustum() {
+  getFrustum(): Frustum {
     return this._frustum;
   }
 
-  updateMatrices(light) {
+  updateMatrices(light: Light<LightShadow<C>>): this {
     const shadowCamera = this.camera;
     const shadowMatrix = this.matrix;
 
@@ -59,9 +76,10 @@ class LightShadow {
     shadowMatrix.set(0.5, 0.0, 0.0, 0.5, 0.0, 0.5, 0.0, 0.5, 0.0, 0.0, 0.5, 0.5, 0.0, 0.0, 0.0, 1.0);
 
     shadowMatrix.multiply(_projScreenMatrix);
+    return this;
   }
 
-  getViewport(viewportIndex) {
+  getViewport(viewportIndex: number): Vector4 {
     return this._viewports[viewportIndex];
   }
 
@@ -79,7 +97,7 @@ class LightShadow {
     }
   }
 
-  copy(source) {
+  copy(source: this, recursive?: boolean): this {
     this.camera = source.camera.clone();
 
     this.bias = source.bias;
@@ -90,23 +108,8 @@ class LightShadow {
     return this;
   }
 
-  clone() {
+  clone(): this {
+    //@ts-expect-error
     return new this.constructor().copy(this);
   }
-
-  toJSON() {
-    const object = {};
-
-    if (this.bias !== 0) object.bias = this.bias;
-    if (this.normalBias !== 0) object.normalBias = this.normalBias;
-    if (this.radius !== 1) object.radius = this.radius;
-    if (this.mapSize.x !== 512 || this.mapSize.y !== 512) object.mapSize = this.mapSize.toArray();
-
-    object.camera = this.camera.toJSON(false).object;
-    delete object.camera.matrix;
-
-    return object;
-  }
 }
-
-export { LightShadow };

@@ -1,32 +1,17 @@
+import { DataTexture } from '../textures/DataTexture.js';
+import { UniformsLib } from '../renderers/shaders/UniformsLib.js';
 import {
-  DataTexture,
-  DataUtils,
-  Filter,
+  ColorSpace,
+  MagnificationTextureFilter,
+  Mapping,
+  MinificationTextureFilter,
   TextureDataType,
   TextureFormat,
-  UniformsLib,
-  Mapping,
   Wrapping,
-} from '../Three.js';
+} from '../constants.js';
+import { DataUtils } from '../extras/DataUtils.js';
 
-/**
- * Uniforms library for RectAreaLight shared webgl shaders
- *
- * NOTE: This is a temporary location for the BRDF approximation texture data
- *       based off of Eric Heitz's work (see citation below).  BRDF data for
- *       RectAreaLight is currently approximated using a precomputed texture
- *       of roughly 80kb in size.  The hope is to find a better way to include
- *       the large texture data before including the full RectAreaLight implementation
- *       in the main build files.
- *
- * TODO: figure out a way to compress the LTC BRDF data
- */
-
-// Real-Time Polygonal-Light Shading with Linearly Transformed Cosines
-// by Eric Heitz, Jonathan Dupuy, Stephen Hill and David Neubelt
-// code: https://github.com/selfshadow/ltc_code/
-
-class RectAreaLightUniformsLib {
+export class RectAreaLightUniformsLib {
   static init() {
     // source: https://github.com/selfshadow/ltc_code/tree/master/fit/results/ltc.js
 
@@ -2827,9 +2812,10 @@ class RectAreaLightUniformsLib {
       Mapping.UV,
       Wrapping.ClampToEdge,
       Wrapping.ClampToEdge,
-      Filter.Linear,
-      Filter.Nearest,
+      MagnificationTextureFilter.Linear,
+      MinificationTextureFilter.Nearest,
       1,
+      ColorSpace.No,
     );
     UniformsLib.LTC_FLOAT_2 = new DataTexture(
       ltc_float_2,
@@ -2840,9 +2826,10 @@ class RectAreaLightUniformsLib {
       Mapping.UV,
       Wrapping.ClampToEdge,
       Wrapping.ClampToEdge,
-      Filter.Linear,
-      Filter.Nearest,
+      MagnificationTextureFilter.Linear,
+      MinificationTextureFilter.Nearest,
       1,
+      ColorSpace.No,
     );
 
     UniformsLib.LTC_FLOAT_1.needsUpdate = true;
@@ -2869,9 +2856,10 @@ class RectAreaLightUniformsLib {
       Mapping.UV,
       Wrapping.ClampToEdge,
       Wrapping.ClampToEdge,
-      Filter.Linear,
-      Filter.Nearest,
+      MagnificationTextureFilter.Linear,
+      MinificationTextureFilter.Nearest,
       1,
+      ColorSpace.No,
     );
     UniformsLib.LTC_HALF_2 = new DataTexture(
       ltc_half_2,
@@ -2882,14 +2870,13 @@ class RectAreaLightUniformsLib {
       Mapping.UV,
       Wrapping.ClampToEdge,
       Wrapping.ClampToEdge,
-      Filter.Linear,
-      Filter.Nearest,
+      MagnificationTextureFilter.Linear,
+      MinificationTextureFilter.Nearest,
       1,
+      ColorSpace.No,
     );
 
     UniformsLib.LTC_HALF_1.needsUpdate = true;
     UniformsLib.LTC_HALF_2.needsUpdate = true;
   }
 }
-
-export { RectAreaLightUniformsLib };

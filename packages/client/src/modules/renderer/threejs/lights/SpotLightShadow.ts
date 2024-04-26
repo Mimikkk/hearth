@@ -1,17 +1,18 @@
 import { LightShadow } from './LightShadow.js';
-import * as MathUtils from '../math/MathUtils.ts';
-import { PerspectiveCamera } from '../cameras/PerspectiveCamera.ts';
+import * as MathUtils from '../math/MathUtils.js';
+import { PerspectiveCamera } from '../cameras/PerspectiveCamera.js';
+import { SpotLight } from '@modules/renderer/threejs/lights/SpotLight.js';
 
-class SpotLightShadow extends LightShadow {
+export class SpotLightShadow extends LightShadow<PerspectiveCamera> {
+  declare isSpotLightShadow: true;
+  focus: number;
+
   constructor() {
     super(new PerspectiveCamera(50, 1, 0.5, 500));
-
-    this.isSpotLightShadow = true;
-
     this.focus = 1;
   }
 
-  updateMatrices(light) {
+  updateMatrices(light: SpotLight): this {
     const camera = this.camera;
 
     const fov = MathUtils.RadianToDegree * 2 * light.angle * this.focus;
@@ -26,9 +27,10 @@ class SpotLightShadow extends LightShadow {
     }
 
     super.updateMatrices(light);
+    return this;
   }
 
-  copy(source) {
+  copy(source: this): this {
     super.copy(source);
 
     this.focus = source.focus;
@@ -36,5 +38,4 @@ class SpotLightShadow extends LightShadow {
     return this;
   }
 }
-
-export { SpotLightShadow };
+SpotLightShadow.prototype.isSpotLightShadow = true;

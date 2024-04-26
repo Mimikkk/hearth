@@ -1,25 +1,34 @@
 import { Light } from './Light.js';
 import { SpotLightShadow } from './SpotLightShadow.js';
-import { Object3D } from '../core/Object3D.ts';
+import { Object3D } from '../core/Object3D.js';
+import { ColorRepresentation } from '../math/Color.js';
+import { Texture } from '../textures/Texture.js';
 
-class SpotLight extends Light {
-  constructor(color, intensity, distance = 0, angle = Math.PI / 3, penumbra = 0, decay = 2) {
+export class SpotLight extends Light<SpotLightShadow> {
+  declare isSpotLight: true;
+  declare type: string | 'SpotLight';
+  target: Object3D;
+  map: null | Texture;
+  shadow: SpotLightShadow;
+
+  constructor(
+    color: ColorRepresentation,
+    intensity: number,
+    public distance: number = 0,
+    public angle: number = Math.PI / 3,
+    public penumbra: number = 0,
+    public decay: number = 2,
+  ) {
     super(color, intensity);
-
-    this.isSpotLight = true;
-
-    this.type = 'SpotLight';
 
     this.position.copy(Object3D.DEFAULT_UP);
     this.updateMatrix();
 
     this.target = new Object3D();
-
     this.distance = distance;
     this.angle = angle;
     this.penumbra = penumbra;
     this.decay = decay;
-
     this.map = null;
 
     this.shadow = new SpotLightShadow();
@@ -40,7 +49,7 @@ class SpotLight extends Light {
     this.shadow.dispose();
   }
 
-  copy(source, recursive) {
+  copy(source: this, recursive?: boolean): this {
     super.copy(source, recursive);
 
     this.distance = source.distance;
@@ -56,4 +65,5 @@ class SpotLight extends Light {
   }
 }
 
-export { SpotLight };
+SpotLight.prototype.isSpotLight = true;
+SpotLight.prototype.type = 'SpotLight';
