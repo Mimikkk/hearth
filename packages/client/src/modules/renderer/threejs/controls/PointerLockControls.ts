@@ -1,4 +1,4 @@
-import { Euler, EventDispatcher, Vector3 } from '../Three.js';
+import { Camera, Euler, EventDispatcher, Vector3 } from '../Three.js';
 
 const _euler = new Euler(0, 0, 0, 'YXZ');
 const _vector = new Vector3();
@@ -9,13 +9,20 @@ const _unlockEvent = { type: 'unlock' };
 
 const _PI_2 = Math.PI / 2;
 
-class PointerLockControls {
+export class PointerLockControls {
   eventDispatcher = new EventDispatcher();
+  isLocked: boolean;
+  minPolarAngle: number;
+  maxPolarAngle: number;
+  pointerSpeed: number;
+  _onMouseMove: (event: MouseEvent) => void;
+  _onPointerlockChange: () => void;
+  _onPointerlockError: () => void;
 
-  constructor(camera, domElement) {
-    this.camera = camera;
-    this.domElement = domElement;
-
+  constructor(
+    public camera: Camera,
+    public domElement: HTMLElement,
+  ) {
     this.isLocked = false;
 
     // Set to constrain the pitch of the camera
@@ -32,33 +39,33 @@ class PointerLockControls {
     this.connect();
   }
 
-  connect() {
+  connect(): void {
     this.domElement.ownerDocument.addEventListener('mousemove', this._onMouseMove);
     this.domElement.ownerDocument.addEventListener('pointerlockchange', this._onPointerlockChange);
     this.domElement.ownerDocument.addEventListener('pointerlockerror', this._onPointerlockError);
   }
 
-  disconnect() {
+  disconnect(): void {
     this.domElement.ownerDocument.removeEventListener('mousemove', this._onMouseMove);
     this.domElement.ownerDocument.removeEventListener('pointerlockchange', this._onPointerlockChange);
     this.domElement.ownerDocument.removeEventListener('pointerlockerror', this._onPointerlockError);
   }
 
-  dispose() {
+  dispose(): void {
     this.disconnect();
   }
 
-  getObject() {
+  getObject(): Camera {
     // retaining this method for backward compatibility
 
     return this.camera;
   }
 
-  getDirection(v) {
+  getDirection(v: Vector3): Vector3 {
     return v.set(0, 0, -1).applyQuaternion(this.camera.quaternion);
   }
 
-  moveForward(distance) {
+  moveForward(distance: number): void {
     // move forward parallel to the xz-plane
     // assumes camera.up is y-up
 
@@ -71,7 +78,7 @@ class PointerLockControls {
     camera.position.addScaledVector(_vector, distance);
   }
 
-  moveRight(distance) {
+  moveRight(distance: number): void {
     const camera = this.camera;
 
     _vector.setFromMatrixColumn(camera.matrix, 0);
@@ -79,24 +86,25 @@ class PointerLockControls {
     camera.position.addScaledVector(_vector, distance);
   }
 
-  lock() {
+  lock(): void {
     this.domElement.requestPointerLock();
   }
 
-  unlock() {
+  unlock(): void {
     this.domElement.ownerDocument.exitPointerLock();
   }
 }
 
 // event listeners
 
-function onMouseMove(event) {
+function onMouseMove(event: MouseEvent) {
   if (this.isLocked === false) return;
 
-  const movementX = event.movementX || event.mozMovementX || event.webkitMovementX || 0;
-  const movementY = event.movementY || event.mozMovementY || event.webkitMovementY || 0;
+  const movementX = event.movementX;
+  const movementY = event.movementY;
 
   const camera = this.camera;
+  //@ts-expect-error
   _euler.setFromQuaternion(camera.quaternion);
 
   _euler.y -= movementX * 0.002 * this.pointerSpeed;
@@ -124,5 +132,3 @@ function onPointerlockChange() {
 function onPointerlockError() {
   console.error('THREE.PointerLockControls: Unable to use Pointer Lock API');
 }
-
-export { PointerLockControls };

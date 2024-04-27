@@ -1,12 +1,40 @@
-import { Spherical, Vector3 } from '../Three.js';
-import { clamp, degreeToRadian, mapLinear, radianToDegree } from '../math/MathUtils.ts';
+import { Camera, Spherical, Vector3 } from '../Three.js';
+import { clamp, degreeToRadian, mapLinear, radianToDegree } from '../math/MathUtils.js';
 
 const _lookDirection = new Vector3();
 const _spherical = new Spherical();
 const _target = new Vector3();
 
-class FirstPersonControls {
-  constructor(object, domElement) {
+export class FirstPersonControls {
+  domElement: HTMLElement;
+  object: Camera;
+  enabled: boolean;
+  movementSpeed: number;
+  lookSpeed: number;
+  lookVertical: boolean;
+  autoForward: boolean;
+  activeLook: boolean;
+  heightSpeed: boolean;
+  heightCoef: number;
+  heightMin: number;
+  heightMax: number;
+  constrainVertical: boolean;
+  verticalMin: number;
+  verticalMax: number;
+  mouseDragOn: boolean;
+  autoSpeedFactor: number;
+  pointerX: number;
+  pointerY: number;
+  moveForward: boolean;
+  moveBackward: boolean;
+  moveLeft: boolean;
+  moveRight: boolean;
+  viewHalfX: number;
+  viewHalfY: number;
+  moveUp: boolean;
+  moveDown: boolean;
+
+  constructor(object: Camera, domElement: HTMLElement) {
     this.object = object;
     this.domElement = domElement;
 
@@ -172,10 +200,10 @@ class FirstPersonControls {
     };
 
     this.lookAt = function (x, y, z) {
-      if (x.isVector3) {
+      if (x instanceof Vector3) {
         _target.copy(x);
       } else {
-        _target.set(x, y, z);
+        _target.set(x, y!, z!);
       }
 
       this.object.lookAt(_target);
@@ -241,6 +269,7 @@ class FirstPersonControls {
         targetPosition.setFromSphericalCoords(1, phi, theta).add(position);
 
         this.object.lookAt(targetPosition);
+        return this;
       };
     })();
 
@@ -268,7 +297,7 @@ class FirstPersonControls {
     window.addEventListener('keydown', _onKeyDown);
     window.addEventListener('keyup', _onKeyUp);
 
-    function setOrientation(controls) {
+    function setOrientation(controls: FirstPersonControls) {
       const quaternion = controls.object.quaternion;
 
       _lookDirection.set(0, 0, -1).applyQuaternion(quaternion);
@@ -282,10 +311,21 @@ class FirstPersonControls {
 
     setOrientation(this);
   }
+
+  handleResize: () => void;
+
+  lookAt: (x: Vector3 | number, y?: number, z?: number) => this;
+
+  update: (delta: number) => this;
+  dispose: () => void;
+
+  onPointerDown: (event: PointerEvent) => void;
+  onPointerUp: (event: PointerEvent) => void;
+  onPointerMove: (event: PointerEvent) => void;
+  onKeyDown: (event: KeyboardEvent) => void;
+  onKeyUp: (event: KeyboardEvent) => void;
 }
 
-function contextmenu(event) {
+function contextmenu(event: Event) {
   event.preventDefault();
 }
-
-export { FirstPersonControls };

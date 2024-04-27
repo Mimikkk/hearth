@@ -1,11 +1,55 @@
-import { EventDispatcher, Quaternion, Vector3 } from '../Three.js';
+import { Camera } from '@modules/renderer/threejs/cameras/Camera.js';
+import { Quaternion } from '@modules/renderer/threejs/math/Quaternion.js';
+import { Vector3 } from '@modules/renderer/threejs/math/Vector3.js';
+import { EventDispatcher } from '@modules/renderer/threejs/core/EventDispatcher.js';
+export interface FlyControlsEventMap {
+  change: {};
+}
 
 const _changeEvent = { type: 'change' };
 
-class FlyControls {
-  eventDispatcher = new EventDispatcher();
+export class FlyControls {
+  eventDispatcher = new EventDispatcher<FlyControlsEventMap>();
+  autoForward: boolean;
+  domElement: HTMLElement;
+  dragToLook: boolean;
+  enabled: boolean;
+  movementSpeed: number;
+  object: Camera;
+  rollSpeed: number;
+  tmpQuaternion: Quaternion;
+  status: number;
+  moveState: {
+    up: number;
+    down: number;
+    left: number;
+    right: number;
+    forward: number;
+    back: number;
+    pitchUp: number;
+    pitchDown: number;
+    yawLeft: number;
+    yawRight: number;
+    rollLeft: number;
+    rollRight: number;
+  };
+  moveVector: Vector3;
+  rotationVector: Vector3;
+  movementSpeedMultiplier: number;
+  keydown: (event: KeyboardEvent) => void;
+  keyup: (event: KeyboardEvent) => void;
+  pointerdown: (event: PointerEvent) => void;
+  pointermove: (event: PointerEvent) => void;
+  pointerup: (event: PointerEvent) => void;
+  pointercancel: () => void;
+  contextMenu: (event: MouseEvent) => void;
+  update: (delta: number) => void;
+  updateMovementVector: () => void;
+  updateRotationVector: () => void;
+  getContainerDimensions: () => { size: number[]; offset: number[] };
+  dispose: () => void;
 
-  constructor(object, domElement) {
+  constructor(object: Camera, domElement: HTMLElement) {
     this.object = object;
     this.domElement = domElement;
 
@@ -265,6 +309,7 @@ class FlyControls {
         lastPosition.distanceToSquared(scope.object.position) > EPS ||
         8 * (1 - lastQuaternion.dot(scope.object.quaternion)) > EPS
       ) {
+        //@ts-expect-error
         scope.eventDispatcher.dispatch(_changeEvent, this);
         lastQuaternion.copy(scope.object.quaternion);
         lastPosition.copy(scope.object.position);
@@ -277,16 +322,12 @@ class FlyControls {
       this.moveVector.x = -this.moveState.left + this.moveState.right;
       this.moveVector.y = -this.moveState.down + this.moveState.up;
       this.moveVector.z = -forward + this.moveState.back;
-
-      //console.log( 'move:', [ this.moveVector.x, this.moveVector.y, this.moveVector.z ] );
     };
 
     this.updateRotationVector = function () {
       this.rotationVector.x = -this.moveState.pitchDown + this.moveState.pitchUp;
       this.rotationVector.y = -this.moveState.yawRight + this.moveState.yawLeft;
       this.rotationVector.z = -this.moveState.rollRight + this.moveState.rollLeft;
-
-      //console.log( 'rotate:', [ this.rotationVector.x, this.rotationVector.y, this.rotationVector.z ] );
     };
 
     this.getContainerDimensions = function () {
@@ -335,5 +376,3 @@ class FlyControls {
     this.updateRotationVector();
   }
 }
-
-export { FlyControls };

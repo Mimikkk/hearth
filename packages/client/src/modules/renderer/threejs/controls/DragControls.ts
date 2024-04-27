@@ -1,7 +1,14 @@
-import { EventDispatcher, Matrix4, Plane, Raycaster, Vector2, Vector3 } from '../Three.js';
+import { Plane } from '../math/Plane.js';
+import { Intersection, Raycaster } from '../core/Raycaster.js';
+import { Vector2 } from '../math/Vector2.js';
+import { Vector3 } from '../math/Vector3.js';
+import { Matrix4 } from '../math/Matrix4.js';
+import { Object3D } from '../core/Object3D.js';
+import { EventDispatcher } from '../core/EventDispatcher.js';
+import { Camera } from '../cameras/Camera.js';
 
 const _plane = new Plane();
-const _raycaster = new Raycaster();
+const _raycaster = new Raycaster(undefined!, undefined!);
 
 const _pointer = new Vector2();
 const _offset = new Vector3();
@@ -14,16 +21,35 @@ const _inverseMatrix = new Matrix4();
 const _up = new Vector3();
 const _right = new Vector3();
 
+export interface DragControlsEventMap {
+  hoveron: { object: Object3D };
+  hoveroff: { object: Object3D };
+  dragstart: { object: Object3D };
+  drag: { object: Object3D };
+  dragend: { object: Object3D };
+}
+
 class DragControls {
-  eventDispatcher = new EventDispatcher();
+  eventDispatcher = new EventDispatcher<DragControlsEventMap>();
 
-  constructor(_objects, _camera, _domElement) {
-    _domElement.style.touchAction = 'none'; // disable touch scroll
+  object: Camera;
 
-    let _selected = null,
-      _hovered = null;
+  // API
 
-    const _intersections = [];
+  enabled: boolean;
+  recursive: boolean;
+  transformGroup: boolean;
+  mode: string;
+  rotateSpeed: number;
+
+  constructor(_objects: Object3D[], _camera: Camera, _domElement: HTMLElement) {
+    // disable touch scroll
+    _domElement.style.touchAction = 'none';
+
+    let _selected: Object3D | null = null;
+    let _hovered: Object3D | null = null;
+
+    const _intersections: Intersection[] = [];
 
     this.mode = 'translate';
 
@@ -57,7 +83,7 @@ class DragControls {
       return _objects;
     }
 
-    function setObjects(objects) {
+    function setObjects(objects: Object3D[]) {
       _objects = objects;
     }
 
@@ -65,7 +91,7 @@ class DragControls {
       return _raycaster;
     }
 
-    function onPointerMove(event) {
+    function onPointerMove(event: PointerEvent) {
       if (scope.enabled === false) return;
 
       updatePointer(event);
@@ -130,7 +156,7 @@ class DragControls {
       _previousPointer.copy(_pointer);
     }
 
-    function onPointerDown(event) {
+    function onPointerDown(event: PointerEvent) {
       if (scope.enabled === false) return;
 
       updatePointer(event);
@@ -151,12 +177,15 @@ class DragControls {
 
         _plane.setFromNormalAndCoplanarPoint(
           _camera.getWorldDirection(_plane.normal),
+          //@ts-expect-error
           _worldPosition.setFromMatrixPosition(_selected.matrixWorld),
         );
 
         if (_raycaster.ray.intersectPlane(_plane, _intersection)) {
           if (scope.mode === 'translate') {
+            //@ts-expect-error
             _inverseMatrix.copy(_selected.parent.matrixWorld).invert();
+            //@ts-expect-error
             _offset.copy(_intersection).sub(_worldPosition.setFromMatrixPosition(_selected.matrixWorld));
           } else if (scope.mode === 'rotate') {
             // the controls only support Y+ up
@@ -167,6 +196,7 @@ class DragControls {
 
         _domElement.style.cursor = 'move';
 
+        //@ts-expect-error
         scope.eventDispatcher.dispatch({ type: 'dragstart', object: _selected }, this);
       }
 
@@ -185,14 +215,15 @@ class DragControls {
       _domElement.style.cursor = _hovered ? 'pointer' : 'auto';
     }
 
-    function updatePointer(event) {
+    function updatePointer(event: PointerEvent) {
       const rect = _domElement.getBoundingClientRect();
 
       _pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
       _pointer.y = (-(event.clientY - rect.top) / rect.height) * 2 + 1;
     }
 
-    function findGroup(obj, group = null) {
+    function findGroup(obj: Object3D, group = null) {
+      //@ts-expect-error
       if (obj.isGroup) group = obj;
 
       if (obj.parent === null) return group;
@@ -215,6 +246,13 @@ class DragControls {
     this.getRaycaster = getRaycaster;
     this.setObjects = setObjects;
   }
+
+  activate: () => void;
+  deactivate: () => void;
+  dispose: () => void;
+  getObjects: () => Object3D[];
+  getRaycaster: () => Raycaster;
+  setObjects: (objects: Object3D[]) => void;
 }
 
 export { DragControls };

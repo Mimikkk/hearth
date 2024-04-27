@@ -7,15 +7,15 @@ export * from './cameras/CinematicCamera.ts';
 
 export { WebGL } from '@modules/renderer/threejs/capabilities/WebGL.ts';
 
-export * from '@modules/renderer/threejs/controls/ArcballControls.js';
-export * from '@modules/renderer/threejs/controls/DragControls.js';
-export * from '@modules/renderer/threejs/controls/FirstPersonControls.js';
-export * from '@modules/renderer/threejs/controls/FlyControls.js';
-export * from '@modules/renderer/threejs/controls/MapControls.js';
-export * from '@modules/renderer/threejs/controls/OrbitControls.js';
-export * from '@modules/renderer/threejs/controls/PointerLockControls.js';
-export * from '@modules/renderer/threejs/controls/TrackballControls.js';
-export * from '@modules/renderer/threejs/controls/TransformControls.js';
+export * from '@modules/renderer/threejs/controls/ArcballControls.ts';
+export * from '@modules/renderer/threejs/controls/DragControls.ts';
+export * from '@modules/renderer/threejs/controls/FirstPersonControls.ts';
+export * from '@modules/renderer/threejs/controls/FlyControls.ts';
+export * from '@modules/renderer/threejs/controls/MapControls.ts';
+export * from '@modules/renderer/threejs/controls/OrbitControls.ts';
+export * from '@modules/renderer/threejs/controls/PointerLockControls.ts';
+export * from '@modules/renderer/threejs/controls/TrackballControls.ts';
+export * from '@modules/renderer/threejs/controls/TransformControls.ts';
 
 export * from '@modules/renderer/threejs/csm/CSM.js';
 export * from '@modules/renderer/threejs/csm/CSMFrustum.js';

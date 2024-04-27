@@ -14,7 +14,7 @@ import {
   Matrix4,
   EventDispatcher,
 } from '../Three.js';
-import { clamp, DegreeToRadian, RadianToDegree } from '../math/MathUtils.ts';
+import { clamp, DegreeToRadian, RadianToDegree } from '../math/MathUtils.js';
 
 //trackball state
 const STATE = {
