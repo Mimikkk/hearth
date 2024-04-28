@@ -1,5 +1,5 @@
 import { BufferGeometry, Float32BufferAttribute } from '../Three.js';
-import { ConvexHull } from '../math/ConvexHull.js';
+import { ConvexHull } from '../math/ConvexHull.ts';
 
 class ConvexGeometry extends BufferGeometry {
   constructor(points = []) {

@@ -134,12 +134,12 @@ export * from './materials/MeshGouraudMaterial.js';
 
 export * from './math/Capsule.ts';
 export * from './math/ColorConverter.ts';
-export * from './math/ConvexHull.js';
+export * from './math/ConvexHull.ts';
 export * from './math/PerlinNoise.ts';
 export * from './math/Lut.js';
 export * from './math/MeshSurfaceSampler.ts';
-export * from './math/OBB.js';
-export * from './math/Octree.js';
+export * from './math/OBB.ts';
+export * from './math/Octree.ts';
 export * from './math/SimplexNoise.ts';
 
 export * from '@modules/renderer/threejs/misc/ConvexObjectBreaker.js';

@@ -1,8 +1,9 @@
-import { Line3, Plane, Triangle, Vector3 } from '../Three.js';
-
-/**
- * Ported from: https://github.com/maurizzzio/quickhull3d/ by Mauricio Poppe (https://github.com/maurizzzio)
- */
+import { Vector3 } from './Vector3.js';
+import { Line3 } from './Line3.js';
+import { Plane } from './Plane.js';
+import { Triangle } from './Triangle.js';
+import { Object3D } from '@modules/renderer/threejs/core/Object3D.js';
+import { Ray } from '@modules/renderer/threejs/math/Ray.js';
 
 const Visible = 0;
 const Deleted = 1;
@@ -13,12 +14,20 @@ const _plane = new Plane();
 const _closestPoint = new Vector3();
 const _triangle = new Triangle();
 
-class ConvexHull {
+export class ConvexHull {
+  tolerance: number;
+  faces: Face[];
+  newFaces: Face[];
+  assigned: VertexList;
+  unassigned: VertexList;
+  vertices: VertexNode[];
+
   constructor() {
     this.tolerance = -1;
-
-    this.faces = []; // the generated faces of the convex hull
-    this.newFaces = []; // this array holds the faces that are generated within a single iteration
+    // the generated faces of the convex hull
+    this.faces = [];
+    // this array holds the faces that are generated within a single iteration
+    this.newFaces = [];
 
     // the vertex lists work as follows:
     //
@@ -33,12 +42,11 @@ class ConvexHull {
     this.assigned = new VertexList();
     this.unassigned = new VertexList();
 
-    this.vertices = []; // vertices of the hull (internal representation of given geometry data)
+    // vertices of the hull (internal representation of given geometry data)
+    this.vertices = [];
   }
 
-  setFromPoints(points) {
-    // The algorithm needs at least four points.
-
+  setFromPoints(points: Vector3[]): this {
     if (points.length >= 4) {
       this.makeEmpty();
 
@@ -52,33 +60,31 @@ class ConvexHull {
     return this;
   }
 
-  setFromObject(object) {
-    const points = [];
+  setFromObject(object: Object3D): this {
+    const points: Vector3[] = [];
 
     object.updateMatrixWorld(true);
 
-    object.traverse(function (node) {
+    object.traverse(node => {
       const geometry = node.geometry;
 
-      if (geometry !== undefined) {
-        const attribute = geometry.attributes.position;
+      if (!geometry) return;
+      const attribute = geometry.attributes.position;
 
-        if (attribute !== undefined) {
-          for (let i = 0, l = attribute.count; i < l; i++) {
-            const point = new Vector3();
+      if (!attribute) return;
+      for (let i = 0, l = attribute.count; i < l; i++) {
+        const point = new Vector3();
 
-            point.fromBufferAttribute(attribute, i).applyMatrix4(node.matrixWorld);
+        point.fromBufferAttribute(attribute, i).applyMatrix4(node.matrixWorld);
 
-            points.push(point);
-          }
-        }
+        points.push(point);
       }
     });
 
     return this.setFromPoints(points);
   }
 
-  containsPoint(point) {
+  containsPoint(point: Vector3): boolean {
     const faces = this.faces;
 
     for (let i = 0, l = faces.length; i < l; i++) {
@@ -92,7 +98,7 @@ class ConvexHull {
     return true;
   }
 
-  intersectRay(ray, target) {
+  intersectRay(ray: Ray, target: Vector3): Vector3 | null {
     // based on "Fast Ray-Convex Polyhedron Intersection" by Eric Haines, GRAPHICS GEMS II
 
     const faces = this.faces;
@@ -154,11 +160,11 @@ class ConvexHull {
     return target;
   }
 
-  intersectsRay(ray) {
+  intersectsRay(ray: Ray): boolean {
     return this.intersectRay(ray, _v1) !== null;
   }
 
-  makeEmpty() {
+  makeEmpty(): this {
     this.faces = [];
     this.vertices = [];
 
@@ -167,7 +173,7 @@ class ConvexHull {
 
   // Adds a vertex to the 'assigned' list of vertices and assigns it to the given face
 
-  addVertexToFace(vertex, face) {
+  addVertexToFace(vertex: VertexNode, face: Face): this {
     vertex.face = face;
 
     if (face.outside === null) {
@@ -183,7 +189,7 @@ class ConvexHull {
 
   // Removes a vertex from the 'assigned' list of vertices and from the given face
 
-  removeVertexFromFace(vertex, face) {
+  removeVertexFromFace(vertex: VertexNode, face: Face): this {
     if (vertex === face.outside) {
       // fix face.outside link
 
@@ -205,7 +211,7 @@ class ConvexHull {
 
   // Removes all the visible vertices that a given face is able to see which are stored in the 'assigned' vertex list
 
-  removeAllVerticesFromFace(face) {
+  removeAllVerticesFromFace(face: Face): VertexNode | undefined {
     if (face.outside !== null) {
       // reference to the first and last vertex of this face
 
@@ -229,7 +235,7 @@ class ConvexHull {
 
   // Removes all the visible vertices that 'face' is able to see
 
-  deleteFaceVertices(face, absorbingFace) {
+  deleteFaceVertices(face: Face, absorbingFace?: Face): this {
     const faceVertices = this.removeAllVerticesFromFace(face);
 
     if (faceVertices !== undefined) {
@@ -260,7 +266,7 @@ class ConvexHull {
 
           // now assign next vertex
 
-          vertex = nextVertex;
+          vertex = nextVertex!;
         } while (vertex !== null);
       }
     }
@@ -270,9 +276,9 @@ class ConvexHull {
 
   // Reassigns as many vertices as possible from the unassigned list to the new faces
 
-  resolveUnassignedPoints(newFaces) {
+  resolveUnassignedPoints(newFaces: Face[]): this {
     if (this.unassigned.isEmpty() === false) {
-      let vertex = this.unassigned.first();
+      let vertex = this.unassigned.first()!;
 
       do {
         // buffer 'next' reference, see .deleteFaceVertices()
@@ -304,7 +310,7 @@ class ConvexHull {
           this.addVertexToFace(vertex, maxFace);
         }
 
-        vertex = nextVertex;
+        vertex = nextVertex!;
       } while (vertex !== null);
     }
 
@@ -313,7 +319,7 @@ class ConvexHull {
 
   // Computes the extremes of a simplex which will be the initial hull
 
-  computeExtremes() {
+  computeExtremes(): { min: VertexNode[]; max: VertexNode[] } {
     const min = new Vector3();
     const max = new Vector3();
 
@@ -369,7 +375,7 @@ class ConvexHull {
   // Computes the initial simplex assigning to its faces all the points
   // that are candidates to form part of the hull
 
-  computeInitialHull() {
+  computeInitialHull(): this {
     const vertices = this.vertices;
     const extremes = this.computeExtremes();
     const min = extremes.min;
@@ -394,8 +400,8 @@ class ConvexHull {
 
     const v0 = min[index];
     const v1 = max[index];
-    let v2;
-    let v3;
+    let v2!: VertexNode;
+    let v3!: VertexNode;
 
     // 2. The next vertex 'v2' is the one farthest to the line formed by 'v0' and 'v1'
 
@@ -537,8 +543,8 @@ class ConvexHull {
 
       // grap the first available face and start with the first visible vertex of that face
 
-      const eyeFace = this.assigned.first().face;
-      let vertex = eyeFace.outside;
+      const eyeFace = this.assigned.first()!.face!;
+      let vertex = eyeFace.outside!;
 
       // now calculate the farthest vertex that face can see
 
@@ -550,7 +556,7 @@ class ConvexHull {
           eyeVertex = vertex;
         }
 
-        vertex = vertex.next;
+        vertex = vertex!.next!;
       } while (vertex !== null && vertex.face === eyeFace);
 
       return eyeVertex;
@@ -561,14 +567,14 @@ class ConvexHull {
   // For an edge to be part of the horizon it must join a face that can see
   // 'eyePoint' and a face that cannot see 'eyePoint'.
 
-  computeHorizon(eyePoint, crossEdge, face, horizon) {
+  computeHorizon(eyePoint: Vector3, crossEdge: HalfEdge | null, face: Face, horizon: HalfEdge[]): this {
     // moves face's vertices to the 'unassigned' vertex list
 
     this.deleteFaceVertices(face);
 
     face.mark = Deleted;
 
-    let edge;
+    let edge!: HalfEdge;
 
     if (crossEdge === null) {
       edge = crossEdge = face.getEdge(0);
@@ -576,11 +582,11 @@ class ConvexHull {
       // start from the next edge since 'crossEdge' was already analyzed
       // (actually 'crossEdge.twin' was the edge who called this method recursively)
 
-      edge = crossEdge.next;
+      edge = crossEdge.next!;
     }
 
     do {
-      const twinEdge = edge.twin;
+      const twinEdge = edge.twin!;
       const oppositeFace = twinEdge.face;
 
       if (oppositeFace.mark === Visible) {
@@ -595,7 +601,7 @@ class ConvexHull {
         }
       }
 
-      edge = edge.next;
+      edge = edge.next!;
     } while (edge !== crossEdge);
 
     return this;
@@ -603,16 +609,16 @@ class ConvexHull {
 
   // Creates a face with the vertices 'eyeVertex.point', 'horizonEdge.tail' and 'horizonEdge.head' in CCW order
 
-  addAdjoiningFace(eyeVertex, horizonEdge) {
+  addAdjoiningFace(eyeVertex: VertexNode, horizonEdge: HalfEdge): HalfEdge {
     // all the half edges are created in ccw order thus the face is always pointing outside the hull
 
-    const face = Face.create(eyeVertex, horizonEdge.tail(), horizonEdge.head());
+    const face = Face.create(eyeVertex, horizonEdge.tail()!, horizonEdge.head());
 
     this.faces.push(face);
 
     // join face.getEdge( - 1 ) with the horizon's opposite edge face.getEdge( - 1 ) = face.getEdge( 2 )
 
-    face.getEdge(-1).setTwin(horizonEdge.twin);
+    face.getEdge(-1).setTwin(horizonEdge.twin!);
 
     return face.getEdge(0); // the half edge whose vertex is the eyeVertex
   }
@@ -620,11 +626,11 @@ class ConvexHull {
   //  Adds 'horizon.length' faces to the hull, each face will be linked with the
   //  horizon opposite face and the face on the left/right
 
-  addNewFaces(eyeVertex, horizon) {
+  addNewFaces(eyeVertex: VertexNode, horizon: HalfEdge[]): this {
     this.newFaces = [];
 
-    let firstSideEdge = null;
-    let previousSideEdge = null;
+    let firstSideEdge: HalfEdge | null = null;
+    let previousSideEdge: HalfEdge | null = null;
 
     for (let i = 0; i < horizon.length; i++) {
       const horizonEdge = horizon[i];
@@ -638,7 +644,7 @@ class ConvexHull {
       } else {
         // joins face.getEdge( 1 ) with previousFace.getEdge( 0 )
 
-        sideEdge.next.setTwin(previousSideEdge);
+        sideEdge.next!.setTwin(previousSideEdge!);
       }
 
       this.newFaces.push(sideEdge.face);
@@ -647,23 +653,23 @@ class ConvexHull {
 
     // perform final join of new faces
 
-    firstSideEdge.next.setTwin(previousSideEdge);
+    firstSideEdge!.next!.setTwin(previousSideEdge!);
 
     return this;
   }
 
   // Adds a vertex to the hull
 
-  addVertexToHull(eyeVertex) {
-    const horizon = [];
+  addVertexToHull(eyeVertex: VertexNode): this {
+    const horizon: HalfEdge[] = [];
 
     this.unassigned.clear();
 
     // remove 'eyeVertex' from 'eyeVertex.face' so that it can't be added to the 'unassigned' vertex list
 
-    this.removeVertexFromFace(eyeVertex, eyeVertex.face);
+    this.removeVertexFromFace(eyeVertex, eyeVertex.face!);
 
-    this.computeHorizon(eyeVertex.point, null, eyeVertex.face, horizon);
+    this.computeHorizon(eyeVertex.point, null, eyeVertex.face!, horizon);
 
     this.addNewFaces(eyeVertex, horizon);
 
@@ -701,21 +707,29 @@ class ConvexHull {
   }
 }
 
-//
+export class Face {
+  normal: Vector3;
+  midpoint: Vector3;
+  area: number;
+  constant: number;
+  outside: VertexNode | null;
+  mark: number;
+  edge: HalfEdge | null;
 
-class Face {
   constructor() {
     this.normal = new Vector3();
     this.midpoint = new Vector3();
     this.area = 0;
 
-    this.constant = 0; // signed distance from face to the origin
-    this.outside = null; // reference to a vertex in a vertex list this face can see
+    // signed distance from face to the origin
+    this.constant = 0;
+    // reference to a vertex in a vertex list this face can see
+    this.outside = null;
     this.mark = Visible;
     this.edge = null;
   }
 
-  static create(a, b, c) {
+  static create(a: VertexNode, b: VertexNode, c: VertexNode): Face {
     const face = new Face();
 
     const e0 = new HalfEdge(a, face);
@@ -735,16 +749,16 @@ class Face {
     return face.compute();
   }
 
-  getEdge(i) {
-    let edge = this.edge;
+  getEdge(i: number): HalfEdge {
+    let edge = this.edge!;
 
     while (i > 0) {
-      edge = edge.next;
+      edge = edge!.next!;
       i--;
     }
 
     while (i < 0) {
-      edge = edge.prev;
+      edge = edge!.prev!;
       i++;
     }
 
@@ -752,9 +766,9 @@ class Face {
   }
 
   compute() {
-    const a = this.edge.tail();
-    const b = this.edge.head();
-    const c = this.edge.next.head();
+    const a = this.edge!.tail()!;
+    const b = this.edge!.head()!;
+    const c = this.edge!.next!.head()!;
 
     _triangle.set(a.point, b.point, c.point);
 
@@ -767,53 +781,48 @@ class Face {
     return this;
   }
 
-  distanceToPoint(point) {
+  distanceToPoint(point: Vector3): number {
     return this.normal.dot(point) - this.constant;
   }
 }
 
-// Entity for a Doubly-Connected Edge List (DCEL).
+export class HalfEdge {
+  prev: HalfEdge | null;
+  next: HalfEdge | null;
+  twin: HalfEdge | null;
 
-class HalfEdge {
-  constructor(vertex, face) {
-    this.vertex = vertex;
+  constructor(
+    public vertex: VertexNode,
+    public face: Face,
+  ) {
     this.prev = null;
     this.next = null;
     this.twin = null;
-    this.face = face;
   }
 
-  head() {
+  head(): VertexNode {
     return this.vertex;
   }
 
-  tail() {
+  tail(): VertexNode | null {
     return this.prev ? this.prev.vertex : null;
   }
 
-  length() {
+  length(): number {
     const head = this.head();
     const tail = this.tail();
 
-    if (tail !== null) {
-      return tail.point.distanceTo(head.point);
-    }
-
-    return -1;
+    return tail === null ? -1 : tail.point.distanceTo(head.point);
   }
 
-  lengthSquared() {
+  lengthSquared(): number {
     const head = this.head();
     const tail = this.tail();
 
-    if (tail !== null) {
-      return tail.point.distanceToSquared(head.point);
-    }
-
-    return -1;
+    return tail !== null ? tail.point.distanceToSquared(head.point) : -1;
   }
 
-  setTwin(edge) {
+  setTwin(edge: HalfEdge): HalfEdge {
     this.twin = edge;
     edge.twin = this;
 
@@ -821,42 +830,39 @@ class HalfEdge {
   }
 }
 
-// A vertex as a double linked list node.
+export class VertexNode {
+  prev: VertexNode | null = null;
+  next: VertexNode | null = null;
+  face: Face | null = null;
 
-class VertexNode {
-  constructor(point) {
-    this.point = point;
-    this.prev = null;
-    this.next = null;
-    this.face = null; // the face that is able to see this vertex
-  }
+  constructor(public point: Vector3) {}
 }
 
-// A double linked list that contains vertex nodes.
+export class VertexList {
+  head: VertexNode | null;
+  tail: VertexNode | null;
 
-class VertexList {
   constructor() {
     this.head = null;
     this.tail = null;
   }
 
-  first() {
+  first(): VertexNode | null {
     return this.head;
   }
 
-  last() {
+  last(): VertexNode | null {
     return this.tail;
   }
 
-  clear() {
-    this.head = this.tail = null;
+  clear(): this {
+    this.head = null;
+    this.tail = null;
 
     return this;
   }
 
-  // Inserts a vertex before the target vertex
-
-  insertBefore(target, vertex) {
+  insertBefore(target: VertexNode, vertex: VertexNode): this {
     vertex.prev = target.prev;
     vertex.next = target;
 
@@ -871,9 +877,7 @@ class VertexList {
     return this;
   }
 
-  // Inserts a vertex after the target vertex
-
-  insertAfter(target, vertex) {
+  insertAfter(target: VertexNode, vertex: VertexNode): this {
     vertex.prev = target;
     vertex.next = target.next;
 
@@ -888,35 +892,30 @@ class VertexList {
     return this;
   }
 
-  // Appends a vertex to the end of the linked list
-
-  append(vertex) {
+  append(vertex: VertexNode): this {
     if (this.head === null) {
       this.head = vertex;
     } else {
-      this.tail.next = vertex;
+      this.tail!.next = vertex;
     }
 
     vertex.prev = this.tail;
-    vertex.next = null; // the tail has no subsequent vertex
+    // the tail has no subsequent vertex
+    vertex.next = null;
 
     this.tail = vertex;
 
     return this;
   }
 
-  // Appends a chain of vertices where 'vertex' is the head.
-
-  appendChain(vertex) {
+  appendChain(vertex: VertexNode): this {
     if (this.head === null) {
       this.head = vertex;
     } else {
-      this.tail.next = vertex;
+      this.tail!.next = vertex;
     }
 
     vertex.prev = this.tail;
-
-    // ensure that the 'tail' reference points to the last vertex of the chain
 
     while (vertex.next !== null) {
       vertex = vertex.next;
@@ -927,9 +926,7 @@ class VertexList {
     return this;
   }
 
-  // Removes a vertex from the linked list
-
-  remove(vertex) {
+  remove(vertex: VertexNode): this {
     if (vertex.prev === null) {
       this.head = vertex.next;
     } else {
@@ -945,9 +942,7 @@ class VertexList {
     return this;
   }
 
-  // Removes a list of vertices whose 'head' is 'a' and whose 'tail' is b
-
-  removeSubList(a, b) {
+  removeSubList(a: VertexNode, b: VertexNode): this {
     if (a.prev === null) {
       this.head = b.next;
     } else {
@@ -967,5 +962,3 @@ class VertexList {
     return this.head === null;
   }
 }
-
-export { ConvexHull, Face, HalfEdge, VertexNode, VertexList };

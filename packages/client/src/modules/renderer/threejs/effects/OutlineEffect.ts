@@ -178,7 +178,7 @@ export class OutlineEffect {
 
     function isCompatible(object: Object3D) {
       const geometry = object.geometry;
-      const hasNormals = geometry !== undefined && geometry.attributes.normal !== undefined;
+      const hasNormals = geometry && geometry.attributes.normal !== undefined;
 
       return object.isMesh === true && object.material !== undefined && hasNormals === true;
     }

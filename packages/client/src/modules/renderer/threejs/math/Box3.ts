@@ -5,6 +5,7 @@ import type { Triangle } from './Triangle.js';
 import type { Plane } from './Plane.js';
 import type { Sphere } from './Sphere.js';
 import type { Matrix4 } from './Matrix4.js';
+import { Mesh } from '@modules/renderer/threejs/objects/Mesh.js';
 
 export class Box3 {
   declare isBox3: true;
@@ -32,7 +33,7 @@ export class Box3 {
     return this;
   }
 
-  setFromBufferAttribute(attribute: BufferAttribute): this {
+  setFromBufferAttribute(attribute: BufferAttribute<Float32Array>): this {
     this.makeEmpty();
 
     for (let i = 0, il = attribute.count; i < il; i++) {
@@ -128,17 +129,22 @@ export class Box3 {
 
     const geometry = object.geometry;
 
-    if (geometry !== undefined) {
+    if (geometry) {
       const positionAttribute = geometry.getAttribute('position');
 
       // precise AABB computation based on vertex data requires at least a position attribute.
       // instancing isn't supported so far and uses the normal (conservative) code path.
 
+      const isInstancedMesh = (obj: any): obj is Mesh => obj.isInstancedMesh;
+
+      //@ts-expect-error
       if (precise === true && positionAttribute !== undefined && object.isInstancedMesh !== true) {
         for (let i = 0, l = positionAttribute.count; i < l; i++) {
           let _vector: Vector3 = new Vector3();
 
-          if (object.isMesh === true) {
+          const isMesh = (obj: any): obj is Mesh => obj.isMesh;
+
+          if (isMesh(object)) {
             object.getVertexPosition(i, _vector);
           } else {
             _vector.fromBufferAttribute(positionAttribute, i);

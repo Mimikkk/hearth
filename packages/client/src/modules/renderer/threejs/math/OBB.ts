@@ -1,23 +1,42 @@
-import { Box3, Matrix3, Matrix4, Ray, Vector3 } from '../Three.js';
-import { clamp } from './MathUtils.ts';
+import { clamp } from './MathUtils.js';
+import { Vector3 } from './Vector3.js';
+import { Matrix3 } from './Matrix3.js';
+import { Box3 } from './Box3.js';
+import { Matrix4 } from './Matrix4.js';
+import { Ray } from './Ray.js';
+import { Plane } from '@modules/renderer/threejs/math/Plane.js';
 
 // module scope helper variables
 
 const a = {
-  c: null, // center
-  u: [new Vector3(), new Vector3(), new Vector3()], // basis vectors
-  e: [], // half width
+  // center
+  c: null,
+  // basis vectors
+  u: [new Vector3(), new Vector3(), new Vector3()],
+  // half width
+  e: [],
+} as {
+  c: Vector3 | null;
+  u: Vector3[];
+  e: number[];
 };
 
 const b = {
-  c: null, // center
-  u: [new Vector3(), new Vector3(), new Vector3()], // basis vectors
-  e: [], // half width
+  // center
+  c: null,
+  // basis vectors
+  u: [new Vector3(), new Vector3(), new Vector3()],
+  // half width
+  e: [],
+} as {
+  c: Vector3 | null;
+  u: Vector3[];
+  e: number[];
 };
 
-const R = [[], [], []];
-const AbsR = [[], [], []];
-const t = [];
+const R: number[][] = [[], [], []];
+const AbsR: number[][] = [[], [], []];
+const t: number[] = [];
 
 const xAxis = new Vector3();
 const yAxis = new Vector3();
@@ -33,14 +52,16 @@ const localRay = new Ray();
 
 // OBB
 
-class OBB {
-  constructor(center = new Vector3(), halfSize = new Vector3(), rotation = new Matrix3()) {
-    this.center = center;
-    this.halfSize = halfSize;
-    this.rotation = rotation;
-  }
+export class OBB {
+  declare ['constructor']: typeof OBB;
 
-  set(center, halfSize, rotation) {
+  constructor(
+    public center: Vector3,
+    public halfSize: Vector3,
+    public rotation: Matrix3,
+  ) {}
+
+  set(center: Vector3, halfSize: Vector3, rotation: Matrix3) {
     this.center = center;
     this.halfSize = halfSize;
     this.rotation = rotation;
@@ -48,7 +69,7 @@ class OBB {
     return this;
   }
 
-  copy(obb) {
+  copy(obb: OBB) {
     this.center.copy(obb.center);
     this.halfSize.copy(obb.halfSize);
     this.rotation.copy(obb.rotation);
@@ -57,10 +78,14 @@ class OBB {
   }
 
   clone() {
-    return new this.constructor().copy(this);
+    return new OBB(
+      new Vector3().copy(this.center),
+      new Vector3().copy(this.halfSize),
+      new Matrix3().copy(this.rotation),
+    );
   }
 
-  getSize(result) {
+  getSize(result: Vector3): Vector3 {
     return result.copy(this.halfSize).multiplyScalar(2);
   }
 
@@ -68,7 +93,7 @@ class OBB {
    * Reference: Closest Point on OBB to Point in Real-Time Collision Detection
    * by Christer Ericson (chapter 5.1.4)
    */
-  clampPoint(point, result) {
+  clampPoint(point: Vector3, result: Vector3): Vector3 {
     const halfSize = this.halfSize;
 
     v1.subVectors(point, this.center);
@@ -92,7 +117,7 @@ class OBB {
     return result;
   }
 
-  containsPoint(point) {
+  containsPoint(point: Vector3): boolean {
     v1.subVectors(point, this.center);
     this.rotation.extractBasis(xAxis, yAxis, zAxis);
 
@@ -105,11 +130,11 @@ class OBB {
     );
   }
 
-  intersectsBox3(box3) {
+  intersectsBox3(box3: Box3): boolean {
     return this.intersectsOBB(obb.fromBox3(box3));
   }
 
-  intersectsSphere(sphere) {
+  intersectsSphere(sphere: { center: Vector3; radius: number }): boolean {
     // find the point on the OBB closest to the sphere center
 
     this.clampPoint(sphere.center, closestPoint);
@@ -124,7 +149,7 @@ class OBB {
    * by Christer Ericson (chapter 4.4.1)
    *
    */
-  intersectsOBB(obb, epsilon = Number.EPSILON) {
+  intersectsOBB(obb: OBB, epsilon: number = Number.EPSILON): boolean {
     // prepare data structures (the code uses the same nomenclature like the reference)
 
     a.c = this.center;
@@ -248,7 +273,7 @@ class OBB {
    * Reference: Testing Box Against Plane in Real-Time Collision Detection
    * by Christer Ericson (chapter 5.2.3)
    */
-  intersectsPlane(plane) {
+  intersectsPlane(plane: Plane): boolean {
     this.rotation.extractBasis(xAxis, yAxis, zAxis);
 
     // compute the projection interval radius of this OBB onto L(t) = this->center + t * p.normal;
@@ -271,7 +296,7 @@ class OBB {
    * Performs a ray/OBB intersection test and stores the intersection point
    * to the given 3D vector. If no intersection is detected, *null* is returned.
    */
-  intersectRay(ray, result) {
+  intersectRay(ray: Ray, result: Vector3): Vector3 | null {
     // the idea is to perform the intersection test in the local space
     // of the OBB.
 
@@ -303,11 +328,11 @@ class OBB {
    * Performs a ray/OBB intersection test. Returns either true or false if
    * there is a intersection or not.
    */
-  intersectsRay(ray) {
+  intersectsRay(ray: Ray): boolean {
     return this.intersectRay(ray, v1) !== null;
   }
 
-  fromBox3(box3) {
+  fromBox3(box3: Box3) {
     box3.getCenter(this.center);
 
     box3.getSize(this.halfSize).multiplyScalar(0.5);
@@ -317,11 +342,11 @@ class OBB {
     return this;
   }
 
-  equals(obb) {
+  equals(obb: OBB): boolean {
     return obb.center.equals(this.center) && obb.halfSize.equals(this.halfSize) && obb.rotation.equals(this.rotation);
   }
 
-  applyMatrix4(matrix) {
+  applyMatrix4(matrix: Matrix4): this {
     const e = matrix.elements;
 
     let sx = v1.set(e[0], e[1], e[2]).length();
@@ -362,6 +387,4 @@ class OBB {
   }
 }
 
-const obb = new OBB();
-
-export { OBB };
+const obb = new OBB(new Vector3(), new Vector3(), new Matrix3());

@@ -16,29 +16,30 @@ const _uvc = new Vector2();
 export class MeshSurfaceSampler<TGeometry extends BufferGeometry, TMaterial extends Material | Material[]> {
   geometry: BufferGeometry;
   randomFunction: () => number;
-  indexAttribute: BufferAttribute;
-  positionAttribute: BufferAttribute;
-  normalAttribute: BufferAttribute;
-  colorAttribute: BufferAttribute;
-  uvAttribute: BufferAttribute;
-  weightAttribute: BufferAttribute;
+  indexAttribute: BufferAttribute<Uint32Array | Uint16Array>;
+  positionAttribute: BufferAttribute<Float32Array>;
+  normalAttribute: BufferAttribute<Float32Array>;
+  colorAttribute: BufferAttribute<Float32Array>;
+  uvAttribute: BufferAttribute<Float32Array>;
+  weightAttribute: BufferAttribute<Float32Array>;
   distribution: Float32Array;
 
   constructor(mesh: Mesh) {
-    this.geometry = mesh.geometry;
+    this.geometry = mesh.geometry as never;
     this.randomFunction = Math.random;
 
-    this.indexAttribute = this.geometry.index!;
-    this.positionAttribute = this.geometry.getAttribute('position')!;
-    this.normalAttribute = this.geometry.getAttribute('normal')!;
-    this.colorAttribute = this.geometry.getAttribute('color')!;
-    this.uvAttribute = this.geometry.getAttribute('uv')!;
+    this.indexAttribute = this.geometry.index! as never as BufferAttribute<Uint32Array | Uint16Array>;
+    this.positionAttribute = this.geometry.getAttribute('position')! as never as BufferAttribute<Float32Array>;
+    this.normalAttribute = this.geometry.getAttribute('normal')! as never as BufferAttribute<Float32Array>;
+    this.colorAttribute = this.geometry.getAttribute('color')! as never as BufferAttribute<Float32Array>;
+    this.uvAttribute = this.geometry.getAttribute('uv')! as never as BufferAttribute<Float32Array>;
 
     this.weightAttribute = null!;
     this.distribution = null!;
   }
 
   setWeightAttribute(name: string): this {
+    //@ts-expect-error
     this.weightAttribute = name ? this.geometry.getAttribute(name) : null;
 
     return this;

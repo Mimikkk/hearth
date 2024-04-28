@@ -60,7 +60,7 @@ export class Vector3 implements IVector3 {
     return this;
   }
 
-  setComponent(index: 0 | 1 | 2, value: number): this {
+  setComponent(index: 0 | 1 | 2 | number, value: number): this {
     switch (index) {
       case 0:
         this.x = value;
@@ -78,7 +78,7 @@ export class Vector3 implements IVector3 {
     return this;
   }
 
-  getComponent(index: 0 | 1 | 2): number {
+  getComponent(index: 0 | 1 | 2 | number): number {
     switch (index) {
       case 0:
         return this.x;
@@ -558,7 +558,7 @@ export class Vector3 implements IVector3 {
     return array;
   }
 
-  fromBufferAttribute(attribute: BufferAttribute | InterleavedBufferAttribute, index: number): this {
+  fromBufferAttribute(attribute: BufferAttribute<Float32Array> | InterleavedBufferAttribute, index: number): this {
     this.x = attribute.getX(index);
     this.y = attribute.getY(index);
     this.z = attribute.getZ(index);
