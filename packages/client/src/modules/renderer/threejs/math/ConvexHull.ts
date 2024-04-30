@@ -715,6 +715,7 @@ export class Face {
   outside: VertexNode | null;
   mark: number;
   edge: HalfEdge | null;
+  materialIndex: number;
 
   constructor() {
     this.normal = new Vector3();

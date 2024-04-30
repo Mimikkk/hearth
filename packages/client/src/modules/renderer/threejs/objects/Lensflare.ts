@@ -1,4 +1,5 @@
 import {
+  Blending,
   Box2,
   BufferGeometry,
   Color,
@@ -8,19 +9,23 @@ import {
   Mesh,
   MeshBasicMaterial,
   RawShaderMaterial,
+  Texture,
   TextureDataType,
   Vector2,
   Vector3,
   Vector4,
 } from '../Three.js';
 
-class Lensflare extends Mesh {
+export class Lensflare extends Mesh {
+  static Geometry: BufferGeometry;
+  declare isLensflare: true;
+  declare type: string | 'Lensflare';
+
+  addElement: (element: LensflareElement) => void;
+  dispose: () => void;
+
   constructor() {
     super(Lensflare.Geometry, new MeshBasicMaterial({ opacity: 0, transparent: true }));
-
-    this.isLensflare = true;
-
-    this.type = 'Lensflare';
     this.frustumCulled = false;
     this.renderOrder = Infinity;
 
@@ -124,7 +129,7 @@ class Lensflare extends Mesh {
 
     //
 
-    const elements = [];
+    const elements: LensflareElement[] = [];
 
     const shader = LensflareElement.Shader;
 
@@ -265,10 +270,31 @@ class Lensflare extends Mesh {
   }
 }
 
+Lensflare.prototype.isLensflare = true;
+Lensflare.prototype.type = 'Lensflare';
+
 //
 
-class LensflareElement {
-  constructor(texture, size = 1, distance = 0, color = new Color(0xffffff)) {
+export class LensflareElement {
+  static Shader: {
+    name: string;
+    uniforms: {
+      map: { value: null };
+      occlusionMap: { value: null };
+      color: { value: null };
+      scale: { value: null };
+      screenPosition: { value: null };
+    };
+    vertexShader: string;
+    fragmentShader: string;
+  };
+
+  texture: Texture;
+  size: number;
+  distance: number;
+  color: Color;
+
+  constructor(texture: Texture, size: number = 1, distance: number = 0, color: Color = new Color(0xffffff)) {
     this.texture = texture;
     this.size = size;
     this.distance = distance;
@@ -359,5 +385,3 @@ Lensflare.Geometry = (function () {
 
   return geometry;
 })();
-
-export { Lensflare, LensflareElement };

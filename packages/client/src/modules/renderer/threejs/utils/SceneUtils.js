@@ -106,7 +106,7 @@ function reduceVertices(object, func, initialValue) {
   object.traverseVisible(child => {
     const { geometry } = child;
 
-    if (geometry !== undefined) {
+    if (geometry !== null) {
       const { position } = geometry.attributes;
 
       if (position !== undefined) {

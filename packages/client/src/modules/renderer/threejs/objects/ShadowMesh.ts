@@ -1,4 +1,4 @@
-import { Matrix4, Mesh, MeshBasicMaterial, StencilFunction, StencilOperation } from '../Three.js';
+import { Matrix4, Mesh, MeshBasicMaterial, Plane, StencilFunction, StencilOperation, Vector4 } from '../Three.js';
 
 /**
  * A shadow Mesh that follows a shadow-casting Mesh in the scene, but is confined to a single plane.
@@ -6,8 +6,13 @@ import { Matrix4, Mesh, MeshBasicMaterial, StencilFunction, StencilOperation } f
 
 const _shadowMatrix = new Matrix4();
 
-class ShadowMesh extends Mesh {
-  constructor(mesh) {
+export class ShadowMesh extends Mesh {
+  declare isShadowMesh: true;
+  declare type: string | 'ShadowMesh';
+
+  meshMatrix: Matrix4;
+
+  constructor(mesh: Mesh) {
     const shadowMaterial = new MeshBasicMaterial({
       color: 0x000000,
       transparent: true,
@@ -19,9 +24,7 @@ class ShadowMesh extends Mesh {
       stencilZPass: StencilOperation.Increment,
     });
 
-    super(mesh.geometry, shadowMaterial);
-
-    this.isShadowMesh = true;
+    super(mesh.geometry!, shadowMaterial);
 
     this.meshMatrix = mesh.matrixWorld;
 
@@ -29,9 +32,7 @@ class ShadowMesh extends Mesh {
     this.matrixAutoUpdate = false;
   }
 
-  update(plane, lightPosition4D) {
-    // based on https://www.opengl.org/archives/resources/features/StencilTalk/tsld021.htm
-
+  update(plane: Plane, lightPosition4D: Vector4) {
     const dot =
       plane.normal.x * lightPosition4D.x +
       plane.normal.y * lightPosition4D.y +
@@ -64,4 +65,5 @@ class ShadowMesh extends Mesh {
   }
 }
 
-export { ShadowMesh };
+ShadowMesh.prototype.isShadowMesh = true;
+ShadowMesh.prototype.type = 'ShadowMesh';

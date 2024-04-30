@@ -44,6 +44,7 @@ export interface Object3DEventMap {
   mouseup: { data: Vector2 };
   mousemove: { data: Vector2 };
   click: { data: Vector2 };
+  dispose: {};
 }
 
 const isCamera = (object: any): object is Camera => object.isCamera;
@@ -58,8 +59,8 @@ export class Object3D<EventMap extends Object3DEventMap = Object3DEventMap> {
 
   eventDispatcher = new EventDispatcher<EventMap>();
 
-  geometry: BufferGeometry | undefined;
-  boundingBox: Box3 | undefined;
+  geometry: BufferGeometry | null;
+  boundingBox: Box3 | null;
   id: number;
   uuid: string;
   name: string;
@@ -85,7 +86,7 @@ export class Object3D<EventMap extends Object3DEventMap = Object3DEventMap> {
   frustumCulled: boolean;
   renderOrder: number;
   animations: any[];
-  userData: { [key: string]: any };
+  userData: Record<string, any>;
 
   constructor() {
     this.id = _object3DId++;

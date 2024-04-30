@@ -14,13 +14,41 @@ import { BoxGeometry, Mesh, ShaderMaterial, Side, UniformsUtils, Vector3 } from 
  * Three.js integration by zz85 http://twitter.com/blurspline
  */
 
-class Sky extends Mesh {
+export class Sky extends Mesh {
+  declare isSky: true;
+  declare type: string | 'Sky';
+  static SkyShader: {
+    name: string;
+    uniforms: {
+      turbidity: {
+        value: number;
+      };
+      rayleigh: {
+        value: number;
+      };
+      mieCoefficient: {
+        value: number;
+      };
+      mieDirectionalG: {
+        value: number;
+      };
+      sunPosition: {
+        value: Vector3;
+      };
+      up: {
+        value: Vector3;
+      };
+    };
+    vertexShader: string;
+    fragmentShader: string;
+  };
+
   constructor() {
     const shader = Sky.SkyShader;
 
     const material = new ShaderMaterial({
       name: shader.name,
-      uniforms: UniformsUtils.clone(shader.uniforms),
+      uniforms: UniformsUtils.clone(shader.uniforms) as any,
       vertexShader: shader.vertexShader,
       fragmentShader: shader.fragmentShader,
       side: Side.Back,
@@ -32,6 +60,9 @@ class Sky extends Mesh {
     this.isSky = true;
   }
 }
+
+Sky.prototype.isSky = true;
+Sky.prototype.type = 'Sky';
 
 Sky.SkyShader = {
   name: 'SkyShader',
@@ -202,5 +233,3 @@ Sky.SkyShader = {
 
 		}`,
 };
-
-export { Sky };

@@ -81,7 +81,7 @@ export class Vector4 implements IVector4 {
     return this;
   }
 
-  setComponent(index: 0 | 1 | 2 | 3, value: number): this {
+  setComponent(index: 0 | 1 | 2 | 3 | number, value: number): this {
     switch (index) {
       case 0:
         this.x = value;
@@ -102,7 +102,7 @@ export class Vector4 implements IVector4 {
     return this;
   }
 
-  getComponent(index: 0 | 1 | 2 | 3): number {
+  getComponent(index: 0 | 1 | 2 | 3 | number): number {
     switch (index) {
       case 0:
         return this.x;
@@ -529,4 +529,5 @@ export class Vector4 implements IVector4 {
     yield this.w;
   }
 }
+
 Vector4.prototype.isVector4 = true;

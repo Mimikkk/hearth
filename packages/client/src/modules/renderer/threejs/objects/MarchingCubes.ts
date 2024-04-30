@@ -1,11 +1,52 @@
-import { BufferAttribute, BufferGeometry, BufferUsage, Color, Mesh, Sphere, Vector3 } from '../Three.js';
+import { BufferAttribute, BufferGeometry, BufferUsage, Color, Material, Mesh, Sphere, Vector3 } from '../Three.js';
 
 /**
  * Port of http://webglsamples.org/blob/blob.html
  */
 
-class MarchingCubes extends Mesh {
-  constructor(resolution, material, enableUvs = false, enableColors = false, maxPolyCount = 10000) {
+export class MarchingCubes extends Mesh {
+  declare isMarchingCubes: true;
+  enableUvs: boolean;
+  enableColors: boolean;
+  resolution: number;
+  isolation: number;
+  size: number;
+  size2: number;
+  size3: number;
+  halfsize: number;
+  delta: number;
+  yd: number;
+  zd: number;
+  field: Float32Array;
+  normal_cache: Float32Array;
+  palette: Float32Array;
+  count: number;
+  positionArray: Float32Array;
+  normalArray: Float32Array;
+  uvArray: Float32Array;
+  colorArray: Float32Array;
+  begin: () => void;
+  end: () => void;
+  init: (resolution: number) => void;
+  addBall: (ballx: number, bally: number, ballz: number, strength: number, subtract: number, colors?: Color) => void;
+  addPlaneX: (strength: number, subtract: number) => void;
+  addPlaneY: (strength: number, subtract: number) => void;
+  addPlaneZ: (strength: number, subtract: number) => void;
+  setCell: (x: number, y: number, z: number, value: number) => void;
+  getCell: (x: number, y: number, z: number) => number;
+
+  blur: (strength: number) => void;
+
+  reset: () => void;
+  update: () => void;
+
+  constructor(
+    resolution: number,
+    material: Material,
+    enableUvs: boolean = false,
+    enableColors: boolean = false,
+    maxPolyCount: number = 10000,
+  ) {
     const geometry = new BufferGeometry();
 
     super(geometry, material);
@@ -88,11 +129,22 @@ class MarchingCubes extends Mesh {
     // Polygonization
     ///////////////////////
 
-    function lerp(a, b, t) {
+    function lerp(a: number, b: number, t: number) {
       return a + (b - a) * t;
     }
 
-    function VIntX(q, offset, isol, x, y, z, valp1, valp2, c_offset1, c_offset2) {
+    function VIntX(
+      q: number,
+      offset: number,
+      isol: number,
+      x: number,
+      y: number,
+      z: number,
+      valp1: number,
+      valp2: number,
+      c_offset1: number,
+      c_offset2: number,
+    ) {
       const mu = (isol - valp1) / (valp2 - valp1),
         nc = scope.normal_cache;
 
@@ -109,7 +161,18 @@ class MarchingCubes extends Mesh {
       clist[offset + 2] = lerp(scope.palette[c_offset1 * 3 + 2], scope.palette[c_offset2 * 3 + 2], mu);
     }
 
-    function VIntY(q, offset, isol, x, y, z, valp1, valp2, c_offset1, c_offset2) {
+    function VIntY(
+      q: number,
+      offset: number,
+      isol: number,
+      x: number,
+      y: number,
+      z: number,
+      valp1: number,
+      valp2: number,
+      c_offset1: number,
+      c_offset2: number,
+    ) {
       const mu = (isol - valp1) / (valp2 - valp1),
         nc = scope.normal_cache;
 
@@ -128,7 +191,18 @@ class MarchingCubes extends Mesh {
       clist[offset + 2] = lerp(scope.palette[c_offset1 * 3 + 2], scope.palette[c_offset2 * 3 + 2], mu);
     }
 
-    function VIntZ(q, offset, isol, x, y, z, valp1, valp2, c_offset1, c_offset2) {
+    function VIntZ(
+      q: number,
+      offset: number,
+      isol: number,
+      x: number,
+      y: number,
+      z: number,
+      valp1: number,
+      valp2: number,
+      c_offset1: number,
+      c_offset2: number,
+    ) {
       const mu = (isol - valp1) / (valp2 - valp1),
         nc = scope.normal_cache;
 
@@ -147,7 +221,7 @@ class MarchingCubes extends Mesh {
       clist[offset + 2] = lerp(scope.palette[c_offset1 * 3 + 2], scope.palette[c_offset2 * 3 + 2], mu);
     }
 
-    function compNorm(q) {
+    function compNorm(q: number) {
       const q3 = q * 3;
 
       if (scope.normal_cache[q3] === 0.0) {
@@ -160,7 +234,7 @@ class MarchingCubes extends Mesh {
     // Returns total number of triangles. Fills triangles.
     // (this is where most of time is spent - it's inner work of O(n3) loop )
 
-    function polygonize(fx, fy, fz, q, isol) {
+    function polygonize(fx: number, fy: number, fz: number, q: number, isol: number) {
       // cache indices
       const q1 = q + 1,
         qy = q + scope.yd,
@@ -300,7 +374,14 @@ class MarchingCubes extends Mesh {
       return numtris;
     }
 
-    function posnormtriv(pos, norm, colors, o1, o2, o3) {
+    function posnormtriv(
+      pos: Float32Array,
+      norm: Float32Array,
+      colors: Float32Array,
+      o1: number,
+      o2: number,
+      o3: number,
+    ) {
       const c = scope.count * 3;
 
       // positions
@@ -319,6 +400,7 @@ class MarchingCubes extends Mesh {
 
       // normals
 
+      //@ts-expect-error
       if (scope.material.flatShading === true) {
         const nx = (norm[o1 + 0] + norm[o2 + 0] + norm[o3 + 0]) / 3;
         const ny = (norm[o1 + 1] + norm[o2 + 1] + norm[o3 + 1]) / 3;
@@ -698,7 +780,7 @@ class MarchingCubes extends Mesh {
 // http://paulbourke.net/geometry/polygonise/
 // who in turn got them from Cory Gene Bloyd.
 
-const edgeTable = new Int32Array([
+export const edgeTable = new Int32Array([
   0x0, 0x109, 0x203, 0x30a, 0x406, 0x50f, 0x605, 0x70c, 0x80c, 0x905, 0xa0f, 0xb06, 0xc0a, 0xd03, 0xe09, 0xf00, 0x190,
   0x99, 0x393, 0x29a, 0x596, 0x49f, 0x795, 0x69c, 0x99c, 0x895, 0xb9f, 0xa96, 0xd9a, 0xc93, 0xf99, 0xe90, 0x230, 0x339,
   0x33, 0x13a, 0x636, 0x73f, 0x435, 0x53c, 0xa3c, 0xb35, 0x83f, 0x936, 0xe3a, 0xf33, 0xc39, 0xd30, 0x3a0, 0x2a9, 0x1a3,
@@ -717,7 +799,7 @@ const edgeTable = new Int32Array([
   0x0,
 ]);
 
-const triTable = new Int32Array([
+export const triTable = new Int32Array([
   -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 8, 3, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
   -1, -1, 0, 1, 9, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 8, 3, 9, 8, 1, -1, -1, -1, -1, -1, -1, -1, -1,
   -1, -1, 1, 2, 10, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 8, 3, 1, 2, 10, -1, -1, -1, -1, -1, -1, -1,
@@ -841,5 +923,3 @@ const triTable = new Int32Array([
   -1, -1, -1, -1, 0, 9, 1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 3, 8, -1, -1, -1, -1, -1, -1, -1, -1,
   -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
 ]);
-
-export { MarchingCubes, edgeTable, triTable };

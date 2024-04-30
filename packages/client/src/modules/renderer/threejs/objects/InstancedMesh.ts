@@ -5,24 +5,36 @@ import { Matrix4 } from '../math/Matrix4.js';
 import { Sphere } from '../math/Sphere.js';
 import { DataTexture } from '../textures/DataTexture.js';
 import { TextureDataType, TextureFormat } from '../constants.js';
+import { BufferGeometry } from '@modules/renderer/threejs/core/BufferGeometry.js';
+import { Material } from '@modules/renderer/threejs/materials/Material.js';
+import { Intersection, Raycaster } from '@modules/renderer/threejs/core/Raycaster.js';
+import { Color } from '@modules/renderer/threejs/math/Color.js';
 
 const _instanceLocalMatrix = /*@__PURE__*/ new Matrix4();
 const _instanceWorldMatrix = /*@__PURE__*/ new Matrix4();
 
-const _instanceIntersects = [];
+const _instanceIntersects: Intersection[] = [];
 
 const _box3 = /*@__PURE__*/ new Box3();
 const _identity = /*@__PURE__*/ new Matrix4();
-const _mesh = /*@__PURE__*/ new Mesh();
+const _mesh = /*@__PURE__*/ new Mesh(null!, null!);
 const _sphere = /*@__PURE__*/ new Sphere();
 
-class InstancedMesh extends Mesh {
-  constructor(geometry, material, count) {
+export class InstancedMesh extends Mesh {
+  declare isInstancedMesh: true;
+  instanceMatrix: InstancedBufferAttribute<Float32Array>;
+  instanceColor: InstancedBufferAttribute<Float32Array> | null;
+  morphTexture: DataTexture | null;
+  count: number;
+  boundingBox: Box3 | null;
+  boundingSphere: Sphere | null;
+
+  constructor(geometry: BufferGeometry, material: Material, count: number) {
     super(geometry, material);
 
     this.isInstancedMesh = true;
 
-    this.instanceMatrix = new InstancedBufferAttribute(new Float32Array(count * 16), 16);
+    this.instanceMatrix = new InstancedBufferAttribute(new Float32Array(count * 16), 16, false, 1);
     this.instanceColor = null;
     this.morphTexture = null;
 
@@ -53,7 +65,7 @@ class InstancedMesh extends Mesh {
     for (let i = 0; i < count; i++) {
       this.getMatrixAt(i, _instanceLocalMatrix);
 
-      _box3.copy(geometry.boundingBox).applyMatrix4(_instanceLocalMatrix);
+      _box3.copy(geometry.boundingBox!).applyMatrix4(_instanceLocalMatrix);
 
       this.boundingBox.union(_box3);
     }
@@ -76,18 +88,19 @@ class InstancedMesh extends Mesh {
     for (let i = 0; i < count; i++) {
       this.getMatrixAt(i, _instanceLocalMatrix);
 
-      _sphere.copy(geometry.boundingSphere).applyMatrix4(_instanceLocalMatrix);
+      _sphere.copy(geometry.boundingSphere!).applyMatrix4(_instanceLocalMatrix);
 
       this.boundingSphere.union(_sphere);
     }
   }
 
-  copy(source, recursive) {
+  copy(source: this, recursive?: boolean): this {
     super.copy(source, recursive);
 
     this.instanceMatrix.copy(source.instanceMatrix);
 
-    if (source.instanceColor !== null) this.instanceColor = source.instanceColor.clone();
+    if (source.instanceColor !== null)
+      this.instanceColor = source.instanceColor.clone() as InstancedBufferAttribute<Float32Array>;
 
     this.count = source.count;
 
@@ -97,18 +110,18 @@ class InstancedMesh extends Mesh {
     return this;
   }
 
-  getColorAt(index, color) {
-    color.fromArray(this.instanceColor.array, index * 3);
+  getColorAt(index: number, color: Color): void {
+    color.fromArray(this.instanceColor!.array as never, index * 3);
   }
 
-  getMatrixAt(index, matrix) {
-    matrix.fromArray(this.instanceMatrix.array, index * 16);
+  getMatrixAt(index: number, matrix: Matrix4): void {
+    matrix.fromArray(this.instanceMatrix.array as never, index * 16);
   }
 
-  getMorphAt(index, object) {
+  getMorphAt(index: number, object: Mesh): void {
     const objectInfluences = object.morphTargetInfluences;
 
-    const array = this.morphTexture.source.data.data;
+    const array = this.morphTexture!.source.data.data;
 
     const len = objectInfluences.length + 1; // All influences + the baseInfluenceSum
 
@@ -119,7 +132,7 @@ class InstancedMesh extends Mesh {
     }
   }
 
-  raycast(raycaster, intersects) {
+  raycast(raycaster: Raycaster, intersects: Intersection[]): void {
     const matrixWorld = this.matrixWorld;
     const raycastTimes = this.count;
 
@@ -132,7 +145,7 @@ class InstancedMesh extends Mesh {
 
     if (this.boundingSphere === null) this.computeBoundingSphere();
 
-    _sphere.copy(this.boundingSphere);
+    _sphere.copy(this.boundingSphere!);
     _sphere.applyMatrix4(matrixWorld);
 
     if (raycaster.ray.intersectsSphere(_sphere) === false) return;
@@ -165,19 +178,19 @@ class InstancedMesh extends Mesh {
     }
   }
 
-  setColorAt(index, color) {
+  setColorAt(index: number, color: Color) {
     if (this.instanceColor === null) {
-      this.instanceColor = new InstancedBufferAttribute(new Float32Array(this.instanceMatrix.count * 3), 3);
+      this.instanceColor = new InstancedBufferAttribute(new Float32Array(this.instanceMatrix.count * 3), 3, false, 1);
     }
 
-    color.toArray(this.instanceColor.array, index * 3);
+    color.toArray(this.instanceColor.array as never, index * 3);
   }
 
-  setMatrixAt(index, matrix) {
-    matrix.toArray(this.instanceMatrix.array, index * 16);
+  setMatrixAt(index: number, matrix: Matrix4) {
+    matrix.toArray(this.instanceMatrix.array as never, index * 16);
   }
 
-  setMorphAt(index, object) {
+  setMorphAt(index: number, object: Mesh) {
     const objectInfluences = object.morphTargetInfluences;
 
     const len = objectInfluences.length + 1; // morphBaseInfluence + all influences
@@ -189,6 +202,13 @@ class InstancedMesh extends Mesh {
         this.count,
         TextureFormat.Red,
         TextureDataType.Float,
+        undefined!,
+        undefined!,
+        undefined!,
+        undefined!,
+        undefined!,
+        undefined!,
+        undefined!,
       );
     }
 
@@ -215,5 +235,3 @@ class InstancedMesh extends Mesh {
     this.eventDispatcher.dispatch({ type: 'dispose' }, this);
   }
 }
-
-export { InstancedMesh };

@@ -5,19 +5,23 @@ import { Object3D } from '../core/Object3D.js';
 import { Vector3 } from '../math/Vector3.js';
 import { PointsMaterial } from '../materials/PointsMaterial.js';
 import { BufferGeometry } from '../core/BufferGeometry.js';
+import { Intersection, Raycaster } from '@modules/renderer/threejs/core/Raycaster.js';
 
 const _inverseMatrix = /*@__PURE__*/ new Matrix4();
 const _ray = /*@__PURE__*/ new Ray();
 const _sphere = /*@__PURE__*/ new Sphere();
 const _position = /*@__PURE__*/ new Vector3();
 
-class Points extends Object3D {
-  constructor(geometry = new BufferGeometry(), material = new PointsMaterial()) {
+export class Points extends Object3D {
+  declare isPoints: true;
+  declare type: string | 'Points';
+  declare geometry: BufferGeometry;
+  declare material: PointsMaterial;
+  morphTargetInfluences: number[];
+  morphTargetDictionary: Record<string, number>;
+
+  constructor(geometry: BufferGeometry, material: PointsMaterial) {
     super();
-
-    this.isPoints = true;
-
-    this.type = 'Points';
 
     this.geometry = geometry;
     this.material = material;
@@ -25,16 +29,16 @@ class Points extends Object3D {
     this.updateMorphTargets();
   }
 
-  copy(source, recursive) {
+  copy(source: this, recursive?: boolean): this {
     super.copy(source, recursive);
 
-    this.material = Array.isArray(source.material) ? source.material.slice() : source.material;
+    this.material = source.material;
     this.geometry = source.geometry;
 
     return this;
   }
 
-  raycast(raycaster, intersects) {
+  raycast(raycaster: Raycaster, intersects: Intersection[]): void {
     const geometry = this.geometry;
     const matrixWorld = this.matrixWorld;
     const threshold = raycaster.params.Points.threshold;
@@ -44,7 +48,7 @@ class Points extends Object3D {
 
     if (geometry.boundingSphere === null) geometry.computeBoundingSphere();
 
-    _sphere.copy(geometry.boundingSphere);
+    _sphere.copy(geometry.boundingSphere!);
     _sphere.applyMatrix4(matrixWorld);
     _sphere.radius += threshold;
 
@@ -92,7 +96,7 @@ class Points extends Object3D {
     const keys = Object.keys(morphAttributes);
 
     if (keys.length > 0) {
-      const morphAttribute = morphAttributes[keys[0]];
+      const morphAttribute = morphAttributes[keys[0]] as unknown as { name: string }[] | undefined;
 
       if (morphAttribute !== undefined) {
         this.morphTargetInfluences = [];
@@ -109,7 +113,18 @@ class Points extends Object3D {
   }
 }
 
-function testPoint(point, index, localThresholdSq, matrixWorld, raycaster, intersects, object) {
+Points.prototype.isPoints = true;
+Points.prototype.type = 'Points';
+
+function testPoint(
+  point: Vector3,
+  index: number,
+  localThresholdSq: number,
+  matrixWorld: Matrix4,
+  raycaster: Raycaster,
+  intersects: Intersection[],
+  object: Points,
+) {
   const rayPointDistanceSq = _ray.distanceSqToPoint(point);
 
   if (rayPointDistanceSq < localThresholdSq) {
@@ -132,5 +147,3 @@ function testPoint(point, index, localThresholdSq, matrixWorld, raycaster, inter
     });
   }
 }
-
-export { Points };
