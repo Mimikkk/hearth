@@ -1,5 +1,5 @@
 import { LineSegments } from '../objects/LineSegments.js';
-import { LineBasicMaterial } from '../materials/LineBasicMaterial.js';
+import { LineBasicMaterial } from '../materials/LineBasicMaterial.ts';
 import { Float32BufferAttribute } from '../core/BufferAttribute.ts';
 import { BufferGeometry } from '../core/BufferGeometry.ts';
 import { Color } from '../math/Color.ts';

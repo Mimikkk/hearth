@@ -6,7 +6,7 @@ import { Matrix4 } from '../math/Matrix4.ts';
 import { Object3D } from '../core/Object3D.ts';
 import { Triangle } from '../math/Triangle.ts';
 import { Side } from '../constants.ts';
-import { MeshBasicMaterial } from '../materials/MeshBasicMaterial.js';
+import { MeshBasicMaterial } from '../materials/MeshBasicMaterial.ts';
 import { BufferGeometry } from '../core/BufferGeometry.ts';
 
 const _inverseMatrix = /*@__PURE__*/ new Matrix4();

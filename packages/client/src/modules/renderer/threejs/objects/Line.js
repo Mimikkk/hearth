@@ -3,7 +3,7 @@ import { Ray } from '../math/Ray.ts';
 import { Matrix4 } from '../math/Matrix4.ts';
 import { Object3D } from '../core/Object3D.ts';
 import { Vector3 } from '../math/Vector3.ts';
-import { LineBasicMaterial } from '../materials/LineBasicMaterial.js';
+import { LineBasicMaterial } from '../materials/LineBasicMaterial.ts';
 import { BufferGeometry } from '../core/BufferGeometry.ts';
 import { Float32BufferAttribute } from '../core/BufferAttribute.ts';
 

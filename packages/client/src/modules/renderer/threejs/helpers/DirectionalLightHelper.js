@@ -3,7 +3,7 @@ import { Object3D } from '../core/Object3D.ts';
 import { Line } from '../objects/Line.js';
 import { Float32BufferAttribute } from '../core/BufferAttribute.ts';
 import { BufferGeometry } from '../core/BufferGeometry.ts';
-import { LineBasicMaterial } from '../materials/LineBasicMaterial.js';
+import { LineBasicMaterial } from '../materials/LineBasicMaterial.ts';
 
 const _v1 = /*@__PURE__*/ new Vector3();
 const _v2 = /*@__PURE__*/ new Vector3();

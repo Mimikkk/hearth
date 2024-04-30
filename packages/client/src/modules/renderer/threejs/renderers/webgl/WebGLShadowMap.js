@@ -1,8 +1,8 @@
 import { Blending, DepthPackingStrategy, Filter, ShadowMap, Side } from '../../constants.ts';
 import { WebGLRenderTarget } from '../WebGLRenderTarget.js';
-import { MeshDepthMaterial } from '../../materials/MeshDepthMaterial.js';
-import { MeshDistanceMaterial } from '../../materials/MeshDistanceMaterial.js';
-import { ShaderMaterial } from '../../materials/ShaderMaterial.js';
+import { MeshDepthMaterial } from '../../materials/MeshDepthMaterial.ts';
+import { MeshDistanceMaterial } from '../../materials/MeshDistanceMaterial.ts';
+import { ShaderMaterial } from '../../materials/ShaderMaterial.ts';
 import { BufferAttribute } from '../../core/BufferAttribute.ts';
 import { BufferGeometry } from '../../core/BufferGeometry.ts';
 import { Mesh } from '../../objects/Mesh.js';

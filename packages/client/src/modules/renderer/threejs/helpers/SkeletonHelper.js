@@ -1,6 +1,6 @@
 import { LineSegments } from '../objects/LineSegments.js';
 import { Matrix4 } from '../math/Matrix4.ts';
-import { LineBasicMaterial } from '../materials/LineBasicMaterial.js';
+import { LineBasicMaterial } from '../materials/LineBasicMaterial.ts';
 import { Color } from '../math/Color.ts';
 import { Vector3 } from '../math/Vector3.ts';
 import { BufferGeometry } from '../core/BufferGeometry.ts';

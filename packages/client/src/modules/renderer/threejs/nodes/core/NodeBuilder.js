@@ -137,7 +137,7 @@ class NodeBuilder {
   }
 
   createPMREMGenerator() {
-    // TODO: Move Materials.js to outside of the Nodes.js in order to remove this function and improve tree-shaking support
+    // TODO: Move Materials.ts to outside of the Nodes.js in order to remove this function and improve tree-shaking support
 
     return new PMREMGenerator(this.renderer);
   }
@@ -930,7 +930,7 @@ class NodeBuilder {
   }
 
   createNodeMaterial(type = 'NodeMaterial') {
-    // TODO: Move Materials.js to outside of the Nodes.js in order to remove this function and improve tree-shaking support
+    // TODO: Move Materials.ts to outside of the Nodes.js in order to remove this function and improve tree-shaking support
 
     return createNodeMaterialFromType(type);
   }

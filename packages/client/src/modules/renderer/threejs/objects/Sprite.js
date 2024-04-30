@@ -6,7 +6,7 @@ import { Object3D } from '../core/Object3D.ts';
 import { BufferGeometry } from '../core/BufferGeometry.ts';
 import { InterleavedBuffer } from '../core/InterleavedBuffer.ts';
 import { InterleavedBufferAttribute } from '../core/InterleavedBufferAttribute.ts';
-import { SpriteMaterial } from '../materials/SpriteMaterial.js';
+import { SpriteMaterial } from '../materials/SpriteMaterial.ts';
 
 let _geometry;
 

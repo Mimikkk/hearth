@@ -1,11 +1,97 @@
-import { Vector2 } from '../math/Vector2.ts';
-import { MeshStandardMaterial } from './MeshStandardMaterial.js';
-import { Color } from '../math/Color.ts';
-import * as MathUtils from '../math/MathUtils.ts';
+import { Vector2 } from '../math/Vector2.js';
+import { MeshStandardMaterial, MeshStandardMaterialParameters } from './MeshStandardMaterial.js';
+import { Color, ColorRepresentation } from '../math/Color.js';
+import * as MathUtils from '../math/MathUtils.js';
+import { Texture } from '../textures/Texture.js';
 
-class MeshPhysicalMaterial extends MeshStandardMaterial {
-  constructor(parameters) {
-    super();
+export interface MeshPhysicalMaterialParameters extends MeshStandardMaterialParameters {
+  clearcoat?: number | undefined;
+  clearcoatMap?: Texture | null | undefined;
+  clearcoatRoughness?: number | undefined;
+  clearcoatRoughnessMap?: Texture | null | undefined;
+  clearcoatNormalScale?: Vector2 | undefined;
+  clearcoatNormalMap?: Texture | null | undefined;
+
+  reflectivity?: number | undefined;
+  ior?: number | undefined;
+
+  sheen?: number | undefined;
+  sheenColor?: ColorRepresentation | undefined;
+  sheenColorMap?: Texture | null | undefined;
+  sheenRoughness?: number | undefined;
+  sheenRoughnessMap?: Texture | null | undefined;
+
+  transmission?: number | undefined;
+  transmissionMap?: Texture | null | undefined;
+
+  thickness?: number | undefined;
+  thicknessMap?: Texture | null | undefined;
+
+  attenuationDistance?: number | undefined;
+  attenuationColor?: ColorRepresentation | undefined;
+
+  specularIntensity?: number | undefined;
+  specularColor?: ColorRepresentation | undefined;
+  specularIntensityMap?: Texture | null | undefined;
+  specularColorMap?: Texture | null | undefined;
+
+  iridescenceMap?: Texture | null | undefined;
+  iridescenceIOR?: number | undefined;
+  iridescence?: number | undefined;
+  iridescenceThicknessRange?: [number, number] | undefined;
+  iridescenceThicknessMap?: Texture | null | undefined;
+
+  anisotropy?: number | undefined;
+  anisotropyRotation?: number | undefined;
+  anisotropyMap?: Texture | null | undefined;
+}
+
+export class MeshPhysicalMaterial extends MeshStandardMaterial {
+  defines: Record<string, any>;
+  declare isMeshPhysicalMaterial: true;
+  declare type: 'MeshPhysicalMaterial';
+
+  anisotropyRotation: number;
+  anisotropyMap: Texture | null;
+  clearcoatMap: Texture | null;
+  clearcoatRoughness: number;
+  clearcoatRoughnessMap: Texture | null;
+  clearcoatNormalScale: Vector2;
+  clearcoatNormalMap: Texture | null;
+  ior: number;
+  iridescenceMap: Texture | null;
+  iridescenceIOR: number;
+  iridescenceThicknessRange: [number, number];
+  iridescenceThicknessMap: Texture | null;
+  sheenColor: Color;
+  sheenColorMap: Texture | null;
+  sheenRoughness: number;
+  sheenRoughnessMap: Texture | null;
+  transmissionMap: Texture | null;
+  thickness: number;
+  thicknessMap: Texture | null;
+  attenuationDistance: number;
+  attenuationColor: Color;
+  specularIntensity: number;
+  specularIntensityMap: Texture | null;
+  specularColor: Color;
+  specularColorMap: Texture | null;
+  _anisotropy: number;
+  _clearcoat: number;
+  _iridescence: number;
+  _sheen: number;
+  _transmission: number;
+
+  set reflectivity(arg: number) {
+    this.ior = (1 + 0.4 * arg) / (1 - 0.4 * arg);
+  }
+
+  get reflectivity(): number {
+    return MathUtils.clamp((2.5 * (this.ior - 1)) / (this.ior + 1), 0, 1);
+  }
+
+  constructor(parameters: MeshPhysicalMaterialParameters) {
+    super(parameters);
 
     this.isMeshPhysicalMaterial = true;
 
@@ -26,15 +112,6 @@ class MeshPhysicalMaterial extends MeshStandardMaterial {
     this.clearcoatNormalMap = null;
 
     this.ior = 1.5;
-
-    Object.defineProperty(this, 'reflectivity', {
-      get: function () {
-        return MathUtils.clamp((2.5 * (this.ior - 1)) / (this.ior + 1), 0, 1);
-      },
-      set: function (reflectivity) {
-        this.ior = (1 + 0.4 * reflectivity) / (1 - 0.4 * reflectivity);
-      },
-    });
 
     this.iridescenceMap = null;
     this.iridescenceIOR = 1.3;
@@ -63,8 +140,6 @@ class MeshPhysicalMaterial extends MeshStandardMaterial {
     this._iridescence = 0;
     this._sheen = 0.0;
     this._transmission = 0;
-
-    this.setValues(parameters);
   }
 
   get anisotropy() {
@@ -127,7 +202,11 @@ class MeshPhysicalMaterial extends MeshStandardMaterial {
     this._transmission = value;
   }
 
-  copy(source) {
+  setValues(values: MeshPhysicalMaterialParameters): void {
+    super.setValues(values);
+  }
+
+  copy(source: this): this {
     super.copy(source);
 
     this.defines = {
@@ -176,5 +255,3 @@ class MeshPhysicalMaterial extends MeshStandardMaterial {
     return this;
   }
 }
-
-export { MeshPhysicalMaterial };

@@ -1,7 +1,7 @@
 import { Mapping, Side, TransferFunction } from '../../constants.ts';
 import { BoxGeometry } from '../../geometries/BoxGeometry.js';
 import { PlaneGeometry } from '../../geometries/PlaneGeometry.js';
-import { ShaderMaterial } from '../../materials/ShaderMaterial.js';
+import { ShaderMaterial } from '../../materials/ShaderMaterial.ts';
 import { Color } from '../../math/Color.ts';
 import { ColorManagement } from '../../math/ColorManagement.ts';
 import { Euler } from '../../math/Euler.ts';

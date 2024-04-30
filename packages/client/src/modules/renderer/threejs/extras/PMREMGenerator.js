@@ -14,11 +14,11 @@ import { BufferGeometry } from '../core/BufferGeometry.ts';
 import { Mesh } from '../objects/Mesh.js';
 import { OrthographicCamera } from '../cameras/OrthographicCamera.ts';
 import { PerspectiveCamera } from '../cameras/PerspectiveCamera.ts';
-import { ShaderMaterial } from '../materials/ShaderMaterial.js';
+import { ShaderMaterial } from '../materials/ShaderMaterial.ts';
 import { Vector3 } from '../math/Vector3.ts';
 import { Color } from '../math/Color.ts';
 import { WebGLRenderTarget } from '../renderers/WebGLRenderTarget.js';
-import { MeshBasicMaterial } from '../materials/MeshBasicMaterial.js';
+import { MeshBasicMaterial } from '../materials/MeshBasicMaterial.ts';
 import { BoxGeometry } from '../geometries/BoxGeometry.js';
 
 const LOD_MIN = 4;

@@ -25,7 +25,7 @@ import {
   LineDashedMaterial,
   LineBasicMaterial,
   Material,
-} from '../materials/Materials.js';
+} from '../materials/Materials.ts';
 
 class MaterialLoader extends Loader {
   constructor(manager) {

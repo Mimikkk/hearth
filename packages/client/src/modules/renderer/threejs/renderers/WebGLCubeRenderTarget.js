@@ -1,7 +1,7 @@
 import { Blending, Filter, Side } from '../constants.ts';
 import { Mesh } from '../objects/Mesh.js';
 import { BoxGeometry } from '../geometries/BoxGeometry.js';
-import { ShaderMaterial } from '../materials/ShaderMaterial.js';
+import { ShaderMaterial } from '../materials/ShaderMaterial.ts';
 import { cloneUniforms } from './shaders/UniformsUtils.js';
 import { WebGLRenderTarget } from './WebGLRenderTarget.js';
 import { CubeCamera } from '../cameras/CubeCamera.ts';

@@ -130,7 +130,7 @@ export * from './loaders/VRMLLoader.js';
 export * from './loaders/VTKLoader.js';
 export * from './loaders/XYZLoader.js';
 
-export * from './materials/MeshGouraudMaterial.js';
+export * from './materials/MeshGouraudMaterial.ts';
 
 export * from './math/Capsule.ts';
 export * from './math/ColorConverter.ts';
