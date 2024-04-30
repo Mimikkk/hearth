@@ -11,7 +11,7 @@ import {
 
 import { BufferAttribute } from '../core/BufferAttribute.ts';
 import { BufferGeometry } from '../core/BufferGeometry.ts';
-import { Mesh } from '../objects/Mesh.js';
+import { Mesh } from '../objects/Mesh.ts';
 import { OrthographicCamera } from '../cameras/OrthographicCamera.ts';
 import { PerspectiveCamera } from '../cameras/PerspectiveCamera.ts';
 import { ShaderMaterial } from '../materials/ShaderMaterial.ts';

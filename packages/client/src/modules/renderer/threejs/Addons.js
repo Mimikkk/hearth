@@ -161,16 +161,16 @@ export * from '@modules/renderer/threejs/modifiers/EdgeSplitModifier.ts';
 export * from '@modules/renderer/threejs/modifiers/SimplifyModifier.ts';
 export * from '@modules/renderer/threejs/modifiers/TessellateModifier.ts';
 
-export * from './objects/GroundedSkybox.js';
-export * from './objects/Lensflare.js';
-export * from './objects/MarchingCubes.js';
-export * from './objects/Reflector.js';
-export * from './objects/ReflectorForSSRPass.js';
-export * from './objects/Refractor.js';
-export * from './objects/ShadowMesh.js';
-export * from './objects/Sky.js';
-export * from './objects/Water.js';
-export { Water as Water2 } from './objects/Water2.js';
+export * from './objects/GroundedSkybox.ts';
+export * from './objects/Lensflare.ts';
+export * from './objects/MarchingCubes.ts';
+export * from './objects/Reflector.ts';
+export * from './objects/ReflectorForSSRPass.ts';
+export * from './objects/Refractor.ts';
+export * from './objects/ShadowMesh.ts';
+export * from './objects/Sky.ts';
+export * from './objects/Water.ts';
+export { Water as Water2 } from './objects/Water2.ts';
 
 export * from './physics/AmmoPhysics.ts';
 export * from './physics/RapierPhysics.ts';

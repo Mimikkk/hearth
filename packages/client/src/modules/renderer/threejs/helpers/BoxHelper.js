@@ -1,5 +1,5 @@
 import { Box3 } from '../math/Box3.ts';
-import { LineSegments } from '../objects/LineSegments.js';
+import { LineSegments } from '../objects/LineSegments.ts';
 import { LineBasicMaterial } from '../materials/LineBasicMaterial.ts';
 import { BufferAttribute } from '../core/BufferAttribute.ts';
 import { BufferGeometry } from '../core/BufferGeometry.ts';

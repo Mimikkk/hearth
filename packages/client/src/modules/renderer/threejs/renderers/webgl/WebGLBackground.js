@@ -6,7 +6,7 @@ import { Color } from '../../math/Color.ts';
 import { ColorManagement } from '../../math/ColorManagement.ts';
 import { Euler } from '../../math/Euler.ts';
 import { Matrix4 } from '../../math/Matrix4.ts';
-import { Mesh } from '../../objects/Mesh.js';
+import { Mesh } from '../../objects/Mesh.ts';
 import { ShaderLib } from '../shaders/ShaderLib.ts';
 import { cloneUniforms, getUnlitUniformColorSpace } from '../shaders/UniformsUtils.js';
 

@@ -1,20 +1,26 @@
-import { TextureDataType, TextureFormat } from '../constants.ts';
+import { TextureDataType, TextureFormat } from '../constants.js';
 import { Bone } from './Bone.js';
-import { Matrix4 } from '../math/Matrix4.ts';
-import { DataTexture } from '../textures/DataTexture.ts';
-import * as MathUtils from '../math/MathUtils.ts';
+import { Matrix4 } from '../math/Matrix4.js';
+import { DataTexture } from '../textures/DataTexture.js';
+import * as MathUtils from '../math/MathUtils.js';
 
 const _offsetMatrix = /*@__PURE__*/ new Matrix4();
 const _identityMatrix = /*@__PURE__*/ new Matrix4();
 
-class Skeleton {
-  constructor(bones = [], boneInverses = []) {
+export class Skeleton {
+  uuid: string;
+  bones: Bone[];
+  boneInverses: Matrix4[];
+  boneMatrices: Float32Array;
+  boneTexture: DataTexture | null;
+  frame: number;
+
+  constructor(bones: Bone[] = [], boneInverses: Matrix4[] = []) {
     this.uuid = MathUtils.generateUuid();
 
     this.bones = bones.slice(0);
     this.boneInverses = boneInverses;
-    this.boneMatrices = null;
-
+    this.boneMatrices = null!;
     this.boneTexture = null;
 
     this.init();
@@ -72,11 +78,13 @@ class Skeleton {
 
     // compute the local matrices, positions, rotations and scales
 
+    const isBone = (bone: any): bone is Bone => bone instanceof Bone;
+
     for (let i = 0, il = this.bones.length; i < il; i++) {
       const bone = this.bones[i];
 
       if (bone) {
-        if (bone.parent && bone.parent.isBone) {
+        if (isBone(bone.parent)) {
           bone.matrix.copy(bone.parent.matrixWorld).invert();
           bone.matrix.multiply(bone.matrixWorld);
         } else {
@@ -102,7 +110,7 @@ class Skeleton {
       const matrix = bones[i] ? bones[i].matrixWorld : _identityMatrix;
 
       _offsetMatrix.multiplyMatrices(matrix, boneInverses[i]);
-      _offsetMatrix.toArray(boneMatrices, i * 16);
+      _offsetMatrix.toArray(boneMatrices as never as number[], i * 16);
     }
 
     if (boneTexture !== null) {
@@ -114,7 +122,7 @@ class Skeleton {
     return new Skeleton(this.bones, this.boneInverses);
   }
 
-  computeBoneTexture() {
+  computeBoneTexture(): this {
     // layout (1 matrix = 4 pixels)
     //      RGBA RGBA RGBA RGBA (=> column1, column2, column3, column4)
     //  with  8x8  pixel texture max   16 bones * 4 pixels =  (8 * 8)
@@ -129,7 +137,20 @@ class Skeleton {
     const boneMatrices = new Float32Array(size * size * 4); // 4 floats per RGBA pixel
     boneMatrices.set(this.boneMatrices); // copy current values
 
-    const boneTexture = new DataTexture(boneMatrices, size, size, TextureFormat.RGBA, TextureDataType.Float);
+    const boneTexture = new DataTexture(
+      boneMatrices,
+      size,
+      size,
+      TextureFormat.RGBA,
+      TextureDataType.Float,
+      undefined!,
+      undefined!,
+      undefined!,
+      undefined!,
+      undefined!,
+      undefined!,
+      undefined!,
+    );
     boneTexture.needsUpdate = true;
 
     this.boneMatrices = boneMatrices;
@@ -138,7 +159,7 @@ class Skeleton {
     return this;
   }
 
-  getBoneByName(name) {
+  getBoneByName(name: string): Bone | undefined {
     for (let i = 0, il = this.bones.length; i < il; i++) {
       const bone = this.bones[i];
 
@@ -158,7 +179,7 @@ class Skeleton {
     }
   }
 
-  fromJSON(json, bones) {
+  fromJSON(json: any, bones: any): any {
     this.uuid = json.uuid;
 
     for (let i = 0, l = json.bones.length; i < l; i++) {
@@ -188,23 +209,20 @@ class Skeleton {
       },
       bones: [],
       boneInverses: [],
+      uuid: this.uuid,
     };
-
-    data.uuid = this.uuid;
 
     const bones = this.bones;
     const boneInverses = this.boneInverses;
 
     for (let i = 0, l = bones.length; i < l; i++) {
       const bone = bones[i];
-      data.bones.push(bone.uuid);
+      data.bones.push(bone.uuid as never);
 
       const boneInverse = boneInverses[i];
-      data.boneInverses.push(boneInverse.toArray());
+      data.boneInverses.push(boneInverse.toArray() as never);
     }
 
     return data;
   }
 }
-
-export { Skeleton };

@@ -1,10 +1,20 @@
-import { Vector3 } from '../math/Vector3.ts';
-import { Object3D } from '../core/Object3D.ts';
+import { Vector3 } from '../math/Vector3.js';
+import { Object3D } from '../core/Object3D.js';
+import { Intersection, Raycaster } from '../core/Raycaster.js';
+import { PerspectiveCamera } from '../cameras/PerspectiveCamera.js';
+import { OrthographicCamera } from '../cameras/OrthographicCamera.js';
 
 const _v1 = /*@__PURE__*/ new Vector3();
 const _v2 = /*@__PURE__*/ new Vector3();
 
-class LOD extends Object3D {
+export class LOD extends Object3D {
+  declare isLOD: true;
+  declare type: string | 'LOD';
+
+  _currentLevel: number;
+  autoUpdate: boolean;
+  levels: { distance: number; hysteresis: number; object: Object3D }[];
+
   constructor() {
     super();
 
@@ -25,8 +35,8 @@ class LOD extends Object3D {
     this.autoUpdate = true;
   }
 
-  copy(source) {
-    super.copy(source, false);
+  copy(source: this, recursive?: boolean): this {
+    super.copy(source, recursive);
 
     const levels = source.levels;
 
@@ -41,7 +51,7 @@ class LOD extends Object3D {
     return this;
   }
 
-  addLevel(object, distance = 0, hysteresis = 0) {
+  addLevel(object: Object3D, distance: number, hysteresis: number): this {
     distance = Math.abs(distance);
 
     const levels = this.levels;
@@ -61,11 +71,7 @@ class LOD extends Object3D {
     return this;
   }
 
-  getCurrentLevel() {
-    return this._currentLevel;
-  }
-
-  getObjectForDistance(distance) {
+  getObjectForDistance(distance: number): Object3D | null {
     const levels = this.levels;
 
     if (levels.length > 0) {
@@ -89,7 +95,7 @@ class LOD extends Object3D {
     return null;
   }
 
-  raycast(raycaster, intersects) {
+  raycast(raycaster: Raycaster, intersects: Intersection[]): void {
     const levels = this.levels;
 
     if (levels.length > 0) {
@@ -97,11 +103,11 @@ class LOD extends Object3D {
 
       const distance = raycaster.ray.origin.distanceTo(_v1);
 
-      this.getObjectForDistance(distance).raycast(raycaster, intersects);
+      this.getObjectForDistance(distance)?.raycast(raycaster, intersects);
     }
   }
 
-  update(camera) {
+  update(camera: PerspectiveCamera | OrthographicCamera) {
     const levels = this.levels;
 
     if (levels.length > 1) {
@@ -137,7 +143,7 @@ class LOD extends Object3D {
     }
   }
 
-  toJSON(meta) {
+  toJSON(meta: any): any {
     const data = super.toJSON(meta);
 
     if (this.autoUpdate === false) data.object.autoUpdate = false;
@@ -160,4 +166,5 @@ class LOD extends Object3D {
   }
 }
 
-export { LOD };
+LOD.prototype.isLOD = true;
+LOD.prototype.type = 'LOD';

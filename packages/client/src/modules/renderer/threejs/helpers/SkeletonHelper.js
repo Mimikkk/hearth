@@ -1,4 +1,4 @@
-import { LineSegments } from '../objects/LineSegments.js';
+import { LineSegments } from '../objects/LineSegments.ts';
 import { Matrix4 } from '../math/Matrix4.ts';
 import { LineBasicMaterial } from '../materials/LineBasicMaterial.ts';
 import { Color } from '../math/Color.ts';

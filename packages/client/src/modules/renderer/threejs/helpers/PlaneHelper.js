@@ -1,5 +1,5 @@
-import { Line } from '../objects/Line.js';
-import { Mesh } from '../objects/Mesh.js';
+import { Line } from '../objects/Line.ts';
+import { Mesh } from '../objects/Mesh.ts';
 import { LineBasicMaterial } from '../materials/LineBasicMaterial.ts';
 import { MeshBasicMaterial } from '../materials/MeshBasicMaterial.ts';
 import { Float32BufferAttribute } from '../core/BufferAttribute.ts';

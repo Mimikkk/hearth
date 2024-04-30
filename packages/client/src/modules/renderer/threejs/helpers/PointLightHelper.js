@@ -1,4 +1,4 @@
-import { Mesh } from '../objects/Mesh.js';
+import { Mesh } from '../objects/Mesh.ts';
 import { MeshBasicMaterial } from '../materials/MeshBasicMaterial.ts';
 import { SphereGeometry } from '../geometries/SphereGeometry.js';
 

@@ -15,7 +15,7 @@ import { PointsMaterial } from '../../../threejs/Three.js';
 
 const defaultValues = new PointsMaterial();
 
-class InstancedPointsNodeMaterial extends NodeMaterial {
+export class InstancedPointsNodeMaterial extends NodeMaterial {
   constructor(params = {}) {
     super();
 

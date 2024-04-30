@@ -1,6 +1,6 @@
 import { Camera } from '../cameras/Camera.ts';
 import { Vector3 } from '../math/Vector3.ts';
-import { LineSegments } from '../objects/LineSegments.js';
+import { LineSegments } from '../objects/LineSegments.ts';
 import { Color } from '../math/Color.ts';
 import { LineBasicMaterial } from '../materials/LineBasicMaterial.ts';
 import { BufferGeometry } from '../core/BufferGeometry.ts';

@@ -1,10 +1,10 @@
-import { InstancedBufferAttribute } from '../core/InstancedBufferAttribute.ts';
+import { InstancedBufferAttribute } from '../core/InstancedBufferAttribute.js';
 import { Mesh } from './Mesh.js';
-import { Box3 } from '../math/Box3.ts';
-import { Matrix4 } from '../math/Matrix4.ts';
-import { Sphere } from '../math/Sphere.ts';
-import { DataTexture } from '../textures/DataTexture.ts';
-import { TextureDataType, TextureFormat } from '../constants.ts';
+import { Box3 } from '../math/Box3.js';
+import { Matrix4 } from '../math/Matrix4.js';
+import { Sphere } from '../math/Sphere.js';
+import { DataTexture } from '../textures/DataTexture.js';
+import { TextureDataType, TextureFormat } from '../constants.js';
 
 const _instanceLocalMatrix = /*@__PURE__*/ new Matrix4();
 const _instanceWorldMatrix = /*@__PURE__*/ new Matrix4();

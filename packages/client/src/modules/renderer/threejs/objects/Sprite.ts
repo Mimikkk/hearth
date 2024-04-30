@@ -1,14 +1,14 @@
-import { Vector2 } from '../math/Vector2.ts';
-import { Vector3 } from '../math/Vector3.ts';
-import { Matrix4 } from '../math/Matrix4.ts';
-import { Triangle } from '../math/Triangle.ts';
-import { Object3D } from '../core/Object3D.ts';
-import { BufferGeometry } from '../core/BufferGeometry.ts';
-import { InterleavedBuffer } from '../core/InterleavedBuffer.ts';
-import { InterleavedBufferAttribute } from '../core/InterleavedBufferAttribute.ts';
-import { SpriteMaterial } from '../materials/SpriteMaterial.ts';
-
-let _geometry;
+import { Vector2 } from '../math/Vector2.js';
+import { Vector3 } from '../math/Vector3.js';
+import { Matrix4 } from '../math/Matrix4.js';
+import { Triangle } from '../math/Triangle.js';
+import { Object3D } from '../core/Object3D.js';
+import { BufferGeometry } from '../core/BufferGeometry.js';
+import { InterleavedBuffer } from '../core/InterleavedBuffer.js';
+import { InterleavedBufferAttribute } from '../core/InterleavedBufferAttribute.js';
+import { SpriteMaterial } from '../materials/SpriteMaterial.js';
+import { Intersection, Raycaster } from '../core/Raycaster.js';
+import { PerspectiveCamera } from '../cameras/PerspectiveCamera.js';
 
 const _intersectPoint = /*@__PURE__*/ new Vector3();
 const _worldScale = /*@__PURE__*/ new Vector3();
@@ -26,8 +26,17 @@ const _uvA = /*@__PURE__*/ new Vector2();
 const _uvB = /*@__PURE__*/ new Vector2();
 const _uvC = /*@__PURE__*/ new Vector2();
 
-class Sprite extends Object3D {
-  constructor(material = new SpriteMaterial()) {
+let _geometry: BufferGeometry;
+
+export class Sprite extends Object3D {
+  declare isSprite: true;
+  declare type: string | 'Sprite';
+
+  center: Vector2;
+  geometry: BufferGeometry;
+  material: SpriteMaterial;
+
+  constructor(material: SpriteMaterial) {
     super();
 
     this.isSprite = true;
@@ -54,9 +63,9 @@ class Sprite extends Object3D {
     this.center = new Vector2(0.5, 0.5);
   }
 
-  raycast(raycaster, intersects) {
+  raycast(raycaster: Raycaster, intersects: Intersection[]): void {
     if (raycaster.camera === null) {
-      console.error('THREE.Sprite: "Raycaster.camera" needs to be set in order to raycast against sprites.');
+      throw Error('THREE.Sprite: "Raycaster.camera" needs to be set in order to raycast against sprites.');
     }
 
     _worldScale.setFromMatrixScale(this.matrixWorld);
@@ -66,12 +75,13 @@ class Sprite extends Object3D {
 
     _mvPosition.setFromMatrixPosition(this.modelViewMatrix);
 
-    if (raycaster.camera.isPerspectiveCamera && this.material.sizeAttenuation === false) {
+    if (raycaster.camera instanceof PerspectiveCamera && this.material.sizeAttenuation === false) {
       _worldScale.multiplyScalar(-_mvPosition.z);
     }
 
     const rotation = this.material.rotation;
-    let sin, cos;
+    let sin: number | undefined;
+    let cos: number | undefined;
 
     if (rotation !== 0) {
       cos = Math.cos(rotation);
@@ -92,7 +102,6 @@ class Sprite extends Object3D {
     let intersect = raycaster.ray.intersectTriangle(_vA, _vB, _vC, false, _intersectPoint);
 
     if (intersect === null) {
-      // check second triangle
       transformVertex(_vB.set(-0.5, 0.5, 0), _mvPosition, center, _worldScale, sin, cos);
       _uvB.set(0, 1);
 
@@ -109,13 +118,13 @@ class Sprite extends Object3D {
     intersects.push({
       distance: distance,
       point: _intersectPoint.clone(),
-      uv: Triangle.getInterpolation(_intersectPoint, _vA, _vB, _vC, _uvA, _uvB, _uvC, new Vector2()),
+      uv: Triangle.getInterpolation(_intersectPoint, _vA, _vB, _vC, _uvA, _uvB, _uvC, new Vector2())!,
       face: null,
       object: this,
     });
   }
 
-  copy(source, recursive) {
+  copy(source: this, recursive?: boolean): this {
     super.copy(source, recursive);
 
     if (source.center !== undefined) this.center.copy(source.center);
@@ -126,12 +135,22 @@ class Sprite extends Object3D {
   }
 }
 
-function transformVertex(vertexPosition, mvPosition, center, scale, sin, cos) {
+Sprite.prototype.isSprite = true;
+Sprite.prototype.type = 'Sprite';
+
+function transformVertex(
+  vertexPosition: Vector3,
+  mvPosition: Vector3,
+  center: Vector2,
+  scale: Vector3,
+  sin?: number,
+  cos?: number,
+) {
   // compute position in camera space
   _alignedPosition.subVectors(vertexPosition, center).addScalar(0.5).multiply(scale);
 
   // to check if rotation is not zero
-  if (sin !== undefined) {
+  if (sin !== undefined && cos !== undefined) {
     _rotatedPosition.x = cos * _alignedPosition.x - sin * _alignedPosition.y;
     _rotatedPosition.y = sin * _alignedPosition.x + cos * _alignedPosition.y;
   } else {
@@ -145,5 +164,3 @@ function transformVertex(vertexPosition, mvPosition, center, scale, sin, cos) {
   // transform to world space
   vertexPosition.applyMatrix4(_viewWorldMatrix);
 }
-
-export { Sprite };

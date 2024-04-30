@@ -1,21 +1,16 @@
-import { BufferAttribute } from '../core/BufferAttribute.ts';
-import { BufferGeometry } from '../core/BufferGeometry.ts';
-import { DataTexture } from '../textures/DataTexture.ts';
-import { TextureDataType, TextureFormat } from '../constants.ts';
-import { Matrix4 } from '../math/Matrix4.ts';
+import { BufferAttribute } from '../core/BufferAttribute.js';
+import { BufferGeometry } from '../core/BufferGeometry.js';
+import { DataTexture } from '../textures/DataTexture.js';
+import { TextureDataType, TextureFormat } from '../constants.js';
+import { Matrix4 } from '../math/Matrix4.js';
 import { Mesh } from './Mesh.js';
-import { Box3 } from '../math/Box3.ts';
-import { Sphere } from '../math/Sphere.ts';
-import { Frustum } from '../math/Frustum.ts';
-import { Vector3 } from '../math/Vector3.ts';
+import { Box3 } from '../math/Box3.js';
+import { Sphere } from '../math/Sphere.js';
+import { Frustum } from '../math/Frustum.js';
+import { Vector3 } from '../math/Vector3.js';
 
-function sortOpaque(a, b) {
-  return a.z - b.z;
-}
-
-function sortTransparent(a, b) {
-  return b.z - a.z;
-}
+const sortAsc = (a: { z: number }, b: { z: number }): number => a.z - b.z;
+const sortDesc = (a: { z: number }, b: { z: number }): number => b.z - a.z;
 
 class MultiDrawRenderList {
   constructor() {
@@ -51,17 +46,17 @@ class MultiDrawRenderList {
 }
 
 const ID_ATTR_NAME = 'batchId';
-const _matrix = /*@__PURE__*/ new Matrix4();
-const _invMatrixWorld = /*@__PURE__*/ new Matrix4();
-const _identityMatrix = /*@__PURE__*/ new Matrix4();
-const _projScreenMatrix = /*@__PURE__*/ new Matrix4();
-const _frustum = /*@__PURE__*/ new Frustum();
-const _box = /*@__PURE__*/ new Box3();
-const _sphere = /*@__PURE__*/ new Sphere();
-const _vector = /*@__PURE__*/ new Vector3();
-const _renderList = /*@__PURE__*/ new MultiDrawRenderList();
-const _mesh = /*@__PURE__*/ new Mesh();
-const _batchIntersects = [];
+const _matrix = new Matrix4();
+const _invMatrixWorld = new Matrix4();
+const _identityMatrix = new Matrix4();
+const _projScreenMatrix = new Matrix4();
+const _frustum = new Frustum();
+const _box = new Box3();
+const _sphere = new Sphere();
+const _vector = new Vector3();
+const _renderList = new MultiDrawRenderList();
+const _mesh = new Mesh();
+const _batchIntersects: number[] = [];
 
 // @TODO: SkinnedMesh support?
 // @TODO: geometry.groups support?
@@ -90,7 +85,7 @@ function copyAttributeData(src, target, targetOffset = 0) {
   target.needsUpdate = true;
 }
 
-class BatchedMesh extends Mesh {
+export class BatchedMesh extends Mesh {
   get maxGeometryCount() {
     return this._maxGeometryCount;
   }
@@ -742,7 +737,7 @@ class BatchedMesh extends Mesh {
       const list = _renderList.list;
       const customSort = this.customSort;
       if (customSort === null) {
-        list.sort(material.transparent ? sortTransparent : sortOpaque);
+        list.sort(material.transparent ? sortDesc : sortAsc);
       } else {
         customSort.call(this, list, camera);
       }
@@ -785,5 +780,3 @@ class BatchedMesh extends Mesh {
     this.onBeforeRender(renderer, null, shadowCamera, geometry, depthMaterial);
   }
 }
-
-export { BatchedMesh };

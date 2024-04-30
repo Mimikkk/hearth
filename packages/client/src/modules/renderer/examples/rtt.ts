@@ -6,7 +6,7 @@ import { WebGL } from '@modules/renderer/threejs/capabilities/WebGL.js';
 
 import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 
-import QuadMesh from '../threejs/objects/QuadMesh.js';
+import { QuadMesh } from '../threejs/objects/QuadMesh.js';
 
 let camera, scene, renderer;
 const mouse = new THREE.Vector2();

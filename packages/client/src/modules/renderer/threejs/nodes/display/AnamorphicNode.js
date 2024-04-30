@@ -7,7 +7,7 @@ import { threshold } from './ColorAdjustmentNode.js';
 import { uv } from '../accessors/UVNode.js';
 import { texturePass } from './PassNode.js';
 import { Vector2, RenderTarget } from '../../../threejs/Three.js';
-import QuadMesh from '../../../threejs/objects/QuadMesh.js';
+import { QuadMesh } from '../../objects/QuadMesh.ts';
 
 const quadMesh = new QuadMesh();
 

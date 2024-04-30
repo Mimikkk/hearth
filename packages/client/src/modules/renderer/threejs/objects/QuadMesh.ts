@@ -1,4 +1,5 @@
-import { BufferGeometry, Float32BufferAttribute, Mesh, OrthographicCamera } from '../Three.js';
+import { BufferGeometry, Float32BufferAttribute, Material, Mesh, OrthographicCamera } from '../Three.js';
+import Renderer from '@modules/renderer/threejs/renderers/common/Renderer.js';
 
 // Helper for passes that need to fill the viewport with a single quad.
 
@@ -6,7 +7,7 @@ const _camera = new OrthographicCamera(-1, 1, 1, -1, 0, 1);
 
 // https://github.com/mrdoob/three.js/pull/21358
 
-class QuadGeometry extends BufferGeometry {
+export class QuadGeometry extends BufferGeometry {
   constructor(flipY = false) {
     super();
 
@@ -19,20 +20,20 @@ class QuadGeometry extends BufferGeometry {
 
 const _geometry = new QuadGeometry();
 
-class QuadMesh extends Mesh {
-  constructor(material = null) {
-    super(_geometry, material);
+export class QuadMesh extends Mesh {
+  camera: OrthographicCamera;
+
+  constructor(material: Material | null) {
+    super(_geometry, material!);
 
     this.camera = _camera;
   }
 
-  renderAsync(renderer) {
+  renderAsync(renderer: Renderer): Promise<void> {
     return renderer.renderAsync(this, _camera);
   }
 
-  render(renderer) {
+  render(renderer: Renderer): void {
     renderer.render(this, _camera);
   }
 }
-
-export default QuadMesh;

@@ -4,8 +4,8 @@ import { Object3D } from '../core/Object3D.ts';
 import { CylinderGeometry } from '../geometries/CylinderGeometry.js';
 import { MeshBasicMaterial } from '../materials/MeshBasicMaterial.ts';
 import { LineBasicMaterial } from '../materials/LineBasicMaterial.ts';
-import { Mesh } from '../objects/Mesh.js';
-import { Line } from '../objects/Line.js';
+import { Mesh } from '../objects/Mesh.ts';
+import { Line } from '../objects/Line.ts';
 import { Vector3 } from '../math/Vector3.ts';
 
 const _axis = /*@__PURE__*/ new Vector3();

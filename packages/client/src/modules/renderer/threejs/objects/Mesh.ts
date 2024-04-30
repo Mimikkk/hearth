@@ -1,13 +1,14 @@
-import { Vector3 } from '../math/Vector3.ts';
-import { Vector2 } from '../math/Vector2.ts';
-import { Sphere } from '../math/Sphere.ts';
-import { Ray } from '../math/Ray.ts';
-import { Matrix4 } from '../math/Matrix4.ts';
-import { Object3D } from '../core/Object3D.ts';
-import { Triangle } from '../math/Triangle.ts';
-import { Side } from '../constants.ts';
-import { MeshBasicMaterial } from '../materials/MeshBasicMaterial.ts';
-import { BufferGeometry } from '../core/BufferGeometry.ts';
+import { Vector3 } from '../math/Vector3.js';
+import { Vector2 } from '../math/Vector2.js';
+import { Sphere } from '../math/Sphere.js';
+import { Ray } from '../math/Ray.js';
+import { Matrix4 } from '../math/Matrix4.js';
+import { Object3D } from '../core/Object3D.js';
+import { Triangle } from '../math/Triangle.js';
+import { Side } from '../constants.js';
+import { MeshBasicMaterial } from '../materials/MeshBasicMaterial.js';
+import { BufferGeometry } from '../core/BufferGeometry.js';
+import { Material } from '@modules/renderer/threejs/materials/Material.js';
 
 const _inverseMatrix = /*@__PURE__*/ new Matrix4();
 const _ray = /*@__PURE__*/ new Ray();
@@ -32,8 +33,8 @@ const _normalC = /*@__PURE__*/ new Vector3();
 const _intersectionPoint = /*@__PURE__*/ new Vector3();
 const _intersectionPointWorld = /*@__PURE__*/ new Vector3();
 
-class Mesh extends Object3D {
-  constructor(geometry = new BufferGeometry(), material = new MeshBasicMaterial()) {
+export class Mesh extends Object3D {
+  constructor(geometry: BufferGeometry = new BufferGeometry(), material: Material = new MeshBasicMaterial()) {
     super();
 
     this.isMesh = true;
@@ -369,5 +370,3 @@ function checkGeometryIntersection(object, material, raycaster, ray, uv, uv1, no
 
   return intersection;
 }
-
-export { Mesh };

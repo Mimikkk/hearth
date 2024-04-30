@@ -1,5 +1,5 @@
 import { Blending, Filter, Side } from '../constants.ts';
-import { Mesh } from '../objects/Mesh.js';
+import { Mesh } from '../objects/Mesh.ts';
 import { BoxGeometry } from '../geometries/BoxGeometry.js';
 import { ShaderMaterial } from '../materials/ShaderMaterial.ts';
 import { cloneUniforms } from './shaders/UniformsUtils.js';

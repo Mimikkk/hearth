@@ -1,11 +1,14 @@
-import { Sphere } from '../math/Sphere.ts';
-import { Ray } from '../math/Ray.ts';
-import { Matrix4 } from '../math/Matrix4.ts';
-import { Object3D } from '../core/Object3D.ts';
-import { Vector3 } from '../math/Vector3.ts';
-import { LineBasicMaterial } from '../materials/LineBasicMaterial.ts';
-import { BufferGeometry } from '../core/BufferGeometry.ts';
-import { Float32BufferAttribute } from '../core/BufferAttribute.ts';
+import { Sphere } from '../math/Sphere.js';
+import { Ray } from '../math/Ray.js';
+import { Matrix4 } from '../math/Matrix4.js';
+import { Object3D } from '../core/Object3D.js';
+import { Vector3 } from '../math/Vector3.js';
+import { LineBasicMaterial } from '../materials/LineBasicMaterial.js';
+import { BufferGeometry } from '../core/BufferGeometry.js';
+import { Float32BufferAttribute } from '../core/BufferAttribute.js';
+import { Material } from '@modules/renderer/threejs/materials/Material.js';
+import { Intersection, Raycaster } from '@modules/renderer/threejs/core/Raycaster.js';
+import { LineSegments } from '@modules/renderer/threejs/objects/LineSegments.js';
 
 const _start = /*@__PURE__*/ new Vector3();
 const _end = /*@__PURE__*/ new Vector3();
@@ -13,13 +16,15 @@ const _inverseMatrix = /*@__PURE__*/ new Matrix4();
 const _ray = /*@__PURE__*/ new Ray();
 const _sphere = /*@__PURE__*/ new Sphere();
 
-class Line extends Object3D {
-  constructor(geometry = new BufferGeometry(), material = new LineBasicMaterial()) {
+export class Line extends Object3D {
+  declare isLine: true;
+  declare type: string | 'Line';
+
+  material: Material;
+  geometry: BufferGeometry;
+
+  constructor(geometry: BufferGeometry, material: LineBasicMaterial) {
     super();
-
-    this.isLine = true;
-
-    this.type = 'Line';
 
     this.geometry = geometry;
     this.material = material;
@@ -27,10 +32,10 @@ class Line extends Object3D {
     this.updateMorphTargets();
   }
 
-  copy(source, recursive) {
+  copy(source: this, recursive?: boolean): this {
     super.copy(source, recursive);
 
-    this.material = Array.isArray(source.material) ? source.material.slice() : source.material;
+    this.material = source.material;
     this.geometry = source.geometry;
 
     return this;
@@ -55,13 +60,13 @@ class Line extends Object3D {
 
       geometry.setAttribute('lineDistance', new Float32BufferAttribute(lineDistances, 1));
     } else {
-      console.warn('THREE.Line.computeLineDistances(): Computation only possible with non-indexed BufferGeometry.');
+      throw Error('THREE.Line.computeLineDistances(): Computation only possible with non-indexed BufferGeometry.');
     }
 
     return this;
   }
 
-  raycast(raycaster, intersects) {
+  raycast(raycaster: Raycaster, intersects: Intersection[]): void {
     const geometry = this.geometry;
     const matrixWorld = this.matrixWorld;
     const threshold = raycaster.params.Line.threshold;
@@ -71,7 +76,7 @@ class Line extends Object3D {
 
     if (geometry.boundingSphere === null) geometry.computeBoundingSphere();
 
-    _sphere.copy(geometry.boundingSphere);
+    _sphere.copy(geometry.boundingSphere!);
     _sphere.applyMatrix4(matrixWorld);
     _sphere.radius += threshold;
 
@@ -89,7 +94,9 @@ class Line extends Object3D {
     const vEnd = new Vector3();
     const interSegment = new Vector3();
     const interRay = new Vector3();
-    const step = this.isLineSegments ? 2 : 1;
+
+    const isLineSegments = (object: any): object is LineSegments => object.isLineSegments;
+    const step = isLineSegments(this) ? 2 : 1;
 
     const index = geometry.index;
     const attributes = geometry.attributes;
@@ -122,8 +129,6 @@ class Line extends Object3D {
           // point: raycaster.ray.at( distance ),
           point: interSegment.clone().applyMatrix4(this.matrixWorld),
           index: i,
-          face: null,
-          faceIndex: null,
           object: this,
         });
       }
@@ -151,13 +156,14 @@ class Line extends Object3D {
           // point: raycaster.ray.at( distance ),
           point: interSegment.clone().applyMatrix4(this.matrixWorld),
           index: i,
-          face: null,
-          faceIndex: null,
           object: this,
         });
       }
     }
   }
+
+  morphTargetInfluences: number[] = [];
+  morphTargetDictionary: Record<string, number> = {};
 
   updateMorphTargets() {
     const geometry = this.geometry;
@@ -166,7 +172,7 @@ class Line extends Object3D {
     const keys = Object.keys(morphAttributes);
 
     if (keys.length > 0) {
-      const morphAttribute = morphAttributes[keys[0]];
+      const morphAttribute = morphAttributes[keys[0]] as unknown as { name: string }[];
 
       if (morphAttribute !== undefined) {
         this.morphTargetInfluences = [];
@@ -183,4 +189,5 @@ class Line extends Object3D {
   }
 }
 
-export { Line };
+Line.prototype.isLine = true;
+Line.prototype.type = 'Line';

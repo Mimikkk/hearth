@@ -1,18 +1,13 @@
 import { Line } from './Line.js';
-import { Vector3 } from '../math/Vector3.ts';
-import { Float32BufferAttribute } from '../core/BufferAttribute.ts';
+import { Vector3 } from '../math/Vector3.js';
+import { Float32BufferAttribute } from '../core/BufferAttribute.js';
 
 const _start = /*@__PURE__*/ new Vector3();
 const _end = /*@__PURE__*/ new Vector3();
 
-class LineSegments extends Line {
-  constructor(geometry, material) {
-    super(geometry, material);
-
-    this.isLineSegments = true;
-
-    this.type = 'LineSegments';
-  }
+export class LineSegments extends Line {
+  declare isLineSegments: true;
+  declare type: string | 'LineSegments';
 
   computeLineDistances() {
     const geometry = this.geometry;
@@ -21,7 +16,7 @@ class LineSegments extends Line {
 
     if (geometry.index === null) {
       const positionAttribute = geometry.attributes.position;
-      const lineDistances = [];
+      const lineDistances: number[] = [];
 
       for (let i = 0, l = positionAttribute.count; i < l; i += 2) {
         _start.fromBufferAttribute(positionAttribute, i);
@@ -33,7 +28,7 @@ class LineSegments extends Line {
 
       geometry.setAttribute('lineDistance', new Float32BufferAttribute(lineDistances, 1));
     } else {
-      console.warn(
+      throw Error(
         'THREE.LineSegments.computeLineDistances(): Computation only possible with non-indexed BufferGeometry.',
       );
     }
@@ -42,4 +37,5 @@ class LineSegments extends Line {
   }
 }
 
-export { LineSegments };
+LineSegments.prototype.isLineSegments = true;
+LineSegments.prototype.type = 'LineSegments';

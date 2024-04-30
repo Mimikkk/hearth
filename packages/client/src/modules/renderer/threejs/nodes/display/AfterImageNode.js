@@ -7,7 +7,7 @@ import { texturePass } from './PassNode.js';
 import { uniform } from '../core/UniformNode.js';
 import { RenderTarget } from '../../../threejs/Three.js';
 import { sign, max } from '../math/MathNode.js';
-import QuadMesh from '../../../threejs/objects/QuadMesh.js';
+import { QuadMesh } from '../../objects/QuadMesh.ts';
 
 const quadMeshComp = new QuadMesh();
 

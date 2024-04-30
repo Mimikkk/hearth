@@ -1,4 +1,4 @@
-import { Mesh, MeshBasicMaterial, SphereGeometry, Vector3 } from '../Three.js';
+import { Mesh, MeshBasicMaterial, SphereGeometry, Texture, Vector3 } from '../Three.js';
 
 /**
  * A ground-projected skybox. The height is how far the camera that took the photo was above the ground -
@@ -7,8 +7,8 @@ import { Mesh, MeshBasicMaterial, SphereGeometry, Vector3 } from '../Three.js';
  * large enough to ensure your user's camera stays inside.
  */
 
-class GroundedSkybox extends Mesh {
-  constructor(map, height, radius, resolution = 128) {
+export class GroundedSkybox extends Mesh {
+  constructor(map: Texture, height: number, radius: number, resolution: number = 128) {
     if (height <= 0 || radius <= 0 || resolution <= 0) {
       throw new Error('GroundedSkybox height, radius, and resolution must be positive.');
     }
@@ -21,12 +21,13 @@ class GroundedSkybox extends Mesh {
 
     for (let i = 0; i < pos.count; ++i) {
       tmp.fromBufferAttribute(pos, i);
+
       if (tmp.y < 0) {
         // Smooth out the transition from flat floor to sphere:
         const y1 = (-height * 3) / 2;
         const f = tmp.y < y1 ? -height / tmp.y : 1 - (tmp.y * tmp.y) / (3 * y1 * y1);
         tmp.multiplyScalar(f);
-        tmp.toArray(pos.array, 3 * i);
+        tmp.toArray(pos.array as never as number[], 3 * i);
       }
     }
 
@@ -35,5 +36,3 @@ class GroundedSkybox extends Mesh {
     super(geometry, new MeshBasicMaterial({ map, depthWrite: false }));
   }
 }
-
-export { GroundedSkybox };

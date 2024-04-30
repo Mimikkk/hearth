@@ -5,7 +5,7 @@ import { MeshDistanceMaterial } from '../../materials/MeshDistanceMaterial.ts';
 import { ShaderMaterial } from '../../materials/ShaderMaterial.ts';
 import { BufferAttribute } from '../../core/BufferAttribute.ts';
 import { BufferGeometry } from '../../core/BufferGeometry.ts';
-import { Mesh } from '../../objects/Mesh.js';
+import { Mesh } from '../../objects/Mesh.ts';
 import { Vector4 } from '../../math/Vector4.ts';
 import { Vector2 } from '../../math/Vector2.ts';
 import { Frustum } from '../../math/Frustum.ts';

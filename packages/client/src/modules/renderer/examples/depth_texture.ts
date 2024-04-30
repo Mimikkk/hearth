@@ -6,7 +6,7 @@ import { WebGL } from '@modules/renderer/threejs/capabilities/WebGL.js';
 
 import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 
-import QuadMesh from '../threejs/objects/QuadMesh.js';
+import { QuadMesh } from '../threejs/objects/QuadMesh.js';
 
 import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
 import { TextureDataType } from '../threejs/Three.js';

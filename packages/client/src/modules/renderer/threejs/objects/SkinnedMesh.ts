@@ -1,11 +1,11 @@
 import { Mesh } from './Mesh.js';
-import { Box3 } from '../math/Box3.ts';
-import { Matrix4 } from '../math/Matrix4.ts';
-import { Sphere } from '../math/Sphere.ts';
-import { Vector3 } from '../math/Vector3.ts';
-import { Vector4 } from '../math/Vector4.ts';
-import { Ray } from '../math/Ray.ts';
-import { BindMode } from '../constants.ts';
+import { Box3 } from '../math/Box3.js';
+import { Matrix4 } from '../math/Matrix4.js';
+import { Sphere } from '../math/Sphere.js';
+import { Vector3 } from '../math/Vector3.js';
+import { Vector4 } from '../math/Vector4.js';
+import { Ray } from '../math/Ray.js';
+import { BindMode } from '../constants.js';
 
 const _basePosition = /*@__PURE__*/ new Vector3();
 
@@ -20,7 +20,7 @@ const _sphere = /*@__PURE__*/ new Sphere();
 const _inverseMatrix = /*@__PURE__*/ new Matrix4();
 const _ray = /*@__PURE__*/ new Ray();
 
-class SkinnedMesh extends Mesh {
+export class SkinnedMesh extends Mesh {
   constructor(geometry, material) {
     super(geometry, material);
 
@@ -201,5 +201,3 @@ class SkinnedMesh extends Mesh {
     return vector.applyMatrix4(this.bindMatrixInverse);
   }
 }
-
-export { SkinnedMesh };
