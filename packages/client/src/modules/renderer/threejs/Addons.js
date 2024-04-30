@@ -7,7 +7,6 @@ export * from './cameras/CinematicCamera.ts';
 
 export { WebGL } from '@modules/renderer/threejs/capabilities/WebGL.ts';
 
-export * from '@modules/renderer/threejs/controls/ArcballControls.ts';
 export * from '@modules/renderer/threejs/controls/DragControls.ts';
 export * from '@modules/renderer/threejs/controls/FirstPersonControls.ts';
 export * from '@modules/renderer/threejs/controls/FlyControls.ts';
@@ -38,15 +37,9 @@ export * from '@modules/renderer/threejs/effects/StereoEffect.ts';
 export * from '@modules/renderer/threejs/environments/DebugEnvironment.ts';
 export * from '@modules/renderer/threejs/environments/RoomEnvironment.ts';
 
-export * from '@modules/renderer/threejs/exporters/DRACOExporter.js';
-export * from '@modules/renderer/threejs/exporters/EXRExporter.js';
 export * from '@modules/renderer/threejs/exporters/GLTFExporter.js';
 export * from '@modules/renderer/threejs/exporters/KTX2Exporter.js';
-export * from '@modules/renderer/threejs/exporters/MMDExporter.js';
 export * from '@modules/renderer/threejs/exporters/OBJExporter.js';
-export * from '@modules/renderer/threejs/exporters/PLYExporter.js';
-export * from '@modules/renderer/threejs/exporters/STLExporter.js';
-export * from '@modules/renderer/threejs/exporters/USDZExporter.js';
 
 export * from './geometries/BoxLineGeometry.js';
 export * from './geometries/ConvexGeometry.js';
