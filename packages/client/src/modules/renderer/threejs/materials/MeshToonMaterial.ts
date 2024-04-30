@@ -100,6 +100,7 @@ export class MeshToonMaterial extends Material {
     this.wireframeLinejoin = 'round';
 
     this.fog = true;
+    this.setValues(parameters);
   }
 
   setValues(parameters: MeshToonMaterialParameters): void {

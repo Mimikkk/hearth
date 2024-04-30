@@ -140,6 +140,7 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
     this._iridescence = 0;
     this._sheen = 0.0;
     this._transmission = 0;
+    this.setValues(parameters);
   }
 
   get anisotropy() {

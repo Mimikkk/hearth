@@ -32,6 +32,7 @@ export class LineBasicMaterial extends Material {
     this.linejoin = 'round';
 
     this.fog = true;
+    this.setValues(parameters);
   }
 
   setValues(values: LineBasicMaterialParameters): void {

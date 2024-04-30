@@ -126,6 +126,7 @@ export class MeshPhongMaterial extends Material {
     this.flatShading = false;
 
     this.fog = true;
+    this.setValues(parameters);
   }
 
   setValues(values: MeshPhongMaterialParameters) {

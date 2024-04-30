@@ -77,6 +77,7 @@ export class MeshBasicMaterial extends Material {
     this.wireframeLinejoin = 'round';
 
     this.fog = true;
+    this.setValues(parameters);
   }
 
   setValues(values: MeshBasicMaterialParameters) {

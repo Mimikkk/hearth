@@ -32,6 +32,7 @@ export class MeshDistanceMaterial extends Material {
 
     this.displacementScale = 1;
     this.displacementBias = 0;
+    this.setValues(parameters);
   }
 
   setValues(values: MeshDistanceMaterialParameters): void {

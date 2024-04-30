@@ -31,6 +31,11 @@ export class PointsMaterial extends Material {
     this.size = 1;
     this.sizeAttenuation = true;
     this.fog = true;
+    this.setValues(parameters);
+  }
+
+  setValues(values: PointsMaterialParameters): void {
+    super.setValues(values);
   }
 
   copy(source: this): this {

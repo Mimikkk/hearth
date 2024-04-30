@@ -24,6 +24,7 @@ export class LineDashedMaterial extends LineBasicMaterial {
     this.scale = 1;
     this.dashSize = 3;
     this.gapSize = 1;
+    this.setValues(parameters);
   }
 
   setValues(values: LineDashedMaterialParameters): void {

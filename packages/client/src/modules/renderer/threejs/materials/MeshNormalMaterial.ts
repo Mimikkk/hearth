@@ -52,6 +52,7 @@ export class MeshNormalMaterial extends Material {
     this.wireframeLinewidth = 1;
 
     this.flatShading = false;
+    this.setValues(parameters);
   }
 
   setValues(values: MeshNormalMaterialParameters): void {

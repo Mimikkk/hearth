@@ -117,6 +117,7 @@ export class MeshLambertMaterial extends Material {
     this.flatShading = false;
 
     this.fog = true;
+    this.setValues(parameters);
   }
 
   setValues(values: MeshLambertMaterialParameters): void {

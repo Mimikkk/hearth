@@ -69,6 +69,7 @@ export class MeshMatcapMaterial extends Material {
     this.flatShading = false;
 
     this.fog = true;
+    this.setValues(parameters);
   }
 
   setValues(values: MeshMatcapMaterialParameters): void {

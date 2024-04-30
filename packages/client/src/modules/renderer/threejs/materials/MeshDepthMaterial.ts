@@ -41,6 +41,7 @@ export class MeshDepthMaterial extends Material {
 
     this.wireframe = false;
     this.wireframeLinewidth = 1;
+    this.setValues(parameters);
   }
 
   setValues(values: MeshDepthMaterialParameters): void {
