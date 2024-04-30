@@ -214,7 +214,7 @@ export class OrbitControls {
 
       const twoPI = 2 * Math.PI;
 
-      return function update(deltaTime) {
+      return function update(deltaTime = null!) {
         const position = scope.object.position;
 
         offset.copy(position).sub(scope.target);
@@ -226,7 +226,7 @@ export class OrbitControls {
         spherical.setFromVector3(offset);
 
         if (scope.autoRotate && state === STATE.NONE) {
-          rotateLeft(getAutoRotationAngle(deltaTime!));
+          rotateLeft(getAutoRotationAngle(deltaTime));
         }
 
         if (scope.enableDamping) {
@@ -465,7 +465,7 @@ export class OrbitControls {
 
     let controlActive = false;
 
-    function getAutoRotationAngle(deltaTime: number) {
+    function getAutoRotationAngle(deltaTime: number | null) {
       if (deltaTime !== null) {
         return ((2 * Math.PI) / 60) * scope.autoRotateSpeed * deltaTime;
       } else {
