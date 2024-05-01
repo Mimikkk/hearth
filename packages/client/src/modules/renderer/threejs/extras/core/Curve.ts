@@ -10,7 +10,7 @@ export abstract class Curve<T extends Vector2 | Vector3> {
   lengths?: number[];
   declare ['constructor']: typeof Curve<T>;
 
-  protected constructor() {}
+  constructor() {}
 
   // Virtual base class method to overwrite and implement in subclasses
   //	- t [0 ... 1]

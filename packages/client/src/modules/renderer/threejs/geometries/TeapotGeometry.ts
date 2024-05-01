@@ -1,55 +1,15 @@
 import { BufferAttribute, BufferGeometry, Matrix4, Vector3, Vector4 } from '../Three.js';
 
-/**
- * Tessellates the famous Utah teapot database by Martin Newell into triangles.
- *
- * Parameters: size = 50, segments = 10, bottom = true, lid = true, body = true,
- *   fitLid = false, blinn = true
- *
- * size is a relative scale: I've scaled the teapot to fit vertically between -1 and 1.
- * Think of it as a "radius".
- * segments - number of line segments to subdivide each patch edge;
- *   1 is possible but gives degenerates, so two is the real minimum.
- * bottom - boolean, if true (default) then the bottom patches are added. Some consider
- *   adding the bottom heresy, so set this to "false" to adhere to the One True Way.
- * lid - to remove the lid and look inside, set to true.
- * body - to remove the body and leave the lid, set this and "bottom" to false.
- * fitLid - the lid is a tad small in the original. This stretches it a bit so you can't
- *   see the teapot's insides through the gap.
- * blinn - Jim Blinn scaled the original data vertically by dividing by about 1.3 to look
- *   nicer. If you want to see the original teapot, similar to the real-world model, set
- *   this to false. True by default.
- *   See http://en.wikipedia.org/wiki/File:Original_Utah_Teapot.jpg for the original
- *   real-world teapot (from http://en.wikipedia.org/wiki/Utah_teapot).
- *
- * Note that the bottom (the last four patches) is not flat - blame Frank Crow, not me.
- *
- * The teapot should normally be rendered as a double sided object, since for some
- * patches both sides can be seen, e.g., the gap around the lid and inside the spout.
- *
- * Segments 'n' determines the number of triangles output.
- *   Total triangles = 32*2*n*n - 8*n    [degenerates at the top and bottom cusps are deleted]
- *
- *   size_factor   # triangles
- *       1          56
- *       2         240
- *       3         552
- *       4         992
- *
- *      10        6320
- *      20       25440
- *      30       57360
- *
- * Code converted from my ancient SPD software, http://tog.acm.org/resources/SPD/
- * Created for the Udacity course "Interactive Rendering", http://bit.ly/ericity
- * YouTube video on teapot history: https://www.youtube.com/watch?v=DxMfblPzFNc
- *
- * See https://en.wikipedia.org/wiki/Utah_teapot for the history of the teapot
- *
- */
-
-class TeapotGeometry extends BufferGeometry {
-  constructor(size = 50, segments = 10, bottom = true, lid = true, body = true, fitLid = true, blinn = true) {
+export class TeapotGeometry extends BufferGeometry {
+  constructor(
+    size: number = 50,
+    segments: number = 10,
+    bottom: boolean = true,
+    lid: boolean = true,
+    body: boolean = true,
+    fitLid: boolean = true,
+    blinn: boolean = true,
+  ) {
     // 32 * 4 * 4 Bezier spline patches
     const teapotPatches = [
       /*rim*/
@@ -209,11 +169,7 @@ class TeapotGeometry extends BufferGeometry {
 
     // internal function: test if triangle has any matching vertices;
     // if so, don't save triangle, since it won't display anything.
-    const notDegenerate = (
-      vtx1,
-      vtx2,
-      vtx3, // if any vertex matches, return false
-    ) =>
+    const notDegenerate = (vtx1: number, vtx2: number, vtx3: number) =>
       !(
         (vertices[vtx1 * 3] === vertices[vtx2 * 3] &&
           vertices[vtx1 * 3 + 1] === vertices[vtx2 * 3 + 1] &&
@@ -392,5 +348,3 @@ class TeapotGeometry extends BufferGeometry {
     this.computeBoundingSphere();
   }
 }
-
-export { TeapotGeometry };

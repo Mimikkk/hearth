@@ -1,13 +1,19 @@
-import { BufferGeometry } from '../core/BufferGeometry.ts';
-import { Float32BufferAttribute } from '../core/BufferAttribute.ts';
-import { Shape } from '../extras/core/Shape.ts';
-import { ShapeUtils } from '../extras/ShapeUtils.ts';
-import { Vector2 } from '../math/Vector2.ts';
+import { BufferGeometry } from '../core/BufferGeometry.js';
+import { Float32BufferAttribute } from '../core/BufferAttribute.js';
+import { Shape } from '../extras/core/Shape.js';
+import { ShapeUtils } from '../extras/ShapeUtils.js';
+import { Vector2 } from '../math/Vector2.js';
 
-class ShapeGeometry extends BufferGeometry {
+export class ShapeGeometry extends BufferGeometry {
+  declare type: string | 'ShapeGeometry';
+  declare parameters: {
+    shapes: Shape | Shape[];
+    curveSegments: number;
+  };
+
   constructor(
-    shapes = new Shape([new Vector2(0, 0.5), new Vector2(-0.5, -0.5), new Vector2(0.5, -0.5)]),
-    curveSegments = 12,
+    shapes: Shape | Shape[] = new Shape([new Vector2(0, 0.5), new Vector2(-0.5, -0.5), new Vector2(0.5, -0.5)]),
+    curveSegments: number = 12,
   ) {
     super();
 
@@ -20,10 +26,10 @@ class ShapeGeometry extends BufferGeometry {
 
     // buffers
 
-    const indices = [];
-    const vertices = [];
-    const normals = [];
-    const uvs = [];
+    const indices: number[] = [];
+    const vertices: number[] = [];
+    const normals: number[] = [];
+    const uvs: number[] = [];
 
     // helper variables
 
@@ -54,7 +60,7 @@ class ShapeGeometry extends BufferGeometry {
 
     // helper functions
 
-    function addShape(shape) {
+    function addShape(shape: Shape) {
       const indexOffset = vertices.length / 3;
       const points = shape.extractPoints(curveSegments);
 
@@ -109,49 +115,13 @@ class ShapeGeometry extends BufferGeometry {
     }
   }
 
-  copy(source) {
+  copy(source: this): this {
     super.copy(source);
 
     this.parameters = Object.assign({}, source.parameters);
 
     return this;
   }
-
-  toJSON() {
-    const data = super.toJSON();
-
-    const shapes = this.parameters.shapes;
-
-    return toJSON(shapes, data);
-  }
-
-  static fromJSON(data, shapes) {
-    const geometryShapes = [];
-
-    for (let j = 0, jl = data.shapes.length; j < jl; j++) {
-      const shape = shapes[data.shapes[j]];
-
-      geometryShapes.push(shape);
-    }
-
-    return new ShapeGeometry(geometryShapes, data.curveSegments);
-  }
 }
 
-function toJSON(shapes, data) {
-  data.shapes = [];
-
-  if (Array.isArray(shapes)) {
-    for (let i = 0, l = shapes.length; i < l; i++) {
-      const shape = shapes[i];
-
-      data.shapes.push(shape.uuid);
-    }
-  } else {
-    data.shapes.push(shapes.uuid);
-  }
-
-  return data;
-}
-
-export { ShapeGeometry };
+ShapeGeometry.prototype.type = 'ShapeGeometry';

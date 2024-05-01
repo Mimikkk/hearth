@@ -1,9 +1,25 @@
-import { BufferGeometry } from '../core/BufferGeometry.ts';
-import { Float32BufferAttribute } from '../core/BufferAttribute.ts';
-import { Vector3 } from '../math/Vector3.ts';
+import { BufferGeometry } from '../core/BufferGeometry.js';
+import { Float32BufferAttribute } from '../core/BufferAttribute.js';
+import { Vector3 } from '../math/Vector3.js';
 
-class BoxGeometry extends BufferGeometry {
-  constructor(width = 1, height = 1, depth = 1, widthSegments = 1, heightSegments = 1, depthSegments = 1) {
+export class BoxGeometry extends BufferGeometry {
+  declare parameters: {
+    width: number;
+    height: number;
+    depth: number;
+    widthSegments: number;
+    heightSegments: number;
+    depthSegments: number;
+  };
+
+  constructor(
+    width: number = 1,
+    height: number = 1,
+    depth: number = 1,
+    widthSegments: number = 1,
+    heightSegments: number = 1,
+    depthSegments: number = 1,
+  ) {
     super();
 
     this.type = 'BoxGeometry';
@@ -27,10 +43,10 @@ class BoxGeometry extends BufferGeometry {
 
     // buffers
 
-    const indices = [];
-    const vertices = [];
-    const normals = [];
-    const uvs = [];
+    const indices: number[] = [];
+    const vertices: number[] = [];
+    const normals: number[] = [];
+    const uvs: number[] = [];
 
     // helper variables
 
@@ -39,21 +55,38 @@ class BoxGeometry extends BufferGeometry {
 
     // build each side of the box geometry
 
-    buildPlane('z', 'y', 'x', -1, -1, depth, height, width, depthSegments, heightSegments, 0); // px
-    buildPlane('z', 'y', 'x', 1, -1, depth, height, -width, depthSegments, heightSegments, 1); // nx
-    buildPlane('x', 'z', 'y', 1, 1, width, depth, height, widthSegments, depthSegments, 2); // py
-    buildPlane('x', 'z', 'y', 1, -1, width, depth, -height, widthSegments, depthSegments, 3); // ny
-    buildPlane('x', 'y', 'z', 1, -1, width, height, depth, widthSegments, heightSegments, 4); // pz
-    buildPlane('x', 'y', 'z', -1, -1, width, height, -depth, widthSegments, heightSegments, 5); // nz
+    // px
+    buildPlane('z', 'y', 'x', -1, -1, depth, height, width, depthSegments, heightSegments, 0);
+    // nx
+    buildPlane('z', 'y', 'x', 1, -1, depth, height, -width, depthSegments, heightSegments, 1);
+    // py
+    buildPlane('x', 'z', 'y', 1, 1, width, depth, height, widthSegments, depthSegments, 2);
+    // ny
+    buildPlane('x', 'z', 'y', 1, -1, width, depth, -height, widthSegments, depthSegments, 3);
+    // pz
+    buildPlane('x', 'y', 'z', 1, -1, width, height, depth, widthSegments, heightSegments, 4);
+    // nz
+    buildPlane('x', 'y', 'z', -1, -1, width, height, -depth, widthSegments, heightSegments, 5);
 
     // build geometry
-
     this.setIndex(indices);
     this.setAttribute('position', new Float32BufferAttribute(vertices, 3));
     this.setAttribute('normal', new Float32BufferAttribute(normals, 3));
     this.setAttribute('uv', new Float32BufferAttribute(uvs, 2));
 
-    function buildPlane(u, v, w, udir, vdir, width, height, depth, gridX, gridY, materialIndex) {
+    function buildPlane(
+      u: 'x' | 'y' | 'z',
+      v: 'x' | 'y' | 'z',
+      w: 'x' | 'y' | 'z',
+      udir: number,
+      vdir: number,
+      width: number,
+      height: number,
+      depth: number,
+      gridX: number,
+      gridY: number,
+      materialIndex: number,
+    ) {
       const segmentWidth = width / gridX;
       const segmentHeight = height / gridY;
 
@@ -146,24 +179,11 @@ class BoxGeometry extends BufferGeometry {
     }
   }
 
-  copy(source) {
+  copy(source: this) {
     super.copy(source);
 
     this.parameters = Object.assign({}, source.parameters);
 
     return this;
   }
-
-  static fromJSON(data) {
-    return new BoxGeometry(
-      data.width,
-      data.height,
-      data.depth,
-      data.widthSegments,
-      data.heightSegments,
-      data.depthSegments,
-    );
-  }
 }
-
-export { BoxGeometry };

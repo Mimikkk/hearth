@@ -1,6 +1,12 @@
 import { PolyhedronGeometry } from './PolyhedronGeometry.js';
 
-class IcosahedronGeometry extends PolyhedronGeometry {
+export class IcosahedronGeometry extends PolyhedronGeometry {
+  declare type: string | 'IcosahedronGeometry';
+  declare parameters: {
+    radius: number;
+    detail: number;
+  };
+
   constructor(radius = 1, detail = 0) {
     const t = (1 + Math.sqrt(5)) / 2;
 
@@ -50,17 +56,11 @@ class IcosahedronGeometry extends PolyhedronGeometry {
 
     super(vertices, indices, radius, detail);
 
-    this.type = 'IcosahedronGeometry';
-
     this.parameters = {
       radius: radius,
       detail: detail,
     };
   }
-
-  static fromJSON(data) {
-    return new IcosahedronGeometry(data.radius, data.detail);
-  }
 }
 
-export { IcosahedronGeometry };
+IcosahedronGeometry.prototype.type = 'IcosahedronGeometry';

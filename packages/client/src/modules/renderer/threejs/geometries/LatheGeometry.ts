@@ -1,19 +1,25 @@
-import { Float32BufferAttribute } from '../core/BufferAttribute.ts';
-import { BufferGeometry } from '../core/BufferGeometry.ts';
-import { Vector3 } from '../math/Vector3.ts';
-import { Vector2 } from '../math/Vector2.ts';
-import * as MathUtils from '../math/MathUtils.ts';
+import { Float32BufferAttribute } from '../core/BufferAttribute.js';
+import { BufferGeometry } from '../core/BufferGeometry.js';
+import { Vector3 } from '../math/Vector3.js';
+import { Vector2 } from '../math/Vector2.js';
+import * as MathUtils from '../math/MathUtils.js';
 
-class LatheGeometry extends BufferGeometry {
+export class LatheGeometry extends BufferGeometry {
+  declare type: string | 'LatheGeometry';
+  declare parameters: {
+    points: Vector2[];
+    segments: number;
+    phiStart: number;
+    phiLength: number;
+  };
+
   constructor(
-    points = [new Vector2(0, -0.5), new Vector2(0.5, 0), new Vector2(0, 0.5)],
-    segments = 12,
-    phiStart = 0,
-    phiLength = Math.PI * 2,
+    points: Vector2[] = [new Vector2(0, -0.5), new Vector2(0.5, 0), new Vector2(0, 0.5)],
+    segments: number = 12,
+    phiStart: number = 0,
+    phiLength: number = Math.PI * 2,
   ) {
     super();
-
-    this.type = 'LatheGeometry';
 
     this.parameters = {
       points: points,
@@ -154,17 +160,13 @@ class LatheGeometry extends BufferGeometry {
     this.setAttribute('normal', new Float32BufferAttribute(normals, 3));
   }
 
-  copy(source) {
+  copy(source: this): this {
     super.copy(source);
 
     this.parameters = Object.assign({}, source.parameters);
 
     return this;
   }
-
-  static fromJSON(data) {
-    return new LatheGeometry(data.points, data.segments, data.phiStart, data.phiLength);
-  }
 }
 
-export { LatheGeometry };
+LatheGeometry.prototype.type = 'LatheGeometry';

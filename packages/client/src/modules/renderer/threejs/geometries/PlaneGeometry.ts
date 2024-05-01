@@ -1,11 +1,17 @@
-import { BufferGeometry } from '../core/BufferGeometry.ts';
-import { Float32BufferAttribute } from '../core/BufferAttribute.ts';
+import { BufferGeometry } from '../core/BufferGeometry.js';
+import { Float32BufferAttribute } from '../core/BufferAttribute.js';
 
-class PlaneGeometry extends BufferGeometry {
+export class PlaneGeometry extends BufferGeometry {
+  declare type: string | 'PlaneGeometry';
+  declare parameters: {
+    width: number;
+    height: number;
+    widthSegments: number;
+    heightSegments: number;
+  };
+
   constructor(width = 1, height = 1, widthSegments = 1, heightSegments = 1) {
     super();
-
-    this.type = 'PlaneGeometry';
 
     this.parameters = {
       width: width,
@@ -66,17 +72,13 @@ class PlaneGeometry extends BufferGeometry {
     this.setAttribute('uv', new Float32BufferAttribute(uvs, 2));
   }
 
-  copy(source) {
+  copy(source: this): this {
     super.copy(source);
 
     this.parameters = Object.assign({}, source.parameters);
 
     return this;
   }
-
-  static fromJSON(data) {
-    return new PlaneGeometry(data.width, data.height, data.widthSegments, data.heightSegments);
-  }
 }
 
-export { PlaneGeometry };
+PlaneGeometry.prototype.type = 'PlaneGeometry';

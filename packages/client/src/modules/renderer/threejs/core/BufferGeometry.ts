@@ -268,7 +268,7 @@ export class BufferGeometry<
       this.boundingBox = new Box3();
     }
 
-    const position = this.attributes.position;
+    const position = this.attributes.position as BufferAttribute<Float32Array>;
     const morphAttributesPosition = this.morphAttributes.position;
 
     if (position !== undefined) {
@@ -314,7 +314,7 @@ export class BufferGeometry<
       this.boundingSphere = new Sphere();
     }
 
-    const position = this.attributes.position;
+    const position = this.attributes.position as BufferAttribute<Float32Array>;
     const morphAttributesPosition = this.morphAttributes.position;
 
     if (position) {
@@ -839,7 +839,7 @@ export class BufferGeometry<
     return new this.constructor().copy(this) as BufferGeometry<AttributeMap, MorphAttributeMap, IndexT>;
   }
 
-  copy(source: BufferGeometry<AttributeMap, MorphAttributeMap, IndexT>): this {
+  copy(source: this): this {
     // reset
 
     this.index = null;

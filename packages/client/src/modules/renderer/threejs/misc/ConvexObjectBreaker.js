@@ -1,5 +1,5 @@
 import { Line3, Mesh, Plane, Vector3 } from '../Three.js';
-import { ConvexGeometry } from '../geometries/ConvexGeometry.js';
+import { ConvexGeometry } from '../geometries/ConvexGeometry.ts';
 
 /**
  * @fileoverview This class can be used to subdivide a convex Geometry object into pieces.

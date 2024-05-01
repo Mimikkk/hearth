@@ -6,7 +6,7 @@ import { CubicBezierCurve } from '../curves/CubicBezierCurve.js';
 import { QuadraticBezierCurve } from '../curves/QuadraticBezierCurve.js';
 import { LineCurve } from '../curves/LineCurve.js';
 
-export class Path extends CurvePath {
+export class Path extends CurvePath<Vector2> {
   declare type: string | 'Path';
   currentPoint: Vector2;
 
@@ -124,7 +124,7 @@ export class Path extends CurvePath {
 
     if (this.curves.length > 0) {
       // if a previous curve is present, attempt to join
-      const firstPoint = curve.getPoint(0);
+      const firstPoint = curve.getPoint(0, new Vector2());
 
       if (!firstPoint.equals(this.currentPoint)) {
         this.lineTo(firstPoint.x, firstPoint.y);
@@ -133,7 +133,7 @@ export class Path extends CurvePath {
 
     this.curves.push(curve);
 
-    const lastPoint = curve.getPoint(1);
+    const lastPoint = curve.getPoint(1, new Vector2());
     this.currentPoint.copy(lastPoint);
 
     return this;

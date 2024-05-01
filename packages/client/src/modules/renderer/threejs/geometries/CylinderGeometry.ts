@@ -1,9 +1,21 @@
-import { BufferGeometry } from '../core/BufferGeometry.ts';
-import { Float32BufferAttribute } from '../core/BufferAttribute.ts';
-import { Vector3 } from '../math/Vector3.ts';
-import { Vector2 } from '../math/Vector2.ts';
+import { BufferGeometry } from '../core/BufferGeometry.js';
+import { Float32BufferAttribute } from '../core/BufferAttribute.js';
+import { Vector3 } from '../math/Vector3.js';
+import { Vector2 } from '../math/Vector2.js';
 
-class CylinderGeometry extends BufferGeometry {
+export class CylinderGeometry extends BufferGeometry {
+  declare type: string | 'CylinderGeometry';
+  declare parameters: {
+    radiusTop: number;
+    radiusBottom: number;
+    height: number;
+    radialSegments: number;
+    heightSegments: number;
+    openEnded: boolean;
+    thetaStart: number;
+    thetaLength: number;
+  };
+
   constructor(
     radiusTop = 1,
     radiusBottom = 1,
@@ -15,8 +27,6 @@ class CylinderGeometry extends BufferGeometry {
     thetaLength = Math.PI * 2,
   ) {
     super();
-
-    this.type = 'CylinderGeometry';
 
     this.parameters = {
       radiusTop: radiusTop,
@@ -36,15 +46,15 @@ class CylinderGeometry extends BufferGeometry {
 
     // buffers
 
-    const indices = [];
-    const vertices = [];
-    const normals = [];
-    const uvs = [];
+    const indices: number[] = [];
+    const vertices: number[] = [];
+    const normals: number[] = [];
+    const uvs: number[] = [];
 
     // helper variables
 
     let index = 0;
-    const indexArray = [];
+    const indexArray: number[][] = [];
     const halfHeight = height / 2;
     let groupStart = 0;
 
@@ -149,7 +159,7 @@ class CylinderGeometry extends BufferGeometry {
       groupStart += groupCount;
     }
 
-    function generateCap(top) {
+    function generateCap(top: boolean) {
       // save the index of the first center vertex
       const centerIndexStart = index;
 
@@ -246,26 +256,12 @@ class CylinderGeometry extends BufferGeometry {
     }
   }
 
-  copy(source) {
+  copy(source: this): this {
     super.copy(source);
 
     this.parameters = Object.assign({}, source.parameters);
 
     return this;
   }
-
-  static fromJSON(data) {
-    return new CylinderGeometry(
-      data.radiusTop,
-      data.radiusBottom,
-      data.height,
-      data.radialSegments,
-      data.heightSegments,
-      data.openEnded,
-      data.thetaStart,
-      data.thetaLength,
-    );
-  }
 }
-
-export { CylinderGeometry };
+CylinderGeometry.prototype.type = 'CylinderGeometry';

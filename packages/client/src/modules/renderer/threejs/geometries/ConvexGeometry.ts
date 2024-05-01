@@ -1,8 +1,8 @@
-import { BufferGeometry, Float32BufferAttribute } from '../Three.js';
-import { ConvexHull } from '../math/ConvexHull.ts';
+import { BufferGeometry, Float32BufferAttribute, Vector3 } from '../Three.js';
+import { ConvexHull } from '../math/ConvexHull.js';
 
-class ConvexGeometry extends BufferGeometry {
-  constructor(points = []) {
+export class ConvexGeometry extends BufferGeometry {
+  constructor(points: Vector3[] = []) {
     super();
 
     // buffers
@@ -18,7 +18,7 @@ class ConvexGeometry extends BufferGeometry {
 
     for (let i = 0; i < faces.length; i++) {
       const face = faces[i];
-      let edge = face.edge;
+      let edge = face.edge!;
 
       // we move along a doubly-connected edge list to access all face points (see HalfEdge docs)
 
@@ -28,7 +28,7 @@ class ConvexGeometry extends BufferGeometry {
         vertices.push(point.x, point.y, point.z);
         normals.push(face.normal.x, face.normal.y, face.normal.z);
 
-        edge = edge.next;
+        edge = edge.next!;
       } while (edge !== face.edge);
     }
 
@@ -38,5 +38,3 @@ class ConvexGeometry extends BufferGeometry {
     this.setAttribute('normal', new Float32BufferAttribute(normals, 3));
   }
 }
-
-export { ConvexGeometry };

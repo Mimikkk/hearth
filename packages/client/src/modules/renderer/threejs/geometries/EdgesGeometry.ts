@@ -1,16 +1,16 @@
-import { BufferGeometry } from '../core/BufferGeometry.ts';
-import { Float32BufferAttribute } from '../core/BufferAttribute.ts';
-import * as MathUtils from '../math/MathUtils.ts';
-import { Triangle } from '../math/Triangle.ts';
-import { Vector3 } from '../math/Vector3.ts';
+import { BufferGeometry } from '../core/BufferGeometry.js';
+import { Float32BufferAttribute } from '../core/BufferAttribute.js';
+import * as MathUtils from '../math/MathUtils.js';
+import { Triangle } from '../math/Triangle.js';
+import { Vector3 } from '../math/Vector3.js';
 
 const _v0 = /*@__PURE__*/ new Vector3();
 const _v1 = /*@__PURE__*/ new Vector3();
 const _normal = /*@__PURE__*/ new Vector3();
 const _triangle = /*@__PURE__*/ new Triangle();
 
-class EdgesGeometry extends BufferGeometry {
-  constructor(geometry = null, thresholdAngle = 1) {
+export class EdgesGeometry extends BufferGeometry {
+  constructor(geometry: BufferGeometry | null = null, thresholdAngle: number = 1) {
     super();
 
     this.type = 'EdgesGeometry';
@@ -33,8 +33,8 @@ class EdgesGeometry extends BufferGeometry {
       const vertKeys = ['a', 'b', 'c'];
       const hashes = new Array(3);
 
-      const edgeData = {};
-      const vertices = [];
+      const edgeData: Record<string, { index0: number; index1: number; normal: Vector3 | null }> = {};
+      const vertices: number[] = [];
       for (let i = 0; i < indexCount; i += 3) {
         if (indexAttr) {
           indexArr[0] = indexAttr.getX(i);
@@ -68,7 +68,9 @@ class EdgesGeometry extends BufferGeometry {
           const jNext = (j + 1) % 3;
           const vecHash0 = hashes[j];
           const vecHash1 = hashes[jNext];
+          //@ts-expect-error
           const v0 = _triangle[vertKeys[j]];
+          //@ts-expect-error
           const v1 = _triangle[vertKeys[jNext]];
 
           const hash = `${vecHash0}_${vecHash1}`;
@@ -77,11 +79,13 @@ class EdgesGeometry extends BufferGeometry {
           if (reverseHash in edgeData && edgeData[reverseHash]) {
             // if we found a sibling edge add it into the vertex array if
             // it meets the angle threshold and delete the edge from the map.
+            //@ts-expect-error
             if (_normal.dot(edgeData[reverseHash].normal) <= thresholdDot) {
               vertices.push(v0.x, v0.y, v0.z);
               vertices.push(v1.x, v1.y, v1.z);
             }
 
+            //@ts-expect-error
             edgeData[reverseHash] = null;
           } else if (!(hash in edgeData)) {
             // if we've already got an edge here then skip adding a new one
@@ -110,7 +114,7 @@ class EdgesGeometry extends BufferGeometry {
     }
   }
 
-  copy(source) {
+  copy(source: this): this {
     super.copy(source);
 
     this.parameters = Object.assign({}, source.parameters);
@@ -118,5 +122,3 @@ class EdgesGeometry extends BufferGeometry {
     return this;
   }
 }
-
-export { EdgesGeometry };

@@ -36,14 +36,14 @@ export * from '@modules/renderer/threejs/exporters/GLTFExporter.js';
 export * from '@modules/renderer/threejs/exporters/KTX2Exporter.js';
 export * from '@modules/renderer/threejs/exporters/OBJExporter.js';
 
-export * from './geometries/BoxLineGeometry.js';
-export * from './geometries/ConvexGeometry.js';
-export * from './geometries/DecalGeometry.js';
-export * from './geometries/ParametricGeometries.js';
-export * from './geometries/ParametricGeometry.js';
-export * from './geometries/RoundedBoxGeometry.js';
-export * from './geometries/TeapotGeometry.js';
-export * from './geometries/TextGeometry.js';
+export * from './geometries/BoxLineGeometry.ts';
+export * from './geometries/ConvexGeometry.ts';
+export * from './geometries/DecalGeometry.ts';
+export * from './geometries/ParametricGeometries.ts';
+export * from './geometries/ParametricGeometry.ts';
+export * from './geometries/RoundedBoxGeometry.ts';
+export * from './geometries/TeapotGeometry.ts';
+export * from './geometries/TextGeometry.ts';
 
 export * from './helpers/LightProbeHelper.js';
 export * from './helpers/OctreeHelper.js';

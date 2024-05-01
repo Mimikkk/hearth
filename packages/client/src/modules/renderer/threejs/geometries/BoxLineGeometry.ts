@@ -1,7 +1,14 @@
 import { BufferGeometry, Float32BufferAttribute } from '../Three.js';
 
-class BoxLineGeometry extends BufferGeometry {
-  constructor(width = 1, height = 1, depth = 1, widthSegments = 1, heightSegments = 1, depthSegments = 1) {
+export class BoxLineGeometry extends BufferGeometry {
+  constructor(
+    width: number = 1,
+    height: number = 1,
+    depth: number = 1,
+    widthSegments: number = 1,
+    heightSegments: number = 1,
+    depthSegments: number = 1,
+  ) {
     super();
 
     widthSegments = Math.floor(widthSegments);
@@ -52,5 +59,3 @@ class BoxLineGeometry extends BufferGeometry {
     this.setAttribute('position', new Float32BufferAttribute(vertices, 3));
   }
 }
-
-export { BoxLineGeometry };

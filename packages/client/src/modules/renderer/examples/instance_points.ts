@@ -11,7 +11,7 @@ import { GUI } from '../threejs/libs/lil-gui.module.min.js';
 import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
 
 import { InstancedPoints } from '../threejs/objects/InstancedPoints.js';
-import InstancedPointsGeometry from '../threejs/geometries/InstancedPointsGeometry.js';
+import { InstancedPointsGeometry } from '../threejs/geometries/InstancedPointsGeometry.js';
 
 import { color, InstancedPointsNodeMaterial } from '../threejs/nodes/Nodes.js';
 

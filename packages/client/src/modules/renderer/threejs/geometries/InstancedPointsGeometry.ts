@@ -5,17 +5,17 @@ import {
   InstancedBufferAttribute,
   Sphere,
   Vector3,
+  Matrix4,
 } from '../Three.js';
 
 const _vector = new Vector3();
 
 export class InstancedPointsGeometry extends InstancedBufferGeometry {
+  declare isInstancedPointsGeometry: true;
+  declare type: string | 'InstancedPointsGeometry';
+
   constructor() {
     super();
-
-    this.isInstancedPointsGeometry = true;
-
-    this.type = 'InstancedPointsGeometry';
 
     const positions = [-1, 1, 0, 1, 1, 0, -1, -1, 0, 1, -1, 0];
     const uvs = [-1, 1, 1, 1, -1, -1, 1, -1];
@@ -26,7 +26,7 @@ export class InstancedPointsGeometry extends InstancedBufferGeometry {
     this.setAttribute('uv', new Float32BufferAttribute(uvs, 2));
   }
 
-  applyMatrix4(matrix) {
+  applyMatrix4(matrix: Matrix4): this {
     const pos = this.attributes.instancePosition;
 
     if (pos !== undefined) {
@@ -46,7 +46,7 @@ export class InstancedPointsGeometry extends InstancedBufferGeometry {
     return this;
   }
 
-  setPositions(array) {
+  setPositions(array: Float32Array | number[]): this {
     let points;
 
     if (array instanceof Float32Array) {
@@ -55,6 +55,7 @@ export class InstancedPointsGeometry extends InstancedBufferGeometry {
       points = new Float32Array(array);
     }
 
+    //@ts-expect-error
     this.setAttribute('instancePosition', new InstancedBufferAttribute(points, 3)); // xyz
 
     //
@@ -65,7 +66,7 @@ export class InstancedPointsGeometry extends InstancedBufferGeometry {
     return this;
   }
 
-  setColors(array) {
+  setColors(array: Float32Array | number[]): this {
     let colors;
 
     if (array instanceof Float32Array) {
@@ -74,24 +75,27 @@ export class InstancedPointsGeometry extends InstancedBufferGeometry {
       colors = new Float32Array(array);
     }
 
+    //@ts-expect-error
     this.setAttribute('instanceColor', new InstancedBufferAttribute(colors, 3)); // rgb
 
     return this;
   }
 
-  computeBoundingBox() {
+  computeBoundingBox(): this {
     if (this.boundingBox === null) {
       this.boundingBox = new Box3();
     }
 
-    const pos = this.attributes.instancePosition;
+    const pos = this.attributes.instancePosition as InstancedBufferAttribute<Float32Array>;
 
     if (pos !== undefined) {
       this.boundingBox.setFromBufferAttribute(pos);
     }
+
+    return this;
   }
 
-  computeBoundingSphere() {
+  computeBoundingSphere(): this {
     if (this.boundingSphere === null) {
       this.boundingSphere = new Sphere();
     }
@@ -105,7 +109,7 @@ export class InstancedPointsGeometry extends InstancedBufferGeometry {
     if (pos !== undefined) {
       const center = this.boundingSphere.center;
 
-      this.boundingBox.getCenter(center);
+      this.boundingBox!.getCenter(center);
 
       let maxRadiusSq = 0;
 
@@ -123,11 +127,8 @@ export class InstancedPointsGeometry extends InstancedBufferGeometry {
         );
       }
     }
-  }
-
-  toJSON() {
-    // todo
+    return this;
   }
 }
-
-export default InstancedPointsGeometry;
+InstancedPointsGeometry.prototype.isInstancedPointsGeometry = true;
+InstancedPointsGeometry.prototype.type = 'InstancedPointsGeometry';

@@ -1,9 +1,26 @@
-import { BufferGeometry } from '../core/BufferGeometry.ts';
-import { Float32BufferAttribute } from '../core/BufferAttribute.ts';
-import { Vector3 } from '../math/Vector3.ts';
+import { BufferGeometry } from '../core/BufferGeometry.js';
+import { Float32BufferAttribute } from '../core/BufferAttribute.js';
+import { Vector3 } from '../math/Vector3.js';
 
-class TorusKnotGeometry extends BufferGeometry {
-  constructor(radius = 1, tube = 0.4, tubularSegments = 64, radialSegments = 8, p = 2, q = 3) {
+export class TorusKnotGeometry extends BufferGeometry {
+  declare type: string | 'TorusKnotGeometry';
+  declare parameters: {
+    radius: number;
+    tube: number;
+    tubularSegments: number;
+    radialSegments: number;
+    p: number;
+    q: number;
+  };
+
+  constructor(
+    radius: number = 1,
+    tube: number = 0.4,
+    tubularSegments: number = 64,
+    radialSegments: number = 8,
+    p: number = 2,
+    q: number = 3,
+  ) {
     super();
 
     this.type = 'TorusKnotGeometry';
@@ -121,7 +138,7 @@ class TorusKnotGeometry extends BufferGeometry {
 
     // this function calculates the current position on the torus curve
 
-    function calculatePositionOnCurve(u, p, q, radius, position) {
+    function calculatePositionOnCurve(u: number, p: number, q: number, radius: number, position: Vector3) {
       const cu = Math.cos(u);
       const su = Math.sin(u);
       const quOverP = (q / p) * u;
@@ -133,17 +150,11 @@ class TorusKnotGeometry extends BufferGeometry {
     }
   }
 
-  copy(source) {
+  copy(source: this): this {
     super.copy(source);
 
     this.parameters = Object.assign({}, source.parameters);
 
     return this;
   }
-
-  static fromJSON(data) {
-    return new TorusKnotGeometry(data.radius, data.tube, data.tubularSegments, data.radialSegments, data.p, data.q);
-  }
 }
-
-export { TorusKnotGeometry };

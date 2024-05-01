@@ -1,12 +1,20 @@
-/**
- * Parametric Surfaces Geometry
- * based on the brilliant article by @prideout https://prideout.net/blog/old/blog/index.html@p=44.html
- */
-
 import { BufferGeometry, Float32BufferAttribute, Vector3 } from '../Three.js';
 
-class ParametricGeometry extends BufferGeometry {
-  constructor(func = (u, v, target) => target.set(u, v, Math.cos(u) * Math.sin(v)), slices = 8, stacks = 8) {
+export class ParametricGeometry extends BufferGeometry {
+  declare type: string | 'ParametricGeometry';
+  declare parameters: {
+    func: (u: number, v: number, target: Vector3) => void;
+    slices: number;
+    stacks: number;
+  };
+
+  constructor(
+    func = (u: number, v: number, target: Vector3): void => {
+      target.set(u, v, Math.cos(u) * Math.sin(v));
+    },
+    slices = 8,
+    stacks = 8,
+  ) {
     super();
 
     this.type = 'ParametricGeometry';
@@ -103,7 +111,7 @@ class ParametricGeometry extends BufferGeometry {
     this.setAttribute('uv', new Float32BufferAttribute(uvs, 2));
   }
 
-  copy(source) {
+  copy(source: this): this {
     super.copy(source);
 
     this.parameters = Object.assign({}, source.parameters);
@@ -111,5 +119,3 @@ class ParametricGeometry extends BufferGeometry {
     return this;
   }
 }
-
-export { ParametricGeometry };

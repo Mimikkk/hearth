@@ -40,7 +40,7 @@ import { LoaderUtils } from './LoaderUtils.js';
 import { BufferGeometryLoader } from './BufferGeometryLoader.js';
 import { Loader } from './Loader.js';
 import { FileLoader } from './FileLoader.js';
-import * as Geometries from '../geometries/Geometries.js';
+import * as Geometries from '../geometries/Geometries.ts';
 import { createTypedArray } from '../utils.ts';
 import { Box3 } from '../math/Box3.ts';
 import { Sphere } from '../math/Sphere.ts';

@@ -2,7 +2,14 @@ import { BoxGeometry, Vector3 } from '../Three.js';
 
 const _tempNormal = new Vector3();
 
-function getUv(faceDirVector, normal, uvAxis, projectionAxis, radius, sideLength) {
+function getUv(
+  faceDirVector: Vector3,
+  normal: Vector3,
+  uvAxis: 'x' | 'y' | 'z',
+  projectionAxis: 'x' | 'y' | 'z',
+  radius: number,
+  sideLength: number,
+) {
   const totArcLength = (2 * Math.PI * radius) / 4;
 
   // length of the planes between the arcs on each axis
@@ -29,8 +36,8 @@ function getUv(faceDirVector, normal, uvAxis, projectionAxis, radius, sideLength
   }
 }
 
-class RoundedBoxGeometry extends BoxGeometry {
-  constructor(width = 1, height = 1, depth = 1, segments = 2, radius = 0.1) {
+export class RoundedBoxGeometry extends BoxGeometry {
+  constructor(width: number = 1, height: number = 1, depth: number = 1, segments: number = 2, radius: number = 0.1) {
     // ensure segments is odd so we have a plane connecting the rounded corners
     segments = segments * 2 + 1;
 
@@ -65,7 +72,7 @@ class RoundedBoxGeometry extends BoxGeometry {
     const halfSegmentSize = 0.5 / segments;
 
     for (let i = 0, j = 0; i < positions.length; i += 3, j += 2) {
-      position.fromArray(positions, i);
+      position.fromArray(positions as never, i);
       normal.copy(position);
       normal.x -= Math.sign(normal.x) * halfSegmentSize;
       normal.y -= Math.sign(normal.y) * halfSegmentSize;
@@ -128,5 +135,3 @@ class RoundedBoxGeometry extends BoxGeometry {
     }
   }
 }
-
-export { RoundedBoxGeometry };

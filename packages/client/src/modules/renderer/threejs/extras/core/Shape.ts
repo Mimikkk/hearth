@@ -47,7 +47,6 @@ export class Shape extends Path {
     return this;
   }
 
-  //@ts-expect-error
   override toJSON(): {
     metadata: { version: number };
     uuid: string;

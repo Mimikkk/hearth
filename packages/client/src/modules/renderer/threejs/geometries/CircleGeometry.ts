@@ -1,29 +1,28 @@
-import { BufferGeometry } from '../core/BufferGeometry.ts';
-import { Float32BufferAttribute } from '../core/BufferAttribute.ts';
-import { Vector3 } from '../math/Vector3.ts';
-import { Vector2 } from '../math/Vector2.ts';
+import { BufferGeometry } from '../core/BufferGeometry.js';
+import { Float32BufferAttribute } from '../core/BufferAttribute.js';
+import { Vector3 } from '../math/Vector3.js';
+import { Vector2 } from '../math/Vector2.js';
 
-class CircleGeometry extends BufferGeometry {
+export class CircleGeometry extends BufferGeometry {
+  declare type: string | 'CircleGeometry';
+  declare parameters: {
+    radius: number;
+    segments: number;
+    thetaStart: number;
+    thetaLength: number;
+  };
+
   constructor(radius = 1, segments = 32, thetaStart = 0, thetaLength = Math.PI * 2) {
     super();
-
-    this.type = 'CircleGeometry';
-
-    this.parameters = {
-      radius: radius,
-      segments: segments,
-      thetaStart: thetaStart,
-      thetaLength: thetaLength,
-    };
-
+    this.parameters = { radius, segments, thetaStart, thetaLength };
     segments = Math.max(3, segments);
 
     // buffers
 
-    const indices = [];
-    const vertices = [];
-    const normals = [];
-    const uvs = [];
+    const indices: number[] = [];
+    const vertices: number[] = [];
+    const normals: number[] = [];
+    const uvs: number[] = [];
 
     // helper variables
 
@@ -72,17 +71,13 @@ class CircleGeometry extends BufferGeometry {
     this.setAttribute('uv', new Float32BufferAttribute(uvs, 2));
   }
 
-  copy(source) {
+  copy(source: this): this {
     super.copy(source);
 
     this.parameters = Object.assign({}, source.parameters);
 
     return this;
   }
-
-  static fromJSON(data) {
-    return new CircleGeometry(data.radius, data.segments, data.thetaStart, data.thetaLength);
-  }
 }
 
-export { CircleGeometry };
+CircleGeometry.prototype.type = 'CircleGeometry';

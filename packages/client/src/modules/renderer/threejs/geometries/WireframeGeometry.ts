@@ -1,9 +1,14 @@
-import { BufferGeometry } from '../core/BufferGeometry.ts';
-import { Float32BufferAttribute } from '../core/BufferAttribute.ts';
-import { Vector3 } from '../math/Vector3.ts';
+import { BufferGeometry } from '../core/BufferGeometry.js';
+import { Float32BufferAttribute } from '../core/BufferAttribute.js';
+import { Vector3 } from '../math/Vector3.js';
 
-class WireframeGeometry extends BufferGeometry {
-  constructor(geometry = null) {
+export class WireframeGeometry extends BufferGeometry {
+  declare type: string | 'WireframeGeometry';
+  declare parameters: {
+    geometry: BufferGeometry;
+  };
+
+  constructor(geometry: BufferGeometry) {
     super();
 
     this.type = 'WireframeGeometry';
@@ -16,7 +21,7 @@ class WireframeGeometry extends BufferGeometry {
       // buffer
 
       const vertices = [];
-      const edges = new Set();
+      const edges = new Set<string>();
 
       // helper variables
 
@@ -87,7 +92,7 @@ class WireframeGeometry extends BufferGeometry {
     }
   }
 
-  copy(source) {
+  copy(source: this): this {
     super.copy(source);
 
     this.parameters = Object.assign({}, source.parameters);
@@ -95,8 +100,9 @@ class WireframeGeometry extends BufferGeometry {
     return this;
   }
 }
+WireframeGeometry.prototype.type = 'WireframeGeometry';
 
-function isUniqueEdge(start, end, edges) {
+function isUniqueEdge(start: Vector3, end: Vector3, edges: Set<string>) {
   const hash1 = `${start.x},${start.y},${start.z}-${end.x},${end.y},${end.z}`;
   const hash2 = `${end.x},${end.y},${end.z}-${start.x},${start.y},${start.z}`; // coincident edge
 
@@ -108,5 +114,3 @@ function isUniqueEdge(start, end, edges) {
     return true;
   }
 }
-
-export { WireframeGeometry };

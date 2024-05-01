@@ -1,16 +1,35 @@
-import { BufferGeometry } from '../core/BufferGeometry.ts';
-import { Float32BufferAttribute } from '../core/BufferAttribute.ts';
-import * as Curves from '../extras/curves/Curves.ts';
-import { Vector2 } from '../math/Vector2.ts';
-import { Vector3 } from '../math/Vector3.ts';
+import { BufferGeometry } from '../core/BufferGeometry.js';
+import { Float32BufferAttribute } from '../core/BufferAttribute.js';
+import * as Curves from '../extras/curves/Curves.js';
+import { Vector2 } from '../math/Vector2.js';
+import { Vector3 } from '../math/Vector3.js';
+import { Curve } from '@modules/renderer/threejs/extras/core/Curve.js';
+import { QuadraticBezierCurve3 } from '../extras/curves/Curves.js';
 
-class TubeGeometry extends BufferGeometry {
+export class TubeGeometry extends BufferGeometry {
+  declare type: string | 'TubeGeometry';
+  declare parameters: {
+    path: Curve<Vector3>;
+    tubularSegments: number;
+    radius: number;
+    radialSegments: number;
+    closed: boolean;
+  };
+
+  tangents: Vector3[];
+  normals: Vector3[];
+  binormals: Vector3[];
+
   constructor(
-    path = new Curves['QuadraticBezierCurve3'](new Vector3(-1, -1, 0), new Vector3(-1, 1, 0), new Vector3(1, 1, 0)),
-    tubularSegments = 64,
-    radius = 1,
-    radialSegments = 8,
-    closed = false,
+    path: QuadraticBezierCurve3 = new QuadraticBezierCurve3(
+      new Vector3(-1, -1, 0),
+      new Vector3(-1, 1, 0),
+      new Vector3(1, 1, 0),
+    ),
+    tubularSegments: number = 64,
+    radius: number = 1,
+    radialSegments: number = 8,
+    closed: boolean = false,
   ) {
     super();
 
@@ -41,10 +60,10 @@ class TubeGeometry extends BufferGeometry {
 
     // buffer
 
-    const vertices = [];
-    const normals = [];
-    const uvs = [];
-    const indices = [];
+    const vertices: number[] = [];
+    const normals: number[] = [];
+    const uvs: number[] = [];
+    const indices: number[] = [];
 
     // create buffer data
 
@@ -81,7 +100,7 @@ class TubeGeometry extends BufferGeometry {
       generateIndices();
     }
 
-    function generateSegment(i) {
+    function generateSegment(i: number) {
       // we use getPointAt to sample evenly distributed points from the given path
 
       P = path.getPointAt(i / tubularSegments, P);
@@ -146,33 +165,13 @@ class TubeGeometry extends BufferGeometry {
     }
   }
 
-  copy(source) {
+  copy(source: this): this {
     super.copy(source);
 
     this.parameters = Object.assign({}, source.parameters);
 
     return this;
   }
-
-  toJSON() {
-    const data = super.toJSON();
-
-    data.path = this.parameters.path.toJSON();
-
-    return data;
-  }
-
-  static fromJSON(data) {
-    // This only works for built-in curves (e.g. CatmullRomCurve3).
-    // User defined curves or instances of CurvePath will not be deserialized.
-    return new TubeGeometry(
-      new Curves[data.path.type]().fromJSON(data.path),
-      data.tubularSegments,
-      data.radius,
-      data.radialSegments,
-      data.closed,
-    );
-  }
 }
 
-export { TubeGeometry };
+TubeGeometry.prototype.type = 'TubeGeometry';

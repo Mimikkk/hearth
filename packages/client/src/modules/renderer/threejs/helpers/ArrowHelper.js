@@ -1,7 +1,7 @@
 import { Float32BufferAttribute } from '../core/BufferAttribute.ts';
 import { BufferGeometry } from '../core/BufferGeometry.ts';
 import { Object3D } from '../core/Object3D.ts';
-import { CylinderGeometry } from '../geometries/CylinderGeometry.js';
+import { CylinderGeometry } from '../geometries/CylinderGeometry.ts';
 import { MeshBasicMaterial } from '../materials/MeshBasicMaterial.ts';
 import { LineBasicMaterial } from '../materials/LineBasicMaterial.ts';
 import { Mesh } from '../objects/Mesh.ts';

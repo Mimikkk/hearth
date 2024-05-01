@@ -1,13 +1,21 @@
-import { BufferGeometry } from '../core/BufferGeometry.ts';
-import { Float32BufferAttribute } from '../core/BufferAttribute.ts';
-import { Vector3 } from '../math/Vector3.ts';
+import { BufferGeometry } from '../core/BufferGeometry.js';
+import { Float32BufferAttribute } from '../core/BufferAttribute.js';
+import { Vector3 } from '../math/Vector3.js';
 
-class TorusGeometry extends BufferGeometry {
+export class TorusGeometry extends BufferGeometry {
+  declare type: string | 'TorusGeometry';
+  declare parameters: {
+    radius: number;
+    tube: number;
+    radialSegments: number;
+    tubularSegments: number;
+    arc: number;
+  };
+
   constructor(radius = 1, tube = 0.4, radialSegments = 12, tubularSegments = 48, arc = Math.PI * 2) {
     super();
 
     this.type = 'TorusGeometry';
-
     this.parameters = {
       radius: radius,
       tube: tube,
@@ -88,17 +96,12 @@ class TorusGeometry extends BufferGeometry {
     this.setAttribute('uv', new Float32BufferAttribute(uvs, 2));
   }
 
-  copy(source) {
+  copy(source: this): this {
     super.copy(source);
 
     this.parameters = Object.assign({}, source.parameters);
 
     return this;
   }
-
-  static fromJSON(data) {
-    return new TorusGeometry(data.radius, data.tube, data.radialSegments, data.tubularSegments, data.arc);
-  }
 }
-
-export { TorusGeometry };
+TorusGeometry.prototype.type = 'TorusGeometry';

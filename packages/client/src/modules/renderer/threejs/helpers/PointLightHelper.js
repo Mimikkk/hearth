@@ -1,6 +1,6 @@
 import { Mesh } from '../objects/Mesh.ts';
 import { MeshBasicMaterial } from '../materials/MeshBasicMaterial.ts';
-import { SphereGeometry } from '../geometries/SphereGeometry.js';
+import { SphereGeometry } from '../geometries/SphereGeometry.ts';
 
 class PointLightHelper extends Mesh {
   constructor(light, sphereSize, color) {

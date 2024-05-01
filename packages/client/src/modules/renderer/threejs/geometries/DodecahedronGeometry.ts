@@ -1,11 +1,17 @@
 import { PolyhedronGeometry } from './PolyhedronGeometry.js';
 
-class DodecahedronGeometry extends PolyhedronGeometry {
-  constructor(radius = 1, detail = 0) {
+export class DodecahedronGeometry extends PolyhedronGeometry {
+  declare type: string | 'DodecahedronGeometry';
+  declare parameters: {
+    radius: number;
+    detail: number;
+  };
+
+  constructor(radius: number = 1, detail: number = 0) {
     const t = (1 + Math.sqrt(5)) / 2;
     const r = 1 / t;
 
-    const vertices = [
+    const vertices: number[] = [
       // (±1, ±1, ±1)
       -1,
       -1,
@@ -86,15 +92,8 @@ class DodecahedronGeometry extends PolyhedronGeometry {
 
     this.type = 'DodecahedronGeometry';
 
-    this.parameters = {
-      radius: radius,
-      detail: detail,
-    };
-  }
-
-  static fromJSON(data) {
-    return new DodecahedronGeometry(data.radius, data.detail);
+    this.parameters = { radius, detail };
   }
 }
 
-export { DodecahedronGeometry };
+DodecahedronGeometry.prototype.type = 'DodecahedronGeometry';
