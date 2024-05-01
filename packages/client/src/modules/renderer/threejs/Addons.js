@@ -16,11 +16,6 @@ export * from '@modules/renderer/threejs/controls/PointerLockControls.ts';
 export * from '@modules/renderer/threejs/controls/TrackballControls.ts';
 export * from '@modules/renderer/threejs/controls/TransformControls.ts';
 
-export * from '@modules/renderer/threejs/csm/CSM.js';
-export * from '@modules/renderer/threejs/csm/CSMFrustum.js';
-export * from '@modules/renderer/threejs/csm/CSMHelper.js';
-export * from '@modules/renderer/threejs/csm/CSMShader.js';
-
 export * as Curves from '@modules/renderer/threejs/curves/CurveExtras.ts';
 export * from '@modules/renderer/threejs/curves/NURBSCurve.ts';
 export * from '@modules/renderer/threejs/curves/NURBSSurface.ts';
