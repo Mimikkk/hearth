@@ -5,6 +5,7 @@ import {
   LineBasicMaterial,
   Mesh,
   MeshBasicMaterial,
+  RectAreaLight,
   Side,
 } from '../Three.js';
 
@@ -12,8 +13,12 @@ import {
  *  This helper must be added as a child of the light
  */
 
-class RectAreaLightHelper extends Line {
-  constructor(light, color) {
+export class RectAreaLightHelper extends Line {
+  declare type: string | 'RectAreaLightHelper';
+  light: RectAreaLight;
+  color: number | undefined;
+
+  constructor(light: RectAreaLight, color?: number) {
     const positions = [1, 1, 0, -1, 1, 0, -1, -1, 0, 1, -1, 0, 1, 1, 0];
 
     const geometry = new BufferGeometry();
@@ -25,7 +30,7 @@ class RectAreaLightHelper extends Line {
     super(geometry, material);
 
     this.light = light;
-    this.color = color; // optional hardwired color for the helper
+    this.color = color;
     this.type = 'RectAreaLightHelper';
 
     //
@@ -43,31 +48,32 @@ class RectAreaLightHelper extends Line {
     this.scale.set(0.5 * this.light.width, 0.5 * this.light.height, 1);
 
     if (this.color !== undefined) {
-      this.material.color.set(this.color);
-      this.children[0].material.color.set(this.color);
+      (this.material as MeshBasicMaterial).color.set(this.color);
+      ((this.children[0] as Mesh).material as MeshBasicMaterial).color.set(this.color);
     } else {
-      this.material.color.copy(this.light.color).multiplyScalar(this.light.intensity);
+      (this.material as MeshBasicMaterial).color.copy(this.light.color).multiplyScalar(this.light.intensity);
 
       // prevent hue shift
-      const c = this.material.color;
+      const c = (this.material as MeshBasicMaterial).color;
       const max = Math.max(c.r, c.g, c.b);
       if (max > 1) c.multiplyScalar(1 / max);
 
-      this.children[0].material.color.copy(this.material.color);
+      ((this.children[0] as Mesh).material as MeshBasicMaterial).color.copy((this.material as MeshBasicMaterial).color);
     }
 
     // ignore world scale on light
     this.matrixWorld.extractRotation(this.light.matrixWorld).scale(this.scale).copyPosition(this.light.matrixWorld);
 
     this.children[0].matrixWorld.copy(this.matrixWorld);
+    return this;
   }
 
   dispose() {
     this.geometry.dispose();
     this.material.dispose();
-    this.children[0].geometry.dispose();
-    this.children[0].material.dispose();
+    (this.children[0].geometry as BufferGeometry).dispose();
+    (this.children[0] as Mesh).material.dispose();
   }
 }
 
-export { RectAreaLightHelper };
+RectAreaLightHelper.prototype.type = 'RectAreaLightHelper';

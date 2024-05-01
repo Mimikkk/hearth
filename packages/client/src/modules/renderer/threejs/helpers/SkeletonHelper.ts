@@ -1,17 +1,24 @@
-import { LineSegments } from '../objects/LineSegments.ts';
-import { Matrix4 } from '../math/Matrix4.ts';
-import { LineBasicMaterial } from '../materials/LineBasicMaterial.ts';
-import { Color } from '../math/Color.ts';
-import { Vector3 } from '../math/Vector3.ts';
-import { BufferGeometry } from '../core/BufferGeometry.ts';
-import { Float32BufferAttribute } from '../core/BufferAttribute.ts';
+import { LineSegments } from '../objects/LineSegments.js';
+import { Matrix4 } from '../math/Matrix4.js';
+import { LineBasicMaterial } from '../materials/LineBasicMaterial.js';
+import { Color } from '../math/Color.js';
+import { Vector3 } from '../math/Vector3.js';
+import { BufferGeometry } from '../core/BufferGeometry.js';
+import { Float32BufferAttribute } from '../core/BufferAttribute.js';
+import { Object3D } from '@modules/renderer/threejs/core/Object3D.js';
+import { Bone } from '@modules/renderer/threejs/objects/Bone.js';
 
 const _vector = /*@__PURE__*/ new Vector3();
 const _boneMatrix = /*@__PURE__*/ new Matrix4();
 const _matrixWorldInv = /*@__PURE__*/ new Matrix4();
 
-class SkeletonHelper extends LineSegments {
-  constructor(object) {
+export class SkeletonHelper extends LineSegments {
+  declare isSkeletonHelper: true;
+  declare type: string | 'SkeletonHelper';
+  root: Object3D;
+  bones: Bone[];
+
+  constructor(object: Object3D) {
     const bones = getBoneList(object);
 
     const geometry = new BufferGeometry();
@@ -25,7 +32,7 @@ class SkeletonHelper extends LineSegments {
     for (let i = 0; i < bones.length; i++) {
       const bone = bones[i];
 
-      if (bone.parent && bone.parent.isBone) {
+      if (bone.parent instanceof Bone) {
         vertices.push(0, 0, 0);
         vertices.push(0, 0, 0);
         colors.push(color1.r, color1.g, color1.b);
@@ -57,7 +64,7 @@ class SkeletonHelper extends LineSegments {
     this.matrixAutoUpdate = false;
   }
 
-  updateMatrixWorld(force) {
+  updateMatrixWorld(force?: boolean): this {
     const bones = this.bones;
 
     const geometry = this.geometry;
@@ -68,7 +75,7 @@ class SkeletonHelper extends LineSegments {
     for (let i = 0, j = 0; i < bones.length; i++) {
       const bone = bones[i];
 
-      if (bone.parent && bone.parent.isBone) {
+      if (bone.parent instanceof Bone) {
         _boneMatrix.multiplyMatrices(_matrixWorldInv, bone.matrixWorld);
         _vector.setFromMatrixPosition(_boneMatrix);
         position.setXYZ(j, _vector.x, _vector.y, _vector.z);
@@ -82,8 +89,7 @@ class SkeletonHelper extends LineSegments {
     }
 
     geometry.getAttribute('position').needsUpdate = true;
-
-    super.updateMatrixWorld(force);
+    return super.updateMatrixWorld(force);
   }
 
   dispose() {
@@ -92,10 +98,13 @@ class SkeletonHelper extends LineSegments {
   }
 }
 
-function getBoneList(object) {
+SkeletonHelper.prototype.isSkeletonHelper = true;
+SkeletonHelper.prototype.type = 'SkeletonHelper';
+
+function getBoneList(object: Object3D) {
   const boneList = [];
 
-  if (object.isBone === true) {
+  if (object instanceof Bone) {
     boneList.push(object);
   }
 
@@ -105,5 +114,3 @@ function getBoneList(object) {
 
   return boneList;
 }
-
-export { SkeletonHelper };

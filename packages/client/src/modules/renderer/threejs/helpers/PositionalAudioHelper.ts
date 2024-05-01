@@ -1,8 +1,19 @@
-import { BufferAttribute, BufferGeometry, Line, LineBasicMaterial } from '../Three.js';
-import { degreeToRadian } from '../math/MathUtils.ts';
+import { BufferAttribute, BufferGeometry, Line, LineBasicMaterial, Material, PositionalAudio } from '../Three.js';
+import { degreeToRadian } from '../math/MathUtils.js';
 
-class PositionalAudioHelper extends Line {
-  constructor(audio, range = 1, divisionsInnerAngle = 16, divisionsOuterAngle = 2) {
+export class PositionalAudioHelper extends Line {
+  declare type: string | 'PositionalAudioHelper';
+  audio: PositionalAudio;
+  range: number;
+  divisionsInnerAngle: number;
+  divisionsOuterAngle: number;
+
+  constructor(
+    audio: PositionalAudio,
+    range: number = 1,
+    divisionsInnerAngle: number = 16,
+    divisionsOuterAngle: number = 2,
+  ) {
     const geometry = new BufferGeometry();
     const divisions = divisionsInnerAngle + divisionsOuterAngle * 2;
     const positions = new Float32Array((divisions * 3 + 3) * 3);
@@ -11,13 +22,12 @@ class PositionalAudioHelper extends Line {
     const materialInnerAngle = new LineBasicMaterial({ color: 0x00ff00 });
     const materialOuterAngle = new LineBasicMaterial({ color: 0xffff00 });
 
-    super(geometry, [materialOuterAngle, materialInnerAngle]);
+    super(geometry, [materialOuterAngle, materialInnerAngle] as any);
 
     this.audio = audio;
     this.range = range;
     this.divisionsInnerAngle = divisionsInnerAngle;
     this.divisionsOuterAngle = divisionsOuterAngle;
-    this.type = 'PositionalAudioHelper';
 
     this.update();
   }
@@ -46,7 +56,7 @@ class PositionalAudioHelper extends Line {
 
     //
 
-    function generateSegment(from, to, divisions, materialIndex) {
+    function generateSegment(from: number, to: number, divisions: number, materialIndex: number) {
       const step = (to - from) / divisions;
 
       positionAttribute.setXYZ(start, 0, 0, 0);
@@ -83,14 +93,14 @@ class PositionalAudioHelper extends Line {
 
     positionAttribute.needsUpdate = true;
 
-    if (coneInnerAngle === coneOuterAngle) this.material[0].visible = false;
+    if (coneInnerAngle === coneOuterAngle) (this.material as never as LineBasicMaterial[])[0].visible = false;
   }
 
   dispose() {
     this.geometry.dispose();
-    this.material[0].dispose();
-    this.material[1].dispose();
+    (this.material as never as LineBasicMaterial[])[0].dispose();
+    (this.material as never as LineBasicMaterial[])[1].dispose();
   }
 }
 
-export { PositionalAudioHelper };
+PositionalAudioHelper.prototype.type = 'PositionalAudioHelper';

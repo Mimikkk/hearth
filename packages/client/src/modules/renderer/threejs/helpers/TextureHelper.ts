@@ -1,19 +1,25 @@
 import {
   BoxGeometry,
   BufferAttribute,
+  CompressedArrayTexture,
+  CubeTexture,
+  Data3DTexture,
+  DataArrayTexture,
   Mesh,
   PlaneGeometry,
   ShaderMaterial,
   Side,
+  Texture,
   Vector3,
 } from '../Three.js';
 import { mergeGeometries } from '@modules/renderer/threejs/utils/BufferGeometryUtils.js';
 
-class TextureHelper extends Mesh {
-  constructor(texture, width = 1, height = 1, depth = 1) {
-    const material = new ShaderMaterial({
-      type: 'TextureHelperMaterial',
+export class TextureHelper extends Mesh {
+  declare type: string | 'TextureHelper';
+  texture: Texture;
 
+  constructor(texture: Texture, width: number = 1, height: number = 1, depth: number = 1) {
+    const material = new ShaderMaterial({
       side: Side.Double,
       transparent: true,
 
@@ -66,10 +72,11 @@ class TextureHelper extends Mesh {
         .join('\n')
         .replace('{samplerType}', getSamplerType(texture)),
     });
-
-    const geometry = texture.isCubeTexture
-      ? createCubeGeometry(width, height, depth)
-      : createSliceGeometry(texture, width, height, depth);
+    material.type = 'TextureMaterialHelper';
+    const geometry =
+      texture instanceof CubeTexture
+        ? createCubeGeometry(width, height, depth)
+        : createSliceGeometry(texture, width, height, depth);
 
     super(geometry, material);
 
@@ -83,43 +90,45 @@ class TextureHelper extends Mesh {
   }
 }
 
-function getSamplerType(texture) {
-  if (texture.isCubeTexture) {
+TextureHelper.prototype.type = 'TextureHelper';
+
+function getSamplerType(texture: Texture) {
+  if (texture instanceof CubeTexture) {
     return 'samplerCube';
-  } else if (texture.isDataArrayTexture || texture.isCompressedArrayTexture) {
+  } else if (texture instanceof DataArrayTexture || texture instanceof CompressedArrayTexture) {
     return 'sampler2DArray';
-  } else if (texture.isData3DTexture || texture.isCompressed3DTexture) {
+  } else if (texture instanceof Data3DTexture) {
     return 'sampler3D';
   } else {
     return 'sampler2D';
   }
 }
 
-function getImageCount(texture) {
-  if (texture.isCubeTexture) {
+function getImageCount(texture: Texture) {
+  if (texture instanceof CubeTexture) {
     return 6;
-  } else if (texture.isDataArrayTexture || texture.isCompressedArrayTexture) {
+  } else if (texture instanceof DataArrayTexture || texture instanceof CompressedArrayTexture) {
     return texture.image.depth;
-  } else if (texture.isData3DTexture || texture.isCompressed3DTexture) {
+  } else if (texture instanceof Data3DTexture) {
     return texture.image.depth;
   } else {
     return 1;
   }
 }
 
-function getAlpha(texture) {
-  if (texture.isCubeTexture) {
+function getAlpha(texture: Texture) {
+  if (texture instanceof CubeTexture) {
     return 1;
-  } else if (texture.isDataArrayTexture || texture.isCompressedArrayTexture) {
+  } else if (texture instanceof DataArrayTexture || texture instanceof CompressedArrayTexture) {
     return Math.max(1 / texture.image.depth, 0.25);
-  } else if (texture.isData3DTexture || texture.isCompressed3DTexture) {
+  } else if (texture instanceof Data3DTexture) {
     return Math.max(1 / texture.image.depth, 0.25);
   } else {
     return 1;
   }
 }
 
-function createCubeGeometry(width, height, depth) {
+function createCubeGeometry(width: number, height: number, depth: number) {
   const geometry = new BoxGeometry(width, height, depth);
 
   const position = geometry.attributes.position;
@@ -144,7 +153,7 @@ function createCubeGeometry(width, height, depth) {
   return geometry;
 }
 
-function createSliceGeometry(texture, width, height, depth) {
+function createSliceGeometry(texture: Texture, width: number, height: number, depth: number) {
   const sliceCount = getImageCount(texture);
 
   const geometries = [];
@@ -165,7 +174,7 @@ function createSliceGeometry(texture, width, height, depth) {
       const w =
         sliceCount === 1
           ? 1
-          : texture.isDataArrayTexture || texture.isCompressedArrayTexture
+          : texture instanceof DataArrayTexture || texture instanceof CompressedArrayTexture
             ? i
             : i / (sliceCount - 1);
 
@@ -180,5 +189,3 @@ function createSliceGeometry(texture, width, height, depth) {
 
   return mergeGeometries(geometries);
 }
-
-export { TextureHelper };

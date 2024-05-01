@@ -1,13 +1,17 @@
-import { Box3 } from '../math/Box3.ts';
-import { LineSegments } from '../objects/LineSegments.ts';
-import { LineBasicMaterial } from '../materials/LineBasicMaterial.ts';
-import { BufferAttribute } from '../core/BufferAttribute.ts';
-import { BufferGeometry } from '../core/BufferGeometry.ts';
+import { Box3 } from '../math/Box3.js';
+import { LineSegments } from '../objects/LineSegments.js';
+import { LineBasicMaterial } from '../materials/LineBasicMaterial.js';
+import { BufferAttribute } from '../core/BufferAttribute.js';
+import { BufferGeometry } from '../core/BufferGeometry.js';
+import { Object3D } from '@modules/renderer/threejs/core/Object3D.js';
 
 const _box = /*@__PURE__*/ new Box3();
 
-class BoxHelper extends LineSegments {
-  constructor(object, color = 0xffff00) {
+export class BoxHelper extends LineSegments {
+  declare type: string | 'BoxHelper';
+  object: Object3D;
+
+  constructor(object: Object3D, color = 0xffff00) {
     const indices = new Uint16Array([0, 1, 1, 2, 2, 3, 3, 0, 4, 5, 5, 6, 6, 7, 7, 4, 0, 4, 1, 5, 2, 6, 3, 7]);
     const positions = new Float32Array(8 * 3);
 
@@ -18,21 +22,12 @@ class BoxHelper extends LineSegments {
     super(geometry, new LineBasicMaterial({ color: color, toneMapped: false }));
 
     this.object = object;
-    this.type = 'BoxHelper';
-
     this.matrixAutoUpdate = false;
-
     this.update();
   }
 
-  update(object) {
-    if (object !== undefined) {
-      console.warn('THREE.BoxHelper: .update() has no longer arguments.');
-    }
-
-    if (this.object !== undefined) {
-      _box.setFromObject(this.object);
-    }
+  update() {
+    if (this.object !== undefined) _box.setFromObject(this.object);
 
     if (_box.isEmpty()) return;
 
@@ -88,14 +83,14 @@ class BoxHelper extends LineSegments {
     this.geometry.computeBoundingSphere();
   }
 
-  setFromObject(object) {
+  setFromObject(object: Object3D) {
     this.object = object;
     this.update();
 
     return this;
   }
 
-  copy(source, recursive) {
+  copy(source: this, recursive?: boolean): this {
     super.copy(source, recursive);
 
     this.object = source.object;
@@ -109,4 +104,4 @@ class BoxHelper extends LineSegments {
   }
 }
 
-export { BoxHelper };
+BoxHelper.prototype.type = 'BoxHelper';

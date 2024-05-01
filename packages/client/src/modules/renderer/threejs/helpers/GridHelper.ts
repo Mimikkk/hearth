@@ -1,11 +1,18 @@
-import { LineSegments } from '../objects/LineSegments.ts';
-import { LineBasicMaterial } from '../materials/LineBasicMaterial.ts';
-import { Float32BufferAttribute } from '../core/BufferAttribute.ts';
-import { BufferGeometry } from '../core/BufferGeometry.ts';
-import { Color } from '../math/Color.ts';
+import { LineSegments } from '../objects/LineSegments.js';
+import { LineBasicMaterial } from '../materials/LineBasicMaterial.js';
+import { Float32BufferAttribute } from '../core/BufferAttribute.js';
+import { BufferGeometry } from '../core/BufferGeometry.js';
+import { Color, ColorRepresentation } from '../math/Color.js';
 
-class GridHelper extends LineSegments {
-  constructor(size = 10, divisions = 10, color1 = 0x444444, color2 = 0x888888) {
+export class GridHelper extends LineSegments {
+  declare type: string | 'GridHelper';
+
+  constructor(
+    size: number = 10,
+    divisions: number = 10,
+    color1: ColorRepresentation = 0x444444,
+    color2: ColorRepresentation = 0x888888,
+  ) {
     color1 = new Color(color1);
     color2 = new Color(color2);
 
@@ -13,8 +20,8 @@ class GridHelper extends LineSegments {
     const step = size / divisions;
     const halfSize = size / 2;
 
-    const vertices = [],
-      colors = [];
+    const vertices: number[] = [];
+    const colors: number[] = [];
 
     for (let i = 0, j = 0, k = -halfSize; i <= divisions; i++, k += step) {
       vertices.push(-halfSize, 0, k, halfSize, 0, k);
@@ -39,8 +46,6 @@ class GridHelper extends LineSegments {
     const material = new LineBasicMaterial({ vertexColors: true, toneMapped: false });
 
     super(geometry, material);
-
-    this.type = 'GridHelper';
   }
 
   dispose() {
@@ -49,4 +54,4 @@ class GridHelper extends LineSegments {
   }
 }
 
-export { GridHelper };
+GridHelper.prototype.type = 'GridHelper';

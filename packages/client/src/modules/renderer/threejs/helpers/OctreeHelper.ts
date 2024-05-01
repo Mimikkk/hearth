@@ -1,21 +1,25 @@
 import { LineSegments, BufferGeometry, Float32BufferAttribute, LineBasicMaterial } from '../Three.js';
+import { Octree } from '@modules/renderer/threejs/math/Octree.js';
+import { ColorRepresentation } from '@modules/renderer/threejs/math/Color.js';
 
-class OctreeHelper extends LineSegments {
-  constructor(octree, color = 0xffff00) {
+export class OctreeHelper extends LineSegments {
+  declare type: string | 'OctreeHelper';
+  octree: Octree;
+  color: ColorRepresentation;
+
+  constructor(octree: Octree, color: ColorRepresentation = 0xffff00) {
     super(new BufferGeometry(), new LineBasicMaterial({ color: color, toneMapped: false }));
 
     this.octree = octree;
     this.color = color;
 
-    this.type = 'OctreeHelper';
-
     this.update();
   }
 
   update() {
-    const vertices = [];
+    const vertices: number[] = [];
 
-    function traverse(tree) {
+    function traverse(tree: Octree[]) {
       for (let i = 0; i < tree.length; i++) {
         const min = tree[i].box.min;
         const max = tree[i].box.max;
@@ -64,5 +68,4 @@ class OctreeHelper extends LineSegments {
     this.material.dispose();
   }
 }
-
-export { OctreeHelper };
+OctreeHelper.prototype.type = 'OctreeHelper';

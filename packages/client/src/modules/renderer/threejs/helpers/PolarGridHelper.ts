@@ -1,11 +1,20 @@
-import { LineSegments } from '../objects/LineSegments.ts';
-import { LineBasicMaterial } from '../materials/LineBasicMaterial.ts';
-import { Float32BufferAttribute } from '../core/BufferAttribute.ts';
-import { BufferGeometry } from '../core/BufferGeometry.ts';
-import { Color } from '../math/Color.ts';
+import { LineSegments } from '../objects/LineSegments.js';
+import { LineBasicMaterial } from '../materials/LineBasicMaterial.js';
+import { Float32BufferAttribute } from '../core/BufferAttribute.js';
+import { BufferGeometry } from '../core/BufferGeometry.js';
+import { Color, ColorRepresentation } from '../math/Color.js';
 
-class PolarGridHelper extends LineSegments {
-  constructor(radius = 10, sectors = 16, rings = 8, divisions = 64, color1 = 0x444444, color2 = 0x888888) {
+export class PolarGridHelper extends LineSegments {
+  declare type: string | 'PolarGridHelper';
+
+  constructor(
+    radius: number = 10,
+    sectors: number = 16,
+    rings: number = 8,
+    divisions: number = 64,
+    color1: ColorRepresentation = 0x444444,
+    color2: ColorRepresentation = 0x888888,
+  ) {
     color1 = new Color(color1);
     color2 = new Color(color2);
 
@@ -68,8 +77,6 @@ class PolarGridHelper extends LineSegments {
     const material = new LineBasicMaterial({ vertexColors: true, toneMapped: false });
 
     super(geometry, material);
-
-    this.type = 'PolarGridHelper';
   }
 
   dispose() {
@@ -78,4 +85,4 @@ class PolarGridHelper extends LineSegments {
   }
 }
 
-export { PolarGridHelper };
+PolarGridHelper.prototype.type = 'PolarGridHelper';

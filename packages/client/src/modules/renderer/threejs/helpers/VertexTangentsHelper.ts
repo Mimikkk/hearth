@@ -4,17 +4,23 @@ import {
   LineSegments,
   LineBasicMaterial,
   Vector3,
+  Object3D,
 } from '../Three.js';
+import { ColorRepresentation } from '@modules/renderer/threejs/math/Color.js';
 
 const _v1 = new Vector3();
 const _v2 = new Vector3();
 
-class VertexTangentsHelper extends LineSegments {
-  constructor(object, size = 1, color = 0x00ffff) {
+export class VertexTangentsHelper extends LineSegments {
+  declare type: string | 'VertexTangentsHelper';
+  object: Object3D;
+  size: number;
+
+  constructor(object: Object3D, size: number = 1, color: ColorRepresentation = 0x00ffff) {
     const geometry = new BufferGeometry();
 
-    const nTangents = object.geometry.attributes.tangent.count;
-    const positions = new Float32BufferAttribute(nTangents * 2 * 3, 3);
+    const nTangents = object.geometry!.attributes.tangent.count;
+    const positions = new Float32BufferAttribute(new Array(nTangents * 2 * 3), 3);
 
     geometry.setAttribute('position', positions);
 
@@ -22,9 +28,6 @@ class VertexTangentsHelper extends LineSegments {
 
     this.object = object;
     this.size = size;
-    this.type = 'VertexTangentsHelper';
-
-    //
 
     this.matrixAutoUpdate = false;
 
@@ -38,17 +41,13 @@ class VertexTangentsHelper extends LineSegments {
 
     const position = this.geometry.attributes.position;
 
-    //
-
-    const objGeometry = this.object.geometry;
+    const objGeometry = this.object.geometry!;
 
     const objPos = objGeometry.attributes.position;
 
     const objTan = objGeometry.attributes.tangent;
 
     let idx = 0;
-
-    // for simplicity, ignore index and drawcalls, and render every tangent
 
     for (let j = 0, jl = objPos.count; j < jl; j++) {
       _v1.fromBufferAttribute(objPos, j).applyMatrix4(matrixWorld);
@@ -75,4 +74,4 @@ class VertexTangentsHelper extends LineSegments {
   }
 }
 
-export { VertexTangentsHelper };
+VertexTangentsHelper.prototype.type = 'VertexTangentsHelper';

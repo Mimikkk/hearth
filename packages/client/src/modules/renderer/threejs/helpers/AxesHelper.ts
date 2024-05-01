@@ -1,8 +1,8 @@
-import { LineSegments } from '../objects/LineSegments.ts';
-import { LineBasicMaterial } from '../materials/LineBasicMaterial.ts';
-import { Float32BufferAttribute } from '../core/BufferAttribute.ts';
-import { BufferGeometry } from '../core/BufferGeometry.ts';
-import { Color } from '../math/Color.ts';
+import { LineSegments } from '../objects/LineSegments.js';
+import { LineBasicMaterial } from '../materials/LineBasicMaterial.js';
+import { Float32BufferAttribute } from '../core/BufferAttribute.js';
+import { BufferGeometry } from '../core/BufferGeometry.js';
+import { Color } from '../math/Color.js';
 
 class AxesHelper extends LineSegments {
   constructor(size = 1) {

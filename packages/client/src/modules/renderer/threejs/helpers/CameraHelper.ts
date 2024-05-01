@@ -1,10 +1,12 @@
-import { Camera } from '../cameras/Camera.ts';
-import { Vector3 } from '../math/Vector3.ts';
-import { LineSegments } from '../objects/LineSegments.ts';
-import { Color } from '../math/Color.ts';
-import { LineBasicMaterial } from '../materials/LineBasicMaterial.ts';
-import { BufferGeometry } from '../core/BufferGeometry.ts';
-import { Float32BufferAttribute } from '../core/BufferAttribute.ts';
+import { Camera } from '../cameras/Camera.js';
+import { Vector3 } from '../math/Vector3.js';
+import { LineSegments } from '../objects/LineSegments.js';
+import { Color } from '../math/Color.js';
+import { LineBasicMaterial } from '../materials/LineBasicMaterial.js';
+import { BufferGeometry } from '../core/BufferGeometry.js';
+import { Float32BufferAttribute } from '../core/BufferAttribute.js';
+import { PerspectiveCamera } from '@modules/renderer/threejs/cameras/PerspectiveCamera.js';
+import { OrthographicCamera } from '@modules/renderer/threejs/cameras/OrthographicCamera.js';
 
 const _vector = /*@__PURE__*/ new Vector3();
 const _camera = /*@__PURE__*/ new Camera();
@@ -16,15 +18,18 @@ const _camera = /*@__PURE__*/ new Camera();
  *    https://github.com/evanw/lightgl.js/blob/master/tests/shadowmap.html
  */
 
-class CameraHelper extends LineSegments {
-  constructor(camera) {
+export class CameraHelper extends LineSegments {
+  camera: Camera;
+  pointMap: Record<string, number[]>;
+
+  constructor(camera: Camera) {
     const geometry = new BufferGeometry();
     const material = new LineBasicMaterial({ color: 0xffffff, vertexColors: true, toneMapped: false });
 
-    const vertices = [];
-    const colors = [];
+    const vertices: number[] = [];
+    const colors: number[] = [];
 
-    const pointMap = {};
+    const pointMap: Record<string, number[]> = {};
 
     // near
 
@@ -73,12 +78,12 @@ class CameraHelper extends LineSegments {
     addLine('cf1', 'cf2');
     addLine('cf3', 'cf4');
 
-    function addLine(a, b) {
+    function addLine(a: string, b: string) {
       addPoint(a);
       addPoint(b);
     }
 
-    function addPoint(id) {
+    function addPoint(id: string) {
       vertices.push(0, 0, 0);
       colors.push(0, 0, 0);
 
@@ -97,7 +102,7 @@ class CameraHelper extends LineSegments {
     this.type = 'CameraHelper';
 
     this.camera = camera;
-    if (this.camera.updateProjectionMatrix) this.camera.updateProjectionMatrix();
+    (this.camera as PerspectiveCamera | OrthographicCamera)?.updateProjectionMatrix();
 
     this.matrix = camera.matrixWorld;
     this.matrixAutoUpdate = false;
@@ -117,7 +122,7 @@ class CameraHelper extends LineSegments {
     this.setColors(colorFrustum, colorCone, colorUp, colorTarget, colorCross);
   }
 
-  setColors(frustum, cone, up, target, cross) {
+  setColors(frustum: Color, cone: Color, up: Color, target: Color, cross: Color) {
     const geometry = this.geometry;
 
     const colorAttribute = geometry.getAttribute('color');
@@ -255,7 +260,15 @@ class CameraHelper extends LineSegments {
   }
 }
 
-function setPoint(point, pointMap, geometry, camera, x, y, z) {
+function setPoint(
+  point: string,
+  pointMap: Record<string, number[]>,
+  geometry: BufferGeometry,
+  camera: Camera,
+  x: number,
+  y: number,
+  z: number,
+) {
   _vector.set(x, y, z).unproject(camera);
 
   const points = pointMap[point];
@@ -268,5 +281,3 @@ function setPoint(point, pointMap, geometry, camera, x, y, z) {
     }
   }
 }
-
-export { CameraHelper };

@@ -1,5 +1,6 @@
 import {
   BoxGeometry,
+  Camera,
   CanvasTexture,
   Color,
   Euler,
@@ -15,9 +16,14 @@ import {
   Vector3,
   Vector4,
 } from '../Three.js';
+import Renderer from '@modules/renderer/threejs/renderers/common/Renderer.js';
 
-class ViewHelper extends Object3D {
-  constructor(camera, domElement) {
+export class ViewHelper extends Object3D {
+  isViewHelper: boolean;
+  animating: boolean;
+  center: Vector3;
+
+  constructor(camera: Camera, domElement: HTMLElement) {
     super();
 
     this.isViewHelper = true;
@@ -29,8 +35,8 @@ class ViewHelper extends Object3D {
     const color2 = new Color('#8adb00');
     const color3 = new Color('#2c8fff');
 
-    const interactiveObjects = [];
-    const raycaster = new Raycaster();
+    const interactiveObjects: Object3D[] = [];
+    const raycaster = new Raycaster(undefined!, undefined!);
     const mouse = new Vector2();
     const dummy = new Object3D();
 
@@ -161,7 +167,7 @@ class ViewHelper extends Object3D {
         const intersection = intersects[0];
         const object = intersection.object;
 
-        prepareAnimationData(object, this.center);
+        prepareAnimationData(object as Sprite, this.center);
 
         this.animating = true;
 
@@ -195,11 +201,17 @@ class ViewHelper extends Object3D {
       yAxis.material.dispose();
       zAxis.material.dispose();
 
+      //@ts-expect-error
       posXAxisHelper.material.map.dispose();
+      //@ts-expect-error
       posYAxisHelper.material.map.dispose();
+      //@ts-expect-error
       posZAxisHelper.material.map.dispose();
+      //@ts-expect-error
       negXAxisHelper.material.map.dispose();
+      //@ts-expect-error
       negYAxisHelper.material.map.dispose();
+      //@ts-expect-error
       negZAxisHelper.material.map.dispose();
 
       posXAxisHelper.material.dispose();
@@ -210,7 +222,7 @@ class ViewHelper extends Object3D {
       negZAxisHelper.material.dispose();
     };
 
-    function prepareAnimationData(object, focusPoint) {
+    function prepareAnimationData(object: Sprite, focusPoint: Vector3) {
       switch (object.userData.type) {
         case 'posX':
           targetPosition.set(1, 0, 0);
@@ -260,16 +272,16 @@ class ViewHelper extends Object3D {
       q2.copy(dummy.quaternion);
     }
 
-    function getAxisMaterial(color) {
+    function getAxisMaterial(color: Color) {
       return new MeshBasicMaterial({ color: color, toneMapped: false });
     }
 
-    function getSpriteMaterial(color, text = null) {
+    function getSpriteMaterial(color: Color, text: string | null = null) {
       const canvas = document.createElement('canvas');
       canvas.width = 64;
       canvas.height = 64;
 
-      const context = canvas.getContext('2d');
+      const context = canvas.getContext('2d')!;
       context.beginPath();
       context.arc(32, 32, 16, 0, 2 * Math.PI);
       context.closePath();
@@ -288,6 +300,11 @@ class ViewHelper extends Object3D {
       return new SpriteMaterial({ map: texture, toneMapped: false });
     }
   }
+
+  render: (renderer: Renderer) => void;
+  handleClick: (event: MouseEvent) => boolean;
+  update: (delta: number) => void;
+  dispose: () => void;
 }
 
-export { ViewHelper };
+ViewHelper.prototype.type = 'ViewHelper';

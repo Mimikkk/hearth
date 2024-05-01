@@ -1,12 +1,18 @@
-import { Line } from '../objects/Line.ts';
-import { Mesh } from '../objects/Mesh.ts';
-import { LineBasicMaterial } from '../materials/LineBasicMaterial.ts';
-import { MeshBasicMaterial } from '../materials/MeshBasicMaterial.ts';
-import { Float32BufferAttribute } from '../core/BufferAttribute.ts';
-import { BufferGeometry } from '../core/BufferGeometry.ts';
+import { Line } from '../objects/Line.js';
+import { Mesh } from '../objects/Mesh.js';
+import { LineBasicMaterial } from '../materials/LineBasicMaterial.js';
+import { MeshBasicMaterial } from '../materials/MeshBasicMaterial.js';
+import { Float32BufferAttribute } from '../core/BufferAttribute.js';
+import { BufferGeometry } from '../core/BufferGeometry.js';
+import { Plane } from '@modules/renderer/threejs/math/Plane.js';
+import { ColorRepresentation } from '@modules/renderer/threejs/math/Color.js';
 
-class PlaneHelper extends Line {
-  constructor(plane, size = 1, hex = 0xffff00) {
+export class PlaneHelper extends Line {
+  declare type: string | 'PlaneHelper';
+  plane: Plane;
+  size: number;
+
+  constructor(plane: Plane, size: number = 1, hex: ColorRepresentation = 0xffff00) {
     const color = hex;
 
     const positions = [1, -1, 0, -1, 1, 0, -1, -1, 0, 1, 1, 0, -1, 1, 0, -1, -1, 0, 1, -1, 0, 1, 1, 0];
@@ -43,7 +49,7 @@ class PlaneHelper extends Line {
     );
   }
 
-  updateMatrixWorld(force) {
+  updateMatrixWorld(force?: boolean): this {
     this.position.set(0, 0, 0);
 
     this.scale.set(0.5 * this.size, 0.5 * this.size, 1);
@@ -52,15 +58,15 @@ class PlaneHelper extends Line {
 
     this.translateZ(-this.plane.constant);
 
-    super.updateMatrixWorld(force);
+    return super.updateMatrixWorld(force);
   }
 
   dispose() {
     this.geometry.dispose();
     this.material.dispose();
-    this.children[0].geometry.dispose();
-    this.children[0].material.dispose();
+    (this.children[0] as Mesh).geometry.dispose();
+    (this.children[0] as Mesh).material.dispose();
   }
 }
 
-export { PlaneHelper };
+PlaneHelper.prototype.type = 'PlaneHelper';

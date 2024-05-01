@@ -45,14 +45,14 @@ export * from './geometries/RoundedBoxGeometry.ts';
 export * from './geometries/TeapotGeometry.ts';
 export * from './geometries/TextGeometry.ts';
 
-export * from './helpers/LightProbeHelper.js';
-export * from './helpers/OctreeHelper.js';
-export * from './helpers/PositionalAudioHelper.js';
-export * from './helpers/RectAreaLightHelper.js';
-export * from './helpers/TextureHelper.js';
-export * from './helpers/VertexNormalsHelper.js';
-export * from './helpers/VertexTangentsHelper.js';
-export * from './helpers/ViewHelper.js';
+export * from './helpers/LightProbeHelper.ts';
+export * from './helpers/OctreeHelper.ts';
+export * from './helpers/PositionalAudioHelper.ts';
+export * from './helpers/RectAreaLightHelper.ts';
+export * from './helpers/TextureHelper.ts';
+export * from './helpers/VertexNormalsHelper.ts';
+export * from './helpers/VertexTangentsHelper.ts';
+export * from './helpers/ViewHelper.ts';
 
 export * from '@modules/renderer/threejs/interactive/InteractiveGroup.ts';
 export * from '@modules/renderer/threejs/interactive/SelectionBox.ts';

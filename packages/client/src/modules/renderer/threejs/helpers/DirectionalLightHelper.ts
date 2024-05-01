@@ -1,16 +1,24 @@
-import { Vector3 } from '../math/Vector3.ts';
-import { Object3D } from '../core/Object3D.ts';
-import { Line } from '../objects/Line.ts';
-import { Float32BufferAttribute } from '../core/BufferAttribute.ts';
-import { BufferGeometry } from '../core/BufferGeometry.ts';
-import { LineBasicMaterial } from '../materials/LineBasicMaterial.ts';
+import { Vector3 } from '../math/Vector3.js';
+import { Object3D } from '../core/Object3D.js';
+import { Line } from '../objects/Line.js';
+import { Float32BufferAttribute } from '../core/BufferAttribute.js';
+import { BufferGeometry } from '../core/BufferGeometry.js';
+import { LineBasicMaterial } from '../materials/LineBasicMaterial.js';
+import { DirectionalLight } from '@modules/renderer/threejs/lights/DirectionalLight.js';
+import { Color } from '@modules/renderer/threejs/math/Color.js';
 
 const _v1 = /*@__PURE__*/ new Vector3();
 const _v2 = /*@__PURE__*/ new Vector3();
 const _v3 = /*@__PURE__*/ new Vector3();
 
-class DirectionalLightHelper extends Object3D {
-  constructor(light, size, color) {
+export class DirectionalLightHelper extends Object3D {
+  declare type: string | 'DirectionalLightHelper';
+  light: DirectionalLight;
+  lightPlane: Line;
+  targetLine: Line;
+  color: Color;
+
+  constructor(light: DirectionalLight, size: number, color: Color) {
     super();
 
     this.light = light;
@@ -19,10 +27,6 @@ class DirectionalLightHelper extends Object3D {
     this.matrixAutoUpdate = false;
 
     this.color = color;
-
-    this.type = 'DirectionalLightHelper';
-
-    if (size === undefined) size = 1;
 
     let geometry = new BufferGeometry();
     geometry.setAttribute(
@@ -62,11 +66,11 @@ class DirectionalLightHelper extends Object3D {
     this.lightPlane.lookAt(_v2);
 
     if (this.color !== undefined) {
-      this.lightPlane.material.color.set(this.color);
-      this.targetLine.material.color.set(this.color);
+      (this.lightPlane.material as LineBasicMaterial).color.set(this.color);
+      (this.targetLine.material as LineBasicMaterial).color.set(this.color);
     } else {
-      this.lightPlane.material.color.copy(this.light.color);
-      this.targetLine.material.color.copy(this.light.color);
+      (this.lightPlane.material as LineBasicMaterial).color.copy(this.light.color);
+      (this.targetLine.material as LineBasicMaterial).color.copy(this.light.color);
     }
 
     this.targetLine.lookAt(_v2);
@@ -74,4 +78,4 @@ class DirectionalLightHelper extends Object3D {
   }
 }
 
-export { DirectionalLightHelper };
+DirectionalLightHelper.prototype.type = 'DirectionalLightHelper';

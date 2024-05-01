@@ -5,18 +5,24 @@ import {
   LineBasicMaterial,
   Matrix3,
   Vector3,
+  Object3D,
 } from '../Three.js';
+import { ColorRepresentation } from '@modules/renderer/threejs/math/Color.js';
 
 const _v1 = new Vector3();
 const _v2 = new Vector3();
 const _normalMatrix = new Matrix3();
 
-class VertexNormalsHelper extends LineSegments {
-  constructor(object, size = 1, color = 0xff0000) {
+export class VertexNormalsHelper extends LineSegments {
+  declare type: string | 'VertexNormalsHelper';
+  object: Object3D;
+  size: number;
+
+  constructor(object: Object3D, size: number = 1, color: ColorRepresentation = 0xff0000) {
     const geometry = new BufferGeometry();
 
-    const nNormals = object.geometry.attributes.normal.count;
-    const positions = new Float32BufferAttribute(nNormals * 2 * 3, 3);
+    const nNormals = object.geometry!.attributes.normal.count;
+    const positions = new Float32BufferAttribute(new Array(nNormals * 2 * 3), 3);
 
     geometry.setAttribute('position', positions);
 
@@ -24,9 +30,6 @@ class VertexNormalsHelper extends LineSegments {
 
     this.object = object;
     this.size = size;
-    this.type = 'VertexNormalsHelper';
-
-    //
 
     this.matrixAutoUpdate = false;
 
@@ -81,4 +84,4 @@ class VertexNormalsHelper extends LineSegments {
   }
 }
 
-export { VertexNormalsHelper };
+VertexNormalsHelper.prototype.type = 'VertexNormalsHelper';

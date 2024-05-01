@@ -1,27 +1,29 @@
-import { Vector3 } from '../math/Vector3.ts';
-import { Color } from '../math/Color.ts';
-import { Object3D } from '../core/Object3D.ts';
-import { Mesh } from '../objects/Mesh.ts';
-import { MeshBasicMaterial } from '../materials/MeshBasicMaterial.ts';
-import { OctahedronGeometry } from '../geometries/OctahedronGeometry.ts';
-import { BufferAttribute } from '../core/BufferAttribute.ts';
+import { Vector3 } from '../math/Vector3.js';
+import { Color } from '../math/Color.js';
+import { Object3D } from '../core/Object3D.js';
+import { Mesh } from '../objects/Mesh.js';
+import { MeshBasicMaterial } from '../materials/MeshBasicMaterial.js';
+import { OctahedronGeometry } from '../geometries/OctahedronGeometry.js';
+import { BufferAttribute } from '../core/BufferAttribute.js';
+import { HemisphereLight } from '@modules/renderer/threejs/lights/HemisphereLight.js';
 
 const _vector = /*@__PURE__*/ new Vector3();
 const _color1 = /*@__PURE__*/ new Color();
 const _color2 = /*@__PURE__*/ new Color();
 
-class HemisphereLightHelper extends Object3D {
-  constructor(light, size, color) {
+export class HemisphereLightHelper extends Object3D {
+  declare type: string | 'HemisphereLightHelper';
+  light: HemisphereLight;
+  color: Color;
+  material: MeshBasicMaterial;
+
+  constructor(light: HemisphereLight, size: number, color: Color) {
     super();
 
     this.light = light;
-
     this.matrix = light.matrixWorld;
     this.matrixAutoUpdate = false;
-
     this.color = color;
-
-    this.type = 'HemisphereLightHelper';
 
     const geometry = new OctahedronGeometry(size);
     geometry.rotateY(Math.PI * 0.5);
@@ -40,8 +42,8 @@ class HemisphereLightHelper extends Object3D {
   }
 
   dispose() {
-    this.children[0].geometry.dispose();
-    this.children[0].material.dispose();
+    (this.children[0] as Mesh).geometry.dispose();
+    (this.children[0] as Mesh).material.dispose();
   }
 
   update() {
@@ -50,7 +52,7 @@ class HemisphereLightHelper extends Object3D {
     if (this.color !== undefined) {
       this.material.color.set(this.color);
     } else {
-      const colors = mesh.geometry.getAttribute('color');
+      const colors = mesh.geometry!.getAttribute('color');
 
       _color1.copy(this.light.color);
       _color2.copy(this.light.groundColor);
@@ -70,4 +72,4 @@ class HemisphereLightHelper extends Object3D {
   }
 }
 
-export { HemisphereLightHelper };
+HemisphereLightHelper.prototype.type = 'HemisphereLightHelper';

@@ -1,12 +1,13 @@
-import { Mesh, ShaderMaterial, SphereGeometry } from '../Three.js';
+import { LightProbe, Mesh, ShaderMaterial, SphereGeometry } from '../Three.js';
 
-class LightProbeHelper extends Mesh {
-  constructor(lightProbe, size) {
+export class LightProbeHelper extends Mesh {
+  lightProbe: LightProbe;
+  size: number;
+
+  constructor(lightProbe: LightProbe, size: number) {
     const material = new ShaderMaterial({
-      type: 'LightProbeHelperMaterial',
-
       uniforms: {
-        sh: { value: lightProbe.sh.coefficients }, // by reference
+        sh: { value: lightProbe.sphericalHarmonics.coefficients }, // by reference
 
         intensity: { value: lightProbe.intensity },
       },
@@ -81,6 +82,7 @@ class LightProbeHelper extends Mesh {
         '}',
       ].join('\n'),
     });
+    material.type = 'LightProbeHelperMaterial';
 
     const geometry = new SphereGeometry(1, 32, 16);
 
@@ -88,7 +90,6 @@ class LightProbeHelper extends Mesh {
 
     this.lightProbe = lightProbe;
     this.size = size;
-    this.type = 'LightProbeHelper';
 
     this.onBeforeRender();
   }
@@ -103,8 +104,8 @@ class LightProbeHelper extends Mesh {
 
     this.scale.set(1, 1, 1).multiplyScalar(this.size);
 
-    this.material.uniforms.intensity.value = this.lightProbe.intensity;
+    (this.material as any).uniforms.intensity.value = this.lightProbe.intensity;
   }
 }
 
-export { LightProbeHelper };
+LightProbeHelper.prototype.type = 'LightProbeHelper';

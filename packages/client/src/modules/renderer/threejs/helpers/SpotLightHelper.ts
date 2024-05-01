@@ -1,14 +1,21 @@
-import { Vector3 } from '../math/Vector3.ts';
-import { Object3D } from '../core/Object3D.ts';
-import { LineSegments } from '../objects/LineSegments.ts';
-import { LineBasicMaterial } from '../materials/LineBasicMaterial.ts';
-import { Float32BufferAttribute } from '../core/BufferAttribute.ts';
-import { BufferGeometry } from '../core/BufferGeometry.ts';
+import { Vector3 } from '../math/Vector3.js';
+import { Object3D } from '../core/Object3D.js';
+import { LineSegments } from '../objects/LineSegments.js';
+import { LineBasicMaterial } from '../materials/LineBasicMaterial.js';
+import { Float32BufferAttribute } from '../core/BufferAttribute.js';
+import { BufferGeometry } from '../core/BufferGeometry.js';
+import { SpotLight } from '@modules/renderer/threejs/lights/SpotLight.js';
+import { Color } from '@modules/renderer/threejs/math/Color.js';
 
 const _vector = /*@__PURE__*/ new Vector3();
 
 class SpotLightHelper extends Object3D {
-  constructor(light, color) {
+  declare type: string | 'SpotLightHelper';
+  light: SpotLight;
+  color: Color;
+  cone: LineSegments;
+
+  constructor(light: SpotLight, color: Color) {
     super();
 
     this.light = light;
@@ -16,8 +23,6 @@ class SpotLightHelper extends Object3D {
     this.matrixAutoUpdate = false;
 
     this.color = color;
-
-    this.type = 'SpotLightHelper';
 
     const geometry = new BufferGeometry();
 
@@ -51,7 +56,7 @@ class SpotLightHelper extends Object3D {
 
     // update the local matrix based on the parent and light target transforms
     if (this.parent) {
-      this.parent.updateWorldMatrix(true);
+      this.parent.updateWorldMatrix(true, false);
 
       this.matrix.copy(this.parent.matrixWorld).invert().multiply(this.light.matrixWorld);
     } else {
@@ -70,11 +75,10 @@ class SpotLightHelper extends Object3D {
     this.cone.lookAt(_vector);
 
     if (this.color !== undefined) {
-      this.cone.material.color.set(this.color);
+      (this.cone.material as LineBasicMaterial).color.set(this.color);
     } else {
-      this.cone.material.color.copy(this.light.color);
+      (this.cone.material as LineBasicMaterial).color.copy(this.light.color);
     }
   }
 }
-
-export { SpotLightHelper };
+SpotLightHelper.prototype.type = 'SpotLightHelper';

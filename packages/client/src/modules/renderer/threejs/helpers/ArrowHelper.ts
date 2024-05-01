@@ -1,18 +1,22 @@
-import { Float32BufferAttribute } from '../core/BufferAttribute.ts';
-import { BufferGeometry } from '../core/BufferGeometry.ts';
-import { Object3D } from '../core/Object3D.ts';
-import { CylinderGeometry } from '../geometries/CylinderGeometry.ts';
-import { MeshBasicMaterial } from '../materials/MeshBasicMaterial.ts';
-import { LineBasicMaterial } from '../materials/LineBasicMaterial.ts';
-import { Mesh } from '../objects/Mesh.ts';
-import { Line } from '../objects/Line.ts';
-import { Vector3 } from '../math/Vector3.ts';
+import { Float32BufferAttribute } from '../core/BufferAttribute.js';
+import { BufferGeometry } from '../core/BufferGeometry.js';
+import { Object3D } from '../core/Object3D.js';
+import { CylinderGeometry } from '../geometries/CylinderGeometry.js';
+import { MeshBasicMaterial } from '../materials/MeshBasicMaterial.js';
+import { LineBasicMaterial } from '../materials/LineBasicMaterial.js';
+import { Mesh } from '../objects/Mesh.js';
+import { Line } from '../objects/Line.js';
+import { Vector3 } from '../math/Vector3.js';
+import { Color } from '@modules/renderer/threejs/math/Color.js';
 
 const _axis = /*@__PURE__*/ new Vector3();
-let _lineGeometry, _coneGeometry;
+let _lineGeometry!: BufferGeometry;
+let _coneGeometry!: CylinderGeometry;
 
-class ArrowHelper extends Object3D {
-  // dir is assumed to be normalized
+export class ArrowHelper extends Object3D {
+  declare type: string | 'ArrowHelper';
+  line: Line;
+  cone: Mesh;
 
   constructor(
     dir = new Vector3(0, 0, 1),
@@ -48,7 +52,7 @@ class ArrowHelper extends Object3D {
     this.setLength(length, headLength, headWidth);
   }
 
-  setDirection(dir) {
+  setDirection(dir: Vector3) {
     // dir is assumed to be normalized
 
     if (dir.y > 0.99999) {
@@ -64,8 +68,8 @@ class ArrowHelper extends Object3D {
     }
   }
 
-  setLength(length, headLength = length * 0.2, headWidth = headLength * 0.2) {
-    this.line.scale.set(1, Math.max(0.0001, length - headLength), 1); // see #17458
+  setLength(length: number, headLength: number = length * 0.2, headWidth: number = headLength * 0.2) {
+    this.line.scale.set(1, Math.max(0.0001, length - headLength), 1);
     this.line.updateMatrix();
 
     this.cone.scale.set(headWidth, headLength, headWidth);
@@ -73,12 +77,12 @@ class ArrowHelper extends Object3D {
     this.cone.updateMatrix();
   }
 
-  setColor(color) {
-    this.line.material.color.set(color);
-    this.cone.material.color.set(color);
+  setColor(color: Color) {
+    (this.line.material as MeshBasicMaterial).color.set(color);
+    (this.cone.material as LineBasicMaterial).color.set(color);
   }
 
-  copy(source) {
+  copy(source: this): this {
     super.copy(source, false);
 
     this.line.copy(source.line);
@@ -95,4 +99,4 @@ class ArrowHelper extends Object3D {
   }
 }
 
-export { ArrowHelper };
+ArrowHelper.prototype.type = 'ArrowHelper';
