@@ -1,15 +1,15 @@
 import * as AnimationUtils from './AnimationUtils.js';
-import { KeyframeTrack } from './KeyframeTrack.ts';
-import { BooleanKeyframeTrack } from './tracks/BooleanKeyframeTrack.ts';
-import { ColorKeyframeTrack } from './tracks/ColorKeyframeTrack.ts';
-import { NumberKeyframeTrack } from './tracks/NumberKeyframeTrack.ts';
-import { QuaternionKeyframeTrack } from './tracks/QuaternionKeyframeTrack.ts';
-import { StringKeyframeTrack } from './tracks/StringKeyframeTrack.ts';
-import { VectorKeyframeTrack } from './tracks/VectorKeyframeTrack.ts';
-import * as MathUtils from '../math/MathUtils.ts';
-import { AnimationBlendMode } from '../constants.ts';
+import { KeyframeTrack } from './KeyframeTrack.js';
+import { BooleanKeyframeTrack } from './tracks/BooleanKeyframeTrack.js';
+import { ColorKeyframeTrack } from './tracks/ColorKeyframeTrack.js';
+import { NumberKeyframeTrack } from './tracks/NumberKeyframeTrack.js';
+import { QuaternionKeyframeTrack } from './tracks/QuaternionKeyframeTrack.js';
+import { StringKeyframeTrack } from './tracks/StringKeyframeTrack.js';
+import { VectorKeyframeTrack } from './tracks/VectorKeyframeTrack.js';
+import * as MathUtils from '../math/MathUtils.js';
+import { AnimationBlendMode } from '../constants.js';
 
-class AnimationClip {
+export class AnimationClip {
   constructor(name, duration = -1, tracks, blendMode = AnimationBlendMode.Normal) {
     this.name = name;
     this.tracks = tracks;
@@ -350,5 +350,3 @@ function parseKeyframeTrack(json) {
     return new trackType(json.name, json.times, json.values, json.interpolation);
   }
 }
-
-export { AnimationClip };

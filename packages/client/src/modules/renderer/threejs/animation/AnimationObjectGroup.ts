@@ -1,58 +1,49 @@
 import { PropertyBinding } from './PropertyBinding.js';
-import * as MathUtils from '../math/MathUtils.ts';
+import * as MathUtils from '../math/MathUtils.js';
+import Binding from '@modules/renderer/threejs/renderers/common/Binding.js';
+import { Object3D } from '@modules/renderer/threejs/core/Object3D.js';
 
-/**
- *
- * A group of objects that receives a shared animation state.
- *
- * Usage:
- *
- *  - Add objects you would otherwise pass as 'root' to the
- *    constructor or the .clipAction method of AnimationMixer.
- *
- *  - Instead pass this object as 'root'.
- *
- *  - You can also add and remove objects later when the mixer
- *    is running.
- *
- * Note:
- *
- *    Objects of this class appear as one object to the mixer,
- *    so cache control of the individual objects must be done
- *    on the group.
- *
- * Limitation:
- *
- *  - The animated properties must be compatible among the
- *    all objects in the group.
- *
- *  - A single property can either be controlled through a
- *    target group or directly, but not both.
- */
+export class AnimationObjectGroup {
+  declare isAnimationObjectGroup: boolean;
+  uuid: string;
+  _objects: any[];
+  nCachedObjects_: number;
+  _indicesByUuid: { [key: string]: number };
+  _paths: string[];
+  _parsedPaths: any[];
+  _bindings: PropertyBinding[][];
+  _bindingsIndicesByPath: Record<string, number>;
+  stats: {
+    objects: {
+      total: number;
+      inUse: number;
+    };
+    bindingsPerObject: number;
+  };
 
-class AnimationObjectGroup {
-  constructor() {
+  constructor(...bindings: Object3D[]) {
     this.isAnimationObjectGroup = true;
 
     this.uuid = MathUtils.generateUuid();
 
     // cached objects followed by the active ones
-    this._objects = Array.prototype.slice.call(arguments);
+    this._objects = bindings;
 
-    this.nCachedObjects_ = 0; // threshold
-    // note: read by PropertyBinding.Composite
+    this.nCachedObjects_ = 0;
 
-    const indices = {};
-    this._indicesByUUID = indices; // for bookkeeping
+    const indices: Record<string, number> = {};
+    this._indicesByUuid = indices;
 
-    for (let i = 0, n = arguments.length; i !== n; ++i) {
-      indices[arguments[i].uuid] = i;
+    for (let i = 0, n = bindings.length; i !== n; ++i) {
+      indices[bindings[i].uuid] = i;
     }
 
-    this._paths = []; // inside: string
-    this._parsedPaths = []; // inside: { we don't care, here }
-    this._bindings = []; // inside: Array< PropertyBinding >
-    this._bindingsIndicesByPath = {}; // inside: indices in these arrays
+    this._paths = [];
+    // inside: { we don't care, here }
+    this._parsedPaths = [];
+    this._bindings = [];
+    // inside: indices in these arrays
+    this._bindingsIndicesByPath = {};
 
     const scope = this;
 
@@ -73,7 +64,7 @@ class AnimationObjectGroup {
 
   add() {
     const objects = this._objects,
-      indicesByUUID = this._indicesByUUID,
+      indicesByUUID = this._indicesByUuid,
       paths = this._paths,
       parsedPaths = this._parsedPaths,
       bindings = this._bindings,
@@ -147,7 +138,7 @@ class AnimationObjectGroup {
 
   remove() {
     const objects = this._objects,
-      indicesByUUID = this._indicesByUUID,
+      indicesByUUID = this._indicesByUuid,
       bindings = this._bindings,
       nBindings = bindings.length;
 
@@ -189,7 +180,7 @@ class AnimationObjectGroup {
   // remove & forget
   uncache() {
     const objects = this._objects,
-      indicesByUUID = this._indicesByUUID,
+      indicesByUUID = this._indicesByUuid,
       bindings = this._bindings,
       nBindings = bindings.length;
 
@@ -262,7 +253,7 @@ class AnimationObjectGroup {
 
   // Internal interface used by befriended PropertyBinding.Composite:
 
-  subscribe_(path, parsedPath) {
+  subscribe_(path: string, parsedPath: any) {
     // returns an array of bindings for the given path that is changed
     // according to the contained objects in the group
 
@@ -295,7 +286,7 @@ class AnimationObjectGroup {
     return bindingsForPath;
   }
 
-  unsubscribe_(path) {
+  unsubscribe_(path: string) {
     // tells the group to forget about a property path and no longer
     // update the array previously obtained with 'subscribe_'
 
@@ -323,5 +314,3 @@ class AnimationObjectGroup {
     }
   }
 }
-
-export { AnimationObjectGroup };

@@ -1,7 +1,7 @@
-export * from './animation/AnimationClipCreator.js';
-export * from './animation/CCDIKSolver.js';
-export * from './animation/MMDAnimationHelper.js';
-export * from './animation/MMDPhysics.js';
+export * from './animation/AnimationClipCreator.ts';
+export * from './animation/CCDIKSolver.ts';
+export * from './animation/MMDAnimationHelper.ts';
+export * from './animation/MMDPhysics.ts';
 
 export * from './cameras/CinematicCamera.ts';
 

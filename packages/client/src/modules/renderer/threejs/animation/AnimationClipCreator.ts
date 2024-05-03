@@ -1,16 +1,17 @@
 import {
   AnimationClip,
   BooleanKeyframeTrack,
+  Color,
   ColorKeyframeTrack,
   NumberKeyframeTrack,
   Vector3,
   VectorKeyframeTrack,
 } from '../Three.js';
 
-class AnimationClipCreator {
-  static CreateRotationAnimation(period, axis = 'x') {
-    const times = [0, period],
-      values = [0, 360];
+export namespace AnimationClipCreator {
+  export function CreateRotationAnimation(period: number, axis: 'x' | 'y' | 'z') {
+    const times: number[] = [0, period];
+    const values: number[] = [0, 360];
 
     const trackName = '.rotation[' + axis + ']';
 
@@ -19,9 +20,9 @@ class AnimationClipCreator {
     return new AnimationClip(null, period, [track]);
   }
 
-  static CreateScaleAxisAnimation(period, axis = 'x') {
-    const times = [0, period],
-      values = [0, 1];
+  export function CreateScaleAxisAnimation(period: number, axis: 'x' | 'y' | 'z') {
+    const times: number[] = [0, period];
+    const values: number[] = [0, 1];
 
     const trackName = '.scale[' + axis + ']';
 
@@ -30,10 +31,10 @@ class AnimationClipCreator {
     return new AnimationClip(null, period, [track]);
   }
 
-  static CreateShakeAnimation(duration, shakeScale) {
-    const times = [],
-      values = [],
-      tmp = new Vector3();
+  export function CreateShakeAnimation(duration: number, shakeScale: Vector3) {
+    const times: number[] = [];
+    const values: number[] = [];
+    const tmp = new Vector3();
 
     for (let i = 0; i < duration * 10; i++) {
       times.push(i / 10);
@@ -51,10 +52,10 @@ class AnimationClipCreator {
     return new AnimationClip(null, duration, [track]);
   }
 
-  static CreatePulsationAnimation(duration, pulseScale) {
-    const times = [],
-      values = [],
-      tmp = new Vector3();
+  export function CreatePulsationAnimation(duration: number, pulseScale: number) {
+    const times: number[] = [];
+    const values: number[] = [];
+    const tmp = new Vector3();
 
     for (let i = 0; i < duration * 10; i++) {
       times.push(i / 10);
@@ -70,9 +71,9 @@ class AnimationClipCreator {
     return new AnimationClip(null, duration, [track]);
   }
 
-  static CreateVisibilityAnimation(duration) {
-    const times = [0, duration / 2, duration],
-      values = [true, false, true];
+  export function CreateVisibilityAnimation(duration: number) {
+    const times: number[] = [0, duration / 2, duration];
+    const values: boolean[] = [true, false, true];
 
     const trackName = '.visible';
 
@@ -81,10 +82,10 @@ class AnimationClipCreator {
     return new AnimationClip(null, duration, [track]);
   }
 
-  static CreateMaterialColorAnimation(duration, colors) {
-    const times = [],
-      values = [],
-      timeStep = duration / colors.length;
+  export function CreateMaterialColorAnimation(duration: number, colors: Color[]) {
+    const times: number[] = [];
+    const values: number[] = [];
+    const timeStep = duration / colors.length;
 
     for (let i = 0; i < colors.length; i++) {
       times.push(i * timeStep);
@@ -100,5 +101,3 @@ class AnimationClipCreator {
     return new AnimationClip(null, duration, [track]);
   }
 }
-
-export { AnimationClipCreator };

@@ -331,6 +331,9 @@ export type TypedArray =
   | Int16Array
   | Int8Array
   | Uint8ClampedArray;
+
+export type NumberArray = number[] | TypedArray;
+
 export type TypedArrayConstructor =
   | Float64ArrayConstructor
   | Float32ArrayConstructor
@@ -341,25 +344,52 @@ export type TypedArrayConstructor =
   | Int16ArrayConstructor
   | Uint8ClampedArrayConstructor
   | Int8ArrayConstructor;
-export type ReadTypedArrayConstructor<T extends TypedArray> = T extends Float32Array
-  ? Float32ArrayConstructor
-  : T extends Uint32Array
-    ? Uint32ArrayConstructor
-    : T extends Uint16Array
-      ? Uint16ArrayConstructor
-      : T extends Uint8Array
-        ? Uint8ArrayConstructor
-        : T extends Int32Array
-          ? Int32ArrayConstructor
-          : T extends Int16Array
-            ? Int16ArrayConstructor
-            : T extends Int8Array
-              ? Int8ArrayConstructor
-              : T extends Uint8ClampedArray
-                ? Uint8ClampedArrayConstructor
-                : T extends Float64Array
-                  ? Float64ArrayConstructor
-                  : never;
+
+export type NumberArrayConstructor = ArrayConstructor | TypedArrayConstructor;
+
+export type ArrayConstructorMap<T extends NumberArray> = [T] extends [number[]]
+  ? ArrayConstructor
+  : [T] extends [Float32Array]
+    ? Float64ArrayConstructor
+    : [T] extends [Float32Array]
+      ? Float32ArrayConstructor
+      : [T] extends [Uint32Array]
+        ? Uint32ArrayConstructor
+        : [T] extends [Uint16Array]
+          ? Uint16ArrayConstructor
+          : [T] extends [Uint8Array]
+            ? Uint8ArrayConstructor
+            : [T] extends [Int32Array]
+              ? Int32ArrayConstructor
+              : [T] extends [Int16Array]
+                ? Int16ArrayConstructor
+                : [T] extends [Int8Array]
+                  ? Int8ArrayConstructor
+                  : [T] extends [Uint8ClampedArray]
+                    ? Uint8ClampedArrayConstructor
+                    : never;
+
+export type ArrayMap<T extends NumberArrayConstructor> = T extends ArrayConstructor
+  ? number[]
+  : T extends Float64ArrayConstructor
+    ? Float32Array
+    : T extends Float32ArrayConstructor
+      ? Float32Array
+      : T extends Uint32ArrayConstructor
+        ? Uint32Array
+        : T extends Uint16ArrayConstructor
+          ? Uint16Array
+          : T extends Uint8ArrayConstructor
+            ? Uint8Array
+            : T extends Int32ArrayConstructor
+              ? Int32Array
+              : T extends Int16ArrayConstructor
+                ? Int16Array
+                : T extends Int8ArrayConstructor
+                  ? Int8Array
+                  : T extends Uint8ClampedArrayConstructor
+                    ? Uint8ClampedArray
+                    : never;
 
 export const denormalize = (value: number, array: TypedArray): number => {
   switch (array.constructor) {

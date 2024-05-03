@@ -1,4 +1,4 @@
-import { AnimationClip } from '../animation/AnimationClip.js';
+import { AnimationClip } from '../animation/AnimationClip.ts';
 import { FileLoader } from './FileLoader.js';
 import { Loader } from './Loader.js';
 

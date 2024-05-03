@@ -1,27 +1,21 @@
-import { Quaternion } from '../math/Quaternion.ts';
-import { AnimationBlendMode } from '../constants.ts';
+import { Quaternion } from '../math/Quaternion.js';
+import { AnimationBlendMode } from '../constants.js';
+import { TypedArray, TypedArrayConstructor } from '@modules/renderer/threejs/math/MathUtils.js';
 
-// converts an array to a specific type
-function convertArray(array, type, forceClone) {
-  if (
-    !array || // let 'undefined' and 'null' pass
-    (!forceClone && array.constructor === type)
-  )
-    return array;
-
-  if (typeof type.BYTES_PER_ELEMENT === 'number') {
-    return new type(array); // create typed array
-  }
-
-  return Array.prototype.slice.call(array); // create Array
+export function convertArray<T extends ArrayLike<number>, R extends TypedArrayConstructor>(
+  array: ArrayLike<number>,
+  type: R,
+): R {
+  if ('BYTES_PER_ELEMENT' in type) return new type(array);
+  return Array.from(array);
 }
 
-function isTypedArray(object) {
+export function isTypedArray(object: any): object is TypedArray {
   return ArrayBuffer.isView(object) && !(object instanceof DataView);
 }
 
 // returns an array by which times and values can be sorted
-function getKeyframeOrder(times) {
+export function getKeyframeOrder(times) {
   function compareTime(i, j) {
     return times[i] - times[j];
   }
@@ -36,7 +30,7 @@ function getKeyframeOrder(times) {
 }
 
 // uses the array previously returned by 'getKeyframeOrder' to sort data
-function sortedArray(values, stride, order) {
+export function sortedArray(values, stride, order) {
   const nValues = values.length;
   const result = new values.constructor(nValues);
 
@@ -52,7 +46,7 @@ function sortedArray(values, stride, order) {
 }
 
 // function for parsing AOS keyframe formats
-function flattenJSON(jsonKeys, times, values, valuePropertyName) {
+export function flattenJSON(jsonKeys, times, values, valuePropertyName) {
   let i = 1,
     key = jsonKeys[0];
 
@@ -105,7 +99,7 @@ function flattenJSON(jsonKeys, times, values, valuePropertyName) {
   }
 }
 
-function subclip(sourceClip, name, startFrame, endFrame, fps = 30) {
+export function subclip(sourceClip, name, startFrame, endFrame, fps = 30) {
   const clip = sourceClip.clone();
 
   clip.name = name;
@@ -162,7 +156,7 @@ function subclip(sourceClip, name, startFrame, endFrame, fps = 30) {
   return clip;
 }
 
-function makeClipAdditive(targetClip, referenceFrame = 0, referenceClip = targetClip, fps = 30) {
+export function makeClipAdditive(targetClip, referenceFrame = 0, referenceClip = targetClip, fps = 30) {
   if (fps <= 0) fps = 30;
 
   const numTracks = referenceClip.tracks.length;
@@ -258,7 +252,7 @@ function makeClipAdditive(targetClip, referenceFrame = 0, referenceClip = target
   return targetClip;
 }
 
-const AnimationUtils = {
+export const AnimationUtils = {
   convertArray: convertArray,
   isTypedArray: isTypedArray,
   getKeyframeOrder: getKeyframeOrder,
@@ -266,15 +260,4 @@ const AnimationUtils = {
   flattenJSON: flattenJSON,
   subclip: subclip,
   makeClipAdditive: makeClipAdditive,
-};
-
-export {
-  convertArray,
-  isTypedArray,
-  getKeyframeOrder,
-  sortedArray,
-  flattenJSON,
-  subclip,
-  makeClipAdditive,
-  AnimationUtils,
 };

@@ -9,7 +9,7 @@ import { Color } from '@modules/renderer/threejs/math/Color.js';
 
 const _vector = /*@__PURE__*/ new Vector3();
 
-class SpotLightHelper extends Object3D {
+export class SpotLightHelper extends Object3D {
   declare type: string | 'SpotLightHelper';
   light: SpotLight;
   color: Color;

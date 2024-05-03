@@ -20,7 +20,7 @@ export class KeyframeTrack<T extends TypedArray = Float32Array, V extends TypedA
     public name: string,
     times: T,
     values: V,
-    interpolation: InterpolationMode,
+    interpolation?: InterpolationMode,
   ) {
     if (name === undefined) throw new Error('THREE.KeyframeTrack: track name is undefined');
     if (times === undefined || times.length === 0)

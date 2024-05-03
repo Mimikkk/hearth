@@ -34,7 +34,7 @@ import { Source } from '../textures/Source.ts';
 import { DataTexture } from '../textures/DataTexture.ts';
 import { ImageLoader } from './ImageLoader.js';
 import { LoadingManager } from './LoadingManager.js';
-import { AnimationClip } from '../animation/AnimationClip.js';
+import { AnimationClip } from '../animation/AnimationClip.ts';
 import { MaterialLoader } from './MaterialLoader.js';
 import { LoaderUtils } from './LoaderUtils.js';
 import { BufferGeometryLoader } from './BufferGeometryLoader.js';

@@ -1,6 +1,6 @@
-import { AnimationActionLoopStyle, AnimationBlendMode, InterpolationEndingMode } from '../constants.ts';
+import { AnimationActionLoopStyle, AnimationBlendMode, InterpolationEndingMode } from '../constants.js';
 
-class AnimationAction {
+export class AnimationAction {
   constructor(mixer, clip, localRoot = null, blendMode = clip.blendMode) {
     this._mixer = mixer;
     this._clip = clip;
@@ -548,5 +548,3 @@ class AnimationAction {
     return this;
   }
 }
-
-export { AnimationAction };

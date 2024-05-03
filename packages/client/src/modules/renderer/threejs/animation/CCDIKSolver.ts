@@ -1,4 +1,5 @@
 import {
+  Bone,
   BufferAttribute,
   BufferGeometry,
   Color,
@@ -9,6 +10,7 @@ import {
   MeshBasicMaterial,
   Object3D,
   Quaternion,
+  Skeleton,
   SphereGeometry,
   Vector3,
 } from '../Three.js';
@@ -24,6 +26,21 @@ const _linkScale = new Vector3();
 const _axis = new Vector3();
 const _vector = new Vector3();
 const _matrix = new Matrix4();
+
+export interface IKS {
+  effector: number;
+  iteration?: number | undefined;
+  links: Array<{
+    enabled?: boolean | undefined;
+    index: number;
+    limitation?: Vector3 | undefined;
+    rotationMin?: Vector3 | undefined;
+    rotationMax?: Vector3 | undefined;
+  }>;
+  minAngle?: number | undefined;
+  maxAngle?: number | undefined;
+  target: number;
+}
 
 /**
  * CCD Algorithm
@@ -45,7 +62,7 @@ const _matrix = new Matrix4();
  * } ];
  */
 
-class CCDIKSolver {
+export class CCDIKSolver {
   /**
    * @param {THREE.SkinnedMesh} mesh
    * @param {Array<Object>} iks
@@ -215,11 +232,16 @@ class CCDIKSolver {
   }
 }
 
-function getPosition(bone, matrixWorldInv) {
+function getPosition(bone: Bone, matrixWorldInv: Matrix4): Vector3 {
   return _vector.setFromMatrixPosition(bone.matrixWorld).applyMatrix4(matrixWorldInv);
 }
 
-function setPositionOfBoneToAttributeArray(array, index, bone, matrixWorldInv) {
+function setPositionOfBoneToAttributeArray(
+  array: ArrayLike<number>,
+  index: number,
+  bone: Bone,
+  matrixWorldInv: Matrix4,
+) {
   const v = getPosition(bone, matrixWorldInv);
 
   array[index * 3 + 0] = v.x;
@@ -233,8 +255,16 @@ function setPositionOfBoneToAttributeArray(array, index, bone, matrixWorldInv) {
  * @param {SkinnedMesh} mesh
  * @param {Array<Object>} iks
  */
-class CCDIKHelper extends Object3D {
-  constructor(mesh, iks = [], sphereSize = 0.25) {
+export class CCDIKHelper extends Object3D {
+  root: Mesh;
+  iks: IKS[];
+  sphereGeometry: SphereGeometry;
+  targetSphereMaterial: MeshBasicMaterial;
+  effectorSphereMaterial: MeshBasicMaterial;
+  linkSphereMaterial: MeshBasicMaterial;
+  lineMaterial: LineBasicMaterial;
+
+  constructor(mesh: Mesh, iks: IKS[], sphereSize: number) {
     super();
 
     this.root = mesh;
@@ -279,14 +309,14 @@ class CCDIKHelper extends Object3D {
   /**
    * Updates IK bones visualization.
    */
-  updateMatrixWorld(force) {
+  updateMatrixWorld(force?: boolean): this {
     const mesh = this.root;
 
     if (this.visible) {
       let offset = 0;
 
       const iks = this.iks;
-      const bones = mesh.skeleton.bones;
+      const bones = (mesh as unknown as { skeleton: Skeleton }).skeleton.bones;
 
       _matrix.copy(mesh.matrixWorld).invert();
 
@@ -312,7 +342,7 @@ class CCDIKHelper extends Object3D {
         }
 
         const line = this.children[offset++];
-        const array = line.geometry.attributes.position.array;
+        const array = line.geometry!.attributes.position.array;
 
         setPositionOfBoneToAttributeArray(array, 0, targetBone, _matrix);
         setPositionOfBoneToAttributeArray(array, 1, effectorBone, _matrix);
@@ -323,21 +353,17 @@ class CCDIKHelper extends Object3D {
           setPositionOfBoneToAttributeArray(array, j + 2, linkBone, _matrix);
         }
 
-        line.geometry.attributes.position.needsUpdate = true;
+        line.geometry!.attributes.position.needsUpdate = true;
       }
     }
 
     this.matrix.copy(mesh.matrixWorld);
 
-    super.updateMatrixWorld(force);
+    return super.updateMatrixWorld(force);
   }
 
-  /**
-   * Frees the GPU-related resources allocated by this instance. Call this method whenever this instance is no longer used in your app.
-   */
   dispose() {
     this.sphereGeometry.dispose();
-
     this.targetSphereMaterial.dispose();
     this.effectorSphereMaterial.dispose();
     this.linkSphereMaterial.dispose();
@@ -348,7 +374,7 @@ class CCDIKHelper extends Object3D {
     for (let i = 0; i < children.length; i++) {
       const child = children[i];
 
-      if (child.isLine) child.geometry.dispose();
+      if (child instanceof Line) child.geometry.dispose();
     }
   }
 
@@ -358,7 +384,7 @@ class CCDIKHelper extends Object3D {
     const scope = this;
     const iks = this.iks;
 
-    function createLineGeometry(ik) {
+    function createLineGeometry(ik: IKS) {
       const geometry = new BufferGeometry();
       const vertices = new Float32Array((2 + ik.links.length) * 3);
       geometry.setAttribute('position', new BufferAttribute(vertices, 3));
@@ -378,7 +404,7 @@ class CCDIKHelper extends Object3D {
       return new Mesh(scope.sphereGeometry, scope.linkSphereMaterial);
     }
 
-    function createLine(ik) {
+    function createLine(ik: IKS) {
       return new Line(createLineGeometry(ik), scope.lineMaterial);
     }
 
@@ -396,5 +422,3 @@ class CCDIKHelper extends Object3D {
     }
   }
 }
-
-export { CCDIKSolver, CCDIKHelper };

@@ -1,10 +1,10 @@
 import { AnimationAction } from './AnimationAction.js';
-import { EventDispatcher } from '../core/EventDispatcher.ts';
-import { LinearInterpolant } from '../math/interpolants/LinearInterpolant.ts';
+import { EventDispatcher } from '../core/EventDispatcher.js';
+import { LinearInterpolant } from '../math/interpolants/LinearInterpolant.js';
 import { PropertyBinding } from './PropertyBinding.js';
-import { PropertyMixer } from './PropertyMixer.ts';
+import { PropertyMixer } from './PropertyMixer.js';
 import { AnimationClip } from './AnimationClip.js';
-import { AnimationBlendMode } from '../constants.ts';
+import { AnimationBlendMode } from '../constants.js';
 
 const _controlInterpolantsResultBuffer = new Float32Array(1);
 
