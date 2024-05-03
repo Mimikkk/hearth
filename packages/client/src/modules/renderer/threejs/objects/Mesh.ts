@@ -71,6 +71,7 @@ export class Mesh extends Object3D {
 
   updateMorphTargets() {
     const geometry = this.geometry;
+    if (!geometry) return;
 
     const morphAttributes = geometry.morphAttributes;
     const keys = Object.keys(morphAttributes);
