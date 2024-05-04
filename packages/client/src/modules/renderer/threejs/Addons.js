@@ -56,7 +56,7 @@ export * from '@modules/renderer/threejs/interactive/InteractiveGroup.ts';
 export * from '@modules/renderer/threejs/interactive/SelectionBox.ts';
 export * from '@modules/renderer/threejs/interactive/SelectionHelper.ts';
 
-export { IESSpotLight } from './lights/IESSpotLight.ts';
+export * from './lights/IESSpotLight.ts';
 export * from './lights/LightProbeGenerator.ts';
 export * from './lights/RectAreaLightUniformsLib.ts';
 
@@ -69,29 +69,18 @@ export * from '@modules/renderer/threejs/lines/Wireframe.ts';
 export * from '@modules/renderer/threejs/lines/WireframeGeometry2.ts';
 
 export * from './loaders/BVHLoader.js';
-export * from './loaders/ColladaLoader.js';
 export * from './loaders/DDSLoader.js';
 export * from './loaders/DRACOLoader.js';
-export * from './loaders/EXRLoader.js';
 export * from './loaders/FBXLoader.js';
 export * from './loaders/FontLoader.js';
 export * from './loaders/GCodeLoader.js';
 export * from './loaders/GLTFLoader.js';
 export * from './loaders/HDRCubeTextureLoader.js';
 export * from './loaders/IESLoader.js';
-export * from './loaders/KMZLoader.js';
 export * from './loaders/KTX2Loader.js';
-export * from './loaders/KTXLoader.js';
-export * from './loaders/LDrawLoader.js';
-export * from './loaders/LUT3dlLoader.js';
-export * from './loaders/LUTCubeLoader.js';
-export * from './loaders/LWOLoader.js';
-export * from './loaders/LogLuvLoader.js';
 export * from './loaders/MD2Loader.js';
 export * from './loaders/MDDLoader.js';
 export * from './loaders/MMDLoader.js';
-export * from './loaders/MTLLoader.js';
-export * from './loaders/NRRDLoader.js';
 
 export * from './loaders/OBJLoader.js';
 export * from './loaders/RGBELoader.js';
