@@ -68,8 +68,6 @@ export * from '@modules/renderer/threejs/lines/LineSegmentsGeometry.ts';
 export * from '@modules/renderer/threejs/lines/Wireframe.ts';
 export * from '@modules/renderer/threejs/lines/WireframeGeometry2.ts';
 
-export * from './loaders/3MFLoader.js';
-export * from './loaders/AMFLoader.js';
 export * from './loaders/BVHLoader.js';
 export * from './loaders/ColladaLoader.js';
 export * from './loaders/DDSLoader.js';
@@ -94,22 +92,15 @@ export * from './loaders/MDDLoader.js';
 export * from './loaders/MMDLoader.js';
 export * from './loaders/MTLLoader.js';
 export * from './loaders/NRRDLoader.js';
+
 export * from './loaders/OBJLoader.js';
-export * from './loaders/PCDLoader.js';
-export * from './loaders/PDBLoader.js';
-export * from './loaders/PLYLoader.js';
-export * from './loaders/PVRLoader.js';
 export * from './loaders/RGBELoader.js';
 export * from './loaders/RGBMLoader.js';
 export * from './loaders/STLLoader.js';
 export * from './loaders/SVGLoader.js';
-export * from './loaders/TDSLoader.js';
 export * from './loaders/TGALoader.js';
 export * from './loaders/TIFFLoader.js';
 export * from './loaders/TTFLoader.js';
-export * from './loaders/TiltLoader.js';
-export * from './loaders/USDZLoader.js';
-export * from './loaders/VOXLoader.js';
 
 export * from './math/Capsule.ts';
 export * from './math/ColorConverter.ts';
