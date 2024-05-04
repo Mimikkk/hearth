@@ -36,7 +36,7 @@ function init() {
 
   clock = new THREE.Clock();
 
-  // model
+  // modelwe
 
   const loader = new GLTFLoader();
   loader.load('models/gltf/Michelle.glb', function (gltf) {

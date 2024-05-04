@@ -7,8 +7,6 @@ import { GLTFLoader } from '../threejs/loaders/GLTFLoader.js';
 
 import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 
-import { nodeFrame } from '@modules/renderer/threejs/renderers/webgl-legacy/nodes/WebGLNodes.js';
-
 const SAMPLE_PATH =
   'https://raw.githubusercontent.com/materialx/MaterialX/main/resources/Materials/Examples/StandardSurface/';
 
@@ -133,7 +131,5 @@ function onWindowResize() {
 }
 
 function render() {
-  nodeFrame.update();
-
   renderer.render(scene, camera);
 }
