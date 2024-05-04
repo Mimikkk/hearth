@@ -3,7 +3,6 @@ import * as Nodes from '../threejs/nodes/Nodes.js';
 
 import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 import WGSLNodeBuilder from '@modules/renderer/threejs/renderers/webgpu/nodes/WGSLNodeBuilder.js';
-import GLSLNodeBuilder from '@modules/renderer/threejs/renderers/webgl/nodes/GLSLNodeBuilder.js';
 
 import { GUI } from '../threejs/libs/lil-gui.module.min.js';
 
@@ -118,10 +117,6 @@ output = vec4( finalColor, opacity );
 
         if (options.output === 'WGSL') {
           NodeBuilder = WGSLNodeBuilder;
-        } else if (options.output === 'GLSL ES 3.0') {
-          NodeBuilder = GLSLNodeBuilder;
-        } else {
-          NodeBuilder = GLSL1NodeBuilder;
         }
 
         nodeBuilder = new NodeBuilder(mesh, renderer);
@@ -154,7 +149,7 @@ output = vec4( finalColor, opacity );
 
     const gui = new GUI();
 
-    gui.add(options, 'output', ['WGSL', 'GLSL ES 3.0']).onChange(build);
+    gui.add(options, 'output', ['WGSL']).onChange(build);
     gui.add(options, 'shader', ['vertex', 'fragment']).onChange(showCode);
 
     gui.add(options, 'outputColorSpace', [THREE.ColorSpace.LinearSRGB, THREE.ColorSpace.SRGB]).onChange(value => {

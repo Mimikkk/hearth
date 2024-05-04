@@ -3,11 +3,11 @@ import { Mesh } from '../objects/Mesh.ts';
 import { BoxGeometry } from '../geometries/BoxGeometry.ts';
 import { ShaderMaterial } from '../materials/ShaderMaterial.ts';
 import { cloneUniforms } from './shaders/UniformsUtils.js';
-import { WebGLRenderTarget } from './WebGLRenderTarget.ts';
 import { CubeCamera } from '../cameras/CubeCamera.ts';
 import { CubeTexture } from '../textures/CubeTexture.ts';
+import { RenderTarget } from '@modules/renderer/threejs/core/RenderTarget.js';
 
-class WebGLCubeRenderTarget extends WebGLRenderTarget {
+class WebGLCubeRenderTarget extends RenderTarget {
   constructor(size = 1, options = {}) {
     super(size, size, options);
 

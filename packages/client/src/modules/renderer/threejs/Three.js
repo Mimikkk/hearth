@@ -1,7 +1,5 @@
 import { Revision } from './constants.ts';
 
-export { WebGLArrayRenderTarget } from './renderers/WebGLArrayRenderTarget.ts';
-export { WebGL3DRenderTarget } from './renderers/WebGL3DRenderTarget.ts';
 export { WebGLCubeRenderTarget } from './renderers/WebGLCubeRenderTarget.js';
 export { WebGLRenderTarget } from './renderers/WebGLRenderTarget.ts';
 export { ShaderLib } from './renderers/shaders/ShaderLib.ts';
@@ -152,7 +150,6 @@ export { DataUtils } from './extras/DataUtils.ts';
 export { ImageUtils } from './extras/ImageUtils.ts';
 export { ShapeUtils } from './extras/ShapeUtils.ts';
 export { PMREMGenerator } from './extras/PMREMGenerator.js';
-export { WebGLUtils } from './renderers/webgl/WebGLUtils.js';
 export { createCanvasElement } from './utils.ts';
 export * from './constants.ts';
 

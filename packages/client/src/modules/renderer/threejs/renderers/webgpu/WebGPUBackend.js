@@ -25,7 +25,7 @@ import { WebGPUManager } from '@modules/renderer/threejs/capabilities/WebGPUMana
 
 //
 
-class WebGPUBackend extends Backend {
+export class WebGPUBackend extends Backend {
   constructor(parameters = {}) {
     super(parameters);
 
@@ -1149,5 +1149,3 @@ class WebGPUBackend extends Backend {
     renderContextData.currentSets = { attributes: {} };
   }
 }
-
-export default WebGPUBackend;

@@ -12,7 +12,7 @@ import { Frustum } from '../../math/Frustum.ts';
 
 import * as vsm from '../shaders/ShaderLib/vsm.glsl.js';
 
-function WebGLShadowMap(_renderer, _objects, _capabilities) {
+export function WebGLShadowMap(_renderer, _objects, _capabilities) {
   let _frustum = new Frustum();
 
   const _shadowMapSize = new Vector2(),
@@ -352,5 +352,3 @@ function WebGLShadowMap(_renderer, _objects, _capabilities) {
     }
   }
 }
-
-export { WebGLShadowMap };
