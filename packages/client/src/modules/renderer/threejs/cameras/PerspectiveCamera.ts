@@ -183,26 +183,6 @@ export class PerspectiveCamera extends Camera {
     this.projectionMatrixInverse.copy(this.projectionMatrix).invert();
     return this;
   }
-
-  toJSON(meta: any): any {
-    const data = super.toJSON(meta);
-
-    data.object.fov = this.fov;
-    data.object.zoom = this.zoom;
-
-    data.object.near = this.near;
-    data.object.far = this.far;
-    data.object.focus = this.focus;
-
-    data.object.aspect = this.aspect;
-
-    if (this.view !== null) data.object.view = Object.assign({}, this.view);
-
-    data.object.filmGauge = this.filmGaugeMM;
-    data.object.filmOffset = this.filmOffsetMM;
-
-    return data;
-  }
 }
 PerspectiveCamera.prototype.isPerspectiveCamera = true;
 PerspectiveCamera.prototype.type = 'PerspectiveCamera';

@@ -147,9 +147,8 @@ export class CurvePath<T extends Vector2 | Vector3> extends Curve<T> {
     return points;
   }
 
-  // @ts-expect-error
-  copy(source: CurvePath<T>): this {
-    super.copy(source as Curve<T>);
+  copy(source: this): this {
+    super.copy(source);
 
     this.curves = [];
 
@@ -160,38 +159,6 @@ export class CurvePath<T extends Vector2 | Vector3> extends Curve<T> {
     }
 
     this.autoClose = source.autoClose;
-
-    return this;
-  }
-
-  toJSON(): any {
-    const data = super.toJSON();
-
-    //@ts-expect-error
-    data.autoClose = this.autoClose;
-    //@ts-expect-error
-    data.curves = [];
-
-    for (let i = 0, l = this.curves.length; i < l; i++) {
-      const curve = this.curves[i];
-      //@ts-expect-error
-      data.curves.push(curve.toJSON());
-    }
-
-    return data;
-  }
-
-  fromJSON(json: any): this {
-    super.fromJSON(json);
-
-    this.autoClose = json.autoClose;
-    this.curves = [];
-
-    for (let i = 0, l = json.curves.length; i < l; i++) {
-      const curve = json.curves[i];
-      //@ts-expect-error
-      this.curves.push(new Curves[curve.type]().fromJSON(curve));
-    }
 
     return this;
   }

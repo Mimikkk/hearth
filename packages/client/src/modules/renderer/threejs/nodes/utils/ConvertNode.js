@@ -22,18 +22,6 @@ class ConvertNode extends Node {
     return convertTo;
   }
 
-  serialize(data) {
-    super.serialize(data);
-
-    data.convertTo = this.convertTo;
-  }
-
-  deserialize(data) {
-    super.deserialize(data);
-
-    this.convertTo = data.convertTo;
-  }
-
   generate(builder, output) {
     const node = this.node;
     const type = this.getNodeType(builder);

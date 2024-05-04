@@ -14,20 +14,11 @@ export class InstancedBufferAttribute<T extends TypedArray> extends BufferAttrib
     super(array, itemSize, normalized);
   }
 
-  copy(source: InstancedBufferAttribute<T>): this {
+  copy(source: this): this {
     super.copy(source);
     this.meshPerAttribute = source.meshPerAttribute;
 
     return this;
-  }
-
-  toJSON(): any {
-    const data = super.toJSON();
-    // @ts-expect-error
-    data.meshPerAttribute = this.meshPerAttribute;
-    // @ts-expect-error
-    data.isInstancedBufferAttribute = true;
-    return data;
   }
 }
 InstancedBufferAttribute.prototype.isInstancedBufferAttribute = true;

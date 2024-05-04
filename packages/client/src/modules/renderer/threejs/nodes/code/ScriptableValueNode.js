@@ -77,44 +77,6 @@ class ScriptableValueNode extends Node {
   setup() {
     return this.value && this.value.isNode ? this.value : float();
   }
-
-  serialize(data) {
-    super.serialize(data);
-
-    if (this.value !== null) {
-      if (this.inputType === 'ArrayBuffer') {
-        data.value = arrayBufferToBase64(this.value);
-      } else {
-        data.value = this.value ? this.value.toJSON(data.meta).uuid : null;
-      }
-    } else {
-      data.value = null;
-    }
-
-    data.inputType = this.inputType;
-    data.outputType = this.outputType;
-  }
-
-  deserialize(data) {
-    super.deserialize(data);
-
-    let value = null;
-
-    if (data.value !== null) {
-      if (data.inputType === 'ArrayBuffer') {
-        value = base64ToArrayBuffer(data.value);
-      } else if (data.inputType === 'Texture') {
-        value = data.meta.textures[data.value];
-      } else {
-        value = data.meta.nodes[data.value] || null;
-      }
-    }
-
-    this.value = value;
-
-    this.inputType = data.inputType;
-    this.outputType = data.outputType;
-  }
 }
 
 export default ScriptableValueNode;

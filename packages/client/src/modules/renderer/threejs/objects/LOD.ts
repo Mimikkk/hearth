@@ -142,28 +142,6 @@ export class LOD extends Object3D {
       }
     }
   }
-
-  toJSON(meta: any): any {
-    const data = super.toJSON(meta);
-
-    if (this.autoUpdate === false) data.object.autoUpdate = false;
-
-    data.object.levels = [];
-
-    const levels = this.levels;
-
-    for (let i = 0, l = levels.length; i < l; i++) {
-      const level = levels[i];
-
-      data.object.levels.push({
-        object: level.object.uuid,
-        distance: level.distance,
-        hysteresis: level.hysteresis,
-      });
-    }
-
-    return data;
-  }
 }
 
 LOD.prototype.isLOD = true;

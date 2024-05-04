@@ -4,48 +4,6 @@ import { ColorSpace, Filter, Mapping, PixelFormat, TextureDataType, TextureForma
 import { Vector4 } from '../math/Vector4.js';
 import { Source } from '../textures/Source.js';
 
-export interface RenderTargetOptions {
-  generateMipmaps: boolean;
-  internalFormat: PixelFormat | null;
-  minFilter: number;
-  depthBuffer: boolean;
-  stencilBuffer: boolean;
-  depthTexture: Texture | null;
-  samples: number;
-  count: number;
-  image: any | null;
-  mapping: Mapping;
-  wrapS: Wrapping;
-  wrapT: Wrapping;
-  magFilter: Filter;
-  format: TextureFormat;
-  type: TextureDataType;
-  anisotropy: number;
-  colorSpace: ColorSpace;
-}
-
-export namespace RenderTargetOptions {
-  export const create = (options?: Partial<RenderTargetOptions>): RenderTargetOptions => ({
-    generateMipmaps: options?.generateMipmaps ?? false,
-    internalFormat: options?.internalFormat ?? null,
-    minFilter: options?.minFilter ?? Filter.Linear,
-    depthBuffer: options?.depthBuffer ?? true,
-    stencilBuffer: options?.stencilBuffer ?? false,
-    depthTexture: options?.depthTexture ?? null,
-    samples: options?.samples ?? 0,
-    count: options?.count ?? 1,
-    image: options?.image ?? null,
-    mapping: options?.mapping ?? Mapping.UV,
-    wrapS: options?.wrapS ?? Wrapping.ClampToEdge,
-    wrapT: options?.wrapT ?? Wrapping.ClampToEdge,
-    magFilter: options?.magFilter ?? Filter.Linear,
-    format: options?.format ?? TextureFormat.RGBA,
-    type: options?.type ?? TextureDataType.UnsignedByte,
-    anisotropy: options?.anisotropy ?? 1,
-    colorSpace: options?.colorSpace ?? ColorSpace.No,
-  });
-}
-
 export class RenderTarget {
   declare ['constructor']: typeof RenderTarget;
   declare isRenderTarget: true;
@@ -64,7 +22,7 @@ export class RenderTarget {
   constructor(
     public width: number = 1,
     public height: number = 1,
-    options: Partial<RenderTargetOptions> = {},
+    options?: RenderTarget.Options,
   ) {
     this.depth = 1;
 
@@ -75,7 +33,7 @@ export class RenderTarget {
 
     const image = { width: width, height: height, depth: 1 };
 
-    const configuration = RenderTargetOptions.create(options);
+    const configuration = RenderTarget.configure(options);
 
     const texture = new Texture(
       image,
@@ -140,7 +98,7 @@ export class RenderTarget {
     return new this.constructor().copy(this);
   }
 
-  copy(source: RenderTarget): this {
+  copy(source: this): this {
     this.width = source.width;
     this.height = source.height;
     this.depth = source.depth;
@@ -175,6 +133,69 @@ export class RenderTarget {
   dispose(): void {
     this.eventDispatcher.dispatch({ type: 'dispose' }, this);
   }
+}
+
+export namespace RenderTarget {
+  export interface Configuration {
+    generateMipmaps: boolean;
+    internalFormat: PixelFormat | null;
+    minFilter: number;
+    depthBuffer: boolean;
+    stencilBuffer: boolean;
+    depthTexture: Texture | null;
+    samples: number;
+    count: number;
+    image: any | null;
+    mapping: Mapping;
+    wrapS: Wrapping;
+    wrapT: Wrapping;
+    magFilter: Filter;
+    format: TextureFormat;
+    type: TextureDataType;
+    anisotropy: number;
+    colorSpace: ColorSpace;
+  }
+
+  export interface Options extends Partial<Configuration> {}
+
+  export const initial: Configuration = {
+    generateMipmaps: false,
+    internalFormat: null,
+    minFilter: Filter.Linear,
+    depthBuffer: true,
+    stencilBuffer: false,
+    depthTexture: null,
+    samples: 0,
+    count: 1,
+    image: null,
+    mapping: Mapping.UV,
+    wrapS: Wrapping.ClampToEdge,
+    wrapT: Wrapping.ClampToEdge,
+    magFilter: Filter.Linear,
+    format: TextureFormat.RGBA,
+    type: TextureDataType.UnsignedByte,
+    anisotropy: 1,
+    colorSpace: ColorSpace.No,
+  };
+  export const configure = (options?: Options): Configuration => ({
+    generateMipmaps: options?.generateMipmaps ?? initial.generateMipmaps,
+    internalFormat: options?.internalFormat ?? initial.internalFormat,
+    minFilter: options?.minFilter ?? initial.minFilter,
+    depthBuffer: options?.depthBuffer ?? initial.depthBuffer,
+    stencilBuffer: options?.stencilBuffer ?? initial.stencilBuffer,
+    depthTexture: options?.depthTexture ?? initial.depthTexture,
+    samples: options?.samples ?? initial.samples,
+    count: options?.count ?? initial.count,
+    image: options?.image ?? initial.image,
+    mapping: options?.mapping ?? initial.mapping,
+    wrapS: options?.wrapS ?? initial.wrapS,
+    wrapT: options?.wrapT ?? initial.wrapT,
+    magFilter: options?.magFilter ?? initial.magFilter,
+    format: options?.format ?? initial.format,
+    type: options?.type ?? initial.type,
+    anisotropy: options?.anisotropy ?? initial.anisotropy,
+    colorSpace: options?.colorSpace ?? initial.colorSpace,
+  });
 }
 
 RenderTarget.prototype.isRenderTarget = true;

@@ -68,18 +68,6 @@ class SplitNode extends Node {
 
     return snippet;
   }
-
-  serialize(data) {
-    super.serialize(data);
-
-    data.components = this.components;
-  }
-
-  deserialize(data) {
-    super.deserialize(data);
-
-    this.components = data.components;
-  }
 }
 
 export default SplitNode;

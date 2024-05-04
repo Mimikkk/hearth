@@ -45,24 +45,6 @@ export class LineCurve extends Curve<Vector2> {
 
     return this;
   }
-
-  toJSON(): any {
-    const data = super.toJSON() as any;
-
-    data.v1 = this.v1.toArray();
-    data.v2 = this.v2.toArray();
-
-    return data;
-  }
-
-  fromJSON(json: any): any {
-    super.fromJSON(json);
-
-    this.v1.fromArray(json.v1);
-    this.v2.fromArray(json.v2);
-
-    return this;
-  }
 }
 LineCurve.prototype.isLineCurve = true;
 LineCurve.prototype.type = 'LineCurve';

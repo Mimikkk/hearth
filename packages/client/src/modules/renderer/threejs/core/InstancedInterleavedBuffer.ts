@@ -13,7 +13,7 @@ export class InstancedInterleavedBuffer extends InterleavedBuffer {
     super(array, stride);
   }
 
-  copy(source: InstancedInterleavedBuffer): this {
+  copy(source: this): this {
     super.copy(source);
 
     this.meshPerAttribute = source.meshPerAttribute;
@@ -27,15 +27,6 @@ export class InstancedInterleavedBuffer extends InterleavedBuffer {
     ib.meshPerAttribute = this.meshPerAttribute;
 
     return ib;
-  }
-
-  toJSON(data: InstancedInterleavedBuffer): any {
-    const json = super.toJSON(data);
-
-    json.isInstancedInterleavedBuffer = true;
-    json.meshPerAttribute = this.meshPerAttribute;
-
-    return json;
   }
 }
 InstancedInterleavedBuffer.prototype.isInstancedInterleavedBuffer = true;

@@ -41,7 +41,6 @@ export { CompressedTextureLoader } from './loaders/CompressedTextureLoader.js';
 export { CubeTextureLoader } from './loaders/CubeTextureLoader.js';
 export { DataTextureLoader } from './loaders/DataTextureLoader.js';
 export { TextureLoader } from './loaders/TextureLoader.js';
-export { ObjectLoader } from './loaders/ObjectLoader.js';
 export { MaterialLoader } from './loaders/MaterialLoader.js';
 export { BufferGeometryLoader } from './loaders/BufferGeometryLoader.js';
 export { DefaultLoadingManager, LoadingManager } from './loaders/LoadingManager.js';

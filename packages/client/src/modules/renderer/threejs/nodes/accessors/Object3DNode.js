@@ -85,18 +85,6 @@ class Object3DNode extends Node {
 
     return this._uniformNode.build(builder);
   }
-
-  serialize(data) {
-    super.serialize(data);
-
-    data.scope = this.scope;
-  }
-
-  deserialize(data) {
-    super.deserialize(data);
-
-    this.scope = data.scope;
-  }
 }
 
 Object3DNode.VIEW_MATRIX = 'viewMatrix';

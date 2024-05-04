@@ -290,17 +290,6 @@ export class BufferAttribute<T extends TypedArray> {
   clone(): BufferAttribute<T> {
     return new this.constructor(this.array, this.itemSize).copy(this);
   }
-
-  toJSON() {
-    return {
-      name: this.name,
-      usage: this.usage,
-      itemSize: this.itemSize,
-      type: this.array.constructor.name,
-      array: Array.from(this.array),
-      normalized: this.normalized,
-    };
-  }
 }
 BufferAttribute.prototype.isBufferAttribute = true;
 

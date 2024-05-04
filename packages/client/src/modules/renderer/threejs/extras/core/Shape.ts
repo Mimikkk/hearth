@@ -33,7 +33,7 @@ export class Shape extends Path {
     };
   }
 
-  copy(source: Shape): this {
+  copy(source: this): this {
     super.copy(source);
 
     this.holes = [];
@@ -42,42 +42,6 @@ export class Shape extends Path {
       const hole = source.holes[i];
 
       this.holes.push(hole.clone());
-    }
-
-    return this;
-  }
-
-  override toJSON(): {
-    metadata: { version: number };
-    uuid: string;
-    holes: ReturnType<Path['toJSON']>[];
-  } {
-    const data = super.toJSON() as unknown as {
-      metadata: { version: number };
-      uuid: string;
-      holes: ReturnType<Path['toJSON']>[];
-    };
-
-    data.uuid = this.uuid;
-    data.holes = [];
-
-    for (let i = 0, l = this.holes.length; i < l; i++) {
-      const hole = this.holes[i];
-      data.holes.push(hole.toJSON());
-    }
-
-    return data;
-  }
-
-  fromJSON(json: { uuid: string; holes: ReturnType<Path['toJSON']>[] }) {
-    super.fromJSON(json);
-
-    this.uuid = json.uuid;
-    this.holes = [];
-
-    for (let i = 0, l = json.holes.length; i < l; i++) {
-      const hole = json.holes[i];
-      this.holes.push(new Path().fromJSON(hole));
     }
 
     return this;

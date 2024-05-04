@@ -45,20 +45,6 @@ class TimerNode extends UniformNode {
       this.value = frame.time * scale;
     }
   }
-
-  serialize(data) {
-    super.serialize(data);
-
-    data.scope = this.scope;
-    data.scale = this.scale;
-  }
-
-  deserialize(data) {
-    super.deserialize(data);
-
-    this.scope = data.scope;
-    this.scale = data.scale;
-  }
 }
 
 TimerNode.LOCAL = 'local';

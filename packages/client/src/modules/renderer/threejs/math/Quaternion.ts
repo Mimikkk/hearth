@@ -577,10 +577,6 @@ export class Quaternion {
     return this;
   }
 
-  toJSON() {
-    return this.toArray();
-  }
-
   _onChange(callback: () => void) {
     this._onChangeCallback = callback;
 

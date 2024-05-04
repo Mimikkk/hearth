@@ -33,18 +33,6 @@ class VertexColorNode extends AttributeNode {
 
     return result;
   }
-
-  serialize(data) {
-    super.serialize(data);
-
-    data.index = this.index;
-  }
-
-  deserialize(data) {
-    super.deserialize(data);
-
-    this.index = data.index;
-  }
 }
 
 export default VertexColorNode;

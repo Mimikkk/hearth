@@ -45,18 +45,6 @@ class PositionNode extends Node {
 
     return outputNode.build(builder, this.getNodeType(builder));
   }
-
-  serialize(data) {
-    super.serialize(data);
-
-    data.scope = this.scope;
-  }
-
-  deserialize(data) {
-    super.deserialize(data);
-
-    this.scope = data.scope;
-  }
 }
 
 PositionNode.GEOMETRY = 'geometry';

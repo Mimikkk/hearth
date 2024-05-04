@@ -3,14 +3,14 @@ import { CubicInterpolant } from '../math/interpolants/CubicInterpolant.js';
 import { LinearInterpolant } from '../math/interpolants/LinearInterpolant.js';
 import { DiscreteInterpolant } from '../math/interpolants/DiscreteInterpolant.js';
 import * as AnimationUtils from './AnimationUtils.js';
-import { TypedArray, TypedArrayConstructor } from '../math/MathUtils.js';
+import { NumberArrayConstructor, TypedArray, TypedArrayConstructor } from '../math/MathUtils.js';
 import { Interpolant } from '../math/Interpolant.js';
 
 export class KeyframeTrack<T extends TypedArray = Float32Array, V extends TypedArray = Float32Array> {
   declare ['constructor']: typeof KeyframeTrack;
   declare DefaultInterpolation: InterpolationMode;
-  declare TimeBufferType: TypedArrayConstructor | ArrayConstructor;
-  declare ValueBufferType: TypedArrayConstructor | ArrayConstructor;
+  declare TimeBufferType: NumberArrayConstructor;
+  declare ValueBufferType: NumberArrayConstructor;
   declare ValueTypeName: string;
   times: T;
   values: V;
@@ -30,33 +30,6 @@ export class KeyframeTrack<T extends TypedArray = Float32Array, V extends TypedA
     this.values = AnimationUtils.convertArray(values, this.ValueBufferType);
 
     this.setInterpolation(interpolation || this.DefaultInterpolation);
-  }
-
-  static toJSON(track: any): any {
-    const trackType = track.constructor;
-
-    let json;
-
-    if (trackType.toJSON !== this.toJSON) {
-      json = trackType.toJSON(track);
-    } else {
-      json = {
-        name: track.name,
-        times: AnimationUtils.convertArray(track.times, Array),
-        values: AnimationUtils.convertArray(track.values, Array),
-      };
-
-      const interpolation = track.getInterpolation();
-
-      if (interpolation !== track.DefaultInterpolation) {
-        //@ts-expect-error
-        json.interpolation = interpolation;
-      }
-    }
-
-    json.type = track.ValueTypeName;
-
-    return json;
   }
 
   InterpolantFactoryMethodDiscrete(result: V): DiscreteInterpolant<T, V> {

@@ -16,7 +16,7 @@ export function getCacheKey(object, force = false) {
   return cacheKey;
 }
 
-export function* getNodeChildren(node, toJSON = false) {
+export function* getNodeChildren(node) {
   for (const property in node) {
     // Ignore private properties.
     if (property.startsWith('_') === true) continue;
@@ -27,7 +27,7 @@ export function* getNodeChildren(node, toJSON = false) {
       for (let i = 0; i < object.length; i++) {
         const child = object[i];
 
-        if (child && (child.isNode === true || (toJSON && typeof child.toJSON === 'function'))) {
+        if (child && child.isNode === true) {
           yield { property, index: i, childNode: child };
         }
       }
@@ -37,7 +37,7 @@ export function* getNodeChildren(node, toJSON = false) {
       for (const subProperty in object) {
         const child = object[subProperty];
 
-        if (child && (child.isNode === true || (toJSON && typeof child.toJSON === 'function'))) {
+        if (child && child.isNode === true) {
           yield { property, index: subProperty, childNode: child };
         }
       }

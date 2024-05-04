@@ -33,7 +33,7 @@ export class Scene extends Object3D {
     this.overrideMaterial = null;
   }
 
-  copy(source: Scene, recursive?: boolean) {
+  copy(source: this, recursive?: boolean): this {
     super.copy(source, recursive);
 
     if (source.background !== null) this.background = source.background.clone();
@@ -50,19 +50,6 @@ export class Scene extends Object3D {
     this.matrixAutoUpdate = source.matrixAutoUpdate;
 
     return this;
-  }
-
-  toJSON(meta: any) {
-    const data = super.toJSON(meta);
-
-    if (this.fog !== null) data.object.fog = this.fog.toJSON();
-    if (this.backgroundBlurriness > 0) data.object.backgroundBlurriness = this.backgroundBlurriness;
-    if (this.backgroundIntensity !== 1) data.object.backgroundIntensity = this.backgroundIntensity;
-
-    data.object.backgroundRotation = this.backgroundRotation.toArray();
-    data.object.environmentRotation = this.environmentRotation.toArray();
-
-    return data;
   }
 }
 Scene.prototype.isScene = true;

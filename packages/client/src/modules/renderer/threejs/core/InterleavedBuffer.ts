@@ -109,37 +109,5 @@ export class InterleavedBuffer {
 
     return this;
   }
-
-  toJSON(data?: {}): any {
-    //@ts-expect-error
-    if (data.arrayBuffers === undefined) {
-      //@ts-expect-error
-      data.arrayBuffers = {};
-    }
-
-    // generate UUID for array buffer if necessary
-
-    //@ts-expect-error
-    if (this.array.buffer._uuid === undefined) {
-      //@ts-expect-error
-      this.array.buffer._uuid = MathUtils.generateUuid();
-    }
-
-    //@ts-expect-error
-    if (data.arrayBuffers[this.array.buffer._uuid] === undefined) {
-      //@ts-expect-error
-      data.arrayBuffers[this.array.buffer._uuid] = Array.from(new Uint32Array(this.array.buffer));
-    }
-
-    //
-
-    return {
-      uuid: this.uuid,
-      //@ts-expect-error
-      buffer: this.array.buffer._uuid,
-      type: this.array.constructor.name,
-      stride: this.stride,
-    };
-  }
 }
 InterleavedBuffer.prototype.isInterleavedBuffer = true;

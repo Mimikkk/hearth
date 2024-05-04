@@ -7,7 +7,6 @@ import {
   js,
   loop,
   MeshBasicNodeMaterial,
-  NodeObjectLoader,
   normalLocal,
   normalView,
   normalWorld,
@@ -345,8 +344,6 @@ function init() {
     addMesh(geometry, materials[i]);
   }
 
-  const serializeMesh = scene.children[scene.children.length - 1];
-
   //
 
   renderer = new WebGPURenderer({ antialias: true });
@@ -365,8 +362,6 @@ function init() {
   window.addEventListener('resize', onWindowResize);
 
   //
-
-  setTimeout(() => testSerialization(serializeMesh), 1000);
 }
 
 function addMesh(geometry, material) {
@@ -382,25 +377,6 @@ function addMesh(geometry, material) {
   objects.push(mesh);
 
   scene.add(mesh);
-}
-
-function testSerialization(mesh) {
-  const json = mesh.toJSON();
-  const loader = new NodeObjectLoader();
-  const serializedMesh = loader.parse(json);
-
-  serializedMesh.position.x = (objects.length % 4) * 200 - 400;
-  serializedMesh.position.z = Math.floor(objects.length / 4) * 200 - 200;
-
-  const scriptableNode = serializedMesh.material.colorNode;
-
-  // it's because local.get( 'material' ) is used in the example ( local/global is unserializable )
-  scriptableNode.setLocal('material', serializedMesh.material);
-  scriptableNode.setParameter('execFrom', 'serialized');
-
-  objects.push(serializedMesh);
-
-  scene.add(serializedMesh);
 }
 
 function onWindowResize() {

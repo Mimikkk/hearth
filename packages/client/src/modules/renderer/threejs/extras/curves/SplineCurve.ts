@@ -29,7 +29,7 @@ export class SplineCurve extends Curve<Vector2> {
     return point;
   }
 
-  copy(source: SplineCurve): this {
+  copy(source: this): this {
     super.copy(source);
 
     this.points = [];
@@ -42,34 +42,7 @@ export class SplineCurve extends Curve<Vector2> {
 
     return this;
   }
-
-  toJSON(): any {
-    const data = super.toJSON();
-
-    // @ts-expect-error
-    data.points = [];
-
-    for (let i = 0, l = this.points.length; i < l; i++) {
-      const point = this.points[i];
-      // @ts-expect-error
-      data.points.push(point.toArray());
-    }
-
-    return data;
-  }
-
-  fromJSON(json: any): any {
-    super.fromJSON(json);
-
-    this.points = [];
-
-    for (let i = 0, l = json.points.length; i < l; i++) {
-      const point = json.points[i];
-      this.points.push(new Vector2().fromArray(point));
-    }
-
-    return this;
-  }
 }
+
 SplineCurve.prototype.isSplineCurve = true;
 SplineCurve.prototype.type = 'SplineCurve';

@@ -128,7 +128,7 @@ class CatmullRomCurve3 extends Curve<Vector3> {
     return point;
   }
 
-  copy(source: CatmullRomCurve3): this {
+  copy(source: this): this {
     super.copy(source);
 
     this.points = [];
@@ -142,40 +142,6 @@ class CatmullRomCurve3 extends Curve<Vector3> {
     this.closed = source.closed;
     this.curveType = source.curveType;
     this.tension = source.tension;
-
-    return this;
-  }
-
-  toJSON(): any {
-    const data = super.toJSON() as any;
-
-    data.points = [];
-
-    for (let i = 0, l = this.points.length; i < l; i++) {
-      const point = this.points[i];
-      data.points.push(point.toArray());
-    }
-
-    data.closed = this.closed;
-    data.curveType = this.curveType;
-    data.tension = this.tension;
-
-    return data;
-  }
-
-  fromJSON(json: any): any {
-    super.fromJSON(json);
-
-    this.points = [];
-
-    for (let i = 0, l = json.points.length; i < l; i++) {
-      const point = json.points[i];
-      this.points.push(new Vector3().fromArray(point));
-    }
-
-    this.closed = json.closed;
-    this.curveType = json.curveType;
-    this.tension = json.tension;
 
     return this;
   }

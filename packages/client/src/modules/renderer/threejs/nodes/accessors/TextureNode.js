@@ -248,18 +248,6 @@ class TextureNode extends UniformNode {
 
   // --
 
-  serialize(data) {
-    super.serialize(data);
-
-    data.value = this.value.toJSON(data.meta).uuid;
-  }
-
-  deserialize(data) {
-    super.deserialize(data);
-
-    this.value = data.meta.textures[data.value];
-  }
-
   update() {
     const texture = this.value;
 

@@ -16,14 +16,5 @@ export class FogExp2 {
   clone() {
     return new FogExp2(this.color, this.density);
   }
-
-  toJSON() {
-    return {
-      type: 'FogExp2',
-      name: this.name,
-      color: this.color.getHex(),
-      density: this.density,
-    };
-  }
 }
 FogExp2.prototype.isFogExp2 = true;

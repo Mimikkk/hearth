@@ -281,31 +281,5 @@ export abstract class Curve<T extends Vector2 | Vector3> {
 
     return this;
   }
-
-  toJSON(): {
-    metadata: {
-      version: number;
-      type: string;
-      generator: string;
-    };
-    precision: number;
-    type: string;
-  } {
-    return {
-      metadata: {
-        version: 4.6,
-        type: 'Curve',
-        generator: 'Curve.toJSON',
-      },
-      precision: this.precision,
-      type: this.type,
-    };
-  }
-
-  fromJSON(json: { precision: number }) {
-    this.precision = json.precision;
-
-    return this;
-  }
 }
 Curve.prototype.type = 'Curve';

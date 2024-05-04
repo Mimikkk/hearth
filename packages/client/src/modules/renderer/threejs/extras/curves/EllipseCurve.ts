@@ -63,7 +63,7 @@ export class EllipseCurve extends Curve<Vector2> {
     return point.set(x, y);
   }
 
-  copy(source: EllipseCurve): this {
+  copy(source: this): this {
     super.copy(source);
 
     this.aX = source.aX;
@@ -78,44 +78,6 @@ export class EllipseCurve extends Curve<Vector2> {
     this.aClockwise = source.aClockwise;
 
     this.aRotation = source.aRotation;
-
-    return this;
-  }
-
-  toJSON(): any {
-    const data = super.toJSON() as any;
-
-    data.aX = this.aX;
-    data.aY = this.aY;
-
-    data.xRadius = this.xRadius;
-    data.yRadius = this.yRadius;
-
-    data.aStartAngle = this.aStartAngle;
-    data.aEndAngle = this.aEndAngle;
-
-    data.aClockwise = this.aClockwise;
-
-    data.aRotation = this.aRotation;
-
-    return data;
-  }
-
-  fromJSON(json: any): any {
-    super.fromJSON(json);
-
-    this.aX = json.aX;
-    this.aY = json.aY;
-
-    this.xRadius = json.xRadius;
-    this.yRadius = json.yRadius;
-
-    this.aStartAngle = json.aStartAngle;
-    this.aEndAngle = json.aEndAngle;
-
-    this.aClockwise = json.aClockwise;
-
-    this.aRotation = json.aRotation;
 
     return this;
   }

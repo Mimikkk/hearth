@@ -648,10 +648,6 @@ export class Color {
     return this;
   }
 
-  toJSON() {
-    return this.getHex();
-  }
-
   *[Symbol.iterator](): Iterator<number> {
     yield this.r;
     yield this.g;

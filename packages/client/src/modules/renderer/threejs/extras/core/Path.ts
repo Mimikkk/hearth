@@ -139,26 +139,10 @@ export class Path extends CurvePath<Vector2> {
     return this;
   }
 
-  copy(source: Path): this {
+  copy(source: this): this {
     super.copy(source);
 
     this.currentPoint.copy(source.currentPoint);
-
-    return this;
-  }
-
-  toJSON(): any {
-    const data = super.toJSON() as any;
-
-    data.currentPoint = this.currentPoint.toArray();
-
-    return data;
-  }
-
-  fromJSON(json: any): any {
-    super.fromJSON(json);
-
-    this.currentPoint.fromArray(json.currentPoint);
 
     return this;
   }

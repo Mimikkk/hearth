@@ -23,6 +23,7 @@ import {
   Vector3,
   Vector4,
 } from '../../../threejs/Three.js';
+import { WebGPUBackend } from '@modules/renderer/threejs/renderers/webgpu/WebGPUBackend.js';
 
 const _scene = new Scene();
 const _drawingBufferSize = new Vector2();
@@ -31,8 +32,13 @@ const _frustum = new Frustum();
 const _projScreenMatrix = new Matrix4();
 const _vector3 = new Vector3();
 
+export interface RendererParameters {
+  logarithmicDepthBuffer: boolean;
+  alpha: boolean;
+}
+
 export class Renderer {
-  constructor(backend, parameters = {}) {
+  constructor(parameters = {}) {
     this.isRenderer = true;
 
     //
@@ -41,6 +47,7 @@ export class Renderer {
 
     // public
 
+    const backend = new WebGPUBackend(parameters);
     this.domElement = backend.getDomElement();
 
     this.backend = backend;

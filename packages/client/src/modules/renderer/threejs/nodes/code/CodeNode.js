@@ -39,20 +39,6 @@ class CodeNode extends Node {
 
     return nodeCode.code;
   }
-
-  serialize(data) {
-    super.serialize(data);
-
-    data.code = this.code;
-    data.language = this.language;
-  }
-
-  deserialize(data) {
-    super.deserialize(data);
-
-    this.code = data.code;
-    this.language = data.language;
-  }
 }
 
 export default CodeNode;

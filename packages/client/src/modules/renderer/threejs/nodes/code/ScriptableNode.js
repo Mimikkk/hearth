@@ -252,18 +252,6 @@ class ScriptableNode extends Node {
     return this._object;
   }
 
-  deserialize(data) {
-    super.deserialize(data);
-
-    for (const name in this.parameters) {
-      let valueNode = this.parameters[name];
-
-      if (valueNode.isScriptableNode) valueNode = valueNode.getDefaultOutput();
-
-      valueNode.events.add('refresh', this.onRefresh);
-    }
-  }
-
   getLayout() {
     return this.getObject().layout;
   }

@@ -37,18 +37,6 @@ class OscNode extends Node {
 
     return outputNode;
   }
-
-  serialize(data) {
-    super.serialize(data);
-
-    data.method = this.method;
-  }
-
-  deserialize(data) {
-    super.deserialize(data);
-
-    this.method = data.method;
-  }
 }
 
 OscNode.SINE = 'sine';

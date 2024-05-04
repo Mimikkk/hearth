@@ -51,21 +51,12 @@ export class DepthTexture extends Texture {
     this.compareFunction = null;
   }
 
-  //@ts-expect-error
-  copy(source: DepthTexture): this {
-    super.copy(source as unknown as Texture);
+  copy(source: this): this {
+    super.copy(source);
 
     this.compareFunction = source.compareFunction;
 
     return this;
-  }
-
-  toJSON(meta: any): any {
-    const data = super.toJSON(meta);
-
-    if (this.compareFunction !== null) data.compareFunction = this.compareFunction;
-
-    return data;
   }
 }
 DepthTexture.prototype.isDepthTexture = true;

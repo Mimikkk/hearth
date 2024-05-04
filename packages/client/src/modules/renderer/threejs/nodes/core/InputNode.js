@@ -29,32 +29,6 @@ class InputNode extends Node {
     return this;
   }
 
-  serialize(data) {
-    super.serialize(data);
-
-    data.value = this.value;
-
-    if (this.value && this.value.toArray) data.value = this.value.toArray();
-
-    data.valueType = getValueType(this.value);
-    data.nodeType = this.nodeType;
-
-    if (data.valueType === 'ArrayBuffer') data.value = arrayBufferToBase64(data.value);
-
-    data.precision = this.precision;
-  }
-
-  deserialize(data) {
-    super.deserialize(data);
-
-    this.nodeType = data.nodeType;
-    this.value = Array.isArray(data.value) ? getValueFromType(data.valueType, ...data.value) : data.value;
-
-    this.precision = data.precision || null;
-
-    if (this.value && this.value.fromArray) this.value = this.value.fromArray(data.value);
-  }
-
   generate(/*builder, output*/) {
     console.warn('Abstract function.');
   }

@@ -22,18 +22,6 @@ class LightNode extends Node {
 
     return output;
   }
-
-  serialize(data) {
-    super.serialize(data);
-
-    data.scope = this.scope;
-  }
-
-  deserialize(data) {
-    super.deserialize(data);
-
-    this.scope = data.scope;
-  }
 }
 
 LightNode.TARGET_DIRECTION = 'targetDirection';
