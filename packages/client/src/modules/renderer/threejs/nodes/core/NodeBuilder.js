@@ -398,8 +398,6 @@ class NodeBuilder {
 
     if (map && map.isTexture) {
       colorSpace = map.colorSpace;
-    } else if (map && map.isWebGLRenderTarget) {
-      colorSpace = map.texture.colorSpace;
     } else {
       colorSpace = ColorSpace.No;
     }

@@ -1,4 +1,4 @@
-import { Blending, ShaderMaterial, TextureDataType, UniformsUtils, WebGLRenderTarget } from '../../threejs/Three.js';
+import { Blending, RenderTarget, ShaderMaterial, TextureDataType, UniformsUtils } from '../../threejs/Three.js';
 import { FullScreenQuad, Pass } from './Pass.js';
 import { CopyShader } from '../shaders/CopyShader.js';
 
@@ -22,7 +22,7 @@ class SavePass extends Pass {
     this.renderTarget = renderTarget;
 
     if (this.renderTarget === undefined) {
-      this.renderTarget = new WebGLRenderTarget(1, 1, { type: TextureDataType.HalfFloat }); // will be resized later
+      this.renderTarget = new RenderTarget(1, 1, { type: TextureDataType.HalfFloat }); // will be resized later
       this.renderTarget.texture.name = 'SavePass.rt';
     }
 

@@ -6,12 +6,12 @@ import {
   DepthTexture,
   Filter,
   MeshNormalMaterial,
+  RenderTarget,
   ShaderMaterial,
   TextureDataType,
   TextureFormat,
   UniformsUtils,
   Vector2,
-  WebGLRenderTarget,
 } from '../../threejs/Three.js';
 import { FullScreenQuad, Pass } from './Pass.js';
 import { SAOShader } from '../shaders/SAOShader.js';
@@ -51,7 +51,7 @@ class SAOPass extends Pass {
 
     this.resolution = new Vector2(resolution.x, resolution.y);
 
-    this.saoRenderTarget = new WebGLRenderTarget(this.resolution.x, this.resolution.y, {
+    this.saoRenderTarget = new RenderTarget(this.resolution.x, this.resolution.y, {
       type: TextureDataType.HalfFloat,
     });
     this.blurIntermediateRenderTarget = this.saoRenderTarget.clone();
@@ -60,7 +60,7 @@ class SAOPass extends Pass {
     depthTexture.format = TextureFormat.DepthStencil;
     depthTexture.type = TextureDataType.UnsignedInt248;
 
-    this.normalRenderTarget = new WebGLRenderTarget(this.resolution.x, this.resolution.y, {
+    this.normalRenderTarget = new RenderTarget(this.resolution.x, this.resolution.y, {
       minFilter: Filter.Nearest,
       magFilter: Filter.Nearest,
       type: TextureDataType.HalfFloat,

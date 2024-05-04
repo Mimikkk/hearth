@@ -2,12 +2,12 @@ import { OrthographicCamera } from '../cameras/OrthographicCamera.js';
 import { Scene } from '../scenes/Scene.js';
 import { StereoCamera } from '../cameras/StereoCamera.js';
 import { Filter, TextureFormat } from '../constants.js';
-import { WebGLRenderTarget } from '../renderers/WebGLRenderTarget.js';
 import { ShaderMaterial } from '../materials/ShaderMaterial.js';
 import { Mesh } from '../objects/Mesh.js';
 import { PlaneGeometry } from '../geometries/PlaneGeometry.js';
 import { PerspectiveCamera } from '../cameras/PerspectiveCamera.js';
 import { Renderer } from '@modules/renderer/threejs/renderers/common/Renderer.js';
+import { RenderTarget } from '../core/RenderTarget.js';
 
 export class ParallaxBarrierEffect {
   constructor(renderer: Renderer) {
@@ -19,8 +19,8 @@ export class ParallaxBarrierEffect {
 
     const _params = { minFilter: Filter.Linear, magFilter: Filter.Nearest, format: TextureFormat.RGBA };
 
-    const _renderTargetL = new WebGLRenderTarget(512, 512, _params);
-    const _renderTargetR = new WebGLRenderTarget(512, 512, _params);
+    const _renderTargetL = new RenderTarget(512, 512, _params);
+    const _renderTargetR = new RenderTarget(512, 512, _params);
 
     const _material = new ShaderMaterial({
       uniforms: {

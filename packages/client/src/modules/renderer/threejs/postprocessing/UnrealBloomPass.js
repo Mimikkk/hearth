@@ -1,12 +1,12 @@
 import {
   Color,
   MeshBasicMaterial,
+  RenderTarget,
   ShaderMaterial,
   TextureDataType,
   UniformsUtils,
   Vector2,
   Vector3,
-  WebGLRenderTarget,
 } from '../../threejs/Three.js';
 import { FullScreenQuad, Pass } from './Pass.js';
 import { CopyShader } from '../shaders/CopyShader.js';
@@ -40,19 +40,19 @@ class UnrealBloomPass extends Pass {
     let resx = Math.round(this.resolution.x / 2);
     let resy = Math.round(this.resolution.y / 2);
 
-    this.renderTargetBright = new WebGLRenderTarget(resx, resy, { type: TextureDataType.HalfFloat });
+    this.renderTargetBright = new RenderTarget(resx, resy, { type: TextureDataType.HalfFloat });
     this.renderTargetBright.texture.name = 'UnrealBloomPass.bright';
     this.renderTargetBright.texture.generateMipmaps = false;
 
     for (let i = 0; i < this.nMips; i++) {
-      const renderTargetHorizonal = new WebGLRenderTarget(resx, resy, { type: TextureDataType.HalfFloat });
+      const renderTargetHorizonal = new RenderTarget(resx, resy, { type: TextureDataType.HalfFloat });
 
       renderTargetHorizonal.texture.name = 'UnrealBloomPass.h' + i;
       renderTargetHorizonal.texture.generateMipmaps = false;
 
       this.renderTargetsHorizontal.push(renderTargetHorizonal);
 
-      const renderTargetVertical = new WebGLRenderTarget(resx, resy, { type: TextureDataType.HalfFloat });
+      const renderTargetVertical = new RenderTarget(resx, resy, { type: TextureDataType.HalfFloat });
 
       renderTargetVertical.texture.name = 'UnrealBloomPass.v' + i;
       renderTargetVertical.texture.generateMipmaps = false;

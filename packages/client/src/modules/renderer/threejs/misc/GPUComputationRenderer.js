@@ -4,11 +4,11 @@ import {
   Filter,
   Mesh,
   PlaneGeometry,
+  RenderTarget,
   Scene,
   ShaderMaterial,
   TextureDataType,
   TextureFormat,
-  WebGLRenderTarget,
   Wrapping,
 } from '../Three.js';
 
@@ -312,7 +312,7 @@ class GPUComputationRenderer {
       minFilter = minFilter || Filter.Nearest;
       magFilter = magFilter || Filter.Nearest;
 
-      const renderTarget = new WebGLRenderTarget(sizeXTexture, sizeYTexture, {
+      const renderTarget = new RenderTarget(sizeXTexture, sizeYTexture, {
         wrapS: wrapS,
         wrapT: wrapT,
         minFilter: minFilter,

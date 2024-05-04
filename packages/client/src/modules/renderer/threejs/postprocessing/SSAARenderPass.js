@@ -1,4 +1,4 @@
-import { Color, ShaderMaterial, TextureDataType, UniformsUtils, WebGLRenderTarget } from '../../threejs/Three.js';
+import { Color, RenderTarget, ShaderMaterial, TextureDataType, UniformsUtils } from '../../threejs/Three.js';
 import { FullScreenQuad, Pass } from './Pass.js';
 import { CopyShader } from '../shaders/CopyShader.js';
 
@@ -61,7 +61,7 @@ class SSAARenderPass extends Pass {
 
   render(renderer, writeBuffer, readBuffer) {
     if (!this.sampleRenderTarget) {
-      this.sampleRenderTarget = new WebGLRenderTarget(readBuffer.width, readBuffer.height, {
+      this.sampleRenderTarget = new RenderTarget(readBuffer.width, readBuffer.height, {
         type: TextureDataType.HalfFloat,
       });
       this.sampleRenderTarget.texture.name = 'SSAARenderPass.sample';

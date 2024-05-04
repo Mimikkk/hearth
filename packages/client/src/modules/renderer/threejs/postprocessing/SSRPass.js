@@ -7,10 +7,10 @@ import {
   Filter,
   MeshBasicMaterial,
   MeshNormalMaterial,
+  RenderTarget,
   ShaderMaterial,
   TextureDataType,
   UniformsUtils,
-  WebGLRenderTarget,
 } from '../../threejs/Three.js';
 import { FullScreenQuad, Pass } from './Pass.js';
 import { SSRBlurShader, SSRDepthShader, SSRShader } from '../shaders/SSRShader.js';
@@ -123,7 +123,7 @@ class SSRPass extends Pass {
     depthTexture.minFilter = Filter.Nearest;
     depthTexture.magFilter = Filter.Nearest;
 
-    this.beautyRenderTarget = new WebGLRenderTarget(this.width, this.height, {
+    this.beautyRenderTarget = new RenderTarget(this.width, this.height, {
       minFilter: Filter.Nearest,
       magFilter: Filter.Nearest,
       type: TextureDataType.HalfFloat,
@@ -132,14 +132,14 @@ class SSRPass extends Pass {
     });
 
     //for bouncing
-    this.prevRenderTarget = new WebGLRenderTarget(this.width, this.height, {
+    this.prevRenderTarget = new RenderTarget(this.width, this.height, {
       minFilter: Filter.Nearest,
       magFilter: Filter.Nearest,
     });
 
     // normal render target
 
-    this.normalRenderTarget = new WebGLRenderTarget(this.width, this.height, {
+    this.normalRenderTarget = new RenderTarget(this.width, this.height, {
       minFilter: Filter.Nearest,
       magFilter: Filter.Nearest,
       type: TextureDataType.HalfFloat,
@@ -147,7 +147,7 @@ class SSRPass extends Pass {
 
     // metalness render target
 
-    this.metalnessRenderTarget = new WebGLRenderTarget(this.width, this.height, {
+    this.metalnessRenderTarget = new RenderTarget(this.width, this.height, {
       minFilter: Filter.Nearest,
       magFilter: Filter.Nearest,
       type: TextureDataType.HalfFloat,
@@ -155,7 +155,7 @@ class SSRPass extends Pass {
 
     // ssr render target
 
-    this.ssrRenderTarget = new WebGLRenderTarget(this.width, this.height, {
+    this.ssrRenderTarget = new RenderTarget(this.width, this.height, {
       minFilter: Filter.Nearest,
       magFilter: Filter.Nearest,
     });

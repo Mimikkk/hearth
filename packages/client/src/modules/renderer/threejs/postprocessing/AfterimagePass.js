@@ -1,10 +1,10 @@
 import {
   Filter,
   MeshBasicMaterial,
+  RenderTarget,
   ShaderMaterial,
   TextureDataType,
   UniformsUtils,
-  WebGLRenderTarget,
 } from '../../threejs/Three.js';
 import { FullScreenQuad, Pass } from './Pass.js';
 import { AfterimageShader } from '../shaders/AfterimageShader.js';
@@ -19,12 +19,12 @@ class AfterimagePass extends Pass {
 
     this.uniforms['damp'].value = damp;
 
-    this.textureComp = new WebGLRenderTarget(window.innerWidth, window.innerHeight, {
+    this.textureComp = new RenderTarget(window.innerWidth, window.innerHeight, {
       magFilter: Filter.Nearest,
       type: TextureDataType.HalfFloat,
     });
 
-    this.textureOld = new WebGLRenderTarget(window.innerWidth, window.innerHeight, {
+    this.textureOld = new RenderTarget(window.innerWidth, window.innerHeight, {
       magFilter: Filter.Nearest,
       type: TextureDataType.HalfFloat,
     });

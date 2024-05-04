@@ -1,4 +1,4 @@
-import { Blending, Clock, TextureDataType, Vector2, WebGLRenderTarget } from '../../threejs/Three.js';
+import { Blending, Clock, RenderTarget, TextureDataType, Vector2 } from '../../threejs/Three.js';
 import { CopyShader } from '../shaders/CopyShader.js';
 import { ShaderPass } from './ShaderPass.js';
 import { ClearMaskPass, MaskPass } from './MaskPass.js';
@@ -14,7 +14,7 @@ class EffectComposer {
       this._width = size.width;
       this._height = size.height;
 
-      renderTarget = new WebGLRenderTarget(this._width * this._pixelRatio, this._height * this._pixelRatio, {
+      renderTarget = new RenderTarget(this._width * this._pixelRatio, this._height * this._pixelRatio, {
         type: TextureDataType.HalfFloat,
       });
       renderTarget.texture.name = 'EffectComposer.rt1';

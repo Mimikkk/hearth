@@ -17,9 +17,9 @@ import { PerspectiveCamera } from '../cameras/PerspectiveCamera.ts';
 import { ShaderMaterial } from '../materials/ShaderMaterial.ts';
 import { Vector3 } from '../math/Vector3.ts';
 import { Color } from '../math/Color.ts';
-import { WebGLRenderTarget } from '../renderers/WebGLRenderTarget.ts';
 import { MeshBasicMaterial } from '../materials/MeshBasicMaterial.ts';
 import { BoxGeometry } from '../geometries/BoxGeometry.ts';
+import { RenderTarget } from '../core/RenderTarget.ts';
 
 const LOD_MIN = 4;
 
@@ -524,7 +524,7 @@ function _createPlanes(lodMax) {
 }
 
 function _createRenderTarget(width, height, params) {
-  const cubeUVRenderTarget = new WebGLRenderTarget(width, height, params);
+  const cubeUVRenderTarget = new RenderTarget(width, height, params);
   cubeUVRenderTarget.texture.mapping = Mapping.CubeUVReflection;
   cubeUVRenderTarget.texture.name = 'PMREM.cubeUv';
   cubeUVRenderTarget.scissorTest = true;

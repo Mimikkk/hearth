@@ -5,7 +5,7 @@ import { ShaderMaterial } from '../materials/ShaderMaterial.ts';
 import { cloneUniforms } from './shaders/UniformsUtils.js';
 import { CubeCamera } from '../cameras/CubeCamera.ts';
 import { CubeTexture } from '../textures/CubeTexture.ts';
-import { RenderTarget } from '@modules/renderer/threejs/core/RenderTarget.js';
+import { RenderTarget } from '../core/RenderTarget.ts';
 
 class WebGLCubeRenderTarget extends RenderTarget {
   constructor(size = 1, options = {}) {

@@ -1,11 +1,4 @@
-import {
-  Filter,
-  ShaderMaterial,
-  Texture,
-  TextureDataType,
-  UniformsUtils,
-  WebGLRenderTarget,
-} from '../../threejs/Three.js';
+import { Filter, RenderTarget, ShaderMaterial, Texture, TextureDataType, UniformsUtils } from '../../threejs/Three.js';
 import { FullScreenQuad, Pass } from './Pass.js';
 import { SMAABlendShader, SMAAEdgesShader, SMAAWeightsShader } from '../shaders/SMAAShader.js';
 
@@ -15,13 +8,13 @@ class SMAAPass extends Pass {
 
     // render targets
 
-    this.edgesRT = new WebGLRenderTarget(width, height, {
+    this.edgesRT = new RenderTarget(width, height, {
       depthBuffer: false,
       type: TextureDataType.HalfFloat,
     });
     this.edgesRT.texture.name = 'SMAAPass.edges';
 
-    this.weightsRT = new WebGLRenderTarget(width, height, {
+    this.weightsRT = new RenderTarget(width, height, {
       depthBuffer: false,
       type: TextureDataType.HalfFloat,
     });

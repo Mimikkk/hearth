@@ -4,10 +4,10 @@ import {
   DepthPackingStrategy,
   Filter,
   MeshDepthMaterial,
+  RenderTarget,
   ShaderMaterial,
   TextureDataType,
   UniformsUtils,
-  WebGLRenderTarget,
 } from '../../threejs/Three.js';
 import { FullScreenQuad, Pass } from './Pass.js';
 import { BokehShader } from '../shaders/BokehShader.js';
@@ -29,7 +29,7 @@ class BokehPass extends Pass {
 
     // render targets
 
-    this.renderTargetDepth = new WebGLRenderTarget(1, 1, {
+    this.renderTargetDepth = new RenderTarget(1, 1, {
       // will be resized later
       minFilter: Filter.Nearest,
       magFilter: Filter.Nearest,

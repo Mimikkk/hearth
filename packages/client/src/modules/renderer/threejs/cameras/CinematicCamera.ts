@@ -1,6 +1,5 @@
 import { OrthographicCamera } from './OrthographicCamera.js';
 import { Scene } from '../scenes/Scene.js';
-import { WebGLRenderTarget } from '../renderers/WebGLRenderTarget.js';
 import { BokehDepthShader, BokehShader, BokehShaderUniforms } from '../shaders/BokehShader2.js';
 import { UniformsUtils } from '../renderers/shaders/UniformsUtils.js';
 import { ShaderMaterial } from '../materials/ShaderMaterial.js';
@@ -8,6 +7,7 @@ import { PerspectiveCamera } from './PerspectiveCamera.js';
 import { Mesh } from '../objects/Mesh.js';
 import { PlaneGeometry } from '@modules/renderer/threejs/geometries/PlaneGeometry.js';
 import { Renderer } from '@modules/renderer/threejs/renderers/common/Renderer.js';
+import { RenderTarget } from '@modules/renderer/threejs/core/RenderTarget.js';
 
 export class CinematicCamera extends PerspectiveCamera {
   declare type: string | 'CinematicCamera';
@@ -16,8 +16,8 @@ export class CinematicCamera extends PerspectiveCamera {
     enabled: boolean;
     scene: Scene;
     camera: OrthographicCamera;
-    rtTextureDepth: WebGLRenderTarget;
-    rtTextureColor: WebGLRenderTarget;
+    rtTextureDepth: RenderTarget;
+    rtTextureColor: RenderTarget;
     bokeh_uniforms: BokehShaderUniforms;
     bokeh_material: ShaderMaterial;
     quad: Mesh;
@@ -145,8 +145,8 @@ export class CinematicCamera extends PerspectiveCamera {
 
       this.postprocessing.scene.add(this.postprocessing.camera as any);
 
-      this.postprocessing.rtTextureDepth = new WebGLRenderTarget(window.innerWidth, window.innerHeight);
-      this.postprocessing.rtTextureColor = new WebGLRenderTarget(window.innerWidth, window.innerHeight);
+      this.postprocessing.rtTextureDepth = new RenderTarget(window.innerWidth, window.innerHeight);
+      this.postprocessing.rtTextureColor = new RenderTarget(window.innerWidth, window.innerHeight);
 
       const bokeh_shader = BokehShader;
 

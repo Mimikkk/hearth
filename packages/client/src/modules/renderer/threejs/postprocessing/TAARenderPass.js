@@ -1,4 +1,4 @@
-import { TextureDataType, WebGLRenderTarget } from '../../threejs/Three.js';
+import { RenderTarget, TextureDataType } from '../../threejs/Three.js';
 import { SSAARenderPass } from './SSAARenderPass.js';
 
 /**
@@ -33,14 +33,14 @@ class TAARenderPass extends SSAARenderPass {
     const jitterOffsets = _JitterVectors[5];
 
     if (this.sampleRenderTarget === undefined) {
-      this.sampleRenderTarget = new WebGLRenderTarget(readBuffer.width, readBuffer.height, {
+      this.sampleRenderTarget = new RenderTarget(readBuffer.width, readBuffer.height, {
         type: TextureDataType.HalfFloat,
       });
       this.sampleRenderTarget.texture.name = 'TAARenderPass.sample';
     }
 
     if (this.holdRenderTarget === undefined) {
-      this.holdRenderTarget = new WebGLRenderTarget(readBuffer.width, readBuffer.height, {
+      this.holdRenderTarget = new RenderTarget(readBuffer.width, readBuffer.height, {
         type: TextureDataType.HalfFloat,
       });
       this.holdRenderTarget.texture.name = 'TAARenderPass.hold';

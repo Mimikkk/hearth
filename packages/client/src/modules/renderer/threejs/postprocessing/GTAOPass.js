@@ -7,11 +7,11 @@ import {
   DepthTexture,
   Filter,
   MeshNormalMaterial,
+  RenderTarget,
   ShaderMaterial,
   TextureDataType,
   TextureFormat,
   UniformsUtils,
-  WebGLRenderTarget,
   Wrapping,
 } from '../../threejs/Three.js';
 import { FullScreenQuad, Pass } from './Pass.js';
@@ -41,7 +41,7 @@ class GTAOPass extends Pass {
     this.gtaoNoiseTexture = generateMagicSquareNoise();
     this.pdNoiseTexture = this.generateNoise();
 
-    this.gtaoRenderTarget = new WebGLRenderTarget(this.width, this.height, { type: TextureDataType.HalfFloat });
+    this.gtaoRenderTarget = new RenderTarget(this.width, this.height, { type: TextureDataType.HalfFloat });
     this.pdRenderTarget = this.gtaoRenderTarget.clone();
 
     this.gtaoMaterial = new ShaderMaterial({

@@ -100,8 +100,6 @@ export class KTX2Exporter {
 
     if (arg1.isDataTexture || arg1.isData3DTexture) {
       texture = arg1;
-    } else if (arg1.isWebGLRenderer && arg2.isWebGLRenderTarget) {
-      texture = toDataTexture(arg1, arg2);
     } else {
       throw new Error(ERROR_INPUT);
     }

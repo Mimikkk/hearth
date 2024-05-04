@@ -1,4 +1,4 @@
-import { ShaderMaterial, TextureDataType, UniformsUtils, Vector2, WebGLRenderTarget } from '../../threejs/Three.js';
+import { ShaderMaterial, TextureDataType, UniformsUtils, Vector2, RenderTarget } from '../../threejs/Three.js';
 import { FullScreenQuad, Pass } from './Pass.js';
 import { ConvolutionShader } from '../shaders/ConvolutionShader.js';
 
@@ -8,9 +8,9 @@ class BloomPass extends Pass {
 
     // render targets
 
-    this.renderTargetX = new WebGLRenderTarget(1, 1, { type: TextureDataType.HalfFloat }); // will be resized later
+    this.renderTargetX = new RenderTarget(1, 1, { type: TextureDataType.HalfFloat }); // will be resized later
     this.renderTargetX.texture.name = 'BloomPass.x';
-    this.renderTargetY = new WebGLRenderTarget(1, 1, { type: TextureDataType.HalfFloat }); // will be resized later
+    this.renderTargetY = new RenderTarget(1, 1, { type: TextureDataType.HalfFloat }); // will be resized later
     this.renderTargetY.texture.name = 'BloomPass.y';
 
     // combine material

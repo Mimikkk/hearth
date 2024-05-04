@@ -7,12 +7,12 @@ import { Vector4 } from '../math/Vector4.js';
 import { Vector2 } from '../math/Vector2.js';
 import { Scene } from '../scenes/Scene.js';
 import { Camera } from '../cameras/Camera.js';
-import { WebGLRenderTarget } from '../renderers/WebGLRenderTarget.js';
 import { WebGLShadowMap } from '../renderers/webgl/WebGLShadowMap.js';
 import { Material } from '@modules/renderer/threejs/materials/Material.js';
 import { Object3D } from '@modules/renderer/threejs/core/Object3D.js';
 import { BufferGeometry } from '@modules/renderer/threejs/core/BufferGeometry.js';
 import { Renderer } from '@modules/renderer/threejs/renderers/common/Renderer.js';
+import { RenderTarget } from '@modules/renderer/threejs/core/RenderTarget.js';
 
 export interface OutlineEffectParameters {
   defaultThickness?: number;
@@ -424,7 +424,7 @@ export class OutlineEffect {
   getSize: (target: Vector2) => Vector2;
   render: (scene: Scene, camera: Camera) => void;
   renderOutline: (scene: Scene, camera: Camera) => void;
-  setRenderTarget: (renderTarget: WebGLRenderTarget | null) => void;
+  setRenderTarget: (renderTarget: RenderTarget | null) => void;
   setPixelRatio: (value: number) => void;
   setScissor: (x: Vector4 | number, y?: number, width?: number, height?: number) => void;
   setScissorTest: (enable: boolean) => void;

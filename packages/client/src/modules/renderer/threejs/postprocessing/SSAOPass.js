@@ -7,12 +7,12 @@ import {
   DepthTexture,
   Filter,
   MeshNormalMaterial,
+  RenderTarget,
   ShaderMaterial,
   TextureDataType,
   TextureFormat,
   UniformsUtils,
   Vector3,
-  WebGLRenderTarget,
   Wrapping,
 } from '../../threejs/Three.js';
 import { FullScreenQuad, Pass } from './Pass.js';
@@ -56,7 +56,7 @@ class SSAOPass extends Pass {
 
     // normal render target with depth buffer
 
-    this.normalRenderTarget = new WebGLRenderTarget(this.width, this.height, {
+    this.normalRenderTarget = new RenderTarget(this.width, this.height, {
       minFilter: Filter.Nearest,
       magFilter: Filter.Nearest,
       type: TextureDataType.HalfFloat,
@@ -65,7 +65,7 @@ class SSAOPass extends Pass {
 
     // ssao render target
 
-    this.ssaoRenderTarget = new WebGLRenderTarget(this.width, this.height, { type: TextureDataType.HalfFloat });
+    this.ssaoRenderTarget = new RenderTarget(this.width, this.height, { type: TextureDataType.HalfFloat });
 
     this.blurRenderTarget = this.ssaoRenderTarget.clone();
 

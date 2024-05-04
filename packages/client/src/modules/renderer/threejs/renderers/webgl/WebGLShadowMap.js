@@ -1,5 +1,4 @@
 import { Blending, DepthPackingStrategy, Filter, ShadowMap, Side } from '../../constants.ts';
-import { WebGLRenderTarget } from '../WebGLRenderTarget.ts';
 import { MeshDepthMaterial } from '../../materials/MeshDepthMaterial.ts';
 import { MeshDistanceMaterial } from '../../materials/MeshDistanceMaterial.ts';
 import { ShaderMaterial } from '../../materials/ShaderMaterial.ts';
@@ -11,6 +10,7 @@ import { Vector2 } from '../../math/Vector2.ts';
 import { Frustum } from '../../math/Frustum.ts';
 
 import * as vsm from '../shaders/ShaderLib/vsm.glsl.js';
+import { RenderTarget } from '@modules/renderer/threejs/core/RenderTarget.js';
 
 export function WebGLShadowMap(_renderer, _objects, _capabilities) {
   let _frustum = new Frustum();
@@ -125,7 +125,7 @@ export function WebGLShadowMap(_renderer, _objects, _capabilities) {
           shadow.map.dispose();
         }
 
-        shadow.map = new WebGLRenderTarget(_shadowMapSize.x, _shadowMapSize.y, pars);
+        shadow.map = new RenderTarget(_shadowMapSize.x, _shadowMapSize.y, pars);
         shadow.map.texture.name = light.name + '.shadowMap';
 
         shadow.camera.updateProjectionMatrix();
@@ -183,7 +183,7 @@ export function WebGLShadowMap(_renderer, _objects, _capabilities) {
     }
 
     if (shadow.mapPass === null) {
-      shadow.mapPass = new WebGLRenderTarget(_shadowMapSize.x, _shadowMapSize.y);
+      shadow.mapPass = new RenderTarget(_shadowMapSize.x, _shadowMapSize.y);
     }
 
     // vertical pass

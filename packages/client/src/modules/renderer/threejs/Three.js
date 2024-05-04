@@ -1,7 +1,6 @@
 import { Revision } from './constants.ts';
 
 export { WebGLCubeRenderTarget } from './renderers/WebGLCubeRenderTarget.js';
-export { WebGLRenderTarget } from './renderers/WebGLRenderTarget.ts';
 export { ShaderLib } from './renderers/shaders/ShaderLib.ts';
 export { UniformsLib } from './renderers/shaders/UniformsLib.ts';
 export { UniformsUtils } from './renderers/shaders/UniformsUtils.js';

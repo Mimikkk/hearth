@@ -4,8 +4,8 @@ import { Vector3 } from '../math/Vector3.js';
 import { Vector4 } from '../math/Vector4.js';
 import { Frustum } from '../math/Frustum.js';
 import { Camera } from '../cameras/Camera.js';
-import { WebGLRenderTarget } from '../renderers/WebGLRenderTarget.js';
 import { Light } from './Light.js';
+import { RenderTarget } from '@modules/renderer/threejs/core/RenderTarget.js';
 
 const _projScreenMatrix = /*@__PURE__*/ new Matrix4();
 const _lightPositionWorld = /*@__PURE__*/ new Vector3();
@@ -18,8 +18,8 @@ export class LightShadow<C extends Camera = Camera> {
   radius: number;
   blurSamples: number;
   mapSize: Vector2;
-  map: WebGLRenderTarget | null;
-  mapPass: WebGLRenderTarget | null;
+  map: RenderTarget | null;
+  mapPass: RenderTarget | null;
   matrix: Matrix4;
   autoUpdate: boolean;
   needsUpdate: boolean;
