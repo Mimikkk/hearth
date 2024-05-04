@@ -1,4 +1,3 @@
-import * as THREE from '../threejs/Three.js';
 import {
   checker,
   color,
@@ -20,127 +19,126 @@ import { GLTFLoader } from '../threejs/loaders/GLTFLoader.js';
 import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 
 import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
+import {
+  AnimationMixer,
+  BoxGeometry,
+  Clock,
+  Mesh,
+  PerspectiveCamera,
+  Scene,
+  Side,
+  Color,
+  ToneMapping,
+} from '../threejs/Three.js';
+import { createWindowResizer } from '@modules/renderer/examples/utilities/createWindowResizer.js';
 
-let camera, scene, renderer;
-let mixer, clock;
+const camera = new PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.25, 25);
+camera.position.set(3, 2, 3);
 
-init();
+const scene = new Scene();
+scene.background = new Color(0x333333);
+camera.lookAt(0, 1, 0);
 
-function init() {
-  camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.25, 25);
-  camera.position.set(3, 2, 3);
+const clock = new Clock();
 
-  scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x333333);
-  camera.lookAt(0, 1, 0);
+// modelwe
 
-  clock = new THREE.Clock();
+let mixer: AnimationMixer;
+const loader = new GLTFLoader();
+loader.load('models/gltf/Michelle.glb', function (gltf) {
+  const object = gltf.scene;
+  mixer = new AnimationMixer(object);
 
-  // modelwe
+  const action = mixer.clipAction(gltf.animations[0]);
+  action.play();
 
-  const loader = new GLTFLoader();
-  loader.load('models/gltf/Michelle.glb', function (gltf) {
-    const object = gltf.scene;
-    mixer = new THREE.AnimationMixer(object);
+  scene.add(object);
+});
 
-    const action = mixer.clipAction(gltf.animations[0]);
-    action.play();
+// volume
 
-    scene.add(object);
-  });
+const depthDistance = depthTexture().distance(depth);
+const depthAlphaNode = depthDistance.oneMinus().smoothstep(0.9, 2).mul(20).saturate();
+const depthBlurred = viewportMipTexture().bicubic(
+  depthDistance
+    .smoothstep(0, 0.6)
+    .mul(40 * 5)
+    .clamp(0, 5),
+);
 
-  // volume
+const blurredBlur = new MeshBasicNodeMaterial();
+blurredBlur.backdropNode = depthBlurred.add(depthAlphaNode.mix(color(0x0066ff), 0));
+blurredBlur.transparent = true;
+blurredBlur.side = Side.Double;
 
-  const depthDistance = depthTexture().distance(depth);
-  const depthAlphaNode = depthDistance.oneMinus().smoothstep(0.9, 2).mul(20).saturate();
-  const depthBlurred = viewportMipTexture().bicubic(
-    depthDistance
-      .smoothstep(0, 0.6)
-      .mul(40 * 5)
-      .clamp(0, 5),
-  );
+const volumeMaterial = new MeshBasicNodeMaterial();
+volumeMaterial.colorNode = color(0x0066ff);
+volumeMaterial.backdropNode = viewportSharedTexture();
+volumeMaterial.backdropAlphaNode = depthAlphaNode;
+volumeMaterial.transparent = true;
+volumeMaterial.side = Side.Double;
 
-  const blurredBlur = new MeshBasicNodeMaterial();
-  blurredBlur.backdropNode = depthBlurred.add(depthAlphaNode.mix(color(0x0066ff), 0));
-  blurredBlur.transparent = true;
-  blurredBlur.side = THREE.Side.Double;
+const depthMaterial = new MeshBasicNodeMaterial();
+depthMaterial.backdropNode = depthAlphaNode;
+depthMaterial.transparent = true;
+depthMaterial.side = Side.Double;
 
-  const volumeMaterial = new MeshBasicNodeMaterial();
-  volumeMaterial.colorNode = color(0x0066ff);
-  volumeMaterial.backdropNode = viewportSharedTexture();
-  volumeMaterial.backdropAlphaNode = depthAlphaNode;
-  volumeMaterial.transparent = true;
-  volumeMaterial.side = THREE.Side.Double;
+const bicubicMaterial = new MeshBasicNodeMaterial();
+bicubicMaterial.backdropNode = viewportMipTexture().bicubic(5); // @TODO: Move to alpha value [ 0, 1 ]
+bicubicMaterial.backdropAlphaNode = checker(uv().mul(3).mul(modelScale.xy));
+bicubicMaterial.opacityNode = bicubicMaterial.backdropAlphaNode;
+bicubicMaterial.transparent = true;
+bicubicMaterial.side = Side.Double;
 
-  const depthMaterial = new MeshBasicNodeMaterial();
-  depthMaterial.backdropNode = depthAlphaNode;
-  depthMaterial.transparent = true;
-  depthMaterial.side = THREE.Side.Double;
+const pixelMaterial = new MeshBasicNodeMaterial();
+pixelMaterial.backdropNode = viewportSharedTexture(viewportTopLeft.mul(100).floor().div(100));
+pixelMaterial.transparent = true;
 
-  const bicubicMaterial = new MeshBasicNodeMaterial();
-  bicubicMaterial.backdropNode = viewportMipTexture().bicubic(5); // @TODO: Move to alpha value [ 0, 1 ]
-  bicubicMaterial.backdropAlphaNode = checker(uv().mul(3).mul(modelScale.xy));
-  bicubicMaterial.opacityNode = bicubicMaterial.backdropAlphaNode;
-  bicubicMaterial.transparent = true;
-  bicubicMaterial.side = THREE.Side.Double;
+// box / floor
 
-  const pixelMaterial = new MeshBasicNodeMaterial();
-  pixelMaterial.backdropNode = viewportSharedTexture(viewportTopLeft.mul(100).floor().div(100));
-  pixelMaterial.transparent = true;
+const box = new Mesh(new BoxGeometry(2, 2, 2), volumeMaterial);
+box.position.set(0, 1, 0);
+scene.add(box);
 
-  // box / floor
+const floor = new Mesh(new BoxGeometry(1.99, 0.01, 1.99), new MeshBasicNodeMaterial({ color: 0x333333 }));
+floor.position.set(0, 0, 0);
+scene.add(floor);
 
-  const box = new THREE.Mesh(new THREE.BoxGeometry(2, 2, 2), volumeMaterial);
-  box.position.set(0, 1, 0);
-  scene.add(box);
+// renderer
 
-  const floor = new THREE.Mesh(new THREE.BoxGeometry(1.99, 0.01, 1.99), new MeshBasicNodeMaterial({ color: 0x333333 }));
-  floor.position.set(0, 0, 0);
-  scene.add(floor);
+const renderer = new WebGPURenderer(/*{ antialias: true }*/);
+renderer.setPixelRatio(window.devicePixelRatio);
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setAnimationLoop(animate);
+renderer.toneMappingNode = toneMapping(ToneMapping.Linear, 0.15);
+document.body.appendChild(renderer.domElement);
 
-  // renderer
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.target.set(0, 1, 0);
+controls.update();
 
-  renderer = new WebGPURenderer(/*{ antialias: true }*/);
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.setAnimationLoop(animate);
-  renderer.toneMappingNode = toneMapping(THREE.ToneMapping.Linear, 0.15);
-  document.body.appendChild(renderer.domElement);
+createWindowResizer(renderer, camera);
 
-  const controls = new OrbitControls(camera, renderer.domElement);
-  controls.target.set(0, 1, 0);
-  controls.update();
+// gui
 
-  window.addEventListener('resize', onWindowResize);
+const materials = {
+  blurred: blurredBlur,
+  volume: volumeMaterial,
+  depth: depthMaterial,
+  bicubic: bicubicMaterial,
+  pixel: pixelMaterial,
+};
 
-  // gui
+const gui = new GUI();
+const options = { material: 'blurred' };
 
-  const materials = {
-    blurred: blurredBlur,
-    volume: volumeMaterial,
-    depth: depthMaterial,
-    bicubic: bicubicMaterial,
-    pixel: pixelMaterial,
-  };
+box.material = materials[options.material];
 
-  const gui = new GUI();
-  const options = { material: 'blurred' };
-
-  box.material = materials[options.material];
-
-  gui.add(box.scale, 'x', 0.1, 2, 0.01);
-  gui.add(box.scale, 'z', 0.1, 2, 0.01);
-  gui.add(options, 'material', Object.keys(materials)).onChange(name => {
-    box.material = materials[name];
-  });
-}
-
-function onWindowResize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-
-  renderer.setSize(window.innerWidth, window.innerHeight);
-}
+gui.add(box.scale, 'x', 0.1, 2, 0.01);
+gui.add(box.scale, 'z', 0.1, 2, 0.01);
+gui.add(options, 'material', Object.keys(materials)).onChange(name => {
+  box.material = materials[name];
+});
 
 function animate() {
   const delta = clock.getDelta();

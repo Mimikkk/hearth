@@ -1,4 +1,3 @@
-import * as THREE from '../threejs/Three.js';
 import {
   checker,
   color,
@@ -19,113 +18,116 @@ import { GLTFLoader } from '../threejs/loaders/GLTFLoader.js';
 import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 
 import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
+import {
+  AnimationMixer,
+  Clock,
+  Color,
+  Group,
+  Mesh,
+  PerspectiveCamera,
+  Scene,
+  SphereGeometry,
+  SpotLight,
+  ToneMapping,
+} from '../threejs/Three.js';
+import { degreeToRadian } from '@modules/renderer/threejs/math/MathUtils.js';
+import { createWindowResizer } from '@modules/renderer/examples/utilities/createWindowResizer.js';
 
-let camera, scene, renderer;
-let portals,
-  rotate = true;
-let mixer, clock;
+const camera = new PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.01, 100);
+camera.position.set(1, 2, 3);
 
-init();
+const scene = new Scene();
+scene.background = new Color('lightblue');
+camera.lookAt(0, 1, 0);
 
-function init() {
-  camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.01, 100);
-  camera.position.set(1, 2, 3);
+const clock = new Clock();
 
-  scene = new THREE.Scene();
-  scene.background = new THREE.Color('lightblue');
-  camera.lookAt(0, 1, 0);
+//lights
 
-  clock = new THREE.Clock();
+const light = new SpotLight(0xffffff, 1);
+light.power = 2000;
+camera.add(light);
+scene.add(camera);
 
-  //lights
+const loader = new GLTFLoader();
+let mixer: AnimationMixer;
+loader.load('models/gltf/Michelle.glb', function (gltf) {
+  const object = gltf.scene;
+  mixer = new AnimationMixer(object);
 
-  const light = new THREE.SpotLight(0xffffff, 1);
-  light.power = 2000;
-  camera.add(light);
-  scene.add(camera);
+  const material = object.children[0].children[0].material;
 
-  const loader = new GLTFLoader();
-  loader.load('models/gltf/Michelle.glb', function (gltf) {
-    const object = gltf.scene;
-    mixer = new THREE.AnimationMixer(object);
+  // output material effect ( better using hsv )
+  // ignore output.sRGBToLinear().linearTosRGB() for now
 
-    const material = object.children[0].children[0].material;
+  material.outputNode = oscSine(timerLocal(0.1)).mix(output, output.add(0.1).posterize(4).mul(2));
 
-    // output material effect ( better using hsv )
-    // ignore output.sRGBToLinear().linearTosRGB() for now
+  const action = mixer.clipAction(gltf.animations[0]);
+  action.play();
 
-    material.outputNode = oscSine(timerLocal(0.1)).mix(output, output.add(0.1).posterize(4).mul(2));
+  scene.add(object);
+});
 
-    const action = mixer.clipAction(gltf.animations[0]);
-    action.play();
+// portals
 
-    scene.add(object);
-  });
+const geometry = new SphereGeometry(0.3, 32, 16);
 
-  // portals
+const portals = new Group();
+scene.add(portals);
 
-  const geometry = new THREE.SphereGeometry(0.3, 32, 16);
+function addBackdropSphere(backdropNode, backdropAlphaNode = null) {
+  const distance = 1;
+  const id = portals.children.length;
+  const rotation = degreeToRadian(id * 45);
 
-  portals = new THREE.Group();
-  scene.add(portals);
+  const material = new MeshStandardNodeMaterial({ color: 0x0066ff });
+  material.roughnessNode = float(0.2);
+  material.metalnessNode = float(0);
+  material.backdropNode = backdropNode;
+  material.backdropAlphaNode = backdropAlphaNode;
+  material.transparent = true;
 
-  function addBackdropSphere(backdropNode, backdropAlphaNode = null) {
-    const distance = 1;
-    const id = portals.children.length;
-    const rotation = THREE.MathUtils.degreeToRadian(id * 45);
+  const mesh = new Mesh(geometry, material);
+  mesh.position.set(Math.cos(rotation) * distance, 1, Math.sin(rotation) * distance);
 
-    const material = new MeshStandardNodeMaterial({ color: 0x0066ff });
-    material.roughnessNode = float(0.2);
-    material.metalnessNode = float(0);
-    material.backdropNode = backdropNode;
-    material.backdropAlphaNode = backdropAlphaNode;
-    material.transparent = true;
-
-    const mesh = new THREE.Mesh(geometry, material);
-    mesh.position.set(Math.cos(rotation) * distance, 1, Math.sin(rotation) * distance);
-
-    portals.add(mesh);
-  }
-
-  addBackdropSphere(viewportSharedTexture().bgr.hue(oscSine().mul(Math.PI)));
-  addBackdropSphere(viewportSharedTexture().rgb.oneMinus());
-  addBackdropSphere(viewportSharedTexture().rgb.saturation(0));
-  addBackdropSphere(viewportSharedTexture().rgb.saturation(10), oscSine());
-  addBackdropSphere(viewportSharedTexture().rgb.overlay(checker(uv().mul(10))));
-  addBackdropSphere(viewportSharedTexture(viewportTopLeft.mul(40).floor().div(40)));
-  addBackdropSphere(viewportSharedTexture(viewportTopLeft.mul(80).floor().div(80)).add(color(0x0033ff)));
-  addBackdropSphere(vec3(0, 0, viewportSharedTexture().b));
-
-  //renderer
-
-  renderer = new WebGPURenderer({ antialias: true });
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.setAnimationLoop(animate);
-  renderer.toneMappingNode = toneMapping(THREE.ToneMapping.Linear, 0.15);
-  document.body.appendChild(renderer.domElement);
-
-  const controls = new OrbitControls(camera, renderer.domElement);
-  controls.target.set(0, 1, 0);
-  controls.eventDispatcher.add('start', () => (rotate = false));
-  controls.eventDispatcher.add('end', () => (rotate = true));
-  controls.update();
-
-  window.addEventListener('resize', onWindowResize);
+  portals.add(mesh);
 }
 
-function onWindowResize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
+addBackdropSphere(viewportSharedTexture().bgr.hue(oscSine().mul(Math.PI)));
+addBackdropSphere(viewportSharedTexture().rgb.oneMinus());
+addBackdropSphere(viewportSharedTexture().rgb.saturation(0));
+addBackdropSphere(viewportSharedTexture().rgb.saturation(10), oscSine());
+addBackdropSphere(viewportSharedTexture().rgb.overlay(checker(uv().mul(10))));
+addBackdropSphere(viewportSharedTexture(viewportTopLeft.mul(40).floor().div(40)));
+addBackdropSphere(viewportSharedTexture(viewportTopLeft.mul(80).floor().div(80)).add(color(0x0033ff)));
+addBackdropSphere(vec3(0, 0, viewportSharedTexture().b));
 
-  renderer.setSize(window.innerWidth, window.innerHeight);
-}
+//renderer
+
+const renderer = new WebGPURenderer({ antialias: true });
+renderer.setPixelRatio(window.devicePixelRatio);
+renderer.setSize(window.innerWidth, window.innerHeight);
+await renderer.setAnimationLoop(animate);
+
+renderer.toneMappingNode = toneMapping(ToneMapping.Linear, 0.15);
+document.body.appendChild(renderer.domElement);
+
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.target.set(0, 1, 0);
+
+let rotate = true;
+
+const toggleRotation = () => (rotate = !rotate);
+controls.eventDispatcher.add('start', toggleRotation);
+controls.eventDispatcher.add('end', toggleRotation);
+controls.update();
+
+createWindowResizer(renderer, camera);
 
 function animate() {
   const delta = clock.getDelta();
 
   if (mixer) mixer.update(delta);
-
   if (rotate) portals.rotation.y += delta * 0.5;
 
   renderer.render(scene, camera);
