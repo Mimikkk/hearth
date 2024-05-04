@@ -68,7 +68,6 @@ export * from '@modules/renderer/threejs/lines/LineSegmentsGeometry.ts';
 export * from '@modules/renderer/threejs/lines/Wireframe.ts';
 export * from '@modules/renderer/threejs/lines/WireframeGeometry2.ts';
 
-export * from './loaders/3DMLoader.js';
 export * from './loaders/3MFLoader.js';
 export * from './loaders/AMFLoader.js';
 export * from './loaders/BVHLoader.js';
@@ -90,7 +89,6 @@ export * from './loaders/LUT3dlLoader.js';
 export * from './loaders/LUTCubeLoader.js';
 export * from './loaders/LWOLoader.js';
 export * from './loaders/LogLuvLoader.js';
-export * from './loaders/LottieLoader.js';
 export * from './loaders/MD2Loader.js';
 export * from './loaders/MDDLoader.js';
 export * from './loaders/MMDLoader.js';
@@ -112,17 +110,11 @@ export * from './loaders/TTFLoader.js';
 export * from './loaders/TiltLoader.js';
 export * from './loaders/USDZLoader.js';
 export * from './loaders/VOXLoader.js';
-export * from './loaders/VRMLLoader.js';
-export * from './loaders/VTKLoader.js';
-export * from './loaders/XYZLoader.js';
-
-export * from './materials/MeshGouraudMaterial.ts';
 
 export * from './math/Capsule.ts';
 export * from './math/ColorConverter.ts';
 export * from './math/ConvexHull.ts';
 export * from './math/PerlinNoise.ts';
-export * from './math/Lut.js';
 export * from './math/MeshSurfaceSampler.ts';
 export * from './math/OBB.ts';
 export * from './math/Octree.ts';
@@ -150,13 +142,8 @@ export * from '@modules/renderer/threejs/modifiers/TessellateModifier.ts';
 export * from './objects/GroundedSkybox.ts';
 export * from './objects/Lensflare.ts';
 export * from './objects/MarchingCubes.ts';
-export * from './objects/Reflector.ts';
-export * from './objects/ReflectorForSSRPass.ts';
-export * from './objects/Refractor.ts';
 export * from './objects/ShadowMesh.ts';
 export * from './objects/Sky.ts';
-export * from './objects/Water.ts';
-export { Water as Water2 } from './objects/Water2.ts';
 
 export * from './physics/AmmoPhysics.ts';
 export * from './physics/RapierPhysics.ts';
@@ -190,8 +177,6 @@ export * from './postprocessing/TAARenderPass.js';
 export * from './postprocessing/TexturePass.js';
 export * from './postprocessing/UnrealBloomPass.js';
 
-export * from './renderers/CSS2DRenderer.js';
-export * from './renderers/CSS3DRenderer.js';
 export * from './renderers/Projector.js';
 export * from './renderers/SVGRenderer.js';
 
