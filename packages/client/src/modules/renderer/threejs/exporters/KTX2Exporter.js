@@ -87,7 +87,7 @@ const KHR_DF_CHANNEL_MAP = {
 };
 
 const ERROR_INPUT =
-  'THREE.KTX2Exporter: Supported inputs are DataTexture, Data3DTexture, or WebGLRenderer and WebGLRenderTarget.';
+  'THREE.KTX2Exporter: Supported inputs are DataTexture, Data3DTexture, or Renderer and WebGLRenderTarget.';
 const ERROR_FORMAT = 'THREE.KTX2Exporter: Supported formats are RGBAFormat, RGFormat, or RedFormat.';
 const ERROR_TYPE =
   'THREE.KTX2Exporter: Supported types are TextureDataType.Float, TextureDataType.HalfFloat, or TextureDataType.UnsignedByte."';

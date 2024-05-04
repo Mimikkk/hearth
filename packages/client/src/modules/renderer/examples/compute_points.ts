@@ -14,9 +14,6 @@ import {
 
 import { GUI } from '../threejs/libs/lil-gui.module.min.js';
 
-import { WebGPU } from '@modules/renderer/threejs/capabilities/WebGPU.js';
-import { WebGL } from '@modules/renderer/threejs/capabilities/WebGL.js';
-
 import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 import StorageInstancedBufferAttribute from '../threejs/renderers/common/StorageInstancedBufferAttribute.js';
 
@@ -29,12 +26,6 @@ const scaleVector = new THREE.Vector2(1, 1);
 init();
 
 function init() {
-  if (WebGPU.isAvailable() === false && WebGL.isWebGL2Available() === false) {
-    document.body.appendChild(WebGPU.getErrorMessage());
-
-    throw new Error('No WebGPU or WebGL2 support');
-  }
-
   camera = new THREE.OrthographicCamera(-1.0, 1.0, 1.0, -1.0, 0, 1);
   camera.position.z = 1;
 

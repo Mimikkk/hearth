@@ -16,9 +16,6 @@ import { HDRCubeTextureLoader } from '../threejs/loaders/HDRCubeTextureLoader.js
 
 import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 
-import { WebGPU } from '@modules/renderer/threejs/capabilities/WebGPU.js';
-import { WebGL } from '@modules/renderer/threejs/capabilities/WebGL.js';
-
 let container, stats;
 
 let camera, scene, renderer;
@@ -29,12 +26,6 @@ let group;
 init();
 
 function init() {
-  if (WebGPU.isAvailable() === false && WebGL.isWebGL2Available() === false) {
-    document.body.appendChild(WebGPU.getErrorMessage());
-
-    throw new Error('No WebGPU or WebGL2 support');
-  }
-
   container = document.createElement('div');
   document.body.appendChild(container);
 

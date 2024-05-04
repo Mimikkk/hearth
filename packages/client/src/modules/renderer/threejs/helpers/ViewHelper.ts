@@ -16,7 +16,7 @@ import {
   Vector3,
   Vector4,
 } from '../Three.js';
-import Renderer from '@modules/renderer/threejs/renderers/common/Renderer.js';
+import { Renderer } from '@modules/renderer/threejs/renderers/common/Renderer.js';
 
 export class ViewHelper extends Object3D {
   isViewHelper: boolean;

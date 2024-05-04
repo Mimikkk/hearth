@@ -1,5 +1,5 @@
 import { BufferGeometry, Float32BufferAttribute, Material, Mesh, OrthographicCamera } from '../Three.js';
-import Renderer from '@modules/renderer/threejs/renderers/common/Renderer.js';
+import { Renderer } from '@modules/renderer/threejs/renderers/common/Renderer.js';
 
 // Helper for passes that need to fill the viewport with a single quad.
 

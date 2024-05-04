@@ -1,4 +1,3 @@
-import { WebGLRenderer } from '../renderers/WebGLRenderer.js';
 import { Matrix3 } from '../math/Matrix3.js';
 import { OrthographicCamera } from '../cameras/OrthographicCamera.js';
 import { Scene } from '../scenes/Scene.js';
@@ -9,12 +8,13 @@ import { ShaderMaterial } from '../materials/ShaderMaterial.js';
 import { Mesh } from '../objects/Mesh.js';
 import { PlaneGeometry } from '../geometries/PlaneGeometry.js';
 import { PerspectiveCamera } from '@modules/renderer/threejs/cameras/PerspectiveCamera.js';
+import { Renderer } from '@modules/renderer/threejs/renderers/common/Renderer.js';
 
 export class AnaglyphEffect {
   colorMatrixLeft: Matrix3;
   colorMatrixRight: Matrix3;
 
-  constructor(renderer: WebGLRenderer, width: number = 512, height: number = 512) {
+  constructor(renderer: Renderer, width: number = 512, height: number = 512) {
     this.colorMatrixLeft = new Matrix3().fromArray([
       0.4561, -0.0400822, -0.0152161, 0.500484, -0.0378246, -0.0205971, 0.176381, -0.0157589, -0.00546856,
     ]);

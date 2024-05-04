@@ -1,5 +1,5 @@
 import { Blending, DepthPackingStrategy, Filter, ShadowMap, Side } from '../../constants.ts';
-import { WebGLRenderTarget } from '../WebGLRenderTarget.js';
+import { WebGLRenderTarget } from '../WebGLRenderTarget.ts';
 import { MeshDepthMaterial } from '../../materials/MeshDepthMaterial.ts';
 import { MeshDistanceMaterial } from '../../materials/MeshDistanceMaterial.ts';
 import { ShaderMaterial } from '../../materials/ShaderMaterial.ts';

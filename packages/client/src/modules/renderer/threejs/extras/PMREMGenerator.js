@@ -17,7 +17,7 @@ import { PerspectiveCamera } from '../cameras/PerspectiveCamera.ts';
 import { ShaderMaterial } from '../materials/ShaderMaterial.ts';
 import { Vector3 } from '../math/Vector3.ts';
 import { Color } from '../math/Color.ts';
-import { WebGLRenderTarget } from '../renderers/WebGLRenderTarget.js';
+import { WebGLRenderTarget } from '../renderers/WebGLRenderTarget.ts';
 import { MeshBasicMaterial } from '../materials/MeshBasicMaterial.ts';
 import { BoxGeometry } from '../geometries/BoxGeometry.ts';
 

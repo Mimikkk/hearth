@@ -18,7 +18,7 @@ const _va = /*@__PURE__*/ new Vector3(), // from pe to pa
  * @param {Vector3} bottomRightCorner
  * @param {Vector3} topLeftCorner
  * @param {boolean} estimateViewFrustum */
-function frameCorners(camera, bottomLeftCorner, bottomRightCorner, topLeftCorner, estimateViewFrustum = false) {
+export function frameCorners(camera, bottomLeftCorner, bottomRightCorner, topLeftCorner, estimateViewFrustum = false) {
   const pa = bottomLeftCorner,
     pb = bottomRightCorner,
     pc = topLeftCorner;
@@ -74,5 +74,3 @@ function frameCorners(camera, bottomLeftCorner, bottomRightCorner, topLeftCorner
       Math.atan((_vec.copy(pb).sub(pa).length() + _vec.copy(pc).sub(pa).length()) / _va.length());
   }
 }
-
-export { frameCorners };

@@ -1,6 +1,6 @@
-import { WebGLRenderer } from '@modules/renderer/threejs/renderers/WebGLRenderer.js';
 import { Camera } from '@modules/renderer/threejs/cameras/Camera.js';
 import { Scene } from '@modules/renderer/threejs/scenes/Scene.js';
+import { Renderer } from '@modules/renderer/threejs/renderers/common/Renderer.js';
 
 export interface AsciiEffectOptions {
   resolution?: number;
@@ -15,7 +15,7 @@ export interface AsciiEffectOptions {
 export class AsciiEffect {
   domElement: HTMLElement;
 
-  constructor(renderer: WebGLRenderer, charSet: string = ' .:-=+*#%@', options: AsciiEffectOptions = {}) {
+  constructor(renderer: Renderer, charSet: string = ' .:-=+*#%@', options: AsciiEffectOptions = {}) {
     // ' .,:;=|iI+hHOE#`$';
     // darker bolder character set from https://github.com/saw/Canvas-ASCII-Art/
     // ' .\'`^",:;Il!i~+_-?][}{1)(|/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$'.split('');

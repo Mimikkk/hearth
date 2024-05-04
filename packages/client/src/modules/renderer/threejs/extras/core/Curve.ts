@@ -276,7 +276,7 @@ export abstract class Curve<T extends Vector2 | Vector3> {
     return new this.constructor().copy(this);
   }
 
-  copy(source: Curve<T>): this {
+  copy(source: this): this {
     this.precision = source.precision;
 
     return this;

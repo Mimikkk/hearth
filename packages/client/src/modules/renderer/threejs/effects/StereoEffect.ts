@@ -1,15 +1,15 @@
-import { WebGLRenderer } from '../renderers/WebGLRenderer.js';
 import { StereoCamera } from '../cameras/StereoCamera.js';
 import { Vector2 } from '../math/Vector2.js';
 import { Scene } from '../scenes/Scene.js';
 import { PerspectiveCamera } from '../cameras/PerspectiveCamera.js';
+import { Renderer } from '@modules/renderer/threejs/renderers/common/Renderer.js';
 
 export class StereoEffect {
   setEyeSeparation: (eyeSep: number) => void;
   setSize: (width: number, height: number) => void;
   render: (scene: Scene, camera: PerspectiveCamera) => void;
 
-  constructor(renderer: WebGLRenderer) {
+  constructor(renderer: Renderer) {
     const _stereo = new StereoCamera();
     _stereo.aspect = 0.5;
     const size = new Vector2();

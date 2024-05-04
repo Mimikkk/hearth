@@ -18,7 +18,6 @@ export class ShapeUtils {
   }
 
   static triangulateShape(contour: Vector2[], holes: Vector2[][]): [number, number, number][] {
-    console.log('here');
     const vertices: number[] = [];
     const holeIndices: number[] = [];
     const faces: [number, number, number][] = [];

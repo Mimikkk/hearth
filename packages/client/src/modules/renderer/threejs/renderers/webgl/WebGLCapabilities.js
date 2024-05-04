@@ -43,7 +43,7 @@ function WebGLCapabilities(gl, extensions, parameters) {
   const maxPrecision = getMaxPrecision(precision);
 
   if (maxPrecision !== precision) {
-    console.warn('THREE.WebGLRenderer:', precision, 'not supported, using', maxPrecision, 'instead.');
+    console.warn('THREE.Renderer:', precision, 'not supported, using', maxPrecision, 'instead.');
     precision = maxPrecision;
   }
 

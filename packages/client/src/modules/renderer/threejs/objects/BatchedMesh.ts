@@ -11,10 +11,9 @@ import { Vector3 } from '../math/Vector3.js';
 import { Material } from '@modules/renderer/threejs/materials/Material.js';
 import { Camera } from '@modules/renderer/threejs/cameras/Camera.js';
 import { Intersection, Raycaster } from '@modules/renderer/threejs/core/Raycaster.js';
-import Renderer from '@modules/renderer/threejs/renderers/common/Renderer.js';
+import { Renderer } from '@modules/renderer/threejs/renderers/common/Renderer.js';
 import { Scene } from '@modules/renderer/threejs/scenes/Scene.js';
 import { Group } from '@modules/renderer/threejs/objects/Group.js';
-import { WebGLRenderer } from '@modules/renderer/threejs/renderers/WebGLRenderer.js';
 
 const sortAsc = (a: { z: number }, b: { z: number }): number => a.z - b.z;
 const sortDesc = (a: { z: number }, b: { z: number }): number => b.z - a.z;
@@ -727,7 +726,7 @@ export class BatchedMesh extends Mesh {
   }
 
   onBeforeRender(
-    renderer: WebGLRenderer,
+    renderer: Renderer,
     scene: Scene,
     camera: Camera,
     geometry: BufferGeometry,
@@ -828,7 +827,7 @@ export class BatchedMesh extends Mesh {
   }
 
   onBeforeShadow(
-    renderer: WebGLRenderer,
+    renderer: Renderer,
     scene: Scene,
     shadowCamera: Camera,
     geometry: BufferGeometry,

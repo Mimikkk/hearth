@@ -2,8 +2,8 @@ import { CoordinateSystem } from '../constants.js';
 import { Object3D } from '../core/Object3D.js';
 import { PerspectiveCamera } from './PerspectiveCamera.js';
 import { WebGLCubeRenderTarget } from '../renderers/WebGLCubeRenderTarget.js';
-import { WebGLRenderer } from '@modules/renderer/threejs/renderers/WebGLRenderer.js';
 import { Scene } from '@modules/renderer/threejs/scenes/Scene.js';
+import { Renderer } from '@modules/renderer/threejs/renderers/common/Renderer.js';
 
 const fov = -90; // negative fov is not an error
 const aspect = 1;
@@ -102,7 +102,7 @@ export class CubeCamera extends Object3D {
     }
   }
 
-  update(renderer: WebGLRenderer, scene: Scene): void {
+  update(renderer: Renderer, scene: Scene): void {
     if (this.parent === null) this.updateMatrixWorld();
 
     const { renderTarget, activeMipmapLevel } = this;
@@ -157,4 +157,5 @@ export class CubeCamera extends Object3D {
     renderTarget.texture.needsPMREMUpdate = true;
   }
 }
+
 CubeCamera.prototype.type = 'CubeCamera';

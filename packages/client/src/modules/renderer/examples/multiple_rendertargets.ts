@@ -18,9 +18,6 @@ import {
   vec2,
   vec4,
 } from '../threejs/nodes/Nodes.js';
-import { WebGPU } from '@modules/renderer/threejs/capabilities/WebGPU.js';
-import { WebGL } from '@modules/renderer/threejs/capabilities/WebGL.js';
-
 import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 
 import { QuadMesh } from '../threejs/objects/QuadMesh.js';
@@ -86,12 +83,6 @@ class ReadGBufferMaterial extends NodeMaterial {
 init();
 
 function init() {
-  if (WebGPU.isAvailable() === false && WebGL.isWebGL2Available() === false) {
-    document.body.appendChild(WebGPU.getErrorMessage());
-
-    throw new Error('No WebGPU or WebGL2 support');
-  }
-
   renderer = new WebGPURenderer({ antialias: true });
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);

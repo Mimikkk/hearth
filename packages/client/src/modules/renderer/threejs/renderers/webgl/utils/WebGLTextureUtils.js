@@ -83,9 +83,7 @@ class WebGLTextureUtils {
     if (internalFormatName !== null) {
       if (gl[internalFormatName] !== undefined) return gl[internalFormatName];
 
-      console.warn(
-        "THREE.WebGLRenderer: Attempt to use non-existing WebGL internal format '" + internalFormatName + "'",
-      );
+      console.warn("THREE.Renderer: Attempt to use non-existing WebGL internal format '" + internalFormatName + "'");
     }
 
     let internalFormat = glFormat;

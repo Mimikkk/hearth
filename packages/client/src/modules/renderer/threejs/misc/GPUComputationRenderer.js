@@ -106,7 +106,7 @@ import {
  *
  * @param {int} sizeX Computation problem size is always 2d: sizeX * sizeY elements.
  * @param {int} sizeY Computation problem size is always 2d: sizeX * sizeY elements.
- * @param {WebGLRenderer} renderer The renderer
+ * @param {Renderer} renderer The renderer
  */
 
 class GPUComputationRenderer {

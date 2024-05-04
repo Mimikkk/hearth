@@ -3,7 +3,7 @@ import { Mesh } from '../objects/Mesh.ts';
 import { BoxGeometry } from '../geometries/BoxGeometry.ts';
 import { ShaderMaterial } from '../materials/ShaderMaterial.ts';
 import { cloneUniforms } from './shaders/UniformsUtils.js';
-import { WebGLRenderTarget } from './WebGLRenderTarget.js';
+import { WebGLRenderTarget } from './WebGLRenderTarget.ts';
 import { CubeCamera } from '../cameras/CubeCamera.ts';
 import { CubeTexture } from '../textures/CubeTexture.ts';
 

@@ -4,6 +4,7 @@ import {
   MagnificationTextureFilter,
   Mapping,
   MinificationTextureFilter,
+  PixelFormat,
   TextureDataType,
   TextureFormat,
   Wrapping,
@@ -13,7 +14,6 @@ import { Vector2 } from '../math/Vector2.js';
 import { Matrix3 } from '../math/Matrix3.js';
 import { Source } from './Source.js';
 import type { CubeTexture } from './CubeTexture.js';
-import { PixelFormatGPU } from 'three/src/constants.js';
 
 let _textureId = 0;
 
@@ -34,7 +34,7 @@ export class Texture {
   minFilter: MinificationTextureFilter;
   anisotropy: number;
   format: TextureFormat;
-  internalFormat: PixelFormatGPU | null;
+  internalFormat: PixelFormat | null;
   type: TextureDataType;
   offset: Vector2;
   repeat: Vector2;

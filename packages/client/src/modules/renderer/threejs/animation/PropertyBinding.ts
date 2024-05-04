@@ -70,12 +70,7 @@ class Composite {
   }
 }
 
-// Note: This class uses a State pattern on a per-method basis:
-// 'bind' sets 'this.getValue' / 'setValue' and shadows the
-// prototype version of these methods with one that represents
-// the bound state. When the property is not found, the methods
-// become no-ops.
-class PropertyBinding {
+export class PropertyBinding {
   constructor(rootNode, path, parsedPath) {
     this.path = path;
     this.parsedPath = parsedPath || PropertyBinding.parseTrackName(path);
@@ -569,5 +564,3 @@ PropertyBinding.prototype.SetterByBindingTypeAndVersioning = [
     PropertyBinding.prototype._setValue_fromArray_setMatrixWorldNeedsUpdate,
   ],
 ];
-
-export { PropertyBinding };

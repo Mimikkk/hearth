@@ -1,10 +1,9 @@
 import { Revision } from './constants.ts';
 
-export { WebGLArrayRenderTarget } from './renderers/WebGLArrayRenderTarget.js';
-export { WebGL3DRenderTarget } from './renderers/WebGL3DRenderTarget.js';
+export { WebGLArrayRenderTarget } from './renderers/WebGLArrayRenderTarget.ts';
+export { WebGL3DRenderTarget } from './renderers/WebGL3DRenderTarget.ts';
 export { WebGLCubeRenderTarget } from './renderers/WebGLCubeRenderTarget.js';
-export { WebGLRenderTarget } from './renderers/WebGLRenderTarget.js';
-export { WebGLRenderer } from './renderers/WebGLRenderer.js';
+export { WebGLRenderTarget } from './renderers/WebGLRenderTarget.ts';
 export { ShaderLib } from './renderers/shaders/ShaderLib.ts';
 export { UniformsLib } from './renderers/shaders/UniformsLib.ts';
 export { UniformsUtils } from './renderers/shaders/UniformsUtils.js';
@@ -84,7 +83,7 @@ export { BooleanKeyframeTrack } from './animation/tracks/BooleanKeyframeTrack.ts
 export { PropertyMixer } from './animation/PropertyMixer.ts';
 export { PropertyBinding } from './animation/PropertyBinding.ts';
 export { KeyframeTrack } from './animation/KeyframeTrack.ts';
-export { AnimationUtils } from './animation/AnimationUtils.ts';
+export * as AnimationUtils from './animation/AnimationUtils.ts';
 export { AnimationObjectGroup } from './animation/AnimationObjectGroup.ts';
 export { AnimationMixer } from './animation/AnimationMixer.ts';
 export { AnimationClip } from './animation/AnimationClip.ts';

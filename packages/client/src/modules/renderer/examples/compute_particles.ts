@@ -11,8 +11,6 @@ import {
   If,
 } from '../threejs/nodes/Nodes.js';
 
-import { WebGPU } from '@modules/renderer/threejs/capabilities/WebGPU.js';
-import { WebGL } from '@modules/renderer/threejs/capabilities/WebGL.js';
 import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 import StorageInstancedBufferAttribute from '../threejs/renderers/common/StorageInstancedBufferAttribute.js';
 
@@ -39,12 +37,6 @@ const timestamps = document.getElementById('timestamps');
 init();
 
 function init() {
-  if (WebGPU.isAvailable() === false && WebGL.isWebGL2Available() === false) {
-    document.body.appendChild(WebGPU.getErrorMessage());
-
-    throw new Error('No WebGPU or WebGL2 support');
-  }
-
   const { innerWidth, innerHeight } = window;
 
   camera = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, 0.1, 1000);

@@ -6,11 +6,11 @@ import { WebGLRenderTarget } from '../renderers/WebGLRenderTarget.js';
 import { ShaderMaterial } from '../materials/ShaderMaterial.js';
 import { Mesh } from '../objects/Mesh.js';
 import { PlaneGeometry } from '../geometries/PlaneGeometry.js';
-import { WebGLRenderer } from '../renderers/WebGLRenderer.js';
 import { PerspectiveCamera } from '../cameras/PerspectiveCamera.js';
+import { Renderer } from '@modules/renderer/threejs/renderers/common/Renderer.js';
 
 export class ParallaxBarrierEffect {
-  constructor(renderer: WebGLRenderer) {
+  constructor(renderer: Renderer) {
     const _camera = new OrthographicCamera(-1, 1, 1, -1, 0, 1);
 
     const _scene = new Scene();

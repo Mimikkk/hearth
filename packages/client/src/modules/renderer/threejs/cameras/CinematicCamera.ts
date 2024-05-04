@@ -7,7 +7,7 @@ import { ShaderMaterial } from '../materials/ShaderMaterial.js';
 import { PerspectiveCamera } from './PerspectiveCamera.js';
 import { Mesh } from '../objects/Mesh.js';
 import { PlaneGeometry } from '@modules/renderer/threejs/geometries/PlaneGeometry.js';
-import type { WebGLRenderer } from '@modules/renderer/threejs/renderers/WebGLRenderer.js';
+import { Renderer } from '@modules/renderer/threejs/renderers/common/Renderer.js';
 
 export class CinematicCamera extends PerspectiveCamera {
   declare type: string | 'CinematicCamera';
@@ -194,7 +194,7 @@ export class CinematicCamera extends PerspectiveCamera {
     return this;
   }
 
-  renderCinematic(scene: Scene, renderer: WebGLRenderer): this {
+  renderCinematic(scene: Scene, renderer: Renderer): this {
     if (this.postprocessing.enabled) {
       const currentRenderTarget = renderer.getRenderTarget();
 

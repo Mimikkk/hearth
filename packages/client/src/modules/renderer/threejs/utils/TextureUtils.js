@@ -7,7 +7,6 @@ import {
   Scene,
   ShaderMaterial,
   Uniform,
-  WebGLRenderer,
 } from '../Three.js';
 
 let _renderer;
@@ -53,10 +52,6 @@ export function decompress(texture, maxTextureSize = Infinity, renderer = null) 
   const _camera = new PerspectiveCamera();
   const _scene = new Scene();
   _scene.add(fullscreenQuad);
-
-  if (renderer === null) {
-    renderer = _renderer = new WebGLRenderer({ antialias: false });
-  }
 
   const width = Math.min(texture.image.width, maxTextureSize);
   const height = Math.min(texture.image.height, maxTextureSize);

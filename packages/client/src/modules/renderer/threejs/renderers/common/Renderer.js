@@ -31,7 +31,7 @@ const _frustum = new Frustum();
 const _projScreenMatrix = new Matrix4();
 const _vector3 = new Vector3();
 
-class Renderer {
+export class Renderer {
   constructor(backend, parameters = {}) {
     this.isRenderer = true;
 
@@ -1095,5 +1095,3 @@ class Renderer {
     return this.compileAsync;
   }
 }
-
-export default Renderer;

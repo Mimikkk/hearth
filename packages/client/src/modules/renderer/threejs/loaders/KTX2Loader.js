@@ -329,7 +329,7 @@ KTX2Loader.EngineFormat = {
   RGB_ETC1_Format: CompressedPixelFormat.RGB_ETC1,
   RGB_ETC2_Format: CompressedPixelFormat.RGB_ETC2,
   RGB_PVRTC_4BPPV1_Format: CompressedPixelFormat.RGB_PVRTC_4BPPV1,
-  RGB_S3TC_DXT1_Format: CompressedPixelFormat.RGB_S3TC_DXT1,
+  RGB_S3TC_DXT1_Format: CompressedPixelFormat.RGBA_S3TC_DXT1,
 };
 
 /* WEB WORKER */

@@ -1,9 +1,6 @@
 import * as THREE from '../threejs/Three.js';
 import { MeshBasicNodeMaterial, texture } from '../threejs/nodes/Nodes.js';
 
-import { WebGPU } from '@modules/renderer/threejs/capabilities/WebGPU.js';
-import { WebGL } from '@modules/renderer/threejs/capabilities/WebGL.js';
-
 import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 
 import { QuadMesh } from '../threejs/objects/QuadMesh.js';
@@ -20,12 +17,6 @@ const dpr = window.devicePixelRatio;
 init();
 
 function init() {
-  if (WebGPU.isAvailable() === false && WebGL.isWebGL2Available() === false) {
-    document.body.appendChild(WebGPU.getErrorMessage());
-
-    throw new Error('No WebGPU or WebGL2 support');
-  }
-
   camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 20);
   camera.position.z = 4;
 

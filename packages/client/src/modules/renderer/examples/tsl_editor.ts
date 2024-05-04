@@ -1,25 +1,15 @@
 import * as THREE from '../threejs/Three.js';
 import * as Nodes from '../threejs/nodes/Nodes.js';
 
-import { WebGPU } from '@modules/renderer/threejs/capabilities/WebGPU.js';
-import { WebGL } from '@modules/renderer/threejs/capabilities/WebGL.js';
-
 import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 import WGSLNodeBuilder from '@modules/renderer/threejs/renderers/webgpu/nodes/WGSLNodeBuilder.js';
 import GLSLNodeBuilder from '@modules/renderer/threejs/renderers/webgl/nodes/GLSLNodeBuilder.js';
-import GLSL1NodeBuilder from '@modules/renderer/threejs/renderers/webgl-legacy/nodes/GLSL1NodeBuilder.js';
 
 import { GUI } from '../threejs/libs/lil-gui.module.min.js';
 
 init();
 
 function init() {
-  if (WebGPU.isAvailable() === false && WebGL.isWebGL2Available() === false) {
-    document.body.appendChild(WebGPU.getErrorMessage());
-
-    throw new Error('No WebGPU or WebGL2 support');
-  }
-
   // add the depedencies
 
   const width = 200;
@@ -164,7 +154,7 @@ output = vec4( finalColor, opacity );
 
     const gui = new GUI();
 
-    gui.add(options, 'output', ['WGSL', 'GLSL ES 3.0', 'GLSL']).onChange(build);
+    gui.add(options, 'output', ['WGSL', 'GLSL ES 3.0']).onChange(build);
     gui.add(options, 'shader', ['vertex', 'fragment']).onChange(showCode);
 
     gui.add(options, 'outputColorSpace', [THREE.ColorSpace.LinearSRGB, THREE.ColorSpace.SRGB]).onChange(value => {

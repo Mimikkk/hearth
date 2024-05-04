@@ -1,4 +1,3 @@
-import { WebGLRenderer } from '../renderers/WebGLRenderer.js';
 import { Color } from '../math/Color.js';
 import { ShaderMaterial } from '../materials/ShaderMaterial.js';
 import { UniformsUtils } from '../renderers/shaders/UniformsUtils.js';
@@ -13,6 +12,7 @@ import { WebGLShadowMap } from '../renderers/webgl/WebGLShadowMap.js';
 import { Material } from '@modules/renderer/threejs/materials/Material.js';
 import { Object3D } from '@modules/renderer/threejs/core/Object3D.js';
 import { BufferGeometry } from '@modules/renderer/threejs/core/BufferGeometry.js';
+import { Renderer } from '@modules/renderer/threejs/renderers/common/Renderer.js';
 
 export interface OutlineEffectParameters {
   defaultThickness?: number;
@@ -27,7 +27,7 @@ export class OutlineEffect {
   domElement: HTMLElement;
   shadowMap: WebGLShadowMap;
 
-  constructor(renderer: WebGLRenderer, parameters: OutlineEffectParameters = {}) {
+  constructor(renderer: Renderer, parameters: OutlineEffectParameters = {}) {
     this.enabled = true;
 
     const defaultThickness = parameters.defaultThickness !== undefined ? parameters.defaultThickness : 0.003;
@@ -213,7 +213,7 @@ export class OutlineEffect {
     }
 
     function onBeforeRender(
-      renderer: WebGLRenderer,
+      renderer: Renderer,
       scene: Scene,
       camera: Camera,
       geometry: BufferGeometry,

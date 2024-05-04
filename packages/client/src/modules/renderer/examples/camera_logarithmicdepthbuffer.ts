@@ -3,9 +3,6 @@ import * as THREE from '../threejs/Three.js';
 import { FontLoader } from '../threejs/loaders/FontLoader.js';
 import { TextGeometry } from '../threejs/geometries/TextGeometry.js';
 
-import { WebGPU } from '@modules/renderer/threejs/capabilities/WebGPU.js';
-import { WebGL } from '@modules/renderer/threejs/capabilities/WebGL.js';
-
 import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 
 import Stats from '../threejs/libs/stats.module.js';
@@ -49,12 +46,6 @@ const labeldata = [
 init();
 
 function init() {
-  if (WebGPU.isAvailable() === false && WebGL.isWebGL2Available() === false) {
-    document.body.appendChild(WebGPU.getErrorMessage());
-
-    throw new Error('No WebGPU or WebGL2 support');
-  }
-
   container = document.getElementById('container');
 
   const loader = new FontLoader();

@@ -1,12 +1,12 @@
 import { EventDispatcher } from './EventDispatcher.js';
 import { Texture } from '../textures/Texture.js';
-import { ColorSpace, Filter, Mapping, TextureDataType, TextureFormat, Wrapping } from '../constants.js';
+import { ColorSpace, Filter, Mapping, PixelFormat, TextureDataType, TextureFormat, Wrapping } from '../constants.js';
 import { Vector4 } from '../math/Vector4.js';
 import { Source } from '../textures/Source.js';
 
-interface RenderTargetOptions {
+export interface RenderTargetOptions {
   generateMipmaps: boolean;
-  internalFormat: number | null;
+  internalFormat: PixelFormat | null;
   minFilter: number;
   depthBuffer: boolean;
   stencilBuffer: boolean;
@@ -23,6 +23,7 @@ interface RenderTargetOptions {
   anisotropy: number;
   colorSpace: ColorSpace;
 }
+
 export namespace RenderTargetOptions {
   export const create = (options?: Partial<RenderTargetOptions>): RenderTargetOptions => ({
     generateMipmaps: options?.generateMipmaps ?? false,
@@ -175,4 +176,5 @@ export class RenderTarget {
     this.eventDispatcher.dispatch({ type: 'dispose' }, this);
   }
 }
+
 RenderTarget.prototype.isRenderTarget = true;

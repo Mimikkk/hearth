@@ -37,8 +37,8 @@ export class LineCurve extends Curve<Vector2> {
     return this.getTangent(u, optionalTarget);
   }
 
-  copy(source: LineCurve): this {
-    super.copy(source) as this;
+  copy(source: this): this {
+    super.copy(source);
 
     this.v1.copy(source.v1);
     this.v2.copy(source.v2);

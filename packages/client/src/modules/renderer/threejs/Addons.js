@@ -5,8 +5,6 @@ export * from './animation/MMDPhysics.ts';
 
 export * from './cameras/CinematicCamera.ts';
 
-export { WebGL } from '@modules/renderer/threejs/capabilities/WebGL.ts';
-
 export * from '@modules/renderer/threejs/controls/DragControls.ts';
 export * from '@modules/renderer/threejs/controls/FirstPersonControls.ts';
 export * from '@modules/renderer/threejs/controls/FlyControls.ts';

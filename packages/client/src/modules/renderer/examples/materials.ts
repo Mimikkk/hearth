@@ -26,7 +26,6 @@ import {
   wgslFn,
 } from '../threejs/nodes/Nodes.js';
 
-import { WebGPU } from '@modules/renderer/threejs/capabilities/WebGPU.js';
 import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 
 import { TeapotGeometry } from '../threejs/geometries/TeapotGeometry.js';
@@ -43,12 +42,6 @@ const objects = [],
 init();
 
 function init() {
-  if (WebGPU.isAvailable() === false) {
-    document.body.appendChild(WebGPU.getErrorMessage());
-
-    throw new Error('No WebGPU support');
-  }
-
   const container = document.createElement('div');
   document.body.appendChild(container);
 

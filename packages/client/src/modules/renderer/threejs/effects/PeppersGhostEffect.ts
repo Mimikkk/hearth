@@ -1,15 +1,15 @@
-import { WebGLRenderer } from '../renderers/WebGLRenderer.js';
 import { PerspectiveCamera } from '../cameras/PerspectiveCamera.js';
 import { Vector3 } from '../math/Vector3.js';
 import { Quaternion } from '../math/Quaternion.js';
 import { Scene } from '@modules/renderer/threejs/scenes/Scene.js';
 import { Camera } from '@modules/renderer/threejs/cameras/Camera.js';
+import { Renderer } from '@modules/renderer/threejs/renderers/common/Renderer.js';
 
 export class PeppersGhostEffect {
   cameraDistance: number;
   reflectFromAbove: boolean;
 
-  constructor(public renderer: WebGLRenderer) {
+  constructor(public renderer: Renderer) {
     this.cameraDistance = 15;
     this.reflectFromAbove = false;
 

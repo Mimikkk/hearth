@@ -1,6 +1,6 @@
 import { Box3, Color, Frustum, Matrix3, Matrix4, Side, Vector2, Vector3, Vector4 } from '../Three.js';
 
-class RenderableObject {
+export class RenderableObject {
   constructor() {
     this.id = 0;
 
@@ -12,7 +12,7 @@ class RenderableObject {
 
 //
 
-class RenderableFace {
+export class RenderableFace {
   constructor() {
     this.id = 0;
 
@@ -36,7 +36,7 @@ class RenderableFace {
 
 //
 
-class RenderableVertex {
+export class RenderableVertex {
   constructor() {
     this.position = new Vector3();
     this.positionWorld = new Vector3();
@@ -53,7 +53,7 @@ class RenderableVertex {
 
 //
 
-class RenderableLine {
+export class RenderableLine {
   constructor() {
     this.id = 0;
 
@@ -70,7 +70,7 @@ class RenderableLine {
 
 //
 
-class RenderableSprite {
+export class RenderableSprite {
   constructor() {
     this.id = 0;
 
@@ -90,7 +90,7 @@ class RenderableSprite {
 
 //
 
-class Projector {
+export class Projector {
   constructor() {
     let _object,
       _objectCount,
@@ -715,5 +715,3 @@ class Projector {
     }
   }
 }
-
-export { RenderableObject, RenderableFace, RenderableVertex, RenderableLine, RenderableSprite, Projector };

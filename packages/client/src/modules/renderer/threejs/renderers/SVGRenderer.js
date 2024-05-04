@@ -1,7 +1,7 @@
 import { Box2, Camera, Color, ColorSpace, Matrix3, Matrix4, Object3D, Vector3 } from '../Three.js';
 import { Projector, RenderableFace, RenderableLine, RenderableSprite } from './Projector.js';
 
-class SVGObject extends Object3D {
+export class SVGObject extends Object3D {
   constructor(node) {
     super();
 
@@ -11,7 +11,7 @@ class SVGObject extends Object3D {
   }
 }
 
-class SVGRenderer {
+export class SVGRenderer {
   constructor() {
     let _renderData,
       _elements,
@@ -482,5 +482,3 @@ class SVGRenderer {
     }
   }
 }
-
-export { SVGObject, SVGRenderer };

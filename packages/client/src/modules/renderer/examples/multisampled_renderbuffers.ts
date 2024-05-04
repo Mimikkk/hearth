@@ -1,9 +1,6 @@
 import * as THREE from '../threejs/Three.js';
 import { texture, MeshBasicNodeMaterial, MeshPhongNodeMaterial } from '../threejs/nodes/Nodes.js';
 
-import { WebGPU } from '@modules/renderer/threejs/capabilities/WebGPU.js';
-import { WebGL } from '@modules/renderer/threejs/capabilities/WebGL.js';
-
 import { GUI } from '../threejs/libs/lil-gui.module.min.js';
 
 import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
@@ -52,12 +49,6 @@ function initGUI() {
 }
 
 function init() {
-  if (WebGPU.isAvailable() === false && WebGL.isWebGL2Available() === false) {
-    document.body.appendChild(WebGPU.getErrorMessage());
-
-    throw new Error('No WebGPU or WebGL2 support');
-  }
-
   camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 50);
   camera.position.z = 3;
 

@@ -1,19 +1,10 @@
 import * as THREE from '../threejs/Three.js';
 import { MeshBasicNodeMaterial, oscTriangle, texture, timerLocal, uv } from '../threejs/nodes/Nodes.js';
 
-import { WebGPU } from '@modules/renderer/threejs/capabilities/WebGPU.js';
-import { WebGL } from '@modules/renderer/threejs/capabilities/WebGL.js';
-
 import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 
 import Stats from '../threejs/libs/stats.module.js';
 import { unzipSync } from '../threejs/libs/fflate.module.js';
-
-if (WebGPU.isAvailable() === false && WebGL.isWebGL2Available() === false) {
-  document.body.appendChild(WebGPU.getErrorMessage());
-
-  throw new Error('No WebGPU or WebGL2 support');
-}
 
 let camera, scene, mesh, renderer, stats;
 

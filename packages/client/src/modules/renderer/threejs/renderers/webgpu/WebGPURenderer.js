@@ -1,6 +1,6 @@
-import { WebGPU } from '@modules/renderer/threejs/capabilities/WebGPU.ts';
+import { WebGPUManager } from '@modules/renderer/threejs/capabilities/WebGPUManager.ts';
 
-import Renderer from '../../../threejs/renderers/common/Renderer.js';
+import { Renderer } from '../../../threejs/renderers/common/Renderer.js';
 import WebGLBackend from '../webgl/WebGLBackend.js';
 import WebGPUBackend from './WebGPUBackend.js';
 
@@ -10,7 +10,7 @@ export class WebGPURenderer extends Renderer {
 
     if (parameters.forceWebGL) {
       BackendClass = WebGLBackend;
-    } else if (WebGPU.isAvailable()) {
+    } else if (WebGPUManager.isAvailable()) {
       BackendClass = WebGPUBackend;
     } else {
       BackendClass = WebGLBackend;

@@ -8,7 +8,6 @@ import { Matrix3 } from '../math/Matrix3.js';
 import * as MathUtils from '../math/MathUtils.js';
 import type { Intersection, Raycaster } from './Raycaster.js';
 import type { Light } from '../lights/Light.js';
-import type { WebGLRenderer } from '../renderers/WebGLRenderer.js';
 import type { Scene } from '../scenes/Scene.js';
 import type { BufferGeometry } from './BufferGeometry.js';
 import type { Camera } from '../cameras/Camera.js';
@@ -16,6 +15,7 @@ import type { Material } from '../materials/Material.js';
 import type { Group } from '../objects/Group.js';
 import type { Vector2 } from '../math/Vector2.js';
 import { Box3 } from '@modules/renderer/threejs/math/Box3.js';
+import { Renderer } from '../renderers/common/Renderer.js';
 
 let _object3DId = 0;
 
@@ -168,7 +168,7 @@ export class Object3D<EventMap extends Object3DEventMap = Object3DEventMap> {
   }
 
   onBeforeShadow(
-    renderer: WebGLRenderer,
+    renderer: Renderer,
     scene: Scene,
     shadowCamera: Camera,
     geometry: BufferGeometry,
@@ -177,7 +177,7 @@ export class Object3D<EventMap extends Object3DEventMap = Object3DEventMap> {
   ): void {}
 
   onAfterShadow(
-    renderer: WebGLRenderer,
+    renderer: Renderer,
     scene: Scene,
     shadowCamera: Camera,
     geometry: BufferGeometry,
@@ -186,7 +186,7 @@ export class Object3D<EventMap extends Object3DEventMap = Object3DEventMap> {
   ): void {}
 
   onBeforeRender(
-    renderer: WebGLRenderer,
+    renderer: Renderer,
     scene: Scene,
     camera: Camera,
     geometry: BufferGeometry,
@@ -195,7 +195,7 @@ export class Object3D<EventMap extends Object3DEventMap = Object3DEventMap> {
   ): void {}
 
   onAfterRender(
-    renderer: WebGLRenderer,
+    renderer: Renderer,
     scene: Scene,
     camera: Camera,
     geometry: BufferGeometry,

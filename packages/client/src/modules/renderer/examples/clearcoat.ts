@@ -1,6 +1,5 @@
 import * as THREE from '../threejs/Three.js';
 
-import { WebGPU } from '@modules/renderer/threejs/capabilities/WebGPU.js';
 import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 
 import Stats from '../threejs/libs/stats.module.js';
@@ -20,12 +19,6 @@ let group;
 init();
 
 function init() {
-  if (WebGPU.isAvailable() === false) {
-    document.body.appendChild(WebGPU.getErrorMessage());
-
-    throw new Error('No WebGPU support');
-  }
-
   container = document.createElement('div');
   document.body.appendChild(container);
 

@@ -21,7 +21,7 @@ import WebGPUAttributeUtils from './utils/WebGPUAttributeUtils.js';
 import WebGPUBindingUtils from './utils/WebGPUBindingUtils.js';
 import WebGPUPipelineUtils from './utils/WebGPUPipelineUtils.js';
 import WebGPUTextureUtils from './utils/WebGPUTextureUtils.js';
-import { WebGPU } from '@modules/renderer/threejs/capabilities/WebGPU.ts';
+import { WebGPUManager } from '@modules/renderer/threejs/capabilities/WebGPUManager.ts';
 
 //
 
@@ -1051,7 +1051,7 @@ class WebGPUBackend extends Backend {
   }
 
   async hasFeatureAsync(name) {
-    const adapter = this.adapter || (await WebGPU.getStaticAdapter());
+    const adapter = this.adapter || (await WebGPUManager.readAdapter());
 
     //
 

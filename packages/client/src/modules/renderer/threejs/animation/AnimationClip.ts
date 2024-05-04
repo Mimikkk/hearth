@@ -8,9 +8,27 @@ import { StringKeyframeTrack } from './tracks/StringKeyframeTrack.js';
 import { VectorKeyframeTrack } from './tracks/VectorKeyframeTrack.js';
 import * as MathUtils from '../math/MathUtils.js';
 import { AnimationBlendMode } from '../constants.js';
+import { Vector3 } from 'three/src/math/Vector3.js';
+import { Object3D } from '@modules/renderer/threejs/core/Object3D.js';
+
+export interface MorphTarget {
+  name: string;
+  vertices: Vector3[];
+}
 
 export class AnimationClip {
-  constructor(name, duration = -1, tracks, blendMode = AnimationBlendMode.Normal) {
+  name: string;
+  tracks: KeyframeTrack[];
+  duration: number;
+  blendMode: AnimationBlendMode;
+  uuid: string;
+
+  constructor(
+    name: string,
+    duration: number = -1,
+    tracks: KeyframeTrack[],
+    blendMode: AnimationBlendMode = AnimationBlendMode.Normal,
+  ) {
     this.name = name;
     this.tracks = tracks;
     this.duration = duration;
@@ -19,12 +37,10 @@ export class AnimationClip {
     this.uuid = MathUtils.generateUuid();
 
     // this means it should figure out its duration by scanning the tracks
-    if (this.duration < 0) {
-      this.resetDuration();
-    }
+    if (this.duration < 0) this.resetDuration();
   }
 
-  static parse(json) {
+  static parse(json: any) {
     const tracks = [],
       jsonTracks = json.tracks,
       frameTime = 1.0 / (json.fps || 1.0);
@@ -39,9 +55,9 @@ export class AnimationClip {
     return clip;
   }
 
-  static toJSON(clip) {
-    const tracks = [],
-      clipTracks = clip.tracks;
+  static toJSON(clip: any): any {
+    const tracks: KeyframeTrack[] = [];
+    const clipTracks = clip.tracks;
 
     const json = {
       name: clip.name,
@@ -58,7 +74,7 @@ export class AnimationClip {
     return json;
   }
 
-  static CreateFromMorphTargetSequence(name, morphTargetSequence, fps, noLoop) {
+  static CreateFromMorphTargetSequence(name: string, morphTargetSequence: MorphTarget[], fps: number, noLoop: boolean) {
     const numMorphTargets = morphTargetSequence.length;
     const tracks = [];
 
@@ -91,11 +107,12 @@ export class AnimationClip {
     return new this(name, -1, tracks);
   }
 
-  static findByName(objectOrClipArray, name) {
-    let clipArray = objectOrClipArray;
+  static findByName(objectOrClipArray: Object3D | AnimationClip[], name: string): AnimationClip | null {
+    let clipArray: AnimationClip[] = objectOrClipArray as never;
 
     if (!Array.isArray(objectOrClipArray)) {
       const o = objectOrClipArray;
+      //@ts-expect-error
       clipArray = (o.geometry && o.geometry.animations) || o.animations;
     }
 
@@ -108,7 +125,7 @@ export class AnimationClip {
     return null;
   }
 
-  static CreateClipsFromMorphTargetSequences(morphTargets, fps, noLoop) {
+  static CreateClipsFromMorphTargetSequences(morphTargets: MorphTarget[], fps: number, noLoop: boolean) {
     const animationToMorphTargets = {};
 
     // tested with https://regex101.com/ on trick sequences
@@ -293,8 +310,24 @@ export class AnimationClip {
   }
 }
 
-function getTrackTypeForValueTypeName(typeName) {
-  switch (typeName.toLowerCase()) {
+type TypeName =
+  | 'scalar'
+  | 'double'
+  | 'float'
+  | 'number'
+  | 'integer'
+  | 'vector'
+  | 'vector2'
+  | 'vector3'
+  | 'vector4'
+  | 'color'
+  | 'quaternion'
+  | 'bool'
+  | 'boolean'
+  | 'string';
+
+function getTrackTypeForValueTypeName(typeName: TypeName) {
+  switch (typeName) {
     case 'scalar':
     case 'double':
     case 'float':
@@ -321,11 +354,15 @@ function getTrackTypeForValueTypeName(typeName) {
     case 'string':
       return StringKeyframeTrack;
   }
-
-  throw new Error('THREE.KeyframeTrack: Unsupported typeName: ' + typeName);
 }
 
-function parseKeyframeTrack(json) {
+function parseKeyframeTrack(json: {
+  name: string;
+  type: TypeName;
+  times: number[];
+  values: any[];
+  interpolation: number;
+}) {
   if (json.type === undefined) {
     throw new Error('THREE.KeyframeTrack: track type undefined, can not parse');
   }
@@ -333,8 +370,8 @@ function parseKeyframeTrack(json) {
   const trackType = getTrackTypeForValueTypeName(json.type);
 
   if (json.times === undefined) {
-    const times = [],
-      values = [];
+    const times = [];
+    const values = [];
 
     AnimationUtils.flattenJSON(json.keys, times, values, 'value');
 

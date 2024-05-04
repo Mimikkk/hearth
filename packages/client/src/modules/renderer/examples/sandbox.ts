@@ -18,7 +18,6 @@ import {
 
 import { KTX2Loader } from '../threejs/loaders/KTX2Loader.js';
 
-import { WebGPU } from '@modules/renderer/threejs/capabilities/WebGPU.js';
 import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 import { TextureFormat } from '../threejs/Three.js';
 
@@ -29,12 +28,6 @@ let box;
 init();
 
 async function init() {
-  if (WebGPU.isAvailable() === false) {
-    document.body.appendChild(WebGPU.getErrorMessage());
-
-    throw new Error('No WebGPU support');
-  }
-
   camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 10);
   camera.position.z = 4;
 
