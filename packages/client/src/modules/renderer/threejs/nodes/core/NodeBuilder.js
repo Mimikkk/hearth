@@ -34,7 +34,6 @@ import {
 import { stack } from './StackNode.js';
 import { getCurrentStack, setCurrentStack } from '../shadernode/ShaderNode.js';
 
-import CubeRenderTarget from '../../renderers/common/CubeRenderTarget.js';
 import ChainMap from '../../renderers/common/ChainMap.js';
 
 import PMREMGenerator from '../../renderers/common/extras/PMREMGenerator.js';
@@ -130,10 +129,6 @@ class NodeBuilder {
 
   createRenderTarget(width, height, options) {
     return new RenderTarget(width, height, options);
-  }
-
-  createCubeRenderTarget(size, options) {
-    return new CubeRenderTarget(size, options);
   }
 
   createPMREMGenerator() {

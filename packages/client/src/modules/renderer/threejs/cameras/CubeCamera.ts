@@ -1,7 +1,7 @@
 import { CoordinateSystem } from '../constants.js';
 import { Object3D } from '../core/Object3D.js';
 import { PerspectiveCamera } from './PerspectiveCamera.js';
-import { WebGLCubeRenderTarget } from '../renderers/WebGLCubeRenderTarget.js';
+import { CubeRenderTarget } from '../renderers/CubeRenderTarget.js';
 import { Scene } from '@modules/renderer/threejs/scenes/Scene.js';
 import { Renderer } from '@modules/renderer/threejs/renderers/common/Renderer.js';
 
@@ -10,11 +10,11 @@ const aspect = 1;
 
 export class CubeCamera extends Object3D {
   declare type: string | 'CubeCamera';
-  renderTarget: WebGLCubeRenderTarget;
+  renderTarget: CubeRenderTarget;
   coordinateSystem: CoordinateSystem | null;
   activeMipmapLevel: number;
 
-  constructor(near: number, far: number, renderTarget: WebGLCubeRenderTarget) {
+  constructor(near: number, far: number, renderTarget: CubeRenderTarget) {
     super();
 
     this.renderTarget = renderTarget;

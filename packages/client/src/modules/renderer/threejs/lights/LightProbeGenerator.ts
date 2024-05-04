@@ -5,7 +5,7 @@ import { Vector3 } from '@modules/renderer/threejs/math/Vector3.js';
 import { SphericalHarmonics3 } from '@modules/renderer/threejs/math/SphericalHarmonics3.js';
 import { DataUtils } from '@modules/renderer/threejs/extras/DataUtils.js';
 import { LightProbe } from '@modules/renderer/threejs/lights/LightProbe.js';
-import { WebGLCubeRenderTarget } from '@modules/renderer/threejs/renderers/WebGLCubeRenderTarget.js';
+import { CubeRenderTarget } from '@modules/renderer/threejs/renderers/CubeRenderTarget.js';
 import { Renderer } from '@modules/renderer/threejs/renderers/common/Renderer.js';
 
 const convertColorToLinear = (color: Color, colorSpace: ColorSpace) => {
@@ -140,7 +140,7 @@ export class LightProbeGenerator {
     return new LightProbe(sh);
   }
 
-  static fromCubeRenderTarget(renderer: Renderer, cubeRenderTarget: WebGLCubeRenderTarget): LightProbe {
+  static fromCubeRenderTarget(renderer: Renderer, cubeRenderTarget: CubeRenderTarget): LightProbe {
     // The renderTarget must be set to RGBA in order to make readRenderTargetPixels works
     let totalWeight = 0;
 

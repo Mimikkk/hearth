@@ -51,7 +51,7 @@ function init() {
 
   //
 
-  cubeRenderTarget = new THREE.WebGLCubeRenderTarget(256);
+  cubeRenderTarget = new THREE.CubeRenderTarget(256);
   cubeRenderTarget.texture.type = THREE.TextureDataType.HalfFloat;
   cubeRenderTarget.texture.minFilter = THREE.Filter.LinearMipmapLinear;
   cubeRenderTarget.texture.magFilter = THREE.Filter.Linear;
