@@ -2,7 +2,7 @@ import { IconName } from '@components/buttons/Icon/Icon.js';
 import { createEffect, createSignal, For, Show } from 'solid-js';
 import { createToggle } from '@logic/createToggle.js';
 import cx from 'clsx';
-import { paused } from '@utils/paused.js';
+import { prevented } from '@utils/prevented.js';
 import { ButtonIcon } from '@components/buttons/ButtonIcon/ButtonIcon.js';
 
 export interface AccordionItem {
@@ -36,7 +36,7 @@ export const Accordion = (props: AccordionProps) => {
     return (
       <li
         class={cx('flex flex-col gap-1 group peer')}
-        onClick={paused(() => {
+        onClick={prevented(() => {
           if (!item.children) return select(item.id);
 
           if (expanded() && within(item.children, selected())) select(undefined);
@@ -63,7 +63,7 @@ export const Accordion = (props: AccordionProps) => {
               size="sm"
               variant="text"
               icon="CgChevronDown"
-              onClick={paused(toggleExpand)}
+              onClick={prevented(toggleExpand)}
             />
           </Show>
         </div>
