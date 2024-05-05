@@ -1,7 +1,7 @@
 import { Curve, Vector3, Vector4 } from '../Three.js';
 import * as NURBSUtils from './NURBSUtils.js';
 
-export class NURBSCurve extends Curve {
+export class NURBSCurve extends Curve<Vector3> {
   constructor(
     public degree: number,
     public knots: number[],

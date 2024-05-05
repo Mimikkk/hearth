@@ -217,16 +217,10 @@ export * from './shaders/WaterRefractionShader.js';
 export * from './textures/FlakesTexture.ts';
 
 export * as BufferGeometryUtils from '@modules/renderer/threejs/utils/BufferGeometryUtils.js';
-export * as CameraUtils from '@modules/renderer/threejs/utils/CameraUtils.js';
 export * from '@modules/renderer/threejs/utils/GPUStatsPanel.js';
 export * as GeometryCompressionUtils from '@modules/renderer/threejs/utils/GeometryCompressionUtils.js';
 export * as GeometryUtils from '@modules/renderer/threejs/utils/GeometryUtils.js';
 export * from '@modules/renderer/threejs/utils/LDrawUtils.js';
 export * from '@modules/renderer/threejs/utils/PackedPhongMaterial.js';
-export * as SceneUtils from '@modules/renderer/threejs/utils/SceneUtils.js';
-export * from '@modules/renderer/threejs/utils/ShadowMapViewer.js';
-export * as SkeletonUtils from '@modules/renderer/threejs/utils/SkeletonUtils.js';
-export * as SortUtils from '@modules/renderer/threejs/utils/SortUtils.js';
 export * from '@modules/renderer/threejs/utils/TextureUtils.js';
-export * from '@modules/renderer/threejs/utils/UVsDebug.js';
 export * from '@modules/renderer/threejs/utils/WorkerPool.js';
