@@ -10,7 +10,6 @@ const _scale = /*@__PURE__*/ new Vector3();
 const _orientation = /*@__PURE__*/ new Vector3();
 
 export class AudioListener extends Object3D {
-  declare type: string | 'AudioListener';
   context: AudioContext;
   gain: GainNode;
   filter: AudioNode | null;
@@ -20,7 +19,7 @@ export class AudioListener extends Object3D {
   constructor() {
     super();
 
-    this.context = AudioContextManager.getContext();
+    this.context = AudioContextManager.readContext();
     this.gain = this.context.createGain();
     this.gain.connect(this.context.destination);
 
@@ -107,4 +106,3 @@ export class AudioListener extends Object3D {
     return this;
   }
 }
-AudioListener.prototype.type = 'AudioListener';

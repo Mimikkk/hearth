@@ -4,7 +4,7 @@ export class AudioAnalyser {
   analyser: AnalyserNode;
   data: Uint8Array;
 
-  constructor(audio: Audio<AudioNode>, fftSize: number = 2048) {
+  constructor(audio: Audio, fftSize: number = 2048) {
     this.analyser = audio.context.createAnalyser();
     this.analyser.fftSize = fftSize;
 

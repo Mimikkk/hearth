@@ -1,7 +1,7 @@
 const CanIUseLink = 'https://caniuse.com/webgpu';
 
 export namespace WebGPUManager {
-  let _adapter: GPUAdapter | null = null;
+  let _adapter: GPUAdapter | undefined | null;
 
   export async function isAvailable(): Promise<boolean> {
     if (_adapter) return true;

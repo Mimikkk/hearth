@@ -1,4 +1,4 @@
-import Animation from './Animation.js';
+import { Animation } from './Animation.js';
 import RenderObjects from './RenderObjects.js';
 import Attributes from './Attributes.js';
 import Geometries from './Geometries.js';

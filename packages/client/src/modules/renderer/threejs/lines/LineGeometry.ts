@@ -3,9 +3,6 @@ import { Line } from '@modules/renderer/threejs/objects/Line.js';
 import { TypedArray } from '@modules/renderer/threejs/math/MathUtils.js';
 
 export class LineGeometry extends LineSegmentsGeometry {
-  declare isLineGeometry: true;
-  declare type: string | 'LineGeometry';
-
   setPositions(array: TypedArray): this {
     // converts [ x1, y1, z1,  x2, y2, z2, ... ] to pairs format
 
@@ -56,5 +53,3 @@ export class LineGeometry extends LineSegmentsGeometry {
     return this;
   }
 }
-LineGeometry.prototype.isLineGeometry = true;
-LineGeometry.prototype.type = 'LineGeometry';

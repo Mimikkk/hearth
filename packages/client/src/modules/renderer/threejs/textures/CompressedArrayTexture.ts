@@ -2,7 +2,6 @@ import { CompressedPixelFormat, TextureDataType, Wrapping } from '../constants.j
 import { CompressedTexture } from './CompressedTexture.js';
 
 export class CompressedArrayTexture extends CompressedTexture {
-  declare isCompressedArrayTexture: boolean;
   wrapR: Wrapping;
 
   constructor(
@@ -19,4 +18,3 @@ export class CompressedArrayTexture extends CompressedTexture {
     this.wrapR = Wrapping.ClampToEdge;
   }
 }
-CompressedArrayTexture.prototype.isCompressedArrayTexture = true;

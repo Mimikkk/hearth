@@ -16,9 +16,7 @@ import {
 const _box = new Box3();
 const _vector = new Vector3();
 
-class LineSegmentsGeometry extends InstancedBufferGeometry {
-  declare isLineSegmentsGeometry: true;
-  declare type: string | 'LineSegmentsGeometry';
+export class LineSegmentsGeometry extends InstancedBufferGeometry {
   constructor() {
     super();
 
@@ -160,7 +158,3 @@ class LineSegmentsGeometry extends InstancedBufferGeometry {
     return this;
   }
 }
-
-export { LineSegmentsGeometry };
-LineSegmentsGeometry.prototype.isLineSegmentsGeometry = true;
-LineSegmentsGeometry.prototype.type = 'LineSegmentsGeometry';

@@ -10,8 +10,6 @@ import {
 } from '../constants.js';
 
 export class DepthTexture extends Texture {
-  //@ts-expect-error
-  declare ['constructor']: typeof DepthTexture;
   declare isDepthTexture: true;
   compareFunction: DepthComparison | null;
 

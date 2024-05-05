@@ -1,12 +1,8 @@
-import { ImageUtils } from '../extras/ImageUtils.js';
 import * as MathUtils from '../math/MathUtils.js';
 
 let _sourceId = 0;
 
 export class Source {
-  declare ['constructor']: typeof Source;
-  declare isSource: true;
-
   id: number;
   uuid: string;
   data: any;
@@ -28,4 +24,3 @@ export class Source {
     if (value) ++this.version;
   }
 }
-Source.prototype.isSource = true;

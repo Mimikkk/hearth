@@ -404,8 +404,6 @@ export interface LineMaterialParameters extends MaterialParameters {
 }
 
 export class LineMaterial extends ShaderMaterial {
-  declare isLineMaterial: true;
-
   constructor(parameters: LineMaterialParameters) {
     super({
       type: 'LineMaterial',
@@ -414,8 +412,6 @@ export class LineMaterial extends ShaderMaterial {
       fragmentShader: ShaderLib.line.fragmentShader,
       clipping: true,
     });
-
-    this.isLineMaterial = true;
 
     this.setValues(parameters);
   }
@@ -534,4 +530,3 @@ export class LineMaterial extends ShaderMaterial {
     }
   }
 }
-LineMaterial.prototype.isLineMaterial = true;

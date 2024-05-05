@@ -1,12 +1,8 @@
-let _context: AudioContext | undefined = undefined;
+export namespace AudioContextManager {
+  let _context: AudioContext | undefined | null;
 
-export class AudioContextManager {
-  static getContext(): AudioContext {
-    if (_context === undefined) _context = new window.AudioContext();
+  export function readContext(): AudioContext {
+    if (!_context) _context = new window.AudioContext();
     return _context;
-  }
-
-  static setContext(value: AudioContext): void {
-    _context = value;
   }
 }

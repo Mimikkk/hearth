@@ -1,4 +1,4 @@
-class Animation {
+export class Animation {
   constructor(nodes, info) {
     this.nodes = nodes;
     this.info = info;
@@ -33,5 +33,3 @@ class Animation {
     this.animationLoop = callback;
   }
 }
-
-export default Animation;

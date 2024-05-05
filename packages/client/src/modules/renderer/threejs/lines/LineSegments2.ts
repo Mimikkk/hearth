@@ -208,9 +208,6 @@ function raycastScreenSpace(lineSegments: LineSegments, camera: Camera, intersec
 }
 
 export class LineSegments2 extends Mesh {
-  declare isLineSegments2: true;
-  declare type: string | 'LineSegments2';
-
   constructor(
     geometry: LineSegmentsGeometry = new LineSegmentsGeometry(),
     material: LineMaterial = new LineMaterial({ color: Math.random() * 0xffffff }),
@@ -316,5 +313,3 @@ export class LineSegments2 extends Mesh {
     return intersects;
   }
 }
-LineSegments2.prototype.isLineSegments2 = true;
-LineSegments2.prototype.type = 'LineSegments2';

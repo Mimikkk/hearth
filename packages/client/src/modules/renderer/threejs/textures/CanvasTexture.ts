@@ -9,8 +9,6 @@ import {
 } from '../constants.js';
 
 export class CanvasTexture extends Texture {
-  declare isCanvasTexture: true;
-
   constructor(
     canvas: TexImageSource | OffscreenCanvas,
     mapping?: Mapping,
@@ -27,5 +25,3 @@ export class CanvasTexture extends Texture {
     this.needsUpdate = true;
   }
 }
-
-CanvasTexture.prototype.isCanvasTexture = true;
