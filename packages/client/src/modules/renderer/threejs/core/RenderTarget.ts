@@ -1,6 +1,15 @@
 import { EventDispatcher } from './EventDispatcher.js';
 import { Texture } from '../textures/Texture.js';
-import { ColorSpace, Filter, Mapping, PixelFormat, TextureDataType, TextureFormat, Wrapping } from '../constants.js';
+import {
+  ColorSpace,
+  Filter,
+  MagnificationTextureFilter,
+  Mapping,
+  PixelFormat,
+  TextureDataType,
+  TextureFormat,
+  Wrapping,
+} from '../constants.js';
 import { Vector4 } from '../math/Vector4.js';
 import { Source } from '../textures/Source.js';
 
@@ -18,6 +27,7 @@ export class RenderTarget {
   stencilBuffer: boolean;
   depthTexture: Texture | null;
   samples: number;
+  configuration: RenderTarget.Configuration;
 
   constructor(
     public width: number = 1,
@@ -34,6 +44,7 @@ export class RenderTarget {
     const image = { width: width, height: height, depth: 1 };
 
     const configuration = RenderTarget.configure(options);
+    this.configuration = configuration;
 
     const texture = new Texture(
       image,
@@ -149,7 +160,7 @@ export namespace RenderTarget {
     mapping: Mapping;
     wrapS: Wrapping;
     wrapT: Wrapping;
-    magFilter: Filter;
+    magFilter: MagnificationTextureFilter;
     format: TextureFormat;
     type: TextureDataType;
     anisotropy: number;
@@ -171,7 +182,7 @@ export namespace RenderTarget {
     mapping: Mapping.UV,
     wrapS: Wrapping.ClampToEdge,
     wrapT: Wrapping.ClampToEdge,
-    magFilter: Filter.Linear,
+    magFilter: MagnificationTextureFilter.Linear,
     format: TextureFormat.RGBA,
     type: TextureDataType.UnsignedByte,
     anisotropy: 1,

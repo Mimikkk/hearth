@@ -1,6 +1,5 @@
 import { Cache } from './Cache.js';
 import { Loader } from './Loader.js';
-import { createElementNS } from '../utils.ts';
 
 class ImageLoader extends Loader {
   constructor(manager) {
@@ -28,7 +27,7 @@ class ImageLoader extends Loader {
       return cached;
     }
 
-    const image = createElementNS('img');
+    const image = document.createElement('img');
 
     function onImageLoad() {
       removeEventListeners();

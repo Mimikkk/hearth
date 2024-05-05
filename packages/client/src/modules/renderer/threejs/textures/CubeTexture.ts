@@ -15,7 +15,7 @@ export class CubeTexture extends Texture {
   declare isCubeTexture: true;
 
   constructor(
-    images: (HTMLImageElement | HTMLCanvasElement)[],
+    images: (HTMLImageElement | HTMLCanvasElement | { width: number; height: number; depth: number })[],
     mapping: CubeMapping,
     wrapS: Wrapping,
     wrapT: Wrapping,
@@ -53,4 +53,5 @@ export class CubeTexture extends Texture {
     this.image = value;
   }
 }
+
 CubeTexture.prototype.isCubeTexture = true;

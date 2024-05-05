@@ -3,7 +3,7 @@ let vector4 = null;
 let color4 = null;
 
 import Color4 from './Color4.js';
-import { Vector2, Vector4, Revision, createCanvasElement } from '../../../threejs/Three.js';
+import { Vector2, Vector4, Revision } from '../../../threejs/Three.js';
 
 class Backend {
   constructor(parameters = {}) {
@@ -127,7 +127,7 @@ class Backend {
     let domElement = this.domElement;
 
     if (domElement === null) {
-      domElement = this.parameters.canvas !== undefined ? this.parameters.canvas : createCanvasElement();
+      domElement = this.parameters.canvas ?? document.createElement('canvas');
 
       // OffscreenCanvas does not have setAttribute, see #22811
       if ('setAttribute' in domElement) domElement.setAttribute('data-engine', `three.js r${Revision} webgpu`);

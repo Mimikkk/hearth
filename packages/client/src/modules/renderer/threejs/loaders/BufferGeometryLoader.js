@@ -10,7 +10,7 @@ import { InterleavedBufferAttribute } from '../core/InterleavedBufferAttribute.t
 import { InterleavedBuffer } from '../core/InterleavedBuffer.ts';
 import { createTypedArray } from '../utils.ts';
 
-class BufferGeometryLoader extends Loader {
+export class BufferGeometryLoader extends Loader {
   constructor(manager) {
     super(manager);
   }
@@ -81,6 +81,7 @@ class BufferGeometryLoader extends Loader {
     const index = json.data.index;
 
     if (index !== undefined) {
+      console.log('index', index);
       const typedArray = createTypedArray(index.type, index.array);
       geometry.setIndex(new BufferAttribute(typedArray, 1));
     }
@@ -178,5 +179,3 @@ class BufferGeometryLoader extends Loader {
     return geometry;
   }
 }
-
-export { BufferGeometryLoader };

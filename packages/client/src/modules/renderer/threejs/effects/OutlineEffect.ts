@@ -7,7 +7,6 @@ import { Vector4 } from '../math/Vector4.js';
 import { Vector2 } from '../math/Vector2.js';
 import { Scene } from '../scenes/Scene.js';
 import { Camera } from '../cameras/Camera.js';
-import { WebGLShadowMap } from '../renderers/webgl/WebGLShadowMap.js';
 import { Material } from '@modules/renderer/threejs/materials/Material.js';
 import { Object3D } from '@modules/renderer/threejs/core/Object3D.js';
 import { BufferGeometry } from '@modules/renderer/threejs/core/BufferGeometry.js';
@@ -25,7 +24,6 @@ export class OutlineEffect {
   enabled: boolean;
   autoClear: boolean;
   domElement: HTMLElement;
-  shadowMap: WebGLShadowMap;
 
   constructor(renderer: Renderer, parameters: OutlineEffectParameters = {}) {
     this.enabled = true;
@@ -343,12 +341,10 @@ export class OutlineEffect {
       const currentAutoClear = renderer.autoClear;
       const currentSceneAutoUpdate = scene.matrixWorldAutoUpdate;
       const currentSceneBackground = scene.background;
-      const currentShadowMapEnabled = renderer.shadowMap.enabled;
 
       scene.matrixWorldAutoUpdate = false;
       scene.background = null;
       renderer.autoClear = false;
-      renderer.shadowMap.enabled = false;
 
       scene.traverse(setOutlineMaterial);
 
@@ -361,7 +357,6 @@ export class OutlineEffect {
       scene.matrixWorldAutoUpdate = currentSceneAutoUpdate;
       scene.background = currentSceneBackground;
       renderer.autoClear = currentAutoClear;
-      renderer.shadowMap.enabled = currentShadowMapEnabled;
     };
 
     /*
@@ -380,7 +375,6 @@ export class OutlineEffect {
      */
     this.autoClear = renderer.autoClear;
     this.domElement = renderer.domElement;
-    this.shadowMap = renderer.shadowMap;
 
     this.clear = function (color, depth, stencil) {
       renderer.clear(color, depth, stencil);

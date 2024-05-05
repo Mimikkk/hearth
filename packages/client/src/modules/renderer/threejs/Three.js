@@ -1,6 +1,6 @@
 import { Revision } from './constants.ts';
 
-export { CubeRenderTarget } from './renderers/CubeRenderTarget.js';
+export { CubeRenderTarget } from './renderers/CubeRenderTarget.ts';
 export { ShaderLib } from './renderers/shaders/ShaderLib.ts';
 export { UniformsLib } from './renderers/shaders/UniformsLib.ts';
 export { UniformsUtils } from './renderers/shaders/UniformsUtils.js';
@@ -148,24 +148,4 @@ export { DataUtils } from './extras/DataUtils.ts';
 export { ImageUtils } from './extras/ImageUtils.ts';
 export { ShapeUtils } from './extras/ShapeUtils.ts';
 export { PMREMGenerator } from './extras/PMREMGenerator.js';
-export { createCanvasElement } from './utils.ts';
 export * from './constants.ts';
-
-if (typeof __THREE_DEVTOOLS__ !== 'undefined') {
-  __THREE_DEVTOOLS__.dispatchEvent(
-    new CustomEvent('register', {
-      detail: {
-        revision: Revision,
-      },
-    }),
-    this,
-  );
-}
-
-if (typeof window !== 'undefined') {
-  if (window.__THREE__) {
-    console.warn('WARNING: Multiple instances of Three.js being imported.');
-  } else {
-    window.__THREE__ = Revision;
-  }
-}

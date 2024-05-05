@@ -1,4 +1,3 @@
-import { createCanvasElement } from '../utils.js';
 import { SRGBToLinear } from '../math/ColorManagement.js';
 
 let _canvas: HTMLCanvasElement | undefined;
@@ -14,7 +13,7 @@ export class ImageUtils {
       canvas = image;
     } else {
       image = image as ImageBitmap | ImageData;
-      if (_canvas === undefined) _canvas = createCanvasElement();
+      if (_canvas === undefined) _canvas = document.createElement('canvas');
 
       _canvas.width = image.width;
       _canvas.height = image.height;
@@ -46,7 +45,7 @@ export class ImageUtils {
         height: ImageData['height'];
       } {
     if (image instanceof HTMLImageElement || image instanceof HTMLCanvasElement || image instanceof ImageBitmap) {
-      const canvas = createCanvasElement();
+      const canvas = document.createElement('canvas');
 
       canvas.width = image.width;
       canvas.height = image.height;
