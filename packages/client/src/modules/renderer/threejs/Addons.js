@@ -128,35 +128,6 @@ export * from './objects/Sky.ts';
 export * from './physics/AmmoPhysics.ts';
 export * from './physics/RapierPhysics.ts';
 
-export * from './postprocessing/AfterimagePass.js';
-export * from './postprocessing/BloomPass.js';
-export * from './postprocessing/BokehPass.js';
-export * from './postprocessing/ClearPass.js';
-export * from './postprocessing/CubeTexturePass.js';
-export * from './postprocessing/DotScreenPass.js';
-export * from './postprocessing/EffectComposer.js';
-export * from './postprocessing/FilmPass.js';
-export * from './postprocessing/GlitchPass.js';
-export * from './postprocessing/GTAOPass.js';
-export * from './postprocessing/HalftonePass.js';
-export * from './postprocessing/LUTPass.js';
-export * from './postprocessing/MaskPass.js';
-export * from './postprocessing/OutlinePass.js';
-export * from './postprocessing/OutputPass.js';
-export * from './postprocessing/Pass.js';
-export * from './postprocessing/RenderPass.js';
-export * from './postprocessing/RenderPixelatedPass.js';
-export * from './postprocessing/SAOPass.js';
-export * from './postprocessing/SMAAPass.js';
-export * from './postprocessing/SSAARenderPass.js';
-export * from './postprocessing/SSAOPass.js';
-export * from './postprocessing/SSRPass.js';
-export * from './postprocessing/SavePass.js';
-export * from './postprocessing/ShaderPass.js';
-export * from './postprocessing/TAARenderPass.js';
-export * from './postprocessing/TexturePass.js';
-export * from './postprocessing/UnrealBloomPass.js';
-
 export * from './renderers/Projector.js';
 export * from './renderers/SVGRenderer.js';
 
