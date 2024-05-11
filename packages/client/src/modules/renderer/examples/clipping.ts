@@ -5,7 +5,7 @@ import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 
 import Stats from '../threejs/libs/stats.module.js';
 
-import { GUI } from '../threejs/libs/lil-gui.module.min.js';
+import { GUI } from 'lil-gui';
 
 import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
 import { Side } from '../threejs/Three.js';

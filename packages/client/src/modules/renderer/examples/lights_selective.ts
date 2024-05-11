@@ -3,7 +3,7 @@ import { rangeFog, color, lights, texture, normalMap, MeshStandardNodeMaterial }
 
 import Stats from '../threejs/libs/stats.module.js';
 
-import { GUI } from '../threejs/libs/lil-gui.module.min.js';
+import { GUI } from 'lil-gui';
 
 import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
 import { TeapotGeometry } from '../threejs/geometries/TeapotGeometry.js';

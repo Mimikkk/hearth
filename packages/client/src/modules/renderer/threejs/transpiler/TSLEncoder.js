@@ -1,5 +1,5 @@
 import { Revision } from '../Three.js';
-import { VariableDeclaration, Accessor } from './AST.js';
+import { VariableDeclaration, Accessor } from './AST.ts';
 import * as Nodes from '../../threejs/nodes/Nodes.js';
 
 const opLib = {

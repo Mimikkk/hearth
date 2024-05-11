@@ -19,7 +19,7 @@ import { RGBMLoader } from '../threejs/loaders/RGBMLoader.js';
 import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
 import { GLTFLoader } from '../threejs/loaders/GLTFLoader.js';
 
-import { GUI } from '../threejs/libs/lil-gui.module.min.js';
+import { GUI } from 'lil-gui';
 import { Filter } from '../threejs/Three.js';
 
 let camera, scene, renderer;

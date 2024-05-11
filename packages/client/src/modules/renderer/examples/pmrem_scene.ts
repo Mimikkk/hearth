@@ -8,7 +8,7 @@ import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 
 import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
 
-import { GUI } from '../threejs/libs/lil-gui.module.min.js';
+import { GUI } from 'lil-gui';
 
 let camera, scene, renderer;
 

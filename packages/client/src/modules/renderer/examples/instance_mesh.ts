@@ -2,7 +2,7 @@ import * as THREE from '../threejs/Three.js';
 import { mix, normalWorld, oscSine, range, timerLocal } from '../threejs/nodes/Nodes.js';
 
 import Stats from '../threejs/libs/stats.module.js';
-import { GUI } from '../threejs/libs/lil-gui.module.min.js';
+import { GUI } from 'lil-gui';
 
 import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 

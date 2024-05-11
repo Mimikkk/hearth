@@ -1,7 +1,7 @@
 import * as THREE from '../threejs/Three.js';
 
 import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
-//import { GUI } from '../threejs/libs/lil-gui.module.min.js';
+//import { GUI } from 'lil-gui';
 
 import {
   NodeMaterial,

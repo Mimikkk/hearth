@@ -10,7 +10,7 @@ import {
   uv,
 } from '../threejs/nodes/Nodes.js';
 
-import { GUI } from '../threejs/libs/lil-gui.module.min.js';
+import { GUI } from 'lil-gui';
 
 import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 

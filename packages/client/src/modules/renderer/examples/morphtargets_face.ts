@@ -10,7 +10,7 @@ import { GLTFLoader } from '../threejs/loaders/GLTFLoader.js';
 import { KTX2Loader } from '../threejs/loaders/KTX2Loader.js';
 import { MeshoptDecoder } from '../threejs/libs/meshopt_decoder.module.js';
 
-import { GUI } from '../threejs/libs/lil-gui.module.min.js';
+import { GUI } from 'lil-gui';
 
 init();
 

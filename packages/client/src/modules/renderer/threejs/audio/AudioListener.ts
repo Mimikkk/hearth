@@ -66,7 +66,7 @@ export class AudioListener extends Object3D {
     return this.gain.gain.value;
   }
 
-  setMasterVolume(value: number): number {
+  setMasterVolume(value: number): this {
     this.gain.gain.setTargetAtTime(value, this.context.currentTime, 0.01);
 
     return this;

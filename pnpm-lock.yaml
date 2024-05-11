@@ -53,6 +53,9 @@ importers:
       lodash-es:
         specifier: ^4.17.21
         version: 4.17.21
+      monaco-editor:
+        specifier: ^0.48.0
+        version: 0.48.0
       opentype.js:
         specifier: ^1.3.4
         version: 1.3.4
@@ -134,10 +137,10 @@ importers:
         version: 5.1.3(@types/node@20.11.19)(sass@1.71.0)
       vite-plugin-solid:
         specifier: ^2.10.1
-        version: 2.10.1(solid-js@1.8.15)(vite@5.1.3)
+        version: 2.10.1(solid-js@1.8.15)(vite@5.1.3(@types/node@20.11.19)(sass@1.71.0))
       vite-plugin-svgr:
         specifier: ^4.2.0
-        version: 4.2.0(vite@5.1.3)
+        version: 4.2.0(rollup@4.12.0)(vite@5.1.3(@types/node@20.11.19)(sass@1.71.0))
       vitest:
         specifier: ^1.3.1
         version: 1.3.1(@types/node@20.11.19)(jsdom@24.0.0)(sass@1.71.0)
@@ -161,8 +164,14 @@ packages:
   '@arktype/fs@0.0.11':
     resolution: {integrity: sha512-f3p8apUMOTl6KlFNTrOX6twQJDeSdSmtYPVca7SaQjUUTAxfUlaROY1/i1C3y2llYDrrQBEbsggk8k2Oxxgrvw==}
 
+  '@arktype/schema@0.1.2':
+    resolution: {integrity: sha512-ggvxs5P0toqd/4/XK76URQrtyOYpbYcLhirEZeTso6FxkloPa0lT+whPg7DNQj5qi2OQXLUHBYKMx9DOb13ViQ==}
+
   '@arktype/util@0.0.20':
     resolution: {integrity: sha512-Wv7lx8lFTPHXLnNi8v4LPEUyml9M2yqeWhRk/Vmejci/XZvR49bD9qEAw7xtIyWDlx8yE84XkXMhHFY2/3fYEQ==}
+
+  '@arktype/util@0.0.38':
+    resolution: {integrity: sha512-IvYMGnkUASJllRk3mdBVgckomKx2LNsDTrWCxz04EBK1OuU+4fJ/smSjxgZVWfopNXZds9sHNxZgTJOIw7GvJw==}
 
   '@babel/code-frame@7.23.5':
     resolution: {integrity: sha512-CgH3s1a96LipHCmSUmYFPwY7MNx8C3avkq7i4Wl3cfa662ldtUe4VM1TPXX70pfmrlWTb6jLqTYrZyT2ZTJBgA==}
@@ -729,8 +738,8 @@ packages:
   argparse@2.0.1:
     resolution: {integrity: sha512-8+9WqebbFzpX9OR+Wa6O29asIogeRMzcGtAINdpMHHyAg10f05aSFVBbcEqGf/PXw1EjAZ+q2/bEBg3DvurK3Q==}
 
-  arktype@1.0.29-alpha:
-    resolution: {integrity: sha512-glMLgVhIQRSkR3tymiS+POAcWVJH09sfrgic0jHnyFL8BlhHAJZX2BzdImU9zYr1y9NBqy+U93ZNrRTHXsKRDw==}
+  arktype@2.0.0-dev.11:
+    resolution: {integrity: sha512-k+WVQoHsHsTyTiVQkO201mxLQxyXHmy3buJW8TXLOkr4X2yOUCp0K1SBscuG9OEJoc8MjpvoIharjPHEkFI7kg==}
 
   assertion-error@1.1.0:
     resolution: {integrity: sha512-jgsaNduz+ndvGyFt3uSuWqvy4lCnIJiovtouQN5JZHOKCS2QuhEdbcQHFhVksz2N2U9hXJo8odG7ETyWlEeuDw==}
@@ -1288,6 +1297,9 @@ packages:
 
   mlly@1.5.0:
     resolution: {integrity: sha512-NPVQvAY1xr1QoVeG0cy8yUYC7FQcOx6evl/RjT1wL5FvzPnzOysoqB/jmx/DhssT2dYa8nxECLAaFI/+gVLhDQ==}
+
+  monaco-editor@0.48.0:
+    resolution: {integrity: sha512-goSDElNqFfw7iDHMg8WDATkfcyeLTNpBHQpO8incK6p5qZt5G/1j41X0xdGzpIkGojGXM+QiRQyLjnfDVvrpwA==}
 
   ms@2.1.2:
     resolution: {integrity: sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==}
@@ -2006,14 +2018,20 @@ snapshots:
       '@arktype/util': 0.0.20
       '@typescript/analyze-trace': 0.10.1
       '@typescript/vfs': 1.5.0
-      arktype: 1.0.29-alpha
+      arktype: 2.0.0-dev.11
       typescript: 5.4.2
     transitivePeerDependencies:
       - supports-color
 
   '@arktype/fs@0.0.11': {}
 
+  '@arktype/schema@0.1.2':
+    dependencies:
+      '@arktype/util': 0.0.38
+
   '@arktype/util@0.0.20': {}
+
+  '@arktype/util@0.0.38': {}
 
   '@babel/code-frame@7.23.5':
     dependencies:
@@ -2273,11 +2291,13 @@ snapshots:
   '@pkgjs/parseargs@0.11.0':
     optional: true
 
-  '@rollup/pluginutils@5.1.0':
+  '@rollup/pluginutils@5.1.0(rollup@4.12.0)':
     dependencies:
       '@types/estree': 1.0.1
       estree-walker: 2.0.2
       picomatch: 2.3.1
+    optionalDependencies:
+      rollup: 4.12.0
 
   '@rollup/rollup-android-arm-eabi@4.12.0':
     optional: true
@@ -2535,7 +2555,10 @@ snapshots:
 
   argparse@2.0.1: {}
 
-  arktype@1.0.29-alpha: {}
+  arktype@2.0.0-dev.11:
+    dependencies:
+      '@arktype/schema': 0.1.2
+      '@arktype/util': 0.0.38
 
   assertion-error@1.1.0: {}
 
@@ -3117,6 +3140,8 @@ snapshots:
       pkg-types: 1.0.3
       ufo: 1.4.0
 
+  monaco-editor@0.48.0: {}
+
   ms@2.1.2: {}
 
   mz@2.7.0:
@@ -3237,8 +3262,9 @@ snapshots:
   postcss-load-config@4.0.1(postcss@8.4.35):
     dependencies:
       lilconfig: 2.1.0
-      postcss: 8.4.35
       yaml: 2.3.1
+    optionalDependencies:
+      postcss: 8.4.35
 
   postcss-nested@6.0.1(postcss@8.4.35):
     dependencies:
@@ -3621,7 +3647,7 @@ snapshots:
       - supports-color
       - terser
 
-  vite-plugin-solid@2.10.1(solid-js@1.8.15)(vite@5.1.3):
+  vite-plugin-solid@2.10.1(solid-js@1.8.15)(vite@5.1.3(@types/node@20.11.19)(sass@1.71.0)):
     dependencies:
       '@babel/core': 7.23.9
       '@types/babel__core': 7.20.5
@@ -3630,13 +3656,13 @@ snapshots:
       solid-js: 1.8.15
       solid-refresh: 0.6.3(solid-js@1.8.15)
       vite: 5.1.3(@types/node@20.11.19)(sass@1.71.0)
-      vitefu: 0.2.5(vite@5.1.3)
+      vitefu: 0.2.5(vite@5.1.3(@types/node@20.11.19)(sass@1.71.0))
     transitivePeerDependencies:
       - supports-color
 
-  vite-plugin-svgr@4.2.0(vite@5.1.3):
+  vite-plugin-svgr@4.2.0(rollup@4.12.0)(vite@5.1.3(@types/node@20.11.19)(sass@1.71.0)):
     dependencies:
-      '@rollup/pluginutils': 5.1.0
+      '@rollup/pluginutils': 5.1.0(rollup@4.12.0)
       '@svgr/core': 8.1.0
       '@svgr/plugin-jsx': 8.1.0(@svgr/core@8.1.0)
       vite: 5.1.3(@types/node@20.11.19)(sass@1.71.0)
@@ -3646,21 +3672,20 @@ snapshots:
 
   vite@5.1.3(@types/node@20.11.19)(sass@1.71.0):
     dependencies:
-      '@types/node': 20.11.19
       esbuild: 0.19.12
       postcss: 8.4.35
       rollup: 4.12.0
-      sass: 1.71.0
     optionalDependencies:
+      '@types/node': 20.11.19
       fsevents: 2.3.3
+      sass: 1.71.0
 
-  vitefu@0.2.5(vite@5.1.3):
-    dependencies:
+  vitefu@0.2.5(vite@5.1.3(@types/node@20.11.19)(sass@1.71.0)):
+    optionalDependencies:
       vite: 5.1.3(@types/node@20.11.19)(sass@1.71.0)
 
   vitest@1.3.1(@types/node@20.11.19)(jsdom@24.0.0)(sass@1.71.0):
     dependencies:
-      '@types/node': 20.11.19
       '@vitest/expect': 1.3.1
       '@vitest/runner': 1.3.1
       '@vitest/snapshot': 1.3.1
@@ -3670,7 +3695,6 @@ snapshots:
       chai: 4.4.1
       debug: 4.3.4
       execa: 8.0.1
-      jsdom: 24.0.0
       local-pkg: 0.5.0
       magic-string: 0.30.7
       pathe: 1.1.2
@@ -3682,6 +3706,9 @@ snapshots:
       vite: 5.1.3(@types/node@20.11.19)(sass@1.71.0)
       vite-node: 1.3.1(@types/node@20.11.19)(sass@1.71.0)
       why-is-node-running: 2.2.2
+    optionalDependencies:
+      '@types/node': 20.11.19
+      jsdom: 24.0.0
     transitivePeerDependencies:
       - less
       - lightningcss
@@ -3777,5 +3804,6 @@ snapshots:
 
   zustand@4.5.1(react@18.2.0):
     dependencies:
-      react: 18.2.0
       use-sync-external-store: 1.2.0(react@18.2.0)
+    optionalDependencies:
+      react: 18.2.0

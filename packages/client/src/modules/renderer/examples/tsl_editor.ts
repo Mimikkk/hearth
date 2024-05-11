@@ -1,165 +1,107 @@
-import * as THREE from '../threejs/Three.js';
 import * as Nodes from '../threejs/nodes/Nodes.js';
-
 import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
+import initialCode from './tsl_editor.code.ts?raw';
+import { GUI } from 'lil-gui';
+import * as monaco from 'monaco-editor';
+import { Color, ColorSpace, Mesh, PerspectiveCamera, PlaneGeometry, Scene } from '../threejs/Three.js';
+import './tsl_editor.css';
+import './utilities/monaco-vite.js';
 import WGSLNodeBuilder from '@modules/renderer/threejs/renderers/webgpu/nodes/WGSLNodeBuilder.js';
+import { resolveScript } from '@modules/renderer/examples/utilities/resolveScript.js';
 
-import { GUI } from '../threejs/libs/lil-gui.module.min.js';
+const createContainers = () => {
+  const container = document.createElement('div');
+  container.id = 'container';
+  const source = document.createElement('div');
+  source.id = 'source';
+  const result = document.createElement('div');
+  result.id = 'result';
+  const renderable = document.createElement('div');
+  renderable.id = 'renderable';
 
-init();
+  container.append(source, result, renderable);
+  document.body.append(container);
 
-function init() {
-  // add the depedencies
+  return { container, source, result, renderable };
+};
 
-  const width = 200;
-  const height = 200;
+const { source, result, renderable } = createContainers();
 
-  const camera = new THREE.PerspectiveCamera(70, width / height, 0.1, 10);
-  camera.position.z = 0.72;
-  camera.lookAt(0, 0, 0);
+const camera = new PerspectiveCamera(70, 1, 0.1, 10);
+camera.position.z = 0.72;
+camera.lookAt(0, 0, 0);
 
-  const scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x222222);
+const scene = new Scene();
+scene.background = new Color(0x222222);
 
-  const rendererDOM = document.getElementById('renderer');
+const material = new Nodes.NodeMaterial();
+material.fragmentNode = Nodes.vec4(0, 0, 0, 1);
 
-  const renderer = new WebGPURenderer({ antialias: true });
-  renderer.outputColorSpace = THREE.ColorSpace.LinearSRGB;
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(200, 200);
-  rendererDOM.appendChild(renderer.domElement);
+const mesh = new Mesh(new PlaneGeometry(1, 1), material);
+scene.add(mesh);
 
-  const material = new Nodes.NodeMaterial();
-  material.fragmentNode = Nodes.vec4(0, 0, 0, 1);
+// editor
 
-  const mesh = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), material);
-  scene.add(mesh);
+const options: {
+  stage: 'vertex' | 'fragment';
+  colorSpace: ColorSpace;
+  preview: boolean;
+} = {
+  stage: 'fragment',
+  colorSpace: ColorSpace.SRGB,
+  preview: true,
+};
 
-  renderer.setAnimationLoop(() => {
-    renderer.render(scene, camera);
-  });
+let builder: WGSLNodeBuilder | null = null;
 
-  // editor
+const renderer = new WebGPURenderer({ antialias: true });
+renderer.outputColorSpace = ColorSpace.LinearSRGB;
+renderer.setPixelRatio(window.devicePixelRatio);
+renderer.setAnimationLoop(() => renderer.render(scene, camera));
+renderer.setSize(renderable.clientWidth, renderable.clientHeight);
+renderable.appendChild(renderer.domElement);
 
-  window.require.config({ paths: { vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@latest/min/vs' } });
+const refreshEditorView = async () => {
+  const code = editorView.getValue();
+  mesh.material.fragmentNode = await resolveScript(code);
+  mesh.material.needsUpdate = true;
 
-  require(['vs/editor/editor.main'], () => {
-    const options = {
-      shader: 'fragment',
-      outputColorSpace: THREE.ColorSpace.LinearSRGB,
-      output: 'WGSL',
-      preview: true,
-    };
+  builder = new WGSLNodeBuilder(mesh, renderer).build();
 
-    let timeout = null;
-    let nodeBuilder = null;
+  refreshResultView();
+};
+const refreshResultView = () => {
+  if (!builder) return;
 
-    const editorDOM = document.getElementById('source');
-    const resultDOM = document.getElementById('result');
+  const code = (builder as unknown as Record<string, string>)[options.stage + 'Shader'];
 
-    const tslCode = `// Simple uv.x animation
+  resultView.setValue(code);
+};
 
-const { texture, uniform, vec2, vec4, uv, oscSine, timerLocal } = TSL;
+const editorView = monaco.editor.create(source, {
+  value: initialCode,
+  language: 'typescript',
+  theme: 'vs-dark',
+  automaticLayout: true,
+  minimap: { enabled: false },
+});
+const resultView = monaco.editor.create(result, {
+  language: 'wgsl',
+  theme: 'vs-dark',
+  automaticLayout: true,
+  readOnly: true,
+  minimap: { enabled: false },
+});
+editorView.getModel()?.onDidChangeContent(refreshEditorView);
+refreshEditorView();
 
-//const samplerTexture = new THREE.Texture();
-const samplerTexture = new THREE.TextureLoader().load( './textures/uv_grid_opengl.jpg' );
-samplerTexture.wrapS = THREE.Wrapping.Repeat;
-//samplerTexture.wrapT = THREE.Wrapping.Repeat;
-//samplerTexture.colorSpace = THREE.SRGBColorSpace;
-
-const timer = timerLocal( .5 ); // .5 is speed
-const uv0 = uv();
-const animateUv = vec2( uv0.x.add( oscSine( timer ) ), uv0.y );
-
-// label is optional
-const myMap = texture( samplerTexture, animateUv ).rgb.label( 'myTexture' );
-const myColor = uniform( new THREE.Color( 0x0066ff ) ).label( 'myColor' );
-const opacity = .7;
-
-const desaturatedMap = myMap.rgb.saturation( 0 ); // try add .temp( 'myVar' ) after saturation()
-
-const finalColor = desaturatedMap.add( myColor );
-
-output = vec4( finalColor, opacity );
-`;
-
-    const editor = window.monaco.editor.create(editorDOM, {
-      value: tslCode,
-      language: 'javascript',
-      theme: 'vs-dark',
-      automaticLayout: true,
-      minimap: { enabled: false },
-    });
-
-    const result = window.monaco.editor.create(resultDOM, {
-      value: '',
-      language: 'wgsl',
-      theme: 'vs-dark',
-      automaticLayout: true,
-      readOnly: true,
-      minimap: { enabled: false },
-    });
-
-    const showCode = () => {
-      result.setValue(nodeBuilder[options.shader + 'Shader']);
-      result.revealLine(1);
-    };
-
-    const build = () => {
-      try {
-        const tslCode = `let output = null;\n${editor.getValue()}\nreturn { output };`;
-        const nodes = new Function('THREE', 'TSL', tslCode)(THREE, Nodes);
-
-        mesh.material.fragmentNode = nodes.output;
-        mesh.material.needsUpdate = true;
-
-        let NodeBuilder;
-
-        if (options.output === 'WGSL') {
-          NodeBuilder = WGSLNodeBuilder;
-        }
-
-        nodeBuilder = new NodeBuilder(mesh, renderer);
-        nodeBuilder.build();
-
-        showCode();
-
-        // extra debug info
-
-        /*const style = 'background-color: #333; color: white; font-style: italic; border: 2px solid #777; font-size: 22px;';
-
-         console.log( '%c  [ WGSL ] Vertex Shader      ', style );
-         console.log( nodeBuilder.vertexShader );
-         console.log( '%c  [ WGSL ] Fragment Shader    ', style );
-         console.log( nodeBuilder.fragmentShader );*/
-      } catch (e) {
-        result.setValue('Error: ' + e.message);
-      }
-    };
-
-    build();
-
-    editor.getModel().onDidChangeContent(() => {
-      if (timeout) clearTimeout(timeout);
-
-      timeout = setTimeout(build, 1000);
-    });
-
-    // gui
-
-    const gui = new GUI();
-
-    gui.add(options, 'output', ['WGSL']).onChange(build);
-    gui.add(options, 'shader', ['vertex', 'fragment']).onChange(showCode);
-
-    gui.add(options, 'outputColorSpace', [THREE.ColorSpace.LinearSRGB, THREE.ColorSpace.SRGB]).onChange(value => {
-      renderer.outputColorSpace = value;
-
-      build();
-    });
-
-    gui.add(options, 'preview').onChange(value => {
-      rendererDOM.style.display = value ? '' : 'none';
-    });
-  });
-}
+// gui
+const gui = new GUI();
+gui.add(options, 'stage', ['vertex', 'fragment']).onChange(refreshResultView);
+gui.add(options, 'colorSpace', [ColorSpace.LinearSRGB, ColorSpace.SRGB]).onChange(async (value: ColorSpace) => {
+  renderer.outputColorSpace = value;
+  await refreshEditorView();
+});
+gui.add(options, 'preview').onChange((value: boolean) => {
+  renderable.style.setProperty('display', value ? '' : 'none');
+});

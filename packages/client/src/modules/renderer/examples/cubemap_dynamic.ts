@@ -6,7 +6,7 @@ import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
 import { RGBMLoader } from '../threejs/loaders/RGBMLoader.js';
 
-import { GUI } from '../threejs/libs/lil-gui.module.min.js';
+import { GUI } from 'lil-gui';
 import Stats from '../threejs/libs/stats.module.js';
 import { Filter } from '../threejs/Three.js';
 

@@ -4,7 +4,7 @@ import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 
 import Stats from '../threejs/libs/stats.module.js';
 
-import { GUI } from '../threejs/libs/lil-gui.module.min.js';
+import { GUI } from 'lil-gui';
 import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
 import { color, Line2NodeMaterial, LineBasicNodeMaterial, LineDashedNodeMaterial } from '../threejs/nodes/Nodes.js';
 import { Line2 } from '@modules/renderer/threejs/lines/Line2.js';
