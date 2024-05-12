@@ -1,78 +1,43 @@
 import Transpiler from '@modules/renderer/threejs/transpiler/Transpiler.js';
 import GLSLDecoder from '@modules/renderer/threejs/transpiler/GLSLDecoder.js';
 import TSLEncoder from '@modules/renderer/threejs/transpiler/TSLEncoder.js';
+import * as monaco from 'monaco-editor';
+import initialCode from './tsl_transpiler.code.glsl?raw';
+import './tsl_transpiler.css';
 
-init();
+const createContainers = () => {
+  const container = document.createElement('div');
+  container.id = 'container';
+  const source = document.createElement('div');
+  source.id = 'source';
+  const result = document.createElement('div');
+  result.id = 'result';
 
-function init() {
-  // editor
+  container.append(source, result);
+  document.body.append(container);
+  return { container, source, result };
+};
 
-  window.require.config({ paths: { vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@latest/min/vs' } });
+const { source, result } = createContainers();
 
-  require(['vs/editor/editor.main'], () => {
-    let timeout = null;
+const editorView = monaco.editor.create(source, {
+  value: initialCode,
+  language: 'glsl',
+  theme: 'vs-dark',
+  automaticLayout: true,
+  minimap: { enabled: false },
+});
+const resultView = monaco.editor.create(result, {
+  value: '',
+  language: 'javascript',
+  theme: 'vs-dark',
+  automaticLayout: true,
+  readOnly: true,
+  minimap: { enabled: false },
+});
 
-    const editorDOM = document.getElementById('source');
-    const resultDOM = document.getElementById('result');
+const showCode = (code: string) => resultView.setValue(code);
+const build = () => showCode(new Transpiler(new GLSLDecoder(), new TSLEncoder()).parse(editorView.getValue()));
 
-    const glslCode = `// Put here your GLSL code to transpile to TSL:
-
-float V_GGX_SmithCorrelated( const in float alpha, const in float dotNL, const in float dotNV ) {
-
-	float a2 = pow2( alpha );
-
-	float gv = dotNL * sqrt( a2 + ( 1.0 - a2 ) * pow2( dotNV ) );
-	float gl = dotNV * sqrt( a2 + ( 1.0 - a2 ) * pow2( dotNL ) );
-
-	return 0.5 / max( gv + gl, EPSILON );
-
-}
-`;
-
-    const editor = window.monaco.editor.create(editorDOM, {
-      value: glslCode,
-      language: 'glsl',
-      theme: 'vs-dark',
-      automaticLayout: true,
-      minimap: { enabled: false },
-    });
-
-    const result = window.monaco.editor.create(resultDOM, {
-      value: '',
-      language: 'javascript',
-      theme: 'vs-dark',
-      automaticLayout: true,
-      readOnly: true,
-      minimap: { enabled: false },
-    });
-
-    const showCode = code => {
-      result.setValue(code);
-      result.revealLine(1);
-    };
-
-    const build = () => {
-      try {
-        const glsl = editor.getValue();
-
-        const decoder = new GLSLDecoder();
-        const encoder = new TSLEncoder();
-
-        const transpiler = new Transpiler(decoder, encoder);
-        const tsl = transpiler.parse(glsl);
-
-        showCode(tsl);
-      } catch (e) {
-        result.setValue('Error: ' + e.message);
-      }
-    };
-
-    build();
-
-    editor.getModel().onDidChangeContent(() => {
-      if (timeout) clearTimeout(timeout);
-
-      timeout = setTimeout(build, 1000);
-    });
-  });
-}
+build();
+editorView.getModel()?.onDidChangeContent(build);
