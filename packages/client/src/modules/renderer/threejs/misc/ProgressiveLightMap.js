@@ -1,5 +1,5 @@
 import * as THREE from '../threejs/Three.js';
-import { potpack } from '../../threejs/libs/potpack.module.js';
+import { potpack } from 'potpack';
 
 /**
  * Progressive Light Map Accumulator, by [zalo](https://github.com/zalo/)

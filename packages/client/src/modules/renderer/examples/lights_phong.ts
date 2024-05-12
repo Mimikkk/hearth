@@ -11,7 +11,7 @@ import {
   uv,
 } from '../threejs/nodes/Nodes.js';
 
-import Stats from '../threejs/libs/stats.module.js';
+import Stats from 'stats-js';
 
 import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
 import { TeapotGeometry } from '../threejs/geometries/TeapotGeometry.js';

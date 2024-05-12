@@ -5,7 +5,7 @@ import { TextGeometry } from '../threejs/geometries/TextGeometry.js';
 
 import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 
-import Stats from '../threejs/libs/stats.module.js';
+import Stats from 'stats-js';
 
 // 1 micrometer to 100 billion light years in one scene, with 1 unit = 1 meter?  preposterous!  and yet...
 const NEAR = 1e-6,

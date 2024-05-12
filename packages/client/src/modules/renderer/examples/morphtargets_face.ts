@@ -2,13 +2,13 @@ import * as THREE from '../threejs/Three.js';
 
 import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 
-import Stats from '../threejs/libs/stats.module.js';
+import Stats from 'stats-js';
 
 import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
 
 import { GLTFLoader } from '../threejs/loaders/GLTFLoader.js';
 import { KTX2Loader } from '../threejs/loaders/KTX2Loader.js';
-import { MeshoptDecoder } from '../threejs/libs/meshopt_decoder.module.js';
+import { MeshoptDecoder } from 'meshoptimizer';
 
 import { GUI } from 'lil-gui';
 

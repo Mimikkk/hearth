@@ -29,7 +29,7 @@ import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 
 import { TeapotGeometry } from '../threejs/geometries/TeapotGeometry.js';
 
-import Stats from '../threejs/libs/stats.module.js';
+import Stats from 'stats-js';
 
 let stats;
 

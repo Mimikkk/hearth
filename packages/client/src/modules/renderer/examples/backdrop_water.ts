@@ -27,7 +27,7 @@ import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.
 
 import { GUI } from 'lil-gui';
 
-import Stats from '../threejs/libs/stats.module.js';
+import Stats from 'stats-js';
 import {
   AnimationMixer,
   BoxGeometry,

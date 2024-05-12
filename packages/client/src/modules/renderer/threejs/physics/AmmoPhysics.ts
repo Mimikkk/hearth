@@ -1,7 +1,7 @@
 import { Mesh } from '../objects/Mesh.js';
 import { Object3D } from '../core/Object3D.js';
 import { Vector3 } from '../math/Vector3.js';
-import { Ammo } from '../libs/ammo.wasm.js';
+import Ammo from 'ammojs3';
 import { BufferGeometry } from '@modules/renderer/threejs/core/BufferGeometry.js';
 import { Scene } from '@modules/renderer/threejs/scenes/Scene.js';
 
@@ -238,7 +238,6 @@ export async function AmmoPhysics(): Promise<AmmoPhysicsObject> {
   };
 }
 
-//@ts-expect-error
 function compose(position: Ammo.btVector3, quaternion: Ammo.btQuaternion, array: number[], index: number) {
   const x = quaternion.x(),
     y = quaternion.y(),

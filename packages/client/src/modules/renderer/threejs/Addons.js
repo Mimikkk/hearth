@@ -1,7 +1,5 @@
 export * from './animation/AnimationClipCreator.ts';
 export * from './animation/CCDIKSolver.ts';
-export * from './animation/MMDAnimationHelper.ts';
-export * from './animation/MMDPhysics.ts';
 
 export * from './cameras/CinematicCamera.ts';
 
@@ -70,7 +68,6 @@ export * from '@modules/renderer/threejs/lines/WireframeGeometry2.ts';
 
 export * from './loaders/BVHLoader.js';
 export * from './loaders/DDSLoader.js';
-export * from './loaders/DRACOLoader.js';
 export * from './loaders/FBXLoader.js';
 export * from './loaders/FontLoader.js';
 export * from './loaders/GCodeLoader.js';
@@ -80,7 +77,6 @@ export * from './loaders/IESLoader.js';
 export * from './loaders/KTX2Loader.js';
 export * from './loaders/MD2Loader.js';
 export * from './loaders/MDDLoader.js';
-export * from './loaders/MMDLoader.js';
 
 export * from './loaders/OBJLoader.js';
 export * from './loaders/RGBELoader.js';

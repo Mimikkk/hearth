@@ -1,6 +1,6 @@
 import { DataTextureLoader, Filter } from '../../threejs/Three.js';
 
-import UTIF from '../libs/utif.module.js';
+import UTIF from 'utif';
 
 class TIFFLoader extends DataTextureLoader {
   constructor(manager) {

@@ -1,7 +1,7 @@
 import * as THREE from '../threejs/Three.js';
 import { rangeFog, color, lights, texture, normalMap, MeshStandardNodeMaterial } from '../threejs/nodes/Nodes.js';
 
-import Stats from '../threejs/libs/stats.module.js';
+import Stats from 'stats-js';
 
 import { GUI } from 'lil-gui';
 

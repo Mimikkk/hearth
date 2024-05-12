@@ -3,8 +3,8 @@ import { MeshBasicNodeMaterial, oscTriangle, texture, timerLocal, uv } from '../
 
 import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 
-import Stats from '../threejs/libs/stats.module.js';
-import { unzipSync } from '../threejs/libs/fflate.module.js';
+import Stats from 'stats-js';
+import { unzipSync } from 'fflate';
 
 let camera, scene, mesh, renderer, stats;
 

@@ -14,7 +14,7 @@ import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.
 
 import { TeapotGeometry } from '../threejs/geometries/TeapotGeometry.js';
 
-import Stats from '../threejs/libs/stats.module.js';
+import Stats from 'stats-js';
 
 class InstanceUniformNode extends Node {
   constructor() {

@@ -27,7 +27,7 @@ import {
   VK_FORMAT_R8G8B8A8_SRGB,
   VK_FORMAT_R8G8B8A8_UNORM,
   write,
-} from '../../threejs/libs/ktx-parse.module.js';
+} from 'ktx-parse';
 
 const VK_FORMAT_MAP = {
   [TextureFormat.RGBA]: {

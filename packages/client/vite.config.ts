@@ -2,10 +2,11 @@ import { defineConfig } from 'vite';
 import solid from 'vite-plugin-solid';
 import svgr from 'vite-plugin-svgr';
 import path from 'path';
+import arraybuffer from 'vite-plugin-arraybuffer';
 
 export default defineConfig({
   base: './',
-  plugins: [solid(), svgr()],
+  plugins: [solid(), svgr(), arraybuffer()],
   server: {
     port: 8080,
     open: true,

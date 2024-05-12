@@ -50,14 +50,17 @@ import {
   VK_FORMAT_R8G8B8A8_SRGB,
   VK_FORMAT_R8G8B8A8_UNORM,
   VK_FORMAT_UNDEFINED,
-} from '../libs/ktx-parse.module.js';
-import { ZSTDDecoder } from '../libs/zstddec.module.js';
+} from 'ktx-parse';
+import { ZSTDDecoder } from 'zstddec';
 
 const _taskCache = new WeakMap();
 
 let _activeLoaders = 0;
 
 let _zstd;
+
+import BASIS from '../../basis/basis_transcoder.js?raw';
+import BASISWASM from '../../basis/basis_transcoder.wasm?arraybuffer';
 
 class KTX2Loader extends Loader {
   constructor(manager) {
@@ -117,22 +120,11 @@ class KTX2Loader extends Loader {
     return this;
   }
 
-  init() {
+  async init() {
     if (!this.transcoderPending) {
-      // Load transcoder wrapper.
-      const jsLoader = new FileLoader(this.manager);
-      jsLoader.setPath(this.transcoderPath);
-      jsLoader.setWithCredentials(this.withCredentials);
-      const jsContent = jsLoader.loadAsync('basis_transcoder.js');
-
-      // Load transcoder WASM binary.
-      const binaryLoader = new FileLoader(this.manager);
-      binaryLoader.setPath(this.transcoderPath);
-      binaryLoader.setResponseType('arraybuffer');
-      binaryLoader.setWithCredentials(this.withCredentials);
-      const binaryContent = binaryLoader.loadAsync('basis_transcoder.wasm');
-
-      this.transcoderPending = Promise.all([jsContent, binaryContent]).then(([jsContent, binaryContent]) => {
+      this.transcoderPending = Promise.resolve().then(() => {
+        const jsContent = BASIS;
+        const binaryContent = BASISWASM;
         const fn = KTX2Loader.BasisWorker.toString();
 
         const body = [

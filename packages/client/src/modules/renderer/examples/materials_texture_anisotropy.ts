@@ -1,6 +1,6 @@
 import * as THREE from '../threejs/Three.js';
 
-import Stats from '../threejs/libs/stats.module.js';
+import Stats from 'stats-js';
 import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 
 let container, stats;

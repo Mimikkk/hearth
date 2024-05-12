@@ -17,7 +17,7 @@ import PostProcessing from '../threejs/renderers/common/PostProcessing.js';
 
 import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
 
-import Stats from '../threejs/libs/stats.module.js';
+import Stats from 'stats-js';
 import { ColorSpace } from '../threejs/Three.js';
 
 let camera, scene, renderer;

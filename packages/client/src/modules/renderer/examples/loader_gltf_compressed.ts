@@ -2,7 +2,7 @@ import * as THREE from '../threejs/Three.js';
 
 import { GLTFLoader } from '../threejs/loaders/GLTFLoader.js';
 import { KTX2Loader } from '../threejs/loaders/KTX2Loader.js';
-import { MeshoptDecoder } from '../threejs/libs/meshopt_decoder.module.js';
+import { MeshoptDecoder } from 'meshoptimizer';
 
 import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
 

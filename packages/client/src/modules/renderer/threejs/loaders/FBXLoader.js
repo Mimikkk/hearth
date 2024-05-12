@@ -42,7 +42,7 @@ import {
   VectorKeyframeTrack,
   Wrapping,
 } from '../../threejs/Three.js';
-import * as fflate from '../libs/fflate.module.js';
+import * as fflate from 'fflate';
 import { NURBSCurve } from '@modules/renderer/threejs/curves/NURBSCurve.ts';
 
 /**

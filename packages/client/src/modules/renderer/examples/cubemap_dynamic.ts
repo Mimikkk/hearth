@@ -7,7 +7,7 @@ import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.
 import { RGBMLoader } from '../threejs/loaders/RGBMLoader.js';
 
 import { GUI } from 'lil-gui';
-import Stats from '../threejs/libs/stats.module.js';
+import Stats from 'stats-js';
 import { Filter } from '../threejs/Three.js';
 
 let camera, scene, renderer, stats;

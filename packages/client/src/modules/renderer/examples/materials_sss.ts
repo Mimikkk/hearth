@@ -3,7 +3,7 @@ import * as Nodes from '../threejs/nodes/Nodes.js';
 
 import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 
-import Stats from '../threejs/libs/stats.module.js';
+import Stats from 'stats-js';
 
 import { GUI } from 'lil-gui';
 import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
