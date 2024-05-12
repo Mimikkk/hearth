@@ -18,7 +18,7 @@ import {
   Vector2NodeUniform,
   Vector3NodeUniform,
   Vector4NodeUniform,
-} from '../../renderers/common/nodes/NodeUniform.js';
+} from '../../renderers/common/nodes/NodeUniform.ts';
 
 import {
   Color,
@@ -34,9 +34,9 @@ import {
 import { stack } from './StackNode.js';
 import { getCurrentStack, setCurrentStack } from '../shadernode/ShaderNode.js';
 
-import ChainMap from '../../renderers/common/ChainMap.js';
+import ChainMap from '../../renderers/common/ChainMap.ts';
 
-import PMREMGenerator from '../../renderers/common/extras/PMREMGenerator.js';
+import PMREMGenerator from '../../renderers/common/extras/PMREMGenerator.ts';
 
 const uniformsGroupCache = new ChainMap();
 
@@ -132,7 +132,7 @@ class NodeBuilder {
   }
 
   createPMREMGenerator() {
-    // TODO: Move Materials.ts to outside of the Nodes.js in order to remove this function and improve tree-shaking support
+    // TODO: Move Materials.ts to outside of the Nodes.ts in order to remove this function and improve tree-shaking support
 
     return new PMREMGenerator(this.renderer);
   }
@@ -923,7 +923,7 @@ class NodeBuilder {
   }
 
   createNodeMaterial(type = 'NodeMaterial') {
-    // TODO: Move Materials.ts to outside of the Nodes.js in order to remove this function and improve tree-shaking support
+    // TODO: Move Materials.ts to outside of the Nodes.ts in order to remove this function and improve tree-shaking support
 
     return createNodeMaterialFromType(type);
   }

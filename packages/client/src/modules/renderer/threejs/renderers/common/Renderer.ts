@@ -33,8 +33,8 @@ const _projScreenMatrix = new Matrix4();
 const _vector3 = new Vector3();
 
 export interface RendererParameters {
-  logarithmicDepthBuffer: boolean;
-  alpha: boolean;
+  logarithmicDepthBuffer?: boolean;
+  alpha?: boolean;
 }
 
 export class Renderer {

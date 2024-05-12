@@ -14,7 +14,7 @@ import {
 } from './utils/WebGPUConstants.js';
 
 import WGSLNodeBuilder from './nodes/WGSLNodeBuilder.js';
-import Backend from '../../../threejs/renderers/common/Backend.js';
+import Backend from '../common/Backend.js';
 
 import WebGPUUtils from './utils/WebGPUUtils.js';
 import WebGPUAttributeUtils from './utils/WebGPUAttributeUtils.js';
@@ -22,8 +22,16 @@ import WebGPUBindingUtils from './utils/WebGPUBindingUtils.js';
 import WebGPUPipelineUtils from './utils/WebGPUPipelineUtils.js';
 import WebGPUTextureUtils from './utils/WebGPUTextureUtils.js';
 import { WebGPUManager } from '@modules/renderer/threejs/capabilities/WebGPUManager.ts';
+import { BackendParameters } from 'three/examples/jsm/renderers/common/Backend.js';
 
 //
+
+export interface WebGPUBackendParameters extends BackendParameters {
+  alpha?: boolean;
+  antialias?: boolean;
+  sampleCount?: number;
+  trackTimestamp?: boolean;
+}
 
 export class WebGPUBackend extends Backend {
   constructor(parameters = {}) {

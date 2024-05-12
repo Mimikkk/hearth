@@ -1,15 +1,12 @@
 import { ColorSpace, TextureDataType } from '../../../Three.js';
 
-import NodeUniformsGroup from '../../../../threejs/renderers/common/nodes/NodeUniformsGroup.js';
+import NodeUniformsGroup from '../../common/nodes/NodeUniformsGroup.ts';
 
-import NodeSampler from '../../../../threejs/renderers/common/nodes/NodeSampler.js';
-import {
-  NodeSampledCubeTexture,
-  NodeSampledTexture,
-} from '../../../../threejs/renderers/common/nodes/NodeSampledTexture.js';
+import NodeSampler from '../../common/nodes/NodeSampler.ts';
+import { NodeSampledCubeTexture, NodeSampledTexture } from '../../common/nodes/NodeSampledTexture.ts';
 
-import NodeUniformBuffer from '../../../../threejs/renderers/common/nodes/NodeUniformBuffer.js';
-import NodeStorageBuffer from '../../../../threejs/renderers/common/nodes/NodeStorageBuffer.js';
+import NodeUniformBuffer from '../../common/nodes/NodeUniformBuffer.ts';
+import NodeStorageBuffer from '../../common/nodes/NodeStorageBuffer.ts';
 
 import { CodeNode, NodeBuilder } from '../../../../threejs/nodes/Nodes.js';
 

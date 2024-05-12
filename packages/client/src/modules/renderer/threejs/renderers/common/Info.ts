@@ -1,4 +1,29 @@
+import { Object3D } from '@modules/renderer/threejs/core/Object3D.js';
+
 class Info {
+  autoReset: boolean;
+  frame: number;
+  calls: number;
+  render: {
+    calls: number;
+    drawCalls: number;
+    triangles: number;
+    points: number;
+    lines: number;
+    timestamp: number;
+  };
+
+  compute: {
+    calls: number;
+    computeCalls: number;
+    timestamp: number;
+  };
+
+  memory: {
+    geometries: number;
+    textures: number;
+  };
+
   constructor() {
     this.autoReset = true;
 
@@ -26,7 +51,7 @@ class Info {
     };
   }
 
-  update(object, count, instanceCount) {
+  update(object: Object3D, count: number, instanceCount: number = 1) {
     this.render.drawCalls++;
 
     if (object.isMesh || object.isSprite) {
