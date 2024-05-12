@@ -17,7 +17,8 @@
     "fflate": "^0.8.2",
     "meshoptimizer": "^0.20.0",
     "potpack": "^2.0.0",
-    "ammojs3": "^0.0.11"
+    "ammojs3": "^0.0.11",
+    "@zd/basis": "workspace:*"
   },
   "description": "Prototype application with the usage of @zd/engine",
   "devDependencies": {

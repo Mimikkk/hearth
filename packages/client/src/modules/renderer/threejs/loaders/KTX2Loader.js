@@ -56,11 +56,9 @@ import { ZSTDDecoder } from 'zstddec';
 const _taskCache = new WeakMap();
 
 let _activeLoaders = 0;
-
 let _zstd;
 
-import BASIS from '../../basis/basis_transcoder.js?raw';
-import BASISWASM from '../../basis/basis_transcoder.wasm?arraybuffer';
+import * as basis from '@zd/basis';
 
 class KTX2Loader extends Loader {
   constructor(manager) {
@@ -123,8 +121,8 @@ class KTX2Loader extends Loader {
   async init() {
     if (!this.transcoderPending) {
       this.transcoderPending = Promise.resolve().then(() => {
-        const jsContent = BASIS;
-        const binaryContent = BASISWASM;
+        const jsContent = basis.CodeString;
+        const binaryContent = basis.WasmBuffer;
         const fn = KTX2Loader.BasisWorker.toString();
 
         const body = [
@@ -350,7 +348,7 @@ KTX2Loader.BasisWorker = function () {
   function init(wasmBinary) {
     transcoderPending = new Promise(resolve => {
       BasisModule = { wasmBinary, onRuntimeInitialized: resolve };
-      BASIS(BasisModule); // eslint-disable-line no-undef
+      BASIS(BasisModule);
     }).then(() => {
       BasisModule.initializeBasis();
 

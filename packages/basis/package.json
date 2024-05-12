@@ -1,0 +1,31 @@
+{
+  "author": "Daniel Zdancewicz <zdancewicz.daniel@gmail.com>",
+  "description": "Export of basis universal",
+  "devDependencies": {
+    "prettier": "^3.2.5",
+    "vite": "^5.1.3",
+    "vite-plugin-arraybuffer": "^0.0.7",
+    "vite-plugin-dts": "^3.9.1"
+  },
+  "homepage": "https://www.github.com/Mimikkk/webgpgu/basis",
+  "keywords": [
+    "WebGPU"
+  ],
+  "license": "MIT",
+  "name": "@zd/basis",
+  "scripts": {
+    "build": "vite build"
+  },
+  "type": "module",
+  "version": "0.0.0",
+  "main": "./build/basis.js",
+  "module": "./build/basis.js",
+  "types": "./build/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./build/index.d.ts",
+      "import": "./build/basis.js",
+      "require": "./build/basis.cjs"
+    }
+  }
+}
