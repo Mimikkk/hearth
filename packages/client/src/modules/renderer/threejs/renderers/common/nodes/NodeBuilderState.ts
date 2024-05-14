@@ -1,27 +1,20 @@
+import Binding from '@modules/renderer/threejs/renderers/common/Binding.js';
+import NodeAttribute from '@modules/renderer/threejs/nodes/core/NodeAttribute.js';
+import Node from '@modules/renderer/threejs/nodes/core/Node.js';
+
 class NodeBuilderState {
+  usedTimes: number = 0;
+
   constructor(
-    vertexShader,
-    fragmentShader,
-    computeShader,
-    nodeAttributes,
-    bindings,
-    updateNodes,
-    updateBeforeNodes,
-    transforms = [],
-  ) {
-    this.vertexShader = vertexShader;
-    this.fragmentShader = fragmentShader;
-    this.computeShader = computeShader;
-    this.transforms = transforms;
-
-    this.nodeAttributes = nodeAttributes;
-    this.bindings = bindings;
-
-    this.updateNodes = updateNodes;
-    this.updateBeforeNodes = updateBeforeNodes;
-
-    this.usedTimes = 0;
-  }
+    public vertexShader: string | null,
+    public fragmentShader: string | null,
+    public computeShader: string | null,
+    public nodeAttributes: NodeAttribute[],
+    public bindings: Binding[],
+    public updateNodes: Node[],
+    public updateBeforeNodes: Node[],
+    public transforms = [],
+  ) {}
 
   createBindings() {
     const bindingsArray = [];

@@ -1,22 +1,26 @@
 import UniformsGroup from '../UniformsGroup.js';
+import UniformGroupNode from '@modules/renderer/threejs/nodes/core/UniformGroupNode.js';
+import { ValueNodeUniform } from '@modules/renderer/threejs/renderers/common/nodes/NodeUniform.js';
 
 let id = 0;
 
-class NodeUniformsGroup extends UniformsGroup {
-  constructor(name, groupNode) {
+export class NodeUniformsGroup extends UniformsGroup {
+  declare isNodeUniformsGroup: true;
+  id: number;
+
+  constructor(
+    name: string,
+    public groupNode: UniformGroupNode,
+  ) {
     super(name);
-
     this.id = id++;
-    this.groupNode = groupNode;
-
-    this.isNodeUniformsGroup = true;
   }
 
   get shared() {
     return this.groupNode.shared;
   }
 
-  getNodes() {
+  getNodes(): ValueNodeUniform[] {
     const nodes = [];
 
     for (const uniform of this.uniforms) {
@@ -30,5 +34,7 @@ class NodeUniformsGroup extends UniformsGroup {
     return nodes;
   }
 }
+
+NodeUniformsGroup.prototype.isNodeUniformsGroup = true;
 
 export default NodeUniformsGroup;

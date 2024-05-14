@@ -66,7 +66,7 @@ class Bindings extends DataMap {
       } else if (binding.isStorageBuffer) {
         const attribute = binding.attribute;
 
-        this.attributes.update(attribute, AttributeType.STORAGE);
+        this.attributes.update(attribute, AttributeType.Storage);
       }
     }
   }

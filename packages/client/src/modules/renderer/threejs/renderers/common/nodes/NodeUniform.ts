@@ -8,8 +8,20 @@ import {
   Matrix4Uniform,
 } from '../Uniform.js';
 
-class FloatNodeUniform extends FloatUniform {
-  constructor(nodeUniform) {
+import NodeUniform from '@modules/renderer/threejs/nodes/core/NodeUniform.js';
+
+export class FloatNodeUniform extends FloatUniform {
+  constructor(public nodeUniform: NodeUniform) {
+    super(nodeUniform.name, nodeUniform.value);
+  }
+
+  getValue() {
+    return this.nodeUniform.value;
+  }
+}
+
+export class Vector2NodeUniform extends Vector2Uniform {
+  constructor(public nodeUniform: NodeUniform) {
     super(nodeUniform.name, nodeUniform.value);
 
     this.nodeUniform = nodeUniform;
@@ -20,8 +32,8 @@ class FloatNodeUniform extends FloatUniform {
   }
 }
 
-class Vector2NodeUniform extends Vector2Uniform {
-  constructor(nodeUniform) {
+export class Vector3NodeUniform extends Vector3Uniform {
+  constructor(public nodeUniform: NodeUniform) {
     super(nodeUniform.name, nodeUniform.value);
 
     this.nodeUniform = nodeUniform;
@@ -32,8 +44,8 @@ class Vector2NodeUniform extends Vector2Uniform {
   }
 }
 
-class Vector3NodeUniform extends Vector3Uniform {
-  constructor(nodeUniform) {
+export class Vector4NodeUniform extends Vector4Uniform {
+  constructor(public nodeUniform: NodeUniform) {
     super(nodeUniform.name, nodeUniform.value);
 
     this.nodeUniform = nodeUniform;
@@ -44,8 +56,8 @@ class Vector3NodeUniform extends Vector3Uniform {
   }
 }
 
-class Vector4NodeUniform extends Vector4Uniform {
-  constructor(nodeUniform) {
+export class ColorNodeUniform extends ColorUniform {
+  constructor(public nodeUniform: NodeUniform) {
     super(nodeUniform.name, nodeUniform.value);
 
     this.nodeUniform = nodeUniform;
@@ -56,8 +68,8 @@ class Vector4NodeUniform extends Vector4Uniform {
   }
 }
 
-class ColorNodeUniform extends ColorUniform {
-  constructor(nodeUniform) {
+export class Matrix3NodeUniform extends Matrix3Uniform {
+  constructor(public nodeUniform: NodeUniform) {
     super(nodeUniform.name, nodeUniform.value);
 
     this.nodeUniform = nodeUniform;
@@ -68,8 +80,8 @@ class ColorNodeUniform extends ColorUniform {
   }
 }
 
-class Matrix3NodeUniform extends Matrix3Uniform {
-  constructor(nodeUniform) {
+export class Matrix4NodeUniform extends Matrix4Uniform {
+  constructor(public nodeUniform: NodeUniform) {
     super(nodeUniform.name, nodeUniform.value);
 
     this.nodeUniform = nodeUniform;
@@ -80,24 +92,11 @@ class Matrix3NodeUniform extends Matrix3Uniform {
   }
 }
 
-class Matrix4NodeUniform extends Matrix4Uniform {
-  constructor(nodeUniform) {
-    super(nodeUniform.name, nodeUniform.value);
-
-    this.nodeUniform = nodeUniform;
-  }
-
-  getValue() {
-    return this.nodeUniform.value;
-  }
-}
-
-export {
-  FloatNodeUniform,
-  Vector2NodeUniform,
-  Vector3NodeUniform,
-  Vector4NodeUniform,
-  ColorNodeUniform,
-  Matrix3NodeUniform,
-  Matrix4NodeUniform,
-};
+export type ValueNodeUniform =
+  | FloatNodeUniform
+  | Vector2NodeUniform
+  | Vector3NodeUniform
+  | Vector4NodeUniform
+  | ColorNodeUniform
+  | Matrix3NodeUniform
+  | Matrix4NodeUniform;

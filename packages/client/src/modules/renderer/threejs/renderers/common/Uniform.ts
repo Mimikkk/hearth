@@ -1,100 +1,107 @@
 import { Color, Matrix3, Matrix4, Vector2, Vector3, Vector4 } from '../../../threejs/Three.js';
 
-class Uniform {
-  constructor(name, value = null) {
-    this.name = name;
+export abstract class Uniform<T> {
+  // STD140 layout
+  abstract boundary: number;
+  // size in bytes
+  abstract itemSize: number;
+  // offset within UniformsGroup
+  offset: number = 0;
+
+  constructor(
+    public name: string,
+    public value: T,
+  ) {}
+
+  setValue(value: T): void {
     this.value = value;
-
-    this.boundary = 0; // used to build the uniform buffer according to the STD140 layout
-    this.itemSize = 0;
-
-    this.offset = 0; // this property is set by WebGPUUniformsGroup and marks the start position in the uniform buffer
   }
 
-  setValue(value) {
-    this.value = value;
-  }
-
-  getValue() {
+  getValue(): T {
     return this.value;
   }
 }
 
-class FloatUniform extends Uniform {
-  constructor(name, value = 0) {
+export class FloatUniform extends Uniform<number> {
+  declare isFloatUniform: true;
+  boundary: number = 4;
+  itemSize: number = 1;
+
+  constructor(name: string, value: number = 0) {
     super(name, value);
-
-    this.isFloatUniform = true;
-
-    this.boundary = 4;
-    this.itemSize = 1;
   }
 }
 
-class Vector2Uniform extends Uniform {
-  constructor(name, value = new Vector2()) {
+FloatUniform.prototype.isFloatUniform = true;
+
+export class Vector2Uniform extends Uniform<Vector2> {
+  declare isVector2Uniform: true;
+  boundary: number = 8;
+  itemSize: number = 2;
+
+  constructor(name: string, value: Vector2) {
     super(name, value);
-
-    this.isVector2Uniform = true;
-
-    this.boundary = 8;
-    this.itemSize = 2;
   }
 }
 
-class Vector3Uniform extends Uniform {
-  constructor(name, value = new Vector3()) {
+Vector2Uniform.prototype.isVector2Uniform = true;
+
+export class Vector3Uniform extends Uniform<Vector3> {
+  declare isVector3Uniform: true;
+  boundary: number = 16;
+  itemSize: number = 3;
+
+  constructor(name: string, value: Vector3 = new Vector3()) {
     super(name, value);
-
-    this.isVector3Uniform = true;
-
-    this.boundary = 16;
-    this.itemSize = 3;
   }
 }
 
-class Vector4Uniform extends Uniform {
-  constructor(name, value = new Vector4()) {
+Vector3Uniform.prototype.isVector3Uniform = true;
+
+export class Vector4Uniform extends Uniform<Vector4> {
+  declare isVector4Uniform: true;
+  boundary: number = 16;
+  itemSize: number = 4;
+
+  constructor(name: string, value: Vector4 = new Vector4()) {
     super(name, value);
-
-    this.isVector4Uniform = true;
-
-    this.boundary = 16;
-    this.itemSize = 4;
   }
 }
 
-class ColorUniform extends Uniform {
-  constructor(name, value = new Color()) {
+Vector4Uniform.prototype.isVector4Uniform = true;
+
+export class ColorUniform extends Uniform<Color> {
+  declare isColorUniform: true;
+  boundary: number = 16;
+  itemSize: number = 3;
+
+  constructor(name: string, value: Color = new Color()) {
     super(name, value);
-
-    this.isColorUniform = true;
-
-    this.boundary = 16;
-    this.itemSize = 3;
   }
 }
 
-class Matrix3Uniform extends Uniform {
-  constructor(name, value = new Matrix3()) {
+ColorUniform.prototype.isColorUniform = true;
+
+export class Matrix3Uniform extends Uniform<Matrix3> {
+  declare isMatrix3Uniform: true;
+  boundary: number = 48;
+  itemSize: number = 12;
+
+  constructor(name: string, value: Matrix3 = new Matrix3()) {
     super(name, value);
-
-    this.isMatrix3Uniform = true;
-
-    this.boundary = 48;
-    this.itemSize = 12;
   }
 }
 
-class Matrix4Uniform extends Uniform {
-  constructor(name, value = new Matrix4()) {
+Matrix3Uniform.prototype.isMatrix3Uniform = true;
+
+export class Matrix4Uniform extends Uniform<Matrix4> {
+  declare isMatrix4Uniform: true;
+  boundary: number = 64;
+  itemSize: number = 16;
+
+  constructor(name: string, value: Matrix4 = new Matrix4()) {
     super(name, value);
-
-    this.isMatrix4Uniform = true;
-
-    this.boundary = 64;
-    this.itemSize = 16;
   }
 }
 
-export { FloatUniform, Vector2Uniform, Vector3Uniform, Vector4Uniform, ColorUniform, Matrix3Uniform, Matrix4Uniform };
+Matrix4Uniform.prototype.isMatrix4Uniform = true;

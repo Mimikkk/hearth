@@ -1,4 +1,4 @@
-class NodeUniform {
+export class NodeUniform {
   constructor(name, type, node, needsUpdate = undefined) {
     this.isNodeUniform = true;
 

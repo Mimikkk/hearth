@@ -111,13 +111,13 @@ class Geometries extends DataMap {
     const attributes = renderObject.getAttributes();
 
     for (const attribute of attributes) {
-      this.updateAttribute(attribute, AttributeType.VERTEX);
+      this.updateAttribute(attribute, AttributeType.Vertex);
     }
 
     const index = this.getIndex(renderObject);
 
     if (index !== null) {
-      this.updateAttribute(index, AttributeType.INDEX);
+      this.updateAttribute(index, AttributeType.Index);
     }
   }
 

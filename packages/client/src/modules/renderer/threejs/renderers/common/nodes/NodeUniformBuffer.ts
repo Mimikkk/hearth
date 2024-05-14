@@ -1,9 +1,12 @@
 import UniformBuffer from '../UniformBuffer.js';
+import NodeUniform from '@modules/renderer/threejs/nodes/core/NodeUniform.js';
 
 let _id = 0;
 
 class NodeUniformBuffer extends UniformBuffer {
-  constructor(nodeUniform) {
+  nodeUniform: NodeUniform;
+
+  constructor(nodeUniform: NodeUniform) {
     super('UniformBuffer_' + _id++, nodeUniform ? nodeUniform.value : null);
 
     this.nodeUniform = nodeUniform;

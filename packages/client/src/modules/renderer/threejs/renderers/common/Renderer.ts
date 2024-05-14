@@ -2,7 +2,7 @@ import { Animation } from './Animation.js';
 import RenderObjects from './RenderObjects.js';
 import Attributes from './Attributes.js';
 import Geometries from './Geometries.js';
-import Info from './Info.js';
+import { Info } from './Info.js';
 import Pipelines from './Pipelines.js';
 import Bindings from './Bindings.js';
 import RenderLists from './RenderLists.js';

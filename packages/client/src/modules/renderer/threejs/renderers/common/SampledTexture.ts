@@ -1,13 +1,20 @@
 import Binding from './Binding.js';
+import { Texture } from '@modules/renderer/threejs/textures/Texture.js';
+import { VideoTexture } from '@modules/renderer/threejs/textures/VideoTexture.js';
 
 let id = 0;
 
-class SampledTexture extends Binding {
-  constructor(name, texture) {
+export class SampledTexture extends Binding {
+  declare isSampledTexture: true;
+  texture: Texture;
+  version: number;
+  store: boolean;
+  id: number;
+
+  constructor(name: string, texture: Texture) {
     super(name);
 
     this.id = id++;
-
     this.texture = texture;
     this.version = texture ? texture.version : 0;
     this.store = false;
@@ -18,7 +25,7 @@ class SampledTexture extends Binding {
   get needsBindingsUpdate() {
     const { texture, version } = this;
 
-    return texture.isVideoTexture ? true : version !== texture.version; // @TODO: version === 0 && texture.version > 0 ( add it just to External Textures like PNG,JPG )
+    return texture instanceof VideoTexture ? true : version !== texture.version;
   }
 
   update() {
@@ -34,28 +41,34 @@ class SampledTexture extends Binding {
   }
 }
 
-class SampledArrayTexture extends SampledTexture {
-  constructor(name, texture) {
-    super(name, texture);
+SampledTexture.prototype.isSampledTexture = true;
 
-    this.isSampledArrayTexture = true;
+export class SampledArrayTexture extends SampledTexture {
+  declare isSampledArrayTexture: true;
+
+  constructor(name: string, texture: Texture) {
+    super(name, texture);
   }
 }
 
-class Sampled3DTexture extends SampledTexture {
-  constructor(name, texture) {
-    super(name, texture);
+SampledArrayTexture.prototype.isSampledArrayTexture = true;
 
-    this.isSampled3DTexture = true;
+export class Sampled3DTexture extends SampledTexture {
+  declare isSampled3DTexture: true;
+
+  constructor(name: string, texture: Texture) {
+    super(name, texture);
   }
 }
 
-class SampledCubeTexture extends SampledTexture {
-  constructor(name, texture) {
-    super(name, texture);
+Sampled3DTexture.prototype.isSampled3DTexture = true;
 
-    this.isSampledCubeTexture = true;
+export class SampledCubeTexture extends SampledTexture {
+  declare isSampledCubeTexture: true;
+
+  constructor(name: string, texture: Texture) {
+    super(name, texture);
   }
 }
 
-export { SampledTexture, SampledArrayTexture, Sampled3DTexture, SampledCubeTexture };
+SampledCubeTexture.prototype.isSampledCubeTexture = true;

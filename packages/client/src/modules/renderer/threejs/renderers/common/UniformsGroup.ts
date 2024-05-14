@@ -1,24 +1,45 @@
 import UniformBuffer from './UniformBuffer.js';
-import { GPU_CHUNK_BYTES } from './Constants.js';
+import { STD140ChunkBytes } from './Constants.js';
+import { Matrix4 } from '@modules/renderer/threejs/math/Matrix4.js';
+import {
+  Uniform,
+  ColorUniform,
+  FloatUniform,
+  Matrix3Uniform,
+  Matrix4Uniform,
+  Vector2Uniform,
+  Vector3Uniform,
+  Vector4Uniform,
+} from '@modules/renderer/threejs/renderers/common/Uniform.js';
+import {
+  ColorNodeUniform,
+  FloatNodeUniform,
+  Matrix3NodeUniform,
+  Matrix4NodeUniform,
+  ValueNodeUniform,
+  Vector2NodeUniform,
+  Vector3NodeUniform,
+  Vector4NodeUniform,
+} from '@modules/renderer/threejs/renderers/common/nodes/NodeUniform.js';
 
 class UniformsGroup extends UniformBuffer {
-  constructor(name) {
-    super(name);
+  declare isUniformsGroup: true;
+  // the order of uniforms in this array must match the order of uniforms in the shader
+  uniforms: ValueNodeUniform[] = [];
+  bytesPerElement: number = Float32Array.BYTES_PER_ELEMENT;
+  _buffer: Float32Array | null = null;
 
-    this.isUniformsGroup = true;
-
-    // the order of uniforms in this array must match the order of uniforms in the shader
-
-    this.uniforms = [];
+  constructor(name: string) {
+    super(name, null!);
   }
 
-  addUniform(uniform) {
+  addUniform(uniform: ValueNodeUniform): this {
     this.uniforms.push(uniform);
 
     return this;
   }
 
-  removeUniform(uniform) {
+  removeUniform(uniform: ValueNodeUniform): this {
     const index = this.uniforms.indexOf(uniform);
 
     if (index !== -1) {
@@ -28,7 +49,7 @@ class UniformsGroup extends UniformBuffer {
     return this;
   }
 
-  get buffer() {
+  get buffer(): Float32Array {
     let buffer = this._buffer;
 
     if (buffer === null) {
@@ -42,8 +63,9 @@ class UniformsGroup extends UniformBuffer {
     return buffer;
   }
 
-  get byteLength() {
-    let offset = 0; // global buffer offset in bytes
+  get byteLength(): number {
+    // global buffer offset in bytes
+    let offset = 0;
 
     for (let i = 0, l = this.uniforms.length; i < l; i++) {
       const uniform = this.uniforms[i];
@@ -52,15 +74,15 @@ class UniformsGroup extends UniformBuffer {
 
       // offset within a single chunk in bytes
 
-      const chunkOffset = offset % GPU_CHUNK_BYTES;
-      const remainingSizeInChunk = GPU_CHUNK_BYTES - chunkOffset;
+      const chunkOffset = offset % STD140ChunkBytes;
+      const remainingSizeInChunk = STD140ChunkBytes - chunkOffset;
 
       // conformance tests
 
       if (chunkOffset !== 0 && remainingSizeInChunk - boundary < 0) {
         // check for chunk overflow
 
-        offset += GPU_CHUNK_BYTES - chunkOffset;
+        offset += STD140ChunkBytes - chunkOffset;
       } else if (chunkOffset % boundary !== 0) {
         // check for correct alignment
 
@@ -72,7 +94,7 @@ class UniformsGroup extends UniformBuffer {
       offset += itemSize * this.bytesPerElement;
     }
 
-    return Math.ceil(offset / GPU_CHUNK_BYTES) * GPU_CHUNK_BYTES;
+    return Math.ceil(offset / STD140ChunkBytes) * STD140ChunkBytes;
   }
 
   update() {
@@ -87,19 +109,19 @@ class UniformsGroup extends UniformBuffer {
     return updated;
   }
 
-  updateByType(uniform) {
-    if (uniform.isFloatUniform) return this.updateNumber(uniform);
-    if (uniform.isVector2Uniform) return this.updateVector2(uniform);
-    if (uniform.isVector3Uniform) return this.updateVector3(uniform);
-    if (uniform.isVector4Uniform) return this.updateVector4(uniform);
-    if (uniform.isColorUniform) return this.updateColor(uniform);
-    if (uniform.isMatrix3Uniform) return this.updateMatrix3(uniform);
-    if (uniform.isMatrix4Uniform) return this.updateMatrix4(uniform);
+  updateByType(uniform: ValueNodeUniform) {
+    if (uniform instanceof FloatNodeUniform) return this.updateNumber(uniform);
+    if (uniform instanceof Vector2NodeUniform) return this.updateVector2(uniform);
+    if (uniform instanceof Vector3NodeUniform) return this.updateVector3(uniform);
+    if (uniform instanceof Vector4NodeUniform) return this.updateVector4(uniform);
+    if (uniform instanceof ColorNodeUniform) return this.updateColor(uniform);
+    if (uniform instanceof Matrix3NodeUniform) return this.updateMatrix3(uniform);
+    if (uniform instanceof Matrix4NodeUniform) return this.updateMatrix4(uniform);
 
     console.error('THREE.WebGPUUniformsGroup: Unsupported uniform type.', uniform);
   }
 
-  updateNumber(uniform) {
+  updateNumber(uniform: FloatNodeUniform): boolean {
     let updated = false;
 
     const a = this.buffer;
@@ -114,7 +136,7 @@ class UniformsGroup extends UniformBuffer {
     return updated;
   }
 
-  updateVector2(uniform) {
+  updateVector2(uniform: Vector2NodeUniform): boolean {
     let updated = false;
 
     const a = this.buffer;
@@ -131,7 +153,7 @@ class UniformsGroup extends UniformBuffer {
     return updated;
   }
 
-  updateVector3(uniform) {
+  updateVector3(uniform: Vector3NodeUniform): boolean {
     let updated = false;
 
     const a = this.buffer;
@@ -149,7 +171,7 @@ class UniformsGroup extends UniformBuffer {
     return updated;
   }
 
-  updateVector4(uniform) {
+  updateVector4(uniform: Vector4NodeUniform): boolean {
     let updated = false;
 
     const a = this.buffer;
@@ -168,7 +190,7 @@ class UniformsGroup extends UniformBuffer {
     return updated;
   }
 
-  updateColor(uniform) {
+  updateColor(uniform: ColorNodeUniform): boolean {
     let updated = false;
 
     const a = this.buffer;
@@ -186,7 +208,7 @@ class UniformsGroup extends UniformBuffer {
     return updated;
   }
 
-  updateMatrix3(uniform) {
+  updateMatrix3(uniform: Matrix3NodeUniform): boolean {
     let updated = false;
 
     const a = this.buffer;
@@ -220,7 +242,7 @@ class UniformsGroup extends UniformBuffer {
     return updated;
   }
 
-  updateMatrix4(uniform) {
+  updateMatrix4(uniform: Matrix4NodeUniform): boolean {
     let updated = false;
 
     const a = this.buffer;
@@ -236,7 +258,9 @@ class UniformsGroup extends UniformBuffer {
   }
 }
 
-function arraysEqual(a, b, offset) {
+UniformsGroup.prototype.isUniformsGroup = true;
+
+function arraysEqual(a: ArrayLike<number>, b: ArrayLike<number>, offset: number) {
   for (let i = 0, l = b.length; i < l; i++) {
     if (a[offset + i] !== b[i]) return false;
   }

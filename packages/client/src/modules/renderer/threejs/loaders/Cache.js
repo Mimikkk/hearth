@@ -1,4 +1,4 @@
-const Cache = {
+export const Cache = {
   enabled: false,
 
   files: {},
@@ -6,15 +6,11 @@ const Cache = {
   add: function (key, file) {
     if (this.enabled === false) return;
 
-    // console.log( 'THREE.Cache', 'Adding key:', key );
-
     this.files[key] = file;
   },
 
   get: function (key) {
     if (this.enabled === false) return;
-
-    // console.log( 'THREE.Cache', 'Checking key:', key );
 
     return this.files[key];
   },
@@ -27,5 +23,3 @@ const Cache = {
     this.files = {};
   },
 };
-
-export { Cache };

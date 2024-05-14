@@ -1,12 +1,12 @@
-import { GPU_CHUNK_BYTES } from './Constants.js';
+import { STD140ChunkBytes } from './Constants.js';
 
-function getFloatLength(floatLength) {
+export function getFloatLength(floatLength: number): number {
   // ensure chunk size alignment (STD140 layout)
 
-  return floatLength + ((GPU_CHUNK_BYTES - (floatLength % GPU_CHUNK_BYTES)) % GPU_CHUNK_BYTES);
+  return floatLength + ((STD140ChunkBytes - (floatLength % STD140ChunkBytes)) % STD140ChunkBytes);
 }
 
-function getVectorLength(count, vectorLength = 4) {
+export function getVectorLength(count: number, vectorLength: number = 4): number {
   const strideLength = getStrideLength(vectorLength);
 
   const floatLength = strideLength * count;
@@ -14,10 +14,8 @@ function getVectorLength(count, vectorLength = 4) {
   return getFloatLength(floatLength);
 }
 
-function getStrideLength(vectorLength) {
+export function getStrideLength(vectorLength: number): number {
   const strideLength = 4;
 
   return vectorLength + ((strideLength - (vectorLength % strideLength)) % strideLength);
 }
-
-export { getFloatLength, getVectorLength, getStrideLength };

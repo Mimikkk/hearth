@@ -1,15 +1,14 @@
-class Binding {
-  constructor(name = '') {
-    this.name = name;
+export class Binding {
+  visibility: number;
 
-    this.visibility = 0;
-  }
+  constructor(public name: string = '') {}
 
-  setVisibility(visibility) {
+  setVisibility(visibility: number) {
     this.visibility |= visibility;
   }
 
-  clone() {
+  clone(): this {
+    //@ts-expect-error
     return Object.assign(new this.constructor(), this);
   }
 }

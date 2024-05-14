@@ -1,7 +1,10 @@
 import Sampler from '../Sampler.js';
+import TextureNode from '@modules/renderer/threejs/nodes/accessors/TextureNode.js';
 
 class NodeSampler extends Sampler {
-  constructor(name, textureNode) {
+  textureNode: TextureNode;
+
+  constructor(name: string, textureNode: TextureNode) {
     super(name, textureNode ? textureNode.value : null);
 
     this.textureNode = textureNode;

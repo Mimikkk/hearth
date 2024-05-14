@@ -1,6 +1,11 @@
 import { Object3D } from '@modules/renderer/threejs/core/Object3D.js';
+import { LineSegments } from '@modules/renderer/threejs/objects/LineSegments.js';
+import { Mesh } from '@modules/renderer/threejs/objects/Mesh.js';
+import { Sprite } from '@modules/renderer/threejs/objects/Sprite.js';
+import { Points } from '@modules/renderer/threejs/objects/Points.js';
+import { Line } from '@modules/renderer/threejs/objects/Line.js';
 
-class Info {
+export class Info {
   autoReset: boolean;
   frame: number;
   calls: number;
@@ -54,20 +59,20 @@ class Info {
   update(object: Object3D, count: number, instanceCount: number = 1) {
     this.render.drawCalls++;
 
-    if (object.isMesh || object.isSprite) {
+    if (object instanceof Mesh || object instanceof Sprite) {
       this.render.triangles += instanceCount * (count / 3);
-    } else if (object.isPoints) {
+    } else if (object instanceof Points) {
       this.render.points += instanceCount * count;
-    } else if (object.isLineSegments) {
+    } else if (object instanceof LineSegments) {
       this.render.lines += instanceCount * (count / 2);
-    } else if (object.isLine) {
+    } else if (object instanceof Line) {
       this.render.lines += instanceCount * (count - 1);
     } else {
       console.error('THREE.WebGPUInfo: Unknown object type.');
     }
   }
 
-  updateTimestamp(type, time) {
+  updateTimestamp(type: 'render' | 'compute', time: number) {
     this[type].timestamp += time;
   }
 
@@ -97,5 +102,3 @@ class Info {
     this.memory.textures = 0;
   }
 }
-
-export default Info;

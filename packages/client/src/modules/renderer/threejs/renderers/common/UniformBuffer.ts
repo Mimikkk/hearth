@@ -1,11 +1,9 @@
 import Buffer from './Buffer.js';
 
-class UniformBuffer extends Buffer {
-  constructor(name, buffer = null) {
-    super(name, buffer);
-
-    this.isUniformBuffer = true;
-  }
+export class UniformBuffer extends Buffer {
+  declare isUniformBuffer: true;
 }
+
+UniformBuffer.prototype.isUniformBuffer = true;
 
 export default UniformBuffer;

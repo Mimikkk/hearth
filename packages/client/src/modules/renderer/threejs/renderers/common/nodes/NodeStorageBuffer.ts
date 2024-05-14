@@ -1,9 +1,12 @@
 import StorageBuffer from '../StorageBuffer.js';
+import NodeUniform from '@modules/renderer/threejs/nodes/core/NodeUniform.js';
 
 let _id = 0;
 
-class NodeStorageBuffer extends StorageBuffer {
-  constructor(nodeUniform) {
+export class NodeStorageBuffer extends StorageBuffer {
+  nodeUniform: NodeUniform;
+
+  constructor(nodeUniform: NodeUniform) {
     super('StorageBuffer_' + _id++, nodeUniform ? nodeUniform.value : null);
 
     this.nodeUniform = nodeUniform;

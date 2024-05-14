@@ -1,13 +1,17 @@
 import Buffer from './Buffer.js';
+import { BufferAttribute } from '@modules/renderer/threejs/core/BufferAttribute.js';
 
 class StorageBuffer extends Buffer {
-  constructor(name, attribute) {
+  declare isStorageBuffer: boolean;
+  attribute: BufferAttribute<any>;
+
+  constructor(name: string, attribute: BufferAttribute<any>) {
     super(name, attribute ? attribute.array : null);
 
     this.attribute = attribute;
-
-    this.isStorageBuffer = true;
   }
 }
+
+StorageBuffer.prototype.isStorageBuffer = true;
 
 export default StorageBuffer;

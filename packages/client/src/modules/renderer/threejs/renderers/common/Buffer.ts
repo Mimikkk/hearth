@@ -1,19 +1,20 @@
 import Binding from './Binding.js';
 import { getFloatLength } from './BufferUtils.js';
+import { TypedArray } from '@modules/renderer/threejs/math/MathUtils.js';
 
-class Buffer extends Binding {
-  constructor(name, buffer = null) {
+export class Buffer extends Binding {
+  declare isBuffer: true;
+  declare bytesPerElement: number;
+  _buffer: Float32Array | null = null;
+
+  constructor(name: string, buffer: Float32Array) {
     super(name);
-
-    this.isBuffer = true;
-
-    this.bytesPerElement = Float32Array.BYTES_PER_ELEMENT;
 
     this._buffer = buffer;
   }
 
   get byteLength() {
-    return getFloatLength(this._buffer.byteLength);
+    return getFloatLength(this._buffer!.byteLength);
   }
 
   get buffer() {
@@ -24,5 +25,8 @@ class Buffer extends Binding {
     return true;
   }
 }
+
+Buffer.prototype.isBuffer = true;
+Buffer.prototype.bytesPerElement = Float32Array.BYTES_PER_ELEMENT;
 
 export default Buffer;

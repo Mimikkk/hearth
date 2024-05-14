@@ -1,7 +1,10 @@
 import { SampledTexture } from '../SampledTexture.js';
+import TextureNode from '@modules/renderer/threejs/nodes/accessors/TextureNode.js';
 
-class NodeSampledTexture extends SampledTexture {
-  constructor(name, textureNode) {
+export class NodeSampledTexture extends SampledTexture {
+  textureNode: TextureNode;
+
+  constructor(name: string, textureNode: TextureNode) {
     super(name, textureNode ? textureNode.value : null);
 
     this.textureNode = textureNode;
@@ -24,12 +27,12 @@ class NodeSampledTexture extends SampledTexture {
   }
 }
 
-class NodeSampledCubeTexture extends NodeSampledTexture {
-  constructor(name, textureNode) {
-    super(name, textureNode);
+export class NodeSampledCubeTexture extends NodeSampledTexture {
+  declare isSampledCubeTexture: true;
 
-    this.isSampledCubeTexture = true;
+  constructor(name: string, textureNode: TextureNode) {
+    super(name, textureNode);
   }
 }
 
-export { NodeSampledTexture, NodeSampledCubeTexture };
+NodeSampledCubeTexture.prototype.isSampledCubeTexture = true;

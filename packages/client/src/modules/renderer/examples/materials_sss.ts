@@ -124,7 +124,6 @@ function initGUI(material) {
     .step(0.01)
     .onChange(function () {
       material.thicknessDistortionNode.value = thicknessControls.distortion;
-      console.log('distortion');
     });
 
   gui

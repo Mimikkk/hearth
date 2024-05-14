@@ -1,14 +1,20 @@
 import Binding from './Binding.js';
+import { Texture } from '@modules/renderer/threejs/textures/Texture.js';
 
-class Sampler extends Binding {
-  constructor(name, texture) {
+export class Sampler extends Binding {
+  declare isSampler: true;
+
+  texture: Texture;
+  version: number;
+
+  constructor(name: string, texture: Texture) {
     super(name);
 
     this.texture = texture;
     this.version = texture ? texture.version : 0;
-
-    this.isSampler = true;
   }
 }
+
+Sampler.prototype.isSampler = true;
 
 export default Sampler;

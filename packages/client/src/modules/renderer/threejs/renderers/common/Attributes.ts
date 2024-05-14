@@ -21,11 +21,11 @@ class Attributes extends DataMap {
     const data = this.get(attribute);
 
     if (data.version === undefined) {
-      if (type === AttributeType.VERTEX) {
+      if (type === AttributeType.Vertex) {
         this.backend.createAttribute(attribute);
-      } else if (type === AttributeType.INDEX) {
+      } else if (type === AttributeType.Index) {
         this.backend.createIndexAttribute(attribute);
-      } else if (type === AttributeType.STORAGE) {
+      } else if (type === AttributeType.Storage) {
         this.backend.createStorageAttribute(attribute);
       }
 
