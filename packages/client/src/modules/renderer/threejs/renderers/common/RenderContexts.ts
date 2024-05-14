@@ -5,7 +5,7 @@ import { Camera } from '@modules/renderer/threejs/cameras/Camera.js';
 import { RenderTarget } from '@modules/renderer/threejs/core/RenderTarget.js';
 
 class RenderContexts {
-  chainMaps: Record<string, ChainMap>;
+  chainMaps: Record<string, ChainMap<any, any>>;
 
   constructor() {
     this.chainMaps = {};

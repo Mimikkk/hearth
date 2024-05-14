@@ -13,6 +13,7 @@ import Nodes from './nodes/Nodes.js';
 import Color4 from './Color4.js';
 import ClippingContext from './ClippingContext.js';
 import {
+  Camera,
   ColorSpace,
   Frustum,
   Matrix4,
@@ -191,9 +192,9 @@ export class Renderer {
       this._nodes = new Nodes(this);
       this._animation = new Animation(this);
       this._attributes = new Attributes(this);
-      this._background = new Background(this, this._nodes);
-      this._geometries = new Geometries(this._attributes, this.info);
-      this._textures = new Textures(this, backend, this.info);
+      this._background = new Background(this);
+      this._geometries = new Geometries(this);
+      this._textures = new Textures(this);
       this._pipelines = new Pipelines(this);
       this._bindings = new Bindings(this);
       this._objects = new RenderObjects(this);
@@ -214,7 +215,7 @@ export class Renderer {
     return this.backend.coordinateSystem;
   }
 
-  async compileAsync(scene, camera, targetScene = null) {
+  async compileAsync(scene: Scene, camera: Camera, targetScene: Scene | null = null) {
     if (this._initialized === false) await this.init();
 
     // preserve render tree
@@ -236,7 +237,7 @@ export class Renderer {
     const renderContext = this._renderContexts.get(targetScene, camera, renderTarget);
     const activeMipmapLevel = this._activeMipmapLevel;
 
-    const compilationPromises = [];
+    const compilationPromises: any[] = [];
 
     this._currentRenderContext = renderContext;
     this._currentRenderObjectFunction = this.renderObject;
@@ -272,7 +273,7 @@ export class Renderer {
 
     // include lights from target scene
     if (targetScene !== scene) {
-      targetScene.traverseVisible(function (object) {
+      targetScene.traverseVisible(object => {
         if (object.isLight && object.layers.test(camera.layers)) {
           renderList.pushLight(object);
         }

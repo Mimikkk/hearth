@@ -1,8 +1,12 @@
 import DataMap from './DataMap.js';
 import { AttributeType } from './Constants.js';
-import { Uint32BufferAttribute, Uint16BufferAttribute } from '../../../threejs/Three.js';
+import { Uint32BufferAttribute, Uint16BufferAttribute, WireframeGeometry } from '../../../threejs/Three.js';
+import { Renderer } from '@modules/renderer/threejs/renderers/common/Renderer.js';
+import RenderObject from '@modules/renderer/threejs/renderers/common/RenderObject.js';
+import { Attribute } from '@modules/renderer/threejs/renderers/common/Attributes.js';
+import RenderObjects from '@modules/renderer/threejs/renderers/common/RenderObjects.js';
 
-function arrayNeedsUint32(array) {
+function arrayNeedsUint32(array: number[]): boolean {
   // assumes larger values usually on last
 
   for (let i = array.length - 1; i >= 0; --i) {
@@ -12,11 +16,12 @@ function arrayNeedsUint32(array) {
   return false;
 }
 
-function getWireframeVersion(geometry) {
+function getWireframeVersion(geometry: WireframeGeometry) {
+  //@ts-expect-error
   return geometry.index !== null ? geometry.index.version : geometry.attributes.position.version;
 }
 
-function getWireframeIndex(geometry) {
+function getWireframeIndex(geometry: WireframeGeometry) {
   const indices = [];
 
   const geometryIndex = geometry.index;
@@ -50,55 +55,55 @@ function getWireframeIndex(geometry) {
   return attribute;
 }
 
-export class Geometries extends DataMap {
-  constructor(attributes, info) {
-    super();
+export class Geometries extends DataMap<any, any> {
+  wireframes: WeakMap<any, any>;
+  attributeCall: WeakMap<any, any>;
 
-    this.attributes = attributes;
-    this.info = info;
+  constructor(public renderer: Renderer) {
+    super();
 
     this.wireframes = new WeakMap();
     this.attributeCall = new WeakMap();
   }
 
-  has(renderObject) {
+  has(renderObject: RenderObject) {
     const geometry = renderObject.geometry;
 
     return super.has(geometry) && this.get(geometry).initialized === true;
   }
 
-  updateForRender(renderObject) {
+  updateForRender(renderObject: RenderObject) {
     if (this.has(renderObject) === false) this.initGeometry(renderObject);
 
     this.updateAttributes(renderObject);
   }
 
-  initGeometry(renderObject) {
+  initGeometry(renderObject: RenderObject) {
     const geometry = renderObject.geometry;
     const geometryData = this.get(geometry);
 
     geometryData.initialized = true;
 
-    this.info.memory.geometries++;
+    this.renderer.info.memory.geometries++;
 
     const onDispose = () => {
-      this.info.memory.geometries--;
+      this.renderer.info.memory.geometries--;
 
       const index = geometry.index;
       const geometryAttributes = renderObject.getAttributes();
 
       if (index !== null) {
-        this.attributes.delete(index);
+        this.renderer._attributes.delete(index);
       }
 
       for (const geometryAttribute of geometryAttributes) {
-        this.attributes.delete(geometryAttribute);
+        this.renderer._attributes.delete(geometryAttribute);
       }
 
       const wireframeAttribute = this.wireframes.get(geometry);
 
       if (wireframeAttribute !== undefined) {
-        this.attributes.delete(wireframeAttribute);
+        this.renderer._attributes.delete(wireframeAttribute);
       }
 
       geometry.eventDispatcher.remove('dispose', onDispose);
@@ -107,7 +112,7 @@ export class Geometries extends DataMap {
     geometry.eventDispatcher.add('dispose', onDispose);
   }
 
-  updateAttributes(renderObject) {
+  updateAttributes(renderObject: RenderObject) {
     const attributes = renderObject.getAttributes();
 
     for (const attribute of attributes) {
@@ -121,21 +126,22 @@ export class Geometries extends DataMap {
     }
   }
 
-  updateAttribute(attribute, type) {
-    const callId = this.info.render.calls;
+  updateAttribute(attribute: Attribute, type: AttributeType) {
+    const callId = this.renderer.info.render.calls;
 
     if (this.attributeCall.get(attribute) !== callId) {
-      this.attributes.update(attribute, type);
+      this.renderer._attributes.update(attribute, type);
 
       this.attributeCall.set(attribute, callId);
     }
   }
 
-  getIndex(renderObject) {
+  getIndex(renderObject: RenderObject) {
     const { geometry, material } = renderObject;
 
     let index = geometry.index;
 
+    //@ts-expect-error
     if (material.wireframe === true) {
       const wireframes = this.wireframes;
 
@@ -146,7 +152,7 @@ export class Geometries extends DataMap {
 
         wireframes.set(geometry, wireframeAttribute);
       } else if (wireframeAttribute.version !== getWireframeVersion(geometry)) {
-        this.attributes.delete(wireframeAttribute);
+        this.renderer._attributes.delete(wireframeAttribute);
 
         wireframeAttribute = getWireframeIndex(geometry);
 

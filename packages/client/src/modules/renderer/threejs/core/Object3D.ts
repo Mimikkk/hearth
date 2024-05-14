@@ -59,6 +59,7 @@ export class Object3D<EventMap extends Object3DEventMap = Object3DEventMap> {
 
   eventDispatcher = new EventDispatcher<EventMap>();
 
+  occlusionTest: boolean;
   geometry: BufferGeometry | null;
   boundingBox: Box3 | null;
   id: number;
@@ -660,4 +661,5 @@ export class Object3D<EventMap extends Object3DEventMap = Object3DEventMap> {
     return this;
   }
 }
+
 Object3D.prototype.isObject3D = true;

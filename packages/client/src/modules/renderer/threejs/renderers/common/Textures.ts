@@ -1,19 +1,26 @@
 import DataMap from './DataMap.js';
 
-import { DepthTexture, Filter, Mapping, TextureDataType, TextureFormat, Vector3 } from '../../../threejs/Three.js';
+import {
+  DepthTexture,
+  Filter,
+  Mapping,
+  MinificationTextureFilter,
+  RenderTarget,
+  Texture,
+  TextureDataType,
+  TextureFormat,
+  Vector3,
+} from '../../../threejs/Three.js';
+import { Renderer } from '@modules/renderer/threejs/renderers/common/Renderer.js';
 
 const _size = new Vector3();
 
-class Textures extends DataMap {
-  constructor(renderer, backend, info) {
+class Textures extends DataMap<any, any> {
+  constructor(public renderer: Renderer) {
     super();
-
-    this.renderer = renderer;
-    this.backend = backend;
-    this.info = info;
   }
 
-  updateRenderTarget(renderTarget, activeMipmapLevel = 0) {
+  updateRenderTarget(renderTarget: RenderTarget, activeMipmapLevel: number = 0) {
     const renderTargetData = this.get(renderTarget);
 
     const sampleCount = renderTarget.samples === 0 ? 1 : renderTarget.samples;
@@ -24,13 +31,14 @@ class Textures extends DataMap {
 
     const size = this.getSize(texture);
 
-    const mipWidth = size.width >> activeMipmapLevel;
-    const mipHeight = size.height >> activeMipmapLevel;
+    const mipWidth = size.x >> activeMipmapLevel;
+    const mipHeight = size.y >> activeMipmapLevel;
 
     let depthTexture = renderTarget.depthTexture || depthTextureMips[activeMipmapLevel];
     let textureNeedsUpdate = false;
 
     if (depthTexture === undefined) {
+      //@ts-expect-error
       depthTexture = new DepthTexture();
       depthTexture.format = renderTarget.stencilBuffer ? TextureFormat.DepthStencil : TextureFormat.Depth;
       depthTexture.type = renderTarget.stencilBuffer ? TextureDataType.UnsignedInt248 : TextureDataType.UnsignedInt;
@@ -40,7 +48,7 @@ class Textures extends DataMap {
       depthTextureMips[activeMipmapLevel] = depthTexture;
     }
 
-    if (renderTargetData.width !== size.width || size.height !== renderTargetData.height) {
+    if (renderTargetData.width !== size.x || size.y !== renderTargetData.height) {
       textureNeedsUpdate = true;
       depthTexture.needsUpdate = true;
 
@@ -48,8 +56,8 @@ class Textures extends DataMap {
       depthTexture.image.height = mipHeight;
     }
 
-    renderTargetData.width = size.width;
-    renderTargetData.height = size.height;
+    renderTargetData.width = size.x;
+    renderTargetData.height = size.y;
     renderTargetData.textures = textures;
     renderTargetData.depthTexture = depthTexture;
     renderTargetData.depth = renderTarget.depthBuffer;
@@ -102,12 +110,12 @@ class Textures extends DataMap {
     }
   }
 
-  updateTexture(texture, options = {}) {
+  updateTexture(texture: Texture, options: Record<string, any> = {}) {
     const textureData = this.get(texture);
     if (textureData.initialized === true && textureData.version === texture.version) return;
 
     const isRenderTarget = texture.isRenderTargetTexture || texture.isDepthTexture || texture.isFramebufferTexture;
-    const backend = this.backend;
+    const backend = this.renderer.backend;
 
     if (isRenderTarget && textureData.initialized === true) {
       // it's an update
@@ -131,7 +139,7 @@ class Textures extends DataMap {
 
     //
 
-    const { width, height, depth } = this.getSize(texture);
+    const { x: width, y: height, z: depth } = this.getSize(texture);
 
     options.width = width;
     options.height = height;
@@ -195,7 +203,7 @@ class Textures extends DataMap {
 
       //
 
-      this.info.memory.textures++;
+      this.renderer.info.memory.textures++;
 
       // dispose
 
@@ -204,7 +212,7 @@ class Textures extends DataMap {
 
         this._destroyTexture(texture);
 
-        this.info.memory.textures--;
+        this.renderer.info.memory.textures--;
       };
 
       texture.eventDispatcher.add('dispose', onDispose);
@@ -215,23 +223,23 @@ class Textures extends DataMap {
     textureData.version = texture.version;
   }
 
-  getSize(texture, target = _size) {
+  getSize(texture: Texture, target = _size) {
     let image = texture.images ? texture.images[0] : texture.image;
 
     if (image) {
       if (image.image !== undefined) image = image.image;
 
-      target.width = image.width;
-      target.height = image.height;
-      target.depth = texture.isCubeTexture ? 6 : image.depth || 1;
+      target.x = image.width;
+      target.y = image.height;
+      target.z = texture.isCubeTexture ? 6 : image.depth || 1;
     } else {
-      target.width = target.height = target.depth = 1;
+      target.x = target.y = target.z = 1;
     }
 
     return target;
   }
 
-  getMipLevels(texture, width, height) {
+  getMipLevels(texture: Texture, width: number, height: number): number {
     let mipLevelCount;
 
     if (texture.isCompressedTexture) {
@@ -243,16 +251,17 @@ class Textures extends DataMap {
     return mipLevelCount;
   }
 
-  needsMipmaps(texture) {
+  needsMipmaps(texture: Texture): boolean {
     if (this.isEnvironmentTexture(texture)) return true;
 
     return (
       texture.isCompressedTexture === true ||
-      (texture.minFilter !== Filter.Nearest && texture.minFilter !== Filter.Linear)
+      (texture.minFilter !== MinificationTextureFilter.Nearest &&
+        texture.minFilter !== MinificationTextureFilter.Linear)
     );
   }
 
-  isEnvironmentTexture(texture) {
+  isEnvironmentTexture(texture: Texture): boolean {
     const mapping = texture.mapping;
 
     return (
@@ -263,9 +272,9 @@ class Textures extends DataMap {
     );
   }
 
-  _destroyTexture(texture) {
-    this.backend.destroySampler(texture);
-    this.backend.destroyTexture(texture);
+  _destroyTexture(texture: Texture): void {
+    this.renderer.backend.destroySampler(texture);
+    this.renderer.backend.destroyTexture(texture);
 
     this.delete(texture);
   }

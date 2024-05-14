@@ -3,9 +3,9 @@ import { AttributeType } from './Constants.js';
 import { BufferAttribute, BufferUsage, InterleavedBufferAttribute } from '../../../threejs/Three.js';
 import type { Renderer } from '@modules/renderer/threejs/renderers/common/Renderer.js';
 
-type Attribute = BufferAttribute<any> | InterleavedBufferAttribute;
+export type Attribute = BufferAttribute<any> | InterleavedBufferAttribute;
 
-class Attributes extends DataMap<Attribute, any> {
+export class Attributes extends DataMap<Attribute, any> {
   constructor(public renderer: Renderer) {
     super();
   }
