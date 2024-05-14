@@ -17,20 +17,27 @@ import {
   toneMapping,
   viewportBottomLeft,
 } from '../../../nodes/Nodes.js';
+import { Renderer } from '@modules/renderer/threejs/renderers/common/Renderer.js';
+import NodeUniformsGroup from '@modules/renderer/threejs/renderers/common/nodes/NodeUniformsGroup.js';
+import RenderObject from '@modules/renderer/threejs/renderers/common/RenderObject.js';
+import nodeBuilderState from './NodeBuilderState.js';
 
-class Nodes extends DataMap {
-  constructor(renderer, backend) {
+export class Nodes extends DataMap {
+  nodeFrame: NodeFrame;
+  nodeBuilderCache: Map<string, NodeBuilderState>;
+  callHashCache: ChainMap;
+  groupsData: ChainMap;
+
+  constructor(public renderer: Renderer) {
     super();
 
-    this.renderer = renderer;
-    this.backend = backend;
     this.nodeFrame = new NodeFrame();
     this.nodeBuilderCache = new Map();
     this.callHashCache = new ChainMap();
     this.groupsData = new ChainMap();
   }
 
-  updateGroup(nodeUniformsGroup) {
+  updateGroup(nodeUniformsGroup: NodeUniformsGroup): boolean {
     const groupNode = nodeUniformsGroup.groupNode;
     const name = groupNode.name;
 
@@ -84,11 +91,11 @@ class Nodes extends DataMap {
     return false;
   }
 
-  getForRenderCacheKey(renderObject) {
+  getForRenderCacheKey(renderObject: RenderObject): string {
     return renderObject.initialCacheKey;
   }
 
-  getForRender(renderObject) {
+  getForRender(renderObject: RenderObject): NodeBuilderState {
     const renderObjectData = this.get(renderObject);
 
     let nodeBuilderState = renderObjectData.nodeBuilderState;
@@ -101,7 +108,11 @@ class Nodes extends DataMap {
       nodeBuilderState = nodeBuilderCache.get(cacheKey);
 
       if (nodeBuilderState === undefined) {
-        const nodeBuilder = this.backend.createNodeBuilder(renderObject.object, this.renderer, renderObject.scene);
+        const nodeBuilder = this.renderer.backend.createNodeBuilder(
+          renderObject.object,
+          this.renderer,
+          renderObject.scene,
+        );
         nodeBuilder.material = renderObject.material;
         nodeBuilder.context.material = renderObject.material;
         nodeBuilder.lightsNode = renderObject.lightsNode;
@@ -124,7 +135,7 @@ class Nodes extends DataMap {
     return nodeBuilderState;
   }
 
-  delete(object) {
+  delete(object): boolean {
     if (object.isRenderObject) {
       const nodeBuilderState = this.get(object).nodeBuilderState;
       nodeBuilderState.usedTimes--;
@@ -137,13 +148,13 @@ class Nodes extends DataMap {
     return super.delete(object);
   }
 
-  getForCompute(computeNode) {
+  getForCompute(computeNode): NodeBuilderState {
     const computeData = this.get(computeNode);
 
     let nodeBuilderState = computeData.nodeBuilderState;
 
     if (nodeBuilderState === undefined) {
-      const nodeBuilder = this.backend.createNodeBuilder(computeNode, this.renderer);
+      const nodeBuilder = this.renderer.backend.createNodeBuilder(computeNode, this.renderer);
       nodeBuilder.build();
 
       nodeBuilderState = this._createNodeBuilderState(nodeBuilder);

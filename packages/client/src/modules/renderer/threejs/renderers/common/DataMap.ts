@@ -1,20 +1,19 @@
-class DataMap {
-  constructor() {
-    this.data = new WeakMap();
-  }
+export class DataMap<K extends WeakKey, V extends {}> {
+  data: WeakMap<K, V> = new WeakMap();
 
-  get(object) {
+  get<T extends V>(object: K): T {
     let map = this.data.get(object);
 
     if (map === undefined) {
-      map = {};
+      map = {} as V;
+
       this.data.set(object, map);
     }
 
-    return map;
+    return map as T;
   }
 
-  delete(object) {
+  delete<T extends V>(object: K): T | undefined {
     let map;
 
     if (this.data.has(object)) {
@@ -23,14 +22,14 @@ class DataMap {
       this.data.delete(object);
     }
 
-    return map;
+    return map as T | undefined;
   }
 
-  has(object) {
+  has(object: K): boolean {
     return this.data.has(object);
   }
 
-  dispose() {
+  dispose(): void {
     this.data = new WeakMap();
   }
 }

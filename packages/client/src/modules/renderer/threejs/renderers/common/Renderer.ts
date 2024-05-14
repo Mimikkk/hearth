@@ -38,14 +38,59 @@ export interface RendererParameters {
 }
 
 export class Renderer {
-  constructor(parameters = {}) {
+  declare isRenderer: true;
+  domElement: HTMLCanvasElement;
+  backend: WebGPUBackend;
+  autoClear: boolean;
+  autoClearColor: boolean;
+  autoClearDepth: boolean;
+  autoClearStencil: boolean;
+  alpha: boolean;
+  logarithmicDepthBuffer: boolean;
+  outputColorSpace: ColorSpace;
+  toneMapping: ToneMapping;
+  toneMappingExposure: number;
+  sortObjects: boolean;
+  depth: boolean;
+  stencil: boolean;
+  clippingPlanes: any[];
+  info: Info;
+  _pixelRatio: number;
+  _width: number;
+  _height: number;
+  _viewport: Vector4;
+  _scissor: Vector4;
+  _scissorTest: boolean;
+  _attributes: Attributes;
+  _geometries: Geometries;
+  _nodes: Nodes;
+  _animation: Animation;
+  _bindings: Bindings;
+  _objects: RenderObjects;
+  _pipelines: Pipelines;
+  _renderLists: RenderLists;
+  _renderContexts: RenderContexts;
+  _textures: Textures;
+  _background: Background;
+  _currentRenderContext: any;
+  _opaqueSort: any;
+  _transparentSort: any;
+  _clearColor: Color4;
+  _clearDepth: number;
+  _clearStencil: number;
+  _renderTarget: any;
+  _activeCubeFace: number;
+  _activeMipmapLevel: number;
+  _renderObjectFunction: any;
+  _currentRenderObjectFunction: any;
+  _handleObjectFunction: any;
+  _initialized: boolean;
+  _initPromise: Promise<void>;
+  _compilationPromises: any;
+
+  constructor(parameters: RendererParameters = {}) {
     this.isRenderer = true;
-
-    //
-
     const { logarithmicDepthBuffer = false, alpha = true } = parameters;
-
-    // public
 
     const backend = new WebGPUBackend(parameters);
     this.domElement = backend.getDomElement();
@@ -85,17 +130,17 @@ export class Renderer {
     this._scissor = new Vector4(0, 0, this._width, this._height);
     this._scissorTest = false;
 
-    this._attributes = null;
-    this._geometries = null;
-    this._nodes = null;
-    this._animation = null;
-    this._bindings = null;
-    this._objects = null;
-    this._pipelines = null;
-    this._renderLists = null;
-    this._renderContexts = null;
-    this._textures = null;
-    this._background = null;
+    this._attributes = null!;
+    this._geometries = null!;
+    this._nodes = null!;
+    this._animation = null!;
+    this._bindings = null!;
+    this._objects = null!;
+    this._pipelines = null!;
+    this._renderLists = null!;
+    this._renderContexts = null!;
+    this._textures = null!;
+    this._background = null!;
 
     this._currentRenderContext = null;
 
@@ -118,20 +163,9 @@ export class Renderer {
     this._handleObjectFunction = this._renderObjectDirect;
 
     this._initialized = false;
-    this._initPromise = null;
+    this._initPromise = null!;
 
     this._compilationPromises = null;
-
-    // backwards compatibility
-
-    this.shadowMap = {
-      enabled: false,
-      type: null,
-    };
-
-    this.xr = {
-      enabled: false,
-    };
   }
 
   async init() {
@@ -153,9 +187,9 @@ export class Renderer {
         return;
       }
 
-      this._nodes = new Nodes(this, backend);
-      this._animation = new Animation(this._nodes, this.info);
-      this._attributes = new Attributes(backend);
+      this._nodes = new Nodes(this);
+      this._animation = new Animation(this);
+      this._attributes = new Attributes(this);
       this._background = new Background(this, this._nodes);
       this._geometries = new Geometries(this._attributes, this.info);
       this._textures = new Textures(this, backend, this.info);

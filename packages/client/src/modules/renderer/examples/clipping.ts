@@ -96,7 +96,7 @@ function init() {
   // Renderer
 
   renderer = new WebGPURenderer({ antialias: true });
-  renderer.shadowMap.enabled = true;
+
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(animate);

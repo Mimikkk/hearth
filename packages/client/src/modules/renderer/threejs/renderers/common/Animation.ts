@@ -1,35 +1,34 @@
+import type { Renderer } from '@modules/renderer/threejs/renderers/common/Renderer.js';
+
+type AnimationLoopFn = (time: number, frame?: number) => void;
+
 export class Animation {
-  constructor(nodes, info) {
-    this.nodes = nodes;
-    this.info = info;
+  animationLoop: AnimationLoopFn | null = null;
+  requestId: number | null = null;
 
+  constructor(public renderer: Renderer) {
     this.animationLoop = null;
-    this.requestId = null;
 
-    this._init();
-  }
-
-  _init() {
-    const update = (time, frame) => {
+    const update = (time: number, frame?: number) => {
       this.requestId = self.requestAnimationFrame(update);
 
-      if (this.info.autoReset === true) this.info.reset();
+      if (this.renderer.info.autoReset) this.renderer.info.reset();
 
-      this.nodes.nodeFrame.update();
+      this.renderer._nodes.nodeFrame.update();
 
-      this.info.frame = this.nodes.nodeFrame.frameId;
+      this.renderer.info.frame = this.renderer._nodes.nodeFrame.frameId;
 
       if (this.animationLoop !== null) this.animationLoop(time, frame);
     };
 
-    update();
+    update(0);
   }
 
   dispose() {
-    self.cancelAnimationFrame(this.requestId);
+    self.cancelAnimationFrame(this.requestId!);
   }
 
-  setAnimationLoop(callback) {
+  setAnimationLoop(callback: AnimationLoopFn) {
     this.animationLoop = callback;
   }
 }

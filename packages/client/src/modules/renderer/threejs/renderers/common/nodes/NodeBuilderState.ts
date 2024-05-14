@@ -2,7 +2,7 @@ import Binding from '@modules/renderer/threejs/renderers/common/Binding.js';
 import NodeAttribute from '@modules/renderer/threejs/nodes/core/NodeAttribute.js';
 import Node from '@modules/renderer/threejs/nodes/core/Node.js';
 
-class NodeBuilderState {
+export class NodeBuilderState {
   usedTimes: number = 0;
 
   constructor(
@@ -16,20 +16,18 @@ class NodeBuilderState {
     public transforms = [],
   ) {}
 
-  createBindings() {
-    const bindingsArray = [];
+  createBindings(): Binding[] {
+    const bindings = [];
 
-    for (const instanceBinding of this.bindings) {
-      let binding = instanceBinding;
-
-      if (instanceBinding.shared !== true) {
-        binding = instanceBinding.clone();
+    for (let binding of this.bindings) {
+      if (binding.shared !== true) {
+        binding = binding.clone();
       }
 
-      bindingsArray.push(binding);
+      bindings.push(binding);
     }
 
-    return bindingsArray;
+    return bindings;
   }
 }
 

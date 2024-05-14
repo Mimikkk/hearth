@@ -119,10 +119,6 @@ export class CubeCamera extends Object3D {
     const currentActiveCubeFace = renderer.getActiveCubeFace();
     const currentActiveMipmapLevel = renderer.getActiveMipmapLevel();
 
-    const currentXrEnabled = renderer.xr.enabled;
-
-    renderer.xr.enabled = false;
-
     const generateMipmaps = renderTarget.texture.generateMipmaps;
 
     renderTarget.texture.generateMipmaps = false;
@@ -151,8 +147,6 @@ export class CubeCamera extends Object3D {
     renderer.render(scene, cameraNZ);
 
     renderer.setRenderTarget(currentRenderTarget, currentActiveCubeFace, currentActiveMipmapLevel);
-
-    renderer.xr.enabled = currentXrEnabled;
 
     renderTarget.texture.needsPMREMUpdate = true;
   }

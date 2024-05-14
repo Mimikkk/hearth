@@ -347,18 +347,10 @@ class GPUComputationRenderer {
     this.doRenderTarget = function (material, output) {
       const currentRenderTarget = renderer.getRenderTarget();
 
-      const currentXrEnabled = renderer.xr.enabled;
-      const currentShadowAutoUpdate = renderer.shadowMap.autoUpdate;
-
-      renderer.xr.enabled = false; // Avoid camera modification
-      renderer.shadowMap.autoUpdate = false; // Avoid re-computing shadows
       mesh.material = material;
       renderer.setRenderTarget(output);
       renderer.render(scene, camera);
       mesh.material = passThruShader;
-
-      renderer.xr.enabled = currentXrEnabled;
-      renderer.shadowMap.autoUpdate = currentShadowAutoUpdate;
 
       renderer.setRenderTarget(currentRenderTarget);
     };

@@ -1,49 +1,51 @@
 import DataMap from './DataMap.js';
 import { AttributeType } from './Constants.js';
-import { BufferUsage } from '../../../threejs/Three.js';
+import { BufferAttribute, BufferUsage, InterleavedBufferAttribute } from '../../../threejs/Three.js';
+import type { Renderer } from '@modules/renderer/threejs/renderers/common/Renderer.js';
 
-class Attributes extends DataMap {
-  constructor(backend) {
+type Attribute = BufferAttribute<any> | InterleavedBufferAttribute;
+
+class Attributes extends DataMap<Attribute, any> {
+  constructor(public renderer: Renderer) {
     super();
-
-    this.backend = backend;
   }
 
-  delete(attribute) {
-    const attributeData = super.delete(attribute);
+  delete(attribute: Attribute) {
+    const data = super.delete(attribute);
 
-    if (attributeData !== undefined) {
-      this.backend.destroyAttribute(attribute);
+    if (data !== undefined) {
+      this.renderer.backend.destroyAttribute(attribute);
     }
+
+    return data;
   }
 
-  update(attribute, type) {
+  update(attribute: Attribute, type: AttributeType) {
     const data = this.get(attribute);
 
     if (data.version === undefined) {
       if (type === AttributeType.Vertex) {
-        this.backend.createAttribute(attribute);
+        this.renderer.backend.createAttribute(attribute);
       } else if (type === AttributeType.Index) {
-        this.backend.createIndexAttribute(attribute);
+        this.renderer.backend.createIndexAttribute(attribute);
       } else if (type === AttributeType.Storage) {
-        this.backend.createStorageAttribute(attribute);
+        this.renderer.backend.createStorageAttribute(attribute);
       }
 
       data.version = this._getBufferAttribute(attribute).version;
     } else {
-      const bufferAttribute = this._getBufferAttribute(attribute);
+      const buffer = this._getBufferAttribute(attribute);
 
-      if (data.version < bufferAttribute.version || bufferAttribute.usage === BufferUsage.DynamicDraw) {
-        this.backend.updateAttribute(attribute);
+      if (data.version < buffer.version || buffer.usage === BufferUsage.DynamicDraw) {
+        this.renderer.backend.updateAttribute(attribute);
 
-        data.version = bufferAttribute.version;
+        data.version = buffer.version;
       }
     }
   }
 
-  _getBufferAttribute(attribute) {
-    if (attribute.isInterleavedBufferAttribute) attribute = attribute.data;
-
+  _getBufferAttribute(attribute: Attribute): BufferAttribute<any> {
+    if (attribute instanceof InterleavedBufferAttribute) attribute = attribute.data as unknown as BufferAttribute<any>;
     return attribute;
   }
 }
