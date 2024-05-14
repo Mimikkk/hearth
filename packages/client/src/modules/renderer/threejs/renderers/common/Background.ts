@@ -1,6 +1,6 @@
 import DataMap from './DataMap.js';
 import Color4 from './Color4.js';
-import { Mesh, Side, SphereGeometry } from '../../../threejs/Three.js';
+import { Camera, Mesh, Scene, Side, SphereGeometry } from '../../../threejs/Three.js';
 import {
   backgroundBlurriness,
   backgroundIntensity,
@@ -10,20 +10,20 @@ import {
   normalWorld,
   vec4,
 } from '../../nodes/Nodes.js';
+import { Renderer } from '@modules/renderer/threejs/renderers/common/Renderer.js';
+import RenderContext from '@modules/renderer/threejs/renderers/common/RenderContext.js';
+import RenderList from '@modules/renderer/threejs/renderers/common/RenderList.js';
 
-const _clearColor = new Color4();
+const _clearColor = new Color4(0, 0, 0, 1);
 
-class Background extends DataMap {
-  constructor(renderer, nodes) {
+class Background extends DataMap<any, any> {
+  constructor(public renderer: Renderer) {
     super();
-
-    this.renderer = renderer;
-    this.nodes = nodes;
   }
 
-  update(scene, renderList, renderContext) {
+  update(scene: Scene, renderList: RenderList, renderContext: RenderContext) {
     const renderer = this.renderer;
-    const background = this.nodes.getBackgroundNode(scene) || scene.background;
+    const background = this.renderer._nodes.getBackgroundNode(scene) || scene.background;
 
     let forceClear = false;
 
@@ -49,7 +49,6 @@ class Background extends DataMap {
 
       if (backgroundMesh === undefined) {
         const backgroundMeshNode = context(vec4(backgroundNode).mul(backgroundIntensity), {
-          // @TODO: Add Texture2D support using node context
           getUV: () => normalWorld,
           getTextureLevel: () => backgroundBlurriness,
         });
@@ -69,7 +68,7 @@ class Background extends DataMap {
         sceneData.backgroundMesh = backgroundMesh = new Mesh(new SphereGeometry(1, 32, 32), nodeMaterial);
         backgroundMesh.frustumCulled = false;
 
-        backgroundMesh.onBeforeRender = function (renderer, scene, camera) {
+        backgroundMesh.onBeforeRender = function (renderer: Renderer, scene: Scene, camera: Camera) {
           this.matrixWorld.copyPosition(camera.matrixWorld);
         };
       }

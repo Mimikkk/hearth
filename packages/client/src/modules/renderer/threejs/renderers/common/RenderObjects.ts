@@ -1,37 +1,36 @@
 import ChainMap from './ChainMap.js';
 import RenderObject from './RenderObject.js';
+import { Renderer } from '@modules/renderer/threejs/renderers/common/Renderer.js';
+import RenderContext from '@modules/renderer/threejs/renderers/common/RenderContext.js';
+import LightsNode from '@modules/renderer/threejs/nodes/lighting/LightsNode.js';
+import { Camera } from '@modules/renderer/threejs/cameras/Camera.js';
+import { Scene } from '@modules/renderer/threejs/scenes/Scene.js';
+import { Material } from '@modules/renderer/threejs/materials/Material.js';
+import { Object3D } from '@modules/renderer/threejs/core/Object3D.js';
 
 class RenderObjects {
-  constructor(renderer, nodes, geometries, pipelines, bindings, info) {
-    this.renderer = renderer;
-    this.nodes = nodes;
-    this.geometries = geometries;
-    this.pipelines = pipelines;
-    this.bindings = bindings;
-    this.info = info;
+  chainMaps: Record<string, ChainMap>;
 
+  constructor(public renderer: Renderer) {
     this.chainMaps = {};
   }
 
-  get(object, material, scene, camera, lightsNode, renderContext, passId) {
+  get(
+    object: Object3D,
+    material: Material,
+    scene: Scene,
+    camera: Camera,
+    lightsNode: LightsNode,
+    renderContext: RenderContext,
+    passId: string = 'default',
+  ) {
     const chainMap = this.getChainMap(passId);
     const chainArray = [object, material, renderContext, lightsNode];
 
     let renderObject = chainMap.get(chainArray);
 
     if (renderObject === undefined) {
-      renderObject = this.createRenderObject(
-        this.nodes,
-        this.geometries,
-        this.renderer,
-        object,
-        material,
-        scene,
-        camera,
-        lightsNode,
-        renderContext,
-        passId,
-      );
+      renderObject = this.createRenderObject(object, material, scene, camera, lightsNode, renderContext, passId);
 
       chainMap.set(chainArray, renderObject);
     } else {
@@ -51,7 +50,7 @@ class RenderObjects {
     return renderObject;
   }
 
-  getChainMap(passId = 'default') {
+  getChainMap(passId: string = 'default') {
     return this.chainMaps[passId] || (this.chainMaps[passId] = new ChainMap());
   }
 
@@ -59,15 +58,23 @@ class RenderObjects {
     this.chainMaps = {};
   }
 
-  createRenderObject(nodes, geometries, renderer, object, material, scene, camera, lightsNode, renderContext, passId) {
+  createRenderObject(
+    object: Object3D,
+    material: Material,
+    scene: Scene,
+    camera: Camera,
+    lightsNode: LightsNode,
+    renderContext: RenderContext,
+    passId: string,
+  ) {
     const chainMap = this.getChainMap(passId);
 
-    const renderObject = new RenderObject(renderer, object, material, scene, camera, lightsNode, renderContext);
+    const renderObject = new RenderObject(this.renderer, object, material, scene, camera, lightsNode, renderContext);
 
     renderObject.onDispose = () => {
-      this.pipelines.delete(renderObject);
-      this.bindings.delete(renderObject);
-      this.nodes.delete(renderObject);
+      this.renderer._pipelines.delete(renderObject);
+      this.renderer._bindings.delete(renderObject);
+      this.renderer._nodes.delete(renderObject);
 
       chainMap.delete(renderObject.getChainArray());
     };

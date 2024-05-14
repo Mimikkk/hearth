@@ -1,14 +1,18 @@
-import { Filter, Texture } from '../../../threejs/Three.js';
+import { MagnificationTextureFilter, MinificationTextureFilter, Texture } from '../../../threejs/Three.js';
 
-class StorageTexture extends Texture {
-  constructor(width = 1, height = 1) {
+export class StorageTexture extends Texture {
+  declare isStorageTexture: true;
+  magFilter: MagnificationTextureFilter;
+  minFilter: MinificationTextureFilter;
+
+  constructor(width: number = 1, height: number = 1) {
+    //@ts-expect-error
     super();
 
     this.image = { width, height };
 
-    this.magFilter = Filter.Linear;
-    this.minFilter = Filter.Linear;
-
+    this.magFilter = MagnificationTextureFilter.Linear;
+    this.minFilter = MinificationTextureFilter.Linear;
     this.isStorageTexture = true;
   }
 }

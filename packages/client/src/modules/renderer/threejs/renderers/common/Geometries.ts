@@ -50,7 +50,7 @@ function getWireframeIndex(geometry) {
   return attribute;
 }
 
-class Geometries extends DataMap {
+export class Geometries extends DataMap {
   constructor(attributes, info) {
     super();
 

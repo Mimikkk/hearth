@@ -1,8 +1,33 @@
 import { Vector4 } from '../../../threejs/Three.js';
+import { RGBA } from '@modules/renderer/threejs/renderers/common/Color4.js';
 
 let id = 0;
 
-class RenderContext {
+export class RenderContext {
+  id: number;
+  color: boolean;
+  clearColor: boolean;
+  clearColorValue: RGBA;
+  depth: boolean;
+  clearDepth: boolean;
+  clearDepthValue: number;
+  stencil: boolean;
+  clearStencil: boolean;
+  clearStencilValue: number;
+  viewport: boolean;
+  viewportValue: Vector4;
+  scissor: boolean;
+  scissorValue: Vector4;
+  textures: any;
+  depthTexture: any;
+  activeCubeFace: number;
+  sampleCount: number;
+  width: number;
+  height: number;
+  isRenderContext: boolean;
+  stencilClearValue: number;
+  depthClearValue: number;
+
   constructor() {
     this.id = id++;
 

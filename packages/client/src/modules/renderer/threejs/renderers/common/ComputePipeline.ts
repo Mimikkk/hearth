@@ -1,10 +1,14 @@
 import Pipeline from './Pipeline.js';
+import ProgrammableStage from '@modules/renderer/threejs/renderers/common/ProgrammableStage.js';
 
-class ComputePipeline extends Pipeline {
-  constructor(cacheKey, computeProgram) {
+export class ComputePipeline extends Pipeline {
+  declare isComputePipeline: true;
+
+  constructor(
+    cacheKey: string,
+    public computeProgram: ProgrammableStage,
+  ) {
     super(cacheKey);
-
-    this.computeProgram = computeProgram;
 
     this.isComputePipeline = true;
   }

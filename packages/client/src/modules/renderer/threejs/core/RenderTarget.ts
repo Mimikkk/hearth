@@ -28,6 +28,7 @@ export class RenderTarget {
   depthTexture: Texture | null;
   samples: number;
   configuration: RenderTarget.Configuration;
+  count: number;
 
   constructor(
     public width: number = 1,
@@ -71,6 +72,7 @@ export class RenderTarget {
       this.textures[i].isRenderTargetTexture = true;
     }
 
+    this.count = count;
     this.depthBuffer = configuration.depthBuffer;
     this.stencilBuffer = configuration.stencilBuffer;
     this.depthTexture = configuration.depthTexture;

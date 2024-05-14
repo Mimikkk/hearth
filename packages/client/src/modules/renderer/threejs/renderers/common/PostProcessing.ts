@@ -1,24 +1,28 @@
 import { vec4, NodeMaterial } from '../../nodes/Nodes.js';
 import { QuadMesh } from '../../objects/QuadMesh.js';
+import { Renderer } from '@modules/renderer/threejs/renderers/common/Renderer.js';
 
-const quadMesh = new QuadMesh(new NodeMaterial());
+const mesh = new QuadMesh(new NodeMaterial());
 
 class PostProcessing {
-  constructor(renderer, outputNode = vec4(0, 0, 1, 1)) {
+  renderer: Renderer;
+  outputNode: any;
+
+  constructor(renderer: Renderer, outputNode = vec4(0, 0, 1, 1)) {
     this.renderer = renderer;
     this.outputNode = outputNode;
   }
 
   render() {
-    quadMesh.material.fragmentNode = this.outputNode;
+    (mesh.material as NodeMaterial).fragmentNode = this.outputNode;
 
-    quadMesh.render(this.renderer);
+    mesh.render(this.renderer);
   }
 
   renderAsync() {
-    quadMesh.material.fragmentNode = this.outputNode;
+    (mesh.material as NodeMaterial).fragmentNode = this.outputNode;
 
-    return quadMesh.renderAsync(this.renderer);
+    return mesh.renderAsync(this.renderer);
   }
 }
 

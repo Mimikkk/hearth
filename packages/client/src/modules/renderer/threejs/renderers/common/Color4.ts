@@ -1,7 +1,7 @@
 import { Color } from '../../../threejs/Three.js';
 import { RGB } from '@modules/renderer/threejs/math/Color.js';
 
-type RGBA = RGB & { a: number };
+export type RGBA = RGB & { a: number };
 
 class Color4 extends Color {
   constructor(

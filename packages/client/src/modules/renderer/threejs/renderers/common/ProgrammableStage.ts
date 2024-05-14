@@ -2,7 +2,7 @@ let _id = 0;
 
 export type StageType = 'compute' | 'vertex' | 'fragment';
 
-class ProgrammableStage {
+export class ProgrammableStage {
   usedTimes: number = 0;
   id: number;
 

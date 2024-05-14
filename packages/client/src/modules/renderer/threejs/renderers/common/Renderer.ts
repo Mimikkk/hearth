@@ -196,14 +196,7 @@ export class Renderer {
       this._textures = new Textures(this, backend, this.info);
       this._pipelines = new Pipelines(this);
       this._bindings = new Bindings(this);
-      this._objects = new RenderObjects(
-        this,
-        this._nodes,
-        this._geometries,
-        this._pipelines,
-        this._bindings,
-        this.info,
-      );
+      this._objects = new RenderObjects(this);
       this._renderLists = new RenderLists();
       this._renderContexts = new RenderContexts();
 

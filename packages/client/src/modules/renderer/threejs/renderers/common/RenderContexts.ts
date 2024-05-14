@@ -1,12 +1,17 @@
 import ChainMap from './ChainMap.js';
 import RenderContext from './RenderContext.js';
+import { Scene } from '@modules/renderer/threejs/scenes/Scene.js';
+import { Camera } from '@modules/renderer/threejs/cameras/Camera.js';
+import { RenderTarget } from '@modules/renderer/threejs/core/RenderTarget.js';
 
 class RenderContexts {
+  chainMaps: Record<string, ChainMap>;
+
   constructor() {
     this.chainMaps = {};
   }
 
-  get(scene, camera, renderTarget = null) {
+  get(scene: Scene, camera: Camera, renderTarget: RenderTarget | null = null) {
     const chainKey = [scene, camera];
 
     let attachmentState;
@@ -35,7 +40,7 @@ class RenderContexts {
     return renderState;
   }
 
-  getChainMap(attachmentState) {
+  getChainMap(attachmentState: string) {
     return this.chainMaps[attachmentState] || (this.chainMaps[attachmentState] = new ChainMap());
   }
 
