@@ -19,8 +19,8 @@ import {
   StencilFunc,
   StencilOp,
 } from 'three/src/constants.js';
-import { Plane } from 'three/src/math/Plane.js';
 import { Vector3 } from '@modules/renderer/threejs/math/Vector3.js';
+import { Plane } from '@modules/renderer/threejs/math/Plane.js';
 
 let _materialId = 0;
 

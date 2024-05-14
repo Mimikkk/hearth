@@ -1,14 +1,50 @@
 import ClippingContext from './ClippingContext.js';
+import Nodes from '@modules/renderer/threejs/renderers/common/nodes/Nodes.js';
+import Geometries from '@modules/renderer/threejs/renderers/common/Geometries.js';
+import { Renderer } from '@modules/renderer/threejs/renderers/common/Renderer.js';
+import { Object3D } from '@modules/renderer/threejs/core/Object3D.js';
+import { Material } from '@modules/renderer/threejs/materials/Material.js';
+import { Scene } from '@modules/renderer/threejs/scenes/Scene.js';
+import { Camera } from '@modules/renderer/threejs/cameras/Camera.js';
+import LightsNode from '@modules/renderer/threejs/nodes/lighting/LightsNode.js';
+import RenderContext from '@modules/renderer/threejs/renderers/common/RenderContext.js';
 
 let id = 0;
 
 export default class RenderObject {
-  constructor(nodes, geometries, renderer, object, material, scene, camera, lightsNode, renderContext) {
-    this._nodes = nodes;
-    this._geometries = geometries;
+  id: number;
+  renderer: Renderer;
+  object: Object3D;
+  material: Material;
+  scene: Scene;
+  camera: Camera;
+  lightsNode: LightsNode;
+  context: RenderContext;
+  geometry: any;
+  version: number;
+  attributes: any;
+  pipeline: any;
+  vertexBuffers: any;
+  clippingContext: ClippingContext;
+  clippingContextVersion: number;
+  initialNodesCacheKey: string;
+  initialCacheKey: string;
+  _nodeBuilderState: any;
+  _bindings: any;
+  onDispose: any;
+  isRenderObject: boolean;
+  onMaterialDispose: any;
 
+  constructor(
+    public renderer: Renderer,
+    public object: Object3D,
+    public material: Material,
+    public scene: Scene,
+    public camera: Camera,
+    public lightsNode: LightsNode,
+    public renderContext: RenderContext,
+  ) {
     this.id = id++;
-
     this.renderer = renderer;
     this.object = object;
     this.material = material;
@@ -71,7 +107,7 @@ export default class RenderObject {
   }
 
   getNodeBuilderState() {
-    return this._nodeBuilderState || (this._nodeBuilderState = this._nodes.getForRender(this));
+    return this._nodeBuilderState || (this._nodeBuilderState = this.renderer._nodes.getForRender(this));
   }
 
   getBindings() {
@@ -79,7 +115,7 @@ export default class RenderObject {
   }
 
   getIndex() {
-    return this._geometries.getIndex(this);
+    return this.renderer._geometries.getIndex(this);
   }
 
   getChainArray() {
@@ -159,13 +195,12 @@ export default class RenderObject {
     return this.initialNodesCacheKey !== this.getNodesCacheKey() || this.clippingNeedsUpdate;
   }
 
-  getNodesCacheKey() {
+  getNodesCacheKey(): string {
     // Environment Nodes Cache Key
-
-    return this._nodes.getCacheKey(this.scene, this.lightsNode);
+    return this.renderer._nodes.getCacheKey(this.scene, this.lightsNode);
   }
 
-  getCacheKey() {
+  getCacheKey(): string {
     return this.getMaterialCacheKey() + ',' + this.getNodesCacheKey();
   }
 

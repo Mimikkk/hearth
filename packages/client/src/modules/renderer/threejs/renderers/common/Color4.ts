@@ -1,25 +1,32 @@
 import { Color } from '../../../threejs/Three.js';
+import { RGB } from '@modules/renderer/threejs/math/Color.js';
+
+type RGBA = RGB & { a: number };
 
 class Color4 extends Color {
-  constructor(r, g, b, a = 1) {
+  constructor(
+    r: number,
+    g: number,
+    b: number,
+    public a: number = 1,
+  ) {
     super(r, g, b);
-
-    this.a = a;
   }
 
-  set(r, g, b, a = 1) {
+  set(r: number, g: number, b: number, a: number) {
     this.a = a;
 
     return super.set(r, g, b);
   }
 
-  copy(color) {
-    if (color.a !== undefined) this.a = color.a;
+  copy(color: RGB | RGBA) {
+    if ('a' in color) this.a = color.a;
 
-    return super.copy(color);
+    return super.copy(color as any);
   }
 
   clone() {
+    //@ts-expect-error
     return new this.constructor(this.r, this.g, this.b, this.a);
   }
 }

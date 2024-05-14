@@ -64,6 +64,7 @@ export class Renderer {
   _attributes: Attributes;
   _geometries: Geometries;
   _nodes: Nodes;
+  localClippingEnabled: boolean;
   _animation: Animation;
   _bindings: Bindings;
   _objects: RenderObjects;
@@ -101,7 +102,7 @@ export class Renderer {
     this.autoClearColor = true;
     this.autoClearDepth = true;
     this.autoClearStencil = true;
-
+    this.localClippingEnabled = false;
     this.alpha = alpha;
 
     this.logarithmicDepthBuffer = logarithmicDepthBuffer;
@@ -193,8 +194,8 @@ export class Renderer {
       this._background = new Background(this, this._nodes);
       this._geometries = new Geometries(this._attributes, this.info);
       this._textures = new Textures(this, backend, this.info);
-      this._pipelines = new Pipelines(backend, this._nodes);
-      this._bindings = new Bindings(backend, this._nodes, this._textures, this._attributes, this._pipelines, this.info);
+      this._pipelines = new Pipelines(this);
+      this._bindings = new Bindings(this);
       this._objects = new RenderObjects(
         this,
         this._nodes,

@@ -1,5 +1,5 @@
 export class Binding {
-  visibility: number;
+  visibility: number = 0;
 
   constructor(public name: string = '') {}
 

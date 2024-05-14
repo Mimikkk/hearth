@@ -62,17 +62,7 @@ class RenderObjects {
   createRenderObject(nodes, geometries, renderer, object, material, scene, camera, lightsNode, renderContext, passId) {
     const chainMap = this.getChainMap(passId);
 
-    const renderObject = new RenderObject(
-      nodes,
-      geometries,
-      renderer,
-      object,
-      material,
-      scene,
-      camera,
-      lightsNode,
-      renderContext,
-    );
+    const renderObject = new RenderObject(renderer, object, material, scene, camera, lightsNode, renderContext);
 
     renderObject.onDispose = () => {
       this.pipelines.delete(renderObject);

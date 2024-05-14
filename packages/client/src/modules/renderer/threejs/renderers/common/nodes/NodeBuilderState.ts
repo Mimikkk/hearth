@@ -13,7 +13,6 @@ export class NodeBuilderState {
     public bindings: Binding[],
     public updateNodes: Node[],
     public updateBeforeNodes: Node[],
-    public transforms = [],
   ) {}
 
   createBindings(): Binding[] {

@@ -1,11 +1,21 @@
-import { Matrix3, Plane, Vector4 } from '../../../threejs/Three.js';
+import { Camera, Material, Matrix3, Matrix4, Plane, Vector4 } from '../../../threejs/Three.js';
+import { Renderer } from '@modules/renderer/threejs/renderers/common/Renderer.js';
 
 const _plane = new Plane();
 const _viewNormalMatrix = new Matrix3();
 
 let _clippingContextVersion = 0;
 
-class ClippingContext {
+export class ClippingContext {
+  version: number;
+  globalClippingCount: number;
+  localClippingCount: number;
+  localClippingEnabled: boolean;
+  localClipIntersection: boolean;
+  planes: Vector4[];
+  parentVersion: number;
+  viewMatrix: Matrix4 | null;
+
   constructor() {
     this.version = ++_clippingContextVersion;
 
@@ -20,12 +30,12 @@ class ClippingContext {
     this.parentVersion = 0;
   }
 
-  projectPlanes(source, offset) {
+  projectPlanes(source: Plane[], offset: number) {
     const l = source.length;
     const planes = this.planes;
 
     for (let i = 0; i < l; i++) {
-      _plane.copy(source[i]).applyMatrix4(this.viewMatrix, _viewNormalMatrix);
+      _plane.copy(source[i]).applyMatrix4(this.viewMatrix!, _viewNormalMatrix);
 
       const v = planes[offset + i];
       const normal = _plane.normal;
@@ -37,11 +47,11 @@ class ClippingContext {
     }
   }
 
-  updateGlobal(renderer, camera) {
+  updateGlobal(renderer: Renderer, camera: Camera) {
     const rendererClippingPlanes = renderer.clippingPlanes;
     this.viewMatrix = camera.matrixWorldInverse;
 
-    _viewNormalMatrix.getNormalMatrix(this.viewMatrix);
+    _viewNormalMatrix.getNormalMatrix(this.viewMatrix!);
 
     let update = false;
 
@@ -76,7 +86,7 @@ class ClippingContext {
     if (update) this.version = _clippingContextVersion++;
   }
 
-  update(parent, material) {
+  update(parent: ClippingContext, material: Material) {
     let update = false;
 
     if (this !== parent && parent.version !== this.parentVersion) {

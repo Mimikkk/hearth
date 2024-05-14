@@ -1,21 +1,24 @@
 import DataMap from './DataMap.js';
 import { AttributeType } from './Constants.js';
+import Pipelines from '@modules/renderer/threejs/renderers/common/Pipelines.js';
+import Backend from '@modules/renderer/threejs/renderers/common/Backend.js';
+import Nodes from '@modules/renderer/threejs/renderers/common/nodes/Nodes.js';
+import Textures from '@modules/renderer/threejs/renderers/common/Textures.js';
+import Attributes from '@modules/renderer/threejs/renderers/common/Attributes.js';
+import { Info } from '@modules/renderer/threejs/renderers/common/Info.js';
+import { Renderer } from '@modules/renderer/threejs/renderers/common/Renderer.js';
+import RenderObject from '@modules/renderer/threejs/renderers/common/RenderObject.js';
+import Binding from '@modules/renderer/threejs/renderers/common/Binding.js';
+import RenderObjects from '@modules/renderer/threejs/renderers/common/RenderObjects.js';
+import ComputeNode from 'three/examples/jsm/nodes/gpgpu/ComputeNode.js';
+import { Object3D } from '@modules/renderer/threejs/core/Object3D.js';
 
-class Bindings extends DataMap {
-  constructor(backend, nodes, textures, attributes, pipelines, info) {
+class Bindings extends DataMap<any, any> {
+  constructor(public renderer: Renderer) {
     super();
-
-    this.backend = backend;
-    this.textures = textures;
-    this.pipelines = pipelines;
-    this.attributes = attributes;
-    this.nodes = nodes;
-    this.info = info;
-
-    this.pipelines.bindings = this; // assign bindings to pipelines
   }
 
-  getForRender(renderObject) {
+  getForRender(renderObject: RenderObject): Binding[] {
     const bindings = renderObject.getBindings();
 
     const data = this.get(renderObject);
@@ -27,17 +30,17 @@ class Bindings extends DataMap {
 
       this._init(bindings);
 
-      this.backend.createBindings(bindings);
+      this.renderer.backend.createBindings(bindings);
     }
 
     return data.bindings;
   }
 
-  getForCompute(computeNode) {
+  getForCompute(computeNode: ComputeNode): Binding[] {
     const data = this.get(computeNode);
 
     if (data.bindings === undefined) {
-      const nodeBuilderState = this.nodes.getForCompute(computeNode);
+      const nodeBuilderState = this.renderer._nodes.getForCompute(computeNode);
 
       const bindings = nodeBuilderState.bindings;
 
@@ -45,42 +48,40 @@ class Bindings extends DataMap {
 
       this._init(bindings);
 
-      this.backend.createBindings(bindings);
+      this.renderer.backend.createBindings(bindings);
     }
 
     return data.bindings;
   }
 
-  updateForCompute(computeNode) {
+  updateForCompute(computeNode: ComputeNode): void {
     this._update(computeNode, this.getForCompute(computeNode));
   }
 
-  updateForRender(renderObject) {
+  updateForRender(renderObject: RenderObject): void {
     this._update(renderObject, this.getForRender(renderObject));
   }
 
-  _init(bindings) {
+  _init(bindings: Binding[]): void {
     for (const binding of bindings) {
       if (binding.isSampledTexture) {
-        this.textures.updateTexture(binding.texture);
+        this.renderer._textures.updateTexture(binding.texture);
       } else if (binding.isStorageBuffer) {
         const attribute = binding.attribute;
 
-        this.attributes.update(attribute, AttributeType.Storage);
+        this.renderer._attributes.update(attribute, AttributeType.Storage);
       }
     }
   }
 
-  _update(object, bindings) {
-    const { backend } = this;
-
+  _update(object: Object3D, bindings: Binding[]): void {
     let needsBindingsUpdate = false;
 
     // iterate over all bindings and check if buffer updates or a new binding group is required
 
     for (const binding of bindings) {
       if (binding.isNodeUniformsGroup) {
-        const updated = this.nodes.updateGroup(binding);
+        const updated = this.renderer._nodes.updateGroup(binding);
 
         if (!updated) continue;
       }
@@ -89,7 +90,7 @@ class Bindings extends DataMap {
         const updated = binding.update();
 
         if (updated) {
-          backend.updateBinding(binding);
+          this.renderer.backend.updateBinding(binding);
         }
       } else if (binding.isSampledTexture) {
         const texture = binding.texture;
@@ -99,7 +100,7 @@ class Bindings extends DataMap {
         const updated = binding.update();
 
         if (updated) {
-          this.textures.updateTexture(binding.texture);
+          this.renderer._textures.updateTexture(binding.texture);
         }
 
         if (texture.isStorageTexture === true) {
@@ -109,10 +110,10 @@ class Bindings extends DataMap {
             textureData.needsMipmap = true;
           } else if (
             texture.generateMipmaps === true &&
-            this.textures.needsMipmaps(texture) &&
+            this.renderer._textures.needsMipmaps(texture) &&
             textureData.needsMipmap === true
           ) {
-            this.backend.generateMipmaps(texture);
+            this.renderer.backend.generateMipmaps(texture);
 
             textureData.needsMipmap = false;
           }
@@ -121,9 +122,9 @@ class Bindings extends DataMap {
     }
 
     if (needsBindingsUpdate === true) {
-      const pipeline = this.pipelines.getForRender(object);
+      const pipeline = this.renderer._pipelines.getForRender(object);
 
-      this.backend.updateBindings(bindings, pipeline);
+      this.renderer.backend.updateBindings(bindings, pipeline);
     }
   }
 }
