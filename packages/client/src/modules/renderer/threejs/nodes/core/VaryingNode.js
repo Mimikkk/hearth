@@ -1,5 +1,4 @@
 import Node, { addNodeClass } from './Node.js';
-import { NodeShaderStage } from './constants.js';
 import { addNodeElement, nodeProxy } from '../shadernode/ShaderNode.js';
 
 class VaryingNode extends Node {
@@ -35,10 +34,10 @@ class VaryingNode extends Node {
     // this property can be used to check if the varying can be optimized for a var
     nodeVarying.needsInterpolation || (nodeVarying.needsInterpolation = builder.shaderStage === 'fragment');
 
-    const propertyName = builder.getPropertyName(nodeVarying, NodeShaderStage.VERTEX);
+    const propertyName = builder.getPropertyName(nodeVarying, 'vertex');
 
     // force node run in vertex stage
-    builder.flowNodeFromShaderStage(NodeShaderStage.VERTEX, node, type, propertyName);
+    builder.flowNodeFromShaderStage('vertex', node, type, propertyName);
 
     return builder.getPropertyName(nodeVarying);
   }

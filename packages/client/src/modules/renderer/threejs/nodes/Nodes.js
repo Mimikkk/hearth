@@ -2,7 +2,7 @@
 // this will also solve issues like "import TempNode from '../core/Node.js'"
 
 // constants
-export * from './core/constants.js';
+export * from './core/constants.ts';
 
 // core
 export { default as AssignNode, assign } from './core/AssignNode.js';

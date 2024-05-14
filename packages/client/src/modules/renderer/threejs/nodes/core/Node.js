@@ -1,5 +1,5 @@
 import { EventDispatcher } from '../../../threejs/Three.js';
-import { NodeUpdateType } from './constants.js';
+import { NodeUpdateType } from './constants.ts';
 import { getCacheKey, getNodeChildren } from './NodeUtils.js';
 import { generateUuid } from '../../math/MathUtils.ts';
 

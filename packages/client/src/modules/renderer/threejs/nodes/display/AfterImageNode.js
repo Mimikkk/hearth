@@ -1,6 +1,6 @@
 import TempNode from '../core/TempNode.js';
 import { nodeObject, addNodeElement, tslFn, float, vec4 } from '../shadernode/ShaderNode.js';
-import { NodeUpdateType } from '../core/constants.js';
+import { NodeUpdateType } from '../core/constants.ts';
 import { uv } from '../accessors/UVNode.js';
 import { texture } from '../accessors/TextureNode.js';
 import { texturePass } from './PassNode.js';

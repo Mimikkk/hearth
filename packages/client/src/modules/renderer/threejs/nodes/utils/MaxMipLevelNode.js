@@ -1,5 +1,5 @@
 import UniformNode from '../core/UniformNode.js';
-import { NodeUpdateType } from '../core/constants.js';
+import { NodeUpdateType } from '../core/constants.ts';
 import { nodeProxy } from '../shadernode/ShaderNode.js';
 import { addNodeClass } from '../core/Node.js';
 

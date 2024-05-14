@@ -8,7 +8,7 @@ import NodeCache from './NodeCache.js';
 import ParameterNode from './ParameterNode.js';
 import FunctionNode from '../code/FunctionNode.js';
 import { createNodeMaterialFromType, default as NodeMaterial } from '../materials/NodeMaterial.js';
-import { defaultBuildStages, NodeUpdateType, shaderStages } from './constants.js';
+import { buildStages, NodeUpdateType, shaderStages } from './constants.ts';
 
 import {
   ColorNodeUniform,
@@ -737,7 +737,7 @@ class NodeBuilder {
     this.flow = flow;
     this.vars = {};
 
-    for (const buildStage of defaultBuildStages) {
+    for (const buildStage of buildStages) {
       this.setBuildStage(buildStage);
 
       flow.result = node.build(this, output);
@@ -877,7 +877,7 @@ class NodeBuilder {
     // analyze()   -> stage 2: analyze nodes to possible optimization and validation
     // generate()  -> stage 3: generate shader
 
-    for (const buildStage of defaultBuildStages) {
+    for (const buildStage of buildStages) {
       this.setBuildStage(buildStage);
 
       if (this.context.vertex && this.context.vertex.isNode) {

@@ -1,6 +1,6 @@
 import ReferenceNode from './ReferenceNode.js';
 //import { renderGroup } from '../core/UniformGroupNode.js';
-//import { NodeUpdateType } from '../core/constants.js';
+//import { NodeUpdateType } from '../core/constants.ts';
 import { addNodeClass } from '../core/Node.js';
 import { nodeObject } from '../shadernode/ShaderNode.js';
 

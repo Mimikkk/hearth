@@ -1,4 +1,4 @@
-import { NodeUpdateType } from './constants.js';
+import { NodeUpdateType } from './constants.ts';
 
 class NodeFrame {
   constructor() {

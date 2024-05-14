@@ -42,7 +42,6 @@ class Pipelines extends DataMap<any, any> {
 
       let stageCompute = this.programs.compute.get(nodeBuilderState.computeShader!);
 
-      console.log(this.programs);
       if (stageCompute === undefined) {
         if (previousPipeline && previousPipeline.computeProgram.usedTimes === 0)
           this._releaseProgram(previousPipeline.computeProgram);

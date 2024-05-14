@@ -1,6 +1,6 @@
 import Object3DNode from './Object3DNode.js';
 import { addNodeClass } from '../core/Node.js';
-import { NodeUpdateType } from '../core/constants.js';
+import { NodeUpdateType } from '../core/constants.ts';
 //import { sharedUniformGroup } from '../core/UniformGroupNode.js';
 import { nodeImmutable } from '../shadernode/ShaderNode.js';
 

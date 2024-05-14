@@ -3,7 +3,7 @@ import { addNodeClass } from '../core/Node.js';
 import { texture } from '../accessors/TextureNode.js';
 import { textureCubeUV } from './PMREMUtils.js';
 import { uniform } from '../core/UniformNode.js';
-import { NodeUpdateType } from '../core/constants.js';
+import { NodeUpdateType } from '../core/constants.ts';
 import { nodeProxy } from '../shadernode/ShaderNode.js';
 
 let _generator = null;

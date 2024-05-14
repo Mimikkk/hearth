@@ -6,7 +6,7 @@ import { expression } from '../code/ExpressionNode.js';
 import { addNodeClass } from '../core/Node.js';
 import { maxMipLevel } from '../utils/MaxMipLevelNode.js';
 import { addNodeElement, nodeProxy, vec3, nodeObject } from '../shadernode/ShaderNode.js';
-import { NodeUpdateType } from '../core/constants.js';
+import { NodeUpdateType } from '../core/constants.ts';
 
 class TextureNode extends UniformNode {
   constructor(value, uvNode = null, levelNode = null) {

@@ -1,7 +1,7 @@
 import { addNodeClass } from '../core/Node.js';
 import TempNode from '../core/TempNode.js';
 import { addNodeElement, nodeProxy } from '../shadernode/ShaderNode.js';
-import { vectorComponents } from '../core/constants.js';
+import { vectorComponents } from './constants.ts';
 
 class AssignNode extends TempNode {
   constructor(targetNode, sourceNode) {

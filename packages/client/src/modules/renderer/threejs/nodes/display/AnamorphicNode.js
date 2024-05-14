@@ -2,7 +2,7 @@ import TempNode from '../core/TempNode.js';
 import { nodeObject, addNodeElement, tslFn, float, vec2, vec3, vec4 } from '../shadernode/ShaderNode.js';
 import { loop } from '../utils/LoopNode.js';
 import { uniform } from '../core/UniformNode.js';
-import { NodeUpdateType } from '../core/constants.js';
+import { NodeUpdateType } from '../core/constants.ts';
 import { threshold } from './ColorAdjustmentNode.js';
 import { uv } from '../accessors/UVNode.js';
 import { texturePass } from './PassNode.js';

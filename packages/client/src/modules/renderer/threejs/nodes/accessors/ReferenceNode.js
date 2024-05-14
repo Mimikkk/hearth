@@ -1,5 +1,5 @@
 import Node, { addNodeClass } from '../core/Node.js';
-import { NodeUpdateType } from '../core/constants.js';
+import { NodeUpdateType } from '../core/constants.ts';
 import { uniform } from '../core/UniformNode.js';
 import { texture } from './TextureNode.js';
 import { buffer } from './BufferNode.js';

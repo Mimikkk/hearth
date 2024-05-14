@@ -1,6 +1,6 @@
 import { addNodeClass } from '../core/Node.js';
 import TempNode from '../core/TempNode.js';
-import { vectorComponents } from '../core/constants.js';
+import { vectorComponents } from '../core/constants.ts';
 
 class SetNode extends TempNode {
   constructor(sourceNode, components, targetNode) {

@@ -1,6 +1,6 @@
 import TextureNode from '../accessors/TextureNode.js';
 import { nodeObject, vec2 } from '../shadernode/ShaderNode.js';
-import { NodeUpdateType } from '../core/constants.js';
+import { NodeUpdateType } from '../core/constants.ts';
 import { viewportTopLeft } from '../display/ViewportNode.js';
 import {
   Filter,
