@@ -4,24 +4,14 @@ import { Uint32BufferAttribute, Uint16BufferAttribute, WireframeGeometry } from 
 import { Renderer } from '@modules/renderer/threejs/renderers/common/Renderer.js';
 import RenderObject from '@modules/renderer/threejs/renderers/common/RenderObject.js';
 import { Attribute } from '@modules/renderer/threejs/renderers/common/Attributes.js';
-import RenderObjects from '@modules/renderer/threejs/renderers/common/RenderObjects.js';
+import { isArrayUint32 } from '@modules/renderer/threejs/utils.js';
 
-function arrayNeedsUint32(array: number[]): boolean {
-  // assumes larger values usually on last
-
-  for (let i = array.length - 1; i >= 0; --i) {
-    if (array[i] >= 65535) return true; // account for PRIMITIVE_RESTART_FIXED_INDEX, #24565
-  }
-
-  return false;
-}
-
-function getWireframeVersion(geometry: WireframeGeometry) {
+function getWireframeVersion(geometry: WireframeGeometry): number {
   //@ts-expect-error
   return geometry.index !== null ? geometry.index.version : geometry.attributes.position.version;
 }
 
-function getWireframeIndex(geometry: WireframeGeometry) {
+function getWireframeIndex(geometry: WireframeGeometry): Uint16BufferAttribute | Uint32BufferAttribute {
   const indices = [];
 
   const geometryIndex = geometry.index;
@@ -49,7 +39,7 @@ function getWireframeIndex(geometry: WireframeGeometry) {
     }
   }
 
-  const attribute = new (arrayNeedsUint32(indices) ? Uint32BufferAttribute : Uint16BufferAttribute)(indices, 1);
+  const attribute = new (isArrayUint32(indices) ? Uint32BufferAttribute : Uint16BufferAttribute)(indices, 1);
   attribute.version = getWireframeVersion(geometry);
 
   return attribute;

@@ -1,7 +1,7 @@
 import DataMap from './DataMap.js';
 import RenderPipeline from './RenderPipeline.js';
 import ComputePipeline from './ComputePipeline.js';
-import ProgrammableStage from './ProgrammableStage.js';
+import ProgrammableStage, { StageType } from './ProgrammableStage.js';
 import { Renderer } from '@modules/renderer/threejs/renderers/common/Renderer.js';
 import ComputeNode from '@modules/renderer/threejs/nodes/gpgpu/ComputeNode.js';
 import Binding from '@modules/renderer/threejs/renderers/common/Binding.js';
@@ -10,7 +10,7 @@ import Pipeline from '@modules/renderer/threejs/renderers/common/Pipeline.js';
 
 class Pipelines extends DataMap<any, any> {
   caches: Map<any, any>;
-  programs: { vertex: Map<ProgrammableStage, any>; fragment: Map<any, any>; compute: Map<any, any> };
+  programs: Record<StageType, Map<string, ProgrammableStage>>;
 
   constructor(public renderer: Renderer) {
     super();
@@ -40,8 +40,9 @@ class Pipelines extends DataMap<any, any> {
 
       // programmable stage
 
-      let stageCompute = this.programs.compute.get(nodeBuilderState.computeShader);
+      let stageCompute = this.programs.compute.get(nodeBuilderState.computeShader!);
 
+      console.log(this.programs);
       if (stageCompute === undefined) {
         if (previousPipeline && previousPipeline.computeProgram.usedTimes === 0)
           this._releaseProgram(previousPipeline.computeProgram);
@@ -51,7 +52,7 @@ class Pipelines extends DataMap<any, any> {
           'compute',
           nodeBuilderState.nodeAttributes,
         );
-        this.programs.compute.set(nodeBuilderState.computeShader, stageCompute);
+        this.programs.compute.set(nodeBuilderState.computeShader!, stageCompute);
 
         this.renderer.backend.createProgram(stageCompute);
       }

@@ -1,9 +1,18 @@
 import Node, { addNodeClass } from '../core/Node.js';
 import { NodeUpdateType } from '../core/constants.js';
 import { addNodeElement, nodeObject } from '../shadernode/ShaderNode.js';
+import { Renderer } from '@modules/renderer/threejs/renderers/common/Renderer.js';
+import NodeBuilder from '@modules/renderer/threejs/nodes/core/NodeBuilder.js';
 
 class ComputeNode extends Node {
-  constructor(computeNode, count, workgroupSize = [64]) {
+  declare id: number;
+  declare isComputeNode: boolean;
+  computeNode: any;
+  count: number;
+  workgroupSize: number[];
+  dispatchCount: number;
+
+  constructor(computeNode: any, count: number, workgroupSize: number[] = [64]) {
     super('void');
 
     this.isComputeNode = true;
@@ -21,10 +30,10 @@ class ComputeNode extends Node {
   }
 
   dispose() {
-    this.dispatchEvent({ type: 'dispose' }, this);
+    this.eventDispatcher.dispatch({ type: 'dispose' }, this);
   }
 
-  set needsUpdate(value) {
+  set needsUpdate(value: boolean) {
     if (value === true) this.version++;
   }
 
@@ -40,11 +49,12 @@ class ComputeNode extends Node {
 
   onInit() {}
 
-  updateBefore({ renderer }) {
+  updateBefore(x: { renderer: Renderer }) {
+    const { renderer } = x;
     renderer.compute(this);
   }
 
-  generate(builder) {
+  generate(builder: NodeBuilder) {
     const { shaderStage } = builder;
 
     if (shaderStage === 'compute') {
@@ -59,7 +69,7 @@ class ComputeNode extends Node {
 
 export default ComputeNode;
 
-export const compute = (node, count, workgroupSize) =>
+export const compute = (node: any, count: number, workgroupSize: number[] = [64]) =>
   nodeObject(new ComputeNode(nodeObject(node), count, workgroupSize));
 
 addNodeElement('compute', compute);

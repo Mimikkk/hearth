@@ -386,7 +386,7 @@ export { default as FogExp2Node, densityFog } from './fog/FogExp2Node.js';
 export { default as RangeNode, range } from './geometry/RangeNode.js';
 
 // gpgpu
-export { default as ComputeNode, compute } from './gpgpu/ComputeNode.js';
+export { default as ComputeNode, compute } from './gpgpu/ComputeNode.ts';
 
 // lighting
 export { default as LightNode, lightTargetDirection } from './lighting/LightNode.js';

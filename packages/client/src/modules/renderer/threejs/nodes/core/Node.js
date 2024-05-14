@@ -160,7 +160,7 @@ class Node {
     }
   }
 
-  updateBefore(/*frame*/) {
+  updateBefore(frame) {
     console.warn('Abstract function.');
   }
 
