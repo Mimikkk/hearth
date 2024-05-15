@@ -1,5 +1,8 @@
-import { Float16BufferAttribute } from '../../../Three.js';
-import { GPUInputStepMode } from './WebGPUConstants.ts';
+import { BufferAttribute, Float16BufferAttribute, InterleavedBufferAttribute } from '../../../Three.js';
+import { GPUInputStepModeType } from './WebGPUConstants.ts';
+import { WebGPUBackend } from '@modules/renderer/threejs/renderers/webgpu/WebGPUBackend.js';
+import RenderObject from '@modules/renderer/threejs/renderers/common/RenderObject.js';
+import { Attribute } from '@modules/renderer/threejs/renderers/common/Attributes.js';
 
 const typedArraysToVertexFormatPrefix = new Map([
   [Int8Array, ['sint8', 'snorm8']],
@@ -20,11 +23,9 @@ const typeArraysToVertexFormatPrefixForItemSize1 = new Map([
 ]);
 
 class WebGPUAttributeUtils {
-  constructor(backend) {
-    this.backend = backend;
-  }
+  constructor(public backend: WebGPUBackend) {}
 
-  createAttribute(attribute, usage) {
+  createAttribute(attribute: BufferAttribute<any>, usage: GPUBufferUsageFlags) {
     const bufferAttribute = this._getBufferAttribute(attribute);
 
     const backend = this.backend;
@@ -38,7 +39,7 @@ class WebGPUAttributeUtils {
       let array = bufferAttribute.array;
 
       if (
-        (bufferAttribute.isStorageBufferAttribute || bufferAttribute.isStorageInstancedBufferAttribute) &&
+        (isStorageBufferAttribute(bufferAttribute) || isStorageInstancedBufferAttribute(bufferAttribute)) &&
         bufferAttribute.itemSize === 3
       ) {
         bufferAttribute.itemSize = 4;
@@ -66,7 +67,7 @@ class WebGPUAttributeUtils {
     }
   }
 
-  updateAttribute(attribute) {
+  updateAttribute(attribute: BufferAttribute<any>) {
     const bufferAttribute = this._getBufferAttribute(attribute);
 
     const backend = this.backend;
@@ -97,7 +98,7 @@ class WebGPUAttributeUtils {
     }
   }
 
-  createShaderVertexBuffers(renderObject) {
+  createShaderVertexBuffers(renderObject: RenderObject) {
     const attributes = renderObject.getAttributes();
     const vertexBuffers = new Map();
 
@@ -114,11 +115,13 @@ class WebGPUAttributeUtils {
         if (geometryAttribute.isInterleavedBufferAttribute === true) {
           arrayStride = geometryAttribute.data.stride * bytesPerElement;
           stepMode = geometryAttribute.data.isInstancedInterleavedBuffer
-            ? GPUInputStepMode.Instance
-            : GPUInputStepMode.Vertex;
+            ? GPUInputStepModeType.Instance
+            : GPUInputStepModeType.Vertex;
         } else {
           arrayStride = geometryAttribute.itemSize * bytesPerElement;
-          stepMode = geometryAttribute.isInstancedBufferAttribute ? GPUInputStepMode.Instance : GPUInputStepMode.Vertex;
+          stepMode = geometryAttribute.isInstancedBufferAttribute
+            ? GPUInputStepModeType.Instance
+            : GPUInputStepModeType.Vertex;
         }
 
         vertexBufferLayout = {
@@ -144,7 +147,7 @@ class WebGPUAttributeUtils {
     return Array.from(vertexBuffers.values());
   }
 
-  destroyAttribute(attribute) {
+  destroyAttribute(attribute: BufferAttribute<any>) {
     const backend = this.backend;
     const data = backend.get(this._getBufferAttribute(attribute));
 
@@ -153,7 +156,7 @@ class WebGPUAttributeUtils {
     backend.delete(attribute);
   }
 
-  async getArrayBufferAsync(attribute) {
+  async getArrayBufferAsync(attribute: BufferAttribute<any>) {
     const backend = this.backend;
     const device = backend.device;
 
@@ -193,7 +196,7 @@ class WebGPUAttributeUtils {
     return arrayBuffer;
   }
 
-  _getVertexFormat(geometryAttribute) {
+  _getVertexFormat(geometryAttribute: BufferAttribute<any>) {
     const { itemSize, normalized } = geometryAttribute;
     const ArrayType = geometryAttribute.array.constructor;
     const AttributeType = geometryAttribute.constructor;
@@ -227,11 +230,16 @@ class WebGPUAttributeUtils {
     return format;
   }
 
-  _getBufferAttribute(attribute) {
-    if (attribute.isInterleavedBufferAttribute) attribute = attribute.data;
-
+  _getBufferAttribute(attribute: Attribute) {
+    if (isInterleavedBufferAttribute(attribute)) attribute = attribute.data as unknown as BufferAttribute<any>;
     return attribute;
   }
 }
+
+const isInterleavedBufferAttribute = (item: any): item is InterleavedBufferAttribute =>
+  item.isInterleavedBufferAttribute;
+const isStorageBufferAttribute = (item: any): item is BufferAttribute<any> => item.isStorageBufferAttribute;
+const isStorageInstancedBufferAttribute = (item: any): item is BufferAttribute<any> =>
+  item.isStorageInstancedBufferAttribute;
 
 export default WebGPUAttributeUtils;

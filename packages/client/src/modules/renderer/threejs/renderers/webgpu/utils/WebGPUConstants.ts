@@ -1,4 +1,4 @@
-export const GPUPrimitiveTopology = {
+export const GPUPrimitiveTopologyType = {
   PointList: 'point-list',
   LineList: 'line-list',
   LineStrip: 'line-strip',
@@ -6,7 +6,7 @@ export const GPUPrimitiveTopology = {
   TriangleStrip: 'triangle-strip',
 } as const;
 
-export const GPUCompareFunction = {
+export const GPUCompareFunctionType = {
   Never: 'never',
   Less: 'less',
   Equal: 'equal',
@@ -17,33 +17,33 @@ export const GPUCompareFunction = {
   Always: 'always',
 } as const;
 
-export const GPUStoreOp = {
+export const GPUStoreOpType = {
   Store: 'store',
   Discard: 'discard',
 } as const;
 
-export const GPULoadOp = {
+export const GPULoadOpType = {
   Load: 'load',
   Clear: 'clear',
 } as const;
 
-export const GPUFrontFace = {
+export const GPUFrontFaceType = {
   CCW: 'ccw',
   CW: 'cw',
 } as const;
 
-export const GPUCullMode = {
+export const GPUCullModeType = {
   None: 'none',
   Front: 'front',
   Back: 'back',
 } as const;
 
-export const GPUIndexFormat = {
+export const GPUIndexFormatType = {
   Uint16: 'uint16',
   Uint32: 'uint32',
 } as const;
 
-export const GPUVertexFormat = {
+export const GPUVertexFormatType = {
   Uint8x2: 'uint8x2',
   Uint8x4: 'uint8x4',
   Sint8x2: 'sint8x2',
@@ -76,7 +76,7 @@ export const GPUVertexFormat = {
   Sint32x4: 'sint32x4',
 } as const;
 
-export const GPUTextureFormat = {
+export const GPUTextureFormatType = {
   // 8-bit formats
 
   R8Unorm: 'r8unorm',
@@ -206,18 +206,18 @@ export const GPUTextureFormat = {
   ASTC12x12UnormSRGB: 'astc-12x12-unorm-srgb',
 } as const;
 
-export const GPUAddressMode = {
+export const GPUAddressModeType = {
   ClampToEdge: 'clamp-to-edge',
   Repeat: 'repeat',
   MirrorRepeat: 'mirror-repeat',
 } as const;
 
-export const GPUFilterMode = {
+export const GPUFilterModeType = {
   Linear: 'linear',
   Nearest: 'nearest',
 } as const;
 
-export const GPUBlendFactor = {
+export const GPUBlendFactorType = {
   Zero: 'zero',
   One: 'one',
   Src: 'src',
@@ -233,7 +233,7 @@ export const GPUBlendFactor = {
   OneMinusConstant: 'one-minus-constant',
 } as const;
 
-export const GPUBlendOperation = {
+export const GPUBlendOperationType = {
   Add: 'add',
   Subtract: 'subtract',
   ReverseSubtract: 'reverse-subtract',
@@ -241,7 +241,7 @@ export const GPUBlendOperation = {
   Max: 'max',
 } as const;
 
-export const GPUColorWriteFlags = {
+export const GPUColorWriteFlagsType = {
   None: 0,
   Red: 0x1,
   Green: 0x2,
@@ -250,7 +250,7 @@ export const GPUColorWriteFlags = {
   All: 0xf,
 };
 
-export const GPUStencilOperation = {
+export const GPUStencilOperationType = {
   Keep: 'keep',
   Zero: 'zero',
   Replace: 'replace',
@@ -261,19 +261,19 @@ export const GPUStencilOperation = {
   DecrementWrap: 'decrement-wrap',
 } as const;
 
-export const GPUBufferBindingType = {
+export const GPUBufferBindingTypeType = {
   Uniform: 'uniform',
   Storage: 'storage',
   ReadOnlyStorage: 'read-only-storage',
 } as const;
 
-export const GPUSamplerBindingType = {
+export const GPUSamplerBindingTypeType = {
   Filtering: 'filtering',
   NonFiltering: 'non-filtering',
   Comparison: 'comparison',
 } as const;
 
-export const GPUTextureSampleType = {
+export const GPUTextureSampleTypeType = {
   Float: 'float',
   UnfilterableFloat: 'unfilterable-float',
   Depth: 'depth',
@@ -281,13 +281,13 @@ export const GPUTextureSampleType = {
   UInt: 'uint',
 } as const;
 
-export const GPUTextureDimension = {
+export const GPUTextureDimensionType = {
   OneD: '1d',
   TwoD: '2d',
   ThreeD: '3d',
 } as const;
 
-export const GPUTextureViewDimension = {
+export const GPUTextureViewDimensionType = {
   OneD: '1d',
   TwoD: '2d',
   TwoDArray: '2d-array',
@@ -296,18 +296,18 @@ export const GPUTextureViewDimension = {
   ThreeD: '3d',
 } as const;
 
-export const GPUTextureAspect = {
+export const GPUTextureAspectType = {
   All: 'all',
   StencilOnly: 'stencil-only',
   DepthOnly: 'depth-only',
 } as const;
 
-export const GPUInputStepMode = {
+export const GPUInputStepModeType = {
   Vertex: 'vertex',
   Instance: 'instance',
 } as const;
 
-export const GPUFeatureName = {
+export const GPUFeatureNameType = {
   DepthClipControl: 'depth-clip-control',
   Depth32FloatStencil8: 'depth32float-stencil8',
   TextureCompressionBC: 'texture-compression-bc',

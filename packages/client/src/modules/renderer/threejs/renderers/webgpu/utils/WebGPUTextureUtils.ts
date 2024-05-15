@@ -1,9 +1,9 @@
 import {
-  GPUAddressMode,
-  GPUFeatureName,
-  GPUFilterMode,
-  GPUTextureDimension,
-  GPUTextureFormat,
+  GPUAddressModeType,
+  GPUFeatureNameType,
+  GPUFilterModeType,
+  GPUTextureDimensionType,
+  GPUTextureFormatType,
 } from './WebGPUConstants.ts';
 
 import {
@@ -219,7 +219,7 @@ class WebGPUTextureUtils {
         depthOrArrayLayers: 1,
       },
       sampleCount: backend.parameters.sampleCount,
-      format: GPUTextureFormat.BGRA8Unorm,
+      format: GPUTextureFormatType.BGRA8Unorm,
       usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.COPY_SRC,
     });
 
@@ -515,79 +515,79 @@ class WebGPUTextureUtils {
   _getBlockData(format) {
     // this method is only relevant for compressed texture formats
 
-    if (format === GPUTextureFormat.BC1RGBAUnorm || format === GPUTextureFormat.BC1RGBAUnormSRGB)
+    if (format === GPUTextureFormatType.BC1RGBAUnorm || format === GPUTextureFormatType.BC1RGBAUnormSRGB)
       return { byteLength: 8, width: 4, height: 4 }; // DXT1
-    if (format === GPUTextureFormat.BC2RGBAUnorm || format === GPUTextureFormat.BC2RGBAUnormSRGB)
+    if (format === GPUTextureFormatType.BC2RGBAUnorm || format === GPUTextureFormatType.BC2RGBAUnormSRGB)
       return { byteLength: 16, width: 4, height: 4 }; // DXT3
-    if (format === GPUTextureFormat.BC3RGBAUnorm || format === GPUTextureFormat.BC3RGBAUnormSRGB)
+    if (format === GPUTextureFormatType.BC3RGBAUnorm || format === GPUTextureFormatType.BC3RGBAUnormSRGB)
       return { byteLength: 16, width: 4, height: 4 }; // DXT5
-    if (format === GPUTextureFormat.BC4RUnorm || format === GPUTextureFormat.BC4RSNorm)
+    if (format === GPUTextureFormatType.BC4RUnorm || format === GPUTextureFormatType.BC4RSNorm)
       return { byteLength: 8, width: 4, height: 4 }; // RGTC1
-    if (format === GPUTextureFormat.BC5RGUnorm || format === GPUTextureFormat.BC5RGSnorm)
+    if (format === GPUTextureFormatType.BC5RGUnorm || format === GPUTextureFormatType.BC5RGSnorm)
       return { byteLength: 16, width: 4, height: 4 }; // RGTC2
-    if (format === GPUTextureFormat.BC6HRGBUFloat || format === GPUTextureFormat.BC6HRGBFloat)
+    if (format === GPUTextureFormatType.BC6HRGBUFloat || format === GPUTextureFormatType.BC6HRGBFloat)
       return { byteLength: 16, width: 4, height: 4 }; // BPTC (float)
-    if (format === GPUTextureFormat.BC7RGBAUnorm || format === GPUTextureFormat.BC7RGBAUnormSRGB)
+    if (format === GPUTextureFormatType.BC7RGBAUnorm || format === GPUTextureFormatType.BC7RGBAUnormSRGB)
       return { byteLength: 16, width: 4, height: 4 }; // BPTC (unorm)
 
-    if (format === GPUTextureFormat.ETC2RGB8Unorm || format === GPUTextureFormat.ETC2RGB8UnormSRGB)
+    if (format === GPUTextureFormatType.ETC2RGB8Unorm || format === GPUTextureFormatType.ETC2RGB8UnormSRGB)
       return { byteLength: 8, width: 4, height: 4 };
-    if (format === GPUTextureFormat.ETC2RGB8A1Unorm || format === GPUTextureFormat.ETC2RGB8A1UnormSRGB)
+    if (format === GPUTextureFormatType.ETC2RGB8A1Unorm || format === GPUTextureFormatType.ETC2RGB8A1UnormSRGB)
       return { byteLength: 8, width: 4, height: 4 };
-    if (format === GPUTextureFormat.ETC2RGBA8Unorm || format === GPUTextureFormat.ETC2RGBA8UnormSRGB)
+    if (format === GPUTextureFormatType.ETC2RGBA8Unorm || format === GPUTextureFormatType.ETC2RGBA8UnormSRGB)
       return { byteLength: 16, width: 4, height: 4 };
-    if (format === GPUTextureFormat.EACR11Unorm) return { byteLength: 8, width: 4, height: 4 };
-    if (format === GPUTextureFormat.EACR11Snorm) return { byteLength: 8, width: 4, height: 4 };
-    if (format === GPUTextureFormat.EACRG11Unorm) return { byteLength: 16, width: 4, height: 4 };
-    if (format === GPUTextureFormat.EACRG11Snorm) return { byteLength: 16, width: 4, height: 4 };
+    if (format === GPUTextureFormatType.EACR11Unorm) return { byteLength: 8, width: 4, height: 4 };
+    if (format === GPUTextureFormatType.EACR11Snorm) return { byteLength: 8, width: 4, height: 4 };
+    if (format === GPUTextureFormatType.EACRG11Unorm) return { byteLength: 16, width: 4, height: 4 };
+    if (format === GPUTextureFormatType.EACRG11Snorm) return { byteLength: 16, width: 4, height: 4 };
 
-    if (format === GPUTextureFormat.ASTC4x4Unorm || format === GPUTextureFormat.ASTC4x4UnormSRGB)
+    if (format === GPUTextureFormatType.ASTC4x4Unorm || format === GPUTextureFormatType.ASTC4x4UnormSRGB)
       return { byteLength: 16, width: 4, height: 4 };
-    if (format === GPUTextureFormat.ASTC5x4Unorm || format === GPUTextureFormat.ASTC5x4UnormSRGB)
+    if (format === GPUTextureFormatType.ASTC5x4Unorm || format === GPUTextureFormatType.ASTC5x4UnormSRGB)
       return { byteLength: 16, width: 5, height: 4 };
-    if (format === GPUTextureFormat.ASTC5x5Unorm || format === GPUTextureFormat.ASTC5x5UnormSRGB)
+    if (format === GPUTextureFormatType.ASTC5x5Unorm || format === GPUTextureFormatType.ASTC5x5UnormSRGB)
       return { byteLength: 16, width: 5, height: 5 };
-    if (format === GPUTextureFormat.ASTC6x5Unorm || format === GPUTextureFormat.ASTC6x5UnormSRGB)
+    if (format === GPUTextureFormatType.ASTC6x5Unorm || format === GPUTextureFormatType.ASTC6x5UnormSRGB)
       return { byteLength: 16, width: 6, height: 5 };
-    if (format === GPUTextureFormat.ASTC6x6Unorm || format === GPUTextureFormat.ASTC6x6UnormSRGB)
+    if (format === GPUTextureFormatType.ASTC6x6Unorm || format === GPUTextureFormatType.ASTC6x6UnormSRGB)
       return { byteLength: 16, width: 6, height: 6 };
-    if (format === GPUTextureFormat.ASTC8x5Unorm || format === GPUTextureFormat.ASTC8x5UnormSRGB)
+    if (format === GPUTextureFormatType.ASTC8x5Unorm || format === GPUTextureFormatType.ASTC8x5UnormSRGB)
       return { byteLength: 16, width: 8, height: 5 };
-    if (format === GPUTextureFormat.ASTC8x6Unorm || format === GPUTextureFormat.ASTC8x6UnormSRGB)
+    if (format === GPUTextureFormatType.ASTC8x6Unorm || format === GPUTextureFormatType.ASTC8x6UnormSRGB)
       return { byteLength: 16, width: 8, height: 6 };
-    if (format === GPUTextureFormat.ASTC8x8Unorm || format === GPUTextureFormat.ASTC8x8UnormSRGB)
+    if (format === GPUTextureFormatType.ASTC8x8Unorm || format === GPUTextureFormatType.ASTC8x8UnormSRGB)
       return { byteLength: 16, width: 8, height: 8 };
-    if (format === GPUTextureFormat.ASTC10x5Unorm || format === GPUTextureFormat.ASTC10x5UnormSRGB)
+    if (format === GPUTextureFormatType.ASTC10x5Unorm || format === GPUTextureFormatType.ASTC10x5UnormSRGB)
       return { byteLength: 16, width: 10, height: 5 };
-    if (format === GPUTextureFormat.ASTC10x6Unorm || format === GPUTextureFormat.ASTC10x6UnormSRGB)
+    if (format === GPUTextureFormatType.ASTC10x6Unorm || format === GPUTextureFormatType.ASTC10x6UnormSRGB)
       return { byteLength: 16, width: 10, height: 6 };
-    if (format === GPUTextureFormat.ASTC10x8Unorm || format === GPUTextureFormat.ASTC10x8UnormSRGB)
+    if (format === GPUTextureFormatType.ASTC10x8Unorm || format === GPUTextureFormatType.ASTC10x8UnormSRGB)
       return { byteLength: 16, width: 10, height: 8 };
-    if (format === GPUTextureFormat.ASTC10x10Unorm || format === GPUTextureFormat.ASTC10x10UnormSRGB)
+    if (format === GPUTextureFormatType.ASTC10x10Unorm || format === GPUTextureFormatType.ASTC10x10UnormSRGB)
       return { byteLength: 16, width: 10, height: 10 };
-    if (format === GPUTextureFormat.ASTC12x10Unorm || format === GPUTextureFormat.ASTC12x10UnormSRGB)
+    if (format === GPUTextureFormatType.ASTC12x10Unorm || format === GPUTextureFormatType.ASTC12x10UnormSRGB)
       return { byteLength: 16, width: 12, height: 10 };
-    if (format === GPUTextureFormat.ASTC12x12Unorm || format === GPUTextureFormat.ASTC12x12UnormSRGB)
+    if (format === GPUTextureFormatType.ASTC12x12Unorm || format === GPUTextureFormatType.ASTC12x12UnormSRGB)
       return { byteLength: 16, width: 12, height: 12 };
   }
 
   _convertAddressMode(value) {
-    let addressMode = GPUAddressMode.ClampToEdge;
+    let addressMode = GPUAddressModeType.ClampToEdge;
 
     if (value === Wrapping.Repeat) {
-      addressMode = GPUAddressMode.Repeat;
+      addressMode = GPUAddressModeType.Repeat;
     } else if (value === Wrapping.MirroredRepeat) {
-      addressMode = GPUAddressMode.MirrorRepeat;
+      addressMode = GPUAddressModeType.MirrorRepeat;
     }
 
     return addressMode;
   }
 
   _convertFilterMode(value) {
-    let filterMode = GPUFilterMode.Linear;
+    let filterMode = GPUFilterModeType.Linear;
 
     if (value === Filter.Nearest || value === Filter.NearestMipmapNearest || value === Filter.NearestMipmapLinear) {
-      filterMode = GPUFilterMode.Nearest;
+      filterMode = GPUFilterModeType.Nearest;
     }
 
     return filterMode;
@@ -596,124 +596,124 @@ class WebGPUTextureUtils {
   _getBytesPerTexel(format) {
     // 8-bit formats
     if (
-      format === GPUTextureFormat.R8Unorm ||
-      format === GPUTextureFormat.R8Snorm ||
-      format === GPUTextureFormat.R8Uint ||
-      format === GPUTextureFormat.R8Sint
+      format === GPUTextureFormatType.R8Unorm ||
+      format === GPUTextureFormatType.R8Snorm ||
+      format === GPUTextureFormatType.R8Uint ||
+      format === GPUTextureFormatType.R8Sint
     )
       return 1;
 
     // 16-bit formats
     if (
-      format === GPUTextureFormat.R16Uint ||
-      format === GPUTextureFormat.R16Sint ||
-      format === GPUTextureFormat.R16Float ||
-      format === GPUTextureFormat.RG8Unorm ||
-      format === GPUTextureFormat.RG8Snorm ||
-      format === GPUTextureFormat.RG8Uint ||
-      format === GPUTextureFormat.RG8Sint
+      format === GPUTextureFormatType.R16Uint ||
+      format === GPUTextureFormatType.R16Sint ||
+      format === GPUTextureFormatType.R16Float ||
+      format === GPUTextureFormatType.RG8Unorm ||
+      format === GPUTextureFormatType.RG8Snorm ||
+      format === GPUTextureFormatType.RG8Uint ||
+      format === GPUTextureFormatType.RG8Sint
     )
       return 2;
 
     // 32-bit formats
     if (
-      format === GPUTextureFormat.R32Uint ||
-      format === GPUTextureFormat.R32Sint ||
-      format === GPUTextureFormat.R32Float ||
-      format === GPUTextureFormat.RG16Uint ||
-      format === GPUTextureFormat.RG16Sint ||
-      format === GPUTextureFormat.RG16Float ||
-      format === GPUTextureFormat.RGBA8Unorm ||
-      format === GPUTextureFormat.RGBA8UnormSRGB ||
-      format === GPUTextureFormat.RGBA8Snorm ||
-      format === GPUTextureFormat.RGBA8Uint ||
-      format === GPUTextureFormat.RGBA8Sint ||
-      format === GPUTextureFormat.BGRA8Unorm ||
-      format === GPUTextureFormat.BGRA8UnormSRGB ||
+      format === GPUTextureFormatType.R32Uint ||
+      format === GPUTextureFormatType.R32Sint ||
+      format === GPUTextureFormatType.R32Float ||
+      format === GPUTextureFormatType.RG16Uint ||
+      format === GPUTextureFormatType.RG16Sint ||
+      format === GPUTextureFormatType.RG16Float ||
+      format === GPUTextureFormatType.RGBA8Unorm ||
+      format === GPUTextureFormatType.RGBA8UnormSRGB ||
+      format === GPUTextureFormatType.RGBA8Snorm ||
+      format === GPUTextureFormatType.RGBA8Uint ||
+      format === GPUTextureFormatType.RGBA8Sint ||
+      format === GPUTextureFormatType.BGRA8Unorm ||
+      format === GPUTextureFormatType.BGRA8UnormSRGB ||
       // Packed 32-bit formats
-      format === GPUTextureFormat.RGB9E5UFloat ||
-      format === GPUTextureFormat.RGB10A2Unorm ||
-      format === GPUTextureFormat.RG11B10UFloat ||
-      format === GPUTextureFormat.Depth32Float ||
-      format === GPUTextureFormat.Depth24Plus ||
-      format === GPUTextureFormat.Depth24PlusStencil8 ||
-      format === GPUTextureFormat.Depth32FloatStencil8
+      format === GPUTextureFormatType.RGB9E5UFloat ||
+      format === GPUTextureFormatType.RGB10A2Unorm ||
+      format === GPUTextureFormatType.RG11B10UFloat ||
+      format === GPUTextureFormatType.Depth32Float ||
+      format === GPUTextureFormatType.Depth24Plus ||
+      format === GPUTextureFormatType.Depth24PlusStencil8 ||
+      format === GPUTextureFormatType.Depth32FloatStencil8
     )
       return 4;
 
     // 64-bit formats
     if (
-      format === GPUTextureFormat.RG32Uint ||
-      format === GPUTextureFormat.RG32Sint ||
-      format === GPUTextureFormat.RG32Float ||
-      format === GPUTextureFormat.RGBA16Uint ||
-      format === GPUTextureFormat.RGBA16Sint ||
-      format === GPUTextureFormat.RGBA16Float
+      format === GPUTextureFormatType.RG32Uint ||
+      format === GPUTextureFormatType.RG32Sint ||
+      format === GPUTextureFormatType.RG32Float ||
+      format === GPUTextureFormatType.RGBA16Uint ||
+      format === GPUTextureFormatType.RGBA16Sint ||
+      format === GPUTextureFormatType.RGBA16Float
     )
       return 8;
 
     // 128-bit formats
     if (
-      format === GPUTextureFormat.RGBA32Uint ||
-      format === GPUTextureFormat.RGBA32Sint ||
-      format === GPUTextureFormat.RGBA32Float
+      format === GPUTextureFormatType.RGBA32Uint ||
+      format === GPUTextureFormatType.RGBA32Sint ||
+      format === GPUTextureFormatType.RGBA32Float
     )
       return 16;
   }
 
   _getTypedArrayType(format) {
-    if (format === GPUTextureFormat.R8Uint) return Uint8Array;
-    if (format === GPUTextureFormat.R8Sint) return Int8Array;
-    if (format === GPUTextureFormat.R8Unorm) return Uint8Array;
-    if (format === GPUTextureFormat.R8Snorm) return Int8Array;
-    if (format === GPUTextureFormat.RG8Uint) return Uint8Array;
-    if (format === GPUTextureFormat.RG8Sint) return Int8Array;
-    if (format === GPUTextureFormat.RG8Unorm) return Uint8Array;
-    if (format === GPUTextureFormat.RG8Snorm) return Int8Array;
-    if (format === GPUTextureFormat.RGBA8Uint) return Uint8Array;
-    if (format === GPUTextureFormat.RGBA8Sint) return Int8Array;
-    if (format === GPUTextureFormat.RGBA8Unorm) return Uint8Array;
-    if (format === GPUTextureFormat.RGBA8Snorm) return Int8Array;
+    if (format === GPUTextureFormatType.R8Uint) return Uint8Array;
+    if (format === GPUTextureFormatType.R8Sint) return Int8Array;
+    if (format === GPUTextureFormatType.R8Unorm) return Uint8Array;
+    if (format === GPUTextureFormatType.R8Snorm) return Int8Array;
+    if (format === GPUTextureFormatType.RG8Uint) return Uint8Array;
+    if (format === GPUTextureFormatType.RG8Sint) return Int8Array;
+    if (format === GPUTextureFormatType.RG8Unorm) return Uint8Array;
+    if (format === GPUTextureFormatType.RG8Snorm) return Int8Array;
+    if (format === GPUTextureFormatType.RGBA8Uint) return Uint8Array;
+    if (format === GPUTextureFormatType.RGBA8Sint) return Int8Array;
+    if (format === GPUTextureFormatType.RGBA8Unorm) return Uint8Array;
+    if (format === GPUTextureFormatType.RGBA8Snorm) return Int8Array;
 
-    if (format === GPUTextureFormat.R16Uint) return Uint16Array;
-    if (format === GPUTextureFormat.R16Sint) return Int16Array;
-    if (format === GPUTextureFormat.RG16Uint) return Uint16Array;
-    if (format === GPUTextureFormat.RG16Sint) return Int16Array;
-    if (format === GPUTextureFormat.RGBA16Uint) return Uint16Array;
-    if (format === GPUTextureFormat.RGBA16Sint) return Int16Array;
-    if (format === GPUTextureFormat.R16Float) return Float32Array;
-    if (format === GPUTextureFormat.RG16Float) return Float32Array;
-    if (format === GPUTextureFormat.RGBA16Float) return Float32Array;
+    if (format === GPUTextureFormatType.R16Uint) return Uint16Array;
+    if (format === GPUTextureFormatType.R16Sint) return Int16Array;
+    if (format === GPUTextureFormatType.RG16Uint) return Uint16Array;
+    if (format === GPUTextureFormatType.RG16Sint) return Int16Array;
+    if (format === GPUTextureFormatType.RGBA16Uint) return Uint16Array;
+    if (format === GPUTextureFormatType.RGBA16Sint) return Int16Array;
+    if (format === GPUTextureFormatType.R16Float) return Float32Array;
+    if (format === GPUTextureFormatType.RG16Float) return Float32Array;
+    if (format === GPUTextureFormatType.RGBA16Float) return Float32Array;
 
-    if (format === GPUTextureFormat.R32Uint) return Uint32Array;
-    if (format === GPUTextureFormat.R32Sint) return Int32Array;
-    if (format === GPUTextureFormat.R32Float) return Float32Array;
-    if (format === GPUTextureFormat.RG32Uint) return Uint32Array;
-    if (format === GPUTextureFormat.RG32Sint) return Int32Array;
-    if (format === GPUTextureFormat.RG32Float) return Float32Array;
-    if (format === GPUTextureFormat.RGBA32Uint) return Uint32Array;
-    if (format === GPUTextureFormat.RGBA32Sint) return Int32Array;
-    if (format === GPUTextureFormat.RGBA32Float) return Float32Array;
+    if (format === GPUTextureFormatType.R32Uint) return Uint32Array;
+    if (format === GPUTextureFormatType.R32Sint) return Int32Array;
+    if (format === GPUTextureFormatType.R32Float) return Float32Array;
+    if (format === GPUTextureFormatType.RG32Uint) return Uint32Array;
+    if (format === GPUTextureFormatType.RG32Sint) return Int32Array;
+    if (format === GPUTextureFormatType.RG32Float) return Float32Array;
+    if (format === GPUTextureFormatType.RGBA32Uint) return Uint32Array;
+    if (format === GPUTextureFormatType.RGBA32Sint) return Int32Array;
+    if (format === GPUTextureFormatType.RGBA32Float) return Float32Array;
 
-    if (format === GPUTextureFormat.BGRA8Unorm) return Uint8Array;
-    if (format === GPUTextureFormat.BGRA8UnormSRGB) return Uint8Array;
-    if (format === GPUTextureFormat.RGB10A2Unorm) return Uint32Array;
-    if (format === GPUTextureFormat.RGB9E5UFloat) return Uint32Array;
-    if (format === GPUTextureFormat.RG11B10UFloat) return Uint32Array;
+    if (format === GPUTextureFormatType.BGRA8Unorm) return Uint8Array;
+    if (format === GPUTextureFormatType.BGRA8UnormSRGB) return Uint8Array;
+    if (format === GPUTextureFormatType.RGB10A2Unorm) return Uint32Array;
+    if (format === GPUTextureFormatType.RGB9E5UFloat) return Uint32Array;
+    if (format === GPUTextureFormatType.RG11B10UFloat) return Uint32Array;
 
-    if (format === GPUTextureFormat.Depth32Float) return Float32Array;
-    if (format === GPUTextureFormat.Depth24Plus) return Uint32Array;
-    if (format === GPUTextureFormat.Depth24PlusStencil8) return Uint32Array;
-    if (format === GPUTextureFormat.Depth32FloatStencil8) return Float32Array;
+    if (format === GPUTextureFormatType.Depth32Float) return Float32Array;
+    if (format === GPUTextureFormatType.Depth24Plus) return Uint32Array;
+    if (format === GPUTextureFormatType.Depth24PlusStencil8) return Uint32Array;
+    if (format === GPUTextureFormatType.Depth32FloatStencil8) return Float32Array;
   }
 
   _getDimension(texture) {
     let dimension;
 
     if (texture.isData3DTexture) {
-      dimension = GPUTextureDimension.ThreeD;
+      dimension = GPUTextureDimensionType.ThreeD;
     } else {
-      dimension = GPUTextureDimension.TwoD;
+      dimension = GPUTextureDimensionType.TwoD;
     }
 
     return dimension;
@@ -728,91 +728,110 @@ export function getFormat(texture, device = null) {
   let formatGPU;
 
   if (texture.isFramebufferTexture === true && texture.type === TextureDataType.UnsignedByte) {
-    formatGPU = GPUTextureFormat.BGRA8Unorm;
+    formatGPU = GPUTextureFormatType.BGRA8Unorm;
   } else if (texture.isCompressedTexture === true) {
     switch (format) {
       case CompressedPixelFormat.RGBA_S3TC_DXT1:
-        formatGPU = colorSpace === ColorSpace.SRGB ? GPUTextureFormat.BC1RGBAUnormSRGB : GPUTextureFormat.BC1RGBAUnorm;
+        formatGPU =
+          colorSpace === ColorSpace.SRGB ? GPUTextureFormatType.BC1RGBAUnormSRGB : GPUTextureFormatType.BC1RGBAUnorm;
         break;
 
       case CompressedPixelFormat.RGBA_S3TC_DXT3:
-        formatGPU = colorSpace === ColorSpace.SRGB ? GPUTextureFormat.BC2RGBAUnormSRGB : GPUTextureFormat.BC2RGBAUnorm;
+        formatGPU =
+          colorSpace === ColorSpace.SRGB ? GPUTextureFormatType.BC2RGBAUnormSRGB : GPUTextureFormatType.BC2RGBAUnorm;
         break;
 
       case CompressedPixelFormat.RGBA_S3TC_DXT5:
-        formatGPU = colorSpace === ColorSpace.SRGB ? GPUTextureFormat.BC3RGBAUnormSRGB : GPUTextureFormat.BC3RGBAUnorm;
+        formatGPU =
+          colorSpace === ColorSpace.SRGB ? GPUTextureFormatType.BC3RGBAUnormSRGB : GPUTextureFormatType.BC3RGBAUnorm;
         break;
 
       case CompressedPixelFormat.RGB_ETC2:
         formatGPU =
-          colorSpace === ColorSpace.SRGB ? GPUTextureFormat.ETC2RGB8UnormSRGB : GPUTextureFormat.ETC2RGB8Unorm;
+          colorSpace === ColorSpace.SRGB ? GPUTextureFormatType.ETC2RGB8UnormSRGB : GPUTextureFormatType.ETC2RGB8Unorm;
         break;
 
       case CompressedPixelFormat.RGBA_ETC2_EAC:
         formatGPU =
-          colorSpace === ColorSpace.SRGB ? GPUTextureFormat.ETC2RGBA8UnormSRGB : GPUTextureFormat.ETC2RGBA8Unorm;
+          colorSpace === ColorSpace.SRGB
+            ? GPUTextureFormatType.ETC2RGBA8UnormSRGB
+            : GPUTextureFormatType.ETC2RGBA8Unorm;
         break;
 
       case CompressedPixelFormat.RGBA_ASTC_4x4:
-        formatGPU = colorSpace === ColorSpace.SRGB ? GPUTextureFormat.ASTC4x4UnormSRGB : GPUTextureFormat.ASTC4x4Unorm;
+        formatGPU =
+          colorSpace === ColorSpace.SRGB ? GPUTextureFormatType.ASTC4x4UnormSRGB : GPUTextureFormatType.ASTC4x4Unorm;
         break;
 
       case CompressedPixelFormat.RGBA_ASTC_5x4:
-        formatGPU = colorSpace === ColorSpace.SRGB ? GPUTextureFormat.ASTC5x4UnormSRGB : GPUTextureFormat.ASTC5x4Unorm;
+        formatGPU =
+          colorSpace === ColorSpace.SRGB ? GPUTextureFormatType.ASTC5x4UnormSRGB : GPUTextureFormatType.ASTC5x4Unorm;
         break;
 
       case CompressedPixelFormat.RGBA_ASTC_5x5:
-        formatGPU = colorSpace === ColorSpace.SRGB ? GPUTextureFormat.ASTC5x5UnormSRGB : GPUTextureFormat.ASTC5x5Unorm;
+        formatGPU =
+          colorSpace === ColorSpace.SRGB ? GPUTextureFormatType.ASTC5x5UnormSRGB : GPUTextureFormatType.ASTC5x5Unorm;
         break;
 
       case CompressedPixelFormat.RGBA_ASTC_6x5:
-        formatGPU = colorSpace === ColorSpace.SRGB ? GPUTextureFormat.ASTC6x5UnormSRGB : GPUTextureFormat.ASTC6x5Unorm;
+        formatGPU =
+          colorSpace === ColorSpace.SRGB ? GPUTextureFormatType.ASTC6x5UnormSRGB : GPUTextureFormatType.ASTC6x5Unorm;
         break;
 
       case CompressedPixelFormat.RGBA_ASTC_6x6:
-        formatGPU = colorSpace === ColorSpace.SRGB ? GPUTextureFormat.ASTC6x6UnormSRGB : GPUTextureFormat.ASTC6x6Unorm;
+        formatGPU =
+          colorSpace === ColorSpace.SRGB ? GPUTextureFormatType.ASTC6x6UnormSRGB : GPUTextureFormatType.ASTC6x6Unorm;
         break;
 
       case CompressedPixelFormat.RGBA_ASTC_8x5:
-        formatGPU = colorSpace === ColorSpace.SRGB ? GPUTextureFormat.ASTC8x5UnormSRGB : GPUTextureFormat.ASTC8x5Unorm;
+        formatGPU =
+          colorSpace === ColorSpace.SRGB ? GPUTextureFormatType.ASTC8x5UnormSRGB : GPUTextureFormatType.ASTC8x5Unorm;
         break;
 
       case CompressedPixelFormat.RGBA_ASTC_8x6:
-        formatGPU = colorSpace === ColorSpace.SRGB ? GPUTextureFormat.ASTC8x6UnormSRGB : GPUTextureFormat.ASTC8x6Unorm;
+        formatGPU =
+          colorSpace === ColorSpace.SRGB ? GPUTextureFormatType.ASTC8x6UnormSRGB : GPUTextureFormatType.ASTC8x6Unorm;
         break;
 
       case CompressedPixelFormat.RGBA_ASTC_8x8:
-        formatGPU = colorSpace === ColorSpace.SRGB ? GPUTextureFormat.ASTC8x8UnormSRGB : GPUTextureFormat.ASTC8x8Unorm;
+        formatGPU =
+          colorSpace === ColorSpace.SRGB ? GPUTextureFormatType.ASTC8x8UnormSRGB : GPUTextureFormatType.ASTC8x8Unorm;
         break;
 
       case CompressedPixelFormat.RGBA_ASTC_10x5:
         formatGPU =
-          colorSpace === ColorSpace.SRGB ? GPUTextureFormat.ASTC10x5UnormSRGB : GPUTextureFormat.ASTC10x5Unorm;
+          colorSpace === ColorSpace.SRGB ? GPUTextureFormatType.ASTC10x5UnormSRGB : GPUTextureFormatType.ASTC10x5Unorm;
         break;
 
       case CompressedPixelFormat.RGBA_ASTC_10x6:
         formatGPU =
-          colorSpace === ColorSpace.SRGB ? GPUTextureFormat.ASTC10x6UnormSRGB : GPUTextureFormat.ASTC10x6Unorm;
+          colorSpace === ColorSpace.SRGB ? GPUTextureFormatType.ASTC10x6UnormSRGB : GPUTextureFormatType.ASTC10x6Unorm;
         break;
 
       case CompressedPixelFormat.RGBA_ASTC_10x8:
         formatGPU =
-          colorSpace === ColorSpace.SRGB ? GPUTextureFormat.ASTC10x8UnormSRGB : GPUTextureFormat.ASTC10x8Unorm;
+          colorSpace === ColorSpace.SRGB ? GPUTextureFormatType.ASTC10x8UnormSRGB : GPUTextureFormatType.ASTC10x8Unorm;
         break;
 
       case CompressedPixelFormat.RGBA_ASTC_10x10:
         formatGPU =
-          colorSpace === ColorSpace.SRGB ? GPUTextureFormat.ASTC10x10UnormSRGB : GPUTextureFormat.ASTC10x10Unorm;
+          colorSpace === ColorSpace.SRGB
+            ? GPUTextureFormatType.ASTC10x10UnormSRGB
+            : GPUTextureFormatType.ASTC10x10Unorm;
         break;
 
       case CompressedPixelFormat.RGBA_ASTC_12x10:
         formatGPU =
-          colorSpace === ColorSpace.SRGB ? GPUTextureFormat.ASTC12x10UnormSRGB : GPUTextureFormat.ASTC12x10Unorm;
+          colorSpace === ColorSpace.SRGB
+            ? GPUTextureFormatType.ASTC12x10UnormSRGB
+            : GPUTextureFormatType.ASTC12x10Unorm;
         break;
 
       case CompressedPixelFormat.RGBA_ASTC_12x12:
         formatGPU =
-          colorSpace === ColorSpace.SRGB ? GPUTextureFormat.ASTC12x12UnormSRGB : GPUTextureFormat.ASTC12x12Unorm;
+          colorSpace === ColorSpace.SRGB
+            ? GPUTextureFormatType.ASTC12x12UnormSRGB
+            : GPUTextureFormatType.ASTC12x12Unorm;
         break;
 
       default:
@@ -823,15 +842,16 @@ export function getFormat(texture, device = null) {
       case TextureFormat.RGBA:
         switch (type) {
           case TextureDataType.UnsignedByte:
-            formatGPU = colorSpace === ColorSpace.SRGB ? GPUTextureFormat.RGBA8UnormSRGB : GPUTextureFormat.RGBA8Unorm;
+            formatGPU =
+              colorSpace === ColorSpace.SRGB ? GPUTextureFormatType.RGBA8UnormSRGB : GPUTextureFormatType.RGBA8Unorm;
             break;
 
           case TextureDataType.HalfFloat:
-            formatGPU = GPUTextureFormat.RGBA16Float;
+            formatGPU = GPUTextureFormatType.RGBA16Float;
             break;
 
           case TextureDataType.Float:
-            formatGPU = GPUTextureFormat.RGBA32Float;
+            formatGPU = GPUTextureFormatType.RGBA32Float;
             break;
 
           default:
@@ -843,15 +863,15 @@ export function getFormat(texture, device = null) {
       case TextureFormat.Red:
         switch (type) {
           case TextureDataType.UnsignedByte:
-            formatGPU = GPUTextureFormat.R8Unorm;
+            formatGPU = GPUTextureFormatType.R8Unorm;
             break;
 
           case TextureDataType.HalfFloat:
-            formatGPU = GPUTextureFormat.R16Float;
+            formatGPU = GPUTextureFormatType.R16Float;
             break;
 
           case TextureDataType.Float:
-            formatGPU = GPUTextureFormat.R32Float;
+            formatGPU = GPUTextureFormatType.R32Float;
             break;
 
           default:
@@ -863,15 +883,15 @@ export function getFormat(texture, device = null) {
       case TextureFormat.RG:
         switch (type) {
           case TextureDataType.UnsignedByte:
-            formatGPU = GPUTextureFormat.RG8Unorm;
+            formatGPU = GPUTextureFormatType.RG8Unorm;
             break;
 
           case TextureDataType.HalfFloat:
-            formatGPU = GPUTextureFormat.RG16Float;
+            formatGPU = GPUTextureFormatType.RG16Float;
             break;
 
           case TextureDataType.Float:
-            formatGPU = GPUTextureFormat.RG32Float;
+            formatGPU = GPUTextureFormatType.RG32Float;
             break;
 
           default:
@@ -883,15 +903,15 @@ export function getFormat(texture, device = null) {
       case TextureFormat.Depth:
         switch (type) {
           case TextureDataType.UnsignedShort:
-            formatGPU = GPUTextureFormat.Depth16Unorm;
+            formatGPU = GPUTextureFormatType.Depth16Unorm;
             break;
 
           case TextureDataType.UnsignedInt:
-            formatGPU = GPUTextureFormat.Depth24Plus;
+            formatGPU = GPUTextureFormatType.Depth24Plus;
             break;
 
           case TextureDataType.Float:
-            formatGPU = GPUTextureFormat.Depth32Float;
+            formatGPU = GPUTextureFormatType.Depth32Float;
             break;
 
           default:
@@ -903,17 +923,17 @@ export function getFormat(texture, device = null) {
       case TextureFormat.DepthStencil:
         switch (type) {
           case TextureDataType.UnsignedInt248:
-            formatGPU = GPUTextureFormat.Depth24PlusStencil8;
+            formatGPU = GPUTextureFormatType.Depth24PlusStencil8;
             break;
 
           case TextureDataType.Float:
-            if (device && device.features.has(GPUFeatureName.Depth32FloatStencil8) === false) {
+            if (device && device.features.has(GPUFeatureNameType.Depth32FloatStencil8) === false) {
               console.error(
                 'WebGPURenderer: Depth textures with TextureFormat.DepthStencil + FloatType can only be used with the "depth32float-stencil8" GPU feature.',
               );
             }
 
-            formatGPU = GPUTextureFormat.Depth32FloatStencil8;
+            formatGPU = GPUTextureFormatType.Depth32FloatStencil8;
 
             break;
 

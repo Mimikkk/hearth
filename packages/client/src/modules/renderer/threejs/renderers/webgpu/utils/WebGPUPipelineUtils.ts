@@ -1,12 +1,12 @@
 import {
-  GPUBlendFactor,
-  GPUBlendOperation,
-  GPUColorWriteFlags,
-  GPUCompareFunction,
-  GPUCullMode,
-  GPUFrontFace,
-  GPUIndexFormat,
-  GPUStencilOperation,
+  GPUBlendFactorType,
+  GPUBlendOperationType,
+  GPUColorWriteFlagsType,
+  GPUCompareFunctionType,
+  GPUCullModeType,
+  GPUFrontFaceType,
+  GPUIndexFormatType,
+  GPUStencilOperationType,
 } from './WebGPUConstants.ts';
 
 import {
@@ -14,17 +14,20 @@ import {
   BlendingEquation,
   BlendingFactor,
   Depth,
+  Material,
   Side,
   StencilFunction,
   StencilOperation,
 } from '../../../Three.js';
+import type { WebGPUBackend } from '@modules/renderer/threejs/renderers/webgpu/WebGPUBackend.js';
+import RenderObject from '@modules/renderer/threejs/renderers/common/RenderObject.js';
+import ComputePipeline from '@modules/renderer/threejs/renderers/common/ComputePipeline.js';
+import Binding from '@modules/renderer/threejs/renderers/common/Binding.js';
 
 class WebGPUPipelineUtils {
-  constructor(backend) {
-    this.backend = backend;
-  }
+  constructor(public backend: WebGPUBackend) {}
 
-  createRenderPipeline(renderObject, promises) {
+  createRenderPipeline(renderObject: RenderObject, promises: Promise<void>[] | null = null) {
     const { object, material, geometry, pipeline } = renderObject;
     const { vertexProgram, fragmentProgram } = pipeline;
 
@@ -139,7 +142,7 @@ class WebGPUPipelineUtils {
     }
   }
 
-  createComputePipeline(pipeline, bindings) {
+  createComputePipeline(pipeline: ComputePipeline, bindings: Binding[]) {
     const backend = this.backend;
     const device = backend.device;
 
@@ -156,16 +159,16 @@ class WebGPUPipelineUtils {
     });
   }
 
-  _getBlending(material) {
+  _getBlending(material: Material) {
     let color, alpha;
 
     const blending = material.blending;
 
     if (blending === Blending.Custom) {
-      const blendSrcAlpha = material.blendSrcAlpha !== null ? material.blendSrcAlpha : GPUBlendFactor.One;
-      const blendDstAlpha = material.blendDstAlpha !== null ? material.blendDstAlpha : GPUBlendFactor.Zero;
+      const blendSrcAlpha = material.blendSrcAlpha !== null ? material.blendSrcAlpha : GPUBlendFactorType.One;
+      const blendDstAlpha = material.blendDstAlpha !== null ? material.blendDstAlpha : GPUBlendFactorType.Zero;
       const blendEquationAlpha =
-        material.blendEquationAlpha !== null ? material.blendEquationAlpha : GPUBlendFactor.Add;
+        material.blendEquationAlpha !== null ? material.blendEquationAlpha : GPUBlendOperationType.Add;
 
       color = {
         srcFactor: this._getBlendFactor(material.blendSrc),
@@ -181,17 +184,22 @@ class WebGPUPipelineUtils {
     } else {
       const premultipliedAlpha = material.premultipliedAlpha;
 
-      const setBlend = (srcRGB, dstRGB, srcAlpha, dstAlpha) => {
+      const setBlend = (
+        srcRGB: GPUBlendFactorType,
+        dstRGB: GPUBlendFactorType,
+        srcAlpha: GPUBlendFactorType,
+        dstAlpha: GPUBlendFactorType,
+      ) => {
         color = {
           srcFactor: srcRGB,
           dstFactor: dstRGB,
-          operation: GPUBlendOperation.Add,
+          operation: GPUBlendOperationType.Add,
         };
 
         alpha = {
           srcFactor: srcAlpha,
           dstFactor: dstAlpha,
-          operation: GPUBlendOperation.Add,
+          operation: GPUBlendOperationType.Add,
         };
       };
 
@@ -199,46 +207,71 @@ class WebGPUPipelineUtils {
         switch (blending) {
           case Blending.Normal:
             setBlend(
-              GPUBlendFactor.SrcAlpha,
-              GPUBlendFactor.OneMinusSrcAlpha,
-              GPUBlendFactor.One,
-              GPUBlendFactor.OneMinusSrcAlpha,
+              GPUBlendFactorType.SrcAlpha,
+              GPUBlendFactorType.OneMinusSrcAlpha,
+              GPUBlendFactorType.One,
+              GPUBlendFactorType.OneMinusSrcAlpha,
             );
             break;
 
           case Blending.Additive:
-            setBlend(GPUBlendFactor.SrcAlpha, GPUBlendFactor.One, GPUBlendFactor.One, GPUBlendFactor.One);
+            setBlend(
+              GPUBlendFactorType.SrcAlpha,
+              GPUBlendFactorType.One,
+              GPUBlendFactorType.One,
+              GPUBlendFactorType.One,
+            );
             break;
 
           case Blending.Subtractive:
-            setBlend(GPUBlendFactor.Zero, GPUBlendFactor.OneMinusSrc, GPUBlendFactor.Zero, GPUBlendFactor.One);
+            setBlend(
+              GPUBlendFactorType.Zero,
+              GPUBlendFactorType.OneMinusSrc,
+              GPUBlendFactorType.Zero,
+              GPUBlendFactorType.One,
+            );
             break;
 
           case Blending.Multiply:
-            setBlend(GPUBlendFactor.Zero, GPUBlendFactor.Src, GPUBlendFactor.Zero, GPUBlendFactor.SrcAlpha);
+            setBlend(
+              GPUBlendFactorType.Zero,
+              GPUBlendFactorType.Src,
+              GPUBlendFactorType.Zero,
+              GPUBlendFactorType.SrcAlpha,
+            );
             break;
         }
       } else {
         switch (blending) {
           case Blending.Normal:
             setBlend(
-              GPUBlendFactor.SrcAlpha,
-              GPUBlendFactor.OneMinusSrcAlpha,
-              GPUBlendFactor.One,
-              GPUBlendFactor.OneMinusSrcAlpha,
+              GPUBlendFactorType.SrcAlpha,
+              GPUBlendFactorType.OneMinusSrcAlpha,
+              GPUBlendFactorType.One,
+              GPUBlendFactorType.OneMinusSrcAlpha,
             );
             break;
 
           case Blending.Additive:
-            setBlend(GPUBlendFactor.SrcAlpha, GPUBlendFactor.One, GPUBlendFactor.SrcAlpha, GPUBlendFactor.One);
+            setBlend(
+              GPUBlendFactorType.SrcAlpha,
+              GPUBlendFactorType.One,
+              GPUBlendFactorType.SrcAlpha,
+              GPUBlendFactorType.One,
+            );
             break;
 
           case Blending.Subtractive:
-            setBlend(GPUBlendFactor.Zero, GPUBlendFactor.OneMinusSrc, GPUBlendFactor.Zero, GPUBlendFactor.One);
+            setBlend(
+              GPUBlendFactorType.Zero,
+              GPUBlendFactorType.OneMinusSrc,
+              GPUBlendFactorType.Zero,
+              GPUBlendFactorType.One,
+            );
             break;
 
           case Blending.Multiply:
-            setBlend(GPUBlendFactor.Zero, GPUBlendFactor.Src, GPUBlendFactor.Zero, GPUBlendFactor.Src);
+            setBlend(GPUBlendFactorType.Zero, GPUBlendFactorType.Src, GPUBlendFactorType.Zero, GPUBlendFactorType.Src);
             break;
         }
       }
@@ -251,60 +284,60 @@ class WebGPUPipelineUtils {
     }
   }
 
-  _getBlendFactor(blend) {
+  _getBlendFactor(blend: number) {
     let blendFactor;
 
     switch (blend) {
       case BlendingFactor.Zero:
-        blendFactor = GPUBlendFactor.Zero;
+        blendFactor = GPUBlendFactorType.Zero;
         break;
 
       case BlendingFactor.One:
-        blendFactor = GPUBlendFactor.One;
+        blendFactor = GPUBlendFactorType.One;
         break;
 
       case BlendingFactor.SrcColor:
-        blendFactor = GPUBlendFactor.Src;
+        blendFactor = GPUBlendFactorType.Src;
         break;
 
       case BlendingFactor.OneMinusSrcColor:
-        blendFactor = GPUBlendFactor.OneMinusSrc;
+        blendFactor = GPUBlendFactorType.OneMinusSrc;
         break;
 
       case BlendingFactor.SrcAlpha:
-        blendFactor = GPUBlendFactor.SrcAlpha;
+        blendFactor = GPUBlendFactorType.SrcAlpha;
         break;
 
       case BlendingFactor.OneMinusSrcAlpha:
-        blendFactor = GPUBlendFactor.OneMinusSrcAlpha;
+        blendFactor = GPUBlendFactorType.OneMinusSrcAlpha;
         break;
 
       case BlendingFactor.DstColor:
-        blendFactor = GPUBlendFactor.Dst;
+        blendFactor = GPUBlendFactorType.Dst;
         break;
 
       case BlendingFactor.OneMinusDstColor:
-        blendFactor = GPUBlendFactor.OneMinusDstColor;
+        blendFactor = GPUBlendFactorType.OneMinusDstColor;
         break;
 
       case BlendingFactor.DstAlpha:
-        blendFactor = GPUBlendFactor.DstAlpha;
+        blendFactor = GPUBlendFactorType.DstAlpha;
         break;
 
       case BlendingFactor.OneMinusDstAlpha:
-        blendFactor = GPUBlendFactor.OneMinusDstAlpha;
+        blendFactor = GPUBlendFactorType.OneMinusDstAlpha;
         break;
 
       case BlendingFactor.SrcAlphaSaturate:
-        blendFactor = GPUBlendFactor.SrcAlphaSaturated;
+        blendFactor = GPUBlendFactorType.SrcAlphaSaturated;
         break;
 
       case BlendingFactor.BlendColor:
-        blendFactor = GPUBlendFactor.Constant;
+        blendFactor = GPUBlendFactorType.Constant;
         break;
 
       case BlendingFactor.OneMinusBlendColor:
-        blendFactor = GPUBlendFactor.OneMinusConstant;
+        blendFactor = GPUBlendFactorType.OneMinusConstant;
         break;
 
       default:
@@ -321,35 +354,35 @@ class WebGPUPipelineUtils {
 
     switch (stencilFunc) {
       case StencilFunction.Never:
-        stencilCompare = GPUCompareFunction.Never;
+        stencilCompare = GPUCompareFunctionType.Never;
         break;
 
       case StencilFunction.Always:
-        stencilCompare = GPUCompareFunction.Always;
+        stencilCompare = GPUCompareFunctionType.Always;
         break;
 
       case StencilFunction.Less:
-        stencilCompare = GPUCompareFunction.Less;
+        stencilCompare = GPUCompareFunctionType.Less;
         break;
 
       case StencilFunction.LessEqual:
-        stencilCompare = GPUCompareFunction.LessEqual;
+        stencilCompare = GPUCompareFunctionType.LessEqual;
         break;
 
       case StencilFunction.Equal:
-        stencilCompare = GPUCompareFunction.Equal;
+        stencilCompare = GPUCompareFunctionType.Equal;
         break;
 
       case StencilFunction.GreaterEqual:
-        stencilCompare = GPUCompareFunction.GreaterEqual;
+        stencilCompare = GPUCompareFunctionType.GreaterEqual;
         break;
 
       case StencilFunction.Greater:
-        stencilCompare = GPUCompareFunction.Greater;
+        stencilCompare = GPUCompareFunctionType.Greater;
         break;
 
       case StencilFunction.NotEqual:
-        stencilCompare = GPUCompareFunction.NotEqual;
+        stencilCompare = GPUCompareFunctionType.NotEqual;
         break;
 
       default:
@@ -364,35 +397,35 @@ class WebGPUPipelineUtils {
 
     switch (op) {
       case StencilOperation.Keep:
-        stencilOperation = GPUStencilOperation.Keep;
+        stencilOperation = GPUStencilOperationType.Keep;
         break;
 
       case StencilOperation.Zero:
-        stencilOperation = GPUStencilOperation.Zero;
+        stencilOperation = GPUStencilOperationType.Zero;
         break;
 
       case StencilOperation.Replace:
-        stencilOperation = GPUStencilOperation.Replace;
+        stencilOperation = GPUStencilOperationType.Replace;
         break;
 
       case StencilOperation.Invert:
-        stencilOperation = GPUStencilOperation.Invert;
+        stencilOperation = GPUStencilOperationType.Invert;
         break;
 
       case StencilOperation.Increment:
-        stencilOperation = GPUStencilOperation.IncrementClamp;
+        stencilOperation = GPUStencilOperationType.IncrementClamp;
         break;
 
       case StencilOperation.Decrement:
-        stencilOperation = GPUStencilOperation.DecrementClamp;
+        stencilOperation = GPUStencilOperationType.DecrementClamp;
         break;
 
       case StencilOperation.IncrementWrap:
-        stencilOperation = GPUStencilOperation.IncrementWrap;
+        stencilOperation = GPUStencilOperationType.IncrementWrap;
         break;
 
       case StencilOperation.DecrementWrap:
-        stencilOperation = GPUStencilOperation.DecrementWrap;
+        stencilOperation = GPUStencilOperationType.DecrementWrap;
         break;
 
       default:
@@ -407,23 +440,23 @@ class WebGPUPipelineUtils {
 
     switch (blendEquation) {
       case BlendingEquation.Add:
-        blendOperation = GPUBlendOperation.Add;
+        blendOperation = GPUBlendOperationType.Add;
         break;
 
       case BlendingEquation.Subtract:
-        blendOperation = GPUBlendOperation.Subtract;
+        blendOperation = GPUBlendOperationType.Subtract;
         break;
 
       case BlendingEquation.ReverseSubtract:
-        blendOperation = GPUBlendOperation.ReverseSubtract;
+        blendOperation = GPUBlendOperationType.ReverseSubtract;
         break;
 
       case BlendingEquation.Min:
-        blendOperation = GPUBlendOperation.Min;
+        blendOperation = GPUBlendOperationType.Min;
         break;
 
       case BlendingEquation.Max:
-        blendOperation = GPUBlendOperation.Max;
+        blendOperation = GPUBlendOperationType.Max;
         break;
 
       default:
@@ -441,23 +474,23 @@ class WebGPUPipelineUtils {
 
     if (geometry.index !== null && object.isLine === true && object.isLineSegments !== true) {
       descriptor.stripIndexFormat =
-        geometry.index.array instanceof Uint16Array ? GPUIndexFormat.Uint16 : GPUIndexFormat.Uint32;
+        geometry.index.array instanceof Uint16Array ? GPUIndexFormatType.Uint16 : GPUIndexFormatType.Uint32;
     }
 
     switch (material.side) {
       case Side.Front:
-        descriptor.frontFace = GPUFrontFace.CCW;
-        descriptor.cullMode = GPUCullMode.Back;
+        descriptor.frontFace = GPUFrontFaceType.CCW;
+        descriptor.cullMode = GPUCullModeType.Back;
         break;
 
       case Side.Back:
-        descriptor.frontFace = GPUFrontFace.CCW;
-        descriptor.cullMode = GPUCullMode.Front;
+        descriptor.frontFace = GPUFrontFaceType.CCW;
+        descriptor.cullMode = GPUCullModeType.Front;
         break;
 
       case Side.Double:
-        descriptor.frontFace = GPUFrontFace.CCW;
-        descriptor.cullMode = GPUCullMode.None;
+        descriptor.frontFace = GPUFrontFaceType.CCW;
+        descriptor.cullMode = GPUCullModeType.None;
         break;
 
       default:
@@ -469,48 +502,48 @@ class WebGPUPipelineUtils {
   }
 
   _getColorWriteMask(material) {
-    return material.colorWrite === true ? GPUColorWriteFlags.All : GPUColorWriteFlags.None;
+    return material.colorWrite === true ? GPUColorWriteFlagsType.All : GPUColorWriteFlagsType.None;
   }
 
   _getDepthCompare(material) {
     let depthCompare;
 
     if (material.depthTest === false) {
-      depthCompare = GPUCompareFunction.Always;
+      depthCompare = GPUCompareFunctionType.Always;
     } else {
       const depthFunc = material.depthFunc;
 
       switch (depthFunc) {
         case Depth.Never:
-          depthCompare = GPUCompareFunction.Never;
+          depthCompare = GPUCompareFunctionType.Never;
           break;
 
         case Depth.Always:
-          depthCompare = GPUCompareFunction.Always;
+          depthCompare = GPUCompareFunctionType.Always;
           break;
 
         case Depth.Less:
-          depthCompare = GPUCompareFunction.Less;
+          depthCompare = GPUCompareFunctionType.Less;
           break;
 
         case Depth.LessEqual:
-          depthCompare = GPUCompareFunction.LessEqual;
+          depthCompare = GPUCompareFunctionType.LessEqual;
           break;
 
         case Depth.Equal:
-          depthCompare = GPUCompareFunction.Equal;
+          depthCompare = GPUCompareFunctionType.Equal;
           break;
 
         case Depth.GreaterEqual:
-          depthCompare = GPUCompareFunction.GreaterEqual;
+          depthCompare = GPUCompareFunctionType.GreaterEqual;
           break;
 
         case Depth.Greater:
-          depthCompare = GPUCompareFunction.Greater;
+          depthCompare = GPUCompareFunctionType.Greater;
           break;
 
         case Depth.NotEqual:
-          depthCompare = GPUCompareFunction.NotEqual;
+          depthCompare = GPUCompareFunctionType.NotEqual;
           break;
 
         default:

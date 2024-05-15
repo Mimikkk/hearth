@@ -1,17 +1,13 @@
 import {
-  GPUTextureViewDimension,
-  GPUIndexFormat,
-  GPUFilterMode,
-  GPUPrimitiveTopology,
-  GPULoadOp,
-  GPUStoreOp,
+  GPUTextureViewDimensionType,
+  GPUIndexFormatType,
+  GPUFilterModeType,
+  GPUPrimitiveTopologyType,
+  GPULoadOpType,
+  GPUStoreOpType,
 } from './WebGPUConstants.ts';
 
-class WebGPUTexturePassUtils {
-  constructor(device) {
-    this.device = device;
-
-    const mipmapVertexSource = `
+const mipmapVertexSource = `
 struct VarysStruct {
 	@builtin( position ) Position: vec4<f32>,
 	@location( 0 ) vTex : vec2<f32>
@@ -44,7 +40,7 @@ fn main( @builtin( vertex_index ) vertexIndex : u32 ) -> VarysStruct {
 }
 `;
 
-    const mipmapFragmentSource = `
+const mipmapFragmentSource = `
 @group( 0 ) @binding( 0 )
 var imgSampler : sampler;
 
@@ -59,7 +55,7 @@ fn main( @location( 0 ) vTex : vec2<f32> ) -> @location( 0 ) vec4<f32> {
 }
 `;
 
-    const flipYFragmentSource = `
+const flipYFragmentSource = `
 @group( 0 ) @binding( 0 )
 var imgSampler : sampler;
 
@@ -73,10 +69,20 @@ fn main( @location( 0 ) vTex : vec2<f32> ) -> @location( 0 ) vec4<f32> {
 
 }
 `;
-    this.mipmapSampler = device.createSampler({ minFilter: GPUFilterMode.Linear });
-    this.flipYSampler = device.createSampler({ minFilter: GPUFilterMode.Nearest }); //@TODO?: Consider using textureLoad()
 
-    // We'll need a new pipeline for every texture format used.
+class WebGPUTexturePassUtils {
+  mipmapSampler: GPUSampler;
+  flipYSampler: GPUSampler;
+  transferPipelines: Record<GPUTextureFormat | string, GPURenderPipeline> = {};
+  flipYPipelines: Record<GPUTextureFormat | string, GPURenderPipeline> = {};
+  mipmapVertexShaderModule: GPUShaderModule;
+  mipmapFragmentShaderModule: GPUShaderModule;
+  flipYFragmentShaderModule: GPUShaderModule;
+
+  constructor(public device: GPUDevice) {
+    this.mipmapSampler = device.createSampler({ minFilter: GPUFilterModeType.Linear });
+    this.flipYSampler = device.createSampler({ minFilter: GPUFilterModeType.Nearest });
+
     this.transferPipelines = {};
     this.flipYPipelines = {};
 
@@ -96,7 +102,7 @@ fn main( @location( 0 ) vTex : vec2<f32> ) -> @location( 0 ) vec4<f32> {
     });
   }
 
-  getTransferPipeline(format) {
+  getTransferPipeline(format: GPUTextureFormat) {
     let pipeline = this.transferPipelines[format];
 
     if (pipeline === undefined) {
@@ -111,8 +117,8 @@ fn main( @location( 0 ) vTex : vec2<f32> ) -> @location( 0 ) vec4<f32> {
           targets: [{ format }],
         },
         primitive: {
-          topology: GPUPrimitiveTopology.TriangleStrip,
-          stripIndexFormat: GPUIndexFormat.Uint32,
+          topology: 'triangle-strip',
+          stripIndexFormat: GPUIndexFormatType.Uint32,
         },
         layout: 'auto',
       });
@@ -123,7 +129,7 @@ fn main( @location( 0 ) vTex : vec2<f32> ) -> @location( 0 ) vec4<f32> {
     return pipeline;
   }
 
-  getFlipYPipeline(format) {
+  getFlipYPipeline(format: GPUTextureFormat) {
     let pipeline = this.flipYPipelines[format];
 
     if (pipeline === undefined) {
@@ -138,8 +144,8 @@ fn main( @location( 0 ) vTex : vec2<f32> ) -> @location( 0 ) vec4<f32> {
           targets: [{ format }],
         },
         primitive: {
-          topology: GPUPrimitiveTopology.TriangleStrip,
-          stripIndexFormat: GPUIndexFormat.Uint32,
+          topology: GPUPrimitiveTopologyType.TriangleStrip,
+          stripIndexFormat: GPUIndexFormatType.Uint32,
         },
         layout: 'auto',
       });
@@ -150,9 +156,9 @@ fn main( @location( 0 ) vTex : vec2<f32> ) -> @location( 0 ) vec4<f32> {
     return pipeline;
   }
 
-  flipY(textureGPU, textureGPUDescriptor, baseArrayLayer = 0) {
+  flipY(textureGPU: GPUTexture, textureGPUDescriptor: GPUTextureDescriptor, baseArrayLayer: number = 0) {
     const format = textureGPUDescriptor.format;
-    const { width, height } = textureGPUDescriptor.size;
+    const { width, height } = textureGPUDescriptor.size as GPUExtent3DDictStrict;
 
     const transferPipeline = this.getTransferPipeline(format);
     const flipYPipeline = this.getFlipYPipeline(format);
@@ -166,21 +172,22 @@ fn main( @location( 0 ) vTex : vec2<f32> ) -> @location( 0 ) vec4<f32> {
     const srcView = textureGPU.createView({
       baseMipLevel: 0,
       mipLevelCount: 1,
-      dimension: GPUTextureViewDimension.TwoD,
+      dimension: GPUTextureViewDimensionType.TwoD,
       baseArrayLayer,
     });
 
     const dstView = tempTexture.createView({
       baseMipLevel: 0,
       mipLevelCount: 1,
-      dimension: GPUTextureViewDimension.TwoD,
+      dimension: GPUTextureViewDimensionType.TwoD,
       baseArrayLayer: 0,
     });
 
     const commandEncoder = this.device.createCommandEncoder({});
 
-    const pass = (pipeline, sourceView, destinationView) => {
-      const bindGroupLayout = pipeline.getBindGroupLayout(0); // @TODO: Consider making this static.
+    const pass = (pipeline: GPURenderPipeline, sourceView: GPUTextureView, destinationView: GPUTextureView) => {
+      console.log(sourceView, destinationView);
+      const bindGroupLayout = pipeline.getBindGroupLayout(0);
 
       const bindGroup = this.device.createBindGroup({
         layout: bindGroupLayout,
@@ -200,8 +207,8 @@ fn main( @location( 0 ) vTex : vec2<f32> ) -> @location( 0 ) vec4<f32> {
         colorAttachments: [
           {
             view: destinationView,
-            loadOp: GPULoadOp.Clear,
-            storeOp: GPUStoreOp.Store,
+            loadOp: GPULoadOpType.Clear,
+            storeOp: GPUStoreOpType.Store,
             clearValue: [0, 0, 0, 0],
           },
         ],
@@ -221,20 +228,21 @@ fn main( @location( 0 ) vTex : vec2<f32> ) -> @location( 0 ) vec4<f32> {
     tempTexture.destroy();
   }
 
-  generateMipmaps(textureGPU, textureGPUDescriptor, baseArrayLayer = 0) {
+  generateMipmaps(textureGPU: GPUTexture, textureGPUDescriptor: GPUTextureDescriptor, baseArrayLayer: number = 0) {
     const pipeline = this.getTransferPipeline(textureGPUDescriptor.format);
 
     const commandEncoder = this.device.createCommandEncoder({});
-    const bindGroupLayout = pipeline.getBindGroupLayout(0); // @TODO: Consider making this static.
+    // @TODO: Consider making this static.
+    const bindGroupLayout = pipeline.getBindGroupLayout(0);
 
     let srcView = textureGPU.createView({
       baseMipLevel: 0,
       mipLevelCount: 1,
-      dimension: GPUTextureViewDimension.TwoD,
+      dimension: GPUTextureViewDimensionType.TwoD,
       baseArrayLayer,
     });
 
-    for (let i = 1; i < textureGPUDescriptor.mipLevelCount; i++) {
+    for (let i = 1; i < textureGPUDescriptor.mipLevelCount!; i++) {
       const bindGroup = this.device.createBindGroup({
         layout: bindGroupLayout,
         entries: [
@@ -252,7 +260,7 @@ fn main( @location( 0 ) vTex : vec2<f32> ) -> @location( 0 ) vec4<f32> {
       const dstView = textureGPU.createView({
         baseMipLevel: i,
         mipLevelCount: 1,
-        dimension: GPUTextureViewDimension.TwoD,
+        dimension: GPUTextureViewDimensionType.TwoD,
         baseArrayLayer,
       });
 
@@ -260,8 +268,8 @@ fn main( @location( 0 ) vTex : vec2<f32> ) -> @location( 0 ) vec4<f32> {
         colorAttachments: [
           {
             view: dstView,
-            loadOp: GPULoadOp.Clear,
-            storeOp: GPUStoreOp.Store,
+            loadOp: GPULoadOpType.Clear,
+            storeOp: GPUStoreOpType.Store,
             clearValue: [0, 0, 0, 0],
           },
         ],

@@ -1,12 +1,12 @@
 import { BufferAttribute, CoordinateSystem, Object3D, RenderTarget, Scene, Texture, Vector3 } from '../../Three.js';
 
 import {
-  GPUFeatureName,
-  GPUIndexFormat,
-  GPULoadOp,
-  GPUStoreOp,
-  GPUTextureFormat,
-  GPUTextureViewDimension,
+  GPUFeatureNameType,
+  GPUIndexFormatType,
+  GPULoadOpType,
+  GPUStoreOpType,
+  GPUTextureFormatType,
+  GPUTextureViewDimensionType,
 } from './utils/WebGPUConstants.js';
 
 import WGSLNodeBuilder from './nodes/WGSLNodeBuilder.js';
@@ -102,7 +102,7 @@ export class WebGPUBackend extends Backend {
 
     // feature support
 
-    const features = Object.values(GPUFeatureName).filter(name => adapter.features.has(name));
+    const features = Object.values(GPUFeatureNameType).filter(name => adapter.features.has(name));
 
     const device = await adapter.requestDevice({
       requiredFeatures: features,
@@ -123,7 +123,7 @@ export class WebGPUBackend extends Backend {
 
     this.context.configure({
       device: this.device,
-      format: GPUTextureFormat.BGRA8Unorm,
+      format: GPUTextureFormatType.BGRA8Unorm,
       usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.COPY_SRC,
       alphaMode: alphaMode,
     });
@@ -218,7 +218,7 @@ export class WebGPUBackend extends Backend {
           baseMipLevel: renderContext.activeMipmapLevel,
           mipLevelCount: 1,
           baseArrayLayer: renderContext.activeCubeFace,
-          dimension: GPUTextureViewDimension.TwoD,
+          dimension: GPUTextureViewDimensionType.TwoD,
         });
 
         let view, resolveTarget;
@@ -234,8 +234,8 @@ export class WebGPUBackend extends Backend {
         colorAttachments.push({
           view,
           resolveTarget,
-          loadOp: GPULoadOp.Load,
-          storeOp: GPUStoreOp.Store,
+          loadOp: GPULoadOpType.Load,
+          storeOp: GPUStoreOpType.Store,
         });
       }
 
@@ -312,11 +312,11 @@ export class WebGPUBackend extends Backend {
 
         if (renderContext.clearColor) {
           colorAttachment.clearValue = renderContext.clearColorValue;
-          colorAttachment.loadOp = GPULoadOp.Clear;
-          colorAttachment.storeOp = GPUStoreOp.Store;
+          colorAttachment.loadOp = GPULoadOpType.Clear;
+          colorAttachment.storeOp = GPUStoreOpType.Store;
         } else {
-          colorAttachment.loadOp = GPULoadOp.Load;
-          colorAttachment.storeOp = GPUStoreOp.Store;
+          colorAttachment.loadOp = GPULoadOpType.Load;
+          colorAttachment.storeOp = GPUStoreOpType.Store;
         }
       }
     } else {
@@ -324,11 +324,11 @@ export class WebGPUBackend extends Backend {
 
       if (renderContext.clearColor) {
         colorAttachment.clearValue = renderContext.clearColorValue;
-        colorAttachment.loadOp = GPULoadOp.Clear;
-        colorAttachment.storeOp = GPUStoreOp.Store;
+        colorAttachment.loadOp = GPULoadOpType.Clear;
+        colorAttachment.storeOp = GPUStoreOpType.Store;
       } else {
-        colorAttachment.loadOp = GPULoadOp.Load;
-        colorAttachment.storeOp = GPUStoreOp.Store;
+        colorAttachment.loadOp = GPULoadOpType.Load;
+        colorAttachment.storeOp = GPUStoreOpType.Store;
       }
     }
 
@@ -337,22 +337,22 @@ export class WebGPUBackend extends Backend {
     if (renderContext.depth) {
       if (renderContext.clearDepth) {
         depthStencilAttachment.depthClearValue = renderContext.clearDepthValue;
-        depthStencilAttachment.depthLoadOp = GPULoadOp.Clear;
-        depthStencilAttachment.depthStoreOp = GPUStoreOp.Store;
+        depthStencilAttachment.depthLoadOp = GPULoadOpType.Clear;
+        depthStencilAttachment.depthStoreOp = GPUStoreOpType.Store;
       } else {
-        depthStencilAttachment.depthLoadOp = GPULoadOp.Load;
-        depthStencilAttachment.depthStoreOp = GPUStoreOp.Store;
+        depthStencilAttachment.depthLoadOp = GPULoadOpType.Load;
+        depthStencilAttachment.depthStoreOp = GPUStoreOpType.Store;
       }
     }
 
     if (renderContext.stencil) {
       if (renderContext.clearStencil) {
         depthStencilAttachment.stencilClearValue = renderContext.clearStencilValue;
-        depthStencilAttachment.stencilLoadOp = GPULoadOp.Clear;
-        depthStencilAttachment.stencilStoreOp = GPUStoreOp.Store;
+        depthStencilAttachment.stencilLoadOp = GPULoadOpType.Clear;
+        depthStencilAttachment.stencilStoreOp = GPUStoreOpType.Store;
       } else {
-        depthStencilAttachment.stencilLoadOp = GPULoadOp.Load;
-        depthStencilAttachment.stencilStoreOp = GPUStoreOp.Store;
+        depthStencilAttachment.stencilLoadOp = GPULoadOpType.Load;
+        depthStencilAttachment.stencilStoreOp = GPUStoreOpType.Store;
       }
     }
 
@@ -523,8 +523,8 @@ export class WebGPUBackend extends Backend {
         const colorAttachment = colorAttachments[0];
 
         colorAttachment.clearValue = clearValue;
-        colorAttachment.loadOp = GPULoadOp.Clear;
-        colorAttachment.storeOp = GPUStoreOp.Store;
+        colorAttachment.loadOp = GPULoadOpType.Clear;
+        colorAttachment.storeOp = GPUStoreOpType.Store;
       }
 
       if (supportsDepth || supportsStencil) {
@@ -553,8 +553,8 @@ export class WebGPUBackend extends Backend {
             view,
             resolveTarget,
             clearValue,
-            loadOp: GPULoadOp.Clear,
-            storeOp: GPUStoreOp.Store,
+            loadOp: GPULoadOpType.Clear,
+            storeOp: GPUStoreOpType.Store,
           });
         }
       }
@@ -572,12 +572,12 @@ export class WebGPUBackend extends Backend {
 
     if (supportsDepth) {
       if (depth) {
-        depthStencilAttachment.depthLoadOp = GPULoadOp.Clear;
+        depthStencilAttachment.depthLoadOp = GPULoadOpType.Clear;
         depthStencilAttachment.depthClearValue = renderer.getClearDepth();
-        depthStencilAttachment.depthStoreOp = GPUStoreOp.Store;
+        depthStencilAttachment.depthStoreOp = GPUStoreOpType.Store;
       } else {
-        depthStencilAttachment.depthLoadOp = GPULoadOp.Load;
-        depthStencilAttachment.depthStoreOp = GPUStoreOp.Store;
+        depthStencilAttachment.depthLoadOp = GPULoadOpType.Load;
+        depthStencilAttachment.depthStoreOp = GPUStoreOpType.Store;
       }
     }
 
@@ -585,12 +585,12 @@ export class WebGPUBackend extends Backend {
 
     if (supportsStencil) {
       if (stencil) {
-        depthStencilAttachment.stencilLoadOp = GPULoadOp.Clear;
+        depthStencilAttachment.stencilLoadOp = GPULoadOpType.Clear;
         depthStencilAttachment.stencilClearValue = renderer.getClearStencil();
-        depthStencilAttachment.stencilStoreOp = GPUStoreOp.Store;
+        depthStencilAttachment.stencilStoreOp = GPUStoreOpType.Store;
       } else {
-        depthStencilAttachment.stencilLoadOp = GPULoadOp.Load;
-        depthStencilAttachment.stencilStoreOp = GPUStoreOp.Store;
+        depthStencilAttachment.stencilLoadOp = GPULoadOpType.Load;
+        depthStencilAttachment.stencilStoreOp = GPUStoreOpType.Store;
       }
     }
 
@@ -683,7 +683,7 @@ export class WebGPUBackend extends Backend {
     if (hasIndex === true) {
       if (currentSets.index !== index) {
         const buffer = this.get(index).buffer;
-        const indexFormat = index.array instanceof Uint16Array ? GPUIndexFormat.Uint16 : GPUIndexFormat.Uint32;
+        const indexFormat = index.array instanceof Uint16Array ? GPUIndexFormatType.Uint16 : GPUIndexFormatType.Uint32;
 
         passEncoderGPU.setIndexBuffer(buffer, indexFormat);
 
@@ -908,7 +908,7 @@ export class WebGPUBackend extends Backend {
   }
 
   initTimestampQuery(renderContext: RenderContext, descriptor) {
-    if (!this.hasFeature(GPUFeatureName.TimestampQuery) || !this.trackTimestamp) return;
+    if (!this.hasFeature(GPUFeatureNameType.TimestampQuery) || !this.trackTimestamp) return;
 
     const renderContextData = this.get(renderContext);
 
@@ -934,7 +934,7 @@ export class WebGPUBackend extends Backend {
   // timestamp utils
 
   prepareTimestampBuffer(renderContext: RenderContext, encoder) {
-    if (!this.hasFeature(GPUFeatureName.TimestampQuery) || !this.trackTimestamp) return;
+    if (!this.hasFeature(GPUFeatureNameType.TimestampQuery) || !this.trackTimestamp) return;
 
     const renderContextData = this.get(renderContext);
 
@@ -956,7 +956,7 @@ export class WebGPUBackend extends Backend {
   }
 
   async resolveTimestampAsync(renderContext: RenderContext, type: 'render' | 'compute' = 'render') {
-    if (!this.hasFeature(GPUFeatureName.TimestampQuery) || !this.trackTimestamp) return;
+    if (!this.hasFeature(GPUFeatureNameType.TimestampQuery) || !this.trackTimestamp) return;
 
     const renderContextData = this.get(renderContext);
     const { currentTimestampQueryBuffer } = renderContextData;
@@ -1158,9 +1158,9 @@ export class WebGPUBackend extends Backend {
 
     if (texture.generateMipmaps) this.textureUtils.generateMipmaps(texture);
 
-    descriptor.colorAttachments[0].loadOp = GPULoadOp.Load;
-    if (renderContext.depth) descriptor.depthStencilAttachment.depthLoadOp = GPULoadOp.Load;
-    if (renderContext.stencil) descriptor.depthStencilAttachment.stencilLoadOp = GPULoadOp.Load;
+    descriptor.colorAttachments[0].loadOp = GPULoadOpType.Load;
+    if (renderContext.depth) descriptor.depthStencilAttachment.depthLoadOp = GPULoadOpType.Load;
+    if (renderContext.stencil) descriptor.depthStencilAttachment.stencilLoadOp = GPULoadOpType.Load;
 
     renderContextData.currentPass = encoder.beginRenderPass(descriptor);
     renderContextData.currentSets = { attributes: {} };

@@ -1,17 +1,21 @@
 import {
-  GPUBufferBindingType,
-  GPUTextureAspect,
-  GPUTextureSampleType,
-  GPUTextureViewDimension,
+  GPUBufferBindingTypeType,
+  GPUTextureAspectType,
+  GPUTextureSampleTypeType,
+  GPUTextureViewDimensionType,
 } from './WebGPUConstants.ts';
-import { TextureDataType } from '../../../Three.js';
+import { DataArrayTexture, DataTexture, DepthTexture, TextureDataType, VideoTexture } from '../../../Three.js';
+import { WebGPUBackend } from '@modules/renderer/threejs/renderers/webgpu/WebGPUBackend.js';
+import Binding from '@modules/renderer/threejs/renderers/common/Binding.js';
+import UniformBuffer from '@modules/renderer/threejs/renderers/common/UniformBuffer.js';
+import { SampledCubeTexture, SampledTexture } from '@modules/renderer/threejs/renderers/common/SampledTexture.js';
+import StorageBuffer from '@modules/renderer/threejs/renderers/common/StorageBuffer.js';
+import Sampler from '@modules/renderer/threejs/renderers/common/Sampler.js';
 
 class WebGPUBindingUtils {
-  constructor(backend) {
-    this.backend = backend;
-  }
+  constructor(public backend: WebGPUBackend) {}
 
-  createBindingsLayout(bindings) {
+  createBindingsLayout(bindings: Binding[]) {
     const backend = this.backend;
     const device = backend.device;
 
@@ -20,50 +24,50 @@ class WebGPUBindingUtils {
     let index = 0;
 
     for (const binding of bindings) {
-      const bindingGPU = {
+      const bindingGPU: GPUBindGroupLayoutEntry = {
         binding: index++,
         visibility: binding.visibility,
       };
 
-      if (binding.isUniformBuffer || binding.isStorageBuffer) {
-        const buffer = {}; // GPUBufferBindingLayout
+      if (isUniformBuffer(binding) || isStorageBuffer(binding)) {
+        const buffer: GPUBufferBindingLayout = {};
 
-        if (binding.isStorageBuffer) {
-          buffer.type = GPUBufferBindingType.Storage;
+        if (isStorageBuffer(binding)) {
+          buffer.type = GPUBufferBindingTypeType.Storage;
         }
 
         bindingGPU.buffer = buffer;
-      } else if (binding.isSampler) {
-        const sampler = {}; // GPUSamplerBindingLayout
+      } else if (isSampler(binding)) {
+        const sampler: GPUSamplerBindingLayout = {};
 
-        if (binding.texture.isDepthTexture) {
+        if (isDepthTexture(binding.texture)) {
           if (binding.texture.compareFunction !== null) {
             sampler.type = 'comparison';
           }
         }
 
         bindingGPU.sampler = sampler;
-      } else if (binding.isSampledTexture && binding.texture.isVideoTexture) {
-        bindingGPU.externalTexture = {}; // GPUExternalTextureBindingLayout
-      } else if (binding.isSampledTexture && binding.store) {
+      } else if (isSampledTexture(binding) && isVideoTexture(binding.texture)) {
+        bindingGPU.externalTexture = {} satisfies GPUExternalTextureBindingLayout;
+      } else if (isSampledTexture(binding) && binding.store) {
         const format = this.backend.get(binding.texture).texture.format;
 
-        bindingGPU.storageTexture = { format }; // GPUStorageTextureBindingLayout
-      } else if (binding.isSampledTexture) {
-        const texture = {}; // GPUTextureBindingLayout
+        bindingGPU.storageTexture = { format } satisfies GPUStorageTextureBindingLayout;
+      } else if (isSampledTexture(binding)) {
+        const texture: GPUTextureBindingLayout = {};
 
-        if (binding.texture.isDepthTexture) {
-          texture.sampleType = GPUTextureSampleType.Depth;
-        } else if (binding.texture.isDataTexture && binding.texture.type === TextureDataType.Float) {
+        if (isDepthTexture(binding.texture)) {
+          texture.sampleType = GPUTextureSampleTypeType.Depth;
+        } else if (isDataTexture(binding.texture) && binding.texture.type === TextureDataType.Float) {
           // @TODO: Add support for this soon: backend.hasFeature( 'float32-filterable' )
 
-          texture.sampleType = GPUTextureSampleType.UnfilterableFloat;
+          texture.sampleType = GPUTextureSampleTypeType.UnfilterableFloat;
         }
 
-        if (binding.isSampledCubeTexture) {
-          texture.viewDimension = GPUTextureViewDimension.Cube;
-        } else if (binding.texture.isDataArrayTexture) {
-          texture.viewDimension = GPUTextureViewDimension.TwoDArray;
+        if (isSampledCubeTexture(binding)) {
+          texture.viewDimension = GPUTextureViewDimensionType.Cube;
+        } else if (isDataArrayTexture(binding.texture)) {
+          texture.viewDimension = GPUTextureViewDimensionType.TwoDArray;
         }
 
         bindingGPU.texture = texture;
@@ -77,7 +81,7 @@ class WebGPUBindingUtils {
     return device.createBindGroupLayout({ entries });
   }
 
-  createBindings(bindings) {
+  createBindings(bindings: Binding[]) {
     const backend = this.backend;
     const bindingsData = backend.get(bindings);
 
@@ -91,7 +95,7 @@ class WebGPUBindingUtils {
     bindingsData.bindings = bindings;
   }
 
-  updateBinding(binding) {
+  updateBinding(binding: Binding[]) {
     const backend = this.backend;
     const device = backend.device;
 
@@ -101,7 +105,7 @@ class WebGPUBindingUtils {
     device.queue.writeBuffer(bufferGPU, 0, buffer, 0);
   }
 
-  createBindGroup(bindings, layoutGPU) {
+  createBindGroup(bindings: Binding[], layoutGPU: GPUBindGroupLayout) {
     const backend = this.backend;
     const device = backend.device;
 
@@ -109,7 +113,7 @@ class WebGPUBindingUtils {
     const entriesGPU = [];
 
     for (const binding of bindings) {
-      if (binding.isUniformBuffer) {
+      if (isUniformBuffer(binding)) {
         const bindingData = backend.get(binding);
 
         if (bindingData.buffer === undefined) {
@@ -127,34 +131,31 @@ class WebGPUBindingUtils {
         }
 
         entriesGPU.push({ binding: bindingPoint, resource: { buffer: bindingData.buffer } });
-      } else if (binding.isStorageBuffer) {
+      } else if (isStorageBuffer(binding)) {
         const bindingData = backend.get(binding);
 
         if (bindingData.buffer === undefined) {
           const attribute = binding.attribute;
-          //const usage = GPUBufferUsage.STORAGE | GPUBufferUsage.VERTEX | /*GPUBufferUsage.COPY_SRC |*/ GPUBufferUsage.COPY_DST;
-
-          //backend.attributeUtils.createAttribute( attribute, usage ); // @TODO: Move it to universal renderer
 
           bindingData.buffer = backend.get(attribute).buffer;
         }
 
         entriesGPU.push({ binding: bindingPoint, resource: { buffer: bindingData.buffer } });
-      } else if (binding.isSampler) {
+      } else if (isSampler(binding)) {
         const textureGPU = backend.get(binding.texture);
 
         entriesGPU.push({ binding: bindingPoint, resource: textureGPU.sampler });
-      } else if (binding.isSampledTexture) {
+      } else if (isSampledTexture(binding)) {
         const textureData = backend.get(binding.texture);
 
         let dimensionViewGPU;
 
-        if (binding.isSampledCubeTexture) {
-          dimensionViewGPU = GPUTextureViewDimension.Cube;
-        } else if (binding.texture.isDataArrayTexture) {
-          dimensionViewGPU = GPUTextureViewDimension.TwoDArray;
+        if (isSampledCubeTexture(binding)) {
+          dimensionViewGPU = GPUTextureViewDimensionType.Cube;
+        } else if (isDataArrayTexture(binding.texture)) {
+          dimensionViewGPU = GPUTextureViewDimensionType.TwoDArray;
         } else {
-          dimensionViewGPU = GPUTextureViewDimension.TwoD;
+          dimensionViewGPU = GPUTextureViewDimensionType.TwoD;
         }
 
         let resourceGPU;
@@ -162,7 +163,7 @@ class WebGPUBindingUtils {
         if (textureData.externalTexture !== undefined) {
           resourceGPU = device.importExternalTexture({ source: textureData.externalTexture });
         } else {
-          const aspectGPU = GPUTextureAspect.All;
+          const aspectGPU = GPUTextureAspectType.All;
 
           resourceGPU = textureData.texture.createView({
             aspect: aspectGPU,
@@ -183,5 +184,15 @@ class WebGPUBindingUtils {
     });
   }
 }
+
+const isUniformBuffer = (item: any): item is UniformBuffer => item.isUniformBuffer;
+const isStorageBuffer = (item: any): item is StorageBuffer => item.isStorageBuffer;
+const isSampler = (item: any): item is Sampler => item.isSampler;
+const isDepthTexture = (item: any): item is DepthTexture => item.isDepthTexture;
+const isSampledTexture = (item: any): item is SampledTexture => item.isSampledTexture;
+const isVideoTexture = (item: any): item is VideoTexture => item.isVideoTexture;
+const isSampledCubeTexture = (item: any): item is SampledCubeTexture => item.isSampledCubeTexture;
+const isDataTexture = (item: any): item is DataTexture => item.isDataTexture;
+const isDataArrayTexture = (item: any): item is DataArrayTexture => item.isDataArrayTexture;
 
 export default WebGPUBindingUtils;
