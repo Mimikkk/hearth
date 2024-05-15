@@ -1,8 +1,20 @@
 import DataMap from '../DataMap.js';
 import ChainMap from '../ChainMap.js';
 import NodeBuilderState from './NodeBuilderState.js';
-import { Mapping, ToneMapping } from '../../../../threejs/Three.js';
 import {
+  Camera,
+  CubeTexture,
+  Fog,
+  FogExp2,
+  Mapping,
+  Material,
+  Object3D,
+  Scene,
+  Texture,
+  ToneMapping,
+} from '../../../../threejs/Three.js';
+import {
+  ComputeNode,
   cubeTexture,
   densityFog,
   frameGroup,
@@ -20,6 +32,9 @@ import {
 import { Renderer } from '@modules/renderer/threejs/renderers/common/Renderer.js';
 import NodeUniformsGroup from '@modules/renderer/threejs/renderers/common/nodes/NodeUniformsGroup.js';
 import RenderObject from '@modules/renderer/threejs/renderers/common/RenderObject.js';
+import NodeBuilder from '@modules/renderer/threejs/nodes/core/NodeBuilder.js';
+import { types } from 'sass';
+import Color = types.Color;
 
 export class Nodes extends DataMap<any, any> {
   nodeFrame: NodeFrame;
@@ -134,7 +149,7 @@ export class Nodes extends DataMap<any, any> {
     return nodeBuilderState;
   }
 
-  delete(object): boolean {
+  delete(object: RenderObject): any {
     if (object.isRenderObject) {
       const nodeBuilderState = this.get(object).nodeBuilderState;
       nodeBuilderState.usedTimes--;
@@ -147,7 +162,7 @@ export class Nodes extends DataMap<any, any> {
     return super.delete(object);
   }
 
-  getForCompute(computeNode): NodeBuilderState {
+  getForCompute(computeNode: ComputeNode): NodeBuilderState {
     const computeData = this.get(computeNode);
 
     let nodeBuilderState = computeData.nodeBuilderState;
@@ -164,7 +179,7 @@ export class Nodes extends DataMap<any, any> {
     return nodeBuilderState;
   }
 
-  _createNodeBuilderState(nodeBuilder) {
+  _createNodeBuilderState(nodeBuilder: NodeBuilder) {
     return new NodeBuilderState(
       nodeBuilder.vertexShader,
       nodeBuilder.fragmentShader,
@@ -173,19 +188,18 @@ export class Nodes extends DataMap<any, any> {
       nodeBuilder.getBindings(),
       nodeBuilder.updateNodes,
       nodeBuilder.updateBeforeNodes,
-      nodeBuilder.transforms,
     );
   }
 
-  getEnvironmentNode(scene) {
+  getEnvironmentNode(scene: Scene) {
     return scene.environmentNode || this.get(scene).environmentNode || null;
   }
 
-  getBackgroundNode(scene) {
+  getBackgroundNode(scene: Scene) {
     return scene.backgroundNode || this.get(scene).backgroundNode || null;
   }
 
-  getFogNode(scene) {
+  getFogNode(scene: Scene) {
     return scene.fogNode || this.get(scene).fogNode || null;
   }
 
@@ -195,7 +209,7 @@ export class Nodes extends DataMap<any, any> {
     return this.renderer.toneMappingNode || this.get(this.renderer).toneMappingNode || null;
   }
 
-  getCacheKey(scene, lightsNode) {
+  getCacheKey(scene: Scene, lightsNode) {
     const chain = [scene, lightsNode];
     const callId = this.renderer.info.calls;
 
@@ -224,7 +238,7 @@ export class Nodes extends DataMap<any, any> {
     return cacheKeyData.cacheKey;
   }
 
-  updateScene(scene) {
+  updateScene(scene: Scene) {
     this.updateEnvironment(scene);
     this.updateFog(scene);
     this.updateBackground(scene);
@@ -259,7 +273,7 @@ export class Nodes extends DataMap<any, any> {
     }
   }
 
-  updateBackground(scene) {
+  updateBackground(scene: Scene) {
     const sceneData = this.get(scene);
     const background = scene.background;
 
@@ -267,15 +281,11 @@ export class Nodes extends DataMap<any, any> {
       if (sceneData.background !== background) {
         let backgroundNode = null;
 
-        if (
-          background.isCubeTexture === true ||
-          background.mapping === Mapping.EquirectangularReflection ||
-          background.mapping === Mapping.EquirectangularRefraction
-        ) {
+        if (isCubeTexture(background)) {
           backgroundNode = pmremTexture(background, normalWorld);
-        } else if (background.isTexture === true) {
+        } else if (isTexture(background)) {
           backgroundNode = texture(background, viewportBottomLeft).setUpdateMatrix(true);
-        } else if (background.isColor !== true) {
+        } else if (isColor(background) !== true) {
           console.error('WebGPUNodes: Unsupported background configuration.', background);
         }
 
@@ -288,7 +298,7 @@ export class Nodes extends DataMap<any, any> {
     }
   }
 
-  updateFog(scene) {
+  updateFog(scene: Scene) {
     const sceneData = this.get(scene);
     const fog = scene.fog;
 
@@ -296,9 +306,9 @@ export class Nodes extends DataMap<any, any> {
       if (sceneData.fog !== fog) {
         let fogNode = null;
 
-        if (fog.isFogExp2) {
+        if (fog instanceof FogExp2) {
           fogNode = densityFog(reference('color', 'color', fog), reference('density', 'float', fog));
-        } else if (fog.isFog) {
+        } else if (fog instanceof Fog) {
           fogNode = rangeFog(
             reference('color', 'color', fog),
             reference('near', 'float', fog),
@@ -317,7 +327,7 @@ export class Nodes extends DataMap<any, any> {
     }
   }
 
-  updateEnvironment(scene) {
+  updateEnvironment(scene: Scene) {
     const sceneData = this.get(scene);
     const environment = scene.environment;
 
@@ -342,7 +352,13 @@ export class Nodes extends DataMap<any, any> {
     }
   }
 
-  getNodeFrame(renderer = this.renderer, scene = null, object = null, camera = null, material = null) {
+  getNodeFrame(
+    renderer: Renderer,
+    scene: Scene | null = null,
+    object: Object3D | null = null,
+    camera: Camera | null = null,
+    material: Material | null = null,
+  ) {
     const nodeFrame = this.nodeFrame;
     nodeFrame.renderer = renderer;
     nodeFrame.scene = scene;
@@ -353,7 +369,7 @@ export class Nodes extends DataMap<any, any> {
     return nodeFrame;
   }
 
-  getNodeFrameForRender(renderObject) {
+  getNodeFrameForRender(renderObject: RenderObject) {
     return this.getNodeFrame(
       renderObject.renderer,
       renderObject.scene,
@@ -363,7 +379,7 @@ export class Nodes extends DataMap<any, any> {
     );
   }
 
-  updateBefore(renderObject) {
+  updateBefore(renderObject: RenderObject) {
     const nodeFrame = this.getNodeFrameForRender(renderObject);
     const nodeBuilder = renderObject.getNodeBuilderState();
 
@@ -372,8 +388,8 @@ export class Nodes extends DataMap<any, any> {
     }
   }
 
-  updateForCompute(computeNode) {
-    const nodeFrame = this.getNodeFrame();
+  updateForCompute(computeNode: ComputeNode) {
+    const nodeFrame = this.getNodeFrame(this.renderer);
     const nodeBuilder = this.getForCompute(computeNode);
 
     for (const node of nodeBuilder.updateNodes) {
@@ -381,7 +397,7 @@ export class Nodes extends DataMap<any, any> {
     }
   }
 
-  updateForRender(renderObject) {
+  updateForRender(renderObject: RenderObject) {
     const nodeFrame = this.getNodeFrameForRender(renderObject);
     const nodeBuilder = renderObject.getNodeBuilderState();
 
@@ -397,5 +413,15 @@ export class Nodes extends DataMap<any, any> {
     this.nodeBuilderCache = new Map();
   }
 }
+
+const isCubeTexture = (item: any): item is Texture => {
+  return (
+    item.isCubeTexture ||
+    item.mapping === Mapping.EquirectangularReflection ||
+    item.mapping === Mapping.EquirectangularRefraction
+  );
+};
+const isTexture = (item: any): item is CubeTexture => item.isTexture;
+const isColor = (item: any): item is Color => item.isColor;
 
 export default Nodes;

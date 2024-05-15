@@ -1,4 +1,4 @@
-import { GPUPrimitiveTopology, GPUTextureFormat } from './WebGPUConstants.js';
+import { GPUPrimitiveTopology, GPUTextureFormat } from './WebGPUConstants.ts';
 
 class WebGPUUtils {
   constructor(backend) {

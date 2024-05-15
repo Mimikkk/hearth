@@ -5,7 +5,7 @@ import {
   GPUPrimitiveTopology,
   GPULoadOp,
   GPUStoreOp,
-} from './WebGPUConstants.js';
+} from './WebGPUConstants.ts';
 
 class WebGPUTexturePassUtils {
   constructor(device) {

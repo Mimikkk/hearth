@@ -4,7 +4,7 @@ import {
   GPUFilterMode,
   GPUTextureDimension,
   GPUTextureFormat,
-} from './WebGPUConstants.js';
+} from './WebGPUConstants.ts';
 
 import {
   ColorSpace,

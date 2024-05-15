@@ -7,7 +7,7 @@ import {
   GPUFrontFace,
   GPUIndexFormat,
   GPUStencilOperation,
-} from './WebGPUConstants.js';
+} from './WebGPUConstants.ts';
 
 import {
   Blending,

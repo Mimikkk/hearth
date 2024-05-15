@@ -5,9 +5,14 @@ import type { Material } from '../materials/Material.js';
 import type { Color } from '../math/Color.js';
 import type { Texture } from '../textures/Texture.js';
 import type { CubeTexture } from '../textures/CubeTexture.js';
+import { EnvironmentNode } from '@modules/renderer/threejs/nodes/Nodes.js';
+import FogNode from '@modules/renderer/threejs/nodes/fog/FogNode.js';
 
 export class Scene extends Object3D {
   declare isScene: true;
+  declare environmentNode: EnvironmentNode | null;
+  declare backgroundNode: Node | null;
+  declare fogNode: FogNode | null;
   type: string | 'Scene';
   fog: Fog | null;
   background: Color | Texture | CubeTexture | null;

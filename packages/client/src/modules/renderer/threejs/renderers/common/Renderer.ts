@@ -25,6 +25,7 @@ import {
   Vector4,
 } from '../../../threejs/Three.js';
 import { WebGPUBackend } from '@modules/renderer/threejs/renderers/webgpu/WebGPUBackend.js';
+import ToneMappingNode from '@modules/renderer/threejs/nodes/display/ToneMappingNode.js';
 
 const _scene = new Scene();
 const _drawingBufferSize = new Vector2();
@@ -51,6 +52,7 @@ export class Renderer {
   outputColorSpace: ColorSpace;
   toneMapping: ToneMapping;
   toneMappingExposure: number;
+  toneMappingNode: ToneMappingNode | null;
   sortObjects: boolean;
   depth: boolean;
   stencil: boolean;

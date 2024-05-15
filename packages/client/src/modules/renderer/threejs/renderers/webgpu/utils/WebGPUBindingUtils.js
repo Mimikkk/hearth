@@ -3,7 +3,7 @@ import {
   GPUTextureAspect,
   GPUTextureSampleType,
   GPUTextureViewDimension,
-} from './WebGPUConstants.js';
+} from './WebGPUConstants.ts';
 import { TextureDataType } from '../../../Three.js';
 
 class WebGPUBindingUtils {

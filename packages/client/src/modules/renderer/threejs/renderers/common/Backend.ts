@@ -15,6 +15,7 @@ import { TypedArray } from '@modules/renderer/threejs/math/MathUtils.js';
 import Info from 'three/examples/jsm/renderers/common/Info.js';
 import ComputePipeline from '@modules/renderer/threejs/renderers/common/ComputePipeline.js';
 import RenderPipeline from '@modules/renderer/threejs/renderers/common/RenderPipeline.js';
+import ProgrammableStage from '@modules/renderer/threejs/renderers/common/ProgrammableStage.js';
 
 export interface BackendParameters {
   canvas?: HTMLCanvasElement;
@@ -49,9 +50,9 @@ class Backend {
 
   // program
 
-  createProgram(program: Program) {}
+  createProgram(program: ProgrammableStage) {}
 
-  destroyProgram(program: Program) {}
+  destroyProgram(program: ProgrammableStage) {}
 
   // bindings
 
