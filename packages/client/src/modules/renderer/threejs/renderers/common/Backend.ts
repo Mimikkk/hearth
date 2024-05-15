@@ -128,11 +128,7 @@ class Backend {
   getInstanceCount(renderObject: RenderObject) {
     const { object, geometry } = renderObject;
 
-    return geometry.isInstancedBufferGeometry
-      ? geometry.instanceCount
-      : object instanceof InstancedMesh
-        ? object.count
-        : 1;
+    return geometry.isInstancedBufferGeometry ? geometry.instanceCount : object.isInstancedMesh ? object.count : 1;
   }
 
   getDrawingBufferSize() {

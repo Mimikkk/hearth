@@ -124,8 +124,6 @@ export * from './objects/Sky.ts';
 export * from './physics/AmmoPhysics.ts';
 export * from './physics/RapierPhysics.ts';
 
-export * from './renderers/Projector.js';
-export * from './renderers/SVGRenderer.js';
 export * from './textures/FlakesTexture.ts';
 
 export * as BufferGeometryUtils from '@modules/renderer/threejs/utils/BufferGeometryUtils.js';
