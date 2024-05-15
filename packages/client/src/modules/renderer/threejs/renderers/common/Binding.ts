@@ -1,4 +1,5 @@
 export class Binding {
+  declare shared: boolean;
   visibility: number = 0;
 
   constructor(public name: string = '') {}

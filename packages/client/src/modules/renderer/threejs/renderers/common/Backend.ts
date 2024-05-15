@@ -5,7 +5,7 @@ let vector4 = null;
 let color4 = null;
 
 import Color4 from './Color4.js';
-import { Vector2, Vector4, Revision, Texture, BufferAttribute } from '../../../threejs/Three.js';
+import { Vector2, Vector4, Revision, Texture, BufferAttribute, InstancedMesh } from '../../../threejs/Three.js';
 import RenderContext from './RenderContext.js';
 import RenderObject from './RenderObject.js';
 import { Program } from '@modules/renderer/threejs/transpiler/AST.js';
@@ -128,7 +128,11 @@ class Backend {
   getInstanceCount(renderObject: RenderObject) {
     const { object, geometry } = renderObject;
 
-    return geometry.isInstancedBufferGeometry ? geometry.instanceCount : object.isInstancedMesh ? object.count : 1;
+    return geometry.isInstancedBufferGeometry
+      ? geometry.instanceCount
+      : object instanceof InstancedMesh
+        ? object.count
+        : 1;
   }
 
   getDrawingBufferSize() {
@@ -148,7 +152,7 @@ class Backend {
   getClearColor() {
     const renderer = this.renderer;
 
-    color4 = new Color4();
+    color4 = new Color4(0, 0, 0, 1);
 
     renderer.getClearColor(color4);
 

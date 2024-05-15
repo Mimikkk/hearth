@@ -9,7 +9,7 @@ import { Material } from '@modules/renderer/threejs/materials/Material.js';
 import { Object3D } from '@modules/renderer/threejs/core/Object3D.js';
 
 class RenderObjects {
-  chainMaps: Record<string, ChainMap>;
+  chainMaps: Record<string, ChainMap<any, any>>;
 
   constructor(public renderer: Renderer) {
     this.chainMaps = {};

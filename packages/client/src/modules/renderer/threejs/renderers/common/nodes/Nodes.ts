@@ -20,13 +20,12 @@ import {
 import { Renderer } from '@modules/renderer/threejs/renderers/common/Renderer.js';
 import NodeUniformsGroup from '@modules/renderer/threejs/renderers/common/nodes/NodeUniformsGroup.js';
 import RenderObject from '@modules/renderer/threejs/renderers/common/RenderObject.js';
-import nodeBuilderState from './NodeBuilderState.js';
 
-export class Nodes extends DataMap {
+export class Nodes extends DataMap<any, any> {
   nodeFrame: NodeFrame;
   nodeBuilderCache: Map<string, NodeBuilderState>;
-  callHashCache: ChainMap;
-  groupsData: ChainMap;
+  callHashCache: ChainMap<any, any>;
+  groupsData: ChainMap<any, any>;
 
   constructor(public renderer: Renderer) {
     super();

@@ -1,5 +1,6 @@
 import { Vector4 } from '../../../threejs/Three.js';
 import { RGBA } from '@modules/renderer/threejs/renderers/common/Color4.js';
+import ClippingContext from '@modules/renderer/threejs/renderers/common/ClippingContext.js';
 
 let id = 0;
 
@@ -27,6 +28,7 @@ export class RenderContext {
   isRenderContext: boolean;
   stencilClearValue: number;
   depthClearValue: number;
+  clippingContext: ClippingContext;
 
   constructor() {
     this.id = id++;

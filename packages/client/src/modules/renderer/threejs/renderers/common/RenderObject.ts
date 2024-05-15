@@ -13,12 +13,6 @@ let id = 0;
 
 export default class RenderObject {
   id: number;
-  renderer: Renderer;
-  object: Object3D;
-  material: Material;
-  scene: Scene;
-  camera: Camera;
-  lightsNode: LightsNode;
   context: RenderContext;
   geometry: any;
   version: number;
@@ -81,7 +75,7 @@ export default class RenderObject {
     this.material.eventDispatcher.add('dispose', this.onMaterialDispose);
   }
 
-  updateClipping(parent) {
+  updateClipping(parent: ClippingContext) {
     const material = this.material;
 
     let clippingContext = this.clippingContext;

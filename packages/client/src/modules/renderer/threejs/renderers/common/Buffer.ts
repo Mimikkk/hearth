@@ -1,6 +1,5 @@
 import Binding from './Binding.js';
 import { getFloatLength } from './BufferUtils.js';
-import { TypedArray } from '@modules/renderer/threejs/math/MathUtils.js';
 
 export class Buffer extends Binding {
   declare isBuffer: true;
