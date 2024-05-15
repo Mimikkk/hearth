@@ -16,6 +16,7 @@ import Info from 'three/examples/jsm/renderers/common/Info.js';
 import ComputePipeline from '@modules/renderer/threejs/renderers/common/ComputePipeline.js';
 import RenderPipeline from '@modules/renderer/threejs/renderers/common/RenderPipeline.js';
 import ProgrammableStage from '@modules/renderer/threejs/renderers/common/ProgrammableStage.js';
+import Binding from '@modules/renderer/threejs/renderers/common/Binding.js';
 
 export interface BackendParameters {
   canvas?: HTMLCanvasElement;
@@ -56,13 +57,13 @@ class Backend {
 
   // bindings
 
-  createBindings(renderObject: RenderObject) {}
+  createBindings(bindings: Binding[]) {}
 
-  updateBindings(renderObject: RenderObject) {}
+  updateBindings(bindings: Binding[]) {}
 
   // pipeline
 
-  createRenderPipeline(renderObject: RenderObject): RenderPipeline {
+  createRenderPipeline(renderObject: RenderObject, promises?: Promise<void>[]): RenderPipeline {
     throw new Error('Not implemented');
   }
 

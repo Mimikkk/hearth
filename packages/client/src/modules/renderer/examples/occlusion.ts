@@ -4,11 +4,13 @@ import { MeshPhongNodeMaterial, Node, nodeObject, NodeUpdateType, uniform } from
 import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
 
 import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
+import { Renderer } from '@modules/renderer/threejs/renderers/common/Renderer.js';
+import { Camera, Scene } from '../threejs/Three.js';
 
-let camera, scene, renderer, controls;
+let camera: Camera, scene: Scene, renderer: Renderer, controls: OrbitControls;
 
 class OcclusionNode extends Node {
-  constructor(testObject, normalColor, occludedColor) {
+  constructor(testObject: THREE.Object3D, normalColor: THREE.Color, occludedColor: THREE.Color) {
     super('vec3');
 
     this.updateType = NodeUpdateType.OBJECT;

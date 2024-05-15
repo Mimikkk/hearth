@@ -1002,11 +1002,11 @@ export class WebGPUBackend extends Backend {
 
   // pipelines
 
-  createRenderPipeline(renderObject: RenderObject, promises) {
+  createRenderPipeline(renderObject: RenderObject, promises: Promise<void>[] | null = null) {
     this.pipelineUtils.createRenderPipeline(renderObject, promises);
   }
 
-  createComputePipeline(computePipeline: ComputePipeline, bindings) {
+  createComputePipeline(computePipeline: ComputePipeline, bindings: Binding[]) {
     this.pipelineUtils.createComputePipeline(computePipeline, bindings);
   }
 
@@ -1165,5 +1165,13 @@ export class WebGPUBackend extends Backend {
 
     renderContextData.currentPass = encoder.beginRenderPass(descriptor);
     renderContextData.currentSets = { attributes: {} };
+  }
+
+  static async create(parameters: WebGPUBackendParameters) {
+    const backend = new WebGPUBackend(parameters);
+
+    await backend.init();
+
+    return backend;
   }
 }
