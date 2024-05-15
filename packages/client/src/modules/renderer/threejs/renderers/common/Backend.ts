@@ -107,7 +107,7 @@ class Backend {
 
   // canvas
 
-  getContext(): RenderContext {
+  getContext(): GPUCanvasContext {
     throw new Error('Not implemented');
   }
 

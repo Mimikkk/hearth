@@ -14,7 +14,10 @@ import {
   BlendingEquation,
   BlendingFactor,
   Depth,
+  Line,
+  LineSegments,
   Material,
+  Object3D,
   Side,
   StencilFunction,
   StencilOperation,
@@ -23,6 +26,9 @@ import type { WebGPUBackend } from '@modules/renderer/threejs/renderers/webgpu/W
 import RenderObject from '@modules/renderer/threejs/renderers/common/RenderObject.js';
 import ComputePipeline from '@modules/renderer/threejs/renderers/common/ComputePipeline.js';
 import Binding from '@modules/renderer/threejs/renderers/common/Binding.js';
+import { Geometry } from 'three/examples/jsm/deprecated/Geometry.js';
+import geometries from '@modules/renderer/threejs/renderers/common/Geometries.js';
+import { TypedArray } from '@modules/renderer/threejs/math/MathUtils.js';
 
 class WebGPUPipelineUtils {
   constructor(public backend: WebGPUBackend) {}
@@ -57,9 +63,9 @@ class WebGPUPipelineUtils {
     if (material.stencilWrite === true) {
       stencilFront = {
         compare: this._getStencilCompare(material),
-        failOp: this._getStencilOperation(material.stencilFail),
-        depthFailOp: this._getStencilOperation(material.stencilZFail),
-        passOp: this._getStencilOperation(material.stencilZPass),
+        failOp: this._getStencilOperation(material.stencilFail as StencilOperation),
+        depthFailOp: this._getStencilOperation(material.stencilZFail as StencilOperation),
+        passOp: this._getStencilOperation(material.stencilZPass as StencilOperation),
       };
     }
 
@@ -131,10 +137,10 @@ class WebGPUPipelineUtils {
     if (promises === null) {
       pipelineData.pipeline = device.createRenderPipeline(pipelineDescriptor);
     } else {
-      const p = new Promise((resolve /*, reject*/) => {
+      const p = new Promise<void>(resolve => {
         device.createRenderPipelineAsync(pipelineDescriptor).then(pipeline => {
           pipelineData.pipeline = pipeline;
-          resolve();
+          resolve(undefined);
         });
       });
 
@@ -165,10 +171,9 @@ class WebGPUPipelineUtils {
     const blending = material.blending;
 
     if (blending === Blending.Custom) {
-      const blendSrcAlpha = material.blendSrcAlpha !== null ? material.blendSrcAlpha : GPUBlendFactorType.One;
-      const blendDstAlpha = material.blendDstAlpha !== null ? material.blendDstAlpha : GPUBlendFactorType.Zero;
-      const blendEquationAlpha =
-        material.blendEquationAlpha !== null ? material.blendEquationAlpha : GPUBlendOperationType.Add;
+      const blendSrcAlpha = (material.blendSrcAlpha ?? GPUBlendFactorType.One) as number;
+      const blendDstAlpha = (material.blendDstAlpha ?? GPUBlendFactorType.Zero) as number;
+      const blendEquationAlpha = (material.blendEquationAlpha ?? GPUBlendOperationType.Add) as number;
 
       color = {
         srcFactor: this._getBlendFactor(material.blendSrc),
@@ -185,10 +190,10 @@ class WebGPUPipelineUtils {
       const premultipliedAlpha = material.premultipliedAlpha;
 
       const setBlend = (
-        srcRGB: GPUBlendFactorType,
-        dstRGB: GPUBlendFactorType,
-        srcAlpha: GPUBlendFactorType,
-        dstAlpha: GPUBlendFactorType,
+        srcRGB: GPUBlendFactor,
+        dstRGB: GPUBlendFactor,
+        srcAlpha: GPUBlendFactor,
+        dstAlpha: GPUBlendFactor,
       ) => {
         color = {
           srcFactor: srcRGB,
@@ -332,10 +337,12 @@ class WebGPUPipelineUtils {
         blendFactor = GPUBlendFactorType.SrcAlphaSaturated;
         break;
 
+      //@ts-expect-error
       case BlendingFactor.BlendColor:
         blendFactor = GPUBlendFactorType.Constant;
         break;
 
+      //@ts-expect-error
       case BlendingFactor.OneMinusBlendColor:
         blendFactor = GPUBlendFactorType.OneMinusConstant;
         break;
@@ -347,7 +354,7 @@ class WebGPUPipelineUtils {
     return blendFactor;
   }
 
-  _getStencilCompare(material) {
+  _getStencilCompare(material: Material) {
     let stencilCompare;
 
     const stencilFunc = material.stencilFunc;
@@ -392,7 +399,7 @@ class WebGPUPipelineUtils {
     return stencilCompare;
   }
 
-  _getStencilOperation(op) {
+  _getStencilOperation(op: StencilOperation) {
     let stencilOperation;
 
     switch (op) {
@@ -435,8 +442,8 @@ class WebGPUPipelineUtils {
     return stencilOperation;
   }
 
-  _getBlendOperation(blendEquation) {
-    let blendOperation;
+  _getBlendOperation(blendEquation: BlendingEquation): GPUBlendOperation {
+    let blendOperation: GPUBlendOperation = GPUBlendOperationType.Add;
 
     switch (blendEquation) {
       case BlendingEquation.Add:
@@ -466,13 +473,13 @@ class WebGPUPipelineUtils {
     return blendOperation;
   }
 
-  _getPrimitiveState(object, geometry, material) {
-    const descriptor = {};
+  _getPrimitiveState(object: Object3D, geometry: Geometry, material: Material): GPUPrimitiveState {
+    const descriptor: GPUPrimitiveState = {};
     const utils = this.backend.utils;
 
     descriptor.topology = utils.getPrimitiveTopology(object, material);
 
-    if (geometry.index !== null && object.isLine === true && object.isLineSegments !== true) {
+    if (hasIndex(geometry) && isLine(object) && isLineSegments(object) !== true) {
       descriptor.stripIndexFormat =
         geometry.index.array instanceof Uint16Array ? GPUIndexFormatType.Uint16 : GPUIndexFormatType.Uint32;
     }
@@ -501,11 +508,11 @@ class WebGPUPipelineUtils {
     return descriptor;
   }
 
-  _getColorWriteMask(material) {
+  _getColorWriteMask(material: Material) {
     return material.colorWrite === true ? GPUColorWriteFlagsType.All : GPUColorWriteFlagsType.None;
   }
 
-  _getDepthCompare(material) {
+  _getDepthCompare(material: Material) {
     let depthCompare;
 
     if (material.depthTest === false) {
@@ -555,4 +562,7 @@ class WebGPUPipelineUtils {
   }
 }
 
+const hasIndex = (geometry: any): geometry is { index: { array: TypedArray } } => geometry.index !== null;
+const isLine = (object: any): object is Line => object.isLine;
+const isLineSegments = (object: any): object is LineSegments => object.isLineSegments;
 export default WebGPUPipelineUtils;

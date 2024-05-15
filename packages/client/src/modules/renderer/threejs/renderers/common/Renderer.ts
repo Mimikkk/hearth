@@ -1,6 +1,6 @@
-import { Animation } from './Animation.js';
+import { Animation, AnimationLoopFn } from './Animation.js';
 import RenderObjects from './RenderObjects.js';
-import Attributes from './Attributes.js';
+import Attributes, { Attribute } from './Attributes.js';
 import Geometries from './Geometries.js';
 import { Info } from './Info.js';
 import Pipelines from './Pipelines.js';
@@ -13,6 +13,7 @@ import Nodes from './nodes/Nodes.js';
 import Color4 from './Color4.js';
 import ClippingContext from './ClippingContext.js';
 import {
+  BufferAttribute,
   Camera,
   ColorSpace,
   Frustum,
@@ -330,13 +331,13 @@ export class Renderer {
     await Promise.all(compilationPromises);
   }
 
-  async renderAsync(scene, camera) {
+  async renderAsync(scene: Scene, camera: Camera) {
     if (this._initialized === false) await this.init();
 
     this._renderScene(scene, camera);
   }
 
-  render(scene, camera) {
+  render(scene: Scene, camera: Camera) {
     if (this._initialized === false) {
       console.warn(
         'THREE.Renderer: .render() called before the backend is initialized. Try using .renderAsync() instead.',
@@ -348,7 +349,7 @@ export class Renderer {
     this._renderScene(scene, camera);
   }
 
-  _renderScene(scene, camera) {
+  _renderScene(scene: Scene, camera: Camera) {
     // preserve render tree
 
     const nodeFrame = this._nodes.nodeFrame;
@@ -529,21 +530,17 @@ export class Renderer {
     return this._activeMipmapLevel;
   }
 
-  async setAnimationLoop(callback) {
+  async setAnimationLoop(callback: AnimationLoopFn) {
     if (this._initialized === false) await this.init();
 
     this._animation.setAnimationLoop(callback);
   }
 
-  getArrayBuffer(attribute) {
-    // @deprecated, r155
-
-    console.warn('THREE.Renderer: getArrayBuffer() is deprecated. Use getArrayBufferAsync() instead.');
-
+  getArrayBuffer(attribute: BufferAttribute<any>) {
     return this.getArrayBufferAsync(attribute);
   }
 
-  async getArrayBufferAsync(attribute) {
+  async getArrayBufferAsync(attribute: BufferAttribute<any>) {
     return await this.backend.getArrayBufferAsync(attribute);
   }
 
@@ -555,15 +552,15 @@ export class Renderer {
     return this._pixelRatio;
   }
 
-  getDrawingBufferSize(target) {
+  getDrawingBufferSize(target: Vector3) {
     return target.set(this._width * this._pixelRatio, this._height * this._pixelRatio).floor();
   }
 
-  getSize(target) {
+  getSize(target: Vector2) {
     return target.set(this._width, this._height);
   }
 
-  setPixelRatio(value = 1) {
+  setPixelRatio(value: number = 1) {
     this._pixelRatio = value;
 
     this.setSize(this._width, this._height, false);

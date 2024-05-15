@@ -4,24 +4,6 @@ import { WebGPUBackend } from '@modules/renderer/threejs/renderers/webgpu/WebGPU
 import RenderObject from '@modules/renderer/threejs/renderers/common/RenderObject.js';
 import { Attribute } from '@modules/renderer/threejs/renderers/common/Attributes.js';
 
-const typedArraysToVertexFormatPrefix = new Map([
-  [Int8Array, ['sint8', 'snorm8']],
-  [Uint8Array, ['uint8', 'unorm8']],
-  [Int16Array, ['sint16', 'snorm16']],
-  [Uint16Array, ['uint16', 'unorm16']],
-  [Int32Array, ['sint32', 'snorm32']],
-  [Uint32Array, ['uint32', 'unorm32']],
-  [Float32Array, ['float32']],
-]);
-
-const typedAttributeToVertexFormatPrefix = new Map([[Float16BufferAttribute, ['float16']]]);
-
-const typeArraysToVertexFormatPrefixForItemSize1 = new Map([
-  [Int32Array, 'sint32'],
-  [Uint32Array, 'uint32'],
-  [Float32Array, 'float32'],
-]);
-
 class WebGPUAttributeUtils {
   constructor(public backend: WebGPUBackend) {}
 
@@ -204,10 +186,34 @@ class WebGPUAttributeUtils {
     let format;
 
     if (itemSize == 1) {
-      format = typeArraysToVertexFormatPrefixForItemSize1.get(ArrayType);
+      if (ArrayType === Int32Array) {
+        format = 'sint32';
+      } else if (ArrayType === Uint32Array) {
+        format = 'uint32';
+      } else if (ArrayType === Float32Array) {
+        format = 'float32';
+      }
     } else {
-      const prefixOptions =
-        typedAttributeToVertexFormatPrefix.get(AttributeType) || typedArraysToVertexFormatPrefix.get(ArrayType);
+      let prefixOptions!: string[];
+
+      if (AttributeType === Float16BufferAttribute) {
+        prefixOptions = ['float16'];
+      } else if (ArrayType == Int8Array) {
+        prefixOptions = ['sint8', 'snorm8'];
+      } else if (ArrayType == Uint8Array) {
+        prefixOptions = ['uint8', 'unorm8'];
+      } else if (ArrayType == Int16Array) {
+        prefixOptions = ['sint16', 'snorm16'];
+      } else if (ArrayType == Uint16Array) {
+        prefixOptions = ['uint16', 'unorm16'];
+      } else if (ArrayType == Int32Array) {
+        prefixOptions = ['sint32', 'snorm32'];
+      } else if (ArrayType == Uint32Array) {
+        prefixOptions = ['uint32', 'unorm32'];
+      } else if (ArrayType == Float32Array) {
+        prefixOptions = ['float32'];
+      }
+
       const prefix = prefixOptions[normalized ? 1 : 0];
 
       if (prefix) {

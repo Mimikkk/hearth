@@ -95,7 +95,7 @@ class WebGPUBindingUtils {
     bindingsData.bindings = bindings;
   }
 
-  updateBinding(binding: Binding[]) {
+  updateBinding(binding: Binding) {
     const backend = this.backend;
     const device = backend.device;
 

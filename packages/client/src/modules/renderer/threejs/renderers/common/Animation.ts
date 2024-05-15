@@ -1,6 +1,6 @@
 import type { Renderer } from '@modules/renderer/threejs/renderers/common/Renderer.js';
 
-type AnimationLoopFn = (time: number, frame?: number) => void;
+export type AnimationLoopFn = (time: number, frame?: number) => void;
 
 export class Animation {
   animationLoop: AnimationLoopFn | null = null;

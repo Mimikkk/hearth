@@ -30,6 +30,7 @@ export class Texture {
   channel: number;
   wrapS: Wrapping;
   wrapT: Wrapping;
+  declare wrapR: Wrapping;
   magFilter: MagnificationTextureFilter;
   minFilter: MinificationTextureFilter;
   anisotropy: number;

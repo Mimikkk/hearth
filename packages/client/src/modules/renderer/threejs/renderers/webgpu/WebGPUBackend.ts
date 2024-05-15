@@ -41,9 +41,9 @@ export interface WebGPUBackendParameters extends BackendParameters {
 export class WebGPUBackend extends Backend {
   declare parameters: WebGPUBackendParameters;
   trackTimestamp: boolean;
-  adapter: GPUAdapter | null;
-  device: GPUDevice | null;
-  context: GPUCanvasContext | null;
+  adapter: GPUAdapter;
+  device: GPUDevice;
+  context: GPUCanvasContext;
   colorBuffer: GPUTexture | null;
   defaultRenderPassdescriptor: GPURenderPassDescriptor | null;
   utils: WebGPUUtils;
@@ -69,9 +69,9 @@ export class WebGPUBackend extends Backend {
 
     this.trackTimestamp = parameters.trackTimestamp ?? false;
 
-    this.adapter = null;
-    this.device = null;
-    this.context = null;
+    this.adapter = null!;
+    this.device = null!;
+    this.context = null!;
     this.colorBuffer = null;
     this.defaultRenderPassdescriptor = null;
 
@@ -140,7 +140,7 @@ export class WebGPUBackend extends Backend {
   }
 
   getContext(): GPUCanvasContext {
-    return this.context!;
+    return this.context;
   }
 
   _getDefaultRenderPassDescriptor() {
