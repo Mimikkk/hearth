@@ -17,7 +17,7 @@ import WebGPUAttributeUtils from './utils/WebGPUAttributeUtils.js';
 import WebGPUBindingUtils from './utils/WebGPUBindingUtils.js';
 import WebGPUPipelineUtils from './utils/WebGPUPipelineUtils.js';
 import WebGPUTextureUtils from './utils/WebGPUTextureUtils.js';
-import { WebGPUManager } from '@modules/renderer/threejs/capabilities/WebGPUManager.ts';
+import { WebGPUManager } from '@modules/renderer/threejs/capabilities/WebGPUManager.js';
 import { BackendParameters } from 'three/examples/jsm/renderers/common/Backend.js';
 import type { Renderer } from '@modules/renderer/threejs/renderers/common/Renderer.js';
 import RenderContext from '@modules/renderer/threejs/renderers/common/RenderContext.js';
@@ -610,7 +610,6 @@ export class WebGPUBackend extends Backend {
   // compute
 
   beginCompute(computeGroup: ComputeNode) {
-    console.log({ computeGroup });
     const groupGPU = this.get(computeGroup);
 
     const descriptor = {};

@@ -10,7 +10,7 @@ import NodeStorageBuffer from '../../common/nodes/NodeStorageBuffer.ts';
 
 import { CodeNode, NodeBuilder } from '../../../../threejs/nodes/Nodes.js';
 
-import { getFormat } from '../utils/WebGPUTextureUtils.js';
+import { getFormat } from '../utils/WebGPUTextureUtils.ts';
 
 import WGSLNodeParser from './WGSLNodeParser.js';
 

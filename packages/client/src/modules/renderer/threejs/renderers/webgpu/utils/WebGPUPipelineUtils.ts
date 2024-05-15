@@ -134,7 +134,6 @@ class WebGPUPipelineUtils {
           resolve();
         });
       });
-      console.log({ p });
 
       promises.push(p);
     }
