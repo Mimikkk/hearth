@@ -1,7 +1,7 @@
 import AnalyticLightNode from './AnalyticLightNode.js';
 import { lightTargetDirection } from './LightNode.js';
 import { addLightNode } from './LightsNode.js';
-import { addNodeClass } from '../core/Node.js';
+import { addNodeClass } from '../core/Node.ts';
 
 import { DirectionalLight } from '../../../threejs/Three.js';
 

@@ -1,5 +1,5 @@
 import ReferenceNode from './ReferenceNode.js';
-import { addNodeClass } from '../core/Node.js';
+import { addNodeClass } from '../core/Node.ts';
 import { nodeObject } from '../shadernode/ShaderNode.js';
 
 class UserDataNode extends ReferenceNode {

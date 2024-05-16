@@ -1,4 +1,4 @@
-import Node, { addNodeClass } from './Node.js';
+import Node, { addNodeClass } from './Node.ts';
 
 class TempNode extends Node {
   constructor(type) {

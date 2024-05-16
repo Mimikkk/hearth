@@ -1,4 +1,4 @@
-import Node, { addNodeClass } from '../core/Node.js';
+import Node, { addNodeClass } from '../core/Node.ts';
 import { cameraViewMatrix } from './CameraNode.js';
 import { transformedNormalView } from './NormalNode.js';
 import { positionViewDirection } from './PositionNode.js';

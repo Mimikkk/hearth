@@ -1,5 +1,5 @@
 import ViewportTextureNode from './ViewportTextureNode.js';
-import { addNodeClass } from '../core/Node.js';
+import { addNodeClass } from '../core/Node.ts';
 import { addNodeElement, nodeProxy } from '../shadernode/ShaderNode.js';
 import { viewportTopLeft } from './ViewportNode.js';
 import { FramebufferTexture } from '../../../threejs/Three.js';

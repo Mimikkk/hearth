@@ -1,5 +1,5 @@
 // @TODO: We can simplify "export { default as SomeNode, other, exports } from '...'" to just "export * from '...'" if we will use only named exports
-// this will also solve issues like "import TempNode from '../core/Node.js'"
+// this will also solve issues like "import TempNode from '../core/Node.ts'"
 
 // constants
 export * from './core/constants.ts';
@@ -13,7 +13,7 @@ export { default as ConstNode } from './core/ConstNode.js';
 export { default as ContextNode, context, label } from './core/ContextNode.js';
 export { default as IndexNode, vertexIndex, instanceIndex } from './core/IndexNode.js';
 export { default as LightingModel } from './core/LightingModel.js';
-export { default as Node, addNodeClass, createNodeFromType } from './core/Node.js';
+export { default as Node, addNodeClass, createNodeFromType } from './core/Node.ts';
 export { default as VarNode, temp } from './core/VarNode.js';
 export { default as NodeAttribute } from './core/NodeAttribute.js';
 export { default as NodeBuilder } from './core/NodeBuilder.js';

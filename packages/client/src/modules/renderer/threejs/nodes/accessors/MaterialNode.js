@@ -1,4 +1,4 @@
-import Node, { addNodeClass } from '../core/Node.js';
+import Node, { addNodeClass } from '../core/Node.ts';
 import { reference } from './ReferenceNode.js';
 import { materialReference } from './MaterialReferenceNode.js';
 import { normalView } from './NormalNode.js';

@@ -1,4 +1,4 @@
-import Node, { addNodeClass } from './Node.js';
+import Node, { addNodeClass } from './Node.ts';
 import { addNodeElement, nodeProxy } from '../shadernode/ShaderNode.js';
 
 class BypassNode extends Node {

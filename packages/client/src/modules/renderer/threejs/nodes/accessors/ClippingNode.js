@@ -1,4 +1,4 @@
-import Node from '../core/Node.js';
+import Node from '../core/Node.ts';
 import { nodeObject } from '../shadernode/ShaderNode.js';
 import { positionView } from './PositionNode.js';
 import { diffuseColor, property } from '../core/PropertyNode.js';

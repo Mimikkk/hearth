@@ -2,7 +2,7 @@ import SpotLightNode from './SpotLightNode.js';
 import { addLightNode } from './LightsNode.js';
 import { texture } from '../accessors/TextureNode.js';
 import { vec2 } from '../shadernode/ShaderNode.js';
-import { addNodeClass } from '../core/Node.js';
+import { addNodeClass } from '../core/Node.ts';
 
 import { IESSpotLight } from '../../lights/IESSpotLight.ts';
 

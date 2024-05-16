@@ -1,5 +1,5 @@
 import TempNode from '../core/TempNode.js';
-import { addNodeClass } from '../core/Node.js';
+import { addNodeClass } from '../core/Node.ts';
 import { add, mul, div } from '../math/OperatorNode.js';
 import { floor, ceil, fract, pow } from '../math/MathNode.js';
 import { nodeProxy, addNodeElement, float, vec2, vec4, int } from '../shadernode/ShaderNode.js';

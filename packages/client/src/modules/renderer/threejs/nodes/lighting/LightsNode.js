@@ -1,4 +1,4 @@
-import Node from '../core/Node.js';
+import Node from '../core/Node.ts';
 import AnalyticLightNode from './AnalyticLightNode.js';
 import { nodeObject, nodeProxy, vec3 } from '../shadernode/ShaderNode.js';
 

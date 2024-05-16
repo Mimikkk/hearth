@@ -1,6 +1,6 @@
 import FogNode from './FogNode.js';
 import { smoothstep } from '../math/MathNode.js';
-import { addNodeClass } from '../core/Node.js';
+import { addNodeClass } from '../core/Node.ts';
 import { addNodeElement, nodeProxy } from '../shadernode/ShaderNode.js';
 
 class FogRangeNode extends FogNode {

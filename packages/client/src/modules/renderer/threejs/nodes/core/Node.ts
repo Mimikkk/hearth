@@ -44,11 +44,11 @@ class Node {
     return this.self || this;
   }
 
-  setReference(/*state*/) {
+  setReference(state) {
     return this;
   }
 
-  isGlobal(/*builder*/) {
+  isGlobal(builder) {
     return false;
   }
 
@@ -81,7 +81,7 @@ class Node {
     return this._cacheKey;
   }
 
-  getHash(/*builder*/) {
+  getHash(builder) {
     return this.uuid;
   }
 
@@ -164,7 +164,7 @@ class Node {
     console.warn('Abstract function.');
   }
 
-  update(/*frame*/) {
+  update(frame) {
     console.warn('Abstract function.');
   }
 

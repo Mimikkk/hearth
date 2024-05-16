@@ -1,6 +1,6 @@
 import AnalyticLightNode from './AnalyticLightNode.js';
 import { addLightNode } from './LightsNode.js';
-import { addNodeClass } from '../core/Node.js';
+import { addNodeClass } from '../core/Node.ts';
 
 import { AmbientLight } from '../../../threejs/Three.js';
 

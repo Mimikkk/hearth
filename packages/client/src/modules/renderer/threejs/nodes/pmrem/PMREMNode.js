@@ -1,5 +1,5 @@
 import TempNode from '../core/TempNode.js';
-import { addNodeClass } from '../core/Node.js';
+import { addNodeClass } from '../core/Node.ts';
 import { texture } from '../accessors/TextureNode.js';
 import { textureCubeUV } from './PMREMUtils.js';
 import { uniform } from '../core/UniformNode.js';

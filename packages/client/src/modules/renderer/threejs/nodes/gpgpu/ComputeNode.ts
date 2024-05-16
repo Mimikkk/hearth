@@ -1,4 +1,4 @@
-import Node, { addNodeClass } from '../core/Node.js';
+import Node, { addNodeClass } from '../core/Node.ts';
 import { NodeUpdateType } from '../core/constants.ts';
 import { addNodeElement, nodeObject } from '../shadernode/ShaderNode.js';
 import { Renderer } from '@modules/renderer/threejs/renderers/common/Renderer.js';

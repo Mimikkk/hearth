@@ -1,5 +1,5 @@
 import InputNode from '../core/InputNode.js';
-import { addNodeClass } from '../core/Node.js';
+import { addNodeClass } from '../core/Node.ts';
 import { varying } from '../core/VaryingNode.js';
 import { addNodeElement, nodeObject } from '../shadernode/ShaderNode.js';
 import { BufferUsage, InterleavedBuffer, InterleavedBufferAttribute } from '../../../threejs/Three.js';

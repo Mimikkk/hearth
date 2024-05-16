@@ -1,5 +1,5 @@
 import ContextNode from '../core/ContextNode.js';
-import { addNodeClass } from '../core/Node.js';
+import { addNodeClass } from '../core/Node.ts';
 import { addNodeElement, nodeProxy, float, vec3 } from '../shadernode/ShaderNode.js';
 
 class LightingContextNode extends ContextNode {

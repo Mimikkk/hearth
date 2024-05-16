@@ -1,6 +1,6 @@
 import InputNode from './InputNode.js';
 import { objectGroup } from './UniformGroupNode.js';
-import { addNodeClass } from './Node.js';
+import { addNodeClass } from './Node.ts';
 import { getConstNodeType, nodeObject } from '../shadernode/ShaderNode.js';
 
 class UniformNode extends InputNode {

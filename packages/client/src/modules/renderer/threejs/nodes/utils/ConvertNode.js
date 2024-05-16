@@ -1,4 +1,4 @@
-import Node, { addNodeClass } from '../core/Node.js';
+import Node, { addNodeClass } from '../core/Node.ts';
 
 class ConvertNode extends Node {
   constructor(node, convertTo) {

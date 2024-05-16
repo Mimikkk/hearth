@@ -1,5 +1,5 @@
-import Node from '../core/Node.js';
-import { addNodeClass } from '../core/Node.js';
+import Node from '../core/Node.ts';
+import { addNodeClass } from '../core/Node.ts';
 import { nodeImmutable } from '../shadernode/ShaderNode.js';
 import { reference } from './ReferenceNode.js';
 

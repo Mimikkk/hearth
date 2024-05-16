@@ -1,4 +1,4 @@
-import Node, { addNodeClass } from '../core/Node.js';
+import Node, { addNodeClass } from '../core/Node.ts';
 import { NodeUpdateType } from '../core/constants.ts';
 import UniformNode from '../core/UniformNode.js';
 import { nodeProxy } from '../shadernode/ShaderNode.js';

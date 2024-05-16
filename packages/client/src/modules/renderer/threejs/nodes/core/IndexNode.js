@@ -1,4 +1,4 @@
-import Node, { addNodeClass } from './Node.js';
+import Node, { addNodeClass } from './Node.ts';
 import { varying } from './VaryingNode.js';
 import { nodeImmutable } from '../shadernode/ShaderNode.js';
 

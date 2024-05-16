@@ -1,7 +1,7 @@
 import UniformNode from '../core/UniformNode.js';
 import { NodeUpdateType } from '../core/constants.ts';
 import { nodeObject, nodeImmutable } from '../shadernode/ShaderNode.js';
-import { addNodeClass } from '../core/Node.js';
+import { addNodeClass } from '../core/Node.ts';
 
 class TimerNode extends UniformNode {
   constructor(scope = TimerNode.LOCAL, scale = 1, value = 0) {

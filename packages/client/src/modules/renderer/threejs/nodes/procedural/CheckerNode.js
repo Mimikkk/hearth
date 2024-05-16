@@ -1,6 +1,6 @@
 import TempNode from '../core/TempNode.js';
 import { uv } from '../accessors/UVNode.js';
-import { addNodeClass } from '../core/Node.js';
+import { addNodeClass } from '../core/Node.ts';
 import { addNodeElement, tslFn, nodeProxy } from '../shadernode/ShaderNode.js';
 
 const checkerShaderNode = tslFn(inputs => {

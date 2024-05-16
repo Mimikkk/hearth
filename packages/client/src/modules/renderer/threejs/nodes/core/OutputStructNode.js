@@ -1,4 +1,4 @@
-import Node, { addNodeClass } from './Node.js';
+import Node, { addNodeClass } from './Node.ts';
 import StructTypeNode from './StructTypeNode.js';
 import { nodeProxy } from '../shadernode/ShaderNode.js';
 

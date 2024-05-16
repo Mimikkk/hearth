@@ -1,7 +1,7 @@
 import ReferenceNode from './ReferenceNode.js';
 //import { renderGroup } from '../core/UniformGroupNode.js';
 //import { NodeUpdateType } from '../core/constants.ts';
-import { addNodeClass } from '../core/Node.js';
+import { addNodeClass } from '../core/Node.ts';
 import { nodeObject } from '../shadernode/ShaderNode.js';
 
 class MaterialReferenceNode extends ReferenceNode {

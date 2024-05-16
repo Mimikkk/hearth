@@ -1,4 +1,4 @@
-import Node, { addNodeClass } from './Node.js';
+import Node, { addNodeClass } from './Node.ts';
 import { nodeImmutable, nodeObject } from '../shadernode/ShaderNode.js';
 
 class PropertyNode extends Node {

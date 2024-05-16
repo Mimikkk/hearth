@@ -1,4 +1,4 @@
-import { addNodeClass } from './Node.js';
+import { addNodeClass } from './Node.ts';
 import { nodeObject } from '../shadernode/ShaderNode.js';
 import PropertyNode from './PropertyNode.js';
 

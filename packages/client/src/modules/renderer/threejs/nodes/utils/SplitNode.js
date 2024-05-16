@@ -1,4 +1,4 @@
-import Node, { addNodeClass } from '../core/Node.js';
+import Node, { addNodeClass } from '../core/Node.ts';
 import { vectorComponents } from '../core/constants.ts';
 
 const stringVectorComponents = vectorComponents.join('');

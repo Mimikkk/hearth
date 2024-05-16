@@ -1,4 +1,4 @@
-import Node, { addNodeClass } from './Node.js';
+import Node, { addNodeClass } from './Node.ts';
 import { cond } from '../math/CondNode.js';
 import { getCurrentStack, nodeProxy, setCurrentStack, ShaderNode } from '../shadernode/ShaderNode.js';
 

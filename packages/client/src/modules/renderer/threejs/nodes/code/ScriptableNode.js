@@ -1,4 +1,4 @@
-import Node, { addNodeClass } from '../core/Node.js';
+import Node, { addNodeClass } from '../core/Node.ts';
 import { scriptableValue } from './ScriptableValueNode.js';
 import { addNodeElement, float, nodeProxy } from '../shadernode/ShaderNode.js';
 

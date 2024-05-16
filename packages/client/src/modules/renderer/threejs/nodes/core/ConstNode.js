@@ -1,5 +1,5 @@
 import InputNode from './InputNode.js';
-import { addNodeClass } from './Node.js';
+import { addNodeClass } from './Node.ts';
 
 class ConstNode extends InputNode {
   constructor(value, nodeType = null) {

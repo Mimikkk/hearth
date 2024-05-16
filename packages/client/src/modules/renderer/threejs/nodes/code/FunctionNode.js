@@ -1,5 +1,5 @@
 import CodeNode from './CodeNode.js';
-import { addNodeClass } from '../core/Node.js';
+import { addNodeClass } from '../core/Node.ts';
 import { nodeObject } from '../shadernode/ShaderNode.js';
 
 class FunctionNode extends CodeNode {

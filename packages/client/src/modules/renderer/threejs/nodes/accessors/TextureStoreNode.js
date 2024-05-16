@@ -1,4 +1,4 @@
-import { addNodeClass } from '../core/Node.js';
+import { addNodeClass } from '../core/Node.ts';
 import TextureNode from './TextureNode.js';
 import { nodeProxy } from '../shadernode/ShaderNode.js';
 

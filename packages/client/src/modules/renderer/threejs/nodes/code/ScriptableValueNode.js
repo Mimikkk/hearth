@@ -1,4 +1,4 @@
-import Node, { addNodeClass } from '../core/Node.js';
+import Node, { addNodeClass } from '../core/Node.ts';
 import { arrayBufferToBase64, base64ToArrayBuffer } from '../core/NodeUtils.js';
 import { addNodeElement, float, nodeProxy } from '../shadernode/ShaderNode.js';
 import { EventDispatcher } from '../../../threejs/Three.js';

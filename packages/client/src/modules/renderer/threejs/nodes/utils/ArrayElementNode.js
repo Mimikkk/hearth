@@ -1,4 +1,4 @@
-import Node, { addNodeClass } from '../core/Node.js';
+import Node, { addNodeClass } from '../core/Node.ts';
 
 class ArrayElementNode extends Node {
   // @TODO: If extending from TempNode it breaks webgpu_compute

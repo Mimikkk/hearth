@@ -4,7 +4,7 @@ import { uniform } from '../core/UniformNode.js';
 import { mix } from '@modules/renderer/threejs/nodes/math/MathNode.js';
 import { normalView } from '../accessors/NormalNode.js';
 import { objectPosition } from '../accessors/Object3DNode.js';
-import { addNodeClass } from '../core/Node.js';
+import { addNodeClass } from '../core/Node.ts';
 
 import { Color, HemisphereLight } from '../../../threejs/Three.js';
 

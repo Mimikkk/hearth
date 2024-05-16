@@ -1,4 +1,4 @@
-import { addNodeClass } from '../core/Node.js';
+import { addNodeClass } from '../core/Node.ts';
 import TempNode from '../core/TempNode.js';
 import TextureNode from '../accessors/TextureNode.js';
 import { NodeUpdateType } from '../core/constants.ts';

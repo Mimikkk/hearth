@@ -1,5 +1,5 @@
 import Object3DNode from './Object3DNode.js';
-import { addNodeClass } from '../core/Node.js';
+import { addNodeClass } from '../core/Node.ts';
 import { nodeImmutable } from '../shadernode/ShaderNode.js';
 
 class ModelNode extends Object3DNode {

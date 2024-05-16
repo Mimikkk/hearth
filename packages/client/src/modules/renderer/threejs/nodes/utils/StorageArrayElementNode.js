@@ -1,4 +1,4 @@
-import { addNodeClass } from '../core/Node.js';
+import { addNodeClass } from '../core/Node.ts';
 import { nodeProxy, addNodeElement } from '../shadernode/ShaderNode.js';
 import ArrayElementNode from './ArrayElementNode.js';
 

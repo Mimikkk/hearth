@@ -1,4 +1,4 @@
-import { addNodeClass } from '../core/Node.js';
+import { addNodeClass } from '../core/Node.ts';
 import TempNode from '../core/TempNode.js';
 import { cameraProjectionMatrix } from './CameraNode.js';
 import { modelViewMatrix } from './ModelNode.js';

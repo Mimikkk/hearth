@@ -1,4 +1,4 @@
-import Node, { addNodeClass } from '../core/Node.js';
+import Node, { addNodeClass } from '../core/Node.ts';
 import { nodeProxy } from '../shadernode/ShaderNode.js';
 import { objectPosition } from '../accessors/Object3DNode.js';
 import { cameraViewMatrix } from '../accessors/CameraNode.js';

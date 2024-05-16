@@ -1,4 +1,4 @@
-import Node, { addNodeClass } from '../core/Node.js';
+import Node, { addNodeClass } from '../core/Node.ts';
 import { NodeUpdateType } from '../core/constants.ts';
 import { uniform } from '../core/UniformNode.js';
 import { nodeImmutable, vec2 } from '../shadernode/ShaderNode.js';
