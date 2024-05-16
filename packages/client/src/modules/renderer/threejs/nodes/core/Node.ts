@@ -251,7 +251,7 @@ class Node {
 
 export default Node;
 
-export function addNodeClass(type: NodeType, nodeClass: any) {
+export function addNodeClass(type: string, nodeClass: any) {
   if (typeof nodeClass !== 'function' || !type) throw new Error(`Node class ${type} is not a class`);
   if (NodeClasses.has(type)) {
     console.warn(`Redefinition of node class ${type}`);

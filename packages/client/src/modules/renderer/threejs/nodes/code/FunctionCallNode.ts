@@ -1,30 +1,24 @@
 import TempNode from '../core/TempNode.js';
 import { addNodeClass } from '../core/Node.ts';
 import { addNodeElement, nodeArray, nodeObject, nodeObjects } from '../shadernode/ShaderNode.js';
+import FunctionNode from './FunctionNode.ts';
+import NodeBuilder from '@modules/renderer/threejs/nodes/core/NodeBuilder.js';
+import { NodeTypeOption } from '@modules/renderer/threejs/nodes/core/constants.js';
+import Node from 'three/examples/jsm/nodes/core/Node.js';
 
 class FunctionCallNode extends TempNode {
-  constructor(functionNode = null, parameters = {}) {
+  constructor(
+    public functionNode: FunctionNode,
+    public parameters: Record<string, any>,
+  ) {
     super();
-
-    this.functionNode = functionNode;
-    this.parameters = parameters;
   }
 
-  setParameters(parameters) {
-    this.parameters = parameters;
-
-    return this;
-  }
-
-  getParameters() {
-    return this.parameters;
-  }
-
-  getNodeType(builder) {
+  getNodeType(builder: NodeBuilder): NodeTypeOption {
     return this.functionNode.getNodeType(builder);
   }
 
-  generate(builder) {
+  generate(builder: NodeBuilder): string {
     const params = [];
 
     const functionNode = this.functionNode;
@@ -59,7 +53,7 @@ class FunctionCallNode extends TempNode {
 
 export default FunctionCallNode;
 
-export const call = (func, ...params) => {
+export const call = (func: any, ...params: any) => {
   params = params.length > 1 || (params[0] && params[0].isNode === true) ? nodeArray(params) : nodeObjects(params[0]);
 
   return nodeObject(new FunctionCallNode(nodeObject(func), params));

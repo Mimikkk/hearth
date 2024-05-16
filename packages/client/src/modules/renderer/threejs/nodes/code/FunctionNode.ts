@@ -1,23 +1,27 @@
-import CodeNode from './CodeNode.js';
+import CodeNode, { CodeNodeInclude } from './CodeNode.ts';
 import { addNodeClass } from '../core/Node.ts';
 import { nodeObject } from '../shadernode/ShaderNode.js';
+import NodeBuilder from '@modules/renderer/threejs/nodes/core/NodeBuilder.js';
+import { NodeType } from 'three/examples/jsm/nodes/core/constants.js';
 
 class FunctionNode extends CodeNode {
-  constructor(code = '', includes = [], language = '') {
-    super(code, includes, language);
+  keywords: Record<string, CodeNode>;
+
+  constructor(code: string = '', includes: CodeNodeInclude[] = []) {
+    super(code, includes);
 
     this.keywords = {};
   }
 
-  getNodeType(builder) {
+  getNodeType(builder: NodeBuilder): NodeType {
     return this.getNodeFunction(builder).type;
   }
 
-  getInputs(builder) {
+  getInputs(builder: NodeBuilder) {
     return this.getNodeFunction(builder).inputs;
   }
 
-  getNodeFunction(builder) {
+  getNodeFunction(builder: NodeBuilder) {
     const nodeData = builder.getDataFromNode(this);
 
     let nodeFunction = nodeData.nodeFunction;
@@ -31,7 +35,7 @@ class FunctionNode extends CodeNode {
     return nodeFunction;
   }
 
-  generate(builder, output) {
+  generate(builder: NodeBuilder, output?: string | 'property') {
     super.generate(builder);
 
     const nodeFunction = this.getNodeFunction(builder);
@@ -42,8 +46,6 @@ class FunctionNode extends CodeNode {
     const nodeCode = builder.getCodeFromNode(this, type);
 
     if (name !== '') {
-      // use a custom property name
-
       nodeCode.name = name;
     }
 
@@ -75,34 +77,27 @@ class FunctionNode extends CodeNode {
 
 export default FunctionNode;
 
-const nativeFn = (code, includes = [], language = '') => {
+const nativeFn = (code: string, includes: CodeNodeInclude[] = []) => {
   for (let i = 0; i < includes.length; i++) {
     const include = includes[i];
 
     // TSL Function: glslFn, wgslFn
 
     if (typeof include === 'function') {
+      //@ts-expect-error
       includes[i] = include.functionNode;
     }
   }
 
-  const functionNode = nodeObject(new FunctionNode(code, includes, language));
+  const functionNode = nodeObject(new FunctionNode(code, includes));
 
-  const fn = (...params) => functionNode.call(...params);
+  const fn = (...params: any) => functionNode.call(...params);
   fn.functionNode = functionNode;
 
   return fn;
 };
 
-export const glslFn = (code, includes) => nativeFn(code, includes, 'glsl');
-export const wgslFn = (code, includes) => nativeFn(code, includes, 'wgsl');
-
-export const func = (code, includes) => {
-  // @deprecated, r154
-
-  console.warn('TSL: func() is deprecated. Use nativeFn(), wgslFn() or glslFn() instead.');
-
-  return nodeObject(new FunctionNode(code, includes));
-};
+export const glslFn = (code: string, includes?: CodeNodeInclude[]) => nativeFn(code, includes);
+export const wgslFn = (code: string, includes?: CodeNodeInclude[]) => nativeFn(code, includes);
 
 addNodeClass('FunctionNode', FunctionNode);

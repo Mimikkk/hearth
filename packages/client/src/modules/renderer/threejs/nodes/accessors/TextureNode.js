@@ -2,7 +2,7 @@ import UniformNode, { uniform } from '../core/UniformNode.js';
 import { uv } from './UVNode.js';
 import { textureSize } from './TextureSizeNode.js';
 import { colorSpaceToLinear } from '../display/ColorSpaceNode.js';
-import { expression } from '../code/ExpressionNode.js';
+import { expression } from '../code/ExpressionNode.ts';
 import { addNodeClass } from '../core/Node.ts';
 import { maxMipLevel } from '../utils/MaxMipLevelNode.js';
 import { addNodeElement, nodeProxy, vec3, nodeObject } from '../shadernode/ShaderNode.js';

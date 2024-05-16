@@ -1,14 +1,17 @@
 import Node, { addNodeClass } from '../core/Node.ts';
 import { nodeProxy } from '../shadernode/ShaderNode.js';
+import NodeBuilder from '@modules/renderer/threejs/nodes/core/NodeBuilder.js';
+import { NodeTypeOption } from '@modules/renderer/threejs/nodes/core/constants.js';
 
 class ExpressionNode extends Node {
-  constructor(snippet = '', nodeType = 'void') {
+  constructor(
+    public snippet: string,
+    nodeType: NodeTypeOption = 'void',
+  ) {
     super(nodeType);
-
-    this.snippet = snippet;
   }
 
-  generate(builder, output) {
+  generate(builder: NodeBuilder, output: string | null = null) {
     const type = this.getNodeType(builder);
     const snippet = this.snippet;
 

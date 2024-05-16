@@ -1,23 +1,27 @@
 import Node, { addNodeClass } from '../core/Node.ts';
 import { scriptableValue } from './ScriptableValueNode.js';
 import { addNodeElement, float, nodeProxy } from '../shadernode/ShaderNode.js';
+import CodeNode from '@modules/renderer/threejs/nodes/code/CodeNode.js';
+import NodeBuilder from '@modules/renderer/threejs/nodes/core/NodeBuilder.js';
+import { NodeTypeOption } from '@modules/renderer/threejs/nodes/core/constants.js';
 
 class Resources extends Map {
-  get(key, callback = null, ...params) {
+  get<Fn extends (...args: any) => any>(
+    key: string,
+    callback: Fn | null = null,
+    ...params: Parameters<Fn>
+  ): ReturnType<Fn> | undefined {
     if (this.has(key)) return super.get(key);
+    if (callback === null) return undefined;
 
-    if (callback !== null) {
-      const value = callback(...params);
-      this.set(key, value);
-      return value;
-    }
+    const value = callback(...params);
+    this.set(key, value);
+    return value;
   }
 }
 
-class Parameters {
-  constructor(scriptableNode) {
-    this.scriptableNode = scriptableNode;
-  }
+class Params {
+  constructor(public scriptableNode: ScriptableNode) {}
 
   get parameters() {
     return this.scriptableNode.parameters;
@@ -27,11 +31,7 @@ class Parameters {
     return this.scriptableNode.getLayout();
   }
 
-  getInputLayout(id) {
-    return this.scriptableNode.getInputLayout(id);
-  }
-
-  get(name) {
+  get(name: string) {
     const param = this.parameters[name];
     const value = param ? param.getValue() : null;
 
@@ -42,11 +42,21 @@ class Parameters {
 export const global = new Resources();
 
 class ScriptableNode extends Node {
-  constructor(codeNode = null, parameters = {}) {
-    super();
+  declare isScriptableNode: true;
+  _local: Resources;
+  _output: any;
+  _outputs: Record<string, any>;
+  _source: string;
+  _method: any;
+  _object: any;
+  _value: any;
+  _needsOutputUpdate: boolean;
 
-    this.codeNode = codeNode;
-    this.parameters = parameters;
+  constructor(
+    public codeNode: CodeNode,
+    public parameters: Record<string, any> = {},
+  ) {
+    super();
 
     this._local = new Resources();
     this._output = scriptableValue();
@@ -56,29 +66,29 @@ class ScriptableNode extends Node {
     this._object = null;
     this._value = null;
     this._needsOutputUpdate = true;
-
     this.onRefresh = this.onRefresh.bind(this);
 
     this.isScriptableNode = true;
   }
 
-  get source() {
-    return this.codeNode ? this.codeNode.code : '';
+  get source(): string {
+    return this.codeNode.code;
   }
 
-  get needsUpdate() {
+  get needsUpdate(): boolean {
     return this.source !== this._source;
   }
 
-  set needsUpdate(value) {
+  set needsUpdate(value: boolean) {
     if (value === true) this.dispose();
   }
 
-  setLocal(name, value) {
+  setLocal(name: string, value: any) {
     return this._local.set(name, value);
   }
 
-  getLocal(name) {
+  getLocal(name: string) {
+    console.log(name);
     return this._local.get(name);
   }
 
@@ -86,7 +96,7 @@ class ScriptableNode extends Node {
     this._refresh();
   }
 
-  getInputLayout(id) {
+  getInputLayout(id: string) {
     for (const element of this.getLayout()) {
       if (element.inputType && (element.id === id || element.name === id)) {
         return element;
@@ -94,7 +104,7 @@ class ScriptableNode extends Node {
     }
   }
 
-  getOutputLayout(id) {
+  getOutputLayout(id: string) {
     for (const element of this.getLayout()) {
       if (element.outputType && (element.id === id || element.name === id)) {
         return element;
@@ -102,7 +112,7 @@ class ScriptableNode extends Node {
     }
   }
 
-  setOutput(name, value) {
+  setOutput(name: string, value: any) {
     const outputs = this._outputs;
 
     if (outputs[name] === undefined) {
@@ -114,15 +124,15 @@ class ScriptableNode extends Node {
     return this;
   }
 
-  getOutput(name) {
+  getOutput(name: string) {
     return this._outputs[name];
   }
 
-  getParameter(name) {
+  getParameter(name: string) {
     return this.parameters[name];
   }
 
-  setParameter(name, value) {
+  setParameter(name: string, value: any) {
     const parameters = this.parameters;
 
     if (value && value.isScriptableNode) {
@@ -149,7 +159,7 @@ class ScriptableNode extends Node {
     return this.getDefaultOutput().getValue();
   }
 
-  deleteParameter(name) {
+  deleteParameter(name: string) {
     let valueNode = this.parameters[name];
 
     if (valueNode) {
@@ -171,7 +181,7 @@ class ScriptableNode extends Node {
     return this;
   }
 
-  call(name, ...params) {
+  call(name: string, ...params: any) {
     const object = this.getObject();
     const method = object[name];
 
@@ -180,7 +190,7 @@ class ScriptableNode extends Node {
     }
   }
 
-  async callAsync(name, ...params) {
+  async callAsync(name: string, ...params: any) {
     const object = this.getObject();
     const method = object[name];
 
@@ -189,7 +199,7 @@ class ScriptableNode extends Node {
     }
   }
 
-  getNodeType(builder) {
+  getNodeType(builder: NodeBuilder): NodeTypeOption {
     return this.getDefaultOutputNode().getNodeType(builder);
   }
 
@@ -208,14 +218,14 @@ class ScriptableNode extends Node {
     //
 
     const refresh = () => this.refresh();
-    const setOutput = (id, value) => this.setOutput(id, value);
+    const setOutput = (id: any, value: any) => this.setOutput(id, value);
 
-    const parameters = new Parameters(this);
+    const parameters = new Params(this);
 
     const THREE = global.get('THREE');
     const TSL = global.get('TSL');
 
-    const method = this.getMethod(this.codeNode);
+    const method = this.getMethod();
     const params = [parameters, this._local, global, refresh, setOutput, THREE, TSL];
 
     this._object = method(...params);
@@ -301,7 +311,7 @@ class ScriptableNode extends Node {
 
     this._method = null;
     this._object = null;
-    this._source = null;
+    this._source = null!;
     this._value = null;
     this._needsOutputUpdate = true;
     this._output.value = null;

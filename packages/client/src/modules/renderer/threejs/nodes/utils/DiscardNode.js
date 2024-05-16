@@ -1,5 +1,5 @@
 import CondNode from '../math/CondNode.js';
-import { expression } from '../code/ExpressionNode.js';
+import { expression } from '../code/ExpressionNode.ts';
 import { addNodeClass } from '../core/Node.ts';
 import { addNodeElement, nodeProxy } from '../shadernode/ShaderNode.js';
 

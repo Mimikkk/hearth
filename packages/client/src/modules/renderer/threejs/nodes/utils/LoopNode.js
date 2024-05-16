@@ -1,5 +1,5 @@
 import Node, { addNodeClass } from '../core/Node.ts';
-import { expression } from '../code/ExpressionNode.js';
+import { expression } from '../code/ExpressionNode.ts';
 import { bypass } from '../core/BypassNode.js';
 import { context } from '../core/ContextNode.js';
 import { addNodeElement, nodeObject, nodeArray } from '../shadernode/ShaderNode.js';

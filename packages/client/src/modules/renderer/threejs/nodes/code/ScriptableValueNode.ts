@@ -1,9 +1,20 @@
 import Node, { addNodeClass } from '../core/Node.ts';
-import { arrayBufferToBase64, base64ToArrayBuffer } from '../core/NodeUtils.js';
 import { addNodeElement, float, nodeProxy } from '../shadernode/ShaderNode.js';
 import { EventDispatcher } from '../../../threejs/Three.js';
+import NodeBuilder from '@modules/renderer/threejs/nodes/core/NodeBuilder.js';
+import { NodeTypeOption } from '@modules/renderer/threejs/nodes/core/constants.js';
 
 class ScriptableValueNode extends Node {
+  declare isScriptableValueNode: true;
+  events = new EventDispatcher<{
+    change: {};
+    refresh: {};
+  }>();
+  inputType: string | null;
+  outputType: string | null;
+  _value: any;
+  _cache: string | null;
+
   constructor(value = null) {
     super();
 
@@ -11,15 +22,9 @@ class ScriptableValueNode extends Node {
     this._cache = null;
 
     this.inputType = null;
-    this.outpuType = null;
-
-    this.events = new EventDispatcher();
+    this.outputType = null;
 
     this.isScriptableValueNode = true;
-  }
-
-  get isScriptableOutputNode() {
-    return this.outputType !== null;
   }
 
   get value() {
@@ -70,7 +75,7 @@ class ScriptableValueNode extends Node {
     return this._cache || value;
   }
 
-  getNodeType(builder) {
+  getNodeType(builder: NodeBuilder): NodeTypeOption {
     return this.value && this.value.isNode ? this.value.getNodeType(builder) : 'float';
   }
 

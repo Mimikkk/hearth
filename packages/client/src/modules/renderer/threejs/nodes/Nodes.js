@@ -370,12 +370,12 @@ export { default as AnamorphicNode, anamorphic } from './display/AnamorphicNode.
 export { default as PassNode, pass, depthPass } from './display/PassNode.js';
 
 // code
-export { default as ExpressionNode, expression } from './code/ExpressionNode.js';
-export { default as CodeNode, code, js, wgsl, glsl } from './code/CodeNode.js';
-export { default as FunctionCallNode, call } from './code/FunctionCallNode.js';
-export { default as FunctionNode, wgslFn, glslFn } from './code/FunctionNode.js';
-export { default as ScriptableNode, scriptable, global } from './code/ScriptableNode.js';
-export { default as ScriptableValueNode, scriptableValue } from './code/ScriptableValueNode.js';
+export { default as ExpressionNode, expression } from './code/ExpressionNode.ts';
+export { default as CodeNode, code, js, wgsl, glsl } from './code/CodeNode.ts';
+export { default as FunctionCallNode, call } from './code/FunctionCallNode.ts';
+export { default as FunctionNode, wgslFn, glslFn } from './code/FunctionNode.ts';
+export { default as ScriptableNode, scriptable, global } from './code/ScriptableNode.ts';
+export { default as ScriptableValueNode, scriptableValue } from './code/ScriptableValueNode.ts';
 
 // fog
 export { default as FogNode, fog } from './fog/FogNode.js';

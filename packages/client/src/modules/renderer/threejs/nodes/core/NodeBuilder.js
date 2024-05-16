@@ -6,7 +6,7 @@ import NodeCode from './NodeCode.js';
 import NodeKeywords from './NodeKeywords.js';
 import NodeCache from './NodeCache.js';
 import ParameterNode from './ParameterNode.js';
-import FunctionNode from '../code/FunctionNode.js';
+import FunctionNode from '../code/FunctionNode.ts';
 import { createNodeMaterialFromType, default as NodeMaterial } from '../materials/NodeMaterial.js';
 import { buildStages, NodeUpdateType, shaderStages } from './constants.ts';
 
