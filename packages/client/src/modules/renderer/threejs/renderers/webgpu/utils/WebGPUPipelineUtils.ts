@@ -121,7 +121,8 @@ class WebGPUPipelineUtils {
         depthWriteEnabled: material.depthWrite,
         depthCompare: depthCompare,
         stencilFront: stencilFront,
-        stencilBack: {}, // three.js does not provide an API to configure the back function (gl.stencilFuncSeparate() was never used)
+        // three.js does not provide an API to configure the back function (gl.stencilFuncSeparate() was never used)
+        stencilBack: {},
         stencilReadMask: material.stencilFuncMask,
         stencilWriteMask: material.stencilWriteMask,
       },
