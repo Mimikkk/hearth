@@ -924,7 +924,7 @@ class NodeBuilder {
   }
 
   createNodeMaterial(type = 'NodeMaterial') {
-    return NodeMaterials.get(type);
+    return new (NodeMaterials.get(type))();
   }
 
   format(snippet, fromType, toType) {
