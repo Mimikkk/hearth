@@ -395,13 +395,14 @@ export { default as DirectionalLightNode } from './lighting/DirectionalLightNode
 export { default as SpotLightNode } from './lighting/SpotLightNode.js';
 export { default as IESSpotLightNode } from './lighting/IESSpotLightNode.js';
 export { default as AmbientLightNode } from './lighting/AmbientLightNode.js';
-export { default as LightsNode, lights, lightsNode, addLightNode } from './lighting/LightsNode.js';
+export { default as LightsNode, lights, lightsNode } from './lighting/LightsNode.js';
 export { default as LightingNode /* @TODO: lighting (abstract), light */ } from './lighting/LightingNode.js';
 export { default as LightingContextNode, lightingContext } from './lighting/LightingContextNode.js';
 export { default as HemisphereLightNode } from './lighting/HemisphereLightNode.js';
 export { default as EnvironmentNode } from './lighting/EnvironmentNode.js';
 export { default as AONode } from './lighting/AONode.js';
 export { default as AnalyticLightNode } from './lighting/AnalyticLightNode.js';
+import './lighting/LightsNodeMap.initialize.ts';
 
 // pmrem
 export { default as PMREMNode, pmremTexture } from './pmrem/PMREMNode.js';

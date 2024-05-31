@@ -1,8 +1,5 @@
 import AnalyticLightNode from './AnalyticLightNode.js';
 import { lightTargetDirection } from './LightNode.js';
-import { addLightNode } from './LightsNode.js';
-
-import { DirectionalLight } from '../../../threejs/Three.js';
 
 class DirectionalLightNode extends AnalyticLightNode {
   static type = 'DirectionalLightNode';
@@ -33,5 +30,3 @@ class DirectionalLightNode extends AnalyticLightNode {
 }
 
 export default DirectionalLightNode;
-
-addLightNode(DirectionalLight, DirectionalLightNode);

@@ -1,13 +1,10 @@
 import AnalyticLightNode from './AnalyticLightNode.js';
 import { lightTargetDirection } from './LightNode.js';
-import { addLightNode } from './LightsNode.js';
 import { getDistanceAttenuation } from './LightUtils.js';
 import { uniform } from '../core/UniformNode.js';
 import { smoothstep } from '@modules/renderer/threejs/nodes/math/MathNode.js';
 import { objectViewPosition } from '../accessors/Object3DNode.js';
 import { positionView } from '../accessors/PositionNode.js';
-
-import { SpotLight } from '../../../threejs/Three.js';
 
 class SpotLightNode extends AnalyticLightNode {
   static type = 'SpotLightNode';
@@ -78,5 +75,3 @@ class SpotLightNode extends AnalyticLightNode {
 }
 
 export default SpotLightNode;
-
-addLightNode(SpotLight, SpotLightNode);

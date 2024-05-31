@@ -1,8 +1,7 @@
 import Node from '../core/Node.ts';
 import AnalyticLightNode from './AnalyticLightNode.js';
 import { nodeObject, nodeProxy, vec3 } from '../shadernode/ShaderNode.js';
-
-const LightNodes = new WeakMap();
+import { LightNodeMap } from '@modules/renderer/threejs/nodes/lighting/LightsNodeMap.js';
 
 const sortLights = lights => {
   return lights.sort((a, b) => a.id - b.id);
@@ -14,7 +13,6 @@ class LightsNode extends Node {
 
     this.totalDiffuseNode = vec3().temp('totalDiffuse');
     this.totalSpecularNode = vec3().temp('totalSpecular');
-
     this.outgoingLightNode = vec3().temp('outgoingLight');
 
     this.lightNodes = lightNodes;
@@ -26,17 +24,14 @@ class LightsNode extends Node {
     return this.lightNodes.length > 0;
   }
 
-  getHash() {
+  getHash(builder) {
     if (this._hash === null) {
       const hash = [];
-
       for (const lightNode of this.lightNodes) {
-        hash.push(lightNode.getHash());
+        hash.push(lightNode.getHash(builder));
       }
-
       this._hash = 'lights-' + hash.join(',');
     }
-
     return this._hash;
   }
 
@@ -117,7 +112,7 @@ class LightsNode extends Node {
 
       if (lightNode === null) {
         const lightClass = light.constructor;
-        const lightNodeClass = LightNodes.has(lightClass) ? LightNodes.get(lightClass) : AnalyticLightNode;
+        const lightNodeClass = LightNodeMap.has(lightClass) ? LightNodeMap.get(lightClass) : AnalyticLightNode;
 
         lightNode = nodeObject(new lightNodeClass(light));
       }
@@ -136,16 +131,3 @@ export default LightsNode;
 
 export const lights = lights => nodeObject(new LightsNode().fromLights(lights));
 export const lightsNode = nodeProxy(LightsNode);
-
-export function addLightNode(lightClass, lightNodeClass) {
-  if (LightNodes.has(lightClass)) {
-    console.warn(`Redefinition of light node ${lightNodeClass.type}`);
-    return;
-  }
-
-  if (typeof lightClass !== 'function') throw new Error(`Light ${lightClass.name} is not a class`);
-  if (typeof lightNodeClass !== 'function' || !lightNodeClass.type)
-    throw new Error(`Light node ${lightNodeClass.type} is not a class`);
-
-  LightNodes.set(lightClass, lightNodeClass);
-}
