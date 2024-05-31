@@ -1,9 +1,11 @@
-import Node, { addNodeClass } from '../core/Node.ts';
+import Node from '../core/Node.ts';
 import { vectorComponents } from '../core/constants.ts';
 
 const stringVectorComponents = vectorComponents.join('');
 
 class SplitNode extends Node {
+  static type = 'SplitNode';
+
   constructor(node, components = 'x') {
     super();
 
@@ -71,5 +73,3 @@ class SplitNode extends Node {
 }
 
 export default SplitNode;
-
-addNodeClass('SplitNode', SplitNode);

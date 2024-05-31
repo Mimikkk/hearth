@@ -1,10 +1,12 @@
-import Node, { addNodeClass } from '../core/Node.ts';
+import Node from '../core/Node.ts';
 import { expression } from '../code/ExpressionNode.ts';
 import { bypass } from '../core/BypassNode.js';
 import { context } from '../core/ContextNode.js';
-import { addNodeElement, nodeObject, nodeArray } from '../shadernode/ShaderNode.js';
+import { addNodeElement, nodeArray, nodeObject } from '../shadernode/ShaderNode.js';
 
 class LoopNode extends Node {
+  static type = 'LoopNode';
+
   constructor(params = []) {
     super();
 
@@ -161,5 +163,3 @@ export const Continue = () => expression('continue').append();
 export const Break = () => expression('break').append();
 
 addNodeElement('loop', (returns, ...params) => bypass(returns, loop(...params)));
-
-addNodeClass('LoopNode', LoopNode);

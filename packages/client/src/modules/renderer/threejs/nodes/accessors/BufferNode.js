@@ -1,8 +1,9 @@
 import UniformNode from '../core/UniformNode.js';
-import { addNodeClass } from '../core/Node.ts';
 import { nodeObject } from '../shadernode/ShaderNode.js';
 
 class BufferNode extends UniformNode {
+  static type = 'BufferNode';
+
   constructor(value, bufferType, bufferCount = 0) {
     super(value, bufferType);
 
@@ -20,5 +21,3 @@ class BufferNode extends UniformNode {
 export default BufferNode;
 
 export const buffer = (value, type, count) => nodeObject(new BufferNode(value, type, count));
-
-addNodeClass('BufferNode', BufferNode);

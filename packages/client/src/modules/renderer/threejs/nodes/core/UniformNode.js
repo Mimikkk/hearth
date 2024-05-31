@@ -1,9 +1,10 @@
 import InputNode from './InputNode.js';
 import { objectGroup } from './UniformGroupNode.js';
-import { addNodeClass } from './Node.ts';
 import { getConstNodeType, nodeObject } from '../shadernode/ShaderNode.js';
 
 class UniformNode extends InputNode {
+  static type = 'UniformNode';
+
   constructor(value, nodeType = null) {
     super(value, nodeType);
 
@@ -65,5 +66,3 @@ export const uniform = (arg1, arg2) => {
 
   return nodeObject(new UniformNode(value, nodeType));
 };
-
-addNodeClass('UniformNode', UniformNode);

@@ -1,8 +1,9 @@
-import { addNodeClass } from '../core/Node.ts';
 import TempNode from '../core/TempNode.js';
 import { vectorComponents } from '../core/constants.ts';
 
 class SetNode extends TempNode {
+  static type = 'SetNode';
+
   constructor(sourceNode, components, targetNode) {
     super();
 
@@ -44,5 +45,3 @@ class SetNode extends TempNode {
 }
 
 export default SetNode;
-
-addNodeClass('SetNode', SetNode);

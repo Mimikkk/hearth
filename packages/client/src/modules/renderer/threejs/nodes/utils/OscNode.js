@@ -1,8 +1,10 @@
-import Node, { addNodeClass } from '../core/Node.ts';
+import Node from '../core/Node.ts';
 import { timerLocal } from './TimerNode.js';
 import { nodeObject, nodeProxy } from '../shadernode/ShaderNode.js';
 
 class OscNode extends Node {
+  static type = 'OscNode';
+
   constructor(method = OscNode.SINE, timeNode = timerLocal()) {
     super();
 
@@ -50,5 +52,3 @@ export const oscSine = nodeProxy(OscNode, OscNode.SINE);
 export const oscSquare = nodeProxy(OscNode, OscNode.SQUARE);
 export const oscTriangle = nodeProxy(OscNode, OscNode.TRIANGLE);
 export const oscSawtooth = nodeProxy(OscNode, OscNode.SAWTOOTH);
-
-addNodeClass('OscNode', OscNode);

@@ -7,20 +7,20 @@ import Schlick_to_F0 from './BSDF/Schlick_to_F0.js';
 import BRDF_Sheen from './BSDF/BRDF_Sheen.js';
 import LightingModel from '../core/LightingModel.js';
 import {
-  diffuseColor,
-  specularColor,
-  roughness,
   clearcoat,
   clearcoatRoughness,
-  sheen,
-  sheenRoughness,
+  diffuseColor,
   iridescence,
   iridescenceIOR,
   iridescenceThickness,
+  roughness,
+  sheen,
+  sheenRoughness,
+  specularColor,
 } from '../core/PropertyNode.js';
-import { transformedNormalView, transformedClearcoatNormalView } from '../accessors/NormalNode.js';
+import { transformedClearcoatNormalView, transformedNormalView } from '../accessors/NormalNode.js';
 import { positionViewDirection } from '../accessors/PositionNode.js';
-import { tslFn, float, vec3, mat3 } from '../shadernode/ShaderNode.js';
+import { float, mat3, tslFn, vec3 } from '../shadernode/ShaderNode.js';
 import { cond } from '@modules/renderer/threejs/nodes/math/CondNode.js';
 import { mix, smoothstep } from '@modules/renderer/threejs/nodes/math/MathNode.js';
 

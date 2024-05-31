@@ -1,9 +1,10 @@
 import TempNode from '../core/TempNode.js';
-import { sub, mul, div } from './OperatorNode.js';
-import { addNodeClass } from '../core/Node.ts';
-import { addNodeElement, nodeObject, nodeProxy, float, vec3, vec4 } from '../shadernode/ShaderNode.js';
+import { div, mul, sub } from './OperatorNode.js';
+import { addNodeElement, float, nodeObject, nodeProxy, vec3, vec4 } from '../shadernode/ShaderNode.js';
 
 class MathNode extends TempNode {
+  static type = 'MathNode';
+
   constructor(method, aNode, bNode = null, cNode = null) {
     super();
 
@@ -309,5 +310,3 @@ addNodeElement('faceForward', faceForward);
 addNodeElement('difference', difference);
 addNodeElement('saturate', saturate);
 addNodeElement('cbrt', cbrt);
-
-addNodeClass('MathNode', MathNode);

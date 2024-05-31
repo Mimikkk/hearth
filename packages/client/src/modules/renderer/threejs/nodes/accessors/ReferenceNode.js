@@ -1,4 +1,4 @@
-import Node, { addNodeClass } from '../core/Node.ts';
+import Node from '../core/Node.ts';
 import { NodeUpdateType } from '../core/constants.ts';
 import { uniform } from '../core/UniformNode.js';
 import { texture } from './TextureNode.js';
@@ -8,6 +8,8 @@ import { uniforms } from './UniformsNode.js';
 import ArrayElementNode from '../utils/ArrayElementNode.js';
 
 class ReferenceElementNode extends ArrayElementNode {
+  static type = 'ReferenceElementNode';
+
   constructor(referenceNode, indexNode) {
     super(referenceNode, indexNode);
 
@@ -114,5 +116,3 @@ export default ReferenceNode;
 
 export const reference = (name, type, object) => nodeObject(new ReferenceNode(name, type, object));
 export const referenceBuffer = (name, type, count, object) => nodeObject(new ReferenceNode(name, type, object, count));
-
-addNodeClass('ReferenceNode', ReferenceNode);

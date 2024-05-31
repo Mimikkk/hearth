@@ -1,6 +1,5 @@
 import TextureNode from '../accessors/TextureNode.js';
 import { NodeUpdateType } from '../core/constants.js';
-import { addNodeClass } from '../core/Node.js';
 import { addNodeElement, nodeProxy } from '../shadernode/ShaderNode.js';
 import { viewportTopLeft } from './ViewportNode.js';
 import { Filter, FramebufferTexture, Vector2 } from '../../../threejs/Three.js';
@@ -8,6 +7,8 @@ import { Filter, FramebufferTexture, Vector2 } from '../../../threejs/Three.js';
 const _size = new Vector2();
 
 class ViewportTextureNode extends TextureNode {
+  static type = 'ViewportTextureNode';
+
   constructor(uvNode = viewportTopLeft, levelNode = null, framebufferTexture = null) {
     if (framebufferTexture === null) {
       framebufferTexture = new FramebufferTexture();
@@ -59,5 +60,3 @@ export const viewportMipTexture = nodeProxy(ViewportTextureNode, null, null, { g
 
 addNodeElement('viewportTexture', viewportTexture);
 addNodeElement('viewportMipTexture', viewportMipTexture);
-
-addNodeClass('ViewportTextureNode', ViewportTextureNode);

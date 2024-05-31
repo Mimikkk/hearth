@@ -1,4 +1,4 @@
-import Node, { addNodeClass } from '../core/Node.js';
+import Node from '../core/Node.js';
 import { NodeUpdateType } from '../core/constants.js';
 import { uniform } from '../core/UniformNode.js';
 import { nodeImmutable, vec2 } from '../shadernode/ShaderNode.js';
@@ -8,6 +8,8 @@ import { Vector2, Vector4 } from '../../../threejs/Three.js';
 let resolution, viewportResult;
 
 class ViewportNode extends Node {
+  static type = 'ViewportNode';
+
   constructor(scope) {
     super();
 
@@ -100,5 +102,3 @@ export const viewportTopLeft = nodeImmutable(ViewportNode, ViewportNode.TOP_LEFT
 export const viewportBottomLeft = nodeImmutable(ViewportNode, ViewportNode.BOTTOM_LEFT);
 export const viewportTopRight = nodeImmutable(ViewportNode, ViewportNode.TOP_RIGHT);
 export const viewportBottomRight = nodeImmutable(ViewportNode, ViewportNode.BOTTOM_RIGHT);
-
-addNodeClass('ViewportNode', ViewportNode);

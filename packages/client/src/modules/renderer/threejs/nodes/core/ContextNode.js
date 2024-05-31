@@ -1,7 +1,9 @@
-import Node, { addNodeClass } from './Node.ts';
+import Node from './Node.ts';
 import { addNodeElement, nodeProxy } from '../shadernode/ShaderNode.js';
 
 class ContextNode extends Node {
+  static type = 'ContextNode';
+
   constructor(node, context = {}) {
     super();
 
@@ -47,5 +49,3 @@ export const label = (node, name) => context(node, { label: name });
 
 addNodeElement('context', context);
 addNodeElement('label', label);
-
-addNodeClass('ContextNode', ContextNode);

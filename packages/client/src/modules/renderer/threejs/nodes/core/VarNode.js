@@ -1,7 +1,9 @@
-import Node, { addNodeClass } from './Node.ts';
+import Node from './Node.ts';
 import { addNodeElement, nodeProxy } from '../shadernode/ShaderNode.js';
 
 class VarNode extends Node {
+  static type = 'VarNode';
+
   constructor(node, name = null) {
     super();
 
@@ -42,7 +44,5 @@ export default VarNode;
 
 export const temp = nodeProxy(VarNode);
 
-addNodeElement('temp', temp); // @TODO: Will be removed in the future
+addNodeElement('temp', temp);
 addNodeElement('toVar', (...params) => temp(...params).append());
-
-addNodeClass('VarNode', VarNode);

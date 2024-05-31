@@ -1,10 +1,10 @@
 import CodeNode, { CodeNodeInclude } from './CodeNode.ts';
-import { addNodeClass } from '../core/Node.ts';
 import { nodeObject } from '../shadernode/ShaderNode.js';
 import NodeBuilder from '@modules/renderer/threejs/nodes/core/NodeBuilder.js';
 import { NodeType } from 'three/examples/jsm/nodes/core/constants.js';
 
 class FunctionNode extends CodeNode {
+  static type = 'FunctionNode';
   keywords: Record<string, CodeNode>;
 
   constructor(code: string = '', includes: CodeNodeInclude[] = []) {
@@ -99,5 +99,3 @@ const nativeFn = (code: string, includes: CodeNodeInclude[] = []) => {
 
 export const glslFn = (code: string, includes?: CodeNodeInclude[]) => nativeFn(code, includes);
 export const wgslFn = (code: string, includes?: CodeNodeInclude[]) => nativeFn(code, includes);
-
-addNodeClass('FunctionNode', FunctionNode);

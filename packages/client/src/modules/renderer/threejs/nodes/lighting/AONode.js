@@ -1,7 +1,8 @@
 import LightingNode from './LightingNode.js';
-import { addNodeClass } from '../core/Node.ts';
 
 class AONode extends LightingNode {
+  static type = 'AONode';
+
   constructor(aoNode = null) {
     super();
 
@@ -17,5 +18,3 @@ class AONode extends LightingNode {
 }
 
 export default AONode;
-
-addNodeClass('AONode', AONode);

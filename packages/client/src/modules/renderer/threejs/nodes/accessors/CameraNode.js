@@ -1,5 +1,4 @@
 import Object3DNode from './Object3DNode.js';
-import { addNodeClass } from '../core/Node.ts';
 import { NodeUpdateType } from '../core/constants.ts';
 //import { sharedUniformGroup } from '../core/UniformGroupNode.js';
 import { nodeImmutable } from '../shadernode/ShaderNode.js';
@@ -7,6 +6,8 @@ import { nodeImmutable } from '../shadernode/ShaderNode.js';
 //const cameraGroup = sharedUniformGroup( 'camera' );
 
 class CameraNode extends Object3DNode {
+  static type = 'CameraNode';
+
   constructor(scope = CameraNode.POSITION) {
     super(scope);
 
@@ -83,5 +84,3 @@ export const cameraViewMatrix = nodeImmutable(CameraNode, CameraNode.VIEW_MATRIX
 export const cameraNormalMatrix = nodeImmutable(CameraNode, CameraNode.NORMAL_MATRIX);
 export const cameraWorldMatrix = nodeImmutable(CameraNode, CameraNode.WORLD_MATRIX);
 export const cameraPosition = nodeImmutable(CameraNode, CameraNode.POSITION);
-
-addNodeClass('CameraNode', CameraNode);

@@ -1,8 +1,10 @@
-import Node, { addNodeClass } from '../core/Node.ts';
+import Node from '../core/Node.ts';
 import { uv } from '../accessors/UVNode.js';
-import { nodeProxy, float, vec2 } from '../shadernode/ShaderNode.js';
+import { float, nodeProxy, vec2 } from '../shadernode/ShaderNode.js';
 
 class SpriteSheetUVNode extends Node {
+  static type = 'SpriteSheetUVNode';
+
   constructor(countNode, uvNode = uv(), frameNode = float(0)) {
     super('vec2');
 
@@ -31,5 +33,3 @@ class SpriteSheetUVNode extends Node {
 export default SpriteSheetUVNode;
 
 export const spritesheetUV = nodeProxy(SpriteSheetUVNode);
-
-addNodeClass('SpriteSheetUVNode', SpriteSheetUVNode);

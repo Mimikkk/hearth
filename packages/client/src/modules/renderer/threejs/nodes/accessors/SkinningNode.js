@@ -1,4 +1,4 @@
-import Node, { addNodeClass } from '../core/Node.ts';
+import Node from '../core/Node.ts';
 import { NodeUpdateType } from '../core/constants.ts';
 import { nodeObject } from '../shadernode/ShaderNode.js';
 import { attribute } from '../core/AttributeNode.js';
@@ -11,6 +11,8 @@ import { uniform } from '../core/UniformNode.js';
 import { buffer } from './BufferNode.js';
 
 class SkinningNode extends Node {
+  static type = 'SkinningNode';
+
   constructor(skinnedMesh, useReference = false) {
     super('void');
 
@@ -102,5 +104,3 @@ export default SkinningNode;
 
 export const skinning = skinnedMesh => nodeObject(new SkinningNode(skinnedMesh));
 export const skinningReference = skinnedMesh => nodeObject(new SkinningNode(skinnedMesh, true));
-
-addNodeClass('SkinningNode', SkinningNode);

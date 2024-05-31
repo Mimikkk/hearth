@@ -3,21 +3,21 @@ import { transformedClearcoatNormalView } from '../accessors/NormalNode.js';
 import {
   clearcoat,
   clearcoatRoughness,
-  sheen,
-  sheenRoughness,
   iridescence,
   iridescenceIOR,
   iridescenceThickness,
+  sheen,
+  sheenRoughness,
 } from '../core/PropertyNode.js';
 import {
   materialClearcoat,
-  materialClearcoatRoughness,
   materialClearcoatNormal,
-  materialSheen,
-  materialSheenRoughness,
+  materialClearcoatRoughness,
   materialIridescence,
   materialIridescenceIOR,
   materialIridescenceThickness,
+  materialSheen,
+  materialSheenRoughness,
 } from '../accessors/MaterialNode.js';
 import { float, vec3 } from '../shadernode/ShaderNode.js';
 import PhysicalLightingModel from '../functions/PhysicalLightingModel.js';

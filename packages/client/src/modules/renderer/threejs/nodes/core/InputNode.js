@@ -1,7 +1,9 @@
-import Node, { addNodeClass } from './Node.ts';
-import { arrayBufferToBase64, getValueFromType, getValueType } from './NodeUtils.js';
+import Node from './Node.ts';
+import { getValueType } from './NodeUtils.js';
 
 class InputNode extends Node {
+  static type = 'InputNode';
+
   constructor(value, nodeType = null) {
     super(nodeType);
 
@@ -35,5 +37,3 @@ class InputNode extends Node {
 }
 
 export default InputNode;
-
-addNodeClass('InputNode', InputNode);

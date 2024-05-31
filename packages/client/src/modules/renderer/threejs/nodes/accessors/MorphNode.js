@@ -1,4 +1,4 @@
-import Node, { addNodeClass } from '../core/Node.ts';
+import Node from '../core/Node.ts';
 import { NodeUpdateType } from '../core/constants.ts';
 import { int, ivec2, nodeProxy, tslFn } from '../shadernode/ShaderNode.js';
 import { uniform } from '../core/UniformNode.js';
@@ -134,6 +134,8 @@ function getEntry(geometry) {
 }
 
 class MorphNode extends Node {
+  static type = 'MorphNode';
+
   constructor(mesh) {
     super('void');
 
@@ -207,5 +209,3 @@ class MorphNode extends Node {
 export default MorphNode;
 
 export const morphReference = nodeProxy(MorphNode);
-
-addNodeClass('MorphNode', MorphNode);

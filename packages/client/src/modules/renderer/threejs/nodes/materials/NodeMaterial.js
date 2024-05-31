@@ -1,5 +1,5 @@
-import { ColorSpace, Material, ShaderMaterial } from '../../../threejs/Three.js';
-import { getCacheKey, getNodeChildren } from '../core/NodeUtils.js';
+import { ColorSpace, ShaderMaterial } from '../../../threejs/Three.js';
+import { getCacheKey } from '../core/NodeUtils.js';
 import { attribute } from '../core/AttributeNode.js';
 import { diffuseColor, output } from '../core/PropertyNode.js';
 import {

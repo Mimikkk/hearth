@@ -1,4 +1,4 @@
-import Node, { addNodeClass } from '../core/Node.ts';
+import Node from '../core/Node.ts';
 import { attribute } from '../core/AttributeNode.js';
 import { varying } from '../core/VaryingNode.js';
 import { property } from '../core/PropertyNode.js';
@@ -8,6 +8,8 @@ import { modelNormalMatrix } from './ModelNode.js';
 import { nodeImmutable } from '../shadernode/ShaderNode.js';
 
 class NormalNode extends Node {
+  static type = 'NormalNode';
+
   constructor(scope = NormalNode.LOCAL) {
     super('vec3');
 
@@ -58,5 +60,3 @@ export const normalWorld = nodeImmutable(NormalNode, NormalNode.WORLD);
 export const transformedNormalView = property('vec3', 'TransformedNormalView');
 export const transformedNormalWorld = transformedNormalView.transformDirection(cameraViewMatrix).normalize();
 export const transformedClearcoatNormalView = property('vec3', 'TransformedClearcoatNormalView');
-
-addNodeClass('NormalNode', NormalNode);

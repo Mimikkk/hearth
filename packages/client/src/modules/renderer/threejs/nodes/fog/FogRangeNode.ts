@@ -1,10 +1,11 @@
 import FogNode from './FogNode.js';
 import { smoothstep } from '../math/MathNode.js';
-import Node, { addNodeClass } from '../core/Node.ts';
+import Node from '../core/Node.ts';
 import { addNodeElement, nodeProxy } from '../shadernode/ShaderNode.js';
 import NodeBuilder from '@modules/renderer/threejs/nodes/core/NodeBuilder.js';
 
 class FogRangeNode extends FogNode {
+  static type = 'FogRangeNode';
   declare isFogRangeNode: true;
 
   constructor(
@@ -28,5 +29,3 @@ export default FogRangeNode;
 export const rangeFog = nodeProxy(FogRangeNode);
 
 addNodeElement('rangeFog', rangeFog);
-
-addNodeClass('FogRangeNode', FogRangeNode);

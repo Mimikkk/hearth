@@ -7,7 +7,6 @@ import { positionView } from '../accessors/PositionNode.js';
 import { TBNViewMatrix } from '../accessors/AccessorsUtils.js';
 import { uv } from '../accessors/UVNode.js';
 import { faceDirection } from './FrontFacingNode.js';
-import { addNodeClass } from '../core/Node.js';
 import { addNodeElement, nodeProxy, tslFn, vec3 } from '../shadernode/ShaderNode.js';
 
 import { NormalMapType } from '../../../threejs/Three.js';
@@ -38,6 +37,8 @@ const perturbNormal2Arb = tslFn(inputs => {
 });
 
 class NormalMapNode extends TempNode {
+  static type = 'NormalMapNode';
+
   constructor(node, scaleNode = null) {
     super('vec3');
 
@@ -84,5 +85,3 @@ export default NormalMapNode;
 export const normalMap = nodeProxy(NormalMapNode);
 
 addNodeElement('normalMap', normalMap);
-
-addNodeClass('NormalMapNode', NormalMapNode);

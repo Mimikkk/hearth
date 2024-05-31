@@ -1,9 +1,10 @@
-import Node, { addNodeClass } from '../core/Node.js';
+import Node from '../core/Node.js';
 import { positionView } from '../accessors/PositionNode.js';
 import { addNodeElement, nodeProxy } from '../shadernode/ShaderNode.js';
 import NodeBuilder from '@modules/renderer/threejs/nodes/core/NodeBuilder.js';
 
 class FogNode extends Node {
+  static type = 'FogNode';
   declare isFogNode: boolean;
 
   constructor(
@@ -37,5 +38,3 @@ export default FogNode;
 export const fog = nodeProxy(FogNode);
 
 addNodeElement('fog', fog);
-
-addNodeClass('FogNode', FogNode);

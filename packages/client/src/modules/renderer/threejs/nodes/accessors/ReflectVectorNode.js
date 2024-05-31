@@ -1,10 +1,12 @@
-import Node, { addNodeClass } from '../core/Node.ts';
+import Node from '../core/Node.ts';
 import { cameraViewMatrix } from './CameraNode.js';
 import { transformedNormalView } from './NormalNode.js';
 import { positionViewDirection } from './PositionNode.js';
 import { nodeImmutable } from '../shadernode/ShaderNode.js';
 
 class ReflectVectorNode extends Node {
+  static type = 'ReflectVectorNode';
+
   constructor() {
     super('vec3');
   }
@@ -23,5 +25,3 @@ class ReflectVectorNode extends Node {
 export default ReflectVectorNode;
 
 export const reflectVector = nodeImmutable(ReflectVectorNode);
-
-addNodeClass('ReflectVectorNode', ReflectVectorNode);

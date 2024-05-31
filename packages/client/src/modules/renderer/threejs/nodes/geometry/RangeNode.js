@@ -1,4 +1,4 @@
-import Node, { addNodeClass } from '../core/Node.ts';
+import Node from '../core/Node.ts';
 import { getValueType } from '../core/NodeUtils.js';
 import { buffer } from '../accessors/BufferNode.js';
 import { instanceIndex } from '../core/IndexNode.js';
@@ -11,6 +11,8 @@ let min = null;
 let max = null;
 
 class RangeNode extends Node {
+  static type = 'RangeNode';
+
   constructor(minNode = float(), maxNode = float()) {
     super();
 
@@ -84,5 +86,3 @@ class RangeNode extends Node {
 export default RangeNode;
 
 export const range = nodeProxy(RangeNode);
-
-addNodeClass('RangeNode', RangeNode);

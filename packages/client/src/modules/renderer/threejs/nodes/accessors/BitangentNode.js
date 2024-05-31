@@ -1,4 +1,4 @@
-import Node, { addNodeClass } from '../core/Node.ts';
+import Node from '../core/Node.ts';
 import { varying } from '../core/VaryingNode.js';
 import { normalize } from '../math/MathNode.js';
 import { cameraViewMatrix } from './CameraNode.js';
@@ -7,6 +7,8 @@ import { tangentGeometry, tangentLocal, tangentView, tangentWorld, transformedTa
 import { nodeImmutable } from '../shadernode/ShaderNode.js';
 
 class BitangentNode extends Node {
+  static type = 'BitangentNode';
+
   constructor(scope = BitangentNode.LOCAL) {
     super('vec3');
 
@@ -55,5 +57,3 @@ export const transformedBitangentView = normalize(
   transformedNormalView.cross(transformedTangentView).mul(tangentGeometry.w),
 );
 export const transformedBitangentWorld = normalize(transformedBitangentView.transformDirection(cameraViewMatrix));
-
-addNodeClass('BitangentNode', BitangentNode);

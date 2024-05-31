@@ -1,7 +1,6 @@
 import LightingNode from './LightingNode.js';
 import { NodeUpdateType } from '../core/constants.ts';
 import { uniform } from '../core/UniformNode.js';
-import { addNodeClass } from '../core/Node.ts';
 import { vec3, vec4 } from '../shadernode/ShaderNode.js';
 import { reference } from '../accessors/ReferenceNode.js';
 import { texture } from '../accessors/TextureNode.js';
@@ -12,6 +11,8 @@ import { Color, CoordinateSystem, DepthComparison, DepthTexture, Filter } from '
 let overrideMaterial = null;
 
 class AnalyticLightNode extends LightingNode {
+  static type = 'AnalyticLightNode';
+
   constructor(light = null) {
     super();
 
@@ -206,5 +207,3 @@ class AnalyticLightNode extends LightingNode {
 }
 
 export default AnalyticLightNode;
-
-addNodeClass('AnalyticLightNode', AnalyticLightNode);

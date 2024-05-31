@@ -1,9 +1,10 @@
 import Node from '../core/Node.ts';
-import { addNodeClass } from '../core/Node.ts';
 import { nodeImmutable } from '../shadernode/ShaderNode.js';
 import { reference } from './ReferenceNode.js';
 
 class SceneNode extends Node {
+  static type = 'SceneNode';
+
   constructor(scope = SceneNode.BACKGROUND_BLURRINESS, scene = null) {
     super();
 
@@ -36,5 +37,3 @@ export default SceneNode;
 
 export const backgroundBlurriness = nodeImmutable(SceneNode, SceneNode.BACKGROUND_BLURRINESS);
 export const backgroundIntensity = nodeImmutable(SceneNode, SceneNode.BACKGROUND_INTENSITY);
-
-addNodeClass('SceneNode', SceneNode);

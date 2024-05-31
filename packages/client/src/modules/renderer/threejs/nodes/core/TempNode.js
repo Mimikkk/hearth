@@ -1,6 +1,8 @@
-import Node, { addNodeClass } from './Node.ts';
+import Node from './Node.ts';
 
 class TempNode extends Node {
+  static type = 'TempNode';
+
   constructor(type) {
     super(type);
 
@@ -45,5 +47,3 @@ class TempNode extends Node {
 }
 
 export default TempNode;
-
-addNodeClass('TempNode', TempNode);

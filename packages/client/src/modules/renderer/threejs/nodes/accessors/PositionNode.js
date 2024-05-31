@@ -1,11 +1,13 @@
-import Node, { addNodeClass } from '../core/Node.ts';
+import Node from '../core/Node.ts';
 import { attribute } from '../core/AttributeNode.js';
 import { varying } from '../core/VaryingNode.js';
 import { normalize } from '../math/MathNode.js';
-import { modelWorldMatrix, modelViewMatrix } from './ModelNode.js';
+import { modelViewMatrix, modelWorldMatrix } from './ModelNode.js';
 import { nodeImmutable } from '../shadernode/ShaderNode.js';
 
 class PositionNode extends Node {
+  static type = 'PositionNode';
+
   constructor(scope = PositionNode.LOCAL) {
     super('vec3');
 
@@ -62,5 +64,3 @@ export const positionWorld = nodeImmutable(PositionNode, PositionNode.WORLD);
 export const positionWorldDirection = nodeImmutable(PositionNode, PositionNode.WORLD_DIRECTION);
 export const positionView = nodeImmutable(PositionNode, PositionNode.VIEW);
 export const positionViewDirection = nodeImmutable(PositionNode, PositionNode.VIEW_DIRECTION);
-
-addNodeClass('PositionNode', PositionNode);

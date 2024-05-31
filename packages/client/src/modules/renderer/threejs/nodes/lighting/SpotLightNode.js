@@ -6,11 +6,12 @@ import { uniform } from '../core/UniformNode.js';
 import { smoothstep } from '@modules/renderer/threejs/nodes/math/MathNode.js';
 import { objectViewPosition } from '../accessors/Object3DNode.js';
 import { positionView } from '../accessors/PositionNode.js';
-import { addNodeClass } from '../core/Node.ts';
 
 import { SpotLight } from '../../../threejs/Three.js';
 
 class SpotLightNode extends AnalyticLightNode {
+  static type = 'SpotLightNode';
+
   constructor(light = null) {
     super(light);
 
@@ -77,7 +78,5 @@ class SpotLightNode extends AnalyticLightNode {
 }
 
 export default SpotLightNode;
-
-addNodeClass('SpotLightNode', SpotLightNode);
 
 addLightNode(SpotLight, SpotLightNode);

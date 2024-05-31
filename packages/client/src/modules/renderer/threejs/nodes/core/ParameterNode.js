@@ -1,8 +1,9 @@
-import { addNodeClass } from './Node.ts';
 import { nodeObject } from '../shadernode/ShaderNode.js';
 import PropertyNode from './PropertyNode.js';
 
 class ParameterNode extends PropertyNode {
+  static type = 'ParameterNode';
+
   constructor(nodeType, name = null) {
     super(nodeType, name);
 
@@ -21,5 +22,3 @@ class ParameterNode extends PropertyNode {
 export default ParameterNode;
 
 export const parameter = (type, name) => nodeObject(new ParameterNode(type, name));
-
-addNodeClass('ParameterNode', ParameterNode);

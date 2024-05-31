@@ -1,4 +1,4 @@
-import Node, { addNodeClass } from '../core/Node.ts';
+import Node from '../core/Node.ts';
 import ArrayElementNode from '../utils/ArrayElementNode.js';
 import ConvertNode from '../utils/ConvertNode.js';
 import JoinNode from '../utils/JoinNode.js';
@@ -366,9 +366,10 @@ export const getConstNodeType = value =>
 
 // shader node base
 
-export function ShaderNode(jsFunc) {
+export const ShaderNode = function (jsFunc) {
   return new Proxy(new ShaderNodeInternal(jsFunc), shaderNodeHandler);
-}
+};
+ShaderNode.type = 'ShaderNode';
 
 export const nodeObject = (val, altType = null) => /* new */ ShaderNodeObject(val, altType);
 export const nodeObjects = (val, altType = null) => new ShaderNodeObjects(val, altType);
@@ -410,8 +411,6 @@ export const tslFn = jsFunc => {
 
   return fn;
 };
-
-addNodeClass('ShaderNode', ShaderNode);
 
 //
 

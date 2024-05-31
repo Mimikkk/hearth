@@ -1,7 +1,9 @@
-import Node, { addNodeClass } from './Node.ts';
+import Node from './Node.ts';
 import { nodeImmutable, nodeObject } from '../shadernode/ShaderNode.js';
 
 class PropertyNode extends Node {
+  static type = 'PropertyNode';
+
   constructor(nodeType, name = null, varying = false) {
     super(nodeType);
 
@@ -54,5 +56,3 @@ export const output = nodeImmutable(PropertyNode, 'vec4', 'Output');
 export const dashSize = nodeImmutable(PropertyNode, 'float', 'dashSize');
 export const gapSize = nodeImmutable(PropertyNode, 'float', 'gapSize');
 export const pointWidth = nodeImmutable(PropertyNode, 'float', 'pointWidth');
-
-addNodeClass('PropertyNode', PropertyNode);

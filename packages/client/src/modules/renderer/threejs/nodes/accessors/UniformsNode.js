@@ -1,4 +1,3 @@
-import { addNodeClass } from '../core/Node.ts';
 import { nodeObject } from '../shadernode/ShaderNode.js';
 import { NodeUpdateType } from '../core/constants.ts';
 import { getValueType } from '../core/NodeUtils.js';
@@ -25,6 +24,8 @@ class UniformsElementNode extends ArrayElementNode {
 }
 
 class UniformsNode extends BufferNode {
+  static type = 'UniformsNode';
+
   constructor(value, elementType = null) {
     super(null, 'vec4');
 
@@ -102,5 +103,3 @@ class UniformsNode extends BufferNode {
 export default UniformsNode;
 
 export const uniforms = (values, nodeType) => nodeObject(new UniformsNode(values, nodeType));
-
-addNodeClass('UniformsNode', UniformsNode);

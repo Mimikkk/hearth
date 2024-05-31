@@ -1,7 +1,6 @@
 import TempNode from '../core/TempNode.js';
-import { /*mix, step,*/ EPSILON } from '../math/MathNode.js';
-import { addNodeClass } from '../core/Node.js';
-import { addNodeElement, tslFn, nodeProxy, vec3 } from '../shadernode/ShaderNode.js';
+import { EPSILON } from '../math/MathNode.js';
+import { addNodeElement, nodeProxy, tslFn, vec3 } from '../shadernode/ShaderNode.js';
 
 export const BurnNode = tslFn(({ base, blend }) => {
   const fn = c => blend[c].lessThan(EPSILON).cond(blend[c], base[c].oneMinus().div(blend[c]).oneMinus().max(0));
@@ -58,6 +57,8 @@ export const OverlayNode = tslFn(({ base, blend }) => {
 });
 
 class BlendModeNode extends TempNode {
+  static type = 'BlendModeNode';
+
   constructor(blendMode, baseNode, blendNode) {
     super();
 
@@ -103,5 +104,3 @@ addNodeElement('burn', burn);
 addNodeElement('dodge', dodge);
 addNodeElement('overlay', overlay);
 addNodeElement('screen', screen);
-
-addNodeClass('BlendModeNode', BlendModeNode);

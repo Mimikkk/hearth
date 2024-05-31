@@ -1,10 +1,12 @@
-import Node, { addNodeClass } from '../core/Node.js';
+import Node from '../core/Node.js';
 import { nodeImmutable, nodeProxy } from '../shadernode/ShaderNode.js';
-import { cameraNear, cameraFar } from '../accessors/CameraNode.js';
+import { cameraFar, cameraNear } from '../accessors/CameraNode.js';
 import { positionView } from '../accessors/PositionNode.js';
 import { viewportDepthTexture } from './ViewportDepthTextureNode.js';
 
 class ViewportDepthNode extends Node {
+  static type = 'ViewportDepthNode';
+
   constructor(scope, valueNode = null) {
     super('float');
 
@@ -75,5 +77,3 @@ export const depthTexture = nodeProxy(ViewportDepthNode, ViewportDepthNode.DEPTH
 export const depthPixel = nodeImmutable(ViewportDepthNode, ViewportDepthNode.DEPTH_PIXEL);
 
 depthPixel.assign = value => depthPixelBase(value);
-
-addNodeClass('ViewportDepthNode', ViewportDepthNode);

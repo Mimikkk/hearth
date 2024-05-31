@@ -1,9 +1,10 @@
 import TempNode from '../core/TempNode.js';
-import { addNodeClass } from '../core/Node.ts';
-import { addNodeElement, nodeProxy, vec4, mat2, mat4 } from '../shadernode/ShaderNode.js';
+import { addNodeElement, mat2, mat4, nodeProxy, vec4 } from '../shadernode/ShaderNode.js';
 import { cos, sin } from '../math/MathNode.js';
 
 class RotateNode extends TempNode {
+  static type = 'RotateNode';
+
   constructor(positionNode, rotationNode) {
     super();
 
@@ -58,5 +59,3 @@ export default RotateNode;
 export const rotate = nodeProxy(RotateNode);
 
 addNodeElement('rotate', rotate);
-
-addNodeClass('RotateNode', RotateNode);

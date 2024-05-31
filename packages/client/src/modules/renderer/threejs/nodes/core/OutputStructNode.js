@@ -1,8 +1,10 @@
-import Node, { addNodeClass } from './Node.ts';
+import Node from './Node.ts';
 import StructTypeNode from './StructTypeNode.js';
 import { nodeProxy } from '../shadernode/ShaderNode.js';
 
 class OutputStructNode extends Node {
+  static type = 'OutputStructNode';
+
   constructor(...members) {
     super();
 
@@ -46,5 +48,3 @@ class OutputStructNode extends Node {
 export default OutputStructNode;
 
 export const outputStruct = nodeProxy(OutputStructNode);
-
-addNodeClass('OutputStructNode', OutputStructNode);

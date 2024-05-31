@@ -1,12 +1,12 @@
 import TempNode from '../core/TempNode.js';
-import { nodeObject, addNodeElement, tslFn, float, vec4 } from '../shadernode/ShaderNode.js';
+import { addNodeElement, float, nodeObject, tslFn, vec4 } from '../shadernode/ShaderNode.js';
 import { NodeUpdateType } from '../core/constants.js';
 import { uv } from '../accessors/UVNode.js';
 import { texture } from '../accessors/TextureNode.js';
 import { texturePass } from './PassNode.js';
 import { uniform } from '../core/UniformNode.js';
 import { RenderTarget } from '../../../threejs/Three.js';
-import { sign, max } from '../math/MathNode.js';
+import { max, sign } from '../math/MathNode.js';
 import { QuadMesh } from '../../objects/QuadMesh.js';
 import { TextureNode } from '@modules/renderer/threejs/nodes/Nodes.js';
 import NodeMaterial from '@modules/renderer/threejs/nodes/materials/NodeMaterial.js';

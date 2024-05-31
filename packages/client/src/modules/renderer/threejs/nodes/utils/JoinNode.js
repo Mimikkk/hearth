@@ -1,7 +1,8 @@
-import { addNodeClass } from '../core/Node.ts';
 import TempNode from '../core/TempNode.js';
 
 class JoinNode extends TempNode {
+  static type = 'JoinNode';
+
   constructor(nodes = [], nodeType = null) {
     super(nodeType);
 
@@ -45,5 +46,3 @@ class JoinNode extends TempNode {
 }
 
 export default JoinNode;
-
-addNodeClass('JoinNode', JoinNode);

@@ -4,11 +4,12 @@ import { getDistanceAttenuation } from './LightUtils.js';
 import { uniform } from '../core/UniformNode.js';
 import { objectViewPosition } from '../accessors/Object3DNode.js';
 import { positionView } from '../accessors/PositionNode.js';
-import { addNodeClass } from '../core/Node.ts';
 
 import { PointLight } from '../../../threejs/Three.js';
 
 class PointLightNode extends AnalyticLightNode {
+  static type = 'PointLightNode';
+
   constructor(light = null) {
     super(light);
 
@@ -58,7 +59,5 @@ class PointLightNode extends AnalyticLightNode {
 }
 
 export default PointLightNode;
-
-addNodeClass('PointLightNode', PointLightNode);
 
 addLightNode(PointLight, PointLightNode);

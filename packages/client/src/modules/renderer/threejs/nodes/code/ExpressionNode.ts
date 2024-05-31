@@ -1,9 +1,11 @@
-import Node, { addNodeClass } from '../core/Node.ts';
+import Node from '../core/Node.ts';
 import { nodeProxy } from '../shadernode/ShaderNode.js';
 import NodeBuilder from '@modules/renderer/threejs/nodes/core/NodeBuilder.js';
 import { NodeTypeOption } from '@modules/renderer/threejs/nodes/core/constants.js';
 
 class ExpressionNode extends Node {
+  static type = 'ExpressionNode';
+
   constructor(
     public snippet: string,
     nodeType: NodeTypeOption = 'void',
@@ -26,5 +28,3 @@ class ExpressionNode extends Node {
 export default ExpressionNode;
 
 export const expression = nodeProxy(ExpressionNode);
-
-addNodeClass('ExpressionNode', ExpressionNode);

@@ -1,8 +1,10 @@
-import Node, { addNodeClass } from './Node.ts';
+import Node from './Node.ts';
 import { varying } from './VaryingNode.js';
 import { nodeObject } from '../shadernode/ShaderNode.js';
 
 class AttributeNode extends Node {
+  static type = 'AttributeNode';
+
   constructor(attributeName, nodeType = null) {
     super(nodeType);
 
@@ -74,5 +76,3 @@ class AttributeNode extends Node {
 export default AttributeNode;
 
 export const attribute = (name, nodeType) => nodeObject(new AttributeNode(name, nodeType));
-
-addNodeClass('AttributeNode', AttributeNode);

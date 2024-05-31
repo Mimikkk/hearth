@@ -1,8 +1,9 @@
 import ReferenceNode from './ReferenceNode.js';
-import { addNodeClass } from '../core/Node.ts';
 import { nodeObject } from '../shadernode/ShaderNode.js';
 
 class RendererReferenceNode extends ReferenceNode {
+  static type = 'RendererReferenceNode';
+
   constructor(property, inputType, renderer = null) {
     super(property, inputType, renderer);
 
@@ -19,5 +20,3 @@ class RendererReferenceNode extends ReferenceNode {
 export default RendererReferenceNode;
 
 export const rendererReference = (name, type, renderer) => nodeObject(new RendererReferenceNode(name, type, renderer));
-
-addNodeClass('RendererReferenceNode', RendererReferenceNode);

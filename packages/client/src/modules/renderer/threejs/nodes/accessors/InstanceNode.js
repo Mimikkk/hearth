@@ -1,4 +1,4 @@
-import Node, { addNodeClass } from '../core/Node.ts';
+import Node from '../core/Node.ts';
 import { instancedBufferAttribute, instancedDynamicBufferAttribute } from './BufferAttributeNode.js';
 import { normalLocal } from './NormalNode.js';
 import { positionLocal } from './PositionNode.js';
@@ -6,6 +6,8 @@ import { mat3, mat4, nodeProxy, vec3 } from '../shadernode/ShaderNode.js';
 import { BufferUsage, InstancedInterleavedBuffer } from '../../../threejs/Three.js';
 
 class InstanceNode extends Node {
+  static type = 'InstanceNode';
+
   constructor(instanceMesh) {
     super('void');
 
@@ -62,5 +64,3 @@ class InstanceNode extends Node {
 export default InstanceNode;
 
 export const instance = nodeProxy(InstanceNode);
-
-addNodeClass('InstanceNode', InstanceNode);

@@ -1,7 +1,8 @@
 import InputNode from './InputNode.js';
-import { addNodeClass } from './Node.ts';
 
 class ConstNode extends InputNode {
+  static type = 'ConstNode';
+
   constructor(value, nodeType = null) {
     super(value, nodeType);
 
@@ -20,5 +21,3 @@ class ConstNode extends InputNode {
 }
 
 export default ConstNode;
-
-addNodeClass('ConstNode', ConstNode);

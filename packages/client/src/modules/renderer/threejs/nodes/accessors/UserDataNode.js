@@ -1,8 +1,9 @@
 import ReferenceNode from './ReferenceNode.js';
-import { addNodeClass } from '../core/Node.ts';
 import { nodeObject } from '../shadernode/ShaderNode.js';
 
 class UserDataNode extends ReferenceNode {
+  static type = 'UserDataNode';
+
   constructor(property, inputType, userData = null) {
     super(property, inputType, userData);
 
@@ -19,5 +20,3 @@ class UserDataNode extends ReferenceNode {
 export default UserDataNode;
 
 export const userData = (name, inputType, userData) => nodeObject(new UserDataNode(name, inputType, userData));
-
-addNodeClass('UserDataNode', UserDataNode);

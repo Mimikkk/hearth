@@ -1,7 +1,9 @@
-import Node, { addNodeClass } from '../core/Node.ts';
+import Node from '../core/Node.ts';
 import { nodeImmutable } from '../shadernode/ShaderNode.js';
 
 class PointUVNode extends Node {
+  static type = 'PointUVNode';
+
   constructor() {
     super('vec2');
 
@@ -16,5 +18,3 @@ class PointUVNode extends Node {
 export default PointUVNode;
 
 export const pointUV = nodeImmutable(PointUVNode);
-
-addNodeClass('PointUVNode', PointUVNode);

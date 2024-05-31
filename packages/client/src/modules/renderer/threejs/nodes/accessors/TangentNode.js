@@ -1,4 +1,4 @@
-import Node, { addNodeClass } from '../core/Node.ts';
+import Node from '../core/Node.ts';
 import { attribute } from '../core/AttributeNode.js';
 import { temp } from '../core/VarNode.js';
 import { varying } from '../core/VaryingNode.js';
@@ -8,6 +8,8 @@ import { modelViewMatrix } from './ModelNode.js';
 import { nodeImmutable, vec4 } from '../shadernode/ShaderNode.js';
 
 class TangentNode extends Node {
+  static type = 'TangentNode';
+
   constructor(scope = TangentNode.LOCAL) {
     super();
 
@@ -66,5 +68,3 @@ export const tangentView = nodeImmutable(TangentNode, TangentNode.VIEW);
 export const tangentWorld = nodeImmutable(TangentNode, TangentNode.WORLD);
 export const transformedTangentView = temp(tangentView, 'TransformedTangentView');
 export const transformedTangentWorld = normalize(transformedTangentView.transformDirection(cameraViewMatrix));
-
-addNodeClass('TangentNode', TangentNode);

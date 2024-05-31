@@ -1,7 +1,7 @@
-import Node, { addNodeClass } from '../core/Node.ts';
+import Node from '../core/Node.ts';
 
 class ArrayElementNode extends Node {
-  // @TODO: If extending from TempNode it breaks webgpu_compute
+  static type = 'ArrayElementNode';
 
   constructor(node, indexNode) {
     super();
@@ -25,5 +25,3 @@ class ArrayElementNode extends Node {
 }
 
 export default ArrayElementNode;
-
-addNodeClass('ArrayElementNode', ArrayElementNode);

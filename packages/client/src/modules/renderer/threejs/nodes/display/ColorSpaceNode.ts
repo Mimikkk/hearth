@@ -1,6 +1,5 @@
 import TempNode from '../core/TempNode.js';
 import { mix } from '../math/MathNode.js';
-import { addNodeClass } from '../core/Node.js';
 import { addNodeElement, nodeObject, nodeProxy, tslFn, vec4 } from '../shadernode/ShaderNode.js';
 import { ColorSpace } from '../../../threejs/Three.js';
 
@@ -47,6 +46,8 @@ const getMethod = (source, target) => {
 };
 
 class ColorSpaceNode extends TempNode {
+  static type = 'ColorSpaceNode';
+
   constructor(method, node) {
     super('vec4');
 
@@ -86,5 +87,3 @@ addNodeElement('linearTosRGB', linearTosRGB);
 addNodeElement('sRGBToLinear', sRGBToLinear);
 addNodeElement('linearToColorSpace', linearToColorSpace);
 addNodeElement('colorSpaceToLinear', colorSpaceToLinear);
-
-addNodeClass('ColorSpaceNode', ColorSpaceNode);

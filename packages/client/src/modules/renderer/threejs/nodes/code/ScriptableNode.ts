@@ -1,4 +1,4 @@
-import Node, { addNodeClass } from '../core/Node.ts';
+import Node from '../core/Node.ts';
 import { scriptableValue } from './ScriptableValueNode.js';
 import { addNodeElement, float, nodeProxy } from '../shadernode/ShaderNode.js';
 import CodeNode from '@modules/renderer/threejs/nodes/code/CodeNode.js';
@@ -42,6 +42,7 @@ class Params {
 export const global = new Resources();
 
 class ScriptableNode extends Node {
+  static type = 'ScriptableNode';
   declare isScriptableNode: true;
   _local: Resources;
   _output: any;
@@ -350,5 +351,3 @@ export default ScriptableNode;
 export const scriptable = nodeProxy(ScriptableNode);
 
 addNodeElement('scriptable', scriptable);
-
-addNodeClass('ScriptableNode', ScriptableNode);

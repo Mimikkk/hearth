@@ -1,9 +1,10 @@
 import TempNode from '../core/TempNode.js';
 import { positionWorldDirection } from '../accessors/PositionNode.js';
 import { nodeProxy, vec2 } from '../shadernode/ShaderNode.js';
-import { addNodeClass } from '../core/Node.ts';
 
 class EquirectUVNode extends TempNode {
+  static type = 'EquirectUVNode';
+
   constructor(dirNode = positionWorldDirection) {
     super('vec2');
 
@@ -30,5 +31,3 @@ class EquirectUVNode extends TempNode {
 export default EquirectUVNode;
 
 export const equirectUV = nodeProxy(EquirectUVNode);
-
-addNodeClass('EquirectUVNode', EquirectUVNode);

@@ -1,4 +1,4 @@
-import Node, { addNodeClass } from '../core/Node.ts';
+import Node from '../core/Node.ts';
 import { nodeProxy } from '../shadernode/ShaderNode.js';
 import NodeBuilder from '@modules/renderer/threejs/nodes/core/NodeBuilder.js';
 
@@ -7,6 +7,7 @@ export interface CodeNodeInclude {
 }
 
 class CodeNode extends Node {
+  static type = 'CodeNode';
   declare isCodeNode: boolean;
 
   constructor(
@@ -53,5 +54,3 @@ export const code = nodeProxy(CodeNode);
 export const js = (src: string, includes: any[]) => code(src, includes, 'js');
 export const wgsl = (src: string, includes: any[]) => code(src, includes, 'wgsl');
 export const glsl = (src: string, includes: any[]) => code(src, includes, 'glsl');
-
-addNodeClass('CodeNode', CodeNode);

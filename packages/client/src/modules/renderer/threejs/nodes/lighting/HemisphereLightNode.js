@@ -4,11 +4,12 @@ import { uniform } from '../core/UniformNode.js';
 import { mix } from '@modules/renderer/threejs/nodes/math/MathNode.js';
 import { normalView } from '../accessors/NormalNode.js';
 import { objectPosition } from '../accessors/Object3DNode.js';
-import { addNodeClass } from '../core/Node.ts';
 
 import { Color, HemisphereLight } from '../../../threejs/Three.js';
 
 class HemisphereLightNode extends AnalyticLightNode {
+  static type = 'HemisphereLightNode';
+
   constructor(light = null) {
     super(light);
 
@@ -41,7 +42,5 @@ class HemisphereLightNode extends AnalyticLightNode {
 }
 
 export default HemisphereLightNode;
-
-addNodeClass('HemisphereLightNode', HemisphereLightNode);
 
 addLightNode(HemisphereLight, HemisphereLightNode);

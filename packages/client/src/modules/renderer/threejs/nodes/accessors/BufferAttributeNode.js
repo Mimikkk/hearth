@@ -1,10 +1,11 @@
 import InputNode from '../core/InputNode.js';
-import { addNodeClass } from '../core/Node.ts';
 import { varying } from '../core/VaryingNode.js';
 import { addNodeElement, nodeObject } from '../shadernode/ShaderNode.js';
 import { BufferUsage, InterleavedBuffer, InterleavedBufferAttribute } from '../../../threejs/Three.js';
 
 class BufferAttributeNode extends InputNode {
+  static type = 'BufferAttributeNode';
+
   constructor(value, bufferType = null, bufferStride = 0, bufferOffset = 0) {
     super(value, bufferType);
 
@@ -103,5 +104,3 @@ export const instancedDynamicBufferAttribute = (array, type, stride, offset) =>
   dynamicBufferAttribute(array, type, stride, offset).setInstanced(true);
 
 addNodeElement('toAttribute', bufferNode => bufferAttribute(bufferNode.value));
-
-addNodeClass('BufferAttributeNode', BufferAttributeNode);

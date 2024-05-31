@@ -1,6 +1,8 @@
-import Node, { addNodeClass } from './Node.ts';
+import Node from './Node.ts';
 
 class UniformGroupNode extends Node {
+  static type = 'UniformGroupNode';
+
   constructor(name, shared = false) {
     super('string');
 
@@ -25,5 +27,3 @@ export const renderGroup = sharedUniformGroup('render');
 export const objectGroup = uniformGroup('object');
 
 export default UniformGroupNode;
-
-addNodeClass('UniformGroupNode', UniformGroupNode);

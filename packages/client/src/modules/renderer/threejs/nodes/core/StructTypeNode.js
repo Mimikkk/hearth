@@ -1,6 +1,8 @@
-import Node, { addNodeClass } from './Node.ts';
+import Node from './Node.ts';
 
 class StructTypeNode extends Node {
+  static type = 'StructTypeNode';
+
   constructor(types) {
     super();
 
@@ -14,5 +16,3 @@ class StructTypeNode extends Node {
 }
 
 export default StructTypeNode;
-
-addNodeClass('StructTypeNode', StructTypeNode);

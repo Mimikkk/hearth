@@ -1,9 +1,10 @@
 import UniformNode from '../core/UniformNode.js';
 import { NodeUpdateType } from '../core/constants.ts';
-import { nodeObject, nodeImmutable } from '../shadernode/ShaderNode.js';
-import { addNodeClass } from '../core/Node.ts';
+import { nodeImmutable, nodeObject } from '../shadernode/ShaderNode.js';
 
 class TimerNode extends UniformNode {
+  static type = 'TimerNode';
+
   constructor(scope = TimerNode.LOCAL, scale = 1, value = 0) {
     super(value);
 
@@ -13,22 +14,6 @@ class TimerNode extends UniformNode {
     this.updateType = NodeUpdateType.FRAME;
   }
 
-  /*
-  @TODO:
-  getNodeType( builder ) {
-
-    const scope = this.scope;
-
-    if ( scope === TimerNode.FRAME ) {
-
-      return 'uint';
-
-    }
-
-    return 'float';
-
-  }
-*/
   update(frame) {
     const scope = this.scope;
     const scale = this.scale;
@@ -59,5 +44,3 @@ export const timerLocal = (timeScale, value = 0) => nodeObject(new TimerNode(Tim
 export const timerGlobal = (timeScale, value = 0) => nodeObject(new TimerNode(TimerNode.GLOBAL, timeScale, value));
 export const timerDelta = (timeScale, value = 0) => nodeObject(new TimerNode(TimerNode.DELTA, timeScale, value));
 export const frameId = nodeImmutable(TimerNode, TimerNode.FRAME).uint();
-
-addNodeClass('TimerNode', TimerNode);

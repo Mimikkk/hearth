@@ -1,20 +1,20 @@
 import {
-  mx_perlin_noise_float,
-  mx_perlin_noise_vec3,
-  mx_worley_noise_float as worley_noise_float,
-  mx_worley_noise_vec2 as worley_noise_vec2,
-  mx_worley_noise_vec3 as worley_noise_vec3,
   mx_cell_noise_float as cell_noise_float,
   mx_fractal_noise_float as fractal_noise_float,
   mx_fractal_noise_vec2 as fractal_noise_vec2,
   mx_fractal_noise_vec3 as fractal_noise_vec3,
   mx_fractal_noise_vec4 as fractal_noise_vec4,
+  mx_perlin_noise_float,
+  mx_perlin_noise_vec3,
+  mx_worley_noise_float as worley_noise_float,
+  mx_worley_noise_vec2 as worley_noise_vec2,
+  mx_worley_noise_vec3 as worley_noise_vec3,
 } from './lib/mx_noise.js';
 import { mx_hsvtorgb, mx_rgbtohsv } from './lib/mx_hsv.js';
 import { mx_srgb_texture_to_lin_rec709 } from './lib/mx_transform_color.js';
 import { mix, smoothstep } from '@modules/renderer/threejs/nodes/math/MathNode.js';
 import { uv } from '../accessors/UVNode.js';
-import { float, vec2, vec4, int } from '../shadernode/ShaderNode.js';
+import { float, int, vec2, vec4 } from '../shadernode/ShaderNode.js';
 
 export const mx_aastep = (threshold, value) => {
   threshold = float(threshold);

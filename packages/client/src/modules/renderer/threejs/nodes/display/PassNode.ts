@@ -1,4 +1,3 @@
-import { addNodeClass } from '../core/Node.js';
 import TempNode from '../core/TempNode.js';
 import TextureNode from '../accessors/TextureNode.js';
 import { NodeUpdateType } from '../core/constants.js';
@@ -28,6 +27,8 @@ class PassTextureNode extends TextureNode {
 }
 
 class PassNode extends TempNode {
+  static type = 'PassNode';
+
   constructor(scope, scene, camera) {
     super('vec4');
 
@@ -160,5 +161,3 @@ export default PassNode;
 export const pass = (scene, camera) => nodeObject(new PassNode(PassNode.COLOR, scene, camera));
 export const texturePass = (pass, texture) => nodeObject(new PassTextureNode(pass, texture));
 export const depthPass = (scene, camera) => nodeObject(new PassNode(PassNode.DEPTH, scene, camera));
-
-addNodeClass('PassNode', PassNode);

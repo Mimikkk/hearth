@@ -1,4 +1,3 @@
-import { addNodeClass } from '../core/Node.ts';
 import TempNode from '../core/TempNode.js';
 import { cameraProjectionMatrix } from './CameraNode.js';
 import { modelViewMatrix } from './ModelNode.js';
@@ -7,6 +6,8 @@ import { nodeProxy } from '../shadernode/ShaderNode.js';
 import { varying } from '../core/VaryingNode.js';
 
 class ModelViewProjectionNode extends TempNode {
+  static type = 'ModelViewProjectionNode';
+
   constructor(positionNode = null) {
     super('vec4');
 
@@ -27,5 +28,3 @@ class ModelViewProjectionNode extends TempNode {
 export default ModelViewProjectionNode;
 
 export const modelViewProjection = nodeProxy(ModelViewProjectionNode);
-
-addNodeClass('ModelViewProjectionNode', ModelViewProjectionNode);

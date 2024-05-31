@@ -1,4 +1,4 @@
-import { sub, mul, div, add } from './OperatorNode.js';
+import { add, div, mul, sub } from './OperatorNode.js';
 import { addNodeElement } from '../shadernode/ShaderNode.js';
 import { PI, pow, sin } from './MathNode.js';
 

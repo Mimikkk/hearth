@@ -1,8 +1,10 @@
-import Node, { addNodeClass } from './Node.ts';
+import Node from './Node.ts';
 import { varying } from './VaryingNode.js';
 import { nodeImmutable } from '../shadernode/ShaderNode.js';
 
 class IndexNode extends Node {
+  static type = 'IndexNode';
+
   constructor(scope) {
     super('uint');
 
@@ -46,5 +48,3 @@ export default IndexNode;
 
 export const vertexIndex = nodeImmutable(IndexNode, IndexNode.VERTEX);
 export const instanceIndex = nodeImmutable(IndexNode, IndexNode.INSTANCE);
-
-addNodeClass('IndexNode', IndexNode);

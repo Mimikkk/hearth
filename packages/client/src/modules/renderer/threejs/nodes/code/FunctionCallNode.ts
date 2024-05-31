@@ -1,12 +1,12 @@
 import TempNode from '../core/TempNode.js';
-import { addNodeClass } from '../core/Node.ts';
 import { addNodeElement, nodeArray, nodeObject, nodeObjects } from '../shadernode/ShaderNode.js';
 import FunctionNode from './FunctionNode.ts';
 import NodeBuilder from '@modules/renderer/threejs/nodes/core/NodeBuilder.js';
 import { NodeTypeOption } from '@modules/renderer/threejs/nodes/core/constants.js';
-import Node from 'three/examples/jsm/nodes/core/Node.js';
 
 class FunctionCallNode extends TempNode {
+  static type = 'FunctionCallNode';
+
   constructor(
     public functionNode: FunctionNode,
     public parameters: Record<string, any>,
@@ -60,5 +60,3 @@ export const call = (func: any, ...params: any) => {
 };
 
 addNodeElement('call', call);
-
-addNodeClass('FunctionCallNode', FunctionCallNode);

@@ -1,6 +1,8 @@
-import Node, { addNodeClass } from '../core/Node.ts';
+import Node from '../core/Node.ts';
 
 class ConvertNode extends Node {
+  static type = 'ConvertNode';
+
   constructor(node, convertTo) {
     super();
 
@@ -33,5 +35,3 @@ class ConvertNode extends Node {
 }
 
 export default ConvertNode;
-
-addNodeClass('ConvertNode', ConvertNode);

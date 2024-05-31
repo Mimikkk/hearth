@@ -1,10 +1,11 @@
 import TextureNode from './TextureNode.js';
 import { reflectVector } from './ReflectVectorNode.js';
-import { addNodeClass } from '../core/Node.ts';
 import { addNodeElement, nodeProxy, vec3 } from '../shadernode/ShaderNode.js';
 import { CoordinateSystem } from '../../../threejs/Three.js';
 
 class CubeTextureNode extends TextureNode {
+  static type = 'CubeTextureNode';
+
   constructor(value, uvNode = null, levelNode = null) {
     super(value, uvNode, levelNode);
 
@@ -41,5 +42,3 @@ export default CubeTextureNode;
 export const cubeTexture = nodeProxy(CubeTextureNode);
 
 addNodeElement('cubeTexture', cubeTexture);
-
-addNodeClass('CubeTextureNode', CubeTextureNode);

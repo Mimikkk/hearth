@@ -1,8 +1,10 @@
-import Node, { addNodeClass } from './Node.ts';
+import Node from './Node.ts';
 import { cond } from '../math/CondNode.js';
 import { getCurrentStack, nodeProxy, setCurrentStack, ShaderNode } from '../shadernode/ShaderNode.js';
 
 class StackNode extends Node {
+  static type = 'StackNode';
+
   constructor(parent = null) {
     super();
 
@@ -67,5 +69,3 @@ class StackNode extends Node {
 export default StackNode;
 
 export const stack = nodeProxy(StackNode);
-
-addNodeClass('StackNode', StackNode);

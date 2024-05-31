@@ -1,9 +1,10 @@
-import { addNodeClass } from '../core/Node.ts';
 import AttributeNode from '../core/AttributeNode.js';
 import { nodeObject } from '../shadernode/ShaderNode.js';
 import { Vector4 } from '../../../threejs/Three.js';
 
 class VertexColorNode extends AttributeNode {
+  static type = 'VertexColorNode';
+
   constructor(index = 0) {
     super(null, 'vec4');
 
@@ -38,5 +39,3 @@ class VertexColorNode extends AttributeNode {
 export default VertexColorNode;
 
 export const vertexColor = (...params) => nodeObject(new VertexColorNode(...params));
-
-addNodeClass('VertexColorNode', VertexColorNode);

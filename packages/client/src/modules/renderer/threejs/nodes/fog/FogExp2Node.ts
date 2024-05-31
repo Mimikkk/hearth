@@ -1,10 +1,11 @@
 import FogNode from './FogNode.js';
-import Node, { addNodeClass } from '../core/Node.js';
+import Node from '../core/Node.js';
 import { addNodeElement, nodeProxy } from '../shadernode/ShaderNode.js';
 import NodeBuilder from '@modules/renderer/threejs/nodes/core/NodeBuilder.js';
 
 class FogExp2Node extends FogNode {
   declare isFogExp2Node: true;
+  static type = 'FogExp2Node';
 
   constructor(
     colorNode: Node,
@@ -28,5 +29,3 @@ export default FogExp2Node;
 export const densityFog = nodeProxy(FogExp2Node);
 
 addNodeElement('densityFog', densityFog);
-
-addNodeClass('FogExp2Node', FogExp2Node);

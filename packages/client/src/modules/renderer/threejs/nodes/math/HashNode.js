@@ -1,7 +1,9 @@
-import Node, { addNodeClass } from '../core/Node.ts';
+import Node from '../core/Node.ts';
 import { addNodeElement, nodeProxy } from '../shadernode/ShaderNode.js';
 
 class HashNode extends Node {
+  static type = 'HashNode';
+
   constructor(seedNode) {
     super();
 
@@ -24,5 +26,3 @@ export default HashNode;
 export const hash = nodeProxy(HashNode);
 
 addNodeElement('hash', hash);
-
-addNodeClass('HashNode', HashNode);

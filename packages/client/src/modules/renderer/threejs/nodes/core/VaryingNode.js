@@ -1,7 +1,9 @@
-import Node, { addNodeClass } from './Node.ts';
+import Node from './Node.ts';
 import { addNodeElement, nodeProxy } from '../shadernode/ShaderNode.js';
 
 class VaryingNode extends Node {
+  static type = 'VaryingNode';
+
   constructor(node, name = null) {
     super();
 
@@ -48,5 +50,3 @@ export default VaryingNode;
 export const varying = nodeProxy(VaryingNode);
 
 addNodeElement('varying', varying);
-
-addNodeClass('VaryingNode', VaryingNode);

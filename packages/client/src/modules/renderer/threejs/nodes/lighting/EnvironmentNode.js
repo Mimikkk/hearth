@@ -1,7 +1,7 @@
 import LightingNode from './LightingNode.js';
 import { cache } from '../core/CacheNode.js';
 import { context } from '../core/ContextNode.js';
-import { roughness, clearcoatRoughness } from '../core/PropertyNode.js';
+import { clearcoatRoughness, roughness } from '../core/PropertyNode.js';
 import { cameraViewMatrix } from '../accessors/CameraNode.js';
 import {
   transformedClearcoatNormalView,
@@ -9,7 +9,6 @@ import {
   transformedNormalWorld,
 } from '../accessors/NormalNode.js';
 import { positionViewDirection } from '../accessors/PositionNode.js';
-import { addNodeClass } from '../core/Node.ts';
 import { float } from '../shadernode/ShaderNode.js';
 import { reference } from '../accessors/ReferenceNode.js';
 import { pmremTexture } from '@modules/renderer/threejs/nodes/pmrem/PMREMNode.js';
@@ -17,6 +16,8 @@ import { pmremTexture } from '@modules/renderer/threejs/nodes/pmrem/PMREMNode.js
 const envNodeCache = new WeakMap();
 
 class EnvironmentNode extends LightingNode {
+  static type = 'EnvironmentNode';
+
   constructor(envNode = null) {
     super();
 
@@ -100,5 +101,3 @@ const createIrradianceContext = normalWorldNode => {
 };
 
 export default EnvironmentNode;
-
-addNodeClass('EnvironmentNode', EnvironmentNode);

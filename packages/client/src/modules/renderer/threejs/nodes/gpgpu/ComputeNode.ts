@@ -1,10 +1,11 @@
-import Node, { addNodeClass } from '../core/Node.ts';
+import Node from '../core/Node.ts';
 import { NodeUpdateType } from '../core/constants.ts';
 import { addNodeElement, nodeObject } from '../shadernode/ShaderNode.js';
 import { Renderer } from '@modules/renderer/threejs/renderers/common/Renderer.js';
 import NodeBuilder from '@modules/renderer/threejs/nodes/core/NodeBuilder.js';
 
 class ComputeNode extends Node {
+  static type = 'ComputeNode';
   declare id: number;
   declare isComputeNode: boolean;
   computeNode: any;
@@ -73,5 +74,3 @@ export const compute = (node: any, count: number, workgroupSize: number[] = [64]
   nodeObject(new ComputeNode(nodeObject(node), count, workgroupSize));
 
 addNodeElement('compute', compute);
-
-addNodeClass('ComputeNode', ComputeNode);

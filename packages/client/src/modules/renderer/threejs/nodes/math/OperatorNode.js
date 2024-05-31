@@ -1,8 +1,9 @@
 import TempNode from '../core/TempNode.js';
-import { addNodeClass } from '../core/Node.ts';
 import { addNodeElement, nodeProxy } from '../shadernode/ShaderNode.js';
 
 class OperatorNode extends TempNode {
+  static type = 'OperatorNode';
+
   constructor(op, aNode, bNode, ...params) {
     super();
 
@@ -184,5 +185,3 @@ addNodeElement('bitOr', bitOr);
 addNodeElement('bitXor', bitXor);
 addNodeElement('shiftLeft', shiftLeft);
 addNodeElement('shiftRight', shiftRight);
-
-addNodeClass('OperatorNode', OperatorNode);

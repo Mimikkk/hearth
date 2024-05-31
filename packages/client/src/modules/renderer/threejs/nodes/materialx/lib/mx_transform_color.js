@@ -1,9 +1,9 @@
 // Three.js Transpiler
 // https://github.com/AcademySoftwareFoundation/MaterialX/blob/main/libraries/stdlib/genglsl/lib/mx_transform_color.glsl
 
-import { bvec3, vec3, tslFn } from '../../shadernode/ShaderNode.js';
+import { bvec3, tslFn, vec3 } from '../../shadernode/ShaderNode.js';
 import { greaterThan } from '@modules/renderer/threejs/nodes/math/OperatorNode.js';
-import { max, pow, mix } from '@modules/renderer/threejs/nodes/math/MathNode.js';
+import { max, mix, pow } from '@modules/renderer/threejs/nodes/math/MathNode.js';
 
 const mx_srgb_texture_to_lin_rec709 = tslFn(([color_immutable]) => {
   const color = vec3(color_immutable).toVar();

@@ -1,7 +1,9 @@
-import Node, { addNodeClass } from '../core/Node.ts';
+import Node from '../core/Node.ts';
 import { nodeProxy } from '../shadernode/ShaderNode.js';
 
 class FunctionOverloadingNode extends Node {
+  static type = 'FunctionOverloadingNode';
+
   constructor(functionNodes = [], ...parametersNodes) {
     super();
 
@@ -70,5 +72,3 @@ export const overloadingFn =
   functionNodes =>
   (...params) =>
     overloadingBaseFn(functionNodes, ...params);
-
-addNodeClass('FunctionOverloadingNode', FunctionOverloadingNode);

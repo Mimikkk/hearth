@@ -1,8 +1,9 @@
-import { addNodeClass } from '../core/Node.ts';
-import { nodeProxy, addNodeElement } from '../shadernode/ShaderNode.js';
+import { addNodeElement, nodeProxy } from '../shadernode/ShaderNode.js';
 import ArrayElementNode from './ArrayElementNode.js';
 
 class StorageArrayElementNode extends ArrayElementNode {
+  static type = 'StorageArrayElementNode';
+
   constructor(storageBufferNode, indexNode) {
     super(storageBufferNode, indexNode);
 
@@ -61,5 +62,3 @@ export default StorageArrayElementNode;
 export const storageElement = nodeProxy(StorageArrayElementNode);
 
 addNodeElement('storageElement', storageElement);
-
-addNodeClass('StorageArrayElementNode', StorageArrayElementNode);

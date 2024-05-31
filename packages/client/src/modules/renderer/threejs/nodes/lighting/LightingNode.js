@@ -1,6 +1,8 @@
-import Node, { addNodeClass } from '../core/Node.ts';
+import Node from '../core/Node.ts';
 
 class LightingNode extends Node {
+  static type = 'LightingNode';
+
   constructor() {
     super('vec3');
   }
@@ -11,5 +13,3 @@ class LightingNode extends Node {
 }
 
 export default LightingNode;
-
-addNodeClass('LightingNode', LightingNode);

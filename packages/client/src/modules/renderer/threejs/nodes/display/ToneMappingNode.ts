@@ -1,5 +1,4 @@
 import TempNode from '../core/TempNode.js';
-import { addNodeClass } from '../core/Node.js';
 import { addNodeElement, float, mat3, nodeObject, tslFn, vec3 } from '../shadernode/ShaderNode.js';
 import { rendererReference } from '../accessors/RendererReferenceNode.js';
 import { clamp, log2, max, pow } from '../math/MathNode.js';
@@ -125,6 +124,8 @@ const toneMappingLib = {
 };
 
 class ToneMappingNode extends TempNode {
+  static type = 'ToneMappingNode';
+
   constructor(toneMapping = ToneMapping.None, exposureNode = toneMappingExposure, colorNode = null) {
     super('vec3');
 
@@ -171,5 +172,3 @@ export const toneMapping = (mapping, exposure, color) =>
 export const toneMappingExposure = rendererReference('toneMappingExposure', 'float');
 
 addNodeElement('toneMapping', (color, mapping, exposure) => toneMapping(mapping, exposure, color));
-
-addNodeClass('ToneMappingNode', ToneMappingNode);

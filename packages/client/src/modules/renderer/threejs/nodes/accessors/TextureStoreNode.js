@@ -1,8 +1,9 @@
-import { addNodeClass } from '../core/Node.ts';
 import TextureNode from './TextureNode.js';
 import { nodeProxy } from '../shadernode/ShaderNode.js';
 
 class TextureStoreNode extends TextureNode {
+  static type = 'TextureStoreNode';
+
   constructor(value, uvNode, storeNode = null) {
     super(value, uvNode);
 
@@ -60,5 +61,3 @@ export const textureStore = (value, uvNode, storeNode) => {
 
   return node;
 };
-
-addNodeClass('TextureStoreNode', TextureStoreNode);

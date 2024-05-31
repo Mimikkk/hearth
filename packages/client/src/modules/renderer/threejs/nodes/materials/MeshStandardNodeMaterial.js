@@ -1,7 +1,7 @@
 import NodeMaterial, { addNodeMaterial } from './NodeMaterial.js';
 import { diffuseColor, metalness, roughness, specularColor } from '../core/PropertyNode.js';
 import { mix } from '@modules/renderer/threejs/nodes/math/MathNode.js';
-import { materialRoughness, materialMetalness } from '../accessors/MaterialNode.js';
+import { materialMetalness, materialRoughness } from '../accessors/MaterialNode.js';
 import getRoughness from '../functions/material/getRoughness.js';
 import PhysicalLightingModel from '../functions/PhysicalLightingModel.js';
 import { float, vec3, vec4 } from '../shadernode/ShaderNode.js';

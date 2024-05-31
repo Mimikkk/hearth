@@ -1,24 +1,23 @@
 import NodeMaterial, { addNodeMaterial } from './NodeMaterial.js';
 import { temp } from '../core/VarNode.js';
 import { varying } from '../core/VaryingNode.js';
-import { property, varyingProperty } from '../core/PropertyNode.js';
+import { dashSize, gapSize, property, varyingProperty } from '../core/PropertyNode.js';
 import { attribute } from '../core/AttributeNode.js';
 import { cameraProjectionMatrix } from '../accessors/CameraNode.js';
 import {
   materialColor,
-  materialLineScale,
+  materialLineDashOffset,
   materialLineDashSize,
   materialLineGapSize,
-  materialLineDashOffset,
+  materialLineScale,
   materialLineWidth,
 } from '../accessors/MaterialNode.js';
 import { modelViewMatrix } from '../accessors/ModelNode.js';
 import { positionGeometry } from '../accessors/PositionNode.js';
 import { mix, smoothstep } from '@modules/renderer/threejs/nodes/math/MathNode.js';
-import { tslFn, float, vec2, vec3, vec4, If } from '../shadernode/ShaderNode.js';
+import { float, If, tslFn, vec2, vec3, vec4 } from '../shadernode/ShaderNode.js';
 import { uv } from '../accessors/UVNode.js';
 import { viewport } from '../display/ViewportNode.ts';
-import { dashSize, gapSize } from '../core/PropertyNode.js';
 
 import { LineDashedMaterial } from '../../../threejs/Three.js';
 

@@ -1,8 +1,9 @@
 import TempNode from '../core/TempNode.js';
-import { addNodeClass } from '../core/Node.js';
 import { addNodeElement, nodeProxy } from '../shadernode/ShaderNode.js';
 
 class PosterizeNode extends TempNode {
+  static type = 'PosterizeNode';
+
   constructor(sourceNode, stepsNode) {
     super();
 
@@ -22,5 +23,3 @@ export default PosterizeNode;
 export const posterize = nodeProxy(PosterizeNode);
 
 addNodeElement('posterize', posterize);
-
-addNodeClass('PosterizeNode', PosterizeNode);

@@ -1,8 +1,10 @@
-import Node, { addNodeClass } from './Node.ts';
+import Node from './Node.ts';
 import NodeCache from './NodeCache.js';
 import { addNodeElement, nodeProxy } from '../shadernode/ShaderNode.js';
 
 class CacheNode extends Node {
+  static type = 'CacheNode';
+
   constructor(node, cache = new NodeCache()) {
     super();
 
@@ -37,5 +39,3 @@ export const globalCache = node => cache(node, null);
 
 addNodeElement('cache', cache);
 addNodeElement('globalCache', globalCache);
-
-addNodeClass('CacheNode', CacheNode);

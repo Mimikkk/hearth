@@ -1,8 +1,9 @@
 import TempNode from '../core/TempNode.js';
-import { addNodeClass } from '../core/Node.ts';
 import { addNodeElement, nodeProxy } from '../shadernode/ShaderNode.js';
 
 class PackingNode extends TempNode {
+  static type = 'PackingNode';
+
   constructor(scope, node) {
     super();
 
@@ -39,5 +40,3 @@ export const colorToDirection = nodeProxy(PackingNode, PackingNode.COLOR_TO_DIRE
 
 addNodeElement('directionToColor', directionToColor);
 addNodeElement('colorToDirection', colorToDirection);
-
-addNodeClass('PackingNode', PackingNode);

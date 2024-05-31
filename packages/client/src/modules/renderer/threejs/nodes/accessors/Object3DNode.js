@@ -1,4 +1,4 @@
-import Node, { addNodeClass } from '../core/Node.ts';
+import Node from '../core/Node.ts';
 import { NodeUpdateType } from '../core/constants.ts';
 import UniformNode from '../core/UniformNode.js';
 import { nodeProxy } from '../shadernode/ShaderNode.js';
@@ -6,6 +6,8 @@ import { nodeProxy } from '../shadernode/ShaderNode.js';
 import { Vector3 } from '../../../threejs/Three.js';
 
 class Object3DNode extends Node {
+  static type = 'Object3DNode';
+
   constructor(scope = Object3DNode.VIEW_MATRIX, object3d = null) {
     super();
 
@@ -104,5 +106,3 @@ export const objectWorldMatrix = nodeProxy(Object3DNode, Object3DNode.WORLD_MATR
 export const objectPosition = nodeProxy(Object3DNode, Object3DNode.POSITION);
 export const objectScale = nodeProxy(Object3DNode, Object3DNode.SCALE);
 export const objectViewPosition = nodeProxy(Object3DNode, Object3DNode.VIEW_POSITION);
-
-addNodeClass('Object3DNode', Object3DNode);

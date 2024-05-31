@@ -1,10 +1,11 @@
-import Node, { addNodeClass } from '../core/Node.ts';
+import Node from '../core/Node.ts';
 import { addNodeElement, float, nodeProxy } from '../shadernode/ShaderNode.js';
 import { EventDispatcher } from '../../../threejs/Three.js';
 import NodeBuilder from '@modules/renderer/threejs/nodes/core/NodeBuilder.js';
 import { NodeTypeOption } from '@modules/renderer/threejs/nodes/core/constants.js';
 
 class ScriptableValueNode extends Node {
+  static type = 'ScriptableValueNode';
   declare isScriptableValueNode: true;
   events = new EventDispatcher<{
     change: {};
@@ -89,5 +90,3 @@ export default ScriptableValueNode;
 export const scriptableValue = nodeProxy(ScriptableValueNode);
 
 addNodeElement('scriptableValue', scriptableValue);
-
-addNodeClass('ScriptableValueNode', ScriptableValueNode);

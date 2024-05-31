@@ -4,15 +4,11 @@ import { getCacheKey, getNodeChildren } from './NodeUtils.js';
 import { generateUuid } from '../../math/MathUtils.ts';
 import NodeBuilder from '@modules/renderer/threejs/nodes/core/NodeBuilder.js';
 import NodeFrame from '@modules/renderer/threejs/nodes/core/NodeFrame.js';
-import { NodeType } from 'three/examples/jsm/nodes/core/constants.js';
-import NodeBuilderState from '@modules/renderer/threejs/renderers/common/nodes/NodeBuilderState.js';
-
-export const NodeClasses = new Map();
 
 let _nodeId = 0;
 
 class Node {
-  declare static type: number;
+  declare static type: any;
   declare isNode: true;
   eventDispatcher = new EventDispatcher<{ dispose: {} }>();
   nodeType: NodeTypeOption | null;
@@ -250,20 +246,3 @@ class Node {
 }
 
 export default Node;
-
-export function addNodeClass(type: string, nodeClass: any) {
-  if (typeof nodeClass !== 'function' || !type) throw new Error(`Node class ${type} is not a class`);
-  if (NodeClasses.has(type)) {
-    console.warn(`Redefinition of node class ${type}`);
-    return;
-  }
-
-  NodeClasses.set(type, nodeClass);
-  nodeClass.type = type;
-}
-
-export function createNodeFromType(type: NodeType) {
-  const Class = NodeClasses.get(type);
-
-  if (Class !== undefined) return new Class();
-}

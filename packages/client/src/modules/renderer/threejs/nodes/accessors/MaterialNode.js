@@ -1,12 +1,14 @@
-import Node, { addNodeClass } from '../core/Node.ts';
+import Node from '../core/Node.ts';
 import { reference } from './ReferenceNode.js';
 import { materialReference } from './MaterialReferenceNode.js';
 import { normalView } from './NormalNode.js';
-import { nodeImmutable, float } from '../shadernode/ShaderNode.js';
+import { float, nodeImmutable } from '../shadernode/ShaderNode.js';
 
 const _propertyCache = new Map();
 
 class MaterialNode extends Node {
+  static type = 'MaterialNode';
+
   constructor(scope) {
     super();
 
@@ -217,5 +219,3 @@ export const materialLineGapSize = nodeImmutable(MaterialNode, MaterialNode.LINE
 export const materialLineWidth = nodeImmutable(MaterialNode, MaterialNode.LINE_WIDTH);
 export const materialLineDashOffset = nodeImmutable(MaterialNode, MaterialNode.LINE_DASH_OFFSET);
 export const materialPointWidth = nodeImmutable(MaterialNode, MaterialNode.POINT_WIDTH);
-
-addNodeClass('MaterialNode', MaterialNode);
