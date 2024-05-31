@@ -1,4 +1,4 @@
-import Node, { addNodeClass } from '../core/Node.ts';
+import Node, { addNodeClass } from '../core/Node.js';
 import { nodeImmutable, float } from '../shadernode/ShaderNode.js';
 
 class FrontFacingNode extends Node {

@@ -1,6 +1,6 @@
 import TempNode from '../core/TempNode.js';
 import { /*mix, step,*/ EPSILON } from '../math/MathNode.js';
-import { addNodeClass } from '../core/Node.ts';
+import { addNodeClass } from '../core/Node.js';
 import { addNodeElement, tslFn, nodeProxy, vec3 } from '../shadernode/ShaderNode.js';
 
 export const BurnNode = tslFn(({ base, blend }) => {

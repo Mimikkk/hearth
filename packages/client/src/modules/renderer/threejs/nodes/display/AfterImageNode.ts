@@ -1,18 +1,30 @@
 import TempNode from '../core/TempNode.js';
 import { nodeObject, addNodeElement, tslFn, float, vec4 } from '../shadernode/ShaderNode.js';
-import { NodeUpdateType } from '../core/constants.ts';
+import { NodeUpdateType } from '../core/constants.js';
 import { uv } from '../accessors/UVNode.js';
 import { texture } from '../accessors/TextureNode.js';
 import { texturePass } from './PassNode.js';
 import { uniform } from '../core/UniformNode.js';
 import { RenderTarget } from '../../../threejs/Three.js';
 import { sign, max } from '../math/MathNode.js';
-import { QuadMesh } from '../../objects/QuadMesh.ts';
+import { QuadMesh } from '../../objects/QuadMesh.js';
+import { TextureNode } from '@modules/renderer/threejs/nodes/Nodes.js';
+import NodeMaterial from '@modules/renderer/threejs/nodes/materials/NodeMaterial.js';
+import NodeBuilder from 'three/examples/jsm/nodes/core/NodeBuilder.js';
+import NodeFrame from '@modules/renderer/threejs/nodes/core/NodeFrame.js';
 
-const quadMeshComp = new QuadMesh();
+const quadMeshComp = new QuadMesh(null);
 
 class AfterImageNode extends TempNode {
-  constructor(textureNode, damp = 0.96) {
+  textureNode: TextureNode;
+  textureNodeOld: TextureNode;
+  damp: any;
+  _compRT: RenderTarget;
+  _oldRT: RenderTarget;
+  _textureNode: TextureNode;
+  _materialComposed: NodeMaterial;
+
+  constructor(textureNode: TextureNode, damp: number = 0.96) {
     super(textureNode);
 
     this.textureNode = textureNode;
@@ -34,12 +46,12 @@ class AfterImageNode extends TempNode {
     return this._textureNode;
   }
 
-  setSize(width, height) {
+  setSize(width: number, height: number) {
     this._compRT.setSize(width, height);
     this._oldRT.setSize(width, height);
   }
 
-  updateBefore(frame) {
+  updateBefore(frame: NodeFrame) {
     const { renderer } = frame;
 
     const textureNode = this.textureNode;
@@ -71,7 +83,7 @@ class AfterImageNode extends TempNode {
     textureNode.value = currentTexture;
   }
 
-  setup(builder) {
+  setup(builder: NodeBuilder): Node | null {
     const textureNode = this.textureNode;
     const textureNodeOld = this.textureNodeOld;
 
@@ -122,7 +134,7 @@ class AfterImageNode extends TempNode {
   }
 }
 
-export const afterImage = (node, damp) => nodeObject(new AfterImageNode(nodeObject(node), damp));
+export const afterImage = (node: Node, damp: number) => nodeObject(new AfterImageNode(nodeObject(node), damp));
 
 addNodeElement('afterImage', afterImage);
 

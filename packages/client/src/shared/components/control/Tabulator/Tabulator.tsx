@@ -1,4 +1,3 @@
-import type { IconName } from '@components/buttons/Icon/Icon.js';
 import { createSignal, For, JSX, mergeProps } from 'solid-js';
 import cx from 'clsx';
 import s from './Tabulator.module.scss';
@@ -6,11 +5,11 @@ import { Dynamic } from 'solid-js/web';
 import { SearchStorage } from '@logic/SearchStorage/SearchStorage.js';
 
 export interface TabItem {
-  icon?: IconName;
   id: string;
   title: string;
-  children: () => JSX.Element;
   class?: string;
+  children?: () => JSX.Element;
+  onClick?: () => void;
 }
 
 export type TabulatorProps = ({ id: string } | { storageId: string; searchId: string }) & {
@@ -33,13 +32,18 @@ export const Tabulator = (props: TabulatorProps) => {
       <div class={cx(s.nav, $.navclass)}>
         <For each={$.tabs}>
           {tab => (
-            <div onClick={() => select(tab.id)} class={cx(s.navtab, $.tabclass, selected() === tab.id && s.selected)}>
+            <div
+              onClick={() => {
+                if (tab.children !== undefined) select(tab.id);
+                tab.onClick?.();
+              }}
+              class={cx(s.navtab, $.tabclass, selected() === tab.id && s.selected)}
+            >
               <div class={cx(s.text, selected() === tab.id && s.selected)}>{tab.title}</div>
             </div>
           )}
         </For>
       </div>
-
       <div class={cx('overflow-auto', $.contentclass)}>
         <Dynamic component={$.tabs.find(tab => tab.id === selected())?.children} />
       </div>

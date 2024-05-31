@@ -23,10 +23,10 @@ import { float, vec3, vec4 } from '../shadernode/ShaderNode.js';
 import AONode from '../lighting/AONode.js';
 import { lightingContext } from '../lighting/LightingContextNode.js';
 import EnvironmentNode from '../lighting/EnvironmentNode.js';
-import { depthPixel } from '../display/ViewportDepthNode.js';
+import { depthPixel } from '../display/ViewportDepthNode.ts';
 import { cameraLogDepth } from '../accessors/CameraNode.js';
 import { clipping, clippingAlpha } from '../accessors/ClippingNode.js';
-import { faceDirection } from '../display/FrontFacingNode.js';
+import { faceDirection } from '../display/FrontFacingNode.ts';
 
 const NodeMaterials = new Map();
 

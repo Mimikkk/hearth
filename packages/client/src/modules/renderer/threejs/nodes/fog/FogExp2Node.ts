@@ -1,17 +1,21 @@
 import FogNode from './FogNode.js';
-import { addNodeClass } from '../core/Node.ts';
+import Node, { addNodeClass } from '../core/Node.js';
 import { addNodeElement, nodeProxy } from '../shadernode/ShaderNode.js';
+import NodeBuilder from '@modules/renderer/threejs/nodes/core/NodeBuilder.js';
 
 class FogExp2Node extends FogNode {
-  constructor(colorNode, densityNode) {
+  declare isFogExp2Node: true;
+
+  constructor(
+    colorNode: Node,
+    public densityNode: Node,
+  ) {
     super(colorNode);
 
     this.isFogExp2Node = true;
-
-    this.densityNode = densityNode;
   }
 
-  setup(builder) {
+  setup(builder: NodeBuilder): Node | null {
     const viewZ = this.getViewZNode(builder);
     const density = this.densityNode;
 

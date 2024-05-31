@@ -1,4 +1,4 @@
-import Node, { addNodeClass } from '../core/Node.ts';
+import Node, { addNodeClass } from '../core/Node.js';
 import { nodeImmutable, nodeProxy } from '../shadernode/ShaderNode.js';
 import { cameraNear, cameraFar } from '../accessors/CameraNode.js';
 import { positionView } from '../accessors/PositionNode.js';

@@ -9,7 +9,7 @@ import { positionGeometry } from '../accessors/PositionNode.js';
 import { smoothstep } from '@modules/renderer/threejs/nodes/math/MathNode.js';
 import { tslFn, vec2, vec4 } from '../shadernode/ShaderNode.js';
 import { uv } from '../accessors/UVNode.js';
-import { viewport } from '../display/ViewportNode.js';
+import { viewport } from '../display/ViewportNode.ts';
 
 import { PointsMaterial } from '../../../threejs/Three.js';
 

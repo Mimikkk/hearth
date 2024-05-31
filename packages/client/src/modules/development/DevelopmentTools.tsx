@@ -2,6 +2,8 @@ import s from './DevelopmentTools.module.scss';
 import { AvailableIconsTab } from '@modules/development/Tabs/AvailableIcons.tab.js';
 import { Devtools } from '@modules/development/devtools.js';
 import { Tabulator } from '@components/control/Tabulator/Tabulator.js';
+import '@modules/renderer/threejs/nodes/Nodes.js';
+import { NodeClasses } from '@modules/renderer/threejs/nodes/core/Node.js';
 
 export const DevelopmentTools = () => {
   Devtools.createKeyboardShortcut();
@@ -19,7 +21,11 @@ export const DevelopmentTools = () => {
                 id: 'tab-1',
                 title: 'Available icons',
                 children: AvailableIconsTab,
-                icon: 'CgAdd',
+              },
+              {
+                id: 'tab-2',
+                title: 'Log available nodes',
+                onClick: () => console.log({ NodeClasses }),
               },
             ]}
           />

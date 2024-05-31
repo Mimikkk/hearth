@@ -7,7 +7,7 @@ import NodeFrame from '@modules/renderer/threejs/nodes/core/NodeFrame.js';
 import { NodeType } from 'three/examples/jsm/nodes/core/constants.js';
 import NodeBuilderState from '@modules/renderer/threejs/renderers/common/nodes/NodeBuilderState.js';
 
-const NodeClasses = new Map();
+export const NodeClasses = new Map();
 
 let _nodeId = 0;
 
@@ -126,7 +126,7 @@ class Node {
     return nodeFromHash || this;
   }
 
-  setup(builder: NodeBuilder) {
+  setup(builder: NodeBuilder): Node | null {
     const nodeProperties = builder.getNodeProperties(this);
 
     for (const childNode of this.getChildren()) {

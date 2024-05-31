@@ -1,6 +1,6 @@
 import TempNode from '../core/TempNode.js';
 import { mix } from '../math/MathNode.js';
-import { addNodeClass } from '../core/Node.ts';
+import { addNodeClass } from '../core/Node.js';
 import { addNodeElement, nodeObject, nodeProxy, tslFn, vec4 } from '../shadernode/ShaderNode.js';
 import { ColorSpace } from '../../../threejs/Three.js';
 

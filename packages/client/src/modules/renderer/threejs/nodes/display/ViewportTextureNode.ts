@@ -1,6 +1,6 @@
 import TextureNode from '../accessors/TextureNode.js';
-import { NodeUpdateType } from '../core/constants.ts';
-import { addNodeClass } from '../core/Node.ts';
+import { NodeUpdateType } from '../core/constants.js';
+import { addNodeClass } from '../core/Node.js';
 import { addNodeElement, nodeProxy } from '../shadernode/ShaderNode.js';
 import { viewportTopLeft } from './ViewportNode.js';
 import { Filter, FramebufferTexture, Vector2 } from '../../../threejs/Three.js';

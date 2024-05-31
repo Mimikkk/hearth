@@ -17,7 +17,7 @@ import { positionGeometry } from '../accessors/PositionNode.js';
 import { mix, smoothstep } from '@modules/renderer/threejs/nodes/math/MathNode.js';
 import { tslFn, float, vec2, vec3, vec4, If } from '../shadernode/ShaderNode.js';
 import { uv } from '../accessors/UVNode.js';
-import { viewport } from '../display/ViewportNode.js';
+import { viewport } from '../display/ViewportNode.ts';
 import { dashSize, gapSize } from '../core/PropertyNode.js';
 
 import { LineDashedMaterial } from '../../../threejs/Three.js';

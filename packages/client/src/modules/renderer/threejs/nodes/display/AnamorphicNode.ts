@@ -2,12 +2,12 @@ import TempNode from '../core/TempNode.js';
 import { nodeObject, addNodeElement, tslFn, float, vec2, vec3, vec4 } from '../shadernode/ShaderNode.js';
 import { loop } from '../utils/LoopNode.js';
 import { uniform } from '../core/UniformNode.js';
-import { NodeUpdateType } from '../core/constants.ts';
+import { NodeUpdateType } from '../core/constants.js';
 import { threshold } from './ColorAdjustmentNode.js';
 import { uv } from '../accessors/UVNode.js';
 import { texturePass } from './PassNode.js';
 import { Vector2, RenderTarget } from '../../../threejs/Three.js';
-import { QuadMesh } from '../../objects/QuadMesh.ts';
+import { QuadMesh } from '../../objects/QuadMesh.js';
 
 const quadMesh = new QuadMesh();
 

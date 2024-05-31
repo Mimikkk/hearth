@@ -1,18 +1,21 @@
-import Node, { addNodeClass } from '../core/Node.ts';
+import Node, { addNodeClass } from '../core/Node.js';
 import { positionView } from '../accessors/PositionNode.js';
 import { addNodeElement, nodeProxy } from '../shadernode/ShaderNode.js';
+import NodeBuilder from '@modules/renderer/threejs/nodes/core/NodeBuilder.js';
 
 class FogNode extends Node {
-  constructor(colorNode, factorNode) {
+  declare isFogNode: boolean;
+
+  constructor(
+    public colorNode: Node,
+    public factorNode: Node | null = null,
+  ) {
     super('float');
 
     this.isFogNode = true;
-
-    this.colorNode = colorNode;
-    this.factorNode = factorNode;
   }
 
-  getViewZNode(builder) {
+  getViewZNode(builder: NodeBuilder) {
     let viewZ;
 
     const getViewZ = builder.context.getViewZ;
@@ -24,7 +27,7 @@ class FogNode extends Node {
     return (viewZ || positionView.z).negate();
   }
 
-  setup() {
+  setup(): Node | null {
     return this.factorNode;
   }
 }

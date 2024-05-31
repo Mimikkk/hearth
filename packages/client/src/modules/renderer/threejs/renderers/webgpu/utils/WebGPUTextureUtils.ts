@@ -540,7 +540,6 @@ class WebGPUTextureUtils {
     textureGPU: GPUTexture,
     textureDescriptorGPU: GPUTextureDescriptor,
   ) {
-    console.log({ mipmaps });
     // @TODO: Consider to use GPUCommandEncoder.copyBufferToTexture()
 
     const device = this.backend.device;

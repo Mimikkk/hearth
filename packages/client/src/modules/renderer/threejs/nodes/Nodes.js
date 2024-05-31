@@ -318,8 +318,8 @@ export { default as UVNode, uv } from './accessors/UVNode.js';
 export { default as UserDataNode, userData } from './accessors/UserDataNode.js';
 
 // display
-export { default as BlendModeNode, burn, dodge, overlay, screen } from './display/BlendModeNode.js';
-export { default as BumpMapNode, bumpMap } from './display/BumpMapNode.js';
+export { default as BlendModeNode, burn, dodge, overlay, screen } from './display/BlendModeNode.ts';
+export { default as BumpMapNode, bumpMap } from './display/BumpMapNode.ts';
 export {
   default as ColorAdjustmentNode,
   saturation,
@@ -328,18 +328,18 @@ export {
   lumaCoeffs,
   luminance,
   threshold,
-} from './display/ColorAdjustmentNode.js';
+} from './display/ColorAdjustmentNode.ts';
 export {
   default as ColorSpaceNode,
   linearToColorSpace,
   colorSpaceToLinear,
   linearTosRGB,
   sRGBToLinear,
-} from './display/ColorSpaceNode.js';
-export { default as FrontFacingNode, frontFacing, faceDirection } from './display/FrontFacingNode.js';
-export { default as NormalMapNode, normalMap } from './display/NormalMapNode.js';
-export { default as PosterizeNode, posterize } from './display/PosterizeNode.js';
-export { default as ToneMappingNode, toneMapping } from './display/ToneMappingNode.js';
+} from './display/ColorSpaceNode.ts';
+export { default as FrontFacingNode, frontFacing, faceDirection } from './display/FrontFacingNode.ts';
+export { default as NormalMapNode, normalMap } from './display/NormalMapNode.ts';
+export { default as PosterizeNode, posterize } from './display/PosterizeNode.ts';
+export { default as ToneMappingNode, toneMapping } from './display/ToneMappingNode.ts';
 export {
   default as ViewportNode,
   viewport,
@@ -349,10 +349,10 @@ export {
   viewportBottomLeft,
   viewportTopRight,
   viewportBottomRight,
-} from './display/ViewportNode.js';
-export { default as ViewportTextureNode, viewportTexture, viewportMipTexture } from './display/ViewportTextureNode.js';
-export { default as ViewportSharedTextureNode, viewportSharedTexture } from './display/ViewportSharedTextureNode.js';
-export { default as ViewportDepthTextureNode, viewportDepthTexture } from './display/ViewportDepthTextureNode.js';
+} from './display/ViewportNode.ts';
+export { default as ViewportTextureNode, viewportTexture, viewportMipTexture } from './display/ViewportTextureNode.ts';
+export { default as ViewportSharedTextureNode, viewportSharedTexture } from './display/ViewportSharedTextureNode.ts';
+export { default as ViewportDepthTextureNode, viewportDepthTexture } from './display/ViewportDepthTextureNode.ts';
 export {
   default as ViewportDepthNode,
   viewZToOrthographicDepth,
@@ -362,12 +362,12 @@ export {
   depth,
   depthTexture,
   depthPixel,
-} from './display/ViewportDepthNode.js';
-export { default as GaussianBlurNode, gaussianBlur } from './display/GaussianBlurNode.js';
-export { default as AfterImageNode, afterImage } from './display/AfterImageNode.js';
-export { default as AnamorphicNode, anamorphic } from './display/AnamorphicNode.js';
+} from './display/ViewportDepthNode.ts';
+export { default as GaussianBlurNode, gaussianBlur } from './display/GaussianBlurNode.ts';
+export { default as AfterImageNode, afterImage } from './display/AfterImageNode.ts';
+export { default as AnamorphicNode, anamorphic } from './display/AnamorphicNode.ts';
 
-export { default as PassNode, pass, depthPass } from './display/PassNode.js';
+export { default as PassNode, pass, depthPass } from './display/PassNode.ts';
 
 // code
 export { default as ExpressionNode, expression } from './code/ExpressionNode.ts';
@@ -378,9 +378,9 @@ export { default as ScriptableNode, scriptable, global } from './code/Scriptable
 export { default as ScriptableValueNode, scriptableValue } from './code/ScriptableValueNode.ts';
 
 // fog
-export { default as FogNode, fog } from './fog/FogNode.js';
-export { default as FogRangeNode, rangeFog } from './fog/FogRangeNode.js';
-export { default as FogExp2Node, densityFog } from './fog/FogExp2Node.js';
+export { default as FogNode, fog } from './fog/FogNode.ts';
+export { default as FogRangeNode, rangeFog } from './fog/FogRangeNode.ts';
+export { default as FogExp2Node, densityFog } from './fog/FogExp2Node.ts';
 
 // geometry
 export { default as RangeNode, range } from './geometry/RangeNode.js';

@@ -1,7 +1,7 @@
 import UniformNode, { uniform } from '../core/UniformNode.js';
 import { uv } from './UVNode.js';
 import { textureSize } from './TextureSizeNode.js';
-import { colorSpaceToLinear } from '../display/ColorSpaceNode.js';
+import { colorSpaceToLinear } from '../display/ColorSpaceNode.ts';
 import { expression } from '../code/ExpressionNode.ts';
 import { addNodeClass } from '../core/Node.ts';
 import { maxMipLevel } from '../utils/MaxMipLevelNode.js';

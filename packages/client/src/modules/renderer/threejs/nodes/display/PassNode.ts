@@ -1,7 +1,7 @@
-import { addNodeClass } from '../core/Node.ts';
+import { addNodeClass } from '../core/Node.js';
 import TempNode from '../core/TempNode.js';
 import TextureNode from '../accessors/TextureNode.js';
-import { NodeUpdateType } from '../core/constants.ts';
+import { NodeUpdateType } from '../core/constants.js';
 import { nodeObject } from '../shadernode/ShaderNode.js';
 import { uniform } from '../core/UniformNode.js';
 import { perspectiveDepthToViewZ, viewZToOrthographicDepth } from './ViewportDepthNode.js';
