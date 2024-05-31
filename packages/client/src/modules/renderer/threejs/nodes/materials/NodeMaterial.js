@@ -27,10 +27,11 @@ import { depthPixel } from '../display/ViewportDepthNode.ts';
 import { cameraLogDepth } from '../accessors/CameraNode.js';
 import { clipping, clippingAlpha } from '../accessors/ClippingNode.js';
 import { faceDirection } from '../display/FrontFacingNode.ts';
+import { NodeMaterials } from '@modules/renderer/threejs/nodes/materials/NodeMaterialMap.js';
 
-const NodeMaterials = new Map();
+export class NodeMaterial extends ShaderMaterial {
+  static type = 'NodeMaterial';
 
-class NodeMaterial extends ShaderMaterial {
   constructor() {
     super();
 
@@ -409,7 +410,7 @@ class NodeMaterial extends ShaderMaterial {
 
     const type = material.type.replace('Material', 'NodeMaterial');
 
-    const nodeMaterial = createNodeMaterialFromType(type);
+    const nodeMaterial = NodeMaterials.get(type);
 
     if (nodeMaterial === undefined) {
       throw new Error(`NodeMaterial: Material "${material.type}" is not compatible.`);
@@ -422,26 +423,3 @@ class NodeMaterial extends ShaderMaterial {
     return nodeMaterial;
   }
 }
-
-export default NodeMaterial;
-
-export function addNodeMaterial(type, nodeMaterial) {
-  if (typeof nodeMaterial !== 'function' || !type) throw new Error(`Node material ${type} is not a class`);
-  if (NodeMaterials.has(type)) {
-    console.warn(`Redefinition of node material ${type}`);
-    return;
-  }
-
-  NodeMaterials.set(type, nodeMaterial);
-  nodeMaterial.type = type;
-}
-
-export function createNodeMaterialFromType(type) {
-  const Material = NodeMaterials.get(type);
-
-  if (Material !== undefined) {
-    return new Material();
-  }
-}
-
-addNodeMaterial('NodeMaterial', NodeMaterial);

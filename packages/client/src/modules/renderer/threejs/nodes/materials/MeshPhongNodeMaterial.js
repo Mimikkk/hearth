@@ -1,4 +1,4 @@
-import NodeMaterial, { addNodeMaterial } from './NodeMaterial.js';
+import { NodeMaterial } from './NodeMaterial.js';
 import { shininess, specularColor } from '../core/PropertyNode.js';
 import { materialShininess, materialSpecularColor } from '../accessors/MaterialNode.js';
 import { float } from '../shadernode/ShaderNode.js';
@@ -8,7 +8,9 @@ import { MeshPhongMaterial } from '../../../threejs/Three.js';
 
 const defaultValues = new MeshPhongMaterial();
 
-class MeshPhongNodeMaterial extends NodeMaterial {
+export class MeshPhongNodeMaterial extends NodeMaterial {
+  static type = 'MeshPhongNodeMaterial';
+
   constructor(parameters) {
     super();
 
@@ -49,7 +51,3 @@ class MeshPhongNodeMaterial extends NodeMaterial {
     return super.copy(source);
   }
 }
-
-export default MeshPhongNodeMaterial;
-
-addNodeMaterial('MeshPhongNodeMaterial', MeshPhongNodeMaterial);

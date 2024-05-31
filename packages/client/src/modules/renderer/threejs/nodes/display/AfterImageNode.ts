@@ -9,7 +9,7 @@ import { RenderTarget } from '../../../threejs/Three.js';
 import { max, sign } from '../math/MathNode.js';
 import { QuadMesh } from '../../objects/QuadMesh.js';
 import { TextureNode } from '@modules/renderer/threejs/nodes/Nodes.js';
-import NodeMaterial from '@modules/renderer/threejs/nodes/materials/NodeMaterial.js';
+import { NodeMaterial } from '@modules/renderer/threejs/nodes/materials/NodeMaterial.js';
 import NodeBuilder from 'three/examples/jsm/nodes/core/NodeBuilder.js';
 import NodeFrame from '@modules/renderer/threejs/nodes/core/NodeFrame.js';
 

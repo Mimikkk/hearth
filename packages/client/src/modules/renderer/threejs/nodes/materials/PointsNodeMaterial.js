@@ -1,10 +1,12 @@
-import NodeMaterial, { addNodeMaterial } from './NodeMaterial.js';
+import { NodeMaterial } from './NodeMaterial.js';
 
 import { PointsMaterial } from '../../../threejs/Three.js';
 
 const defaultValues = new PointsMaterial();
 
-class PointsNodeMaterial extends NodeMaterial {
+export class PointsNodeMaterial extends NodeMaterial {
+  static type = 'PointsNodeMaterial';
+
   constructor(parameters) {
     super();
 
@@ -27,7 +29,3 @@ class PointsNodeMaterial extends NodeMaterial {
     return super.copy(source);
   }
 }
-
-export default PointsNodeMaterial;
-
-addNodeMaterial('PointsNodeMaterial', PointsNodeMaterial);

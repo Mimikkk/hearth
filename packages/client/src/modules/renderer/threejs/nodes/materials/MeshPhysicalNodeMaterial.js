@@ -1,4 +1,3 @@
-import { addNodeMaterial } from './NodeMaterial.js';
 import { transformedClearcoatNormalView } from '../accessors/NormalNode.js';
 import {
   clearcoat,
@@ -21,13 +20,15 @@ import {
 } from '../accessors/MaterialNode.js';
 import { float, vec3 } from '../shadernode/ShaderNode.js';
 import PhysicalLightingModel from '../functions/PhysicalLightingModel.js';
-import MeshStandardNodeMaterial from './MeshStandardNodeMaterial.js';
+import { MeshStandardNodeMaterial } from './MeshStandardNodeMaterial.js';
 
 import { MeshPhysicalMaterial } from '../../../threejs/Three.js';
 
 const defaultValues = new MeshPhysicalMaterial();
 
-class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
+export class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
+  static type = 'MeshPhysicalNodeMaterial';
+
   constructor(parameters) {
     super();
 
@@ -146,7 +147,3 @@ class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
     return super.copy(source);
   }
 }
-
-export default MeshPhysicalNodeMaterial;
-
-addNodeMaterial('MeshPhysicalNodeMaterial', MeshPhysicalNodeMaterial);

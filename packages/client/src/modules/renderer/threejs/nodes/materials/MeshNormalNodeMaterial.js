@@ -1,4 +1,4 @@
-import NodeMaterial, { addNodeMaterial } from './NodeMaterial.js';
+import { NodeMaterial } from './NodeMaterial.js';
 import { diffuseColor } from '../core/PropertyNode.js';
 import { directionToColor } from '../utils/PackingNode.js';
 import { materialOpacity } from '../accessors/MaterialNode.js';
@@ -9,7 +9,9 @@ import { MeshNormalMaterial } from '../../../threejs/Three.js';
 
 const defaultValues = new MeshNormalMaterial();
 
-class MeshNormalNodeMaterial extends NodeMaterial {
+export class MeshNormalNodeMaterial extends NodeMaterial {
+  static type = 'MeshNormalNodeMaterial';
+
   constructor(parameters) {
     super();
 
@@ -28,7 +30,3 @@ class MeshNormalNodeMaterial extends NodeMaterial {
     diffuseColor.assign(vec4(directionToColor(transformedNormalView), opacityNode));
   }
 }
-
-export default MeshNormalNodeMaterial;
-
-addNodeMaterial('MeshNormalNodeMaterial', MeshNormalNodeMaterial);

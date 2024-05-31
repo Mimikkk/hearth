@@ -1,8 +1,7 @@
-import { addNodeMaterial } from './NodeMaterial.js';
 import { transformedNormalView } from '../accessors/NormalNode.js';
 import { positionViewDirection } from '../accessors/PositionNode.js';
 import PhysicalLightingModel from '../functions/PhysicalLightingModel.js';
-import MeshPhysicalNodeMaterial from './MeshPhysicalNodeMaterial.js';
+import { MeshPhysicalNodeMaterial } from './MeshPhysicalNodeMaterial.js';
 import { float, vec3 } from '../shadernode/ShaderNode.js';
 
 class SSSLightingModel extends PhysicalLightingModel {
@@ -38,7 +37,9 @@ class SSSLightingModel extends PhysicalLightingModel {
   }
 }
 
-class MeshSSSNodeMaterial extends MeshPhysicalNodeMaterial {
+export class MeshSSSNodeMaterial extends MeshPhysicalNodeMaterial {
+  static type = 'MeshSSSNodeMaterial';
+
   constructor(parameters) {
     super(parameters);
 
@@ -69,7 +70,3 @@ class MeshSSSNodeMaterial extends MeshPhysicalNodeMaterial {
     return super.copy(source);
   }
 }
-
-export default MeshSSSNodeMaterial;
-
-addNodeMaterial('MeshSSSNodeMaterial', MeshSSSNodeMaterial);

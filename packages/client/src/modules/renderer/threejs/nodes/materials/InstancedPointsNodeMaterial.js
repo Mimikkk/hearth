@@ -1,4 +1,4 @@
-import NodeMaterial, { addNodeMaterial } from './NodeMaterial.js';
+import { NodeMaterial } from './NodeMaterial.js';
 import { varying } from '../core/VaryingNode.js';
 import { property } from '../core/PropertyNode.js';
 import { attribute } from '../core/AttributeNode.js';
@@ -16,6 +16,8 @@ import { PointsMaterial } from '../../../threejs/Three.js';
 const defaultValues = new PointsMaterial();
 
 export class InstancedPointsNodeMaterial extends NodeMaterial {
+  static type = 'InstancedPointsNodeMaterial';
+
   constructor(params = {}) {
     super();
 
@@ -128,7 +130,3 @@ export class InstancedPointsNodeMaterial extends NodeMaterial {
     }
   }
 }
-
-export default InstancedPointsNodeMaterial;
-
-addNodeMaterial('InstancedPointsNodeMaterial', InstancedPointsNodeMaterial);

@@ -1,11 +1,13 @@
-import NodeMaterial, { addNodeMaterial } from './NodeMaterial.js';
+import { NodeMaterial } from './NodeMaterial.js';
 import PhongLightingModel from '../functions/PhongLightingModel.js';
 
 import { MeshLambertMaterial } from '../../../threejs/Three.js';
 
 const defaultValues = new MeshLambertMaterial();
 
-class MeshLambertNodeMaterial extends NodeMaterial {
+export class MeshLambertNodeMaterial extends NodeMaterial {
+  static type = 'MeshLambertNodeMaterial';
+
   constructor(parameters) {
     super();
 
@@ -22,7 +24,3 @@ class MeshLambertNodeMaterial extends NodeMaterial {
     return new PhongLightingModel(false); // ( specular ) -> force lambert
   }
 }
-
-export default MeshLambertNodeMaterial;
-
-addNodeMaterial('MeshLambertNodeMaterial', MeshLambertNodeMaterial);

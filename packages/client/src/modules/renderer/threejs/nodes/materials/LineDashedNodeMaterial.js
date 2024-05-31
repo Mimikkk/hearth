@@ -1,4 +1,4 @@
-import NodeMaterial, { addNodeMaterial } from './NodeMaterial.js';
+import { NodeMaterial } from './NodeMaterial.js';
 import { attribute } from '../core/AttributeNode.js';
 import { varying } from '../core/VaryingNode.js';
 import { materialLineDashSize, materialLineGapSize, materialLineScale } from '../accessors/MaterialNode.js';
@@ -8,7 +8,9 @@ import { LineDashedMaterial } from '../../../threejs/Three.js';
 
 const defaultValues = new LineDashedMaterial();
 
-class LineDashedNodeMaterial extends NodeMaterial {
+export class LineDashedNodeMaterial extends NodeMaterial {
+  static type = 'LineDashedNodeMaterial';
+
   constructor(parameters) {
     super();
 
@@ -42,7 +44,3 @@ class LineDashedNodeMaterial extends NodeMaterial {
     vLineDistanceOffset.mod(dashSize.add(gapSize)).greaterThan(dashSize).discard();
   }
 }
-
-export default LineDashedNodeMaterial;
-
-addNodeMaterial('LineDashedNodeMaterial', LineDashedNodeMaterial);

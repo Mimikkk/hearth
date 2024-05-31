@@ -1,4 +1,4 @@
-import NodeMaterial, { addNodeMaterial } from './NodeMaterial.js';
+import { NodeMaterial } from './NodeMaterial.js';
 import { temp } from '../core/VarNode.js';
 import { varying } from '../core/VaryingNode.js';
 import { dashSize, gapSize, property, varyingProperty } from '../core/PropertyNode.js';
@@ -23,7 +23,9 @@ import { LineDashedMaterial } from '../../../threejs/Three.js';
 
 const defaultValues = new LineDashedMaterial();
 
-class Line2NodeMaterial extends NodeMaterial {
+export class Line2NodeMaterial extends NodeMaterial {
+  static type = 'Line2NodeMaterial';
+
   constructor(params = {}) {
     super();
 
@@ -357,7 +359,3 @@ class Line2NodeMaterial extends NodeMaterial {
     }
   }
 }
-
-export default Line2NodeMaterial;
-
-addNodeMaterial('Line2NodeMaterial', Line2NodeMaterial);

@@ -1,4 +1,4 @@
-import NodeMaterial, { addNodeMaterial } from './NodeMaterial.js';
+import { NodeMaterial } from './NodeMaterial.js';
 import { uniform } from '../core/UniformNode.js';
 import { cameraProjectionMatrix } from '../accessors/CameraNode.js';
 import { materialRotation } from '../accessors/MaterialNode.js';
@@ -10,7 +10,9 @@ import { SpriteMaterial } from '../../../threejs/Three.js';
 
 const defaultValues = new SpriteMaterial();
 
-class SpriteNodeMaterial extends NodeMaterial {
+export class SpriteNodeMaterial extends NodeMaterial {
+  static type = 'SpriteNodeMaterial';
+
   constructor(parameters) {
     super();
 
@@ -72,7 +74,3 @@ class SpriteNodeMaterial extends NodeMaterial {
     return super.copy(source);
   }
 }
-
-export default SpriteNodeMaterial;
-
-addNodeMaterial('SpriteNodeMaterial', SpriteNodeMaterial);

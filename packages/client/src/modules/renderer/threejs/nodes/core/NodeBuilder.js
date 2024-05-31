@@ -7,7 +7,7 @@ import NodeKeywords from './NodeKeywords.js';
 import NodeCache from './NodeCache.js';
 import ParameterNode from './ParameterNode.js';
 import FunctionNode from '../code/FunctionNode.ts';
-import { createNodeMaterialFromType, default as NodeMaterial } from '../materials/NodeMaterial.js';
+import { NodeMaterial } from '../materials/NodeMaterial.js';
 import { buildStages, NodeUpdateType, shaderStages } from './constants.ts';
 
 import {
@@ -37,6 +37,7 @@ import { getCurrentStack, setCurrentStack } from '../shadernode/ShaderNode.js';
 import ChainMap from '../../renderers/common/ChainMap.ts';
 
 import PMREMGenerator from '../../renderers/common/extras/PMREMGenerator.ts';
+import { NodeMaterials } from '@modules/renderer/threejs/nodes/materials/NodeMaterialMap.js';
 
 const uniformsGroupCache = new ChainMap();
 
@@ -923,9 +924,7 @@ class NodeBuilder {
   }
 
   createNodeMaterial(type = 'NodeMaterial') {
-    // TODO: Move Materials.ts to outside of the Nodes.ts in order to remove this function and improve tree-shaking support
-
-    return createNodeMaterialFromType(type);
+    return NodeMaterials.get(type);
   }
 
   format(snippet, fromType, toType) {

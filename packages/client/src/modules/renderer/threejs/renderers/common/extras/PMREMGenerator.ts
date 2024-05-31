@@ -1,4 +1,4 @@
-import NodeMaterial from '../../../../threejs/nodes/materials/NodeMaterial.js';
+import { NodeMaterial } from '../../../../threejs/nodes/materials/NodeMaterial.js';
 import { blur, getDirection } from '../../../nodes/pmrem/PMREMUtils.js';
 import { equirectUV } from '../../../nodes/utils/EquirectUVNode.js';
 import { uniform } from '../../../nodes/core/UniformNode.js';

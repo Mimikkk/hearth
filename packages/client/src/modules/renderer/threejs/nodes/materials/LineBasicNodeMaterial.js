@@ -1,10 +1,12 @@
-import NodeMaterial, { addNodeMaterial } from './NodeMaterial.js';
+import { NodeMaterial } from './NodeMaterial.js';
 
 import { LineBasicMaterial } from '../../../threejs/Three.js';
 
 const defaultValues = new LineBasicMaterial();
 
-class LineBasicNodeMaterial extends NodeMaterial {
+export class LineBasicNodeMaterial extends NodeMaterial {
+  static type = 'LineBasicNodeMaterial';
+
   constructor(parameters) {
     super();
 
@@ -18,7 +20,3 @@ class LineBasicNodeMaterial extends NodeMaterial {
     this.setValues(parameters);
   }
 }
-
-export default LineBasicNodeMaterial;
-
-addNodeMaterial('LineBasicNodeMaterial', LineBasicNodeMaterial);
