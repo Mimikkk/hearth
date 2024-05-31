@@ -188,6 +188,7 @@ export { default as ReflectorNode, reflector } from './utils/ReflectorNode.js';
 
 // shadernode
 export * from './shadernode/ShaderNode.js';
+import './shadernode/ShaderNode.map.initialize.js';
 
 // accessors
 export { TBNViewMatrix, parallaxDirection, parallaxUV } from './accessors/AccessorsUtils.js';

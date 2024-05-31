@@ -6,23 +6,13 @@ import SplitNode from '../utils/SplitNode.js';
 import SetNode from '../utils/SetNode.js';
 import ConstNode from '../core/ConstNode.js';
 import { getValueFromType, getValueType } from '../core/NodeUtils.js';
+import { NodeElements } from '@modules/renderer/threejs/nodes/shadernode/ShaderNode.map.js';
 
 //
 
 let currentStack = null;
 
-const NodeElements = new Map(); // @TODO: Currently only a few nodes are added, probably also add others
-
-export function addNodeElement(name, nodeElement) {
-  if (NodeElements.has(name)) {
-    console.warn(`Redefinition of node element ${name}`);
-    return;
-  }
-
-  if (typeof nodeElement !== 'function') throw new Error(`Node element ${name} is not a function`);
-
-  NodeElements.set(name, nodeElement);
-}
+export const addNodeElement = (name, nodeElement) => NodeElements.set(name, nodeElement);
 
 const parseSwizzle = props => props.replace(/r|s/g, 'x').replace(/g|t/g, 'y').replace(/b|p/g, 'z').replace(/a|q/g, 'w');
 
@@ -371,7 +361,7 @@ export const ShaderNode = function (jsFunc) {
 };
 ShaderNode.type = 'ShaderNode';
 
-export const nodeObject = (val, altType = null) => /* new */ ShaderNodeObject(val, altType);
+export const nodeObject = (val, altType = null) => ShaderNodeObject(val, altType);
 export const nodeObjects = (val, altType = null) => new ShaderNodeObjects(val, altType);
 export const nodeArray = (val, altType = null) => new ShaderNodeArray(val, altType);
 export const nodeProxy = (...params) => new ShaderNodeProxy(...params);
@@ -432,8 +422,6 @@ export function append(node) {
   return node;
 }
 
-addNodeElement('append', append);
-
 // types
 // @TODO: Maybe export from ConstNode.js?
 
@@ -477,6 +465,13 @@ export const bmat4 = new ConvertType('bmat4');
 export const string = (value = '') => nodeObject(new ConstNode(value, 'string'));
 export const arrayBuffer = value => nodeObject(new ConstNode(value, 'ArrayBuffer'));
 
+// basic nodes
+// HACK - we cannot export them from the corresponding files because of the cyclic dependency
+export const element = nodeProxy(ArrayElementNode);
+export const convert = (node, types) => nodeObject(new ConvertNode(nodeObject(node), types));
+export const split = (node, channels) => nodeObject(new SplitNode(nodeObject(node), channels));
+
+addNodeElement('append', append);
 addNodeElement('color', color);
 addNodeElement('float', float);
 addNodeElement('int', int);
@@ -508,12 +503,5 @@ addNodeElement('umat4', umat4);
 addNodeElement('bmat4', bmat4);
 addNodeElement('string', string);
 addNodeElement('arrayBuffer', arrayBuffer);
-
-// basic nodes
-// HACK - we cannot export them from the corresponding files because of the cyclic dependency
-export const element = nodeProxy(ArrayElementNode);
-export const convert = (node, types) => nodeObject(new ConvertNode(nodeObject(node), types));
-export const split = (node, channels) => nodeObject(new SplitNode(nodeObject(node), channels));
-
 addNodeElement('element', element);
 addNodeElement('convert', convert);
