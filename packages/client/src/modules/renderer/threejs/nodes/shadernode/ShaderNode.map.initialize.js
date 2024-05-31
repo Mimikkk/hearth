@@ -33,7 +33,7 @@ import {
   vec2,
   vec3,
   vec4,
-} from './ShaderNode.js';
+} from './ShaderNode.class.js';
 import { NodeElements } from './ShaderNode.map.js';
 
 NodeElements.set('append', append);
