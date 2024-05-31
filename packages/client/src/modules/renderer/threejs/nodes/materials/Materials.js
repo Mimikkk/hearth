@@ -1,4 +1,4 @@
-import './NodeMaterialMap.initialize.js';
+import './NodeMaterial.map.initialize.js';
 
 export { NodeMaterial } from './NodeMaterial.js';
 export { InstancedPointsNodeMaterial } from './InstancedPointsNodeMaterial.js';
