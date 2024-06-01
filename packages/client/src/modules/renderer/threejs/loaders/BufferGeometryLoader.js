@@ -2,7 +2,7 @@ import { Sphere } from '../math/Sphere.ts';
 import { Vector3 } from '../math/Vector3.ts';
 import { BufferAttribute } from '../core/BufferAttribute.ts';
 import { BufferGeometry } from '../core/BufferGeometry.ts';
-import { FileLoader } from './FileLoader.js';
+import { FileLoader } from './FileLoader.ts';
 import { Loader } from './Loader.ts';
 import { InstancedBufferGeometry } from '../core/InstancedBufferGeometry.ts';
 import { InstancedBufferAttribute } from '../core/InstancedBufferAttribute.ts';

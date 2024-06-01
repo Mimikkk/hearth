@@ -74,11 +74,12 @@ class FBXLoader extends Loader {
 
     const path = scope.path === '' ? LoaderUtils.extractUrlBase(url) : scope.path;
 
-    const loader = new FileLoader(this.manager);
-    loader.setPath(scope.path);
-    loader.setResponseType('arraybuffer');
-    loader.setRequestHeader(scope.requestHeader);
-    loader.setWithCredentials(scope.withCredentials);
+    const loader = new FileLoader(this.manager, {
+      responseType: 'arraybuffer',
+      path: scope.path,
+      requestHeader: scope.requestHeader,
+      withCredentials: scope.withCredentials,
+    });
 
     loader.load(
       url,
@@ -1027,7 +1028,7 @@ class FBXTreeParser {
       material = materials[0];
     } else {
       material = new MeshPhongMaterial({
-        name: Loader.DEFAULT_MATERIAL_NAME,
+        name: Loader.FallbackMaterialName,
         color: 0xcccccc,
       });
       materials.push(material);
@@ -1058,7 +1059,7 @@ class FBXTreeParser {
 
     // FBX does not list materials for Nurbs lines, so we'll just put our own in here.
     const material = new LineBasicMaterial({
-      name: Loader.DEFAULT_MATERIAL_NAME,
+      name: Loader.FallbackMaterialName,
       color: 0x3300ff,
       linewidth: 1,
     });

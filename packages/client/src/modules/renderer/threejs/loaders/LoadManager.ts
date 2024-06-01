@@ -74,5 +74,3 @@ export namespace LoadManager {
   export type OnStart = OnProgress;
   export type OnLoad = () => void;
 }
-
-export const loadManager = new LoadManager();

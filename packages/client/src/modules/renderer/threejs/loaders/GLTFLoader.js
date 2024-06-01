@@ -145,7 +145,7 @@ class GLTFLoader extends Loader {
       // referenced resource 'model.bin' will be loaded from 'https://my-cnd-server.com/assets/models/model.bin'
       // referenced resource '../textures/texture.png' will be loaded from 'https://my-cnd-server.com/assets/textures/texture.png'
       const relativeUrl = LoaderUtils.extractUrlBase(url);
-      resourcePath = LoaderUtils.resolveURL(relativeUrl, this.path);
+      resourcePath = LoaderUtils.resolveUrl(relativeUrl, this.path);
     } else {
       resourcePath = LoaderUtils.extractUrlBase(url);
     }
@@ -166,12 +166,12 @@ class GLTFLoader extends Loader {
       scope.manager.itemEnd(url);
     };
 
-    const loader = new FileLoader(this.manager);
-
-    loader.setPath(this.path);
-    loader.setResponseType('arraybuffer');
-    loader.setRequestHeader(this.requestHeader);
-    loader.setWithCredentials(this.withCredentials);
+    const loader = new FileLoader(this.manager, {
+      path: this.path,
+      responseType: 'arraybuffer',
+      headers: this.requestHeader,
+      withCredentials: this.withCredentials,
+    });
 
     loader.load(
       url,
@@ -2320,7 +2320,7 @@ class GLTFParser {
     const options = this.options;
 
     return new Promise(function (resolve, reject) {
-      loader.load(LoaderUtils.resolveURL(bufferDef.uri, options.path), resolve, undefined, function () {
+      loader.load(LoaderUtils.resolveUrl(bufferDef.uri, options.path), resolve, undefined, function () {
         reject(new Error('THREE.GLTFLoader: Failed to load buffer "' + bufferDef.uri + '".'));
       });
     });
@@ -2583,7 +2583,7 @@ class GLTFParser {
             };
           }
 
-          loader.load(LoaderUtils.resolveURL(sourceURI, options.path), onLoad, undefined, reject);
+          loader.load(LoaderUtils.resolveUrl(sourceURI, options.path), onLoad, undefined, reject);
         });
       })
       .then(function (texture) {

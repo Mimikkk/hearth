@@ -67,11 +67,12 @@ class STLLoader extends Loader {
   load(url, onLoad, onProgress, onError) {
     const scope = this;
 
-    const loader = new FileLoader(this.manager);
-    loader.setPath(this.path);
-    loader.setResponseType('arraybuffer');
-    loader.setRequestHeader(this.requestHeader);
-    loader.setWithCredentials(this.withCredentials);
+    const loader = new FileLoader(this.manager, {
+      responseType: 'arraybuffer',
+      path: this.path,
+      requestHeader: this.requestHeader,
+      withCredentials: this.withCredentials,
+    });
 
     loader.load(
       url,

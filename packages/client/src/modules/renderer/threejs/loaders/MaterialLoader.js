@@ -4,7 +4,7 @@ import { Vector3 } from '../math/Vector3.ts';
 import { Vector4 } from '../math/Vector4.ts';
 import { Matrix3 } from '../math/Matrix3.ts';
 import { Matrix4 } from '../math/Matrix4.ts';
-import { FileLoader } from './FileLoader.js';
+import { FileLoader } from './FileLoader.ts';
 import { Loader } from './Loader.ts';
 import {
   ShadowMaterial,

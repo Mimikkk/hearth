@@ -1,5 +1,5 @@
 import { AudioContextManager } from '../audio/AudioContextManager.ts';
-import { FileLoader } from './FileLoader.js';
+import { FileLoader } from './FileLoader.ts';
 import { Loader } from './Loader.ts';
 
 class AudioLoader extends Loader {
@@ -10,11 +10,13 @@ class AudioLoader extends Loader {
   load(url, onLoad, onProgress, onError) {
     const scope = this;
 
-    const loader = new FileLoader(this.manager);
-    loader.setResponseType('arraybuffer');
-    loader.setPath(this.path);
-    loader.setRequestHeader(this.requestHeader);
-    loader.setWithCredentials(this.withCredentials);
+    const loader = new FileLoader(this.manager, {
+      responseType: 'arraybuffer',
+      path: this.path,
+      requestHeader: this.requestHeader,
+      withCredentials: this.withCredentials,
+    });
+
     loader.load(
       url,
       function (buffer) {

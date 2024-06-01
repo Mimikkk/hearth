@@ -1,52 +1,73 @@
-import { loadManager } from './LoadManager.js';
+import { LoadManager } from './LoadManager.js';
 
-export class Loader {
-  constructor(manager) {
-    this.manager = manager !== undefined ? manager : loadManager;
+const loader = new LoadManager();
 
-    this.crossOrigin = 'anonymous';
-    this.withCredentials = false;
-    this.path = '';
-    this.resourcePath = '';
-    this.requestHeader = {};
+export abstract class Loader<TData = any, TUrl extends string = string> {
+  static FallbackMaterialName: string = '__Nameless';
+  withCredentials: boolean;
+  crossOrigin: string;
+  path: string;
+  resourcePath: string;
+  requestHeader: Loader.RequestHeader;
+
+  protected constructor(
+    public manager: LoadManager = loader,
+    options?: Loader.Options,
+  ) {
+    this.crossOrigin = options?.crossOrigin ?? 'anonymous';
+    this.withCredentials = options?.withCredentials ?? false;
+    this.path = options?.path ?? '';
+    this.resourcePath = options?.resourcePath ?? '';
+    this.requestHeader = options?.requestHeader ?? {};
   }
 
-  load(/* url, onLoad, onProgress, onError */) {}
+  load(url: TUrl, onLoad: Loader.OnLoad<TData>, onProgress?: Loader.OnProgress, onError?: Loader.OnError<unknown>) {}
 
-  loadAsync(url, onProgress) {
-    const scope = this;
-
-    return new Promise(function (resolve, reject) {
-      scope.load(url, resolve, onProgress, reject);
+  loadAsync(url: TUrl, onProgress: Loader.OnProgress) {
+    return new Promise((resolve, reject) => {
+      this.load(url, resolve, onProgress, reject);
     });
   }
 
-  parse(/* data */) {}
+  parse(data: TData) {}
 
-  setCrossOrigin(crossOrigin) {
+  setCrossOrigin(crossOrigin: string) {
     this.crossOrigin = crossOrigin;
     return this;
   }
 
-  setWithCredentials(value) {
+  setWithCredentials(value: boolean) {
     this.withCredentials = value;
     return this;
   }
 
-  setPath(path) {
+  setPath(path: string) {
     this.path = path;
     return this;
   }
 
-  setResourcePath(resourcePath) {
+  setResourcePath(resourcePath: string) {
     this.resourcePath = resourcePath;
     return this;
   }
 
-  setRequestHeader(requestHeader) {
+  setRequestHeader(requestHeader: Loader.RequestHeader) {
     this.requestHeader = requestHeader;
     return this;
   }
 }
 
-Loader.DEFAULT_MATERIAL_NAME = '__DEFAULT';
+export namespace Loader {
+  export interface Options {
+    crossOrigin?: string;
+    withCredentials?: boolean;
+    path?: string;
+    resourcePath?: string;
+    requestHeader?: RequestHeader;
+  }
+
+  export type RequestHeader = Record<string, string>;
+  export type OnLoad<T> = (item: T) => void;
+  export type OnProgress = (event: ProgressEvent) => void;
+  export type OnError<E> = (error: E) => void;
+}

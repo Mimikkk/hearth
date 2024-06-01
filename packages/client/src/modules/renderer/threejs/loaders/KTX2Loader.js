@@ -52,13 +52,12 @@ import {
   VK_FORMAT_UNDEFINED,
 } from 'ktx-parse';
 import { ZSTDDecoder } from 'zstddec';
+import * as basis from '@zd/basis';
 
 const _taskCache = new WeakMap();
 
 let _activeLoaders = 0;
 let _zstd;
-
-import * as basis from '@zd/basis';
 
 class KTX2Loader extends Loader {
   constructor(manager) {
@@ -169,10 +168,10 @@ class KTX2Loader extends Loader {
       throw new Error('THREE.KTX2Loader: Missing initialization with `.detectSupport( renderer )`.');
     }
 
-    const loader = new FileLoader(this.manager);
-
-    loader.setResponseType('arraybuffer');
-    loader.setWithCredentials(this.withCredentials);
+    const loader = new FileLoader(this.manager, {
+      responseType: 'arraybuffer',
+      withCredentials: this.withCredentials,
+    });
 
     loader.load(
       url,

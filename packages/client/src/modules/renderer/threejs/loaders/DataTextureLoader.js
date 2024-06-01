@@ -1,5 +1,5 @@
 import { Filter, Wrapping } from '../constants.ts';
-import { FileLoader } from './FileLoader.js';
+import { FileLoader } from './FileLoader.ts';
 import { DataTexture } from '../textures/DataTexture.ts';
 import { Loader } from './Loader.ts';
 
@@ -19,11 +19,12 @@ class DataTextureLoader extends Loader {
 
     const texture = new DataTexture();
 
-    const loader = new FileLoader(this.manager);
-    loader.setResponseType('arraybuffer');
-    loader.setRequestHeader(this.requestHeader);
-    loader.setPath(this.path);
-    loader.setWithCredentials(scope.withCredentials);
+    const loader = new FileLoader(this.manager, {
+      responseType: 'arraybuffer',
+      path: this.path,
+      requestHeader: this.requestHeader,
+      withCredentials: this.withCredentials,
+    });
     loader.load(
       url,
       function (buffer) {

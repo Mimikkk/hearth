@@ -1,5 +1,5 @@
 import { Filter } from '../constants.ts';
-import { FileLoader } from './FileLoader.js';
+import { FileLoader } from './FileLoader.ts';
 import { CompressedTexture } from '../textures/CompressedTexture.ts';
 import { Loader } from './Loader.ts';
 
@@ -21,11 +21,12 @@ class CompressedTextureLoader extends Loader {
 
     const texture = new CompressedTexture();
 
-    const loader = new FileLoader(this.manager);
-    loader.setPath(this.path);
-    loader.setResponseType('arraybuffer');
-    loader.setRequestHeader(this.requestHeader);
-    loader.setWithCredentials(scope.withCredentials);
+    const loader = new FileLoader(this.manager, {
+      responseType: 'arraybuffer',
+      path: this.path,
+      requestHeader: this.requestHeader,
+      withCredentials: this.withCredentials,
+    });
 
     let loaded = 0;
 
