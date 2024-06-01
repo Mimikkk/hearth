@@ -2,13 +2,14 @@ import { ColorSpace, MagnificationTextureFilter, MinificationTextureFilter, Text
 import { DataTextureLoader } from './DataTextureLoader.js';
 import { Loader } from './Loader.js';
 import { DataUtils } from '@modules/renderer/threejs/extras/DataUtils.js';
+import { DataTexture } from '@modules/renderer/threejs/textures/DataTexture.js';
 
-type SupportedType = TextureDataType.Float | TextureDataType.HalfFloat | TextureDataType.UnsignedByte;
+type SupportedType = TextureDataType.Float | TextureDataType.HalfFloat;
 
 export class RGBELoader<TUrl extends string = string> extends DataTextureLoader {
   type: SupportedType;
 
-  constructor(options: RGBELoader.Options) {
+  constructor(options?: RGBELoader.Options) {
     super(options);
 
     this.type = options?.type ?? TextureDataType.HalfFloat;
@@ -20,7 +21,7 @@ export class RGBELoader<TUrl extends string = string> extends DataTextureLoader 
       rgbe_write_error = 2,
       rgbe_format_error = 3,
       rgbe_memory_error = 4,
-      rgbe_error = function (rgbe_error_code, msg) {
+      rgbe_error = function (rgbe_error_code: number, msg?: string) {
         switch (rgbe_error_code) {
           case rgbe_read_error:
             throw new Error('THREE.RGBELoader: Read Error: ' + (msg || ''));
@@ -333,18 +334,16 @@ export class RGBELoader<TUrl extends string = string> extends DataTextureLoader 
     };
   }
 
-  load(url: TUrl, onLoad, onProgress, onError) {
-    if (typeof onLoad === 'object') return this.load(url, onLoad.onLoad, onLoad.onProgress, onLoad.onError);
-
+  load(url: TUrl, handlers?: Loader.Handlers<[texture: DataTexture, data: any]>): void {
     super.load(url, {
-      onLoad: this.createOnLoad2(onLoad),
-      onProgress,
-      onError,
+      onLoad: this.createOnLoad2(handlers?.onLoad),
+      onProgress: handlers?.onProgress,
+      onError: handlers?.onError,
     });
   }
 
-  createOnLoad2(onLoad) {
-    return (texture, texData) => {
+  createOnLoad2(onLoad: undefined | Loader.OnLoad<[texture: DataTexture, data: any]>) {
+    return (texture: DataTexture, texData: any) => {
       switch (texture.type) {
         case TextureDataType.Float:
         case TextureDataType.HalfFloat:
@@ -357,7 +356,7 @@ export class RGBELoader<TUrl extends string = string> extends DataTextureLoader 
           break;
       }
 
-      if (onLoad) onLoad(texture, texData);
+      onLoad?.([texture, texData]);
     };
   }
 }

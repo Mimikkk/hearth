@@ -48,29 +48,31 @@ async function init() {
   controls.maxDistance = 10;
   controls.update();
 
-  new RGBMLoader({ path: './textures/cube/pisaRGBM16/' }).loadCubemap(
+  new RGBMLoader({ path: './textures/cube/pisaRGBM16/' }).load(
     ['px.png', 'nx.png', 'py.png', 'ny.png', 'pz.png', 'nz.png'],
-    function (map) {
-      const reflectVec = positionViewDirection.negate().reflect(normalView).transformDirection(cameraViewMatrix);
+    {
+      onLoad: function (map) {
+        const reflectVec = positionViewDirection.negate().reflect(normalView).transformDirection(cameraViewMatrix);
 
-      const pmremRoughness = uniform(0.5);
-      const pmremNode = pmremTexture(map, reflectVec, pmremRoughness);
+        const pmremRoughness = uniform(0.5);
+        const pmremNode = pmremTexture(map, reflectVec, pmremRoughness);
 
-      scene.backgroundNode = pmremTexture(map, normalWorld, pmremRoughness);
+        scene.backgroundNode = pmremTexture(map, normalWorld, pmremRoughness);
 
-      scene.add(
-        new THREE.Mesh(new THREE.SphereGeometry(0.5, 64, 64), new MeshBasicNodeMaterial({ colorNode: pmremNode })),
-      );
+        scene.add(
+          new THREE.Mesh(new THREE.SphereGeometry(0.5, 64, 64), new MeshBasicNodeMaterial({ colorNode: pmremNode })),
+        );
 
-      // gui
+        // gui
 
-      const gui = new GUI();
-      gui
-        .add(pmremRoughness, 'value', 0, 1, 0.001)
-        .name('roughness')
-        .onChange(() => render());
+        const gui = new GUI();
+        gui
+          .add(pmremRoughness, 'value', 0, 1, 0.001)
+          .name('roughness')
+          .onChange(() => render());
 
-      render();
+        render();
+      },
     },
   );
 

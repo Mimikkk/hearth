@@ -54,19 +54,21 @@ function init() {
 
   //
 
-  new RGBELoader({ path: 'textures/equirectangular/' }).load('royal_esplanade_1k.hdr', function (texture) {
-    texture.mapping = THREE.Mapping.EquirectangularReflection;
+  new RGBELoader({ path: 'textures/equirectangular/' }).load('royal_esplanade_1k.hdr', {
+    onLoad: function (texture) {
+      texture.mapping = THREE.Mapping.EquirectangularReflection;
 
-    scene.environment = texture;
+      scene.environment = texture;
 
-    // model
+      // model
 
-    const loader = new GLTFLoader({ path: 'models/gltf/DamagedHelmet/glTF/' });
-    loader.load('DamagedHelmet.gltf', function (gltf) {
-      scene.add(gltf.scene);
+      const loader = new GLTFLoader({ path: 'models/gltf/DamagedHelmet/glTF/' });
+      loader.load('DamagedHelmet.gltf', function (gltf) {
+        scene.add(gltf.scene);
 
-      render();
-    });
+        render();
+      });
+    },
   });
 
   //

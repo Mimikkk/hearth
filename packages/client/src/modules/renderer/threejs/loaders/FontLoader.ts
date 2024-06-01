@@ -1,30 +1,26 @@
 import { FileLoader, Loader, ShapePath } from '../../threejs/Three.js';
 
 export class FontLoader extends Loader {
-  load(url, onLoad, onProgress, onError) {
-    const scope = this;
+  responseType: 'json' = 'json';
 
-    const loader = new FileLoader({
-      manager: this.manager,
-      responseType: 'text',
-      path: this.path,
-      requestHeader: this.requestHeader,
-      withCredentials: this.withCredentials,
-    });
+  constructor(options?: FontLoader.Options) {
+    super(options);
+  }
+
+  load(url, onLoad, onProgress, onError) {
+    const loader = new FileLoader(this);
 
     loader.load(
       url,
-      text => {
-        const font = scope.parse(JSON.parse(text));
-
-        if (onLoad) onLoad(font);
+      json => {
+        onLoad?.(this.parse(json));
       },
       onProgress,
       onError,
     );
   }
 
-  parse(json) {
+  parse(json: any) {
     return new Font(json);
   }
 }
@@ -32,15 +28,11 @@ export class FontLoader extends Loader {
 //
 
 export class Font {
-  constructor(data) {
-    this.isFont = true;
+  type: 'Font' = 'Font';
 
-    this.type = 'Font';
+  constructor(public data: any) {}
 
-    this.data = data;
-  }
-
-  generateShapes(text, size = 100) {
+  generateShapes(text: string, size = 100) {
     const shapes = [];
     const paths = createPaths(text, size, this.data);
 
@@ -52,7 +44,7 @@ export class Font {
   }
 }
 
-function createPaths(text, size, data) {
+function createPaths(text: string, size: number, data: any) {
   const chars = Array.from(text);
   const scale = size / data.resolution;
   const line_height = (data.boundingBox.yMax - data.boundingBox.yMin + data.underlineThickness) * scale;
@@ -78,7 +70,7 @@ function createPaths(text, size, data) {
   return paths;
 }
 
-function createPath(char, scale, offsetX, offsetY, data) {
+function createPath(char: string, scale: number, offsetX: number, offsetY: number, data: any) {
   const glyph = data.glyphs[char] || data.glyphs['?'];
 
   if (!glyph) {
@@ -140,4 +132,8 @@ function createPath(char, scale, offsetX, offsetY, data) {
   }
 
   return { offsetX: glyph.ha * scale, path: path };
+}
+
+export namespace FontLoader {
+  export interface Options extends Pick<Loader.Options, 'manager' | 'path' | 'requestHeader' | 'withCredentials'> {}
 }

@@ -1,70 +1,70 @@
 import {
   CubeTexture,
+  DataTexture,
   DataTextureLoader,
   DataUtils,
-  Filter,
+  Loader,
+  MinificationTextureFilter,
   TextureDataType,
   TextureFormat,
 } from '../../threejs/Three.js';
 import * as UPNG from 'upng-js';
 
-export class RGBMLoader extends DataTextureLoader {
-  constructor(options) {
+type SupportedType = TextureDataType.HalfFloat | TextureDataType.Float;
+
+type Urls<TUrl extends string = string> = [posx: TUrl, negx: TUrl, posy: TUrl, negy: TUrl, posz: TUrl, negz: TUrl];
+
+export class RGBMLoader<TUrl extends string = string> extends DataTextureLoader {
+  type: SupportedType;
+  maxRange: number;
+
+  constructor(options?: RGBMLoader.Options) {
     super(options);
 
-    this.type = TextureDataType.HalfFloat;
-    // more information about this property at https://iwasbeingirony.blogspot.com/2010/06/difference-between-rgbm-and-rgbd.html
-    this.maxRange = 7;
+    this.type = options?.type ?? TextureDataType.HalfFloat;
+    this.maxRange = options?.maxRange ?? 7;
   }
 
-  setDataType(value) {
-    this.type = value;
-    return this;
-  }
-
-  setMaxRange(value) {
-    this.maxRange = value;
-    return this;
-  }
-
-  loadCubemap(urls, onLoad, onProgress, onError) {
+  load(urls: Urls<TUrl>, handlers?: Loader.Handlers<CubeTexture>): CubeTexture {
+    //@ts-expect-error
     const texture = new CubeTexture();
 
     let loaded = 0;
+    const increment = () => ++loaded;
 
-    const scope = this;
-
-    function loadTexture(i) {
-      scope.load(urls[i], {
-        onLoad: function (image) {
-          texture.images[i] = image;
-
-          loaded++;
-
-          if (loaded === 6) {
-            texture.needsUpdate = true;
-
-            if (onLoad) onLoad(texture);
-          }
-        },
-        onProgress: undefined,
-        onError,
+    for (let i = 0; i < 6; ++i) {
+      super.load(urls[i], {
+        onLoad: this.createOnLoad2(i, texture, increment, handlers?.onLoad),
+        onError: handlers?.onError,
       });
-    }
-
-    for (let i = 0; i < urls.length; ++i) {
-      loadTexture(i);
     }
 
     texture.type = this.type;
     texture.format = TextureFormat.RGBA;
-    texture.minFilter = Filter.Linear;
+    texture.minFilter = MinificationTextureFilter.Linear;
     texture.generateMipmaps = false;
 
     return texture;
   }
 
-  parse(buffer) {
+  createOnLoad2(
+    index: number,
+    texture: CubeTexture,
+    incrementCounter: () => number,
+    onLoad?: Loader.OnLoad<CubeTexture>,
+  ) {
+    return (image: DataTexture) => {
+      texture.images[index] = image;
+
+      if (incrementCounter() === 6) {
+        texture.needsUpdate = true;
+
+        onLoad?.(texture);
+      }
+    };
+  }
+
+  parse(buffer: ArrayBuffer) {
     const img = UPNG.decode(buffer);
     const rgba = UPNG.toRGBA8(img)[0];
 
@@ -102,5 +102,12 @@ export class RGBMLoader extends DataTextureLoader {
       type: this.type,
       flipY: true,
     };
+  }
+}
+
+export namespace RGBMLoader {
+  export interface Options extends DataTextureLoader.Options {
+    type?: SupportedType;
+    maxRange?: number;
   }
 }
