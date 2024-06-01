@@ -10,9 +10,11 @@ class TextureLoader extends Loader {
   load(url, onLoad, onProgress, onError) {
     const texture = new Texture();
 
-    const loader = new ImageLoader(this.manager);
-    loader.setCrossOrigin(this.crossOrigin);
-    loader.setPath(this.path);
+    const loader = new ImageLoader({
+      manager: this.manager,
+      crossOrigin: this.crossOrigin,
+      path: this.path,
+    });
 
     loader.load(
       url,

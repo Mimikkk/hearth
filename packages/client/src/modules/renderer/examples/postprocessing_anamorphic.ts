@@ -1,5 +1,5 @@
 import * as THREE from '../threejs/Three.js';
-import { pass, cubeTexture, viewportTopLeft, uniform } from '../threejs/nodes/Nodes.js';
+import { cubeTexture, pass, uniform, viewportTopLeft } from '../threejs/nodes/Nodes.js';
 
 import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 
@@ -27,14 +27,14 @@ function init() {
   scene = new THREE.Scene();
 
   const rgbmUrls = ['px.png', 'nx.png', 'py.png', 'ny.png', 'pz.png', 'nz.png'];
-  const cube1Texture = new RGBMLoader().setMaxRange(16).setPath('./textures/cube/pisaRGBM16/').loadCubemap(rgbmUrls);
+  const cube1Texture = new RGBMLoader({ path: './textures/cube/pisaRGBM16/' }).setMaxRange(16).loadCubemap(rgbmUrls);
 
   scene.environment = cube1Texture;
   scene.backgroundNode = cubeTexture(cube1Texture)
     .mul(viewportTopLeft.distance(0.5).oneMinus().remapClamp(0.1, 4))
     .saturation(0);
 
-  const loader = new GLTFLoader().setPath('models/gltf/DamagedHelmet/glTF/');
+  const loader = new GLTFLoader({ path: 'models/gltf/DamagedHelmet/glTF/' });
   loader.load('DamagedHelmet.gltf', function (gltf) {
     scene.add(gltf.scene);
   });

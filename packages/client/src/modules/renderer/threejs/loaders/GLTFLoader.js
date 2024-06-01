@@ -273,7 +273,7 @@ class GLTFLoader extends Loader {
       meshoptDecoder: this.meshoptDecoder,
     });
 
-    parser.fileLoader.setRequestHeader(this.requestHeader);
+    parser.fileLoader.requestHeader = this.requestHeader;
 
     for (let i = 0; i < this.pluginCallbacks.length; i++) {
       const plugin = this.pluginCallbacks[i](parser);
@@ -1971,39 +1971,18 @@ class GLTFParser {
 
     // Node cache
     this.nodeCache = {};
-
-    // Object3D instance caches
     this.meshCache = { refs: {}, uses: {} };
     this.cameraCache = { refs: {}, uses: {} };
-    this.lightCache = { refs: {}, uses: {} };
 
     this.sourceCache = {};
     this.textureCache = {};
-
-    // Track node names, to ensure no duplicates
     this.nodeNamesUsed = {};
 
-    // Use an ImageBitmapLoader if imageBitmaps are supported. Moves much of the
-    // expensive work of uploading a texture to the GPU off the main thread.
-
-    let isSafari = false;
-    let isFirefox = false;
-    let firefoxVersion = -1;
-
-    if (typeof navigator !== 'undefined') {
-      isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent) === true;
-      isFirefox = navigator.userAgent.indexOf('Firefox') > -1;
-      firefoxVersion = isFirefox ? navigator.userAgent.match(/Firefox\/([0-9]+)\./)[1] : -1;
-    }
-
-    if (typeof createImageBitmap === 'undefined' || isSafari || (isFirefox && firefoxVersion < 98)) {
-      this.textureLoader = new TextureLoader(this.options.manager);
-    } else {
-      this.textureLoader = new ImageBitmapLoader(this.options.manager);
-    }
-
-    this.textureLoader.setCrossOrigin(this.options.crossOrigin);
-    this.textureLoader.setRequestHeader(this.options.requestHeader);
+    this.textureLoader = new ImageBitmapLoader({
+      manager: this.options.manager,
+      crossOrigin: this.options.crossOrigin,
+      requestHeader: this.options.requestHeader,
+    });
 
     this.fileLoader = new FileLoader({
       manager: this.options.manager,

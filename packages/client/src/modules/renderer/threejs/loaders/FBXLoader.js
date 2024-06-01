@@ -121,9 +121,11 @@ class FBXLoader extends Loader {
 
     // console.log( fbxTree );
 
-    const textureLoader = new TextureLoader(this.manager)
-      .setPath(this.resourcePath || path)
-      .setCrossOrigin(this.crossOrigin);
+    const textureLoader = new TextureLoader({
+      manager: this.manager,
+      path: this.resourcePath || path,
+      crossOrigin: this.crossOrigin,
+    });
 
     return new FBXTreeParser(textureLoader, this.manager).parse(fbxTree);
   }
@@ -346,7 +348,7 @@ class FBXTreeParser {
       fileName = images[children[0].ID];
 
       if (fileName.indexOf('blob:') === 0 || fileName.indexOf('data:') === 0) {
-        this.textureLoader.setPath(undefined);
+        this.textureLoader.path = undefined;
       }
     }
 
@@ -361,7 +363,7 @@ class FBXTreeParser {
         console.warn('FBXLoader: TGA loader not found, creating placeholder texture for', textureNode.RelativeFilename);
         texture = new Texture();
       } else {
-        loader.setPath(this.textureLoader.path);
+        loader.path = this.textureLoader.path;
         texture = loader.load(fileName);
       }
     } else if (extension === 'dds') {
@@ -371,7 +373,7 @@ class FBXTreeParser {
         console.warn('FBXLoader: DDS loader not found, creating placeholder texture for', textureNode.RelativeFilename);
         texture = new Texture();
       } else {
-        loader.setPath(this.textureLoader.path);
+        loader.path = this.textureLoader.path;
         texture = loader.load(fileName);
       }
     } else if (extension === 'psd') {
@@ -384,7 +386,7 @@ class FBXTreeParser {
       texture = this.textureLoader.load(fileName);
     }
 
-    this.textureLoader.setPath(currentPath);
+    this.textureLoader.path = currentPath;
 
     return texture;
   }

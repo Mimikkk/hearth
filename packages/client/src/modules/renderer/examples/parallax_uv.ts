@@ -4,7 +4,6 @@ import { MeshStandardNodeMaterial, parallaxUV, texture, uv } from '../threejs/no
 import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 
 import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
-import { ColorSpace } from '../threejs/Three.js';
 
 let camera, scene, renderer;
 
@@ -24,9 +23,14 @@ function init() {
 
   // environment
 
-  const environmentTexture = new THREE.CubeTextureLoader()
-    .setPath('./textures/cube/Park2/')
-    .load(['posx.jpg', 'negx.jpg', 'posy.jpg', 'negy.jpg', 'posz.jpg', 'negz.jpg']);
+  const environmentTexture = new THREE.CubeTextureLoader({ path: './textures/cube/Park2/' }).load([
+    'posx.jpg',
+    'negx.jpg',
+    'posy.jpg',
+    'negy.jpg',
+    'posz.jpg',
+    'negz.jpg',
+  ]);
 
   scene.environment = environmentTexture;
   scene.background = environmentTexture;

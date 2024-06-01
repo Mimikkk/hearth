@@ -64,7 +64,7 @@ function init() {
 
   //
 
-  new RGBELoader().setPath('./textures/equirectangular/').load('san_giuseppe_bridge_2k.hdr', async texture => {
+  new RGBELoader({ path: './textures/equirectangular/' }).load('san_giuseppe_bridge_2k.hdr', async texture => {
     texture.mapping = THREE.Mapping.EquirectangularReflection;
 
     scene.background = texture;
@@ -109,8 +109,7 @@ async function addSample(sample) {
 
   //
 
-  const material = await new MaterialXLoader()
-    .setPath(SAMPLE_PATH)
+  const material = await new MaterialXLoader({ path: SAMPLE_PATH })
     .loadAsync(sample)
     .then(({ materials }) => Object.values(materials).pop());
 
