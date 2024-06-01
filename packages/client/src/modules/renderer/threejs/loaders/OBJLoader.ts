@@ -318,7 +318,7 @@ function ParserState() {
     },
 
     addPointGeometry: function (vertices) {
-      this.object.geometry.type = 'Points';
+      this.object.geometry.type = 'Poi.js';
 
       const vLen = this.vertices.length;
 
@@ -571,7 +571,7 @@ export class OBJLoader extends Loader {
         const geometry = object.geometry;
         const materials = object.materials;
         const isLine = geometry.type === 'Line';
-        const isPoints = geometry.type === 'Points';
+        const isPoints = geometry.type === 'Poi.js';
         let hasVertexColors = false;
 
         // Skip o/g line declarations that did not follow with any faces

@@ -1,6 +1,6 @@
 import { ImageLoader } from './ImageLoader.js';
-import { Texture } from '../textures/Texture.ts';
-import { Loader } from './Loader.ts';
+import { Texture } from '../textures/Texture.js';
+import { Loader } from './Loader.js';
 
 export class TextureLoader extends Loader {
   load(url, onLoad, onProgress, onError) {

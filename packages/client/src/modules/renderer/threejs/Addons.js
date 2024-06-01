@@ -68,24 +68,24 @@ export * from '@modules/renderer/threejs/lines/WireframeGeometry2.ts';
 
 export * from './loaders/BVHLoader.js';
 export * from './loaders/DDSLoader.js';
-export * from './loaders/FBXLoader.js';
-export * from './loaders/FontLoader.js';
+export * from './loaders/FBXLoader.ts';
+export * from './loaders/FontLoader.ts';
 export * from './loaders/GCodeLoader.js';
-export * from './loaders/GLTFLoader.js';
-export * from './loaders/HDRCubeTextureLoader.js';
-export * from './loaders/IESLoader.js';
-export * from './loaders/KTX2Loader.js';
+export * from './loaders/GLTFLoader.ts';
+export * from './loaders/HDRCubeTextureLoader.ts';
+export * from './loaders/IESLoader.ts';
+export * from './loaders/KTX2Loader.ts';
 export * from './loaders/MD2Loader.js';
 export * from './loaders/MDDLoader.js';
 
-export * from './loaders/OBJLoader.js';
-export * from './loaders/RGBELoader.js';
-export * from './loaders/RGBMLoader.js';
-export * from './loaders/STLLoader.js';
-export * from './loaders/SVGLoader.js';
+export * from './loaders/OBJLoader.ts';
+export * from './loaders/RGBELoader.ts';
+export * from './loaders/RGBMLoader.ts';
+export * from './loaders/STLLoader.ts';
+export * from './loaders/SVGLoader.ts';
 export * from './loaders/TGALoader.js';
-export * from './loaders/TIFFLoader.js';
-export * from './loaders/TTFLoader.js';
+export * from './loaders/TIFFLoader.ts';
+export * from './loaders/TTFLoader.ts';
 
 export * from './math/Capsule.ts';
 export * from './math/ColorConverter.ts';

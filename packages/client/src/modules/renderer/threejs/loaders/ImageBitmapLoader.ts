@@ -1,5 +1,5 @@
 import { Cache } from './Cache.js';
-import { Loader } from './Loader.ts';
+import { Loader } from './Loader.js';
 
 export class ImageBitmapLoader extends Loader {
   constructor(manager) {

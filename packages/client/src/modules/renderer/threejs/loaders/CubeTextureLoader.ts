@@ -1,7 +1,7 @@
 import { ImageLoader } from './ImageLoader.js';
-import { CubeTexture } from '../textures/CubeTexture.ts';
-import { Loader } from './Loader.ts';
-import { ColorSpace } from '../constants.ts';
+import { CubeTexture } from '../textures/CubeTexture.js';
+import { Loader } from './Loader.js';
+import { ColorSpace } from '../constants.js';
 
 export class CubeTextureLoader extends Loader {
   load(urls, onLoad, onProgress, onError) {
