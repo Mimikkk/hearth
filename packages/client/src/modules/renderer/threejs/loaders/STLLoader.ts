@@ -8,94 +8,40 @@ import {
   Vector3,
 } from '../../threejs/Three.js';
 
-/**
- * Description: A THREE loader for STL ASCII files, as created by Solidworks and other CAD programs.
- *
- * Supports both binary and ASCII encoded files, with automatic detection of type.
- *
- * The loader returns a non-indexed buffer geometry.
- *
- * Limitations:
- *  Binary decoding supports "Magics" color format (http://en.wikipedia.org/wiki/STL_(file_format)#Color_in_binary_STL).
- *  There is perhaps some question as to how valid it is to always assume little-endian-ness.
- *  ASCII decoding assumes file is UTF-8.
- *
- * Usage:
- *  const loader = new STLLoader();
- *  loader.load( './models/stl/slotted_disk.stl', function ( geometry ) {
- *    scene.add( new THREE.Mesh( geometry ) );
- *  });
- *
- * For binary STLs geometry might contain colors for vertices. To use it:
- *  // use the same code to load STL as above
- *  if (geometry.hasColors) {
- *    material = new THREE.MeshPhongMaterial({ opacity: geometry.alpha, vertexColors: true });
- *  } else { .... }
- *  const mesh = new THREE.Mesh( geometry, material );
- *
- * For ASCII STLs containing multiple solids, each solid is assigned to a different group.
- * Groups can be used to assign a different color by defining an array of materials with the same length of
- * geometry.groups and passing it to the Mesh constructor:
- *
- * const mesh = new THREE.Mesh( geometry, material );
- *
- * For example:
- *
- *  const materials = [];
- *  const nGeometryGroups = geometry.groups.length;
- *
- *  const colorMap = ...; // Some logic to index colors.
- *
- *  for (let i = 0; i < nGeometryGroups; i++) {
- *
- *    const material = new THREE.MeshPhongMaterial({
- *      color: colorMap[i],
- *      wireframe: false
- *    });
- *
- *  }
- *
- *  materials.push(material);
- *  const mesh = new THREE.Mesh(geometry, materials);
- */
+export class STLLoader<TUrl extends string = string> extends Loader {
+  responseType: 'text' = 'text';
 
-export class STLLoader extends Loader {
-  constructor(manager) {
-    super(manager);
+  constructor(options?: STLLoader.Options) {
+    super(options);
   }
 
-  load(url, onLoad, onProgress, onError) {
+  load(url: TUrl, handlers?: Loader.Handlers<BufferGeometry>) {
     const scope = this;
 
-    const loader = new FileLoader({
-      manager: this.manager,
-      responseType: 'arraybuffer',
-      path: this.path,
-      requestHeader: this.requestHeader,
-      withCredentials: this.withCredentials,
+    FileLoader.load(url, this, {
+      onLoad: this.createOnLoad(url, handlers?.onLoad, handlers?.onError),
+      onProgress: handlers?.onProgress,
+      onError: handlers?.onError,
     });
-
-    loader.load(
-      url,
-      text => {
-        try {
-          onLoad(scope.parse(text));
-        } catch (e) {
-          if (onError) {
-            onError(e);
-          } else {
-            console.error(e);
-          }
-
-          scope.manager.itemError(url);
-        }
-      },
-      onProgress,
-      onError,
-    );
   }
 
-  parse(data) {
+  createOnLoad(
+    url: string,
+    onLoad: undefined | Loader.OnLoad<BufferGeometry>,
+    onError: Loader.OnError = console.error,
+  ) {
+    return (text: string) => {
+      try {
+        onLoad?.(this.parse(text));
+      } catch (e) {
+        onError?.(e);
+
+        this.manager.itemError(url);
+      }
+    };
+  }
+
+  parse(data: string) {
     function isBinary(data) {
       const reader = new DataView(data);
       const face_size = (32 / 8) * 3 + (32 / 8) * 3 * 3 + 16 / 8;
@@ -343,4 +289,8 @@ export class STLLoader extends Loader {
 
     return isBinary(binData) ? parseBinary(binData) : parseASCII(ensureString(data));
   }
+}
+
+export namespace STLLoader {
+  export interface Options extends Pick<Loader.Options, 'manager' | 'path' | 'requestHeader' | 'withCredentials'> {}
 }
