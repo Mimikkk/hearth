@@ -9,12 +9,12 @@ import { Loader } from './Loader.ts';
  * Sub classes have to implement the parse() method which will be used in load().
  */
 
-class CompressedTextureLoader extends Loader {
+export class CompressedTextureLoader extends Loader {
   constructor(manager) {
     super(manager);
   }
 
-  load(url, onLoad, onProgress, onError) {
+  load(url, { onLoad, onProgress, onError }) {
     const scope = this;
 
     const images = [];
@@ -32,9 +32,8 @@ class CompressedTextureLoader extends Loader {
     let loaded = 0;
 
     function loadTexture(i) {
-      loader.load(
-        url[i],
-        function (buffer) {
+      loader.load(url[i], {
+        onLoad: function (buffer) {
           const texDatas = scope.parse(buffer, true);
 
           images[i] = {
@@ -58,7 +57,7 @@ class CompressedTextureLoader extends Loader {
         },
         onProgress,
         onError,
-      );
+      });
     }
 
     if (Array.isArray(url)) {
@@ -68,9 +67,8 @@ class CompressedTextureLoader extends Loader {
     } else {
       // compressed cubemap texture stored in a single DDS file
 
-      loader.load(
-        url,
-        function (buffer) {
+      loader.load(url, {
+        onLoad: function (buffer) {
           const texDatas = scope.parse(buffer, true);
 
           if (texDatas.isCubemap) {
@@ -105,11 +103,9 @@ class CompressedTextureLoader extends Loader {
         },
         onProgress,
         onError,
-      );
+      });
     }
 
     return texture;
   }
 }
-
-export { CompressedTextureLoader };

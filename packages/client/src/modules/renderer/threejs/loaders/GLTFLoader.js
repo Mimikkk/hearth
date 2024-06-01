@@ -48,7 +48,6 @@ import {
   Sphere,
   SpotLight,
   Texture,
-  TextureLoader,
   Vector2,
   Vector3,
   VectorKeyframeTrack,
@@ -131,7 +130,7 @@ class GLTFLoader extends Loader {
     });
   }
 
-  load(url, onLoad, onProgress, onError) {
+  load(url, { onLoad, onProgress, onError }) {
     const scope = this;
 
     let resourcePath;
@@ -174,9 +173,8 @@ class GLTFLoader extends Loader {
       withCredentials: this.withCredentials,
     });
 
-    loader.load(
-      url,
-      function (data) {
+    loader.load(url, {
+      onLoad: function (data) {
         try {
           scope.parse(
             data,
@@ -193,8 +191,8 @@ class GLTFLoader extends Loader {
         }
       },
       onProgress,
-      _onError,
-    );
+      onerror: _onError,
+    });
   }
 
   setDRACOLoader(dracoLoader) {
@@ -273,7 +271,7 @@ class GLTFLoader extends Loader {
       meshoptDecoder: this.meshoptDecoder,
     });
 
-    parser.fileLoader.setRequestHeader(this.requestHeader);
+    parser.fileLoader.requestHeader = this.requestHeader;
 
     for (let i = 0; i < this.pluginCallbacks.length; i++) {
       const plugin = this.pluginCallbacks[i](parser);
@@ -1979,31 +1977,13 @@ class GLTFParser {
 
     this.sourceCache = {};
     this.textureCache = {};
-
-    // Track node names, to ensure no duplicates
     this.nodeNamesUsed = {};
 
-    // Use an ImageBitmapLoader if imageBitmaps are supported. Moves much of the
-    // expensive work of uploading a texture to the GPU off the main thread.
-
-    let isSafari = false;
-    let isFirefox = false;
-    let firefoxVersion = -1;
-
-    if (typeof navigator !== 'undefined') {
-      isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent) === true;
-      isFirefox = navigator.userAgent.indexOf('Firefox') > -1;
-      firefoxVersion = isFirefox ? navigator.userAgent.match(/Firefox\/([0-9]+)\./)[1] : -1;
-    }
-
-    if (typeof createImageBitmap === 'undefined' || isSafari || (isFirefox && firefoxVersion < 98)) {
-      this.textureLoader = new TextureLoader(this.options.manager);
-    } else {
-      this.textureLoader = new ImageBitmapLoader(this.options.manager);
-    }
-
-    this.textureLoader.setCrossOrigin(this.options.crossOrigin);
-    this.textureLoader.setRequestHeader(this.options.requestHeader);
+    this.textureLoader = new ImageBitmapLoader({
+      manager: this.options.manager,
+      crossOrigin: this.options.crossOrigin,
+      path: this.options.path,
+    });
 
     this.fileLoader = new FileLoader({
       manager: this.options.manager,
@@ -2320,8 +2300,12 @@ class GLTFParser {
     const options = this.options;
 
     return new Promise(function (resolve, reject) {
-      loader.load(LoaderUtils.resolveUrl(bufferDef.uri, options.path), resolve, undefined, function () {
-        reject(new Error('THREE.GLTFLoader: Failed to load buffer "' + bufferDef.uri + '".'));
+      loader.load(LoaderUtils.resolveUrl(bufferDef.uri, options.path), {
+        onLoad: resolve,
+        onProgress: undefined,
+        onError: function () {
+          reject(new Error('THREE.GLTFLoader: Failed to load buffer "' + bufferDef.uri + '".'));
+        },
       });
     });
   }
@@ -2583,7 +2567,11 @@ class GLTFParser {
             };
           }
 
-          loader.load(LoaderUtils.resolveUrl(sourceURI, options.path), onLoad, undefined, reject);
+          loader.load(LoaderUtils.resolveUrl(sourceURI, options.path), {
+            onLoad,
+            onProgress: undefined,
+            onError: reject,
+          });
         });
       })
       .then(function (texture) {

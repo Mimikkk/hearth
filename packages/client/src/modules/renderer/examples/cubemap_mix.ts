@@ -23,7 +23,7 @@ function init() {
   scene = new THREE.Scene();
 
   const rgbmUrls = ['px.png', 'nx.png', 'py.png', 'ny.png', 'pz.png', 'nz.png'];
-  const cube1Texture = new RGBMLoader().setMaxRange(16).setPath('./textures/cube/pisaRGBM16/').loadCubemap(rgbmUrls);
+  const cube1Texture = new RGBMLoader({ path: './textures/cube/pisaRGBM16/' }).setMaxRange(16).loadCubemap(rgbmUrls);
 
   cube1Texture.generateMipmaps = true;
   cube1Texture.minFilter = THREE.Filter.LinearMipmapLinear;
@@ -36,7 +36,7 @@ function init() {
     'dark-s_pz.jpg',
     'dark-s_nz.jpg',
   ];
-  const cube2Texture = new THREE.CubeTextureLoader().setPath('./textures/cube/MilkyWay/').load(cube2Urls);
+  const cube2Texture = new THREE.CubeTextureLoader({ path: './textures/cube/MilkyWay/' }).load(cube2Urls);
 
   cube2Texture.generateMipmaps = true;
   cube2Texture.minFilter = THREE.Filter.LinearMipmapLinear;
@@ -47,7 +47,7 @@ function init() {
     getTextureLevel: () => float(0.5),
   });
 
-  const loader = new GLTFLoader().setPath('models/gltf/DamagedHelmet/glTF/');
+  const loader = new GLTFLoader({ path: 'models/gltf/DamagedHelmet/glTF/' });
   loader.load('DamagedHelmet.gltf', function (gltf) {
     scene.add(gltf.scene);
   });

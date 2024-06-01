@@ -15,7 +15,7 @@ export class BufferGeometryLoader extends Loader {
     super(manager);
   }
 
-  load(url, onLoad, onProgress, onError) {
+  load(url, { onLoad, onProgress, onError }) {
     const scope = this;
 
     const loader = new FileLoader({
@@ -25,9 +25,8 @@ export class BufferGeometryLoader extends Loader {
       withCredentials: this.withCredentials,
     });
 
-    loader.load(
-      url,
-      function (text) {
+    loader.load(url, {
+      onLoad: function (text) {
         try {
           onLoad(scope.parse(JSON.parse(text)));
         } catch (e) {
@@ -42,7 +41,7 @@ export class BufferGeometryLoader extends Loader {
       },
       onProgress,
       onError,
-    );
+    });
   }
 
   parse(json) {

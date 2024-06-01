@@ -18,7 +18,7 @@ async function init() {
 
   //
 
-  const iesLoader = new IESLoader().setPath('./ies/');
+  const iesLoader = new IESLoader({ path: './ies/' });
   //iesLoader.type = THREE.UnsignedByteType; // LDR
 
   const [iesTexture1, iesTexture2, iesTexture3, iesTexture4] = await Promise.all([

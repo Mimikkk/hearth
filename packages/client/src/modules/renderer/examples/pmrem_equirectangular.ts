@@ -1,13 +1,13 @@
 import * as THREE from '../threejs/Three.js';
 
 import {
-  normalWorld,
-  uniform,
-  normalView,
-  positionViewDirection,
   cameraViewMatrix,
-  pmremTexture,
   MeshBasicNodeMaterial,
+  normalView,
+  normalWorld,
+  pmremTexture,
+  positionViewDirection,
+  uniform,
 } from '../threejs/nodes/Nodes.js';
 
 import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
@@ -48,7 +48,7 @@ async function init() {
   controls.maxDistance = 10;
   controls.update();
 
-  new RGBELoader().setPath('textures/equirectangular/').load('royal_esplanade_1k.hdr', function (map) {
+  new RGBELoader({ path: 'textures/equirectangular/' }).load('royal_esplanade_1k.hdr', function (map) {
     map.mapping = THREE.Mapping.EquirectangularReflection;
 
     const reflectVec = positionViewDirection.negate().reflect(normalView).transformDirection(cameraViewMatrix);

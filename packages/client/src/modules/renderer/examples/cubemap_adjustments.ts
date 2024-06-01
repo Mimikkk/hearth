@@ -1,15 +1,15 @@
 import * as THREE from '../threejs/Three.js';
 import {
-  uniform,
   mix,
+  normalWorld,
   pmremTexture,
-  reference,
   positionLocal,
   positionWorld,
-  normalWorld,
   positionWorldDirection,
+  reference,
   reflectVector,
   toneMapping,
+  uniform,
 } from '../threejs/nodes/Nodes.js';
 
 import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
@@ -20,7 +20,6 @@ import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.
 import { GLTFLoader } from '../threejs/loaders/GLTFLoader.js';
 
 import { GUI } from 'lil-gui';
-import { Filter } from '../threejs/Three.js';
 
 let camera, scene, renderer;
 
@@ -40,13 +39,13 @@ function init() {
   // cube textures
 
   const rgbmUrls = ['px.png', 'nx.png', 'py.png', 'ny.png', 'pz.png', 'nz.png'];
-  const cube1Texture = new RGBMLoader().setMaxRange(16).setPath('./textures/cube/pisaRGBM16/').loadCubemap(rgbmUrls);
+  const cube1Texture = new RGBMLoader({ path: './textures/cube/pisaRGBM16/' }).setMaxRange(16).loadCubemap(rgbmUrls);
 
   cube1Texture.generateMipmaps = true;
   cube1Texture.minFilter = THREE.Filter.LinearMipmapLinear;
 
   const cube2Urls = ['posx.jpg', 'negx.jpg', 'posy.jpg', 'negy.jpg', 'posz.jpg', 'negz.jpg'];
-  const cube2Texture = new THREE.CubeTextureLoader().setPath('./textures/cube/Park2/').load(cube2Urls);
+  const cube2Texture = new THREE.CubeTextureLoader({ path: './textures/cube/Park2/' }).load(cube2Urls);
 
   cube2Texture.generateMipmaps = true;
   cube2Texture.minFilter = THREE.Filter.LinearMipmapLinear;
@@ -96,7 +95,7 @@ function init() {
 
   // scene objects
 
-  const loader = new GLTFLoader().setPath('models/gltf/DamagedHelmet/glTF/');
+  const loader = new GLTFLoader({ path: 'models/gltf/DamagedHelmet/glTF/' });
   loader.load('DamagedHelmet.gltf', function (gltf) {
     scene.add(gltf.scene);
   });

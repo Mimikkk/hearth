@@ -29,7 +29,8 @@ export class FileLoader<TData extends string | ArrayBuffer, TUrl extends string 
     this.responseType = options?.responseType ?? 'text';
   }
 
-  load(url: TUrl, onLoad?: Loader.OnLoad<TData>, onProgress?: Loader.OnProgress, onError?: Loader.OnError<unknown>) {
+  load(url: TUrl, handlers: Loader.Handlers<TData, TUrl>) {
+    const { onLoad } = handlers;
     let uri: string = url;
 
     if (this.path) uri = this.path + uri;
@@ -51,19 +52,18 @@ export class FileLoader<TData extends string | ArrayBuffer, TUrl extends string 
     }
 
     if (loading[uri]) {
-      loading[uri].push({ onLoad, onProgress, onError });
+      loading[uri].push(handlers);
       return;
     }
 
     loading[uri] = [];
-    loading[uri].push({ onLoad, onProgress, onError });
+    loading[uri].push(handlers);
 
     const request = new Request(uri, {
       headers: new Headers(this.requestHeader),
       credentials: this.withCredentials ? 'include' : 'same-origin',
     });
 
-    // start the fetch
     fetch(request)
       .then(response => {
         if (response.status === 200 || response.status === 0) {

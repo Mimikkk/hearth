@@ -1,12 +1,12 @@
 import * as THREE from '../threejs/Three.js';
 import {
   MeshPhysicalNodeMaterial,
-  normalWorld,
-  timerLocal,
-  mx_noise_vec3,
-  mx_worley_noise_vec3,
   mx_cell_noise_float,
   mx_fractal_noise_vec3,
+  mx_noise_vec3,
+  mx_worley_noise_vec3,
+  normalWorld,
+  timerLocal,
 } from '../threejs/nodes/Nodes.js';
 
 import Stats from 'stats-js';
@@ -37,9 +37,9 @@ function init() {
   group = new THREE.Group();
   scene.add(group);
 
-  new HDRCubeTextureLoader()
-    .setPath('textures/cube/pisaHDR/')
-    .load(['px.hdr', 'nx.hdr', 'py.hdr', 'ny.hdr', 'pz.hdr', 'nz.hdr'], function (hdrTexture) {
+  new HDRCubeTextureLoader({ path: 'textures/cube/pisaHDR/' }).load(
+    ['px.hdr', 'nx.hdr', 'py.hdr', 'ny.hdr', 'pz.hdr', 'nz.hdr'],
+    function (hdrTexture) {
       const geometry = new THREE.SphereGeometry(8, 64, 32);
 
       const offsetNode = timerLocal();
@@ -89,7 +89,8 @@ function init() {
 
       scene.background = hdrTexture;
       scene.environment = hdrTexture;
-    });
+    },
+  );
 
   // LIGHTS
 

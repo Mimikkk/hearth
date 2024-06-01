@@ -184,7 +184,7 @@ class MaterialXLoader extends Loader {
     super(manager);
   }
 
-  load(url, onLoad, onProgress, onError) {
+  load(url, { onLoad, onProgress, onError }) {
     const _onError = function (e) {
       if (onError) {
         onError(e);
@@ -698,7 +698,7 @@ class MaterialX {
   parse(text) {
     const rootXML = new DOMParser().parseFromString(text, 'application/xml').documentElement;
 
-    this.textureLoader.setPath(this.path);
+    this.textureLoader.path = this.path;
 
     //
 

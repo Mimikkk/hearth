@@ -1,27 +1,24 @@
-import { ImageLoader } from './ImageLoader.js';
+import { ImageLoader } from './ImageLoader.ts';
 import { CubeTexture } from '../textures/CubeTexture.ts';
 import { Loader } from './Loader.ts';
 import { ColorSpace } from '../constants.ts';
 
-class CubeTextureLoader extends Loader {
+export class CubeTextureLoader extends Loader {
   constructor(manager) {
     super(manager);
   }
 
-  load(urls, onLoad, onProgress, onError) {
+  load(urls, { onLoad, onProgress, onError }) {
     const texture = new CubeTexture();
     texture.colorSpace = ColorSpace.SRGB;
 
-    const loader = new ImageLoader(this.manager);
-    loader.setCrossOrigin(this.crossOrigin);
-    loader.setPath(this.path);
+    const loader = new ImageLoader({ manager: this.manager, crossOrigin: this.crossOrigin, path: this.path });
 
     let loaded = 0;
 
     function loadTexture(i) {
-      loader.load(
-        urls[i],
-        function (image) {
+      loader.load(urls[i], {
+        onLoad: function (image) {
           texture.images[i] = image;
 
           loaded++;
@@ -32,9 +29,9 @@ class CubeTextureLoader extends Loader {
             if (onLoad) onLoad(texture);
           }
         },
-        undefined,
+        onProgress,
         onError,
-      );
+      });
     }
 
     for (let i = 0; i < urls.length; ++i) {
@@ -44,5 +41,3 @@ class CubeTextureLoader extends Loader {
     return texture;
   }
 }
-
-export { CubeTextureLoader };

@@ -14,7 +14,7 @@ class DataTextureLoader extends Loader {
     super(manager);
   }
 
-  load(url, onLoad, onProgress, onError) {
+  load(url, { onLoad, onProgress, onError }) {
     const scope = this;
 
     const texture = new DataTexture();
@@ -26,9 +26,8 @@ class DataTextureLoader extends Loader {
       requestHeader: this.requestHeader,
       withCredentials: this.withCredentials,
     });
-    loader.load(
-      url,
-      function (buffer) {
+    loader.load(url, {
+      onLoad: function (buffer) {
         let texData;
 
         try {
@@ -93,7 +92,7 @@ class DataTextureLoader extends Loader {
       },
       onProgress,
       onError,
-    );
+    });
 
     return texture;
   }
