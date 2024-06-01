@@ -1,8 +1,8 @@
-import { DefaultLoadingManager } from './LoadingManager.js';
+import { loadManager } from './LoadManager.js';
 
-class Loader {
+export class Loader {
   constructor(manager) {
-    this.manager = manager !== undefined ? manager : DefaultLoadingManager;
+    this.manager = manager !== undefined ? manager : loadManager;
 
     this.crossOrigin = 'anonymous';
     this.withCredentials = false;
@@ -50,5 +50,3 @@ class Loader {
 }
 
 Loader.DEFAULT_MATERIAL_NAME = '__DEFAULT';
-
-export { Loader };

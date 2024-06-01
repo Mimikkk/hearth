@@ -3,7 +3,7 @@ import { Vector3 } from '../math/Vector3.ts';
 import { BufferAttribute } from '../core/BufferAttribute.ts';
 import { BufferGeometry } from '../core/BufferGeometry.ts';
 import { FileLoader } from './FileLoader.js';
-import { Loader } from './Loader.js';
+import { Loader } from './Loader.ts';
 import { InstancedBufferGeometry } from '../core/InstancedBufferGeometry.ts';
 import { InstancedBufferAttribute } from '../core/InstancedBufferAttribute.ts';
 import { InterleavedBufferAttribute } from '../core/InterleavedBufferAttribute.ts';

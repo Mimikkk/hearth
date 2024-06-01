@@ -1,6 +1,6 @@
 import { AnimationClip } from '../animation/AnimationClip.ts';
 import { FileLoader } from './FileLoader.js';
-import { Loader } from './Loader.js';
+import { Loader } from './Loader.ts';
 
 class AnimationLoader extends Loader {
   constructor(manager) {

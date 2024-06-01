@@ -1,25 +1,24 @@
 export const Cache = {
   enabled: false,
-
   files: {},
 
-  add: function (key, file) {
+  add(key, file) {
     if (this.enabled === false) return;
 
     this.files[key] = file;
   },
 
-  get: function (key) {
+  get(key) {
     if (this.enabled === false) return;
 
     return this.files[key];
   },
 
-  remove: function (key) {
+  remove(key) {
     delete this.files[key];
   },
 
-  clear: function () {
+  clear() {
     this.files = {};
   },
 };

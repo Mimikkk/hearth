@@ -1,5 +1,5 @@
 import { Cache } from './Cache.js';
-import { Loader } from './Loader.js';
+import { Loader } from './Loader.ts';
 
 const loading = {};
 

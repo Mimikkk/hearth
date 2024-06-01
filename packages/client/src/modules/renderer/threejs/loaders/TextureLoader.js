@@ -1,6 +1,6 @@
 import { ImageLoader } from './ImageLoader.js';
 import { Texture } from '../textures/Texture.ts';
-import { Loader } from './Loader.js';
+import { Loader } from './Loader.ts';
 
 class TextureLoader extends Loader {
   constructor(manager) {

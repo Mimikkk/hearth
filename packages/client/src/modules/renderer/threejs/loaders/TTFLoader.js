@@ -1,13 +1,7 @@
 import { FileLoader, Loader } from '../../threejs/Three.js';
 import opentype from 'opentype.js';
 
-/**
- * Requires opentype.js to be included in the project.
- * Loads TTF files and converts them into typeface JSON that can be used directly
- * to create THREE.Font objects.
- */
-
-class TTFLoader extends Loader {
+export class TTFLoader extends Loader {
   constructor(manager) {
     super(manager);
 
@@ -160,5 +154,3 @@ class TTFLoader extends Loader {
     return convert(opentype.parse(arraybuffer), this.reversed);
   }
 }
-
-export { TTFLoader };

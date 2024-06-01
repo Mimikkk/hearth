@@ -1,6 +1,6 @@
 import { AudioContextManager } from '../audio/AudioContextManager.ts';
 import { FileLoader } from './FileLoader.js';
-import { Loader } from './Loader.js';
+import { Loader } from './Loader.ts';
 
 class AudioLoader extends Loader {
   constructor(manager) {

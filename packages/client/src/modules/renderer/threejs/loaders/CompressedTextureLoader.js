@@ -1,7 +1,7 @@
 import { Filter } from '../constants.ts';
 import { FileLoader } from './FileLoader.js';
 import { CompressedTexture } from '../textures/CompressedTexture.ts';
-import { Loader } from './Loader.js';
+import { Loader } from './Loader.ts';
 
 /**
  * Abstract Base class to block based textures loader (dds, pvr, ...)
