@@ -1,5 +1,4 @@
 import {
-  append,
   arrayBuffer,
   bmat2,
   bmat3,
@@ -35,8 +34,9 @@ import {
   vec4,
 } from './ShaderNode.class.js';
 import { NodeElements } from './ShaderNode.map.js';
+import { NodeStack } from '@modules/renderer/threejs/nodes/shadernode/ShaderNode.stack.js';
 
-NodeElements.set('append', append);
+NodeElements.set('append', NodeStack.append);
 NodeElements.set('color', color);
 NodeElements.set('float', float);
 NodeElements.set('int', int);

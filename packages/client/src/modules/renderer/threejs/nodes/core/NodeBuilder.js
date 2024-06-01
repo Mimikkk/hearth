@@ -32,7 +32,7 @@ import {
 } from '../../../threejs/Three.js';
 
 import { stack } from './StackNode.js';
-import { getCurrentStack, setCurrentStack } from '../shadernode/ShaderNode.js';
+import { NodeStack } from '../shadernode/ShaderNode.js';
 
 import ChainMap from '../../renderers/common/ChainMap.ts';
 
@@ -487,8 +487,8 @@ class NodeBuilder {
   addStack() {
     this.stack = stack(this.stack);
 
-    this.stacks.push(getCurrentStack() || this.stack);
-    setCurrentStack(this.stack);
+    this.stacks.push(NodeStack.get() || this.stack);
+    NodeStack.set(this.stack);
 
     return this.stack;
   }
@@ -497,7 +497,7 @@ class NodeBuilder {
     const lastStack = this.stack;
     this.stack = lastStack.parent;
 
-    setCurrentStack(this.stacks.pop());
+    NodeStack.set(this.stacks.pop());
 
     return lastStack;
   }

@@ -1,6 +1,11 @@
 import InputNode from './InputNode.js';
 import { objectGroup } from './UniformGroupNode.js';
-import { getConstNodeType, nodeObject } from '../shadernode/ShaderNode.js';
+import { nodeObject } from '../shadernode/ShaderNode.js';
+
+export const getConstNodeType = value =>
+  value !== undefined && value !== null
+    ? value.nodeType || value.convertTo || (typeof value === 'string' ? value : null)
+    : null;
 
 class UniformNode extends InputNode {
   static type = 'UniformNode';
@@ -61,7 +66,6 @@ export default UniformNode;
 export const uniform = (arg1, arg2) => {
   const nodeType = getConstNodeType(arg2 || arg1);
 
-  // @TODO: get ConstNode from .traverse() in the future
   const value = arg1 && arg1.isNode === true ? (arg1.node && arg1.node.value) || arg1.value : arg1;
 
   return nodeObject(new UniformNode(value, nodeType));

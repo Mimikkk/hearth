@@ -1,14 +1,14 @@
 import * as THREE from '../threejs/Three.js';
 import {
+  float,
+  instanceIndex,
+  NodeStack,
+  SpriteNodeMaterial,
+  storage,
+  texture,
   tslFn,
   uniform,
-  texture,
-  instanceIndex,
-  float,
   vec3,
-  storage,
-  SpriteNodeMaterial,
-  If,
 } from '../threejs/nodes/Nodes.js';
 
 import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
@@ -87,7 +87,7 @@ function init() {
 
     // floor
 
-    If(position.y.lessThan(0), () => {
+    NodeStack.if(position.y.lessThan(0), () => {
       position.y = 0;
       velocity.y = velocity.y.negate().mul(bounce);
 

@@ -1,14 +1,14 @@
 import * as THREE from '../threejs/Three.js';
 import {
-  storageObject,
-  If,
-  vec3,
-  uv,
-  uint,
   float,
-  tslFn,
   instanceIndex,
   MeshBasicNodeMaterial,
+  NodeStack,
+  storageObject,
+  tslFn,
+  uint,
+  uv,
+  vec3,
 } from '../threejs/nodes/Nodes.js';
 
 import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
@@ -73,34 +73,34 @@ function init(forceWebGL = false) {
   material.colorNode = tslFn(() => {
     const index = uint(uv().x.mul(size).floor()).toVar();
 
-    If(index.greaterThanEqual(size), () => {
+    NodeStack.if(index.greaterThanEqual(size), () => {
       index.assign(uint(size).sub(1));
     });
 
     const color = vec3(0, 0, 0).toVar();
 
-    If(uv().y.greaterThan(0.0), () => {
+    NodeStack.if(uv().y.greaterThan(0.0), () => {
       const indexValue = arrayBufferNodes[0].element(index).toVar();
       const value = float(indexValue).div(float(size)).mul(20).floor().div(20);
 
       color.assign(vec3(value, 0, 0));
     });
 
-    If(uv().y.greaterThan(0.25), () => {
+    NodeStack.if(uv().y.greaterThan(0.25), () => {
       const indexValue = arrayBufferNodes[1].element(index).toVar();
       const value = float(indexValue).div(float(size)).mul(20).floor().div(20);
 
       color.assign(vec3(0, value, 0));
     });
 
-    If(uv().y.greaterThan(0.5), () => {
+    NodeStack.if(uv().y.greaterThan(0.5), () => {
       const indexValue = arrayBufferNodes[2].element(index).toVar();
       const value = float(indexValue).div(float(size)).mul(20).floor().div(20);
 
       color.assign(vec3(0, 0, value));
     });
 
-    If(uv().y.greaterThan(0.75), () => {
+    NodeStack.if(uv().y.greaterThan(0.75), () => {
       const indexValue = arrayBufferNodes[3].element(index).toVar();
       const value = float(indexValue).div(float(size)).mul(20).floor().div(20);
 
