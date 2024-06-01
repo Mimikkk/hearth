@@ -1,7 +1,7 @@
 // Three.js Transpiler
 // https://github.com/AcademySoftwareFoundation/MaterialX/blob/main/libraries/stdlib/genglsl/lib/mx_hsv.glsl
 
-import { float, If, int, tslFn, vec3 } from '../../shadernode/ShaderNode.js';
+import { float, int, NodeStack, tslFn, vec3 } from '../../shadernode/ShaderNode.js';
 import { add, mul, sub } from '@modules/renderer/threejs/nodes/math/OperatorNode.js';
 import { floor, max, min, trunc } from '@modules/renderer/threejs/nodes/math/MathNode.js';
 
@@ -11,7 +11,7 @@ const mx_hsvtorgb = tslFn(([hsv_immutable]) => {
   const s = float(hsv.y).toVar();
   const v = float(hsv.z).toVar();
 
-  If(s.lessThan(0.0001), () => {
+  NodeStack.if(s.lessThan(0.0001), () => {
     return vec3(v, v, v);
   }).else(() => {
     h.assign(mul(6.0, h.sub(floor(h))));
@@ -21,7 +21,7 @@ const mx_hsvtorgb = tslFn(([hsv_immutable]) => {
     const q = float(v.mul(sub(1.0, s.mul(f)))).toVar();
     const t = float(v.mul(sub(1.0, s.mul(sub(1.0, f))))).toVar();
 
-    If(hi.equal(int(0)), () => {
+    NodeStack.if(hi.equal(int(0)), () => {
       return vec3(v, t, p);
     })
       .elseif(hi.equal(int(1)), () => {
@@ -54,16 +54,16 @@ const mx_rgbtohsv = tslFn(([c_immutable]) => {
     v = float().toVar();
   v.assign(maxcomp);
 
-  If(maxcomp.greaterThan(0.0), () => {
+  NodeStack.if(maxcomp.greaterThan(0.0), () => {
     s.assign(delta.div(maxcomp));
   }).else(() => {
     s.assign(0.0);
   });
 
-  If(s.lessThanEqual(0.0), () => {
+  NodeStack.if(s.lessThanEqual(0.0), () => {
     h.assign(0.0);
   }).else(() => {
-    If(r.greaterThanEqual(maxcomp), () => {
+    NodeStack.if(r.greaterThanEqual(maxcomp), () => {
       h.assign(g.sub(b).div(delta));
     })
       .elseif(g.greaterThanEqual(maxcomp), () => {
@@ -75,7 +75,7 @@ const mx_rgbtohsv = tslFn(([c_immutable]) => {
 
     h.mulAssign(1.0 / 6.0);
 
-    If(h.lessThan(0.0), () => {
+    NodeStack.if(h.lessThan(0.0), () => {
       h.addAssign(1.0);
     });
   });
