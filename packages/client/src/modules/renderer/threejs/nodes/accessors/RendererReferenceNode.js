@@ -1,5 +1,5 @@
 import ReferenceNode from './ReferenceNode.js';
-import { nodeObject } from '../shadernode/ShaderNode.js';
+import { nodeObject } from '../shadernode/ShaderNodes.js';
 
 class RendererReferenceNode extends ReferenceNode {
   static type = 'RendererReferenceNode';

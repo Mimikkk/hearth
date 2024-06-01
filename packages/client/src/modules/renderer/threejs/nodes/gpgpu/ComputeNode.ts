@@ -1,6 +1,6 @@
 import Node from '../core/Node.ts';
 import { NodeUpdateType } from '../core/constants.ts';
-import { addNodeElement, nodeObject } from '../shadernode/ShaderNode.js';
+import { addNodeElement, nodeObject } from '../shadernode/ShaderNodes.js';
 import { Renderer } from '@modules/renderer/threejs/renderers/common/Renderer.js';
 import NodeBuilder from '@modules/renderer/threejs/nodes/core/NodeBuilder.js';
 

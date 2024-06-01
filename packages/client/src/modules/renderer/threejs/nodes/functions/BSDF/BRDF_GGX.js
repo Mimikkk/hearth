@@ -4,7 +4,7 @@ import D_GGX from './D_GGX.js';
 import { transformedNormalView } from '../../accessors/NormalNode.js';
 import { positionViewDirection } from '../../accessors/PositionNode.js';
 import { iridescence } from '../../core/PropertyNode.js';
-import { tslFn } from '../../shadernode/ShaderNode.js';
+import { tslFn } from '../../shadernode/ShaderNodes.js';
 
 // GGX Distribution, Schlick Fresnel, GGX_SmithCorrelated Visibility
 const BRDF_GGX = tslFn(inputs => {

@@ -1,6 +1,6 @@
 import Node from './Node.ts';
 import { cond } from '../math/CondNode.js';
-import { nodeProxy, NodeStack, ShaderNode } from '../shadernode/ShaderNode.js';
+import { nodeProxy, NodeStack, ShaderNode } from '../shadernode/ShaderNodes.js';
 
 class StackNode extends Node {
   static type = 'StackNode';

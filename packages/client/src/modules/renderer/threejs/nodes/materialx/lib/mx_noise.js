@@ -1,7 +1,7 @@
 // Three.js Transpiler
 // https://raw.githubusercontent.com/AcademySoftwareFoundation/MaterialX/main/libraries/stdlib/genglsl/lib/mx_noise.glsl
 
-import { bool, float, int, NodeStack, tslFn, uint, uvec3, vec2, vec3, vec4 } from '../../shadernode/ShaderNode.js';
+import { bool, float, int, NodeStack, tslFn, uint, uvec3, vec2, vec3, vec4 } from '../../shadernode/ShaderNodes.js';
 import { cond } from '@modules/renderer/threejs/nodes/math/CondNode.js';
 import { mul, sub } from '@modules/renderer/threejs/nodes/math/OperatorNode.js';
 import { abs, dot, floor, max, min, sqrt } from '@modules/renderer/threejs/nodes/math/MathNode.js';

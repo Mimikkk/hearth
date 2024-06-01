@@ -1,6 +1,6 @@
 import InputNode from './InputNode.js';
 import { objectGroup } from './UniformGroupNode.js';
-import { nodeObject } from '../shadernode/ShaderNode.js';
+import { nodeObject } from '../shadernode/ShaderNodes.js';
 
 export const getConstNodeType = value =>
   value !== undefined && value !== null

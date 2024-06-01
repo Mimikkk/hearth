@@ -1,6 +1,6 @@
 import Node from '../core/Node.ts';
 import { uv } from '../accessors/UVNode.js';
-import { float, nodeProxy, vec2 } from '../shadernode/ShaderNode.js';
+import { float, nodeProxy, vec2 } from '../shadernode/ShaderNodes.js';
 
 class SpriteSheetUVNode extends Node {
   static type = 'SpriteSheetUVNode';

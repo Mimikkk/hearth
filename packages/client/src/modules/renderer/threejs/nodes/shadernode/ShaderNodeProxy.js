@@ -1,18 +1,24 @@
-import { nodeObject } from './ShaderNodeObject.js';
-import { nodeArray } from './ShaderNodeArray.js';
+import { ShaderNodeObject } from '@modules/renderer/threejs/nodes/shadernode/ShaderNodeObject.js';
+import { ShaderNodeArray } from '@modules/renderer/threejs/nodes/shadernode/ShaderNodeArray.js';
 
 export class ShaderNodeProxy {
   constructor(NodeClass, scope = null, factor = null, settings = null) {
-    const assignNode = node => nodeObject(settings !== null ? Object.assign(node, settings) : node);
+    const assignNode = node => ShaderNodeObject(settings !== null ? Object.assign(node, settings) : node);
 
-    if (scope === null) return (...params) => assignNode(new NodeClass(...nodeArray(params)));
-    if (factor !== null) {
-      factor = nodeObject(factor);
+    if (scope === null) {
+      return (...params) => {
+        return assignNode(new NodeClass(...new ShaderNodeArray(params)));
+      };
+    } else if (factor !== null) {
+      factor = ShaderNodeObject(factor);
 
-      return (...params) => assignNode(new NodeClass(scope, ...nodeArray(params), factor));
+      return (...params) => {
+        return assignNode(new NodeClass(scope, ...new ShaderNodeArray(params), factor));
+      };
+    } else {
+      return (...params) => {
+        return assignNode(new NodeClass(scope, ...new ShaderNodeArray(params)));
+      };
     }
-    return (...params) => assignNode(new NodeClass(scope, ...nodeArray(params)));
   }
 }
-
-export const nodeProxy = (...params) => new ShaderNodeProxy(...params);

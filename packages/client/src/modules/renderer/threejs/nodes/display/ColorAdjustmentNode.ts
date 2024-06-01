@@ -1,7 +1,7 @@
 import TempNode from '../core/TempNode.js';
 import { dot, mix } from '../math/MathNode.js';
 import { add } from '../math/OperatorNode.js';
-import { addNodeElement, float, nodeProxy, tslFn, vec3 } from '../shadernode/ShaderNode.js';
+import { addNodeElement, float, nodeProxy, tslFn, vec3 } from '../shadernode/ShaderNodes.js';
 
 const saturationNode = tslFn(({ color, adjustment }) => {
   return adjustment.mix(luminance(color.rgb), color.rgb);

@@ -1,32 +1,36 @@
-import { getValueType } from '../core/NodeUtils.js';
-import { proxyHandlers, tslFn } from './ShaderNode.class.js';
+import { getValueType } from '@modules/renderer/threejs/nodes/core/NodeUtils.js';
 import { getConstNode } from '@modules/renderer/threejs/nodes/shadernode/utils.js';
+import { tslFn } from '@modules/renderer/threejs/nodes/shadernode/tslFn.js';
+import { handlers } from '@modules/renderer/threejs/nodes/shadernode/ShaderNode.handlers.js';
 
 const cache = new WeakMap();
 
-export const ShaderNodeObject = function (obj, altType = null) {
-  const type = getValueType(obj);
+export const ShaderNodeObject = function (object, altType = null) {
+  const type = getValueType(object);
 
   if (type === 'node') {
-    let nodeObject = cache.get(obj);
+    let node = cache.get(object);
 
-    if (nodeObject === undefined) {
-      nodeObject = new Proxy(obj, proxyHandlers);
+    if (node === undefined) {
+      node = new Proxy(object, handlers);
 
-      cache.set(obj, nodeObject);
-      cache.set(nodeObject, nodeObject);
+      cache.set(object, node);
+      cache.set(node, node);
     }
 
-    return nodeObject;
-  } else if (
+    return node;
+  }
+
+  if (
     (altType === null && (type === 'float' || type === 'boolean')) ||
     (type && type !== 'shader' && type !== 'string')
   ) {
-    return nodeObject(getConstNode(obj, altType));
-  } else if (type === 'shader') {
-    return tslFn(obj);
+    return ShaderNodeObject(getConstNode(object, altType));
   }
 
-  return obj;
+  if (type === 'shader') {
+    return tslFn(object);
+  }
+
+  return object;
 };
-export const nodeObject = (val, altType = null) => ShaderNodeObject(val, altType);

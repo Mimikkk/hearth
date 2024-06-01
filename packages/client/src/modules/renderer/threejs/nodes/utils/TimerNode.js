@@ -1,6 +1,6 @@
 import UniformNode from '../core/UniformNode.js';
 import { NodeUpdateType } from '../core/constants.ts';
-import { nodeImmutable, nodeObject } from '../shadernode/ShaderNode.js';
+import { nodeImmutable, nodeObject } from '../shadernode/ShaderNodes.js';
 
 class TimerNode extends UniformNode {
   static type = 'TimerNode';

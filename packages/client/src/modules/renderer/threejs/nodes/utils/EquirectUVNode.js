@@ -1,6 +1,6 @@
 import TempNode from '../core/TempNode.js';
 import { positionWorldDirection } from '../accessors/PositionNode.js';
-import { nodeProxy, vec2 } from '../shadernode/ShaderNode.js';
+import { nodeProxy, vec2 } from '../shadernode/ShaderNodes.js';
 
 class EquirectUVNode extends TempNode {
   static type = 'EquirectUVNode';

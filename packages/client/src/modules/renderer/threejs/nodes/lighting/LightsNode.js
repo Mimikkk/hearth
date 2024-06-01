@@ -1,6 +1,6 @@
 import Node from '../core/Node.ts';
 import AnalyticLightNode from './AnalyticLightNode.js';
-import { nodeObject, nodeProxy, vec3 } from '../shadernode/ShaderNode.js';
+import { nodeObject, nodeProxy, vec3 } from '../shadernode/ShaderNodes.js';
 import { LightNodeMap } from '@modules/renderer/threejs/nodes/lighting/LightsNodeMap.js';
 
 const sortLights = lights => {

@@ -1,5 +1,5 @@
 import CodeNode, { CodeNodeInclude } from './CodeNode.ts';
-import { nodeObject } from '../shadernode/ShaderNode.js';
+import { nodeObject } from '../shadernode/ShaderNodes.js';
 import NodeBuilder from '@modules/renderer/threejs/nodes/core/NodeBuilder.js';
 import { NodeType } from 'three/examples/jsm/nodes/core/constants.js';
 

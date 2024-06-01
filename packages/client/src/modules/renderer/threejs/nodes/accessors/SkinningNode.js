@@ -1,6 +1,6 @@
 import Node from '../core/Node.ts';
 import { NodeUpdateType } from '../core/constants.ts';
-import { nodeObject } from '../shadernode/ShaderNode.js';
+import { nodeObject } from '../shadernode/ShaderNodes.js';
 import { attribute } from '../core/AttributeNode.js';
 import { reference, referenceBuffer } from './ReferenceNode.js';
 import { add } from '../math/OperatorNode.js';

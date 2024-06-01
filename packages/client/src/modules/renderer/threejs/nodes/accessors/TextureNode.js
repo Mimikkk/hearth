@@ -4,7 +4,7 @@ import { textureSize } from './TextureSizeNode.js';
 import { colorSpaceToLinear } from '../display/ColorSpaceNode.ts';
 import { expression } from '../code/ExpressionNode.ts';
 import { maxMipLevel } from '../utils/MaxMipLevelNode.js';
-import { addNodeElement, nodeObject, nodeProxy, vec3 } from '../shadernode/ShaderNode.js';
+import { addNodeElement, nodeObject, nodeProxy, vec3 } from '../shadernode/ShaderNodes.js';
 import { NodeUpdateType } from '../core/constants.ts';
 
 class TextureNode extends UniformNode {

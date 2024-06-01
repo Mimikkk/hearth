@@ -19,7 +19,7 @@ import { texture } from '../accessors/TextureNode.js';
 import { cubeTexture } from '../accessors/CubeTextureNode.js';
 import { lightsNode } from '../lighting/LightsNode.js';
 import { mix } from '@modules/renderer/threejs/nodes/math/MathNode.js';
-import { float, vec3, vec4 } from '../shadernode/ShaderNode.js';
+import { float, vec3, vec4 } from '../shadernode/ShaderNodes.js';
 import AONode from '../lighting/AONode.js';
 import { lightingContext } from '../lighting/LightingContextNode.js';
 import EnvironmentNode from '../lighting/EnvironmentNode.js';

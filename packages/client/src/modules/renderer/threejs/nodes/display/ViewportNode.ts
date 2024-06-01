@@ -1,7 +1,7 @@
 import Node from '../core/Node.js';
 import { NodeUpdateType } from '../core/constants.js';
 import { uniform } from '../core/UniformNode.js';
-import { nodeImmutable, vec2 } from '../shadernode/ShaderNode.js';
+import { nodeImmutable, vec2 } from '../shadernode/ShaderNodes.js';
 
 import { Vector2, Vector4 } from '../../../threejs/Three.js';
 

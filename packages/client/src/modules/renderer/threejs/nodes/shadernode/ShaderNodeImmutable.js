@@ -1,10 +1,8 @@
-import { nodeObject } from './ShaderNodeObject.js';
-import { nodeArray } from './ShaderNodeArray.js';
+import { ShaderNodeArray } from './ShaderNodeArray.js';
+import { ShaderNodeObject } from './ShaderNodeObject.js';
 
 export class ShaderNodeImmutable {
   constructor(NodeClass, ...params) {
-    return nodeObject(new NodeClass(...nodeArray(params)));
+    return ShaderNodeObject(new NodeClass(...new ShaderNodeArray(params)));
   }
 }
-
-export const nodeImmutable = (...params) => new ShaderNodeImmutable(...params);

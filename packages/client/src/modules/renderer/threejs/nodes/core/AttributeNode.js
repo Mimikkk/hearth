@@ -1,6 +1,6 @@
 import Node from './Node.ts';
 import { varying } from './VaryingNode.js';
-import { nodeObject } from '../shadernode/ShaderNode.js';
+import { nodeObject } from '../shadernode/ShaderNodes.js';
 
 class AttributeNode extends Node {
   static type = 'AttributeNode';

@@ -1,4 +1,4 @@
-import { tslFn, vec3 } from '../../shadernode/ShaderNode.js';
+import { tslFn, vec3 } from '../../shadernode/ShaderNodes.js';
 
 const Schlick_to_F0 = tslFn(({ f, f90, dotVH }) => {
   const x = dotVH.oneMinus().saturate();

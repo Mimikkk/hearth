@@ -1,6 +1,6 @@
 import Node from '../core/Node.ts';
 import { scriptableValue } from './ScriptableValueNode.js';
-import { addNodeElement, float, nodeProxy } from '../shadernode/ShaderNode.js';
+import { addNodeElement, float, nodeProxy } from '../shadernode/ShaderNodes.js';
 import CodeNode from '@modules/renderer/threejs/nodes/code/CodeNode.js';
 import NodeBuilder from '@modules/renderer/threejs/nodes/core/NodeBuilder.js';
 import { NodeTypeOption } from '@modules/renderer/threejs/nodes/core/constants.js';

@@ -2,7 +2,7 @@ import Node from '../core/Node.ts';
 import { expression } from '../code/ExpressionNode.ts';
 import { bypass } from '../core/BypassNode.js';
 import { context } from '../core/ContextNode.js';
-import { addNodeElement, nodeArray, nodeObject } from '../shadernode/ShaderNode.js';
+import { addNodeElement, nodeArray, nodeObject } from '../shadernode/ShaderNodes.js';
 
 class LoopNode extends Node {
   static type = 'LoopNode';

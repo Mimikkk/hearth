@@ -2,7 +2,7 @@ import TempNode from '../core/TempNode.js';
 import { cameraProjectionMatrix } from './CameraNode.js';
 import { modelViewMatrix } from './ModelNode.js';
 import { positionLocal } from './PositionNode.js';
-import { nodeProxy } from '../shadernode/ShaderNode.js';
+import { nodeProxy } from '../shadernode/ShaderNodes.js';
 import { varying } from '../core/VaryingNode.js';
 
 class ModelViewProjectionNode extends TempNode {

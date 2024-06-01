@@ -32,9 +32,9 @@ import {
   vec2,
   vec3,
   vec4,
-} from './ShaderNode.class.js';
+} from './ShaderNode.primitves.js';
 import { NodeElements } from './ShaderNode.map.js';
-import { NodeStack } from '@modules/renderer/threejs/nodes/shadernode/ShaderNode.stack.js';
+import { NodeStack } from '@modules/renderer/threejs/nodes/shadernode/ShaderNode.stack.ts';
 
 NodeElements.set('append', NodeStack.append);
 NodeElements.set('color', color);

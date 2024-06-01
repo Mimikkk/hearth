@@ -1,5 +1,5 @@
 import Node from '../core/Node.ts';
-import { addNodeElement, float, nodeProxy } from '../shadernode/ShaderNode.js';
+import { addNodeElement, float, nodeProxy } from '../shadernode/ShaderNodes.js';
 import { EventDispatcher } from '../../../threejs/Three.js';
 import NodeBuilder from '@modules/renderer/threejs/nodes/core/NodeBuilder.js';
 import { NodeTypeOption } from '@modules/renderer/threejs/nodes/core/constants.js';

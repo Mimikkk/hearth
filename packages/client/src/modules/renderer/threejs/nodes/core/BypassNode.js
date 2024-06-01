@@ -1,5 +1,5 @@
 import Node from './Node.ts';
-import { addNodeElement, nodeProxy } from '../shadernode/ShaderNode.js';
+import { addNodeElement, nodeProxy } from '../shadernode/ShaderNodes.js';
 
 class BypassNode extends Node {
   static type = 'BypassNode';

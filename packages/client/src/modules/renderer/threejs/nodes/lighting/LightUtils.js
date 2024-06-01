@@ -1,4 +1,4 @@
-import { tslFn } from '../shadernode/ShaderNode.js';
+import { tslFn } from '../shadernode/ShaderNodes.js';
 
 export const getDistanceAttenuation = tslFn(inputs => {
   const { lightDistance, cutoffDistance, decayExponent } = inputs;

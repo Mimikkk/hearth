@@ -1,7 +1,7 @@
 import Node from '../core/Node.ts';
 import { property } from '../core/PropertyNode.js';
 import { context as contextNode } from '../core/ContextNode.js';
-import { addNodeElement, nodeProxy } from '../shadernode/ShaderNode.js';
+import { addNodeElement, nodeProxy } from '../shadernode/ShaderNodes.js';
 
 class CondNode extends Node {
   static type = 'CondNode';

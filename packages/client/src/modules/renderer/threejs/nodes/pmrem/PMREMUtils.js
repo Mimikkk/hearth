@@ -1,4 +1,4 @@
-import { float, int, NodeStack, tslFn, vec2, vec3, vec4 } from '../shadernode/ShaderNode.js';
+import { float, int, NodeStack, tslFn, vec2, vec3, vec4 } from '../shadernode/ShaderNodes.js';
 import { abs, all, clamp, cos, cross, exp2, floor, fract, log2, max, mix, normalize, sin } from '../math/MathNode.js';
 import { mul } from '../math/OperatorNode.js';
 import { cond } from '../math/CondNode.js';

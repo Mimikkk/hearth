@@ -14,7 +14,7 @@ import { mx_hsvtorgb, mx_rgbtohsv } from './lib/mx_hsv.js';
 import { mx_srgb_texture_to_lin_rec709 } from './lib/mx_transform_color.js';
 import { mix, smoothstep } from '@modules/renderer/threejs/nodes/math/MathNode.js';
 import { uv } from '../accessors/UVNode.js';
-import { float, int, vec2, vec4 } from '../shadernode/ShaderNode.js';
+import { float, int, vec2, vec4 } from '../shadernode/ShaderNodes.js';
 
 export const mx_aastep = (threshold, value) => {
   threshold = float(threshold);

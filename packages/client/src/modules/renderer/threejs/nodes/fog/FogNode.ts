@@ -1,6 +1,6 @@
 import Node from '../core/Node.js';
 import { positionView } from '../accessors/PositionNode.js';
-import { addNodeElement, nodeProxy } from '../shadernode/ShaderNode.js';
+import { addNodeElement, nodeProxy } from '../shadernode/ShaderNodes.js';
 import NodeBuilder from '@modules/renderer/threejs/nodes/core/NodeBuilder.js';
 
 class FogNode extends Node {

@@ -2,7 +2,7 @@ import { transformedNormalView } from '../accessors/NormalNode.js';
 import { positionViewDirection } from '../accessors/PositionNode.js';
 import PhysicalLightingModel from '../functions/PhysicalLightingModel.js';
 import { MeshPhysicalNodeMaterial } from './MeshPhysicalNodeMaterial.js';
-import { float, vec3 } from '../shadernode/ShaderNode.js';
+import { float, vec3 } from '../shadernode/ShaderNodes.js';
 
 class SSSLightingModel extends PhysicalLightingModel {
   constructor(useClearcoat, useSheen, useIridescence, useSSS) {

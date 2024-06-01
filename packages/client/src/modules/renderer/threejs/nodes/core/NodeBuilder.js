@@ -32,7 +32,7 @@ import {
 } from '../../../threejs/Three.js';
 
 import { stack } from './StackNode.js';
-import { NodeStack } from '../shadernode/ShaderNode.js';
+import { NodeStack } from '../shadernode/ShaderNodes.js';
 
 import ChainMap from '../../renderers/common/ChainMap.ts';
 

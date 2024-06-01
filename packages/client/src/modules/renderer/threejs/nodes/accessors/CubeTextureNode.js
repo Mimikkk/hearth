@@ -1,6 +1,6 @@
 import TextureNode from './TextureNode.js';
 import { reflectVector } from './ReflectVectorNode.js';
-import { addNodeElement, nodeProxy, vec3 } from '../shadernode/ShaderNode.js';
+import { addNodeElement, nodeProxy, vec3 } from '../shadernode/ShaderNodes.js';
 import { CoordinateSystem } from '../../../threejs/Three.js';
 
 class CubeTextureNode extends TextureNode {

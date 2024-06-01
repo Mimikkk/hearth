@@ -1,7 +1,7 @@
 // Three.js Transpiler
 // https://github.com/AcademySoftwareFoundation/MaterialX/blob/main/libraries/stdlib/genglsl/lib/mx_transform_color.glsl
 
-import { bvec3, tslFn, vec3 } from '../../shadernode/ShaderNode.js';
+import { bvec3, tslFn, vec3 } from '../../shadernode/ShaderNodes.js';
 import { greaterThan } from '@modules/renderer/threejs/nodes/math/OperatorNode.js';
 import { max, mix, pow } from '@modules/renderer/threejs/nodes/math/MathNode.js';
 

@@ -1,5 +1,5 @@
 import Object3DNode from './Object3DNode.js';
-import { nodeImmutable } from '../shadernode/ShaderNode.js';
+import { nodeImmutable } from '../shadernode/ShaderNodes.js';
 
 class ModelNode extends Object3DNode {
   static type = 'ModelNode';

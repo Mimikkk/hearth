@@ -1,5 +1,5 @@
 import TempNode from '../core/TempNode.js';
-import { addNodeElement, float, nodeObject, tslFn, vec2, vec4 } from '../shadernode/ShaderNode.js';
+import { addNodeElement, float, nodeObject, tslFn, vec2, vec4 } from '../shadernode/ShaderNodes.js';
 import { NodeUpdateType } from '../core/constants.js';
 import { mul } from '../math/OperatorNode.js';
 import { uv } from '../accessors/UVNode.js';

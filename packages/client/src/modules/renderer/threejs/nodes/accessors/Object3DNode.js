@@ -1,7 +1,7 @@
 import Node from '../core/Node.ts';
 import { NodeUpdateType } from '../core/constants.ts';
 import UniformNode from '../core/UniformNode.js';
-import { nodeProxy } from '../shadernode/ShaderNode.js';
+import { nodeProxy } from '../shadernode/ShaderNodes.js';
 
 import { Vector3 } from '../../../threejs/Three.js';
 

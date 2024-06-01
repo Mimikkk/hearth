@@ -1,6 +1,6 @@
 import Node from '../core/Node.ts';
 import { timerLocal } from './TimerNode.js';
-import { nodeObject, nodeProxy } from '../shadernode/ShaderNode.js';
+import { nodeObject, nodeProxy } from '../shadernode/ShaderNodes.js';
 
 class OscNode extends Node {
   static type = 'OscNode';

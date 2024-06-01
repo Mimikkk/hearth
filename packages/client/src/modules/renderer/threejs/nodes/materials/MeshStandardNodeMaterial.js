@@ -4,7 +4,7 @@ import { mix } from '@modules/renderer/threejs/nodes/math/MathNode.js';
 import { materialMetalness, materialRoughness } from '../accessors/MaterialNode.js';
 import getRoughness from '../functions/material/getRoughness.js';
 import PhysicalLightingModel from '../functions/PhysicalLightingModel.js';
-import { float, vec3, vec4 } from '../shadernode/ShaderNode.js';
+import { float, vec3, vec4 } from '../shadernode/ShaderNodes.js';
 
 import { MeshStandardMaterial } from '../../../threejs/Three.js';
 

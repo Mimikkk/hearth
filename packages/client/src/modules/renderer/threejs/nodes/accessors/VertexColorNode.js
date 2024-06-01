@@ -1,5 +1,5 @@
 import AttributeNode from '../core/AttributeNode.js';
-import { nodeObject } from '../shadernode/ShaderNode.js';
+import { nodeObject } from '../shadernode/ShaderNodes.js';
 import { Vector4 } from '../../../threejs/Three.js';
 
 class VertexColorNode extends AttributeNode {

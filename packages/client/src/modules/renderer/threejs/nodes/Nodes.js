@@ -187,7 +187,7 @@ export {
 export { default as ReflectorNode, reflector } from './utils/ReflectorNode.js';
 
 // shadernode
-export * from './shadernode/ShaderNode.js';
+export * from './shadernode/ShaderNodes.js';
 import './shadernode/ShaderNode.map.initialize.js';
 
 // accessors

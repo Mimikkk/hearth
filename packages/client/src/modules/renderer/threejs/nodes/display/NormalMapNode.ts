@@ -7,7 +7,7 @@ import { positionView } from '../accessors/PositionNode.js';
 import { TBNViewMatrix } from '../accessors/AccessorsUtils.js';
 import { uv } from '../accessors/UVNode.js';
 import { faceDirection } from './FrontFacingNode.js';
-import { addNodeElement, nodeProxy, tslFn, vec3 } from '../shadernode/ShaderNode.js';
+import { addNodeElement, nodeProxy, tslFn, vec3 } from '../shadernode/ShaderNodes.js';
 
 import { NormalMapType } from '../../../threejs/Three.js';
 

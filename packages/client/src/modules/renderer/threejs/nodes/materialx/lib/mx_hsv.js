@@ -1,7 +1,7 @@
 // Three.js Transpiler
 // https://github.com/AcademySoftwareFoundation/MaterialX/blob/main/libraries/stdlib/genglsl/lib/mx_hsv.glsl
 
-import { float, int, NodeStack, tslFn, vec3 } from '../../shadernode/ShaderNode.js';
+import { float, int, NodeStack, tslFn, vec3 } from '../../shadernode/ShaderNodes.js';
 import { add, mul, sub } from '@modules/renderer/threejs/nodes/math/OperatorNode.js';
 import { floor, max, min, trunc } from '@modules/renderer/threejs/nodes/math/MathNode.js';
 

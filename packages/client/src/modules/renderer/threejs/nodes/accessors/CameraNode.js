@@ -1,7 +1,7 @@
 import Object3DNode from './Object3DNode.js';
 import { NodeUpdateType } from '../core/constants.ts';
 //import { sharedUniformGroup } from '../core/UniformGroupNode.js';
-import { nodeImmutable } from '../shadernode/ShaderNode.js';
+import { nodeImmutable } from '../shadernode/ShaderNodes.js';
 
 //const cameraGroup = sharedUniformGroup( 'camera' );
 
