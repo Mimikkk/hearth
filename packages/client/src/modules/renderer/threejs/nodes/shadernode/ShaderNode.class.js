@@ -6,105 +6,17 @@ import SplitNode from '../utils/SplitNode.js';
 import SetNode from '../utils/SetNode.js';
 import ConstNode from '../core/ConstNode.js';
 import { getValueFromType, getValueType } from '../core/NodeUtils.js';
-import { boolMap, constMap, floatMap, NodeElements, sintMap, uintMap } from './ShaderNode.map.js';
-import { NodeStack } from '@modules/renderer/threejs/nodes/shadernode/ShaderNode.stack.js';
+import { NodeElements } from '@modules/renderer/threejs/nodes/shadernode/ShaderNode.map.js';
 
-const parseSwizzle = props =>
-  props.replace(/[rs]/g, 'x').replace(/[gt]/g, 'y').replace(/[bp]/g, 'z').replace(/[aq]/g, 'w');
+//
 
-class ShaderNodeObjects {
-  constructor(objects, altType = null) {
-    for (const name in objects) {
-      objects[name] = nodeObject(objects[name], altType);
-    }
+let currentStack = null;
 
-    return objects;
-  }
-}
+export const addNodeElement = (name, nodeElement) => NodeElements.set(name, nodeElement);
 
-class ShaderNodeArray {
-  constructor(array, altType = null) {
-    const len = array.length;
+const parseSwizzle = props => props.replace(/r|s/g, 'x').replace(/g|t/g, 'y').replace(/b|p/g, 'z').replace(/a|q/g, 'w');
 
-    for (let i = 0; i < len; i++) {
-      array[i] = nodeObject(array[i], altType);
-    }
-
-    return array;
-  }
-}
-
-class ShaderNodeProxy {
-  constructor(NodeClass, scope = null, factor = null, settings = null) {
-    const assignNode = node => nodeObject(settings !== null ? Object.assign(node, settings) : node);
-
-    if (scope === null) {
-      return (...params) => {
-        return assignNode(new NodeClass(...nodeArray(params)));
-      };
-    }
-    if (factor !== null) {
-      factor = nodeObject(factor);
-
-      return (...params) => {
-        return assignNode(new NodeClass(scope, ...nodeArray(params), factor));
-      };
-    }
-    return (...params) => {
-      return assignNode(new NodeClass(scope, ...nodeArray(params)));
-    };
-  }
-}
-
-class ShaderNodeImmutable {
-  constructor(NodeClass, ...params) {
-    return nodeObject(new NodeClass(...nodeArray(params)));
-  }
-}
-
-const getConstNode = (value, type) => {
-  if (constMap.has(value)) return constMap.get(value);
-  if (value.isNode) return value;
-  return new ConstNode(value, type);
-};
-
-const readType = node => {
-  try {
-    return node.getNodeType();
-  } catch {
-    return undefined;
-  }
-};
-const convertNode =
-  (type, cacheMap = null) =>
-  (...params) => {
-    if (
-      params.length === 0 ||
-      (!['bool', 'float', 'int', 'uint'].includes(type) && params.every(param => typeof param !== 'object'))
-    ) {
-      params = [getValueFromType(type, ...params)];
-    }
-
-    if (params.length === 1 && cacheMap !== null && cacheMap.has(params[0])) {
-      return nodeObject(cacheMap.get(params[0]));
-    }
-
-    if (params.length === 1) {
-      const node = getConstNode(params[0], type);
-      if (readType(node) === type) return nodeObject(node);
-      return nodeObject(new ConvertNode(node, type));
-    }
-
-    const nodes = params.map(param => getConstNode(param));
-    return nodeObject(new JoinNode(nodes, type));
-  };
-
-export const getConstNodeType = value =>
-  value !== undefined && value !== null
-    ? value.nodeType || value.convertTo || (typeof value === 'string' ? value : null)
-    : null;
-
-const proxyHandlers = {
+const shaderNodeHandler = {
   setup(NodeClosure, params) {
     const inputs = params.shift();
 
@@ -115,7 +27,7 @@ const proxyHandlers = {
     if (typeof prop === 'string' && node[prop] === undefined) {
       if (node.isStackNode !== true && prop === 'assign') {
         return (...params) => {
-          NodeStack.get().assign(nodeObj, ...params);
+          currentStack.assign(nodeObj, ...params);
 
           return nodeObj;
         };
@@ -134,6 +46,8 @@ const proxyHandlers = {
           ? (...params) => nodeObj.assign(params[0], nodeElement(...params))
           : (...params) => nodeObj.assign(nodeElement(nodeObj, ...params));
       } else if (/^[xyzwrgbastpq]{1,4}$/.test(prop) === true) {
+        // accessing properties ( swizzle )
+
         prop = parseSwizzle(prop);
 
         return nodeObject(new SplitNode(nodeObj, prop));
@@ -186,7 +100,78 @@ const proxyHandlers = {
   },
 };
 
-class ShaderCallNodeImpl extends Node {
+const nodeObjectsCacheMap = new WeakMap();
+const nodeBuilderFunctionsCacheMap = new WeakMap();
+
+const ShaderNodeObject = function (obj, altType = null) {
+  const type = getValueType(obj);
+
+  if (type === 'node') {
+    let nodeObject = nodeObjectsCacheMap.get(obj);
+
+    if (nodeObject === undefined) {
+      nodeObject = new Proxy(obj, shaderNodeHandler);
+
+      nodeObjectsCacheMap.set(obj, nodeObject);
+      nodeObjectsCacheMap.set(nodeObject, nodeObject);
+    }
+
+    return nodeObject;
+  } else if (
+    (altType === null && (type === 'float' || type === 'boolean')) ||
+    (type && type !== 'shader' && type !== 'string')
+  ) {
+    return nodeObject(getConstNode(obj, altType));
+  } else if (type === 'shader') {
+    return tslFn(obj);
+  }
+
+  return obj;
+};
+
+const ShaderNodeObjects = function (objects, altType = null) {
+  for (const name in objects) {
+    objects[name] = nodeObject(objects[name], altType);
+  }
+
+  return objects;
+};
+
+const ShaderNodeArray = function (array, altType = null) {
+  const len = array.length;
+
+  for (let i = 0; i < len; i++) {
+    array[i] = nodeObject(array[i], altType);
+  }
+
+  return array;
+};
+
+const ShaderNodeProxy = function (NodeClass, scope = null, factor = null, settings = null) {
+  const assignNode = node => nodeObject(settings !== null ? Object.assign(node, settings) : node);
+
+  if (scope === null) {
+    return (...params) => {
+      return assignNode(new NodeClass(...nodeArray(params)));
+    };
+  } else if (factor !== null) {
+    factor = nodeObject(factor);
+
+    return (...params) => {
+      return assignNode(new NodeClass(scope, ...nodeArray(params), factor));
+    };
+  } else {
+    return (...params) => {
+      return assignNode(new NodeClass(scope, ...nodeArray(params)));
+    };
+  }
+};
+
+const ShaderNodeImmutable = function (NodeClass, ...params) {
+  return nodeObject(new NodeClass(...nodeArray(params)));
+};
+
+class ShaderCallNodeInternal extends Node {
   constructor(shaderNode, inputNodes) {
     super();
 
@@ -204,27 +189,27 @@ class ShaderCallNodeImpl extends Node {
     const { shaderNode, inputNodes } = this;
 
     if (shaderNode.layout) {
-      let fnMap = functionMapMap.get(builder.constructor);
+      let functionNodesCacheMap = nodeBuilderFunctionsCacheMap.get(builder.constructor);
 
-      if (fnMap === undefined) {
-        fnMap = new WeakMap();
+      if (functionNodesCacheMap === undefined) {
+        functionNodesCacheMap = new WeakMap();
 
-        functionMapMap.set(builder.constructor, fnMap);
+        nodeBuilderFunctionsCacheMap.set(builder.constructor, functionNodesCacheMap);
       }
 
-      let node = fnMap.get(shaderNode);
+      let functionNode = functionNodesCacheMap.get(shaderNode);
 
-      if (node === undefined) {
-        node = nodeObject(builder.buildFunctionNode(shaderNode));
+      if (functionNode === undefined) {
+        functionNode = nodeObject(builder.buildFunctionNode(shaderNode));
 
-        fnMap.set(shaderNode, node);
+        functionNodesCacheMap.set(shaderNode, functionNode);
       }
 
       if (builder.currentFunctionNode !== null) {
-        builder.currentFunctionNode.includes.push(node);
+        builder.currentFunctionNode.includes.push(functionNode);
       }
 
-      return nodeObject(node.call(inputNodes));
+      return nodeObject(functionNode.call(inputNodes));
     }
 
     const jsFunc = shaderNode.jsFunc;
@@ -255,29 +240,28 @@ class ShaderCallNodeImpl extends Node {
   }
 }
 
-const arrayInputRe = /^\((\s+)?\[/;
-
-const functionMapMap = new WeakMap();
-class ShaderNodeImpl extends Node {
-  constructor(jsFn) {
+class ShaderNodeInternal extends Node {
+  constructor(jsFunc) {
     super();
 
-    this.jsFunc = jsFn;
+    this.jsFunc = jsFunc;
     this.layout = null;
   }
 
   get isArrayInput() {
-    return arrayInputRe.test(this.jsFunc.toString());
+    return /^\((\s+)?\[/.test(this.jsFunc.toString());
   }
 
   setLayout(layout) {
     this.layout = layout;
+
     return this;
   }
 
   call(inputs = null) {
     nodeObjects(inputs);
-    return nodeObject(new ShaderCallNodeImpl(this, inputs));
+
+    return nodeObject(new ShaderCallNodeInternal(this, inputs));
   }
 
   setup() {
@@ -285,40 +269,97 @@ class ShaderNodeImpl extends Node {
   }
 }
 
-export class ShaderNode {
-  static type = 'ShaderNode';
+const bools = [false, true];
+const uints = [0, 1, 2, 3];
+const ints = [-1, -2];
+const floats = [
+  0.5,
+  1.5,
+  1 / 3,
+  1e-6,
+  1e6,
+  Math.PI,
+  Math.PI * 2,
+  1 / Math.PI,
+  2 / Math.PI,
+  1 / (Math.PI * 2),
+  Math.PI / 2,
+];
 
-  constructor(jsFn) {
-    return new Proxy(new ShaderNodeImpl(jsFn), proxyHandlers);
+const boolsCacheMap = new Map();
+for (const bool of bools) boolsCacheMap.set(bool, new ConstNode(bool));
+
+const uintsCacheMap = new Map();
+for (const uint of uints) uintsCacheMap.set(uint, new ConstNode(uint, 'uint'));
+
+const intsCacheMap = new Map([...uintsCacheMap].map(el => new ConstNode(el.value, 'int')));
+for (const int of ints) intsCacheMap.set(int, new ConstNode(int, 'int'));
+
+const floatsCacheMap = new Map([...intsCacheMap].map(el => new ConstNode(el.value)));
+for (const float of floats) floatsCacheMap.set(float, new ConstNode(float));
+for (const float of floats) floatsCacheMap.set(-float, new ConstNode(-float));
+
+const cacheMaps = { bool: boolsCacheMap, uint: uintsCacheMap, ints: intsCacheMap, float: floatsCacheMap };
+
+const constNodesCacheMap = new Map([...boolsCacheMap, ...floatsCacheMap]);
+
+const getConstNode = (value, type) => {
+  if (constNodesCacheMap.has(value)) {
+    return constNodesCacheMap.get(value);
+  } else if (value.isNode === true) {
+    return value;
+  } else {
+    return new ConstNode(value, type);
   }
-}
+};
 
-const nodeObjectMap = new WeakMap();
-const ShaderNodeObject = function (obj, altType = null) {
-  const type = getValueType(obj);
+const safeGetNodeType = node => {
+  try {
+    return node.getNodeType();
+  } catch (_) {
+    return undefined;
+  }
+};
 
-  if (type === 'node') {
-    let nodeObject = nodeObjectMap.get(obj);
-
-    if (nodeObject === undefined) {
-      nodeObject = new Proxy(obj, proxyHandlers);
-
-      nodeObjectMap.set(obj, nodeObject);
-      nodeObjectMap.set(nodeObject, nodeObject);
+const ConvertType = function (type, cacheMap = null) {
+  return (...params) => {
+    if (
+      params.length === 0 ||
+      (!['bool', 'float', 'int', 'uint'].includes(type) && params.every(param => typeof param !== 'object'))
+    ) {
+      params = [getValueFromType(type, ...params)];
     }
 
-    return nodeObject;
-  } else if (
-    (altType === null && (type === 'float' || type === 'boolean')) ||
-    (type && type !== 'shader' && type !== 'string')
-  ) {
-    return nodeObject(getConstNode(obj, altType));
-  } else if (type === 'shader') {
-    return tslFn(obj);
-  }
+    if (params.length === 1 && cacheMap !== null && cacheMap.has(params[0])) {
+      return nodeObject(cacheMap.get(params[0]));
+    }
 
-  return obj;
+    if (params.length === 1) {
+      const node = getConstNode(params[0], type);
+      if (safeGetNodeType(node) === type) return nodeObject(node);
+      return nodeObject(new ConvertNode(node, type));
+    }
+
+    const nodes = params.map(param => getConstNode(param));
+    return nodeObject(new JoinNode(nodes, type));
+  };
 };
+
+// exports
+
+// utils
+
+export const getConstNodeType = value =>
+  value !== undefined && value !== null
+    ? value.nodeType || value.convertTo || (typeof value === 'string' ? value : null)
+    : null;
+
+// shader node base
+
+export const ShaderNode = function (jsFunc) {
+  return new Proxy(new ShaderNodeInternal(jsFunc), shaderNodeHandler);
+};
+ShaderNode.type = 'ShaderNode';
 
 export const nodeObject = (val, altType = null) => ShaderNodeObject(val, altType);
 export const nodeObjects = (val, altType = null) => new ShaderNodeObjects(val, altType);
@@ -326,8 +367,16 @@ export const nodeArray = (val, altType = null) => new ShaderNodeArray(val, altTy
 export const nodeProxy = (...params) => new ShaderNodeProxy(...params);
 export const nodeImmutable = (...params) => new ShaderNodeImmutable(...params);
 
-export const tslFn = jsFn => {
-  const shaderNode = new ShaderNode(jsFn);
+export const shader = jsFunc => {
+  // @deprecated, r154
+
+  console.warn('TSL: shader() is deprecated. Use tslFn() instead.');
+
+  return new ShaderNode(jsFunc);
+};
+
+export const tslFn = jsFunc => {
+  const shaderNode = new ShaderNode(jsFunc);
 
   const fn = (...params) => {
     let inputs;
@@ -353,37 +402,71 @@ export const tslFn = jsFn => {
   return fn;
 };
 
-export const color = convertNode('color');
-export const float = convertNode('float', floatMap);
-export const int = convertNode('int', sintMap);
-export const uint = convertNode('uint', uintMap);
-export const bool = convertNode('bool', boolMap);
-export const vec2 = convertNode('vec2');
-export const ivec2 = convertNode('ivec2');
-export const uvec2 = convertNode('uvec2');
-export const bvec2 = convertNode('bvec2');
-export const vec3 = convertNode('vec3');
-export const ivec3 = convertNode('ivec3');
-export const uvec3 = convertNode('uvec3');
-export const bvec3 = convertNode('bvec3');
-export const vec4 = convertNode('vec4');
-export const ivec4 = convertNode('ivec4');
-export const uvec4 = convertNode('uvec4');
-export const bvec4 = convertNode('bvec4');
-export const mat2 = convertNode('mat2');
-export const imat2 = convertNode('imat2');
-export const umat2 = convertNode('umat2');
-export const bmat2 = convertNode('bmat2');
-export const mat3 = convertNode('mat3');
-export const imat3 = convertNode('imat3');
-export const umat3 = convertNode('umat3');
-export const bmat3 = convertNode('bmat3');
-export const mat4 = convertNode('mat4');
-export const imat4 = convertNode('imat4');
-export const umat4 = convertNode('umat4');
-export const bmat4 = convertNode('bmat4');
+//
+
+export const setCurrentStack = stack => {
+  if (currentStack === stack) {
+    //throw new Error( 'Stack already defined.' );
+  }
+
+  currentStack = stack;
+};
+
+export const getCurrentStack = () => currentStack;
+
+export const If = (...params) => currentStack.if(...params);
+
+export function append(node) {
+  if (currentStack) currentStack.add(node);
+
+  return node;
+}
+
+// types
+// @TODO: Maybe export from ConstNode.js?
+
+export const color = new ConvertType('color');
+
+export const float = new ConvertType('float', cacheMaps.float);
+export const int = new ConvertType('int', cacheMaps.ints);
+export const uint = new ConvertType('uint', cacheMaps.uint);
+export const bool = new ConvertType('bool', cacheMaps.bool);
+
+export const vec2 = new ConvertType('vec2');
+export const ivec2 = new ConvertType('ivec2');
+export const uvec2 = new ConvertType('uvec2');
+export const bvec2 = new ConvertType('bvec2');
+
+export const vec3 = new ConvertType('vec3');
+export const ivec3 = new ConvertType('ivec3');
+export const uvec3 = new ConvertType('uvec3');
+export const bvec3 = new ConvertType('bvec3');
+
+export const vec4 = new ConvertType('vec4');
+export const ivec4 = new ConvertType('ivec4');
+export const uvec4 = new ConvertType('uvec4');
+export const bvec4 = new ConvertType('bvec4');
+
+export const mat2 = new ConvertType('mat2');
+export const imat2 = new ConvertType('imat2');
+export const umat2 = new ConvertType('umat2');
+export const bmat2 = new ConvertType('bmat2');
+
+export const mat3 = new ConvertType('mat3');
+export const imat3 = new ConvertType('imat3');
+export const umat3 = new ConvertType('umat3');
+export const bmat3 = new ConvertType('bmat3');
+
+export const mat4 = new ConvertType('mat4');
+export const imat4 = new ConvertType('imat4');
+export const umat4 = new ConvertType('umat4');
+export const bmat4 = new ConvertType('bmat4');
+
 export const string = (value = '') => nodeObject(new ConstNode(value, 'string'));
 export const arrayBuffer = value => nodeObject(new ConstNode(value, 'ArrayBuffer'));
+
+// basic nodes
+// HACK - we cannot export them from the corresponding files because of the cyclic dependency
 export const element = nodeProxy(ArrayElementNode);
 export const convert = (node, types) => nodeObject(new ConvertNode(nodeObject(node), types));
 export const split = (node, channels) => nodeObject(new SplitNode(nodeObject(node), channels));

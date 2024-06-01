@@ -1,4 +1,4 @@
-import { float, int, NodeStack, tslFn, vec2, vec3, vec4 } from '../shadernode/ShaderNode.js';
+import { float, If, int, tslFn, vec2, vec3, vec4 } from '../shadernode/ShaderNode.js';
 import { abs, all, clamp, cos, cross, exp2, floor, fract, log2, max, mix, normalize, sin } from '../math/MathNode.js';
 import { mul } from '../math/OperatorNode.js';
 import { cond } from '../math/CondNode.js';
@@ -28,14 +28,14 @@ const getFace = tslFn(([direction]) => {
   const absDirection = vec3(abs(direction)).toVar();
   const face = float(-1.0).toVar();
 
-  NodeStack.if(absDirection.x.greaterThan(absDirection.z), () => {
-    NodeStack.if(absDirection.x.greaterThan(absDirection.y), () => {
+  If(absDirection.x.greaterThan(absDirection.z), () => {
+    If(absDirection.x.greaterThan(absDirection.y), () => {
       face.assign(cond(direction.x.greaterThan(0.0), 0.0, 3.0));
     }).else(() => {
       face.assign(cond(direction.y.greaterThan(0.0), 1.0, 4.0));
     });
   }).else(() => {
-    NodeStack.if(absDirection.z.greaterThan(absDirection.y), () => {
+    If(absDirection.z.greaterThan(absDirection.y), () => {
       face.assign(cond(direction.z.greaterThan(0.0), 2.0, 5.0));
     }).else(() => {
       face.assign(cond(direction.y.greaterThan(0.0), 1.0, 4.0));
@@ -53,7 +53,7 @@ const getFace = tslFn(([direction]) => {
 const getUV = tslFn(([direction, face]) => {
   const uv = vec2().toVar();
 
-  NodeStack.if(face.equal(0.0), () => {
+  If(face.equal(0.0), () => {
     uv.assign(vec2(direction.z, direction.y).div(abs(direction.x))); // pos x
   })
     .elseif(face.equal(1.0), () => {
@@ -85,7 +85,7 @@ const getUV = tslFn(([direction, face]) => {
 const roughnessToMip = tslFn(([roughness]) => {
   const mip = float(0.0).toVar();
 
-  NodeStack.if(roughness.greaterThanEqual(cubeUV_r1), () => {
+  If(roughness.greaterThanEqual(cubeUV_r1), () => {
     mip.assign(cubeUV_r0.sub(roughness).mul(cubeUV_m1.sub(cubeUV_m0)).div(cubeUV_r0.sub(cubeUV_r1)).add(cubeUV_m0));
   })
     .elseif(roughness.greaterThanEqual(cubeUV_r4), () => {
@@ -114,7 +114,7 @@ export const getDirection = tslFn(([uv_immutable, face]) => {
   uv.assign(mul(2.0, uv).sub(1.0));
   const direction = vec3(uv, 1.0).toVar();
 
-  NodeStack.if(face.equal(0.0), () => {
+  If(face.equal(0.0), () => {
     direction.assign(direction.zyx); // ( 1, v, u ) pos x
   })
     .elseif(face.equal(1.0), () => {
@@ -160,7 +160,7 @@ export const textureCubeUV = tslFn(
       bilinearCubeUV(envMap, sampleDir, mipInt, CUBEUV_TEXEL_WIDTH, CUBEUV_TEXEL_HEIGHT, CUBEUV_MAX_MIP),
     ).toVar();
 
-    NodeStack.if(mipF.notEqual(0.0), () => {
+    If(mipF.notEqual(0.0), () => {
       const color1 = vec3(
         bilinearCubeUV(envMap, sampleDir, mipInt.add(1.0), CUBEUV_TEXEL_WIDTH, CUBEUV_TEXEL_HEIGHT, CUBEUV_MAX_MIP),
       ).toVar();
@@ -182,7 +182,7 @@ const bilinearCubeUV = tslFn(
     const faceSize = float(exp2(mipInt)).toVar();
     const uv = vec2(getUV(direction, face).mul(faceSize.sub(2.0)).add(1.0)).toVar();
 
-    NodeStack.if(face.greaterThan(2.0), () => {
+    If(face.greaterThan(2.0), () => {
       uv.y.addAssign(faceSize);
       face.subAssign(3.0);
     });
@@ -228,7 +228,7 @@ export const blur = tslFn(
   }) => {
     const axis = vec3(cond(latitudinal, poleAxis, cross(poleAxis, outputDirection))).toVar();
 
-    NodeStack.if(all(axis.equals(vec3(0.0))), () => {
+    If(all(axis.equals(vec3(0.0))), () => {
       axis.assign(vec3(outputDirection.z, 0.0, outputDirection.x.negate()));
     });
 
@@ -251,7 +251,7 @@ export const blur = tslFn(
     );
 
     loop({ start: int(1), end: n }, ({ i }) => {
-      NodeStack.if(i.greaterThanEqual(samples), () => {
+      If(i.greaterThanEqual(samples), () => {
         Break();
       });
 

@@ -1,21 +1,21 @@
 import * as THREE from '../threejs/Three.js';
 import {
-  color,
-  instanceIndex,
-  MeshBasicNodeMaterial,
-  MeshStandardNodeMaterial,
-  NodeStack,
-  pass,
-  positionLocal,
-  positionWorld,
-  storage,
-  texture,
-  timerLocal,
   tslFn,
-  uint,
-  vec2,
+  texture,
   vec3,
+  pass,
+  color,
+  uint,
   viewportTopLeft,
+  positionWorld,
+  positionLocal,
+  timerLocal,
+  vec2,
+  MeshStandardNodeMaterial,
+  instanceIndex,
+  storage,
+  MeshBasicNodeMaterial,
+  If,
 } from '../threejs/nodes/Nodes.js';
 
 import { TeapotGeometry } from '../threejs/geometries/TeapotGeometry.js';
@@ -139,7 +139,7 @@ async function init() {
     const rippleOnSurface = texture(collisionPosRT.texture, getCoord(position.xz));
     const rippleFloorArea = rippleOnSurface.y.add(scale.x.mul(surfaceOffset));
 
-    NodeStack.if(position.y.greaterThan(rippleFloorArea), () => {
+    If(position.y.greaterThan(rippleFloorArea), () => {
       position.x = particleData.x.add(timer.mul(random.mul(random)).mul(speed).sin().mul(3));
       position.z = particleData.z.add(timer.mul(random).mul(speed).cos().mul(random.mul(10)));
 

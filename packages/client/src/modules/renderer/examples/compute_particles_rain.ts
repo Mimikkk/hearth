@@ -1,21 +1,21 @@
 import * as THREE from '../threejs/Three.js';
 import {
-  cameraProjectionMatrix,
-  cameraViewMatrix,
-  instanceIndex,
-  MeshBasicNodeMaterial,
-  modelWorldMatrix,
-  NodeStack,
-  positionGeometry,
-  positionWorld,
-  storage,
-  texture,
-  timerDelta,
-  timerLocal,
   tslFn,
-  uint,
+  texture,
   uv,
+  uint,
+  positionWorld,
+  modelWorldMatrix,
+  cameraViewMatrix,
+  timerLocal,
+  timerDelta,
+  cameraProjectionMatrix,
   vec2,
+  instanceIndex,
+  positionGeometry,
+  storage,
+  MeshBasicNodeMaterial,
+  If,
 } from '../threejs/nodes/Nodes.js';
 
 import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
@@ -27,6 +27,7 @@ import Stats from 'stats-js';
 import { GUI } from 'lil-gui';
 
 import * as BufferGeometryUtils from '@modules/renderer/threejs/utils/BufferGeometryUtils.js';
+import { Side } from '../threejs/Three.js';
 
 const maxParticleCount = 50000;
 const instanceCount = maxParticleCount / 2;
@@ -142,7 +143,7 @@ function init() {
 
     const ripplePivotOffsetY = -0.9;
 
-    NodeStack.if(position.y.add(ripplePivotOffsetY).lessThan(floorPosition), () => {
+    If(position.y.add(ripplePivotOffsetY).lessThan(floorPosition), () => {
       position.y = 25;
 
       ripplePosition.xz = position.xz;
@@ -162,7 +163,7 @@ function init() {
 
     const rippleFloorArea = rippleOnSurface.y.add(surfaceOffset);
 
-    NodeStack.if(ripplePosition.y.greaterThan(rippleFloorArea), () => {
+    If(ripplePosition.y.greaterThan(rippleFloorArea), () => {
       rippleTime.x = 1000;
     });
   });
