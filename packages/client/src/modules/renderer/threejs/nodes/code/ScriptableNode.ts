@@ -89,7 +89,6 @@ class ScriptableNode extends Node {
   }
 
   getLocal(name: string) {
-    console.log(name);
     return this._local.get(name);
   }
 

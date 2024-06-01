@@ -186,7 +186,6 @@ class WebGPUTexturePassUtils {
     const commandEncoder = this.device.createCommandEncoder({});
 
     const pass = (pipeline: GPURenderPipeline, sourceView: GPUTextureView, destinationView: GPUTextureView) => {
-      console.log(sourceView, destinationView);
       const bindGroupLayout = pipeline.getBindGroupLayout(0);
 
       const bindGroup = this.device.createBindGroup({

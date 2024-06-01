@@ -81,7 +81,6 @@ export class BufferGeometryLoader extends Loader {
     const index = json.data.index;
 
     if (index !== undefined) {
-      console.log('index', index);
       const typedArray = createTypedArray(index.type, index.array);
       geometry.setIndex(new BufferAttribute(typedArray, 1));
     }
