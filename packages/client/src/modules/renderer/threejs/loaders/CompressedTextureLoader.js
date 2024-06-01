@@ -9,11 +9,7 @@ import { Loader } from './Loader.ts';
  * Sub classes have to implement the parse() method which will be used in load().
  */
 
-class CompressedTextureLoader extends Loader {
-  constructor(manager) {
-    super(manager);
-  }
-
+export class CompressedTextureLoader extends Loader {
   load(url, onLoad, onProgress, onError) {
     const scope = this;
 
@@ -111,5 +107,3 @@ class CompressedTextureLoader extends Loader {
     return texture;
   }
 }
-
-export { CompressedTextureLoader };

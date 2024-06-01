@@ -59,7 +59,7 @@ const _taskCache = new WeakMap();
 let _activeLoaders = 0;
 let _zstd;
 
-class KTX2Loader extends Loader {
+export class KTX2Loader extends Loader {
   constructor(manager) {
     super(manager);
 
@@ -739,5 +739,3 @@ function parseColorSpace(container) {
     return ColorSpace.No;
   }
 }
-
-export { KTX2Loader };

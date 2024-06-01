@@ -9,7 +9,7 @@ import {
   TextureFormat,
 } from '../../threejs/Three.js';
 
-class IESLoader extends Loader {
+export class IESLoader extends Loader {
   constructor(manager) {
     super(manager);
 
@@ -281,5 +281,3 @@ function IESLamp(text) {
     }
   }
 }
-
-export { IESLoader };

@@ -64,11 +64,7 @@ let fbxTree;
 let connections;
 let sceneGraph;
 
-class FBXLoader extends Loader {
-  constructor(manager) {
-    super(manager);
-  }
-
+export class FBXLoader extends Loader {
   load(url, onLoad, onProgress, onError) {
     const scope = this;
 
@@ -3433,5 +3429,3 @@ function slice(a, b, from, to) {
 
   return a;
 }
-
-export { FBXLoader };

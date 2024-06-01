@@ -16,7 +16,7 @@ import {
 
 const COLOR_SPACE_SVG = ColorSpace.SRGB;
 
-class SVGLoader extends Loader {
+export class SVGLoader extends Loader {
   constructor(manager) {
     super(manager);
 
@@ -2527,5 +2527,3 @@ class SVGLoader extends Loader {
     }
   }
 }
-
-export { SVGLoader };

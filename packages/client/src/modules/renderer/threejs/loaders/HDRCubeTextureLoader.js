@@ -9,7 +9,7 @@ import {
 } from '../../threejs/Three.js';
 import { RGBELoader } from '../loaders/RGBELoader.js';
 
-class HDRCubeTextureLoader extends Loader {
+export class HDRCubeTextureLoader extends Loader {
   constructor(manager) {
     super(manager);
 
@@ -86,13 +86,4 @@ class HDRCubeTextureLoader extends Loader {
 
     return texture;
   }
-
-  setDataType(value) {
-    this.type = value;
-    this.hdrLoader.setDataType(value);
-
-    return this;
-  }
 }
-
-export { HDRCubeTextureLoader };

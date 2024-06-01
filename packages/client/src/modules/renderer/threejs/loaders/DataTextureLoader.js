@@ -9,11 +9,7 @@ import { Loader } from './Loader.ts';
  * Sub classes have to implement the parse() method which will be used in load().
  */
 
-class DataTextureLoader extends Loader {
-  constructor(manager) {
-    super(manager);
-  }
-
+export class DataTextureLoader extends Loader {
   load(url, onLoad, onProgress, onError) {
     const scope = this;
 
@@ -98,5 +94,3 @@ class DataTextureLoader extends Loader {
     return texture;
   }
 }
-
-export { DataTextureLoader };

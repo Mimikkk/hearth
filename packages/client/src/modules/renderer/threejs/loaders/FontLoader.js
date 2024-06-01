@@ -1,10 +1,6 @@
 import { FileLoader, Loader, ShapePath } from '../../threejs/Three.js';
 
-class FontLoader extends Loader {
-  constructor(manager) {
-    super(manager);
-  }
-
+export class FontLoader extends Loader {
   load(url, onLoad, onProgress, onError) {
     const scope = this;
 
@@ -35,7 +31,7 @@ class FontLoader extends Loader {
 
 //
 
-class Font {
+export class Font {
   constructor(data) {
     this.isFont = true;
 
@@ -145,5 +141,3 @@ function createPath(char, scale, offsetX, offsetY, data) {
 
   return { offsetX: glyph.ha * scale, path: path };
 }
-
-export { FontLoader, Font };

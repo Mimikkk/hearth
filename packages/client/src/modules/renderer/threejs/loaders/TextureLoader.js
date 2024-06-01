@@ -2,11 +2,7 @@ import { ImageLoader } from './ImageLoader.js';
 import { Texture } from '../textures/Texture.ts';
 import { Loader } from './Loader.ts';
 
-class TextureLoader extends Loader {
-  constructor(manager) {
-    super(manager);
-  }
-
+export class TextureLoader extends Loader {
   load(url, onLoad, onProgress, onError) {
     const texture = new Texture();
 
@@ -33,5 +29,3 @@ class TextureLoader extends Loader {
     return texture;
   }
 }
-
-export { TextureLoader };

@@ -3,7 +3,7 @@ import { ColorSpace, DataTextureLoader, DataUtils, Filter, TextureDataType } fro
 // https://github.com/mrdoob/three.js/issues/5552
 // http://en.wikipedia.org/wiki/RGBE_image_format
 
-class RGBELoader extends DataTextureLoader {
+export class RGBELoader extends DataTextureLoader {
   constructor(manager) {
     super(manager);
 
@@ -356,5 +356,3 @@ class RGBELoader extends DataTextureLoader {
     return super.load(url, onLoadCallback, onProgress, onError);
   }
 }
-
-export { RGBELoader };

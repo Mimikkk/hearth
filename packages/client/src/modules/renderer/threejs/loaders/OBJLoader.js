@@ -353,7 +353,7 @@ function ParserState() {
 
 //
 
-class OBJLoader extends Loader {
+export class OBJLoader extends Loader {
   constructor(manager) {
     super(manager);
 
@@ -694,5 +694,3 @@ class OBJLoader extends Loader {
     return container;
   }
 }
-
-export { OBJLoader };

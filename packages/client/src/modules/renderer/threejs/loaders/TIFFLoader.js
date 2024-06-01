@@ -1,12 +1,8 @@
 import { DataTextureLoader, Filter } from '../../threejs/Three.js';
 
-import UTIF from 'utif';
+import * as UTIF from 'utif';
 
-class TIFFLoader extends DataTextureLoader {
-  constructor(manager) {
-    super(manager);
-  }
-
+export class TIFFLoader extends DataTextureLoader {
   parse(buffer) {
     const ifds = UTIF.decode(buffer);
     UTIF.decodeImage(buffer, ifds[0]);
@@ -22,5 +18,3 @@ class TIFFLoader extends DataTextureLoader {
     };
   }
 }
-
-export { TIFFLoader };

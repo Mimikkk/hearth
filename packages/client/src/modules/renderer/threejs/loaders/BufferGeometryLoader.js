@@ -11,10 +11,6 @@ import { InterleavedBuffer } from '../core/InterleavedBuffer.ts';
 import { createTypedArray } from '../utils.ts';
 
 export class BufferGeometryLoader extends Loader {
-  constructor(manager) {
-    super(manager);
-  }
-
   load(url, onLoad, onProgress, onError) {
     const scope = this;
 

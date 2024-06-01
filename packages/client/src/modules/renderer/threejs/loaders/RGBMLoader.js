@@ -8,12 +8,13 @@ import {
 } from '../../threejs/Three.js';
 import * as UPNG from 'upng-js';
 
-class RGBMLoader extends DataTextureLoader {
+export class RGBMLoader extends DataTextureLoader {
   constructor(manager) {
     super(manager);
 
     this.type = TextureDataType.HalfFloat;
-    this.maxRange = 7; // more information about this property at https://iwasbeingirony.blogspot.com/2010/06/difference-between-rgbm-and-rgbd.html
+    // more information about this property at https://iwasbeingirony.blogspot.com/2010/06/difference-between-rgbm-and-rgbd.html
+    this.maxRange = 7;
   }
 
   setDataType(value) {
@@ -104,5 +105,3 @@ class RGBMLoader extends DataTextureLoader {
     };
   }
 }
-
-export { RGBMLoader };

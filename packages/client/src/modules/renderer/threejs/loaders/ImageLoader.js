@@ -1,11 +1,7 @@
 import { Cache } from './Cache.js';
 import { Loader } from './Loader.ts';
 
-class ImageLoader extends Loader {
-  constructor(manager) {
-    super(manager);
-  }
-
+export class ImageLoader extends Loader {
   load(url, onLoad, onProgress, onError) {
     if (this.path !== undefined) url = this.path + url;
 
@@ -67,5 +63,3 @@ class ImageLoader extends Loader {
     return image;
   }
 }
-
-export { ImageLoader };

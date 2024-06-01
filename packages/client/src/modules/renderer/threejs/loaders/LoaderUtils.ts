@@ -1,4 +1,5 @@
 const relativeRe = /^https?:\/\//i;
+const replaceRelativeRe = /(^https?:\/\/[^\/]+).*/i;
 const isHostRelativeUrl = (path: string, url: string) => relativeRe.test(path) && /^\//.test(url);
 
 const hostRe = /^https?:\/\/[^/]+/;
@@ -17,9 +18,7 @@ export const LoaderUtils = {
     return url.slice(0, index + 1);
   },
   resolveUrl(url: string, path: string): string {
-    if (isHostRelativeUrl(path, url)) {
-      path = path.replace(/(^https?:\/\/[^\/]+).*/i, '$1');
-    }
+    if (isHostRelativeUrl(path, url)) path = path.replace(replaceRelativeRe, '$1');
     if (isAbsoluteUrl(url)) return url;
     if (isDataUri(url)) return url;
     if (isBlobUrl(url)) return url;

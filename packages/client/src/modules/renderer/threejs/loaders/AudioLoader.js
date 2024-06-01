@@ -2,11 +2,7 @@ import { AudioContextManager } from '../audio/AudioContextManager.ts';
 import { FileLoader } from './FileLoader.ts';
 import { Loader } from './Loader.ts';
 
-class AudioLoader extends Loader {
-  constructor(manager) {
-    super(manager);
-  }
-
+export class AudioLoader extends Loader {
   load(url, onLoad, onProgress, onError) {
     const scope = this;
 
@@ -51,5 +47,3 @@ class AudioLoader extends Loader {
     }
   }
 }
-
-export { AudioLoader };

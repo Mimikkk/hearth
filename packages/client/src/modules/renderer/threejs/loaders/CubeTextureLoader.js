@@ -3,11 +3,7 @@ import { CubeTexture } from '../textures/CubeTexture.ts';
 import { Loader } from './Loader.ts';
 import { ColorSpace } from '../constants.ts';
 
-class CubeTextureLoader extends Loader {
-  constructor(manager) {
-    super(manager);
-  }
-
+export class CubeTextureLoader extends Loader {
   load(urls, onLoad, onProgress, onError) {
     const texture = new CubeTexture();
     texture.colorSpace = ColorSpace.SRGB;
@@ -46,5 +42,3 @@ class CubeTextureLoader extends Loader {
     return texture;
   }
 }
-
-export { CubeTextureLoader };

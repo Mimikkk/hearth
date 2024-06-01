@@ -56,7 +56,7 @@ import {
 } from '../../threejs/Three.js';
 import { toTrianglesDrawMode } from '../utils/BufferGeometryUtils.js';
 
-class GLTFLoader extends Loader {
+export class GLTFLoader extends Loader {
   constructor(manager) {
     super(manager);
 
@@ -3660,5 +3660,3 @@ function addPrimitiveAttributes(geometry, primitiveDef, parser) {
     return primitiveDef.targets !== undefined ? addMorphTargets(geometry, primitiveDef.targets, parser) : geometry;
   });
 }
-
-export { GLTFLoader };

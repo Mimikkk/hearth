@@ -59,7 +59,7 @@ import {
  *  const mesh = new THREE.Mesh(geometry, materials);
  */
 
-class STLLoader extends Loader {
+export class STLLoader extends Loader {
   constructor(manager) {
     super(manager);
   }
@@ -344,5 +344,3 @@ class STLLoader extends Loader {
     return isBinary(binData) ? parseBinary(binData) : parseASCII(ensureString(data));
   }
 }
-
-export { STLLoader };

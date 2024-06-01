@@ -1,7 +1,7 @@
 import { Cache } from './Cache.js';
 import { Loader } from './Loader.ts';
 
-class ImageBitmapLoader extends Loader {
+export class ImageBitmapLoader extends Loader {
   constructor(manager) {
     super(manager);
 
@@ -16,12 +16,6 @@ class ImageBitmapLoader extends Loader {
     }
 
     this.options = { premultiplyAlpha: 'none' };
-  }
-
-  setOptions(options) {
-    this.options = options;
-
-    return this;
   }
 
   load(url, onLoad, onProgress, onError) {
@@ -95,5 +89,3 @@ class ImageBitmapLoader extends Loader {
     scope.manager.itemStart(url);
   }
 }
-
-export { ImageBitmapLoader };

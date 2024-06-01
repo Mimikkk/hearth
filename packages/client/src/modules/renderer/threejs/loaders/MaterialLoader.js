@@ -6,28 +6,9 @@ import { Matrix3 } from '../math/Matrix3.ts';
 import { Matrix4 } from '../math/Matrix4.ts';
 import { FileLoader } from './FileLoader.ts';
 import { Loader } from './Loader.ts';
-import {
-  LineBasicMaterial,
-  LineDashedMaterial,
-  Material,
-  MeshBasicMaterial,
-  MeshDepthMaterial,
-  MeshDistanceMaterial,
-  MeshLambertMaterial,
-  MeshMatcapMaterial,
-  MeshNormalMaterial,
-  MeshPhongMaterial,
-  MeshPhysicalMaterial,
-  MeshStandardMaterial,
-  MeshToonMaterial,
-  PointsMaterial,
-  RawShaderMaterial,
-  ShaderMaterial,
-  ShadowMaterial,
-  SpriteMaterial,
-} from '../materials/Materials.ts';
+import * as materials from '../materials/Materials.ts';
 
-class MaterialLoader extends Loader {
+export class MaterialLoader extends Loader {
   constructor(options) {
     super(options);
     this.textures = {};
@@ -307,35 +288,7 @@ class MaterialLoader extends Loader {
     return material;
   }
 
-  setTextures(value) {
-    this.textures = value;
-    return this;
-  }
-
   static createMaterialFromType(type) {
-    const materialLib = {
-      ShadowMaterial,
-      SpriteMaterial,
-      RawShaderMaterial,
-      ShaderMaterial,
-      PointsMaterial,
-      MeshPhysicalMaterial,
-      MeshStandardMaterial,
-      MeshPhongMaterial,
-      MeshToonMaterial,
-      MeshNormalMaterial,
-      MeshLambertMaterial,
-      MeshDepthMaterial,
-      MeshDistanceMaterial,
-      MeshBasicMaterial,
-      MeshMatcapMaterial,
-      LineDashedMaterial,
-      LineBasicMaterial,
-      Material,
-    };
-
-    return new materialLib[type]();
+    return new materials[type]();
   }
 }
-
-export { MaterialLoader };
