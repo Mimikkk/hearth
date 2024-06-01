@@ -9,8 +9,13 @@ import { getValueFromType, getValueType } from '../core/NodeUtils.js';
 import { boolMap, constMap, floatMap, NodeElements, sintMap, uintMap } from './ShaderNode.map.js';
 import { NodeStack } from '@modules/renderer/threejs/nodes/shadernode/ShaderNode.stack.js';
 
+const swizzleRSRe = /[rs]/g;
+const swizzleGTRe = /[gt]/g;
+const swizzleBPRe = /[bp]/g;
+const swizzleAQRe = /[aq]/g;
+
 const parseSwizzle = props =>
-  props.replace(/[rs]/g, 'x').replace(/[gt]/g, 'y').replace(/[bp]/g, 'z').replace(/[aq]/g, 'w');
+  props.replace(swizzleRSRe, 'x').replace(swizzleGTRe, 'y').replace(swizzleBPRe, 'z').replace(swizzleAQRe, 'w');
 
 class ShaderNodeObjects {
   constructor(objects, altType = null) {
@@ -258,6 +263,7 @@ class ShaderCallNodeImpl extends Node {
 const arrayInputRe = /^\((\s+)?\[/;
 
 const functionMapMap = new WeakMap();
+
 class ShaderNodeImpl extends Node {
   constructor(jsFn) {
     super();
