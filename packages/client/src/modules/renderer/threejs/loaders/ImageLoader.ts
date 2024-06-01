@@ -1,23 +1,27 @@
 import { Cache } from './Cache.js';
 import { Loader } from './Loader.js';
 
-export class ImageLoader extends Loader {
-  load(url, onLoad, onProgress, onError) {
-    if (this.path !== undefined) url = this.path + url;
+export class ImageLoader<TUrl extends string = string> extends Loader {
+  constructor(options?: ImageLoader.Options) {
+    super(options);
+  }
 
-    url = this.manager.resolveURL(url);
+  load(url: TUrl, handlers?: ImageLoader.Handlers) {
+    let uri: string = url;
+    if (this.path !== undefined) uri = this.path + uri;
+    uri = this.manager.resolveURL(uri);
 
     const scope = this;
 
-    const cached = Cache.get(url);
+    const cached = Cache.get(uri);
 
     if (cached !== undefined) {
-      scope.manager.itemStart(url);
+      scope.manager.itemStart(uri);
 
       setTimeout(function () {
-        if (onLoad) onLoad(cached);
+        handlers?.onLoad?.(cached);
 
-        scope.manager.itemEnd(url);
+        scope.manager.itemEnd(uri);
       }, 0);
 
       return cached;
@@ -25,41 +29,45 @@ export class ImageLoader extends Loader {
 
     const image = document.createElement('img');
 
-    function onImageLoad() {
-      removeEventListeners();
-
-      Cache.add(url, this);
-
-      if (onLoad) onLoad(this);
-
-      scope.manager.itemEnd(url);
-    }
-
-    function onImageError(event) {
-      removeEventListeners();
-
-      if (onError) onError(event);
-
-      scope.manager.itemError(url);
-      scope.manager.itemEnd(url);
-    }
-
-    function removeEventListeners() {
+    function clearListeners() {
       image.removeEventListener('load', onImageLoad, false);
       image.removeEventListener('error', onImageError, false);
+    }
+
+    function onImageLoad() {
+      clearListeners();
+
+      Cache.add(uri, this);
+
+      handlers?.onLoad?.(this);
+
+      scope.manager.itemEnd(uri);
+    }
+
+    function onImageError(event: ErrorEvent) {
+      clearListeners();
+
+      handlers?.onError?.(event);
+
+      scope.manager.itemError(uri);
+      scope.manager.itemEnd(uri);
     }
 
     image.addEventListener('load', onImageLoad, false);
     image.addEventListener('error', onImageError, false);
 
-    if (url.slice(0, 5) !== 'data:') {
-      if (this.crossOrigin !== undefined) image.crossOrigin = this.crossOrigin;
-    }
+    if (uri.slice(0, 5) !== 'data:' && this.crossOrigin !== undefined) image.crossOrigin = this.crossOrigin;
 
-    scope.manager.itemStart(url);
+    scope.manager.itemStart(uri);
 
-    image.src = url;
+    image.src = uri;
 
     return image;
   }
+}
+
+export namespace ImageLoader {
+  export interface Options extends Pick<Loader.Options, 'manager' | 'crossOrigin' | 'path'> {}
+
+  export interface Handlers<T = HTMLImageElement> extends Pick<Loader.Handlers<T>, 'onLoad' | 'onError'> {}
 }

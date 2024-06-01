@@ -48,7 +48,6 @@ import {
   Sphere,
   SpotLight,
   Texture,
-  TextureLoader,
   Vector2,
   Vector3,
   VectorKeyframeTrack,
@@ -131,7 +130,7 @@ export class GLTFLoader extends Loader {
     });
   }
 
-  load(url, onLoad, onProgress, onError) {
+  load(url, onLoad, onProgress, onError = console.error) {
     const scope = this;
 
     let resourcePath;
@@ -156,12 +155,7 @@ export class GLTFLoader extends Loader {
     this.manager.itemStart(url);
 
     const _onError = function (e) {
-      if (onError) {
-        onError(e);
-      } else {
-        console.error(e);
-      }
-
+      onError(e);
       scope.manager.itemError(url);
       scope.manager.itemEnd(url);
     };

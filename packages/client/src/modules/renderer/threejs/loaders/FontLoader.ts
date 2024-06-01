@@ -14,7 +14,7 @@ export class FontLoader extends Loader {
 
     loader.load(
       url,
-      function (text) {
+      text => {
         const font = scope.parse(JSON.parse(text));
 
         if (onLoad) onLoad(font);

@@ -3,7 +3,7 @@ import { DataTextureLoader, Filter } from '../../threejs/Three.js';
 import * as UTIF from 'utif';
 
 export class TIFFLoader extends DataTextureLoader {
-  parse(buffer) {
+  parse(buffer: ArrayBuffer) {
     const ifds = UTIF.decode(buffer);
     UTIF.decodeImage(buffer, ifds[0]);
     const rgba = UTIF.toRGBA8(ifds[0]);

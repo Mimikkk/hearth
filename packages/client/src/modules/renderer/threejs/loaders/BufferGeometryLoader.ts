@@ -10,38 +10,20 @@ import { InterleavedBufferAttribute } from '../core/InterleavedBufferAttribute.j
 import { InterleavedBuffer } from '../core/InterleavedBuffer.js';
 import { createTypedArray } from '../utils.js';
 
-export class BufferGeometryLoader extends Loader {
-  load(url, onLoad, onProgress, onError) {
-    const scope = this;
-
-    const loader = new FileLoader({
-      manager: this.manager,
-      path: this.path,
-      requestHeader: this.requestHeader,
-      withCredentials: this.withCredentials,
-    });
-
-    loader.load(
-      url,
-      function (text) {
-        try {
-          onLoad(scope.parse(JSON.parse(text)));
-        } catch (e) {
-          if (onError) {
-            onError(e);
-          } else {
-            console.error(e);
-          }
-
-          scope.manager.itemError(url);
-        }
-      },
-      onProgress,
-      onError,
-    );
+export class BufferGeometryLoader<TUrl extends string = string> extends Loader {
+  constructor(options?: BufferGeometryLoader.Options) {
+    super(options);
   }
 
-  parse(json) {
+  load(url: TUrl, handlers?: Loader.Handlers<BufferGeometry>) {
+    FileLoader.load(url, this, {
+      onLoad: this.createOnLoad(url, handlers?.onLoad, handlers?.onError),
+      onProgress: handlers?.onProgress,
+      onError: handlers?.onError,
+    });
+  }
+
+  parse(json: any) {
     const interleavedBufferMap = {};
     const arrayBufferMap = {};
 
@@ -176,4 +158,19 @@ export class BufferGeometryLoader extends Loader {
 
     return geometry;
   }
+
+  createOnLoad(url: TUrl, onLoad: undefined | Loader.OnLoad<BufferGeometry>, onError: Loader.OnError = console.error) {
+    return (text: string) => {
+      try {
+        onLoad?.(this.parse(JSON.parse(text)));
+      } catch (e) {
+        onError(e);
+        this.manager.itemError(url);
+      }
+    };
+  }
+}
+
+export namespace BufferGeometryLoader {
+  export interface Options extends Pick<Loader.Options, 'manager' | 'withCredentials' | 'path' | 'requestHeader'> {}
 }

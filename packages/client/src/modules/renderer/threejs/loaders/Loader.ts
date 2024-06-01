@@ -20,12 +20,16 @@ export abstract class Loader<TData = any, TUrl extends string = string> {
     this.requestHeader = options?.requestHeader ?? {};
   }
 
-  load(url: TUrl, onLoad: Loader.OnLoad<TData>, onProgress?: Loader.OnProgress, onError?: Loader.OnError<unknown>) {}
+  abstract load(url: TUrl, handlers: Loader.Handlers<TData>): void;
+  abstract load(
+    url: TUrl,
+    onLoad: Loader.OnLoad<TData>,
+    onProgress?: Loader.OnProgress,
+    onError?: Loader.OnError,
+  ): void;
 
-  loadAsync(url: TUrl, onProgress: Loader.OnProgress): Promise<void> {
-    return new Promise((resolve, reject) => {
-      this.load(url, resolve, onProgress, reject);
-    });
+  loadAsync(url: TUrl, onProgress?: Loader.OnProgress): Promise<void> {
+    return new Promise((onLoad, onError) => this.load(url, { onLoad: () => onLoad(), onProgress, onError }));
   }
 
   parse(data: TData) {}
@@ -41,8 +45,14 @@ export namespace Loader {
     requestHeader?: RequestHeader;
   }
 
+  export interface Handlers<T, E = unknown> {
+    onLoad?: OnLoad<T>;
+    onProgress?: OnProgress;
+    onError?: OnError<E>;
+  }
+
   export type RequestHeader = Record<string, string>;
   export type OnLoad<T> = (item: T) => void;
   export type OnProgress = (event: ProgressEvent) => void;
-  export type OnError<E> = (error: E) => void;
+  export type OnError<E = unknown> = (error: E) => void;
 }

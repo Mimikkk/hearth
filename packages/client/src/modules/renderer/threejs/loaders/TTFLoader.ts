@@ -1,48 +1,38 @@
 import { FileLoader, Loader } from '../../threejs/Three.js';
-import opentype from 'opentype.js';
+import * as opentype from 'opentype.js';
 
-export class TTFLoader extends Loader {
-  constructor(manager) {
-    super(manager);
+export class TTFLoader<TUrl extends string = string> extends Loader {
+  reversed: boolean;
 
-    this.reversed = false;
+  constructor(options?: TTFLoader.Options) {
+    super(options);
+
+    this.reversed = options?.reversed ?? false;
   }
 
-  load(url, onLoad, onProgress, onError) {
-    const scope = this;
-
-    const loader = new FileLoader({
-      manager: this.manager,
-      responseType: 'arraybuffer',
-      path: this.path,
-      requestHeader: this.requestHeader,
-      withCredentials: this.withCredentials,
-    });
-    loader.load(
+  load(url: TUrl, { onError = console.error, onLoad, onProgress }: Loader.Handlers<any>) {
+    FileLoader.load(
       url,
-      function (buffer) {
-        try {
-          onLoad(scope.parse(buffer));
-        } catch (e) {
-          if (onError) {
-            onError(e);
-          } else {
-            console.error(e);
-          }
-
-          scope.manager.itemError(url);
-        }
+      {
+        manager: this.manager,
+        responseType: 'arraybuffer',
+        path: this.path,
+        requestHeader: this.requestHeader,
+        withCredentials: this.withCredentials,
       },
-      onProgress,
-      onError,
+      {
+        onLoad: this.createOnLoad(url, onLoad, onError),
+        onProgress,
+        onError,
+      },
     );
   }
 
-  parse(arraybuffer) {
-    function convert(font, reversed) {
+  parse(arraybuffer: ArrayBuffer) {
+    function convert(font: any, reversed: boolean) {
       const round = Math.round;
 
-      const glyphs = {};
+      const glyphs: Record<string, any> = {};
       const scale = 100000 / ((font.unitsPerEm || 2048) * 72);
 
       const glyphIndexMap = font.encoding.cmap.glyphIndexMap;
@@ -64,7 +54,7 @@ export class TTFLoader extends Loader {
             glyph.path.commands = reverseCommands(glyph.path.commands);
           }
 
-          glyph.path.commands.forEach(function (command) {
+          glyph.path.commands.forEach(function (command: any) {
             if (command.type.toLowerCase() === 'c') {
               command.type = 'b';
             }
@@ -106,11 +96,11 @@ export class TTFLoader extends Loader {
       };
     }
 
-    function reverseCommands(commands) {
-      const paths = [];
+    function reverseCommands(commands: any) {
+      const paths: any[] = [];
       let path;
 
-      commands.forEach(function (c) {
+      commands.forEach(function (c: any) {
         if (c.type.toLowerCase() === 'm') {
           path = [c];
           paths.push(path);
@@ -119,7 +109,7 @@ export class TTFLoader extends Loader {
         }
       });
 
-      const reversed = [];
+      const reversed: any[] = [];
 
       paths.forEach(function (p) {
         const result = {
@@ -132,7 +122,15 @@ export class TTFLoader extends Loader {
 
         for (let i = p.length - 1; i > 0; i--) {
           const command = p[i];
-          const result = { type: command.type };
+          const result: {
+            type: string;
+            x: number;
+            y: number;
+            x1?: number;
+            y1?: number;
+            x2?: number;
+            y2?: number;
+          } = { type: command.type, x: p[i - 1].x, y: p[i - 1].y };
 
           if (command.x2 !== undefined && command.y2 !== undefined) {
             result.x1 = command.x2;
@@ -144,8 +142,6 @@ export class TTFLoader extends Loader {
             result.y1 = command.y1;
           }
 
-          result.x = p[i - 1].x;
-          result.y = p[i - 1].y;
           reversed.push(result);
         }
       });
@@ -154,5 +150,22 @@ export class TTFLoader extends Loader {
     }
 
     return convert(opentype.parse(arraybuffer), this.reversed);
+  }
+
+  createOnLoad(url: TUrl, onLoad: Loader.OnLoad<any>, onError: Loader.OnError) {
+    return (buffer: ArrayBuffer) => {
+      try {
+        onLoad(this.parse(buffer));
+      } catch (e) {
+        onError(e);
+        this.manager.itemError(url);
+      }
+    };
+  }
+}
+
+export namespace TTFLoader {
+  export interface Options extends Loader.Options {
+    reversed?: boolean;
   }
 }

@@ -1,18 +1,20 @@
-import { ColorSpace, DataTextureLoader, DataUtils, Filter, TextureDataType } from '../../threejs/Three.js';
+import { ColorSpace, MagnificationTextureFilter, MinificationTextureFilter, TextureDataType } from '../constants.ts';
+import { DataTextureLoader } from './DataTextureLoader.js';
+import { Loader } from './Loader.js';
+import { DataUtils } from '@modules/renderer/threejs/extras/DataUtils.js';
 
-// https://github.com/mrdoob/three.js/issues/5552
-// http://en.wikipedia.org/wiki/RGBE_image_format
+type SupportedType = TextureDataType.Float | TextureDataType.HalfFloat | TextureDataType.UnsignedByte;
 
-export class RGBELoader extends DataTextureLoader {
-  constructor(manager) {
-    super(manager);
+export class RGBELoader<TUrl extends string = string> extends DataTextureLoader {
+  type: SupportedType;
 
-    this.type = TextureDataType.HalfFloat;
+  constructor(options: RGBELoader.Options) {
+    super(options);
+
+    this.type = options?.type ?? TextureDataType.HalfFloat;
   }
 
-  // adapted from http://www.graphics.cornell.edu/~bjw/rgbe.html
-
-  parse(buffer) {
+  parse(buffer: ArrayBuffer) {
     const /* default error routine.  change this to change error handling */
       rgbe_read_error = 1,
       rgbe_write_error = 2,
@@ -331,19 +333,24 @@ export class RGBELoader extends DataTextureLoader {
     };
   }
 
-  setDataType(value) {
-    this.type = value;
-    return this;
+  load(url: TUrl, onLoad, onProgress, onError) {
+    if (typeof onLoad === 'object') return this.load(url, onLoad.onLoad, onLoad.onProgress, onLoad.onError);
+
+    super.load(url, {
+      onLoad: this.createOnLoad2(onLoad),
+      onProgress,
+      onError,
+    });
   }
 
-  load(url, onLoad, onProgress, onError) {
-    function onLoadCallback(texture, texData) {
+  createOnLoad2(onLoad) {
+    return (texture, texData) => {
       switch (texture.type) {
         case TextureDataType.Float:
         case TextureDataType.HalfFloat:
           texture.colorSpace = ColorSpace.LinearSRGB;
-          texture.minFilter = Filter.Linear;
-          texture.magFilter = Filter.Linear;
+          texture.minFilter = MinificationTextureFilter.Linear;
+          texture.magFilter = MagnificationTextureFilter.Linear;
           texture.generateMipmaps = false;
           texture.flipY = true;
 
@@ -351,8 +358,12 @@ export class RGBELoader extends DataTextureLoader {
       }
 
       if (onLoad) onLoad(texture, texData);
-    }
+    };
+  }
+}
 
-    return super.load(url, onLoadCallback, onProgress, onError);
+export namespace RGBELoader {
+  export interface Options extends Loader.Options {
+    type?: SupportedType;
   }
 }

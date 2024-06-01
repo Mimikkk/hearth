@@ -184,13 +184,9 @@ class MaterialXLoader extends Loader {
     super(manager);
   }
 
-  load(url, onLoad, onProgress, onError) {
+  load(url, onLoad, onProgress, onError = console.error) {
     const _onError = function (e) {
-      if (onError) {
-        onError(e);
-      } else {
-        console.error(e);
-      }
+      onError(e);
     };
 
     new FileLoader({

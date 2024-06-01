@@ -1,24 +1,30 @@
-export const Cache = {
-  enabled: false,
-  files: {},
+export namespace Cache {
+  type Key = PropertyKey;
+  type Value = any;
+  type FileMap = Map<Key, Value>;
 
-  add(key, file) {
-    if (this.enabled === false) return;
+  const files: FileMap = new Map();
+  let enabled = false;
 
-    this.files[key] = file;
-  },
+  export function add(key: Key, file: Value): FileMap {
+    if (!enabled) return files;
 
-  get(key) {
-    if (this.enabled === false) return;
+    files.set(key, file);
 
-    return this.files[key];
-  },
+    return files;
+  }
 
-  remove(key) {
-    delete this.files[key];
-  },
+  export function get(key: Key): Value | undefined {
+    return enabled ? files.get(key) : undefined;
+  }
 
-  clear() {
-    this.files = {};
-  },
-};
+  export function remove(key: Key): FileMap {
+    files.delete(key);
+    return files;
+  }
+
+  export function clear(): FileMap {
+    files.clear();
+    return files;
+  }
+}

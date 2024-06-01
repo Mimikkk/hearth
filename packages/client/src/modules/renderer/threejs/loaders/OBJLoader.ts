@@ -372,7 +372,7 @@ export class OBJLoader extends Loader {
 
     loader.load(
       url,
-      function (text) {
+      text => {
         try {
           onLoad(scope.parse(text));
         } catch (e) {

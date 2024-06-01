@@ -39,7 +39,7 @@ export class SVGLoader extends Loader {
     });
     loader.load(
       url,
-      function (text) {
+      text => {
         try {
           onLoad(scope.parse(text));
         } catch (e) {

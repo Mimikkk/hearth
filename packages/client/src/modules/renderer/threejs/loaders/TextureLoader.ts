@@ -2,30 +2,29 @@ import { ImageLoader } from './ImageLoader.js';
 import { Texture } from '../textures/Texture.js';
 import { Loader } from './Loader.js';
 
-export class TextureLoader extends Loader {
-  load(url, onLoad, onProgress, onError) {
+export class TextureLoader<TUrl extends string = string> extends Loader {
+  constructor(options?: ImageLoader.Options) {
+    super(options);
+  }
+
+  load(url: TUrl, { onLoad, onError }: ImageLoader.Handlers<Texture> = {}) {
+    //@ts-expect-error
     const texture = new Texture();
 
-    const loader = new ImageLoader({
-      manager: this.manager,
-      crossOrigin: this.crossOrigin,
-      path: this.path,
+    new ImageLoader(this).load(url, {
+      onLoad: this.createOnLoad(texture, onLoad),
+      onError,
     });
 
-    loader.load(
-      url,
-      function (image) {
-        texture.image = image;
-        texture.needsUpdate = true;
-
-        if (onLoad !== undefined) {
-          onLoad(texture);
-        }
-      },
-      onProgress,
-      onError,
-    );
-
     return texture;
+  }
+
+  createOnLoad(texture: Texture, onLoad?: Loader.OnLoad<Texture>) {
+    return (image: HTMLImageElement) => {
+      texture.image = image;
+      texture.needsUpdate = true;
+
+      onLoad?.(texture);
+    };
   }
 }

@@ -9,8 +9,8 @@ import {
 import * as UPNG from 'upng-js';
 
 export class RGBMLoader extends DataTextureLoader {
-  constructor(manager) {
-    super(manager);
+  constructor(options) {
+    super(options);
 
     this.type = TextureDataType.HalfFloat;
     // more information about this property at https://iwasbeingirony.blogspot.com/2010/06/difference-between-rgbm-and-rgbd.html
@@ -35,9 +35,8 @@ export class RGBMLoader extends DataTextureLoader {
     const scope = this;
 
     function loadTexture(i) {
-      scope.load(
-        urls[i],
-        function (image) {
+      scope.load(urls[i], {
+        onLoad: function (image) {
           texture.images[i] = image;
 
           loaded++;
@@ -48,9 +47,9 @@ export class RGBMLoader extends DataTextureLoader {
             if (onLoad) onLoad(texture);
           }
         },
-        undefined,
+        onProgress: undefined,
         onError,
-      );
+      });
     }
 
     for (let i = 0; i < urls.length; ++i) {

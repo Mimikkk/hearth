@@ -268,17 +268,19 @@ function init() {
   //
 
   const loader = new THREE.BufferGeometryLoader();
-  loader.load('models/json/suzanne_buffergeometry.json', function (geometry) {
-    geometry.computeVertexNormals();
+  loader.load('models/json/suzanne_buffergeometry.json', {
+    onLoad: function (geometry) {
+      geometry.computeVertexNormals();
 
-    monkey = new THREE.Mesh(geometry, new THREE.MeshStandardMaterial({ roughness: 1, metalness: 0 }));
-    monkey.receiveShadow = true;
-    monkey.scale.setScalar(5);
-    monkey.rotation.y = Math.PI / 2;
-    monkey.position.y = 4.5;
-    monkey.layers.enable(1); // add to collision layer
+      monkey = new THREE.Mesh(geometry, new THREE.MeshStandardMaterial({ roughness: 1, metalness: 0 }));
+      monkey.receiveShadow = true;
+      monkey.scale.setScalar(5);
+      monkey.rotation.y = Math.PI / 2;
+      monkey.position.y = 4.5;
+      monkey.layers.enable(1); // add to collision layer
 
-    scene.add(monkey);
+      scene.add(monkey);
+    },
   });
 
   //

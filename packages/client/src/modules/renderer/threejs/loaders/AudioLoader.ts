@@ -2,48 +2,33 @@ import { AudioContextManager } from '../audio/AudioContextManager.js';
 import { FileLoader } from './FileLoader.js';
 import { Loader } from './Loader.js';
 
-export class AudioLoader extends Loader {
-  load(url, onLoad, onProgress, onError) {
-    const scope = this;
+export class AudioLoader<TUrl extends string = string> extends Loader<any, TUrl> {
+  responseType: 'arraybuffer' = 'arraybuffer';
 
-    const loader = new FileLoader({
-      manager: this.manager,
-      responseType: 'arraybuffer',
-      path: this.path,
-      requestHeader: this.requestHeader,
-      withCredentials: this.withCredentials,
-    });
-
-    loader.load(
-      url,
-      function (buffer) {
-        try {
-          // Create a copy of the buffer. The `decodeAudioData` method
-          // detaches the buffer when complete, preventing reuse.
-          const bufferCopy = buffer.slice(0);
-
-          const context = AudioContextManager.readContext();
-          context
-            .decodeAudioData(bufferCopy, function (audioBuffer) {
-              onLoad(audioBuffer);
-            })
-            .catch(handleError);
-        } catch (e) {
-          handleError(e);
-        }
-      },
-      onProgress,
-      onError,
-    );
-
-    function handleError(e) {
-      if (onError) {
-        onError(e);
-      } else {
-        console.error(e);
-      }
-
-      scope.manager.itemError(url);
-    }
+  constructor(options?: AudioLoader.Options) {
+    super(options);
   }
+
+  load(url: TUrl, handlers?: Loader.Handlers<AudioBuffer>) {
+    FileLoader.load(url, this, {
+      onLoad: this.createOnLoad(url, handlers?.onLoad, handlers?.onError),
+      onProgress: handlers?.onProgress,
+      onError: handlers?.onError,
+    });
+  }
+
+  createOnLoad(url: TUrl, onLoad: undefined | Loader.OnLoad<any>, onError: Loader.OnError<any> = console.error) {
+    return (buffer: ArrayBuffer) => {
+      try {
+        AudioContextManager.readContext().decodeAudioData(buffer.slice(0), onLoad);
+      } catch (e) {
+        onError(e);
+        this.manager.itemError(url);
+      }
+    };
+  }
+}
+
+export namespace AudioLoader {
+  export interface Options extends Pick<Loader.Options, 'manager' | 'withCredentials' | 'path' | 'requestHeader'> {}
 }

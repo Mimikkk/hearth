@@ -10,7 +10,7 @@ const loading: Record<
   }[]
 > = {};
 
-class HttpError extends Error {
+class ReadError extends Error {
   constructor(
     message: string,
     public response: Response,
@@ -20,16 +20,32 @@ class HttpError extends Error {
 }
 
 type ResponseType = 'arraybuffer' | 'blob' | 'json' | 'text';
+type ResponseMap = {
+  arraybuffer: ArrayBuffer;
+  blob: Blob;
+  json: any;
+  text: string;
+};
 
-export class FileLoader<TData extends string | ArrayBuffer, TUrl extends string = string> extends Loader<TData, TUrl> {
-  responseType: ResponseType;
+export class FileLoader<RT extends ResponseType = 'text', TUrl extends string = string> extends Loader<
+  ResponseMap[RT],
+  TUrl
+> {
+  responseType: RT;
 
-  constructor(options?: FileLoader.Options) {
+  constructor(options?: FileLoader.Options<RT>) {
     super(options);
-    this.responseType = options?.responseType ?? 'text';
+    this.responseType = (options?.responseType ?? 'text') as RT;
   }
 
-  load(url: TUrl, onLoad?: Loader.OnLoad<TData>, onProgress?: Loader.OnProgress, onError?: Loader.OnError<unknown>) {
+  load(
+    url: TUrl,
+    onLoad?: Loader.OnLoad<ResponseMap[RT]> | Loader.Handlers<ResponseMap[RT]>,
+    onProgress?: Loader.OnProgress,
+    onError: Loader.OnError = console.error,
+  ): void {
+    if (typeof onLoad === 'object') return this.load(url, onLoad.onLoad, onLoad.onProgress, onLoad.onError);
+
     let uri: string = url;
 
     if (this.path) uri = this.path + uri;
@@ -68,13 +84,9 @@ export class FileLoader<TData extends string | ArrayBuffer, TUrl extends string 
       .then(response => {
         if (response.status === 200 || response.status === 0) {
           if (!response.body) return response;
-
           const callbacks = loading[uri];
           const reader = response.body.getReader();
 
-          // Nginx needs X-File-Size check
-          // https://serverfault.com/questions/482875/
-          // /why-does-nginx-remove-content-length-header-for-chunked-content
           const contentLength = response.headers.get('Content-Length') || response.headers.get('X-File-Size');
           const total = contentLength ? parseInt(contentLength) : 0;
           const lengthComputable = total !== 0;
@@ -107,7 +119,7 @@ export class FileLoader<TData extends string | ArrayBuffer, TUrl extends string 
 
           return new Response(stream);
         } else {
-          throw new HttpError(
+          throw new ReadError(
             `fetch for "${response.url}" responded with ${response.status}: ${response.statusText}`,
             response,
           );
@@ -164,10 +176,24 @@ export class FileLoader<TData extends string | ArrayBuffer, TUrl extends string 
 
     this.manager.itemStart(uri);
   }
+
+  static load<RT extends ResponseType>(
+    url: string,
+    options: FileLoader.Options<RT>,
+    handlers: Loader.Handlers<ResponseMap[RT]>,
+  ): void {
+    new FileLoader(options).load(url, handlers);
+  }
 }
 
 export namespace FileLoader {
-  export interface Options extends Loader.Options {
-    responseType?: ResponseType;
+  export interface Options<RT extends ResponseType> extends Loader.Options {
+    responseType?: RT;
+  }
+
+  export interface Handlers<T, E> {
+    onLoad?: Loader.OnLoad<T>;
+    onProgress?: Loader.OnProgress;
+    onError?: Loader.OnError<E>;
   }
 }

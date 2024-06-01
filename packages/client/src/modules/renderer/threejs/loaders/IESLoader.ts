@@ -1,29 +1,36 @@
+import { Loader } from './Loader.js';
 import {
-  DataTexture,
-  DataUtils,
-  FileLoader,
-  Filter,
-  Loader,
-  MathUtils,
+  MagnificationTextureFilter,
+  MinificationTextureFilter,
   TextureDataType,
   TextureFormat,
-} from '../../threejs/Three.js';
+} from '@modules/renderer/threejs/constants.js';
+import { DataUtils } from '@modules/renderer/threejs/extras/DataUtils.js';
+import { FileLoader } from '@modules/renderer/threejs/loaders/FileLoader.js';
+import { DataTexture } from '@modules/renderer/threejs/textures/DataTexture.js';
+import { lerp } from '../math/MathUtils.js';
 
-export class IESLoader extends Loader {
-  constructor(manager) {
-    super(manager);
+type SupportedType = TextureDataType.Float | TextureDataType.HalfFloat | TextureDataType.UnsignedByte;
 
-    this.type = TextureDataType.HalfFloat;
+export class IESLoader<TUrl extends string = string> extends Loader {
+  type: SupportedType;
+  responseType: 'text';
+
+  constructor(options?: IESLoader.Options) {
+    super(options);
+
+    this.type = options?.type ?? TextureDataType.HalfFloat;
+    this.responseType = 'text';
   }
 
-  _getIESValues(iesLamp, type) {
+  _getIESValues(iesLamp: IESLamp, type: SupportedType) {
     const width = 360;
     const height = 180;
     const size = width * height;
 
     const data = new Array(size);
 
-    function interpolateCandelaValues(phi, theta) {
+    function interpolateCandelaValues(phi: number, theta: number) {
       let phiIndex = 0,
         thetaIndex = 0;
       let startTheta = 0,
@@ -65,17 +72,13 @@ export class IESLoader extends Loader {
 
       const nextThetaIndex = deltaTheta === 0 ? thetaIndex : thetaIndex + 1;
 
-      const v1 = MathUtils.lerp(
-        iesLamp.candelaValues[thetaIndex][phiIndex],
-        iesLamp.candelaValues[nextThetaIndex][phiIndex],
-        t1,
-      );
-      const v2 = MathUtils.lerp(
+      const v1 = lerp(iesLamp.candelaValues[thetaIndex][phiIndex], iesLamp.candelaValues[nextThetaIndex][phiIndex], t1);
+      const v2 = lerp(
         iesLamp.candelaValues[thetaIndex][phiIndex + 1],
         iesLamp.candelaValues[nextThetaIndex][phiIndex + 1],
         t1,
       );
-      const v = MathUtils.lerp(v1, v2, t2);
+      const v = lerp(v1, v2, t2);
 
       return v;
     }
@@ -103,180 +106,197 @@ export class IESLoader extends Loader {
     if (type === TextureDataType.UnsignedByte) result = Uint8Array.from(data.map(v => Math.min(v * 0xff, 0xff)));
     else if (type === TextureDataType.HalfFloat) result = Uint16Array.from(data.map(v => DataUtils.toHalfFloat(v)));
     else if (type === TextureDataType.Float) result = Float32Array.from(data);
-    else console.error('IESLoader: Unsupported type:', type);
 
     return result;
   }
 
-  load(url, onLoad, onProgress, onError) {
-    const loader = new FileLoader({
-      manager: this.manager,
-      responseType: 'text',
-      path: this.path,
-      requestHeader: this.requestHeader,
-      withCredentials: this.withCredentials,
-      crossOrigin: this.crossOrigin,
+  load(url: TUrl, handlers?: Loader.Handlers<DataTexture>) {
+    FileLoader.load(url, this, {
+      onLoad: this.createOnLoad(handlers?.onLoad),
+      onProgress: handlers?.onProgress,
+      onError: handlers?.onError,
     });
-
-    loader.load(
-      url,
-      text => {
-        onLoad(this.parse(text));
-      },
-      onProgress,
-      onError,
-    );
   }
 
-  parse(text) {
+  parse(text: string) {
     const type = this.type;
 
     const iesLamp = new IESLamp(text);
     const data = this._getIESValues(iesLamp, type);
 
+    //@ts-expect-error
     const texture = new DataTexture(data, 180, 1, TextureFormat.Red, type);
-    texture.minFilter = Filter.Linear;
-    texture.magFilter = Filter.Linear;
+    texture.minFilter = MinificationTextureFilter.Linear;
+    texture.magFilter = MagnificationTextureFilter.Linear;
     texture.needsUpdate = true;
 
     return texture;
   }
+
+  createOnLoad(onLoad?: Loader.OnLoad<DataTexture>) {
+    return (text: string) => onLoad?.(this.parse(text));
+  }
 }
 
-function IESLamp(text) {
-  const _self = this;
-
-  const textArray = text.split('\n');
-
-  let lineNumber = 0;
-  let line;
-
-  _self.verAngles = [];
-  _self.horAngles = [];
-
-  _self.candelaValues = [];
-
-  _self.tiltData = {};
-  _self.tiltData.angles = [];
-  _self.tiltData.mulFactors = [];
-
-  function textToArray(text) {
-    text = text.replace(/^\s+|\s+$/g, ''); // remove leading or trailing spaces
-    text = text.replace(/,/g, ' '); // replace commas with spaces
-    text = text.replace(/\s\s+/g, ' '); // replace white space/tabs etc by single whitespace
-
-    const array = text.split(' ');
-
-    return array;
+export namespace IESLoader {
+  export interface Options
+    extends Pick<Loader.Options, 'manager' | 'path' | 'requestHeader' | 'withCredentials' | 'crossOrigin'> {
+    type?: SupportedType;
   }
+}
 
-  function readArray(count, array) {
-    while (true) {
-      const line = textArray[lineNumber++];
-      const lineData = textToArray(line);
+class IESLamp {
+  verAngles: number[];
+  horAngles: number[];
+  candelaValues: number[][];
+  tiltData: {
+    lampToLumGeometry: number;
+    numAngles: number;
+    angles: number[];
+    mulFactors: number[];
+  };
+  count: number;
+  lumens: number;
+  multiplier: number;
+  numVerAngles: number;
+  numHorAngles: number;
+  gonioType: number;
+  units: number;
+  width: number;
+  length: number;
+  height: number;
+  ballFactor: number;
+  blpFactor: number;
+  inputWatts: number;
 
-      for (let i = 0; i < lineData.length; ++i) {
-        array.push(Number(lineData[i]));
+  constructor(text: string) {
+    const _self = this;
+
+    const textArray = text.split('\n');
+
+    let lineNumber = 0;
+    let line;
+
+    _self.verAngles = [];
+    _self.horAngles = [];
+
+    _self.candelaValues = [];
+
+    _self.tiltData = {} as any;
+    _self.tiltData.angles = [];
+    _self.tiltData.mulFactors = [];
+
+    function textToArray(text: string) {
+      // remove leading or trailing spaces
+      text = text.replace(/^\s+|\s+$/g, '');
+      // replace commas with spaces
+      text = text.replace(/,/g, ' ');
+      // replace white space/tabs etc by single whitespace
+      text = text.replace(/\s\s+/g, ' ');
+
+      return text.split(' ');
+    }
+
+    function readArray(count: number, array: number[]) {
+      while (true) {
+        const line = textArray[lineNumber++];
+        const lineData = textToArray(line);
+
+        for (let i = 0; i < lineData.length; ++i) {
+          array.push(Number(lineData[i]));
+        }
+
+        if (array.length === count) break;
       }
-
-      if (array.length === count) break;
     }
-  }
 
-  function readTilt() {
-    let line = textArray[lineNumber++];
-    let lineData = textToArray(line);
+    function readTilt() {
+      let line = textArray[lineNumber++];
+      let lineData = textToArray(line);
 
-    _self.tiltData.lampToLumGeometry = Number(lineData[0]);
+      _self.tiltData.lampToLumGeometry = Number(lineData[0]);
 
-    line = textArray[lineNumber++];
-    lineData = textToArray(line);
+      line = textArray[lineNumber++];
+      lineData = textToArray(line);
 
-    _self.tiltData.numAngles = Number(lineData[0]);
+      _self.tiltData.numAngles = Number(lineData[0]);
 
-    readArray(_self.tiltData.numAngles, _self.tiltData.angles);
-    readArray(_self.tiltData.numAngles, _self.tiltData.mulFactors);
-  }
-
-  function readLampValues() {
-    const values = [];
-    readArray(10, values);
-
-    _self.count = Number(values[0]);
-    _self.lumens = Number(values[1]);
-    _self.multiplier = Number(values[2]);
-    _self.numVerAngles = Number(values[3]);
-    _self.numHorAngles = Number(values[4]);
-    _self.gonioType = Number(values[5]);
-    _self.units = Number(values[6]);
-    _self.width = Number(values[7]);
-    _self.length = Number(values[8]);
-    _self.height = Number(values[9]);
-  }
-
-  function readLampFactors() {
-    const values = [];
-    readArray(3, values);
-
-    _self.ballFactor = Number(values[0]);
-    _self.blpFactor = Number(values[1]);
-    _self.inputWatts = Number(values[2]);
-  }
-
-  while (true) {
-    line = textArray[lineNumber++];
-
-    if (line.includes('TILT')) {
-      break;
+      readArray(_self.tiltData.numAngles, _self.tiltData.angles);
+      readArray(_self.tiltData.numAngles, _self.tiltData.mulFactors);
     }
-  }
 
-  if (!line.includes('NONE')) {
-    if (line.includes('INCLUDE')) {
+    function readLampValues() {
+      const values: number[] = [];
+      readArray(10, values);
+
+      _self.count = +values[0];
+      _self.lumens = +values[1];
+      _self.multiplier = +values[2];
+      _self.numVerAngles = +values[3];
+      _self.numHorAngles = +values[4];
+      _self.gonioType = +values[5];
+      _self.units = +values[6];
+      _self.width = +values[7];
+      _self.length = +values[8];
+      _self.height = +values[9];
+    }
+
+    function readLampFactors() {
+      const values: number[] = [];
+      readArray(3, values);
+
+      _self.ballFactor = +values[0];
+      _self.blpFactor = +values[1];
+      _self.inputWatts = +values[2];
+    }
+
+    while (true) {
+      line = textArray[lineNumber++];
+
+      if (line.includes('TILT')) {
+        break;
+      }
+    }
+
+    if (!line.includes('NONE') && line.includes('INCLUDE')) {
       readTilt();
-    } else {
-      // TODO:: Read tilt data from a file
     }
-  }
 
-  readLampValues();
+    readLampValues();
 
-  readLampFactors();
+    readLampFactors();
 
-  // Initialize candela value array
-  for (let i = 0; i < _self.numHorAngles; ++i) {
-    _self.candelaValues.push([]);
-  }
-
-  // Parse Angles
-  readArray(_self.numVerAngles, _self.verAngles);
-  readArray(_self.numHorAngles, _self.horAngles);
-
-  // Parse Candela values
-  for (let i = 0; i < _self.numHorAngles; ++i) {
-    readArray(_self.numVerAngles, _self.candelaValues[i]);
-  }
-
-  // Calculate actual candela values, and normalize.
-  for (let i = 0; i < _self.numHorAngles; ++i) {
-    for (let j = 0; j < _self.numVerAngles; ++j) {
-      _self.candelaValues[i][j] *= _self.candelaValues[i][j] * _self.multiplier * _self.ballFactor * _self.blpFactor;
+    for (let i = 0; i < _self.numHorAngles; ++i) {
+      _self.candelaValues.push([]);
     }
-  }
 
-  let maxVal = -1;
-  for (let i = 0; i < _self.numHorAngles; ++i) {
-    for (let j = 0; j < _self.numVerAngles; ++j) {
-      const value = _self.candelaValues[i][j];
-      maxVal = maxVal < value ? value : maxVal;
+    readArray(_self.numVerAngles, _self.verAngles);
+    readArray(_self.numHorAngles, _self.horAngles);
+
+    for (let i = 0; i < _self.numHorAngles; ++i) {
+      readArray(_self.numVerAngles, _self.candelaValues[i]);
     }
-  }
 
-  const bNormalize = true;
-  if (bNormalize && maxVal > 0) {
     for (let i = 0; i < _self.numHorAngles; ++i) {
       for (let j = 0; j < _self.numVerAngles; ++j) {
-        _self.candelaValues[i][j] /= maxVal;
+        _self.candelaValues[i][j] *= _self.candelaValues[i][j] * _self.multiplier * _self.ballFactor * _self.blpFactor;
+      }
+    }
+
+    let maxVal = -1;
+    for (let i = 0; i < _self.numHorAngles; ++i) {
+      for (let j = 0; j < _self.numVerAngles; ++j) {
+        const value = _self.candelaValues[i][j];
+        maxVal = maxVal < value ? value : maxVal;
+      }
+    }
+
+    const bNormalize = true;
+    if (bNormalize && maxVal > 0) {
+      for (let i = 0; i < _self.numHorAngles; ++i) {
+        for (let j = 0; j < _self.numVerAngles; ++j) {
+          _self.candelaValues[i][j] /= maxVal;
+        }
       }
     }
   }
