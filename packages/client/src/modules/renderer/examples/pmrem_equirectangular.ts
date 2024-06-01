@@ -48,31 +48,29 @@ async function init() {
   controls.maxDistance = 10;
   controls.update();
 
-  new RGBELoader({ path: 'textures/equirectangular/' }).load('royal_esplanade_1k.hdr', {
-    onLoad: function (map) {
-      map.mapping = THREE.Mapping.EquirectangularReflection;
+  new RGBELoader({ path: 'textures/equirectangular/' }).load('royal_esplanade_1k.hdr', function (map) {
+    map.mapping = THREE.Mapping.EquirectangularReflection;
 
-      const reflectVec = positionViewDirection.negate().reflect(normalView).transformDirection(cameraViewMatrix);
+    const reflectVec = positionViewDirection.negate().reflect(normalView).transformDirection(cameraViewMatrix);
 
-      const pmremRoughness = uniform(0.5);
-      const pmremNode = pmremTexture(map, reflectVec, pmremRoughness);
+    const pmremRoughness = uniform(0.5);
+    const pmremNode = pmremTexture(map, reflectVec, pmremRoughness);
 
-      scene.backgroundNode = pmremTexture(map, normalWorld, pmremRoughness);
+    scene.backgroundNode = pmremTexture(map, normalWorld, pmremRoughness);
 
-      scene.add(
-        new THREE.Mesh(new THREE.SphereGeometry(0.5, 64, 64), new MeshBasicNodeMaterial({ colorNode: pmremNode })),
-      );
+    scene.add(
+      new THREE.Mesh(new THREE.SphereGeometry(0.5, 64, 64), new MeshBasicNodeMaterial({ colorNode: pmremNode })),
+    );
 
-      // gui
+    // gui
 
-      const gui = new GUI();
-      gui
-        .add(pmremRoughness, 'value', 0, 1, 0.001)
-        .name('roughness')
-        .onChange(() => render());
+    const gui = new GUI();
+    gui
+      .add(pmremRoughness, 'value', 0, 1, 0.001)
+      .name('roughness')
+      .onChange(() => render());
 
-      render();
-    },
+    render();
   });
 
   window.addEventListener('resize', onWindowResize);

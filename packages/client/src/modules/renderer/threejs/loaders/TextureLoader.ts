@@ -7,13 +7,13 @@ export class TextureLoader<TUrl extends string = string> extends Loader {
     super(options);
   }
 
-  load(url: TUrl, handlers?: ImageLoader.Handlers<Texture>) {
+  load(url: TUrl, { onLoad, onError }: ImageLoader.Handlers<Texture> = {}) {
     //@ts-expect-error
     const texture = new Texture();
 
     new ImageLoader(this).load(url, {
-      onLoad: this.createOnLoad(texture, handlers?.onLoad),
-      onError: handlers?.onError,
+      onLoad: this.createOnLoad(texture, onLoad),
+      onError,
     });
 
     return texture;

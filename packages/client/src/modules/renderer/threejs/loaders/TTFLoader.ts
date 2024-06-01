@@ -2,7 +2,6 @@ import { FileLoader, Loader } from '../../threejs/Three.js';
 import * as opentype from 'opentype.js';
 
 export class TTFLoader<TUrl extends string = string> extends Loader {
-  responseType: 'arraybuffer' = 'arraybuffer';
   reversed: boolean;
 
   constructor(options?: TTFLoader.Options) {
@@ -11,12 +10,22 @@ export class TTFLoader<TUrl extends string = string> extends Loader {
     this.reversed = options?.reversed ?? false;
   }
 
-  load(url: TUrl, handlers?: Loader.Handlers<any>) {
-    FileLoader.load(url, this, {
-      onLoad: this.createOnLoad(url, handlers?.onLoad, handlers?.onError),
-      onProgress: handlers?.onProgress,
-      onError: handlers?.onError,
-    });
+  load(url: TUrl, { onError = console.error, onLoad, onProgress }: Loader.Handlers<any>) {
+    FileLoader.load(
+      url,
+      {
+        manager: this.manager,
+        responseType: 'arraybuffer',
+        path: this.path,
+        requestHeader: this.requestHeader,
+        withCredentials: this.withCredentials,
+      },
+      {
+        onLoad: this.createOnLoad(url, onLoad, onError),
+        onProgress,
+        onError,
+      },
+    );
   }
 
   parse(arraybuffer: ArrayBuffer) {
@@ -143,10 +152,10 @@ export class TTFLoader<TUrl extends string = string> extends Loader {
     return convert(opentype.parse(arraybuffer), this.reversed);
   }
 
-  createOnLoad(url: TUrl, onLoad: undefined | Loader.OnLoad<any>, onError: Loader.OnError = console.error) {
+  createOnLoad(url: TUrl, onLoad: Loader.OnLoad<any>, onError: Loader.OnError) {
     return (buffer: ArrayBuffer) => {
       try {
-        onLoad?.(this.parse(buffer));
+        onLoad(this.parse(buffer));
       } catch (e) {
         onError(e);
         this.manager.itemError(url);
@@ -156,7 +165,7 @@ export class TTFLoader<TUrl extends string = string> extends Loader {
 }
 
 export namespace TTFLoader {
-  export interface Options extends Pick<Loader.Options, 'manager' | 'path' | 'requestHeader' | 'withCredentials'> {
+  export interface Options extends Loader.Options {
     reversed?: boolean;
   }
 }

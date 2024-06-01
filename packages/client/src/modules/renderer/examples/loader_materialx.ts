@@ -64,19 +64,17 @@ function init() {
 
   //
 
-  new RGBELoader({ path: './textures/equirectangular/' }).load('san_giuseppe_bridge_2k.hdr', {
-    onLoad: async texture => {
-      texture.mapping = THREE.Mapping.EquirectangularReflection;
+  new RGBELoader({ path: './textures/equirectangular/' }).load('san_giuseppe_bridge_2k.hdr', async texture => {
+    texture.mapping = THREE.Mapping.EquirectangularReflection;
 
-      scene.background = texture;
-      scene.environment = texture;
+    scene.background = texture;
+    scene.environment = texture;
 
-      prefab = (await new GLTFLoader().loadAsync('./models/gltf/ShaderBall.glb')).scene;
+    prefab = (await new GLTFLoader().loadAsync('./models/gltf/ShaderBall.glb')).scene;
 
-      for (const sample of samples) {
-        addSample(sample);
-      }
-    },
+    for (const sample of samples) {
+      addSample(sample);
+    }
   });
 
   window.addEventListener('resize', onWindowResize);

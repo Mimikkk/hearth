@@ -1,4 +1,4 @@
-import { Filter, MinificationTextureFilter, Wrapping } from '../constants.js';
+import { Filter, Wrapping } from '../constants.js';
 import { FileLoader } from './FileLoader.js';
 import { DataTexture } from '../textures/DataTexture.js';
 import { Loader } from './Loader.js';
@@ -16,8 +16,7 @@ export class DataTextureLoader<TUrl extends string = string> extends Loader {
     super(options);
   }
 
-  load(url: TUrl, handlers?: Loader.Handlers<[texture: DataTexture, data: any]>): DataTexture {
-    //@ts-expect-error
+  load(url: TUrl, handlers?: Loader.Handlers<any>) {
     const texture = new DataTexture();
 
     FileLoader.load(url, this, {
@@ -29,13 +28,9 @@ export class DataTextureLoader<TUrl extends string = string> extends Loader {
     return texture;
   }
 
-  createOnLoad(
-    texture: DataTexture,
-    onLoad: undefined | Loader.OnLoad<[texture: DataTexture, data: any]>,
-    onError: Loader.OnError = console.error,
-  ) {
+  createOnLoad(texture: DataTexture, onLoad: undefined | Loader.OnLoad<any>, onError: Loader.OnError = console.error) {
     return (buffer: ArrayBuffer) => {
-      let texData: any;
+      let texData: DataTexture;
 
       try {
         texData = this.parse(buffer);
@@ -77,11 +72,11 @@ export class DataTextureLoader<TUrl extends string = string> extends Loader {
 
       if (texData.mipmaps !== undefined) {
         texture.mipmaps = texData.mipmaps;
-        texture.minFilter = MinificationTextureFilter.LinearMipmapLinear;
+        texture.minFilter = Filter.LinearMipmapLinear;
       }
 
       if (texData.mipmapCount === 1) {
-        texture.minFilter = MinificationTextureFilter.Linear;
+        texture.minFilter = Filter.Linear;
       }
 
       if (texData.generateMipmaps !== undefined) {
@@ -90,7 +85,7 @@ export class DataTextureLoader<TUrl extends string = string> extends Loader {
 
       texture.needsUpdate = true;
 
-      onLoad?.([texture, texData]);
+      if (onLoad) onLoad(texture, texData);
     };
   }
 }

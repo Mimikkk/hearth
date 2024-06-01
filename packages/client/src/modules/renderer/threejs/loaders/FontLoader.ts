@@ -1,26 +1,30 @@
 import { FileLoader, Loader, ShapePath } from '../../threejs/Three.js';
 
 export class FontLoader extends Loader {
-  responseType: 'json' = 'json';
-
-  constructor(options?: FontLoader.Options) {
-    super(options);
-  }
-
   load(url, onLoad, onProgress, onError) {
-    const loader = new FileLoader(this);
+    const scope = this;
+
+    const loader = new FileLoader({
+      manager: this.manager,
+      responseType: 'text',
+      path: this.path,
+      requestHeader: this.requestHeader,
+      withCredentials: this.withCredentials,
+    });
 
     loader.load(
       url,
-      json => {
-        onLoad?.(this.parse(json));
+      text => {
+        const font = scope.parse(JSON.parse(text));
+
+        if (onLoad) onLoad(font);
       },
       onProgress,
       onError,
     );
   }
 
-  parse(json: any) {
+  parse(json) {
     return new Font(json);
   }
 }
@@ -28,11 +32,15 @@ export class FontLoader extends Loader {
 //
 
 export class Font {
-  type: 'Font' = 'Font';
+  constructor(data) {
+    this.isFont = true;
 
-  constructor(public data: any) {}
+    this.type = 'Font';
 
-  generateShapes(text: string, size = 100) {
+    this.data = data;
+  }
+
+  generateShapes(text, size = 100) {
     const shapes = [];
     const paths = createPaths(text, size, this.data);
 
@@ -44,7 +52,7 @@ export class Font {
   }
 }
 
-function createPaths(text: string, size: number, data: any) {
+function createPaths(text, size, data) {
   const chars = Array.from(text);
   const scale = size / data.resolution;
   const line_height = (data.boundingBox.yMax - data.boundingBox.yMin + data.underlineThickness) * scale;
@@ -70,7 +78,7 @@ function createPaths(text: string, size: number, data: any) {
   return paths;
 }
 
-function createPath(char: string, scale: number, offsetX: number, offsetY: number, data: any) {
+function createPath(char, scale, offsetX, offsetY, data) {
   const glyph = data.glyphs[char] || data.glyphs['?'];
 
   if (!glyph) {
@@ -132,8 +140,4 @@ function createPath(char: string, scale: number, offsetX: number, offsetY: numbe
   }
 
   return { offsetX: glyph.ha * scale, path: path };
-}
-
-export namespace FontLoader {
-  export interface Options extends Pick<Loader.Options, 'manager' | 'path' | 'requestHeader' | 'withCredentials'> {}
 }

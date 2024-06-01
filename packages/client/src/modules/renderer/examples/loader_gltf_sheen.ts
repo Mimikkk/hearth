@@ -45,14 +45,12 @@ function init() {
 
   scene.background = new THREE.Color(0xaaaaaa);
 
-  new RGBELoader({ path: 'textures/equirectangular/' }).load('royal_esplanade_1k.hdr', {
-    onLoad: function (texture) {
-      texture.mapping = THREE.Mapping.EquirectangularReflection;
+  new RGBELoader({ path: 'textures/equirectangular/' }).load('royal_esplanade_1k.hdr', function (texture) {
+    texture.mapping = THREE.Mapping.EquirectangularReflection;
 
-      scene.background = texture;
-      //scene.backgroundBlurriness = 1; // @TODO: Needs PMREM
-      scene.environment = texture;
-    },
+    scene.background = texture;
+    //scene.backgroundBlurriness = 1; // @TODO: Needs PMREM
+    scene.environment = texture;
   });
 
   controls = new OrbitControls(camera, renderer.domElement);
