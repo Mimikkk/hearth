@@ -6,21 +6,36 @@ import { Matrix3 } from '../math/Matrix3.ts';
 import { Matrix4 } from '../math/Matrix4.ts';
 import { FileLoader } from './FileLoader.ts';
 import { Loader } from './Loader.ts';
-import * as materials from '../materials/Materials.ts';
-import { Material } from '../materials/Materials.ts';
-import { Texture } from '@modules/renderer/threejs/textures/Texture.js';
+import {
+  LineBasicMaterial,
+  LineDashedMaterial,
+  Material,
+  MeshBasicMaterial,
+  MeshDepthMaterial,
+  MeshDistanceMaterial,
+  MeshLambertMaterial,
+  MeshMatcapMaterial,
+  MeshNormalMaterial,
+  MeshPhongMaterial,
+  MeshPhysicalMaterial,
+  MeshStandardMaterial,
+  MeshToonMaterial,
+  PointsMaterial,
+  RawShaderMaterial,
+  ShaderMaterial,
+  ShadowMaterial,
+  SpriteMaterial,
+} from '../materials/Materials.ts';
 
-type MaterialType = keyof typeof materials;
-
-export class MaterialLoader<TData = any, TUrl extends string = string> extends Loader<string> {
-  textures: Record<string, Texture>;
-
-  constructor(options: MaterialLoader.Options) {
+class MaterialLoader extends Loader {
+  constructor(options) {
     super(options);
-    this.textures = options?.textures ?? {};
+    this.textures = {};
   }
 
-  load(url: TUrl, { onLoad, onProgress, onError = console.error }: Loader.Handlers<Material, string>) {
+  load(url, onLoad, onProgress, onError) {
+    const scope = this;
+
     const loader = new FileLoader({
       manager: this.manager,
       responseType: 'text',
@@ -28,19 +43,24 @@ export class MaterialLoader<TData = any, TUrl extends string = string> extends L
       requestHeader: this.requestHeader,
       withCredentials: this.withCredentials,
     });
-
-    loader.load(url, {
-      onLoad: text => {
+    loader.load(
+      url,
+      function (text) {
         try {
-          onLoad(this.parse(JSON.parse(text)));
+          onLoad(scope.parse(JSON.parse(text)));
         } catch (e) {
-          onError(e);
-          this.manager.itemError(url);
+          if (onError) {
+            onError(e);
+          } else {
+            console.error(e);
+          }
+
+          scope.manager.itemError(url);
         }
       },
       onProgress,
       onError,
-    });
+    );
   }
 
   parse(json) {
@@ -287,14 +307,35 @@ export class MaterialLoader<TData = any, TUrl extends string = string> extends L
     return material;
   }
 
-  static createMaterialFromType(type: MaterialType): Material {
-    const constructor = materials[type] as new () => Material;
-    return new constructor();
+  setTextures(value) {
+    this.textures = value;
+    return this;
+  }
+
+  static createMaterialFromType(type) {
+    const materialLib = {
+      ShadowMaterial,
+      SpriteMaterial,
+      RawShaderMaterial,
+      ShaderMaterial,
+      PointsMaterial,
+      MeshPhysicalMaterial,
+      MeshStandardMaterial,
+      MeshPhongMaterial,
+      MeshToonMaterial,
+      MeshNormalMaterial,
+      MeshLambertMaterial,
+      MeshDepthMaterial,
+      MeshDistanceMaterial,
+      MeshBasicMaterial,
+      MeshMatcapMaterial,
+      LineDashedMaterial,
+      LineBasicMaterial,
+      Material,
+    };
+
+    return new materialLib[type]();
   }
 }
 
-export namespace MaterialLoader {
-  export interface Options extends Loader.Options {
-    textures?: Record<string, Texture>;
-  }
-}
+export { MaterialLoader };

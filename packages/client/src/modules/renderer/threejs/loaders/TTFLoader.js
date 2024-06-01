@@ -1,40 +1,48 @@
 import { FileLoader, Loader } from '../../threejs/Three.js';
-import * as opentype from 'opentype.js';
+import opentype from 'opentype.js';
 
-export class TTFLoader<TUrl extends string> extends Loader<ArrayBuffer, TUrl> {
-  reversed: boolean;
+export class TTFLoader extends Loader {
+  constructor(manager) {
+    super(manager);
 
-  constructor(options: TTFLoader.Options) {
-    super(options);
-    this.reversed = options?.reversed ?? false;
+    this.reversed = false;
   }
 
-  load(url: TUrl, { onLoad, onProgress, onError = console.error }: Loader.Handlers<any, string>) {
-    new FileLoader<ArrayBuffer>({
+  load(url, onLoad, onProgress, onError) {
+    const scope = this;
+
+    const loader = new FileLoader({
       manager: this.manager,
       responseType: 'arraybuffer',
       path: this.path,
       requestHeader: this.requestHeader,
       withCredentials: this.withCredentials,
-    }).load(url, {
-      onLoad: buffer => {
+    });
+    loader.load(
+      url,
+      function (buffer) {
         try {
-          onLoad(this.parse(buffer));
+          onLoad(scope.parse(buffer));
         } catch (e) {
-          onError(e);
-          this.manager.itemError(url);
+          if (onError) {
+            onError(e);
+          } else {
+            console.error(e);
+          }
+
+          scope.manager.itemError(url);
         }
       },
       onProgress,
       onError,
-    });
+    );
   }
 
-  parse(arraybuffer: ArrayBuffer): TTFLoader.Result {
-    function convert(font: any, reversed: boolean) {
+  parse(arraybuffer) {
+    function convert(font, reversed) {
       const round = Math.round;
 
-      const glyphs: Record<string, any> = {};
+      const glyphs = {};
       const scale = 100000 / ((font.unitsPerEm || 2048) * 72);
 
       const glyphIndexMap = font.encoding.cmap.glyphIndexMap;
@@ -56,7 +64,7 @@ export class TTFLoader<TUrl extends string> extends Loader<ArrayBuffer, TUrl> {
             glyph.path.commands = reverseCommands(glyph.path.commands);
           }
 
-          glyph.path.commands.forEach(function (command: any) {
+          glyph.path.commands.forEach(function (command) {
             if (command.type.toLowerCase() === 'c') {
               command.type = 'b';
             }
@@ -98,11 +106,11 @@ export class TTFLoader<TUrl extends string> extends Loader<ArrayBuffer, TUrl> {
       };
     }
 
-    function reverseCommands(commands: any) {
-      const paths: any[] = [];
+    function reverseCommands(commands) {
+      const paths = [];
       let path;
 
-      commands.forEach(function (c: any) {
+      commands.forEach(function (c) {
         if (c.type.toLowerCase() === 'm') {
           path = [c];
           paths.push(path);
@@ -111,7 +119,7 @@ export class TTFLoader<TUrl extends string> extends Loader<ArrayBuffer, TUrl> {
         }
       });
 
-      const reversed: any[] = [];
+      const reversed = [];
 
       paths.forEach(function (p) {
         const result = {
@@ -124,15 +132,7 @@ export class TTFLoader<TUrl extends string> extends Loader<ArrayBuffer, TUrl> {
 
         for (let i = p.length - 1; i > 0; i--) {
           const command = p[i];
-          const result = { type: command.type } as {
-            type: string;
-            x: number;
-            y: number;
-            x1?: number;
-            y1?: number;
-            x2?: number;
-            y2?: number;
-          };
+          const result = { type: command.type };
 
           if (command.x2 !== undefined && command.y2 !== undefined) {
             result.x1 = command.x2;
@@ -154,28 +154,5 @@ export class TTFLoader<TUrl extends string> extends Loader<ArrayBuffer, TUrl> {
     }
 
     return convert(opentype.parse(arraybuffer), this.reversed);
-  }
-}
-
-export namespace TTFLoader {
-  export interface Options extends Loader.Options {
-    reversed?: boolean;
-  }
-
-  export interface Result {
-    glyphs: Record<string, any>;
-    familyName: string;
-    ascender: number;
-    descender: number;
-    underlinePosition: number;
-    underlineThickness: number;
-    boundingBox: {
-      xMin: number;
-      xMax: number;
-      yMin: number;
-      yMax: number;
-    };
-    resolution: number;
-    original_font_information: string;
   }
 }

@@ -331,7 +331,12 @@ class RGBELoader extends DataTextureLoader {
     };
   }
 
-  load(url, { onLoad, onProgress, onError }) {
+  setDataType(value) {
+    this.type = value;
+    return this;
+  }
+
+  load(url, onLoad, onProgress, onError) {
     function onLoadCallback(texture, texData) {
       switch (texture.type) {
         case TextureDataType.Float:
@@ -348,7 +353,7 @@ class RGBELoader extends DataTextureLoader {
       if (onLoad) onLoad(texture, texData);
     }
 
-    return super.load(url, { onLoad: onLoadCallback, onProgress, onError });
+    return super.load(url, onLoadCallback, onProgress, onError);
   }
 }
 

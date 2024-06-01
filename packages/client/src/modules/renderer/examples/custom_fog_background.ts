@@ -3,7 +3,7 @@ import * as THREE from '../threejs/Three.js';
 import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 import PostProcessing from '../threejs/renderers/common/PostProcessing.js';
 
-import { color, pass, rangeFog } from '../threejs/nodes/Nodes.js';
+import { pass, color, rangeFog } from '../threejs/nodes/Nodes.js';
 
 import { RGBELoader } from '../threejs/loaders/RGBELoader.js';
 
@@ -54,14 +54,14 @@ function init() {
 
   //
 
-  new RGBELoader({ path: 'textures/equirectangular/' }).load('royal_esplanade_1k.hdr', function (texture) {
+  new RGBELoader().setPath('textures/equirectangular/').load('royal_esplanade_1k.hdr', function (texture) {
     texture.mapping = THREE.Mapping.EquirectangularReflection;
 
     scene.environment = texture;
 
     // model
 
-    const loader = new GLTFLoader({ path: 'models/gltf/DamagedHelmet/glTF/' });
+    const loader = new GLTFLoader().setPath('models/gltf/DamagedHelmet/glTF/');
     loader.load('DamagedHelmet.gltf', function (gltf) {
       scene.add(gltf.scene);
 

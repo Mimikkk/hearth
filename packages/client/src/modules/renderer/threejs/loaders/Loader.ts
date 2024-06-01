@@ -20,13 +20,40 @@ export abstract class Loader<TData = any, TUrl extends string = string> {
     this.requestHeader = options?.requestHeader ?? {};
   }
 
-  load(url: TUrl, handlers: Loader.Handlers<TData, TUrl>) {}
+  load(url: TUrl, onLoad: Loader.OnLoad<TData>, onProgress?: Loader.OnProgress, onError?: Loader.OnError<unknown>) {}
 
   loadAsync(url: TUrl, onProgress: Loader.OnProgress) {
-    return new Promise((onLoad, onError) => this.load(url, { onLoad, onProgress, onError }));
+    return new Promise((resolve, reject) => {
+      this.load(url, resolve, onProgress, reject);
+    });
   }
 
   parse(data: TData) {}
+
+  setCrossOrigin(crossOrigin: string) {
+    this.crossOrigin = crossOrigin;
+    return this;
+  }
+
+  setWithCredentials(value: boolean) {
+    this.withCredentials = value;
+    return this;
+  }
+
+  setPath(path: string) {
+    this.path = path;
+    return this;
+  }
+
+  setResourcePath(resourcePath: string) {
+    this.resourcePath = resourcePath;
+    return this;
+  }
+
+  setRequestHeader(requestHeader: Loader.RequestHeader) {
+    this.requestHeader = requestHeader;
+    return this;
+  }
 }
 
 export namespace Loader {
@@ -37,12 +64,6 @@ export namespace Loader {
     path?: string;
     resourcePath?: string;
     requestHeader?: RequestHeader;
-  }
-
-  export interface Handlers<T, E> {
-    onLoad: OnLoad<T>;
-    onProgress: OnProgress;
-    onError: OnError<E>;
   }
 
   export type RequestHeader = Record<string, string>;

@@ -108,7 +108,7 @@ class IESLoader extends Loader {
     return result;
   }
 
-  load(url, { onLoad, onProgress, onError }) {
+  load(url, onLoad, onProgress, onError) {
     const loader = new FileLoader({
       manager: this.manager,
       responseType: 'text',
@@ -118,13 +118,14 @@ class IESLoader extends Loader {
       crossOrigin: this.crossOrigin,
     });
 
-    loader.load(url, {
-      onLoad: text => {
+    loader.load(
+      url,
+      text => {
         onLoad(this.parse(text));
       },
       onProgress,
       onError,
-    });
+    );
   }
 
   parse(text) {

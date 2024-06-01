@@ -69,7 +69,7 @@ class FBXLoader extends Loader {
     super(manager);
   }
 
-  load(url, { onLoad, onProgress, onError }) {
+  load(url, onLoad, onProgress, onError) {
     const scope = this;
 
     const path = scope.path === '' ? LoaderUtils.extractUrlBase(url) : scope.path;
@@ -82,8 +82,9 @@ class FBXLoader extends Loader {
       withCredentials: scope.withCredentials,
     });
 
-    loader.load(url, {
-      onLoad: function (buffer) {
+    loader.load(
+      url,
+      function (buffer) {
         try {
           onLoad(scope.parse(buffer, path));
         } catch (e) {
@@ -98,7 +99,7 @@ class FBXLoader extends Loader {
       },
       onProgress,
       onError,
-    });
+    );
   }
 
   parse(FBXBuffer, path) {
@@ -120,11 +121,9 @@ class FBXLoader extends Loader {
 
     // console.log( fbxTree );
 
-    const textureLoader = new TextureLoader({
-      manager: this.manager,
-      path: this.resourcePath || path,
-      crossOrigin: this.crossOrigin,
-    });
+    const textureLoader = new TextureLoader(this.manager)
+      .setPath(this.resourcePath || path)
+      .setCrossOrigin(this.crossOrigin);
 
     return new FBXTreeParser(textureLoader, this.manager).parse(fbxTree);
   }
@@ -347,7 +346,7 @@ class FBXTreeParser {
       fileName = images[children[0].ID];
 
       if (fileName.indexOf('blob:') === 0 || fileName.indexOf('data:') === 0) {
-        this.textureLoader.path = undefined;
+        this.textureLoader.setPath(undefined);
       }
     }
 
@@ -362,7 +361,7 @@ class FBXTreeParser {
         console.warn('FBXLoader: TGA loader not found, creating placeholder texture for', textureNode.RelativeFilename);
         texture = new Texture();
       } else {
-        loader.path = this.textureLoader.path;
+        loader.setPath(this.textureLoader.path);
         texture = loader.load(fileName);
       }
     } else if (extension === 'dds') {
@@ -372,7 +371,7 @@ class FBXTreeParser {
         console.warn('FBXLoader: DDS loader not found, creating placeholder texture for', textureNode.RelativeFilename);
         texture = new Texture();
       } else {
-        loader.path = this.textureLoader.path;
+        loader.setPath(this.textureLoader.path);
         texture = loader.load(fileName);
       }
     } else if (extension === 'psd') {
@@ -385,7 +384,7 @@ class FBXTreeParser {
       texture = this.textureLoader.load(fileName);
     }
 
-    this.textureLoader.path = currentPath;
+    this.textureLoader.setPath(currentPath);
 
     return texture;
   }

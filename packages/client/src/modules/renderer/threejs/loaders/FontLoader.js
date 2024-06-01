@@ -5,7 +5,7 @@ class FontLoader extends Loader {
     super(manager);
   }
 
-  load(url, { onLoad, onProgress, onError }) {
+  load(url, onLoad, onProgress, onError) {
     const scope = this;
 
     const loader = new FileLoader({
@@ -16,15 +16,16 @@ class FontLoader extends Loader {
       withCredentials: this.withCredentials,
     });
 
-    loader.load(url, {
-      onLoad: function (text) {
+    loader.load(
+      url,
+      function (text) {
         const font = scope.parse(JSON.parse(text));
 
         if (onLoad) onLoad(font);
       },
       onProgress,
       onError,
-    });
+    );
   }
 
   parse(json) {

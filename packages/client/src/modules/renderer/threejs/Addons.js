@@ -81,11 +81,11 @@ export * from './loaders/MDDLoader.js';
 export * from './loaders/OBJLoader.js';
 export * from './loaders/RGBELoader.js';
 export * from './loaders/RGBMLoader.js';
-export * from './loaders/STLLoader.ts';
+export * from './loaders/STLLoader.js';
 export * from './loaders/SVGLoader.js';
 export * from './loaders/TGALoader.js';
-export * from './loaders/TIFFLoader.ts';
-export * from './loaders/TTFLoader.ts';
+export * from './loaders/TIFFLoader.js';
+export * from './loaders/TTFLoader.js';
 
 export * from './math/Capsule.ts';
 export * from './math/ColorConverter.ts';

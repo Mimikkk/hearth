@@ -30,9 +30,9 @@ function init() {
   group = new THREE.Group();
   scene.add(group);
 
-  new HDRCubeTextureLoader({ path: 'textures/cube/pisaHDR/' }).load(
-    ['px.hdr', 'nx.hdr', 'py.hdr', 'ny.hdr', 'pz.hdr', 'nz.hdr'],
-    function (texture) {
+  new HDRCubeTextureLoader()
+    .setPath('textures/cube/pisaHDR/')
+    .load(['px.hdr', 'nx.hdr', 'py.hdr', 'ny.hdr', 'pz.hdr', 'nz.hdr'], function (texture) {
       const geometry = new THREE.SphereGeometry(0.8, 64, 32);
 
       const textureLoader = new THREE.TextureLoader();
@@ -132,8 +132,7 @@ function init() {
 
       scene.background = texture;
       scene.environment = texture;
-    },
-  );
+    });
 
   // LIGHTS
 

@@ -163,7 +163,7 @@ class KTX2Loader extends Loader {
     return this.transcoderPending;
   }
 
-  load(url, { onLoad, onProgress, onError }) {
+  load(url, onLoad, onProgress, onError) {
     if (this.workerConfig === null) {
       throw new Error('THREE.KTX2Loader: Missing initialization with `.detectSupport( renderer )`.');
     }
@@ -174,8 +174,9 @@ class KTX2Loader extends Loader {
       withCredentials: this.withCredentials,
     });
 
-    loader.load(url, {
-      onLoad: buffer => {
+    loader.load(
+      url,
+      buffer => {
         // Check for an existing task using this buffer. A transferred buffer cannot be transferred
         // again from this thread.
         if (_taskCache.has(buffer)) {
@@ -190,7 +191,7 @@ class KTX2Loader extends Loader {
       },
       onProgress,
       onError,
-    });
+    );
   }
 
   _createTextureFrom(transcodeResult, container) {

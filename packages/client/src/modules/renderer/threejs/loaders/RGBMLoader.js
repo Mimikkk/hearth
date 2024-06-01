@@ -15,12 +15,17 @@ class RGBMLoader extends DataTextureLoader {
     this.maxRange = 7; // more information about this property at https://iwasbeingirony.blogspot.com/2010/06/difference-between-rgbm-and-rgbd.html
   }
 
+  setDataType(value) {
+    this.type = value;
+    return this;
+  }
+
   setMaxRange(value) {
     this.maxRange = value;
     return this;
   }
 
-  loadCubemap(urls, { onLoad, onProgress, onError }) {
+  loadCubemap(urls, onLoad, onProgress, onError) {
     const texture = new CubeTexture();
 
     let loaded = 0;

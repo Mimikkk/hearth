@@ -24,7 +24,7 @@ class ImageBitmapLoader extends Loader {
     return this;
   }
 
-  load(url, { onLoad, onProgress, onError }) {
+  load(url, onLoad, onProgress, onError) {
     if (url === undefined) url = '';
 
     if (this.path !== undefined) url = this.path + url;

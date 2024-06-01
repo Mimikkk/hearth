@@ -21,7 +21,7 @@ function init() {
 
   scene = new THREE.Scene();
 
-  new RGBELoader({ path: 'textures/equirectangular/' }).load('royal_esplanade_1k.hdr', function (texture) {
+  new RGBELoader().setPath('textures/equirectangular/').load('royal_esplanade_1k.hdr', function (texture) {
     texture.mapping = THREE.Mapping.EquirectangularReflection;
     //texture.minFilter = THREE.LinearMipmapLinearFilter;
     //texture.generateMipmaps = true;
@@ -33,7 +33,7 @@ function init() {
 
     // model
 
-    const loader = new GLTFLoader({ path: 'models/gltf/DamagedHelmet/glTF/' });
+    const loader = new GLTFLoader().setPath('models/gltf/DamagedHelmet/glTF/');
     loader.load('DamagedHelmet.gltf', function (gltf) {
       scene.add(gltf.scene);
 

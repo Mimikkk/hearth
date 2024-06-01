@@ -1,6 +1,5 @@
 import {
   BufferGeometry,
-  Color,
   FileLoader,
   Float32BufferAttribute,
   Group,
@@ -13,6 +12,7 @@ import {
   Points,
   PointsMaterial,
   Vector3,
+  Color,
 } from '../../threejs/Three.js';
 
 // o object_name | g group_name
@@ -360,7 +360,7 @@ class OBJLoader extends Loader {
     this.materials = null;
   }
 
-  load(url, { onLoad, onProgress, onError }) {
+  load(url, onLoad, onProgress, onError) {
     const scope = this;
 
     const loader = new FileLoader({
@@ -370,8 +370,9 @@ class OBJLoader extends Loader {
       withCredentials: this.withCredentials,
     });
 
-    loader.load(url, {
-      onLoad: function (text) {
+    loader.load(
+      url,
+      function (text) {
         try {
           onLoad(scope.parse(text));
         } catch (e) {
@@ -386,7 +387,7 @@ class OBJLoader extends Loader {
       },
       onProgress,
       onError,
-    });
+    );
   }
 
   setMaterials(materials) {

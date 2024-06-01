@@ -1,13 +1,13 @@
 import * as THREE from '../threejs/Three.js';
 
 import {
-  cameraViewMatrix,
-  MeshBasicNodeMaterial,
-  normalView,
   normalWorld,
-  pmremTexture,
-  positionViewDirection,
   uniform,
+  normalView,
+  positionViewDirection,
+  cameraViewMatrix,
+  pmremTexture,
+  MeshBasicNodeMaterial,
 } from '../threejs/nodes/Nodes.js';
 
 import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
@@ -48,9 +48,9 @@ async function init() {
   controls.maxDistance = 10;
   controls.update();
 
-  new RGBMLoader({ path: './textures/cube/pisaRGBM16/' }).loadCubemap(
-    ['px.png', 'nx.png', 'py.png', 'ny.png', 'pz.png', 'nz.png'],
-    function (map) {
+  new RGBMLoader()
+    .setPath('./textures/cube/pisaRGBM16/')
+    .loadCubemap(['px.png', 'nx.png', 'py.png', 'ny.png', 'pz.png', 'nz.png'], function (map) {
       const reflectVec = positionViewDirection.negate().reflect(normalView).transformDirection(cameraViewMatrix);
 
       const pmremRoughness = uniform(0.5);
@@ -71,8 +71,7 @@ async function init() {
         .onChange(() => render());
 
       render();
-    },
-  );
+    });
 
   window.addEventListener('resize', onWindowResize);
 }

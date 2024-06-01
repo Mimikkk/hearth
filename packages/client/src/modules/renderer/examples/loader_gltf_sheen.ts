@@ -24,7 +24,7 @@ function init() {
 
   // model
 
-  new GLTFLoader({ path: 'models/gltf/' }).load('SheenChair.glb', function (gltf) {
+  new GLTFLoader().setPath('models/gltf/').load('SheenChair.glb', function (gltf) {
     scene.add(gltf.scene);
 
     const object = gltf.scene.getObjectByName('SheenChair_fabric');
@@ -45,7 +45,7 @@ function init() {
 
   scene.background = new THREE.Color(0xaaaaaa);
 
-  new RGBELoader({ path: 'textures/equirectangular/' }).load('royal_esplanade_1k.hdr', function (texture) {
+  new RGBELoader().setPath('textures/equirectangular/').load('royal_esplanade_1k.hdr', function (texture) {
     texture.mapping = THREE.Mapping.EquirectangularReflection;
 
     scene.background = texture;

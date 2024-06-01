@@ -17,7 +17,7 @@ class HDRCubeTextureLoader extends Loader {
     this.type = TextureDataType.HalfFloat;
   }
 
-  load(urls, { onLoad, onProgress, onError }) {
+  load(urls, onLoad, onProgress, onError) {
     const texture = new CubeTexture();
 
     texture.type = this.type;
@@ -42,14 +42,15 @@ class HDRCubeTextureLoader extends Loader {
 
     let loaded = 0;
 
-    function loadHDRData(i, { onLoad, onProgress, onError }) {
+    function loadHDRData(i, onLoad, onProgress, onError) {
       new FileLoader({
         manager: scope.manager,
         responseType: 'arraybuffer',
         path: scope.path,
         withCredentials: scope.withCredentials,
-      }).load(urls[i], {
-        onLoad: function (buffer) {
+      }).load(
+        urls[i],
+        function (buffer) {
           loaded++;
 
           const texData = scope.hdrLoader.parse(buffer);
@@ -76,11 +77,11 @@ class HDRCubeTextureLoader extends Loader {
         },
         onProgress,
         onError,
-      });
+      );
     }
 
     for (let i = 0; i < urls.length; i++) {
-      loadHDRData(i, { onLoad, onProgress, onError });
+      loadHDRData(i, onLoad, onProgress, onError);
     }
 
     return texture;

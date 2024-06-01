@@ -31,9 +31,9 @@ async function init() {
   controls.target.set(0, 0.2, 0);
   controls.update();
 
-  const rgbeLoader = new RGBELoader({ path: 'textures/equirectangular/' });
+  const rgbeLoader = new RGBELoader().setPath('textures/equirectangular/');
 
-  const gltfLoader = new GLTFLoader({ path: 'models/gltf/' });
+  const gltfLoader = new GLTFLoader().setPath('models/gltf/');
 
   const [texture, gltf] = await Promise.all([
     rgbeLoader.loadAsync('venice_sunset_1k.hdr'),

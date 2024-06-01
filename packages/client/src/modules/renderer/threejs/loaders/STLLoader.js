@@ -59,8 +59,12 @@ import {
  *  const mesh = new THREE.Mesh(geometry, materials);
  */
 
-export class STLLoader<TUrl extends string> extends Loader<any, TUrl> {
-  load(url: TUrl, { onLoad, onProgress, onError }: Loader.Handlers<any, any>) {
+class STLLoader extends Loader {
+  constructor(manager) {
+    super(manager);
+  }
+
+  load(url, onLoad, onProgress, onError) {
     const scope = this;
 
     const loader = new FileLoader({
@@ -71,8 +75,9 @@ export class STLLoader<TUrl extends string> extends Loader<any, TUrl> {
       withCredentials: this.withCredentials,
     });
 
-    loader.load(url, {
-      onLoad: function (text) {
+    loader.load(
+      url,
+      function (text) {
         try {
           onLoad(scope.parse(text));
         } catch (e) {
@@ -87,10 +92,10 @@ export class STLLoader<TUrl extends string> extends Loader<any, TUrl> {
       },
       onProgress,
       onError,
-    });
+    );
   }
 
-  parse(data: any) {
+  parse(data) {
     function isBinary(data) {
       const reader = new DataView(data);
       const face_size = (32 / 8) * 3 + (32 / 8) * 3 * 3 + 16 / 8;
@@ -339,3 +344,5 @@ export class STLLoader<TUrl extends string> extends Loader<any, TUrl> {
     return isBinary(binData) ? parseBinary(binData) : parseASCII(ensureString(data));
   }
 }
+
+export { STLLoader };

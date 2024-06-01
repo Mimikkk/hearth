@@ -38,14 +38,14 @@ export class LoadManager {
     this.onError?.(url);
   }
 
-  resolveURL(url: string): string {
-    return this.urlModifier?.(url) ?? url;
-  }
-
   setURLModifier(modifier?: LoadManager.UrlModifier): this {
     this.urlModifier = modifier;
 
     return this;
+  }
+
+  resolveURL(url: string): string {
+    return this.urlModifier?.(url) ?? url;
   }
 
   addHandler(regex: RegExp, loader: Loader): this {

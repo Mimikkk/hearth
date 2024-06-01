@@ -101,9 +101,6 @@ importers:
       typescript:
         specifier: 5.4.5
         version: 5.4.5
-      upng-js:
-        specifier: ^2.1.0
-        version: 2.1.0
       utif:
         specifier: ^3.1.0
         version: 3.1.0
@@ -132,12 +129,6 @@ importers:
       '@types/three':
         specifier: ^0.161.2
         version: 0.161.2
-      '@types/upng-js':
-        specifier: ^2.1.5
-        version: 2.1.5
-      '@types/utif':
-        specifier: ^3.0.5
-        version: 3.0.5
       '@webgpu/types':
         specifier: ^0.1.40
         version: 0.1.40
@@ -212,14 +203,14 @@ packages:
   '@arktype/fs@0.0.11':
     resolution: {integrity: sha512-f3p8apUMOTl6KlFNTrOX6twQJDeSdSmtYPVca7SaQjUUTAxfUlaROY1/i1C3y2llYDrrQBEbsggk8k2Oxxgrvw==}
 
-  '@arktype/schema@0.1.10':
-    resolution: {integrity: sha512-soPxL3D4Ad0f7LIhMlah9WD0lo1LpGuE3tMg9emJSMROkA0cirRXAfnsO16QLpoeqUa5QP8zAnnqjEJhKSa6uA==}
+  '@arktype/schema@0.1.2':
+    resolution: {integrity: sha512-ggvxs5P0toqd/4/XK76URQrtyOYpbYcLhirEZeTso6FxkloPa0lT+whPg7DNQj5qi2OQXLUHBYKMx9DOb13ViQ==}
 
   '@arktype/util@0.0.20':
     resolution: {integrity: sha512-Wv7lx8lFTPHXLnNi8v4LPEUyml9M2yqeWhRk/Vmejci/XZvR49bD9qEAw7xtIyWDlx8yE84XkXMhHFY2/3fYEQ==}
 
-  '@arktype/util@0.0.46':
-    resolution: {integrity: sha512-Sll+sNpGV61f5JKd16Zn/y5tDRf/MoGgQTSMkcx9rineZvjGDKJlQ17zgH6I7YzSa2ta+BJrSlECk0C0HQNaMQ==}
+  '@arktype/util@0.0.38':
+    resolution: {integrity: sha512-IvYMGnkUASJllRk3mdBVgckomKx2LNsDTrWCxz04EBK1OuU+4fJ/smSjxgZVWfopNXZds9sHNxZgTJOIw7GvJw==}
 
   '@babel/code-frame@7.23.5':
     resolution: {integrity: sha512-CgH3s1a96LipHCmSUmYFPwY7MNx8C3avkq7i4Wl3cfa662ldtUe4VM1TPXX70pfmrlWTb6jLqTYrZyT2ZTJBgA==}
@@ -745,12 +736,6 @@ packages:
   '@types/three@0.161.2':
     resolution: {integrity: sha512-DazpZ+cIfBzbW/p0zm6G8CS03HBMd748A3R1ZOXHpqaXZLv2I5zNgQUrRG//UfJ6zYFp2cUoCQaOLaz8ubH07w==}
 
-  '@types/upng-js@2.1.5':
-    resolution: {integrity: sha512-CzXg1lcCcWzrmYmke9BLbBPzb2DpdC1bXuXf0BtK3Bygvsozslei8S1bheDI1QUfZzZpMeQI5fywfnMj4CxocQ==}
-
-  '@types/utif@3.0.5':
-    resolution: {integrity: sha512-ULwKfCC9b5JxJyjkkG0WCeOWz7pfBLuvf1ax1fbxt0e+DnZtLUjGnnwMeAU4ukKYmIa3HyITNHOyeKQyf0aAUg==}
-
   '@types/webxr@0.5.3':
     resolution: {integrity: sha512-orrXqFCuuRE5hMuwLZhPaQrukAZxpkMzNJHmKCNJ16XT5yiR5iNBLNdn+xONbfzU2XAXTZR0GA2R99ciUd/2hg==}
 
@@ -870,8 +855,8 @@ packages:
   argparse@2.0.1:
     resolution: {integrity: sha512-8+9WqebbFzpX9OR+Wa6O29asIogeRMzcGtAINdpMHHyAg10f05aSFVBbcEqGf/PXw1EjAZ+q2/bEBg3DvurK3Q==}
 
-  arktype@2.0.0-dev.18:
-    resolution: {integrity: sha512-UdAElu/1DgO14AvzpxLeb8Df/OOFvNPUGGTILPz9d5vGRg+140Xojk7KdIR1U7/NRTYErnMWN4HArgi++uBsEQ==}
+  arktype@2.0.0-dev.11:
+    resolution: {integrity: sha512-k+WVQoHsHsTyTiVQkO201mxLQxyXHmy3buJW8TXLOkr4X2yOUCp0K1SBscuG9OEJoc8MjpvoIharjPHEkFI7kg==}
 
   assertion-error@1.1.0:
     resolution: {integrity: sha512-jgsaNduz+ndvGyFt3uSuWqvy4lCnIJiovtouQN5JZHOKCS2QuhEdbcQHFhVksz2N2U9hXJo8odG7ETyWlEeuDw==}
@@ -2039,9 +2024,6 @@ packages:
     peerDependencies:
       browserslist: '>= 4.21.0'
 
-  upng-js@2.1.0:
-    resolution: {integrity: sha512-d3xzZzpMP64YkjP5pr8gNyvBt7dLk/uGI67EctzDuVp4lCZyVMo0aJO6l/VDlgbInJYDY6cnClLoBp29eKWI6g==}
-
   uri-js@4.4.1:
     resolution: {integrity: sha512-7rKUyy33Q1yc98pQ1DAmLtwX109F7TIfWlW1Ydo8Wl1ii1SeHieeh0HHfPeL2fMXK6z0s8ecKs9frCuLJvndBg==}
 
@@ -2309,20 +2291,20 @@ snapshots:
       '@arktype/util': 0.0.20
       '@typescript/analyze-trace': 0.10.1
       '@typescript/vfs': 1.5.0
-      arktype: 2.0.0-dev.18
+      arktype: 2.0.0-dev.11
       typescript: 5.4.2
     transitivePeerDependencies:
       - supports-color
 
   '@arktype/fs@0.0.11': {}
 
-  '@arktype/schema@0.1.10':
+  '@arktype/schema@0.1.2':
     dependencies:
-      '@arktype/util': 0.0.46
+      '@arktype/util': 0.0.38
 
   '@arktype/util@0.0.20': {}
 
-  '@arktype/util@0.0.46': {}
+  '@arktype/util@0.0.38': {}
 
   '@babel/code-frame@7.23.5':
     dependencies:
@@ -2826,12 +2808,6 @@ snapshots:
       fflate: 0.6.10
       meshoptimizer: 0.18.1
 
-  '@types/upng-js@2.1.5': {}
-
-  '@types/utif@3.0.5':
-    dependencies:
-      '@types/node': 20.11.19
-
   '@types/webxr@0.5.3': {}
 
   '@typescript/analyze-trace@0.10.1':
@@ -2980,10 +2956,10 @@ snapshots:
 
   argparse@2.0.1: {}
 
-  arktype@2.0.0-dev.18:
+  arktype@2.0.0-dev.11:
     dependencies:
-      '@arktype/schema': 0.1.10
-      '@arktype/util': 0.0.46
+      '@arktype/schema': 0.1.2
+      '@arktype/util': 0.0.38
 
   assertion-error@1.1.0: {}
 
@@ -4127,10 +4103,6 @@ snapshots:
       browserslist: 4.23.0
       escalade: 3.1.1
       picocolors: 1.0.0
-
-  upng-js@2.1.0:
-    dependencies:
-      pako: 1.0.11
 
   uri-js@4.4.1:
     dependencies:

@@ -27,7 +27,7 @@ class SVGLoader extends Loader {
     this.defaultUnit = 'px';
   }
 
-  load(url, { onLoad, onProgress, onError }) {
+  load(url, onLoad, onProgress, onError) {
     const scope = this;
 
     const loader = new FileLoader({
@@ -37,8 +37,9 @@ class SVGLoader extends Loader {
       requestHeader: this.requestHeader,
       withCredentials: this.withCredentials,
     });
-    loader.load(url, {
-      onLoad: function (text) {
+    loader.load(
+      url,
+      function (text) {
         try {
           onLoad(scope.parse(text));
         } catch (e) {
@@ -53,7 +54,7 @@ class SVGLoader extends Loader {
       },
       onProgress,
       onError,
-    });
+    );
   }
 
   parse(text) {
