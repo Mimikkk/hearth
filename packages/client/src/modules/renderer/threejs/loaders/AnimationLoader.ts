@@ -3,12 +3,14 @@ import { FileLoader } from './FileLoader.js';
 import { Loader } from './Loader.ts';
 
 export class AnimationLoader extends Loader {
-  constructor(manager) {
-    super(manager);
-  }
-
-  load(url, onLoad, onProgress, onError = console.error) {
-    const loader = new FileLoader(this.manager, {
+  load(
+    url: string,
+    onLoad?: Loader.OnLoad<any>,
+    onProgress?: Loader.OnProgress,
+    onError: Loader.OnProgress = console.error,
+  ) {
+    const loader = new FileLoader({
+      manager: this.manager,
       path: this.path,
       requestHeader: this.requestHeader,
       withCredentials: this.withCredentials,

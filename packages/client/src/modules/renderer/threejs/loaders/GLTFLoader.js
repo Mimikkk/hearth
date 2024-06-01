@@ -166,7 +166,8 @@ class GLTFLoader extends Loader {
       scope.manager.itemEnd(url);
     };
 
-    const loader = new FileLoader(this.manager, {
+    const loader = new FileLoader({
+      manager: this.manager,
       path: this.path,
       responseType: 'arraybuffer',
       headers: this.requestHeader,
@@ -2004,12 +2005,11 @@ class GLTFParser {
     this.textureLoader.setCrossOrigin(this.options.crossOrigin);
     this.textureLoader.setRequestHeader(this.options.requestHeader);
 
-    this.fileLoader = new FileLoader(this.options.manager);
-    this.fileLoader.setResponseType('arraybuffer');
-
-    if (this.options.crossOrigin === 'use-credentials') {
-      this.fileLoader.setWithCredentials(true);
-    }
+    this.fileLoader = new FileLoader({
+      manager: this.options.manager,
+      responseType: 'arraybuffer',
+      withCredentials: this.options.crossOrigin === 'use-credentials',
+    });
   }
 
   setExtensions(extensions) {

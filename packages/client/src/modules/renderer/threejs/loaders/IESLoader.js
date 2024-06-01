@@ -109,7 +109,8 @@ class IESLoader extends Loader {
   }
 
   load(url, onLoad, onProgress, onError) {
-    const loader = new FileLoader(this.manager, {
+    const loader = new FileLoader({
+      manager: this.manager,
       responseType: 'text',
       path: this.path,
       requestHeader: this.requestHeader,

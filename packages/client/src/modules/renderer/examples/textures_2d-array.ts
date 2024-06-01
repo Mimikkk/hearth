@@ -24,7 +24,11 @@ function init() {
 
   // width 256, height 256, depth 109, 8-bit, zip archived raw data
 
-  new THREE.FileLoader().setResponseType('arraybuffer').load('textures/3d/head256x256x109.zip', function (data) {
+  // new THREE.FileLoader().setResponseType('arraybuffer');
+
+  const loader = new THREE.FileLoader();
+
+  loader.load('textures/3d/head256x256x109.zip', function (data) {
     const zip = unzipSync(new Uint8Array(data));
     const array = new Uint8Array(zip['head256x256x109'].buffer);
 

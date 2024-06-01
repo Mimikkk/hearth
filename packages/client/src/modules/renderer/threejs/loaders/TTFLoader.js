@@ -11,7 +11,8 @@ export class TTFLoader extends Loader {
   load(url, onLoad, onProgress, onError) {
     const scope = this;
 
-    const loader = new FileLoader(this.manager, {
+    const loader = new FileLoader({
+      manager: this.manager,
       responseType: 'arraybuffer',
       path: this.path,
       requestHeader: this.requestHeader,

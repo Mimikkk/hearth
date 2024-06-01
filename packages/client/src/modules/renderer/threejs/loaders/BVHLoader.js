@@ -28,10 +28,14 @@ class BVHLoader extends Loader {
   load(url, onLoad, onProgress, onError) {
     const scope = this;
 
-    const loader = new FileLoader(scope.manager);
-    loader.setPath(scope.path);
-    loader.setRequestHeader(scope.requestHeader);
-    loader.setWithCredentials(scope.withCredentials);
+    const loader = new FileLoader({
+      manager: scope.manager,
+      responseType: 'text',
+      path: scope.path,
+      requestHeader: scope.requestHeader,
+      withCredentials: scope.withCredentials,
+    });
+
     loader.load(
       url,
       function (text) {

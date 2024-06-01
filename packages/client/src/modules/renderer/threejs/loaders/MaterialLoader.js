@@ -7,39 +7,42 @@ import { Matrix4 } from '../math/Matrix4.ts';
 import { FileLoader } from './FileLoader.ts';
 import { Loader } from './Loader.ts';
 import {
-  ShadowMaterial,
-  SpriteMaterial,
-  RawShaderMaterial,
-  ShaderMaterial,
-  PointsMaterial,
-  MeshPhysicalMaterial,
-  MeshStandardMaterial,
-  MeshPhongMaterial,
-  MeshToonMaterial,
-  MeshNormalMaterial,
-  MeshLambertMaterial,
+  LineBasicMaterial,
+  LineDashedMaterial,
+  Material,
+  MeshBasicMaterial,
   MeshDepthMaterial,
   MeshDistanceMaterial,
-  MeshBasicMaterial,
+  MeshLambertMaterial,
   MeshMatcapMaterial,
-  LineDashedMaterial,
-  LineBasicMaterial,
-  Material,
+  MeshNormalMaterial,
+  MeshPhongMaterial,
+  MeshPhysicalMaterial,
+  MeshStandardMaterial,
+  MeshToonMaterial,
+  PointsMaterial,
+  RawShaderMaterial,
+  ShaderMaterial,
+  ShadowMaterial,
+  SpriteMaterial,
 } from '../materials/Materials.ts';
 
 class MaterialLoader extends Loader {
-  constructor(manager) {
-    super(manager);
+  constructor(options) {
+    super(options);
     this.textures = {};
   }
 
   load(url, onLoad, onProgress, onError) {
     const scope = this;
 
-    const loader = new FileLoader(scope.manager);
-    loader.setPath(scope.path);
-    loader.setRequestHeader(scope.requestHeader);
-    loader.setWithCredentials(scope.withCredentials);
+    const loader = new FileLoader({
+      manager: this.manager,
+      responseType: 'text',
+      path: this.path,
+      requestHeader: this.requestHeader,
+      withCredentials: this.withCredentials,
+    });
     loader.load(
       url,
       function (text) {

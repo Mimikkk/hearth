@@ -168,7 +168,8 @@ class KTX2Loader extends Loader {
       throw new Error('THREE.KTX2Loader: Missing initialization with `.detectSupport( renderer )`.');
     }
 
-    const loader = new FileLoader(this.manager, {
+    const loader = new FileLoader({
+      manager: this.manager,
       responseType: 'arraybuffer',
       withCredentials: this.withCredentials,
     });

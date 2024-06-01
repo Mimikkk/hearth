@@ -1,6 +1,5 @@
 import { Cache } from './Cache.js';
 import { Loader } from './Loader.js';
-import { LoadManager } from '@modules/renderer/threejs/loaders/LoadManager.js';
 
 const loading: Record<
   string,
@@ -25,8 +24,8 @@ type ResponseType = 'arraybuffer' | 'blob' | 'json' | 'text';
 export class FileLoader<TData extends string | ArrayBuffer, TUrl extends string = string> extends Loader<TData, TUrl> {
   responseType: ResponseType;
 
-  constructor(manager?: LoadManager, options?: FileLoader.Options) {
-    super(manager, options);
+  constructor(options?: FileLoader.Options) {
+    super(options);
     this.responseType = options?.responseType ?? 'text';
   }
 
@@ -164,11 +163,6 @@ export class FileLoader<TData extends string | ArrayBuffer, TUrl extends string 
       });
 
     this.manager.itemStart(uri);
-  }
-
-  setResponseType(type: ResponseType) {
-    this.responseType = type;
-    return this;
   }
 }
 

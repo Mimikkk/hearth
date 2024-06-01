@@ -193,7 +193,10 @@ class MaterialXLoader extends Loader {
       }
     };
 
-    new FileLoader(this.manager).setPath(this.path).load(
+    new FileLoader({
+      manager: this.manager,
+      path: this.path,
+    }).load(
       url,
       async text => {
         try {

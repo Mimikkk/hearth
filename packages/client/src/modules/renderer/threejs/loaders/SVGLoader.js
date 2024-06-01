@@ -30,10 +30,13 @@ class SVGLoader extends Loader {
   load(url, onLoad, onProgress, onError) {
     const scope = this;
 
-    const loader = new FileLoader(scope.manager);
-    loader.setPath(scope.path);
-    loader.setRequestHeader(scope.requestHeader);
-    loader.setWithCredentials(scope.withCredentials);
+    const loader = new FileLoader({
+      manager: this.manager,
+      responseType: 'text',
+      path: this.path,
+      requestHeader: this.requestHeader,
+      withCredentials: this.withCredentials,
+    });
     loader.load(
       url,
       function (text) {

@@ -74,7 +74,8 @@ class FBXLoader extends Loader {
 
     const path = scope.path === '' ? LoaderUtils.extractUrlBase(url) : scope.path;
 
-    const loader = new FileLoader(this.manager, {
+    const loader = new FileLoader({
+      manager: this.manager,
       responseType: 'arraybuffer',
       path: scope.path,
       requestHeader: scope.requestHeader,
