@@ -46,12 +46,14 @@ async function init() {
   const loader = new GLTFLoader();
   loader.setKTX2Loader(ktx2Loader);
   loader.setMeshoptDecoder(MeshoptDecoder);
-  loader.load('./models/gltf/coffeemat.glb', function (gltf) {
-    const gltfScene = gltf.scene;
-    gltfScene.position.y = -0.8;
-    gltfScene.scale.setScalar(0.01);
+  loader.load('./models/gltf/coffeemat.glb', {
+    onLoad: function (gltf) {
+      const gltfScene = gltf.scene;
+      gltfScene.position.y = -0.8;
+      gltfScene.scale.setScalar(0.01);
 
-    scene.add(gltfScene);
+      scene.add(gltfScene);
+    },
   });
 
   window.addEventListener('resize', onWindowResize);

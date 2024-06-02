@@ -28,8 +28,8 @@ export abstract class Loader<TData = any, TUrl extends string = string> {
     onError?: Loader.OnError,
   ): void;
 
-  loadAsync(url: TUrl, onProgress?: Loader.OnProgress): Promise<void> {
-    return new Promise((onLoad, onError) => this.load(url, { onLoad: () => onLoad(), onProgress, onError }));
+  loadAsync(url: TUrl, onProgress?: Loader.OnProgress): Promise<TData> {
+    return new Promise((onLoad, onError) => this.load(url, { onLoad, onProgress, onError }));
   }
 
   parse(data: TData) {}

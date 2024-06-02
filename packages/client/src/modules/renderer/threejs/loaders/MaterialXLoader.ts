@@ -184,31 +184,26 @@ class MaterialXLoader extends Loader {
     super(manager);
   }
 
-  load(url, onLoad, onProgress, onError = console.error) {
-    const _onError = function (e) {
-      onError(e);
-    };
-
+  load(url, handlers) {
     new FileLoader({
       manager: this.manager,
       path: this.path,
-    }).load(
-      url,
-      async text => {
+    }).load(url, {
+      onLoad: async text => {
         try {
-          onLoad(this.parse(text));
+          handlers?.onLoad?.(this.parse(text));
         } catch (e) {
-          _onError(e);
+          handlers?.onError?.(e);
         }
       },
-      onProgress,
-      _onError,
-    );
+      onProgress: handlers?.onProgress,
+      onError: handlers?.onError,
+    });
 
     return this;
   }
 
-  parse(text) {
+  parse(text: string) {
     return new MaterialX(this.manager, this.path).parse(text);
   }
 }

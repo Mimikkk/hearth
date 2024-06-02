@@ -78,9 +78,8 @@ export class FBXLoader extends Loader {
       withCredentials: scope.withCredentials,
     });
 
-    loader.load(
-      url,
-      function (buffer) {
+    loader.load(url, {
+      onLoad: function (buffer) {
         try {
           onLoad(scope.parse(buffer, path));
         } catch (e) {
@@ -95,7 +94,7 @@ export class FBXLoader extends Loader {
       },
       onProgress,
       onError,
-    );
+    });
   }
 
   parse(FBXBuffer, path) {

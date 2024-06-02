@@ -41,31 +41,33 @@ async function init() {
   new GLTFLoader()
     .setKTX2Loader(ktx2Loader)
     .setMeshoptDecoder(MeshoptDecoder)
-    .load('./models/gltf/facecap.glb', gltf => {
-      const mesh = gltf.scene.children[0];
+    .load('./models/gltf/facecap.glb', {
+      onLoad: gltf => {
+        const mesh = gltf.scene.children[0];
 
-      scene.add(mesh);
+        scene.add(mesh);
 
-      mixer = new THREE.AnimationMixer(mesh);
+        mixer = new THREE.AnimationMixer(mesh);
 
-      mixer.clipAction(gltf.animations[0]).play();
+        mixer.clipAction(gltf.animations[0]).play();
 
-      // GUI
+        // GUI
 
-      const head = mesh.getObjectByName('mesh_2');
-      const influences = head.morphTargetInfluences;
+        const head = mesh.getObjectByName('mesh_2');
+        const influences = head.morphTargetInfluences;
 
-      //head.morphTargetInfluences = null;
+        //head.morphTargetInfluences = null;
 
-      // WebGPURenderer: Unsupported texture format. 33776
-      head.material.map = null;
+        // WebGPURenderer: Unsupported texture format. 33776
+        head.material.map = null;
 
-      const gui = new GUI();
-      gui.close();
+        const gui = new GUI();
+        gui.close();
 
-      for (const [key, value] of Object.entries(head.morphTargetDictionary)) {
-        gui.add(influences, value, 0, 1, 0.01).name(key.replace('blendShape1.', '')).listen();
-      }
+        for (const [key, value] of Object.entries(head.morphTargetDictionary)) {
+          gui.add(influences, value, 0, 1, 0.01).name(key.replace('blendShape1.', '')).listen();
+        }
+      },
     });
 
   scene.background = new THREE.Color(0x666666);

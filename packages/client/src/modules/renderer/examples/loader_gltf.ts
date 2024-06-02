@@ -35,10 +35,12 @@ function init() {
       // model
 
       const loader = new GLTFLoader({ path: 'models/gltf/DamagedHelmet/glTF/' });
-      loader.load('DamagedHelmet.gltf', function (gltf) {
-        scene.add(gltf.scene);
+      loader.load('DamagedHelmet.gltf', {
+        onLoad: function (gltf) {
+          scene.add(gltf.scene);
 
-        render();
+          render();
+        },
       });
     },
   });

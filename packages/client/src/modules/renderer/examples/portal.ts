@@ -61,46 +61,48 @@ function init() {
   // models
 
   const loader = new GLTFLoader();
-  loader.load('models/gltf/Xbot.glb', function (gltf) {
-    const createModel = (colorNode = null) => {
-      let object;
+  loader.load('models/gltf/Xbot.glb', {
+    onLoad: function (gltf) {
+      const createModel = (colorNode = null) => {
+        let object;
 
-      if (mixers.length === 0) {
-        object = gltf.scene;
-      } else {
-        object = gltf.scene.clone();
+        if (mixers.length === 0) {
+          object = gltf.scene;
+        } else {
+          object = gltf.scene.clone();
 
-        const children = object.children[0].children;
+          const children = object.children[0].children;
 
-        const applyFX = index => {
-          children[index].material = children[index].material.clone();
-          children[index].material.colorNode = colorNode;
-          children[index].material.wireframe = true;
-        };
+          const applyFX = index => {
+            children[index].material = children[index].material.clone();
+            children[index].material.colorNode = colorNode;
+            children[index].material.wireframe = true;
+          };
 
-        applyFX(0);
-        applyFX(1);
-      }
+          applyFX(0);
+          applyFX(1);
+        }
 
-      const mixer = new THREE.AnimationMixer(object);
+        const mixer = new THREE.AnimationMixer(object);
 
-      const action = mixer.clipAction(gltf.animations[6]);
-      action.play();
+        const action = mixer.clipAction(gltf.animations[6]);
+        action.play();
 
-      mixers.push(mixer);
+        mixers.push(mixer);
 
-      return object;
-    };
+        return object;
+      };
 
-    const colorNode = mx_fractal_noise_vec3(uv().mul(20).add(timerLocal()));
+      const colorNode = mx_fractal_noise_vec3(uv().mul(20).add(timerLocal()));
 
-    const modelMain = createModel();
-    const modelPortal = createModel(colorNode);
+      const modelMain = createModel();
+      const modelPortal = createModel(colorNode);
 
-    // model portal
+      // model portal
 
-    sceneMain.add(modelMain);
-    scenePortal.add(modelPortal);
+      sceneMain.add(modelMain);
+      scenePortal.add(modelPortal);
+    },
   });
 
   // portal

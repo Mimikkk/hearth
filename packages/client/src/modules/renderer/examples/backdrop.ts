@@ -51,21 +51,23 @@ scene.add(camera);
 
 const loader = new GLTFLoader();
 let mixer: AnimationMixer;
-loader.load('models/gltf/Michelle.glb', function (gltf) {
-  const object = gltf.scene;
-  mixer = new AnimationMixer(object);
+loader.load('models/gltf/Michelle.glb', {
+  onLoad: function (gltf) {
+    const object = gltf.scene;
+    mixer = new AnimationMixer(object);
 
-  const material = object.children[0].children[0].material;
+    const material = object.children[0].children[0].material;
 
-  // output material effect ( better using hsv )
-  // ignore output.sRGBToLinear().linearTosRGB() for now
+    // output material effect ( better using hsv )
+    // ignore output.sRGBToLinear().linearTosRGB() for now
 
-  material.outputNode = oscSine(timerLocal(0.1)).mix(output, output.add(0.1).posterize(4).mul(2));
+    material.outputNode = oscSine(timerLocal(0.1)).mix(output, output.add(0.1).posterize(4).mul(2));
 
-  const action = mixer.clipAction(gltf.animations[0]);
-  action.play();
+    const action = mixer.clipAction(gltf.animations[0]);
+    action.play();
 
-  scene.add(object);
+    scene.add(object);
+  },
 });
 
 // portals

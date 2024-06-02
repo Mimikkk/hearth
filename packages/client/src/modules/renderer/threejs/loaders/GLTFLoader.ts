@@ -55,7 +55,7 @@ import {
 } from '../../threejs/Three.js';
 import { toTrianglesDrawMode } from '../utils/BufferGeometryUtils.js';
 
-export class GLTFLoader extends Loader {
+export class GLTFLoader<TUrl extends string = string> extends Loader {
   constructor(manager) {
     super(manager);
 
@@ -130,7 +130,8 @@ export class GLTFLoader extends Loader {
     });
   }
 
-  load(url, onLoad, onProgress, onError = console.error) {
+  load(url: TUrl, handlers?: Loader.Handlers<any>) {
+    const { onLoad, onProgress, onError } = handlers ?? {};
     const scope = this;
 
     let resourcePath;
@@ -168,11 +169,8 @@ export class GLTFLoader extends Loader {
       withCredentials: this.withCredentials,
     });
 
-    console.log({ loader });
-
-    loader.load(
-      url,
-      function (data) {
+    loader.load(url, {
+      onLoad: function (data) {
         try {
           scope.parse(
             data,
@@ -189,8 +187,8 @@ export class GLTFLoader extends Loader {
         }
       },
       onProgress,
-      _onError,
-    );
+      onError: _onError,
+    });
   }
 
   setDRACOLoader(dracoLoader) {
@@ -2295,8 +2293,12 @@ class GLTFParser {
     const options = this.options;
 
     return new Promise(function (resolve, reject) {
-      loader.load(LoaderUtils.resolveUrl(bufferDef.uri, options.path), resolve, undefined, function () {
-        reject(new Error('THREE.GLTFLoader: Failed to load buffer "' + bufferDef.uri + '".'));
+      loader.load(LoaderUtils.resolveUrl(bufferDef.uri, options.path), {
+        onLoad: resolve,
+        onProgress: undefined,
+        onError: function () {
+          reject(new Error('THREE.GLTFLoader: Failed to load buffer "' + bufferDef.uri + '".'));
+        },
       });
     });
   }
@@ -2558,7 +2560,11 @@ class GLTFParser {
             };
           }
 
-          loader.load(LoaderUtils.resolveUrl(sourceURI, options.path), onLoad, undefined, reject);
+          loader.load(LoaderUtils.resolveUrl(sourceURI, options.path), {
+            onLoad: onLoad,
+            onProgress: undefined,
+            onError: reject,
+          });
         });
       })
       .then(function (texture) {

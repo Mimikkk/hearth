@@ -90,16 +90,18 @@ const clock = new Clock();
 let model: Group;
 let mixer: AnimationMixer;
 const loader = new GLTFLoader();
-loader.load('models/gltf/Michelle.glb', function (gltf) {
-  model = gltf.scene;
-  model.children[0].children[0].castShadow = true;
+loader.load('models/gltf/Michelle.glb', {
+  onLoad: function (gltf) {
+    model = gltf.scene;
+    model.children[0].children[0].castShadow = true;
 
-  mixer = new AnimationMixer(model);
+    mixer = new AnimationMixer(model);
 
-  const action = mixer.clipAction(gltf.animations[0]);
-  action.play();
+    const action = mixer.clipAction(gltf.animations[0]);
+    action.play();
 
-  scene.add(model);
+    scene.add(model);
+  },
 });
 
 // objects

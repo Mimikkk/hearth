@@ -1,5 +1,6 @@
 import {
   BufferGeometry,
+  Color,
   FileLoader,
   Float32BufferAttribute,
   Group,
@@ -12,7 +13,6 @@ import {
   Points,
   PointsMaterial,
   Vector3,
-  Color,
 } from '../../threejs/Three.js';
 
 // o object_name | g group_name
@@ -353,14 +353,14 @@ function ParserState() {
 
 //
 
-export class OBJLoader extends Loader {
-  constructor(manager) {
-    super(manager);
+export class OBJLoader<TUrl extends string = string> extends Loader {
+  constructor(options) {
+    super(options);
 
     this.materials = null;
   }
 
-  load(url, onLoad, onProgress, onError) {
+  load(url: TUrl, handlers?: Loader.Handlers<Group>) {
     const scope = this;
 
     const loader = new FileLoader({
@@ -370,33 +370,22 @@ export class OBJLoader extends Loader {
       withCredentials: this.withCredentials,
     });
 
-    loader.load(
-      url,
-      text => {
+    loader.load(url, {
+      onLoad: text => {
         try {
-          onLoad(scope.parse(text));
+          handlers?.onLoad?.(scope.parse(text));
         } catch (e) {
-          if (onError) {
-            onError(e);
-          } else {
-            console.error(e);
-          }
+          handlers?.onError?.(e);
 
           scope.manager.itemError(url);
         }
       },
-      onProgress,
-      onError,
-    );
+      onProgress: handlers?.onProgress,
+      onError: handlers?.onError,
+    });
   }
 
-  setMaterials(materials) {
-    this.materials = materials;
-
-    return this;
-  }
-
-  parse(text) {
+  parse(text: string) {
     const state = new ParserState();
 
     if (text.indexOf('\r\n') !== -1) {

@@ -1,15 +1,15 @@
 import * as THREE from '../threejs/Three.js';
 import {
-  uniform,
   mix,
+  normalWorld,
   pmremTexture,
-  reference,
   positionLocal,
   positionWorld,
-  normalWorld,
   positionWorldDirection,
+  reference,
   reflectVector,
   toneMapping,
+  uniform,
 } from '../threejs/nodes/Nodes.js';
 
 import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
@@ -20,7 +20,6 @@ import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.
 import { GLTFLoader } from '../threejs/loaders/GLTFLoader.js';
 
 import { GUI } from 'lil-gui';
-import { Filter } from '../threejs/Three.js';
 
 let camera, scene, renderer;
 
@@ -97,8 +96,10 @@ function init() {
   // scene objects
 
   const loader = new GLTFLoader({ path: 'models/gltf/DamagedHelmet/glTF/' });
-  loader.load('DamagedHelmet.gltf', function (gltf) {
-    scene.add(gltf.scene);
+  loader.load('DamagedHelmet.gltf', {
+    onLoad: function (gltf) {
+      scene.add(gltf.scene);
+    },
   });
 
   const sphereGeometry = new THREE.SphereGeometry(0.5, 64, 32);

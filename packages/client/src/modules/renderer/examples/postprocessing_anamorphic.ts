@@ -35,8 +35,10 @@ function init() {
     .saturation(0);
 
   const loader = new GLTFLoader({ path: 'models/gltf/DamagedHelmet/glTF/' });
-  loader.load('DamagedHelmet.gltf', function (gltf) {
-    scene.add(gltf.scene);
+  loader.load('DamagedHelmet.gltf', {
+    onLoad: function (gltf) {
+      scene.add(gltf.scene);
+    },
   });
 
   renderer = new WebGPURenderer({ antialias: true });

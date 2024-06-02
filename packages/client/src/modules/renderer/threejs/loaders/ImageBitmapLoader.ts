@@ -2,6 +2,9 @@ import { Cache } from './Cache.js';
 import { Loader } from './Loader.js';
 
 export class ImageBitmapLoader extends Loader {
+  options: ImageBitmapOptions;
+  isImageBitmapLoader: true = true;
+
   constructor(manager) {
     super(manager);
 
@@ -18,7 +21,7 @@ export class ImageBitmapLoader extends Loader {
     this.options = { premultiplyAlpha: 'none' };
   }
 
-  load(url, onLoad, onProgress, onError) {
+  load(url, handlers) {
     if (url === undefined) url = '';
 
     if (this.path !== undefined) url = this.path + url;
@@ -36,19 +39,19 @@ export class ImageBitmapLoader extends Loader {
       if (cached.then) {
         cached
           .then(imageBitmap => {
-            if (onLoad) onLoad(imageBitmap);
+            handlers?.onLoad?.(imageBitmap);
 
             scope.manager.itemEnd(url);
           })
           .catch(e => {
-            if (onError) onError(e);
+            handlers?.onError?.(e);
           });
         return;
       }
 
       // If cached is not a promise (i.e., it's already an imageBitmap)
       setTimeout(function () {
-        if (onLoad) onLoad(cached);
+        handlers?.onLoad?.(cached);
 
         scope.manager.itemEnd(url);
       }, 0);
@@ -56,7 +59,7 @@ export class ImageBitmapLoader extends Loader {
       return cached;
     }
 
-    const fetchOptions = {};
+    const fetchOptions: RequestInit = {};
     fetchOptions.credentials = this.crossOrigin === 'anonymous' ? 'same-origin' : 'include';
     fetchOptions.headers = this.requestHeader;
 
@@ -70,14 +73,14 @@ export class ImageBitmapLoader extends Loader {
       .then(function (imageBitmap) {
         Cache.add(url, imageBitmap);
 
-        if (onLoad) onLoad(imageBitmap);
+        handlers?.onLoad?.(imageBitmap);
 
         scope.manager.itemEnd(url);
 
         return imageBitmap;
       })
       .catch(function (e) {
-        if (onError) onError(e);
+        handlers?.onError?.(e);
 
         Cache.remove(url);
 

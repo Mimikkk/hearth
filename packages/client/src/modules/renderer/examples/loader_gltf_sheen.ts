@@ -24,15 +24,17 @@ function init() {
 
   // model
 
-  new GLTFLoader({ path: 'models/gltf/' }).load('SheenChair.glb', function (gltf) {
-    scene.add(gltf.scene);
+  new GLTFLoader({ path: 'models/gltf/' }).load('SheenChair.glb', {
+    onLoad: function (gltf) {
+      scene.add(gltf.scene);
 
-    const object = gltf.scene.getObjectByName('SheenChair_fabric');
+      const object = gltf.scene.getObjectByName('SheenChair_fabric');
 
-    const gui = new GUI();
+      const gui = new GUI();
 
-    gui.add(object.material, 'sheen', 0, 1);
-    gui.open();
+      gui.add(object.material, 'sheen', 0, 1);
+      gui.open();
+    },
   });
 
   renderer = new WebGPURenderer({ antialias: true });

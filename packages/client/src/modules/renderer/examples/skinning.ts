@@ -29,14 +29,16 @@ function init() {
   scene.add(camera);
 
   const loader = new GLTFLoader();
-  loader.load('models/gltf/Michelle.glb', function (gltf) {
-    const object = gltf.scene;
-    mixer = new THREE.AnimationMixer(object);
+  loader.load('models/gltf/Michelle.glb', {
+    onLoad: function (gltf) {
+      const object = gltf.scene;
+      mixer = new THREE.AnimationMixer(object);
 
-    const action = mixer.clipAction(gltf.animations[0]);
-    action.play();
+      const action = mixer.clipAction(gltf.animations[0]);
+      action.play();
 
-    scene.add(object);
+      scene.add(object);
+    },
   });
 
   //renderer
