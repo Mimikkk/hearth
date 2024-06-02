@@ -16,7 +16,7 @@ export class DataTextureLoader<TUrl extends string = string> extends Loader {
     super(options);
   }
 
-  load(url: TUrl, handlers?: Loader.Handlers<[texture: DataTexture, data: any]>): DataTexture {
+  load(url: TUrl | any, handlers?: Loader.Handlers<[texture: DataTexture, data: any]>): DataTexture {
     //@ts-expect-error
     const texture = new DataTexture();
 

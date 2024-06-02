@@ -20,13 +20,7 @@ export abstract class Loader<TData = any, TUrl extends string = string> {
     this.requestHeader = options?.requestHeader ?? {};
   }
 
-  abstract load(url: TUrl, handlers: Loader.Handlers<TData>): void;
-  abstract load(
-    url: TUrl,
-    onLoad: Loader.OnLoad<TData>,
-    onProgress?: Loader.OnProgress,
-    onError?: Loader.OnError,
-  ): void;
+  abstract load(url: any, handlers: Loader.Handlers<TData>): void;
 
   loadAsync(url: TUrl, onProgress?: Loader.OnProgress): Promise<TData> {
     return new Promise((onLoad, onError) => this.load(url, { onLoad, onProgress, onError }));
