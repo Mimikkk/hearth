@@ -25,7 +25,7 @@ function init() {
   const cube1Texture = new RGBMLoader({
     path: './textures/cube/pisaRGBM16/',
     maxRange: 16,
-  }).loadCubemap(rgbmUrls);
+  }).load(rgbmUrls);
 
   cube1Texture.generateMipmaps = true;
   cube1Texture.minFilter = THREE.Filter.LinearMipmapLinear;

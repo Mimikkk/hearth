@@ -40,7 +40,7 @@ function init() {
   const uvTexture = new THREE.TextureLoader().load('./textures/uv_grid_opengl.jpg');
 
   const rgbmUrls = ['px.png', 'nx.png', 'py.png', 'ny.png', 'pz.png', 'nz.png'];
-  const texture = new RGBMLoader({ path: './textures/cube/pisaRGBM16/', maxRange: 16 }).loadCubemap(rgbmUrls);
+  const texture = new RGBMLoader({ path: './textures/cube/pisaRGBM16/', maxRange: 16 }).load(rgbmUrls);
 
   texture.name = 'pisaRGBM16';
   texture.minFilter = THREE.Filter.LinearMipmapLinear;

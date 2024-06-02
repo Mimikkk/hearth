@@ -66,24 +66,17 @@ export * from '@modules/renderer/threejs/lines/LineSegmentsGeometry.ts';
 export * from '@modules/renderer/threejs/lines/Wireframe.ts';
 export * from '@modules/renderer/threejs/lines/WireframeGeometry2.ts';
 
-export * from './loaders/BVHLoader.js';
-export * from './loaders/DDSLoader.js';
 export * from './loaders/FBXLoader.ts';
 export * from './loaders/FontLoader.ts';
-export * from './loaders/GCodeLoader.js';
 export * from './loaders/GLTFLoader.ts';
 export * from './loaders/HDRCubeTextureLoader.ts';
 export * from './loaders/IESLoader.ts';
 export * from './loaders/KTX2Loader.ts';
-export * from './loaders/MD2Loader.js';
-export * from './loaders/MDDLoader.js';
-
 export * from './loaders/OBJLoader.ts';
 export * from './loaders/RGBELoader.ts';
 export * from './loaders/RGBMLoader.ts';
 export * from './loaders/STLLoader.ts';
 export * from './loaders/SVGLoader.ts';
-export * from './loaders/TGALoader.js';
 export * from './loaders/TIFFLoader.ts';
 export * from './loaders/TTFLoader.ts';
 
@@ -95,20 +88,6 @@ export * from './math/MeshSurfaceSampler.ts';
 export * from './math/OBB.ts';
 export * from './math/Octree.ts';
 export * from './math/SimplexNoise.ts';
-
-export * from '@modules/renderer/threejs/misc/ConvexObjectBreaker.js';
-export * from '@modules/renderer/threejs/misc/GPUComputationRenderer.js';
-export * from '@modules/renderer/threejs/misc/Gyroscope.js';
-export * from '@modules/renderer/threejs/misc/MD2Character.js';
-export * from '@modules/renderer/threejs/misc/MD2CharacterComplex.js';
-export * from '@modules/renderer/threejs/misc/MorphAnimMesh.js';
-export * from '@modules/renderer/threejs/misc/MorphBlendMesh.js';
-export * from '@modules/renderer/threejs/misc/ProgressiveLightMap.js';
-export * from '@modules/renderer/threejs/misc/RollerCoaster.js';
-export * from '@modules/renderer/threejs/misc/Timer.js';
-export * from '@modules/renderer/threejs/misc/TubePainter.js';
-export * from '@modules/renderer/threejs/misc/Volume.js';
-export * from '@modules/renderer/threejs/misc/VolumeSlice.js';
 
 export * from '@modules/renderer/threejs/modifiers/CurveModifier.ts';
 export * from '@modules/renderer/threejs/modifiers/EdgeSplitModifier.ts';

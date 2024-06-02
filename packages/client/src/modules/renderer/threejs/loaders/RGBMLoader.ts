@@ -23,7 +23,7 @@ export class RGBMLoader<TUrl extends string = string> extends DataTextureLoader 
     this.maxRange = options?.maxRange ?? 7;
   }
 
-  loadCubemap(urls: Urls<TUrl>, handlers?: ImageLoader.Handlers<CubeTexture>) {
+  load(urls: Urls<TUrl>, handlers?: ImageLoader.Handlers<CubeTexture>) {
     //@ts-expect-error
     const texture = new CubeTexture();
 
@@ -31,7 +31,7 @@ export class RGBMLoader<TUrl extends string = string> extends DataTextureLoader 
     const incrementCounter = () => ++loaded;
 
     for (let i = 0; i < urls.length; ++i) {
-      this.load(urls[i], {
+      super.load(urls[i], {
         onLoad: this.createOnLoad2(i, texture, incrementCounter, handlers?.onLoad),
         onError: handlers?.onError,
       });

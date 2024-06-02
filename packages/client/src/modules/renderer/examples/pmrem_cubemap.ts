@@ -48,7 +48,7 @@ async function init() {
   controls.maxDistance = 10;
   controls.update();
 
-  new RGBMLoader({ path: './textures/cube/pisaRGBM16/' }).loadCubemap(
+  new RGBMLoader({ path: './textures/cube/pisaRGBM16/' }).load(
     ['px.png', 'nx.png', 'py.png', 'ny.png', 'pz.png', 'nz.png'],
     {
       onLoad: function (map) {
