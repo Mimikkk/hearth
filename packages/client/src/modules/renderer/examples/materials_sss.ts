@@ -93,12 +93,14 @@ function initMaterial() {
   // LOADER
 
   const loaderFBX = new FBXLoader();
-  loaderFBX.load('models/fbx/stanford-bunny.fbx', function (object) {
-    model = object.children[0];
-    model.position.set(0, 0, 10);
-    model.scale.setScalar(1);
-    model.material = material;
-    scene.add(model);
+  loaderFBX.load('models/fbx/stanford-bunny.fbx', {
+    onLoad: function (object) {
+      model = object.children[0];
+      model.position.set(0, 0, 10);
+      model.scale.setScalar(1);
+      model.material = material;
+      scene.add(model);
+    },
   });
 
   initGUI(material);

@@ -65,7 +65,8 @@ let connections;
 let sceneGraph;
 
 export class FBXLoader extends Loader {
-  load(url, onLoad, onProgress, onError) {
+  load(url, handlers) {
+    const { onLoad, onProgress, onError } = handlers ?? {};
     const scope = this;
 
     const path = scope.path === '' ? LoaderUtils.extractUrlBase(url) : scope.path;
