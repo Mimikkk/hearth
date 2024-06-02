@@ -9,7 +9,7 @@ type SupportedType = TextureDataType.Float | TextureDataType.HalfFloat;
 export class RGBELoader<TUrl extends string = string> extends DataTextureLoader {
   type: SupportedType;
 
-  constructor(options: RGBELoader.Options) {
+  constructor(options?: RGBELoader.Options) {
     super(options);
 
     this.type = options?.type ?? TextureDataType.HalfFloat;

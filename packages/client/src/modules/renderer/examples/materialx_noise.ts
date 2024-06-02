@@ -1,12 +1,12 @@
 import * as THREE from '../threejs/Three.js';
 import {
   MeshPhysicalNodeMaterial,
-  normalWorld,
-  timerLocal,
-  mx_noise_vec3,
-  mx_worley_noise_vec3,
   mx_cell_noise_float,
   mx_fractal_noise_vec3,
+  mx_noise_vec3,
+  mx_worley_noise_vec3,
+  normalWorld,
+  timerLocal,
 } from '../threejs/nodes/Nodes.js';
 
 import Stats from 'stats-js';
@@ -39,56 +39,58 @@ function init() {
 
   new HDRCubeTextureLoader({ path: 'textures/cube/pisaHDR/' }).load(
     ['px.hdr', 'nx.hdr', 'py.hdr', 'ny.hdr', 'pz.hdr', 'nz.hdr'],
-    function (hdrTexture) {
-      const geometry = new THREE.SphereGeometry(8, 64, 32);
+    {
+      onLoad: function (hdrTexture) {
+        const geometry = new THREE.SphereGeometry(8, 64, 32);
 
-      const offsetNode = timerLocal();
-      const customUV = normalWorld.mul(10).add(offsetNode);
+        const offsetNode = timerLocal();
+        const customUV = normalWorld.mul(10).add(offsetNode);
 
-      // left top
+        // left top
 
-      let material = new MeshPhysicalNodeMaterial();
-      material.colorNode = mx_noise_vec3(customUV);
+        let material = new MeshPhysicalNodeMaterial();
+        material.colorNode = mx_noise_vec3(customUV);
 
-      let mesh = new THREE.Mesh(geometry, material);
-      mesh.position.x = -10;
-      mesh.position.y = 10;
-      group.add(mesh);
+        let mesh = new THREE.Mesh(geometry, material);
+        mesh.position.x = -10;
+        mesh.position.y = 10;
+        group.add(mesh);
 
-      // right top
+        // right top
 
-      material = new MeshPhysicalNodeMaterial();
-      material.colorNode = mx_cell_noise_float(customUV);
+        material = new MeshPhysicalNodeMaterial();
+        material.colorNode = mx_cell_noise_float(customUV);
 
-      mesh = new THREE.Mesh(geometry, material);
-      mesh.position.x = 10;
-      mesh.position.y = 10;
-      group.add(mesh);
+        mesh = new THREE.Mesh(geometry, material);
+        mesh.position.x = 10;
+        mesh.position.y = 10;
+        group.add(mesh);
 
-      // left bottom
+        // left bottom
 
-      material = new MeshPhysicalNodeMaterial();
-      material.colorNode = mx_worley_noise_vec3(customUV);
+        material = new MeshPhysicalNodeMaterial();
+        material.colorNode = mx_worley_noise_vec3(customUV);
 
-      mesh = new THREE.Mesh(geometry, material);
-      mesh.position.x = -10;
-      mesh.position.y = -10;
-      group.add(mesh);
+        mesh = new THREE.Mesh(geometry, material);
+        mesh.position.x = -10;
+        mesh.position.y = -10;
+        group.add(mesh);
 
-      // right bottom
+        // right bottom
 
-      material = new MeshPhysicalNodeMaterial();
-      material.colorNode = mx_fractal_noise_vec3(customUV.mul(0.2));
+        material = new MeshPhysicalNodeMaterial();
+        material.colorNode = mx_fractal_noise_vec3(customUV.mul(0.2));
 
-      mesh = new THREE.Mesh(geometry, material);
-      mesh.position.x = 10;
-      mesh.position.y = -10;
-      group.add(mesh);
+        mesh = new THREE.Mesh(geometry, material);
+        mesh.position.x = 10;
+        mesh.position.y = -10;
+        group.add(mesh);
 
-      //
+        //
 
-      scene.background = hdrTexture;
-      scene.environment = hdrTexture;
+        scene.background = hdrTexture;
+        scene.environment = hdrTexture;
+      },
     },
   );
 

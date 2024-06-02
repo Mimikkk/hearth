@@ -168,6 +168,8 @@ export class GLTFLoader extends Loader {
       withCredentials: this.withCredentials,
     });
 
+    console.log({ loader });
+
     loader.load(
       url,
       function (data) {
