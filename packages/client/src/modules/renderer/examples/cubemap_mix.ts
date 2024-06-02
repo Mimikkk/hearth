@@ -24,9 +24,8 @@ function init() {
   const rgbmUrls = ['px.png', 'nx.png', 'py.png', 'ny.png', 'pz.png', 'nz.png'];
   const cube1Texture = new RGBMLoader({
     path: './textures/cube/pisaRGBM16/',
-  })
-    .setMaxRange(16)
-    .loadCubemap(rgbmUrls);
+    maxRange: 16,
+  }).loadCubemap(rgbmUrls);
 
   cube1Texture.generateMipmaps = true;
   cube1Texture.minFilter = THREE.Filter.LinearMipmapLinear;

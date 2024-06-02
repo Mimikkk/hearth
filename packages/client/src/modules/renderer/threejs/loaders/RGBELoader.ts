@@ -2,6 +2,7 @@ import { ColorSpace, MagnificationTextureFilter, MinificationTextureFilter, Text
 import { DataTextureLoader } from './DataTextureLoader.js';
 import { Loader } from './Loader.js';
 import { DataUtils } from '@modules/renderer/threejs/extras/DataUtils.js';
+import { DataTexture } from '@modules/renderer/threejs/textures/DataTexture.js';
 
 type SupportedType = TextureDataType.Float | TextureDataType.HalfFloat | TextureDataType.UnsignedByte;
 
@@ -333,17 +334,15 @@ export class RGBELoader<TUrl extends string = string> extends DataTextureLoader 
     };
   }
 
-  load(url: TUrl, onLoad, onProgress, onError) {
-    if (typeof onLoad === 'object') return this.load(url, onLoad.onLoad, onLoad.onProgress, onLoad.onError);
-
-    super.load(url, {
-      onLoad: this.createOnLoad2(onLoad),
-      onProgress,
-      onError,
+  load(url: TUrl, handlers?: Loader.Handlers<[texture: DataTexture, data: any]>): DataTexture {
+    return super.load(url, {
+      onLoad: this.createOnLoad2(handlers?.onLoad),
+      onProgress: handlers?.onProgress,
+      onError: handlers?.onError,
     });
   }
 
-  createOnLoad2(onLoad) {
+  createOnLoad2(onLoad?: Loader.OnLoad<DataTexture>) {
     return (texture, texData) => {
       switch (texture.type) {
         case TextureDataType.Float:
@@ -357,7 +356,7 @@ export class RGBELoader<TUrl extends string = string> extends DataTextureLoader 
           break;
       }
 
-      if (onLoad) onLoad(texture, texData);
+      onLoad?.(texture, texData);
     };
   }
 }

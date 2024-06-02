@@ -27,7 +27,7 @@ function init() {
   scene = new THREE.Scene();
 
   const rgbmUrls = ['px.png', 'nx.png', 'py.png', 'ny.png', 'pz.png', 'nz.png'];
-  const cube1Texture = new RGBMLoader({ path: './textures/cube/pisaRGBM16/' }).setMaxRange(16).loadCubemap(rgbmUrls);
+  const cube1Texture = new RGBMLoader({ path: './textures/cube/pisaRGBM16/', maxRange: 16 }).loadCubemap(rgbmUrls);
 
   scene.environment = cube1Texture;
   scene.backgroundNode = cubeTexture(cube1Texture)

@@ -49,12 +49,14 @@ function init() {
   container = document.getElementById('container');
 
   const loader = new FontLoader();
-  loader.load('fonts/helvetiker_regular.typeface.json', function (font) {
-    const scene = initScene(font);
+  loader.load('fonts/helvetiker_regular.typeface.json', {
+    onLoad: function (font) {
+      const scene = initScene(font);
 
-    // Initialize two copies of the same scene, one with normal z-buffer and one with logarithmic z-buffer
-    objects.normal = initView(scene, 'normal', false);
-    objects.logzbuf = initView(scene, 'logzbuf', true);
+      // Initialize two copies of the same scene, one with normal z-buffer and one with logarithmic z-buffer
+      objects.normal = initView(scene, 'normal', false);
+      objects.logzbuf = initView(scene, 'logzbuf', true);
+    },
   });
 
   stats = new Stats();

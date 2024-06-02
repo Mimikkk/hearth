@@ -1,27 +1,26 @@
 import { FileLoader, Loader, ShapePath } from '../../threejs/Three.js';
 
-export class FontLoader extends Loader {
+export class FontLoader<TUrl extends string = string> extends Loader {
   responseType: 'json' = 'json';
 
   constructor(options?: FontLoader.Options) {
     super(options);
   }
 
-  load(url, onLoad, onProgress, onError) {
-    const loader = new FileLoader(this);
-
-    loader.load(
-      url,
-      json => {
-        onLoad?.(this.parse(json));
-      },
-      onProgress,
-      onError,
-    );
+  load(url: TUrl, handlers?: Loader.Handlers<Font>) {
+    FileLoader.load(url, this, {
+      onLoad: this.createOnLoad(handlers?.onLoad),
+      onProgress: handlers?.onProgress,
+      onError: handlers?.onError,
+    });
   }
 
   parse(json: any) {
     return new Font(json);
+  }
+
+  createOnLoad(onLoad: undefined | Loader.OnLoad<Font>) {
+    return (json: any) => onLoad?.(this.parse(json));
   }
 }
 

@@ -3,35 +3,47 @@ import { CubeTexture } from '../textures/CubeTexture.js';
 import { Loader } from './Loader.js';
 import { ColorSpace } from '../constants.js';
 
-export class CubeTextureLoader extends Loader {
+type Urls<T extends string> = [posx: T, negx: T, posy: T, negy: T, posz: T, negz: T];
+
+export class CubeTextureLoader<TUrl extends string = string> extends Loader {
   constructor(options?: ImageLoader.Options) {
     super(options);
   }
 
-  load(urls, onLoad, onProgress, onError) {
+  load(urls: Urls<TUrl>, handlers?: ImageLoader.Handlers<CubeTexture>): CubeTexture {
+    //@ts-expect-error
     const texture = new CubeTexture();
     texture.colorSpace = ColorSpace.SRGB;
 
     const loader = new ImageLoader(this);
 
     let loaded = 0;
-    for (let i = 0; i < urls.length; ++i) {
+    const incrementCounter = () => loaded;
+
+    for (let i = 0; i < 6; ++i) {
       loader.load(urls[i], {
-        onLoad: image => {
-          texture.images[i] = image;
-
-          ++loaded;
-
-          if (loaded === 6) {
-            texture.needsUpdate = true;
-
-            onLoad?.(texture);
-          }
-        },
-        onError,
+        onLoad: this.createOnLoad(i, texture, incrementCounter, handlers?.onLoad),
+        onError: handlers?.onError,
       });
     }
 
     return texture;
+  }
+
+  createOnLoad(
+    index: number,
+    texture: CubeTexture,
+    incrementCounter: () => number,
+    onLoad?: Loader.OnLoad<CubeTexture>,
+  ) {
+    return (image: HTMLImageElement) => {
+      texture.images[index] = image;
+
+      if (incrementCounter() === 6) {
+        texture.needsUpdate = true;
+
+        onLoad?.(texture);
+      }
+    };
   }
 }
