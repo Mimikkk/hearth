@@ -90,7 +90,7 @@ export class DataTextureLoader<TUrl extends string = string> extends Loader {
 
       texture.needsUpdate = true;
 
-      onLoad?.(texture, texData);
+      onLoad?.([texture, texData]);
     };
   }
 }

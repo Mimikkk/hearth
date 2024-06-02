@@ -4,7 +4,7 @@ import { Loader } from './Loader.js';
 import { DataUtils } from '@modules/renderer/threejs/extras/DataUtils.js';
 import { DataTexture } from '@modules/renderer/threejs/textures/DataTexture.js';
 
-type SupportedType = TextureDataType.Float | TextureDataType.HalfFloat | TextureDataType.UnsignedByte;
+type SupportedType = TextureDataType.Float | TextureDataType.HalfFloat;
 
 export class RGBELoader<TUrl extends string = string> extends DataTextureLoader {
   type: SupportedType;
@@ -342,8 +342,8 @@ export class RGBELoader<TUrl extends string = string> extends DataTextureLoader 
     });
   }
 
-  createOnLoad2(onLoad?: Loader.OnLoad<DataTexture>) {
-    return (texture, texData) => {
+  createOnLoad2(onLoad?: Loader.OnLoad<[DataTexture, any]>) {
+    return ([texture, texData]: [DataTexture, any]) => {
       switch (texture.type) {
         case TextureDataType.Float:
         case TextureDataType.HalfFloat:
@@ -356,7 +356,7 @@ export class RGBELoader<TUrl extends string = string> extends DataTextureLoader 
           break;
       }
 
-      onLoad?.(texture, texData);
+      onLoad?.([texture, texData]);
     };
   }
 }

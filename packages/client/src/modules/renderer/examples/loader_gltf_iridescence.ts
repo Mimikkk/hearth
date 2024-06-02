@@ -35,7 +35,7 @@ async function init() {
 
   const gltfLoader = new GLTFLoader({ path: 'models/gltf/' });
 
-  const [texture, gltf] = await Promise.all([
+  const [[texture], gltf] = await Promise.all([
     rgbeLoader.loadAsync('venice_sunset_1k.hdr'),
     gltfLoader.loadAsync('IridescenceLamp.glb'),
   ]);

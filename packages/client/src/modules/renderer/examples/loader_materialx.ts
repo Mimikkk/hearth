@@ -65,7 +65,7 @@ function init() {
   //
 
   new RGBELoader({ path: './textures/equirectangular/' }).load('san_giuseppe_bridge_2k.hdr', {
-    onLoad: async texture => {
+    onLoad: async ([texture]) => {
       texture.mapping = THREE.Mapping.EquirectangularReflection;
 
       scene.background = texture;

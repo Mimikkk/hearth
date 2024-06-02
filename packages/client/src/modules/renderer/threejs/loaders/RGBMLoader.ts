@@ -51,7 +51,7 @@ export class RGBMLoader<TUrl extends string = string> extends DataTextureLoader 
     incrementCounter: () => number,
     onLoad: undefined | Loader.OnLoad<CubeTexture>,
   ) {
-    return (image: DataTexture) => {
+    return ([image]: [DataTexture, any]) => {
       texture.images[index] = image;
 
       if (incrementCounter() === 6) {

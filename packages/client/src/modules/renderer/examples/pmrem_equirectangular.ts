@@ -49,7 +49,7 @@ async function init() {
   controls.update();
 
   new RGBELoader({ path: 'textures/equirectangular/' }).load('royal_esplanade_1k.hdr', {
-    onLoad: function (map) {
+    onLoad: function ([map]) {
       map.mapping = THREE.Mapping.EquirectangularReflection;
 
       const reflectVec = positionViewDirection.negate().reflect(normalView).transformDirection(cameraViewMatrix);

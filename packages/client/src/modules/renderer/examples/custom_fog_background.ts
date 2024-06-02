@@ -55,7 +55,7 @@ function init() {
   //
 
   new RGBELoader({ path: 'textures/equirectangular/' }).load('royal_esplanade_1k.hdr', {
-    onLoad: function (texture) {
+    onLoad: function ([texture]) {
       texture.mapping = THREE.Mapping.EquirectangularReflection;
 
       scene.environment = texture;
