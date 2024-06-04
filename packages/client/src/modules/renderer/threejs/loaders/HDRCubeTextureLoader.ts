@@ -2,107 +2,86 @@ import {
   ColorSpace,
   CubeTexture,
   DataTexture,
-  RFileLoader,
-  Loader,
   MagnificationTextureFilter,
   MinificationTextureFilter,
   TextureDataType,
 } from '../../threejs/Three.js';
 import { RGBELoader } from './RGBELoader.js';
+import { FileLoader } from '@modules/renderer/threejs/loaders/FileLoader.js';
+import type { IConfigurable, IConfigurableConstructor, LoaderAsync } from './types.js';
 
-type Urls<T extends string> = [posx: T, negx: T, posy: T, negy: T, posz: T, negz: T];
+export type CubeUrls<T extends string> = [posx: T, negx: T, posy: T, negy: T, posz: T, negz: T];
 type SupportedType = TextureDataType.Float | TextureDataType.HalfFloat;
 
-export class HDRCubeTextureLoader<TUrl extends string = string> extends Loader {
-  hdrLoader: RGBELoader;
-  type: SupportedType;
-  responseType: 'arraybuffer' = 'arraybuffer';
+const createCubeTexture = (type: SupportedType): CubeTexture => {
+  //@ts-expect-error - improve texture handling
+  const texture = new CubeTexture();
+  texture.type = type;
+  texture.colorSpace = ColorSpace.LinearSRGB;
+  texture.minFilter = MinificationTextureFilter.Linear;
+  texture.magFilter = MagnificationTextureFilter.Linear;
+  texture.generateMipmaps = false;
 
-  constructor(options?: HDRCubeTextureLoader.Options) {
-    super(options);
+  return texture;
+};
+const createDataTexture = ({ data, width, height }: RGBELoader.Result, cube: CubeTexture): DataTexture => {
+  //@ts-expect-error - improve texture handling
+  const texture = new DataTexture(data, width, height);
+  texture.type = cube.type;
+  texture.colorSpace = cube.colorSpace;
+  texture.format = cube.format;
+  texture.minFilter = cube.minFilter;
+  texture.magFilter = cube.magFilter;
+  texture.generateMipmaps = cube.generateMipmaps;
 
-    this.hdrLoader = new RGBELoader();
-    this.type = options?.type ?? TextureDataType.HalfFloat;
-  }
+  return texture;
+};
 
-  load(urls: Urls<TUrl>, handlers?: Loader.Handlers<CubeTexture>) {
-    const texture = this.createTexture();
-
-    let loaded = 0;
-    const incrementCounter = () => ++loaded;
-
-    for (let i = 0; i < 6; i++) {
-      RFileLoader.load(urls[i], this, {
-        onLoad: this.createOnLoad(i, incrementCounter, texture, handlers?.onLoad),
-        onProgress: handlers?.onProgress,
-        onError: handlers?.onError,
-      });
-    }
-
-    return texture;
-  }
-
-  createTexture() {
-    //@ts-expect-error
-    const texture = new CubeTexture();
-    texture.type = this.type;
-
-    switch (texture.type) {
-      case TextureDataType.Float:
-        texture.colorSpace = ColorSpace.LinearSRGB;
-        texture.minFilter = MinificationTextureFilter.Linear;
-        texture.magFilter = MagnificationTextureFilter.Linear;
-        texture.generateMipmaps = false;
-        break;
-
-      case TextureDataType.HalfFloat:
-        texture.colorSpace = ColorSpace.LinearSRGB;
-        texture.minFilter = MinificationTextureFilter.Linear;
-        texture.magFilter = MagnificationTextureFilter.Linear;
-        texture.generateMipmaps = false;
-        break;
-    }
-
-    return texture;
-  }
-
-  createOnLoad(
-    index: number,
-    incrementCounter: () => number,
-    texture: CubeTexture,
-    onLoad?: Loader.OnLoad<CubeTexture>,
-  ) {
-    return (buffer: ArrayBuffer) => {
-      const loaded = incrementCounter();
-
-      const texData = this.hdrLoader.parse(buffer);
-
-      if (!texData) return;
-
-      if (texData.data !== undefined) {
-        //@ts-expect-error
-        const dataTexture = new DataTexture(texData.data, texData.width, texData.height);
-
-        dataTexture.type = texture.type;
-        dataTexture.colorSpace = texture.colorSpace;
-        dataTexture.format = texture.format;
-        dataTexture.minFilter = texture.minFilter;
-        dataTexture.magFilter = texture.magFilter;
-        dataTexture.generateMipmaps = texture.generateMipmaps;
-
-        texture.images[index] = dataTexture;
-      }
-
-      if (loaded === 6) {
-        texture.needsUpdate = true;
-        onLoad?.(texture);
-      }
+export const HDRCubeTextureLoader = class<TUrl extends CubeUrls<string>>
+  implements LoaderAsync<CubeTexture, TUrl>, IConfigurable<Configuration>
+{
+  static configure(options?: HDRCubeTextureLoader.Options): HDRCubeTextureLoader.Configuration {
+    return {
+      type: options?.type ?? TextureDataType.HalfFloat,
+      credentials: options?.credentials ?? 'same-origin',
+      headers: options?.headers,
+      responseType: 'arraybuffer',
     };
   }
-}
+
+  configuration: HDRCubeTextureLoader.Configuration;
+  hdr: RGBELoader;
+
+  constructor(options?: HDRCubeTextureLoader.Options) {
+    this.configuration = HDRCubeTextureLoader.configure(options);
+    this.hdr = new RGBELoader();
+  }
+
+  async loadAsync<T extends CubeTexture>(urls: TUrl, handlers?: LoaderAsync.Handlers): Promise<T> {
+    const loader = new FileLoader(this.configuration);
+
+    const texture = createCubeTexture(this.configuration.type) as T;
+    texture.images = await Promise.all(
+      urls.map(async url => {
+        const buffer = await loader.loadAsync(url, handlers);
+        const result = this.hdr.parse(buffer);
+
+        return createDataTexture(result, texture);
+      }),
+    );
+    texture.needsUpdate = true;
+
+    return texture;
+  }
+} satisfies IConfigurableConstructor<Options, Configuration>;
 
 export namespace HDRCubeTextureLoader {
-  export interface Options extends Pick<Loader.Options, 'manager' | 'path' | 'withCredentials'> {
-    type?: SupportedType;
+  export interface Configuration extends Pick<FileLoader.Configuration, 'credentials' | 'headers'> {
+    type: SupportedType;
+    responseType: 'arraybuffer';
   }
+
+  export type Options = Omit<Configuration, 'responseType'>;
 }
+type Options = HDRCubeTextureLoader.Options;
+type Configuration = HDRCubeTextureLoader.Configuration;

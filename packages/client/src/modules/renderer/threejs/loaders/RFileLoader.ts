@@ -38,6 +38,8 @@ export class RFileLoader<RT extends ResponseType = 'text', TUrl extends string =
     this.responseType = (options?.responseType ?? 'text') as RT;
   }
 
+  parse() {}
+
   load(
     url: TUrl,
     onLoad?: Loader.OnLoad<ResponseMap[RT]> | Loader.Handlers<ResponseMap[RT]>,

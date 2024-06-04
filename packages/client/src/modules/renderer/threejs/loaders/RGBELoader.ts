@@ -15,9 +15,9 @@ export class RGBELoader<TUrl extends string = string> extends DataTextureLoader 
     this.type = options?.type ?? TextureDataType.HalfFloat;
   }
 
-  parse(buffer: ArrayBuffer) {
-    const /* default error routine.  change this to change error handling */
-      rgbe_read_error = 1,
+  parse(buffer: ArrayBuffer): RGBELoader.Result {
+    /* default error routine.  change this to change error handling */
+    const rgbe_read_error = 1,
       rgbe_write_error = 2,
       rgbe_format_error = 3,
       rgbe_memory_error = 4,
@@ -364,5 +364,15 @@ export class RGBELoader<TUrl extends string = string> extends DataTextureLoader 
 export namespace RGBELoader {
   export interface Options extends Loader.Options {
     type?: SupportedType;
+  }
+
+  export interface Result {
+    width: number;
+    height: number;
+    data: Float32Array | Uint16Array;
+    header: string;
+    gamma: number;
+    exposure: number;
+    type: TextureDataType;
   }
 }
