@@ -9,7 +9,7 @@ import {
   ColorSpace,
   DirectionalLight,
   DrawMode,
-  FileLoader,
+  RFileLoader,
   Filter,
   Group,
   ImageBitmapLoader,
@@ -161,7 +161,7 @@ export class GLTFLoader<TUrl extends string = string> extends Loader {
       scope.manager.itemEnd(url);
     };
 
-    const loader = new FileLoader({
+    const loader = new RFileLoader({
       manager: this.manager,
       path: this.path,
       responseType: 'arraybuffer',
@@ -1978,7 +1978,7 @@ class GLTFParser {
       requestHeader: this.options.requestHeader,
     });
 
-    this.fileLoader = new FileLoader({
+    this.fileLoader = new RFileLoader({
       manager: this.options.manager,
       responseType: 'arraybuffer',
       withCredentials: this.options.crossOrigin === 'use-credentials',

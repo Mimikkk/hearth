@@ -7,7 +7,7 @@ import {
   ColorSpace,
   DirectionalLight,
   Euler,
-  FileLoader,
+  RFileLoader,
   Float32BufferAttribute,
   Group,
   Line,
@@ -71,7 +71,7 @@ export class FBXLoader extends Loader {
 
     const path = scope.path === '' ? LoaderUtils.extractUrlBase(url) : scope.path;
 
-    const loader = new FileLoader({
+    const loader = new RFileLoader({
       manager: this.manager,
       responseType: 'arraybuffer',
       path: scope.path,

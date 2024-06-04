@@ -22,11 +22,11 @@ export abstract class Loader<TData = any, TUrl extends string = string> {
 
   abstract load(url: any, handlers: Loader.Handlers<TData>): void;
 
+  abstract parse(data: TData): void;
+
   loadAsync(url: TUrl, onProgress?: Loader.OnProgress): Promise<TData> {
     return new Promise((onLoad, onError) => this.load(url, { onLoad, onProgress, onError }));
   }
-
-  parse(data: TData) {}
 }
 
 export namespace Loader {

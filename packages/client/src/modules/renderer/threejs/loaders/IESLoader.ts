@@ -6,7 +6,7 @@ import {
   TextureFormat,
 } from '@modules/renderer/threejs/constants.js';
 import { DataUtils } from '@modules/renderer/threejs/extras/DataUtils.js';
-import { FileLoader } from '@modules/renderer/threejs/loaders/FileLoader.js';
+import { RFileLoader } from '@modules/renderer/threejs/loaders/RFileLoader.js';
 import { DataTexture } from '@modules/renderer/threejs/textures/DataTexture.js';
 import { lerp } from '../math/MathUtils.js';
 
@@ -111,7 +111,7 @@ export class IESLoader<TUrl extends string = string> extends Loader {
   }
 
   load(url: TUrl, handlers?: Loader.Handlers<DataTexture>) {
-    FileLoader.load(url, this, {
+    RFileLoader.load(url, this, {
       onLoad: this.createOnLoad(handlers?.onLoad),
       onProgress: handlers?.onProgress,
       onError: handlers?.onError,

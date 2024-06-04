@@ -1,5 +1,5 @@
 import { Filter, MinificationTextureFilter, Wrapping } from '../constants.js';
-import { FileLoader } from './FileLoader.js';
+import { RFileLoader } from './RFileLoader.js';
 import { DataTexture } from '../textures/DataTexture.js';
 import { Loader } from './Loader.js';
 
@@ -20,7 +20,7 @@ export class DataTextureLoader<TUrl extends string = string> extends Loader {
     //@ts-expect-error
     const texture = new DataTexture();
 
-    FileLoader.load(url, this, {
+    RFileLoader.load(url, this, {
       onLoad: this.createOnLoad(texture, handlers?.onLoad, handlers?.onError),
       onProgress: handlers?.onProgress,
       onError: handlers?.onError,

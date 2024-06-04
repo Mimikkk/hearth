@@ -1,7 +1,7 @@
 import {
   BufferGeometry,
   Color,
-  FileLoader,
+  RFileLoader,
   Float32BufferAttribute,
   Group,
   LineBasicMaterial,
@@ -363,7 +363,7 @@ export class OBJLoader<TUrl extends string = string> extends Loader {
   load(url: TUrl, handlers?: Loader.Handlers<Group>) {
     const scope = this;
 
-    const loader = new FileLoader({
+    const loader = new RFileLoader({
       manager: this.manager,
       crossOrigin: this.crossOrigin,
       requestHeader: this.requestHeader,

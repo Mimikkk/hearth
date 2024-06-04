@@ -2,7 +2,7 @@ import {
   BufferAttribute,
   BufferGeometry,
   Color,
-  FileLoader,
+  RFileLoader,
   Float32BufferAttribute,
   Loader,
   Vector3,
@@ -18,7 +18,7 @@ export class STLLoader<TUrl extends string = string> extends Loader {
   load(url: TUrl, handlers?: Loader.Handlers<BufferGeometry>) {
     const scope = this;
 
-    FileLoader.load(url, this, {
+    RFileLoader.load(url, this, {
       onLoad: this.createOnLoad(url, handlers?.onLoad, handlers?.onError),
       onProgress: handlers?.onProgress,
       onError: handlers?.onError,

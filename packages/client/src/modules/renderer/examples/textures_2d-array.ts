@@ -26,7 +26,7 @@ function init() {
 
   // new THREE.FileLoader().setResponseType('arraybuffer');
 
-  const loader = new THREE.FileLoader();
+  const loader = new THREE.RFileLoader();
 
   loader.load('textures/3d/head256x256x109.zip', {
     onLoad: function (data) {

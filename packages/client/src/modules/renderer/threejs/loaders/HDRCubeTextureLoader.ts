@@ -2,7 +2,7 @@ import {
   ColorSpace,
   CubeTexture,
   DataTexture,
-  FileLoader,
+  RFileLoader,
   Loader,
   MagnificationTextureFilter,
   MinificationTextureFilter,
@@ -32,7 +32,7 @@ export class HDRCubeTextureLoader<TUrl extends string = string> extends Loader {
     const incrementCounter = () => ++loaded;
 
     for (let i = 0; i < 6; i++) {
-      FileLoader.load(urls[i], this, {
+      RFileLoader.load(urls[i], this, {
         onLoad: this.createOnLoad(i, incrementCounter, texture, handlers?.onLoad),
         onProgress: handlers?.onProgress,
         onError: handlers?.onError,

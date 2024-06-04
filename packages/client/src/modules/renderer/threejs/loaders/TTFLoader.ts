@@ -1,4 +1,4 @@
-import { FileLoader, Loader } from '../../threejs/Three.js';
+import { RFileLoader, Loader } from '../../threejs/Three.js';
 import * as opentype from 'opentype.js';
 
 export class TTFLoader<TUrl extends string = string> extends Loader {
@@ -12,7 +12,7 @@ export class TTFLoader<TUrl extends string = string> extends Loader {
   }
 
   load(url: TUrl, handlers?: Loader.Handlers<any>) {
-    FileLoader.load(url, this, {
+    RFileLoader.load(url, this, {
       onLoad: this.createOnLoad(url, handlers?.onLoad, handlers?.onError),
       onProgress: handlers?.onProgress,
       onError: handlers?.onError,

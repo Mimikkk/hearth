@@ -1,5 +1,5 @@
 import { AudioContextManager } from '../audio/AudioContextManager.js';
-import { FileLoader } from './FileLoader.js';
+import { RFileLoader } from './RFileLoader.js';
 import { Loader } from './Loader.js';
 
 export class AudioLoader<TUrl extends string = string> extends Loader<any, TUrl> {
@@ -10,7 +10,7 @@ export class AudioLoader<TUrl extends string = string> extends Loader<any, TUrl>
   }
 
   load(url: TUrl, handlers?: Loader.Handlers<AudioBuffer>) {
-    FileLoader.load(url, this, {
+    RFileLoader.load(url, this, {
       onLoad: this.createOnLoad(url, handlers?.onLoad, handlers?.onError),
       onProgress: handlers?.onProgress,
       onError: handlers?.onError,

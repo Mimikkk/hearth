@@ -1,4 +1,4 @@
-import { FileLoader, Loader, ShapePath } from '../../threejs/Three.js';
+import { RFileLoader, Loader, ShapePath } from '../../threejs/Three.js';
 
 export class FontLoader<TUrl extends string = string> extends Loader {
   responseType: 'json' = 'json';
@@ -8,7 +8,7 @@ export class FontLoader<TUrl extends string = string> extends Loader {
   }
 
   load(url: TUrl, handlers?: Loader.Handlers<Font>) {
-    FileLoader.load(url, this, {
+    RFileLoader.load(url, this, {
       onLoad: this.createOnLoad(handlers?.onLoad),
       onProgress: handlers?.onProgress,
       onError: handlers?.onError,

@@ -27,13 +27,13 @@ type ResponseMap = {
   text: string;
 };
 
-export class FileLoader<RT extends ResponseType = 'text', TUrl extends string = string> extends Loader<
+export class RFileLoader<RT extends ResponseType = 'text', TUrl extends string = string> extends Loader<
   ResponseMap[RT],
   TUrl
 > {
   responseType: RT;
 
-  constructor(options?: FileLoader.Options<RT>) {
+  constructor(options?: RFileLoader.Options<RT>) {
     super(options);
     this.responseType = (options?.responseType ?? 'text') as RT;
   }
@@ -179,14 +179,14 @@ export class FileLoader<RT extends ResponseType = 'text', TUrl extends string = 
 
   static load<RT extends ResponseType>(
     url: string,
-    options: FileLoader.Options<RT>,
+    options: RFileLoader.Options<RT>,
     handlers: Loader.Handlers<ResponseMap[RT]>,
   ): void {
-    new FileLoader(options).load(url, handlers);
+    new RFileLoader(options).load(url, handlers);
   }
 }
 
-export namespace FileLoader {
+export namespace RFileLoader {
   export interface Options<RT extends ResponseType> extends Loader.Options {
     responseType?: RT;
   }

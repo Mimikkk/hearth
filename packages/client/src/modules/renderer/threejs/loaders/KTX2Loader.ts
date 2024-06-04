@@ -19,7 +19,7 @@ import {
   CompressedTexture,
   Data3DTexture,
   DataTexture,
-  FileLoader,
+  RFileLoader,
   Filter,
   Loader,
   TextureDataType,
@@ -169,7 +169,7 @@ export class KTX2Loader extends Loader {
       throw new Error('THREE.KTX2Loader: Missing initialization with `.detectSupport( renderer )`.');
     }
 
-    const loader = new FileLoader({
+    const loader = new RFileLoader({
       manager: this.manager,
       responseType: 'arraybuffer',
       withCredentials: this.withCredentials,

@@ -2,7 +2,7 @@ import { Sphere } from '../math/Sphere.js';
 import { Vector3 } from '../math/Vector3.js';
 import { BufferAttribute } from '../core/BufferAttribute.js';
 import { BufferGeometry } from '../core/BufferGeometry.js';
-import { FileLoader } from './FileLoader.js';
+import { RFileLoader } from './RFileLoader.js';
 import { Loader } from './Loader.js';
 import { InstancedBufferGeometry } from '../core/InstancedBufferGeometry.js';
 import { InstancedBufferAttribute } from '../core/InstancedBufferAttribute.js';
@@ -16,7 +16,7 @@ export class BufferGeometryLoader<TUrl extends string = string> extends Loader {
   }
 
   load(url: TUrl, handlers?: Loader.Handlers<BufferGeometry>) {
-    FileLoader.load(url, this, {
+    RFileLoader.load(url, this, {
       onLoad: this.createOnLoad(url, handlers?.onLoad, handlers?.onError),
       onProgress: handlers?.onProgress,
       onError: handlers?.onError,

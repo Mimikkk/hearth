@@ -1,4 +1,4 @@
-import { FileLoader, Loader, TextureLoader, Wrapping } from '../../threejs/Three.js';
+import { RFileLoader, Loader, TextureLoader, Wrapping } from '../../threejs/Three.js';
 
 import {
   abs,
@@ -185,7 +185,7 @@ class MaterialXLoader extends Loader {
   }
 
   load(url, handlers) {
-    new FileLoader({
+    new RFileLoader({
       manager: this.manager,
       path: this.path,
     }).load(url, {
