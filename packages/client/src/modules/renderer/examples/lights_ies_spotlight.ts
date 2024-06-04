@@ -18,14 +18,11 @@ async function init() {
 
   //
 
-  const iesLoader = new IESLoader({ path: './ies/' });
-  //iesLoader.type = THREE.UnsignedByteType; // LDR
-
-  const [iesTexture1, iesTexture2, iesTexture3, iesTexture4] = await Promise.all([
-    iesLoader.loadAsync('007cfb11e343e2f42e3b476be4ab684e.ies'),
-    iesLoader.loadAsync('06b4cfdc8805709e767b5e2e904be8ad.ies'),
-    iesLoader.loadAsync('02a7562c650498ebb301153dbbf59207.ies'),
-    iesLoader.loadAsync('1a936937a49c63374e6d4fbed9252b29.ies'),
+  const [iesTexture1, iesTexture2, iesTexture3, iesTexture4] = await IESLoader.loadAsyncMultiple([
+    './ies/007cfb11e343e2f42e3b476be4ab684e.ies',
+    './ies/06b4cfdc8805709e767b5e2e904be8ad.ies',
+    './ies/02a7562c650498ebb301153dbbf59207.ies',
+    './ies/1a936937a49c63374e6d4fbed9252b29.ies',
   ]);
 
   //

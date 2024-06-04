@@ -1,4 +1,4 @@
-import type { IConfigurable, IConfigurableConstructor, LoaderAsync } from './types.js';
+import type { Configurable, ConfigurableConstructor, LoaderAsync, MultiLoaderAsync } from './types.js';
 
 class ReadError extends Error {
   constructor(public response: Response) {
@@ -6,14 +6,57 @@ class ReadError extends Error {
   }
 }
 
-export const FileLoader = class<Url extends string, RT extends ResponseType = 'text'>
-  implements IConfigurable<Configuration<RT>>, LoaderAsync<ResponseMap[RT], Url>
+const read = <E = unknown>(response: Response, handlers?: LoaderAsync.Handlers<E>): Response => {
+  if (response.status !== 200 && response.status !== 0) throw new ReadError(response);
+  if (!response.body) return response;
+  const reader = response.body.getReader();
+
+  const size = response.headers.get('Content-Length') || response.headers.get('X-File-Size');
+  const total = size ? parseInt(size) : 0;
+
+  const lengthComputable = total !== 0;
+  let loaded = 0;
+
+  const start = (controller: ReadableStreamDefaultController) => {
+    async function load() {
+      const { done, value } = await reader.read();
+      if (done) return controller.close();
+
+      loaded += value.byteLength;
+
+      handlers?.onProgress?.(new ProgressEvent('progress', { lengthComputable, loaded, total }));
+
+      controller.enqueue(value);
+      load();
+    }
+
+    load();
+  };
+
+  return new Response(new ReadableStream({ start }));
+};
+
+const parse = <RT extends ResponseType>(response: Response, responseType: RT): ResponseMap[RT] => {
+  switch (responseType) {
+    case FileResponseType.Buffer:
+      return response.arrayBuffer();
+    case FileResponseType.Blob:
+      return response.blob();
+    case FileResponseType.Json:
+      return response.json();
+    default:
+      return response.text();
+  }
+};
+
+export const FileLoader = class<Url extends string, RT extends ResponseType = FileResponseType.Text>
+  implements Configurable<Configuration<RT>>, LoaderAsync<ResponseMap[RT], Url>, MultiLoaderAsync<ResponseMap[RT], Url>
 {
   static configure<RT extends ResponseType>(options?: Options<RT>): Configuration<RT> {
     return {
       responseType: options?.responseType ?? ('text' as RT),
       headers: options?.headers,
-      credentials: options?.credentials ?? ('same-origin' as const),
+      credentials: options?.credentials ?? 'same-origin',
     };
   }
 
@@ -26,55 +69,42 @@ export const FileLoader = class<Url extends string, RT extends ResponseType = 't
   async loadAsync<T extends ResponseMap[RT], E = unknown>(url: Url, handlers?: LoaderAsync.Handlers<E>): Promise<T> {
     const response = await fetch(url, this.configuration);
 
-    return this.parse(this.read(response, handlers));
+    return parse(read(response, handlers), this.configuration.responseType);
   }
 
-  read<E = unknown>(response: Response, handlers?: LoaderAsync.Handlers<E>): Response {
-    if (response.status !== 200 && response.status !== 0) throw new ReadError(response);
-    if (!response.body) return response;
-    const reader = response.body.getReader();
-
-    const size = response.headers.get('Content-Length') || response.headers.get('X-File-Size');
-    const total = size ? parseInt(size) : 0;
-
-    const lengthComputable = total !== 0;
-    let loaded = 0;
-
-    const start = (controller: ReadableStreamDefaultController) => {
-      async function load() {
-        const { done, value } = await reader.read();
-        if (done) return controller.close();
-
-        loaded += value.byteLength;
-
-        handlers?.onProgress?.(new ProgressEvent('progress', { lengthComputable, loaded, total }));
-
-        controller.enqueue(value);
-        load();
-      }
-
-      load();
-    };
-
-    return new Response(new ReadableStream({ start }));
+  async loadAsyncMultiple<T extends ResponseMap[RT], E = unknown>(
+    urls: Url[],
+    handlers?: LoaderAsync.Handlers<E>,
+  ): Promise<T[]> {
+    return Promise.all(urls.map(url => this.loadAsync(url, handlers)));
   }
 
-  parse(response: Response): ResponseMap[RT] {
-    switch (this.configuration.responseType) {
-      case 'arraybuffer':
-        return response.arrayBuffer();
-      case 'blob':
-        return response.blob();
-      case 'json':
-        return response.json();
-      default:
-        return response.text();
-    }
+  static async loadAsync<T extends ResponseMap[RT], Url extends string, RT extends ResponseType, E = unknown>(
+    url: Url,
+    options?: Options<RT>,
+    handlers?: LoaderAsync.Handlers<E>,
+  ): Promise<T> {
+    return new FileLoader(options).loadAsync(url, handlers);
   }
-} satisfies IConfigurableConstructor<Options, Configuration>;
+
+  static async loadAsyncMultiple<T extends ResponseMap[RT], Url extends string, RT extends ResponseType, E = unknown>(
+    urls: Url[],
+    options?: Options<RT>,
+    handlers?: LoaderAsync.Handlers<E>,
+  ): Promise<T[]> {
+    return new FileLoader(options).loadAsyncMultiple(urls, handlers);
+  }
+} satisfies ConfigurableConstructor<Options, Configuration>;
+
+export const enum FileResponseType {
+  Buffer = 'arraybuffer',
+  Blob = 'blob',
+  Json = 'json',
+  Text = 'text',
+}
 
 export namespace FileLoader {
-  export type ResponseType = 'arraybuffer' | 'blob' | 'json' | 'text';
+  export type ResponseType = FileResponseType;
 
   export type ResponseMap = {
     arraybuffer: ArrayBuffer;

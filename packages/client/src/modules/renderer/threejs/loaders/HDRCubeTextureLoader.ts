@@ -7,8 +7,8 @@ import {
   TextureDataType,
 } from '../../threejs/Three.js';
 import { RGBELoader } from './RGBELoader.js';
-import { FileLoader } from '@modules/renderer/threejs/loaders/FileLoader.js';
-import type { IConfigurable, IConfigurableConstructor, LoaderAsync } from './types.js';
+import { FileLoader, FileResponseType } from '@modules/renderer/threejs/loaders/FileLoader.js';
+import type { Configurable, ConfigurableConstructor, LoaderAsync } from './types.js';
 
 export type CubeUrls<T extends string> = [posx: T, negx: T, posy: T, negy: T, posz: T, negz: T];
 type SupportedType = TextureDataType.Float | TextureDataType.HalfFloat;
@@ -38,14 +38,14 @@ const createDataTexture = ({ data, width, height }: RGBELoader.Result, cube: Cub
 };
 
 export const HDRCubeTextureLoader = class<TUrl extends CubeUrls<string>>
-  implements LoaderAsync<CubeTexture, TUrl>, IConfigurable<Configuration>
+  implements LoaderAsync<CubeTexture, TUrl>, Configurable<Configuration>
 {
   static configure(options?: HDRCubeTextureLoader.Options): HDRCubeTextureLoader.Configuration {
     return {
       type: options?.type ?? TextureDataType.HalfFloat,
       credentials: options?.credentials ?? 'same-origin',
       headers: options?.headers,
-      responseType: 'arraybuffer',
+      responseType: FileResponseType.Buffer,
     };
   }
 
@@ -58,30 +58,31 @@ export const HDRCubeTextureLoader = class<TUrl extends CubeUrls<string>>
   }
 
   async loadAsync<T extends CubeTexture>(urls: TUrl, handlers?: LoaderAsync.Handlers): Promise<T> {
-    const loader = new FileLoader(this.configuration);
+    const buffers = await FileLoader.loadAsyncMultiple(urls, this.configuration, handlers);
 
     const texture = createCubeTexture(this.configuration.type) as T;
-    texture.images = await Promise.all(
-      urls.map(async url => {
-        const buffer = await loader.loadAsync(url, handlers);
-        const result = this.hdr.parse(buffer);
-
-        return createDataTexture(result, texture);
-      }),
-    );
+    texture.images = buffers.map(buffer => createDataTexture(this.hdr.parse(buffer), texture));
     texture.needsUpdate = true;
 
     return texture;
   }
-} satisfies IConfigurableConstructor<Options, Configuration>;
+
+  static async loadAsync<T extends CubeTexture, TUrl extends CubeUrls<string>, E = unknown>(
+    urls: TUrl,
+    options: HDRCubeTextureLoader.Configuration,
+    handlers?: LoaderAsync.Handlers<E>,
+  ): Promise<T> {
+    return new HDRCubeTextureLoader(options).loadAsync(urls, handlers);
+  }
+} satisfies ConfigurableConstructor<Options, Configuration>;
 
 export namespace HDRCubeTextureLoader {
-  export interface Configuration extends Pick<FileLoader.Configuration, 'credentials' | 'headers'> {
+  export interface Configuration extends Omit<FileLoader.Configuration, 'responseType'> {
     type: SupportedType;
-    responseType: 'arraybuffer';
+    responseType: FileResponseType.Buffer;
   }
 
-  export type Options = Omit<Configuration, 'responseType'>;
+  export type Options = Partial<Omit<Configuration, 'responseType'>>;
 }
 type Options = HDRCubeTextureLoader.Options;
 type Configuration = HDRCubeTextureLoader.Configuration;

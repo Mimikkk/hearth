@@ -1,4 +1,3 @@
-import { Loader } from './Loader.js';
 import {
   MagnificationTextureFilter,
   MinificationTextureFilter,
@@ -6,144 +5,179 @@ import {
   TextureFormat,
 } from '@modules/renderer/threejs/constants.js';
 import { DataUtils } from '@modules/renderer/threejs/extras/DataUtils.js';
-import { RFileLoader } from '@modules/renderer/threejs/loaders/RFileLoader.js';
 import { DataTexture } from '@modules/renderer/threejs/textures/DataTexture.js';
 import { lerp } from '../math/MathUtils.js';
+import type {
+  Configurable,
+  ConfigurableConstructor,
+  LoaderAsync,
+  MultiLoaderAsync,
+} from '@modules/renderer/threejs/loaders/types.js';
+import { FileLoader, FileResponseType } from '@modules/renderer/threejs/loaders/FileLoader.js';
 
 type SupportedType = TextureDataType.Float | TextureDataType.HalfFloat | TextureDataType.UnsignedByte;
+type SupportedMap = {
+  [TextureDataType.UnsignedByte]: Uint8Array;
+  [TextureDataType.HalfFloat]: Uint16Array;
+  [TextureDataType.Float]: Float32Array;
+};
 
-export class IESLoader<TUrl extends string = string> extends Loader {
-  type: SupportedType;
-  responseType: 'text';
+const createDataTexture = (data: Uint8Array | Uint16Array | Float32Array, type: SupportedType): DataTexture => {
+  //@ts-expect-error - improve texture handling
+  const texture = new DataTexture(data, 180, 1, TextureFormat.Red, type);
+  texture.minFilter = MinificationTextureFilter.Linear;
+  texture.magFilter = MagnificationTextureFilter.Linear;
+  texture.needsUpdate = true;
 
-  constructor(options?: IESLoader.Options) {
-    super(options);
+  return texture;
+};
+const readIes = <ST extends SupportedType>(iesLamp: IESLamp, type: SupportedType): SupportedMap[ST] => {
+  const width = 360;
+  const height = 180;
+  const size = width * height;
 
-    this.type = options?.type ?? TextureDataType.HalfFloat;
-    this.responseType = 'text';
-  }
+  const data = new Array(size);
 
-  _getIESValues(iesLamp: IESLamp, type: SupportedType) {
-    const width = 360;
-    const height = 180;
-    const size = width * height;
+  function interpolateCandelaValues(phi: number, theta: number) {
+    let phiIndex = 0;
+    let thetaIndex = 0;
+    let startTheta = 0;
+    let endTheta = 0;
+    let startPhi = 0;
+    let endPhi = 0;
 
-    const data = new Array(size);
+    for (let i = 0; i < iesLamp.numHorAngles - 1; ++i) {
+      // numHorAngles = horAngles.length-1 because of extra padding, so this wont cause an out of bounds error
 
-    function interpolateCandelaValues(phi: number, theta: number) {
-      let phiIndex = 0,
-        thetaIndex = 0;
-      let startTheta = 0,
-        endTheta = 0,
-        startPhi = 0,
-        endPhi = 0;
+      if (theta < iesLamp.horAngles[i + 1] || i == iesLamp.numHorAngles - 2) {
+        thetaIndex = i;
+        startTheta = iesLamp.horAngles[i];
+        endTheta = iesLamp.horAngles[i + 1];
 
-      for (let i = 0; i < iesLamp.numHorAngles - 1; ++i) {
-        // numHorAngles = horAngles.length-1 because of extra padding, so this wont cause an out of bounds error
-
-        if (theta < iesLamp.horAngles[i + 1] || i == iesLamp.numHorAngles - 2) {
-          thetaIndex = i;
-          startTheta = iesLamp.horAngles[i];
-          endTheta = iesLamp.horAngles[i + 1];
-
-          break;
-        }
+        break;
       }
-
-      for (let i = 0; i < iesLamp.numVerAngles - 1; ++i) {
-        if (phi < iesLamp.verAngles[i + 1] || i == iesLamp.numVerAngles - 2) {
-          phiIndex = i;
-          startPhi = iesLamp.verAngles[i];
-          endPhi = iesLamp.verAngles[i + 1];
-
-          break;
-        }
-      }
-
-      const deltaTheta = endTheta - startTheta;
-      const deltaPhi = endPhi - startPhi;
-
-      if (deltaPhi === 0)
-        // Outside range
-        return 0;
-
-      const t1 = deltaTheta === 0 ? 0 : (theta - startTheta) / deltaTheta;
-      const t2 = (phi - startPhi) / deltaPhi;
-
-      const nextThetaIndex = deltaTheta === 0 ? thetaIndex : thetaIndex + 1;
-
-      const v1 = lerp(iesLamp.candelaValues[thetaIndex][phiIndex], iesLamp.candelaValues[nextThetaIndex][phiIndex], t1);
-      const v2 = lerp(
-        iesLamp.candelaValues[thetaIndex][phiIndex + 1],
-        iesLamp.candelaValues[nextThetaIndex][phiIndex + 1],
-        t1,
-      );
-      const v = lerp(v1, v2, t2);
-
-      return v;
     }
 
-    const startTheta = iesLamp.horAngles[0],
-      endTheta = iesLamp.horAngles[iesLamp.numHorAngles - 1];
+    for (let i = 0; i < iesLamp.numVerAngles - 1; ++i) {
+      if (phi < iesLamp.verAngles[i + 1] || i == iesLamp.numVerAngles - 2) {
+        phiIndex = i;
+        startPhi = iesLamp.verAngles[i];
+        endPhi = iesLamp.verAngles[i + 1];
 
-    for (let i = 0; i < size; ++i) {
-      let theta = i % width;
-      const phi = Math.floor(i / width);
-
-      if (endTheta - startTheta !== 0 && (theta < startTheta || theta >= endTheta)) {
-        // Handle symmetry for hor angles
-
-        theta %= endTheta * 2;
-
-        if (theta > endTheta) theta = endTheta * 2 - theta;
+        break;
       }
-
-      data[phi + theta * height] = interpolateCandelaValues(phi, theta);
     }
 
-    let result = null;
+    const deltaTheta = endTheta - startTheta;
+    const deltaPhi = endPhi - startPhi;
 
-    if (type === TextureDataType.UnsignedByte) result = Uint8Array.from(data.map(v => Math.min(v * 0xff, 0xff)));
-    else if (type === TextureDataType.HalfFloat) result = Uint16Array.from(data.map(v => DataUtils.toHalfFloat(v)));
-    else if (type === TextureDataType.Float) result = Float32Array.from(data);
+    if (deltaPhi === 0)
+      // Outside range
+      return 0;
 
-    return result;
+    const t1 = deltaTheta === 0 ? 0 : (theta - startTheta) / deltaTheta;
+    const t2 = (phi - startPhi) / deltaPhi;
+
+    const nextThetaIndex = deltaTheta === 0 ? thetaIndex : thetaIndex + 1;
+
+    const v1 = lerp(iesLamp.candelaValues[thetaIndex][phiIndex], iesLamp.candelaValues[nextThetaIndex][phiIndex], t1);
+    const v2 = lerp(
+      iesLamp.candelaValues[thetaIndex][phiIndex + 1],
+      iesLamp.candelaValues[nextThetaIndex][phiIndex + 1],
+      t1,
+    );
+    const v = lerp(v1, v2, t2);
+
+    return v;
   }
 
-  load(url: TUrl, handlers?: Loader.Handlers<DataTexture>) {
-    RFileLoader.load(url, this, {
-      onLoad: this.createOnLoad(handlers?.onLoad),
-      onProgress: handlers?.onProgress,
-      onError: handlers?.onError,
-    });
+  const startTheta = iesLamp.horAngles[0];
+  const endTheta = iesLamp.horAngles[iesLamp.numHorAngles - 1];
+
+  for (let i = 0; i < size; ++i) {
+    let theta = i % width;
+    const phi = Math.floor(i / width);
+
+    if (endTheta - startTheta !== 0 && (theta < startTheta || theta >= endTheta)) {
+      // Handle symmetry for hor angles
+
+      theta %= endTheta * 2;
+
+      if (theta > endTheta) theta = endTheta * 2 - theta;
+    }
+
+    data[phi + theta * height] = interpolateCandelaValues(phi, theta);
   }
 
-  parse(text: string) {
-    const type = this.type;
+  switch (type) {
+    case TextureDataType.UnsignedByte:
+      return Uint8Array.from(data.map(v => Math.min(v * 0xff, 0xff))) as SupportedMap[ST];
+    case TextureDataType.HalfFloat:
+      return Uint16Array.from(data.map(v => DataUtils.toHalfFloat(v))) as SupportedMap[ST];
+    default:
+      return Float32Array.from(data) as SupportedMap[ST];
+  }
+};
+const parse = (text: string, type: SupportedType): DataTexture =>
+  createDataTexture(readIes(new IESLamp(text), type), type);
 
-    const iesLamp = new IESLamp(text);
-    const data = this._getIESValues(iesLamp, type);
+export const IESLoader = class<TData extends DataTexture, TUrl extends string>
+  implements Configurable<Configuration>, LoaderAsync<TData, TUrl>, MultiLoaderAsync<TData, TUrl>
+{
+  configuration: Configuration;
 
-    //@ts-expect-error
-    const texture = new DataTexture(data, 180, 1, TextureFormat.Red, type);
-    texture.minFilter = MinificationTextureFilter.Linear;
-    texture.magFilter = MagnificationTextureFilter.Linear;
-    texture.needsUpdate = true;
-
-    return texture;
+  static configure(options?: Options): Configuration {
+    return {
+      headers: options?.headers,
+      credentials: options?.credentials ?? 'same-origin',
+      type: options?.type ?? TextureDataType.HalfFloat,
+      responseType: FileResponseType.Text,
+    };
   }
 
-  createOnLoad(onLoad?: Loader.OnLoad<DataTexture>) {
-    return (text: string) => onLoad?.(this.parse(text));
+  constructor(options?: Options) {
+    this.configuration = IESLoader.configure(options);
   }
-}
+
+  async loadAsync<T extends TData, E = unknown>(url: TUrl, handlers?: LoaderAsync.Handlers<E>): Promise<T> {
+    const text = await FileLoader.loadAsync(url, this.configuration, handlers);
+
+    return parse(text, this.configuration.type) as T;
+  }
+
+  static loadAsync<T extends DataTexture, TUrl extends string, E = unknown>(
+    url: TUrl,
+    options?: Options,
+    handlers?: LoaderAsync.Handlers<E>,
+  ): Promise<T> {
+    return new IESLoader(options).loadAsync(url, handlers);
+  }
+
+  async loadAsyncMultiple<T extends TData, E = unknown>(url: TUrl[], handlers?: LoaderAsync.Handlers<E>): Promise<T[]> {
+    const texts = await FileLoader.loadAsyncMultiple(url, this.configuration, handlers);
+
+    return texts.map(text => parse(text, this.configuration.type)) as T[];
+  }
+
+  static loadAsyncMultiple<T extends DataTexture, TUrl extends string, E = unknown>(
+    urls: TUrl[],
+    options?: Options,
+    handlers?: LoaderAsync.Handlers<E>,
+  ): Promise<T[]> {
+    return new IESLoader(options).loadAsyncMultiple(urls, handlers);
+  }
+} satisfies ConfigurableConstructor<Options, Configuration>;
 
 export namespace IESLoader {
-  export interface Options
-    extends Pick<Loader.Options, 'manager' | 'path' | 'requestHeader' | 'withCredentials' | 'crossOrigin'> {
-    type?: SupportedType;
+  export interface Configuration extends Omit<FileLoader.Configuration, 'responseType'> {
+    responseType: FileResponseType.Text;
+    type: SupportedType;
   }
+
+  export type Options = Partial<Omit<Configuration, 'responseType'>>;
 }
+type Options = IESLoader.Options;
+type Configuration = IESLoader.Configuration;
 
 class IESLamp {
   verAngles: number[];

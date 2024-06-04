@@ -1,10 +1,10 @@
-export interface IConfigurableConstructor<O, C> {
+export interface ConfigurableConstructor<O, C> {
   configure(options?: O): C;
 
   new (options?: O): void;
 }
 
-export interface IConfigurable<C> {
+export interface Configurable<C> {
   configuration: C;
 }
 
@@ -29,6 +29,10 @@ export namespace LoaderSync {
 
 export interface LoaderAsync<TData, TUrl extends ILoader.Url> {
   loadAsync<T extends TData, E = unknown>(url: TUrl, handlers?: LoaderAsync.Handlers<E>): Promise<T>;
+}
+
+export interface MultiLoaderAsync<TData, TUrl extends ILoader.Url> {
+  loadAsyncMultiple<T extends TData, E = unknown>(url: TUrl[], handlers?: LoaderAsync.Handlers<E>): Promise<T[]>;
 }
 
 export namespace LoaderAsync {
