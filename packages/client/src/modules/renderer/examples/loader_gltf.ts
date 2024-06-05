@@ -21,28 +21,26 @@ function init() {
 
   scene = new THREE.Scene();
 
-  new RGBELoader({ path: 'textures/equirectangular/' }).load('royal_esplanade_1k.hdr', {
-    onLoad: function ([texture]) {
-      texture.mapping = THREE.Mapping.EquirectangularReflection;
-      //texture.minFilter = THREE.LinearMipmapLinearFilter;
-      //texture.generateMipmaps = true;
+  RGBELoader.loadAsync('textures/equirectangular/royal_esplanade_1k.hdr').then(texture => {
+    texture.mapping = THREE.Mapping.EquirectangularReflection;
+    //texture.minFilter = THREE.LinearMipmapLinearFilter;
+    //texture.generateMipmaps = true;
 
-      scene.background = texture;
-      scene.environment = texture;
+    scene.background = texture;
+    scene.environment = texture;
 
-      render();
+    render();
 
-      // model
+    // model
 
-      const loader = new GLTFLoader({ path: 'models/gltf/DamagedHelmet/glTF/' });
-      loader.load('DamagedHelmet.gltf', {
-        onLoad: function (gltf) {
-          scene.add(gltf.scene);
+    const loader = new GLTFLoader({ path: 'models/gltf/DamagedHelmet/glTF/' });
+    loader.load('DamagedHelmet.gltf', {
+      onLoad: function (gltf) {
+        scene.add(gltf.scene);
 
-          render();
-        },
-      });
-    },
+        render();
+      },
+    });
   });
 
   renderer = new WebGPURenderer({ antialias: true });

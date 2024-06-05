@@ -6,7 +6,7 @@ import {
   MinificationTextureFilter,
   TextureDataType,
 } from '../../threejs/Three.js';
-import { RGBELoader } from './RGBELoader.js';
+import { parse, ParseResult } from './RGBELoader.js';
 import { FileLoader, FileResponseType } from '@modules/renderer/threejs/loaders/FileLoader.js';
 import type { Configurable, ConfigurableConstructor, LoaderAsync } from './types.js';
 
@@ -24,7 +24,7 @@ const createCubeTexture = (type: SupportedType): CubeTexture => {
 
   return texture;
 };
-const createDataTexture = ({ data, width, height }: RGBELoader.Result, cube: CubeTexture): DataTexture => {
+const createDataTexture = ({ data, width, height }: ParseResult, cube: CubeTexture): DataTexture => {
   //@ts-expect-error - improve texture handling
   const texture = new DataTexture(data, width, height);
   texture.type = cube.type;
@@ -50,18 +50,16 @@ export const HDRCubeTextureLoader = class<TUrl extends CubeUrls<string>>
   }
 
   configuration: HDRCubeTextureLoader.Configuration;
-  hdr: RGBELoader;
 
   constructor(options?: HDRCubeTextureLoader.Options) {
     this.configuration = HDRCubeTextureLoader.configure(options);
-    this.hdr = new RGBELoader();
   }
 
   async loadAsync<T extends CubeTexture>(urls: TUrl, handlers?: LoaderAsync.Handlers): Promise<T> {
     const buffers = await FileLoader.loadAsyncMultiple(urls, this.configuration, handlers);
 
     const texture = createCubeTexture(this.configuration.type) as T;
-    texture.images = buffers.map(buffer => createDataTexture(this.hdr.parse(buffer), texture));
+    texture.images = buffers.map(buffer => createDataTexture(parse(buffer, this.configuration.type), texture));
     texture.needsUpdate = true;
 
     return texture;
