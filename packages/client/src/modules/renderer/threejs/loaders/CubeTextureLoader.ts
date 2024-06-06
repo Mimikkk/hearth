@@ -1,4 +1,4 @@
-import { _ImageLoader } from './ImageLoader.js';
+import { ImageLoader } from './ImageLoader.js';
 import { CubeTexture } from '../textures/CubeTexture.js';
 import { ColorSpace } from '../constants.js';
 import { Configurable, ConfigurableConstructor, LoaderAsync } from '@modules/renderer/threejs/loaders/types.js';
@@ -27,16 +27,16 @@ export const _CubeTextureLoader = class<TUrl extends string = string>
     //@ts-expect-error
     const texture = new CubeTexture() as T;
     texture.colorSpace = ColorSpace.SRGB;
-    texture.images = await _ImageLoader.loadAsyncMultiple(urls, handlers, this.configuration);
+    texture.images = await ImageLoader.loadAsyncMultiple(urls, handlers, this.configuration);
     texture.needsUpdate = true;
     return texture;
   }
 } satisfies ConfigurableConstructor<Options, Configuration>;
 
 export namespace _CubeTextureLoader {
-  export type Options = _ImageLoader.Options & {};
+  export type Options = ImageLoader.Options & {};
 
-  export type Configuration = _ImageLoader.Configuration & {};
+  export type Configuration = ImageLoader.Configuration & {};
 }
 type Options = _CubeTextureLoader.Options;
 type Configuration = _CubeTextureLoader.Configuration;

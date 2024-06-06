@@ -1,4 +1,4 @@
-import { _ImageLoader } from './ImageLoader.js';
+import { ImageLoader } from './ImageLoader.js';
 import { Texture } from '../textures/Texture.js';
 import {
   Configurable,
@@ -27,11 +27,11 @@ export const TextureLoader = class<TUrl extends string = string>
   }
 
   constructor(options?: Options) {
-    this.configuration = _ImageLoader.configure(options);
+    this.configuration = ImageLoader.configure(options);
   }
 
   async loadAsync<T extends Texture, E = unknown>(url: TUrl, handlers?: LoaderAsync.Handlers<E>): Promise<T> {
-    const image = await _ImageLoader.loadAsync(url, this.configuration, handlers);
+    const image = await ImageLoader.loadAsync(url, this.configuration, handlers);
 
     return createTexture(image) as T;
   }
@@ -48,7 +48,7 @@ export const TextureLoader = class<TUrl extends string = string>
     urls: TUrl[],
     handlers?: LoaderAsync.Handlers<E>,
   ): Promise<T[]> {
-    const images = await _ImageLoader.loadAsyncMultiple(urls, this.configuration, handlers);
+    const images = await ImageLoader.loadAsyncMultiple(urls, this.configuration, handlers);
 
     return images.map(createTexture) as T[];
   }
@@ -63,8 +63,8 @@ export const TextureLoader = class<TUrl extends string = string>
 } satisfies ConfigurableConstructor<Options, Configuration>;
 
 export namespace TextureLoader {
-  export type Options = _ImageLoader.Options;
-  export type Configuration = _ImageLoader.Configuration;
+  export type Options = ImageLoader.Options;
+  export type Configuration = ImageLoader.Configuration;
 }
 type Options = TextureLoader.Options;
 type Configuration = TextureLoader.Configuration;
