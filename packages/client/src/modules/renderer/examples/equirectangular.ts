@@ -4,20 +4,21 @@ import { texture, equirectUV } from '../threejs/nodes/Nodes.js';
 import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 
 import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
+import { TextureLoader } from '@modules/renderer/threejs/loaders/TextureLoader.js';
 
 let camera, scene, renderer;
 let controls;
 
 init();
 
-function init() {
+async function init() {
   const container = document.createElement('div');
   document.body.appendChild(container);
 
   camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.25, 20);
   camera.position.set(1, 0, 0);
 
-  const equirectTexture = new THREE.TextureLoader().load('textures/2294472375_24a3b8ef46_o.jpg');
+  const equirectTexture = await new TextureLoader().loadAsync('textures/2294472375_24a3b8ef46_o.jpg');
 
   scene = new THREE.Scene();
   scene.backgroundNode = texture(equirectTexture, equirectUV(), 0);

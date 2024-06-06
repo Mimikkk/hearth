@@ -19,6 +19,7 @@ import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.
 
 import Stats from 'stats-js';
 import { ColorSpace } from '../threejs/Three.js';
+import { TextureLoader } from '@modules/renderer/threejs/loaders/TextureLoader.js';
 
 let camera, scene, renderer;
 let model, mixer, clock;
@@ -28,7 +29,7 @@ let stats;
 
 init();
 
-function init() {
+async function init() {
   camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.25, 30);
   camera.position.set(2, 2.5, 3);
 
@@ -78,14 +79,14 @@ function init() {
 
   // textures
 
-  const textureLoader = new THREE.TextureLoader();
+  const textureLoader = new TextureLoader();
 
-  const floorColor = textureLoader.load('textures/floors/FloorsCheckerboard_S_Diffuse.jpg');
+  const floorColor = await textureLoader.loadAsync('textures/floors/FloorsCheckerboard_S_Diffuse.jpg');
   floorColor.wrapS = THREE.Wrapping.Repeat;
   floorColor.wrapT = THREE.Wrapping.Repeat;
   floorColor.colorSpace = THREE.ColorSpace.SRGB;
 
-  const floorNormal = textureLoader.load('textures/floors/FloorsCheckerboard_S_Normal.jpg');
+  const floorNormal = await textureLoader.loadAsync('textures/floors/FloorsCheckerboard_S_Normal.jpg');
   floorNormal.wrapS = THREE.Wrapping.Repeat;
   floorNormal.wrapT = THREE.Wrapping.Repeat;
 

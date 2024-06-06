@@ -15,6 +15,7 @@ import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.
 import { TeapotGeometry } from '../threejs/geometries/TeapotGeometry.js';
 
 import Stats from 'stats-js';
+import { _CubeTextureLoader } from '@modules/renderer/threejs/loaders/CubeTextureLoader.js';
 
 class InstanceUniformNode extends Node {
   constructor() {
@@ -47,7 +48,7 @@ const objects = [];
 
 init();
 
-function init() {
+async function init() {
   const container = document.createElement('div');
   document.body.appendChild(container);
 
@@ -64,18 +65,14 @@ function init() {
 
   // CubeMap
 
-  const path = 'textures/cube/SwedishRoyalCastle/';
-  const format = '.jpg';
-  const urls = [
-    path + 'px' + format,
-    path + 'nx' + format,
-    path + 'py' + format,
-    path + 'ny' + format,
-    path + 'pz' + format,
-    path + 'nz' + format,
-  ];
-
-  const cTexture = new THREE.CubeTextureLoader().load(urls);
+  const cTexture = await new _CubeTextureLoader().loadAsync([
+    'textures/cube/SwedishRoyalCastle/px.jpg',
+    'textures/cube/SwedishRoyalCastle/nx.jpg',
+    'textures/cube/SwedishRoyalCastle/py.jpg',
+    'textures/cube/SwedishRoyalCastle/ny.jpg',
+    'textures/cube/SwedishRoyalCastle/pz.jpg',
+    'textures/cube/SwedishRoyalCastle/nz.jpg',
+  ]);
 
   // Materials
 

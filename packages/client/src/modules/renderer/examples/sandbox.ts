@@ -20,6 +20,7 @@ import { KTX2Loader } from '../threejs/loaders/KTX2Loader.js';
 
 import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 import { TextureFormat } from '../threejs/Three.js';
+import { TextureLoader } from '@modules/renderer/threejs/loaders/TextureLoader.js';
 
 let camera, scene, renderer;
 
@@ -44,13 +45,13 @@ async function init() {
 
   // textures
 
-  const textureLoader = new THREE.TextureLoader();
-  const uvTexture = textureLoader.load('./textures/uv_grid_opengl.jpg');
+  const textureLoader = new TextureLoader();
+  const uvTexture = await textureLoader.loadAsync('./textures/uv_grid_opengl.jpg');
   uvTexture.wrapS = THREE.Wrapping.Repeat;
   uvTexture.wrapT = THREE.Wrapping.Repeat;
   uvTexture.name = 'uv_grid';
 
-  const textureDisplace = textureLoader.load('./textures/transition/transition1.png');
+  const textureDisplace = await textureLoader.loadAsync('./textures/transition/transition1.png');
   textureDisplace.wrapS = THREE.Wrapping.Repeat;
   textureDisplace.wrapT = THREE.Wrapping.Repeat;
 

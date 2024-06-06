@@ -7,6 +7,7 @@ import { RGBMLoader } from '../threejs/loaders/RGBMLoader.js';
 
 import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
 import { GLTFLoader } from '../threejs/loaders/GLTFLoader.js';
+import { _CubeTextureLoader } from '@modules/renderer/threejs/loaders/CubeTextureLoader.js';
 
 let camera, scene, renderer;
 
@@ -32,15 +33,14 @@ async function init() {
   cube1Texture.generateMipmaps = true;
   cube1Texture.minFilter = THREE.MinificationTextureFilter.LinearMipmapLinear;
 
-  const cube2Urls = [
-    'dark-s_px.jpg',
-    'dark-s_nx.jpg',
-    'dark-s_py.jpg',
-    'dark-s_ny.jpg',
-    'dark-s_pz.jpg',
-    'dark-s_nz.jpg',
-  ];
-  const cube2Texture = new THREE.CubeTextureLoader({ path: './textures/cube/MilkyWay/' }).load(cube2Urls);
+  const cube2Texture = await new _CubeTextureLoader().loadAsync([
+    'textures/cube/MilkyWay/dark-s_px.jpg',
+    'textures/cube/MilkyWay/dark-s_nx.jpg',
+    'textures/cube/MilkyWay/dark-s_py.jpg',
+    'textures/cube/MilkyWay/dark-s_ny.jpg',
+    'textures/cube/MilkyWay/dark-s_pz.jpg',
+    'textures/cube/MilkyWay/dark-s_nz.jpg',
+  ]);
 
   cube2Texture.generateMipmaps = true;
   cube2Texture.minFilter = THREE.MinificationTextureFilter.LinearMipmapLinear;

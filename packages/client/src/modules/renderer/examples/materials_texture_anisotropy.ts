@@ -2,6 +2,7 @@ import * as THREE from '../threejs/Three.js';
 
 import Stats from 'stats-js';
 import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
+import { TextureLoader } from '@modules/renderer/threejs/loaders/TextureLoader.js';
 
 let container, stats;
 
@@ -12,7 +13,7 @@ let mouseX = 0,
 
 init();
 
-function init() {
+async function init() {
   const SCREEN_WIDTH = window.innerWidth;
   const SCREEN_HEIGHT = window.innerHeight;
 
@@ -55,11 +56,11 @@ function init() {
 
   // GROUND
 
-  const textureLoader = new THREE.TextureLoader();
+  const textureLoader = new TextureLoader();
 
   const maxAnisotropy = renderer.getMaxAnisotropy();
 
-  const texture1 = textureLoader.load('textures/crate.gif');
+  const texture1 = await textureLoader.loadAsync('textures/crate.gif');
   const material1 = new THREE.MeshPhongMaterial({ color: 0xffffff, map: texture1 });
 
   texture1.colorSpace = THREE.ColorSpace.SRGB;
@@ -67,7 +68,7 @@ function init() {
   texture1.wrapS = texture1.wrapT = THREE.Wrapping.Repeat;
   texture1.repeat.set(512, 512);
 
-  const texture2 = textureLoader.load('textures/crate.gif');
+  const texture2 = await textureLoader.loadAsync('textures/crate.gif');
   const material2 = new THREE.MeshPhongMaterial({ color: 0xffffff, map: texture2 });
 
   texture2.colorSpace = THREE.ColorSpace.SRGB;

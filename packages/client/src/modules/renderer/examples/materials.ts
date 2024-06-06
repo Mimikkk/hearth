@@ -30,6 +30,7 @@ import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 import { TeapotGeometry } from '../threejs/geometries/TeapotGeometry.js';
 
 import Stats from 'stats-js';
+import { TextureLoader } from '@modules/renderer/threejs/loaders/TextureLoader.js';
 
 let stats;
 
@@ -40,7 +41,7 @@ const objects = [],
 
 init();
 
-function init() {
+async function init() {
   const container = document.createElement('div');
   document.body.appendChild(container);
 
@@ -57,13 +58,13 @@ function init() {
 
   // Materials
 
-  const textureLoader = new THREE.TextureLoader();
+  const textureLoader = new TextureLoader();
 
-  const uvTexture = textureLoader.load('./textures/uv_grid_opengl.jpg');
+  const uvTexture = await textureLoader.loadAsync('./textures/uv_grid_opengl.jpg');
   uvTexture.wrapS = THREE.Wrapping.Repeat;
   uvTexture.wrapT = THREE.Wrapping.Repeat;
 
-  const opacityTexture = textureLoader.load('./textures/alphaMap.jpg');
+  const opacityTexture = await textureLoader.loadAsync('./textures/alphaMap.jpg');
   opacityTexture.wrapS = THREE.Wrapping.Repeat;
   opacityTexture.wrapT = THREE.Wrapping.Repeat;
 

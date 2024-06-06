@@ -18,6 +18,7 @@ import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.
 import Stats from 'stats-js';
 
 import { GUI } from 'lil-gui';
+import { TextureLoader } from '@modules/renderer/threejs/loaders/TextureLoader.js';
 
 const particleCount = 1000000;
 
@@ -36,7 +37,7 @@ const timestamps = document.getElementById('timestamps');
 
 init();
 
-function init() {
+async function init() {
   const { innerWidth, innerHeight } = window;
 
   camera = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, 0.1, 1000);
@@ -46,8 +47,8 @@ function init() {
 
   // textures
 
-  const textureLoader = new THREE.TextureLoader();
-  const map = textureLoader.load('textures/sprite.png');
+  const textureLoader = new TextureLoader();
+  const map = await textureLoader.loadAsync('textures/sprite.png');
 
   //
 

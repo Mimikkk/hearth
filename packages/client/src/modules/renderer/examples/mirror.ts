@@ -4,6 +4,7 @@ import { color, MeshPhongNodeMaterial, reflector, texture, uv } from '../threejs
 import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 
 import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
+import { TextureLoader } from '@modules/renderer/threejs/loaders/TextureLoader.js';
 
 let camera, scene, renderer;
 
@@ -13,7 +14,7 @@ let sphereGroup, smallSphere;
 
 init();
 
-function init() {
+async function init() {
   // scene
   scene = new THREE.Scene();
 
@@ -52,16 +53,16 @@ function init() {
 
   // textures
 
-  const textureLoader = new THREE.TextureLoader();
+  const textureLoader = new TextureLoader();
 
-  const floorNormal = textureLoader.load('textures/floors/FloorsCheckerboard_S_Normal.jpg');
+  const floorNormal = await textureLoader.loadAsync('textures/floors/FloorsCheckerboard_S_Normal.jpg');
   floorNormal.wrapS = THREE.Wrapping.Repeat;
   floorNormal.wrapT = THREE.Wrapping.Repeat;
 
-  const decalDiffuse = textureLoader.load('textures/decal/decal-diffuse.png');
+  const decalDiffuse = await textureLoader.loadAsync('textures/decal/decal-diffuse.png');
   decalDiffuse.colorSpace = THREE.ColorSpace.SRGB;
 
-  const decalNormal = textureLoader.load('textures/decal/decal-normal.jpg');
+  const decalNormal = await textureLoader.loadAsync('textures/decal/decal-normal.jpg');
 
   // reflectors / mirrors
 

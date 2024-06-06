@@ -1,9 +1,11 @@
 import * as THREE from '../threejs/Three.js';
+import { TextureLoader } from '../threejs/loaders/TextureLoader.ts';
 import { MeshStandardNodeMaterial, parallaxUV, texture, uv } from '../threejs/nodes/Nodes.js';
 
 import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 
 import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
+import { _CubeTextureLoader } from '@modules/renderer/threejs/loaders/CubeTextureLoader.js';
 
 let camera, scene, renderer;
 
@@ -11,7 +13,7 @@ let controls;
 
 init();
 
-function init() {
+async function init() {
   // scene
 
   scene = new THREE.Scene();
@@ -23,13 +25,13 @@ function init() {
 
   // environment
 
-  const environmentTexture = new THREE.CubeTextureLoader({ path: './textures/cube/Park2/' }).load([
-    'posx.jpg',
-    'negx.jpg',
-    'posy.jpg',
-    'negy.jpg',
-    'posz.jpg',
-    'negz.jpg',
+  const environmentTexture = new _CubeTextureLoader().loadAsync([
+    'textures/cube/Park2/posx.jpg',
+    'textures/cube/Park2/negx.jpg',
+    'textures/cube/Park2/posy.jpg',
+    'textures/cube/Park2/negy.jpg',
+    'textures/cube/Park2/posz.jpg',
+    'textures/cube/Park2/negz.jpg',
   ]);
 
   scene.environment = environmentTexture;
@@ -37,23 +39,23 @@ function init() {
 
   // textures
 
-  const loader = new THREE.TextureLoader();
+  const loader = new TextureLoader();
 
-  const topTexture = loader.load('textures/ambientcg/Ice002_1K-JPG_Color.jpg');
+  const topTexture = await loader.loadAsync('textures/ambientcg/Ice002_1K-JPG_Color.jpg');
   topTexture.colorSpace = THREE.ColorSpace.SRGB;
 
-  const roughnessTexture = loader.load('textures/ambientcg/Ice002_1K-JPG_Roughness.jpg');
+  const roughnessTexture = await loader.loadAsync('textures/ambientcg/Ice002_1K-JPG_Roughness.jpg');
   roughnessTexture.colorSpace = THREE.ColorSpace.No;
 
-  const normalTexture = loader.load('textures/ambientcg/Ice002_1K-JPG_NormalGL.jpg');
+  const normalTexture = await loader.loadAsync('textures/ambientcg/Ice002_1K-JPG_NormalGL.jpg');
   normalTexture.colorSpace = THREE.ColorSpace.No;
 
-  const displaceTexture = loader.load('textures/ambientcg/Ice002_1K-JPG_Displacement.jpg');
+  const displaceTexture = await loader.loadAsync('textures/ambientcg/Ice002_1K-JPG_Displacement.jpg');
   displaceTexture.colorSpace = THREE.ColorSpace.No;
 
   //
 
-  const bottomTexture = loader.load('textures/ambientcg/Ice003_1K-JPG_Color.jpg');
+  const bottomTexture = await loader.loadAsync('textures/ambientcg/Ice003_1K-JPG_Color.jpg');
   bottomTexture.colorSpace = THREE.ColorSpace.SRGB;
   bottomTexture.wrapS = THREE.Wrapping.Repeat;
   bottomTexture.wrapT = THREE.Wrapping.Repeat;

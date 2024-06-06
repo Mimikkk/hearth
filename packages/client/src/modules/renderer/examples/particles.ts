@@ -16,13 +16,14 @@ import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 
 import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
 import { Blending } from '../threejs/Three.js';
+import { TextureLoader } from '@modules/renderer/threejs/loaders/TextureLoader.js';
 
 let camera, scene, renderer;
 let controls;
 
 init();
 
-function init() {
+async function init() {
   const { innerWidth, innerHeight } = window;
 
   camera = new THREE.PerspectiveCamera(60, innerWidth / innerHeight, 1, 5000);
@@ -33,8 +34,8 @@ function init() {
 
   // textures
 
-  const textureLoader = new THREE.TextureLoader();
-  const map = textureLoader.load('textures/opengameart/smoke1.png');
+  const textureLoader = new TextureLoader();
+  const map = await textureLoader.loadAsync('textures/opengameart/smoke1.png');
 
   // create nodes
 

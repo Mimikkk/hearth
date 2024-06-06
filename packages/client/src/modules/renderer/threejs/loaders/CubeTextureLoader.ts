@@ -1,49 +1,42 @@
-import { ImageLoader } from './ImageLoader.js';
+import { _ImageLoader } from './ImageLoader.js';
 import { CubeTexture } from '../textures/CubeTexture.js';
-import { Loader } from './Loader.js';
 import { ColorSpace } from '../constants.js';
+import { Configurable, ConfigurableConstructor, LoaderAsync } from '@modules/renderer/threejs/loaders/types.js';
 
 type Urls<T extends string> = [posx: T, negx: T, posy: T, negy: T, posz: T, negz: T];
 
-export class CubeTextureLoader<TUrl extends string = string> extends Loader {
-  constructor(options?: ImageLoader.Options) {
-    super(options);
-  }
+export const _CubeTextureLoader = class<TUrl extends string = string>
+  implements LoaderAsync<CubeTexture, Urls<TUrl>>, Configurable<Configuration>
+{
+  configuration: Configuration;
 
-  load(urls: Urls<TUrl>, handlers?: ImageLoader.Handlers<CubeTexture>): CubeTexture {
-    //@ts-expect-error
-    const texture = new CubeTexture();
-    texture.colorSpace = ColorSpace.SRGB;
-
-    const loader = new ImageLoader(this);
-
-    let loaded = 0;
-    const incrementCounter = () => loaded;
-
-    for (let i = 0; i < 6; ++i) {
-      loader.load(urls[i], {
-        onLoad: this.createOnLoad(i, texture, incrementCounter, handlers?.onLoad),
-        onError: handlers?.onError,
-      });
-    }
-
-    return texture;
-  }
-
-  createOnLoad(
-    index: number,
-    texture: CubeTexture,
-    incrementCounter: () => number,
-    onLoad?: Loader.OnLoad<CubeTexture>,
-  ) {
-    return (image: HTMLImageElement) => {
-      texture.images[index] = image;
-
-      if (incrementCounter() === 6) {
-        texture.needsUpdate = true;
-
-        onLoad?.(texture);
-      }
+  static configure(options?: Options): Configuration {
+    return {
+      crossOrigin: options?.crossOrigin ?? 'anonymous',
     };
   }
+
+  constructor(options?: Options) {
+    this.configuration = _CubeTextureLoader.configure(options);
+  }
+
+  async loadAsync<T extends CubeTexture, E = unknown>(
+    urls: Urls<TUrl>,
+    handlers?: LoaderAsync.Handlers<E>,
+  ): Promise<T> {
+    //@ts-expect-error
+    const texture = new CubeTexture() as T;
+    texture.colorSpace = ColorSpace.SRGB;
+    texture.images = await _ImageLoader.loadAsyncMultiple(urls, handlers, this.configuration);
+    texture.needsUpdate = true;
+    return texture;
+  }
+} satisfies ConfigurableConstructor<Options, Configuration>;
+
+export namespace _CubeTextureLoader {
+  export type Options = _ImageLoader.Options & {};
+
+  export type Configuration = _ImageLoader.Configuration & {};
 }
+type Options = _CubeTextureLoader.Options;
+type Configuration = _CubeTextureLoader.Configuration;

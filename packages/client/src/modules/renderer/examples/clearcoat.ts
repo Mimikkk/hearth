@@ -8,6 +8,7 @@ import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.
 import { HDRCubeTextureLoader } from '../threejs/loaders/HDRCubeTextureLoader.js';
 
 import { FlakesTexture } from '../threejs/textures/FlakesTexture.js';
+import { TextureLoader } from '@modules/renderer/threejs/loaders/TextureLoader.js';
 
 let container, stats;
 
@@ -18,7 +19,7 @@ let group;
 
 init();
 
-function init() {
+async function init() {
   container = document.createElement('div');
   document.body.appendChild(container);
 
@@ -39,25 +40,25 @@ function init() {
       'textures/cube/pisaHDR/pz.hdr',
       'textures/cube/pisaHDR/nz.hdr',
     ])
-    .then(texture => {
+    .then(async texture => {
       const geometry = new THREE.SphereGeometry(0.8, 64, 32);
 
-      const textureLoader = new THREE.TextureLoader();
+      const textureLoader = new TextureLoader();
 
-      const diffuse = textureLoader.load('textures/carbon/Carbon.png');
+      const diffuse = await textureLoader.loadAsync('textures/carbon/Carbon.png');
       diffuse.colorSpace = THREE.ColorSpace.SRGB;
       diffuse.wrapS = THREE.Wrapping.Repeat;
       diffuse.wrapT = THREE.Wrapping.Repeat;
       diffuse.repeat.x = 10;
       diffuse.repeat.y = 10;
 
-      const normalMap = textureLoader.load('textures/carbon/Carbon_Normal.png');
+      const normalMap = await textureLoader.loadAsync('textures/carbon/Carbon_Normal.png');
       normalMap.wrapS = THREE.Wrapping.Repeat;
       normalMap.wrapT = THREE.Wrapping.Repeat;
       normalMap.repeat.x = 10;
       normalMap.repeat.y = 10;
 
-      const normalMap2 = textureLoader.load('textures/water/Water_1_M_Normal.jpg');
+      const normalMap2 = await textureLoader.loadAsync('textures/water/Water_1_M_Normal.jpg');
 
       const normalMap3 = new THREE.CanvasTexture(new FlakesTexture());
       normalMap3.wrapS = THREE.Wrapping.Repeat;
@@ -66,9 +67,11 @@ function init() {
       normalMap3.repeat.y = 6;
       normalMap3.anisotropy = 16;
 
-      const normalMap4 = textureLoader.load('textures/golfball.jpg');
+      const normalMap4 = await textureLoader.loadAsync('textures/golfball.jpg');
 
-      const clearcoatNormalMap = textureLoader.load('textures/pbr/Scratched_gold/Scratched_gold_01_1K_Normal.png');
+      const clearcoatNormalMap = await textureLoader.loadAsync(
+        'textures/pbr/Scratched_gold/Scratched_gold_01_1K_Normal.png',
+      );
 
       // car paint
 

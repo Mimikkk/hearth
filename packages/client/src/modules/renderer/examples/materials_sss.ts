@@ -8,6 +8,7 @@ import Stats from 'stats-js';
 import { GUI } from 'lil-gui';
 import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
 import { FBXLoader } from '../threejs/loaders/FBXLoader.js';
+import { TextureLoader } from '../threejs/loaders/TextureLoader.ts';
 
 let container, stats;
 let camera, scene, renderer;
@@ -72,12 +73,12 @@ function init() {
   initMaterial();
 }
 
-function initMaterial() {
-  const loader = new THREE.TextureLoader();
-  const imgTexture = loader.load('models/fbx/white.jpg');
+async function initMaterial() {
+  const loader = new TextureLoader();
+  const imgTexture = await loader.loadAsync('models/fbx/white.jpg');
   imgTexture.colorSpace = THREE.ColorSpace.SRGB;
 
-  const thicknessTexture = loader.load('models/fbx/bunny_thickness.jpg');
+  const thicknessTexture = await loader.loadAsync('models/fbx/bunny_thickness.jpg');
   imgTexture.wrapS = imgTexture.wrapT = THREE.Wrapping.Repeat;
 
   const material = new Nodes.MeshSSSNodeMaterial();

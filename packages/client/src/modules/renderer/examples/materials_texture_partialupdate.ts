@@ -1,6 +1,7 @@
 import * as THREE from '../threejs/Three.js';
 import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 import { Filter } from '../threejs/Three.js';
+import { TextureLoader } from '@modules/renderer/threejs/loaders/TextureLoader.js';
 
 let camera, scene, renderer, clock, dataTexture, diffuseMap;
 
@@ -10,7 +11,7 @@ const color = new THREE.Color();
 
 init();
 
-function init() {
+async function init() {
   camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 10);
   camera.position.z = 2;
 
@@ -18,10 +19,10 @@ function init() {
 
   clock = new THREE.Clock();
 
-  const loader = new THREE.TextureLoader();
-  diffuseMap = loader.load('textures/carbon/Carbon.png', animate);
+  const loader = new TextureLoader();
+  diffuseMap = await loader.loadAsync('textures/carbon/Carbon.png', animate);
   diffuseMap.colorSpace = THREE.ColorSpace.SRGB;
-  diffuseMap.minFilter = THREE.Filter.Linear;
+  diffuseMap.minFilter = THREE.MinificationTextureFilter.Linear;
   diffuseMap.generateMipmaps = false;
 
   const geometry = new THREE.PlaneGeometry(2, 2);

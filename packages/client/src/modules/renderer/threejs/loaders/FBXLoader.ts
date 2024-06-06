@@ -7,7 +7,6 @@ import {
   ColorSpace,
   DirectionalLight,
   Euler,
-  RFileLoader,
   Float32BufferAttribute,
   Group,
   Line,
@@ -29,12 +28,12 @@ import {
   PropertyBinding,
   Quaternion,
   QuaternionKeyframeTrack,
+  RFileLoader,
   ShapeUtils,
   Skeleton,
   SkinnedMesh,
   SpotLight,
   Texture,
-  TextureLoader,
   Uint16BufferAttribute,
   Vector2,
   Vector3,
@@ -44,6 +43,7 @@ import {
 } from '../../threejs/Three.js';
 import * as fflate from 'fflate';
 import { NURBSCurve } from '@modules/renderer/threejs/curves/NURBSCurve.js';
+import { TextureLoader } from '@modules/renderer/threejs/loaders/TextureLoader.js';
 
 /**
  * Loader loads FBX file and generates Group representing FBX scene.
@@ -117,9 +117,7 @@ export class FBXLoader extends Loader {
 
     // console.log( fbxTree );
 
-    const textureLoader = new TextureLoader({
-      manager: this.manager,
-      path: this.resourcePath || path,
+    const textureLoader = await new TextureLoader({
       crossOrigin: this.crossOrigin,
     });
 

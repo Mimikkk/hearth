@@ -9,12 +9,13 @@ import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.
 import { TeapotGeometry } from '../threejs/geometries/TeapotGeometry.js';
 
 import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
+import { TextureLoader } from '@modules/renderer/threejs/loaders/TextureLoader.js';
 
 let camera, scene, renderer, light1, light2, light3, light4, stats, controls;
 
 init();
 
-function init() {
+async function init() {
   camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.01, 100);
   camera.position.z = 7;
 
@@ -25,13 +26,13 @@ function init() {
 
   //textures
 
-  const textureLoader = new THREE.TextureLoader();
+  const textureLoader = new TextureLoader();
 
-  const normalMapTexture = textureLoader.load('./textures/water/Water_1_M_Normal.jpg');
+  const normalMapTexture = await textureLoader.loadAsync('./textures/water/Water_1_M_Normal.jpg');
   normalMapTexture.wrapS = THREE.Wrapping.Repeat;
   normalMapTexture.wrapT = THREE.Wrapping.Repeat;
 
-  const alphaTexture = textureLoader.load('./textures/roughness_map.jpg');
+  const alphaTexture = await textureLoader.loadAsync('./textures/roughness_map.jpg');
   alphaTexture.wrapS = THREE.Wrapping.Repeat;
   alphaTexture.wrapT = THREE.Wrapping.Repeat;
 

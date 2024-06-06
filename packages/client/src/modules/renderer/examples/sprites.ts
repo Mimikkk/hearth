@@ -2,6 +2,7 @@ import * as THREE from '../threejs/Three.js';
 import { color, rangeFog, SpriteNodeMaterial, texture, userData, uv } from '../threejs/nodes/Nodes.js';
 
 import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
+import { TextureLoader } from '@modules/renderer/threejs/loaders/TextureLoader.js';
 
 let camera, scene, renderer;
 
@@ -14,7 +15,7 @@ let imageWidth = 1,
 
 init();
 
-function init() {
+async function init() {
   const width = window.innerWidth;
   const height = window.innerHeight;
 
@@ -29,9 +30,9 @@ function init() {
   const amount = 200;
   const radius = 500;
 
-  const textureLoader = new THREE.TextureLoader();
+  const textureLoader = new TextureLoader();
 
-  map = textureLoader.load('./textures/sprite.png', map => {
+  map = await textureLoader.loadAsync('./textures/sprite.png', map => {
     imageWidth = map.image.width;
     imageHeight = map.image.height;
   });

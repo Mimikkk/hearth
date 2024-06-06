@@ -47,6 +47,7 @@ import {
   Wrapping,
 } from '../threejs/Three.js';
 import { createWindowResizer } from '@modules/renderer/examples/utilities/createWindowResizer.js';
+import { TextureLoader } from '@modules/renderer/threejs/loaders/TextureLoader.js';
 
 // let camera, scene, renderer;
 // let mixer, objects, clock;
@@ -106,8 +107,7 @@ loader.load('models/gltf/Michelle.glb', {
 
 // objects
 
-const textureLoader = new TextureLoader();
-const iceDiffuse = textureLoader.load('./textures/water.jpg');
+const iceDiffuse = await new TextureLoader().loadAsync('./textures/water/water.jpg');
 iceDiffuse.wrapS = Wrapping.Repeat;
 iceDiffuse.wrapT = Wrapping.Repeat;
 iceDiffuse.colorSpace = ColorSpace.No;

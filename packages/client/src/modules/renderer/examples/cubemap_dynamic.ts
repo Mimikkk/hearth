@@ -8,6 +8,7 @@ import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.
 import { GUI } from 'lil-gui';
 import Stats from 'stats-js';
 import { RGBMLoader } from '@modules/renderer/threejs/loaders/RGBMLoader.js';
+import { TextureLoader } from '@modules/renderer/threejs/loaders/TextureLoader.js';
 
 let camera, scene, renderer, stats;
 let cube, sphere, torus, material;
@@ -36,7 +37,7 @@ async function init() {
 
   scene = new THREE.Scene();
 
-  const uvTexture = new THREE.TextureLoader().load('./textures/uv_grid_opengl.jpg');
+  const uvTexture = await new TextureLoader().loadAsync('./textures/uv_grid_opengl.jpg');
 
   const texture = await new RGBMLoader({ maxRange: 16 }).loadAsync([
     'textures/cube/pisaRGBM16/px.png',

@@ -4,6 +4,7 @@ import { MeshBasicNodeMaterial, texture, uniform } from '../threejs/nodes/Nodes.
 import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 
 import { QuadMesh } from '../threejs/objects/QuadMesh.js';
+import { TextureLoader } from '@modules/renderer/threejs/loaders/TextureLoader.js';
 
 let camera, scene, renderer;
 const mouse = new THREE.Vector2();
@@ -16,7 +17,7 @@ const dpr = window.devicePixelRatio;
 
 init();
 
-function init() {
+async function init() {
   camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 10);
   camera.position.z = 3;
 
@@ -25,8 +26,8 @@ function init() {
 
   // textured mesh
 
-  const loader = new THREE.TextureLoader();
-  const uvTexture = loader.load('./textures/uv_grid_opengl.jpg');
+  const loader = new TextureLoader();
+  const uvTexture = await loader.loadAsync('./textures/uv_grid_opengl.jpg');
 
   const geometryBox = new THREE.BoxGeometry();
   const materialBox = new MeshBasicNodeMaterial();

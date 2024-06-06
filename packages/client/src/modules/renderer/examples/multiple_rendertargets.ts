@@ -22,6 +22,7 @@ import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 
 import { QuadMesh } from '../threejs/objects/QuadMesh.js';
 import { Filter } from '../threejs/Three.js';
+import { TextureLoader } from '@modules/renderer/threejs/loaders/TextureLoader.js';
 
 let camera, scene, renderer, torus;
 let quadMesh, renderTarget;
@@ -82,7 +83,7 @@ class ReadGBufferMaterial extends NodeMaterial {
 
 init();
 
-function init() {
+async function init() {
   renderer = new WebGPURenderer({ antialias: true });
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
@@ -110,9 +111,9 @@ function init() {
   camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 50);
   camera.position.z = 4;
 
-  const loader = new THREE.TextureLoader();
+  const loader = new TextureLoader();
 
-  const diffuse = loader.load('textures/hardwood2_diffuse.jpg', render);
+  const diffuse = await loader.loadAsync('textures/hardwood2_diffuse.jpg', render);
   diffuse.colorSpace = THREE.ColorSpace.SRGB;
   diffuse.wrapS = THREE.Wrapping.Repeat;
   diffuse.wrapT = THREE.Wrapping.Repeat;

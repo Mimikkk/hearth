@@ -36,8 +36,6 @@ export { DepthTexture } from './textures/DepthTexture.ts';
 export { Texture } from './textures/Texture.ts';
 export * from './geometries/Geometries.ts';
 export * from './materials/Materials.ts';
-export { CubeTextureLoader } from './loaders/CubeTextureLoader.ts';
-export { TextureLoader } from './loaders/TextureLoader.ts';
 export { BufferGeometryLoader } from './loaders/BufferGeometryLoader.ts';
 export { LoadManager } from './loaders/LoadManager.ts';
 export { ImageLoader } from './loaders/ImageLoader.ts';
