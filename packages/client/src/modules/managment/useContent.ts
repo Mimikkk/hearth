@@ -3,11 +3,10 @@ import { createSearchString } from '@logic/Search/createSearchString.js';
 import { ExampleNs } from '@modules/managment/exampleNs.js';
 import { Example } from '@modules/renderer/examples/examples.js';
 
-export const [useContent, ContentProvider] = createContext(() => {
-  const [selected, select] = createSearchString<Example>(ExampleNs.Search.SelectedId);
+const createExampleSearch = () => createSearchString<Example | ''>(ExampleNs.Search.SelectedId);
 
-  return {
-    selected,
-    select,
-  };
+export const [useContent, ContentProvider] = createContext(() => {
+  const [selectedExample, selectExample] = createExampleSearch();
+
+  return { selectedExample, selectExample };
 });

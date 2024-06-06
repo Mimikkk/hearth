@@ -13,15 +13,15 @@ const Backdrop = () => (
 );
 
 export const Canvas = () => {
-  const { selected } = useContent();
+  const { selectedExample } = useContent();
 
   return (
     <div class="w-full h-full rounded-sm border border-primary-3">
-      <Show when={selected()} fallback={<Backdrop />}>
+      <Show when={selectedExample()} fallback={<Backdrop />}>
         <object
           class="w-full h-full rounded-sm"
           type="text/html"
-          data={`src/modules/renderer/examples/${selected()}.html`}
+          data={`src/modules/renderer/examples/${selectedExample()}.html`}
         />
       </Show>
     </div>

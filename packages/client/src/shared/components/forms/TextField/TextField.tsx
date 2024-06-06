@@ -1,4 +1,4 @@
-import { Ref, Show } from 'solid-js';
+import { createEffect, Ref, Show } from 'solid-js';
 import cx from 'clsx';
 import s from './TextField.module.scss';
 import { createSearchString } from '@logic/Search/createSearchString.js';
@@ -19,6 +19,11 @@ export type TextFieldProps = ({ searchId: string } | { id: string }) & {
 
 export const TextField = (props: TextFieldProps) => {
   const [get, set, clear] = 'id' in props ? createString(props.value) : createSearchString(props.searchId, props.value);
+
+  createEffect(() => {
+    if (get() === props.value) return;
+    set(props.value || '');
+  });
 
   let ref: HTMLInputElement;
   let id = 'id' in props ? props.id : props.searchId;
