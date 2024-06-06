@@ -48,7 +48,7 @@ async function init() {
   controls.maxDistance = 10;
   controls.update();
 
-  new _RGBMLoader()
+  new RGBMLoader()
     .loadAsync([
       './textures/cube/pisaRGBM16/px.png',
       './textures/cube/pisaRGBM16/nx.png',

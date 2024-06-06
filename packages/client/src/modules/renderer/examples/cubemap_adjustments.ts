@@ -38,7 +38,7 @@ async function init() {
 
   // cube textures
 
-  const cube1Texture = await new _RGBMLoader({ maxRange: 16 }).loadAsync([
+  const cube1Texture = await new RGBMLoader({ maxRange: 16 }).loadAsync([
     'textures/cube/pisaRGBM16/px.png',
     'textures/cube/pisaRGBM16/nx.png',
     'textures/cube/pisaRGBM16/py.png',

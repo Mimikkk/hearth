@@ -38,7 +38,7 @@ async function init() {
 
   const uvTexture = new THREE.TextureLoader().load('./textures/uv_grid_opengl.jpg');
 
-  const texture = await new _RGBMLoader({ maxRange: 16 }).loadAsync([
+  const texture = await new RGBMLoader({ maxRange: 16 }).loadAsync([
     'textures/cube/pisaRGBM16/px.png',
     'textures/cube/pisaRGBM16/nx.png',
     'textures/cube/pisaRGBM16/py.png',

@@ -21,7 +21,7 @@ async function init() {
 
   scene = new THREE.Scene();
 
-  const cube1Texture = await new _RGBMLoader({ maxRange: 123 }).loadAsync([
+  const cube1Texture = await new RGBMLoader({ maxRange: 123 }).loadAsync([
     './textures/cube/pisaRGBM16/px.png',
     './textures/cube/pisaRGBM16/nx.png',
     './textures/cube/pisaRGBM16/py.png',
