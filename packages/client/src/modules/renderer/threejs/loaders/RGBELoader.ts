@@ -59,7 +59,7 @@ export const parse = (buffer: ArrayBuffer, type: SupportedType): ParseResult => 
   const rgbe_write_error = 2;
   const rgbe_format_error = 3;
   const rgbe_memory_error = 4;
-  const rgbe_error = (rgbe_error_code: number, msg: string) => {
+  const rgbe_error = (rgbe_error_code: number, msg?: string) => {
     switch (rgbe_error_code) {
       case rgbe_read_error:
         throw new Error('THREE.RGBELoader: Read Error: ' + (msg || ''));
@@ -76,11 +76,11 @@ export const parse = (buffer: ArrayBuffer, type: SupportedType): ParseResult => 
   const RGBE_VALID_FORMAT = 2;
   const RGBE_VALID_DIMENSIONS = 4;
   const NEWLINE = '\n';
-  const fgets = (buffer: Uint8Array, lineLimit: number, consume: boolean) => {
+  const fgets = (buffer: Uint8Array, lineLimit?: number, consume?: boolean): string | undefined => {
     const chunkSize = 128;
 
     lineLimit = !lineLimit ? 1024 : lineLimit;
-    let p = buffer.pos;
+    let p = position;
     let i = -1;
     let len = 0;
     let s = '';
@@ -100,11 +100,9 @@ export const parse = (buffer: ArrayBuffer, type: SupportedType): ParseResult => 
           else if (byteCode > 0x7ff && byteCode <= 0xffff) byteLen += 2;
           if (byteCode >= 0xDC00 && byteCode <= 0xDFFF) i--; //trail surrogate
         }*/
-      if (false !== consume) buffer.pos += len + i + 1;
+      if (false !== consume) position += len + i + 1;
       return s + chunk.slice(0, i);
     }
-
-    return false;
   };
   const RGBE_ReadHeader = (buffer: Uint8Array) => {
     // regexes to parse header info fields
@@ -133,25 +131,25 @@ export const parse = (buffer: ArrayBuffer, type: SupportedType): ParseResult => 
       height: 0 /* image dimensions, width/height */,
     };
 
-    let line!: string;
-    let match: RegExpMatchArray | null;
+    let line!: undefined | string;
+    let match: RegExpMatchArray | undefined | null;
 
-    if (buffer.pos >= buffer.byteLength || !(line = fgets(buffer))) {
+    if (position >= buffer.byteLength || !(line = fgets(buffer))) {
       rgbe_error(rgbe_read_error, 'no header found');
     }
 
     /* if you want to require the magic token then uncomment the next line */
-    if (!(match = line.match(magic_token_re))) {
+    if (!(match = line?.match(magic_token_re))) {
       rgbe_error(rgbe_format_error, 'bad initial token');
     }
 
     header.valid |= RGBE_VALID_PROGRAMTYPE;
-    header.programtype = match[1];
+    header.programtype = match![1];
     header.string += line + '\n';
 
     while (true) {
       line = fgets(buffer);
-      if (false === line) break;
+      if (undefined === line) break;
       header.string += line + '\n';
 
       if ('#' === line.charAt(0)) {
@@ -290,15 +288,15 @@ export const parse = (buffer: ArrayBuffer, type: SupportedType): ParseResult => 
     return data_rgba;
   };
 
+  let position = 0;
   const byteArray = new Uint8Array(buffer);
-  byteArray.pos = 0;
 
   const rgbe_header_info = RGBE_ReadHeader(byteArray);
 
   const w = rgbe_header_info.width;
   const h = rgbe_header_info.height;
 
-  const image_rgba_data = RGBE_ReadPixels_RLE(byteArray.subarray(byteArray.pos), w, h);
+  const image_rgba_data = RGBE_ReadPixels_RLE(byteArray.subarray(position), w, h);
 
   let data;
   let numElements;
