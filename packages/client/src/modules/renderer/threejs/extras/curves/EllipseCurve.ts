@@ -18,7 +18,7 @@ export class EllipseCurve extends Curve<Vector2> {
     super();
   }
 
-  getPoint(t: number, optionalTarget: Vector2): Vector2 {
+  getPoint(t: number, optionalTarget: Vector2 = new Vector2()): Vector2 {
     const point = optionalTarget;
 
     const twoPi = Math.PI * 2;

@@ -4,7 +4,6 @@ import { TTFLoader } from '@modules/renderer/threejs/loaders/TTFLoader.js';
 import { WebGPURenderer } from '@modules/renderer/threejs/renderers/webgpu/WebGPURenderer.js';
 import { TextGeometry } from '@modules/renderer/threejs/geometries/TextGeometry.js';
 
-let container;
 let camera, cameraTarget, scene, renderer;
 let group, textMesh1, textMesh2, textGeo, material;
 let firstLetter = true;
@@ -31,12 +30,11 @@ let windowHalfX = window.innerWidth / 2;
 init();
 
 function init() {
-  container = document.createElement('div');
-  document.body.appendChild(container);
-
   // CAMERA
 
-  camera = new THREE.PerspectiveCamera(30, window.innerWidth / window.innerHeight, 1, 1500);
+  const width = window.innerWidth;
+  const height = window.innerHeight;
+  camera = new THREE.PerspectiveCamera(60, width / height, 1, 2100);
   camera.position.set(0, 400, 700);
 
   cameraTarget = new THREE.Vector3(0, 150, 0);
@@ -85,13 +83,13 @@ function init() {
   renderer = new WebGPURenderer({ antialias: true });
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.setAnimationLoop(animate);
-  container.appendChild(renderer.domElement);
+  renderer.setAnimationLoop(render);
+  document.body.appendChild(renderer.domElement);
 
   // EVENTS
 
-  container.style.touchAction = 'none';
-  container.addEventListener('pointerdown', onPointerDown);
+  document.body.style.touchAction = 'none';
+  document.body.addEventListener('pointerdown', onPointerDown);
 
   document.addEventListener('keypress', onDocumentKeyPress);
   document.addEventListener('keydown', onDocumentKeyDown);
@@ -100,9 +98,10 @@ function init() {
 }
 
 function onWindowResize() {
-  windowHalfX = window.innerWidth / 2;
+  const width = window.innerWidth;
+  const height = window.innerHeight;
 
-  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.aspect = width / height;
   camera.updateProjectionMatrix();
 
   renderer.setSize(window.innerWidth, window.innerHeight);
@@ -222,7 +221,7 @@ function onPointerUp() {
 
 //
 
-function animate() {
+function render() {
   group.rotation.y += (targetRotation - group.rotation.y) * 0.05;
 
   camera.lookAt(cameraTarget);

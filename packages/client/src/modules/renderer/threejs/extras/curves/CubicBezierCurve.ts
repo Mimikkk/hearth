@@ -7,15 +7,15 @@ class CubicBezierCurve extends Curve<Vector2> {
   declare type: 'CubicBezierCurve';
 
   constructor(
-    public v0: Vector2,
-    public v1: Vector2,
-    public v2: Vector2,
-    public v3: Vector2,
+    public v0: Vector2 = new Vector2(),
+    public v1: Vector2 = new Vector2(),
+    public v2: Vector2 = new Vector2(),
+    public v3: Vector2 = new Vector2(),
   ) {
     super();
   }
 
-  getPoint(t: number, optionalTarget: Vector2): Vector2 {
+  getPoint(t: number, optionalTarget: Vector2 = new Vector2()): Vector2 {
     const point = optionalTarget;
     const { v0, v1, v2, v3 } = this;
 

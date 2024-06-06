@@ -64,7 +64,7 @@ class CatmullRomCurve3 extends Curve<Vector3> {
     super();
   }
 
-  getPoint(t: number, optionalTarget: Vector3): Vector3 {
+  getPoint(t: number, optionalTarget: Vector3 = new Vector3()): Vector3 {
     const point = optionalTarget;
 
     const points = this.points;
