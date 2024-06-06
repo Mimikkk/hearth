@@ -55,7 +55,11 @@ export const Examples = () => {
     ]),
   );
 
-  const [results, get, set] = createQueryable(SideBarItems, { keys: ['title'], recursiveBy: 'children' });
+  const [results, get, set] = createQueryable(SideBarItems, {
+    keys: ['title'],
+    recursiveBy: 'children',
+    threshold: 0.2,
+  });
   const filtered = createMemo(() => findNested(SideBarItems, new Set(flatBy(results(), 'children'))));
 
   return (
