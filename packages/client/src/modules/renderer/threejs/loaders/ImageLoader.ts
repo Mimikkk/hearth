@@ -15,9 +15,9 @@ const createImage = async (src: string): Promise<HTMLImageElement> => {
     }
 
     function onError(event: ErrorEvent) {
-      console.error(event);
       clearListeners();
       reject(event.error);
+      throw Error(`Failed to load image: '${src}'`);
     }
 
     image.addEventListener('load', onLoad);
