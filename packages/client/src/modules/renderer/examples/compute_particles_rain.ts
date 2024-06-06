@@ -27,6 +27,7 @@ import Stats from 'stats-js';
 import { GUI } from 'lil-gui';
 
 import * as BufferGeometryUtils from '@modules/renderer/threejs/utils/BufferGeometryUtils.js';
+import { BufferGeometryLoader } from '@modules/renderer/threejs/loaders/BufferGeometryLoader.js';
 
 const maxParticleCount = 50000;
 const instanceCount = maxParticleCount / 2;
@@ -267,20 +268,18 @@ function init() {
 
   //
 
-  const loader = new THREE.BufferGeometryLoader();
-  loader.load('models/json/suzanne_buffergeometry.json', {
-    onLoad: function (geometry) {
-      geometry.computeVertexNormals();
+  const loader = new BufferGeometryLoader();
+  loader.loadAsync('models/json/suzanne_buffergeometry.json').then(function (geometry) {
+    geometry.computeVertexNormals();
 
-      monkey = new THREE.Mesh(geometry, new THREE.MeshStandardMaterial({ roughness: 1, metalness: 0 }));
-      monkey.receiveShadow = true;
-      monkey.scale.setScalar(5);
-      monkey.rotation.y = Math.PI / 2;
-      monkey.position.y = 4.5;
-      monkey.layers.enable(1); // add to collision layer
+    monkey = new THREE.Mesh(geometry, new THREE.MeshStandardMaterial({ roughness: 1, metalness: 0 }));
+    monkey.receiveShadow = true;
+    monkey.scale.setScalar(5);
+    monkey.rotation.y = Math.PI / 2;
+    monkey.position.y = 4.5;
+    monkey.layers.enable(1); // add to collision layer
 
-      scene.add(monkey);
-    },
+    scene.add(monkey);
   });
 
   //

@@ -5,6 +5,7 @@ import Stats from 'stats-js';
 import { GUI } from 'lil-gui';
 
 import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
+import { BufferGeometryLoader } from '@modules/renderer/threejs/loaders/BufferGeometryLoader.js';
 
 let camera, scene, renderer, stats;
 
@@ -29,22 +30,20 @@ function init() {
 
   material.colorNode = mix(normalWorld, randomColors, oscSine(timerLocal(0.1)));
 
-  const loader = new THREE.BufferGeometryLoader();
-  loader.load('models/json/suzanne_buffergeometry.json', {
-    onLoad: function (geometry) {
-      geometry.computeVertexNormals();
-      geometry.scale(0.5, 0.5, 0.5);
+  const loader = new BufferGeometryLoader();
+  loader.loadAsync('models/json/suzanne_buffergeometry.json').then(function (geometry) {
+    geometry.computeVertexNormals();
+    geometry.scale(0.5, 0.5, 0.5);
 
-      mesh = new THREE.InstancedMesh(geometry, material, count);
-      mesh.instanceMatrix.setUsage(THREE.BufferUsage.DynamicDraw);
+    mesh = new THREE.InstancedMesh(geometry, material, count);
+    mesh.instanceMatrix.setUsage(THREE.BufferUsage.DynamicDraw);
 
-      scene.add(mesh);
+    scene.add(mesh);
 
-      //
+    //
 
-      const gui = new GUI();
-      gui.add(mesh, 'count', 0, count);
-    },
+    const gui = new GUI();
+    gui.add(mesh, 'count', 0, count);
   });
 
   //
