@@ -66,9 +66,9 @@ function init() {
   scene.add(group);
 
   const loader = new TTFLoader();
-
-  loader.load('fonts/kenpixel.ttf', function (json) {
+  loader.loadAsync('fonts/kenpixel.ttf').then(json => {
     font = new Font(json);
+
     createText();
   });
 
