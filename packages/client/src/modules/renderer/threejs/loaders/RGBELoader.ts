@@ -1,6 +1,5 @@
 import {
   ColorSpace,
-  Filter,
   MagnificationTextureFilter,
   MinificationTextureFilter,
   TextureDataType,
@@ -23,7 +22,7 @@ const RGBEByteToRGBFloat = (
   const e = sourceArray[sourceOffset + 3];
   const scale = Math.pow(2.0, e - 128.0) / 255.0;
 
-  destArray[destOffset + 0] = sourceArray[sourceOffset + 0] * scale;
+  destArray[destOffset] = sourceArray[sourceOffset] * scale;
   destArray[destOffset + 1] = sourceArray[sourceOffset + 1] * scale;
   destArray[destOffset + 2] = sourceArray[sourceOffset + 2] * scale;
   destArray[destOffset + 3] = 1;
@@ -39,16 +38,16 @@ const RGBEByteToRGBHalf = (
   const scale = Math.pow(2.0, e - 128.0) / 255.0;
 
   // clamping to 65504, the maximum representable value in float16
-  destArray[destOffset + 0] = DataUtils.toHalfFloat(Math.min(sourceArray[sourceOffset + 0] * scale, 65504));
+  destArray[destOffset] = DataUtils.toHalfFloat(Math.min(sourceArray[sourceOffset] * scale, 65504));
   destArray[destOffset + 1] = DataUtils.toHalfFloat(Math.min(sourceArray[sourceOffset + 1] * scale, 65504));
   destArray[destOffset + 2] = DataUtils.toHalfFloat(Math.min(sourceArray[sourceOffset + 2] * scale, 65504));
   destArray[destOffset + 3] = DataUtils.toHalfFloat(1);
 };
 
 export type ParseResult = {
+  data: Float32Array | Uint16Array;
   width: number;
   height: number;
-  data: Float32Array | Uint16Array;
   header: string;
   gamma: number;
   exposure: number;
@@ -110,7 +109,7 @@ export const parse = (buffer: ArrayBuffer, type: SupportedType): ParseResult => 
     const gamma_re = /^\s*GAMMA\s*=\s*(\d+(\.\d+)?)\s*$/;
     const exposure_re = /^\s*EXPOSURE\s*=\s*(\d+(\.\d+)?)\s*$/;
     const format_re = /^\s*FORMAT=(\S+)\s*$/;
-    const dimensions_re = /^\s*\-Y\s+(\d+)\s+\+X\s+(\d+)\s*$/;
+    const dimensions_re = /^\s*-Y\s+(\d+)\s+\+X\s+(\d+)\s*$/;
     // RGBE format header struct
     const header = {
       valid: 0 /* indicate which fields are valid */,
@@ -238,10 +237,8 @@ export const parse = (buffer: ArrayBuffer, type: SupportedType): ParseResult => 
         rgbe_error(rgbe_format_error, 'bad rgbe scanline format');
       }
 
-      // read each of the four channels for the scanline into the buffer
-      // first red, then green, then blue, then exponent
-      let ptr = 0,
-        count;
+      let ptr = 0;
+      let count;
 
       while (ptr < ptr_end && pos < buffer.byteLength) {
         count = buffer[pos++];
@@ -267,10 +264,7 @@ export const parse = (buffer: ArrayBuffer, type: SupportedType): ParseResult => 
         }
       }
 
-      // now convert data from buffer into rgba
-      // first red, then green, then blue, then exponent (alpha)
-      const l = scanline_width; //scanline_buffer.byteLength;
-      for (let i = 0; i < l; i++) {
+      for (let i = 0; i < scanline_width; i++) {
         let off = 0;
         data_rgba[offset] = scanline_buffer[i + off];
         off += scanline_width; //1;
@@ -291,12 +285,12 @@ export const parse = (buffer: ArrayBuffer, type: SupportedType): ParseResult => 
   let position = 0;
   const byteArray = new Uint8Array(buffer);
 
-  const rgbe_header_info = RGBE_ReadHeader(byteArray);
+  const header = RGBE_ReadHeader(byteArray);
 
-  const w = rgbe_header_info.width;
-  const h = rgbe_header_info.height;
+  const width = header.width;
+  const height = header.height;
 
-  const image_rgba_data = RGBE_ReadPixels_RLE(byteArray.subarray(position), w, h);
+  const image_rgba_data = RGBE_ReadPixels_RLE(byteArray.subarray(position), width, height);
 
   let data;
   let numElements;
@@ -326,76 +320,32 @@ export const parse = (buffer: ArrayBuffer, type: SupportedType): ParseResult => 
   }
 
   return {
-    width: w,
-    height: h,
+    width: width,
+    height: height,
     data: data,
-    header: rgbe_header_info.string,
-    gamma: rgbe_header_info.gamma,
-    exposure: rgbe_header_info.exposure,
+    header: header.string,
+    gamma: header.gamma,
+    exposure: header.exposure,
     type: type,
   };
 };
 
-const createDataTexture = (texData: any): DataTexture => {
+const createDataTexture = (details: ParseResult): DataTexture => {
   //@ts-expect-error
   const texture = new DataTexture();
 
-  if (texData.image !== undefined) {
-    texture.image = texData.image;
-  } else if (texData.data !== undefined) {
-    texture.image.width = texData.width;
-    texture.image.height = texData.height;
-    texture.image.data = texData.data;
-  }
-
-  texture.wrapS = texData.wrapS !== undefined ? texData.wrapS : Wrapping.ClampToEdge;
-  texture.wrapT = texData.wrapT !== undefined ? texData.wrapT : Wrapping.ClampToEdge;
-
-  texture.magFilter = texData.magFilter !== undefined ? texData.magFilter : Filter.Linear;
-  texture.minFilter = texData.minFilter !== undefined ? texData.minFilter : Filter.Linear;
-
-  texture.anisotropy = texData.anisotropy !== undefined ? texData.anisotropy : 1;
-
-  if (texData.colorSpace !== undefined) {
-    texture.colorSpace = texData.colorSpace;
-  }
-
-  if (texData.flipY !== undefined) {
-    texture.flipY = texData.flipY;
-  }
-
-  if (texData.format !== undefined) {
-    texture.format = texData.format;
-  }
-
-  if (texData.type !== undefined) {
-    texture.type = texData.type;
-  }
-
-  if (texData.mipmaps !== undefined) {
-    texture.mipmaps = texData.mipmaps;
-    texture.minFilter = MinificationTextureFilter.LinearMipmapLinear;
-  }
-
-  if (texData.mipmapCount === 1) {
-    texture.minFilter = MinificationTextureFilter.Linear;
-  }
-
-  if (texData.generateMipmaps !== undefined) {
-    texture.generateMipmaps = texData.generateMipmaps;
-  }
-
-  switch (texture.type) {
-    case TextureDataType.Float:
-    case TextureDataType.HalfFloat:
-      texture.colorSpace = ColorSpace.LinearSRGB;
-      texture.minFilter = MinificationTextureFilter.Linear;
-      texture.magFilter = MagnificationTextureFilter.Linear;
-      texture.generateMipmaps = false;
-      texture.flipY = true;
-
-      break;
-  }
+  texture.wrapS = Wrapping.ClampToEdge;
+  texture.wrapT = Wrapping.ClampToEdge;
+  texture.minFilter = MinificationTextureFilter.Linear;
+  texture.magFilter = MagnificationTextureFilter.Linear;
+  texture.anisotropy = 1;
+  texture.colorSpace = ColorSpace.LinearSRGB;
+  texture.generateMipmaps = false;
+  texture.flipY = true;
+  texture.image.width = details.width;
+  texture.image.height = details.height;
+  texture.image.data = details.data;
+  texture.type = details.type;
 
   texture.needsUpdate = true;
 

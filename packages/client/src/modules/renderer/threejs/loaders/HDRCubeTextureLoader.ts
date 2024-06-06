@@ -55,7 +55,7 @@ export const HDRCubeTextureLoader = class<TUrl extends CubeUrls<string>>
     this.configuration = HDRCubeTextureLoader.configure(options);
   }
 
-  async loadAsync<T extends CubeTexture>(urls: TUrl, handlers?: LoaderAsync.Handlers): Promise<T> {
+  async loadAsync<T extends CubeTexture, E = unknown>(urls: TUrl, handlers?: LoaderAsync.Handlers<E>): Promise<T> {
     const buffers = await FileLoader.loadAsyncMultiple(urls, this.configuration, handlers);
 
     const texture = createCubeTexture(this.configuration.type) as T;

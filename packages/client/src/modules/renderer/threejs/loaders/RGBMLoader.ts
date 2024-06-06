@@ -1,113 +1,147 @@
 import {
   CubeTexture,
   DataTexture,
-  DataTextureLoader,
   DataUtils,
-  ImageLoader,
-  Loader,
+  MagnificationTextureFilter,
   MinificationTextureFilter,
   TextureDataType,
   TextureFormat,
+  Wrapping,
 } from '../../threejs/Three.js';
-import * as UPNG from 'upng-js';
+import * as upng from 'upng-js';
+import { Configurable, ConfigurableConstructor, LoaderAsync } from './types.ts';
+import { FileLoader, FileResponseType } from '@modules/renderer/threejs/loaders/FileLoader.js';
 
 type Urls<T extends string> = [posx: T, negx: T, posy: T, negy: T, posz: T, negz: T];
 
-export class RGBMLoader<TUrl extends string = string> extends DataTextureLoader {
-  type: RGBMLoader.SupportedType;
-  maxRange: number;
+const parse = (buffer: ArrayBuffer, { type, maxRange }: RGBMLoader.Configuration): ParseResult => {
+  const img = upng.decode(buffer);
+  const rgba = upng.toRGBA8(img)[0];
 
-  constructor(options?: RGBMLoader.Options) {
-    super(options);
-    this.type = options?.type ?? TextureDataType.HalfFloat;
-    this.maxRange = options?.maxRange ?? 7;
-  }
+  const data = new Uint8Array(rgba);
+  const size = img.width * img.height * 4;
 
-  load(urls: Urls<TUrl>, handlers?: ImageLoader.Handlers<CubeTexture>) {
-    //@ts-expect-error
-    const texture = new CubeTexture();
+  const output = type === TextureDataType.HalfFloat ? new Uint16Array(size) : new Float32Array(size);
 
-    let loaded = 0;
-    const incrementCounter = () => ++loaded;
+  for (let i = 0; i < data.length; i += 4) {
+    const r = data[i] / 255;
+    const g = data[i + 1] / 255;
+    const b = data[i + 2] / 255;
+    const a = data[i + 3] / 255;
 
-    for (let i = 0; i < urls.length; ++i) {
-      super.load(urls[i], {
-        onLoad: this.createOnLoad2(i, texture, incrementCounter, handlers?.onLoad),
-        onError: handlers?.onError,
-      });
+    if (type === TextureDataType.HalfFloat) {
+      output[i] = DataUtils.toHalfFloat(Math.min(r * a * maxRange, 65504));
+      output[i + 1] = DataUtils.toHalfFloat(Math.min(g * a * maxRange, 65504));
+      output[i + 2] = DataUtils.toHalfFloat(Math.min(b * a * maxRange, 65504));
+      output[i + 3] = DataUtils.toHalfFloat(1);
+    } else {
+      output[i] = r * a * maxRange;
+      output[i + 1] = g * a * maxRange;
+      output[i + 2] = b * a * maxRange;
+      output[i + 3] = 1;
     }
-
-    texture.type = this.type;
-    texture.format = TextureFormat.RGBA;
-    texture.minFilter = MinificationTextureFilter.Linear;
-    texture.generateMipmaps = false;
-
-    return texture;
   }
 
-  createOnLoad2(
-    index: number,
-    texture: CubeTexture,
-    incrementCounter: () => number,
-    onLoad: undefined | Loader.OnLoad<CubeTexture>,
-  ) {
-    return ([image]: [DataTexture, any]) => {
-      texture.images[index] = image;
+  return {
+    width: img.width,
+    height: img.height,
+    data: output,
+    format: TextureFormat.RGBA,
+    type: type,
+    flipY: true,
+  };
+};
 
-      if (incrementCounter() === 6) {
-        texture.needsUpdate = true;
-
-        onLoad?.(texture);
-      }
-    };
-  }
-
-  parse(buffer: ArrayBuffer) {
-    const img = UPNG.decode(buffer);
-    const rgba = UPNG.toRGBA8(img)[0];
-
-    const data = new Uint8Array(rgba);
-    const size = img.width * img.height * 4;
-
-    const output = this.type === TextureDataType.HalfFloat ? new Uint16Array(size) : new Float32Array(size);
-
-    // decode RGBM
-
-    for (let i = 0; i < data.length; i += 4) {
-      const r = data[i + 0] / 255;
-      const g = data[i + 1] / 255;
-      const b = data[i + 2] / 255;
-      const a = data[i + 3] / 255;
-
-      if (this.type === TextureDataType.HalfFloat) {
-        output[i + 0] = DataUtils.toHalfFloat(Math.min(r * a * this.maxRange, 65504));
-        output[i + 1] = DataUtils.toHalfFloat(Math.min(g * a * this.maxRange, 65504));
-        output[i + 2] = DataUtils.toHalfFloat(Math.min(b * a * this.maxRange, 65504));
-        output[i + 3] = DataUtils.toHalfFloat(1);
-      } else {
-        output[i + 0] = r * a * this.maxRange;
-        output[i + 1] = g * a * this.maxRange;
-        output[i + 2] = b * a * this.maxRange;
-        output[i + 3] = 1;
-      }
-    }
-
-    return {
-      width: img.width,
-      height: img.height,
-      data: output,
-      format: TextureFormat.RGBA,
-      type: this.type,
-      flipY: true,
-    };
-  }
+interface ParseResult {
+  data: Uint16Array | Float32Array;
+  width: number;
+  height: number;
+  format: TextureFormat;
+  type: TextureDataType;
+  flipY: boolean;
 }
 
+const createCubeTexture = (images: DataTexture[], configuration: Configuration): CubeTexture => {
+  //@ts-expect-error - improve texture handling
+  const texture = new CubeTexture();
+  texture.images = images;
+  texture.type = configuration.type;
+  texture.format = TextureFormat.RGBA;
+  texture.minFilter = MinificationTextureFilter.Linear;
+  texture.generateMipmaps = false;
+  texture.needsUpdate = true;
+
+  return texture;
+};
+const createDataTexture = (buffer: ArrayBuffer, configuration: Configuration) => {
+  //@ts-expect-error
+  const texture = new DataTexture();
+  texture.wrapS = Wrapping.ClampToEdge;
+  texture.wrapT = Wrapping.ClampToEdge;
+  texture.magFilter = MagnificationTextureFilter.Linear;
+  texture.minFilter = MinificationTextureFilter.Linear;
+  texture.anisotropy = 1;
+
+  const details = parse(buffer, configuration);
+  texture.image.width = details.width;
+  texture.image.height = details.height;
+  texture.image.data = details.data;
+  texture.flipY = details.flipY;
+  texture.format = details.format;
+  texture.type = details.type;
+  texture.needsUpdate = true;
+
+  return texture;
+};
+
+export const RGBMLoader = class<TData extends CubeTexture, TUrl extends string = string>
+  implements Configurable<Configuration>, LoaderAsync<TData, Urls<TUrl>>
+{
+  configuration: Configuration;
+
+  static configure(options?: Options): Configuration {
+    return {
+      responseType: FileResponseType.Buffer,
+      headers: options?.headers,
+      credentials: options?.credentials ?? 'same-origin',
+      type: options?.type ?? TextureDataType.HalfFloat,
+      maxRange: options?.maxRange ?? 7,
+    };
+  }
+
+  constructor(options?: Options) {
+    this.configuration = RGBMLoader.configure(options);
+  }
+
+  async loadAsync<T extends TData, E = unknown>(urls: Urls<TUrl>, handlers?: LoaderAsync.Handlers<E>): Promise<T> {
+    const buffers = await FileLoader.loadAsyncMultiple(urls, this.configuration, handlers);
+    const images = buffers.map(buffer => createDataTexture(buffer, this.configuration));
+
+    return createCubeTexture(images, this.configuration) as T;
+  }
+
+  static async loadAsync<T extends CubeTexture, TUrl extends string, E = unknown>(
+    urls: Urls<TUrl>,
+    options: Configuration,
+    handlers?: LoaderAsync.Handlers<E>,
+  ): Promise<T> {
+    return new RGBMLoader(options).loadAsync(urls, handlers);
+  }
+} satisfies ConfigurableConstructor<Options, Configuration>;
+
 export namespace RGBMLoader {
-  export interface Options extends DataTextureLoader.Options {
+  export type SupportedType = TextureDataType.HalfFloat | TextureDataType.Float;
+
+  export interface Options extends FileLoader.Options {
     type?: SupportedType;
     maxRange?: number;
   }
 
-  export type SupportedType = TextureDataType.HalfFloat | TextureDataType.Float;
+  export interface Configuration extends FileLoader.Configuration {
+    type: SupportedType;
+    maxRange: number;
+  }
 }
+
+type Options = RGBMLoader.Options;
+type Configuration = RGBMLoader.Configuration;

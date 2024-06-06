@@ -17,7 +17,7 @@ let postProcessing;
 
 init();
 
-function init() {
+async function init() {
   const container = document.createElement('div');
   document.body.appendChild(container);
 
@@ -26,8 +26,14 @@ function init() {
 
   scene = new THREE.Scene();
 
-  const rgbmUrls = ['px.png', 'nx.png', 'py.png', 'ny.png', 'pz.png', 'nz.png'];
-  const cube1Texture = new RGBMLoader({ path: './textures/cube/pisaRGBM16/', maxRange: 16 }).load(rgbmUrls);
+  const cube1Texture = await new _RGBMLoader({ maxRange: 16 }).loadAsync([
+    'textures/cube/pisaRGBM16/px.png',
+    'textures/cube/pisaRGBM16/nx.png',
+    'textures/cube/pisaRGBM16/py.png',
+    'textures/cube/pisaRGBM16/ny.png',
+    'textures/cube/pisaRGBM16/pz.png',
+    'textures/cube/pisaRGBM16/nz.png',
+  ]);
 
   scene.environment = cube1Texture;
   scene.backgroundNode = cubeTexture(cube1Texture)

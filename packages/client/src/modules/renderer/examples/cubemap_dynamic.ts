@@ -4,11 +4,10 @@ import * as Nodes from '../threejs/nodes/Nodes.js';
 import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 
 import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
-import { RGBMLoader } from '../threejs/loaders/RGBMLoader.js';
 
 import { GUI } from 'lil-gui';
 import Stats from 'stats-js';
-import { Filter } from '../threejs/Three.js';
+import { RGBMLoader } from '@modules/renderer/threejs/loaders/RGBMLoader.js';
 
 let camera, scene, renderer, stats;
 let cube, sphere, torus, material;
@@ -19,7 +18,7 @@ let controls;
 
 init();
 
-function init() {
+async function init() {
   renderer = new WebGPURenderer({ antialias: true });
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
@@ -39,12 +38,18 @@ function init() {
 
   const uvTexture = new THREE.TextureLoader().load('./textures/uv_grid_opengl.jpg');
 
-  const rgbmUrls = ['px.png', 'nx.png', 'py.png', 'ny.png', 'pz.png', 'nz.png'];
-  const texture = new RGBMLoader({ path: './textures/cube/pisaRGBM16/', maxRange: 16 }).load(rgbmUrls);
+  const texture = await new _RGBMLoader({ maxRange: 16 }).loadAsync([
+    'textures/cube/pisaRGBM16/px.png',
+    'textures/cube/pisaRGBM16/nx.png',
+    'textures/cube/pisaRGBM16/py.png',
+    'textures/cube/pisaRGBM16/ny.png',
+    'textures/cube/pisaRGBM16/pz.png',
+    'textures/cube/pisaRGBM16/nz.png',
+  ]);
 
   texture.name = 'pisaRGBM16';
-  texture.minFilter = THREE.Filter.LinearMipmapLinear;
-  texture.magFilter = THREE.Filter.Linear;
+  texture.minFilter = THREE.MinificationTextureFilter.LinearMipmapLinear;
+  texture.magFilter = THREE.MagnificationTextureFilter.Linear;
 
   scene.background = texture;
   scene.environment = texture;
@@ -53,8 +58,8 @@ function init() {
 
   cubeRenderTarget = new THREE.CubeRenderTarget(256);
   cubeRenderTarget.texture.type = THREE.TextureDataType.HalfFloat;
-  cubeRenderTarget.texture.minFilter = THREE.Filter.LinearMipmapLinear;
-  cubeRenderTarget.texture.magFilter = THREE.Filter.Linear;
+  cubeRenderTarget.texture.minFilter = THREE.MinificationTextureFilter.LinearMipmapLinear;
+  cubeRenderTarget.texture.magFilter = THREE.MagnificationTextureFilter.Linear;
   cubeRenderTarget.texture.generateMipmaps = true;
 
   cubeCamera = new THREE.CubeCamera(1, 1000, cubeRenderTarget);

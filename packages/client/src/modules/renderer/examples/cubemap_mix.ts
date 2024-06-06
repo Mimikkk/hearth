@@ -12,7 +12,7 @@ let camera, scene, renderer;
 
 init();
 
-function init() {
+async function init() {
   const container = document.createElement('div');
   document.body.appendChild(container);
 
@@ -21,14 +21,16 @@ function init() {
 
   scene = new THREE.Scene();
 
-  const rgbmUrls = ['px.png', 'nx.png', 'py.png', 'ny.png', 'pz.png', 'nz.png'];
-  const cube1Texture = new RGBMLoader({
-    path: './textures/cube/pisaRGBM16/',
-    maxRange: 16,
-  }).load(rgbmUrls);
-
+  const cube1Texture = await new _RGBMLoader({ maxRange: 123 }).loadAsync([
+    './textures/cube/pisaRGBM16/px.png',
+    './textures/cube/pisaRGBM16/nx.png',
+    './textures/cube/pisaRGBM16/py.png',
+    './textures/cube/pisaRGBM16/ny.png',
+    './textures/cube/pisaRGBM16/pz.png',
+    './textures/cube/pisaRGBM16/nz.png',
+  ]);
   cube1Texture.generateMipmaps = true;
-  cube1Texture.minFilter = THREE.Filter.LinearMipmapLinear;
+  cube1Texture.minFilter = THREE.MinificationTextureFilter.LinearMipmapLinear;
 
   const cube2Urls = [
     'dark-s_px.jpg',
@@ -41,7 +43,7 @@ function init() {
   const cube2Texture = new THREE.CubeTextureLoader({ path: './textures/cube/MilkyWay/' }).load(cube2Urls);
 
   cube2Texture.generateMipmaps = true;
-  cube2Texture.minFilter = THREE.Filter.LinearMipmapLinear;
+  cube2Texture.minFilter = THREE.MinificationTextureFilter.LinearMipmapLinear;
 
   scene.environmentNode = mix(pmremTexture(cube2Texture), pmremTexture(cube1Texture), oscSine(timerLocal(0.1)));
 
