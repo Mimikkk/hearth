@@ -1,20 +1,93 @@
-import { DataTextureLoader, Filter } from '../../threejs/Three.js';
+import { DataTexture, MagnificationTextureFilter, MinificationTextureFilter, Wrapping } from '../../threejs/Three.js';
 
 import * as UTIF from 'utif';
+import { Configurable, ConfigurableConstructor, LoaderAsync } from '@modules/renderer/threejs/loaders/types.js';
+import { FileLoader, FileResponseType } from '@modules/renderer/threejs/loaders/FileLoader.js';
 
-export class TIFFLoader extends DataTextureLoader {
-  parse(buffer: ArrayBuffer) {
-    const ifds = UTIF.decode(buffer);
-    UTIF.decodeImage(buffer, ifds[0]);
-    const rgba = UTIF.toRGBA8(ifds[0]);
+interface ParseResult {
+  data: Uint8Array;
+  width: number;
+  height: number;
+  flipY: boolean;
+  magFilter: MagnificationTextureFilter;
+  minFilter: MinificationTextureFilter;
+}
 
+const parseTiff = (buffer: ArrayBuffer): ParseResult => {
+  const [ifds] = UTIF.decode(buffer);
+  UTIF.decodeImage(buffer, ifds);
+  const data = UTIF.toRGBA8(ifds);
+
+  return {
+    data,
+    width: ifds.width,
+    height: ifds.height,
+    flipY: true,
+    magFilter: MagnificationTextureFilter.Linear,
+    minFilter: MinificationTextureFilter.LinearMipmapLinear,
+  };
+};
+
+const createDataTexture = (details: ParseResult) => {
+  //@ts-expect-error - improve texture handling
+  const texture = new DataTexture();
+  texture.image.width = details.width;
+  texture.image.height = details.height;
+  texture.image.data = details.data;
+  texture.wrapS = Wrapping.ClampToEdge;
+  texture.wrapT = Wrapping.ClampToEdge;
+  texture.magFilter = details.magFilter;
+  texture.minFilter = details.minFilter;
+  texture.anisotropy = 1;
+  texture.flipY = details.flipY;
+  texture.needsUpdate = true;
+
+  return texture;
+};
+
+export const TiffLoader = class<TUrl extends string = string>
+  implements Configurable<Configuration>, LoaderAsync<DataTexture, TUrl>
+{
+  configuration: Configuration;
+
+  static configure(options?: Options): Configuration {
     return {
-      width: ifds[0].width,
-      height: ifds[0].height,
-      data: rgba,
-      flipY: true,
-      magFilter: Filter.Linear,
-      minFilter: Filter.LinearMipmapLinear,
+      headers: options?.headers,
+      credentials: options?.credentials ?? 'same-origin',
+      maxRange: options?.maxRange ?? 16,
+      responseType: FileResponseType.Buffer,
     };
   }
+
+  constructor(options?: Options) {
+    this.configuration = TiffLoader.configure(options);
+  }
+
+  async loadAsync<T extends DataTexture, E = unknown>(url: TUrl, handlers?: LoaderAsync.Handlers<E>): Promise<T> {
+    const buffer = await FileLoader.loadAsync(url, this.configuration, handlers);
+
+    return createDataTexture(parseTiff(buffer)) as T;
+  }
+
+  static async loadAsync<T extends DataTexture, TUrl extends string, E = unknown>(
+    url: TUrl,
+    options?: Options,
+    handlers?: LoaderAsync.Handlers<E>,
+  ): Promise<T> {
+    return new TiffLoader(options).loadAsync(url, handlers);
+  }
+} satisfies ConfigurableConstructor<Options, Configuration>;
+
+export namespace TiffLoader {
+  export interface Options extends FileLoader.Options {
+    maxRange?: number;
+  }
+
+  export interface Configuration extends Omit<FileLoader.Configuration, 'responseType'> {
+    responseType: FileResponseType.Buffer;
+    maxRange: number;
+  }
 }
+
+type Options = TiffLoader.Options;
+type Configuration = TiffLoader.Configuration;
