@@ -42,7 +42,7 @@ function init() {
   scene.add(plane);
 
   const loader = new GLTFLoader();
-  loader.load('models/gltf/Michelle.glb', {
+  loader.loadAsync('models/gltf/Michelle.glb', {
     onLoad: function (gltf) {
       const object = gltf.scene;
 

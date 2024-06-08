@@ -34,7 +34,7 @@ function init() {
     // model
 
     const loader = new GLTFLoader();
-    loader.load('models/gltf/DamagedHelmet/glTF/DamagedHelmet.gltf').then(gltf => {
+    loader.loadAsync('models/gltf/DamagedHelmet/glTF/DamagedHelmet.gltf').then(gltf => {
       scene.add(gltf.scene);
 
       render();

@@ -61,7 +61,7 @@ function init() {
   // models
 
   const loader = new GLTFLoader();
-  loader.load('models/gltf/Xbot.glb', {
+  loader.loadAsync('models/gltf/Xbot.glb', {
     onLoad: function (gltf) {
       const createModel = (colorNode = null) => {
         let object;

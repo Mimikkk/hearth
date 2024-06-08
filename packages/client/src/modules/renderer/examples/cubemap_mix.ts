@@ -52,7 +52,7 @@ async function init() {
   });
 
   const loader = new GLTFLoader({ path: 'models/gltf/DamagedHelmet/glTF/' });
-  loader.load('DamagedHelmet.gltf', {
+  loader.loadAsync('DamagedHelmet.gltf', {
     onLoad: function (gltf) {
       scene.add(gltf.scene);
     },

@@ -21,7 +21,7 @@ function init() {
   clock = new THREE.Clock();
 
   const loader = new GLTFLoader();
-  loader.load('models/gltf/Michelle.glb', {
+  loader.loadAsync('models/gltf/Michelle.glb', {
     onLoad: function (gltf) {
       const object = gltf.scene;
       mixer = new THREE.AnimationMixer(object);

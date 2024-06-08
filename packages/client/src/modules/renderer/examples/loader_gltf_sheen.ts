@@ -24,7 +24,7 @@ function init() {
 
   // model
 
-  new GLTFLoader({ path: 'models/gltf/' }).load('SheenChair.glb', {
+  new GLTFLoader({ path: 'models/gltf/' }).loadAsync('SheenChair.glb', {
     onLoad: function (gltf) {
       scene.add(gltf.scene);
 

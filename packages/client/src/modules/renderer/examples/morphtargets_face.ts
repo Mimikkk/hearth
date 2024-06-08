@@ -41,7 +41,7 @@ async function init() {
   new GLTFLoader()
     .setKTX2Loader(ktx2Loader)
     .setMeshoptDecoder(MeshoptDecoder)
-    .load('./models/gltf/facecap.glb', {
+    .loadAsync('./models/gltf/facecap.glb', {
       onLoad: gltf => {
         const mesh = gltf.scene.children[0];
 

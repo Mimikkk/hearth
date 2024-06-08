@@ -46,7 +46,7 @@ async function init() {
   const loader = new GLTFLoader();
   loader.setKTX2Loader(ktx2Loader);
   loader.setMeshoptDecoder(MeshoptDecoder);
-  loader.load('./models/gltf/coffeemat.glb', {
+  loader.loadAsync('./models/gltf/coffeemat.glb', {
     onLoad: function (gltf) {
       const gltfScene = gltf.scene;
       gltfScene.position.y = -0.8;

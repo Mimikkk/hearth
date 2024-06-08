@@ -91,7 +91,7 @@ const clock = new Clock();
 let model: Group;
 let mixer: AnimationMixer;
 const loader = new GLTFLoader();
-loader.load('models/gltf/Michelle.glb', {
+loader.loadAsync('models/gltf/Michelle.glb', {
   onLoad: function (gltf) {
     model = gltf.scene;
     model.children[0].children[0].castShadow = true;
