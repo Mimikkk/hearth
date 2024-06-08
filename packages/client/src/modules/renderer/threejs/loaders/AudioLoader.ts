@@ -1,34 +1,40 @@
 import { AudioContextManager } from '../audio/AudioContextManager.js';
-import { RFileLoader } from './RFileLoader.js';
-import { Loader } from './Loader.js';
+import { Configurable, ConfigurableConstructor, LoaderAsync } from './types.ts';
+import { FileLoader, FileLoaderResponse } from '@modules/renderer/threejs/loaders/FileLoader.js';
 
-export class AudioLoader<TUrl extends string = string> extends Loader<any, TUrl> {
-  responseType: 'arraybuffer' = 'arraybuffer';
+export const AudioLoader = class<TData extends AudioBuffer, TUrl extends string = string>
+  implements Configurable<Configuration>, LoaderAsync<TData, TUrl>
+{
+  configuration: Configuration;
 
-  constructor(options?: AudioLoader.Options) {
-    super(options);
-  }
-
-  load(url: TUrl, handlers?: Loader.Handlers<AudioBuffer>) {
-    RFileLoader.load(url, this, {
-      onLoad: this.createOnLoad(url, handlers?.onLoad, handlers?.onError),
-      onProgress: handlers?.onProgress,
-      onError: handlers?.onError,
-    });
-  }
-
-  createOnLoad(url: TUrl, onLoad: undefined | Loader.OnLoad<any>, onError: Loader.OnError<any> = console.error) {
-    return (buffer: ArrayBuffer) => {
-      try {
-        AudioContextManager.readContext().decodeAudioData(buffer.slice(0), onLoad);
-      } catch (e) {
-        onError(e);
-        this.manager.itemError(url);
-      }
+  static configure(options?: Options): Configuration {
+    return {
+      responseType: FileLoaderResponse.Buffer,
+      credentials: options?.credentials ?? 'same-origin',
+      headers: options?.headers,
     };
   }
-}
+
+  constructor(options?: Options) {
+    this.configuration = AudioLoader.configure(options);
+  }
+
+  async loadAsync<T extends TData, E = unknown>(url: TUrl, handlers?: LoaderAsync.Handlers<E>): Promise<T> {
+    const buffer = await FileLoader.loadAsync(url, this.configuration, handlers);
+
+    const context = AudioContextManager.get();
+    const audio = await context.decodeAudioData(buffer);
+
+    return audio as T;
+  }
+} satisfies ConfigurableConstructor<Options, Configuration>;
 
 export namespace AudioLoader {
-  export interface Options extends Pick<Loader.Options, 'manager' | 'withCredentials' | 'path' | 'requestHeader'> {}
+  export interface Options extends Omit<FileLoader.Options, 'responseType'> {}
+
+  export interface Configuration extends Omit<FileLoader.Configuration, 'responseType'> {
+    responseType: FileLoaderResponse.Buffer;
+  }
 }
+type Options = AudioLoader.Options;
+type Configuration = AudioLoader.Configuration;

@@ -31,24 +31,28 @@ namespace LinkedList {
     return last!;
   };
 
-  export const sort = (head: Vertex): Vertex => {
-    let e;
+  export const sort = (list: Vertex): Vertex => {
+    let p: Vertex | null;
+    let q: Vertex | null;
+    let e: Vertex | null;
     let tail: Vertex | null;
-    let pSize;
-    let qSize;
+    let numMerges: number;
+    let pSize: number;
+    let qSize: number;
     let inSize = 1;
 
-    while (true) {
-      let p: Vertex | null = head;
-      head = null!;
-      tail = null!;
-      let mergeCount = 0;
+    let head: Vertex | null = list;
+    do {
+      p = head;
+      head = null;
+      tail = null;
+      numMerges = 0;
 
       while (p) {
-        ++mergeCount;
-        let q: Vertex | null = p;
+        ++numMerges;
+        q = p;
         pSize = 0;
-        for (let i = 0; i < inSize; i++) {
+        for (let i = 0; i < inSize; ++i) {
           pSize++;
           q = q.nextZ;
           if (!q) break;
@@ -57,20 +61,20 @@ namespace LinkedList {
         qSize = inSize;
 
         while (pSize > 0 || (qSize > 0 && q)) {
-          if (pSize !== 0 && (qSize === 0 || !q || p.z <= q.z)) {
+          if (pSize !== 0 && (qSize === 0 || !q || p!.z <= q.z)) {
             e = p;
-            p = p.nextZ!;
+            p = p!.nextZ;
             pSize--;
           } else {
-            e = q!;
-            q = q!.nextZ!;
+            e = q;
+            q = q!.nextZ;
             qSize--;
           }
 
           if (tail) tail.nextZ = e;
           else head = e;
 
-          e.prevZ = tail;
+          e!.prevZ = tail;
           tail = e;
         }
 
@@ -79,10 +83,9 @@ namespace LinkedList {
 
       tail!.nextZ = null;
       inSize *= 2;
-      if (mergeCount === 0) break;
-    }
+    } while (numMerges > 1);
 
-    return head;
+    return head!;
   };
 
   export const leftmost = (start: Vertex): Vertex => {

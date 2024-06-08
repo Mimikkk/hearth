@@ -19,7 +19,7 @@ export class AudioListener extends Object3D {
   constructor() {
     super();
 
-    this.context = AudioContextManager.readContext();
+    this.context = AudioContextManager.get();
     this.gain = this.context.createGain();
     this.gain.connect(this.context.destination);
 

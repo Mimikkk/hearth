@@ -42,7 +42,6 @@ export { RFileLoader } from './loaders/RFileLoader.ts';
 export { Loader } from './loaders/Loader.ts';
 export { LoaderUtils } from './loaders/LoaderUtils.ts';
 export { Cache } from './loaders/Cache.ts';
-export { AudioLoader } from './loaders/AudioLoader.ts';
 export { SpotLight } from './lights/SpotLight.ts';
 export { PointLight } from './lights/PointLight.ts';
 export { RectAreaLight } from './lights/RectAreaLight.ts';

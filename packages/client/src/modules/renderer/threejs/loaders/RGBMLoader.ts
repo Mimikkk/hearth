@@ -10,7 +10,7 @@ import {
 } from '../../threejs/Three.js';
 import * as upng from 'upng-js';
 import { Configurable, ConfigurableConstructor, LoaderAsync } from './types.ts';
-import { FileLoader, FileResponseType } from '@modules/renderer/threejs/loaders/FileLoader.js';
+import { FileLoader, FileLoaderResponse } from '@modules/renderer/threejs/loaders/FileLoader.js';
 
 type Urls<T extends string> = [posx: T, negx: T, posy: T, negy: T, posz: T, negz: T];
 
@@ -101,7 +101,7 @@ export const RGBMLoader = class<TData extends CubeTexture, TUrl extends string =
 
   static configure(options?: Options): Configuration {
     return {
-      responseType: FileResponseType.Buffer,
+      responseType: FileLoaderResponse.Buffer,
       headers: options?.headers,
       credentials: options?.credentials ?? 'same-origin',
       type: options?.type ?? TextureDataType.HalfFloat,

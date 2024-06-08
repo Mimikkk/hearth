@@ -1,30 +1,44 @@
-import { RFileLoader, Loader, ShapePath } from '../../threejs/Three.js';
+import { ShapePath } from '../../threejs/Three.js';
+import { FileLoader, FileLoaderResponse } from '@modules/renderer/threejs/loaders/FileLoader.js';
+import { Configurable, ConfigurableConstructor, LoaderAsync } from '@modules/renderer/threejs/loaders/types.js';
 
-export class FontLoader<TUrl extends string = string> extends Loader {
-  responseType: 'json' = 'json';
+export const FontLoader = class<TData extends Font, TUrl extends string = string>
+  implements Configurable<Configuration>, LoaderAsync<TData, TUrl>
+{
+  configuration: Configuration;
 
-  constructor(options?: FontLoader.Options) {
-    super(options);
+  static configure(options?: Options): Configuration {
+    return {
+      responseType: FileLoaderResponse.Json,
+      headers: options?.headers,
+      credentials: options?.credentials ?? 'same-origin',
+    };
   }
 
-  load(url: TUrl, handlers?: Loader.Handlers<Font>) {
-    RFileLoader.load(url, this, {
-      onLoad: this.createOnLoad(handlers?.onLoad),
-      onProgress: handlers?.onProgress,
-      onError: handlers?.onError,
-    });
+  constructor(options?: Options) {
+    this.configuration = FontLoader.configure(options);
   }
 
-  parse(json: any) {
-    return new Font(json);
+  async loadAsync<T extends TData, E = unknown>(url: TUrl, handlers?: LoaderAsync.Handlers<E>): Promise<T> {
+    const buffer = await FileLoader.loadAsync(url, this.configuration, handlers);
+
+    return new Font(buffer) as T;
   }
 
-  createOnLoad(onLoad: undefined | Loader.OnLoad<Font>) {
-    return (json: any) => onLoad?.(this.parse(json));
+  static loadAsync<T extends Font, E = unknown>(url: string, options?: Options, handlers?: LoaderAsync.Handlers<E>) {
+    return new FontLoader(options).loadAsync<T, E>(url, handlers);
+  }
+} satisfies ConfigurableConstructor<Options, Configuration>;
+
+export namespace FontLoader {
+  export interface Options extends Omit<FileLoader.Options, 'responseType'> {}
+
+  export interface Configuration extends Omit<FileLoader.Configuration, 'responseType'> {
+    responseType: FileLoaderResponse.Json;
   }
 }
-
-//
+type Options = FontLoader.Options;
+type Configuration = FontLoader.Configuration;
 
 export class Font {
   type: 'Font' = 'Font';
@@ -131,8 +145,4 @@ function createPath(char: string, scale: number, offsetX: number, offsetY: numbe
   }
 
   return { offsetX: glyph.ha * scale, path: path };
-}
-
-export namespace FontLoader {
-  export interface Options extends Pick<Loader.Options, 'manager' | 'path' | 'requestHeader' | 'withCredentials'> {}
 }

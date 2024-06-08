@@ -2,7 +2,7 @@ import { DataTexture, MagnificationTextureFilter, MinificationTextureFilter, Wra
 
 import * as UTIF from 'utif';
 import { Configurable, ConfigurableConstructor, LoaderAsync } from '@modules/renderer/threejs/loaders/types.js';
-import { FileLoader, FileResponseType } from '@modules/renderer/threejs/loaders/FileLoader.js';
+import { FileLoader, FileLoaderResponse } from '@modules/renderer/threejs/loaders/FileLoader.js';
 
 interface ParseResult {
   data: Uint8Array;
@@ -55,7 +55,7 @@ export const TiffLoader = class<TUrl extends string = string>
       headers: options?.headers,
       credentials: options?.credentials ?? 'same-origin',
       maxRange: options?.maxRange ?? 16,
-      responseType: FileResponseType.Buffer,
+      responseType: FileLoaderResponse.Buffer,
     };
   }
 
@@ -84,7 +84,7 @@ export namespace TiffLoader {
   }
 
   export interface Configuration extends Omit<FileLoader.Configuration, 'responseType'> {
-    responseType: FileResponseType.Buffer;
+    responseType: FileLoaderResponse.Buffer;
     maxRange: number;
   }
 }

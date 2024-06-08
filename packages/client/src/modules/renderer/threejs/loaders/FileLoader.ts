@@ -38,18 +38,18 @@ const read = <E = unknown>(response: Response, handlers?: LoaderAsync.Handlers<E
 
 const parse = <RT extends ResponseType>(response: Response, responseType: RT): ResponseMap[RT] => {
   switch (responseType) {
-    case FileResponseType.Buffer:
+    case FileLoaderResponse.Buffer:
       return response.arrayBuffer();
-    case FileResponseType.Blob:
+    case FileLoaderResponse.Blob:
       return response.blob();
-    case FileResponseType.Json:
+    case FileLoaderResponse.Json:
       return response.json();
     default:
       return response.text();
   }
 };
 
-export const FileLoader = class<Url extends string, RT extends ResponseType = FileResponseType.Text>
+export const FileLoader = class<Url extends string, RT extends ResponseType = FileLoaderResponse.Text>
   implements Configurable<Configuration<RT>>, LoaderAsync<ResponseMap[RT], Url>, MultiLoaderAsync<ResponseMap[RT], Url>
 {
   static configure<RT extends ResponseType>(options?: Options<RT>): Configuration<RT> {
@@ -96,7 +96,7 @@ export const FileLoader = class<Url extends string, RT extends ResponseType = Fi
   }
 } satisfies ConfigurableConstructor<Options, Configuration>;
 
-export const enum FileResponseType {
+export const enum FileLoaderResponse {
   Buffer = 'arraybuffer',
   Blob = 'blob',
   Json = 'json',
@@ -104,7 +104,7 @@ export const enum FileResponseType {
 }
 
 export namespace FileLoader {
-  export type ResponseType = FileResponseType;
+  export type ResponseType = FileLoaderResponse;
 
   export type ResponseMap = {
     arraybuffer: ArrayBuffer;

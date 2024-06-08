@@ -8,7 +8,7 @@ import { InterleavedBufferAttribute } from '../core/InterleavedBufferAttribute.j
 import { InterleavedBuffer } from '../core/InterleavedBuffer.js';
 import { createTypedArray } from '../utils.js';
 import { Configurable, LoaderAsync } from '@modules/renderer/threejs/loaders/types.js';
-import { FileLoader, FileResponseType } from '@modules/renderer/threejs/loaders/FileLoader.js';
+import { FileLoader, FileLoaderResponse } from '@modules/renderer/threejs/loaders/FileLoader.js';
 
 interface JsonContent {
   interleavedBuffers: Record<string, any>;
@@ -179,7 +179,7 @@ export const BufferGeometryLoader = class<TUrl extends string = string>
     return {
       headers: options?.headers,
       credentials: options?.credentials ?? 'same-origin',
-      responseType: FileResponseType.Json,
+      responseType: FileLoaderResponse.Json,
     };
   }
 
@@ -209,7 +209,7 @@ export namespace BufferGeometryLoader {
   export type Options = Omit<FileLoader.Options, 'responseType'> & {};
 
   export type Configuration = Omit<FileLoader.Configuration, 'responseType'> & {
-    responseType: FileResponseType.Json;
+    responseType: FileLoaderResponse.Json;
   };
 }
 type Options = BufferGeometryLoader.Options;

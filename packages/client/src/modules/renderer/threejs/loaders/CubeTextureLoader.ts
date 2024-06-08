@@ -5,7 +5,16 @@ import { Configurable, ConfigurableConstructor, LoaderAsync } from '@modules/ren
 
 type Urls<T extends string> = [posx: T, negx: T, posy: T, negy: T, posz: T, negz: T];
 
-export const _CubeTextureLoader = class<TUrl extends string = string>
+const createCubeTexture = (images: HTMLImageElement[]): CubeTexture => {
+  //@ts-expect-error
+  const texture = new CubeTexture();
+  texture.colorSpace = ColorSpace.SRGB;
+  texture.images = images;
+  texture.needsUpdate = true;
+  return texture;
+};
+
+export const CubeTextureLoader = class<TUrl extends string = string>
   implements LoaderAsync<CubeTexture, Urls<TUrl>>, Configurable<Configuration>
 {
   configuration: Configuration;
@@ -17,26 +26,23 @@ export const _CubeTextureLoader = class<TUrl extends string = string>
   }
 
   constructor(options?: Options) {
-    this.configuration = _CubeTextureLoader.configure(options);
+    this.configuration = CubeTextureLoader.configure(options);
   }
 
   async loadAsync<T extends CubeTexture, E = unknown>(
     urls: Urls<TUrl>,
     handlers?: LoaderAsync.Handlers<E>,
   ): Promise<T> {
-    //@ts-expect-error
-    const texture = new CubeTexture() as T;
-    texture.colorSpace = ColorSpace.SRGB;
-    texture.images = await ImageLoader.loadAsyncMultiple(urls, handlers, this.configuration);
-    texture.needsUpdate = true;
-    return texture;
+    const images = await ImageLoader.loadAsyncMultiple(urls, this.configuration, handlers);
+
+    return createCubeTexture(images) as T;
   }
 } satisfies ConfigurableConstructor<Options, Configuration>;
 
-export namespace _CubeTextureLoader {
-  export type Options = ImageLoader.Options & {};
+export namespace CubeTextureLoader {
+  export interface Options extends ImageLoader.Options {}
 
-  export type Configuration = ImageLoader.Configuration & {};
+  export interface Configuration extends ImageLoader.Configuration {}
 }
-type Options = _CubeTextureLoader.Options;
-type Configuration = _CubeTextureLoader.Configuration;
+type Options = CubeTextureLoader.Options;
+type Configuration = CubeTextureLoader.Configuration;

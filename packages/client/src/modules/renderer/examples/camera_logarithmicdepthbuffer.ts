@@ -1,32 +1,38 @@
 import * as THREE from '../threejs/Three.js';
+import { PerspectiveCamera, Scene } from '../threejs/Three.js';
 
-import { FontLoader } from '../threejs/loaders/FontLoader.js';
+import { Font, FontLoader } from '../threejs/loaders/FontLoader.js';
 import { TextGeometry } from '../threejs/geometries/TextGeometry.js';
 
 import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
-
 import Stats from 'stats-js';
+import { ColorRepresentation } from '@modules/renderer/threejs/math/Color.js';
+import { clamp } from 'lodash-es';
 
-// 1 micrometer to 100 billion light years in one scene, with 1 unit = 1 meter?  preposterous!  and yet...
-const NEAR = 1e-6,
-  FAR = 1e27;
-let SCREEN_WIDTH = window.innerWidth;
-let SCREEN_HEIGHT = window.innerHeight;
-let screensplit = 0.25,
-  screensplit_right = 0;
+let screensplit = 0.25;
+let screensplit_right = 0;
+
 const mouse = [0.5, 0.5];
-let zoompos = -100,
-  minzoomspeed = 0.015;
-let zoomspeed = minzoomspeed;
+let position = -100;
+const zoom = {
+  minSpeed: 0.015,
+  speed: 0.015,
+};
 
-let container, border, stats;
-const objects = {};
+let container!: HTMLDivElement;
+let border!: HTMLDivElement;
+let stats!: Stats;
+let scene!: Scene;
+let normal!: HTMLDivElement;
+let logarithmic!: HTMLDivElement;
+
+let objects!: Views;
 
 // Generate a number of text labels, from 1µm in size up to 100,000,000 light years
 // Try to use some descriptive real-world examples of objects at each scale
 
-const labeldata = [
-  { size: 0.01, scale: 0.0001, label: 'microscopic (1µm)' }, // FIXME - triangulating text fails at this size, so we scale instead
+const descriptors = [
+  { size: 0.01, scale: 0.0001, label: 'microscopic (1µm)' },
   { size: 0.01, scale: 0.1, label: 'minuscule (1mm)' },
   { size: 0.01, scale: 1.0, label: 'tiny (1cm)' },
   { size: 1, scale: 1.0, label: 'child-sized (1m)' },
@@ -43,52 +49,95 @@ const labeldata = [
   { size: 1e19, scale: 1.0, label: 'mind boggling (1000 light years)' },
 ];
 
-init();
-
-function init() {
-  container = document.getElementById('container');
-
-  const loader = new FontLoader();
-  loader.load('fonts/helvetiker_regular.typeface.json', {
-    onLoad: function (font) {
-      const scene = initScene(font);
-
-      // Initialize two copies of the same scene, one with normal z-buffer and one with logarithmic z-buffer
-      objects.normal = initView(scene, 'normal', false);
-      objects.logzbuf = initView(scene, 'logzbuf', true);
-    },
-  });
-
-  stats = new Stats();
-  container.appendChild(stats.dom);
-
-  // Resize border allows the user to easily compare effects of logarithmic depth buffer over the whole scene
-  border = document.getElementById('renderer_border');
-  border.addEventListener('pointerdown', onBorderPointerDown);
-
-  window.addEventListener('mousemove', onMouseMove);
-  window.addEventListener('resize', onWindowResize);
-  window.addEventListener('wheel', onMouseWheel);
+interface Views {
+  normal: CameraView;
+  logarithmic: CameraView;
 }
 
-function initView(scene, name, logDepthBuf) {
-  const framecontainer = document.getElementById('container_' + name);
+interface CameraView {
+  container: HTMLDivElement;
+  renderer: WebGPURenderer;
+  camera: PerspectiveCamera;
+}
 
-  const camera = new THREE.PerspectiveCamera(50, (screensplit * SCREEN_WIDTH) / SCREEN_HEIGHT, NEAR, FAR);
-  scene.add(camera);
+const createViews = (normal: CameraView, logarithmic: CameraView): Views => ({ normal, logarithmic });
 
-  const renderer = new WebGPURenderer({ antialias: true, logarithmicDepthBuffer: logDepthBuf });
+const createCameraView = async (container: HTMLDivElement, type: 'logarithmic' | 'normal'): Promise<CameraView> => {
+  const { innerWidth: width, innerHeight: height } = window;
+  const Near = 1e-6;
+  const Far = 1e27;
+
+  const camera = new THREE.PerspectiveCamera(50, (screensplit * width) / height, Near, Far);
+
+  const renderer = new WebGPURenderer({ antialias: true, logarithmicDepthBuffer: type === 'logarithmic' });
   renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(SCREEN_WIDTH / 2, SCREEN_HEIGHT);
-  renderer.setAnimationLoop(render);
+  renderer.setSize(width / 2, height);
+
   renderer.domElement.style.position = 'relative';
-  renderer.domElement.id = 'renderer_' + name;
-  framecontainer.appendChild(renderer.domElement);
+  renderer.domElement.id = `renderer_${type}`;
+  container.appendChild(renderer.domElement);
+  await renderer.init();
 
-  return { container: framecontainer, renderer: renderer, scene: scene, camera: camera };
-}
+  return { container, renderer, camera } as const;
+};
 
-function initScene(font) {
+const updateRenderers = () => {
+  const { innerWidth: width, innerHeight: height } = window;
+
+  screensplit_right = 1 - screensplit;
+
+  objects.normal.renderer.setSize(screensplit * width, height);
+  objects.normal.camera.aspect = (screensplit * width) / height;
+  objects.normal.camera.updateProjectionMatrix();
+  objects.normal.camera.setViewOffset(width, height, 0, 0, width * screensplit, height);
+  objects.normal.container.style.width = screensplit * 100 + '%';
+
+  objects.logarithmic.renderer.setSize(screensplit_right * width, height);
+  objects.logarithmic.camera.aspect = (screensplit_right * width) / height;
+  objects.logarithmic.camera.updateProjectionMatrix();
+  objects.logarithmic.camera.setViewOffset(width, height, width * screensplit, 0, width * screensplit_right, height);
+  objects.logarithmic.container.style.width = screensplit_right * 100 + '%';
+
+  border.style.left = screensplit * 100 + '%';
+};
+
+const onResize = () => {
+  updateRenderers();
+};
+
+const onMove = (ev: MouseEvent) => {
+  mouse[0] = ev.clientX / window.innerWidth;
+  mouse[1] = ev.clientY / window.innerHeight;
+};
+
+const onWheel = (ev: WheelEvent) => {
+  const amount = ev.deltaY;
+  if (amount === 0) return;
+  const dir = amount / Math.abs(amount);
+  zoom.speed = dir / 10;
+  zoom.minSpeed = 0.001;
+};
+
+const createBorderEvents = (border: HTMLDivElement) => {
+  const onBorderPointerMove = (ev: PointerEvent) => {
+    screensplit = clamp(ev.clientX / window.innerWidth, 0.05, 0.95);
+  };
+
+  const onBorderPointerUp = () => {
+    window.removeEventListener('pointermove', onBorderPointerMove);
+    window.removeEventListener('pointerup', onBorderPointerUp);
+  };
+
+  function onUp() {
+    // activate draggable window resizing bar
+    window.addEventListener('pointermove', onBorderPointerMove);
+    window.addEventListener('pointerup', onBorderPointerUp);
+  }
+
+  border.addEventListener('pointerdown', onUp);
+};
+
+const createScene = (font: Font): Scene => {
   const scene = new THREE.Scene();
 
   scene.add(new THREE.AmbientLight(0x777777));
@@ -97,7 +146,12 @@ function initScene(font) {
   light.position.set(100, 100, 100);
   scene.add(light);
 
-  const materialargs = {
+  const materialargs: {
+    color: ColorRepresentation;
+    specular: ColorRepresentation;
+    shininess: number;
+    emissive: ColorRepresentation;
+  } = {
     color: 0xffffff,
     specular: 0x050505,
     shininess: 50,
@@ -106,141 +160,110 @@ function initScene(font) {
 
   const geometry = new THREE.SphereGeometry(0.5, 24, 12);
 
-  for (let i = 0; i < labeldata.length; i++) {
-    const scale = labeldata[i].scale || 1;
+  for (let i = 0; i < descriptors.length; i++) {
+    const scale = descriptors[i].scale || 1;
 
-    const labelgeo = new TextGeometry(labeldata[i].label, {
+    const labelgeo = new TextGeometry(descriptors[i].label, {
       font: font,
-      size: labeldata[i].size,
-      height: labeldata[i].size / 2,
+      size: descriptors[i].size,
+      depth: descriptors[i].size / 2,
     });
 
     labelgeo.computeBoundingSphere();
 
     // center text
-    labelgeo.translate(-labelgeo.boundingSphere.radius, 0, 0);
+    labelgeo.translate(-labelgeo.boundingSphere!.radius, 0, 0);
 
     materialargs.color = new THREE.Color().setHSL(Math.random(), 0.5, 0.5);
 
     const material = new THREE.MeshPhongMaterial(materialargs);
 
     const group = new THREE.Group();
-    group.position.z = -labeldata[i].size * scale;
+    group.position.z = -descriptors[i].size * scale;
     scene.add(group);
 
     const textmesh = new THREE.Mesh(labelgeo, material);
     textmesh.scale.set(scale, scale, scale);
-    textmesh.position.z = -labeldata[i].size * scale;
-    textmesh.position.y = (labeldata[i].size / 4) * scale;
+    textmesh.position.z = -descriptors[i].size * scale;
+    textmesh.position.y = (descriptors[i].size / 4) * scale;
     group.add(textmesh);
 
     const dotmesh = new THREE.Mesh(geometry, material);
-    dotmesh.position.y = (-labeldata[i].size / 4) * scale;
-    dotmesh.scale.multiplyScalar(labeldata[i].size * scale);
+    dotmesh.position.y = (-descriptors[i].size / 4) * scale;
+    dotmesh.scale.multiplyScalar(descriptors[i].size * scale);
     group.add(dotmesh);
   }
 
   return scene;
-}
+};
 
-function updateRendererSizes() {
-  // Recalculate size for both renderers when screen size or split location changes
-
-  SCREEN_WIDTH = window.innerWidth;
-  SCREEN_HEIGHT = window.innerHeight;
-
-  screensplit_right = 1 - screensplit;
-
-  objects.normal.renderer.setSize(screensplit * SCREEN_WIDTH, SCREEN_HEIGHT);
-  objects.normal.camera.aspect = (screensplit * SCREEN_WIDTH) / SCREEN_HEIGHT;
-  objects.normal.camera.updateProjectionMatrix();
-  objects.normal.camera.setViewOffset(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, SCREEN_WIDTH * screensplit, SCREEN_HEIGHT);
-  objects.normal.container.style.width = screensplit * 100 + '%';
-
-  objects.logzbuf.renderer.setSize(screensplit_right * SCREEN_WIDTH, SCREEN_HEIGHT);
-  objects.logzbuf.camera.aspect = (screensplit_right * SCREEN_WIDTH) / SCREEN_HEIGHT;
-  objects.logzbuf.camera.updateProjectionMatrix();
-  objects.logzbuf.camera.setViewOffset(
-    SCREEN_WIDTH,
-    SCREEN_HEIGHT,
-    SCREEN_WIDTH * screensplit,
-    0,
-    SCREEN_WIDTH * screensplit_right,
-    SCREEN_HEIGHT,
-  );
-  objects.logzbuf.container.style.width = screensplit_right * 100 + '%';
-
-  border.style.left = screensplit * 100 + '%';
-}
-
-function render() {
-  // Put some limits on zooming
-  const minzoom = labeldata[0].size * labeldata[0].scale * 1;
-  const maxzoom = labeldata[labeldata.length - 1].size * labeldata[labeldata.length - 1].scale * 100;
-  let damping = Math.abs(zoomspeed) > minzoomspeed ? 0.95 : 1.0;
+const recalculateZoom = () => {
+  const min = descriptors[0].size ** 2;
+  const max = descriptors[descriptors.length - 1].size ** 2 * 100;
 
   // Zoom out faster the further out you go
-  const zoom = THREE.MathUtils.clamp(Math.pow(Math.E, zoompos), minzoom, maxzoom);
-  zoompos = Math.log(zoom);
+  const value = clamp(Math.pow(Math.E, position), min, max);
+  position = Math.log(value);
 
   // Slow down quickly at the zoom limits
-  if ((zoom == minzoom && zoomspeed < 0) || (zoom == maxzoom && zoomspeed > 0)) {
-    damping = 0.85;
-  }
+  let damp = Math.abs(zoom.speed) > zoom.minSpeed ? 0.95 : 1.0;
+  if ((value == min && zoom.speed < 0) || (value == max && zoom.speed > 0)) damp = 0.85;
 
-  zoompos += zoomspeed;
-  zoomspeed *= damping;
+  position += zoom.speed;
+  zoom.speed *= damp;
+
+  return value;
+};
+
+const animate = () => {
+  requestAnimationFrame(animate);
+  const zoom = recalculateZoom();
 
   objects.normal.camera.position.x = Math.sin(0.5 * Math.PI * (mouse[0] - 0.5)) * zoom;
   objects.normal.camera.position.y = Math.sin(0.25 * Math.PI * (mouse[1] - 0.5)) * zoom;
   objects.normal.camera.position.z = Math.cos(0.5 * Math.PI * (mouse[0] - 0.5)) * zoom;
-  objects.normal.camera.lookAt(objects.normal.scene.position);
+  objects.normal.camera.lookAt(scene.position);
 
   // Clone camera settings across both scenes
-  objects.logzbuf.camera.position.copy(objects.normal.camera.position);
-  objects.logzbuf.camera.quaternion.copy(objects.normal.camera.quaternion);
+  objects.logarithmic.camera.position.copy(objects.normal.camera.position);
+  objects.logarithmic.camera.quaternion.copy(objects.normal.camera.quaternion);
 
   // Update renderer sizes if the split has changed
   if (screensplit_right != 1 - screensplit) {
-    updateRendererSizes();
+    updateRenderers();
   }
 
-  objects.normal.renderer.render(objects.normal.scene, objects.normal.camera);
-  objects.logzbuf.renderer.render(objects.logzbuf.scene, objects.logzbuf.camera);
+  objects.normal.renderer.render(scene, objects.normal.camera);
+  objects.logarithmic.renderer.render(scene, objects.logarithmic.camera);
 
   stats.update();
-}
+};
 
-function onWindowResize() {
-  updateRendererSizes();
-}
+const init = async () => {
+  container = document.getElementById('container') as HTMLDivElement;
+  normal = document.getElementById('normal') as HTMLDivElement;
+  logarithmic = document.getElementById('logarithmic') as HTMLDivElement;
+  border = document.getElementById('border') as HTMLDivElement;
 
-function onBorderPointerDown() {
-  // activate draggable window resizing bar
-  window.addEventListener('pointermove', onBorderPointerMove);
-  window.addEventListener('pointerup', onBorderPointerUp);
-}
+  const [font, normalView, logarithmicView] = await Promise.all([
+    FontLoader.loadAsync('fonts/helvetiker_regular.typeface.json'),
+    createCameraView(normal, 'normal'),
+    createCameraView(logarithmic, 'logarithmic'),
+  ]);
+  scene = createScene(font);
 
-function onBorderPointerMove(ev) {
-  screensplit = Math.max(0, Math.min(1, ev.clientX / window.innerWidth));
-}
+  objects = createViews(normalView, logarithmicView);
 
-function onBorderPointerUp() {
-  window.removeEventListener('pointermove', onBorderPointerMove);
-  window.removeEventListener('pointerup', onBorderPointerUp);
-}
+  stats = new Stats();
 
-function onMouseMove(ev) {
-  mouse[0] = ev.clientX / window.innerWidth;
-  mouse[1] = ev.clientY / window.innerHeight;
-}
+  container.appendChild(stats.dom);
 
-function onMouseWheel(ev) {
-  const amount = ev.deltaY;
-  if (amount === 0) return;
-  const dir = amount / Math.abs(amount);
-  zoomspeed = dir / 10;
+  createBorderEvents(border);
+  window.addEventListener('mousemove', onMove);
+  window.addEventListener('resize', onResize);
+  window.addEventListener('wheel', onWheel);
 
-  // Slow down default zoom speed after user starts zooming, to give them more control
-  minzoomspeed = 0.001;
-}
+  animate();
+};
+
+await init();

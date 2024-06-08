@@ -13,7 +13,7 @@ import type {
   LoaderAsync,
   MultiLoaderAsync,
 } from '@modules/renderer/threejs/loaders/types.js';
-import { FileLoader, FileResponseType } from '@modules/renderer/threejs/loaders/FileLoader.js';
+import { FileLoader, FileLoaderResponse } from '@modules/renderer/threejs/loaders/FileLoader.js';
 
 type SupportedType = TextureDataType.Float | TextureDataType.HalfFloat | TextureDataType.UnsignedByte;
 type SupportedMap = {
@@ -131,7 +131,7 @@ export const IESLoader = class<TData extends DataTexture, TUrl extends string>
       headers: options?.headers,
       credentials: options?.credentials ?? 'same-origin',
       type: options?.type ?? TextureDataType.HalfFloat,
-      responseType: FileResponseType.Text,
+      responseType: FileLoaderResponse.Text,
     };
   }
 
@@ -170,7 +170,7 @@ export const IESLoader = class<TData extends DataTexture, TUrl extends string>
 
 export namespace IESLoader {
   export interface Configuration extends Omit<FileLoader.Configuration, 'responseType'> {
-    responseType: FileResponseType.Text;
+    responseType: FileLoaderResponse.Text;
     type: SupportedType;
   }
 

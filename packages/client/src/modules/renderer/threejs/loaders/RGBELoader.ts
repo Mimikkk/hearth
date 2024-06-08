@@ -7,7 +7,7 @@ import {
 } from '../constants.ts';
 import { DataUtils } from '@modules/renderer/threejs/extras/DataUtils.js';
 import { DataTexture } from '@modules/renderer/threejs/textures/DataTexture.js';
-import { FileLoader, FileResponseType } from '@modules/renderer/threejs/loaders/FileLoader.js';
+import { FileLoader, FileLoaderResponse } from '@modules/renderer/threejs/loaders/FileLoader.js';
 import { NumberArray } from '@modules/renderer/threejs/math/MathUtils.js';
 import { Configurable, ConfigurableConstructor, LoaderAsync } from '@modules/renderer/threejs/loaders/types.js';
 
@@ -360,7 +360,7 @@ export const RGBELoader = class<TData extends DataTexture, TUrl extends string =
       type: options?.type ?? TextureDataType.HalfFloat,
       headers: options?.headers,
       credentials: options?.credentials ?? 'same-origin',
-      responseType: FileResponseType.Buffer,
+      responseType: FileLoaderResponse.Buffer,
     };
   }
 
@@ -391,7 +391,7 @@ export namespace RGBELoader {
   }
 
   export interface Configuration extends Omit<FileLoader.Configuration, 'responseType'> {
-    responseType: FileResponseType.Buffer;
+    responseType: FileLoaderResponse.Buffer;
     type: SupportedType;
   }
 }

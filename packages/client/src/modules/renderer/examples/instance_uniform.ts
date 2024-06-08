@@ -15,7 +15,7 @@ import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.
 import { TeapotGeometry } from '../threejs/geometries/TeapotGeometry.js';
 
 import Stats from 'stats-js';
-import { _CubeTextureLoader } from '@modules/renderer/threejs/loaders/CubeTextureLoader.js';
+import { CubeTextureLoader } from '@modules/renderer/threejs/loaders/CubeTextureLoader.js';
 
 class InstanceUniformNode extends Node {
   constructor() {
@@ -65,7 +65,7 @@ async function init() {
 
   // CubeMap
 
-  const cTexture = await new _CubeTextureLoader().loadAsync([
+  const cTexture = await new CubeTextureLoader().loadAsync([
     'textures/cube/SwedishRoyalCastle/px.jpg',
     'textures/cube/SwedishRoyalCastle/nx.jpg',
     'textures/cube/SwedishRoyalCastle/py.jpg',

@@ -20,7 +20,7 @@ import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.
 import { GLTFLoader } from '../threejs/loaders/GLTFLoader.js';
 
 import { GUI } from 'lil-gui';
-import { _CubeTextureLoader } from '@modules/renderer/threejs/loaders/CubeTextureLoader.js';
+import { CubeTextureLoader } from '@modules/renderer/threejs/loaders/CubeTextureLoader.js';
 
 let camera, scene, renderer;
 
@@ -51,7 +51,7 @@ async function init() {
   cube1Texture.generateMipmaps = true;
   cube1Texture.minFilter = THREE.MinificationTextureFilter.LinearMipmapLinear;
 
-  const cube2Texture = await new _CubeTextureLoader().loadAsync([
+  const cube2Texture = await new CubeTextureLoader().loadAsync([
     'textures/cube/Park2/posx.jpg',
     'textures/cube/Park2/negx.jpg',
     'textures/cube/Park2/posy.jpg',

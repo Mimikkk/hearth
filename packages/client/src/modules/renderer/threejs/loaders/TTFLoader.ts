@@ -1,5 +1,5 @@
 import * as opentype from 'opentype.js';
-import { FileLoader, FileResponseType } from '@modules/renderer/threejs/loaders/FileLoader.js';
+import { FileLoader, FileLoaderResponse } from '@modules/renderer/threejs/loaders/FileLoader.js';
 import { Configurable, ConfigurableConstructor, LoaderAsync } from '@modules/renderer/threejs/loaders/types.js';
 
 const parse = (arraybuffer: ArrayBuffer, { reversed }: Configuration) => {
@@ -135,7 +135,7 @@ export const TTFLoader = class<TData, TUrl extends string = string>
     return {
       headers: options?.headers,
       credentials: options?.credentials ?? 'same-origin',
-      responseType: FileResponseType.Buffer,
+      responseType: FileLoaderResponse.Buffer,
       reversed: options?.reversed ?? false,
     };
   }
@@ -157,7 +157,7 @@ export namespace TTFLoader {
   }
 
   export interface Configuration extends Omit<FileLoader.Configuration, 'responseType'> {
-    responseType: FileResponseType.Buffer;
+    responseType: FileLoaderResponse.Buffer;
     reversed: boolean;
   }
 }

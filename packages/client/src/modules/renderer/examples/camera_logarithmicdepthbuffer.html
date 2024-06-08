@@ -8,7 +8,8 @@
       body {
           touch-action: none;
       }
-      .renderer_label {
+
+      .label {
           bottom: 1em;
           color: white;
           display: block;
@@ -16,25 +17,26 @@
           text-align: center;
           width: 100%;
           z-index: 10;
+          overflow: hidden;
       }
 
       #container {
           display: flex;
       }
 
-      #container_normal {
+      #normal {
           display: inline-block;
           position: relative;
           width: 50%;
       }
 
-      #container_logzbuf {
+      #logarithmic {
           display: inline-block;
           position: relative;
           width: 50%;
       }
 
-      #renderer_border {
+      #border {
           background: #ccc;
           border: 1px inset #ccc;
           bottom: 0;
@@ -50,11 +52,11 @@
 </head>
 <body>
 <div id="container">
-  <div id="container_normal"><h2 class="renderer_label">normal z-buffer</h2></div>
-  <div id="container_logzbuf"><h2 class="renderer_label">logarithmic z-buffer</h2></div>
-  <div id="renderer_border"></div>
+  <div id="normal"><label class="label">normal z-buffer</label></div>
+  <div id="logarithmic"><label class="label">logarithmic z-buffer</label></div>
+  <div id="border"></div>
 </div>
-<div id="info">WebGPU - cameras - logarithmic depth buffer<br /> mousewheel to dolly out</div>
+<div id="info">WebGPU - cameras - logarithmic depth buffer</div>
 <script src="./camera_logarithmicdepthbuffer.ts" type="module"></script>
 </body>
 </html>

@@ -7,7 +7,7 @@ import {
   TextureDataType,
 } from '../../threejs/Three.js';
 import { parse, ParseResult } from './RGBELoader.js';
-import { FileLoader, FileResponseType } from '@modules/renderer/threejs/loaders/FileLoader.js';
+import { FileLoader, FileLoaderResponse } from '@modules/renderer/threejs/loaders/FileLoader.js';
 import type { Configurable, ConfigurableConstructor, LoaderAsync } from './types.js';
 
 export type CubeUrls<T extends string> = [posx: T, negx: T, posy: T, negy: T, posz: T, negz: T];
@@ -45,7 +45,7 @@ export const HDRCubeTextureLoader = class<TUrl extends CubeUrls<string>>
       type: options?.type ?? TextureDataType.HalfFloat,
       credentials: options?.credentials ?? 'same-origin',
       headers: options?.headers,
-      responseType: FileResponseType.Buffer,
+      responseType: FileLoaderResponse.Buffer,
     };
   }
 
@@ -77,7 +77,7 @@ export const HDRCubeTextureLoader = class<TUrl extends CubeUrls<string>>
 export namespace HDRCubeTextureLoader {
   export interface Configuration extends Omit<FileLoader.Configuration, 'responseType'> {
     type: SupportedType;
-    responseType: FileResponseType.Buffer;
+    responseType: FileLoaderResponse.Buffer;
   }
 
   export type Options = Partial<Omit<Configuration, 'responseType'>>;

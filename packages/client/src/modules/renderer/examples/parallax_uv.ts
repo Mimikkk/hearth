@@ -5,7 +5,7 @@ import { MeshStandardNodeMaterial, parallaxUV, texture, uv } from '../threejs/no
 import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 
 import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
-import { _CubeTextureLoader } from '@modules/renderer/threejs/loaders/CubeTextureLoader.js';
+import { CubeTextureLoader } from '@modules/renderer/threejs/loaders/CubeTextureLoader.js';
 
 let camera, scene, renderer;
 
@@ -25,7 +25,7 @@ async function init() {
 
   // environment
 
-  const environmentTexture = new _CubeTextureLoader().loadAsync([
+  const environmentTexture = new CubeTextureLoader().loadAsync([
     'textures/cube/Park2/posx.jpg',
     'textures/cube/Park2/negx.jpg',
     'textures/cube/Park2/posy.jpg',

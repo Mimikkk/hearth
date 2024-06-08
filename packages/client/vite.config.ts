@@ -4,6 +4,10 @@ import svgr from 'vite-plugin-svgr';
 import path from 'path';
 import arraybuffer from 'vite-plugin-arraybuffer';
 
+const resolveAt = (relativePath: string) => path.resolve(__dirname, relativePath);
+const createAliases = (...aliases: [alias: string, path: string][]) =>
+  Object.fromEntries(aliases.map(([alias, path]) => [alias, resolveAt(path)]));
+
 export default defineConfig({
   base: './',
   plugins: [solid(), svgr(), arraybuffer()],
@@ -15,14 +19,14 @@ export default defineConfig({
     outDir: '../build',
   },
   resolve: {
-    alias: {
-      '@': path.resolve(__dirname, './src'),
-      '@shared': path.resolve(__dirname, './src/shared'),
-      '@modules': path.resolve(__dirname, './src/modules'),
-      '@logic': path.resolve(__dirname, './src/shared/logic'),
-      '@components': path.resolve(__dirname, './src/shared/components'),
-      '@utils': path.resolve(__dirname, './src/shared/utils'),
-    },
+    alias: createAliases(
+      ['@', 'src'],
+      ['@shared', 'src/shared'],
+      ['@modules', 'src/modules'],
+      ['@logic', 'src/shared/logic'],
+      ['@components', 'src/shared/components'],
+      ['@utils', 'src/shared/utils'],
+    ),
   },
   css: {
     modules: {
