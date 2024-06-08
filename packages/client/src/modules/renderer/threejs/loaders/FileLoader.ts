@@ -103,6 +103,10 @@ export const enum FileLoaderResponse {
   Text = 'text',
 }
 
+export type FileLoader<Url extends string, RT extends ResponseType = FileLoaderResponse.Text> = (typeof FileLoader<
+  Url,
+  RT
+>)['prototype'];
 export namespace FileLoader {
   export type ResponseType = FileLoaderResponse;
 

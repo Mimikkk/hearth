@@ -9,10 +9,8 @@ import {
   ColorSpace,
   DirectionalLight,
   DrawMode,
-  RFileLoader,
   Filter,
   Group,
-  ImageBitmapLoader,
   InstancedBufferAttribute,
   InstancedMesh,
   InterleavedBuffer,
@@ -54,6 +52,8 @@ import {
   Wrapping,
 } from '../../threejs/Three.js';
 import { toTrianglesDrawMode } from '../utils/BufferGeometryUtils.js';
+import { _ImageBitmapLoader } from '@modules/renderer/threejs/loaders/ImageBitmapLoader.js';
+import { FileLoader, FileLoaderResponse } from '@modules/renderer/threejs/loaders/FileLoader.js';
 
 export class GLTFLoader<TUrl extends string = string> extends Loader {
   constructor(manager) {
@@ -130,7 +130,7 @@ export class GLTFLoader<TUrl extends string = string> extends Loader {
     });
   }
 
-  load(url: TUrl, handlers?: Loader.Handlers<any>) {
+  async load(url: TUrl, handlers?: Loader.Handlers<any>) {
     const { onLoad, onProgress, onError } = handlers ?? {};
     const scope = this;
 
@@ -139,56 +139,17 @@ export class GLTFLoader<TUrl extends string = string> extends Loader {
     if (this.resourcePath !== '') {
       resourcePath = this.resourcePath;
     } else if (this.path !== '') {
-      // If a base path is set, resources will be relative paths from that plus the relative path of the gltf file
-      // Example  path = 'https://my-cnd-server.com/', url = 'assets/models/model.gltf'
-      // resourcePath = 'https://my-cnd-server.com/assets/models/'
-      // referenced resource 'model.bin' will be loaded from 'https://my-cnd-server.com/assets/models/model.bin'
-      // referenced resource '../textures/texture.png' will be loaded from 'https://my-cnd-server.com/assets/textures/texture.png'
       const relativeUrl = LoaderUtils.extractUrlBase(url);
       resourcePath = LoaderUtils.resolveUrl(relativeUrl, this.path);
     } else {
       resourcePath = LoaderUtils.extractUrlBase(url);
     }
 
-    // Tells the LoadingManager to track an extra item, which resolves after
-    // the model is fully loaded. This means the count of items loaded will
-    // be incorrect, but ensures manager.onLoad() does not fire early.
-    this.manager.itemStart(url);
-
-    const _onError = function (e) {
-      onError(e);
-      scope.manager.itemError(url);
-      scope.manager.itemEnd(url);
-    };
-
-    const loader = new RFileLoader({
-      manager: this.manager,
-      path: this.path,
-      responseType: 'arraybuffer',
-      headers: this.requestHeader,
-      withCredentials: this.withCredentials,
+    const buffer = await FileLoader.loadAsync(url, {
+      responseType: FileLoaderResponse.Buffer,
     });
 
-    loader.load(url, {
-      onLoad: function (data) {
-        try {
-          scope.parse(
-            data,
-            resourcePath,
-            function (gltf) {
-              onLoad(gltf);
-
-              scope.manager.itemEnd(url);
-            },
-            _onError,
-          );
-        } catch (e) {
-          _onError(e);
-        }
-      },
-      onProgress,
-      onError: _onError,
-    });
+    return this.parse(buffer, resourcePath);
   }
 
   setDRACOLoader(dracoLoader) {
@@ -226,7 +187,7 @@ export class GLTFLoader<TUrl extends string = string> extends Loader {
     return this;
   }
 
-  parse(data, path, onLoad, onError) {
+  parse(data, path) {
     let json;
     const extensions = {};
     const plugins = {};
@@ -251,11 +212,6 @@ export class GLTFLoader<TUrl extends string = string> extends Loader {
       }
     } else {
       json = data;
-    }
-
-    if (json.asset === undefined || json.asset.version[0] < 2) {
-      if (onError) onError(new Error('THREE.GLTFLoader: Unsupported asset. glTF versions >=2.0 are supported.'));
-      return;
     }
 
     const parser = new GLTFParser(json, {
@@ -315,7 +271,7 @@ export class GLTFLoader<TUrl extends string = string> extends Loader {
 
     parser.setExtensions(extensions);
     parser.setPlugins(plugins);
-    parser.parse(onLoad, onError);
+    return parser.parse();
   }
 
   parseAsync(data, path) {
@@ -1948,6 +1904,9 @@ const _identityMatrix = new Matrix4();
 /* GLTF PARSER */
 
 class GLTFParser {
+  textureLoader: _ImageBitmapLoader;
+  fileLoader: FileLoader<string, FileLoaderResponse.Buffer>;
+
   constructor(json = {}, options = {}) {
     this.json = json;
     this.extensions = {};
@@ -1972,16 +1931,10 @@ class GLTFParser {
     this.textureCache = {};
     this.nodeNamesUsed = {};
 
-    this.textureLoader = new ImageBitmapLoader({
-      manager: this.options.manager,
-      crossOrigin: this.options.crossOrigin,
-      requestHeader: this.options.requestHeader,
-    });
+    this.textureLoader = new _ImageBitmapLoader();
 
-    this.fileLoader = new RFileLoader({
-      manager: this.options.manager,
-      responseType: 'arraybuffer',
-      withCredentials: this.options.crossOrigin === 'use-credentials',
+    this.fileLoader = new FileLoader({
+      responseType: FileLoaderResponse.Buffer,
     });
   }
 
@@ -1993,7 +1946,7 @@ class GLTFParser {
     this.plugins = plugins;
   }
 
-  parse(onLoad, onError) {
+  parse() {
     const parser = this;
     const json = this.json;
     const extensions = this.extensions;
@@ -2007,7 +1960,7 @@ class GLTFParser {
       return ext._markDefs && ext._markDefs();
     });
 
-    Promise.all(
+    return Promise.all(
       this._invokeAll(function (ext) {
         return ext.beforeRoot && ext.beforeRoot();
       }),
@@ -2043,10 +1996,9 @@ class GLTFParser {
             scene.updateMatrixWorld();
           }
 
-          onLoad(result);
+          return result;
         });
-      })
-      .catch(onError);
+      });
   }
 
   /**
@@ -2277,7 +2229,7 @@ class GLTFParser {
    * @param {number} bufferIndex
    * @return {Promise<ArrayBuffer>}
    */
-  loadBuffer(bufferIndex) {
+  loadBuffer(bufferIndex: number): Promise<ArrayBuffer> {
     const bufferDef = this.json.buffers[bufferIndex];
     const loader = this.fileLoader;
 
@@ -2290,17 +2242,7 @@ class GLTFParser {
       return Promise.resolve(this.extensions[EXTENSIONS.KHR_BINARY_GLTF].body);
     }
 
-    const options = this.options;
-
-    return new Promise(function (resolve, reject) {
-      loader.load(LoaderUtils.resolveUrl(bufferDef.uri, options.path), {
-        onLoad: resolve,
-        onProgress: undefined,
-        onError: function () {
-          reject(new Error('THREE.GLTFLoader: Failed to load buffer "' + bufferDef.uri + '".'));
-        },
-      });
-    });
+    return loader.loadAsync(LoaderUtils.resolveUrl(bufferDef.uri, this.options.path));
   }
 
   /**
@@ -2446,29 +2388,13 @@ class GLTFParser {
     });
   }
 
-  /**
-   * Specification: https://github.com/KhronosGroup/glTF/tree/master/specification/2.0#textures
-   * @param {number} textureIndex
-   * @return {Promise<THREE.Texture|null>}
-   */
-  loadTexture(textureIndex) {
-    const json = this.json;
-    const options = this.options;
-    const textureDef = json.textures[textureIndex];
-    const sourceIndex = textureDef.source;
-    const sourceDef = json.images[sourceIndex];
+  loadTexture(textureIndex: number): Promise<Texture> {
+    const sourceIndex = this.json.textures[textureIndex].source;
 
-    let loader = this.textureLoader;
-
-    if (sourceDef.uri) {
-      const handler = options.manager.getHandler(sourceDef.uri);
-      if (handler !== null) loader = handler;
-    }
-
-    return this.loadTextureImage(textureIndex, sourceIndex, loader);
+    return this.loadTextureImage(textureIndex, sourceIndex, this.textureLoader);
   }
 
-  loadTextureImage(textureIndex, sourceIndex, loader) {
+  async loadTextureImage(textureIndex, sourceIndex, loader: _ImageBitmapLoader): Promise<Texture> {
     const parser = this;
     const json = this.json;
 
@@ -2482,42 +2408,38 @@ class GLTFParser {
       return this.textureCache[cacheKey];
     }
 
-    const promise = this.loadImageSource(sourceIndex, loader)
-      .then(function (texture) {
-        texture.flipY = false;
+    const promise = this.loadImageSource(sourceIndex, loader).then(function (texture) {
+      texture.flipY = false;
 
-        texture.name = textureDef.name || sourceDef.name || '';
+      texture.name = textureDef.name || sourceDef.name || '';
 
-        if (
-          texture.name === '' &&
-          typeof sourceDef.uri === 'string' &&
-          sourceDef.uri.startsWith('data:image/') === false
-        ) {
-          texture.name = sourceDef.uri;
-        }
+      if (
+        texture.name === '' &&
+        typeof sourceDef.uri === 'string' &&
+        sourceDef.uri.startsWith('data:image/') === false
+      ) {
+        texture.name = sourceDef.uri;
+      }
 
-        const samplers = json.samplers || {};
-        const sampler = samplers[textureDef.sampler] || {};
+      const samplers = json.samplers || {};
+      const sampler = samplers[textureDef.sampler] || {};
 
-        texture.magFilter = WEBGL_FILTERS[sampler.magFilter] || Filter.Linear;
-        texture.minFilter = WEBGL_FILTERS[sampler.minFilter] || Filter.LinearMipmapLinear;
-        texture.wrapS = WEBGL_WRAPPINGS[sampler.wrapS] || Wrapping.Repeat;
-        texture.wrapT = WEBGL_WRAPPINGS[sampler.wrapT] || Wrapping.Repeat;
+      texture.magFilter = WEBGL_FILTERS[sampler.magFilter] || Filter.Linear;
+      texture.minFilter = WEBGL_FILTERS[sampler.minFilter] || Filter.LinearMipmapLinear;
+      texture.wrapS = WEBGL_WRAPPINGS[sampler.wrapS] || Wrapping.Repeat;
+      texture.wrapT = WEBGL_WRAPPINGS[sampler.wrapT] || Wrapping.Repeat;
 
-        parser.associations.set(texture, { textures: textureIndex });
+      parser.associations.set(texture, { textures: textureIndex });
 
-        return texture;
-      })
-      .catch(function () {
-        return null;
-      });
+      return texture;
+    });
 
     this.textureCache[cacheKey] = promise;
 
     return promise;
   }
 
-  loadImageSource(sourceIndex, loader) {
+  async loadImageSource(sourceIndex: number, loader: _ImageBitmapLoader): Promise<Texture> {
     const parser = this;
     const json = this.json;
     const options = this.options;
@@ -2526,64 +2448,38 @@ class GLTFParser {
       return this.sourceCache[sourceIndex].then(texture => texture.clone());
     }
 
-    const sourceDef = json.images[sourceIndex];
+    const reference = json.images[sourceIndex];
 
-    const URL = self.URL || self.webkitURL;
+    let sourceUrl = reference.uri || '';
 
-    let sourceURI = sourceDef.uri || '';
-    let isObjectURL = false;
-
-    if (sourceDef.bufferView !== undefined) {
+    let isObjectUrl = false;
+    if (reference.bufferView !== undefined) {
       // Load binary image data from bufferView, if provided.
+      sourceUrl = parser.getDependency('bufferView', reference.bufferView).then(bufferView => {
+        isObjectUrl = true;
 
-      sourceURI = parser.getDependency('bufferView', sourceDef.bufferView).then(function (bufferView) {
-        isObjectURL = true;
-        const blob = new Blob([bufferView], { type: sourceDef.mimeType });
-        sourceURI = URL.createObjectURL(blob);
-        return sourceURI;
+        sourceUrl = URL.createObjectURL(new Blob([bufferView], { type: reference.mimeType }));
+
+        return sourceUrl;
       });
-    } else if (sourceDef.uri === undefined) {
+    } else if (reference.uri === undefined) {
       throw new Error('THREE.GLTFLoader: Image ' + sourceIndex + ' is missing URI and bufferView');
     }
 
-    const promise = Promise.resolve(sourceURI)
-      .then(function (sourceURI) {
-        return new Promise(function (resolve, reject) {
-          let onLoad = resolve;
+    const promise = Promise.resolve(sourceUrl).then(async url => {
+      const bitmap = await loader.loadAsync(LoaderUtils.resolveUrl(url, options.path));
+      if (isObjectUrl) URL.revokeObjectURL(url);
 
-          if (loader.isImageBitmapLoader === true) {
-            onLoad = function (imageBitmap) {
-              const texture = new Texture(imageBitmap);
-              texture.needsUpdate = true;
+      const texture = new Texture(bitmap);
+      texture.needsUpdate = true;
 
-              resolve(texture);
-            };
-          }
+      texture.userData.mimeType = reference.mimeType || getImageURIMimeType(reference.uri);
 
-          loader.load(LoaderUtils.resolveUrl(sourceURI, options.path), {
-            onLoad: onLoad,
-            onProgress: undefined,
-            onError: reject,
-          });
-        });
-      })
-      .then(function (texture) {
-        // Clean up resources and configure Texture.
-
-        if (isObjectURL === true) {
-          URL.revokeObjectURL(sourceURI);
-        }
-
-        texture.userData.mimeType = sourceDef.mimeType || getImageURIMimeType(sourceDef.uri);
-
-        return texture;
-      })
-      .catch(function (error) {
-        console.error("THREE.GLTFLoader: Couldn't load texture", sourceURI);
-        throw error;
-      });
+      return texture;
+    });
 
     this.sourceCache[sourceIndex] = promise;
+
     return promise;
   }
 
