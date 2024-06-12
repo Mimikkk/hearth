@@ -22,7 +22,6 @@ import {
   LineBasicMaterial,
   LineLoop,
   LineSegments,
-  Loader,
   LoaderUtils,
   Material,
   MathUtils,
@@ -53,12 +52,12 @@ import {
   Wrapping,
 } from '../../threejs/Three.js';
 import { toTrianglesDrawMode } from '../utils/BufferGeometryUtils.js';
-import { _ImageBitmapLoader } from '@modules/renderer/threejs/loaders/ImageBitmapLoader.js';
+import { ImageBitmapLoader } from '@modules/renderer/threejs/loaders/ImageBitmapLoader.js';
 import { FileLoader, FileLoaderResponse } from '@modules/renderer/threejs/loaders/FileLoader.js';
 import { KTX2Loader } from '@modules/renderer/threejs/loaders/KTX2Loader.js';
 import { MeshoptDecoder } from 'meshoptimizer';
 import { GLTF, GLTFLoaderPlugin } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import { LoaderAsync } from '@modules/renderer/threejs/loaders/types.js';
+import { Configurable, ConfigurableConstructor, LoaderAsync } from '@modules/renderer/threejs/loaders/types.js';
 
 type DracoLoader = any;
 type MeshoptDecoder = typeof MeshoptDecoder;
@@ -97,14 +96,17 @@ export interface GLTF {
 
 export type PluginFn = (parser: GLTFParser) => GLTFLoaderPlugin;
 
-export class GLTFLoader<TUrl extends string = string> extends Loader {
+export const GLTFLoader = class<TData extends GLTF, TUrl extends string = string>
+  implements LoaderAsync<TData, TUrl>, Configurable<Configuration>
+{
   dracoLoader?: DracoLoader;
   ktx2Loader?: KTX2Loader;
   meshoptDecoder?: MeshoptDecoder;
   plugins: Set<PluginFn>;
+  configuration: Configuration;
 
-  constructor() {
-    super();
+  constructor(options?: Options) {
+    this.configuration = GLTFLoader.configure(options);
 
     this.plugins = new Set([
       parser => new GLTFMaterialsClearcoatExtension(parser),
@@ -126,10 +128,14 @@ export class GLTFLoader<TUrl extends string = string> extends Loader {
     ]) as Set<PluginFn>;
   }
 
-  async loadAsync<T extends GLTF, E = unknown>(url: TUrl, handlers?: LoaderAsync.Handlers<E>): Promise<T> {
+  static configure(options?: Options): Configuration {
+    return {};
+  }
+
+  async loadAsync<T extends TData, E = unknown>(url: TUrl, handlers?: LoaderAsync.Handlers<E>): Promise<T> {
     const buffer = await FileLoader.loadAsync(url, { responseType: FileLoaderResponse.Buffer });
 
-    return this.parse(buffer, LoaderUtils.extractUrlBase(url)) as Promise<T>;
+    return (await this.parse(buffer, LoaderUtils.extractUrlBase(url))) as T;
   }
 
   setDRACOLoader(loader: DracoLoader): this {
@@ -162,7 +168,6 @@ export class GLTFLoader<TUrl extends string = string> extends Loader {
     const plugins: Record<string, any> = {};
 
     let item: any;
-
     const decoder = new TextDecoder();
     const magic = decoder.decode(new Uint8Array(data, 0, 4));
     if (magic === BINARY_EXTENSION_HEADER_MAGIC) {
@@ -216,7 +221,16 @@ export class GLTFLoader<TUrl extends string = string> extends Loader {
     parser.setPlugins(plugins);
     return parser.parse();
   }
+} satisfies ConfigurableConstructor<Options, Configuration>;
+
+export namespace GLTFLoader {
+  export interface Options {}
+
+  export interface Configuration {}
 }
+
+type Options = GLTFLoader.Options;
+type Configuration = GLTFLoader.Configuration;
 
 /* GLTFREGISTRY */
 
@@ -1847,7 +1861,7 @@ const _identityMatrix = new Matrix4();
 /* GLTF PARSER */
 
 class GLTFParser {
-  textureLoader: _ImageBitmapLoader;
+  textureLoader: ImageBitmapLoader;
   fileLoader: FileLoader<string, FileLoaderResponse.Buffer>;
 
   constructor(json = {}, options = {}) {
@@ -1874,7 +1888,7 @@ class GLTFParser {
     this.textureCache = {};
     this.nodeNamesUsed = {};
 
-    this.textureLoader = new _ImageBitmapLoader();
+    this.textureLoader = new ImageBitmapLoader();
 
     this.fileLoader = new FileLoader({
       responseType: FileLoaderResponse.Buffer,
@@ -2337,7 +2351,7 @@ class GLTFParser {
     return this.loadTextureImage(textureIndex, sourceIndex, this.textureLoader);
   }
 
-  async loadTextureImage(textureIndex, sourceIndex, loader: _ImageBitmapLoader): Promise<Texture> {
+  async loadTextureImage(textureIndex, sourceIndex, loader: ImageBitmapLoader): Promise<Texture> {
     const parser = this;
     const json = this.json;
 
@@ -2382,7 +2396,7 @@ class GLTFParser {
     return promise;
   }
 
-  async loadImageSource(sourceIndex: number, loader: _ImageBitmapLoader): Promise<Texture> {
+  async loadImageSource(sourceIndex: number, loader: ImageBitmapLoader): Promise<Texture> {
     const parser = this;
     const json = this.json;
     const options = this.options;

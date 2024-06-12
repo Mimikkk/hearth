@@ -109,6 +109,8 @@ export const SideBarItems: AccordionItem[] = [
     title: 'Loading & Data Management',
     icon: 'TiDownload',
     children: [
+      { id: Example.LoaderObj, title: 'Loader Obj' },
+      { id: Example.LoaderObjMtl, title: 'Loader Obj+Mtl' },
       { id: Example.LoaderTtf, title: 'Loader Ttf' },
       { id: Example.LoaderGltf, title: 'Loader Gltf' },
       { id: Example.LoaderGltfCompressed, title: 'Loader Gltf Compressed' },

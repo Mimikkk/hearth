@@ -37,7 +37,6 @@ export { Texture } from './textures/Texture.ts';
 export * from './geometries/Geometries.ts';
 export * from './materials/Materials.ts';
 export { LoadManager } from './loaders/LoadManager.ts';
-export { ImageBitmapLoader } from './loaders/ImageBitmapLoader.ts';
 export { RFileLoader } from './loaders/RFileLoader.ts';
 export { Loader } from './loaders/Loader.ts';
 export { LoaderUtils } from './loaders/LoaderUtils.ts';

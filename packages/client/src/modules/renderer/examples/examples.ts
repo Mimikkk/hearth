@@ -67,6 +67,8 @@ export enum Example {
   TslTranspiler = 'tsl_transpiler',
   VideoPanorama = 'video_panorama',
   LoaderTtf = 'ttf_loader',
+  LoaderObj = 'loader_obj',
+  LoaderObjMtl = 'loader_obj_mtl',
 }
 
 export type ExampleName = keyof typeof Example;

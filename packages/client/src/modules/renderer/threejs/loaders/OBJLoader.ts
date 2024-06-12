@@ -1,7 +1,6 @@
 import {
   BufferGeometry,
   Color,
-  RFileLoader,
   Float32BufferAttribute,
   Group,
   LineBasicMaterial,
@@ -14,6 +13,7 @@ import {
   PointsMaterial,
   Vector3,
 } from '../../threejs/Three.js';
+import { FileLoader } from '@modules/renderer/threejs/loaders/FileLoader.js';
 
 // o object_name | g group_name
 const _object_pattern = /^[og]\s*(.+)?/;
@@ -360,32 +360,19 @@ export class OBJLoader<TUrl extends string = string> extends Loader {
     this.materials = null;
   }
 
-  load(url: TUrl, handlers?: Loader.Handlers<Group>) {
-    const scope = this;
+  setMaterials(materials) {
+    this.materials = materials;
 
-    const loader = new RFileLoader({
-      manager: this.manager,
-      crossOrigin: this.crossOrigin,
-      requestHeader: this.requestHeader,
-      withCredentials: this.withCredentials,
-    });
-
-    loader.load(url, {
-      onLoad: text => {
-        try {
-          handlers?.onLoad?.(scope.parse(text));
-        } catch (e) {
-          handlers?.onError?.(e);
-
-          scope.manager.itemError(url);
-        }
-      },
-      onProgress: handlers?.onProgress,
-      onError: handlers?.onError,
-    });
+    return this;
   }
 
-  parse(text: string) {
+  async loadAsync(url: TUrl, handlers?: Loader.Handlers<Group>) {
+    const text = await FileLoader.loadAsync(url);
+
+    return await this.parse(text);
+  }
+
+  async parse(text: string) {
     const state = new ParserState();
 
     if (text.indexOf('\r\n') !== -1) {
@@ -593,7 +580,7 @@ export class OBJLoader<TUrl extends string = string> extends Loader {
           let material = state.materials[materialHash];
 
           if (this.materials !== null) {
-            material = this.materials.create(sourceMaterial.name);
+            material = await this.materials.create(sourceMaterial.name);
 
             // mtl etc. loaders probably can't create line materials correctly, copy properties to a line material.
             if (isLine && material && !(material instanceof LineBasicMaterial)) {
