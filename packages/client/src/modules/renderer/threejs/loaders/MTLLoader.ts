@@ -1,138 +1,129 @@
-import { Color, ColorSpace, Loader, LoaderUtils, MeshPhongMaterial, Side, Vector2, Wrapping } from '../Three.js';
-import { FileLoader } from '@modules/renderer/threejs/loaders/FileLoader.js';
+import { Color, ColorSpace, LoaderUtils, MeshPhongMaterial, Side, Vector2, Wrapping } from '../Three.js';
+import { FileLoader } from './FileLoader.js';
 import { TextureLoader } from '@modules/renderer/threejs/loaders/TextureLoader.js';
+import { Configurable, ConfigurableConstructor, LoaderAsync } from '@modules/renderer/threejs/loaders/types.js';
 
-class MTLLoader extends Loader {
-  constructor() {
-    super();
-  }
+const parse = (text: string, path: string) => {
+  const lines = text.split('\n');
+  let info = {};
+  const delimiter_pattern = /\s+/;
+  const materialsInfo = {};
 
-  async load(url) {
-    const path = LoaderUtils.extractUrlBase(url);
+  for (let i = 0; i < lines.length; ++i) {
+    let line = lines[i];
+    line = line.trim();
 
-    const loader = new FileLoader();
-    const text = await loader.loadAsync(url);
+    if (line.length === 0 || line.charAt(0) === '#') continue;
 
-    return this.parse(text, path);
-  }
+    const pos = line.indexOf(' ');
 
-  /**
-   * Parses a MTL file.
-   *
-   * @param {String} text - Content of MTL file
-   * @return {MaterialCreator}
-   *
-   * @see setPath setResourcePath
-   *
-   * @note In order for relative texture references to resolve correctly
-   * you must call setResourcePath() explicitly prior to parse.
-   */
-  parse(text: string, path: string) {
-    const lines = text.split('\n');
-    let info = {};
-    const delimiter_pattern = /\s+/;
-    const materialsInfo = {};
+    let key = pos >= 0 ? line.substring(0, pos) : line;
+    key = key.toLowerCase();
 
-    for (let i = 0; i < lines.length; i++) {
-      let line = lines[i];
-      line = line.trim();
+    let value = pos >= 0 ? line.substring(pos + 1) : '';
+    value = value.trim();
 
-      if (line.length === 0 || line.charAt(0) === '#') {
-        // Blank line or comment ignore
-        continue;
-      }
+    if (key === 'newmtl') {
+      // New material
 
-      const pos = line.indexOf(' ');
-
-      let key = pos >= 0 ? line.substring(0, pos) : line;
-      key = key.toLowerCase();
-
-      let value = pos >= 0 ? line.substring(pos + 1) : '';
-      value = value.trim();
-
-      if (key === 'newmtl') {
-        // New material
-
-        info = { name: value };
-        materialsInfo[value] = info;
+      info = { name: value };
+      materialsInfo[value] = info;
+    } else {
+      if (key === 'ka' || key === 'kd' || key === 'ks' || key === 'ke') {
+        const ss = value.split(delimiter_pattern, 3);
+        info[key] = [parseFloat(ss[0]), parseFloat(ss[1]), parseFloat(ss[2])];
       } else {
-        if (key === 'ka' || key === 'kd' || key === 'ks' || key === 'ke') {
-          const ss = value.split(delimiter_pattern, 3);
-          info[key] = [parseFloat(ss[0]), parseFloat(ss[1]), parseFloat(ss[2])];
-        } else {
-          info[key] = value;
-        }
+        info[key] = value;
       }
     }
+  }
 
-    const materialCreator = new MaterialCreator(this.resourcePath || path, this.materialOptions);
-    materialCreator.setCrossOrigin(this.crossOrigin);
-    materialCreator.setManager(this.manager);
-    materialCreator.setMaterials(materialsInfo);
+  const materialCreator = new MaterialCreator(path);
+  materialCreator.setMaterials(materialsInfo);
 
-    console.log(materialCreator);
-    return materialCreator;
+  console.log(materialCreator);
+  return materialCreator;
+};
+
+export const MTLLoader = class<TUrl extends string>
+  implements Configurable<Configuration>, LoaderAsync<MaterialCreator, TUrl>
+{
+  configuration: Configuration;
+
+  static configure(options?: Options): Configuration {
+    return {
+      fileloader: FileLoader.configure(options?.fileloader),
+    };
+  }
+
+  constructor(options?: Options) {
+    this.configuration = MTLLoader.configure(options);
+  }
+
+  async loadAsync(url: TUrl, handlers?: LoaderAsync.Handlers): Promise<MaterialCreator> {
+    const path = LoaderUtils.extractUrlBase(url);
+
+    const text = await FileLoader.loadAsync(url);
+
+    return parse(text, path);
+  }
+} satisfies ConfigurableConstructor<Options, Configuration>;
+
+export namespace MTLLoader {
+  export interface Options {
+    fileloader?: FileLoader.Configuration;
+  }
+
+  export interface Configuration {
+    fileloader: FileLoader.Configuration;
   }
 }
+type Options = MTLLoader.Options;
+type Configuration = MTLLoader.Configuration;
 
-/**
- * Create a new MTLLoader.MaterialCreator
- * @param baseUrl - Url relative to which textures are loaded
- * @param options - Set of options on how to construct the materials
- *                  side: Which side to apply the material
- *                        FrontSide (default), THREE.BackSide, THREE.DoubleSide
- *                  wrap: What type of wrapping to apply for textures
- *                        RepeatWrapping (default), THREE.ClampToEdgeWrapping, THREE.MirroredRepeatWrapping
- *                  normalizeRGB: RGBs need to be normalized to 0-1 from 0-255
- *                                Default: false, assumed to be already normalized
- *                  ignoreZeroRGBs: Ignore values of RGBs (Ka,Kd,Ks) that are all 0's
- *                                  Default: false
- * @constructor
- */
+type MaterialsInfo = Record<string, Record<string, string | number[]>>;
+export const MaterialCreator = class implements Configurable<MaterialCreator.Configuration> {
+  configuration: MaterialCreator.Configuration;
 
-class MaterialCreator {
-  constructor(baseUrl = '', options = {}) {
+  static configure(options?: MaterialCreator.Options): MaterialCreator.Configuration {
+    return {
+      normalizeRGB: options?.normalizeRGB ?? false,
+      ignoreZeroRGBs: options?.ignoreZeroRGBs ?? false,
+      side: options?.side ?? Side.Front,
+      wrap: options?.wrap ?? Wrapping.Repeat,
+      invertTrProperty: options?.invertTrProperty ?? false,
+    };
+  }
+
+  baseUrl: string;
+  materialsInfo: MaterialsInfo;
+  materials: Record<string, MeshPhongMaterial>;
+  materialsArray: MeshPhongMaterial[];
+  nameLookup: Record<string, number>;
+
+  constructor(baseUrl: string, options: Options = {}) {
+    this.configuration = MaterialCreator.configure(options);
     this.baseUrl = baseUrl;
-    this.options = options;
     this.materialsInfo = {};
     this.materials = {};
     this.materialsArray = [];
     this.nameLookup = {};
-
-    this.crossOrigin = 'anonymous';
-
-    this.side = this.options.side !== undefined ? this.options.side : Side.Front;
-    this.wrap = this.options.wrap !== undefined ? this.options.wrap : Wrapping.Repeat;
   }
 
-  setCrossOrigin(value) {
-    this.crossOrigin = value;
-    return this;
-  }
-
-  setManager(value) {
-    this.manager = value;
-  }
-
-  setMaterials(materialsInfo) {
+  setMaterials(materialsInfo: MaterialsInfo) {
     this.materialsInfo = this.convert(materialsInfo);
     this.materials = {};
     this.materialsArray = [];
     this.nameLookup = {};
   }
 
-  convert(materialsInfo) {
-    if (!this.options) return materialsInfo;
-
-    const converted = {};
+  convert(materialsInfo: MaterialsInfo): MaterialsInfo {
+    const converted: MaterialsInfo = {};
 
     for (const mn in materialsInfo) {
-      // Convert materials info into normalized form based on options
-
       const mat = materialsInfo[mn];
 
-      const covmat = {};
-
+      const covmat: MaterialsInfo[string] = {};
       converted[mn] = covmat;
 
       for (const prop in mat) {
@@ -144,23 +135,16 @@ class MaterialCreator {
           case 'kd':
           case 'ka':
           case 'ks':
-            // Diffuse color (color under white light) using RGB values
-
-            if (this.options && this.options.normalizeRGB) {
-              value = [value[0] / 255, value[1] / 255, value[2] / 255];
+            if (this.configuration.normalizeRGB) {
+              value = [+value[0] / 255, +value[1] / 255, +value[2] / 255];
             }
-
-            if (this.options && this.options.ignoreZeroRGBs) {
+            if (this.configuration.ignoreZeroRGBs) {
               if (value[0] === 0 && value[1] === 0 && value[2] === 0) {
                 // ignore
 
                 save = false;
               }
             }
-
-            break;
-
-          default:
             break;
         }
 
@@ -177,13 +161,14 @@ class MaterialCreator {
     for (const mn in this.materialsInfo) {
       await this.create(mn);
     }
+    console.log({ t: this.materialsInfo });
   }
 
-  getIndex(materialName) {
+  getIndex(materialName: string): number | undefined {
     return this.nameLookup[materialName];
   }
 
-  async create(materialName) {
+  async create(materialName: string): Promise<MeshPhongMaterial> {
     if (this.materials[materialName] === undefined) {
       await this.createMaterial_(materialName);
     }
@@ -191,17 +176,15 @@ class MaterialCreator {
     return this.materials[materialName];
   }
 
-  async createMaterial_(materialName) {
-    // Create material
-
+  async createMaterial_(materialName: string): Promise<MeshPhongMaterial> {
     const scope = this;
     const mat = this.materialsInfo[materialName];
     const params = {
       name: materialName,
-      side: this.side,
+      side: this.configuration.side,
     };
 
-    function resolveURL(baseUrl, url) {
+    function resolveURL(baseUrl: string, url: string): string {
       if (typeof url !== 'string' || url === '') return '';
 
       // Absolute URL
@@ -210,17 +193,17 @@ class MaterialCreator {
       return baseUrl + url;
     }
 
-    async function setMapForType(mapType, value) {
-      if (params[mapType]) return; // Keep the first encountered texture
+    async function setMapForType(mapType: string, value: string) {
+      if (params[mapType]) return;
 
       const texParams = scope.getTextureParams(value, params);
-      const map = await scope.loadTexture(resolveURL(scope.baseUrl, texParams.url));
+      const map = await TextureLoader.loadAsync(resolveURL(scope.baseUrl, texParams.url));
 
       map.repeat.copy(texParams.scale);
       map.offset.copy(texParams.offset);
 
-      map.wrapS = scope.wrap;
-      map.wrapT = scope.wrap;
+      map.wrapS = scope.configuration.wrap;
+      map.wrapT = scope.configuration.wrap;
 
       if (mapType === 'map' || mapType === 'emissiveMap') {
         map.colorSpace = ColorSpace.SRGB;
@@ -234,7 +217,6 @@ class MaterialCreator {
       let n;
 
       if (value === '') continue;
-
       switch (prop.toLowerCase()) {
         // Ns is material specular exponent
 
@@ -320,7 +302,7 @@ class MaterialCreator {
         case 'tr':
           n = parseFloat(value);
 
-          if (this.options && this.options.invertTrProperty) n = 1 - n;
+          if (this.configuration.invertTrProperty) n = 1 - n;
 
           if (n > 0) {
             params.opacity = 1 - n;
@@ -371,18 +353,23 @@ class MaterialCreator {
     texParams.url = items.join(' ').trim();
     return texParams;
   }
+} satisfies ConfigurableConstructor<MaterialCreator.Options, MaterialCreator.Configuration>;
+export type MaterialCreator = InstanceType<typeof MaterialCreator>;
 
-  async loadTexture(url, mapping, onLoad, onProgress, onError) {
-    const loader = new TextureLoader();
+export namespace MaterialCreator {
+  export interface Options {
+    normalizeRGB?: boolean;
+    ignoreZeroRGBs?: boolean;
+    side?: Side;
+    wrap?: Wrapping;
+    invertTrProperty?: boolean;
+  }
 
-    if (loader.setCrossOrigin) loader.setCrossOrigin(this.crossOrigin);
-
-    const texture = await loader.loadAsync(url, onLoad, onProgress, onError);
-
-    if (mapping !== undefined) texture.mapping = mapping;
-
-    return texture;
+  export interface Configuration {
+    normalizeRGB: boolean;
+    ignoreZeroRGBs: boolean;
+    side: Side;
+    wrap: Wrapping;
+    invertTrProperty: boolean;
   }
 }
-
-export { MTLLoader };

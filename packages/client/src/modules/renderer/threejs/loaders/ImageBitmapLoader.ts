@@ -32,7 +32,7 @@ export const ImageBitmapLoader = class<TData extends ImageBitmap, TUrl extends s
   }
 } satisfies ConfigurableConstructor<Options, Configuration>;
 
-export type ImageBitmapLoader = (typeof ImageBitmapLoader)['prototype'];
+export type ImageBitmapLoader = InstanceType<typeof ImageBitmapLoader>;
 
 export namespace ImageBitmapLoader {
   export interface Options extends Omit<FileLoader.Options, 'responseType'> {

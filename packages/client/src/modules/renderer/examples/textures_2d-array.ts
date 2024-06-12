@@ -5,6 +5,7 @@ import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 
 import Stats from 'stats-js';
 import { unzipSync } from 'fflate';
+import { FileLoader, FileLoaderResponse } from '@modules/renderer/threejs/loaders/FileLoader.js';
 
 let camera, scene, mesh, renderer, stats;
 
@@ -26,33 +27,29 @@ function init() {
 
   // new THREE.FileLoader().setResponseType('arraybuffer');
 
-  const loader = new THREE.RFileLoader();
+  FileLoader.loadAsync('textures/3d/head256x256x109.zip', { responseType: FileLoaderResponse.Buffer }).then(data => {
+    const zip = unzipSync(new Uint8Array(data));
+    const array = new Uint8Array(zip['head256x256x109'].buffer);
 
-  loader.load('textures/3d/head256x256x109.zip', {
-    onLoad: function (data) {
-      const zip = unzipSync(new Uint8Array(data));
-      const array = new Uint8Array(zip['head256x256x109'].buffer);
+    const map = new THREE.DataArrayTexture(array, 256, 256, 109);
+    map.format = THREE.TextureFormat.Red;
+    map.needsUpdate = true;
 
-      const map = new THREE.DataArrayTexture(array, 256, 256, 109);
-      map.format = THREE.TextureFormat.Red;
-      map.needsUpdate = true;
+    let coord = uv();
+    coord = coord.setY(coord.y.oneMinus()); // flip y
 
-      let coord = uv();
-      coord = coord.setY(coord.y.oneMinus()); // flip y
+    let oscLayers = oscTriangle(timerLocal(0.5)); // [ /\/ ] triangle osc animation
+    oscLayers = oscLayers.add(1).mul(0.5); // convert osc range of [ -1, 1 ] to [ 0, 1 ]
+    oscLayers = oscLayers.mul(map.image.depth); // scale osc range to texture depth
 
-      let oscLayers = oscTriangle(timerLocal(0.5)); // [ /\/ ] triangle osc animation
-      oscLayers = oscLayers.add(1).mul(0.5); // convert osc range of [ -1, 1 ] to [ 0, 1 ]
-      oscLayers = oscLayers.mul(map.image.depth); // scale osc range to texture depth
+    const material = new MeshBasicNodeMaterial();
+    material.colorNode = texture(map, coord).depth(oscLayers).r.remap(0, 1, -0.1, 1.8); // remap to make it more visible
 
-      const material = new MeshBasicNodeMaterial();
-      material.colorNode = texture(map, coord).depth(oscLayers).r.remap(0, 1, -0.1, 1.8); // remap to make it more visible
+    const geometry = new THREE.PlaneGeometry(planeWidth, planeHeight);
 
-      const geometry = new THREE.PlaneGeometry(planeWidth, planeHeight);
+    mesh = new THREE.Mesh(geometry, material);
 
-      mesh = new THREE.Mesh(geometry, material);
-
-      scene.add(mesh);
-    },
+    scene.add(mesh);
   });
 
   renderer = new WebGPURenderer();

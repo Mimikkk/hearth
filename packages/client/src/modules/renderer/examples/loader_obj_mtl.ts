@@ -37,11 +37,11 @@ async function init() {
     }
   };
 
-  const materials = await new MTLLoader().load('models/obj/male02/male02.mtl');
+  const materials = await new MTLLoader().loadAsync('models/obj/male02/male02.mtl');
   await materials.preload();
   console.log({ materials });
 
-  const object = await new OBJLoader().setMaterials(materials).loadAsync('models/obj/male02/male02.obj');
+  const object = await new OBJLoader({ materials }).loadAsync('models/obj/male02/male02.obj');
   object.position.y = -0.95;
   object.scale.setScalar(0.01);
   scene.add(object);

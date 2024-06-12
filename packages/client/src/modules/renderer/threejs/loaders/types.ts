@@ -29,6 +29,7 @@ export namespace LoaderSync {
 
 export interface LoaderAsync<TData, TUrl extends ILoader.Url> {
   loadAsync<T extends TData, E = unknown>(url: TUrl, handlers?: LoaderAsync.Handlers<E>): Promise<T>;
+  loadAsync<E = unknown>(url: TUrl, handlers?: LoaderAsync.Handlers<E>): Promise<TData>;
 }
 
 export interface MultiLoaderAsync<TData, TUrl extends ILoader.Url> {
