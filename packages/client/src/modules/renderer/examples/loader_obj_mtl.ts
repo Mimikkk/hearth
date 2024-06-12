@@ -1,0 +1,79 @@
+import { Scene } from '@modules/renderer/threejs/scenes/Scene.js';
+import { PerspectiveCamera } from '@modules/renderer/threejs/cameras/PerspectiveCamera.js';
+import { WebGPURenderer } from '@modules/renderer/threejs/renderers/webgpu/WebGPURenderer.js';
+import { MTLLoader } from '@modules/renderer/threejs/loaders/MTLLoader.js';
+import { OBJLoader } from '@modules/renderer/threejs/loaders/OBJLoader.js';
+import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
+import { AmbientLight } from '@modules/renderer/threejs/lights/AmbientLight.js';
+import { PointLight } from '@modules/renderer/threejs/lights/PointLight.js';
+
+let camera!: PerspectiveCamera;
+let scene!: Scene;
+let renderer!: WebGPURenderer;
+
+init();
+
+async function init() {
+  camera = new PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 20);
+  camera.position.z = 2.5;
+
+  // scene
+
+  scene = new Scene();
+
+  const ambientLight = new AmbientLight(0xffffff);
+  scene.add(ambientLight);
+
+  const pointLight = new PointLight(0xffffff, 15);
+  camera.add(pointLight);
+  scene.add(camera);
+
+  // model
+
+  const onProgress = xhr => {
+    if (xhr.lengthComputable) {
+      const percentComplete = (xhr.loaded / xhr.total) * 100;
+      console.log(percentComplete.toFixed(2) + '% downloaded');
+    }
+  };
+
+  const materials = await new MTLLoader().load('models/obj/male02/male02.mtl');
+  await materials.preload();
+  console.log({ materials });
+
+  const object = await new OBJLoader().setMaterials(materials).loadAsync('models/obj/male02/male02.obj');
+  object.position.y = -0.95;
+  object.scale.setScalar(0.01);
+  scene.add(object);
+
+  //
+
+  renderer = new WebGPURenderer({ antialias: true });
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setAnimationLoop(animate);
+  document.body.appendChild(renderer.domElement);
+
+  //
+
+  const controls = new OrbitControls(camera, renderer.domElement);
+  controls.minDistance = 2;
+  controls.maxDistance = 5;
+
+  //
+
+  window.addEventListener('resize', onWindowResize);
+}
+
+function onWindowResize() {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+
+  renderer.setSize(window.innerWidth, window.innerHeight);
+}
+
+//
+
+function animate() {
+  renderer.render(scene, camera);
+}
