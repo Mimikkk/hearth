@@ -10,6 +10,7 @@ import { color, Line2NodeMaterial, LineBasicNodeMaterial, LineDashedNodeMaterial
 import { Line2 } from '@modules/renderer/threejs/lines/Line2.js';
 import { LineGeometry } from '@modules/renderer/threejs/lines/LineGeometry.js';
 import * as GeometryUtils from '@modules/renderer/threejs/utils/GeometryUtils.js';
+import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let line, renderer, scene, camera, camera2, controls, backgroundNode;
 let line1;
@@ -102,26 +103,23 @@ function init() {
 
   //
 
-  window.addEventListener('resize', onWindowResize);
-  onWindowResize();
+  useWindowResizer(renderer, camera, () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+
+    renderer.setSize(window.innerWidth, window.innerHeight);
+
+    insetWidth = window.innerHeight / 4; // square
+    insetHeight = window.innerHeight / 4;
+
+    camera2.aspect = insetWidth / insetHeight;
+    camera2.updateProjectionMatrix();
+  });
 
   stats = new Stats();
   document.body.appendChild(stats.dom);
 
   initGui();
-}
-
-function onWindowResize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-
-  renderer.setSize(window.innerWidth, window.innerHeight);
-
-  insetWidth = window.innerHeight / 4; // square
-  insetHeight = window.innerHeight / 4;
-
-  camera2.aspect = insetWidth / insetHeight;
-  camera2.updateProjectionMatrix();
 }
 
 function animate() {

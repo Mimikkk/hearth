@@ -17,6 +17,7 @@ import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
 import { Blending } from '../threejs/Three.js';
 import { TextureLoader } from '@modules/renderer/threejs/loaders/TextureLoader.js';
+import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, renderer;
 let controls;
@@ -116,22 +117,13 @@ async function init() {
 
   //
 
-  window.addEventListener('resize', onWindowResize);
+  useWindowResizer(renderer, camera);
 
   // gui
 
   const gui = new GUI();
 
   gui.add(timer, 'scale', 0, 1, 0.01).name('speed');
-}
-
-function onWindowResize() {
-  const { innerWidth, innerHeight } = window;
-
-  camera.aspect = innerWidth / innerHeight;
-  camera.updateProjectionMatrix();
-
-  renderer.setSize(innerWidth, innerHeight);
 }
 
 function render() {

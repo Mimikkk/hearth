@@ -31,6 +31,7 @@ import { TeapotGeometry } from '../threejs/geometries/TeapotGeometry.js';
 
 import Stats from 'stats-js';
 import { TextureLoader } from '@modules/renderer/threejs/loaders/TextureLoader.js';
+import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let stats;
 
@@ -360,7 +361,7 @@ async function init() {
 
   //
 
-  window.addEventListener('resize', onWindowResize);
+  useWindowResizer(renderer, camera);
 
   //
 }
@@ -379,15 +380,6 @@ function addMesh(geometry, material) {
 
   scene.add(mesh);
 }
-
-function onWindowResize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-
-  renderer.setSize(window.innerWidth, window.innerHeight);
-}
-
-//
 
 function animate() {
   const timer = 0.0001 * Date.now();

@@ -9,6 +9,7 @@ import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
 
 import { GUI } from 'lil-gui';
+import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, renderer;
 
@@ -92,19 +93,8 @@ async function init() {
 
   render();
 
-  window.addEventListener('resize', onWindowResize);
+  useWindowResizer(renderer, camera);
 }
-
-function onWindowResize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-
-  renderer.setSize(window.innerWidth, window.innerHeight);
-
-  render();
-}
-
-//
 
 function render() {
   renderer.render(scene, camera);

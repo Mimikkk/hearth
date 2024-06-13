@@ -11,6 +11,7 @@ import { KTX2Loader } from '../threejs/loaders/KTX2Loader.js';
 import { MeshoptDecoder } from 'meshoptimizer';
 
 import { GUI } from 'lil-gui';
+import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 init();
 
@@ -98,10 +99,5 @@ async function init() {
     stats.update();
   }
 
-  window.addEventListener('resize', () => {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-
-    renderer.setSize(window.innerWidth, window.innerHeight);
-  });
+  useWindowResizer(renderer, camera);
 }

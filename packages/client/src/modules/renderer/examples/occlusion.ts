@@ -6,6 +6,7 @@ import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.
 import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 import { Renderer } from '@modules/renderer/threejs/renderers/common/Renderer.js';
 import { Camera, Scene } from '../threejs/Three.js';
+import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera: Camera, scene: Scene, renderer: Renderer, controls: OrbitControls;
 
@@ -88,14 +89,7 @@ async function init() {
   controls.minDistance = 3;
   controls.maxDistance = 25;
 
-  window.addEventListener('resize', onWindowResize);
-}
-
-function onWindowResize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-
-  renderer.setSize(window.innerWidth, window.innerHeight);
+  useWindowResizer(renderer, camera);
 }
 
 function render() {

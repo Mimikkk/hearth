@@ -3,6 +3,7 @@ import { TextureLoader } from '@modules/renderer/threejs/loaders/TextureLoader.j
 import { OBJLoader } from '@modules/renderer/threejs/loaders/OBJLoader.js';
 import { WebGPURenderer } from '@modules/renderer/threejs/renderers/webgpu/WebGPURenderer.js';
 import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
+import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera!: PerspectiveCamera;
 let scene!: Scene;
@@ -65,16 +66,9 @@ async function init() {
   controls.maxDistance = 5;
   controls.eventDispatcher.add('change', render);
 
-  window.addEventListener('resize', onWindowResize);
+  useWindowResizer(renderer, camera);
 
   render();
-}
-
-function onWindowResize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-
-  renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
 function render() {

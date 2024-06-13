@@ -3,6 +3,7 @@ import { texture, textureStore, wgslFn, code, instanceIndex, uniform } from '../
 
 import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 import StorageTexture from '../threejs/renderers/common/StorageTexture.js';
+import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, renderer;
 let computeInitNode, computeToPing, computeToPong;
@@ -141,26 +142,22 @@ function init() {
   renderer.setAnimationLoop(render);
   document.body.appendChild(renderer.domElement);
 
-  window.addEventListener('resize', onWindowResize);
+  useWindowResizer(renderer, camera, () => {
+    renderer.setSize(window.innerWidth, window.innerHeight);
 
-  // compute init
+    const aspect = window.innerWidth / window.innerHeight;
+
+    const frustumHeight = camera.top - camera.bottom;
+
+    camera.left = (-frustumHeight * aspect) / 2;
+    camera.right = (frustumHeight * aspect) / 2;
+
+    camera.updateProjectionMatrix();
+
+    render();
+  });
 
   renderer.compute(computeInitNode);
-}
-
-function onWindowResize() {
-  renderer.setSize(window.innerWidth, window.innerHeight);
-
-  const aspect = window.innerWidth / window.innerHeight;
-
-  const frustumHeight = camera.top - camera.bottom;
-
-  camera.left = (-frustumHeight * aspect) / 2;
-  camera.right = (frustumHeight * aspect) / 2;
-
-  camera.updateProjectionMatrix();
-
-  render();
 }
 
 function render() {

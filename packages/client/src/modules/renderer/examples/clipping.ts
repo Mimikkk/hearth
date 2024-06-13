@@ -9,6 +9,7 @@ import { GUI } from 'lil-gui';
 
 import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
 import { Side } from '../threejs/Three.js';
+import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, renderer, startTime, object, stats;
 
@@ -100,7 +101,6 @@ function init() {
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(animate);
-  window.addEventListener('resize', onWindowResize);
   document.body.appendChild(renderer.domElement);
 
   // ***** Clipping setup (renderer): *****
@@ -187,14 +187,8 @@ function init() {
 
   // Start
 
+  useWindowResizer(renderer, camera);
   startTime = Date.now();
-}
-
-function onWindowResize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-
-  renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
 function animate(currentTime) {

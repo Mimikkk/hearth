@@ -2,6 +2,7 @@ import * as THREE from '../threejs/Three.js';
 
 import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 import { ColorSpace } from '../threejs/Three.js';
+import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, renderer;
 
@@ -52,14 +53,7 @@ function init() {
 
   //
 
-  window.addEventListener('resize', onWindowResize);
-}
-
-function onWindowResize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-
-  renderer.setSize(window.innerWidth, window.innerHeight);
+  useWindowResizer(renderer, camera);
 }
 
 function onPointerDown(event) {

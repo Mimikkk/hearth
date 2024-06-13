@@ -11,6 +11,7 @@ import {
 import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 
 import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
+import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 class CustomLightingModel extends LightingModel {
   direct({ lightColor, reflectedLight }, stack) {
@@ -97,16 +98,7 @@ function init() {
   controls.minDistance = 0;
   controls.maxDistance = 4;
 
-  // events
-
-  window.addEventListener('resize', onWindowResize);
-}
-
-function onWindowResize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-
-  renderer.setSize(window.innerWidth, window.innerHeight);
+  useWindowResizer(renderer, camera);
 }
 
 function animate() {

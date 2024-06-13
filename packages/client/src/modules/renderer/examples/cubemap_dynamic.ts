@@ -9,6 +9,7 @@ import { GUI } from 'lil-gui';
 import Stats from 'stats-js';
 import { RGBMLoader } from '@modules/renderer/threejs/loaders/RGBMLoader.js';
 import { TextureLoader } from '@modules/renderer/threejs/loaders/TextureLoader.js';
+import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, renderer, stats;
 let cube, sphere, torus, material;
@@ -26,8 +27,6 @@ async function init() {
   renderer.setAnimationLoop(animation);
   renderer.toneMapping = THREE.ToneMapping.ACESFilmic;
   document.body.appendChild(renderer.domElement);
-
-  window.addEventListener('resize', onWindowResized);
 
   stats = new Stats();
   document.body.appendChild(stats.dom);
@@ -95,15 +94,9 @@ async function init() {
 
   //
 
+  useWindowResizer(renderer, camera);
   controls = new OrbitControls(camera, renderer.domElement);
   controls.autoRotate = true;
-}
-
-function onWindowResized() {
-  renderer.setSize(window.innerWidth, window.innerHeight);
-
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
 }
 
 function animation(msTime) {

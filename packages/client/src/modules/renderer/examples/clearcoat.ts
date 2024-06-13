@@ -9,6 +9,7 @@ import { HDRCubeTextureLoader } from '../threejs/loaders/HDRCubeTextureLoader.js
 
 import { FlakesTexture } from '../threejs/textures/FlakesTexture.js';
 import { TextureLoader } from '@modules/renderer/threejs/loaders/TextureLoader.js';
+import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let container, stats;
 
@@ -176,17 +177,7 @@ async function init() {
   controls.minDistance = 3;
   controls.maxDistance = 30;
 
-  window.addEventListener('resize', onWindowResize);
-}
-
-function onWindowResize() {
-  const width = window.innerWidth;
-  const height = window.innerHeight;
-
-  camera.aspect = width / height;
-  camera.updateProjectionMatrix();
-
-  renderer.setSize(width, height);
+  useWindowResizer(renderer, camera);
 }
 
 function animate() {

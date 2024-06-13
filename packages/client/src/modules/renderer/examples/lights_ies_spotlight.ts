@@ -7,6 +7,7 @@ import { IESSpotLight } from '../threejs/lights/IESSpotLight.js';
 import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
 
 import { IESLoader } from '../threejs/loaders/IESLoader.js';
+import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let renderer, scene, camera;
 let lights;
@@ -95,16 +96,7 @@ async function init() {
   controls.maxDistance = 50;
   controls.enablePan = false;
 
-  //
-
-  window.addEventListener('resize', onWindowResize);
-}
-
-function onWindowResize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-
-  renderer.setSize(window.innerWidth, window.innerHeight);
+  useWindowResizer(renderer, camera);
 }
 
 function render(time) {

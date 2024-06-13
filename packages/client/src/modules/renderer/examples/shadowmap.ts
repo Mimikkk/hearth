@@ -4,6 +4,7 @@ import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 
 import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
 import { MeshPhongNodeMaterial, tslFn, vec4, vertexIndex } from '../threejs/nodes/Nodes.js';
+import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, renderer, clock;
 let dirLight, spotLight;
@@ -140,14 +141,7 @@ function init() {
 
   clock = new THREE.Clock();
 
-  window.addEventListener('resize', resize);
-}
-
-function resize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-
-  renderer.setSize(window.innerWidth, window.innerHeight);
+  useWindowResizer(renderer, camera);
 }
 
 function animate(time) {

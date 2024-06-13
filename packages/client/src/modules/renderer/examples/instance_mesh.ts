@@ -6,6 +6,7 @@ import { GUI } from 'lil-gui';
 
 import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 import { BufferGeometryLoader } from '@modules/renderer/threejs/loaders/BufferGeometryLoader.js';
+import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, renderer, stats;
 
@@ -61,14 +62,7 @@ function init() {
 
   //
 
-  window.addEventListener('resize', onWindowResize);
-}
-
-function onWindowResize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-
-  renderer.setSize(window.innerWidth, window.innerHeight);
+  useWindowResizer(renderer, camera);
 }
 
 //

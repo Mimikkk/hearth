@@ -19,6 +19,7 @@ import Stats from 'stats-js';
 
 import { GUI } from 'lil-gui';
 import { TextureLoader } from '@modules/renderer/threejs/loaders/TextureLoader.js';
+import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 const particleCount = 1000000;
 
@@ -202,7 +203,7 @@ async function init() {
 
   //
 
-  window.addEventListener('resize', onWindowResize);
+  useWindowResizer(renderer, camera);
 
   // gui
 
@@ -212,15 +213,6 @@ async function init() {
   gui.add(bounce, 'value', 0.1, 1, 0.01).name('bounce');
   gui.add(friction, 'value', 0.96, 0.99, 0.01).name('friction');
   gui.add(size, 'value', 0.12, 0.5, 0.01).name('size');
-}
-
-function onWindowResize() {
-  const { innerWidth, innerHeight } = window;
-
-  camera.aspect = innerWidth / innerHeight;
-  camera.updateProjectionMatrix();
-
-  renderer.setSize(innerWidth, innerHeight);
 }
 
 async function animate() {

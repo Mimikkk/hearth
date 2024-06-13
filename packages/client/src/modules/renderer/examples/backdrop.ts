@@ -31,7 +31,7 @@ import {
   ToneMapping,
 } from '../threejs/Three.js';
 import { degreeToRadian } from '@modules/renderer/threejs/math/MathUtils.js';
-import { createWindowResizer } from '@modules/renderer/examples/utilities/createWindowResizer.js';
+import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 const camera = new PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.01, 100);
 camera.position.set(1, 2, 3);
@@ -124,7 +124,7 @@ controls.eventDispatcher.add('start', toggleRotation);
 controls.eventDispatcher.add('end', toggleRotation);
 controls.update();
 
-createWindowResizer(renderer, camera);
+useWindowResizer(renderer, camera);
 
 function animate() {
   const delta = clock.getDelta();

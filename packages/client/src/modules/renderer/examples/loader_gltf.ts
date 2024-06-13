@@ -6,6 +6,7 @@ import { RGBELoader } from '../threejs/loaders/RGBELoader.js';
 
 import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
 import { GLTFLoader } from '../threejs/loaders/GLTFLoader.js';
+import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, renderer;
 
@@ -54,19 +55,11 @@ function init() {
   controls.target.set(0, 0, -0.2);
   controls.update();
 
-  window.addEventListener('resize', onWindowResize);
+  useWindowResizer(renderer, camera, () => {
+    useWindowResizer.updateSize(renderer, camera);
+    render();
+  });
 }
-
-function onWindowResize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-
-  renderer.setSize(window.innerWidth, window.innerHeight);
-
-  render();
-}
-
-//
 
 function render() {
   renderer.renderAsync(scene, camera);

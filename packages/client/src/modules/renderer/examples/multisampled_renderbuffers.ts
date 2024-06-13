@@ -6,6 +6,7 @@ import { GUI } from 'lil-gui';
 import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 
 import { QuadMesh } from '../threejs/objects/QuadMesh.js';
+import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, renderer;
 const mouse = new THREE.Vector2();
@@ -89,11 +90,12 @@ function init() {
   });
 
   window.addEventListener('mousemove', onWindowMouseMove);
-  window.addEventListener('resize', onWindowResize);
-
-  // FX
-
-  // modulate the final color based on the mouse position
+  useWindowResizer(renderer, camera, () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderTarget.setSize(window.innerWidth * dpr, window.innerHeight * dpr);
+  });
 
   const materialFX = new MeshBasicNodeMaterial();
   materialFX.colorNode = texture(renderTarget.texture).rgb;
@@ -104,14 +106,6 @@ function init() {
 function onWindowMouseMove(e) {
   mouse.x = e.offsetX / window.innerWidth;
   mouse.y = e.offsetY / window.innerHeight;
-}
-
-function onWindowResize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderTarget.setSize(window.innerWidth * dpr, window.innerHeight * dpr);
 }
 
 function animate() {

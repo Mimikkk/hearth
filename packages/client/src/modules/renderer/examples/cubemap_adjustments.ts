@@ -21,6 +21,7 @@ import { GLTFLoader } from '../threejs/loaders/GLTFLoader.js';
 
 import { GUI } from 'lil-gui';
 import { CubeTextureLoader } from '@modules/renderer/threejs/loaders/CubeTextureLoader.js';
+import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, renderer;
 
@@ -151,7 +152,7 @@ async function init() {
   controls.minDistance = 2;
   controls.maxDistance = 10;
 
-  window.addEventListener('resize', onWindowResize);
+  useWindowResizer(renderer, camera);
 
   // gui
 
@@ -171,13 +172,6 @@ async function init() {
   gui.add(adjustments, 'intensity', 0, 5, 0.01);
   gui.add(adjustments, 'hue', 0, Math.PI * 2, 0.01);
   gui.add(adjustments, 'saturation', 0, 2, 0.01);
-}
-
-function onWindowResize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-
-  renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
 //

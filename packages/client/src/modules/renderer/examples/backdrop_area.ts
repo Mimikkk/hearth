@@ -30,7 +30,7 @@ import {
   Side,
   ToneMapping,
 } from '../threejs/Three.js';
-import { createWindowResizer } from '@modules/renderer/examples/utilities/createWindowResizer.js';
+import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 const camera = new PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.25, 25);
 camera.position.set(3, 2, 3);
@@ -119,7 +119,7 @@ const controls = new OrbitControls(camera, renderer.domElement);
 controls.target.set(0, 1, 0);
 controls.update();
 
-createWindowResizer(renderer, camera);
+useWindowResizer(renderer, camera);
 
 // gui
 

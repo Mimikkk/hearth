@@ -17,6 +17,7 @@ import { RGBMLoader } from '../threejs/loaders/RGBMLoader.js';
 import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
 
 import { GUI } from 'lil-gui';
+import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, renderer;
 
@@ -80,16 +81,7 @@ async function init() {
       render();
     });
 
-  window.addEventListener('resize', onWindowResize);
-}
-
-function onWindowResize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-
-  renderer.setSize(window.innerWidth, window.innerHeight);
-
-  render();
+  useWindowResizer(renderer, camera);
 }
 
 //

@@ -6,6 +6,7 @@ import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 import Stats from 'stats-js';
 import { unzipSync } from 'fflate';
 import { FileLoader, FileLoaderResponse } from '@modules/renderer/threejs/loaders/FileLoader.js';
+import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, mesh, renderer, stats;
 
@@ -61,14 +62,7 @@ function init() {
   stats = new Stats();
   container.appendChild(stats.dom);
 
-  window.addEventListener('resize', onWindowResize);
-}
-
-function onWindowResize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-
-  renderer.setSize(window.innerWidth, window.innerHeight);
+  useWindowResizer(renderer, camera);
 }
 
 function animate() {

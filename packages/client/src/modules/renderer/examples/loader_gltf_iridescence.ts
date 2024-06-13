@@ -5,6 +5,7 @@ import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
 import { GLTFLoader } from '../threejs/loaders/GLTFLoader.js';
 import { RGBELoader } from '../threejs/loaders/RGBELoader.js';
+import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let renderer, scene, camera, controls;
 
@@ -31,11 +32,11 @@ async function init() {
   controls.target.set(0, 0.2, 0);
   controls.update();
 
-  const gltfLoader = new GLTFLoader({ path: 'models/gltf/' });
+  const gltfLoader = new GLTFLoader();
 
   const [texture, gltf] = await Promise.all([
     RGBELoader.loadAsync('textures/equirectangular/venice_sunset_1k.hdr'),
-    gltfLoader.loadAsync('IridescenceLamp.glb'),
+    gltfLoader.loadAsync('models/gltf/IridescenceLamp.glb'),
   ]);
 
   // environment
@@ -51,17 +52,7 @@ async function init() {
 
   render();
 
-  window.addEventListener('resize', onWindowResize);
-}
-
-function onWindowResize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
-
-  camera.updateProjectionMatrix();
-
-  renderer.setSize(window.innerWidth, window.innerHeight);
-
-  render();
+  useWindowResizer(renderer, camera);
 }
 
 function render() {

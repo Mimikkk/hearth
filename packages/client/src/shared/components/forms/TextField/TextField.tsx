@@ -1,10 +1,11 @@
-import { createEffect, Ref, Show } from 'solid-js';
+import { createEffect, JSXElement, Ref, Show } from 'solid-js';
 import cx from 'clsx';
 import s from './TextField.module.scss';
 import { createSearchString } from '@logic/Search/createSearchString.js';
 import { ButtonIcon } from '@components/buttons/ButtonIcon/ButtonIcon.js';
 import { IconName } from '@components/buttons/Icon/Icon.js';
 import { createString } from '@logic/createString.js';
+import { createToggle } from '@logic/createToggle.js';
 
 type ChangeEvent = Event & { currentTarget?: HTMLInputElement; target?: HTMLInputElement };
 export type TextFieldProps = ({ searchId: string } | { id: string }) & {
@@ -15,6 +16,8 @@ export type TextFieldProps = ({ searchId: string } | { id: string }) & {
   ref?: Ref<HTMLInputElement>;
   icon?: IconName;
   onIconClick?: (event: MouseEvent) => void;
+  onFocusChange?: (focused: boolean) => void;
+  after?: JSXElement;
 };
 
 export const TextField = (props: TextFieldProps) => {
@@ -27,6 +30,9 @@ export const TextField = (props: TextFieldProps) => {
 
   let ref: HTMLInputElement;
   let id = 'id' in props ? props.id : props.searchId;
+
+  const [isFocused, , toggleFocused] = createToggle();
+  createEffect(() => props.onFocusChange?.(isFocused()));
 
   return (
     <div class={cx(s.field, props.icon && s.withIcon, props.class)}>
@@ -62,6 +68,8 @@ export const TextField = (props: TextFieldProps) => {
           ref = element;
           (props.ref as ((element: HTMLInputElement) => void) | undefined)?.(element);
         }}
+        onFocus={toggleFocused}
+        onBlur={toggleFocused}
         class={s.input}
         placeholder=" "
         value={get()}
@@ -73,6 +81,7 @@ export const TextField = (props: TextFieldProps) => {
           props.onChange?.(value, event);
         }}
       />
+      {props.after}
     </div>
   );
 };

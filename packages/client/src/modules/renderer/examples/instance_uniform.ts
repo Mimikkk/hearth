@@ -16,6 +16,7 @@ import { TeapotGeometry } from '../threejs/geometries/TeapotGeometry.js';
 
 import Stats from 'stats-js';
 import { CubeTextureLoader } from '@modules/renderer/threejs/loaders/CubeTextureLoader.js';
+import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 class InstanceUniformNode extends Node {
   constructor() {
@@ -112,7 +113,7 @@ async function init() {
 
   //
 
-  window.addEventListener('resize', onWindowResize);
+  useWindowResizer(renderer, camera);
 }
 
 function addMesh(geometry, material) {
@@ -131,15 +132,6 @@ function addMesh(geometry, material) {
 
   scene.add(mesh);
 }
-
-function onWindowResize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-
-  renderer.setSize(window.innerWidth, window.innerHeight);
-}
-
-//
 
 function animate() {
   for (let i = 0, l = objects.length; i < l; i++) {

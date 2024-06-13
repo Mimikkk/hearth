@@ -5,6 +5,7 @@ import { GLTFLoader } from '../threejs/loaders/GLTFLoader.js';
 
 import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 import PostProcessing from '../threejs/renderers/common/PostProcessing.js';
+import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, renderer;
 let postProcessing;
@@ -110,14 +111,7 @@ function init() {
 
   // events
 
-  window.addEventListener('resize', onWindowResize);
-}
-
-function onWindowResize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-
-  renderer.setSize(window.innerWidth, window.innerHeight);
+  useWindowResizer(renderer, camera);
 }
 
 function animate() {

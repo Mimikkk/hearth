@@ -5,6 +5,7 @@ import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 
 import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
 import { TextureLoader } from '@modules/renderer/threejs/loaders/TextureLoader.js';
+import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, renderer;
 let controls;
@@ -34,14 +35,7 @@ async function init() {
   controls.rotateSpeed = -0.125; // negative, to track mouse pointer
   controls.autoRotateSpeed = 1.0;
 
-  window.addEventListener('resize', onWindowResize);
-}
-
-function onWindowResize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-
-  renderer.setSize(window.innerWidth, window.innerHeight);
+  useWindowResizer(renderer, camera);
 }
 
 function render() {

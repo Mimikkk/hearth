@@ -20,6 +20,7 @@ import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.
 import Stats from 'stats-js';
 import { ColorSpace } from '../threejs/Three.js';
 import { TextureLoader } from '@modules/renderer/threejs/loaders/TextureLoader.js';
+import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, renderer;
 let model, mixer, clock;
@@ -143,14 +144,7 @@ async function init() {
 
   //
 
-  window.addEventListener('resize', onWindowResize);
-}
-
-function onWindowResize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-
-  renderer.setSize(window.innerWidth, window.innerHeight);
+  useWindowResizer(renderer, camera);
 }
 
 function animate() {

@@ -23,6 +23,7 @@ import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 import { QuadMesh } from '../threejs/objects/QuadMesh.js';
 import { Filter } from '../threejs/Three.js';
 import { TextureLoader } from '@modules/renderer/threejs/loaders/TextureLoader.js';
+import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, renderer, torus;
 let quadMesh, renderTarget;
@@ -130,17 +131,14 @@ async function init() {
 
   new OrbitControls(camera, renderer.domElement);
 
-  window.addEventListener('resize', onWindowResize);
-}
+  useWindowResizer(renderer, camera, () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
 
-function onWindowResize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-
-  renderer.setSize(window.innerWidth, window.innerHeight);
-
-  const dpr = renderer.getPixelRatio();
-  renderTarget.setSize(window.innerWidth * dpr, window.innerHeight * dpr);
+    const dpr = renderer.getPixelRatio();
+    renderTarget.setSize(window.innerWidth * dpr, window.innerHeight * dpr);
+  });
 }
 
 function render(time) {

@@ -1,17 +1,18 @@
 import * as THREE from '../threejs/Three.js';
 import {
+  float,
+  instanceIndex,
+  MeshBasicNodeMaterial,
   texture,
   textureStore,
   tslFn,
-  instanceIndex,
-  float,
   uvec2,
   vec4,
-  MeshBasicNodeMaterial,
 } from '../threejs/nodes/Nodes.js';
 
 import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 import StorageTexture from '../threejs/renderers/common/StorageTexture.js';
+import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, renderer;
 
@@ -75,23 +76,20 @@ function init() {
 
   // compute texture
   renderer.compute(computeNode);
+  useWindowResizer(renderer, camera, () => {
+    renderer.setSize(window.innerWidth, window.innerHeight);
 
-  window.addEventListener('resize', onWindowResize);
-}
+    const aspect = window.innerWidth / window.innerHeight;
 
-function onWindowResize() {
-  renderer.setSize(window.innerWidth, window.innerHeight);
+    const frustumHeight = camera.top - camera.bottom;
 
-  const aspect = window.innerWidth / window.innerHeight;
+    camera.left = (-frustumHeight * aspect) / 2;
+    camera.right = (frustumHeight * aspect) / 2;
 
-  const frustumHeight = camera.top - camera.bottom;
+    camera.updateProjectionMatrix();
 
-  camera.left = (-frustumHeight * aspect) / 2;
-  camera.right = (frustumHeight * aspect) / 2;
-
-  camera.updateProjectionMatrix();
-
-  render();
+    render();
+  });
 }
 
 function render() {

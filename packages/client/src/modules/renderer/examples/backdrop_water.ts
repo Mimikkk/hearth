@@ -46,7 +46,7 @@ import {
   Vector3,
   Wrapping,
 } from '../threejs/Three.js';
-import { createWindowResizer } from '@modules/renderer/examples/utilities/createWindowResizer.js';
+import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 import { TextureLoader } from '@modules/renderer/threejs/loaders/TextureLoader.js';
 
 // let camera, scene, renderer;
@@ -238,7 +238,7 @@ postProcessing.outputNode = waterMask.cond(
 
 //
 
-createWindowResizer(renderer, camera);
+useWindowResizer(renderer, camera);
 
 function animate() {
   stats.update();

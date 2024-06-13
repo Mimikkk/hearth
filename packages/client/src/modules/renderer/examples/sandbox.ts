@@ -21,6 +21,7 @@ import { KTX2Loader } from '../threejs/loaders/KTX2Loader.js';
 import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 import { TextureFormat } from '../threejs/Three.js';
 import { TextureLoader } from '@modules/renderer/threejs/loaders/TextureLoader.js';
+import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, renderer;
 
@@ -157,14 +158,7 @@ async function init() {
   line.position.set(2, 1, 0);
   scene.add(line);
 
-  window.addEventListener('resize', onWindowResize);
-}
-
-function onWindowResize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-
-  renderer.setSize(window.innerWidth, window.innerHeight);
+  useWindowResizer(renderer, camera);
 }
 
 function animate() {

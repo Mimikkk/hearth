@@ -3,6 +3,7 @@ import * as THREE from '../threejs/Three.js';
 import Stats from 'stats-js';
 import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 import { TextureLoader } from '@modules/renderer/threejs/loaders/TextureLoader.js';
+import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let container, stats;
 
@@ -106,14 +107,7 @@ async function init() {
 
   document.addEventListener('mousemove', onDocumentMouseMove);
 
-  window.addEventListener('resize', onWindowResize);
-}
-
-function onWindowResize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-
-  renderer.setSize(window.innerWidth, window.innerHeight);
+  useWindowResizer(renderer, camera);
 }
 
 function onDocumentMouseMove(event) {

@@ -16,6 +16,7 @@ import { GUI } from 'lil-gui';
 import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 import StorageInstancedBufferAttribute from '../threejs/renderers/common/StorageInstancedBufferAttribute.js';
 import { TextureFormat } from '../threejs/Three.js';
+import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, renderer;
 let computeNode;
@@ -163,21 +164,13 @@ async function init() {
   renderer.setAnimationLoop(render);
   container.appendChild(renderer.domElement);
 
-  window.addEventListener('resize', onWindowResize);
-
   document.onclick = () => {
     const overlay = document.getElementById('overlay');
     if (overlay !== null) overlay.remove();
 
     playAudioBuffer();
   };
-}
-
-function onWindowResize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-
-  renderer.setSize(window.innerWidth, window.innerHeight);
+  useWindowResizer(renderer, camera);
 }
 
 function render() {

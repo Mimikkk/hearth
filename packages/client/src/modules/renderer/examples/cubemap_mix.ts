@@ -8,6 +8,7 @@ import { RGBMLoader } from '../threejs/loaders/RGBMLoader.js';
 import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
 import { GLTFLoader } from '../threejs/loaders/GLTFLoader.js';
 import { CubeTextureLoader } from '@modules/renderer/threejs/loaders/CubeTextureLoader.js';
+import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, renderer;
 
@@ -70,14 +71,7 @@ async function init() {
   controls.minDistance = 2;
   controls.maxDistance = 10;
 
-  window.addEventListener('resize', onWindowResize);
-}
-
-function onWindowResize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-
-  renderer.setSize(window.innerWidth, window.innerHeight);
+  useWindowResizer(renderer, camera);
 }
 
 //

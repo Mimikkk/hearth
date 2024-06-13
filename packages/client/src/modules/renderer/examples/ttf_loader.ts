@@ -3,6 +3,7 @@ import { Font } from '@modules/renderer/threejs/loaders/FontLoader.js';
 import { TTFLoader } from '@modules/renderer/threejs/loaders/TTFLoader.js';
 import { WebGPURenderer } from '@modules/renderer/threejs/renderers/webgpu/WebGPURenderer.js';
 import { TextGeometry } from '@modules/renderer/threejs/geometries/TextGeometry.js';
+import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, cameraTarget, scene, renderer;
 let group, textMesh1, textMesh2, textGeo, material;
@@ -94,17 +95,7 @@ function init() {
   document.addEventListener('keypress', onDocumentKeyPress);
   document.addEventListener('keydown', onDocumentKeyDown);
 
-  window.addEventListener('resize', onWindowResize);
-}
-
-function onWindowResize() {
-  const width = window.innerWidth;
-  const height = window.innerHeight;
-
-  camera.aspect = width / height;
-  camera.updateProjectionMatrix();
-
-  renderer.setSize(window.innerWidth, window.innerHeight);
+  useWindowResizer(renderer, camera);
 }
 
 function onDocumentKeyDown(event) {

@@ -4,6 +4,7 @@ import { GUI } from 'lil-gui';
 import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
 
 import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
+import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let container, camera, scene, renderer, mesh;
 
@@ -47,7 +48,7 @@ function init() {
   const controls = new OrbitControls(camera, renderer.domElement);
   controls.enableZoom = false;
 
-  window.addEventListener('resize', onWindowResize);
+  useWindowResizer(renderer, camera);
 }
 
 function createGeometry() {
@@ -114,11 +115,4 @@ function initGUI() {
     .onChange(function (value) {
       mesh.morphTargetInfluences[1] = value;
     });
-}
-
-function onWindowResize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-
-  renderer.setSize(window.innerWidth, window.innerHeight);
 }

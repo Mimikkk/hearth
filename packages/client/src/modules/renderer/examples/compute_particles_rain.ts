@@ -28,6 +28,7 @@ import { GUI } from 'lil-gui';
 
 import * as BufferGeometryUtils from '@modules/renderer/threejs/utils/BufferGeometryUtils.js';
 import { BufferGeometryLoader } from '@modules/renderer/threejs/loaders/BufferGeometryLoader.js';
+import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 const maxParticleCount = 50000;
 const instanceCount = maxParticleCount / 2;
@@ -309,7 +310,7 @@ function init() {
 
   //
 
-  window.addEventListener('resize', onWindowResize);
+  useWindowResizer(renderer, camera);
 
   // gui
 
@@ -325,15 +326,6 @@ function init() {
     .add(rainParticles, 'count', 200, maxParticleCount, 1)
     .name('drop count')
     .onChange(v => (rippleParticles.count = v));
-}
-
-function onWindowResize() {
-  const { innerWidth, innerHeight } = window;
-
-  camera.aspect = innerWidth / innerHeight;
-  camera.updateProjectionMatrix();
-
-  renderer.setSize(innerWidth, innerHeight);
 }
 
 function animate() {

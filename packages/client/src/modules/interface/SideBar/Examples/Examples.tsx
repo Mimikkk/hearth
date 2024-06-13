@@ -1,5 +1,5 @@
 import { TextField } from '@components/forms/TextField/TextField.js';
-import { createEffect, createMemo, onCleanup } from 'solid-js';
+import { createEffect, createMemo, createSignal, JSXElement, onCleanup, ParentProps, Show } from 'solid-js';
 import { Search } from '@logic/Search/Search.js';
 import { createQueryable } from '@logic/createQueryable.js';
 import { ExampleNs } from '@modules/managment/exampleNs.js';
@@ -11,6 +11,8 @@ import { SideBarItems } from '@modules/interface/SideBar/SideBar.items.js';
 import { useContent } from '@modules/managment/useContent.js';
 import { createEffectListener } from '@logic/createListener.js';
 import { Example } from '@modules/renderer/examples/examples.js';
+import cx from 'clsx';
+import { Shortcut } from '@shared/components/forms/Shortcut/Shortcut.tsx';
 
 const flatBy = <T extends Record<string, any>>(items: T[], key: Path.Of<T, T[] | undefined>): T[] => {
   const results = [];
@@ -97,6 +99,8 @@ export const Examples = () => {
     }
   });
 
+  const [isFocused, setIsFocused] = createSignal(false);
+
   return (
     <div class="flex flex-col gap-1 h-full">
       <div class="flex flex-col gap-1 px-2">
@@ -107,6 +111,16 @@ export const Examples = () => {
           label="search..."
           value={query()}
           onChange={setQuery}
+          onFocusChange={setIsFocused}
+          after={
+            <Show when={!isFocused()}>
+              <Shortcut class="absolute right-0 pr-1 opacity-50">
+                <Shortcut.Key border>ctrl</Shortcut.Key>
+                <Shortcut.Key border>alt</Shortcut.Key>
+                <Shortcut.Key>f</Shortcut.Key>
+              </Shortcut>
+            </Show>
+          }
         />
         <div class="flex ml-auto gap-2">
           <CollapseButton />

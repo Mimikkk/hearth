@@ -1,6 +1,7 @@
 import * as THREE from '../threejs/Three.js';
 
 import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
+import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let container;
 
@@ -10,9 +11,6 @@ let video, texture, material, mesh;
 
 let mouseX = 0;
 let mouseY = 0;
-
-let windowHalfX = window.innerWidth / 2;
-let windowHalfY = window.innerHeight / 2;
 
 let cube_count;
 
@@ -111,17 +109,7 @@ function init() {
 
   //
 
-  window.addEventListener('resize', onWindowResize);
-}
-
-function onWindowResize() {
-  windowHalfX = window.innerWidth / 2;
-  windowHalfY = window.innerHeight / 2;
-
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-
-  renderer.setSize(window.innerWidth, window.innerHeight);
+  useWindowResizer(renderer, camera);
 }
 
 function change_uvs(geometry, unitx, unity, offsetx, offsety) {
@@ -134,8 +122,8 @@ function change_uvs(geometry, unitx, unity, offsetx, offsety) {
 }
 
 function onDocumentMouseMove(event) {
-  mouseX = event.clientX - windowHalfX;
-  mouseY = (event.clientY - windowHalfY) * 0.3;
+  mouseX = event.clientX - window.innerWidth / 2;
+  mouseY = (event.clientY - window.innerHeight / 2) * 0.3;
 }
 
 //

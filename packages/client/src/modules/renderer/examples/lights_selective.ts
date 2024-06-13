@@ -10,6 +10,7 @@ import { TeapotGeometry } from '../threejs/geometries/TeapotGeometry.js';
 
 import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 import { TextureLoader } from '@modules/renderer/threejs/loaders/TextureLoader.js';
+import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, renderer, light1, light2, light3, light4, stats, controls;
 
@@ -109,21 +110,13 @@ async function init() {
   stats = new Stats();
   document.body.appendChild(stats.dom);
 
-  window.addEventListener('resize', onWindowResize);
-
+  useWindowResizer(renderer, camera);
   //gui
 
   const gui = new GUI();
 
   gui.add(centerObject.material, 'roughness', 0, 1, 0.01);
   gui.add(centerObject.material, 'metalness', 0, 1, 0.01);
-}
-
-function onWindowResize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-
-  renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
 function animate() {

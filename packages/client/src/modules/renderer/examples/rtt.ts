@@ -5,6 +5,7 @@ import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 
 import { QuadMesh } from '../threejs/objects/QuadMesh.js';
 import { TextureLoader } from '@modules/renderer/threejs/loaders/TextureLoader.js';
+import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, renderer;
 const mouse = new THREE.Vector2();
@@ -49,7 +50,11 @@ async function init() {
   renderTarget = new THREE.RenderTarget(window.innerWidth * dpr, window.innerHeight * dpr);
 
   window.addEventListener('mousemove', onWindowMouseMove);
-  window.addEventListener('resize', onWindowResize);
+  useWindowResizer(renderer, camera);
+  window.addEventListener('resize', () => {
+    useWindowResizer.updateSize(renderer, camera);
+    renderTarget.setSize(window.innerWidth * dpr, window.innerHeight * dpr);
+  });
 
   // FX
 
@@ -66,14 +71,6 @@ async function init() {
 function onWindowMouseMove(e) {
   mouse.x = e.offsetX / window.innerWidth;
   mouse.y = e.offsetY / window.innerHeight;
-}
-
-function onWindowResize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderTarget.setSize(window.innerWidth * dpr, window.innerHeight * dpr);
 }
 
 function animate() {

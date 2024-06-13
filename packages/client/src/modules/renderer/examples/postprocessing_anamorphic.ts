@@ -11,6 +11,7 @@ import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.
 import { GLTFLoader } from '../threejs/loaders/GLTFLoader.js';
 
 import { GUI } from 'lil-gui';
+import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, renderer;
 let postProcessing;
@@ -87,19 +88,8 @@ async function init() {
     .name('resolution')
     .onChange(v => (anamorphicPass.resolution.y = v));
 
-  //
-
-  window.addEventListener('resize', onWindowResize);
+  useWindowResizer(renderer, camera);
 }
-
-function onWindowResize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-
-  renderer.setSize(window.innerWidth, window.innerHeight);
-}
-
-//
 
 function render() {
   postProcessing.render();

@@ -2,6 +2,7 @@ import * as THREE from '../threejs/Three.js';
 import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 import { Filter } from '../threejs/Three.js';
 import { TextureLoader } from '@modules/renderer/threejs/loaders/TextureLoader.js';
+import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, renderer, clock, dataTexture, diffuseMap;
 
@@ -49,14 +50,7 @@ async function init() {
 
   //
 
-  window.addEventListener('resize', onWindowResize);
-}
-
-function onWindowResize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-
-  renderer.setSize(window.innerWidth, window.innerHeight);
+  useWindowResizer(renderer, camera);
 }
 
 async function animate() {

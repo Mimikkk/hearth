@@ -9,6 +9,7 @@ import { GUI } from 'lil-gui';
 import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
 import { FBXLoader } from '../threejs/loaders/FBXLoader.js';
 import { TextureLoader } from '../threejs/loaders/TextureLoader.ts';
+import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let container, stats;
 let camera, scene, renderer;
@@ -68,8 +69,7 @@ function init() {
   controls.minDistance = 500;
   controls.maxDistance = 3000;
 
-  window.addEventListener('resize', onWindowResize);
-
+  useWindowResizer(renderer, camera);
   initMaterial();
 }
 
@@ -165,15 +165,6 @@ function initGUI(material) {
       material.thicknessScaleNode.value = thicknessControls.scale;
     });
 }
-
-function onWindowResize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-
-  renderer.setSize(window.innerWidth, window.innerHeight);
-}
-
-//
 
 function animate() {
   render();

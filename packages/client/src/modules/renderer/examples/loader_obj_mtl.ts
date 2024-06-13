@@ -6,6 +6,7 @@ import { OBJLoader } from '@modules/renderer/threejs/loaders/OBJLoader.js';
 import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
 import { AmbientLight } from '@modules/renderer/threejs/lights/AmbientLight.js';
 import { PointLight } from '@modules/renderer/threejs/lights/PointLight.js';
+import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera!: PerspectiveCamera;
 let scene!: Scene;
@@ -62,17 +63,8 @@ async function init() {
 
   //
 
-  window.addEventListener('resize', onWindowResize);
+  useWindowResizer(renderer, camera);
 }
-
-function onWindowResize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-
-  renderer.setSize(window.innerWidth, window.innerHeight);
-}
-
-//
 
 function animate() {
   renderer.render(scene, camera);

@@ -26,6 +26,7 @@ import StorageInstancedBufferAttribute from '../threejs/renderers/common/Storage
 import PostProcessing from '../threejs/renderers/common/PostProcessing.js';
 
 import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
+import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 const maxParticleCount = 100000;
 
@@ -298,16 +299,7 @@ async function init() {
 
   //
 
-  window.addEventListener('resize', onWindowResize);
-}
-
-function onWindowResize() {
-  const { innerWidth, innerHeight } = window;
-
-  camera.aspect = innerWidth / innerHeight;
-  camera.updateProjectionMatrix();
-
-  renderer.setSize(innerWidth, innerHeight);
+  useWindowResizer(renderer, camera);
 }
 
 async function animate() {

@@ -3,6 +3,7 @@ import { color, rangeFog, SpriteNodeMaterial, texture, userData, uv } from '../t
 
 import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 import { TextureLoader } from '@modules/renderer/threejs/loaders/TextureLoader.js';
+import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, renderer;
 
@@ -74,17 +75,7 @@ async function init() {
   renderer.setAnimationLoop(render);
   document.body.appendChild(renderer.domElement);
 
-  window.addEventListener('resize', onWindowResize);
-}
-
-function onWindowResize() {
-  const width = window.innerWidth;
-  const height = window.innerHeight;
-
-  camera.aspect = width / height;
-  camera.updateProjectionMatrix();
-
-  renderer.setSize(window.innerWidth, window.innerHeight);
+  useWindowResizer(renderer, camera);
 }
 
 function render() {

@@ -7,6 +7,7 @@ import { MeshoptDecoder } from 'meshoptimizer';
 import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
 
 import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
+import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, renderer;
 
@@ -46,24 +47,15 @@ async function init() {
   const loader = new GLTFLoader();
   loader.setKTX2Loader(ktx2Loader);
   loader.setMeshoptDecoder(MeshoptDecoder);
-  loader.loadAsync('./models/gltf/coffeemat.glb', {
-    onLoad: function (gltf) {
-      const gltfScene = gltf.scene;
-      gltfScene.position.y = -0.8;
-      gltfScene.scale.setScalar(0.01);
+  loader.loadAsync('./models/gltf/coffeemat.glb').then(function (gltf) {
+    const gltfScene = gltf.scene;
+    gltfScene.position.y = -0.8;
+    gltfScene.scale.setScalar(0.01);
 
-      scene.add(gltfScene);
-    },
+    scene.add(gltfScene);
   });
 
-  window.addEventListener('resize', onWindowResize);
-}
-
-function onWindowResize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-
-  renderer.setSize(window.innerWidth, window.innerHeight);
+  useWindowResizer(renderer, camera);
 }
 
 function animate() {

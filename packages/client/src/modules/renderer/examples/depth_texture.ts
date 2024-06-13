@@ -7,6 +7,7 @@ import { QuadMesh } from '../threejs/objects/QuadMesh.js';
 
 import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
 import { TextureDataType } from '../threejs/Three.js';
+import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, controls, renderer;
 
@@ -56,7 +57,13 @@ function init() {
   renderTarget = new THREE.RenderTarget(window.innerWidth * dpr, window.innerHeight * dpr);
   renderTarget.depthTexture = depthTexture;
 
-  window.addEventListener('resize', onWindowResize);
+  useWindowResizer(renderer, camera, () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderTarget.setSize(window.innerWidth * dpr, window.innerHeight * dpr);
+  });
 
   // FX
 
@@ -69,14 +76,6 @@ function init() {
 
   controls = new OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true;
-}
-
-function onWindowResize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderTarget.setSize(window.innerWidth * dpr, window.innerHeight * dpr);
 }
 
 function animate() {

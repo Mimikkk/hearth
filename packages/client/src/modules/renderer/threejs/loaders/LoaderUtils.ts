@@ -17,6 +17,7 @@ export const LoaderUtils = {
 
     return url.slice(0, index + 1);
   },
+
   resolveUrl(url: string, path: string): string {
     if (isHostRelativeUrl(path, url)) path = path.replace(replaceRelativeRe, '$1');
     if (isAbsoluteUrl(url)) return url;

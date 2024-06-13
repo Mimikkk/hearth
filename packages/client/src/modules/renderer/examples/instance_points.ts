@@ -13,6 +13,7 @@ import { InstancedPointsGeometry } from '../threejs/geometries/InstancedPointsGe
 import { color, InstancedPointsNodeMaterial } from '../threejs/nodes/Nodes.js';
 
 import * as GeometryUtils from '@modules/renderer/threejs/utils/GeometryUtils.js';
+import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let renderer, scene, camera, camera2, controls, backgroundNode;
 let material;
@@ -91,26 +92,23 @@ function init() {
 
   //
 
-  window.addEventListener('resize', onWindowResize);
-  onWindowResize();
+  useWindowResizer(renderer, camera, () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+
+    renderer.setSize(window.innerWidth, window.innerHeight);
+
+    insetWidth = window.innerHeight / 4;
+    insetHeight = window.innerHeight / 4;
+
+    camera2.aspect = insetWidth / insetHeight;
+    camera2.updateProjectionMatrix();
+  });
 
   stats = new Stats();
   document.body.appendChild(stats.dom);
 
   initGui();
-}
-
-function onWindowResize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-
-  renderer.setSize(window.innerWidth, window.innerHeight);
-
-  insetWidth = window.innerHeight / 4; // square
-  insetHeight = window.innerHeight / 4;
-
-  camera2.aspect = insetWidth / insetHeight;
-  camera2.updateProjectionMatrix();
 }
 
 function animate() {

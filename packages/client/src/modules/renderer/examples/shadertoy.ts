@@ -6,6 +6,7 @@ import ShaderToyDecoder from '@modules/renderer/threejs/transpiler/ShaderToyDeco
 import TSLEncoder from '@modules/renderer/threejs/transpiler/TSLEncoder.js';
 
 import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
+import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 class ShaderToyNode extends Nodes.Node {
   constructor() {
@@ -90,14 +91,7 @@ function init() {
   renderer.outputColorSpace = THREE.ColorSpace.LinearSRGB;
   document.body.appendChild(renderer.domElement);
 
-  window.addEventListener('resize', onWindowResize);
-}
-
-function onWindowResize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-
-  renderer.setSize(window.innerWidth, window.innerHeight);
+  useWindowResizer(renderer, camera);
 }
 
 function animate() {

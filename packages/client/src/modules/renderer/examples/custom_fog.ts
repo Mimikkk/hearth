@@ -14,6 +14,7 @@ import {
 import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 
 import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
+import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, renderer;
 let controls;
@@ -124,14 +125,7 @@ function init() {
   controls.autoRotateSpeed = 0.1;
   controls.update();
 
-  window.addEventListener('resize', resize);
-}
-
-function resize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-
-  renderer.setSize(window.innerWidth, window.innerHeight);
+  useWindowResizer(renderer, camera);
 }
 
 function animate() {

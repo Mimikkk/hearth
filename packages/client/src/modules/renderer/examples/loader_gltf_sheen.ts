@@ -7,6 +7,7 @@ import { GLTFLoader } from '../threejs/loaders/GLTFLoader.js';
 import { RGBELoader } from '../threejs/loaders/RGBELoader.js';
 
 import { GUI } from 'lil-gui';
+import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, renderer, controls;
 
@@ -24,17 +25,15 @@ function init() {
 
   // model
 
-  new GLTFLoader({ path: 'models/gltf/' }).loadAsync('SheenChair.glb', {
-    onLoad: function (gltf) {
-      scene.add(gltf.scene);
+  new GLTFLoader().loadAsync('models/gltf/SheenChair.glb').then(gltf => {
+    scene.add(gltf.scene);
 
-      const object = gltf.scene.getObjectByName('SheenChair_fabric');
+    const object = gltf.scene.getObjectByName('SheenChair_fabric');
 
-      const gui = new GUI();
+    const gui = new GUI();
 
-      gui.add(object.material, 'sheen', 0, 1);
-      gui.open();
-    },
+    gui.add(object.material, 'sheen', 0, 1);
+    gui.open();
   });
 
   renderer = new WebGPURenderer({ antialias: true });
@@ -62,14 +61,7 @@ function init() {
   controls.target.set(0, 0.35, 0);
   controls.update();
 
-  window.addEventListener('resize', onWindowResize);
-}
-
-function onWindowResize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-
-  renderer.setSize(window.innerWidth, window.innerHeight);
+  useWindowResizer(renderer, camera);
 }
 
 //

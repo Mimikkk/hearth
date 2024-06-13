@@ -13,6 +13,7 @@ import {
 
 import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 import StorageInstancedBufferAttribute from '../threejs/renderers/common/StorageInstancedBufferAttribute.js';
+import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 const timestamps = {
   webgpu: document.getElementById('timestamps'),
@@ -152,11 +153,8 @@ function init(forceWebGL = false) {
 
   stepAnimation();
 
-  window.addEventListener('resize', onWindowResize);
-
-  function onWindowResize() {
+  useWindowResizer(renderer, camera, () => {
     renderer.setSize(window.innerWidth / 2, window.innerHeight);
-
     const aspect = window.innerWidth / 2 / window.innerHeight;
 
     const frustumHeight = camera.top - camera.bottom;
@@ -167,5 +165,5 @@ function init(forceWebGL = false) {
     camera.updateProjectionMatrix();
 
     renderer.render(scene, camera);
-  }
+  });
 }

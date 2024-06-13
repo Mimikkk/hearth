@@ -16,6 +16,7 @@ import { GUI } from 'lil-gui';
 
 import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
 import StorageInstancedBufferAttribute from '../threejs/renderers/common/StorageInstancedBufferAttribute.js';
+import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, renderer;
 let computeNode;
@@ -111,7 +112,7 @@ function init() {
   renderer.setAnimationLoop(animate);
   document.body.appendChild(renderer.domElement);
 
-  window.addEventListener('resize', onWindowResize);
+  useWindowResizer(renderer, camera);
   window.addEventListener('mousemove', onMouseMove);
 
   // gui
@@ -120,12 +121,6 @@ function init() {
 
   gui.add(scaleVector, 'x', 0, 1, 0.01);
   gui.add(scaleVector, 'y', 0, 1, 0.01);
-}
-
-function onWindowResize() {
-  camera.updateProjectionMatrix();
-
-  renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
 function onMouseMove(event) {

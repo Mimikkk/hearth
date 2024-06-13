@@ -4,6 +4,7 @@ import { PointsNodeMaterial, skinning, uniform } from '../threejs/nodes/Nodes.js
 import { GLTFLoader } from '../threejs/loaders/GLTFLoader.js';
 
 import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
+import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, renderer;
 
@@ -54,14 +55,7 @@ function init() {
   renderer.setAnimationLoop(animate);
   document.body.appendChild(renderer.domElement);
 
-  window.addEventListener('resize', onWindowResize);
-}
-
-function onWindowResize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-
-  renderer.setSize(window.innerWidth, window.innerHeight);
+  useWindowResizer(renderer, camera);
 }
 
 function animate() {
