@@ -222,11 +222,11 @@ class ScriptableNode extends Node {
 
     const parameters = new Params(this);
 
-    const THREE = global.get('THREE');
+    const ENGINE = global.get('ENGINE');
     const TSL = global.get('TSL');
 
     const method = this.getMethod();
-    const params = [parameters, this._local, global, refresh, setOutput, THREE, TSL];
+    const params = [parameters, this._local, global, refresh, setOutput, ENGINE, TSL];
 
     this._object = method(...params);
 
@@ -286,7 +286,7 @@ class ScriptableNode extends Node {
 
     //
 
-    const parametersProps = ['parameters', 'local', 'global', 'refresh', 'setOutput', 'THREE', 'TSL'];
+    const parametersProps = ['parameters', 'local', 'global', 'refresh', 'setOutput', 'ENGINE', 'TSL'];
     const interfaceProps = ['layout', 'init', 'main', 'dispose'];
 
     const properties = interfaceProps.join(', ');

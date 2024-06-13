@@ -1,4 +1,4 @@
-import * as THREE from '@modules/renderer/engine/engine.js';
+import * as Engine from '@modules/renderer/engine/engine.js';
 import {
   color,
   float,
@@ -142,18 +142,18 @@ async function init() {
   const container = document.createElement('div');
   document.body.appendChild(container);
 
-  camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.01, 30);
+  camera = new Engine.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.01, 30);
 
   // nodes
 
-  analyserTexture = new THREE.DataTexture(analyserBuffer, analyserBuffer.length, 1, THREE.TextureFormat.Red);
+  analyserTexture = new Engine.DataTexture(analyserBuffer, analyserBuffer.length, 1, Engine.TextureFormat.Red);
 
   const spectrum = texture(analyserTexture, viewportTopLeft.x).x.mul(viewportTopLeft.y);
   const backgroundNode = color(0x0000ff).mul(spectrum);
 
   // scene
 
-  scene = new THREE.Scene();
+  scene = new Engine.Scene();
   scene.backgroundNode = backgroundNode;
 
   // renderer

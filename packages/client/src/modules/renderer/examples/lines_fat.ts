@@ -1,4 +1,4 @@
-import * as THREE from '@modules/renderer/engine/engine.js';
+import * as Engine from '@modules/renderer/engine/engine.js';
 
 import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
 
@@ -37,12 +37,12 @@ function init() {
   renderer.setAnimationLoop(animate);
   document.body.appendChild(renderer.domElement);
 
-  scene = new THREE.Scene();
+  scene = new Engine.Scene();
 
-  camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 1000);
+  camera = new Engine.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 1000);
   camera.position.set(-40, 0, 60);
 
-  camera2 = new THREE.PerspectiveCamera(40, 1, 1, 1000);
+  camera2 = new Engine.PerspectiveCamera(40, 1, 1, 1000);
   camera2.position.copy(camera.position);
 
   controls = new OrbitControls(camera, renderer.domElement);
@@ -52,17 +52,15 @@ function init() {
 
   backgroundNode = color(0x222222);
 
-  // Position and THREE.Color Data
-
   const positions = [];
   const colors = [];
 
-  const points = GeometryUtils.hilbert3D(new THREE.Vector3(0, 0, 0), 20.0, 1, 0, 1, 2, 3, 4, 5, 6, 7);
+  const points = GeometryUtils.hilbert3D(new Engine.Vector3(0, 0, 0), 20.0, 1, 0, 1, 2, 3, 4, 5, 6, 7);
 
-  const spline = new THREE.CatmullRomCurve3(points);
+  const spline = new Engine.CatmullRomCurve3(points);
   const divisions = Math.round(12 * points.length);
-  const point = new THREE.Vector3();
-  const lineColor = new THREE.Color();
+  const point = new Engine.Vector3();
+  const lineColor = new Engine.Color();
 
   for (let i = 0, l = divisions; i < l; i++) {
     const t = i / l;
@@ -70,7 +68,7 @@ function init() {
     spline.getPoint(t, point);
     positions.push(point.x, point.y, point.z);
 
-    lineColor.setHSL(t, 1.0, 0.5, THREE.ColorSpace.SRGB);
+    lineColor.setHSL(t, 1.0, 0.5, Engine.ColorSpace.SRGB);
     colors.push(lineColor.r, lineColor.g, lineColor.b);
   }
 
@@ -94,14 +92,14 @@ function init() {
   line.scale.set(1, 1, 1);
   scene.add(line);
 
-  const geo = new THREE.BufferGeometry();
-  geo.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
-  geo.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+  const geo = new Engine.BufferGeometry();
+  geo.setAttribute('position', new Engine.Float32BufferAttribute(positions, 3));
+  geo.setAttribute('color', new Engine.Float32BufferAttribute(colors, 3));
 
   matLineBasic = new LineBasicNodeMaterial({ vertexColors: true });
   matLineDashed = new LineDashedNodeMaterial({ vertexColors: true, scale: 2, dashSize: 1, gapSize: 1 });
 
-  line1 = new THREE.Line(geo, matLineBasic);
+  line1 = new Engine.Line(geo, matLineBasic);
   line1.computeLineDistances();
   line1.visible = false;
   scene.add(line1);

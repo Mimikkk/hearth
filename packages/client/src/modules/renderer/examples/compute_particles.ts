@@ -1,4 +1,4 @@
-import * as THREE from '@modules/renderer/engine/engine.js';
+import * as Engine from '@modules/renderer/engine/engine.js';
 import {
   float,
   instanceIndex,
@@ -28,7 +28,7 @@ const bounce = uniform(0.8);
 const friction = uniform(0.99);
 const size = uniform(0.12);
 
-const clickPosition = uniform(new THREE.Vector3());
+const clickPosition = uniform(new Engine.Vector3());
 
 let camera, scene, renderer;
 let controls, stats;
@@ -41,10 +41,10 @@ init();
 async function init() {
   const { innerWidth, innerHeight } = window;
 
-  camera = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, 0.1, 1000);
+  camera = new Engine.PerspectiveCamera(50, innerWidth / innerHeight, 0.1, 1000);
   camera.position.set(15, 30, 15);
 
-  scene = new THREE.Scene();
+  scene = new Engine.Scene();
 
   // textures
 
@@ -116,7 +116,7 @@ async function init() {
   particleMaterial.depthTest = true;
   particleMaterial.transparent = true;
 
-  const particles = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), particleMaterial);
+  const particles = new Engine.Mesh(new Engine.PlaneGeometry(1, 1), particleMaterial);
   particles.isInstancedMesh = true;
   particles.count = particleCount;
   particles.frustumCulled = false;
@@ -124,17 +124,17 @@ async function init() {
 
   //
 
-  const helper = new THREE.GridHelper(60, 40, 0x303030, 0x303030);
+  const helper = new Engine.GridHelper(60, 40, 0x303030, 0x303030);
   scene.add(helper);
 
-  const geometry = new THREE.PlaneGeometry(1000, 1000);
+  const geometry = new Engine.PlaneGeometry(1000, 1000);
   geometry.rotateX(-Math.PI / 2);
 
-  const plane = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({ visible: false }));
+  const plane = new Engine.Mesh(geometry, new Engine.MeshBasicMaterial({ visible: false }));
   scene.add(plane);
 
-  const raycaster = new THREE.Raycaster();
-  const pointer = new THREE.Vector2();
+  const raycaster = new Engine.Raycaster();
+  const pointer = new Engine.Vector2();
 
   //
 

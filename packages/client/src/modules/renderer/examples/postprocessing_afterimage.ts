@@ -1,4 +1,4 @@
-import * as THREE from '@modules/renderer/engine/engine.js';
+import * as Engine from '@modules/renderer/engine/engine.js';
 
 import { GUI } from 'lil-gui';
 
@@ -24,15 +24,15 @@ function init() {
   renderer.setAnimationLoop(animate);
   document.body.appendChild(renderer.domElement);
 
-  camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 1000);
+  camera = new Engine.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 1000);
   camera.position.z = 400;
 
-  scene = new THREE.Scene();
-  scene.fog = new THREE.Fog(0x000000, 1, 1000);
+  scene = new Engine.Scene();
+  scene.fog = new Engine.Fog(0x000000, 1, 1000);
 
-  const geometry = new THREE.TorusKnotGeometry(100, 30, 100, 16);
-  const material = new THREE.MeshNormalMaterial();
-  mesh = new THREE.Mesh(geometry, material);
+  const geometry = new Engine.TorusKnotGeometry(100, 30, 100, 16);
+  const material = new Engine.MeshNormalMaterial();
+  mesh = new Engine.Mesh(geometry, material);
   scene.add(mesh);
 
   // postprocessing

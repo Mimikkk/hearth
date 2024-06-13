@@ -1,4 +1,4 @@
-import * as THREE from '@modules/renderer/engine/engine.js';
+import * as Engine from '@modules/renderer/engine/engine.js';
 import { color, rangeFog, SpriteNodeMaterial, texture, userData, uv } from '@modules/renderer/engine/nodes/Nodes.js';
 
 import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
@@ -20,10 +20,10 @@ async function init() {
   const width = window.innerWidth;
   const height = window.innerHeight;
 
-  camera = new THREE.PerspectiveCamera(60, width / height, 1, 2100);
+  camera = new Engine.PerspectiveCamera(60, width / height, 1, 2100);
   camera.position.z = 1500;
 
-  scene = new THREE.Scene();
+  scene = new Engine.Scene();
   scene.fogNode = rangeFog(color(0x0000ff), 1500, 2100);
 
   // create sprites
@@ -37,7 +37,7 @@ async function init() {
   imageWidth = map.image.width;
   imageHeight = map.image.height;
 
-  group = new THREE.Group();
+  group = new Engine.Group();
 
   const textureNode = texture(map);
 
@@ -52,7 +52,7 @@ async function init() {
     const y = Math.random() - 0.5;
     const z = Math.random() - 0.5;
 
-    const sprite = new THREE.Sprite(material);
+    const sprite = new Engine.Sprite(material);
 
     sprite.position.set(x, y, z);
     sprite.position.normalize();

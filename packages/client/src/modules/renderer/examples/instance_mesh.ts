@@ -1,4 +1,4 @@
-import * as THREE from '@modules/renderer/engine/engine.js';
+import * as Engine from '@modules/renderer/engine/engine.js';
 import { mix, normalWorld, oscSine, range, timerLocal } from '@modules/renderer/engine/nodes/Nodes.js';
 
 import Stats from 'stats-js';
@@ -13,21 +13,21 @@ let camera, scene, renderer, stats;
 let mesh;
 const amount = parseInt(window.location.search.slice(1)) || 10;
 const count = Math.pow(amount, 3);
-const dummy = new THREE.Object3D();
+const dummy = new Engine.Object3D();
 
 init();
 
 function init() {
-  camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
+  camera = new Engine.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
   camera.position.set(amount * 0.9, amount * 0.9, amount * 0.9);
   camera.lookAt(0, 0, 0);
 
-  scene = new THREE.Scene();
+  scene = new Engine.Scene();
 
-  const material = new THREE.MeshBasicMaterial();
+  const material = new Engine.MeshBasicMaterial();
 
   // random colors between instances from 0x000000 to 0xFFFFFF
-  const randomColors = range(new THREE.Color(0x000000), new THREE.Color(0xffffff));
+  const randomColors = range(new Engine.Color(0x000000), new Engine.Color(0xffffff));
 
   material.colorNode = mix(normalWorld, randomColors, oscSine(timerLocal(0.1)));
 
@@ -36,8 +36,8 @@ function init() {
     geometry.computeVertexNormals();
     geometry.scale(0.5, 0.5, 0.5);
 
-    mesh = new THREE.InstancedMesh(geometry, material, count);
-    mesh.instanceMatrix.setUsage(THREE.BufferUsage.DynamicDraw);
+    mesh = new Engine.InstancedMesh(geometry, material, count);
+    mesh.instanceMatrix.setUsage(Engine.BufferUsage.DynamicDraw);
 
     scene.add(mesh);
 

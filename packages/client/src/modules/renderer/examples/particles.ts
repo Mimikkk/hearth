@@ -1,4 +1,4 @@
-import * as THREE from '@modules/renderer/engine/engine.js';
+import * as Engine from '@modules/renderer/engine/engine.js';
 import {
   color,
   mix,
@@ -27,10 +27,10 @@ init();
 async function init() {
   const { innerWidth, innerHeight } = window;
 
-  camera = new THREE.PerspectiveCamera(60, innerWidth / innerHeight, 1, 5000);
+  camera = new Engine.PerspectiveCamera(60, innerWidth / innerHeight, 1, 5000);
   camera.position.set(1300, 500, 0);
 
-  scene = new THREE.Scene();
+  scene = new Engine.Scene();
   //scene.fogNode = rangeFog( color( 0x0000ff ), 1500, 2100 );
 
   // textures
@@ -41,7 +41,7 @@ async function init() {
   // create nodes
 
   const lifeRange = range(0.1, 1);
-  const offsetRange = range(new THREE.Vector3(-2, 3, -2), new THREE.Vector3(2, 5, 2));
+  const offsetRange = range(new Engine.Vector3(-2, 3, -2), new Engine.Vector3(2, 5, 2));
 
   const timer = timerLocal(0.2, 1 /*100000*/); // @TODO: need to work with 64-bit precision
 
@@ -69,7 +69,7 @@ async function init() {
   smokeNodeMaterial.depthWrite = false;
   smokeNodeMaterial.transparent = true;
 
-  const smokeInstancedSprite = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), smokeNodeMaterial);
+  const smokeInstancedSprite = new Engine.Mesh(new Engine.PlaneGeometry(1, 1), smokeNodeMaterial);
   smokeInstancedSprite.scale.setScalar(400);
   smokeInstancedSprite.isInstancedMesh = true;
   smokeInstancedSprite.count = 2000;
@@ -79,14 +79,14 @@ async function init() {
 
   const fireNodeMaterial = new SpriteNodeMaterial();
   fireNodeMaterial.colorNode = mix(color(0xb72f17), color(0xb72f17), life);
-  fireNodeMaterial.positionNode = range(new THREE.Vector3(-1, 1, -1), new THREE.Vector3(1, 2, 1)).mul(lifeTime);
+  fireNodeMaterial.positionNode = range(new Engine.Vector3(-1, 1, -1), new Engine.Vector3(1, 2, 1)).mul(lifeTime);
   fireNodeMaterial.scaleNode = smokeNodeMaterial.scaleNode;
   fireNodeMaterial.opacityNode = opacityNode;
-  fireNodeMaterial.blending = THREE.Blending.Additive;
+  fireNodeMaterial.blending = Engine.Blending.Additive;
   fireNodeMaterial.transparent = true;
   fireNodeMaterial.depthWrite = false;
 
-  const fireInstancedSprite = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), fireNodeMaterial);
+  const fireInstancedSprite = new Engine.Mesh(new Engine.PlaneGeometry(1, 1), fireNodeMaterial);
   fireInstancedSprite.scale.setScalar(400);
   fireInstancedSprite.isInstancedMesh = true;
   fireInstancedSprite.count = 100;
@@ -96,7 +96,7 @@ async function init() {
 
   //
 
-  const helper = new THREE.GridHelper(3000, 40, 0x303030, 0x303030);
+  const helper = new Engine.GridHelper(3000, 40, 0x303030, 0x303030);
   helper.position.y = -75;
   scene.add(helper);
 

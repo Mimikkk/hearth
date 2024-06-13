@@ -1,4 +1,4 @@
-import * as THREE from '@modules/renderer/engine/engine.js';
+import * as Engine from '@modules/renderer/engine/engine.js';
 import {
   attribute,
   checker,
@@ -30,11 +30,11 @@ let box;
 init();
 
 async function init() {
-  camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 10);
+  camera = new Engine.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 10);
   camera.position.z = 4;
 
-  scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x222222);
+  scene = new Engine.Scene();
+  scene.background = new Engine.Color(0x222222);
 
   //
 
@@ -48,13 +48,13 @@ async function init() {
 
   const textureLoader = new TextureLoader();
   const uvTexture = await textureLoader.loadAsync('./textures/uv_grid_opengl.jpg');
-  uvTexture.wrapS = THREE.Wrapping.Repeat;
-  uvTexture.wrapT = THREE.Wrapping.Repeat;
+  uvTexture.wrapS = Engine.Wrapping.Repeat;
+  uvTexture.wrapT = Engine.Wrapping.Repeat;
   uvTexture.name = 'uv_grid';
 
   const textureDisplace = await textureLoader.loadAsync('./textures/transition/transition1.png');
-  textureDisplace.wrapS = THREE.Wrapping.Repeat;
-  textureDisplace.wrapT = THREE.Wrapping.Repeat;
+  textureDisplace.wrapS = Engine.Wrapping.Repeat;
+  textureDisplace.wrapT = Engine.Wrapping.Repeat;
 
   const ktxLoader = await new KTX2Loader().setTranscoderPath('../engine/libs/basis/').detectSupportAsync(renderer);
 
@@ -62,7 +62,7 @@ async function init() {
 
   // box mesh
 
-  const geometryBox = new THREE.BoxGeometry();
+  const geometryBox = new Engine.BoxGeometry();
   const materialBox = new MeshBasicNodeMaterial();
 
   // birection speed
@@ -77,13 +77,13 @@ async function init() {
   //geometryBox.setAttribute( 'uv1', geometryBox.getAttribute( 'uv' ) );
   //materialBox.colorNode = texture( uvTexture, uv( 1 ) );
 
-  box = new THREE.Mesh(geometryBox, materialBox);
+  box = new Engine.Mesh(geometryBox, materialBox);
   box.position.set(0, 1, 0);
   scene.add(box);
 
   // displace example
 
-  const geometrySphere = new THREE.SphereGeometry(0.5, 64, 64);
+  const geometrySphere = new Engine.SphereGeometry(0.5, 64, 64);
   const materialSphere = new MeshBasicNodeMaterial();
 
   const displaceY = texture(textureDisplace).x.mul(0.25);
@@ -93,18 +93,18 @@ async function init() {
   materialSphere.colorNode = displaceY;
   materialSphere.positionNode = positionLocal.add(displace);
 
-  const sphere = new THREE.Mesh(geometrySphere, materialSphere);
+  const sphere = new Engine.Mesh(geometrySphere, materialSphere);
   sphere.position.set(-2, -1, 0);
   scene.add(sphere);
 
   // data texture
 
-  const geometryPlane = new THREE.PlaneGeometry();
+  const geometryPlane = new Engine.PlaneGeometry();
   const materialPlane = new MeshBasicNodeMaterial();
   materialPlane.colorNode = texture(createDataTexture()).add(color(0x0000ff));
   materialPlane.transparent = true;
 
-  const plane = new THREE.Mesh(geometryPlane, materialPlane);
+  const plane = new Engine.Mesh(geometryPlane, materialPlane);
   plane.position.set(0, -1, 0);
   scene.add(plane);
 
@@ -116,8 +116,8 @@ async function init() {
   materialCompressed.alphaTestNode = oscSine();
   materialCompressed.transparent = true;
 
-  const geo = flipY(new THREE.PlaneGeometry());
-  const planeCompressed = new THREE.Mesh(geo, materialCompressed);
+  const geo = flipY(new Engine.PlaneGeometry());
+  const planeCompressed = new Engine.Mesh(geo, materialCompressed);
   planeCompressed.position.set(-2, 1, 0);
   scene.add(planeCompressed);
 
@@ -126,27 +126,27 @@ async function init() {
   const points = [];
 
   for (let i = 0; i < 1000; i++) {
-    const point = new THREE.Vector3().random().subScalar(0.5);
+    const point = new Engine.Vector3().random().subScalar(0.5);
     points.push(point);
   }
 
-  const geometryPoints = new THREE.BufferGeometry().setFromPoints(points);
+  const geometryPoints = new Engine.BufferGeometry().setFromPoints(points);
   const materialPoints = new PointsNodeMaterial();
 
   materialPoints.colorNode = positionLocal.mul(3);
 
-  const pointCloud = new THREE.Points(geometryPoints, materialPoints);
+  const pointCloud = new Engine.Points(geometryPoints, materialPoints);
   pointCloud.position.set(2, -1, 0);
   scene.add(pointCloud);
 
   // lines
 
-  const geometryLine = new THREE.BufferGeometry().setFromPoints([
-    new THREE.Vector3(-0.5, -0.5, 0),
-    new THREE.Vector3(0.5, -0.5, 0),
-    new THREE.Vector3(0.5, 0.5, 0),
-    new THREE.Vector3(-0.5, 0.5, 0),
-    new THREE.Vector3(-0.5, -0.5, 0),
+  const geometryLine = new Engine.BufferGeometry().setFromPoints([
+    new Engine.Vector3(-0.5, -0.5, 0),
+    new Engine.Vector3(0.5, -0.5, 0),
+    new Engine.Vector3(0.5, 0.5, 0),
+    new Engine.Vector3(-0.5, 0.5, 0),
+    new Engine.Vector3(-0.5, -0.5, 0),
   ]);
 
   geometryLine.setAttribute('color', geometryLine.getAttribute('position'));
@@ -154,7 +154,7 @@ async function init() {
   const materialLine = new LineBasicNodeMaterial();
   materialLine.colorNode = attribute('color');
 
-  const line = new THREE.Line(geometryLine, materialLine);
+  const line = new Engine.Line(geometryLine, materialLine);
   line.position.set(2, 1, 0);
   scene.add(line);
 
@@ -171,7 +171,7 @@ function animate() {
 }
 
 function createDataTexture() {
-  const color = new THREE.Color(0xff0000);
+  const color = new Engine.Color(0xff0000);
 
   const width = 512;
   const height = 512;
@@ -192,7 +192,7 @@ function createDataTexture() {
     data[stride + 3] = 255;
   }
 
-  const texture = new THREE.DataTexture(data, width, height, THREE.TextureFormat.RGBA);
+  const texture = new Engine.DataTexture(data, width, height, Engine.TextureFormat.RGBA);
   texture.needsUpdate = true;
   return texture;
 }

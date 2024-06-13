@@ -28,7 +28,7 @@ ktx2Loader.setTranscoderPath( 'examples/engine/libs/basis/' );
 ktx2Loader.detectSupport( renderer );
 ktx2Loader.load( 'diffuse.ktx2', function ( texture ) {
 
-	const material = new THREE.MeshStandardMaterial( { map: texture } );
+	const material = new MeshStandardMaterial( { map: texture } );
 
 }, function () {
 

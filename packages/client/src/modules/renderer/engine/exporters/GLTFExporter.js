@@ -178,18 +178,18 @@ const WEBGL_CONSTANTS = {
 
 const KHR_MESH_QUANTIZATION = 'KHR_mesh_quantization';
 
-const THREE_TO_WEBGL = {};
+const ENGINE_TO_WEBGL = {};
 
-THREE_TO_WEBGL[Filter.Nearest] = WEBGL_CONSTANTS.NEAREST;
-THREE_TO_WEBGL[Filter.NearestMipmapNearest] = WEBGL_CONSTANTS.NEAREST_MIPMAP_NEAREST;
-THREE_TO_WEBGL[Filter.NearestMipmapLinear] = WEBGL_CONSTANTS.NEAREST_MIPMAP_LINEAR;
-THREE_TO_WEBGL[Filter.Linear] = WEBGL_CONSTANTS.LINEAR;
-THREE_TO_WEBGL[Filter.LinearMipmapNearest] = WEBGL_CONSTANTS.LINEAR_MIPMAP_NEAREST;
-THREE_TO_WEBGL[Filter.LinearMipmapLinear] = WEBGL_CONSTANTS.LINEAR_MIPMAP_LINEAR;
+ENGINE_TO_WEBGL[Filter.Nearest] = WEBGL_CONSTANTS.NEAREST;
+ENGINE_TO_WEBGL[Filter.NearestMipmapNearest] = WEBGL_CONSTANTS.NEAREST_MIPMAP_NEAREST;
+ENGINE_TO_WEBGL[Filter.NearestMipmapLinear] = WEBGL_CONSTANTS.NEAREST_MIPMAP_LINEAR;
+ENGINE_TO_WEBGL[Filter.Linear] = WEBGL_CONSTANTS.LINEAR;
+ENGINE_TO_WEBGL[Filter.LinearMipmapNearest] = WEBGL_CONSTANTS.LINEAR_MIPMAP_NEAREST;
+ENGINE_TO_WEBGL[Filter.LinearMipmapLinear] = WEBGL_CONSTANTS.LINEAR_MIPMAP_LINEAR;
 
-THREE_TO_WEBGL[Wrapping.ClampToEdge] = WEBGL_CONSTANTS.CLAMP_TO_EDGE;
-THREE_TO_WEBGL[Wrapping.Repeat] = WEBGL_CONSTANTS.REPEAT;
-THREE_TO_WEBGL[Wrapping.MirroredRepeat] = WEBGL_CONSTANTS.MIRRORED_REPEAT;
+ENGINE_TO_WEBGL[Wrapping.ClampToEdge] = WEBGL_CONSTANTS.CLAMP_TO_EDGE;
+ENGINE_TO_WEBGL[Wrapping.Repeat] = WEBGL_CONSTANTS.REPEAT;
+ENGINE_TO_WEBGL[Wrapping.MirroredRepeat] = WEBGL_CONSTANTS.MIRRORED_REPEAT;
 
 const PATH_PROPERTIES = {
   scale: 'scale',
@@ -1076,10 +1076,10 @@ class GLTFWriter {
     if (!json.samplers) json.samplers = [];
 
     const samplerDef = {
-      magFilter: THREE_TO_WEBGL[map.magFilter],
-      minFilter: THREE_TO_WEBGL[map.minFilter],
-      wrapS: THREE_TO_WEBGL[map.wrapS],
-      wrapT: THREE_TO_WEBGL[map.wrapT],
+      magFilter: ENGINE_TO_WEBGL[map.magFilter],
+      minFilter: ENGINE_TO_WEBGL[map.minFilter],
+      wrapS: ENGINE_TO_WEBGL[map.wrapS],
+      wrapT: ENGINE_TO_WEBGL[map.wrapT],
     };
 
     return json.samplers.push(samplerDef) - 1;

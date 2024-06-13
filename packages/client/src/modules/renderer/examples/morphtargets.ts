@@ -1,4 +1,4 @@
-import * as THREE from '@modules/renderer/engine/engine.js';
+import * as Engine from '@modules/renderer/engine/engine.js';
 
 import { GUI } from 'lil-gui';
 import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
@@ -13,26 +13,26 @@ init();
 function init() {
   container = document.getElementById('container');
 
-  scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x8fbcd4);
+  scene = new Engine.Scene();
+  scene.background = new Engine.Color(0x8fbcd4);
 
-  camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 20);
+  camera = new Engine.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 20);
   camera.position.z = 10;
   scene.add(camera);
 
-  scene.add(new THREE.AmbientLight(0x8fbcd4, 1.5));
+  scene.add(new Engine.AmbientLight(0x8fbcd4, 1.5));
 
-  const pointLight = new THREE.PointLight(0xffffff, 200);
+  const pointLight = new Engine.PointLight(0xffffff, 200);
   camera.add(pointLight);
 
   const geometry = createGeometry();
 
-  const material = new THREE.MeshPhongMaterial({
+  const material = new Engine.MeshPhongMaterial({
     color: 0xff0000,
     flatShading: true,
   });
 
-  mesh = new THREE.Mesh(geometry, material);
+  mesh = new Engine.Mesh(geometry, material);
   scene.add(mesh);
 
   initGUI();
@@ -52,7 +52,7 @@ function init() {
 }
 
 function createGeometry() {
-  const geometry = new THREE.BoxGeometry(2, 2, 2, 32, 32, 32);
+  const geometry = new Engine.BoxGeometry(2, 2, 2, 32, 32, 32);
 
   // create an empty array to hold targets for the attribute we want to morph
   // morphing positions and normals is supported
@@ -66,8 +66,8 @@ function createGeometry() {
 
   // for the second morph target, we'll twist the cubes vertices
   const twistPositions = [];
-  const direction = new THREE.Vector3(1, 0, 0);
-  const vertex = new THREE.Vector3();
+  const direction = new Engine.Vector3(1, 0, 0);
+  const vertex = new Engine.Vector3();
 
   for (let i = 0; i < positionAttribute.count; i++) {
     const x = positionAttribute.getX(i);
@@ -87,10 +87,10 @@ function createGeometry() {
   }
 
   // add the spherical positions as the first morph target
-  geometry.morphAttributes.position[0] = new THREE.Float32BufferAttribute(spherePositions, 3);
+  geometry.morphAttributes.position[0] = new Engine.Float32BufferAttribute(spherePositions, 3);
 
   // add the twisted positions as the second morph target
-  geometry.morphAttributes.position[1] = new THREE.Float32BufferAttribute(twistPositions, 3);
+  geometry.morphAttributes.position[1] = new Engine.Float32BufferAttribute(twistPositions, 3);
 
   return geometry;
 }

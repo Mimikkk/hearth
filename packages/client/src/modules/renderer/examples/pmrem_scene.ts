@@ -1,4 +1,4 @@
-import * as THREE from '@modules/renderer/engine/engine.js';
+import * as Engine from '@modules/renderer/engine/engine.js';
 
 import { MeshBasicNodeMaterial, normalWorld, pmremTexture, uniform } from '@modules/renderer/engine/nodes/Nodes.js';
 
@@ -19,10 +19,10 @@ async function init() {
   const container = document.createElement('div');
   document.body.appendChild(container);
 
-  camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.25, 20);
+  camera = new Engine.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.25, 20);
   camera.position.set(-1.8, 0.6, 2.7);
 
-  scene = new THREE.Scene();
+  scene = new Engine.Scene();
 
   const forceWebGL = false;
 
@@ -41,31 +41,31 @@ async function init() {
 
   //
 
-  scene.background = new THREE.Color(0x006699);
+  scene.background = new Engine.Color(0x006699);
 
   let model;
 
-  model = new THREE.Mesh(new THREE.SphereGeometry(0.2, 64, 64), new THREE.MeshBasicMaterial({ color: 0x0000ff }));
+  model = new Engine.Mesh(new Engine.SphereGeometry(0.2, 64, 64), new Engine.MeshBasicMaterial({ color: 0x0000ff }));
   model.position.z -= 1;
   scene.add(model);
 
-  model = new THREE.Mesh(new THREE.SphereGeometry(0.2, 64, 64), new THREE.MeshBasicMaterial({ color: 0xff0000 }));
+  model = new Engine.Mesh(new Engine.SphereGeometry(0.2, 64, 64), new Engine.MeshBasicMaterial({ color: 0xff0000 }));
   model.position.z += 1;
   scene.add(model);
 
-  model = new THREE.Mesh(new THREE.SphereGeometry(0.2, 64, 64), new THREE.MeshBasicMaterial({ color: 0xff00ff }));
+  model = new Engine.Mesh(new Engine.SphereGeometry(0.2, 64, 64), new Engine.MeshBasicMaterial({ color: 0xff00ff }));
   model.position.x += 1;
   scene.add(model);
 
-  model = new THREE.Mesh(new THREE.SphereGeometry(0.2, 64, 64), new THREE.MeshBasicMaterial({ color: 0x00ffff }));
+  model = new Engine.Mesh(new Engine.SphereGeometry(0.2, 64, 64), new Engine.MeshBasicMaterial({ color: 0x00ffff }));
   model.position.x -= 1;
   scene.add(model);
 
-  model = new THREE.Mesh(new THREE.SphereGeometry(0.2, 64, 64), new THREE.MeshBasicMaterial({ color: 0xffff00 }));
+  model = new Engine.Mesh(new Engine.SphereGeometry(0.2, 64, 64), new Engine.MeshBasicMaterial({ color: 0xffff00 }));
   model.position.y -= 1;
   scene.add(model);
 
-  model = new THREE.Mesh(new THREE.SphereGeometry(0.2, 64, 64), new THREE.MeshBasicMaterial({ color: 0x00ff00 }));
+  model = new Engine.Mesh(new Engine.SphereGeometry(0.2, 64, 64), new Engine.MeshBasicMaterial({ color: 0x00ff00 }));
   model.position.y += 1;
   scene.add(model);
 
@@ -81,7 +81,9 @@ async function init() {
   const pmremRoughness = uniform(0.5);
   const pmremNode = pmremTexture(sceneRT.texture, normalWorld, pmremRoughness);
 
-  scene.add(new THREE.Mesh(new THREE.SphereGeometry(0.5, 64, 64), new MeshBasicNodeMaterial({ colorNode: pmremNode })));
+  scene.add(
+    new Engine.Mesh(new Engine.SphereGeometry(0.5, 64, 64), new MeshBasicNodeMaterial({ colorNode: pmremNode })),
+  );
 
   // gui
 

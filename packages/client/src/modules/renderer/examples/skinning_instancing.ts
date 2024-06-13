@@ -1,4 +1,4 @@
-import * as THREE from '@modules/renderer/engine/engine.js';
+import * as Engine from '@modules/renderer/engine/engine.js';
 import {
   color,
   MeshStandardNodeMaterial,
@@ -23,51 +23,51 @@ let mixer, clock;
 init();
 
 function init() {
-  camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.01, 40);
+  camera = new Engine.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.01, 40);
   camera.position.set(1, 2, 3);
 
-  scene = new THREE.Scene();
+  scene = new Engine.Scene();
   camera.lookAt(0, 1, 0);
 
-  clock = new THREE.Clock();
+  clock = new Engine.Clock();
 
   // lights
 
-  const centerLight = new THREE.PointLight(0xff9900, 1, 100);
+  const centerLight = new Engine.PointLight(0xff9900, 1, 100);
   centerLight.position.y = 4.5;
   centerLight.position.z = -2;
   centerLight.power = 400;
   scene.add(centerLight);
 
-  const cameraLight = new THREE.PointLight(0x0099ff, 1, 100);
+  const cameraLight = new Engine.PointLight(0x0099ff, 1, 100);
   cameraLight.power = 400;
   camera.add(cameraLight);
   scene.add(camera);
 
-  const geometry = new THREE.PlaneGeometry(1000, 1000);
+  const geometry = new Engine.PlaneGeometry(1000, 1000);
   geometry.rotateX(-Math.PI / 2);
 
-  const plane = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({ color: 0x000000, visible: true }));
+  const plane = new Engine.Mesh(geometry, new Engine.MeshBasicMaterial({ color: 0x000000, visible: true }));
   scene.add(plane);
 
   const loader = new GLTFLoader();
   loader.loadAsync('models/gltf/Michelle.glb').then(function (gltf) {
     const object = gltf.scene;
 
-    mixer = new THREE.AnimationMixer(object);
+    mixer = new Engine.AnimationMixer(object);
 
     const action = mixer.clipAction(gltf.animations[0]);
     action.play();
 
     const instanceCount = 30;
-    const dummy = new THREE.Object3D();
+    const dummy = new Engine.Object3D();
 
     object.traverse(child => {
       if (child.isMesh) {
         const oscNode = oscSine(timerLocal(0.1));
 
         // random colors between instances from 0x000000 to 0xFFFFFF
-        const randomColors = range(new THREE.Color(0x000000), new THREE.Color(0xffffff));
+        const randomColors = range(new Engine.Color(0x000000), new Engine.Color(0xffffff));
 
         // random [ 0, 1 ] values between instances
         const randomMetalness = range(0, 1);
@@ -78,7 +78,7 @@ function init() {
         child.material.colorNode = mix(color(0xffffff), randomColors, oscNode);
 
         child.isInstancedMesh = true;
-        child.instanceMatrix = new THREE.InstancedBufferAttribute(new Float32Array(instanceCount * 16), 16);
+        child.instanceMatrix = new Engine.InstancedBufferAttribute(new Float32Array(instanceCount * 16), 16);
         child.count = instanceCount;
 
         for (let i = 0; i < instanceCount; i++) {

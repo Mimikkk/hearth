@@ -1,4 +1,4 @@
-import * as THREE from '@modules/renderer/engine/engine.js';
+import * as Engine from '@modules/renderer/engine/engine.js';
 import {
   float,
   instanceIndex,
@@ -21,10 +21,10 @@ render();
 
 function init() {
   const aspect = window.innerWidth / window.innerHeight;
-  camera = new THREE.OrthographicCamera(-aspect, aspect, 1, -1, 0, 2);
+  camera = new Engine.OrthographicCamera(-aspect, aspect, 1, -1, 0, 2);
   camera.position.z = 1;
 
-  scene = new THREE.Scene();
+  scene = new Engine.Scene();
 
   // texture
 
@@ -32,7 +32,6 @@ function init() {
     height = 512;
 
   const storageTexture = new StorageTexture(width, height);
-  //storageTexture.minFilter = THREE.LinearMipMapLinearFilter;
 
   // create function
 
@@ -66,7 +65,7 @@ function init() {
   const material = new MeshBasicNodeMaterial({ color: 0x00ff00 });
   material.colorNode = texture(storageTexture);
 
-  const plane = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), material);
+  const plane = new Engine.Mesh(new Engine.PlaneGeometry(1, 1), material);
   scene.add(plane);
 
   renderer = new WebGPURenderer({ antialias: true });

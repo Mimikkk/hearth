@@ -2,10 +2,10 @@ import { Triangle } from './Triangle.js';
 import { Vector3 } from './Vector3.js';
 import { Vector2 } from './Vector2.js';
 import type { Mesh } from '../objects/Mesh.js';
-import type { BufferGeometry } from 'three';
 import type { Material } from '../materials/Material.js';
 import type { BufferAttribute } from '../core/BufferAttribute.js';
 import type { Color } from './Color.js';
+import { BufferGeometry } from '@modules/renderer/engine/core/BufferGeometry.js';
 
 const _face = new Triangle();
 const _color = new Vector3();

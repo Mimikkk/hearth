@@ -1,4 +1,4 @@
-import * as THREE from '@modules/renderer/engine/engine.js';
+import * as Engine from '@modules/renderer/engine/engine.js';
 import {
   color,
   LightingModel,
@@ -26,24 +26,24 @@ let light1, light2, light3;
 init();
 
 function init() {
-  camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 10);
+  camera = new Engine.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 10);
   camera.position.z = 2;
 
-  scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x222222);
+  scene = new Engine.Scene();
+  scene.background = new Engine.Color(0x222222);
 
   // lights
 
-  const sphereGeometry = new THREE.SphereGeometry(0.02, 16, 8);
+  const sphereGeometry = new Engine.SphereGeometry(0.02, 16, 8);
 
   const addLight = (hexColor, intensity = 2, distance = 1) => {
     const material = new MeshStandardNodeMaterial();
     material.colorNode = color(hexColor);
     material.lightsNode = lights(); // ignore scene lights
 
-    const mesh = new THREE.Mesh(sphereGeometry, material);
+    const mesh = new Engine.Mesh(sphereGeometry, material);
 
-    const light = new THREE.PointLight(hexColor, intensity, distance);
+    const light = new Engine.PointLight(hexColor, intensity, distance);
     light.add(mesh);
 
     scene.add(light);
@@ -64,11 +64,11 @@ function init() {
   const points = [];
 
   for (let i = 0; i < 3000; i++) {
-    const point = new THREE.Vector3().random().subScalar(0.5).multiplyScalar(2);
+    const point = new Engine.Vector3().random().subScalar(0.5).multiplyScalar(2);
     points.push(point);
   }
 
-  const geometryPoints = new THREE.BufferGeometry().setFromPoints(points);
+  const geometryPoints = new Engine.BufferGeometry().setFromPoints(points);
   const materialPoints = new PointsNodeMaterial();
 
   // custom lighting model
@@ -80,7 +80,7 @@ function init() {
 
   //
 
-  const pointCloud = new THREE.Points(geometryPoints, materialPoints);
+  const pointCloud = new Engine.Points(geometryPoints, materialPoints);
   scene.add(pointCloud);
 
   //
@@ -89,7 +89,7 @@ function init() {
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(animate);
-  renderer.toneMappingNode = toneMapping(THREE.ToneMapping.Linear, 1);
+  renderer.toneMappingNode = toneMapping(Engine.ToneMapping.Linear, 1);
   document.body.appendChild(renderer.domElement);
 
   // controls

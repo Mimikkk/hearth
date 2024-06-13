@@ -15,15 +15,14 @@ import {
 } from '@modules/renderer/engine/engine.js';
 import RenderContext from './RenderContext.js';
 import RenderObject from './RenderObject.js';
-import { Program } from '@modules/renderer/engine/transpiler/AST.js';
 import Pipeline from '@modules/renderer/engine/renderers/common/Pipeline.js';
 import ComputeNode from '@modules/renderer/engine/nodes/gpgpu/ComputeNode.js';
 import { TypedArray } from '@modules/renderer/engine/math/MathUtils.js';
-import Info from 'three/examples/jsm/renderers/common/Info.js';
 import ComputePipeline from '@modules/renderer/engine/renderers/common/ComputePipeline.js';
 import RenderPipeline from '@modules/renderer/engine/renderers/common/RenderPipeline.js';
 import ProgrammableStage from '@modules/renderer/engine/renderers/common/ProgrammableStage.js';
 import Binding from '@modules/renderer/engine/renderers/common/Binding.js';
+import { Info } from '@modules/renderer/engine/renderers/common/Info.js';
 
 export interface BackendParameters {
   canvas?: HTMLCanvasElement;

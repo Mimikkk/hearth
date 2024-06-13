@@ -1,4 +1,4 @@
-import * as THREE from '@modules/renderer/engine/engine.js';
+import * as Engine from '@modules/renderer/engine/engine.js';
 import {
   color,
   MeshBasicNodeMaterial,
@@ -31,45 +31,45 @@ init();
 async function init() {
   //
 
-  sceneMain = new THREE.Scene();
-  sceneMain.background = new THREE.Color(0x222222);
+  sceneMain = new Engine.Scene();
+  sceneMain.background = new Engine.Color(0x222222);
   sceneMain.backgroundNode = normalWorld.y.mix(color(0x0066ff), color(0xff0066));
 
-  scenePortal = new THREE.Scene();
+  scenePortal = new Engine.Scene();
   scenePortal.backgroundNode = mx_worley_noise_float(normalWorld.mul(20).add(vec2(0, timerLocal().oneMinus()))).mul(
     color(0x0066ff),
   );
 
   //
 
-  camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.01, 30);
+  camera = new Engine.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.01, 30);
   camera.position.set(2.5, 1, 3);
   camera.position.multiplyScalar(0.8);
   camera.lookAt(0, 1, 0);
 
-  clock = new THREE.Clock();
+  clock = new Engine.Clock();
 
   // lights
 
-  const light = new THREE.PointLight(0xffffff, 1);
+  const light = new Engine.PointLight(0xffffff, 1);
   light.position.set(0, 1, 5);
   light.power = 17000;
 
-  sceneMain.add(new THREE.HemisphereLight(0xff0066, 0x0066ff, 7));
+  sceneMain.add(new Engine.HemisphereLight(0xff0066, 0x0066ff, 7));
   sceneMain.add(light);
   scenePortal.add(light.clone());
 
   // portal
 
-  const geometry = new THREE.PlaneGeometry(1.7, 2);
+  const geometry = new Engine.PlaneGeometry(1.7, 2);
 
   const material = new MeshBasicNodeMaterial();
   material.colorNode = pass(scenePortal, camera).context({ getUV: () => viewportTopLeft });
   material.opacityNode = uv().distance(0.5).remapClamp(0.3, 0.5).oneMinus();
-  material.side = THREE.Side.Double;
+  material.side = Engine.Side.Double;
   material.transparent = true;
 
-  const plane = new THREE.Mesh(geometry, material);
+  const plane = new Engine.Mesh(geometry, material);
   plane.position.set(0, 1, 0.8);
   sceneMain.add(plane);
 
@@ -98,7 +98,7 @@ async function init() {
         applyFX(1);
       }
 
-      const mixer = new THREE.AnimationMixer(object);
+      const mixer = new Engine.AnimationMixer(object);
 
       const action = mixer.clipAction(gltf.animations[6]);
       action.play();
@@ -123,7 +123,7 @@ async function init() {
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(animate);
-  renderer.toneMappingNode = toneMapping(THREE.ToneMapping.Linear, 0.15);
+  renderer.toneMappingNode = toneMapping(Engine.ToneMapping.Linear, 0.15);
   document.body.appendChild(renderer.domElement);
 
   //

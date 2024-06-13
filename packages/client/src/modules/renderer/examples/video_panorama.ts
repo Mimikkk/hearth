@@ -1,4 +1,4 @@
-import * as THREE from '@modules/renderer/engine/engine.js';
+import * as Engine from '@modules/renderer/engine/engine.js';
 
 import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
 import { ColorSpace } from '@modules/renderer/engine/engine.js';
@@ -23,22 +23,22 @@ init();
 function init() {
   const container = document.getElementById('container');
 
-  camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.25, 10);
+  camera = new Engine.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.25, 10);
 
-  scene = new THREE.Scene();
+  scene = new Engine.Scene();
 
-  const geometry = new THREE.SphereGeometry(5, 60, 40);
+  const geometry = new Engine.SphereGeometry(5, 60, 40);
   // invert the geometry on the x-axis so that all of the faces point inward
   geometry.scale(-1, 1, 1);
 
   const video = document.getElementById('video');
   video.play();
 
-  const texture = new THREE.VideoTexture(video);
-  texture.colorSpace = THREE.ColorSpace.SRGB;
-  const material = new THREE.MeshBasicMaterial({ map: texture });
+  const texture = new Engine.VideoTexture(video);
+  texture.colorSpace = Engine.ColorSpace.SRGB;
+  const material = new Engine.MeshBasicMaterial({ map: texture });
 
-  const mesh = new THREE.Mesh(geometry, material);
+  const mesh = new Engine.Mesh(geometry, material);
   scene.add(mesh);
 
   renderer = new WebGPURenderer({ antialias: true });
@@ -83,8 +83,8 @@ function animate() {
 
 function update() {
   lat = Math.max(-85, Math.min(85, lat));
-  phi = THREE.MathUtils.degreeToRadian(90 - lat);
-  theta = THREE.MathUtils.degreeToRadian(lon);
+  phi = Engine.MathUtils.degreeToRadian(90 - lat);
+  theta = Engine.MathUtils.degreeToRadian(lon);
 
   camera.position.x = distance * Math.sin(phi) * Math.cos(theta);
   camera.position.y = distance * Math.cos(phi);

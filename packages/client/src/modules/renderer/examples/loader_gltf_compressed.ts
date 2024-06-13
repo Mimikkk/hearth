@@ -1,4 +1,4 @@
-import * as THREE from '@modules/renderer/engine/engine.js';
+import * as Engine from '@modules/renderer/engine/engine.js';
 
 import { GLTFLoader } from '@modules/renderer/engine/loaders/GLTFLoader.js';
 import { KTX2Loader } from '@modules/renderer/engine/loaders/KTX2Loader.js';
@@ -14,15 +14,15 @@ let camera, scene, renderer;
 init();
 
 async function init() {
-  camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 20);
+  camera = new Engine.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 20);
   camera.position.set(2, 2, 2);
 
-  scene = new THREE.Scene();
-  scene.background = new THREE.Color(0xeeeeee);
+  scene = new Engine.Scene();
+  scene.background = new Engine.Color(0xeeeeee);
 
   //lights
 
-  const light = new THREE.PointLight(0xffffff);
+  const light = new Engine.PointLight(0xffffff);
   light.power = 1300;
   camera.add(light);
   scene.add(camera);
@@ -33,7 +33,7 @@ async function init() {
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(animate);
-  renderer.toneMapping = THREE.ToneMapping.Reinhard;
+  renderer.toneMapping = Engine.ToneMapping.Reinhard;
   renderer.toneMappingExposure = 1;
   document.body.appendChild(renderer.domElement);
 

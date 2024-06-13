@@ -1,4 +1,4 @@
-import * as THREE from '@modules/renderer/engine/engine.js';
+import * as Engine from '@modules/renderer/engine/engine.js';
 
 import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
 //import { GUI } from 'lil-gui';
@@ -93,10 +93,10 @@ async function init() {
 
   // Create a multi render target with Float buffers
 
-  renderTarget = new THREE.RenderTarget(
+  renderTarget = new Engine.RenderTarget(
     window.innerWidth * window.devicePixelRatio,
     window.innerHeight * window.devicePixelRatio,
-    { count: 2, minFilter: THREE.Filter.Nearest, magFilter: THREE.Filter.Nearest },
+    { count: 2, minFilter: Engine.Filter.Nearest, magFilter: Engine.Filter.Nearest },
   );
 
   // Name our G-Buffer attachments for debugging
@@ -106,20 +106,20 @@ async function init() {
 
   // Scene setup
 
-  scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x222222);
+  scene = new Engine.Scene();
+  scene.background = new Engine.Color(0x222222);
 
-  camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 50);
+  camera = new Engine.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 50);
   camera.position.z = 4;
 
   const loader = new TextureLoader();
 
   const diffuse = await loader.loadAsync('textures/hardwood2_diffuse.jpg', render);
-  diffuse.colorSpace = THREE.ColorSpace.SRGB;
-  diffuse.wrapS = THREE.Wrapping.Repeat;
-  diffuse.wrapT = THREE.Wrapping.Repeat;
+  diffuse.colorSpace = Engine.ColorSpace.SRGB;
+  diffuse.wrapS = Engine.Wrapping.Repeat;
+  diffuse.wrapT = Engine.Wrapping.Repeat;
 
-  torus = new THREE.Mesh(new THREE.TorusKnotGeometry(1, 0.3, 128, 32), new WriteGBufferMaterial(diffuse));
+  torus = new Engine.Mesh(new Engine.TorusKnotGeometry(1, 0.3, 128, 32), new WriteGBufferMaterial(diffuse));
 
   scene.add(torus);
 

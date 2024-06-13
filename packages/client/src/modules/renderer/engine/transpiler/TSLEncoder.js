@@ -547,7 +547,7 @@ ${this.tab}} );\n\n`;
 
       footer += '\n} );';
     } else {
-      header += imports.length > 0 ? 'import { ' + imports.join(', ') + " } from 'three/nodes';\n" : '';
+      header += imports.length > 0 ? 'import { ' + imports.join(', ') + " } from 'engine/nodes';\n" : '';
       footer += exports.length > 0 ? 'export { ' + exports.join(', ') + ' };\n' : '';
     }
 

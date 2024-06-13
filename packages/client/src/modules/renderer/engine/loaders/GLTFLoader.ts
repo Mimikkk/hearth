@@ -56,7 +56,6 @@ import { ImageBitmapLoader } from '@modules/renderer/engine/loaders/ImageBitmapL
 import { FileLoader, FileLoaderResponse } from '@modules/renderer/engine/loaders/FileLoader.js';
 import { KTX2Loader } from '@modules/renderer/engine/loaders/KTX2Loader.js';
 import { MeshoptDecoder } from 'meshoptimizer';
-import { GLTF, GLTFLoaderPlugin } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { Configurable, ConfigurableConstructor, LoaderAsync } from '@modules/renderer/engine/loaders/types.js';
 
 type DracoLoader = any;
@@ -1369,25 +1368,25 @@ class GLTFDracoMeshCompressionExtension {
     const dracoLoader = this.dracoLoader;
     const bufferViewIndex = primitive.extensions[this.name].bufferView;
     const gltfAttributeMap = primitive.extensions[this.name].attributes;
-    const threeAttributeMap = {};
+    const engineAttributeMap = {};
     const attributeNormalizedMap = {};
     const attributeTypeMap = {};
 
     for (const attributeName in gltfAttributeMap) {
-      const threeAttributeName = ATTRIBUTES[attributeName] || attributeName.toLowerCase();
+      const engineAttributeName = ATTRIBUTES[attributeName] || attributeName.toLowerCase();
 
-      threeAttributeMap[threeAttributeName] = gltfAttributeMap[attributeName];
+      engineAttributeMap[engineAttributeName] = gltfAttributeMap[attributeName];
     }
 
     for (const attributeName in primitive.attributes) {
-      const threeAttributeName = ATTRIBUTES[attributeName] || attributeName.toLowerCase();
+      const engineAttributeName = ATTRIBUTES[attributeName] || attributeName.toLowerCase();
 
       if (gltfAttributeMap[attributeName] !== undefined) {
         const accessorDef = json.accessors[primitive.attributes[attributeName]];
         const componentType = WEBGL_COMPONENT_TYPES[accessorDef.componentType];
 
-        attributeTypeMap[threeAttributeName] = componentType.name;
-        attributeNormalizedMap[threeAttributeName] = accessorDef.normalized === true;
+        attributeTypeMap[engineAttributeName] = componentType.name;
+        attributeNormalizedMap[engineAttributeName] = accessorDef.normalized === true;
       }
     }
 
@@ -1405,7 +1404,7 @@ class GLTFDracoMeshCompressionExtension {
 
             resolve(geometry);
           },
-          threeAttributeMap,
+          engineAttributeMap,
           attributeTypeMap,
           ColorSpace.LinearSRGB,
           reject,
@@ -3482,12 +3481,12 @@ function addPrimitiveAttributes(geometry, primitiveDef, parser) {
   }
 
   for (const gltfAttributeName in attributes) {
-    const threeAttributeName = ATTRIBUTES[gltfAttributeName] || gltfAttributeName.toLowerCase();
+    const engineAttributeName = ATTRIBUTES[gltfAttributeName] || gltfAttributeName.toLowerCase();
 
     // Skip attributes already provided by e.g. Draco extension.
-    if (threeAttributeName in geometry.attributes) continue;
+    if (engineAttributeName in geometry.attributes) continue;
 
-    pending.push(assignAttributeAccessor(attributes[gltfAttributeName], threeAttributeName));
+    pending.push(assignAttributeAccessor(attributes[gltfAttributeName], engineAttributeName));
   }
 
   if (primitiveDef.indices !== undefined && !geometry.index) {

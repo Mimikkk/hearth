@@ -1,4 +1,4 @@
-import * as THREE from '@modules/renderer/engine/engine.js';
+import * as Engine from '@modules/renderer/engine/engine.js';
 import { MeshBasicNodeMaterial, oscTriangle, texture, timerLocal, uv } from '@modules/renderer/engine/nodes/Nodes.js';
 
 import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
@@ -19,21 +19,17 @@ function init() {
   const container = document.createElement('div');
   document.body.appendChild(container);
 
-  camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 2000);
+  camera = new Engine.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 2000);
   camera.position.z = 70;
 
-  scene = new THREE.Scene();
-
-  // width 256, height 256, depth 109, 8-bit, zip archived raw data
-
-  // new THREE.FileLoader().setResponseType('arraybuffer');
+  scene = new Engine.Scene();
 
   FileLoader.loadAsync('textures/3d/head256x256x109.zip', { responseType: FileLoaderResponse.Buffer }).then(data => {
     const zip = unzipSync(new Uint8Array(data));
     const array = new Uint8Array(zip['head256x256x109'].buffer);
 
-    const map = new THREE.DataArrayTexture(array, 256, 256, 109);
-    map.format = THREE.TextureFormat.Red;
+    const map = new Engine.DataArrayTexture(array, 256, 256, 109);
+    map.format = Engine.TextureFormat.Red;
     map.needsUpdate = true;
 
     let coord = uv();
@@ -46,9 +42,9 @@ function init() {
     const material = new MeshBasicNodeMaterial();
     material.colorNode = texture(map, coord).depth(oscLayers).r.remap(0, 1, -0.1, 1.8); // remap to make it more visible
 
-    const geometry = new THREE.PlaneGeometry(planeWidth, planeHeight);
+    const geometry = new Engine.PlaneGeometry(planeWidth, planeHeight);
 
-    mesh = new THREE.Mesh(geometry, material);
+    mesh = new Engine.Mesh(geometry, material);
 
     scene.add(mesh);
   });

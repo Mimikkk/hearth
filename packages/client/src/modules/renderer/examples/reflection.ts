@@ -1,4 +1,4 @@
-import * as THREE from '@modules/renderer/engine/engine.js';
+import * as Engine from '@modules/renderer/engine/engine.js';
 import {
   color,
   MeshPhongNodeMaterial,
@@ -31,15 +31,15 @@ let stats;
 init();
 
 async function init() {
-  camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.25, 30);
+  camera = new Engine.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.25, 30);
   camera.position.set(2, 2.5, 3);
 
-  scene = new THREE.Scene();
-  scene.fog = new THREE.Fog(0x0487e2, 7, 25);
+  scene = new Engine.Scene();
+  scene.fog = new Engine.Fog(0x0487e2, 7, 25);
   scene.backgroundNode = normalWorld.y.mix(color(0x0487e2), color(0x0066ff));
   camera.lookAt(0, 1, 0);
 
-  const sunLight = new THREE.DirectionalLight(0xffe499, 5);
+  const sunLight = new Engine.DirectionalLight(0xffe499, 5);
   sunLight.castShadow = true;
   sunLight.shadow.camera.near = 0.1;
   sunLight.shadow.camera.far = 5;
@@ -52,14 +52,14 @@ async function init() {
   sunLight.shadow.bias = -0.001;
   sunLight.position.set(0.5, 3, 0.5);
 
-  const waterAmbientLight = new THREE.HemisphereLight(0x333366, 0x74ccf4, 5);
-  const skyAmbientLight = new THREE.HemisphereLight(0x74ccf4, 0, 1);
+  const waterAmbientLight = new Engine.HemisphereLight(0x333366, 0x74ccf4, 5);
+  const skyAmbientLight = new Engine.HemisphereLight(0x74ccf4, 0, 1);
 
   scene.add(sunLight);
   scene.add(skyAmbientLight);
   scene.add(waterAmbientLight);
 
-  clock = new THREE.Clock();
+  clock = new Engine.Clock();
 
   // animated model
 
@@ -68,7 +68,7 @@ async function init() {
     model = gltf.scene;
     model.children[0].children[0].castShadow = true;
 
-    mixer = new THREE.AnimationMixer(model);
+    mixer = new Engine.AnimationMixer(model);
 
     const action = mixer.clipAction(gltf.animations[0]);
     action.play();
@@ -81,13 +81,13 @@ async function init() {
   const textureLoader = new TextureLoader();
 
   const floorColor = await textureLoader.loadAsync('textures/floors/FloorsCheckerboard_S_Diffuse.jpg');
-  floorColor.wrapS = THREE.Wrapping.Repeat;
-  floorColor.wrapT = THREE.Wrapping.Repeat;
-  floorColor.colorSpace = THREE.ColorSpace.SRGB;
+  floorColor.wrapS = Engine.Wrapping.Repeat;
+  floorColor.wrapT = Engine.Wrapping.Repeat;
+  floorColor.colorSpace = Engine.ColorSpace.SRGB;
 
   const floorNormal = await textureLoader.loadAsync('textures/floors/FloorsCheckerboard_S_Normal.jpg');
-  floorNormal.wrapS = THREE.Wrapping.Repeat;
-  floorNormal.wrapT = THREE.Wrapping.Repeat;
+  floorNormal.wrapS = Engine.Wrapping.Repeat;
+  floorNormal.wrapT = Engine.Wrapping.Repeat;
 
   // floor
 
@@ -102,7 +102,7 @@ async function init() {
   const floorMaterial = new MeshPhongNodeMaterial();
   floorMaterial.colorNode = texture(floorColor, floorUV).add(reflection);
 
-  const floor = new THREE.Mesh(new THREE.BoxGeometry(50, 0.001, 50), floorMaterial);
+  const floor = new Engine.Mesh(new Engine.BoxGeometry(50, 0.001, 50), floorMaterial);
   floor.position.set(0, 0, 0);
   scene.add(floor);
 

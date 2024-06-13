@@ -2,7 +2,7 @@
   "metadata": {
     "position": 505,
     "type": "BufferGeometry",
-    "generator": "io_three",
+    "generator": "io_engine",
     "version": 3
   },
   "data": {

@@ -1,4 +1,4 @@
-import * as THREE from '@modules/renderer/engine/engine.js';
+import * as Engine from '@modules/renderer/engine/engine.js';
 import {
   color,
   float,
@@ -22,10 +22,10 @@ let controls;
 init();
 
 function init() {
-  camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 600);
+  camera = new Engine.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 600);
   camera.position.set(30, 15, 30);
 
-  scene = new THREE.Scene();
+  scene = new Engine.Scene();
 
   // custom fog
 
@@ -59,16 +59,16 @@ function init() {
     .sign()
     .mix(color(0x000066).add(fogNoiseDistance), color(0xffffff));
 
-  const buildGeometry = new THREE.BoxGeometry(1, 1, 1);
+  const buildGeometry = new Engine.BoxGeometry(1, 1, 1);
   const buildMaterial = new MeshPhongNodeMaterial({
     colorNode: buildWindows,
   });
 
-  const buildMesh = new THREE.InstancedMesh(buildGeometry, buildMaterial, 4000);
+  const buildMesh = new Engine.InstancedMesh(buildGeometry, buildMaterial, 4000);
   scene.add(buildMesh);
 
-  const dummy = new THREE.Object3D();
-  const center = new THREE.Vector3();
+  const dummy = new Engine.Object3D();
+  const center = new Engine.Vector3();
 
   for (let i = 0; i < buildMesh.count; i++) {
     const scaleY = Math.random() * 7 + 0.5;
@@ -90,16 +90,16 @@ function init() {
 
   // lights
 
-  scene.add(new THREE.HemisphereLight(skyColor.value, groundColor.value, 0.5));
+  scene.add(new Engine.HemisphereLight(skyColor.value, groundColor.value, 0.5));
 
   // geometry
 
-  const planeGeometry = new THREE.PlaneGeometry(200, 200);
-  const planeMaterial = new THREE.MeshPhongMaterial({
+  const planeGeometry = new Engine.PlaneGeometry(200, 200);
+  const planeMaterial = new Engine.MeshPhongMaterial({
     color: 0x999999,
   });
 
-  const ground = new THREE.Mesh(planeGeometry, planeMaterial);
+  const ground = new Engine.Mesh(planeGeometry, planeMaterial);
   ground.rotation.x = -Math.PI / 2;
   ground.scale.multiplyScalar(3);
   ground.castShadow = true;

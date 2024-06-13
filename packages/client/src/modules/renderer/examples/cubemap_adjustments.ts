@@ -1,4 +1,4 @@
-import * as THREE from '@modules/renderer/engine/engine.js';
+import * as Engine from '@modules/renderer/engine/engine.js';
 import {
   mix,
   normalWorld,
@@ -33,10 +33,10 @@ async function init() {
 
   const initialDistance = 2;
 
-  camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.25, 20);
+  camera = new Engine.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.25, 20);
   camera.position.set(-1.8 * initialDistance, 0.6 * initialDistance, 2.7 * initialDistance);
 
-  scene = new THREE.Scene();
+  scene = new Engine.Scene();
 
   // cube textures
 
@@ -50,7 +50,7 @@ async function init() {
   ]);
 
   cube1Texture.generateMipmaps = true;
-  cube1Texture.minFilter = THREE.MinificationTextureFilter.LinearMipmapLinear;
+  cube1Texture.minFilter = Engine.MinificationTextureFilter.LinearMipmapLinear;
 
   const cube2Texture = await new CubeTextureLoader().loadAsync([
     'textures/cube/Park2/posx.jpg',
@@ -62,7 +62,7 @@ async function init() {
   ]);
 
   cube2Texture.generateMipmaps = true;
-  cube2Texture.minFilter = THREE.MinificationTextureFilter.LinearMipmapLinear;
+  cube2Texture.minFilter = Engine.MinificationTextureFilter.LinearMipmapLinear;
 
   // nodes and environment
 
@@ -80,8 +80,8 @@ async function init() {
   const hueNode = reference('hue', 'float', adjustments);
   const saturationNode = reference('saturation', 'float', adjustments);
 
-  const rotateY1Matrix = new THREE.Matrix4();
-  const rotateY2Matrix = new THREE.Matrix4();
+  const rotateY1Matrix = new Engine.Matrix4();
+  const rotateY2Matrix = new Engine.Matrix4();
 
   const getEnvironmentNode = (reflectNode, positionNode) => {
     const custom1UV = reflectNode.xyz.mul(uniform(rotateY1Matrix));
@@ -114,20 +114,20 @@ async function init() {
     scene.add(gltf.scene);
   });
 
-  const sphereGeometry = new THREE.SphereGeometry(0.5, 64, 32);
+  const sphereGeometry = new Engine.SphereGeometry(0.5, 64, 32);
 
-  const sphereRightView = new THREE.Mesh(
+  const sphereRightView = new Engine.Mesh(
     sphereGeometry,
-    new THREE.MeshStandardMaterial({
+    new Engine.MeshStandardMaterial({
       roughness: 0,
       metalness: 1,
     }),
   );
   sphereRightView.position.x += 2;
 
-  const sphereLeftView = new THREE.Mesh(
+  const sphereLeftView = new Engine.Mesh(
     sphereGeometry,
-    new THREE.MeshStandardMaterial({
+    new Engine.MeshStandardMaterial({
       roughness: 1,
       metalness: 1,
     }),
@@ -142,7 +142,7 @@ async function init() {
   renderer = new WebGPURenderer({ antialias: true });
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.toneMappingNode = toneMapping(THREE.ToneMapping.Linear, 1);
+  renderer.toneMappingNode = toneMapping(Engine.ToneMapping.Linear, 1);
   renderer.setAnimationLoop(render);
   container.appendChild(renderer.domElement);
 

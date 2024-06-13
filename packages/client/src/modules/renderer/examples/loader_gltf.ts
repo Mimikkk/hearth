@@ -1,4 +1,4 @@
-import * as THREE from '@modules/renderer/engine/engine.js';
+import * as Engine from '@modules/renderer/engine/engine.js';
 
 import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
 
@@ -17,16 +17,13 @@ function init() {
   const container = document.createElement('div');
   document.body.appendChild(container);
 
-  camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.25, 20);
+  camera = new Engine.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.25, 20);
   camera.position.set(-1.8, 0.6, 2.7);
 
-  scene = new THREE.Scene();
+  scene = new Engine.Scene();
 
   RGBELoader.loadAsync('textures/equirectangular/royal_esplanade_1k.hdr').then(texture => {
-    texture.mapping = THREE.Mapping.EquirectangularReflection;
-    //texture.minFilter = THREE.LinearMipmapLinearFilter;
-    //texture.generateMipmaps = true;
-
+    texture.mapping = Engine.Mapping.EquirectangularReflection;
     scene.background = texture;
     scene.environment = texture;
 
@@ -45,7 +42,7 @@ function init() {
   renderer = new WebGPURenderer({ antialias: true });
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.toneMapping = THREE.ToneMapping.ACESFilmic;
+  renderer.toneMapping = Engine.ToneMapping.ACESFilmic;
   container.appendChild(renderer.domElement);
 
   const controls = new OrbitControls(camera, renderer.domElement);

@@ -13,6 +13,7 @@ import {
   Blending,
   BlendingEquation,
   BlendingFactor,
+  BufferGeometry,
   Depth,
   Line,
   LineSegments,
@@ -26,8 +27,6 @@ import type { WebGPUBackend } from '@modules/renderer/engine/renderers/webgpu/We
 import RenderObject from '@modules/renderer/engine/renderers/common/RenderObject.js';
 import ComputePipeline from '@modules/renderer/engine/renderers/common/ComputePipeline.js';
 import Binding from '@modules/renderer/engine/renderers/common/Binding.js';
-import { Geometry } from 'three/examples/jsm/deprecated/Geometry.js';
-import geometries from '@modules/renderer/engine/renderers/common/Geometries.js';
 import { TypedArray } from '@modules/renderer/engine/math/MathUtils.js';
 
 class WebGPUPipelineUtils {
@@ -474,7 +473,7 @@ class WebGPUPipelineUtils {
     return blendOperation;
   }
 
-  _getPrimitiveState(object: Object3D, geometry: Geometry, material: Material): GPUPrimitiveState {
+  _getPrimitiveState(object: Object3D, geometry: BufferGeometry, material: Material): GPUPrimitiveState {
     const descriptor: GPUPrimitiveState = {};
     const utils = this.backend.utils;
 

@@ -3,12 +3,12 @@ import { AttributeType } from './Constants.js';
 import { Renderer } from '@modules/renderer/engine/renderers/common/Renderer.js';
 import RenderObject from '@modules/renderer/engine/renderers/common/RenderObject.js';
 import Binding from '@modules/renderer/engine/renderers/common/Binding.js';
-import ComputeNode from 'three/examples/jsm/nodes/gpgpu/ComputeNode.js';
 import { SampledTexture } from '@modules/renderer/engine/renderers/common/SampledTexture.js';
 import NodeUniformsGroup from '@modules/renderer/engine/renderers/common/nodes/NodeUniformsGroup.js';
 import UniformBuffer from '@modules/renderer/engine/renderers/common/UniformBuffer.js';
 import StorageTexture from '@modules/renderer/engine/renderers/common/StorageTexture.js';
 import StorageBuffer from '@modules/renderer/engine/renderers/common/StorageBuffer.js';
+import { ComputeNode } from '@modules/renderer/engine/nodes/Nodes.js';
 
 class Bindings extends DataMap<any, any> {
   constructor(public renderer: Renderer) {

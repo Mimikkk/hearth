@@ -1,4 +1,4 @@
-import * as THREE from '@modules/renderer/engine/engine.js';
+import * as Engine from '@modules/renderer/engine/engine.js';
 import {
   float,
   instanceIndex,
@@ -28,10 +28,10 @@ init(true);
 
 function init(forceWebGL = false) {
   const aspect = window.innerWidth / 2 / window.innerHeight;
-  const camera = new THREE.OrthographicCamera(-aspect, aspect, 1, -1, 0, 2);
+  const camera = new Engine.OrthographicCamera(-aspect, aspect, 1, -1, 0, 2);
   camera.position.z = 1;
 
-  const scene = new THREE.Scene();
+  const scene = new Engine.Scene();
 
   // texture
 
@@ -115,7 +115,7 @@ function init(forceWebGL = false) {
 
   //
 
-  const plane = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), material);
+  const plane = new Engine.Mesh(new Engine.PlaneGeometry(1, 1), material);
   scene.add(plane);
 
   const renderer = new WebGPURenderer({ antialias: false, forceWebGL: forceWebGL, trackTimestamp: true });
@@ -132,9 +132,9 @@ function init(forceWebGL = false) {
   if (forceWebGL) {
     renderer.domElement.style.left = '50%';
 
-    scene.background = new THREE.Color(0x212121);
+    scene.background = new Engine.Color(0x212121);
   } else {
-    scene.background = new THREE.Color(0x313131);
+    scene.background = new Engine.Color(0x313131);
   }
 
   // Init Positions

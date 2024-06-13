@@ -1,7 +1,7 @@
 import CodeNode, { CodeNodeInclude } from './CodeNode.ts';
 import { nodeObject } from '../shadernode/ShaderNodes.js';
 import NodeBuilder from '@modules/renderer/engine/nodes/core/NodeBuilder.js';
-import { NodeType } from 'three/examples/jsm/nodes/core/constants.js';
+import { NodeType } from '@modules/renderer/engine/nodes/core/constants.js';
 
 class FunctionNode extends CodeNode {
   static type = 'FunctionNode';

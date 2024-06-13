@@ -1,5 +1,6 @@
 import { Color, ShaderLib, ShaderMaterial, UniformsLib, UniformsUtils, Vector2 } from '../engine.js';
-import { ColorRepresentation, MaterialParameters } from 'three/src/engine.js';
+import { MaterialParameters } from '@modules/renderer/engine/materials/Material.js';
+import { ColorRepresentation } from '@modules/renderer/engine/math/Color.js';
 
 UniformsLib.line = {
   worldUnits: { value: 1 },

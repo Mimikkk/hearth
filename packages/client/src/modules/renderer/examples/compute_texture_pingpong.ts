@@ -1,4 +1,4 @@
-import * as THREE from '@modules/renderer/engine/engine.js';
+import * as Engine from '@modules/renderer/engine/engine.js';
 import { texture, textureStore, wgslFn, code, instanceIndex, uniform } from '@modules/renderer/engine/nodes/Nodes.js';
 
 import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
@@ -12,17 +12,17 @@ let material;
 let phase = true;
 let lastUpdate = -1;
 
-const seed = uniform(new THREE.Vector2());
+const seed = uniform(new Engine.Vector2());
 
 init();
 render();
 
 function init() {
   const aspect = window.innerWidth / window.innerHeight;
-  camera = new THREE.OrthographicCamera(-aspect, aspect, 1, -1, 0, 2);
+  camera = new Engine.OrthographicCamera(-aspect, aspect, 1, -1, 0, 2);
   camera.position.z = 1;
 
-  scene = new THREE.Scene();
+  scene = new Engine.Scene();
 
   // texture
 
@@ -34,8 +34,8 @@ function init() {
   pongTexture = new StorageTexture(width, height);
 
   if (hdr) {
-    pingTexture.type = THREE.TextureDataType.HalfFloat;
-    pongTexture.type = THREE.TextureDataType.HalfFloat;
+    pingTexture.type = Engine.TextureDataType.HalfFloat;
+    pongTexture.type = Engine.TextureDataType.HalfFloat;
   }
 
   const wgslFormat = hdr ? 'rgba16float' : 'rgba8unorm';
@@ -131,9 +131,9 @@ function init() {
 
   //
 
-  material = new THREE.MeshBasicMaterial({ color: 0xffffff, map: pongTexture });
+  material = new Engine.MeshBasicMaterial({ color: 0xffffff, map: pongTexture });
 
-  const plane = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), material);
+  const plane = new Engine.Mesh(new Engine.PlaneGeometry(1, 1), material);
   scene.add(plane);
 
   renderer = new WebGPURenderer({ antialias: true });

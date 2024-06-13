@@ -1,4 +1,4 @@
-import * as THREE from '@modules/renderer/engine/engine.js';
+import * as Engine from '@modules/renderer/engine/engine.js';
 import {
   color,
   instanceIndex,
@@ -42,15 +42,15 @@ init();
 async function init() {
   const { innerWidth, innerHeight } = window;
 
-  camera = new THREE.PerspectiveCamera(60, innerWidth / innerHeight, 0.1, 100);
+  camera = new Engine.PerspectiveCamera(60, innerWidth / innerHeight, 0.1, 100);
   camera.position.set(20, 2, 20);
   camera.layers.enable(2);
   camera.lookAt(0, 40, 0);
 
-  scene = new THREE.Scene();
-  scene.fog = new THREE.Fog(0x0f3c37, 5, 40);
+  scene = new Engine.Scene();
+  scene.fog = new Engine.Fog(0x0f3c37, 5, 40);
 
-  const dirLight = new THREE.DirectionalLight(0xf9ff9b, 9);
+  const dirLight = new Engine.DirectionalLight(0xf9ff9b, 9);
   dirLight.castShadow = true;
   dirLight.position.set(10, 10, 0);
   dirLight.castShadow = true;
@@ -65,17 +65,17 @@ async function init() {
   dirLight.shadow.bias = -0.009;
   scene.add(dirLight);
 
-  scene.add(new THREE.HemisphereLight(0x0f3c37, 0x080d10, 100));
+  scene.add(new Engine.HemisphereLight(0x0f3c37, 0x080d10, 100));
 
   //
 
-  collisionCamera = new THREE.OrthographicCamera(-50, 50, 50, -50, 0.1, 50);
+  collisionCamera = new Engine.OrthographicCamera(-50, 50, 50, -50, 0.1, 50);
   collisionCamera.position.y = 50;
   collisionCamera.lookAt(0, 0, 0);
   collisionCamera.layers.enable(1);
 
-  collisionPosRT = new THREE.RenderTarget(1024, 1024);
-  collisionPosRT.texture.type = THREE.TextureDataType.HalfFloat;
+  collisionPosRT = new Engine.RenderTarget(1024, 1024);
+  collisionPosRT.texture.type = Engine.TextureDataType.HalfFloat;
 
   collisionPosMaterial = new MeshBasicNodeMaterial();
   collisionPosMaterial.fog = false;
@@ -154,7 +154,7 @@ async function init() {
 
   // rain
 
-  const geometry = new THREE.SphereGeometry(surfaceOffset, 5, 5);
+  const geometry = new Engine.SphereGeometry(surfaceOffset, 5, 5);
 
   function particle(staticParticles) {
     const posBuffer = staticParticles ? staticPositionBuffer : positionBuffer;
@@ -168,7 +168,7 @@ async function init() {
 
     staticMaterial.positionNode = positionLocal.mul(scaleBuffer.toAttribute()).add(posBuffer.toAttribute());
 
-    const rainParticles = new THREE.Mesh(geometry, staticMaterial);
+    const rainParticles = new Engine.Mesh(geometry, staticMaterial);
     rainParticles.isInstancedMesh = true;
     rainParticles.count = maxParticleCount;
     rainParticles.castShadow = true;
@@ -186,12 +186,12 @@ async function init() {
 
   // floor geometry
 
-  const floorGeometry = new THREE.PlaneGeometry(100, 100);
+  const floorGeometry = new Engine.PlaneGeometry(100, 100);
   floorGeometry.rotateX(-Math.PI / 2);
 
-  const plane = new THREE.Mesh(
+  const plane = new Engine.Mesh(
     floorGeometry,
-    new THREE.MeshStandardMaterial({
+    new Engine.MeshStandardMaterial({
       color: 0x0c1e1e,
       roughness: 0.5,
       metalness: 0,
@@ -212,28 +212,28 @@ async function init() {
       metalness: 0,
     });
 
-    const object = new THREE.Group();
+    const object = new Engine.Group();
 
     for (let i = 0; i < count; i++) {
       const radius = 1 + i;
 
-      const coneGeometry = new THREE.ConeGeometry(radius * 0.95, radius * 1.25, 32);
+      const coneGeometry = new Engine.ConeGeometry(radius * 0.95, radius * 1.25, 32);
 
-      const cone = new THREE.Mesh(coneGeometry, coneMaterial);
+      const cone = new Engine.Mesh(coneGeometry, coneMaterial);
       cone.castShadow = true;
       cone.position.y = (count - i) * 1.5 + count * 0.6;
       object.add(cone);
     }
 
-    const geometry = new THREE.CylinderGeometry(1, 1, count, 32);
-    const cone = new THREE.Mesh(geometry, coneMaterial);
+    const geometry = new Engine.CylinderGeometry(1, 1, count, 32);
+    const cone = new Engine.Mesh(geometry, coneMaterial);
     cone.position.y = count / 2;
     object.add(cone);
 
     return object;
   }
 
-  const teapotTree = new THREE.Mesh(
+  const teapotTree = new Engine.Mesh(
     new TeapotGeometry(0.5, 18),
     new MeshBasicNodeMaterial({
       color: 0xfcfb9e,
@@ -252,7 +252,7 @@ async function init() {
   //
 
   renderer = new WebGPURenderer({ antialias: true });
-  renderer.toneMapping = THREE.ToneMapping.ACESFilmic;
+  renderer.toneMapping = Engine.ToneMapping.ACESFilmic;
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(animate);
@@ -277,10 +277,10 @@ async function init() {
 
   const teapotTreePass = pass(teapotTree, camera).getTextureNode();
   const teapotTreePassBlurred = teapotTreePass.gaussianBlur(3);
-  teapotTreePassBlurred.resolution = new THREE.Vector2(0.2, 0.2);
+  teapotTreePassBlurred.resolution = new Engine.Vector2(0.2, 0.2);
 
   const scenePassColorBlurred = scenePassColor.gaussianBlur();
-  scenePassColorBlurred.resolution = new THREE.Vector2(0.5, 0.5);
+  scenePassColorBlurred.resolution = new Engine.Vector2(0.5, 0.5);
   scenePassColorBlurred.directionNode = vec2(1);
 
   // compose

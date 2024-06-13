@@ -1,24 +1,16 @@
-import { Color } from '../math/Color.js';
+import { Color, ColorRepresentation } from '../math/Color.js';
 import { EventDispatcher } from '../core/EventDispatcher.js';
 import {
   Blending,
   BlendingEquation,
   BlendingFactor,
   Depth,
+  PixelFormat,
   Side,
   StencilFunction,
   StencilOperation,
 } from '../constants.js';
 import * as MathUtils from '../math/MathUtils.js';
-import { ColorRepresentation } from 'three/src/math/Color.js';
-import {
-  BlendingDstFactor,
-  BlendingSrcFactor,
-  DepthModes,
-  PixelFormat,
-  StencilFunc,
-  StencilOp,
-} from 'three/src/constants.js';
 import { Vector3 } from '@modules/renderer/engine/math/Vector3.js';
 import { Plane } from '@modules/renderer/engine/math/Plane.js';
 
@@ -30,19 +22,19 @@ export interface MaterialParameters {
   alphaToCoverage?: boolean | undefined;
   blendAlpha?: number | undefined;
   blendColor?: ColorRepresentation | undefined;
-  blendDst?: BlendingDstFactor | undefined;
+  blendDst?: BlendingFactor | undefined;
   blendDstAlpha?: number | undefined;
   blendEquation?: BlendingEquation | undefined;
   blendEquationAlpha?: number | undefined;
   blending?: Blending | undefined;
-  blendSrc?: BlendingSrcFactor | BlendingDstFactor | undefined;
+  blendSrc?: BlendingFactor | undefined;
   blendSrcAlpha?: number | undefined;
   clipIntersection?: boolean | undefined;
   clippingPlanes?: Plane[] | undefined;
   clipShadows?: boolean | undefined;
   colorWrite?: boolean | undefined;
   defines?: any;
-  depthFunc?: DepthModes | undefined;
+  depthFunc?: Depth | undefined;
   depthTest?: boolean | undefined;
   depthWrite?: boolean | undefined;
   name?: string | undefined;
@@ -62,13 +54,13 @@ export interface MaterialParameters {
   visible?: boolean | undefined;
   format?: PixelFormat | undefined;
   stencilWrite?: boolean | undefined;
-  stencilFunc?: StencilFunc | undefined;
+  stencilFunc?: StencilFunction | undefined;
   stencilRef?: number | undefined;
   stencilWriteMask?: number | undefined;
   stencilFuncMask?: number | undefined;
-  stencilFail?: StencilOp | undefined;
-  stencilZFail?: StencilOp | undefined;
-  stencilZPass?: StencilOp | undefined;
+  stencilFail?: StencilOperation | undefined;
+  stencilZFail?: StencilOperation | undefined;
+  stencilZPass?: StencilOperation | undefined;
   userData?: Record<string, any> | undefined;
 }
 
@@ -85,24 +77,24 @@ export class Material {
   opacity: number;
   transparent: boolean;
   alphaHash: boolean;
-  blendSrc: BlendingSrcFactor | BlendingDstFactor;
-  blendDst: BlendingDstFactor;
+  blendSrc: BlendingFactor;
+  blendDst: BlendingFactor;
   blendEquation: BlendingEquation;
   blendSrcAlpha: number | null;
   blendDstAlpha: number | null;
   blendEquationAlpha: number | null;
   blendColor: Color;
   blendAlpha: number;
-  depthFunc: DepthModes;
+  depthFunc: Depth;
   depthTest: boolean;
   depthWrite: boolean;
   stencilWriteMask: number;
-  stencilFunc: StencilFunc;
+  stencilFunc: StencilFunction;
   stencilRef: number;
   stencilFuncMask: number;
-  stencilFail: StencilOp;
-  stencilZFail: StencilOp;
-  stencilZPass: StencilOp;
+  stencilFail: StencilOperation;
+  stencilZFail: StencilOperation;
+  stencilZPass: StencilOperation;
   stencilWrite: boolean;
   clippingPlanes: Plane[] | null;
   clipIntersection: boolean;

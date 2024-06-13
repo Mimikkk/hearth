@@ -1,4 +1,4 @@
-import * as THREE from '@modules/renderer/engine/engine.js';
+import * as Engine from '@modules/renderer/engine/engine.js';
 import { Font } from '@modules/renderer/engine/loaders/FontLoader.js';
 import { TTFLoader } from '@modules/renderer/engine/loaders/TTFLoader.js';
 import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
@@ -9,7 +9,7 @@ let camera, cameraTarget, scene, renderer;
 let group, textMesh1, textMesh2, textGeo, material;
 let firstLetter = true;
 
-let text = 'three.js';
+let text = 'penumbra';
 const depth = 20,
   size = 70,
   hover = 30,
@@ -35,31 +35,31 @@ function init() {
 
   const width = window.innerWidth;
   const height = window.innerHeight;
-  camera = new THREE.PerspectiveCamera(60, width / height, 1, 2100);
+  camera = new Engine.PerspectiveCamera(60, width / height, 1, 2100);
   camera.position.set(0, 400, 700);
 
-  cameraTarget = new THREE.Vector3(0, 150, 0);
+  cameraTarget = new Engine.Vector3(0, 150, 0);
 
   // SCENE
 
-  scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x000000);
-  scene.fog = new THREE.Fog(0x000000, 250, 1400);
+  scene = new Engine.Scene();
+  scene.background = new Engine.Color(0x000000);
+  scene.fog = new Engine.Fog(0x000000, 250, 1400);
 
   // LIGHTS
 
-  const dirLight1 = new THREE.DirectionalLight(0xffffff, 0.4);
+  const dirLight1 = new Engine.DirectionalLight(0xffffff, 0.4);
   dirLight1.position.set(0, 0, 1).normalize();
   scene.add(dirLight1);
 
-  const dirLight2 = new THREE.DirectionalLight(0xffffff, 2);
+  const dirLight2 = new Engine.DirectionalLight(0xffffff, 2);
   dirLight2.position.set(0, hover, 10).normalize();
-  dirLight2.color.setHSL(Math.random(), 1, 0.5, THREE.ColorSpace.SRGB);
+  dirLight2.color.setHSL(Math.random(), 1, 0.5, Engine.ColorSpace.SRGB);
   scene.add(dirLight2);
 
-  material = new THREE.MeshPhongMaterial({ color: 0xffffff, flatShading: true });
+  material = new Engine.MeshPhongMaterial({ color: 0xffffff, flatShading: true });
 
-  group = new THREE.Group();
+  group = new Engine.Group();
   group.position.y = 100;
 
   scene.add(group);
@@ -71,9 +71,9 @@ function init() {
     createText();
   });
 
-  const plane = new THREE.Mesh(
-    new THREE.PlaneGeometry(10000, 10000),
-    new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.5, transparent: true }),
+  const plane = new Engine.Mesh(
+    new Engine.PlaneGeometry(10000, 10000),
+    new Engine.MeshBasicMaterial({ color: 0xffffff, opacity: 0.5, transparent: true }),
   );
   plane.position.y = 100;
   plane.rotation.x = -Math.PI / 2;
@@ -151,7 +151,7 @@ function createText() {
 
   const centerOffset = -0.5 * (textGeo.boundingBox.max.x - textGeo.boundingBox.min.x);
 
-  textMesh1 = new THREE.Mesh(textGeo, material);
+  textMesh1 = new Engine.Mesh(textGeo, material);
 
   textMesh1.position.x = centerOffset;
   textMesh1.position.y = hover;
@@ -163,7 +163,7 @@ function createText() {
   group.add(textMesh1);
 
   if (mirror) {
-    textMesh2 = new THREE.Mesh(textGeo, material);
+    textMesh2 = new Engine.Mesh(textGeo, material);
 
     textMesh2.position.x = centerOffset;
     textMesh2.position.y = -hover;

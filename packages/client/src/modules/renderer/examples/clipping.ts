@@ -1,4 +1,4 @@
-import * as THREE from '@modules/renderer/engine/engine.js';
+import * as Engine from '@modules/renderer/engine/engine.js';
 import { MeshPhongNodeMaterial } from '@modules/renderer/engine/nodes/Nodes.js';
 
 import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
@@ -16,17 +16,17 @@ let camera, scene, renderer, startTime, object, stats;
 init();
 
 function init() {
-  camera = new THREE.PerspectiveCamera(36, window.innerWidth / window.innerHeight, 0.25, 16);
+  camera = new Engine.PerspectiveCamera(36, window.innerWidth / window.innerHeight, 0.25, 16);
 
   camera.position.set(0, 1.3, 3);
 
-  scene = new THREE.Scene();
+  scene = new Engine.Scene();
 
   // Lights
 
-  scene.add(new THREE.AmbientLight(0xcccccc));
+  scene.add(new Engine.AmbientLight(0xcccccc));
 
-  const spotLight = new THREE.SpotLight(0xffffff, 60);
+  const spotLight = new Engine.SpotLight(0xffffff, 60);
   spotLight.angle = Math.PI / 5;
   spotLight.penumbra = 0.2;
   spotLight.position.set(2, 3, 3);
@@ -39,7 +39,7 @@ function init() {
   spotLight.shadow.radius = 4;
   scene.add(spotLight);
 
-  const dirLight = new THREE.DirectionalLight(0x55505a, 3);
+  const dirLight = new Engine.DirectionalLight(0x55505a, 3);
   dirLight.position.set(0, 3, 0);
   dirLight.castShadow = true;
   dirLight.shadow.camera.near = 1;
@@ -56,16 +56,16 @@ function init() {
 
   // ***** Clipping planes: *****
 
-  const localPlane = new THREE.Plane(new THREE.Vector3(0, -1, 0), 0.8);
-  const localPlane2 = new THREE.Plane(new THREE.Vector3(0, 0, -1), 0.1);
-  const globalPlane = new THREE.Plane(new THREE.Vector3(-1, 0, 0), 0.1);
+  const localPlane = new Engine.Plane(new Engine.Vector3(0, -1, 0), 0.8);
+  const localPlane2 = new Engine.Plane(new Engine.Vector3(0, 0, -1), 0.1);
+  const globalPlane = new Engine.Plane(new Engine.Vector3(-1, 0, 0), 0.1);
 
   // Geometry
 
   const material = new MeshPhongNodeMaterial({
     color: 0x80ee10,
     shininess: 0,
-    side: THREE.Side.Double,
+    side: Engine.Side.Double,
 
     // ***** Clipping setup (material): *****
     clippingPlanes: [localPlane, localPlane2],
@@ -74,14 +74,14 @@ function init() {
     clipIntersection: true,
   });
 
-  const geometry = new THREE.TorusKnotGeometry(0.4, 0.08, 95, 20);
+  const geometry = new Engine.TorusKnotGeometry(0.4, 0.08, 95, 20);
 
-  object = new THREE.Mesh(geometry, material);
+  object = new Engine.Mesh(geometry, material);
   object.castShadow = true;
   scene.add(object);
 
-  const ground = new THREE.Mesh(
-    new THREE.PlaneGeometry(9, 9, 1, 1),
+  const ground = new Engine.Mesh(
+    new Engine.PlaneGeometry(9, 9, 1, 1),
     new MeshPhongNodeMaterial({ color: 0xa0adaf, shininess: 150 }),
   );
 

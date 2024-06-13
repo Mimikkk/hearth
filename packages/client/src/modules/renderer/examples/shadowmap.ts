@@ -1,4 +1,4 @@
-import * as THREE from '@modules/renderer/engine/engine.js';
+import * as Engine from '@modules/renderer/engine/engine.js';
 
 import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
 
@@ -13,18 +13,18 @@ let torusKnot, dirGroup;
 init();
 
 function init() {
-  camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);
+  camera = new Engine.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);
   camera.position.set(0, 10, 20);
 
-  scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x222244);
-  scene.fog = new THREE.Fog(0x222244, 50, 100);
+  scene = new Engine.Scene();
+  scene.background = new Engine.Color(0x222244);
+  scene.fog = new Engine.Fog(0x222244, 50, 100);
 
   // lights
 
-  scene.add(new THREE.AmbientLight(0x444444, 2));
+  scene.add(new Engine.AmbientLight(0x444444, 2));
 
-  spotLight = new THREE.SpotLight(0xff8888, 400);
+  spotLight = new Engine.SpotLight(0xff8888, 400);
   spotLight.angle = Math.PI / 5;
   spotLight.penumbra = 0.3;
   spotLight.position.set(8, 10, 5);
@@ -37,7 +37,7 @@ function init() {
   spotLight.shadow.radius = 4;
   scene.add(spotLight);
 
-  dirLight = new THREE.DirectionalLight(0x8888ff, 3);
+  dirLight = new Engine.DirectionalLight(0x8888ff, 3);
   dirLight.position.set(3, 12, 17);
   dirLight.castShadow = true;
   dirLight.shadow.camera.near = 0.1;
@@ -51,13 +51,13 @@ function init() {
   dirLight.shadow.radius = 4;
   dirLight.shadow.bias = -0.0005;
 
-  dirGroup = new THREE.Group();
+  dirGroup = new Engine.Group();
   dirGroup.add(dirLight);
   scene.add(dirGroup);
 
   // geometry
 
-  const geometry = new THREE.TorusKnotGeometry(25, 8, 75, 80);
+  const geometry = new Engine.TorusKnotGeometry(25, 8, 75, 80);
   const material = new MeshPhongNodeMaterial({
     color: 0x999999,
     shininess: 0,
@@ -83,16 +83,16 @@ function init() {
     return materialColor;
   })();
 
-  torusKnot = new THREE.Mesh(geometry, materialCustomShadow);
+  torusKnot = new Engine.Mesh(geometry, materialCustomShadow);
   torusKnot.scale.multiplyScalar(1 / 18);
   torusKnot.position.y = 3;
   torusKnot.castShadow = true;
   torusKnot.receiveShadow = true;
   scene.add(torusKnot);
 
-  const cylinderGeometry = new THREE.CylinderGeometry(0.75, 0.75, 7, 32);
+  const cylinderGeometry = new Engine.CylinderGeometry(0.75, 0.75, 7, 32);
 
-  const pillar1 = new THREE.Mesh(cylinderGeometry, material);
+  const pillar1 = new Engine.Mesh(cylinderGeometry, material);
   pillar1.position.set(8, 3.5, 8);
   pillar1.castShadow = true;
   pillar1.receiveShadow = true;
@@ -109,14 +109,14 @@ function init() {
   scene.add(pillar3);
   scene.add(pillar4);
 
-  const planeGeometry = new THREE.PlaneGeometry(200, 200);
-  const planeMaterial = new THREE.MeshPhongMaterial({
+  const planeGeometry = new Engine.PlaneGeometry(200, 200);
+  const planeMaterial = new Engine.MeshPhongMaterial({
     color: 0x999999,
     shininess: 0,
     specular: 0x111111,
   });
 
-  const ground = new THREE.Mesh(planeGeometry, planeMaterial);
+  const ground = new Engine.Mesh(planeGeometry, planeMaterial);
   ground.rotation.x = -Math.PI / 2;
   ground.scale.multiplyScalar(3);
   ground.castShadow = true;
@@ -129,7 +129,7 @@ function init() {
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(animate);
-  renderer.toneMapping = THREE.ToneMapping.ACESFilmic;
+  renderer.toneMapping = Engine.ToneMapping.ACESFilmic;
   document.body.appendChild(renderer.domElement);
 
   // Mouse control
@@ -139,7 +139,7 @@ function init() {
   controls.maxDistance = 40;
   controls.update();
 
-  clock = new THREE.Clock();
+  clock = new Engine.Clock();
 
   useWindowResizer(renderer, camera);
 }

@@ -1,4 +1,4 @@
-import * as THREE from '@modules/renderer/engine/engine.js';
+import * as Engine from '@modules/renderer/engine/engine.js';
 import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
 import { TextureLoader } from '@modules/renderer/engine/loaders/TextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
@@ -6,29 +6,29 @@ import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindow
 let camera, scene, renderer, clock, dataTexture, diffuseMap;
 
 let last = 0;
-const position = new THREE.Vector2();
-const color = new THREE.Color();
+const position = new Engine.Vector2();
+const color = new Engine.Color();
 
 init();
 
 async function init() {
-  camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 10);
+  camera = new Engine.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 10);
   camera.position.z = 2;
 
-  scene = new THREE.Scene();
+  scene = new Engine.Scene();
 
-  clock = new THREE.Clock();
+  clock = new Engine.Clock();
 
   const loader = new TextureLoader();
   diffuseMap = await loader.loadAsync('textures/carbon/Carbon.png');
-  diffuseMap.colorSpace = THREE.ColorSpace.SRGB;
-  diffuseMap.minFilter = THREE.MinificationTextureFilter.Linear;
+  diffuseMap.colorSpace = Engine.ColorSpace.SRGB;
+  diffuseMap.minFilter = Engine.MinificationTextureFilter.Linear;
   diffuseMap.generateMipmaps = false;
 
-  const geometry = new THREE.PlaneGeometry(2, 2);
-  const material = new THREE.MeshBasicMaterial({ map: diffuseMap });
+  const geometry = new Engine.PlaneGeometry(2, 2);
+  const material = new Engine.MeshBasicMaterial({ map: diffuseMap });
 
-  const mesh = new THREE.Mesh(geometry, material);
+  const mesh = new Engine.Mesh(geometry, material);
   scene.add(mesh);
 
   //
@@ -37,7 +37,7 @@ async function init() {
   const height = 32;
 
   const data = new Uint8Array(width * height * 4);
-  dataTexture = new THREE.DataTexture(data, width, height);
+  dataTexture = new Engine.DataTexture(data, width, height);
 
   //
 
@@ -63,8 +63,8 @@ async function animate() {
   if (elapsedTime - last > 0.1) {
     last = elapsedTime;
 
-    position.x = 32 * THREE.MathUtils.randInt(1, 16) - 32;
-    position.y = 32 * THREE.MathUtils.randInt(1, 16) - 32;
+    position.x = 32 * Engine.MathUtils.randInt(1, 16) - 32;
+    position.y = 32 * Engine.MathUtils.randInt(1, 16) - 32;
 
     // generate new color data
     updateDataTexture(dataTexture);

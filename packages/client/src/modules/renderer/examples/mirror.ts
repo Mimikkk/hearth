@@ -1,4 +1,4 @@
-import * as THREE from '@modules/renderer/engine/engine.js';
+import * as Engine from '@modules/renderer/engine/engine.js';
 import { color, MeshPhongNodeMaterial, reflector, texture, uv } from '@modules/renderer/engine/nodes/Nodes.js';
 
 import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
@@ -17,10 +17,10 @@ init();
 
 async function init() {
   // scene
-  scene = new THREE.Scene();
+  scene = new Engine.Scene();
 
   // camera
-  camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 500);
+  camera = new Engine.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 500);
   camera.position.set(0, 75, 160);
 
   //
@@ -29,17 +29,17 @@ async function init() {
 
   //
 
-  sphereGroup = new THREE.Object3D();
+  sphereGroup = new Engine.Object3D();
   scene.add(sphereGroup);
 
-  geometry = new THREE.CylinderGeometry(0.1, 15 * Math.cos((Math.PI / 180) * 30), 0.1, 24, 1);
-  material = new THREE.MeshPhongMaterial({ color: 0xffffff, emissive: 0x8d8d8d });
-  const sphereCap = new THREE.Mesh(geometry, material);
+  geometry = new Engine.CylinderGeometry(0.1, 15 * Math.cos((Math.PI / 180) * 30), 0.1, 24, 1);
+  material = new Engine.MeshPhongMaterial({ color: 0xffffff, emissive: 0x8d8d8d });
+  const sphereCap = new Engine.Mesh(geometry, material);
   sphereCap.position.y = -15 * Math.sin((Math.PI / 180) * 30) - 0.05;
   sphereCap.rotateX(-Math.PI);
 
-  geometry = new THREE.SphereGeometry(15, 24, 24, Math.PI / 2, Math.PI * 2, 0, (Math.PI / 180) * 120);
-  const halfSphere = new THREE.Mesh(geometry, material);
+  geometry = new Engine.SphereGeometry(15, 24, 24, Math.PI / 2, Math.PI * 2, 0, (Math.PI / 180) * 120);
+  const halfSphere = new Engine.Mesh(geometry, material);
   halfSphere.add(sphereCap);
   halfSphere.rotateX((-Math.PI / 180) * 135);
   halfSphere.rotateZ((-Math.PI / 180) * 20);
@@ -47,9 +47,9 @@ async function init() {
 
   sphereGroup.add(halfSphere);
 
-  geometry = new THREE.IcosahedronGeometry(5, 0);
-  material = new THREE.MeshPhongMaterial({ color: 0xffffff, emissive: 0x7b7b7b, flatShading: true });
-  smallSphere = new THREE.Mesh(geometry, material);
+  geometry = new Engine.IcosahedronGeometry(5, 0);
+  material = new Engine.MeshPhongMaterial({ color: 0xffffff, emissive: 0x7b7b7b, flatShading: true });
+  smallSphere = new Engine.Mesh(geometry, material);
   scene.add(smallSphere);
 
   // textures
@@ -57,11 +57,11 @@ async function init() {
   const textureLoader = new TextureLoader();
 
   const floorNormal = await textureLoader.loadAsync('textures/floors/FloorsCheckerboard_S_Normal.jpg');
-  floorNormal.wrapS = THREE.Wrapping.Repeat;
-  floorNormal.wrapT = THREE.Wrapping.Repeat;
+  floorNormal.wrapS = Engine.Wrapping.Repeat;
+  floorNormal.wrapT = Engine.Wrapping.Repeat;
 
   const decalDiffuse = await textureLoader.loadAsync('textures/decal/decal-diffuse.png');
-  decalDiffuse.colorSpace = THREE.ColorSpace.SRGB;
+  decalDiffuse.colorSpace = Engine.ColorSpace.SRGB;
 
   const decalNormal = await textureLoader.loadAsync('textures/decal/decal-normal.jpg');
 
@@ -84,11 +84,11 @@ async function init() {
 
   // walls
 
-  const planeGeo = new THREE.PlaneGeometry(100.1, 100.1);
+  const planeGeo = new Engine.PlaneGeometry(100.1, 100.1);
 
   //
 
-  const planeBottom = new THREE.Mesh(
+  const planeBottom = new Engine.Mesh(
     planeGeo,
     new MeshPhongNodeMaterial({
       colorNode: groundNode,
@@ -98,7 +98,7 @@ async function init() {
   planeBottom.add(groundReflector.target);
   scene.add(planeBottom);
 
-  const planeBack = new THREE.Mesh(
+  const planeBack = new Engine.Mesh(
     planeGeo,
     new MeshPhongNodeMaterial({
       colorNode: verticalNode,
@@ -111,24 +111,24 @@ async function init() {
 
   //
 
-  const planeTop = new THREE.Mesh(planeGeo, new THREE.MeshPhongMaterial({ color: 0xffffff }));
+  const planeTop = new Engine.Mesh(planeGeo, new Engine.MeshPhongMaterial({ color: 0xffffff }));
   planeTop.position.y = 100;
   planeTop.rotateX(Math.PI / 2);
   scene.add(planeTop);
 
-  const planeFront = new THREE.Mesh(planeGeo, new THREE.MeshPhongMaterial({ color: 0x7f7fff }));
+  const planeFront = new Engine.Mesh(planeGeo, new Engine.MeshPhongMaterial({ color: 0x7f7fff }));
   planeFront.position.z = 50;
   planeFront.position.y = 50;
   planeFront.rotateY(Math.PI);
   scene.add(planeFront);
 
-  const planeRight = new THREE.Mesh(planeGeo, new THREE.MeshPhongMaterial({ color: 0x00ff00 }));
+  const planeRight = new Engine.Mesh(planeGeo, new Engine.MeshPhongMaterial({ color: 0x00ff00 }));
   planeRight.position.x = 50;
   planeRight.position.y = 50;
   planeRight.rotateY(-Math.PI / 2);
   scene.add(planeRight);
 
-  const planeLeft = new THREE.Mesh(planeGeo, new THREE.MeshPhongMaterial({ color: 0xff0000 }));
+  const planeLeft = new Engine.Mesh(planeGeo, new Engine.MeshPhongMaterial({ color: 0xff0000 }));
   planeLeft.position.x = -50;
   planeLeft.position.y = 50;
   planeLeft.rotateY(Math.PI / 2);
@@ -136,19 +136,19 @@ async function init() {
 
   // lights
 
-  const mainLight = new THREE.PointLight(0xe7e7e7, 2.5, 250, 0);
+  const mainLight = new Engine.PointLight(0xe7e7e7, 2.5, 250, 0);
   mainLight.position.y = 60;
   scene.add(mainLight);
 
-  const greenLight = new THREE.PointLight(0x00ff00, 0.5, 1000, 0);
+  const greenLight = new Engine.PointLight(0x00ff00, 0.5, 1000, 0);
   greenLight.position.set(550, 50, 0);
   scene.add(greenLight);
 
-  const redLight = new THREE.PointLight(0xff0000, 0.5, 1000, 0);
+  const redLight = new Engine.PointLight(0xff0000, 0.5, 1000, 0);
   redLight.position.set(-550, 50, 0);
   scene.add(redLight);
 
-  const blueLight = new THREE.PointLight(0xbbbbfe, 0.5, 1000, 0);
+  const blueLight = new Engine.PointLight(0xbbbbfe, 0.5, 1000, 0);
   blueLight.position.set(0, 50, 550);
   scene.add(blueLight);
 

@@ -1,4 +1,4 @@
-import * as THREE from '@modules/renderer/engine/engine.js';
+import * as Engine from '@modules/renderer/engine/engine.js';
 
 import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
 
@@ -33,12 +33,12 @@ function init() {
   renderer.setAnimationLoop(animate);
   document.body.appendChild(renderer.domElement);
 
-  scene = new THREE.Scene();
+  scene = new Engine.Scene();
 
-  camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 1000);
+  camera = new Engine.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 1000);
   camera.position.set(-40, 0, 60);
 
-  camera2 = new THREE.PerspectiveCamera(40, 1, 1, 1000);
+  camera2 = new Engine.PerspectiveCamera(40, 1, 1, 1000);
   camera2.position.copy(camera.position);
 
   controls = new OrbitControls(camera, renderer.domElement);
@@ -48,17 +48,15 @@ function init() {
 
   backgroundNode = color(0x222222);
 
-  // Position and THREE.Color Data
-
   const positions = [];
   const colors = [];
 
-  const points = GeometryUtils.hilbert3D(new THREE.Vector3(0, 0, 0), 20.0, 1, 0, 1, 2, 3, 4, 5, 6, 7);
+  const points = GeometryUtils.hilbert3D(new Engine.Vector3(0, 0, 0), 20.0, 1, 0, 1, 2, 3, 4, 5, 6, 7);
 
-  const spline = new THREE.CatmullRomCurve3(points);
+  const spline = new Engine.CatmullRomCurve3(points);
   const divisions = Math.round(4 * points.length);
-  const point = new THREE.Vector3();
-  const pointColor = new THREE.Color();
+  const point = new Engine.Vector3();
+  const pointColor = new Engine.Color();
 
   for (let i = 0, l = divisions; i < l; i++) {
     const t = i / l;
@@ -66,7 +64,7 @@ function init() {
     spline.getPoint(t, point);
     positions.push(point.x, point.y, point.z);
 
-    pointColor.setHSL(t, 1.0, 0.5, THREE.ColorSpace.SRGB);
+    pointColor.setHSL(t, 1.0, 0.5, Engine.ColorSpace.SRGB);
     colors.push(pointColor.r, pointColor.g, pointColor.b);
   }
 

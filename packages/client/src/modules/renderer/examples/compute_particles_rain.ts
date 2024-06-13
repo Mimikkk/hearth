@@ -1,4 +1,4 @@
-import * as THREE from '@modules/renderer/engine/engine.js';
+import * as Engine from '@modules/renderer/engine/engine.js';
 import {
   cameraProjectionMatrix,
   cameraViewMatrix,
@@ -47,13 +47,13 @@ init();
 function init() {
   const { innerWidth, innerHeight } = window;
 
-  camera = new THREE.PerspectiveCamera(60, innerWidth / innerHeight, 0.1, 110);
+  camera = new Engine.PerspectiveCamera(60, innerWidth / innerHeight, 0.1, 110);
   camera.position.set(40, 8, 0);
   camera.lookAt(0, 0, 0);
 
-  scene = new THREE.Scene();
+  scene = new Engine.Scene();
 
-  const dirLight = new THREE.DirectionalLight(0xffffff, 0.5);
+  const dirLight = new Engine.DirectionalLight(0xffffff, 0.5);
   dirLight.castShadow = true;
   dirLight.position.set(3, 17, 17);
   dirLight.castShadow = true;
@@ -68,18 +68,18 @@ function init() {
   dirLight.shadow.bias = -0.01;
 
   scene.add(dirLight);
-  scene.add(new THREE.AmbientLight(0x111111));
+  scene.add(new Engine.AmbientLight(0x111111));
 
   //
 
-  collisionCamera = new THREE.OrthographicCamera(-50, 50, 50, -50, 0.1, 50);
+  collisionCamera = new Engine.OrthographicCamera(-50, 50, 50, -50, 0.1, 50);
   collisionCamera.position.y = 50;
   collisionCamera.lookAt(0, 0, 0);
   collisionCamera.layers.disableAll();
   collisionCamera.layers.enable(1);
 
-  collisionPosRT = new THREE.RenderTarget(1024, 1024);
-  collisionPosRT.texture.type = THREE.TextureDataType.HalfFloat;
+  collisionPosRT = new Engine.RenderTarget(1024, 1024);
+  collisionPosRT.texture.type = Engine.TextureDataType.HalfFloat;
 
   collisionPosMaterial = new MeshBasicNodeMaterial();
   collisionPosMaterial.colorNode = positionWorld;
@@ -200,13 +200,13 @@ function init() {
   rainMaterial.colorNode = uv().distance(vec2(0.5, 0)).oneMinus().mul(3).exp().mul(0.1);
   rainMaterial.vertexNode = billboarding();
   rainMaterial.opacity = 0.2;
-  rainMaterial.side = THREE.Side.Double;
+  rainMaterial.side = Engine.Side.Double;
   rainMaterial.forceSinglePass = true;
   rainMaterial.depthWrite = false;
   rainMaterial.depthTest = true;
   rainMaterial.transparent = true;
 
-  const rainParticles = new THREE.Mesh(new THREE.PlaneGeometry(0.1, 2), rainMaterial);
+  const rainParticles = new Engine.Mesh(new Engine.PlaneGeometry(0.1, 2), rainMaterial);
   rainParticles.isInstancedMesh = true;
   rainParticles.count = instanceCount;
   scene.add(rainParticles);
@@ -226,7 +226,7 @@ function init() {
   rippleMaterial.colorNode = rippleEffect();
   rippleMaterial.positionNode = positionGeometry.add(ripplePositionBuffer.toAttribute());
   rippleMaterial.opacityNode = rippleTime.mul(0.3).oneMinus().max(0).mul(0.5);
-  rippleMaterial.side = THREE.Side.Double;
+  rippleMaterial.side = Engine.Side.Double;
   rippleMaterial.forceSinglePass = true;
   rippleMaterial.depthWrite = false;
   rippleMaterial.depthTest = true;
@@ -234,32 +234,32 @@ function init() {
 
   // ripple geometry
 
-  const surfaceRippleGeometry = new THREE.PlaneGeometry(2.5, 2.5);
+  const surfaceRippleGeometry = new Engine.PlaneGeometry(2.5, 2.5);
   surfaceRippleGeometry.rotateX(-Math.PI / 2);
 
-  const xRippleGeometry = new THREE.PlaneGeometry(1, 2);
+  const xRippleGeometry = new Engine.PlaneGeometry(1, 2);
   xRippleGeometry.rotateY(-Math.PI / 2);
 
-  const zRippleGeometry = new THREE.PlaneGeometry(1, 2);
+  const zRippleGeometry = new Engine.PlaneGeometry(1, 2);
 
   const rippleGeometry = BufferGeometryUtils.mergeGeometries([surfaceRippleGeometry, xRippleGeometry, zRippleGeometry]);
 
-  const rippleParticles = new THREE.Mesh(rippleGeometry, rippleMaterial);
+  const rippleParticles = new Engine.Mesh(rippleGeometry, rippleMaterial);
   rippleParticles.isInstancedMesh = true;
   rippleParticles.count = instanceCount;
   scene.add(rippleParticles);
 
   // floor geometry
 
-  const floorGeometry = new THREE.PlaneGeometry(1000, 1000);
+  const floorGeometry = new Engine.PlaneGeometry(1000, 1000);
   floorGeometry.rotateX(-Math.PI / 2);
 
-  const plane = new THREE.Mesh(floorGeometry, new THREE.MeshBasicMaterial({ color: 0x050505 }));
+  const plane = new Engine.Mesh(floorGeometry, new Engine.MeshBasicMaterial({ color: 0x050505 }));
   scene.add(plane);
 
   //
 
-  collisionBox = new THREE.Mesh(new THREE.BoxGeometry(30, 1, 15), new THREE.MeshStandardMaterial());
+  collisionBox = new Engine.Mesh(new Engine.BoxGeometry(30, 1, 15), new Engine.MeshStandardMaterial());
   collisionBox.material.color.set(0x333333);
   collisionBox.position.y = 12;
   collisionBox.scale.x = 3.5;
@@ -273,7 +273,7 @@ function init() {
   loader.loadAsync('models/json/suzanne_buffergeometry.json').then(function (geometry) {
     geometry.computeVertexNormals();
 
-    monkey = new THREE.Mesh(geometry, new THREE.MeshStandardMaterial({ roughness: 1, metalness: 0 }));
+    monkey = new Engine.Mesh(geometry, new Engine.MeshStandardMaterial({ roughness: 1, metalness: 0 }));
     monkey.receiveShadow = true;
     monkey.scale.setScalar(5);
     monkey.rotation.y = Math.PI / 2;
@@ -285,7 +285,7 @@ function init() {
 
   //
 
-  clock = new THREE.Clock();
+  clock = new Engine.Clock();
 
   //
 
@@ -317,8 +317,8 @@ function init() {
   const gui = new GUI();
 
   // use lerp to smooth the movement
-  collisionBoxPosUI = new THREE.Vector3().copy(collisionBox.position);
-  collisionBoxPos = new THREE.Vector3();
+  collisionBoxPosUI = new Engine.Vector3().copy(collisionBox.position);
+  collisionBoxPos = new Engine.Vector3();
 
   gui.add(collisionBoxPosUI, 'z', -50, 50, 0.001).name('position');
   gui.add(collisionBox.scale, 'x', 0.1, 3.5, 0.01).name('scale');

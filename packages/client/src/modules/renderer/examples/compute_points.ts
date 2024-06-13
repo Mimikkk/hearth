@@ -1,4 +1,4 @@
-import * as THREE from '@modules/renderer/engine/engine.js';
+import * as Engine from '@modules/renderer/engine/engine.js';
 import {
   tslFn,
   uniform,
@@ -21,16 +21,16 @@ import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindow
 let camera, scene, renderer;
 let computeNode;
 
-const pointerVector = new THREE.Vector2(-10.0, -10.0); // Out of bounds first
-const scaleVector = new THREE.Vector2(1, 1);
+const pointerVector = new Engine.Vector2(-10.0, -10.0); // Out of bounds first
+const scaleVector = new Engine.Vector2(1, 1);
 
 init();
 
 function init() {
-  camera = new THREE.OrthographicCamera(-1.0, 1.0, 1.0, -1.0, 0, 1);
+  camera = new Engine.OrthographicCamera(-1.0, 1.0, 1.0, -1.0, 0, 1);
   camera.position.z = 1;
 
-  scene = new THREE.Scene();
+  scene = new Engine.Scene();
 
   // initialize particles
 
@@ -92,8 +92,8 @@ function init() {
 
   const particleNode = attribute('particle', 'vec2');
 
-  const pointsGeometry = new THREE.BufferGeometry();
-  pointsGeometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(3), 3)); // single vertex ( not triangle )
+  const pointsGeometry = new Engine.BufferGeometry();
+  pointsGeometry.setAttribute('position', new Engine.BufferAttribute(new Float32Array(3), 3)); // single vertex ( not triangle )
   pointsGeometry.setAttribute('particle', particleBuffer); // dummy the position points as instances
   pointsGeometry.drawRange.count = 1; // force render points as instances ( not triangle )
 
@@ -101,7 +101,7 @@ function init() {
   pointsMaterial.colorNode = particleNode.add(color(0xffffff));
   pointsMaterial.positionNode = particleNode;
 
-  const mesh = new THREE.Points(pointsGeometry, pointsMaterial);
+  const mesh = new Engine.Points(pointsGeometry, pointsMaterial);
   mesh.isInstancedMesh = true;
   mesh.count = particleNum;
   scene.add(mesh);

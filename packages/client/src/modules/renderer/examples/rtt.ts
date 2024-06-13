@@ -1,4 +1,4 @@
-import * as THREE from '@modules/renderer/engine/engine.js';
+import * as Engine from '@modules/renderer/engine/engine.js';
 import { MeshBasicNodeMaterial, texture, uniform } from '@modules/renderer/engine/nodes/Nodes.js';
 
 import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
@@ -8,7 +8,7 @@ import { TextureLoader } from '@modules/renderer/engine/loaders/TextureLoader.js
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, renderer;
-const mouse = new THREE.Vector2();
+const mouse = new Engine.Vector2();
 
 let quadMesh, renderTarget;
 
@@ -19,24 +19,24 @@ const dpr = window.devicePixelRatio;
 init();
 
 async function init() {
-  camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 10);
+  camera = new Engine.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 10);
   camera.position.z = 3;
 
-  scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x0066ff);
+  scene = new Engine.Scene();
+  scene.background = new Engine.Color(0x0066ff);
 
   // textured mesh
 
   const loader = new TextureLoader();
   const uvTexture = await loader.loadAsync('./textures/uv_grid_opengl.jpg');
 
-  const geometryBox = new THREE.BoxGeometry();
+  const geometryBox = new Engine.BoxGeometry();
   const materialBox = new MeshBasicNodeMaterial();
   materialBox.colorNode = texture(uvTexture);
 
   //
 
-  box = new THREE.Mesh(geometryBox, materialBox);
+  box = new Engine.Mesh(geometryBox, materialBox);
   scene.add(box);
 
   //
@@ -47,7 +47,7 @@ async function init() {
   renderer.setAnimationLoop(animate);
   document.body.appendChild(renderer.domElement);
 
-  renderTarget = new THREE.RenderTarget(window.innerWidth * dpr, window.innerHeight * dpr);
+  renderTarget = new Engine.RenderTarget(window.innerWidth * dpr, window.innerHeight * dpr);
 
   window.addEventListener('mousemove', onWindowMouseMove);
   useWindowResizer(renderer, camera);

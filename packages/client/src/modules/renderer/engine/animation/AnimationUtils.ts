@@ -1,7 +1,7 @@
 import { Quaternion } from '../math/Quaternion.js';
 import { AnimationBlendMode } from '../constants.js';
 import { ArrayMap, NumberArray, TypedArray, TypedArrayConstructor } from '@modules/renderer/engine/math/MathUtils.js';
-import { AnimationClip } from 'three/src/animation/AnimationClip.js';
+import { AnimationClip } from '@modules/renderer/engine/animation/AnimationClip.js';
 
 export const convertArray = <R extends TypedArrayConstructor>(array: NumberArray, type: R): ArrayMap<R> =>
   ('BYTES_PER_ELEMENT' in type ? new type(array) : Array.from(array)) as ArrayMap<R>;

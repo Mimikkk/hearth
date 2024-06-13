@@ -1,4 +1,4 @@
-import * as THREE from '@modules/renderer/engine/engine.js';
+import * as Engine from '@modules/renderer/engine/engine.js';
 import * as Nodes from '@modules/renderer/engine/nodes/Nodes.js';
 
 import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
@@ -25,16 +25,16 @@ async function init() {
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(animation);
-  renderer.toneMapping = THREE.ToneMapping.ACESFilmic;
+  renderer.toneMapping = Engine.ToneMapping.ACESFilmic;
   document.body.appendChild(renderer.domElement);
 
   stats = new Stats();
   document.body.appendChild(stats.dom);
 
-  camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 1000);
+  camera = new Engine.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 1000);
   camera.position.z = 75;
 
-  scene = new THREE.Scene();
+  scene = new Engine.Scene();
 
   const uvTexture = await new TextureLoader().loadAsync('./textures/uv_grid_opengl.jpg');
 
@@ -48,21 +48,21 @@ async function init() {
   ]);
 
   texture.name = 'pisaRGBM16';
-  texture.minFilter = THREE.MinificationTextureFilter.LinearMipmapLinear;
-  texture.magFilter = THREE.MagnificationTextureFilter.Linear;
+  texture.minFilter = Engine.MinificationTextureFilter.LinearMipmapLinear;
+  texture.magFilter = Engine.MagnificationTextureFilter.Linear;
 
   scene.background = texture;
   scene.environment = texture;
 
   //
 
-  cubeRenderTarget = new THREE.CubeRenderTarget(256);
-  cubeRenderTarget.texture.type = THREE.TextureDataType.HalfFloat;
-  cubeRenderTarget.texture.minFilter = THREE.MinificationTextureFilter.LinearMipmapLinear;
-  cubeRenderTarget.texture.magFilter = THREE.MagnificationTextureFilter.Linear;
+  cubeRenderTarget = new Engine.CubeRenderTarget(256);
+  cubeRenderTarget.texture.type = Engine.TextureDataType.HalfFloat;
+  cubeRenderTarget.texture.minFilter = Engine.MinificationTextureFilter.LinearMipmapLinear;
+  cubeRenderTarget.texture.magFilter = Engine.MagnificationTextureFilter.Linear;
   cubeRenderTarget.texture.generateMipmaps = true;
 
-  cubeCamera = new THREE.CubeCamera(1, 1000, cubeRenderTarget);
+  cubeCamera = new Engine.CubeCamera(1, 1000, cubeRenderTarget);
 
   //
 
@@ -77,19 +77,19 @@ async function init() {
   gui.add(material, 'metalness', 0, 1);
   gui.add(renderer, 'toneMappingExposure', 0, 2).name('exposure');
 
-  sphere = new THREE.Mesh(new THREE.IcosahedronGeometry(15, 8), material);
+  sphere = new Engine.Mesh(new Engine.IcosahedronGeometry(15, 8), material);
   scene.add(sphere);
 
-  const material2 = new THREE.MeshStandardMaterial({
+  const material2 = new Engine.MeshStandardMaterial({
     map: uvTexture,
     roughness: 0.1,
     metalness: 0,
   });
 
-  cube = new THREE.Mesh(new THREE.BoxGeometry(15, 15, 15), material2);
+  cube = new Engine.Mesh(new Engine.BoxGeometry(15, 15, 15), material2);
   scene.add(cube);
 
-  torus = new THREE.Mesh(new THREE.TorusKnotGeometry(8, 3, 128, 16), material2);
+  torus = new Engine.Mesh(new Engine.TorusKnotGeometry(8, 3, 128, 16), material2);
   scene.add(torus);
 
   //

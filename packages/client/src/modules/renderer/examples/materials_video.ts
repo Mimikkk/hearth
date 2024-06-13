@@ -1,4 +1,4 @@
-import * as THREE from '@modules/renderer/engine/engine.js';
+import * as Engine from '@modules/renderer/engine/engine.js';
 
 import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
@@ -31,12 +31,12 @@ function init() {
   container = document.createElement('div');
   document.body.appendChild(container);
 
-  camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 10000);
+  camera = new Engine.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 10000);
   camera.position.z = 500;
 
-  scene = new THREE.Scene();
+  scene = new Engine.Scene();
 
-  const light = new THREE.DirectionalLight(0xffffff, 7);
+  const light = new Engine.DirectionalLight(0xffffff, 7);
   light.position.set(0.5, 1, 1).normalize();
   scene.add(light);
 
@@ -52,7 +52,7 @@ function init() {
     this.currentTime = 3;
   });
 
-  texture = new THREE.VideoTexture(video);
+  texture = new Engine.VideoTexture(video);
 
   //
 
@@ -73,11 +73,11 @@ function init() {
       ox = i;
       oy = j;
 
-      geometry = new THREE.BoxGeometry(xsize, ysize, xsize);
+      geometry = new Engine.BoxGeometry(xsize, ysize, xsize);
 
       change_uvs(geometry, ux, uy, ox, oy);
 
-      materials[cube_count] = new THREE.MeshPhongMaterial(parameters);
+      materials[cube_count] = new Engine.MeshPhongMaterial(parameters);
 
       material = materials[cube_count];
 
@@ -86,7 +86,7 @@ function init() {
 
       material.color.setHSL(material.hue, material.saturation, 0.5);
 
-      mesh = new THREE.Mesh(geometry, material);
+      mesh = new Engine.Mesh(geometry, material);
 
       mesh.position.x = (i - xgrid / 2) * xsize;
       mesh.position.y = (j - ygrid / 2) * ysize;

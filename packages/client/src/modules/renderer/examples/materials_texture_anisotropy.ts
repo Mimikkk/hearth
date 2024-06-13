@@ -1,4 +1,4 @@
-import * as THREE from '@modules/renderer/engine/engine.js';
+import * as Engine from '@modules/renderer/engine/engine.js';
 
 import Stats from 'stats-js';
 import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
@@ -35,23 +35,23 @@ async function init() {
 
   //
 
-  camera = new THREE.PerspectiveCamera(35, SCREEN_WIDTH / SCREEN_HEIGHT, 1, 25000);
+  camera = new Engine.PerspectiveCamera(35, SCREEN_WIDTH / SCREEN_HEIGHT, 1, 25000);
   camera.position.z = 1500;
 
-  scene1 = new THREE.Scene();
-  scene1.fog = new THREE.Fog(0xf2f7ff, 1, 25000);
+  scene1 = new Engine.Scene();
+  scene1.fog = new Engine.Fog(0xf2f7ff, 1, 25000);
 
-  scene2 = new THREE.Scene();
-  scene2.fog = new THREE.Fog(0xf2f7ff, 1, 25000);
+  scene2 = new Engine.Scene();
+  scene2.fog = new Engine.Fog(0xf2f7ff, 1, 25000);
 
-  scene1.add(new THREE.AmbientLight(0xeef0ff, 3));
-  scene2.add(new THREE.AmbientLight(0xeef0ff, 3));
+  scene1.add(new Engine.AmbientLight(0xeef0ff, 3));
+  scene2.add(new Engine.AmbientLight(0xeef0ff, 3));
 
-  const light1 = new THREE.DirectionalLight(0xffffff, 6);
+  const light1 = new Engine.DirectionalLight(0xffffff, 6);
   light1.position.set(1, 1, 1);
   scene1.add(light1);
 
-  const light2 = new THREE.DirectionalLight(0xffffff, 6);
+  const light2 = new Engine.DirectionalLight(0xffffff, 6);
   light2.position.set(1, 1, 1);
   scene2.add(light2);
 
@@ -62,19 +62,19 @@ async function init() {
   const maxAnisotropy = renderer.getMaxAnisotropy();
 
   const texture1 = await textureLoader.loadAsync('textures/crate.gif');
-  const material1 = new THREE.MeshPhongMaterial({ color: 0xffffff, map: texture1 });
+  const material1 = new Engine.MeshPhongMaterial({ color: 0xffffff, map: texture1 });
 
-  texture1.colorSpace = THREE.ColorSpace.SRGB;
+  texture1.colorSpace = Engine.ColorSpace.SRGB;
   texture1.anisotropy = renderer.getMaxAnisotropy();
-  texture1.wrapS = texture1.wrapT = THREE.Wrapping.Repeat;
+  texture1.wrapS = texture1.wrapT = Engine.Wrapping.Repeat;
   texture1.repeat.set(512, 512);
 
   const texture2 = await textureLoader.loadAsync('textures/crate.gif');
-  const material2 = new THREE.MeshPhongMaterial({ color: 0xffffff, map: texture2 });
+  const material2 = new Engine.MeshPhongMaterial({ color: 0xffffff, map: texture2 });
 
-  texture2.colorSpace = THREE.ColorSpace.SRGB;
+  texture2.colorSpace = Engine.ColorSpace.SRGB;
   texture2.anisotropy = 1;
-  texture2.wrapS = texture2.wrapT = THREE.Wrapping.Repeat;
+  texture2.wrapS = texture2.wrapT = Engine.Wrapping.Repeat;
   texture2.repeat.set(512, 512);
 
   if (maxAnisotropy > 0) {
@@ -87,13 +87,13 @@ async function init() {
 
   //
 
-  const geometry = new THREE.PlaneGeometry(100, 100);
+  const geometry = new Engine.PlaneGeometry(100, 100);
 
-  const mesh1 = new THREE.Mesh(geometry, material1);
+  const mesh1 = new Engine.Mesh(geometry, material1);
   mesh1.rotation.x = -Math.PI / 2;
   mesh1.scale.set(1000, 1000, 1000);
 
-  const mesh2 = new THREE.Mesh(geometry, material2);
+  const mesh2 = new Engine.Mesh(geometry, material2);
   mesh2.rotation.x = -Math.PI / 2;
   mesh2.scale.set(1000, 1000, 1000);
 
@@ -128,7 +128,11 @@ function render() {
   const SCREEN_HEIGHT = window.innerHeight;
 
   camera.position.x += (mouseX - camera.position.x) * 0.05;
-  camera.position.y = THREE.MathUtils.clamp(camera.position.y + (-(mouseY - 200) - camera.position.y) * 0.05, 50, 1000);
+  camera.position.y = Engine.MathUtils.clamp(
+    camera.position.y + (-(mouseY - 200) - camera.position.y) * 0.05,
+    50,
+    1000,
+  );
 
   camera.lookAt(scene1.position);
   renderer.clear();

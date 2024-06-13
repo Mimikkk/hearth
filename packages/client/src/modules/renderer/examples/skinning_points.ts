@@ -1,4 +1,4 @@
-import * as THREE from '@modules/renderer/engine/engine.js';
+import * as Engine from '@modules/renderer/engine/engine.js';
 import { PointsNodeMaterial, skinning, uniform } from '@modules/renderer/engine/nodes/Nodes.js';
 
 import { GLTFLoader } from '@modules/renderer/engine/loaders/GLTFLoader.js';
@@ -13,18 +13,18 @@ let mixer, clock;
 init();
 
 function init() {
-  camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 1000);
+  camera = new Engine.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 1000);
   camera.position.set(0, 300, -85);
 
-  scene = new THREE.Scene();
+  scene = new Engine.Scene();
   camera.lookAt(0, 0, -85);
 
-  clock = new THREE.Clock();
+  clock = new Engine.Clock();
 
   const loader = new GLTFLoader();
   loader.loadAsync('models/gltf/Michelle.glb').then(function (gltf) {
     const object = gltf.scene;
-    mixer = new THREE.AnimationMixer(object);
+    mixer = new Engine.AnimationMixer(object);
 
     const action = mixer.clipAction(gltf.animations[0]);
     action.play();
@@ -34,10 +34,10 @@ function init() {
         child.visible = false;
 
         const materialPoints = new PointsNodeMaterial();
-        materialPoints.colorNode = uniform(new THREE.Color());
+        materialPoints.colorNode = uniform(new Engine.Color());
         materialPoints.positionNode = skinning(child);
 
-        const pointCloud = new THREE.Points(child.geometry, materialPoints);
+        const pointCloud = new Engine.Points(child.geometry, materialPoints);
         scene.add(pointCloud);
       }
     });

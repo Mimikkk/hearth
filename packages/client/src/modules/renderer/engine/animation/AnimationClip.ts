@@ -8,8 +8,8 @@ import { StringKeyframeTrack } from './tracks/StringKeyframeTrack.js';
 import { VectorKeyframeTrack } from './tracks/VectorKeyframeTrack.js';
 import * as MathUtils from '../math/MathUtils.js';
 import { AnimationBlendMode } from '../constants.js';
-import { Vector3 } from 'three/src/math/Vector3.js';
 import { Object3D } from '@modules/renderer/engine/core/Object3D.js';
+import { Vector3 } from '@modules/renderer/engine/math/Vector3.js';
 
 export interface MorphTarget {
   name: string;

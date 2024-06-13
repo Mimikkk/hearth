@@ -1,4 +1,4 @@
-import * as THREE from '@modules/renderer/engine/engine.js';
+import * as Engine from '@modules/renderer/engine/engine.js';
 import { MeshBasicNodeMaterial, texture } from '@modules/renderer/engine/nodes/Nodes.js';
 
 import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
@@ -18,16 +18,16 @@ const dpr = window.devicePixelRatio;
 init();
 
 function init() {
-  camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 20);
+  camera = new Engine.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 20);
   camera.position.z = 4;
 
-  scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x222222);
+  scene = new Engine.Scene();
+  scene.background = new Engine.Color(0x222222);
   scene.overrideMaterial = new MeshBasicNodeMaterial();
 
   //
 
-  const geometry = new THREE.TorusKnotGeometry(1, 0.3, 128, 64);
+  const geometry = new Engine.TorusKnotGeometry(1, 0.3, 128, 64);
 
   const count = 50;
   const scale = 5;
@@ -37,7 +37,7 @@ function init() {
     const z = Math.random() * 2.0 - 1.0;
     const zScale = Math.sqrt(1.0 - z * z) * scale;
 
-    const mesh = new THREE.Mesh(geometry);
+    const mesh = new Engine.Mesh(geometry);
     mesh.position.set(Math.cos(r) * zScale, Math.sin(r) * zScale, z * scale);
     mesh.rotation.set(Math.random(), Math.random(), Math.random());
     scene.add(mesh);
@@ -51,10 +51,10 @@ function init() {
   renderer.setAnimationLoop(animate);
   document.body.appendChild(renderer.domElement);
 
-  const depthTexture = new THREE.DepthTexture();
-  depthTexture.type = THREE.TextureDataType.Float;
+  const depthTexture = new Engine.DepthTexture();
+  depthTexture.type = Engine.TextureDataType.Float;
 
-  renderTarget = new THREE.RenderTarget(window.innerWidth * dpr, window.innerHeight * dpr);
+  renderTarget = new Engine.RenderTarget(window.innerWidth * dpr, window.innerHeight * dpr);
   renderTarget.depthTexture = depthTexture;
 
   useWindowResizer(renderer, camera, () => {

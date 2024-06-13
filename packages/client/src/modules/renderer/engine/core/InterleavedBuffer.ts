@@ -1,7 +1,6 @@
 import * as MathUtils from '../math/MathUtils.js';
 import { TypedArray, TypedArrayConstructor } from '../math/MathUtils.js';
 import { BufferUsage } from '../constants.js';
-import { InterleavedBufferAttribute } from 'three';
 
 export class InterleavedBuffer {
   declare ['constructor']: typeof InterleavedBuffer;

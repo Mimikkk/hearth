@@ -1,4 +1,4 @@
-import * as THREE from '@modules/renderer/engine/engine.js';
+import * as Engine from '@modules/renderer/engine/engine.js';
 
 import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
 
@@ -15,7 +15,7 @@ let lights;
 async function init() {
   //
 
-  scene = new THREE.Scene();
+  scene = new Engine.Scene();
 
   //
 
@@ -72,11 +72,11 @@ async function init() {
 
   //
 
-  const material = new THREE.MeshPhongMaterial({ color: 0x808080 /*, dithering: true*/ });
+  const material = new Engine.MeshPhongMaterial({ color: 0x808080 /*, dithering: true*/ });
 
-  const geometry = new THREE.PlaneGeometry(200, 200);
+  const geometry = new Engine.PlaneGeometry(200, 200);
 
-  const mesh = new THREE.Mesh(geometry, material);
+  const mesh = new Engine.Mesh(geometry, material);
   mesh.rotation.x = -Math.PI * 0.5;
   scene.add(mesh);
 
@@ -88,7 +88,7 @@ async function init() {
   renderer.setAnimationLoop(render);
   document.body.appendChild(renderer.domElement);
 
-  camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.1, 100);
+  camera = new Engine.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.1, 100);
   camera.position.set(16, 4, 1);
 
   const controls = new OrbitControls(camera, renderer.domElement);

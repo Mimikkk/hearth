@@ -1,4 +1,4 @@
-import * as THREE from '@modules/renderer/engine/engine.js';
+import * as Engine from '@modules/renderer/engine/engine.js';
 import * as Nodes from '@modules/renderer/engine/nodes/Nodes.js';
 import {
   color,
@@ -46,14 +46,14 @@ async function init() {
   const container = document.createElement('div');
   document.body.appendChild(container);
 
-  camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 2000);
+  camera = new Engine.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 2000);
   camera.position.set(0, 200, 800);
 
-  scene = new THREE.Scene();
+  scene = new Engine.Scene();
 
   // Grid
 
-  const helper = new THREE.GridHelper(1000, 40, 0x303030, 0x303030);
+  const helper = new Engine.GridHelper(1000, 40, 0x303030, 0x303030);
   helper.position.y = -75;
   scene.add(helper);
 
@@ -62,12 +62,12 @@ async function init() {
   const textureLoader = new TextureLoader();
 
   const uvTexture = await textureLoader.loadAsync('./textures/uv_grid_opengl.jpg');
-  uvTexture.wrapS = THREE.Wrapping.Repeat;
-  uvTexture.wrapT = THREE.Wrapping.Repeat;
+  uvTexture.wrapS = Engine.Wrapping.Repeat;
+  uvTexture.wrapT = Engine.Wrapping.Repeat;
 
   const opacityTexture = await textureLoader.loadAsync('./textures/alphaMap.jpg');
-  opacityTexture.wrapS = THREE.Wrapping.Repeat;
-  opacityTexture.wrapT = THREE.Wrapping.Repeat;
+  opacityTexture.wrapS = Engine.Wrapping.Repeat;
+  opacityTexture.wrapT = Engine.Wrapping.Repeat;
 
   let material;
 
@@ -120,7 +120,7 @@ async function init() {
   materials.push(material);
 
   // Normal
-  material = new THREE.MeshNormalMaterial();
+  material = new Engine.MeshNormalMaterial();
   material.opacity = 0.5;
   material.transparent = true;
   materials.push(material);
@@ -232,7 +232,7 @@ async function init() {
 
   // Scriptable
 
-  global.set('THREE', THREE);
+  global.set('ENGINE', Engine);
   global.set('TSL', Nodes);
 
   const asyncNode = js(`
@@ -323,10 +323,10 @@ async function init() {
 
   scriptableNode.setParameter('source', texture(uvTexture).xyz);
   scriptableNode.setParameter('contrast', asyncNode);
-  scriptableNode.setParameter('vector3', vec3(new THREE.Vector3(1, 1, 1)));
+  scriptableNode.setParameter('vector3', vec3(new Engine.Vector3(1, 1, 1)));
   scriptableNode.setParameter('message', string('Hello World!'));
   scriptableNode.setParameter('binary', new ArrayBuffer(4));
-  scriptableNode.setParameter('object3d', new THREE.Group());
+  scriptableNode.setParameter('object3d', new Engine.Group());
 
   scriptableNode.call('helloWorld');
 
@@ -367,7 +367,7 @@ async function init() {
 }
 
 function addMesh(geometry, material) {
-  const mesh = new THREE.Mesh(geometry, material);
+  const mesh = new Engine.Mesh(geometry, material);
 
   mesh.position.x = (objects.length % 4) * 200 - 400;
   mesh.position.z = Math.floor(objects.length / 4) * 200 - 200;

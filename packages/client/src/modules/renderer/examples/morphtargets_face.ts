@@ -1,4 +1,4 @@
-import * as THREE from '@modules/renderer/engine/engine.js';
+import * as Engine from '@modules/renderer/engine/engine.js';
 
 import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
 
@@ -18,21 +18,21 @@ init();
 async function init() {
   let mixer;
 
-  const clock = new THREE.Clock();
+  const clock = new Engine.Clock();
 
   const container = document.createElement('div');
   document.body.appendChild(container);
 
-  const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 20);
+  const camera = new Engine.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 20);
   camera.position.set(-1.8, 0.8, 3);
 
-  const scene = new THREE.Scene();
-  scene.add(new THREE.HemisphereLight(0xffffff, 0x443333, 2));
+  const scene = new Engine.Scene();
+  scene.add(new Engine.HemisphereLight(0xffffff, 0x443333, 2));
 
   const renderer = new WebGPURenderer({ antialias: true });
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.toneMapping = THREE.ToneMapping.ACESFilmic;
+  renderer.toneMapping = Engine.ToneMapping.ACESFilmic;
   renderer.setAnimationLoop(animate);
 
   container.appendChild(renderer.domElement);
@@ -48,7 +48,7 @@ async function init() {
 
         scene.add(mesh);
 
-        mixer = new THREE.AnimationMixer(mesh);
+        mixer = new Engine.AnimationMixer(mesh);
 
         mixer.clipAction(gltf.animations[0]).play();
 
@@ -71,7 +71,7 @@ async function init() {
       },
     });
 
-  scene.background = new THREE.Color(0x666666);
+  scene.background = new Engine.Color(0x666666);
 
   const controls = new OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true;

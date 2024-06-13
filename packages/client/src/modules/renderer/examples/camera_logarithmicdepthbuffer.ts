@@ -1,4 +1,4 @@
-import * as THREE from '@modules/renderer/engine/engine.js';
+import * as Engine from '@modules/renderer/engine/engine.js';
 import { PerspectiveCamera, Scene } from '@modules/renderer/engine/engine.js';
 
 import { Font, FontLoader } from '@modules/renderer/engine/loaders/FontLoader.js';
@@ -67,7 +67,7 @@ const createCameraView = async (container: HTMLDivElement, type: 'logarithmic' |
   const Near = 1e-6;
   const Far = 1e27;
 
-  const camera = new THREE.PerspectiveCamera(50, (screensplit * width) / height, Near, Far);
+  const camera = new Engine.PerspectiveCamera(50, (screensplit * width) / height, Near, Far);
 
   const renderer = new WebGPURenderer({ antialias: true, logarithmicDepthBuffer: type === 'logarithmic' });
   renderer.setPixelRatio(window.devicePixelRatio);
@@ -138,11 +138,11 @@ const createBorderEvents = (border: HTMLDivElement) => {
 };
 
 const createScene = (font: Font): Scene => {
-  const scene = new THREE.Scene();
+  const scene = new Engine.Scene();
 
-  scene.add(new THREE.AmbientLight(0x777777));
+  scene.add(new Engine.AmbientLight(0x777777));
 
-  const light = new THREE.DirectionalLight(0xffffff, 3);
+  const light = new Engine.DirectionalLight(0xffffff, 3);
   light.position.set(100, 100, 100);
   scene.add(light);
 
@@ -158,7 +158,7 @@ const createScene = (font: Font): Scene => {
     emissive: 0x000000,
   };
 
-  const geometry = new THREE.SphereGeometry(0.5, 24, 12);
+  const geometry = new Engine.SphereGeometry(0.5, 24, 12);
 
   for (let i = 0; i < descriptors.length; i++) {
     const scale = descriptors[i].scale || 1;
@@ -174,21 +174,21 @@ const createScene = (font: Font): Scene => {
     // center text
     labelgeo.translate(-labelgeo.boundingSphere!.radius, 0, 0);
 
-    materialargs.color = new THREE.Color().setHSL(Math.random(), 0.5, 0.5);
+    materialargs.color = new Engine.Color().setHSL(Math.random(), 0.5, 0.5);
 
-    const material = new THREE.MeshPhongMaterial(materialargs);
+    const material = new Engine.MeshPhongMaterial(materialargs);
 
-    const group = new THREE.Group();
+    const group = new Engine.Group();
     group.position.z = -descriptors[i].size * scale;
     scene.add(group);
 
-    const textmesh = new THREE.Mesh(labelgeo, material);
+    const textmesh = new Engine.Mesh(labelgeo, material);
     textmesh.scale.set(scale, scale, scale);
     textmesh.position.z = -descriptors[i].size * scale;
     textmesh.position.y = (descriptors[i].size / 4) * scale;
     group.add(textmesh);
 
-    const dotmesh = new THREE.Mesh(geometry, material);
+    const dotmesh = new Engine.Mesh(geometry, material);
     dotmesh.position.y = (-descriptors[i].size / 4) * scale;
     dotmesh.scale.multiplyScalar(descriptors[i].size * scale);
     group.add(dotmesh);

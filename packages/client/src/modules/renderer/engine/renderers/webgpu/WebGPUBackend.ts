@@ -10,7 +10,7 @@ import {
 } from './utils/WebGPUConstants.js';
 
 import WGSLNodeBuilder from './nodes/WGSLNodeBuilder.js';
-import Backend from '../common/Backend.js';
+import Backend, { BackendParameters } from '../common/Backend.js';
 
 import WebGPUUtils from './utils/WebGPUUtils.js';
 import WebGPUAttributeUtils from './utils/WebGPUAttributeUtils.js';
@@ -18,7 +18,6 @@ import WebGPUBindingUtils from './utils/WebGPUBindingUtils.js';
 import WebGPUPipelineUtils from './utils/WebGPUPipelineUtils.js';
 import WebGPUTextureUtils from './utils/WebGPUTextureUtils.js';
 import { WebGPUManager } from '@modules/renderer/engine/capabilities/WebGPUManager.js';
-import { BackendParameters } from 'three/examples/jsm/renderers/common/Backend.js';
 import type { Renderer } from '@modules/renderer/engine/renderers/common/Renderer.js';
 import RenderContext from '@modules/renderer/engine/renderers/common/RenderContext.js';
 import ComputeNode from '@modules/renderer/engine/nodes/gpgpu/ComputeNode.js';

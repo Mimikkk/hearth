@@ -1,4 +1,4 @@
-import * as THREE from '@modules/renderer/engine/engine.js';
+import * as Engine from '@modules/renderer/engine/engine.js';
 import { TextureLoader } from '@modules/renderer/engine/loaders/TextureLoader.ts';
 import { MeshStandardNodeMaterial, parallaxUV, texture, uv } from '@modules/renderer/engine/nodes/Nodes.js';
 
@@ -17,11 +17,11 @@ init();
 async function init() {
   // scene
 
-  scene = new THREE.Scene();
+  scene = new Engine.Scene();
 
   // camera
 
-  camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 50);
+  camera = new Engine.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 50);
   camera.position.set(10, 14, 10);
 
   // environment
@@ -43,23 +43,23 @@ async function init() {
   const loader = new TextureLoader();
 
   const topTexture = await loader.loadAsync('textures/ambientcg/Ice002_1K-JPG_Color.jpg');
-  topTexture.colorSpace = THREE.ColorSpace.SRGB;
+  topTexture.colorSpace = Engine.ColorSpace.SRGB;
 
   const roughnessTexture = await loader.loadAsync('textures/ambientcg/Ice002_1K-JPG_Roughness.jpg');
-  roughnessTexture.colorSpace = THREE.ColorSpace.No;
+  roughnessTexture.colorSpace = Engine.ColorSpace.No;
 
   const normalTexture = await loader.loadAsync('textures/ambientcg/Ice002_1K-JPG_NormalGL.jpg');
-  normalTexture.colorSpace = THREE.ColorSpace.No;
+  normalTexture.colorSpace = Engine.ColorSpace.No;
 
   const displaceTexture = await loader.loadAsync('textures/ambientcg/Ice002_1K-JPG_Displacement.jpg');
-  displaceTexture.colorSpace = THREE.ColorSpace.No;
+  displaceTexture.colorSpace = Engine.ColorSpace.No;
 
   //
 
   const bottomTexture = await loader.loadAsync('textures/ambientcg/Ice003_1K-JPG_Color.jpg');
-  bottomTexture.colorSpace = THREE.ColorSpace.SRGB;
-  bottomTexture.wrapS = THREE.Wrapping.Repeat;
-  bottomTexture.wrapT = THREE.Wrapping.Repeat;
+  bottomTexture.colorSpace = Engine.ColorSpace.SRGB;
+  bottomTexture.wrapS = Engine.Wrapping.Repeat;
+  bottomTexture.wrapT = Engine.Wrapping.Repeat;
 
   // paralax effect
 
@@ -79,9 +79,9 @@ async function init() {
   material.normalMap = normalTexture;
   material.metalness = 0;
 
-  const geometry = new THREE.BoxGeometry(10, 10, 10);
+  const geometry = new Engine.BoxGeometry(10, 10, 10);
 
-  const ground = new THREE.Mesh(geometry, material);
+  const ground = new Engine.Mesh(geometry, material);
   ground.rotateX(-Math.PI / 2);
   scene.add(ground);
 
@@ -91,7 +91,7 @@ async function init() {
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(animate);
-  renderer.toneMapping = THREE.ToneMapping.Reinhard;
+  renderer.toneMapping = Engine.ToneMapping.Reinhard;
   renderer.toneMappingExposure = 6;
   document.body.appendChild(renderer.domElement);
 

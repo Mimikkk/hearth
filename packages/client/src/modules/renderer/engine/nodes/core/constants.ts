@@ -9,6 +9,18 @@ export const buildStages = ['setup', 'analyze', 'generate'] as const;
 export const shaderStages = ['fragment', 'vertex', 'compute'] as const;
 export const vectorComponents = ['x', 'y', 'z', 'w'] as const;
 
+export enum NodeType {
+  BOOLEAN = 'bool',
+  INTEGER = 'int',
+  FLOAT = 'float',
+  VECTOR2 = 'vec2',
+  VECTOR3 = 'vec3',
+  VECTOR4 = 'vec4',
+  MATRIX2 = 'mat2',
+  MATRIX3 = 'mat3',
+  MATRIX4 = 'mat4',
+}
+
 export type NodeTypeOption =
   | 'bool'
   | 'int'

@@ -1,4 +1,4 @@
-import * as THREE from '@modules/renderer/engine/engine.js';
+import * as Engine from '@modules/renderer/engine/engine.js';
 
 import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
 
@@ -18,12 +18,12 @@ async function init() {
   renderer.setAnimationLoop(render);
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.toneMapping = THREE.ToneMapping.ACESFilmic;
+  renderer.toneMapping = Engine.ToneMapping.ACESFilmic;
   document.body.appendChild(renderer.domElement);
 
-  scene = new THREE.Scene();
+  scene = new Engine.Scene();
 
-  camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.05, 20);
+  camera = new Engine.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.05, 20);
   camera.position.set(0.35, 0.05, 0.35);
 
   controls = new OrbitControls(camera, renderer.domElement);
@@ -41,7 +41,7 @@ async function init() {
 
   // environment
 
-  texture.mapping = THREE.Mapping.EquirectangularReflection;
+  texture.mapping = Engine.Mapping.EquirectangularReflection;
 
   scene.background = texture;
   scene.environment = texture;

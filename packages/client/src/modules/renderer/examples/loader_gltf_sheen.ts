@@ -1,4 +1,4 @@
-import * as THREE from '@modules/renderer/engine/engine.js';
+import * as Engine from '@modules/renderer/engine/engine.js';
 
 import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
 
@@ -17,12 +17,10 @@ function init() {
   const container = document.createElement('div');
   document.body.appendChild(container);
 
-  camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 20);
+  camera = new Engine.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 20);
   camera.position.set(-0.75, 0.7, 1.25);
 
-  scene = new THREE.Scene();
-  //scene.add( new THREE.DirectionalLight( 0xffffff, 2 ) );
-
+  scene = new Engine.Scene();
   // model
 
   new GLTFLoader().loadAsync('models/gltf/SheenChair.glb').then(gltf => {
@@ -40,14 +38,14 @@ function init() {
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(animate);
-  renderer.toneMapping = THREE.ToneMapping.ACESFilmic;
+  renderer.toneMapping = Engine.ToneMapping.ACESFilmic;
   renderer.toneMappingExposure = 1;
   container.appendChild(renderer.domElement);
 
-  scene.background = new THREE.Color(0xaaaaaa);
+  scene.background = new Engine.Color(0xaaaaaa);
 
   RGBELoader.loadAsync('textures/equirectangular/royal_esplanade_1k.hdr').then(texture => {
-    texture.mapping = THREE.Mapping.EquirectangularReflection;
+    texture.mapping = Engine.Mapping.EquirectangularReflection;
 
     scene.background = texture;
     //scene.backgroundBlurriness = 1; // @TODO: Needs PMREM

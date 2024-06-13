@@ -1,4 +1,4 @@
-import * as THREE from '@modules/renderer/engine/engine.js';
+import * as Engine from '@modules/renderer/engine/engine.js';
 import {
   rangeFog,
   color,
@@ -24,25 +24,25 @@ let camera, scene, renderer, light1, light2, light3, light4, stats, controls;
 init();
 
 async function init() {
-  camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.01, 100);
+  camera = new Engine.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.01, 100);
   camera.position.z = 7;
 
-  scene = new THREE.Scene();
+  scene = new Engine.Scene();
   scene.fogNode = rangeFog(color(0xff00ff), 12, 30);
 
-  const sphereGeometry = new THREE.SphereGeometry(0.1, 16, 8);
+  const sphereGeometry = new Engine.SphereGeometry(0.1, 16, 8);
 
   //textures
 
   const textureLoader = new TextureLoader();
 
   const normalMapTexture = await textureLoader.loadAsync('./textures/water/Water_1_M_Normal.jpg');
-  normalMapTexture.wrapS = THREE.Wrapping.Repeat;
-  normalMapTexture.wrapT = THREE.Wrapping.Repeat;
+  normalMapTexture.wrapS = Engine.Wrapping.Repeat;
+  normalMapTexture.wrapT = Engine.Wrapping.Repeat;
 
   const alphaTexture = await textureLoader.loadAsync('./textures/roughness_map.jpg');
-  alphaTexture.wrapS = THREE.Wrapping.Repeat;
-  alphaTexture.wrapT = THREE.Wrapping.Repeat;
+  alphaTexture.wrapS = Engine.Wrapping.Repeat;
+  alphaTexture.wrapT = Engine.Wrapping.Repeat;
 
   //lights
 
@@ -51,9 +51,9 @@ async function init() {
     material.colorNode = color(hexColor);
     material.lights = false;
 
-    const mesh = new THREE.Mesh(sphereGeometry, material);
+    const mesh = new Engine.Mesh(sphereGeometry, material);
 
-    const light = new THREE.PointLight(hexColor, 1, distance);
+    const light = new Engine.PointLight(hexColor, 1, distance);
     light.power = power;
     light.add(mesh);
 
@@ -76,20 +76,20 @@ async function init() {
 
   const geometryTeapot = new TeapotGeometry(0.8, 18);
 
-  const leftObject = new THREE.Mesh(geometryTeapot, new MeshStandardNodeMaterial({ color: 0x555555 }));
+  const leftObject = new Engine.Mesh(geometryTeapot, new MeshStandardNodeMaterial({ color: 0x555555 }));
   leftObject.material.lightsNode = redLightsNode;
   leftObject.material.roughnessNode = texture(alphaTexture);
   leftObject.material.metalness = 0;
   leftObject.position.x = -3;
   scene.add(leftObject);
 
-  const centerObject = new THREE.Mesh(geometryTeapot, new MeshStandardNodeMaterial({ color: 0x555555 }));
+  const centerObject = new Engine.Mesh(geometryTeapot, new MeshStandardNodeMaterial({ color: 0x555555 }));
   centerObject.material.normalNode = normalMap(texture(normalMapTexture));
   centerObject.material.metalness = 0.5;
   centerObject.material.roughness = 0.5;
   scene.add(centerObject);
 
-  const rightObject = new THREE.Mesh(geometryTeapot, new MeshStandardNodeMaterial({ color: 0x555555 }));
+  const rightObject = new Engine.Mesh(geometryTeapot, new MeshStandardNodeMaterial({ color: 0x555555 }));
   rightObject.material.lightsNode = blueLightsNode;
   rightObject.material.metalnessNode = texture(alphaTexture);
   rightObject.position.x = 3;

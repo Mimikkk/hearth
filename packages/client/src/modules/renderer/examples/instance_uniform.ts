@@ -1,4 +1,4 @@
-import * as THREE from '@modules/renderer/engine/engine.js';
+import * as Engine from '@modules/renderer/engine/engine.js';
 import {
   MeshStandardNodeMaterial,
   NodeUpdateType,
@@ -24,7 +24,7 @@ class InstanceUniformNode extends Node {
 
     this.updateType = NodeUpdateType.OBJECT;
 
-    this.uniformNode = uniform(new THREE.Color());
+    this.uniformNode = uniform(new Engine.Color());
   }
 
   update(frame) {
@@ -53,14 +53,14 @@ async function init() {
   const container = document.createElement('div');
   document.body.appendChild(container);
 
-  camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 4000);
+  camera = new Engine.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 4000);
   camera.position.set(0, 200, 1200);
 
-  scene = new THREE.Scene();
+  scene = new Engine.Scene();
 
   // Grid
 
-  const helper = new THREE.GridHelper(1000, 40, 0x303030, 0x303030);
+  const helper = new Engine.GridHelper(1000, 40, 0x303030, 0x303030);
   helper.position.y = -75;
   scene.add(helper);
 
@@ -117,9 +117,9 @@ async function init() {
 }
 
 function addMesh(geometry, material) {
-  const mesh = new THREE.Mesh(geometry, material);
+  const mesh = new Engine.Mesh(geometry, material);
 
-  mesh.color = new THREE.Color(Math.random() * 0xffffff);
+  mesh.color = new Engine.Color(Math.random() * 0xffffff);
 
   mesh.position.x = (objects.length % 4) * 200 - 300;
   mesh.position.z = Math.floor(objects.length / 4) * 200 - 200;

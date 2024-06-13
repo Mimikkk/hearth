@@ -1,4 +1,4 @@
-import * as THREE from '@modules/renderer/engine/engine.js';
+import * as Engine from '@modules/renderer/engine/engine.js';
 import { cubeTexture, pass, uniform, viewportTopLeft } from '@modules/renderer/engine/nodes/Nodes.js';
 
 import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
@@ -22,10 +22,10 @@ async function init() {
   const container = document.createElement('div');
   document.body.appendChild(container);
 
-  camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.25, 20);
+  camera = new Engine.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.25, 20);
   camera.position.set(-1.8, -0.6, 2.7);
 
-  scene = new THREE.Scene();
+  scene = new Engine.Scene();
 
   const cube1Texture = await new RGBMLoader({ maxRange: 16 }).loadAsync([
     'textures/cube/pisaRGBM16/px.png',
@@ -50,7 +50,7 @@ async function init() {
 
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.toneMapping = THREE.ToneMapping.Linear;
+  renderer.toneMapping = Engine.ToneMapping.Linear;
   renderer.toneMappingExposure = 1;
   renderer.setAnimationLoop(render);
   container.appendChild(renderer.domElement);
@@ -69,7 +69,7 @@ async function init() {
   const samples = 64;
 
   const anamorphicPass = scenePass.getTextureNode().anamorphic(threshold, scaleNode, samples);
-  anamorphicPass.resolution = new THREE.Vector2(0.2, 0.2); // 1 = full resolution
+  anamorphicPass.resolution = new Engine.Vector2(0.2, 0.2); // 1 = full resolution
 
   postProcessing = new PostProcessing(renderer);
   postProcessing.outputNode = scenePass.add(anamorphicPass.mul(intensity));

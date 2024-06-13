@@ -1,4 +1,4 @@
-import * as THREE from '@modules/renderer/engine/engine.js';
+import * as Engine from '@modules/renderer/engine/engine.js';
 import * as Nodes from '@modules/renderer/engine/nodes/Nodes.js';
 
 import Transpiler from '@modules/renderer/engine/transpiler/Transpiler.js';
@@ -71,15 +71,15 @@ function init() {
 
   //
 
-  camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
-  scene = new THREE.Scene();
+  camera = new Engine.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+  scene = new Engine.Scene();
 
-  const geometry = new THREE.PlaneGeometry(2, 2);
+  const geometry = new Engine.PlaneGeometry(2, 2);
 
   const material = new Nodes.MeshBasicNodeMaterial();
   material.colorNode = Nodes.oscSine(Nodes.timerLocal(0.3)).mix(shaderToy1Node, shaderToy2Node);
 
-  const quad = new THREE.Mesh(geometry, material);
+  const quad = new Engine.Mesh(geometry, material);
   scene.add(quad);
 
   //
@@ -88,7 +88,7 @@ function init() {
   renderer.setPixelRatio(dpr);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(animate);
-  renderer.outputColorSpace = THREE.ColorSpace.LinearSRGB;
+  renderer.outputColorSpace = Engine.ColorSpace.LinearSRGB;
   document.body.appendChild(renderer.domElement);
 
   useWindowResizer(renderer, camera);
