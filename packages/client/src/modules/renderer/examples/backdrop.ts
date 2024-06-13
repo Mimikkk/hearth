@@ -11,13 +11,13 @@ import {
   vec3,
   viewportSharedTexture,
   viewportTopLeft,
-} from '../threejs/nodes/Nodes.js';
+} from '@modules/renderer/engine/nodes/Nodes.js';
 
-import { GLTFLoader } from '../threejs/loaders/GLTFLoader.js';
+import { GLTFLoader } from '@modules/renderer/engine/loaders/GLTFLoader.js';
 
-import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
+import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
 
-import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
+import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
 import {
   AnimationMixer,
   Clock,
@@ -29,8 +29,8 @@ import {
   SphereGeometry,
   SpotLight,
   ToneMapping,
-} from '../threejs/Three.js';
-import { degreeToRadian } from '@modules/renderer/threejs/math/MathUtils.js';
+} from '@modules/renderer/engine/engine.js';
+import { degreeToRadian } from '@modules/renderer/engine/math/MathUtils.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 const camera = new PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.01, 100);
@@ -51,23 +51,21 @@ scene.add(camera);
 
 const loader = new GLTFLoader();
 let mixer: AnimationMixer;
-loader.loadAsync('models/gltf/Michelle.glb', {
-  onLoad: function (gltf) {
-    const object = gltf.scene;
-    mixer = new AnimationMixer(object);
+loader.loadAsync('models/gltf/Michelle.glb').then(function (gltf) {
+  const object = gltf.scene;
+  mixer = new AnimationMixer(object);
 
-    const material = object.children[0].children[0].material;
+  const material = object.children[0].children[0].material;
 
-    // output material effect ( better using hsv )
-    // ignore output.sRGBToLinear().linearTosRGB() for now
+  // output material effect ( better using hsv )
+  // ignore output.sRGBToLinear().linearTosRGB() for now
 
-    material.outputNode = oscSine(timerLocal(0.1)).mix(output, output.add(0.1).posterize(4).mul(2));
+  material.outputNode = oscSine(timerLocal(0.1)).mix(output, output.add(0.1).posterize(4).mul(2));
 
-    const action = mixer.clipAction(gltf.animations[0]);
-    action.play();
+  const action = mixer.clipAction(gltf.animations[0]);
+  action.play();
 
-    scene.add(object);
-  },
+  scene.add(object);
 });
 
 // portals

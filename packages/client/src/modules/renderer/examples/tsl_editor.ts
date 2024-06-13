@@ -1,12 +1,12 @@
-import * as Nodes from '../threejs/nodes/Nodes.js';
-import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
+import * as Nodes from '@modules/renderer/engine/nodes/Nodes.js';
+import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
 import initialCode from './tsl_editor.code.ts?raw';
 import { GUI } from 'lil-gui';
 import * as monaco from 'monaco-editor';
-import { Color, ColorSpace, Mesh, PerspectiveCamera, PlaneGeometry, Scene } from '../threejs/Three.js';
+import { Color, ColorSpace, Mesh, PerspectiveCamera, PlaneGeometry, Scene } from '@modules/renderer/engine/engine.js';
 import './tsl_editor.css';
 import './utilities/monaco-vite.js';
-import WGSLNodeBuilder from '@modules/renderer/threejs/renderers/webgpu/nodes/WGSLNodeBuilder.js';
+import WGSLNodeBuilder from '@modules/renderer/engine/renderers/webgpu/nodes/WGSLNodeBuilder.js';
 import { resolveScript } from '@modules/renderer/examples/utilities/resolveScript.js';
 
 const createContainers = () => {

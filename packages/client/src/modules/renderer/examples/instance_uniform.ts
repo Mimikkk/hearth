@@ -1,4 +1,4 @@
-import * as THREE from '../threejs/Three.js';
+import * as THREE from '@modules/renderer/engine/engine.js';
 import {
   MeshStandardNodeMaterial,
   NodeUpdateType,
@@ -6,16 +6,16 @@ import {
   nodeObject,
   uniform,
   cubeTexture,
-} from '../threejs/nodes/Nodes.js';
+} from '@modules/renderer/engine/nodes/Nodes.js';
 
-import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
+import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
 
-import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
+import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
 
-import { TeapotGeometry } from '../threejs/geometries/TeapotGeometry.js';
+import { TeapotGeometry } from '@modules/renderer/engine/geometries/TeapotGeometry.js';
 
 import Stats from 'stats-js';
-import { CubeTextureLoader } from '@modules/renderer/threejs/loaders/CubeTextureLoader.js';
+import { CubeTextureLoader } from '@modules/renderer/engine/loaders/CubeTextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 class InstanceUniformNode extends Node {

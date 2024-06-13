@@ -1,8 +1,8 @@
-import * as THREE from '../threejs/Three.js';
-import { texture, textureStore, wgslFn, code, instanceIndex, uniform } from '../threejs/nodes/Nodes.js';
+import * as THREE from '@modules/renderer/engine/engine.js';
+import { texture, textureStore, wgslFn, code, instanceIndex, uniform } from '@modules/renderer/engine/nodes/Nodes.js';
 
-import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
-import StorageTexture from '../threejs/renderers/common/StorageTexture.js';
+import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
+import StorageTexture from '@modules/renderer/engine/renderers/common/StorageTexture.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, renderer;

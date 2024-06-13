@@ -1,4 +1,4 @@
-import * as THREE from '../threejs/Three.js';
+import * as THREE from '@modules/renderer/engine/engine.js';
 import {
   color,
   instanceIndex,
@@ -16,16 +16,16 @@ import {
   vec2,
   vec3,
   viewportTopLeft,
-} from '../threejs/nodes/Nodes.js';
+} from '@modules/renderer/engine/nodes/Nodes.js';
 
-import { TeapotGeometry } from '../threejs/geometries/TeapotGeometry.js';
+import { TeapotGeometry } from '@modules/renderer/engine/geometries/TeapotGeometry.js';
 
-import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
-import StorageInstancedBufferAttribute from '../threejs/renderers/common/StorageInstancedBufferAttribute.js';
+import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
+import StorageInstancedBufferAttribute from '@modules/renderer/engine/renderers/common/StorageInstancedBufferAttribute.js';
 
-import PostProcessing from '../threejs/renderers/common/PostProcessing.js';
+import PostProcessing from '@modules/renderer/engine/renderers/common/PostProcessing.js';
 
-import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
+import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 const maxParticleCount = 100000;

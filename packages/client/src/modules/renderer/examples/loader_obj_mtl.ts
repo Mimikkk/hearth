@@ -1,11 +1,11 @@
-import { Scene } from '@modules/renderer/threejs/scenes/Scene.js';
-import { PerspectiveCamera } from '@modules/renderer/threejs/cameras/PerspectiveCamera.js';
-import { WebGPURenderer } from '@modules/renderer/threejs/renderers/webgpu/WebGPURenderer.js';
-import { MTLLoader } from '@modules/renderer/threejs/loaders/MTLLoader.js';
-import { OBJLoader } from '@modules/renderer/threejs/loaders/OBJLoader.js';
-import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
-import { AmbientLight } from '@modules/renderer/threejs/lights/AmbientLight.js';
-import { PointLight } from '@modules/renderer/threejs/lights/PointLight.js';
+import { Scene } from '@modules/renderer/engine/scenes/Scene.js';
+import { PerspectiveCamera } from '@modules/renderer/engine/cameras/PerspectiveCamera.js';
+import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
+import { MTLLoader } from '@modules/renderer/engine/loaders/MTLLoader.js';
+import { OBJLoader } from '@modules/renderer/engine/loaders/OBJLoader.js';
+import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
+import { AmbientLight } from '@modules/renderer/engine/lights/AmbientLight.js';
+import { PointLight } from '@modules/renderer/engine/lights/PointLight.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera!: PerspectiveCamera;

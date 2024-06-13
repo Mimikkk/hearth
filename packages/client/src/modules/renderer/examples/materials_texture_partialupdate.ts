@@ -1,7 +1,6 @@
-import * as THREE from '../threejs/Three.js';
-import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
-import { Filter } from '../threejs/Three.js';
-import { TextureLoader } from '@modules/renderer/threejs/loaders/TextureLoader.js';
+import * as THREE from '@modules/renderer/engine/engine.js';
+import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
+import { TextureLoader } from '@modules/renderer/engine/loaders/TextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, renderer, clock, dataTexture, diffuseMap;
@@ -21,7 +20,7 @@ async function init() {
   clock = new THREE.Clock();
 
   const loader = new TextureLoader();
-  diffuseMap = await loader.loadAsync('textures/carbon/Carbon.png', animate);
+  diffuseMap = await loader.loadAsync('textures/carbon/Carbon.png');
   diffuseMap.colorSpace = THREE.ColorSpace.SRGB;
   diffuseMap.minFilter = THREE.MinificationTextureFilter.Linear;
   diffuseMap.generateMipmaps = false;
@@ -49,6 +48,7 @@ async function init() {
   document.body.appendChild(renderer.domElement);
 
   //
+  animate();
 
   useWindowResizer(renderer, camera);
 }

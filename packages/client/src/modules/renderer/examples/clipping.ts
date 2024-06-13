@@ -1,14 +1,14 @@
-import * as THREE from '../threejs/Three.js';
-import { MeshPhongNodeMaterial } from '../threejs/nodes/Nodes.js';
+import * as THREE from '@modules/renderer/engine/engine.js';
+import { MeshPhongNodeMaterial } from '@modules/renderer/engine/nodes/Nodes.js';
 
-import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
+import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
 
 import Stats from 'stats-js';
 
 import { GUI } from 'lil-gui';
 
-import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
-import { Side } from '../threejs/Three.js';
+import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
+import { Side } from '@modules/renderer/engine/engine.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, renderer, startTime, object, stats;

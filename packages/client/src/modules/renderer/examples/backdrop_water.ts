@@ -16,14 +16,14 @@ import {
   viewportDepthTexture,
   viewportSharedTexture,
   viewportTopLeft,
-} from '../threejs/nodes/Nodes.js';
+} from '@modules/renderer/engine/nodes/Nodes.js';
 
-import { GLTFLoader } from '../threejs/loaders/GLTFLoader.js';
+import { GLTFLoader } from '@modules/renderer/engine/loaders/GLTFLoader.js';
 
-import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
-import PostProcessing from '../threejs/renderers/common/PostProcessing.js';
+import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
+import PostProcessing from '@modules/renderer/engine/renderers/common/PostProcessing.js';
 
-import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
+import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
 
 import { GUI } from 'lil-gui';
 
@@ -45,9 +45,9 @@ import {
   TextureLoader,
   Vector3,
   Wrapping,
-} from '../threejs/Three.js';
+} from '@modules/renderer/engine/engine.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import { TextureLoader } from '@modules/renderer/threejs/loaders/TextureLoader.js';
+import { TextureLoader } from '@modules/renderer/engine/loaders/TextureLoader.js';
 
 // let camera, scene, renderer;
 // let mixer, objects, clock;

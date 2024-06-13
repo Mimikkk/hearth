@@ -1,9 +1,9 @@
-import * as THREE from '../threejs/Three.js';
-import { PointsNodeMaterial, skinning, uniform } from '../threejs/nodes/Nodes.js';
+import * as THREE from '@modules/renderer/engine/engine.js';
+import { PointsNodeMaterial, skinning, uniform } from '@modules/renderer/engine/nodes/Nodes.js';
 
-import { GLTFLoader } from '../threejs/loaders/GLTFLoader.js';
+import { GLTFLoader } from '@modules/renderer/engine/loaders/GLTFLoader.js';
 
-import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
+import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, renderer;
@@ -22,29 +22,27 @@ function init() {
   clock = new THREE.Clock();
 
   const loader = new GLTFLoader();
-  loader.loadAsync('models/gltf/Michelle.glb', {
-    onLoad: function (gltf) {
-      const object = gltf.scene;
-      mixer = new THREE.AnimationMixer(object);
+  loader.loadAsync('models/gltf/Michelle.glb').then(function (gltf) {
+    const object = gltf.scene;
+    mixer = new THREE.AnimationMixer(object);
 
-      const action = mixer.clipAction(gltf.animations[0]);
-      action.play();
+    const action = mixer.clipAction(gltf.animations[0]);
+    action.play();
 
-      object.traverse(function (child) {
-        if (child.isMesh) {
-          child.visible = false;
+    object.traverse(function (child) {
+      if (child.isMesh) {
+        child.visible = false;
 
-          const materialPoints = new PointsNodeMaterial();
-          materialPoints.colorNode = uniform(new THREE.Color());
-          materialPoints.positionNode = skinning(child);
+        const materialPoints = new PointsNodeMaterial();
+        materialPoints.colorNode = uniform(new THREE.Color());
+        materialPoints.positionNode = skinning(child);
 
-          const pointCloud = new THREE.Points(child.geometry, materialPoints);
-          scene.add(pointCloud);
-        }
-      });
+        const pointCloud = new THREE.Points(child.geometry, materialPoints);
+        scene.add(pointCloud);
+      }
+    });
 
-      scene.add(object);
-    },
+    scene.add(object);
   });
 
   //renderer

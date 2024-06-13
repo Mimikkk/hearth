@@ -1,4 +1,4 @@
-import * as THREE from '../threejs/Three.js';
+import * as THREE from '@modules/renderer/engine/engine.js';
 import {
   attribute,
   checker,
@@ -14,13 +14,13 @@ import {
   timerLocal,
   uv,
   vec2,
-} from '../threejs/nodes/Nodes.js';
+} from '@modules/renderer/engine/nodes/Nodes.js';
 
-import { KTX2Loader } from '../threejs/loaders/KTX2Loader.js';
+import { KTX2Loader } from '@modules/renderer/engine/loaders/KTX2Loader.js';
 
-import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
-import { TextureFormat } from '../threejs/Three.js';
-import { TextureLoader } from '@modules/renderer/threejs/loaders/TextureLoader.js';
+import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
+import { TextureFormat } from '@modules/renderer/engine/engine.js';
+import { TextureLoader } from '@modules/renderer/engine/loaders/TextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, renderer;
@@ -56,7 +56,7 @@ async function init() {
   textureDisplace.wrapS = THREE.Wrapping.Repeat;
   textureDisplace.wrapT = THREE.Wrapping.Repeat;
 
-  const ktxLoader = await new KTX2Loader().setTranscoderPath('../threejs/libs/basis/').detectSupportAsync(renderer);
+  const ktxLoader = await new KTX2Loader().setTranscoderPath('../engine/libs/basis/').detectSupportAsync(renderer);
 
   const ktxTexture = await ktxLoader.loadAsync('./textures/compressed/sample_uastc_zstd.ktx2');
 

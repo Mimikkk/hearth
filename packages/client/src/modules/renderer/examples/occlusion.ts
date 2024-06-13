@@ -1,11 +1,17 @@
-import * as THREE from '../threejs/Three.js';
-import { MeshPhongNodeMaterial, Node, nodeObject, NodeUpdateType, uniform } from '../threejs/nodes/Nodes.js';
+import * as THREE from '@modules/renderer/engine/engine.js';
+import {
+  MeshPhongNodeMaterial,
+  Node,
+  nodeObject,
+  NodeUpdateType,
+  uniform,
+} from '@modules/renderer/engine/nodes/Nodes.js';
 
-import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
+import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
 
-import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
-import { Renderer } from '@modules/renderer/threejs/renderers/common/Renderer.js';
-import { Camera, Scene } from '../threejs/Three.js';
+import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
+import { Renderer } from '@modules/renderer/engine/renderers/common/Renderer.js';
+import { Camera, Scene } from '@modules/renderer/engine/engine.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera: Camera, scene: Scene, renderer: Renderer, controls: OrbitControls;

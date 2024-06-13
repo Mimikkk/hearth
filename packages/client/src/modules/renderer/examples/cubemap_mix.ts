@@ -1,13 +1,13 @@
-import * as THREE from '../threejs/Three.js';
-import { float, mix, oscSine, pmremTexture, timerLocal, toneMapping } from '../threejs/nodes/Nodes.js';
+import * as THREE from '@modules/renderer/engine/engine.js';
+import { float, mix, oscSine, pmremTexture, timerLocal, toneMapping } from '@modules/renderer/engine/nodes/Nodes.js';
 
-import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
+import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
 
-import { RGBMLoader } from '../threejs/loaders/RGBMLoader.js';
+import { RGBMLoader } from '@modules/renderer/engine/loaders/RGBMLoader.js';
 
-import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
-import { GLTFLoader } from '../threejs/loaders/GLTFLoader.js';
-import { CubeTextureLoader } from '@modules/renderer/threejs/loaders/CubeTextureLoader.js';
+import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
+import { GLTFLoader } from '@modules/renderer/engine/loaders/GLTFLoader.js';
+import { CubeTextureLoader } from '@modules/renderer/engine/loaders/CubeTextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, renderer;
@@ -52,11 +52,9 @@ async function init() {
     getTextureLevel: () => float(0.5),
   });
 
-  const loader = new GLTFLoader({ path: 'models/gltf/DamagedHelmet/glTF/' });
-  loader.loadAsync('DamagedHelmet.gltf', {
-    onLoad: function (gltf) {
-      scene.add(gltf.scene);
-    },
+  const loader = new GLTFLoader();
+  loader.loadAsync('models/gltf/DamagedHelmet/glTF/DamagedHelmet.gltf').then(function (gltf) {
+    scene.add(gltf.scene);
   });
 
   renderer = new WebGPURenderer({ antialias: true });

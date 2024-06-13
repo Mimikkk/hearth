@@ -1,10 +1,10 @@
-import * as THREE from '../threejs/Three.js';
+import * as THREE from '@modules/renderer/engine/engine.js';
 
 import { GUI } from 'lil-gui';
 
-import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
-import PostProcessing from '../threejs/renderers/common/PostProcessing.js';
-import { pass } from '../threejs/nodes/Nodes.js';
+import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
+import PostProcessing from '@modules/renderer/engine/renderers/common/PostProcessing.js';
+import { pass } from '@modules/renderer/engine/nodes/Nodes.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, renderer;

@@ -1,10 +1,18 @@
-import * as THREE from '../threejs/Three.js';
-import { color, MeshStandardNodeMaterial, mix, oscSine, pass, range, timerLocal } from '../threejs/nodes/Nodes.js';
+import * as THREE from '@modules/renderer/engine/engine.js';
+import {
+  color,
+  MeshStandardNodeMaterial,
+  mix,
+  oscSine,
+  pass,
+  range,
+  timerLocal,
+} from '@modules/renderer/engine/nodes/Nodes.js';
 
-import { GLTFLoader } from '../threejs/loaders/GLTFLoader.js';
+import { GLTFLoader } from '@modules/renderer/engine/loaders/GLTFLoader.js';
 
-import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
-import PostProcessing from '../threejs/renderers/common/PostProcessing.js';
+import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
+import PostProcessing from '@modules/renderer/engine/renderers/common/PostProcessing.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, renderer;
@@ -43,50 +51,48 @@ function init() {
   scene.add(plane);
 
   const loader = new GLTFLoader();
-  loader.loadAsync('models/gltf/Michelle.glb', {
-    onLoad: function (gltf) {
-      const object = gltf.scene;
+  loader.loadAsync('models/gltf/Michelle.glb').then(function (gltf) {
+    const object = gltf.scene;
 
-      mixer = new THREE.AnimationMixer(object);
+    mixer = new THREE.AnimationMixer(object);
 
-      const action = mixer.clipAction(gltf.animations[0]);
-      action.play();
+    const action = mixer.clipAction(gltf.animations[0]);
+    action.play();
 
-      const instanceCount = 30;
-      const dummy = new THREE.Object3D();
+    const instanceCount = 30;
+    const dummy = new THREE.Object3D();
 
-      object.traverse(child => {
-        if (child.isMesh) {
-          const oscNode = oscSine(timerLocal(0.1));
+    object.traverse(child => {
+      if (child.isMesh) {
+        const oscNode = oscSine(timerLocal(0.1));
 
-          // random colors between instances from 0x000000 to 0xFFFFFF
-          const randomColors = range(new THREE.Color(0x000000), new THREE.Color(0xffffff));
+        // random colors between instances from 0x000000 to 0xFFFFFF
+        const randomColors = range(new THREE.Color(0x000000), new THREE.Color(0xffffff));
 
-          // random [ 0, 1 ] values between instances
-          const randomMetalness = range(0, 1);
+        // random [ 0, 1 ] values between instances
+        const randomMetalness = range(0, 1);
 
-          child.material = new MeshStandardNodeMaterial();
-          child.material.roughness = 0.1;
-          child.material.metalnessNode = mix(0.0, randomMetalness, oscNode);
-          child.material.colorNode = mix(color(0xffffff), randomColors, oscNode);
+        child.material = new MeshStandardNodeMaterial();
+        child.material.roughness = 0.1;
+        child.material.metalnessNode = mix(0.0, randomMetalness, oscNode);
+        child.material.colorNode = mix(color(0xffffff), randomColors, oscNode);
 
-          child.isInstancedMesh = true;
-          child.instanceMatrix = new THREE.InstancedBufferAttribute(new Float32Array(instanceCount * 16), 16);
-          child.count = instanceCount;
+        child.isInstancedMesh = true;
+        child.instanceMatrix = new THREE.InstancedBufferAttribute(new Float32Array(instanceCount * 16), 16);
+        child.count = instanceCount;
 
-          for (let i = 0; i < instanceCount; i++) {
-            dummy.position.x = -200 + (i % 5) * 70;
-            dummy.position.y = Math.floor(i / 5) * -200;
+        for (let i = 0; i < instanceCount; i++) {
+          dummy.position.x = -200 + (i % 5) * 70;
+          dummy.position.y = Math.floor(i / 5) * -200;
 
-            dummy.updateMatrix();
+          dummy.updateMatrix();
 
-            dummy.matrix.toArray(child.instanceMatrix.array, i * 16);
-          }
+          dummy.matrix.toArray(child.instanceMatrix.array, i * 16);
         }
-      });
+      }
+    });
 
-      scene.add(object);
-    },
+    scene.add(object);
   });
 
   // renderer

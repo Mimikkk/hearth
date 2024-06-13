@@ -1,6 +1,6 @@
-import Transpiler from '@modules/renderer/threejs/transpiler/Transpiler.js';
-import GLSLDecoder from '@modules/renderer/threejs/transpiler/GLSLDecoder.js';
-import TSLEncoder from '@modules/renderer/threejs/transpiler/TSLEncoder.js';
+import Transpiler from '@modules/renderer/engine/transpiler/Transpiler.js';
+import GLSLDecoder from '@modules/renderer/engine/transpiler/GLSLDecoder.js';
+import TSLEncoder from '@modules/renderer/engine/transpiler/TSLEncoder.js';
 import * as monaco from 'monaco-editor';
 import initialCode from './tsl_transpiler.code.glsl?raw';
 import './tsl_transpiler.css';

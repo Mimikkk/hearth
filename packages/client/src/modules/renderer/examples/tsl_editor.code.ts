@@ -1,8 +1,8 @@
 // Simple uv.x animation
-import { oscSine, texture, timerLocal, uniform, uv, vec2, vec4 } from '../threejs/nodes/Nodes.js';
-import { ColorSpace, Wrapping } from '../threejs/constants.ts';
-import { Color } from '../threejs/math/Color.ts';
-import { TextureLoader } from '../threejs/loaders/TextureLoader.js';
+import { oscSine, texture, timerLocal, uniform, uv, vec2, vec4 } from '@modules/renderer/engine/nodes/Nodes.js';
+import { ColorSpace, Wrapping } from '@modules/renderer/engine/constants.ts';
+import { Color } from '@modules/renderer/engine/math/Color.ts';
+import { TextureLoader } from '@modules/renderer/engine/loaders/TextureLoader.js';
 
 const samplerTexture = await new TextureLoader().loadAsync('./textures/uv_grid_opengl.jpg');
 samplerTexture.wrapS = Wrapping.Repeat;

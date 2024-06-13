@@ -10,15 +10,15 @@ import {
   viewportMipTexture,
   viewportSharedTexture,
   viewportTopLeft,
-} from '../threejs/nodes/Nodes.js';
+} from '@modules/renderer/engine/nodes/Nodes.js';
 
 import { GUI } from 'lil-gui';
 
-import { GLTFLoader } from '../threejs/loaders/GLTFLoader.js';
+import { GLTFLoader } from '@modules/renderer/engine/loaders/GLTFLoader.js';
 
-import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
+import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
 
-import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
+import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
 import {
   AnimationMixer,
   BoxGeometry,
@@ -29,7 +29,7 @@ import {
   Scene,
   Side,
   ToneMapping,
-} from '../threejs/Three.js';
+} from '@modules/renderer/engine/engine.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 const camera = new PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.25, 25);
@@ -45,16 +45,14 @@ const clock = new Clock();
 
 let mixer: AnimationMixer;
 const loader = new GLTFLoader();
-loader.loadAsync('models/gltf/Michelle.glb', {
-  onLoad: function (gltf) {
-    const object = gltf.scene;
-    mixer = new AnimationMixer(object);
+loader.loadAsync('models/gltf/Michelle.glb').then(function (gltf) {
+  const object = gltf.scene;
+  mixer = new AnimationMixer(object);
 
-    const action = mixer.clipAction(gltf.animations[0]);
-    action.play();
+  const action = mixer.clipAction(gltf.animations[0]);
+  action.play();
 
-    scene.add(object);
-  },
+  scene.add(object);
 });
 
 // volume

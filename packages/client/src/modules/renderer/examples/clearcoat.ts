@@ -1,14 +1,14 @@
-import * as THREE from '../threejs/Three.js';
+import * as THREE from '@modules/renderer/engine/engine.js';
 
-import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
+import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
 
 import Stats from 'stats-js';
 
-import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
-import { HDRCubeTextureLoader } from '../threejs/loaders/HDRCubeTextureLoader.js';
+import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
+import { HDRCubeTextureLoader } from '@modules/renderer/engine/loaders/HDRCubeTextureLoader.js';
 
-import { FlakesTexture } from '../threejs/textures/FlakesTexture.js';
-import { TextureLoader } from '@modules/renderer/threejs/loaders/TextureLoader.js';
+import { FlakesTexture } from '@modules/renderer/engine/textures/FlakesTexture.js';
+import { TextureLoader } from '@modules/renderer/engine/loaders/TextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let container, stats;

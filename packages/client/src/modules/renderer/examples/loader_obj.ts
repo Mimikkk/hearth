@@ -1,8 +1,8 @@
-import { AmbientLight, ColorSpace, PerspectiveCamera, PointLight, Scene } from '../threejs/Three.js';
-import { TextureLoader } from '@modules/renderer/threejs/loaders/TextureLoader.js';
-import { OBJLoader } from '@modules/renderer/threejs/loaders/OBJLoader.js';
-import { WebGPURenderer } from '@modules/renderer/threejs/renderers/webgpu/WebGPURenderer.js';
-import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
+import { AmbientLight, ColorSpace, PerspectiveCamera, PointLight, Scene } from '@modules/renderer/engine/engine.js';
+import { TextureLoader } from '@modules/renderer/engine/loaders/TextureLoader.js';
+import { OBJLoader } from '@modules/renderer/engine/loaders/OBJLoader.js';
+import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
+import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera!: PerspectiveCamera;

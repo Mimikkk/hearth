@@ -1,8 +1,8 @@
-import * as THREE from '../threejs/Three.js';
-import { color, rangeFog, SpriteNodeMaterial, texture, userData, uv } from '../threejs/nodes/Nodes.js';
+import * as THREE from '@modules/renderer/engine/engine.js';
+import { color, rangeFog, SpriteNodeMaterial, texture, userData, uv } from '@modules/renderer/engine/nodes/Nodes.js';
 
-import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
-import { TextureLoader } from '@modules/renderer/threejs/loaders/TextureLoader.js';
+import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
+import { TextureLoader } from '@modules/renderer/engine/loaders/TextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, renderer;
@@ -33,10 +33,9 @@ async function init() {
 
   const textureLoader = new TextureLoader();
 
-  map = await textureLoader.loadAsync('./textures/sprite.png', map => {
-    imageWidth = map.image.width;
-    imageHeight = map.image.height;
-  });
+  map = await textureLoader.loadAsync('./textures/sprite.png');
+  imageWidth = map.image.width;
+  imageHeight = map.image.height;
 
   group = new THREE.Group();
 
@@ -76,6 +75,7 @@ async function init() {
   document.body.appendChild(renderer.domElement);
 
   useWindowResizer(renderer, camera);
+  render();
 }
 
 function render() {

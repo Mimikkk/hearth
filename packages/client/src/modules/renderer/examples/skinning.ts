@@ -1,9 +1,9 @@
-import * as THREE from '../threejs/Three.js';
-import { toneMapping } from '../threejs/nodes/Nodes.js';
+import * as THREE from '@modules/renderer/engine/engine.js';
+import { toneMapping } from '@modules/renderer/engine/nodes/Nodes.js';
 
-import { GLTFLoader } from '../threejs/loaders/GLTFLoader.js';
+import { GLTFLoader } from '@modules/renderer/engine/loaders/GLTFLoader.js';
 
-import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
+import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, renderer;
@@ -30,16 +30,14 @@ function init() {
   scene.add(camera);
 
   const loader = new GLTFLoader();
-  loader.loadAsync('models/gltf/Michelle.glb', {
-    onLoad: function (gltf) {
-      const object = gltf.scene;
-      mixer = new THREE.AnimationMixer(object);
+  loader.loadAsync('models/gltf/Michelle.glb').then(function (gltf) {
+    const object = gltf.scene;
+    mixer = new THREE.AnimationMixer(object);
 
-      const action = mixer.clipAction(gltf.animations[0]);
-      action.play();
+    const action = mixer.clipAction(gltf.animations[0]);
+    action.play();
 
-      scene.add(object);
-    },
+    scene.add(object);
   });
 
   //renderer

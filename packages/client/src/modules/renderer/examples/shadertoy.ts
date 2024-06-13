@@ -1,11 +1,11 @@
-import * as THREE from '../threejs/Three.js';
-import * as Nodes from '../threejs/nodes/Nodes.js';
+import * as THREE from '@modules/renderer/engine/engine.js';
+import * as Nodes from '@modules/renderer/engine/nodes/Nodes.js';
 
-import Transpiler from '@modules/renderer/threejs/transpiler/Transpiler.js';
-import ShaderToyDecoder from '@modules/renderer/threejs/transpiler/ShaderToyDecoder.js';
-import TSLEncoder from '@modules/renderer/threejs/transpiler/TSLEncoder.js';
+import Transpiler from '@modules/renderer/engine/transpiler/Transpiler.js';
+import ShaderToyDecoder from '@modules/renderer/engine/transpiler/ShaderToyDecoder.js';
+import TSLEncoder from '@modules/renderer/engine/transpiler/TSLEncoder.js';
 
-import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
+import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 class ShaderToyNode extends Nodes.Node {

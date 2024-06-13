@@ -1,4 +1,4 @@
-import * as THREE from '../threejs/Three.js';
+import * as THREE from '@modules/renderer/engine/engine.js';
 import {
   color,
   MeshPhongNodeMaterial,
@@ -8,18 +8,18 @@ import {
   texture,
   uv,
   viewportTopLeft,
-} from '../threejs/nodes/Nodes.js';
+} from '@modules/renderer/engine/nodes/Nodes.js';
 
-import { GLTFLoader } from '../threejs/loaders/GLTFLoader.js';
+import { GLTFLoader } from '@modules/renderer/engine/loaders/GLTFLoader.js';
 
-import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
-import PostProcessing from '../threejs/renderers/common/PostProcessing.js';
+import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
+import PostProcessing from '@modules/renderer/engine/renderers/common/PostProcessing.js';
 
-import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
+import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
 
 import Stats from 'stats-js';
-import { ColorSpace } from '../threejs/Three.js';
-import { TextureLoader } from '@modules/renderer/threejs/loaders/TextureLoader.js';
+import { ColorSpace } from '@modules/renderer/engine/engine.js';
+import { TextureLoader } from '@modules/renderer/engine/loaders/TextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, renderer;
@@ -64,18 +64,16 @@ async function init() {
   // animated model
 
   const loader = new GLTFLoader();
-  loader.loadAsync('models/gltf/Michelle.glb', {
-    onLoad: function (gltf) {
-      model = gltf.scene;
-      model.children[0].children[0].castShadow = true;
+  loader.loadAsync('models/gltf/Michelle.glb').then(function (gltf) {
+    model = gltf.scene;
+    model.children[0].children[0].castShadow = true;
 
-      mixer = new THREE.AnimationMixer(model);
+    mixer = new THREE.AnimationMixer(model);
 
-      const action = mixer.clipAction(gltf.animations[0]);
-      action.play();
+    const action = mixer.clipAction(gltf.animations[0]);
+    action.play();
 
-      scene.add(model);
-    },
+    scene.add(model);
   });
 
   // textures

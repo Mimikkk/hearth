@@ -1,15 +1,20 @@
-import * as THREE from '../threejs/Three.js';
+import * as THREE from '@modules/renderer/engine/engine.js';
 
-import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
+import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
 
 import Stats from 'stats-js';
 
 import { GUI } from 'lil-gui';
-import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
-import { color, Line2NodeMaterial, LineBasicNodeMaterial, LineDashedNodeMaterial } from '../threejs/nodes/Nodes.js';
-import { Line2 } from '@modules/renderer/threejs/lines/Line2.js';
-import { LineGeometry } from '@modules/renderer/threejs/lines/LineGeometry.js';
-import * as GeometryUtils from '@modules/renderer/threejs/utils/GeometryUtils.js';
+import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
+import {
+  color,
+  Line2NodeMaterial,
+  LineBasicNodeMaterial,
+  LineDashedNodeMaterial,
+} from '@modules/renderer/engine/nodes/Nodes.js';
+import { Line2 } from '@modules/renderer/engine/lines/Line2.js';
+import { LineGeometry } from '@modules/renderer/engine/lines/LineGeometry.js';
+import * as GeometryUtils from '@modules/renderer/engine/utils/GeometryUtils.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let line, renderer, scene, camera, camera2, controls, backgroundNode;

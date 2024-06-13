@@ -1,4 +1,4 @@
-import * as THREE from '../threejs/Three.js';
+import * as THREE from '@modules/renderer/engine/engine.js';
 import {
   float,
   instanceIndex,
@@ -9,16 +9,16 @@ import {
   tslFn,
   uniform,
   vec3,
-} from '../threejs/nodes/Nodes.js';
+} from '@modules/renderer/engine/nodes/Nodes.js';
 
-import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
-import StorageInstancedBufferAttribute from '../threejs/renderers/common/StorageInstancedBufferAttribute.js';
+import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
+import StorageInstancedBufferAttribute from '@modules/renderer/engine/renderers/common/StorageInstancedBufferAttribute.js';
 
-import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
+import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
 import Stats from 'stats-js';
 
 import { GUI } from 'lil-gui';
-import { TextureLoader } from '@modules/renderer/threejs/loaders/TextureLoader.js';
+import { TextureLoader } from '@modules/renderer/engine/loaders/TextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 const particleCount = 1000000;

@@ -1,12 +1,12 @@
-import * as THREE from '../threejs/Three.js';
-import { PerspectiveCamera, Scene } from '../threejs/Three.js';
+import * as THREE from '@modules/renderer/engine/engine.js';
+import { PerspectiveCamera, Scene } from '@modules/renderer/engine/engine.js';
 
-import { Font, FontLoader } from '../threejs/loaders/FontLoader.js';
-import { TextGeometry } from '../threejs/geometries/TextGeometry.js';
+import { Font, FontLoader } from '@modules/renderer/engine/loaders/FontLoader.js';
+import { TextGeometry } from '@modules/renderer/engine/geometries/TextGeometry.js';
 
-import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
+import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
 import Stats from 'stats-js';
-import { ColorRepresentation } from '@modules/renderer/threejs/math/Color.js';
+import { ColorRepresentation } from '@modules/renderer/engine/math/Color.js';
 import { clamp } from 'lodash-es';
 
 let screensplit = 0.25;

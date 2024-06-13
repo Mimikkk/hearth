@@ -1,12 +1,12 @@
-import * as THREE from '../threejs/Three.js';
+import * as THREE from '@modules/renderer/engine/engine.js';
 
-import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
+import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
 
-import { IESSpotLight } from '../threejs/lights/IESSpotLight.js';
+import { IESSpotLight } from '@modules/renderer/engine/lights/IESSpotLight.js';
 
-import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
+import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
 
-import { IESLoader } from '../threejs/loaders/IESLoader.js';
+import { IESLoader } from '@modules/renderer/engine/loaders/IESLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let renderer, scene, camera;

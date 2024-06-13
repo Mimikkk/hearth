@@ -1,8 +1,8 @@
-import * as THREE from '../threejs/Three.js';
-import { Font } from '@modules/renderer/threejs/loaders/FontLoader.js';
-import { TTFLoader } from '@modules/renderer/threejs/loaders/TTFLoader.js';
-import { WebGPURenderer } from '@modules/renderer/threejs/renderers/webgpu/WebGPURenderer.js';
-import { TextGeometry } from '@modules/renderer/threejs/geometries/TextGeometry.js';
+import * as THREE from '@modules/renderer/engine/engine.js';
+import { Font } from '@modules/renderer/engine/loaders/FontLoader.js';
+import { TTFLoader } from '@modules/renderer/engine/loaders/TTFLoader.js';
+import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
+import { TextGeometry } from '@modules/renderer/engine/geometries/TextGeometry.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, cameraTarget, scene, renderer;

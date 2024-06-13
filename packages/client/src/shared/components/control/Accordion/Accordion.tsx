@@ -10,6 +10,7 @@ export interface AccordionItem {
   title: string;
   id: string;
   children?: AccordionItem[];
+  maintenance?: boolean;
 }
 
 export namespace AccordionItem {
@@ -132,16 +133,20 @@ export const Accordion = (props: AccordionProps) => {
         <div
           class={cx(
             'cursor-pointer transition-all flex justify-between p-1 rounded-sm select-none',
+            item.maintenance && 'text-accent-7',
             selected() === item.id
               ? 'bg-accent-5 hover:bg-accent-4 active:bg-accent-3'
               : 'hover:bg-accent-4 active:bg-accent-3 active',
           )}
         >
-          <div class="flex gap-2">
+          <div class="w-full flex gap-2">
             <Show when={item.icon}>
               <ButtonIcon size="sm" variant="text" icon={item.icon!} />
             </Show>
             <span>{item.title}</span>
+            <Show when={item.maintenance}>
+              <ButtonIcon class="ml-auto" size="sm" variant="contained" icon="BsWrenchAdjustable" />
+            </Show>
           </div>
           <Show when={item.children}>
             <ButtonIcon

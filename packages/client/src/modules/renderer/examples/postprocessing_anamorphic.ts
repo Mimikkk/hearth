@@ -1,14 +1,14 @@
-import * as THREE from '../threejs/Three.js';
-import { cubeTexture, pass, uniform, viewportTopLeft } from '../threejs/nodes/Nodes.js';
+import * as THREE from '@modules/renderer/engine/engine.js';
+import { cubeTexture, pass, uniform, viewportTopLeft } from '@modules/renderer/engine/nodes/Nodes.js';
 
-import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
+import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
 
-import PostProcessing from '../threejs/renderers/common/PostProcessing.js';
+import PostProcessing from '@modules/renderer/engine/renderers/common/PostProcessing.js';
 
-import { RGBMLoader } from '../threejs/loaders/RGBMLoader.js';
+import { RGBMLoader } from '@modules/renderer/engine/loaders/RGBMLoader.js';
 
-import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
-import { GLTFLoader } from '../threejs/loaders/GLTFLoader.js';
+import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
+import { GLTFLoader } from '@modules/renderer/engine/loaders/GLTFLoader.js';
 
 import { GUI } from 'lil-gui';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
@@ -41,11 +41,9 @@ async function init() {
     .mul(viewportTopLeft.distance(0.5).oneMinus().remapClamp(0.1, 4))
     .saturation(0);
 
-  const loader = new GLTFLoader({ path: 'models/gltf/DamagedHelmet/glTF/' });
-  loader.loadAsync('DamagedHelmet.gltf', {
-    onLoad: function (gltf) {
-      scene.add(gltf.scene);
-    },
+  const loader = new GLTFLoader();
+  loader.loadAsync('models/gltf/DamagedHelmet/glTF/DamagedHelmet.gltf').then(function (gltf) {
+    scene.add(gltf.scene);
   });
 
   renderer = new WebGPURenderer({ antialias: true });

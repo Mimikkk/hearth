@@ -57,7 +57,6 @@ export const SideBarItems: AccordionItem[] = [
     children: [
       { id: Example.Clearcoat, title: 'Clearcoat' },
       { id: Example.Materials, title: 'Materials' },
-      { id: Example.MaterialsSss, title: 'Materials Sss' },
       { id: Example.MaterialsTextureAnisotropy, title: 'Materials Texture Anisotropy' },
       { id: Example.MaterialsTexturePartialUpdate, title: 'Materials Texture Partial Update' },
       { id: Example.MaterialsVideo, title: 'Materials Video' },
@@ -66,7 +65,6 @@ export const SideBarItems: AccordionItem[] = [
 
         title: 'Lines Fat',
       },
-      { id: Example.MaterialXNoise, title: 'Material X Noise' },
     ],
   },
   {
@@ -90,8 +88,8 @@ export const SideBarItems: AccordionItem[] = [
       { id: Example.InstanceUniform, title: 'Instance Uniform' },
       { id: Example.Mirror, title: 'Mirror' },
       { id: Example.MorphTargets, title: 'Morph Targets' },
-      { id: Example.MorphTargetsFace, title: 'Morph Targets Face' },
-      { id: Example.Sprites, title: 'Sprites' },
+      { id: Example.MorphTargetsFace, title: 'Morph Targets Face', maintenance: true },
+      { id: Example.Sprites, title: 'Sprites', maintenance: true },
     ],
   },
   {
@@ -101,7 +99,7 @@ export const SideBarItems: AccordionItem[] = [
     children: [
       { id: Example.PostprocessingAfterimage, title: 'Postprocessing Afterimage' },
       { id: Example.PostprocessingAnamorphic, title: 'Postprocessing Anamorphic' },
-      { id: Example.ShaderToy, title: 'Shader Toy' },
+      { id: Example.ShaderToy, title: 'Shader Toy', maintenance: true },
     ],
   },
   {
@@ -113,10 +111,9 @@ export const SideBarItems: AccordionItem[] = [
       { id: Example.LoaderObjMtl, title: 'Loader Obj+Mtl' },
       { id: Example.LoaderTtf, title: 'Loader Ttf' },
       { id: Example.LoaderGltf, title: 'Loader Gltf' },
-      { id: Example.LoaderGltfCompressed, title: 'Loader Gltf Compressed' },
+      { id: Example.LoaderGltfCompressed, title: 'Loader Gltf Compressed', maintenance: true },
       { id: Example.LoaderGltfIridescence, title: 'Loader Gltf Iridescence' },
       { id: Example.LoaderGltfSheen, title: 'Loader Gltf Sheen' },
-      { id: Example.LoaderMaterialX, title: 'Loader Material X' },
       { id: Example.StorageBuffer, title: 'Storage Buffer' },
     ],
   },
@@ -126,9 +123,9 @@ export const SideBarItems: AccordionItem[] = [
     icon: 'BsCamera',
     children: [
       { id: Example.CameraLogarithmicDepthBuffer, title: 'Camera Logarithmic Depth Buffer' },
-      { id: Example.DepthTexture, title: 'Depth Texture' },
+      { id: Example.DepthTexture, title: 'Depth Texture', maintenance: true },
       { id: Example.Equirectangular, title: 'Equirectangular' },
-      { id: Example.MultipleRenderTargets, title: 'Multiple Render Targets' },
+      { id: Example.MultipleRenderTargets, title: 'Multiple Render Targets', maintenance: true },
       { id: Example.MultiSampledRenderBuffers, title: 'Multi Sampled Render Buffers' },
       { id: Example.Rtt, title: 'Rtt' },
     ],
@@ -140,15 +137,15 @@ export const SideBarItems: AccordionItem[] = [
     children: [
       { id: Example.Clipping, title: 'Clipping' },
       { id: Example.CubemapAdjustments, title: 'Cubemap Adjustments' },
-      { id: Example.CubemapDynamic, title: 'Cubemap Dynamic' },
+      { id: Example.CubemapDynamic, title: 'Cubemap Dynamic', maintenance: true },
       { id: Example.CubemapMix, title: 'Cubemap Mix' },
       { id: Example.Occlusion, title: 'Occlusion' },
-      { id: Example.ParallaxUv, title: 'Parallax Uv' },
+      { id: Example.ParallaxUv, title: 'Parallax Uv', maintenance: true },
       { id: Example.Particles, title: 'Particles' },
       { id: Example.PmRemCubemap, title: 'Pm Rem Cubemap' },
       { id: Example.PmRemEquirectangular, title: 'Pm Rem Equirectangular' },
       { id: Example.PmRemScene, title: 'Pm Rem Scene' },
-      { id: Example.Portal, title: 'Portal' },
+      { id: Example.Portal, title: 'Portal', maintenance: true },
       { id: Example.Sandbox, title: 'Sandbox' },
       { id: Example.ShadowMap, title: 'Shadow Map' },
       { id: Example.Skinning, title: 'Skinning' },

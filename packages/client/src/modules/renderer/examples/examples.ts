@@ -32,7 +32,6 @@ export enum Example {
   LoaderGltfIridescence = 'loader_gltf_iridescence',
   LoaderGltfSheen = 'loader_gltf_sheen',
   Materials = 'materials',
-  MaterialsSss = 'materials_sss',
   MaterialsTextureAnisotropy = 'materials_texture_anisotropy',
   MaterialsTexturePartialUpdate = 'materials_texture_partialupdate',
   MaterialsVideo = 'materials_video',

@@ -1,4 +1,4 @@
-import * as THREE from '../threejs/Three.js';
+import * as THREE from '@modules/renderer/engine/engine.js';
 import {
   color,
   MeshBasicNodeMaterial,
@@ -11,14 +11,14 @@ import {
   uv,
   vec2,
   viewportTopLeft,
-} from '../threejs/nodes/Nodes.js';
+} from '@modules/renderer/engine/nodes/Nodes.js';
 
-import { GLTFLoader } from '../threejs/loaders/GLTFLoader.js';
+import { GLTFLoader } from '@modules/renderer/engine/loaders/GLTFLoader.js';
 
-import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
+import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
 
-import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
-import { Side } from '../threejs/Three.js';
+import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
+import { Side } from '@modules/renderer/engine/engine.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, sceneMain, scenePortal, renderer;
@@ -28,7 +28,7 @@ const mixers = [];
 
 init();
 
-function init() {
+async function init() {
   //
 
   sceneMain = new THREE.Scene();
@@ -59,53 +59,6 @@ function init() {
   sceneMain.add(light);
   scenePortal.add(light.clone());
 
-  // models
-
-  const loader = new GLTFLoader();
-  loader.loadAsync('models/gltf/Xbot.glb', {
-    onLoad: function (gltf) {
-      const createModel = (colorNode = null) => {
-        let object;
-
-        if (mixers.length === 0) {
-          object = gltf.scene;
-        } else {
-          object = gltf.scene.clone();
-
-          const children = object.children[0].children;
-
-          const applyFX = index => {
-            children[index].material = children[index].material.clone();
-            children[index].material.colorNode = colorNode;
-            children[index].material.wireframe = true;
-          };
-
-          applyFX(0);
-          applyFX(1);
-        }
-
-        const mixer = new THREE.AnimationMixer(object);
-
-        const action = mixer.clipAction(gltf.animations[6]);
-        action.play();
-
-        mixers.push(mixer);
-
-        return object;
-      };
-
-      const colorNode = mx_fractal_noise_vec3(uv().mul(20).add(timerLocal()));
-
-      const modelMain = createModel();
-      const modelPortal = createModel(colorNode);
-
-      // model portal
-
-      sceneMain.add(modelMain);
-      scenePortal.add(modelPortal);
-    },
-  });
-
   // portal
 
   const geometry = new THREE.PlaneGeometry(1.7, 2);
@@ -121,6 +74,50 @@ function init() {
   sceneMain.add(plane);
 
   // renderer
+  // models
+
+  const loader = new GLTFLoader();
+  await loader.loadAsync('models/gltf/Xbot.glb').then(function (gltf) {
+    const createModel = (colorNode = null) => {
+      let object;
+
+      if (mixers.length === 0) {
+        object = gltf.scene;
+      } else {
+        object = gltf.scene.clone();
+
+        const children = object.children[0].children;
+
+        const applyFX = index => {
+          children[index].material = children[index].material.clone();
+          children[index].material.colorNode = colorNode;
+          children[index].material.wireframe = true;
+        };
+
+        applyFX(0);
+        applyFX(1);
+      }
+
+      const mixer = new THREE.AnimationMixer(object);
+
+      const action = mixer.clipAction(gltf.animations[6]);
+      action.play();
+
+      mixers.push(mixer);
+
+      return object;
+    };
+
+    const colorNode = mx_fractal_noise_vec3(uv().mul(20).add(timerLocal()));
+
+    const modelMain = createModel();
+    const modelPortal = createModel(colorNode);
+
+    // model portal
+
+    sceneMain.add(modelMain);
+    scenePortal.add(modelPortal);
+  });
 
   renderer = new WebGPURenderer({ antialias: true });
   renderer.setPixelRatio(window.devicePixelRatio);

@@ -1,4 +1,4 @@
-import * as THREE from '../threejs/Three.js';
+import * as THREE from '@modules/renderer/engine/engine.js';
 
 import {
   cameraViewMatrix,
@@ -8,13 +8,13 @@ import {
   pmremTexture,
   positionViewDirection,
   uniform,
-} from '../threejs/nodes/Nodes.js';
+} from '@modules/renderer/engine/nodes/Nodes.js';
 
-import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
+import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
 
-import { RGBMLoader } from '../threejs/loaders/RGBMLoader.js';
+import { RGBMLoader } from '@modules/renderer/engine/loaders/RGBMLoader.js';
 
-import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
+import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
 
 import { GUI } from 'lil-gui';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';

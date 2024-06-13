@@ -1,10 +1,10 @@
-import * as THREE from '../threejs/Three.js';
+import * as THREE from '@modules/renderer/engine/engine.js';
 
-import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
+import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
 
-import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
-import { GLTFLoader } from '../threejs/loaders/GLTFLoader.js';
-import { RGBELoader } from '../threejs/loaders/RGBELoader.js';
+import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
+import { GLTFLoader } from '@modules/renderer/engine/loaders/GLTFLoader.js';
+import { RGBELoader } from '@modules/renderer/engine/loaders/RGBELoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let renderer, scene, camera, controls;

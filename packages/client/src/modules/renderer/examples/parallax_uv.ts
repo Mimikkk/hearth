@@ -1,11 +1,11 @@
-import * as THREE from '../threejs/Three.js';
-import { TextureLoader } from '../threejs/loaders/TextureLoader.ts';
-import { MeshStandardNodeMaterial, parallaxUV, texture, uv } from '../threejs/nodes/Nodes.js';
+import * as THREE from '@modules/renderer/engine/engine.js';
+import { TextureLoader } from '@modules/renderer/engine/loaders/TextureLoader.ts';
+import { MeshStandardNodeMaterial, parallaxUV, texture, uv } from '@modules/renderer/engine/nodes/Nodes.js';
 
-import { WebGPURenderer } from '../threejs/renderers/webgpu/WebGPURenderer.js';
+import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
 
-import { OrbitControls } from '@modules/renderer/threejs/controls/OrbitControls.js';
-import { CubeTextureLoader } from '@modules/renderer/threejs/loaders/CubeTextureLoader.js';
+import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
+import { CubeTextureLoader } from '@modules/renderer/engine/loaders/CubeTextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, renderer;
