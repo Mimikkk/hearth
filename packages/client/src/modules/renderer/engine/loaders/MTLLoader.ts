@@ -1,7 +1,7 @@
 import { Color, ColorSpace, LoaderUtils, MeshPhongMaterial, Side, Vector2, Wrapping } from '../engine.js';
-import { FileLoader } from './FileLoader.js';
+import { FileLoader, FileLoaderResponse } from './FileLoader.js';
 import { TextureLoader } from '@modules/renderer/engine/loaders/TextureLoader.js';
-import { Configurable, ConfigurableConstructor, LoaderAsync } from '@modules/renderer/engine/loaders/types.js';
+import { classLoader, Configurable, ConfigurableConstructor } from '@modules/renderer/engine/loaders/types.js';
 
 const parse = (text: string, path: string) => {
   const lines = text.split('\n');
@@ -45,37 +45,29 @@ const parse = (text: string, path: string) => {
   return materialCreator;
 };
 
-export const MTLLoader = class<TUrl extends string>
-  implements Configurable<Configuration>, LoaderAsync<MaterialCreator, TUrl>
-{
-  configuration: Configuration;
-
-  static configure(options?: Options): Configuration {
-    return {
-      fileloader: FileLoader.configure(options?.fileloader),
-    };
-  }
-
-  constructor(options?: Options) {
-    this.configuration = MTLLoader.configure(options);
-  }
-
-  async loadAsync(url: TUrl, handlers?: LoaderAsync.Handlers): Promise<MaterialCreator> {
+export class MTLLoader extends classLoader<{
+  Url: string;
+  Return: MaterialCreator;
+  Options: Options;
+  Configuration: Configuration;
+}>(
+  options => ({ fileLoader: FileLoader.configureAs(FileLoaderResponse.Text, options?.fileLoader) }),
+  async (url, { fileLoader }, handlers) => {
     const path = LoaderUtils.extractUrlBase(url);
 
-    const text = await FileLoader.loadAsync(url);
+    const text = await FileLoader.loadAsync(url, fileLoader, handlers);
 
     return parse(text, path);
-  }
-} satisfies ConfigurableConstructor<Options, Configuration>;
+  },
+) {}
 
 export namespace MTLLoader {
   export interface Options {
-    fileloader?: FileLoader.Configuration;
+    fileLoader?: FileLoader.Options;
   }
 
   export interface Configuration {
-    fileloader: FileLoader.Configuration;
+    fileLoader: FileLoader.Configuration<FileLoaderResponse.Text>;
   }
 }
 type Options = MTLLoader.Options;

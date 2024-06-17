@@ -9,7 +9,7 @@ import {
   Wrapping,
 } from '@modules/renderer/engine/engine.js';
 import * as upng from 'upng-js';
-import { Configurable, ConfigurableConstructor, LoaderAsync } from './types.ts';
+import { classLoader, Configurable, ConfigurableConstructor, LoaderAsync } from './types.ts';
 import { FileLoader, FileLoaderResponse } from '@modules/renderer/engine/loaders/FileLoader.js';
 
 type Urls<T extends string> = [posx: T, negx: T, posy: T, negy: T, posz: T, negz: T];
@@ -94,50 +94,36 @@ const createDataTexture = (buffer: ArrayBuffer, configuration: Configuration) =>
   return texture;
 };
 
-export const RGBMLoader = class<TData extends CubeTexture, TUrl extends string = string>
-  implements Configurable<Configuration>, LoaderAsync<TData, Urls<TUrl>>
-{
-  configuration: Configuration;
+export class RGBMLoader extends classLoader<{
+  Url: Urls<string>;
+  Return: CubeTexture;
+  Options: Options;
+  Configuration: Configuration;
+}>(
+  options => ({
+    fileLoader: FileLoader.configureAs(FileLoaderResponse.Buffer, options?.fileLoader),
+    type: options?.type ?? TextureDataType.HalfFloat,
+    maxRange: options?.maxRange ?? 7,
+  }),
+  async (urls, configuration, handlers) => {
+    const buffers = await FileLoader.loadAsyncMultiple(urls, configuration.fileLoader, handlers);
+    const images = buffers.map(buffer => createDataTexture(buffer, configuration));
 
-  static configure(options?: Options): Configuration {
-    return {
-      responseType: FileLoaderResponse.Buffer,
-      headers: options?.headers,
-      credentials: options?.credentials ?? 'same-origin',
-      type: options?.type ?? TextureDataType.HalfFloat,
-      maxRange: options?.maxRange ?? 7,
-    };
-  }
-
-  constructor(options?: Options) {
-    this.configuration = RGBMLoader.configure(options);
-  }
-
-  async loadAsync<T extends TData, E = unknown>(urls: Urls<TUrl>, handlers?: LoaderAsync.Handlers<E>): Promise<T> {
-    const buffers = await FileLoader.loadAsyncMultiple(urls, this.configuration, handlers);
-    const images = buffers.map(buffer => createDataTexture(buffer, this.configuration));
-
-    return createCubeTexture(images, this.configuration) as T;
-  }
-
-  static async loadAsync<T extends CubeTexture, TUrl extends string, E = unknown>(
-    urls: Urls<TUrl>,
-    options: Configuration,
-    handlers?: LoaderAsync.Handlers<E>,
-  ): Promise<T> {
-    return new RGBMLoader(options).loadAsync(urls, handlers);
-  }
-} satisfies ConfigurableConstructor<Options, Configuration>;
+    return createCubeTexture(images, configuration);
+  },
+) {}
 
 export namespace RGBMLoader {
   export type SupportedType = TextureDataType.HalfFloat | TextureDataType.Float;
 
-  export interface Options extends FileLoader.Options {
+  export interface Options {
+    fileLoader?: Omit<FileLoader.Options, 'responseType'>;
     type?: SupportedType;
     maxRange?: number;
   }
 
-  export interface Configuration extends FileLoader.Configuration {
+  export interface Configuration {
+    fileLoader: FileLoader.Configuration<FileLoaderResponse.Buffer>;
     type: SupportedType;
     maxRange: number;
   }

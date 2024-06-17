@@ -7,7 +7,7 @@ import { InstancedBufferAttribute } from '../core/InstancedBufferAttribute.js';
 import { InterleavedBufferAttribute } from '../core/InterleavedBufferAttribute.js';
 import { InterleavedBuffer } from '../core/InterleavedBuffer.js';
 import { createTypedArray } from '../utils.js';
-import { Configurable, LoaderAsync } from '@modules/renderer/engine/loaders/types.js';
+import { classLoader } from '@modules/renderer/engine/loaders/types.js';
 import { FileLoader, FileLoaderResponse } from '@modules/renderer/engine/loaders/FileLoader.js';
 
 interface JsonContent {
@@ -172,44 +172,27 @@ const parse = (json: JsonContent): BufferGeometry => {
   return geometry as BufferGeometry;
 };
 
-export const BufferGeometryLoader = class<TUrl extends string = string>
-  implements LoaderAsync<BufferGeometry, TUrl>, Configurable<Configuration>
-{
-  static configure(options?: Options): Configuration {
-    return {
-      headers: options?.headers,
-      credentials: options?.credentials ?? 'same-origin',
-      responseType: FileLoaderResponse.Json,
-    };
-  }
+export class BufferGeometryLoader extends classLoader<{
+  Url: string;
+  Return: BufferGeometry;
+  Options: Options;
+  Configuration: Configuration;
+}>(
+  options => ({ fileLoader: FileLoader.configureAs(FileLoaderResponse.Json, options?.fileLoader) }),
+  async (url, { fileLoader }, handlers) => {
+    const json = await FileLoader.loadAsync(url, fileLoader, handlers);
 
-  configuration: Configuration;
-
-  constructor(options?: Options) {
-    this.configuration = BufferGeometryLoader.configure(options);
-  }
-
-  async loadAsync<T extends BufferGeometry, E = unknown>(url: TUrl, handlers?: LoaderAsync.Handlers<E>): Promise<T> {
-    const json = await FileLoader.loadAsync(url, this.configuration, handlers);
-
-    return parse(json) as T;
-  }
-
-  static async loadAsync<T extends BufferGeometry, TUrl extends string, E = unknown>(
-    url: TUrl,
-    options?: Options,
-    handlers?: LoaderAsync.Handlers<E>,
-  ): Promise<T> {
-    const loader = new BufferGeometryLoader(options);
-    return loader.loadAsync(url, handlers);
-  }
-};
+    return parse(json);
+  },
+) {}
 
 export namespace BufferGeometryLoader {
-  export type Options = Omit<FileLoader.Options, 'responseType'> & {};
+  export interface Options {
+    fileLoader?: Omit<FileLoader.Options, 'responseType'>;
+  }
 
-  export type Configuration = Omit<FileLoader.Configuration, 'responseType'> & {
-    responseType: FileLoaderResponse.Json;
+  export type Configuration = {
+    fileLoader: FileLoader.Configuration<FileLoaderResponse.Json>;
   };
 }
 type Options = BufferGeometryLoader.Options;

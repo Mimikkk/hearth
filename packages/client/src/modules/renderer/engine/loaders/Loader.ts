@@ -1,10 +1,4 @@
-import { LoadManager } from './LoadManager.js';
-
-const loader = new LoadManager();
-
 export abstract class Loader<TData = any, TUrl extends string = string> {
-  static FallbackMaterialName: string = '__Nameless';
-  manager: LoadManager;
   withCredentials: boolean;
   crossOrigin: string;
   path: string;
@@ -12,7 +6,6 @@ export abstract class Loader<TData = any, TUrl extends string = string> {
   requestHeader: Loader.RequestHeader;
 
   protected constructor(options?: Loader.Options) {
-    this.manager = options?.manager ?? loader;
     this.crossOrigin = options?.crossOrigin ?? 'anonymous';
     this.withCredentials = options?.withCredentials ?? false;
     this.path = options?.path ?? '';
@@ -31,7 +24,6 @@ export abstract class Loader<TData = any, TUrl extends string = string> {
 
 export namespace Loader {
   export interface Options {
-    manager?: LoadManager;
     crossOrigin?: string;
     withCredentials?: boolean;
     path?: string;

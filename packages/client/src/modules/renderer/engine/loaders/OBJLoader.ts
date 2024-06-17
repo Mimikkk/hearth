@@ -5,7 +5,6 @@ import {
   Group,
   LineBasicMaterial,
   LineSegments,
-  Loader,
   Material,
   Mesh,
   MeshPhongMaterial,
@@ -13,8 +12,9 @@ import {
   PointsMaterial,
   Vector3,
 } from '@modules/renderer/engine/engine.js';
-import { FileLoader } from '@modules/renderer/engine/loaders/FileLoader.js';
+import { FileLoader, FileLoaderResponse } from '@modules/renderer/engine/loaders/FileLoader.js';
 import { MaterialCreator } from '@modules/renderer/engine/loaders/MTLLoader.js';
+import { classLoader } from '@modules/renderer/engine/loaders/types.js';
 
 // o object_name | g group_name
 const _object_pattern = /^[og]\s*(.+)?/;
@@ -350,331 +350,326 @@ class ParserState {
   }
 }
 
-//
+async function parse(text: string, configuration: Configuration): Promise<Group> {
+  const state = new ParserState();
 
-export class OBJLoader<TUrl extends string = string> {
-  configuration: Configuration;
-
-  static configure(options?: Options): Configuration {
-    return {
-      materials: options?.materials ?? null,
-    };
+  if (text.indexOf('\r\n') !== -1) {
+    // This is faster than String.split with regex that splits on both
+    text = text.replace(/\r\n/g, '\n');
   }
 
-  constructor(options?: Options) {
-    this.configuration = OBJLoader.configure(options);
+  if (text.indexOf('\\\n') !== -1) {
+    // join lines separated by a line continuation character (\)
+    text = text.replace(/\\\n/g, '');
   }
 
-  async loadAsync(url: TUrl, handlers?: Loader.Handlers<Group>) {
-    const text = await FileLoader.loadAsync(url);
+  const lines = text.split('\n');
+  let result = [];
 
-    return await this.parse(text);
-  }
+  for (let i = 0, l = lines.length; i < l; i++) {
+    const line = lines[i].trimStart();
 
-  async parse(text: string) {
-    const state = new ParserState();
+    if (line.length === 0) continue;
 
-    if (text.indexOf('\r\n') !== -1) {
-      // This is faster than String.split with regex that splits on both
-      text = text.replace(/\r\n/g, '\n');
-    }
+    const lineFirstChar = line.charAt(0);
 
-    if (text.indexOf('\\\n') !== -1) {
-      // join lines separated by a line continuation character (\)
-      text = text.replace(/\\\n/g, '');
-    }
+    if (lineFirstChar === '#') continue;
+    if (lineFirstChar === 'v') {
+      const data = line.split(_face_vertex_data_separator_pattern);
 
-    const lines = text.split('\n');
-    let result = [];
+      switch (data[0]) {
+        case 'v':
+          state.vertices.push(parseFloat(data[1]), parseFloat(data[2]), parseFloat(data[3]));
+          if (data.length >= 7) {
+            _color.setRGB(parseFloat(data[4]), parseFloat(data[5]), parseFloat(data[6])).convertSRGBToLinear();
 
-    for (let i = 0, l = lines.length; i < l; i++) {
-      const line = lines[i].trimStart();
+            state.colors.push(_color.r, _color.g, _color.b);
+          } else {
+            // if no colors are defined, add placeholders so color and vertex indices match
 
-      if (line.length === 0) continue;
-
-      const lineFirstChar = line.charAt(0);
-
-      // @todo invoke passed in handler if any
-      if (lineFirstChar === '#') continue; // skip comments
-
-      if (lineFirstChar === 'v') {
-        const data = line.split(_face_vertex_data_separator_pattern);
-
-        switch (data[0]) {
-          case 'v':
-            state.vertices.push(parseFloat(data[1]), parseFloat(data[2]), parseFloat(data[3]));
-            if (data.length >= 7) {
-              _color.setRGB(parseFloat(data[4]), parseFloat(data[5]), parseFloat(data[6])).convertSRGBToLinear();
-
-              state.colors.push(_color.r, _color.g, _color.b);
-            } else {
-              // if no colors are defined, add placeholders so color and vertex indices match
-
-              state.colors.push(undefined, undefined, undefined);
-            }
-
-            break;
-          case 'vn':
-            state.normals.push(parseFloat(data[1]), parseFloat(data[2]), parseFloat(data[3]));
-            break;
-          case 'vt':
-            state.uvs.push(parseFloat(data[1]), parseFloat(data[2]));
-            break;
-        }
-      } else if (lineFirstChar === 'f') {
-        const lineData = line.slice(1).trim();
-        const vertexData = lineData.split(_face_vertex_data_separator_pattern);
-        const faceVertices = [];
-
-        // Parse the face vertex data into an easy to work with format
-
-        for (let j = 0, jl = vertexData.length; j < jl; j++) {
-          const vertex = vertexData[j];
-
-          if (vertex.length > 0) {
-            const vertexParts = vertex.split('/');
-            faceVertices.push(vertexParts);
+            state.colors.push(undefined, undefined, undefined);
           }
-        }
 
-        // Draw an edge between the first vertex and all subsequent vertices to form an n-gon
-
-        const v1 = faceVertices[0];
-
-        for (let j = 1, jl = faceVertices.length - 1; j < jl; j++) {
-          const v2 = faceVertices[j];
-          const v3 = faceVertices[j + 1];
-
-          state.addFace(v1[0], v2[0], v3[0], v1[1], v2[1], v3[1], v1[2], v2[2], v3[2]);
-        }
-      } else if (lineFirstChar === 'l') {
-        const lineParts = line.substring(1).trim().split(' ');
-        let lineVertices = [];
-        const lineUVs = [];
-
-        if (line.indexOf('/') === -1) {
-          lineVertices = lineParts;
-        } else {
-          for (let li = 0, llen = lineParts.length; li < llen; li++) {
-            const parts = lineParts[li].split('/');
-
-            if (parts[0] !== '') lineVertices.push(parts[0]);
-            if (parts[1] !== '') lineUVs.push(parts[1]);
-          }
-        }
-
-        state.addLineGeometry(lineVertices, lineUVs);
-      } else if (lineFirstChar === 'p') {
-        const lineData = line.slice(1).trim();
-        const pointData = lineData.split(' ');
-
-        state.addPointGeometry(pointData);
-      } else if ((result = _object_pattern.exec(line)) !== null) {
-        // o object_name
-        // or
-        // g group_name
-
-        // WORKAROUND: https://bugs.chromium.org/p/v8/issues/detail?id=2869
-        // let name = result[ 0 ].slice( 1 ).trim();
-        const name = (' ' + result[0].slice(1).trim()).slice(1);
-
-        state.startObject(name);
-      } else if (_material_use_pattern.test(line)) {
-        // material
-
-        state.object.startMaterial(line.substring(7).trim(), state.materialLibraries);
-      } else if (_material_library_pattern.test(line)) {
-        // mtl file
-
-        state.materialLibraries.push(line.substring(7).trim());
-      } else if (_map_use_pattern.test(line)) {
-        // the line is parsed but ignored since the loader assumes textures are defined MTL files
-        // (according to https://www.okino.com/conv/imp_wave.htm, 'usemap' is the old-style Wavefront texture reference method)
-
-        console.warn(
-          'engine.OBJLoader: Rendering identifier "usemap" not supported. Textures must be defined in MTL files.',
-        );
-      } else if (lineFirstChar === 's') {
-        result = line.split(' ');
-
-        // smooth shading
-
-        // @todo Handle files that have varying smooth values for a set of faces inside one geometry,
-        // but does not define a usemtl for each face set.
-        // This should be detected and a dummy material created (later MultiMaterial and geometry groups).
-        // This requires some care to not create extra material on each smooth value for "normal" obj files.
-        // where explicit usemtl defines geometry groups.
-        // Example asset: examples/models/obj/cerberus/Cerberus.obj
-
-        /*
-         * http://paulbourke.net/dataformats/obj/
-         *
-         * From chapter "Grouping" Syntax explanation "s group_number":
-         * "group_number is the smoothing group number. To turn off smoothing groups, use a value of 0 or off.
-         * Polygonal elements use group numbers to put elements in different smoothing groups. For free-form
-         * surfaces, smoothing groups are either turned on or off; there is no difference between values greater
-         * than 0."
-         */
-        if (result.length > 1) {
-          const value = result[1].trim().toLowerCase();
-          state.object.smooth = value !== '0' && value !== 'off';
-        } else {
-          // ZBrush can produce "s" lines #11707
-          state.object.smooth = true;
-        }
-
-        const material = state.object.currentMaterial();
-        if (material) material.smooth = state.object.smooth;
-      } else {
-        // Handle null terminated files without exception
-        if (line === '\0') continue;
-
-        console.warn('engine.OBJLoader: Unexpected line: "' + line + '"');
+          break;
+        case 'vn':
+          state.normals.push(parseFloat(data[1]), parseFloat(data[2]), parseFloat(data[3]));
+          break;
+        case 'vt':
+          state.uvs.push(parseFloat(data[1]), parseFloat(data[2]));
+          break;
       }
+    } else if (lineFirstChar === 'f') {
+      const lineData = line.slice(1).trim();
+      const vertexData = lineData.split(_face_vertex_data_separator_pattern);
+      const faceVertices = [];
+
+      // Parse the face vertex data into an easy to work with format
+
+      for (let j = 0, jl = vertexData.length; j < jl; j++) {
+        const vertex = vertexData[j];
+
+        if (vertex.length > 0) {
+          const vertexParts = vertex.split('/');
+          faceVertices.push(vertexParts);
+        }
+      }
+
+      // Draw an edge between the first vertex and all subsequent vertices to form an n-gon
+
+      const v1 = faceVertices[0];
+
+      for (let j = 1, jl = faceVertices.length - 1; j < jl; j++) {
+        const v2 = faceVertices[j];
+        const v3 = faceVertices[j + 1];
+
+        state.addFace(v1[0], v2[0], v3[0], v1[1], v2[1], v3[1], v1[2], v2[2], v3[2]);
+      }
+    } else if (lineFirstChar === 'l') {
+      const lineParts = line.substring(1).trim().split(' ');
+      let lineVertices = [];
+      const lineUVs = [];
+
+      if (line.indexOf('/') === -1) {
+        lineVertices = lineParts;
+      } else {
+        for (let li = 0, llen = lineParts.length; li < llen; li++) {
+          const parts = lineParts[li].split('/');
+
+          if (parts[0] !== '') lineVertices.push(parts[0]);
+          if (parts[1] !== '') lineUVs.push(parts[1]);
+        }
+      }
+
+      state.addLineGeometry(lineVertices, lineUVs);
+    } else if (lineFirstChar === 'p') {
+      const lineData = line.slice(1).trim();
+      const pointData = lineData.split(' ');
+
+      state.addPointGeometry(pointData);
+    } else if ((result = _object_pattern.exec(line)) !== null) {
+      // o object_name
+      // or
+      // g group_name
+
+      // WORKAROUND: https://bugs.chromium.org/p/v8/issues/detail?id=2869
+      // let name = result[ 0 ].slice( 1 ).trim();
+      const name = (' ' + result[0].slice(1).trim()).slice(1);
+
+      state.startObject(name);
+    } else if (_material_use_pattern.test(line)) {
+      // material
+
+      state.object.startMaterial(line.substring(7).trim(), state.materialLibraries);
+    } else if (_material_library_pattern.test(line)) {
+      // mtl file
+
+      state.materialLibraries.push(line.substring(7).trim());
+    } else if (_map_use_pattern.test(line)) {
+      // the line is parsed but ignored since the loader assumes textures are defined MTL files
+      // (according to https://www.okino.com/conv/imp_wave.htm, 'usemap' is the old-style Wavefront texture reference method)
+
+      console.warn(
+        'engine.OBJLoader: Rendering identifier "usemap" not supported. Textures must be defined in MTL files.',
+      );
+    } else if (lineFirstChar === 's') {
+      result = line.split(' ');
+
+      // smooth shading
+
+      // @todo Handle files that have varying smooth values for a set of faces inside one geometry,
+      // but does not define a usemtl for each face set.
+      // This should be detected and a dummy material created (later MultiMaterial and geometry groups).
+      // This requires some care to not create extra material on each smooth value for "normal" obj files.
+      // where explicit usemtl defines geometry groups.
+      // Example asset: examples/models/obj/cerberus/Cerberus.obj
+
+      /*
+       * http://paulbourke.net/dataformats/obj/
+       *
+       * From chapter "Grouping" Syntax explanation "s group_number":
+       * "group_number is the smoothing group number. To turn off smoothing groups, use a value of 0 or off.
+       * Polygonal elements use group numbers to put elements in different smoothing groups. For free-form
+       * surfaces, smoothing groups are either turned on or off; there is no difference between values greater
+       * than 0."
+       */
+      if (result.length > 1) {
+        const value = result[1].trim().toLowerCase();
+        state.object.smooth = value !== '0' && value !== 'off';
+      } else {
+        // ZBrush can produce "s" lines #11707
+        state.object.smooth = true;
+      }
+
+      const material = state.object.currentMaterial();
+      if (material) material.smooth = state.object.smooth;
+    } else {
+      // Handle null terminated files without exception
+      if (line === '\0') continue;
+
+      console.warn('engine.OBJLoader: Unexpected line: "' + line + '"');
     }
+  }
 
-    state.finalize();
+  state.finalize();
 
-    const container = new Group();
+  const container = new Group();
 
-    const hasPrimitives = !(state.objects.length === 1 && state.objects[0].geometry.vertices.length === 0);
+  const hasPrimitives = !(state.objects.length === 1 && state.objects[0].geometry.vertices.length === 0);
 
-    if (hasPrimitives === true) {
-      for (let i = 0, l = state.objects.length; i < l; i++) {
-        const object = state.objects[i];
-        const geometry = object.geometry;
-        const materials = object.materials;
-        const isLine = geometry.type === 'Line';
-        const isPoints = geometry.type === 'Poi.js';
-        let hasVertexColors = false;
+  if (hasPrimitives === true) {
+    for (let i = 0, l = state.objects.length; i < l; i++) {
+      const object = state.objects[i];
+      const geometry = object.geometry;
+      const materials = object.materials;
+      const isLine = geometry.type === 'Line';
+      const isPoints = geometry.type === 'Poi.js';
+      let hasVertexColors = false;
 
-        // Skip o/g line declarations that did not follow with any faces
-        if (geometry.vertices.length === 0) continue;
+      // Skip o/g line declarations that did not follow with any faces
+      if (geometry.vertices.length === 0) continue;
 
-        const buffergeometry = new BufferGeometry();
+      const buffergeometry = new BufferGeometry();
 
-        buffergeometry.setAttribute('position', new Float32BufferAttribute(geometry.vertices, 3));
+      buffergeometry.setAttribute('position', new Float32BufferAttribute(geometry.vertices, 3));
 
-        if (geometry.normals.length > 0) {
-          buffergeometry.setAttribute('normal', new Float32BufferAttribute(geometry.normals, 3));
+      if (geometry.normals.length > 0) {
+        buffergeometry.setAttribute('normal', new Float32BufferAttribute(geometry.normals, 3));
+      }
+
+      if (geometry.colors.length > 0) {
+        hasVertexColors = true;
+        buffergeometry.setAttribute('color', new Float32BufferAttribute(geometry.colors, 3));
+      }
+
+      if (geometry.hasUVIndices === true) {
+        buffergeometry.setAttribute('uv', new Float32BufferAttribute(geometry.uvs, 2));
+      }
+
+      // Create materials
+
+      const createdMaterials = [];
+
+      for (let mi = 0, miLen = materials.length; mi < miLen; mi++) {
+        const sourceMaterial = materials[mi];
+        const materialHash = sourceMaterial.name + '_' + sourceMaterial.smooth + '_' + hasVertexColors;
+        let material = state.materials[materialHash];
+
+        if (configuration.materials !== null) {
+          material = await configuration.materials.create(sourceMaterial.name);
+
+          // mtl etc. loaders probably can't create line materials correctly, copy properties to a line material.
+          if (isLine && material && !(material instanceof LineBasicMaterial)) {
+            const materialLine = new LineBasicMaterial();
+            Material.prototype.copy.call(materialLine, material);
+            materialLine.color.copy(material.color);
+            material = materialLine;
+          } else if (isPoints && material && !(material instanceof PointsMaterial)) {
+            const materialPoints = new PointsMaterial({ size: 10, sizeAttenuation: false });
+            Material.prototype.copy.call(materialPoints, material);
+            materialPoints.color.copy(material.color);
+            materialPoints.map = material.map;
+            material = materialPoints;
+          }
         }
 
-        if (geometry.colors.length > 0) {
-          hasVertexColors = true;
-          buffergeometry.setAttribute('color', new Float32BufferAttribute(geometry.colors, 3));
+        if (material === undefined) {
+          if (isLine) {
+            material = new LineBasicMaterial();
+          } else if (isPoints) {
+            material = new PointsMaterial({ size: 1, sizeAttenuation: false });
+          } else {
+            material = new MeshPhongMaterial();
+          }
+
+          material.name = sourceMaterial.name;
+          material.flatShading = sourceMaterial.smooth ? false : true;
+          material.vertexColors = hasVertexColors;
+
+          state.materials[materialHash] = material;
         }
 
-        if (geometry.hasUVIndices === true) {
-          buffergeometry.setAttribute('uv', new Float32BufferAttribute(geometry.uvs, 2));
-        }
+        createdMaterials.push(material);
+      }
 
-        // Create materials
+      // Create mesh
 
-        const createdMaterials = [];
+      let mesh;
 
+      if (createdMaterials.length > 1) {
         for (let mi = 0, miLen = materials.length; mi < miLen; mi++) {
           const sourceMaterial = materials[mi];
-          const materialHash = sourceMaterial.name + '_' + sourceMaterial.smooth + '_' + hasVertexColors;
-          let material = state.materials[materialHash];
-
-          if (this.configuration.materials !== null) {
-            material = await this.configuration.materials.create(sourceMaterial.name);
-
-            // mtl etc. loaders probably can't create line materials correctly, copy properties to a line material.
-            if (isLine && material && !(material instanceof LineBasicMaterial)) {
-              const materialLine = new LineBasicMaterial();
-              Material.prototype.copy.call(materialLine, material);
-              materialLine.color.copy(material.color);
-              material = materialLine;
-            } else if (isPoints && material && !(material instanceof PointsMaterial)) {
-              const materialPoints = new PointsMaterial({ size: 10, sizeAttenuation: false });
-              Material.prototype.copy.call(materialPoints, material);
-              materialPoints.color.copy(material.color);
-              materialPoints.map = material.map;
-              material = materialPoints;
-            }
-          }
-
-          if (material === undefined) {
-            if (isLine) {
-              material = new LineBasicMaterial();
-            } else if (isPoints) {
-              material = new PointsMaterial({ size: 1, sizeAttenuation: false });
-            } else {
-              material = new MeshPhongMaterial();
-            }
-
-            material.name = sourceMaterial.name;
-            material.flatShading = sourceMaterial.smooth ? false : true;
-            material.vertexColors = hasVertexColors;
-
-            state.materials[materialHash] = material;
-          }
-
-          createdMaterials.push(material);
+          buffergeometry.addGroup(sourceMaterial.groupStart, sourceMaterial.groupCount, mi);
         }
 
-        // Create mesh
-
-        let mesh;
-
-        if (createdMaterials.length > 1) {
-          for (let mi = 0, miLen = materials.length; mi < miLen; mi++) {
-            const sourceMaterial = materials[mi];
-            buffergeometry.addGroup(sourceMaterial.groupStart, sourceMaterial.groupCount, mi);
-          }
-
-          if (isLine) {
-            mesh = new LineSegments(buffergeometry, createdMaterials);
-          } else if (isPoints) {
-            mesh = new Points(buffergeometry, createdMaterials);
-          } else {
-            mesh = new Mesh(buffergeometry, createdMaterials);
-          }
+        if (isLine) {
+          mesh = new LineSegments(buffergeometry, createdMaterials);
+        } else if (isPoints) {
+          mesh = new Points(buffergeometry, createdMaterials);
         } else {
-          if (isLine) {
-            mesh = new LineSegments(buffergeometry, createdMaterials[0]);
-          } else if (isPoints) {
-            mesh = new Points(buffergeometry, createdMaterials[0]);
-          } else {
-            mesh = new Mesh(buffergeometry, createdMaterials[0]);
-          }
+          mesh = new Mesh(buffergeometry, createdMaterials);
         }
-
-        mesh.name = object.name;
-
-        container.add(mesh);
-      }
-    } else {
-      // if there is only the default parser state object with no geometry data, interpret data as point cloud
-
-      if (state.vertices.length > 0) {
-        const material = new PointsMaterial({ size: 1, sizeAttenuation: false });
-
-        const buffergeometry = new BufferGeometry();
-
-        buffergeometry.setAttribute('position', new Float32BufferAttribute(state.vertices, 3));
-
-        if (state.colors.length > 0 && state.colors[0] !== undefined) {
-          buffergeometry.setAttribute('color', new Float32BufferAttribute(state.colors, 3));
-          material.vertexColors = true;
+      } else {
+        if (isLine) {
+          mesh = new LineSegments(buffergeometry, createdMaterials[0]);
+        } else if (isPoints) {
+          mesh = new Points(buffergeometry, createdMaterials[0]);
+        } else {
+          mesh = new Mesh(buffergeometry, createdMaterials[0]);
         }
-
-        const points = new Points(buffergeometry, material);
-        container.add(points);
       }
+
+      mesh.name = object.name;
+
+      container.add(mesh);
     }
+  } else {
+    // if there is only the default parser state object with no geometry data, interpret data as point cloud
 
-    return container;
+    if (state.vertices.length > 0) {
+      const material = new PointsMaterial({ size: 1, sizeAttenuation: false });
+
+      const buffergeometry = new BufferGeometry();
+
+      buffergeometry.setAttribute('position', new Float32BufferAttribute(state.vertices, 3));
+
+      if (state.colors.length > 0 && state.colors[0] !== undefined) {
+        buffergeometry.setAttribute('color', new Float32BufferAttribute(state.colors, 3));
+        material.vertexColors = true;
+      }
+
+      const points = new Points(buffergeometry, material);
+      container.add(points);
+    }
   }
+
+  return container;
 }
+
+export class OBJLoader extends classLoader<{
+  Url: string;
+  Return: Group;
+  Options: Options;
+  Configuration: Configuration;
+}>(
+  options => ({
+    fileLoader: FileLoader.configureAs(FileLoaderResponse.Text, options?.fileLoader),
+    materials: options?.materials ?? null,
+  }),
+  async (url, configuration, handlers) => {
+    const text = await FileLoader.loadAsync(url, configuration.fileLoader, handlers);
+
+    return await parse(text, configuration);
+  },
+) {}
 
 export namespace OBJLoader {
   export interface Options {
+    fileLoader?: Omit<FileLoader.Options, 'responseType'>;
     materials?: MaterialCreator;
   }
 
   export interface Configuration {
+    fileLoader: FileLoader.Configuration<FileLoaderResponse.Text>;
     materials: MaterialCreator | null;
   }
 }

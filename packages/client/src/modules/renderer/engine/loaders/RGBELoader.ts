@@ -9,7 +9,12 @@ import { DataUtils } from '@modules/renderer/engine/extras/DataUtils.js';
 import { DataTexture } from '@modules/renderer/engine/textures/DataTexture.js';
 import { FileLoader, FileLoaderResponse } from '@modules/renderer/engine/loaders/FileLoader.js';
 import { NumberArray } from '@modules/renderer/engine/math/MathUtils.js';
-import { Configurable, ConfigurableConstructor, LoaderAsync } from '@modules/renderer/engine/loaders/types.js';
+import {
+  classLoader,
+  Configurable,
+  ConfigurableConstructor,
+  LoaderAsync,
+} from '@modules/renderer/engine/loaders/types.js';
 
 type SupportedType = TextureDataType.Float | TextureDataType.HalfFloat;
 
@@ -352,46 +357,31 @@ const createDataTexture = (details: ParseResult): DataTexture => {
   return texture;
 };
 
-export const RGBELoader = class<TData extends DataTexture, TUrl extends string = string>
-  implements Configurable<Configuration>, LoaderAsync<TData, TUrl>
-{
-  static configure(options?: Options): Configuration {
-    return {
-      type: options?.type ?? TextureDataType.HalfFloat,
-      headers: options?.headers,
-      credentials: options?.credentials ?? 'same-origin',
-      responseType: FileLoaderResponse.Buffer,
-    };
-  }
+export class RGBELoader extends classLoader<{
+  Url: string;
+  Return: DataTexture;
+  Options: Options;
+  Configuration: Configuration;
+}>(
+  options => ({
+    fileLoader: FileLoader.configureAs(FileLoaderResponse.Buffer, options?.fileLoader),
+    type: options?.type ?? TextureDataType.HalfFloat,
+  }),
+  async (url, configuration, handlers) => {
+    const buffer = await FileLoader.loadAsync(url, configuration.fileLoader, handlers);
 
-  configuration: Configuration;
-
-  constructor(options?: Options) {
-    this.configuration = RGBELoader.configure(options);
-  }
-
-  async loadAsync<T extends TData, E = unknown>(url: TUrl, handlers?: LoaderAsync.Handlers<E>): Promise<T> {
-    const buffer = await FileLoader.loadAsync(url, this.configuration, handlers);
-
-    return createDataTexture(parse(buffer, this.configuration.type)) as T;
-  }
-
-  static async loadAsync<T extends DataTexture, TUrl extends string, E = unknown>(
-    url: TUrl,
-    options?: Options,
-    handlers?: LoaderAsync.Handlers<E>,
-  ): Promise<T> {
-    return new RGBELoader(options).loadAsync(url, handlers);
-  }
-} satisfies ConfigurableConstructor<Options, Configuration>;
+    return createDataTexture(parse(buffer, configuration.type));
+  },
+) {}
 
 export namespace RGBELoader {
-  export interface Options extends Omit<FileLoader.Options, 'responseType'> {
+  export interface Options {
+    fileLoader?: Omit<FileLoader.Options, 'responseType'>;
     type?: SupportedType;
   }
 
-  export interface Configuration extends Omit<FileLoader.Configuration, 'responseType'> {
-    responseType: FileLoaderResponse.Buffer;
+  export interface Configuration {
+    fileLoader: FileLoader.Configuration<FileLoaderResponse.Buffer>;
     type: SupportedType;
   }
 }

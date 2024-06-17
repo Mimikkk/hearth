@@ -67,6 +67,7 @@ export const Example = {
   TslTranspiler: 'tsl_transpiler',
   VideoPanorama: 'video_panorama',
   Loaders: {
+    Stl: 'loader_stl',
     Tiff: 'loader_tiff',
     Ttf: 'ttf_loader',
     Obj: 'loader_obj',

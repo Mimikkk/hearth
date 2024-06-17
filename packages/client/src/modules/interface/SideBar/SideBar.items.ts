@@ -111,6 +111,7 @@ export const SideBarItems: AccordionItem[] = [
       { id: Example.Loaders.ObjMtl, title: 'Loader Obj+Mtl' },
       { id: Example.Loaders.Tiff, title: 'Loader Tiff' },
       { id: Example.Loaders.Ttf, title: 'Loader Ttf' },
+      { id: Example.Loaders.Stl, title: 'Loader Stl' },
       { id: Example.Loaders.Gltf.Default, title: 'Loader Gltf' },
       { id: Example.Loaders.Gltf.Compressed, title: 'Loader Gltf Compressed', maintenance: true },
       { id: Example.Loaders.Gltf.Iridescence, title: 'Loader Gltf Iridescence' },

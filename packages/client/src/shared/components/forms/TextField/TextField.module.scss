@@ -12,6 +12,10 @@
     }
   }
 
+  &:has(.input:not(:focus)) .label {
+    @apply cursor-pointer;
+  }
+
   .label {
     @apply first-letter:uppercase;
     @apply absolute transition-all;

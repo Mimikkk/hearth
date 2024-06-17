@@ -5,12 +5,8 @@ import { FileLoader, FileLoaderResponse } from '@modules/renderer/engine/loaders
 export class AudioLoader extends classLoader<{
   Url: string;
   Return: AudioBuffer;
-  Options: {
-    fileLoader?: Omit<FileLoader.Options, 'responseType'>;
-  };
-  Configuration: {
-    fileLoader: FileLoader.Configuration<FileLoaderResponse.Buffer>;
-  };
+  Options: Options;
+  Configuration: Configuration;
 }>(
   options => ({ fileLoader: FileLoader.configureAs(FileLoaderResponse.Buffer, options?.fileLoader) }),
   async (url, { fileLoader }, handlers) => {
@@ -23,6 +19,13 @@ export class AudioLoader extends classLoader<{
 ) {}
 
 export namespace AudioLoader {
-  export type Options = (typeof AudioLoader)['Type']['Options'];
-  export type Configuration = (typeof AudioLoader)['Type']['Configuration'];
+  export interface Options {
+    fileLoader?: Omit<FileLoader.Options, 'responseType'>;
+  }
+
+  export interface Configuration {
+    fileLoader: FileLoader.Configuration<FileLoaderResponse.Buffer>;
+  }
 }
+type Options = AudioLoader.Options;
+type Configuration = AudioLoader.Configuration;
