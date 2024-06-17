@@ -7,12 +7,7 @@ import {
 import { DataUtils } from '@modules/renderer/engine/extras/DataUtils.js';
 import { DataTexture } from '@modules/renderer/engine/textures/DataTexture.js';
 import { lerp } from '../math/MathUtils.js';
-import type {
-  Configurable,
-  ConfigurableConstructor,
-  LoaderAsync,
-  MultiLoaderAsync,
-} from '@modules/renderer/engine/loaders/types.js';
+import { classLoader } from '@modules/renderer/engine/loaders/types.js';
 import { FileLoader, FileLoaderResponse } from '@modules/renderer/engine/loaders/FileLoader.js';
 
 type SupportedType = TextureDataType.Float | TextureDataType.HalfFloat | TextureDataType.UnsignedByte;
@@ -121,60 +116,35 @@ const readIes = <ST extends SupportedType>(iesLamp: IESLamp, type: SupportedType
 const parse = (text: string, type: SupportedType): DataTexture =>
   createDataTexture(readIes(new IESLamp(text), type), type);
 
-export const IESLoader = class<TData extends DataTexture, TUrl extends string>
-  implements Configurable<Configuration>, LoaderAsync<TData, TUrl>, MultiLoaderAsync<TData, TUrl>
-{
-  configuration: Configuration;
-
-  static configure(options?: Options): Configuration {
+export class IESLoader extends classLoader<{
+  Url: string;
+  Return: DataTexture;
+  Options: Options;
+  Configuration: Configuration;
+}>(
+  options => {
     return {
-      headers: options?.headers,
-      credentials: options?.credentials ?? 'same-origin',
+      fileLoader: FileLoader.configureAs(FileLoaderResponse.Text, options?.fileLoader),
       type: options?.type ?? TextureDataType.HalfFloat,
-      responseType: FileLoaderResponse.Text,
     };
-  }
+  },
+  async (url, { fileLoader, type }, handlers) => {
+    const text = await FileLoader.loadAsync(url, fileLoader, handlers);
 
-  constructor(options?: Options) {
-    this.configuration = IESLoader.configure(options);
-  }
-
-  async loadAsync<T extends TData, E = unknown>(url: TUrl, handlers?: LoaderAsync.Handlers<E>): Promise<T> {
-    const text = await FileLoader.loadAsync(url, this.configuration, handlers);
-
-    return parse(text, this.configuration.type) as T;
-  }
-
-  static loadAsync<T extends DataTexture, TUrl extends string, E = unknown>(
-    url: TUrl,
-    options?: Options,
-    handlers?: LoaderAsync.Handlers<E>,
-  ): Promise<T> {
-    return new IESLoader(options).loadAsync(url, handlers);
-  }
-
-  async loadAsyncMultiple<T extends TData, E = unknown>(url: TUrl[], handlers?: LoaderAsync.Handlers<E>): Promise<T[]> {
-    const texts = await FileLoader.loadAsyncMultiple(url, this.configuration, handlers);
-
-    return texts.map(text => parse(text, this.configuration.type)) as T[];
-  }
-
-  static loadAsyncMultiple<T extends DataTexture, TUrl extends string, E = unknown>(
-    urls: TUrl[],
-    options?: Options,
-    handlers?: LoaderAsync.Handlers<E>,
-  ): Promise<T[]> {
-    return new IESLoader(options).loadAsyncMultiple(urls, handlers);
-  }
-} satisfies ConfigurableConstructor<Options, Configuration>;
+    return parse(text, type);
+  },
+) {}
 
 export namespace IESLoader {
-  export interface Configuration extends Omit<FileLoader.Configuration, 'responseType'> {
-    responseType: FileLoaderResponse.Text;
+  export interface Configuration {
+    fileLoader: FileLoader.Configuration<FileLoaderResponse.Text>;
     type: SupportedType;
   }
 
-  export type Options = Partial<Omit<Configuration, 'responseType'>>;
+  export interface Options {
+    fileLoader?: Omit<FileLoader.Configuration, 'responseType'>;
+    type?: SupportedType;
+  }
 }
 type Options = IESLoader.Options;
 type Configuration = IESLoader.Configuration;

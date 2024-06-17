@@ -1,4 +1,4 @@
-import { Configurable, ConfigurableConstructor, LoaderAsync, MultiLoaderAsync } from './types.ts';
+import { classLoader } from './types.ts';
 
 const createImage = async (src: string): Promise<HTMLImageElement> => {
   const image = document.createElement('img');
@@ -28,54 +28,23 @@ const createImage = async (src: string): Promise<HTMLImageElement> => {
   return wait;
 };
 
-export const ImageLoader = class<TUrl extends string = string>
-  implements LoaderAsync<HTMLImageElement, TUrl>, MultiLoaderAsync<HTMLImageElement, TUrl>, Configurable<Configuration>
-{
-  configuration: Configuration;
+export class ImageLoader extends classLoader<{
+  Url: string;
+  Return: HTMLImageElement;
+  Options: Options;
+  Configuration: Configuration;
+}>(
+  options => ({
+    crossOrigin: options?.crossOrigin ?? 'anonymous',
+  }),
+  async (url, { crossOrigin }) => {
+    const image = await createImage(url);
 
-  static configure(options?: Options): Configuration {
-    return {
-      crossOrigin: options?.crossOrigin ?? 'anonymous',
-    };
-  }
-
-  constructor(options?: Options) {
-    this.configuration = ImageLoader.configure(options);
-  }
-
-  async loadAsync<T extends HTMLImageElement, E = unknown>(url: TUrl, handler?: LoaderAsync.Handlers<E>): Promise<T> {
-    const image = (await createImage(url)) as T;
-
-    if (!url.startsWith('data:') && this.configuration.crossOrigin) image.crossOrigin = this.configuration.crossOrigin;
+    if (!url.startsWith('data:') && crossOrigin) image.crossOrigin = crossOrigin;
 
     return image;
-  }
-
-  static async loadAsync<T extends HTMLImageElement, TUrl extends string, E = unknown>(
-    url: TUrl,
-    options?: Options,
-    handlers?: LoaderAsync.Handlers<E>,
-  ): Promise<T> {
-    return new ImageLoader(options).loadAsync(url, handlers);
-  }
-
-  loadAsyncMultiple<T extends HTMLImageElement, E = unknown>(
-    url: TUrl[],
-    handlers?: LoaderAsync.Handlers<E>,
-  ): Promise<T[]> {
-    const loader = new ImageLoader(this.configuration);
-
-    return Promise.all(url.map(url => loader.loadAsync(url, handlers))) as Promise<T[]>;
-  }
-
-  static async loadAsyncMultiple<T extends HTMLImageElement, TUrl extends string, E = unknown>(
-    urls: TUrl[],
-    options?: Options,
-    handlers?: LoaderAsync.Handlers<E>,
-  ): Promise<T[]> {
-    return new ImageLoader(options).loadAsyncMultiple(urls, handlers);
-  }
-} satisfies ConfigurableConstructor<Options, Configuration>;
+  },
+) {}
 
 export namespace ImageLoader {
   export interface Options {

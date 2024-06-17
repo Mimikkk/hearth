@@ -1,8 +1,25 @@
 import * as opentype from 'opentype.js';
 import { FileLoader, FileLoaderResponse } from '@modules/renderer/engine/loaders/FileLoader.js';
-import { Configurable, ConfigurableConstructor, LoaderAsync } from '@modules/renderer/engine/loaders/types.js';
+import { classLoader } from '@modules/renderer/engine/loaders/types.js';
 
-const parse = (arraybuffer: ArrayBuffer, { reversed }: Configuration) => {
+interface TTFont {
+  glyphs: Record<string, any>;
+  familyName: string;
+  ascender: number;
+  descender: number;
+  underlinePosition: number;
+  underlineThickness: number;
+  boundingBox: {
+    xMin: number;
+    xMax: number;
+    yMin: number;
+    yMax: number;
+  };
+  resolution: number;
+  original_font_information: any;
+}
+
+const parse = (arraybuffer: ArrayBuffer, reversed: boolean): TTFont => {
   function convert(font: any, reversed: boolean) {
     const round = Math.round;
 
@@ -126,40 +143,31 @@ const parse = (arraybuffer: ArrayBuffer, { reversed }: Configuration) => {
   return convert(opentype.parse(arraybuffer), reversed);
 };
 
-export const TTFLoader = class<TData, TUrl extends string = string>
-  implements Configurable<Configuration>, LoaderAsync<any, TUrl>
-{
-  configuration: Configuration;
+export class TTFLoader extends classLoader<{
+  Url: string;
+  Return: TTFont;
+  Options: {
+    fileLoader?: Omit<FileLoader.Options, 'responseType'>;
+    reversed?: boolean;
+  };
+  Configuration: {
+    fileLoader: FileLoader.Configuration<FileLoaderResponse.Buffer>;
+    reversed: boolean;
+  };
+}>(
+  options => ({
+    fileLoader: FileLoader.configureAs(FileLoaderResponse.Buffer, options?.fileLoader),
+    reversed: options?.reversed ?? false,
+  }),
+  async (url, { fileLoader, reversed }, handlers) => {
+    const buffer = await FileLoader.loadAsync(url, fileLoader, handlers);
 
-  static configure(options?: Options): Configuration {
-    return {
-      headers: options?.headers,
-      credentials: options?.credentials ?? 'same-origin',
-      responseType: FileLoaderResponse.Buffer,
-      reversed: options?.reversed ?? false,
-    };
-  }
-
-  constructor(options?: Options) {
-    this.configuration = TTFLoader.configure(options);
-  }
-
-  async loadAsync<T extends TData, E = unknown>(url: TUrl, handlers?: LoaderAsync.Handlers<E>): Promise<T> {
-    const buffer = await FileLoader.loadAsync(url, this.configuration, handlers);
-
-    return parse(buffer, this.configuration) as T;
-  }
-} satisfies ConfigurableConstructor<Options, Configuration>;
+    return parse(buffer, reversed);
+  },
+) {}
 
 export namespace TTFLoader {
-  export interface Options extends Omit<FileLoader.Options, 'responseType'> {
-    reversed?: boolean;
-  }
+  export type Options = (typeof TTFLoader)['Type']['Options'];
 
-  export interface Configuration extends Omit<FileLoader.Configuration, 'responseType'> {
-    responseType: FileLoaderResponse.Buffer;
-    reversed: boolean;
-  }
+  export type Configuration = (typeof TTFLoader)['Type']['Configuration'];
 }
-type Options = TTFLoader.Options;
-type Configuration = TTFLoader.Configuration;

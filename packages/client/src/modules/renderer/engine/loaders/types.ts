@@ -1,6 +1,8 @@
 export interface ConfigurableConstructor<O, C> {
   configure(options?: O): C;
 
+  create(options?: O): InstanceType<this>;
+
   new (options?: O): void;
 }
 
@@ -16,31 +18,87 @@ export namespace ILoader {
   export type ErrorHandler<E = unknown> = (error: E) => void;
 }
 
-export interface LoaderSync<TUrl extends ILoader.Url> {
-  loadSync<T, E = unknown>(url: TUrl, handlers?: LoaderSync.Handlers<E>): T;
+export interface LoaderSync<T, Url extends ILoader.Url> {
+  loadSync(url: Url, handlers?: LoaderSync.Handlers): T;
 }
 
 export namespace LoaderSync {
-  export interface Handlers<E = unknown> {
+  export interface Handlers {
     onProgress?: ILoader.ProgressHandler;
-    onError?: ILoader.ErrorHandler<E>;
+    onError?: ILoader.ErrorHandler;
   }
 }
 
-export interface LoaderAsync<TData, TUrl extends ILoader.Url> {
-  loadAsync<T extends TData, E = unknown>(url: TUrl, handlers?: LoaderAsync.Handlers<E>): Promise<T>;
-  loadAsync<E = unknown>(url: TUrl, handlers?: LoaderAsync.Handlers<E>): Promise<TData>;
+export interface LoaderAsync<T, Url extends ILoader.Url> {
+  loadAsync(url: Url, handlers?: LoaderAsync.Handlers): Promise<T>;
 }
 
-export interface MultiLoaderAsync<TData, TUrl extends ILoader.Url> {
-  loadAsyncMultiple<T extends TData, E = unknown>(url: TUrl[], handlers?: LoaderAsync.Handlers<E>): Promise<T[]>;
+export interface MultiLoaderAsync<T, Url extends ILoader.Url> {
+  loadAsyncMultiple(url: Url[], handlers?: LoaderAsync.Handlers): Promise<T[]>;
 }
 
 export namespace LoaderAsync {
-  export interface Handlers<E = unknown> {
+  export interface Handlers {
     onProgress?: ILoader.ProgressHandler;
-    onError?: ILoader.ErrorHandler<E>;
+    onError?: ILoader.ErrorHandler;
   }
 }
 
-export type ConfigFn = <O, C>(options?: Partial<O>) => C;
+export const classConfigurable = <O, C>(configure: (options?: O) => C) =>
+  class Config implements Configurable<C> {
+    configuration: C;
+
+    static configure(options?: O): C {
+      return configure(options);
+    }
+
+    static create(options?: O) {
+      return new this(options);
+    }
+
+    constructor(options?: O) {
+      this.configuration = Config.configure(options);
+    }
+  } satisfies ConfigurableConstructor<O, C>;
+
+export const classLoader = <
+  T extends {
+    Url: string | string[];
+    Return: any;
+    Options: any;
+    Configuration: any;
+  },
+>(
+  configure: (options?: T['Options']) => T['Configuration'],
+  loadAsync: (
+    url: T['Url'],
+    configuration: T['Configuration'],
+    handlers?: LoaderAsync.Handlers,
+  ) => Promise<T['Return']>,
+) =>
+  class Loader
+    extends classConfigurable<T['Options'], T['Configuration']>(configure)
+    implements LoaderAsync<T['Return'], T['Url']>, MultiLoaderAsync<T['Return'], T['Url']>
+  {
+    declare static Type: T;
+
+    async loadAsync(url: T['Url'], handlers?: LoaderAsync.Handlers): Promise<T['Return']> {
+      return loadAsync(url, this.configuration, handlers);
+    }
+
+    async loadAsyncMultiple(url: T['Url'][], handlers?: LoaderAsync.Handlers): Promise<T['Return'][]> {
+      return Promise.all(url.map(url => this.loadAsync(url, handlers)));
+    }
+
+    static loadAsync(url: T['Url'], options?: T['Options'], handlers?: LoaderAsync.Handlers): Promise<T['Return']> {
+      return new this(options).loadAsync(url, handlers);
+    }
+
+    static loadAsyncMultiple(
+      url: T['Url'][],
+      options?: T['Options'],
+      handlers?: LoaderAsync.Handlers,
+    ): Promise<T['Return'][]> {
+      return new this(options).loadAsyncMultiple(url, handlers);
+    }
+  };

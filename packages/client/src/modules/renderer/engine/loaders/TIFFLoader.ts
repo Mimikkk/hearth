@@ -6,7 +6,7 @@ import {
 } from '@modules/renderer/engine/engine.js';
 
 import * as UTIF from 'utif';
-import { Configurable, ConfigurableConstructor, LoaderAsync } from '@modules/renderer/engine/loaders/types.js';
+import { classLoader } from '@modules/renderer/engine/loaders/types.js';
 import { FileLoader, FileLoaderResponse } from '@modules/renderer/engine/loaders/FileLoader.js';
 
 interface ParseResult {
@@ -50,46 +50,31 @@ const createDataTexture = (details: ParseResult) => {
   return texture;
 };
 
-export const TiffLoader = class<TUrl extends string = string>
-  implements Configurable<Configuration>, LoaderAsync<DataTexture, TUrl>
-{
-  configuration: Configuration;
+export class TiffLoader extends classLoader<{
+  Url: string;
+  Return: DataTexture;
+  Options: Options;
+  Configuration: Configuration;
+}>(
+  options => ({
+    fileLoader: FileLoader.configureAs(FileLoaderResponse.Buffer, options?.fileLoader),
+    maxRange: options?.maxRange ?? 16,
+  }),
+  async (url, configuration, handlers) => {
+    const buffer = await FileLoader.loadAsync(url, configuration.fileLoader, handlers);
 
-  static configure(options?: Options): Configuration {
-    return {
-      headers: options?.headers,
-      credentials: options?.credentials ?? 'same-origin',
-      maxRange: options?.maxRange ?? 16,
-      responseType: FileLoaderResponse.Buffer,
-    };
-  }
-
-  constructor(options?: Options) {
-    this.configuration = TiffLoader.configure(options);
-  }
-
-  async loadAsync<T extends DataTexture, E = unknown>(url: TUrl, handlers?: LoaderAsync.Handlers<E>): Promise<T> {
-    const buffer = await FileLoader.loadAsync(url, this.configuration, handlers);
-
-    return createDataTexture(parseTiff(buffer)) as T;
-  }
-
-  static async loadAsync<T extends DataTexture, TUrl extends string, E = unknown>(
-    url: TUrl,
-    options?: Options,
-    handlers?: LoaderAsync.Handlers<E>,
-  ): Promise<T> {
-    return new TiffLoader(options).loadAsync(url, handlers);
-  }
-} satisfies ConfigurableConstructor<Options, Configuration>;
+    return createDataTexture(parseTiff(buffer));
+  },
+) {}
 
 export namespace TiffLoader {
-  export interface Options extends FileLoader.Options {
+  export interface Options {
+    fileLoader?: Omit<FileLoader.Configuration, 'responseType'>;
     maxRange?: number;
   }
 
-  export interface Configuration extends Omit<FileLoader.Configuration, 'responseType'> {
-    responseType: FileLoaderResponse.Buffer;
+  export interface Configuration {
+    fileLoader: FileLoader.Configuration<FileLoaderResponse.Buffer>;
     maxRange: number;
   }
 }

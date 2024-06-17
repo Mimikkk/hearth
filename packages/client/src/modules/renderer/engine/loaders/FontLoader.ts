@@ -1,40 +1,28 @@
 import { ShapePath } from '@modules/renderer/engine/engine.js';
 import { FileLoader, FileLoaderResponse } from '@modules/renderer/engine/loaders/FileLoader.js';
-import { Configurable, ConfigurableConstructor, LoaderAsync } from '@modules/renderer/engine/loaders/types.js';
+import { classLoader } from '@modules/renderer/engine/loaders/types.js';
 
-export const FontLoader = class<TData extends Font, TUrl extends string = string>
-  implements Configurable<Configuration>, LoaderAsync<TData, TUrl>
-{
-  configuration: Configuration;
+export class FontLoader extends classLoader<{
+  Url: string;
+  Return: Font;
+  Options: Options;
+  Configuration: Configuration;
+}>(
+  options => ({ fileLoader: FileLoader.configureAs(FileLoaderResponse.Json, options?.fileLoader) }),
+  async (url, { fileLoader }, handlers) => {
+    const buffer = await FileLoader.loadAsync(url, fileLoader, handlers);
 
-  static configure(options?: Options): Configuration {
-    return {
-      responseType: FileLoaderResponse.Json,
-      headers: options?.headers,
-      credentials: options?.credentials ?? 'same-origin',
-    };
-  }
-
-  constructor(options?: Options) {
-    this.configuration = FontLoader.configure(options);
-  }
-
-  async loadAsync<T extends TData, E = unknown>(url: TUrl, handlers?: LoaderAsync.Handlers<E>): Promise<T> {
-    const buffer = await FileLoader.loadAsync(url, this.configuration, handlers);
-
-    return new Font(buffer) as T;
-  }
-
-  static loadAsync<T extends Font, E = unknown>(url: string, options?: Options, handlers?: LoaderAsync.Handlers<E>) {
-    return new FontLoader(options).loadAsync<T, E>(url, handlers);
-  }
-} satisfies ConfigurableConstructor<Options, Configuration>;
+    return new Font(buffer);
+  },
+) {}
 
 export namespace FontLoader {
-  export interface Options extends Omit<FileLoader.Options, 'responseType'> {}
+  export interface Options {
+    fileLoader?: Omit<FileLoader.Options, 'responseType'>;
+  }
 
-  export interface Configuration extends Omit<FileLoader.Configuration, 'responseType'> {
-    responseType: FileLoaderResponse.Json;
+  export interface Configuration {
+    fileLoader: FileLoader.Configuration<FileLoaderResponse.Json>;
   }
 }
 type Options = FontLoader.Options;

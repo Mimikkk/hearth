@@ -1,4 +1,4 @@
-import type { Configurable, ConfigurableConstructor, LoaderAsync, MultiLoaderAsync } from './types.js';
+import { classLoader, LoaderAsync } from './types.js';
 
 class ReadError extends Error {
   constructor(public response: Response) {
@@ -6,7 +6,7 @@ class ReadError extends Error {
   }
 }
 
-const read = <E = unknown>(response: Response, handlers?: LoaderAsync.Handlers<E>): Response => {
+const read = (response: Response, handlers?: LoaderAsync.Handlers): Response => {
   if (response.status !== 200 && response.status !== 0) throw new ReadError(response);
   if (!response.body) return response;
   const reader = response.body.getReader();
@@ -49,52 +49,59 @@ const parse = <RT extends ResponseType>(response: Response, responseType: RT): R
   }
 };
 
-export const FileLoader = class<Url extends string, RT extends ResponseType = FileLoaderResponse.Text>
-  implements Configurable<Configuration<RT>>, LoaderAsync<ResponseMap[RT], Url>, MultiLoaderAsync<ResponseMap[RT], Url>
-{
-  static configure<RT extends ResponseType>(options?: Options<RT>): Configuration<RT> {
-    return {
-      responseType: options?.responseType ?? ('text' as RT),
-      headers: options?.headers,
-      credentials: options?.credentials ?? 'same-origin',
-    };
-  }
+export class FileLoader<RT extends ResponseType> extends classLoader<{
+  Url: string;
+  Return: ResponseMap[ResponseType];
+  Options: Options;
+  Configuration: Configuration;
+}>(
+  options => ({
+    responseType: options?.responseType ?? FileLoaderResponse.Text,
+    headers: options?.headers,
+    credentials: options?.credentials ?? 'same-origin',
+  }),
+  async (url, configuration, handlers) => {
+    const response = await fetch(url, configuration);
 
-  configuration: Configuration<RT>;
-
+    return parse(read(response, handlers), configuration.responseType);
+  },
+) {
   constructor(options?: Options<RT>) {
-    this.configuration = FileLoader.configure(options);
+    super(options);
   }
 
-  async loadAsync<T extends ResponseMap[RT], E = unknown>(url: Url, handlers?: LoaderAsync.Handlers<E>): Promise<T> {
-    const response = await fetch(url, this.configuration);
+  declare configuration: Configuration<RT>;
 
-    return parse(read(response, handlers), this.configuration.responseType);
+  declare static configure: <RT extends ResponseType>(options?: Options<RT>) => Configuration<RT>;
+
+  static configureAs<RT extends ResponseType>(
+    responseType: RT,
+    options?: Omit<Options, 'responseType'>,
+  ): Configuration<RT> {
+    const configuration = FileLoader.configure<RT>(options);
+    configuration.responseType = responseType;
+
+    return configuration;
   }
 
-  async loadAsyncMultiple<T extends ResponseMap[RT], E = unknown>(
-    urls: Url[],
-    handlers?: LoaderAsync.Handlers<E>,
-  ): Promise<T[]> {
-    return Promise.all(urls.map(url => this.loadAsync(url, handlers)));
-  }
+  declare static create: <RT extends ResponseType>(options?: Options<RT>) => FileLoader<RT>;
 
-  static async loadAsync<T extends ResponseMap[RT], Url extends string, RT extends ResponseType, E = unknown>(
-    url: Url,
+  declare loadAsync: (url: string, handlers?: LoaderAsync.Handlers) => Promise<ResponseMap[RT]>;
+
+  declare loadAsyncMultiple: (urls: string[], handlers?: LoaderAsync.Handlers) => Promise<ResponseMap[RT][]>;
+
+  declare static loadAsync: <RT extends ResponseType>(
+    url: string,
     options?: Options<RT>,
-    handlers?: LoaderAsync.Handlers<E>,
-  ): Promise<T> {
-    return new FileLoader(options).loadAsync(url, handlers);
-  }
+    handlers?: LoaderAsync.Handlers,
+  ) => Promise<ResponseMap[RT]>;
 
-  static async loadAsyncMultiple<T extends ResponseMap[RT], Url extends string, RT extends ResponseType, E = unknown>(
-    urls: Url[],
+  declare static loadAsyncMultiple: <RT extends ResponseType>(
+    urls: string[],
     options?: Options<RT>,
-    handlers?: LoaderAsync.Handlers<E>,
-  ): Promise<T[]> {
-    return new FileLoader(options).loadAsyncMultiple(urls, handlers);
-  }
-} satisfies ConfigurableConstructor<Options, Configuration>;
+    handlers?: LoaderAsync.Handlers,
+  ) => Promise<ResponseMap[RT][]>;
+}
 
 export const enum FileLoaderResponse {
   Buffer = 'arraybuffer',
@@ -103,9 +110,6 @@ export const enum FileLoaderResponse {
   Text = 'text',
 }
 
-export type FileLoader<Url extends string, RT extends ResponseType = FileLoaderResponse.Text> = InstanceType<
-  typeof FileLoader<Url, RT>
->;
 export namespace FileLoader {
   export type ResponseType = FileLoaderResponse;
 
