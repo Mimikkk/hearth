@@ -1,5 +1,3 @@
-import * as Engine from '@modules/renderer/engine/engine.js';
-
 import { GLTFLoader } from '@modules/renderer/engine/loaders/GLTFLoader.js';
 import { KTX2Loader } from '@modules/renderer/engine/loaders/KTX2Loader.js';
 import { MeshoptDecoder } from 'meshoptimizer';
@@ -8,32 +6,35 @@ import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.j
 
 import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-
-let camera, scene, renderer;
+import { ToneMapping } from '@modules/renderer/engine/constants.js';
+import { PerspectiveCamera } from '@modules/renderer/engine/cameras/PerspectiveCamera.js';
+import { Scene } from '@modules/renderer/engine/scenes/Scene.js';
+import { Color } from '@modules/renderer/engine/math/Color.js';
+import { PointLight } from '@modules/renderer/engine/lights/PointLight.js';
 
 init();
 
 async function init() {
-  camera = new Engine.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 20);
+  const camera = new PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 20);
   camera.position.set(2, 2, 2);
 
-  scene = new Engine.Scene();
-  scene.background = new Engine.Color(0xeeeeee);
+  const scene = new Scene();
+  scene.background = new Color(0xeeeeee);
 
   //lights
 
-  const light = new Engine.PointLight(0xffffff);
+  const light = new PointLight(0xffffff);
   light.power = 1300;
   camera.add(light);
   scene.add(camera);
 
   //renderer
 
-  renderer = new WebGPURenderer({ antialias: true });
+  const renderer = new WebGPURenderer({ antialias: true });
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.setAnimationLoop(animate);
-  renderer.toneMapping = Engine.ToneMapping.Reinhard;
+  renderer.setAnimationLoop(() => renderer.render(scene, camera));
+  renderer.toneMapping = ToneMapping.Reinhard;
   renderer.toneMappingExposure = 1;
   document.body.appendChild(renderer.domElement);
 
@@ -42,12 +43,13 @@ async function init() {
   controls.maxDistance = 6;
   controls.update();
 
-  const ktx2Loader = await new KTX2Loader().setTranscoderPath('../engine/libs/basis/').detectSupportAsync(renderer);
+  const ktx2Loader = await new KTX2Loader().detectSupportAsync(renderer);
 
   const loader = new GLTFLoader();
   loader.setKTX2Loader(ktx2Loader);
   loader.setMeshoptDecoder(MeshoptDecoder);
-  loader.loadAsync('./models/gltf/coffeemat.glb').then(function (gltf) {
+  loader.loadAsync('./models/gltf/coffeemat.glb').then(gltf => {
+    console.log(gltf);
     const gltfScene = gltf.scene;
     gltfScene.position.y = -0.8;
     gltfScene.scale.setScalar(0.01);
@@ -56,8 +58,4 @@ async function init() {
   });
 
   useWindowResizer(renderer, camera);
-}
-
-function animate() {
-  renderer.render(scene, camera);
 }

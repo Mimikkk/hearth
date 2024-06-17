@@ -57,9 +57,10 @@ import { FileLoader, FileLoaderResponse } from '@modules/renderer/engine/loaders
 const _taskCache = new WeakMap();
 
 let _activeLoaders = 0;
+
 let _zstd;
 
-export class KTX2Loader extends Loader {
+class KTX2Loader extends Loader {
   constructor(manager) {
     super(manager);
 
@@ -73,22 +74,10 @@ export class KTX2Loader extends Loader {
 
     if (typeof MSC_TRANSCODER !== 'undefined') {
       console.warn(
-        'engine.KTX2Loader: Please update to latest "basis_transcoder".' +
-          ' "msc_basis_transcoder" is no longer supported in engine.js r125+.',
+        'THREE.KTX2Loader: Please update to latest "basis_transcoder".' +
+          ' "msc_basis_transcoder" is no longer supported in three.js r125+.',
       );
     }
-  }
-
-  setTranscoderPath(path) {
-    this.transcoderPath = path;
-
-    return this;
-  }
-
-  setWorkerLimit(num) {
-    this.workerPool.setWorkerLimit(num);
-
-    return this;
   }
 
   async detectSupportAsync(renderer) {
@@ -117,11 +106,9 @@ export class KTX2Loader extends Loader {
     return this;
   }
 
-  async init() {
+  init() {
     if (!this.transcoderPending) {
-      this.transcoderPending = Promise.resolve().then(() => {
-        const jsContent = basis.CodeString;
-        const binaryContent = basis.WasmBuffer;
+      this.transcoderPending = Promise.all([basis.CodeString, basis.WasmBuffer]).then(([jsContent, binaryContent]) => {
         const fn = KTX2Loader.BasisWorker.toString();
 
         const body = [
@@ -152,7 +139,7 @@ export class KTX2Loader extends Loader {
         // Each instance loads a transcoder and allocates workers, increasing network and memory cost.
 
         console.warn(
-          'engine.KTX2Loader: Multiple active KTX2 loaders may cause performance issues.' +
+          'THREE.KTX2Loader: Multiple active KTX2 loaders may cause performance issues.' +
             ' Use a single KTX2Loader instance, or call .dispose() on old instances.',
         );
       }
@@ -163,10 +150,9 @@ export class KTX2Loader extends Loader {
     return this.transcoderPending;
   }
 
-  async load(url, handlers) {
-    const { onLoad, onProgress, onError } = handlers ?? {};
+  async loadAsync(url, onLoad, onProgress, onError) {
     if (this.workerConfig === null) {
-      throw new Error('engine.KTX2Loader: Missing initialization with `.detectSupport( renderer )`.');
+      throw new Error('THREE.KTX2Loader: Missing initialization with `.detectSupport( renderer )`.');
     }
 
     const loader = new FileLoader({
@@ -174,17 +160,14 @@ export class KTX2Loader extends Loader {
     });
 
     const buffer = await loader.loadAsync(url);
-    // Check for an existing task using this buffer. A transferred buffer cannot be transferred
-    // again from this thread.
+
     if (_taskCache.has(buffer)) {
       const cachedTask = _taskCache.get(buffer);
 
       return cachedTask.promise.then(onLoad).catch(onError);
     }
 
-    return this._createTexture(buffer)
-      .then(texture => (onLoad ? onLoad(texture) : null))
-      .catch(onError);
+    return this._createTexture(buffer).catch(onError);
   }
 
   _createTextureFrom(transcodeResult, container) {
@@ -195,7 +178,7 @@ export class KTX2Loader extends Loader {
     let texture;
 
     if (container.faceCount === 6) {
-      texture = new CompressedCubeTexture(faces, format, TextureDataType.HalfFloat.UnsignedByte);
+      texture = new CompressedCubeTexture(faces, format, TextureDataType.UnsignedByte);
     } else {
       const mipmaps = faces[0].mipmaps;
 
@@ -224,11 +207,9 @@ export class KTX2Loader extends Loader {
   }
 
   /**
-   * @param {ArrayBuffer} buffer
-   * @param {object?} config
    * @return {Promise<CompressedTexture|CompressedArrayTexture|DataTexture|Data3DTexture>}
    */
-  async _createTexture(buffer, config = {}) {
+  async _createTexture(buffer: ArrayBuffer, config = {}) {
     const container = read(new Uint8Array(buffer));
 
     if (container.vkFormat !== VK_FORMAT_UNDEFINED) {
@@ -341,12 +322,12 @@ KTX2Loader.BasisWorker = function () {
   function init(wasmBinary) {
     transcoderPending = new Promise(resolve => {
       BasisModule = { wasmBinary, onRuntimeInitialized: resolve };
-      BASIS(BasisModule);
+      BASIS(BasisModule); // eslint-disable-line no-undef
     }).then(() => {
       BasisModule.initializeBasis();
 
       if (BasisModule.KTX2File === undefined) {
-        console.warn('engine.KTX2Loader: Please update Basis Universal transcoder.');
+        console.warn('THREE.KTX2Loader: Please update Basis Universal transcoder.');
       }
     });
   }
@@ -361,7 +342,7 @@ KTX2Loader.BasisWorker = function () {
 
     if (!ktx2File.isValid()) {
       cleanup();
-      throw new Error('engine.KTX2Loader:	Invalid or unsupported .ktx2 file');
+      throw new Error('THREE.KTX2Loader:	Invalid or unsupported .ktx2 file');
     }
 
     const basisFormat = ktx2File.isUASTC() ? BasisFormat.UASTC_4x4 : BasisFormat.ETC1S;
@@ -377,12 +358,12 @@ KTX2Loader.BasisWorker = function () {
 
     if (!width || !height || !levelCount) {
       cleanup();
-      throw new Error('engine.KTX2Loader:	Invalid texture');
+      throw new Error('THREE.KTX2Loader:	Invalid texture');
     }
 
     if (!ktx2File.startTranscoding()) {
       cleanup();
-      throw new Error('engine.KTX2Loader: .startTranscoding failed');
+      throw new Error('THREE.KTX2Loader: .startTranscoding failed');
     }
 
     const faces = [];
@@ -405,7 +386,7 @@ KTX2Loader.BasisWorker = function () {
             layer === 0 &&
             (levelInfo.origWidth % 4 !== 0 || levelInfo.origHeight % 4 !== 0)
           ) {
-            console.warn('engine.KTX2Loader: ETC1S and UASTC textures should use multiple-of-four dimensions.');
+            console.warn('THREE.KTX2Loader: ETC1S and UASTC textures should use multiple-of-four dimensions.');
           }
 
           if (levelCount > 1) {
@@ -414,7 +395,7 @@ KTX2Loader.BasisWorker = function () {
           } else {
             // Handles non-multiple-of-four dimensions in textures without mipmaps. Textures with
             // mipmaps must use multiple-of-four dimensions, for some texture formats and APIs.
-            // See mrdoob/engine.js#25908.
+            // See mrdoob/three.js#25908.
             mipWidth = levelInfo.width;
             mipHeight = levelInfo.height;
           }
@@ -424,7 +405,7 @@ KTX2Loader.BasisWorker = function () {
 
           if (!status) {
             cleanup();
-            throw new Error('engine.KTX2Loader: .transcodeImage failed.');
+            throw new Error('THREE.KTX2Loader: .transcodeImage failed.');
           }
 
           layerMips.push(dst);
@@ -476,7 +457,7 @@ KTX2Loader.BasisWorker = function () {
       if: 'dxtSupported',
       basisFormat: [BasisFormat.ETC1S, BasisFormat.UASTC_4x4],
       transcoderFormat: [TranscoderFormat.BC1, TranscoderFormat.BC3],
-      engineFormat: [EngineFormat.RGB_S3TC_DXT1_Format, EngineFormat.RGBA_S3TC_DXT5_Format],
+      engineFormat: [EngineFormat.RGBA_S3TC_DXT1_Format, EngineFormat.RGBA_S3TC_DXT5_Format],
       priorityETC1S: 4,
       priorityUASTC: 5,
       needsPowerOfTwo: false,
@@ -537,7 +518,7 @@ KTX2Loader.BasisWorker = function () {
       return { transcoderFormat, engineFormat };
     }
 
-    console.warn('engine.KTX2Loader: No suitable compressed texture format found. Decoding to RGBA32.');
+    console.warn('THREE.KTX2Loader: No suitable compressed texture format found. Decoding to RGBA32.');
 
     transcoderFormat = TranscoderFormat.RGBA32;
     engineFormat = EngineFormat.RGBAFormat;
@@ -732,3 +713,5 @@ function parseColorSpace(container) {
     return ColorSpace.No;
   }
 }
+
+export { KTX2Loader };

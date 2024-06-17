@@ -2423,6 +2423,7 @@ class GLTFParser {
     }
 
     const promise = Promise.resolve(sourceUrl).then(async url => {
+      console.log({ loader });
       const bitmap = await loader.loadAsync(LoaderUtils.resolveUrl(url, options.path));
       if (isObjectUrl) URL.revokeObjectURL(url);
 

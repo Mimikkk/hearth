@@ -72,9 +72,9 @@ export const Example = {
     Ttf: 'ttf_loader',
     Obj: 'loader_obj',
     ObjMtl: 'loader_obj_mtl',
-    Gltf: {
-      Default: 'loader_gltf',
-      Compressed: 'loader_gltf_compressed',
+    Gltfs: {
+      Gltf: 'loader_gltf',
+      Ktx2: 'loader_gltf_ktx2',
       Iridescence: 'loader_gltf_iridescence',
       Sheen: 'loader_gltf_sheen',
     },
