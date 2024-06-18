@@ -113,7 +113,7 @@ export const SideBarItems: AccordionItem[] = [
       { id: Example.Loaders.Ttf, title: 'Loader Ttf' },
       { id: Example.Loaders.Stl, title: 'Loader Stl' },
       { id: Example.Loaders.Gltfs.Gltf, title: 'Loader Gltf' },
-      { id: Example.Loaders.Gltfs.Ktx2, title: 'Loader Gltf + KTX2', maintenance: true },
+      { id: Example.Loaders.Gltfs.Ktx2, title: 'Loader Gltf + KTX2' },
       { id: Example.Loaders.Gltfs.Iridescence, title: 'Loader Gltf Iridescence' },
       { id: Example.Loaders.Gltfs.Sheen, title: 'Loader Gltf Sheen' },
       { id: Example.StorageBuffer, title: 'Storage Buffer' },

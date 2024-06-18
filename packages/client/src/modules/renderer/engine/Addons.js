@@ -106,4 +106,4 @@ export * from './textures/FlakesTexture.ts';
 export * as BufferGeometryUtils from '@modules/renderer/engine/utils/BufferGeometryUtils.js';
 export * as GeometryUtils from '@modules/renderer/engine/utils/GeometryUtils.js';
 export * from '@modules/renderer/engine/utils/TextureUtils.js';
-export * from '@modules/renderer/engine/utils/WorkerPool.js';
+export * from '@modules/renderer/engine/utils/WorkerPool.ts';
