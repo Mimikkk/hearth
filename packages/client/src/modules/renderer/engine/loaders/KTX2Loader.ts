@@ -222,7 +222,9 @@ class KTX2Loader extends Loader {
       .then(() => {
         return this.workerPool.postMessage({ type: 'transcode', buffer, taskConfig: taskConfig }, [buffer]);
       })
-      .then(e => this._createTextureFrom(e.data, container));
+      .then(e => {
+        return this._createTextureFrom(e.data, container);
+      });
 
     // Cache the task result.
     _taskCache.set(buffer, { promise: texturePending });
@@ -273,11 +275,11 @@ KTX2Loader.EngineFormat = {
   RGBA_BPTC_Format: CompressedPixelFormat.RGBA_BPTC,
   RGBA_ETC2_EAC_Format: CompressedPixelFormat.RGBA_ETC2_EAC,
   RGBA_PVRTC_4BPPV1_Format: CompressedPixelFormat.RGBA_PVRTC_4BPPV1,
+  RGBA_S3TC_DXT1_Format: CompressedPixelFormat.RGBA_S3TC_DXT1,
   RGBA_S3TC_DXT5_Format: CompressedPixelFormat.RGBA_S3TC_DXT5,
   RGB_ETC1_Format: CompressedPixelFormat.RGB_ETC1,
   RGB_ETC2_Format: CompressedPixelFormat.RGB_ETC2,
   RGB_PVRTC_4BPPV1_Format: CompressedPixelFormat.RGB_PVRTC_4BPPV1,
-  RGB_S3TC_DXT1_Format: CompressedPixelFormat.RGBA_S3TC_DXT1,
 };
 
 /* WEB WORKER */
@@ -355,6 +357,7 @@ KTX2Loader.BasisWorker = function () {
     const dfdFlags = ktx2File.getDFDFlags();
 
     const { transcoderFormat, engineFormat } = getTranscoderFormat(basisFormat, width, height, hasAlpha);
+    // console.log({ transcoderFormat, engineFormat });
 
     if (!width || !height || !levelCount) {
       cleanup();
@@ -490,6 +493,7 @@ KTX2Loader.BasisWorker = function () {
       needsPowerOfTwo: true,
     },
   ];
+  console.log({ FORMAT_OPTIONS });
 
   const ETC1S_OPTIONS = FORMAT_OPTIONS.sort(function (a, b) {
     return a.priorityETC1S - b.priorityETC1S;
@@ -514,6 +518,8 @@ KTX2Loader.BasisWorker = function () {
 
       transcoderFormat = opt.transcoderFormat[hasAlpha ? 1 : 0];
       engineFormat = opt.engineFormat[hasAlpha ? 1 : 0];
+
+      // console.log({ engineFormat, opt: opt.engineFormat });
 
       return { transcoderFormat, engineFormat };
     }
