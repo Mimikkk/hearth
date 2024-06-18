@@ -1,56 +1,56 @@
 import { CompressedPixelFormat, TextureFormat } from '@modules/renderer/engine/constants.js';
-import { WasmBuffer } from '@zd/basis';
-import { BASIS } from './basis_transcoder.js';
+import { Basis, createBasis } from '@zd/basis';
 
-export interface KTX2File {
-  isValid(): boolean;
+type ResultTranscode = {
+  type: 'transcode';
+  hasAlpha: boolean;
+  format: number;
+  height: number;
+  width: number;
+  dfdFlags: number;
+  faces: any[];
+  id: any;
+};
 
-  isUASTC(): boolean;
+type ResultError = {
+  type: 'error';
+  error: Error;
+  id: string;
+};
 
-  getWidth(): number;
+export type TranscoderResult = ResultTranscode | ResultError;
 
-  getHeight(): number;
+export namespace TranscoderResult {
+  export const error = (id: string, error: Error): ResultError => ({ type: 'error', id, error });
 
-  getLayers(): number | undefined;
-
-  getLevels(): number;
-
-  getFaces(): number;
-
-  getHasAlpha(): boolean;
-
-  getDFDFlags(): number;
-
-  startTranscoding(): boolean;
-
-  getImageLevelInfo(
-    mip: number,
-    layer: number,
-    face: number,
-  ): {
-    width: number;
-    height: number;
-    origWidth: number;
-    origHeight: number;
-  };
-
-  getImageTranscodedSizeInBytes(mip: number, layer: number, face: number, format: number): number;
-
-  transcodeImage(
-    dst: Uint8Array,
-    mip: number,
-    layer: number,
-    face: number,
-    format: number,
-    unused: number,
-    unused2: number,
-    unused3: number,
-  ): boolean;
-
-  close(): void;
-
-  delete(): void;
+  export const transcode = (
+    id: string,
+    { faces, width, height, hasAlpha, format, dfdFlags }: TranscodeResult,
+  ): ResultTranscode => ({ type: 'transcode', id, faces, width, height, hasAlpha, format, dfdFlags });
 }
+
+export type Mipmap = {
+  data: Uint8Array;
+  width: number;
+  height: number;
+};
+
+export type Face = {
+  mipmaps: Mipmap[];
+  width: number;
+  height: number;
+  format: number;
+};
+
+export type TranscodeResult = {
+  buffers: ArrayBuffer[];
+  hasAlpha: boolean;
+  format: number;
+  height: number;
+  width: number;
+  dfdFlags: number;
+  faces: Face[];
+};
 
 export type WorkerConfig = {
   astcSupported: boolean;
@@ -62,13 +62,8 @@ export type WorkerConfig = {
 };
 
 let config: WorkerConfig;
-let BasisModule: {
-  wasmBinary: ArrayBuffer;
-  onRuntimeInitialized: (value: unknown) => void;
-  initializeBasis: () => void;
-  KTX2File: new (array: Uint8Array) => KTX2File;
-};
-let transcoderPending: Promise<void>;
+let BasisModule: Basis;
+let transcoderPending: Promise<Basis>;
 
 const BasisFormat = {
   ETC1S: 0,
@@ -112,7 +107,10 @@ self.addEventListener('message', ({ data: message }) => {
   switch (message.type) {
     case 'init':
       config = message.config;
-      init();
+      transcoderPending = createBasis();
+      transcoderPending.then(module => {
+        BasisModule = module;
+      });
       break;
     case 'transcode':
       transcoderPending.then(() => {
@@ -128,55 +126,6 @@ self.addEventListener('message', ({ data: message }) => {
       break;
   }
 });
-
-type ResultTranscode = {
-  type: 'transcode';
-  hasAlpha: boolean;
-  format: number;
-  height: number;
-  width: number;
-  dfdFlags: number;
-  faces: any[];
-  id: any;
-};
-
-type ResultError = {
-  type: 'error';
-  error: Error;
-  id: string;
-};
-
-export type TranscoderResult = ResultTranscode | ResultError;
-
-export namespace TranscoderResult {
-  export const error = (id: string, error: Error): ResultError => ({ type: 'error', id, error });
-
-  export const transcode = (
-    id: string,
-    { faces, width, height, hasAlpha, format, dfdFlags }: TranscodeResult,
-  ): ResultTranscode => ({ type: 'transcode', id, faces, width, height, hasAlpha, format, dfdFlags });
-}
-
-type TranscodeResult = {
-  buffers: ArrayBuffer[];
-  hasAlpha: boolean;
-  format: number;
-  height: number;
-  width: number;
-  dfdFlags: number;
-  faces: any[];
-  id: any;
-};
-
-function init() {
-  transcoderPending = new Promise(resolve => {
-    BasisModule = <typeof BasisModule>{ wasmBinary: WasmBuffer, onRuntimeInitialized: resolve };
-    BASIS(BasisModule);
-  }).then(() => {
-    BasisModule.initializeBasis();
-  });
-}
-
 function transcode(buffer: ArrayBuffer): TranscodeResult {
   const ktx2File = new BasisModule.KTX2File(new Uint8Array(buffer));
 
@@ -186,7 +135,7 @@ function transcode(buffer: ArrayBuffer): TranscodeResult {
   };
   const raise = (message: string) => {
     cleanup();
-    return Error('KTX2Loader: Invalid or unsupported .ktx2 file');
+    return Error(message);
   };
 
   const result = () => {
@@ -209,22 +158,19 @@ function transcode(buffer: ArrayBuffer): TranscodeResult {
   const { transcoderFormat, engineFormat } = getTranscoderFormat(basisFormat, width, height, hasAlpha);
 
   if (!width || !height || !levelCount) throw raise('Invalid or unsupported texture');
+  if (!ktx2File.startTranscoding()) throw raise('.startTranscoding failed');
 
-  if (!ktx2File.startTranscoding()) {
-    cleanup();
-    throw new Error('THREE.KTX2Loader: .startTranscoding failed');
-  }
-
-  const faces: any[] = [];
+  const faces: Face[] = [];
   const buffers: ArrayBuffer[] = [];
 
   for (let face = 0; face < faceCount; face++) {
-    const mipmaps = [];
+    const mipmaps: Mipmap[] = [];
 
     for (let mip = 0; mip < levelCount; mip++) {
       const layerMips = [];
 
-      let mipWidth, mipHeight;
+      let mipWidth!: number;
+      let mipHeight!: number;
 
       for (let layer = 0; layer < layerCount; layer++) {
         const levelInfo = ktx2File.getImageLevelInfo(mip, layer, face);
@@ -345,8 +291,8 @@ function getTranscoderFormat(
     if (option.needsPowerOfTwo && !(isPowerOfTwo(width) && isPowerOfTwo(height))) continue;
 
     return {
-      transcoderFormat: option.transcoderFormat[hasAlpha ? 1 : 0],
-      engineFormat: option.engineFormat[hasAlpha ? 1 : 0],
+      transcoderFormat: option.transcoderFormat[hasAlpha ? 1 : 0]!,
+      engineFormat: option.engineFormat[hasAlpha ? 1 : 0]!,
     };
   }
 
