@@ -14,7 +14,7 @@ const Backdrop = () => (
 
 const Unavailable = () => (
   <div class="w-full h-full center flex flex-col">
-    <span class="text-primary-8 flex gap-1 center">
+    <span class="text-primary-dark flex gap-1 center">
       <Icon name="BiSolidCog" size="lg" class="h-6 w-6" />
       <span class="text-primary-5">WebGPU</span> is unavailable under this browser
     </span>
