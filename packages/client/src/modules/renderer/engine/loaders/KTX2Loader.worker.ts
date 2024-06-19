@@ -65,43 +65,43 @@ let config: WorkerConfig;
 let BasisModule: Basis;
 let transcoderPending: Promise<Basis>;
 
-const BasisFormat = {
-  ETC1S: 0,
-  UASTC_4x4: 1,
-};
+enum BasisFormat {
+  ETC1S = 0,
+  UASTC_4x4 = 1,
+}
 
-const TranscoderFormat = {
-  ETC1: 0,
-  ETC2: 1,
-  BC1: 2,
-  BC3: 3,
-  BC4: 4,
-  BC5: 5,
-  BC7_M6_OPAQUE_ONLY: 6,
-  BC7_M5: 7,
-  PVRTC1_4_RGB: 8,
-  PVRTC1_4_RGBA: 9,
-  ASTC_4x4: 10,
-  ATC_RGB: 11,
-  ATC_RGBA_INTERPOLATED_ALPHA: 12,
-  RGBA32: 13,
-  RGB565: 14,
-  BGR565: 15,
-  RGBA4444: 16,
-};
+enum TranscoderFormat {
+  ETC1 = 0,
+  ETC2 = 1,
+  BC1 = 2,
+  BC3 = 3,
+  BC4 = 4,
+  BC5 = 5,
+  BC7_M6_OPAQUE_ONLY = 6,
+  BC7_M5 = 7,
+  PVRTC1_4_RGB = 8,
+  PVRTC1_4_RGBA = 9,
+  ASTC_4x4 = 10,
+  ATC_RGB = 11,
+  ATC_RGBA_INTERPOLATED_ALPHA = 12,
+  RGBA32 = 13,
+  RGB565 = 14,
+  BGR565 = 15,
+  RGBA4444 = 16,
+}
 
-const EngineFormat = {
-  RGBAFormat: TextureFormat.RGBA,
-  RGBA_ASTC_4x4_Format: CompressedPixelFormat.RGBA_ASTC_4x4,
-  RGBA_BPTC_Format: CompressedPixelFormat.RGBA_BPTC,
-  RGBA_ETC2_EAC_Format: CompressedPixelFormat.RGBA_ETC2_EAC,
-  RGBA_PVRTC_4BPPV1_Format: CompressedPixelFormat.RGBA_PVRTC_4BPPV1,
-  RGBA_S3TC_DXT1_Format: CompressedPixelFormat.RGBA_S3TC_DXT1,
-  RGBA_S3TC_DXT5_Format: CompressedPixelFormat.RGBA_S3TC_DXT5,
-  RGB_ETC1_Format: CompressedPixelFormat.RGB_ETC1,
-  RGB_ETC2_Format: CompressedPixelFormat.RGB_ETC2,
-  RGB_PVRTC_4BPPV1_Format: CompressedPixelFormat.RGB_PVRTC_4BPPV1,
-};
+enum EngineFormat {
+  RGBAFormat = TextureFormat.RGBA,
+  RGBA_ASTC_4x4_Format = CompressedPixelFormat.RGBA_ASTC_4x4,
+  RGBA_BPTC_Format = CompressedPixelFormat.RGBA_BPTC,
+  RGBA_ETC2_EAC_Format = CompressedPixelFormat.RGBA_ETC2_EAC,
+  RGBA_PVRTC_4BPPV1_Format = CompressedPixelFormat.RGBA_PVRTC_4BPPV1,
+  RGBA_S3TC_DXT1_Format = CompressedPixelFormat.RGBA_S3TC_DXT1,
+  RGBA_S3TC_DXT5_Format = CompressedPixelFormat.RGBA_S3TC_DXT5,
+  RGB_ETC1_Format = CompressedPixelFormat.RGB_ETC1,
+  RGB_ETC2_Format = CompressedPixelFormat.RGB_ETC2,
+  RGB_PVRTC_4BPPV1_Format = CompressedPixelFormat.RGB_PVRTC_4BPPV1,
+}
 
 self.addEventListener('message', ({ data: message }) => {
   switch (message.type) {
@@ -126,6 +126,7 @@ self.addEventListener('message', ({ data: message }) => {
       break;
   }
 });
+
 function transcode(buffer: ArrayBuffer): TranscodeResult {
   const ktx2File = new BasisModule.KTX2File(new Uint8Array(buffer));
 
@@ -215,7 +216,17 @@ function transcode(buffer: ArrayBuffer): TranscodeResult {
   return result();
 }
 
-const FormatOptions = [
+interface Option {
+  if: keyof WorkerConfig;
+  basisFormat: BasisFormat[];
+  transcoderFormat: TranscoderFormat[];
+  engineFormat: EngineFormat[];
+  priorityETC1S: number;
+  priorityUASTC: number;
+  needsPowerOfTwo: boolean;
+}
+
+const Etc1sOptions: Option[] = [
   {
     if: 'astcSupported',
     basisFormat: [BasisFormat.UASTC_4x4],
@@ -224,7 +235,7 @@ const FormatOptions = [
     priorityETC1S: Infinity,
     priorityUASTC: 1,
     needsPowerOfTwo: false,
-  } as const,
+  },
   {
     if: 'bptcSupported',
     basisFormat: [BasisFormat.ETC1S, BasisFormat.UASTC_4x4],
@@ -233,16 +244,7 @@ const FormatOptions = [
     priorityETC1S: 3,
     priorityUASTC: 2,
     needsPowerOfTwo: false,
-  } as const,
-  {
-    if: 'dxtSupported',
-    basisFormat: [BasisFormat.ETC1S, BasisFormat.UASTC_4x4],
-    transcoderFormat: [TranscoderFormat.BC1, TranscoderFormat.BC3],
-    engineFormat: [EngineFormat.RGBA_S3TC_DXT1_Format, EngineFormat.RGBA_S3TC_DXT5_Format],
-    priorityETC1S: 4,
-    priorityUASTC: 5,
-    needsPowerOfTwo: false,
-  } as const,
+  },
   {
     if: 'etc2Supported',
     basisFormat: [BasisFormat.ETC1S, BasisFormat.UASTC_4x4],
@@ -251,7 +253,7 @@ const FormatOptions = [
     priorityETC1S: 1,
     priorityUASTC: 3,
     needsPowerOfTwo: false,
-  } as const,
+  },
   {
     if: 'etc1Supported',
     basisFormat: [BasisFormat.ETC1S, BasisFormat.UASTC_4x4],
@@ -260,7 +262,16 @@ const FormatOptions = [
     priorityETC1S: 2,
     priorityUASTC: 4,
     needsPowerOfTwo: false,
-  } as const,
+  },
+  {
+    if: 'dxtSupported',
+    basisFormat: [BasisFormat.ETC1S, BasisFormat.UASTC_4x4],
+    transcoderFormat: [TranscoderFormat.BC1, TranscoderFormat.BC3],
+    engineFormat: [EngineFormat.RGBA_S3TC_DXT1_Format, EngineFormat.RGBA_S3TC_DXT5_Format],
+    priorityETC1S: 4,
+    priorityUASTC: 5,
+    needsPowerOfTwo: false,
+  },
   {
     if: 'pvrtcSupported',
     basisFormat: [BasisFormat.ETC1S, BasisFormat.UASTC_4x4],
@@ -269,17 +280,19 @@ const FormatOptions = [
     priorityETC1S: 5,
     priorityUASTC: 6,
     needsPowerOfTwo: true,
-  } as const,
+  },
 ];
-const Etc1sOptions = FormatOptions.sort((a, b) => a.priorityETC1S - b.priorityETC1S);
-const UastcOptions = FormatOptions.sort((a, b) => a.priorityUASTC - b.priorityUASTC);
+const UastcOptions = Etc1sOptions.toSorted((a, b) => a.priorityUASTC - b.priorityUASTC);
 
 function getTranscoderFormat(
-  basisFormat: (typeof BasisFormat)[keyof typeof BasisFormat],
+  basisFormat: BasisFormat,
   width: number,
   height: number,
   hasAlpha: boolean,
-) {
+): {
+  transcoderFormat: TranscoderFormat;
+  engineFormat: EngineFormat;
+} {
   const options = basisFormat === BasisFormat.ETC1S ? Etc1sOptions : UastcOptions;
 
   for (let i = 0; i < options.length; ++i) {
@@ -300,11 +313,11 @@ function getTranscoderFormat(
   return { transcoderFormat: TranscoderFormat.RGBA32, engineFormat: EngineFormat.RGBAFormat };
 }
 
-function isPowerOfTwo(value: number) {
+function isPowerOfTwo(value: number): boolean {
   return value <= 2 || ((value & (value - 1)) === 0 && value !== 0);
 }
 
-function concat(arrays: Uint8Array[]) {
+function concat(arrays: Uint8Array[]): Uint8Array {
   if (arrays.length === 1) return arrays[0];
 
   let totalByteLength = 0;

@@ -42,7 +42,7 @@ import { ZSTDDecoder } from 'zstddec';
 import { FileLoader, FileLoaderResponse } from '@modules/renderer/engine/loaders/FileLoader.js';
 import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
 import LoadWorker from './KTX2Loader.worker.ts?worker';
-import type { WorkerConfig, TranscoderResult } from './KTX2Loader.worker.ts';
+import type { TranscoderResult, WorkerConfig } from './KTX2Loader.worker.ts';
 import { classLoader } from '@modules/renderer/engine/loaders/types.js';
 
 let _activeLoaders = 0;
@@ -187,7 +187,7 @@ async function createRawTexture(container: KTX2Container) {
 
     const level = container.levels[levelIndex];
 
-    let levelData;
+    let levelData!: Uint8Array;
 
     if (container.supercompressionScheme === KHR_SUPERCOMPRESSION_NONE) {
       levelData = level.levelData;
@@ -223,20 +223,25 @@ async function createRawTexture(container: KTX2Container) {
 
   let texture;
 
-  if (UNCOMPRESSED_FORMATS.has(FORMAT_MAP[vkFormat])) {
+  if (UNCOMPRESSED_FORMATS.has(FORMAT_MAP[vkFormat as keyof typeof FORMAT_MAP] as TextureFormat)) {
     texture =
       container.pixelDepth === 0
-        ? new DataTexture(mipmaps[0].data, container.pixelWidth, container.pixelHeight)
+        ? /*@ts-expect-error*/
+          new DataTexture(mipmaps[0].data, container.pixelWidth, container.pixelHeight)
         : new Data3DTexture(mipmaps[0].data, container.pixelWidth, container.pixelHeight, container.pixelDepth);
   } else {
     if (container.pixelDepth > 0) throw new Error('engine.KTX2Loader: Unsupported pixelDepth.');
 
+    /*@ts-expect-error*/
     texture = new CompressedTexture(mipmaps, container.pixelWidth, container.pixelHeight);
   }
 
+  /*@ts-expect-error*/
   texture.mipmaps = mipmaps;
 
+  /*@ts-expect-error*/
   texture.type = TYPE_MAP[vkFormat];
+  /*@ts-expect-error*/
   texture.format = FORMAT_MAP[vkFormat];
   texture.colorSpace = parseColorSpace(container);
   texture.needsUpdate = true;
