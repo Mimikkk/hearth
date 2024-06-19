@@ -6,7 +6,7 @@ import { IESSpotLight } from '@modules/renderer/engine/lights/IESSpotLight.js';
 
 import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
 
-import { IESLoader } from '@modules/renderer/engine/loaders/IESLoader.js';
+import { IESLoader } from '@modules/renderer/engine/loaders/lights/IESLoader/IESLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let renderer, scene, camera;

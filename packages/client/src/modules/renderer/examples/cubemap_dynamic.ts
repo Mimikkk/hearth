@@ -7,8 +7,8 @@ import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.j
 
 import { GUI } from 'lil-gui';
 import Stats from 'stats-js';
-import { RGBMLoader } from '@modules/renderer/engine/loaders/RGBMLoader.js';
-import { TextureLoader } from '@modules/renderer/engine/loaders/TextureLoader.js';
+import { RGBMLoader } from '@modules/renderer/engine/loaders/textures/RGBMLoader/RGBMLoader.js';
+import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, renderer, stats;

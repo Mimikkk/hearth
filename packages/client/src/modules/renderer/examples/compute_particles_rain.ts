@@ -27,7 +27,7 @@ import Stats from 'stats-js';
 import { GUI } from 'lil-gui';
 
 import * as BufferGeometryUtils from '@modules/renderer/engine/utils/BufferGeometryUtils.js';
-import { BufferGeometryLoader } from '@modules/renderer/engine/loaders/BufferGeometryLoader.js';
+import { BufferGeometryLoader } from '@modules/renderer/engine/loaders/geometries/BufferGeometryLoader/BufferGeometryLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 const maxParticleCount = 50000;

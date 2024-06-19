@@ -1,9 +1,9 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
-import { Font } from '@modules/renderer/engine/loaders/FontLoader.js';
-import { TTFLoader } from '@modules/renderer/engine/loaders/TTFLoader.js';
+import { TTFLoader } from '@modules/renderer/engine/loaders/fonts/TTFLoader/TTFLoader.js';
 import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
 import { TextGeometry } from '@modules/renderer/engine/geometries/TextGeometry.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
+import { FontManager } from '@modules/renderer/engine/loaders/fonts/FontManager.js';
 
 let camera, cameraTarget, scene, renderer;
 let group, textMesh1, textMesh2, textGeo, material;
@@ -66,7 +66,7 @@ function init() {
 
   const loader = new TTFLoader();
   loader.loadAsync('fonts/kenpixel.ttf').then(json => {
-    font = new Font(json);
+    font = new FontManager(json);
 
     createText();
   });

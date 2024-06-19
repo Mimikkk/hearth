@@ -30,7 +30,7 @@ import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPU
 import { TeapotGeometry } from '@modules/renderer/engine/geometries/TeapotGeometry.js';
 
 import Stats from 'stats-js';
-import { TextureLoader } from '@modules/renderer/engine/loaders/TextureLoader.js';
+import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let stats;

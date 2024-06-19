@@ -36,7 +36,6 @@ export { DepthTexture } from './textures/DepthTexture.ts';
 export { Texture } from './textures/Texture.ts';
 export * from './geometries/Geometries.ts';
 export * from './materials/Materials.ts';
-export { Loader } from './loaders/Loader.ts';
 export { LoaderUtils } from './loaders/LoaderUtils.ts';
 export { SpotLight } from './lights/SpotLight.ts';
 export { PointLight } from './lights/PointLight.ts';

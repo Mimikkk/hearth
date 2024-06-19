@@ -5,7 +5,7 @@ import Stats from 'stats-js';
 import { GUI } from 'lil-gui';
 
 import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
-import { BufferGeometryLoader } from '@modules/renderer/engine/loaders/BufferGeometryLoader.js';
+import { BufferGeometryLoader } from '@modules/renderer/engine/loaders/geometries/BufferGeometryLoader/BufferGeometryLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, renderer, stats;

@@ -1,5 +1,5 @@
-import { GLTFLoader } from '@modules/renderer/engine/loaders/GLTFLoader.js';
-import { KTX2Loader } from '@modules/renderer/engine/loaders/KTX2Loader.js';
+import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/GLTFLoader.js';
+import { KTX2Loader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/KTX2Loader.js';
 import { MeshoptDecoder } from 'meshoptimizer';
 
 import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';

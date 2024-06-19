@@ -16,11 +16,11 @@ import {
   vec2,
 } from '@modules/renderer/engine/nodes/Nodes.js';
 
-import { KTX2Loader } from '@modules/renderer/engine/loaders/KTX2Loader.js';
+import { KTX2Loader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/KTX2Loader.js';
 
 import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
 import { TextureFormat } from '@modules/renderer/engine/engine.js';
-import { TextureLoader } from '@modules/renderer/engine/loaders/TextureLoader.js';
+import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, renderer;

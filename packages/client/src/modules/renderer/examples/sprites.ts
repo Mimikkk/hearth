@@ -2,7 +2,7 @@ import * as Engine from '@modules/renderer/engine/engine.js';
 import { color, rangeFog, SpriteNodeMaterial, texture, userData, uv } from '@modules/renderer/engine/nodes/Nodes.js';
 
 import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
-import { TextureLoader } from '@modules/renderer/engine/loaders/TextureLoader.js';
+import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, renderer;

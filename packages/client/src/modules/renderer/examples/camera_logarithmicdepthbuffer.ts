@@ -1,13 +1,14 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
 import { PerspectiveCamera, Scene } from '@modules/renderer/engine/engine.js';
 
-import { Font, FontLoader } from '@modules/renderer/engine/loaders/FontLoader.js';
+import { FontLoader } from '@modules/renderer/engine/loaders/fonts/FontLoader/FontLoader.js';
 import { TextGeometry } from '@modules/renderer/engine/geometries/TextGeometry.js';
 
 import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
 import Stats from 'stats-js';
 import { ColorRepresentation } from '@modules/renderer/engine/math/Color.js';
 import { clamp } from 'lodash-es';
+import { FontManager } from '@modules/renderer/engine/loaders/fonts/FontManager.js';
 
 let screensplit = 0.25;
 let screensplit_right = 0;
@@ -137,7 +138,7 @@ const createBorderEvents = (border: HTMLDivElement) => {
   border.addEventListener('pointerdown', onUp);
 };
 
-const createScene = (font: Font): Scene => {
+const createScene = (font: FontManager): Scene => {
   const scene = new Engine.Scene();
 
   scene.add(new Engine.AmbientLight(0x777777));
@@ -250,8 +251,7 @@ const init = async () => {
     createCameraView(normal, 'normal'),
     createCameraView(logarithmic, 'logarithmic'),
   ]);
-  scene = createScene(font);
-
+  scene = createScene(FontManager.create(font));
   objects = createViews(normalView, logarithmicView);
 
   stats = new Stats();

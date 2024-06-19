@@ -14,7 +14,7 @@ import {
 
 import { GUI } from 'lil-gui';
 
-import { GLTFLoader } from '@modules/renderer/engine/loaders/GLTFLoader.js';
+import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/GLTFLoader.js';
 
 import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
 

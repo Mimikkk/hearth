@@ -5,10 +5,10 @@ import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPU
 
 import PostProcessing from '@modules/renderer/engine/renderers/common/PostProcessing.js';
 
-import { RGBMLoader } from '@modules/renderer/engine/loaders/RGBMLoader.js';
+import { RGBMLoader } from '@modules/renderer/engine/loaders/textures/RGBMLoader/RGBMLoader.js';
 
 import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
-import { GLTFLoader } from '@modules/renderer/engine/loaders/GLTFLoader.js';
+import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/GLTFLoader.js';
 
 import { GUI } from 'lil-gui';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';

@@ -5,7 +5,7 @@ import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPU
 
 import Stats from 'stats-js';
 import { unzipSync } from 'fflate';
-import { FileLoader, FileLoaderResponse } from '@modules/renderer/engine/loaders/FileLoader.js';
+import { FileLoader, ResponseType } from '@modules/renderer/engine/loaders/files/FileLoader/FileLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, mesh, renderer, stats;
@@ -24,7 +24,7 @@ function init() {
 
   scene = new Engine.Scene();
 
-  FileLoader.loadAsync('textures/3d/head256x256x109.zip', { responseType: FileLoaderResponse.Buffer }).then(data => {
+  FileLoader.loadAsync('textures/3d/head256x256x109.zip', { responseType: ResponseType.Buffer }).then(data => {
     const zip = unzipSync(new Uint8Array(data));
     const array = new Uint8Array(zip['head256x256x109'].buffer);
 

@@ -5,10 +5,10 @@ import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPU
 import Stats from 'stats-js';
 
 import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
-import { HDRCubeTextureLoader } from '@modules/renderer/engine/loaders/HDRCubeTextureLoader.js';
+import { HDRCubeTextureLoader } from '@modules/renderer/engine/loaders/textures/HDRCubeTextureLoader/HDRCubeTextureLoader.js';
 
 import { FlakesTexture } from '@modules/renderer/engine/textures/FlakesTexture.js';
-import { TextureLoader } from '@modules/renderer/engine/loaders/TextureLoader.js';
+import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let container, stats;

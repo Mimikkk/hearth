@@ -66,17 +66,17 @@ export * from '@modules/renderer/engine/lines/LineSegmentsGeometry.ts';
 export * from '@modules/renderer/engine/lines/Wireframe.ts';
 export * from '@modules/renderer/engine/lines/WireframeGeometry2.ts';
 
-export * from './loaders/FontLoader.ts';
-export * from './loaders/GLTFLoader.ts';
-export * from './loaders/HDRCubeTextureLoader.ts';
-export * from './loaders/IESLoader.ts';
-export * from './loaders/KTX2Loader.ts';
-export * from './loaders/OBJLoader.ts';
-export * from './loaders/RGBELoader.ts';
-export * from './loaders/RGBMLoader.ts';
-export * from './loaders/STLLoader.ts';
-export * from './loaders/TIFFLoader.ts';
-export * from './loaders/TTFLoader.ts';
+export * from '@modules/renderer/engine/loaders/fonts/FontLoader/FontLoader.ts';
+export * from '@modules/renderer/engine/loaders/objects/GLTFLoader/GLTFLoader.ts';
+export * from '@modules/renderer/engine/loaders/textures/HDRCubeTextureLoader/HDRCubeTextureLoader.ts';
+export * from '@modules/renderer/engine/loaders/lights/IESLoader/IESLoader.ts';
+export * from '@modules/renderer/engine/loaders/objects/GLTFLoader/KTX2Loader.ts';
+export * from '@modules/renderer/engine/loaders/objects/OBJLoader/OBJLoader.ts';
+export * from '@modules/renderer/engine/loaders/textures/RGBELoader/RGBELoader.ts';
+export * from '@modules/renderer/engine/loaders/textures/RGBMLoader/RGBMLoader.ts';
+export * from '@modules/renderer/engine/loaders/objects/STLLoader/STLLoader.ts';
+export * from '@modules/renderer/engine/loaders/textures/TIFFLoader/TIFFLoader.ts';
+export * from '@modules/renderer/engine/loaders/fonts/TTFLoader/TTFLoader.ts';
 
 export * from './math/Capsule.ts';
 export * from './math/ColorConverter.ts';

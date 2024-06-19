@@ -10,7 +10,7 @@ import {
   viewportTopLeft,
 } from '@modules/renderer/engine/nodes/Nodes.js';
 
-import { GLTFLoader } from '@modules/renderer/engine/loaders/GLTFLoader.js';
+import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/GLTFLoader.js';
 
 import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
 import PostProcessing from '@modules/renderer/engine/renderers/common/PostProcessing.js';
@@ -19,7 +19,7 @@ import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.j
 
 import Stats from 'stats-js';
 import { ColorSpace } from '@modules/renderer/engine/engine.js';
-import { TextureLoader } from '@modules/renderer/engine/loaders/TextureLoader.js';
+import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, renderer;

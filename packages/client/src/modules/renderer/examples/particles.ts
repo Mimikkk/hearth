@@ -16,7 +16,7 @@ import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPU
 
 import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
 import { Blending } from '@modules/renderer/engine/engine.js';
-import { TextureLoader } from '@modules/renderer/engine/loaders/TextureLoader.js';
+import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, renderer;

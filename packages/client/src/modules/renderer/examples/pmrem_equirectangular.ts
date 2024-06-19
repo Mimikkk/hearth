@@ -12,7 +12,7 @@ import {
 
 import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
 
-import { RGBELoader } from '@modules/renderer/engine/loaders/RGBELoader.js';
+import { RGBELoader } from '@modules/renderer/engine/loaders/textures/RGBELoader/RGBELoader.js';
 
 import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
 

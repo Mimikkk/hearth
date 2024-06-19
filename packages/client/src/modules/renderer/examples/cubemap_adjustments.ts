@@ -14,13 +14,13 @@ import {
 
 import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
 
-import { RGBMLoader } from '@modules/renderer/engine/loaders/RGBMLoader.js';
+import { RGBMLoader } from '@modules/renderer/engine/loaders/textures/RGBMLoader/RGBMLoader.js';
 
 import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
-import { GLTFLoader } from '@modules/renderer/engine/loaders/GLTFLoader.js';
+import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/GLTFLoader.js';
 
 import { GUI } from 'lil-gui';
-import { CubeTextureLoader } from '@modules/renderer/engine/loaders/CubeTextureLoader.js';
+import { CubeTextureLoader } from '@modules/renderer/engine/loaders/textures/CubeTextureLoader/CubeTextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, renderer;

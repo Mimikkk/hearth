@@ -7,7 +7,7 @@ import { Fog } from '../engine/scenes/Fog';
 import { Mesh } from '../engine/objects/Mesh';
 import { PlaneGeometry } from '../engine/geometries/PlaneGeometry';
 import { MeshPhongMaterial } from '../engine/materials/MeshPhongMaterial';
-import { STLLoader } from '../engine/loaders/STLLoader';
+import { STLLoader } from '@modules/renderer/engine/loaders/objects/STLLoader/STLLoader.js';
 import { HemisphereLight } from '../engine/lights/HemisphereLight';
 import { DirectionalLight } from '../engine/lights/DirectionalLight';
 import { WebGPURenderer } from '../engine/renderers/webgpu/WebGPURenderer';

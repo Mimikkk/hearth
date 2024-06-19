@@ -1,7 +1,7 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
 import { toneMapping } from '@modules/renderer/engine/nodes/Nodes.js';
 
-import { GLTFLoader } from '@modules/renderer/engine/loaders/GLTFLoader.js';
+import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/GLTFLoader.js';
 
 import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';

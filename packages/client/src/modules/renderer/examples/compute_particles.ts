@@ -18,7 +18,7 @@ import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.j
 import Stats from 'stats-js';
 
 import { GUI } from 'lil-gui';
-import { TextureLoader } from '@modules/renderer/engine/loaders/TextureLoader.js';
+import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 const particleCount = 1000000;

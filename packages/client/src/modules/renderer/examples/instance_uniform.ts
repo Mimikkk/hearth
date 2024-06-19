@@ -15,7 +15,7 @@ import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.j
 import { TeapotGeometry } from '@modules/renderer/engine/geometries/TeapotGeometry.js';
 
 import Stats from 'stats-js';
-import { CubeTextureLoader } from '@modules/renderer/engine/loaders/CubeTextureLoader.js';
+import { CubeTextureLoader } from '@modules/renderer/engine/loaders/textures/CubeTextureLoader/CubeTextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 class InstanceUniformNode extends Node {

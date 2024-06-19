@@ -5,7 +5,7 @@ import { MeshBasicMaterial } from '@modules/renderer/engine/materials/MeshBasicM
 import { Mesh } from '@modules/renderer/engine/objects/Mesh.js';
 import { ColorSpace } from '../engine/constants.ts';
 import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
-import { TiffLoader } from '@modules/renderer/engine/loaders/TIFFLoader.js';
+import { TiffLoader } from '@modules/renderer/engine/loaders/textures/TIFFLoader/TIFFLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 import { DataTexture } from '@modules/renderer/engine/textures/DataTexture.js';
 
