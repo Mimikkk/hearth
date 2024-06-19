@@ -75,6 +75,7 @@ export const Example = {
     Gltfs: {
       Gltf: 'loader_gltf',
       Ktx2: 'loader_gltf_ktx2',
+      Draco: 'loader_gltf_draco',
       Iridescence: 'loader_gltf_iridescence',
       Sheen: 'loader_gltf_sheen',
     },

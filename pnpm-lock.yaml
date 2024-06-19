@@ -212,14 +212,14 @@ packages:
   '@arktype/fs@0.0.11':
     resolution: {integrity: sha512-f3p8apUMOTl6KlFNTrOX6twQJDeSdSmtYPVca7SaQjUUTAxfUlaROY1/i1C3y2llYDrrQBEbsggk8k2Oxxgrvw==}
 
-  '@arktype/schema@0.1.11':
-    resolution: {integrity: sha512-fLbwFRwSLkpOi39/D+yrRRcbXVlYk1WINisRKnV+TbatrOLYQ89DBkQjEJEA+G/eDWUOKejnIoOD3CQL+ngZMg==}
+  '@arktype/schema@0.1.16':
+    resolution: {integrity: sha512-Y2BrHO1yJT9fiMvM2H0RuPROqCYSHY2HRCZM1GH2WdCDcoipkRUTGEJxduIUimWUikPfR/EQRMnCkD86DMit4A==}
 
   '@arktype/util@0.0.20':
     resolution: {integrity: sha512-Wv7lx8lFTPHXLnNi8v4LPEUyml9M2yqeWhRk/Vmejci/XZvR49bD9qEAw7xtIyWDlx8yE84XkXMhHFY2/3fYEQ==}
 
-  '@arktype/util@0.0.47':
-    resolution: {integrity: sha512-hLFA4vgjd8klYXlMUccPH7Nra3F+OmhmoFgRnpu6AbQrcPvUZe+xBYU40fjavZpGlgGovLePZNoZIYPEBJigjQ==}
+  '@arktype/util@0.0.49':
+    resolution: {integrity: sha512-ptlPUDZ8EECx23S7OjQnMulUSt8lmhxq5pQXmiyMlVt9g9EhUOVpdFrNqSCntFURtennxwFDJaYa+7rKQrGrew==}
 
   '@babel/code-frame@7.23.5':
     resolution: {integrity: sha512-CgH3s1a96LipHCmSUmYFPwY7MNx8C3avkq7i4Wl3cfa662ldtUe4VM1TPXX70pfmrlWTb6jLqTYrZyT2ZTJBgA==}
@@ -889,8 +889,8 @@ packages:
   argparse@2.0.1:
     resolution: {integrity: sha512-8+9WqebbFzpX9OR+Wa6O29asIogeRMzcGtAINdpMHHyAg10f05aSFVBbcEqGf/PXw1EjAZ+q2/bEBg3DvurK3Q==}
 
-  arktype@2.0.0-dev.19:
-    resolution: {integrity: sha512-0/CehWThtbwlb3nlkiaYcxeRxHcjfVy2+ylGw9/HlHeBKkNmFcla0/JcAaxhwLHfxHgy1Q8tvH6f01qdhG/QOg==}
+  arktype@2.0.0-dev.24:
+    resolution: {integrity: sha512-Nlrrj7Ma8T5iBFmHpxeq16GdM4cvTOweLLnAc0k4GAqZx3WzGTTDosw+9sDFYgsYhCKAVZTdPg44ORR/WprQhA==}
 
   assertion-error@1.1.0:
     resolution: {integrity: sha512-jgsaNduz+ndvGyFt3uSuWqvy4lCnIJiovtouQN5JZHOKCS2QuhEdbcQHFhVksz2N2U9hXJo8odG7ETyWlEeuDw==}
@@ -2444,20 +2444,20 @@ snapshots:
       '@arktype/util': 0.0.20
       '@typescript/analyze-trace': 0.10.1
       '@typescript/vfs': 1.5.0
-      arktype: 2.0.0-dev.19
+      arktype: 2.0.0-dev.24
       typescript: 5.4.2
     transitivePeerDependencies:
       - supports-color
 
   '@arktype/fs@0.0.11': {}
 
-  '@arktype/schema@0.1.11':
+  '@arktype/schema@0.1.16':
     dependencies:
-      '@arktype/util': 0.0.47
+      '@arktype/util': 0.0.49
 
   '@arktype/util@0.0.20': {}
 
-  '@arktype/util@0.0.47': {}
+  '@arktype/util@0.0.49': {}
 
   '@babel/code-frame@7.23.5':
     dependencies:
@@ -3150,10 +3150,10 @@ snapshots:
 
   argparse@2.0.1: {}
 
-  arktype@2.0.0-dev.19:
+  arktype@2.0.0-dev.24:
     dependencies:
-      '@arktype/schema': 0.1.11
-      '@arktype/util': 0.0.47
+      '@arktype/schema': 0.1.16
+      '@arktype/util': 0.0.49
 
   assertion-error@1.1.0: {}
 

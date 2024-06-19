@@ -4,6 +4,7 @@ import {
   Box3,
   BufferAttribute,
   BufferGeometry,
+  Camera,
   Color,
   ColorManagement,
   ColorSpace,
@@ -20,7 +21,6 @@ import {
   LineBasicMaterial,
   LineLoop,
   LineSegments,
-  Loader,
   LoaderUtils,
   Material,
   MathUtils,
@@ -54,108 +54,99 @@ import { toTrianglesDrawMode } from '../utils/BufferGeometryUtils.js';
 import { FileLoader, FileLoaderResponse } from '@modules/renderer/engine/loaders/FileLoader.js';
 import { ImageBitmapLoader } from './ImageBitmapLoader.ts';
 import { TextureLoader } from '@modules/renderer/engine/loaders/TextureLoader.js';
+import { KTX2Loader } from '@modules/renderer/engine/loaders/KTX2Loader.js';
+import { MeshoptDecoder } from 'meshoptimizer';
+import { DRACOLoader } from '@modules/renderer/engine/loaders/DRACOLoader.js';
 
-class GLTFLoader extends Loader {
-  constructor(manager) {
-    super(manager);
+export type PluginFn = (parser: Parser) => Plugin;
 
+export interface Plugin {
+  readonly name: string;
+  beforeRoot?: (() => Promise<void> | null) | undefined;
+  afterRoot?: ((result: GLTF) => Promise<void> | null) | undefined;
+  loadNode?: ((nodeIndex: number) => Promise<Object3D> | null) | undefined;
+  loadMesh?: ((meshIndex: number) => Promise<Group | Mesh | SkinnedMesh> | null) | undefined;
+  loadBufferView?: ((bufferViewIndex: number) => Promise<ArrayBuffer> | null) | undefined;
+  loadMaterial?: ((materialIndex: number) => Promise<Material> | null) | undefined;
+  loadTexture?: ((textureIndex: number) => Promise<Texture> | null) | undefined;
+  getMaterialType?: ((materialIndex: number) => typeof Material | null) | undefined;
+  extendMaterialParams?:
+    | ((materialIndex: number, materialParams: { [key: string]: any }) => Promise<any> | null)
+    | undefined;
+  createNodeMesh?: ((nodeIndex: number) => Promise<Group | Mesh | SkinnedMesh> | null) | undefined;
+  createNodeAttachment?: ((nodeIndex: number) => Promise<Object3D> | null) | undefined;
+}
+
+export interface GLTF {
+  animations: AnimationClip[];
+  scene: Group;
+  scenes: Group[];
+  cameras: Camera[];
+  asset: {
+    copyright?: string | undefined;
+    generator?: string | undefined;
+    version?: string | undefined;
+    minVersion?: string | undefined;
+    extensions?: any;
+    extras?: any;
+  };
+  parser: Parser;
+  userData: Record<string, any>;
+}
+
+class GLTFLoader {
+  dracoLoader: null | DRACOLoader;
+  ktx2Loader: null | KTX2Loader;
+  meshoptDecoder: null | MeshoptDecoder;
+  pluginCallbacks: PluginFn[];
+
+  constructor() {
     this.dracoLoader = null;
     this.ktx2Loader = null;
     this.meshoptDecoder = null;
-
-    this.pluginCallbacks = [];
-
-    this.register(function (parser) {
-      return new GLTFMaterialsClearcoatExtension(parser);
-    });
-
-    this.register(function (parser) {
-      return new GLTFMaterialsDispersionExtension(parser);
-    });
-
-    this.register(function (parser) {
-      return new GLTFTextureBasisUExtension(parser);
-    });
-
-    this.register(function (parser) {
-      return new GLTFTextureWebPExtension(parser);
-    });
-
-    this.register(function (parser) {
-      return new GLTFTextureAVIFExtension(parser);
-    });
-
-    this.register(function (parser) {
-      return new GLTFMaterialsSheenExtension(parser);
-    });
-
-    this.register(function (parser) {
-      return new GLTFMaterialsTransmissionExtension(parser);
-    });
-
-    this.register(function (parser) {
-      return new GLTFMaterialsVolumeExtension(parser);
-    });
-
-    this.register(function (parser) {
-      return new GLTFMaterialsIorExtension(parser);
-    });
-
-    this.register(function (parser) {
-      return new GLTFMaterialsEmissiveStrengthExtension(parser);
-    });
-
-    this.register(function (parser) {
-      return new GLTFMaterialsSpecularExtension(parser);
-    });
-
-    this.register(function (parser) {
-      return new GLTFMaterialsIridescenceExtension(parser);
-    });
-
-    this.register(function (parser) {
-      return new GLTFMaterialsAnisotropyExtension(parser);
-    });
-
-    this.register(function (parser) {
-      return new GLTFMaterialsBumpExtension(parser);
-    });
-
-    this.register(function (parser) {
-      return new GLTFLightsExtension(parser);
-    });
-
-    this.register(function (parser) {
-      return new GLTFMeshoptCompression(parser);
-    });
-
-    this.register(function (parser) {
-      return new GLTFMeshGpuInstancing(parser);
-    });
+    this.pluginCallbacks = [
+      parser => new GLTFMaterialsClearcoatExtension(parser),
+      parser => new GLTFMaterialsDispersionExtension(parser),
+      parser => new GLTFTextureBasisUExtension(parser),
+      parser => new GLTFTextureWebPExtension(parser),
+      parser => new GLTFTextureAVIFExtension(parser),
+      parser => new GLTFMaterialsSheenExtension(parser),
+      parser => new GLTFMaterialsTransmissionExtension(parser),
+      parser => new GLTFMaterialsVolumeExtension(parser),
+      parser => new GLTFMaterialsIorExtension(parser),
+      parser => new GLTFMaterialsEmissiveStrengthExtension(parser),
+      parser => new GLTFMaterialsSpecularExtension(parser),
+      parser => new GLTFMaterialsIridescenceExtension(parser),
+      parser => new GLTFMaterialsAnisotropyExtension(parser),
+      parser => new GLTFMaterialsBumpExtension(parser),
+      parser => new GLTFLightsExtension(parser),
+      parser => new GLTFMeshoptCompression(parser),
+      parser => new GLTFMeshGpuInstancing(parser),
+    ];
   }
 
-  async loadAsync(url, onLoad, onProgress, onError) {
-    const buffer = await FileLoader.loadAsync(url, { responseType: FileLoaderResponse.Buffer });
+  async loadAsync(url, handlers) {
+    const buffer = await FileLoader.loadAsync(url, { responseType: FileLoaderResponse.Buffer }, handlers);
 
     return this.parse(buffer, LoaderUtils.extractUrlBase(url));
   }
 
-  setDRACOLoader(dracoLoader) {
+  setDRACOLoader(dracoLoader: DRACOLoader): this {
     this.dracoLoader = dracoLoader;
     return this;
   }
 
-  setKTX2Loader(ktx2Loader) {
+  setKTX2Loader(ktx2Loader: KTX2Loader): this {
     this.ktx2Loader = ktx2Loader;
     return this;
   }
 
-  setMeshoptDecoder(meshoptDecoder) {
+  setMeshoptDecoder(meshoptDecoder: MeshoptDecoder): this {
     this.meshoptDecoder = meshoptDecoder;
     return this;
   }
 
-  register(callback) {
+  register(callback: PluginFn) {
     if (this.pluginCallbacks.indexOf(callback) === -1) {
       this.pluginCallbacks.push(callback);
     }
@@ -163,7 +154,7 @@ class GLTFLoader extends Loader {
     return this;
   }
 
-  unregister(callback) {
+  unregister(callback: PluginFn) {
     if (this.pluginCallbacks.indexOf(callback) !== -1) {
       this.pluginCallbacks.splice(this.pluginCallbacks.indexOf(callback), 1);
     }
@@ -171,7 +162,7 @@ class GLTFLoader extends Loader {
     return this;
   }
 
-  parse(data, path) {
+  parse(data: ArrayBuffer, path: string) {
     let json;
     const extensions = {};
     const plugins = {};
@@ -187,7 +178,7 @@ class GLTFLoader extends Loader {
       json = JSON.parse(textDecoder.decode(data));
     }
 
-    const parser = new GLTFParser(json, {
+    const parser = new Parser(json, {
       path: path || this.resourcePath || '',
       crossOrigin: this.crossOrigin,
       requestHeader: this.requestHeader,
@@ -295,7 +286,7 @@ const EXTENSIONS = {
  *
  * Specification: https://github.com/KhronosGroup/glTF/tree/master/extensions/2.0/Khronos/KHR_lights_punctual
  */
-class GLTFLightsExtension {
+class GLTFLightsExtension implements Plugin {
   constructor(parser) {
     this.parser = parser;
     this.name = EXTENSIONS.KHR_LIGHTS_PUNCTUAL;
@@ -413,7 +404,7 @@ class GLTFLightsExtension {
  *
  * Specification: https://github.com/KhronosGroup/glTF/tree/master/extensions/2.0/Khronos/KHR_materials_unlit
  */
-class GLTFMaterialsUnlitExtension {
+class GLTFMaterialsUnlitExtension implements Plugin {
   constructor() {
     this.name = EXTENSIONS.KHR_MATERIALS_UNLIT;
   }
@@ -452,7 +443,7 @@ class GLTFMaterialsUnlitExtension {
  *
  * Specification: https://github.com/KhronosGroup/glTF/blob/5768b3ce0ef32bc39cdf1bef10b948586635ead3/extensions/2.0/Khronos/KHR_materials_emissive_strength/README.md
  */
-class GLTFMaterialsEmissiveStrengthExtension {
+class GLTFMaterialsEmissiveStrengthExtension implements Plugin {
   constructor(parser) {
     this.parser = parser;
     this.name = EXTENSIONS.KHR_MATERIALS_EMISSIVE_STRENGTH;
@@ -481,7 +472,7 @@ class GLTFMaterialsEmissiveStrengthExtension {
  *
  * Specification: https://github.com/KhronosGroup/glTF/tree/master/extensions/2.0/Khronos/KHR_materials_clearcoat
  */
-class GLTFMaterialsClearcoatExtension {
+class GLTFMaterialsClearcoatExtension implements Plugin {
   constructor(parser) {
     this.parser = parser;
     this.name = EXTENSIONS.KHR_MATERIALS_CLEARCOAT;
@@ -543,7 +534,7 @@ class GLTFMaterialsClearcoatExtension {
  *
  * Specification: https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_materials_dispersion
  */
-class GLTFMaterialsDispersionExtension {
+class GLTFMaterialsDispersionExtension implements Plugin {
   constructor(parser) {
     this.parser = parser;
     this.name = EXTENSIONS.KHR_MATERIALS_DISPERSION;
@@ -579,7 +570,7 @@ class GLTFMaterialsDispersionExtension {
  *
  * Specification: https://github.com/KhronosGroup/glTF/tree/master/extensions/2.0/Khronos/KHR_materials_iridescence
  */
-class GLTFMaterialsIridescenceExtension {
+class GLTFMaterialsIridescenceExtension implements Plugin {
   constructor(parser) {
     this.parser = parser;
     this.name = EXTENSIONS.KHR_MATERIALS_IRIDESCENCE;
@@ -645,7 +636,7 @@ class GLTFMaterialsIridescenceExtension {
  *
  * Specification: https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_materials_sheen
  */
-class GLTFMaterialsSheenExtension {
+class GLTFMaterialsSheenExtension implements Plugin {
   constructor(parser) {
     this.parser = parser;
     this.name = EXTENSIONS.KHR_MATERIALS_SHEEN;
@@ -703,7 +694,7 @@ class GLTFMaterialsSheenExtension {
  * Specification: https://github.com/KhronosGroup/glTF/tree/master/extensions/2.0/Khronos/KHR_materials_transmission
  * Draft: https://github.com/KhronosGroup/glTF/pull/1698
  */
-class GLTFMaterialsTransmissionExtension {
+class GLTFMaterialsTransmissionExtension implements Plugin {
   constructor(parser) {
     this.parser = parser;
     this.name = EXTENSIONS.KHR_MATERIALS_TRANSMISSION;
@@ -747,7 +738,7 @@ class GLTFMaterialsTransmissionExtension {
  *
  * Specification: https://github.com/KhronosGroup/glTF/tree/master/extensions/2.0/Khronos/KHR_materials_volume
  */
-class GLTFMaterialsVolumeExtension {
+class GLTFMaterialsVolumeExtension implements Plugin {
   constructor(parser) {
     this.parser = parser;
     this.name = EXTENSIONS.KHR_MATERIALS_VOLUME;
@@ -799,7 +790,7 @@ class GLTFMaterialsVolumeExtension {
  *
  * Specification: https://github.com/KhronosGroup/glTF/tree/master/extensions/2.0/Khronos/KHR_materials_ior
  */
-class GLTFMaterialsIorExtension {
+class GLTFMaterialsIorExtension implements Plugin {
   constructor(parser) {
     this.parser = parser;
     this.name = EXTENSIONS.KHR_MATERIALS_IOR;
@@ -835,7 +826,7 @@ class GLTFMaterialsIorExtension {
  *
  * Specification: https://github.com/KhronosGroup/glTF/tree/master/extensions/2.0/Khronos/KHR_materials_specular
  */
-class GLTFMaterialsSpecularExtension {
+class GLTFMaterialsSpecularExtension implements Plugin {
   constructor(parser) {
     this.parser = parser;
     this.name = EXTENSIONS.KHR_MATERIALS_SPECULAR;
@@ -891,7 +882,7 @@ class GLTFMaterialsSpecularExtension {
  *
  * Specification: https://github.com/KhronosGroup/glTF/tree/master/extensions/2.0/Khronos/EXT_materials_bump
  */
-class GLTFMaterialsBumpExtension {
+class GLTFMaterialsBumpExtension implements Plugin {
   constructor(parser) {
     this.parser = parser;
     this.name = EXTENSIONS.EXT_MATERIALS_BUMP;
@@ -933,7 +924,7 @@ class GLTFMaterialsBumpExtension {
  *
  * Specification: https://github.com/KhronosGroup/glTF/tree/master/extensions/2.0/Khronos/KHR_materials_anisotropy
  */
-class GLTFMaterialsAnisotropyExtension {
+class GLTFMaterialsAnisotropyExtension implements Plugin {
   constructor(parser) {
     this.parser = parser;
     this.name = EXTENSIONS.KHR_MATERIALS_ANISOTROPY;
@@ -981,13 +972,13 @@ class GLTFMaterialsAnisotropyExtension {
  *
  * Specification: https://github.com/KhronosGroup/glTF/tree/master/extensions/2.0/Khronos/KHR_texture_basisu
  */
-class GLTFTextureBasisUExtension {
+class GLTFTextureBasisUExtension implements Plugin {
   constructor(parser) {
     this.parser = parser;
     this.name = EXTENSIONS.KHR_TEXTURE_BASISU;
   }
 
-  async loadTexture(textureIndex) {
+  loadTexture(textureIndex) {
     const parser = this.parser;
     const json = parser.json;
 
@@ -1009,7 +1000,7 @@ class GLTFTextureBasisUExtension {
       }
     }
 
-    return await parser.loadTextureImage(textureIndex, extension.source, loader);
+    return parser.loadTextureImage(textureIndex, extension.source, loader);
   }
 }
 
@@ -1018,7 +1009,7 @@ class GLTFTextureBasisUExtension {
  *
  * Specification: https://github.com/KhronosGroup/glTF/tree/master/extensions/2.0/Vendor/EXT_texture_webp
  */
-class GLTFTextureWebPExtension {
+class GLTFTextureWebPExtension implements Plugin {
   constructor(parser) {
     this.parser = parser;
     this.name = EXTENSIONS.EXT_TEXTURE_WEBP;
@@ -1077,7 +1068,7 @@ class GLTFTextureWebPExtension {
  *
  * Specification: https://github.com/KhronosGroup/glTF/tree/master/extensions/2.0/Vendor/EXT_texture_avif
  */
-class GLTFTextureAVIFExtension {
+class GLTFTextureAVIFExtension implements Plugin {
   constructor(parser) {
     this.parser = parser;
     this.name = EXTENSIONS.EXT_TEXTURE_AVIF;
@@ -1135,7 +1126,7 @@ class GLTFTextureAVIFExtension {
  *
  * Specification: https://github.com/KhronosGroup/glTF/tree/master/extensions/2.0/Vendor/EXT_meshopt_compression
  */
-class GLTFMeshoptCompression {
+class GLTFMeshoptCompression implements Plugin {
   constructor(parser) {
     this.name = EXTENSIONS.EXT_MESHOPT_COMPRESSION;
     this.parser = parser;
@@ -1203,7 +1194,7 @@ class GLTFMeshoptCompression {
  * Specification: https://github.com/KhronosGroup/glTF/tree/master/extensions/2.0/Vendor/EXT_mesh_gpu_instancing
  *
  */
-class GLTFMeshGpuInstancing {
+class GLTFMeshGpuInstancing implements Plugin {
   constructor(parser) {
     this.name = EXTENSIONS.EXT_MESH_GPU_INSTANCING;
     this.parser = parser;
@@ -1322,7 +1313,7 @@ const BINARY_EXTENSION_HEADER_MAGIC = 'glTF';
 const BINARY_EXTENSION_HEADER_LENGTH = 12;
 const BINARY_EXTENSION_CHUNK_TYPES = { JSON: 0x4e4f534a, BIN: 0x004e4942 };
 
-class GLTFBinaryExtension {
+class GLTFBinaryExtension implements Plugin {
   constructor(data) {
     this.name = EXTENSIONS.KHR_BINARY_GLTF;
     this.content = null;
@@ -1378,7 +1369,7 @@ class GLTFBinaryExtension {
  *
  * Specification: https://github.com/KhronosGroup/glTF/tree/master/extensions/2.0/Khronos/KHR_draco_mesh_compression
  */
-class GLTFDracoMeshCompressionExtension {
+class GLTFDracoMeshCompressionExtension implements Plugin {
   constructor(json, dracoLoader) {
     if (!dracoLoader) {
       throw new Error('THREE.GLTFLoader: No DRACOLoader instance provided.');
@@ -1446,7 +1437,7 @@ class GLTFDracoMeshCompressionExtension {
  *
  * Specification: https://github.com/KhronosGroup/glTF/tree/master/extensions/2.0/Khronos/KHR_texture_transform
  */
-class GLTFTextureTransformExtension {
+class GLTFTextureTransformExtension implements Plugin {
   constructor() {
     this.name = EXTENSIONS.KHR_TEXTURE_TRANSFORM;
   }
@@ -1491,7 +1482,7 @@ class GLTFTextureTransformExtension {
  *
  * Specification: https://github.com/KhronosGroup/glTF/tree/master/extensions/2.0/Khronos/KHR_mesh_quantization
  */
-class GLTFMeshQuantizationExtension {
+class GLTFMeshQuantizationExtension implements Plugin {
   constructor() {
     this.name = EXTENSIONS.KHR_MESH_QUANTIZATION;
   }
@@ -1717,7 +1708,7 @@ function assignExtrasToUserData(object, gltfDef) {
  *
  * @param {BufferGeometry} geometry
  * @param {Array<GLTF.Target>} targets
- * @param {GLTFParser} parser
+ * @param {Parser} parser
  * @return {Promise<BufferGeometry>}
  */
 function addMorphTargets(geometry, targets, parser) {
@@ -1886,7 +1877,7 @@ const _identityMatrix = new Matrix4();
 
 /* GLTF PARSER */
 
-class GLTFParser {
+class Parser {
   constructor(json = {}, options = {}) {
     this.json = json;
     this.extensions = {};
@@ -2401,11 +2392,8 @@ class GLTFParser {
    */
   loadTexture(textureIndex) {
     const json = this.json;
-    const options = this.options;
     const textureDef = json.textures[textureIndex];
     const sourceIndex = textureDef.source;
-    const sourceDef = json.images[sourceIndex];
-
     let loader = this.textureLoader;
 
     return this.loadTextureImage(textureIndex, sourceIndex, loader);
@@ -2490,11 +2478,18 @@ class GLTFParser {
     }
 
     const promise = Promise.resolve(sourceURI)
-      .then(sourceURI => {
-        return loader.loadAsync(LoaderUtils.resolveUrl(sourceURI, options.path));
+      .then(async sourceURI => {
+        const image = await loader.loadAsync(LoaderUtils.resolveUrl(sourceURI, options.path));
+
+        if (loader instanceof ImageBitmapLoader) {
+          const texture = new Texture(image);
+          texture.needsUpdate = true;
+          return texture;
+        }
+
+        return image;
       })
       .then(texture => {
-        console.log(texture);
         // Clean up resources and configure Texture.
 
         if (isObjectURL === true) {
@@ -3459,7 +3454,7 @@ class GLTFParser {
 /**
  * @param {BufferGeometry} geometry
  * @param {GLTF.Primitive} primitiveDef
- * @param {GLTFParser} parser
+ * @param {Parser} parser
  */
 function computeBounds(geometry, primitiveDef, parser) {
   const attributes = primitiveDef.attributes;
@@ -3546,7 +3541,7 @@ function computeBounds(geometry, primitiveDef, parser) {
 /**
  * @param {BufferGeometry} geometry
  * @param {GLTF.Primitive} primitiveDef
- * @param {GLTFParser} parser
+ * @param {Parser} parser
  * @return {Promise<BufferGeometry>}
  */
 function addPrimitiveAttributes(geometry, primitiveDef, parser) {
