@@ -8,6 +8,7 @@ import { SupportedType } from './parseRGBE.js';
 export type { SupportedType } from './parseRGBE.js';
 
 export class RGBELoader extends classLoader<{
+  This: RGBELoader;
   Url: string;
   Return: DataTexture;
   Options: Options;

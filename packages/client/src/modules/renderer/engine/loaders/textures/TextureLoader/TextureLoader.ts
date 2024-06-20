@@ -11,6 +11,7 @@ const createTexture = (image: HTMLImageElement) => {
 };
 
 export class TextureLoader extends classLoader<{
+  This: TextureLoader;
   Url: string;
   Return: Texture;
   Options: Options;

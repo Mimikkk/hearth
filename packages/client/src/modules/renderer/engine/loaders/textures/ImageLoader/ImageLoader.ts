@@ -2,6 +2,7 @@ import { classLoader } from '../../types.ts';
 import { createImage } from '@modules/renderer/engine/loaders/textures/ImageLoader/createImage.js';
 
 export class ImageLoader extends classLoader<{
+  This: ImageLoader;
   Url: string;
   Return: HTMLImageElement;
   Options: Options;

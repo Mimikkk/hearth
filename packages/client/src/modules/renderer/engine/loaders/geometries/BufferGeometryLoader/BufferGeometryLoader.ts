@@ -4,6 +4,7 @@ import { FileLoader, ResponseType } from '@modules/renderer/engine/loaders/files
 import { parseBufferGeometry } from '@modules/renderer/engine/loaders/geometries/BufferGeometryLoader/parseBufferGeometry.js';
 
 export class BufferGeometryLoader extends classLoader<{
+  This: BufferGeometryLoader;
   Url: string;
   Return: BufferGeometry;
   Options: Options;

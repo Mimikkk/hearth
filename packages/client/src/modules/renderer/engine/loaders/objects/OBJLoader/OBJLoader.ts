@@ -2,9 +2,10 @@ import { Group } from '@modules/renderer/engine/engine.js';
 import { FileLoader, ResponseType } from '@modules/renderer/engine/loaders/files/FileLoader/FileLoader.js';
 import { classLoader } from '@modules/renderer/engine/loaders/types.js';
 import { parseOBJ } from '@modules/renderer/engine/loaders/objects/OBJLoader/parseOBJ.js';
-import { MaterialCreator } from '@modules/renderer/engine/loaders/objects/OBJLoader/MaterialCreator.js';
+import { MTLMaterialCreator } from '@modules/renderer/engine/loaders/objects/OBJLoader/MTLLoader/MTLMaterialCreator.js';
 
 export class OBJLoader extends classLoader<{
+  This: OBJLoader;
   Url: string;
   Return: Group;
   Options: Options;
@@ -24,12 +25,12 @@ export class OBJLoader extends classLoader<{
 export namespace OBJLoader {
   export interface Options {
     fileLoader?: Omit<FileLoader.Options, 'responseType'>;
-    materials?: MaterialCreator;
+    materials?: MTLMaterialCreator;
   }
 
   export interface Configuration {
     fileLoader: FileLoader.Configuration<ResponseType.Text>;
-    materials?: MaterialCreator;
+    materials?: MTLMaterialCreator;
   }
 }
 type Options = OBJLoader.Options;

@@ -4,6 +4,7 @@ import { FileLoader, ResponseType } from '@modules/renderer/engine/loaders/files
 import { parseTiff } from '@modules/renderer/engine/loaders/textures/TIFFLoader/parseTiff.js';
 
 export class TiffLoader extends classLoader<{
+  This: TiffLoader;
   Url: string;
   Return: DataTexture;
   Options: Options;

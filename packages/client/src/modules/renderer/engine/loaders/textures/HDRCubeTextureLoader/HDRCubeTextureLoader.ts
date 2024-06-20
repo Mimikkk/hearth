@@ -9,6 +9,7 @@ export type { SupportedType } from './parseHDRCubeTexture.js';
 export type CubeUrls<T extends string> = [posx: T, negx: T, posy: T, negy: T, posz: T, negz: T];
 
 export class HDRCubeTextureLoader extends classLoader<{
+  This: HDRCubeTextureLoader;
   Url: CubeUrls<string>;
   Return: CubeTexture;
   Options: Options;

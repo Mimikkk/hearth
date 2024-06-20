@@ -12,24 +12,22 @@ import {
   PointsMaterial,
   Vector3,
 } from '@modules/renderer/engine/engine.js';
-import { MaterialCreator } from '@modules/renderer/engine/loaders/objects/OBJLoader/MTLLoader.js';
+import { MTLMaterialCreator } from '@modules/renderer/engine/loaders/objects/OBJLoader/MTLLoader/MTLMaterialCreator.js';
 // o object_name | g group_name
-const _object_pattern = /^[og]\s*(.+)?/;
+const ObjectRe = /^[og]\s*(.+)?/;
 // mtllib file_reference
-const _material_library_pattern = /^mtllib /;
+const MaterialLibRe = /^mtllib /;
 // usemtl material_name
-const _material_use_pattern = /^usemtl /;
+const MaterialUseRe = /^usemtl /;
 // usemap map_name
-const _map_use_pattern = /^usemap /;
-const _face_vertex_data_separator_pattern = /\s+/;
+const MapUseRe = /^usemap /;
+const DelimiterRe = /\s+/;
 
 const _vA = new Vector3();
 const _vB = new Vector3();
 const _vC = new Vector3();
-
 const _ab = new Vector3();
 const _cb = new Vector3();
-
 const _color = new Color();
 
 class ParserState {
@@ -347,7 +345,7 @@ class ParserState {
   }
 }
 
-export async function parseOBJ(text: string, materialCreator?: MaterialCreator): Promise<Group> {
+export async function parseOBJ(text: string, materialCreator?: MTLMaterialCreator): Promise<Group> {
   const state = new ParserState();
 
   if (text.indexOf('\r\n') !== -1) {
@@ -372,7 +370,7 @@ export async function parseOBJ(text: string, materialCreator?: MaterialCreator):
 
     if (lineFirstChar === '#') continue;
     if (lineFirstChar === 'v') {
-      const data = line.split(_face_vertex_data_separator_pattern);
+      const data = line.split(DelimiterRe);
 
       switch (data[0]) {
         case 'v':
@@ -397,7 +395,7 @@ export async function parseOBJ(text: string, materialCreator?: MaterialCreator):
       }
     } else if (lineFirstChar === 'f') {
       const lineData = line.slice(1).trim();
-      const vertexData = lineData.split(_face_vertex_data_separator_pattern);
+      const vertexData = lineData.split(DelimiterRe);
       const faceVertices = [];
 
       // Parse the face vertex data into an easy to work with format
@@ -443,7 +441,7 @@ export async function parseOBJ(text: string, materialCreator?: MaterialCreator):
       const pointData = lineData.split(' ');
 
       state.addPointGeometry(pointData);
-    } else if ((result = _object_pattern.exec(line)) !== null) {
+    } else if ((result = ObjectRe.exec(line)) !== null) {
       // o object_name
       // or
       // g group_name
@@ -453,15 +451,15 @@ export async function parseOBJ(text: string, materialCreator?: MaterialCreator):
       const name = (' ' + result[0].slice(1).trim()).slice(1);
 
       state.startObject(name);
-    } else if (_material_use_pattern.test(line)) {
+    } else if (MaterialUseRe.test(line)) {
       // material
 
       state.object.startMaterial(line.substring(7).trim(), state.materialLibraries);
-    } else if (_material_library_pattern.test(line)) {
+    } else if (MaterialLibRe.test(line)) {
       // mtl file
 
       state.materialLibraries.push(line.substring(7).trim());
-    } else if (_map_use_pattern.test(line)) {
+    } else if (MapUseRe.test(line)) {
       // the line is parsed but ignored since the loader assumes textures are defined MTL files
       // (according to https://www.okino.com/conv/imp_wave.htm, 'usemap' is the old-style Wavefront texture reference method)
 
@@ -552,7 +550,7 @@ export async function parseOBJ(text: string, materialCreator?: MaterialCreator):
         let material = state.materials[materialHash];
 
         if (materialCreator) {
-          material = await materialCreator.create(sourceMaterial.name);
+          material = await materialCreator.loadAsync(sourceMaterial.name);
 
           // mtl etc. loaders probably can't create line materials correctly, copy properties to a line material.
           if (isLine && material && !(material instanceof LineBasicMaterial)) {

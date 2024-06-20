@@ -3,6 +3,7 @@ import { classLoader } from '@modules/renderer/engine/loaders/types.js';
 import { Font } from '@modules/renderer/engine/loaders/fonts/font.js';
 
 export class FontLoader extends classLoader<{
+  This: FontLoader;
   Url: string;
   Return: Font;
   Options: Options;

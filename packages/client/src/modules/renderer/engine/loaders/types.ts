@@ -57,8 +57,8 @@ export type LoadContext<Url extends ILoader.Url, T, C> = LoaderAsync<T, Url> &
   Configurable<C> &
   any;
 
-export type LoadFn<Url extends ILoader.Url, T, C> = (
-  this: LoadContext<Url, T, C>,
+export type LoadFn<This, Url extends ILoader.Url, T, C> = (
+  this: This & LoadContext<Url, T, C>,
   url: Url,
   configuration: C,
   handlers?: LoaderAsync.Handlers,
@@ -66,6 +66,7 @@ export type LoadFn<Url extends ILoader.Url, T, C> = (
 
 export const classLoader = <
   T extends {
+    This: any;
     Url: ILoader.Url;
     Return: any;
     Options: any;
@@ -73,13 +74,12 @@ export const classLoader = <
   },
 >(
   configure: ConfigureFn<T['Options'], T['Configuration']>,
-  loadAsync: LoadFn<T['Url'], T['Return'], T['Configuration']>,
+  loadAsync: LoadFn<T['This'], T['Url'], T['Return'], T['Configuration']>,
 ) =>
   class Loader
     extends classConfigurable<T['Options'], T['Configuration']>(configure)
     implements LoaderAsync<T['Return'], T['Url']>, MultiLoaderAsync<T['Return'], T['Url']>
   {
-    declare static Type: T;
     loadAsyncFn: typeof loadAsync;
 
     constructor(options?: T['Options']) {

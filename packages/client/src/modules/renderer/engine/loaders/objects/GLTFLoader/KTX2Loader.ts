@@ -54,6 +54,7 @@ type TranscoderSignal = {
 };
 
 export class KTX2Loader extends classLoader<{
+  This: KTX2Loader;
   Url: string;
   Return: CompressedCubeTexture | CompressedArrayTexture | CompressedTexture | Data3DTexture | DataTexture;
   Options: Options;
@@ -63,7 +64,7 @@ export class KTX2Loader extends classLoader<{
     fileLoader: FileLoader.configureAs(ResponseType.Buffer, options?.fileLoader),
     workerPoolSize: options?.workerPoolSize ?? 4,
   }),
-  async function (this: { pool: WorkerPool<TranscoderSignal> }, url, configuration, handlers) {
+  async function (this, url, configuration, handlers) {
     const buffer = await FileLoader.loadAsync(url, configuration.fileLoader, handlers);
 
     const container = read(new Uint8Array(buffer));

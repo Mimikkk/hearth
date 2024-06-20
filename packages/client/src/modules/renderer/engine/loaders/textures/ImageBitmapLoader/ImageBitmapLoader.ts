@@ -2,6 +2,7 @@ import { classLoader } from '@modules/renderer/engine/loaders/types.js';
 import { FileLoader, ResponseType } from '@modules/renderer/engine/loaders/files/FileLoader/FileLoader.js';
 
 export class ImageBitmapLoader extends classLoader<{
+  This: ImageBitmapLoader;
   Url: string;
   Return: ImageBitmap;
   Options: Options;

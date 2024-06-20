@@ -6,6 +6,7 @@ import { ResponseMap, ResponseType } from './parseFile.js';
 export { type ResponseMap, ResponseType } from './parseFile.js';
 
 export class FileLoader<RT extends ResponseType> extends classLoader<{
+  This: FileLoader<ResponseType>;
   Url: string;
   Return: ResponseMap[ResponseType];
   Options: Options;

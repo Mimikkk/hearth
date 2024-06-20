@@ -6,6 +6,7 @@ import { parseCubeTexture } from '@modules/renderer/engine/loaders/textures/Cube
 type Urls<T extends string> = [posx: T, negx: T, posy: T, negy: T, posz: T, negz: T];
 
 export class CubeTextureLoader extends classLoader<{
+  This: CubeTextureLoader;
   Url: Urls<string>;
   Return: CubeTexture;
   Options: Options;

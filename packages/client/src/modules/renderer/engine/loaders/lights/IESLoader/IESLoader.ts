@@ -7,6 +7,7 @@ import { parseIES, SupportedType } from './parseIES.js';
 export type { SupportedType, SupportedMap } from './parseIES.js';
 
 export class IESLoader extends classLoader<{
+  This: IESLoader;
   Url: string;
   Return: DataTexture;
   Options: Options;

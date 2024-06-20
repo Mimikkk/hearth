@@ -4,6 +4,7 @@ import { parseTtf } from './parseTtf.js';
 import type { Font } from '../font.js';
 
 export class TTFLoader extends classLoader<{
+  This: TTFLoader;
   Url: string;
   Return: Font;
   Options: Options;

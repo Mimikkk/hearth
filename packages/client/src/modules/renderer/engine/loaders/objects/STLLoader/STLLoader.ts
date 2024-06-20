@@ -4,6 +4,7 @@ import { classLoader } from '@modules/renderer/engine/loaders/types.js';
 import { parseSTL } from '@modules/renderer/engine/loaders/objects/STLLoader/parseSTL.js';
 
 export class STLLoader extends classLoader<{
+  This: STLLoader;
   Url: string;
   Return: BufferGeometry;
   Options: STLLoader.Options;

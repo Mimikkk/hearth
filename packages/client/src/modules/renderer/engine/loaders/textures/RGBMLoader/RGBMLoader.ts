@@ -6,6 +6,7 @@ import { parseRGBM } from '@modules/renderer/engine/loaders/textures/RGBMLoader/
 type Urls<T extends string> = [posx: T, negx: T, posy: T, negy: T, posz: T, negz: T];
 
 export class RGBMLoader extends classLoader<{
+  This: RGBMLoader;
   Url: Urls<string>;
   Return: CubeTexture;
   Options: Options;
