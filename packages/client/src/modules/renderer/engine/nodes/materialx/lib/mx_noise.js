@@ -354,7 +354,7 @@ const mx_hash_int_4 = tslFn(([x_immutable, y_immutable, z_immutable, xx_immutabl
   return mx_bjfinal(a, b, c);
 });
 
-const mx_hash_int = overloadingFn([mx_hash_int_0, mx_hash_int_1, mx_hash_int_2, mx_hash_int_3, mx_hash_int_4]);
+export const mx_hash_int = overloadingFn([mx_hash_int_0, mx_hash_int_1, mx_hash_int_2, mx_hash_int_3, mx_hash_int_4]);
 
 const mx_hash_vec3_0 = tslFn(([x_immutable, y_immutable]) => {
   const y = int(y_immutable).toVar();
@@ -381,7 +381,7 @@ const mx_hash_vec3_1 = tslFn(([x_immutable, y_immutable, z_immutable]) => {
   return result;
 });
 
-const mx_hash_vec3 = overloadingFn([mx_hash_vec3_0, mx_hash_vec3_1]);
+export const mx_hash_vec3 = overloadingFn([mx_hash_vec3_0, mx_hash_vec3_1]);
 
 const mx_perlin_noise_float_0 = tslFn(([p_immutable]) => {
   const p = vec2(p_immutable).toVar();
@@ -440,7 +440,7 @@ const mx_perlin_noise_float_1 = tslFn(([p_immutable]) => {
   return mx_gradient_scale3d(result);
 });
 
-const mx_perlin_noise_float = overloadingFn([mx_perlin_noise_float_0, mx_perlin_noise_float_1]);
+export const mx_perlin_noise_float = overloadingFn([mx_perlin_noise_float_0, mx_perlin_noise_float_1]);
 
 const mx_perlin_noise_vec3_0 = tslFn(([p_immutable]) => {
   const p = vec2(p_immutable).toVar();
@@ -499,7 +499,7 @@ const mx_perlin_noise_vec3_1 = tslFn(([p_immutable]) => {
   return mx_gradient_scale3d(result);
 });
 
-const mx_perlin_noise_vec3 = overloadingFn([mx_perlin_noise_vec3_0, mx_perlin_noise_vec3_1]);
+export const mx_perlin_noise_vec3 = overloadingFn([mx_perlin_noise_vec3_0, mx_perlin_noise_vec3_1]);
 
 const mx_cell_noise_float_0 = tslFn(([p_immutable]) => {
   const p = float(p_immutable).toVar();
@@ -1384,35 +1384,3 @@ mx_worley_noise_vec3_1.setLayout({
     { name: 'metric', type: 'int' },
   ],
 });
-
-export {
-  mx_select,
-  mx_negate_if,
-  mx_floor,
-  mx_floorfrac,
-  mx_bilerp,
-  mx_trilerp,
-  mx_gradient_float,
-  mx_gradient_vec3,
-  mx_gradient_scale2d,
-  mx_gradient_scale3d,
-  mx_rotl32,
-  mx_bjmix,
-  mx_bjfinal,
-  mx_bits_to_01,
-  mx_fade,
-  mx_hash_int,
-  mx_hash_vec3,
-  mx_perlin_noise_float,
-  mx_perlin_noise_vec3,
-  mx_cell_noise_float,
-  mx_cell_noise_vec3,
-  mx_fractal_noise_float,
-  mx_fractal_noise_vec3,
-  mx_fractal_noise_vec2,
-  mx_fractal_noise_vec4,
-  mx_worley_distance,
-  mx_worley_noise_float,
-  mx_worley_noise_vec2,
-  mx_worley_noise_vec3,
-};
