@@ -27,9 +27,9 @@ async function init() {
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.domElement);
   const [uncompressed, lzw, jpeg] = await TiffLoader.loadAsyncMultiple([
-    'textures/tiff/crate_uncompressed.tif',
-    'textures/tiff/crate_lzw.tif',
-    'textures/tiff/crate_jpeg.tif',
+    'resources/textures/tiff/crate_uncompressed.tif',
+    'resources/textures/tiff/crate_lzw.tif',
+    'resources/textures/tiff/crate_jpeg.tif',
   ]);
 
   const mesh1 = createMesh(uncompressed, [-1.125, 0, 0]);

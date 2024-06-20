@@ -20,7 +20,7 @@ async function init() {
   clock = new Engine.Clock();
 
   const loader = new TextureLoader();
-  diffuseMap = await loader.loadAsync('textures/carbon/Carbon.png');
+  diffuseMap = await loader.loadAsync('resources/textures/carbon/Carbon.png');
   diffuseMap.colorSpace = Engine.ColorSpace.SRGB;
   diffuseMap.minFilter = Engine.MinificationTextureFilter.Linear;
   diffuseMap.generateMipmaps = false;

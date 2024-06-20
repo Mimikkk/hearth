@@ -36,7 +36,7 @@ async function init() {
   // textures
 
   const textureLoader = new TextureLoader();
-  const map = await textureLoader.loadAsync('textures/opengameart/smoke1.png');
+  const map = await textureLoader.loadAsync('resources/textures/opengameart/smoke1.png');
 
   // create nodes
 

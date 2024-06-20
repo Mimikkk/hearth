@@ -27,12 +27,12 @@ async function init() {
   // environment
 
   const environmentTexture = new CubeTextureLoader().loadAsync([
-    'textures/cube/Park2/posx.jpg',
-    'textures/cube/Park2/negx.jpg',
-    'textures/cube/Park2/posy.jpg',
-    'textures/cube/Park2/negy.jpg',
-    'textures/cube/Park2/posz.jpg',
-    'textures/cube/Park2/negz.jpg',
+    'resources/textures/cube/Park2/posx.jpg',
+    'resources/textures/cube/Park2/negx.jpg',
+    'resources/textures/cube/Park2/posy.jpg',
+    'resources/textures/cube/Park2/negy.jpg',
+    'resources/textures/cube/Park2/posz.jpg',
+    'resources/textures/cube/Park2/negz.jpg',
   ]);
 
   scene.environment = environmentTexture;
@@ -42,21 +42,21 @@ async function init() {
 
   const loader = new TextureLoader();
 
-  const topTexture = await loader.loadAsync('textures/ambientcg/Ice002_1K-JPG_Color.jpg');
+  const topTexture = await loader.loadAsync('resources/textures/ambientcg/Ice002_1K-JPG_Color.jpg');
   topTexture.colorSpace = Engine.ColorSpace.SRGB;
 
-  const roughnessTexture = await loader.loadAsync('textures/ambientcg/Ice002_1K-JPG_Roughness.jpg');
+  const roughnessTexture = await loader.loadAsync('resources/textures/ambientcg/Ice002_1K-JPG_Roughness.jpg');
   roughnessTexture.colorSpace = Engine.ColorSpace.No;
 
-  const normalTexture = await loader.loadAsync('textures/ambientcg/Ice002_1K-JPG_NormalGL.jpg');
+  const normalTexture = await loader.loadAsync('resources/textures/ambientcg/Ice002_1K-JPG_NormalGL.jpg');
   normalTexture.colorSpace = Engine.ColorSpace.No;
 
-  const displaceTexture = await loader.loadAsync('textures/ambientcg/Ice002_1K-JPG_Displacement.jpg');
+  const displaceTexture = await loader.loadAsync('resources/textures/ambientcg/Ice002_1K-JPG_Displacement.jpg');
   displaceTexture.colorSpace = Engine.ColorSpace.No;
 
   //
 
-  const bottomTexture = await loader.loadAsync('textures/ambientcg/Ice003_1K-JPG_Color.jpg');
+  const bottomTexture = await loader.loadAsync('resources/textures/ambientcg/Ice003_1K-JPG_Color.jpg');
   bottomTexture.colorSpace = Engine.ColorSpace.SRGB;
   bottomTexture.wrapS = Engine.Wrapping.Repeat;
   bottomTexture.wrapT = Engine.Wrapping.Repeat;

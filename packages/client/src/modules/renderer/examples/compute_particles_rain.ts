@@ -270,7 +270,7 @@ function init() {
   //
 
   const loader = new BufferGeometryLoader();
-  loader.loadAsync('models/json/suzanne_buffergeometry.json').then(function (geometry) {
+  loader.loadAsync('resources/models/json/suzanne_buffergeometry.json').then(function (geometry) {
     geometry.computeVertexNormals();
 
     monkey = new Engine.Mesh(geometry, new Engine.MeshStandardMaterial({ roughness: 1, metalness: 0 }));

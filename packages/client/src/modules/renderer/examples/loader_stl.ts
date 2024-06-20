@@ -42,7 +42,7 @@ function init() {
 
   // ASCII file
   const loader = new STLLoader();
-  loader.loadAsync('./models/stl/ascii/slotted_disk.stl').then(function (geometry) {
+  loader.loadAsync('resources/models/stl/ascii/slotted_disk.stl').then(function (geometry) {
     const material = new MeshPhongMaterial({ color: 0xff9c7c, specular: 0x494949, shininess: 200 });
     const mesh = new Mesh(geometry, material);
 
@@ -59,7 +59,7 @@ function init() {
   // Binary files
   const material = new MeshPhongMaterial({ color: 0xd5d5d5, specular: 0x494949, shininess: 200 });
 
-  loader.loadAsync('./models/stl/binary/pr2_head_pan.stl').then(function (geometry) {
+  loader.loadAsync('resources/models/stl/binary/pr2_head_pan.stl').then(function (geometry) {
     const mesh = new Mesh(geometry, material);
 
     mesh.position.set(0, -0.37, -0.6);
@@ -72,7 +72,7 @@ function init() {
     scene.add(mesh);
   });
 
-  loader.loadAsync('./models/stl/binary/pr2_head_tilt.stl').then(function (geometry) {
+  loader.loadAsync('resources/models/stl/binary/pr2_head_tilt.stl').then(function (geometry) {
     const mesh = new Mesh(geometry, material);
 
     mesh.position.set(0.136, -0.37, -0.6);
@@ -86,7 +86,7 @@ function init() {
   });
 
   // Colored binary STL
-  loader.loadAsync('./models/stl/binary/colored.stl').then(function (geometry) {
+  loader.loadAsync('resources/models/stl/binary/colored.stl').then(function (geometry) {
     let meshMaterial = material;
 
     if (geometry.hasColors) {

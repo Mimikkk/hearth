@@ -22,7 +22,7 @@ function init() {
 
   scene = new Engine.Scene();
 
-  RGBELoader.loadAsync('textures/equirectangular/royal_esplanade_1k.hdr').then(texture => {
+  RGBELoader.loadAsync('resources/textures/equirectangular/royal_esplanade_1k.hdr').then(texture => {
     texture.mapping = Engine.Mapping.EquirectangularReflection;
     scene.background = texture;
     scene.environment = texture;
@@ -32,7 +32,7 @@ function init() {
     // model
 
     const loader = new GLTFLoader();
-    loader.loadAsync('models/gltf/DamagedHelmet/glTF/DamagedHelmet.gltf').then(gltf => {
+    loader.loadAsync('resources/models/gltf/DamagedHelmet/glTF/DamagedHelmet.gltf').then(gltf => {
       scene.add(gltf.scene);
 
       render();

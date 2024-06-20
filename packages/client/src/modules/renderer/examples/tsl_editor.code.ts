@@ -4,7 +4,7 @@ import { ColorSpace, Wrapping } from '@modules/renderer/engine/constants.ts';
 import { Color } from '@modules/renderer/engine/math/Color.ts';
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 
-const samplerTexture = await new TextureLoader().loadAsync('./textures/uv_grid_opengl.jpg');
+const samplerTexture = await new TextureLoader().loadAsync('resources/textures/uv_grid_opengl.jpg');
 samplerTexture.wrapS = Wrapping.Repeat;
 samplerTexture.wrapT = Wrapping.Repeat;
 samplerTexture.colorSpace = ColorSpace.SRGB;

@@ -32,7 +32,7 @@ function init() {
   material.colorNode = mix(normalWorld, randomColors, oscSine(timerLocal(0.1)));
 
   const loader = new BufferGeometryLoader();
-  loader.loadAsync('models/json/suzanne_buffergeometry.json').then(function (geometry) {
+  loader.loadAsync('resources/models/json/suzanne_buffergeometry.json').then(function (geometry) {
     geometry.computeVertexNormals();
     geometry.scale(0.5, 0.5, 0.5);
 

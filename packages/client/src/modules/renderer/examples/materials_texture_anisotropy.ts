@@ -61,7 +61,7 @@ async function init() {
 
   const maxAnisotropy = renderer.getMaxAnisotropy();
 
-  const texture1 = await textureLoader.loadAsync('textures/crate.gif');
+  const texture1 = await textureLoader.loadAsync('resources/textures/crate.gif');
   const material1 = new Engine.MeshPhongMaterial({ color: 0xffffff, map: texture1 });
 
   texture1.colorSpace = Engine.ColorSpace.SRGB;
@@ -69,7 +69,7 @@ async function init() {
   texture1.wrapS = texture1.wrapT = Engine.Wrapping.Repeat;
   texture1.repeat.set(512, 512);
 
-  const texture2 = await textureLoader.loadAsync('textures/crate.gif');
+  const texture2 = await textureLoader.loadAsync('resources/textures/crate.gif');
   const material2 = new Engine.MeshPhongMaterial({ color: 0xffffff, map: texture2 });
 
   texture2.colorSpace = Engine.ColorSpace.SRGB;

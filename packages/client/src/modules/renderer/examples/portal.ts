@@ -77,7 +77,7 @@ async function init() {
   // models
 
   const loader = new GLTFLoader();
-  await loader.loadAsync('models/gltf/Xbot.glb').then(function (gltf) {
+  await loader.loadAsync('resources/models/gltf/Xbot.glb').then(function (gltf) {
     const createModel = (colorNode = null) => {
       let object;
 

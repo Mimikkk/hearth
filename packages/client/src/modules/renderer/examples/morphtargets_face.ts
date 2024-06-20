@@ -37,12 +37,12 @@ async function init() {
 
   container.appendChild(renderer.domElement);
 
-  const ktx2Loader = await new KTX2Loader().setTranscoderPath('../engine/libs/basis/').detectSupportAsync(renderer);
+  const ktx2Loader = await new KTX2Loader().detectSupportAsync(renderer);
 
   new GLTFLoader()
     .setKTX2Loader(ktx2Loader)
     .setMeshoptDecoder(MeshoptDecoder)
-    .loadAsync('./models/gltf/facecap.glb', {
+    .loadAsync('resources/models/gltf/facecap.glb', {
       onLoad: gltf => {
         const mesh = gltf.scene.children[0];
 

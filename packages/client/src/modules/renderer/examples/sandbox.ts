@@ -47,18 +47,18 @@ async function init() {
   // textures
 
   const textureLoader = new TextureLoader();
-  const uvTexture = await textureLoader.loadAsync('./textures/uv_grid_opengl.jpg');
+  const uvTexture = await textureLoader.loadAsync('resources/textures/uv_grid_opengl.jpg');
   uvTexture.wrapS = Engine.Wrapping.Repeat;
   uvTexture.wrapT = Engine.Wrapping.Repeat;
   uvTexture.name = 'uv_grid';
 
-  const textureDisplace = await textureLoader.loadAsync('./textures/transition/transition1.png');
+  const textureDisplace = await textureLoader.loadAsync('resources/textures/transition/transition1.png');
   textureDisplace.wrapS = Engine.Wrapping.Repeat;
   textureDisplace.wrapT = Engine.Wrapping.Repeat;
 
-  const ktxLoader = await new KTX2Loader().setTranscoderPath('../engine/libs/basis/').detectSupportAsync(renderer);
+  const ktxLoader = await new KTX2Loader().detectSupportAsync(renderer);
 
-  const ktxTexture = await ktxLoader.loadAsync('./textures/compressed/sample_uastc_zstd.ktx2');
+  const ktxTexture = await ktxLoader.loadAsync('resources/textures/compressed/sample_uastc_zstd.ktx2');
 
   // box mesh
 

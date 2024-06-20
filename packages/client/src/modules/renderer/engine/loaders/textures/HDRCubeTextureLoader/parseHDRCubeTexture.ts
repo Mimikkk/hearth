@@ -6,9 +6,9 @@ import {
   MinificationTextureFilter,
   TextureDataType,
 } from '@modules/renderer/engine/engine.js';
-import { parse, ParseResult } from '../RGBELoader/RGBELoader.js';
+import { parseRGBE } from '@modules/renderer/engine/loaders/textures/RGBELoader/parseRGBE.js';
 
-const createDataTexture = ({ data, width, height }: ParseResult, cube: CubeTexture): DataTexture => {
+const createDataTexture = ({ image: { data, width, height } }: DataTexture, cube: CubeTexture): DataTexture => {
   //@ts-expect-error - improve texture handling
   const texture = new DataTexture(data, width, height);
   texture.type = cube.type;
@@ -30,8 +30,7 @@ export const parseHDRCubeTexture = (buffers: ArrayBuffer[], type: SupportedType)
   texture.minFilter = MinificationTextureFilter.Linear;
   texture.magFilter = MagnificationTextureFilter.Linear;
   texture.generateMipmaps = false;
-
-  texture.images = buffers.map(buffer => createDataTexture(parse(buffer, type), texture));
+  texture.images = buffers.map(buffer => createDataTexture(parseRGBE(buffer, type), texture));
   texture.needsUpdate = true;
 
   return texture;

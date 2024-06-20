@@ -56,14 +56,14 @@ async function init() {
 
   const textureLoader = new TextureLoader();
 
-  const floorNormal = await textureLoader.loadAsync('textures/floors/FloorsCheckerboard_S_Normal.jpg');
+  const floorNormal = await textureLoader.loadAsync('resources/textures/floors/FloorsCheckerboard_S_Normal.jpg');
   floorNormal.wrapS = Engine.Wrapping.Repeat;
   floorNormal.wrapT = Engine.Wrapping.Repeat;
 
-  const decalDiffuse = await textureLoader.loadAsync('textures/decal/decal-diffuse.png');
+  const decalDiffuse = await textureLoader.loadAsync('resources/textures/decal/decal-diffuse.png');
   decalDiffuse.colorSpace = Engine.ColorSpace.SRGB;
 
-  const decalNormal = await textureLoader.loadAsync('textures/decal/decal-normal.jpg');
+  const decalNormal = await textureLoader.loadAsync('resources/textures/decal/decal-normal.jpg');
 
   // reflectors / mirrors
 

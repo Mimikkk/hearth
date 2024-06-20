@@ -48,7 +48,7 @@ scene.add(camera);
 
 const loader = new GLTFLoader();
 let mixer: AnimationMixer;
-loader.loadAsync('models/gltf/Michelle.glb').then(function (gltf) {
+loader.loadAsync('resources/models/gltf/Michelle.glb').then(function (gltf) {
   const object = gltf.scene;
   mixer = new AnimationMixer(object);
 

@@ -36,15 +36,15 @@ async function init() {
 
   scene = new Engine.Scene();
 
-  const uvTexture = await new TextureLoader().loadAsync('./textures/uv_grid_opengl.jpg');
+  const uvTexture = await new TextureLoader().loadAsync('resources/textures/uv_grid_opengl.jpg');
 
   const texture = await new RGBMLoader({ maxRange: 16 }).loadAsync([
-    'textures/cube/pisaRGBM16/px.png',
-    'textures/cube/pisaRGBM16/nx.png',
-    'textures/cube/pisaRGBM16/py.png',
-    'textures/cube/pisaRGBM16/ny.png',
-    'textures/cube/pisaRGBM16/pz.png',
-    'textures/cube/pisaRGBM16/nz.png',
+    'resources/textures/cube/pisaRGBM16/px.png',
+    'resources/textures/cube/pisaRGBM16/nx.png',
+    'resources/textures/cube/pisaRGBM16/py.png',
+    'resources/textures/cube/pisaRGBM16/ny.png',
+    'resources/textures/cube/pisaRGBM16/pz.png',
+    'resources/textures/cube/pisaRGBM16/nz.png',
   ]);
 
   texture.name = 'pisaRGBM16';

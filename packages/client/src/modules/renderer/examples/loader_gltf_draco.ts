@@ -48,7 +48,7 @@ function init() {
   spotLight.position.set(-1, 1, 1);
   scene.add(spotLight);
 
-  dracoLoader.loadAsync('models/draco/bunny.drc').then(function (geometry) {
+  dracoLoader.loadAsync('resources/models/draco/bunny.drc').then(function (geometry) {
     geometry.computeVertexNormals();
 
     const material = new MeshStandardMaterial({ color: 0xa5a5a5 });

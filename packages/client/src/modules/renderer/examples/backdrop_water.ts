@@ -91,7 +91,7 @@ const clock = new Clock();
 let model: Group;
 let mixer: AnimationMixer;
 const loader = new GLTFLoader();
-loader.loadAsync('models/gltf/Michelle.glb').then(gltf => {
+loader.loadAsync('resources/models/gltf/Michelle.glb').then(gltf => {
   model = gltf.scene;
   model.children[0].children[0].castShadow = true;
 
@@ -105,7 +105,7 @@ loader.loadAsync('models/gltf/Michelle.glb').then(gltf => {
 
 // objects
 
-const iceDiffuse = await new TextureLoader().loadAsync('./textures/water/water.jpg');
+const iceDiffuse = await new TextureLoader().loadAsync('resources/textures/water/water.jpg');
 iceDiffuse.wrapS = Wrapping.Repeat;
 iceDiffuse.wrapT = Wrapping.Repeat;
 iceDiffuse.colorSpace = ColorSpace.No;

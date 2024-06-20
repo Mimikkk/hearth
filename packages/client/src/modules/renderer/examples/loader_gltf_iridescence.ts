@@ -35,8 +35,8 @@ async function init() {
   const gltfLoader = new GLTFLoader();
 
   const [texture, gltf] = await Promise.all([
-    RGBELoader.loadAsync('textures/equirectangular/venice_sunset_1k.hdr'),
-    gltfLoader.loadAsync('models/gltf/IridescenceLamp.glb'),
+    RGBELoader.loadAsync('resources/textures/equirectangular/venice_sunset_1k.hdr'),
+    gltfLoader.loadAsync('resources/models/gltf/IridescenceLamp.glb'),
   ]);
 
   // environment

@@ -19,7 +19,7 @@ async function init() {
   camera = new Engine.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.25, 20);
   camera.position.set(1, 0, 0);
 
-  const equirectTexture = await new TextureLoader().loadAsync('textures/2294472375_24a3b8ef46_o.jpg');
+  const equirectTexture = await new TextureLoader().loadAsync('resources/textures/2294472375_24a3b8ef46_o.jpg');
 
   scene = new Engine.Scene();
   scene.backgroundNode = texture(equirectTexture, equirectUV(), 0);

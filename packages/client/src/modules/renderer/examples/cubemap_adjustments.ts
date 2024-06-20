@@ -41,24 +41,24 @@ async function init() {
   // cube textures
 
   const cube1Texture = await new RGBMLoader({ maxRange: 16 }).loadAsync([
-    'textures/cube/pisaRGBM16/px.png',
-    'textures/cube/pisaRGBM16/nx.png',
-    'textures/cube/pisaRGBM16/py.png',
-    'textures/cube/pisaRGBM16/ny.png',
-    'textures/cube/pisaRGBM16/pz.png',
-    'textures/cube/pisaRGBM16/nz.png',
+    'resources/textures/cube/pisaRGBM16/px.png',
+    'resources/textures/cube/pisaRGBM16/nx.png',
+    'resources/textures/cube/pisaRGBM16/py.png',
+    'resources/textures/cube/pisaRGBM16/ny.png',
+    'resources/textures/cube/pisaRGBM16/pz.png',
+    'resources/textures/cube/pisaRGBM16/nz.png',
   ]);
 
   cube1Texture.generateMipmaps = true;
   cube1Texture.minFilter = Engine.MinificationTextureFilter.LinearMipmapLinear;
 
   const cube2Texture = await new CubeTextureLoader().loadAsync([
-    'textures/cube/Park2/posx.jpg',
-    'textures/cube/Park2/negx.jpg',
-    'textures/cube/Park2/posy.jpg',
-    'textures/cube/Park2/negy.jpg',
-    'textures/cube/Park2/posz.jpg',
-    'textures/cube/Park2/negz.jpg',
+    'resources/textures/cube/Park2/posx.jpg',
+    'resources/textures/cube/Park2/negx.jpg',
+    'resources/textures/cube/Park2/posy.jpg',
+    'resources/textures/cube/Park2/negy.jpg',
+    'resources/textures/cube/Park2/posz.jpg',
+    'resources/textures/cube/Park2/negz.jpg',
   ]);
 
   cube2Texture.generateMipmaps = true;
@@ -110,7 +110,7 @@ async function init() {
   // scene objects
 
   const loader = new GLTFLoader();
-  loader.loadAsync('models/gltf/DamagedHelmet/glTF/DamagedHelmet.gltf').then(function (gltf) {
+  loader.loadAsync('resources/models/gltf/DamagedHelmet/glTF/DamagedHelmet.gltf').then(function (gltf) {
     scene.add(gltf.scene);
   });
 

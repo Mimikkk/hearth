@@ -20,10 +20,10 @@ async function init() {
   //
 
   const [iesTexture1, iesTexture2, iesTexture3, iesTexture4] = await IESLoader.loadAsyncMultiple([
-    './ies/007cfb11e343e2f42e3b476be4ab684e.ies',
-    './ies/06b4cfdc8805709e767b5e2e904be8ad.ies',
-    './ies/02a7562c650498ebb301153dbbf59207.ies',
-    './ies/1a936937a49c63374e6d4fbed9252b29.ies',
+    'resources/ies/007cfb11e343e2f42e3b476be4ab684e.ies',
+    'resources/ies/06b4cfdc8805709e767b5e2e904be8ad.ies',
+    'resources/ies/02a7562c650498ebb301153dbbf59207.ies',
+    'resources/ies/1a936937a49c63374e6d4fbed9252b29.ies',
   ]);
 
   //

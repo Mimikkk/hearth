@@ -64,7 +64,7 @@ async function init() {
   // animated model
 
   const loader = new GLTFLoader();
-  loader.loadAsync('models/gltf/Michelle.glb').then(function (gltf) {
+  loader.loadAsync('resources/models/gltf/Michelle.glb').then(function (gltf) {
     model = gltf.scene;
     model.children[0].children[0].castShadow = true;
 
@@ -80,12 +80,12 @@ async function init() {
 
   const textureLoader = new TextureLoader();
 
-  const floorColor = await textureLoader.loadAsync('textures/floors/FloorsCheckerboard_S_Diffuse.jpg');
+  const floorColor = await textureLoader.loadAsync('resources/textures/floors/FloorsCheckerboard_S_Diffuse.jpg');
   floorColor.wrapS = Engine.Wrapping.Repeat;
   floorColor.wrapT = Engine.Wrapping.Repeat;
   floorColor.colorSpace = Engine.ColorSpace.SRGB;
 
-  const floorNormal = await textureLoader.loadAsync('textures/floors/FloorsCheckerboard_S_Normal.jpg');
+  const floorNormal = await textureLoader.loadAsync('resources/textures/floors/FloorsCheckerboard_S_Normal.jpg');
   floorNormal.wrapS = Engine.Wrapping.Repeat;
   floorNormal.wrapT = Engine.Wrapping.Repeat;
 

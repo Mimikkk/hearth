@@ -61,11 +61,11 @@ async function init() {
 
   const textureLoader = new TextureLoader();
 
-  const uvTexture = await textureLoader.loadAsync('./textures/uv_grid_opengl.jpg');
+  const uvTexture = await textureLoader.loadAsync('resources/textures/uv_grid_opengl.jpg');
   uvTexture.wrapS = Engine.Wrapping.Repeat;
   uvTexture.wrapT = Engine.Wrapping.Repeat;
 
-  const opacityTexture = await textureLoader.loadAsync('./textures/alphaMap.jpg');
+  const opacityTexture = await textureLoader.loadAsync('resources/textures/alphaMap.jpg');
   opacityTexture.wrapS = Engine.Wrapping.Repeat;
   opacityTexture.wrapT = Engine.Wrapping.Repeat;
 

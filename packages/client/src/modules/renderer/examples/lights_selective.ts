@@ -36,11 +36,11 @@ async function init() {
 
   const textureLoader = new TextureLoader();
 
-  const normalMapTexture = await textureLoader.loadAsync('./textures/water/Water_1_M_Normal.jpg');
+  const normalMapTexture = await textureLoader.loadAsync('resources/textures/water/Water_1_M_Normal.jpg');
   normalMapTexture.wrapS = Engine.Wrapping.Repeat;
   normalMapTexture.wrapT = Engine.Wrapping.Repeat;
 
-  const alphaTexture = await textureLoader.loadAsync('./textures/roughness_map.jpg');
+  const alphaTexture = await textureLoader.loadAsync('resources/textures/roughness_map.jpg');
   alphaTexture.wrapS = Engine.Wrapping.Repeat;
   alphaTexture.wrapT = Engine.Wrapping.Repeat;
 

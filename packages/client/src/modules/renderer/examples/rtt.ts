@@ -28,7 +28,7 @@ async function init() {
   // textured mesh
 
   const loader = new TextureLoader();
-  const uvTexture = await loader.loadAsync('./textures/uv_grid_opengl.jpg');
+  const uvTexture = await loader.loadAsync('resources/textures/uv_grid_opengl.jpg');
 
   const geometryBox = new Engine.BoxGeometry();
   const materialBox = new MeshBasicNodeMaterial();

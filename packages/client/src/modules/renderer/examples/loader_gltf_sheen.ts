@@ -23,7 +23,7 @@ function init() {
   scene = new Engine.Scene();
   // model
 
-  new GLTFLoader().loadAsync('models/gltf/SheenChair.glb').then(gltf => {
+  new GLTFLoader().loadAsync('resources/models/gltf/SheenChair.glb').then(gltf => {
     scene.add(gltf.scene);
 
     const object = gltf.scene.getObjectByName('SheenChair_fabric');
@@ -44,7 +44,7 @@ function init() {
 
   scene.background = new Engine.Color(0xaaaaaa);
 
-  RGBELoader.loadAsync('textures/equirectangular/royal_esplanade_1k.hdr').then(texture => {
+  RGBELoader.loadAsync('resources/textures/equirectangular/royal_esplanade_1k.hdr').then(texture => {
     texture.mapping = Engine.Mapping.EquirectangularReflection;
 
     scene.background = texture;

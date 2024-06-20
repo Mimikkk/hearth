@@ -247,7 +247,7 @@ const init = async () => {
   border = document.getElementById('border') as HTMLDivElement;
 
   const [font, normalView, logarithmicView] = await Promise.all([
-    FontLoader.loadAsync('fonts/helvetiker_regular.typeface.json'),
+    FontLoader.loadAsync('resources/fonts/helvetiker_regular.typeface.json'),
     createCameraView(normal, 'normal'),
     createCameraView(logarithmic, 'logarithmic'),
   ]);

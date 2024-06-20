@@ -34,32 +34,32 @@ async function init() {
 
   new HDRCubeTextureLoader()
     .loadAsync([
-      'textures/cube/pisaHDR/px.hdr',
-      'textures/cube/pisaHDR/nx.hdr',
-      'textures/cube/pisaHDR/py.hdr',
-      'textures/cube/pisaHDR/ny.hdr',
-      'textures/cube/pisaHDR/pz.hdr',
-      'textures/cube/pisaHDR/nz.hdr',
+      'resources/textures/cube/pisaHDR/px.hdr',
+      'resources/textures/cube/pisaHDR/nx.hdr',
+      'resources/textures/cube/pisaHDR/py.hdr',
+      'resources/textures/cube/pisaHDR/ny.hdr',
+      'resources/textures/cube/pisaHDR/pz.hdr',
+      'resources/textures/cube/pisaHDR/nz.hdr',
     ])
     .then(async texture => {
       const geometry = new Engine.SphereGeometry(0.8, 64, 32);
 
       const textureLoader = new TextureLoader();
 
-      const diffuse = await textureLoader.loadAsync('textures/carbon/Carbon.png');
+      const diffuse = await textureLoader.loadAsync('resources/textures/carbon/Carbon.png');
       diffuse.colorSpace = Engine.ColorSpace.SRGB;
       diffuse.wrapS = Engine.Wrapping.Repeat;
       diffuse.wrapT = Engine.Wrapping.Repeat;
       diffuse.repeat.x = 10;
       diffuse.repeat.y = 10;
 
-      const normalMap = await textureLoader.loadAsync('textures/carbon/Carbon_Normal.png');
+      const normalMap = await textureLoader.loadAsync('resources/textures/carbon/Carbon_Normal.png');
       normalMap.wrapS = Engine.Wrapping.Repeat;
       normalMap.wrapT = Engine.Wrapping.Repeat;
       normalMap.repeat.x = 10;
       normalMap.repeat.y = 10;
 
-      const normalMap2 = await textureLoader.loadAsync('textures/water/Water_1_M_Normal.jpg');
+      const normalMap2 = await textureLoader.loadAsync('resources/textures/water/Water_1_M_Normal.jpg');
 
       const normalMap3 = new Engine.CanvasTexture(new FlakesTexture());
       normalMap3.wrapS = Engine.Wrapping.Repeat;
@@ -68,10 +68,10 @@ async function init() {
       normalMap3.repeat.y = 6;
       normalMap3.anisotropy = 16;
 
-      const normalMap4 = await textureLoader.loadAsync('textures/golfball.jpg');
+      const normalMap4 = await textureLoader.loadAsync('resources/textures/golfball.jpg');
 
       const clearcoatNormalMap = await textureLoader.loadAsync(
-        'textures/pbr/Scratched_gold/Scratched_gold_01_1K_Normal.png',
+        'resources/textures/pbr/Scratched_gold/Scratched_gold_01_1K_Normal.png',
       );
 
       // car paint

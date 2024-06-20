@@ -67,12 +67,12 @@ async function init() {
   // CubeMap
 
   const cTexture = await new CubeTextureLoader().loadAsync([
-    'textures/cube/SwedishRoyalCastle/px.jpg',
-    'textures/cube/SwedishRoyalCastle/nx.jpg',
-    'textures/cube/SwedishRoyalCastle/py.jpg',
-    'textures/cube/SwedishRoyalCastle/ny.jpg',
-    'textures/cube/SwedishRoyalCastle/pz.jpg',
-    'textures/cube/SwedishRoyalCastle/nz.jpg',
+    'resources/textures/cube/SwedishRoyalCastle/px.jpg',
+    'resources/textures/cube/SwedishRoyalCastle/nx.jpg',
+    'resources/textures/cube/SwedishRoyalCastle/py.jpg',
+    'resources/textures/cube/SwedishRoyalCastle/ny.jpg',
+    'resources/textures/cube/SwedishRoyalCastle/pz.jpg',
+    'resources/textures/cube/SwedishRoyalCastle/nz.jpg',
   ]);
 
   // Materials

@@ -49,7 +49,7 @@ async function init() {
   controls.maxDistance = 10;
   controls.update();
 
-  RGBELoader.loadAsync('textures/equirectangular/royal_esplanade_1k.hdr').then(map => {
+  RGBELoader.loadAsync('resources/textures/equirectangular/royal_esplanade_1k.hdr').then(map => {
     map.mapping = Engine.Mapping.EquirectangularReflection;
 
     const reflectVec = positionViewDirection.negate().reflect(normalView).transformDirection(cameraViewMatrix);

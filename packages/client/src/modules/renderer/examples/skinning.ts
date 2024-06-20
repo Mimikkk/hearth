@@ -30,7 +30,7 @@ function init() {
   scene.add(camera);
 
   const loader = new GLTFLoader();
-  loader.loadAsync('models/gltf/Michelle.glb').then(function (gltf) {
+  loader.loadAsync('resources/models/gltf/Michelle.glb').then(function (gltf) {
     const object = gltf.scene;
     mixer = new Engine.AnimationMixer(object);
 

@@ -29,7 +29,7 @@ async function init() {
   // texture
 
   const textureLoader = new TextureLoader();
-  const texture = await textureLoader.loadAsync('textures/uv_grid_opengl.jpg');
+  const texture = await textureLoader.loadAsync('resources/textures/uv_grid_opengl.jpg');
   texture.colorSpace = ColorSpace.SRGB;
 
   // model
@@ -42,7 +42,7 @@ async function init() {
   }
 
   const loader = new OBJLoader();
-  const object = await loader.loadAsync('models/obj/male02/male02.obj');
+  const object = await loader.loadAsync('resources/models/obj/male02/male02.obj');
 
   object.traverse(child => {
     if (child.isMesh) child.material.map = texture;

@@ -24,23 +24,23 @@ async function init() {
   scene = new Engine.Scene();
 
   const cube1Texture = await new RGBMLoader({ maxRange: 123 }).loadAsync([
-    './textures/cube/pisaRGBM16/px.png',
-    './textures/cube/pisaRGBM16/nx.png',
-    './textures/cube/pisaRGBM16/py.png',
-    './textures/cube/pisaRGBM16/ny.png',
-    './textures/cube/pisaRGBM16/pz.png',
-    './textures/cube/pisaRGBM16/nz.png',
+    'resources/textures/cube/pisaRGBM16/px.png',
+    'resources/textures/cube/pisaRGBM16/nx.png',
+    'resources/textures/cube/pisaRGBM16/py.png',
+    'resources/textures/cube/pisaRGBM16/ny.png',
+    'resources/textures/cube/pisaRGBM16/pz.png',
+    'resources/textures/cube/pisaRGBM16/nz.png',
   ]);
   cube1Texture.generateMipmaps = true;
   cube1Texture.minFilter = Engine.MinificationTextureFilter.LinearMipmapLinear;
 
   const cube2Texture = await new CubeTextureLoader().loadAsync([
-    'textures/cube/MilkyWay/dark-s_px.jpg',
-    'textures/cube/MilkyWay/dark-s_nx.jpg',
-    'textures/cube/MilkyWay/dark-s_py.jpg',
-    'textures/cube/MilkyWay/dark-s_ny.jpg',
-    'textures/cube/MilkyWay/dark-s_pz.jpg',
-    'textures/cube/MilkyWay/dark-s_nz.jpg',
+    'resources/textures/cube/MilkyWay/dark-s_px.jpg',
+    'resources/textures/cube/MilkyWay/dark-s_nx.jpg',
+    'resources/textures/cube/MilkyWay/dark-s_py.jpg',
+    'resources/textures/cube/MilkyWay/dark-s_ny.jpg',
+    'resources/textures/cube/MilkyWay/dark-s_pz.jpg',
+    'resources/textures/cube/MilkyWay/dark-s_nz.jpg',
   ]);
 
   cube2Texture.generateMipmaps = true;
@@ -53,7 +53,7 @@ async function init() {
   });
 
   const loader = new GLTFLoader();
-  loader.loadAsync('models/gltf/DamagedHelmet/glTF/DamagedHelmet.gltf').then(function (gltf) {
+  loader.loadAsync('resources/models/gltf/DamagedHelmet/glTF/DamagedHelmet.gltf').then(function (gltf) {
     scene.add(gltf.scene);
   });
 

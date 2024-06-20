@@ -33,7 +33,7 @@ async function init() {
 
   const textureLoader = new TextureLoader();
 
-  map = await textureLoader.loadAsync('./textures/sprite.png');
+  map = await textureLoader.loadAsync('resources/textures/sprite.png');
   imageWidth = map.image.width;
   imageHeight = map.image.height;
 

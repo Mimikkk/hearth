@@ -28,12 +28,12 @@ async function init() {
   scene = new Engine.Scene();
 
   const cube1Texture = await new RGBMLoader({ maxRange: 16 }).loadAsync([
-    'textures/cube/pisaRGBM16/px.png',
-    'textures/cube/pisaRGBM16/nx.png',
-    'textures/cube/pisaRGBM16/py.png',
-    'textures/cube/pisaRGBM16/ny.png',
-    'textures/cube/pisaRGBM16/pz.png',
-    'textures/cube/pisaRGBM16/nz.png',
+    'resources/textures/cube/pisaRGBM16/px.png',
+    'resources/textures/cube/pisaRGBM16/nx.png',
+    'resources/textures/cube/pisaRGBM16/py.png',
+    'resources/textures/cube/pisaRGBM16/ny.png',
+    'resources/textures/cube/pisaRGBM16/pz.png',
+    'resources/textures/cube/pisaRGBM16/nz.png',
   ]);
 
   scene.environment = cube1Texture;
@@ -42,7 +42,7 @@ async function init() {
     .saturation(0);
 
   const loader = new GLTFLoader();
-  loader.loadAsync('models/gltf/DamagedHelmet/glTF/DamagedHelmet.gltf').then(function (gltf) {
+  loader.loadAsync('resources/models/gltf/DamagedHelmet/glTF/DamagedHelmet.gltf').then(function (gltf) {
     scene.add(gltf.scene);
   });
 
