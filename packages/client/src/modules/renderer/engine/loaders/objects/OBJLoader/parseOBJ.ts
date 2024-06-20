@@ -34,15 +34,15 @@ class ParserState {
   objects = [];
   object = {};
 
-  vertices = [];
-  normals = [];
-  colors = [];
-  uvs = [];
+  vertices: number[] = [];
+  normals: number[] = [];
+  colors: number[] = [];
+  uvs: number[] = [];
 
   materials = {};
   materialLibraries = [];
 
-  startObject(name, fromDeclaration) {
+  startObject(name: string, fromDeclaration: boolean) {
     // If the current object (initial from reset) is not from a g/o declaration in the parsed
     // file. We need to use it for the first parsed g/o to keep things in sync.
     if (this.object && this.object.fromDeclaration === false) {
@@ -72,7 +72,7 @@ class ParserState {
       materials: [],
       smooth: true,
 
-      startMaterial(name, libraries) {
+      startMaterial(name: string, libraries: string[]) {
         const previous = this._finalize(false);
 
         // New usemtl declaration overwrites an inherited material, except if faces were declared
@@ -91,7 +91,7 @@ class ParserState {
           groupCount: -1,
           inherited: false,
 
-          clone(index) {
+          clone(index: number) {
             const cloned = {
               index: typeof index === 'number' ? index : this.index,
               name: this.name,
@@ -170,22 +170,22 @@ class ParserState {
     }
   }
 
-  parseVertexIndex(value, len) {
+  parseVertexIndex(value: string, len: number): number {
     const index = parseInt(value, 10);
     return (index >= 0 ? index - 1 : index + len / 3) * 3;
   }
 
-  parseNormalIndex(value, len) {
+  parseNormalIndex(value: string, len: number): number {
     const index = parseInt(value, 10);
     return (index >= 0 ? index - 1 : index + len / 3) * 3;
   }
 
-  parseUVIndex(value, len) {
+  parseUVIndex(value: string, len: number): number {
     const index = parseInt(value, 10);
     return (index >= 0 ? index - 1 : index + len / 2) * 2;
   }
 
-  addVertex(a, b, c) {
+  addVertex(a: number, b: number, c: number) {
     const src = this.vertices;
     const dst = this.object.geometry.vertices;
 
@@ -194,21 +194,21 @@ class ParserState {
     dst.push(src[c + 0], src[c + 1], src[c + 2]);
   }
 
-  addVertexPoint(a) {
+  addVertexPoint(a: number) {
     const src = this.vertices;
     const dst = this.object.geometry.vertices;
 
     dst.push(src[a + 0], src[a + 1], src[a + 2]);
   }
 
-  addVertexLine(a) {
+  addVertexLine(a: number) {
     const src = this.vertices;
     const dst = this.object.geometry.vertices;
 
     dst.push(src[a + 0], src[a + 1], src[a + 2]);
   }
 
-  addNormal(a, b, c) {
+  addNormal(a: number, b: number, c: number) {
     const src = this.normals;
     const dst = this.object.geometry.normals;
 
@@ -217,7 +217,7 @@ class ParserState {
     dst.push(src[c + 0], src[c + 1], src[c + 2]);
   }
 
-  addFaceNormal(a, b, c) {
+  addFaceNormal(a: number, b: number, c: number) {
     const src = this.vertices;
     const dst = this.object.geometry.normals;
 
@@ -236,16 +236,16 @@ class ParserState {
     dst.push(_cb.x, _cb.y, _cb.z);
   }
 
-  addColor(a, b, c) {
+  addColor(a?: number, b?: number, c?: number) {
     const src = this.colors;
     const dst = this.object.geometry.colors;
 
-    if (src[a] !== undefined) dst.push(src[a + 0], src[a + 1], src[a + 2]);
-    if (src[b] !== undefined) dst.push(src[b + 0], src[b + 1], src[b + 2]);
-    if (src[c] !== undefined) dst.push(src[c + 0], src[c + 1], src[c + 2]);
+    if (a !== undefined && src[a] !== undefined) dst.push(src[a + 0], src[a + 1], src[a + 2]);
+    if (b !== undefined && src[b] !== undefined) dst.push(src[b + 0], src[b + 1], src[b + 2]);
+    if (c !== undefined && src[c] !== undefined) dst.push(src[c + 0], src[c + 1], src[c + 2]);
   }
 
-  addUV(a, b, c) {
+  addUV(a: number, b: number, c: number) {
     const src = this.uvs;
     const dst = this.object.geometry.uvs;
 
@@ -262,14 +262,14 @@ class ParserState {
     dst.push(0, 0);
   }
 
-  addUVLine(a) {
+  addUVLine(a: number) {
     const src = this.uvs;
     const dst = this.object.geometry.uvs;
 
     dst.push(src[a + 0], src[a + 1]);
   }
 
-  addFace(a, b, c, ua, ub, uc, na, nb, nc) {
+  addFace(a: string, b: string, c: string, ua: string, ub: string, uc: string, na: string, nb: string, nc: string) {
     const vLen = this.vertices.length;
 
     let ia = this.parseVertexIndex(a, vLen);
@@ -312,7 +312,7 @@ class ParserState {
     }
   }
 
-  addPointGeometry(vertices) {
+  addPointGeometry(vertices: string[]) {
     this.object.geometry.type = 'Poi.js';
 
     const vLen = this.vertices.length;
@@ -325,7 +325,7 @@ class ParserState {
     }
   }
 
-  addLineGeometry(vertices, uvs) {
+  addLineGeometry(vertices: string[], uvs: string[]) {
     this.object.geometry.type = 'Line';
 
     const vLen = this.vertices.length;
@@ -343,6 +343,21 @@ class ParserState {
   constructor() {
     this.startObject('', false);
   }
+}
+
+export const enum OBJToken {
+  Vertex = 'v',
+  Normal = 'vn',
+  UV = 'vt',
+  Face = 'f',
+  Line = 'l',
+  Point = 'p',
+  Group = 'g',
+  Object = 'o',
+  Material = 'usemtl',
+  MaterialLibrary = 'mtllib',
+  Smooth = 's',
+  Comment = '#',
 }
 
 export async function parseOBJ(text: string, materialCreator?: MTLMaterialCreator): Promise<Group> {
@@ -368,15 +383,15 @@ export async function parseOBJ(text: string, materialCreator?: MTLMaterialCreato
 
     const lineFirstChar = line.charAt(0);
 
-    if (lineFirstChar === '#') continue;
-    if (lineFirstChar === 'v') {
+    if (lineFirstChar === OBJToken.Comment) continue;
+    if (lineFirstChar === OBJToken.Vertex) {
       const data = line.split(DelimiterRe);
 
       switch (data[0]) {
-        case 'v':
-          state.vertices.push(parseFloat(data[1]), parseFloat(data[2]), parseFloat(data[3]));
+        case OBJToken.Vertex:
+          state.vertices.push(+data[1], +data[2], +data[3]);
           if (data.length >= 7) {
-            _color.setRGB(parseFloat(data[4]), parseFloat(data[5]), parseFloat(data[6])).convertSRGBToLinear();
+            _color.setRGB(+data[4], +data[5], +data[6]).convertSRGBToLinear();
 
             state.colors.push(_color.r, _color.g, _color.b);
           } else {
@@ -387,10 +402,10 @@ export async function parseOBJ(text: string, materialCreator?: MTLMaterialCreato
 
           break;
         case 'vn':
-          state.normals.push(parseFloat(data[1]), parseFloat(data[2]), parseFloat(data[3]));
+          state.normals.push(+data[1], +data[2], +data[3]);
           break;
         case 'vt':
-          state.uvs.push(parseFloat(data[1]), parseFloat(data[2]));
+          state.uvs.push(+data[1], +data[2]);
           break;
       }
     } else if (lineFirstChar === 'f') {
