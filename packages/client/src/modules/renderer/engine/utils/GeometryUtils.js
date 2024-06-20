@@ -171,13 +171,11 @@ function gosper(size = 1) {
     },
   });
 
-  const points = toPoints({
+  return toPoints({
     fractal: gosper,
     size: size,
     angle: Math.PI / 3, // 60 degrees
   });
-
-  return points;
 }
 
 export { hilbert2D, hilbert3D, gosper };

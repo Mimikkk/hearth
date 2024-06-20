@@ -133,5 +133,4 @@ export { Curve } from './extras/core/Curve.ts';
 export { DataUtils } from './extras/DataUtils.ts';
 export { ImageUtils } from './extras/ImageUtils.ts';
 export { ShapeUtils } from './extras/ShapeUtils.ts';
-export { PMREMGenerator } from './extras/PMREMGenerator.js';
 export * from './constants.ts';

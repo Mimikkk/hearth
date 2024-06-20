@@ -41,7 +41,6 @@ export * from './geometries/RoundedBoxGeometry.ts';
 export * from './geometries/TeapotGeometry.ts';
 export * from './geometries/TextGeometry.ts';
 
-export * from './helpers/LightProbeHelper.ts';
 export * from './helpers/OctreeHelper.ts';
 export * from './helpers/PositionalAudioHelper.ts';
 export * from './helpers/RectAreaLightHelper.ts';
@@ -93,7 +92,6 @@ export * from '@modules/renderer/engine/modifiers/SimplifyModifier.ts';
 export * from '@modules/renderer/engine/modifiers/TessellateModifier.ts';
 
 export * from './objects/GroundedSkybox.ts';
-export * from './objects/Lensflare.ts';
 export * from './objects/MarchingCubes.ts';
 export * from './objects/ShadowMesh.ts';
 export * from './objects/Sky.ts';

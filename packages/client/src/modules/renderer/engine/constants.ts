@@ -318,11 +318,6 @@ export enum BufferUsage {
   StreamCopy = 35042,
 }
 
-export enum GLSLVersion {
-  GLSL1 = '100',
-  GLSL3 = '300 es',
-}
-
 export enum CoordinateSystem {
   WebGL = 2000,
   WebGPU = 2001,
