@@ -4,6 +4,9 @@ import {
   depthTexture,
   MeshBasicNodeMaterial,
   MeshStandardNodeMaterial,
+  mx_cell_noise_float,
+  mx_fractal_noise_float,
+  mx_perlin_noise_float,
   mx_worley_noise_float,
   normalWorld,
   objectPosition,
@@ -137,11 +140,11 @@ scene.add(objects);
 
 // water
 
-const timer = timerLocal(0.8);
+const timer = timerLocal(1);
 const floorUV = positionWorld.xzy;
 
-const waterLayer0 = mx_worley_noise_float(floorUV.mul(4).add(timer));
-const waterLayer1 = mx_worley_noise_float(floorUV.mul(2).add(timer));
+const waterLayer0 = mx_perlin_noise_float(floorUV.mul(4).add(timer));
+const waterLayer1 = mx_perlin_noise_float(floorUV.mul(2).add(timer));
 
 const waterIntensity = waterLayer0.mul(waterLayer1);
 const waterColor = waterIntensity.mul(1.4).mix(color(0x0487e2), color(0x74ccf4));
