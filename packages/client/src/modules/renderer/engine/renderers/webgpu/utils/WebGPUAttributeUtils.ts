@@ -1,11 +1,11 @@
 import { BufferAttribute, Float16BufferAttribute, InterleavedBufferAttribute } from '../../../engine.js';
 import { GPUInputStepModeType } from './WebGPUConstants.ts';
-import { WebGPUBackend } from '@modules/renderer/engine/renderers/webgpu/WebGPUBackend.js';
+import { Backend } from '@modules/renderer/engine/renderers/webgpu/Backend.js';
 import RenderObject from '@modules/renderer/engine/renderers/common/RenderObject.js';
 import { Attribute } from '@modules/renderer/engine/renderers/common/Attributes.js';
 
 class WebGPUAttributeUtils {
-  constructor(public backend: WebGPUBackend) {}
+  constructor(public backend: Backend) {}
 
   createAttribute(attribute: BufferAttribute<any>, usage: GPUBufferUsageFlags) {
     const bufferAttribute = this._getBufferAttribute(attribute);

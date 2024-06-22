@@ -3,10 +3,10 @@ import RenderContext from '@modules/renderer/engine/renderers/common/RenderConte
 import { Object3D } from '@modules/renderer/engine/core/Object3D.js';
 import { Material } from '@modules/renderer/engine/materials/Material.js';
 import { Texture } from '@modules/renderer/engine/textures/Texture.js';
-import type { WebGPUBackend } from '@modules/renderer/engine/renderers/webgpu/WebGPUBackend.js';
+import type { Backend } from '@modules/renderer/engine/renderers/webgpu/Backend.js';
 
 class WebGPUUtils {
-  constructor(public backend: WebGPUBackend) {}
+  constructor(public backend: Backend) {}
 
   getCurrentDepthStencilFormat(renderContext: RenderContext) {
     if (renderContext.depthTexture !== null) return this.getTextureFormatGPU(renderContext.depthTexture);

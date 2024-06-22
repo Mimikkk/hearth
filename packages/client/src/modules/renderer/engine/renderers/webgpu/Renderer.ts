@@ -1,4 +1,4 @@
-import { WebGPUBackend, WebGPUBackendParameters } from '@modules/renderer/engine/renderers/webgpu/WebGPUBackend.js';
+import { Backend, BackendParameters } from '@modules/renderer/engine/renderers/webgpu/Backend.js';
 import { ColorSpace, Side, ToneMapping } from '@modules/renderer/engine/constants.js';
 import ToneMappingNode from '@modules/renderer/engine/nodes/display/ToneMappingNode.js';
 import { Info } from '@modules/renderer/engine/renderers/common/Info.js';
@@ -30,7 +30,7 @@ const _frustum = new Frustum();
 const _projScreenMatrix = new Matrix4();
 const _vector3 = new Vector3();
 
-export interface WebGPURendererParameters extends WebGPUBackendParameters {
+export interface RendererParameters extends BackendParameters {
   logarithmicDepthBuffer?: boolean;
   alpha?: boolean;
 }
@@ -38,7 +38,7 @@ export interface WebGPURendererParameters extends WebGPUBackendParameters {
 export class Renderer {
   declare isRenderer: true;
   domElement: HTMLCanvasElement;
-  backend: WebGPUBackend;
+  backend: Backend;
   autoClear: boolean;
   autoClearColor: boolean;
   autoClearDepth: boolean;
@@ -88,11 +88,11 @@ export class Renderer {
   _initPromise: Promise<void>;
   _compilationPromises: any;
 
-  constructor(parameters: WebGPURendererParameters = {}) {
+  constructor(parameters: RendererParameters = {}) {
     this.isRenderer = true;
     const { logarithmicDepthBuffer = false, alpha = true } = parameters;
 
-    const backend = new WebGPUBackend(parameters);
+    const backend = new Backend(parameters);
     this.domElement = backend.getDomElement();
 
     this.backend = backend;

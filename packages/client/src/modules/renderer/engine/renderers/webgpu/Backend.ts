@@ -1,4 +1,15 @@
-import { BufferAttribute, CoordinateSystem, Object3D, RenderTarget, Scene, Texture, Vector3 } from '../../engine.js';
+import {
+  BufferAttribute,
+  CoordinateSystem,
+  Object3D,
+  RenderTarget,
+  Revision,
+  Scene,
+  Texture,
+  Vector2,
+  Vector3,
+  Vector4,
+} from '../../engine.js';
 
 import {
   GPUFeatureNameType,
@@ -10,7 +21,6 @@ import {
 } from './utils/WebGPUConstants.js';
 
 import WGSLNodeBuilder from './nodes/WGSLNodeBuilder.js';
-import Backend, { BackendParameters } from '../common/Backend.js';
 
 import WebGPUUtils from './utils/WebGPUUtils.js';
 import WebGPUAttributeUtils from './utils/WebGPUAttributeUtils.js';
@@ -26,8 +36,10 @@ import Binding from '@modules/renderer/engine/renderers/common/Binding.js';
 import { Info } from '@modules/renderer/engine/renderers/common/Info.js';
 import RenderObject from '@modules/renderer/engine/renderers/common/RenderObject.js';
 import ProgrammableStage from '@modules/renderer/engine/renderers/common/ProgrammableStage.js';
+import Color4 from '@modules/renderer/engine/renderers/common/Color4.js';
 
-export interface WebGPUBackendParameters extends BackendParameters {
+export interface BackendParameters {
+  canvas?: HTMLCanvasElement;
   alpha?: boolean;
   antialias?: boolean;
   sampleCount?: number;
@@ -37,8 +49,85 @@ export interface WebGPUBackendParameters extends BackendParameters {
   context?: GPUCanvasContext;
 }
 
-export class WebGPUBackend extends Backend {
-  declare parameters: WebGPUBackendParameters;
+export class Backend {
+  parameters: BackendParameters;
+  data: WeakMap<any, any>;
+  renderer: Renderer;
+  domElement: HTMLCanvasElement;
+
+  getInstanceCount(renderObject: RenderObject) {
+    const { object, geometry } = renderObject;
+
+    return geometry.isInstancedBufferGeometry ? geometry.instanceCount : object.isInstancedMesh ? object.count : 1;
+  }
+
+  getDrawingBufferSize() {
+    const vector2 = new Vector2();
+
+    return this.renderer.getDrawingBufferSize(vector2);
+  }
+
+  getScissor() {
+    vector4 = new Vector4();
+
+    return this.renderer.getScissor(vector4);
+  }
+
+  setScissorTest(boolean: boolean) {}
+
+  getClearColor() {
+    const renderer = this.renderer;
+
+    color4 = new Color4(0, 0, 0, 1);
+
+    renderer.getClearColor(color4);
+
+    color4.getRGB(color4, this.renderer.currentColorSpace);
+
+    return color4;
+  }
+
+  getDomElement() {
+    let domElement = this.domElement;
+
+    if (domElement === null) {
+      domElement = this.parameters.canvas ?? document.createElement('canvas');
+
+      // OffscreenCanvas does not have setAttribute, see #22811
+      if ('setAttribute' in domElement) domElement.setAttribute('data-engine', `engine.js r${Revision} webgpu`);
+
+      this.domElement = domElement;
+    }
+
+    return domElement;
+  }
+
+  // resource properties
+
+  set(object: any, value: any) {
+    this.data.set(object, value);
+  }
+
+  get(object: any) {
+    let map = this.data.get(object);
+
+    if (map === undefined) {
+      map = {};
+      this.data.set(object, map);
+    }
+
+    return map;
+  }
+
+  has(object: any) {
+    return this.data.has(object);
+  }
+
+  delete(object: any) {
+    this.data.delete(object);
+  }
+
+  declare parameters: BackendParameters;
   trackTimestamp: boolean;
   adapter: GPUAdapter;
   device: GPUDevice;
@@ -52,8 +141,11 @@ export class WebGPUBackend extends Backend {
   textureUtils: WebGPUTextureUtils;
   occludedResolveCache: Map<number, GPUBuffer>;
 
-  constructor(parameters: WebGPUBackendParameters) {
-    super(parameters);
+  constructor(parameters: BackendParameters) {
+    this.parameters = parameters;
+    this.data = new WeakMap();
+    this.renderer = null!;
+    this.domElement = null!;
 
     this.parameters.alpha = parameters.alpha ?? true;
     this.parameters.antialias = parameters.antialias ?? false;
@@ -83,7 +175,7 @@ export class WebGPUBackend extends Backend {
   }
 
   async init(renderer: Renderer) {
-    await super.init(renderer);
+    this.renderer = renderer;
 
     //
 
@@ -1165,8 +1257,8 @@ export class WebGPUBackend extends Backend {
     renderContextData.currentSets = { attributes: {} };
   }
 
-  static async create(parameters: WebGPUBackendParameters) {
-    const backend = new WebGPUBackend(parameters);
+  static async create(parameters: BackendParameters) {
+    const backend = new Backend(parameters);
 
     await backend.init();
 

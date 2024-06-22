@@ -5,7 +5,7 @@ import {
   GPUTextureViewDimensionType,
 } from './WebGPUConstants.ts';
 import { DataArrayTexture, DataTexture, DepthTexture, TextureDataType, VideoTexture } from '../../../engine.js';
-import { WebGPUBackend } from '@modules/renderer/engine/renderers/webgpu/WebGPUBackend.js';
+import { Backend } from '@modules/renderer/engine/renderers/webgpu/Backend.js';
 import Binding from '@modules/renderer/engine/renderers/common/Binding.js';
 import UniformBuffer from '@modules/renderer/engine/renderers/common/UniformBuffer.js';
 import { SampledCubeTexture, SampledTexture } from '@modules/renderer/engine/renderers/common/SampledTexture.js';
@@ -13,7 +13,7 @@ import StorageBuffer from '@modules/renderer/engine/renderers/common/StorageBuff
 import Sampler from '@modules/renderer/engine/renderers/common/Sampler.js';
 
 class WebGPUBindingUtils {
-  constructor(public backend: WebGPUBackend) {}
+  constructor(public backend: Backend) {}
 
   createBindingsLayout(bindings: Binding[]) {
     const backend = this.backend;

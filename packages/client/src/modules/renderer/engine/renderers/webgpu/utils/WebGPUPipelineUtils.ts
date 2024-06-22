@@ -23,14 +23,14 @@ import {
   StencilFunction,
   StencilOperation,
 } from '../../../engine.js';
-import type { WebGPUBackend } from '@modules/renderer/engine/renderers/webgpu/WebGPUBackend.js';
+import type { Backend } from '@modules/renderer/engine/renderers/webgpu/Backend.js';
 import RenderObject from '@modules/renderer/engine/renderers/common/RenderObject.js';
 import ComputePipeline from '@modules/renderer/engine/renderers/common/ComputePipeline.js';
 import Binding from '@modules/renderer/engine/renderers/common/Binding.js';
 import { TypedArray } from '@modules/renderer/engine/math/MathUtils.js';
 
 class WebGPUPipelineUtils {
-  constructor(public backend: WebGPUBackend) {}
+  constructor(public backend: Backend) {}
 
   createRenderPipeline(renderObject: RenderObject, promises: Promise<void>[] | null = null) {
     const { object, material, geometry, pipeline } = renderObject;

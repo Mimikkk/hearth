@@ -29,7 +29,7 @@ import {
 } from '../../../engine.js';
 
 import WebGPUTexturePassUtils from './WebGPUTexturePassUtils.js';
-import { WebGPUBackend } from '@modules/renderer/engine/renderers/webgpu/WebGPUBackend.js';
+import { Backend } from '@modules/renderer/engine/renderers/webgpu/Backend.js';
 import StorageTexture from '@modules/renderer/engine/renderers/common/StorageTexture.js';
 import { TypedArrayConstructor } from '@modules/renderer/engine/math/MathUtils.js';
 
@@ -53,7 +53,7 @@ class WebGPUTextureUtils {
   colorBuffer: GPUTexture | null;
   depthTexture: DepthTexture;
 
-  constructor(public backend: WebGPUBackend) {
+  constructor(public backend: Backend) {
     this._passUtils = null;
 
     this.defaultTexture = null;
