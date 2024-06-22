@@ -2,6 +2,7 @@ import { useContent } from '@modules/managment/useContent.js';
 import { Show } from 'solid-js';
 import { Icon } from '@components/buttons/Icon/Icon.js';
 import { ExampleNs } from '@modules/managment/exampleNs.js';
+import { Frame } from '@components/elements/Frame/Frame.js';
 
 const Backdrop = () => (
   <div class="w-full h-full center bg-gray-300 rounded-sm">
@@ -40,11 +41,7 @@ export const Canvas = () => {
     <div class="w-full h-full rounded-sm border border-primary-3">
       <Show when={isWebGpuAvailable} fallback={<Unavailable />}>
         <Show when={selectedExample()} fallback={<Backdrop />}>
-          <object
-            class="w-full h-full rounded-sm"
-            type="text/html"
-            data={`src/modules/renderer/examples/${selectedExample()}.html`}
-          />
+          <Frame class="w-full h-full rounded-sm" src={`src/modules/renderer/examples/${selectedExample()}.html`} />
         </Show>
       </Show>
     </div>

@@ -129,7 +129,7 @@ function init() {
   // Init Positions
   renderer.compute(computeInit);
 
-  const stepAnimation = async function () {
+  const stepAnimation = async () => {
     await renderer.computeAsync(compute);
     await renderer.renderAsync(scene, camera);
 
@@ -147,16 +147,5 @@ function init() {
 
   stepAnimation();
 
-  useWindowResizer(renderer, camera, () => {
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    const aspect = window.innerWidth / window.innerHeight;
-    const frustumHeight = camera.top - camera.bottom;
-
-    camera.left = -frustumHeight * aspect;
-    camera.right = frustumHeight * aspect;
-
-    camera.updateProjectionMatrix();
-
-    renderer.render(scene, camera);
-  });
+  useWindowResizer(renderer, camera);
 }
