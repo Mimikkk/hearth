@@ -37,7 +37,6 @@ export interface RendererParameters {
 }
 
 export class Renderer {
-  declare isRenderer: true;
   domElement: HTMLCanvasElement;
   backend: Backend;
   autoClear: boolean;
@@ -88,12 +87,10 @@ export class Renderer {
   _initialized: boolean;
   _initPromise: Promise<void>;
   _compilationPromises: any;
+  parameters: RendererParameters;
 
-  constructor(parameters: RendererParameters = {}) {
-    this.isRenderer = true;
-    const { logarithmicDepthBuffer = false, alpha = true } = parameters;
-
-    const backend = new Backend(parameters.backend);
+  constructor(parameters?: RendererParameters) {
+    const backend = new Backend(parameters?.backend);
     this.domElement = backend.getDomElement();
 
     this.backend = backend;
@@ -103,10 +100,8 @@ export class Renderer {
     this.autoClearDepth = true;
     this.autoClearStencil = true;
     this.localClippingEnabled = false;
-    this.alpha = alpha;
-
-    this.logarithmicDepthBuffer = logarithmicDepthBuffer;
-
+    this.alpha = parameters?.alpha ?? true;
+    this.logarithmicDepthBuffer = parameters?.logarithmicDepthBuffer ?? false;
     this.outputColorSpace = ColorSpace.SRGB;
 
     this.toneMapping = ToneMapping.None;
@@ -148,7 +143,7 @@ export class Renderer {
     this._opaqueSort = null;
     this._transparentSort = null;
 
-    const alphaClear = this.alpha === true ? 0 : 1;
+    const alphaClear = this.alpha ? 0 : 1;
 
     this._clearColor = new Color4(0, 0, 0, alphaClear);
     this._clearDepth = 1;

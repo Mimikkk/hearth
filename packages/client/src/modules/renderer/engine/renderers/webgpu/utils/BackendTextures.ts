@@ -4,7 +4,7 @@ import {
   GPUFilterModeType,
   GPUTextureDimensionType,
   GPUTextureFormatType,
-} from './WebGPUConstants.ts';
+} from './constants.ts';
 
 import {
   ColorSpace,
@@ -28,7 +28,7 @@ import {
   Wrapping,
 } from '../../../engine.js';
 
-import WebGPUTexturePassUtils from './WebGPUTexturePassUtils.js';
+import { BackendTexturePass } from './BackendTexturePass.js';
 import { Backend } from '@modules/renderer/engine/renderers/webgpu/Backend.js';
 import StorageTexture from '@modules/renderer/engine/renderers/common/StorageTexture.js';
 import { TypedArrayConstructor } from '@modules/renderer/engine/math/MathUtils.js';
@@ -46,8 +46,8 @@ const _compareToWebGPU = {
 
 const _flipMap = [0, 1, 3, 2, 4, 5] as const;
 
-class WebGPUTextureUtils {
-  _passUtils: WebGPUTexturePassUtils | null;
+export class BackendTextures {
+  _passUtils: BackendTexturePass | null;
   defaultTexture: Texture | null;
   defaultCubeTexture: CubeTexture | null;
   colorBuffer: GPUTexture | null;
@@ -480,7 +480,7 @@ class WebGPUTextureUtils {
     let passUtils = this._passUtils;
 
     if (passUtils === null) {
-      this._passUtils = passUtils = new WebGPUTexturePassUtils(this.backend.device);
+      this._passUtils = passUtils = new BackendTexturePass(this.backend.device);
     }
 
     return passUtils;
@@ -1017,5 +1017,3 @@ const isRenderTargetTexture = (
   isRenderTargetTexture: boolean;
 } => item.isRenderTargetTexture;
 const isStorageTexture = (item: any): item is StorageTexture => item.isStorageTexture;
-
-export default WebGPUTextureUtils;

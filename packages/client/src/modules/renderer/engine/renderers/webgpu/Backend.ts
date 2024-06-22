@@ -18,15 +18,15 @@ import {
   GPUStoreOpType,
   GPUTextureFormatType,
   GPUTextureViewDimensionType,
-} from './utils/WebGPUConstants.js';
+} from './utils/constants.js';
 
 import WGSLNodeBuilder from './nodes/WGSLNodeBuilder.js';
 
-import WebGPUUtils from './utils/WebGPUUtils.js';
-import WebGPUAttributeUtils from './utils/WebGPUAttributeUtils.js';
-import WebGPUBindingUtils from './utils/WebGPUBindingUtils.js';
-import WebGPUPipelineUtils from './utils/WebGPUPipelineUtils.js';
-import WebGPUTextureUtils from './utils/WebGPUTextureUtils.js';
+import { BackendUtilities } from './utils/BackendUtilities.js';
+import { BackendAttributes } from './utils/BackendAttributes.js';
+import { BackendBindings } from './utils/BackendBindings.js';
+import BackendPipelines from './utils/BackendPipelines.js';
+import { BackendTextures } from './utils/BackendTextures.js';
 import { WebGPUManager } from '@modules/renderer/engine/capabilities/WebGPUManager.js';
 import type { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 import RenderContext from '@modules/renderer/engine/renderers/common/RenderContext.js';
@@ -68,17 +68,15 @@ export class Backend {
   }
 
   getScissor() {
-    vector4 = new Vector4();
+    const vector4 = new Vector4();
 
     return this.renderer.getScissor(vector4);
   }
 
-  setScissorTest(boolean: boolean) {}
-
   getClearColor() {
     const renderer = this.renderer;
 
-    color4 = new Color4(0, 0, 0, 1);
+    const color4 = new Color4(0, 0, 0, 1);
 
     renderer.getClearColor(color4);
 
@@ -133,31 +131,31 @@ export class Backend {
   context: GPUCanvasContext;
   colorBuffer: GPUTexture | null;
   defaultRenderPassdescriptor: GPURenderPassDescriptor | null;
-  utils: WebGPUUtils;
-  attributeUtils: WebGPUAttributeUtils;
-  bindingUtils: WebGPUBindingUtils;
-  pipelineUtils: WebGPUPipelineUtils;
-  textureUtils: WebGPUTextureUtils;
+  utils: BackendUtilities;
+  attributeUtils: BackendAttributes;
+  bindingUtils: BackendBindings;
+  pipelineUtils: BackendPipelines;
+  textureUtils: BackendTextures;
   occludedResolveCache: Map<number, GPUBuffer>;
 
-  constructor(parameters: BackendParameters = {}) {
-    this.parameters = parameters;
+  constructor(parameters?: BackendParameters) {
+    this.parameters = parameters ?? {};
     this.data = new WeakMap();
     this.renderer = null!;
     this.domElement = null!;
 
-    this.parameters.alpha = parameters.alpha ?? true;
-    this.parameters.antialias = parameters.antialias ?? true;
+    this.parameters.alpha = this.parameters.alpha ?? true;
+    this.parameters.antialias = this.parameters.antialias ?? true;
 
     if (this.parameters.antialias) {
-      this.parameters.sampleCount = parameters.sampleCount ?? 4;
+      this.parameters.sampleCount = this.parameters.sampleCount ?? 4;
     } else {
       this.parameters.sampleCount = 1;
     }
 
-    this.parameters.requiredLimits = parameters.requiredLimits ?? {};
+    this.parameters.requiredLimits = this.parameters.requiredLimits ?? {};
 
-    this.trackTimestamp = parameters.trackTimestamp ?? false;
+    this.trackTimestamp = this.parameters.trackTimestamp ?? false;
 
     this.adapter = null!;
     this.device = null!;
@@ -165,11 +163,11 @@ export class Backend {
     this.colorBuffer = null;
     this.defaultRenderPassdescriptor = null;
 
-    this.utils = new WebGPUUtils(this);
-    this.attributeUtils = new WebGPUAttributeUtils(this);
-    this.bindingUtils = new WebGPUBindingUtils(this);
-    this.pipelineUtils = new WebGPUPipelineUtils(this);
-    this.textureUtils = new WebGPUTextureUtils(this);
+    this.utils = new BackendUtilities(this);
+    this.attributeUtils = new BackendAttributes(this);
+    this.bindingUtils = new BackendBindings(this);
+    this.pipelineUtils = new BackendPipelines(this);
+    this.textureUtils = new BackendTextures(this);
     this.occludedResolveCache = new Map();
   }
 

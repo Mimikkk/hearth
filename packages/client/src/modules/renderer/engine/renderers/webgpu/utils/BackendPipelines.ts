@@ -7,7 +7,7 @@ import {
   GPUFrontFaceType,
   GPUIndexFormatType,
   GPUStencilOperationType,
-} from './WebGPUConstants.ts';
+} from './constants.ts';
 
 import {
   Blending,
@@ -29,7 +29,7 @@ import ComputePipeline from '@modules/renderer/engine/renderers/common/ComputePi
 import Binding from '@modules/renderer/engine/renderers/common/Binding.js';
 import { TypedArray } from '@modules/renderer/engine/math/MathUtils.js';
 
-class WebGPUPipelineUtils {
+class BackendPipelines {
   constructor(public backend: Backend) {}
 
   createRenderPipeline(renderObject: RenderObject, promises: Promise<void>[] | null = null) {
@@ -565,4 +565,4 @@ class WebGPUPipelineUtils {
 const hasIndex = (geometry: any): geometry is { index: { array: TypedArray } } => geometry.index !== null;
 const isLine = (object: any): object is Line => object.isLine;
 const isLineSegments = (object: any): object is LineSegments => object.isLineSegments;
-export default WebGPUPipelineUtils;
+export default BackendPipelines;

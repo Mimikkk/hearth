@@ -5,7 +5,7 @@ import {
   GPUPrimitiveTopologyType,
   GPULoadOpType,
   GPUStoreOpType,
-} from './WebGPUConstants.ts';
+} from './constants.ts';
 
 const mipmapVertexSource = `
 struct VarysStruct {
@@ -70,7 +70,7 @@ fn main( @location( 0 ) vTex : vec2<f32> ) -> @location( 0 ) vec4<f32> {
 }
 `;
 
-class WebGPUTexturePassUtils {
+export class BackendTexturePass {
   mipmapSampler: GPUSampler;
   flipYSampler: GPUSampler;
   transferPipelines: Record<GPUTextureFormat | string, GPURenderPipeline> = {};
@@ -285,5 +285,3 @@ class WebGPUTexturePassUtils {
     this.device.queue.submit([commandEncoder.finish()]);
   }
 }
-
-export default WebGPUTexturePassUtils;
