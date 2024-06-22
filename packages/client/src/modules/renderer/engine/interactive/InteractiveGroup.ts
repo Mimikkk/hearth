@@ -2,7 +2,7 @@ import { Group } from '../objects/Group.js';
 import { Vector2 } from '../math/Vector2.js';
 import { Raycaster } from '../core/Raycaster.js';
 import { Camera } from '../cameras/Camera.js';
-import { WebGPURenderer } from '../renderers/webgpu/WebGPURenderer.js';
+import { Renderer } from '../renderers/webgpu/Renderer.js';
 
 type InteractionType = 'pointerdown' | 'pointerup' | 'pointermove' | 'mousedown' | 'mouseup' | 'mousemove' | 'click';
 
@@ -13,7 +13,7 @@ interface InteractionEvent {
 const createInteractionEvent = (type: InteractionType, data: Vector2): InteractionEvent => ({ type, data });
 
 export class InteractiveGroup extends Group {
-  listenToPointerEvents(renderer: WebGPURenderer, camera: Camera) {
+  listenToPointerEvents(renderer: Renderer, camera: Camera) {
     const scope = this;
     const raycaster = new Raycaster(undefined!, undefined!);
 

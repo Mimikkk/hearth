@@ -4,7 +4,7 @@ import { PlaneGeometry } from '@modules/renderer/engine/geometries/PlaneGeometry
 import { MeshBasicMaterial } from '@modules/renderer/engine/materials/MeshBasicMaterial.js';
 import { Mesh } from '@modules/renderer/engine/objects/Mesh.js';
 import { ColorSpace } from '../engine/constants.ts';
-import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
+import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 import { TiffLoader } from '@modules/renderer/engine/loaders/textures/TIFFLoader/TIFFLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 import { DataTexture } from '@modules/renderer/engine/textures/DataTexture.js';
@@ -22,7 +22,7 @@ async function init() {
   const camera = new PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.01, 10);
   camera.position.set(0, 0, 4);
 
-  const renderer = new WebGPURenderer({ antialias: true });
+  const renderer = new Renderer({ antialias: true });
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.domElement);

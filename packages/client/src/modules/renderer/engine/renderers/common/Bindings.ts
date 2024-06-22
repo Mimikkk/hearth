@@ -1,6 +1,6 @@
 import DataMap from './DataMap.js';
 import { AttributeType } from './Constants.js';
-import { Renderer } from '@modules/renderer/engine/renderers/common/Renderer.js';
+import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 import RenderObject from '@modules/renderer/engine/renderers/common/RenderObject.js';
 import Binding from '@modules/renderer/engine/renderers/common/Binding.js';
 import { SampledTexture } from '@modules/renderer/engine/renderers/common/SampledTexture.js';

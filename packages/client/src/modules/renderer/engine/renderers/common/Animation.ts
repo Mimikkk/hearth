@@ -1,5 +1,4 @@
-import type { Renderer } from '@modules/renderer/engine/renderers/common/Renderer.js';
-
+import type { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 export type AnimationLoopFn = (time: number, frame?: number) => void;
 
 export class Animation {

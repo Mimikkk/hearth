@@ -1,4 +1,4 @@
-import { Renderer } from '@modules/renderer/engine/renderers/common/Renderer.js';
+import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 
 let vector2 = null;
 let vector4 = null;

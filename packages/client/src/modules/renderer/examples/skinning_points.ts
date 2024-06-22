@@ -3,7 +3,7 @@ import { PointsNodeMaterial, skinning, uniform } from '@modules/renderer/engine/
 
 import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/GLTFLoader.js';
 
-import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
+import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, renderer;
@@ -47,7 +47,7 @@ function init() {
 
   //renderer
 
-  renderer = new WebGPURenderer({ antialias: true });
+  renderer = new Renderer({ antialias: true });
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(animate);

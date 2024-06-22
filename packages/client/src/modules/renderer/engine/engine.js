@@ -49,7 +49,6 @@ export { StereoCamera } from './cameras/StereoCamera.ts';
 export { PerspectiveCamera } from './cameras/PerspectiveCamera.ts';
 export { OrthographicCamera } from './cameras/OrthographicCamera.ts';
 export { CubeCamera } from './cameras/CubeCamera.ts';
-export { ArrayCamera } from './cameras/ArrayCamera.ts';
 export { Camera } from './cameras/Camera.ts';
 export { AudioListener } from './audio/AudioListener.ts';
 export { PositionalAudio } from './audio/PositionalAudio.ts';

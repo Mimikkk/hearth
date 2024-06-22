@@ -6,7 +6,7 @@ import { SphericalHarmonics3 } from '@modules/renderer/engine/math/SphericalHarm
 import { DataUtils } from '@modules/renderer/engine/extras/DataUtils.js';
 import { LightProbe } from '@modules/renderer/engine/lights/LightProbe.js';
 import { CubeRenderTarget } from '@modules/renderer/engine/renderers/CubeRenderTarget.js';
-import { Renderer } from '@modules/renderer/engine/renderers/common/Renderer.js';
+import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 
 const convertColorToLinear = (color: Color, colorSpace: ColorSpace) => {
   switch (colorSpace) {

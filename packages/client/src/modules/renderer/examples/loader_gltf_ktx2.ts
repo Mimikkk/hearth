@@ -4,7 +4,7 @@ import { MeshoptDecoder } from 'meshoptimizer';
 
 import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
 
-import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
+import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 import { ToneMapping } from '@modules/renderer/engine/constants.js';
 import { PerspectiveCamera } from '@modules/renderer/engine/cameras/PerspectiveCamera.js';
@@ -30,7 +30,7 @@ async function init() {
 
   //renderer
 
-  const renderer = new WebGPURenderer({ antialias: true });
+  const renderer = new Renderer({ antialias: true });
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(() => renderer.render(scene, camera));

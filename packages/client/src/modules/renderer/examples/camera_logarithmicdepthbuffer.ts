@@ -4,7 +4,7 @@ import { PerspectiveCamera, Scene } from '@modules/renderer/engine/engine.js';
 import { FontLoader } from '@modules/renderer/engine/loaders/fonts/FontLoader/FontLoader.js';
 import { TextGeometry } from '@modules/renderer/engine/geometries/TextGeometry.js';
 
-import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
+import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 import Stats from 'stats-js';
 import { ColorRepresentation } from '@modules/renderer/engine/math/Color.js';
 import { clamp } from 'lodash-es';
@@ -57,7 +57,7 @@ interface Views {
 
 interface CameraView {
   container: HTMLDivElement;
-  renderer: WebGPURenderer;
+  renderer: Renderer;
   camera: PerspectiveCamera;
 }
 
@@ -70,7 +70,7 @@ const createCameraView = async (container: HTMLDivElement, type: 'logarithmic' |
 
   const camera = new Engine.PerspectiveCamera(50, (screensplit * width) / height, Near, Far);
 
-  const renderer = new WebGPURenderer({ antialias: true, logarithmicDepthBuffer: type === 'logarithmic' });
+  const renderer = new Renderer({ antialias: true, logarithmicDepthBuffer: type === 'logarithmic' });
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(width / 2, height);
 

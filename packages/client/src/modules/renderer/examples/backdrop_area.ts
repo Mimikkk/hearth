@@ -16,7 +16,7 @@ import { GUI } from 'lil-gui';
 
 import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/GLTFLoader.js';
 
-import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
+import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 
 import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
 import {
@@ -106,7 +106,7 @@ scene.add(floor);
 
 // renderer
 
-const renderer = new WebGPURenderer(/*{ antialias: true }*/);
+const renderer = new Renderer(/*{ antialias: true }*/);
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setAnimationLoop(animate);

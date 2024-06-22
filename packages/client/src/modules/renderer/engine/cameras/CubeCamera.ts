@@ -3,7 +3,7 @@ import { Object3D } from '../core/Object3D.js';
 import { PerspectiveCamera } from './PerspectiveCamera.js';
 import { CubeRenderTarget } from '../renderers/CubeRenderTarget.js';
 import { Scene } from '@modules/renderer/engine/scenes/Scene.js';
-import { Renderer } from '@modules/renderer/engine/renderers/common/Renderer.js';
+import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 
 const fov = -90; // negative fov is not an error
 const aspect = 1;

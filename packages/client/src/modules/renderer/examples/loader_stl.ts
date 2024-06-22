@@ -10,7 +10,7 @@ import { MeshPhongMaterial } from '../engine/materials/MeshPhongMaterial';
 import { STLLoader } from '@modules/renderer/engine/loaders/objects/STLLoader/STLLoader.js';
 import { HemisphereLight } from '../engine/lights/HemisphereLight';
 import { DirectionalLight } from '../engine/lights/DirectionalLight';
-import { WebGPURenderer } from '../engine/renderers/webgpu/WebGPURenderer';
+import { Renderer } from '../engine/renderers/webgpu/Renderer.js';
 
 let container, stats;
 
@@ -113,7 +113,7 @@ function init() {
   addShadowedLight(0.5, 1, -1, 0xffd500, 3);
   // renderer
 
-  renderer = new WebGPURenderer({ antialias: true });
+  renderer = new Renderer({ antialias: true });
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(animate);

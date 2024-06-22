@@ -15,7 +15,7 @@ import type { Material } from '../materials/Material.js';
 import type { Group } from '../objects/Group.js';
 import type { Vector2 } from '../math/Vector2.js';
 import { Box3 } from '@modules/renderer/engine/math/Box3.js';
-import { Renderer } from '../renderers/common/Renderer.js';
+import { Renderer } from '../renderers/webgpu/Renderer.js';
 
 let _object3DId = 0;
 

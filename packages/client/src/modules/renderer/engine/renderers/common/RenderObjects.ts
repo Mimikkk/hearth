@@ -1,6 +1,6 @@
 import ChainMap from './ChainMap.js';
 import RenderObject from './RenderObject.js';
-import { Renderer } from '@modules/renderer/engine/renderers/common/Renderer.js';
+import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 import RenderContext from '@modules/renderer/engine/renderers/common/RenderContext.js';
 import LightsNode from '@modules/renderer/engine/nodes/lighting/LightsNode.js';
 import { Camera } from '@modules/renderer/engine/cameras/Camera.js';

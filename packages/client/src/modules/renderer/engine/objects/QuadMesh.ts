@@ -1,5 +1,5 @@
 import { BufferGeometry, Float32BufferAttribute, Material, Mesh, OrthographicCamera } from '../engine.js';
-import { Renderer } from '@modules/renderer/engine/renderers/common/Renderer.js';
+import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 
 // Helper for passes that need to fill the viewport with a single quad.
 

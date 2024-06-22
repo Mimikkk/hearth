@@ -11,7 +11,7 @@ import {
   vec3,
 } from '@modules/renderer/engine/nodes/Nodes.js';
 
-import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
+import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 import StorageInstancedBufferAttribute from '@modules/renderer/engine/renderers/common/StorageInstancedBufferAttribute.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
@@ -118,7 +118,7 @@ function init(forceWebGL = false) {
   const plane = new Engine.Mesh(new Engine.PlaneGeometry(1, 1), material);
   scene.add(plane);
 
-  const renderer = new WebGPURenderer({ antialias: false, forceWebGL: forceWebGL, trackTimestamp: true });
+  const renderer = new Renderer({ antialias: false, forceWebGL: forceWebGL, trackTimestamp: true });
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth / 2, window.innerHeight);
 

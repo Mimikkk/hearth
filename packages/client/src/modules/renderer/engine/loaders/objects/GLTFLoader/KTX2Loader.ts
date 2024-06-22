@@ -40,7 +40,7 @@ import {
 } from 'ktx-parse';
 import { ZSTDDecoder } from 'zstddec';
 import { FileLoader, ResponseType } from '@modules/renderer/engine/loaders/files/FileLoader/FileLoader.js';
-import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
+import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 import LoadWorker from './KTX2Loader.worker.ts?worker';
 import type { TranscoderResult, WorkerConfig } from './KTX2Loader.worker.ts';
 import { classLoader } from '@modules/renderer/engine/loaders/types.js';
@@ -86,7 +86,7 @@ export class KTX2Loader extends classLoader<{
     }, this.configuration.workerPoolSize);
   }
 
-  async detectSupportAsync(renderer: WebGPURenderer) {
+  async detectSupportAsync(renderer: Renderer) {
     this.workerConfig = {
       astcSupported: await renderer.hasFeatureAsync('texture-compression-astc'),
       etc1Supported: await renderer.hasFeatureAsync('texture-compression-etc1'),

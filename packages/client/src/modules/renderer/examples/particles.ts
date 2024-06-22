@@ -12,7 +12,7 @@ import {
 
 import { GUI } from 'lil-gui';
 
-import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
+import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 
 import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
 import { Blending } from '@modules/renderer/engine/engine.js';
@@ -102,7 +102,7 @@ async function init() {
 
   //
 
-  renderer = new WebGPURenderer({ antialias: true });
+  renderer = new Renderer({ antialias: true });
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(render);

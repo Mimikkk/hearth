@@ -16,7 +16,7 @@ import {
   Vector3,
   Vector4,
 } from '../engine.js';
-import { Renderer } from '@modules/renderer/engine/renderers/common/Renderer.js';
+import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 
 export class ViewHelper extends Object3D {
   isViewHelper: boolean;

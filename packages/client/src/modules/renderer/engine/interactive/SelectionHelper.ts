@@ -1,9 +1,9 @@
 import { Vector2 } from '../engine.js';
-import type { WebGPURenderer } from '../renderers/webgpu/WebGPURenderer.js';
+import type { Renderer } from '../renderers/webgpu/Renderer.js';
 
 export class SelectionHelper {
   element: HTMLDivElement;
-  renderer: WebGPURenderer;
+  renderer: Renderer;
   startPoint: Vector2;
   pointTopLeft: Vector2;
   pointBottomRight: Vector2;
@@ -13,7 +13,7 @@ export class SelectionHelper {
   onPointerMove: (event: PointerEvent) => void;
   onPointerUp: (event: PointerEvent) => void;
 
-  constructor(renderer: WebGPURenderer, cssClassName: string) {
+  constructor(renderer: Renderer, cssClassName: string) {
     this.element = document.createElement('div');
     this.element.classList.add(cssClassName);
     this.element.style.pointerEvents = 'none';

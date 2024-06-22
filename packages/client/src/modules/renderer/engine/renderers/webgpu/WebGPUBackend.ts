@@ -18,7 +18,7 @@ import WebGPUBindingUtils from './utils/WebGPUBindingUtils.js';
 import WebGPUPipelineUtils from './utils/WebGPUPipelineUtils.js';
 import WebGPUTextureUtils from './utils/WebGPUTextureUtils.js';
 import { WebGPUManager } from '@modules/renderer/engine/capabilities/WebGPUManager.js';
-import type { Renderer } from '@modules/renderer/engine/renderers/common/Renderer.js';
+import type { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 import RenderContext from '@modules/renderer/engine/renderers/common/RenderContext.js';
 import ComputeNode from '@modules/renderer/engine/nodes/gpgpu/ComputeNode.js';
 import ComputePipeline from '@modules/renderer/engine/renderers/common/ComputePipeline.js';

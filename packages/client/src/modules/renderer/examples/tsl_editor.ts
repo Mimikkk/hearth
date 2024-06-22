@@ -1,5 +1,5 @@
 import * as Nodes from '@modules/renderer/engine/nodes/Nodes.js';
-import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
+import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 import initialCode from './tsl_editor.code.ts?raw';
 import { GUI } from 'lil-gui';
 import * as monaco from 'monaco-editor';
@@ -54,7 +54,7 @@ const options: {
 
 let builder: WGSLNodeBuilder | null = null;
 
-const renderer = new WebGPURenderer({ antialias: true });
+const renderer = new Renderer({ antialias: true });
 renderer.outputColorSpace = ColorSpace.LinearSRGB;
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setAnimationLoop(() => renderer.render(scene, camera));

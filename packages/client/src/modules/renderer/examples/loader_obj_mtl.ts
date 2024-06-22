@@ -1,6 +1,6 @@
 import { Scene } from '@modules/renderer/engine/scenes/Scene.js';
 import { PerspectiveCamera } from '@modules/renderer/engine/cameras/PerspectiveCamera.js';
-import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
+import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 import { MTLLoader } from '@modules/renderer/engine/loaders/objects/OBJLoader/MTLLoader/MTLLoader.js';
 import { OBJLoader } from '@modules/renderer/engine/loaders/objects/OBJLoader/OBJLoader.js';
 import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
@@ -10,7 +10,7 @@ import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindow
 
 let camera!: PerspectiveCamera;
 let scene!: Scene;
-let renderer!: WebGPURenderer;
+let renderer!: Renderer;
 
 init();
 
@@ -49,7 +49,7 @@ async function init() {
 
   //
 
-  renderer = new WebGPURenderer({ antialias: true });
+  renderer = new Renderer({ antialias: true });
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(animate);

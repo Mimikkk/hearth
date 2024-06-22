@@ -20,7 +20,7 @@ import {
 
 import { TeapotGeometry } from '@modules/renderer/engine/geometries/TeapotGeometry.js';
 
-import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
+import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 import StorageInstancedBufferAttribute from '@modules/renderer/engine/renderers/common/StorageInstancedBufferAttribute.js';
 
 import PostProcessing from '@modules/renderer/engine/renderers/common/PostProcessing.js';
@@ -251,7 +251,7 @@ async function init() {
 
   //
 
-  renderer = new WebGPURenderer({ antialias: true });
+  renderer = new Renderer({ antialias: true });
   renderer.toneMapping = Engine.ToneMapping.ACESFilmic;
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);

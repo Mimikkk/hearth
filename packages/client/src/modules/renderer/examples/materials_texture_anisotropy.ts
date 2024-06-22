@@ -1,7 +1,7 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
 
 import Stats from 'stats-js';
-import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
+import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
@@ -21,7 +21,7 @@ async function init() {
   container = document.createElement('div');
   document.body.appendChild(container);
 
-  renderer = new WebGPURenderer({ antialias: true, forceWebGL: false });
+  renderer = new Renderer({ antialias: true, forceWebGL: false });
 
   // RENDERER
 

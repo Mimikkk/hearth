@@ -29,7 +29,7 @@ import {
   toneMapping,
   viewportBottomLeft,
 } from '../../../nodes/Nodes.js';
-import { Renderer } from '@modules/renderer/engine/renderers/common/Renderer.js';
+import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 import NodeUniformsGroup from '@modules/renderer/engine/renderers/common/nodes/NodeUniformsGroup.js';
 import RenderObject from '@modules/renderer/engine/renderers/common/RenderObject.js';
 import NodeBuilder from '@modules/renderer/engine/nodes/core/NodeBuilder.js';

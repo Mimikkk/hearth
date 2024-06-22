@@ -2,7 +2,7 @@ import DataMap from './DataMap.js';
 import RenderPipeline from './RenderPipeline.js';
 import ComputePipeline from './ComputePipeline.js';
 import ProgrammableStage, { StageType } from './ProgrammableStage.js';
-import { Renderer } from '@modules/renderer/engine/renderers/common/Renderer.js';
+import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 import ComputeNode from '@modules/renderer/engine/nodes/gpgpu/ComputeNode.js';
 import Binding from '@modules/renderer/engine/renderers/common/Binding.js';
 import RenderObject from '@modules/renderer/engine/renderers/common/RenderObject.js';

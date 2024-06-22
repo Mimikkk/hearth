@@ -1,32 +1,27 @@
-import { Animation, AnimationLoopFn } from './Animation.js';
-import RenderObjects from './RenderObjects.js';
-import Attributes, { Attribute } from './Attributes.js';
-import Geometries from './Geometries.js';
-import { Info } from './Info.js';
-import Pipelines from './Pipelines.js';
-import Bindings from './Bindings.js';
-import RenderLists from './RenderLists.js';
-import RenderContexts from './RenderContexts.js';
-import Textures from './Textures.js';
-import Background from './Background.js';
-import Nodes from './nodes/Nodes.js';
-import Color4 from './Color4.js';
-import ClippingContext from './ClippingContext.js';
-import {
-  BufferAttribute,
-  Camera,
-  ColorSpace,
-  Frustum,
-  Matrix4,
-  Scene,
-  Side,
-  ToneMapping,
-  Vector2,
-  Vector3,
-  Vector4,
-} from '@modules/renderer/engine/engine.js';
-import { WebGPUBackend } from '@modules/renderer/engine/renderers/webgpu/WebGPUBackend.js';
+import { WebGPUBackend, WebGPUBackendParameters } from '@modules/renderer/engine/renderers/webgpu/WebGPUBackend.js';
+import { ColorSpace, Side, ToneMapping } from '@modules/renderer/engine/constants.js';
 import ToneMappingNode from '@modules/renderer/engine/nodes/display/ToneMappingNode.js';
+import { Info } from '@modules/renderer/engine/renderers/common/Info.js';
+import { Vector4 } from '@modules/renderer/engine/math/Vector4.js';
+import Attributes from '@modules/renderer/engine/renderers/common/Attributes.js';
+import Geometries from '@modules/renderer/engine/renderers/common/Geometries.js';
+import Nodes from '@modules/renderer/engine/renderers/common/nodes/Nodes.js';
+import { Animation, AnimationLoopFn } from '@modules/renderer/engine/renderers/common/Animation.js';
+import Bindings from '@modules/renderer/engine/renderers/common/Bindings.js';
+import RenderObjects from '@modules/renderer/engine/renderers/common/RenderObjects.js';
+import Pipelines from '@modules/renderer/engine/renderers/common/Pipelines.js';
+import RenderLists from '@modules/renderer/engine/renderers/common/RenderLists.js';
+import RenderContexts from '@modules/renderer/engine/renderers/common/RenderContexts.js';
+import Textures from '@modules/renderer/engine/renderers/common/Textures.js';
+import Background from '@modules/renderer/engine/renderers/common/Background.js';
+import Color4 from '@modules/renderer/engine/renderers/common/Color4.js';
+import { Scene } from '@modules/renderer/engine/scenes/Scene.js';
+import { Camera } from '@modules/renderer/engine/cameras/Camera.js';
+import ClippingContext from '@modules/renderer/engine/renderers/common/ClippingContext.js';
+import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
+import { Vector3 } from '@modules/renderer/engine/math/Vector3.js';
+import { Vector2 } from '@modules/renderer/engine/math/Vector2.js';
+import { Frustum, Matrix4 } from '@modules/renderer/engine/engine.js';
 
 const _scene = new Scene();
 const _drawingBufferSize = new Vector2();
@@ -35,7 +30,7 @@ const _frustum = new Frustum();
 const _projScreenMatrix = new Matrix4();
 const _vector3 = new Vector3();
 
-export interface RendererParameters {
+export interface WebGPURendererParameters extends WebGPUBackendParameters {
   logarithmicDepthBuffer?: boolean;
   alpha?: boolean;
 }
@@ -93,7 +88,7 @@ export class Renderer {
   _initPromise: Promise<void>;
   _compilationPromises: any;
 
-  constructor(parameters: RendererParameters = {}) {
+  constructor(parameters: WebGPURendererParameters = {}) {
     this.isRenderer = true;
     const { logarithmicDepthBuffer = false, alpha = true } = parameters;
 
@@ -951,40 +946,12 @@ export class Renderer {
   }
 
   _renderObjects(renderList, camera, scene, lightsNode) {
-    // process renderable objects
-
     for (let i = 0, il = renderList.length; i < il; i++) {
       const renderItem = renderList[i];
 
-      // @TODO: Add support for multiple materials per object. This will require to extract
-      // the material from the renderItem object and pass it with its group data to renderObject().
-
       const { object, geometry, material, group } = renderItem;
 
-      if (camera.isArrayCamera) {
-        const cameras = camera.cameras;
-
-        for (let j = 0, jl = cameras.length; j < jl; j++) {
-          const camera2 = cameras[j];
-
-          if (object.layers.test(camera2.layers)) {
-            const vp = camera2.viewport;
-            const minDepth = vp.minDepth === undefined ? 0 : vp.minDepth;
-            const maxDepth = vp.maxDepth === undefined ? 1 : vp.maxDepth;
-
-            const viewportValue = this._currentRenderContext.viewportValue;
-            viewportValue.copy(vp).multiplyScalar(this._pixelRatio).floor();
-            viewportValue.minDepth = minDepth;
-            viewportValue.maxDepth = maxDepth;
-
-            this.backend.updateViewport(this._currentRenderContext);
-
-            this._currentRenderObjectFunction(object, scene, camera2, geometry, material, group, lightsNode);
-          }
-        }
-      } else {
-        this._currentRenderObjectFunction(object, scene, camera, geometry, material, group, lightsNode);
-      }
+      this._currentRenderObjectFunction(object, scene, camera, geometry, material, group, lightsNode);
     }
   }
 

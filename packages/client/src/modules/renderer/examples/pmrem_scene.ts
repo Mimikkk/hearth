@@ -4,7 +4,7 @@ import { MeshBasicNodeMaterial, normalWorld, pmremTexture, uniform } from '@modu
 
 import PMREMGenerator from '@modules/renderer/engine/renderers/common/extras/PMREMGenerator.js';
 
-import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
+import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 
 import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
 
@@ -26,7 +26,7 @@ async function init() {
 
   const forceWebGL = false;
 
-  renderer = new WebGPURenderer({ antialias: true, forceWebGL });
+  renderer = new Renderer({ antialias: true, forceWebGL });
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   container.appendChild(renderer.domElement);

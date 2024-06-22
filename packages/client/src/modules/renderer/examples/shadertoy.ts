@@ -5,7 +5,7 @@ import Transpiler from '@modules/renderer/engine/transpiler/Transpiler.js';
 import ShaderToyDecoder from '@modules/renderer/engine/transpiler/ShaderToyDecoder.js';
 import TSLEncoder from '@modules/renderer/engine/transpiler/TSLEncoder.js';
 
-import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
+import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 class ShaderToyNode extends Nodes.Node {
@@ -84,7 +84,7 @@ function init() {
 
   //
 
-  renderer = new WebGPURenderer({ antialias: true });
+  renderer = new Renderer({ antialias: true });
   renderer.setPixelRatio(dpr);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(animate);

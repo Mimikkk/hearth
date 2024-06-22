@@ -10,7 +10,7 @@ import {
   uniform,
 } from '@modules/renderer/engine/nodes/Nodes.js';
 
-import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
+import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 
 import { RGBELoader } from '@modules/renderer/engine/loaders/textures/RGBELoader/RGBELoader.js';
 
@@ -34,7 +34,7 @@ async function init() {
 
   const forceWebGL = false;
 
-  renderer = new WebGPURenderer({ antialias: true, forceWebGL });
+  renderer = new Renderer({ antialias: true, forceWebGL });
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.toneMapping = Engine.ToneMapping.ACESFilmic;

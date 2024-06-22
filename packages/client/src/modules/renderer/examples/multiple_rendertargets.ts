@@ -18,7 +18,7 @@ import {
   vec2,
   vec4,
 } from '@modules/renderer/engine/nodes/Nodes.js';
-import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
+import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 
 import { QuadMesh } from '@modules/renderer/engine/objects/QuadMesh.js';
 import { Filter } from '@modules/renderer/engine/engine.js';
@@ -85,7 +85,7 @@ class ReadGBufferMaterial extends NodeMaterial {
 init();
 
 async function init() {
-  renderer = new WebGPURenderer({ antialias: true });
+  renderer = new Renderer({ antialias: true });
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(render);

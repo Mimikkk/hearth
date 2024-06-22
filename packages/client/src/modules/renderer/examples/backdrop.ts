@@ -13,7 +13,7 @@ import {
   viewportTopLeft,
 } from '@modules/renderer/engine/nodes/Nodes.js';
 import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/GLTFLoader.js';
-import { WebGPURenderer } from '@modules/renderer/engine/renderers/webgpu/WebGPURenderer.js';
+import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
 import {
   AnimationMixer,
@@ -101,7 +101,7 @@ addBackdropSphere(vec3(0, 0, viewportSharedTexture().b));
 
 //renderer
 
-const renderer = new WebGPURenderer({ antialias: true });
+const renderer = new Renderer({ antialias: true });
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
 await renderer.setAnimationLoop(animate);

@@ -1,5 +1,5 @@
 import { Camera, Material, Matrix3, Matrix4, Plane, Vector4 } from '@modules/renderer/engine/engine.js';
-import { Renderer } from '@modules/renderer/engine/renderers/common/Renderer.js';
+import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 
 const _plane = new Plane();
 const _viewNormalMatrix = new Matrix3();
