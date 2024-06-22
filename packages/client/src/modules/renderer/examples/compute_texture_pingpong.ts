@@ -136,7 +136,7 @@ function init() {
   const plane = new Engine.Mesh(new Engine.PlaneGeometry(1, 1), material);
   scene.add(plane);
 
-  renderer = new Renderer({ antialias: true });
+  renderer = new Renderer();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(render);

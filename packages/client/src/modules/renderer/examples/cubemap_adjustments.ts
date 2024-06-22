@@ -139,7 +139,7 @@ async function init() {
 
   // renderer and controls
 
-  renderer = new Renderer({ antialias: true });
+  renderer = new Renderer();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.toneMappingNode = toneMapping(Engine.ToneMapping.Linear, 1);

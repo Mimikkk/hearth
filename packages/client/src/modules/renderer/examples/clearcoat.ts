@@ -155,7 +155,7 @@ async function init() {
 
   particleLight.add(new Engine.PointLight(0xffffff, 30));
 
-  renderer = new Renderer({ antialias: true });
+  renderer = new Renderer();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(animate);

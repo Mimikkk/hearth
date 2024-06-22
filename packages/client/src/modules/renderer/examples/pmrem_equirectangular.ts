@@ -32,9 +32,7 @@ async function init() {
 
   scene = new Engine.Scene();
 
-  const forceWebGL = false;
-
-  renderer = new Renderer({ antialias: true, forceWebGL });
+  renderer = new Renderer();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.toneMapping = Engine.ToneMapping.ACESFilmic;

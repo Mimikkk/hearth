@@ -101,7 +101,7 @@ addBackdropSphere(vec3(0, 0, viewportSharedTexture().b));
 
 //renderer
 
-const renderer = new Renderer({ antialias: true });
+const renderer = new Renderer();
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
 await renderer.setAnimationLoop(animate);

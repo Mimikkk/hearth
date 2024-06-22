@@ -113,7 +113,7 @@ function init() {
   addShadowedLight(0.5, 1, -1, 0xffd500, 3);
   // renderer
 
-  renderer = new Renderer({ antialias: true });
+  renderer = new Renderer();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(animate);

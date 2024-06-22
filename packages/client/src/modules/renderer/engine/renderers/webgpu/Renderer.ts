@@ -30,7 +30,8 @@ const _frustum = new Frustum();
 const _projScreenMatrix = new Matrix4();
 const _vector3 = new Vector3();
 
-export interface RendererParameters extends BackendParameters {
+export interface RendererParameters {
+  backend?: BackendParameters;
   logarithmicDepthBuffer?: boolean;
   alpha?: boolean;
 }
@@ -92,7 +93,7 @@ export class Renderer {
     this.isRenderer = true;
     const { logarithmicDepthBuffer = false, alpha = true } = parameters;
 
-    const backend = new Backend(parameters);
+    const backend = new Backend(parameters.backend);
     this.domElement = backend.getDomElement();
 
     this.backend = backend;

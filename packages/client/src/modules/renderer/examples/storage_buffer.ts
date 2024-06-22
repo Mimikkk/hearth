@@ -15,19 +15,18 @@ import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js'
 import StorageInstancedBufferAttribute from '@modules/renderer/engine/renderers/common/StorageInstancedBufferAttribute.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
-const timestamps = {
-  webgpu: document.getElementById('timestamps'),
-  webgl: document.getElementById('timestamps_webgl'),
-};
-
 // WebGPU Backend
 init();
 
-// WebGL Backend
-init(true);
+const dashboard = {
+  renderMs: document.getElementById('render-ms')!,
+  computeMs: document.getElementById('compute-ms')!,
+  renderCalls: document.getElementById('render-calls')!,
+  computeCalls: document.getElementById('compute-calls')!,
+};
 
-function init(forceWebGL = false) {
-  const aspect = window.innerWidth / 2 / window.innerHeight;
+function init() {
+  const aspect = window.innerWidth / window.innerHeight;
   const camera = new Engine.OrthographicCamera(-aspect, aspect, 1, -1, 0, 2);
   camera.position.z = 1;
 
@@ -118,24 +117,14 @@ function init(forceWebGL = false) {
   const plane = new Engine.Mesh(new Engine.PlaneGeometry(1, 1), material);
   scene.add(plane);
 
-  const renderer = new Renderer({ antialias: false, forceWebGL: forceWebGL, trackTimestamp: true });
+  const renderer = new Renderer({ backend: { trackTimestamp: true } });
   renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth / 2, window.innerHeight);
+  renderer.setSize(window.innerWidth, window.innerHeight);
 
   document.body.appendChild(renderer.domElement);
-  renderer.domElement.style.position = 'absolute';
-  renderer.domElement.style.top = '0';
-  renderer.domElement.style.left = '0';
-  renderer.domElement.style.width = '50%';
   renderer.domElement.style.height = '100%';
 
-  if (forceWebGL) {
-    renderer.domElement.style.left = '50%';
-
-    scene.background = new Engine.Color(0x212121);
-  } else {
-    scene.background = new Engine.Color(0x313131);
-  }
+  scene.background = new Engine.Color(0x313131);
 
   // Init Positions
   renderer.compute(computeInit);
@@ -143,10 +132,15 @@ function init(forceWebGL = false) {
   const stepAnimation = async function () {
     await renderer.computeAsync(compute);
     await renderer.renderAsync(scene, camera);
-    timestamps[forceWebGL ? 'webgl' : 'webgpu'].innerHTML = `
 
-							Compute ${renderer.info.compute.computeCalls} pass in ${renderer.info?.timestamp?.compute.toFixed(6)}ms<br>
-							Draw ${renderer.info.render.drawCalls} pass in ${renderer.info?.timestamp?.render.toFixed(6)}ms`;
+    const computeCalls = renderer.info?.compute?.computeCalls.toFixed(0);
+    const renderCalls = renderer.info?.render?.drawCalls.toFixed(0);
+    dashboard.computeCalls.innerHTML = computeCalls ?? 'N/A';
+    dashboard.renderCalls.innerHTML = renderCalls ?? 'N/A';
+    const computeMs = renderer.info?.compute?.timestamp.toFixed(6);
+    const renderMs = renderer.info?.render?.timestamp.toFixed(6);
+    dashboard.computeMs.innerHTML = computeMs ?? 'N/A';
+    dashboard.renderMs.innerHTML = renderMs ?? 'N/A';
 
     setTimeout(stepAnimation, 1000);
   };
@@ -154,13 +148,12 @@ function init(forceWebGL = false) {
   stepAnimation();
 
   useWindowResizer(renderer, camera, () => {
-    renderer.setSize(window.innerWidth / 2, window.innerHeight);
-    const aspect = window.innerWidth / 2 / window.innerHeight;
-
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    const aspect = window.innerWidth / window.innerHeight;
     const frustumHeight = camera.top - camera.bottom;
 
-    camera.left = (-frustumHeight * aspect) / 2;
-    camera.right = (frustumHeight * aspect) / 2;
+    camera.left = -frustumHeight * aspect;
+    camera.right = frustumHeight * aspect;
 
     camera.updateProjectionMatrix();
 

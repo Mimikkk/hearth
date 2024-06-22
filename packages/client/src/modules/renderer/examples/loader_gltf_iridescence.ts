@@ -14,7 +14,7 @@ init().catch(function (err) {
 });
 
 async function init() {
-  renderer = new Renderer({ antialias: true });
+  renderer = new Renderer();
   renderer.setAnimationLoop(render);
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);

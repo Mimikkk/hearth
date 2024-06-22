@@ -30,7 +30,7 @@ let insetHeight;
 init();
 
 function init() {
-  renderer = new Renderer({ antialias: true });
+  renderer = new Renderer();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setClearColor(0x000000, 0.0);
   renderer.setSize(window.innerWidth, window.innerHeight);

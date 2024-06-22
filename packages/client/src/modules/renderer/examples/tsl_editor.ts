@@ -54,7 +54,7 @@ const options: {
 
 let builder: WGSLNodeBuilder | null = null;
 
-const renderer = new Renderer({ antialias: true });
+const renderer = new Renderer();
 renderer.outputColorSpace = ColorSpace.LinearSRGB;
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setAnimationLoop(() => renderer.render(scene, camera));

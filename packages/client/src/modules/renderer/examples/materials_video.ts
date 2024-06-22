@@ -40,7 +40,7 @@ function init() {
   light.position.set(0.5, 1, 1).normalize();
   scene.add(light);
 
-  renderer = new Renderer({ antialias: true });
+  renderer = new Renderer();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(render);

@@ -106,7 +106,7 @@ function init() {
   mesh.count = particleNum;
   scene.add(mesh);
 
-  renderer = new Renderer({ antialias: true });
+  renderer = new Renderer();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(animate);

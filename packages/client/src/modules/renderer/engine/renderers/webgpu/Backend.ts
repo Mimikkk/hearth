@@ -127,7 +127,6 @@ export class Backend {
     this.data.delete(object);
   }
 
-  declare parameters: BackendParameters;
   trackTimestamp: boolean;
   adapter: GPUAdapter;
   device: GPUDevice;
@@ -141,14 +140,14 @@ export class Backend {
   textureUtils: WebGPUTextureUtils;
   occludedResolveCache: Map<number, GPUBuffer>;
 
-  constructor(parameters: BackendParameters) {
+  constructor(parameters: BackendParameters = {}) {
     this.parameters = parameters;
     this.data = new WeakMap();
     this.renderer = null!;
     this.domElement = null!;
 
     this.parameters.alpha = parameters.alpha ?? true;
-    this.parameters.antialias = parameters.antialias ?? false;
+    this.parameters.antialias = parameters.antialias ?? true;
 
     if (this.parameters.antialias) {
       this.parameters.sampleCount = parameters.sampleCount ?? 4;

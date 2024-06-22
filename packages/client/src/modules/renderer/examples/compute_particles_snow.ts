@@ -251,7 +251,7 @@ async function init() {
 
   //
 
-  renderer = new Renderer({ antialias: true });
+  renderer = new Renderer();
   renderer.toneMapping = Engine.ToneMapping.ACESFilmic;
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);

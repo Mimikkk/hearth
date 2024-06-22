@@ -57,7 +57,7 @@ async function init() {
     scene.add(gltf.scene);
   });
 
-  renderer = new Renderer({ antialias: true });
+  renderer = new Renderer();
 
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);

@@ -26,7 +26,7 @@ function init() {
 
   scene = new Engine.Scene();
 
-  renderer = new Renderer({ antialias: true });
+  renderer = new Renderer();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.toneMapping = ToneMapping.ACESFilmic;

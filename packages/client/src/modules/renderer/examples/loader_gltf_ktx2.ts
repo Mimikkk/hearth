@@ -30,7 +30,7 @@ async function init() {
 
   //renderer
 
-  const renderer = new Renderer({ antialias: true });
+  const renderer = new Renderer();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(() => renderer.render(scene, camera));
