@@ -30,7 +30,6 @@ export const createStorageStore = <T extends {}>(
   initial: T,
 ): [get: Store<T>, set: SetStoreFunction<T>, clear: ClearFn] => {
   const [get, set] = createStore(Storage.read(name, initial) as T);
-  get;
 
   createEffect(() => Storage.set(name, get));
 
