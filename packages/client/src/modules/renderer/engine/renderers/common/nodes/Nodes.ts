@@ -255,7 +255,7 @@ export class Nodes extends DataMap<any, any> {
   updateToneMapping() {
     const renderer = this.renderer;
     const rendererData = this.get(renderer);
-    const rendererToneMapping = renderer.toneMapping;
+    const rendererToneMapping = renderer.parameters.toneMapping;
 
     if (this.isToneMappingState && rendererToneMapping !== ToneMapping.None) {
       if (rendererData.toneMapping !== rendererToneMapping) {

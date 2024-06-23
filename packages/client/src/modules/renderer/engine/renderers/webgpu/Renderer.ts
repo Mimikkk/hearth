@@ -33,19 +33,7 @@ const _vector3 = new Vector3();
 export class Renderer {
   domElement: HTMLCanvasElement;
   backend: Backend;
-  autoClear: boolean;
-  autoClearColor: boolean;
-  autoClearDepth: boolean;
-  autoClearStencil: boolean;
-  alpha: boolean;
-  logarithmicDepthBuffer: boolean;
-  outputColorSpace: ColorSpace;
-  toneMapping: ToneMapping;
-  toneMappingExposure: number;
   toneMappingNode: ToneMappingNode | null;
-  sortObjects: boolean;
-  depth: boolean;
-  stencil: boolean;
   clippingPlanes: any[];
   info: Info;
   _pixelRatio: number;
@@ -57,7 +45,6 @@ export class Renderer {
   _attributes: Attributes;
   _geometries: Geometries;
   _nodes: Nodes;
-  localClippingEnabled: boolean;
   _animation: Animation;
   _bindings: Bindings;
   _objects: RenderObjects;
@@ -81,45 +68,41 @@ export class Renderer {
   _initialized: boolean;
   _initPromise: Promise<void>;
   _compilationPromises: any;
-  parameters: Options;
+  parameters: Configuration;
 
-  constructor(parameters?: Options) {
-    const backend = new Backend(parameters?.backend);
-    this.domElement = backend.getDomElement();
+  static configure(options?: Options): Configuration {
+    return {
+      alpha: options?.alpha ?? true,
+      logarithmicDepthBuffer: options?.logarithmicDepthBuffer ?? false,
+      autoClear: options?.autoClear ?? true,
+      autoClearColor: options?.autoClearColor ?? true,
+      autoClearDepth: options?.autoClearDepth ?? true,
+      autoClearStencil: options?.autoClearStencil ?? true,
+      localClippingEnabled: options?.localClippingEnabled ?? false,
+      outputColorSpace: options?.outputColorSpace ?? ColorSpace.SRGB,
+      toneMapping: options?.toneMapping ?? ToneMapping.None,
+      toneMappingExposure: options?.toneMappingExposure ?? 1.0,
+      sortObjects: options?.sortObjects ?? true,
+      depth: options?.depth ?? true,
+      stencil: options?.stencil ?? false,
+    };
+  }
 
-    this.backend = backend;
+  constructor(options?: Options) {
+    this.parameters = Renderer.configure(options);
 
-    this.autoClear = true;
-    this.autoClearColor = true;
-    this.autoClearDepth = true;
-    this.autoClearStencil = true;
-    this.localClippingEnabled = false;
-    this.alpha = parameters?.alpha ?? true;
-    this.logarithmicDepthBuffer = parameters?.logarithmicDepthBuffer ?? false;
-    this.outputColorSpace = ColorSpace.SRGB;
-
-    this.toneMapping = ToneMapping.None;
-    this.toneMappingExposure = 1.0;
-
-    this.sortObjects = true;
-
-    this.depth = true;
-    this.stencil = false;
-
+    this.backend = new Backend(options?.backend);
+    this.domElement = this.backend.getDomElement();
     this.clippingPlanes = [];
-
     this.info = new Info();
 
     // internals
-
     this._pixelRatio = 1;
     this._width = this.domElement.width;
     this._height = this.domElement.height;
-
     this._viewport = new Vector4(0, 0, this._width, this._height);
     this._scissor = new Vector4(0, 0, this._width, this._height);
     this._scissorTest = false;
-
     this._attributes = null!;
     this._geometries = null!;
     this._nodes = null!;
@@ -131,30 +114,21 @@ export class Renderer {
     this._renderContexts = null!;
     this._textures = null!;
     this._background = null!;
-
     this._currentRenderContext = null;
-
     this._opaqueSort = null;
     this._transparentSort = null;
-
-    const alphaClear = this.alpha ? 0 : 1;
-
+    const alphaClear = this.parameters.alpha ? 0 : 1;
     this._clearColor = new Color4(0, 0, 0, alphaClear);
     this._clearDepth = 1;
     this._clearStencil = 0;
-
     this._renderTarget = null;
     this._activeCubeFace = 0;
     this._activeMipmapLevel = 0;
-
     this._renderObjectFunction = null;
     this._currentRenderObjectFunction = null;
-
     this._handleObjectFunction = this._renderObjectDirect;
-
     this._initialized = false;
     this._initPromise = null!;
-
     this._compilationPromises = null;
   }
 
@@ -242,8 +216,8 @@ export class Renderer {
 
     //
 
-    renderContext.depth = this.depth;
-    renderContext.stencil = this.stencil;
+    renderContext.depth = this.parameters.depth;
+    renderContext.stencil = this.parameters.stencil;
 
     if (!renderContext.clippingContext) renderContext.clippingContext = new ClippingContext();
     renderContext.clippingContext.updateGlobal(this, camera);
@@ -428,7 +402,7 @@ export class Renderer {
 
     renderList.finish();
 
-    if (this.sortObjects === true) {
+    if (this.parameters.sortObjects === true) {
       renderList.sort(this._opaqueSort, this._transparentSort);
     }
 
@@ -451,8 +425,8 @@ export class Renderer {
       renderContext.depthTexture = null;
       renderContext.width = this.domElement.width;
       renderContext.height = this.domElement.height;
-      renderContext.depth = this.depth;
-      renderContext.stencil = this.stencil;
+      renderContext.depth = this.parameters.depth;
+      renderContext.stencil = this.parameters.stencil;
     }
 
     renderContext.width >>= activeMipmapLevel;
@@ -737,7 +711,7 @@ export class Renderer {
       return (Array.isArray(texture) ? texture[0] : texture).colorSpace;
     }
 
-    return this.outputColorSpace;
+    return this.parameters.outputColorSpace;
   }
 
   dispose() {
@@ -881,7 +855,7 @@ export class Renderer {
         renderList.pushLight(object);
       } else if (object.isSprite) {
         if (!object.frustumCulled || _frustum.intersectsSprite(object)) {
-          if (this.sortObjects === true) {
+          if (this.parameters.sortObjects === true) {
             _vector3.setFromMatrixPosition(object.matrixWorld).applyMatrix4(_projScreenMatrix);
           }
 
@@ -901,7 +875,7 @@ export class Renderer {
           const geometry = object.geometry;
           const material = object.material;
 
-          if (this.sortObjects === true) {
+          if (this.parameters.sortObjects === true) {
             if (geometry.boundingSphere === null) geometry.computeBoundingSphere();
 
             _vector3
@@ -974,7 +948,7 @@ export class Renderer {
           overrideMaterial.fragmentNode = material.shadowNode;
         }
 
-        if (this.localClippingEnabled) {
+        if (this.parameters.localClippingEnabled) {
           if (material.clipShadows) {
             if (overrideMaterial.clippingPlanes !== material.clippingPlanes) {
               overrideMaterial.clippingPlanes = material.clippingPlanes;
@@ -1093,11 +1067,33 @@ export namespace Renderer {
     backend?: Backend.Options;
     logarithmicDepthBuffer?: boolean;
     alpha?: boolean;
+    autoClear?: boolean;
+    autoClearColor?: boolean;
+    autoClearDepth?: boolean;
+    autoClearStencil?: boolean;
+    localClippingEnabled?: boolean;
+    outputColorSpace?: ColorSpace;
+    toneMapping?: ToneMapping;
+    toneMappingExposure?: number;
+    sortObjects?: boolean;
+    depth?: boolean;
+    stencil?: boolean;
   }
 
   export interface Configuration {
     logarithmicDepthBuffer: boolean;
     alpha: boolean;
+    autoClear: boolean;
+    autoClearColor: boolean;
+    autoClearDepth: boolean;
+    autoClearStencil: boolean;
+    localClippingEnabled: boolean;
+    outputColorSpace: ColorSpace;
+    toneMapping: ToneMapping;
+    toneMappingExposure: number;
+    sortObjects: boolean;
+    depth: boolean;
+    stencil: boolean;
   }
 }
 type Options = Renderer.Options;

@@ -25,7 +25,7 @@ async function init() {
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(animation);
-  renderer.toneMapping = Engine.ToneMapping.ACESFilmic;
+  renderer.parameters.toneMapping = Engine.ToneMapping.ACESFilmic;
   document.body.appendChild(renderer.domElement);
 
   stats = new Stats();
@@ -75,7 +75,7 @@ async function init() {
   const gui = new GUI();
   gui.add(material, 'roughness', 0, 1);
   gui.add(material, 'metalness', 0, 1);
-  gui.add(renderer, 'toneMappingExposure', 0, 2).name('exposure');
+  gui.add(renderer.parameters, 'toneMappingExposure', 0, 2).name('exposure');
 
   sphere = new Engine.Mesh(new Engine.IcosahedronGeometry(15, 8), material);
   scene.add(sphere);

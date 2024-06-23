@@ -88,7 +88,7 @@ function init() {
   renderer.setPixelRatio(dpr);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(animate);
-  renderer.outputColorSpace = Engine.ColorSpace.LinearSRGB;
+  renderer.parameters.outputColorSpace = Engine.ColorSpace.LinearSRGB;
   document.body.appendChild(renderer.domElement);
 
   useWindowResizer(renderer, camera);

@@ -78,8 +78,8 @@ export class ClippingContext {
       update = true;
     }
 
-    if (renderer.localClippingEnabled !== this.localClippingEnabled) {
-      this.localClippingEnabled = renderer.localClippingEnabled;
+    if (renderer.parameters.localClippingEnabled !== this.localClippingEnabled) {
+      this.localClippingEnabled = renderer.parameters.localClippingEnabled;
       update = true;
     }
 

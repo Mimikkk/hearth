@@ -14,11 +14,11 @@ export class MipmapShader {
   shader: GPUShaderModule;
 
   constructor(public backend: Backend) {
-    const { samplers, shaders } = this.backend.resources;
+    const { resources } = this.backend;
 
-    this.samplerLinear = samplers.get(names.linear, () => ({ minFilter: GPUFilterModeType.Linear }));
-    this.samplerNearest = samplers.get(names.nearest, () => ({ minFilter: GPUFilterModeType.Nearest }));
-    this.shader = shaders.get(names.shader, () => ({ code: mipmapSource }));
+    this.samplerLinear = resources.sampler({ label: names.linear, minFilter: GPUFilterModeType.Linear });
+    this.samplerNearest = resources.sampler({ label: names.nearest, minFilter: GPUFilterModeType.Nearest });
+    this.shader = resources.shader({ label: names.shader, code: mipmapSource });
   }
 
   vertexState(): GPUVertexState {
@@ -37,10 +37,10 @@ export class MipmapShader {
   }
 
   dispose(): void {
-    const { samplers, shaders } = this.backend.resources;
+    const { samplerMap, shaderMap } = this.backend.resources;
 
-    samplers.delete(names.linear);
-    samplers.delete(names.nearest);
-    shaders.delete(names.shader);
+    samplerMap.delete(names.linear);
+    samplerMap.delete(names.nearest);
+    shaderMap.delete(names.shader);
   }
 }

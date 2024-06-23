@@ -91,8 +91,8 @@ async function init() {
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(animate);
-  renderer.toneMapping = Engine.ToneMapping.Reinhard;
-  renderer.toneMappingExposure = 6;
+  renderer.parameters.toneMapping = Engine.ToneMapping.Reinhard;
+  renderer.parameters.toneMappingExposure = 6;
   document.body.appendChild(renderer.domElement);
 
   // controls
