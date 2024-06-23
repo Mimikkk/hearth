@@ -38,14 +38,14 @@ class BackendPipelines {
 
     const backend = this.backend;
     const device = backend.device;
-    const utils = backend.utils;
+    const utils = backend.utilities;
 
     const pipelineData = backend.get(pipeline);
     const bindingsData = backend.get(renderObject.getBindings());
 
     // vertex buffers
 
-    const vertexBuffers = backend.attributeUtils.createShaderVertexBuffers(renderObject);
+    const vertexBuffers = backend.attributes.createShaderVertexBuffers(renderObject);
 
     // blending
 
@@ -475,7 +475,7 @@ class BackendPipelines {
 
   _getPrimitiveState(object: Object3D, geometry: BufferGeometry, material: Material): GPUPrimitiveState {
     const descriptor: GPUPrimitiveState = {};
-    const utils = this.backend.utils;
+    const utils = this.backend.utilities;
 
     descriptor.topology = utils.getPrimitiveTopology(object, material);
 

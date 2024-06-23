@@ -9,7 +9,7 @@ export class BackendUtilities {
   constructor(public backend: Backend) {}
 
   getCurrentDepthStencilFormat(renderContext: RenderContext) {
-    if (renderContext.depthTexture !== null) return this.getTextureFormatGPU(renderContext.depthTexture);
+    if (renderContext.depthTexture) return this.getTextureFormatGPU(renderContext.depthTexture);
     if (renderContext.depth && renderContext.stencil) return GPUTextureFormatType.Depth24PlusStencil8;
     if (renderContext.depth) return GPUTextureFormatType.Depth24Plus;
     return undefined;
@@ -20,15 +20,13 @@ export class BackendUtilities {
   }
 
   getCurrentColorFormat(renderContext: RenderContext) {
-    return renderContext.textures !== null
+    return renderContext.textures
       ? this.getTextureFormatGPU(renderContext.textures[0])
       : GPUTextureFormatType.BGRA8Unorm;
   }
 
   getCurrentColorSpace(renderContext: RenderContext) {
-    return renderContext.textures !== null
-      ? renderContext.textures[0].colorSpace
-      : this.backend.renderer.outputColorSpace;
+    return renderContext.textures ? renderContext.textures[0].colorSpace : this.backend.renderer.outputColorSpace;
   }
 
   getPrimitiveTopology(object: Object3D, material: Material) {
@@ -39,14 +37,14 @@ export class BackendUtilities {
     return undefined;
   }
 
-  getSampleCount(renderContext: RenderContext): number {
-    if (renderContext.textures !== null) return renderContext.sampleCount;
+  getSampleCount(context: RenderContext): number {
+    if (context.textures) return context.sampleCount;
     return this.backend.parameters.sampleCount as number;
   }
 }
 
 const isPointsTopology = (object: any): boolean => object.isPoints;
 const isLineSegmentsTopology = (object: any, material: any): boolean =>
-  object.isLineSegments || (object.isMesh && material.wireframe === true);
+  object.isLineSegments || (object.isMesh && material.wireframe);
 const isLineTopology = (object: any): boolean => object.isLine;
 const isMeshTopology = (object: any): boolean => object.isMesh;

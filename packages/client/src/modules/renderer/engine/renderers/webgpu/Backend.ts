@@ -37,20 +37,10 @@ import { Info } from '@modules/renderer/engine/renderers/common/Info.js';
 import RenderObject from '@modules/renderer/engine/renderers/common/RenderObject.js';
 import ProgrammableStage from '@modules/renderer/engine/renderers/common/ProgrammableStage.js';
 import Color4 from '@modules/renderer/engine/renderers/common/Color4.js';
-
-export interface BackendParameters {
-  canvas?: HTMLCanvasElement;
-  alpha?: boolean;
-  antialias?: boolean;
-  sampleCount?: number;
-  trackTimestamp?: boolean;
-  requiredLimits?: Record<string, number>;
-  powerPreference?: GPUPowerPreference;
-  context?: GPUCanvasContext;
-}
+import { ResourceManager } from './utils/ResourceManager.js';
 
 export class Backend {
-  parameters: BackendParameters;
+  parameters: Options;
   data: WeakMap<any, any>;
   renderer: Renderer;
   domElement: HTMLCanvasElement;
@@ -131,18 +121,20 @@ export class Backend {
   context: GPUCanvasContext;
   colorBuffer: GPUTexture | null;
   defaultRenderPassdescriptor: GPURenderPassDescriptor | null;
-  utils: BackendUtilities;
-  attributeUtils: BackendAttributes;
-  bindingUtils: BackendBindings;
-  pipelineUtils: BackendPipelines;
-  textureUtils: BackendTextures;
+  utilities: BackendUtilities;
+  attributes: BackendAttributes;
+  bindings: BackendBindings;
+  pipelines: BackendPipelines;
+  textures: BackendTextures;
   occludedResolveCache: Map<number, GPUBuffer>;
+  resources: ResourceManager;
 
-  constructor(parameters?: BackendParameters) {
+  constructor(parameters?: Options) {
     this.parameters = parameters ?? {};
     this.data = new WeakMap();
     this.renderer = null!;
     this.domElement = null!;
+    this.resources = null!;
 
     this.parameters.alpha = this.parameters.alpha ?? true;
     this.parameters.antialias = this.parameters.antialias ?? true;
@@ -163,11 +155,12 @@ export class Backend {
     this.colorBuffer = null;
     this.defaultRenderPassdescriptor = null;
 
-    this.utils = new BackendUtilities(this);
-    this.attributeUtils = new BackendAttributes(this);
-    this.bindingUtils = new BackendBindings(this);
-    this.pipelineUtils = new BackendPipelines(this);
-    this.textureUtils = new BackendTextures(this);
+    this.resources = new ResourceManager(this);
+    this.utilities = new BackendUtilities(this);
+    this.attributes = new BackendAttributes(this);
+    this.bindings = new BackendBindings(this);
+    this.pipelines = new BackendPipelines(this);
+    this.textures = new BackendTextures(this);
     this.occludedResolveCache = new Map();
   }
 
@@ -224,7 +217,7 @@ export class Backend {
   }
 
   async getArrayBufferAsync(attribute: BufferAttribute<any>) {
-    return await this.attributeUtils.getArrayBufferAsync(attribute);
+    return await this.attributes.getArrayBufferAsync(attribute);
   }
 
   getContext(): GPUCanvasContext {
@@ -246,7 +239,7 @@ export class Backend {
           },
         ],
         depthStencilAttachment: {
-          view: this.textureUtils.getDepthBuffer(renderer.depth, renderer.stencil).createView(),
+          view: this.textures.getDepthBuffer(renderer.depth, renderer.stencil).createView(),
         },
       };
 
@@ -532,7 +525,7 @@ export class Backend {
         const texture = textures[i];
 
         if (texture.generateMipmaps === true) {
-          this.textureUtils.generateMipmaps(texture);
+          this.textures.generateMipmaps(texture);
         }
       }
     }
@@ -845,7 +838,7 @@ export class Backend {
 
     const { object, material } = renderObject;
 
-    const utils = this.utils;
+    const utils = this.utilities;
 
     const sampleCount = utils.getSampleCount(renderObject.context);
     const colorSpace = utils.getCurrentColorSpace(renderObject.context);
@@ -927,7 +920,7 @@ export class Backend {
   getRenderCacheKey(renderObject: RenderObject) {
     const { object, material } = renderObject;
 
-    const utils = this.utils;
+    const utils = this.utilities;
     const renderContext = renderObject.context;
 
     return [
@@ -964,35 +957,35 @@ export class Backend {
   // textures
 
   createSampler(texture: Texture) {
-    this.textureUtils.createSampler(texture);
+    this.textures.createSampler(texture);
   }
 
   destroySampler(texture: Texture) {
-    this.textureUtils.destroySampler(texture);
+    this.textures.destroySampler(texture);
   }
 
   createDefaultTexture(texture: Texture) {
-    this.textureUtils.createDefaultTexture(texture);
+    this.textures.createDefaultTexture(texture);
   }
 
   createTexture(texture: Texture, options) {
-    this.textureUtils.createTexture(texture, options);
+    this.textures.createTexture(texture, options);
   }
 
   updateTexture(texture: Texture, options) {
-    this.textureUtils.updateTexture(texture, options);
+    this.textures.updateTexture(texture, options);
   }
 
   generateMipmaps(texture: Texture) {
-    this.textureUtils.generateMipmaps(texture);
+    this.textures.generateMipmaps(texture);
   }
 
   destroyTexture(texture: Texture) {
-    this.textureUtils.destroyTexture(texture);
+    this.textures.destroyTexture(texture);
   }
 
   copyTextureToBuffer(texture: Texture, x: number, y: number, width: number, height: number) {
-    return this.textureUtils.copyTextureToBuffer(texture, x, y, width, height);
+    return this.textures.copyTextureToBuffer(texture, x, y, width, height);
   }
 
   initTimestampQuery(renderContext: RenderContext, descriptor) {
@@ -1090,62 +1083,62 @@ export class Backend {
   // pipelines
 
   createRenderPipeline(renderObject: RenderObject, promises: Promise<void>[] | null = null) {
-    this.pipelineUtils.createRenderPipeline(renderObject, promises);
+    this.pipelines.createRenderPipeline(renderObject, promises);
   }
 
   createComputePipeline(computePipeline: ComputePipeline, bindings: Binding[]) {
-    this.pipelineUtils.createComputePipeline(computePipeline, bindings);
+    this.pipelines.createComputePipeline(computePipeline, bindings);
   }
 
   // bindings
 
   createBindings(bindings: Binding[]) {
-    this.bindingUtils.createBindings(bindings);
+    this.bindings.createBindings(bindings);
   }
 
   updateBindings(bindings: Binding[]) {
-    this.bindingUtils.createBindings(bindings);
+    this.bindings.createBindings(bindings);
   }
 
   updateBinding(binding: Binding) {
-    this.bindingUtils.updateBinding(binding);
+    this.bindings.updateBinding(binding);
   }
 
   // attributes
 
   createIndexAttribute(attribute: BufferAttribute<any>) {
-    this.attributeUtils.createAttribute(
+    this.attributes.createAttribute(
       attribute,
       GPUBufferUsage.INDEX | GPUBufferUsage.COPY_SRC | GPUBufferUsage.COPY_DST,
     );
   }
 
   createAttribute(attribute: BufferAttribute<any>) {
-    this.attributeUtils.createAttribute(
+    this.attributes.createAttribute(
       attribute,
       GPUBufferUsage.VERTEX | GPUBufferUsage.COPY_SRC | GPUBufferUsage.COPY_DST,
     );
   }
 
   createStorageAttribute(attribute: BufferAttribute<any>) {
-    this.attributeUtils.createAttribute(
+    this.attributes.createAttribute(
       attribute,
       GPUBufferUsage.STORAGE | GPUBufferUsage.VERTEX | GPUBufferUsage.COPY_SRC | GPUBufferUsage.COPY_DST,
     );
   }
 
   updateAttribute(attribute: BufferAttribute<any>) {
-    this.attributeUtils.updateAttribute(attribute);
+    this.attributes.updateAttribute(attribute);
   }
 
   destroyAttribute(attribute: BufferAttribute<any>) {
-    this.attributeUtils.destroyAttribute(attribute);
+    this.attributes.destroyAttribute(attribute);
   }
 
   // canvas
 
   updateSize() {
-    this.colorBuffer = this.textureUtils.getColorBuffer();
+    this.colorBuffer = this.textures.getColorBuffer();
     this.defaultRenderPassdescriptor = null;
   }
 
@@ -1213,7 +1206,7 @@ export class Backend {
       }
     } else {
       if (texture.isDepthTexture) {
-        sourceGPU = this.textureUtils.getDepthBuffer(renderContext.depth, renderContext.stencil);
+        sourceGPU = this.textures.getDepthBuffer(renderContext.depth, renderContext.stencil);
       } else {
         sourceGPU = this.context.getCurrentTexture();
       }
@@ -1244,7 +1237,7 @@ export class Backend {
       [texture.image.width, texture.image.height],
     );
 
-    if (texture.generateMipmaps) this.textureUtils.generateMipmaps(texture);
+    if (texture.generateMipmaps) this.textures.generateMipmaps(texture);
 
     descriptor.colorAttachments[0].loadOp = GPULoadOpType.Load;
     if (renderContext.depth) descriptor.depthStencilAttachment.depthLoadOp = GPULoadOpType.Load;
@@ -1254,7 +1247,7 @@ export class Backend {
     renderContextData.currentSets = { attributes: {} };
   }
 
-  static async create(parameters: BackendParameters) {
+  static async create(parameters: Options) {
     const backend = new Backend(parameters);
 
     await backend.init();
@@ -1262,3 +1255,29 @@ export class Backend {
     return backend;
   }
 }
+
+export namespace Backend {
+  export interface Options {
+    canvas?: HTMLCanvasElement;
+    alpha?: boolean;
+    antialias?: boolean;
+    sampleCount?: number;
+    trackTimestamp?: boolean;
+    requiredLimits?: Record<string, number>;
+    powerPreference?: GPUPowerPreference;
+    context?: GPUCanvasContext;
+  }
+
+  export interface Configuration {
+    canvas?: HTMLCanvasElement;
+    alpha?: boolean;
+    antialias?: boolean;
+    sampleCount?: number;
+    trackTimestamp?: boolean;
+    requiredLimits?: Record<string, number>;
+    powerPreference?: GPUPowerPreference;
+    context?: GPUCanvasContext;
+  }
+}
+type Options = Backend.Options;
+type Configuration = Backend.Configuration;

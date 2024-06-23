@@ -1,4 +1,4 @@
-import { Backend, BackendParameters } from '@modules/renderer/engine/renderers/webgpu/Backend.js';
+import { Backend } from '@modules/renderer/engine/renderers/webgpu/Backend.js';
 import { ColorSpace, Side, ToneMapping } from '@modules/renderer/engine/constants.js';
 import ToneMappingNode from '@modules/renderer/engine/nodes/display/ToneMappingNode.js';
 import { Info } from '@modules/renderer/engine/renderers/common/Info.js';
@@ -29,12 +29,6 @@ const _screen = new Vector4();
 const _frustum = new Frustum();
 const _projScreenMatrix = new Matrix4();
 const _vector3 = new Vector3();
-
-export interface RendererParameters {
-  backend?: BackendParameters;
-  logarithmicDepthBuffer?: boolean;
-  alpha?: boolean;
-}
 
 export class Renderer {
   domElement: HTMLCanvasElement;
@@ -87,9 +81,9 @@ export class Renderer {
   _initialized: boolean;
   _initPromise: Promise<void>;
   _compilationPromises: any;
-  parameters: RendererParameters;
+  parameters: Options;
 
-  constructor(parameters?: RendererParameters) {
+  constructor(parameters?: Options) {
     const backend = new Backend(parameters?.backend);
     this.domElement = backend.getDomElement();
 
@@ -1093,3 +1087,18 @@ export class Renderer {
     return this.compileAsync;
   }
 }
+
+export namespace Renderer {
+  export interface Options {
+    backend?: Backend.Options;
+    logarithmicDepthBuffer?: boolean;
+    alpha?: boolean;
+  }
+
+  export interface Configuration {
+    logarithmicDepthBuffer: boolean;
+    alpha: boolean;
+  }
+}
+type Options = Renderer.Options;
+type Configuration = Renderer.Configuration;
