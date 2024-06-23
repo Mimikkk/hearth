@@ -125,15 +125,16 @@ function init() {
 
   // renderer
 
-  renderer = new Renderer();
+  renderer = new Renderer({
+    toneMapping: Engine.ToneMapping.ACESFilmic,
+  });
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(animate);
-  renderer.parameters.toneMapping = Engine.ToneMapping.ACESFilmic;
-  document.body.appendChild(renderer.domElement);
+  document.body.appendChild(renderer.canvas);
 
   // Mouse control
-  const controls = new OrbitControls(camera, renderer.domElement);
+  const controls = new OrbitControls(camera, renderer.canvas);
   controls.target.set(0, 2, 0);
   controls.minDistance = 7;
   controls.maxDistance = 40;

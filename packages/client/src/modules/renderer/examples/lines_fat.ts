@@ -35,7 +35,7 @@ function init() {
   renderer.setClearColor(0x000000, 0.0);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(animate);
-  document.body.appendChild(renderer.domElement);
+  document.body.appendChild(renderer.canvas);
 
   scene = new Engine.Scene();
 
@@ -45,7 +45,7 @@ function init() {
   camera2 = new Engine.PerspectiveCamera(40, 1, 1, 1000);
   camera2.position.copy(camera.position);
 
-  controls = new OrbitControls(camera, renderer.domElement);
+  controls = new OrbitControls(camera, renderer.canvas);
   controls.enableDamping = true;
   controls.minDistance = 10;
   controls.maxDistance = 500;

@@ -30,15 +30,16 @@ async function init() {
 
   //renderer
 
-  const renderer = new Renderer();
+  const renderer = new Renderer({
+    toneMapping: ToneMapping.Reinhard,
+    toneMappingExposure: 1,
+  });
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(() => renderer.render(scene, camera));
-  renderer.parameters.toneMapping = ToneMapping.Reinhard;
-  renderer.parameters.toneMappingExposure = 1;
-  document.body.appendChild(renderer.domElement);
+  document.body.appendChild(renderer.canvas);
 
-  const controls = new OrbitControls(camera, renderer.domElement);
+  const controls = new OrbitControls(camera, renderer.canvas);
   controls.minDistance = 3;
   controls.maxDistance = 6;
   controls.update();

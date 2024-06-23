@@ -46,16 +46,16 @@ async function init() {
     scene.add(gltf.scene);
   });
 
-  renderer = new Renderer();
+  renderer = new Renderer({
+    toneMapping: Engine.ToneMapping.Linear,
+  });
 
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.parameters.toneMapping = Engine.ToneMapping.Linear;
-  renderer.parameters.toneMappingExposure = 1;
   renderer.setAnimationLoop(render);
-  container.appendChild(renderer.domElement);
+  container.appendChild(renderer.canvas);
 
-  const controls = new OrbitControls(camera, renderer.domElement);
+  const controls = new OrbitControls(camera, renderer.canvas);
   controls.minDistance = 2;
   controls.maxDistance = 10;
 

@@ -21,12 +21,13 @@ let controls;
 init();
 
 async function init() {
-  renderer = new Renderer();
+  renderer = new Renderer({
+    toneMapping: Engine.ToneMapping.ACESFilmic,
+  });
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(animation);
-  renderer.parameters.toneMapping = Engine.ToneMapping.ACESFilmic;
-  document.body.appendChild(renderer.domElement);
+  document.body.appendChild(renderer.canvas);
 
   stats = new Stats();
   document.body.appendChild(stats.dom);
@@ -95,7 +96,7 @@ async function init() {
   //
 
   useWindowResizer(renderer, camera);
-  controls = new OrbitControls(camera, renderer.domElement);
+  controls = new OrbitControls(camera, renderer.canvas);
   controls.autoRotate = true;
 }
 

@@ -27,11 +27,11 @@ async function init() {
   renderer = new Renderer();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
-  container.appendChild(renderer.domElement);
+  container.appendChild(renderer.canvas);
 
   await renderer.init();
 
-  const controls = new OrbitControls(camera, renderer.domElement);
+  const controls = new OrbitControls(camera, renderer.canvas);
   controls.eventDispatcher.add('change', render); // use if there is no animation loop
   controls.minDistance = 2;
   controls.maxDistance = 10;

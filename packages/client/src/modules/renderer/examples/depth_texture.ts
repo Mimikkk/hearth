@@ -49,7 +49,7 @@ function init() {
   renderer.setPixelRatio(dpr);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(animate);
-  document.body.appendChild(renderer.domElement);
+  document.body.appendChild(renderer.canvas);
 
   const depthTexture = new Engine.DepthTexture();
   depthTexture.type = Engine.TextureDataType.Float;
@@ -74,7 +74,7 @@ function init() {
 
   //
 
-  controls = new OrbitControls(camera, renderer.domElement);
+  controls = new OrbitControls(camera, renderer.canvas);
   controls.enableDamping = true;
 }
 

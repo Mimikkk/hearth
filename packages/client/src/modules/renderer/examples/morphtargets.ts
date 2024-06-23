@@ -43,9 +43,9 @@ function init() {
   renderer.setAnimationLoop(function () {
     renderer.render(scene, camera);
   });
-  container.appendChild(renderer.domElement);
+  container.appendChild(renderer.canvas);
 
-  const controls = new OrbitControls(camera, renderer.domElement);
+  const controls = new OrbitControls(camera, renderer.canvas);
   controls.enableZoom = false;
 
   useWindowResizer(renderer, camera);

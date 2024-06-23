@@ -25,7 +25,7 @@ async function init() {
   const renderer = new Renderer();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
-  document.body.appendChild(renderer.domElement);
+  document.body.appendChild(renderer.canvas);
   const [uncompressed, lzw, jpeg] = await TiffLoader.loadAsyncMultiple([
     'resources/textures/tiff/crate_uncompressed.tif',
     'resources/textures/tiff/crate_lzw.tif',

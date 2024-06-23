@@ -112,12 +112,12 @@ async function init() {
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(animate);
-  document.body.appendChild(renderer.domElement);
+  document.body.appendChild(renderer.canvas);
 
   stats = new Stats();
   document.body.appendChild(stats.dom);
 
-  controls = new OrbitControls(camera, renderer.domElement);
+  controls = new OrbitControls(camera, renderer.canvas);
   controls.minDistance = 1;
   controls.maxDistance = 10;
   controls.maxPolarAngle = Math.PI / 2;

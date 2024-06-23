@@ -98,11 +98,11 @@ async function init() {
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(animate);
-  container.appendChild(renderer.domElement);
+  container.appendChild(renderer.canvas);
 
   //
 
-  controls = new OrbitControls(camera, renderer.domElement);
+  controls = new OrbitControls(camera, renderer.canvas);
   controls.minDistance = 400;
   controls.maxDistance = 2000;
 

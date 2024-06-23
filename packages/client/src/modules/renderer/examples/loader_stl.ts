@@ -120,7 +120,7 @@ function init() {
 
   // renderer.shadowMap.enabled = true;
 
-  container.appendChild(renderer.domElement);
+  container.appendChild(renderer.canvas);
 
   // stats
 

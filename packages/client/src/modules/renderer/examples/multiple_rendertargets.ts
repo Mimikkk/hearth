@@ -89,7 +89,7 @@ async function init() {
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(render);
-  document.body.appendChild(renderer.domElement);
+  document.body.appendChild(renderer.canvas);
 
   // Create a multi render target with Float buffers
 
@@ -129,7 +129,7 @@ async function init() {
 
   // Controls
 
-  new OrbitControls(camera, renderer.domElement);
+  new OrbitControls(camera, renderer.canvas);
 
   useWindowResizer(renderer, camera, () => {
     camera.aspect = window.innerWidth / window.innerHeight;

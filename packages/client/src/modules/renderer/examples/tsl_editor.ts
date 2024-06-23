@@ -54,12 +54,13 @@ const options: {
 
 let builder: WGSLNodeBuilder | null = null;
 
-const renderer = new Renderer();
-renderer.parameters.outputColorSpace = ColorSpace.LinearSRGB;
+const renderer = new Renderer({
+  outputColorSpace: ColorSpace.LinearSRGB,
+});
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setAnimationLoop(() => renderer.render(scene, camera));
 renderer.setSize(renderable.clientWidth, renderable.clientHeight);
-renderable.appendChild(renderer.domElement);
+renderable.appendChild(renderer.canvas);
 
 const refreshEditorView = async () => {
   const code = editorView.getValue();

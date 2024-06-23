@@ -32,16 +32,17 @@ async function init() {
 
   scene = new Engine.Scene();
 
-  renderer = new Renderer();
+  renderer = new Renderer({
+    toneMapping: Engine.ToneMapping.ACESFilmic,
+  });
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.parameters.toneMapping = Engine.ToneMapping.ACESFilmic;
 
   await renderer.init();
 
-  container.appendChild(renderer.domElement);
+  container.appendChild(renderer.canvas);
 
-  const controls = new OrbitControls(camera, renderer.domElement);
+  const controls = new OrbitControls(camera, renderer.canvas);
   controls.eventDispatcher.add('change', render); // use if there is no animation loop
   controls.minDistance = 2;
   controls.maxDistance = 10;

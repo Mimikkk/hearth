@@ -101,17 +101,18 @@ function init() {
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(animate);
-  document.body.appendChild(renderer.domElement);
+  document.body.appendChild(renderer.canvas);
 
   // ***** Clipping setup (renderer): *****
   const globalPlanes = [globalPlane];
   const Empty = Object.freeze([]);
 
-  renderer.clippingPlanes = Empty; // GUI sets it to globalPlanes
+  // GUI sets it to globalPlanes
+  renderer.parameters.clippingPlanes = Empty;
   renderer.parameters.localClippingEnabled = true;
 
   // Controls
-  const controls = new OrbitControls(camera, renderer.domElement);
+  const controls = new OrbitControls(camera, renderer.canvas);
   controls.target.set(0, 1, 0);
   controls.update();
 
@@ -155,10 +156,10 @@ function init() {
     folderGlobal = gui.addFolder('Global Clipping'),
     propsGlobal = {
       get Enabled() {
-        return renderer.clippingPlanes !== Empty;
+        return renderer.parameters.clippingPlanes !== Empty;
       },
       set Enabled(v) {
-        renderer.clippingPlanes = v ? globalPlanes : Empty;
+        renderer.parameters.clippingPlanes = v ? globalPlanes : Empty;
       },
 
       get Plane() {

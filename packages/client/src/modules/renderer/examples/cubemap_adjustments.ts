@@ -144,9 +144,9 @@ async function init() {
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.toneMappingNode = toneMapping(Engine.ToneMapping.Linear, 1);
   renderer.setAnimationLoop(render);
-  container.appendChild(renderer.domElement);
+  container.appendChild(renderer.canvas);
 
-  const controls = new OrbitControls(camera, renderer.domElement);
+  const controls = new OrbitControls(camera, renderer.canvas);
   controls.minDistance = 2;
   controls.maxDistance = 10;
 

@@ -3,7 +3,6 @@ import {
   CoordinateSystem,
   Object3D,
   RenderTarget,
-  Revision,
   Scene,
   Texture,
   Vector2,
@@ -40,10 +39,9 @@ import Color4 from '@modules/renderer/engine/renderers/common/Color4.js';
 import { ResourceManager } from './utils/ResourceManager.js';
 
 export class Backend {
-  parameters: Options;
+  parameters: Configuration;
   data: WeakMap<any, any>;
   renderer: Renderer;
-  domElement: HTMLCanvasElement;
 
   getInstanceCount(renderObject: RenderObject) {
     const { object, geometry } = renderObject;
@@ -75,23 +73,6 @@ export class Backend {
     return color4;
   }
 
-  getDomElement() {
-    let domElement = this.domElement;
-
-    if (domElement === null) {
-      domElement = this.parameters.canvas ?? document.createElement('canvas');
-
-      // OffscreenCanvas does not have setAttribute, see #22811
-      if ('setAttribute' in domElement) domElement.setAttribute('data-engine', `engine.js r${Revision} webgpu`);
-
-      this.domElement = domElement;
-    }
-
-    return domElement;
-  }
-
-  // resource properties
-
   set(object: any, value: any) {
     this.data.set(object, value);
   }
@@ -115,10 +96,8 @@ export class Backend {
     this.data.delete(object);
   }
 
-  trackTimestamp: boolean;
   adapter: GPUAdapter;
   device: GPUDevice;
-  context: GPUCanvasContext;
   colorBuffer: GPUTexture | null;
   defaultRenderPassdescriptor: GPURenderPassDescriptor | null;
   utilities: BackendUtilities;
@@ -130,7 +109,14 @@ export class Backend {
   resources: ResourceManager;
 
   static configure(options?: Options): Configuration {
+    const canvas = options?.canvas ?? document.createElement('canvas');
+    const context = canvas.getContext('webgpu')!;
+
+    if (context === null) throw new Error('Unable to create WebGPU context.');
+
     return {
+      canvas,
+      context,
       alpha: options?.alpha ?? true,
       antialias: options?.antialias ?? true,
       powerPreference: options?.powerPreference ?? 'high-performance',
@@ -142,13 +128,13 @@ export class Backend {
 
   constructor(options?: Options) {
     this.parameters = Backend.configure(options);
+
     this.data = new WeakMap();
+
     this.renderer = null!;
-    this.domElement = null!;
     this.resources = null!;
     this.adapter = null!;
     this.device = null!;
-    this.context = null!;
     this.colorBuffer = null;
     this.defaultRenderPassdescriptor = null;
 
@@ -188,19 +174,12 @@ export class Backend {
       requiredLimits: parameters.requiredLimits,
     });
 
-    const context = parameters.context ?? renderer.domElement.getContext('webgpu');
-
-    if (context === null) {
-      throw new Error('WebGPUBackend: Unable to create WebGPU context.');
-    }
-
     this.adapter = adapter;
     this.device = device;
-    this.context = context;
 
     const alphaMode = parameters.alpha ? 'premultiplied' : 'opaque';
 
-    this.context.configure({
+    this.parameters.context.configure({
       device: this.device,
       format: GPUTextureFormatType.BGRA8Unorm,
       usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.COPY_SRC,
@@ -219,7 +198,7 @@ export class Backend {
   }
 
   getContext(): GPUCanvasContext {
-    return this.context;
+    return this.parameters.context;
   }
 
   _getDefaultRenderPassDescriptor() {
@@ -255,9 +234,9 @@ export class Backend {
     const colorAttachment = descriptor.colorAttachments[0];
 
     if (antialias === true) {
-      colorAttachment.resolveTarget = this.context.getCurrentTexture().createView();
+      colorAttachment.resolveTarget = this.parameters.context.getCurrentTexture().createView();
     } else {
-      colorAttachment.view = this.context.getCurrentTexture().createView();
+      colorAttachment.view = this.parameters.context.getCurrentTexture().createView();
     }
 
     return descriptor;
@@ -1206,7 +1185,7 @@ export class Backend {
       if (texture.isDepthTexture) {
         sourceGPU = this.textures.getDepthBuffer(renderContext.depth, renderContext.stencil);
       } else {
-        sourceGPU = this.context.getCurrentTexture();
+        sourceGPU = this.parameters.context.getCurrentTexture();
       }
     }
 
@@ -1267,14 +1246,14 @@ export namespace Backend {
   }
 
   export interface Configuration {
-    canvas?: HTMLCanvasElement;
-    alpha?: boolean;
-    antialias?: boolean;
-    sampleCount?: number;
-    trackTimestamp?: boolean;
-    requiredLimits?: Record<string, number>;
-    powerPreference?: GPUPowerPreference;
-    context?: GPUCanvasContext;
+    canvas: HTMLCanvasElement;
+    alpha: boolean;
+    antialias: boolean;
+    sampleCount: number;
+    trackTimestamp: boolean;
+    requiredLimits: Record<string, number>;
+    powerPreference: GPUPowerPreference;
+    context: GPUCanvasContext;
   }
 }
 type Options = Backend.Options;

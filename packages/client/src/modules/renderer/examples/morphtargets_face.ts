@@ -29,13 +29,14 @@ async function init() {
   const scene = new Engine.Scene();
   scene.add(new Engine.HemisphereLight(0xffffff, 0x443333, 2));
 
-  const renderer = new Renderer();
+  const renderer = new Renderer({
+    toneMapping: Engine.ToneMapping.ACESFilmic,
+  });
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.parameters.toneMapping = Engine.ToneMapping.ACESFilmic;
   renderer.setAnimationLoop(animate);
 
-  container.appendChild(renderer.domElement);
+  container.appendChild(renderer.canvas);
 
   const ktx2Loader = await new KTX2Loader().detectSupportAsync(renderer);
 
@@ -73,7 +74,7 @@ async function init() {
 
   scene.background = new Engine.Color(0x666666);
 
-  const controls = new OrbitControls(camera, renderer.domElement);
+  const controls = new OrbitControls(camera, renderer.canvas);
   controls.enableDamping = true;
   controls.minDistance = 2.5;
   controls.maxDistance = 5;

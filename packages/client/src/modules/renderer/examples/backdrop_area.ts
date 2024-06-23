@@ -111,9 +111,9 @@ renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setAnimationLoop(animate);
 renderer.toneMappingNode = toneMapping(ToneMapping.Linear, 0.15);
-document.body.appendChild(renderer.domElement);
+document.body.appendChild(renderer.canvas);
 
-const controls = new OrbitControls(camera, renderer.domElement);
+const controls = new OrbitControls(camera, renderer.canvas);
 controls.target.set(0, 1, 0);
 controls.update();
 

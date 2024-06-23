@@ -47,21 +47,21 @@ export class SelectionHelper {
       this.onSelectOver(event);
     };
 
-    this.renderer.domElement.addEventListener('pointerdown', this.onPointerDown);
-    this.renderer.domElement.addEventListener('pointermove', this.onPointerMove);
-    this.renderer.domElement.addEventListener('pointerup', this.onPointerUp);
+    this.renderer.canvas.addEventListener('pointerdown', this.onPointerDown);
+    this.renderer.canvas.addEventListener('pointermove', this.onPointerMove);
+    this.renderer.canvas.addEventListener('pointerup', this.onPointerUp);
   }
 
   dispose() {
-    this.renderer.domElement.removeEventListener('pointerdown', this.onPointerDown);
-    this.renderer.domElement.removeEventListener('pointermove', this.onPointerMove);
-    this.renderer.domElement.removeEventListener('pointerup', this.onPointerUp);
+    this.renderer.canvas.removeEventListener('pointerdown', this.onPointerDown);
+    this.renderer.canvas.removeEventListener('pointermove', this.onPointerMove);
+    this.renderer.canvas.removeEventListener('pointerup', this.onPointerUp);
   }
 
   onSelectStart(event: PointerEvent) {
     this.element.style.display = 'none';
 
-    this.renderer.domElement.parentElement.appendChild(this.element);
+    this.renderer.canvas.parentElement.appendChild(this.element);
 
     this.element.style.left = event.clientX + 'px';
     this.element.style.top = event.clientY + 'px';
