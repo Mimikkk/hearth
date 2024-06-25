@@ -157,7 +157,7 @@ async function init() {
     render();
   });
 
-  renderer.compute(computeInitNode);
+  renderer.computeAsync(computeInitNode);
 }
 
 function render() {
@@ -169,14 +169,14 @@ function render() {
   if (phase && seconds !== lastUpdate) {
     seed.value.set(Math.random(), Math.random());
 
-    renderer.compute(computeInitNode);
+    renderer.computeAsync(computeInitNode);
 
     lastUpdate = seconds;
   }
 
   // compute step
 
-  renderer.compute(phase ? computeToPong : computeToPing);
+  renderer.computeAsync(phase ? computeToPong : computeToPing);
 
   material.map = phase ? pongTexture : pingTexture;
 

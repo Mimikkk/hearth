@@ -269,7 +269,7 @@ class PMREMGenerator {
 
   _compileMaterial(material) {
     const tmpMesh = new Mesh(this._lodPlanes[0], material);
-    this._renderer.compile(tmpMesh, _flatCamera);
+    this._renderer.compileAsync(tmpMesh, _flatCamera);
   }
 
   _sceneToCubeUV(scene, near, far, cubeUVRenderTarget) {

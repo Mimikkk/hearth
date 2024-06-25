@@ -3,12 +3,10 @@ import {
   CoordinateSystem,
   Object3D,
   RenderTarget,
-  Revision,
   Scene,
   Texture,
   Vector2,
   Vector3,
-  Vector4,
 } from '../../engine.js';
 
 import {
@@ -16,7 +14,6 @@ import {
   GPUIndexFormatType,
   GPULoadOpType,
   GPUStoreOpType,
-  GPUTextureFormatType,
   GPUTextureViewDimensionType,
 } from './utils/constants.js';
 
@@ -27,7 +24,6 @@ import { BackendAttributes } from './utils/BackendAttributes.js';
 import { BackendBindings } from './utils/BackendBindings.js';
 import BackendPipelines from './utils/BackendPipelines.js';
 import { BackendTextures } from './utils/BackendTextures.js';
-import { WebGPUManager } from '@modules/renderer/engine/capabilities/WebGPUManager.js';
 import type { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 import RenderContext from '@modules/renderer/engine/renderers/common/RenderContext.js';
 import ComputeNode from '@modules/renderer/engine/nodes/gpgpu/ComputeNode.js';
@@ -1057,14 +1053,6 @@ export class Backend {
 
   getMaxAnisotropy() {
     return 16;
-  }
-
-  async hasFeatureAsync(name: string) {
-    const adapter = this.adapter || (await WebGPUManager.readAdapter());
-
-    //
-
-    return adapter.features.has(name);
   }
 
   hasFeature(name: string) {

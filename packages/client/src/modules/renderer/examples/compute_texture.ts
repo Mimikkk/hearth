@@ -74,7 +74,7 @@ async function init() {
   document.body.appendChild(renderer.parameters.canvas);
 
   // compute texture
-  renderer.compute(computeNode);
+  renderer.computeAsync(computeNode);
   useWindowResizer(renderer, camera, () => {
     renderer.setSize(window.innerWidth, window.innerHeight);
 

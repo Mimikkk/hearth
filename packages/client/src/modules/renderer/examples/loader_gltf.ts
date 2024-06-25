@@ -1,4 +1,16 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
+import {
+  Camera,
+  Mapping,
+  Mesh,
+  MeshBasicMaterial,
+  OrthographicCamera,
+  PerspectiveCamera,
+  PlaneGeometry,
+  Scene,
+  Texture,
+  ToneMapping,
+} from '@modules/renderer/engine/engine.js';
 
 import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 
@@ -7,8 +19,12 @@ import { RGBELoader } from '@modules/renderer/engine/loaders/textures/RGBELoader
 import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
 import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/GLTFLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
+import { ViewHelper } from '@modules/renderer/engine/helpers/ViewHelper.js';
 
-let camera, scene, renderer;
+let camera!: PerspectiveCamera;
+let scene!: Scene;
+let renderer!: Renderer;
+let viewHelper!: ViewHelper;
 
 await init();
 render();
@@ -17,19 +33,20 @@ async function init() {
   const container = document.createElement('div');
   document.body.appendChild(container);
 
-  camera = new Engine.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.25, 20);
+  camera = new PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.25, 20);
   camera.position.set(-1.8, 0.6, 2.7);
 
-  scene = new Engine.Scene();
+  scene = new Scene();
 
   renderer = await Renderer.create();
+  viewHelper = new ViewHelper(camera, renderer.parameters.canvas);
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.parameters.toneMapping = Engine.ToneMapping.ACESFilmic;
+  renderer.parameters.toneMapping = ToneMapping.ACESFilmic;
   container.appendChild(renderer.parameters.canvas);
 
   RGBELoader.loadAsync('resources/textures/equirectangular/royal_esplanade_1k.hdr').then(texture => {
-    texture.mapping = Engine.Mapping.EquirectangularReflection;
+    texture.mapping = Mapping.EquirectangularReflection;
     scene.background = texture;
     scene.environment = texture;
 
@@ -37,9 +54,19 @@ async function init() {
 
     // model
 
+    const cameraHud = new OrthographicCamera(
+      -window.innerWidth / 2,
+      window.innerWidth / 2,
+      window.innerHeight / 2,
+      -window.innerHeight / 2,
+      0,
+      30,
+    );
+
     const loader = new GLTFLoader();
     loader.loadAsync('resources/models/gltf/DamagedHelmet/glTF/DamagedHelmet.gltf').then(gltf => {
       scene.add(gltf.scene);
+      scene.add(viewHelper);
 
       render();
     });
@@ -58,6 +85,7 @@ async function init() {
   });
 }
 
-function render() {
-  renderer.renderAsync(scene, camera);
+async function render() {
+  renderer.clear();
+  await renderer.renderAsync(scene, camera);
 }

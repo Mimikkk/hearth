@@ -149,7 +149,7 @@ async function init() {
 
   //
 
-  renderer.compute(computeInit);
+  renderer.computeAsync(computeInit);
 
   // click event
 
@@ -186,7 +186,7 @@ async function init() {
 
       // compute
 
-      renderer.compute(computeHit);
+      renderer.computeAsync(computeHit);
     }
   }
 
@@ -224,7 +224,7 @@ async function animate() {
 
   // throttle the logging
 
-  if (renderer.hasFeature('timestamp-query')) {
+  if (renderer.backend.hasFeature('timestamp-query')) {
     if (renderer.info.render.calls % 5 === 0) {
       timestamps.innerHTML = `
 

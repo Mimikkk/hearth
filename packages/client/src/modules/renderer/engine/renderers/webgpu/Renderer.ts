@@ -657,10 +657,6 @@ export class Renderer {
     return this.clear(false, false, true);
   }
 
-  async clearAsync(color = true, depth = true, stencil = true) {
-    this.clear(color, depth, stencil);
-  }
-
   get currentColorSpace() {
     const renderTarget = this._renderTarget;
 
@@ -769,14 +765,6 @@ export class Renderer {
     //
 
     nodeFrame.renderId = previousRenderId;
-  }
-
-  hasFeatureAsync(name) {
-    return this.backend.hasFeatureAsync(name);
-  }
-
-  hasFeature(name) {
-    return this.backend.hasFeature(name);
   }
 
   copyFramebufferToTexture(framebufferTexture) {
@@ -1009,14 +997,6 @@ export class Renderer {
 
     this._pipelines.getForRender(renderObject, this._compilationPromises);
   }
-
-  get compute() {
-    return this.computeAsync;
-  }
-
-  get compile() {
-    return this.compileAsync;
-  }
 }
 
 export namespace Renderer {
@@ -1028,7 +1008,6 @@ export namespace Renderer {
     autoClearColor?: boolean;
     autoClearDepth?: boolean;
     autoClearStencil?: boolean;
-    backend?: Backend.Options;
     canvas?: HTMLCanvasElement;
     clippingPlanes?: Plane[];
     depth?: boolean;

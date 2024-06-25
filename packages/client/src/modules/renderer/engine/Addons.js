@@ -44,10 +44,8 @@ export * from './geometries/TextGeometry.ts';
 export * from './helpers/OctreeHelper.ts';
 export * from './helpers/PositionalAudioHelper.ts';
 export * from './helpers/RectAreaLightHelper.ts';
-export * from './helpers/TextureHelper.ts';
 export * from './helpers/VertexNormalsHelper.ts';
 export * from './helpers/VertexTangentsHelper.ts';
-export * from './helpers/ViewHelper.ts';
 
 export * from '@modules/renderer/engine/interactive/InteractiveGroup.ts';
 export * from '@modules/renderer/engine/interactive/SelectionBox.ts';

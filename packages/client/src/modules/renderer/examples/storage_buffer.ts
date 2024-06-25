@@ -127,7 +127,7 @@ async function init() {
   scene.background = new Engine.Color(0x313131);
 
   // Init Positions
-  renderer.compute(computeInit);
+  renderer.computeAsync(computeInit);
 
   const stepAnimation = async () => {
     await renderer.computeAsync(compute);

@@ -133,12 +133,9 @@ export class ViewHelper extends Object3D {
       const x = domElement.offsetWidth - dim;
 
       renderer.clearDepth();
-
       renderer.getViewport(viewport);
       renderer.setViewport(x, 0, dim, dim);
-
       renderer.render(this, orthoCamera);
-
       renderer.setViewport(viewport.x, viewport.y, viewport.z, viewport.w);
     };
 

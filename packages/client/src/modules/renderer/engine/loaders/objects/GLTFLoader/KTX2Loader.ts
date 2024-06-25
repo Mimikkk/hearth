@@ -88,12 +88,12 @@ export class KTX2Loader extends classLoader<{
 
   async detectSupportAsync(renderer: Renderer) {
     this.workerConfig = {
-      astcSupported: await renderer.hasFeatureAsync('texture-compression-astc'),
-      etc1Supported: await renderer.hasFeatureAsync('texture-compression-etc1'),
-      etc2Supported: await renderer.hasFeatureAsync('texture-compression-etc2'),
-      dxtSupported: await renderer.hasFeatureAsync('texture-compression-bc'),
-      bptcSupported: await renderer.hasFeatureAsync('texture-compression-bptc'),
-      pvrtcSupported: await renderer.hasFeatureAsync('texture-compression-pvrtc'),
+      astcSupported: await renderer.backend.hasFeature('texture-compression-astc'),
+      etc1Supported: await renderer.backend.hasFeature('texture-compression-etc1'),
+      etc2Supported: await renderer.backend.hasFeature('texture-compression-etc2'),
+      dxtSupported: await renderer.backend.hasFeature('texture-compression-bc'),
+      bptcSupported: await renderer.backend.hasFeature('texture-compression-bptc'),
+      pvrtcSupported: await renderer.backend.hasFeature('texture-compression-pvrtc'),
     };
     return this;
   }
