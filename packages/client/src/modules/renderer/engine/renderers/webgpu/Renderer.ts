@@ -22,6 +22,7 @@ import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.j
 import { Vector3 } from '@modules/renderer/engine/math/Vector3.js';
 import { Vector2 } from '@modules/renderer/engine/math/Vector2.js';
 import { Frustum, Matrix4, Plane } from '@modules/renderer/engine/engine.js';
+import { GPUFeatureNameType, GPUTextureFormatType } from '@modules/renderer/engine/renderers/webgpu/utils/constants.js';
 
 const _scene = new Scene();
 const _drawingBufferSize = new Vector2();
@@ -103,11 +104,9 @@ export class Renderer {
   constructor(parameters?: Options) {
     this.parameters = Renderer.configure(parameters);
     this.backend = new Backend();
-
     this.info = new Info();
 
     // internals
-
     this._pixelRatio = 1;
     this._width = this.parameters.canvas.width;
     this._height = this.parameters.canvas.height;
@@ -129,45 +128,48 @@ export class Renderer {
     this._background = null!;
 
     this._currentRenderContext = null;
-
     this._opaqueSort = null;
     this._transparentSort = null;
 
-    const alphaClear = this.parameters.alpha ? 0 : 1;
-
-    this._clearColor = new Color4(0, 0, 0, alphaClear);
+    this._clearColor = new Color4(0, 0, 0, this.parameters.alpha ? 0 : 1);
     this._clearDepth = 1;
     this._clearStencil = 0;
-
     this._renderTarget = null;
     this._activeCubeFace = 0;
     this._activeMipmapLevel = 0;
-
     this._renderObjectFunction = null;
     this._currentRenderObjectFunction = null;
-
     this._handleObjectFunction = this._renderObjectDirect;
-
     this._initialized = false;
-    this._initPromise = null!;
 
+    this._initPromise = null!;
     this._compilationPromises = null;
   }
 
   static async create(parameters?: Options) {
     const renderer = new Renderer(parameters);
-    await renderer.init();
+    const backend = renderer.backend;
+    await backend.init(renderer);
+
+    renderer._nodes = new Nodes(renderer);
+    renderer._animation = new Animation(renderer);
+    renderer._attributes = new Attributes(renderer);
+    renderer._background = new Background(renderer);
+    renderer._geometries = new Geometries(renderer);
+    renderer._textures = new Textures(renderer);
+    renderer._pipelines = new Pipelines(renderer);
+    renderer._bindings = new Bindings(renderer);
+    renderer._objects = new RenderObjects(renderer);
+    renderer._renderLists = new RenderLists();
+    renderer._renderContexts = new RenderContexts();
+
     return renderer;
   }
 
   async init() {
-    if (this._initialized) {
-      throw new Error('Renderer: Backend has already been initialized.');
-    }
+    if (this._initialized) throw new Error('Renderer: Backend has already been initialized.');
 
-    if (this._initPromise !== null) {
-      return this._initPromise;
-    }
+    if (this._initPromise !== null) return this._initPromise;
 
     this._initPromise = new Promise(async (resolve, reject) => {
       const backend = this.backend;
@@ -714,20 +716,7 @@ export class Renderer {
 
   async clearAsync(color = true, depth = true, stencil = true) {
     if (this._initialized === false) await this.init();
-
     this.clear(color, depth, stencil);
-  }
-
-  clearColorAsync() {
-    return this.clearAsync(true, false, false);
-  }
-
-  clearDepthAsync() {
-    return this.clearAsync(false, true, false);
-  }
-
-  clearStencilAsync() {
-    return this.clearAsync(false, false, true);
   }
 
   get currentColorSpace() {

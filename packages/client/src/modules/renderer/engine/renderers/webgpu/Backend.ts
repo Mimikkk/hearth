@@ -42,7 +42,6 @@ import { ResourceManager } from './utils/ResourceManager.js';
 export class Backend {
   data: WeakMap<any, any>;
   renderer: Renderer;
-  domElement: HTMLCanvasElement;
 
   getInstanceCount(renderObject: RenderObject) {
     const { object, geometry } = renderObject;
@@ -56,12 +55,6 @@ export class Backend {
     return this.renderer.getDrawingBufferSize(vector2);
   }
 
-  getScissor() {
-    const vector4 = new Vector4();
-
-    return this.renderer.getScissor(vector4);
-  }
-
   getClearColor() {
     const renderer = this.renderer;
 
@@ -72,21 +65,6 @@ export class Backend {
     color4.getRGB(color4, this.renderer.currentColorSpace);
 
     return color4;
-  }
-
-  getDomElement() {
-    let domElement = this.domElement;
-
-    if (domElement === null) {
-      domElement = this.parameters.canvas ?? document.createElement('canvas');
-
-      // OffscreenCanvas does not have setAttribute, see #22811
-      if ('setAttribute' in domElement) domElement.setAttribute('data-engine', `engine.js r${Revision} webgpu`);
-
-      this.domElement = domElement;
-    }
-
-    return domElement;
   }
 
   // resource properties
@@ -129,7 +107,6 @@ export class Backend {
   constructor() {
     this.data = new WeakMap();
     this.renderer = null!;
-    this.domElement = null!;
     this.resources = null!;
 
     this.adapter = null!;
@@ -149,32 +126,25 @@ export class Backend {
   async init(renderer: Renderer) {
     this.renderer = renderer;
 
-    const adapterOptions = {
-      powerPreference: this.renderer.parameters.powerPreference,
-    };
-
-    const adapter = await navigator.gpu.requestAdapter(adapterOptions);
-
-    if (adapter === null) throw new Error('WebGPUBackend: Unable to create WebGPU adapter.');
-
-    const features = Object.values(GPUFeatureNameType).filter(name => adapter.features.has(name));
+    const adapter = await navigator.gpu.requestAdapter({ powerPreference: renderer.parameters.powerPreference });
+    if (adapter === null) throw Error('WebGPUBackend: Unable to create WebGPU adapter.');
 
     const device = await adapter.requestDevice({
-      requiredFeatures: features,
-      requiredLimits: this.renderer.parameters.requiredLimits,
+      requiredFeatures: Object.values(GPUFeatureNameType).filter(name => adapter.features.has(name)),
+      requiredLimits: renderer.parameters.requiredLimits,
     });
-
-    this.adapter = adapter;
-    this.device = device;
 
     renderer.parameters.context.configure({
       device,
       format: GPUTextureFormatType.BGRA8Unorm,
       usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.COPY_SRC,
-      alphaMode: this.renderer.parameters.alpha ? 'premultiplied' : 'opaque',
+      alphaMode: renderer.parameters.alpha ? 'premultiplied' : 'opaque',
     });
 
-    this.updateSize();
+    this.adapter = adapter;
+    this.device = device;
+    this.colorBuffer = this.textures.getColorBuffer();
+    this.renderPassDescriptor = null;
   }
 
   get coordinateSystem() {
