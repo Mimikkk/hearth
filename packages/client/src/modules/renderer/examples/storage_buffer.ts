@@ -25,7 +25,7 @@ const dashboard = {
   computeCalls: document.getElementById('compute-calls')!,
 };
 
-function init() {
+async function init() {
   const aspect = window.innerWidth / window.innerHeight;
   const camera = new Engine.OrthographicCamera(-aspect, aspect, 1, -1, 0, 2);
   camera.position.z = 1;
@@ -117,7 +117,7 @@ function init() {
   const plane = new Engine.Mesh(new Engine.PlaneGeometry(1, 1), material);
   scene.add(plane);
 
-  const renderer = new Renderer({ trackTimestamp: true });
+  const renderer = await Renderer.create({ trackTimestamp: true });
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
 

@@ -10,10 +10,10 @@ import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindow
 
 let camera, scene, renderer;
 
-init();
+await init();
 render();
 
-function init() {
+async function init() {
   const container = document.createElement('div');
   document.body.appendChild(container);
 
@@ -21,6 +21,12 @@ function init() {
   camera.position.set(-1.8, 0.6, 2.7);
 
   scene = new Engine.Scene();
+
+  renderer = await Renderer.create();
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.parameters.toneMapping = Engine.ToneMapping.ACESFilmic;
+  container.appendChild(renderer.parameters.canvas);
 
   RGBELoader.loadAsync('resources/textures/equirectangular/royal_esplanade_1k.hdr').then(texture => {
     texture.mapping = Engine.Mapping.EquirectangularReflection;
@@ -38,12 +44,6 @@ function init() {
       render();
     });
   });
-
-  renderer = new Renderer();
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.parameters.toneMapping = Engine.ToneMapping.ACESFilmic;
-  container.appendChild(renderer.parameters.canvas);
 
   const controls = new OrbitControls(camera, renderer.parameters.canvas);
   controls.eventDispatcher.add('change', render); // use if there is no animation loop

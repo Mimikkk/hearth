@@ -30,7 +30,7 @@ let windowHalfX = window.innerWidth / 2;
 
 init();
 
-function init() {
+async function init() {
   // CAMERA
 
   const width = window.innerWidth;
@@ -81,7 +81,7 @@ function init() {
 
   // RENDERER
 
-  renderer = new Renderer();
+  renderer = await Renderer.create();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(render);

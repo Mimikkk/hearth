@@ -24,7 +24,7 @@ startButton.addEventListener('click', function () {
   init();
 });
 
-function init() {
+async function init() {
   const overlay = document.getElementById('overlay');
   overlay.remove();
 
@@ -40,7 +40,7 @@ function init() {
   light.position.set(0.5, 1, 1).normalize();
   scene.add(light);
 
-  renderer = new Renderer();
+  renderer = await Renderer.create();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(render);

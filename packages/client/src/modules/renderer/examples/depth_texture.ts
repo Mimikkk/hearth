@@ -17,7 +17,7 @@ const dpr = window.devicePixelRatio;
 
 init();
 
-function init() {
+async function init() {
   camera = new Engine.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 20);
   camera.position.z = 4;
 
@@ -45,7 +45,7 @@ function init() {
 
   //
 
-  renderer = new Renderer();
+  renderer = await Renderer.create();
   renderer.setPixelRatio(dpr);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(animate);

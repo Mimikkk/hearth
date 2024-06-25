@@ -21,7 +21,7 @@ const dracoLoader = new DRACOLoader();
 
 init();
 
-function init() {
+async function init() {
   camera = new PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.1, 15);
   camera.position.set(3, 0.25, 3);
 
@@ -62,7 +62,7 @@ function init() {
   });
 
   // renderer
-  renderer = new Renderer();
+  renderer = await Renderer.create();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(animate);

@@ -18,7 +18,7 @@ let camera, cameraTarget, scene, renderer;
 
 init();
 
-function init() {
+async function init() {
   container = document.createElement('div');
   document.body.appendChild(container);
 
@@ -113,7 +113,7 @@ function init() {
   addShadowedLight(0.5, 1, -1, 0xffd500, 3);
   // renderer
 
-  renderer = new Renderer();
+  renderer = await Renderer.create();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(animate);

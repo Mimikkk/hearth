@@ -15,7 +15,7 @@ let camera, scene, renderer, startTime, object, stats;
 
 init();
 
-function init() {
+async function init() {
   camera = new Engine.PerspectiveCamera(36, window.innerWidth / window.innerHeight, 0.25, 16);
 
   camera.position.set(0, 1.3, 3);
@@ -96,7 +96,7 @@ function init() {
 
   // Renderer
 
-  renderer = new Renderer();
+  renderer = await Renderer.create();
 
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);

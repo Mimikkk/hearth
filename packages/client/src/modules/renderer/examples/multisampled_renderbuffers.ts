@@ -49,7 +49,7 @@ function initGUI() {
   gui.add(params, 'animated', true);
 }
 
-function init() {
+async function init() {
   camera = new Engine.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 50);
   camera.position.z = 3;
 
@@ -78,7 +78,7 @@ function init() {
 
   //
 
-  renderer = new Renderer();
+  renderer = await Renderer.create();
   renderer.setPixelRatio(dpr);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(animate);

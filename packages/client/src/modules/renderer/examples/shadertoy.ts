@@ -57,7 +57,7 @@ const dpr = window.devicePixelRatio;
 
 init();
 
-function init() {
+async function init() {
   //
 
   const example1Code = document.getElementById('example1').textContent;
@@ -84,7 +84,7 @@ function init() {
 
   //
 
-  renderer = new Renderer();
+  renderer = await Renderer.create();
   renderer.setPixelRatio(dpr);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(animate);

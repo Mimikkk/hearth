@@ -10,7 +10,7 @@ let container, camera, scene, renderer, mesh;
 
 init();
 
-function init() {
+async function init() {
   container = document.getElementById('container');
 
   scene = new Engine.Scene();
@@ -37,7 +37,7 @@ function init() {
 
   initGUI();
 
-  renderer = new Renderer();
+  renderer = await Renderer.create();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(function () {

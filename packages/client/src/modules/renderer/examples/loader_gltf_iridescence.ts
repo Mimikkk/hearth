@@ -9,12 +9,10 @@ import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindow
 
 let renderer, scene, camera, controls;
 
-init().catch(function (err) {
-  console.error(err);
-});
+init();
 
 async function init() {
-  renderer = new Renderer();
+  renderer = await Renderer.create();
   renderer.setAnimationLoop(render);
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);

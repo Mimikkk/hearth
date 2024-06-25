@@ -106,7 +106,7 @@ scene.add(floor);
 
 // renderer
 
-const renderer = new Renderer();
+const renderer = await Renderer.create();
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setAnimationLoop(animate);

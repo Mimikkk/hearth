@@ -21,7 +21,7 @@ async function init() {
   container = document.createElement('div');
   document.body.appendChild(container);
 
-  renderer = new Renderer();
+  renderer = await Renderer.create();
 
   // RENDERER
 

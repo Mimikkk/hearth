@@ -22,7 +22,7 @@ async function init() {
   const camera = new PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.01, 10);
   camera.position.set(0, 0, 4);
 
-  const renderer = new Renderer();
+  const renderer = await Renderer.create();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.parameters.canvas);

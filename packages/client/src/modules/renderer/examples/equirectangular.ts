@@ -24,7 +24,7 @@ async function init() {
   scene = new Engine.Scene();
   scene.backgroundNode = texture(equirectTexture, equirectUV(), 0);
 
-  renderer = new Renderer();
+  renderer = await Renderer.create();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(render);

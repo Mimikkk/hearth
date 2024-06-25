@@ -17,7 +17,7 @@ const dummy = new Engine.Object3D();
 
 init();
 
-function init() {
+async function init() {
   camera = new Engine.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
   camera.position.set(amount * 0.9, amount * 0.9, amount * 0.9);
   camera.lookAt(0, 0, 0);
@@ -49,7 +49,7 @@ function init() {
 
   //
 
-  renderer = new Renderer();
+  renderer = await Renderer.create();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(animate);

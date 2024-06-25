@@ -25,7 +25,7 @@ let light1, light2, light3;
 
 init();
 
-function init() {
+async function init() {
   camera = new Engine.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 10);
   camera.position.z = 2;
 
@@ -85,7 +85,7 @@ function init() {
 
   //
 
-  renderer = new Renderer();
+  renderer = await Renderer.create();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(animate);

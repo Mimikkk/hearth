@@ -14,10 +14,10 @@ let lastUpdate = -1;
 
 const seed = uniform(new Engine.Vector2());
 
-init();
+await init();
 render();
 
-function init() {
+async function init() {
   const aspect = window.innerWidth / window.innerHeight;
   camera = new Engine.OrthographicCamera(-aspect, aspect, 1, -1, 0, 2);
   camera.position.z = 1;
@@ -136,7 +136,7 @@ function init() {
   const plane = new Engine.Mesh(new Engine.PlaneGeometry(1, 1), material);
   scene.add(plane);
 
-  renderer = new Renderer();
+  renderer = await Renderer.create();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(render);

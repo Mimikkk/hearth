@@ -20,7 +20,7 @@ const distance = 0.5;
 
 init();
 
-function init() {
+async function init() {
   const container = document.getElementById('container');
 
   camera = new Engine.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.25, 10);
@@ -41,7 +41,7 @@ function init() {
   const mesh = new Engine.Mesh(geometry, material);
   scene.add(mesh);
 
-  renderer = new Renderer();
+  renderer = await Renderer.create();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(animate);

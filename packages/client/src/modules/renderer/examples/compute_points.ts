@@ -26,7 +26,7 @@ const scaleVector = new Engine.Vector2(1, 1);
 
 init();
 
-function init() {
+async function init() {
   camera = new Engine.OrthographicCamera(-1.0, 1.0, 1.0, -1.0, 0, 1);
   camera.position.z = 1;
 
@@ -106,7 +106,7 @@ function init() {
   mesh.count = particleNum;
   scene.add(mesh);
 
-  renderer = new Renderer();
+  renderer = await Renderer.create();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(animate);

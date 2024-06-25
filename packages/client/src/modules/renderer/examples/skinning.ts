@@ -12,7 +12,7 @@ let mixer, clock;
 
 init();
 
-function init() {
+async function init() {
   camera = new Engine.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.01, 100);
   camera.position.set(1, 2, 3);
 
@@ -42,7 +42,7 @@ function init() {
 
   //renderer
 
-  renderer = new Renderer();
+  renderer = await Renderer.create();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(animate);

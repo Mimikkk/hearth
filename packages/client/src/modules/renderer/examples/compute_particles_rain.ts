@@ -44,7 +44,7 @@ let collisionBoxPos, collisionBoxPosUI;
 
 init();
 
-function init() {
+async function init() {
   const { innerWidth, innerHeight } = window;
 
   camera = new Engine.PerspectiveCamera(60, innerWidth / innerHeight, 0.1, 110);
@@ -289,7 +289,7 @@ function init() {
 
   //
 
-  renderer = new Renderer();
+  renderer = await Renderer.create();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(animate);
