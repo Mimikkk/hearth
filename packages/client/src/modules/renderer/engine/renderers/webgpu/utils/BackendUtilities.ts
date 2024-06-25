@@ -41,7 +41,7 @@ export class BackendUtilities {
 
   getSampleCount(context: RenderContext): number {
     if (context.textures) return context.sampleCount;
-    return this.backend.parameters.sampleCount as number;
+    return this.backend.renderer.parameters.sampleCount;
   }
 }
 

@@ -138,7 +138,7 @@ async function init() {
 
   //
 
-  renderer = new Renderer({ backend: { trackTimestamp: true } });
+  renderer = new Renderer({ trackTimestamp: true });
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(animate);

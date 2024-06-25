@@ -72,9 +72,11 @@ export class Renderer {
     const context = canvas.getContext('webgpu');
     if (context === null) throw Error('WebGPU not supported.');
 
+    const antialias = options?.antialias ?? true;
     return {
       alpha: options?.alpha ?? true,
-      antialias: options?.antialias ?? false,
+      antialias,
+      sampleCount: antialias ? options?.sampleCount ?? 4 : 1,
       autoClear: options?.autoClear ?? true,
       autoClearColor: options?.autoClearColor ?? true,
       autoClearDepth: options?.autoClearDepth ?? true,
@@ -93,12 +95,14 @@ export class Renderer {
       toneMapping: options?.toneMapping ?? ToneMapping.None,
       toneMappingExposure: options?.toneMappingExposure ?? 1.0,
       toneMappingNode: options?.toneMappingNode ?? null,
+      requiredLimits: options?.requiredLimits ?? {},
+      trackTimestamp: options?.trackTimestamp ?? false,
     };
   }
 
   constructor(parameters?: Options) {
     this.parameters = Renderer.configure(parameters);
-    this.backend = new Backend(parameters?.backend);
+    this.backend = new Backend();
 
     this.info = new Info();
 
@@ -148,6 +152,12 @@ export class Renderer {
     this._initPromise = null!;
 
     this._compilationPromises = null;
+  }
+
+  static async create(parameters?: Options) {
+    const renderer = new Renderer(parameters);
+    await renderer.init();
+    return renderer;
   }
 
   async init() {
@@ -1084,6 +1094,7 @@ export namespace Renderer {
   export interface Options {
     alpha?: boolean;
     antialias?: boolean;
+    sampleCount?: number;
     autoClear?: boolean;
     autoClearColor?: boolean;
     autoClearDepth?: boolean;
@@ -1102,11 +1113,14 @@ export namespace Renderer {
     toneMapping?: ToneMapping;
     toneMappingExposure?: number;
     toneMappingNode?: ToneMappingNode | null;
+    requiredLimits?: Record<string, GPUSize64>;
+    trackTimestamp?: boolean;
   }
 
   export interface Configuration {
     alpha: boolean;
     antialias: boolean;
+    sampleCount: number;
     autoClear: boolean;
     autoClearColor: boolean;
     autoClearDepth: boolean;
@@ -1125,6 +1139,8 @@ export namespace Renderer {
     toneMapping: ToneMapping;
     toneMappingExposure: number;
     toneMappingNode: ToneMappingNode | null;
+    requiredLimits: Record<string, GPUSize64>;
+    trackTimestamp: boolean;
   }
 }
 type Options = Renderer.Options;

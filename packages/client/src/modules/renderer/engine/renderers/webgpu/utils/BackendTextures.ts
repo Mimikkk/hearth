@@ -245,7 +245,7 @@ export class BackendTextures {
         height: height,
         depthOrArrayLayers: 1,
       },
-      sampleCount: backend.parameters.sampleCount,
+      sampleCount: backend.renderer.parameters.sampleCount,
       format: GPUTextureFormatType.BGRA8Unorm,
       usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.COPY_SRC,
     });
@@ -290,7 +290,7 @@ export class BackendTextures {
     depthTexture.image.width = width;
     depthTexture.image.height = height;
 
-    this.createTexture(depthTexture, { sampleCount: backend.parameters.sampleCount, width, height });
+    this.createTexture(depthTexture, { sampleCount: backend.renderer.parameters.sampleCount, width, height });
 
     return backend.get(depthTexture).texture;
   }

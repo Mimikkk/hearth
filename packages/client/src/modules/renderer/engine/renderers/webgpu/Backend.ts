@@ -40,7 +40,6 @@ import Color4 from '@modules/renderer/engine/renderers/common/Color4.js';
 import { ResourceManager } from './utils/ResourceManager.js';
 
 export class Backend {
-  parameters: Options;
   data: WeakMap<any, any>;
   renderer: Renderer;
   domElement: HTMLCanvasElement;
@@ -115,45 +114,28 @@ export class Backend {
     this.data.delete(object);
   }
 
-  trackTimestamp: boolean;
   adapter: GPUAdapter;
   device: GPUDevice;
-  context: GPUCanvasContext;
   colorBuffer: GPUTexture | null;
-  defaultRenderPassdescriptor: GPURenderPassDescriptor | null;
+  renderPassDescriptor: GPURenderPassDescriptor | null;
   utilities: BackendUtilities;
   attributes: BackendAttributes;
   bindings: BackendBindings;
   pipelines: BackendPipelines;
   textures: BackendTextures;
-  occludedResolveCache: Map<number, GPUBuffer>;
+  resolveBufferMap: Map<number, GPUBuffer>;
   resources: ResourceManager;
 
-  constructor(parameters?: Options) {
-    this.parameters = parameters ?? {};
+  constructor() {
     this.data = new WeakMap();
     this.renderer = null!;
     this.domElement = null!;
     this.resources = null!;
 
-    this.parameters.alpha = this.parameters.alpha ?? true;
-    this.parameters.antialias = this.parameters.antialias ?? true;
-
-    if (this.parameters.antialias) {
-      this.parameters.sampleCount = this.parameters.sampleCount ?? 4;
-    } else {
-      this.parameters.sampleCount = 1;
-    }
-
-    this.parameters.requiredLimits = this.parameters.requiredLimits ?? {};
-
-    this.trackTimestamp = this.parameters.trackTimestamp ?? false;
-
     this.adapter = null!;
     this.device = null!;
-    this.context = null!;
     this.colorBuffer = null;
-    this.defaultRenderPassdescriptor = null;
+    this.renderPassDescriptor = null;
 
     this.resources = new ResourceManager(this);
     this.utilities = new BackendUtilities(this);
@@ -161,52 +143,35 @@ export class Backend {
     this.bindings = new BackendBindings(this);
     this.pipelines = new BackendPipelines(this);
     this.textures = new BackendTextures(this);
-    this.occludedResolveCache = new Map();
+    this.resolveBufferMap = new Map();
   }
 
   async init(renderer: Renderer) {
     this.renderer = renderer;
 
-    //
-
-    const parameters = this.parameters;
-
     const adapterOptions = {
-      powerPreference: parameters.powerPreference,
+      powerPreference: this.renderer.parameters.powerPreference,
     };
 
     const adapter = await navigator.gpu.requestAdapter(adapterOptions);
 
-    if (adapter === null) {
-      throw new Error('WebGPUBackend: Unable to create WebGPU adapter.');
-    }
-
-    // feature support
+    if (adapter === null) throw new Error('WebGPUBackend: Unable to create WebGPU adapter.');
 
     const features = Object.values(GPUFeatureNameType).filter(name => adapter.features.has(name));
 
     const device = await adapter.requestDevice({
       requiredFeatures: features,
-      requiredLimits: parameters.requiredLimits,
+      requiredLimits: this.renderer.parameters.requiredLimits,
     });
-
-    const context = parameters.context ?? renderer.parameters.canvas.getContext('webgpu');
-
-    if (context === null) {
-      throw new Error('WebGPUBackend: Unable to create WebGPU context.');
-    }
 
     this.adapter = adapter;
     this.device = device;
-    this.context = context;
 
-    const alphaMode = parameters.alpha ? 'premultiplied' : 'opaque';
-
-    this.context.configure({
-      device: this.device,
+    renderer.parameters.context.configure({
+      device,
       format: GPUTextureFormatType.BGRA8Unorm,
       usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.COPY_SRC,
-      alphaMode: alphaMode,
+      alphaMode: this.renderer.parameters.alpha ? 'premultiplied' : 'opaque',
     });
 
     this.updateSize();
@@ -221,13 +186,13 @@ export class Backend {
   }
 
   getContext(): GPUCanvasContext {
-    return this.context;
+    return this.renderer.parameters.context;
   }
 
   _getDefaultRenderPassDescriptor() {
-    let descriptor = this.defaultRenderPassdescriptor;
+    let descriptor = this.renderPassDescriptor;
 
-    const antialias = this.parameters.antialias;
+    const antialias = this.renderer.parameters.antialias;
 
     if (descriptor === null) {
       const renderer = this.renderer;
@@ -251,15 +216,15 @@ export class Backend {
         colorAttachment.resolveTarget = undefined;
       }
 
-      this.defaultRenderPassdescriptor = descriptor;
+      this.renderPassDescriptor = descriptor;
     }
 
     const colorAttachment = descriptor.colorAttachments[0];
 
     if (antialias === true) {
-      colorAttachment.resolveTarget = this.context.getCurrentTexture().createView();
+      colorAttachment.resolveTarget = this.renderer.parameters.context.getCurrentTexture().createView();
     } else {
-      colorAttachment.view = this.context.getCurrentTexture().createView();
+      colorAttachment.view = this.renderer.parameters.context.getCurrentTexture().createView();
     }
 
     return descriptor;
@@ -473,11 +438,12 @@ export class Backend {
     renderContextData.currentPass.end();
 
     if (occlusionQueryCount > 0) {
-      const bufferSize = occlusionQueryCount * 8; // 8 byte entries for query results
+      // 8 byte entries for query results
+      const bufferSize = occlusionQueryCount * 8;
 
       //
 
-      let queryResolveBuffer = this.occludedResolveCache.get(bufferSize);
+      let queryResolveBuffer = this.resolveBufferMap.get(bufferSize);
 
       if (queryResolveBuffer === undefined) {
         queryResolveBuffer = this.device.createBuffer({
@@ -485,7 +451,7 @@ export class Backend {
           usage: GPUBufferUsage.QUERY_RESOLVE | GPUBufferUsage.COPY_SRC,
         });
 
-        this.occludedResolveCache.set(bufferSize, queryResolveBuffer);
+        this.resolveBufferMap.set(bufferSize, queryResolveBuffer);
       }
 
       //
@@ -989,7 +955,7 @@ export class Backend {
   }
 
   initTimestampQuery(renderContext: RenderContext, descriptor) {
-    if (!this.hasFeature(GPUFeatureNameType.TimestampQuery) || !this.trackTimestamp) return;
+    if (!this.hasFeature(GPUFeatureNameType.TimestampQuery) || !this.renderer.parameters.trackTimestamp) return;
 
     const renderContextData = this.get(renderContext);
 
@@ -1015,7 +981,7 @@ export class Backend {
   // timestamp utils
 
   prepareTimestampBuffer(renderContext: RenderContext, encoder) {
-    if (!this.hasFeature(GPUFeatureNameType.TimestampQuery) || !this.trackTimestamp) return;
+    if (!this.hasFeature(GPUFeatureNameType.TimestampQuery) || !this.renderer.parameters.trackTimestamp) return;
 
     const renderContextData = this.get(renderContext);
 
@@ -1037,7 +1003,7 @@ export class Backend {
   }
 
   async resolveTimestampAsync(renderContext: RenderContext, type: 'render' | 'compute' = 'render') {
-    if (!this.hasFeature(GPUFeatureNameType.TimestampQuery) || !this.trackTimestamp) return;
+    if (!this.hasFeature(GPUFeatureNameType.TimestampQuery) || !this.renderer.parameters.trackTimestamp) return;
 
     const renderContextData = this.get(renderContext);
     const { currentTimestampQueryBuffer } = renderContextData;
@@ -1139,7 +1105,7 @@ export class Backend {
 
   updateSize() {
     this.colorBuffer = this.textures.getColorBuffer();
-    this.defaultRenderPassdescriptor = null;
+    this.renderPassDescriptor = null;
   }
 
   // utils public
@@ -1208,7 +1174,7 @@ export class Backend {
       if (texture.isDepthTexture) {
         sourceGPU = this.textures.getDepthBuffer(renderContext.depth, renderContext.stencil);
       } else {
-        sourceGPU = this.context.getCurrentTexture();
+        sourceGPU = this.renderer.parameters.context.getCurrentTexture();
       }
     }
 
@@ -1246,38 +1212,4 @@ export class Backend {
     renderContextData.currentPass = encoder.beginRenderPass(descriptor);
     renderContextData.currentSets = { attributes: {} };
   }
-
-  static async create(parameters: Options) {
-    const backend = new Backend(parameters);
-
-    await backend.init();
-
-    return backend;
-  }
 }
-
-export namespace Backend {
-  export interface Options {
-    canvas?: HTMLCanvasElement;
-    alpha?: boolean;
-    antialias?: boolean;
-    sampleCount?: number;
-    trackTimestamp?: boolean;
-    requiredLimits?: Record<string, number>;
-    powerPreference?: GPUPowerPreference;
-    context?: GPUCanvasContext;
-  }
-
-  export interface Configuration {
-    canvas?: HTMLCanvasElement;
-    alpha?: boolean;
-    antialias?: boolean;
-    sampleCount?: number;
-    trackTimestamp?: boolean;
-    requiredLimits?: Record<string, number>;
-    powerPreference?: GPUPowerPreference;
-    context?: GPUCanvasContext;
-  }
-}
-type Options = Backend.Options;
-type Configuration = Backend.Configuration;
