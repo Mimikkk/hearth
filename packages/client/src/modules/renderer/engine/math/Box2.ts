@@ -1,149 +1,166 @@
-import { Vector2 } from './Vector2.js';
-
-export class Box2 {
-  declare isBox2: true;
-  declare ['constructor']: typeof Box2;
-
-  constructor(
-    public min: Vector2 = new Vector2(+Infinity, +Infinity),
-    public max: Vector2 = new Vector2(-Infinity, -Infinity),
-  ) {}
-
-  set(min: Vector2, max: Vector2): Box2 {
-    this.min.copy(min);
-    this.max.copy(max);
-
-    return this;
-  }
-
-  setFromPoints(points: Vector2[]): this {
-    this.makeEmpty();
-
-    for (let i = 0, il = points.length; i < il; ++i) {
-      this.expandByPoint(points[i]);
-    }
-
-    return this;
-  }
-
-  setFromCenterAndSize(center: Vector2, size: Vector2): this {
-    const halfSize = new Vector2().copy(size).multiplyScalar(0.5);
-    this.min.copy(center).sub(halfSize);
-    this.max.copy(center).add(halfSize);
-
-    return this;
-  }
-
-  clone(): Box2 {
-    return new this.constructor().copy(this);
-  }
-
-  copy(box: Box2): this {
-    this.min.copy(box.min);
-    this.max.copy(box.max);
-
-    return this;
-  }
-
-  makeEmpty(): this {
-    this.min.x = this.min.y = +Infinity;
-    this.max.x = this.max.y = -Infinity;
-
-    return this;
-  }
-
-  isEmpty(): boolean {
-    // this is a more robust check for empty than ( volume <= 0 ) because volume can get positive with two negative axes
-
-    return this.max.x < this.min.x || this.max.y < this.min.y;
-  }
-
-  getCenter(target: Vector2): Vector2 {
-    return this.isEmpty() ? target.set(0, 0) : target.addVectors(this.min, this.max).multiplyScalar(0.5);
-  }
-
-  getSize(target: Vector2): Vector2 {
-    return this.isEmpty() ? target.set(0, 0) : target.subVectors(this.max, this.min);
-  }
-
-  expandByPoint(point: Vector2): this {
-    this.min.min(point);
-    this.max.max(point);
-
-    return this;
-  }
-
-  expandByVector(vector: Vector2): this {
-    this.min.sub(vector);
-    this.max.add(vector);
-
-    return this;
-  }
-
-  expandByScalar(scalar: number): this {
-    this.min.addScalar(-scalar);
-    this.max.addScalar(scalar);
-
-    return this;
-  }
-
-  containsPoint(point: Vector2): boolean {
-    return !(point.x < this.min.x || point.x > this.max.x || point.y < this.min.y || point.y > this.max.y);
-  }
-
-  containsBox(box: Box2): boolean {
-    return this.min.x <= box.min.x && box.max.x <= this.max.x && this.min.y <= box.min.y && box.max.y <= this.max.y;
-  }
-
-  getParameter(point: Vector2, target: Vector2): Vector2 {
-    // This can potentially have a divide by zero if the box
-    // has a size dimension of 0.
-
-    return target.set(
-      (point.x - this.min.x) / (this.max.x - this.min.x),
-      (point.y - this.min.y) / (this.max.y - this.min.y),
-    );
-  }
-
-  intersectsBox(box: Box2): boolean {
-    // using 4 splitting planes to rule out intersections
-
-    return !(box.max.x < this.min.x || box.min.x > this.max.x || box.max.y < this.min.y || box.min.y > this.max.y);
-  }
-
-  clampPoint(point: Vector2, target: Vector2): Vector2 {
-    return target.copy(point).clamp(this.min, this.max);
-  }
-
-  distanceToPoint(point: Vector2): number {
-    return this.clampPoint(point, new Vector2(0, 0)).distanceTo(point);
-  }
-
-  intersect(box: Box2): this {
-    this.min.max(box.min);
-    this.max.min(box.max);
-
-    if (this.isEmpty()) this.makeEmpty();
-
-    return this;
-  }
-
-  union(box: Box2): this {
-    this.min.min(box.min);
-    this.max.max(box.max);
-
-    return this;
-  }
-
-  translate(offset: Vector2): this {
-    this.min.add(offset);
-    this.max.add(offset);
-
-    return this;
-  }
-
-  equals(box: Box2): boolean {
-    return box.min.equals(this.min) && box.max.equals(this.max);
-  }
+export interface Vec2 {
+  x: number;
+  y: number;
 }
-Box2.prototype.isBox2 = true;
+
+export namespace Vec2 {
+  export const create = (x: number, y: number): Vec2 => ({ x, y });
+  export const vec2 = create;
+}
+const { vec2 } = Vec2;
+
+export interface Box2 {
+  min: Vec2;
+  max: Vec2;
+}
+
+const clamp = (value: number, min: number, max: number): number => Math.max(min, Math.min(max, value));
+export namespace Box2 {
+  export const create = (minX: number, minY: number, maxX: number, maxY: number): Box2 => ({
+    min: { x: minX, y: minY },
+    max: { x: maxX, y: maxY },
+  });
+  export const box2 = create;
+
+  export const empty = (): Box2 => create(+Infinity, +Infinity, -Infinity, -Infinity);
+  export const clear = (self: Box2): Box2 => fill(self, +Infinity, +Infinity, -Infinity, -Infinity);
+
+  export const isEmpty = (self: Box2): boolean => self.max.x < self.min.x || self.max.y < self.min.y;
+
+  export const copy = ({ min, max }: Box2): Box2 => create(min.x, min.y, max.x, max.y);
+  export const fill = (self: Box2, minX: number, minY: number, maxX: number, maxY: number): Box2 => {
+    self.min.x = minX;
+    self.min.y = minY;
+    self.max.x = maxX;
+    self.max.y = maxY;
+
+    return self;
+  };
+  export const fill_ = (self: Box2, into: Box2): Box2 => {
+    into.min.x = self.min.x;
+    into.min.y = self.min.y;
+    into.max.x = self.max.x;
+    into.max.y = self.max.y;
+
+    return into;
+  };
+
+  export const clone = ({ min, max }: Box2): Box2 => ({ min, max });
+  export const cloneVec = (min: Vec2, max: Vec2): Box2 => ({ min, max });
+
+  export const size = (self: Box2): Vec2 => vec2(self.max.x - self.min.x, self.max.y - self.min.y);
+  export const size_ = (self: Box2, into: Vec2): Vec2 => {
+    into.x = self.max.x - self.min.x;
+    into.y = self.max.y - self.min.y;
+
+    return into;
+  };
+
+  export const center = (self: Box2): Vec2 => vec2((self.min.x + self.max.x) / 2, (self.min.y + self.max.y) / 2);
+  export const center_ = (self: Box2, into: Vec2): Vec2 => {
+    into.x = (self.min.x + self.max.x) / 2;
+    into.y = (self.min.y + self.max.y) / 2;
+
+    return into;
+  };
+
+  export const expandByVec = (self: Box2, { x, y }: Vec2): Box2 => {
+    if (x < self.min.x) self.min.x = x;
+    if (y < self.min.y) self.min.y = y;
+    if (x > self.max.x) self.max.x = x;
+    if (y > self.max.y) self.max.y = y;
+
+    return self;
+  };
+  export const expandedByVec = (self: Box2, vec: Vec2): Box2 => expandByVec(copy(self), vec);
+  export const expandByVecs = (self: Box2, vecs: Vec2[]): Box2 => {
+    for (let i = 0, it = vecs.length; i < it; ++i) expandByVec(self, vecs[i]);
+    return self;
+  };
+  export const expandedByVecs = (self: Box2, vecs: Vec2[]): Box2 => expandByVecs(copy(self), vecs);
+  export const expandByScalar = (self: Box2, scalar: number): Box2 => {
+    self.min.x -= scalar;
+    self.min.y -= scalar;
+    self.max.x += scalar;
+    self.max.y += scalar;
+
+    return self;
+  };
+  export const expandedByScalar = (self: Box2, scalar: number): Box2 => expandByScalar(copy(self), scalar);
+
+  export const fromVecs = (vecs: Vec2[]): Box2 => expandByVecs(empty(), vecs);
+  export const fromCenterAndSize = (center: Vec2, size: Vec2): Box2 => {
+    const halfSize = vec2(size.x / 2, size.y / 2);
+
+    return fill(empty(), center.x - halfSize.x, center.y - halfSize.y, center.x + halfSize.x, center.y + halfSize.y);
+  };
+  export const fromCenterAndSize_ = (center: Vec2, size: Vec2, into: Box2): Box2 => {
+    const half = vec2(size.x / 2, size.y / 2);
+
+    return fill(into, center.x - half.x, center.y - half.y, center.x + half.x, center.y + half.y);
+  };
+
+  export const contains = (self: Box2, box: Box2): boolean =>
+    self.min.x <= box.min.x && box.max.x <= self.max.x && self.min.y <= box.min.y && box.max.y <= self.max.y;
+
+  export const containsVec = (self: Box2, { x, y }: Vec2): boolean =>
+    !(x < self.min.x || x > self.max.x || y < self.min.y || y > self.max.y);
+
+  export const intersects = (self: Box2, box: Box2): boolean =>
+    box.max.x >= self.min.x && box.min.x <= self.max.x && box.max.y >= self.min.y && box.min.y <= self.max.y;
+
+  export const clampVec = (self: Box2, { x, y }: Vec2): Vec2 =>
+    vec2(clamp(x, self.min.x, self.max.x), clamp(y, self.min.y, self.max.y));
+  export const clampVec_ = (self: Box2, { x, y }: Vec2, into: Vec2): Vec2 => {
+    into.x = clamp(x, self.min.x, self.max.x);
+    into.y = clamp(y, self.min.y, self.max.y);
+
+    return into;
+  };
+
+  export const intersect = (self: Box2, box: Box2): Box2 => {
+    if (box.min.x > self.min.x) self.min.x = box.min.x;
+    if (box.min.y > self.min.y) self.min.y = box.min.y;
+    if (box.max.x < self.max.x) self.max.x = box.max.x;
+    if (box.max.y < self.max.y) self.max.y = box.max.y;
+
+    return self;
+  };
+  export const intersected = (self: Box2, box: Box2): Box2 => intersect(copy(self), box);
+
+  export const union = (self: Box2, box: Box2): Box2 => {
+    if (box.min.x < self.min.x) self.min.x = box.min.x;
+    if (box.min.y < self.min.y) self.min.y = box.min.y;
+    if (box.max.x > self.max.x) self.max.x = box.max.x;
+    if (box.max.y > self.max.y) self.max.y = box.max.y;
+
+    return self;
+  };
+  export const united = (self: Box2, box: Box2): Box2 => union(copy(self), box);
+
+  export const translate = (self: Box2, { x, y }: Vec2): Box2 => {
+    self.min.x += x;
+    self.min.y += y;
+    self.max.x += x;
+    self.max.y += y;
+
+    return self;
+  };
+  export const translated = (self: Box2, vec: Vec2): Box2 => translate(copy(self), vec);
+
+  export const distanceSqTo = (self: Box2, vec: Vec2): number => {
+    const x = clamp(vec.x, self.min.x, self.max.x) - vec.x;
+    const y = clamp(vec.y, self.min.y, self.max.y) - vec.y;
+
+    return x * x + y * y;
+  };
+  export const distanceTo = (self: Box2, vec: Vec2): number => {
+    const x = clamp(vec.x, self.min.x, self.max.x) - vec.x;
+    const y = clamp(vec.y, self.min.y, self.max.y) - vec.y;
+
+    return Math.sqrt(x * x + y * y);
+  };
+
+  export const equals = (self: Box2, box: Box2): boolean =>
+    box.min.x === self.min.x && box.min.y === self.min.y && box.max.x === self.max.x && box.max.y === self.max.y;
+}
