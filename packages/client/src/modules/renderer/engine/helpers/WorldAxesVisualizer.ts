@@ -57,10 +57,12 @@ const createSpriteMaterial = (color: Color, text: string | null = null) => {
   return new SpriteMaterial({ map: new CanvasTexture(canvas), toneMapped: false });
 };
 
-type AnimateState = {};
+type AnimateState = {
+  position: Vector3;
+  rotation: Quaternion;
+};
 
 export class WorldAxesVisualizer extends Object3D {
-  animating: boolean = false;
   center: Vector3 = new Vector3();
 
   radius: number;
@@ -68,24 +70,24 @@ export class WorldAxesVisualizer extends Object3D {
   axisLines: [posX: Sprite, posY: Sprite, posZ: Sprite, negX: Sprite, negY: Sprite, negZ: Sprite];
   axisMeshes: [xAxis: Mesh, yAxis: Mesh, zAxis: Mesh];
   raycaster: Raycaster = new Raycaster();
-  mouse: Vector2 = new Vector2();
   dummy: Object3D = new Object3D();
   orthoCamera: OrthographicCamera;
   q1: Quaternion = new Quaternion();
   q2: Quaternion = new Quaternion();
   viewport: Vector4 = new Vector4();
   point: Vector3 = new Vector3();
-  clicker: (event: MouseEvent) => void;
+  unsubscribeClick: () => void;
 
-  animateState: AnimateState | null;
+  animation: AnimateState | null;
 
   constructor(
     public camera: Camera,
     public canvas: HTMLCanvasElement,
   ) {
     super();
-    this.clicker = this.handleClick.bind(this);
-    this.canvas.addEventListener('click', this.clicker);
+    const handleClick = this.handleClick.bind(this);
+    this.canvas.addEventListener('click', handleClick);
+    this.unsubscribeClick = () => this.canvas.removeEventListener('click', handleClick);
 
     this.orthoCamera = new OrthographicCamera(-2, 2, 2, -2, 0, 4);
     this.orthoCamera.position.set(0, 0, 2);
@@ -129,45 +131,42 @@ export class WorldAxesVisualizer extends Object3D {
     this.add(...this.axisMeshes, ...this.axisLines);
   }
 
-  targetPosition: Vector3 = new Vector3();
-  targetQuaternion: Quaternion = new Quaternion();
-
-  prepareAnimation(object: Sprite) {
-    const {
-      targetQuaternion,
-      targetPosition,
-      axisLines: [posX, posY, posZ, negX, negY, negZ],
-    } = this;
+  findAnimateState(object: Sprite): AnimateState | null {
+    const [posX, posY, posZ, negX, negY, negZ] = this.axisLines;
 
     if (posX === object) {
-      targetPosition.set(1, 0, 0);
-      targetQuaternion.setFromEuler(new Euler(0, Math.PI * 0.5, 0));
+      return {
+        position: new Vector3(1, 0, 0),
+        rotation: new Quaternion().setFromEuler(new Euler(0, Math.PI * 0.5, 0)),
+      };
     } else if (posY === object) {
-      targetPosition.set(0, 1, 0);
-      targetQuaternion.setFromEuler(new Euler(-Math.PI * 0.5, 0, 0));
+      return {
+        position: new Vector3(0, 1, 0),
+        rotation: new Quaternion().setFromEuler(new Euler(-Math.PI * 0.5, 0, 0)),
+      };
     } else if (posZ === object) {
-      targetPosition.set(0, 0, 1);
-      targetQuaternion.setFromEuler(new Euler());
+      return {
+        position: new Vector3(0, 0, 1),
+        rotation: new Quaternion().setFromEuler(new Euler()),
+      };
     } else if (negX === object) {
-      targetPosition.set(-1, 0, 0);
-      targetQuaternion.setFromEuler(new Euler(0, -Math.PI * 0.5, 0));
+      return {
+        position: new Vector3(-1, 0, 0),
+        rotation: new Quaternion().setFromEuler(new Euler(0, -Math.PI * 0.5, 0)),
+      };
     } else if (negY === object) {
-      targetPosition.set(0, -1, 0);
-      targetQuaternion.setFromEuler(new Euler(Math.PI * 0.5, 0, 0));
+      return {
+        position: new Vector3(0, -1, 0),
+        rotation: new Quaternion().setFromEuler(new Euler(Math.PI * 0.5, 0, 0)),
+      };
     } else if (negZ === object) {
-      targetPosition.set(0, 0, -1);
-      targetQuaternion.setFromEuler(new Euler(0, Math.PI, 0));
+      return {
+        position: new Vector3(0, 0, -1),
+        rotation: new Quaternion().setFromEuler(new Euler(0, Math.PI, 0)),
+      };
     }
 
-    this.radius = this.camera.position.distanceTo(this.center);
-    targetPosition.multiplyScalar(this.radius).add(this.center);
-
-    this.dummy.position.copy(this.center);
-    this.dummy.lookAt(this.camera.position);
-    this.q1.copy(this.dummy.quaternion);
-
-    this.dummy.lookAt(targetPosition);
-    this.q2.copy(this.dummy.quaternion);
+    return null;
   }
 
   render(renderer: Renderer): void {
@@ -213,26 +212,40 @@ export class WorldAxesVisualizer extends Object3D {
   }
 
   handleClick(event: MouseEvent): void {
-    if (this.animating) return;
+    if (this.animation) return;
 
     const { bottom, left, right, top } = this.canvas.getBoundingClientRect();
     const offsetX = left + (this.canvas.offsetWidth - dim);
     const offsetY = top + (this.canvas.offsetHeight - dim);
-    this.mouse.x = ((event.clientX - offsetX) / (right - offsetX)) * 2 - 1;
-    this.mouse.y = -((event.clientY - offsetY) / (bottom - offsetY)) * 2 + 1;
 
-    this.raycaster.setFromCamera(this.mouse, this.orthoCamera);
-    const intersects = this.raycaster.intersectObjects<Sprite>(this.axisLines);
-    console.log(intersects);
+    this.raycaster.setFromCamera(
+      new Vector2(
+        ((event.clientX - offsetX) / (right - offsetX)) * 2 - 1,
+        -((event.clientY - offsetY) / (bottom - offsetY)) * 2 + 1,
+      ),
+      this.orthoCamera,
+    );
+
+    const intersects = this.raycaster.intersects<Sprite>(this.axisLines);
     if (intersects.length === 0) return;
 
-    this.prepareAnimation(intersects[0].object);
+    this.animation = this.findAnimateState(intersects[0].object);
+    if (!this.animation) return;
 
-    this.animating = true;
+    this.radius = this.camera.position.distanceTo(this.center);
+
+    this.animation.position.multiplyScalar(this.radius).add(this.center);
+
+    this.dummy.position.copy(this.center);
+    this.dummy.lookAt(this.camera.position);
+    this.q1.copy(this.dummy.quaternion);
+
+    this.dummy.lookAt(this.animation.position);
+    this.q2.copy(this.dummy.quaternion);
   }
 
   update(delta: number): void {
-    if (!this.animating) return;
+    if (!this.animation) return;
 
     const step = delta * turnRate;
     const { q1, q2 } = this;
@@ -240,13 +253,13 @@ export class WorldAxesVisualizer extends Object3D {
     this.q1.rotateTowards(q2, step);
 
     this.camera.position.set(0, 0, 1).applyQuaternion(q1).multiplyScalar(this.radius).add(this.center);
-    this.camera.quaternion.rotateTowards(this.targetQuaternion, step);
+    this.camera.quaternion.rotateTowards(this.animation.rotation, step);
 
-    if (q1.angleTo(q2) === 0) this.animating = false;
+    if (q1.angleTo(q2) === 0) this.animation = null;
   }
 
   dispose(): void {
-    this.canvas.removeEventListener('click', this.clicker);
+    this.unsubscribeClick();
 
     this.geometry.dispose();
     const [xAxis, yAxis, zAxis] = this.axisMeshes;

@@ -174,7 +174,7 @@ async function init() {
 
     raycaster.setFromCamera(pointer, camera);
 
-    const intersects = raycaster.intersectObjects([plane], false);
+    const intersects = raycaster.intersects([plane], false);
 
     if (intersects.length > 0) {
       const { point } = intersects[0];

@@ -119,7 +119,7 @@ class DragControls {
           _intersections.length = 0;
 
           _raycaster.setFromCamera(_pointer, _camera);
-          _raycaster.intersectObjects(_objects, scope.recursive, _intersections);
+          _raycaster.intersects(_objects, scope.recursive, _intersections);
 
           if (_intersections.length > 0) {
             const object = _intersections[0].object;
@@ -164,7 +164,7 @@ class DragControls {
       _intersections.length = 0;
 
       _raycaster.setFromCamera(_pointer, _camera);
-      _raycaster.intersectObjects(_objects, scope.recursive, _intersections);
+      _raycaster.intersects(_objects, scope.recursive, _intersections);
 
       if (_intersections.length > 0) {
         if (scope.transformGroup === true) {

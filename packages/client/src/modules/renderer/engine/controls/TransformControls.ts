@@ -689,7 +689,7 @@ function intersectObjectWithRay(
   raycaster: Raycaster,
   includeInvisible: boolean,
 ): Intersection | false {
-  const allIntersections = raycaster.intersectObject(object, true);
+  const allIntersections = raycaster.intersect(object, true);
 
   for (let i = 0; i < allIntersections.length; i++) {
     if (allIntersections[i].object.visible || includeInvisible) {

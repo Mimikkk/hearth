@@ -26,7 +26,7 @@ export class InteractiveGroup extends Group {
       const pointer = new Vector2(((event.clientX - left) / width) * 2 - 1, (-(event.clientY - top) / height) * 2 + 1);
       raycaster.setFromCamera(pointer, camera);
 
-      const intersection = raycaster.intersectObjects(scope.children, false)[0];
+      const intersection = raycaster.intersects(scope.children, false)[0];
       if (intersection === undefined) return;
       intersection.object.eventDispatcher.dispatch(
         createInteractionEvent(event.type as InteractionType, intersection.uv!),
