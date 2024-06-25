@@ -38,7 +38,10 @@ async function init() {
 
   scene = new Scene();
 
-  renderer = await Renderer.create();
+  renderer = await Renderer.create({
+    autoClear: false,
+  });
+
   viewHelper = new ViewHelper(camera, renderer.parameters.canvas);
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
@@ -50,24 +53,9 @@ async function init() {
     scene.background = texture;
     scene.environment = texture;
 
-    render();
-
-    // model
-
-    const cameraHud = new OrthographicCamera(
-      -window.innerWidth / 2,
-      window.innerWidth / 2,
-      window.innerHeight / 2,
-      -window.innerHeight / 2,
-      0,
-      30,
-    );
-
     const loader = new GLTFLoader();
     loader.loadAsync('resources/models/gltf/DamagedHelmet/glTF/DamagedHelmet.gltf').then(gltf => {
       scene.add(gltf.scene);
-      scene.add(viewHelper);
-
       render();
     });
   });
@@ -87,5 +75,6 @@ async function init() {
 
 async function render() {
   renderer.clear();
-  await renderer.renderAsync(scene, camera);
+  await renderer.render(scene, camera);
+  viewHelper.render(renderer);
 }
