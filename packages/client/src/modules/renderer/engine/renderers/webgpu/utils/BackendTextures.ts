@@ -235,17 +235,11 @@ export class BackendTextures {
   getColorBuffer() {
     if (this.colorBuffer) this.colorBuffer.destroy();
 
-    const backend = this.backend;
-    const { width, height } = backend.getDrawingBufferSize();
-
-    this.colorBuffer = backend.device.createTexture({
+    const { width, height } = this.backend.getDrawingBufferSize();
+    this.colorBuffer = this.backend.device.createTexture({
       label: 'colorBuffer',
-      size: {
-        width: width,
-        height: height,
-        depthOrArrayLayers: 1,
-      },
-      sampleCount: backend.renderer.parameters.sampleCount,
+      size: { width, height, depthOrArrayLayers: 1 },
+      sampleCount: this.backend.renderer.parameters.sampleCount,
       format: GPUTextureFormatType.BGRA8Unorm,
       usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.COPY_SRC,
     });

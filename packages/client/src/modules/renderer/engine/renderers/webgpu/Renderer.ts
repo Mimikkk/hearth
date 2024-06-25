@@ -63,8 +63,6 @@ export class Renderer {
   _renderObjectFunction: any;
   _currentRenderObjectFunction: any;
   _handleObjectFunction: any;
-  _initialized: boolean;
-  _initPromise: Promise<void>;
   _compilationPromises: any;
   parameters: Configuration;
 
@@ -101,13 +99,13 @@ export class Renderer {
     };
   }
 
-  constructor(parameters?: Options) {
+  private constructor(parameters?: Options) {
     this.parameters = Renderer.configure(parameters);
-    this.backend = new Backend();
+    this.backend = new Backend(this);
     this.info = new Info();
 
     // internals
-    this._pixelRatio = 1;
+    this._pixelRatio = window.devicePixelRatio;
     this._width = this.parameters.canvas.width;
     this._height = this.parameters.canvas.height;
 
@@ -115,17 +113,17 @@ export class Renderer {
     this._scissor = new Vector4(0, 0, this._width, this._height);
     this._scissorTest = false;
 
-    this._attributes = null!;
-    this._geometries = null!;
-    this._nodes = null!;
-    this._animation = null!;
-    this._bindings = null!;
-    this._objects = null!;
-    this._pipelines = null!;
-    this._renderLists = null!;
-    this._renderContexts = null!;
-    this._textures = null!;
-    this._background = null!;
+    this._nodes = new Nodes(this);
+    this._animation = new Animation(this);
+    this._attributes = new Attributes(this);
+    this._background = new Background(this);
+    this._geometries = new Geometries(this);
+    this._textures = new Textures(this);
+    this._pipelines = new Pipelines(this);
+    this._bindings = new Bindings(this);
+    this._objects = new RenderObjects(this);
+    this._renderLists = new RenderLists();
+    this._renderContexts = new RenderContexts();
 
     this._currentRenderContext = null;
     this._opaqueSort = null;
@@ -140,67 +138,34 @@ export class Renderer {
     this._renderObjectFunction = null;
     this._currentRenderObjectFunction = null;
     this._handleObjectFunction = this._renderObjectDirect;
-    this._initialized = false;
 
-    this._initPromise = null!;
     this._compilationPromises = null;
   }
 
   static async create(parameters?: Options) {
     const renderer = new Renderer(parameters);
     const backend = renderer.backend;
-    await backend.init(renderer);
 
-    renderer._nodes = new Nodes(renderer);
-    renderer._animation = new Animation(renderer);
-    renderer._attributes = new Attributes(renderer);
-    renderer._background = new Background(renderer);
-    renderer._geometries = new Geometries(renderer);
-    renderer._textures = new Textures(renderer);
-    renderer._pipelines = new Pipelines(renderer);
-    renderer._bindings = new Bindings(renderer);
-    renderer._objects = new RenderObjects(renderer);
-    renderer._renderLists = new RenderLists();
-    renderer._renderContexts = new RenderContexts();
+    const adapter = await navigator.gpu.requestAdapter({ powerPreference: renderer.parameters.powerPreference });
+    if (adapter === null) throw Error('WebGPUBackend: Unable to create WebGPU adapter.');
 
-    return renderer;
-  }
-
-  async init() {
-    if (this._initialized) throw new Error('Renderer: Backend has already been initialized.');
-
-    if (this._initPromise !== null) return this._initPromise;
-
-    this._initPromise = new Promise(async (resolve, reject) => {
-      const backend = this.backend;
-
-      try {
-        await backend.init(this);
-      } catch (error) {
-        reject(error);
-        return;
-      }
-
-      this._nodes = new Nodes(this);
-      this._animation = new Animation(this);
-      this._attributes = new Attributes(this);
-      this._background = new Background(this);
-      this._geometries = new Geometries(this);
-      this._textures = new Textures(this);
-      this._pipelines = new Pipelines(this);
-      this._bindings = new Bindings(this);
-      this._objects = new RenderObjects(this);
-      this._renderLists = new RenderLists();
-      this._renderContexts = new RenderContexts();
-
-      //
-
-      this._initialized = true;
-
-      resolve();
+    const device = await adapter.requestDevice({
+      requiredFeatures: Object.values(GPUFeatureNameType).filter(name => adapter.features.has(name)),
+      requiredLimits: renderer.parameters.requiredLimits,
     });
 
-    return this._initPromise;
+    backend.device = device;
+    backend.adapter = adapter;
+    backend.colorBuffer = backend.textures.getColorBuffer();
+
+    renderer.parameters.context.configure({
+      device,
+      format: GPUTextureFormatType.BGRA8Unorm,
+      usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.COPY_SRC,
+      alphaMode: renderer.parameters.alpha ? 'premultiplied' : 'opaque',
+    });
+
+    return renderer;
   }
 
   get coordinateSystem() {
@@ -208,8 +173,6 @@ export class Renderer {
   }
 
   async compileAsync(scene: Scene, camera: Camera, targetScene: Scene | null = null) {
-    if (this._initialized === false) await this.init();
-
     // preserve render tree
 
     const nodeFrame = this._nodes.nodeFrame;
@@ -321,20 +284,10 @@ export class Renderer {
   }
 
   async renderAsync(scene: Scene, camera: Camera) {
-    if (this._initialized === false) await this.init();
-
     this._renderScene(scene, camera);
   }
 
   render(scene: Scene, camera: Camera) {
-    if (this._initialized === false) {
-      console.warn(
-        'engine.Renderer: .render() called before the backend is initialized. Try using .renderAsync() instead.',
-      );
-
-      return this.renderAsync(scene, camera);
-    }
-
     this._renderScene(scene, camera);
   }
 
@@ -520,8 +473,6 @@ export class Renderer {
   }
 
   async setAnimationLoop(callback: AnimationLoopFn) {
-    if (this._initialized === false) await this.init();
-
     this._animation.setAnimationLoop(callback);
   }
 
@@ -566,7 +517,7 @@ export class Renderer {
 
     this.setViewport(0, 0, width, height);
 
-    if (this._initialized) this.backend.updateSize();
+    this.backend.updateSize();
   }
 
   setSize(width, height, updateStyle = true) {
@@ -583,7 +534,7 @@ export class Renderer {
 
     this.setViewport(0, 0, width, height);
 
-    if (this._initialized) this.backend.updateSize();
+    this.backend.updateSize();
   }
 
   setOpaqueSort(method) {
@@ -682,14 +633,6 @@ export class Renderer {
   }
 
   clear(color = true, depth = true, stencil = true) {
-    if (this._initialized === false) {
-      console.warn(
-        'engine.Renderer: .clear() called before the backend is initialized. Try using .clearAsync() instead.',
-      );
-
-      return this.clearAsync(color, depth, stencil);
-    }
-
     let renderTargetData = null;
     const renderTarget = this._renderTarget;
 
@@ -715,7 +658,6 @@ export class Renderer {
   }
 
   async clearAsync(color = true, depth = true, stencil = true) {
-    if (this._initialized === false) await this.init();
     this.clear(color, depth, stencil);
   }
 
@@ -766,8 +708,6 @@ export class Renderer {
   }
 
   async computeAsync(computeNodes) {
-    if (this._initialized === false) await this.init();
-
     const nodeFrame = this._nodes.nodeFrame;
 
     const previousRenderId = nodeFrame.renderId;

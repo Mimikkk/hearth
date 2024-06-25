@@ -104,10 +104,9 @@ export class Backend {
   resolveBufferMap: Map<number, GPUBuffer>;
   resources: ResourceManager;
 
-  constructor() {
+  constructor(renderer: Renderer) {
     this.data = new WeakMap();
-    this.renderer = null!;
-    this.resources = null!;
+    this.renderer = renderer;
 
     this.adapter = null!;
     this.device = null!;
@@ -121,30 +120,6 @@ export class Backend {
     this.pipelines = new BackendPipelines(this);
     this.textures = new BackendTextures(this);
     this.resolveBufferMap = new Map();
-  }
-
-  async init(renderer: Renderer) {
-    this.renderer = renderer;
-
-    const adapter = await navigator.gpu.requestAdapter({ powerPreference: renderer.parameters.powerPreference });
-    if (adapter === null) throw Error('WebGPUBackend: Unable to create WebGPU adapter.');
-
-    const device = await adapter.requestDevice({
-      requiredFeatures: Object.values(GPUFeatureNameType).filter(name => adapter.features.has(name)),
-      requiredLimits: renderer.parameters.requiredLimits,
-    });
-
-    renderer.parameters.context.configure({
-      device,
-      format: GPUTextureFormatType.BGRA8Unorm,
-      usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.COPY_SRC,
-      alphaMode: renderer.parameters.alpha ? 'premultiplied' : 'opaque',
-    });
-
-    this.adapter = adapter;
-    this.device = device;
-    this.colorBuffer = this.textures.getColorBuffer();
-    this.renderPassDescriptor = null;
   }
 
   get coordinateSystem() {
@@ -1093,12 +1068,6 @@ export class Backend {
   }
 
   hasFeature(name: string) {
-    if (!this.adapter) {
-      console.warn('WebGPUBackend: WebGPU adapter has not been initialized yet. Please use hasFeatureAsync instead');
-
-      return false;
-    }
-
     return this.adapter.features.has(name);
   }
 
