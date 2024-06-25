@@ -121,8 +121,8 @@ function init() {
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
 
-  document.body.appendChild(renderer.canvas);
-  renderer.canvas.style.height = '100%';
+  document.body.appendChild(renderer.domElement);
+  renderer.domElement.style.height = '100%';
 
   scene.background = new Engine.Color(0x313131);
 

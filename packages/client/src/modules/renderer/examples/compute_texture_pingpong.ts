@@ -140,7 +140,7 @@ function init() {
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(render);
-  document.body.appendChild(renderer.canvas);
+  document.body.appendChild(renderer.domElement);
 
   useWindowResizer(renderer, camera, () => {
     renderer.setSize(window.innerWidth, window.innerHeight);

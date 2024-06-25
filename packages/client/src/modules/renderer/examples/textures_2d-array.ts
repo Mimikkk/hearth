@@ -55,7 +55,7 @@ function init() {
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(animate);
-  container.appendChild(renderer.canvas);
+  container.appendChild(renderer.domElement);
 
   stats = new Stats();
   container.appendChild(stats.dom);

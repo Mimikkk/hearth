@@ -21,15 +21,17 @@ async function init() {
   container = document.createElement('div');
   document.body.appendChild(container);
 
-  renderer = new Renderer({
-    autoClear: false,
-  });
+  renderer = new Renderer();
+
+  // RENDERER
+
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
   renderer.setAnimationLoop(animate);
+  renderer.parameters.autoClear = false;
 
-  renderer.canvas.style.position = 'relative';
-  container.appendChild(renderer.canvas);
+  renderer.domElement.style.position = 'relative';
+  container.appendChild(renderer.domElement);
 
   //
 

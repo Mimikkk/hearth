@@ -39,14 +39,13 @@ function init() {
     });
   });
 
-  renderer = new Renderer({
-    toneMapping: Engine.ToneMapping.ACESFilmic,
-  });
+  renderer = new Renderer();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
-  container.appendChild(renderer.canvas);
+  renderer.parameters.toneMapping = Engine.ToneMapping.ACESFilmic;
+  container.appendChild(renderer.domElement);
 
-  const controls = new OrbitControls(camera, renderer.canvas);
+  const controls = new OrbitControls(camera, renderer.domElement);
   controls.eventDispatcher.add('change', render); // use if there is no animation loop
   controls.minDistance = 2;
   controls.maxDistance = 10;

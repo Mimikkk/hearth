@@ -199,11 +199,11 @@ const renderer = new Renderer();
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setAnimationLoop(animate);
-document.body.appendChild(renderer.canvas);
+document.body.appendChild(renderer.domElement);
 const stats = new Stats();
 document.body.appendChild(stats.dom);
 
-const controls = new OrbitControls(camera, renderer.canvas);
+const controls = new OrbitControls(camera, renderer.domElement);
 controls.minDistance = 1;
 controls.maxDistance = 10;
 controls.maxPolarAngle = Math.PI * 0.9;

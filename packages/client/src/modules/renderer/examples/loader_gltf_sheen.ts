@@ -34,13 +34,13 @@ function init() {
     gui.open();
   });
 
-  renderer = new Renderer({
-    toneMapping: Engine.ToneMapping.ACESFilmic,
-  });
+  renderer = new Renderer();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(animate);
-  container.appendChild(renderer.canvas);
+  renderer.parameters.toneMapping = Engine.ToneMapping.ACESFilmic;
+  renderer.parameters.toneMappingExposure = 1;
+  container.appendChild(renderer.domElement);
 
   scene.background = new Engine.Color(0xaaaaaa);
 
@@ -52,7 +52,7 @@ function init() {
     scene.environment = texture;
   });
 
-  controls = new OrbitControls(camera, renderer.canvas);
+  controls = new OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true;
   controls.minDistance = 1;
   controls.maxDistance = 10;

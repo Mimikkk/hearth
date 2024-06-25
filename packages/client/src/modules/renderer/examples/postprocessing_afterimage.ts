@@ -22,7 +22,7 @@ function init() {
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(animate);
-  document.body.appendChild(renderer.canvas);
+  document.body.appendChild(renderer.domElement);
 
   camera = new Engine.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 1000);
   camera.position.z = 400;

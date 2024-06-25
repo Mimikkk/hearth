@@ -45,7 +45,7 @@ async function init() {
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
 
-  document.body.appendChild(renderer.canvas);
+  document.body.appendChild(renderer.domElement);
 
   //
   animate();

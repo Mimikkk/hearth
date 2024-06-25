@@ -26,12 +26,11 @@ function init() {
 
   scene = new Engine.Scene();
 
-  renderer = new Renderer({
-    toneMapping: Engine.ToneMapping.ACESFilmic,
-  });
+  renderer = new Renderer();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
-  container.appendChild(renderer.canvas);
+  renderer.parameters.toneMapping = ToneMapping.ACESFilmic;
+  container.appendChild(renderer.domElement);
 
   // post processing
 
@@ -72,7 +71,7 @@ function init() {
 
   //
 
-  const controls = new OrbitControls(camera, renderer.canvas);
+  const controls = new OrbitControls(camera, renderer.domElement);
   controls.minDistance = 2;
   controls.maxDistance = 5;
   controls.target.set(0, -0.1, -0.2);

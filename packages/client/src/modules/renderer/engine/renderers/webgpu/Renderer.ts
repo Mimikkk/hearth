@@ -21,17 +21,21 @@ import ClippingContext from '@modules/renderer/engine/renderers/common/ClippingC
 import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
 import { Vector3 } from '@modules/renderer/engine/math/Vector3.js';
 import { Vector2 } from '@modules/renderer/engine/math/Vector2.js';
-import { Frustum, Matrix4, Plane } from '@modules/renderer/engine/engine.js';
+import { Frustum, Matrix4 } from '@modules/renderer/engine/engine.js';
 
+const _scene = new Scene();
+const _drawingBufferSize = new Vector2();
+const _screen = new Vector4();
 const _frustum = new Frustum();
 const _projScreenMatrix = new Matrix4();
+const _vector3 = new Vector3();
 
 export class Renderer {
-  canvas: HTMLCanvasElement;
+  domElement: HTMLCanvasElement;
   backend: Backend;
   toneMappingNode: ToneMappingNode | null;
+  clippingPlanes: any[];
   info: Info;
-
   _pixelRatio: number;
   _width: number;
   _height: number;
@@ -66,9 +70,8 @@ export class Renderer {
   _compilationPromises: any;
   parameters: Configuration;
 
-  private static configure(options?: Options): Configuration {
+  static configure(options?: Options): Configuration {
     return {
-      clippingPlanes: options?.clippingPlanes ?? [],
       alpha: options?.alpha ?? true,
       logarithmicDepthBuffer: options?.logarithmicDepthBuffer ?? false,
       autoClear: options?.autoClear ?? true,
@@ -89,13 +92,14 @@ export class Renderer {
     this.parameters = Renderer.configure(options);
 
     this.backend = new Backend(options?.backend);
-    this.canvas = this.backend.parameters.canvas;
+    this.domElement = this.backend.getDomElement();
+    this.clippingPlanes = [];
     this.info = new Info();
 
     // internals
     this._pixelRatio = 1;
-    this._width = this.canvas.width;
-    this._height = this.canvas.height;
+    this._width = this.domElement.width;
+    this._height = this.domElement.height;
     this._viewport = new Vector4(0, 0, this._width, this._height);
     this._scissor = new Vector4(0, 0, this._width, this._height);
     this._scissorTest = false;
@@ -187,7 +191,7 @@ export class Renderer {
 
     //
 
-    const sceneRef = scene.isScene === true ? scene : new Scene();
+    const sceneRef = scene.isScene === true ? scene : _scene;
 
     if (targetScene === null) targetScene = scene;
 
@@ -315,7 +319,7 @@ export class Renderer {
 
     //
 
-    const sceneRef = scene.isScene === true ? scene : new Scene();
+    const sceneRef = scene.isScene === true ? scene : _scene;
 
     const renderTarget = this._renderTarget;
     const renderContext = this._renderContexts.get(scene, camera, renderTarget);
@@ -360,10 +364,8 @@ export class Renderer {
       pixelRatio = 1;
     }
 
-    const _drawingBufferSize = new Vector2();
     this.getDrawingBufferSize(_drawingBufferSize);
 
-    const _screen = new Vector4();
     _screen.set(0, 0, _drawingBufferSize.width, _drawingBufferSize.height);
 
     const minDepth = viewport.minDepth === undefined ? 0 : viewport.minDepth;
@@ -421,8 +423,8 @@ export class Renderer {
     } else {
       renderContext.textures = null;
       renderContext.depthTexture = null;
-      renderContext.width = this.canvas.width;
-      renderContext.height = this.canvas.height;
+      renderContext.width = this.domElement.width;
+      renderContext.height = this.domElement.height;
       renderContext.depth = this.parameters.depth;
       renderContext.stencil = this.parameters.stencil;
     }
@@ -529,8 +531,8 @@ export class Renderer {
 
     this._pixelRatio = pixelRatio;
 
-    this.canvas.width = Math.floor(width * pixelRatio);
-    this.canvas.height = Math.floor(height * pixelRatio);
+    this.domElement.width = Math.floor(width * pixelRatio);
+    this.domElement.height = Math.floor(height * pixelRatio);
 
     this.setViewport(0, 0, width, height);
 
@@ -541,12 +543,12 @@ export class Renderer {
     this._width = width;
     this._height = height;
 
-    this.canvas.width = Math.floor(width * this._pixelRatio);
-    this.canvas.height = Math.floor(height * this._pixelRatio);
+    this.domElement.width = Math.floor(width * this._pixelRatio);
+    this.domElement.height = Math.floor(height * this._pixelRatio);
 
     if (updateStyle === true) {
-      this.canvas.style.width = width + 'px';
-      this.canvas.style.height = height + 'px';
+      this.domElement.style.width = width + 'px';
+      this.domElement.style.height = height + 'px';
     }
 
     this.setViewport(0, 0, width, height);
@@ -844,8 +846,6 @@ export class Renderer {
 
     const visible = object.layers.test(camera.layers);
 
-    const _vector3 = new Vector3();
-
     if (visible) {
       if (object.isGroup) {
         groupOrder = object.renderOrder;
@@ -1065,7 +1065,6 @@ export class Renderer {
 export namespace Renderer {
   export interface Options {
     backend?: Backend.Options;
-    clippingPlanes?: Plane[];
     logarithmicDepthBuffer?: boolean;
     alpha?: boolean;
     autoClear?: boolean;
@@ -1082,7 +1081,6 @@ export namespace Renderer {
   }
 
   export interface Configuration {
-    clippingPlanes: Plane[];
     logarithmicDepthBuffer: boolean;
     alpha: boolean;
     autoClear: boolean;

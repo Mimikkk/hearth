@@ -28,9 +28,9 @@ async function init() {
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(render);
-  container.appendChild(renderer.canvas);
+  container.appendChild(renderer.domElement);
 
-  controls = new OrbitControls(camera, renderer.canvas);
+  controls = new OrbitControls(camera, renderer.domElement);
   controls.autoRotate = true;
   controls.rotateSpeed = -0.125; // negative, to track mouse pointer
   controls.autoRotateSpeed = 1.0;

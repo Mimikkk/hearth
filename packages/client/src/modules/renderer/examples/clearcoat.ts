@@ -155,14 +155,16 @@ async function init() {
 
   particleLight.add(new Engine.PointLight(0xffffff, 30));
 
-  renderer = new Renderer({
-    toneMapping: Engine.ToneMapping.ACESFilmic,
-    toneMappingExposure: 1.25,
-  });
+  renderer = new Renderer();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(animate);
-  container.appendChild(renderer.canvas);
+  container.appendChild(renderer.domElement);
+
+  //
+
+  renderer.parameters.toneMapping = Engine.ToneMapping.ACESFilmic;
+  renderer.parameters.toneMappingExposure = 1.25;
 
   //
 
@@ -171,7 +173,7 @@ async function init() {
 
   // EVENTS
 
-  const controls = new OrbitControls(camera, renderer.canvas);
+  const controls = new OrbitControls(camera, renderer.domElement);
   controls.minDistance = 3;
   controls.maxDistance = 30;
 
