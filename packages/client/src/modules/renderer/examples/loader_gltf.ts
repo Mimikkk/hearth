@@ -1,21 +1,6 @@
-import * as Engine from '@modules/renderer/engine/engine.js';
-import {
-  Camera,
-  Mapping,
-  Mesh,
-  MeshBasicMaterial,
-  OrthographicCamera,
-  PerspectiveCamera,
-  PlaneGeometry,
-  Scene,
-  Texture,
-  ToneMapping,
-} from '@modules/renderer/engine/engine.js';
-
+import { Mapping, PerspectiveCamera, Scene, ToneMapping } from '@modules/renderer/engine/engine.js';
 import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
-
 import { RGBELoader } from '@modules/renderer/engine/loaders/textures/RGBELoader/RGBELoader.js';
-
 import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
 import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/GLTFLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
@@ -56,6 +41,7 @@ async function init() {
     const loader = new GLTFLoader();
     loader.loadAsync('resources/models/gltf/DamagedHelmet/glTF/DamagedHelmet.gltf').then(gltf => {
       scene.add(gltf.scene);
+
       render();
     });
   });
@@ -75,6 +61,7 @@ async function init() {
 
 async function render() {
   renderer.clear();
-  await renderer.render(scene, camera);
+
+  renderer.render(scene, camera);
   viewHelper.render(renderer);
 }

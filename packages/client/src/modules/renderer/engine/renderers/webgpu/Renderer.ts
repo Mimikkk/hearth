@@ -103,16 +103,12 @@ export class Renderer {
     this.parameters = Renderer.configure(parameters);
     this.backend = new Backend(this);
     this.info = new Info();
-
-    // internals
     this._pixelRatio = window.devicePixelRatio;
     this._width = this.parameters.canvas.width;
     this._height = this.parameters.canvas.height;
-
     this._viewport = new Vector4(0, 0, this._width, this._height);
     this._scissor = new Vector4(0, 0, this._width, this._height);
     this._scissorTest = false;
-
     this._nodes = new Nodes(this);
     this._animation = new Animation(this);
     this._attributes = new Attributes(this);
@@ -124,11 +120,9 @@ export class Renderer {
     this._objects = new RenderObjects(this);
     this._renderLists = new RenderLists();
     this._renderContexts = new RenderContexts();
-
     this._currentRenderContext = null;
     this._opaqueSort = null;
     this._transparentSort = null;
-
     this._clearColor = new Color4(0, 0, 0, this.parameters.alpha ? 0 : 1);
     this._clearDepth = 1;
     this._clearStencil = 0;
@@ -138,7 +132,6 @@ export class Renderer {
     this._renderObjectFunction = null;
     this._currentRenderObjectFunction = null;
     this._handleObjectFunction = this._renderObjectDirect;
-
     this._compilationPromises = null;
   }
 

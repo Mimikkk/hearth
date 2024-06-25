@@ -51,7 +51,6 @@ async function init() {
   object.position.y = -0.95;
   object.scale.setScalar(0.01);
   scene.add(object);
-
   //
 
   renderer = await Renderer.create();

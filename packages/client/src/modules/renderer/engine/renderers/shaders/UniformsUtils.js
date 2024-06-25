@@ -1,9 +1,3 @@
-import { ColorManagement } from '../../math/ColorManagement.ts';
-
-/**
- * Uniform Utilities
- */
-
 export function cloneUniforms(src) {
   const dst = {};
 
@@ -56,35 +50,3 @@ export function mergeUniforms(uniforms) {
 
   return merged;
 }
-
-export function cloneUniformsGroups(src) {
-  const dst = [];
-
-  for (let u = 0; u < src.length; u++) {
-    dst.push(src[u].clone());
-  }
-
-  return dst;
-}
-
-export function getUnlitUniformColorSpace(renderer) {
-  const currentRenderTarget = renderer.getRenderTarget();
-
-  if (currentRenderTarget === null) {
-    // https://github.com/mrdoob/engine.js/pull/23937#issuecomment-1111067398
-    return renderer.outputColorSpace;
-  }
-
-  // https://github.com/mrdoob/engine.js/issues/27868
-  if (currentRenderTarget.isXRRenderTarget === true) {
-    return currentRenderTarget.texture.colorSpace;
-  }
-
-  return ColorManagement.workingColorSpace;
-}
-
-// Legacy
-
-const UniformsUtils = { clone: cloneUniforms, merge: mergeUniforms };
-
-export { UniformsUtils };

@@ -1,7 +1,7 @@
 import { CoordinateSystem } from '../constants.js';
 import { Object3D } from '../core/Object3D.js';
 import { PerspectiveCamera } from './PerspectiveCamera.js';
-import { CubeRenderTarget } from '../renderers/CubeRenderTarget.js';
+import { CubeRenderTarget } from '../core/CubeRenderTarget.js';
 import { Scene } from '@modules/renderer/engine/scenes/Scene.js';
 import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 

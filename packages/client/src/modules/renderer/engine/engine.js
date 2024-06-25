@@ -1,9 +1,8 @@
 import { Revision } from './constants.ts';
 
-export { CubeRenderTarget } from './renderers/CubeRenderTarget.ts';
+export { CubeRenderTarget } from './core/CubeRenderTarget.ts';
 export { ShaderLib } from './renderers/shaders/ShaderLib.ts';
 export { UniformsLib } from './renderers/shaders/UniformsLib.ts';
-export { UniformsUtils } from './renderers/shaders/UniformsUtils.js';
 export { ShaderChunk } from './renderers/shaders/ShaderChunk.js';
 export { FogExp2 } from './scenes/FogExp2.ts';
 export { Fog } from './scenes/Fog.ts';

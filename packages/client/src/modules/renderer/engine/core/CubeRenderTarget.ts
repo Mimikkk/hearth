@@ -1,5 +1,5 @@
 import { CubeTexture } from '../textures/CubeTexture.js';
-import { RenderTarget } from '../core/RenderTarget.js';
+import { RenderTarget } from './RenderTarget.js';
 import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 import { CubeMapping, DepthTextureFormat } from '@modules/renderer/engine/constants.js';
 
