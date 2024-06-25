@@ -17,12 +17,12 @@ export class InteractiveGroup extends Group {
     const scope = this;
     const raycaster = new Raycaster(undefined!, undefined!);
 
-    const element = renderer.domElement;
+    const element = renderer.parameters.canvas;
 
     const onPointerEvent = (event: PointerEvent) => {
       event.stopPropagation();
 
-      const { width, height, left, top } = renderer.domElement.getBoundingClientRect();
+      const { width, height, left, top } = renderer.parameters.canvas.getBoundingClientRect();
       const pointer = new Vector2(((event.clientX - left) / width) * 2 - 1, (-(event.clientY - top) / height) * 2 + 1);
       raycaster.setFromCamera(pointer, camera);
 

@@ -59,7 +59,7 @@ renderer.outputColorSpace = ColorSpace.LinearSRGB;
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setAnimationLoop(() => renderer.render(scene, camera));
 renderer.setSize(renderable.clientWidth, renderable.clientHeight);
-renderable.appendChild(renderer.domElement);
+renderable.appendChild(renderer.parameters.canvas);
 
 const refreshEditorView = async () => {
   const code = editorView.getValue();

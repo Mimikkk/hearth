@@ -142,7 +142,7 @@ async function init() {
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(animate);
-  document.body.appendChild(renderer.domElement);
+  document.body.appendChild(renderer.parameters.canvas);
 
   stats = new Stats();
   document.body.appendChild(stats.dom);
@@ -192,10 +192,10 @@ async function init() {
 
   // events
 
-  renderer.domElement.addEventListener('pointermove', onMove);
+  renderer.parameters.canvas.addEventListener('pointermove', onMove);
   //
 
-  controls = new OrbitControls(camera, renderer.domElement);
+  controls = new OrbitControls(camera, renderer.parameters.canvas);
   controls.minDistance = 5;
   controls.maxDistance = 200;
   controls.target.set(0, 0, 0);

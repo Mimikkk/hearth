@@ -66,7 +66,7 @@ function init() {
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(animate);
-  container.appendChild(renderer.domElement);
+  container.appendChild(renderer.parameters.canvas);
 
   window.addEventListener('resize', onWindowResize);
 }

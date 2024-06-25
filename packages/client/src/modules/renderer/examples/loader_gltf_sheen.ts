@@ -38,9 +38,9 @@ function init() {
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(animate);
-  renderer.toneMapping = Engine.ToneMapping.ACESFilmic;
-  renderer.toneMappingExposure = 1;
-  container.appendChild(renderer.domElement);
+  renderer.parameters.toneMapping = Engine.ToneMapping.ACESFilmic;
+  renderer.parameters.toneMappingExposure = 1;
+  container.appendChild(renderer.parameters.canvas);
 
   scene.background = new Engine.Color(0xaaaaaa);
 
@@ -52,7 +52,7 @@ function init() {
     scene.environment = texture;
   });
 
-  controls = new OrbitControls(camera, renderer.domElement);
+  controls = new OrbitControls(camera, renderer.parameters.canvas);
   controls.enableDamping = true;
   controls.minDistance = 1;
   controls.maxDistance = 10;

@@ -71,7 +71,7 @@ function init() {
   renderer = new Renderer();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
-  document.body.appendChild(renderer.domElement);
+  document.body.appendChild(renderer.parameters.canvas);
 
   // compute texture
   renderer.compute(computeNode);

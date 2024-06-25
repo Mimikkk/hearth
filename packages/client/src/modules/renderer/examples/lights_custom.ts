@@ -89,12 +89,12 @@ function init() {
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(animate);
-  renderer.toneMappingNode = toneMapping(Engine.ToneMapping.Linear, 1);
-  document.body.appendChild(renderer.domElement);
+  renderer.parameters.toneMappingNode = toneMapping(Engine.ToneMapping.Linear, 1);
+  document.body.appendChild(renderer.parameters.canvas);
 
   // controls
 
-  const controls = new OrbitControls(camera, renderer.domElement);
+  const controls = new OrbitControls(camera, renderer.parameters.canvas);
   controls.minDistance = 0;
   controls.maxDistance = 4;
 

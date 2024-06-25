@@ -86,12 +86,12 @@ async function init() {
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(render);
-  document.body.appendChild(renderer.domElement);
+  document.body.appendChild(renderer.parameters.canvas);
 
   camera = new Engine.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.1, 100);
   camera.position.set(16, 4, 1);
 
-  const controls = new OrbitControls(camera, renderer.domElement);
+  const controls = new OrbitControls(camera, renderer.parameters.canvas);
   controls.minDistance = 2;
   controls.maxDistance = 50;
   controls.enablePan = false;

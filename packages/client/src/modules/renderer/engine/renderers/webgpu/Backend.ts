@@ -190,7 +190,7 @@ export class Backend {
       requiredLimits: parameters.requiredLimits,
     });
 
-    const context = parameters.context ?? renderer.domElement.getContext('webgpu');
+    const context = parameters.context ?? renderer.parameters.canvas.getContext('webgpu');
 
     if (context === null) {
       throw new Error('WebGPUBackend: Unable to create WebGPU context.');
@@ -239,7 +239,7 @@ export class Backend {
           },
         ],
         depthStencilAttachment: {
-          view: this.textures.getDepthBuffer(renderer.depth, renderer.stencil).createView(),
+          view: this.textures.getDepthBuffer(renderer.parameters.depth, renderer.parameters.stencil).createView(),
         },
       };
 
@@ -593,8 +593,8 @@ export class Backend {
     }
 
     if (renderTargetData === null) {
-      supportsDepth = renderer.depth;
-      supportsStencil = renderer.stencil;
+      supportsDepth = renderer.parameters.depth;
+      supportsStencil = renderer.parameters.stencil;
 
       const descriptor = this._getDefaultRenderPassDescriptor();
 

@@ -35,7 +35,7 @@ function init() {
   renderer.setClearColor(0x000000, 0.0);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(animate);
-  document.body.appendChild(renderer.domElement);
+  document.body.appendChild(renderer.parameters.canvas);
 
   scene = new Engine.Scene();
 
@@ -45,7 +45,7 @@ function init() {
   camera2 = new Engine.PerspectiveCamera(40, 1, 1, 1000);
   camera2.position.copy(camera.position);
 
-  controls = new OrbitControls(camera, renderer.domElement);
+  controls = new OrbitControls(camera, renderer.parameters.canvas);
   controls.enableDamping = true;
   controls.minDistance = 10;
   controls.maxDistance = 500;
@@ -136,7 +136,7 @@ function animate() {
 
   controls.update();
 
-  renderer.autoClear = true;
+  renderer.parameters.autoClear = true;
 
   scene.backgroundNode = null;
   renderer.render(scene, camera);
@@ -154,7 +154,7 @@ function animate() {
   camera2.position.copy(camera.position);
   camera2.quaternion.copy(camera.quaternion);
 
-  renderer.autoClear = false;
+  renderer.parameters.autoClear = false;
 
   scene.backgroundNode = backgroundNode;
   renderer.render(scene, camera2);

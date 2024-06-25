@@ -74,9 +74,9 @@ const createCameraView = async (container: HTMLDivElement, type: 'logarithmic' |
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(width / 2, height);
 
-  renderer.domElement.style.position = 'relative';
-  renderer.domElement.id = `renderer_${type}`;
-  container.appendChild(renderer.domElement);
+  renderer.parameters.canvas.style.position = 'relative';
+  renderer.parameters.canvas.id = `renderer_${type}`;
+  container.appendChild(renderer.parameters.canvas);
   await renderer.init();
 
   return { container, renderer, camera } as const;

@@ -162,7 +162,7 @@ async function init() {
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(render);
-  container.appendChild(renderer.domElement);
+  container.appendChild(renderer.parameters.canvas);
 
   document.onclick = () => {
     const overlay = document.getElementById('overlay');

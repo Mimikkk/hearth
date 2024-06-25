@@ -252,15 +252,15 @@ async function init() {
   //
 
   renderer = new Renderer();
-  renderer.toneMapping = Engine.ToneMapping.ACESFilmic;
+  renderer.parameters.toneMapping = Engine.ToneMapping.ACESFilmic;
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(animate);
-  document.body.appendChild(renderer.domElement);
+  document.body.appendChild(renderer.parameters.canvas);
 
   //
 
-  controls = new OrbitControls(camera, renderer.domElement);
+  controls = new OrbitControls(camera, renderer.parameters.canvas);
   controls.target.set(0, 10, 0);
   controls.minDistance = 25;
   controls.maxDistance = 35;

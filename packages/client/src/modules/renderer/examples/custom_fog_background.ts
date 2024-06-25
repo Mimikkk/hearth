@@ -29,8 +29,8 @@ function init() {
   renderer = new Renderer();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.toneMapping = ToneMapping.ACESFilmic;
-  container.appendChild(renderer.domElement);
+  renderer.parameters.toneMapping = ToneMapping.ACESFilmic;
+  container.appendChild(renderer.parameters.canvas);
 
   // post processing
 
@@ -71,7 +71,7 @@ function init() {
 
   //
 
-  const controls = new OrbitControls(camera, renderer.domElement);
+  const controls = new OrbitControls(camera, renderer.parameters.canvas);
   controls.minDistance = 2;
   controls.maxDistance = 5;
   controls.target.set(0, -0.1, -0.2);

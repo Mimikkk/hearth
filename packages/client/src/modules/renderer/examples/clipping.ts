@@ -101,17 +101,17 @@ function init() {
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(animate);
-  document.body.appendChild(renderer.domElement);
+  document.body.appendChild(renderer.parameters.canvas);
 
   // ***** Clipping setup (renderer): *****
   const globalPlanes = [globalPlane];
   const Empty = Object.freeze([]);
 
-  renderer.clippingPlanes = Empty; // GUI sets it to globalPlanes
-  renderer.localClippingEnabled = true;
+  renderer.parameters.clippingPlanes = Empty; // GUI sets it to globalPlanes
+  renderer.parameters.localClippingEnabled = true;
 
   // Controls
-  const controls = new OrbitControls(camera, renderer.domElement);
+  const controls = new OrbitControls(camera, renderer.parameters.canvas);
   controls.target.set(0, 1, 0);
   controls.update();
 

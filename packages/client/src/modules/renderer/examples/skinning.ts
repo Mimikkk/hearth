@@ -46,8 +46,8 @@ function init() {
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(animate);
-  renderer.toneMappingNode = toneMapping(Engine.ToneMapping.Linear, 0.15);
-  document.body.appendChild(renderer.domElement);
+  renderer.parameters.toneMappingNode = toneMapping(Engine.ToneMapping.Linear, 0.15);
+  document.body.appendChild(renderer.parameters.canvas);
 
   useWindowResizer(renderer, camera);
 }

@@ -25,8 +25,8 @@ async function init() {
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(animation);
-  renderer.toneMapping = Engine.ToneMapping.ACESFilmic;
-  document.body.appendChild(renderer.domElement);
+  renderer.parameters.toneMapping = Engine.ToneMapping.ACESFilmic;
+  document.body.appendChild(renderer.parameters.canvas);
 
   stats = new Stats();
   document.body.appendChild(stats.dom);
@@ -75,7 +75,7 @@ async function init() {
   const gui = new GUI();
   gui.add(material, 'roughness', 0, 1);
   gui.add(material, 'metalness', 0, 1);
-  gui.add(renderer, 'toneMappingExposure', 0, 2).name('exposure');
+  gui.add(renderer.parameters, 'toneMappingExposure', 0, 2).name('exposure');
 
   sphere = new Engine.Mesh(new Engine.IcosahedronGeometry(15, 8), material);
   scene.add(sphere);
@@ -95,7 +95,7 @@ async function init() {
   //
 
   useWindowResizer(renderer, camera);
-  controls = new OrbitControls(camera, renderer.domElement);
+  controls = new OrbitControls(camera, renderer.parameters.canvas);
   controls.autoRotate = true;
 }
 

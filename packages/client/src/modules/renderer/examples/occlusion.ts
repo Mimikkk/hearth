@@ -87,11 +87,11 @@ async function init() {
   await renderer.compileAsync(scene, camera);
 
   renderer.setAnimationLoop(render);
-  document.body.appendChild(renderer.domElement);
+  document.body.appendChild(renderer.parameters.canvas);
 
   // controls
 
-  controls = new OrbitControls(camera, renderer.domElement);
+  controls = new OrbitControls(camera, renderer.parameters.canvas);
   controls.minDistance = 3;
   controls.maxDistance = 25;
 

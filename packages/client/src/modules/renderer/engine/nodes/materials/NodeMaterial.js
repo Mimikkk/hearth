@@ -152,7 +152,7 @@ export class NodeMaterial extends ShaderMaterial {
 
     let depthNode = this.depthNode;
 
-    if (depthNode === null && renderer.logarithmicDepthBuffer === true) {
+    if (depthNode === null && renderer.parameters.logarithmicDepthBuffer) {
       const fragDepth = modelViewProjection().w.add(1);
 
       depthNode = fragDepth.log2().mul(cameraLogDepth).mul(0.5);

@@ -169,6 +169,6 @@ export default ToneMappingNode;
 
 export const toneMapping = (mapping, exposure, color) =>
   nodeObject(new ToneMappingNode(mapping, nodeObject(exposure), nodeObject(color)));
-export const toneMappingExposure = rendererReference('toneMappingExposure', 'float');
+export const toneMappingExposure = rendererReference('parameters.toneMappingExposure', 'float');
 
 addNodeElement('toneMapping', (color, mapping, exposure) => toneMapping(mapping, exposure, color));

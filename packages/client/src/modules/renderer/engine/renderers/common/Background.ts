@@ -90,7 +90,7 @@ class Background extends DataMap<any, any> {
 
     //
 
-    if (renderer.autoClear === true || forceClear === true) {
+    if (renderer.parameters.autoClear || forceClear) {
       _clearColor.multiplyScalar(_clearColor.a);
 
       const clearColorValue = renderContext.clearColorValue;
@@ -103,9 +103,9 @@ class Background extends DataMap<any, any> {
       renderContext.depthClearValue = renderer._clearDepth;
       renderContext.stencilClearValue = renderer._clearStencil;
 
-      renderContext.clearColor = renderer.autoClearColor === true;
-      renderContext.clearDepth = renderer.autoClearDepth === true;
-      renderContext.clearStencil = renderer.autoClearStencil === true;
+      renderContext.clearColor = renderer.parameters.autoClearColor;
+      renderContext.clearDepth = renderer.parameters.autoClearDepth;
+      renderContext.clearStencil = renderer.parameters.autoClearStencil;
     } else {
       renderContext.clearColor = false;
       renderContext.clearDepth = false;

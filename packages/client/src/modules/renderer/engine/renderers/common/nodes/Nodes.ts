@@ -206,7 +206,7 @@ export class Nodes extends DataMap<any, any> {
   getToneMappingNode() {
     if (this.isToneMappingState === false) return null;
 
-    return this.renderer.toneMappingNode || this.get(this.renderer).toneMappingNode || null;
+    return this.renderer.parameters.toneMappingNode || this.get(this.renderer).toneMappingNode || null;
   }
 
   getCacheKey(scene: Scene, lightsNode) {
@@ -255,7 +255,7 @@ export class Nodes extends DataMap<any, any> {
   updateToneMapping() {
     const renderer = this.renderer;
     const rendererData = this.get(renderer);
-    const rendererToneMapping = renderer.toneMapping;
+    const rendererToneMapping = renderer.parameters.toneMapping;
 
     if (this.isToneMappingState && rendererToneMapping !== ToneMapping.None) {
       if (rendererData.toneMapping !== rendererToneMapping) {

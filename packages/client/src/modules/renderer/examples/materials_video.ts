@@ -44,7 +44,7 @@ function init() {
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(render);
-  container.appendChild(renderer.domElement);
+  container.appendChild(renderer.parameters.canvas);
 
   video = document.getElementById('video');
   video.play();

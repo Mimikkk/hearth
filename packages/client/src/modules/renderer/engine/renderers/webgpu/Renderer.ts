@@ -21,7 +21,7 @@ import ClippingContext from '@modules/renderer/engine/renderers/common/ClippingC
 import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
 import { Vector3 } from '@modules/renderer/engine/math/Vector3.js';
 import { Vector2 } from '@modules/renderer/engine/math/Vector2.js';
-import { Frustum, Matrix4 } from '@modules/renderer/engine/engine.js';
+import { Frustum, Matrix4, Plane } from '@modules/renderer/engine/engine.js';
 
 const _scene = new Scene();
 const _drawingBufferSize = new Vector2();
@@ -31,22 +31,7 @@ const _projScreenMatrix = new Matrix4();
 const _vector3 = new Vector3();
 
 export class Renderer {
-  domElement: HTMLCanvasElement;
   backend: Backend;
-  autoClear: boolean;
-  autoClearColor: boolean;
-  autoClearDepth: boolean;
-  autoClearStencil: boolean;
-  alpha: boolean;
-  logarithmicDepthBuffer: boolean;
-  outputColorSpace: ColorSpace;
-  toneMapping: ToneMapping;
-  toneMappingExposure: number;
-  toneMappingNode: ToneMappingNode | null;
-  sortObjects: boolean;
-  depth: boolean;
-  stencil: boolean;
-  clippingPlanes: any[];
   info: Info;
   _pixelRatio: number;
   _width: number;
@@ -57,7 +42,6 @@ export class Renderer {
   _attributes: Attributes;
   _geometries: Geometries;
   _nodes: Nodes;
-  localClippingEnabled: boolean;
   _animation: Animation;
   _bindings: Bindings;
   _objects: RenderObjects;
@@ -81,40 +65,48 @@ export class Renderer {
   _initialized: boolean;
   _initPromise: Promise<void>;
   _compilationPromises: any;
-  parameters: Options;
+  parameters: Configuration;
+
+  static configure(options?: Options): Configuration {
+    const canvas = options?.canvas ?? document.createElement('canvas');
+    const context = canvas.getContext('webgpu');
+    if (context === null) throw Error('WebGPU not supported.');
+
+    return {
+      alpha: options?.alpha ?? true,
+      antialias: options?.antialias ?? false,
+      autoClear: options?.autoClear ?? true,
+      autoClearColor: options?.autoClearColor ?? true,
+      autoClearDepth: options?.autoClearDepth ?? true,
+      autoClearStencil: options?.autoClearStencil ?? true,
+      canvas,
+      clippingPlanes: options?.clippingPlanes ?? [],
+      context,
+      depth: options?.depth ?? true,
+      localClippingEnabled: options?.localClippingEnabled ?? false,
+      logarithmicDepthBuffer: options?.logarithmicDepthBuffer ?? false,
+      outputColorSpace: options?.outputColorSpace ?? ColorSpace.SRGB,
+      outputEncoding: options?.outputEncoding ?? 'sRGB',
+      powerPreference: options?.powerPreference ?? 'high-performance',
+      sortObjects: options?.sortObjects ?? true,
+      stencil: options?.stencil ?? false,
+      toneMapping: options?.toneMapping ?? ToneMapping.None,
+      toneMappingExposure: options?.toneMappingExposure ?? 1.0,
+      toneMappingNode: options?.toneMappingNode ?? null,
+    };
+  }
 
   constructor(parameters?: Options) {
-    const backend = new Backend(parameters?.backend);
-    this.domElement = backend.getDomElement();
-
-    this.backend = backend;
-
-    this.autoClear = true;
-    this.autoClearColor = true;
-    this.autoClearDepth = true;
-    this.autoClearStencil = true;
-    this.localClippingEnabled = false;
-    this.alpha = parameters?.alpha ?? true;
-    this.logarithmicDepthBuffer = parameters?.logarithmicDepthBuffer ?? false;
-    this.outputColorSpace = ColorSpace.SRGB;
-
-    this.toneMapping = ToneMapping.None;
-    this.toneMappingExposure = 1.0;
-
-    this.sortObjects = true;
-
-    this.depth = true;
-    this.stencil = false;
-
-    this.clippingPlanes = [];
+    this.parameters = Renderer.configure(parameters);
+    this.backend = new Backend(parameters?.backend);
 
     this.info = new Info();
 
     // internals
 
     this._pixelRatio = 1;
-    this._width = this.domElement.width;
-    this._height = this.domElement.height;
+    this._width = this.parameters.canvas.width;
+    this._height = this.parameters.canvas.height;
 
     this._viewport = new Vector4(0, 0, this._width, this._height);
     this._scissor = new Vector4(0, 0, this._width, this._height);
@@ -137,7 +129,7 @@ export class Renderer {
     this._opaqueSort = null;
     this._transparentSort = null;
 
-    const alphaClear = this.alpha ? 0 : 1;
+    const alphaClear = this.parameters.alpha ? 0 : 1;
 
     this._clearColor = new Color4(0, 0, 0, alphaClear);
     this._clearDepth = 1;
@@ -242,8 +234,8 @@ export class Renderer {
 
     //
 
-    renderContext.depth = this.depth;
-    renderContext.stencil = this.stencil;
+    renderContext.depth = this.parameters.depth;
+    renderContext.stencil = this.parameters.stencil;
 
     if (!renderContext.clippingContext) renderContext.clippingContext = new ClippingContext();
     renderContext.clippingContext.updateGlobal(this, camera);
@@ -428,7 +420,7 @@ export class Renderer {
 
     renderList.finish();
 
-    if (this.sortObjects === true) {
+    if (this.parameters.sortObjects) {
       renderList.sort(this._opaqueSort, this._transparentSort);
     }
 
@@ -449,10 +441,10 @@ export class Renderer {
     } else {
       renderContext.textures = null;
       renderContext.depthTexture = null;
-      renderContext.width = this.domElement.width;
-      renderContext.height = this.domElement.height;
-      renderContext.depth = this.depth;
-      renderContext.stencil = this.stencil;
+      renderContext.width = this.parameters.canvas.width;
+      renderContext.height = this.parameters.canvas.height;
+      renderContext.depth = this.parameters.depth;
+      renderContext.stencil = this.parameters.stencil;
     }
 
     renderContext.width >>= activeMipmapLevel;
@@ -557,8 +549,8 @@ export class Renderer {
 
     this._pixelRatio = pixelRatio;
 
-    this.domElement.width = Math.floor(width * pixelRatio);
-    this.domElement.height = Math.floor(height * pixelRatio);
+    this.parameters.canvas.width = Math.floor(width * pixelRatio);
+    this.parameters.canvas.height = Math.floor(height * pixelRatio);
 
     this.setViewport(0, 0, width, height);
 
@@ -569,12 +561,12 @@ export class Renderer {
     this._width = width;
     this._height = height;
 
-    this.domElement.width = Math.floor(width * this._pixelRatio);
-    this.domElement.height = Math.floor(height * this._pixelRatio);
+    this.parameters.canvas.width = Math.floor(width * this._pixelRatio);
+    this.parameters.canvas.height = Math.floor(height * this._pixelRatio);
 
     if (updateStyle === true) {
-      this.domElement.style.width = width + 'px';
-      this.domElement.style.height = height + 'px';
+      this.parameters.canvas.style.width = width + 'px';
+      this.parameters.canvas.style.height = height + 'px';
     }
 
     this.setViewport(0, 0, width, height);
@@ -737,7 +729,7 @@ export class Renderer {
       return (Array.isArray(texture) ? texture[0] : texture).colorSpace;
     }
 
-    return this.outputColorSpace;
+    return this.parameters.outputColorSpace;
   }
 
   dispose() {
@@ -881,7 +873,7 @@ export class Renderer {
         renderList.pushLight(object);
       } else if (object.isSprite) {
         if (!object.frustumCulled || _frustum.intersectsSprite(object)) {
-          if (this.sortObjects === true) {
+          if (this.parameters.sortObjects) {
             _vector3.setFromMatrixPosition(object.matrixWorld).applyMatrix4(_projScreenMatrix);
           }
 
@@ -901,7 +893,7 @@ export class Renderer {
           const geometry = object.geometry;
           const material = object.material;
 
-          if (this.sortObjects === true) {
+          if (this.parameters.sortObjects) {
             if (geometry.boundingSphere === null) geometry.computeBoundingSphere();
 
             _vector3
@@ -974,7 +966,7 @@ export class Renderer {
           overrideMaterial.fragmentNode = material.shadowNode;
         }
 
-        if (this.localClippingEnabled) {
+        if (this.parameters.localClippingEnabled) {
           if (material.clipShadows) {
             if (overrideMaterial.clippingPlanes !== material.clippingPlanes) {
               overrideMaterial.clippingPlanes = material.clippingPlanes;
@@ -1090,14 +1082,49 @@ export class Renderer {
 
 export namespace Renderer {
   export interface Options {
-    backend?: Backend.Options;
-    logarithmicDepthBuffer?: boolean;
     alpha?: boolean;
+    antialias?: boolean;
+    autoClear?: boolean;
+    autoClearColor?: boolean;
+    autoClearDepth?: boolean;
+    autoClearStencil?: boolean;
+    backend?: Backend.Options;
+    canvas?: HTMLCanvasElement;
+    clippingPlanes?: Plane[];
+    depth?: boolean;
+    localClippingEnabled?: boolean;
+    logarithmicDepthBuffer?: boolean;
+    outputColorSpace?: ColorSpace;
+    outputEncoding?: string;
+    powerPreference?: GPUPowerPreference;
+    sortObjects?: boolean;
+    stencil?: boolean;
+    toneMapping?: ToneMapping;
+    toneMappingExposure?: number;
+    toneMappingNode?: ToneMappingNode | null;
   }
 
   export interface Configuration {
-    logarithmicDepthBuffer: boolean;
     alpha: boolean;
+    antialias: boolean;
+    autoClear: boolean;
+    autoClearColor: boolean;
+    autoClearDepth: boolean;
+    autoClearStencil: boolean;
+    canvas: HTMLCanvasElement;
+    clippingPlanes: Plane[];
+    context: GPUCanvasContext;
+    depth: boolean;
+    localClippingEnabled: boolean;
+    logarithmicDepthBuffer: boolean;
+    outputColorSpace: ColorSpace;
+    outputEncoding: string;
+    powerPreference: GPUPowerPreference;
+    sortObjects: boolean;
+    stencil: boolean;
+    toneMapping: ToneMapping;
+    toneMappingExposure: number;
+    toneMappingNode: ToneMappingNode | null;
   }
 }
 type Options = Renderer.Options;

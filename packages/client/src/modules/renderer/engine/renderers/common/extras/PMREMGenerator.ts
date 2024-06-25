@@ -283,12 +283,12 @@ class PMREMGenerator {
 
     const renderer = this._renderer;
 
-    const originalAutoClear = renderer.autoClear;
-    const toneMapping = renderer.toneMapping;
+    const originalAutoClear = renderer.parameters.autoClear;
+    const toneMapping = renderer.parameters.toneMapping;
     renderer.getClearColor(_clearColor);
 
-    renderer.toneMapping = ToneMapping.None;
-    renderer.autoClear = false;
+    renderer.parameters.toneMapping = ToneMapping.None;
+    renderer.parameters.autoClear = false;
 
     const backgroundMaterial = new MeshBasicMaterial({
       name: 'PMREM.Background',
@@ -345,8 +345,8 @@ class PMREMGenerator {
     backgroundBox.geometry.dispose();
     backgroundBox.material.dispose();
 
-    renderer.toneMapping = toneMapping;
-    renderer.autoClear = originalAutoClear;
+    renderer.parameters.toneMapping = toneMapping;
+    renderer.parameters.autoClear = originalAutoClear;
     scene.background = background;
   }
 
@@ -380,8 +380,8 @@ class PMREMGenerator {
 
   _applyPMREM(cubeUVRenderTarget) {
     const renderer = this._renderer;
-    const autoClear = renderer.autoClear;
-    renderer.autoClear = false;
+    const autoClear = renderer.parameters.autoClear;
+    renderer.parameters.autoClear = false;
 
     for (let i = 1; i < this._lodPlanes.length; i++) {
       const sigma = Math.sqrt(this._sigmas[i] * this._sigmas[i] - this._sigmas[i - 1] * this._sigmas[i - 1]);
@@ -391,7 +391,7 @@ class PMREMGenerator {
       this._blur(cubeUVRenderTarget, i - 1, i, sigma, poleAxis);
     }
 
-    renderer.autoClear = autoClear;
+    renderer.parameters.autoClear = autoClear;
   }
 
   /**
