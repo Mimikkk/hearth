@@ -25,7 +25,7 @@ import {
 import { Object3DEventMap } from '@modules/renderer/engine/core/Object3D.js';
 import { Intersection } from '@modules/renderer/engine/core/Raycaster.js';
 
-const _raycaster = new Raycaster(undefined!, undefined!);
+const _raycaster = new Raycaster();
 
 const _tempVector = new Vector3();
 const _tempVector2 = new Vector3();

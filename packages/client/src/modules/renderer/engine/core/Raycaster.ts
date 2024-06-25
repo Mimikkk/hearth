@@ -41,7 +41,7 @@ export class Raycaster {
   layers: Layers;
   params: RaycasterParameters;
 
-  constructor(origin: Vector3, direction: Vector3, near: number = 0, far: number = Infinity) {
+  constructor(origin?: Vector3, direction?: Vector3, near: number = 0, far: number = Infinity) {
     this.ray = new Ray(origin, direction);
     this.camera = null!;
     this.near = near;

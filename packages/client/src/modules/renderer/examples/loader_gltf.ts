@@ -1,15 +1,15 @@
-import { Mapping, PerspectiveCamera, Scene, ToneMapping } from '@modules/renderer/engine/engine.js';
+import { Clock, Mapping, PerspectiveCamera, Scene, ToneMapping } from '@modules/renderer/engine/engine.js';
 import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 import { RGBELoader } from '@modules/renderer/engine/loaders/textures/RGBELoader/RGBELoader.js';
 import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
 import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/GLTFLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import { ViewHelper } from '@modules/renderer/engine/helpers/ViewHelper.js';
+import { WorldAxesVisualizer } from '@modules/renderer/engine/helpers/WorldAxesVisualizer.js';
 
 let camera!: PerspectiveCamera;
 let scene!: Scene;
 let renderer!: Renderer;
-let viewHelper!: ViewHelper;
+let viewHelper!: WorldAxesVisualizer;
 
 await init();
 render();
@@ -27,7 +27,8 @@ async function init() {
     autoClear: false,
   });
 
-  viewHelper = new ViewHelper(camera, renderer.parameters.canvas);
+  viewHelper = new WorldAxesVisualizer(camera, renderer.parameters.canvas);
+  renderer.setAnimationLoop(animate);
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.parameters.toneMapping = ToneMapping.ACESFilmic;
@@ -47,19 +48,23 @@ async function init() {
   });
 
   const controls = new OrbitControls(camera, renderer.parameters.canvas);
-  controls.eventDispatcher.add('change', render); // use if there is no animation loop
   controls.minDistance = 2;
   controls.maxDistance = 10;
   controls.target.set(0, 0, -0.2);
   controls.update();
 
-  useWindowResizer(renderer, camera, () => {
-    useWindowResizer.updateSize(renderer, camera);
-    render();
-  });
+  useWindowResizer(renderer, camera);
 }
 
-async function render() {
+const clock = new Clock();
+
+async function animate() {
+  const delta = clock.getDelta();
+  viewHelper.update(delta);
+  render();
+}
+
+function render() {
   renderer.clear();
 
   renderer.render(scene, camera);

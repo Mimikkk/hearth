@@ -8,7 +8,7 @@ import { EventDispatcher } from '../core/EventDispatcher.js';
 import { Camera } from '../cameras/Camera.js';
 
 const _plane = new Plane();
-const _raycaster = new Raycaster(undefined!, undefined!);
+const _raycaster = new Raycaster();
 
 const _pointer = new Vector2();
 const _offset = new Vector3();

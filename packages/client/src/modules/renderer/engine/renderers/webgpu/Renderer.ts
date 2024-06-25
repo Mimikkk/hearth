@@ -21,7 +21,7 @@ import ClippingContext from '@modules/renderer/engine/renderers/common/ClippingC
 import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
 import { Vector3 } from '@modules/renderer/engine/math/Vector3.js';
 import { Vector2 } from '@modules/renderer/engine/math/Vector2.js';
-import { Frustum, Matrix4, Plane } from '@modules/renderer/engine/engine.js';
+import { Frustum, Matrix4, Object3D, Plane } from '@modules/renderer/engine/engine.js';
 import { GPUFeatureNameType, GPUTextureFormatType } from '@modules/renderer/engine/renderers/webgpu/utils/constants.js';
 
 const _scene = new Scene();
@@ -280,11 +280,11 @@ export class Renderer {
     this._renderScene(scene, camera);
   }
 
-  render(scene: Scene, camera: Camera) {
+  render(scene: Object3D, camera: Camera) {
     this._renderScene(scene, camera);
   }
 
-  _renderScene(scene: Scene, camera: Camera) {
+  _renderScene(scene: Object3D, camera: Camera) {
     // preserve render tree
 
     const nodeFrame = this._nodes.nodeFrame;

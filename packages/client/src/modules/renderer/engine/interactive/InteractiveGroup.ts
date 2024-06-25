@@ -15,7 +15,7 @@ const createInteractionEvent = (type: InteractionType, data: Vector2): Interacti
 export class InteractiveGroup extends Group {
   listenToPointerEvents(renderer: Renderer, camera: Camera) {
     const scope = this;
-    const raycaster = new Raycaster(undefined!, undefined!);
+    const raycaster = new Raycaster();
 
     const element = renderer.parameters.canvas;
 
