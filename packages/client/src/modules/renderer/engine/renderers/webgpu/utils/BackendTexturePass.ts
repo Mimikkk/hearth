@@ -56,92 +56,91 @@ const flipYLabel = (format: GPUTextureFormat) => `${mipmapLabel(format)}-flip_y`
 export class BackendTexturePass {
   transferPipelines = new CacheMap(
     (format: GPUTextureFormat) => {
-      const { resources } = this.backend;
+      const { render, bindGroupLayouts } = this.backend.resources;
       const label = mipmapLabel(format);
 
-      return resources.renderPipeline({
-        label: transferLabel(format),
+      return render.pipelines.get(transferLabel(format), () => ({
+        label,
         vertex: this.mipmap.vertexState(),
         fragment: this.mipmap.fragmentState(format, false),
         primitive: {
           topology: GPUPrimitiveTopologyType.TriangleStrip,
           stripIndexFormat: GPUIndexFormatType.Uint32,
         },
-        layout: resources.renderPipelineLayout({
-          label: `${label}-layout`,
-          bindGroupLayouts: resources.bindGroupLayouts({
-            label: `${label}-bind-group`,
-            entries: [
-              {
-                binding: 0,
-                visibility: GPUShaderStage.FRAGMENT,
-                sampler: { type: 'filtering' },
-              },
-              {
-                binding: 1,
-                visibility: GPUShaderStage.FRAGMENT,
-                texture: {
-                  sampleType: 'float',
-                  viewDimension: '2d',
+        layout: render.layouts.get(`${label}-layout`, () => ({
+          bindGroupLayouts: [
+            bindGroupLayouts.get(`${label}-bind-group`, () => ({
+              entries: [
+                {
+                  binding: 0,
+                  visibility: GPUShaderStage.FRAGMENT,
+                  sampler: { type: 'filtering' },
                 },
-              },
-            ],
-          }),
-        }),
-      });
+                {
+                  binding: 1,
+                  visibility: GPUShaderStage.FRAGMENT,
+                  texture: {
+                    sampleType: 'float',
+                    viewDimension: '2d',
+                  },
+                },
+              ],
+            })),
+          ],
+        })),
+      }));
     },
     (pipeline, format) => {
-      const { resources } = this.backend;
+      const { render, bindGroupLayouts } = this.backend.resources;
       const label = mipmapLabel(format);
 
-      resources.renderPipelineMap.delete(pipeline.label);
-      resources.renderPipelineLayoutMap.remove(`${label}-layout`);
-      resources.bindGroupLayoutMap.remove(`${label}-bind-group`);
+      render.pipelines.delete(pipeline.label);
+      render.layouts.remove(`${label}-layout`);
+      bindGroupLayouts.remove(`${label}-bind-group`);
     },
   );
   flipYPipelines = new CacheMap(
     (format: GPUTextureFormat) => {
-      const { resources } = this.backend;
+      const { render, bindGroupLayouts } = this.backend.resources;
       const label = mipmapLabel(format);
 
-      return resources.renderPipeline({
-        label: flipYLabel(format),
+      return render.pipelines.get(flipYLabel(format), () => ({
         vertex: this.mipmap.vertexState(),
         fragment: this.mipmap.fragmentState(format, true),
         primitive: {
           topology: GPUPrimitiveTopologyType.TriangleStrip,
           stripIndexFormat: GPUIndexFormatType.Uint32,
         },
-        layout: resources.renderPipelineLayout({
-          label: `${label}-layout`,
-          bindGroupLayouts: resources.bindGroupLayouts({
-            label: `${label}-bind-group`,
-            entries: [
-              {
-                binding: 0,
-                visibility: GPUShaderStage.FRAGMENT,
-                sampler: { type: 'filtering' },
-              },
-              {
-                binding: 1,
-                visibility: GPUShaderStage.FRAGMENT,
-                texture: {
-                  sampleType: 'float',
-                  viewDimension: '2d',
+        layout: render.layouts.get(`${label}-layout`, () => ({
+          bindGroupLayouts: [
+            bindGroupLayouts.get(`${label}-bind-group`, () => ({
+              entries: [
+                {
+                  binding: 0,
+                  visibility: GPUShaderStage.FRAGMENT,
+                  sampler: { type: 'filtering' },
                 },
-              },
-            ],
-          }),
-        }),
-      });
+                {
+                  binding: 1,
+                  visibility: GPUShaderStage.FRAGMENT,
+                  texture: {
+                    sampleType: 'float',
+                    viewDimension: '2d',
+                  },
+                },
+              ],
+            })),
+          ],
+        })),
+      }));
     },
     (pipeline, format) => {
-      const { resources } = this.backend;
+      const { render, bindGroupLayouts } = this.backend.resources;
       const label = mipmapLabel(format);
 
-      resources.renderPipelineMap.delete(pipeline.label);
-      resources.renderPipelineLayoutMap.remove(`${label}-layout`);
-      resources.bindGroupLayoutMap.remove(`${label}-bind-group`);
+      render.pipelines.delete(pipeline.label);
+      render.layouts.remove(`${label}-layout`);
+      bindGroupLayouts.remove(`${label}-bind-group`);
     },
   );
   mipmap: MipmapShader;
@@ -157,7 +156,7 @@ export class BackendTexturePass {
     const transferPipeline = this.transferPipelines.get(format);
     const flipYPipeline = this.flipYPipelines.get(format);
 
-    const temporaryTexture = this.backend.resources.textureMap.set({
+    const temporaryTexture = this.backend.resources.textures.set({
       label: 'mipmap-temporary-texture',
       size: { width, height, depthOrArrayLayers: 1 },
       format,
@@ -195,14 +194,14 @@ export class BackendTexturePass {
     );
 
     this.backend.device.queue.submit([commandEncoder.finish()]);
-    this.backend.resources.textureMap.delete('mipmap-temporary-texture');
+    this.backend.resources.textures.delete('mipmap-temporary-texture');
   }
 
   generateMipmaps(texture: GPUTexture, descriptor: GPUTextureDescriptor, layer: number): void {
     const pipeline = this.transferPipelines.get(descriptor.format);
-    const { resources } = this.backend;
+    const { commandEncoders, bindGroups } = this.backend.resources;
 
-    const commandEncoder = resources.commandEncoder({ label: 'mipmap-encoder' });
+    const commandEncoder = commandEncoders.create({ label: 'mipmap-encoder' }, 'mipmap-encoder');
     const bindGroupLayout = pipeline.getBindGroupLayout(0);
 
     let source = texture.createView({
@@ -213,20 +212,23 @@ export class BackendTexturePass {
     });
 
     for (let i = 1; i < descriptor.mipLevelCount!; i++) {
-      const group = resources.bindGroup({
-        label: `mipmap-${i}`,
-        layout: bindGroupLayout,
-        entries: [
-          {
-            binding: 0,
-            resource: this.mipmap.samplerLinear,
-          },
-          {
-            binding: 1,
-            resource: source,
-          },
-        ],
-      });
+      const bindGroup = bindGroups.create(
+        {
+          label: `mipmap-${i}`,
+          layout: bindGroupLayout,
+          entries: [
+            {
+              binding: 0,
+              resource: this.mipmap.samplerLinear,
+            },
+            {
+              binding: 1,
+              resource: source,
+            },
+          ],
+        },
+        `mipmap-${i}`,
+      );
 
       const destination = texture.createView({
         baseMipLevel: i,
@@ -247,7 +249,7 @@ export class BackendTexturePass {
       });
 
       passEncoder.setPipeline(pipeline);
-      passEncoder.setBindGroup(0, group);
+      passEncoder.setBindGroup(0, bindGroup);
       passEncoder.draw(4, 1, 0, 0);
       passEncoder.end();
 

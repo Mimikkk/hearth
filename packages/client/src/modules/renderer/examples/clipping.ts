@@ -108,7 +108,7 @@ function init() {
   const Empty = Object.freeze([]);
 
   renderer.clippingPlanes = Empty; // GUI sets it to globalPlanes
-  renderer.parameters.localClippingEnabled = true;
+  renderer.localClippingEnabled = true;
 
   // Controls
   const controls = new OrbitControls(camera, renderer.domElement);
@@ -124,10 +124,10 @@ function init() {
     folderLocal = gui.addFolder('Local Clipping'),
     propsLocal = {
       get Enabled() {
-        return renderer.parameters.localClippingEnabled;
+        return renderer.localClippingEnabled;
       },
       set Enabled(v) {
-        renderer.parameters.localClippingEnabled = v;
+        renderer.localClippingEnabled = v;
       },
 
       get Shadows() {

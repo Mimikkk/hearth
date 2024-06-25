@@ -18,7 +18,7 @@ async function init() {
   renderer.setAnimationLoop(render);
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.parameters.toneMapping = Engine.ToneMapping.ACESFilmic;
+  renderer.toneMapping = Engine.ToneMapping.ACESFilmic;
   document.body.appendChild(renderer.domElement);
 
   scene = new Engine.Scene();

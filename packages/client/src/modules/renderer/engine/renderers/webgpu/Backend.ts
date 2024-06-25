@@ -129,23 +129,26 @@ export class Backend {
   occludedResolveCache: Map<number, GPUBuffer>;
   resources: ResourceManager;
 
-  static configure(options?: Options): Configuration {
-    return {
-      alpha: options?.alpha ?? true,
-      antialias: options?.antialias ?? true,
-      powerPreference: options?.powerPreference ?? 'high-performance',
-      requiredLimits: options?.requiredLimits ?? {},
-      trackTimestamp: options?.trackTimestamp ?? false,
-      sampleCount: options?.antialias ?? true ? options?.sampleCount ?? 4 : 1,
-    };
-  }
-
-  constructor(options?: Options) {
-    this.parameters = Backend.configure(options);
+  constructor(parameters?: Options) {
+    this.parameters = parameters ?? {};
     this.data = new WeakMap();
     this.renderer = null!;
     this.domElement = null!;
     this.resources = null!;
+
+    this.parameters.alpha = this.parameters.alpha ?? true;
+    this.parameters.antialias = this.parameters.antialias ?? true;
+
+    if (this.parameters.antialias) {
+      this.parameters.sampleCount = this.parameters.sampleCount ?? 4;
+    } else {
+      this.parameters.sampleCount = 1;
+    }
+
+    this.parameters.requiredLimits = this.parameters.requiredLimits ?? {};
+
+    this.trackTimestamp = this.parameters.trackTimestamp ?? false;
+
     this.adapter = null!;
     this.device = null!;
     this.context = null!;
@@ -158,7 +161,6 @@ export class Backend {
     this.bindings = new BackendBindings(this);
     this.pipelines = new BackendPipelines(this);
     this.textures = new BackendTextures(this);
-
     this.occludedResolveCache = new Map();
   }
 
@@ -237,7 +239,7 @@ export class Backend {
           },
         ],
         depthStencilAttachment: {
-          view: this.textures.getDepthBuffer(renderer.parameters.depth, renderer.parameters.stencil).createView(),
+          view: this.textures.getDepthBuffer(renderer.depth, renderer.stencil).createView(),
         },
       };
 
@@ -591,8 +593,8 @@ export class Backend {
     }
 
     if (renderTargetData === null) {
-      supportsDepth = renderer.parameters.depth;
-      supportsStencil = renderer.parameters.stencil;
+      supportsDepth = renderer.depth;
+      supportsStencil = renderer.stencil;
 
       const descriptor = this._getDefaultRenderPassDescriptor();
 
@@ -987,7 +989,7 @@ export class Backend {
   }
 
   initTimestampQuery(renderContext: RenderContext, descriptor) {
-    if (!this.hasFeature(GPUFeatureNameType.TimestampQuery) || !this.parameters.trackTimestamp) return;
+    if (!this.hasFeature(GPUFeatureNameType.TimestampQuery) || !this.trackTimestamp) return;
 
     const renderContextData = this.get(renderContext);
 
@@ -1013,7 +1015,7 @@ export class Backend {
   // timestamp utils
 
   prepareTimestampBuffer(renderContext: RenderContext, encoder) {
-    if (!this.hasFeature(GPUFeatureNameType.TimestampQuery) || !this.parameters.trackTimestamp) return;
+    if (!this.hasFeature(GPUFeatureNameType.TimestampQuery) || !this.trackTimestamp) return;
 
     const renderContextData = this.get(renderContext);
 
@@ -1035,7 +1037,7 @@ export class Backend {
   }
 
   async resolveTimestampAsync(renderContext: RenderContext, type: 'render' | 'compute' = 'render') {
-    if (!this.hasFeature(GPUFeatureNameType.TimestampQuery) || !this.parameters.trackTimestamp) return;
+    if (!this.hasFeature(GPUFeatureNameType.TimestampQuery) || !this.trackTimestamp) return;
 
     const renderContextData = this.get(renderContext);
     const { currentTimestampQueryBuffer } = renderContextData;

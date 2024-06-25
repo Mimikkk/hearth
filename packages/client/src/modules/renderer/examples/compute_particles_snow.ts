@@ -252,7 +252,7 @@ async function init() {
   //
 
   renderer = new Renderer();
-  renderer.parameters.toneMapping = Engine.ToneMapping.ACESFilmic;
+  renderer.toneMapping = Engine.ToneMapping.ACESFilmic;
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(animate);

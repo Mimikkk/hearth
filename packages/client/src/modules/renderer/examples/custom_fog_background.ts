@@ -29,7 +29,7 @@ function init() {
   renderer = new Renderer();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.parameters.toneMapping = ToneMapping.ACESFilmic;
+  renderer.toneMapping = ToneMapping.ACESFilmic;
   container.appendChild(renderer.domElement);
 
   // post processing

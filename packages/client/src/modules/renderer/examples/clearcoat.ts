@@ -163,8 +163,8 @@ async function init() {
 
   //
 
-  renderer.parameters.toneMapping = Engine.ToneMapping.ACESFilmic;
-  renderer.parameters.toneMappingExposure = 1.25;
+  renderer.toneMapping = Engine.ToneMapping.ACESFilmic;
+  renderer.toneMappingExposure = 1.25;
 
   //
 

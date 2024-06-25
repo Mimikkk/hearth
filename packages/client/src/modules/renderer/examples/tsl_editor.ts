@@ -55,7 +55,7 @@ const options: {
 let builder: WGSLNodeBuilder | null = null;
 
 const renderer = new Renderer();
-renderer.parameters.outputColorSpace = ColorSpace.LinearSRGB;
+renderer.outputColorSpace = ColorSpace.LinearSRGB;
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setAnimationLoop(() => renderer.render(scene, camera));
 renderer.setSize(renderable.clientWidth, renderable.clientHeight);
@@ -99,7 +99,7 @@ refreshEditorView();
 const gui = new GUI();
 gui.add(options, 'stage', ['vertex', 'fragment']).onChange(refreshResultView);
 gui.add(options, 'colorSpace', [ColorSpace.LinearSRGB, ColorSpace.SRGB]).onChange(async (value: ColorSpace) => {
-  renderer.parameters.outputColorSpace = value;
+  renderer.outputColorSpace = value;
   await refreshEditorView();
 });
 gui.add(options, 'preview').onChange((value: boolean) => {

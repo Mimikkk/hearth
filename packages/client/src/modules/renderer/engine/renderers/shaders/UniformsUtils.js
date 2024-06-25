@@ -72,7 +72,7 @@ export function getUnlitUniformColorSpace(renderer) {
 
   if (currentRenderTarget === null) {
     // https://github.com/mrdoob/engine.js/pull/23937#issuecomment-1111067398
-    return renderer.parameters.outputColorSpace;
+    return renderer.outputColorSpace;
   }
 
   // https://github.com/mrdoob/engine.js/issues/27868

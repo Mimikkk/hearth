@@ -26,9 +26,7 @@ export class BackendUtilities {
   }
 
   getCurrentColorSpace(renderContext: RenderContext) {
-    return renderContext.textures
-      ? renderContext.textures[0].colorSpace
-      : this.backend.renderer.parameters.outputColorSpace;
+    return renderContext.textures ? renderContext.textures[0].colorSpace : this.backend.renderer.outputColorSpace;
   }
 
   getPrimitiveTopology(object: Object3D, material: Material) {

@@ -129,7 +129,7 @@ function init() {
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(animate);
-  renderer.parameters.toneMapping = Engine.ToneMapping.ACESFilmic;
+  renderer.toneMapping = Engine.ToneMapping.ACESFilmic;
   document.body.appendChild(renderer.domElement);
 
   // Mouse control

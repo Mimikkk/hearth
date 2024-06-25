@@ -38,8 +38,8 @@ function init() {
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(animate);
-  renderer.parameters.toneMapping = Engine.ToneMapping.ACESFilmic;
-  renderer.parameters.toneMappingExposure = 1;
+  renderer.toneMapping = Engine.ToneMapping.ACESFilmic;
+  renderer.toneMappingExposure = 1;
   container.appendChild(renderer.domElement);
 
   scene.background = new Engine.Color(0xaaaaaa);

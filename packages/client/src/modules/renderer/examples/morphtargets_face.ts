@@ -32,7 +32,7 @@ async function init() {
   const renderer = new Renderer();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.parameters.toneMapping = Engine.ToneMapping.ACESFilmic;
+  renderer.toneMapping = Engine.ToneMapping.ACESFilmic;
   renderer.setAnimationLoop(animate);
 
   container.appendChild(renderer.domElement);
