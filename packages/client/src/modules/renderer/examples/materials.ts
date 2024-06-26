@@ -372,10 +372,7 @@ function addMesh(geometry, material) {
   mesh.position.x = (objects.length % 4) * 200 - 400;
   mesh.position.z = Math.floor(objects.length / 4) * 200 - 200;
 
-  mesh.rotation.x = Math.random() * 200 - 100;
-  mesh.rotation.y = Math.random() * 200 - 100;
-  mesh.rotation.z = Math.random() * 200 - 100;
-
+  mesh.setRotation(Math.random() * 200 - 100, Math.random() * 200 - 100, Math.random() * 200 - 100);
   objects.push(mesh);
 
   scene.add(mesh);
@@ -392,8 +389,8 @@ function animate() {
   for (let i = 0, l = objects.length; i < l; i++) {
     const object = objects[i];
 
-    object.rotation.x += 0.01;
-    object.rotation.y += 0.005;
+    object.rotateX(0.01);
+    object.rotateY(0.005);
   }
 
   renderer.render(scene, camera);

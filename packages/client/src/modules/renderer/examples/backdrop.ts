@@ -125,7 +125,7 @@ function animate() {
   const delta = clock.getDelta();
 
   if (mixer) mixer.update(delta);
-  if (rotate) portals.rotation.y += delta * 0.5;
+  if (rotate) portals.rotateY(delta * 0.5);
 
   renderer.render(scene, camera);
 }

@@ -117,7 +117,7 @@ async function init() {
   });
 
   const ground = new Engine.Mesh(planeGeometry, planeMaterial);
-  ground.rotation.x = -Math.PI / 2;
+  ground.setRotationX(-Math.PI / 2);
   ground.scale.multiplyScalar(3);
   ground.castShadow = true;
   ground.receiveShadow = true;
@@ -147,11 +147,11 @@ async function init() {
 function animate(time) {
   const delta = clock.getDelta();
 
-  torusKnot.rotation.x += 0.25 * delta;
-  torusKnot.rotation.y += 0.5 * delta;
-  torusKnot.rotation.z += 1 * delta;
+  torusKnot.rotateX(0.25 * delta);
+  torusKnot.rotateY(0.03 * delta);
+  torusKnot.rotateZ(1.0 * delta);
 
-  dirGroup.rotation.y += 0.7 * delta;
+  dirGroup.rotateY(0.7 * delta);
   dirLight.position.z = 17 + Math.sin(time * 0.001) * 5;
 
   renderer.render(scene, camera);

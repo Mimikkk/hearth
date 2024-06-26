@@ -178,11 +178,19 @@ export class CCDIKSolver {
         }
 
         if (rotationMin !== undefined) {
-          link.rotation.setFromVector3(_vector.setFromEuler(link.rotation).max(rotationMin));
+          const x = link.getRotationX();
+          const y = link.getRotationY();
+          const z = link.getRotationZ();
+
+          link.setRotation(math.max(rotationMin.x, x), math.max(rotationMin.y, y), math.max(rotationMin.z, z));
         }
 
         if (rotationMax !== undefined) {
-          link.rotation.setFromVector3(_vector.setFromEuler(link.rotation).min(rotationMax));
+          const x = link.getRotationX();
+          const y = link.getRotationY();
+          const z = link.getRotationZ();
+
+          link.setRotation(math.min(rotationMax.x, x), math.min(rotationMax.y, y), math.min(rotationMax.z, z));
         }
 
         link.updateMatrixWorld(true);

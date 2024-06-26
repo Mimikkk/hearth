@@ -195,7 +195,7 @@ function render() {
 
   for (let i = 0; i < group.children.length; i++) {
     const child = group.children[i];
-    child.rotation.y += 0.005;
+    child.rotateY(0.005);
   }
 
   renderer.render(scene, camera);

@@ -150,8 +150,8 @@ function render() {
     for (let i = 0; i < cube_count; i++) {
       mesh = meshes[i];
 
-      mesh.rotation.x += 10 * mesh.dx;
-      mesh.rotation.y += 10 * mesh.dy;
+      mesh.rotateX(10 * mesh.dx);
+      mesh.rotateY(10 * mesh.dy);
 
       mesh.position.x -= 150 * mesh.dx;
       mesh.position.y += 150 * mesh.dy;

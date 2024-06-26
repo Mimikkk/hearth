@@ -4,6 +4,7 @@ import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js'
 import { TextGeometry } from '@modules/renderer/engine/geometries/TextGeometry.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 import { FontManager } from '@modules/renderer/engine/loaders/fonts/FontManager.js';
+import { clamp } from '@modules/renderer/engine/math/MathUtils.js';
 
 let camera, cameraTarget, scene, renderer;
 let group, textMesh1, textMesh2, textGeo, material;
@@ -76,7 +77,7 @@ async function init() {
     new Engine.MeshBasicMaterial({ color: 0xffffff, opacity: 0.5, transparent: true }),
   );
   plane.position.y = 100;
-  plane.rotation.x = -Math.PI / 2;
+  plane.setRotationX(-Math.PI / 2);
   scene.add(plane);
 
   // RENDERER
@@ -157,8 +158,8 @@ function createText() {
   textMesh1.position.y = hover;
   textMesh1.position.z = 0;
 
-  textMesh1.rotation.x = 0;
-  textMesh1.rotation.y = Math.PI * 2;
+  textMesh1.setRotationX(0);
+  textMesh1.setRotationY(Math.PI * 2);
 
   group.add(textMesh1);
 
@@ -169,8 +170,8 @@ function createText() {
     textMesh2.position.y = -hover;
     textMesh2.position.z = depth;
 
-    textMesh2.rotation.x = Math.PI;
-    textMesh2.rotation.y = Math.PI * 2;
+    textMesh2.setRotationX(-Math.PI);
+    textMesh2.setRotationZ(Math.PI * 2);
 
     group.add(textMesh2);
   }
@@ -200,7 +201,11 @@ function onPointerMove(event) {
 
   pointerX = event.clientX - windowHalfX;
 
-  targetRotation = targetRotationOnPointerDown + (pointerX - pointerXOnPointerDown) * 0.02;
+  const clampToHalfPi = (angle: number) => {
+    return clamp(angle, -Math.PI, Math.PI) / 2;
+  };
+
+  targetRotation = clampToHalfPi(targetRotationOnPointerDown + (pointerX - pointerXOnPointerDown) * 0.02);
 }
 
 function onPointerUp() {
@@ -213,8 +218,7 @@ function onPointerUp() {
 //
 
 function render() {
-  group.rotation.y += (targetRotation - group.rotation.y) * 0.05;
-
+  group.rotateY((targetRotation - group.getRotationY()) * 0.05);
   camera.lookAt(cameraTarget);
 
   renderer.render(scene, camera);

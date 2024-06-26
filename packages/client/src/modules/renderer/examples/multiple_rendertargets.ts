@@ -160,7 +160,7 @@ function render(time) {
 
    */
 
-  torus.rotation.y = (time / 1000) * 0.4;
+  torus.setRotationY((time / 1000) * 0.4);
 
   // render scene into target
   renderer.setRenderTarget(renderTarget);

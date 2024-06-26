@@ -31,7 +31,7 @@ async function init() {
 
   // Ground
   const plane = new Mesh(new PlaneGeometry(8, 8), new MeshPhongMaterial({ color: 0xcbcbcb, specular: 0x101010 }));
-  plane.rotation.x = -Math.PI / 2;
+  plane.setRotationX(-Math.PI / 2);
   plane.position.y = 0.03;
   plane.receiveShadow = true;
   scene.add(plane);

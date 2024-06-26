@@ -77,7 +77,7 @@ async function init() {
   const geometry = new Engine.PlaneGeometry(200, 200);
 
   const mesh = new Engine.Mesh(geometry, material);
-  mesh.rotation.x = -Math.PI * 0.5;
+  mesh.setRotationX(-Math.PI * 0.5);
   scene.add(mesh);
 
   //

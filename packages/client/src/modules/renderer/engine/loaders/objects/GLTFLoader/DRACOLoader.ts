@@ -209,7 +209,6 @@ class DRACOLoader {
     this.decoderPending = Promise.all(librariesPending).then(libraries => {
       const jsContent = libraries[0];
 
-      console.log([libraries]);
       if (!useJS) {
         this.decoderConfig.wasmBinary = libraries[1];
       }
@@ -330,7 +329,6 @@ function DRACOWorker() {
           const decoder = new draco.Decoder();
 
           try {
-            console.log({ buffer });
             const geometry = decodeGeometry(draco, decoder, new Int8Array(buffer), taskConfig);
 
             const buffers = geometry.attributes.map(attr => attr.array.buffer);
@@ -357,7 +355,6 @@ function DRACOWorker() {
     let dracoGeometry;
     let decodingStatus;
 
-    console.log({ array });
     const geometryType = decoder.GetEncodedGeometryType(array);
     if (geometryType === draco.TRIANGULAR_MESH) {
       dracoGeometry = new draco.Mesh();

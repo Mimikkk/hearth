@@ -39,7 +39,7 @@ async function init() {
 
     const mesh = new Engine.Mesh(geometry);
     mesh.position.set(Math.cos(r) * zScale, Math.sin(r) * zScale, z * scale);
-    mesh.rotation.set(Math.random(), Math.random(), Math.random());
+    mesh.setRotation(Math.random(), Math.random(), Math.random());
     scene.add(mesh);
   }
 
