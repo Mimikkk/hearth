@@ -9,7 +9,7 @@ import { Matrix4 } from '@modules/renderer/engine/math/Matrix4.js';
 const _vector = /*@__PURE__*/ new Vector3();
 const _vector2 = /*@__PURE__*/ new Vector2();
 
-export class BufferAttribute<T extends TypedArray> {
+export class BufferAttribute<T extends TypedArray = any> {
   declare ['constructor']: typeof BufferAttribute<T>;
   declare isBufferAttribute: true;
   name: string;
