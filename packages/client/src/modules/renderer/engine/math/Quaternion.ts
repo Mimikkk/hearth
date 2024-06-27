@@ -1,6 +1,6 @@
 import * as MathUtils from './MathUtils.js';
 import { NumberArray, TypedArray } from './MathUtils.js';
-import type { Euler, Euler_ } from './Euler.js';
+import type { Euler_ } from './Euler.js';
 import type { Vector3 } from './Vector3.js';
 import type { Matrix4 } from './Matrix4.js';
 import type { BufferAttribute } from '../core/BufferAttribute.js';
@@ -144,7 +144,7 @@ export class Quaternion {
     return this;
   }
 
-  setFromEuler(euler: Euler): this {
+  setFromEuler(euler: Euler_): this {
     const x = euler.x;
     const y = euler.y;
     const z = euler.z;

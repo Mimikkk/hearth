@@ -1,4 +1,5 @@
-import { BufferGeometry, Euler, Float32BufferAttribute, Matrix4, Mesh, Vector3 } from '../engine.js';
+import { BufferGeometry, Float32BufferAttribute, Matrix4, Mesh, Vector3 } from '../engine.js';
+import { Euler_ } from '@modules/renderer/engine/math/Euler.js';
 
 /**
  * You can use this geometry to create a decal mesh, that serves different kinds of purposes.
@@ -16,7 +17,7 @@ import { BufferGeometry, Euler, Float32BufferAttribute, Matrix4, Mesh, Vector3 }
  */
 
 export class DecalGeometry extends BufferGeometry {
-  constructor(mesh: Mesh, position: Vector3, orientation: Euler, size: Vector3) {
+  constructor(mesh: Mesh, position: Vector3, orientation: Euler_, size: Vector3) {
     super();
 
     // buffers
