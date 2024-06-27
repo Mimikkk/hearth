@@ -1,6 +1,6 @@
 import * as MathUtils from './MathUtils.js';
 import { NumberArray, TypedArray } from './MathUtils.js';
-import type { Euler_ } from './Euler.js';
+import type { Euler } from './Euler.js';
 import type { Vector3 } from './Vector3.js';
 import type { Matrix4 } from './Matrix4.js';
 import type { BufferAttribute } from '../core/BufferAttribute.js';
@@ -144,7 +144,7 @@ export class Quaternion {
     return this;
   }
 
-  setFromEuler(euler: Euler_): this {
+  setFromEuler(euler: Euler): this {
     const x = euler.x;
     const y = euler.y;
     const z = euler.z;
@@ -543,8 +543,8 @@ export namespace Quaternion_ {
 
   export const identity = (): Quaternion_ => create(0, 0, 0, 1);
 
-  export const fromEuler = (euler: Readonly<Euler_>): Quaternion_ => fromEuler_(euler, identity());
-  export const fromEuler_ = ({ order, x, y, z }: Readonly<Euler_>, into: Quaternion_) => {
+  export const fromEuler = (euler: Readonly<Euler>): Quaternion_ => fromEuler_(euler, identity());
+  export const fromEuler_ = ({ order, x, y, z }: Readonly<Euler>, into: Quaternion_) => {
     x /= 2;
     y /= 2;
     z /= 2;
@@ -607,7 +607,7 @@ export namespace Quaternion_ {
         );
     }
   };
-  export const fillEuler = (self: Quaternion_, euler: Readonly<Euler_>): Quaternion_ => fromEuler_(euler, self);
+  export const fillEuler = (self: Quaternion_, euler: Readonly<Euler>): Quaternion_ => fromEuler_(euler, self);
 
   export const fromUnit = (from: Readonly<Vec3>, to: Readonly<Vec3>): Quaternion_ => fromUnit_(from, to, identity());
   export const fromUnit_ = (from: Readonly<Vec3>, to: Readonly<Vec3>, into: Quaternion_): Quaternion_ => {
