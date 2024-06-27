@@ -1,4 +1,7 @@
 // Characters [].:/ are reserved for track binding syntax.
+import { Quaternion_ } from '@modules/renderer/engine/math/Quaternion.js';
+import { Vec3 } from '@modules/renderer/engine/math/Vector3.js';
+
 const _RESERVED_CHARS_RE = '\\[\\]\\.:\\/';
 const _reservedRe = new RegExp('[' + _RESERVED_CHARS_RE + ']', 'g');
 
@@ -217,6 +220,23 @@ export class PropertyBinding {
     this.resolvedProperty.toArray(buffer, offset);
   }
 
+  _getValue_quaternion(buffer, offset) {
+    const source = this.resolvedProperty;
+
+    buffer[offset] = source.x;
+    buffer[offset + 1] = source.y;
+    buffer[offset + 2] = source.z;
+    buffer[offset + 3] = source.w;
+  }
+
+  _getValue_vector3(buffer, offset) {
+    const source = this.resolvedProperty;
+
+    buffer[offset] = source.x;
+    buffer[offset + 1] = source.y;
+    buffer[offset + 2] = source.z;
+  }
+
   // Direct
 
   _setValue_direct(buffer, offset) {
@@ -294,6 +314,71 @@ export class PropertyBinding {
     this.resolvedProperty.fromArray(buffer, offset);
     this.targetObject.matrixWorldNeedsUpdate = true;
   }
+
+  // Quaternion
+
+  _setValue_quaternion(buffer, offset) {
+    const source = this.resolvedProperty;
+
+    source.x = buffer[offset];
+    source.y = buffer[offset + 1];
+    source.z = buffer[offset + 2];
+    source.w = buffer[offset + 3];
+  }
+
+  _setValue_quaternion_setNeedsUpdate(buffer, offset) {
+    const source = this.resolvedProperty;
+
+    source.x = buffer[offset];
+    source.y = buffer[offset + 1];
+    source.z = buffer[offset + 2];
+    source.w = buffer[offset + 3];
+
+    this.targetObject.needsUpdate = true;
+  }
+
+  _setValue_quaternion_setMatrixWorldNeedsUpdate(buffer, offset) {
+    const source = this.resolvedProperty;
+
+    source.x = buffer[offset];
+    source.y = buffer[offset + 1];
+    source.z = buffer[offset + 2];
+    source.w = buffer[offset + 3];
+
+    this.targetObject.matrixWorldNeedsUpdate = true;
+  }
+
+  // Vector3
+
+  _setValue_vector3(buffer, offset) {
+    const source = this.resolvedProperty;
+
+    source.x = buffer[offset];
+    source.y = buffer[offset + 1];
+    source.z = buffer[offset + 2];
+  }
+
+  _setValue_vector3_setNeedsUpdate(buffer, offset) {
+    const source = this.resolvedProperty;
+
+    source.x = buffer[offset];
+    source.y = buffer[offset + 1];
+    source.z = buffer[offset + 2];
+
+    this.targetObject.needsUpdate = true;
+  }
+
+  _setValue_vector3_setMatrixWorldNeedsUpdate(buffer, offset) {
+    const source = this.resolvedProperty;
+
+    source.x = buffer[offset];
+    source.y = buffer[offset + 1];
+    source.z = buffer[offset + 2];
+
+    this.targetObject.matrixWorldNeedsUpdate = true;
+  }
+
+  // unbound
 
   _getValue_unbound(targetArray, offset) {
     this.bind();
@@ -486,10 +571,14 @@ export class PropertyBinding {
 
       this.resolvedProperty = nodeProperty;
       this.propertyIndex = propertyIndex;
-    } else if (nodeProperty.fromArray !== undefined && nodeProperty.toArray !== undefined) {
+    } else if (Quaternion_.is(nodeProperty)) {
+      bindingType = this.BindingType.IsQuaternion;
+
+      this.resolvedProperty = nodeProperty;
+    } else if (Vec3.is(nodeProperty)) {
       // must use copy for Object3D.Euler/Quaternion
 
-      bindingType = this.BindingType.HasFromToArray;
+      bindingType = this.BindingType.IsVector3;
 
       this.resolvedProperty = nodeProperty;
     } else if (Array.isArray(nodeProperty)) {
@@ -522,6 +611,8 @@ PropertyBinding.prototype.BindingType = {
   EntireArray: 1,
   ArrayElement: 2,
   HasFromToArray: 3,
+  IsQuaternion: 4,
+  IsVector3: 5,
 };
 
 PropertyBinding.prototype.Versioning = {
@@ -535,6 +626,8 @@ PropertyBinding.prototype.GetterByBindingType = [
   PropertyBinding.prototype._getValue_array,
   PropertyBinding.prototype._getValue_arrayElement,
   PropertyBinding.prototype._getValue_toArray,
+  PropertyBinding.prototype._getValue_quaternion,
+  PropertyBinding.prototype._getValue_vector3,
 ];
 
 PropertyBinding.prototype.SetterByBindingTypeAndVersioning = [
@@ -562,5 +655,17 @@ PropertyBinding.prototype.SetterByBindingTypeAndVersioning = [
     PropertyBinding.prototype._setValue_fromArray,
     PropertyBinding.prototype._setValue_fromArray_setNeedsUpdate,
     PropertyBinding.prototype._setValue_fromArray_setMatrixWorldNeedsUpdate,
+  ],
+  [
+    // IsQuaternion
+    PropertyBinding.prototype._setValue_quaternion,
+    PropertyBinding.prototype._setValue_quaternion_setNeedsUpdate,
+    PropertyBinding.prototype._setValue_quaternion_setMatrixWorldNeedsUpdate,
+  ],
+  [
+    // IsVector3
+    PropertyBinding.prototype._setValue_vector3,
+    PropertyBinding.prototype._setValue_vector3_setNeedsUpdate,
+    PropertyBinding.prototype._setValue_vector3_setMatrixWorldNeedsUpdate,
   ],
 ];

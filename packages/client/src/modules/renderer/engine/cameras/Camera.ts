@@ -4,7 +4,6 @@ import { Object3D } from '../core/Object3D.js';
 import { Vector3 } from '../math/Vector3.js';
 
 export class Camera extends Object3D {
-  //@ts-expect-error
   declare ['constructor']: typeof Camera;
   declare isCamera: true;
   declare type: string | 'Camera';
@@ -24,7 +23,6 @@ export class Camera extends Object3D {
     this.coordinateSystem = CoordinateSystem.WebGL;
   }
 
-  //@ts-expect-error
   copy(source: Camera, recursive?: boolean): this {
     super.copy(source as unknown as Object3D, recursive);
 
@@ -56,7 +54,6 @@ export class Camera extends Object3D {
     return this;
   }
 
-  //@ts-expect-error
   clone(): this {
     //@ts-expect-error
     return new this.constructor().copy(this);

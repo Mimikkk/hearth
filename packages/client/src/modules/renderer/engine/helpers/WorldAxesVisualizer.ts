@@ -176,7 +176,7 @@ export class WorldAxesVisualizer extends Object3D {
       axisLines: [posX, posY, posZ, negX, negY, negZ],
     } = this;
 
-    quaternion.copy(this.camera.quaternion).invert();
+    Quaternion_.invert_(this.camera.quaternion, quaternion);
     this.updateMatrixWorld();
 
     point.set(0, 0, 1);
