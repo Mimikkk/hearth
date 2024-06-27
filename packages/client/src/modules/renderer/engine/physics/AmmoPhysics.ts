@@ -4,7 +4,7 @@ import { Vector3 } from '../math/Vector3.js';
 import Ammo from 'ammojs3';
 import { BufferGeometry } from '@modules/renderer/engine/core/BufferGeometry.js';
 import { Scene } from '@modules/renderer/engine/scenes/Scene.js';
-import { Quaternion_ } from '@modules/renderer/engine/math/Quaternion.js';
+import { Quaternion } from '@modules/renderer/engine/math/Quaternion.js';
 
 export interface AmmoPhysicsObject {
   addScene: (scene: Object3D) => void;
@@ -217,7 +217,7 @@ export async function AmmoPhysics(): Promise<AmmoPhysicsObject> {
           const position = worldTransform.getOrigin();
           const quaternion = worldTransform.getRotation();
           mesh.position.set(position.x(), position.y(), position.z());
-          Quaternion_.fill(mesh.quaternion, quaternion.x(), quaternion.y(), quaternion.z(), quaternion.w());
+          Quaternion.fill(mesh.quaternion, quaternion.x(), quaternion.y(), quaternion.z(), quaternion.w());
         }
       }
     }

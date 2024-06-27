@@ -2,7 +2,7 @@ import { Vector3 } from '@modules/renderer/engine/math/Vector3.js';
 import { Object3D } from '@modules/renderer/engine/core/Object3D.js';
 import { Mesh } from '@modules/renderer/engine/objects/Mesh.js';
 import { BufferGeometry } from '@modules/renderer/engine/core/BufferGeometry.js';
-import { Quaternion_ } from '@modules/renderer/engine/math/Quaternion.js';
+import { Quaternion } from '@modules/renderer/engine/math/Quaternion.js';
 import { Matrix4 } from '@modules/renderer/engine/math/Matrix4.js';
 import { Clock } from '@modules/renderer/engine/core/Clock.js';
 import { Scene } from '@modules/renderer/engine/scenes/Scene.js';
@@ -64,7 +64,7 @@ export async function RapierPhysics(): Promise<RapierPhysicsObject> {
   const meshMap = new WeakMap();
 
   const _vector = new Vector3();
-  const _quaternion = Quaternion_.identity();
+  const _quaternion = Quaternion.identity();
   const _matrix = new Matrix4();
 
   function addScene(scene: Scene) {
@@ -175,7 +175,7 @@ export async function RapierPhysics(): Promise<RapierPhysicsObject> {
           const body = bodies[j];
 
           const position = body.translation();
-          Quaternion_.fill_(body.rotation(), _quaternion);
+          Quaternion.fill_(body.rotation(), _quaternion);
 
           _matrix.compose(position, _quaternion, _scale).toArray(array, j * 16);
         }
@@ -188,7 +188,7 @@ export async function RapierPhysics(): Promise<RapierPhysicsObject> {
         const body = meshMap.get(mesh);
 
         mesh.position.copy(body.translation());
-        Quaternion_.fill_(body.rotation(), mesh.quaternion);
+        Quaternion.fill_(body.rotation(), mesh.quaternion);
       }
     }
   }

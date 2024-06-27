@@ -9,7 +9,7 @@ import Stats from 'stats-js';
 import { ColorRepresentation } from '@modules/renderer/engine/math/Color.js';
 import { clamp } from 'lodash-es';
 import { FontManager } from '@modules/renderer/engine/loaders/fonts/FontManager.js';
-import { Quaternion_ } from '@modules/renderer/engine/math/Quaternion.js';
+import { Quaternion } from '@modules/renderer/engine/math/Quaternion.js';
 
 let screensplit = 0.25;
 let screensplit_right = 0;
@@ -227,7 +227,7 @@ const animate = () => {
 
   // Clone camera settings across both scenes
   objects.logarithmic.camera.position.copy(objects.normal.camera.position);
-  Quaternion_.fill_(objects.normal.camera.quaternion, objects.logarithmic.camera.quaternion);
+  Quaternion.fill_(objects.normal.camera.quaternion, objects.logarithmic.camera.quaternion);
 
   // Update renderer sizes if the split has changed
   if (screensplit_right != 1 - screensplit) {

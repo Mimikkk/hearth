@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { Quaternion_, QuaternionArray } from './Quaternion.ts';
+import { Quaternion, QuaternionArray } from './Quaternion.ts';
 import { Euler } from './Euler.ts';
 import { BufferAttribute } from '../core/BufferAttribute.ts';
 import { Vec3 } from './Vector3.ts';
@@ -7,7 +7,7 @@ import { Vec3 } from './Vector3.ts';
 const expectWithin = (actual: number, expected: number, epsilon: number = Number.EPSILON) => {
   expect(actual).within(expected - epsilon, expected + epsilon);
 };
-const expectQuaternionWithin = (actual: Quaternion_, expected: Quaternion_, epsilon: number = Number.EPSILON) => {
+const expectQuaternionWithin = (actual: Quaternion, expected: Quaternion, epsilon: number = Number.EPSILON) => {
   expectWithin(actual.x, expected.x, epsilon);
   expectWithin(actual.y, expected.y, epsilon);
   expectWithin(actual.z, expected.z, epsilon);
@@ -15,15 +15,15 @@ const expectQuaternionWithin = (actual: Quaternion_, expected: Quaternion_, epsi
 };
 const orders: Euler.Order[] = ['XYZ', 'YXZ', 'ZXY', 'ZYX', 'YZX', 'XZY'];
 
-const quaternionSub = (a: Quaternion_, b: Quaternion_): Quaternion_ =>
-  Quaternion_.create(a.x - b.x, a.y - b.y, a.z - b.z, a.w - b.w);
+const quaternionSub = (a: Quaternion, b: Quaternion): Quaternion =>
+  Quaternion.create(a.x - b.x, a.y - b.y, a.z - b.z, a.w - b.w);
 
 function slerpObject(aArr: readonly number[], bArr: readonly number[], t: number): SlerpResult {
-  const a = Quaternion_.fromArray(aArr, 0);
-  const b = Quaternion_.fromArray(bArr, 0);
-  const c = Quaternion_.fromArray(aArr, 0);
+  const a = Quaternion.fromArray(aArr, 0);
+  const b = Quaternion.fromArray(bArr, 0);
+  const c = Quaternion.fromArray(aArr, 0);
 
-  expect(Quaternion_.slerp(c, b, t)).toBe(c);
+  expect(Quaternion.slerp(c, b, t)).toBe(c);
 
   return {
     equals: (x: number, y: number, z: number, w: number) =>
@@ -31,9 +31,9 @@ function slerpObject(aArr: readonly number[], bArr: readonly number[], t: number
       Math.abs(y - c.y) <= Number.EPSILON &&
       Math.abs(z - c.z) <= Number.EPSILON &&
       Math.abs(w - c.w) <= Number.EPSILON,
-    length: Quaternion_.length(c),
-    dotA: Quaternion_.dot(c, a),
-    dotB: Quaternion_.dot(c, b),
+    length: Quaternion.length(c),
+    dotA: Quaternion.dot(c, a),
+    dotB: Quaternion.dot(c, b),
   };
 }
 
@@ -109,18 +109,18 @@ function expectSlerp(
 
 describe('Math - Quaternion', () => {
   it('Instancing', () => {
-    const identity = Quaternion_.identity();
+    const identity = Quaternion.identity();
     expect(identity).toEqual({ x: 0, y: 0, z: 0, w: 1 });
 
-    const copy = Quaternion_.copy(identity);
+    const copy = Quaternion.copy(identity);
     expect(copy).not.toBe(identity);
     expect(copy).toEqual(identity);
 
-    const fill = Quaternion_.create(1, 2, 3, 4);
-    expect(Quaternion_.fill(fill, 5, 6, 7, 8)).toBe(fill);
+    const fill = Quaternion.create(1, 2, 3, 4);
+    expect(Quaternion.fill(fill, 5, 6, 7, 8)).toBe(fill);
     expect(fill).toEqual({ x: 5, y: 6, z: 7, w: 8 });
 
-    expect(Quaternion_.fill_(fill, copy)).toBe(copy);
+    expect(Quaternion.fill_(fill, copy)).toBe(copy);
     expect(copy).toEqual(fill);
   });
 
@@ -138,7 +138,7 @@ describe('Math - Quaternion', () => {
     for (const order of orders) {
       for (const angle of angles) {
         const eulers2 = Euler.fromQuaternion(
-          Quaternion_.fromEuler(Euler.create(angle.x, angle.y, angle.z, order)),
+          Quaternion.fromEuler(Euler.create(angle.x, angle.y, angle.z, order)),
           order,
         );
 
@@ -150,22 +150,22 @@ describe('Math - Quaternion', () => {
   });
 
   it('fromAxisAngle', () => {
-    const zero = Quaternion_.identity();
-    const a = Quaternion_.identity();
+    const zero = Quaternion.identity();
+    const a = Quaternion.identity();
 
-    expect(Quaternion_.fromAxisAngle_(Vec3.create(1, 0, 0), 0, a)).toBe(a);
+    expect(Quaternion.fromAxisAngle_(Vec3.create(1, 0, 0), 0, a)).toBe(a);
     expect(a).toEqual(zero);
-    expect(Quaternion_.fromAxisAngle_(Vec3.create(0, 1, 0), 0, a)).toBe(a);
+    expect(Quaternion.fromAxisAngle_(Vec3.create(0, 1, 0), 0, a)).toBe(a);
     expect(a).toEqual(zero);
-    expect(Quaternion_.fromAxisAngle_(Vec3.create(0, 0, 1), 0, a)).toBe(a);
+    expect(Quaternion.fromAxisAngle_(Vec3.create(0, 0, 1), 0, a)).toBe(a);
     expect(a).toEqual(zero);
 
-    const b1 = Quaternion_.fromAxisAngle(Vec3.create(1, 0, 0), Math.PI);
+    const b1 = Quaternion.fromAxisAngle(Vec3.create(1, 0, 0), Math.PI);
     expect(a).not.toEqual(b1);
-    const b2 = Quaternion_.fromAxisAngle(Vec3.create(1, 0, 0), -Math.PI);
+    const b2 = Quaternion.fromAxisAngle(Vec3.create(1, 0, 0), -Math.PI);
     expect(a).not.toEqual(b2);
 
-    expect(Quaternion_.multiply(b1, b2)).toBe(b1);
+    expect(Quaternion.multiply(b1, b2)).toBe(b1);
     expect(b1).toEqual(a);
   });
 
@@ -207,138 +207,138 @@ describe('Math - Quaternion', () => {
   // });
 
   it('fromUnit', () => {
-    const a = Quaternion_.fromUnit(Vec3.create(1, 0, 0), Vec3.create(0, 1, 0));
+    const a = Quaternion.fromUnit(Vec3.create(1, 0, 0), Vec3.create(0, 1, 0));
     expectQuaternionWithin(a, { x: 0, y: 0, z: Math.SQRT1_2, w: Math.SQRT1_2 });
   });
 
   it('angleTo', () => {
-    const a = Quaternion_.identity();
-    const b = Quaternion_.fromEuler(Euler.create(0, Math.PI, 0));
-    const c = Quaternion_.fromEuler(Euler.create(0, 2 * Math.PI, 0));
+    const a = Quaternion.identity();
+    const b = Quaternion.fromEuler(Euler.create(0, Math.PI, 0));
+    const c = Quaternion.fromEuler(Euler.create(0, 2 * Math.PI, 0));
 
-    expect(Quaternion_.angleTo(a, a)).toBe(0);
-    expect(Quaternion_.angleTo(a, b)).toBe(Math.PI);
-    expect(Quaternion_.angleTo(a, c)).toBe(0);
+    expect(Quaternion.angleTo(a, a)).toBe(0);
+    expect(Quaternion.angleTo(a, b)).toBe(Math.PI);
+    expect(Quaternion.angleTo(a, c)).toBe(0);
   });
 
   it('rotateTowards', () => {
-    const a = Quaternion_.identity();
-    const b = Quaternion_.fromEuler(Euler.create(0, Math.PI, 0));
-    const c = Quaternion_.identity();
+    const a = Quaternion.identity();
+    const b = Quaternion.fromEuler(Euler.create(0, Math.PI, 0));
+    const c = Quaternion.identity();
 
-    expect(Quaternion_.rotateTowards_(a, b, 0, c)).toBe(c);
+    expect(Quaternion.rotateTowards_(a, b, 0, c)).toBe(c);
     expect(c).toEqual(a);
 
-    expect(Quaternion_.rotateTowards_(a, b, Math.PI * 2, c)).toBe(c);
+    expect(Quaternion.rotateTowards_(a, b, Math.PI * 2, c)).toBe(c);
     expect(c).toEqual(b);
 
-    expect(Quaternion_.rotateTowards_(a, b, Math.PI * 0.5, c)).toBe(c);
+    expect(Quaternion.rotateTowards_(a, b, Math.PI * 0.5, c)).toBe(c);
 
-    expect(Quaternion_.angleTo(a, c)).within(Math.PI * 0.5 - Number.EPSILON, Math.PI * 0.5 + Number.EPSILON);
+    expect(Quaternion.angleTo(a, c)).within(Math.PI * 0.5 - Number.EPSILON, Math.PI * 0.5 + Number.EPSILON);
   });
 
   it('conjugate', () => {
-    const a = Quaternion_.create(1, 2, 3, 4);
-    const c = Quaternion_.copy(a);
+    const a = Quaternion.create(1, 2, 3, 4);
+    const c = Quaternion.copy(a);
 
-    expect(Quaternion_.conjugate(a)).toBe(a);
+    expect(Quaternion.conjugate(a)).toBe(a);
     expect(a).toEqual({ x: -1, y: -2, z: -3, w: 4 });
-    expect(Quaternion_.conjugate(a)).toBe(a);
+    expect(Quaternion.conjugate(a)).toBe(a);
     expect(a).toEqual(c);
 
-    const b = Quaternion_.identity();
-    expect(Quaternion_.conjugate_(a, b)).toBe(b);
+    const b = Quaternion.identity();
+    expect(Quaternion.conjugate_(a, b)).toBe(b);
     expect(a).toEqual(c);
     expect(b).toEqual({ x: -1, y: -2, z: -3, w: 4 });
   });
 
   it('invert', () => {
-    const a = Quaternion_.create(0, 1, 0, 1);
-    expect(Quaternion_.invert(a)).toBe(a);
+    const a = Quaternion.create(0, 1, 0, 1);
+    expect(Quaternion.invert(a)).toBe(a);
     expectQuaternionWithin(a, { x: -0, y: -0.5, z: -0, w: 0.5 });
-    expect(Quaternion_.fill(a, 4, 0, 0, 4)).toBe(a);
-    expect(Quaternion_.invert(a)).toBe(a);
+    expect(Quaternion.fill(a, 4, 0, 0, 4)).toBe(a);
+    expect(Quaternion.invert(a)).toBe(a);
     expectQuaternionWithin(a, { x: -0.125, y: -0, z: -0, w: 0.125 });
   });
 
   it('dot', () => {
-    const a = Quaternion_.identity();
-    const b = Quaternion_.identity();
+    const a = Quaternion.identity();
+    const b = Quaternion.identity();
 
-    expect(Quaternion_.dot(a, b)).toBe(1);
-    expect(Quaternion_.dot(b, a)).toBe(1);
+    expect(Quaternion.dot(a, b)).toBe(1);
+    expect(Quaternion.dot(b, a)).toBe(1);
 
-    expect(Quaternion_.fill(a, 1, 2, 3, 1)).toBe(a);
-    expect(Quaternion_.fill(b, 3, 2, 1, 1)).toBe(b);
+    expect(Quaternion.fill(a, 1, 2, 3, 1)).toBe(a);
+    expect(Quaternion.fill(b, 3, 2, 1, 1)).toBe(b);
 
-    expect(Quaternion_.dot(a, b)).toBe(11);
-    expect(Quaternion_.dot(b, a)).toBe(11);
+    expect(Quaternion.dot(a, b)).toBe(11);
+    expect(Quaternion.dot(b, a)).toBe(11);
   });
 
   it('normalize/length/lengthSq', () => {
-    const a = Quaternion_.create(1, 2, 3, 4);
+    const a = Quaternion.create(1, 2, 3, 4);
 
-    expect(Quaternion_.lengthSq(a)).toBe(30);
-    expect(Quaternion_.length(a)).toBe(Math.sqrt(30));
+    expect(Quaternion.lengthSq(a)).toBe(30);
+    expect(Quaternion.length(a)).toBe(Math.sqrt(30));
 
-    expect(Quaternion_.normalize(a)).toBe(a);
+    expect(Quaternion.normalize(a)).toBe(a);
 
-    expectWithin(Quaternion_.lengthSq(a), 1);
-    expectWithin(Quaternion_.length(a), 1);
+    expectWithin(Quaternion.lengthSq(a), 1);
+    expectWithin(Quaternion.length(a), 1);
   });
 
   it('multiply', () => {
-    const a = Quaternion_.create(2, -2, -2, 4);
-    const b = Quaternion_.create(1, 2, 3, 4);
+    const a = Quaternion.create(2, -2, -2, 4);
+    const b = Quaternion.create(1, 2, 3, 4);
 
-    expect(Quaternion_.multiply(a, b)).toBe(a);
+    expect(Quaternion.multiply(a, b)).toBe(a);
     expect(a).toEqual({ x: 10, y: -8, z: 10, w: 24 });
 
-    expect(Quaternion_.fill(a, 4, -3, -8, 5)).toBe(a);
-    expect(Quaternion_.fill(b, 2, 3, 4, 5)).toBe(b);
+    expect(Quaternion.fill(a, 4, -3, -8, 5)).toBe(a);
+    expect(Quaternion.fill(b, 2, 3, 4, 5)).toBe(b);
 
-    expect(Quaternion_.multiply(a, b)).toBe(a);
+    expect(Quaternion.multiply(a, b)).toBe(a);
     expect(a).toEqual({ x: 42, y: -32, z: -2, w: 58 });
   });
 
   it('premultiply', () => {
-    const a = Quaternion_.create(1, 2, 3, 4);
-    const b = Quaternion_.create(2, -2, -2, 4);
+    const a = Quaternion.create(1, 2, 3, 4);
+    const b = Quaternion.create(2, -2, -2, 4);
 
-    expect(Quaternion_.premultiply(a, b)).toBe(a);
+    expect(Quaternion.premultiply(a, b)).toBe(a);
     expect(a).toEqual({ x: 10, y: -8, z: 10, w: 24 });
 
-    expect(Quaternion_.fill(a, 2, 3, 4, 5)).toBe(a);
-    expect(Quaternion_.fill(b, 4, -3, -8, 5)).toBe(b);
+    expect(Quaternion.fill(a, 2, 3, 4, 5)).toBe(a);
+    expect(Quaternion.fill(b, 4, -3, -8, 5)).toBe(b);
 
-    expect(Quaternion_.premultiply(a, b)).toBe(a);
+    expect(Quaternion.premultiply(a, b)).toBe(a);
     expect(a).toEqual({ x: 42, y: -32, z: -2, w: 58 });
   });
 
   it('slerp', () => {
-    const a = Quaternion_.create(1, 2, 3, 4);
-    const b = Quaternion_.create(4, 3, 2, 1);
-    const c = Quaternion_.identity();
+    const a = Quaternion.create(1, 2, 3, 4);
+    const b = Quaternion.create(4, 3, 2, 1);
+    const c = Quaternion.identity();
 
-    expect(Quaternion_.slerp_(a, b, 0, c)).toBe(c);
+    expect(Quaternion.slerp_(a, b, 0, c)).toBe(c);
     expect(c).toEqual(a);
-    expect(Quaternion_.slerp_(a, b, 1, c)).toBe(c);
+    expect(Quaternion.slerp_(a, b, 1, c)).toBe(c);
     expect(c).toEqual(b);
 
-    expect(Quaternion_.fill(a, 1, 0, 0, 0)).toBe(a);
-    expect(Quaternion_.fill(b, 0, 0, 1, 0)).toBe(b);
+    expect(Quaternion.fill(a, 1, 0, 0, 0)).toBe(a);
+    expect(Quaternion.fill(b, 0, 0, 1, 0)).toBe(b);
 
     const Expected = Math.SQRT1_2;
-    expect(Quaternion_.slerp_(a, b, 0.5, c)).toBe(c);
+    expect(Quaternion.slerp_(a, b, 0.5, c)).toBe(c);
     expect(c.x).within(Expected - Number.EPSILON, Expected + Number.EPSILON);
     expect(c.y).within(0, 0);
     expect(c.z).within(Expected - Number.EPSILON, Expected + Number.EPSILON);
     expect(c.w).within(0, 0);
 
-    expect(Quaternion_.fill(a, 0, Expected, 0, Expected)).toBe(a);
-    expect(Quaternion_.fill(b, 0, -Expected, 0, Expected)).toBe(b);
+    expect(Quaternion.fill(a, 0, Expected, 0, Expected)).toBe(a);
+    expect(Quaternion.fill(b, 0, -Expected, 0, Expected)).toBe(b);
 
-    expect(Quaternion_.slerp_(a, b, 0.5, c)).toBe(c);
+    expect(Quaternion.slerp_(a, b, 0.5, c)).toBe(c);
     expect(c.x).within(0, 0);
     expect(c.y).within(0, 0);
     expect(c.z).within(0, 0);
@@ -346,43 +346,43 @@ describe('Math - Quaternion', () => {
   });
 
   it('equals', () => {
-    const a = Quaternion_.identity();
-    const b = Quaternion_.identity();
+    const a = Quaternion.identity();
+    const b = Quaternion.identity();
 
-    expect(Quaternion_.equals(a, b)).toBe(true);
+    expect(Quaternion.equals(a, b)).toBe(true);
   });
 
   it('fromArray', () => {
     const array = [1, 2, 3, 4, 5, 6];
-    const a = Quaternion_.fromArray(array, 0);
+    const a = Quaternion.fromArray(array, 0);
     expect(a).toEqual({ x: 1, y: 2, z: 3, w: 4 });
 
-    expect(Quaternion_.fromArray_(array, 2, a)).toBe(a);
+    expect(Quaternion.fromArray_(array, 2, a)).toBe(a);
     expect(a).toEqual({ x: 3, y: 4, z: 5, w: 6 });
   });
 
   it('intoArray', () => {
-    const a = Quaternion_.create(1, 2, 3, 4);
-    const array = Quaternion_.intoArray(a);
+    const a = Quaternion.create(1, 2, 3, 4);
+    const array = Quaternion.intoArray(a);
 
     expect(array).toEqual([1, 2, 3, 4]);
 
     const array2 = [5, 6, 7, 8];
 
-    expect(Quaternion_.intoArray_(a, 0, array2)).toBe(array2);
+    expect(Quaternion.intoArray_(a, 0, array2)).toBe(array2);
     expect(array2).toEqual([1, 2, 3, 4]);
   });
 
   it('fromAttribute', () => {
     const attribute = new BufferAttribute(new Float64Array([0, 0, 0, 1, 0.7, 0, 0, 0.7, 0, 0.7, 0, 0.7]), 4);
 
-    const a = Quaternion_.fromAttribute(attribute, 0);
+    const a = Quaternion.fromAttribute(attribute, 0);
     expectQuaternionWithin(a, { x: 0, y: 0, z: 0, w: 1 });
 
-    expect(Quaternion_.fromAttribute_(attribute, 1, a)).toBe(a);
+    expect(Quaternion.fromAttribute_(attribute, 1, a)).toBe(a);
     expectQuaternionWithin(a, { x: 0.7, y: 0, z: 0, w: 0.7 });
 
-    expect(Quaternion_.fromAttribute_(attribute, 2, a)).toBe(a);
+    expect(Quaternion.fromAttribute_(attribute, 2, a)).toBe(a);
     expectQuaternionWithin(a, { x: 0, y: 0.7, z: 0, w: 0.7 });
   });
 });

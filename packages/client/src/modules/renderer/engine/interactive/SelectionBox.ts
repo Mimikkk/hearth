@@ -1,7 +1,7 @@
 import { Vector3 } from '../math/Vector3.js';
 import type { Mesh } from '../objects/Mesh.js';
 import type { Scene } from '../scenes/Scene.js';
-import { Quaternion_ } from '../math/Quaternion.js';
+import { Quaternion } from '../math/Quaternion.js';
 import { Matrix4 } from '../math/Matrix4.js';
 import { Frustum } from '../math/Frustum.js';
 import type { Object3D } from '../core/Object3D.js';
@@ -29,7 +29,7 @@ const _vectemp2 = new Vector3();
 const _vectemp3 = new Vector3();
 
 const _matrix = new Matrix4();
-const _quaternion = Quaternion_.identity();
+const _quaternion = Quaternion.identity();
 const _scale = new Vector3();
 
 const isPerspectiveCamera = (camera: any): camera is PerspectiveCamera => camera.isPerspectiveCamera;

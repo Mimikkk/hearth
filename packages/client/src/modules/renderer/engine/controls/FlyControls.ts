@@ -1,5 +1,5 @@
 import { Camera } from '@modules/renderer/engine/cameras/Camera.js';
-import { Quaternion_ } from '@modules/renderer/engine/math/Quaternion.js';
+import { Quaternion } from '@modules/renderer/engine/math/Quaternion.js';
 import { Vector3 } from '@modules/renderer/engine/math/Vector3.js';
 import { EventDispatcher } from '@modules/renderer/engine/core/EventDispatcher.js';
 
@@ -18,7 +18,7 @@ export class FlyControls {
   movementSpeed: number;
   object: Camera;
   rollSpeed: number;
-  tmpQuaternion: Quaternion_;
+  tmpQuaternion: Quaternion;
   status: number;
   moveState: {
     up: number;
@@ -73,10 +73,10 @@ export class FlyControls {
 
     const EPS = 0.000001;
 
-    const lastQuaternion = Quaternion_.identity();
+    const lastQuaternion = Quaternion.identity();
     const lastPosition = new Vector3();
 
-    this.tmpQuaternion = Quaternion_.identity();
+    this.tmpQuaternion = Quaternion.identity();
 
     this.status = 0;
 
@@ -301,7 +301,7 @@ export class FlyControls {
       scope.object.translateY(scope.moveVector.y * moveMult);
       scope.object.translateZ(scope.moveVector.z * moveMult);
 
-      Quaternion_.fill(
+      Quaternion.fill(
         scope.tmpQuaternion,
         scope.rotationVector.x * rotMult,
         scope.rotationVector.y * rotMult,
@@ -309,16 +309,16 @@ export class FlyControls {
         1,
       );
 
-      Quaternion_.normalize(scope.tmpQuaternion);
-      Quaternion_.multiply(scope.object.quaternion, scope.tmpQuaternion);
+      Quaternion.normalize(scope.tmpQuaternion);
+      Quaternion.multiply(scope.object.quaternion, scope.tmpQuaternion);
 
       if (
         lastPosition.distanceToSquared(scope.object.position) > EPS ||
-        8 * (1 - Quaternion_.dot(lastQuaternion, scope.object.quaternion)) > EPS
+        8 * (1 - Quaternion.dot(lastQuaternion, scope.object.quaternion)) > EPS
       ) {
         //@ts-expect-error
         scope.eventDispatcher.dispatch(_changeEvent, this);
-        Quaternion_.fill_(scope.object.quaternion, lastQuaternion);
+        Quaternion.fill_(scope.object.quaternion, lastQuaternion);
         lastPosition.copy(scope.object.position);
       }
     };
