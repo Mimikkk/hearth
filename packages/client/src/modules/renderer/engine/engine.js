@@ -104,7 +104,6 @@ export { Line3 } from './math/Line3.ts';
 export { Vector4 } from './math/Vector4.ts';
 export { Vector3 } from './math/Vector3.ts';
 export { Vector2 } from './math/Vector2.ts';
-export { Quaternion } from './math/Quaternion.ts';
 export { Color } from './math/Color.ts';
 export { ColorManagement } from './math/ColorManagement.ts';
 export { SphericalHarmonics3 } from './math/SphericalHarmonics3.ts';

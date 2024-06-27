@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { Quaternion_, QuaternionArray, Vec3 } from './Quaternion.ts';
+import { Quaternion_, QuaternionArray } from './Quaternion.ts';
 import { Euler } from './Euler.ts';
 import { BufferAttribute } from '../core/BufferAttribute.ts';
+import { Vec3 } from './Vector3.ts';
 
 const expectWithin = (actual: number, expected: number, epsilon: number = Number.EPSILON) => {
   expect(actual).within(expected - epsilon, expected + epsilon);
@@ -12,6 +13,7 @@ const expectQuaternionWithin = (actual: Quaternion_, expected: Quaternion_, epsi
   expectWithin(actual.z, expected.z, epsilon);
   expectWithin(actual.w, expected.w, epsilon);
 };
+const orders: Euler.Order[] = ['XYZ', 'YXZ', 'ZXY', 'ZYX', 'YZX', 'XZY'];
 
 const quaternionSub = (a: Quaternion_, b: Quaternion_): Quaternion_ =>
   Quaternion_.create(a.x - b.x, a.y - b.y, a.z - b.z, a.w - b.w);
@@ -130,21 +132,22 @@ describe('Math - Quaternion', () => {
     expectSlerp(slerpArray);
   });
 
-  // it('setFromEuler/setFromQuaternion', () => {
-  //   const angles = [new Vector3(1, 0, 0), new Vector3(0, 1, 0), new Vector3(0, 0, 1)];
-  //
-  //   // ensure euler conversion to/from Quaternion matches.
-  //   for (let i = 0; i < orders.length; i++) {
-  //     for (let j = 0; j < angles.length; j++) {
-  //       const eulers2 = new Euler().setFromQuaternion(
-  //         new Quaternion().setFromEuler(new Euler(angles[j].x, angles[j].y, angles[j].z, orders[i])),
-  //         orders[i],
-  //       );
-  //       const newAngle = new Vector3(eulers2.x, eulers2.y, eulers2.z);
-  //       assert.ok(newAngle.distanceTo(angles[j]) < 0.001, 'Passed!');
-  //     }
-  //   }
-  // });
+  it('fromEuler/fromQuaternion', () => {
+    const angles = [Vec3.create(1, 0, 0), Vec3.create(0, 1, 0), Vec3.create(0, 0, 1)];
+
+    for (const order of orders) {
+      for (const angle of angles) {
+        const eulers2 = Euler.fromQuaternion(
+          Quaternion_.fromEuler(Euler.create(angle.x, angle.y, angle.z, order)),
+          order,
+        );
+
+        const newAngle = Vec3.create(eulers2.x, eulers2.y, eulers2.z);
+
+        // assert.ok(newAngle.distanceTo(angles[j]) < 0.001, 'Passed!');
+      }
+    }
+  });
 
   it('fromAxisAngle', () => {
     const zero = Quaternion_.identity();
@@ -370,7 +373,7 @@ describe('Math - Quaternion', () => {
     expect(array2).toEqual([1, 2, 3, 4]);
   });
 
-  it('fromBufferAttribute', () => {
+  it('fromAttribute', () => {
     const attribute = new BufferAttribute(new Float64Array([0, 0, 0, 1, 0.7, 0, 0, 0.7, 0, 0.7, 0, 0.7]), 4);
 
     const a = Quaternion_.fromAttribute(attribute, 0);

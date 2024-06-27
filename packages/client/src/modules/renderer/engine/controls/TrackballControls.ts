@@ -1,19 +1,13 @@
-import {
-  EventDispatcher,
-  Mouse,
-  OrthographicCamera,
-  PerspectiveCamera,
-  Quaternion,
-  Vector2,
-  Vector3,
-} from '../engine.js';
+import { EventDispatcher, Mouse, OrthographicCamera, PerspectiveCamera, Vector2, Vector3 } from '../engine.js';
 import { clamp } from '../math/MathUtils.js';
+import { Quaternion_ } from '@modules/renderer/engine/math/Quaternion.js';
 
 export interface TrackballControlsEventMap {
   change: {};
   start: {};
   end: {};
 }
+
 const _changeEvent = { type: 'change' } as const;
 const _startEvent = { type: 'start' } as const;
 const _endEvent = { type: 'end' } as const;
@@ -162,7 +156,7 @@ export class TrackballControls {
 
     this.rotateCamera = (function () {
       const axis = new Vector3(),
-        quaternion = new Quaternion(),
+        quaternion = Quaternion_.identity(),
         eyeDirection = new Vector3(),
         objectUpDirection = new Vector3(),
         objectSidewaysDirection = new Vector3(),
@@ -187,8 +181,7 @@ export class TrackballControls {
           axis.crossVectors(moveDirection, _eye).normalize();
 
           angle *= scope.rotateSpeed;
-          quaternion.setFromAxisAngle(axis, angle);
-
+          Quaternion_.fillAxisAngle(quaternion, axis, angle);
           _eye.applyQuaternion(quaternion);
           scope.object.up.applyQuaternion(quaternion);
 
@@ -197,7 +190,7 @@ export class TrackballControls {
         } else if (!scope.staticMoving && _lastAngle) {
           _lastAngle *= Math.sqrt(1.0 - scope.dynamicDampingFactor);
           _eye.copy(scope.object.position).sub(scope.target);
-          quaternion.setFromAxisAngle(_lastAxis, _lastAngle);
+          Quaternion_.fillAxisAngle(quaternion, _lastAxis, _lastAngle);
           _eye.applyQuaternion(quaternion);
           scope.object.up.applyQuaternion(quaternion);
         }

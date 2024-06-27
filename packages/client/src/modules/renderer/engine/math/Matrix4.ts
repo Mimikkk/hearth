@@ -2,7 +2,7 @@ import { CoordinateSystem } from '../constants.js';
 import { Vector3 } from './Vector3.js';
 import { Matrix, Matrix3 } from './Matrix3.js';
 import { Euler } from '@modules/renderer/engine/math/Euler.js';
-import { Quaternion } from '@modules/renderer/engine/math/Quaternion.js';
+import { Quaternion_ } from '@modules/renderer/engine/math/Quaternion.js';
 
 export class Matrix4 implements Matrix {
   declare ['constructor']: typeof Matrix4;
@@ -324,7 +324,7 @@ export class Matrix4 implements Matrix {
     return this;
   }
 
-  makeRotationFromQuaternion(q: Quaternion): this {
+  makeRotationFromQuaternion(q: Quaternion_): this {
     return this.compose(new Vector3(0, 0, 0), q, new Vector3(1, 1, 1));
   }
 
@@ -737,7 +737,7 @@ export class Matrix4 implements Matrix {
     return this;
   }
 
-  compose(position: Vector3, quaternion: Quaternion, scale: Vector3): this {
+  compose(position: Vector3, quaternion: Quaternion_, scale: Vector3): this {
     const te = this.elements;
 
     const x = quaternion.x,
@@ -784,7 +784,7 @@ export class Matrix4 implements Matrix {
     return this;
   }
 
-  decompose(position: Vector3, quaternion: Quaternion, scale: Vector3): this {
+  decompose(position: Vector3, quaternion: Quaternion_, scale: Vector3): this {
     const te = this.elements;
 
     let sx = new Vector3(te[0], te[1], te[2]).length();
@@ -818,7 +818,7 @@ export class Matrix4 implements Matrix {
     _m1.elements[9] *= invSZ;
     _m1.elements[10] *= invSZ;
 
-    quaternion.setFromRotationMatrix(_m1);
+    Quaternion_.fillRotation(quaternion, _m1);
 
     scale.x = sx;
     scale.y = sy;

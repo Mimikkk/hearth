@@ -1,18 +1,13 @@
 import { Quaternion_ } from './Quaternion.js';
 import { Matrix4 } from './Matrix4.js';
 import { clamp } from './MathUtils.js';
+import { Vec3 } from '@modules/renderer/engine/math/Vector3.js';
 
 export interface Euler {
   x: number;
   y: number;
   z: number;
   order: EulerOrder;
-}
-
-interface Vec3 {
-  x: number;
-  y: number;
-  z: number;
 }
 
 type Mat4x4 = number[];
@@ -136,7 +131,7 @@ export namespace Euler {
   export const fromQuaternion = (quaternion: Quaternion_, order: Order): Euler =>
     fromQuaternion_(quaternion, order, empty());
   export const fromQuaternion_ = (quaternion: Quaternion_, order: Order, into: Euler): Euler =>
-    fromMat_(Matrix4.fromQuaternion_(quaternion, _matrix), order, into);
+    fromMat_(_matrix.makeRotationFromQuaternion(quaternion).elements, order, into);
   export const fillQuaternion = (self: Euler, quaternion: Quaternion_): Euler =>
     fromQuaternion_(quaternion, self.order, self);
 
@@ -166,7 +161,7 @@ export namespace Euler {
 
   export const reorder = (self: Euler, order: Order): Euler => reorder_(self, order, self);
   export const reorder_ = (self: Euler, order: Order, into: Euler): Euler =>
-    fromQuaternion_(Quaternion_.fromEuler(self, _quaternion), order, into);
+    fromQuaternion_(Quaternion_.fromEuler_(self, _quaternion), order, into);
   export const reordered = (self: Euler, order: Order): Euler => reorder_(self, order, empty());
 
   export const equals = (a: Euler, b: Euler): boolean =>
