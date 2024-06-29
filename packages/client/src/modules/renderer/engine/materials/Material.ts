@@ -13,6 +13,7 @@ import {
 import * as MathUtils from '../math/MathUtils.js';
 import { Vector3 } from '@modules/renderer/engine/math/Vector3.js';
 import { Plane } from '@modules/renderer/engine/math/Plane.js';
+import { v4 } from 'uuid';
 
 let _materialId = 0;
 
@@ -117,7 +118,7 @@ export class Material {
 
   constructor(parameters: MaterialParameters) {
     this.id = _materialId++;
-    this.uuid = MathUtils.generateUuid();
+    this.uuid = v4();
     this.name = '';
 
     this.blending = Blending.Normal;

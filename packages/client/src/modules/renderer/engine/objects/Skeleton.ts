@@ -3,6 +3,7 @@ import { Bone } from './Bone.js';
 import { Matrix4 } from '../math/Matrix4.js';
 import { DataTexture } from '../textures/DataTexture.js';
 import * as MathUtils from '../math/MathUtils.js';
+import { v4 } from 'uuid';
 
 const _offsetMatrix = /*@__PURE__*/ new Matrix4();
 const _identityMatrix = /*@__PURE__*/ new Matrix4();
@@ -16,7 +17,7 @@ export class Skeleton {
   frame: number;
 
   constructor(bones: Bone[] = [], boneInverses: Matrix4[] = []) {
-    this.uuid = MathUtils.generateUuid();
+    this.uuid = v4();
 
     this.bones = bones.slice(0);
     this.boneInverses = boneInverses;

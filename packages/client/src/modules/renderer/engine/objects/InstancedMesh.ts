@@ -121,7 +121,7 @@ export class InstancedMesh extends Mesh {
   getMorphAt(index: number, object: Mesh): void {
     const objectInfluences = object.morphTargetInfluences;
 
-    const array = this.morphTexture!.source.data.data;
+    const array = this.morphTexture!.source;
 
     const len = objectInfluences.length + 1; // All influences + the baseInfluenceSum
 
@@ -212,7 +212,7 @@ export class InstancedMesh extends Mesh {
       );
     }
 
-    const array = this.morphTexture.source.data.data;
+    const array = this.morphTexture.source.data;
 
     let morphInfluencesSum = 0;
 

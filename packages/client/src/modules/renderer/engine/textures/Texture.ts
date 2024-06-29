@@ -14,23 +14,24 @@ import { Vector2 } from '../math/Vector2.js';
 import { Matrix3 } from '../math/Matrix3.js';
 import { Source } from './Source.js';
 import type { CubeTexture } from './CubeTexture.js';
+import { v4 } from 'uuid';
 
 let _textureId = 0;
 
-export class Texture {
+export class Texture<T> {
   declare ['constructor']: typeof Texture;
   declare isTexture: true;
   eventDispatcher = new EventDispatcher<{ dispose: {} }>();
   id: number;
   uuid: string;
   name: string;
-  source: Source;
+  source: T;
   mipmaps: (ImageData | CubeTexture)[];
   mapping: Mapping;
   channel: number;
   wrapS: Wrapping;
   wrapT: Wrapping;
-  declare wrapR: Wrapping;
+  wrapR: Wrapping;
   magFilter: MagnificationTextureFilter;
   minFilter: MinificationTextureFilter;
   anisotropy: number;
@@ -46,17 +47,18 @@ export class Texture {
   generateMipmaps: boolean;
   premultiplyAlpha: boolean;
   flipY: boolean;
-  unpackAlignment: number;
+  unpackAlignment: 1 | 2 | 4 | 8;
   colorSpace: ColorSpace;
   version: number;
-  onUpdate: any;
+  /** whether a texture belongs to a render target */
   isRenderTargetTexture: boolean;
+  /** whether should be processed by PMREMGenerator */
   needsPMREMUpdate: boolean;
   userData: any;
 
   constructor(
-    image: TexImageSource | OffscreenCanvas,
-    mapping: Mapping = Mapping.UV,
+    source: T,
+    options: Options | Mapping = Mapping.UV,
     wrapS: Wrapping = Wrapping.ClampToEdge,
     wrapT: Wrapping = Wrapping.ClampToEdge,
     magFilter: MagnificationTextureFilter = MagnificationTextureFilter.Linear,
@@ -67,62 +69,44 @@ export class Texture {
     colorSpace: ColorSpace = ColorSpace.No,
   ) {
     this.id = ++_textureId;
-
-    this.uuid = MathUtils.generateUuid();
+    this.uuid = v4();
+    this.source = source;
 
     this.name = '';
-
-    this.source = new Source(image);
     this.mipmaps = [];
-
-    this.mapping = mapping;
+    this.mapping = options;
     this.channel = 0;
-
     this.wrapS = wrapS;
     this.wrapT = wrapT;
-
     this.magFilter = magFilter;
     this.minFilter = minFilter;
-
     this.anisotropy = anisotropy;
-
     this.format = format;
     this.internalFormat = null;
     this.type = type;
-
     this.offset = new Vector2(0, 0);
     this.repeat = new Vector2(1, 1);
     this.center = new Vector2(0, 0);
     this.rotation = 0;
-
     this.matrixAutoUpdate = true;
     this.matrix = new Matrix3();
-
     this.generateMipmaps = true;
     this.premultiplyAlpha = false;
     this.flipY = true;
-    // valid values: 1, 2, 4, 8 (see http://www.khronos.org/opengles/sdk/docs/man/xhtml/glPixelStorei.xml)
     this.unpackAlignment = 4;
-
     this.colorSpace = colorSpace;
-
     this.userData = {};
-
     this.version = 0;
-    this.onUpdate = null;
-
-    // indicates whether a texture belongs to a render target or not
     this.isRenderTargetTexture = false;
-    // indicates whether this texture should be processed by PMREMGenerator or not (only relevant for render target textures)
     this.needsPMREMUpdate = false;
   }
 
   get image() {
-    return this.source.data;
+    return this.source;
   }
 
   set image(value) {
-    this.source.data = value;
+    this.source = value;
   }
 
   updateMatrix(): this {
@@ -138,7 +122,7 @@ export class Texture {
     return this;
   }
 
-  clone(): Texture {
+  clone(): Texture<T> {
     return new this.constructor(undefined!).copy(this);
   }
 
@@ -243,10 +227,20 @@ export class Texture {
   }
 
   set needsUpdate(value: boolean) {
-    if (value === true) {
-      this.version++;
-      this.source.needsUpdate = true;
-    }
+    if (!value) return;
+    ++this.version;
+  }
+
+  static configure(options?: Options): Configuration {
+    return {};
   }
 }
+
 Texture.prototype.isTexture = true;
+
+export namespace Texture {
+  export type Options = {};
+  export type Configuration = {};
+}
+type Options = Texture.Options;
+type Configuration = Texture.Configuration;

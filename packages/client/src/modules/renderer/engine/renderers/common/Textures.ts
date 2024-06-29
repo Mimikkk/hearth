@@ -2,7 +2,6 @@ import DataMap from './DataMap.js';
 
 import {
   DepthTexture,
-  Filter,
   Mapping,
   MinificationTextureFilter,
   RenderTarget,
@@ -111,13 +110,12 @@ class Textures extends DataMap<any, any> {
   }
 
   updateTexture(texture: Texture, options: Record<string, any> = {}) {
-    const textureData = this.get(texture);
-    if (textureData.initialized === true && textureData.version === texture.version) return;
-
-    const isRenderTarget = texture.isRenderTargetTexture || texture.isDepthTexture || texture.isFramebufferTexture;
+    const data = this.get(texture);
+    if (data.initialized === true && data.version === texture.version) return;
     const backend = this.renderer.backend;
 
-    if (isRenderTarget && textureData.initialized === true) {
+    const isRenderTarget = texture.isRenderTargetTexture || texture.isDepthTexture || texture.isFramebufferTexture;
+    if (isRenderTarget && data.initialized) {
       // it's an update
 
       backend.destroySampler(texture);
@@ -127,11 +125,10 @@ class Textures extends DataMap<any, any> {
     //
 
     if (texture.isFramebufferTexture) {
-      const renderer = this.renderer;
-      const renderTarget = renderer.getRenderTarget();
+      const target = this.renderer.getRenderTarget();
 
-      if (renderTarget) {
-        texture.type = renderTarget.texture.type;
+      if (target) {
+        texture.type = target.texture.type;
       } else {
         texture.type = TextureDataType.UnsignedByte;
       }
@@ -153,7 +150,7 @@ class Textures extends DataMap<any, any> {
       backend.createSampler(texture);
       backend.createTexture(texture, options);
     } else {
-      const needsCreate = textureData.initialized !== true;
+      const needsCreate = data.initialized !== true;
 
       if (needsCreate) backend.createSampler(texture);
 
@@ -177,13 +174,12 @@ class Textures extends DataMap<any, any> {
             options.image = image;
           }
 
-          if (textureData.isDefaultTexture === undefined || textureData.isDefaultTexture === true) {
+          if (data.isDefaultTexture === undefined || data.isDefaultTexture === true) {
             backend.createTexture(texture, options);
-
-            textureData.isDefaultTexture = false;
+            data.isDefaultTexture = false;
           }
 
-          if (texture.source.dataReady === true) backend.updateTexture(texture, options);
+          backend.updateTexture(texture, options);
 
           if (options.needsMipmaps && texture.mipmaps.length === 0) backend.generateMipmaps(texture);
         }
@@ -192,14 +188,14 @@ class Textures extends DataMap<any, any> {
 
         backend.createDefaultTexture(texture);
 
-        textureData.isDefaultTexture = true;
+        data.isDefaultTexture = true;
       }
     }
 
     // dispose handler
 
-    if (textureData.initialized !== true) {
-      textureData.initialized = true;
+    if (data.initialized !== true) {
+      data.initialized = true;
 
       //
 
@@ -220,7 +216,7 @@ class Textures extends DataMap<any, any> {
 
     //
 
-    textureData.version = texture.version;
+    data.version = texture.version;
   }
 
   getSize(texture: Texture, target = _size) {

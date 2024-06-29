@@ -1059,13 +1059,13 @@ export class Backend {
     return this.adapter.features.has(name);
   }
 
-  copyTextureToTexture(position: Vector3, srcTexture: Texture, dstTexture: Texture, level: number = 0) {
+  copyTextureToTexture(position: Vector3, source: Texture, into: Texture, level: number = 0) {
     const encoder = this.device.createCommandEncoder({
-      label: 'copyTextureToTexture_' + srcTexture.id + '_' + dstTexture.id,
+      label: 'copyTextureToTexture_' + source.id + '_' + into.id,
     });
 
-    const sourceGPU = this.get(srcTexture).texture;
-    const destinationGPU = this.get(dstTexture).texture;
+    const sourceGPU = this.get(source).texture;
+    const destinationGPU = this.get(into).texture;
 
     encoder.copyTextureToTexture(
       {
@@ -1078,7 +1078,7 @@ export class Backend {
         mipLevel: level,
         origin: { x: position.x, y: position.y, z: position.z },
       },
-      [srcTexture.image.width, srcTexture.image.height],
+      [source.image.width, source.image.height],
     );
 
     this.device.queue.submit([encoder.finish()]);

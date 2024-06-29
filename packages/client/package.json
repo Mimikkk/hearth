@@ -19,10 +19,12 @@
     "potpack": "^2.0.0",
     "ammojs3": "^0.0.11",
     "@zd/basis": "workspace:*",
-    "upng-js": "^2.1.0"
+    "upng-js": "^2.1.0",
+    "uuid": "^10.0.0"
   },
   "description": "Prototype application with the usage of @zd/engine",
   "devDependencies": {
+    "@types/uuid": "^10.0.0",
     "@types/upng-js": "^2.1.5",
     "@faker-js/faker": "^8.4.1",
     "@types/lodash-es": "^4.17.12",
