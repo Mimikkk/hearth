@@ -1,20 +1,10 @@
-import { CompressedTextureFormat, TextureDataType, Wrapping } from '../constants.js';
 import { CompressedTexture } from './CompressedTexture.js';
+import { Texture } from '@modules/renderer/engine/textures/Texture.js';
+
+type ArrayImage = { mipmaps: ImageData[]; width: number; height: number; depth: number };
 
 export class CompressedArrayTexture extends CompressedTexture {
-  wrapR: Wrapping;
-
-  constructor(
-    images: ImageData[],
-    width: number,
-    height: number,
-    depth: number,
-    format: CompressedTextureFormat,
-    type: TextureDataType,
-  ) {
-    super(images, width, height, { format, type });
-
-    this.image.depth = depth;
-    this.wrapR = Wrapping.ClampToEdge;
+  constructor(image: ArrayImage, options?: Texture.Options) {
+    super(image, options);
   }
 }

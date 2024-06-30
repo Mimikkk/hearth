@@ -1,11 +1,10 @@
 import { Texture } from './Texture.js';
-import { MagnificationTextureFilter, MinificationTextureFilter, Wrapping } from '../constants.js';
+import { MagnificationTextureFilter, MinificationTextureFilter } from '../constants.js';
 
 type Data3DImage = { data: BufferSource | null; width: number; height: number; depth: number };
 
 export class Data3DTexture extends Texture<Data3DImage> {
   declare isData3DTexture: true;
-  wrapR: Wrapping;
 
   constructor(
     data: BufferSource | null = null,
@@ -25,8 +24,6 @@ export class Data3DTexture extends Texture<Data3DImage> {
         ...options,
       },
     );
-
-    this.wrapR = Wrapping.ClampToEdge;
   }
 }
 
