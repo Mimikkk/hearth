@@ -44,14 +44,6 @@ export class CubeTexture extends Texture {
 
     this.flipY = false;
   }
-
-  get images() {
-    return this.image;
-  }
-
-  set images(value) {
-    this.image = value;
-  }
 }
 
 CubeTexture.prototype.isCubeTexture = true;

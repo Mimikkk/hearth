@@ -5,14 +5,14 @@ export class CompressedArrayTexture extends CompressedTexture {
   wrapR: Wrapping;
 
   constructor(
-    mipmaps: ImageData[],
+    images: ImageData[],
     width: number,
     height: number,
     depth: number,
     format: CompressedTextureFormat,
     type: TextureDataType,
   ) {
-    super(mipmaps, width, height, format, type);
+    super(images, width, height, { format, type });
 
     this.image.depth = depth;
     this.wrapR = Wrapping.ClampToEdge;

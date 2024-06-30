@@ -2,59 +2,45 @@ import { Texture } from './Texture.js';
 import {
   DepthComparison,
   MagnificationTextureFilter,
-  Mapping,
   MinificationTextureFilter,
   TextureDataType,
   TextureFormat,
-  Wrapping,
 } from '../constants.js';
 
 export class DepthTexture extends Texture {
   declare isDepthTexture: true;
   compareFunction: DepthComparison | null;
 
-  constructor(
-    width: number,
-    height: number,
-    type: TextureDataType,
-    mapping: Mapping,
-    wrapS: Wrapping,
-    wrapT: Wrapping,
-    magFilter: MagnificationTextureFilter,
-    minFilter: MinificationTextureFilter,
-    anisotropy: number,
-    format: TextureFormat,
-  ) {
-    format = format !== undefined ? format : TextureFormat.Depth;
+  constructor(width?: number, height?: number, options?: Options) {
+    super(
+      { width, height },
+      {
+        magFilter: MagnificationTextureFilter.Nearest,
+        minFilter: MinificationTextureFilter.Nearest,
+        type:
+          options?.format === TextureFormat.DepthStencil ? TextureDataType.UnsignedInt248 : TextureDataType.UnsignedInt,
+        flipY: false,
+        generateMipmaps: false,
+        ...options,
+      },
+    );
 
-    if (format !== TextureFormat.Depth && format !== TextureFormat.DepthStencil) {
-      throw new Error(
-        'DepthTexture format must be either engine.TextureFormat.Depth or engine.TextureFormat.DepthStencil',
-      );
-    }
-
-    if (type === undefined && format === TextureFormat.Depth) type = TextureDataType.UnsignedInt;
-    if (type === undefined && format === TextureFormat.DepthStencil) type = TextureDataType.UnsignedInt248;
-
-    super(null as never, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy);
-
-    this.image = { width: width, height: height };
-
-    this.magFilter = magFilter ?? MagnificationTextureFilter.Nearest;
-    this.minFilter = minFilter ?? MinificationTextureFilter.Nearest;
-
-    this.flipY = false;
-    this.generateMipmaps = false;
-
-    this.compareFunction = null;
+    this.compareFunction = options?.compareFunction ?? null;
   }
 
   copy(source: this): this {
     super.copy(source);
-
     this.compareFunction = source.compareFunction;
-
     return this;
   }
 }
+
+export namespace DepthTexture {
+  export type Options = Omit<Texture.Options, 'format'> & {
+    format?: TextureFormat.Depth | TextureFormat.DepthStencil;
+    compareFunction?: DepthComparison;
+  };
+}
+type Options = DepthTexture.Options;
+
 DepthTexture.prototype.isDepthTexture = true;
