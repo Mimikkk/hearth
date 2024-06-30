@@ -122,7 +122,7 @@ export class Backend {
     return CoordinateSystem.WebGPU;
   }
 
-  async getArrayBufferAsync(attribute: BufferAttribute<any>) {
+  async getArrayBufferAsync(attribute: BufferAttribute) {
     return await this.attributes.getArrayBufferAsync(attribute);
   }
 
@@ -1013,32 +1013,32 @@ export class Backend {
 
   // attributes
 
-  createIndexAttribute(attribute: BufferAttribute<any>) {
+  createIndexAttribute(attribute: BufferAttribute) {
     this.attributes.createAttribute(
       attribute,
       GPUBufferUsage.INDEX | GPUBufferUsage.COPY_SRC | GPUBufferUsage.COPY_DST,
     );
   }
 
-  createAttribute(attribute: BufferAttribute<any>) {
+  createAttribute(attribute: BufferAttribute) {
     this.attributes.createAttribute(
       attribute,
       GPUBufferUsage.VERTEX | GPUBufferUsage.COPY_SRC | GPUBufferUsage.COPY_DST,
     );
   }
 
-  createStorageAttribute(attribute: BufferAttribute<any>) {
+  createStorageAttribute(attribute: BufferAttribute) {
     this.attributes.createAttribute(
       attribute,
       GPUBufferUsage.STORAGE | GPUBufferUsage.VERTEX | GPUBufferUsage.COPY_SRC | GPUBufferUsage.COPY_DST,
     );
   }
 
-  updateAttribute(attribute: BufferAttribute<any>) {
+  updateAttribute(attribute: BufferAttribute) {
     this.attributes.updateAttribute(attribute);
   }
 
-  destroyAttribute(attribute: BufferAttribute<any>) {
+  destroyAttribute(attribute: BufferAttribute) {
     this.attributes.destroyAttribute(attribute);
   }
 

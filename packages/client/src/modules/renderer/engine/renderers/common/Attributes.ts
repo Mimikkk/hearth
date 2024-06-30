@@ -2,7 +2,7 @@ import DataMap from './DataMap.js';
 import { AttributeType } from './Constants.js';
 import { BufferAttribute, BufferUsage, InterleavedBufferAttribute } from '@modules/renderer/engine/engine.js';
 import type { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
-export type Attribute = BufferAttribute<any> | InterleavedBufferAttribute;
+export type Attribute = BufferAttribute | InterleavedBufferAttribute;
 
 export class Attributes extends DataMap<Attribute, any> {
   constructor(public renderer: Renderer) {
@@ -43,8 +43,8 @@ export class Attributes extends DataMap<Attribute, any> {
     }
   }
 
-  _getBufferAttribute(attribute: Attribute): BufferAttribute<any> {
-    if (attribute instanceof InterleavedBufferAttribute) attribute = attribute.data as unknown as BufferAttribute<any>;
+  _getBufferAttribute(attribute: Attribute): BufferAttribute {
+    if (attribute instanceof InterleavedBufferAttribute) attribute = attribute.data as unknown as BufferAttribute;
     return attribute;
   }
 }

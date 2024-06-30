@@ -3,9 +3,9 @@ import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.j
 
 class StorageBuffer extends Buffer {
   declare isStorageBuffer: boolean;
-  attribute: BufferAttribute<any>;
+  attribute: BufferAttribute;
 
-  constructor(name: string, attribute: BufferAttribute<any>) {
+  constructor(name: string, attribute: BufferAttribute) {
     super(name, attribute ? attribute.array : null);
 
     this.attribute = attribute;

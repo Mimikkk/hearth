@@ -7,7 +7,7 @@ import { Attribute } from '@modules/renderer/engine/renderers/common/Attributes.
 export class BackendAttributes {
   constructor(public backend: Backend) {}
 
-  createAttribute(attribute: BufferAttribute<any>, usage: GPUBufferUsageFlags) {
+  createAttribute(attribute: BufferAttribute, usage: GPUBufferUsageFlags) {
     const bufferAttribute = this._getBufferAttribute(attribute);
 
     const backend = this.backend;
@@ -49,7 +49,7 @@ export class BackendAttributes {
     }
   }
 
-  updateAttribute(attribute: BufferAttribute<any>) {
+  updateAttribute(attribute: BufferAttribute) {
     const bufferAttribute = this._getBufferAttribute(attribute);
 
     const backend = this.backend;
@@ -129,7 +129,7 @@ export class BackendAttributes {
     return Array.from(vertexBuffers.values());
   }
 
-  destroyAttribute(attribute: BufferAttribute<any>) {
+  destroyAttribute(attribute: BufferAttribute) {
     const backend = this.backend;
     const data = backend.get(this._getBufferAttribute(attribute));
 
@@ -138,7 +138,7 @@ export class BackendAttributes {
     backend.delete(attribute);
   }
 
-  async getArrayBufferAsync(attribute: BufferAttribute<any>) {
+  async getArrayBufferAsync(attribute: BufferAttribute) {
     const backend = this.backend;
     const device = backend.device;
 
@@ -178,7 +178,7 @@ export class BackendAttributes {
     return arrayBuffer;
   }
 
-  _getVertexFormat(geometryAttribute: BufferAttribute<any>) {
+  _getVertexFormat(geometryAttribute: BufferAttribute) {
     const { itemSize, normalized } = geometryAttribute;
     const ArrayType = geometryAttribute.array.constructor;
     const AttributeType = geometryAttribute.constructor;
@@ -237,13 +237,13 @@ export class BackendAttributes {
   }
 
   _getBufferAttribute(attribute: Attribute) {
-    if (isInterleavedBufferAttribute(attribute)) attribute = attribute.data as unknown as BufferAttribute<any>;
+    if (isInterleavedBufferAttribute(attribute)) attribute = attribute.data as unknown as BufferAttribute;
     return attribute;
   }
 }
 
 const isInterleavedBufferAttribute = (item: any): item is InterleavedBufferAttribute =>
   item.isInterleavedBufferAttribute;
-const isStorageBufferAttribute = (item: any): item is BufferAttribute<any> => item.isStorageBufferAttribute;
-const isStorageInstancedBufferAttribute = (item: any): item is BufferAttribute<any> =>
+const isStorageBufferAttribute = (item: any): item is BufferAttribute => item.isStorageBufferAttribute;
+const isStorageInstancedBufferAttribute = (item: any): item is BufferAttribute =>
   item.isStorageInstancedBufferAttribute;
