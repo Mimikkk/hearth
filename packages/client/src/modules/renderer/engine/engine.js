@@ -22,7 +22,6 @@ export { Points } from './objects/Points.ts';
 export { Group } from './objects/Group.ts';
 export { VideoTexture } from './textures/VideoTexture.ts';
 export { FramebufferTexture } from './textures/FramebufferTexture.ts';
-export { Source } from './textures/Source.ts';
 export { DataTexture } from './textures/DataTexture.ts';
 export { DataArrayTexture } from './textures/DataArrayTexture.ts';
 export { Data3DTexture } from './textures/Data3DTexture.ts';

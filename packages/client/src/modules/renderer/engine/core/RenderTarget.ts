@@ -11,7 +11,6 @@ import {
   Wrapping,
 } from '../constants.js';
 import { Vector4 } from '../math/Vector4.js';
-import { Source } from '../textures/Source.js';
 
 export class RenderTarget {
   declare ['constructor']: typeof RenderTarget;
@@ -131,7 +130,7 @@ export class RenderTarget {
     // ensure image object is not shared, see #20328
 
     const image = Object.assign({}, source.texture.image);
-    this.texture.source = new Source(image);
+    this.texture.source = image;
 
     this.depthBuffer = source.depthBuffer;
     this.stencilBuffer = source.stencilBuffer;
