@@ -12,8 +12,6 @@ import {
   viewportTopLeft,
 } from '@modules/renderer/engine/nodes/Nodes.js';
 
-import { GUI } from 'lil-gui';
-
 import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/GLTFLoader.js';
 
 import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
@@ -31,31 +29,99 @@ import {
   ToneMapping,
 } from '@modules/renderer/engine/engine.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
+import { UI } from '@modules/renderer/examples/utilities/UI.js';
 
-const camera = new PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.25, 25);
-camera.position.set(3, 2, 3);
+const createCamera = () => {
+  const camera = new PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.25, 25);
+  camera.position.set(3, 2, 3);
+  camera.lookAt(0, 1, 0);
 
-const scene = new Scene();
-scene.background = new Color(0x333333);
-camera.lookAt(0, 1, 0);
+  return camera;
+};
+const createScene = () => {
+  const scene = new Scene();
+  scene.background = new Color(0x333333);
 
-const clock = new Clock();
-
-// modelwe
-
-let mixer: AnimationMixer;
-const loader = new GLTFLoader();
-loader.loadAsync('resources/models/gltf/Michelle.glb').then(function (gltf) {
+  return scene;
+};
+const loadMichelle = async () => {
+  const gltf = await GLTFLoader.loadAsync('resources/models/gltf/Michelle.glb');
   const object = gltf.scene;
-  mixer = new AnimationMixer(object);
+  const mixer = new AnimationMixer(object);
 
   const action = mixer.clipAction(gltf.animations[0]);
   action.play();
 
-  scene.add(object);
-});
+  return { object, mixer };
+};
+const createRenderer = async (animate: () => void) => {
+  const renderer = await Renderer.create();
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setAnimationLoop(animate);
+  renderer.parameters.toneMappingNode = toneMapping(ToneMapping.Linear, 0.15);
+  document.body.appendChild(renderer.parameters.canvas);
 
-// volume
+  return renderer;
+};
+const useOrbitControls = (canvas: HTMLCanvasElement) => {
+  const controls = new OrbitControls(camera, canvas);
+  controls.target.set(0, 1, 0);
+  controls.update();
+};
+const createBox = () => {
+  const box = new Mesh(new BoxGeometry(2, 2, 2), volumeMaterial);
+  box.position.set(0, 1, 0);
+  box.material = bicubicMaterial;
+  return box;
+};
+const createFloor = () => {
+  const floor = new Mesh(new BoxGeometry(1.99, 0.01, 1.99), new MeshBasicNodeMaterial({ color: 0x333333 }));
+  floor.position.set(0, 0, 0);
+  return floor;
+};
+const useUi = () => {
+  type MaterialType = 'blurred' | 'volume' | 'depth' | 'bicubic' | 'pixel';
+  const materials = {
+    blurred: blurredBlur,
+    volume: volumeMaterial,
+    depth: depthMaterial,
+    bicubic: bicubicMaterial,
+    pixel: pixelMaterial,
+  };
+
+  UI.create<{
+    value: boolean;
+    scale: { x: number; z: number };
+    material: MaterialType;
+  }>('controls', {
+    value: false,
+    scale: { x: 1, z: 1 },
+    material: 'bicubic',
+  })
+    .option<MaterialType>(
+      'material',
+      'Material',
+      {
+        blurred: 'Blurred',
+        volume: 'Volume',
+        depth: 'Depth',
+        bicubic: 'Bicubic',
+        pixel: 'Pixel',
+      },
+      value => {
+        box.material = materials[value];
+      },
+    )
+    .number('scale.x', 'Scale X', 0.1, 2, 0.01, value => {
+      box.scale.x = value;
+      floor.scale.x = value;
+    })
+    .number('scale.z', 'Scale Z', 0.1, 2, 0.01, value => {
+      box.scale.z = value;
+      floor.scale.z = value;
+    });
+};
 
 const depthDistance = depthTexture().distance(depth);
 const depthAlphaNode = depthDistance.oneMinus().smoothstep(0.9, 2).mul(20).saturate();
@@ -84,7 +150,7 @@ depthMaterial.transparent = true;
 depthMaterial.side = Side.Double;
 
 const bicubicMaterial = new MeshBasicNodeMaterial();
-bicubicMaterial.backdropNode = viewportMipTexture().bicubic(5); // @TODO: Move to alpha value [ 0, 1 ]
+bicubicMaterial.backdropNode = viewportMipTexture().bicubic(5);
 bicubicMaterial.backdropAlphaNode = checker(uv().mul(3).mul(modelScale.xy));
 bicubicMaterial.opacityNode = bicubicMaterial.backdropAlphaNode;
 bicubicMaterial.transparent = true;
@@ -94,56 +160,23 @@ const pixelMaterial = new MeshBasicNodeMaterial();
 pixelMaterial.backdropNode = viewportSharedTexture(viewportTopLeft.mul(100).floor().div(100));
 pixelMaterial.transparent = true;
 
-// box / floor
+const camera = createCamera();
+const scene = createScene();
+const clock = new Clock();
+const { object, mixer } = await loadMichelle();
 
-const box = new Mesh(new BoxGeometry(2, 2, 2), volumeMaterial);
-box.position.set(0, 1, 0);
-scene.add(box);
+const box = createBox();
+const floor = createFloor();
+scene.add(object, box, floor);
 
-const floor = new Mesh(new BoxGeometry(1.99, 0.01, 1.99), new MeshBasicNodeMaterial({ color: 0x333333 }));
-floor.position.set(0, 0, 0);
-scene.add(floor);
-
-// renderer
-
-const renderer = await Renderer.create();
-renderer.setPixelRatio(window.devicePixelRatio);
-renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.setAnimationLoop(animate);
-renderer.parameters.toneMappingNode = toneMapping(ToneMapping.Linear, 0.15);
-document.body.appendChild(renderer.parameters.canvas);
-
-const controls = new OrbitControls(camera, renderer.parameters.canvas);
-controls.target.set(0, 1, 0);
-controls.update();
-
-useWindowResizer(renderer, camera);
-
-// gui
-
-const materials = {
-  blurred: blurredBlur,
-  volume: volumeMaterial,
-  depth: depthMaterial,
-  bicubic: bicubicMaterial,
-  pixel: pixelMaterial,
-};
-
-const gui = new GUI();
-const options = { material: 'blurred' };
-
-box.material = materials[options.material];
-
-gui.add(box.scale, 'x', 0.1, 2, 0.01);
-gui.add(box.scale, 'z', 0.1, 2, 0.01);
-gui.add(options, 'material', Object.keys(materials)).onChange(name => {
-  box.material = materials[name];
-});
-
-function animate() {
+const renderer = await createRenderer(() => {
   const delta = clock.getDelta();
 
   if (mixer) mixer.update(delta);
 
   renderer.render(scene, camera);
-}
+});
+
+useUi();
+useOrbitControls(renderer.parameters.canvas);
+useWindowResizer(renderer, camera);

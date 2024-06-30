@@ -14,7 +14,6 @@ import {
 } from '@modules/renderer/engine/nodes/Nodes.js';
 import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/GLTFLoader.js';
 import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
-import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
 import {
   AnimationMixer,
   Clock,
@@ -30,65 +29,69 @@ import {
 import { degreeToRadian } from '@modules/renderer/engine/math/MathUtils.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
-const camera = new PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.01, 100);
-camera.position.set(1, 2, 3);
+const createCamera = () => {
+  const camera = new PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.01, 100);
+  camera.position.set(1, 2, 3);
+  camera.lookAt(0, 1, 0);
 
-const scene = new Scene();
-scene.background = new Color('lightblue');
-camera.lookAt(0, 1, 0);
+  return camera;
+};
+const createScene = () => {
+  const scene = new Scene();
+  scene.background = new Color('lightblue');
+  return scene;
+};
+const createLight = () => {
+  const light = new SpotLight(0xffffff, 1);
+  light.power = 2000;
 
-const clock = new Clock();
+  return light;
+};
+const createRenderer = async (onAnimate: () => void) => {
+  const renderer = await Renderer.create();
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setAnimationLoop(onAnimate);
+  renderer.parameters.toneMappingNode = toneMapping(ToneMapping.Linear, 0.15);
 
-//lights
-
-const light = new SpotLight(0xffffff, 1);
-light.power = 2000;
-camera.add(light);
-scene.add(camera);
-
-const loader = new GLTFLoader();
-let mixer: AnimationMixer;
-loader.loadAsync('resources/models/gltf/Michelle.glb').then(function (gltf) {
+  return renderer;
+};
+const loadMichelle = async () => {
+  const gltf = await GLTFLoader.loadAsync('resources/models/gltf/Michelle.glb');
   const object = gltf.scene;
-  mixer = new AnimationMixer(object);
-
-  const material = object.children[0].children[0].material;
-
-  // output material effect ( better using hsv )
-  // ignore output.sRGBToLinear().linearTosRGB() for now
-
-  material.outputNode = oscSine(timerLocal(0.1)).mix(output, output.add(0.1).posterize(4).mul(2));
-
+  const mixer = new AnimationMixer(object);
   const action = mixer.clipAction(gltf.animations[0]);
   action.play();
 
-  scene.add(object);
-});
+  return { object, mixer };
+};
 
-// portals
+const camera = createCamera();
+const scene = createScene();
+const light = createLight();
+const clock = new Clock();
+
+const { object, mixer } = await loadMichelle();
+
+const spheres = new Group();
 
 const geometry = new SphereGeometry(0.3, 32, 16);
-
-const portals = new Group();
-scene.add(portals);
-
-function addBackdropSphere(backdropNode, backdropAlphaNode = null) {
+const addBackdropSphere = (backdropNode: any) => {
   const distance = 1;
-  const id = portals.children.length;
+  const id = spheres.children.length;
   const rotation = degreeToRadian(id * 45);
 
   const material = new MeshStandardNodeMaterial({ color: 0x0066ff });
   material.roughnessNode = float(0.2);
   material.metalnessNode = float(0);
   material.backdropNode = backdropNode;
-  material.backdropAlphaNode = backdropAlphaNode;
   material.transparent = true;
 
   const mesh = new Mesh(geometry, material);
   mesh.position.set(Math.cos(rotation) * distance, 1, Math.sin(rotation) * distance);
 
-  portals.add(mesh);
-}
+  spheres.add(mesh);
+};
 
 addBackdropSphere(viewportSharedTexture().bgr.hue(oscSine().mul(Math.PI)));
 addBackdropSphere(viewportSharedTexture().rgb.oneMinus());
@@ -99,33 +102,17 @@ addBackdropSphere(viewportSharedTexture(viewportTopLeft.mul(40).floor().div(40))
 addBackdropSphere(viewportSharedTexture(viewportTopLeft.mul(80).floor().div(80)).add(color(0x0033ff)));
 addBackdropSphere(vec3(0, 0, viewportSharedTexture().b));
 
-//renderer
+camera.add(light);
+scene.add(object, camera, spheres);
 
-const renderer = await Renderer.create();
-renderer.setPixelRatio(window.devicePixelRatio);
-renderer.setSize(window.innerWidth, window.innerHeight);
-await renderer.setAnimationLoop(animate);
-
-renderer.parameters.toneMappingNode = toneMapping(ToneMapping.Linear, 0.15);
-document.body.appendChild(renderer.parameters.canvas);
-
-const controls = new OrbitControls(camera, renderer.parameters.canvas);
-controls.target.set(0, 1, 0);
-
-let rotate = true;
-
-const toggleRotation = () => (rotate = !rotate);
-controls.eventDispatcher.add('start', toggleRotation);
-controls.eventDispatcher.add('end', toggleRotation);
-controls.update();
-
-useWindowResizer(renderer, camera);
-
-function animate() {
+const renderer = await createRenderer(() => {
   const delta = clock.getDelta();
 
-  if (mixer) mixer.update(delta);
-  if (rotate) portals.rotateY(delta * 0.5);
+  mixer?.update(delta);
+  spheres.rotateY(delta * 0.5);
 
   renderer.render(scene, camera);
-}
+});
+document.body.append(renderer.parameters.canvas);
+
+useWindowResizer(renderer, camera);

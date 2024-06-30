@@ -465,7 +465,7 @@ export class Renderer {
     return this._activeMipmapLevel;
   }
 
-  async setAnimationLoop(callback: AnimationLoopFn) {
+  setAnimationLoop(callback: AnimationLoopFn) {
     this._animation.setAnimationLoop(callback);
   }
 
