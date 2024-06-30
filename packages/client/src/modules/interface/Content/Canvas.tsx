@@ -1,8 +1,12 @@
 import { useContent } from '@modules/managment/useContent.js';
-import { Show } from 'solid-js';
+import { createEffect, createMemo, Show } from 'solid-js';
 import { Icon } from '@components/buttons/Icon/Icon.js';
 import { ExampleNs } from '@modules/managment/exampleNs.js';
 import { Frame } from '@components/elements/Frame/Frame.js';
+import { createResizer } from '@logic/createResizer.js';
+import { DragCorner } from '@components/control/DragCorner/DragCorner.js';
+import cx from 'clsx';
+import { CodeView } from '@modules/interface/Content/CodeView.js';
 
 const Backdrop = () => (
   <div class="w-full h-full center bg-gray-300 rounded-sm">
@@ -37,12 +41,29 @@ export const Canvas = () => {
 
   const isWebGpuAvailable = 'gpu' in navigator;
 
+  const { showCode } = useContent();
+
+  const srcHtml = createMemo(() => `src/modules/renderer/examples/${selectedExample()}.html`);
+  const srcTs = createMemo(() => `src/modules/renderer/examples/${selectedExample()}.ts`);
+
+  createEffect(() => {
+    if (!showCode()) drag.reset();
+  });
+
+  const drag = createResizer({ vertical: false });
+
   return (
-    <div class="w-full h-full rounded-sm border border-primary-3">
-      <Show when={isWebGpuAvailable} fallback={<Unavailable />}>
-        <Show when={selectedExample()} fallback={<Backdrop />}>
-          <Frame class="w-full h-full rounded-sm" src={`src/modules/renderer/examples/${selectedExample()}.html`} />
+    <div class="w-full h-full rounded-sm border border-primary-3 flex gap-2">
+      <div ref={drag.target.ref} class={cx('relative flex-shrink-0', showCode() ? 'w-[50%] max-w-[80%]' : 'w-full')}>
+        <Show when={isWebGpuAvailable} fallback={<Unavailable />}>
+          <Show when={selectedExample()} fallback={<Backdrop />}>
+            <Frame class="w-full h-full rounded-sm" src={srcHtml()} />
+          </Show>
         </Show>
+        <DragCorner onDoubleClick={drag.reset} onDrag={drag.start} type="right" />
+      </div>
+      <Show when={showCode()}>
+        <CodeView src={srcTs()} />
       </Show>
     </div>
   );

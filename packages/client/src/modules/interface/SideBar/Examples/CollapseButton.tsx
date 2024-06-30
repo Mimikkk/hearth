@@ -1,9 +1,8 @@
-import { SearchStorage } from '@logic/SearchStorage/SearchStorage.js';
 import { ButtonIcon } from '@components/buttons/ButtonIcon/ButtonIcon.js';
-import { ExampleNs } from '@modules/managment/exampleNs.js';
+import { useContent } from '@modules/managment/useContent.js';
 
 export const CollapseButton = () => {
-  const [isCollapsed, , toggleCollapsed] = SearchStorage.bool(ExampleNs.Search.CollapseId, 'example-collapse', false);
+  const { isCollapsed, toggleCollapsed } = useContent();
 
   return (
     <ButtonIcon
