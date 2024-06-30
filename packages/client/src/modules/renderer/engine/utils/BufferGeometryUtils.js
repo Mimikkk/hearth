@@ -7,7 +7,7 @@ import {
   InterleavedBuffer,
   InterleavedBufferAttribute,
   Vector3,
-} from '../engine.js';
+} from '../engine.ts';
 
 function computeMikkTSpaceTangents(geometry, MikkTSpace, negateSign = true) {
   if (!MikkTSpace || !MikkTSpace.isReady) {

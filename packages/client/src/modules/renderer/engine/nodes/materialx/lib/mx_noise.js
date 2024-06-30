@@ -1,4 +1,4 @@
-// engine.js Transpiler
+// engine.ts Transpiler
 // https://raw.githubusercontent.com/AcademySoftwareFoundation/MaterialX/main/libraries/stdlib/genglsl/lib/mx_noise.glsl
 
 import { bool, float, int, NodeStack, tslFn, uint, uvec3, vec2, vec3, vec4 } from '../../shadernode/ShaderNodes.js';

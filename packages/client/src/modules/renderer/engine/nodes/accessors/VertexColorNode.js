@@ -1,6 +1,6 @@
 import AttributeNode from '../core/AttributeNode.js';
 import { nodeObject } from '../shadernode/ShaderNodes.js';
-import { Vector4 } from '@modules/renderer/engine/engine.js';
+import { Vector4 } from '@modules/renderer/engine/engine.ts';
 
 class VertexColorNode extends AttributeNode {
   static type = 'VertexColorNode';

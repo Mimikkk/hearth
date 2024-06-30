@@ -1,4 +1,4 @@
-import { Color, Matrix3, Matrix4, Vector2, Vector3, Vector4 } from '@modules/renderer/engine/engine.js';
+import { Color, Matrix3, Matrix4, Vector2, Vector3, Vector4 } from '@modules/renderer/engine/engine.ts';
 
 export function getCacheKey(object, force = false) {
   let cacheKey = '{';

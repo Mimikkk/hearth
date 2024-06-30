@@ -19,7 +19,7 @@ import { float, NodeStack, tslFn, vec2, vec3, vec4 } from '../shadernode/ShaderN
 import { uv } from '../accessors/UVNode.js';
 import { viewport } from '../display/ViewportNode.ts';
 
-import { LineDashedMaterial } from '@modules/renderer/engine/engine.js';
+import { LineDashedMaterial } from '@modules/renderer/engine/engine.ts';
 
 const defaultValues = new LineDashedMaterial();
 

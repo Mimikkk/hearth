@@ -4,7 +4,7 @@ import { mix } from '@modules/renderer/engine/nodes/math/MathNode.js';
 import { normalView } from '../accessors/NormalNode.js';
 import { objectPosition } from '../accessors/Object3DNode.js';
 
-import { Color } from '@modules/renderer/engine/engine.js';
+import { Color } from '@modules/renderer/engine/engine.ts';
 
 class HemisphereLightNode extends AnalyticLightNode {
   static type = 'HemisphereLightNode';

@@ -22,8 +22,6 @@ export interface MeshMatcapMaterialParameters extends MaterialParameters {
 }
 
 export class MeshMatcapMaterial extends Material {
-  declare isMeshMatcapMaterial: true;
-  declare type: 'MeshMatcapMaterial';
   defines: Record<string, any>;
   color: Color;
   matcap: Texture | null;
@@ -107,6 +105,3 @@ export class MeshMatcapMaterial extends Material {
     return this;
   }
 }
-
-MeshMatcapMaterial.prototype.isMeshMatcapMaterial = true;
-MeshMatcapMaterial.prototype.type = 'MeshMatcapMaterial';

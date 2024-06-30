@@ -22,7 +22,7 @@ import { float, vec3 } from '../shadernode/ShaderNodes.js';
 import PhysicalLightingModel from '../functions/PhysicalLightingModel.js';
 import { MeshStandardNodeMaterial } from './MeshStandardNodeMaterial.js';
 
-import { MeshPhysicalMaterial } from '@modules/renderer/engine/engine.js';
+import { MeshPhysicalMaterial } from '@modules/renderer/engine/engine.ts';
 
 const defaultValues = new MeshPhysicalMaterial();
 

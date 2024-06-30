@@ -33,9 +33,6 @@ export interface MeshToonMaterialParameters extends MaterialParameters {
 }
 
 export class MeshToonMaterial extends Material {
-  declare isMeshToonMaterial: true;
-  declare type: string | 'MeshToonMaterial';
-
   color: Color;
   gradientMap: Texture | null;
   map: Texture | null;
@@ -147,5 +144,3 @@ export class MeshToonMaterial extends Material {
     return this;
   }
 }
-MeshToonMaterial.prototype.isMeshToonMaterial = true;
-MeshToonMaterial.prototype.type = 'MeshToonMaterial';

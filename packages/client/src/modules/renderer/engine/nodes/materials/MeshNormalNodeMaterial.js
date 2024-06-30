@@ -5,7 +5,7 @@ import { materialOpacity } from '../accessors/MaterialNode.js';
 import { transformedNormalView } from '../accessors/NormalNode.js';
 import { float, vec4 } from '../shadernode/ShaderNodes.js';
 
-import { MeshNormalMaterial } from '@modules/renderer/engine/engine.js';
+import { MeshNormalMaterial } from '@modules/renderer/engine/engine.ts';
 
 const defaultValues = new MeshNormalMaterial();
 

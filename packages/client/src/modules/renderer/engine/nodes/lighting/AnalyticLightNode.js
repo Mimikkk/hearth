@@ -6,7 +6,7 @@ import { reference } from '../accessors/ReferenceNode.js';
 import { texture } from '../accessors/TextureNode.js';
 import { positionWorld } from '../accessors/PositionNode.js';
 import { normalWorld } from '../accessors/NormalNode.js';
-import { Color, CoordinateSystem, DepthComparison, DepthTexture, Filter } from '@modules/renderer/engine/engine.js';
+import { Color, CoordinateSystem, DepthComparison, DepthTexture, Filter } from '@modules/renderer/engine/engine.ts';
 
 let overrideMaterial = null;
 

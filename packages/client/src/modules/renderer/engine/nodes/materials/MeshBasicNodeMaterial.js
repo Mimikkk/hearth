@@ -1,6 +1,6 @@
 import { NodeMaterial } from './NodeMaterial.js';
 
-import { MeshBasicMaterial } from '@modules/renderer/engine/engine.js';
+import { MeshBasicMaterial } from '@modules/renderer/engine/engine.ts';
 
 const defaultValues = new MeshBasicMaterial();
 

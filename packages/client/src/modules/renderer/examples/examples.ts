@@ -80,6 +80,9 @@ export const Example = {
       Sheen: 'loader_gltf_sheen',
     },
   },
+  Physics: {
+    Ammo: 'physics_ammo',
+  },
 };
 
 export type ExampleName = keyof typeof Example;
