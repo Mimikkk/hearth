@@ -2,7 +2,6 @@ import { TextureDataType, TextureFormat } from '../constants.js';
 import { Bone } from './Bone.js';
 import { Matrix4 } from '../math/Matrix4.js';
 import { DataTexture } from '../textures/DataTexture.js';
-import * as MathUtils from '../math/MathUtils.js';
 import { v4 } from 'uuid';
 
 const _offsetMatrix = /*@__PURE__*/ new Matrix4();
@@ -138,20 +137,10 @@ export class Skeleton {
     const boneMatrices = new Float32Array(size * size * 4); // 4 floats per RGBA pixel
     boneMatrices.set(this.boneMatrices); // copy current values
 
-    const boneTexture = new DataTexture(
-      boneMatrices,
-      size,
-      size,
-      TextureFormat.RGBA,
-      TextureDataType.Float,
-      undefined!,
-      undefined!,
-      undefined!,
-      undefined!,
-      undefined!,
-      undefined!,
-      undefined!,
-    );
+    const boneTexture = new DataTexture(boneMatrices, size, size, {
+      format: TextureFormat.RGBA,
+      type: TextureDataType.Float,
+    });
     boneTexture.needsUpdate = true;
 
     this.boneMatrices = boneMatrices;

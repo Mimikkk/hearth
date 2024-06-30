@@ -46,8 +46,9 @@ async function init() {
   renderer.setAnimationLoop(render);
   container.appendChild(renderer.parameters.canvas);
 
-  video = document.getElementById('video');
+  video = document.getElementById('video') as HTMLVideoElement;
   video.play();
+  video.muted = true;
   video.addEventListener('play', function () {
     this.currentTime = 3;
   });

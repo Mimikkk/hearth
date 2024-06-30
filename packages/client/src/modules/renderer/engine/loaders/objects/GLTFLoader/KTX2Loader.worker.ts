@@ -1,4 +1,4 @@
-import { CompressedPixelFormat, TextureFormat } from '@modules/renderer/engine/constants.js';
+import { CompressedTextureFormat, TextureFormat } from '@modules/renderer/engine/constants.js';
 import { Basis, createBasis } from '@zd/basis';
 
 type ResultTranscode = {
@@ -92,15 +92,15 @@ enum TranscoderFormat {
 
 enum EngineFormat {
   RGBAFormat = TextureFormat.RGBA,
-  RGBA_ASTC_4x4_Format = CompressedPixelFormat.RGBA_ASTC_4x4,
-  RGBA_BPTC_Format = CompressedPixelFormat.RGBA_BPTC,
-  RGBA_ETC2_EAC_Format = CompressedPixelFormat.RGBA_ETC2_EAC,
-  RGBA_PVRTC_4BPPV1_Format = CompressedPixelFormat.RGBA_PVRTC_4BPPV1,
-  RGBA_S3TC_DXT1_Format = CompressedPixelFormat.RGBA_S3TC_DXT1,
-  RGBA_S3TC_DXT5_Format = CompressedPixelFormat.RGBA_S3TC_DXT5,
-  RGB_ETC1_Format = CompressedPixelFormat.RGB_ETC1,
-  RGB_ETC2_Format = CompressedPixelFormat.RGB_ETC2,
-  RGB_PVRTC_4BPPV1_Format = CompressedPixelFormat.RGB_PVRTC_4BPPV1,
+  RGBA_ASTC_4x4_Format = CompressedTextureFormat.RGBA_ASTC_4x4,
+  RGBA_BPTC_Format = CompressedTextureFormat.RGBA_BPTC,
+  RGBA_ETC2_EAC_Format = CompressedTextureFormat.RGBA_ETC2_EAC,
+  RGBA_PVRTC_4BPPV1_Format = CompressedTextureFormat.RGBA_PVRTC_4BPPV1,
+  RGBA_S3TC_DXT1_Format = CompressedTextureFormat.RGBA_S3TC_DXT1,
+  RGBA_S3TC_DXT5_Format = CompressedTextureFormat.RGBA_S3TC_DXT5,
+  RGB_ETC1_Format = CompressedTextureFormat.RGB_ETC1,
+  RGB_ETC2_Format = CompressedTextureFormat.RGB_ETC2,
+  RGB_PVRTC_4BPPV1_Format = CompressedTextureFormat.RGB_PVRTC_4BPPV1,
 }
 
 self.addEventListener('message', ({ data: message }) => {

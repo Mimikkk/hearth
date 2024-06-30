@@ -129,8 +129,7 @@ export class RenderTarget {
 
     // ensure image object is not shared, see #20328
 
-    const image = Object.assign({}, source.texture.image);
-    this.texture.source = image;
+    this.texture.image = Object.assign({}, source.texture.image);
 
     this.depthBuffer = source.depthBuffer;
     this.stencilBuffer = source.stencilBuffer;

@@ -2,7 +2,7 @@ import {
   ColorSpace,
   CompressedArrayTexture,
   CompressedCubeTexture,
-  CompressedPixelFormat,
+  CompressedTextureFormat,
   CompressedTexture,
   Data3DTexture,
   DataTexture,
@@ -136,8 +136,8 @@ const FORMAT_MAP = {
   [VK_FORMAT_R8_SRGB]: TextureFormat.Red,
   [VK_FORMAT_R8_UNORM]: TextureFormat.Red,
 
-  [VK_FORMAT_ASTC_6x6_SRGB_BLOCK]: CompressedPixelFormat.RGBA_ASTC_6x6,
-  [VK_FORMAT_ASTC_6x6_UNORM_BLOCK]: CompressedPixelFormat.RGBA_ASTC_6x6,
+  [VK_FORMAT_ASTC_6x6_SRGB_BLOCK]: CompressedTextureFormat.RGBA_ASTC_6x6,
+  [VK_FORMAT_ASTC_6x6_UNORM_BLOCK]: CompressedTextureFormat.RGBA_ASTC_6x6,
 };
 const TYPE_MAP = {
   [VK_FORMAT_R32G32B32A32_SFLOAT]: TextureDataType.Float,
@@ -227,8 +227,7 @@ async function createRawTexture(container: KTX2Container) {
   if (UNCOMPRESSED_FORMATS.has(FORMAT_MAP[vkFormat as keyof typeof FORMAT_MAP] as TextureFormat)) {
     texture =
       container.pixelDepth === 0
-        ? /*@ts-expect-error*/
-          new DataTexture(mipmaps[0].data, container.pixelWidth, container.pixelHeight)
+        ? new DataTexture(mipmaps[0].data, container.pixelWidth, container.pixelHeight)
         : new Data3DTexture(mipmaps[0].data, container.pixelWidth, container.pixelHeight, container.pixelDepth);
   } else {
     if (container.pixelDepth > 0) throw new Error('engine.KTX2Loader: Unsupported pixelDepth.');
