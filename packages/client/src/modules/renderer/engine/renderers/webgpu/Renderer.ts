@@ -157,6 +157,7 @@ export class Renderer {
       usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.COPY_SRC,
       alphaMode: renderer.parameters.alpha ? 'premultiplied' : 'opaque',
     });
+    renderer.setSize(window.innerWidth, window.innerHeight);
 
     return renderer;
   }

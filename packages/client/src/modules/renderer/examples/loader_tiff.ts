@@ -23,8 +23,6 @@ async function init() {
   camera.position.set(0, 0, 4);
 
   const renderer = await Renderer.create();
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.parameters.canvas);
   const [uncompressed, lzw, jpeg] = await TiffLoader.loadAsyncMultiple([
     'resources/textures/tiff/crate_uncompressed.tif',

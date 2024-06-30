@@ -26,7 +26,6 @@ async function init() {
 
   // RENDERER
 
-  renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
   renderer.setAnimationLoop(animate);
   renderer.parameters.autoClear = false;

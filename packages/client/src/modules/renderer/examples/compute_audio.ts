@@ -159,8 +159,6 @@ async function init() {
   // renderer
 
   renderer = await Renderer.create();
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(render);
   container.appendChild(renderer.parameters.canvas);
 

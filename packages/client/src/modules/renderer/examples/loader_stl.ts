@@ -114,8 +114,6 @@ async function init() {
   // renderer
 
   renderer = await Renderer.create();
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(animate);
 
   // renderer.shadowMap.enabled = true;

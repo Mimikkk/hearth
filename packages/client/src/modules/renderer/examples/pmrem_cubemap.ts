@@ -33,8 +33,6 @@ async function init() {
   scene = new Engine.Scene();
 
   renderer = await Renderer.create();
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.parameters.toneMapping = Engine.ToneMapping.ACESFilmic;
 
   container.appendChild(renderer.parameters.canvas);

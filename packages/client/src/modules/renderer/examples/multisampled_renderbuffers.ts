@@ -80,7 +80,6 @@ async function init() {
 
   renderer = await Renderer.create();
   renderer.setPixelRatio(dpr);
-  renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(animate);
   document.body.appendChild(renderer.parameters.canvas);
 
@@ -93,7 +92,6 @@ async function init() {
   useWindowResizer(renderer, camera, () => {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
     renderTarget.setSize(window.innerWidth * dpr, window.innerHeight * dpr);
   });
 

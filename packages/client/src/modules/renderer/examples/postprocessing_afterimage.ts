@@ -19,8 +19,6 @@ createGUI();
 
 async function init() {
   renderer = await Renderer.create();
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(animate);
   document.body.appendChild(renderer.parameters.canvas);
 

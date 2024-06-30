@@ -43,8 +43,6 @@ async function init() {
   //renderer
 
   renderer = await Renderer.create();
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(animate);
   renderer.parameters.toneMappingNode = toneMapping(Engine.ToneMapping.Linear, 0.15);
   document.body.appendChild(renderer.parameters.canvas);
