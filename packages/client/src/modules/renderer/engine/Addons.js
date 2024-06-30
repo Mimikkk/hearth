@@ -97,7 +97,7 @@ export * from './objects/Sky.ts';
 export * from './physics/AmmoPhysics.ts';
 export * from './physics/RapierPhysics.ts';
 
-export * from './textures/FlakesTexture.ts';
+export * from './textures/createFlakesCanvas.ts';
 
 export * as BufferGeometryUtils from '@modules/renderer/engine/utils/BufferGeometryUtils.js';
 export * as GeometryUtils from '@modules/renderer/engine/utils/GeometryUtils.js';
