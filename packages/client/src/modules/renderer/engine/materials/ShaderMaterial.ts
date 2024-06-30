@@ -1,5 +1,4 @@
 import { Material, MaterialParameters } from './Material.js';
-import { cloneUniforms } from '../renderers/shaders/UniformsUtils.js';
 import { UniformsGroup } from '../core/UniformsGroup.js';
 
 export interface IUniform<TValue = any> {
@@ -55,13 +54,6 @@ export class ShaderMaterial extends Material {
 
   copy(source: this): this {
     super.copy(source);
-
-    this.uniforms = cloneUniforms(source.uniforms);
-    this.defines = Object.assign({}, source.defines);
-    this.wireframe = source.wireframe;
-    this.fog = source.fog;
-    this.lights = source.lights;
-    this.clipping = source.clipping;
 
     return this;
   }
