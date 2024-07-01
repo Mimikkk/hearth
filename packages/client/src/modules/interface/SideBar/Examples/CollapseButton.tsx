@@ -10,7 +10,7 @@ export const CollapseButton = () => {
       cross={isCollapsed()}
       icon="BiRegularCategory"
       onClick={toggleCollapsed}
-      title={isCollapsed() ? 'show all examples' : 'collapse examples'}
+      title={isCollapsed() ? 'Categorize examples' : 'Collapse examples'}
     />
   );
 };
