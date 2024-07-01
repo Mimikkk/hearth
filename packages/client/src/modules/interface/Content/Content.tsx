@@ -14,7 +14,13 @@ const CodeButton = () => {
   return (
     <Show when={selectedExample()}>
       <div class="z-10 absolute bottom-2 right-2">
-        <ButtonIcon cross={showCode()} variant="text" icon="VsCode" onClick={toggleCode} />
+        <ButtonIcon
+          cross={showCode()}
+          variant="text"
+          icon="VsCode"
+          onClick={toggleCode}
+          title={showCode() ? 'Hide code' : 'Show code'}
+        />
       </div>
     </Show>
   );
