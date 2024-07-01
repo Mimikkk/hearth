@@ -7,7 +7,7 @@ export const Layout = () => (
   <main class="flex flex-col gap-1 pb-1 h-full overflow-auto">
     <div class="flex rounded-sm h-full overflow-auto">
       <SideBar class="rounded-br-sm" />
-      <Content class="p-1" />
+      <Content class="p-1 pb-0" />
     </div>
     <Footer class="col-span-full px-2" />
     <DevelopmentTools />
