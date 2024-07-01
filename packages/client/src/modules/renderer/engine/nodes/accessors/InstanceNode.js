@@ -3,7 +3,7 @@ import { instancedBufferAttribute, instancedDynamicBufferAttribute } from './Buf
 import { normalLocal } from './NormalNode.js';
 import { positionLocal } from './PositionNode.js';
 import { mat3, mat4, nodeProxy, vec3 } from '../shadernode/ShaderNodes.js';
-import { BufferUsage, InstancedInterleavedBuffer } from '@modules/renderer/engine/engine.ts';
+import { BufferUsage, InstancedInterleavedBuffer } from '@modules/renderer/engine/engine.js';
 
 class InstanceNode extends Node {
   static type = 'InstanceNode';

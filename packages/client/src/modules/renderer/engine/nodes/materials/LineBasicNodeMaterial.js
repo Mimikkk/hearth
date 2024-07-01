@@ -1,6 +1,6 @@
 import { NodeMaterial } from './NodeMaterial.js';
 
-import { LineBasicMaterial } from '@modules/renderer/engine/engine.ts';
+import { LineBasicMaterial } from '@modules/renderer/engine/engine.js';
 
 const defaultValues = new LineBasicMaterial();
 

@@ -3,7 +3,7 @@ import { NodeUpdateType } from '../core/constants.ts';
 import UniformNode from '../core/UniformNode.js';
 import { nodeProxy } from '../shadernode/ShaderNodes.js';
 
-import { Vector3 } from '@modules/renderer/engine/engine.ts';
+import { Vector3 } from '@modules/renderer/engine/engine.js';
 
 class Object3DNode extends Node {
   static type = 'Object3DNode';

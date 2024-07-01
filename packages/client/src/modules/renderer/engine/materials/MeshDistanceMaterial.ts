@@ -14,6 +14,9 @@ export interface MeshDistanceMaterialParameters extends MaterialParameters {
 }
 
 export class MeshDistanceMaterial extends Material {
+  declare isMeshDistanceMaterial: true;
+  declare type: 'MeshDistanceMaterial';
+
   map: Texture | null;
   alphaMap: Texture | null;
   displacementMap: Texture | null;
@@ -50,3 +53,6 @@ export class MeshDistanceMaterial extends Material {
     return this;
   }
 }
+
+MeshDistanceMaterial.prototype.isMeshDistanceMaterial = true;
+MeshDistanceMaterial.prototype.type = 'MeshDistanceMaterial';

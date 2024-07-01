@@ -12,7 +12,7 @@ import {
   Vector2,
   Vector3,
   Vector4,
-} from '@modules/renderer/engine/engine.ts';
+} from '@modules/renderer/engine/engine.js';
 
 const _reflectorPlane = new Plane();
 const _normal = new Vector3();

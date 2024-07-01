@@ -12,6 +12,9 @@ export interface PointsMaterialParameters extends MaterialParameters {
 }
 
 export class PointsMaterial extends Material {
+  declare isPointsMaterial: true;
+  declare type: string | 'PointsMaterial';
+
   color: Color;
   map: Texture | null;
   alphaMap: Texture | null;
@@ -48,3 +51,6 @@ export class PointsMaterial extends Material {
     return this;
   }
 }
+
+PointsMaterial.prototype.isPointsMaterial = true;
+PointsMaterial.prototype.type = 'PointsMaterial';

@@ -11,28 +11,36 @@ export interface MeshPhysicalMaterialParameters extends MeshStandardMaterialPara
   clearcoatRoughnessMap?: Texture | null | undefined;
   clearcoatNormalScale?: Vector2 | undefined;
   clearcoatNormalMap?: Texture | null | undefined;
+
   reflectivity?: number | undefined;
   ior?: number | undefined;
+
   sheen?: number | undefined;
   sheenColor?: ColorRepresentation | undefined;
   sheenColorMap?: Texture | null | undefined;
   sheenRoughness?: number | undefined;
   sheenRoughnessMap?: Texture | null | undefined;
+
   transmission?: number | undefined;
   transmissionMap?: Texture | null | undefined;
+
   thickness?: number | undefined;
   thicknessMap?: Texture | null | undefined;
+
   attenuationDistance?: number | undefined;
   attenuationColor?: ColorRepresentation | undefined;
+
   specularIntensity?: number | undefined;
   specularColor?: ColorRepresentation | undefined;
   specularIntensityMap?: Texture | null | undefined;
   specularColorMap?: Texture | null | undefined;
+
   iridescenceMap?: Texture | null | undefined;
   iridescenceIOR?: number | undefined;
   iridescence?: number | undefined;
   iridescenceThicknessRange?: [number, number] | undefined;
   iridescenceThicknessMap?: Texture | null | undefined;
+
   anisotropy?: number | undefined;
   anisotropyRotation?: number | undefined;
   anisotropyMap?: Texture | null | undefined;
@@ -40,6 +48,8 @@ export interface MeshPhysicalMaterialParameters extends MeshStandardMaterialPara
 
 export class MeshPhysicalMaterial extends MeshStandardMaterial {
   defines: Record<string, any>;
+  declare isMeshPhysicalMaterial: true;
+  declare type: 'MeshPhysicalMaterial';
 
   anisotropyRotation: number;
   anisotropyMap: Texture | null;
@@ -83,10 +93,14 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
   constructor(parameters: MeshPhysicalMaterialParameters) {
     super(parameters);
 
+    this.isMeshPhysicalMaterial = true;
+
     this.defines = {
       STANDARD: '',
       PHYSICAL: '',
     };
+
+    this.type = 'MeshPhysicalMaterial';
 
     this.anisotropyRotation = 0;
     this.anisotropyMap = null;

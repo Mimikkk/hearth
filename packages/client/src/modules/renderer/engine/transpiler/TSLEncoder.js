@@ -1,4 +1,4 @@
-import { Revision } from '../engine.ts';
+import { Revision } from '../engine.js';
 import { VariableDeclaration, Accessor } from './AST.ts';
 import * as Nodes from '@modules/renderer/engine/nodes/Nodes.js';
 
@@ -536,7 +536,7 @@ ${this.tab}} );\n\n`;
 
     const layouts = this.layoutsCode.length > 0 ? `\n${this.tab}// layouts\n\n` + this.layoutsCode : '';
 
-    let header = '// engine.ts Transpiler r' + Revision + '\n\n';
+    let header = '// engine.js Transpiler r' + Revision + '\n\n';
     let footer = '';
 
     if (this.iife) {

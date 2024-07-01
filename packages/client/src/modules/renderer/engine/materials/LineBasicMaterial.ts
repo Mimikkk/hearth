@@ -11,6 +11,8 @@ export interface LineBasicMaterialParameters extends MaterialParameters {
 }
 
 export class LineBasicMaterial extends Material {
+  declare isLineBasicMaterial: true;
+  declare type: string;
   color: Color;
   fog: boolean;
   linewidth: number;
@@ -24,6 +26,7 @@ export class LineBasicMaterial extends Material {
     this.color = new Color(0xffffff);
 
     this.map = null;
+
     this.linewidth = 1;
     this.linecap = 'round';
     this.linejoin = 'round';
@@ -47,3 +50,6 @@ export class LineBasicMaterial extends Material {
     return this;
   }
 }
+
+LineBasicMaterial.prototype.isLineBasicMaterial = true;
+LineBasicMaterial.prototype.type = 'LineBasicMaterial';

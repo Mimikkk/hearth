@@ -19,6 +19,9 @@ export interface MeshNormalMaterialParameters extends MaterialParameters {
 }
 
 export class MeshNormalMaterial extends Material {
+  declare isMeshNormalMaterial: true;
+  declare type: 'MeshNormalMaterial';
+
   bumpMap: Texture | null;
   bumpScale: number;
   normalMap: Texture | null;
@@ -78,3 +81,6 @@ export class MeshNormalMaterial extends Material {
     return this;
   }
 }
+
+MeshNormalMaterial.prototype.isMeshNormalMaterial = true;
+MeshNormalMaterial.prototype.type = 'MeshNormalMaterial';

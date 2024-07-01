@@ -12,6 +12,9 @@ export interface SpriteMaterialParameters extends MaterialParameters {
 }
 
 export class SpriteMaterial extends Material {
+  declare isSpriteMaterial: true;
+  declare type: string | 'SpriteMaterial';
+
   color: Color;
   map: Texture | null;
   alphaMap: Texture | null;
@@ -62,3 +65,6 @@ export class SpriteMaterial extends Material {
     return this;
   }
 }
+
+SpriteMaterial.prototype.isSpriteMaterial = true;
+SpriteMaterial.prototype.type = 'SpriteMaterial';
