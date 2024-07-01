@@ -37,11 +37,8 @@ const Unavailable = () => (
 );
 
 export const Canvas = () => {
-  const { selectedExample } = useContent();
-
+  const { showCode, selectedExample } = useContent();
   const isWebGpuAvailable = 'gpu' in navigator;
-
-  const { showCode } = useContent();
 
   const srcHtml = createMemo(() => `src/modules/renderer/examples/${selectedExample()}.html`);
   const srcTs = createMemo(() => `src/modules/renderer/examples/${selectedExample()}.ts`);
@@ -50,24 +47,26 @@ export const Canvas = () => {
     if (!showCode()) drag.reset();
   });
 
+  const code = createMemo(() => showCode() && selectedExample());
+
   const drag = createResizer({ vertical: false });
 
   return (
     <div class="w-full h-full rounded-sm border border-primary-3 flex gap-1">
       <div
         ref={drag.target.ref}
-        class={cx('relative flex-shrink-0', showCode() ? 'w-[50%] min-w-[10%] max-w-[80%]' : 'w-full')}
+        class={cx('relative flex-shrink-0', code() ? 'w-[50%] min-w-[10%] max-w-[80%]' : 'w-full')}
       >
         <Show when={isWebGpuAvailable} fallback={<Unavailable />}>
           <Show when={selectedExample()} fallback={<Backdrop />}>
             <Frame class="w-full h-full overflow-hidden" src={srcHtml()} />
           </Show>
         </Show>
-        <Show when={showCode()}>
+        <Show when={code()}>
           <DragCorner onDoubleClick={drag.reset} onDrag={drag.start} type="right" />
         </Show>
       </div>
-      <Show when={showCode()}>
+      <Show when={code()}>
         <CodeView src={srcTs()} />
       </Show>
     </div>
