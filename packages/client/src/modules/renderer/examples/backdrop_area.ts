@@ -55,7 +55,7 @@ const loadMichelle = async () => {
   return { object, mixer };
 };
 const createRenderer = async (animate: () => void) => {
-  const renderer = await Renderer.create();
+  const renderer = await Renderer.create({ antialias: false });
   renderer.setAnimationLoop(animate);
   renderer.parameters.toneMappingNode = toneMapping(ToneMapping.Linear, 0.15);
   document.body.appendChild(renderer.parameters.canvas);
