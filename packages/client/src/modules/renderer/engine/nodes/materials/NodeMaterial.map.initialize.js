@@ -13,6 +13,10 @@ import { LineDashedNodeMaterial } from '@modules/renderer/engine/nodes/materials
 import { LineBasicNodeMaterial } from '@modules/renderer/engine/nodes/materials/LineBasicNodeMaterial.js';
 import { Line2NodeMaterial } from '@modules/renderer/engine/nodes/materials/Line2NodeMaterial.js';
 import { InstancedPointsNodeMaterial } from '@modules/renderer/engine/nodes/materials/InstancedPointsNodeMaterial.js';
+import { MeshMatcapNodeMaterial } from '@modules/renderer/engine/nodes/materials/MeshMatcapNodeMaterial.js';
+import { VolumeNodeMaterial } from '@modules/renderer/engine/nodes/materials/VolumeNodeMaterial.js';
+import { MeshToonNodeMaterial } from '@modules/renderer/engine/nodes/materials/MeshToonNodeMaterial.js';
+import { ShadowNodeMaterial } from '@modules/renderer/engine/nodes/materials/ShadowNodeMaterial.js';
 
 NodeMaterials.set('NodeMaterial', NodeMaterial);
 NodeMaterials.set('SpriteNodeMaterial', SpriteNodeMaterial);
@@ -28,3 +32,8 @@ NodeMaterials.set('LineDashedNodeMaterial', LineDashedNodeMaterial);
 NodeMaterials.set('LineBasicNodeMaterial', LineBasicNodeMaterial);
 NodeMaterials.set('Line2NodeMaterial', Line2NodeMaterial);
 NodeMaterials.set('InstancedPointsNodeMaterial', InstancedPointsNodeMaterial);
+NodeMaterials.set('MeshMatcapNodeMaterial', MeshMatcapNodeMaterial);
+
+NodeMaterials.set('MeshToonNodeMaterial', MeshToonNodeMaterial);
+NodeMaterials.set('ShadowNodeMaterial', ShadowNodeMaterial);
+NodeMaterials.set('VolumeNodeMaterial', VolumeNodeMaterial);

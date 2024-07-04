@@ -13,7 +13,7 @@ export interface AmmoPhysicsObject {
 }
 export async function AmmoPhysics(): Promise<AmmoPhysicsObject> {
   // eslint-disable-line no-undef
-  const AmmoLib = await Ammo();
+  const AmmoLib = await new Ammo();
 
   const frameRate = 60;
 
