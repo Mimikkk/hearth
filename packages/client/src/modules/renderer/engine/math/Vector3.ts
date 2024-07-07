@@ -1,4 +1,4 @@
-import { clamp } from './MathUtils.js';
+import { clamp, NumberArray } from './MathUtils.js';
 import { Quaternion } from './Quaternion.js';
 import type { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
 import type { InterleavedBufferAttribute } from '@modules/renderer/engine/core/InterleavedBufferAttribute.js';
@@ -603,9 +603,131 @@ export interface Vec3 {
 
 export namespace Vec3 {
   export const create = (x: number, y: number, z: number): Vec3 => ({ x, y, z });
+  export const empty = (): Vec3 => create(0, 0, 0);
   export const vec3 = create;
-  export const is = (v: any): v is Vec3 =>
-    v && typeof v.x === 'number' && typeof v.y === 'number' && typeof v.z === 'number';
+
+  export const is = (o: any): o is Vec3 =>
+    !!o && typeof o.x === 'number' && typeof o.y === 'number' && typeof o.z === 'number';
+
+  export const add = (a: Vec3, b: Readonly<Vec3>): Vec3 => add_(a, b, a);
+  export const add_ = (a: Readonly<Vec3>, b: Readonly<Vec3>, into: Vec3): Vec3 =>
+    fill(into, a.x + b.x, a.y + b.y, a.z + b.z);
+  export const added = (a: Vec3, b: Readonly<Vec3>): Vec3 => add_(a, b, empty());
+
+  export const sub = (a: Vec3, b: Readonly<Vec3>): Vec3 => sub_(a, b, a);
+  export const sub_ = (a: Readonly<Vec3>, b: Readonly<Vec3>, into: Vec3): Vec3 =>
+    fill(into, a.x - b.x, a.y - b.y, a.z - b.z);
+  export const subbed = (a: Readonly<Vec3>, b: Readonly<Vec3>): Vec3 => sub_(a, b, empty());
+
+  export const mul = (a: Vec3, b: Readonly<Vec3>): Vec3 => mul_(a, b, a);
+  export const mul_ = (a: Readonly<Vec3>, b: Readonly<Vec3>, into: Vec3): Vec3 =>
+    fill(into, a.x * b.x, a.y * b.y, a.z * b.z);
+  export const mulled = (a: Readonly<Vec3>, b: Readonly<Vec3>): Vec3 => mul_(a, b, empty());
+
+  export const mulScalar = (a: Vec3, scalar: number): Vec3 => mulScalar_(a, scalar, a);
+  export const mulScalar_ = (a: Readonly<Vec3>, scalar: number, into: Vec3): Vec3 =>
+    fill(into, a.x * scalar, a.y * scalar, a.z * scalar);
+  export const mulledScalar = (a: Readonly<Vec3>, scalar: number): Vec3 => mulScalar_(a, scalar, empty());
+
+  export const div = (a: Vec3, b: Readonly<Vec3>): Vec3 => div_(a, b, a);
+  export const div_ = (a: Readonly<Vec3>, b: Readonly<Vec3>, into: Vec3): Vec3 =>
+    fill(into, a.x / b.x, a.y / b.y, a.z / b.z);
+  export const dived = (a: Readonly<Vec3>, b: Readonly<Vec3>): Vec3 => div_(a, b, empty());
+
+  export const divScalar = (a: Vec3, scalar: number): Vec3 => divScalar_(a, scalar, a);
+  export const divScalar_ = (a: Readonly<Vec3>, scalar: number, into: Vec3): Vec3 =>
+    fill(into, a.x / scalar, a.y / scalar, a.z / scalar);
+  export const divedScalar = (a: Readonly<Vec3>, scalar: number): Vec3 => divScalar_(a, scalar, empty());
+
+  export const cross = (a: Readonly<Vec3>, b: Readonly<Vec3>): Vec3 => cross_(a, b, empty());
+  export const cross_ = (a: Readonly<Vec3>, b: Readonly<Vec3>, into: Vec3): Vec3 =>
+    fill(into, a.y * b.z - a.z * b.y, a.z * b.x - a.x * b.z, a.x * b.y - a.y * b.x);
+  export const crossed = (a: Readonly<Vec3>, b: Readonly<Vec3>): Vec3 => cross_(a, b, empty());
+
+  export const normalize = (self: Vec3): Vec3 => normalize_(self, self);
+  export const normalize_ = (self: Readonly<Vec3>, into: Vec3): Vec3 => {
+    const length = Math.sqrt(self.x * self.x + self.y * self.y + self.z * self.z);
+
+    return fill(into, self.x / length, self.y / length, self.z / length);
+  };
+  export const normalized = (self: Readonly<Vec3>): Vec3 => normalize_(self, empty());
+
+  export const lengthSq = (self: Readonly<Vec3>): number => self.x * self.x + self.y * self.y + self.z * self.z;
+  export const length = (self: Readonly<Vec3>): number => Math.sqrt(lengthSq(self));
 
   export const dot = (a: Readonly<Vec3>, b: Readonly<Vec3>): number => a.x * b.x + a.y * b.y + a.z * b.z;
+
+  export const fill = (self: Vec3, x: number, y: number, z: number): Vec3 => {
+    self.x = x;
+    self.y = y;
+    self.z = z;
+
+    return self;
+  };
+  export const fill_ = ({ x, y, z }: Readonly<Vec3>, into: Vec3): Vec3 => fill(into, x, y, z);
+
+  export const fromArray = (array: Readonly<NumberArray>, offset: number): Vec3 => fromArray_(array, offset, empty());
+  export const fromArray_ = (array: Readonly<NumberArray>, offset: number, into: Vec3): Vec3 =>
+    fill(into, array[offset], array[offset + 1], array[offset + 2]);
+  export const fillArray = (self: Vec3, array: Readonly<NumberArray>, offset: number): Vec3 =>
+    fromArray_(array, offset, self);
+  export const intoArray_ = <T extends NumberArray>({ x, y, z }: Readonly<Vec3>, offset: number, into: T): T => {
+    into[offset] = x;
+    into[offset + 1] = y;
+    into[offset + 2] = z;
+
+    return into;
+  };
+  export const intoArray = (self: Readonly<Vec3>): number[] => intoArray_(self, 0, [0, 0, 0]);
+
+  export const fromAttribute = (attribute: BufferAttribute<Float32Array>, index: number): Vec3 =>
+    fromAttribute_(attribute, index, empty());
+  export const fromAttribute_ = (attribute: BufferAttribute<Float32Array>, index: number, into: Vec3): Vec3 =>
+    fill(into, attribute.getX(index), attribute.getY(index), attribute.getZ(index));
+  export const fillAttribute = (self: Vec3, attribute: BufferAttribute<Float32Array>, index: number): Vec3 =>
+    fromAttribute_(attribute, index, self);
+  export const intoAttribute_ = (
+    self: Readonly<Vec3>,
+    attribute: BufferAttribute<Float32Array>,
+    index: number,
+  ): BufferAttribute<Float32Array> => attribute.setXYZ(index, self.x, self.y, self.z);
+
+  export const distanceSqTo = (a: Readonly<Vec3>, b: Readonly<Vec3>): number => {
+    const dx = a.x - b.x;
+    const dy = a.y - b.y;
+    const dz = a.z - b.z;
+
+    return dx * dx + dy * dy + dz * dz;
+  };
+  export const distanceTo = (a: Readonly<Vec3>, b: Readonly<Vec3>): number => Math.sqrt(distanceSqTo(a, b));
+
+  export const manhattanDistanceTo = (a: Readonly<Vec3>, b: Readonly<Vec3>): number =>
+    Math.abs(a.x - b.x) + Math.abs(a.y - b.y) + Math.abs(a.z - b.z);
+
+  export const applyMat4 = (self: Vec3, matrix: Readonly<Matrix4>): Vec3 => applyMat4_(self, matrix, self);
+  export const applyMat4_ = (self: Readonly<Vec3>, { elements }: Readonly<Matrix4>, into: Vec3): Vec3 => {
+    const { x, y, z } = self;
+
+    const w = 1 / (elements[3] * x + elements[7] * y + elements[11] * z + elements[15]);
+
+    return fill(
+      into,
+      (elements[0] * x + elements[4] * y + elements[8] * z + elements[12]) * w,
+      (elements[1] * x + elements[5] * y + elements[9] * z + elements[13]) * w,
+      (elements[2] * x + elements[6] * y + elements[10] * z + elements[14]) * w,
+    );
+  };
+
+  export const equals = (a: Readonly<Vec3>, b: Readonly<Vec3>): boolean => a.x === b.x && a.y === b.y && a.z === b.z;
+
+  export const temp0 = empty();
+  export const temp1 = empty();
+  export const temp2 = empty();
+  export const temp3 = empty();
+  export const temp4 = empty();
+  export const temp5 = empty();
+  export const temp6 = empty();
+  export const temp7 = empty();
+  export const temp8 = empty();
+  export const temp9 = empty();
 }
