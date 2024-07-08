@@ -3,6 +3,8 @@ import { Quaternion, QuaternionArray } from './Quaternion.ts';
 import { Euler } from './Euler.ts';
 import { BufferAttribute } from '../core/BufferAttribute.ts';
 import { Vec3 } from './Vector3.ts';
+import { Matrix4 } from '@modules/renderer/engine/math/Matrix4.js';
+import { Vec4 } from '@modules/renderer/engine/math/Vector4.js';
 
 const expectWithin = (actual: number, expected: number, epsilon: number = Number.EPSILON) => {
   expect(actual).within(expected - epsilon, expected + epsilon);
@@ -13,10 +15,6 @@ const expectQuaternionWithin = (actual: Quaternion, expected: Quaternion, epsilo
   expectWithin(actual.z, expected.z, epsilon);
   expectWithin(actual.w, expected.w, epsilon);
 };
-const orders: Euler.Order[] = ['XYZ', 'YXZ', 'ZXY', 'ZYX', 'YZX', 'XZY'];
-
-const quaternionSub = (a: Quaternion, b: Quaternion): Quaternion =>
-  Quaternion.create(a.x - b.x, a.y - b.y, a.z - b.z, a.w - b.w);
 
 function slerpObject(aArr: readonly number[], bArr: readonly number[], t: number): SlerpResult {
   const a = Quaternion.fromArray(aArr, 0);
@@ -132,33 +130,16 @@ describe('Math - Quaternion', () => {
     expectSlerp(slerpArray);
   });
 
-  it('fromEuler/fromQuaternion', () => {
-    const angles = [Vec3.create(1, 0, 0), Vec3.create(0, 1, 0), Vec3.create(0, 0, 1)];
-
-    for (const order of orders) {
-      for (const angle of angles) {
-        const eulers2 = Euler.fromQuaternion(
-          Quaternion.fromEuler(Euler.create(angle.x, angle.y, angle.z, order)),
-          order,
-        );
-
-        const newAngle = Vec3.create(eulers2.x, eulers2.y, eulers2.z);
-
-        // assert.ok(newAngle.distanceTo(angles[j]) < 0.001, 'Passed!');
-      }
-    }
-  });
-
   it('fromAxisAngle', () => {
-    const zero = Quaternion.identity();
+    const identity = Quaternion.identity();
     const a = Quaternion.identity();
 
-    expect(Quaternion.fromAxisAngle_(Vec3.create(1, 0, 0), 0, a)).toBe(a);
-    expect(a).toEqual(zero);
-    expect(Quaternion.fromAxisAngle_(Vec3.create(0, 1, 0), 0, a)).toBe(a);
-    expect(a).toEqual(zero);
-    expect(Quaternion.fromAxisAngle_(Vec3.create(0, 0, 1), 0, a)).toBe(a);
-    expect(a).toEqual(zero);
+    expect(Quaternion.fillAxisAngle(a, Vec3.create(1, 0, 0), 0)).toBe(a);
+    expect(a).toEqual(identity);
+    expect(Quaternion.fillAxisAngle(a, Vec3.create(0, 1, 0), 0)).toBe(a);
+    expect(a).toEqual(identity);
+    expect(Quaternion.fillAxisAngle(a, Vec3.create(0, 0, 1), 0)).toBe(a);
+    expect(a).toEqual(identity);
 
     const b1 = Quaternion.fromAxisAngle(Vec3.create(1, 0, 0), Math.PI);
     expect(a).not.toEqual(b1);
@@ -169,42 +150,44 @@ describe('Math - Quaternion', () => {
     expect(b1).toEqual(a);
   });
 
-  // it('setFromEuler/setFromRotationMatrix', () => {
-  //   // ensure euler conversion for Quaternion matches that of Matrix4
-  //   for (let i = 0; i < orders.length; i++) {
-  //     const q = new Quaternion().setFromEuler(changeEulerOrder(eulerAngles, orders[i]));
-  //     const m = new Matrix4().makeRotationFromEuler(changeEulerOrder(eulerAngles, orders[i]));
-  //     const q2 = new Quaternion().setFromRotationMatrix(m);
-  //
-  //     assert.ok(qSub(q, q2).length() < 0.001, 'Passed!');
-  //   }
-  // });
+  it('fromEuler/fromRotation/fromQuaternion', () => {
+    const euler = Euler.create(Math.random(), Math.random(), Math.random());
+    const a = Quaternion.identity();
+    const b = Quaternion.identity();
+    const matrix = new Matrix4();
 
-  // it('setFromRotationMatrix', () => {
-  //   // contrived examples purely to please the god of code coverage...
-  //   // match conditions in various 'else [if]' blocks
-  //
-  //   const a = new Quaternion();
-  //   let q = new Quaternion(-9, -2, 3, -4).normalize();
-  //   const m = new Matrix4().makeRotationFromQuaternion(q);
-  //   let expected = new Vector4(0.8581163303210332, 0.19069251784911848, -0.2860387767736777, 0.38138503569823695);
-  //
-  //   a.setFromRotationMatrix(m);
-  //   assert.ok(Math.abs(a.x - expected.x) <= eps, 'm11 > m22 && m11 > m33: check x');
-  //   assert.ok(Math.abs(a.y - expected.y) <= eps, 'm11 > m22 && m11 > m33: check y');
-  //   assert.ok(Math.abs(a.z - expected.z) <= eps, 'm11 > m22 && m11 > m33: check z');
-  //   assert.ok(Math.abs(a.w - expected.w) <= eps, 'm11 > m22 && m11 > m33: check w');
-  //
-  //   q = new Quaternion(-1, -2, 1, -1).normalize();
-  //   m.makeRotationFromQuaternion(q);
-  //   expected = new Vector4(0.37796447300922714, 0.7559289460184544, -0.37796447300922714, 0.37796447300922714);
-  //
-  //   a.setFromRotationMatrix(m);
-  //   assert.ok(Math.abs(a.x - expected.x) <= eps, 'm22 > m33: check x');
-  //   assert.ok(Math.abs(a.y - expected.y) <= eps, 'm22 > m33: check y');
-  //   assert.ok(Math.abs(a.z - expected.z) <= eps, 'm22 > m33: check z');
-  //   assert.ok(Math.abs(a.w - expected.w) <= eps, 'm22 > m33: check w');
-  // });
+    for (const order of Euler.orders) {
+      euler.order = order;
+
+      Quaternion.fillEuler(a, euler);
+      matrix.makeRotationFromEuler(euler);
+      Quaternion.fillRotation(b, matrix);
+
+      expect(Quaternion.angleTo(a, b)).toBeCloseTo(0);
+    }
+  });
+
+  it('fromMat', () => {
+    const a = Quaternion.identity();
+    const b = Quaternion.normalize(Quaternion.create(-9, -2, 3, -4));
+    const m = new Matrix4().makeRotationFromQuaternion(b);
+    const expected = Quaternion.create(
+      0.8581163303210332,
+      0.19069251784911848,
+      -0.2860387767736777,
+      0.38138503569823695,
+    );
+
+    Quaternion.fillRotation(a, m);
+    expectQuaternionWithin(a, expected);
+
+    Quaternion.fill(b, -1, -2, 1, -1);
+    m.makeRotationFromQuaternion(b);
+    Quaternion.fill(expected, 1, 2, -1, 1);
+
+    Quaternion.fillRotation(a, m);
+    expectQuaternionWithin(a, expected);
+  });
 
   it('fromUnit', () => {
     const a = Quaternion.fromUnit(Vec3.create(1, 0, 0), Vec3.create(0, 1, 0));

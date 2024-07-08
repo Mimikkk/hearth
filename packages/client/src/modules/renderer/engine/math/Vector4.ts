@@ -530,3 +530,15 @@ export class Vector4 implements IVector4 {
 }
 
 Vector4.prototype.isVector4 = true;
+
+export interface Vec4 {
+  x: number;
+  y: number;
+  z: number;
+  w: number;
+}
+
+export namespace Vec4 {
+  export const create = (x: number, y: number, z: number, w: number): Vec4 => ({ x, y, z, w });
+  export const empty = (): Vec4 => create(0, 0, 0, 0);
+}

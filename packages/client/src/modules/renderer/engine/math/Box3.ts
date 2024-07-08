@@ -859,10 +859,14 @@ export namespace Box3_ {
     return isSatForAxes(axes, _v0, _v1, _v2, _extents);
   };
 
-  export const clampVec = (self: Readonly<Box3_>, { x, y, z }: Readonly<Vec3>): Vec3 =>
-    vec3(clamp(x, self.min.x, self.max.x), clamp(y, self.min.y, self.max.y), clamp(z, self.min.z, self.max.z));
-  export const clampVec_ = (self: Readonly<Box3_>, { x, y, z }: Readonly<Vec3>, into: Vec3): Vec3 =>
-    vec3(clamp(x, self.min.x, self.max.x), clamp(y, self.min.y, self.max.y), clamp(z, self.min.z, self.max.z));
+  export const clampVec = (self: Readonly<Box3_>, vec: Readonly<Vec3>): Vec3 => clampVec_(self, vec, Vec3.empty());
+  export const clampVec_ = (self: Readonly<Box3_>, { x, y, z }: Readonly<Vec3>, into: Vec3): Vec3 => {
+    into.x = clamp(x, self.min.x, self.max.x);
+    into.y = clamp(y, self.min.y, self.max.y);
+    into.z = clamp(z, self.min.z, self.max.z);
+
+    return into;
+  };
 
   export const intersect = (self: Box3_, box: Readonly<Box3_>): Box3_ => {
     if (box.min.x > self.min.x) self.min.x = box.min.x;
