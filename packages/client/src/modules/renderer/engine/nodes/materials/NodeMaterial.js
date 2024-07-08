@@ -410,7 +410,6 @@ export class NodeMaterial extends ShaderMaterial {
 
     const type = material.type.replace('Material', 'NodeMaterial');
 
-    console.log({ NodeMaterials, type });
     const nodeMaterial = new (NodeMaterials.get(type))();
 
     if (nodeMaterial === undefined) {

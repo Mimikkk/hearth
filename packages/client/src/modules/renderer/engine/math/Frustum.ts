@@ -1,6 +1,6 @@
 import { CoordinateSystem } from '../constants.js';
 import { Vector3 } from './Vector3.js';
-import { Sphere } from './Sphere.js';
+import { Sphere, Sphere_ } from './Sphere.js';
 import { Plane } from './Plane.js';
 import type { Matrix4 } from './Matrix4.js';
 import type { Box3 } from './Box3.js';
@@ -83,18 +83,19 @@ export class Frustum {
   }
 
   intersectsObject(object: Object3D): boolean {
-    const _sphere = new Sphere();
+    const _sphere = Sphere_.empty();
 
     if (object.boundingSphere !== undefined) {
       if (object.boundingSphere === null) object.computeBoundingSphere();
 
-      _sphere.copy(object.boundingSphere).applyMatrix4(object.matrixWorld);
+      Sphere_.fill_(object.boundingSphere, _sphere);
+      Sphere_.applyMat4(_sphere, object.matrixWorld);
     } else {
-      const geometry = object.geometry;
-
+      const geometry = object.geometry!;
       if (geometry.boundingSphere === null) geometry.computeBoundingSphere();
 
-      _sphere.copy(geometry.boundingSphere).applyMatrix4(object.matrixWorld);
+      Sphere_.fill_(geometry.boundingSphere!, _sphere);
+      Sphere_.applyMat4(_sphere, object.matrixWorld);
     }
 
     return this.intersectsSphere(_sphere);
@@ -107,7 +108,7 @@ export class Frustum {
     return this.intersectsSphere(_sphere);
   }
 
-  intersectsSphere(sphere: Sphere): boolean {
+  intersectsSphere(sphere: Sphere_): boolean {
     const planes = this.planes;
     const center = sphere.center;
     const negRadius = -sphere.radius;

@@ -606,6 +606,8 @@ export namespace Vec3 {
   export const empty = (): Vec3 => create(0, 0, 0);
   export const vec3 = create;
 
+  export const copy = ({ x, y, z }: Readonly<Vec3>): Vec3 => create(x, y, z);
+
   export const is = (o: any): o is Vec3 =>
     !!o && typeof o.x === 'number' && typeof o.y === 'number' && typeof o.z === 'number';
 

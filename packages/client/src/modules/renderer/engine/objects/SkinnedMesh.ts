@@ -1,7 +1,7 @@
 import { Mesh } from './Mesh.js';
 import { Box3 } from '../math/Box3.js';
 import { Matrix4 } from '../math/Matrix4.js';
-import { Sphere } from '../math/Sphere.js';
+import { Sphere, Sphere_ } from '../math/Sphere.js';
 import { Vector3 } from '../math/Vector3.js';
 import { Vector4 } from '../math/Vector4.js';
 import { Ray } from '../math/Ray.js';
@@ -20,7 +20,7 @@ const _vector3 = /*@__PURE__*/ new Vector3();
 const _matrix4 = /*@__PURE__*/ new Matrix4();
 const _vertex = /*@__PURE__*/ new Vector3();
 
-const _sphere = /*@__PURE__*/ new Sphere();
+const _sphere = Sphere_.empty();
 const _inverseMatrix = /*@__PURE__*/ new Matrix4();
 const _ray = /*@__PURE__*/ new Ray();
 
@@ -31,7 +31,7 @@ export class SkinnedMesh extends Mesh {
   bindMode: BindMode;
   bindMatrix: Matrix4;
   bindMatrixInverse: Matrix4;
-  boundingSphere: Sphere | null;
+  boundingSphere: Sphere_ | null;
   skeleton: Skeleton | null;
   declare geometry: BufferGeometry;
   declare material: Material;
@@ -66,16 +66,15 @@ export class SkinnedMesh extends Mesh {
     const geometry = this.geometry!;
 
     if (this.boundingSphere === null) {
-      this.boundingSphere = new Sphere();
+      this.boundingSphere = Sphere_.empty();
     }
-
-    this.boundingSphere.makeEmpty();
+    Sphere_.clear(this.boundingSphere);
 
     const positionAttribute = geometry.getAttribute('position');
 
     for (let i = 0; i < positionAttribute.count; i++) {
       this.getVertexPosition(i, _vertex);
-      this.boundingSphere.expandByPoint(_vertex);
+      Sphere_.expandByVec(this.boundingSphere, _vertex);
     }
   }
 
@@ -89,8 +88,13 @@ export class SkinnedMesh extends Mesh {
     this.skeleton = source.skeleton;
 
     if (source.boundingBox !== null) this.boundingBox = source.boundingBox.clone();
-    if (source.boundingSphere !== null) this.boundingSphere = source.boundingSphere.clone();
-
+    if (source.boundingSphere !== null) {
+      if (this.boundingSphere === null) {
+        this.boundingSphere = Sphere_.copy(source.boundingSphere);
+      } else {
+        Sphere_.fill_(source.boundingSphere, this.boundingSphere);
+      }
+    }
     return this;
   }
 
@@ -104,8 +108,8 @@ export class SkinnedMesh extends Mesh {
 
     if (this.boundingSphere === null) this.computeBoundingSphere();
 
-    _sphere.copy(this.boundingSphere!);
-    _sphere.applyMatrix4(matrixWorld);
+    Sphere_.fill_(this.boundingSphere!, _sphere);
+    Sphere_.applyMat4(_sphere, matrixWorld);
 
     if (raycaster.ray.intersectsSphere(_sphere) === false) return;
 

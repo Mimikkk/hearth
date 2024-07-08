@@ -1,5 +1,5 @@
-import { Vector3 } from './Vector3.js';
-import type { Sphere } from './Sphere.js';
+import { Vec3, Vector3 } from './Vector3.js';
+import type { Sphere, Sphere_ } from './Sphere.js';
 import type { Plane } from './Plane.js';
 import type { Box3 } from './Box3.js';
 import type { Matrix4 } from './Matrix4.js';
@@ -58,7 +58,7 @@ export class Ray {
     return Math.sqrt(this.distanceSqToPoint(point));
   }
 
-  distanceSqToPoint(point: Vector3): number {
+  distanceSqToPoint(point: Vec3): number {
     const directionDistance = new Vector3().subVectors(point, this.origin).dot(this.direction);
 
     // point behind the ray
@@ -187,7 +187,7 @@ export class Ray {
     return this.at(t0, target);
   }
 
-  intersectsSphere(sphere: Sphere): boolean {
+  intersectsSphere(sphere: Sphere_): boolean {
     return this.distanceSqToPoint(sphere.center) <= sphere.radius * sphere.radius;
   }
 
