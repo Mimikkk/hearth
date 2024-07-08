@@ -164,6 +164,9 @@ export const SideBarItems: AccordionItem[] = [
     id: 'physics',
     title: 'Physics',
     icon: 'SiAtom',
-    children: [{ id: Example.Physics.Ammo, title: 'Ammo' }],
+    children: [
+      { id: Example.Physics.Ammo, title: 'Ammo' },
+      { id: Example.Collisions.Octree, title: 'Octree collisions' },
+    ],
   },
 ];
