@@ -1,4 +1,4 @@
-import { Vector3 } from './Vector3.js';
+import { Vec3, Vector3 } from './Vector3.js';
 import { Box3 } from '@modules/renderer/engine/math/Box3.js';
 import { Plane } from '@modules/renderer/engine/math/Plane.js';
 import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
@@ -27,22 +27,21 @@ export class Triangle {
     return target.set(0, 0, 0);
   }
 
-  static getBarycoord(point: Vector3, a: Vector3, b: Vector3, c: Vector3, target: Vector3): Vector3 | null {
-    const _v0 = new Vector3().subVectors(c, a);
-    const _v1 = new Vector3().subVectors(b, a);
-    const _v2 = new Vector3().subVectors(point, a);
+  static getBarycoord(point: Vec3, a: Vec3, b: Vec3, c: Vec3, target: Vec3): Vec3 | null {
+    const _v0 = Vec3.subbed(c, a);
+    const _v1 = Vec3.subbed(b, a);
+    const _v2 = Vec3.subbed(point, a);
 
-    const dot00 = _v0.dot(_v0);
-    const dot01 = _v0.dot(_v1);
-    const dot02 = _v0.dot(_v2);
-    const dot11 = _v1.dot(_v1);
-    const dot12 = _v1.dot(_v2);
+    const dot00 = Vec3.dot(_v0, _v0);
+    const dot01 = Vec3.dot(_v0, _v1);
+    const dot02 = Vec3.dot(_v0, _v2);
+    const dot11 = Vec3.dot(_v1, _v1);
+    const dot12 = Vec3.dot(_v1, _v2);
 
     const denom = dot00 * dot11 - dot01 * dot01;
 
-    // collinear or singular triangle
     if (denom === 0) {
-      target.set(0, 0, 0);
+      Vec3.fill(target, 0, 0, 0);
       return null;
     }
 
@@ -50,13 +49,12 @@ export class Triangle {
     const u = (dot11 * dot02 - dot01 * dot12) * invDenom;
     const v = (dot00 * dot12 - dot01 * dot02) * invDenom;
 
-    // barycentric coordinates must always sum to 1
-    return target.set(1 - u - v, v, u);
+    return Vec3.fill(target, 1 - u - v, v, u);
   }
 
-  static containsPoint(point: Vector3, a: Vector3, b: Vector3, c: Vector3): boolean {
+  static containsPoint(point: Vec3, a: Vec3, b: Vec3, c: Vec3): boolean {
     // if the triangle is degenerate then we can't contain a point
-    const _v3 = new Vector3();
+    const _v3 = Vec3.empty();
     if (this.getBarycoord(point, a, b, c, _v3) === null) {
       return false;
     }
@@ -156,7 +154,7 @@ export class Triangle {
     return target.setFromCoplanarPoints(this.a, this.b, this.c);
   }
 
-  getBarycoord(point: Vector3, target: Vector3): Vector3 | null {
+  getBarycoord(point: Vec3, target: Vec3): Vec3 | null {
     return Triangle.getBarycoord(point, this.a, this.b, this.c, target);
   }
 
@@ -164,7 +162,7 @@ export class Triangle {
     return Triangle.getInterpolation(point, this.a, this.b, this.c, v1, v2, v3, target);
   }
 
-  containsPoint(point: Vector3): boolean {
+  containsPoint(point: Vec3): boolean {
     return Triangle.containsPoint(point, this.a, this.b, this.c);
   }
 

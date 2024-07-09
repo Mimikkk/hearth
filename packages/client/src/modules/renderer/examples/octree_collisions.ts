@@ -10,12 +10,11 @@ import { IcosahedronGeometry } from '@modules/renderer/engine/geometries/Icosahe
 import { MeshLambertMaterial } from '@modules/renderer/engine/materials/MeshLambertMaterial.js';
 import { Mesh } from '@modules/renderer/engine/objects/Mesh.js';
 import { Sphere } from '@modules/renderer/engine/math/Sphere.js';
-import { Vector3 } from '@modules/renderer/engine/math/Vector3.js';
+import { Vec3, Vector3 } from '@modules/renderer/engine/math/Vector3.js';
 import { Octree } from '@modules/renderer/engine/math/Octree.js';
 import { Capsule } from '@modules/renderer/engine/math/Capsule.js';
 import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/GLTFLoader.js';
 import { OctreeHelper } from '@modules/renderer/engine/helpers/OctreeHelper.js';
-import { GUI } from 'lil-gui';
 import { ToneMapping } from '@modules/renderer/engine/constants.js';
 import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 import { Euler } from '@modules/renderer/engine/math/Euler.js';
@@ -50,8 +49,6 @@ scene.add(directionalLight);
 const container = document.getElementById('container') as HTMLDivElement;
 
 const renderer = await Renderer.create({ antialias: true });
-renderer.setPixelRatio(window.devicePixelRatio);
-renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setAnimationLoop(animate);
 renderer.parameters.toneMapping = ToneMapping.ACESFilmic;
 container.appendChild(renderer.parameters.canvas);
@@ -94,7 +91,7 @@ for (let i = 0; i < NUM_SPHERES; i++) {
 
 const worldOctree = new Octree();
 
-const playerCollider = new Capsule(new Vector3(0, 0.35, 0), new Vector3(0, 1, 0), 0.35);
+const playerCollider = Capsule.create(0, 0.35, 0, 0, 1, 0, 0.35);
 
 const playerVelocity = new Vector3();
 const playerDirection = new Vector3();
@@ -171,11 +168,12 @@ function playerCollisions() {
     playerOnFloor = result.normal.y > 0;
 
     if (!playerOnFloor) {
-      playerVelocity.addScaledVector(result.normal, -result.normal.dot(playerVelocity));
+      playerVelocity.addScaledVector(result.normal, -Vec3.dot(result.normal, playerVelocity));
     }
 
     if (result.depth >= 1e-10) {
-      playerCollider.translate(result.normal.multiplyScalar(result.depth));
+      Vec3.mulScalar(result.normal, result.depth);
+      Capsule.translate(playerCollider, result.normal);
     }
   }
 }
@@ -193,7 +191,7 @@ function updatePlayer(deltaTime: number) {
   playerVelocity.addScaledVector(playerVelocity, damping);
 
   const deltaPosition = playerVelocity.clone().multiplyScalar(deltaTime);
-  playerCollider.translate(deltaPosition);
+  Capsule.translate(playerCollider, deltaPosition);
 
   playerCollisions();
 
@@ -211,7 +209,7 @@ function playerSphereCollision(sphere: { collider: Sphere; velocity: Vector3 }) 
   // approximation: player = 3 spheres
 
   for (const point of [playerCollider.start, playerCollider.end, center]) {
-    const d2 = point.distanceToSquared(sphere_center);
+    const d2 = Vec3.distanceSqTo(point, sphere_center);
 
     if (d2 < r2) {
       const normal = vector1.subVectors(point, sphere_center).normalize();
@@ -262,8 +260,10 @@ function updateSpheres(deltaTime: number) {
     const result = worldOctree.sphereIntersect(sphere.collider);
 
     if (result) {
-      sphere.velocity.addScaledVector(result.normal, -result.normal.dot(sphere.velocity) * 1.5);
-      sphere.collider.center.add(result.normal.multiplyScalar(result.depth));
+      sphere.velocity.addScaledVector(result.normal, -Vec3.dot(result.normal, sphere.velocity) * 1.5);
+
+      Vec3.mulScalar(result.normal, result.depth);
+      sphere.collider.center.add(result.normal);
     } else {
       sphere.velocity.y -= GRAVITY * deltaTime;
     }
