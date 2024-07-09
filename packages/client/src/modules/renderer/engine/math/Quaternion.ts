@@ -213,7 +213,7 @@ export namespace Quaternion {
   };
   export const fill_ = (into: Quaternion, { w, x, y, z }: Const<Quaternion>): Quaternion => fill(into, x, y, z, w);
 
-  export const clone = (from: Const<Quaternion>): Quaternion => fill_(identity(), from);
+  export const clone = (from: Const<Quaternion>): Quaternion => clone_(from, identity());
   export const clone_ = (from: Const<Quaternion>, into: Quaternion): Quaternion => fill_(into, from);
 
   export const equals = (a: Const<Quaternion>, b: Const<Quaternion>): boolean =>

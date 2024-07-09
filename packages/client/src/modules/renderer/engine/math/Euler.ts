@@ -32,7 +32,7 @@ export namespace Euler {
   };
   export const fill_ = (into: Euler, { order, x, y, z }: Euler): Euler => fill(into, x, y, z, order);
 
-  export const clone = (from: Euler): Euler => fill_(empty(), from);
+  export const clone = (from: Euler): Euler => clone_(from, empty());
   export const clone_ = (from: Euler, into: Euler): Euler => fill_(into, from);
 
   export const fromVec = ({ x, y, z }: Const<Vec3>, order: Order = 'XYZ'): Euler => create(x, y, z, order);
