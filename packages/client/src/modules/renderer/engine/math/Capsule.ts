@@ -46,14 +46,15 @@ export namespace Capsule {
   export const fill_ = ({ start, end, radius }: Readonly<Capsule>, into: Capsule): Capsule =>
     fill(into, start.x, start.y, start.z, end.x, end.y, end.z, radius);
 
-  export const translate = (capsule: Capsule, vec: Vec3): Capsule => translate_(capsule, vec, capsule);
-  export const translate_ = (self: Capsule, vec: Vec3, into: Capsule): Capsule => {
+  export const translate = (capsule: Capsule, vec: Readonly<Vec3>): Capsule => translate_(capsule, vec, capsule);
+  export const translate_ = (self: Readonly<Capsule>, vec: Readonly<Vec3>, into: Capsule): Capsule => {
     Vec3.add_(self.start, vec, into.start);
     Vec3.add_(self.end, vec, into.end);
 
     return into;
   };
-  export const translated = (capsule: Capsule, vec: Vec3): Capsule => translate(fill_(capsule, empty()), vec);
+  export const translated = (capsule: Readonly<Capsule>, vec: Readonly<Vec3>): Capsule =>
+    translate(fill_(capsule, empty()), vec);
 
   export const clone = ({ start, end, radius }: Readonly<Capsule>): Capsule => ({ start, end, radius });
   export const copy = ({ start, end, radius }: Readonly<Capsule>): Capsule => ({

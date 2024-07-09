@@ -152,4 +152,34 @@ export class Plane {
     return new this.constructor().copy(this);
   }
 }
+
 Plane.prototype.isPlane = true;
+
+export interface Plane_ {
+  normal: Vec3;
+  constant: number;
+}
+
+export namespace Plane_ {
+  export const create = (normalX: number, normalY: number, normalZ: number, constant: number): Plane_ => ({
+    normal: Vec3.create(normalX, normalY, normalZ),
+    constant,
+  });
+  export const empty = (): Plane_ => create(0, 0, 0, 0);
+
+  export const fill = (self: Plane_, normalX: number, normalY: number, normalZ: number, constant: number): Plane_ => {
+    self.normal.x = normalX;
+    self.normal.y = normalY;
+    self.normal.z = normalZ;
+    self.constant = constant;
+
+    return self;
+  };
+  export const fill_ = ({ normal, constant }: Readonly<Plane_>, into: Plane_): Plane_ =>
+    fill(into, normal.x, normal.y, normal.z, constant);
+
+  export const copy = ({ normal, constant }: Readonly<Plane_>): Plane_ => ({ normal: Vec3.copy(normal), constant });
+  export const clone = ({ normal, constant }: Readonly<Plane_>): Plane_ => ({ normal, constant });
+  export const copy_ = ({ normal, constant }: Readonly<Plane_>, into: Plane_): Plane_ =>
+    fill(into, normal.x, normal.y, normal.z, constant);
+}
