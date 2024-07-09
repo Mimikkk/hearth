@@ -44,7 +44,8 @@ export namespace Capsule {
 
     return self;
   };
-  export const fill_ = (self: Capsule, from: Const<Capsule>): Capsule => clone_(from, self);
+  export const fill_ = (self: Capsule, { start, end, radius }: Const<Capsule>): Capsule =>
+    fill(self, start.x, start.y, start.z, end.x, end.y, end.z, radius);
 
   export const copy = (from: Const<Capsule>): Capsule => copy_(from, empty());
   export const copy_ = ({ start, end, radius }: Const<Capsule>, into: Capsule): Capsule => {
