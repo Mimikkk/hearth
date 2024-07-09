@@ -37,7 +37,7 @@ describe('Math - Box3', () => {
     expect(empty.max.z).toBe(-Infinity);
 
     const fill = Box3_.empty();
-    Box3_.fill_(a, fill);
+    Box3_.copy_(a, fill);
     expect(fill).not.toBe(a);
     expect(fill).toEqual(a);
   });

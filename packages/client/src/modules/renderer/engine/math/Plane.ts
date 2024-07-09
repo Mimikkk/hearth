@@ -4,6 +4,7 @@ import type { Sphere, Sphere_ } from './Sphere.js';
 import type { Line3 } from './Line3.js';
 import type { Box3 } from './Box3.js';
 import type { Matrix4 } from './Matrix4.js';
+import { Const } from '@modules/renderer/engine/math/types.js';
 
 export class Plane {
   declare ['constructor']: typeof Plane;
@@ -175,11 +176,17 @@ export namespace Plane_ {
 
     return self;
   };
-  export const fill_ = ({ normal, constant }: Readonly<Plane_>, into: Plane_): Plane_ =>
-    fill(into, normal.x, normal.y, normal.z, constant);
+  export const fill_ = (self: Plane_, { constant, normal: { x, y, z } }: Const<Plane_>): Plane_ =>
+    fill(self, x, y, z, constant);
 
-  export const copy = ({ normal, constant }: Readonly<Plane_>): Plane_ => ({ normal: Vec3.copy(normal), constant });
-  export const clone = ({ normal, constant }: Readonly<Plane_>): Plane_ => ({ normal, constant });
-  export const copy_ = ({ normal, constant }: Readonly<Plane_>, into: Plane_): Plane_ =>
-    fill(into, normal.x, normal.y, normal.z, constant);
+  export const copy = (from: Const<Plane_>): Plane_ => copy_(from, empty());
+  export const copy_ = (from: Const<Plane_>, into: Plane_): Plane_ => fill_(into, from);
+
+  export const clone = (self: Const<Plane_>): Plane_ => clone_(empty(), self);
+  export const clone_ = (self: Plane_, { normal, constant }: Const<Plane_>): Plane_ => {
+    self.normal = normal;
+    self.constant = constant;
+
+    return self;
+  };
 }
