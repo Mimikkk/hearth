@@ -175,7 +175,7 @@ export async function RapierPhysics(): Promise<RapierPhysicsObject> {
           const body = bodies[j];
 
           const position = body.translation();
-          Quaternion.fill_(body.rotation(), _quaternion);
+          Quaternion.clone_(body.rotation(), _quaternion);
 
           _matrix.compose(position, _quaternion, _scale).toArray(array, j * 16);
         }
@@ -188,7 +188,7 @@ export async function RapierPhysics(): Promise<RapierPhysicsObject> {
         const body = meshMap.get(mesh);
 
         mesh.position.copy(body.translation());
-        Quaternion.fill_(body.rotation(), mesh.quaternion);
+        Quaternion.clone_(body.rotation(), mesh.quaternion);
       }
     }
   }

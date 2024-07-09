@@ -607,10 +607,20 @@ export namespace Vec3 {
   export const empty = (): Vec3 => create(0, 0, 0);
   export const vec3 = create;
 
-  export const copy = ({ x, y, z }: Const<Vec3>): Vec3 => create(x, y, z);
-
   export const is = (o: any): o is Vec3 =>
     !!o && typeof o.x === 'number' && typeof o.y === 'number' && typeof o.z === 'number';
+
+  export const fill = (self: Vec3, x: number, y: number, z: number): Vec3 => {
+    self.x = x;
+    self.y = y;
+    self.z = z;
+
+    return self;
+  };
+  export const fill_ = (into: Vec3, from: Const<Vec3>): Vec3 => clone_(from, into);
+
+  export const clone = (from: Const<Vec3>): Vec3 => fill_(from, empty());
+  export const clone_ = ({ x, y, z }: Const<Vec3>, into: Vec3): Vec3 => fill(into, x, y, z);
 
   export const add = (a: Vec3, b: Const<Vec3>): Vec3 => add_(a, b, a);
   export const add_ = (a: Const<Vec3>, b: Const<Vec3>, into: Vec3): Vec3 => fill(into, a.x + b.x, a.y + b.y, a.z + b.z);
@@ -660,15 +670,6 @@ export namespace Vec3 {
   export const length = (self: Const<Vec3>): number => Math.sqrt(lengthSq(self));
 
   export const dot = (a: Const<Vec3>, b: Const<Vec3>): number => a.x * b.x + a.y * b.y + a.z * b.z;
-
-  export const fill = (self: Vec3, x: number, y: number, z: number): Vec3 => {
-    self.x = x;
-    self.y = y;
-    self.z = z;
-
-    return self;
-  };
-  export const fill_ = ({ x, y, z }: Const<Vec3>, into: Vec3): Vec3 => fill(into, x, y, z);
 
   export const fromArray = (array: Const<NumberArray>, offset: number): Vec3 => fromArray_(array, offset, empty());
   export const fromArray_ = (array: Const<NumberArray>, offset: number, into: Vec3): Vec3 =>

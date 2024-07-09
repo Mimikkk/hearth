@@ -25,7 +25,7 @@ describe('Math - Quaternion', () => {
 
   it('copy/equals', () => {
     const a = Euler.create(1, 2, 3, 'XYZ');
-    const b = Euler.copy(a);
+    const b = Euler.clone(a);
 
     expect(b).toEqual(a);
     expect(b).not.toBe(a);
