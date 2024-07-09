@@ -88,13 +88,13 @@ export class Frustum {
     if (object.boundingSphere !== undefined) {
       if (object.boundingSphere === null) object.computeBoundingSphere();
 
-      Sphere_.clone_(object.boundingSphere, _sphere);
+      Sphere_.fill_(object.boundingSphere, _sphere);
       Sphere_.applyMat4(_sphere, object.matrixWorld);
     } else {
       const geometry = object.geometry!;
       if (geometry.boundingSphere === null) geometry.computeBoundingSphere();
 
-      Sphere_.clone_(geometry.boundingSphere!, _sphere);
+      Sphere_.fill_(geometry.boundingSphere!, _sphere);
       Sphere_.applyMat4(_sphere, object.matrixWorld);
     }
 

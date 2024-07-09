@@ -149,7 +149,7 @@ function animate() {
   renderer.setViewport(20, 20, insetWidth, insetHeight);
 
   camera2.position.copy(camera.position);
-  Quaternion.clone_(camera.quaternion, camera2.quaternion);
+  Quaternion.fill_(camera.quaternion, camera2.quaternion);
 
   renderer.parameters.autoClear = false;
 

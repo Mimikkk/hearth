@@ -352,10 +352,10 @@ UI.create('Controls', { debug: false }).boolean('debug', 'Debug', value => {
 
 function teleportPlayerIfOob() {
   if (camera.position.y <= -25) {
-    Vec3.fill(playerCollider.start, 0, 0.35, 0);
-    Vec3.fill(playerCollider.end, 0, 1, 0);
+    playerCollider.start.set(0, 0.35, 0);
+    playerCollider.end.set(0, 1, 0);
     playerCollider.radius = 0.35;
-    Vec3.fill_(playerVelocity, playerCollider.end);
+    camera.position.copy(playerCollider.end);
     camera.setRotation(0, 0, 0);
   }
 }

@@ -44,11 +44,10 @@ export namespace Capsule {
 
     return self;
   };
-  export const fill_ = (self: Capsule, { start, end, radius }: Const<Capsule>): Capsule =>
-    fill(self, start.x, start.y, start.z, end.x, end.y, end.z, radius);
+  export const fill_ = (self: Capsule, from: Const<Capsule>): Capsule => copy_(from, self);
 
-  export const copy = (from: Const<Capsule>): Capsule => copy_(from, empty());
-  export const copy_ = ({ start, end, radius }: Const<Capsule>, into: Capsule): Capsule => {
+  export const clone = (self: Const<Capsule>): Capsule => clone_(self, empty());
+  export const clone_ = ({ start, end, radius }: Const<Capsule>, into: Capsule): Capsule => {
     into.start = start;
     into.end = end;
     into.radius = radius;
@@ -56,8 +55,9 @@ export namespace Capsule {
     return into;
   };
 
-  export const clone = (from: Const<Capsule>): Capsule => clone_(from, empty());
-  export const clone_ = (from: Const<Capsule>, into: Capsule): Capsule => fill_(into, from);
+  export const copy = (self: Const<Capsule>): Capsule => fill_(self, empty());
+  export const copy_ = ({ start, end, radius }: Const<Capsule>, into: Capsule): Capsule =>
+    fill(into, start.x, start.y, start.z, end.x, end.y, end.z, radius);
 
   export const translate = (capsule: Capsule, vec: Const<Vec3>): Capsule => translate_(capsule, vec, capsule);
   export const translate_ = (self: Const<Capsule>, vec: Const<Vec3>, into: Capsule): Capsule => {
@@ -67,7 +67,7 @@ export namespace Capsule {
     return into;
   };
   export const translated = (capsule: Const<Capsule>, vec: Const<Vec3>): Capsule =>
-    translate(clone_(capsule, empty()), vec);
+    translate(copy_(capsule, empty()), vec);
 
   export const center = (capsule: Const<Capsule>): Vec3 => center_(capsule, Vec3.empty());
   export const center_ = ({ start, end }: Const<Capsule>, into: Vec3): Vec3 =>

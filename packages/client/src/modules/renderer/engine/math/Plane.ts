@@ -180,13 +180,13 @@ export namespace Plane_ {
     fill(self, x, y, z, constant);
 
   export const copy = (from: Const<Plane_>): Plane_ => copy_(from, empty());
-  export const copy_ = (from: Const<Plane_>, into: Plane_): Plane_ => {
-    into.normal = from.normal;
-    into.constant = from.constant;
+  export const copy_ = (from: Const<Plane_>, into: Plane_): Plane_ => fill_(into, from);
 
-    return into;
+  export const clone = (self: Const<Plane_>): Plane_ => clone_(empty(), self);
+  export const clone_ = (self: Plane_, { normal, constant }: Const<Plane_>): Plane_ => {
+    self.normal = normal;
+    self.constant = constant;
+
+    return self;
   };
-
-  export const clone = (from: Const<Plane_>): Plane_ => clone_(from, empty());
-  export const clone_ = (from: Const<Plane_>, into: Plane_): Plane_ => fill_(into, from);
 }

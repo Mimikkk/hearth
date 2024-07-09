@@ -47,8 +47,8 @@ export class Scene extends Object3D {
 
     this.backgroundBlurriness = source.backgroundBlurriness;
     this.backgroundIntensity = source.backgroundIntensity;
-    Euler.clone_(this.backgroundRotation, source.backgroundRotation);
-    Euler.clone_(this.environmentRotation, source.environmentRotation);
+    Euler.fill_(this.backgroundRotation, source.backgroundRotation);
+    Euler.fill_(this.environmentRotation, source.environmentRotation);
 
     if (source.overrideMaterial !== null) this.overrideMaterial = source.overrideMaterial.clone();
 

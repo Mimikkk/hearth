@@ -226,7 +226,7 @@ const animate = () => {
 
   // Clone camera settings across both scenes
   objects.logarithmic.camera.position.copy(objects.normal.camera.position);
-  Quaternion.clone_(objects.normal.camera.quaternion, objects.logarithmic.camera.quaternion);
+  Quaternion.fill_(objects.normal.camera.quaternion, objects.logarithmic.camera.quaternion);
 
   // Update renderer sizes if the split has changed
   if (screensplit_right != 1 - screensplit) {

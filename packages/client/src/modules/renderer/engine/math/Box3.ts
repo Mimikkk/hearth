@@ -584,11 +584,11 @@ export namespace Box3_ {
     return into;
   };
 
-  export const clone = (from: Const<Box3_>): Box3_ => clone_(from, empty());
-  export const clone_ = (from: Const<Box3_>, into: Box3_): Box3_ => fill_(into, from);
-
   export const copy = (from: Const<Box3_>): Box3_ => copy_(from, empty());
-  export const copy_ = (from: Const<Box3_>, into: Box3_): Box3_ => {
+  export const copy_ = (from: Const<Box3_>, into: Box3_): Box3_ => fill_(into, from);
+
+  export const clone = (from: Const<Box3_>): Box3_ => clone_(from, empty());
+  export const clone_ = (from: Const<Box3_>, into: Box3_): Box3_ => {
     into.min = from.min;
     into.max = from.max;
 
@@ -617,13 +617,13 @@ export namespace Box3_ {
 
     return self;
   };
-  export const expandedByVec = (self: Const<Box3_>, vec: Const<Vec3>): Box3_ => expandByVec(clone(self), vec);
+  export const expandedByVec = (self: Const<Box3_>, vec: Const<Vec3>): Box3_ => expandByVec(copy(self), vec);
 
   export const expandByVecs = (self: Box3_, vecs: Const<Vec3>[]): Box3_ => {
     for (let i = 0, it = vecs.length; i < it; ++i) expandByVec(self, vecs[i]);
     return self;
   };
-  export const expandedByVecs = (self: Const<Box3_>, vecs: Const<Vec3>[]): Box3_ => expandByVecs(clone(self), vecs);
+  export const expandedByVecs = (self: Const<Box3_>, vecs: Const<Vec3>[]): Box3_ => expandByVecs(copy(self), vecs);
 
   export const expandByScalar = (self: Box3_, scalar: number): Box3_ => {
     self.min.x -= scalar;
@@ -635,7 +635,7 @@ export namespace Box3_ {
 
     return self;
   };
-  export const expandedByScalar = (self: Const<Box3_>, scalar: number): Box3_ => expandByScalar(clone(self), scalar);
+  export const expandedByScalar = (self: Const<Box3_>, scalar: number): Box3_ => expandByScalar(copy(self), scalar);
 
   export const fromCenterAndRadius = (center: Const<Vec3>, radius: number): Box3_ =>
     fromCenterAndRadius_(center, radius, empty());
@@ -887,7 +887,7 @@ export namespace Box3_ {
 
     return self;
   };
-  export const intersected = (self: Const<Box3_>, box: Const<Box3_>): Box3_ => intersect(clone(self), box);
+  export const intersected = (self: Const<Box3_>, box: Const<Box3_>): Box3_ => intersect(copy(self), box);
   export const intersectSphere = (self: Const<Box3_>): Sphere_ => intersectSphere_(self, Sphere_.empty());
   export const intersectSphere_ = (self: Const<Box3_>, into: Sphere_): Sphere_ => {
     const center = center_(self, Vec3.temp0);
@@ -906,7 +906,7 @@ export namespace Box3_ {
 
     return self;
   };
-  export const united = (self: Const<Box3_>, box: Const<Box3_>): Box3_ => union(clone(self), box);
+  export const united = (self: Const<Box3_>, box: Const<Box3_>): Box3_ => union(copy(self), box);
 
   export const translate = (self: Box3_, { x, y, z }: Const<Vec3>): Box3_ => {
     self.min.x += x;
@@ -918,13 +918,13 @@ export namespace Box3_ {
 
     return self;
   };
-  export const translated = (self: Const<Box3_>, vec: Const<Vec3>): Box3_ => translate(clone(self), vec);
+  export const translated = (self: Const<Box3_>, vec: Const<Vec3>): Box3_ => translate(copy(self), vec);
 
   export const applyMat4 = (self: Const<Box3_>, matrix: Const<Matrix4>): Box3_ => applyMat4_(self, matrix, self);
   export const applyMat4_ = (self: Const<Box3_>, matrix: Const<Matrix4>, into: Box3_): Box3_ => {
     if (isEmpty(self)) return clear(into);
 
-    clone_(self, into);
+    copy_(self, into);
 
     Vec3.applyMat4(Vec3.fill(Vec3.temp0, self.min.x, self.min.y, self.min.z), matrix);
     expandByVec(into, Vec3.temp0);
