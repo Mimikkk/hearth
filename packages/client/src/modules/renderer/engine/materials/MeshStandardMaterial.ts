@@ -174,7 +174,7 @@ export class MeshStandardMaterial extends Material {
     this.alphaMap = source.alphaMap;
 
     this.envMap = source.envMap;
-    Euler.fill_(this.envMapRotation, source.envMapRotation);
+    Euler.clone_(this.envMapRotation, source.envMapRotation);
     this.envMapIntensity = source.envMapIntensity;
 
     this.wireframe = source.wireframe;

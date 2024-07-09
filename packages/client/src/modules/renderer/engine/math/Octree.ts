@@ -190,7 +190,7 @@ export class Octree {
     const intersectPoint = Vec3.lerp_(capsule.start, capsule.end, delta, _v1);
 
     if (triangle.containsPoint(intersectPoint)) {
-      return { normal: _plane.normal.clone(), point: Vec3.copy(_v1), depth: Math.abs(Math.min(d1, d2)) };
+      return { normal: _plane.normal.clone(), point: Vec3.clone(_v1), depth: Math.abs(Math.min(d1, d2)) };
     }
 
     const r2 = capsule.radius * capsule.radius;
@@ -315,7 +315,7 @@ export class Octree {
   }
 
   capsuleIntersect(capsule: Capsule): undefined | Intersection {
-    Capsule.copy_(capsule, _capsule);
+    Capsule.clone_(capsule, _capsule);
 
     const triangles: Triangle[] = [];
     let result,

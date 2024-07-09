@@ -318,7 +318,7 @@ export class FlyControls {
       ) {
         //@ts-expect-error
         scope.eventDispatcher.dispatch(_changeEvent, this);
-        Quaternion.fill_(scope.object.quaternion, lastQuaternion);
+        Quaternion.clone_(scope.object.quaternion, lastQuaternion);
         lastPosition.copy(scope.object.position);
       }
     };

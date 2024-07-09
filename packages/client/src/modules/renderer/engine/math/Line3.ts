@@ -15,8 +15,8 @@ export class Line3 {
   ) {}
 
   set(start: Vec3, end: Vec3): Line3 {
-    Vec3.fill_(start, this.start);
-    Vec3.fill_(end, this.end);
+    Vec3.clone_(start, this.start);
+    Vec3.clone_(end, this.end);
 
     return this;
   }

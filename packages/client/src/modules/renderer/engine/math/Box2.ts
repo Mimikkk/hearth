@@ -21,18 +21,23 @@ export namespace Box2 {
 
   export const isEmpty = (self: Const<Box2>): boolean => self.max.x < self.min.x || self.max.y < self.min.y;
 
-  export const copy = ({ min, max }: Const<Box2>): Box2 => create(min.x, min.y, max.x, max.y);
-  export const copy_ = ({ min, max }: Const<Box2>, into: Box2): Box2 => fill(into, min.x, min.y, max.x, max.y);
+  export const fill = (into: Box2, minX: number, minY: number, maxX: number, maxY: number): Box2 => {
+    into.min.x = minX;
+    into.min.y = minY;
+    into.max.x = maxX;
+    into.max.y = maxY;
 
-  export const fill = (self: Box2, minX: number, minY: number, maxX: number, maxY: number): Box2 => {
-    self.min.x = minX;
-    self.min.y = minY;
-    self.max.x = maxX;
-    self.max.y = maxY;
-
-    return self;
+    return into;
   };
-  export const fill_ = (self: Box2, from: Const<Box2>): Box2 => copy_(from, self);
+  export const fill_ = (into: Box2, { min, max }: Const<Box2>): Box2 => fill(into, min.x, min.y, max.x, max.y);
+
+  export const copy = (from: Const<Box2>): Box2 => copy_(from, empty());
+  export const copy_ = ({ min, max }: Const<Box2>, into: Box2): Box2 => {
+    into.min = min;
+    into.max = max;
+
+    return into;
+  };
 
   export const clone = (from: Const<Box2>): Box2 => clone_(from, empty());
   export const clone_ = (from: Const<Box2>, into: Box2): Box2 => fill_(into, from);
@@ -61,12 +66,12 @@ export namespace Box2 {
 
     return self;
   };
-  export const expandedByVec = (self: Const<Box2>, vec: Const<Vec2>): Box2 => expandByVec(copy(self), vec);
+  export const expandedByVec = (self: Const<Box2>, vec: Const<Vec2>): Box2 => expandByVec(clone(self), vec);
   export const expandByVecs = (self: Box2, vecs: Const<Vec2>[]): Box2 => {
     for (let i = 0, it = vecs.length; i < it; ++i) expandByVec(self, vecs[i]);
     return self;
   };
-  export const expandedByVecs = (self: Const<Box2>, vecs: Const<Vec2>[]): Box2 => expandByVecs(copy(self), vecs);
+  export const expandedByVecs = (self: Const<Box2>, vecs: Const<Vec2>[]): Box2 => expandByVecs(clone(self), vecs);
   export const expandByScalar = (self: Box2, scalar: number): Box2 => {
     self.min.x -= scalar;
     self.min.y -= scalar;
@@ -75,7 +80,7 @@ export namespace Box2 {
 
     return self;
   };
-  export const expandedByScalar = (self: Const<Box2>, scalar: number): Box2 => expandByScalar(copy(self), scalar);
+  export const expandedByScalar = (self: Const<Box2>, scalar: number): Box2 => expandByScalar(clone(self), scalar);
 
   export const fromVecs = (vecs: Const<Vec2>[]): Box2 => expandByVecs(empty(), vecs);
   export const fromCenterAndSize = (center: Const<Vec2>, size: Const<Vec2>): Box2 =>
@@ -113,7 +118,7 @@ export namespace Box2 {
 
     return self;
   };
-  export const intersected = (self: Const<Box2>, box: Const<Box2>): Box2 => intersect(copy(self), box);
+  export const intersected = (self: Const<Box2>, box: Const<Box2>): Box2 => intersect(clone(self), box);
 
   export const union = (self: Box2, box: Const<Box2>): Box2 => {
     if (box.min.x < self.min.x) self.min.x = box.min.x;
@@ -131,12 +136,12 @@ export namespace Box2 {
 
     return into;
   };
-  export const united = (self: Const<Box2>, box: Const<Box2>): Box2 => union(copy(self), box);
+  export const united = (self: Const<Box2>, box: Const<Box2>): Box2 => union(clone(self), box);
 
   export const translate = (self: Box2, vec: Const<Vec2>): Box2 => translate_(self, vec, self);
   export const translate_ = (self: Const<Box2>, { x, y }: Const<Vec2>, into: Box2): Box2 =>
     fill(into, self.min.x + x, self.min.y + y, self.max.x + x, self.max.y + y);
-  export const translated = (self: Const<Box2>, vec: Const<Vec2>): Box2 => translate(copy(self), vec);
+  export const translated = (self: Const<Box2>, vec: Const<Vec2>): Box2 => translate(clone(self), vec);
 
   export const distanceSqTo = (self: Const<Box2>, vec: Const<Vec2>): number => {
     const x = clamp(vec.x, self.min.x, self.max.x) - vec.x;
