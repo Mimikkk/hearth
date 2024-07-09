@@ -14,19 +14,19 @@ describe('Math - Box3', () => {
     expect(a.max.y).toBe(5);
     expect(a.max.z).toBe(6);
 
-    const cloned = Box3_.copy(a);
-    expect(cloned.min).toBe(a.min);
-    expect(cloned.max).toBe(a.max);
+    const copied = Box3_.copy(a);
+    expect(copied.min).toBe(a.min);
+    expect(copied.max).toBe(a.max);
 
-    const copied = Box3_.clone(a);
-    expect(copied.min).not.toBe(a.min);
-    expect(copied.max).not.toBe(a.max);
-    expect(copied.min.x).toBe(a.min.x);
-    expect(copied.min.y).toBe(a.min.y);
-    expect(copied.min.z).toBe(a.min.z);
-    expect(copied.max.x).toBe(a.max.x);
-    expect(copied.max.y).toBe(a.max.y);
-    expect(copied.max.z).toBe(a.max.z);
+    const cloned = Box3_.clone(a);
+    expect(cloned.min).not.toBe(a.min);
+    expect(cloned.max).not.toBe(a.max);
+    expect(cloned.min.x).toBe(a.min.x);
+    expect(cloned.min.y).toBe(a.min.y);
+    expect(cloned.min.z).toBe(a.min.z);
+    expect(cloned.max.x).toBe(a.max.x);
+    expect(cloned.max.y).toBe(a.max.y);
+    expect(cloned.max.z).toBe(a.max.z);
 
     const empty = Box3_.empty();
     expect(empty.min.x).toBe(Infinity);
