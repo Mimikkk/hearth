@@ -24,7 +24,7 @@ export namespace Capsule {
   });
   export const empty = (): Capsule => create(0, 0, 0, 0, 0, 0, 0);
 
-  export const fill = (
+  export const set = (
     into: Capsule,
     startX: number,
     startY: number,
@@ -45,7 +45,7 @@ export namespace Capsule {
     return into;
   };
   export const fill_ = (into: Capsule, { start, end, radius }: Const<Capsule>): Capsule =>
-    fill(into, start.x, start.y, start.z, end.x, end.y, end.z, radius);
+    set(into, start.x, start.y, start.z, end.x, end.y, end.z, radius);
 
   export const copy = (self: Const<Capsule>): Capsule => copy_(self, empty());
   export const copy_ = ({ start, end, radius }: Const<Capsule>, into: Capsule): Capsule => {

@@ -1,43 +1,31 @@
-import type { Vector3 } from './Vector3.js';
+import type { Vec3 } from './Vector3.js';
+import type { Const } from '@modules/renderer/engine/math/types.js';
 
-export class Cylindrical {
-  declare ['constructor']: typeof Cylindrical;
+export interface Cylindrical {
+  radius: number;
+  theta: number;
+  y: number;
+}
 
-  constructor(
-    public radius: number = 1,
-    public theta: number = 0,
-    public y: number = 0,
-  ) {}
+export namespace Cylindrical {
+  export const create = (radius: number, theta: number, y: number): Cylindrical => ({ radius, theta, y });
+  export const empty = (): Cylindrical => create(0, 0, 0);
 
-  set(radius: number, theta: number, y: number): this {
-    this.radius = radius;
-    this.theta = theta;
-    this.y = y;
+  export const set = (self: Cylindrical, radius: number, theta: number, y: number): Cylindrical => {
+    self.radius = radius;
+    self.theta = theta;
+    self.y = y;
 
-    return this;
-  }
+    return self;
+  };
+  export const fill_ = (self: Cylindrical, { radius, theta, y }: Const<Cylindrical>): Cylindrical =>
+    set(self, radius, theta, y);
 
-  copy(other: Cylindrical): this {
-    this.radius = other.radius;
-    this.theta = other.theta;
-    this.y = other.y;
+  export const clone = (from: Const<Cylindrical>): Cylindrical => clone_(from, empty());
+  export const clone_ = (from: Const<Cylindrical>, into: Cylindrical): Cylindrical => fill_(into, from);
 
-    return this;
-  }
-
-  setFromVector3(v: Vector3): this {
-    return this.setFromCartesianCoords(v.x, v.y, v.z);
-  }
-
-  setFromCartesianCoords(x: number, y: number, z: number): this {
-    this.radius = Math.sqrt(x * x + z * z);
-    this.theta = Math.atan2(x, z);
-    this.y = y;
-
-    return this;
-  }
-
-  clone(): Cylindrical {
-    return new this.constructor().copy(this);
-  }
+  export const fromVec = (from: Const<Vec3>): Cylindrical => fromVec_(from, empty());
+  export const fromVec_ = ({ x, y, z }: Const<Vec3>, into: Cylindrical): Cylindrical =>
+    set(into, Math.sqrt(x * x + z * z), Math.atan2(x, z), y);
+  export const fillVec = (self: Cylindrical, from: Const<Vec3>): Cylindrical => fromVec_(from, self);
 }

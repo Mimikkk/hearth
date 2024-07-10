@@ -301,7 +301,7 @@ export class FlyControls {
       scope.object.translateY(scope.moveVector.y * moveMult);
       scope.object.translateZ(scope.moveVector.z * moveMult);
 
-      Quaternion.fill(
+      Quaternion.set(
         scope.tmpQuaternion,
         scope.rotationVector.x * rotMult,
         scope.rotationVector.y * rotMult,

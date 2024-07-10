@@ -1116,7 +1116,7 @@ export class TransformControlsGizmo extends Object3D {
           handle.visible = !!this.axis;
 
           if (this.axis === 'X') {
-            Euler.fill(_tempEuler, 0, 0, 0, _tempEuler.order);
+            Euler.set(_tempEuler, 0, 0, 0, _tempEuler.order);
             Quaternion.fillEuler(_tempQuaternion, _tempEuler);
 
             Quaternion.clone_(quaternion, handle.quaternion);
@@ -1127,7 +1127,7 @@ export class TransformControlsGizmo extends Object3D {
           }
 
           if (this.axis === 'Y') {
-            Euler.fill(_tempEuler, 0, 0, Math.PI / 2, _tempEuler.order);
+            Euler.set(_tempEuler, 0, 0, Math.PI / 2, _tempEuler.order);
             Quaternion.fillEuler(_tempQuaternion, _tempEuler);
 
             Quaternion.clone_(quaternion, handle.quaternion);
@@ -1139,7 +1139,7 @@ export class TransformControlsGizmo extends Object3D {
           }
 
           if (this.axis === 'Z') {
-            Euler.fill(_tempEuler, 0, Math.PI / 2, 0, _tempEuler.order);
+            Euler.set(_tempEuler, 0, Math.PI / 2, 0, _tempEuler.order);
             Quaternion.fillEuler(_tempQuaternion, _tempEuler);
 
             Quaternion.clone_(quaternion, handle.quaternion);
@@ -1151,7 +1151,7 @@ export class TransformControlsGizmo extends Object3D {
           }
 
           if (this.axis === 'XYZE') {
-            Euler.fill(_tempEuler, 0, Math.PI / 2, 0, _tempEuler.order);
+            Euler.set(_tempEuler, 0, Math.PI / 2, 0, _tempEuler.order);
             Quaternion.fillEuler(_tempQuaternion, _tempEuler);
 
             //@ts-expect-error

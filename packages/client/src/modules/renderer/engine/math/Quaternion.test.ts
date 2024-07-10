@@ -115,7 +115,7 @@ describe('Math - Quaternion', () => {
     expect(copy).toEqual(identity);
 
     const fill = Quaternion.create(1, 2, 3, 4);
-    expect(Quaternion.fill(fill, 5, 6, 7, 8)).toBe(fill);
+    expect(Quaternion.set(fill, 5, 6, 7, 8)).toBe(fill);
     expect(fill).toEqual({ x: 5, y: 6, z: 7, w: 8 });
 
     expect(Quaternion.clone_(fill, copy)).toBe(copy);
@@ -181,9 +181,9 @@ describe('Math - Quaternion', () => {
     Quaternion.fillRotation(a, m);
     expectQuaternionWithin(a, expected);
 
-    Quaternion.fill(b, -1, -2, 1, -1);
+    Quaternion.set(b, -1, -2, 1, -1);
     m.makeRotationFromQuaternion(b);
-    Quaternion.fill(expected, 1, 2, -1, 1);
+    Quaternion.set(expected, 1, 2, -1, 1);
 
     Quaternion.fillRotation(a, m);
     expectQuaternionWithin(a, expected);
@@ -239,7 +239,7 @@ describe('Math - Quaternion', () => {
     const a = Quaternion.create(0, 1, 0, 1);
     expect(Quaternion.invert(a)).toBe(a);
     expectQuaternionWithin(a, { x: -0, y: -0.5, z: -0, w: 0.5 });
-    expect(Quaternion.fill(a, 4, 0, 0, 4)).toBe(a);
+    expect(Quaternion.set(a, 4, 0, 0, 4)).toBe(a);
     expect(Quaternion.invert(a)).toBe(a);
     expectQuaternionWithin(a, { x: -0.125, y: -0, z: -0, w: 0.125 });
   });
@@ -251,8 +251,8 @@ describe('Math - Quaternion', () => {
     expect(Quaternion.dot(a, b)).toBe(1);
     expect(Quaternion.dot(b, a)).toBe(1);
 
-    expect(Quaternion.fill(a, 1, 2, 3, 1)).toBe(a);
-    expect(Quaternion.fill(b, 3, 2, 1, 1)).toBe(b);
+    expect(Quaternion.set(a, 1, 2, 3, 1)).toBe(a);
+    expect(Quaternion.set(b, 3, 2, 1, 1)).toBe(b);
 
     expect(Quaternion.dot(a, b)).toBe(11);
     expect(Quaternion.dot(b, a)).toBe(11);
@@ -277,8 +277,8 @@ describe('Math - Quaternion', () => {
     expect(Quaternion.multiply(a, b)).toBe(a);
     expect(a).toEqual({ x: 10, y: -8, z: 10, w: 24 });
 
-    expect(Quaternion.fill(a, 4, -3, -8, 5)).toBe(a);
-    expect(Quaternion.fill(b, 2, 3, 4, 5)).toBe(b);
+    expect(Quaternion.set(a, 4, -3, -8, 5)).toBe(a);
+    expect(Quaternion.set(b, 2, 3, 4, 5)).toBe(b);
 
     expect(Quaternion.multiply(a, b)).toBe(a);
     expect(a).toEqual({ x: 42, y: -32, z: -2, w: 58 });
@@ -291,8 +291,8 @@ describe('Math - Quaternion', () => {
     expect(Quaternion.premultiply(a, b)).toBe(a);
     expect(a).toEqual({ x: 10, y: -8, z: 10, w: 24 });
 
-    expect(Quaternion.fill(a, 2, 3, 4, 5)).toBe(a);
-    expect(Quaternion.fill(b, 4, -3, -8, 5)).toBe(b);
+    expect(Quaternion.set(a, 2, 3, 4, 5)).toBe(a);
+    expect(Quaternion.set(b, 4, -3, -8, 5)).toBe(b);
 
     expect(Quaternion.premultiply(a, b)).toBe(a);
     expect(a).toEqual({ x: 42, y: -32, z: -2, w: 58 });
@@ -308,8 +308,8 @@ describe('Math - Quaternion', () => {
     expect(Quaternion.slerp_(a, b, 1, c)).toBe(c);
     expect(c).toEqual(b);
 
-    expect(Quaternion.fill(a, 1, 0, 0, 0)).toBe(a);
-    expect(Quaternion.fill(b, 0, 0, 1, 0)).toBe(b);
+    expect(Quaternion.set(a, 1, 0, 0, 0)).toBe(a);
+    expect(Quaternion.set(b, 0, 0, 1, 0)).toBe(b);
 
     const Expected = Math.SQRT1_2;
     expect(Quaternion.slerp_(a, b, 0.5, c)).toBe(c);
@@ -318,8 +318,8 @@ describe('Math - Quaternion', () => {
     expect(c.z).within(Expected - Number.EPSILON, Expected + Number.EPSILON);
     expect(c.w).within(0, 0);
 
-    expect(Quaternion.fill(a, 0, Expected, 0, Expected)).toBe(a);
-    expect(Quaternion.fill(b, 0, -Expected, 0, Expected)).toBe(b);
+    expect(Quaternion.set(a, 0, Expected, 0, Expected)).toBe(a);
+    expect(Quaternion.set(b, 0, -Expected, 0, Expected)).toBe(b);
 
     expect(Quaternion.slerp_(a, b, 0.5, c)).toBe(c);
     expect(c.x).within(0, 0);

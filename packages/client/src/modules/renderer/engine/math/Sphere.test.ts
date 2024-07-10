@@ -103,7 +103,7 @@ describe('Math - Sphere', () => {
     expect(!Sphere_.containsVec(sphere, vec3(0, 0, 0))).toBe(true);
     expect(Sphere_.containsVec(sphere, vec3(1, 1, 1))).toBe(true);
 
-    expect(Sphere_.fill(sphere, 0, 0, 0, 0)).toBe(sphere);
+    expect(Sphere_.set(sphere, 0, 0, 0, 0)).toBe(sphere);
     expect(Sphere_.containsVec(sphere, sphere.center)).toBe(true);
   });
 
@@ -154,11 +154,11 @@ describe('Math - Sphere', () => {
     const sphere = Sphere_.empty();
     const box = Box3_.empty();
 
-    expect(Sphere_.fill(sphere, 1, 1, 1, 1)).toBe(sphere);
+    expect(Sphere_.set(sphere, 1, 1, 1, 1)).toBe(sphere);
     expect(Sphere_.bbox_(sphere, box)).toBe(box);
     expect(box).toEqual(Box3_.create(0, 0, 0, 2, 2, 2));
 
-    expect(Sphere_.fill(sphere, 0, 0, 0, 0)).toBe(sphere);
+    expect(Sphere_.set(sphere, 0, 0, 0, 0)).toBe(sphere);
     expect(Sphere_.bbox_(sphere, box)).toBe(box);
     expect(box).toEqual(Box3_.create(0, 0, 0, 0, 0, 0));
 

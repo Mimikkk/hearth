@@ -174,7 +174,7 @@ export class CCDIKSolver {
           if (c > 1.0) c = 1.0;
 
           const c2 = math.sqrt(1 - c * c);
-          Quaternion.fill(link.quaternion, limitation.x * c2, limitation.y * c2, limitation.z * c2, c);
+          Quaternion.set(link.quaternion, limitation.x * c2, limitation.y * c2, limitation.z * c2, c);
         }
 
         if (rotationMin !== undefined) {

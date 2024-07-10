@@ -22,7 +22,7 @@ export namespace Euler {
   export const empty = (): Euler => create(0, 0, 0, 'XYZ');
   export type Order = 'XYZ' | 'YXZ' | 'ZXY' | 'ZYX' | 'YZX' | 'XZY';
 
-  export const fill = (self: Euler, x: number, y: number, z: number, order: Order): Euler => {
+  export const set = (self: Euler, x: number, y: number, z: number, order: Order): Euler => {
     self.x = x;
     self.y = y;
     self.z = z;
@@ -30,13 +30,13 @@ export namespace Euler {
 
     return self;
   };
-  export const fill_ = (into: Euler, { order, x, y, z }: Euler): Euler => fill(into, x, y, z, order);
+  export const fill_ = (into: Euler, { order, x, y, z }: Euler): Euler => set(into, x, y, z, order);
 
   export const clone = (from: Euler): Euler => clone_(from, empty());
   export const clone_ = (from: Euler, into: Euler): Euler => fill_(into, from);
 
   export const fromVec = ({ x, y, z }: Const<Vec3>, order: Order = 'XYZ'): Euler => create(x, y, z, order);
-  export const fromVec_ = ({ x, y, z }: Const<Vec3>, into: Euler): Euler => fill(into, x, y, z, into.order);
+  export const fromVec_ = ({ x, y, z }: Const<Vec3>, into: Euler): Euler => set(into, x, y, z, into.order);
   export const fillVec = (self: Euler, vec: Const<Vec3>): Euler => {
     self.x = vec.x;
     self.y = vec.y;
@@ -133,7 +133,7 @@ export namespace Euler {
 
   export const fromArray = (array: Const<(number | string)[]>, offset: number) => fromArray_(array, offset, empty());
   export const fromArray_ = (array: Const<(number | string)[]>, offset: number, into: Euler) =>
-    fill(
+    set(
       into,
       array[offset] as number,
       array[offset + 1] as number,
