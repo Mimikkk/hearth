@@ -2,7 +2,7 @@ import { Vec3, Vector3 } from './Vector3.js';
 import type { BufferAttribute } from '../core/BufferAttribute.js';
 import type { Object3D } from '../core/Object3D.js';
 import type { Triangle } from './Triangle.js';
-import type { Plane } from './Plane.js';
+import type { Plane, Plane_ } from './Plane.js';
 import { Sphere, Sphere_ } from './Sphere.js';
 import type { Matrix4 } from './Matrix4.js';
 import { Mesh } from '@modules/renderer/engine/objects/Mesh.js';
@@ -738,7 +738,7 @@ export namespace Box3_ {
 
     return distance <= sphere.radius * sphere.radius;
   };
-  export const intersectsPlane = (self: Const<Box3_>, plane: Const<Plane>): boolean => {
+  export const intersectsPlane = (self: Const<Box3_>, plane: Const<Plane_>): boolean => {
     let min: number;
     let max: number;
 
