@@ -16,7 +16,7 @@ import {
 import { LineSegmentsGeometry } from './LineSegmentsGeometry.js';
 import { LineMaterial } from './LineMaterial.js';
 import { Intersection } from '@modules/renderer/engine/core/Raycaster.js';
-import { Line3_ } from '@modules/renderer/engine/math/Line3.js';
+import { Line3 } from '@modules/renderer/engine/math/Line3.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vector3.js';
 
 const _start = new Vector3();
@@ -28,7 +28,7 @@ const _end4 = new Vector4();
 const _ssOrigin = new Vector4();
 const _ssOrigin3 = new Vector3();
 const _mvMatrix = new Matrix4();
-const _line = Line3_.empty();
+const _line = Line3.empty();
 const _closestPoint = new Vector3();
 
 const _box = new Box3();
@@ -67,7 +67,7 @@ function raycastWorldUnits(lineSegments: LineSegments, intersects: Intersection[
   for (let i = 0, l = segmentCount; i < l; i++) {
     Vec3.fromAttribute_(instanceStart, i, _line.start);
     Vec3.fromAttribute_(instanceEnd, i, _line.end);
-    Line3_.applyMat4(_line, matrixWorld);
+    Line3.applyMat4(_line, matrixWorld);
 
     const pointOnLine = new Vector3();
     const point = new Vector3();
