@@ -3,6 +3,7 @@ import {
   Camera,
   InstancedInterleavedBuffer,
   InterleavedBufferAttribute,
+  Line3,
   LineSegments,
   MathUtils,
   Matrix4,
@@ -16,8 +17,6 @@ import {
 import { LineSegmentsGeometry } from './LineSegmentsGeometry.js';
 import { LineMaterial } from './LineMaterial.js';
 import { Intersection } from '@modules/renderer/engine/core/Raycaster.js';
-import { Line3_ } from '@modules/renderer/engine/math/Line3.js';
-import { Vec3 } from '@modules/renderer/engine/math/Vector3.js';
 
 const _start = new Vector3();
 const _end = new Vector3();
@@ -28,7 +27,7 @@ const _end4 = new Vector4();
 const _ssOrigin = new Vector4();
 const _ssOrigin3 = new Vector3();
 const _mvMatrix = new Matrix4();
-const _line = Line3_.empty();
+const _line = new Line3();
 const _closestPoint = new Vector3();
 
 const _box = new Box3();
@@ -65,9 +64,10 @@ function raycastWorldUnits(lineSegments: LineSegments, intersects: Intersection[
   const segmentCount = Math.min(geometry.instanceCount, instanceStart.count);
 
   for (let i = 0, l = segmentCount; i < l; i++) {
-    Vec3.fromAttribute_(instanceStart, i, _line.start);
-    Vec3.fromAttribute_(instanceEnd, i, _line.end);
-    Line3_.applyMat4(_line, matrixWorld);
+    _line.start.fromBufferAttribute(instanceStart, i);
+    _line.end.fromBufferAttribute(instanceEnd, i);
+
+    _line.applyMatrix4(matrixWorld);
 
     const pointOnLine = new Vector3();
     const point = new Vector3();
