@@ -2,6 +2,10 @@
 
 import { describe, expect, it } from 'vitest';
 import { Line3_ } from './Line3.ts';
+import { Vec3, Vector3 } from '@modules/renderer/engine/math/Vector3.js';
+import { clamp } from './MathUtils.ts';
+import { Vec4, Vector4 } from '@modules/renderer/engine/math/Vector4.js';
+import { Matrix4 } from '@modules/renderer/engine/math/Matrix4.js';
 
 describe('Math - Line3', () => {
   it.only('Instancing', () => {
@@ -52,78 +56,68 @@ describe('Math - Line3', () => {
     expect(distanceSq).toBe(27);
   });
 
-  it('at', () => {
-    const a = new Line3(one3.clone(), new Vector3(1, 1, 2));
-    const point = new Vector3();
+  it.only('at', () => {
+    const line = Line3_.create(0, 0, 1, 0, 0, 2);
+    const point = Vec3.empty();
 
-    a.at(-1, point);
-    assert.ok(point.distanceTo(new Vector3(1, 1, 0)) < 0.0001, 'Passed!');
-    a.at(0, point);
-    assert.ok(point.distanceTo(one3.clone()) < 0.0001, 'Passed!');
-    a.at(1, point);
-    assert.ok(point.distanceTo(new Vector3(1, 1, 2)) < 0.0001, 'Passed!');
-    a.at(2, point);
-    assert.ok(point.distanceTo(new Vector3(1, 1, 3)) < 0.0001, 'Passed!');
+    Line3_.at_(line, -1, point);
+    expect(Vec3.distanceTo(point, Vec3.create(0, 0, 1))).toBe(0);
+
+    Line3_.at_(line, 0, point);
+    expect(Vec3.distanceTo(point, Vec3.create(0, 0, 1))).toBe(0);
+    Line3_.at_(line, 0.5, point);
+    expect(Vec3.distanceTo(point, Vec3.create(0, 0, 1.5))).toBe(0);
+    Line3_.at_(line, 1, point);
+    expect(Vec3.distanceTo(point, Vec3.create(0, 0, 2))).toBe(0);
+
+    Line3_.at_(line, 2, point);
+    expect(Vec3.distanceTo(point, Vec3.create(0, 0, 2))).toBe(0);
   });
 
-  it('closestAt/closestTo/at', () => {
-    const a = new Line3(one3.clone(), new Vector3(1, 1, 2));
-    const point = new Vector3();
+  it.only('closestAt/closestTo/at', () => {
+    const line = Line3_.create(0, 0, 0, 0, 0, 1);
+    const point = Vec3.empty();
 
-    // nearby the ray
-    assert.ok(a.closestPointToPointParameter(zero3.clone(), true) == 0, 'Passed!');
-    a.closestPointToPoint(zero3.clone(), true, point);
-    assert.ok(point.distanceTo(new Vector3(1, 1, 1)) < 0.0001, 'Passed!');
+    for (let i = -1; i <= 2; i += 0.05) {
+      let step = clamp(i, 0, 1);
 
-    // nearby the ray
-    assert.ok(a.closestPointToPointParameter(zero3.clone(), false) == -1, 'Passed!');
-    a.closestPointToPoint(zero3.clone(), false, point);
-    assert.ok(point.distanceTo(new Vector3(1, 1, 0)) < 0.0001, 'Passed!');
+      Line3_.at_(line, i, point);
 
-    // nearby the ray
-    assert.ok(a.closestPointToPointParameter(new Vector3(1, 1, 5), true) == 1, 'Passed!');
-    a.closestPointToPoint(new Vector3(1, 1, 5), true, point);
-    assert.ok(point.distanceTo(new Vector3(1, 1, 2)) < 0.0001, 'Passed!');
-
-    // exactly on the ray
-    assert.ok(a.closestPointToPointParameter(one3.clone(), true) == 0, 'Passed!');
-    a.closestPointToPoint(one3.clone(), true, point);
-    assert.ok(point.distanceTo(one3.clone()) < 0.0001, 'Passed!');
+      expect(Line3_.closestAt(line, point)).toBeCloseTo(step, 5);
+      expect(Line3_.closestTo(line, point)).toEqual(Vec3.create(0, 0, step));
+    }
   });
 
-  it('applyMat4', () => {
-    const a = new Line3(zero3.clone(), two3.clone());
-    const b = new Vector4(two3.x, two3.y, two3.z, 1);
-    const m = new Matrix4().makeTranslation(x, y, z);
-    const v = new Vector3(x, y, z);
+  it.only('applyMat4', () => {
+    const line = Line3_.create(0, 0, 0, 2, 2, 2);
+    const vec4 = new Vector4(2, 2, 2, 1);
+    const mat4 = new Matrix4().makeTranslation(2, 3, 4);
+    const vec3 = new Vector3(2, 3, 4);
 
-    a.applyMatrix4(m);
-    assert.ok(a.start.equals(v), 'Translation: check start');
-    assert.ok(a.end.equals(new Vector3(2 + x, 2 + y, 2 + z)), 'Translation: check start');
+    Line3_.applyMat4(line, mat4);
+    expect(line).toEqual({ start: { x: 2, y: 3, z: 4 }, end: { x: 4, y: 5, z: 6 } });
 
-    // reset starting conditions
-    a.set(zero3.clone(), two3.clone());
-    m.makeRotationX(Math.PI);
+    Line3_.set(line, 0, 0, 0, 2, 2, 2);
+    mat4.makeRotationX(Math.PI);
 
-    a.applyMatrix4(m);
-    b.applyMatrix4(m);
+    Line3_.applyMat4(line, mat4);
+    Vec4.applyMat4(vec4, mat4);
 
-    assert.ok(a.start.equals(zero3), 'Rotation: check start');
-    assert.numEqual(a.end.x, b.x / b.w, 'Rotation: check end.x');
-    assert.numEqual(a.end.y, b.y / b.w, 'Rotation: check end.y');
-    assert.numEqual(a.end.z, b.z / b.w, 'Rotation: check end.z');
+    expect(line).toEqual({
+      start: { x: 0, y: 0, z: 0 },
+      end: { x: vec4.x / vec4.w, y: vec4.y / vec4.w, z: vec4.z / vec4.w },
+    });
 
-    // reset starting conditions
-    a.set(zero3.clone(), two3.clone());
-    b.set(two3.x, two3.y, two3.z, 1);
-    m.setPosition(v);
+    Line3_.set(line, 0, 0, 0, 2, 2, 2);
+    vec4.set(2, 2, 2, 1);
+    mat4.setPosition(vec3);
 
-    a.applyMatrix4(m);
-    b.applyMatrix4(m);
+    Line3_.applyMat4(line, mat4);
+    Vec3.applyMat4(vec4, mat4);
 
-    assert.ok(a.start.equals(v), 'Both: check start');
-    assert.numEqual(a.end.x, b.x / b.w, 'Both: check end.x');
-    assert.numEqual(a.end.y, b.y / b.w, 'Both: check end.y');
-    assert.numEqual(a.end.z, b.z / b.w, 'Both: check end.z');
+    expect(line).toEqual({
+      start: { x: 2, y: 3, z: 4 },
+      end: { x: vec4.x / vec4.w, y: vec4.y / vec4.w, z: vec4.z / vec4.w },
+    });
   });
 });

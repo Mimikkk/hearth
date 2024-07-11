@@ -3,6 +3,7 @@ import type { Matrix4 } from './Matrix4.js';
 import type { Quaternion } from './Quaternion.js';
 import type { Matrix3 } from './Matrix3.js';
 import type { BufferAttribute } from '../core/BufferAttribute.js';
+import { Const } from '@modules/renderer/engine/math/types.js';
 
 export interface IVector4 {
   x: number;
@@ -541,4 +542,26 @@ export interface Vec4 {
 export namespace Vec4 {
   export const create = (x: number, y: number, z: number, w: number): Vec4 => ({ x, y, z, w });
   export const empty = (): Vec4 => create(0, 0, 0, 0);
+
+  export const set = (self: Vec4, x: number, y: number, z: number, w: number): Vec4 => {
+    self.x = x;
+    self.y = y;
+    self.z = z;
+    self.w = w;
+    return self;
+  };
+  export const fill_ = (self: Vec4, { x, y, z, w }: Const<Vec4>): Vec4 => set(self, x, y, z, w);
+
+  export const clone = (from: Const<Vec4>): Vec4 => clone_(from, empty());
+  export const clone_ = (from: Const<Vec4>, into: Vec4): Vec4 => fill_(into, from);
+
+  export const applyMat4 = (self: Vec4, matrix: Const<Matrix4>): Vec4 => applyMat4_(self, matrix, self);
+  export const applyMat4_ = ({ x, y, z, w }: Vec4, { elements: e }: Const<Matrix4>, into: Vec4): Vec4 =>
+    set(
+      into,
+      e[0] * x + e[4] * y + e[8] * z + e[12] * w,
+      e[1] * x + e[5] * y + e[9] * z + e[13] * w,
+      e[2] * x + e[6] * y + e[10] * z + e[14] * w,
+      e[3] * x + e[7] * y + e[11] * z + e[15] * w,
+    );
 }

@@ -14,7 +14,9 @@ export class Line3 {
   constructor(
     public start: Vector3 = new Vector3(),
     public end: Vector3 = new Vector3(),
-  ) {}
+  ) {
+    console.log('epic');
+  }
 
   set(start: Vec3, end: Vec3): Line3 {
     Vec3.clone_(start, this.start);
@@ -147,8 +149,8 @@ export namespace Line3_ {
   export const at = (self: Line3_, step: number): Vec3 => at_(self, step, Vec3.empty());
   export const at_ = (from: Const<Line3_>, step: number, into: Vec3): Vec3 => {
     delta_(from, into);
-    Vec3.mulScalar(into, step);
-    Vec3.add_(from.start, into, into);
+    Vec3.mulScalar(into, clamp(step, 0, 1));
+    Vec3.add(into, from.start);
 
     return into;
   };
@@ -163,11 +165,7 @@ export namespace Line3_ {
   export const delta = (from: Const<Line3_>): Vec3 => delta_(from, Vec3.empty());
   export const delta_ = ({ end, start }: Const<Line3_>, into: Vec3): Vec3 => Vec3.sub_(end, start, into);
 
-  export const applyMat4 = (self: Line3_, matrix: Const<Matrix4>): Line3_ => {
-    Vec3.applyMat4(self.start, matrix);
-    Vec3.applyMat4(self.end, matrix);
-    return self;
-  };
+  export const applyMat4 = (self: Line3_, matrix: Const<Matrix4>): Line3_ => applyMat4_(self, matrix, self);
   export const applyMat4_ = (from: Const<Line3_>, matrix: Const<Matrix4>, into: Line3_): Line3_ => {
     Vec3.applyMat4_(from.start, matrix, into.start);
     Vec3.applyMat4_(from.end, matrix, into.end);
