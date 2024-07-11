@@ -70,17 +70,12 @@ export class Ray {
     return new Vector3().copy(this.origin).addScaledVector(this.direction, directionDistance).distanceToSquared(point);
   }
 
-  distanceSqToSegment(
-    v0: Vector3,
-    v1: Vector3,
-    optionalPointOnRay?: Vector3,
-    optionalPointOnSegment?: Vector3,
-  ): number {
+  distanceSqToSegment(v0: Vec3, v1: Vec3, optionalPointOnRay?: Vector3, optionalPointOnSegment?: Vector3): number {
     const _segCenter = new Vector3().copy(v0).add(v1).multiplyScalar(0.5);
     const _segDir = new Vector3().copy(v1).sub(v0).normalize();
     const _diff = new Vector3().copy(this.origin).sub(_segCenter);
 
-    const segExtent = v0.distanceTo(v1) * 0.5;
+    const segExtent = Vec3.distanceTo(v0, v1) * 0.5;
     const a01 = -this.direction.dot(_segDir);
     const b0 = _diff.dot(this.direction);
     const b1 = -_diff.dot(_segDir);

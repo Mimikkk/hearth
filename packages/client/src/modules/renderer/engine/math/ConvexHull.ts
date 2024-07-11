@@ -9,7 +9,7 @@ const Visible = 0;
 const Deleted = 1;
 
 const _v1 = new Vector3();
-const _line3 = new Line3();
+const _line3 = Line3.empty();
 const _plane = new Plane();
 const _closestPoint = new Vector3();
 const _triangle = new Triangle();
@@ -406,13 +406,13 @@ export class ConvexHull {
     // 2. The next vertex 'v2' is the one farthest to the line formed by 'v0' and 'v1'
 
     maxDistance = 0;
-    _line3.set(v0.point, v1.point);
+    Line3.fillEnds(_line3, v0.point, v1.point);
 
     for (let i = 0, l = this.vertices.length; i < l; i++) {
       const vertex = vertices[i];
 
       if (vertex !== v0 && vertex !== v1) {
-        _line3.closestPointToPoint(vertex.point, true, _closestPoint);
+        Line3.closestTo_(_line3, vertex.point, _closestPoint);
 
         const distance = _closestPoint.distanceToSquared(vertex.point);
 

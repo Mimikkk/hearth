@@ -96,7 +96,7 @@ export class Vector3 implements IVector3 {
     return new this.constructor(this.x, this.y, this.z);
   }
 
-  copy(v: Vector3): this {
+  copy(v: Vec3): this {
     this.x = v.x;
     this.y = v.y;
     this.z = v.z;
@@ -104,7 +104,7 @@ export class Vector3 implements IVector3 {
     return this;
   }
 
-  add(v: Vector3): this {
+  add(v: Vec3): this {
     this.x += v.x;
     this.y += v.y;
     this.z += v.z;
@@ -120,7 +120,7 @@ export class Vector3 implements IVector3 {
     return this;
   }
 
-  addVectors(a: Vector3, b: Vector3): this {
+  addVectors(a: Vec3, b: Vec3): this {
     this.x = a.x + b.x;
     this.y = a.y + b.y;
     this.z = a.z + b.z;
@@ -128,7 +128,7 @@ export class Vector3 implements IVector3 {
     return this;
   }
 
-  addScaledVector(vector: Vector3, scale: number): this {
+  addScaledVector(vector: Vec3, scale: number): this {
     this.x += vector.x * scale;
     this.y += vector.y * scale;
     this.z += vector.z * scale;
@@ -136,7 +136,7 @@ export class Vector3 implements IVector3 {
     return this;
   }
 
-  sub(vector: Vector3): this {
+  sub(vector: Vec3): this {
     this.x -= vector.x;
     this.y -= vector.y;
     this.z -= vector.z;
@@ -152,7 +152,7 @@ export class Vector3 implements IVector3 {
     return this;
   }
 
-  subVectors(a: Vector3, b: Vector3): this {
+  subVectors(a: Vec3, b: Vec3): this {
     this.x = a.x - b.x;
     this.y = a.y - b.y;
     this.z = a.z - b.z;
@@ -160,7 +160,7 @@ export class Vector3 implements IVector3 {
     return this;
   }
 
-  multiply(vector: Vector3): this {
+  multiply(vector: Vec3): this {
     this.x *= vector.x;
     this.y *= vector.y;
     this.z *= vector.z;
@@ -176,7 +176,7 @@ export class Vector3 implements IVector3 {
     return this;
   }
 
-  multiplyVectors(a: Vector3, b: Vector3): this {
+  multiplyVectors(a: Vec3, b: Vec3): this {
     this.x = a.x * b.x;
     this.y = a.y * b.y;
     this.z = a.z * b.z;
@@ -188,7 +188,7 @@ export class Vector3 implements IVector3 {
     return this.applyQuaternion(Quaternion.fromEuler(euler));
   }
 
-  applyAxisAngle(axis: Vector3, angle: number): this {
+  applyAxisAngle(axis: Vec3, angle: number): this {
     return this.applyQuaternion(Quaternion.fromAxisAngle(axis, angle));
   }
 
@@ -270,7 +270,7 @@ export class Vector3 implements IVector3 {
     return this.normalize();
   }
 
-  divide(vector: Vector3): this {
+  divide(vector: Vec3): this {
     this.x /= vector.x;
     this.y /= vector.y;
     this.z /= vector.z;
@@ -282,7 +282,7 @@ export class Vector3 implements IVector3 {
     return this.multiplyScalar(1 / scalar);
   }
 
-  min(vector: Vector3): this {
+  min(vector: Vec3): this {
     this.x = Math.min(this.x, vector.x);
     this.y = Math.min(this.y, vector.y);
     this.z = Math.min(this.z, vector.z);
@@ -290,7 +290,7 @@ export class Vector3 implements IVector3 {
     return this;
   }
 
-  max(vector: Vector3): this {
+  max(vector: Vec3): this {
     this.x = Math.max(this.x, vector.x);
     this.y = Math.max(this.y, vector.y);
     this.z = Math.max(this.z, vector.z);
@@ -298,7 +298,7 @@ export class Vector3 implements IVector3 {
     return this;
   }
 
-  clamp(min: Vector3, max: Vector3): this {
+  clamp(min: Vec3, max: Vec3): this {
     this.x = Math.max(min.x, Math.min(max.x, this.x));
     this.y = Math.max(min.y, Math.min(max.y, this.y));
     this.z = Math.max(min.z, Math.min(max.z, this.z));
@@ -360,7 +360,7 @@ export class Vector3 implements IVector3 {
     return this;
   }
 
-  dot(vector: Vector3): number {
+  dot(vector: Vec3): number {
     return this.x * vector.x + this.y * vector.y + this.z * vector.z;
   }
 
@@ -384,7 +384,7 @@ export class Vector3 implements IVector3 {
     return this.normalize().multiplyScalar(length);
   }
 
-  lerp(vector: Vector3, step: number): this {
+  lerp(vector: Vec3, step: number): this {
     this.x += (vector.x - this.x) * step;
     this.y += (vector.y - this.y) * step;
     this.z += (vector.z - this.z) * step;
@@ -392,7 +392,7 @@ export class Vector3 implements IVector3 {
     return this;
   }
 
-  lerpVectors(from: Vector3, to: Vector3, step: number): this {
+  lerpVectors(from: Vec3, to: Vec3, step: number): this {
     this.x = from.x + (to.x - from.x) * step;
     this.y = from.y + (to.y - from.y) * step;
     this.z = from.z + (to.z - from.z) * step;
@@ -400,11 +400,11 @@ export class Vector3 implements IVector3 {
     return this;
   }
 
-  cross(vector: Vector3): this {
+  cross(vector: Vec3): this {
     return this.crossVectors(this, vector);
   }
 
-  crossVectors(a: Vector3, b: Vector3): this {
+  crossVectors(a: Vec3, b: Vec3): this {
     const ax = a.x,
       ay = a.y,
       az = a.z;

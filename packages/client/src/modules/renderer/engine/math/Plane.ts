@@ -1,7 +1,7 @@
 import { Matrix3 } from './Matrix3.js';
 import { Vec3, Vector3 } from './Vector3.js';
 import { Sphere, Sphere_ } from './Sphere.js';
-import type { Line3 } from './Line3.js';
+import { Line3 } from './Line3.js';
 import { Box3, Box3_ } from './Box3.js';
 import type { Matrix4 } from './Matrix4.js';
 import { Const } from '@modules/renderer/engine/math/types.js';
@@ -83,27 +83,29 @@ export class Plane {
   }
 
   intersectLine(line: Line3, target: Vector3): Vector3 | null {
-    const direction = line.delta(new Vector3());
+    const direction = Line3.delta(line);
 
-    const denominator = this.normal.dot(direction);
+    const denominator = Vec3.dot(this.normal, direction);
 
     if (denominator === 0) {
       // line is coplanar, return origin
       if (this.distanceToPoint(line.start) === 0) {
-        return target.copy(line.start);
+        Vec3.fill_(target, line.start);
+        return target;
       }
 
       // Unsure if this is the correct method to handle this case.
       return null;
     }
 
-    const t = -(line.start.dot(this.normal) + this.constant) / denominator;
+    const t = -(Vec3.dot(line.start, this.normal) + this.constant) / denominator;
 
     if (t < 0 || t > 1) {
       return null;
     }
 
-    return target.copy(line.start).addScaledVector(direction, t);
+    Vec3.fill_(target, line.start);
+    return target.addScaledVector(direction, t);
   }
 
   intersectsLine(line: Line3): boolean {
@@ -275,7 +277,7 @@ export namespace Plane_ {
   export const intersectLine = (self: Const<Plane_>, line: Const<Line3>): Vec3 | null =>
     intersectLine_(self, line, Vec3.empty());
   export const intersectLine_ = (self: Const<Plane_>, line: Const<Line3>, into: Vec3): Vec3 | null => {
-    const direction = line.delta(_vec1);
+    const direction = Line3.delta_(line, _vec1);
     const denominator = Vec3.dot(self.normal, direction);
 
     if (denominator === 0) {
