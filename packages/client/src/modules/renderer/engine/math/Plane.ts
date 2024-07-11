@@ -1,7 +1,7 @@
 import { Matrix3 } from './Matrix3.js';
 import { Vec3, Vector3 } from './Vector3.js';
-import { Sphere, Sphere_ } from './Sphere.js';
-import type { Line3 } from './Line3.js';
+import { Sphere_ } from './Sphere.js';
+import { Line3_ } from './Line3.js';
 import { Box3, Box3_ } from './Box3.js';
 import type { Matrix4 } from './Matrix4.js';
 import { Const } from '@modules/renderer/engine/math/types.js';
@@ -82,45 +82,12 @@ export class Plane {
     return target.copy(point).addScaledVector(this.normal, -this.distanceToPoint(point));
   }
 
-  intersectLine(line: Line3, target: Vector3): Vector3 | null {
-    const direction = line.delta(new Vector3());
-
-    const denominator = this.normal.dot(direction);
-
-    if (denominator === 0) {
-      // line is coplanar, return origin
-      if (this.distanceToPoint(line.start) === 0) {
-        return target.copy(line.start);
-      }
-
-      // Unsure if this is the correct method to handle this case.
-      return null;
-    }
-
-    const t = -(line.start.dot(this.normal) + this.constant) / denominator;
-
-    if (t < 0 || t > 1) {
-      return null;
-    }
-
-    return target.copy(line.start).addScaledVector(direction, t);
-  }
-
-  intersectsLine(line: Line3): boolean {
-    // Note: this tests if a line intersects the plane, not whether it (or its end-points) are coplanar with it.
-
-    const startSign = this.distanceToPoint(line.start);
-    const endSign = this.distanceToPoint(line.end);
-
-    return (startSign < 0 && endSign > 0) || (endSign < 0 && startSign > 0);
-  }
-
   intersectsBox(box: Box3): boolean {
     return box.intersectsPlane(this);
   }
 
-  intersectsSphere(sphere: Sphere): boolean {
-    return sphere.intersectsPlane(this);
+  intersectsSphere(sphere: Sphere_): boolean {
+    return Sphere_.intersectsPlane(sphere, this);
   }
 
   coplanarPoint(target: Vector3): Vector3 {
@@ -244,7 +211,8 @@ export namespace Plane_ {
 
     return fromNormalAndCoplanar_(into.normal, a, into);
   };
-
+  export const fillCoplanar = (self: Plane_, a: Const<Vec3>, b: Const<Vec3>, c: Const<Vec3>): Plane_ =>
+    fromCoplanar_(a, b, c, self);
   const _mat3 = new Matrix3();
   export const applyMat4 = (self: Plane_, mat: Const<Matrix4>): Plane_ => applyMat4_(self, mat, self);
   export const applyMat4_ = (from: Const<Plane_>, mat: Const<Matrix4>, into: Plane_): Plane_ => {
@@ -272,10 +240,10 @@ export namespace Plane_ {
   };
   export const projected = (self: Const<Plane_>, point: Const<Vec3>): Vec3 => project_(self, point, Vec3.empty());
 
-  export const intersectLine = (self: Const<Plane_>, line: Const<Line3>): Vec3 | null =>
+  export const intersectLine = (self: Const<Plane_>, line: Const<Line3_>): Vec3 | null =>
     intersectLine_(self, line, Vec3.empty());
-  export const intersectLine_ = (self: Const<Plane_>, line: Const<Line3>, into: Vec3): Vec3 | null => {
-    const direction = line.delta(_vec1);
+  export const intersectLine_ = (self: Const<Plane_>, line: Const<Line3_>, into: Vec3): Vec3 | null => {
+    const direction = Line3_.delta_(line, _vec1);
     const denominator = Vec3.dot(self.normal, direction);
 
     if (denominator === 0) {
@@ -291,7 +259,7 @@ export namespace Plane_ {
     return into;
   };
 
-  export const intersectsLine = (self: Const<Plane_>, line: Const<Line3>): boolean => {
+  export const intersectsLine = (self: Const<Plane_>, line: Const<Line3_>): boolean => {
     const startSign = distanceToVec(self, line.start) > 0 ? 1 : -1;
     const endSign = distanceToVec(self, line.end) > 0 ? 1 : -1;
 

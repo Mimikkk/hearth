@@ -1,6 +1,6 @@
 import { Vec3, Vector3 } from './Vector3.js';
 import { Box3 } from '@modules/renderer/engine/math/Box3.js';
-import { Plane } from '@modules/renderer/engine/math/Plane.js';
+import { Plane, Plane_ } from '@modules/renderer/engine/math/Plane.js';
 import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
 import { InterleavedBufferAttribute } from '@modules/renderer/engine/core/InterleavedBufferAttribute.js';
 import { Vector2 } from '@modules/renderer/engine/math/Vector2.js';
@@ -150,8 +150,8 @@ export class Triangle {
     return Triangle.getNormal(this.a, this.b, this.c, target);
   }
 
-  getPlane(target: Plane): Plane {
-    return target.setFromCoplanarPoints(this.a, this.b, this.c);
+  getPlane(target: Plane_): Plane_ {
+    return Plane_.fillCoplanar(target, this.a, this.b, this.c);
   }
 
   getBarycoord(point: Vec3, target: Vec3): Vec3 | null {

@@ -8,7 +8,7 @@ import { Vec4, Vector4 } from '@modules/renderer/engine/math/Vector4.js';
 import { Matrix4 } from '@modules/renderer/engine/math/Matrix4.js';
 
 describe('Math - Line3', () => {
-  it.only('Instancing', () => {
+  it('Instancing', () => {
     let line = Line3_.empty();
     expect(line).toEqual({ start: { x: 0, y: 0, z: 0 }, end: { x: 0, y: 0, z: 0 } });
 
@@ -34,21 +34,21 @@ describe('Math - Line3', () => {
     expect(Line3_.equals(line, clone)).toBe(false);
   });
 
-  it.only('center', () => {
+  it('center', () => {
     const line = Line3_.create(0, 0, 0, 2, 2, 2);
     const center = Line3_.center(line);
 
     expect(center).toEqual({ x: 1, y: 1, z: 1 });
   });
 
-  it.only('delta', () => {
+  it('delta', () => {
     const line = Line3_.create(0, 0, 0, 2, 2, 2);
     const delta = Line3_.delta(line);
 
     expect(delta).toEqual({ x: 2, y: 2, z: 2 });
   });
 
-  it.only('distance/distanceSq', () => {
+  it('distance/distanceSq', () => {
     const line = Line3_.create(0, 0, 0, 3, 3, 3);
     const distanceSq = Line3_.distanceSq(line);
     const distance = Line3_.distance(line);
@@ -56,7 +56,7 @@ describe('Math - Line3', () => {
     expect(distanceSq).toBe(27);
   });
 
-  it.only('at', () => {
+  it('at', () => {
     const line = Line3_.create(0, 0, 1, 0, 0, 2);
     const point = Vec3.empty();
 
@@ -74,7 +74,7 @@ describe('Math - Line3', () => {
     expect(Vec3.distanceTo(point, Vec3.create(0, 0, 2))).toBe(0);
   });
 
-  it.only('closestAt/closestTo/at', () => {
+  it('closestAt/closestTo/at', () => {
     const line = Line3_.create(0, 0, 0, 0, 0, 1);
     const point = Vec3.empty();
 
@@ -88,7 +88,7 @@ describe('Math - Line3', () => {
     }
   });
 
-  it.only('applyMat4', () => {
+  it('applyMat4', () => {
     const line = Line3_.create(0, 0, 0, 2, 2, 2);
     const vec4 = new Vector4(2, 2, 2, 1);
     const mat4 = new Matrix4().makeTranslation(2, 3, 4);
@@ -119,5 +119,13 @@ describe('Math - Line3', () => {
       start: { x: 2, y: 3, z: 4 },
       end: { x: vec4.x / vec4.w, y: vec4.y / vec4.w, z: vec4.z / vec4.w },
     });
+  });
+
+  it('fromEnds', () => {
+    const start = Vec3.create(1, 2, 3);
+    const end = Vec3.create(4, 5, 6);
+    const line = Line3_.fromEnds(start, end);
+
+    expect(line).toEqual({ start, end });
   });
 });

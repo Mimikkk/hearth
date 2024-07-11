@@ -94,7 +94,6 @@ export { Matrix4 } from './math/Matrix4.ts';
 export { Matrix3 } from './math/Matrix3.ts';
 export { Box3 } from './math/Box3.ts';
 export { Box2 } from './math/Box2.ts';
-export { Line3 } from './math/Line3.ts';
 export { Vector4 } from './math/Vector4.ts';
 export { Vector3 } from './math/Vector3.ts';
 export { Vector2 } from './math/Vector2.ts';
