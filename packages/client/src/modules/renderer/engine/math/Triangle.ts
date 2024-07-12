@@ -181,14 +181,9 @@ export class Triangle {
       c = this.c;
     let v, w;
 
-    // algorithm thanks to Real-Time Collision Detection by Christer Ericson,
-    // published by Morgan Kaufmann Publishers, (c) 2005 Elsevier Inc.,
-    // under the accompanying license; see chapter 5.1.5 for detailed explanation.
-    // basically, we're distinguishing which of the voronoi regions of the triangle
-    // the point lies in with the minimum amount of redundant computation.
-
     const _vab = new Vector3().subVectors(b, a);
     const _vac = new Vector3().subVectors(c, a);
+
     const _vap = new Vector3().subVectors(p, a);
     const d1 = _vab.dot(_vap);
     const d2 = _vac.dot(_vap);
@@ -412,35 +407,50 @@ export namespace Triangle_ {
     return into;
   };
 
-  export const closestTo = (self: Const<Triangle_>, point: Const<Vec3>, into: Vec3): Vec3 =>
-    closestTo_(self, point, Vec3.empty(), into);
-  export const closestTo_ = ({ a, b, c }: Const<Triangle_>, point: Const<Vec3>, temp: Vec3, into: Vec3): Vec3 => {
-    Vec3.sub_(a, b, _v0);
-    Vec3.sub_(c, b, _v1);
-    Vec3.sub_(point, b, _v2);
+  export const closestTo = (self: Const<Triangle_>, point: Const<Vec3>): Vec3 => closestTo_(self, point, Vec3.empty());
+  export const closestTo_ = ({ a, b, c }: Const<Triangle_>, p: Const<Vec3>, into: Vec3): Vec3 => {
+    Vec3.sub_(b, a, _v0);
+    Vec3.sub_(c, a, _v1);
 
+    Vec3.sub_(p, a, _v2);
     const d1 = Vec3.dot(_v0, _v2);
     const d2 = Vec3.dot(_v1, _v2);
     if (d1 <= 0 && d2 <= 0) return Vec3.fill_(into, a);
 
-    Vec3.sub_(point, a, _v2);
+    Vec3.sub_(p, b, _v2);
     const d3 = Vec3.dot(_v0, _v2);
     const d4 = Vec3.dot(_v1, _v2);
     if (d3 >= 0 && d4 <= d3) return Vec3.fill_(into, b);
 
     const vc = d1 * d4 - d3 * d2;
-    if (vc <= 0 && d1 >= 0 && d3 <= 0) return Vec3.fill_(into, a);
+    if (vc <= 0 && d1 >= 0 && d3 <= 0) {
+      const v = d1 / (d1 - d3);
+      Vec3.fill_(into, a);
+      Vec3.scale(_v0, v);
+      return Vec3.add(into, _v0);
+    }
 
-    Vec3.sub_(point, c, _v2);
+    Vec3.sub_(p, c, _v2);
     const d5 = Vec3.dot(_v0, _v2);
     const d6 = Vec3.dot(_v1, _v2);
     if (d6 >= 0 && d5 <= d6) return Vec3.fill_(into, c);
 
     const vb = d5 * d2 - d1 * d6;
-    if (vb <= 0 && d2 >= 0 && d6 <= 0) return Vec3.fill_(into, b);
+    if (vb <= 0 && d2 >= 0 && d6 <= 0) {
+      const w = d2 / (d2 - d6);
+      Vec3.fill_(into, b);
+      Vec3.scale(_v1, w);
+      return Vec3.add(into, _v1);
+    }
 
     const va = d3 * d6 - d5 * d4;
-    if (va <= 0 && d4 - d3 >= 0 && d5 - d6 >= 0) return Vec3.fill_(into, a);
+    if (va <= 0 && d4 - d3 >= 0 && d5 - d6 >= 0) {
+      const w = (d4 - d3) / (d4 - d3 + d5 - d6);
+      Vec3.sub_(c, b, _v0);
+      Vec3.fill_(into, b);
+      Vec3.scale(_v0, w);
+      return Vec3.add(into, _v0);
+    }
 
     const denom = 1 / (va + vb + vc);
     const v = vb * denom;
