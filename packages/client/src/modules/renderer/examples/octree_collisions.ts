@@ -172,7 +172,7 @@ function playerCollisions() {
     }
 
     if (result.depth >= 1e-10) {
-      Vec3.mulScalar(result.normal, result.depth);
+      Vec3.scale(result.normal, result.depth);
       Capsule.translate(playerCollider, result.normal);
     }
   }
@@ -262,7 +262,7 @@ function updateSpheres(deltaTime: number) {
     if (result) {
       sphere.velocity.addScaledVector(result.normal, -Vec3.dot(result.normal, sphere.velocity) * 1.5);
 
-      Vec3.mulScalar(result.normal, result.depth);
+      Vec3.scale(result.normal, result.depth);
       sphere.collider.center.add(result.normal);
     } else {
       sphere.velocity.y -= GRAVITY * deltaTime;

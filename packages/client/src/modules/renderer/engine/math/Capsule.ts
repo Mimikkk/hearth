@@ -71,7 +71,7 @@ export namespace Capsule {
 
   export const center = (capsule: Const<Capsule>): Vec3 => center_(capsule, Vec3.empty());
   export const center_ = ({ start, end }: Const<Capsule>, into: Vec3): Vec3 =>
-    Vec3.mulScalar(Vec3.add_(start, end, into), 0.5);
+    Vec3.scale(Vec3.add_(start, end, into), 0.5);
 
   const isAABBAxis = (
     p1x: number,

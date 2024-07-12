@@ -323,7 +323,7 @@ export namespace Triangle_ {
     Vec3.cross(into, _vec);
 
     const len = Vec3.lengthSq(into);
-    return len > 0 ? Vec3.mulScalar(into, 1 / Math.sqrt(len)) : Vec3.clear(into);
+    return len > 0 ? Vec3.scale(into, 1 / Math.sqrt(len)) : Vec3.clear(into);
   };
 
   export const plane = (self: Const<Triangle_>): Plane_ => plane_(self, Plane_.empty());
@@ -385,7 +385,7 @@ export namespace Triangle_ {
   export const midpoint_ = ({ a, b, c }: Const<Triangle_>, into: Vec3): Vec3 => {
     Vec3.add_(a, b, into);
     Vec3.add(into, c);
-    return Vec3.mulScalar(into, 1 / 3);
+    return Vec3.scale(into, 1 / 3);
   };
 
   export const interpolate = (a: Const<Triangle_>, b: Const<Triangle_>, point: Const<Vec3>): Vec3 | null =>
@@ -400,13 +400,13 @@ export namespace Triangle_ {
     Vec3.clear(into);
     if (barycoord_(a, point, _v0) === null) return null;
 
-    Vec3.mulScalar_(b.a, _v0.x, _v1);
+    Vec3.scale_(b.a, _v0.x, _v1);
     Vec3.add_(into, _v1, into);
 
-    Vec3.mulScalar_(b.b, _v0.y, _v1);
+    Vec3.scale_(b.b, _v0.y, _v1);
     Vec3.add_(into, _v1, into);
 
-    Vec3.mulScalar_(b.c, _v0.z, _v1);
+    Vec3.scale_(b.c, _v0.z, _v1);
     Vec3.add_(into, _v1, into);
 
     return into;
@@ -447,9 +447,9 @@ export namespace Triangle_ {
     const w = vc * denom;
 
     Vec3.fill_(into, a);
-    Vec3.mulScalar(_v0, v);
+    Vec3.scale(_v0, v);
     Vec3.add(into, _v0);
-    Vec3.mulScalar(_v1, w);
+    Vec3.scale(_v1, w);
     Vec3.add(into, _v1);
 
     return into;

@@ -195,7 +195,7 @@ export namespace Plane_ {
   export const normalize = (self: Plane_): Plane_ => normalize_(self, self);
   export const normalize_ = (from: Const<Plane_>, into: Plane_): Plane_ => {
     const length = 1.0 / Vec3.length(from.normal);
-    Vec3.mulScalar_(from.normal, length, into.normal);
+    Vec3.scale_(from.normal, length, into.normal);
     into.constant = from.constant * length;
 
     return into;
@@ -220,8 +220,7 @@ export namespace Plane_ {
   export const translated = (from: Const<Plane_>, offset: Const<Vec3>): Plane_ => translate_(from, offset, clone(from));
 
   export const coplanar = (self: Const<Plane_>): Vec3 => coplanar_(self, Vec3.empty());
-  export const coplanar_ = (self: Const<Plane_>, into: Vec3): Vec3 =>
-    Vec3.mulScalar_(self.normal, -self.constant, into);
+  export const coplanar_ = (self: Const<Plane_>, into: Vec3): Vec3 => Vec3.scale_(self.normal, -self.constant, into);
 
   export const fromNormalAndCoplanar = (normal: Const<Vec3>, coplanar: Const<Vec3>): Plane_ =>
     fromNormalAndCoplanar_(normal, coplanar, empty());
@@ -270,7 +269,7 @@ export namespace Plane_ {
   export const project = (self: Const<Plane_>, point: Const<Vec3>): Vec3 => project_(self, point, Vec3.empty());
   export const project_ = (self: Const<Plane_>, point: Const<Vec3>, into: Vec3): Vec3 => {
     Vec3.add_(point, self.normal, into);
-    Vec3.mulScalar(into, -distanceToVec(self, point));
+    Vec3.scale(into, -distanceToVec(self, point));
 
     return into;
   };
@@ -290,7 +289,7 @@ export namespace Plane_ {
     const step = -(Vec3.dot(line.start, self.normal) + self.constant) / denominator;
     if (step < 0 || step > 1) return null;
 
-    Vec3.mulScalar(direction, step);
+    Vec3.scale(direction, step);
     Vec3.add_(line.start, direction, into);
     return into;
   };

@@ -303,7 +303,7 @@ export class Octree {
       if (!result) continue;
 
       hit = true;
-      Vec3.add(_sphere.center, Vec3.mulScalar(result.normal, result.depth));
+      Vec3.add(_sphere.center, Vec3.scale(result.normal, result.depth));
     }
 
     if (hit) {
@@ -327,7 +327,7 @@ export class Octree {
       if ((result = this.triangleCapsuleIntersect(_capsule, triangles[i]))) {
         hit = true;
 
-        Capsule.translate(_capsule, Vec3.mulScalar(result.normal, result.depth));
+        Capsule.translate(_capsule, Vec3.scale(result.normal, result.depth));
       }
     }
 
