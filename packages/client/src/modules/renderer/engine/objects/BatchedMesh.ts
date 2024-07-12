@@ -6,7 +6,7 @@ import { Matrix4 } from '../math/Matrix4.js';
 import { Mesh } from './Mesh.js';
 import { Box3 } from '../math/Box3.js';
 import { Sphere } from '../math/Sphere.js';
-import { Frustum } from '../math/Frustum.js';
+import { Frustum_ } from '../math/Frustum.js';
 import { Vector3 } from '../math/Vector3.js';
 import { Material } from '@modules/renderer/engine/materials/Material.js';
 import { Camera } from '@modules/renderer/engine/cameras/Camera.js';
@@ -60,7 +60,7 @@ const _matrix = new Matrix4();
 const _invMatrixWorld = new Matrix4();
 const _identityMatrix = new Matrix4();
 const _projScreenMatrix = new Matrix4();
-const _frustum = new Frustum();
+const _frustum = Frustum_.empty();
 const _box = new Box3();
 const _sphere = new Sphere();
 const _vector = new Vector3();
@@ -742,7 +742,7 @@ export class BatchedMesh extends Mesh {
     // prepare the frustum in the local frame
     if (perObjectFrustumCulled) {
       _projScreenMatrix.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse).multiply(this.matrixWorld);
-      _frustum.setFromProjectionMatrix(_projScreenMatrix, renderer.coordinateSystem);
+      Frustum_.fillProjection(_frustum, _projScreenMatrix);
     }
 
     let count = 0;
@@ -760,7 +760,7 @@ export class BatchedMesh extends Mesh {
           // determine whether the batched geometry is within the frustum
           let culled = false;
           if (perObjectFrustumCulled) {
-            culled = !_frustum.intersectsSphere(_sphere);
+            culled = !Frustum_.intersectsSphere(_frustum, _sphere);
           }
 
           if (!culled) {
@@ -797,7 +797,7 @@ export class BatchedMesh extends Mesh {
             // get the bounds in world space
             this.getMatrixAt(i, _matrix);
             this.getBoundingSphereAt(i, _sphere)!.applyMatrix4(_matrix);
-            culled = !_frustum.intersectsSphere(_sphere);
+            culled = !Frustum_.intersectsSphere(_frustum, _sphere);
           }
 
           if (!culled) {

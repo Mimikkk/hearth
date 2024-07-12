@@ -1,14 +1,16 @@
-import { Vector3 } from '../math/Vector3.js';
+import { Vec3, Vector3 } from '../math/Vector3.js';
 import type { Mesh } from '../objects/Mesh.js';
 import type { Scene } from '../scenes/Scene.js';
 import { Quaternion } from '../math/Quaternion.js';
 import { Matrix4 } from '../math/Matrix4.js';
-import { Frustum } from '../math/Frustum.js';
+import { Frustum_ } from '../math/Frustum.js';
 import type { Object3D } from '../core/Object3D.js';
 import { PerspectiveCamera } from '@modules/renderer/engine/cameras/PerspectiveCamera.js';
 import { OrthographicCamera } from '@modules/renderer/engine/cameras/OrthographicCamera.js';
+import { throttle } from 'lodash-es';
+import { Plane_ } from '@modules/renderer/engine/math/Plane.js';
 
-const _frustum = new Frustum();
+const _frustum = Frustum_.empty();
 const _center = new Vector3();
 
 const _tmpPoint = new Vector3();
@@ -111,14 +113,14 @@ export class SelectionBox {
       _vectemp3.add(_vecNear);
 
       const planes = _frustum.planes;
+      Plane_.fillCoplanar(planes[0], _vecNear, _vecTopLeft, _vecTopRight);
+      Plane_.fillCoplanar(planes[1], _vecNear, _vecTopRight, _vecDownRight);
+      Plane_.fillCoplanar(planes[2], _vecDownRight, _vecDownLeft, _vecNear);
+      Plane_.fillCoplanar(planes[3], _vecDownLeft, _vecTopLeft, _vecNear);
+      Plane_.fillCoplanar(planes[4], _vecTopRight, _vecDownRight, _vecDownLeft);
+      Plane_.fillCoplanar(planes[5], _vectemp3, _vectemp2, _vectemp1);
 
-      planes[0].setFromCoplanarPoints(_vecNear, _vecTopLeft, _vecTopRight);
-      planes[1].setFromCoplanarPoints(_vecNear, _vecTopRight, _vecDownRight);
-      planes[2].setFromCoplanarPoints(_vecDownRight, _vecDownLeft, _vecNear);
-      planes[3].setFromCoplanarPoints(_vecDownLeft, _vecTopLeft, _vecNear);
-      planes[4].setFromCoplanarPoints(_vecTopRight, _vecDownRight, _vecDownLeft);
-      planes[5].setFromCoplanarPoints(_vectemp3, _vectemp2, _vectemp1);
-      planes[5].normal.multiplyScalar(-1);
+      Vec3.negate(planes[5].normal);
     } else if (isOrthographicCamera(this.camera)) {
       const left = Math.min(startPoint.x, endPoint.x);
       const top = Math.max(startPoint.y, endPoint.y);
@@ -146,18 +148,17 @@ export class SelectionBox {
       _vecFarDownLeft.unproject(this.camera);
 
       const planes = _frustum.planes;
-
-      planes[0].setFromCoplanarPoints(_vecTopLeft, _vecFarTopLeft, _vecFarTopRight);
-      planes[1].setFromCoplanarPoints(_vecTopRight, _vecFarTopRight, _vecFarDownRight);
-      planes[2].setFromCoplanarPoints(_vecFarDownRight, _vecFarDownLeft, _vecDownLeft);
-      planes[3].setFromCoplanarPoints(_vecFarDownLeft, _vecFarTopLeft, _vecTopLeft);
-      planes[4].setFromCoplanarPoints(_vecTopRight, _vecDownRight, _vecDownLeft);
-      planes[5].setFromCoplanarPoints(_vecFarDownRight, _vecFarTopRight, _vecFarTopLeft);
-      planes[5].normal.multiplyScalar(-1);
+      Plane_.fillCoplanar(planes[0], _vecTopLeft, _vecFarTopLeft, _vecFarTopRight);
+      Plane_.fillCoplanar(planes[1], _vecTopRight, _vecFarTopRight, _vecFarDownRight);
+      Plane_.fillCoplanar(planes[2], _vecFarDownRight, _vecFarDownLeft, _vecDownLeft);
+      Plane_.fillCoplanar(planes[3], _vecFarDownLeft, _vecFarTopLeft, _vecTopLeft);
+      Plane_.fillCoplanar(planes[4], _vecTopRight, _vecDownRight, _vecDownLeft);
+      Plane_.fillCoplanar(planes[5], _vecFarDownRight, _vecFarTopRight, _vecFarTopLeft);
+      Vec3.negate(planes[5].normal);
     }
   }
 
-  searchChildInFrustum(frustum: Frustum, object: Object3D): void {
+  searchChildInFrustum(frustum: Frustum_, object: Object3D): void {
     if (object.isMesh || object.isLine || object.isPoints) {
       if (object.isInstancedMesh) {
         this.instances[object.uuid] = [];
@@ -167,18 +168,18 @@ export class SelectionBox {
           _matrix.decompose(_center, _quaternion, _scale);
           _center.applyMatrix4(object.matrixWorld);
 
-          if (frustum.containsPoint(_center)) {
+          if (Frustum_.containsVec(frustum, _center)) {
             this.instances[object.uuid].push(instanceId);
           }
         }
       } else {
         if (object.geometry.boundingSphere === null) object.geometry.computeBoundingSphere();
 
-        _center.copy(object.geometry.boundingSphere.center);
+        _center.copy(object.geometry!.boundingSphere!.center);
 
         _center.applyMatrix4(object.matrixWorld);
 
-        if (frustum.containsPoint(_center)) {
+        if (Frustum_.containsVec(frustum, _center)) {
           this.collection.push(object);
         }
       }
@@ -191,3 +192,5 @@ export class SelectionBox {
     }
   }
 }
+
+const con = throttle(console.log, 100);

@@ -17,6 +17,7 @@ export const Example = {
   BackdropWater: 'backdrop_water',
   Camera: {
     Frustum: 'camera_frustum',
+    Selection: 'camera_selection',
     LogarithmicDepthBuffer: 'camera_logarithmicdepthbuffer',
   },
   Clearcoat: 'clearcoat',

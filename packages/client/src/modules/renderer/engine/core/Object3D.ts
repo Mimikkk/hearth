@@ -50,8 +50,6 @@ export interface Object3DEventMap {
   dispose: {};
 }
 
-const con = throttle(console.log, 1000);
-
 const isCamera = (object: any): object is Camera => object.isCamera;
 const isLight = (object: any): object is Light<any> => object.isLight;
 

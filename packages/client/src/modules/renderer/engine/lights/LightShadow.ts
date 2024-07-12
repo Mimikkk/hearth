@@ -2,7 +2,7 @@ import { Matrix4 } from '../math/Matrix4.js';
 import { Vector2 } from '../math/Vector2.js';
 import { Vector3 } from '../math/Vector3.js';
 import { Vector4 } from '../math/Vector4.js';
-import { Frustum } from '../math/Frustum.js';
+import { Frustum_ } from '../math/Frustum.js';
 import { Camera } from '../cameras/Camera.js';
 import { Light } from './Light.js';
 import { RenderTarget } from '@modules/renderer/engine/core/RenderTarget.js';
@@ -23,7 +23,7 @@ export class LightShadow<C extends Camera = Camera> {
   matrix: Matrix4;
   autoUpdate: boolean;
   needsUpdate: boolean;
-  _frustum: Frustum;
+  _frustum: Frustum_;
   _frameExtents: Vector2;
   _viewportCount: number;
   _viewports: Vector4[];
@@ -43,7 +43,7 @@ export class LightShadow<C extends Camera = Camera> {
     this.autoUpdate = true;
     this.needsUpdate = false;
 
-    this._frustum = new Frustum();
+    this._frustum = Frustum_.empty();
     this._frameExtents = new Vector2(1, 1);
 
     this._viewportCount = 1;
@@ -55,7 +55,7 @@ export class LightShadow<C extends Camera = Camera> {
     return this._viewportCount;
   }
 
-  getFrustum(): Frustum {
+  getFrustum(): Frustum_ {
     return this._frustum;
   }
 
@@ -71,7 +71,7 @@ export class LightShadow<C extends Camera = Camera> {
     shadowCamera.updateMatrixWorld();
 
     _projScreenMatrix.multiplyMatrices(shadowCamera.projectionMatrix, shadowCamera.matrixWorldInverse);
-    this._frustum.setFromProjectionMatrix(_projScreenMatrix);
+    Frustum_.fromProjection_(shadowCamera.projectionMatrix, this._frustum);
 
     shadowMatrix.set(0.5, 0.0, 0.0, 0.5, 0.0, 0.5, 0.0, 0.5, 0.0, 0.0, 0.5, 0.5, 0.0, 0.0, 0.0, 1.0);
 

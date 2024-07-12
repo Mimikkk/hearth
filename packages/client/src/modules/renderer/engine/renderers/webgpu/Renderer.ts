@@ -21,13 +21,14 @@ import ClippingContext from '@modules/renderer/engine/renderers/common/ClippingC
 import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
 import { Vector3 } from '@modules/renderer/engine/math/Vector3.js';
 import { Vector2 } from '@modules/renderer/engine/math/Vector2.js';
-import { Frustum, Matrix4, Object3D, Plane } from '@modules/renderer/engine/engine.js';
+import { Matrix4, Object3D, Plane } from '@modules/renderer/engine/engine.js';
 import { GPUFeatureNameType, GPUTextureFormatType } from '@modules/renderer/engine/renderers/webgpu/utils/constants.js';
+import { Frustum_ } from '@modules/renderer/engine/math/Frustum.js';
 
 const _scene = new Scene();
 const _drawingBufferSize = new Vector2();
 const _screen = new Vector4();
-const _frustum = new Frustum();
+const _frustum = Frustum_.empty();
 const _projScreenMatrix = new Matrix4();
 const _vector3 = new Vector3();
 
@@ -371,7 +372,7 @@ export class Renderer {
     //
 
     _projScreenMatrix.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse);
-    _frustum.setFromProjectionMatrix(_projScreenMatrix, coordinateSystem);
+    Frustum_.fillProjection(_frustum, _projScreenMatrix);
 
     const renderList = this._renderLists.get(scene, camera);
     renderList.begin();
@@ -794,7 +795,7 @@ export class Renderer {
       } else if (object.isLight) {
         renderList.pushLight(object);
       } else if (object.isSprite) {
-        if (!object.frustumCulled || _frustum.intersectsSprite(object)) {
+        if (!object.frustumCulled || Frustum_.intersectsSphere(_frustum, object)) {
           if (this.parameters.sortObjects) {
             _vector3.setFromMatrixPosition(object.matrixWorld).applyMatrix4(_projScreenMatrix);
           }
@@ -811,7 +812,7 @@ export class Renderer {
           'engine.Renderer: Objects of type engine.LineLoop are not supported. Please use engine.Line or engine.LineSegments.',
         );
       } else if (object.isMesh || object.isLine || object.isPoints) {
-        if (!object.frustumCulled || _frustum.intersectsObject(object)) {
+        if (!object.frustumCulled || Frustum_.intersectsObject(_frustum, object)) {
           const geometry = object.geometry;
           const material = object.material;
 

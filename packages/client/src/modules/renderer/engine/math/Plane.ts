@@ -246,6 +246,8 @@ export namespace Plane_ {
 
     return fromNormalAndCoplanar_(into.normal, a, into);
   };
+  export const fillCoplanar = (self: Plane_, a: Const<Vec3>, b: Const<Vec3>, c: Const<Vec3>): Plane_ =>
+    fromCoplanar_(a, b, c, self);
 
   const _mat3 = new Matrix3();
   export const applyMat4 = (self: Plane_, mat: Const<Matrix4>): Plane_ => applyMat4_(self, mat, self);
