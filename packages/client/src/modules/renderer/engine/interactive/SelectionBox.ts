@@ -3,14 +3,14 @@ import type { Mesh } from '../objects/Mesh.js';
 import type { Scene } from '../scenes/Scene.js';
 import { Quaternion } from '../math/Quaternion.js';
 import { Matrix4 } from '../math/Matrix4.js';
-import { Frustum_ } from '../math/Frustum.js';
+import { Frustum } from '../math/Frustum.js';
 import type { Object3D } from '../core/Object3D.js';
 import { PerspectiveCamera } from '@modules/renderer/engine/cameras/PerspectiveCamera.js';
 import { OrthographicCamera } from '@modules/renderer/engine/cameras/OrthographicCamera.js';
 import { throttle } from 'lodash-es';
 import { Plane_ } from '@modules/renderer/engine/math/Plane.js';
 
-const _frustum = Frustum_.empty();
+const _frustum = Frustum.empty();
 const _center = new Vector3();
 
 const _tmpPoint = new Vector3();
@@ -158,7 +158,7 @@ export class SelectionBox {
     }
   }
 
-  searchChildInFrustum(frustum: Frustum_, object: Object3D): void {
+  searchChildInFrustum(frustum: Frustum, object: Object3D): void {
     if (object.isMesh || object.isLine || object.isPoints) {
       if (object.isInstancedMesh) {
         this.instances[object.uuid] = [];
@@ -168,7 +168,7 @@ export class SelectionBox {
           _matrix.decompose(_center, _quaternion, _scale);
           _center.applyMatrix4(object.matrixWorld);
 
-          if (Frustum_.containsVec(frustum, _center)) {
+          if (Frustum.containsVec(frustum, _center)) {
             this.instances[object.uuid].push(instanceId);
           }
         }
@@ -179,7 +179,7 @@ export class SelectionBox {
 
         _center.applyMatrix4(object.matrixWorld);
 
-        if (Frustum_.containsVec(frustum, _center)) {
+        if (Frustum.containsVec(frustum, _center)) {
           this.collection.push(object);
         }
       }
