@@ -1,60 +1,48 @@
 import type { Vector3 } from './Vector3.js';
-import { clamp } from './MathUtils.js';
+import { clamp as clampNumber } from './MathUtils.js';
+import { Const } from '@modules/renderer/engine/math/types.js';
 
-export class Spherical {
-  declare isSpherical: true;
-  declare ['constructor']: typeof Spherical;
+export interface Spherical_ {
+  radius: number;
+  phi: number;
+  theta: number;
+}
 
-  constructor(
-    public radius: number = 1,
-    public phi: number = 0,
-    public theta: number = 0,
-  ) {}
+export namespace Spherical_ {
+  export const create = (radius: number, phi: number, theta: number): Spherical_ => ({ radius, phi, theta });
+  export const empty = (): Spherical_ => create(0, 0, 0);
+  export const clear = (self: Spherical_): Spherical_ => set(self, 0, 0, 0);
 
-  set(radius: number, phi: number, theta: number): this {
-    this.radius = radius;
-    this.phi = phi;
-    this.theta = theta;
+  export const set = (self: Spherical_, radius: number, phi: number, theta: number): Spherical_ => {
+    self.radius = radius;
+    self.phi = phi;
+    self.theta = theta;
+    return self;
+  };
+  export const fill_ = (self: Spherical_, { phi, radius, theta }: Const<Spherical_>): Spherical_ =>
+    set(self, radius, phi, theta);
 
-    return this;
-  }
+  export const clone = (from: Const<Spherical_>): Spherical_ => clone_(from, empty());
+  export const clone_ = (from: Const<Spherical_>, into: Spherical_): Spherical_ => fill_(into, from);
 
-  copy(other: Spherical): this {
-    this.radius = other.radius;
-    this.phi = other.phi;
-    this.theta = other.theta;
+  export const fromCartesian = (from: Const<Vector3>): Spherical_ => fromCartesian_(from, empty());
+  export const fromCartesian_ = ({ x, y, z }: Const<Vector3>, into: Spherical_): Spherical_ => {
+    into.radius = Math.sqrt(x * x + y * y + z * z);
 
-    return this;
-  }
-
-  // restrict phi to be between EPS and PI-EPS
-  makeSafe(): this {
-    const EPS = 0.000001;
-    this.phi = Math.max(EPS, Math.min(Math.PI - EPS, this.phi));
-
-    return this;
-  }
-
-  setFromVector3(v: Vector3): this {
-    return this.setFromCartesianCoords(v.x, v.y, v.z);
-  }
-
-  setFromCartesianCoords(x: number, y: number, z: number): this {
-    this.radius = Math.sqrt(x * x + y * y + z * z);
-
-    if (this.radius === 0) {
-      this.theta = 0;
-      this.phi = 0;
+    if (into.radius === 0) {
+      into.theta = 0;
+      into.phi = 0;
     } else {
-      this.theta = Math.atan2(x, z);
-      this.phi = Math.acos(clamp(y / this.radius, -1, 1));
+      into.theta = Math.atan2(x, z);
+      into.phi = Math.acos(clamp(y / into.radius, -1, 1));
     }
 
-    return this;
-  }
+    return into;
+  };
+  export const fillCartesian = (self: Spherical_, from: Const<Vector3>): Spherical_ => fromCartesian_(from, self);
 
-  clone(): Spherical {
-    return new this.constructor().copy(this);
-  }
+  export const clamp = (self: Spherical_): Spherical_ => {
+    self.phi = clampNumber(self.phi, Number.EPSILON, Math.PI - Number.EPSILON);
+    return self;
+  };
 }
-Spherical.prototype.isSpherical = true;

@@ -1,8 +1,9 @@
-import { Camera, Spherical, Vector3 } from '../engine.js';
+import { Camera, Vector3 } from '../engine.js';
 import { clamp, degreeToRadian, mapLinear, radianToDegree } from '../math/MathUtils.js';
+import { Spherical_ } from '@modules/renderer/engine/math/Spherical.js';
 
 const _lookDirection = new Vector3();
-const _spherical = new Spherical();
+const _spherical = Spherical_.empty();
 const _target = new Vector3();
 
 export class FirstPersonControls {
@@ -301,7 +302,7 @@ export class FirstPersonControls {
       const quaternion = controls.object.quaternion;
 
       _lookDirection.set(0, 0, -1).applyQuaternion(quaternion);
-      _spherical.setFromVector3(_lookDirection);
+      Spherical_.fillCartesian(_spherical, _lookDirection);
 
       lat = 90 - radianToDegree(_spherical.phi);
       lon = radianToDegree(_spherical.theta);

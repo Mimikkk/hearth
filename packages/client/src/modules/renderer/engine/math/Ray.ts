@@ -1,9 +1,11 @@
 import { Vec3, Vector3 } from './Vector3.js';
 import type { Sphere_ } from './Sphere.js';
-import type { Plane } from './Plane.js';
+import { Plane_ } from './Plane.js';
 import type { Box3 } from './Box3.js';
 import type { Matrix4 } from './Matrix4.js';
 
+const _vec1 = Vec3.empty();
+const _vec2 = Vec3.empty();
 export class Ray {
   declare ['constructor']: typeof Ray;
 
@@ -59,15 +61,18 @@ export class Ray {
   }
 
   distanceSqToPoint(point: Vec3): number {
-    const directionDistance = new Vector3().subVectors(point, this.origin).dot(this.direction);
+    Vec3.sub_(point, this.origin, _vec1);
+
+    const directionDistance = Vec3.dot(_vec1, this.direction);
 
     // point behind the ray
 
     if (directionDistance < 0) {
-      return this.origin.distanceToSquared(point);
+      return Vec3.distanceSqTo(this.origin, point);
     }
 
-    return new Vector3().copy(this.origin).addScaledVector(this.direction, directionDistance).distanceToSquared(point);
+    Vec3.addScaled_(this.origin, this.direction, directionDistance, _vec2);
+    return Vec3.distanceSqTo(_vec2, point);
   }
 
   distanceSqToSegment(v0: Vec3, v1: Vec3, optionalPointOnRay?: Vector3, optionalPointOnSegment?: Vector3): number {
@@ -186,12 +191,12 @@ export class Ray {
     return this.distanceSqToPoint(sphere.center) <= sphere.radius * sphere.radius;
   }
 
-  distanceToPlane(plane: Plane): number | null {
-    const denominator = plane.normal.dot(this.direction);
+  distanceToPlane(plane: Plane_): number | null {
+    const denominator = Vec3.dot(plane.normal, this.direction);
 
     if (denominator === 0) {
       // line is coplanar, return origin
-      if (plane.distanceToPoint(this.origin) === 0) {
+      if (Plane_.distanceToVec(plane, this.origin) === 0) {
         return 0;
       }
 
@@ -207,7 +212,7 @@ export class Ray {
     return t >= 0 ? t : null;
   }
 
-  intersectPlane(plane: Plane, target: Vector3): Vector3 | null {
+  intersectPlane(plane: Plane_, target: Vector3): Vector3 | null {
     const t = this.distanceToPlane(plane);
 
     if (t === null) {
@@ -217,16 +222,16 @@ export class Ray {
     return this.at(t, target);
   }
 
-  intersectsPlane(plane: Plane) {
+  intersectsPlane(plane: Plane_) {
     // check if the ray lies on the plane first
 
-    const distToPoint = plane.distanceToPoint(this.origin);
+    const distToPoint = Plane_.distanceToVec(plane, this.origin);
 
     if (distToPoint === 0) {
       return true;
     }
 
-    const denominator = plane.normal.dot(this.direction);
+    const denominator = Vec3.dot(plane.normal, this.direction);
 
     if (denominator * distToPoint < 0) {
       return true;
