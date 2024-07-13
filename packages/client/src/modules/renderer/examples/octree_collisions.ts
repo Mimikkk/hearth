@@ -9,7 +9,7 @@ import { DirectionalLight } from '@modules/renderer/engine/lights/DirectionalLig
 import { IcosahedronGeometry } from '@modules/renderer/engine/geometries/IcosahedronGeometry.js';
 import { MeshLambertMaterial } from '@modules/renderer/engine/materials/MeshLambertMaterial.js';
 import { Mesh } from '@modules/renderer/engine/objects/Mesh.js';
-import { Sphere } from '@modules/renderer/engine/math/Sphere.js';
+import { Sphere, Sphere_ } from '@modules/renderer/engine/math/Sphere.js';
 import { Vec3, Vector3 } from '@modules/renderer/engine/math/Vector3.js';
 import { Octree } from '@modules/renderer/engine/math/Octree.js';
 import { Capsule } from '@modules/renderer/engine/math/Capsule.js';

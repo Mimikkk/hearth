@@ -1,7 +1,7 @@
 import { Mesh } from './Mesh.js';
 import { Box3 } from '../math/Box3.js';
 import { Matrix4 } from '../math/Matrix4.js';
-import { Sphere, Sphere_ } from '../math/Sphere.js';
+import { Sphere_ } from '../math/Sphere.js';
 import { Vector3 } from '../math/Vector3.js';
 import { Vector4 } from '../math/Vector4.js';
 import { Ray } from '../math/Ray.js';

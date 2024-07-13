@@ -1,5 +1,4 @@
 import {
-  Box3,
   Camera,
   InstancedInterleavedBuffer,
   InterleavedBufferAttribute,
@@ -9,7 +8,6 @@ import {
   Mesh,
   Ray,
   Raycaster,
-  Sphere,
   Vector3,
   Vector4,
 } from '../engine.js';
@@ -18,6 +16,8 @@ import { LineMaterial } from './LineMaterial.js';
 import { Intersection } from '@modules/renderer/engine/core/Raycaster.js';
 import { Line3 } from '@modules/renderer/engine/math/Line3.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vector3.js';
+import { Sphere_ } from '@modules/renderer/engine/math/Sphere.js';
+import { Box3_ } from '@modules/renderer/engine/math/Box3.js';
 
 const _start = new Vector3();
 const _end = new Vector3();
@@ -31,8 +31,8 @@ const _mvMatrix = new Matrix4();
 const _line = Line3.empty();
 const _closestPoint = new Vector3();
 
-const _box = new Box3();
-const _sphere = new Sphere();
+const _box = Box3_.empty();
+const _sphere = Sphere_.empty();
 const _clipToWorldVector = new Vector4();
 
 let _ray: Ray, _lineWidth: number;
@@ -263,40 +263,40 @@ export class LineSegments2 extends Mesh {
       geometry.computeBoundingSphere();
     }
 
-    _sphere.copy(geometry.boundingSphere).applyMatrix4(matrixWorld);
+    Sphere_.fill_(_sphere, geometry.boundingSphere!);
+    Sphere_.applyMat4(_sphere, matrixWorld);
 
     // increase the sphere bounds by the worst case line screen space width
     let sphereMargin;
     if (worldUnits) {
       sphereMargin = _lineWidth * 0.5;
     } else {
-      const distanceToSphere = Math.max(camera.near, _sphere.distanceToPoint(_ray.origin));
+      const distanceToSphere = Math.max(camera.near, Sphere_.distanceToVec(_sphere, _ray.origin));
       sphereMargin = getWorldSpaceHalfWidth(camera, distanceToSphere, material.resolution);
     }
 
     _sphere.radius += sphereMargin;
 
-    if (_ray.intersectsSphere(_sphere) === false) {
-      return;
-    }
+    if (_ray.intersectsSphere(_sphere) === false) return intersects;
 
     // check if we intersect the box bounds
     if (geometry.boundingBox === null) {
       geometry.computeBoundingBox();
     }
 
-    _box.copy(geometry.boundingBox).applyMatrix4(matrixWorld);
+    Box3_.fill_(_box, geometry.boundingBox!);
+    Box3_.applyMat4(_box, matrixWorld);
 
     // increase the box bounds by the worst case line width
     let boxMargin;
     if (worldUnits) {
       boxMargin = _lineWidth * 0.5;
     } else {
-      const distanceToBox = Math.max(camera.near, _box.distanceToPoint(_ray.origin));
+      const distanceToBox = Math.max(camera.near, Box3_.distanceTo(_box, _ray.origin));
       boxMargin = getWorldSpaceHalfWidth(camera, distanceToBox, material.resolution);
     }
 
-    _box.expandByScalar(boxMargin);
+    Box3_.expandByScalar(_box, boxMargin);
 
     if (_ray.intersectsBox(_box) === false) {
       return intersects;

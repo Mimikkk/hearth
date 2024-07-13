@@ -1,4 +1,4 @@
-import { Sphere } from '../math/Sphere.js';
+import { Sphere_ } from '../math/Sphere.js';
 import { Ray } from '../math/Ray.js';
 import { Matrix4 } from '../math/Matrix4.js';
 import { Object3D } from '../core/Object3D.js';
@@ -9,7 +9,7 @@ import { Intersection, Raycaster } from '@modules/renderer/engine/core/Raycaster
 
 const _inverseMatrix = /*@__PURE__*/ new Matrix4();
 const _ray = /*@__PURE__*/ new Ray();
-const _sphere = /*@__PURE__*/ new Sphere();
+const _sphere = Sphere_.empty();
 const _position = /*@__PURE__*/ new Vector3();
 
 export class Points extends Object3D {
@@ -48,8 +48,8 @@ export class Points extends Object3D {
 
     if (geometry.boundingSphere === null) geometry.computeBoundingSphere();
 
-    _sphere.copy(geometry.boundingSphere!);
-    _sphere.applyMatrix4(matrixWorld);
+    Sphere_.fill_(_sphere, geometry.boundingSphere!);
+    Sphere_.applyMat4(_sphere, matrixWorld);
     _sphere.radius += threshold;
 
     if (raycaster.ray.intersectsSphere(_sphere) === false) return;

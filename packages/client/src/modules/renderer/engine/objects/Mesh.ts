@@ -1,6 +1,6 @@
 import { Vec3, Vector3 } from '../math/Vector3.js';
 import { Vec2, Vector2 } from '../math/Vector2.js';
-import { Sphere } from '../math/Sphere.js';
+import { Sphere_ } from '../math/Sphere.js';
 import { Ray } from '../math/Ray.js';
 import { Matrix4 } from '../math/Matrix4.js';
 import { Object3D } from '../core/Object3D.js';
@@ -13,7 +13,7 @@ import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.j
 
 const _inverseMatrix = /*@__PURE__*/ new Matrix4();
 const _ray = /*@__PURE__*/ new Ray();
-const _sphere = /*@__PURE__*/ new Sphere();
+const _sphere = Sphere_.empty();
 const _sphereHitAt = /*@__PURE__*/ new Vector3();
 
 const _vA = /*@__PURE__*/ new Vector3();
@@ -142,14 +142,14 @@ export class Mesh extends Object3D {
 
     if (geometry.boundingSphere === null) geometry.computeBoundingSphere();
 
-    _sphere.copy(geometry.boundingSphere!);
-    _sphere.applyMatrix4(matrixWorld);
+    Sphere_.fill_(_sphere, geometry.boundingSphere!);
+    Sphere_.applyMat4(_sphere, matrixWorld);
 
     // check distance from ray origin to bounding sphere
 
     _ray.copy(raycaster.ray).recast(raycaster.near);
 
-    if (_sphere.containsPoint(_ray.origin) === false) {
+    if (!Sphere_.containsVec(_sphere, _ray.origin)) {
       if (_ray.intersectSphere(_sphere, _sphereHitAt) === null) return;
 
       if (_ray.origin.distanceToSquared(_sphereHitAt) > (raycaster.far - raycaster.near) ** 2) return;

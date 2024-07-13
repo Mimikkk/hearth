@@ -1,5 +1,5 @@
 import { Vec3, Vector3 } from './Vector3.js';
-import type { Sphere, Sphere_ } from './Sphere.js';
+import type { Sphere_ } from './Sphere.js';
 import type { Plane } from './Plane.js';
 import type { Box3 } from './Box3.js';
 import type { Matrix4 } from './Matrix4.js';
@@ -154,7 +154,7 @@ export class Ray {
     return sqrDist;
   }
 
-  intersectSphere(sphere: Sphere, target: Vector3): Vector3 | null {
+  intersectSphere(sphere: Sphere_, target: Vector3): Vector3 | null {
     const _vector = new Vector3().subVectors(sphere.center, this.origin);
     const tca = _vector.dot(this.direction);
     const d2 = _vector.dot(_vector) - tca * tca;

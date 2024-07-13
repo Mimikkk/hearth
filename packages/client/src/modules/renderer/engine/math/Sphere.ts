@@ -325,15 +325,4 @@ export namespace Sphere_ {
     Vec3.equals(a.center, b.center) && a.radius === b.radius;
 
   export const is = (o: any): o is Sphere_ => Vec3.is(o.center) && typeof o?.radius === 'number';
-
-  export const temp0 = empty();
-  export const temp1 = empty();
-  export const temp2 = empty();
-  export const temp3 = empty();
-  export const temp4 = empty();
-  export const temp5 = empty();
-  export const temp6 = empty();
-  export const temp7 = empty();
-  export const temp8 = empty();
-  export const temp9 = empty();
 }

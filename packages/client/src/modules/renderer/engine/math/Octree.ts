@@ -1,13 +1,14 @@
 import { Capsule } from './Capsule.js';
 import { Vec3, Vector3 } from './Vector3.js';
-import { Plane } from './Plane.js';
+import { Plane_ } from './Plane.js';
 import { Line3 } from './Line3.js';
-import { Sphere } from './Sphere.js';
+import { Sphere_ } from './Sphere.js';
 import { Box3 } from './Box3.js';
 import { Triangle } from './Triangle.js';
 import { Ray } from './Ray.js';
 import { Object3D } from '@modules/renderer/engine/core/Object3D.js';
 import { Mesh } from '@modules/renderer/engine/objects/Mesh.js';
+import { clamp } from '@modules/renderer/engine/math/MathUtils.js';
 
 interface Intersection {
   normal: Vec3;
@@ -19,34 +20,34 @@ const _v1 = new Vector3();
 const _v2 = new Vector3();
 const _point1 = new Vector3();
 const _point2 = new Vector3();
-const _plane = new Plane();
+const _plane = Plane_.empty();
 const _line1 = Line3.empty();
 const _line2 = Line3.empty();
-const _sphere = new Sphere();
+const _sphere = Sphere_.empty();
 const _capsule = Capsule.empty();
 
 const _temp1 = new Vector3();
 const _temp2 = new Vector3();
 const _temp3 = new Vector3();
-const EPS = 1e-10;
 
-function lineToLineClosestPoints(line1: Line3, line2: Line3, target1: Vector3, target2: Vector3) {
-  const r = _temp1.copy(line1.end).sub(line1.start);
-  const s = _temp2.copy(line2.end).sub(line2.start);
-  const w = _temp3.copy(line2.start).sub(line1.start);
+const lineToLineClosestPoints = (line1: Line3, line2: Line3, target1: Vector3, target2: Vector3) => {
+  const r = Vec3.sub_(line1.end, line1.start, _temp1);
+  const s = Vec3.sub_(line2.end, line2.start, _temp2);
+  const w = Vec3.sub_(line2.start, line1.start, _temp3);
 
-  const a = r.dot(s),
-    b = r.dot(r),
-    c = s.dot(s),
-    d = s.dot(w),
-    e = r.dot(w);
+  const drs = Vec3.dot(r, s);
+  const drr = Vec3.dot(r, r);
+  const dss = Vec3.dot(s, s);
+  const dsw = Vec3.dot(s, w);
+  const drw = Vec3.dot(r, w);
 
-  let t1, t2;
-  const divisor = b * c - a * a;
+  let t1: number;
+  let t2: number;
 
-  if (Math.abs(divisor) < EPS) {
-    const d1 = -d / c;
-    const d2 = (a - d) / c;
+  const divisor = drr * dss - drs * drs;
+  if (Math.abs(divisor) < Number.EPSILON) {
+    const d1 = -dsw / dss;
+    const d2 = (drs - dsw) / dss;
 
     if (Math.abs(d1 - 0.5) < Math.abs(d2 - 0.5)) {
       t1 = 0;
@@ -56,21 +57,22 @@ function lineToLineClosestPoints(line1: Line3, line2: Line3, target1: Vector3, t
       t2 = d2;
     }
   } else {
-    t1 = (d * a + e * c) / divisor;
-    t2 = (t1 * a - d) / c;
+    t1 = (dsw * drs + drw * dss) / divisor;
+    t2 = (t1 * drs - dsw) / dss;
   }
 
-  t2 = Math.max(0, Math.min(1, t2));
-  t1 = Math.max(0, Math.min(1, t1));
+  t1 = clamp(t1, 0, 1);
+  t2 = clamp(t2, 0, 1);
 
   if (target1) {
-    target1.copy(r).multiplyScalar(t1).add(line1.start);
+    Vec3.scale_(r, t1, target1);
+    Vec3.add(target1, line1.start);
   }
-
   if (target2) {
-    target2.copy(s).multiplyScalar(t2).add(line2.start);
+    Vec3.scale_(s, t2, target2);
+    Vec3.add(target2, line2.start);
   }
-}
+};
 
 export class Octree {
   bounds: Box3;
@@ -180,8 +182,8 @@ export class Octree {
   triangleCapsuleIntersect(capsule: Capsule, triangle: Triangle): Intersection | undefined {
     Triangle.plane_(triangle, _plane);
 
-    const d1 = _plane.distanceToPoint(capsule.start) - capsule.radius;
-    const d2 = _plane.distanceToPoint(capsule.end) - capsule.radius;
+    const d1 = Plane_.distanceToVec(_plane, capsule.start) - capsule.radius;
+    const d2 = Plane_.distanceToVec(_plane, capsule.end) - capsule.radius;
 
     if ((d1 > 0 && d2 > 0) || (d1 < -capsule.radius && d2 < -capsule.radius)) return;
 
@@ -190,7 +192,11 @@ export class Octree {
     const intersectPoint = Vec3.lerp_(capsule.start, capsule.end, delta, _v1);
 
     if (Triangle.containsVec(triangle, intersectPoint)) {
-      return { normal: _plane.normal.clone(), point: Vec3.clone(_v1), depth: Math.abs(Math.min(d1, d2)) };
+      return {
+        normal: new Vector3(_plane.normal.x, _plane.normal.y, _plane.normal.z),
+        point: Vec3.clone(_v1),
+        depth: Math.abs(Math.min(d1, d2)),
+      };
     }
 
     const r2 = capsule.radius * capsule.radius;
@@ -208,31 +214,32 @@ export class Octree {
 
       lineToLineClosestPoints(_line1, _line2, _point1, _point2);
 
-      if (_point1.distanceToSquared(_point2) < r2) {
+      const distanceSq = Vec3.distanceSqTo(_point1, _point2);
+      if (distanceSq < r2) {
         return {
           normal: _point1.clone().sub(_point2).normalize(),
           point: _point2.clone(),
-          depth: capsule.radius - _point1.distanceTo(_point2),
+          depth: capsule.radius - Math.sqrt(distanceSq),
         };
       }
     }
   }
 
-  triangleSphereIntersect(sphere: Sphere, triangle: Triangle): undefined | Intersection {
+  triangleSphereIntersect(sphere: Sphere_, triangle: Triangle): undefined | Intersection {
     Triangle.plane_(triangle, _plane);
 
-    if (!sphere.intersectsPlane(_plane)) return;
+    if (!Sphere_.intersectsPlane(sphere, _plane)) return;
 
-    const depth = Math.abs(_plane.distanceToSphere(sphere));
+    const depth = Math.abs(Plane_.distanceToSphere(_plane, sphere));
     const r2 = sphere.radius * sphere.radius - depth * depth;
 
-    const plainPoint = _plane.projectPoint(sphere.center, _v1);
+    const plainPoint = Plane_.project_(_plane, sphere.center, _v1);
 
     if (Triangle.containsVec(triangle, sphere.center)) {
       return {
-        normal: _plane.normal.clone(),
-        point: plainPoint.clone(),
-        depth: Math.abs(_plane.distanceToSphere(sphere)),
+        normal: new Vector3(_plane.normal.x, _plane.normal.y, _plane.normal.z),
+        point: new Vector3(_v1.x, _v1.y, _v1.z),
+        depth: Math.abs(Plane_.distanceToSphere(_plane, sphere)),
       };
     }
 
@@ -246,23 +253,27 @@ export class Octree {
       Line3.fillEnds(_line1, lines[i][0], lines[i][1]);
       Line3.closestTo_(_line1, plainPoint, _v2);
 
-      const d = _v2.distanceToSquared(sphere.center);
+      const distance = Vec3.distanceSqTo(_v2, sphere.center);
 
-      if (d < r2) {
-        return {
-          normal: sphere.center.clone().sub(_v2).normalize(),
-          point: _v2.clone(),
-          depth: sphere.radius - Math.sqrt(d),
-        };
-      }
+      if (distance >= r2) continue;
+      const s = Vec3.subbed(sphere.center, _v2);
+      Vec3.normalize(s);
+
+      const normal = new Vector3(s.x, s.y, s.z);
+
+      return {
+        normal,
+        point: _v2.clone(),
+        depth: sphere.radius - Math.sqrt(distance),
+      };
     }
   }
 
-  getSphereTriangles(sphere: Sphere, triangles: Triangle[]): void {
+  getSphereTriangles(sphere: Sphere_, triangles: Triangle[]): void {
     for (let i = 0; i < this.subTrees.length; i++) {
       const subTree = this.subTrees[i];
 
-      if (!sphere.intersectsBox(subTree.box)) continue;
+      if (!Sphere_.intersectsBox(sphere, subTree.box)) continue;
 
       if (subTree.triangles.length > 0) {
         for (let j = 0; j < subTree.triangles.length; j++) {
@@ -290,8 +301,8 @@ export class Octree {
     }
   }
 
-  sphereIntersect(sphere: Sphere): undefined | Intersection {
-    _sphere.copy(sphere);
+  sphereIntersect(sphere: Sphere_): undefined | Intersection {
+    Sphere_.fill_(_sphere, sphere);
 
     const triangles: Triangle[] = [];
     let hit = false;
@@ -306,12 +317,12 @@ export class Octree {
       Vec3.add(_sphere.center, Vec3.scale(result.normal, result.depth));
     }
 
-    if (hit) {
-      const collisionVector = _sphere.center.clone().sub(sphere.center);
-      const depth = collisionVector.length();
+    if (!hit) return;
+    const collision = Vec3.subbed(_sphere.center, sphere.center);
+    const depth = Vec3.length(collision);
+    const normal = Vec3.normalize(collision);
 
-      return { normal: collisionVector.normalize(), depth: depth };
-    }
+    return { normal, depth };
   }
 
   capsuleIntersect(capsule: Capsule): undefined | Intersection {
@@ -331,13 +342,14 @@ export class Octree {
       }
     }
 
-    if (hit) {
-      Capsule.center_(_capsule, Vec3.temp0);
-      Capsule.center_(capsule, Vec3.temp1);
-      Vec3.sub(Vec3.temp0, Vec3.temp1);
+    if (!hit) return;
+    Capsule.center_(_capsule, Vec3.temp0);
+    Capsule.center_(capsule, Vec3.temp1);
+    const collision = Vec3.subbed(Vec3.temp0, Vec3.temp1);
+    const depth = Vec3.length(collision);
+    const normal = Vec3.normalize(collision);
 
-      return { normal: Vec3.normalized(Vec3.temp0), depth: Vec3.length(Vec3.temp0) };
-    }
+    return { normal, depth };
   }
 
   rayIntersect(ray: Ray): undefined | { distance: number; triangle: Triangle; position: Vector3 } {
