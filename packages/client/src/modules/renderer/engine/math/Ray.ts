@@ -293,7 +293,7 @@ export class Ray {
     return this.intersectBox(box, new Vector3(0, 0, 0)) !== null;
   }
 
-  intersectTriangle(a: Vector3, b: Vector3, c: Vector3, backfaceCulling: boolean, target: Vector3): Vector3 | null {
+  intersectTriangle(a: Vec3, b: Vec3, c: Vec3, backfaceCulling: boolean, target: Vector3): Vector3 | null {
     // Compute the offset origin, edges, and normal.
 
     // from https://github.com/pmjoniak/GeometricTools/blob/master/GTEngine/Include/Mathematics/GteIntrRay3Triangle3.h

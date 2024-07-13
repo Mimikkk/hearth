@@ -1,13 +1,13 @@
 import { BufferGeometry } from '../core/BufferGeometry.js';
 import { Float32BufferAttribute } from '../core/BufferAttribute.js';
 import * as MathUtils from '../math/MathUtils.js';
-import { Triangle } from '../math/Triangle.js';
+import { Triangle_ } from '../math/Triangle.js';
 import { Vector3 } from '../math/Vector3.js';
 
 const _v0 = /*@__PURE__*/ new Vector3();
 const _v1 = /*@__PURE__*/ new Vector3();
 const _normal = /*@__PURE__*/ new Vector3();
-const _triangle = /*@__PURE__*/ new Triangle();
+const _triangle = Triangle_.empty();
 
 export class EdgesGeometry extends BufferGeometry {
   constructor(geometry: BufferGeometry | null = null, thresholdAngle: number = 1) {
@@ -47,10 +47,8 @@ export class EdgesGeometry extends BufferGeometry {
         }
 
         const { a, b, c } = _triangle;
-        a.fromBufferAttribute(positionAttr, indexArr[0]);
-        b.fromBufferAttribute(positionAttr, indexArr[1]);
-        c.fromBufferAttribute(positionAttr, indexArr[2]);
-        _triangle.getNormal(_normal);
+        Triangle_.fillPointsAndIndices(_triangle, positionAttr, indexArr[0], indexArr[1], indexArr[2]);
+        Triangle_.normal_(_triangle, _normal);
 
         // create hashes for the edge from the vertices
         hashes[0] = `${Math.round(a.x * precision)},${Math.round(a.y * precision)},${Math.round(a.z * precision)}`;

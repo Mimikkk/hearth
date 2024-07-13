@@ -1,6 +1,7 @@
 import { clamp } from './MathUtils.js';
 import type { BufferAttribute } from '../core/BufferAttribute.js';
 import type { Matrix3 } from './Matrix3.js';
+import { Const } from '@modules/renderer/engine/math/types.js';
 
 export interface IVector2 {
   x: number;
@@ -373,6 +374,7 @@ export class Vector2 implements IVector2 {
     yield this.y;
   }
 }
+
 Vector2.prototype.isVector2 = true;
 
 export interface Vec2 {
@@ -382,5 +384,40 @@ export interface Vec2 {
 
 export namespace Vec2 {
   export const create = (x: number, y: number): Vec2 => ({ x, y });
+  export const empty = (): Vec2 => create(0, 0);
   export const vec2 = create;
+
+  export const set = (self: Vec2, x: number, y: number): Vec2 => {
+    self.x = x;
+    self.y = y;
+    return self;
+  };
+  export const fill_ = (self: Vec2, other: Const<Vec2>): Vec2 => set(self, other.x, other.y);
+
+  export const clone = (self: Const<Vec2>): Vec2 => clone_(self, empty());
+  export const clone_ = (self: Const<Vec2>, into: Vec2): Vec2 => set(into, self.x, self.y);
+
+  export const scale = (self: Vec2, scalar: number): Vec2 => scale_(self, scalar, self);
+  export const scale_ = ({ x, y }: Const<Vec2>, scalar: number, into: Vec2): Vec2 => set(into, x * scalar, y * scalar);
+  export const scaled = (self: Const<Vec2>, scalar: number): Vec2 => scale_(self, scalar, empty());
+
+  export const add = (a: Vec2, b: Const<Vec2>): Vec2 => add_(a, b, a);
+  export const add_ = (a: Const<Vec2>, b: Const<Vec2>, into: Vec2): Vec2 => set(into, a.x + b.x, a.y + b.y);
+  export const added = (a: Const<Vec2>, b: Const<Vec2>): Vec2 => add_(a, b, empty());
+
+  export const sub = (a: Vec2, b: Const<Vec2>): Vec2 => sub_(a, b, a);
+  export const sub_ = (a: Const<Vec2>, b: Const<Vec2>, into: Vec2): Vec2 => set(into, a.x - b.x, a.y - b.y);
+  export const subbed = (a: Const<Vec2>, b: Const<Vec2>): Vec2 => sub_(a, b, empty());
+
+  export const mul = (self: Vec2, other: Const<Vec2>): Vec2 => mul_(self, other, self);
+  export const mul_ = (self: Const<Vec2>, other: Const<Vec2>, into: Vec2): Vec2 =>
+    set(into, self.x * other.x, self.y * other.y);
+  export const mulled = (self: Const<Vec2>, other: Const<Vec2>): Vec2 => mul_(self, other, empty());
+
+  export const fromAttribute = (attribute: BufferAttribute, index: number): Vec2 =>
+    fromAttribute_(attribute, index, empty());
+  export const fromAttribute_ = (attribute: BufferAttribute, index: number, into: Vec2): Vec2 =>
+    set(into, attribute.getX(index), attribute.getY(index));
+  export const fillAttribute = (self: Vec2, attribute: BufferAttribute, index: number): Vec2 =>
+    fromAttribute_(attribute, index, self);
 }
