@@ -4,7 +4,7 @@ import { Plane } from './Plane.js';
 import { Line3 } from './Line3.js';
 import { Sphere } from './Sphere.js';
 import { Box3 } from './Box3.js';
-import { Triangle_ } from './Triangle.js';
+import { Triangle } from './Triangle.js';
 import { Ray } from './Ray.js';
 import { Object3D } from '@modules/renderer/engine/core/Object3D.js';
 import { Mesh } from '@modules/renderer/engine/objects/Mesh.js';
@@ -75,7 +75,7 @@ function lineToLineClosestPoints(line1: Line3, line2: Line3, target1: Vector3, t
 export class Octree {
   bounds: Box3;
   subTrees: Octree[];
-  triangles: Triangle_[];
+  triangles: Triangle[];
 
   constructor(public box: Box3 = new Box3()) {
     this.bounds = new Box3();
@@ -84,7 +84,7 @@ export class Octree {
     this.triangles = [];
   }
 
-  addTriangle(triangle: Triangle_): this {
+  addTriangle(triangle: Triangle): this {
     this.bounds.min.x = Math.min(this.bounds.min.x, triangle.a.x, triangle.b.x, triangle.c.x);
     this.bounds.min.y = Math.min(this.bounds.min.y, triangle.a.y, triangle.b.y, triangle.c.y);
     this.bounds.min.z = Math.min(this.bounds.min.z, triangle.a.z, triangle.b.z, triangle.c.z);
@@ -160,7 +160,7 @@ export class Octree {
     return this;
   }
 
-  getRayTriangles(ray: Ray, triangles: Triangle_[]): Triangle_[] {
+  getRayTriangles(ray: Ray, triangles: Triangle[]): Triangle[] {
     for (let i = 0; i < this.subTrees.length; i++) {
       const subTree = this.subTrees[i];
       if (!ray.intersectsBox(subTree.box)) continue;
@@ -177,8 +177,8 @@ export class Octree {
     return triangles;
   }
 
-  triangleCapsuleIntersect(capsule: Capsule, triangle: Triangle_): Intersection | undefined {
-    Triangle_.plane_(triangle, _plane);
+  triangleCapsuleIntersect(capsule: Capsule, triangle: Triangle): Intersection | undefined {
+    Triangle.plane_(triangle, _plane);
 
     const d1 = _plane.distanceToPoint(capsule.start) - capsule.radius;
     const d2 = _plane.distanceToPoint(capsule.end) - capsule.radius;
@@ -189,7 +189,7 @@ export class Octree {
 
     const intersectPoint = Vec3.lerp_(capsule.start, capsule.end, delta, _v1);
 
-    if (Triangle_.containsVec(triangle, intersectPoint)) {
+    if (Triangle.containsVec(triangle, intersectPoint)) {
       return { normal: _plane.normal.clone(), point: Vec3.clone(_v1), depth: Math.abs(Math.min(d1, d2)) };
     }
 
@@ -218,8 +218,8 @@ export class Octree {
     }
   }
 
-  triangleSphereIntersect(sphere: Sphere, triangle: Triangle_): undefined | Intersection {
-    Triangle_.plane_(triangle, _plane);
+  triangleSphereIntersect(sphere: Sphere, triangle: Triangle): undefined | Intersection {
+    Triangle.plane_(triangle, _plane);
 
     if (!sphere.intersectsPlane(_plane)) return;
 
@@ -228,7 +228,7 @@ export class Octree {
 
     const plainPoint = _plane.projectPoint(sphere.center, _v1);
 
-    if (Triangle_.containsVec(triangle, sphere.center)) {
+    if (Triangle.containsVec(triangle, sphere.center)) {
       return {
         normal: _plane.normal.clone(),
         point: plainPoint.clone(),
@@ -258,7 +258,7 @@ export class Octree {
     }
   }
 
-  getSphereTriangles(sphere: Sphere, triangles: Triangle_[]): void {
+  getSphereTriangles(sphere: Sphere, triangles: Triangle[]): void {
     for (let i = 0; i < this.subTrees.length; i++) {
       const subTree = this.subTrees[i];
 
@@ -274,7 +274,7 @@ export class Octree {
     }
   }
 
-  getCapsuleTriangles(capsule: Capsule, triangles: Triangle_[]): void {
+  getCapsuleTriangles(capsule: Capsule, triangles: Triangle[]): void {
     for (let i = 0; i < this.subTrees.length; i++) {
       const subTree = this.subTrees[i];
 
@@ -293,7 +293,7 @@ export class Octree {
   sphereIntersect(sphere: Sphere): undefined | Intersection {
     _sphere.copy(sphere);
 
-    const triangles: Triangle_[] = [];
+    const triangles: Triangle[] = [];
     let hit = false;
 
     this.getSphereTriangles(sphere, triangles);
@@ -317,7 +317,7 @@ export class Octree {
   capsuleIntersect(capsule: Capsule): undefined | Intersection {
     Capsule.clone_(capsule, _capsule);
 
-    const triangles: Triangle_[] = [];
+    const triangles: Triangle[] = [];
     let result,
       hit = false;
 
@@ -340,11 +340,11 @@ export class Octree {
     }
   }
 
-  rayIntersect(ray: Ray): undefined | { distance: number; triangle: Triangle_; position: Vector3 } {
+  rayIntersect(ray: Ray): undefined | { distance: number; triangle: Triangle; position: Vector3 } {
     if (ray.direction.length() === 0) return;
 
-    const triangles: Triangle_[] = [];
-    let triangle!: Triangle_;
+    const triangles: Triangle[] = [];
+    let triangle!: Triangle;
     let position!: Vector3;
     let distance = Infinity;
 
@@ -392,7 +392,7 @@ export class Octree {
           v2.applyMatrix4(obj.matrixWorld);
           v3.applyMatrix4(obj.matrixWorld);
 
-          this.addTriangle(Triangle_.create(v1, v2, v3));
+          this.addTriangle(Triangle.create(v1, v2, v3));
         }
 
         if (isTemp) {

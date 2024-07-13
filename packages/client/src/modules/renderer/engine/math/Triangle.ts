@@ -4,84 +4,84 @@ import { Plane_ } from '@modules/renderer/engine/math/Plane.js';
 import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
 import { Const } from '@modules/renderer/engine/math/types.js';
 
-export interface Triangle_ {
+export interface Triangle {
   a: Vec3;
   b: Vec3;
   c: Vec3;
 }
 
-export namespace Triangle_ {
-  export const create = (a: Vec3, b: Vec3, c: Vec3): Triangle_ => ({ a, b, c });
-  export const empty = (): Triangle_ => ({ a: Vec3.empty(), b: Vec3.empty(), c: Vec3.empty() });
+export namespace Triangle {
+  export const create = (a: Vec3, b: Vec3, c: Vec3): Triangle => ({ a, b, c });
+  export const empty = (): Triangle => ({ a: Vec3.empty(), b: Vec3.empty(), c: Vec3.empty() });
 
-  export const set = (self: Triangle_, a: Const<Vec3>, b: Const<Vec3>, c: Const<Vec3>): Triangle_ => {
+  export const set = (self: Triangle, a: Const<Vec3>, b: Const<Vec3>, c: Const<Vec3>): Triangle => {
     Vec3.fill_(self.a, a);
     Vec3.fill_(self.b, b);
     Vec3.fill_(self.c, c);
     return self;
   };
-  export const fill_ = (self: Triangle_, { a, b, c }: Const<Triangle_>): Triangle_ => set(self, a, b, c);
+  export const fill_ = (self: Triangle, { a, b, c }: Const<Triangle>): Triangle => set(self, a, b, c);
 
-  export const fromPointsAndIndices = (points: Const<Vec3>[], i0: number, i1: number, i2: number): Triangle_ =>
+  export const fromPointsAndIndices = (points: Const<Vec3>[], i0: number, i1: number, i2: number): Triangle =>
     fromPointsAndIndices_(points, i0, i1, i2, empty());
   export const fromPointsAndIndices_ = (
     points: Const<Vec3>[],
     i0: number,
     i1: number,
     i2: number,
-    into: Triangle_,
-  ): Triangle_ => set(into, points[i0], points[i1], points[i2]);
+    into: Triangle,
+  ): Triangle => set(into, points[i0], points[i1], points[i2]);
   export const fillPointsAndIndices = (
-    self: Triangle_,
+    self: Triangle,
     points: Const<Vec3>[],
     i0: number,
     i1: number,
     i2: number,
-  ): Triangle_ => fromPointsAndIndices_(points, i0, i1, i2, self);
+  ): Triangle => fromPointsAndIndices_(points, i0, i1, i2, self);
 
   export const fromAttributeAndIndices = (
     attribute: Const<BufferAttribute>,
     i0: number,
     i1: number,
     i2: number,
-  ): Triangle_ => fromAttributeAndIndices_(attribute, i0, i1, i2, empty());
+  ): Triangle => fromAttributeAndIndices_(attribute, i0, i1, i2, empty());
   export const fromAttributeAndIndices_ = (
     attribute: Const<BufferAttribute>,
     i0: number,
     i1: number,
     i2: number,
-    into: Triangle_,
-  ): Triangle_ => {
+    into: Triangle,
+  ): Triangle => {
     Vec3.fromAttribute_(attribute, i0, into.a);
     Vec3.fromAttribute_(attribute, i1, into.b);
     Vec3.fromAttribute_(attribute, i2, into.c);
     return into;
   };
   export const fillAttributeAndIndices = (
-    self: Triangle_,
+    self: Triangle,
     attribute: Const<BufferAttribute>,
     i0: number,
     i1: number,
     i2: number,
   ) => fromAttributeAndIndices_(attribute, i0, i1, i2, self);
 
-  export const clone = (from: Const<Triangle_>): Triangle_ => clone_(from, empty());
-  export const clone_ = (from: Const<Triangle_>, into: Triangle_): Triangle_ => fill_(into, from);
+  export const clone = (from: Const<Triangle>): Triangle => clone_(from, empty());
+  export const clone_ = (from: Const<Triangle>, into: Triangle): Triangle => fill_(into, from);
 
-  export const copy = (from: Triangle_): Triangle_ => copy_(from, empty());
-  export const copy_ = (from: Triangle_, into: Triangle_): Triangle_ => {
+  export const copy = (from: Triangle): Triangle => copy_(from, empty());
+  export const copy_ = (from: Triangle, into: Triangle): Triangle => {
     into.a = from.a;
     into.b = from.b;
     into.c = from.c;
     return into;
   };
 
-  export const equals = (a: Const<Triangle_>, b: Const<Triangle_>): boolean =>
+  export const equals = (a: Const<Triangle>, b: Const<Triangle>): boolean =>
     Vec3.equals(a.a, b.a) && Vec3.equals(a.b, b.b) && Vec3.equals(a.c, b.c);
 
   const _vec = Vec3.empty();
-  export const normal = (self: Const<Triangle_>): Vec3 => normal_(self, Vec3.empty());
-  export const normal_ = ({ a, b, c }: Const<Triangle_>, into: Vec3): Vec3 => {
+  export const normal = (self: Const<Triangle>): Vec3 => normal_(self, Vec3.empty());
+  export const normal_ = ({ a, b, c }: Const<Triangle>, into: Vec3): Vec3 => {
     Vec3.sub_(c, b, into);
     Vec3.sub_(a, b, _vec);
     Vec3.cross(into, _vec);
@@ -90,14 +90,14 @@ export namespace Triangle_ {
     return len > 0 ? Vec3.scale(into, 1 / Math.sqrt(len)) : Vec3.clear(into);
   };
 
-  export const plane = (self: Const<Triangle_>): Plane_ => plane_(self, Plane_.empty());
-  export const plane_ = ({ a, b, c }: Const<Triangle_>, into: Plane_): Plane_ => Plane_.fillCoplanar(into, a, b, c);
+  export const plane = (self: Const<Triangle>): Plane_ => plane_(self, Plane_.empty());
+  export const plane_ = ({ a, b, c }: Const<Triangle>, into: Plane_): Plane_ => Plane_.fillCoplanar(into, a, b, c);
 
   const _v0 = Vec3.empty();
   const _v1 = Vec3.empty();
   const _v2 = Vec3.empty();
-  export const barycoord = (from: Const<Triangle_>, vec: Vec3): Vec3 | null => barycoord_(from, vec, Vec3.empty());
-  export const barycoord_ = ({ a, b, c }: Const<Triangle_>, vec: Const<Vec3>, into: Vec3): Vec3 | null => {
+  export const barycoord = (from: Const<Triangle>, vec: Vec3): Vec3 | null => barycoord_(from, vec, Vec3.empty());
+  export const barycoord_ = ({ a, b, c }: Const<Triangle>, vec: Const<Vec3>, into: Vec3): Vec3 | null => {
     Vec3.sub_(c, a, _v0);
     Vec3.sub_(b, a, _v1);
     Vec3.sub_(vec, a, _v2);
@@ -122,22 +122,22 @@ export namespace Triangle_ {
     return Vec3.set(into, 1 - u - v, v, u);
   };
 
-  export const containsVec = (self: Const<Triangle_>, vec: Const<Vec3>): boolean => {
+  export const containsVec = (self: Const<Triangle>, vec: Const<Vec3>): boolean => {
     if (barycoord_(self, vec, _v0) === null) return false;
     return _v0.x >= 0 && _v0.y >= 0 && _v0.x + _v0.y <= 1;
   };
 
-  export const isFrontFacing = ({ a, b, c }: Const<Triangle_>, direction: Const<Vec3>): boolean => {
+  export const isFrontFacing = ({ a, b, c }: Const<Triangle>, direction: Const<Vec3>): boolean => {
     Vec3.sub_(c, b, _v0);
     Vec3.sub_(a, b, _v1);
     Vec3.cross(_v0, _v1);
 
     return Vec3.dot(_v0, direction) < 0;
   };
-  export const intersectsBox = (self: Const<Triangle_>, box: Const<Box3_>): boolean =>
+  export const intersectsBox = (self: Const<Triangle>, box: Const<Box3_>): boolean =>
     Box3_.intersectsTriangle(box, self);
 
-  export const area = ({ a, b, c }: Const<Triangle_>): number => {
+  export const area = ({ a, b, c }: Const<Triangle>): number => {
     Vec3.sub_(c, b, _v0);
     Vec3.sub_(a, b, _v1);
     Vec3.cross(_v0, _v1);
@@ -145,22 +145,17 @@ export namespace Triangle_ {
     return Vec3.length(_v0) * 0.5;
   };
 
-  export const midpoint = (self: Const<Triangle_>): Vec3 => midpoint_(self, Vec3.empty());
-  export const midpoint_ = ({ a, b, c }: Const<Triangle_>, into: Vec3): Vec3 => {
+  export const midpoint = (self: Const<Triangle>): Vec3 => midpoint_(self, Vec3.empty());
+  export const midpoint_ = ({ a, b, c }: Const<Triangle>, into: Vec3): Vec3 => {
     Vec3.add_(a, b, into);
     Vec3.add(into, c);
     return Vec3.scale(into, 1 / 3);
   };
 
-  export const interpolate = (a: Const<Triangle_>, b: Const<Triangle_>, point: Const<Vec3>): Vec3 | null =>
+  export const interpolate = (a: Const<Triangle>, b: Const<Triangle>, point: Const<Vec3>): Vec3 | null =>
     interpolate_(a, b, point, Vec3.empty());
 
-  export const interpolate_ = (
-    a: Const<Triangle_>,
-    b: Const<Triangle_>,
-    point: Const<Vec3>,
-    into: Vec3,
-  ): Vec3 | null => {
+  export const interpolate_ = (a: Const<Triangle>, b: Const<Triangle>, point: Const<Vec3>, into: Vec3): Vec3 | null => {
     Vec3.clear(into);
     if (barycoord_(a, point, _v0) === null) return null;
 
@@ -176,8 +171,8 @@ export namespace Triangle_ {
     return into;
   };
 
-  export const closestTo = (self: Const<Triangle_>, point: Const<Vec3>): Vec3 => closestTo_(self, point, Vec3.empty());
-  export const closestTo_ = ({ a, b, c }: Const<Triangle_>, p: Const<Vec3>, into: Vec3): Vec3 => {
+  export const closestTo = (self: Const<Triangle>, point: Const<Vec3>): Vec3 => closestTo_(self, point, Vec3.empty());
+  export const closestTo_ = ({ a, b, c }: Const<Triangle>, p: Const<Vec3>, into: Vec3): Vec3 => {
     Vec3.sub_(b, a, _v0);
     Vec3.sub_(c, a, _v1);
 

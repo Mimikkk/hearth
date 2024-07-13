@@ -1,7 +1,7 @@
 import { Vec3, Vector3 } from './Vector3.js';
 import { Line3 } from './Line3.js';
 import { Plane_ } from './Plane.js';
-import { Triangle_ } from './Triangle.js';
+import { Triangle } from './Triangle.js';
 import { Object3D } from '@modules/renderer/engine/core/Object3D.js';
 import { Ray } from '@modules/renderer/engine/math/Ray.js';
 
@@ -12,7 +12,7 @@ const _v1 = new Vector3();
 const _line3 = Line3.empty();
 const _plane = Plane_.empty();
 const _closest = Vec3.empty();
-const _triangle = Triangle_.empty();
+const _triangle = Triangle.empty();
 
 export class ConvexHull {
   tolerance: number;
@@ -771,10 +771,10 @@ export class Face {
     const b = this.edge!.head()!;
     const c = this.edge!.next!.head()!;
 
-    Triangle_.set(_triangle, a.point, b.point, c.point);
-    Triangle_.normal_(_triangle, this.normal);
-    Triangle_.midpoint_(_triangle, this.midpoint);
-    this.area = Triangle_.area(_triangle);
+    Triangle.set(_triangle, a.point, b.point, c.point);
+    Triangle.normal_(_triangle, this.normal);
+    Triangle.midpoint_(_triangle, this.midpoint);
+    this.area = Triangle.area(_triangle);
     this.constant = Vec3.dot(this.normal, this.midpoint);
 
     return this;

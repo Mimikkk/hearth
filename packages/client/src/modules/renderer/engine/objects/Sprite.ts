@@ -1,7 +1,7 @@
 import { Vec2, Vector2 } from '../math/Vector2.js';
 import { Vec3, Vector3 } from '../math/Vector3.js';
 import { Matrix4 } from '../math/Matrix4.js';
-import { Triangle_ } from '../math/Triangle.js';
+import { Triangle } from '../math/Triangle.js';
 import { Object3D } from '../core/Object3D.js';
 import { BufferGeometry } from '../core/BufferGeometry.js';
 import { InterleavedBuffer } from '../core/InterleavedBuffer.js';
@@ -24,8 +24,8 @@ const _vC = /*@__PURE__*/ new Vector3();
 const _uvA = /*@__PURE__*/ new Vector2();
 const _uvB = /*@__PURE__*/ new Vector2();
 const _uvC = /*@__PURE__*/ new Vector2();
-const _triangle1 = Triangle_.empty();
-const _triangle2 = Triangle_.empty();
+const _triangle1 = Triangle.empty();
+const _triangle2 = Triangle.empty();
 
 let _geometry: BufferGeometry;
 
@@ -119,10 +119,10 @@ export class Sprite extends Object3D {
 
     if (distance < raycaster.near || distance > raycaster.far) return;
 
-    Triangle_.set(_triangle1, _vA, _vB, _vC);
-    Triangle_.set(_triangle2, _vA, _vC, _vB);
+    Triangle.set(_triangle1, _vA, _vB, _vC);
+    Triangle.set(_triangle2, _vA, _vC, _vB);
 
-    const uv = Triangle_.interpolate(_triangle1, _triangle2, _intersect)!;
+    const uv = Triangle.interpolate(_triangle1, _triangle2, _intersect)!;
 
     intersects.push({
       distance: distance,
