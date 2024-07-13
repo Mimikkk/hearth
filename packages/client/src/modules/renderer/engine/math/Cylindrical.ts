@@ -24,8 +24,8 @@ export namespace Cylindrical {
   export const clone = (from: Const<Cylindrical>): Cylindrical => clone_(from, empty());
   export const clone_ = (from: Const<Cylindrical>, into: Cylindrical): Cylindrical => fill_(into, from);
 
-  export const fromVec = (from: Const<Vec3>): Cylindrical => fromVec_(from, empty());
-  export const fromVec_ = ({ x, y, z }: Const<Vec3>, into: Cylindrical): Cylindrical =>
+  export const fromCartesian = (from: Const<Vec3>): Cylindrical => fromCartesian_(from, empty());
+  export const fromCartesian_ = ({ x, y, z }: Const<Vec3>, into: Cylindrical): Cylindrical =>
     set(into, Math.sqrt(x * x + z * z), Math.atan2(x, z), y);
-  export const fillVec = (self: Cylindrical, from: Const<Vec3>): Cylindrical => fromVec_(from, self);
+  export const fillCartesian = (self: Cylindrical, from: Const<Vec3>): Cylindrical => fromCartesian_(from, self);
 }
