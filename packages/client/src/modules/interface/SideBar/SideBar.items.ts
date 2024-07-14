@@ -83,6 +83,7 @@ export const SideBarItems: AccordionItem[] = [
     title: 'Geometry & Meshes',
     icon: 'SiMetro',
     children: [
+      { id: Example.Primitives, title: 'Primitives' },
       { id: Example.InstanceMesh, title: 'Instance Mesh' },
       { id: Example.InstancePoints, title: 'Instance Points' },
       { id: Example.InstanceUniform, title: 'Instance Uniform' },

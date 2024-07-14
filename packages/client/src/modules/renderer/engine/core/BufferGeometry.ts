@@ -1,6 +1,6 @@
-import { Vector3 } from '../math/Vector3.js';
+import { Vec3, Vector3 } from '../math/Vector3.js';
 import { Vector2 } from '../math/Vector2.js';
-import { Box3 } from '../math/Box3.js';
+import { Box3, Box3_ } from '../math/Box3.js';
 import { EventDispatcher } from './EventDispatcher.js';
 import {
   BufferAttribute,
@@ -264,46 +264,33 @@ export class BufferGeometry<
   }
 
   computeBoundingBox(): this {
-    if (this.boundingBox === null) {
-      this.boundingBox = new Box3();
-    }
+    if (this.boundingBox === null) this.boundingBox = new Box3();
 
     const position = this.attributes.position as BufferAttribute<Float32Array>;
-    const morphAttributesPosition = this.morphAttributes.position;
 
-    if (position !== undefined) {
-      this.boundingBox.setFromBufferAttribute(position);
-
-      // process morph attributes if present
-
-      if (morphAttributesPosition) {
-        //@ts-expect-error
-        for (let i = 0, il = morphAttributesPosition.length; i < il; i++) {
-          //@ts-expect-error
-          const morphAttribute = morphAttributesPosition[i];
-          _box.setFromBufferAttribute(morphAttribute);
-
-          if (this.morphTargetsRelative) {
-            _vector.addVectors(this.boundingBox.min, _box.min);
-            this.boundingBox.expandByPoint(_vector);
-
-            _vector.addVectors(this.boundingBox.max, _box.max);
-            this.boundingBox.expandByPoint(_vector);
-          } else {
-            this.boundingBox.expandByPoint(_box.min);
-            this.boundingBox.expandByPoint(_box.max);
-          }
-        }
-      }
-    } else {
-      this.boundingBox.makeEmpty();
+    if (!position) {
+      Box3_.clear(this.boundingBox);
+      return this;
     }
 
-    if (isNaN(this.boundingBox.min.x) || isNaN(this.boundingBox.min.y) || isNaN(this.boundingBox.min.z)) {
-      console.error(
-        'engine.BufferGeometry.computeBoundingBox(): Computed min/max have NaN values. The "position" attribute is likely to have NaN values.',
-        this,
-      );
+    Box3_.fillAttribute(this.boundingBox, position);
+
+    const morphs = this.morphAttributes.position as never as BufferAttribute<Float32Array>[];
+    if (!morphs) return this;
+
+    for (let i = 0, il = morphs.length; i < il; i++) {
+      const morph = morphs[i];
+      Box3_.fillAttribute(_box, morph);
+
+      if (this.morphTargetsRelative) {
+        Vec3.add_(this.boundingBox.min, _box.min, _vector);
+        Box3_.expandCoord(this.boundingBox, _vector);
+        Vec3.add_(this.boundingBox.max, _box.max, _vector);
+        Box3_.expandCoord(this.boundingBox, _vector);
+      } else {
+        Box3_.expandCoord(this.boundingBox, _box.min);
+        Box3_.expandCoord(this.boundingBox, _box.max);
+      }
     }
 
     return this;
@@ -315,81 +302,60 @@ export class BufferGeometry<
     }
 
     const position = this.attributes.position as BufferAttribute<Float32Array>;
-    const morphAttributesPosition = this.morphAttributes.position;
 
-    if (position) {
-      // first, find the center of the bounding sphere
+    if (!position) return this;
 
-      const center = this.boundingSphere.center;
+    Box3_.fillAttribute(_box, position);
 
-      _box.setFromBufferAttribute(position);
+    const morphs = this.morphAttributes.position as never as BufferAttribute<Float32Array>[];
+    if (morphs) {
+      for (let i = 0, il = morphs.length; i < il; ++i) {
+        const morph = morphs[i];
+        Box3_.fillAttribute(_boxMorphTargets, morph);
 
-      // process morph attributes if present
-
-      if (morphAttributesPosition) {
-        //@ts-expect-error
-        for (let i = 0, il = morphAttributesPosition.length; i < il; i++) {
-          //@ts-expect-error
-          const morphAttribute = morphAttributesPosition[i];
-          _boxMorphTargets.setFromBufferAttribute(morphAttribute);
-
-          if (this.morphTargetsRelative) {
-            _vector.addVectors(_box.min, _boxMorphTargets.min);
-            _box.expandByPoint(_vector);
-
-            _vector.addVectors(_box.max, _boxMorphTargets.max);
-            _box.expandByPoint(_vector);
-          } else {
-            _box.expandByPoint(_boxMorphTargets.min);
-            _box.expandByPoint(_boxMorphTargets.max);
-          }
+        if (this.morphTargetsRelative) {
+          Vec3.add_(_box.min, _boxMorphTargets.min, _vector);
+          Box3_.expandCoord(_box, _vector);
+          Vec3.add_(_box.max, _boxMorphTargets.max, _vector);
+          Box3_.expandCoord(_box, _vector);
+        } else {
+          Box3_.expandCoord(_box, _boxMorphTargets.min);
+          Box3_.expandCoord(_box, _boxMorphTargets.max);
         }
-      }
-
-      _box.getCenter(center);
-
-      // second, try to find a boundingSphere with a radius smaller than the
-      // boundingSphere of the boundingBox: sqrt(3) smaller in the best case
-
-      let maxRadiusSq = 0;
-
-      for (let i = 0, il = position.count; i < il; i++) {
-        _vector.fromBufferAttribute(position, i);
-
-        maxRadiusSq = Math.max(maxRadiusSq, center.distanceToSquared(_vector));
-      }
-
-      // process morph attributes if present
-
-      if (morphAttributesPosition) {
-        //@ts-expect-error
-        for (let i = 0, il = morphAttributesPosition.length; i < il; i++) {
-          //@ts-expect-error
-          const morphAttribute = morphAttributesPosition[i];
-          const morphTargetsRelative = this.morphTargetsRelative;
-
-          for (let j = 0, jl = morphAttribute.count; j < jl; j++) {
-            _vector.fromBufferAttribute(morphAttribute, j);
-
-            if (morphTargetsRelative) {
-              _offset.fromBufferAttribute(position, j);
-              _vector.add(_offset);
-            }
-
-            maxRadiusSq = Math.max(maxRadiusSq, center.distanceToSquared(_vector));
-          }
-        }
-      }
-
-      this.boundingSphere.radius = Math.sqrt(maxRadiusSq);
-
-      if (isNaN(this.boundingSphere.radius)) {
-        console.error(
-          'engine.BufferGeometry.computeBoundingSphere(): Computed radius is NaN. The "position" attribute is likely to have NaN values.',
-          this,
-        );
       }
     }
+
+    const center = this.boundingSphere.center;
+    Box3_.center_(_box, center);
+
+    let maxRadiusSq = 0;
+    for (let i = 0, il = position.count; i < il; i++) {
+      _vector.fromBufferAttribute(position, i);
+
+      const distance = Vec3.distanceSqTo(center, _vector);
+      if (distance > maxRadiusSq) maxRadiusSq = distance;
+    }
+
+    if (morphs) {
+      const isRelative = this.morphTargetsRelative;
+      for (let i = 0, il = morphs.length; i < il; ++i) {
+        const morph = morphs[i];
+
+        for (let j = 0, jl = morph.count; j < jl; j++) {
+          Vec3.fillAttribute(_vector, morph, j);
+
+          if (isRelative) {
+            Vec3.fillAttribute(_offset, position, j);
+            Vec3.add(_vector, _offset);
+          }
+
+          const radiusSq = Vec3.distanceSqTo(center, _vector);
+          if (radiusSq > maxRadiusSq) maxRadiusSq = radiusSq;
+        }
+      }
+    }
+
+    this.boundingSphere.radius = Math.sqrt(maxRadiusSq);
 
     return this;
   }

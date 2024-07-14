@@ -5,6 +5,7 @@ import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.j
 import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/GLTFLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 import { WorldAxesVisualizer } from '@modules/renderer/engine/helpers/WorldAxesVisualizer.js';
+import { UI } from '@modules/renderer/examples/utilities/UI.js';
 
 let camera!: PerspectiveCamera;
 let scene!: Scene;

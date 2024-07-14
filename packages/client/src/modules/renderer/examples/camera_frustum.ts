@@ -69,7 +69,7 @@ const geometry = new SphereGeometry(0.25, 32, 24);
 const smb = SpriteMaterialBuilder.create({ height: 256, width: 256 }).addCircle({ radius: 128 }).addText('+');
 
 const sprites = new Group();
-const addSphere = (x: number, y: number, z: number) => {
+const createSphere = (x: number, y: number, z: number) => {
   const material = new MeshStandardNodeMaterial({ color: Math.random() * 0xffffff });
   material.roughnessNode = float(0.8);
   material.metalnessNode = float(0.2);
@@ -84,19 +84,19 @@ const addSphere = (x: number, y: number, z: number) => {
   return mesh;
 };
 
-points.add(addSphere(0, 0, 3));
-points.add(addSphere(0, 0, -3));
-points.add(addSphere(2.5, 1.5, 0));
+points.add(createSphere(0, 0, 3));
+points.add(createSphere(0, 0, -3));
+points.add(createSphere(2.5, 1.5, 0));
 
-spheres.add(addSphere(0, 0, 0));
-spheres.add(addSphere(1, 0, 0));
-spheres.add(addSphere(0, 1, 0));
-spheres.add(addSphere(1, 1, 0));
-spheres.add(addSphere(-1, 0, 0));
-spheres.add(addSphere(0, -1, 0));
-spheres.add(addSphere(-1, -1, 0));
-spheres.add(addSphere(-1, 1, 0));
-spheres.add(addSphere(1, -1, 0));
+spheres.add(createSphere(0, 0, 0));
+spheres.add(createSphere(1, 0, 0));
+spheres.add(createSphere(0, 1, 0));
+spheres.add(createSphere(1, 1, 0));
+spheres.add(createSphere(-1, 0, 0));
+spheres.add(createSphere(0, -1, 0));
+spheres.add(createSphere(-1, -1, 0));
+spheres.add(createSphere(-1, 1, 0));
+spheres.add(createSphere(1, -1, 0));
 
 const frustumVisualizer = new CameraVisualizer(frustumCamera);
 perspectiveCamera.add(light);
@@ -108,6 +108,7 @@ const renderer = await createRenderer(() => {
   controls.update();
   renderer.render(scene, state.camera);
 });
+
 const controls = useOrbitControls(renderer.parameters.canvas);
 useWindowResizer.updateSize(renderer, state.camera);
 useWindowResizer(renderer, state.camera);

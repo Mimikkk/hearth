@@ -70,6 +70,7 @@ export const Example = {
   TslEditor: 'tsl_editor',
   TslTranspiler: 'tsl_transpiler',
   VideoPanorama: 'video_panorama',
+  Primitives: 'primitives',
   Loaders: {
     Stl: 'loader_stl',
     Tiff: 'loader_tiff',
