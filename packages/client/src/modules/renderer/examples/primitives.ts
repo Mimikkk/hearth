@@ -96,7 +96,7 @@ const useOrbitControls = () => {
   return controls;
 };
 const useDragControls = () => {
-  const objects: Object3D[] = [spheres, sphere];
+  const objects: Object3D[] = [sphere];
   const controls = new DragControls([...objects], camera, renderer.parameters.canvas);
 
   const mouse = new Vector2();
@@ -116,25 +116,25 @@ const useDragControls = () => {
     const intersections = raycaster.intersects(objects, true);
     console.log({ objects, intersections });
 
-    if (intersections.length > 0) {
-      const object = intersections[0].object;
+    // if (intersections.length > 0) {
+    //   const object = intersections[0].object;
+    //
+    //   if (group.children.includes(object)) {
+    //     object.material.emissive.set(0x000000);
+    //     scene.attach(object);
+    //   } else {
+    //     object.material.emissive.set(0xaaaaaa);
+    //     group.attach(object);
+    //   }
+    //
+    //   controls.transformGroup = true;
+    //   draggableObjects.push(group);
+    // }
 
-      if (group.children.includes(object)) {
-        object.material.emissive.set(0x000000);
-        scene.attach(object);
-      } else {
-        object.material.emissive.set(0xaaaaaa);
-        group.attach(object);
-      }
-
-      controls.transformGroup = true;
-      draggableObjects.push(group);
-    }
-
-    if (group.children.length === 0) {
-      controls.transformGroup = false;
-      draggableObjects.push(...objects);
-    }
+    // if (group.children.length === 0) {
+    //   controls.transformGroup = false;
+    //   draggableObjects.push(...objects);
+    // }
   });
 
   return controls;
@@ -146,15 +146,16 @@ camera.add(light);
 
 const reference = createSphere(new SphereGeometry(0.1, 32, 24), 0, 0, 0);
 const sphere = createSphere(new SphereGeometry(0.25, 32, 24), 1, 0, 0);
-const spheres = createSpheres();
+// const spheres = createSpheres();
 
 const scene = createScene();
-const group = new Group();
-scene.add(camera, reference, sphere, spheres, group);
+
+// scene.add(camera, reference, sphere, spheres, group);
+scene.add(camera, reference, sphere);
 
 useVisualizer(scene, reference);
 useVisualizer(scene, sphere);
-useVisualizer(scene, spheres);
+// useVisualizer(scene, spheres);
 
 const renderer = await createRenderer(() => {
   orbitControls.update();
