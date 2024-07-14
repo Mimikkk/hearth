@@ -3,7 +3,7 @@ import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js'
 import { PerspectiveCamera } from '@modules/renderer/engine/cameras/PerspectiveCamera.js';
 import { Scene } from '@modules/renderer/engine/scenes/Scene.js';
 import { normalWorld } from '@modules/renderer/engine/nodes/accessors/NormalNode.js';
-import { color } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.primitves.js';
+import { color, float } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.primitves.js';
 import {
   BoundingBoxVisualizer,
   BoxGeometry,
@@ -11,6 +11,7 @@ import {
   Fog,
   Group,
   Mesh,
+  MeshLambertMaterial,
   Object3D,
   Raycaster,
   SphereGeometry,
@@ -18,7 +19,6 @@ import {
   Vector2,
 } from '@modules/renderer/engine/engine.js';
 import { MeshStandardNodeMaterial } from '@modules/renderer/engine/nodes/materials/MeshStandardNodeMaterial.js';
-import { float } from 'three/examples/jsm/nodes/shadernode/ShaderNode.js';
 import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vector3.js';
 import { DragControls } from '@modules/renderer/engine/controls/DragControls.js';
@@ -48,7 +48,7 @@ const createRenderer = async (onAnimate: () => void) => {
 };
 
 const createSpheres = () => {
-  const material = new MeshStandardNodeMaterial({ color: Math.random() * 0xffffff });
+  const material = new MeshLambertMaterial({ color: Math.random() * 0xffffff });
 
   const group = new Group();
   const box = new Mesh(new BoxGeometry(0.24, 0.24, 0.24), material);
@@ -65,9 +65,7 @@ const createSpheres = () => {
   return group;
 };
 const createSphere = (geometry: BufferGeometry, x: number, y: number, z: number) => {
-  const material = new MeshStandardNodeMaterial({ color: Math.random() * 0xffffff });
-  material.roughnessNode = float(0.8);
-  material.metalnessNode = float(0.2);
+  const material = new MeshLambertMaterial({ color: Math.random() * 0xffffff });
 
   const mesh = new Mesh(geometry, material);
   mesh.position.set(x, y, z);
@@ -77,8 +75,9 @@ const createSphere = (geometry: BufferGeometry, x: number, y: number, z: number)
 
 const state = {
   drag: {
+    selected: null as Object3D | null,
     mode: 'translate' as 'translate' | 'rotate',
-    selection: false,
+    selection: true,
   },
 };
 const useVisualizer = (scene: Scene, of: Object3D) => {
@@ -97,15 +96,45 @@ const useOrbitControls = () => {
   return controls;
 };
 const useDragControls = () => {
-  const controls = new DragControls(scene.children, camera, renderer.parameters.canvas);
+  const objects: Object3D[] = [spheres, sphere];
+  const controls = new DragControls([...objects], camera, renderer.parameters.canvas);
 
   const mouse = new Vector2();
   const raycaster = new Raycaster();
 
-  document.addEventListener('click', () => {
-    if (state.drag.selection) {
-      console.log('here1');
-    } else console.log('here2');
+  document.addEventListener('click', event => {
+    if (!state.drag.selection) return;
+
+    const draggableObjects = controls.getObjects();
+    draggableObjects.length = 0;
+
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+    raycaster.setFromCamera(mouse, camera);
+
+    const intersections = raycaster.intersects(objects, true);
+    console.log({ objects, intersections });
+
+    if (intersections.length > 0) {
+      const object = intersections[0].object;
+
+      if (group.children.includes(object)) {
+        object.material.emissive.set(0x000000);
+        scene.attach(object);
+      } else {
+        object.material.emissive.set(0xaaaaaa);
+        group.attach(object);
+      }
+
+      controls.transformGroup = true;
+      draggableObjects.push(group);
+    }
+
+    if (group.children.length === 0) {
+      controls.transformGroup = false;
+      draggableObjects.push(...objects);
+    }
   });
 
   return controls;
@@ -115,11 +144,8 @@ const light = createLight();
 const camera = createCamera();
 camera.add(light);
 
-const bigSphereGeometry = new SphereGeometry(0.25, 32, 24);
-const smallSphereGeometry = new SphereGeometry(0.1, 32, 24);
-
-const reference = createSphere(smallSphereGeometry, 0, 0, 0);
-const sphere = createSphere(bigSphereGeometry, 1, 0, 0);
+const reference = createSphere(new SphereGeometry(0.1, 32, 24), 0, 0, 0);
+const sphere = createSphere(new SphereGeometry(0.25, 32, 24), 1, 0, 0);
 const spheres = createSpheres();
 
 const scene = createScene();
@@ -138,9 +164,9 @@ const renderer = await createRenderer(() => {
 useWindowResizer(renderer, camera);
 
 const dragControls = useDragControls();
-const orbitControls = useOrbitControls(spheres);
+const orbitControls = useOrbitControls();
 
-UI.create('Controls', state)
+const ui = UI.create('Controls', state)
   .shortcut('s', 'Toggle selection', state => {
     state.drag.selection = !state.drag.selection;
     dragControls.enabled = state.drag.selection;
@@ -148,8 +174,11 @@ UI.create('Controls', state)
   .shortcut('m', 'Toggle drag mode', state => {
     state.drag.mode = state.drag.mode === 'translate' ? 'rotate' : 'translate';
     dragControls.mode = state.drag.mode;
-  })
-  .folder('Drag options')
+  });
+
+ui.folder('Drag info').text('Selected:', s => (s.drag.selected ? s.drag.selected.uuid : 'None'));
+
+ui.folder('Drag options')
   .boolean('drag.selection', 'Selection', value => (dragControls.enabled = value))
   .option<'translate' | 'rotate'>(
     'drag.mode',

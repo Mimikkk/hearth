@@ -151,8 +151,10 @@ export class UI<S extends {}> {
     return this;
   }
 
-  text(key: string, description: string) {
-    const controller = this.ui.add({ [key]: description }, key).name(`Key: ${key}`);
+  text(key: string, fn: string | ((state: S) => string)) {
+    const description = typeof fn === 'string' ? fn : fn(this.state);
+
+    const controller = this.ui.add({ [key]: description }, key).name(key);
 
     controller.$widget.children[0].remove();
 
@@ -178,6 +180,11 @@ export class UI<S extends {}> {
       text.style.whiteSpace = 'nowrap';
     });
     controller.domElement.title = description;
+
+    if (typeof fn !== 'string') {
+      this.controllers.push(controller);
+      this.update();
+    }
 
     return this;
   }
@@ -219,7 +226,7 @@ export class UI<S extends {}> {
           ? [key.control ? 'Ctrl' : '', key.shift ? 'Shift' : '', key.key.toUpperCase()].join('+')
           : key.toUpperCase();
 
-      this.shortcutsFolder!.text(title, description);
+      this.shortcutsFolder!.text(`Key: ${title}`, description);
     }
 
     this.#maybePlaceLastShortcuts();
