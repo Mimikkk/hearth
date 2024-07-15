@@ -16,7 +16,7 @@ import { Fog } from '@modules/renderer/engine/scenes/Fog.js';
 import { normalWorld } from '@modules/renderer/engine/nodes/accessors/NormalNode.js';
 import { color } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.primitves.js';
 import { Group } from '@modules/renderer/engine/objects/Group.js';
-import { UI } from '@modules/renderer/examples/utilities/UI.js';
+import { UI } from '@mimi/ui';
 import { Vec2 } from '@modules/renderer/engine/math/Vector2.js';
 
 const createCamera = () => {

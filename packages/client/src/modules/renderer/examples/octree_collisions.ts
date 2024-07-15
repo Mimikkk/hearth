@@ -18,7 +18,7 @@ import { OctreeHelper } from '@modules/renderer/engine/helpers/OctreeHelper.js';
 import { ToneMapping } from '@modules/renderer/engine/constants.js';
 import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 import { Euler } from '@modules/renderer/engine/math/Euler.js';
-import { UI } from '@modules/renderer/examples/utilities/UI.js';
+import { UI } from '@mimi/ui';
 
 const clock = new Clock();
 const scene = new Scene();

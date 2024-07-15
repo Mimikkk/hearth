@@ -16,7 +16,7 @@ import {
 } from '@modules/renderer/engine/engine.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 import { float } from 'three/examples/jsm/nodes/shadernode/ShaderNode.js';
-import { UI } from '@modules/renderer/examples/utilities/UI.js';
+import { UI } from '@mimi/ui';
 import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
 import { SpriteMaterialBuilder } from '@modules/renderer/engine/materials/SpriteMaterialBuilder.js';
 

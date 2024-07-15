@@ -1,16 +1,15 @@
 import { defineConfig } from 'vite';
-import arraybuffer from 'vite-plugin-arraybuffer';
 import dts from 'vite-plugin-dts';
 
 export default defineConfig({
   base: './',
-  plugins: [arraybuffer(), dts()],
+  plugins: [dts()],
   build: {
     outDir: './build',
     lib: {
-      entry: 'src/basis.ts',
-      name: 'basis',
-      fileName: 'basis',
+      entry: 'src/ui.ts',
+      name: 'ui',
+      fileName: 'ui',
       formats: ['es', 'cjs'],
     },
   },

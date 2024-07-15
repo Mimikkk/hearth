@@ -1,6 +1,8 @@
 import { Controller, GUI } from 'lil-gui';
 import { Path } from 'a-path';
 
+type Shortcut = { key: ShortcutKey; description: string; unsubscribe: () => void };
+type ShortcutKey = { control?: boolean; shift?: boolean; key: string } | string;
 type Handler<S, K extends Path<S>> = {
   key: K;
   title: string;
@@ -29,7 +31,7 @@ export class UI<S extends {} = {}> {
     this.ui.domElement.style.overflow = 'hidden';
   }
 
-  static create<S extends {}>(title: string, state: S = {} as S) {
+  static create<S extends {} = {}>(title: string, state: S = {} as S) {
     return new this(title, state);
   }
 
@@ -241,6 +243,3 @@ export class UI<S extends {} = {}> {
     }
   }
 }
-
-type Shortcut = { key: ShortcutKey; description: string; unsubscribe: () => void };
-type ShortcutKey = { control?: boolean; shift?: boolean; key: string } | string;

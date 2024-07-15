@@ -15,7 +15,7 @@ import {
 } from '@modules/renderer/engine/engine.js';
 import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vector3.js';
-import { UI } from '@modules/renderer/examples/utilities/UI.js';
+import { UI } from '@mimi/ui';
 
 const container = document.createElement('div');
 document.body.appendChild(container);

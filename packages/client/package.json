@@ -18,12 +18,13 @@
     "meshoptimizer": "^0.20.0",
     "potpack": "^2.0.0",
     "ammojs3": "^0.0.11",
-    "@zd/basis": "workspace:*",
+    "@mimi/basis": "workspace:*",
+    "@mimi/ui": "workspace:*",
     "upng-js": "^2.1.0",
     "uuid": "^10.0.0",
     "three": "^0.166.1"
   },
-  "description": "Prototype application with the usage of @zd/engine",
+  "description": "Prototype application with the usage of @mimi/engine",
   "devDependencies": {
     "@types/uuid": "^10.0.0",
     "@types/upng-js": "^2.1.5",
@@ -58,7 +59,7 @@
     "WebGPU"
   ],
   "license": "MIT",
-  "name": "@zd/client",
+  "name": "@mimi/client",
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "dev": "vite dev",

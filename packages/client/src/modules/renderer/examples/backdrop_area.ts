@@ -29,7 +29,7 @@ import {
   ToneMapping,
 } from '@modules/renderer/engine/engine.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import { UI } from '@modules/renderer/examples/utilities/UI.js';
+import { UI } from '@mimi/ui';
 
 const createCamera = () => {
   const camera = new PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.25, 25);
