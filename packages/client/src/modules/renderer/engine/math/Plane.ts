@@ -230,7 +230,7 @@ export namespace Plane_ {
 
     return into;
   };
-  export const fillFromNormalAndCoplanar_ = (self: Plane_, normal: Const<Vec3>, coplanar: Const<Vec3>): Plane_ =>
+  export const fillFromNormalAndCoplanar = (self: Plane_, normal: Const<Vec3>, coplanar: Const<Vec3>): Plane_ =>
     fromNormalAndCoplanar_(normal, coplanar, self);
 
   const _vec1 = Vec3.empty();
