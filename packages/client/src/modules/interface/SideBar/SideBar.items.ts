@@ -49,10 +49,12 @@ export const SideBarItems: AccordionItem[] = [
       {
         id: Example.Controls.Orbit,
         title: 'Controls Orbit',
+        masterdisk: true,
       },
       {
         id: Example.Controls.Selection,
         title: 'Controls Selection',
+        masterdisk: true,
       },
     ],
   },

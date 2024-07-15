@@ -74,6 +74,10 @@ const CollapsedItems = flatBy(SideBarItems, 'children')
   .filter(x => !x.children)
   .sort((a, b) => a.title.localeCompare(b.title));
 
+const GoldenItems = flatBy(SideBarItems, 'children')
+  .filter(x => !x.children)
+  .filter(x => x.masterdisk);
+
 export const Examples = () => {
   onCleanup(cleanupSearch);
   const { selectedExample, selectExample, isCollapsed } = useContent();
@@ -125,7 +129,13 @@ export const Examples = () => {
             </Show>
           }
         />
-        <div class="flex ml-auto gap-2">
+        <div class="flex justify-between gap-2">
+          <span class="center gap-1 text-sm text-primary-7">
+            visible:
+            <span class="center text-sm text-primary-9">
+              {examples().length}/{CollapsedItems.length}/<span class="text-golden-3">{GoldenItems.length}</span>
+            </span>
+          </span>
           <CollapseButton />
         </div>
       </div>
