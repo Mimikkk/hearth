@@ -37,9 +37,9 @@ const _scale = new Vector3();
 const isPerspectiveCamera = (camera: any): camera is PerspectiveCamera => camera.isPerspectiveCamera;
 const isOrthographicCamera = (camera: any): camera is OrthographicCamera => camera.isOrthographicCamera;
 
-export class SelectionBox {
-  startPoint: Vector3 = new Vector3();
-  endPoint: Vector3 = new Vector3();
+export class SelectionControl {
+  start: Vector3 = new Vector3();
+  end: Vector3 = new Vector3();
   collection: Mesh[] = [];
   instances: Record<string, number[]> = {};
 
@@ -48,26 +48,26 @@ export class SelectionBox {
     public scene: Scene,
     public deep: number = Number.MAX_VALUE,
   ) {
-    this.startPoint = new Vector3();
-    this.endPoint = new Vector3();
+    this.start = new Vector3();
+    this.end = new Vector3();
     this.collection = [];
     this.instances = {};
   }
 
-  select(startPoint: Vector3, endPoint: Vector3): Mesh[] {
-    this.startPoint = startPoint || this.startPoint;
-    this.endPoint = endPoint || this.endPoint;
+  select(startPoint?: Vector3, endPoint?: Vector3): Mesh[] {
+    this.start = startPoint || this.start;
+    this.end = endPoint || this.end;
     this.collection = [];
 
-    this.updateFrustum(this.startPoint, this.endPoint);
+    this.updateFrustum(this.start, this.end);
     this.searchChildInFrustum(_frustum, this.scene);
 
     return this.collection;
   }
 
   updateFrustum(startPoint: Vector3, endPoint: Vector3): void {
-    startPoint = startPoint || this.startPoint;
-    endPoint = endPoint || this.endPoint;
+    startPoint = startPoint || this.start;
+    endPoint = endPoint || this.end;
 
     if (startPoint.x === endPoint.x) {
       endPoint.x += Number.EPSILON;

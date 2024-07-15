@@ -48,8 +48,8 @@ export * from './helpers/VertexNormalsHelper.ts';
 export * from './helpers/VertexTangentsHelper.ts';
 
 export * from '@modules/renderer/engine/interactive/InteractiveGroup.ts';
-export * from '@modules/renderer/engine/interactive/SelectionBox.ts';
-export * from '@modules/renderer/engine/interactive/SelectionHelper.ts';
+export * from '@modules/renderer/engine/interactive/SelectionControl.ts';
+export * from '@modules/renderer/engine/interactive/SelectionVisualizer.ts';
 
 export * from './lights/IESSpotLight.ts';
 export * from './lights/LightProbeGenerator.ts';

@@ -37,7 +37,6 @@ export { HemisphereLight } from './lights/HemisphereLight.ts';
 export { DirectionalLight } from './lights/DirectionalLight.ts';
 export { AmbientLight } from './lights/AmbientLight.ts';
 export { Light } from './lights/Light.ts';
-export { StereoCamera } from './cameras/StereoCamera.ts';
 export { PerspectiveCamera } from './cameras/PerspectiveCamera.ts';
 export { OrthographicCamera } from './cameras/OrthographicCamera.ts';
 export { CubeCamera } from './cameras/CubeCamera.ts';
