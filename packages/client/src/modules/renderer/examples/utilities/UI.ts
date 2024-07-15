@@ -23,7 +23,7 @@ export class UI<S extends {}> {
     this.ui = ui;
   }
 
-  static create<S extends {}>(title: string, state: S) {
+  static create<S extends {}>(title: string, state: S = {}) {
     return new this(title, state);
   }
 

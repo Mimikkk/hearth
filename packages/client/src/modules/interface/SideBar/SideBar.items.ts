@@ -38,6 +38,25 @@ export const SideBarItems: AccordionItem[] = [
     ],
   },
   {
+    id: 'controls',
+    title: 'Controls',
+    icon: 'HiSolidHandRaised',
+    children: [
+      {
+        id: Example.Controls.Drag,
+        title: 'Controls Drag',
+      },
+      {
+        id: Example.Controls.Orbit,
+        title: 'Controls Orbit',
+      },
+      {
+        id: Example.Controls.Selection,
+        title: 'Controls Selection',
+      },
+    ],
+  },
+  {
     id: 'environment',
     title: 'Environment',
     icon: 'IoEarth',
@@ -127,7 +146,6 @@ export const SideBarItems: AccordionItem[] = [
     icon: 'BsCamera',
     children: [
       { id: Example.Camera.Frustum, title: 'Camera Frustum' },
-      { id: Example.Camera.Selection, title: 'Camera Selection' },
       { id: Example.Camera.LogarithmicDepthBuffer, title: 'Camera Logarithmic Depth Buffer' },
       { id: Example.DepthTexture, title: 'Depth Texture', maintenance: true },
       { id: Example.Equirectangular, title: 'Equirectangular' },
