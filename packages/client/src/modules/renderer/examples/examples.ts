@@ -71,9 +71,9 @@ export const Example = {
   VideoPanorama: 'video_panorama',
   Primitives: 'primitives',
   Controls: {
-    Drag: 'controls_drag',
-    Orbit: 'controls_orbit',
-    Selection: 'controls_selection',
+    Drag: 'categories/controls/controls_drag',
+    Orbit: 'categories/controls/controls_orbit',
+    Selection: 'categories/controls/controls_selection',
   },
   Loaders: {
     Stl: 'loader_stl',
