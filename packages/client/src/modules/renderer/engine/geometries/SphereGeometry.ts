@@ -72,6 +72,13 @@ const configure = (parameters?: SphereGeometryParameters): SphereGeometryConfigu
   };
 };
 
+interface Buffers {
+  index: Uint16BufferAttribute;
+  position: Float32BufferAttribute;
+  normal: Float32BufferAttribute;
+  uv: Float32BufferAttribute;
+}
+
 const _vec = Vec3.empty();
 const generateBuffers = ({
   radius,
@@ -82,12 +89,7 @@ const generateBuffers = ({
   thetaStart,
   thetaLength,
   thetaEnd,
-}: SphereGeometryConfiguration): {
-  index: Uint16BufferAttribute;
-  position: Float32BufferAttribute;
-  normal: Float32BufferAttribute;
-  uv: Float32BufferAttribute;
-} => {
+}: SphereGeometryConfiguration): Buffers => {
   let index: number = 0;
   const grid: number[][] = [];
   const indices: number[] = [];
