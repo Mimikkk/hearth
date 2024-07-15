@@ -6,7 +6,7 @@ import type { InterleavedBufferAttribute } from '@modules/renderer/engine/core/I
 import type { Matrix3 } from '@modules/renderer/engine/math/Matrix3.js';
 import type { Vector3 } from '@modules/renderer/engine/math/Vector3.js';
 
-const ColorMap = {
+export const ColorMap = {
   aliceblue: 0xf0f8ff,
   antiquewhite: 0xfaebd7,
   aqua: 0x00ffff,

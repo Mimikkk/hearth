@@ -16,20 +16,19 @@ import {
 import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vector3.js';
 import { UI } from '@mimi/ui';
-
-const container = document.createElement('div');
-document.body.appendChild(container);
+import { ColorMap } from '@modules/renderer/engine/math/Color.js';
+import { Random } from '@modules/renderer/engine/math/random.js';
 
 const createCamera = () => {
   const camera = new PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.25, 30);
   Vec3.set(camera.position, 0, 2, 3);
   return camera;
 };
-const createLight = () => new SpotLight('white', 30);
+const createLight = () => new SpotLight(ColorMap.white, 30);
 const createScene = () => {
   const scene = new Scene();
   scene.fog = new Fog('red', 7, 25);
-  scene.backgroundNode = normalWorld.y.mix(color('violet'), color('blue'));
+  scene.backgroundNode = normalWorld.y.mix(color(ColorMap.violet), color(ColorMap.blue));
   return scene;
 };
 const createRenderer = async (onAnimate: () => void) => {
@@ -41,7 +40,7 @@ const createRenderer = async (onAnimate: () => void) => {
 };
 
 const createSphere = (geometry: BufferGeometry, x: number, y: number, z: number) => {
-  const material = new MeshLambertMaterial({ color: Math.random() * 0xffffff });
+  const material = new MeshLambertMaterial({ color: Random.color() });
   const mesh = new Mesh(geometry, material);
   mesh.position.set(x, y, z);
 
