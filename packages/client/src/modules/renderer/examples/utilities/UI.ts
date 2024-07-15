@@ -21,12 +21,8 @@ export class UI<S extends {} = {}> {
     this.shortcuts = [];
 
     this.ui = ui;
-    this.ui.domElement.onclick = event => {
-      event.preventDefault();
-      event.stopPropagation();
-    };
-
-    console.log(this.ui);
+    this.ui.domElement.style.borderRadius = '0.125rem';
+    this.ui.domElement.style.overflow = 'hidden';
   }
 
   static create<S extends {}>(title: string, state: S = {} as S) {
