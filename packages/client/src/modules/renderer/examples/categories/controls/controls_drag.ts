@@ -46,25 +46,6 @@ const createBox = (geometry: BufferGeometry, x: number, y: number, z: number) =>
   return mesh;
 };
 
-const useVisualizeSphere = (object: Object3D) => {
-  if (!object.boundingSphere) object.geometry!.computeBoundingSphere();
-
-  const sphere = object.geometry!.boundingSphere as Sphere;
-  const visualizer = new Mesh(
-    new SphereGeometry(sphere),
-    new MeshLambertMaterial({
-      color: Random.color(),
-      transparent: true,
-      opacity: 0.2,
-    }),
-  );
-
-  Vec3.fill_(visualizer.position, sphere.center);
-  object.add(visualizer);
-
-  return visualizer;
-};
-
 const useDragControls = () => {
   const objects: Object3D[] = [box1, box2];
   const controls = new DragControls([...objects], camera, renderer.parameters.canvas);
