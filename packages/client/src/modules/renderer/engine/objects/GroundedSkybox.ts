@@ -13,7 +13,7 @@ export class GroundedSkybox extends Mesh {
       throw new Error('GroundedSkybox height, radius, and resolution must be positive.');
     }
 
-    const geometry = new SphereGeometry(radius, 2 * resolution, resolution);
+    const geometry = new SphereGeometry({ radius, widthSegments: 2 * resolution, heightSegments: resolution });
     geometry.scale(1, 1, -1);
 
     const pos = geometry.getAttribute('position');

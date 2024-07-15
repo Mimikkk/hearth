@@ -65,7 +65,10 @@ class Background extends DataMap<any, any> {
         nodeMaterial.fragmentNode = backgroundMeshNode;
 
         sceneData.backgroundMeshNode = backgroundMeshNode;
-        sceneData.backgroundMesh = backgroundMesh = new Mesh(new SphereGeometry(1, 32, 32), nodeMaterial);
+        sceneData.backgroundMesh = backgroundMesh = new Mesh(
+          new SphereGeometry({ radius: 1, widthSegments: 32, heightSegments: 32 }),
+          nodeMaterial,
+        );
         backgroundMesh.frustumCulled = false;
 
         backgroundMesh.onBeforeRender = function (renderer: Renderer, scene: Scene, camera: Camera) {

@@ -9,9 +9,9 @@ import {
   Mesh,
   MeshLambertMaterial,
   Object3D,
-  Raycaster,
+  Sphere,
+  SphereGeometry,
   SpotLight,
-  Vector2,
 } from '@modules/renderer/engine/engine.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vector3.js';
 import { DragControls } from '@modules/renderer/engine/controls/DragControls.js';
@@ -45,47 +45,66 @@ const createBox = (geometry: BufferGeometry, x: number, y: number, z: number) =>
   return mesh;
 };
 
+const useVisualizeSphere = (object: Object3D) => {
+  if (!object.boundingSphere) object.geometry!.computeBoundingSphere();
+
+  const sphere = object.geometry!.boundingSphere as Sphere;
+  const visualizer = new Mesh(
+    new SphereGeometry(sphere),
+    new MeshLambertMaterial({
+      color: Random.color(),
+      transparent: true,
+      opacity: 0.2,
+    }),
+  );
+
+  Vec3.fill_(visualizer.position, sphere.center);
+  object.add(visualizer);
+
+  return visualizer;
+};
+
 const useDragControls = () => {
-  const objects: Object3D[] = [box];
+  const objects: Object3D[] = [box1, box2];
   const controls = new DragControls([...objects], camera, renderer.parameters.canvas);
 
-  const mouse = new Vector2();
-  const raycaster = new Raycaster();
+  // const mouse = new Vector2();
+  // const raycaster = new Raycaster();
 
-  renderer.parameters.canvas.addEventListener('click', event => {
-    if (!state.drag.selection) return;
-
-    const draggableObjects = controls.getObjects();
-    draggableObjects.length = 0;
-
-    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-
-    raycaster.setFromCamera(mouse, camera);
-
-    const intersections = raycaster.intersects(objects, true);
-    console.log({ objects, intersections });
-
-    // if (intersections.length > 0) {
-    //   const object = intersections[0].object;
-    //
-    //   if (group.children.includes(object)) {
-    //     object.material.emissive.set(0x000000);
-    //     scene.attach(object);
-    //   } else {
-    //     object.material.emissive.set(0xaaaaaa);
-    //     group.attach(object);
-    //   }
-    //
-    //   controls.transformGroup = true;
-    //   draggableObjects.push(group);
-    // }
-
-    // if (group.children.length === 0) {
-    //   controls.transformGroup = false;
-    //   draggableObjects.push(...objects);
-    // }
-  });
+  // renderer.parameters.canvas.addEventListener('click', event => {
+  //   if (!state.drag.selection) return;
+  //
+  //   const draggableObjects = controls.getObjects();
+  //   draggableObjects.length = 0;
+  //
+  //   mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+  //   mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+  //
+  //   raycaster.setFromCamera(mouse, camera);
+  //
+  //   const intersections = raycaster.intersects(objects, true);
+  //   console.log({ objects, intersections });
+  //
+  //   // if (intersections.length > 0) {
+  //   //   const object = intersections[0].object;
+  //   //
+  //   //   if (group.children.includes(object)) {
+  //   //     object.material.emissive.set(0x000000);
+  //   //     scene.attach(object);
+  //   //   } else {
+  //   //     object.material.emissive.set(0xaaaaaa);
+  //   //     group.attach(object);
+  //   //   }
+  //   //
+  //   //   controls.transformGroup = true;
+  //   //   draggableObjects.push(group);
+  //   // }
+  //
+  //   // if (group.children.length === 0) {
+  //   //   controls.transformGroup = false;
+  //   //   draggableObjects.push(...objects);
+  //   // }
+  // });
 
   return controls;
 };
@@ -94,11 +113,16 @@ const light = createLight();
 const camera = createCamera();
 camera.add(light);
 
-const reference = createBox(new BoxGeometry(0.1, 0.1, 0.1), 0, 0, 0);
-const box = createBox(new BoxGeometry(), 0, 0, 0);
+const reference = createBox(new BoxGeometry(0.1, 0.1, 0.1), 0, 1, 0);
+const box1 = createBox(new BoxGeometry(0.5, 0.2, 0.7), 0.5, 0, 0);
+const box2 = createBox(new BoxGeometry(0.2, 0.4, 0.7), -0.5, 0, 0);
 
 const scene = createScene();
-scene.add(camera, reference, box);
+
+const sphere1 = useVisualizeSphere(box1);
+const sphere2 = useVisualizeSphere(box2);
+
+scene.add(camera, reference, box1, box2);
 
 const renderer = await Renderer.create({
   animate() {
@@ -115,6 +139,7 @@ interface State {
     mode: 'translate' | 'rotate';
     intersections: Intersection<any>[];
     selection: boolean;
+    showBoundingSpheres: boolean;
   };
 }
 
@@ -124,6 +149,7 @@ const state = <State>{
     mode: 'translate',
     intersections: [],
     selection: true,
+    showBoundingSpheres: true,
   },
 };
 UI.create<State>('Drag controls', state)
@@ -139,6 +165,10 @@ UI.create<State>('Drag controls', state)
     },
     value => (dragControls.mode = value),
   )
+  .boolean('drag.showBoundingSpheres', 'Show bounding spheres', () => {
+    sphere1.visible = state.drag.showBoundingSpheres;
+    sphere2.visible = state.drag.showBoundingSpheres;
+  })
   .shortcut('s', 'Toggle selection', state => {
     state.drag.selection = !state.drag.selection;
     dragControls.enabled = state.drag.selection;
