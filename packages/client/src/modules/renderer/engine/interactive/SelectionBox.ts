@@ -192,5 +192,3 @@ export class SelectionBox {
     }
   }
 }
-
-const con = throttle(console.log, 100);

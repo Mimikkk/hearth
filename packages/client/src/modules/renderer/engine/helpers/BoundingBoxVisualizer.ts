@@ -40,7 +40,6 @@ export class BoundingBoxVisualizer extends LineSegments {
 
     const { array } = position;
     const { min, max } = _box;
-    console.log(_box);
 
     array[0] = max.x;
     array[1] = max.y;

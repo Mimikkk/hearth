@@ -34,13 +34,6 @@ async function init() {
 
   // model
 
-  function onProgress(xhr) {
-    if (xhr.lengthComputable) {
-      const percentComplete = (xhr.loaded / xhr.total) * 100;
-      console.log('model ' + percentComplete.toFixed(2) + '% downloaded');
-    }
-  }
-
   const loader = new OBJLoader();
   const object = await loader.loadAsync('resources/models/obj/male02/male02.obj');
 

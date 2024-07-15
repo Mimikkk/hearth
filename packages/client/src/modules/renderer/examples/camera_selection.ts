@@ -133,7 +133,6 @@ document.addEventListener('pointerup', function (event) {
 
   const allSelected = selectionBox.select();
 
-  console.log({ allSelected });
   for (let i = 0; i < allSelected.length; i++) {
     allSelected[i].material.emissive.set(0xffffff);
   }

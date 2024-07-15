@@ -30,14 +30,6 @@ async function init() {
   scene.add(camera);
 
   // model
-
-  const onProgress = xhr => {
-    if (xhr.lengthComputable) {
-      const percentComplete = (xhr.loaded / xhr.total) * 100;
-      console.log(percentComplete.toFixed(2) + '% downloaded');
-    }
-  };
-
   const materials = await new MTLLoader().loadAsync('resources/models/obj/male02/male02.mtl');
   await materials.preload();
 

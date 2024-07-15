@@ -116,7 +116,7 @@ export class Material {
   version: number;
   _alphaTest: number;
 
-  constructor(parameters: MaterialParameters) {
+  constructor(parameters?: MaterialParameters) {
     this.id = _materialId++;
     this.uuid = v4();
     this.name = '';
@@ -204,7 +204,7 @@ export class Material {
     return this.onBeforeCompile.toString();
   }
 
-  setValues(values: MaterialParameters): void {
+  setValues(values?: MaterialParameters): void {
     if (values === undefined) return;
 
     const isVector3 = (v: any): v is Vector3 => v instanceof Vector3;
