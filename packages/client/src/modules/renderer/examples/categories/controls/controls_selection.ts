@@ -1,7 +1,7 @@
 import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 import { PerspectiveCamera } from '@modules/renderer/engine/cameras/PerspectiveCamera.js';
 import { Scene } from '@modules/renderer/engine/scenes/Scene.js';
-import { Color, ColorMap } from '@modules/renderer/engine/math/Color.js';
+import { ColorMap } from '@modules/renderer/engine/math/Color.js';
 import { AmbientLight } from '@modules/renderer/engine/lights/AmbientLight.js';
 import { SpotLight } from '@modules/renderer/engine/lights/SpotLight.js';
 import { BoxGeometry } from '@modules/renderer/engine/geometries/BoxGeometry.js';
