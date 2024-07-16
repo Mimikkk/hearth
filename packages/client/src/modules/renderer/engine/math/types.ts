@@ -1,3 +1,5 @@
+export const as = <T>(item: unknown): T => item as T;
+
 export type Const<T> = T extends (...args: never[]) => unknown
   ? T
   : T extends Map<infer K, infer V>

@@ -4,7 +4,7 @@ import { Vec2 } from './Vector2.ts';
 import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
 import { Spherical } from '@modules/renderer/engine/math/Spherical.js';
 import { Euler } from './Euler.ts';
-import { Cylindrical } from '@modules/renderer/engine/math/Cylindrical.js';
+import { ICylindrical } from '@modules/renderer/engine/math/Cylindrical.js';
 import { Color } from './Color.ts';
 import { Matrix4 } from './Matrix4.ts';
 import { Matrix3 } from './Matrix3.ts';
@@ -342,7 +342,7 @@ describe('Math - Vec3', () => {
     const coord = IVec3.empty();
     const expected = vec3(1, 0, 1);
 
-    const cylindrical = Cylindrical.fromCartesian(expected);
+    const cylindrical = ICylindrical.fromCartesian(expected);
     IVec3.fillCylindrical(coord, cylindrical);
 
     closeTo(coord, expected);
