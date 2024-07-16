@@ -17,7 +17,7 @@ import { normalWorld } from '@modules/renderer/engine/nodes/accessors/NormalNode
 import { color } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.primitves.js';
 import { Group } from '@modules/renderer/engine/objects/Group.js';
 import { UI } from '@mimi/ui';
-import { Vec2 } from '@modules/renderer/engine/math/Vector2.js';
+import { IVec2 } from '@modules/renderer/engine/math/Vector2.js';
 import { Random } from '@modules/renderer/engine/math/random.js';
 
 const createCamera = () => {
@@ -114,7 +114,7 @@ renderer.parameters.canvas.addEventListener('pointerup', event => {
   }
 });
 
-const formatVec = ({ x, y }: Vec2) => x.toFixed(2) + ', ' + y.toFixed(2);
+const formatVec = ({ x, y }: IVec2) => x.toFixed(2) + ', ' + y.toFixed(2);
 
 const ui = UI.create('Selection')
   .text('Selected count:', () => selection.collection.length)

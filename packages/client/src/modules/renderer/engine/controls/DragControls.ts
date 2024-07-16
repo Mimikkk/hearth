@@ -1,6 +1,6 @@
 import { Plane, Plane_ } from '../math/Plane.js';
 import { Intersection, Raycaster } from '../core/Raycaster.js';
-import { Vec2, Vector2 } from '../math/Vector2.js';
+import { IVec2, Vector2 } from '../math/Vector2.js';
 import { IVec3, Vector3 } from '../math/Vector3.js';
 import { Matrix4 } from '../math/Matrix4.js';
 import { Object3D } from '../core/Object3D.js';
@@ -61,8 +61,8 @@ export class DragControls {
             selected.position.copy(_intersection.sub(_offset).applyMatrix4(_inverseMatrix));
           }
         } else if (this.configuration.mode === 'rotate') {
-          Vec2.sub_(_location, _previousPointer, _diff);
-          const { x, y } = Vec2.scale(_diff, this.configuration.rotateSpeed);
+          IVec2.sub_(_location, _previousPointer, _diff);
+          const { x, y } = IVec2.scale(_diff, this.configuration.rotateSpeed);
 
           IVec3.normalize(_right);
           selected.rotateOnWorldAxis(_up, x);
@@ -229,7 +229,7 @@ const configure = (parameters?: Parameters): Configuration => {
 function updateLocation({ clientX, clientY }: PointerEvent, dom: HTMLElement) {
   const { left, top, width, height } = dom.getBoundingClientRect();
 
-  Vec2.set(_location, ((clientX - left) / width) * 2 - 1, (-(clientY - top) / height) * 2 + 1);
+  IVec2.set(_location, ((clientX - left) / width) * 2 - 1, (-(clientY - top) / height) * 2 + 1);
 }
 
 function findGroup(object: Object3D, group: Group | null = null) {

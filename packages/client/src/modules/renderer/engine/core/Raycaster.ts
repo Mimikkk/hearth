@@ -4,7 +4,7 @@ import type { Vector3 } from '../math/Vector3.js';
 import type { Camera } from '../cameras/Camera.js';
 import type { Object3D } from './Object3D.js';
 import type { Face } from '../math/ConvexHull.js';
-import { Vec2, Vector2 } from '../math/Vector2.js';
+import { IVec2, Vector2 } from '../math/Vector2.js';
 import { PerspectiveCamera } from '../cameras/PerspectiveCamera.js';
 import { OrthographicCamera } from '../cameras/OrthographicCamera.js';
 
@@ -84,7 +84,7 @@ export class Raycaster {
     return this;
   }
 
-  setFromCamera(coords: Vec2, camera: Camera): this {
+  setFromCamera(coords: IVec2, camera: Camera): this {
     if (camera instanceof PerspectiveCamera) {
       this.ray.origin.setFromMatrixPosition(camera.matrixWorld);
       this.ray.direction.set(coords.x, coords.y, 0.5).unproject(camera).sub(this.ray.origin).normalize();
