@@ -54,7 +54,7 @@ const createBoxes = () => {
   const geometry = new BoxGeometry();
 
   const group = new Group();
-  const randomScale = () => Random.between(1, 3);
+  const randomScale = () => Random.number(1, 3);
 
   for (let i = 0; i < 200; ++i) {
     const box = new Mesh(geometry, new MeshLambertMaterial({ color: Random.color() }));

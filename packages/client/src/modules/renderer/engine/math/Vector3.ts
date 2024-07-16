@@ -617,7 +617,7 @@ export namespace Vec3 {
   };
   export const fill_ = (into: Vec3, { x, y, z }: Const<Vec3>): Vec3 => set(into, x, y, z);
 
-  export const clone = (from: Const<Vec3>): Vec3 => fill_(from, empty());
+  export const clone = (from: Const<Vec3>): Vec3 => clone_(from, empty());
   export const clone_ = (from: Const<Vec3>, into: Vec3): Vec3 => fill_(into, from);
 
   export const is = (o: any): o is Vec3 =>
@@ -631,6 +631,28 @@ export namespace Vec3 {
   export const clamp_ = (from: Const<Vec3>, min: Const<Vec3>, max: Const<Vec3>, into: Vec3): Vec3 =>
     set(into, clampNumber(from.x, min.x, max.x), clampNumber(from.y, min.y, max.y), clampNumber(from.z, min.z, max.z));
   export const clamped = (a: Const<Vec3>, min: Const<Vec3>, max: Const<Vec3>): Vec3 => clamp_(a, min, max, empty());
+
+  export const clampScalar = (self: Vec3, min: number, max: number): Vec3 => clampScalar_(self, min, max, self);
+  export const clampScalar_ = (from: Const<Vec3>, min: number, max: number, into: Vec3): Vec3 =>
+    set(into, clampNumber(from.x, min, max), clampNumber(from.y, min, max), clampNumber(from.z, min, max));
+  export const clampedScalar = (from: Const<Vec3>, min: number, max: number): Vec3 =>
+    clampScalar_(from, min, max, empty());
+
+  export const clampLength = (self: Vec3, min: number, max: number): Vec3 => clampLength_(self, min, max, self);
+  export const clampLength_ = (from: Const<Vec3>, min: number, max: number, into: Vec3): Vec3 => {
+    const len = length(from) || 1;
+
+    divScalar_(from, len, into);
+    mulScalar(into, clampNumber(len, min, max));
+
+    return into;
+  };
+  export const clampedLength = (from: Const<Vec3>, min: number, max: number): Vec3 =>
+    clampLength_(from, min, max, empty());
+
+  export const setLength = (self: Vec3, length: number): Vec3 => setLength_(self, length, self);
+  export const setLength_ = (from: Const<Vec3>, len: number, into: Vec3): Vec3 =>
+    mulScalar_(from, len / (length(from) || 1), into);
 
   export const add = (self: Vec3, vec: Const<Vec3>): Vec3 => add_(self, vec, self);
   export const add_ = (from: Const<Vec3>, vec: Const<Vec3>, into: Vec3): Vec3 =>
@@ -655,6 +677,11 @@ export namespace Vec3 {
   export const mul_ = (a: Const<Vec3>, b: Const<Vec3>, into: Vec3): Vec3 => set(into, a.x * b.x, a.y * b.y, a.z * b.z);
   export const mulled = (a: Const<Vec3>, b: Const<Vec3>): Vec3 => mul_(a, b, empty());
 
+  export const mulScalar = (a: Vec3, scalar: number): Vec3 => mulScalar_(a, scalar, a);
+  export const mulScalar_ = (a: Const<Vec3>, scalar: number, into: Vec3): Vec3 =>
+    set(into, a.x * scalar, a.y * scalar, a.z * scalar);
+  export const mulScalared = (a: Const<Vec3>, scalar: number): Vec3 => mulScalar_(a, scalar, empty());
+
   export const min = (a: Vec3, b: Const<Vec3>): Vec3 => min_(a, b, a);
   export const min_ = (a: Const<Vec3>, b: Const<Vec3>, into: Vec3): Vec3 =>
     set(into, Math.min(a.x, b.x), Math.min(a.y, b.y), Math.min(a.z, b.z));
@@ -665,6 +692,26 @@ export namespace Vec3 {
     set(into, Math.max(a.x, b.x), Math.max(a.y, b.y), Math.max(a.z, b.z));
   export const maxed = (a: Const<Vec3>, b: Const<Vec3>): Vec3 => max_(a, b, empty());
 
+  export const ceil = (self: Vec3): Vec3 => ceil_(self, self);
+  export const ceil_ = (from: Const<Vec3>, into: Vec3): Vec3 =>
+    set(into, Math.ceil(from.x), Math.ceil(from.y), Math.ceil(from.z));
+  export const ceiled = (from: Const<Vec3>): Vec3 => ceil_(from, empty());
+
+  export const floor = (self: Vec3): Vec3 => floor_(self, self);
+  export const floor_ = (from: Const<Vec3>, into: Vec3): Vec3 =>
+    set(into, Math.floor(from.x), Math.floor(from.y), Math.floor(from.z));
+  export const floored = (from: Const<Vec3>): Vec3 => floor_(from, empty());
+
+  export const round = (self: Vec3): Vec3 => round_(self, self);
+  export const round_ = (from: Const<Vec3>, into: Vec3): Vec3 =>
+    set(into, Math.round(from.x), Math.round(from.y), Math.round(from.z));
+  export const rounded = (from: Const<Vec3>): Vec3 => round_(from, empty());
+
+  export const trunc = (self: Vec3): Vec3 => trunc_(self, self);
+  export const trunc_ = (from: Const<Vec3>, into: Vec3): Vec3 =>
+    set(into, Math.trunc(from.x), Math.trunc(from.y), Math.trunc(from.z));
+  export const trunced = (from: Const<Vec3>): Vec3 => trunc_(from, empty());
+
   export const scale = (a: Vec3, scalar: number): Vec3 => scale_(a, scalar, a);
   export const scale_ = (a: Const<Vec3>, scalar: number, into: Vec3): Vec3 =>
     set(into, a.x * scalar, a.y * scalar, a.z * scalar);
@@ -674,10 +721,10 @@ export namespace Vec3 {
   export const div_ = (a: Const<Vec3>, b: Const<Vec3>, into: Vec3): Vec3 => set(into, a.x / b.x, a.y / b.y, a.z / b.z);
   export const dived = (a: Const<Vec3>, b: Const<Vec3>): Vec3 => div_(a, b, empty());
 
-  export const invScale = (a: Vec3, scalar: number): Vec3 => invScale_(a, scalar, a);
-  export const invScale_ = (a: Const<Vec3>, scalar: number, into: Vec3): Vec3 =>
+  export const divScalar = (a: Vec3, scalar: number): Vec3 => divScalar_(a, scalar, a);
+  export const divScalar_ = (a: Const<Vec3>, scalar: number, into: Vec3): Vec3 =>
     set(into, a.x / scalar, a.y / scalar, a.z / scalar);
-  export const InvScaled = (a: Const<Vec3>, scalar: number): Vec3 => invScale_(a, scalar, empty());
+  export const divScalared = (a: Const<Vec3>, scalar: number): Vec3 => divScalar_(a, scalar, empty());
 
   export const cross = (a: Const<Vec3>, b: Const<Vec3>): Vec3 => cross_(a, b, a);
   export const cross_ = (a: Const<Vec3>, b: Const<Vec3>, into: Vec3): Vec3 =>
@@ -700,11 +747,16 @@ export namespace Vec3 {
   export const lengthSq = (self: Const<Vec3>): number => self.x * self.x + self.y * self.y + self.z * self.z;
   export const length = (self: Const<Vec3>): number => Math.sqrt(lengthSq(self));
 
+  export const manhattanLength = (self: Const<Vec3>): number => Math.abs(self.x) + Math.abs(self.y) + Math.abs(self.z);
+
   export const dot = (a: Const<Vec3>, b: Const<Vec3>): number => a.x * b.x + a.y * b.y + a.z * b.z;
 
   export const fromArray = (array: Const<NumberArray>, offset: number): Vec3 => fromArray_(array, offset, empty());
-  export const fromArray_ = (array: Const<NumberArray>, offset: number, into: Vec3): Vec3 =>
-    set(into, array[offset], array[offset + 1], array[offset + 2]);
+  export const fromArray_ = (array: Const<NumberArray>, offset: number, into: Vec3): Vec3 => {
+    console.log(array, offset, array[offset], array[offset + 1], array[offset + 2]);
+
+    return set(into, array[offset], array[offset + 1], array[offset + 2]);
+  };
   export const fillArray = (self: Vec3, array: Const<NumberArray>, offset: number): Vec3 =>
     fromArray_(array, offset, self);
   export const intoArray_ = <T extends NumberArray>({ x, y, z }: Const<Vec3>, offset: number, into: T): T => {
@@ -722,8 +774,60 @@ export namespace Vec3 {
     set(into, attribute.getX(index), attribute.getY(index), attribute.getZ(index));
   export const fillAttribute = (self: Vec3, attribute: Const<BufferAttribute>, index: number): Vec3 =>
     fromAttribute_(attribute, index, self);
-  export const intoAttribute_ = (self: Const<Vec3>, attribute: BufferAttribute, index: number): BufferAttribute =>
-    attribute.setXYZ(index, self.x, self.y, self.z);
+  export const intoAttribute_ = (self: Const<Vec3>, index: number, into: BufferAttribute): BufferAttribute =>
+    into.setXYZ(index, self.x, self.y, self.z);
+
+  export const fromSpherical = (spherical: Const<Spherical>): Vec3 => fromSpherical_(spherical, empty());
+  export const fromSpherical_ = ({ phi, radius, theta }: Const<Spherical>, into: Vec3): Vec3 => {
+    const phiSinRadius = Math.sin(phi) * radius;
+
+    return set(into, phiSinRadius * Math.sin(theta), Math.cos(phi), phiSinRadius * Math.cos(theta));
+  };
+  export const fillSpherical = (self: Vec3, spherical: Const<Spherical>): Vec3 => fromSpherical_(spherical, self);
+
+  export const fromCylindrical = (cylindrical: Const<Cylindrical>): Vec3 => fromCylindrical_(cylindrical, empty());
+  export const fromCylindrical_ = ({ radius, theta, y }: Const<Cylindrical>, into: Vec3): Vec3 =>
+    set(into, radius * Math.sin(theta), y, radius * Math.cos(theta));
+  export const fillCylindrical = (self: Vec3, cylindrical: Const<Cylindrical>): Vec3 =>
+    fromCylindrical_(cylindrical, self);
+
+  export const fromMat4Position = (matrix: Const<Matrix4>): Vec3 => fromMat4Position_(matrix, empty());
+  export const fromMat4Position_ = ({ elements }: Const<Matrix4>, into: Vec3): Vec3 =>
+    set(into, elements[12], elements[13], elements[14]);
+  export const fillMat4Position = (self: Vec3, matrix: Const<Matrix4>): Vec3 => fromMat4Position_(matrix, self);
+
+  export const fromMat4Column = (matrix: Const<Matrix4>, index: 0 | 1 | 2 | 3 | number): Vec3 =>
+    fromMat4Column_(matrix, index, empty());
+  export const fromMat4Column_ = ({ elements }: Const<Matrix4>, index: number, into: Vec3): Vec3 =>
+    fillArray(into, elements, index * 4);
+  export const fillMat4Column = (self: Vec3, matrix: Const<Matrix4>, index: 0 | 1 | 2 | 3 | number): Vec3 =>
+    fromMat4Column_(matrix, index, self);
+
+  export const fromMat3Column = (matrix: Const<Matrix3>, index: 0 | 1 | 2 | number): Vec3 =>
+    fromMat3Column_(matrix, index, empty());
+  export const fromMat3Column_ = ({ elements }: Const<Matrix3>, index: number, into: Vec3): Vec3 =>
+    fillArray(into, elements, index * 3);
+  export const fillMat3Column = (self: Vec3, matrix: Const<Matrix3>, index: 0 | 1 | 2 | number): Vec3 =>
+    fromMat3Column_(matrix, index, self);
+
+  export const fromMat4Scale = (matrix: Const<Matrix4>): Vec3 => fromMat4Scale_(matrix, empty());
+  export const fromMat4Scale_ = (matrix: Const<Matrix4>, into: Vec3): Vec3 => {
+    const sx = length(fillMat4Column(into, matrix, 0));
+    const sy = length(fillMat4Column(into, matrix, 1));
+    const sz = length(fillMat4Column(into, matrix, 2));
+
+    return set(into, sx, sy, sz);
+  };
+  export const fillMat4Scale = (self: Vec3, matrix: Const<Matrix4>): Vec3 => fromMat4Scale_(matrix, self);
+
+  export const fromEuler = (euler: Const<Euler>): Vec3 => fromEuler_(euler, empty());
+  export const fromEuler_ = ({ x, y, z }: Const<Euler>, into: Vec3): Vec3 => set(into, x, y, z);
+  export const fillEuler = (self: Vec3, euler: Const<Euler>): Vec3 => fromEuler_(euler, self);
+
+  export const fromColor = (color: Const<Color>): Vec3 => fromColor_(color, empty());
+  export const fromColor_ = ({ r, g, b }: Const<Color>, into: Vec3): Vec3 => set(into, r, g, b);
+  export const fillColor = (self: Vec3, color: Const<Color>): Vec3 => fromColor_(color, self);
+
   export const distanceSqTo = (a: Const<Vec3>, b: Const<Vec3>): number => {
     const dx = a.x - b.x;
     const dy = a.y - b.y;
@@ -737,27 +841,29 @@ export namespace Vec3 {
     Math.abs(a.x - b.x) + Math.abs(a.y - b.y) + Math.abs(a.z - b.z);
 
   export const applyMat4 = (self: Vec3, matrix: Const<Matrix4>): Vec3 => applyMat4_(self, matrix, self);
-  export const applyMat4_ = (self: Const<Vec3>, { elements }: Const<Matrix4>, into: Vec3): Vec3 => {
+  export const applyMat4_ = (self: Const<Vec3>, { elements: e }: Const<Matrix4>, into: Vec3): Vec3 => {
     const { x, y, z } = self;
 
-    const w = 1 / (elements[3] * x + elements[7] * y + elements[11] * z + elements[15]);
+    const w = 1 / (e[3] * x + e[7] * y + e[11] * z + e[15]);
 
     return set(
       into,
-      (elements[0] * x + elements[4] * y + elements[8] * z + elements[12]) * w,
-      (elements[1] * x + elements[5] * y + elements[9] * z + elements[13]) * w,
-      (elements[2] * x + elements[6] * y + elements[10] * z + elements[14]) * w,
+      (e[0] * x + e[4] * y + e[8] * z + e[12]) * w,
+      (e[1] * x + e[5] * y + e[9] * z + e[13]) * w,
+      (e[2] * x + e[6] * y + e[10] * z + e[14]) * w,
     );
   };
+  export const appliedMat4 = (self: Const<Vec3>, matrix: Const<Matrix4>): Vec3 => applyMat4_(self, matrix, empty());
 
   export const applyMat3 = (self: Vec3, matrix: Const<Matrix3>): Vec3 => applyMat3_(self, matrix, self);
-  export const applyMat3_ = (self: Const<Vec3>, { elements }: Const<Matrix3>, into: Vec3): Vec3 =>
+  export const applyMat3_ = (self: Const<Vec3>, { elements: e }: Const<Matrix3>, into: Vec3): Vec3 =>
     set(
       into,
-      elements[0] * self.x + elements[3] * self.y + elements[6] * self.z,
-      elements[1] * self.x + elements[4] * self.y + elements[7] * self.z,
-      elements[2] * self.x + elements[5] * self.y + elements[8] * self.z,
+      e[0] * self.x + e[3] * self.y + e[6] * self.z,
+      e[1] * self.x + e[4] * self.y + e[7] * self.z,
+      e[2] * self.x + e[5] * self.y + e[8] * self.z,
     );
+  export const appliedMat3 = (self: Const<Vec3>, matrix: Const<Matrix3>): Vec3 => applyMat3_(self, matrix, empty());
 
   export const applyEuler = (self: Vec3, euler: Const<Euler>): Vec3 => applyEuler_(self, euler, self);
   export const applyEuler_ = (self: Const<Vec3>, { x, y, z }: Const<Euler>, into: Vec3): Vec3 => {
@@ -794,28 +900,75 @@ export namespace Vec3 {
     );
   };
 
+  const _quaternion = Quaternion.identity();
   export const applyAxisAngle = (self: Vec3, axis: Const<Vec3>, angle: number): Vec3 =>
     applyAxisAngle_(self, axis, angle, self);
   export const applyAxisAngle_ = (self: Const<Vec3>, axis: Const<Vec3>, angle: number, into: Vec3): Vec3 => {
-    const { x, y, z } = axis;
-    const { cos, sin } = Math;
-    const c = cos(angle);
-    const s = sin(angle);
-    const t = 1 - c;
-    const tx = t * x;
-    const ty = t * y;
-
-    return set(
-      into,
-      self.x * (t * x + c) + self.y * (tx - z * s) + self.z * (tx + y * s),
-      self.y * (t * y + c) + self.z * (ty - x * s) + self.x * (ty + z * s),
-      self.z * (t * z + c) + self.x * (tx - y * s) + self.y * (ty + x * s),
-    );
+    Quaternion.fillAxisAngle(_quaternion, axis, angle);
+    applyQuaternion_(self, _quaternion, into);
+    return into;
   };
 
   export const applyNormalMatrix = (self: Vec3, matrix: Const<Matrix3>): Vec3 => applyNormalMatrix_(self, matrix, self);
   export const applyNormalMatrix_ = (self: Const<Vec3>, matrix: Const<Matrix3>, into: Vec3): Vec3 =>
     normalize(applyMat3_(self, matrix, into));
+
+  export const project = (self: Vec3, camera: Camera) => project_(self, camera, self);
+  export const project_ = (self: Const<Vec3>, camera: Const<Camera>, into: Vec3): Vec3 => {
+    applyMat4_(self, camera.matrixWorldInverse, into);
+    applyMat4(into, camera.projectionMatrix);
+    return into;
+  };
+  export const projected = (self: Const<Vec3>, camera: Const<Camera>): Vec3 => project_(self, camera, empty());
+
+  export const unproject = (self: Vec3, camera: Camera) => unproject_(self, camera, self);
+  export const unproject_ = (self: Const<Vec3>, camera: Const<Camera>, into: Vec3): Vec3 => {
+    applyMat4_(self, camera.projectionMatrixInverse, into);
+    applyMat4(into, camera.matrixWorld);
+    return into;
+  };
+  export const unprojected = (self: Const<Vec3>, camera: Const<Camera>): Vec3 => unproject_(self, camera, empty());
+
+  export const reflect = (self: Vec3, normal: Const<Vec3>): Vec3 => reflect_(self, normal, self);
+  export const reflect_ = (self: Const<Vec3>, normal: Const<Vec3>, into: Vec3): Vec3 =>
+    subScaled(into, normal, 2 * dot(self, normal));
+  export const reflected = (self: Const<Vec3>, normal: Const<Vec3>): Vec3 => reflect_(self, normal, empty());
+
+  export const projectVec = (self: Vec3, vector: Const<Vec3>): Vec3 => projectVec_(self, vector, self);
+  export const projectVec_ = (self: Const<Vec3>, vector: Const<Vec3>, into: Vec3): Vec3 => {
+    const denominator = lengthSq(vector);
+    if (denominator === 0) return set(into, 0, 0, 0);
+
+    const scalar = dot(vector, self) / denominator;
+
+    return mulScalar_(vector, scalar, into);
+  };
+  export const projectedVec = (self: Const<Vec3>, vector: Const<Vec3>): Vec3 => projectVec_(self, vector, empty());
+
+  export const projectPlane = (self: Vec3, normal: Const<Vec3>): Vec3 => projectPlane_(self, normal, self);
+  export const projectPlane_ = (self: Const<Vec3>, normal: Const<Vec3>, into: Vec3): Vec3 =>
+    subScaled(into, normal, dot(self, normal));
+  export const projectedPlane = (self: Const<Vec3>, normal: Const<Vec3>): Vec3 => projectPlane_(self, normal, empty());
+
+  export const transformDirection = (self: Vec3, matrix: Const<Matrix4>): Vec3 =>
+    transformDirection_(self, matrix, self);
+  export const transformDirection_ = (self: Const<Vec3>, matrix: Const<Matrix4>, into: Vec3): Vec3 => {
+    const { x, y, z } = self;
+    const e = matrix.elements;
+
+    return normalize(
+      set(into, e[0] * x + e[4] * y + e[8] * z, e[1] * x + e[5] * y + e[9] * z, e[2] * x + e[6] * y + e[10] * z),
+    );
+  };
+
+  export const angleTo = (a: Const<Vec3>, b: Const<Vec3>): number => {
+    const square = lengthSq(a);
+    const denominator = Math.sqrt(square * square);
+    if (denominator === 0) return Math.PI / 2;
+
+    const theta = dot(a, b) / denominator;
+    return Math.acos(clampNumber(theta, -1, 1));
+  };
 
   export const equals = (a: Const<Vec3>, b: Const<Vec3>): boolean => a.x === b.x && a.y === b.y && a.z === b.z;
 
