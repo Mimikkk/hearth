@@ -7,7 +7,7 @@ import {
   MeshLambertMaterialParameters,
 } from '@modules/renderer/engine/materials/MeshLambertMaterial.js';
 import { Sphere } from '@modules/renderer/engine/math/Sphere.js';
-import { Vec3 } from '@modules/renderer/engine/math/Vector3.js';
+import { IVec3 } from '@modules/renderer/engine/math/Vector3.js';
 
 export class BoundingSphereVisualizer {
   object: Object3D;
@@ -24,7 +24,7 @@ export class BoundingSphereVisualizer {
     parameters.opacity ??= 0.2;
 
     this.bound = new Mesh(new SphereGeometry(sphere), new MeshLambertMaterial(parameters));
-    Vec3.fill_(this.bound.position, sphere.center);
+    IVec3.fill(this.bound.position, sphere.center);
   }
 
   static create(object: Object3D): BoundingSphereVisualizer {

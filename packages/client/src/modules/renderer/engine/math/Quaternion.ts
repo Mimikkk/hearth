@@ -1,7 +1,7 @@
 import * as MathUtils from './MathUtils.js';
 import { NumberArray } from './MathUtils.js';
 import type { Euler } from './Euler.js';
-import { Vec3 } from './Vector3.js';
+import { IVec3 } from './Vector3.js';
 import type { Matrix4 } from './Matrix4.js';
 import type { BufferAttribute } from '../core/BufferAttribute.js';
 import type { InterleavedBufferAttribute } from '../core/InterleavedBufferAttribute.js';
@@ -105,9 +105,9 @@ export namespace Quaternion {
   };
   export const fillEuler = (self: Quaternion, euler: Const<Euler>): Quaternion => fromEuler_(euler, self);
 
-  export const fromUnit = (from: Const<Vec3>, to: Const<Vec3>): Quaternion => fromUnit_(from, to, identity());
-  export const fromUnit_ = (from: Const<Vec3>, to: Const<Vec3>, into: Quaternion): Quaternion => {
-    let r = Vec3.dot(from, to) + 1;
+  export const fromUnit = (from: Const<IVec3>, to: Const<IVec3>): Quaternion => fromUnit_(from, to, identity());
+  export const fromUnit_ = (from: Const<IVec3>, to: Const<IVec3>, into: Quaternion): Quaternion => {
+    let r = IVec3.dot(from, to) + 1;
 
     if (r < Number.EPSILON) {
       r = 0;
@@ -123,7 +123,7 @@ export namespace Quaternion {
 
     return normalize(into);
   };
-  export const fillUnit = (self: Quaternion, from: Const<Vec3>, to: Const<Vec3>): Quaternion =>
+  export const fillUnit = (self: Quaternion, from: Const<IVec3>, to: Const<IVec3>): Quaternion =>
     fromUnit_(from, to, self);
 
   export const fromArray = (array: Const<NumberArray>, offset: number): Quaternion =>
@@ -182,15 +182,15 @@ export namespace Quaternion {
   };
   export const fillRotation = (self: Quaternion, matrix: Const<Matrix4>): Quaternion => fromRotation_(matrix, self);
 
-  export const fromAxisAngle = (axis: Const<Vec3>, angle: number): Quaternion =>
+  export const fromAxisAngle = (axis: Const<IVec3>, angle: number): Quaternion =>
     fromAxisAngle_(axis, angle, identity());
-  export const fromAxisAngle_ = (axis: Const<Vec3>, angle: number, into: Quaternion): Quaternion => {
+  export const fromAxisAngle_ = (axis: Const<IVec3>, angle: number, into: Quaternion): Quaternion => {
     const halfAngle = angle / 2;
     const s = Math.sin(halfAngle);
 
     return set(into, axis.x * s, axis.y * s, axis.z * s, Math.cos(halfAngle));
   };
-  export const fillAxisAngle = (self: Quaternion, axis: Const<Vec3>, angle: number): Quaternion =>
+  export const fillAxisAngle = (self: Quaternion, axis: Const<IVec3>, angle: number): Quaternion =>
     fromAxisAngle_(axis, angle, self);
 
   export const fromAttribute = (attribute: Const<BufferAttribute | InterleavedBufferAttribute>, index: number) =>

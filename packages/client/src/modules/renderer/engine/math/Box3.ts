@@ -1,4 +1,4 @@
-import { Vec3, Vector3 } from './Vector3.js';
+import { IVec3, Vector3 } from './Vector3.js';
 import type { BufferAttribute } from '../core/BufferAttribute.js';
 import type { Object3D } from '../core/Object3D.js';
 import type { Triangle } from './Triangle.js';
@@ -144,7 +144,7 @@ export class Box3 {
             _vector.fromBufferAttribute(positionAttribute, i);
           }
 
-          Vec3.applyMat4(_vector, object.matrixWorld);
+          IVec3.applyMat4(_vector, object.matrixWorld);
           this.expandByPoint(_vector);
         }
       } else {
@@ -429,8 +429,8 @@ function satForAxes(axes: number[], v0: Vector3, v1: Vector3, v2: Vector3, exten
 }
 
 export interface Box3_ {
-  min: Vec3;
-  max: Vec3;
+  min: IVec3;
+  max: IVec3;
 }
 
 export namespace Box3_ {
@@ -493,39 +493,39 @@ export namespace Box3_ {
     return into;
   };
 
-  export const size = (self: Const<Box3_>): Vec3 => size_(self, Vec3.empty());
-  export const size_ = (self: Const<Box3_>, into: Vec3): Vec3 =>
+  export const size = (self: Const<Box3_>): IVec3 => size_(self, IVec3.empty());
+  export const size_ = (self: Const<Box3_>, into: IVec3): IVec3 =>
     isEmpty(self)
-      ? Vec3.set(into, 0, 0, 0)
-      : Vec3.set(into, self.max.x - self.min.x, self.max.y - self.min.y, self.max.z - self.min.z);
+      ? IVec3.set(into, 0, 0, 0)
+      : IVec3.set(into, self.max.x - self.min.x, self.max.y - self.min.y, self.max.z - self.min.z);
 
-  export const center = (self: Const<Box3_>): Vec3 => center_(self, Vec3.empty());
-  export const center_ = (self: Const<Box3_>, into: Vec3): Vec3 =>
+  export const center = (self: Const<Box3_>): IVec3 => center_(self, IVec3.empty());
+  export const center_ = (self: Const<Box3_>, into: IVec3): IVec3 =>
     isEmpty(self)
-      ? Vec3.set(into, 0, 0, 0)
-      : Vec3.set(into, (self.min.x + self.max.x) / 2, (self.min.y + self.max.y) / 2, (self.min.z + self.max.z) / 2);
+      ? IVec3.set(into, 0, 0, 0)
+      : IVec3.set(into, (self.min.x + self.max.x) / 2, (self.min.y + self.max.y) / 2, (self.min.z + self.max.z) / 2);
 
-  export const expandCoord = (self: Box3_, coord: Const<Vec3>): Box3_ => {
-    Vec3.min(self.min, coord);
-    Vec3.max(self.max, coord);
+  export const expandCoord = (self: Box3_, coord: Const<IVec3>): Box3_ => {
+    IVec3.min(self.min, coord);
+    IVec3.max(self.max, coord);
 
     return self;
   };
-  export const expandedCoord = (self: Const<Box3_>, vec: Const<Vec3>): Box3_ => expandCoord(clone(self), vec);
+  export const expandedCoord = (self: Const<Box3_>, vec: Const<IVec3>): Box3_ => expandCoord(clone(self), vec);
 
-  export const expandCoords = (self: Box3_, vecs: Const<Vec3>[]): Box3_ => {
+  export const expandCoords = (self: Box3_, vecs: Const<IVec3>[]): Box3_ => {
     for (let i = 0, it = vecs.length; i < it; ++i) expandCoord(self, vecs[i]);
     return self;
   };
-  export const expandedCoords = (self: Const<Box3_>, vecs: Const<Vec3>[]): Box3_ => expandCoords(clone(self), vecs);
+  export const expandedCoords = (self: Const<Box3_>, vecs: Const<IVec3>[]): Box3_ => expandCoords(clone(self), vecs);
 
-  export const expandVec = (self: Box3_, vec: Const<Vec3>): Box3_ => {
-    Vec3.sub(self.min, vec);
-    Vec3.add(self.max, vec);
+  export const expandVec = (self: Box3_, vec: Const<IVec3>): Box3_ => {
+    IVec3.sub(self.min, vec);
+    IVec3.add(self.max, vec);
 
     return self;
   };
-  export const expandedVec = (self: Const<Box3_>, vec: Const<Vec3>): Box3_ => expandVec(clone(self), vec);
+  export const expandedVec = (self: Const<Box3_>, vec: Const<IVec3>): Box3_ => expandVec(clone(self), vec);
 
   export const expandScalar = (self: Box3_, scalar: number): Box3_ => {
     self.min.x -= scalar;
@@ -541,7 +541,7 @@ export namespace Box3_ {
 
   const isMesh = (obj: any): obj is Mesh => obj.isMesh;
   const isInstancedMesh = (obj: any): obj is Mesh => obj.isInstancedMesh;
-  const _vec1 = Vec3.empty();
+  const _vec1 = IVec3.empty();
   export const expandObject = (self: Const<Box3_>, object: Const<Object3D>, precise: boolean): Box3_ => {
     // Computes the world-axis-aligned bounding box of an object (including its children),
     // accounting for both the object's, and children's, world transforms
@@ -560,10 +560,10 @@ export namespace Box3_ {
           if (isMesh(object)) {
             object.getVertexPosition(i, _vec1);
           } else {
-            Vec3.fillAttribute(_vec1, positionAttribute, i);
+            IVec3.fillAttribute(_vec1, positionAttribute, i);
           }
 
-          Vec3.applyMat4(_vec1, object.matrixWorld);
+          IVec3.applyMat4(_vec1, object.matrixWorld);
           expandCoord(self, _vec1);
         }
       } else {
@@ -595,20 +595,20 @@ export namespace Box3_ {
   export const expandedObject = (self: Const<Box3_>, object: Const<Object3D>, precise: boolean): Box3_ =>
     expandObject(clone(self), object, precise);
 
-  export const fromCenterAndRadius = (center: Const<Vec3>, radius: number): Box3_ =>
+  export const fromCenterAndRadius = (center: Const<IVec3>, radius: number): Box3_ =>
     fromCenterAndRadius_(center, radius, empty());
-  export const fromCenterAndRadius_ = ({ x, y, z }: Const<Vec3>, radius: number, into: Box3_): Box3_ =>
+  export const fromCenterAndRadius_ = ({ x, y, z }: Const<IVec3>, radius: number, into: Box3_): Box3_ =>
     set(into, x - radius, y - radius, z - radius, x + radius, y + radius, z + radius);
-  export const fillCenterAndRadius = (self: Box3_, center: Const<Vec3>, radius: number): Box3_ =>
+  export const fillCenterAndRadius = (self: Box3_, center: Const<IVec3>, radius: number): Box3_ =>
     fromCenterAndRadius_(center, radius, self);
 
-  export const fromCoords = (vecs: Const<Vec3>[]): Box3_ => fromCoords_(vecs, empty());
-  export const fromCoords_ = (vecs: Const<Vec3>[], into: Box3_): Box3_ => expandCoords(into, vecs);
-  export const fillCoords = (self: Box3_, vecs: Const<Vec3>[]): Box3_ => fromCoords_(vecs, clear(self));
+  export const fromCoords = (vecs: Const<IVec3>[]): Box3_ => fromCoords_(vecs, empty());
+  export const fromCoords_ = (vecs: Const<IVec3>[], into: Box3_): Box3_ => expandCoords(into, vecs);
+  export const fillCoords = (self: Box3_, vecs: Const<IVec3>[]): Box3_ => fromCoords_(vecs, clear(self));
 
-  export const fromCenterAndSize = (center: Const<Vec3>, size: Const<Vec3>): Box3_ =>
+  export const fromCenterAndSize = (center: Const<IVec3>, size: Const<IVec3>): Box3_ =>
     fromCenterAndSize_(center, size, empty());
-  export const fromCenterAndSize_ = (center: Const<Vec3>, size: Const<Vec3>, into: Box3_): Box3_ => {
+  export const fromCenterAndSize_ = (center: Const<IVec3>, size: Const<IVec3>, into: Box3_): Box3_ => {
     const halfX = size.x / 2;
     const halfY = size.y / 2;
     const halfZ = size.z / 2;
@@ -623,7 +623,7 @@ export namespace Box3_ {
       center.z + halfZ,
     );
   };
-  export const fillCenterAndSize = (self: Box3_, center: Const<Vec3>, size: Const<Vec3>): Box3_ =>
+  export const fillCenterAndSize = (self: Box3_, center: Const<IVec3>, size: Const<IVec3>): Box3_ =>
     fromCenterAndSize_(center, size, self);
 
   export const fromAttribute = (attribute: BufferAttribute): Box3_ => fromAttribute_(attribute, empty());
@@ -631,7 +631,7 @@ export namespace Box3_ {
     Box3_.clear(into);
 
     for (let i = 0; i < attribute.count; ++i) {
-      expandCoord(into, Vec3.fillAttribute(Vec3.temp0, attribute, i));
+      expandCoord(into, IVec3.fillAttribute(IVec3.temp0, attribute, i));
     }
 
     return into;
@@ -678,7 +678,7 @@ export namespace Box3_ {
     self.min.z <= box.min.z &&
     box.max.z <= self.max.z;
 
-  export const containsVec = (self: Const<Box3_>, { x, y, z }: Const<Vec3>): boolean =>
+  export const containsVec = (self: Const<Box3_>, { x, y, z }: Const<IVec3>): boolean =>
     !(x < self.min.x || x > self.max.x || y < self.min.y || y > self.max.y || z < self.min.z || z > self.max.z);
 
   export const intersects = (self: Const<Box3_>, box: Const<Box3_>): boolean =>
@@ -689,8 +689,8 @@ export namespace Box3_ {
     box.max.z >= self.min.z &&
     box.min.z <= self.max.z;
   export const intersectsSphere = (self: Const<Box3_>, sphere: Const<Sphere_>): boolean => {
-    const vec = clampVec_(self, sphere.center, Vec3.temp0);
-    const distance = Vec3.distanceSqTo(vec, sphere.center);
+    const vec = clampVec_(self, sphere.center, IVec3.temp0);
+    const distance = IVec3.distanceSqTo(vec, sphere.center);
 
     return distance <= sphere.radius * sphere.radius;
   };
@@ -727,22 +727,22 @@ export namespace Box3_ {
 
   const isSatForAxes = (
     axes: Const<NumberArray>,
-    v0: Const<Vec3>,
-    v1: Const<Vec3>,
-    v2: Const<Vec3>,
-    extents: Const<Vec3>,
+    v0: Const<IVec3>,
+    v1: Const<IVec3>,
+    v2: Const<IVec3>,
+    extents: Const<IVec3>,
   ): boolean => {
     for (let i = 0, j = axes.length - 3; i <= j; i += 3) {
-      const _testAxis = Vec3.fromArray_(axes, i, Vec3.temp9);
+      const _testAxis = IVec3.fromArray_(axes, i, IVec3.temp9);
 
       // project the aabb onto the separating axis
       const r =
         extents.x * Math.abs(_testAxis.x) + extents.y * Math.abs(_testAxis.y) + extents.z * Math.abs(_testAxis.z);
 
       // project all 3 vertices of the triangle onto the separating axis
-      const p0 = Vec3.dot(v0, _testAxis);
-      const p1 = Vec3.dot(v1, _testAxis);
-      const p2 = Vec3.dot(v2, _testAxis);
+      const p0 = IVec3.dot(v0, _testAxis);
+      const p1 = IVec3.dot(v1, _testAxis);
+      const p2 = IVec3.dot(v2, _testAxis);
 
       // actual test, basically see if either of the most extreme of the triangle points intersects r
       if (Math.max(-Math.max(p0, p1, p2), Math.min(p0, p1, p2)) > r) {
@@ -759,18 +759,18 @@ export namespace Box3_ {
     if (isEmpty(self)) return false;
 
     // compute box center and extents
-    const _center = center_(self, Vec3.temp0);
-    const _extents = Vec3.sub_(self.max, _center, Vec3.temp1);
+    const _center = center_(self, IVec3.temp0);
+    const _extents = IVec3.sub_(self.max, _center, IVec3.temp1);
 
     // translate triangle to aabb origin
-    const _v0 = Vec3.sub_(triangle.a, _center, Vec3.temp2);
-    const _v1 = Vec3.sub_(triangle.b, _center, Vec3.temp3);
-    const _v2 = Vec3.sub_(triangle.c, _center, Vec3.temp4);
+    const _v0 = IVec3.sub_(triangle.a, _center, IVec3.temp2);
+    const _v1 = IVec3.sub_(triangle.b, _center, IVec3.temp3);
+    const _v2 = IVec3.sub_(triangle.c, _center, IVec3.temp4);
 
     // compute edge vectors for triangle
-    const _f0 = Vec3.sub_(_v1, _v0, Vec3.temp5);
-    const _f1 = Vec3.sub_(_v2, _v1, Vec3.temp6);
-    const _f2 = Vec3.sub_(_v0, _v2, Vec3.temp7);
+    const _f0 = IVec3.sub_(_v1, _v0, IVec3.temp5);
+    const _f1 = IVec3.sub_(_v2, _v1, IVec3.temp6);
+    const _f2 = IVec3.sub_(_v0, _v2, IVec3.temp7);
 
     // test against axes that are given by cross product combinations of the edges of the triangle and the edges of the aabb
     // make an axis testing of each of the 3 sides of the aabb against each of the 3 sides of the triangle = 9 axis of separation
@@ -816,14 +816,14 @@ export namespace Box3_ {
 
     // finally testing the face normal of the triangle
     // use already existing triangle edge vectors here
-    const _triangleNormal = Vec3.cross_(_f0, _f1, Vec3.temp8);
+    const _triangleNormal = IVec3.cross_(_f0, _f1, IVec3.temp8);
     axes = [_triangleNormal.x, _triangleNormal.y, _triangleNormal.z];
 
     return isSatForAxes(axes, _v0, _v1, _v2, _extents);
   };
 
-  export const clampVec = (self: Const<Box3_>, vec: Const<Vec3>): Vec3 => clampVec_(self, vec, Vec3.empty());
-  export const clampVec_ = (self: Const<Box3_>, { x, y, z }: Const<Vec3>, into: Vec3): Vec3 => {
+  export const clampVec = (self: Const<Box3_>, vec: Const<IVec3>): IVec3 => clampVec_(self, vec, IVec3.empty());
+  export const clampVec_ = (self: Const<Box3_>, { x, y, z }: Const<IVec3>, into: IVec3): IVec3 => {
     into.x = clamp(x, self.min.x, self.max.x);
     into.y = clamp(y, self.min.y, self.max.y);
     into.z = clamp(z, self.min.z, self.max.z);
@@ -832,8 +832,8 @@ export namespace Box3_ {
   };
 
   export const intersect = (self: Box3_, box: Const<Box3_>): Box3_ => {
-    Vec3.max(self.min, box.min);
-    Vec3.min(self.max, box.max);
+    IVec3.max(self.min, box.min);
+    IVec3.min(self.max, box.max);
 
     if (isEmpty(self)) clear(self);
 
@@ -842,14 +842,14 @@ export namespace Box3_ {
   export const intersected = (self: Const<Box3_>, box: Const<Box3_>): Box3_ => intersect(clone(self), box);
 
   export const union = (self: Box3_, box: Const<Box3_>): Box3_ => {
-    Vec3.min(self.min, box.min);
-    Vec3.max(self.max, box.max);
+    IVec3.min(self.min, box.min);
+    IVec3.max(self.max, box.max);
 
     return self;
   };
   export const united = (self: Const<Box3_>, box: Const<Box3_>): Box3_ => union(clone(self), box);
 
-  export const translate = (self: Box3_, { x, y, z }: Const<Vec3>): Box3_ => {
+  export const translate = (self: Box3_, { x, y, z }: Const<IVec3>): Box3_ => {
     self.min.x += x;
     self.min.y += y;
     self.min.z += z;
@@ -859,20 +859,20 @@ export namespace Box3_ {
 
     return self;
   };
-  export const translated = (self: Const<Box3_>, vec: Const<Vec3>): Box3_ => translate(clone(self), vec);
+  export const translated = (self: Const<Box3_>, vec: Const<IVec3>): Box3_ => translate(clone(self), vec);
 
-  const _vec4 = Vec3.empty();
+  const _vec4 = IVec3.empty();
   export const sphere = (self: Const<Box3_>) => sphere_(self, Sphere_.empty());
   export const sphere_ = (self: Const<Box3_>, into: Sphere_): Sphere_ => {
     if (isEmpty(self)) return Sphere_.clear(into);
 
     center_(self, into.center);
-    into.radius = Vec3.length(size_(self, _vec4)) * 0.5;
+    into.radius = IVec3.length(size_(self, _vec4)) * 0.5;
 
     return into;
   };
 
-  const _vec2 = Vec3.empty();
+  const _vec2 = IVec3.empty();
   const _box1 = empty();
   export const applyMat4 = (self: Const<Box3_>, matrix: Const<Matrix4>): Box3_ => applyMat4_(self, matrix, self);
   export const applyMat4_ = (self: Const<Box3_>, matrix: Const<Matrix4>, into: Box3_): Box3_ => {
@@ -880,50 +880,50 @@ export namespace Box3_ {
     const { min, max } = fill_(_box1, self);
     clear(into);
 
-    Vec3.set(_vec2, min.x, min.y, min.z);
-    Vec3.applyMat4(_vec2, matrix);
+    IVec3.set(_vec2, min.x, min.y, min.z);
+    IVec3.applyMat4(_vec2, matrix);
     expandCoord(into, _vec2);
 
-    Vec3.set(_vec2, min.x, min.y, max.z);
-    Vec3.applyMat4(_vec2, matrix);
+    IVec3.set(_vec2, min.x, min.y, max.z);
+    IVec3.applyMat4(_vec2, matrix);
     expandCoord(into, _vec2);
 
-    Vec3.set(_vec2, min.x, max.y, min.z);
-    Vec3.applyMat4(_vec2, matrix);
+    IVec3.set(_vec2, min.x, max.y, min.z);
+    IVec3.applyMat4(_vec2, matrix);
     expandCoord(into, _vec2);
 
-    Vec3.set(_vec2, min.x, max.y, max.z);
-    Vec3.applyMat4(_vec2, matrix);
+    IVec3.set(_vec2, min.x, max.y, max.z);
+    IVec3.applyMat4(_vec2, matrix);
     expandCoord(into, _vec2);
 
-    Vec3.set(_vec2, max.x, min.y, min.z);
-    Vec3.applyMat4(_vec2, matrix);
+    IVec3.set(_vec2, max.x, min.y, min.z);
+    IVec3.applyMat4(_vec2, matrix);
     expandCoord(into, _vec2);
 
-    Vec3.set(_vec2, max.x, min.y, max.z);
-    Vec3.applyMat4(_vec2, matrix);
+    IVec3.set(_vec2, max.x, min.y, max.z);
+    IVec3.applyMat4(_vec2, matrix);
     expandCoord(into, _vec2);
 
-    Vec3.set(_vec2, max.x, max.y, min.z);
-    Vec3.applyMat4(_vec2, matrix);
+    IVec3.set(_vec2, max.x, max.y, min.z);
+    IVec3.applyMat4(_vec2, matrix);
     expandCoord(into, _vec2);
 
-    Vec3.set(_vec2, max.x, max.y, max.z);
-    Vec3.applyMat4(_vec2, matrix);
+    IVec3.set(_vec2, max.x, max.y, max.z);
+    IVec3.applyMat4(_vec2, matrix);
     expandCoord(into, _vec2);
 
     return into;
   };
   export const appliedMat4 = (self: Const<Box3_>, matrix: Const<Matrix4>): Box3_ => applyMat4_(self, matrix, empty());
 
-  const _vec3 = Vec3.empty();
-  export const distanceSqTo = (self: Const<Box3_>, vec: Const<Vec3>): number => {
-    Vec3.clamp_(vec, self.min, self.max, _vec3);
+  const _vec3 = IVec3.empty();
+  export const distanceSqTo = (self: Const<Box3_>, vec: Const<IVec3>): number => {
+    IVec3.clamp_(vec, self.min, self.max, _vec3);
 
-    return Vec3.distanceSqTo(_vec3, vec);
+    return IVec3.distanceSqTo(_vec3, vec);
   };
-  export const distanceTo = (self: Const<Box3_>, vec: Const<Vec3>): number => Math.sqrt(distanceSqTo(self, vec));
+  export const distanceTo = (self: Const<Box3_>, vec: Const<IVec3>): number => Math.sqrt(distanceSqTo(self, vec));
 
   export const equals = (a: Const<Box3_>, b: Const<Box3_>): boolean =>
-    Vec3.equals(a.min, b.min) && Vec3.equals(a.max, b.max);
+    IVec3.equals(a.min, b.min) && IVec3.equals(a.max, b.max);
 }

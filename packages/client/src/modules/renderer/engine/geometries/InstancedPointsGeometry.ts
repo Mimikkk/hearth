@@ -9,7 +9,7 @@ import {
   Vector3,
 } from '../engine.js';
 import { Box3_ } from '@modules/renderer/engine/math/Box3.js';
-import { Vec3 } from '@modules/renderer/engine/math/Vector3.js';
+import { IVec3 } from '@modules/renderer/engine/math/Vector3.js';
 
 const _vector = new Vector3();
 
@@ -89,8 +89,8 @@ export class InstancedPointsGeometry extends InstancedBufferGeometry {
 
     let maxRadiusSq = 0;
     for (let i = 0, il = position.count; i < il; i++) {
-      Vec3.fillAttribute(_vector, position, i);
-      const radiusSq = Vec3.distanceSqTo(center, _vector);
+      IVec3.fillAttribute(_vector, position, i);
+      const radiusSq = IVec3.distanceSqTo(center, _vector);
       if (radiusSq > maxRadiusSq) maxRadiusSq = radiusSq;
     }
 

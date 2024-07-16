@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { Frustum } from './Frustum.ts';
 import { Plane_ } from './Plane.ts';
-import { Vec3 } from './Vector3.ts';
+import { IVec3 } from './Vector3.ts';
 import { Matrix4 } from './Matrix4.ts';
 import { Box3_ } from '@modules/renderer/engine/math/Box3.js';
 import { Sphere_ } from './Sphere.ts';
@@ -95,16 +95,16 @@ describe('Maths - Frustum', () => {
     for (let i = maxDepth; i <= minDepth; i += 0.1) {
       for (let j = left; j <= right; j += 0.1) {
         for (let k = bottom; k <= top; k += 0.1) {
-          expect(Frustum.containsVec(frustum, Vec3.create(j, k, i))).toBe(true);
+          expect(Frustum.containsVec(frustum, IVec3.create(j, k, i))).toBe(true);
         }
       }
     }
 
     // orthographic
-    expect(Frustum.containsVec(frustum, Vec3.create(-0.1, 0, minDepth))).toBe(false);
-    expect(Frustum.containsVec(frustum, Vec3.create(0, -0.1, minDepth))).toBe(false);
-    expect(Frustum.containsVec(frustum, Vec3.create(1.1, 0, minDepth))).toBe(false);
-    expect(Frustum.containsVec(frustum, Vec3.create(0, 1.1, minDepth))).toBe(false);
+    expect(Frustum.containsVec(frustum, IVec3.create(-0.1, 0, minDepth))).toBe(false);
+    expect(Frustum.containsVec(frustum, IVec3.create(0, -0.1, minDepth))).toBe(false);
+    expect(Frustum.containsVec(frustum, IVec3.create(1.1, 0, minDepth))).toBe(false);
+    expect(Frustum.containsVec(frustum, IVec3.create(0, 1.1, minDepth))).toBe(false);
   });
 
   it('fromProjection/containsVec', () => {
@@ -121,20 +121,20 @@ describe('Maths - Frustum', () => {
     for (let i = maxDepth; i <= minDepth; i += 0.1) {
       for (let j = left; j <= right; j += 0.1) {
         for (let k = bottom; k <= top; k += 0.1) {
-          expect(Frustum.containsVec(frustum, Vec3.create(j, k, i))).toBe(true);
+          expect(Frustum.containsVec(frustum, IVec3.create(j, k, i))).toBe(true);
         }
       }
     }
-    expect(Frustum.containsVec(frustum, Vec3.create(-0.1, 0, minDepth))).toBe(false);
-    expect(Frustum.containsVec(frustum, Vec3.create(0, -0.1, minDepth))).toBe(false);
+    expect(Frustum.containsVec(frustum, IVec3.create(-0.1, 0, minDepth))).toBe(false);
+    expect(Frustum.containsVec(frustum, IVec3.create(0, -0.1, minDepth))).toBe(false);
 
     // not orthographic
-    expect(Frustum.containsVec(frustum, Vec3.create(1.1, 0, minDepth))).toBe(true);
-    expect(Frustum.containsVec(frustum, Vec3.create(0, 1.1, minDepth))).toBe(true);
+    expect(Frustum.containsVec(frustum, IVec3.create(1.1, 0, minDepth))).toBe(true);
+    expect(Frustum.containsVec(frustum, IVec3.create(0, 1.1, minDepth))).toBe(true);
 
     // but within bounds
-    expect(Frustum.containsVec(frustum, Vec3.create(20, 0, minDepth))).toBe(false);
-    expect(Frustum.containsVec(frustum, Vec3.create(0, 20, minDepth))).toBe(false);
+    expect(Frustum.containsVec(frustum, IVec3.create(20, 0, minDepth))).toBe(false);
+    expect(Frustum.containsVec(frustum, IVec3.create(0, 20, minDepth))).toBe(false);
   });
 
   it('intersectsObject', () => {
@@ -188,7 +188,7 @@ describe('Maths - Frustum', () => {
 
     expect(Frustum.intersectsBox(frustum, box)).toBe(false);
 
-    Box3_.translate(box, Vec3.create(-1 - Number.EPSILON, -1 - Number.EPSILON, -1 - Number.EPSILON));
+    Box3_.translate(box, IVec3.create(-1 - Number.EPSILON, -1 - Number.EPSILON, -1 - Number.EPSILON));
 
     expect(Frustum.intersectsBox(frustum, box)).toBe(false);
   });
@@ -197,7 +197,7 @@ describe('Maths - Frustum', () => {
     const mat = new Matrix4().makePerspective(-1, 1, 1, -1, 1, 100);
     const frustum = Frustum.fromProjection(mat);
 
-    expect(Frustum.containsVec(frustum, Vec3.create(0, 0, 0))).toBe(false);
-    expect(Frustum.containsVec(frustum, Vec3.create(0, 0, -50))).toBe(true);
+    expect(Frustum.containsVec(frustum, IVec3.create(0, 0, 0))).toBe(false);
+    expect(Frustum.containsVec(frustum, IVec3.create(0, 0, -50))).toBe(true);
   });
 });

@@ -1,4 +1,4 @@
-import { Vec3, Vector3 } from '../math/Vector3.js';
+import { IVec3, Vector3 } from '../math/Vector3.js';
 import { Vector2 } from '../math/Vector2.js';
 import { Box3, Box3_ } from '../math/Box3.js';
 import { EventDispatcher } from './EventDispatcher.js';
@@ -283,9 +283,9 @@ export class BufferGeometry<
       Box3_.fillAttribute(_box, morph);
 
       if (this.morphTargetsRelative) {
-        Vec3.add_(this.boundingBox.min, _box.min, _vector);
+        IVec3.add_(this.boundingBox.min, _box.min, _vector);
         Box3_.expandCoord(this.boundingBox, _vector);
-        Vec3.add_(this.boundingBox.max, _box.max, _vector);
+        IVec3.add_(this.boundingBox.max, _box.max, _vector);
         Box3_.expandCoord(this.boundingBox, _vector);
       } else {
         Box3_.expandCoord(this.boundingBox, _box.min);
@@ -314,9 +314,9 @@ export class BufferGeometry<
         Box3_.fillAttribute(_boxMorphTargets, morph);
 
         if (this.morphTargetsRelative) {
-          Vec3.add_(_box.min, _boxMorphTargets.min, _vector);
+          IVec3.add_(_box.min, _boxMorphTargets.min, _vector);
           Box3_.expandCoord(_box, _vector);
-          Vec3.add_(_box.max, _boxMorphTargets.max, _vector);
+          IVec3.add_(_box.max, _boxMorphTargets.max, _vector);
           Box3_.expandCoord(_box, _vector);
         } else {
           Box3_.expandCoord(_box, _boxMorphTargets.min);
@@ -332,7 +332,7 @@ export class BufferGeometry<
     for (let i = 0, il = position.count; i < il; i++) {
       _vector.fromBufferAttribute(position, i);
 
-      const distance = Vec3.distanceSqTo(center, _vector);
+      const distance = IVec3.distanceSqTo(center, _vector);
       if (distance > maxRadiusSq) maxRadiusSq = distance;
     }
 
@@ -342,14 +342,14 @@ export class BufferGeometry<
         const morph = morphs[i];
 
         for (let j = 0, jl = morph.count; j < jl; j++) {
-          Vec3.fillAttribute(_vector, morph, j);
+          IVec3.fillAttribute(_vector, morph, j);
 
           if (isRelative) {
-            Vec3.fillAttribute(_offset, position, j);
-            Vec3.add(_vector, _offset);
+            IVec3.fillAttribute(_offset, position, j);
+            IVec3.add(_vector, _offset);
           }
 
-          const radiusSq = Vec3.distanceSqTo(center, _vector);
+          const radiusSq = IVec3.distanceSqTo(center, _vector);
           if (radiusSq > maxRadiusSq) maxRadiusSq = radiusSq;
         }
       }

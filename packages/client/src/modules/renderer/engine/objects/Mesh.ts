@@ -1,4 +1,4 @@
-import { Vec3, Vector3 } from '../math/Vector3.js';
+import { IVec3, Vector3 } from '../math/Vector3.js';
 import { Vec2, Vector2 } from '../math/Vector2.js';
 import { Sphere_ } from '../math/Sphere.js';
 import { Ray } from '../math/Ray.js';
@@ -34,7 +34,7 @@ const _normalC = /*@__PURE__*/ new Vector3();
 const _intersectionPoint = /*@__PURE__*/ new Vector3();
 const _intersectionPointWorld = /*@__PURE__*/ new Vector3();
 
-const _intersect = Vec3.empty();
+const _intersect = IVec3.empty();
 const _triangle1 = Triangle.empty();
 const _triangle2 = Triangle.empty();
 
@@ -103,7 +103,7 @@ export class Mesh extends Object3D {
     const morphPosition = geometry.morphAttributes.position as unknown as number[];
     const morphTargetsRelative = geometry.morphTargetsRelative;
 
-    Vec3.fillAttribute(target, position, 0);
+    IVec3.fillAttribute(target, position, 0);
 
     const morphInfluences = this.morphTargetInfluences;
 
@@ -125,7 +125,7 @@ export class Mesh extends Object3D {
         }
       }
 
-      Vec3.add(target, _morphA);
+      IVec3.add(target, _morphA);
     }
 
     return target;
@@ -314,8 +314,8 @@ function checkIntersection(
 
   if (intersect === null) return null;
 
-  Vec3.fill_(_intersectionPointWorld, point);
-  Vec3.applyMat4(_intersectionPointWorld, object.matrixWorld);
+  IVec3.fill(_intersectionPointWorld, point);
+  IVec3.applyMat4(_intersectionPointWorld, object.matrixWorld);
 
   const distance = raycaster.ray.origin.distanceTo(_intersectionPointWorld);
 
@@ -372,17 +372,17 @@ function checkGeometryIntersection(
     }
 
     if (normal) {
-      Vec3.fillAttribute(_normalA, normal, a);
-      Vec3.fillAttribute(_normalB, normal, b);
-      Vec3.fillAttribute(_normalC, normal, c);
+      IVec3.fillAttribute(_normalA, normal, a);
+      IVec3.fillAttribute(_normalB, normal, b);
+      IVec3.fillAttribute(_normalC, normal, c);
 
       Triangle.set(_triangle2, _normalA, _normalB, _normalC);
       Triangle.interpolate_(_triangle1, _triangle2, _intersectionPoint, _intersect);
 
       intersection.normal = new Vector3(_intersect.x, _intersect.y, _intersect.z);
 
-      if (Vec3.dot(intersection.normal, ray.direction) > 0) {
-        Vec3.negate(intersection.normal);
+      if (IVec3.dot(intersection.normal, ray.direction) > 0) {
+        IVec3.negate(intersection.normal);
       }
     }
 

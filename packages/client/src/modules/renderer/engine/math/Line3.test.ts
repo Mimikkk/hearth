@@ -2,7 +2,7 @@
 
 import { describe, expect, it } from 'vitest';
 import { Line3 } from './Line3.ts';
-import { Vec3, Vector3 } from '@modules/renderer/engine/math/Vector3.js';
+import { IVec3, Vector3 } from '@modules/renderer/engine/math/Vector3.js';
 import { clamp } from './MathUtils.ts';
 import { Vec4, Vector4 } from '@modules/renderer/engine/math/Vector4.js';
 import { Matrix4 } from '@modules/renderer/engine/math/Matrix4.js';
@@ -58,25 +58,25 @@ describe('Math - Line3', () => {
 
   it.only('at', () => {
     const line = Line3.create(0, 0, 1, 0, 0, 2);
-    const point = Vec3.empty();
+    const point = IVec3.empty();
 
     Line3.at_(line, -1, point);
-    expect(Vec3.distanceTo(point, Vec3.create(0, 0, 1))).toBe(0);
+    expect(IVec3.distanceTo(point, IVec3.create(0, 0, 1))).toBe(0);
 
     Line3.at_(line, 0, point);
-    expect(Vec3.distanceTo(point, Vec3.create(0, 0, 1))).toBe(0);
+    expect(IVec3.distanceTo(point, IVec3.create(0, 0, 1))).toBe(0);
     Line3.at_(line, 0.5, point);
-    expect(Vec3.distanceTo(point, Vec3.create(0, 0, 1.5))).toBe(0);
+    expect(IVec3.distanceTo(point, IVec3.create(0, 0, 1.5))).toBe(0);
     Line3.at_(line, 1, point);
-    expect(Vec3.distanceTo(point, Vec3.create(0, 0, 2))).toBe(0);
+    expect(IVec3.distanceTo(point, IVec3.create(0, 0, 2))).toBe(0);
 
     Line3.at_(line, 2, point);
-    expect(Vec3.distanceTo(point, Vec3.create(0, 0, 2))).toBe(0);
+    expect(IVec3.distanceTo(point, IVec3.create(0, 0, 2))).toBe(0);
   });
 
   it.only('closestAt/closestTo/at', () => {
     const line = Line3.create(0, 0, 0, 0, 0, 1);
-    const point = Vec3.empty();
+    const point = IVec3.empty();
 
     for (let i = -1; i <= 2; i += 0.05) {
       let step = clamp(i, 0, 1);
@@ -84,7 +84,7 @@ describe('Math - Line3', () => {
       Line3.at_(line, i, point);
 
       expect(Line3.closestAt(line, point)).toBeCloseTo(step, 5);
-      expect(Line3.closestTo(line, point)).toEqual(Vec3.create(0, 0, step));
+      expect(Line3.closestTo(line, point)).toEqual(IVec3.create(0, 0, step));
     }
   });
 
@@ -113,7 +113,7 @@ describe('Math - Line3', () => {
     mat4.setPosition(vec3);
 
     Line3.applyMat4(line, mat4);
-    Vec3.applyMat4(vec4, mat4);
+    IVec3.applyMat4(vec4, mat4);
 
     expect(line).toEqual({
       start: { x: 2, y: 3, z: 4 },

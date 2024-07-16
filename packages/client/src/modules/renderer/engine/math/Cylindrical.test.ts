@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { Vec3 } from './Vector3.js';
+import { IVec3 } from './Vector3.js';
 import { Cylindrical } from './Cylindrical.js';
 
 describe('Math - Cylindrical', () => {
@@ -20,8 +20,8 @@ describe('Math - Cylindrical', () => {
 
   it('fromCartesian', () => {
     const a = Cylindrical.create(1, 1, 1);
-    const b = Vec3.create(0, 0, 0);
-    const c = Vec3.create(3, -1, -3);
+    const b = IVec3.create(0, 0, 0);
+    const c = IVec3.create(3, -1, -3);
     const expected = Cylindrical.create(Math.sqrt(9 + 9), Math.atan2(3, -3), -1);
 
     expect(Cylindrical.fillCartesian(a, b)).toBe(a);

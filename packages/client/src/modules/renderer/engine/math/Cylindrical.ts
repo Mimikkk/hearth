@@ -1,4 +1,4 @@
-import type { Vec3 } from './Vector3.js';
+import type { IVec3 } from './Vector3.js';
 import type { Const } from '@modules/renderer/engine/math/types.js';
 
 export interface Cylindrical {
@@ -24,8 +24,8 @@ export namespace Cylindrical {
   export const clone = (from: Const<Cylindrical>): Cylindrical => clone_(from, empty());
   export const clone_ = (from: Const<Cylindrical>, into: Cylindrical): Cylindrical => fill_(into, from);
 
-  export const fromCartesian = (from: Const<Vec3>): Cylindrical => fromCartesian_(from, empty());
-  export const fromCartesian_ = ({ x, y, z }: Const<Vec3>, into: Cylindrical): Cylindrical =>
+  export const fromCartesian = (from: Const<IVec3>): Cylindrical => fromCartesian_(from, empty());
+  export const fromCartesian_ = ({ x, y, z }: Const<IVec3>, into: Cylindrical): Cylindrical =>
     set(into, Math.sqrt(x * x + z * z), Math.atan2(x, z), y);
-  export const fillCartesian = (self: Cylindrical, from: Const<Vec3>): Cylindrical => fromCartesian_(from, self);
+  export const fillCartesian = (self: Cylindrical, from: Const<IVec3>): Cylindrical => fromCartesian_(from, self);
 }

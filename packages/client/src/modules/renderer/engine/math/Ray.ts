@@ -1,11 +1,11 @@
-import { Vec3, Vector3 } from './Vector3.js';
+import { IVec3, Vector3 } from './Vector3.js';
 import type { Sphere_ } from './Sphere.js';
 import { Plane_ } from './Plane.js';
 import type { Box3 } from './Box3.js';
 import type { Matrix4 } from './Matrix4.js';
 
-const _vec1 = Vec3.empty();
-const _vec2 = Vec3.empty();
+const _vec1 = IVec3.empty();
+const _vec2 = IVec3.empty();
 export class Ray {
   declare ['constructor']: typeof Ray;
 
@@ -60,27 +60,27 @@ export class Ray {
     return Math.sqrt(this.distanceSqToPoint(point));
   }
 
-  distanceSqToPoint(point: Vec3): number {
-    Vec3.sub_(point, this.origin, _vec1);
+  distanceSqToPoint(point: IVec3): number {
+    IVec3.sub_(point, this.origin, _vec1);
 
-    const directionDistance = Vec3.dot(_vec1, this.direction);
+    const directionDistance = IVec3.dot(_vec1, this.direction);
 
     // point behind the ray
 
     if (directionDistance < 0) {
-      return Vec3.distanceSqTo(this.origin, point);
+      return IVec3.distanceSqTo(this.origin, point);
     }
 
-    Vec3.addScaled_(this.origin, this.direction, directionDistance, _vec2);
-    return Vec3.distanceSqTo(_vec2, point);
+    IVec3.addScaled_(this.origin, this.direction, directionDistance, _vec2);
+    return IVec3.distanceSqTo(_vec2, point);
   }
 
-  distanceSqToSegment(v0: Vec3, v1: Vec3, optionalPointOnRay?: Vector3, optionalPointOnSegment?: Vector3): number {
+  distanceSqToSegment(v0: IVec3, v1: IVec3, optionalPointOnRay?: Vector3, optionalPointOnSegment?: Vector3): number {
     const _segCenter = new Vector3().copy(v0).add(v1).multiplyScalar(0.5);
     const _segDir = new Vector3().copy(v1).sub(v0).normalize();
     const _diff = new Vector3().copy(this.origin).sub(_segCenter);
 
-    const segExtent = Vec3.distanceTo(v0, v1) * 0.5;
+    const segExtent = IVec3.distanceTo(v0, v1) * 0.5;
     const a01 = -this.direction.dot(_segDir);
     const b0 = _diff.dot(this.direction);
     const b1 = -_diff.dot(_segDir);
@@ -192,7 +192,7 @@ export class Ray {
   }
 
   distanceToPlane(plane: Plane_): number | null {
-    const denominator = Vec3.dot(plane.normal, this.direction);
+    const denominator = IVec3.dot(plane.normal, this.direction);
 
     if (denominator === 0) {
       // line is coplanar, return origin
@@ -231,7 +231,7 @@ export class Ray {
       return true;
     }
 
-    const denominator = Vec3.dot(plane.normal, this.direction);
+    const denominator = IVec3.dot(plane.normal, this.direction);
 
     if (denominator * distToPoint < 0) {
       return true;
@@ -298,7 +298,7 @@ export class Ray {
     return this.intersectBox(box, new Vector3(0, 0, 0)) !== null;
   }
 
-  intersectTriangle(a: Vec3, b: Vec3, c: Vec3, backfaceCulling: boolean, target: Vector3): Vector3 | null {
+  intersectTriangle(a: IVec3, b: IVec3, c: IVec3, backfaceCulling: boolean, target: Vector3): Vector3 | null {
     // Compute the offset origin, edges, and normal.
 
     // from https://github.com/pmjoniak/GeometricTools/blob/master/GTEngine/Include/Mathematics/GteIntrRay3Triangle3.h

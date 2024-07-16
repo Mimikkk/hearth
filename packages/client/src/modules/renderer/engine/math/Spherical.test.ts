@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { Vec3, Vector3 } from './Vector3.js';
+import { IVec3, Vector3 } from './Vector3.js';
 import { Spherical } from './Spherical.js';
 
 describe('Math - Spherical', () => {
@@ -38,8 +38,8 @@ describe('Math - Spherical', () => {
 
   it('fromCartesian', () => {
     const a = Spherical.create(1, 1, 1);
-    const b = Vec3.empty();
-    const c = Vec3.create(Math.PI, 1, -Math.PI);
+    const b = IVec3.empty();
+    const c = IVec3.create(Math.PI, 1, -Math.PI);
     const expected = Spherical.create(4.554032147688322, 1.3494066171539107, 2.356194490192345);
 
     expect(Spherical.fillCartesian(a, b)).toBe(a);

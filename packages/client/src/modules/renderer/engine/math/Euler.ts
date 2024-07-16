@@ -1,7 +1,7 @@
 import { Quaternion } from './Quaternion.js';
 import { Matrix4 } from './Matrix4.js';
 import { clamp } from './MathUtils.js';
-import { Vec3 } from '@modules/renderer/engine/math/Vector3.js';
+import { IVec3 } from '@modules/renderer/engine/math/Vector3.js';
 import { Const } from '@modules/renderer/engine/math/types.js';
 
 export interface Euler {
@@ -35,9 +35,9 @@ export namespace Euler {
   export const clone = (from: Euler): Euler => clone_(from, empty());
   export const clone_ = (from: Euler, into: Euler): Euler => fill_(into, from);
 
-  export const fromVec = ({ x, y, z }: Const<Vec3>, order: Order = 'XYZ'): Euler => create(x, y, z, order);
-  export const fromVec_ = ({ x, y, z }: Const<Vec3>, into: Euler): Euler => set(into, x, y, z, into.order);
-  export const fillVec = (self: Euler, vec: Const<Vec3>): Euler => {
+  export const fromVec = ({ x, y, z }: Const<IVec3>, order: Order = 'XYZ'): Euler => create(x, y, z, order);
+  export const fromVec_ = ({ x, y, z }: Const<IVec3>, into: Euler): Euler => set(into, x, y, z, into.order);
+  export const fillVec = (self: Euler, vec: Const<IVec3>): Euler => {
     self.x = vec.x;
     self.y = vec.y;
     self.z = vec.z;

@@ -96,7 +96,7 @@ export class Vector3 implements IVector3 {
     return new this.constructor(this.x, this.y, this.z);
   }
 
-  copy(v: Vec3): this {
+  copy(v: IVec3): this {
     this.x = v.x;
     this.y = v.y;
     this.z = v.z;
@@ -104,7 +104,7 @@ export class Vector3 implements IVector3 {
     return this;
   }
 
-  add(v: Vec3): this {
+  add(v: IVec3): this {
     this.x += v.x;
     this.y += v.y;
     this.z += v.z;
@@ -120,7 +120,7 @@ export class Vector3 implements IVector3 {
     return this;
   }
 
-  addVectors(a: Vec3, b: Vec3): this {
+  addVectors(a: IVec3, b: IVec3): this {
     this.x = a.x + b.x;
     this.y = a.y + b.y;
     this.z = a.z + b.z;
@@ -128,7 +128,7 @@ export class Vector3 implements IVector3 {
     return this;
   }
 
-  addScaledVector(vector: Vec3, scale: number): this {
+  addScaledVector(vector: IVec3, scale: number): this {
     this.x += vector.x * scale;
     this.y += vector.y * scale;
     this.z += vector.z * scale;
@@ -136,7 +136,7 @@ export class Vector3 implements IVector3 {
     return this;
   }
 
-  sub(vector: Vec3): this {
+  sub(vector: IVec3): this {
     this.x -= vector.x;
     this.y -= vector.y;
     this.z -= vector.z;
@@ -152,7 +152,7 @@ export class Vector3 implements IVector3 {
     return this;
   }
 
-  subVectors(a: Vec3, b: Vec3): this {
+  subVectors(a: IVec3, b: IVec3): this {
     this.x = a.x - b.x;
     this.y = a.y - b.y;
     this.z = a.z - b.z;
@@ -160,7 +160,7 @@ export class Vector3 implements IVector3 {
     return this;
   }
 
-  multiply(vector: Vec3): this {
+  multiply(vector: IVec3): this {
     this.x *= vector.x;
     this.y *= vector.y;
     this.z *= vector.z;
@@ -176,7 +176,7 @@ export class Vector3 implements IVector3 {
     return this;
   }
 
-  multiplyVectors(a: Vec3, b: Vec3): this {
+  multiplyVectors(a: IVec3, b: IVec3): this {
     this.x = a.x * b.x;
     this.y = a.y * b.y;
     this.z = a.z * b.z;
@@ -188,7 +188,7 @@ export class Vector3 implements IVector3 {
     return this.applyQuaternion(Quaternion.fromEuler(euler));
   }
 
-  applyAxisAngle(axis: Vec3, angle: number): this {
+  applyAxisAngle(axis: IVec3, angle: number): this {
     return this.applyQuaternion(Quaternion.fromAxisAngle(axis, angle));
   }
 
@@ -270,7 +270,7 @@ export class Vector3 implements IVector3 {
     return this.normalize();
   }
 
-  divide(vector: Vec3): this {
+  divide(vector: IVec3): this {
     this.x /= vector.x;
     this.y /= vector.y;
     this.z /= vector.z;
@@ -282,7 +282,7 @@ export class Vector3 implements IVector3 {
     return this.multiplyScalar(1 / scalar);
   }
 
-  min(vector: Vec3): this {
+  min(vector: IVec3): this {
     this.x = Math.min(this.x, vector.x);
     this.y = Math.min(this.y, vector.y);
     this.z = Math.min(this.z, vector.z);
@@ -290,7 +290,7 @@ export class Vector3 implements IVector3 {
     return this;
   }
 
-  max(vector: Vec3): this {
+  max(vector: IVec3): this {
     this.x = Math.max(this.x, vector.x);
     this.y = Math.max(this.y, vector.y);
     this.z = Math.max(this.z, vector.z);
@@ -298,7 +298,7 @@ export class Vector3 implements IVector3 {
     return this;
   }
 
-  clamp(min: Vec3, max: Vec3): this {
+  clamp(min: IVec3, max: IVec3): this {
     this.x = Math.max(min.x, Math.min(max.x, this.x));
     this.y = Math.max(min.y, Math.min(max.y, this.y));
     this.z = Math.max(min.z, Math.min(max.z, this.z));
@@ -360,7 +360,7 @@ export class Vector3 implements IVector3 {
     return this;
   }
 
-  dot(vector: Vec3): number {
+  dot(vector: IVec3): number {
     return this.x * vector.x + this.y * vector.y + this.z * vector.z;
   }
 
@@ -384,7 +384,7 @@ export class Vector3 implements IVector3 {
     return this.normalize().multiplyScalar(length);
   }
 
-  lerp(vector: Vec3, step: number): this {
+  lerp(vector: IVec3, step: number): this {
     this.x += (vector.x - this.x) * step;
     this.y += (vector.y - this.y) * step;
     this.z += (vector.z - this.z) * step;
@@ -392,7 +392,7 @@ export class Vector3 implements IVector3 {
     return this;
   }
 
-  lerpVectors(from: Vec3, to: Vec3, step: number): this {
+  lerpVectors(from: IVec3, to: IVec3, step: number): this {
     this.x = from.x + (to.x - from.x) * step;
     this.y = from.y + (to.y - from.y) * step;
     this.z = from.z + (to.z - from.z) * step;
@@ -400,11 +400,11 @@ export class Vector3 implements IVector3 {
     return this;
   }
 
-  cross(vector: Vec3): this {
+  cross(vector: IVec3): this {
     return this.crossVectors(this, vector);
   }
 
-  crossVectors(a: Vec3, b: Vec3): this {
+  crossVectors(a: IVec3, b: IVec3): this {
     const ax = a.x,
       ay = a.y,
       az = a.z;
@@ -596,50 +596,91 @@ export class Vector3 implements IVector3 {
 
 Vector3.prototype.isVector3 = true;
 
-export interface Vec3 {
+export interface IVec3 {
   x: number;
   y: number;
   z: number;
 }
 
-export namespace Vec3 {
-  export const create = (x: number, y: number, z: number): Vec3 => ({ x, y, z });
-  export const empty = (): Vec3 => create(0, 0, 0);
-  export const clear = (self: Vec3): Vec3 => set(self, 0, 0, 0);
+const empty = () => Vec3.empty;
+export class Vec3 implements IVec3 {
+  constructor(
+    public x: number,
+    public y: number,
+    public z: number,
+  ) {}
+
+  static create(x: number, y: number, z: number): Vec3 {
+    return new Vec3(x, y, z);
+  }
+
+  static empty<T extends IVec3 = Vec3>(): T {
+    return new Vec3(0, 0, 0) as unknown as T;
+  }
+
+  clear(): this {
+    return IVec3.clear(this);
+  }
+
+  set(x: number, y: number, z: number): this {
+    return IVec3.set(this, x, y, z);
+  }
+
+  from(vec: Const<IVec3>): this {
+    return IVec3.fill(this, vec);
+  }
+
+  clone<T extends IVec3 = Vec3>(into: T = Vec3.empty<T>()): T {
+    return IVec3.clone_(this, into);
+  }
+
+  negate<T extends IVec3 = Vec3>(into: T = this as never): T {
+    return IVec3.negate_(this, into);
+  }
+}
+
+export namespace IVec3 {
+  export const create = Vec3.create;
+  export const empty = Vec3.empty;
   export const vec3 = create;
 
-  export const set = (self: Vec3, x: number, y: number, z: number): Vec3 => {
+  export const clear = <S extends IVec3>(self: S): S => set(self, 0, 0, 0);
+
+  export const set = <S extends IVec3>(self: S, x: number, y: number, z: number): S => {
     self.x = x;
     self.y = y;
     self.z = z;
 
     return self;
   };
-  export const fill_ = (into: Vec3, { x, y, z }: Const<Vec3>): Vec3 => set(into, x, y, z);
+  export const fill = <S extends IVec3>(self: S, { x, y, z }: Const<IVec3>): S => set(self, x, y, z);
 
-  export const clone = (from: Const<Vec3>): Vec3 => clone_(from, empty());
-  export const clone_ = (from: Const<Vec3>, into: Vec3): Vec3 => fill_(into, from);
+  export const clone = (from: Const<IVec3>): IVec3 => clone_(from, empty());
+  export const clone_ = <S extends IVec3>(from: Const<IVec3>, into: S): S => fill(into, from);
 
-  export const is = (o: any): o is Vec3 =>
+  export const is = (o: any): o is IVec3 =>
     !!o && typeof o.x === 'number' && typeof o.y === 'number' && typeof o.z === 'number';
 
-  export const negate = (self: Vec3): Vec3 => negate_(self, self);
-  export const negate_ = ({ x, y, z }: Const<Vec3>, into: Vec3): Vec3 => set(into, -x, -y, -z);
-  export const negated = (from: Const<Vec3>): Vec3 => negate_(from, empty());
+  export const negate = <S extends IVec3>(self: S): S => negate_(self, self);
+  export const negate_ = <S extends IVec3>({ x, y, z }: Const<IVec3>, into: S): S => set(into, -x, -y, -z);
+  export const negated = (from: Const<IVec3>): IVec3 => negate_(from, empty());
 
-  export const clamp = (self: Vec3, min: Const<Vec3>, max: Const<Vec3>): Vec3 => clamp_(self, min, max, self);
-  export const clamp_ = (from: Const<Vec3>, min: Const<Vec3>, max: Const<Vec3>, into: Vec3): Vec3 =>
+  export const clamp = <S extends IVec3>(self: IVec3, min: Const<IVec3>, max: Const<IVec3>): IVec3 =>
+    clamp_(self, min, max, self);
+  export const clamp_ = (from: Const<IVec3>, min: Const<IVec3>, max: Const<IVec3>, into: IVec3): IVec3 =>
     set(into, clampNumber(from.x, min.x, max.x), clampNumber(from.y, min.y, max.y), clampNumber(from.z, min.z, max.z));
-  export const clamped = (a: Const<Vec3>, min: Const<Vec3>, max: Const<Vec3>): Vec3 => clamp_(a, min, max, empty());
+  export const clamped = (a: Const<IVec3>, min: Const<IVec3>, max: Const<IVec3>): IVec3 => clamp_(a, min, max, empty());
 
-  export const clampScalar = (self: Vec3, min: number, max: number): Vec3 => clampScalar_(self, min, max, self);
-  export const clampScalar_ = (from: Const<Vec3>, min: number, max: number, into: Vec3): Vec3 =>
+  export const clampScalar = <S extends IVec3>(self: IVec3, min: number, max: number): IVec3 =>
+    clampScalar_(self, min, max, self);
+  export const clampScalar_ = (from: Const<IVec3>, min: number, max: number, into: IVec3): IVec3 =>
     set(into, clampNumber(from.x, min, max), clampNumber(from.y, min, max), clampNumber(from.z, min, max));
-  export const clampedScalar = (from: Const<Vec3>, min: number, max: number): Vec3 =>
+  export const clampedScalar = (from: Const<IVec3>, min: number, max: number): IVec3 =>
     clampScalar_(from, min, max, empty());
 
-  export const clampLength = (self: Vec3, min: number, max: number): Vec3 => clampLength_(self, min, max, self);
-  export const clampLength_ = (from: Const<Vec3>, min: number, max: number, into: Vec3): Vec3 => {
+  export const clampLength = <S extends IVec3>(self: IVec3, min: number, max: number): IVec3 =>
+    clampLength_(self, min, max, self);
+  export const clampLength_ = (from: Const<IVec3>, min: number, max: number, into: IVec3): IVec3 => {
     const len = length(from) || 1;
 
     divScalar_(from, len, into);
@@ -647,201 +688,208 @@ export namespace Vec3 {
 
     return into;
   };
-  export const clampedLength = (from: Const<Vec3>, min: number, max: number): Vec3 =>
+  export const clampedLength = (from: Const<IVec3>, min: number, max: number): IVec3 =>
     clampLength_(from, min, max, empty());
 
-  export const setLength = (self: Vec3, length: number): Vec3 => setLength_(self, length, self);
-  export const setLength_ = (from: Const<Vec3>, len: number, into: Vec3): Vec3 =>
+  export const setLength = <S extends IVec3>(self: IVec3, length: number): IVec3 => setLength_(self, length, self);
+  export const setLength_ = (from: Const<IVec3>, len: number, into: IVec3): IVec3 =>
     mulScalar_(from, len / (length(from) || 1), into);
 
-  export const add = (self: Vec3, vec: Const<Vec3>): Vec3 => add_(self, vec, self);
-  export const add_ = (from: Const<Vec3>, vec: Const<Vec3>, into: Vec3): Vec3 =>
+  export const add = <S extends IVec3>(self: IVec3, vec: Const<IVec3>): IVec3 => add_(self, vec, self);
+  export const add_ = (from: Const<IVec3>, vec: Const<IVec3>, into: IVec3): IVec3 =>
     set(into, from.x + vec.x, from.y + vec.y, from.z + vec.z);
-  export const added = (a: Vec3, b: Const<Vec3>): Vec3 => add_(a, b, empty());
+  export const added = (a: IVec3, b: Const<IVec3>): IVec3 => add_(a, b, empty());
 
-  export const addScaled = (self: Vec3, vec: Const<Vec3>, scale: number): Vec3 => addScaled_(self, vec, scale, self);
-  export const addScaled_ = (from: Const<Vec3>, vec: Const<Vec3>, scale: number, into: Vec3): Vec3 =>
+  export const addScaled = <S extends IVec3>(self: IVec3, vec: Const<IVec3>, scale: number): IVec3 =>
+    addScaled_(self, vec, scale, self);
+  export const addScaled_ = (from: Const<IVec3>, vec: Const<IVec3>, scale: number, into: IVec3): IVec3 =>
     set(into, from.x + vec.x * scale, from.y + vec.y * scale, from.z + vec.z * scale);
-  export const addedScaled = (a: Const<Vec3>, b: Const<Vec3>, scale: number): Vec3 => addScaled_(a, b, scale, empty());
+  export const addedScaled = (a: Const<IVec3>, b: Const<IVec3>, scale: number): IVec3 =>
+    addScaled_(a, b, scale, empty());
 
-  export const sub = (a: Vec3, b: Const<Vec3>): Vec3 => sub_(a, b, a);
-  export const sub_ = (a: Const<Vec3>, b: Const<Vec3>, into: Vec3): Vec3 => set(into, a.x - b.x, a.y - b.y, a.z - b.z);
-  export const subbed = (a: Const<Vec3>, b: Const<Vec3>): Vec3 => sub_(a, b, empty());
+  export const sub = <S extends IVec3>(a: IVec3, b: Const<IVec3>): IVec3 => sub_(a, b, a);
+  export const sub_ = (a: Const<IVec3>, b: Const<IVec3>, into: IVec3): IVec3 =>
+    set(into, a.x - b.x, a.y - b.y, a.z - b.z);
+  export const subbed = (a: Const<IVec3>, b: Const<IVec3>): IVec3 => sub_(a, b, empty());
 
-  export const subScaled = (self: Vec3, vec: Const<Vec3>, scale: number): Vec3 => subScaled_(self, vec, scale, self);
-  export const subScaled_ = (from: Const<Vec3>, vec: Const<Vec3>, scale: number, into: Vec3): Vec3 =>
+  export const subScaled = <S extends IVec3>(self: IVec3, vec: Const<IVec3>, scale: number): IVec3 =>
+    subScaled_(self, vec, scale, self);
+  export const subScaled_ = (from: Const<IVec3>, vec: Const<IVec3>, scale: number, into: IVec3): IVec3 =>
     set(into, from.x - vec.x * scale, from.y - vec.y * scale, from.z - vec.z * scale);
-  export const subbedScaled = (a: Const<Vec3>, b: Const<Vec3>, scale: number): Vec3 => subScaled_(a, b, scale, empty());
+  export const subbedScaled = (a: Const<IVec3>, b: Const<IVec3>, scale: number): IVec3 =>
+    subScaled_(a, b, scale, empty());
 
-  export const mul = (a: Vec3, b: Const<Vec3>): Vec3 => mul_(a, b, a);
-  export const mul_ = (a: Const<Vec3>, b: Const<Vec3>, into: Vec3): Vec3 => set(into, a.x * b.x, a.y * b.y, a.z * b.z);
-  export const mulled = (a: Const<Vec3>, b: Const<Vec3>): Vec3 => mul_(a, b, empty());
+  export const mul = <S extends IVec3>(a: IVec3, b: Const<IVec3>): IVec3 => mul_(a, b, a);
+  export const mul_ = (a: Const<IVec3>, b: Const<IVec3>, into: IVec3): IVec3 =>
+    set(into, a.x * b.x, a.y * b.y, a.z * b.z);
+  export const mulled = (a: Const<IVec3>, b: Const<IVec3>): IVec3 => mul_(a, b, empty());
 
-  export const mulScalar = (a: Vec3, scalar: number): Vec3 => mulScalar_(a, scalar, a);
-  export const mulScalar_ = (a: Const<Vec3>, scalar: number, into: Vec3): Vec3 =>
+  export const mulScalar = <S extends IVec3>(a: IVec3, scalar: number): IVec3 => mulScalar_(a, scalar, a);
+  export const mulScalar_ = (a: Const<IVec3>, scalar: number, into: IVec3): IVec3 =>
     set(into, a.x * scalar, a.y * scalar, a.z * scalar);
-  export const mulScalared = (a: Const<Vec3>, scalar: number): Vec3 => mulScalar_(a, scalar, empty());
+  export const mulScalared = (a: Const<IVec3>, scalar: number): IVec3 => mulScalar_(a, scalar, empty());
 
-  export const min = (a: Vec3, b: Const<Vec3>): Vec3 => min_(a, b, a);
-  export const min_ = (a: Const<Vec3>, b: Const<Vec3>, into: Vec3): Vec3 =>
+  export const min = <S extends IVec3>(a: IVec3, b: Const<IVec3>): IVec3 => min_(a, b, a);
+  export const min_ = (a: Const<IVec3>, b: Const<IVec3>, into: IVec3): IVec3 =>
     set(into, Math.min(a.x, b.x), Math.min(a.y, b.y), Math.min(a.z, b.z));
-  export const mined = (a: Const<Vec3>, b: Const<Vec3>): Vec3 => min_(a, b, empty());
+  export const mined = (a: Const<IVec3>, b: Const<IVec3>): IVec3 => min_(a, b, empty());
 
-  export const max = (a: Vec3, b: Const<Vec3>): Vec3 => max_(a, b, a);
-  export const max_ = (a: Const<Vec3>, b: Const<Vec3>, into: Vec3): Vec3 =>
+  export const max = <S extends IVec3>(a: IVec3, b: Const<IVec3>): IVec3 => max_(a, b, a);
+  export const max_ = (a: Const<IVec3>, b: Const<IVec3>, into: IVec3): IVec3 =>
     set(into, Math.max(a.x, b.x), Math.max(a.y, b.y), Math.max(a.z, b.z));
-  export const maxed = (a: Const<Vec3>, b: Const<Vec3>): Vec3 => max_(a, b, empty());
+  export const maxed = (a: Const<IVec3>, b: Const<IVec3>): IVec3 => max_(a, b, empty());
 
-  export const ceil = (self: Vec3): Vec3 => ceil_(self, self);
-  export const ceil_ = (from: Const<Vec3>, into: Vec3): Vec3 =>
+  export const ceil = <S extends IVec3>(self: IVec3): IVec3 => ceil_(self, self);
+  export const ceil_ = (from: Const<IVec3>, into: IVec3): IVec3 =>
     set(into, Math.ceil(from.x), Math.ceil(from.y), Math.ceil(from.z));
-  export const ceiled = (from: Const<Vec3>): Vec3 => ceil_(from, empty());
+  export const ceiled = (from: Const<IVec3>): IVec3 => ceil_(from, empty());
 
-  export const floor = (self: Vec3): Vec3 => floor_(self, self);
-  export const floor_ = (from: Const<Vec3>, into: Vec3): Vec3 =>
+  export const floor = <S extends IVec3>(self: IVec3): IVec3 => floor_(self, self);
+  export const floor_ = (from: Const<IVec3>, into: IVec3): IVec3 =>
     set(into, Math.floor(from.x), Math.floor(from.y), Math.floor(from.z));
-  export const floored = (from: Const<Vec3>): Vec3 => floor_(from, empty());
+  export const floored = (from: Const<IVec3>): IVec3 => floor_(from, empty());
 
-  export const round = (self: Vec3): Vec3 => round_(self, self);
-  export const round_ = (from: Const<Vec3>, into: Vec3): Vec3 =>
+  export const round = <S extends IVec3>(self: IVec3): IVec3 => round_(self, self);
+  export const round_ = (from: Const<IVec3>, into: IVec3): IVec3 =>
     set(into, Math.round(from.x), Math.round(from.y), Math.round(from.z));
-  export const rounded = (from: Const<Vec3>): Vec3 => round_(from, empty());
+  export const rounded = (from: Const<IVec3>): IVec3 => round_(from, empty());
 
-  export const trunc = (self: Vec3): Vec3 => trunc_(self, self);
-  export const trunc_ = (from: Const<Vec3>, into: Vec3): Vec3 =>
+  export const trunc = <S extends IVec3>(self: IVec3): IVec3 => trunc_(self, self);
+  export const trunc_ = (from: Const<IVec3>, into: IVec3): IVec3 =>
     set(into, Math.trunc(from.x), Math.trunc(from.y), Math.trunc(from.z));
-  export const trunced = (from: Const<Vec3>): Vec3 => trunc_(from, empty());
+  export const trunced = (from: Const<IVec3>): IVec3 => trunc_(from, empty());
 
-  export const scale = (a: Vec3, scalar: number): Vec3 => scale_(a, scalar, a);
-  export const scale_ = (a: Const<Vec3>, scalar: number, into: Vec3): Vec3 =>
+  export const scale = <S extends IVec3>(a: IVec3, scalar: number): IVec3 => scale_(a, scalar, a);
+  export const scale_ = (a: Const<IVec3>, scalar: number, into: IVec3): IVec3 =>
     set(into, a.x * scalar, a.y * scalar, a.z * scalar);
-  export const scaled = (a: Const<Vec3>, scalar: number): Vec3 => scale_(a, scalar, empty());
+  export const scaled = (a: Const<IVec3>, scalar: number): IVec3 => scale_(a, scalar, empty());
 
-  export const div = (a: Vec3, b: Const<Vec3>): Vec3 => div_(a, b, a);
-  export const div_ = (a: Const<Vec3>, b: Const<Vec3>, into: Vec3): Vec3 => set(into, a.x / b.x, a.y / b.y, a.z / b.z);
-  export const dived = (a: Const<Vec3>, b: Const<Vec3>): Vec3 => div_(a, b, empty());
+  export const div = (a: IVec3, b: Const<IVec3>): IVec3 => div_(a, b, a);
+  export const div_ = (a: Const<IVec3>, b: Const<IVec3>, into: IVec3): IVec3 =>
+    set(into, a.x / b.x, a.y / b.y, a.z / b.z);
+  export const dived = (a: Const<IVec3>, b: Const<IVec3>): IVec3 => div_(a, b, empty());
 
-  export const divScalar = (a: Vec3, scalar: number): Vec3 => divScalar_(a, scalar, a);
-  export const divScalar_ = (a: Const<Vec3>, scalar: number, into: Vec3): Vec3 =>
+  export const divScalar = (a: IVec3, scalar: number): IVec3 => divScalar_(a, scalar, a);
+  export const divScalar_ = (a: Const<IVec3>, scalar: number, into: IVec3): IVec3 =>
     set(into, a.x / scalar, a.y / scalar, a.z / scalar);
-  export const divScalared = (a: Const<Vec3>, scalar: number): Vec3 => divScalar_(a, scalar, empty());
+  export const divScalared = (a: Const<IVec3>, scalar: number): IVec3 => divScalar_(a, scalar, empty());
 
-  export const cross = (a: Const<Vec3>, b: Const<Vec3>): Vec3 => cross_(a, b, a);
-  export const cross_ = (a: Const<Vec3>, b: Const<Vec3>, into: Vec3): Vec3 =>
+  export const cross = (a: Const<IVec3>, b: Const<IVec3>): IVec3 => cross_(a, b, a);
+  export const cross_ = (a: Const<IVec3>, b: Const<IVec3>, into: IVec3): IVec3 =>
     set(into, a.y * b.z - a.z * b.y, a.z * b.x - a.x * b.z, a.x * b.y - a.y * b.x);
-  export const crossed = (a: Const<Vec3>, b: Const<Vec3>): Vec3 => cross_(a, b, empty());
+  export const crossed = (a: Const<IVec3>, b: Const<IVec3>): IVec3 => cross_(a, b, empty());
 
-  export const normalize = (self: Vec3): Vec3 => normalize_(self, self);
-  export const normalize_ = (self: Const<Vec3>, into: Vec3): Vec3 => {
+  export const normalize = (self: IVec3): IVec3 => normalize_(self, self);
+  export const normalize_ = (self: Const<IVec3>, into: IVec3): IVec3 => {
     const length = Math.sqrt(self.x * self.x + self.y * self.y + self.z * self.z);
     if (length == 0) return set(into, 0, 0, 0);
     return set(into, self.x / length, self.y / length, self.z / length);
   };
-  export const normalized = (self: Const<Vec3>): Vec3 => normalize_(self, empty());
+  export const normalized = (self: Const<IVec3>): IVec3 => normalize_(self, empty());
 
-  export const lerp = (a: Vec3, b: Const<Vec3>, step: number): Vec3 => lerp_(a, b, step, a);
-  export const lerp_ = (a: Const<Vec3>, b: Const<Vec3>, step: number, into: Vec3): Vec3 =>
+  export const lerp = (a: IVec3, b: Const<IVec3>, step: number): IVec3 => lerp_(a, b, step, a);
+  export const lerp_ = (a: Const<IVec3>, b: Const<IVec3>, step: number, into: IVec3): IVec3 =>
     set(into, a.x + (b.x - a.x) * step, a.y + (b.y - a.y) * step, a.z + (b.z - a.z) * step);
-  export const lerped = (a: Const<Vec3>, b: Const<Vec3>, step: number): Vec3 => lerp_(a, b, step, empty());
+  export const lerped = (a: Const<IVec3>, b: Const<IVec3>, step: number): IVec3 => lerp_(a, b, step, empty());
 
-  export const lengthSq = (self: Const<Vec3>): number => self.x * self.x + self.y * self.y + self.z * self.z;
-  export const length = (self: Const<Vec3>): number => Math.sqrt(lengthSq(self));
+  export const lengthSq = (self: Const<IVec3>): number => self.x * self.x + self.y * self.y + self.z * self.z;
+  export const length = (self: Const<IVec3>): number => Math.sqrt(lengthSq(self));
 
-  export const manhattanLength = (self: Const<Vec3>): number => Math.abs(self.x) + Math.abs(self.y) + Math.abs(self.z);
+  export const manhattanLength = (self: Const<IVec3>): number => Math.abs(self.x) + Math.abs(self.y) + Math.abs(self.z);
 
-  export const dot = (a: Const<Vec3>, b: Const<Vec3>): number => a.x * b.x + a.y * b.y + a.z * b.z;
+  export const dot = (a: Const<IVec3>, b: Const<IVec3>): number => a.x * b.x + a.y * b.y + a.z * b.z;
 
-  export const fromArray = (array: Const<NumberArray>, offset: number): Vec3 => fromArray_(array, offset, empty());
-  export const fromArray_ = (array: Const<NumberArray>, offset: number, into: Vec3): Vec3 => {
+  export const fromArray = (array: Const<NumberArray>, offset: number): IVec3 => fromArray_(array, offset, empty());
+  export const fromArray_ = (array: Const<NumberArray>, offset: number, into: IVec3): IVec3 => {
     console.log(array, offset, array[offset], array[offset + 1], array[offset + 2]);
 
     return set(into, array[offset], array[offset + 1], array[offset + 2]);
   };
-  export const fillArray = (self: Vec3, array: Const<NumberArray>, offset: number): Vec3 =>
+  export const fillArray = (self: IVec3, array: Const<NumberArray>, offset: number): IVec3 =>
     fromArray_(array, offset, self);
-  export const intoArray_ = <T extends NumberArray>({ x, y, z }: Const<Vec3>, offset: number, into: T): T => {
+  export const intoArray_ = <T extends NumberArray>({ x, y, z }: Const<IVec3>, offset: number, into: T): T => {
     into[offset] = x;
     into[offset + 1] = y;
     into[offset + 2] = z;
 
     return into;
   };
-  export const intoArray = (self: Const<Vec3>): number[] => intoArray_(self, 0, [0, 0, 0]);
+  export const intoArray = (self: Const<IVec3>): number[] => intoArray_(self, 0, [0, 0, 0]);
 
-  export const fromAttribute = (attribute: Const<BufferAttribute>, index: number): Vec3 =>
+  export const fromAttribute = (attribute: Const<BufferAttribute>, index: number): IVec3 =>
     fromAttribute_(attribute, index, empty());
-  export const fromAttribute_ = (attribute: Const<BufferAttribute>, index: number, into: Vec3): Vec3 =>
+  export const fromAttribute_ = (attribute: Const<BufferAttribute>, index: number, into: IVec3): IVec3 =>
     set(into, attribute.getX(index), attribute.getY(index), attribute.getZ(index));
-  export const fillAttribute = (self: Vec3, attribute: Const<BufferAttribute>, index: number): Vec3 =>
+  export const fillAttribute = (self: IVec3, attribute: Const<BufferAttribute>, index: number): IVec3 =>
     fromAttribute_(attribute, index, self);
-  export const intoAttribute_ = (self: Const<Vec3>, index: number, into: BufferAttribute): BufferAttribute =>
+  export const intoAttribute_ = (self: Const<IVec3>, index: number, into: BufferAttribute): BufferAttribute =>
     into.setXYZ(index, self.x, self.y, self.z);
 
-  export const fromSpherical = (spherical: Const<Spherical>): Vec3 => fromSpherical_(spherical, empty());
-  export const fromSpherical_ = ({ phi, radius, theta }: Const<Spherical>, into: Vec3): Vec3 => {
+  export const fromSpherical = (spherical: Const<Spherical>): IVec3 => fromSpherical_(spherical, empty());
+  export const fromSpherical_ = ({ phi, radius, theta }: Const<Spherical>, into: IVec3): IVec3 => {
     const phiSinRadius = Math.sin(phi) * radius;
 
     return set(into, phiSinRadius * Math.sin(theta), Math.cos(phi), phiSinRadius * Math.cos(theta));
   };
-  export const fillSpherical = (self: Vec3, spherical: Const<Spherical>): Vec3 => fromSpherical_(spherical, self);
+  export const fillSpherical = (self: IVec3, spherical: Const<Spherical>): IVec3 => fromSpherical_(spherical, self);
 
-  export const fromCylindrical = (cylindrical: Const<Cylindrical>): Vec3 => fromCylindrical_(cylindrical, empty());
-  export const fromCylindrical_ = ({ radius, theta, y }: Const<Cylindrical>, into: Vec3): Vec3 =>
+  export const fromCylindrical = (cylindrical: Const<Cylindrical>): IVec3 => fromCylindrical_(cylindrical, empty());
+  export const fromCylindrical_ = ({ radius, theta, y }: Const<Cylindrical>, into: IVec3): IVec3 =>
     set(into, radius * Math.sin(theta), y, radius * Math.cos(theta));
-  export const fillCylindrical = (self: Vec3, cylindrical: Const<Cylindrical>): Vec3 =>
+  export const fillCylindrical = (self: IVec3, cylindrical: Const<Cylindrical>): IVec3 =>
     fromCylindrical_(cylindrical, self);
 
-  export const fromMat4Position = (matrix: Const<Matrix4>): Vec3 => fromMat4Position_(matrix, empty());
-  export const fromMat4Position_ = ({ elements }: Const<Matrix4>, into: Vec3): Vec3 =>
+  export const fromMat4Position = (matrix: Const<Matrix4>): IVec3 => fromMat4Position_(matrix, empty());
+  export const fromMat4Position_ = ({ elements }: Const<Matrix4>, into: IVec3): IVec3 =>
     set(into, elements[12], elements[13], elements[14]);
-  export const fillMat4Position = (self: Vec3, matrix: Const<Matrix4>): Vec3 => fromMat4Position_(matrix, self);
+  export const fillMat4Position = (self: IVec3, matrix: Const<Matrix4>): IVec3 => fromMat4Position_(matrix, self);
 
-  export const fromMat4Column = (matrix: Const<Matrix4>, index: 0 | 1 | 2 | 3 | number): Vec3 =>
+  export const fromMat4Column = (matrix: Const<Matrix4>, index: 0 | 1 | 2 | 3 | number): IVec3 =>
     fromMat4Column_(matrix, index, empty());
-  export const fromMat4Column_ = ({ elements }: Const<Matrix4>, index: number, into: Vec3): Vec3 =>
+  export const fromMat4Column_ = ({ elements }: Const<Matrix4>, index: number, into: IVec3): IVec3 =>
     fillArray(into, elements, index * 4);
-  export const fillMat4Column = (self: Vec3, matrix: Const<Matrix4>, index: 0 | 1 | 2 | 3 | number): Vec3 =>
+  export const fillMat4Column = (self: IVec3, matrix: Const<Matrix4>, index: 0 | 1 | 2 | 3 | number): IVec3 =>
     fromMat4Column_(matrix, index, self);
 
-  export const fromMat3Column = (matrix: Const<Matrix3>, index: 0 | 1 | 2 | number): Vec3 =>
+  export const fromMat3Column = (matrix: Const<Matrix3>, index: 0 | 1 | 2 | number): IVec3 =>
     fromMat3Column_(matrix, index, empty());
-  export const fromMat3Column_ = ({ elements }: Const<Matrix3>, index: number, into: Vec3): Vec3 =>
+  export const fromMat3Column_ = ({ elements }: Const<Matrix3>, index: number, into: IVec3): IVec3 =>
     fillArray(into, elements, index * 3);
-  export const fillMat3Column = (self: Vec3, matrix: Const<Matrix3>, index: 0 | 1 | 2 | number): Vec3 =>
+  export const fillMat3Column = (self: IVec3, matrix: Const<Matrix3>, index: 0 | 1 | 2 | number): IVec3 =>
     fromMat3Column_(matrix, index, self);
 
-  export const fromMat4Scale = (matrix: Const<Matrix4>): Vec3 => fromMat4Scale_(matrix, empty());
-  export const fromMat4Scale_ = (matrix: Const<Matrix4>, into: Vec3): Vec3 => {
+  export const fromMat4Scale = (matrix: Const<Matrix4>): IVec3 => fromMat4Scale_(matrix, empty());
+  export const fromMat4Scale_ = (matrix: Const<Matrix4>, into: IVec3): IVec3 => {
     const sx = length(fillMat4Column(into, matrix, 0));
     const sy = length(fillMat4Column(into, matrix, 1));
     const sz = length(fillMat4Column(into, matrix, 2));
 
     return set(into, sx, sy, sz);
   };
-  export const fillMat4Scale = (self: Vec3, matrix: Const<Matrix4>): Vec3 => fromMat4Scale_(matrix, self);
+  export const fillMat4Scale = (self: IVec3, matrix: Const<Matrix4>): IVec3 => fromMat4Scale_(matrix, self);
 
-  export const fromEuler = (euler: Const<Euler>): Vec3 => fromEuler_(euler, empty());
-  export const fromEuler_ = ({ x, y, z }: Const<Euler>, into: Vec3): Vec3 => set(into, x, y, z);
-  export const fillEuler = (self: Vec3, euler: Const<Euler>): Vec3 => fromEuler_(euler, self);
+  export const fromEuler = (euler: Const<Euler>): IVec3 => fromEuler_(euler, empty());
+  export const fromEuler_ = ({ x, y, z }: Const<Euler>, into: IVec3): IVec3 => set(into, x, y, z);
+  export const fillEuler = (self: IVec3, euler: Const<Euler>): IVec3 => fromEuler_(euler, self);
 
-  export const fromColor = (color: Const<Color>): Vec3 => fromColor_(color, empty());
-  export const fromColor_ = ({ r, g, b }: Const<Color>, into: Vec3): Vec3 => set(into, r, g, b);
-  export const fillColor = (self: Vec3, color: Const<Color>): Vec3 => fromColor_(color, self);
+  export const fromColor = (color: Const<Color>): IVec3 => fromColor_(color, empty());
+  export const fromColor_ = ({ r, g, b }: Const<Color>, into: IVec3): IVec3 => set(into, r, g, b);
+  export const fillColor = (self: IVec3, color: Const<Color>): IVec3 => fromColor_(color, self);
 
-  export const distanceSqTo = (a: Const<Vec3>, b: Const<Vec3>): number => {
+  export const distanceSqTo = (a: Const<IVec3>, b: Const<IVec3>): number => {
     const dx = a.x - b.x;
     const dy = a.y - b.y;
     const dz = a.z - b.z;
 
     return dx * dx + dy * dy + dz * dz;
   };
-  export const distanceTo = (a: Const<Vec3>, b: Const<Vec3>): number => Math.sqrt(distanceSqTo(a, b));
+  export const distanceTo = (a: Const<IVec3>, b: Const<IVec3>): number => Math.sqrt(distanceSqTo(a, b));
 
-  export const manhattanDistanceTo = (a: Const<Vec3>, b: Const<Vec3>): number =>
+  export const manhattanDistanceTo = (a: Const<IVec3>, b: Const<IVec3>): number =>
     Math.abs(a.x - b.x) + Math.abs(a.y - b.y) + Math.abs(a.z - b.z);
 
-  export const applyMat4 = (self: Vec3, matrix: Const<Matrix4>): Vec3 => applyMat4_(self, matrix, self);
-  export const applyMat4_ = (self: Const<Vec3>, { elements: e }: Const<Matrix4>, into: Vec3): Vec3 => {
+  export const applyMat4 = (self: IVec3, matrix: Const<Matrix4>): IVec3 => applyMat4_(self, matrix, self);
+  export const applyMat4_ = (self: Const<IVec3>, { elements: e }: Const<Matrix4>, into: IVec3): IVec3 => {
     const { x, y, z } = self;
 
     const w = 1 / (e[3] * x + e[7] * y + e[11] * z + e[15]);
@@ -853,20 +901,20 @@ export namespace Vec3 {
       (e[2] * x + e[6] * y + e[10] * z + e[14]) * w,
     );
   };
-  export const appliedMat4 = (self: Const<Vec3>, matrix: Const<Matrix4>): Vec3 => applyMat4_(self, matrix, empty());
+  export const appliedMat4 = (self: Const<IVec3>, matrix: Const<Matrix4>): IVec3 => applyMat4_(self, matrix, empty());
 
-  export const applyMat3 = (self: Vec3, matrix: Const<Matrix3>): Vec3 => applyMat3_(self, matrix, self);
-  export const applyMat3_ = (self: Const<Vec3>, { elements: e }: Const<Matrix3>, into: Vec3): Vec3 =>
+  export const applyMat3 = (self: IVec3, matrix: Const<Matrix3>): IVec3 => applyMat3_(self, matrix, self);
+  export const applyMat3_ = (self: Const<IVec3>, { elements: e }: Const<Matrix3>, into: IVec3): IVec3 =>
     set(
       into,
       e[0] * self.x + e[3] * self.y + e[6] * self.z,
       e[1] * self.x + e[4] * self.y + e[7] * self.z,
       e[2] * self.x + e[5] * self.y + e[8] * self.z,
     );
-  export const appliedMat3 = (self: Const<Vec3>, matrix: Const<Matrix3>): Vec3 => applyMat3_(self, matrix, empty());
+  export const appliedMat3 = (self: Const<IVec3>, matrix: Const<Matrix3>): IVec3 => applyMat3_(self, matrix, empty());
 
-  export const applyEuler = (self: Vec3, euler: Const<Euler>): Vec3 => applyEuler_(self, euler, self);
-  export const applyEuler_ = (self: Const<Vec3>, { x, y, z }: Const<Euler>, into: Vec3): Vec3 => {
+  export const applyEuler = (self: IVec3, euler: Const<Euler>): IVec3 => applyEuler_(self, euler, self);
+  export const applyEuler_ = (self: Const<IVec3>, { x, y, z }: Const<Euler>, into: IVec3): IVec3 => {
     const { cos, sin } = Math;
 
     const c1 = cos(z);
@@ -884,9 +932,9 @@ export namespace Vec3 {
     );
   };
 
-  export const applyQuaternion = (self: Vec3, quaternion: Const<Quaternion>): Vec3 =>
+  export const applyQuaternion = (self: IVec3, quaternion: Const<Quaternion>): IVec3 =>
     applyQuaternion_(self, quaternion, self);
-  export const applyQuaternion_ = (self: Const<Vec3>, quaternion: Const<Quaternion>, into: Vec3): Vec3 => {
+  export const applyQuaternion_ = (self: Const<IVec3>, quaternion: Const<Quaternion>, into: IVec3): IVec3 => {
     const { x, y, z, w } = quaternion;
     const tx = 2 * (y * self.z - z * self.y);
     const ty = 2 * (z * self.x - x * self.z);
@@ -901,41 +949,42 @@ export namespace Vec3 {
   };
 
   const _quaternion = Quaternion.identity();
-  export const applyAxisAngle = (self: Vec3, axis: Const<Vec3>, angle: number): Vec3 =>
+  export const applyAxisAngle = (self: IVec3, axis: Const<IVec3>, angle: number): IVec3 =>
     applyAxisAngle_(self, axis, angle, self);
-  export const applyAxisAngle_ = (self: Const<Vec3>, axis: Const<Vec3>, angle: number, into: Vec3): Vec3 => {
+  export const applyAxisAngle_ = (self: Const<IVec3>, axis: Const<IVec3>, angle: number, into: IVec3): IVec3 => {
     Quaternion.fillAxisAngle(_quaternion, axis, angle);
     applyQuaternion_(self, _quaternion, into);
     return into;
   };
 
-  export const applyNormalMatrix = (self: Vec3, matrix: Const<Matrix3>): Vec3 => applyNormalMatrix_(self, matrix, self);
-  export const applyNormalMatrix_ = (self: Const<Vec3>, matrix: Const<Matrix3>, into: Vec3): Vec3 =>
+  export const applyNormalMatrix = (self: IVec3, matrix: Const<Matrix3>): IVec3 =>
+    applyNormalMatrix_(self, matrix, self);
+  export const applyNormalMatrix_ = (self: Const<IVec3>, matrix: Const<Matrix3>, into: IVec3): IVec3 =>
     normalize(applyMat3_(self, matrix, into));
 
-  export const project = (self: Vec3, camera: Camera) => project_(self, camera, self);
-  export const project_ = (self: Const<Vec3>, camera: Const<Camera>, into: Vec3): Vec3 => {
+  export const project = (self: IVec3, camera: Camera) => project_(self, camera, self);
+  export const project_ = (self: Const<IVec3>, camera: Const<Camera>, into: IVec3): IVec3 => {
     applyMat4_(self, camera.matrixWorldInverse, into);
     applyMat4(into, camera.projectionMatrix);
     return into;
   };
-  export const projected = (self: Const<Vec3>, camera: Const<Camera>): Vec3 => project_(self, camera, empty());
+  export const projected = (self: Const<IVec3>, camera: Const<Camera>): IVec3 => project_(self, camera, empty());
 
-  export const unproject = (self: Vec3, camera: Camera) => unproject_(self, camera, self);
-  export const unproject_ = (self: Const<Vec3>, camera: Const<Camera>, into: Vec3): Vec3 => {
+  export const unproject = (self: IVec3, camera: Camera) => unproject_(self, camera, self);
+  export const unproject_ = (self: Const<IVec3>, camera: Const<Camera>, into: IVec3): IVec3 => {
     applyMat4_(self, camera.projectionMatrixInverse, into);
     applyMat4(into, camera.matrixWorld);
     return into;
   };
-  export const unprojected = (self: Const<Vec3>, camera: Const<Camera>): Vec3 => unproject_(self, camera, empty());
+  export const unprojected = (self: Const<IVec3>, camera: Const<Camera>): IVec3 => unproject_(self, camera, empty());
 
-  export const reflect = (self: Vec3, normal: Const<Vec3>): Vec3 => reflect_(self, normal, self);
-  export const reflect_ = (self: Const<Vec3>, normal: Const<Vec3>, into: Vec3): Vec3 =>
+  export const reflect = (self: IVec3, normal: Const<IVec3>): IVec3 => reflect_(self, normal, self);
+  export const reflect_ = (self: Const<IVec3>, normal: Const<IVec3>, into: IVec3): IVec3 =>
     subScaled(into, normal, 2 * dot(self, normal));
-  export const reflected = (self: Const<Vec3>, normal: Const<Vec3>): Vec3 => reflect_(self, normal, empty());
+  export const reflected = (self: Const<IVec3>, normal: Const<IVec3>): IVec3 => reflect_(self, normal, empty());
 
-  export const projectVec = (self: Vec3, vector: Const<Vec3>): Vec3 => projectVec_(self, vector, self);
-  export const projectVec_ = (self: Const<Vec3>, vector: Const<Vec3>, into: Vec3): Vec3 => {
+  export const projectVec = (self: IVec3, vector: Const<IVec3>): IVec3 => projectVec_(self, vector, self);
+  export const projectVec_ = (self: Const<IVec3>, vector: Const<IVec3>, into: IVec3): IVec3 => {
     const denominator = lengthSq(vector);
     if (denominator === 0) return set(into, 0, 0, 0);
 
@@ -943,16 +992,17 @@ export namespace Vec3 {
 
     return mulScalar_(vector, scalar, into);
   };
-  export const projectedVec = (self: Const<Vec3>, vector: Const<Vec3>): Vec3 => projectVec_(self, vector, empty());
+  export const projectedVec = (self: Const<IVec3>, vector: Const<IVec3>): IVec3 => projectVec_(self, vector, empty());
 
-  export const projectPlane = (self: Vec3, normal: Const<Vec3>): Vec3 => projectPlane_(self, normal, self);
-  export const projectPlane_ = (self: Const<Vec3>, normal: Const<Vec3>, into: Vec3): Vec3 =>
+  export const projectPlane = (self: IVec3, normal: Const<IVec3>): IVec3 => projectPlane_(self, normal, self);
+  export const projectPlane_ = (self: Const<IVec3>, normal: Const<IVec3>, into: IVec3): IVec3 =>
     subScaled(into, normal, dot(self, normal));
-  export const projectedPlane = (self: Const<Vec3>, normal: Const<Vec3>): Vec3 => projectPlane_(self, normal, empty());
+  export const projectedPlane = (self: Const<IVec3>, normal: Const<IVec3>): IVec3 =>
+    projectPlane_(self, normal, empty());
 
-  export const transformDirection = (self: Vec3, matrix: Const<Matrix4>): Vec3 =>
+  export const transformDirection = (self: IVec3, matrix: Const<Matrix4>): IVec3 =>
     transformDirection_(self, matrix, self);
-  export const transformDirection_ = (self: Const<Vec3>, matrix: Const<Matrix4>, into: Vec3): Vec3 => {
+  export const transformDirection_ = (self: Const<IVec3>, matrix: Const<Matrix4>, into: IVec3): IVec3 => {
     const { x, y, z } = self;
     const e = matrix.elements;
 
@@ -961,7 +1011,7 @@ export namespace Vec3 {
     );
   };
 
-  export const angleTo = (a: Const<Vec3>, b: Const<Vec3>): number => {
+  export const angleTo = (a: Const<IVec3>, b: Const<IVec3>): number => {
     const square = lengthSq(a);
     const denominator = Math.sqrt(square * square);
     if (denominator === 0) return Math.PI / 2;
@@ -970,7 +1020,7 @@ export namespace Vec3 {
     return Math.acos(clampNumber(theta, -1, 1));
   };
 
-  export const equals = (a: Const<Vec3>, b: Const<Vec3>): boolean => a.x === b.x && a.y === b.y && a.z === b.z;
+  export const equals = (a: Const<IVec3>, b: Const<IVec3>): boolean => a.x === b.x && a.y === b.y && a.z === b.z;
 
   export const temp0 = empty();
   export const temp1 = empty();

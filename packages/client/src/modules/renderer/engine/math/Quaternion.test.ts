@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { Quaternion, QuaternionArray } from './Quaternion.ts';
 import { Euler } from './Euler.ts';
 import { BufferAttribute } from '../core/BufferAttribute.ts';
-import { Vec3 } from './Vector3.ts';
+import { IVec3 } from './Vector3.ts';
 import { Matrix4 } from '@modules/renderer/engine/math/Matrix4.js';
 import { Vec4 } from '@modules/renderer/engine/math/Vector4.js';
 
@@ -134,16 +134,16 @@ describe('Math - Quaternion', () => {
     const identity = Quaternion.identity();
     const a = Quaternion.identity();
 
-    expect(Quaternion.fillAxisAngle(a, Vec3.create(1, 0, 0), 0)).toBe(a);
+    expect(Quaternion.fillAxisAngle(a, IVec3.create(1, 0, 0), 0)).toBe(a);
     expect(a).toEqual(identity);
-    expect(Quaternion.fillAxisAngle(a, Vec3.create(0, 1, 0), 0)).toBe(a);
+    expect(Quaternion.fillAxisAngle(a, IVec3.create(0, 1, 0), 0)).toBe(a);
     expect(a).toEqual(identity);
-    expect(Quaternion.fillAxisAngle(a, Vec3.create(0, 0, 1), 0)).toBe(a);
+    expect(Quaternion.fillAxisAngle(a, IVec3.create(0, 0, 1), 0)).toBe(a);
     expect(a).toEqual(identity);
 
-    const b1 = Quaternion.fromAxisAngle(Vec3.create(1, 0, 0), Math.PI);
+    const b1 = Quaternion.fromAxisAngle(IVec3.create(1, 0, 0), Math.PI);
     expect(a).not.toEqual(b1);
-    const b2 = Quaternion.fromAxisAngle(Vec3.create(1, 0, 0), -Math.PI);
+    const b2 = Quaternion.fromAxisAngle(IVec3.create(1, 0, 0), -Math.PI);
     expect(a).not.toEqual(b2);
 
     expect(Quaternion.multiply(b1, b2)).toBe(b1);
@@ -190,7 +190,7 @@ describe('Math - Quaternion', () => {
   });
 
   it('fromUnit', () => {
-    const a = Quaternion.fromUnit(Vec3.create(1, 0, 0), Vec3.create(0, 1, 0));
+    const a = Quaternion.fromUnit(IVec3.create(1, 0, 0), IVec3.create(0, 1, 0));
     expectQuaternionWithin(a, { x: 0, y: 0, z: Math.SQRT1_2, w: Math.SQRT1_2 });
   });
 
