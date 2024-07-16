@@ -1,4 +1,4 @@
-import { Capsule, ICapsule } from './Capsule.js';
+import { Capsule } from './Capsule.js';
 import { IVec3, Vector3 } from './Vector3.js';
 import { Plane_ } from './Plane.js';
 import { Line3 } from './Line3.js';
@@ -289,7 +289,7 @@ export class Octree {
     for (let i = 0; i < this.subTrees.length; i++) {
       const subTree = this.subTrees[i];
 
-      if (!capsule.intersectsBox(subTree.box)) continue;
+      if (!Capsule.intersectsBox(capsule, subTree.box)) continue;
 
       if (subTree.triangles.length > 0) {
         for (let j = 0; j < subTree.triangles.length; j++) {
@@ -326,7 +326,7 @@ export class Octree {
   }
 
   capsuleIntersect(capsule: Capsule): undefined | Intersection {
-    _capsule.fill(capsule);
+    Capsule.clone_(capsule, _capsule);
 
     const triangles: Triangle[] = [];
     let result,
@@ -338,14 +338,13 @@ export class Octree {
       if ((result = this.triangleCapsuleIntersect(_capsule, triangles[i]))) {
         hit = true;
 
-        capsule.translate(IVec3.scale(result.normal, result.depth));
+        Capsule.translate(_capsule, IVec3.scale(result.normal, result.depth));
       }
     }
 
     if (!hit) return;
-    _capsule.center(IVec3.temp0);
-    capsule.center(IVec3.temp1);
-
+    Capsule.center_(_capsule, IVec3.temp0);
+    Capsule.center_(capsule, IVec3.temp1);
     const collision = IVec3.subbed(IVec3.temp0, IVec3.temp1);
     const depth = IVec3.length(collision);
     const normal = IVec3.normalize(collision);
