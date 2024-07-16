@@ -1,7 +1,7 @@
 import { clamp } from './MathUtils.js';
 import type { Matrix3 } from './Matrix3.js';
-import { Const } from '@modules/renderer/engine/math/types.js';
-import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
+import type { Const } from '@modules/renderer/engine/math/types.js';
+import type { Attribute } from '@modules/renderer/engine/core/Attribute.js';
 
 export interface IVec2 {
   x: number;

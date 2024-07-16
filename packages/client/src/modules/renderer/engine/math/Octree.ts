@@ -289,7 +289,7 @@ export class Octree {
     for (let i = 0; i < this.subTrees.length; i++) {
       const subTree = this.subTrees[i];
 
-      if (!Capsule.intersectsBox(capsule, subTree.box)) continue;
+      if (!capsule.intersectsBox(subTree.box)) continue;
 
       if (subTree.triangles.length > 0) {
         for (let j = 0; j < subTree.triangles.length; j++) {
@@ -326,7 +326,7 @@ export class Octree {
   }
 
   capsuleIntersect(capsule: Capsule): undefined | Intersection {
-    Capsule.clone_(capsule, _capsule);
+    _capsule.from(capsule);
 
     const triangles: Triangle[] = [];
     let result,
@@ -338,13 +338,13 @@ export class Octree {
       if ((result = this.triangleCapsuleIntersect(_capsule, triangles[i]))) {
         hit = true;
 
-        Capsule.translate(_capsule, IVec3.scale(result.normal, result.depth));
+        _capsule.translate(IVec3.scale(result.normal, result.depth));
       }
     }
 
     if (!hit) return;
-    Capsule.center_(_capsule, IVec3.temp0);
-    Capsule.center_(capsule, IVec3.temp1);
+    _capsule.center(IVec3.temp0);
+    capsule.center(IVec3.temp1);
     const collision = IVec3.subbed(IVec3.temp0, IVec3.temp1);
     const depth = IVec3.length(collision);
     const normal = IVec3.normalize(collision);

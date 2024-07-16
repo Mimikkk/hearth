@@ -10,7 +10,7 @@ import { IcosahedronGeometry } from '@modules/renderer/engine/geometries/Icosahe
 import { MeshLambertMaterial } from '@modules/renderer/engine/materials/MeshLambertMaterial.js';
 import { Mesh } from '@modules/renderer/engine/objects/Mesh.js';
 import { Sphere, Sphere_ } from '@modules/renderer/engine/math/Sphere.js';
-import { IVec3, Vector3 } from '@modules/renderer/engine/math/Vector3.js';
+import { IVec3, Vec3, Vector3 } from '@modules/renderer/engine/math/Vector3.js';
 import { Octree } from '@modules/renderer/engine/math/Octree.js';
 import { Capsule } from '@modules/renderer/engine/math/Capsule.js';
 import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/GLTFLoader.js';
@@ -19,6 +19,7 @@ import { ToneMapping } from '@modules/renderer/engine/constants.js';
 import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 import { Euler } from '@modules/renderer/engine/math/Euler.js';
 import { UI } from '@mimi/ui';
+import { Object3D } from '@modules/renderer/engine/core/Object3D.js';
 
 const clock = new Clock();
 const scene = new Scene();
@@ -40,8 +41,8 @@ directionalLight.shadow.camera.right = 30;
 directionalLight.shadow.camera.left = -30;
 directionalLight.shadow.camera.top = 30;
 directionalLight.shadow.camera.bottom = -30;
-directionalLight.shadow.mapSize.width = 1024;
-directionalLight.shadow.mapSize.height = 1024;
+directionalLight.shadow.mapSize.x = 1024;
+directionalLight.shadow.mapSize.y = 1024;
 directionalLight.shadow.radius = 4;
 directionalLight.shadow.bias = -0.00006;
 scene.add(directionalLight);
@@ -91,7 +92,7 @@ for (let i = 0; i < NUM_SPHERES; i++) {
 
 const worldOctree = new Octree();
 
-const playerCollider = Capsule.create(0, 0.35, 0, 0, 1, 0, 0.35);
+const playerCollider = Capsule.new(Vec3.new(0, 0.35, 0), Vec3.new(0, 1, 0), 0.35);
 
 const playerVelocity = new Vector3();
 const playerDirection = new Vector3();
@@ -173,7 +174,7 @@ function playerCollisions() {
 
     if (result.depth >= 1e-10) {
       IVec3.scale(result.normal, result.depth);
-      Capsule.translate(playerCollider, result.normal);
+      playerCollider.translate(result.normal);
     }
   }
 }
@@ -191,7 +192,7 @@ function updatePlayer(deltaTime: number) {
   playerVelocity.addScaledVector(playerVelocity, damping);
 
   const deltaPosition = playerVelocity.clone().multiplyScalar(deltaTime);
-  Capsule.translate(playerCollider, deltaPosition);
+  playerCollider.translate(deltaPosition);
 
   playerCollisions();
 
@@ -331,7 +332,7 @@ scene.add(gltf.scene);
 
 worldOctree.fromGraphNode(gltf.scene);
 
-gltf.scene.traverse(child => {
+gltf.scene.traverse((child: any) => {
   if (child.isMesh) {
     child.castShadow = true;
     child.receiveShadow = true;

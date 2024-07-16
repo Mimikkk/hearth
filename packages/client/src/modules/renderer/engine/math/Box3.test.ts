@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { Box3, Box3_ } from './Box3.js';
-import { IVec3, Vector3 } from '@modules/renderer/engine/math/Vector3.js';
+import { Vec3, Vector3 } from '@modules/renderer/engine/math/Vector3.js';
 import { BufferAttribute } from '../core/BufferAttribute.ts';
 import { Mesh } from '@modules/renderer/engine/objects/Mesh.js';
 import { BoxGeometry } from '@modules/renderer/engine/geometries/BoxGeometry.js';
@@ -19,7 +19,7 @@ const closeToBox = (a: Box3_, b: Box3_) => {
   expect(a.max.z).toBeCloseTo(b.max.z);
 };
 
-const { vec3 } = IVec3;
+const vec3 = Vec3.new;
 describe('Math - Box3', () => {
   it('instancing', () => {
     const box = Box3_.create(1, 2, 3, 4, 5, 6);
@@ -97,11 +97,11 @@ describe('Math - Box3', () => {
   it('fromCenterAndSize', () => {
     const box1 = Box3_.create(0, 0, 0, 1, 1, 1);
     const box2 = Box3_.clone(box1);
-    const centerA = IVec3.empty();
-    const sizeA = IVec3.empty();
-    const sizeB = IVec3.empty();
-    const newCenter = IVec3.create(1, 1, 1);
-    const newSize = IVec3.create(2, 2, 2);
+    const centerA = vec3();
+    const sizeA = vec3();
+    const sizeB = vec3();
+    const newCenter = vec3(1, 1, 1);
+    const newSize = vec3(2, 2, 2);
 
     Box3_.center_(box1, centerA);
     Box3_.size_(box2, sizeA);
@@ -328,7 +328,7 @@ describe('Math - Box3', () => {
     const plane6 = Plane_.create(0, 1, 0, -0.75);
     const plane7 = Plane_.create(0, 1, 0, -1);
 
-    const { x, y, z } = IVec3.normalize(vec3(1, 1, 1));
+    const { x, y, z } = vec3(1, 1, 1).normalize();
     const plane8 = Plane_.create(x, y, z, -1.732);
     const plane9 = Plane_.create(x, y, z, -1.733);
 
@@ -427,7 +427,7 @@ describe('Math - Box3', () => {
     const d = Box3_.create(-1, -1, -1, 0, 0, 0);
 
     const m = new Matrix4().makeTranslation(1, -2, 1);
-    const t1 = IVec3.create(1, -2, 1);
+    const t1 = vec3(1, -2, 1);
 
     closeToBox(Box3_.appliedMat4(a, m), Box3_.translated(a, t1));
     closeToBox(Box3_.appliedMat4(b, m), Box3_.translated(b, t1));

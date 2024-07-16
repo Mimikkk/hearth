@@ -50,13 +50,13 @@ class AnalyticLightNode extends LightingNode {
       }
 
       const shadow = this.light.shadow;
-      const rtt = builder.createRenderTarget(shadow.mapSize.width, shadow.mapSize.height);
+      const rtt = builder.createRenderTarget(shadow.mapSize.x, shadow.mapSize.y);
 
       const depthTexture = new DepthTexture();
       depthTexture.minFilter = Filter.Nearest;
       depthTexture.magFilter = Filter.Nearest;
-      depthTexture.image.width = shadow.mapSize.width;
-      depthTexture.image.height = shadow.mapSize.height;
+      depthTexture.image.width = shadow.mapSize.x;
+      depthTexture.image.height = shadow.mapSize.y;
       depthTexture.compareFunction = DepthComparison.Less;
 
       rtt.depthTexture = depthTexture;
@@ -161,7 +161,7 @@ class AnalyticLightNode extends LightingNode {
 
     scene.overrideMaterial = overrideMaterial;
 
-    rtt.setSize(light.shadow.mapSize.width, light.shadow.mapSize.height);
+    rtt.setSize(light.shadow.mapSize.x, light.shadow.mapSize.y);
 
     light.shadow.updateMatrices(light);
 

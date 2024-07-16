@@ -1,79 +1,108 @@
-import { IVec3 } from './Vector3.js';
-import { Box3_ } from '@modules/renderer/engine/math/Box3.js';
-import { Const } from '@modules/renderer/engine/math/types.js';
+import { type IVec3, Vec3 } from './Vector3.js';
+import type { Box3_ } from '@modules/renderer/engine/math/Box3.js';
+import type { Const } from '@modules/renderer/engine/math/types.js';
 
-export interface Capsule {
-  start: IVec3;
-  end: IVec3;
-  radius: number;
-}
+export class Capsule {
+  declare isCapsule: true;
 
-export namespace Capsule {
-  export const create = (
-    startX: number,
-    startY: number,
-    startZ: number,
-    endX: number,
-    endY: number,
-    endZ: number,
-    radius: number,
-  ): Capsule => ({
-    start: IVec3.create(startX, startY, startZ),
-    end: IVec3.create(endX, endY, endZ),
-    radius,
-  });
-  export const empty = (): Capsule => create(0, 0, 0, 0, 0, 0, 0);
+  constructor(
+    public start: Vec3 = Vec3.new(),
+    public end: Vec3 = Vec3.new(),
+    public radius: number = 0,
+  ) {}
 
-  export const set = (
-    into: Capsule,
-    startX: number,
-    startY: number,
-    startZ: number,
-    endX: number,
-    endY: number,
-    endZ: number,
-    radius: number,
-  ): Capsule => {
-    into.start.x = startX;
-    into.start.y = startY;
-    into.start.z = startZ;
-    into.end.x = endX;
-    into.end.y = endY;
-    into.end.z = endZ;
-    into.radius = radius;
+  static new(start: Vec3 = Vec3.new(), end: Vec3 = Vec3.new(), radius: number = 0): Capsule {
+    return new Capsule(start, end, radius);
+  }
 
-    return into;
-  };
-  export const fill_ = (into: Capsule, { start, end, radius }: Const<Capsule>): Capsule =>
-    set(into, start.x, start.y, start.z, end.x, end.y, end.z, radius);
+  static empty(): Capsule {
+    return Capsule.new();
+  }
 
-  export const copy = (self: Const<Capsule>): Capsule => copy_(self, empty());
-  export const copy_ = ({ start, end, radius }: Const<Capsule>, into: Capsule): Capsule => {
+  static clone({ start, end, radius }: Const<Capsule>, into: Capsule = Capsule.empty()): Capsule {
+    return into.set(start, end, radius);
+  }
+
+  static copy({ start, end, radius }: Const<Capsule>, into: Capsule = Capsule.empty()): Capsule {
     into.start = start;
     into.end = end;
     into.radius = radius;
-
     return into;
-  };
+  }
 
-  export const clone = (self: Const<Capsule>): Capsule => fill_(self, empty());
-  export const clone_ = (from: Const<Capsule>, into: Capsule): Capsule => fill_(into, from);
+  static is(capsule: any): capsule is Capsule {
+    return capsule?.isCapsule === true;
+  }
 
-  export const translate = (capsule: Capsule, vec: Const<IVec3>): Capsule => translate_(capsule, vec, capsule);
-  export const translate_ = (self: Const<Capsule>, vec: Const<IVec3>, into: Capsule): Capsule => {
-    IVec3.add_(self.start, vec, into.start);
-    IVec3.add_(self.end, vec, into.end);
+  static into(into: Capsule, { start, end, radius }: Const<Capsule>): Capsule {
+    return into.set(start, end, radius);
+  }
 
-    return into;
-  };
-  export const translated = (capsule: Const<Capsule>, vec: Const<IVec3>): Capsule =>
-    translate(clone_(capsule, empty()), vec);
+  static from({ start, end, radius }: Const<Capsule>, into: Capsule = Capsule.empty()): Capsule {
+    return into.set(start, end, radius);
+  }
 
-  export const center = (capsule: Const<Capsule>): IVec3 => center_(capsule, IVec3.empty());
-  export const center_ = ({ start, end }: Const<Capsule>, into: IVec3): IVec3 =>
-    IVec3.scale(IVec3.add_(start, end, into), 0.5);
+  static fromArray(array: number[], offset: number = 0, into: Capsule = Capsule.empty()): Capsule {
+    return into.fromArray(array, offset);
+  }
 
-  const isAABBAxis = (
+  set(start: Vec3, end: Vec3, radius: number): this {
+    this.start.from(start);
+    this.end.from(end);
+    this.radius = radius;
+
+    return this;
+  }
+
+  fill(into: Capsule): this {
+    into.from(this);
+    return this;
+  }
+
+  from(capsule: Const<Capsule>): this {
+    return this.set(capsule.start, capsule.end, capsule.radius);
+  }
+
+  fromArray(array: number[], offset: number = 0): this {
+    this.start.fromArray(array, offset);
+    this.end.fromArray(array, offset + 3);
+    this.radius = array[offset + 6];
+
+    return this;
+  }
+
+  intoArray(array: number[], offset: number = 0): void {
+    this.start.intoArray(array, offset);
+    this.end.intoArray(array, offset + 3);
+    array[offset + 6] = this.radius;
+  }
+
+  translate(vec: Const<IVec3>): this {
+    this.start.add(vec);
+    this.end.add(vec);
+
+    return this;
+  }
+
+  center(into: Vec3 = Vec3.empty()): Vec3 {
+    return into.set(
+      (this.start.x + this.end.x) * 0.5,
+      (this.start.y + this.end.y) * 0.5,
+      (this.start.z + this.end.z) * 0.5,
+    );
+  }
+
+  intersectsBox({ min, max }: Const<Box3_>): boolean {
+    const { start, end, radius } = this;
+
+    return (
+      Capsule.isAABBAxis(start.x, start.y, end.x, end.y, min.x, max.x, min.y, max.y, radius) &&
+      Capsule.isAABBAxis(start.x, start.z, end.x, end.z, min.x, max.x, min.z, max.z, radius) &&
+      Capsule.isAABBAxis(start.y, start.z, end.y, end.z, min.y, max.y, min.z, max.z, radius)
+    );
+  }
+
+  static isAABBAxis(
     p1x: number,
     p1y: number,
     p2x: number,
@@ -83,14 +112,14 @@ export namespace Capsule {
     miny: number,
     maxy: number,
     radius: number,
-  ): boolean =>
-    (minx - p1x < radius || minx - p2x < radius) &&
-    (p1x - maxx < radius || p2x - maxx < radius) &&
-    (miny - p1y < radius || miny - p2y < radius) &&
-    (p1y - maxy < radius || p2y - maxy < radius);
-
-  export const intersectsBox = ({ start, end, radius }: Const<Capsule>, { min, max }: Const<Box3_>): boolean =>
-    isAABBAxis(start.x, start.y, end.x, end.y, min.x, max.x, min.y, max.y, radius) &&
-    isAABBAxis(start.x, start.z, end.x, end.z, min.x, max.x, min.z, max.z, radius) &&
-    isAABBAxis(start.y, start.z, end.y, end.z, min.y, max.y, min.z, max.z, radius);
+  ): boolean {
+    return (
+      (minx - p1x < radius || minx - p2x < radius) &&
+      (p1x - maxx < radius || p2x - maxx < radius) &&
+      (miny - p1y < radius || miny - p2y < radius) &&
+      (p1y - maxy < radius || p2y - maxy < radius)
+    );
+  }
 }
+
+Capsule.prototype.isCapsule = true;

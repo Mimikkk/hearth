@@ -31,8 +31,8 @@ async function init() {
   spotLight.castShadow = true;
   spotLight.shadow.camera.near = 8;
   spotLight.shadow.camera.far = 200;
-  spotLight.shadow.mapSize.width = 2048;
-  spotLight.shadow.mapSize.height = 2048;
+  spotLight.shadow.mapSize.x = 2048;
+  spotLight.shadow.mapSize.y = 2048;
   spotLight.shadow.bias = -0.002;
   spotLight.shadow.radius = 4;
   scene.add(spotLight);
@@ -46,8 +46,8 @@ async function init() {
   dirLight.shadow.camera.left = -17;
   dirLight.shadow.camera.top = 17;
   dirLight.shadow.camera.bottom = -17;
-  dirLight.shadow.mapSize.width = 2048;
-  dirLight.shadow.mapSize.height = 2048;
+  dirLight.shadow.mapSize.x = 2048;
+  dirLight.shadow.mapSize.y = 2048;
   dirLight.shadow.radius = 4;
   dirLight.shadow.bias = -0.0005;
 
