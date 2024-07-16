@@ -205,6 +205,14 @@ export class Vec2 implements IVec2 {
     return Math.sqrt(this.euclideanSq());
   }
 
+  lengthSq(): number {
+    return this.euclideanSq();
+  }
+
+  length(): number {
+    return Math.sqrt(this.lengthSq());
+  }
+
   manhattan(): number {
     return Math.abs(this.x) + Math.abs(this.y);
   }
@@ -218,7 +226,7 @@ export class Vec2 implements IVec2 {
   }
 
   angleTo(to: Const<IVec2>): number {
-    const denominator = Math.sqrt(this.euclideanSq() * Vec2.into(_temp1, to).euclideanSq());
+    const denominator = Math.sqrt(this.euclideanSq() * as(to).euclideanSq());
     if (denominator === 0) return Math.PI / 2;
     const theta = this.dot(to) / denominator;
     return Math.acos(clamp(theta, -1, 1));
@@ -232,6 +240,14 @@ export class Vec2 implements IVec2 {
 
   euclideanTo(to: Const<IVec2>): number {
     return Math.sqrt(this.euclideanSqTo(to));
+  }
+
+  distanceTo(to: Const<IVec2>): number {
+    return this.euclideanTo(to);
+  }
+
+  distanceSqTo(to: Const<IVec2>): number {
+    return this.euclideanSqTo(to);
   }
 
   manhattanTo({ x, y }: Const<IVec2>): number {
@@ -248,8 +264,8 @@ export class Vec2 implements IVec2 {
     return this.set(e[0] * x + e[3] * y + e[6], e[1] * x + e[4] * y + e[7]);
   }
 
-  lerp(to: Const<IVec2>, step: number): this {
-    return this.addScaled(to, step);
+  lerp(from: Const<IVec2>, to: Const<IVec2>, step: number): this {
+    return this.set(from.x + (to.x - from.x) * step, from.y + (to.y - from.y) * step);
   }
 
   rotateAround(center: Const<IVec2>, angle: number): this {
@@ -261,6 +277,13 @@ export class Vec2 implements IVec2 {
     return this.set(x * cos - y * sin + center.x, x * sin + y * cos + center.y);
   }
 
+  rotate(angle: number): this {
+    const cos = Math.cos(angle);
+    const sin = Math.sin(angle);
+
+    return this.set(this.x * cos - this.y * sin, this.x * sin + this.y * cos);
+  }
+
   *[Symbol.iterator](): Iterator<number> {
     yield this.x;
     yield this.y;
@@ -268,6 +291,7 @@ export class Vec2 implements IVec2 {
 }
 
 const _temp1 = Vec2.new();
+const as = (temp: Const<IVec2>) => _temp1.from(temp);
 
 Vec2.prototype.isVector2 = true;
 Vec2.prototype.isVec2 = true;
