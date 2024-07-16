@@ -10,7 +10,7 @@ describe('Math - Cylindrical', () => {
     const radius = 10.0;
     const theta = Math.PI;
     const height = 5;
-    expect(Cylindrical.set(cylindrical, radius, theta, height)).toBe(cylindrical);
+    expect(cylindrical.set(radius, theta, height)).toBe(cylindrical);
     expect(cylindrical).toEqual({ radius, theta, height });
 
     const cloned = Cylindrical.clone(cylindrical);
@@ -19,15 +19,15 @@ describe('Math - Cylindrical', () => {
   });
 
   it('fromCartesian', () => {
-    const a = Cylindrical.create(1, 1, 1);
+    const a = Cylindrical.new(1, 1, 1);
     const b = IVec3.create(0, 0, 0);
     const c = IVec3.create(3, -1, -3);
-    const expected = Cylindrical.create(Math.sqrt(9 + 9), Math.atan2(3, -3), -1);
+    const expected = Cylindrical.new(Math.sqrt(9 + 9), Math.atan2(3, -3), -1);
 
-    expect(Cylindrical.fillCartesian(a, b)).toBe(a);
+    expect(a.fromCoord(b)).toBe(a);
     expect(a).toEqual({ radius: 0, theta: 0, height: 0 });
 
-    expect(Cylindrical.fillCartesian(a, c)).toBe(a);
+    expect(a.fromCoord(c)).toBe(a);
     expect(a.radius).closeTo(expected.radius, Number.EPSILON);
     expect(a.theta).closeTo(expected.theta, Number.EPSILON);
     expect(a.height).closeTo(expected.height, Number.EPSILON);

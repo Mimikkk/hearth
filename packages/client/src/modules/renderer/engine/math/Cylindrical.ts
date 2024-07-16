@@ -1,31 +1,55 @@
 import type { IVec3 } from './Vector3.js';
 import type { Const } from '@modules/renderer/engine/math/types.js';
 
-export interface Cylindrical {
-  radius: number;
-  theta: number;
-  height: number;
-}
+export class Cylindrical {
+  declare isCylindrical: true;
 
-export namespace Cylindrical {
-  export const create = (radius: number, theta: number, y: number): Cylindrical => ({ radius, theta, height: y });
-  export const empty = (): Cylindrical => create(0, 0, 0);
+  constructor(
+    public radius: number = 0,
+    public theta: number = 0,
+    public height: number = 0,
+  ) {}
 
-  export const set = (self: Cylindrical, radius: number, theta: number, y: number): Cylindrical => {
-    self.radius = radius;
-    self.theta = theta;
-    self.height = y;
+  static new(radius: number = 0, theta: number = 0, height: number = 0): Cylindrical {
+    return new Cylindrical(radius, theta, height);
+  }
 
-    return self;
-  };
-  export const fill_ = (self: Cylindrical, { radius, theta, height }: Const<Cylindrical>): Cylindrical =>
-    set(self, radius, theta, height);
+  static empty(): Cylindrical {
+    return Cylindrical.new();
+  }
 
-  export const clone = (from: Const<Cylindrical>): Cylindrical => clone_(from, empty());
-  export const clone_ = (from: Const<Cylindrical>, into: Cylindrical): Cylindrical => fill_(into, from);
+  static clone({ radius, theta, height }: Const<Cylindrical>, into: Cylindrical = Cylindrical.empty()): Cylindrical {
+    return into.set(radius, theta, height);
+  }
 
-  export const fromCartesian = (from: Const<IVec3>): Cylindrical => fromCartesian_(from, empty());
-  export const fromCartesian_ = ({ x, y, z }: Const<IVec3>, into: Cylindrical): Cylindrical =>
-    set(into, Math.sqrt(x * x + z * z), Math.atan2(x, z), y);
-  export const fillCartesian = (self: Cylindrical, from: Const<IVec3>): Cylindrical => fromCartesian_(from, self);
+  static is(cylindrical: any): cylindrical is Cylindrical {
+    return cylindrical?.isCylindrical === true;
+  }
+
+  static into(into: Cylindrical, { radius, theta, height }: Const<Cylindrical>): Cylindrical {
+    return into.set(radius, theta, height);
+  }
+
+  static from({ radius, theta, height }: Const<Cylindrical>, into: Cylindrical = Cylindrical.empty()): Cylindrical {
+    return into.set(radius, theta, height);
+  }
+
+  static fromCoord(coord: Const<IVec3>, into: Cylindrical = Cylindrical.new()): Cylindrical {
+    return into.fromCoord(coord);
+  }
+
+  from({ radius, height, theta }: Const<Cylindrical>): this {
+    return this.set(radius, theta, height);
+  }
+
+  set(radius: number, theta: number, height: number): this {
+    this.radius = radius;
+    this.theta = theta;
+    this.height = height;
+    return this;
+  }
+
+  fromCoord({ x, y, z }: Const<IVec3>): this {
+    return this.set(Math.sqrt(x * x + z * z), Math.atan2(x, z), y);
+  }
 }
