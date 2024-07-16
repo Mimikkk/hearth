@@ -5,11 +5,11 @@ export class Box2 {
   declare isBox2: true;
 
   constructor(
-    public min: Vec2 = new Vec2(Infinity, Infinity),
-    public max: Vec2 = new Vec2(-Infinity, -Infinity),
+    public min: Vec2 = Vec2.new(Infinity, Infinity),
+    public max: Vec2 = Vec2.new(-Infinity, -Infinity),
   ) {}
 
-  static new(min: Vec2 = new Vec2(Infinity, Infinity), max: Vec2 = new Vec2(-Infinity, -Infinity)): Box2 {
+  static new(min: Vec2 = Vec2.new(Infinity, Infinity), max: Vec2 = Vec2.new(-Infinity, -Infinity)): Box2 {
     return new Box2(min, max);
   }
 
