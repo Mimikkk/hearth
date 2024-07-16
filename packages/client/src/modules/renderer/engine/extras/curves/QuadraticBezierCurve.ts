@@ -1,20 +1,20 @@
 import { Curve } from '../core/Curve.js';
 import { QuadraticBezier } from '../core/Interpolations.js';
-import { Vector2 } from '../../math/Vector2.js';
+import { Vec2 } from '../../math/Vector2.js';
 
-export class QuadraticBezierCurve extends Curve<Vector2> {
+export class QuadraticBezierCurve extends Curve<Vec2> {
   declare isQuadraticBezierCurve: true;
   declare type: 'QuadraticBezierCurve';
 
   constructor(
-    public v0: Vector2 = new Vector2(),
-    public v1: Vector2 = new Vector2(),
-    public v2: Vector2 = new Vector2(),
+    public v0: Vec2 = Vec2.new(),
+    public v1: Vec2 = Vec2.new(),
+    public v2: Vec2 = Vec2.new(),
   ) {
     super();
   }
 
-  getPoint(t: number, optionalTarget: Vector2 = new Vector2()): Vector2 {
+  getPoint(t: number, optionalTarget: Vec2 = Vec2.new()): Vec2 {
     const point = optionalTarget;
 
     const v0 = this.v0,
@@ -29,12 +29,13 @@ export class QuadraticBezierCurve extends Curve<Vector2> {
   copy(source: this): this {
     super.copy(source);
 
-    this.v0.copy(source.v0);
-    this.v1.copy(source.v1);
-    this.v2.copy(source.v2);
+    this.v0.from(source.v0);
+    this.v1.from(source.v1);
+    this.v2.from(source.v2);
 
     return this;
   }
 }
+
 QuadraticBezierCurve.prototype.isQuadraticBezierCurve = true;
 QuadraticBezierCurve.prototype.type = 'QuadraticBezierCurve';

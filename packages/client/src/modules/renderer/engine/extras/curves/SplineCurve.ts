@@ -1,17 +1,17 @@
 import { Curve } from '../core/Curve.js';
 import { CatmullRom } from '../core/Interpolations.js';
-import { Vector2 } from '../../math/Vector2.js';
+import { Vec2 } from '../../math/Vector2.js';
 
-export class SplineCurve extends Curve<Vector2> {
+export class SplineCurve extends Curve<Vec2> {
   declare isSplineCurve: true;
   declare type: 'SplineCurve';
 
-  constructor(public points: Vector2[] = []) {
+  constructor(public points: Vec2[] = []) {
     super();
   }
 
-  getPoint(t: number, optionalTarget: Vector2 = new Vector2()): Vector2 {
-    const point = optionalTarget;
+  getPoint(t: number, into: Vec2 = Vec2.new()): Vec2 {
+    const point = into;
 
     const points = this.points;
     const p = (points.length - 1) * t;
@@ -37,7 +37,7 @@ export class SplineCurve extends Curve<Vector2> {
     for (let i = 0, l = source.points.length; i < l; i++) {
       const point = source.points[i];
 
-      this.points.push(point.clone());
+      this.points.push(Vec2.from(point));
     }
 
     return this;

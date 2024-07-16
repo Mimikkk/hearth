@@ -6,9 +6,10 @@ import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js'
 import { QuadMesh } from '@modules/renderer/engine/objects/QuadMesh.js';
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
+import { Vec2 } from '@modules/renderer/engine/math/Vector2.js';
 
 let camera, scene, renderer;
-const mouse = new Engine.Vector2();
+const mouse = Vec2.new();
 
 let quadMesh, renderTarget;
 

@@ -4,7 +4,7 @@ import type { Vector3 } from '../math/Vector3.js';
 import type { Camera } from '../cameras/Camera.js';
 import type { Object3D } from './Object3D.js';
 import type { Face } from '../math/ConvexHull.js';
-import { Vec2, Vector2 } from '../math/Vector2.js';
+import { Vec2 } from '../math/Vector2.js';
 import { PerspectiveCamera } from '../cameras/PerspectiveCamera.js';
 import { OrthographicCamera } from '../cameras/OrthographicCamera.js';
 
@@ -25,8 +25,8 @@ export interface Intersection<T extends Object3D = Object3D> {
   face?: Face | null | undefined;
   faceIndex?: number | undefined;
   object: T;
-  uv?: Vector2 | undefined;
-  uv1?: Vector2 | undefined;
+  uv?: Vec2 | undefined;
+  uv1?: Vec2 | undefined;
   normal?: Vector3;
   instanceId?: number | undefined;
   pointOnLine?: Vector3;

@@ -1,7 +1,7 @@
 import { BufferGeometry } from '../core/BufferGeometry.js';
 import { Float32BufferAttribute } from '../core/BufferAttribute.js';
 import { Vector3 } from '../math/Vector3.js';
-import { Vector2 } from '../math/Vector2.js';
+import { Vec2 } from '../math/Vector2.js';
 
 export class CylinderGeometry extends BufferGeometry {
   declare type: string | 'CylinderGeometry';
@@ -163,7 +163,7 @@ export class CylinderGeometry extends BufferGeometry {
       // save the index of the first center vertex
       const centerIndexStart = index;
 
-      const uv = new Vector2();
+      const uv = Vec2.new();
       const vertex = new Vector3();
 
       let groupCount = 0;

@@ -1,4 +1,5 @@
-import { Color, Matrix3, Matrix4, Vector2, Vector3, Vector4 } from '@modules/renderer/engine/engine.js';
+import { Color, Matrix3, Matrix4, Vector3, Vector4 } from '@modules/renderer/engine/engine.js';
+import { Vec2 } from '@modules/renderer/engine/math/Vector2.ts';
 
 export function getCacheKey(object, force = false) {
   let cacheKey = '{';
@@ -60,7 +61,7 @@ export function getValueType(value) {
     return 'string';
   } else if (typeOf === 'function') {
     return 'shader';
-  } else if (value.isVector2 === true) {
+  } else if (value.isVector2 === true || Vec2.is(value)) {
     return 'vec2';
   } else if (value.isVector3 === true) {
     return 'vec3';
@@ -93,7 +94,7 @@ export function getValueFromType(type, ...params) {
   if (type === 'color') {
     return new Color(...params);
   } else if (last4 === 'vec2') {
-    return new Vector2(...params);
+    return new Vec2(...params);
   } else if (last4 === 'vec3') {
     return new Vector3(...params);
   } else if (last4 === 'vec4') {

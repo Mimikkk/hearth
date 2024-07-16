@@ -1,6 +1,6 @@
 import { Triangle } from './Triangle.js';
 import { Vector3 } from './Vector3.js';
-import { Vector2 } from './Vector2.js';
+import { Vec2 } from './Vector2.js';
 import type { Mesh } from '../objects/Mesh.js';
 import type { Material } from '../materials/Material.js';
 import type { BufferAttribute } from '../core/BufferAttribute.js';
@@ -9,9 +9,9 @@ import { BufferGeometry } from '@modules/renderer/engine/core/BufferGeometry.js'
 
 const _face = Triangle.empty();
 const _color = new Vector3();
-const _uva = new Vector2();
-const _uvb = new Vector2();
-const _uvc = new Vector2();
+const _uva = Vec2.new();
+const _uvb = Vec2.new();
+const _uvc = Vec2.new();
 
 export class MeshSurfaceSampler<TGeometry extends BufferGeometry, TMaterial extends Material | Material[]> {
   geometry: BufferGeometry;
@@ -98,7 +98,7 @@ export class MeshSurfaceSampler<TGeometry extends BufferGeometry, TMaterial exte
     return this;
   }
 
-  sample(targetPosition: Vector3, targetNormal?: Vector3, targetColor?: Color, targetUV?: Vector2): this {
+  sample(targetPosition: Vector3, targetNormal?: Vector3, targetColor?: Color, targetUV?: Vec2): this {
     const faceIndex = this.sampleFaceIndex();
     return this.sampleFace(faceIndex, targetPosition, targetNormal, targetColor, targetUV);
   }
@@ -138,7 +138,7 @@ export class MeshSurfaceSampler<TGeometry extends BufferGeometry, TMaterial exte
     targetPosition: Vector3,
     targetNormal?: Vector3,
     targetColor?: Color,
-    targetUV?: Vector2,
+    targetUV?: Vec2,
   ): this {
     let u = this.randomFunction();
     let v = this.randomFunction();
@@ -196,14 +196,15 @@ export class MeshSurfaceSampler<TGeometry extends BufferGeometry, TMaterial exte
     }
 
     if (targetUV !== undefined && this.uvAttribute !== undefined) {
-      _uva.fromBufferAttribute(this.uvAttribute, i0);
-      _uvb.fromBufferAttribute(this.uvAttribute, i1);
-      _uvc.fromBufferAttribute(this.uvAttribute, i2);
+      _uva.fromAttribute(this.uvAttribute, i0);
+      _uvb.fromAttribute(this.uvAttribute, i1);
+      _uvc.fromAttribute(this.uvAttribute, i2);
+
       targetUV
         .set(0, 0)
-        .addScaledVector(_uva, u)
-        .addScaledVector(_uvb, v)
-        .addScaledVector(_uvc, 1 - (u + v));
+        .addScaled(_uva, u)
+        .addScaled(_uvb, v)
+        .addScaled(_uvc, 1 - (u + v));
     }
 
     return this;

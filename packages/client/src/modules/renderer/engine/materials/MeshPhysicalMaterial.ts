@@ -1,4 +1,4 @@
-import { Vector2 } from '../math/Vector2.js';
+import { Vec2 } from '../math/Vector2.js';
 import { MeshStandardMaterial, MeshStandardMaterialParameters } from './MeshStandardMaterial.js';
 import { Color, ColorRepresentation } from '../math/Color.js';
 import * as MathUtils from '../math/MathUtils.js';
@@ -9,7 +9,7 @@ export interface MeshPhysicalMaterialParameters extends MeshStandardMaterialPara
   clearcoatMap?: Texture | null | undefined;
   clearcoatRoughness?: number | undefined;
   clearcoatRoughnessMap?: Texture | null | undefined;
-  clearcoatNormalScale?: Vector2 | undefined;
+  clearcoatNormalScale?: Vec2 | undefined;
   clearcoatNormalMap?: Texture | null | undefined;
 
   reflectivity?: number | undefined;
@@ -56,7 +56,7 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
   clearcoatMap: Texture | null;
   clearcoatRoughness: number;
   clearcoatRoughnessMap: Texture | null;
-  clearcoatNormalScale: Vector2;
+  clearcoatNormalScale: Vec2;
   clearcoatNormalMap: Texture | null;
   ior: number;
   iridescenceMap: Texture | null;
@@ -108,7 +108,7 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
     this.clearcoatMap = null;
     this.clearcoatRoughness = 0.0;
     this.clearcoatRoughnessMap = null;
-    this.clearcoatNormalScale = new Vector2(1, 1);
+    this.clearcoatNormalScale = Vec2.new(1, 1);
     this.clearcoatNormalMap = null;
 
     this.ior = 1.5;
@@ -224,7 +224,7 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
     this.clearcoatRoughness = source.clearcoatRoughness;
     this.clearcoatRoughnessMap = source.clearcoatRoughnessMap;
     this.clearcoatNormalMap = source.clearcoatNormalMap;
-    this.clearcoatNormalScale.copy(source.clearcoatNormalScale);
+    this.clearcoatNormalScale.from(source.clearcoatNormalScale);
 
     this.ior = source.ior;
 

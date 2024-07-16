@@ -1,7 +1,7 @@
 import { BufferGeometry } from '../core/BufferGeometry.js';
 import { Float32BufferAttribute } from '../core/BufferAttribute.js';
 import { Vector3 } from '../math/Vector3.js';
-import { Vector2 } from '../math/Vector2.js';
+import { Vec2 } from '../math/Vector2.js';
 
 export class PolyhedronGeometry extends BufferGeometry {
   declare type: string | 'PolyhedronGeometry';
@@ -194,9 +194,9 @@ export class PolyhedronGeometry extends BufferGeometry {
 
       const centroid = new Vector3();
 
-      const uvA = new Vector2();
-      const uvB = new Vector2();
-      const uvC = new Vector2();
+      const uvA = Vec2.new();
+      const uvB = Vec2.new();
+      const uvC = Vec2.new();
 
       for (let i = 0, j = 0; i < vertexBuffer.length; i += 9, j += 6) {
         a.set(vertexBuffer[i + 0], vertexBuffer[i + 1], vertexBuffer[i + 2]);
@@ -217,7 +217,7 @@ export class PolyhedronGeometry extends BufferGeometry {
       }
     }
 
-    function correctUV(uv: Vector2, stride: number, vector: Vector3, azimuth: number) {
+    function correctUV(uv: Vec2, stride: number, vector: Vector3, azimuth: number) {
       if (azimuth < 0 && uv.x === 1) {
         uvBuffer[stride] = uv.x - 1;
       }

@@ -1,5 +1,5 @@
 import { Vector3 } from '../math/Vector3.js';
-import { Vec2, Vector2 } from '../math/Vector2.js';
+import { Vec2 } from '../math/Vector2.js';
 import { denormalize, normalize, TypedArray, TypedArrayConstructor } from '../math/MathUtils.js';
 import { BufferUsage, TextureDataType } from '../constants.js';
 import { fromHalfFloat, toHalfFloat } from '../extras/DataUtils.js';

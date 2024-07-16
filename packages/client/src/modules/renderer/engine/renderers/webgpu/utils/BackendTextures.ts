@@ -234,7 +234,7 @@ export class BackendTextures {
   getColorBuffer() {
     if (this.colorBuffer) this.colorBuffer.destroy();
 
-    const { width, height } = this.backend.getDrawingBufferSize();
+    const { x: width, y: height } = this.backend.getDrawingBufferSize();
     this.colorBuffer = this.backend.device.createTexture({
       label: 'colorBuffer',
       size: { width, height, depthOrArrayLayers: 1 },
@@ -248,7 +248,7 @@ export class BackendTextures {
 
   getDepthBuffer(depth: boolean = true, stencil: boolean = false) {
     const backend = this.backend;
-    const { width, height } = backend.getDrawingBufferSize();
+    const { x: width, y: height } = backend.getDrawingBufferSize();
 
     const depthTexture = this.depthTexture;
     const depthTextureGPU = backend.get(depthTexture).texture;

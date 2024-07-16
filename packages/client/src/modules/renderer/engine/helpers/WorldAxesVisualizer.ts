@@ -10,13 +10,13 @@ import {
   Raycaster,
   Sprite,
   SpriteMaterial,
-  Vector2,
   Vector3,
   Vector4,
 } from '../engine.js';
 import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 import { Euler } from '@modules/renderer/engine/math/Euler.js';
 import { Quaternion } from '@modules/renderer/engine/math/Quaternion.js';
+import { Vec2 } from '@modules/renderer/engine/math/Vector2.js';
 
 const turnRate = 2 * Math.PI;
 const dim = 128;
@@ -219,7 +219,7 @@ export class WorldAxesVisualizer extends Object3D {
     const offsetY = top + (this.canvas.offsetHeight - dim);
 
     this.raycaster.setFromCamera(
-      new Vector2(
+      Vec2.new(
         ((event.clientX - offsetX) / (right - offsetX)) * 2 - 1,
         -((event.clientY - offsetY) / (bottom - offsetY)) * 2 + 1,
       ),

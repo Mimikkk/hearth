@@ -9,10 +9,10 @@ import {
   Plane,
   RenderTarget,
   TextureDataType,
-  Vector2,
   Vector3,
   Vector4,
 } from '@modules/renderer/engine/engine.js';
+import { Vec2 } from '@modules/renderer/engine/math/Vector2.ts';
 
 const _reflectorPlane = new Plane();
 const _normal = new Vector3();
@@ -26,7 +26,7 @@ const _view = new Vector3();
 const _target = new Vector3();
 const _q = new Vector4();
 
-const _size = new Vector2();
+const _size = Vec2.new();
 
 const _defaultRT = new RenderTarget();
 const _defaultUV = vec2(viewportTopLeft.x.oneMinus(), viewportTopLeft.y);
@@ -57,7 +57,7 @@ class ReflectorNode extends TextureNode {
 
     renderer.getDrawingBufferSize(_size);
 
-    renderTarget.setSize(Math.round(_size.width * resolution), Math.round(_size.height * resolution));
+    renderTarget.setSize(Math.round(_size.x * resolution), Math.round(_size.y * resolution));
   }
 
   setup(builder) {

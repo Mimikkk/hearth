@@ -12,6 +12,7 @@ import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/
 
 import { GUI } from 'lil-gui';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
+import { Vec2 } from '@modules/renderer/engine/math/Vector2.js';
 
 let camera, scene, renderer;
 let postProcessing;
@@ -67,7 +68,7 @@ async function init() {
   const samples = 64;
 
   const anamorphicPass = scenePass.getTextureNode().anamorphic(threshold, scaleNode, samples);
-  anamorphicPass.resolution = new Engine.Vector2(0.2, 0.2); // 1 = full resolution
+  anamorphicPass.resolution = Vec2.new(0.2, 0.2); // 1 = full resolution
 
   postProcessing = new PostProcessing(renderer);
   postProcessing.outputNode = scenePass.add(anamorphicPass.mul(intensity));

@@ -1,5 +1,5 @@
 import { IVec3, Vector3 } from '../math/Vector3.js';
-import { Vec2, Vector2 } from '../math/Vector2.js';
+import { Vec2 } from '../math/Vector2.js';
 import { Sphere_ } from '../math/Sphere.js';
 import { Ray } from '../math/Ray.js';
 import { Matrix4 } from '../math/Matrix4.js';
@@ -356,7 +356,7 @@ function checkGeometryIntersection(
       Triangle.set(_triangle2, _uvA, _uvB, _uvC);
       Triangle.interpolate_(_triangle1, _triangle2, _intersectionPoint, _intersect);
 
-      intersection.uv = new Vector2(_intersect.x, _intersect.y);
+      intersection.uv = new Vec2(_intersect.x, _intersect.y);
     }
 
     if (uv1) {
@@ -368,7 +368,7 @@ function checkGeometryIntersection(
       Triangle.interpolate_(_triangle1, _triangle2, _intersectionPoint, _intersect);
       Triangle.interpolate_(_triangle1, _triangle2, _intersectionPoint, _intersect);
 
-      intersection.uv1 = new Vector2(_intersect.x, _intersect.y);
+      intersection.uv1 = new Vec2(_intersect.x, _intersect.y);
     }
 
     if (normal) {

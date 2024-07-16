@@ -1,7 +1,7 @@
 import { LightShadow } from './LightShadow.js';
 import { PerspectiveCamera } from '../cameras/PerspectiveCamera.js';
 import { Matrix4 } from '../math/Matrix4.js';
-import { Vector2 } from '../math/Vector2.js';
+import { Vec2 } from '../math/Vector2.js';
 import { Vector3 } from '../math/Vector3.js';
 import { Vector4 } from '../math/Vector4.js';
 import { PointLight } from './PointLight.js';
@@ -17,7 +17,7 @@ export class PointLightShadow extends LightShadow<PerspectiveCamera> {
 
   constructor() {
     super(new PerspectiveCamera(90, 1, 0.5, 500));
-    this._frameExtents = new Vector2(4, 2);
+    this._frameExtents = Vec2.new(4, 2);
 
     this._viewportCount = 6;
 
