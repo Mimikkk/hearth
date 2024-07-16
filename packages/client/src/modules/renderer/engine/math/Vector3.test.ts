@@ -243,7 +243,7 @@ describe('Math - Vec3', () => {
     const coord = vec3();
     const expected = vec3(1, 0, 1);
 
-    const spherical = Spherical.fromCartesian(expected);
+    const spherical = Spherical.fromCoord(expected);
     closeTo(coord.fromSpherical(spherical), expected, Number.EPSILON * 4);
   });
 
