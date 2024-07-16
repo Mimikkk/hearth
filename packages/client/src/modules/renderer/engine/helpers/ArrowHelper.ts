@@ -10,7 +10,7 @@ import { Vector3 } from '../math/Vector3.js';
 import { Color } from '@modules/renderer/engine/math/Color.js';
 import { Quaternion } from '@modules/renderer/engine/math/Quaternion.js';
 
-const _axis = /*@__PURE__*/ new Vector3();
+const _axis = new Vector3();
 let _lineGeometry!: BufferGeometry;
 let _coneGeometry!: CylinderGeometry;
 

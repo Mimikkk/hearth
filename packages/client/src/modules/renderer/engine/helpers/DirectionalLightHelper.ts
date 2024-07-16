@@ -7,9 +7,9 @@ import { LineBasicMaterial } from '../materials/LineBasicMaterial.js';
 import { DirectionalLight } from '@modules/renderer/engine/lights/DirectionalLight.js';
 import { Color } from '@modules/renderer/engine/math/Color.js';
 
-const _v1 = /*@__PURE__*/ new Vector3();
-const _v2 = /*@__PURE__*/ new Vector3();
-const _v3 = /*@__PURE__*/ new Vector3();
+const _v1 = new Vector3();
+const _v2 = new Vector3();
+const _v3 = new Vector3();
 
 export class DirectionalLightHelper extends Object3D {
   declare type: string | 'DirectionalLightHelper';

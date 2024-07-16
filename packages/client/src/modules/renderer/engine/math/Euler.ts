@@ -13,7 +13,7 @@ export interface Euler {
 
 type Mat4x4 = number[];
 
-const _matrix = /*@__PURE__*/ new Matrix4();
+const _matrix = new Matrix4();
 const _quaternion = Quaternion.identity();
 export namespace Euler {
   export const create = (x: number, y: number, z: number, order: Order = 'XYZ'): Euler => ({ x, y, z, order });

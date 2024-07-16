@@ -4,8 +4,8 @@ import { Matrix4 } from '../math/Matrix4.js';
 import { DataTexture } from '../textures/DataTexture.js';
 import { v4 } from 'uuid';
 
-const _offsetMatrix = /*@__PURE__*/ new Matrix4();
-const _identityMatrix = /*@__PURE__*/ new Matrix4();
+const _offsetMatrix = new Matrix4();
+const _identityMatrix = new Matrix4();
 
 export class Skeleton {
   uuid: string;

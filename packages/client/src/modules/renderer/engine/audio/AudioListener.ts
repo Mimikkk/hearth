@@ -4,10 +4,10 @@ import { Clock } from '../core/Clock.js';
 import { Object3D } from '../core/Object3D.js';
 import { AudioContextManager } from './AudioContextManager.js';
 
-const _position = /*@__PURE__*/ new Vector3();
-const _quaternion = /*@__PURE__*/ Quaternion.identity();
-const _scale = /*@__PURE__*/ new Vector3();
-const _orientation = /*@__PURE__*/ new Vector3();
+const _position = new Vector3();
+const _quaternion = Quaternion.identity();
+const _scale = new Vector3();
+const _orientation = new Vector3();
 
 export class AudioListener extends Object3D {
   context: AudioContext;

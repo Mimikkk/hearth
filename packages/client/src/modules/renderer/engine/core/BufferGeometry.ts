@@ -1,5 +1,5 @@
 import { IVec3, Vector3 } from '../math/Vector3.js';
-import { Vector2 } from '../math/Vector2.js';
+import { Vec2 } from '../math/Vector2.js';
 import { Box3, Box3_ } from '../math/Box3.js';
 import { EventDispatcher } from './EventDispatcher.js';
 import {
@@ -13,20 +13,20 @@ import { Object3D } from './Object3D.js';
 import { Matrix4 } from '../math/Matrix4.js';
 import { Matrix3 } from '../math/Matrix3.js';
 import { isArrayUint32 } from '../utils.js';
-import { InterleavedBufferAttribute } from '@modules/renderer/engine/core/InterleavedBufferAttribute.js';
 import { Quaternion } from '@modules/renderer/engine/math/Quaternion.js';
 import { v4 } from 'uuid';
+import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
 
 let _id = 0;
 
-const _m1 = /*@__PURE__*/ new Matrix4();
-const _obj = /*@__PURE__*/ new Object3D();
-const _offset = /*@__PURE__*/ new Vector3();
-const _box = /*@__PURE__*/ new Box3();
-const _boxMorphTargets = /*@__PURE__*/ new Box3();
-const _vector = /*@__PURE__*/ new Vector3();
+const _m1 = new Matrix4();
+const _obj = new Object3D();
+const _offset = new Vector3();
+const _box = new Box3();
+const _boxMorphTargets = new Box3();
+const _vector = new Vector3();
 
-type AttributeRecord = Record<string, Float32BufferAttribute | InterleavedBufferAttribute>;
+type AttributeRecord = Record<string, Attribute>;
 
 export class BufferGeometry<
   AttributeMap extends AttributeRecord = AttributeRecord,
@@ -401,9 +401,9 @@ export class BufferGeometry<
     const vA = new Vector3(),
       vB = new Vector3(),
       vC = new Vector3(),
-      uvA = new Vector2(),
-      uvB = new Vector2(),
-      uvC = new Vector2(),
+      uvA = Vec2.new(),
+      uvB = Vec2.new(),
+      uvC = Vec2.new(),
       sdir = new Vector3(),
       tdir = new Vector3();
 
@@ -412,9 +412,9 @@ export class BufferGeometry<
       vB.fromBufferAttribute(positionAttribute, b);
       vC.fromBufferAttribute(positionAttribute, c);
 
-      uvA.fromBufferAttribute(uvAttribute, a);
-      uvB.fromBufferAttribute(uvAttribute, b);
-      uvC.fromBufferAttribute(uvAttribute, c);
+      uvA.fromAttribute(uvAttribute, a);
+      uvB.fromAttribute(uvAttribute, b);
+      uvC.fromAttribute(uvAttribute, c);
 
       vB.sub(vA);
       vC.sub(vA);

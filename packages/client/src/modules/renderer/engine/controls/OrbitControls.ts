@@ -1,18 +1,9 @@
-import {
-  EventDispatcher,
-  Matrix4,
-  Mouse,
-  OrthographicCamera,
-  PerspectiveCamera,
-  Plane,
-  Ray,
-  Vector2,
-  Vector3,
-} from '../engine.js';
+import { EventDispatcher, Matrix4, Mouse, OrthographicCamera, PerspectiveCamera, Ray, Vector3 } from '../engine.js';
 import { DegreeToRadian } from '../math/MathUtils.js';
 import { Quaternion } from '@modules/renderer/engine/math/Quaternion.js';
 import { Spherical } from '@modules/renderer/engine/math/Spherical.js';
 import { Plane_ } from '@modules/renderer/engine/math/Plane.js';
+import { Vec2 } from '@modules/renderer/engine/math/Vector2.js';
 
 const _changeEvent = { type: 'change' } as const;
 const _startEvent = { type: 'start' } as const;
@@ -435,24 +426,24 @@ export class OrbitControls {
     let scale = 1;
     const panOffset = new Vector3();
 
-    const rotateStart = new Vector2();
-    const rotateEnd = new Vector2();
-    const rotateDelta = new Vector2();
+    const rotateStart = Vec2.new();
+    const rotateEnd = Vec2.new();
+    const rotateDelta = Vec2.new();
 
-    const panStart = new Vector2();
-    const panEnd = new Vector2();
-    const panDelta = new Vector2();
+    const panStart = Vec2.new();
+    const panEnd = Vec2.new();
+    const panDelta = Vec2.new();
 
-    const dollyStart = new Vector2();
-    const dollyEnd = new Vector2();
-    const dollyDelta = new Vector2();
+    const dollyStart = Vec2.new();
+    const dollyEnd = Vec2.new();
+    const dollyDelta = Vec2.new();
 
     const dollyDirection = new Vector3();
-    const mouse = new Vector2();
+    const mouse = Vec2.new();
     let performCursorZoom = false;
 
     const pointers: number[] = [];
-    const pointerPositions: Record<number, Vector2> = {};
+    const pointerPositions: Record<number, Vec2> = {};
 
     let controlActive = false;
 
@@ -593,7 +584,7 @@ export class OrbitControls {
     function handleMouseMoveRotate(event: MouseEvent) {
       rotateEnd.set(event.clientX, event.clientY);
 
-      rotateDelta.subVectors(rotateEnd, rotateStart).multiplyScalar(scope.rotateSpeed);
+      Vec2.into(rotateDelta, rotateEnd).sub(rotateStart).scale(scope.rotateSpeed);
 
       const element = scope.domElement;
 
@@ -601,7 +592,7 @@ export class OrbitControls {
 
       rotateUp((2 * Math.PI * rotateDelta.y) / element.clientHeight);
 
-      rotateStart.copy(rotateEnd);
+      Vec2.into(rotateStart, rotateEnd);
 
       scope.update();
     }
@@ -609,7 +600,7 @@ export class OrbitControls {
     function handleMouseMoveDolly(event: MouseEvent) {
       dollyEnd.set(event.clientX, event.clientY);
 
-      dollyDelta.subVectors(dollyEnd, dollyStart);
+      Vec2.into(dollyDelta, dollyEnd).sub(dollyStart);
 
       if (dollyDelta.y > 0) {
         dollyOut(getZoomScale(dollyDelta.y));
@@ -617,7 +608,7 @@ export class OrbitControls {
         dollyIn(getZoomScale(dollyDelta.y));
       }
 
-      dollyStart.copy(dollyEnd);
+      Vec2.into(dollyStart, dollyEnd);
 
       scope.update();
     }
@@ -625,11 +616,11 @@ export class OrbitControls {
     function handleMouseMovePan(event: MouseEvent) {
       panEnd.set(event.clientX, event.clientY);
 
-      panDelta.subVectors(panEnd, panStart).multiplyScalar(scope.panSpeed);
+      Vec2.into(panDelta, panEnd).sub(panStart).scale(scope.panSpeed);
 
       pan(panDelta.x, panDelta.y);
 
-      panStart.copy(panEnd);
+      Vec2.into(panStart, panEnd);
 
       scope.update();
     }
@@ -953,7 +944,7 @@ export class OrbitControls {
       let position = pointerPositions[event.pointerId];
 
       if (position === undefined) {
-        position = new Vector2();
+        position = Vec2.new();
         pointerPositions[event.pointerId] = position;
       }
 

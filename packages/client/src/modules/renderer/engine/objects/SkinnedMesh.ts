@@ -11,18 +11,18 @@ import { Material } from '@modules/renderer/engine/materials/Material.js';
 import { Skeleton } from '@modules/renderer/engine/objects/Skeleton.js';
 import { Intersection, Raycaster } from '@modules/renderer/engine/core/Raycaster.js';
 
-const _basePosition = /*@__PURE__*/ new Vector3();
+const _basePosition = new Vector3();
 
-const _skinIndex = /*@__PURE__*/ new Vector4();
-const _skinWeight = /*@__PURE__*/ new Vector4();
+const _skinIndex = new Vector4();
+const _skinWeight = new Vector4();
 
-const _vector3 = /*@__PURE__*/ new Vector3();
-const _matrix4 = /*@__PURE__*/ new Matrix4();
-const _vertex = /*@__PURE__*/ new Vector3();
+const _vector3 = new Vector3();
+const _matrix4 = new Matrix4();
+const _vertex = new Vector3();
 
 const _sphere = Sphere_.empty();
-const _inverseMatrix = /*@__PURE__*/ new Matrix4();
-const _ray = /*@__PURE__*/ new Ray();
+const _inverseMatrix = new Matrix4();
+const _ray = new Ray();
 
 export class SkinnedMesh extends Mesh {
   declare isSkinnedMesh: true;
