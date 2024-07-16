@@ -1,5 +1,5 @@
 import { IVec3, Vector3 } from '../math/Vector3.js';
-import { IVec2, Vector2 } from '../math/Vector2.js';
+import { Vec2, Vector2 } from '../math/Vector2.js';
 import { Sphere_ } from '../math/Sphere.js';
 import { Ray } from '../math/Ray.js';
 import { Matrix4 } from '../math/Matrix4.js';
@@ -11,28 +11,28 @@ import { Material } from '../materials/Material.js';
 import { Intersection, Raycaster } from '../core/Raycaster.js';
 import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
 
-const _inverseMatrix = /*@__PURE__*/ new Matrix4();
-const _ray = /*@__PURE__*/ new Ray();
+const _inverseMatrix = new Matrix4();
+const _ray = new Ray();
 const _sphere = Sphere_.empty();
-const _sphereHitAt = /*@__PURE__*/ new Vector3();
+const _sphereHitAt = new Vector3();
 
-const _vA = /*@__PURE__*/ new Vector3();
-const _vB = /*@__PURE__*/ new Vector3();
-const _vC = /*@__PURE__*/ new Vector3();
+const _vA = new Vector3();
+const _vB = new Vector3();
+const _vC = new Vector3();
 
-const _tempA = /*@__PURE__*/ new Vector3();
-const _morphA = /*@__PURE__*/ new Vector3();
+const _tempA = new Vector3();
+const _morphA = new Vector3();
 
-const _uvA = /*@__PURE__*/ new Vector3();
-const _uvB = /*@__PURE__*/ new Vector3();
-const _uvC = /*@__PURE__*/ new Vector3();
+const _uvA = Vec2.new();
+const _uvB = Vec2.new();
+const _uvC = Vec2.new();
 
-const _normalA = /*@__PURE__*/ new Vector3();
-const _normalB = /*@__PURE__*/ new Vector3();
-const _normalC = /*@__PURE__*/ new Vector3();
+const _normalA = new Vector3();
+const _normalB = new Vector3();
+const _normalC = new Vector3();
 
-const _intersectionPoint = /*@__PURE__*/ new Vector3();
-const _intersectionPointWorld = /*@__PURE__*/ new Vector3();
+const _intersectionPoint = new Vector3();
+const _intersectionPointWorld = new Vector3();
 
 const _intersect = IVec3.empty();
 const _triangle1 = Triangle.empty();
@@ -349,9 +349,9 @@ function checkGeometryIntersection(
 
   if (intersection) {
     if (uv) {
-      IVec2.fillAttribute(_uvA, uv, a);
-      IVec2.fillAttribute(_uvB, uv, b);
-      IVec2.fillAttribute(_uvC, uv, c);
+      _uvA.fromAttribute(uv, a);
+      _uvB.fromAttribute(uv, b);
+      _uvC.fromAttribute(uv, c);
 
       Triangle.set(_triangle2, _uvA, _uvB, _uvC);
       Triangle.interpolate_(_triangle1, _triangle2, _intersectionPoint, _intersect);
@@ -360,9 +360,9 @@ function checkGeometryIntersection(
     }
 
     if (uv1) {
-      IVec2.fillAttribute(_uvA, uv1, a);
-      IVec2.fillAttribute(_uvB, uv1, b);
-      IVec2.fillAttribute(_uvC, uv1, c);
+      _uvA.fromAttribute(uv, a);
+      _uvB.fromAttribute(uv, b);
+      _uvC.fromAttribute(uv, c);
 
       Triangle.set(_triangle2, _uvA, _uvB, _uvC);
       Triangle.interpolate_(_triangle1, _triangle2, _intersectionPoint, _intersect);

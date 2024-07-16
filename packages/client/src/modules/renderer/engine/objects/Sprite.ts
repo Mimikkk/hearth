@@ -1,4 +1,4 @@
-import { IVec2, Vector2 } from '../math/Vector2.js';
+import { Vec2, Vector2 } from '../math/Vector2.js';
 import { IVec3, Vector3 } from '../math/Vector3.js';
 import { Matrix4 } from '../math/Matrix4.js';
 import { Triangle } from '../math/Triangle.js';
@@ -10,22 +10,23 @@ import { SpriteMaterial } from '../materials/SpriteMaterial.js';
 import { Intersection, Raycaster } from '../core/Raycaster.js';
 import { PerspectiveCamera } from '../cameras/PerspectiveCamera.js';
 
-const _intersect = /*@__PURE__*/ new Vector3();
+const _intersect = new Vector3();
 const _worldScale = new Vector3();
-const _mv = /*@__PURE__*/ new Vector3();
+const _mv = new Vector3();
 
-const _align = IVec2.empty();
-const _viewWorldMatrix = /*@__PURE__*/ new Matrix4();
+const _align = Vec2.new();
+const _viewWorldMatrix = new Matrix4();
 
-const _vA = /*@__PURE__*/ new Vector3();
-const _vB = /*@__PURE__*/ new Vector3();
-const _vC = /*@__PURE__*/ new Vector3();
+const _vA = new Vector3();
+const _vB = new Vector3();
+const _vC = new Vector3();
 
-const _uvA = /*@__PURE__*/ new Vector2();
-const _uvB = /*@__PURE__*/ new Vector2();
-const _uvC = /*@__PURE__*/ new Vector2();
+const _uvA = Vec2.new();
+const _uvB = Vec2.new();
+const _uvC = Vec2.new();
 const _triangle1 = Triangle.empty();
 const _triangle2 = Triangle.empty();
+const _center = Vec2.new();
 
 let _geometry: BufferGeometry;
 
@@ -90,26 +91,29 @@ export class Sprite extends Object3D {
     }
 
     const center = this.center;
-
     IVec3.set(_vA, -0.5, -0.5, 0);
     IVec3.set(_vB, 0.5, -0.5, 0);
     IVec3.set(_vC, 0.5, 0.5, 0);
 
-    transformVertex(_vA, _mv, center, _worldScale, sin, cos);
-    transformVertex(_vB, _mv, center, _worldScale, sin, cos);
-    transformVertex(_vC, _mv, center, _worldScale, sin, cos);
+    _center.from(center);
+    transformVertex(_vA, _mv, _center, _worldScale, sin, cos);
+    transformVertex(_vB, _mv, _center, _worldScale, sin, cos);
+    transformVertex(_vC, _mv, _center, _worldScale, sin, cos);
+    _center.fill(center);
 
-    IVec2.set(_uvA, 0, 0);
-    IVec2.set(_uvB, 1, 0);
-    IVec2.set(_uvC, 1, 1);
+    _uvA.set(0, 0);
+    _uvB.set(1, 0);
+    _uvC.set(1, 1);
 
     // check first triangle
     let intersect = raycaster.ray.intersectTriangle(_vA, _vB, _vC, false, _intersect);
 
     if (intersect === null) {
       IVec3.set(_vA, -0.5, 0.5, 0);
-      transformVertex(_vB, _mv, center, _worldScale, sin, cos);
-      IVec2.set(_uvB, 0, 1);
+      transformVertex(_vB, _mv, _center, _worldScale, sin, cos);
+      _center.fill(center);
+
+      _uvB.set(0, 1);
 
       intersect = raycaster.ray.intersectTriangle(_vA, _vC, _vB, false, _intersect);
       if (intersect === null) return;
@@ -147,10 +151,10 @@ export class Sprite extends Object3D {
 Sprite.prototype.isSprite = true;
 Sprite.prototype.type = 'Sprite';
 
-function transformVertex(vec: Vector3, mv: IVec3, center: IVec2, scale: IVec3, sin?: number, cos?: number) {
-  IVec2.sub_(vec, center, _align);
-  IVec2.scale(_align, 0.5);
-  IVec2.mul(_align, scale);
+const _scale = Vec2.new();
+function transformVertex(vec: Vector3, mv: IVec3, center: Vec2, scale: IVec3, sin?: number, cos?: number) {
+  _scale.from(scale);
+  _align.from(vec).sub(center).scale(0.5).mul(_scale);
 
   if (sin !== undefined && cos !== undefined) {
     IVec3.set(vec, mv.x + (cos * _align.x - sin * _align.y), mv.y + (sin * _align.x + cos * _align.y), mv.z);

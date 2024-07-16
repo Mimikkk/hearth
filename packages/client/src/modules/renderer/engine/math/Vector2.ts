@@ -385,7 +385,7 @@ export class Vec2 {
     public y: number,
   ) {}
 
-  static new(x: number, y: number): Vec2 {
+  static new(x: number = 0, y: number = 0): Vec2 {
     return new Vec2(x, y);
   }
 
@@ -405,19 +405,28 @@ export class Vec2 {
     return vec?.isVec2 === true;
   }
 
+  static from({ x, y }: Const<{ x: number; y: number }>, into: Vec2 = Vec2.empty()): Vec2 {
+    return into.set(x, y);
+  }
+
   static fromAttribute(attribute: BufferAttribute, index: number, into: Vec2 = Vec2.empty()): Vec2 {
-    return into.fillAttribute(attribute, index);
+    return into.fromAttribute(attribute, index);
   }
 
   static fromArray(array: number[], offset: number = 0, into: Vec2 = Vec2.empty()): Vec2 {
-    return into.fillArray(array, offset);
+    return into.fromArray(array, offset);
   }
 
-  fill(from: Const<Vec2>): this {
+  from(from: Const<{ x: number; y: number }>): this {
     return this.set(from.x, from.y);
   }
 
-  fillAttribute(attribute: Const<BufferAttribute>, index: number): this {
+  fill(into: { x: number; y: number }): void {
+    into.x = this.x;
+    into.y = this.y;
+  }
+
+  fromAttribute(attribute: Const<BufferAttribute>, index: number): this {
     return this.set(attribute.getX(index), attribute.getY(index));
   }
 
@@ -426,7 +435,7 @@ export class Vec2 {
     return this;
   }
 
-  fillArray(array: Const<number[]>, offset: number = 0): this {
+  fromArray(array: Const<number[]>, offset: number = 0): this {
     return this.set(array[offset], array[offset + 1]);
   }
 
@@ -617,43 +626,5 @@ export class Vec2 {
     yield this.y;
   }
 }
+
 Vec2.prototype.isVec2 = true;
-
-export interface IVec2 {
-  x: number;
-  y: number;
-}
-
-export namespace IVec2 {
-  export const create = Vec2.new;
-  export const empty = Vec2.empty as <T extends IVec2>() => T;
-  export const vec2 = create;
-
-  export const set = (self: IVec2, x: number, y: number): IVec2 => {
-    self.x = x;
-    self.y = y;
-    return self;
-  };
-  export const fill_ = (self: IVec2, other: Const<IVec2>): IVec2 => set(self, other.x, other.y);
-
-  export const clone = (self: Const<IVec2>): IVec2 => clone_(self, empty());
-  export const clone_ = (self: Const<IVec2>, into: IVec2): IVec2 => set(into, self.x, self.y);
-
-  export const scale = (self: IVec2, scalar: number): IVec2 => scale_(self, scalar, self);
-  export const scale_ = ({ x, y }: Const<IVec2>, scalar: number, into: IVec2): IVec2 =>
-    set(into, x * scalar, y * scalar);
-  export const scaled = (self: Const<IVec2>, scalar: number): IVec2 => scale_(self, scalar, empty());
-
-  export const add = (a: IVec2, b: Const<IVec2>): IVec2 => add_(a, b, a);
-  export const add_ = (a: Const<IVec2>, b: Const<IVec2>, into: IVec2): IVec2 => set(into, a.x + b.x, a.y + b.y);
-  export const added = (a: Const<IVec2>, b: Const<IVec2>): IVec2 => add_(a, b, empty());
-
-  export const sub = (a: IVec2, b: Const<IVec2>): IVec2 => sub_(a, b, a);
-  export const sub_ = (a: Const<IVec2>, b: Const<IVec2>, into: IVec2): IVec2 => set(into, a.x - b.x, a.y - b.y);
-  export const subbed = (a: Const<IVec2>, b: Const<IVec2>): IVec2 => sub_(a, b, empty());
-
-  export const mul = (self: IVec2, other: Const<IVec2>): IVec2 => mul_(self, other, self);
-  export const mul_ = (self: Const<IVec2>, other: Const<IVec2>, into: IVec2): IVec2 =>
-    set(into, self.x * other.x, self.y * other.y);
-  export const mulled = (self: Const<IVec2>, other: Const<IVec2>): IVec2 => mul_(self, other, empty());
-}
