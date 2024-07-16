@@ -4,22 +4,22 @@ import type { Const } from '@modules/renderer/engine/math/types.js';
 export interface Cylindrical {
   radius: number;
   theta: number;
-  y: number;
+  height: number;
 }
 
 export namespace Cylindrical {
-  export const create = (radius: number, theta: number, y: number): Cylindrical => ({ radius, theta, y });
+  export const create = (radius: number, theta: number, y: number): Cylindrical => ({ radius, theta, height: y });
   export const empty = (): Cylindrical => create(0, 0, 0);
 
   export const set = (self: Cylindrical, radius: number, theta: number, y: number): Cylindrical => {
     self.radius = radius;
     self.theta = theta;
-    self.y = y;
+    self.height = y;
 
     return self;
   };
-  export const fill_ = (self: Cylindrical, { radius, theta, y }: Const<Cylindrical>): Cylindrical =>
-    set(self, radius, theta, y);
+  export const fill_ = (self: Cylindrical, { radius, theta, height }: Const<Cylindrical>): Cylindrical =>
+    set(self, radius, theta, height);
 
   export const clone = (from: Const<Cylindrical>): Cylindrical => clone_(from, empty());
   export const clone_ = (from: Const<Cylindrical>, into: Cylindrical): Cylindrical => fill_(into, from);

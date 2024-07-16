@@ -66,7 +66,7 @@ export class Vec2 implements IVec2 {
     return this.set(attribute.getX(index), attribute.getY(index));
   }
 
-  intoAttribute(attribute: Attribute, index: number): this {
+  fillAttribute(attribute: Attribute, index: number): this {
     attribute.setXY(index, this.x, this.y);
     return this;
   }
@@ -262,6 +262,9 @@ export class Vec2 implements IVec2 {
     const { x, y } = this;
 
     return this.set(e[0] * x + e[3] * y + e[6], e[1] * x + e[4] * y + e[7]);
+  }
+  applyNMat3(mat: Const<Matrix3>): this {
+    return this.applyMat3(mat).normalize();
   }
 
   lerp(from: Const<IVec2>, to: Const<IVec2>, step: number): this {

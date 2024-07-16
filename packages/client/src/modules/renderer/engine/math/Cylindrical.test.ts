@@ -5,13 +5,13 @@ import { Cylindrical } from './Cylindrical.js';
 describe('Math - Cylindrical', () => {
   it('Instancing', () => {
     const cylindrical = Cylindrical.empty();
-    expect(cylindrical).toEqual({ radius: 0, theta: 0, y: 0 });
+    expect(cylindrical).toEqual({ radius: 0, theta: 0, height: 0 });
 
     const radius = 10.0;
     const theta = Math.PI;
-    const y = 5;
-    expect(Cylindrical.set(cylindrical, radius, theta, y)).toBe(cylindrical);
-    expect(cylindrical).toEqual({ radius, theta, y });
+    const height = 5;
+    expect(Cylindrical.set(cylindrical, radius, theta, height)).toBe(cylindrical);
+    expect(cylindrical).toEqual({ radius, theta, height });
 
     const cloned = Cylindrical.clone(cylindrical);
     expect(cloned).not.toBe(cylindrical);
@@ -25,11 +25,11 @@ describe('Math - Cylindrical', () => {
     const expected = Cylindrical.create(Math.sqrt(9 + 9), Math.atan2(3, -3), -1);
 
     expect(Cylindrical.fillCartesian(a, b)).toBe(a);
-    expect(a).toEqual({ radius: 0, theta: 0, y: 0 });
+    expect(a).toEqual({ radius: 0, theta: 0, height: 0 });
 
     expect(Cylindrical.fillCartesian(a, c)).toBe(a);
     expect(a.radius).closeTo(expected.radius, Number.EPSILON);
     expect(a.theta).closeTo(expected.theta, Number.EPSILON);
-    expect(a.y).closeTo(expected.y, Number.EPSILON);
+    expect(a.height).closeTo(expected.height, Number.EPSILON);
   });
 });

@@ -119,7 +119,7 @@ const ui = UI.create('Selection')
   .text('Selected count:', () => selection.collection.length)
   .text('Mouse start (x, y):', () => formatVec(selection.start))
   .text('Mouse end (x, y):', () => formatVec(selection.end))
-  .action('Log selection', () => console.log(selection.collection))
+  .action('Log selection', () => console.info(selection.collection))
   .action('Clear selection', () => {
     for (const object of selection.collection) {
       (object.material as MeshLambertMaterial).emissive.set(0x000000);

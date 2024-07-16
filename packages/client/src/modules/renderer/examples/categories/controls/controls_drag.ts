@@ -65,7 +65,6 @@ const useDragControls = () => {
   //   raycaster.setFromCamera(mouse, camera);
   //
   //   const intersections = raycaster.intersects(objects, true);
-  //   console.log({ objects, intersections });
   //
   //   // if (intersections.length > 0) {
   //   //   const object = intersections[0].object;
