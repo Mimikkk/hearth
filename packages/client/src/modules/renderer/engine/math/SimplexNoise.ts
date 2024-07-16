@@ -129,7 +129,7 @@ export class SimplexNoise {
     for (let i = 0; i < 512; i++) this.permutationTable[i] = this.noiseTable[i & 255];
   }
 
-  static create(random: RandomFn): SimplexNoise {
+  static new(random: RandomFn): SimplexNoise {
     return new SimplexNoise(random);
   }
 
