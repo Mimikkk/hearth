@@ -14,7 +14,7 @@ export interface Euler {
 type Mat4x4 = number[];
 
 const _matrix = new Matrix4();
-const _quaternion = Quaternion.identity();
+const _quaternion: Quaternion = { x: 0, y: 0, z: 0, w: 1 };
 export namespace Euler {
   export const create = (x: number, y: number, z: number, order: Order = 'XYZ'): Euler => ({ x, y, z, order });
   export const euler = create;
@@ -165,4 +165,5 @@ export namespace Euler {
 
   export const orders: Order[] = ['XYZ', 'YXZ', 'ZXY', 'ZYX', 'YZX', 'XZY'];
 }
+
 export type EulerOrder = Euler.Order;
