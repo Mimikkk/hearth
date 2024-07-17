@@ -1,5 +1,5 @@
 import { Matrix3 } from './Matrix3.js';
-import { IVec3, Vector3 } from './Vector3.js';
+import { IVec3, Vec3, Vector3 } from './Vector3.js';
 import { Sphere_ } from './Sphere.js';
 import { Line3 } from './Line3.js';
 import { Box3, Box3_ } from './Box3.js';
@@ -159,13 +159,13 @@ export class Plane {
 Plane.prototype.isPlane = true;
 
 export interface Plane_ {
-  normal: IVec3;
+  normal: Vec3;
   constant: number;
 }
 
 export namespace Plane_ {
   export const create = (normalX: number, normalY: number, normalZ: number, constant: number): Plane_ => ({
-    normal: IVec3.create(normalX, normalY, normalZ),
+    normal: Vec3.new(normalX, normalY, normalZ),
     constant,
   });
   export const empty = (): Plane_ => create(0, 0, 0, 0);

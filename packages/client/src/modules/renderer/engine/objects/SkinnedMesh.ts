@@ -116,7 +116,7 @@ export class SkinnedMesh extends Mesh {
     // convert ray to local space of skinned mesh
 
     _inverseMatrix.copy(matrixWorld).invert();
-    _ray.copy(raycaster.ray).applyMatrix4(_inverseMatrix);
+    _ray.copy(raycaster.ray).applyMat4(_inverseMatrix);
 
     // test with bounding box in local space
 

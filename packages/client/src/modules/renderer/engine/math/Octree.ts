@@ -21,8 +21,8 @@ const _v2 = new Vector3();
 const _point1 = new Vector3();
 const _point2 = new Vector3();
 const _plane = Plane_.empty();
-const _line1 = Line3.empty();
-const _line2 = Line3.empty();
+const _line1 = Line3.new();
+const _line2 = Line3.new();
 const _sphere = Sphere_.empty();
 const _capsule = Capsule.empty();
 
@@ -201,7 +201,7 @@ export class Octree {
 
     const r2 = capsule.radius * capsule.radius;
 
-    Line3.fillEnds(_line1, capsule.start, capsule.end);
+    _line1.set(capsule.start, capsule.end);
 
     const lines = [
       [triangle.a, triangle.b],
@@ -210,7 +210,7 @@ export class Octree {
     ];
 
     for (let i = 0; i < lines.length; i++) {
-      Line3.fillEnds(_line2, lines[i][0], lines[i][1]);
+      _line2.set(lines[i][0], lines[i][1]);
 
       lineToLineClosestPoints(_line1, _line2, _point1, _point2);
 
@@ -250,8 +250,8 @@ export class Octree {
     ];
 
     for (let i = 0; i < lines.length; i++) {
-      Line3.fillEnds(_line1, lines[i][0], lines[i][1]);
-      Line3.closestTo_(_line1, plainPoint, _v2);
+      _line1.set(lines[i][0], lines[i][1]);
+      _line1.closestTo(plainPoint, _v2);
 
       const distance = IVec3.distanceSqTo(_v2, sphere.center);
 
@@ -364,13 +364,14 @@ export class Octree {
 
     for (let i = 0; i < triangles.length; i++) {
       const result = ray.intersectTriangle(triangles[i].a, triangles[i].b, triangles[i].c, true, _v1);
-
       if (!result) continue;
-      const newdistance = result.sub(ray.origin).length();
-      if (distance <= newdistance) continue;
 
-      position = result.clone().add(ray.origin);
-      distance = newdistance;
+      const newDistance = result.sub(ray.origin).length();
+      if (distance <= newDistance) continue;
+
+      result.add(ray.origin);
+      position.set(result.x, result.y, result.z);
+      distance = newDistance;
       triangle = triangles[i];
     }
 

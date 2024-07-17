@@ -1,20 +1,20 @@
-import { IVec3 } from './Vector3.js';
+import { IVec3, Vec3 } from './Vector3.js';
 import { Box3_ } from '@modules/renderer/engine/math/Box3.js';
 import { Plane_ } from '@modules/renderer/engine/math/Plane.js';
 import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
 import { Const } from '@modules/renderer/engine/math/types.js';
 
 export interface Triangle {
-  a: IVec3;
-  b: IVec3;
-  c: IVec3;
+  a: Vec3;
+  b: Vec3;
+  c: Vec3;
 }
 
 export namespace Triangle {
-  export const create = (a: IVec3, b: IVec3, c: IVec3): Triangle => ({ a, b, c });
-  export const empty = (): Triangle => ({ a: IVec3.empty(), b: IVec3.empty(), c: IVec3.empty() });
+  export const create = (a: Vec3 = Vec3.new(), b: Vec3 = Vec3.new(), c: Vec3 = Vec3.new()): Triangle => ({ a, b, c });
+  export const empty = (): Triangle => create();
 
-  export const set = (self: Triangle, a: Const<IVec3>, b: Const<IVec3>, c: Const<IVec3>): Triangle => {
+  export const set = (self: Triangle, a: Const<Vec3>, b: Const<Vec3>, c: Const<Vec3>): Triangle => {
     IVec3.fill(self.a, a);
     IVec3.fill(self.b, b);
     IVec3.fill(self.c, c);
@@ -22,10 +22,10 @@ export namespace Triangle {
   };
   export const fill_ = (self: Triangle, { a, b, c }: Const<Triangle>): Triangle => set(self, a, b, c);
 
-  export const fromPointsAndIndices = (points: Const<IVec3>[], i0: number, i1: number, i2: number): Triangle =>
+  export const fromPointsAndIndices = (points: Const<Vec3>[], i0: number, i1: number, i2: number): Triangle =>
     fromPointsAndIndices_(points, i0, i1, i2, empty());
   export const fromPointsAndIndices_ = (
-    points: Const<IVec3>[],
+    points: Const<Vec3>[],
     i0: number,
     i1: number,
     i2: number,
@@ -33,7 +33,7 @@ export namespace Triangle {
   ): Triangle => set(into, points[i0], points[i1], points[i2]);
   export const fillPointsAndIndices = (
     self: Triangle,
-    points: Const<IVec3>[],
+    points: Const<Vec3>[],
     i0: number,
     i1: number,
     i2: number,
@@ -77,9 +77,9 @@ export namespace Triangle {
   };
 
   export const equals = (a: Const<Triangle>, b: Const<Triangle>): boolean =>
-    IVec3.equals(a.a, b.a) && IVec3.equals(a.b, b.b) && IVec3.equals(a.c, b.c);
+    a.a.equals(b.a) && a.b.equals(b.b) && a.c.equals(b.c);
 
-  const _vec = IVec3.empty();
+  const _vec = Vec3.empty();
   export const normal = (self: Const<Triangle>): IVec3 => normal_(self, IVec3.empty());
   export const normal_ = ({ a, b, c }: Const<Triangle>, into: IVec3): IVec3 => {
     IVec3.sub_(c, b, into);

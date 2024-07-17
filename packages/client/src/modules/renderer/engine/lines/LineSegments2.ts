@@ -15,21 +15,21 @@ import { LineSegmentsGeometry } from './LineSegmentsGeometry.js';
 import { LineMaterial } from './LineMaterial.js';
 import { Intersection } from '@modules/renderer/engine/core/Raycaster.js';
 import { Line3 } from '@modules/renderer/engine/math/Line3.js';
-import { IVec3 } from '@modules/renderer/engine/math/Vector3.js';
+import { Vec3 } from '@modules/renderer/engine/math/Vector3.js';
 import { Sphere_ } from '@modules/renderer/engine/math/Sphere.js';
 import { Box3_ } from '@modules/renderer/engine/math/Box3.js';
 
-const _start = new Vector3();
-const _end = new Vector3();
+const _start = Vec3.new();
+const _end = Vec3.new();
 
 const _start4 = new Vector4();
 const _end4 = new Vector4();
 
 const _ssOrigin = new Vector4();
-const _ssOrigin3 = new Vector3();
+const _ssOrigin3 = Vec3.new();
 const _mvMatrix = new Matrix4();
-const _line = Line3.empty();
-const _closestPoint = new Vector3();
+const _line = Line3.new();
+const _closestPoint = Vec3.new();
 
 const _box = Box3_.empty();
 const _sphere = Sphere_.empty();
@@ -65,9 +65,9 @@ function raycastWorldUnits(lineSegments: LineSegments, intersects: Intersection[
   const segmentCount = Math.min(geometry.instanceCount, instanceStart.count);
 
   for (let i = 0, l = segmentCount; i < l; i++) {
-    IVec3.fromAttribute_(instanceStart, i, _line.start);
-    IVec3.fromAttribute_(instanceEnd, i, _line.end);
-    Line3.applyMat4(_line, matrixWorld);
+    _line.start.fromAttribute(instanceStart, i);
+    _line.end.fromAttribute(instanceEnd, i);
+    _line.applyMat4(matrixWorld);
 
     const pointOnLine = new Vector3();
     const point = new Vector3();
@@ -106,10 +106,10 @@ function raycastScreenSpace(lineSegments: LineSegments, camera: Camera, intersec
   // pick a point 1 unit out along the ray to avoid the ray origin
   // sitting at the camera origin which will cause "w" to be 0 when
   // applying the projection matrix.
-  _ray.at(1, _ssOrigin);
+  _ray.at(1, _ssOrigin3);
 
-  // ndc space [ - 1.0, 1.0 ]
-  _ssOrigin.w = 1;
+  _ssOrigin.set(_ssOrigin3.x, _ssOrigin3.y, _ssOrigin3.z, 1);
+
   _ssOrigin.applyMatrix4(camera.matrixWorldInverse);
   _ssOrigin.applyMatrix4(projectionMatrix);
   _ssOrigin.multiplyScalar(1 / _ssOrigin.w);
@@ -119,7 +119,7 @@ function raycastScreenSpace(lineSegments: LineSegments, camera: Camera, intersec
   _ssOrigin.y *= resolution.y / 2;
   _ssOrigin.z = 0;
 
-  _ssOrigin3.copy(_ssOrigin);
+  _ssOrigin3.from(_ssOrigin);
 
   _mvMatrix.multiplyMatrices(camera.matrixWorldInverse, matrixWorld);
 
@@ -167,14 +167,12 @@ function raycastScreenSpace(lineSegments: LineSegments, camera: Camera, intersec
     _end4.y *= resolution.y / 2;
 
     // create 2d segment
-    IVec3.set(_line.start, _start4.x, _start4.y, 0);
-    _line.start.z = 0;
-
-    IVec3.set(_line.end, _end4.x, _end4.y, 0);
+    _line.start.set(_start4.x, _start4.y, 0);
+    _line.end.set(_end4.x, _end4.y, 0);
 
     // get closest point on ray to segment
-    const param = Line3.closestAt(_line, _ssOrigin3);
-    Line3.at_(_line, param, _closestPoint);
+    const param = _line.closestAt(_ssOrigin3);
+    _line.at(param, _closestPoint);
 
     // check if the intersection point is within clip space
     const zPos = MathUtils.lerp(_start4.z, _end4.z, param);
@@ -183,10 +181,9 @@ function raycastScreenSpace(lineSegments: LineSegments, camera: Camera, intersec
     const isInside = _ssOrigin3.distanceTo(_closestPoint) < _lineWidth * 0.5;
 
     if (isInClipSpace && isInside) {
-      IVec3.fromAttribute_(instanceStart, i, _line.start);
-      IVec3.fromAttribute_(instanceEnd, i, _line.end);
-      IVec3.applyMat4(_line.start, matrixWorld);
-      IVec3.applyMat4(_line.end, matrixWorld);
+      _line.start.fromAttribute(instanceStart, i);
+      _line.end.fromAttribute(instanceEnd, i);
+      _line.applyMat4(matrixWorld);
 
       const pointOnLine = new Vector3();
       const point = new Vector3();
@@ -223,8 +220,8 @@ export class LineSegments2 extends Mesh {
     const lineDistances = new Float32Array(2 * instanceStart.count);
 
     for (let i = 0, j = 0, l = instanceStart.count; i < l; i++, j += 2) {
-      _start.fromBufferAttribute(instanceStart, i);
-      _end.fromBufferAttribute(instanceEnd, i);
+      _start.fromAttribute(instanceStart, i);
+      _end.fromAttribute(instanceEnd, i);
 
       lineDistances[j] = j === 0 ? 0 : lineDistances[j - 1];
       lineDistances[j + 1] = lineDistances[j] + _start.distanceTo(_end);

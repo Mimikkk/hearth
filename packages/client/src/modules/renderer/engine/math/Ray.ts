@@ -1,93 +1,91 @@
-import { IVec3, Vector3 } from './Vector3.js';
+import { Vec3 } from './Vector3.js';
 import type { Sphere_ } from './Sphere.js';
 import { Plane_ } from './Plane.js';
 import type { Box3 } from './Box3.js';
 import type { Matrix4 } from './Matrix4.js';
 
-const _vec1 = IVec3.empty();
-const _vec2 = IVec3.empty();
+const _vec1 = Vec3.new();
+const _vec2 = Vec3.new();
+
 export class Ray {
   declare ['constructor']: typeof Ray;
 
   constructor(
-    public origin: Vector3 = new Vector3(),
-    public direction: Vector3 = new Vector3(0, 0, -1),
+    public origin: Vec3 = Vec3.new(),
+    public direction: Vec3 = Vec3.new(0, 0, -1),
   ) {}
 
-  set(origin: Vector3, direction: Vector3): this {
-    this.origin.copy(origin);
-    this.direction.copy(direction);
-
+  set(origin: Vec3, direction: Vec3): this {
+    this.origin.from(origin);
+    this.direction.from(direction);
     return this;
   }
 
   copy(ray: Ray): this {
-    this.origin.copy(ray.origin);
-    this.direction.copy(ray.direction);
+    this.origin.from(ray.origin);
+    this.direction.from(ray.direction);
 
     return this;
   }
 
-  at(t: number, target: Vector3): Vector3 {
-    return target.copy(this.origin).addScaledVector(this.direction, t);
+  at(t: number, into: Vec3 = Vec3.new()): Vec3 {
+    return into.from(this.origin).addScaled(this.direction, t);
   }
 
-  lookAt(v: Vector3): this {
-    this.direction.copy(v).sub(this.origin).normalize();
+  lookAt(v: Vec3): this {
+    this.direction.from(v).sub(this.origin).normalize();
 
     return this;
   }
 
   recast(t: number): this {
-    this.origin.copy(this.at(t, new Vector3(0, 0, 0)));
+    this.origin.from(this.at(t));
 
     return this;
   }
 
-  closestPointToPoint(point: Vector3, target: Vector3): Vector3 {
-    target.subVectors(point, this.origin);
+  closestAt(point: Vec3, into: Vec3): Vec3 {
+    into.from(point).sub(this.origin);
 
-    const directionDistance = target.dot(this.direction);
+    const directionDistance = into.dot(this.direction);
 
-    if (directionDistance < 0) {
-      return target.copy(this.origin);
-    }
-
-    return target.copy(this.origin).addScaledVector(this.direction, directionDistance);
+    into.from(this.origin);
+    if (directionDistance < 0) return into;
+    return into.addScaled(this.direction, directionDistance);
   }
 
-  distanceToPoint(point: Vector3): number {
-    return Math.sqrt(this.distanceSqToPoint(point));
+  distanceTo(point: Vec3): number {
+    return Math.sqrt(this.distanceSqTo(point));
   }
 
-  distanceSqToPoint(point: IVec3): number {
-    IVec3.sub_(point, this.origin, _vec1);
-
-    const directionDistance = IVec3.dot(_vec1, this.direction);
+  distanceSqTo(point: Vec3): number {
+    _vec1.from(point).sub(this.origin);
+    const direction = _vec1.dot(this.direction);
 
     // point behind the ray
+    if (direction < 0) return this.origin.distanceSqTo(point);
 
-    if (directionDistance < 0) {
-      return IVec3.distanceSqTo(this.origin, point);
-    }
-
-    IVec3.addScaled_(this.origin, this.direction, directionDistance, _vec2);
-    return IVec3.distanceSqTo(_vec2, point);
+    _vec2.from(this.origin).addScaled(this.direction, direction);
+    return _vec2.distanceSqTo(point);
   }
 
-  distanceSqToSegment(v0: IVec3, v1: IVec3, optionalPointOnRay?: Vector3, optionalPointOnSegment?: Vector3): number {
-    const _segCenter = new Vector3().copy(v0).add(v1).multiplyScalar(0.5);
-    const _segDir = new Vector3().copy(v1).sub(v0).normalize();
-    const _diff = new Vector3().copy(this.origin).sub(_segCenter);
+  distanceToSegment(v0: Vec3, v1: Vec3, rayPoint?: Vec3, segmentPoint?: Vec3): number {
+    return Math.sqrt(this.distanceSqToSegment(v0, v1, rayPoint, segmentPoint));
+  }
 
-    const segExtent = IVec3.distanceTo(v0, v1) * 0.5;
+  distanceSqToSegment(v0: Vec3, v1: Vec3, rayPoint?: Vec3, segmentPoint?: Vec3): number {
+    const _segCenter = _v0.from(v0).add(v1).scale(0.5);
+    const _segDir = _v1.from(v1).sub(v0).normalize();
+    const _diff = _v2.from(this.origin).sub(_segCenter);
+
+    const segExtent = v0.distanceTo(v1) * 0.5;
     const a01 = -this.direction.dot(_segDir);
     const b0 = _diff.dot(this.direction);
     const b1 = -_diff.dot(_segDir);
     const c = _diff.lengthSq();
     const det = Math.abs(1 - a01 * a01);
-    let s0, s1, sqrDist, extDet;
 
+    let s0, s1, sqrDist, extDet;
     if (det > 0) {
       // The ray and segment are not parallel.
 
@@ -148,19 +146,18 @@ export class Ray {
       sqrDist = -s0 * s0 + s1 * (s1 + 2 * b1) + c;
     }
 
-    if (optionalPointOnRay) {
-      optionalPointOnRay.copy(this.origin).addScaledVector(this.direction, s0);
+    if (rayPoint) {
+      rayPoint.from(this.origin).addScaled(this.direction, s0);
     }
-
-    if (optionalPointOnSegment) {
-      optionalPointOnSegment.copy(_segCenter).addScaledVector(_segDir, s1);
+    if (segmentPoint) {
+      segmentPoint.from(_segCenter).addScaled(_segDir, s1);
     }
 
     return sqrDist;
   }
 
-  intersectSphere(sphere: Sphere_, target: Vector3): Vector3 | null {
-    const _vector = new Vector3().subVectors(sphere.center, this.origin);
+  intersectSphere(sphere: Sphere_, target: Vec3): Vec3 | null {
+    const _vector = _v0.from(sphere.center).sub(this.origin);
     const tca = _vector.dot(this.direction);
     const d2 = _vector.dot(_vector) - tca * tca;
     const radius2 = sphere.radius * sphere.radius;
@@ -188,11 +185,11 @@ export class Ray {
   }
 
   intersectsSphere(sphere: Sphere_): boolean {
-    return this.distanceSqToPoint(sphere.center) <= sphere.radius * sphere.radius;
+    return this.distanceSqTo(sphere.center) <= sphere.radius * sphere.radius;
   }
 
   distanceToPlane(plane: Plane_): number | null {
-    const denominator = IVec3.dot(plane.normal, this.direction);
+    const denominator = plane.normal.dot(this.direction);
 
     if (denominator === 0) {
       // line is coplanar, return origin
@@ -212,7 +209,7 @@ export class Ray {
     return t >= 0 ? t : null;
   }
 
-  intersectPlane(plane: Plane_, target: Vector3): Vector3 | null {
+  intersectPlane(plane: Plane_, target: Vec3): Vec3 | null {
     const t = this.distanceToPlane(plane);
 
     if (t === null) {
@@ -224,25 +221,19 @@ export class Ray {
 
   intersectsPlane(plane: Plane_) {
     // check if the ray lies on the plane first
+    const distance = Plane_.distanceToVec(plane, this.origin);
 
-    const distToPoint = Plane_.distanceToVec(plane, this.origin);
+    if (distance === 0) return true;
 
-    if (distToPoint === 0) {
-      return true;
-    }
+    const denominator = plane.normal.dot(this.direction);
 
-    const denominator = IVec3.dot(plane.normal, this.direction);
-
-    if (denominator * distToPoint < 0) {
-      return true;
-    }
+    if (denominator * distance < 0) return true;
 
     // ray origin is behind the plane (and is pointing behind it)
-
     return false;
   }
 
-  intersectBox(box: Box3, target: Vector3): Vector3 | null {
+  intersectBox(box: Box3, target: Vec3): Vec3 | null {
     let tmin, tmax, tymin, tymax, tzmin, tzmax;
 
     const invdirx = 1 / this.direction.x,
@@ -295,17 +286,13 @@ export class Ray {
   }
 
   intersectsBox(box: Box3): boolean {
-    return this.intersectBox(box, new Vector3(0, 0, 0)) !== null;
+    return this.intersectBox(box, Vec3.new(0, 0, 0)) !== null;
   }
 
-  intersectTriangle(a: IVec3, b: IVec3, c: IVec3, backfaceCulling: boolean, target: Vector3): Vector3 | null {
-    // Compute the offset origin, edges, and normal.
-
-    // from https://github.com/pmjoniak/GeometricTools/blob/master/GTEngine/Include/Mathematics/GteIntrRay3Triangle3.h
-
-    const _edge1 = new Vector3().subVectors(b, a);
-    const _edge2 = new Vector3().subVectors(c, a);
-    const _normal = new Vector3().crossVectors(_edge1, _edge2);
+  intersectTriangle(a: Vec3, b: Vec3, c: Vec3, backfaceCulling: boolean, target: Vec3): Vec3 | null {
+    const _edge1 = _v0.from(b).sub(a);
+    const _edge2 = _v1.from(c).sub(a);
+    const _normal = _v2.from(_edge1).cross(_edge2);
 
     // Solve Q + t*D = b1*E1 + b2*E2 (Q = kDiff, D = ray direction,
     // E1 = kEdge1, E2 = kEdge2, N = Cross(E1,E2)) by
@@ -325,40 +312,33 @@ export class Ray {
       return null;
     }
 
-    const _diff = new Vector3().subVectors(this.origin, a);
-    const DdQxE2 = sign * this.direction.dot(_edge2.crossVectors(_diff, _edge2));
+    const _diff = _v3.from(this.origin).sub(a);
+    const _x = _v4.from(_diff).cross(_edge2);
+    const DdQxE2 = sign * this.direction.dot(_x);
 
     // b1 < 0, no intersection
-    if (DdQxE2 < 0) {
-      return null;
-    }
+    if (DdQxE2 < 0) return null;
 
     const DdE1xQ = sign * this.direction.dot(_edge1.cross(_diff));
 
     // b2 < 0, no intersection
-    if (DdE1xQ < 0) {
-      return null;
-    }
+    if (DdE1xQ < 0) return null;
 
     // b1+b2 > 1, no intersection
-    if (DdQxE2 + DdE1xQ > DdN) {
-      return null;
-    }
+    if (DdQxE2 + DdE1xQ > DdN) return null;
 
     // Line intersects triangle, check if ray does.
     const QdN = -sign * _diff.dot(_normal);
 
     // t < 0, no intersection
-    if (QdN < 0) {
-      return null;
-    }
+    if (QdN < 0) return null;
 
     // Ray intersects triangle.
     return this.at(QdN / DdN, target);
   }
 
-  applyMatrix4(matrix4: Matrix4): this {
-    this.origin.applyMatrix4(matrix4);
+  applyMat4(matrix4: Matrix4): this {
+    this.origin.applyMat4(matrix4);
     this.direction.transformDirection(matrix4);
 
     return this;
@@ -372,3 +352,9 @@ export class Ray {
     return new this.constructor().copy(this);
   }
 }
+
+const _v0 = Vec3.new();
+const _v1 = Vec3.new();
+const _v2 = Vec3.new();
+const _v3 = Vec3.new();
+const _v4 = Vec3.new();
