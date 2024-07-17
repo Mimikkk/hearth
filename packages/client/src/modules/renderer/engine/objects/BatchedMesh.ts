@@ -248,12 +248,12 @@ export class BatchedMesh extends Mesh {
     const boundingBox = this.boundingBox;
     const active = this._active;
 
-    boundingBox.makeEmpty();
+    boundingBox.clear();
     for (let i = 0; i < geometryCount; i++) {
       if (active[i] === false) continue;
 
       this.getMatrixAt(i, _matrix);
-      this.getBoundingBoxAt(i, _box)!.applyMatrix4(_matrix);
+      this.getBoundingBoxAt(i, _box)!.applyMat4(_matrix);
       boundingBox.union(_box);
     }
   }
@@ -267,12 +267,12 @@ export class BatchedMesh extends Mesh {
     const boundingSphere = this.boundingSphere;
     const active = this._active;
 
-    boundingSphere.makeEmpty();
+    boundingSphere.clear();
     for (let i = 0; i < geometryCount; i++) {
       if (active[i] === false) continue;
 
       this.getMatrixAt(i, _matrix);
-      this.getBoundingSphereAt(i, _sphere)!.applyMatrix4(_matrix);
+      this.getBoundingSphereAt(i, _sphere)!.applyMat4(_matrix);
       boundingSphere.union(_sphere);
     }
   }
@@ -448,7 +448,7 @@ export class BatchedMesh extends Mesh {
     // store the bounding boxes
     const bound = this._bounds[id];
     if (geometry.boundingBox !== null) {
-      bound.box.copy(geometry.boundingBox);
+      bound.box.from(geometry.boundingBox);
       bound.boxInitialized = true;
     } else {
       bound.boxInitialized = false;
@@ -496,7 +496,7 @@ export class BatchedMesh extends Mesh {
     const box = bound.box;
     const geometry = this.geometry;
     if (bound.boxInitialized === false) {
-      box.makeEmpty();
+      box.clear();
 
       const index = geometry.index;
       const position = geometry.attributes.position;
@@ -507,13 +507,13 @@ export class BatchedMesh extends Mesh {
           iv = index.getX(iv);
         }
 
-        box.expandByPoint(_vector.fromBufferAttribute(position, iv));
+        box.expandCoord(_vector.fromBufferAttribute(position, iv));
       }
 
       bound.boxInitialized = true;
     }
 
-    target.copy(box);
+    target.from(box);
     return target;
   }
 
@@ -529,10 +529,10 @@ export class BatchedMesh extends Mesh {
     const sphere = bound.sphere;
     const geometry = this.geometry;
     if (bound.sphereInitialized === false) {
-      sphere.makeEmpty();
+      sphere.clear();
 
       this.getBoundingBoxAt(id, _box);
-      _box.getCenter(sphere.center);
+      _box.center(sphere.center);
 
       const index = geometry.index;
       const position = geometry.attributes.position;
@@ -755,7 +755,7 @@ export class BatchedMesh extends Mesh {
         if (visibility[i] && active[i]) {
           // get the bounds in world space
           this.getMatrixAt(i, _matrix);
-          this.getBoundingSphereAt(i, _sphere)!.applyMatrix4(_matrix);
+          this.getBoundingSphereAt(i, _sphere)!.applyMat4(_matrix);
 
           // determine whether the batched geometry is within the frustum
           let culled = false;
@@ -796,7 +796,7 @@ export class BatchedMesh extends Mesh {
           if (perObjectFrustumCulled) {
             // get the bounds in world space
             this.getMatrixAt(i, _matrix);
-            this.getBoundingSphereAt(i, _sphere)!.applyMatrix4(_matrix);
+            this.getBoundingSphereAt(i, _sphere)!.applyMat4(_matrix);
             culled = !Frustum.intersectsSphere(_frustum, _sphere);
           }
 

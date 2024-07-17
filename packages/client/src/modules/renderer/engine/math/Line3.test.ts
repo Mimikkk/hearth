@@ -1,8 +1,6 @@
-/* global QUnit */
-
 import { describe, expect, it } from 'vitest';
 import { Line3 } from './Line3.ts';
-import { IVec3, Vector3 } from '@modules/renderer/engine/math/Vector3.js';
+import { IVec3, Vec3, Vector3 } from '@modules/renderer/engine/math/Vector3.js';
 import { clamp } from './MathUtils.ts';
 import { Vec4, Vector4 } from '@modules/renderer/engine/math/Vector4.js';
 import { Matrix4 } from '@modules/renderer/engine/math/Matrix4.js';
@@ -12,7 +10,7 @@ describe('Math - Line3', () => {
     let line = Line3.empty();
     expect(line).toEqual({ start: { x: 0, y: 0, z: 0 }, end: { x: 0, y: 0, z: 0 } });
 
-    line = Line3.create(1, 2, 3, 4, 5, 6);
+    line = Line3.fromParams(1, 2, 3, 4, 5, 6);
     expect(line).toEqual({ start: { x: 1, y: 2, z: 3 }, end: { x: 4, y: 5, z: 6 } });
 
     const clone = Line3.clone(line);
@@ -21,86 +19,78 @@ describe('Math - Line3', () => {
     expect(clone.end).not.toBe(line.end);
     expect(clone).toEqual({ start: { x: 1, y: 2, z: 3 }, end: { x: 4, y: 5, z: 6 } });
 
-    const copy = Line3.copy(line);
-    expect(copy).not.toBe(line);
-    expect(copy.start).toBe(line.start);
-    expect(copy.end).toBe(line.end);
-
-    Line3.set(line, 7, 8, 9, 10, 11, 12);
+    line.setParams(7, 8, 9, 10, 11, 12);
     expect(line).toEqual({ start: { x: 7, y: 8, z: 9 }, end: { x: 10, y: 11, z: 12 } });
-    expect(copy).toEqual(line);
-
-    expect(Line3.equals(line, copy)).toBe(true);
-    expect(Line3.equals(line, clone)).toBe(false);
+    expect(line.equals(clone)).toBe(false);
   });
 
   it.only('center', () => {
-    const line = Line3.create(0, 0, 0, 2, 2, 2);
-    const center = Line3.center(line);
+    const line = Line3.fromParams(0, 0, 0, 2, 2, 2);
+    const center = line.center();
 
     expect(center).toEqual({ x: 1, y: 1, z: 1 });
   });
 
   it.only('delta', () => {
-    const line = Line3.create(0, 0, 0, 2, 2, 2);
-    const delta = Line3.delta(line);
+    const line = Line3.fromParams(0, 0, 0, 2, 2, 2);
+    const delta = line.delta();
 
     expect(delta).toEqual({ x: 2, y: 2, z: 2 });
   });
 
   it.only('distance/distanceSq', () => {
-    const line = Line3.create(0, 0, 0, 3, 3, 3);
-    const distanceSq = Line3.distanceSq(line);
-    const distance = Line3.distance(line);
+    const line = Line3.fromParams(0, 0, 0, 3, 3, 3);
+    const distanceSq = line.distanceSq();
+    const distance = line.distance();
     expect(distance).toBe(Math.sqrt(27));
     expect(distanceSq).toBe(27);
   });
 
   it.only('at', () => {
-    const line = Line3.create(0, 0, 1, 0, 0, 2);
-    const point = IVec3.empty();
+    const line = Line3.fromParams(0, 0, 1, 0, 0, 2);
+    const vec = Vec3.new();
 
-    Line3.at_(line, -1, point);
-    expect(IVec3.distanceTo(point, IVec3.create(0, 0, 1))).toBe(0);
+    line.at(-1, vec);
+    expect(IVec3.distanceTo(vec, Vec3.new(0, 0, 0))).toBe(0);
 
-    Line3.at_(line, 0, point);
-    expect(IVec3.distanceTo(point, IVec3.create(0, 0, 1))).toBe(0);
-    Line3.at_(line, 0.5, point);
-    expect(IVec3.distanceTo(point, IVec3.create(0, 0, 1.5))).toBe(0);
-    Line3.at_(line, 1, point);
-    expect(IVec3.distanceTo(point, IVec3.create(0, 0, 2))).toBe(0);
+    line.at(0, vec);
+    expect(IVec3.distanceTo(vec, Vec3.new(0, 0, 1))).toBe(0);
+    line.at(0.5, vec);
+    expect(IVec3.distanceTo(vec, Vec3.new(0, 0, 1.5))).toBe(0);
+    line.at(1, vec);
+    expect(IVec3.distanceTo(vec, Vec3.new(0, 0, 2))).toBe(0);
 
-    Line3.at_(line, 2, point);
-    expect(IVec3.distanceTo(point, IVec3.create(0, 0, 2))).toBe(0);
+    line.at(2, vec);
+    expect(IVec3.distanceTo(vec, Vec3.new(0, 0, 3))).toBe(0);
   });
 
   it.only('closestAt/closestTo/at', () => {
-    const line = Line3.create(0, 0, 0, 0, 0, 1);
-    const point = IVec3.empty();
+    const line = Line3.fromParams(0, 0, 0, 0, 0, 1);
+    const point = Vec3.new();
 
     for (let i = -1; i <= 2; i += 0.05) {
       let step = clamp(i, 0, 1);
 
-      Line3.at_(line, i, point);
+      line.at(i, point);
 
-      expect(Line3.closestAt(line, point)).toBeCloseTo(step, 5);
-      expect(Line3.closestTo(line, point)).toEqual(IVec3.create(0, 0, step));
+      expect(line.closestAt(point)).toBeCloseTo(step, 5);
+      expect(line.closestTo(point)).toEqual(Vec3.new(0, 0, step));
     }
   });
 
   it.only('applyMat4', () => {
-    const line = Line3.create(0, 0, 0, 2, 2, 2);
+    const line = Line3.fromParams(0, 0, 0, 2, 2, 2);
     const vec4 = new Vector4(2, 2, 2, 1);
     const mat4 = new Matrix4().makeTranslation(2, 3, 4);
     const vec3 = new Vector3(2, 3, 4);
 
-    Line3.applyMat4(line, mat4);
+    line.applyMat4(mat4);
     expect(line).toEqual({ start: { x: 2, y: 3, z: 4 }, end: { x: 4, y: 5, z: 6 } });
 
-    Line3.set(line, 0, 0, 0, 2, 2, 2);
+    line.setParams(0, 0, 0, 2, 2, 2);
     mat4.makeRotationX(Math.PI);
 
-    Line3.applyMat4(line, mat4);
+    line.applyMat4(mat4);
     Vec4.applyMat4(vec4, mat4);
 
     expect(line).toEqual({
@@ -108,11 +98,11 @@ describe('Math - Line3', () => {
       end: { x: vec4.x / vec4.w, y: vec4.y / vec4.w, z: vec4.z / vec4.w },
     });
 
-    Line3.set(line, 0, 0, 0, 2, 2, 2);
+    line.setParams(0, 0, 0, 2, 2, 2);
     vec4.set(2, 2, 2, 1);
     mat4.setPosition(vec3);
 
-    Line3.applyMat4(line, mat4);
+    line.applyMat4(mat4);
     IVec3.applyMat4(vec4, mat4);
 
     expect(line).toEqual({

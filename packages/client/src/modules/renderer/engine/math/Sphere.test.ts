@@ -20,7 +20,7 @@ describe('Math - Sphere', () => {
     expect(a.center).toEqual(vec3(0, 0, 0));
     expect(a.radius).toBe(-1);
 
-    const b = Sphere_.create(1, 2, 3, 4);
+    const b = Sphere.fromParams(1, 2, 3, 4);
     expect(b.center).toEqual(vec3(1, 2, 3));
     expect(b.radius).toBe(4);
 
@@ -36,15 +36,15 @@ describe('Math - Sphere', () => {
   });
 
   it('is/equals', () => {
-    const a = Sphere_.create(1, 2, 3, 4);
-    const b = Sphere_.create(1, 2, 3, 4);
-    const c = Sphere_.create(1, 2, 3, 5);
+    const a = Sphere.fromParams(1, 2, 3, 4);
+    const b = Sphere.fromParams(1, 2, 3, 4);
+    const c = Sphere.fromParams(1, 2, 3, 5);
     const vec = vec3(0, 0, 0);
 
     expect(Sphere_.is(a)).toBe(true);
     expect(Sphere_.is(vec)).toBe(false);
-    expect(Sphere_.equals(a, b)).toBe(true);
-    expect(Sphere_.equals(a, c)).toBe(false);
+    expect(a.equals(b)).toBe(true);
+    expect(a.equals(c)).toBe(false);
   });
 
   it('fromVecs', () => {
@@ -71,166 +71,164 @@ describe('Math - Sphere', () => {
       vec3(-0, -1, -0),
     ];
 
-    const result = Sphere_.fromVecs(points);
-    const expected = Sphere_.create(0.9330126941204071, 0, 0, 1.3676668773461689);
+    const result = Sphere.fromCoords(points);
+    const expected = Sphere.fromParams(0.9330126941204071, 0, 0, 1.3676668773461689);
     expectWithin(result, expected);
   });
 
   it('isEmpty', () => {
-    const a = Sphere_.empty();
-    expect(Sphere_.isEmpty(a)).toBe(true);
+    const a = Sphere.new();
+    expect(a.isEmpty()).toBe(true);
 
-    const b = Sphere_.create(1, 1, 1, 1);
-    expect(Sphere_.isEmpty(b)).toBe(false);
+    const b = Sphere.fromParams(1, 1, 1, 1);
+    expect(b.isEmpty()).toBe(false);
 
-    const c = Sphere_.create(1, 1, 1, -1);
-    expect(Sphere_.isEmpty(c)).toBe(true);
+    const c = Sphere.fromParams(1, 1, 1, -1);
+    expect(c.isEmpty()).toBe(true);
 
-    const d = Sphere_.create(1, 1, 1, 0);
-    expect(Sphere_.isEmpty(d)).toBe(false);
+    const d = Sphere.fromParams(1, 1, 1, 0);
+    expect(d.isEmpty()).toBe(false);
   });
 
   it('clear', () => {
-    const a = Sphere_.create(1, 2, 3, 4);
-    expect(Sphere_.isEmpty(a)).toBe(false);
+    const a = Sphere.fromParams(1, 2, 3, 4);
+    expect(a.isEmpty()).toBe(false);
 
-    expect(Sphere_.clear(a)).toBe(a);
-    expect(Sphere_.isEmpty(a)).toBe(true);
+    expect(a.clear()).toBe(a);
+    expect(a.isEmpty()).toBe(true);
   });
 
   it('containsVec', () => {
-    const sphere = Sphere_.create(1, 1, 1, 1);
-    expect(!Sphere_.containsVec(sphere, vec3(0, 0, 0))).toBe(true);
-    expect(Sphere_.containsVec(sphere, vec3(1, 1, 1))).toBe(true);
+    const sphere = Sphere.fromParams(1, 1, 1, 1);
+    expect(!sphere.containsVec(vec3(0, 0, 0))).toBe(true);
+    expect(sphere.containsVec(vec3(1, 1, 1))).toBe(true);
 
-    expect(Sphere_.set(sphere, 0, 0, 0, 0)).toBe(sphere);
-    expect(Sphere_.containsVec(sphere, sphere.center)).toBe(true);
+    expect(sphere.setParams(0, 0, 0, 0)).toBe(sphere);
+    expect(sphere.containsVec(sphere.center)).toBe(true);
   });
 
   it('distanceToVec', () => {
-    const sphere = Sphere_.create(1, 1, 1, 1);
+    const sphere = Sphere.fromParams(1, 1, 1, 1);
 
-    expect(Sphere_.distanceToVec(sphere, vec3(0, 0, 0)) - 0.732).lessThan(0.001);
-    expect(Sphere_.distanceToVec(sphere, vec3(1, 1, 1))).toBe(-1);
+    expect(sphere.distanceTo(vec3(0, 0, 0)) - 0.732).lessThan(0.001);
+    expect(sphere.distanceTo(vec3(1, 1, 1))).toBe(-1);
   });
 
   it('intersects', () => {
-    const a = Sphere_.create(1, 1, 1, 1);
-    const b = Sphere_.create(0, 0, 0, 1);
-    const c = Sphere_.create(0, 0, 0, 0.25);
+    const a = Sphere.fromParams(1, 1, 1, 1);
+    const b = Sphere.fromParams(0, 0, 0, 1);
+    const c = Sphere.fromParams(0, 0, 0, 0.25);
 
-    expect(Sphere_.intersects(a, b)).toBe(true);
-    expect(Sphere_.intersects(a, c)).toBe(false);
+    expect(a.intersects(b)).toBe(true);
+    expect(a.intersects(c)).toBe(false);
   });
 
   it('intersectsBox', () => {
-    const a = Sphere_.create(0, 0, 0, 1);
-    const b = Sphere_.create(-5, -5, -5, 1);
-    const box = Box3_.create(0, 0, 0, 1, 1, 1);
+    const a = Sphere.fromParams(0, 0, 0, 1);
+    const b = Sphere.fromParams(-5, -5, -5, 1);
+    const box = Box3.fromParams(0, 0, 0, 1, 1, 1);
 
-    expect(Sphere_.intersectsBox(a, box)).toBe(true);
-    expect(Sphere_.intersectsBox(b, box)).toBe(false);
+    expect(a.intersectsBox(box)).toBe(true);
+    expect(b.intersectsBox(box)).toBe(false);
   });
 
   it('intersectsPlane', () => {
-    const sphere = Sphere_.create(0, 0, 0, 1);
+    const sphere = Sphere.fromParams(0, 0, 0, 1);
     const b = new Plane(new Vector3(0, 1, 0), 1);
     const c = new Plane(new Vector3(0, 1, 0), 1.25);
     const d = new Plane(new Vector3(0, -1, 0), 1.25);
 
-    expect(Sphere_.intersectsPlane(sphere, b)).toBe(true);
-    expect(Sphere_.intersectsPlane(sphere, c)).toBe(false);
-    expect(Sphere_.intersectsPlane(sphere, d)).toBe(false);
+    expect(sphere.intersectsPlane(b)).toBe(true);
+    expect(sphere.intersectsPlane(c)).toBe(false);
+    expect(sphere.intersectsPlane(d)).toBe(false);
   });
 
   it('clampVec', () => {
-    const sphere = Sphere_.create(1, 1, 1, 1);
+    const sphere = Sphere.fromParams(1, 1, 1, 1);
 
-    expect(Sphere_.clampVec(sphere, vec3(1, 1, 3))).toEqual(vec3(1, 1, 2));
-    expect(Sphere_.clampVec(sphere, vec3(1, 1, -3))).toEqual(vec3(1, 1, 0));
+    expect(sphere.clamp(vec3(1, 1, 3))).toEqual(vec3(1, 1, 2));
+    expect(sphere.clamp(vec3(1, 1, -3))).toEqual(vec3(1, 1, 0));
   });
 
   it('bbox', () => {
-    const sphere = Sphere_.empty();
-    const box = Box3_.empty();
+    const sphere = Sphere.new();
+    const box = Box3.empty();
 
-    expect(Sphere_.set(sphere, 1, 1, 1, 1)).toBe(sphere);
-    expect(Sphere_.bbox_(sphere, box)).toBe(box);
+    expect(sphere.setParams(1, 1, 1, 1)).toBe(sphere);
+    expect(sphere.bbox(box)).toBe(box);
     expect(box).toEqual(Box3_.create(0, 0, 0, 2, 2, 2));
 
-    expect(Sphere_.set(sphere, 0, 0, 0, 0)).toBe(sphere);
-    expect(Sphere_.bbox_(sphere, box)).toBe(box);
+    expect(sphere.setParams(0, 0, 0, 0)).toBe(sphere);
+    expect(sphere.bbox(box)).toBe(box);
     expect(box).toEqual(Box3_.create(0, 0, 0, 0, 0, 0));
 
     expect(Sphere_.clear(sphere)).toBe(sphere);
-    expect(Sphere_.bbox_(sphere, box)).toBe(box);
+    expect(sphere.bbox(box)).toBe(box);
     expect(Box3_.isEmpty(box)).toBe(true);
   });
 
   it('applyMat4', () => {
-    const sphere = Sphere_.create(1, 1, 1, 1);
+    const sphere = Sphere.fromParams(1, 1, 1, 1);
     const mat = new Matrix4().makeTranslation(1, -2, 1);
 
-    const box1 = Box3_.applyMat4(Sphere_.bbox(sphere), mat);
-    expect(Sphere_.applyMat4(sphere, mat)).toBe(sphere);
-    const box2 = Sphere_.bbox(sphere);
+    const box1 = sphere.bbox().applyMat4(mat);
+    expect(sphere.applyMat4(mat)).toBe(sphere);
+    const box2 = sphere.bbox();
 
     expect(box1).toEqual(box2);
   });
 
   it('translate', () => {
-    const a = Sphere_.create(1, 1, 1, 1);
+    const sphere = Sphere.fromParams(1, 1, 1, 1);
 
-    const sphere = Sphere_.create(1, 1, 1, 1);
-
-    expect(Sphere_.translate(sphere, vec3(1, 1, 1))).toBe(sphere);
+    expect(sphere.translate(vec3(1, 1, 1))).toBe(sphere);
     expect(sphere.center).toEqual(vec3(2, 2, 2));
 
-    expect(Sphere_.translate(sphere, vec3(-1, -1, -1))).toBe(sphere);
+    expect(sphere.translate(vec3(-1, -1, -1))).toBe(sphere);
     expect(sphere.center).toEqual(vec3(1, 1, 1));
   });
 
   it('expandByVec', () => {
-    const sphere = Sphere_.create(0, 0, 0, 1);
+    const sphere = Sphere.fromParams(0, 0, 0, 1);
     const vec = vec3(2, 0, 0);
 
-    expect(Sphere_.containsVec(sphere, vec)).toBe(false);
-    Sphere_.expandByVec(sphere, vec);
+    expect(sphere.containsVec(vec)).toBe(false);
+    sphere.expandCoord(vec);
 
-    expect(Sphere_.containsVec(sphere, vec)).toBe(true);
-    expectWithin(sphere, Sphere_.create(0.5, 0, 0, 1.5));
+    expect(sphere.containsVec(vec)).toBe(true);
+    expectWithin(sphere, Sphere.fromParams(0.5, 0, 0, 1.5));
   });
 
   it('union', () => {
-    const a = Sphere_.create(0, 0, 0, 1);
-    const b = Sphere_.create(2, 0, 0, 1);
+    const a = Sphere.fromParams(0, 0, 0, 1);
+    const b = Sphere.fromParams(2, 0, 0, 1);
 
-    expect(Sphere_.union(a, b)).toBe(a);
-    expect(a).toEqual(Sphere_.create(1, 0, 0, 2));
+    expect(a.union(b)).toBe(a);
+    expect(a).toEqual(Sphere.fromParams(1, 0, 0, 2));
 
-    const c = Sphere_.create(0, 0, 0, 1);
-    const d = Sphere_.create(1, 0, 0, 4);
+    const c = Sphere.fromParams(0, 0, 0, 1);
+    const d = Sphere.fromParams(1, 0, 0, 4);
 
-    expect(Sphere_.union(c, d)).toBe(c);
-    expect(c).toEqual(Sphere_.create(1, 0, 0, 4));
+    expect(c.union(d)).toBe(c);
+    expect(c).toEqual(Sphere.fromParams(1, 0, 0, 4));
 
-    const e = Sphere_.create(0, 0, 0, 1);
-    const f = Sphere_.create(0, 0, 0, 4);
+    const e = Sphere.fromParams(0, 0, 0, 1);
+    const f = Sphere.fromParams(0, 0, 0, 4);
 
-    expect(Sphere_.union(e, f)).toBe(e);
-    expect(e).toEqual(Sphere_.create(0, 0, 0, 4));
+    expect(e.union(f)).toBe(e);
+    expect(e).toEqual(Sphere.fromParams(0, 0, 0, 4));
   });
 
   it('equals', () => {
-    const a = Sphere_.create(0, 0, 0, 0);
-    const b = Sphere_.create(1, 0, 0, 0);
-    const c = Sphere_.create(1, 0, 0, 1);
+    const a = Sphere.fromParams(0, 0, 0, 0);
+    const b = Sphere.fromParams(1, 0, 0, 0);
+    const c = Sphere.fromParams(1, 0, 0, 1);
 
-    expect(Sphere_.equals(a, b)).toBe(false);
-    expect(Sphere_.equals(a, c)).toBe(false);
-    expect(Sphere_.equals(b, c)).toBe(false);
+    expect(a.equals(b)).toBe(false);
+    expect(a.equals(c)).toBe(false);
+    expect(b.equals(c)).toBe(false);
 
-    Sphere_.clone_(b, a);
-    expect(Sphere_.equals(a, b)).toBe(true);
+    b.from(a);
+    expect(a.equals(b)).toBe(true);
   });
 });

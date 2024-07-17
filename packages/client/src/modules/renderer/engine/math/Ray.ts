@@ -3,9 +3,7 @@ import type { Sphere_ } from './Sphere.js';
 import { Plane_ } from './Plane.js';
 import type { Box3 } from './Box3.js';
 import type { Matrix4 } from './Matrix4.js';
-
-const _vec1 = Vec3.new();
-const _vec2 = Vec3.new();
+import { temp } from '@modules/renderer/engine/math/types.js';
 
 export class Ray {
   declare ['constructor']: typeof Ray;
@@ -59,14 +57,14 @@ export class Ray {
   }
 
   distanceSqTo(point: Vec3): number {
-    _vec1.from(point).sub(this.origin);
-    const direction = _vec1.dot(this.direction);
+    const vec1 = _vec1(point).sub(this.origin);
+    const direction = vec1.dot(this.direction);
 
     // point behind the ray
     if (direction < 0) return this.origin.distanceSqTo(point);
 
-    _vec2.from(this.origin).addScaled(this.direction, direction);
-    return _vec2.distanceSqTo(point);
+    const vec2 = _vec2(this.origin).addScaled(this.direction, direction);
+    return vec2.distanceSqTo(point);
   }
 
   distanceToSegment(v0: Vec3, v1: Vec3, rayPoint?: Vec3, segmentPoint?: Vec3): number {
@@ -74,9 +72,9 @@ export class Ray {
   }
 
   distanceSqToSegment(v0: Vec3, v1: Vec3, rayPoint?: Vec3, segmentPoint?: Vec3): number {
-    const _segCenter = _v0.from(v0).add(v1).scale(0.5);
-    const _segDir = _v1.from(v1).sub(v0).normalize();
-    const _diff = _v2.from(this.origin).sub(_segCenter);
+    const _segCenter = _v0(v0).add(v1).scale(0.5);
+    const _segDir = _v1(v1).sub(v0).normalize();
+    const _diff = _v2(this.origin).sub(_segCenter);
 
     const segExtent = v0.distanceTo(v1) * 0.5;
     const a01 = -this.direction.dot(_segDir);
@@ -157,7 +155,7 @@ export class Ray {
   }
 
   intersectSphere(sphere: Sphere_, target: Vec3): Vec3 | null {
-    const _vector = _v0.from(sphere.center).sub(this.origin);
+    const _vector = _v0(sphere.center).sub(this.origin);
     const tca = _vector.dot(this.direction);
     const d2 = _vector.dot(_vector) - tca * tca;
     const radius2 = sphere.radius * sphere.radius;
@@ -290,9 +288,9 @@ export class Ray {
   }
 
   intersectTriangle(a: Vec3, b: Vec3, c: Vec3, backfaceCulling: boolean, target: Vec3): Vec3 | null {
-    const _edge1 = _v0.from(b).sub(a);
-    const _edge2 = _v1.from(c).sub(a);
-    const _normal = _v2.from(_edge1).cross(_edge2);
+    const _edge1 = _v0(b).sub(a);
+    const _edge2 = _v1(c).sub(a);
+    const _normal = _v2(_edge1).cross(_edge2);
 
     // Solve Q + t*D = b1*E1 + b2*E2 (Q = kDiff, D = ray direction,
     // E1 = kEdge1, E2 = kEdge2, N = Cross(E1,E2)) by
@@ -312,8 +310,8 @@ export class Ray {
       return null;
     }
 
-    const _diff = _v3.from(this.origin).sub(a);
-    const _x = _v4.from(_diff).cross(_edge2);
+    const _diff = _v3(this.origin).sub(a);
+    const _x = _v4(_diff).cross(_edge2);
     const DdQxE2 = sign * this.direction.dot(_x);
 
     // b1 < 0, no intersection
@@ -353,8 +351,10 @@ export class Ray {
   }
 }
 
-const _v0 = Vec3.new();
-const _v1 = Vec3.new();
-const _v2 = Vec3.new();
-const _v3 = Vec3.new();
-const _v4 = Vec3.new();
+const _vec1 = temp(Vec3.new);
+const _vec2 = temp(Vec3.new);
+const _v0 = temp(Vec3.new);
+const _v1 = temp(Vec3.new);
+const _v2 = temp(Vec3.new);
+const _v3 = temp(Vec3.new);
+const _v4 = temp(Vec3.new);

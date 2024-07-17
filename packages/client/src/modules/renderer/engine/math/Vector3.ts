@@ -6,11 +6,11 @@ import type { Color } from '@modules/renderer/engine/math/Color.js';
 import type { Euler } from '@modules/renderer/engine/math/Euler.js';
 import type { Matrix3 } from '@modules/renderer/engine/math/Matrix3.js';
 import type { Matrix4 } from '@modules/renderer/engine/math/Matrix4.js';
-import { Cylindrical } from '@modules/renderer/engine/math/Cylindrical.js';
-import { Spherical } from '@modules/renderer/engine/math/Spherical.js';
+import type { Cylindrical } from '@modules/renderer/engine/math/Cylindrical.js';
+import type { Spherical } from '@modules/renderer/engine/math/Spherical.js';
 import type { Camera } from '@modules/renderer/engine/cameras/Camera.js';
-import { Const } from '@modules/renderer/engine/math/types.js';
-import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
+import type { Const } from '@modules/renderer/engine/math/types.js';
+import type { Attribute } from '@modules/renderer/engine/core/Attribute.js';
 
 export class Vector3 implements IVec3 {
   declare isVector3: true;
@@ -601,9 +601,9 @@ export class Vec3 implements IVec3 {
   declare isVec3: true;
 
   constructor(
-    public x: number,
-    public y: number,
-    public z: number,
+    public x: number = 0,
+    public y: number = 0,
+    public z: number = 0,
   ) {}
 
   static new(x: number = 0, y: number = 0, z: number = 0): Vec3 {

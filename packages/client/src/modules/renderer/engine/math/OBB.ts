@@ -301,7 +301,7 @@ export class OBB {
     // of the OBB.
 
     this.getSize(size);
-    aabb.setFromCenterAndSize(v1.set(0, 0, 0), size);
+    aabb.fromCenterAndSize(v1.set(0, 0, 0), size);
 
     // create a 4x4 transformation matrix
 
@@ -333,9 +333,9 @@ export class OBB {
   }
 
   fromBox3(box3: Box3) {
-    box3.getCenter(this.center);
+    box3.center(this.center);
 
-    box3.getSize(this.halfSize).multiplyScalar(0.5);
+    box3.size(this.halfSize).multiplyScalar(0.5);
 
     this.rotation.identity();
 
