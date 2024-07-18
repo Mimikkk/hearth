@@ -46,6 +46,10 @@ export class Vec4 {
     return into.fromAttribute(attribute, index);
   }
 
+  static lerp(from: Const<Vec4>, to: Const<Vec4>, step: number, into: Vec4 = Vec4.empty()): Vec4 {
+    return into.lerp(from, to, step);
+  }
+
   from(from: Const<Vec4>): this {
     return this.set(from.x, from.y, from.z, from.w);
   }
@@ -159,15 +163,14 @@ export class Vec4 {
     return this.mulScalar(scalar);
   }
 
-  applyMat4({
-    elements: [e00, e01, e02, e03, e04, e05, e06, e07, e08, e09, e10, e11, e12, e13, e14, e15],
-  }: Const<Mat4>): this {
+  applyMat4({ elements: e }: Const<Mat4>): this {
     const { x, y, z, w } = this;
+
     return this.set(
-      e00 * x + e01 * y + e02 * z + e03 * w,
-      e04 * x + e05 * y + e06 * z + e07 * w,
-      e08 * x + e09 * y + e10 * z + e11 * w,
-      e12 * x + e13 * y + e14 * z + e15 * w,
+      e[0] * x + e[4] * y + e[8] * z + e[12] * w,
+      e[1] * x + e[5] * y + e[9] * z + e[13] * w,
+      e[2] * x + e[6] * y + e[10] * z + e[14] * w,
+      e[3] * x + e[7] * y + e[11] * z + e[15] * w,
     );
   }
 

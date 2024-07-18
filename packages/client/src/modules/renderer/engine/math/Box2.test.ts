@@ -184,7 +184,7 @@ describe('Math - Box2', () => {
 
   it('distanceTo/euclideanTo', () => {
     const box1 = Box2.fromParams(0, 0, 0, 0);
-    console.log(box1);
+
     expect(box1.distanceTo(vec2(0, 0))).toBe(0);
     expect(box1.distanceTo(vec2(1, 1))).toBe(Math.sqrt(2));
     expect(box1.distanceTo(vec2(-1, -1))).toBe(Math.sqrt(2));

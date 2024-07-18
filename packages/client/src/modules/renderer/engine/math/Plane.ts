@@ -83,11 +83,7 @@ export class Plane {
 
   fromCoplanar(a: Const<Vec3>, b: Const<Vec3>, c: Const<Vec3>): this {
     const normal = Vec3.from(c).sub(b).cross(Vec3.from(a).sub(b)).normalize();
-
-    // Q: should an error be thrown if normal is zero (e.g. degenerate this)?
-
     this.fromNormalAndCoplanar(normal, a);
-
     return this;
   }
 

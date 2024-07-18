@@ -214,40 +214,40 @@ describe('Math - Box3', () => {
   });
 
   it('expandObject', () => {
-    const a = Box3.fromParams(0, 0, 0, 1, 1, 1);
+    const box = Box3.fromParams(0, 0, 0, 1, 1, 1);
     const b = Box3.fromParams(0, 0, 0, 1, 1, 1);
     const bigger = new Mesh(new BoxGeometry(2, 2, 2));
     const smaller = new Mesh(new BoxGeometry(0.5, 0.5, 0.5));
     const child = new Mesh(new BoxGeometry(1, 1, 1));
 
-    a.expandObject(bigger, false);
-    expect(a.min).toEqual(vec3(-1, -1, -1));
-    expect(a.max).toEqual(vec3(1, 1, 1));
+    box.expandObject(bigger, false);
+    expect(box.min).toEqual(vec3(-1, -1, -1));
+    expect(box.max).toEqual(vec3(1, 1, 1));
 
-    a.from(b);
+    box.from(b);
     bigger.translateX(2);
-    a.expandObject(bigger, false);
-    expect(a.min).toEqual(vec3(0, -1, -1));
-    expect(a.max).toEqual(vec3(3, 1, 1));
+    box.expandObject(bigger, false);
+    expect(box.min).toEqual(vec3(0, -1, -1));
+    expect(box.max).toEqual(vec3(3, 1, 1));
 
-    a.from(b);
+    box.from(b);
     bigger.add(child);
-    a.expandObject(bigger, false);
-    expect(a.min).toEqual(vec3(0, -1, -1));
-    expect(a.max).toEqual(vec3(3, 1, 1));
+    box.expandObject(bigger, false);
+    expect(box.min).toEqual(vec3(0, -1, -1));
+    expect(box.max).toEqual(vec3(3, 1, 1));
 
-    a.from(b);
+    box.from(b);
     child.translateX(2);
-    a.expandObject(bigger, false);
-    expect(a.min).toEqual(vec3(0, -1, -1));
-    expect(a.max).toEqual(vec3(4.5, 1, 1));
+    box.expandObject(bigger, false);
+    expect(box.min).toEqual(vec3(0, -1, -1));
+    expect(box.max).toEqual(vec3(4.5, 1, 1));
 
-    a.from(b);
-    a.expandObject(smaller, false);
-    expect(a.min).toEqual(vec3(-0.25, -0.25, -0.25));
-    expect(a.max).toEqual(vec3(1, 1, 1));
+    box.from(b);
+    box.expandObject(smaller, false);
+    expect(box.min).toEqual(vec3(-0.25, -0.25, -0.25));
+    expect(box.max).toEqual(vec3(1, 1, 1));
 
-    const box = Box3.empty();
+    box.clear();
     box.expandObject(new Mesh(), false);
 
     expect(box.isEmpty()).toBe(true);
@@ -349,7 +349,7 @@ describe('Math - Box3', () => {
     expect(a.intersectsTriangle(f)).toBe(false);
   });
 
-  it('clampVec', () => {
+  it('clamp', () => {
     const box1 = Box3.fromParams(0, 0, 0, 0, 0, 0);
     const box2 = Box3.fromParams(-1, -1, -1, 1, 1, 1);
 
@@ -361,7 +361,7 @@ describe('Math - Box3', () => {
     expect(box2.clamp(vec3(-2, -2, -2))).toEqual(vec3(-1, -1, -1));
   });
 
-  it('distanceToVec', () => {
+  it('distanceTo', () => {
     const a = Box3.fromParams(0, 0, 0, 0, 0, 0);
     const b = Box3.fromParams(-1, -1, -1, 1, 1, 1);
 

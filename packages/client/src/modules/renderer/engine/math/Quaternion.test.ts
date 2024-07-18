@@ -294,8 +294,8 @@ describe('Math - Quaternion', () => {
     const a = Quaternion.new(2, 3, 4, 5);
     const b = Quaternion.new(-2, -3, -4, -5);
 
-    const c = a.clone().slerp(a, b, 0);
-    const d = a.clone().slerp(a, b, 1);
+    const c = Quaternion.slerp(a, b, 0);
+    const d = Quaternion.slerp(a, b, 1);
     expect(c).toEqual(a);
     expect(d).toEqual(b);
 
@@ -304,51 +304,14 @@ describe('Math - Quaternion', () => {
     const e = Quaternion.new(1, 0, 0, 0);
     const f = Quaternion.new(0, 0, 1, 0);
     let expected = Quaternion.new(D, 0, D, 0);
-    let result = e.clone().slerp(e, f, 0.5);
+    let result = Quaternion.slerp(e, f, 0.5);
     expect(result).toEqual(expected);
 
-    // assert.ok(Math.abs(result.x - expected.x) <= eps, 'Check x');
-    // assert.ok(Math.abs(result.y - expected.y) <= eps, 'Check y');
-    // assert.ok(Math.abs(result.z - expected.z) <= eps, 'Check z');
-    // assert.ok(Math.abs(result.w - expected.w) <= eps, 'Check w');
-    //
-    // const g = new Quaternion(0, D, 0, D);
-    // const h = new Quaternion(0, -D, 0, D);
-    // expected = new Quaternion(0, 0, 0, 1);
-    // result = g.clone().slerp(h, 0.5);
-    //
-    // assert.ok(Math.abs(result.x - expected.x) <= eps, 'Check x');
-    // assert.ok(Math.abs(result.y - expected.y) <= eps, 'Check y');
-    // assert.ok(Math.abs(result.z - expected.z) <= eps, 'Check z');
-    // assert.ok(Math.abs(result.w - expected.w) <= eps, 'Check w');
-
-    // const a = Quaternion.new(1, 2, 3, 4);
-    // const b = Quaternion.new(4, 3, 2, 1);
-    // const c = Quaternion.identity();
-    //
-    // expect(c.slerp(a, b, 0)).toBe(c);
-    // expect(c).toEqual(a);
-    // expect(c.slerp(a, b, 1)).toBe(c);
-    // expect(c).toEqual(b);
-    //
-    // expect(a.set(1, 0, 0, 0)).toBe(a);
-    // expect(b.set(0, 0, 1, 0)).toBe(b);
-    //
-    // const Expected = Math.SQRT1_2;
-    // expect(c.slerp(a, b, 0.5)).toBe(c);
-    // expect(c.x).within(Expected - Number.EPSILON, Expected + Number.EPSILON);
-    // expect(c.y).within(0, 0);
-    // expect(c.z).within(Expected - Number.EPSILON, Expected + Number.EPSILON);
-    // expect(c.w).within(0, 0);
-    //
-    // expect(a.set(0, Expected, 0, Expected)).toBe(a);
-    // expect(b.set(0, -Expected, 0, Expected)).toBe(b);
-    //
-    // expect(c.slerp(a, b, 0.5)).toBe(c);
-    // expect(c.x).within(0, 0);
-    // expect(c.y).within(0, 0);
-    // expect(c.z).within(0, 0);
-    // expect(c.w).within(1 - Number.EPSILON, 1 + Number.EPSILON);
+    const g = new Quaternion(0, D, 0, D);
+    const h = new Quaternion(0, -D, 0, D);
+    expected = new Quaternion(0, 0, 0, 1);
+    result = Quaternion.slerp(g, h, 0.5);
+    expect(result).toEqual(expected);
   });
 
   it('equals', () => {

@@ -89,9 +89,19 @@ export class Triangle {
     return this.a.equals(a) && this.b.equals(b) && this.c.equals(c);
   }
 
+  midpoint(into: Vec3 = Vec3.new()): Vec3 {
+    const { a, b, c } = this;
+
+    return into
+      .from(a)
+      .add(b)
+      .add(c)
+      .scale(1 / 3);
+  }
+
   normal(into: Vec3 = Vec3.new()): Vec3 {
     const { a, b, c } = this;
-    into.from(c).sub(a).cross(_normal.from(b).sub(a));
+    into.from(c).sub(b).cross(_normal.from(a).sub(b));
 
     const len = into.lengthSq();
     return len > 0 ? into.scale(1 / Math.sqrt(len)) : into.set(0, 0, 0);
@@ -151,16 +161,6 @@ export class Triangle {
     _ba.from(c).sub(b);
     _ca.from(a).sub(b);
     return _ba.cross(_ca).length() * 0.5;
-  }
-
-  midpoint(into: Vec3 = Vec3.new()): Vec3 {
-    const { a, b, c } = this;
-
-    return into
-      .from(a)
-      .add(b)
-      .add(c)
-      .scale(1 / 3);
   }
 
   closestTo(point: Const<Vec3>, into: Vec3 = Vec3.new()): Vec3 {

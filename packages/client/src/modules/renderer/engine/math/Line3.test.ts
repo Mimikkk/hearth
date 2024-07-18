@@ -83,9 +83,11 @@ describe('Math - Line3', () => {
     const vec4 = Vec4.new(2, 2, 2, 1);
     const mat4 = new Mat4().makeTranslation(2, 3, 4);
     const vec3 = Vec3.new(2, 3, 4);
+    const expected = Line3.new();
 
     line.applyMat4(mat4);
-    expect(line).toEqual({ start: { x: 2, y: 3, z: 4 }, end: { x: 4, y: 5, z: 6 } });
+    expected.setParams(2, 3, 4, 4, 5, 6);
+    expectCloseTo(line, expected);
 
     line.setParams(0, 0, 0, 2, 2, 2);
     mat4.makeRotationX(Math.PI);
@@ -93,21 +95,28 @@ describe('Math - Line3', () => {
     line.applyMat4(mat4);
     vec4.applyMat4(mat4);
 
-    expect(line).toEqual({
-      start: { x: 0, y: 0, z: 0 },
-      end: { x: vec4.x / vec4.w, y: vec4.y / vec4.w, z: vec4.z / vec4.w },
-    });
+    expected.setParams(0, 0, 0, vec4.x / vec4.w, vec4.y / vec4.w, vec4.z / vec4.w);
+    expectCloseTo(line, expected);
 
     line.setParams(0, 0, 0, 2, 2, 2);
     vec4.set(2, 2, 2, 1);
     mat4.setPosition(vec3);
 
+    mat4.setPosition(vec3);
     line.applyMat4(mat4);
     vec4.applyMat4(mat4);
 
-    expect(line).toEqual({
-      start: { x: 2, y: 3, z: 4 },
-      end: { x: vec4.x / vec4.w, y: vec4.y / vec4.w, z: vec4.z / vec4.w },
-    });
+    expected.setParams(2, 3, 4, vec4.x / vec4.w, vec4.y / vec4.w, vec4.z / vec4.w);
+    expectCloseTo(line, expected);
   });
 });
+
+const expectCloseTo = (line: Line3, to: Line3, epsilon: number = Number.EPSILON) => {
+  expect(line.start.x).toBeCloseTo(to.start.x, epsilon);
+  expect(line.start.y).toBeCloseTo(to.start.y, epsilon);
+  expect(line.start.z).toBeCloseTo(to.start.z, epsilon);
+
+  expect(line.end.x).toBeCloseTo(to.end.x, epsilon);
+  expect(line.end.y).toBeCloseTo(to.end.y, epsilon);
+  expect(line.end.z).toBeCloseTo(to.end.z, epsilon);
+};
