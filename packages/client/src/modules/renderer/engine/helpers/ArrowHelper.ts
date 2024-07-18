@@ -39,7 +39,7 @@ export class ArrowHelper extends Object3D {
       _coneGeometry.translate(0, -0.5, 0);
     }
 
-    this.position.copy(origin);
+    this.position.from(origin);
 
     this.line = new Line(_lineGeometry, new LineBasicMaterial({ color: color, toneMapped: false }));
     this.line.matrixAutoUpdate = false;

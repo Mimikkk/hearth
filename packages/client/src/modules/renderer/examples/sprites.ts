@@ -56,7 +56,7 @@ async function init() {
 
     sprite.position.set(x, y, z);
     sprite.position.normalize();
-    sprite.position.multiplyScalar(radius);
+    sprite.position.scale(radius);
 
     // individual rotation per sprite
     sprite.userData.rotation = 0;

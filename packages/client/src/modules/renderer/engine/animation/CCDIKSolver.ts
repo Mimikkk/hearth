@@ -332,8 +332,8 @@ export class CCDIKHelper extends Object3D {
         const targetMesh = this.children[offset++];
         const effectorMesh = this.children[offset++];
 
-        targetMesh.position.copy(getPosition(targetBone, _matrix));
-        effectorMesh.position.copy(getPosition(effectorBone, _matrix));
+        targetMesh.position.from(getPosition(targetBone, _matrix));
+        effectorMesh.position.from(getPosition(effectorBone, _matrix));
 
         for (let j = 0, jl = ik.links.length; j < jl; j++) {
           const link = ik.links[j];
@@ -341,7 +341,7 @@ export class CCDIKHelper extends Object3D {
 
           const linkMesh = this.children[offset++];
 
-          linkMesh.position.copy(getPosition(linkBone, _matrix));
+          linkMesh.position.from(getPosition(linkBone, _matrix));
         }
 
         const line = this.children[offset++];

@@ -81,16 +81,16 @@ export class SelectionControl {
     this.camera.updateMatrixWorld();
 
     if (isPerspectiveCamera(this.camera)) {
-      _tmpPoint.copy(startPoint);
+      _tmpPoint.from(startPoint);
       _tmpPoint.x = Math.min(startPoint.x, endPoint.x);
       _tmpPoint.y = Math.max(startPoint.y, endPoint.y);
       endPoint.x = Math.max(startPoint.x, endPoint.x);
       endPoint.y = Math.min(startPoint.y, endPoint.y);
 
       _vecNear.fromMat4Position(this.camera.matrixWorld);
-      _vecTopLeft.copy(_tmpPoint);
+      _vecTopLeft.from(_tmpPoint);
       _vecTopRight.set(endPoint.x, _tmpPoint.y, 0);
-      _vecDownRight.copy(endPoint);
+      _vecDownRight.from(endPoint);
       _vecDownLeft.set(_tmpPoint.x, endPoint.y, 0);
 
       _vecTopLeft.unproject(this.camera);
@@ -98,16 +98,16 @@ export class SelectionControl {
       _vecDownRight.unproject(this.camera);
       _vecDownLeft.unproject(this.camera);
 
-      _vectemp1.copy(_vecTopLeft).sub(_vecNear);
-      _vectemp2.copy(_vecTopRight).sub(_vecNear);
-      _vectemp3.copy(_vecDownRight).sub(_vecNear);
+      _vectemp1.from(_vecTopLeft).sub(_vecNear);
+      _vectemp2.from(_vecTopRight).sub(_vecNear);
+      _vectemp3.from(_vecDownRight).sub(_vecNear);
       _vectemp1.normalize();
       _vectemp2.normalize();
       _vectemp3.normalize();
 
-      _vectemp1.multiplyScalar(this.deep);
-      _vectemp2.multiplyScalar(this.deep);
-      _vectemp3.multiplyScalar(this.deep);
+      _vectemp1.scale(this.deep);
+      _vectemp2.scale(this.deep);
+      _vectemp3.scale(this.deep);
       _vectemp1.add(_vecNear);
       _vectemp2.add(_vecNear);
       _vectemp3.add(_vecNear);
@@ -175,7 +175,7 @@ export class SelectionControl {
       } else {
         if (object.geometry.boundingSphere === null) object.geometry.computeBoundingSphere();
 
-        _center.copy(object.geometry!.boundingSphere!.center);
+        _center.from(object.geometry!.boundingSphere!.center);
 
         _center.applyMat4(object.matrixWorld);
 

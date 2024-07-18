@@ -47,7 +47,7 @@ export class VertexTangentsHelper extends LineSegments {
 
       _v2.fromAttribute(objTan, j);
 
-      _v2.transformDirection(matrixWorld).multiplyScalar(this.size).add(_v1);
+      _v2.transformDirection(matrixWorld).scale(this.size).add(_v1);
 
       position.setXYZ(idx, _v1.x, _v1.y, _v1.z);
 

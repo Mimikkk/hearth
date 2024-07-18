@@ -107,7 +107,7 @@ const planeMaterial = new MeshPhongMaterial({
 
 const ground = new Mesh(planeGeometry, planeMaterial);
 ground.setRotationX(-Math.PI / 2);
-ground.scale.multiplyScalar(3);
+ground.scale.scale(3);
 ground.castShadow = true;
 ground.receiveShadow = true;
 scene.add(ground);

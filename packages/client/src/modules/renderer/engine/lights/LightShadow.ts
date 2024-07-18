@@ -64,14 +64,14 @@ export class LightShadow<C extends Camera = Camera> {
     const shadowMatrix = this.matrix;
 
     _lightPositionWorld.fromMat4Position(light.matrixWorld);
-    shadowCamera.position.copy(_lightPositionWorld);
+    shadowCamera.position.from(_lightPositionWorld);
 
     _lookTarget.fromMat4Position(light.target.matrixWorld);
     shadowCamera.lookAt(_lookTarget);
     shadowCamera.updateMatrixWorld();
 
     _projScreenMatrix.multiplyMatrices(shadowCamera.projectionMatrix, shadowCamera.matrixWorldInverse);
-    Frustum.fromProjection_(shadowCamera.projectionMatrix, this._frustum);
+    this._frustum.fromProjection(shadowCamera.projectionMatrix);
 
     shadowMatrix.set(0.5, 0.0, 0.0, 0.5, 0.0, 0.5, 0.0, 0.5, 0.0, 0.0, 0.5, 0.5, 0.0, 0.0, 0.0, 1.0);
 

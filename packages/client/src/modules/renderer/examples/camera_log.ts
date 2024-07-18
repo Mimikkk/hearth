@@ -190,7 +190,7 @@ const createScene = (font: FontManager): Scene => {
 
     const dotmesh = new Engine.Mesh(geometry, material);
     dotmesh.position.y = (-descriptors[i].size / 4) * scale;
-    dotmesh.scale.multiplyScalar(descriptors[i].size * scale);
+    dotmesh.scale.scale(descriptors[i].size * scale);
     group.add(dotmesh);
   }
 
@@ -225,7 +225,7 @@ const animate = () => {
   objects.normal.camera.lookAt(scene.position);
 
   // Clone camera settings across both scenes
-  objects.logarithmic.camera.position.copy(objects.normal.camera.position);
+  objects.logarithmic.camera.position.from(objects.normal.camera.position);
   Quaternion.clone_(objects.normal.camera.quaternion, objects.logarithmic.camera.quaternion);
 
   // Update renderer sizes if the split has changed

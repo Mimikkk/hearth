@@ -17,7 +17,7 @@ function getUv(
   const halfArc = Math.PI / 4;
 
   // Get the vector projected onto the Y plane
-  _tempNormal.copy(normal);
+  _tempNormal.from(normal);
   _tempNormal[projectionAxis] = 0;
   _tempNormal.normalize();
 
@@ -73,7 +73,7 @@ export class RoundedBoxGeometry extends BoxGeometry {
 
     for (let i = 0, j = 0; i < positions.length; i += 3, j += 2) {
       position.fromArray(positions as never, i);
-      normal.copy(position);
+      normal.from(position);
       normal.x -= Math.sign(normal.x) * halfSegmentSize;
       normal.y -= Math.sign(normal.y) * halfSegmentSize;
       normal.z -= Math.sign(normal.z) * halfSegmentSize;

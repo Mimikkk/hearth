@@ -19,23 +19,16 @@ import { ColorMap } from '@modules/renderer/engine/math/Color.js';
 import { Random } from '@modules/renderer/engine/math/random.js';
 
 const createCamera = () => {
-  const camera = new PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.25, 30);
+  const camera = new PerspectiveCamera();
   camera.position.set(0, 2, 3);
   return camera;
 };
 const createLight = () => new SpotLight(ColorMap.white, 30);
 const createScene = () => {
   const scene = new Scene();
-  scene.fog = new Fog('red', 7, 25);
+  scene.fog = new Fog(ColorMap.red, 7, 25);
   scene.backgroundNode = normalWorld.y.mix(color(ColorMap.violet), color(ColorMap.blue));
   return scene;
-};
-const createRenderer = async (onAnimate: () => void) => {
-  const renderer = await Renderer.create();
-  renderer.setAnimationLoop(onAnimate);
-  document.body.appendChild(renderer.parameters.canvas);
-
-  return renderer;
 };
 
 const createSphere = (geometry: BufferGeometry, x: number, y: number, z: number) => {
@@ -68,13 +61,16 @@ const scene = createScene();
 
 scene.add(camera, reference, sphere);
 
-const renderer = await createRenderer(() => {
-  orbitControls.update();
-  renderer.render(scene, camera);
+console.log(reference, sphere);
+const renderer = await Renderer.create({
+  animate() {
+    controls.update();
+    renderer.render(scene, camera);
+  },
 });
 useWindowResizer(renderer, camera);
 
-const orbitControls = useOrbitControls(camera, renderer.parameters.canvas);
+const controls = useOrbitControls(camera, renderer.parameters.canvas);
 
 UI.create('Orbit controls')
   .text('Move:', 'Right Click  + Drag')

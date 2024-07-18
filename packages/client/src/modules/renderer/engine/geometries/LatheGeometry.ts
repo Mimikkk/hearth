@@ -65,7 +65,7 @@ export class LatheGeometry extends BufferGeometry {
           normal.y = -dx;
           normal.z = dy * 0.0;
 
-          prevNormal.copy(normal);
+          prevNormal.from(normal);
 
           normal.normalize();
 
@@ -86,7 +86,7 @@ export class LatheGeometry extends BufferGeometry {
           normal.y = -dx;
           normal.z = dy * 0.0;
 
-          curNormal.copy(normal);
+          curNormal.from(normal);
 
           normal.x += prevNormal.x;
           normal.y += prevNormal.y;
@@ -96,7 +96,7 @@ export class LatheGeometry extends BufferGeometry {
 
           initNormals.push(normal.x, normal.y, normal.z);
 
-          prevNormal.copy(curNormal);
+          prevNormal.from(curNormal);
       }
     }
 

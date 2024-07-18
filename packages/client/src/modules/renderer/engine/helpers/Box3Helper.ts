@@ -37,7 +37,7 @@ export class Box3Helper extends LineSegments {
     box.center(this.position);
     box.size(this.scale);
 
-    this.scale.multiplyScalar(0.5);
+    this.scale.scale(0.5);
     return super.updateMatrixWorld(force);
   }
 

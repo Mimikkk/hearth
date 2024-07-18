@@ -10,7 +10,7 @@ export class GrannyKnot extends Curve {
     const y = -0.1 * Math.cos(2 * t) - 0.27 * Math.sin(2 * t) + 0.38 * Math.cos(4 * t) + 0.46 * Math.sin(4 * t);
     const z = 0.7 * Math.cos(3 * t) - 0.4 * Math.sin(3 * t);
 
-    return point.set(x, y, z).multiplyScalar(20);
+    return point.set(x, y, z).scale(20);
   }
 }
 
@@ -28,7 +28,7 @@ export class HeartCurve extends Curve {
     const y = 13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t);
     const z = 0;
 
-    return point.set(x, y, z).multiplyScalar(this.scale);
+    return point.set(x, y, z).scale(this.scale);
   }
 }
 
@@ -99,7 +99,7 @@ export class TrefoilKnot extends Curve {
     const y = (2 + Math.cos(3 * t)) * Math.sin(2 * t);
     const z = Math.sin(3 * t);
 
-    return point.set(x, y, z).multiplyScalar(this.scale);
+    return point.set(x, y, z).scale(this.scale);
   }
 }
 
@@ -120,7 +120,7 @@ export class TorusKnot extends Curve {
     const y = (2 + Math.cos(q * t)) * Math.sin(p * t);
     const z = Math.sin(q * t);
 
-    return point.set(x, y, z).multiplyScalar(this.scale);
+    return point.set(x, y, z).scale(this.scale);
   }
 }
 
@@ -141,7 +141,7 @@ export class CinquefoilKnot extends Curve {
     const y = (2 + Math.cos(q * t)) * Math.sin(p * t);
     const z = Math.sin(q * t);
 
-    return point.set(x, y, z).multiplyScalar(this.scale);
+    return point.set(x, y, z).scale(this.scale);
   }
 }
 
@@ -159,7 +159,7 @@ export class TrefoilPolynomialKnot extends Curve {
     const y = Math.pow(t, 4) - 4 * t * t;
     const z = (1 / 5) * Math.pow(t, 5) - 2 * t;
 
-    return point.set(x, y, z).multiplyScalar(this.scale);
+    return point.set(x, y, z).scale(this.scale);
   }
 }
 
@@ -182,7 +182,7 @@ export class FigureEightPolynomialKnot extends Curve {
     const y = Math.pow(t, 4) - 13 * t * t;
     const z = (1 / 10) * t * (t * t - 4) * (t * t - 9) * (t * t - 12);
 
-    return point.set(x, y, z).multiplyScalar(this.scale);
+    return point.set(x, y, z).scale(this.scale);
   }
 }
 
@@ -200,7 +200,7 @@ export class DecoratedTorusKnot4a extends Curve {
     const y = Math.sin(2 * t) * (1 + 0.6 * (Math.cos(5 * t) + 0.75 * Math.cos(10 * t)));
     const z = 0.35 * Math.sin(5 * t);
 
-    return point.set(x, y, z).multiplyScalar(this.scale);
+    return point.set(x, y, z).scale(this.scale);
   }
 }
 
@@ -218,7 +218,7 @@ export class DecoratedTorusKnot4b extends Curve {
     const y = Math.sin(2 * fi) * (1 + 0.45 * Math.cos(3 * fi) + 0.4 * Math.cos(9 * fi));
     const z = 0.2 * Math.sin(9 * fi);
 
-    return point.set(x, y, z).multiplyScalar(this.scale);
+    return point.set(x, y, z).scale(this.scale);
   }
 }
 
@@ -236,7 +236,7 @@ export class DecoratedTorusKnot5a extends Curve {
     const y = Math.sin(3 * fi) * (1 + 0.3 * Math.cos(5 * fi) + 0.5 * Math.cos(10 * fi));
     const z = 0.2 * Math.sin(20 * fi);
 
-    return point.set(x, y, z).multiplyScalar(this.scale);
+    return point.set(x, y, z).scale(this.scale);
   }
 }
 
@@ -254,6 +254,6 @@ export class DecoratedTorusKnot5c extends Curve {
     const y = Math.sin(4 * fi) * (1 + 0.5 * (Math.cos(5 * fi) + 0.4 * Math.cos(20 * fi)));
     const z = 0.35 * Math.sin(15 * fi);
 
-    return point.set(x, y, z).multiplyScalar(this.scale);
+    return point.set(x, y, z).scale(this.scale);
   }
 }

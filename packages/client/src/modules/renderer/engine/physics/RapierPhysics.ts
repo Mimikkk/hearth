@@ -187,7 +187,7 @@ export async function RapierPhysics(): Promise<RapierPhysicsObject> {
       } else {
         const body = meshMap.get(mesh);
 
-        mesh.position.copy(body.translation());
+        mesh.position.from(body.translation());
         Quaternion.clone_(body.rotation(), mesh.quaternion);
       }
     }
