@@ -63,10 +63,13 @@ export class Object3D<EventMap extends Object3DEventMap = any> {
   eventDispatcher = new EventDispatcher<EventMap>();
 
   computeBoundingSphere?(): void;
+
   boundingSphere: Sphere | null;
   occlusionTest: boolean;
   geometry: BufferGeometry | null;
+
   computeBoundingBox?(): void;
+
   boundingBox: Box3 | null;
   id: number;
   uuid: string;
@@ -505,13 +508,17 @@ export class Object3D<EventMap extends Object3DEventMap = any> {
 
   raycast(raycaster: Raycaster, intersects: Intersection[]) {}
 
-  traverse(callback: (object: Object3D) => void): this {
-    callback(this);
+  traverse<T extends Object3D = Object3D>(callback: (object: T) => void, filter?: (o: Object3D) => o is T): this {
+    const stack = this.children.toReversed().concat(this);
 
-    const children = this.children;
+    while (stack.length > 0) {
+      const object = stack.pop()!;
 
-    for (let i = 0, l = children.length; i < l; ++i) {
-      children[i].traverse(callback);
+      if (filter?.(object) ?? true) callback(object as T);
+
+      if (object.children.length > 0) {
+        stack.unshift(...object.children);
+      }
     }
 
     return this;

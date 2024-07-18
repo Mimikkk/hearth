@@ -30,6 +30,10 @@ export class Mesh extends Object3D {
     this.updateMorphTargets();
   }
 
+  static is(value: any): value is Mesh {
+    return value?.isMesh === true;
+  }
+
   copy(source: this, recursive?: boolean): this {
     super.copy(source, recursive);
 

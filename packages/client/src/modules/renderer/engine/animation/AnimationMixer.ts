@@ -5,6 +5,8 @@ import { PropertyBinding } from './PropertyBinding.js';
 import { PropertyMixer } from './PropertyMixer.js';
 import { AnimationClip } from './AnimationClip.js';
 import { AnimationBlendMode } from '../constants.js';
+import { BlendMode } from 'three/examples/jsm/nodes/display/BlendModeNode.js';
+import { Object3D } from '@modules/renderer/engine/core/Object3D.js';
 
 const _controlInterpolantsResultBuffer = new Float32Array(1);
 
@@ -402,7 +404,7 @@ class AnimationMixer {
   // return an action for a clip optionally using a custom root target
   // object (this method allocates a lot of dynamic memory in case a
   // previously unknown clip/root combination is specified)
-  clipAction(clip, optionalRoot, blendMode) {
+  clipAction(clip: AnimationClip, optionalRoot?: any, blendMode?: BlendMode) {
     const root = optionalRoot || this._root,
       rootUuid = root.uuid;
 

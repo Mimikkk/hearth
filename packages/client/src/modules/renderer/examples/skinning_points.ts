@@ -1,63 +1,51 @@
-import * as Engine from '@modules/renderer/engine/engine.js';
+import {
+  AnimationMixer,
+  Clock,
+  Color,
+  Mesh,
+  PerspectiveCamera,
+  Points,
+  Scene,
+} from '@modules/renderer/engine/engine.js';
 import { PointsNodeMaterial, skinning, uniform } from '@modules/renderer/engine/nodes/Nodes.js';
-
 import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/GLTFLoader.js';
-
 import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
-let camera, scene, renderer;
-
-let mixer, clock;
-
-init();
-
-async function init() {
-  camera = new Engine.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 1000);
+const createCamera = () => {
+  const camera = new PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 1000);
   camera.position.set(0, 300, -85);
-
-  scene = new Engine.Scene();
   camera.lookAt(0, 0, -85);
+  return camera;
+};
+const loadMichelle = () => GLTFLoader.loadAsync('resources/models/gltf/Michelle.glb');
 
-  clock = new Engine.Clock();
+const camera = createCamera();
+const scene = new Scene();
 
-  const loader = new GLTFLoader();
-  loader.loadAsync('resources/models/gltf/Michelle.glb').then(function (gltf) {
-    const object = gltf.scene;
-    mixer = new Engine.AnimationMixer(object);
+const { animations, scene: object } = await loadMichelle();
 
-    const action = mixer.clipAction(gltf.animations[0]);
-    action.play();
+object.traverse(child => {
+  child.visible = false;
+  const materialPoints = new PointsNodeMaterial();
+  materialPoints.colorNode = uniform(Color.new());
+  materialPoints.positionNode = skinning(child);
+  const pointCloud = new Points(child.geometry, materialPoints);
+  scene.add(pointCloud);
+}, Mesh.is);
 
-    object.traverse(function (child) {
-      if (child.isMesh) {
-        child.visible = false;
+scene.add(object);
 
-        const materialPoints = new PointsNodeMaterial();
-        materialPoints.colorNode = uniform(new Engine.Color());
-        materialPoints.positionNode = skinning(child);
+const mixer = new AnimationMixer(object);
+mixer.clipAction(animations[0]).play();
 
-        const pointCloud = new Engine.Points(child.geometry, materialPoints);
-        scene.add(pointCloud);
-      }
-    });
+const clock = new Clock();
+const renderer = await Renderer.create({
+  animate() {
+    const delta = clock.getDelta();
+    mixer?.update(delta);
+    renderer.render(scene, camera);
+  },
+});
 
-    scene.add(object);
-  });
-
-  //renderer
-
-  renderer = await Renderer.create();
-  renderer.setAnimationLoop(animate);
-  document.body.appendChild(renderer.parameters.canvas);
-
-  useWindowResizer(renderer, camera);
-}
-
-function animate() {
-  const delta = clock.getDelta();
-
-  if (mixer) mixer.update(delta);
-
-  renderer.render(scene, camera);
-}
+useWindowResizer(renderer, camera);

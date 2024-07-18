@@ -167,14 +167,14 @@ export class OrbitControls {
     };
 
     this.saveState = function () {
-      scope.target0.copy(scope.target);
-      scope.position0.copy(scope.object.position);
+      scope.target0.from(scope.target);
+      scope.position0.from(scope.object.position);
       scope.zoom0 = scope.object.zoom;
     };
 
     this.reset = function () {
-      scope.target.copy(scope.target0);
-      scope.object.position.copy(scope.position0);
+      scope.target.from(scope.target0);
+      scope.object.position.from(scope.position0);
       scope.object.zoom = scope.zoom0;
 
       scope.object.updateProjectionMatrix();
@@ -470,8 +470,8 @@ export class OrbitControls {
       const v = new Vec3();
 
       return function panLeft(distance: number, objectMatrix: Mat4) {
-        v.setFromMatrixColumn(objectMatrix, 0); // get X column of objectMatrix
-        v.multiplyScalar(-distance);
+        v.fromMat4Column(objectMatrix, 0); // get X column of objectMatrix
+        v.scale(-distance);
 
         panOffset.add(v);
       };
@@ -482,13 +482,13 @@ export class OrbitControls {
 
       return function panUp(distance: number, objectMatrix: Mat4) {
         if (scope.screenSpacePanning === true) {
-          v.setFromMatrixColumn(objectMatrix, 1);
+          v.fromMat4Column(objectMatrix, 1);
         } else {
-          v.setFromMatrixColumn(objectMatrix, 0);
-          v.crossVectors(scope.object.up, v);
+          v.fromMat4Column(objectMatrix, 0);
+          v.cross(scope.object.up);
         }
 
-        v.multiplyScalar(distance);
+        v.scale(distance);
 
         panOffset.add(v);
       };
@@ -504,7 +504,7 @@ export class OrbitControls {
         if (scope.object instanceof PerspectiveCamera) {
           // perspective
           const position = scope.object.position;
-          offset.copy(position).sub(scope.target);
+          offset.from(position).sub(scope.target);
           let targetDistance = offset.length();
 
           // half of the fov is center to top of screen
