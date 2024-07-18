@@ -563,7 +563,7 @@ export class Object3D<EventMap extends Object3DEventMap = any> {
       if (this.parent === null) {
         this.matrixWorld.from(this.matrix);
       } else {
-        this.matrixWorld.multiplyMatrices(this.parent.matrixWorld, this.matrix);
+        this.matrixWorld.from(this.parent.matrixWorld).mul(this.matrix);
       }
 
       this.matrixWorldNeedsUpdate = false;
@@ -594,7 +594,7 @@ export class Object3D<EventMap extends Object3DEventMap = any> {
     if (!parent) {
       this.matrixWorld.from(this.matrix);
     } else {
-      this.matrixWorld.multiplyMatrices(parent.matrixWorld, this.matrix);
+      this.matrixWorld.from(parent.matrixWorld).mul(this.matrix);
     }
 
     // update children

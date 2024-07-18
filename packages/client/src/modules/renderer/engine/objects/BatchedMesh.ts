@@ -738,7 +738,7 @@ export class BatchedMesh extends Mesh {
 
     // prepare the frustum in the local frame
     if (perObjectFrustumCulled) {
-      _projScreenMatrix.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse).multiply(this.matrixWorld);
+      _projScreenMatrix.from(camera.projectionMatrix).mul(camera.matrixWorldInverse).mul(this.matrixWorld);
       _frustum.fromProjection(_projScreenMatrix);
     }
 
