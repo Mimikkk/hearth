@@ -1,4 +1,4 @@
-import { Vec4 } from '@modules/renderer/engine/engine.js';
+import { RenderTarget, Vec4 } from '@modules/renderer/engine/engine.js';
 import { RGBA } from '@modules/renderer/engine/renderers/common/Color4.js';
 import ClippingContext from '@modules/renderer/engine/renderers/common/ClippingContext.js';
 import { Const } from '@modules/renderer/engine/math/types.js';
@@ -16,8 +16,7 @@ export class RenderContext {
   stencil: boolean;
   clearStencil: boolean;
   clearStencilValue: number;
-  viewport: boolean;
-  viewportValue: Vec4;
+  viewport: Viewport;
   scissor: Scissor;
   textures: any;
   depthTexture: any;
@@ -25,10 +24,13 @@ export class RenderContext {
   sampleCount: number;
   width: number;
   height: number;
+  activeMipmapLevel: number;
+  occlusionQueryCount: number;
   isRenderContext: boolean;
   stencilClearValue: number;
   depthClearValue: number;
   clippingContext: ClippingContext;
+  renderTarget: RenderTarget;
 
   constructor() {
     this.id = id++;
@@ -45,9 +47,7 @@ export class RenderContext {
     this.clearStencil = true;
     this.clearStencilValue = 1;
 
-    this.viewport = false;
-    this.viewportValue = new Vec4();
-
+    this.viewport = Viewport.new();
     this.scissor = Scissor.new();
 
     this.textures = null;
@@ -94,8 +94,71 @@ export class Scissor {
     return this;
   }
 
+  setSize(width: number, height: number): this {
+    this.width = width;
+    this.height = height;
+    return this;
+  }
+
   from({ x, y, width, height, enabled }: Const<Scissor>): this {
     return this.set(x, y, width, height, enabled);
+  }
+
+  equals({ x, y, z: width, w: height }: Const<Vec4>): boolean {
+    return this.x === x && this.y === y && this.width === width && this.height === height;
+  }
+}
+
+export class Viewport {
+  constructor(
+    public x: number = 0,
+    public y: number = 0,
+    public width: number = 0,
+    public height: number = 0,
+    public minDepth: number = 0,
+    public maxDepth: number = 1,
+    public enabled: boolean = false,
+  ) {}
+
+  static new() {
+    return new Viewport();
+  }
+
+  static from({ x, y, width, height, minDepth, maxDepth, enabled }: Const<Viewport>): Viewport {
+    return new Viewport(x, y, width, height, minDepth, maxDepth, enabled);
+  }
+
+  static fromSize(width: number, height: number): Viewport {
+    return new Viewport(0, 0, width, height);
+  }
+
+  set(
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+    minDepth: number = 0,
+    maxDepth: number = 1,
+    enabled: boolean = this.enabled,
+  ): this {
+    this.x = x;
+    this.y = y;
+    this.width = width;
+    this.height = height;
+    this.minDepth = minDepth;
+    this.maxDepth = maxDepth;
+    this.enabled = enabled;
+    return this;
+  }
+
+  setSize(width: number, height: number): this {
+    this.width = width;
+    this.height = height;
+    return this;
+  }
+
+  from({ x, y, width, height, minDepth, maxDepth, enabled }: Const<Viewport>): this {
+    return this.set(x, y, width, height, minDepth, maxDepth, enabled);
   }
 
   equals({ x, y, z: width, w: height }: Const<Vec4>): boolean {

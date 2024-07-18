@@ -10,13 +10,14 @@ class RenderLists {
     this.lists = new ChainMap();
   }
 
-  get(scene: Scene, camera: Camera) {
+  get(scene: Scene, camera: Camera): RenderList {
     const lists = this.lists;
     const keys = [scene, camera];
 
     let list = lists.get(keys);
     if (list === undefined) {
       list = new RenderList();
+
       lists.set(keys, list);
     }
 
