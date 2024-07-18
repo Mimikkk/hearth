@@ -412,26 +412,8 @@ export class Mat4 {
   }
 
   transpose(): this {
-    const e = this.elements;
-
-    return this.set(
-      e[0],
-      e[4],
-      e[8],
-      e[12],
-      e[1],
-      e[5],
-      e[9],
-      e[13],
-      e[2],
-      e[6],
-      e[10],
-      e[14],
-      e[3],
-      e[7],
-      e[11],
-      e[15],
-    );
+    const [e0, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15] = this.elements;
+    return this.set(e0, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15);
   }
 
   setPosition({ x, y, z }: Const<Vec3>): this {
@@ -541,12 +523,12 @@ export class Mat4 {
     return this;
   }
 
-  getMaxScaleOnAxis(): number {
-    const te = this.elements;
+  maxScaleOnAxis(): number {
+    const [e0, e1, e2, , e4, e5, e6, , e8, e9, e10] = this.elements;
 
-    const scaleXSq = te[0] * te[0] + te[1] * te[1] + te[2] * te[2];
-    const scaleYSq = te[4] * te[4] + te[5] * te[5] + te[6] * te[6];
-    const scaleZSq = te[8] * te[8] + te[9] * te[9] + te[10] * te[10];
+    const scaleXSq = e0 * e0 + e1 * e1 + e2 * e2;
+    const scaleYSq = e4 * e4 + e5 * e5 + e6 * e6;
+    const scaleZSq = e8 * e8 + e9 * e9 + e10 * e10;
 
     return Math.sqrt(Math.max(scaleXSq, scaleYSq, scaleZSq));
   }

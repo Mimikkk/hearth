@@ -5,7 +5,6 @@ import { Sphere } from '@modules/renderer/engine/math/Sphere.js';
 import { Line3 } from '@modules/renderer/engine/math/Line3.js';
 import { Box3 } from '@modules/renderer/engine/math/Box3.js';
 import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
-
 const expectCloseTo = (a: Plane, b: Plane, epsilon: number = Number.EPSILON) => {
   expect(a.normal.x).toBeCloseTo(b.normal.x, epsilon);
   expect(a.normal.y).toBeCloseTo(b.normal.y, epsilon);
@@ -170,7 +169,8 @@ describe('Math - Plane', () => {
 
   it('applyMat4', () => {
     const plane = Plane.fromParams(1, 0, 0, 0);
-    const mat4 = new Mat4().asRotationY(Math.PI / 2);
+
+    const mat4 = Mat4.rotationY(Math.PI / 2);
 
     plane.applyMat4(mat4);
 

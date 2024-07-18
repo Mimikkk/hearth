@@ -233,7 +233,7 @@ describe('Math - Mat4', () => {
   });
 
   it('transpose', () => {
-    const a = Mat4.fromColumnOrder(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16);
+    const a = Mat4.fromRowOrder(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16);
     expect(a.transpose()).toBe(a);
     expect(a.elements).toEqual([1, 5, 9, 13, 2, 6, 10, 14, 3, 7, 11, 15, 4, 8, 12, 16]);
   });
@@ -267,7 +267,7 @@ describe('Math - Mat4', () => {
 
   it('getMaxScaleOnAxis', () => {
     const m = Mat4.scale(2, 3, 4);
-    expect(m.getMaxScaleOnAxis()).toBeCloseTo(4);
+    expect(m.maxScaleOnAxis()).toBeCloseTo(4);
   });
 
   it('extractRotation', () => {

@@ -170,7 +170,7 @@ describe('Math - Mat3', () => {
   });
 
   it('transpose', () => {
-    const a = Mat3.fromColumnOrder(1, 2, 3, 4, 5, 6, 7, 8, 9);
+    const a = Mat3.fromRowOrder(1, 2, 3, 4, 5, 6, 7, 8, 9);
     a.transpose();
 
     expect(a.elements).toEqual([1, 4, 7, 2, 5, 8, 3, 6, 9]);
