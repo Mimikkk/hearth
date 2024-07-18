@@ -322,7 +322,7 @@ async function init() {
 
   scriptableNode.setParameter('source', texture(uvTexture).xyz);
   scriptableNode.setParameter('contrast', asyncNode);
-  scriptableNode.setParameter('vector3', vec3(new Engine.Vector3(1, 1, 1)));
+  scriptableNode.setParameter('vector3', vec3(new Engine.Vec3(1, 1, 1)));
   scriptableNode.setParameter('message', string('Hello World!'));
   scriptableNode.setParameter('binary', new ArrayBuffer(4));
   scriptableNode.setParameter('object3d', new Engine.Group());

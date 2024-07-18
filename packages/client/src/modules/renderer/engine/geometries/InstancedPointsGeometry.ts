@@ -3,15 +3,15 @@ import {
   Float32BufferAttribute,
   InstancedBufferAttribute,
   InstancedBufferGeometry,
-  Matrix4,
+  Mat4,
   Sphere,
   Uint16BufferAttribute,
-  Vector3,
+  Vec3,
 } from '../engine.js';
 import { Box3_ } from '@modules/renderer/engine/math/Box3.js';
-import { IVec3 } from '@modules/renderer/engine/math/Vector3.js';
+import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 
-const _vector = new Vector3();
+const _vector = new Vec3();
 
 const positions = [-1, 1, 0, 1, 1, 0, -1, -1, 0, 1, -1, 0];
 const uvs = [-1, 1, 1, 1, -1, -1, 1, -1];
@@ -29,11 +29,11 @@ export class InstancedPointsGeometry extends InstancedBufferGeometry {
     this.attributes.position = new Float32BufferAttribute(positions, 3);
   }
 
-  applyMatrix4(matrix: Matrix4): this {
+  applyMat4(matrix: Mat4): this {
     const position = this.attributes.instancePosition;
 
     if (position !== undefined) {
-      position.applyMatrix4(matrix);
+      position.applyMat4(matrix);
 
       position.needsUpdate = true;
     }
@@ -89,8 +89,8 @@ export class InstancedPointsGeometry extends InstancedBufferGeometry {
 
     let maxRadiusSq = 0;
     for (let i = 0, il = position.count; i < il; i++) {
-      IVec3.fillAttribute(_vector, position, i);
-      const radiusSq = IVec3.distanceSqTo(center, _vector);
+      Vec3.fillAttribute(_vector, position, i);
+      const radiusSq = Vec3.distanceSqTo(center, _vector);
       if (radiusSq > maxRadiusSq) maxRadiusSq = radiusSq;
     }
 

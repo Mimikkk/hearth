@@ -1,9 +1,9 @@
 import { Curve } from './Curve.js';
 import * as Curves from '../curves/Curves.js';
-import { Vec2 } from '../../math/Vector2.js';
-import type { Vector3 } from '../../math/Vector3.js';
+import { Vec2 } from '../../math/Vec2.js';
+import type { Vec3 } from '../../math/Vec3.js';
 
-export class CurvePath<T extends Vec2 | Vector3> extends Curve<T> {
+export class CurvePath<T extends Vec2 | Vec3> extends Curve<T> {
   declare type: string | 'CurvePath';
   autoClose: boolean = false;
   curves: Curve<T>[] = [];

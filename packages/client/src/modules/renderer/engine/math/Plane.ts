@@ -1,13 +1,12 @@
-import { Matrix3 } from './Matrix3.js';
-import { IVec3, Vec3, Vector3 } from './Vector3.js';
-import { Sphere_ } from './Sphere.js';
-import { Line3 } from './Line3.js';
-import { Box3, Box3_ } from './Box3.js';
-import type { Matrix4 } from './Matrix4.js';
-import { Const } from '@modules/renderer/engine/math/types.js';
+import { Mat3 } from './Mat3.js';
+import { Vec3 } from './Vec3.js';
+import type { Sphere } from './Sphere.js';
+import type { Line3 } from './Line3.js';
+import type { Box3 } from './Box3.js';
+import type { Mat4 } from './Mat4.js';
+import type { Const } from '@modules/renderer/engine/math/types.js';
 
 export class Plane {
-  declare ['constructor']: typeof Plane;
   declare isPlane: true;
 
   constructor(
@@ -23,6 +22,22 @@ export class Plane {
     return Plane.new();
   }
 
+  static clone(plane: Const<Plane>, into: Plane = Plane.new()): Plane {
+    return into.from(plane);
+  }
+
+  static is(item: any): item is Plane {
+    return item?.isPlane === true;
+  }
+
+  static into(into: Plane, from: Const<Plane>): Plane {
+    return into.from(from);
+  }
+
+  static from(from: Const<Plane>, into: Plane = Plane.new()): Plane {
+    return into.from(from);
+  }
+
   static fromParams(
     normalX: number,
     normalY: number,
@@ -33,11 +48,23 @@ export class Plane {
     return into.setParams(normalX, normalY, normalZ, constant);
   }
 
-  set(normal: Vec3, constant: number): this {
-    this.normal.copy(normal);
+  static fromNormalAndCoplanar(normal: Const<Vec3>, point: Const<Vec3>, into: Plane = Plane.new()): Plane {
+    return into.fromNormalAndCoplanar(normal, point);
+  }
+
+  static fromCoplanar(a: Const<Vec3>, b: Const<Vec3>, c: Const<Vec3>, into: Plane = Plane.new()): Plane {
+    return into.fromCoplanar(a, b, c);
+  }
+
+  set(normal: Const<Vec3>, constant: number): this {
+    this.normal.from(normal);
     this.constant = constant;
 
     return this;
+  }
+
+  from({ normal, constant }: Const<Plane>): this {
+    return this.set(normal, constant);
   }
 
   setParams(normalX: number, normalY: number, normalZ: number, constant: number): this {
@@ -47,34 +74,26 @@ export class Plane {
     return this;
   }
 
-  setComponents(x: number, y: number, z: number, w: number): this {
-    this.normal.set(x, y, z);
-    this.constant = w;
-
-    return this;
-  }
-
-  setFromNormalAndCoplanarPoint(normal: Vec3, point: Vec3): this {
-    this.normal.copy(normal);
+  fromNormalAndCoplanar(normal: Const<Vec3>, point: Const<Vec3>): this {
+    this.normal.from(normal);
     this.constant = -point.dot(this.normal);
 
     return this;
   }
 
-  setFromCoplanarPoints(a: Vec3, b: Vec3, c: Vec3): this {
-    const normal = new Vec3().subVectors(c, b).cross(new Vec3().subVectors(a, b)).normalize();
+  fromCoplanar(a: Const<Vec3>, b: Const<Vec3>, c: Const<Vec3>): this {
+    const normal = Vec3.from(c).sub(b).cross(Vec3.from(a).sub(b)).normalize();
 
     // Q: should an error be thrown if normal is zero (e.g. degenerate this)?
 
-    this.setFromNormalAndCoplanarPoint(normal, a);
+    this.fromNormalAndCoplanar(normal, a);
 
     return this;
   }
 
-  copy(plane: Plane): this {
-    this.normal.copy(plane.normal);
+  clone(plane: Plane): this {
+    this.normal.from(plane.normal);
     this.constant = plane.constant;
-
     return this;
   }
 
@@ -82,7 +101,7 @@ export class Plane {
     // Note: will lead to a divide by zero if the plane is invalid.
 
     const inverseNormalLength = 1.0 / this.normal.length();
-    this.normal.multiplyScalar(inverseNormalLength);
+    this.normal.scale(inverseNormalLength);
     this.constant *= inverseNormalLength;
 
     return this;
@@ -95,240 +114,69 @@ export class Plane {
     return this;
   }
 
-  distanceToPoint(point: IVec3): number {
-    return IVec3.dot(this.normal, point) + this.constant;
+  distanceTo(point: Const<Vec3>): number {
+    return this.normal.dot(point) + this.constant;
   }
 
-  distanceToSphere(sphere: Sphere_): number {
-    return this.distanceToPoint(sphere.center) - sphere.radius;
+  distanceToSphere(sphere: Const<Sphere>): number {
+    return this.distanceTo(sphere.center) - sphere.radius;
   }
 
-  projectPoint(point: Vec3, target: Vec3): Vec3 {
-    return target.copy(point).addScaledVector(this.normal, -this.distanceToPoint(point));
+  project(vec: Const<Vec3>, into: Vec3 = Vec3.new()): Vec3 {
+    return into.from(vec).addScaled(this.normal, -this.distanceTo(vec));
   }
 
-  intersectLine(line: Line3, target: Vec3): Vec3 | null {
-    const direction = Line3.delta(line);
+  intersectLine(line: Const<Line3>, into: Vec3 = Vec3.new()): Vec3 | null {
+    const direction = line.delta();
 
-    const denominator = IVec3.dot(this.normal, direction);
+    const denominator = this.normal.dot(direction);
 
     if (denominator === 0) {
-      // line is coplanar, return origin
-      if (this.distanceToPoint(line.start) === 0) {
-        IVec3.fill(target, line.start);
-        return target;
-      }
-
-      // Unsure if this is the correct method to handle this case.
+      if (this.distanceTo(line.start) === 0) return into.from(line.start);
       return null;
     }
 
-    const t = -(IVec3.dot(line.start, this.normal) + this.constant) / denominator;
+    const t = -(line.start.dot(this.normal) + this.constant) / denominator;
+    if (t < 0 || t > 1) return null;
 
-    if (t < 0 || t > 1) {
-      return null;
-    }
-
-    IVec3.fill(target, line.start);
-    return target.addScaledVector(direction, t);
+    return into.from(line.start).addScaled(direction, t);
   }
 
-  intersectsLine(line: Line3): boolean {
-    // Note: this tests if a line intersects the plane, not whether it (or its end-points) are coplanar with it.
-
-    const startSign = this.distanceToPoint(line.start);
-    const endSign = this.distanceToPoint(line.end);
-
-    return (startSign < 0 && endSign > 0) || (endSign < 0 && startSign > 0);
-  }
-
-  intersectsBox(box: Box3): boolean {
+  intersectsBox(box: Const<Box3>): boolean {
     return box.intersectsPlane(this);
   }
 
-  intersectsSphere(sphere: Sphere_): boolean {
-    return Sphere_.intersectsPlane(sphere, this);
+  intersectsLine(line: Const<Line3>): boolean {
+    const startSign = this.distanceTo(line.start) > 0 ? 1 : -1;
+    const endSign = this.distanceTo(line.end) > 0 ? 1 : -1;
+
+    return startSign !== endSign;
   }
 
-  coplanarPoint(target: Vec3): Vec3 {
-    return target.copy(this.normal).multiplyScalar(-this.constant);
+  intersectsSphere(sphere: Const<Sphere>): boolean {
+    return sphere.intersectsPlane(this);
   }
 
-  applyMatrix4(matrix: Matrix4, optionalNormalMatrix?: Matrix3): Plane {
-    const normalMatrix = optionalNormalMatrix || new Matrix3().getNormalMatrix(matrix);
+  coplanar(into: Vec3 = Vec3.new()): Vec3 {
+    return into.from(this.normal).scale(-this.constant);
+  }
 
-    const referencePoint = this.coplanarPoint(new Vec3()).applyMatrix4(matrix);
-
-    const normal = this.normal.applyMatrix3(normalMatrix).normalize();
-
-    this.constant = -referencePoint.dot(normal);
+  applyMat4(matrix: Const<Mat4>, normalMatrix: Const<Mat3> = new Mat3().fromMat4Normal(matrix)): this {
+    const reference = this.coplanar().applyMat4(matrix);
+    this.normal.applyMat3(normalMatrix).normalize();
+    this.constant = -reference.dot(this.normal);
 
     return this;
   }
 
-  translate(offset: Vec3): Plane {
+  translate(offset: Const<Vec3>): this {
     this.constant -= offset.dot(this.normal);
-
     return this;
   }
 
-  equals(plane: Plane): boolean {
+  equals(plane: Const<Plane>): boolean {
     return plane.normal.equals(this.normal) && plane.constant === this.constant;
-  }
-
-  clone(): Plane {
-    return new this.constructor().copy(this);
   }
 }
 
 Plane.prototype.isPlane = true;
-
-export interface Plane_ {
-  normal: Vec3;
-  constant: number;
-}
-
-export namespace Plane_ {
-  export const create = (normalX: number, normalY: number, normalZ: number, constant: number): Plane_ => ({
-    normal: Vec3.new(normalX, normalY, normalZ),
-    constant,
-  });
-  export const empty = (): Plane_ => create(0, 0, 0, 0);
-
-  export const set = (self: Plane_, normalX: number, normalY: number, normalZ: number, constant: number): Plane_ => {
-    self.normal.x = normalX;
-    self.normal.y = normalY;
-    self.normal.z = normalZ;
-    self.constant = constant;
-
-    return self;
-  };
-  export const fill_ = (self: Plane_, { constant, normal: { x, y, z } }: Const<Plane_>): Plane_ =>
-    set(self, x, y, z, constant);
-
-  export const clone = (from: Const<Plane_>): Plane_ => clone_(from, empty());
-  export const clone_ = (from: Const<Plane_>, into: Plane_): Plane_ => fill_(into, from);
-
-  export const copy = (from: Const<Plane_>): Plane_ => copy_(from, empty());
-  export const copy_ = ({ normal, constant }: Const<Plane_>, into: Plane_): Plane_ => {
-    into.normal = normal;
-    into.constant = constant;
-
-    return into;
-  };
-
-  export const normalize = (self: Plane_): Plane_ => normalize_(self, self);
-  export const normalize_ = (from: Const<Plane_>, into: Plane_): Plane_ => {
-    const length = 1.0 / IVec3.length(from.normal);
-    IVec3.scale_(from.normal, length, into.normal);
-    into.constant = from.constant * length;
-
-    return into;
-  };
-  export const normalized = (from: Const<Plane_>): Plane_ => normalize_(from, empty());
-
-  export const negate = (self: Plane_): Plane_ => negate_(self, self);
-  export const negate_ = (from: Const<Plane_>, into: Plane_): Plane_ => {
-    into.constant = -from.constant;
-    IVec3.negate_(from.normal, into.normal);
-
-    return into;
-  };
-  export const negated = (from: Const<Plane_>): Plane_ => negate_(from, empty());
-
-  export const translate = (self: Plane_, offset: Const<IVec3>): Plane_ => translate_(self, offset, self);
-  export const translate_ = (from: Const<Plane_>, offset: Const<IVec3>, into: Plane_): Plane_ => {
-    into.constant -= IVec3.dot(offset, from.normal);
-
-    return into;
-  };
-  export const translated = (from: Const<Plane_>, offset: Const<IVec3>): Plane_ =>
-    translate_(from, offset, clone(from));
-
-  export const coplanar = (self: Const<Plane_>): IVec3 => coplanar_(self, IVec3.empty());
-  export const coplanar_ = (self: Const<Plane_>, into: IVec3): IVec3 => IVec3.scale_(self.normal, -self.constant, into);
-
-  export const fromNormalAndCoplanar = (normal: Const<IVec3>, coplanar: Const<IVec3>): Plane_ =>
-    fromNormalAndCoplanar_(normal, coplanar, empty());
-  export const fromNormalAndCoplanar_ = (normal: Const<IVec3>, coplanar: Const<IVec3>, into: Plane_): Plane_ => {
-    IVec3.fill(into.normal, normal);
-    into.constant = -IVec3.dot(coplanar, normal);
-
-    return into;
-  };
-  export const fillFromNormalAndCoplanar = (self: Plane_, normal: Const<IVec3>, coplanar: Const<IVec3>): Plane_ =>
-    fromNormalAndCoplanar_(normal, coplanar, self);
-
-  const _vec1 = IVec3.empty();
-  const _vec2 = IVec3.empty();
-  export const fromCoplanar = (a: Const<IVec3>, b: Const<IVec3>, c: Const<IVec3>): Plane_ =>
-    fromCoplanar_(a, b, c, empty());
-  export const fromCoplanar_ = (a: Const<IVec3>, b: Const<IVec3>, c: Const<IVec3>, into: Plane_): Plane_ => {
-    IVec3.sub_(c, b, _vec1);
-    IVec3.sub_(a, b, _vec2);
-    IVec3.cross_(_vec1, _vec2, into.normal);
-    IVec3.normalize(into.normal);
-
-    return fromNormalAndCoplanar_(into.normal, a, into);
-  };
-  export const fillCoplanar = (self: Plane_, a: Const<IVec3>, b: Const<IVec3>, c: Const<IVec3>): Plane_ =>
-    fromCoplanar_(a, b, c, self);
-
-  const _mat3 = new Matrix3();
-  export const applyMat4 = (self: Plane_, mat: Const<Matrix4>): Plane_ => applyMat4_(self, mat, self);
-  export const applyMat4_ = (from: Const<Plane_>, mat: Const<Matrix4>, into: Plane_): Plane_ => {
-    const reference = IVec3.applyMat4_(from.normal, mat, _vec1);
-
-    const normalMat = _mat3.getNormalMatrix(mat);
-    IVec3.applyMat3_(from.normal, normalMat, into.normal);
-    IVec3.normalize(into.normal);
-    into.constant = -IVec3.dot(reference, into.normal);
-
-    return into;
-  };
-
-  export const distanceToVec = (self: Const<Plane_>, point: Const<IVec3>): number =>
-    IVec3.dot(self.normal, point) + self.constant;
-  export const distanceToSphere = (self: Const<Plane_>, sphere: Const<Sphere_>): number =>
-    distanceToVec(self, sphere.center) - sphere.radius;
-
-  export const project = (self: Const<Plane_>, point: Const<IVec3>): IVec3 => project_(self, point, IVec3.empty());
-  export const project_ = (self: Const<Plane_>, point: Const<IVec3>, into: IVec3): IVec3 => {
-    IVec3.add_(point, self.normal, into);
-    IVec3.scale(into, -distanceToVec(self, point));
-
-    return into;
-  };
-
-  export const intersectLine = (self: Const<Plane_>, line: Const<Line3>): IVec3 | null =>
-    intersectLine_(self, line, IVec3.empty());
-  export const intersectLine_ = (self: Const<Plane_>, line: Const<Line3>, into: IVec3): IVec3 | null => {
-    const direction = Line3.delta_(line, _vec1);
-    const denominator = IVec3.dot(self.normal, direction);
-
-    if (denominator === 0) {
-      if (distanceToVec(self, line.start) === 0) return IVec3.clone_(line.start, into);
-      return null;
-    }
-
-    const step = -(IVec3.dot(line.start, self.normal) + self.constant) / denominator;
-    if (step < 0 || step > 1) return null;
-
-    IVec3.scale(direction, step);
-    IVec3.add_(line.start, direction, into);
-    return into;
-  };
-
-  export const intersectsLine = (self: Const<Plane_>, line: Const<Line3>): boolean => {
-    const startSign = distanceToVec(self, line.start) > 0 ? 1 : -1;
-    const endSign = distanceToVec(self, line.end) > 0 ? 1 : -1;
-
-    return startSign !== endSign;
-  };
-  export const intersectsBox = (self: Const<Plane_>, box: Const<Box3_>): boolean => Box3_.intersectsPlane(box, self);
-  export const intersectsSphere = (self: Const<Plane_>, sphere: Const<Sphere_>): boolean =>
-    Sphere_.intersectsPlane(sphere, self);
-
-  export const equals = (a: Const<Plane_>, b: Const<Plane_>): boolean =>
-    IVec3.equals(a.normal, b.normal) && a.constant === b.constant;
-}

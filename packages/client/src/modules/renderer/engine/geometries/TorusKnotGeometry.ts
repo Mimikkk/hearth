@@ -1,6 +1,6 @@
 import { BufferGeometry } from '../core/BufferGeometry.js';
 import { Float32BufferAttribute } from '../core/BufferAttribute.js';
-import { Vector3 } from '../math/Vector3.js';
+import { Vec3 } from '../math/Vec3.js';
 
 export class TorusKnotGeometry extends BufferGeometry {
   declare type: string | 'TorusKnotGeometry';
@@ -46,15 +46,15 @@ export class TorusKnotGeometry extends BufferGeometry {
 
     // helper variables
 
-    const vertex = new Vector3();
-    const normal = new Vector3();
+    const vertex = new Vec3();
+    const normal = new Vec3();
 
-    const P1 = new Vector3();
-    const P2 = new Vector3();
+    const P1 = new Vec3();
+    const P2 = new Vec3();
 
-    const B = new Vector3();
-    const T = new Vector3();
-    const N = new Vector3();
+    const B = new Vec3();
+    const T = new Vec3();
+    const N = new Vec3();
 
     // generate vertices, normals and uvs
 
@@ -138,7 +138,7 @@ export class TorusKnotGeometry extends BufferGeometry {
 
     // this function calculates the current position on the torus curve
 
-    function calculatePositionOnCurve(u: number, p: number, q: number, radius: number, position: Vector3) {
+    function calculatePositionOnCurve(u: number, p: number, q: number, radius: number, position: Vec3) {
       const cu = Math.cos(u);
       const su = Math.sin(u);
       const quOverP = (q / p) * u;

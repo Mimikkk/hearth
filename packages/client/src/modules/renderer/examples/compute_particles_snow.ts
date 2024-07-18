@@ -28,7 +28,7 @@ import PostProcessing from '@modules/renderer/engine/renderers/common/PostProces
 import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 import { WorldAxesVisualizer } from '@modules/renderer/engine/helpers/WorldAxesVisualizer.js';
-import { Vec2 } from '@modules/renderer/engine/math/Vector2.js';
+import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 
 const maxParticleCount = 100000;
 

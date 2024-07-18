@@ -1,4 +1,4 @@
-import type { IVec3 } from './Vector3.js';
+import type { Vec3 } from './Vec3.js';
 import type { Const } from '@modules/renderer/engine/math/types.js';
 
 export class Cylindrical {
@@ -34,7 +34,7 @@ export class Cylindrical {
     return into.set(radius, theta, height);
   }
 
-  static fromCoord(coord: Const<IVec3>, into: Cylindrical = Cylindrical.new()): Cylindrical {
+  static fromCoord(coord: Const<Vec3>, into: Cylindrical = Cylindrical.new()): Cylindrical {
     return into.fromCoord(coord);
   }
 
@@ -49,7 +49,7 @@ export class Cylindrical {
     return this;
   }
 
-  fromCoord({ x, y, z }: Const<IVec3>): this {
+  fromCoord({ x, y, z }: Const<Vec3>): this {
     return this.set(Math.sqrt(x * x + z * z), Math.atan2(x, z), y);
   }
 }

@@ -25,7 +25,7 @@ import {
   PerspectiveCamera,
   PlaneGeometry,
   Scene,
-  Vector3,
+  Vec3,
 } from '@modules/renderer/engine/engine.js';
 
 const camera = new PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 600);
@@ -74,7 +74,7 @@ const buildMesh = new InstancedMesh(buildGeometry, buildMaterial, 4000);
 scene.add(buildMesh);
 
 const dummy = new Object3D();
-const center = new Vector3();
+const center = new Vec3();
 
 for (let i = 0; i < buildMesh.count; i++) {
   const scaleY = Math.random() * 7 + 0.5;

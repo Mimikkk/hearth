@@ -17,7 +17,7 @@ import { GUI } from 'lil-gui';
 import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 import StorageInstancedBufferAttribute from '@modules/renderer/engine/renderers/common/StorageInstancedBufferAttribute.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import { Vec2 } from '@modules/renderer/engine/math/Vector2.js';
+import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 
 let camera, scene, renderer;
 let computeNode;

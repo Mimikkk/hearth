@@ -10,7 +10,7 @@ import {
   MeshPhongMaterial,
   Points,
   PointsMaterial,
-  Vector3,
+  Vec3,
 } from '@modules/renderer/engine/engine.js';
 import { MTLMaterialCreator } from '@modules/renderer/engine/loaders/objects/OBJLoader/MTLLoader/MTLMaterialCreator.js';
 // o object_name | g group_name
@@ -23,11 +23,11 @@ const MaterialUseRe = /^usemtl /;
 const MapUseRe = /^usemap /;
 const DelimiterRe = /\s+/;
 
-const _vA = new Vector3();
-const _vB = new Vector3();
-const _vC = new Vector3();
-const _ab = new Vector3();
-const _cb = new Vector3();
+const _vA = new Vec3();
+const _vB = new Vec3();
+const _vC = new Vec3();
+const _ab = new Vec3();
+const _cb = new Vec3();
 const _color = new Color();
 
 class ParserState {

@@ -1,15 +1,15 @@
-import { EventDispatcher, Matrix4, Mouse, OrthographicCamera, PerspectiveCamera, Ray, Vector3 } from '../engine.js';
+import { EventDispatcher, Mat4, Mouse, OrthographicCamera, PerspectiveCamera, Ray, Vec3 } from '../engine.js';
 import { DegreeToRadian } from '../math/MathUtils.js';
 import { Quaternion } from '@modules/renderer/engine/math/Quaternion.js';
 import { Spherical } from '@modules/renderer/engine/math/Spherical.js';
-import { Plane_ } from '@modules/renderer/engine/math/Plane.js';
-import { Vec2 } from '@modules/renderer/engine/math/Vector2.js';
+import { Plane } from '@modules/renderer/engine/math/Plane.js';
+import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 
 const _changeEvent = { type: 'change' } as const;
 const _startEvent = { type: 'start' } as const;
 const _endEvent = { type: 'end' } as const;
 const _ray = new Ray();
-const _plane = Plane_.empty();
+const _plane = Plane.new();
 const TILT_LIMIT = Math.cos(70 * DegreeToRadian);
 
 export interface OrbitControlsEventMap {
@@ -21,8 +21,8 @@ export interface OrbitControlsEventMap {
 export class OrbitControls {
   eventDispatcher = new EventDispatcher<OrbitControlsEventMap>();
   enabled: boolean;
-  target: Vector3;
-  cursor: Vector3;
+  target: Vec3;
+  cursor: Vec3;
   minDistance: number;
   maxDistance: number;
   minZoom: number;
@@ -48,8 +48,8 @@ export class OrbitControls {
   autoRotateSpeed: number;
   keys: { LEFT: string; UP: string; RIGHT: string; BOTTOM: string };
   mouseButtons: { LEFT: Mouse; MIDDLE: Mouse; RIGHT: Mouse };
-  target0: Vector3;
-  position0: Vector3;
+  target0: Vec3;
+  position0: Vec3;
   zoom0: number;
   _domElementKeyEvents: HTMLElement | null;
 
@@ -73,10 +73,10 @@ export class OrbitControls {
     this.enabled = true;
 
     // "target" sets the location of focus, where the object orbits around
-    this.target = new Vector3();
+    this.target = new Vec3();
 
     // Sets the 3D cursor (similar to Blender), from which the maxTargetRadius takes effect
-    this.cursor = new Vector3();
+    this.cursor = new Vec3();
 
     // How far you can dolly in and out ( PerspectiveCamera only )
     this.minDistance = 0;
@@ -187,26 +187,25 @@ export class OrbitControls {
 
     // this method is exposed, but perhaps it would be better if we can make it private...
     this.update = (function () {
-      const offset = new Vector3();
+      const offset = new Vec3();
 
       // so camera.up is the orbit axis
-      const quat = Quaternion.fromUnit(object.up, new Vector3(0, 1, 0));
-      const quatInverse = Quaternion.inverted(quat);
+      const quat = Quaternion.fromUnit(object.up, new Vec3(0, 1, 0));
+      const quatInverse = quat.clone().invert();
 
-      const lastPosition = new Vector3();
+      const lastPosition = new Vec3();
       const lastQuaternion = Quaternion.identity();
-      const lastTargetPosition = new Vector3();
+      const lastTargetPosition = new Vec3();
 
       const twoPI = 2 * Math.PI;
 
       return function update(deltaTime = null!) {
         const position = scope.object.position;
 
-        offset.copy(position).sub(scope.target);
-        offset.applyQuaternion(quat);
+        offset.from(position).sub(scope.target).applyQuaternion(quat);
 
         // angle from z-axis around y-axis
-        Spherical.fromCartesian_(offset, spherical);
+        spherical.fromCoord(offset);
 
         if (scope.autoRotate && state === STATE.NONE) {
           rotateLeft(getAutoRotationAngle(deltaTime));
@@ -242,12 +241,12 @@ export class OrbitControls {
 
         // restrict phi to be between desired limits
         spherical.phi = Math.max(scope.minPolarAngle, Math.min(scope.maxPolarAngle, spherical.phi));
-        Spherical.clamp(spherical);
+        spherical.clamp();
 
         // move target to panned location
 
         if (scope.enableDamping === true) {
-          scope.target.addScaledVector(panOffset, scope.dampingFactor);
+          scope.target.addScaled(panOffset, scope.dampingFactor);
         } else {
           scope.target.add(panOffset);
         }
@@ -268,12 +267,12 @@ export class OrbitControls {
           zoomChanged = prevRadius != spherical.radius;
         }
 
-        offset.setFromSpherical(spherical);
+        offset.fromSpherical(spherical);
 
         // rotate offset back to "camera-up-vector-is-up" space
         offset.applyQuaternion(quatInverse);
 
-        position.copy(scope.target).add(offset);
+        position.from(scope.target).add(offset);
 
         scope.object.lookAt(scope.target);
 
@@ -281,9 +280,9 @@ export class OrbitControls {
           sphericalDelta.theta *= 1 - scope.dampingFactor;
           sphericalDelta.phi *= 1 - scope.dampingFactor;
 
-          panOffset.multiplyScalar(1 - scope.dampingFactor);
+          panOffset.scale(1 - scope.dampingFactor);
         } else {
-          Spherical.clear(sphericalDelta);
+          sphericalDelta.clear();
 
           panOffset.set(0, 0, 0);
         }
@@ -298,13 +297,13 @@ export class OrbitControls {
             newRadius = clampDistance(prevRadius * scale);
 
             const radiusDelta = prevRadius - newRadius;
-            scope.object.position.addScaledVector(dollyDirection, radiusDelta);
+            scope.object.position.addScaled(dollyDirection, radiusDelta);
             scope.object.updateMatrixWorld();
 
             zoomChanged = !!radiusDelta;
           } else if (scope.object instanceof OrthographicCamera) {
             // adjust the ortho camera position based on zoom changes
-            const mouseBefore = new Vector3(mouse.x, mouse.y, 0);
+            const mouseBefore = new Vec3(mouse.x, mouse.y, 0);
             mouseBefore.unproject(scope.object);
 
             const prevZoom = scope.object.zoom;
@@ -313,7 +312,7 @@ export class OrbitControls {
 
             zoomChanged = prevZoom !== scope.object.zoom;
 
-            const mouseAfter = new Vector3(mouse.x, mouse.y, 0);
+            const mouseAfter = new Vec3(mouse.x, mouse.y, 0);
             mouseAfter.unproject(scope.object);
 
             scope.object.position.sub(mouseAfter).add(mouseBefore);
@@ -329,11 +328,11 @@ export class OrbitControls {
               scope.target
                 .set(0, 0, -1)
                 .transformDirection(scope.object.matrix)
-                .multiplyScalar(newRadius)
+                .scale(newRadius)
                 .add(scope.object.position);
             } else {
               // get the ray and translation plane to compute target
-              _ray.origin.copy(scope.object.position);
+              scope.object.position.from(_ray.origin);
               _ray.direction.set(0, 0, -1).transformDirection(scope.object.matrix);
 
               // if the camera is 20 degrees above the horizon then don't adjust the focus target to avoid
@@ -341,7 +340,7 @@ export class OrbitControls {
               if (Math.abs(scope.object.up.dot(_ray.direction)) < TILT_LIMIT) {
                 object.lookAt(scope.target);
               } else {
-                Plane_.fillFromNormalAndCoplanar(_plane, scope.object.up, scope.target);
+                _plane.fromNormalAndCoplanar(scope.object.up, scope.target);
                 _ray.intersectPlane(_plane, scope.target);
               }
             }
@@ -365,16 +364,15 @@ export class OrbitControls {
 
         if (
           zoomChanged ||
-          lastPosition.distanceToSquared(scope.object.position) > EPS ||
-          8 * (1 - Quaternion.dot(lastQuaternion, scope.object.quaternion)) > EPS ||
-          lastTargetPosition.distanceToSquared(scope.target) > EPS
+          lastPosition.distanceSqTo(scope.object.position) > EPS ||
+          8 * (1 - lastQuaternion.dot(scope.object.quaternion)) > EPS ||
+          lastTargetPosition.distanceSqTo(scope.target) > EPS
         ) {
           scope.eventDispatcher.dispatch(_changeEvent, this);
 
-          lastPosition.copy(scope.object.position);
-          Quaternion.clone_(scope.object.quaternion, lastQuaternion);
-          lastTargetPosition.copy(scope.target);
-
+          scope.object.position.from(lastPosition);
+          scope.object.quaternion.from(lastQuaternion);
+          scope.target.from(lastTargetPosition);
           return true;
         }
 
@@ -424,7 +422,7 @@ export class OrbitControls {
     const sphericalDelta = Spherical.empty();
 
     let scale = 1;
-    const panOffset = new Vector3();
+    const panOffset = new Vec3();
 
     const rotateStart = Vec2.new();
     const rotateEnd = Vec2.new();
@@ -438,7 +436,7 @@ export class OrbitControls {
     const dollyEnd = Vec2.new();
     const dollyDelta = Vec2.new();
 
-    const dollyDirection = new Vector3();
+    const dollyDirection = new Vec3();
     const mouse = Vec2.new();
     let performCursorZoom = false;
 
@@ -469,9 +467,9 @@ export class OrbitControls {
     }
 
     const panLeft = (function () {
-      const v = new Vector3();
+      const v = new Vec3();
 
-      return function panLeft(distance: number, objectMatrix: Matrix4) {
+      return function panLeft(distance: number, objectMatrix: Mat4) {
         v.setFromMatrixColumn(objectMatrix, 0); // get X column of objectMatrix
         v.multiplyScalar(-distance);
 
@@ -480,9 +478,9 @@ export class OrbitControls {
     })();
 
     const panUp = (function () {
-      const v = new Vector3();
+      const v = new Vec3();
 
-      return function panUp(distance: number, objectMatrix: Matrix4) {
+      return function panUp(distance: number, objectMatrix: Mat4) {
         if (scope.screenSpacePanning === true) {
           v.setFromMatrixColumn(objectMatrix, 1);
         } else {
@@ -498,7 +496,7 @@ export class OrbitControls {
 
     // deltaX and deltaY are in pixels; right and down are positive
     const pan = (function () {
-      const offset = new Vector3();
+      const offset = new Vec3();
 
       return function pan(deltaX: number, deltaY: number) {
         const element = scope.domElement;

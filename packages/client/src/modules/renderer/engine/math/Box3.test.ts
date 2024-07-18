@@ -1,14 +1,14 @@
 import { describe, expect, it } from 'vitest';
 import { Box3 } from './Box3.js';
-import { Vec3 } from '@modules/renderer/engine/math/Vector3.js';
+import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { BufferAttribute } from '../core/BufferAttribute.ts';
 import { Mesh } from '@modules/renderer/engine/objects/Mesh.js';
 import { BoxGeometry } from '@modules/renderer/engine/geometries/BoxGeometry.js';
 import { SphereGeometry } from '@modules/renderer/engine/geometries/SphereGeometry.js';
-import { Sphere, Sphere_ } from './Sphere.ts';
-import { Plane, Plane_ } from './Plane.ts';
+import { Sphere } from './Sphere.ts';
+import { Plane } from './Plane.ts';
 import { Triangle } from '@modules/renderer/engine/math/Triangle.js';
-import { Matrix4 } from '@modules/renderer/engine/math/Matrix4.js';
+import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
 
 const closeToBox = (a: Box3, b: Box3) => {
   expect(a.min.x).toBeCloseTo(b.min.x);
@@ -305,7 +305,7 @@ describe('Math - Box3', () => {
 
     expect(a.intersectsSphere(b)).toBe(true);
 
-    Sphere_.translate(b, vec3(2, 2, 2));
+    b.translate(vec3(2, 2, 2));
     expect(a.intersectsSphere(b)).toBe(false);
   });
 
@@ -336,11 +336,11 @@ describe('Math - Box3', () => {
 
   it('intersectsTriangle', () => {
     const a = Box3.fromParams(1, 1, 1, 2, 2, 2);
-    const b = Triangle.create(vec3(1.5, 1.5, 2.5), vec3(2.5, 1.5, 1.5), vec3(1.5, 2.5, 1.5));
-    const c = Triangle.create(vec3(1.5, 1.5, 3.5), vec3(3.5, 1.5, 1.5), vec3(1.5, 1.5, 1.5));
-    const d = Triangle.create(vec3(1.5, 1.75, 3), vec3(3, 1.75, 1.5), vec3(1.5, 2.5, 1.5));
-    const e = Triangle.create(vec3(1.5, 1.8, 3), vec3(3, 1.8, 1.5), vec3(1.5, 2.5, 1.5));
-    const f = Triangle.create(vec3(1.5, 2.5, 3), vec3(3, 2.5, 1.5), vec3(1.5, 2.5, 1.5));
+    const b = Triangle.fromCoords([vec3(1.5, 1.5, 2.5), vec3(2.5, 1.5, 1.5), vec3(1.5, 2.5, 1.5)]);
+    const c = Triangle.fromCoords([vec3(1.5, 1.5, 3.5), vec3(3.5, 1.5, 1.5), vec3(1.5, 1.5, 1.5)]);
+    const d = Triangle.fromCoords([vec3(1.5, 1.75, 3), vec3(3, 1.75, 1.5), vec3(1.5, 2.5, 1.5)]);
+    const e = Triangle.fromCoords([vec3(1.5, 1.8, 3), vec3(3, 1.8, 1.5), vec3(1.5, 2.5, 1.5)]);
+    const f = Triangle.fromCoords([vec3(1.5, 2.5, 3), vec3(3, 2.5, 1.5), vec3(1.5, 2.5, 1.5)]);
 
     expect(a.intersectsTriangle(b)).toBe(true);
     expect(a.intersectsTriangle(c)).toBe(true);
@@ -381,10 +381,10 @@ describe('Math - Box3', () => {
     const box2 = Box3.fromParams(0, 0, 0, 1, 1, 1);
     const box3 = Box3.fromParams(-1, -1, -1, 1, 1, 1);
 
-    expect(box1.sphere()).toEqual(Sphere_.create(0, 0, 0, 0));
-    expect(box2.sphere()).toEqual(Sphere_.create(0.5, 0.5, 0.5, Math.sqrt(3) * 0.5));
-    expect(box3.sphere()).toEqual(Sphere_.create(0, 0, 0, Math.sqrt(12) * 0.5));
-    expect(Sphere_.isEmpty(Box3.empty().sphere())).toBe(true);
+    expect(box1.sphere()).toEqual(Sphere.fromParams(0, 0, 0, 0));
+    expect(box2.sphere()).toEqual(Sphere.fromParams(0.5, 0.5, 0.5, Math.sqrt(3) * 0.5));
+    expect(box3.sphere()).toEqual(Sphere.fromParams(0, 0, 0, Math.sqrt(12) * 0.5));
+    expect(Box3.empty().sphere().isEmpty()).toBe(true);
   });
 
   it('intersect', () => {
@@ -411,13 +411,13 @@ describe('Math - Box3', () => {
     expect(a.clone().union(c)).toEqual(c);
   });
 
-  it.only('applyMat4', () => {
+  it('applyMat4', () => {
     const a = Box3.fromParams(0, 0, 0, 0, 0, 0);
     const b = Box3.fromParams(0, 0, 0, 1, 1, 1);
     const c = Box3.fromParams(-1, -1, -1, 1, 1, 1);
     const d = Box3.fromParams(-1, -1, -1, 0, 0, 0);
 
-    const m = new Matrix4().makeTranslation(1, -2, 1);
+    const m = new Mat4().makeTranslation(1, -2, 1);
     const t1 = vec3(1, -2, 1);
 
     closeToBox(a.clone().applyMat4(m), a.translate(t1));

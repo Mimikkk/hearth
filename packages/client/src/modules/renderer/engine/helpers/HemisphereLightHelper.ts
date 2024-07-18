@@ -1,4 +1,4 @@
-import { Vector3 } from '../math/Vector3.js';
+import { Vec3 } from '../math/Vec3.js';
 import { Color, ColorMap } from '../math/Color.js';
 import { Object3D } from '../core/Object3D.js';
 import { Mesh } from '../objects/Mesh.js';
@@ -7,7 +7,7 @@ import { OctahedronGeometry } from '../geometries/OctahedronGeometry.js';
 import { BufferAttribute } from '../core/BufferAttribute.js';
 import { HemisphereLight } from '@modules/renderer/engine/lights/HemisphereLight.js';
 
-const _vector = new Vector3();
+const _vector = new Vec3();
 const _color1 = new Color();
 const _color2 = new Color();
 
@@ -31,7 +31,7 @@ export class HemisphereLightHelper extends Object3D {
     this.material = new MeshBasicMaterial({ wireframe: true, fog: false, toneMapped: false });
     if (this.color === undefined) this.material.vertexColors = true;
 
-    const position = geometry.getAttribute('position');
+    const position = geometry.attributes.position;
     const colors = new Float32Array(position.count * 3);
 
     geometry.setAttribute('color', new BufferAttribute(colors, 3));
@@ -68,7 +68,7 @@ export class HemisphereLightHelper extends Object3D {
 
     this.light.updateWorldMatrix(true, false);
 
-    mesh.lookAt(_vector.setFromMatrixPosition(this.light.matrixWorld).negate());
+    mesh.lookAt(_vector.fromMat4Position(this.light.matrixWorld).negate());
   }
 }
 

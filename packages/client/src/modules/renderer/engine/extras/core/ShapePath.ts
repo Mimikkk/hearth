@@ -2,7 +2,7 @@ import { Color } from '../../math/Color.js';
 import { Path } from './Path.js';
 import { Shape } from './Shape.js';
 import { ShapeUtils } from '../ShapeUtils.js';
-import { Vec2 } from '@modules/renderer/engine/math/Vector2.js';
+import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 
 export class ShapePath {
   declare type: string | 'ShapePath';

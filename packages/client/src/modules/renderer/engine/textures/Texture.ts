@@ -11,8 +11,8 @@ import {
   TextureFormat,
   Wrapping,
 } from '../constants.js';
-import { Vec2 } from '../math/Vector2.js';
-import { Matrix3 } from '../math/Matrix3.js';
+import { Vec2 } from '../math/Vec2.js';
+import { Mat3 } from '../math/Mat3.js';
 import { v4 } from 'uuid';
 
 let _textureId = 0;
@@ -42,7 +42,7 @@ export class Texture<T = any> {
   center: Vec2;
   rotation: number;
   matrixAutoUpdate: boolean;
-  matrix: Matrix3;
+  matrix: Mat3;
   generateMipmaps: boolean;
   premultiplyAlpha: boolean;
   flipY: boolean;
@@ -92,7 +92,7 @@ export class Texture<T = any> {
   }
 
   updateMatrix(): this {
-    this.matrix.setUvTransform(
+    this.matrix.asUvTransform(
       this.offset.x,
       this.offset.y,
       this.repeat.x,
@@ -128,7 +128,7 @@ export class Texture<T = any> {
     this.center.from(source.center);
     this.rotation = source.rotation;
     this.matrixAutoUpdate = source.matrixAutoUpdate;
-    this.matrix.copy(source.matrix);
+    this.matrix.from(source.matrix);
     this.generateMipmaps = source.generateMipmaps;
     this.premultiplyAlpha = source.premultiplyAlpha;
     this.flipY = source.flipY;
@@ -253,7 +253,7 @@ export class Texture<T = any> {
       center: options?.center ?? Vec2.new(0, 0),
       rotation: options?.rotation ?? 0,
       matrixAutoUpdate: options?.matrixAutoUpdate ?? true,
-      matrix: options?.matrix ?? new Matrix3(),
+      matrix: options?.matrix ?? new Mat3(),
       generateMipmaps: options?.generateMipmaps ?? true,
       premultiplyAlpha: options?.premultiplyAlpha ?? false,
       flipY: options?.flipY ?? true,
@@ -289,7 +289,7 @@ export namespace Texture {
     center?: Vec2;
     rotation?: number;
     matrixAutoUpdate?: boolean;
-    matrix?: Matrix3;
+    matrix?: Mat3;
     generateMipmaps?: boolean;
     premultiplyAlpha?: boolean;
     flipY?: boolean;
@@ -320,7 +320,7 @@ export namespace Texture {
     center: Vec2;
     rotation: number;
     matrixAutoUpdate: boolean;
-    matrix: Matrix3;
+    matrix: Mat3;
     generateMipmaps: boolean;
     premultiplyAlpha: boolean;
     flipY: boolean;

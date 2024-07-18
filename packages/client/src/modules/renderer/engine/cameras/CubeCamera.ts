@@ -4,8 +4,9 @@ import { PerspectiveCamera } from './PerspectiveCamera.js';
 import { CubeRenderTarget } from '../core/CubeRenderTarget.js';
 import { Scene } from '@modules/renderer/engine/scenes/Scene.js';
 import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
+import type { Camera } from '@modules/renderer/engine/cameras/Camera.js';
 
-const fov = -90; // negative fov is not an error
+const fov = -90;
 const aspect = 1;
 
 export class CubeCamera extends Object3D {
@@ -113,7 +114,7 @@ export class CubeCamera extends Object3D {
       this.updateCoordinateSystem();
     }
 
-    const [cameraPX, cameraNX, cameraPY, cameraNY, cameraPZ, cameraNZ] = this.children;
+    const [cameraPX, cameraNX, cameraPY, cameraNY, cameraPZ, cameraNZ] = this.children as Camera[];
 
     const currentRenderTarget = renderer.getRenderTarget();
     const currentActiveCubeFace = renderer.getActiveCubeFace();

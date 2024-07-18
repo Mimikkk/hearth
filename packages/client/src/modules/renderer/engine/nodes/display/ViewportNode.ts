@@ -3,8 +3,8 @@ import { NodeUpdateType } from '../core/constants.js';
 import { uniform } from '../core/UniformNode.js';
 import { nodeImmutable, vec2 } from '../shadernode/ShaderNodes.js';
 
-import { Vector4 } from '@modules/renderer/engine/engine.js';
-import { Vec2 } from '@modules/renderer/engine/math/Vector2.js';
+import { Vec4 } from '@modules/renderer/engine/engine.js';
+import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 
 let resolution, viewportResult;
 
@@ -51,7 +51,7 @@ class ViewportNode extends Node {
     if (scope === ViewportNode.RESOLUTION) {
       output = uniform(resolution || (resolution = Vec2.new()));
     } else if (scope === ViewportNode.VIEWPORT) {
-      output = uniform(viewportResult || (viewportResult = new Vector4()));
+      output = uniform(viewportResult || (viewportResult = new Vec4()));
     } else {
       output = viewportCoordinate.div(viewportResolution);
 

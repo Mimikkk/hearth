@@ -1,5 +1,5 @@
 import type { Renderer } from '../renderers/webgpu/Renderer.js';
-import { Vec2 } from '@modules/renderer/engine/math/Vector2.js';
+import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 import { Box2 } from '@modules/renderer/engine/math/Box2.js';
 
 export class SelectionVisualizer {

@@ -7,12 +7,12 @@ import { positionLocal } from './PositionNode.js';
 import { normalLocal } from './NormalNode.js';
 import { textureLoad } from './TextureNode.js';
 import { vertexIndex } from '../core/IndexNode.js';
-import { DataArrayTexture, TextureDataType, Vector4 } from '@modules/renderer/engine/engine.js';
+import { DataArrayTexture, TextureDataType, Vec4 } from '@modules/renderer/engine/engine.js';
 import { loop } from '../utils/LoopNode.js';
-import { Vec2 } from '@modules/renderer/engine/math/Vector2.ts';
+import { Vec2 } from '@modules/renderer/engine/math/Vec2.ts';
 
 const morphTextures = new WeakMap();
-const morphVec4 = new Vector4();
+const morphVec4 = new Vec4();
 
 const getMorph = tslFn(({ bufferMap, influence, stride, width, depth, offset }) => {
   const texelIndex = int(vertexIndex).mul(stride).add(offset);
@@ -83,7 +83,7 @@ function getEntry(geometry) {
         const stride = j * vertexDataStride;
 
         if (hasMorphPosition === true) {
-          morphVec4.fromBufferAttribute(morphTarget, j);
+          morphVec4.fromAttribute(morphTarget, j);
 
           buffer[offset + stride + 0] = morphVec4.x;
           buffer[offset + stride + 1] = morphVec4.y;
@@ -92,7 +92,7 @@ function getEntry(geometry) {
         }
 
         if (hasMorphNormals === true) {
-          morphVec4.fromBufferAttribute(morphNormal, j);
+          morphVec4.fromAttribute(morphNormal, j);
 
           buffer[offset + stride + 4] = morphVec4.x;
           buffer[offset + stride + 5] = morphVec4.y;
@@ -101,7 +101,7 @@ function getEntry(geometry) {
         }
 
         if (hasMorphColors === true) {
-          morphVec4.fromBufferAttribute(morphColor, j);
+          morphVec4.fromAttribute(morphColor, j);
 
           buffer[offset + stride + 8] = morphVec4.x;
           buffer[offset + stride + 9] = morphVec4.y;

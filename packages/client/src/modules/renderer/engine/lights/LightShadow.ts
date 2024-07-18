@@ -1,15 +1,15 @@
-import { Matrix4 } from '../math/Matrix4.js';
-import { Vec2 } from '../math/Vector2.js';
-import { Vector3 } from '../math/Vector3.js';
-import { Vector4 } from '../math/Vector4.js';
+import { Mat4 } from '../math/Mat4.js';
+import { Vec2 } from '../math/Vec2.js';
+import { Vec3 } from '../math/Vec3.js';
+import { Vec4 } from '../math/Vec4.js';
 import { Frustum } from '../math/Frustum.js';
 import { Camera } from '../cameras/Camera.js';
 import { Light } from './Light.js';
 import { RenderTarget } from '@modules/renderer/engine/core/RenderTarget.js';
 
-const _projScreenMatrix = new Matrix4();
-const _lightPositionWorld = new Vector3();
-const _lookTarget = new Vector3();
+const _projScreenMatrix = new Mat4();
+const _lightPositionWorld = new Vec3();
+const _lookTarget = new Vec3();
 
 export class LightShadow<C extends Camera = Camera> {
   declare ['constructor']: typeof LightShadow;
@@ -20,13 +20,13 @@ export class LightShadow<C extends Camera = Camera> {
   mapSize: Vec2;
   map: RenderTarget | null;
   mapPass: RenderTarget | null;
-  matrix: Matrix4;
+  matrix: Mat4;
   autoUpdate: boolean;
   needsUpdate: boolean;
   _frustum: Frustum;
   _frameExtents: Vec2;
   _viewportCount: number;
-  _viewports: Vector4[];
+  _viewports: Vec4[];
 
   constructor(public camera: C) {
     this.bias = 0;
@@ -38,7 +38,7 @@ export class LightShadow<C extends Camera = Camera> {
 
     this.map = null;
     this.mapPass = null;
-    this.matrix = new Matrix4();
+    this.matrix = new Mat4();
 
     this.autoUpdate = true;
     this.needsUpdate = false;
@@ -48,7 +48,7 @@ export class LightShadow<C extends Camera = Camera> {
 
     this._viewportCount = 1;
 
-    this._viewports = [new Vector4(0, 0, 1, 1)];
+    this._viewports = [new Vec4(0, 0, 1, 1)];
   }
 
   getViewportCount(): number {
@@ -63,10 +63,10 @@ export class LightShadow<C extends Camera = Camera> {
     const shadowCamera = this.camera;
     const shadowMatrix = this.matrix;
 
-    _lightPositionWorld.setFromMatrixPosition(light.matrixWorld);
+    _lightPositionWorld.fromMat4Position(light.matrixWorld);
     shadowCamera.position.copy(_lightPositionWorld);
 
-    _lookTarget.setFromMatrixPosition(light.target.matrixWorld);
+    _lookTarget.fromMat4Position(light.target.matrixWorld);
     shadowCamera.lookAt(_lookTarget);
     shadowCamera.updateMatrixWorld();
 
@@ -79,7 +79,7 @@ export class LightShadow<C extends Camera = Camera> {
     return this;
   }
 
-  getViewport(viewportIndex: number): Vector4 {
+  getViewport(viewportIndex: number): Vec4 {
     return this._viewports[viewportIndex];
   }
 

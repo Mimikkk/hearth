@@ -10,7 +10,7 @@ import {
   TextureFormat,
   Wrapping,
 } from '../constants.js';
-import { Vector4 } from '../math/Vector4.js';
+import { Vec4 } from '../math/Vec4.js';
 
 export class RenderTarget {
   declare ['constructor']: typeof RenderTarget;
@@ -18,9 +18,9 @@ export class RenderTarget {
   eventDispatcher = new EventDispatcher<{ dispose: {} }>();
 
   depth: number;
-  scissor: Vector4;
+  scissor: Vec4;
   scissorTest: boolean;
-  viewport: Vector4;
+  viewport: Vec4;
   textures: Texture[];
   depthBuffer: boolean;
   stencilBuffer: boolean;
@@ -36,10 +36,10 @@ export class RenderTarget {
   ) {
     this.depth = 1;
 
-    this.scissor = new Vector4(0, 0, width, height);
+    this.scissor = new Vec4(0, 0, width, height);
     this.scissorTest = false;
 
-    this.viewport = new Vector4(0, 0, width, height);
+    this.viewport = new Vec4(0, 0, width, height);
 
     const image = { width: width, height: height, depth: 1 };
 

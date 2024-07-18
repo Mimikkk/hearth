@@ -1,6 +1,6 @@
-import { Vec3 } from './Vector3.js';
-import { clamp as clampNumber } from './MathUtils.js';
-import { Const } from '@modules/renderer/engine/math/types.js';
+import type { Vec3 } from './Vec3.js';
+import { clamp, NumberArray } from './MathUtils.js';
+import type { Const } from '@modules/renderer/engine/math/types.js';
 
 export class Spherical {
   declare isSpherical: true;
@@ -39,6 +39,10 @@ export class Spherical {
     return into.fromCoord(coord);
   }
 
+  clear(): this {
+    return this.set(0, 0, 0);
+  }
+
   from({ radius, phi, theta }: Const<Spherical>): this {
     return this.set(radius, phi, theta);
   }
@@ -55,11 +59,11 @@ export class Spherical {
     this.radius = vec.euclidean();
 
     if (this.radius === 0) return this.set(0, 0, 0);
-    return this.set(this.radius, Math.acos(clampNumber(y / this.radius, -1, 1)), Math.atan2(x, z));
+    return this.set(this.radius, Math.acos(clamp(y / this.radius, -1, 1)), Math.atan2(x, z));
   }
 
   clamp(): this {
-    this.phi = clampNumber(this.phi, Number.EPSILON, Math.PI - Number.EPSILON);
+    this.phi = clamp(this.phi, Number.EPSILON, Math.PI - Number.EPSILON);
     return this;
   }
 
@@ -67,7 +71,7 @@ export class Spherical {
     return this.set(array[offset], array[offset + 1], array[offset + 2]);
   }
 
-  intoArray(array: number[] = [], offset: number = 0): number[] {
+  intoArray<T extends NumberArray = number[]>(array: T = [] as never, offset: number = 0): T {
     array[offset] = this.radius;
     array[offset + 1] = this.phi;
     array[offset + 2] = this.theta;

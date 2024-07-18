@@ -1,13 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { Vec3 } from './Vector3.ts';
-import { Vec2 } from './Vector2.ts';
+import { Vec3 } from './Vec3.ts';
+import { Vec2 } from './Vec2.ts';
 import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
 import { Spherical } from '@modules/renderer/engine/math/Spherical.js';
 import { Euler } from './Euler.ts';
 import { Cylindrical } from '@modules/renderer/engine/math/Cylindrical.js';
 import { Color } from './Color.ts';
-import { Matrix4 } from './Matrix4.ts';
-import { Matrix3 } from './Matrix3.ts';
+import { Mat4 } from './Mat4.ts';
+import { Mat3 } from './Mat3.ts';
 import { Quaternion } from './Quaternion.ts';
 import { PerspectiveCamera } from '../cameras/PerspectiveCamera.ts';
 
@@ -274,7 +274,7 @@ describe('Math - Vec3', () => {
     const coord = vec3();
     const expected = vec3(1, 0, 1);
 
-    const m = new Matrix4().setPosition(expected);
+    const m = new Mat4().setPosition(expected);
     expect(coord.fromMat4Position(m)).toEqual(expected);
   });
 
@@ -282,13 +282,13 @@ describe('Math - Vec3', () => {
     const coord = vec3();
     const expected = vec3(1, 5, 9);
 
-    const m = new Matrix4().set(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16);
+    const m = new Mat4().set(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16);
     expect(coord.fromMat4Column(m, 0)).toEqual(expected);
   });
 
   it('applyMat3', () => {
     const a = vec3(2, 3, 4);
-    const m = new Matrix3().set(2, 3, 5, 7, 11, 13, 17, 19, 23);
+    const m = new Mat3().set(2, 3, 5, 7, 11, 13, 17, 19, 23);
     const expected = vec3(33, 99, 183);
 
     expect(a.applyMat3(m)).toEqual(expected);
@@ -297,7 +297,7 @@ describe('Math - Vec3', () => {
   it('applyMat4', () => {
     const a = vec3(2, 3, 4);
     const expected = vec3(2, -3, -4);
-    const m = new Matrix4().makeRotationX(Math.PI);
+    const m = new Mat4().makeRotationX(Math.PI);
 
     closeTo(a.applyMat4(m), expected, Number.EPSILON * 4);
   });
@@ -322,7 +322,7 @@ describe('Math - Vec3', () => {
 
   it('transformDirection', () => {
     const a = vec3(2, 3, 4);
-    const m = new Matrix4();
+    const m = new Mat4();
     const expected = vec3(0.3713906763541037, 0.5570860145311556, 0.7427813527082074);
 
     a.transformDirection(m);

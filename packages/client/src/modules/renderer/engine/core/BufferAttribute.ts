@@ -1,12 +1,12 @@
-import { Vector3 } from '../math/Vector3.js';
-import { Vec2 } from '../math/Vector2.js';
+import { Vec3 } from '../math/Vec3.js';
+import { Vec2 } from '../math/Vec2.js';
 import { denormalize, normalize, TypedArray, TypedArrayConstructor } from '../math/MathUtils.js';
 import { BufferUsage, TextureDataType } from '../constants.js';
 import { fromHalfFloat, toHalfFloat } from '../extras/DataUtils.js';
-import { Matrix3 } from '@modules/renderer/engine/math/Matrix3.js';
-import { Matrix4 } from '@modules/renderer/engine/math/Matrix4.js';
+import { Mat3 } from '@modules/renderer/engine/math/Mat3.js';
+import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
 
-const _vec3 = new Vector3();
+const _vec3 = new Vec3();
 const _vec2 = Vec2.new();
 
 export class BufferAttribute<T extends TypedArray = any> {
@@ -90,7 +90,7 @@ export class BufferAttribute<T extends TypedArray = any> {
     return this;
   }
 
-  applyMatrix3(m: Matrix3): this {
+  applyMatrix3(m: Mat3): this {
     if (this.itemSize === 2) {
       for (let i = 0, l = this.count; i < l; i++) {
         _vec2.fromAttribute(this, i);
@@ -100,7 +100,7 @@ export class BufferAttribute<T extends TypedArray = any> {
       }
     } else if (this.itemSize === 3) {
       for (let i = 0, l = this.count; i < l; i++) {
-        _vec3.fromBufferAttribute(this, i);
+        _vec3.fromAttribute(this, i);
         _vec3.applyMatrix3(m);
 
         this.setXYZ(i, _vec3.x, _vec3.y, _vec3.z);
@@ -110,11 +110,11 @@ export class BufferAttribute<T extends TypedArray = any> {
     return this;
   }
 
-  applyMatrix4(m: Matrix4): this {
+  applyMat4(m: Mat4): this {
     for (let i = 0, l = this.count; i < l; i++) {
-      _vec3.fromBufferAttribute(this, i);
+      _vec3.fromAttribute(this, i);
 
-      _vec3.applyMatrix4(m);
+      _vec3.applyMat4(m);
 
       this.setXYZ(i, _vec3.x, _vec3.y, _vec3.z);
     }
@@ -122,9 +122,9 @@ export class BufferAttribute<T extends TypedArray = any> {
     return this;
   }
 
-  applyNormalMatrix(m: Matrix3): this {
+  applyNormalMatrix(m: Mat3): this {
     for (let i = 0, l = this.count; i < l; i++) {
-      _vec3.fromBufferAttribute(this, i);
+      _vec3.fromAttribute(this, i);
 
       _vec3.applyNormalMatrix(m);
 
@@ -134,9 +134,9 @@ export class BufferAttribute<T extends TypedArray = any> {
     return this;
   }
 
-  transformDirection(m: Matrix4): this {
+  transformDirection(m: Mat4): this {
     for (let i = 0, l = this.count; i < l; i++) {
-      _vec3.fromBufferAttribute(this, i);
+      _vec3.fromAttribute(this, i);
 
       _vec3.transformDirection(m);
 

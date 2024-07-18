@@ -1,4 +1,4 @@
-import { Vector3 } from '../../math/Vector3.js';
+import { Vec3 } from '../../math/Vec3.js';
 import { Curve } from '../core/Curve.js';
 
 const CubicPoly = () => {
@@ -46,17 +46,17 @@ const CubicPoly = () => {
 };
 
 type CurveType = 'centripetal' | 'chordal' | 'catmullrom';
-const tmp = new Vector3();
+const tmp = new Vec3();
 const px = CubicPoly();
 const py = CubicPoly();
 const pz = CubicPoly();
 
-class CatmullRomCurve3 extends Curve<Vector3> {
+class CatmullRomCurve3 extends Curve<Vec3> {
   declare isCatmullRomCurve3: true;
   declare type: 'CatmullRomCurve3';
 
   constructor(
-    public points: Vector3[] = [],
+    public points: Vec3[] = [],
     public closed: boolean = false,
     public curveType: CurveType = 'centripetal',
     public tension: number = 0.5,
@@ -64,7 +64,7 @@ class CatmullRomCurve3 extends Curve<Vector3> {
     super();
   }
 
-  getPoint(t: number, optionalTarget: Vector3 = new Vector3()): Vector3 {
+  getPoint(t: number, optionalTarget: Vec3 = new Vec3()): Vec3 {
     const point = optionalTarget;
 
     const points = this.points;
@@ -105,9 +105,9 @@ class CatmullRomCurve3 extends Curve<Vector3> {
     if (this.curveType === 'centripetal' || this.curveType === 'chordal') {
       // init Centripetal / Chordal Catmull-Rom
       const pow = this.curveType === 'chordal' ? 0.5 : 0.25;
-      let dt0 = Math.pow(p0.distanceToSquared(p1), pow);
-      let dt1 = Math.pow(p1.distanceToSquared(p2), pow);
-      let dt2 = Math.pow(p2.distanceToSquared(p3), pow);
+      let dt0 = Math.pow(p0.distanceSqTo(p1), pow);
+      let dt1 = Math.pow(p1.distanceSqTo(p2), pow);
+      let dt2 = Math.pow(p2.distanceSqTo(p3), pow);
 
       // safety check for repeated points
       if (dt1 < 1e-4) dt1 = 1.0;

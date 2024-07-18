@@ -1,7 +1,7 @@
-import { Curve, Vector3 } from '../engine.js';
+import { Curve, Vec3 } from '../engine.js';
 
 export class GrannyKnot extends Curve {
-  getPoint(t: number, optionalTarget: Vector3): Vector3 {
+  getPoint(t: number, optionalTarget: Vec3): Vec3 {
     const point = optionalTarget;
 
     t = 2 * Math.PI * t;
@@ -19,7 +19,7 @@ export class HeartCurve extends Curve {
     super();
   }
 
-  getPoint(t: number, optionalTarget: Vector3): Vector3 {
+  getPoint(t: number, optionalTarget: Vec3): Vec3 {
     const point = optionalTarget;
 
     t *= 2 * Math.PI;
@@ -37,7 +37,7 @@ export class VivianiCurve extends Curve {
     super();
   }
 
-  getPoint(t: number, optionalTarget: Vector3): Vector3 {
+  getPoint(t: number, optionalTarget: Vec3): Vec3 {
     const point = optionalTarget;
 
     t = t * 4 * Math.PI; // normalized to 0..1
@@ -52,7 +52,7 @@ export class VivianiCurve extends Curve {
 }
 
 export class KnotCurve extends Curve {
-  getPoint(t: number, optionalTarget: Vector3): Vector3 {
+  getPoint(t: number, optionalTarget: Vec3): Vec3 {
     const point = optionalTarget;
 
     t *= 2 * Math.PI;
@@ -69,7 +69,7 @@ export class KnotCurve extends Curve {
 }
 
 export class HelixCurve extends Curve {
-  getPoint(t: number, optionalTarget: Vector3): Vector3 {
+  getPoint(t: number, optionalTarget: Vec3): Vec3 {
     const point = optionalTarget;
 
     const a = 30; // radius
@@ -90,7 +90,7 @@ export class TrefoilKnot extends Curve {
     super();
   }
 
-  getPoint(t: number, optionalTarget: Vector3): Vector3 {
+  getPoint(t: number, optionalTarget: Vec3): Vec3 {
     const point = optionalTarget;
 
     t *= Math.PI * 2;
@@ -108,7 +108,7 @@ export class TorusKnot extends Curve {
     super();
   }
 
-  getPoint(t: number, optionalTarget: Vector3): Vector3 {
+  getPoint(t: number, optionalTarget: Vec3): Vec3 {
     const point = optionalTarget;
 
     const p = 3;
@@ -129,7 +129,7 @@ export class CinquefoilKnot extends Curve {
     super();
   }
 
-  getPoint(t: number, optionalTarget: Vector3): Vector3 {
+  getPoint(t: number, optionalTarget: Vec3): Vec3 {
     const point = optionalTarget;
 
     const p = 2;
@@ -150,7 +150,7 @@ export class TrefoilPolynomialKnot extends Curve {
     super();
   }
 
-  getPoint(t: number, optionalTarget: Vector3): Vector3 {
+  getPoint(t: number, optionalTarget: Vec3): Vec3 {
     const point = optionalTarget;
 
     t = t * 4 - 2;
@@ -173,7 +173,7 @@ export class FigureEightPolynomialKnot extends Curve {
     super();
   }
 
-  getPoint(t: number, optionalTarget: Vector3): Vector3 {
+  getPoint(t: number, optionalTarget: Vec3): Vec3 {
     const point = optionalTarget;
 
     t = scaleTo(-4, 4, t);
@@ -191,7 +191,7 @@ export class DecoratedTorusKnot4a extends Curve {
     super();
   }
 
-  getPoint(t: number, optionalTarget: Vector3): Vector3 {
+  getPoint(t: number, optionalTarget: Vec3): Vec3 {
     const point = optionalTarget;
 
     t *= Math.PI * 2;
@@ -209,7 +209,7 @@ export class DecoratedTorusKnot4b extends Curve {
     super();
   }
 
-  getPoint(t: number, optionalTarget: Vector3): Vector3 {
+  getPoint(t: number, optionalTarget: Vec3): Vec3 {
     const point = optionalTarget;
 
     const fi = t * Math.PI * 2;
@@ -227,7 +227,7 @@ export class DecoratedTorusKnot5a extends Curve {
     super();
   }
 
-  getPoint(t: number, optionalTarget: Vector3): Vector3 {
+  getPoint(t: number, optionalTarget: Vec3): Vec3 {
     const point = optionalTarget;
 
     const fi = t * Math.PI * 2;
@@ -245,7 +245,7 @@ export class DecoratedTorusKnot5c extends Curve {
     super();
   }
 
-  getPoint(t: number, optionalTarget: Vector3): Vector3 {
+  getPoint(t: number, optionalTarget: Vec3): Vec3 {
     const point = optionalTarget;
 
     const fi = t * Math.PI * 2;

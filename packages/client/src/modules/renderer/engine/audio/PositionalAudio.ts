@@ -1,13 +1,14 @@
-import { Vector3 } from '../math/Vector3.js';
+import { Vec3 } from '../math/Vec3.js';
 import { Quaternion } from '../math/Quaternion.js';
 import { Audio } from './Audio.js';
+import type { AudioListener } from './AudioListener.js';
 
-const _position = new Vector3();
+const _position = Vec3.new();
 const _quaternion = Quaternion.identity();
-const _scale = new Vector3();
-const _orientation = new Vector3();
+const _scale = Vec3.new();
+const _orientation = Vec3.new();
 
-export class PositionalAudio extends Audio<PannerNode> {
+export class PositionalAudio extends Audio {
   panner: PannerNode;
 
   constructor(listener: AudioListener) {

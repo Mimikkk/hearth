@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import { Line3 } from './Line3.ts';
-import { IVec3, Vec3, Vector3 } from '@modules/renderer/engine/math/Vector3.js';
+import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { clamp } from './MathUtils.ts';
-import { Vec4, Vector4 } from '@modules/renderer/engine/math/Vector4.js';
-import { Matrix4 } from '@modules/renderer/engine/math/Matrix4.js';
+import { Vec4 } from '@modules/renderer/engine/math/Vec4.js';
+import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
 
 describe('Math - Line3', () => {
-  it.only('Instancing', () => {
+  it('Instancing', () => {
     let line = Line3.empty();
     expect(line).toEqual({ start: { x: 0, y: 0, z: 0 }, end: { x: 0, y: 0, z: 0 } });
 
@@ -24,21 +24,21 @@ describe('Math - Line3', () => {
     expect(line.equals(clone)).toBe(false);
   });
 
-  it.only('center', () => {
+  it('center', () => {
     const line = Line3.fromParams(0, 0, 0, 2, 2, 2);
     const center = line.center();
 
     expect(center).toEqual({ x: 1, y: 1, z: 1 });
   });
 
-  it.only('delta', () => {
+  it('delta', () => {
     const line = Line3.fromParams(0, 0, 0, 2, 2, 2);
     const delta = line.delta();
 
     expect(delta).toEqual({ x: 2, y: 2, z: 2 });
   });
 
-  it.only('distance/distanceSq', () => {
+  it('distance/distanceSq', () => {
     const line = Line3.fromParams(0, 0, 0, 3, 3, 3);
     const distanceSq = line.distanceSq();
     const distance = line.distance();
@@ -46,25 +46,25 @@ describe('Math - Line3', () => {
     expect(distanceSq).toBe(27);
   });
 
-  it.only('at', () => {
+  it('at', () => {
     const line = Line3.fromParams(0, 0, 1, 0, 0, 2);
     const vec = Vec3.new();
 
     line.at(-1, vec);
-    expect(IVec3.distanceTo(vec, Vec3.new(0, 0, 0))).toBe(0);
+    expect(vec.distanceTo(Vec3.new(0, 0, 0))).toBe(0);
 
     line.at(0, vec);
-    expect(IVec3.distanceTo(vec, Vec3.new(0, 0, 1))).toBe(0);
+    expect(vec.distanceTo(Vec3.new(0, 0, 1))).toBe(0);
     line.at(0.5, vec);
-    expect(IVec3.distanceTo(vec, Vec3.new(0, 0, 1.5))).toBe(0);
+    expect(vec.distanceTo(Vec3.new(0, 0, 1.5))).toBe(0);
     line.at(1, vec);
-    expect(IVec3.distanceTo(vec, Vec3.new(0, 0, 2))).toBe(0);
+    expect(vec.distanceTo(Vec3.new(0, 0, 2))).toBe(0);
 
     line.at(2, vec);
-    expect(IVec3.distanceTo(vec, Vec3.new(0, 0, 3))).toBe(0);
+    expect(vec.distanceTo(Vec3.new(0, 0, 3))).toBe(0);
   });
 
-  it.only('closestAt/closestTo/at', () => {
+  it('closestAt/closestTo/at', () => {
     const line = Line3.fromParams(0, 0, 0, 0, 0, 1);
     const point = Vec3.new();
 
@@ -78,11 +78,11 @@ describe('Math - Line3', () => {
     }
   });
 
-  it.only('applyMat4', () => {
+  it('applyMat4', () => {
     const line = Line3.fromParams(0, 0, 0, 2, 2, 2);
-    const vec4 = new Vector4(2, 2, 2, 1);
-    const mat4 = new Matrix4().makeTranslation(2, 3, 4);
-    const vec3 = new Vector3(2, 3, 4);
+    const vec4 = Vec4.new(2, 2, 2, 1);
+    const mat4 = new Mat4().makeTranslation(2, 3, 4);
+    const vec3 = Vec3.new(2, 3, 4);
 
     line.applyMat4(mat4);
     expect(line).toEqual({ start: { x: 2, y: 3, z: 4 }, end: { x: 4, y: 5, z: 6 } });
@@ -91,7 +91,7 @@ describe('Math - Line3', () => {
     mat4.makeRotationX(Math.PI);
 
     line.applyMat4(mat4);
-    Vec4.applyMat4(vec4, mat4);
+    vec4.applyMat4(mat4);
 
     expect(line).toEqual({
       start: { x: 0, y: 0, z: 0 },
@@ -103,7 +103,7 @@ describe('Math - Line3', () => {
     mat4.setPosition(vec3);
 
     line.applyMat4(mat4);
-    IVec3.applyMat4(vec4, mat4);
+    vec4.applyMat4(mat4);
 
     expect(line).toEqual({
       start: { x: 2, y: 3, z: 4 },

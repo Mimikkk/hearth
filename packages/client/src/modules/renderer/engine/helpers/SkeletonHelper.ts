@@ -1,16 +1,16 @@
 import { LineSegments } from '../objects/LineSegments.js';
-import { Matrix4 } from '../math/Matrix4.js';
+import { Mat4 } from '../math/Mat4.js';
 import { LineBasicMaterial } from '../materials/LineBasicMaterial.js';
 import { Color } from '../math/Color.js';
-import { Vector3 } from '../math/Vector3.js';
+import { Vec3 } from '../math/Vec3.js';
 import { BufferGeometry } from '../core/BufferGeometry.js';
 import { Float32BufferAttribute } from '../core/BufferAttribute.js';
 import { Object3D } from '@modules/renderer/engine/core/Object3D.js';
 import { Bone } from '@modules/renderer/engine/objects/Bone.js';
 
-const _vector = new Vector3();
-const _boneMatrix = new Matrix4();
-const _matrixWorldInv = new Matrix4();
+const _vector = new Vec3();
+const _boneMatrix = new Mat4();
+const _matrixWorldInv = new Mat4();
 
 export class SkeletonHelper extends LineSegments {
   declare isSkeletonHelper: true;
@@ -68,27 +68,27 @@ export class SkeletonHelper extends LineSegments {
     const bones = this.bones;
 
     const geometry = this.geometry;
-    const position = geometry.getAttribute('position');
+    const position = geometry.attributes.position;
 
-    _matrixWorldInv.copy(this.root.matrixWorld).invert();
+    _matrixWorldInv.from(this.root.matrixWorld).invert();
 
     for (let i = 0, j = 0; i < bones.length; i++) {
       const bone = bones[i];
 
       if (bone.parent instanceof Bone) {
         _boneMatrix.multiplyMatrices(_matrixWorldInv, bone.matrixWorld);
-        _vector.setFromMatrixPosition(_boneMatrix);
+        _vector.fromMat4Position(_boneMatrix);
         position.setXYZ(j, _vector.x, _vector.y, _vector.z);
 
         _boneMatrix.multiplyMatrices(_matrixWorldInv, bone.parent.matrixWorld);
-        _vector.setFromMatrixPosition(_boneMatrix);
+        _vector.fromMat4Position(_boneMatrix);
         position.setXYZ(j + 1, _vector.x, _vector.y, _vector.z);
 
         j += 2;
       }
     }
 
-    geometry.getAttribute('position').needsUpdate = true;
+    geometry.attributes.position.needsUpdate = true;
     return super.updateMatrixWorld(force);
   }
 

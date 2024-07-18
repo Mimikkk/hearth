@@ -1,6 +1,7 @@
-import { type IVec3, Vec3 } from './Vector3.js';
-import type { Box3_ } from '@modules/renderer/engine/math/Box3.js';
+import { Vec3 } from './Vec3.js';
+import type { Box3 } from '@modules/renderer/engine/math/Box3.js';
 import type { Const } from '@modules/renderer/engine/math/types.js';
+import type { NumberArray } from '@modules/renderer/engine/math/MathUtils.js';
 
 export class Capsule {
   declare isCapsule: true;
@@ -71,13 +72,14 @@ export class Capsule {
     return this;
   }
 
-  intoArray(array: number[], offset: number = 0): void {
+  intoArray<T extends NumberArray>(array: T = [] as never, offset: number = 0): T {
     this.start.intoArray(array, offset);
     this.end.intoArray(array, offset + 3);
     array[offset + 6] = this.radius;
+    return array;
   }
 
-  translate(vec: Const<IVec3>): this {
+  translate(vec: Const<Vec3>): this {
     this.start.add(vec);
     this.end.add(vec);
 
@@ -92,7 +94,7 @@ export class Capsule {
     );
   }
 
-  intersectsBox({ min, max }: Const<Box3_>): boolean {
+  intersectsBox({ min, max }: Const<Box3>): boolean {
     const { start, end, radius } = this;
 
     return (

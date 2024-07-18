@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { Vec2 } from './Vector2.ts';
-import { Matrix3 } from '@modules/renderer/engine/math/Matrix3.js';
+import { Vec2 } from './Vec2.ts';
+import { Mat3 } from '@modules/renderer/engine/math/Mat3.js';
 import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
 
 describe('Math - Vec2', () => {
@@ -275,7 +275,7 @@ describe('Math - Vec2', () => {
 
   it('applyMat3', () => {
     const a = Vec2.new(2, 3);
-    const m = new Matrix3().set(2, 3, 5, 7, 11, 13, 17, 19, 23);
+    const m = new Mat3().set(2, 3, 5, 7, 11, 13, 17, 19, 23);
 
     a.applyMat3(m);
 

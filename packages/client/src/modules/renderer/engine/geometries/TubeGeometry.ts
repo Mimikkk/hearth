@@ -1,29 +1,29 @@
 import { BufferGeometry } from '../core/BufferGeometry.js';
 import { Float32BufferAttribute } from '../core/BufferAttribute.js';
-import { Vec2 } from '../math/Vector2.js';
-import { Vector3 } from '../math/Vector3.js';
+import { Vec2 } from '../math/Vec2.js';
+import { Vec3 } from '../math/Vec3.js';
 import { Curve } from '@modules/renderer/engine/extras/core/Curve.js';
 import { QuadraticBezierCurve3 } from '../extras/curves/Curves.js';
 
 export class TubeGeometry extends BufferGeometry {
   declare type: string | 'TubeGeometry';
   declare parameters: {
-    path: Curve<Vector3>;
+    path: Curve<Vec3>;
     tubularSegments: number;
     radius: number;
     radialSegments: number;
     closed: boolean;
   };
 
-  tangents: Vector3[];
-  normals: Vector3[];
-  binormals: Vector3[];
+  tangents: Vec3[];
+  normals: Vec3[];
+  binormals: Vec3[];
 
   constructor(
     path: QuadraticBezierCurve3 = new QuadraticBezierCurve3(
-      new Vector3(-1, -1, 0),
-      new Vector3(-1, 1, 0),
-      new Vector3(1, 1, 0),
+      new Vec3(-1, -1, 0),
+      new Vec3(-1, 1, 0),
+      new Vec3(1, 1, 0),
     ),
     tubularSegments: number = 64,
     radius: number = 1,
@@ -52,10 +52,10 @@ export class TubeGeometry extends BufferGeometry {
 
     // helper variables
 
-    const vertex = new Vector3();
-    const normal = new Vector3();
+    const vertex = new Vec3();
+    const normal = new Vec3();
     const uv = Vec2.new();
-    let P = new Vector3();
+    let P = new Vec3();
 
     // buffer
 

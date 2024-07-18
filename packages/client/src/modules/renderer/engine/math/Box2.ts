@@ -1,5 +1,6 @@
-import { IVec2, Vec2 } from '@modules/renderer/engine/math/Vector2.js';
-import { Const, temp } from './types.ts';
+import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
+import type { Const } from './types.ts';
+import type { NumberArray } from '@modules/renderer/engine/math/MathUtils.js';
 
 export class Box2 {
   declare isBox2: true;
@@ -62,7 +63,7 @@ export class Box2 {
     return this.setParams(array[offset], array[offset + 1], array[offset + 2], array[offset + 3]);
   }
 
-  intoArray(array: number[] = [], offset: number = 0): number[] {
+  intoArray<T extends NumberArray>(array: T = [] as never, offset: number = 0): T {
     array[offset] = this.min.x;
     array[offset + 1] = this.min.y;
     array[offset + 2] = this.max.x;
@@ -119,7 +120,7 @@ export class Box2 {
     return this.min.x <= min.x && max.x <= this.max.x && this.min.y <= min.y && max.y <= this.max.y;
   }
 
-  containsVec({ x, y }: Const<IVec2>): boolean {
+  containsVec({ x, y }: Const<Vec2>): boolean {
     return !(x < this.min.x || x > this.max.x || y < this.min.y || y > this.max.y);
   }
 
@@ -155,7 +156,7 @@ export class Box2 {
     return this;
   }
 
-  translate(vec: Const<IVec2>): this {
+  translate(vec: Const<Vec2>): this {
     this.min.add(vec);
     this.max.add(vec);
 
@@ -166,36 +167,36 @@ export class Box2 {
     return into.from(vec).clamp(this.min, this.max);
   }
 
-  euclideanSqTo(vec: Const<IVec2>): number {
+  euclideanSqTo(vec: Const<Vec2>): number {
     return this.clamp(Vec2.from(vec)).distanceSqTo(vec);
   }
 
-  euclideanTo(vec: Const<IVec2>): number {
+  euclideanTo(vec: Const<Vec2>): number {
     return Math.sqrt(this.euclideanSqTo(vec));
   }
 
-  distanceSqTo(vec: Const<IVec2>): number {
+  distanceSqTo(vec: Const<Vec2>): number {
     return this.euclideanSqTo(vec);
   }
 
-  distanceTo(vec: Const<IVec2>): number {
+  distanceTo(vec: Const<Vec2>): number {
     return Math.sqrt(this.distanceSqTo(vec));
   }
 
-  expandCoord(coord: Const<IVec2>): this {
+  expandCoord(coord: Const<Vec2>): this {
     this.min.min(coord);
     this.max.max(coord);
 
     return this;
   }
 
-  expandCoords(coords: Const<IVec2>[]): this {
+  expandCoords(coords: Const<Vec2>[]): this {
     for (let i = 0, it = coords.length; i < it; ++i) this.expandCoord(coords[i]);
 
     return this;
   }
 
-  expandVec(vec: Const<IVec2>): this {
+  expandVec(vec: Const<Vec2>): this {
     this.min.sub(vec);
     this.max.add(vec);
 
@@ -209,3 +210,5 @@ export class Box2 {
     return this;
   }
 }
+
+Box2.prototype.isBox2 = true;

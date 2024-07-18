@@ -1,9 +1,9 @@
 import { Camera } from './Camera.js';
 import * as MathUtils from '../math/MathUtils.js';
-import { Vec2 } from '../math/Vector2.js';
-import { Vector3 } from '../math/Vector3.js';
+import { Vec2 } from '../math/Vec2.js';
+import { Vec3 } from '../math/Vec3.js';
 
-const _vec3 = new Vector3();
+const _vec3 = Vec3.new();
 const _min = Vec2.new();
 const _max = Vec2.new();
 
@@ -96,10 +96,10 @@ export class PerspectiveCamera extends Camera {
   }
 
   getViewBounds(distance: number, min: Vec2, max: Vec2): void {
-    _vec3.set(-1, -1, 0.5).applyMatrix4(this.projectionMatrixInverse);
+    _vec3.set(-1, -1, 0.5).applyMat4(this.projectionMatrixInverse);
     min.set(_vec3.x, _vec3.y).scale(-distance / _vec3.z);
 
-    _vec3.set(1, 1, 0.5).applyMatrix4(this.projectionMatrixInverse);
+    _vec3.set(1, 1, 0.5).applyMat4(this.projectionMatrixInverse);
     max.set(_vec3.x, _vec3.y).scale(-distance / _vec3.z);
   }
 
@@ -168,7 +168,7 @@ export class PerspectiveCamera extends Camera {
 
     this.projectionMatrix.makePerspective(left, left + width, top, top - height, near, this.far, this.coordinateSystem);
 
-    this.projectionMatrixInverse.copy(this.projectionMatrix).invert();
+    this.projectionMatrixInverse.from(this.projectionMatrix).invert();
     return this;
   }
 }

@@ -8,12 +8,12 @@ import { StringKeyframeTrack } from './tracks/StringKeyframeTrack.js';
 import { VectorKeyframeTrack } from './tracks/VectorKeyframeTrack.js';
 import { AnimationBlendMode } from '../constants.js';
 import { Object3D } from '@modules/renderer/engine/core/Object3D.js';
-import { Vector3 } from '@modules/renderer/engine/math/Vector3.js';
+import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { v4 } from 'uuid';
 
 export interface MorphTarget {
   name: string;
-  vertices: Vector3[];
+  vertices: Vec3[];
 }
 
 export class AnimationClip {

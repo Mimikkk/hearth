@@ -1,18 +1,18 @@
-import { Vector3 } from '../../math/Vector3.js';
+import { Vec3 } from '../../math/Vec3.js';
 import { Curve } from '../core/Curve.js';
 
-export class LineCurve3 extends Curve<Vector3> {
+export class LineCurve3 extends Curve<Vec3> {
   declare isLineCurve3: true;
   declare type: 'LineCurve3';
 
   constructor(
-    public v1: Vector3 = new Vector3(),
-    public v2: Vector3 = new Vector3(),
+    public v1: Vec3 = new Vec3(),
+    public v2: Vec3 = new Vec3(),
   ) {
     super();
   }
 
-  getPoint(t: number, optionalTarget: Vector3 = new Vector3()): Vector3 {
+  getPoint(t: number, optionalTarget: Vec3 = new Vec3()): Vec3 {
     const point = optionalTarget;
 
     if (t === 1) {
@@ -26,15 +26,15 @@ export class LineCurve3 extends Curve<Vector3> {
   }
 
   // Line curve is linear, so we can overwrite default getPointAt
-  getPointAt(u: number, optionalTarget: Vector3 = new Vector3()) {
+  getPointAt(u: number, optionalTarget: Vec3 = new Vec3()) {
     return this.getPoint(u, optionalTarget);
   }
 
-  getTangent(t: number, optionalTarget: Vector3 = new Vector3()) {
+  getTangent(t: number, optionalTarget: Vec3 = new Vec3()) {
     return optionalTarget.subVectors(this.v2, this.v1).normalize();
   }
 
-  getTangentAt(u: number, optionalTarget: Vector3 = new Vector3()) {
+  getTangentAt(u: number, optionalTarget: Vec3 = new Vec3()) {
     return this.getTangent(u, optionalTarget);
   }
 

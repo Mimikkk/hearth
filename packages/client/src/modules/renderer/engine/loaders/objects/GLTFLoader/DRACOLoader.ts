@@ -178,7 +178,7 @@ class DRACOLoader {
     const _color = new Color();
 
     for (let i = 0, il = attribute.count; i < il; i++) {
-      _color.fromBufferAttribute(attribute, i).convertSRGBToLinear();
+      _color.fromAttribute(attribute, i).convertSRGBToLinear();
       attribute.setXYZ(i, _color.r, _color.g, _color.b);
     }
   }

@@ -1,6 +1,6 @@
 import { AmmoPhysics } from '@modules/renderer/engine/physics/AmmoPhysics.ts';
 import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.ts';
-import { Vector3 } from '@modules/renderer/engine/math/Vector3.ts';
+import { Vec3 } from '@modules/renderer/engine/math/Vec3.ts';
 import { PerspectiveCamera } from '@modules/renderer/engine/cameras/PerspectiveCamera.ts';
 import { Scene } from '@modules/renderer/engine/scenes/Scene.ts';
 import { Color } from '@modules/renderer/engine/math/Color.ts';
@@ -10,7 +10,7 @@ import { Mesh } from '@modules/renderer/engine/objects/Mesh.ts';
 import { BoxGeometry } from '@modules/renderer/engine/geometries/BoxGeometry.ts';
 import { ShadowMaterial } from '@modules/renderer/engine/materials/ShadowMaterial.ts';
 import { MeshLambertMaterial } from '@modules/renderer/engine/materials/MeshLambertMaterial.ts';
-import { Matrix4 } from '@modules/renderer/engine/math/Matrix4.ts';
+import { Mat4 } from '@modules/renderer/engine/math/Mat4.ts';
 import { InstancedMesh } from '@modules/renderer/engine/objects/InstancedMesh.ts';
 import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.ts';
 import { IcosahedronGeometry } from '@modules/renderer/engine/geometries/IcosahedronGeometry.ts';
@@ -18,7 +18,7 @@ import { BufferUsage } from '@modules/renderer/engine/constants.ts';
 import Stats from 'stats-js';
 
 const physics = await AmmoPhysics();
-const position = new Vector3();
+const position = new Vec3();
 
 //
 
@@ -48,7 +48,7 @@ scene.add(floor);
 
 const material = new MeshLambertMaterial();
 
-const matrix = new Matrix4();
+const matrix = new Mat4();
 const color = new Color();
 
 // Boxes

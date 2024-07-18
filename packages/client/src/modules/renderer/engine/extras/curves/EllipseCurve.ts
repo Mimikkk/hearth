@@ -1,5 +1,5 @@
 import { Curve } from '../core/Curve.js';
-import { Vec2 } from '../../math/Vector2.js';
+import { Vec2 } from '../../math/Vec2.js';
 
 export class EllipseCurve extends Curve<Vec2> {
   declare isEllipseCurve: true;

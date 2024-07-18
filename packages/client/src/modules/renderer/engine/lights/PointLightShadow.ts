@@ -1,19 +1,19 @@
 import { LightShadow } from './LightShadow.js';
 import { PerspectiveCamera } from '../cameras/PerspectiveCamera.js';
-import { Matrix4 } from '../math/Matrix4.js';
-import { Vec2 } from '../math/Vector2.js';
-import { Vector3 } from '../math/Vector3.js';
-import { Vector4 } from '../math/Vector4.js';
+import { Mat4 } from '../math/Mat4.js';
+import { Vec2 } from '../math/Vec2.js';
+import { Vec3 } from '../math/Vec3.js';
+import { Vec4 } from '../math/Vec4.js';
 import { PointLight } from './PointLight.js';
 
-const _projScreenMatrix = new Matrix4();
-const _lightPositionWorld = new Vector3();
-const _lookTarget = new Vector3();
+const _projScreenMatrix = new Mat4();
+const _lightPositionWorld = new Vec3();
+const _lookTarget = new Vec3();
 
 export class PointLightShadow extends LightShadow<PerspectiveCamera> {
   declare isPointLightShadow: true;
-  _cubeDirections: Vector3[];
-  _cubeUps: Vector3[];
+  _cubeDirections: Vec3[];
+  _cubeUps: Vec3[];
 
   constructor() {
     super(new PerspectiveCamera(90, 1, 0.5, 500));
@@ -36,35 +36,35 @@ export class PointLightShadow extends LightShadow<PerspectiveCamera> {
       // z - Negative z direction
 
       // positive X
-      new Vector4(2, 1, 1, 1),
+      new Vec4(2, 1, 1, 1),
       // negative X
-      new Vector4(0, 1, 1, 1),
+      new Vec4(0, 1, 1, 1),
       // positive Z
-      new Vector4(3, 1, 1, 1),
+      new Vec4(3, 1, 1, 1),
       // negative Z
-      new Vector4(1, 1, 1, 1),
+      new Vec4(1, 1, 1, 1),
       // positive Y
-      new Vector4(3, 0, 1, 1),
+      new Vec4(3, 0, 1, 1),
       // negative Y
-      new Vector4(1, 0, 1, 1),
+      new Vec4(1, 0, 1, 1),
     ];
 
     this._cubeDirections = [
-      new Vector3(1, 0, 0),
-      new Vector3(-1, 0, 0),
-      new Vector3(0, 0, 1),
-      new Vector3(0, 0, -1),
-      new Vector3(0, 1, 0),
-      new Vector3(0, -1, 0),
+      new Vec3(1, 0, 0),
+      new Vec3(-1, 0, 0),
+      new Vec3(0, 0, 1),
+      new Vec3(0, 0, -1),
+      new Vec3(0, 1, 0),
+      new Vec3(0, -1, 0),
     ];
 
     this._cubeUps = [
-      new Vector3(0, 1, 0),
-      new Vector3(0, 1, 0),
-      new Vector3(0, 1, 0),
-      new Vector3(0, 1, 0),
-      new Vector3(0, 0, 1),
-      new Vector3(0, 0, -1),
+      new Vec3(0, 1, 0),
+      new Vec3(0, 1, 0),
+      new Vec3(0, 1, 0),
+      new Vec3(0, 1, 0),
+      new Vec3(0, 0, 1),
+      new Vec3(0, 0, -1),
     ];
   }
 
@@ -79,7 +79,7 @@ export class PointLightShadow extends LightShadow<PerspectiveCamera> {
       camera.updateProjectionMatrix();
     }
 
-    _lightPositionWorld.setFromMatrixPosition(light.matrixWorld);
+    _lightPositionWorld.fromMat4Position(light.matrixWorld);
     camera.position.copy(_lightPositionWorld);
 
     _lookTarget.copy(camera.position);

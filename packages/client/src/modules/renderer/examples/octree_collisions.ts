@@ -9,8 +9,8 @@ import { DirectionalLight } from '@modules/renderer/engine/lights/DirectionalLig
 import { IcosahedronGeometry } from '@modules/renderer/engine/geometries/IcosahedronGeometry.js';
 import { MeshLambertMaterial } from '@modules/renderer/engine/materials/MeshLambertMaterial.js';
 import { Mesh } from '@modules/renderer/engine/objects/Mesh.js';
-import { Sphere, Sphere_ } from '@modules/renderer/engine/math/Sphere.js';
-import { IVec3, Vec3, Vector3 } from '@modules/renderer/engine/math/Vector3.js';
+import { Sphere } from '@modules/renderer/engine/math/Sphere.js';
+import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { Octree } from '@modules/renderer/engine/math/Octree.js';
 import { Capsule } from '@modules/renderer/engine/math/Capsule.js';
 import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/GLTFLoader.js';
@@ -72,7 +72,7 @@ const sphereMaterial = new MeshLambertMaterial({ color: 0xdede8d });
 const spheres: {
   mesh: Mesh;
   collider: Sphere;
-  velocity: Vector3;
+  velocity: Vec3;
 }[] = [];
 let sphereIdx = 0;
 
@@ -85,8 +85,8 @@ for (let i = 0; i < NUM_SPHERES; i++) {
 
   spheres.push({
     mesh: sphere,
-    collider: new Sphere(new Vector3(0, -100, 0), SPHERE_RADIUS),
-    velocity: new Vector3(),
+    collider: new Sphere(new Vec3(0, -100, 0), SPHERE_RADIUS),
+    velocity: new Vec3(),
   });
 }
 
@@ -94,17 +94,17 @@ const worldOctree = new Octree();
 
 const playerCollider = Capsule.new(Vec3.new(0, 0.35, 0), Vec3.new(0, 1, 0), 0.35);
 
-const playerVelocity = new Vector3();
-const playerDirection = new Vector3();
+const playerVelocity = new Vec3();
+const playerDirection = new Vec3();
 
 let playerOnFloor = false;
 let mouseTime = 0;
 
 const keyStates: Record<string, boolean> = {};
 
-const vector1 = new Vector3();
-const vector2 = new Vector3();
-const vector3 = new Vector3();
+const vector1 = new Vec3();
+const vector2 = new Vec3();
+const vector3 = new Vec3();
 
 document.addEventListener('keydown', event => {
   keyStates[event.code] = true;
@@ -169,11 +169,11 @@ function playerCollisions() {
     playerOnFloor = result.normal.y > 0;
 
     if (!playerOnFloor) {
-      playerVelocity.addScaledVector(result.normal, -IVec3.dot(result.normal, playerVelocity));
+      playerVelocity.addScaledVector(result.normal, -Vec3.dot(result.normal, playerVelocity));
     }
 
     if (result.depth >= 1e-10) {
-      IVec3.scale(result.normal, result.depth);
+      Vec3.scale(result.normal, result.depth);
       playerCollider.translate(result.normal);
     }
   }
@@ -199,7 +199,7 @@ function updatePlayer(deltaTime: number) {
   camera.position.copy(playerCollider.end);
 }
 
-function playerSphereCollision(sphere: { collider: Sphere; velocity: Vector3 }) {
+function playerSphereCollision(sphere: { collider: Sphere; velocity: Vec3 }) {
   const center = vector1.addVectors(playerCollider.start, playerCollider.end).multiplyScalar(0.5);
 
   const sphere_center = sphere.collider.center;
@@ -210,7 +210,7 @@ function playerSphereCollision(sphere: { collider: Sphere; velocity: Vector3 }) 
   // approximation: player = 3 spheres
 
   for (const point of [playerCollider.start, playerCollider.end, center]) {
-    const d2 = IVec3.distanceSqTo(point, sphere_center);
+    const d2 = Vec3.distanceSqTo(point, sphere_center);
 
     if (d2 < r2) {
       const normal = vector1.subVectors(point, sphere_center).normalize();
@@ -233,7 +233,7 @@ function spheresCollisions() {
     for (let j = i + 1; j < length; j++) {
       const s2 = spheres[j];
 
-      const d2 = s1.collider.center.distanceToSquared(s2.collider.center);
+      const d2 = s1.collider.center.distanceSqTo(s2.collider.center);
       const r = s1.collider.radius + s2.collider.radius;
       const r2 = r * r;
 
@@ -261,9 +261,9 @@ function updateSpheres(deltaTime: number) {
     const result = worldOctree.sphereIntersect(sphere.collider);
 
     if (result) {
-      sphere.velocity.addScaledVector(result.normal, -IVec3.dot(result.normal, sphere.velocity) * 1.5);
+      sphere.velocity.addScaledVector(result.normal, -Vec3.dot(result.normal, sphere.velocity) * 1.5);
 
-      IVec3.scale(result.normal, result.depth);
+      Vec3.scale(result.normal, result.depth);
       sphere.collider.center.add(result.normal);
     } else {
       sphere.velocity.y -= GRAVITY * deltaTime;

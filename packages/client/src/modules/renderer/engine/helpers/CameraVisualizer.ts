@@ -1,5 +1,5 @@
 import { Camera } from '../cameras/Camera.js';
-import { Vector3 } from '../math/Vector3.js';
+import { Vec3 } from '../math/Vec3.js';
 import { LineSegments } from '../objects/LineSegments.js';
 import { Color } from '../math/Color.js';
 import { LineBasicMaterial } from '../materials/LineBasicMaterial.js';
@@ -8,7 +8,7 @@ import { Float32BufferAttribute } from '../core/BufferAttribute.js';
 import { PerspectiveCamera } from '@modules/renderer/engine/cameras/PerspectiveCamera.js';
 import { OrthographicCamera } from '@modules/renderer/engine/cameras/OrthographicCamera.js';
 
-const _vector = new Vector3();
+const _vector = new Vec3();
 const _camera = new Camera();
 
 export class CameraVisualizer extends LineSegments {
@@ -190,7 +190,7 @@ export class CameraVisualizer extends LineSegments {
     const w = 1;
     const h = 1;
 
-    _camera.projectionMatrixInverse.copy(this.camera.projectionMatrixInverse);
+    _camera.projectionMatrixInverse.from(this.camera.projectionMatrixInverse);
 
     // center / target
     setPoint('c', pointMap, geometry, _camera, 0, 0, -1);
@@ -224,7 +224,7 @@ export class CameraVisualizer extends LineSegments {
     setPoint('cn3', pointMap, geometry, _camera, 0, -h, -1);
     setPoint('cn4', pointMap, geometry, _camera, 0, h, -1);
 
-    geometry.getAttribute('position').needsUpdate = true;
+    geometry.attributes.position.needsUpdate = true;
   }
 
   dispose() {
@@ -247,7 +247,7 @@ function setPoint(
   const points = pointMap[point];
 
   if (points !== undefined) {
-    const position = geometry.getAttribute('position');
+    const position = geometry.attributes.position;
 
     for (let i = 0, l = points.length; i < l; i++) {
       position.setXYZ(points[i], _vector.x, _vector.y, _vector.z);

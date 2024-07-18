@@ -1,7 +1,8 @@
-import { Vec3 } from './Vector3.js';
-import { Matrix4 } from './Matrix4.js';
+import { Vec3 } from './Vec3.js';
+import type { Mat4 } from './Mat4.js';
 import { clamp } from './MathUtils.js';
-import { Const, temp } from '@modules/renderer/engine/math/types.js';
+import type { Const } from '@modules/renderer/engine/math/types.js';
+import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
 
 export class Line3 {
   declare isLine3: true;
@@ -47,6 +48,15 @@ export class Line3 {
     return into.setParams(x1, y1, z1, x2, y2, z2);
   }
 
+  static fromAttribute(
+    attribute: Const<Attribute>,
+    i0: number = 0,
+    i1: number = 1,
+    into: Line3 = Line3.empty(),
+  ): Line3 {
+    return into.fromAttribute(attribute, i0, i1);
+  }
+
   set(start: Const<Vec3>, end: Const<Vec3>): this {
     this.start.from(start);
     this.end.from(end);
@@ -66,6 +76,12 @@ export class Line3 {
   setParams(x1: number, y1: number, z1: number, x2: number, y2: number, z2: number): this {
     this.start.set(x1, y1, z1);
     this.end.set(x2, y2, z2);
+    return this;
+  }
+
+  fromAttribute(attribute: Const<Attribute>, i0: number = 0, i1: number = 1): this {
+    this.start.fromAttribute(attribute, i0);
+    this.end.fromAttribute(attribute, i1);
     return this;
   }
 
@@ -103,13 +119,13 @@ export class Line3 {
   }
 
   closestAt(vec: Const<Vec3>): number {
-    const offset = _v1(vec).sub(this.start);
-    const delta = this.delta(_v2());
+    const offset = Vec3.from(vec).sub(this.start);
+    const delta = this.delta();
 
     return clamp(delta.dot(offset) / delta.dot(delta), 0, 1);
   }
 
-  applyMat4(matrix: Const<Matrix4>): this {
+  applyMat4(matrix: Const<Mat4>): this {
     this.start.applyMat4(matrix);
     this.end.applyMat4(matrix);
     return this;
@@ -129,6 +145,3 @@ export class Line3 {
 }
 
 Line3.prototype.isLine3 = true;
-
-const _v1 = temp(Vec3.new);
-const _v2 = temp(Vec3.new);

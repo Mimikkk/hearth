@@ -8,7 +8,7 @@ import { uv } from '../accessors/UVNode.js';
 import { texturePass } from './PassNode.js';
 import { RenderTarget } from '@modules/renderer/engine/engine.js';
 import { QuadMesh } from '../../objects/QuadMesh.js';
-import { Vec2 } from '@modules/renderer/engine/math/Vector2.js';
+import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 
 const quadMesh = new QuadMesh();
 

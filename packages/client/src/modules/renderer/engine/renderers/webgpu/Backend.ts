@@ -1,4 +1,4 @@
-import { BufferAttribute, CoordinateSystem, Object3D, RenderTarget, Scene, Texture, Vector3 } from '../../engine.js';
+import { BufferAttribute, CoordinateSystem, Object3D, RenderTarget, Scene, Texture, Vec3 } from '../../engine.js';
 
 import {
   GPUFeatureNameType,
@@ -36,8 +36,8 @@ export class Backend {
     return geometry.isInstancedBufferGeometry ? geometry.instanceCount : object.isInstancedMesh ? object.count : 1;
   }
 
-  getDrawingBufferSize(): Vector3 {
-    const vec3 = new Vector3();
+  getDrawingBufferSize(): Vec3 {
+    const vec3 = new Vec3();
     return this.renderer.getDrawingBufferSize(vec3);
   }
 
@@ -1049,7 +1049,7 @@ export class Backend {
     return this.adapter.features.has(name);
   }
 
-  copyTextureToTexture(position: Vector3, source: Texture, into: Texture, level: number = 0) {
+  copyTextureToTexture(position: Vec3, source: Texture, into: Texture, level: number = 0) {
     const encoder = this.device.createCommandEncoder({
       label: 'copyTextureToTexture_' + source.id + '_' + into.id,
     });

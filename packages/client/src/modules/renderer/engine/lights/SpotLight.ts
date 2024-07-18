@@ -21,7 +21,7 @@ export class SpotLight extends Light<SpotLightShadow> {
   ) {
     super(color, intensity);
 
-    this.position.copy(Object3D.DEFAULT_UP);
+    this.position.from(Object3D.Up);
     this.updateMatrix();
 
     this.target = new Object3D();

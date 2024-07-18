@@ -5,7 +5,7 @@ import { nodeObject } from '../shadernode/ShaderNodes.js';
 import { uniform } from '../core/UniformNode.js';
 import { perspectiveDepthToViewZ, viewZToOrthographicDepth } from './ViewportDepthNode.js';
 import { DepthTexture, RenderTarget, TextureDataType, ToneMapping } from '@modules/renderer/engine/engine.js';
-import { Vec2 } from '@modules/renderer/engine/math/Vector2.js';
+import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 
 class PassTextureNode extends TextureNode {
   constructor(passNode, texture) {

@@ -1,237 +1,221 @@
-import { IVec3, Vec3 } from './Vector3.js';
-import { Box3_ } from '@modules/renderer/engine/math/Box3.js';
-import { Plane_ } from '@modules/renderer/engine/math/Plane.js';
-import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
-import { Const } from '@modules/renderer/engine/math/types.js';
+import { Vec3 } from './Vec3.js';
+import type { Box3 } from '@modules/renderer/engine/math/Box3.js';
+import { Plane } from '@modules/renderer/engine/math/Plane.js';
+import type { Const } from '@modules/renderer/engine/math/types.js';
+import type { Attribute } from '../core/Attribute.ts';
 
-export interface Triangle {
-  a: Vec3;
-  b: Vec3;
-  c: Vec3;
-}
+export class Triangle {
+  declare isTriangle: true;
 
-export namespace Triangle {
-  export const create = (a: Vec3 = Vec3.new(), b: Vec3 = Vec3.new(), c: Vec3 = Vec3.new()): Triangle => ({ a, b, c });
-  export const empty = (): Triangle => create();
+  constructor(
+    public a: Vec3 = Vec3.new(),
+    public b: Vec3 = Vec3.new(),
+    public c: Vec3 = Vec3.new(),
+  ) {}
 
-  export const set = (self: Triangle, a: Const<Vec3>, b: Const<Vec3>, c: Const<Vec3>): Triangle => {
-    IVec3.fill(self.a, a);
-    IVec3.fill(self.b, b);
-    IVec3.fill(self.c, c);
-    return self;
-  };
-  export const fill_ = (self: Triangle, { a, b, c }: Const<Triangle>): Triangle => set(self, a, b, c);
+  static interpolate(from: Const<Triangle>, to: Const<Triangle>, vec: Const<Vec3>, into: Vec3 = Vec3.new()): Vec3 {
+    if (!from.barycoord(vec, _coord)) return into.set(0, 0, 0);
 
-  export const fromPointsAndIndices = (points: Const<Vec3>[], i0: number, i1: number, i2: number): Triangle =>
-    fromPointsAndIndices_(points, i0, i1, i2, empty());
-  export const fromPointsAndIndices_ = (
+    return into.set(0, 0, 0).addScaled(to.a, _coord.x).addScaled(to.b, _coord.y).addScaled(to.c, _coord.z);
+  }
+
+  static new(a: Vec3 = Vec3.new(), b: Vec3 = Vec3.new(), c: Vec3 = Vec3.new()): Triangle {
+    return new Triangle(a, b, c);
+  }
+
+  static empty(): Triangle {
+    return Triangle.new();
+  }
+
+  static clone(from: Const<Triangle>, into: Triangle = Triangle.empty()): Triangle {
+    return into.from(from);
+  }
+
+  static is(from: any): from is Triangle {
+    return from?.isTriangle === true;
+  }
+
+  static into(into: Triangle, from: Const<Triangle>): Triangle {
+    return into.from(from);
+  }
+
+  static from(from: Const<Triangle>, into: Triangle = Triangle.new()): Triangle {
+    return into.from(from);
+  }
+
+  static fromCoords(
     points: Const<Vec3>[],
-    i0: number,
-    i1: number,
-    i2: number,
-    into: Triangle,
-  ): Triangle => set(into, points[i0], points[i1], points[i2]);
-  export const fillPointsAndIndices = (
-    self: Triangle,
-    points: Const<Vec3>[],
-    i0: number,
-    i1: number,
-    i2: number,
-  ): Triangle => fromPointsAndIndices_(points, i0, i1, i2, self);
+    i0: number = 0,
+    i1: number = 1,
+    i2: number = 2,
+    into: Triangle = Triangle.new(),
+  ): Triangle {
+    return into.fromCoords(points, i0, i1, i2);
+  }
 
-  export const fromAttributeAndIndices = (
-    attribute: Const<BufferAttribute>,
-    i0: number,
-    i1: number,
-    i2: number,
-  ): Triangle => fromAttributeAndIndices_(attribute, i0, i1, i2, empty());
-  export const fromAttributeAndIndices_ = (
-    attribute: Const<BufferAttribute>,
-    i0: number,
-    i1: number,
-    i2: number,
-    into: Triangle,
-  ): Triangle => {
-    IVec3.fromAttribute_(attribute, i0, into.a);
-    IVec3.fromAttribute_(attribute, i1, into.b);
-    IVec3.fromAttribute_(attribute, i2, into.c);
-    return into;
-  };
-  export const fillAttributeAndIndices = (
-    self: Triangle,
-    attribute: Const<BufferAttribute>,
-    i0: number,
-    i1: number,
-    i2: number,
-  ) => fromAttributeAndIndices_(attribute, i0, i1, i2, self);
+  static fromAttribute(
+    attribute: Const<Attribute>,
+    i0: number = 0,
+    i1: number = 1,
+    i2: number = 2,
+    into: Triangle = Triangle.new(),
+  ): Triangle {
+    return into.fromAttribute(attribute, i0, i1, i2);
+  }
 
-  export const clone = (from: Const<Triangle>): Triangle => clone_(from, empty());
-  export const clone_ = (from: Const<Triangle>, into: Triangle): Triangle => fill_(into, from);
+  set(a: Const<Vec3>, b: Const<Vec3>, c: Const<Vec3>): this {
+    this.a.from(a);
+    this.b.from(b);
+    this.c.from(c);
+    return this;
+  }
 
-  export const copy = (from: Triangle): Triangle => copy_(from, empty());
-  export const copy_ = (from: Triangle, into: Triangle): Triangle => {
-    into.a = from.a;
-    into.b = from.b;
-    into.c = from.c;
-    return into;
-  };
+  from({ a, b, c }: Const<Triangle>): this {
+    return this.set(a, b, c);
+  }
 
-  export const equals = (a: Const<Triangle>, b: Const<Triangle>): boolean =>
-    a.a.equals(b.a) && a.b.equals(b.b) && a.c.equals(b.c);
+  fromCoords(coords: Const<Vec3>[], i0: number, i1: number, i2: number): this {
+    return this.set(coords[i0], coords[i1], coords[i2]);
+  }
 
-  const _vec = Vec3.empty();
-  export const normal = (self: Const<Triangle>): IVec3 => normal_(self, IVec3.empty());
-  export const normal_ = ({ a, b, c }: Const<Triangle>, into: IVec3): IVec3 => {
-    IVec3.sub_(c, b, into);
-    IVec3.sub_(a, b, _vec);
-    IVec3.cross(into, _vec);
+  fromAttribute(attribute: Const<Attribute>, i0: number, i1: number, i2: number): this {
+    this.a.fromAttribute(attribute, i0);
+    this.b.fromAttribute(attribute, i1);
+    this.c.fromAttribute(attribute, i2);
+    return this;
+  }
 
-    const len = IVec3.lengthSq(into);
-    return len > 0 ? IVec3.scale(into, 1 / Math.sqrt(len)) : IVec3.clear(into);
-  };
+  equals({ a, b, c }: Const<Triangle>): boolean {
+    return this.a.equals(a) && this.b.equals(b) && this.c.equals(c);
+  }
 
-  export const plane = (self: Const<Triangle>): Plane_ => plane_(self, Plane_.empty());
-  export const plane_ = ({ a, b, c }: Const<Triangle>, into: Plane_): Plane_ => Plane_.fillCoplanar(into, a, b, c);
+  normal(into: Vec3 = Vec3.new()): Vec3 {
+    const { a, b, c } = this;
+    into.from(c).sub(a).cross(_normal.from(b).sub(a));
 
-  const _v0 = IVec3.empty();
-  const _v1 = IVec3.empty();
-  const _v2 = IVec3.empty();
-  export const barycoord = (from: Const<Triangle>, vec: IVec3): IVec3 | null => barycoord_(from, vec, IVec3.empty());
-  export const barycoord_ = ({ a, b, c }: Const<Triangle>, vec: Const<IVec3>, into: IVec3): IVec3 | null => {
-    IVec3.sub_(c, a, _v0);
-    IVec3.sub_(b, a, _v1);
-    IVec3.sub_(vec, a, _v2);
+    const len = into.lengthSq();
+    return len > 0 ? into.scale(1 / Math.sqrt(len)) : into.set(0, 0, 0);
+  }
 
-    const dot00 = IVec3.dot(_v0, _v0);
-    const dot01 = IVec3.dot(_v0, _v1);
-    const dot02 = IVec3.dot(_v0, _v2);
-    const dot11 = IVec3.dot(_v1, _v1);
-    const dot12 = IVec3.dot(_v1, _v2);
+  plane(into: Plane = Plane.new()): Plane {
+    return into.fromCoplanar(this.a, this.b, this.c);
+  }
 
-    const denom = dot00 * dot11 - dot01 * dot01;
+  barycoord(coord: Const<Vec3>, into: Vec3 = Vec3.new()): Vec3 | null {
+    _ba.from(this.c).sub(this.a);
+    _ca.from(this.b).sub(this.a);
+    _pa.from(coord).sub(this.a);
 
-    if (denom === 0) {
-      IVec3.set(into, 0, 0, 0);
+    const dot00 = _ba.dot(_ba);
+    const dot01 = _ba.dot(_ca);
+    const dot02 = _ba.dot(_pa);
+    const dot11 = _ca.dot(_ca);
+    const dot12 = _ca.dot(_pa);
+
+    const denominator = dot00 * dot11 - dot01 * dot01;
+
+    if (denominator === 0) {
+      into.set(0, 0, 0);
       return null;
     }
 
-    const inverse = 1 / denom;
+    const inverse = 1 / denominator;
     const u = (dot11 * dot02 - dot01 * dot12) * inverse;
     const v = (dot00 * dot12 - dot01 * dot02) * inverse;
 
-    return IVec3.set(into, 1 - u - v, v, u);
-  };
+    return into.set(1 - u - v, v, u);
+  }
 
-  export const containsVec = (self: Const<Triangle>, vec: Const<IVec3>): boolean => {
-    if (barycoord_(self, vec, _v0) === null) return false;
-    return _v0.x >= 0 && _v0.y >= 0 && _v0.x + _v0.y <= 1;
-  };
+  containsVec(vec: Const<Vec3>): boolean {
+    if (!this.barycoord(vec, _ba)) return false;
+    return _ba.x >= 0 && _ba.y >= 0 && _ba.x + _ba.y <= 1;
+  }
 
-  export const isFrontFacing = ({ a, b, c }: Const<Triangle>, direction: Const<IVec3>): boolean => {
-    IVec3.sub_(c, b, _v0);
-    IVec3.sub_(a, b, _v1);
-    IVec3.cross(_v0, _v1);
+  isFrontFacing(direction: Const<Vec3>): boolean {
+    const { a, b, c } = this;
+    _ba.from(c).sub(b);
+    _ca.from(a).sub(b);
+    return _ba.cross(_ca).dot(direction) < 0;
+  }
 
-    return IVec3.dot(_v0, direction) < 0;
-  };
-  export const intersectsBox = (self: Const<Triangle>, box: Const<Box3_>): boolean =>
-    Box3_.intersectsTriangle(box, self);
+  intersectsBox(box: Const<Box3>): boolean {
+    return box.intersectsTriangle(this);
+  }
 
-  export const area = ({ a, b, c }: Const<Triangle>): number => {
-    IVec3.sub_(c, b, _v0);
-    IVec3.sub_(a, b, _v1);
-    IVec3.cross(_v0, _v1);
+  interpolate(to: Const<Triangle>, vec: Const<Vec3>, into: Vec3 = Vec3.new()): Vec3 {
+    return Triangle.interpolate(this, to, vec, into);
+  }
 
-    return IVec3.length(_v0) * 0.5;
-  };
+  area(): number {
+    const { a, b, c } = this;
+    _ba.from(c).sub(b);
+    _ca.from(a).sub(b);
+    return _ba.cross(_ca).length() * 0.5;
+  }
 
-  export const midpoint = (self: Const<Triangle>): IVec3 => midpoint_(self, IVec3.empty());
-  export const midpoint_ = ({ a, b, c }: Const<Triangle>, into: IVec3): IVec3 => {
-    IVec3.add_(a, b, into);
-    IVec3.add(into, c);
-    return IVec3.scale(into, 1 / 3);
-  };
+  midpoint(into: Vec3 = Vec3.new()): Vec3 {
+    const { a, b, c } = this;
 
-  export const interpolate = (a: Const<Triangle>, b: Const<Triangle>, point: Const<IVec3>): IVec3 | null =>
-    interpolate_(a, b, point, IVec3.empty());
+    return into
+      .from(a)
+      .add(b)
+      .add(c)
+      .scale(1 / 3);
+  }
 
-  export const interpolate_ = (
-    a: Const<Triangle>,
-    b: Const<Triangle>,
-    point: Const<IVec3>,
-    into: IVec3,
-  ): IVec3 | null => {
-    IVec3.clear(into);
-    if (barycoord_(a, point, _v0) === null) return null;
+  closestTo(point: Const<Vec3>, into: Vec3 = Vec3.new()): Vec3 {
+    const { a, b, c } = this;
+    _ba.from(b).sub(a);
+    _ca.from(c).sub(a);
+    _pa.from(point).sub(a);
 
-    IVec3.scale_(b.a, _v0.x, _v1);
-    IVec3.add_(into, _v1, into);
+    const d1 = _ba.dot(_pa);
+    const d2 = _ca.dot(_pa);
+    if (d1 <= 0 && d2 <= 0) return into.from(a);
 
-    IVec3.scale_(b.b, _v0.y, _v1);
-    IVec3.add_(into, _v1, into);
-
-    IVec3.scale_(b.c, _v0.z, _v1);
-    IVec3.add_(into, _v1, into);
-
-    return into;
-  };
-
-  export const closestTo = (self: Const<Triangle>, point: Const<IVec3>): IVec3 =>
-    closestTo_(self, point, IVec3.empty());
-  export const closestTo_ = ({ a, b, c }: Const<Triangle>, p: Const<IVec3>, into: IVec3): IVec3 => {
-    IVec3.sub_(b, a, _v0);
-    IVec3.sub_(c, a, _v1);
-
-    IVec3.sub_(p, a, _v2);
-    const d1 = IVec3.dot(_v0, _v2);
-    const d2 = IVec3.dot(_v1, _v2);
-    if (d1 <= 0 && d2 <= 0) return IVec3.fill(into, a);
-
-    IVec3.sub_(p, b, _v2);
-    const d3 = IVec3.dot(_v0, _v2);
-    const d4 = IVec3.dot(_v1, _v2);
-    if (d3 >= 0 && d4 <= d3) return IVec3.fill(into, b);
+    _pa.from(point).sub(b);
+    const d3 = _ba.dot(_pa);
+    const d4 = _ca.dot(_pa);
+    if (d3 >= 0 && d4 <= d3) return into.from(b);
 
     const vc = d1 * d4 - d3 * d2;
     if (vc <= 0 && d1 >= 0 && d3 <= 0) {
       const v = d1 / (d1 - d3);
-      IVec3.fill(into, a);
-      IVec3.scale(_v0, v);
-      return IVec3.add(into, _v0);
+
+      return into.from(a).addScaled(_ba, v);
     }
 
-    IVec3.sub_(p, c, _v2);
-    const d5 = IVec3.dot(_v0, _v2);
-    const d6 = IVec3.dot(_v1, _v2);
-    if (d6 >= 0 && d5 <= d6) return IVec3.fill(into, c);
+    _pa.from(point).sub(c);
+    const d5 = _ba.dot(_pa);
+    const d6 = _ca.dot(_pa);
+    if (d6 >= 0 && d5 <= d6) return into.from(c);
 
     const vb = d5 * d2 - d1 * d6;
     if (vb <= 0 && d2 >= 0 && d6 <= 0) {
       const w = d2 / (d2 - d6);
-      IVec3.fill(into, b);
-      IVec3.scale(_v1, w);
-      return IVec3.add(into, _v1);
+
+      return into.from(b).addScaled(_ca, w);
     }
 
     const va = d3 * d6 - d5 * d4;
     if (va <= 0 && d4 - d3 >= 0 && d5 - d6 >= 0) {
+      const _cb = _ba.from(c).sub(b);
       const w = (d4 - d3) / (d4 - d3 + d5 - d6);
-      IVec3.sub_(c, b, _v0);
-      IVec3.fill(into, b);
-      IVec3.scale(_v0, w);
-      return IVec3.add(into, _v0);
+      return into.from(b).addScaled(_cb, w);
     }
 
     const denom = 1 / (va + vb + vc);
     const v = vb * denom;
     const w = vc * denom;
 
-    IVec3.fill(into, a);
-    IVec3.scale(_v0, v);
-    IVec3.add(into, _v0);
-    IVec3.scale(_v1, w);
-    IVec3.add(into, _v1);
-
-    return into;
-  };
+    return into.from(a).addScaled(_ba, v).addScaled(_ca, w);
+  }
 }
+
+Triangle.prototype.isTriangle = true;
+
+const _normal = Vec3.new();
+const _coord = Vec3.new();
+const _ba = Vec3.new();
+const _ca = Vec3.new();
+const _pa = Vec3.new();

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { IVec3, Vector3 } from './Vector3.js';
+import { Vec3 } from './Vec3.js';
 import { Spherical } from './Spherical.js';
 
 describe('Math - Spherical', () => {
@@ -38,8 +38,8 @@ describe('Math - Spherical', () => {
 
   it('fromCoord', () => {
     const a = Spherical.new(1, 1, 1);
-    const b = IVec3.empty();
-    const c = IVec3.create(Math.PI, 1, -Math.PI);
+    const b = Vec3.empty();
+    const c = Vec3.new(Math.PI, 1, -Math.PI);
     const expected = Spherical.new(4.554032147688322, 1.3494066171539107, 2.356194490192345);
 
     expect(a.fromCoord(b)).toBe(a);

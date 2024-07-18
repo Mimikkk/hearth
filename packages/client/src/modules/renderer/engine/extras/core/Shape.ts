@@ -1,5 +1,5 @@
 import { Path } from './Path.js';
-import { Vec2 } from '../../math/Vector2.js';
+import { Vec2 } from '../../math/Vec2.js';
 import { v4 } from 'uuid';
 
 export class Shape extends Path {

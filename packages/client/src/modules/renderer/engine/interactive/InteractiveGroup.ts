@@ -1,5 +1,5 @@
 import { Group } from '../objects/Group.js';
-import { Vec2 } from '../math/Vector2.js';
+import { Vec2 } from '../math/Vec2.js';
 import { Raycaster } from '../core/Raycaster.js';
 import { Camera } from '../cameras/Camera.js';
 import { Renderer } from '../renderers/webgpu/Renderer.js';
@@ -24,7 +24,7 @@ export class InteractiveGroup extends Group {
 
       const { width, height, left, top } = renderer.parameters.canvas.getBoundingClientRect();
       const pointer = Vec2.new(((event.clientX - left) / width) * 2 - 1, (-(event.clientY - top) / height) * 2 + 1);
-      raycaster.setFromCamera(pointer, camera);
+      raycaster.fromCamera(pointer, camera);
 
       const intersection = raycaster.intersects(scope.children, false)[0];
       if (intersection === undefined) return;

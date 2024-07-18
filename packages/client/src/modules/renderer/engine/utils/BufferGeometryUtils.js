@@ -6,7 +6,7 @@ import {
   InstancedBufferAttribute,
   InterleavedBuffer,
   InterleavedBufferAttribute,
-  Vector3,
+  Vec3,
 } from '../engine.js';
 
 function computeMikkTSpaceTangents(geometry, MikkTSpace, negateSign = true) {
@@ -497,7 +497,7 @@ function mergeVertices(geometry, tolerance = 1e-4) {
   // if it's already available.
   const hashToIndex = {};
   const indices = geometry.getIndex();
-  const positions = geometry.getAttribute('position');
+  const positions = geometry.attributes.position;
   const vertexCount = indices ? indices.count : positions.count;
 
   // next value for triangle indices
@@ -640,7 +640,7 @@ function toTrianglesDrawMode(geometry, drawMode) {
     if (index === null) {
       const indices = [];
 
-      const position = geometry.getAttribute('position');
+      const position = geometry.attributes.position;
 
       if (position !== undefined) {
         for (let i = 0; i < position.count; i++) {
@@ -712,17 +712,17 @@ function toTrianglesDrawMode(geometry, drawMode) {
  * @return {Object} An Object with original position/normal attributes and morphed ones.
  */
 function computeMorphedAttributes(object) {
-  const _vA = new Vector3();
-  const _vB = new Vector3();
-  const _vC = new Vector3();
+  const _vA = new Vec3();
+  const _vB = new Vec3();
+  const _vC = new Vec3();
 
-  const _tempA = new Vector3();
-  const _tempB = new Vector3();
-  const _tempC = new Vector3();
+  const _tempA = new Vec3();
+  const _tempB = new Vec3();
+  const _tempC = new Vec3();
 
-  const _morphA = new Vector3();
-  const _morphB = new Vector3();
-  const _morphC = new Vector3();
+  const _morphA = new Vec3();
+  const _morphB = new Vec3();
+  const _morphC = new Vec3();
 
   function _calculateMorphedAttributeData(
     object,
@@ -734,9 +734,9 @@ function computeMorphedAttributes(object) {
     c,
     modifiedAttributeArray,
   ) {
-    _vA.fromBufferAttribute(attribute, a);
-    _vB.fromBufferAttribute(attribute, b);
-    _vC.fromBufferAttribute(attribute, c);
+    _vA.fromAttribute(attribute, a);
+    _vB.fromAttribute(attribute, b);
+    _vC.fromAttribute(attribute, c);
 
     const morphInfluences = object.morphTargetInfluences;
 
@@ -751,9 +751,9 @@ function computeMorphedAttributes(object) {
 
         if (influence === 0) continue;
 
-        _tempA.fromBufferAttribute(morph, a);
-        _tempB.fromBufferAttribute(morph, b);
-        _tempC.fromBufferAttribute(morph, c);
+        _tempA.fromAttribute(morph, a);
+        _tempB.fromAttribute(morph, b);
+        _tempC.fromAttribute(morph, c);
 
         if (morphTargetsRelative) {
           _morphA.addScaledVector(_tempA, influence);
@@ -980,7 +980,7 @@ function mergeGroups(geometry) {
   // create index for non-indexed geometries
 
   if (geometry.getIndex() === null) {
-    const positionAttribute = geometry.getAttribute('position');
+    const positionAttribute = geometry.attributes.position;
     const indices = [];
 
     for (let i = 0; i < positionAttribute.count; i += 3) {
@@ -1055,11 +1055,11 @@ function toCreasedNormals(geometry, creaseAngle = Math.PI / 3 /* 60 degrees */) 
   const hashMultiplier = (1 + 1e-10) * 1e2;
 
   // reusable vectors
-  const verts = [new Vector3(), new Vector3(), new Vector3()];
-  const tempVec1 = new Vector3();
-  const tempVec2 = new Vector3();
-  const tempNorm = new Vector3();
-  const tempNorm2 = new Vector3();
+  const verts = [new Vec3(), new Vec3(), new Vec3()];
+  const tempVec1 = new Vec3();
+  const tempVec2 = new Vec3();
+  const tempNorm = new Vec3();
+  const tempNorm2 = new Vec3();
 
   // hashes a vector
   function hashVertex(v) {
@@ -1078,15 +1078,15 @@ function toCreasedNormals(geometry, creaseAngle = Math.PI / 3 /* 60 degrees */) 
   // find all the normals shared by commonly located vertices
   for (let i = 0, l = posAttr.count / 3; i < l; i++) {
     const i3 = 3 * i;
-    const a = verts[0].fromBufferAttribute(posAttr, i3 + 0);
-    const b = verts[1].fromBufferAttribute(posAttr, i3 + 1);
-    const c = verts[2].fromBufferAttribute(posAttr, i3 + 2);
+    const a = verts[0].fromAttribute(posAttr, i3 + 0);
+    const b = verts[1].fromAttribute(posAttr, i3 + 1);
+    const c = verts[2].fromAttribute(posAttr, i3 + 2);
 
     tempVec1.subVectors(c, b);
     tempVec2.subVectors(a, b);
 
     // add the normal to the map for all vertices
-    const normal = new Vector3().crossVectors(tempVec1, tempVec2).normalize();
+    const normal = new Vec3().crossVectors(tempVec1, tempVec2).normalize();
     for (let n = 0; n < 3; n++) {
       const vert = verts[n];
       const hash = hashVertex(vert);
@@ -1105,9 +1105,9 @@ function toCreasedNormals(geometry, creaseAngle = Math.PI / 3 /* 60 degrees */) 
   for (let i = 0, l = posAttr.count / 3; i < l; i++) {
     // get the face normal for this vertex
     const i3 = 3 * i;
-    const a = verts[0].fromBufferAttribute(posAttr, i3 + 0);
-    const b = verts[1].fromBufferAttribute(posAttr, i3 + 1);
-    const c = verts[2].fromBufferAttribute(posAttr, i3 + 2);
+    const a = verts[0].fromAttribute(posAttr, i3 + 0);
+    const b = verts[1].fromAttribute(posAttr, i3 + 1);
+    const c = verts[2].fromAttribute(posAttr, i3 + 2);
 
     tempVec1.subVectors(c, b);
     tempVec2.subVectors(a, b);

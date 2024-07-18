@@ -1,6 +1,6 @@
-import { Vec2 } from '../math/Vector2.js';
-import { IVec3, Vector3 } from '../math/Vector3.js';
-import { Matrix4 } from '../math/Matrix4.js';
+import { Vec2 } from '../math/Vec2.js';
+import { Vec3 } from '../math/Vec3.js';
+import { Mat4 } from '../math/Mat4.js';
 import { Triangle } from '../math/Triangle.js';
 import { Object3D } from '../core/Object3D.js';
 import { BufferGeometry } from '../core/BufferGeometry.js';
@@ -10,26 +10,7 @@ import { SpriteMaterial } from '../materials/SpriteMaterial.js';
 import { Intersection, Raycaster } from '../core/Raycaster.js';
 import { PerspectiveCamera } from '../cameras/PerspectiveCamera.js';
 import { Uint16BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
-
-const _intersect = new Vector3();
-const _worldScale = new Vector3();
-const _mv = new Vector3();
-
-const _align = Vec2.new();
-const _viewWorldMatrix = new Matrix4();
-
-const _vA = new Vector3();
-const _vB = new Vector3();
-const _vC = new Vector3();
-
-const _uvA = Vec2.new();
-const _uvB = Vec2.new();
-const _uvC = Vec2.new();
-const _triangle1 = Triangle.empty();
-const _triangle2 = Triangle.empty();
-const _center = Vec2.new();
-
-let _geometry: BufferGeometry;
+import { lazy } from '@modules/renderer/engine/math/types.js';
 
 export class Sprite extends Object3D {
   declare isSprite: true;
@@ -43,47 +24,23 @@ export class Sprite extends Object3D {
   geometry: BufferGeometry;
   material: SpriteMaterial;
 
-  constructor(material: SpriteMaterial) {
+  constructor(material: SpriteMaterial = new SpriteMaterial()) {
     super();
-
-    this.isSprite = true;
-
-    this.type = 'Sprite';
-
-    if (_geometry === undefined) {
-      _geometry = new BufferGeometry();
-
-      const float32Array = new Float32Array([
-        -0.5, -0.5, 0, 0, 0, 0.5, -0.5, 0, 1, 0, 0.5, 0.5, 0, 1, 1, -0.5, 0.5, 0, 0, 1,
-      ]);
-
-      const interleavedBuffer = new InterleavedBuffer(float32Array, 5);
-
-      _geometry.index = new Uint16BufferAttribute([0, 1, 2, 0, 2, 3], 1);
-      _geometry.attributes.position = new InterleavedBufferAttribute(interleavedBuffer, 3, 0, false);
-      _geometry.attributes.uv = new InterleavedBufferAttribute(interleavedBuffer, 2, 3, false);
-    }
-
-    this.geometry = _geometry;
     this.material = material;
-
+    this.geometry = geometry();
     this.center = Vec2.new(0.5, 0.5);
   }
 
-  raycast(raycaster: Raycaster, intersects: Intersection[]): void {
-    if (raycaster.camera === null) {
-      throw Error('engine.Sprite: "Raycaster.camera" needs to be set in order to raycast against sprites.');
-    }
+  raycast(raycaster: Raycaster, into: Intersection[] = []): void {
+    _worldScale.fromMat4Scale(this.matrixWorld);
 
-    _worldScale.setFromMatrixScale(this.matrixWorld);
-
-    _viewWorldMatrix.copy(raycaster.camera.matrixWorld);
+    _viewWorldMatrix.from(raycaster.camera.matrixWorld);
     this.modelViewMatrix.multiplyMatrices(raycaster.camera.matrixWorldInverse, this.matrixWorld);
 
-    _mv.setFromMatrixPosition(this.modelViewMatrix);
+    _mv.fromMat4Position(this.modelViewMatrix);
 
-    if (raycaster.camera instanceof PerspectiveCamera && this.material.sizeAttenuation === false) {
-      _worldScale.multiplyScalar(-_mv.z);
+    if (raycaster.camera instanceof PerspectiveCamera && !this.material.sizeAttenuation) {
+      _worldScale.scale(-_mv.z);
     }
 
     const rotation = this.material.rotation;
@@ -96,9 +53,9 @@ export class Sprite extends Object3D {
     }
 
     const center = this.center;
-    IVec3.set(_vA, -0.5, -0.5, 0);
-    IVec3.set(_vB, 0.5, -0.5, 0);
-    IVec3.set(_vC, 0.5, 0.5, 0);
+    _vA.set(-0.5, -0.5, 0);
+    _vB.set(0.5, -0.5, 0);
+    _vC.set(0.5, 0.5, 0);
 
     _center.from(center);
     transformVertex(_vA, _mv, _center, _worldScale, sin, cos);
@@ -109,31 +66,30 @@ export class Sprite extends Object3D {
     _uvA.set(0, 0);
     _uvB.set(1, 0);
     _uvC.set(1, 1);
+    _triangle1.set(_vA, _vB, _vC);
 
-    // check first triangle
-    let intersect = raycaster.ray.intersectTriangle(_vA, _vB, _vC, false, _intersect);
+    let intersect = raycaster.ray.intersectTriangle(_triangle1, false, _intersect);
 
     if (intersect === null) {
-      IVec3.set(_vA, -0.5, 0.5, 0);
+      _vA.set(-0.5, 0.5, 0);
       transformVertex(_vB, _mv, _center, _worldScale, sin, cos);
       _center.fill(center);
 
       _uvB.set(0, 1);
 
-      intersect = raycaster.ray.intersectTriangle(_vA, _vC, _vB, false, _intersect);
+      _triangle2.set(_vA, _vC, _vB);
+      intersect = raycaster.ray.intersectTriangle(_triangle2, false, _intersect);
       if (intersect === null) return;
     }
 
-    const distance = IVec3.distanceTo(raycaster.ray.origin, _intersect);
+    const distance = raycaster.ray.origin.distanceTo(_intersect);
 
     if (distance < raycaster.near || distance > raycaster.far) return;
 
-    Triangle.set(_triangle1, _vA, _vB, _vC);
-    Triangle.set(_triangle2, _vA, _vC, _vB);
-
+    _triangle2.set(_vA, _vC, _vB);
     const uv = Triangle.interpolate(_triangle1, _triangle2, _intersect)!;
 
-    intersects.push({
+    into.push({
       distance: distance,
       point: _intersect.clone(),
       uv: Vec2.new(uv.x, uv.y),
@@ -156,16 +112,46 @@ export class Sprite extends Object3D {
 Sprite.prototype.isSprite = true;
 Sprite.prototype.type = 'Sprite';
 
-const _scale = Vec2.new();
-function transformVertex(vec: Vector3, mv: IVec3, center: Vec2, scale: IVec3, sin?: number, cos?: number) {
-  _scale.from(scale);
-  _align.from(vec).sub(center).scale(0.5).mul(_scale);
+function transformVertex(align: Vec3, mv: Vec3, center: Vec2, scale: Vec3, sin?: number, cos?: number) {
+  _scale.set(scale.x, scale.y);
+  _align.set(align.x, align.y).sub(center).scale(0.5).mul(_scale);
 
   if (sin !== undefined && cos !== undefined) {
-    IVec3.set(vec, mv.x + (cos * _align.x - sin * _align.y), mv.y + (sin * _align.x + cos * _align.y), mv.z);
+    align.set(mv.x + (cos * _align.x - sin * _align.y), mv.y + (sin * _align.x + cos * _align.y), mv.z);
   } else {
-    IVec3.set(vec, mv.x + _align.x, mv.y + _align.y, mv.z);
+    align.set(mv.x + _align.x, mv.y + _align.y, mv.z);
   }
 
-  IVec3.applyMat4(vec, _viewWorldMatrix);
+  align.applyMat4(_viewWorldMatrix);
 }
+
+const geometry = lazy(() => {
+  const geometry = new BufferGeometry();
+
+  const interleavedBuffer = new InterleavedBuffer(
+    new Float32Array([-0.5, -0.5, 0, 0, 0, 0.5, -0.5, 0, 1, 0, 0.5, 0.5, 0, 1, 1, -0.5, 0.5, 0, 0, 1]),
+    5,
+  );
+
+  geometry.index = new Uint16BufferAttribute([0, 1, 2, 0, 2, 3], 1);
+  geometry.attributes.position = new InterleavedBufferAttribute(interleavedBuffer, 3, 0, false);
+  geometry.attributes.uv = new InterleavedBufferAttribute(interleavedBuffer, 2, 3, false);
+
+  return geometry;
+});
+
+const _intersect = Vec3.new();
+const _worldScale = Vec3.new();
+const _mv = Vec3.new();
+const _align = Vec2.new();
+const _viewWorldMatrix = new Mat4();
+const _vA = Vec3.new();
+const _vB = Vec3.new();
+const _vC = Vec3.new();
+const _uvA = Vec2.new();
+const _uvB = Vec2.new();
+const _uvC = Vec2.new();
+const _triangle1 = Triangle.empty();
+const _triangle2 = Triangle.empty();
+const _center = Vec2.new();
+const _scale = Vec2.new();

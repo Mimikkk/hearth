@@ -1,6 +1,6 @@
 // Characters [].:/ are reserved for track binding syntax.
 import { Quaternion } from '@modules/renderer/engine/math/Quaternion.js';
-import { IVec3 } from '@modules/renderer/engine/math/Vector3.js';
+import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 
 const _RESERVED_CHARS_RE = '\\[\\]\\.:\\/';
 const _reservedRe = new RegExp('[' + _RESERVED_CHARS_RE + ']', 'g');
@@ -575,7 +575,7 @@ export class PropertyBinding {
       bindingType = this.BindingType.IsQuaternion;
 
       this.resolvedProperty = nodeProperty;
-    } else if (IVec3.is(nodeProperty)) {
+    } else if (Vec3.is(nodeProperty)) {
       // must use copy for Object3D.Euler/Quaternion
 
       bindingType = this.BindingType.IsVector3;

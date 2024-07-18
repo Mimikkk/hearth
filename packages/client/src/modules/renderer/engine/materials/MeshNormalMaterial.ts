@@ -1,6 +1,6 @@
 import { NormalMapType } from '../constants.js';
 import { Material, MaterialParameters } from './Material.js';
-import { Vec2 } from '../math/Vector2.js';
+import { Vec2 } from '../math/Vec2.js';
 import { Texture } from '@modules/renderer/engine/textures/Texture.js';
 
 export interface MeshNormalMaterialParameters extends MaterialParameters {

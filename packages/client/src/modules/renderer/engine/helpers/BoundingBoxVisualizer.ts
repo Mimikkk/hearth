@@ -1,28 +1,19 @@
-import { Box3, Box3_ } from '../math/Box3.js';
+import { Box3 } from '../math/Box3.js';
 import { LineSegments } from '../objects/LineSegments.js';
 import { LineBasicMaterial } from '../materials/LineBasicMaterial.js';
 import { BufferAttribute } from '../core/BufferAttribute.js';
 import { BufferGeometry } from '../core/BufferGeometry.js';
 import { Object3D } from '@modules/renderer/engine/core/Object3D.js';
 import { ColorRepresentation } from '@modules/renderer/engine/math/Color.js';
-
-const _box = new Box3();
-
-const indices = new Uint16Array([0, 1, 1, 2, 2, 3, 3, 0, 4, 5, 5, 6, 6, 7, 7, 4, 0, 4, 1, 5, 2, 6, 3, 7]);
+import { lazy } from '@modules/renderer/engine/math/types.js';
+import { Random } from '@modules/renderer/engine/math/random.js';
 
 export class BoundingBoxVisualizer extends LineSegments {
   declare type: string | 'BoxHelper';
   object: Object3D;
 
-  constructor(object: Object3D, color: ColorRepresentation = 0xffff00) {
-    const indices = new Uint16Array([0, 1, 1, 2, 2, 3, 3, 0, 4, 5, 5, 6, 6, 7, 7, 4, 0, 4, 1, 5, 2, 6, 3, 7]);
-    const positions = new Float32Array(24);
-
-    const geometry = new BufferGeometry();
-    geometry.index = new BufferAttribute(indices, 1);
-    geometry.attributes.position = new BufferAttribute(positions, 3);
-
-    super(geometry, new LineBasicMaterial({ color: color, toneMapped: false }));
+  constructor(object: Object3D, color: ColorRepresentation = Random.color()) {
+    super(geometry().clone(), new LineBasicMaterial({ color, toneMapped: false }));
 
     this.object = object;
     this.matrixAutoUpdate = false;
@@ -30,12 +21,9 @@ export class BoundingBoxVisualizer extends LineSegments {
   }
 
   update() {
-    if (this.object) {
-      _box.fromObject(this.object, false);
-      Box3_.fillObject(_box, this.object, false);
-    }
+    if (this.object) _box.fromObject(this.object, false);
 
-    if (Box3_.isEmpty(_box)) return;
+    if (_box.isEmpty()) return;
     const position = this.geometry.attributes.position;
 
     const { array } = position;
@@ -85,3 +73,15 @@ export class BoundingBoxVisualizer extends LineSegments {
 }
 
 BoundingBoxVisualizer.prototype.type = 'BoxHelper';
+
+const geometry = lazy(() => {
+  const geometry = new BufferGeometry();
+  geometry.attributes.position = new BufferAttribute(new Float32Array(24), 3);
+  geometry.index = new BufferAttribute(
+    new Uint16Array([0, 1, 1, 2, 2, 3, 3, 0, 4, 5, 5, 6, 6, 7, 7, 4, 0, 4, 1, 5, 2, 6, 3, 7]),
+    1,
+  );
+
+  return geometry;
+});
+const _box = Box3.new();
