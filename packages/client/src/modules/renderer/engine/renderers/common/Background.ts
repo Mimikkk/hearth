@@ -72,7 +72,7 @@ class Background extends DataMap<any, any> {
         backgroundMesh.frustumCulled = false;
 
         backgroundMesh.onBeforeRender = function (renderer: Renderer, scene: Scene, camera: Camera) {
-          this.matrixWorld.copyPosition(camera.matrixWorld);
+          this.matrixWorld.setPosition(camera.matrixWorld);
         };
       }
 
