@@ -52,7 +52,7 @@ export class HemisphereLightHelper extends Object3D {
     if (this.color !== undefined) {
       this.material.color.set(this.color);
     } else {
-      const colors = mesh.geometry!.getAttribute('color');
+      const colors = mesh.geometry!.attributes.color;
 
       _color1.copy(this.light.color);
       _color2.copy(this.light.groundColor);

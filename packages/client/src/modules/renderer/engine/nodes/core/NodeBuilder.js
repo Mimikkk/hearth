@@ -20,15 +20,7 @@ import {
   Vector4NodeUniform,
 } from '../../renderers/common/nodes/NodeUniform.ts';
 
-import {
-  Color,
-  ColorSpace,
-  Float16BufferAttribute,
-  RenderTarget,
-  Revision,
-  Vec3,
-  Vec4,
-} from '@modules/renderer/engine/engine.js';
+import { Color, ColorSpace, RenderTarget, Revision, Vec3, Vec4 } from '@modules/renderer/engine/engine.js';
 
 import { stack } from './StackNode.js';
 import { NodeStack } from '../shadernode/ShaderNodes.js';
@@ -198,11 +190,11 @@ class NodeBuilder {
       const updateType = node.getUpdateType();
       const updateBeforeType = node.getUpdateBeforeType();
 
-      if (updateType !== NodeUpdateType.NONE) {
+      if (updateType !== NodeUpdateType.None) {
         this.updateNodes.push(node.getSelf());
       }
 
-      if (updateBeforeType !== NodeUpdateType.NONE) {
+      if (updateBeforeType !== NodeUpdateType.None) {
         this.updateBeforeNodes.push(node);
       }
     }
@@ -448,7 +440,7 @@ class NodeBuilder {
 
     let arrayType;
 
-    if (!(attribute instanceof Float16BufferAttribute) && normalized !== true) {
+    if (normalized !== true) {
       arrayType = this.getTypeFromArray(array);
     }
 

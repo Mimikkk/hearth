@@ -23,8 +23,8 @@ class Node {
   constructor(nodeType: NodeTypeOption | null = null) {
     this.nodeType = nodeType;
 
-    this.updateType = NodeUpdateType.NONE;
-    this.updateBeforeType = NodeUpdateType.NONE;
+    this.updateType = NodeUpdateType.None;
+    this.updateBeforeType = NodeUpdateType.None;
 
     this.uuid = v4();
 
@@ -36,6 +36,10 @@ class Node {
     this.isNode = true;
 
     this.id = _nodeId++;
+  }
+
+  static is(node: any): node is Node {
+    return node?.isNode === true;
   }
 
   set needsUpdate(value: boolean) {
@@ -51,28 +55,26 @@ class Node {
   declare self: this;
 
   getSelf(): this {
-    // Returns non-node object.
-
     return this.self || this;
   }
 
-  onUpdate(callback, updateType) {
+  onUpdate(callback: (this: this, frame: NodeFrame) => void, updateType: NodeUpdateType) {
     this.updateType = updateType;
     this.update = callback.bind(this.getSelf());
 
     return this;
   }
 
-  onFrameUpdate(callback) {
-    return this.onUpdate(callback, NodeUpdateType.FRAME);
+  onFrameUpdate(callback: (this: this, frame: NodeFrame) => void) {
+    return this.onUpdate(callback, NodeUpdateType.Frame);
   }
 
-  onRenderUpdate(callback) {
-    return this.onUpdate(callback, NodeUpdateType.RENDER);
+  onRenderUpdate(callback: (this: this, frame: NodeFrame) => void) {
+    return this.onUpdate(callback, NodeUpdateType.Render);
   }
 
-  onObjectUpdate(callback) {
-    return this.onUpdate(callback, NodeUpdateType.OBJECT);
+  onObjectUpdate(callback: (this: this, frame: NodeFrame) => void) {
+    return this.onUpdate(callback, NodeUpdateType.Object);
   }
 
   setReference(state: NodeBuilder) {
@@ -179,12 +181,10 @@ class Node {
     }
   }
 
-  generate(builder: NodeBuilder, output: string | null = null) {
+  generate(builder: NodeBuilder, output: string | null = null): undefined | string {
     const { outputNode } = builder.getNodeProperties(this);
 
-    if (outputNode && outputNode.isNode) {
-      return outputNode.build(builder, output);
-    }
+    if (outputNode?.isNode) return outputNode.build(builder, output);
   }
 
   updateBefore(frame: NodeFrame) {

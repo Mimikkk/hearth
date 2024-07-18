@@ -38,7 +38,7 @@ class AfterImageNode extends TempNode {
 
     this._textureNode = texturePass(this, this._compRT.texture);
 
-    this.updateBeforeType = NodeUpdateType.RENDER;
+    this.updateBeforeType = NodeUpdateType.Render;
   }
 
   getTextureNode() {

@@ -106,7 +106,7 @@ export class CameraVisualizer extends LineSegments {
   setColors(frustum: Color, cone: Color, up: Color, target: Color, cross: Color) {
     const geometry = this.geometry;
 
-    const colorAttribute = geometry.getAttribute('color');
+    const colorAttribute = geometry.attributes.color;
 
     // near
 

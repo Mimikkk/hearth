@@ -1,8 +1,8 @@
 export enum NodeUpdateType {
-  NONE = 'none',
-  FRAME = 'frame',
-  RENDER = 'render',
-  OBJECT = 'object',
+  None = 'none',
+  Frame = 'frame',
+  Render = 'render',
+  Object = 'object',
 }
 
 export const buildStages = ['setup', 'analyze', 'generate'] as const;

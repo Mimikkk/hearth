@@ -35,7 +35,7 @@ class UniformsNode extends BufferNode {
     this._elementType = null;
     this._elementLength = 0;
 
-    this.updateType = NodeUpdateType.RENDER;
+    this.updateType = NodeUpdateType.Render;
 
     this.isArrayBufferNode = true;
   }

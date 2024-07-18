@@ -11,7 +11,7 @@ class CameraNode extends Object3DNode {
   constructor(scope = CameraNode.POSITION) {
     super(scope);
 
-    this.updateType = NodeUpdateType.RENDER;
+    this.updateType = NodeUpdateType.Render;
 
     //this._uniformNode.groupNode = cameraGroup;
   }

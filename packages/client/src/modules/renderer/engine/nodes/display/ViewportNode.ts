@@ -5,29 +5,37 @@ import { nodeImmutable, vec2 } from '../shadernode/ShaderNodes.js';
 
 import { Vec4 } from '@modules/renderer/engine/engine.js';
 import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
+import { NodeBuilder } from '../Nodes.js';
 
-let resolution, viewportResult;
+let resolution = Vec2.new();
+let viewportResult = Vec4.new();
 
-class ViewportNode extends Node {
+export enum ViewportType {
+  Coordinate = 'coordinate',
+  Resolution = 'resolution',
+  Viewport = 'viewport',
+  TopLeft = 'topLeft',
+  BottomLeft = 'bottomLeft',
+  TopRight = 'topRight',
+  BottomRight = 'bottomRight',
+}
+
+export class ViewportNode extends Node {
   static type = 'ViewportNode';
 
-  constructor(scope) {
+  constructor(public scope: ViewportType) {
     super();
-
-    this.scope = scope;
-
-    this.isViewportNode = true;
   }
 
   getNodeType() {
-    return this.scope === ViewportNode.VIEWPORT ? 'vec4' : 'vec2';
+    return this.scope === ViewportType.Viewport ? 'vec4' : 'vec2';
   }
 
   getUpdateType() {
-    let updateType = NodeUpdateType.NONE;
+    let updateType = NodeUpdateType.None;
 
-    if (this.scope === ViewportNode.RESOLUTION || this.scope === ViewportNode.VIEWPORT) {
-      updateType = NodeUpdateType.FRAME;
+    if (this.scope === ViewportType.Resolution || this.scope === ViewportType.Viewport) {
+      updateType = NodeUpdateType.Frame;
     }
 
     this.updateType = updateType;
@@ -36,70 +44,51 @@ class ViewportNode extends Node {
   }
 
   update({ renderer }) {
-    if (this.scope === ViewportNode.VIEWPORT) {
+    if (this.scope === ViewportType.Viewport) {
       renderer.getViewport(viewportResult);
     } else {
       renderer.getDrawingBufferSize(resolution);
     }
   }
 
-  setup(/*builder*/) {
-    const scope = this.scope;
+  setup() {
+    const { scope } = this;
 
-    let output = null;
+    switch (scope) {
+      case ViewportType.Resolution:
+        return uniform(resolution);
+      case ViewportType.Viewport:
+        return uniform(viewportResult);
+      default:
+        const output = viewportCoordinate.div(viewportResolution);
 
-    if (scope === ViewportNode.RESOLUTION) {
-      output = uniform(resolution || (resolution = Vec2.new()));
-    } else if (scope === ViewportNode.VIEWPORT) {
-      output = uniform(viewportResult || (viewportResult = new Vec4()));
-    } else {
-      output = viewportCoordinate.div(viewportResolution);
+        let outX = output.x;
+        let outY = output.y;
+        if (scope === ViewportType.BottomLeft || scope === ViewportType.BottomRight) outY = outY.oneMinus();
+        if (scope === ViewportType.TopRight || scope === ViewportType.BottomRight) outX = outX.oneMinus();
 
-      let outX = output.x;
-      let outY = output.y;
-
-      if (/bottom/i.test(scope)) outY = outY.oneMinus();
-      if (/right/i.test(scope)) outX = outX.oneMinus();
-
-      output = vec2(outX, outY);
+        return vec2(outX, outY);
     }
-
-    return output;
   }
 
-  generate(builder) {
-    if (this.scope === ViewportNode.COORDINATE) {
-      let coord = builder.getFragCoord();
+  generate(builder: NodeBuilder): undefined | string {
+    if (this.scope !== ViewportType.Coordinate) return super.generate(builder);
 
-      if (builder.isFlipY()) {
-        // follow webgpu standards
+    let coordinate = builder.getFragCoord();
 
-        const resolution = builder.getNodeProperties(viewportResolution).outputNode.build(builder);
+    if (!builder.isFlipY()) return coordinate;
 
-        coord = `${builder.getType('vec2')}( ${coord}.x, ${resolution}.y - ${coord}.y )`;
-      }
-
-      return coord;
-    }
-
-    return super.generate(builder);
+    const resolution = builder.getNodeProperties(viewportResolution).outputNode.build(builder);
+    return `${builder.getType('vec2')}( ${coordinate}.x, ${resolution}.y - ${coordinate}.y )`;
   }
 }
 
-ViewportNode.COORDINATE = 'coordinate';
-ViewportNode.RESOLUTION = 'resolution';
-ViewportNode.VIEWPORT = 'viewport';
-ViewportNode.TOP_LEFT = 'topLeft';
-ViewportNode.BOTTOM_LEFT = 'bottomLeft';
-ViewportNode.TOP_RIGHT = 'topRight';
-ViewportNode.BOTTOM_RIGHT = 'bottomRight';
-
 export default ViewportNode;
 
-export const viewportCoordinate = nodeImmutable(ViewportNode, ViewportNode.COORDINATE);
-export const viewportResolution = nodeImmutable(ViewportNode, ViewportNode.RESOLUTION);
-export const viewport = nodeImmutable(ViewportNode, ViewportNode.VIEWPORT);
-export const viewportTopLeft = nodeImmutable(ViewportNode, ViewportNode.TOP_LEFT);
-export const viewportBottomLeft = nodeImmutable(ViewportNode, ViewportNode.BOTTOM_LEFT);
-export const viewportTopRight = nodeImmutable(ViewportNode, ViewportNode.TOP_RIGHT);
-export const viewportBottomRight = nodeImmutable(ViewportNode, ViewportNode.BOTTOM_RIGHT);
+export const viewportCoordinate = nodeImmutable(ViewportNode, ViewportType.Coordinate);
+export const viewportResolution = nodeImmutable(ViewportNode, ViewportType.Resolution);
+export const viewport = nodeImmutable(ViewportNode, ViewportType.Viewport);
+export const viewportTopLeft = nodeImmutable(ViewportNode, ViewportType.TopLeft);
+export const viewportBottomLeft = nodeImmutable(ViewportNode, ViewportType.BottomLeft);
+export const viewportTopRight = nodeImmutable(ViewportNode, ViewportType.TopRight);
+export const viewportBottomRight = nodeImmutable(ViewportNode, ViewportType.BottomRight);
