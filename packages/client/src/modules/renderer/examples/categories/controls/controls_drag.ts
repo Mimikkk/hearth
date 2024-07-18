@@ -9,11 +9,8 @@ import {
   Mesh,
   MeshLambertMaterial,
   Object3D,
-  Sphere,
-  SphereGeometry,
   SpotLight,
 } from '@modules/renderer/engine/engine.js';
-import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { DragControls } from '@modules/renderer/engine/controls/DragControls.js';
 import { UI } from '@mimi/ui';
 import { ColorMap } from '@modules/renderer/engine/math/Color.js';
