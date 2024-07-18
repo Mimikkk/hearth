@@ -25,7 +25,7 @@ import { BoundingSphereVisualizer } from '@modules/renderer/engine/helpers/Bound
 
 const createCamera = () => {
   const camera = new PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.25, 30);
-  Vec3.set(camera.position, 0, 1, 3);
+  camera.position.set(0, 1, 3);
   camera.lookAt(0, 0, 0);
 
   return camera;
@@ -41,7 +41,7 @@ const createBox = (geometry: BufferGeometry, x: number, y: number, z: number) =>
   const material = new MeshLambertMaterial({ color: Random.color() });
 
   const mesh = new Mesh(geometry, material);
-  Vec3.set(mesh.position, x, y, z);
+  mesh.position.set(x, y, z);
 
   return mesh;
 };

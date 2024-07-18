@@ -15,14 +15,13 @@ import {
   SpotLight,
 } from '@modules/renderer/engine/engine.js';
 import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
-import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 
 const container = document.createElement('div');
 document.body.appendChild(container);
 
 const createCamera = () => {
   const camera = new PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.25, 30);
-  Vec3.set(camera.position, 0, 2, 3);
+  camera.position.set(0, 2, 3);
   return camera;
 };
 const createLight = () => new SpotLight(0xffffff, 30);
