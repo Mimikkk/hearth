@@ -175,7 +175,7 @@ export class Euler {
   }
 
   fromQuaternion(quaternion: Const<Quaternion>, order: EulerOrder): this {
-    return this.fromMat4(new Mat4().makeRotationFromQuaternion(quaternion), order);
+    return this.fromMat4(new Mat4().asRotationFromQuaternion(quaternion), order);
   }
 
   fromArray(array: Const<number | string>[], offset: number): this {

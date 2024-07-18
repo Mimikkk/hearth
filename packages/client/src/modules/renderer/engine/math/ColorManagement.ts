@@ -2,7 +2,7 @@ import { ColorPrimary, ColorSpace, TransferFunction } from '../constants.js';
 import { Mat3 } from './Mat3.js';
 import type { Color } from './Color.js';
 
-const LinearSRGBToLinearDisplayP3 = Mat3.fromElements(
+const LinearSRGBToLinearDisplayP3 = Mat3.fromColumnOrder(
   0.8224621,
   0.177538,
   0.0,
@@ -14,7 +14,7 @@ const LinearSRGBToLinearDisplayP3 = Mat3.fromElements(
   0.9105199,
 );
 
-const LinearDisplayP3ToLinearSRGB = Mat3.fromElements(
+const LinearDisplayP3ToLinearSRGB = Mat3.fromColumnOrder(
   1.2249401,
   -0.2249404,
   0.0,

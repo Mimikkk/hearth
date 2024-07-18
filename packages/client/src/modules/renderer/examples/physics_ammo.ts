@@ -13,7 +13,6 @@ import { MeshLambertMaterial } from '@modules/renderer/engine/materials/MeshLamb
 import { Mat4 } from '@modules/renderer/engine/math/Mat4.ts';
 import { InstancedMesh } from '@modules/renderer/engine/objects/InstancedMesh.ts';
 import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.ts';
-import { IcosahedronGeometry } from '@modules/renderer/engine/geometries/IcosahedronGeometry.ts';
 import { BufferUsage } from '@modules/renderer/engine/constants.ts';
 import Stats from 'stats-js';
 
@@ -62,7 +61,7 @@ boxes.userData.physics = { mass: 1 };
 scene.add(boxes);
 
 for (let i = 0; i < boxes.count; i++) {
-  matrix.setPosition(Math.random() - 0.5, Math.random() * 2, Math.random() - 0.5);
+  matrix.setPosition(Vec3.new(Math.random() - 0.5, Math.random() * 2, Math.random() - 0.5));
   boxes.setMatrixAt(i, matrix);
   boxes.setColorAt(i, color.setHex(0xffffff * Math.random()));
 }

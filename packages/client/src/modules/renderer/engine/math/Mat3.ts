@@ -37,7 +37,7 @@ export class Mat3 {
     return into.fromArray(array, offset);
   }
 
-  static fromElements(
+  static fromColumnOrder(
     n11: number,
     n12: number,
     n13: number,
@@ -50,6 +50,21 @@ export class Mat3 {
     into: Mat3 = Mat3.empty(),
   ): Mat3 {
     return into.set(n11, n12, n13, n21, n22, n23, n31, n32, n33);
+  }
+
+  static fromRowOrder(
+    n11: number,
+    n12: number,
+    n13: number,
+    n21: number,
+    n22: number,
+    n23: number,
+    n31: number,
+    n32: number,
+    n33: number,
+    into: Mat3 = Mat3.empty(),
+  ): Mat3 {
+    return into.set(n11, n21, n31, n12, n22, n32, n13, n23, n33);
   }
 
   static fromMat4(matrix: Const<Mat4>, into: Mat3 = Mat3.empty()): Mat3 {

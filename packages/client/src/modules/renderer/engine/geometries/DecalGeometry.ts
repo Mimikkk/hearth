@@ -33,7 +33,7 @@ export class DecalGeometry extends BufferGeometry {
     // this matrix represents the transformation of the decal projector
 
     const projectorMatrix = new Mat4();
-    projectorMatrix.makeRotationFromEuler(orientation);
+    projectorMatrix.asRotationFromEuler(orientation);
     projectorMatrix.setPosition(position);
 
     const projectorMatrixInverse = new Mat4();

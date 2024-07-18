@@ -83,7 +83,7 @@ export class Skeleton {
       if (bone) {
         if (isBone(bone.parent)) {
           bone.matrix.from(bone.parent.matrixWorld).invert();
-          bone.matrix.multiply(bone.matrixWorld);
+          bone.matrix.mul(bone.matrixWorld);
         } else {
           bone.matrix.from(bone.matrixWorld);
         }
@@ -107,7 +107,7 @@ export class Skeleton {
       const matrix = bones[i] ? bones[i].matrixWorld : _identityMatrix;
 
       _offsetMatrix.multiplyMatrices(matrix, boneInverses[i]);
-      _offsetMatrix.toArray(boneMatrices as never as number[], i * 16);
+      _offsetMatrix.intoArray(boneMatrices as never as number[], i * 16);
     }
 
     if (boneTexture !== null) {

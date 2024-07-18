@@ -164,7 +164,7 @@ describe('Math - Sphere', () => {
 
   it('applyMat4', () => {
     const sphere = Sphere.fromParams(1, 1, 1, 1);
-    const mat = new Mat4().makeTranslation(1, -2, 1);
+    const mat = new Mat4().asTranslation(1, -2, 1);
 
     const box1 = sphere.bbox().applyMat4(mat);
     expect(sphere.applyMat4(mat)).toBe(sphere);

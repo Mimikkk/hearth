@@ -103,7 +103,7 @@ describe('Math - Vec4', () => {
 
   it('applyMat4', () => {
     const a = Vec4.new(1, 2, 3, 4);
-    const m = new Mat4().makeRotationX(Math.PI);
+    const m = new Mat4().asRotationX(Math.PI);
     a.applyMat4(m);
 
     expectCloseTo(a, Vec4.new(1, -2, -3, 4));
@@ -229,7 +229,7 @@ describe('Math - Vec4', () => {
 
   it('asAxisAngleFromRotation', () => {
     const a = Vec4.new();
-    const m = new Mat4().makeRotationX(Math.PI);
+    const m = new Mat4().asRotationX(Math.PI);
     a.asAxisAngleFromRotation(m);
     expect(a).toEqual(Vec4.new(1, 0, 0, Math.PI));
   });

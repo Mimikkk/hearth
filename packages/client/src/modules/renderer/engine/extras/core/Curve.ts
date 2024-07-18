@@ -252,7 +252,7 @@ export abstract class Curve<T extends Vec2 | Vec3> {
 
         const theta = Math.acos(MathUtils.clamp(tangents[i - 1].dot(tangents[i]), -1, 1)); // clamp for floating pt errors
 
-        normals[i].applyMat4(mat.makeRotationAxis(vec, theta));
+        normals[i].applyMat4(mat.asRotationAxis(vec, theta));
       }
 
       binormals[i].crossVectors(tangents[i], normals[i]);
@@ -270,7 +270,7 @@ export abstract class Curve<T extends Vec2 | Vec3> {
 
       for (let i = 1; i <= segments; i++) {
         // twist a little...
-        normals[i].applyMat4(mat.makeRotationAxis(tangents[i], theta * i));
+        normals[i].applyMat4(mat.asRotationAxis(tangents[i], theta * i));
         binormals[i].crossVectors(tangents[i], normals[i]);
       }
     }

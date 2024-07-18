@@ -58,7 +58,7 @@ describe('Math - Frustum', () => {
   });
 
   it('fromOrthographic/containsVec', () => {
-    const mat = new Mat4().makeOrthographic(0, 1, 1, 0, 1, 5);
+    const mat = new Mat4().asOrthographic(0, 1, 1, 0, 1, 5);
     const frustum = Frustum.fromProjection(mat);
 
     const maxDepth = -5;
@@ -84,7 +84,7 @@ describe('Math - Frustum', () => {
   });
 
   it('fromProjection/containsVec', () => {
-    const mat = new Mat4().makePerspective(0, 1, 1, 0, 1, 5);
+    const mat = new Mat4().asPerspective(0, 1, 1, 0, 1, 5);
     const frustum = Frustum.fromProjection(mat);
 
     const maxDepth = -5;
@@ -114,7 +114,7 @@ describe('Math - Frustum', () => {
   });
 
   it('intersectsObject', () => {
-    const mat = new Mat4().makePerspective(-1, 1, 1, -1, 1, 100);
+    const mat = new Mat4().asPerspective(-1, 1, 1, -1, 1, 100);
     const frustum = Frustum.fromProjection(mat);
     const mesh = new Mesh(new BoxGeometry(1, 1, 1));
 
@@ -132,7 +132,7 @@ describe('Math - Frustum', () => {
   });
 
   it('intersectsSprite', () => {
-    const mat = new Mat4().makePerspective(0, 1, 1, 0, 1, 5);
+    const mat = new Mat4().asPerspective(0, 1, 1, 0, 1, 5);
     const frustum = Frustum.fromProjection(mat);
     const sprite = new Sprite();
 
@@ -148,7 +148,7 @@ describe('Math - Frustum', () => {
   });
 
   it('intersectsSphere', () => {
-    const mat = new Mat4().makePerspective(-1, 1, 1, -1, 1, 100);
+    const mat = new Mat4().asPerspective(-1, 1, 1, -1, 1, 100);
     const frustum = Frustum.fromProjection(mat);
     const sphere = Sphere.fromParams(0, 0, 0, 0);
 
@@ -158,7 +158,7 @@ describe('Math - Frustum', () => {
   });
 
   it('intersectsBox', () => {
-    const mat = new Mat4().makePerspective(-1, 1, 1, -1, 1, 100);
+    const mat = new Mat4().asPerspective(-1, 1, 1, -1, 1, 100);
     const frustum = Frustum.fromProjection(mat);
     const box = Box3.fromParams(0, 0, 0, 1, 1, 1);
 
@@ -170,7 +170,7 @@ describe('Math - Frustum', () => {
   });
 
   it('containsVec', () => {
-    const mat = new Mat4().makePerspective(-1, 1, 1, -1, 1, 100);
+    const mat = new Mat4().asPerspective(-1, 1, 1, -1, 1, 100);
     const frustum = Frustum.fromProjection(mat);
 
     expect(frustum.contains(Vec3.new(0, 0, 0))).toBe(false);

@@ -297,7 +297,7 @@ describe('Math - Vec3', () => {
   it('applyMat4', () => {
     const a = vec3(2, 3, 4);
     const expected = vec3(2, -3, -4);
-    const m = new Mat4().makeRotationX(Math.PI);
+    const m = new Mat4().asRotationX(Math.PI);
 
     closeTo(a.applyMat4(m), expected, Number.EPSILON * 4);
   });

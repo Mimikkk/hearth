@@ -174,7 +174,7 @@ export class InstancedMesh extends Mesh {
   }
 
   setMatrixAt(index: number, matrix: Mat4) {
-    matrix.toArray(this.instanceMatrix.array as never, index * 16);
+    matrix.intoArray(this.instanceMatrix.array as never, index * 16);
   }
 
   setMorphAt(index: number, object: Mesh) {

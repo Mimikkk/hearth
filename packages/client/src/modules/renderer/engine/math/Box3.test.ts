@@ -417,7 +417,7 @@ describe('Math - Box3', () => {
     const c = Box3.fromParams(-1, -1, -1, 1, 1, 1);
     const d = Box3.fromParams(-1, -1, -1, 0, 0, 0);
 
-    const m = new Mat4().makeTranslation(1, -2, 1);
+    const m = new Mat4().asTranslation(1, -2, 1);
     const t1 = vec3(1, -2, 1);
 
     closeToBox(a.clone().applyMat4(m), a.translate(t1));

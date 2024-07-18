@@ -152,7 +152,7 @@ describe('Math - Quaternion', () => {
       euler.order = order;
 
       a.fromEuler(euler);
-      matrix.makeRotationFromEuler(euler);
+      matrix.asRotationFromEuler(euler);
       b.fromRotation(matrix);
 
       expect(a.angleTo(b)).toBeCloseTo(0);
@@ -162,14 +162,14 @@ describe('Math - Quaternion', () => {
   it('fromMat', () => {
     const a = Quaternion.identity();
     const b = Quaternion.new(-9, -2, 3, -4).normalize();
-    const m = new Mat4().makeRotationFromQuaternion(b);
+    const m = new Mat4().asRotationFromQuaternion(b);
     const expected = Quaternion.new(0.8581163303210332, 0.19069251784911848, -0.2860387767736777, 0.38138503569823695);
 
     a.fromRotation(m);
     expectQuaternionWithin(a, expected);
 
     b.set(-1, -2, 1, -1);
-    m.makeRotationFromQuaternion(b);
+    m.asRotationFromQuaternion(b);
     expected.set(1, 2, -1, 1);
 
     a.fromRotation(m);

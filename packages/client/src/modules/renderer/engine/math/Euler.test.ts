@@ -54,10 +54,10 @@ describe('Math - Quaternion', () => {
     const testValues = [eulerZero, eulerAxyz, eulerAzyx];
     for (let i = 0; i < testValues.length; i++) {
       const euler1 = testValues[i];
-      const mat = new Mat4().makeRotationFromEuler(euler1);
+      const mat = new Mat4().asRotationFromEuler(euler1);
 
       const euler2 = Euler.fromMat4(mat, euler1.order);
-      const expected = new Mat4().makeRotationFromEuler(euler2);
+      const expected = new Mat4().asRotationFromEuler(euler2);
 
       expectMatrices(mat, expected);
     }

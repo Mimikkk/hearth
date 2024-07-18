@@ -158,10 +158,10 @@ async function init() {
     blurNode.value = value;
   });
   gui.add({ offsetCube1: 0 }, 'offsetCube1', 0, Math.PI * 2, 0.01).onChange(value => {
-    rotateY1Matrix.makeRotationY(value);
+    rotateY1Matrix.asRotationY(value);
   });
   gui.add({ offsetCube2: 0 }, 'offsetCube2', 0, Math.PI * 2, 0.01).onChange(value => {
-    rotateY2Matrix.makeRotationY(value);
+    rotateY2Matrix.asRotationY(value);
   });
   gui.add(adjustments, 'mix', -1, 2, 0.01);
   gui.add(adjustments, 'procedural', 0, 1, 0.01);
