@@ -5,7 +5,7 @@ import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.j
 import { Plane } from './Plane.ts';
 import { Box3 } from '@modules/renderer/engine/math/Box3.js';
 
-describe('Maths', () => {
+describe('Math - Triangle', () => {
   it('Instancing', () => {
     const triangle = Triangle.empty();
     expect(triangle).toEqual({

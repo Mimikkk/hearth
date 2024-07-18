@@ -1,11 +1,11 @@
 import { Vec3 } from './Vec3.js';
 import type { Sphere } from './Sphere.js';
-import { Plane } from './Plane.js';
+import type { Plane } from './Plane.js';
 import type { Box3 } from './Box3.js';
 import type { Mat4 } from './Mat4.js';
 import type { Const } from '@modules/renderer/engine/math/types.js';
-import { Triangle } from '@modules/renderer/engine/math/Triangle.js';
-import { Line3 } from './Line3.ts';
+import type { Triangle } from '@modules/renderer/engine/math/Triangle.js';
+import type { Line3 } from './Line3.ts';
 
 export class Ray {
   declare isRay: true;
@@ -31,6 +31,22 @@ export class Ray {
     return ray?.isRay === true;
   }
 
+  static from(ray: Const<Ray>, into: Ray = Ray.empty()): Ray {
+    return into.from(ray);
+  }
+
+  static fromParams(
+    originX: number,
+    originY: number,
+    originZ: number,
+    directionX: number,
+    directionY: number,
+    directionZ: number,
+    into: Ray = Ray.new(),
+  ): Ray {
+    return into.setParams(originX, originY, originZ, directionX, directionY, directionZ);
+  }
+
   from(ray: Const<Ray>): this {
     return this.set(ray.origin, ray.direction);
   }
@@ -38,6 +54,19 @@ export class Ray {
   set(origin: Const<Vec3>, direction: Const<Vec3>): this {
     this.origin.from(origin);
     this.direction.from(direction);
+    return this;
+  }
+
+  setParams(
+    originX: number,
+    originY: number,
+    originZ: number,
+    directionX: number,
+    directionY: number,
+    directionZ: number,
+  ): this {
+    this.direction.set(directionX, directionY, directionZ);
+    this.origin.set(originX, originY, originZ);
     return this;
   }
 
@@ -58,8 +87,8 @@ export class Ray {
     return this;
   }
 
-  lookAt(v: Const<Vec3>): this {
-    this.direction.from(v).sub(this.origin).normalize();
+  lookAt(vec: Const<Vec3>): this {
+    this.direction.from(vec).sub(this.origin).normalize();
 
     return this;
   }
@@ -291,7 +320,7 @@ export class Ray {
   }
 
   intersectsBox(box: Const<Box3>): boolean {
-    return this.intersectBox(box, Vec3.new(0, 0, 0)) !== null;
+    return this.intersectBox(box, _vec0) !== null;
   }
 
   intersectTriangle({ a, b, c }: Const<Triangle>, cullBackface: boolean, into: Vec3 = Vec3.new()): Vec3 | null {
@@ -356,6 +385,7 @@ export class Ray {
 
 Ray.prototype.isRay = true;
 
+const _vec0 = Vec3.new();
 const _vec1 = Vec3.new();
 const _vec2 = Vec3.new();
 const _v0 = Vec3.new();

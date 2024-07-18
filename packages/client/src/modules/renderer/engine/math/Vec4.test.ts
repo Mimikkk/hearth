@@ -13,7 +13,7 @@ const expectCloseTo = (a: Vec4, b: Vec4) => {
   expect(a.w).toBeCloseTo(b.w);
 };
 
-describe('Maths', () => {
+describe('Math - Vec4', () => {
   it('instancning', () => {
     const a = Vec4.new();
     expect(a).toEqual(Vec4.new(0, 0, 0, 1));
