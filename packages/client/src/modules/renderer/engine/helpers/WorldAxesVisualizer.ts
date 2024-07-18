@@ -11,12 +11,12 @@ import {
   Sprite,
   SpriteMaterial,
   Vec3,
-  Vec4,
 } from '../engine.js';
 import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 import { Euler } from '@modules/renderer/engine/math/Euler.js';
 import { Quaternion } from '@modules/renderer/engine/math/Quaternion.js';
 import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
+import { ViewportValue } from '@modules/renderer/engine/renderers/common/RenderContext.js';
 
 const turnRate = 2 * Math.PI;
 const dim = 128;
@@ -74,7 +74,7 @@ export class WorldAxesVisualizer extends Object3D {
   orthoCamera: OrthographicCamera;
   q1: Quaternion = Quaternion.identity();
   q2: Quaternion = Quaternion.identity();
-  viewport: Vec4 = new Vec4();
+  viewport: ViewportValue = ViewportValue.new();
   point: Vec3 = new Vec3();
   unsubscribeClick: () => void;
 
@@ -137,32 +137,32 @@ export class WorldAxesVisualizer extends Object3D {
     if (posX === object) {
       return {
         position: new Vec3(1, 0, 0),
-        rotation: Quaternion.fromEuler(Euler.create(0, Math.PI * 0.5, 0)),
+        rotation: Quaternion.fromEuler(Euler.new(0, Math.PI * 0.5, 0)),
       };
     } else if (posY === object) {
       return {
         position: new Vec3(0, 1, 0),
-        rotation: Quaternion.fromEuler(Euler.create(-Math.PI * 0.5, 0, 0)),
+        rotation: Quaternion.fromEuler(Euler.new(-Math.PI * 0.5, 0, 0)),
       };
     } else if (posZ === object) {
       return {
         position: new Vec3(0, 0, 1),
-        rotation: Quaternion.fromEuler(Euler.create(0, 0, 0)),
+        rotation: Quaternion.fromEuler(Euler.new(0, 0, 0)),
       };
     } else if (negX === object) {
       return {
         position: new Vec3(-1, 0, 0),
-        rotation: Quaternion.fromEuler(Euler.create(0, -Math.PI * 0.5, 0)),
+        rotation: Quaternion.fromEuler(Euler.new(0, -Math.PI * 0.5, 0)),
       };
     } else if (negY === object) {
       return {
         position: new Vec3(0, -1, 0),
-        rotation: Quaternion.fromEuler(Euler.create(Math.PI * 0.5, 0, 0)),
+        rotation: Quaternion.fromEuler(Euler.new(Math.PI * 0.5, 0, 0)),
       };
     } else if (negZ === object) {
       return {
         position: new Vec3(0, 0, -1),
-        rotation: Quaternion.fromEuler(Euler.create(0, Math.PI, 0)),
+        rotation: Quaternion.fromEuler(Euler.new(0, Math.PI, 0)),
       };
     }
 
@@ -176,7 +176,7 @@ export class WorldAxesVisualizer extends Object3D {
       axisLines: [posX, posY, posZ, negX, negY, negZ],
     } = this;
 
-    Quaternion.invert_(this.camera.quaternion, quaternion);
+    quaternion.from(this.camera.quaternion).invert();
     this.updateMatrixWorld();
 
     point.set(0, 0, 1);

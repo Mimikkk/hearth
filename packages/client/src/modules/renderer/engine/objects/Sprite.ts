@@ -31,6 +31,10 @@ export class Sprite extends Object3D {
     this.center = Vec2.new(0.5, 0.5);
   }
 
+  static is(object: any): object is Sprite {
+    return object?.isSprite === true;
+  }
+
   raycast(raycaster: Raycaster, into: Intersection[] = []): void {
     _worldScale.fromMat4Scale(this.matrixWorld);
 

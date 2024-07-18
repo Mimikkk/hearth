@@ -544,7 +544,7 @@ function _createRenderTarget(width, height, params) {
   cubeUVRenderTarget.texture.mapping = Mapping.CubeUVReflection;
   cubeUVRenderTarget.texture.name = 'PMREM.cubeUv';
   cubeUVRenderTarget.texture.isPMREMTexture = true;
-  cubeUVRenderTarget.scissorTest = true;
+  cubeUVRenderTarget.scissor.enabled = true;
   return cubeUVRenderTarget;
 }
 

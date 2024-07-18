@@ -211,6 +211,10 @@ export class InstancedMesh extends Mesh {
   dispose() {
     this.eventDispatcher.dispatch({ type: 'dispose' }, this);
   }
+
+  static is(object: any): object is InstancedMesh {
+    return object?.isInstancedMesh === true;
+  }
 }
 
 const _instanceLocalMatrix = new Mat4();

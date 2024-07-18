@@ -11,6 +11,7 @@ import {
   Wrapping,
 } from '../constants.js';
 import { Vec4 } from '../math/Vec4.js';
+import { Scissor } from '@modules/renderer/engine/renderers/common/RenderContext.js';
 
 export class RenderTarget {
   declare ['constructor']: typeof RenderTarget;
@@ -18,8 +19,7 @@ export class RenderTarget {
   eventDispatcher = new EventDispatcher<{ dispose: {} }>();
 
   depth: number;
-  scissor: Vec4;
-  scissorTest: boolean;
+  scissor: Scissor;
   viewport: Vec4;
   textures: Texture[];
   depthBuffer: boolean;
@@ -36,8 +36,7 @@ export class RenderTarget {
   ) {
     this.depth = 1;
 
-    this.scissor = new Vec4(0, 0, width, height);
-    this.scissorTest = false;
+    this.scissor = Scissor.fromSize(width, height);
 
     this.viewport = new Vec4(0, 0, width, height);
 
@@ -116,8 +115,6 @@ export class RenderTarget {
     this.depth = source.depth;
 
     this.scissor.from(source.scissor);
-    this.scissorTest = source.scissorTest;
-
     this.viewport.from(source.viewport);
 
     this.textures.length = 0;
@@ -126,8 +123,6 @@ export class RenderTarget {
       this.textures[i] = source.textures[i].clone();
       this.textures[i].isRenderTargetTexture = true;
     }
-
-    // ensure image object is not shared, see #20328
 
     this.texture.image = Object.assign({}, source.texture.image);
 

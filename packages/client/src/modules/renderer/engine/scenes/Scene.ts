@@ -38,6 +38,10 @@ export class Scene extends Object3D {
     this.overrideMaterial = null;
   }
 
+  static is(value: any): value is Scene {
+    return value && value.isScene;
+  }
+
   copy(source: this, recursive?: boolean): this {
     super.copy(source, recursive);
 
@@ -57,4 +61,5 @@ export class Scene extends Object3D {
     return this;
   }
 }
+
 Scene.prototype.isScene = true;

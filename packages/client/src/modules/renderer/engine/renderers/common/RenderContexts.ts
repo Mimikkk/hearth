@@ -11,7 +11,7 @@ class RenderContexts {
     this.chainMaps = {};
   }
 
-  get(scene: Scene, camera: Camera, renderTarget: RenderTarget | null = null) {
+  get(scene: Scene, camera: Camera, renderTarget: RenderTarget | null = null): RenderContext {
     const chainKey = [scene, camera];
 
     let attachmentState;

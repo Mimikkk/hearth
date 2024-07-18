@@ -30,6 +30,10 @@ export class Points extends Object3D {
     this.updateMorphTargets();
   }
 
+  static is(object: any): object is Points {
+    return object?.isPoints === true;
+  }
+
   copy(source: this, recursive?: boolean): this {
     super.copy(source, recursive);
 
