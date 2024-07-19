@@ -1,12 +1,30 @@
+import { Object3D } from '../../core/Object3D.ts';
 import { NodeUpdateType } from './constants.js';
+import { Scene } from '@modules/renderer/engine/scenes/Scene.js';
+import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
+import { Material } from '@modules/renderer/engine/materials/Material.js';
+import { Camera } from '@modules/renderer/engine/cameras/Camera.js';
 
 class NodeFrame {
+  time: number;
+  deltaTime: number;
+  frameId: number;
+  id: number;
+  startTime: number | null;
+  updateMap: WeakMap<any, any>;
+  updateBeforeMap: WeakMap<any, any>;
+  renderer: Renderer | null;
+  material: Material | null;
+  camera: Camera | null;
+  object: Object3D | null;
+  scene: Scene | null;
+
   constructor() {
     this.time = 0;
     this.deltaTime = 0;
 
     this.frameId = 0;
-    this.renderId = 0;
+    this.id = 0;
 
     this.startTime = null;
 
@@ -50,9 +68,9 @@ class NodeFrame {
     } else if (updateType === NodeUpdateType.Render) {
       const { renderMap } = this._getMaps(this.updateBeforeMap, reference);
 
-      if (renderMap.get(node) !== this.renderId) {
+      if (renderMap.get(node) !== this.id) {
         if (node.updateBefore(this) !== false) {
-          renderMap.set(node, this.renderId);
+          renderMap.set(node, this.id);
         }
       }
     } else if (updateType === NodeUpdateType.Object) {
@@ -75,9 +93,9 @@ class NodeFrame {
     } else if (updateType === NodeUpdateType.Render) {
       const { renderMap } = this._getMaps(this.updateMap, reference);
 
-      if (renderMap.get(node) !== this.renderId) {
+      if (renderMap.get(node) !== this.id) {
         if (node.update(this) !== false) {
-          renderMap.set(node, this.renderId);
+          renderMap.set(node, this.id);
         }
       }
     } else if (updateType === NodeUpdateType.Object) {

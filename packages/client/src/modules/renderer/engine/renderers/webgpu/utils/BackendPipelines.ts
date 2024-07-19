@@ -32,7 +32,7 @@ import { TypedArray } from '@modules/renderer/engine/math/MathUtils.js';
 class BackendPipelines {
   constructor(public backend: Backend) {}
 
-  createRenderPipeline(renderObject: RenderObject, promises: Promise<void>[] | null = null) {
+  createRenderPipeline(renderObject: RenderObject) {
     const { object, material, geometry, pipeline } = renderObject;
     const { vertexProgram, fragmentProgram } = pipeline;
 
@@ -134,18 +134,7 @@ class BackendPipelines {
       }),
     };
 
-    if (promises === null) {
-      pipelineData.pipeline = device.createRenderPipeline(pipelineDescriptor);
-    } else {
-      const p = new Promise<void>(resolve => {
-        device.createRenderPipelineAsync(pipelineDescriptor).then(pipeline => {
-          pipelineData.pipeline = pipeline;
-          resolve(undefined);
-        });
-      });
-
-      promises.push(p);
-    }
+    pipelineData.pipeline = device.createRenderPipeline(pipelineDescriptor);
   }
 
   createComputePipeline(pipeline: ComputePipeline, bindings: Binding[]) {

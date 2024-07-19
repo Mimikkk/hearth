@@ -87,10 +87,8 @@ export class Plane {
     return this;
   }
 
-  clone(plane: Plane): this {
-    this.normal.from(plane.normal);
-    this.constant = plane.constant;
-    return this;
+  clone(into: Plane = Plane.new()): Plane {
+    return into.from(this);
   }
 
   normalize(): this {

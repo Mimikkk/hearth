@@ -18,12 +18,23 @@ import { Scene } from '@modules/renderer/engine/scenes/Scene.js';
 import { Camera } from '@modules/renderer/engine/cameras/Camera.js';
 import ClippingContext from '@modules/renderer/engine/renderers/common/ClippingContext.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
-import { Color, Light, Mat4, Object3D, Plane, RenderTarget } from '@modules/renderer/engine/engine.js';
+import {
+  BufferGeometry,
+  Color,
+  Group,
+  Light,
+  Mat4,
+  Material,
+  Object3D,
+  Plane,
+  RenderTarget,
+} from '@modules/renderer/engine/engine.js';
 import { GPUFeatureNameType, GPUTextureFormatType } from '@modules/renderer/engine/renderers/webgpu/utils/constants.js';
 import { Frustum } from '@modules/renderer/engine/math/Frustum.js';
 import { throttle } from 'lodash-es';
 import { Scissor, Viewport } from '@modules/renderer/engine/renderers/common/RenderContext.js';
 import ComputeNode from '@modules/renderer/engine/nodes/gpgpu/ComputeNode.js';
+import LightNode from '@modules/renderer/engine/nodes/lighting/LightNode.js';
 
 const _scene = new Scene();
 const _drawingBufferSize = Vec3.new();
@@ -35,12 +46,15 @@ const _vector3 = Vec3.new();
 export class Renderer {
   backend: Backend;
   info: Info;
+
   pixelRatio: number;
   width: number;
   height: number;
+
   viewport: Viewport;
   scissor: Scissor;
   enabledScissor: boolean;
+
   _attributes: Attributes;
   _geometries: Geometries;
   _nodes: Nodes;
@@ -173,41 +187,27 @@ export class Renderer {
   }
 
   async compile(scene: Scene, camera: Camera, targetScene: Scene | null = null) {
-    // preserve render tree
-
-    const nodeFrame = this._nodes.frame;
-
-    const previousRenderId = nodeFrame.renderId;
+    const frame = this._nodes.frame;
+    const previousRenderId = frame.id;
     const previousRenderContext = this._currentRenderContext;
     const previousRenderObjectFunction = this._currentRenderObjectFunction;
-    const previousCompilationPromises = this._compilationPromises;
 
     //
 
-    const sceneRef = scene.isScene === true ? scene : _scene;
+    const sceneRef = Scene.is(scene) ? scene : _scene;
 
     if (targetScene === null) targetScene = scene;
 
-    const renderTarget = this.target;
-    const renderContext = this._renderContexts.get(targetScene, camera, renderTarget);
+    const target = this.target;
+    const renderContext = this._renderContexts.get(targetScene, camera, target);
     const activeMipmapLevel = this._activeMipmapLevel;
-
-    const compilationPromises: any[] = [];
 
     this._currentRenderContext = renderContext;
     this._currentRenderObjectFunction = this.renderObject;
-
     this._handleObjectFunction = this._createObjectPipeline;
 
-    this._compilationPromises = compilationPromises;
-
-    nodeFrame.renderId++;
-
-    //
-
-    nodeFrame.update();
-
-    //
+    frame.id++;
+    frame.update();
 
     renderContext.depth = this.parameters.depth;
     renderContext.stencil = this.parameters.stencil;
@@ -215,18 +215,14 @@ export class Renderer {
     if (!renderContext.clippingContext) renderContext.clippingContext = new ClippingContext();
     renderContext.clippingContext.updateGlobal(this, camera);
 
-    //
-
-    sceneRef.onBeforeRender(this, scene, camera, renderTarget);
-
-    //
+    //@ts-expect-error
+    sceneRef.onBeforeRender(this, scene, camera);
 
     const renderList = this._renderLists.get(scene, camera);
     renderList.begin();
 
     this._projectObject(scene, camera, 0, renderList);
 
-    // include lights from target scene
     if (targetScene !== scene) {
       targetScene.traverseVisible(object => {
         if (Light.is(object) && object.layers.test(camera.layers)) {
@@ -237,12 +233,10 @@ export class Renderer {
 
     renderList.finish();
 
-    //
+    if (target !== null) {
+      this._textures.updateRenderTarget(target, activeMipmapLevel);
 
-    if (renderTarget !== null) {
-      this._textures.updateRenderTarget(renderTarget, activeMipmapLevel);
-
-      const renderTargetData = this._textures.get(renderTarget);
+      const renderTargetData = this._textures.get(target);
 
       renderContext.textures = renderTargetData.textures;
       renderContext.depthTexture = renderTargetData.depthTexture;
@@ -251,15 +245,9 @@ export class Renderer {
       renderContext.depthTexture = null;
     }
 
-    //
-
     this._nodes.updateScene(sceneRef);
 
-    //
-
     this._background.update(sceneRef, renderList, renderContext);
-
-    // process render lists
 
     const opaqueObjects = renderList.opaque;
     const transparentObjects = renderList.transparent;
@@ -268,24 +256,15 @@ export class Renderer {
     if (opaqueObjects.length > 0) this._renderObjects(opaqueObjects, camera, sceneRef, lightsNode);
     if (transparentObjects.length > 0) this._renderObjects(transparentObjects, camera, sceneRef, lightsNode);
 
-    // restore render tree
-
-    nodeFrame.renderId = previousRenderId;
-
+    frame.id = previousRenderId;
     this._currentRenderContext = previousRenderContext;
     this._currentRenderObjectFunction = previousRenderObjectFunction;
-    this._compilationPromises = previousCompilationPromises;
-
     this._handleObjectFunction = this._renderObjectDirect;
-
-    // wait for all promises setup by backends awaiting compilation/linking/pipeline creation to complete
-
-    await Promise.all(compilationPromises);
   }
 
   render(scene: Object3D, camera: Camera) {
     const nodeFrame = this._nodes.frame;
-    const previousRenderId = nodeFrame.renderId;
+    const previousRenderId = nodeFrame.id;
     const previousRenderContext = this._currentRenderContext;
     const previousRenderObjectFunction = this._currentRenderObjectFunction;
 
@@ -300,7 +279,7 @@ export class Renderer {
     //
 
     this.info.updateRender();
-    nodeFrame.renderId = this.info.passes;
+    nodeFrame.id = this.info.passes;
 
     if (scene.matrixWorldAutoUpdate) scene.updateMatrixWorld();
 
@@ -349,7 +328,8 @@ export class Renderer {
     //
 
     const sceneRef = Scene.is(scene) ? scene : _scene;
-    sceneRef.onBeforeRender(this, scene, camera, target);
+    //@ts-expect-error
+    sceneRef.onBeforeRender(this, scene, camera);
 
     //
 
@@ -404,7 +384,7 @@ export class Renderer {
 
     this.backend.finishRender(context);
 
-    nodeFrame.renderId = previousRenderId;
+    nodeFrame.id = previousRenderId;
     this._currentRenderContext = previousRenderContext;
     this._currentRenderObjectFunction = previousRenderObjectFunction;
 
@@ -422,12 +402,12 @@ export class Renderer {
     console.log(computeNodes);
     const frame = this._nodes.frame;
 
-    const previousRenderId = frame.renderId;
+    const previousRenderId = frame.id;
 
     //
     this.info.updateCompute();
 
-    frame.renderId = this.info.passes;
+    frame.id = this.info.passes;
 
     //
 
@@ -477,7 +457,7 @@ export class Renderer {
 
     //
 
-    frame.renderId = previousRenderId;
+    frame.id = previousRenderId;
   }
 
   getMaxAnisotropy() {
@@ -567,7 +547,15 @@ export class Renderer {
     return this._renderObjectFunction;
   }
 
-  renderObject(object, scene, camera, geometry, material, group, lightsNode) {
+  renderObject(
+    object: Object3D,
+    scene: Scene,
+    camera: Camera,
+    geometry: BufferGeometry,
+    material: Material,
+    group: Group,
+    lightsNode: LightNode,
+  ) {
     let overridePositionNode;
     let overrideFragmentNode;
 
@@ -772,8 +760,7 @@ export class Renderer {
     this._nodes.updateForRender(renderObject);
     this._geometries.updateForRender(renderObject);
     this._bindings.updateForRender(renderObject);
-
-    this._pipelines.getForRender(renderObject, this._compilationPromises);
+    this._pipelines.getForRender(renderObject);
   }
 }
 
@@ -835,3 +822,11 @@ export namespace Renderer {
 }
 type Options = Renderer.Options;
 type Configuration = Renderer.Configuration;
+
+export class ViewSize {
+  constructor(
+    public width: number = 0,
+    public height: number = 0,
+    public scissor: boolean = false,
+  ) {}
+}

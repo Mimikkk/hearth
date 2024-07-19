@@ -10,10 +10,16 @@ import {
   StencilFunction,
   StencilOperation,
 } from '../constants.js';
-import * as MathUtils from '../math/MathUtils.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { Plane } from '@modules/renderer/engine/math/Plane.js';
 import { v4 } from 'uuid';
+import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
+import type { Scene } from '@modules/renderer/engine/scenes/Scene.js';
+import type { Camera } from '@modules/renderer/engine/cameras/Camera.js';
+import type { BufferGeometry } from '@modules/renderer/engine/core/BufferGeometry.js';
+import type { Group } from '@modules/renderer/engine/objects/Group.js';
+import { ShaderNodeObject } from 'three/examples/jsm/nodes/shadernode/ShaderNode.js';
+import ProgrammableStage from '@modules/renderer/engine/renderers/common/ProgrammableStage.js';
 
 let _materialId = 0;
 
@@ -194,15 +200,14 @@ export class Material {
     this._alphaTest = value;
   }
 
-  onBuild(/* shaderobject, renderer */) {}
-
-  onBeforeRender(/* renderer, scene, camera, geometry, object, group */) {}
-
-  onBeforeCompile(/* shaderobject, renderer */) {}
-
-  customProgramCacheKey() {
-    return this.onBeforeCompile.toString();
-  }
+  onBeforeRender(
+    renderer: Renderer,
+    scene: Scene,
+    camera: Camera,
+    geometry: BufferGeometry,
+    material: Material,
+    group: Group,
+  ) {}
 
   setValues(values?: MaterialParameters): void {
     if (values === undefined) return;
