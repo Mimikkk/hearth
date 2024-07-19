@@ -34,7 +34,7 @@ class RenderObjects {
 
       chainMap.set(chainArray, renderObject);
     } else {
-      renderObject.updateClipping(renderContext.clippingContext);
+      renderObject.updateClipping(renderContext.clip);
 
       if (renderObject.version !== material.version || renderObject.needsUpdate) {
         if (renderObject.initialCacheKey !== renderObject.getCacheKey()) {

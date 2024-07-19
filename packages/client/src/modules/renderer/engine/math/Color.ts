@@ -212,8 +212,8 @@ export class Color {
     return this.set(r as number, g as number, b as number, a);
   }
 
-  static new(): Color {
-    return new Color();
+  static new(r: number, g: number, b: number, a: number = 1): Color {
+    return new Color(r, g, b, a);
   }
 
   static is(value: any): value is Color {
