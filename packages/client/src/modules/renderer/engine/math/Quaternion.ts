@@ -1,4 +1,4 @@
-import { clamp, NumberArray } from './MathUtils.js';
+import { clamp, type NumberArray } from './MathUtils.js';
 import type { Euler } from './Euler.js';
 import type { Vec3 } from './Vec3.js';
 import type { Mat4 } from './Mat4.js';

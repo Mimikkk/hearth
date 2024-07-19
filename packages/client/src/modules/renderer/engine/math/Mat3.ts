@@ -1,8 +1,8 @@
 import type { Mat4 } from './Mat4.js';
 import type { Vec3 } from './Vec3.js';
 import type { Const } from '@modules/renderer/engine/math/types.js';
-import { NumberArray } from '@modules/renderer/engine/math/MathUtils.js';
-import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
+import type { NumberArray } from '@modules/renderer/engine/math/MathUtils.js';
+import type { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 
 export class Mat3 {
   declare isMat3: true;
@@ -75,7 +75,7 @@ export class Mat3 {
     return into.fromMat4(matrix);
   }
 
-  static fromMat4Normal(matrix: Const<Mat4>, into: Mat3 = Mat3.empty()): Mat3 {
+  static fromNMat4(matrix: Const<Mat4>, into: Mat3 = Mat3.empty()): Mat3 {
     return into.fromNMat4(matrix);
   }
 

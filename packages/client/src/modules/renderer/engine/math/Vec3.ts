@@ -1,4 +1,4 @@
-import { clamp, NumberArray } from './MathUtils.js';
+import { clamp, type NumberArray } from './MathUtils.js';
 import { Quaternion } from './Quaternion.js';
 import type { Color } from '@modules/renderer/engine/math/Color.js';
 import type { Euler } from '@modules/renderer/engine/math/Euler.js';

@@ -1,6 +1,6 @@
 import { Backend } from '@modules/renderer/engine/renderers/webgpu/Backend.js';
 import { ColorSpace, Side, ToneMapping } from '@modules/renderer/engine/constants.js';
-import ToneMappingNode from '@modules/renderer/engine/nodes/display/ToneMappingNode.js';
+import type { ToneMappingNode } from '@modules/renderer/engine/nodes/display/ToneMappingNode.js';
 import { Node } from '@modules/renderer/engine/nodes/core/Node.js';
 import { Info } from '@modules/renderer/engine/renderers/common/Info.js';
 import Attributes from '@modules/renderer/engine/renderers/common/Attributes.js';
@@ -15,8 +15,7 @@ import RenderContexts from '@modules/renderer/engine/renderers/common/RenderCont
 import Textures from '@modules/renderer/engine/renderers/common/Textures.js';
 import Background from '@modules/renderer/engine/renderers/common/Background.js';
 import { Scene } from '@modules/renderer/engine/scenes/Scene.js';
-import { Camera } from '@modules/renderer/engine/cameras/Camera.js';
-import ClippingContext from '@modules/renderer/engine/renderers/common/ClippingContext.js';
+import type { Camera } from '@modules/renderer/engine/cameras/Camera.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import {
   BufferGeometry,
@@ -69,7 +68,7 @@ export class Renderer {
   _renderContexts: RenderContexts;
   _textures: Textures;
   _background: Background;
-  _activeRenderContext: any;
+  activeContext: any;
   sortOpaque: SortFn;
   sortTransparent: SortFn;
   _clearColor: Color;
@@ -161,7 +160,7 @@ export class Renderer {
     this._objects = new RenderObjects(this);
     this._renderLists = new RenderLists();
     this._renderContexts = new RenderContexts();
-    this._activeRenderContext = null;
+    this.activeContext = null;
 
     this.sortOpaque = painterSortStable;
     this.sortTransparent = reversePainterSortStable;
@@ -214,7 +213,7 @@ export class Renderer {
   async compile(scene: Scene, camera: Camera, targetScene: Scene | null = null) {
     const frame = this._nodes.frame;
     const previousRenderId = frame.id;
-    const previousRenderContext = this._activeRenderContext;
+    const previousRenderContext = this.activeContext;
     const previousRenderObjectFunction = this._activeRenderObject;
 
     //
@@ -227,7 +226,7 @@ export class Renderer {
     const renderContext = this._renderContexts.get(targetScene, camera, target);
     const activeMipmapLevel = this.activeMipmap;
 
-    this._activeRenderContext = renderContext;
+    this.activeContext = renderContext;
     this._activeRenderObject = this.renderObject;
     this._handleObject = this._createObjectPipeline;
 
@@ -237,7 +236,6 @@ export class Renderer {
     renderContext.depth = this.parameters.depth;
     renderContext.stencil = this.parameters.stencil;
 
-    if (!renderContext.clip) renderContext.clip = new ClippingContext();
     renderContext.clip.updateGlobal(this, camera);
 
     //@ts-expect-error
@@ -282,7 +280,7 @@ export class Renderer {
     if (transparentObjects.length > 0) this._renderObjects(transparentObjects, camera, sceneRef, lightsNode);
 
     frame.id = previousRenderId;
-    this._activeRenderContext = previousRenderContext;
+    this.activeContext = previousRenderContext;
     this._activeRenderObject = previousRenderObjectFunction;
     this._handleObject = this._renderObjectDirect;
   }
@@ -290,7 +288,7 @@ export class Renderer {
   async render(scene: Scene, camera: Camera) {
     const frame = this._nodes.frame;
     const previousFrameId = frame.id;
-    const previousContext = this._activeRenderContext;
+    const previousContext = this.activeContext;
     const previousRenderObject = this._activeRenderObject;
 
     const target = this.target;
@@ -298,7 +296,7 @@ export class Renderer {
     const activeCubeFace = this.activeFace;
     const activeMipmapLevel = this.activeMipmap;
 
-    this._activeRenderContext = context;
+    this.activeContext = context;
     this._activeRenderObject = this._renderObject || this.renderObject;
 
     this.info.updateRender();
@@ -331,7 +329,6 @@ export class Renderer {
       this.useScissor && !context.scissor.equals(_screen),
     );
 
-    if (!context.clip) context.clip = new ClippingContext();
     context.clip.updateGlobal(this, camera);
 
     const sceneRef = Scene.is(scene) ? scene : _scene;
@@ -388,7 +385,7 @@ export class Renderer {
     this.backend.finishRender(context);
 
     frame.id = previousFrameId;
-    this._activeRenderContext = previousContext;
+    this.activeContext = previousContext;
     this._activeRenderObject = previousRenderObject;
 
     sceneRef.onAfterRender(this, scene, camera, target);
@@ -470,20 +467,21 @@ export class Renderer {
   }
 
   clear(color: boolean = true, depth: boolean = true, stencil: boolean = true): this {
-    let targetData = null;
+    let data = null;
     const target = this.target;
 
     if (target) {
       this._textures.updateRenderTarget(target);
-      targetData = this._textures.get(target);
+      data = this._textures.get(target);
     }
 
-    this.backend.clear(color, depth, stencil, targetData);
+    this.backend.clear(color, depth, stencil, data);
     return this;
   }
 
   get activeColorSpace() {
     const target = this.target;
+
     if (target) {
       const texture = target.texture;
 
@@ -651,27 +649,19 @@ export class Renderer {
     lightsNode: LightsNode,
     passId: string,
   ): void {
-    const renderObject = this._objects.get(
-      object,
-      material,
-      scene,
-      camera,
-      lightsNode,
-      this._activeRenderContext,
-      passId,
-    );
+    const item = this._objects.get(object, material, scene, camera, lightsNode, this.activeContext, passId);
 
-    this._nodes.updateBefore(renderObject);
+    this._nodes.updateBefore(item);
 
     object.modelViewMatrix.from(camera.matrixWorldInverse).mul(object.matrixWorld);
     object.normalMatrix.fromNMat4(object.modelViewMatrix);
 
-    this._nodes.updateForRender(renderObject);
-    this._geometries.updateForRender(renderObject);
-    this._bindings.updateForRender(renderObject);
-    this._pipelines.updateForRender(renderObject);
+    this._nodes.updateForRender(item);
+    this._geometries.updateForRender(item);
+    this._bindings.updateForRender(item);
+    this._pipelines.updateForRender(item);
 
-    this.backend.draw(renderObject, this.info);
+    this.backend.draw(item, this.info);
   }
 
   _createObjectPipeline(
@@ -682,20 +672,14 @@ export class Renderer {
     lightsNode: LightsNode,
     passId: string,
   ): void {
-    const renderObject = this._objects.get(
-      object,
-      material,
-      scene,
-      camera,
-      lightsNode,
-      this._activeRenderContext,
-      passId,
-    );
-    this._nodes.updateBefore(renderObject);
-    this._nodes.updateForRender(renderObject);
-    this._geometries.updateForRender(renderObject);
-    this._bindings.updateForRender(renderObject);
-    this._pipelines.getForRender(renderObject);
+    const item = this._objects.get(object, material, scene, camera, lightsNode, this.activeContext, passId);
+
+    this._nodes.updateBefore(item);
+    this._nodes.updateForRender(item);
+    this._geometries.updateForRender(item);
+    this._bindings.updateForRender(item);
+
+    this._pipelines.getForRender(item);
   }
 }
 

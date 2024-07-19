@@ -155,7 +155,7 @@ export class Plane {
     return into.from(this.normal).scale(-this.constant);
   }
 
-  applyMat4(matrix: Const<Mat4>, normalMatrix: Const<Mat3> = new Mat3().fromNMat4(matrix)): this {
+  applyMat4(matrix: Const<Mat4>, normalMatrix: Const<Mat3> = Mat3.fromNMat4(matrix)): this {
     const reference = this.coplanar().applyMat4(matrix);
     this.normal.applyMat3(normalMatrix).normalize();
     this.constant = -reference.dot(this.normal);

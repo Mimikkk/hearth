@@ -1,5 +1,5 @@
 import { Color, RenderTarget } from '@modules/renderer/engine/engine.js';
-import ClippingContext from '@modules/renderer/engine/renderers/common/ClippingContext.js';
+import { ClippingContext } from '@modules/renderer/engine/renderers/common/ClippingContext.js';
 import { Const } from '@modules/renderer/engine/math/types.js';
 import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 
@@ -38,6 +38,7 @@ export class RenderContext {
     this.color = true;
     this.clearColor = true;
     this.clearColorValue = { r: 0, g: 0, b: 0, a: 1 };
+    this.clip = new ClippingContext();
 
     this.depth = true;
     this.clearDepth = true;

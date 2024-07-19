@@ -5,7 +5,7 @@ import { normalize } from '../math/MathNode.js';
 import { modelViewMatrix, modelWorldMatrix } from './ModelNode.js';
 import { nodeImmutable } from '../shadernode/ShaderNodes.js';
 
-class PositionNode extends Node {
+export class PositionNode extends Node {
   static type = 'PositionNode';
 
   constructor(scope = PositionNode.LOCAL) {
