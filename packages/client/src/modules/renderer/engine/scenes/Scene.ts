@@ -45,16 +45,16 @@ export class Scene extends Object3D {
   copy(source: this, recursive?: boolean): this {
     super.copy(source, recursive);
 
-    if (source.background !== null) this.background = source.background.clone();
-    if (source.environment !== null) this.environment = source.environment.clone();
-    if (source.fog !== null) this.fog = source.fog.clone();
+    if (source.background) this.background = source.background.clone();
+    if (source.environment) this.environment = source.environment.clone();
+    if (source.fog) this.fog = source.fog.clone();
 
     this.backgroundBlurriness = source.backgroundBlurriness;
     this.backgroundIntensity = source.backgroundIntensity;
-    Euler.clone_(this.backgroundRotation, source.backgroundRotation);
-    Euler.clone_(this.environmentRotation, source.environmentRotation);
+    this.backgroundRotation.from(source.backgroundRotation);
+    this.environmentRotation.from(source.environmentRotation);
 
-    if (source.overrideMaterial !== null) this.overrideMaterial = source.overrideMaterial.clone();
+    if (source.overrideMaterial) this.overrideMaterial = source.overrideMaterial.clone();
 
     this.matrixAutoUpdate = source.matrixAutoUpdate;
 
