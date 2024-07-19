@@ -2,8 +2,8 @@ import * as Engine from '@modules/renderer/engine/engine.js';
 import {
   color,
   MeshBasicNodeMaterial,
-  mx_fractal_noise_vec3,
-  mx_worley_noise_float,
+  node_fractal_noise_vec3,
+  node_worley_noise_f32,
   normalWorld,
   pass,
   timerLocal,
@@ -36,7 +36,7 @@ async function init() {
   sceneMain.backgroundNode = normalWorld.y.mix(color(0x0066ff), color(0xff0066));
 
   scenePortal = new Engine.Scene();
-  scenePortal.backgroundNode = mx_worley_noise_float(normalWorld.mul(20).add(vec2(0, timerLocal().oneMinus()))).mul(
+  scenePortal.backgroundNode = node_worley_noise_f32(normalWorld.mul(20).add(vec2(0, timerLocal().oneMinus()))).mul(
     color(0x0066ff),
   );
 
@@ -108,7 +108,7 @@ async function init() {
       return object;
     };
 
-    const colorNode = mx_fractal_noise_vec3(uv().mul(20).add(timerLocal()));
+    const colorNode = node_fractal_noise_vec3(uv().mul(20).add(timerLocal()));
 
     const modelMain = createModel();
     const modelPortal = createModel(colorNode);
