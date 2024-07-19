@@ -38,7 +38,7 @@ import { GPUFeatureNameType, GPUTextureFormatType } from '@modules/renderer/engi
 import { Frustum } from '@modules/renderer/engine/math/Frustum.js';
 import { Scissor, Viewport } from '@modules/renderer/engine/renderers/common/RenderContext.js';
 import ComputeNode from '@modules/renderer/engine/nodes/gpgpu/ComputeNode.js';
-import { RenderList, RenderItem } from '@modules/renderer/engine/renderers/common/RenderList.js';
+import { RenderItem, RenderList } from '@modules/renderer/engine/renderers/common/RenderList.js';
 import LightsNode from '@modules/renderer/engine/nodes/lighting/LightsNode.js';
 import { ShadowNodeMaterial } from '@modules/renderer/engine/nodes/materials/ShadowNodeMaterial.js';
 import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
@@ -46,7 +46,7 @@ import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 const _scene = new Scene();
 const _screen = Vec2.new();
 const _frustum = Frustum.empty();
-const _projScreenMatrix = Mat4.new();
+const _projection = Mat4.new();
 const _vector3 = Vec3.new();
 
 export class Renderer {
@@ -135,7 +135,7 @@ export class Renderer {
       toneMappingExposure: options?.toneMappingExposure ?? 1.0,
       toneMappingNode: options?.toneMappingNode ?? null,
       requiredLimits: options?.requiredLimits ?? {},
-      trackTimestamp: options?.trackTimestamp ?? false,
+      useTimestamp: options?.trackTimestamp ?? false,
     };
   }
 
@@ -287,7 +287,7 @@ export class Renderer {
     this._handleObject = this._renderObjectDirect;
   }
 
-  async render(scene: Object3D, camera: Camera) {
+  async render(scene: Scene, camera: Camera) {
     const frame = this._nodes.frame;
     const previousFrameId = frame.id;
     const previousContext = this._activeRenderContext;
@@ -334,15 +334,11 @@ export class Renderer {
     if (!context.clip) context.clip = new ClippingContext();
     context.clip.updateGlobal(this, camera);
 
-    //
-
     const sceneRef = Scene.is(scene) ? scene : _scene;
     sceneRef.onBeforeRender(this, scene, camera);
 
-    //
-
-    _projScreenMatrix.from(camera.projectionMatrix).mul(camera.matrixWorldInverse);
-    _frustum.fromProjection(_projScreenMatrix);
+    _projection.from(camera.projectionMatrix).mul(camera.matrixWorldInverse);
+    _frustum.fromProjection(_projection);
 
     const list = this._renderLists.get(scene, camera);
 
@@ -417,40 +413,34 @@ export class Renderer {
     const pipelines = this._pipelines;
     const bindings = this._bindings;
     const nodes = this._nodes;
-    const computeList = Array.isArray(computeNodes) ? computeNodes : [computeNodes];
-
-    if (computeList[0] === undefined || computeList[0].isComputeNode !== true) {
-      throw new Error('engine.Renderer: .compute() expects a ComputeNode.');
-    }
+    const list = Array.isArray(computeNodes) ? computeNodes : [computeNodes];
 
     backend.beginCompute(computeNodes);
 
-    for (const computeNode of computeList) {
-      // onInit
-
-      if (pipelines.has(computeNode) === false) {
+    for (const node of list) {
+      if (!pipelines.has(node)) {
         const dispose = () => {
-          computeNode.eventDispatcher.remove('dispose', dispose);
+          node.eventDispatcher.remove('dispose', dispose);
 
-          pipelines.delete(computeNode);
-          bindings.delete(computeNode);
-          nodes.delete(computeNode);
+          pipelines.delete(node);
+          bindings.delete(node);
+          nodes.delete(node);
         };
 
-        computeNode.eventDispatcher.add('dispose', dispose);
+        node.eventDispatcher.add('dispose', dispose);
 
         //
 
-        computeNode.onInit({ renderer: this });
+        node.onInit({ renderer: this });
       }
 
-      nodes.updateForCompute(computeNode);
-      bindings.updateForCompute(computeNode);
+      nodes.updateForCompute(node);
+      bindings.updateForCompute(node);
 
-      const computeBindings = bindings.getForCompute(computeNode);
-      const computePipeline = pipelines.getForCompute(computeNode, computeBindings);
+      const computeBindings = bindings.getForCompute(node);
+      const computePipeline = pipelines.getForCompute(node, computeBindings);
 
-      backend.compute(computeNodes, computeNode, computeBindings, computePipeline);
+      backend.compute(computeNodes, node, computeBindings, computePipeline);
     }
 
     backend.finishCompute(computeNodes);
@@ -463,7 +453,7 @@ export class Renderer {
   }
 
   getDrawSize(into: Vec2 = Vec2.new()): Vec2 {
-    return into.set(this.size.width * this.size.pixelRatio, this.size.height * this.size.pixelRatio).floor();
+    return into.set(this.size.width, this.size.height).scale(this.size.pixelRatio).floor();
   }
 
   updateSize(width: number, height: number, pixelRatio = this.size.pixelRatio): this {
@@ -604,7 +594,7 @@ export class Renderer {
         list.lights.push(object);
       } else if (Sprite.is(object)) {
         if (!object.frustumCulled || _frustum.intersectsSphere(object)) {
-          if (this.parameters.useSort) _vector3.fromMat4Position(object.matrixWorld).applyMat4(_projScreenMatrix);
+          if (this.parameters.useSort) _vector3.fromMat4Position(object.matrixWorld).applyMat4(_projection);
 
           const geometry = object.geometry;
           const material = object.material;
@@ -618,7 +608,7 @@ export class Renderer {
           if (this.parameters.useSort) {
             if (geometry.boundingSphere === null) geometry.computeBoundingSphere();
 
-            _vector3.from(geometry.boundingSphere!.center).applyMat4(object.matrixWorld).applyMat4(_projScreenMatrix);
+            _vector3.from(geometry.boundingSphere!.center).applyMat4(object.matrixWorld).applyMat4(_projection);
           }
 
           if (Array.isArray(material)) {
@@ -760,7 +750,7 @@ export namespace Renderer {
     toneMappingExposure: number;
     toneMappingNode: ToneMappingNode | null;
     requiredLimits: Record<string, GPUSize64>;
-    trackTimestamp: boolean;
+    useTimestamp: boolean;
   }
 }
 type Options = Renderer.Options;
@@ -771,37 +761,25 @@ export class ViewSize {
     public width: number = 0,
     public height: number = 0,
     public pixelRatio = window.devicePixelRatio,
-    public useScissor: boolean = false,
   ) {}
 
-  static new(
-    width: number = 0,
-    height: number = 0,
-    pixelRatio = window.devicePixelRatio,
-    useScissor: boolean = false,
-  ): ViewSize {
-    return new ViewSize(width, height, pixelRatio, useScissor);
+  static new(width: number = 0, height: number = 0, pixelRatio = window.devicePixelRatio): ViewSize {
+    return new ViewSize(width, height, pixelRatio);
   }
 
   static fromSize(
     width: number,
     height: number,
     pixelRatio = window.devicePixelRatio,
-    useScissor: boolean = false,
+    into: ViewSize = ViewSize.new(),
   ): ViewSize {
-    return new ViewSize(width, height, pixelRatio, useScissor);
+    return into.set(width, height, pixelRatio);
   }
 
-  set(
-    width: number,
-    height: number,
-    pixelRatio: number = this.pixelRatio,
-    useScissor: boolean = this.useScissor,
-  ): this {
+  set(width: number, height: number, pixelRatio: number = this.pixelRatio): this {
     this.width = width;
     this.height = height;
     this.pixelRatio = pixelRatio;
-    this.useScissor = useScissor;
     return this;
   }
 }
