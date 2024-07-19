@@ -34,7 +34,7 @@ export class ShaderMaterial extends Material {
   lights: boolean;
   clipping: boolean;
 
-  constructor(parameters: ShaderMaterialParameters) {
+  constructor(parameters?: ShaderMaterialParameters) {
     super(parameters);
 
     this.defines = {};
@@ -48,7 +48,7 @@ export class ShaderMaterial extends Material {
     this.setValues(parameters);
   }
 
-  setValues(parameters: ShaderMaterialParameters): void {
+  setValues(parameters?: ShaderMaterialParameters): void {
     super.setValues(parameters);
   }
 

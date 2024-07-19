@@ -18,6 +18,7 @@ import type { Scene } from '@modules/renderer/engine/scenes/Scene.js';
 import type { Camera } from '@modules/renderer/engine/cameras/Camera.js';
 import type { BufferGeometry } from '@modules/renderer/engine/core/BufferGeometry.js';
 import type { Group } from '@modules/renderer/engine/objects/Group.js';
+import PositionNode from '@modules/renderer/engine/nodes/accessors/PositionNode.js';
 
 let _materialId = 0;
 
@@ -108,6 +109,9 @@ export class Material {
   colorWrite: boolean;
   precision: 'highp' | 'mediump' | 'lowp' | null;
   polygonOffset: boolean;
+  declare positionNode?: PositionNode;
+  declare shadowNode?: Node;
+  declare fragmentNode?: Node;
   polygonOffsetFactor: number;
   polygonOffsetUnits: number;
   dithering: boolean;

@@ -6,9 +6,22 @@ import { reference } from '../accessors/ReferenceNode.js';
 import { texture } from '../accessors/TextureNode.js';
 import { positionWorld } from '../accessors/PositionNode.js';
 import { normalWorld } from '../accessors/NormalNode.js';
-import { Color, DepthComparison, DepthTexture, Filter } from '@modules/renderer/engine/engine.js';
+import {
+  BufferGeometry,
+  Camera,
+  Color,
+  DepthComparison,
+  DepthTexture,
+  Filter,
+  Group,
+  Material,
+  Object3D,
+  Scene,
+} from '@modules/renderer/engine/engine.js';
+import LightsNode from '@modules/renderer/engine/nodes/lighting/LightsNode.js';
+import { ShadowNodeMaterial } from '@modules/renderer/engine/nodes/materials/ShadowNodeMaterial.js';
 
-let overrideMaterial = null;
+let overrideMaterial: ShadowNodeMaterial | null = null;
 
 class AnalyticLightNode extends LightingNode {
   static type = 'AnalyticLightNode';
@@ -46,7 +59,8 @@ class AnalyticLightNode extends LightingNode {
       if (overrideMaterial === null) {
         overrideMaterial = builder.createNodeMaterial();
         overrideMaterial.fragmentNode = vec4(0, 0, 0, 1);
-        overrideMaterial.isShadowNodeMaterial = true; // Use to avoid other overrideMaterial override material.fragmentNode unintentionally when using material.shadowNode
+        // Use to avoid other overrideMaterial override material.fragmentNode unintentionally when using material.shadowNode
+        overrideMaterial.isShadowNodeMaterial = true;
       }
 
       const shadow = this.light.shadow;
@@ -89,49 +103,10 @@ class AnalyticLightNode extends LightingNode {
       // BasicShadowMap
 
       shadowNode = textureCompare(depthTexture, shadowCoord.xy, shadowCoord.z);
-
-      // PCFShadowMap
-      /*
-			const mapSize = reference( 'mapSize', 'vec2', shadow );
-			const radius = reference( 'radius', 'float', shadow );
-
-			const texelSize = vec2( 1 ).div( mapSize );
-			const dx0 = texelSize.x.negate().mul( radius );
-			const dy0 = texelSize.y.negate().mul( radius );
-			const dx1 = texelSize.x.mul( radius );
-			const dy1 = texelSize.y.mul( radius );
-			const dx2 = dx0.mul( 2 );
-			const dy2 = dy0.mul( 2 );
-			const dx3 = dx1.mul( 2 );
-			const dy3 = dy1.mul( 2 );
-
-			shadowNode = add(
-				textureCompare( depthTexture, shadowCoord.xy.add( vec2( dx0, dy0 ) ), shadowCoord.z ),
-				textureCompare( depthTexture, shadowCoord.xy.add( vec2( 0, dy0 ) ), shadowCoord.z ),
-				textureCompare( depthTexture, shadowCoord.xy.add( vec2( dx1, dy0 ) ), shadowCoord.z ),
-				textureCompare( depthTexture, shadowCoord.xy.add( vec2( dx2, dy2 ) ), shadowCoord.z ),
-				textureCompare( depthTexture, shadowCoord.xy.add( vec2( 0, dy2 ) ), shadowCoord.z ),
-				textureCompare( depthTexture, shadowCoord.xy.add( vec2( dx3, dy2 ) ), shadowCoord.z ),
-				textureCompare( depthTexture, shadowCoord.xy.add( vec2( dx0, 0 ) ), shadowCoord.z ),
-				textureCompare( depthTexture, shadowCoord.xy.add( vec2( dx2, 0 ) ), shadowCoord.z ),
-				textureCompare( depthTexture, shadowCoord.xy, shadowCoord.z ),
-				textureCompare( depthTexture, shadowCoord.xy.add( vec2( dx3, 0 ) ), shadowCoord.z ),
-				textureCompare( depthTexture, shadowCoord.xy.add( vec2( dx1, 0 ) ), shadowCoord.z ),
-				textureCompare( depthTexture, shadowCoord.xy.add( vec2( dx2, dy3 ) ), shadowCoord.z ),
-				textureCompare( depthTexture, shadowCoord.xy.add( vec2( 0, dy3 ) ), shadowCoord.z ),
-				textureCompare( depthTexture, shadowCoord.xy.add( vec2( dx3, dy3 ) ), shadowCoord.z ),
-				textureCompare( depthTexture, shadowCoord.xy.add( vec2( dx0, dy1 ) ), shadowCoord.z ),
-				textureCompare( depthTexture, shadowCoord.xy.add( vec2( 0, dy1 ) ), shadowCoord.z ),
-				textureCompare( depthTexture, shadowCoord.xy.add( vec2( dx1, dy1 ) ), shadowCoord.z )
-			).mul( 1 / 17 );
-			*/
-      //
-
       const shadowColor = texture(rtt.texture, shadowCoord);
 
       this.rtt = rtt;
       this.colorNode = this.colorNode.mul(frustumTest.mix(1, shadowNode.mix(shadowColor.a.mix(1, shadowColor), 1)));
-
       this.shadowNode = shadowNode;
 
       //
@@ -158,20 +133,25 @@ class AnalyticLightNode extends LightingNode {
     light.shadow.updateMatrices(light);
 
     const currentRenderTarget = renderer.target;
-    const currentRenderObjectFunction = renderer.getRenderObjectFunction();
+    const currentRenderObjectFunction = renderer._renderObjectFunction;
 
-    renderer.setRenderObjectFunction((object, ...params) => {
-      if (object.castShadow === true) {
-        renderer.renderObject(object, ...params);
-      }
-    });
-
+    renderer._renderObjectFunction = (
+      object: Object3D,
+      scene: Scene,
+      camera: Camera,
+      geometry: BufferGeometry,
+      material: Material,
+      group: Group,
+      lightsNode: LightsNode,
+    ) => {
+      if (!object.castShadow) return;
+      renderer.renderObject(object, scene, camera, geometry, material, group, lightsNode);
+    };
     renderer.setRenderTarget(rtt);
-
     renderer.render(scene, light.shadow.camera);
 
-    renderer.setRenderTarget(currentRenderTarget);
-    renderer.setRenderObjectFunction(currentRenderObjectFunction);
+    renderer.target = currentRenderTarget;
+    renderer._renderObjectFunction = currentRenderObjectFunction;
 
     scene.overrideMaterial = currentOverrideMaterial;
   }

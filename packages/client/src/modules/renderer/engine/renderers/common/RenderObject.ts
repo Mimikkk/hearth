@@ -1,6 +1,4 @@
 import ClippingContext from './ClippingContext.js';
-import Nodes from '@modules/renderer/engine/renderers/common/nodes/Nodes.js';
-import Geometries from '@modules/renderer/engine/renderers/common/Geometries.js';
 import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 import { Object3D } from '@modules/renderer/engine/core/Object3D.js';
 import { Material } from '@modules/renderer/engine/materials/Material.js';
@@ -8,17 +6,21 @@ import { Scene } from '@modules/renderer/engine/scenes/Scene.js';
 import { Camera } from '@modules/renderer/engine/cameras/Camera.js';
 import LightsNode from '@modules/renderer/engine/nodes/lighting/LightsNode.js';
 import RenderContext from '@modules/renderer/engine/renderers/common/RenderContext.js';
+import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
+import { InterleavedBufferAttribute } from '@modules/renderer/engine/core/InterleavedBufferAttribute.js';
 
 let id = 0;
+
+const isCachablePropertyRe = /^(is[A-Z])|^(visible|version|uuid|name|opacity|userData)$/;
 
 export default class RenderObject {
   id: number;
   context: RenderContext;
   geometry: any;
   version: number;
-  attributes: any;
+  attributes: Attribute[];
   pipeline: any;
-  vertexBuffers: any;
+  buffers: Attribute[];
   clippingContext: ClippingContext;
   clippingContextVersion: number;
   initialNodesCacheKey: string;
@@ -51,8 +53,8 @@ export default class RenderObject {
     this.version = material.version;
 
     this.attributes = null;
+    this.buffers = null;
     this.pipeline = null;
-    this.vertexBuffers = null;
 
     this.updateClipping(renderContext.clippingContext);
 
@@ -117,13 +119,13 @@ export default class RenderObject {
   }
 
   getAttributes() {
-    if (this.attributes !== null) return this.attributes;
+    if (this.attributes) return this.attributes;
 
     const nodeAttributes = this.getNodeBuilderState().nodeAttributes;
     const geometry = this.geometry;
 
-    const attributes = [];
-    const vertexBuffers = new Set();
+    const attributes: Attribute[] = [];
+    const buffers: Attribute[] = [];
 
     for (const nodeAttribute of nodeAttributes) {
       const attribute =
@@ -131,24 +133,26 @@ export default class RenderObject {
           ? nodeAttribute.node.attribute
           : geometry.getAttribute(nodeAttribute.name);
 
-      if (attribute === undefined) continue;
+      if (!attribute) continue;
 
       attributes.push(attribute);
+    }
 
-      const bufferAttribute = attribute.isInterleavedBufferAttribute ? attribute.data : attribute;
-      vertexBuffers.add(bufferAttribute);
+    for (let attribute of attributes) {
+      const buffer = InterleavedBufferAttribute.is(attribute) ? attribute.data : attribute;
+      if (buffers.includes(buffer)) continue;
+      buffers.push(buffer);
     }
 
     this.attributes = attributes;
-    this.vertexBuffers = Array.from(vertexBuffers.values());
+    this.buffers = buffers;
 
     return attributes;
   }
 
   getVertexBuffers() {
-    if (this.vertexBuffers === null) this.getAttributes();
-
-    return this.vertexBuffers;
+    if (!this.buffers) this.getAttributes();
+    return this.buffers;
   }
 
   getMaterialCacheKey() {
@@ -157,19 +161,22 @@ export default class RenderObject {
     let cacheKey = '';
 
     for (const property in material) {
-      if (/^(is[A-Z])|^(visible|version|uuid|name|opacity|userData)$/.test(property)) continue;
+      if (isCachablePropertyRe.test(property)) continue;
 
-      let value = material[property];
+      let value = material[property as keyof typeof material];
 
-      if (value !== null) {
-        const type = typeof value;
+      if (value)
+        switch (typeof value) {
+          case 'number':
+            value = value ? '1' : '0';
+            break;
+          case 'object': {
+            value = '{}';
+            break;
+          }
+        }
 
-        if (type === 'number')
-          value = value !== 0 ? '1' : '0'; // Convert to on/off, important for clearcoat, transmission, etc
-        else if (type === 'object') value = '{}';
-      }
-
-      cacheKey += /*property + ':' +*/ value + ',';
+      cacheKey += property + ':' + value + ',';
     }
 
     cacheKey += this.clippingContextVersion + ',';

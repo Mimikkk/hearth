@@ -28,11 +28,11 @@ class Background extends DataMap<any, any> {
     let forceClear = false;
 
     if (background === null) {
-      renderer._clearColor.getRGB(_clearColor, this.renderer.currentColorSpace);
+      renderer._clearColor.getRGB(_clearColor, this.renderer.activeColorSpace);
 
       _clearColor.a = renderer._clearColor.a;
     } else if (Color.is(background)) {
-      background.getRGB(_clearColor, this.renderer.currentColorSpace);
+      background.getRGB(_clearColor, this.renderer.activeColorSpace);
       _clearColor.a = 1;
 
       forceClear = true;

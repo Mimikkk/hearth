@@ -2,8 +2,10 @@ import type { BufferAttribute } from '@modules/renderer/engine/core/BufferAttrib
 import type { InstancedBufferAttribute } from '@modules/renderer/engine/core/InstancedBufferAttribute.js';
 import type { TypedArray } from '@modules/renderer/engine/math/MathUtils.js';
 import { InterleavedBufferAttribute } from '@modules/renderer/engine/core/InterleavedBufferAttribute.js';
+import { InterleavedBuffer } from '@modules/renderer/engine/core/InterleavedBuffer.js';
 
 export type Attribute<T extends TypedArray = any> =
   | BufferAttribute<T>
   | InstancedBufferAttribute<T>
-  | InterleavedBufferAttribute<T>;
+  | InterleavedBufferAttribute<T>
+  | InterleavedBuffer<T>;
