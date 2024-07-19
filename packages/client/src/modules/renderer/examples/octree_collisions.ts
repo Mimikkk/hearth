@@ -49,7 +49,7 @@ scene.add(directionalLight);
 const container = document.getElementById('container') as HTMLDivElement;
 
 const renderer = await Renderer.create({ antialias: true });
-renderer.setAnimationLoop(animate);
+renderer._animation.loop = animate;
 renderer.parameters.toneMapping = ToneMapping.ACESFilmic;
 container.appendChild(renderer.parameters.canvas);
 

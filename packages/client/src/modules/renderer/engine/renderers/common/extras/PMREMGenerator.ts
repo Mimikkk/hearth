@@ -114,8 +114,8 @@ class PMREMGenerator {
    */
   fromScene(scene, sigma = 0, near = 0.1, far = 100) {
     _oldTarget = this._renderer.target;
-    _oldActiveCubeFace = this._renderer.getActiveCubeFace();
-    _oldActiveMipmapLevel = this._renderer.getActiveMipmapLevel();
+    _oldActiveCubeFace = this._renderer.activeFace;
+    _oldActiveMipmapLevel = this._renderer.activeMipmap;
 
     this._setSize(256);
 
@@ -220,8 +220,8 @@ class PMREMGenerator {
     }
 
     _oldTarget = this._renderer.target;
-    _oldActiveCubeFace = this._renderer.getActiveCubeFace();
-    _oldActiveMipmapLevel = this._renderer.getActiveMipmapLevel();
+    _oldActiveCubeFace = this._renderer.activeFace;
+    _oldActiveMipmapLevel = this._renderer.activeMipmap;
 
     const cubeUVRenderTarget = renderTarget || this._allocateTargets();
     this._textureToCubeUV(texture, cubeUVRenderTarget);

@@ -50,7 +50,7 @@ export interface MaterialParameters {
   polygonOffsetUnits?: number | undefined;
   precision?: 'highp' | 'mediump' | 'lowp' | null | undefined;
   premultipliedAlpha?: boolean | undefined;
-  forceSinglePass?: boolean | undefined;
+  useSinglePass?: boolean | undefined;
   dithering?: boolean | undefined;
   side?: Side | undefined;
   shadowSide?: Side | undefined;
@@ -117,7 +117,7 @@ export class Material {
   dithering: boolean;
   alphaToCoverage: boolean;
   premultipliedAlpha: boolean;
-  forceSinglePass: boolean;
+  useSinglePass: boolean;
   visible: boolean;
   toneMapped: boolean;
   userData: Record<string, any>;
@@ -128,15 +128,12 @@ export class Material {
     this.id = _materialId++;
     this.uuid = v4();
     this.name = '';
-
     this.blending = Blending.Normal;
     this.side = Side.Front;
     this.vertexColors = false;
-
     this.opacity = 1;
     this.transparent = false;
     this.alphaHash = false;
-
     this.blendSrc = BlendingFactor.SrcAlpha;
     this.blendDst = BlendingFactor.OneMinusSrcAlpha;
     this.blendEquation = BlendingEquation.Add;
@@ -145,11 +142,9 @@ export class Material {
     this.blendEquationAlpha = null;
     this.blendColor = new Color(0, 0, 0);
     this.blendAlpha = 0;
-
     this.depthFunc = Depth.LessEqual;
     this.depthTest = true;
     this.depthWrite = true;
-
     this.stencilWriteMask = 0xff;
     this.stencilFunc = StencilFunction.Always;
     this.stencilRef = 0;
@@ -162,31 +157,22 @@ export class Material {
     this.clippingPlanes = null;
     this.clipIntersection = false;
     this.clipShadows = false;
-
     this.shadowSide = null;
-
     this.colorWrite = true;
-
-    this.precision = null; // override the renderer's default precision for this material
-
+    // override the renderer's default precision for this material
+    this.precision = null;
     this.polygonOffset = false;
     this.polygonOffsetFactor = 0;
     this.polygonOffsetUnits = 0;
 
     this.dithering = false;
-
     this.alphaToCoverage = false;
     this.premultipliedAlpha = false;
-    this.forceSinglePass = false;
-
+    this.useSinglePass = false;
     this.visible = true;
-
     this.toneMapped = true;
-
     this.userData = {};
-
     this.version = 0;
-
     this._alphaTest = 0;
 
     this.setValues(parameters);
@@ -271,12 +257,12 @@ export class Material {
     const srcPlanes = source.clippingPlanes;
     let dstPlanes = null;
 
-    if (srcPlanes !== null) {
+    if (srcPlanes) {
       const n = srcPlanes.length;
       dstPlanes = new Array(n);
 
       for (let i = 0; i !== n; ++i) {
-        dstPlanes[i] = srcPlanes[i].clone();
+        dstPlanes[i].from(srcPlanes[i]);
       }
     }
 
@@ -300,7 +286,7 @@ export class Material {
     this.alphaHash = source.alphaHash;
     this.alphaToCoverage = source.alphaToCoverage;
     this.premultipliedAlpha = source.premultipliedAlpha;
-    this.forceSinglePass = source.forceSinglePass;
+    this.useSinglePass = source.useSinglePass;
 
     this.visible = source.visible;
 

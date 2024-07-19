@@ -1,7 +1,7 @@
 import { Texture } from './Texture.js';
 import { CubeMapping } from '../constants.js';
 
-export type CubeImage = TexImageSource[];
+export type CubeImage = TexImageSource[] | { width: number; height: number; depth: number };
 export type CubeImages = [
   posX: CubeImage,
   negX: CubeImage,

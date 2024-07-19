@@ -677,7 +677,7 @@ export class Backend {
           contextData.occlusionQueryIndex++;
         }
 
-        if (object.occlusionTest === true) {
+        if (object.useOcclusion === true) {
           passEncoderGPU.beginOcclusionQuery(contextData.occlusionQueryIndex);
           contextData.occlusionQueryObjects[contextData.occlusionQueryIndex] = object;
         }

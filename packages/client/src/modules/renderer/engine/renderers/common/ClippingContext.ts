@@ -51,7 +51,7 @@ export class ClippingContext {
     const rendererClippingPlanes = renderer.parameters.clippingPlanes;
     this.viewMatrix = camera.matrixWorldInverse;
 
-    _viewNormalMatrix.fromMat4Normal(this.viewMatrix!);
+    _viewNormalMatrix.fromNMat4(this.viewMatrix!);
 
     let update = false;
 

@@ -35,7 +35,7 @@ export class Object3D<EventMap extends Object3DEventMap = any> {
   computeBoundingSphere?(): void;
 
   boundingSphere: Sphere | null;
-  occlusionTest: boolean;
+  useOcclusion: boolean;
   geometry: BufferGeometry | null;
 
   computeBoundingBox?(): void;
@@ -58,7 +58,7 @@ export class Object3D<EventMap extends Object3DEventMap = any> {
   matrix: Mat4;
   matrixWorld: Mat4;
   matrixAutoUpdate: boolean;
-  matrixWorldAutoUpdate: boolean;
+  useMatrixWorldAutoUpdate: boolean;
   matrixWorldNeedsUpdate: boolean;
   layers: Layers;
   visible: boolean;
@@ -94,7 +94,7 @@ export class Object3D<EventMap extends Object3DEventMap = any> {
     this.matrixAutoUpdate = Object3D.AutoUpdateLocalMat;
 
     // checked by the renderer
-    this.matrixWorldAutoUpdate = Object3D.AutoUpdateWorldMat;
+    this.useMatrixWorldAutoUpdate = Object3D.AutoUpdateWorldMat;
     this.matrixWorldNeedsUpdate = false;
 
     this.layers = new Layers();
@@ -545,7 +545,7 @@ export class Object3D<EventMap extends Object3DEventMap = any> {
     for (let i = 0, l = children.length; i < l; i++) {
       const child = children[i];
 
-      if (child.matrixWorldAutoUpdate || force) {
+      if (child.useMatrixWorldAutoUpdate || force) {
         child.updateMatrixWorld(force);
       }
     }
@@ -555,7 +555,7 @@ export class Object3D<EventMap extends Object3DEventMap = any> {
   updateWorldMatrix(updateParents: boolean, updateChildren: boolean): this {
     const parent = this.parent;
 
-    if (updateParents && parent && parent.matrixWorldAutoUpdate) {
+    if (updateParents && parent && parent.useMatrixWorldAutoUpdate) {
       parent.updateWorldMatrix(true, false);
     }
 
@@ -575,7 +575,7 @@ export class Object3D<EventMap extends Object3DEventMap = any> {
       for (let i = 0, l = children.length; i < l; i++) {
         const child = children[i];
 
-        if (child.matrixWorldAutoUpdate === true) {
+        if (child.useMatrixWorldAutoUpdate === true) {
           child.updateWorldMatrix(false, true);
         }
       }
@@ -601,7 +601,7 @@ export class Object3D<EventMap extends Object3DEventMap = any> {
 
     this.matrixAutoUpdate = source.matrixAutoUpdate;
 
-    this.matrixWorldAutoUpdate = source.matrixWorldAutoUpdate;
+    this.useMatrixWorldAutoUpdate = source.useMatrixWorldAutoUpdate;
     this.matrixWorldNeedsUpdate = source.matrixWorldNeedsUpdate;
 
     this.layers.mask = source.layers.mask;

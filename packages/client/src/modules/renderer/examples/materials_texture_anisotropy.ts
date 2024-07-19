@@ -27,7 +27,7 @@ async function init() {
   // RENDERER
 
   renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
-  renderer.setAnimationLoop(animate);
+  renderer._animation.loop = animate;
   renderer.parameters.autoClear = false;
 
   renderer.parameters.canvas.style.position = 'relative';
@@ -59,13 +59,13 @@ async function init() {
 
   const textureLoader = new TextureLoader();
 
-  const maxAnisotropy = renderer.getMaxAnisotropy();
+  const maxAnisotropy = renderer.backend.getMaxAnisotropy();
 
   const texture1 = await textureLoader.loadAsync('resources/textures/crate.gif');
   const material1 = new Engine.MeshPhongMaterial({ color: 0xffffff, map: texture1 });
 
   texture1.colorSpace = Engine.ColorSpace.SRGB;
-  texture1.anisotropy = renderer.getMaxAnisotropy();
+  texture1.anisotropy = maxAnisotropy;
   texture1.wrapS = texture1.wrapT = Engine.Wrapping.Repeat;
   texture1.repeat.set(512, 512);
 

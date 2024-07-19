@@ -130,7 +130,7 @@ export class BufferGeometry<
 
     const normal = this.attributes.normal;
     if (normal) {
-      normal.applyNMat3(_mat3.fromMat4Normal(matrix));
+      normal.applyNMat3(_mat3.fromNMat4(matrix));
       normal.needsUpdate = true;
     }
 

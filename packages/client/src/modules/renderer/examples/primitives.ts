@@ -33,7 +33,7 @@ const createScene = () => {
 };
 const createRenderer = async (onAnimate: () => void) => {
   const renderer = await Renderer.create();
-  renderer.setAnimationLoop(onAnimate);
+  renderer._animation.loop = onAnimate;
   document.body.appendChild(renderer.parameters.canvas);
 
   return renderer;

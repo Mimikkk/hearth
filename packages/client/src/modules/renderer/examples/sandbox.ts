@@ -39,7 +39,7 @@ async function init() {
   //
 
   renderer = await Renderer.create();
-  renderer.setAnimationLoop(animate);
+  renderer._animation.loop = animate;
   document.body.appendChild(renderer.parameters.canvas);
 
   // textures

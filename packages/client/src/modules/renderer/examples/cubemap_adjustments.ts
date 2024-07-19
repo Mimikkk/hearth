@@ -141,7 +141,7 @@ async function init() {
 
   renderer = await Renderer.create();
   renderer.parameters.toneMappingNode = toneMapping(Engine.ToneMapping.Linear, 1);
-  renderer.setAnimationLoop(render);
+  renderer._animation.loop = render;
   container.appendChild(renderer.parameters.canvas);
 
   const controls = new OrbitControls(camera, renderer.parameters.canvas);

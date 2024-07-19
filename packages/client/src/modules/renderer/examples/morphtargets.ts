@@ -38,9 +38,9 @@ async function init() {
   initGUI();
 
   renderer = await Renderer.create();
-  renderer.setAnimationLoop(function () {
+  renderer._animation.loop = function () {
     renderer.render(scene, camera);
-  });
+  };
   container.appendChild(renderer.parameters.canvas);
 
   const controls = new OrbitControls(camera, renderer.parameters.canvas);

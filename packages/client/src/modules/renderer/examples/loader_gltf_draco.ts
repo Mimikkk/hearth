@@ -63,7 +63,7 @@ async function init() {
 
   // renderer
   renderer = await Renderer.create();
-  renderer.setAnimationLoop(animate);
+  renderer._animation.loop = animate;
   container.appendChild(renderer.parameters.canvas);
 
   window.addEventListener('resize', onWindowResize);

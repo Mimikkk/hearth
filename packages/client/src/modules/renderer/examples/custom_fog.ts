@@ -113,7 +113,7 @@ ground.receiveShadow = true;
 scene.add(ground);
 
 const renderer = await Renderer.create();
-renderer.setAnimationLoop(animate);
+renderer._animation.loop = animate;
 document.body.appendChild(renderer.parameters.canvas);
 
 const controls = new OrbitControls(camera, renderer.parameters.canvas);

@@ -212,7 +212,7 @@ export class Color {
     return this.set(r as number, g as number, b as number, a);
   }
 
-  static new(r: number, g: number, b: number, a: number = 1): Color {
+  static new(r: number = 0, g: number = 0, b: number = 0, a: number = 1): Color {
     return new Color(r, g, b, a);
   }
 

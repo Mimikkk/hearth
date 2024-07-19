@@ -12,7 +12,7 @@ import {
 } from '../../nodes/Nodes.js';
 import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 import RenderContext from '@modules/renderer/engine/renderers/common/RenderContext.js';
-import RenderList from '@modules/renderer/engine/renderers/common/RenderList.js';
+import { RenderList } from '@modules/renderer/engine/renderers/common/RenderList.js';
 
 const _clearColor = new Color(0, 0, 0, 1);
 

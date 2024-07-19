@@ -33,7 +33,7 @@ init();
 async function init() {
   renderer = await Renderer.create();
   renderer._clearColor.a = 0;
-  renderer.setAnimationLoop(animate);
+  renderer._animation.loop = animate;
   document.body.appendChild(renderer.parameters.canvas);
 
   scene = new Engine.Scene();

@@ -13,7 +13,7 @@ init();
 
 async function init() {
   renderer = await Renderer.create();
-  renderer.setAnimationLoop(render);
+  renderer._animation.loop = render;
   renderer.parameters.toneMapping = Engine.ToneMapping.ACESFilmic;
   document.body.appendChild(renderer.parameters.canvas);
 

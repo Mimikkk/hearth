@@ -71,7 +71,7 @@ async function init() {
   plane.material.colorNode = instanceUniform;
 
   sphere.position.z = -1;
-  sphere.occlusionTest = true;
+  sphere.useOcclusion = true;
 
   scene.add(plane);
   scene.add(sphere);
@@ -84,7 +84,7 @@ async function init() {
 
   await renderer.compile(scene, camera);
 
-  renderer.setAnimationLoop(render);
+  renderer._animation.loop = render;
   document.body.appendChild(renderer.parameters.canvas);
 
   // controls

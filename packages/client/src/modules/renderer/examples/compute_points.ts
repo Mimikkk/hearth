@@ -108,7 +108,7 @@ async function init() {
   scene.add(mesh);
 
   renderer = await Renderer.create();
-  renderer.setAnimationLoop(animate);
+  renderer._animation.loop = animate;
   document.body.appendChild(renderer.parameters.canvas);
 
   useWindowResizer(renderer, camera);

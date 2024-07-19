@@ -25,7 +25,7 @@ async function init() {
   scene.backgroundNode = texture(equirectTexture, equirectUV(), 0);
 
   renderer = await Renderer.create();
-  renderer.setAnimationLoop(render);
+  renderer._animation.loop = render;
   container.appendChild(renderer.parameters.canvas);
 
   controls = new OrbitControls(camera, renderer.parameters.canvas);

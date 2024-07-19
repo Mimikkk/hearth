@@ -42,7 +42,7 @@ async function init() {
   scene.add(mesh);
 
   renderer = await Renderer.create();
-  renderer.setAnimationLoop(animate);
+  renderer._animation.loop = animate;
   container.appendChild(renderer.parameters.canvas);
 
   document.addEventListener('pointerdown', onPointerDown);

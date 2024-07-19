@@ -1,43 +1,37 @@
-import { CubeTexture } from '../textures/CubeTexture.js';
+import { CubeImages, CubeTexture } from '../textures/CubeTexture.js';
 import { RenderTarget } from './RenderTarget.js';
 import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
-import { CubeMapping, DepthTextureFormat } from '@modules/renderer/engine/constants.js';
 
 export class CubeRenderTarget extends RenderTarget {
-  constructor(size = 1, options?: RenderTarget.Options) {
+  constructor(size: number = 1, options?: RenderTarget.Options) {
     super(size, size, options);
 
     const image = { width: size, height: size, depth: 1 };
-    const images = [image, image, image, image, image, image];
+    const images = [image, image, image, image, image, image] as CubeImages;
 
-    const { mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy, colorSpace } = this.configuration;
-    this.texture = new CubeTexture(
-      images,
-      mapping as never as CubeMapping,
-      wrapS,
-      wrapT,
-      magFilter,
-      minFilter,
-      format as never as DepthTextureFormat,
-      type,
-      anisotropy,
-      colorSpace,
-    );
+    this.texture = new CubeTexture(images, this.configuration);
 
     this.texture.isRenderTargetTexture = true;
     this.texture.generateMipmaps = this.configuration.generateMipmaps;
-    this.texture.minFilter = minFilter;
+    this.texture.minFilter = this.configuration.minFilter;
   }
 
   clear(renderer: Renderer, color: boolean, depth: boolean, stencil: boolean): void {
-    const currentRenderTarget = renderer.target;
+    const target = renderer.target;
 
-    for (let i = 0; i < 6; i++) {
-      renderer.setRenderTarget(this, i);
+    renderer.setRenderTarget(this, 0);
+    renderer.clear(color, depth, stencil);
+    renderer.setRenderTarget(this, 1);
+    renderer.clear(color, depth, stencil);
+    renderer.setRenderTarget(this, 2);
+    renderer.clear(color, depth, stencil);
+    renderer.setRenderTarget(this, 3);
+    renderer.clear(color, depth, stencil);
+    renderer.setRenderTarget(this, 4);
+    renderer.clear(color, depth, stencil);
+    renderer.setRenderTarget(this, 5);
+    renderer.clear(color, depth, stencil);
 
-      renderer.clear(color, depth, stencil);
-    }
-
-    renderer.setRenderTarget(currentRenderTarget);
+    renderer.setRenderTarget(target);
   }
 }

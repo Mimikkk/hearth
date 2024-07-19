@@ -43,7 +43,7 @@ export class ShaderMaterial extends Material {
     this.fog = false;
     this.lights = false;
     this.clipping = false;
-    this.forceSinglePass = true;
+    this.useSinglePass = true;
 
     this.setValues(parameters);
   }

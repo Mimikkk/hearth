@@ -348,7 +348,7 @@ async function init() {
   //
 
   renderer = await Renderer.create();
-  renderer.setAnimationLoop(animate);
+  renderer._animation.loop = animate;
   container.appendChild(renderer.parameters.canvas);
 
   //
