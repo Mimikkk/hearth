@@ -1,5 +1,4 @@
-import { RenderTarget, Vec4 } from '@modules/renderer/engine/engine.js';
-import { RGBA } from '@modules/renderer/engine/renderers/common/Color4.js';
+import { Color, RenderTarget, Vec4 } from '@modules/renderer/engine/engine.js';
 import ClippingContext from '@modules/renderer/engine/renderers/common/ClippingContext.js';
 import { Const } from '@modules/renderer/engine/math/types.js';
 
@@ -9,7 +8,7 @@ export class RenderContext {
   id: number;
   color: boolean;
   clearColor: boolean;
-  clearColorValue: RGBA;
+  clearColorValue: Color;
   depth: boolean;
   clearDepth: boolean;
   clearDepthValue: number;

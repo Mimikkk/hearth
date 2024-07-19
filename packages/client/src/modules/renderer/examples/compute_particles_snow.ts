@@ -295,7 +295,7 @@ async function init() {
 
   //
 
-  await renderer.computeAsync(computeInit);
+  await renderer.compute(computeInit);
 
   //
 
@@ -309,16 +309,16 @@ async function animate() {
 
   scene.overrideMaterial = collisionPosMaterial;
   renderer.setRenderTarget(collisionPosRT);
-  await renderer.renderAsync(scene, collisionCamera);
+  await renderer.render(scene, collisionCamera);
 
   // compute
 
-  await renderer.computeAsync(computeParticles);
+  await renderer.compute(computeParticles);
 
   // result
 
   scene.overrideMaterial = null;
   renderer.setRenderTarget(null);
 
-  await postProcessing.renderAsync();
+  await postProcessing.renderer.render();
 }

@@ -149,7 +149,7 @@ export class BufferGeometry<
     if (normal !== undefined) {
       const normalMatrix = new Mat3().fromMat4Normal(matrix);
 
-      normal.applyNormalMatrix(normalMatrix);
+      normal.applyMat4(normalMatrix);
 
       normal.needsUpdate = true;
     }

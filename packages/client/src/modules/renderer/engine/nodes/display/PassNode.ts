@@ -6,6 +6,7 @@ import { uniform } from '../core/UniformNode.js';
 import { perspectiveDepthToViewZ, viewZToOrthographicDepth } from './ViewportDepthNode.js';
 import { DepthTexture, RenderTarget, TextureDataType, ToneMapping } from '@modules/renderer/engine/engine.js';
 import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
+import NodeFrame from '@modules/renderer/engine/nodes/core/NodeFrame.js';
 
 class PassTextureNode extends TextureNode {
   constructor(passNode, texture) {
@@ -105,15 +106,12 @@ class PassNode extends TempNode {
     return this.scope === PassNode.COLOR ? this.getTextureNode() : this.getDepthNode();
   }
 
-  updateBefore(frame) {
-    const { renderer } = frame;
+  updateBefore({ renderer }: NodeFrame) {
     const { scene, camera } = this;
 
-    this._pixelRatio = renderer.getPixelRatio();
+    this._pixelRatio = renderer._pixelRatio;
 
-    const size = renderer.getSize(Vec2.new());
-
-    this.setSize(size.width, size.height);
+    this.setSize(renderer._width, renderer._height);
 
     const currentToneMapping = renderer.parameters.toneMapping;
     const currentToneMappingNode = renderer.parameters.toneMappingNode;
@@ -133,7 +131,7 @@ class PassNode extends TempNode {
     renderer.setRenderTarget(currentRenderTarget);
   }
 
-  setSize(width, height) {
+  setSize(width: number, height: number): this {
     this._width = width;
     this._height = height;
 
@@ -141,6 +139,7 @@ class PassNode extends TempNode {
     const effectiveHeight = this._height * this._pixelRatio;
 
     this.renderTarget.setSize(effectiveWidth, effectiveHeight);
+    return this;
   }
 
   setPixelRatio(pixelRatio) {

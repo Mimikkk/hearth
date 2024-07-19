@@ -32,7 +32,7 @@ export class Animation {
     self.cancelAnimationFrame(this.requestId!);
   }
 
-  setAnimationLoop(callback: AnimationLoopFn) {
+  setAnimationLoop(callback: AnimationLoopFn | null) {
     this.animationLoop = callback;
   }
 }

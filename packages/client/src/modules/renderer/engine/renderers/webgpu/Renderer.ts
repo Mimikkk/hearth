@@ -14,26 +14,23 @@ import RenderLists from '@modules/renderer/engine/renderers/common/RenderLists.j
 import RenderContexts from '@modules/renderer/engine/renderers/common/RenderContexts.js';
 import Textures from '@modules/renderer/engine/renderers/common/Textures.js';
 import Background from '@modules/renderer/engine/renderers/common/Background.js';
-import Color4 from '@modules/renderer/engine/renderers/common/Color4.js';
 import { Scene } from '@modules/renderer/engine/scenes/Scene.js';
 import { Camera } from '@modules/renderer/engine/cameras/Camera.js';
 import ClippingContext from '@modules/renderer/engine/renderers/common/ClippingContext.js';
 import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
-import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
-import { Light, Mat4, Object3D, Plane, RenderTarget } from '@modules/renderer/engine/engine.js';
+import { Color, Light, Mat4, Object3D, Plane, RenderTarget } from '@modules/renderer/engine/engine.js';
 import { GPUFeatureNameType, GPUTextureFormatType } from '@modules/renderer/engine/renderers/webgpu/utils/constants.js';
 import { Frustum } from '@modules/renderer/engine/math/Frustum.js';
 import { throttle } from 'lodash-es';
 import { Scissor, Viewport } from '@modules/renderer/engine/renderers/common/RenderContext.js';
-import { Const } from '@modules/renderer/engine/math/types.js';
 
 const _scene = new Scene();
-const _drawingBufferSize = new Vec3();
+const _drawingBufferSize = Vec3.new();
 const _screen = new Vec4();
 const _frustum = Frustum.empty();
-const _projScreenMatrix = new Mat4();
-const _vector3 = new Vec3();
+const _projScreenMatrix = Mat4.new();
+const _vector3 = Vec3.new();
 
 export class Renderer {
   backend: Backend;
@@ -58,7 +55,7 @@ export class Renderer {
   _currentRenderContext: any;
   _opaqueSort: any;
   _transparentSort: any;
-  _clearColor: Color4;
+  _clearColor: Color;
   _clearDepth: number;
   _clearStencil: number;
   _renderTarget: RenderTarget | null;
@@ -127,7 +124,7 @@ export class Renderer {
     this._currentRenderContext = null;
     this._opaqueSort = null;
     this._transparentSort = null;
-    this._clearColor = new Color4(0, 0, 0, this.parameters.alpha ? 0 : 1);
+    this._clearColor = new Color(0, 0, 0, this.parameters.alpha ? 0 : 1);
     this._clearDepth = 1;
     this._clearStencil = 0;
     this._renderTarget = null;
@@ -454,12 +451,8 @@ export class Renderer {
     return this._activeMipmapLevel;
   }
 
-  setAnimationLoop(callback: AnimationLoopFn) {
+  setAnimationLoop(callback: AnimationLoopFn | null) {
     this._animation.setAnimationLoop(callback);
-  }
-
-  async getArrayBufferAsync(attribute: BufferAttribute) {
-    return await this.backend.getArrayBufferAsync(attribute);
   }
 
   getDrawingBufferSize(target: Vec3) {
@@ -486,83 +479,29 @@ export class Renderer {
     return this;
   }
 
-  setOpaqueSort(method) {
-    this._opaqueSort = method;
-  }
-
-  setTransparentSort(method) {
-    this._transparentSort = method;
-  }
-
-  getClearColor(target) {
-    return target.copy(this._clearColor);
-  }
-
-  setClearColor(color, alpha = 1) {
-    this._clearColor.set(color);
-    this._clearColor.a = alpha;
-  }
-
-  getClearAlpha() {
-    return this._clearColor.a;
-  }
-
-  setClearAlpha(alpha) {
-    this._clearColor.a = alpha;
-  }
-
-  getClearDepth() {
-    return this._clearDepth;
-  }
-
-  setClearDepth(depth) {
-    this._clearDepth = depth;
-  }
-
-  getClearStencil() {
-    return this._clearStencil;
-  }
-
-  setClearStencil(stencil) {
-    this._clearStencil = stencil;
-  }
-
-  isOccluded(object) {
+  isOccluded(object: Object3D): boolean {
     const renderContext = this._currentRenderContext;
 
     return renderContext && this.backend.isOccluded(renderContext, object);
   }
 
-  clear(color = true, depth = true, stencil = true) {
+  clear(color: boolean = true, depth: boolean = true, stencil: boolean = true): this {
     let renderTargetData = null;
-    const renderTarget = this._renderTarget;
+    const into = this._renderTarget;
 
-    if (renderTarget !== null) {
-      this._textures.updateRenderTarget(renderTarget);
-
-      renderTargetData = this._textures.get(renderTarget);
+    if (into !== null) {
+      this._textures.updateRenderTarget(into);
+      renderTargetData = this._textures.get(into);
     }
 
     this.backend.clear(color, depth, stencil, renderTargetData);
-  }
-
-  clearColor() {
-    return this.clear(true, false, false);
-  }
-
-  clearDepth() {
-    return this.clear(false, true, false);
-  }
-
-  clearStencil() {
-    return this.clear(false, false, true);
+    return this;
   }
 
   get currentColorSpace() {
-    const renderTarget = this._renderTarget;
-
-    if (renderTarget !== null) {
-      const texture = renderTarget.texture;
+    const target = this._renderTarget;
+    if (target) {
+      const texture = target.texture;
 
       return (Array.isArray(texture) ? texture[0] : texture).colorSpace;
     }
@@ -602,7 +541,7 @@ export class Renderer {
     return this._renderObjectFunction;
   }
 
-  async computeAsync(computeNodes) {
+  async compute(computeNodes) {
     const nodeFrame = this._nodes.nodeFrame;
 
     const previousRenderId = nodeFrame.renderId;
@@ -664,100 +603,6 @@ export class Renderer {
     //
 
     nodeFrame.renderId = previousRenderId;
-  }
-
-  copyFramebufferToTexture(framebufferTexture) {
-    const renderContext = this._currentRenderContext;
-
-    this._textures.updateTexture(framebufferTexture);
-
-    this.backend.copyFramebufferToTexture(framebufferTexture, renderContext);
-  }
-
-  copyTextureToTexture(position, srcTexture, dstTexture, level = 0) {
-    this._textures.updateTexture(srcTexture);
-    this._textures.updateTexture(dstTexture);
-
-    this.backend.copyTextureToTexture(position, srcTexture, dstTexture, level);
-  }
-
-  readRenderTargetPixelsAsync(renderTarget, x, y, width, height) {
-    return this.backend.copyTextureToBuffer(renderTarget.texture, x, y, width, height);
-  }
-
-  _projectObject(object, camera, groupOrder, renderList) {
-    if (object.visible === false) return;
-
-    const visible = object.layers.test(camera.layers);
-
-    if (visible) {
-      if (object.isGroup) {
-        groupOrder = object.renderOrder;
-      } else if (object.isLOD) {
-        if (object.autoUpdate === true) object.update(camera);
-      } else if (object.isLight) {
-        renderList.pushLight(object);
-      } else if (object.isSprite) {
-        if (!object.frustumCulled || _frustum.intersectsSphere(object)) {
-          if (this.parameters.sortObjects) {
-            _vector3.fromMat4Position(object.matrixWorld).applyMat4(_projScreenMatrix);
-          }
-
-          const geometry = object.geometry;
-          const material = object.material;
-
-          if (material.visible) {
-            renderList.push(object, geometry, material, groupOrder, _vector3.z, null);
-          }
-        }
-      } else if (object.isLineLoop) {
-        console.error(
-          'engine.Renderer: Objects of type engine.LineLoop are not supported. Please use engine.Line or engine.LineSegments.',
-        );
-      } else if (object.isMesh || object.isLine || object.isPoints) {
-        if (!object.frustumCulled || _frustum.intersectsObject(object)) {
-          const geometry = object.geometry;
-          const material = object.material;
-
-          if (this.parameters.sortObjects) {
-            if (geometry.boundingSphere === null) geometry.computeBoundingSphere();
-
-            _vector3.from(geometry.boundingSphere.center).applyMat4(object.matrixWorld).applyMat4(_projScreenMatrix);
-          }
-
-          if (Array.isArray(material)) {
-            const groups = geometry.groups;
-
-            for (let i = 0, l = groups.length; i < l; i++) {
-              const group = groups[i];
-              const groupMaterial = material[group.materialIndex];
-
-              if (groupMaterial && groupMaterial.visible) {
-                renderList.push(object, geometry, groupMaterial, groupOrder, _vector3.z, group);
-              }
-            }
-          } else if (material.visible) {
-            renderList.push(object, geometry, material, groupOrder, _vector3.z, null);
-          }
-        }
-      }
-    }
-
-    const children = object.children;
-
-    for (let i = 0, l = children.length; i < l; i++) {
-      this._projectObject(children[i], camera, groupOrder, renderList);
-    }
-  }
-
-  _renderObjects(renderList, camera, scene, lightsNode) {
-    for (let i = 0, il = renderList.length; i < il; i++) {
-      const renderItem = renderList[i];
-
-      const { object, geometry, material, group } = renderItem;
-
-      this._currentRenderObjectFunction(object, scene, camera, geometry, material, group, lightsNode);
-    }
   }
 
   renderObject(object, scene, camera, geometry, material, group, lightsNode) {
@@ -836,6 +681,81 @@ export class Renderer {
     //
 
     object.onAfterRender(this, scene, camera, geometry, material, group);
+  }
+
+  _projectObject(object, camera, groupOrder, renderList) {
+    if (object.visible === false) return;
+
+    const visible = object.layers.test(camera.layers);
+
+    if (visible) {
+      if (object.isGroup) {
+        groupOrder = object.renderOrder;
+      } else if (object.isLOD) {
+        if (object.autoUpdate === true) object.update(camera);
+      } else if (object.isLight) {
+        renderList.pushLight(object);
+      } else if (object.isSprite) {
+        if (!object.frustumCulled || _frustum.intersectsSphere(object)) {
+          if (this.parameters.sortObjects) {
+            _vector3.fromMat4Position(object.matrixWorld).applyMat4(_projScreenMatrix);
+          }
+
+          const geometry = object.geometry;
+          const material = object.material;
+
+          if (material.visible) {
+            renderList.push(object, geometry, material, groupOrder, _vector3.z, null);
+          }
+        }
+      } else if (object.isLineLoop) {
+        console.error(
+          'engine.Renderer: Objects of type engine.LineLoop are not supported. Please use engine.Line or engine.LineSegments.',
+        );
+      } else if (object.isMesh || object.isLine || object.isPoints) {
+        if (!object.frustumCulled || _frustum.intersectsObject(object)) {
+          const geometry = object.geometry;
+          const material = object.material;
+
+          if (this.parameters.sortObjects) {
+            if (geometry.boundingSphere === null) geometry.computeBoundingSphere();
+
+            _vector3.from(geometry.boundingSphere.center).applyMat4(object.matrixWorld).applyMat4(_projScreenMatrix);
+          }
+
+          if (Array.isArray(material)) {
+            const groups = geometry.groups;
+
+            for (let i = 0, l = groups.length; i < l; i++) {
+              const group = groups[i];
+              const groupMaterial = material[group.materialIndex];
+
+              if (groupMaterial && groupMaterial.visible) {
+                renderList.push(object, geometry, groupMaterial, groupOrder, _vector3.z, group);
+              }
+            }
+          } else if (material.visible) {
+            renderList.push(object, geometry, material, groupOrder, _vector3.z, null);
+          }
+        }
+      }
+    }
+
+    const children = object.children;
+
+    for (let i = 0, l = children.length; i < l; i++) {
+      this._projectObject(children[i], camera, groupOrder, renderList);
+    }
+  }
+
+  _renderObjects(renderList, camera, scene, lightsNode) {
+    for (let i = 0, il = renderList.length; i < il; i++) {
+      const renderItem = renderList[i];
+
+      const { object, geometry, material, group } = renderItem;
+
+      this._currentRenderObjectFunction(object, scene, camera, geometry, material, group, lightsNode);
+    }
   }
 
   _renderObjectDirect(object, material, scene, camera, lightsNode, passId) {

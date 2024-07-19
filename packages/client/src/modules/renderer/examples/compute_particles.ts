@@ -148,7 +148,7 @@ async function init() {
 
   //
 
-  renderer.computeAsync(computeInit);
+  renderer.compute(computeInit);
 
   // click event
 
@@ -185,7 +185,7 @@ async function init() {
 
       // compute
 
-      renderer.computeAsync(computeHit);
+      renderer.compute(computeHit);
     }
   }
 
@@ -217,9 +217,9 @@ async function init() {
 async function animate() {
   stats.update();
 
-  await renderer.computeAsync(computeParticles);
+  await renderer.compute(computeParticles);
 
-  await renderer.renderAsync(scene, camera);
+  await renderer.render(scene, camera);
 
   // throttle the logging
 

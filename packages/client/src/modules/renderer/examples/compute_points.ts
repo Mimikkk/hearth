@@ -86,7 +86,7 @@ async function init() {
       velocity.xy = vec2(velX, velY);
     });
 
-    renderer.computeAsync(precomputeShaderNode().compute(particleNum));
+    renderer.compute(precomputeShaderNode().compute(particleNum));
   };
 
   // use a compute shader to animate the point cloud's vertex data.
@@ -133,6 +133,6 @@ function onMouseMove(event) {
 }
 
 function animate() {
-  renderer.computeAsync(computeNode);
+  renderer.compute(computeNode);
   renderer.render(scene, camera);
 }

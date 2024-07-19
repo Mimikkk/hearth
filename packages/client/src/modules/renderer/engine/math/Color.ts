@@ -198,25 +198,31 @@ export class Color {
   r: number;
   g: number;
   b: number;
+  a: number;
 
   constructor();
   constructor(r: ColorRepresentation);
-  constructor(r: number, g: number, b: number);
-  constructor(r?: number | ColorRepresentation, g?: number, b?: number) {
+  constructor(r: number, g: number, b: number, a?: number);
+  constructor(r?: number | ColorRepresentation, g?: number, b?: number, a?: number) {
     this.r = 1;
     this.g = 1;
     this.b = 1;
+    this.a = 1;
 
-    return this.set(r as number, g as number, b as number);
+    return this.set(r as number, g as number, b as number, a);
   }
 
   static new(): Color {
     return new Color();
   }
 
+  static is(value: any): value is Color {
+    return value?.isColor === true;
+  }
+
   set(r: ColorRepresentation): this;
-  set(r: number, g: number, b: number): this;
-  set(r: ColorRepresentation, g?: number, b?: number): this {
+  set(r: number, g: number, b: number, a?: number): this;
+  set(r: ColorRepresentation, g?: number, b?: number, a?: number): this {
     if (g === undefined && b === undefined) {
       const value = r;
 
@@ -230,6 +236,8 @@ export class Color {
     } else {
       this.setRGB(r as number, g!, b!);
     }
+
+    if (a !== undefined) this.a = a;
 
     return this;
   }
@@ -407,6 +415,7 @@ export class Color {
     this.r = color.r;
     this.g = color.g;
     this.b = color.b;
+    this.a = color.a;
 
     return this;
   }

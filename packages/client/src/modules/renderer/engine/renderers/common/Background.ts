@@ -1,11 +1,11 @@
 import DataMap from './DataMap.js';
-import Color4 from './Color4.js';
-import { Camera, Mesh, Scene, Side, SphereGeometry } from '@modules/renderer/engine/engine.js';
+import { Camera, Color, Mesh, Scene, Side, SphereGeometry } from '@modules/renderer/engine/engine.js';
 import {
   backgroundBlurriness,
   backgroundIntensity,
   context,
   modelViewProjection,
+  Node,
   NodeMaterial,
   normalWorld,
   vec4,
@@ -14,7 +14,7 @@ import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js'
 import RenderContext from '@modules/renderer/engine/renderers/common/RenderContext.js';
 import RenderList from '@modules/renderer/engine/renderers/common/RenderList.js';
 
-const _clearColor = new Color4(0, 0, 0, 1);
+const _clearColor = new Color(0, 0, 0, 1);
 
 class Background extends DataMap<any, any> {
   constructor(public renderer: Renderer) {
@@ -28,18 +28,15 @@ class Background extends DataMap<any, any> {
     let forceClear = false;
 
     if (background === null) {
-      // no background settings, use clear color configuration from the renderer
-
       renderer._clearColor.getRGB(_clearColor, this.renderer.currentColorSpace);
-      _clearColor.a = renderer._clearColor.a;
-    } else if (background.isColor === true) {
-      // background is an opaque color
 
+      _clearColor.a = renderer._clearColor.a;
+    } else if (Color.is(background)) {
       background.getRGB(_clearColor, this.renderer.currentColorSpace);
       _clearColor.a = 1;
 
       forceClear = true;
-    } else if (background.isNode === true) {
+    } else if (Node.is(background)) {
       const sceneData = this.get(scene);
       const backgroundNode = background;
 
@@ -94,8 +91,6 @@ class Background extends DataMap<any, any> {
     //
 
     if (renderer.parameters.autoClear || forceClear) {
-      _clearColor.multiplyScalar(_clearColor.a);
-
       const clearColorValue = renderContext.clearColorValue;
 
       clearColorValue.r = _clearColor.r;

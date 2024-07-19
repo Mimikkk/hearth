@@ -1,4 +1,13 @@
-import { BufferAttribute, CoordinateSystem, Object3D, RenderTarget, Scene, Texture, Vec3 } from '../../engine.js';
+import {
+  BufferAttribute,
+  Color,
+  CoordinateSystem,
+  Object3D,
+  RenderTarget,
+  Scene,
+  Texture,
+  Vec3,
+} from '../../engine.js';
 
 import {
   GPUFeatureNameType,
@@ -23,7 +32,6 @@ import Binding from '@modules/renderer/engine/renderers/common/Binding.js';
 import { Info } from '@modules/renderer/engine/renderers/common/Info.js';
 import RenderObject from '@modules/renderer/engine/renderers/common/RenderObject.js';
 import ProgrammableStage from '@modules/renderer/engine/renderers/common/ProgrammableStage.js';
-import Color4 from '@modules/renderer/engine/renderers/common/Color4.js';
 import { ResourceManager } from './utils/ResourceManager.js';
 
 export class Backend {
@@ -44,13 +52,12 @@ export class Backend {
   getClearColor() {
     const renderer = this.renderer;
 
-    const color4 = new Color4(0, 0, 0, 1);
+    // renderer.getClearColor(color4);
+    //
+    // color4.getRGB(color4, this.renderer.currentColorSpace);
 
-    renderer.getClearColor(color4);
-
-    color4.getRGB(color4, this.renderer.currentColorSpace);
-
-    return color4;
+    // return color4;
+    return renderer._clearColor;
   }
 
   // resource properties
@@ -551,7 +558,7 @@ export class Backend {
     if (supportsDepth) {
       if (depth) {
         depthStencilAttachment.depthLoadOp = GPULoadOpType.Clear;
-        depthStencilAttachment.depthClearValue = renderer.getClearDepth();
+        depthStencilAttachment.depthClearValue = renderer._clearDepth;
         depthStencilAttachment.depthStoreOp = GPUStoreOpType.Store;
       } else {
         depthStencilAttachment.depthLoadOp = GPULoadOpType.Load;
@@ -564,7 +571,7 @@ export class Backend {
     if (supportsStencil) {
       if (stencil) {
         depthStencilAttachment.stencilLoadOp = GPULoadOpType.Clear;
-        depthStencilAttachment.stencilClearValue = renderer.getClearStencil();
+        depthStencilAttachment.stencilClearValue = renderer._clearStencil;
         depthStencilAttachment.stencilStoreOp = GPUStoreOpType.Store;
       } else {
         depthStencilAttachment.stencilLoadOp = GPULoadOpType.Load;
