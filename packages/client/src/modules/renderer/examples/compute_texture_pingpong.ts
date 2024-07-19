@@ -6,7 +6,7 @@ import StorageTexture from '@modules/renderer/engine/renderers/common/StorageTex
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 
-let camera, scene, renderer;
+let camera, scene, renderer: Renderer;
 let computeInitNode, computeToPing, computeToPong;
 let pingTexture, pongTexture;
 let material;
@@ -142,6 +142,7 @@ async function init() {
   document.body.appendChild(renderer.parameters.canvas);
 
   useWindowResizer(renderer, camera, () => {
+    renderer.updateSize(window.innerWidth, window.innerHeight);
     const aspect = window.innerWidth / window.innerHeight;
 
     const frustumHeight = camera.top - camera.bottom;
