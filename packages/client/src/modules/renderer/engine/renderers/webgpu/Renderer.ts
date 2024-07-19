@@ -171,11 +171,7 @@ export class Renderer {
     return renderer;
   }
 
-  get coordinateSystem() {
-    return this.backend.coordinateSystem;
-  }
-
-  async compileAsync(scene: Scene, camera: Camera, targetScene: Scene | null = null) {
+  async compile(scene: Scene, camera: Camera, targetScene: Scene | null = null) {
     // preserve render tree
 
     const nodeFrame = this._nodes.nodeFrame;
@@ -305,18 +301,6 @@ export class Renderer {
     this.info.updateRender();
     nodeFrame.renderId = this.info.calls;
 
-    //
-
-    const coordinateSystem = this.coordinateSystem;
-
-    if (camera.coordinateSystem !== coordinateSystem) {
-      camera.coordinateSystem = coordinateSystem;
-
-      camera.updateProjectionMatrix();
-    }
-
-    //
-
     if (scene.matrixWorldAutoUpdate) scene.updateMatrixWorld();
 
     if (camera.parent === null && camera.matrixWorldAutoUpdate) camera.updateMatrixWorld();
@@ -438,6 +422,69 @@ export class Renderer {
 
     return context;
   }
+  async compute(computeNodes) {
+    const nodeFrame = this._nodes.nodeFrame;
+
+    const previousRenderId = nodeFrame.renderId;
+
+    //
+
+    this.info.calls++;
+    this.info.compute.calls++;
+    this.info.compute.computeCalls++;
+
+    nodeFrame.renderId = this.info.calls;
+
+    //
+
+    const backend = this.backend;
+    const pipelines = this._pipelines;
+    const bindings = this._bindings;
+    const nodes = this._nodes;
+    const computeList = Array.isArray(computeNodes) ? computeNodes : [computeNodes];
+
+    if (computeList[0] === undefined || computeList[0].isComputeNode !== true) {
+      throw new Error('engine.Renderer: .compute() expects a ComputeNode.');
+    }
+
+    backend.beginCompute(computeNodes);
+
+    for (const computeNode of computeList) {
+      // onInit
+
+      if (pipelines.has(computeNode) === false) {
+        const dispose = () => {
+          computeNode.eventDispatcher.remove('dispose', dispose);
+
+          pipelines.delete(computeNode);
+          bindings.delete(computeNode);
+          nodes.delete(computeNode);
+        };
+
+        computeNode.eventDispatcher.add('dispose', dispose);
+
+        //
+
+        computeNode.onInit({ renderer: this });
+      }
+
+      nodes.updateForCompute(computeNode);
+      bindings.updateForCompute(computeNode);
+
+      const computeBindings = bindings.getForCompute(computeNode);
+      const computePipeline = pipelines.getForCompute(computeNode, computeBindings);
+
+      backend.compute(computeNodes, computeNode, computeBindings, computePipeline);
+    }
+
+    backend.finishCompute(computeNodes);
+
+    await this.backend.resolveTimestampAsync(computeNodes, 'compute');
+
+    //
+
+    nodeFrame.renderId = previousRenderId;
+  }
 
   getMaxAnisotropy() {
     return this.backend.getMaxAnisotropy();
@@ -539,70 +586,6 @@ export class Renderer {
 
   getRenderObjectFunction() {
     return this._renderObjectFunction;
-  }
-
-  async compute(computeNodes) {
-    const nodeFrame = this._nodes.nodeFrame;
-
-    const previousRenderId = nodeFrame.renderId;
-
-    //
-
-    this.info.calls++;
-    this.info.compute.calls++;
-    this.info.compute.computeCalls++;
-
-    nodeFrame.renderId = this.info.calls;
-
-    //
-
-    const backend = this.backend;
-    const pipelines = this._pipelines;
-    const bindings = this._bindings;
-    const nodes = this._nodes;
-    const computeList = Array.isArray(computeNodes) ? computeNodes : [computeNodes];
-
-    if (computeList[0] === undefined || computeList[0].isComputeNode !== true) {
-      throw new Error('engine.Renderer: .compute() expects a ComputeNode.');
-    }
-
-    backend.beginCompute(computeNodes);
-
-    for (const computeNode of computeList) {
-      // onInit
-
-      if (pipelines.has(computeNode) === false) {
-        const dispose = () => {
-          computeNode.eventDispatcher.remove('dispose', dispose);
-
-          pipelines.delete(computeNode);
-          bindings.delete(computeNode);
-          nodes.delete(computeNode);
-        };
-
-        computeNode.eventDispatcher.add('dispose', dispose);
-
-        //
-
-        computeNode.onInit({ renderer: this });
-      }
-
-      nodes.updateForCompute(computeNode);
-      bindings.updateForCompute(computeNode);
-
-      const computeBindings = bindings.getForCompute(computeNode);
-      const computePipeline = pipelines.getForCompute(computeNode, computeBindings);
-
-      backend.compute(computeNodes, computeNode, computeBindings, computePipeline);
-    }
-
-    backend.finishCompute(computeNodes);
-
-    await this.backend.resolveTimestampAsync(computeNodes, 'compute');
-
-    //
-
-    nodeFrame.renderId = previousRenderId;
   }
 
   renderObject(object, scene, camera, geometry, material, group, lightsNode) {
