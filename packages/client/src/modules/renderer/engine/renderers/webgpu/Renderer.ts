@@ -413,7 +413,6 @@ export class Renderer {
   }
 
   async compute(computeNodes: ComputeNode | ComputeNode[]) {
-    console.log(computeNodes);
     const frame = this._nodes.frame;
 
     const previousRenderId = frame.id;
@@ -499,6 +498,7 @@ export class Renderer {
     this.height = height;
     this.pixelRatio = pixelRatio;
 
+    console.log({ width, height });
     this.parameters.canvas.width = Math.floor(width * this.pixelRatio);
     this.parameters.canvas.height = Math.floor(height * this.pixelRatio);
     this.parameters.canvas.style.width = width + 'px';

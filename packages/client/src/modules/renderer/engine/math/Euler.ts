@@ -57,7 +57,7 @@ export class Euler {
     return into.fromArray(array, offset);
   }
 
-  set(x: number, y: number, z: number, order: EulerOrder): this {
+  set(x: number, y: number, z: number, order: EulerOrder = this.order): this {
     this.x = x;
     this.y = y;
     this.z = z;

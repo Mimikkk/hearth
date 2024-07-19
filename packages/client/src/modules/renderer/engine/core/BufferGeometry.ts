@@ -20,13 +20,6 @@ import { Const } from '@modules/renderer/engine/math/types.js';
 
 let _id = 0;
 
-const _m1 = new Mat4();
-const _obj = new Object3D();
-const _offset = Vec3.new();
-const _box = Box3.new();
-const _boxMorph = Box3.new();
-const _vector = Vec3.new();
-
 type AttributeRecord = Record<string, Attribute>;
 
 export class BufferGeometry<
@@ -100,32 +93,25 @@ export class BufferGeometry<
 
   setAttribute<K extends keyof AttributeMap>(name: K, attribute: AttributeMap[K]): this {
     this.attributes[name] = attribute;
-
     return this;
   }
 
   deleteAttribute(name: keyof AttributeMap): this {
     delete this.attributes[name];
-
     return this;
   }
 
   hasAttribute(name: keyof AttributeMap): boolean {
-    return this.attributes[name] !== undefined;
+    return !!this.attributes[name];
   }
 
   addGroup(start: number, count: number, materialIndex: number = 0): this {
-    this.groups.push({
-      start: start,
-      count: count,
-      materialIndex: materialIndex,
-    });
+    this.groups.push({ start, count, materialIndex });
     return this;
   }
 
   clearGroups(): this {
     this.groups = [];
-
     return this;
   }
 
@@ -135,115 +121,66 @@ export class BufferGeometry<
     return this;
   }
 
-  applyMat4(matrix: Mat4): this {
+  applyMat4(matrix: Const<Mat4>): this {
     const position = this.attributes.position;
-
-    if (position !== undefined) {
+    if (position) {
       position.applyMat4(matrix);
-
       position.needsUpdate = true;
     }
 
     const normal = this.attributes.normal;
-
-    if (normal !== undefined) {
-      const normalMatrix = new Mat3().fromMat4Normal(matrix);
-
-      normal.applyMat4(normalMatrix);
-
+    if (normal) {
+      normal.applyNMat3(_mat3.fromMat4Normal(matrix));
       normal.needsUpdate = true;
     }
 
     const tangent = this.attributes.tangent;
-
-    if (tangent !== undefined) {
+    if (tangent) {
       tangent.transformDirection(matrix);
-
       tangent.needsUpdate = true;
     }
 
-    if (this.boundingBox !== null) {
-      this.computeBoundingBox();
-    }
-
-    if (this.boundingSphere !== null) {
-      this.computeBoundingSphere();
-    }
+    if (this.boundingBox !== null) this.computeBoundingBox();
+    if (this.boundingSphere !== null) this.computeBoundingSphere();
 
     return this;
   }
 
-  applyQuaternion(q: Quaternion): this {
-    _m1.asRotationFromQuaternion(q);
+  applyQuaternion(quaternion: Const<Quaternion>): this {
+    _mat4.asRotationFromQuaternion(quaternion);
 
-    this.applyMat4(_m1);
+    this.applyMat4(_mat4);
 
     return this;
   }
 
   rotateX(angle: number): this {
-    // rotate geometry around world x-axis
-
-    _m1.asRotationX(angle);
-
-    this.applyMat4(_m1);
-
-    return this;
+    return this.applyMat4(_mat4.asRotationX(angle));
   }
 
   rotateY(angle: number): this {
-    // rotate geometry around world y-axis
-
-    _m1.asRotationY(angle);
-
-    this.applyMat4(_m1);
-
-    return this;
+    return this.applyMat4(_mat4.asRotationY(angle));
   }
 
   rotateZ(angle: number): this {
-    // rotate geometry around world z-axis
-
-    _m1.asRotationZ(angle);
-
-    this.applyMat4(_m1);
-
-    return this;
+    return this.applyMat4(_mat4.asRotationZ(angle));
   }
 
   translate(x: number, y: number, z: number): this {
-    // translate geometry
-
-    _m1.asTranslation(x, y, z);
-
-    this.applyMat4(_m1);
-
-    return this;
+    return this.applyMat4(_mat4.asTranslation(x, y, z));
   }
 
   scale(x: number, y: number, z: number): this {
-    // scale geometry
-
-    _m1.asScale(x, y, z);
-
-    this.applyMat4(_m1);
-
-    return this;
+    return this.applyMat4(_mat4.asScale(x, y, z));
   }
 
   lookAt(vec: Const<Vec3>): this {
-    _obj.lookAt(vec);
-    _obj.updateMatrix();
-    this.applyMat4(_obj.matrix);
-
-    return this;
+    return this.applyMat4(_obj.lookAt(vec).updateMatrix().matrix);
   }
 
   center(): this {
     this.computeBoundingBox();
-
     this.boundingBox!.center(_offset).negate();
-
     this.translate(_offset.x, _offset.y, _offset.z);
 
     return this;
@@ -758,3 +695,11 @@ export class BufferGeometry<
 
 BufferGeometry.prototype.isBufferGeometry = true;
 BufferGeometry.prototype.type = 'BufferGeometry';
+
+const _mat4 = Mat4.new();
+const _mat3 = Mat3.new();
+const _obj = new Object3D();
+const _offset = Vec3.new();
+const _box = Box3.new();
+const _boxMorph = Box3.new();
+const _vector = Vec3.new();

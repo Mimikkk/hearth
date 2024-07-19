@@ -27,6 +27,10 @@ export class Camera extends Object3D {
     return this;
   }
 
+  static is(value: any): value is Camera {
+    return value?.isCamera === true;
+  }
+
   getWorldDirection(into: Vec3 = Vec3.new()): Vec3 {
     return super.getWorldDirection(into).negate();
   }
