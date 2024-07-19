@@ -20,7 +20,6 @@ import {
   InterpolationMode,
   Line,
   LineBasicMaterial,
-  LineLoop,
   LineSegments,
   LoaderUtils,
   Mat4,
@@ -2897,8 +2896,6 @@ class Parser {
           mesh = new LineSegments(geometry, material);
         } else if (primitive.mode === WEBGL_CONSTANTS.LINE_STRIP) {
           mesh = new Line(geometry, material);
-        } else if (primitive.mode === WEBGL_CONSTANTS.LINE_LOOP) {
-          mesh = new LineLoop(geometry, material);
         } else if (primitive.mode === WEBGL_CONSTANTS.POINTS) {
           mesh = new Points(geometry, material);
         } else {
