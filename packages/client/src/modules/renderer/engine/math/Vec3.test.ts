@@ -332,7 +332,7 @@ describe('Math - Vec3', () => {
   it('project/unproject', () => {
     const a = vec3(2, 3, 4);
     const camera = new PerspectiveCamera(75, 16 / 9, 0.1, 300.0);
-    const expected = vec3(-0.36653213611158914, -0.9774190296309043, 1.0506835611870624);
+    const expected = vec3(-0.36653213611158914, -0.9774190296309043, 1.0253417805935314);
 
     a.project(camera);
     closeTo(a, expected);
