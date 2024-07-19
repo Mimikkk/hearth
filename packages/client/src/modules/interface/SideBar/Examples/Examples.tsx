@@ -11,6 +11,7 @@ import { useContent } from '@modules/managment/useContent.js';
 import { createEffectListener } from '@logic/createListener.js';
 import { ExampleName } from '@modules/renderer/examples/examples.js';
 import { Shortcut } from '@components/forms/Shortcut/Shortcut.js';
+import { ButtonIcon } from '@components/buttons/ButtonIcon/ButtonIcon.js';
 
 const FocusShortcut = () => (
   <Shortcut class="absolute right-0 pr-1 opacity-50">
@@ -124,7 +125,14 @@ export const Examples = () => {
           onChange={setQuery}
           onFocusChange={setIsFocused}
           after={
-            <Show when={!isFocused()}>
+            <Show
+              when={!query().length && !isFocused()}
+              fallback={
+                <Show when={query().length}>
+                  <ButtonIcon onClick={() => setQuery('')} icon="ImCross" size="xs" variant="text" />
+                </Show>
+              }
+            >
               <FocusShortcut />
             </Show>
           }
