@@ -16,6 +16,10 @@ export class CompressedCubeTexture extends CompressedTexture {
       },
     );
   }
+
+  static is(item: any): item is CompressedCubeTexture {
+    return item?.isCubeTexture === true;
+  }
 }
 
 CompressedCubeTexture.prototype.isCubeTexture = true;

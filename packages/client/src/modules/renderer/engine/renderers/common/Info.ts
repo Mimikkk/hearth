@@ -8,10 +8,10 @@ import { Line } from '@modules/renderer/engine/objects/Line.js';
 export class Info {
   autoReset: boolean;
   frame: number;
-  calls: number;
+  passes: number;
   render: {
     calls: number;
-    drawCalls: number;
+    passes: number;
     triangles: number;
     points: number;
     lines: number;
@@ -19,8 +19,7 @@ export class Info {
   };
 
   compute: {
-    calls: number;
-    computeCalls: number;
+    passes: number;
     timestamp: number;
   };
 
@@ -33,11 +32,11 @@ export class Info {
     this.autoReset = true;
 
     this.frame = 0;
-    this.calls = 0;
+    this.passes = 0;
 
     this.render = {
+      passes: 0,
       calls: 0,
-      drawCalls: 0,
       triangles: 0,
       points: 0,
       lines: 0,
@@ -45,8 +44,7 @@ export class Info {
     };
 
     this.compute = {
-      calls: 0,
-      computeCalls: 0,
+      passes: 0,
       timestamp: 0,
     };
 
@@ -57,7 +55,7 @@ export class Info {
   }
 
   update(object: Object3D, count: number, instanceCount: number = 1) {
-    this.render.drawCalls++;
+    this.render.calls++;
 
     if (Mesh.is(object) || Sprite.is(object)) {
       this.render.triangles += instanceCount * (count / 3);
@@ -77,8 +75,7 @@ export class Info {
   }
 
   reset() {
-    this.render.drawCalls = 0;
-    this.compute.computeCalls = 0;
+    this.render.calls = 0;
     this.render.triangles = 0;
     this.render.points = 0;
     this.render.lines = 0;
@@ -88,9 +85,9 @@ export class Info {
 
   dispose() {
     this.reset();
-    this.calls = 0;
-    this.render.calls = 0;
-    this.compute.calls = 0;
+    this.passes = 0;
+    this.render.passes = 0;
+    this.compute.passes = 0;
     this.render.timestamp = 0;
     this.compute.timestamp = 0;
     this.memory.geometries = 0;
@@ -98,8 +95,14 @@ export class Info {
   }
 
   updateRender(): this {
-    this.calls++;
-    this.render.calls++;
+    this.passes++;
+    this.render.passes++;
+    return this;
+  }
+
+  updateCompute(): this {
+    this.passes++;
+    this.compute.passes++;
     return this;
   }
 }

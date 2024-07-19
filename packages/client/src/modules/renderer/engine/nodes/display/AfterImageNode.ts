@@ -61,7 +61,7 @@ class AfterImageNode extends TempNode {
     this._compRT.texture.type = textureType;
     this._oldRT.texture.type = textureType;
 
-    const currentRenderTarget = renderer.getRenderTarget();
+    const currentRenderTarget = renderer.target;
     const currentTexture = textureNode.value;
 
     this.textureNodeOld.value = this._oldRT.texture;

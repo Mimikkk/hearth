@@ -3,11 +3,11 @@ import { Clock } from '@modules/renderer/engine/core/Clock.js';
 export type AnimationLoopFn = (time: number, frame?: number) => void;
 
 export class Animation {
-  animationLoop: AnimationLoopFn | null = null;
+  loop: AnimationLoopFn | null = null;
   requestId: number | null = null;
 
   constructor(public renderer: Renderer) {
-    this.animationLoop = null;
+    this.loop = null;
 
     let previousTime = 0;
 
@@ -18,11 +18,11 @@ export class Animation {
 
       if (this.renderer.info.autoReset) this.renderer.info.reset();
 
-      this.renderer._nodes.nodeFrame.update();
+      this.renderer._nodes.frame.update();
 
-      this.renderer.info.frame = this.renderer._nodes.nodeFrame.frameId;
+      this.renderer.info.frame = this.renderer._nodes.frame.frameId;
 
-      if (this.animationLoop !== null) this.animationLoop(delta, frame);
+      if (this.loop) this.loop(delta, frame);
     };
 
     update(0);
@@ -30,9 +30,5 @@ export class Animation {
 
   dispose() {
     self.cancelAnimationFrame(this.requestId!);
-  }
-
-  setAnimationLoop(callback: AnimationLoopFn | null) {
-    this.animationLoop = callback;
   }
 }

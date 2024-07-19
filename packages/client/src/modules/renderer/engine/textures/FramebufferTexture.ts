@@ -15,6 +15,10 @@ export class FramebufferTexture extends Texture {
       },
     );
   }
+
+  static is(item: any): item is FramebufferTexture {
+    return item?.isFramebufferTexture;
+  }
 }
 
 FramebufferTexture.prototype.isFramebufferTexture = true;

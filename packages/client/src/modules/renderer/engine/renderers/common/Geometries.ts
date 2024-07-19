@@ -117,7 +117,7 @@ export class Geometries extends DataMap<any, any> {
   }
 
   updateAttribute(attribute: Attribute, type: AttributeType) {
-    const callId = this.renderer.info.render.calls;
+    const callId = this.renderer.info.render.passes;
 
     if (this.attributeCall.get(attribute) !== callId) {
       this.renderer._attributes.update(attribute, type);

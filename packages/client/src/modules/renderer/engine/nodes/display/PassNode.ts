@@ -115,7 +115,7 @@ class PassNode extends TempNode {
 
     const currentToneMapping = renderer.parameters.toneMapping;
     const currentToneMappingNode = renderer.parameters.toneMappingNode;
-    const currentRenderTarget = renderer.getRenderTarget();
+    const currentRenderTarget = renderer.target;
 
     this._cameraNear.value = camera.near;
     this._cameraFar.value = camera.far;
@@ -140,12 +140,6 @@ class PassNode extends TempNode {
 
     this.renderTarget.setSize(effectiveWidth, effectiveHeight);
     return this;
-  }
-
-  setPixelRatio(pixelRatio) {
-    this._pixelRatio = pixelRatio;
-
-    this.setSize(this._width, this._height);
   }
 
   dispose() {

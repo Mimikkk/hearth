@@ -57,7 +57,7 @@ let builder: WGSLNodeBuilder | null = null;
 const renderer = await Renderer.create();
 renderer.outputColorSpace = ColorSpace.LinearSRGB;
 renderer.setAnimationLoop(() => renderer.render(scene, camera));
-renderer.setSize(renderable.clientWidth, renderable.clientHeight);
+renderer.updateSize(renderable.clientWidth, renderable.clientHeight);
 renderable.appendChild(renderer.parameters.canvas);
 
 const refreshEditorView = async () => {

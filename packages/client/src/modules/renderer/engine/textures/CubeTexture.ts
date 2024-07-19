@@ -17,6 +17,10 @@ export class CubeTexture extends Texture<CubeImages> {
   constructor(images: CubeImages, options?: Texture.Options) {
     super(images, { flipY: false, mapping: CubeMapping.Reflection, ...options });
   }
+
+  static is(item: any): item is CubeTexture {
+    return item?.isCubeTexture === true;
+  }
 }
 
 CubeTexture.prototype.isCubeTexture = true;

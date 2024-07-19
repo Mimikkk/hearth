@@ -37,7 +37,7 @@ import { types } from 'sass';
 import Color = types.Color;
 
 export class Nodes extends DataMap<any, any> {
-  nodeFrame: NodeFrame;
+  frame: NodeFrame;
   nodeBuilderCache: Map<string, NodeBuilderState>;
   callHashCache: ChainMap<any, any>;
   groupsData: ChainMap<any, any>;
@@ -45,7 +45,7 @@ export class Nodes extends DataMap<any, any> {
   constructor(public renderer: Renderer) {
     super();
 
-    this.nodeFrame = new NodeFrame();
+    this.frame = new NodeFrame();
     this.nodeBuilderCache = new Map();
     this.callHashCache = new ChainMap();
     this.groupsData = new ChainMap();
@@ -63,7 +63,7 @@ export class Nodes extends DataMap<any, any> {
 
     if (name === renderGroup.name) {
       const uniformsGroupData = this.get(nodeUniformsGroup);
-      const renderId = this.nodeFrame.renderId;
+      const renderId = this.frame.renderId;
 
       if (uniformsGroupData.renderId !== renderId) {
         uniformsGroupData.renderId = renderId;
@@ -78,7 +78,7 @@ export class Nodes extends DataMap<any, any> {
 
     if (name === frameGroup.name) {
       const uniformsGroupData = this.get(nodeUniformsGroup);
-      const frameId = this.nodeFrame.frameId;
+      const frameId = this.frame.frameId;
 
       if (uniformsGroupData.frameId !== frameId) {
         uniformsGroupData.frameId = frameId;
@@ -211,7 +211,7 @@ export class Nodes extends DataMap<any, any> {
 
   getCacheKey(scene: Scene, lightsNode) {
     const chain = [scene, lightsNode];
-    const callId = this.renderer.info.calls;
+    const callId = this.renderer.info.passes;
 
     let cacheKeyData = this.callHashCache.get(chain);
 
@@ -247,7 +247,7 @@ export class Nodes extends DataMap<any, any> {
 
   get isToneMappingState() {
     const renderer = this.renderer;
-    const renderTarget = renderer.getRenderTarget();
+    const renderTarget = renderer.target;
 
     return renderTarget && renderTarget.isCubeRenderTarget ? false : true;
   }
@@ -335,7 +335,7 @@ export class Nodes extends DataMap<any, any> {
       if (sceneData.environment !== environment) {
         let environmentNode = null;
 
-        if (environment.isCubeTexture === true) {
+        if (CubeTexture.is(environment) === true) {
           environmentNode = cubeTexture(environment);
         } else if (environment.isTexture === true) {
           environmentNode = texture(environment);
@@ -359,7 +359,7 @@ export class Nodes extends DataMap<any, any> {
     camera: Camera | null = null,
     material: Material | null = null,
   ) {
-    const nodeFrame = this.nodeFrame;
+    const nodeFrame = this.frame;
     nodeFrame.renderer = renderer;
     nodeFrame.scene = scene;
     nodeFrame.object = object;
@@ -409,7 +409,7 @@ export class Nodes extends DataMap<any, any> {
   dispose() {
     super.dispose();
 
-    this.nodeFrame = new NodeFrame();
+    this.frame = new NodeFrame();
     this.nodeBuilderCache = new Map();
   }
 }

@@ -85,7 +85,6 @@ async function init() {
   //
 
   renderer = await Renderer.create();
-  renderer.setPixelRatio(dpr);
   renderer.setAnimationLoop(animate);
   renderer.outputColorSpace = Engine.ColorSpace.LinearSRGB;
   document.body.appendChild(renderer.parameters.canvas);

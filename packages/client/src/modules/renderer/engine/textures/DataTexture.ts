@@ -19,10 +19,14 @@ export class DataTexture extends Texture<DataSource> {
       },
     );
   }
+
+  static is(item: any): item is DataTexture {
+    return item?.isDataTexture === true;
+  }
 }
+
+DataTexture.prototype.isDataTexture = true;
 
 export namespace DataTexture {
   export type Options = Omit<Texture.Options, 'generateMipmaps' | 'flipY' | 'unpackAlignment'>;
 }
-
-DataTexture.prototype.isDataTexture = true;

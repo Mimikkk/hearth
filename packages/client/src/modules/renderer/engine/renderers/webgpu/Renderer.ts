@@ -17,13 +17,13 @@ import Background from '@modules/renderer/engine/renderers/common/Background.js'
 import { Scene } from '@modules/renderer/engine/scenes/Scene.js';
 import { Camera } from '@modules/renderer/engine/cameras/Camera.js';
 import ClippingContext from '@modules/renderer/engine/renderers/common/ClippingContext.js';
-import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { Color, Light, Mat4, Object3D, Plane, RenderTarget } from '@modules/renderer/engine/engine.js';
 import { GPUFeatureNameType, GPUTextureFormatType } from '@modules/renderer/engine/renderers/webgpu/utils/constants.js';
 import { Frustum } from '@modules/renderer/engine/math/Frustum.js';
 import { throttle } from 'lodash-es';
 import { Scissor, Viewport } from '@modules/renderer/engine/renderers/common/RenderContext.js';
+import ComputeNode from '@modules/renderer/engine/nodes/gpgpu/ComputeNode.js';
 
 const _scene = new Scene();
 const _drawingBufferSize = Vec3.new();
@@ -35,9 +35,9 @@ const _vector3 = Vec3.new();
 export class Renderer {
   backend: Backend;
   info: Info;
-  _pixelRatio: number;
-  _width: number;
-  _height: number;
+  pixelRatio: number;
+  width: number;
+  height: number;
   viewport: Viewport;
   scissor: Scissor;
   enabledScissor: boolean;
@@ -58,7 +58,7 @@ export class Renderer {
   _clearColor: Color;
   _clearDepth: number;
   _clearStencil: number;
-  _renderTarget: RenderTarget | null;
+  target: RenderTarget | null;
   _activeCubeFace: number;
   _activeMipmapLevel: number;
   _renderObjectFunction: any;
@@ -104,11 +104,11 @@ export class Renderer {
     this.parameters = Renderer.configure(parameters);
     this.backend = new Backend(this);
     this.info = new Info();
-    this._pixelRatio = window.devicePixelRatio;
-    this._width = this.parameters.canvas.width;
-    this._height = this.parameters.canvas.height;
-    this.viewport = Viewport.fromSize(this._width, this._height);
-    this.scissor = Scissor.fromSize(this._width, this._height);
+    this.pixelRatio = window.devicePixelRatio;
+    this.width = this.parameters.canvas.width;
+    this.height = this.parameters.canvas.height;
+    this.viewport = Viewport.fromSize(this.width, this.height);
+    this.scissor = Scissor.fromSize(this.width, this.height);
     this.enabledScissor = false;
     this._nodes = new Nodes(this);
     this._animation = new Animation(this);
@@ -127,7 +127,7 @@ export class Renderer {
     this._clearColor = new Color(0, 0, 0, this.parameters.alpha ? 0 : 1);
     this._clearDepth = 1;
     this._clearStencil = 0;
-    this._renderTarget = null;
+    this.target = null;
     this._activeCubeFace = 0;
     this._activeMipmapLevel = 0;
     this._renderObjectFunction = null;
@@ -158,8 +158,9 @@ export class Renderer {
       usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.COPY_SRC,
       alphaMode: renderer.parameters.alpha ? 'premultiplied' : 'opaque',
     });
-    renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.setSize(window.innerWidth, window.innerHeight);
+
+    renderer.pixelRatio = window.devicePixelRatio;
+    renderer.updateSize(window.innerWidth, window.innerHeight);
 
     if (parameters?.autoinsert === undefined || parameters.autoinsert) {
       document.body.appendChild(renderer.parameters.canvas);
@@ -174,7 +175,7 @@ export class Renderer {
   async compile(scene: Scene, camera: Camera, targetScene: Scene | null = null) {
     // preserve render tree
 
-    const nodeFrame = this._nodes.nodeFrame;
+    const nodeFrame = this._nodes.frame;
 
     const previousRenderId = nodeFrame.renderId;
     const previousRenderContext = this._currentRenderContext;
@@ -187,7 +188,7 @@ export class Renderer {
 
     if (targetScene === null) targetScene = scene;
 
-    const renderTarget = this._renderTarget;
+    const renderTarget = this.target;
     const renderContext = this._renderContexts.get(targetScene, camera, renderTarget);
     const activeMipmapLevel = this._activeMipmapLevel;
 
@@ -283,13 +284,13 @@ export class Renderer {
   }
 
   render(scene: Object3D, camera: Camera) {
-    const nodeFrame = this._nodes.nodeFrame;
+    const nodeFrame = this._nodes.frame;
     const previousRenderId = nodeFrame.renderId;
     const previousRenderContext = this._currentRenderContext;
     const previousRenderObjectFunction = this._currentRenderObjectFunction;
 
-    const into = this._renderTarget;
-    const context = this._renderContexts.get(scene, camera, into);
+    const target = this.target;
+    const context = this._renderContexts.get(scene, camera, target);
     const activeCubeFace = this._activeCubeFace;
     const activeMipmapLevel = this._activeMipmapLevel;
 
@@ -299,7 +300,7 @@ export class Renderer {
     //
 
     this.info.updateRender();
-    nodeFrame.renderId = this.info.calls;
+    nodeFrame.renderId = this.info.passes;
 
     if (scene.matrixWorldAutoUpdate) scene.updateMatrixWorld();
 
@@ -309,11 +310,11 @@ export class Renderer {
 
     let viewport = this.viewport;
     let scissor = this.scissor;
-    let pixelRatio = this._pixelRatio;
+    let pixelRatio = this.pixelRatio;
 
-    if (into !== null) {
-      viewport = into.viewport;
-      scissor = into.scissor;
+    if (target !== null) {
+      viewport = target.viewport;
+      scissor = target.scissor;
       pixelRatio = 1;
     }
 
@@ -348,7 +349,7 @@ export class Renderer {
     //
 
     const sceneRef = Scene.is(scene) ? scene : _scene;
-    sceneRef.onBeforeRender(this, scene, camera, into);
+    sceneRef.onBeforeRender(this, scene, camera, target);
 
     //
 
@@ -356,31 +357,25 @@ export class Renderer {
     _frustum.fromProjection(_projScreenMatrix);
 
     const list = this._renderLists.get(scene, camera);
+
     list.begin();
-
-    col(list);
     this._projectObject(scene, camera, 0, list);
-
     list.finish();
 
-    if (this.parameters.sortObjects) {
-      list.sort(this._opaqueSort, this._transparentSort);
-    }
+    if (this.parameters.sortObjects) list.sort(this._opaqueSort, this._transparentSort);
 
-    //
+    if (target) {
+      this._textures.updateRenderTarget(target, activeMipmapLevel);
 
-    if (into !== null) {
-      this._textures.updateRenderTarget(into, activeMipmapLevel);
-
-      const renderTargetData = this._textures.get(into);
+      const renderTargetData = this._textures.get(target);
 
       context.textures = renderTargetData.textures;
       context.depthTexture = renderTargetData.depthTexture;
       context.width = renderTargetData.width;
       context.height = renderTargetData.height;
-      context.renderTarget = into;
-      context.depth = into.depthBuffer;
-      context.stencil = into.stencilBuffer;
+      context.renderTarget = target;
+      context.depth = target.depthBuffer;
+      context.stencil = target.stencilBuffer;
     } else {
       context.textures = null;
       context.depthTexture = null;
@@ -415,25 +410,24 @@ export class Renderer {
 
     //
 
-    sceneRef.onAfterRender(this, scene, camera, into);
+    sceneRef.onAfterRender(this, scene, camera, target);
 
     //
     this.backend.resolveTimestampAsync(context, 'render');
 
     return context;
   }
-  async compute(computeNodes) {
-    const nodeFrame = this._nodes.nodeFrame;
 
-    const previousRenderId = nodeFrame.renderId;
+  async compute(computeNodes: ComputeNode | ComputeNode[]) {
+    console.log(computeNodes);
+    const frame = this._nodes.frame;
+
+    const previousRenderId = frame.renderId;
 
     //
+    this.info.updateCompute();
 
-    this.info.calls++;
-    this.info.compute.calls++;
-    this.info.compute.computeCalls++;
-
-    nodeFrame.renderId = this.info.calls;
+    frame.renderId = this.info.passes;
 
     //
 
@@ -483,7 +477,7 @@ export class Renderer {
 
     //
 
-    nodeFrame.renderId = previousRenderId;
+    frame.renderId = previousRenderId;
   }
 
   getMaxAnisotropy() {
@@ -498,55 +492,44 @@ export class Renderer {
     return this._activeMipmapLevel;
   }
 
-  setAnimationLoop(callback: AnimationLoopFn | null) {
-    this._animation.setAnimationLoop(callback);
+  setAnimationLoop(loop: AnimationLoopFn | null) {
+    this._animation.loop = loop;
   }
 
   getDrawingBufferSize(target: Vec3) {
-    return target.set(this._width * this._pixelRatio, this._height * this._pixelRatio, 0).floor();
+    return target.set(this.width * this.pixelRatio, this.height * this.pixelRatio, 0).floor();
   }
 
-  setPixelRatio(value: number = 1) {
-    this._pixelRatio = value;
+  updateSize(width: number, height: number, pixelRatio = this.pixelRatio): this {
+    this.width = width;
+    this.height = height;
+    this.pixelRatio = pixelRatio;
 
-    this.setSize(this._width, this._height, false);
-  }
+    this.parameters.canvas.width = Math.floor(width * this.pixelRatio);
+    this.parameters.canvas.height = Math.floor(height * this.pixelRatio);
+    this.parameters.canvas.style.width = width + 'px';
+    this.parameters.canvas.style.height = height + 'px';
 
-  setSize(width: number, height: number, updateStyle: boolean = true): this {
-    this._width = width;
-    this._height = height;
-    this.parameters.canvas.width = Math.floor(width * this._pixelRatio);
-    this.parameters.canvas.height = Math.floor(height * this._pixelRatio);
-    if (updateStyle) {
-      this.parameters.canvas.style.width = width + 'px';
-      this.parameters.canvas.style.height = height + 'px';
-    }
     this.viewport.setSize(width, height);
     this.backend.updateSize();
     return this;
   }
 
-  isOccluded(object: Object3D): boolean {
-    const renderContext = this._currentRenderContext;
-
-    return renderContext && this.backend.isOccluded(renderContext, object);
-  }
-
   clear(color: boolean = true, depth: boolean = true, stencil: boolean = true): this {
-    let renderTargetData = null;
-    const into = this._renderTarget;
+    let targetData = null;
+    const target = this.target;
 
-    if (into !== null) {
-      this._textures.updateRenderTarget(into);
-      renderTargetData = this._textures.get(into);
+    if (target) {
+      this._textures.updateRenderTarget(target);
+      targetData = this._textures.get(target);
     }
 
-    this.backend.clear(color, depth, stencil, renderTargetData);
+    this.backend.clear(color, depth, stencil, targetData);
     return this;
   }
 
   get currentColorSpace() {
-    const target = this._renderTarget;
+    const target = this.target;
     if (target) {
       const texture = target.texture;
 
@@ -566,18 +549,14 @@ export class Renderer {
     this._renderLists.dispose();
     this._renderContexts.dispose();
     this._textures.dispose();
-    this.setRenderTarget(null);
+    this.target = null;
     this.setAnimationLoop(null);
   }
 
-  setRenderTarget(renderTarget, activeCubeFace = 0, activeMipmapLevel = 0) {
-    this._renderTarget = renderTarget;
-    this._activeCubeFace = activeCubeFace;
-    this._activeMipmapLevel = activeMipmapLevel;
-  }
-
-  getRenderTarget() {
-    return this._renderTarget;
+  setRenderTarget(target: RenderTarget | null, face: number = 0, mipmap: number = 0) {
+    this.target = target;
+    this._activeCubeFace = face;
+    this._activeMipmapLevel = mipmap;
   }
 
   setRenderObjectFunction(renderObjectFunction) {

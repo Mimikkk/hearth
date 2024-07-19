@@ -25,6 +25,10 @@ export class Data3DTexture extends Texture<Data3DImage> {
       },
     );
   }
+
+  static is(item: any): item is Data3DTexture {
+    return item?.isData3DTexture === true;
+  }
 }
 
 Data3DTexture.prototype.isData3DTexture = true;

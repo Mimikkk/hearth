@@ -193,7 +193,7 @@ class ReflectorNode extends TextureNode {
 
     material.visible = false;
 
-    const currentRenderTarget = renderer.getRenderTarget();
+    const currentRenderTarget = renderer.target;
 
     renderer.setRenderTarget(renderTarget);
 

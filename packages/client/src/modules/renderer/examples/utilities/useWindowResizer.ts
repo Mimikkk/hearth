@@ -9,7 +9,7 @@ const updateSize: ResizeFn = (renderer, camera) => {
     camera.updateProjectionMatrix();
   }
 
-  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.updateSize(window.innerWidth, window.innerHeight);
 };
 export const useWindowResizer = (renderer: Renderer, camera: Camera, onResize: ResizeFn = updateSize) => {
   const handler = () => onResize(renderer, camera);
