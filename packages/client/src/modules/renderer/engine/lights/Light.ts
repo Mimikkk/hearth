@@ -1,6 +1,6 @@
 import { Object3D } from '../core/Object3D.js';
 import { Color, ColorRepresentation } from '../math/Color.js';
-import { LightShadow } from './LightShadow.ts';
+import { LightShadow } from './LightShadow.js';
 import { RenderTarget } from '@modules/renderer/engine/core/RenderTarget.js';
 
 export class Light<S extends LightShadow | undefined> extends Object3D {

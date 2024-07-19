@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { Frustum } from './Frustum.ts';
-import { Plane } from './Plane.ts';
-import { Vec3 } from './Vec3.ts';
-import { Mat4 } from './Mat4.ts';
+import { Frustum } from './Frustum.js';
+import { Plane } from './Plane.js';
+import { Vec3 } from './Vec3.js';
+import { Mat4 } from './Mat4.js';
 import { Box3 } from '@modules/renderer/engine/math/Box3.js';
-import { Sphere } from './Sphere.ts';
+import { Sphere } from './Sphere.js';
 import { Sprite } from '@modules/renderer/engine/objects/Sprite.js';
 import { Mesh } from '@modules/renderer/engine/objects/Mesh.js';
 import { BoxGeometry } from '@modules/renderer/engine/geometries/BoxGeometry.js';

@@ -2,7 +2,7 @@ import { Vec3 } from './Vec3.js';
 import type { Box3 } from '@modules/renderer/engine/math/Box3.js';
 import { Plane } from '@modules/renderer/engine/math/Plane.js';
 import type { Const } from '@modules/renderer/engine/math/types.js';
-import type { Attribute } from '../core/Attribute.ts';
+import type { Attribute } from '../core/Attribute.js';
 
 export class Triangle {
   declare isTriangle: true;

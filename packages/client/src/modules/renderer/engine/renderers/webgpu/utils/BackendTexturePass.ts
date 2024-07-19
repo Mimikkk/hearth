@@ -4,7 +4,7 @@ import {
   GPUPrimitiveTopologyType,
   GPUStoreOpType,
   GPUTextureViewDimensionType,
-} from './constants.ts';
+} from './constants.js';
 
 import { Backend } from '@modules/renderer/engine/renderers/webgpu/Backend.js';
 import { MipmapShader } from '@modules/renderer/engine/renderers/webgpu/utils/shaders/MipmapShader.js';

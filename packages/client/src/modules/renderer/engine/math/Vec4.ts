@@ -1,7 +1,7 @@
 import type { Mat4 } from './Mat4.js';
 import type { Quaternion } from './Quaternion.js';
 import type { Const } from '@modules/renderer/engine/math/types.js';
-import { clamp, type NumberArray } from './MathUtils.ts';
+import { clamp, type NumberArray } from './MathUtils.js';
 import type { Attribute } from '@modules/renderer/engine/core/Attribute.js';
 
 export class Vec4 {

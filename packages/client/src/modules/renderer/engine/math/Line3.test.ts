@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { Line3 } from './Line3.ts';
+import { Line3 } from './Line3.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
-import { clamp } from './MathUtils.ts';
+import { clamp } from './MathUtils.js';
 import { Vec4 } from '@modules/renderer/engine/math/Vec4.js';
 import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
 

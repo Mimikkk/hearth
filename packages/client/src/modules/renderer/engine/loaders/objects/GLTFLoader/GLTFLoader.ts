@@ -51,7 +51,7 @@ import {
 } from '@modules/renderer/engine/engine.js';
 import { toTrianglesDrawMode } from '../../../utils/BufferGeometryUtils.js';
 import { FileLoader, ResponseType } from '@modules/renderer/engine/loaders/files/FileLoader/FileLoader.js';
-import { ImageBitmapLoader } from '@modules/renderer/engine/loaders/textures/ImageBitmapLoader/ImageBitmapLoader.ts';
+import { ImageBitmapLoader } from '@modules/renderer/engine/loaders/textures/ImageBitmapLoader/ImageBitmapLoader.js';
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { KTX2Loader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/KTX2Loader.js';
 import { DRACOLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/DRACOLoader.js';

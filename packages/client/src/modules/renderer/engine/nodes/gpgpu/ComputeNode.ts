@@ -1,5 +1,5 @@
-import Node from '../core/Node.ts';
-import { NodeUpdateType } from '../core/constants.ts';
+import Node from '../core/Node.js';
+import { NodeUpdateType } from '../core/constants.js';
 import { addNodeElement, nodeObject } from '../shadernode/ShaderNodes.js';
 import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 import NodeBuilder from '@modules/renderer/engine/nodes/core/NodeBuilder.js';

@@ -5,7 +5,7 @@ import type { Box3 } from './Box3.js';
 import type { Mat4 } from './Mat4.js';
 import type { Const } from '@modules/renderer/engine/math/types.js';
 import type { Triangle } from '@modules/renderer/engine/math/Triangle.js';
-import type { Line3 } from './Line3.ts';
+import type { Line3 } from './Line3.js';
 
 export class Ray {
   declare isRay: true;

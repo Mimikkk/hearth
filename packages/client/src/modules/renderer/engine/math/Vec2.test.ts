@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { Vec2 } from './Vec2.ts';
+import { Vec2 } from './Vec2.js';
 import { Mat3 } from '@modules/renderer/engine/math/Mat3.js';
 import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
 

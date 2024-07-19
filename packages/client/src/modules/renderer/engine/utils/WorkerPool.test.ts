@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { WorkerPool } from './WorkerPool.ts';
+import { WorkerPool } from './WorkerPool.js';
 
 describe('WorkerPool', () => {
   it('should create a WorkerPool', () => {
