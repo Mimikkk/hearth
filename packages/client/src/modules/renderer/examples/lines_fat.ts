@@ -15,154 +15,135 @@ import {
 import { Line2 } from '@modules/renderer/engine/lines/Line2.js';
 import { LineGeometry } from '@modules/renderer/engine/lines/LineGeometry.js';
 import * as GeometryUtils from '@modules/renderer/engine/utils/GeometryUtils.js';
-import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 import { Quaternion } from '@modules/renderer/engine/math/Quaternion.js';
+import {
+  BufferGeometry,
+  CatmullRomCurve3,
+  Color,
+  ColorSpace,
+  Float32BufferAttribute,
+  Line,
+  PerspectiveCamera,
+  Scene,
+  Vec3,
+} from '@modules/renderer/engine/engine.js';
+import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
-let line, renderer, scene, camera, camera2, controls, backgroundNode;
-let line1;
-let matLine, matLineBasic, matLineDashed;
-let stats;
-let gui;
+let insetWidth = window.innerHeight / 4;
+let insetHeight = window.innerHeight / 4;
 
-// viewport
-let insetWidth;
-let insetHeight;
+const stats = new Stats();
+document.body.appendChild(stats.dom);
 
-init();
+const scene = new Scene();
 
-async function init() {
-  renderer = await Renderer.create();
-  renderer._clearColor.a = 0;
-  renderer._animation.loop = animate;
-  document.body.appendChild(renderer.parameters.canvas);
+const camera = new PerspectiveCamera(120, window.innerWidth / window.innerHeight, 1, 1000);
+camera.position.set(-500000000, 1500000, 1000000);
 
-  scene = new Engine.Scene();
+const camera2 = new PerspectiveCamera(40, 1, 1, 100);
+camera2.position.set(0, 0, 0);
 
-  camera = new Engine.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 1000);
-  camera.position.set(-40, 0, 60);
+const renderer = await Renderer.create({
+  animate() {
+    renderer.updateSize(window.innerWidth, window.innerHeight);
+    stats.update();
+    controls.update();
 
-  camera2 = new Engine.PerspectiveCamera(40, 1, 1, 1000);
-  camera2.position.copy(camera.position);
+    renderer.parameters.autoClear = true;
 
-  controls = new OrbitControls(camera, renderer.parameters.canvas);
-  controls.enableDamping = true;
-  controls.minDistance = 10;
-  controls.maxDistance = 500;
+    scene.backgroundNode = null;
 
-  backgroundNode = color(0x222222);
+    renderer.render(scene, camera);
+    renderer.clear(false, true, true); // important!
 
-  const positions = [];
-  const colors = [];
+    renderer.scissor.set(200, 200, insetWidth, insetHeight);
+    renderer.viewport.set(200, 200, insetWidth, insetHeight);
 
-  const points = GeometryUtils.hilbert3D(new Engine.Vec3(0, 0, 0), 20.0, 1, 0, 1, 2, 3, 4, 5, 6, 7);
+    // camera2.position.from(camera.position);
+    // camera.quaternion.from(camera2.quaternion);
 
-  const spline = new Engine.CatmullRomCurve3(points);
-  const divisions = Math.round(12 * points.length);
-  const point = new Engine.Vec3();
-  const lineColor = new Engine.Color();
+    renderer.parameters.autoClear = false;
 
-  for (let i = 0, l = divisions; i < l; i++) {
-    const t = i / l;
+    scene.backgroundNode = backgroundNode;
+    renderer.render(scene, camera2);
+  },
+});
+renderer._clearColor.a = 0;
 
-    spline.getPoint(t, point);
-    positions.push(point.x, point.y, point.z);
+const controls = new OrbitControls(camera, renderer.parameters.canvas);
+controls.enableDamping = true;
+controls.minDistance = 10;
+controls.maxDistance = 500;
 
-    lineColor.setHSL(t, 1.0, 0.5, Engine.ColorSpace.SRGB);
-    colors.push(lineColor.r, lineColor.g, lineColor.b);
-  }
+const backgroundNode = color(0x222222);
 
-  // Line2 ( LineGeometry, LineMaterial )
+const positions: number[] = [];
+const colors: number[] = [];
 
-  const geometry = new LineGeometry();
-  geometry.setPositions(positions);
-  geometry.setColors(colors);
-  geometry.instanceCount = positions.length / 3 - 1;
+const points = GeometryUtils.hilbert3D(new Vec3(0, 0, 0), 20.0, 1, 0, 1, 2, 3, 4, 5, 6, 7);
 
-  matLine = new Line2NodeMaterial({
-    color: 0xffffff,
-    linewidth: 5, // in world units with size attenuation, pixels otherwise
-    vertexColors: true,
-    dashed: false,
-    alphaToCoverage: true,
-  });
+const spline = new CatmullRomCurve3(points);
+const divisions = Math.round(12 * points.length);
+const point = new Vec3();
+const lineColor = new Color();
 
-  geometry.computeLineDistances();
-  line = new Line2(geometry, matLine);
-  line.scale.set(1, 1, 1);
-  scene.add(line);
+for (let i = 0, l = divisions; i < l; i++) {
+  const t = i / l;
 
-  const geo = new Engine.BufferGeometry();
-  geo.setAttribute('position', new Engine.Float32BufferAttribute(positions, 3));
-  geo.setAttribute('color', new Engine.Float32BufferAttribute(colors, 3));
+  spline.getPoint(t, point);
+  positions.push(point.x, point.y, point.z);
 
-  matLineBasic = new LineBasicNodeMaterial({ vertexColors: true });
-  matLineDashed = new LineDashedNodeMaterial({ vertexColors: true, scale: 2, dashSize: 1, gapSize: 1 });
-
-  line1 = new Engine.Line(geo, matLineBasic);
-  line1.computeLineDistances();
-  line1.visible = false;
-  scene.add(line1);
-
-  //
-
-  useWindowResizer(renderer, camera, () => {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-
-    insetWidth = window.innerHeight / 4; // square
-    insetHeight = window.innerHeight / 4;
-
-    camera2.aspect = insetWidth / insetHeight;
-    camera2.updateProjectionMatrix();
-  });
-
-  stats = new Stats();
-  document.body.appendChild(stats.dom);
-
-  initGui();
+  lineColor.setHSL(t, 1.0, 0.5, ColorSpace.SRGB);
+  colors.push(lineColor.r, lineColor.g, lineColor.b);
 }
 
-function animate() {
-  stats.update();
+const geometry = new LineGeometry();
+geometry.setPositions(positions);
+geometry.setColors(colors);
+geometry.instanceCount = positions.length / 3 - 1;
 
-  // main scene
+const matLine = new Line2NodeMaterial({
+  color: 0xffffff,
+  linewidth: 5, // in world units with size attenuation, pixels otherwise
+  vertexColors: true,
+  dashed: false,
+  alphaToCoverage: true,
+});
 
-  renderer.setClearColor(0x000000, 0);
+geometry.computeLineDistances();
+const line = new Line2(geometry, matLine);
+line.scale.set(1, 1, 1);
+scene.add(line);
 
-  renderer.setViewport(0, 0, window.innerWidth, window.innerHeight);
+const geo = new BufferGeometry();
+geo.attributes.position = new Float32BufferAttribute(positions, 3);
+geo.attributes.color = new Float32BufferAttribute(colors, 3);
 
-  controls.update();
+const matLineBasic = new LineBasicNodeMaterial({ vertexColors: true });
+const matLineDashed = new LineDashedNodeMaterial({ vertexColors: true, scale: 2, dashSize: 1, gapSize: 1 });
 
-  renderer.parameters.autoClear = true;
-
-  scene.backgroundNode = null;
-  renderer.render(scene, camera);
-
-  // inset scene
-
-  renderer.clearDepth(); // important!
-
-  // renderer.setScissorTest(true);
-
-  renderer.setScissor(20, 20, insetWidth, insetHeight);
-
-  renderer.setViewport(20, 20, insetWidth, insetHeight);
-
-  camera2.position.copy(camera.position);
-  Quaternion.clone_(camera.quaternion, camera2.quaternion);
-
-  renderer.parameters.autoClear = false;
-
-  scene.backgroundNode = backgroundNode;
-  renderer.render(scene, camera2);
-
-  // renderer.setScissorTest(false);
-}
+const line1 = new Line(geo, matLineBasic);
+line1.computeLineDistances();
+line1.visible = false;
+scene.add(line1);
 
 //
 
+useWindowResizer(renderer, camera, () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+
+  insetWidth = window.innerHeight / 4; // square
+  insetHeight = window.innerHeight / 4;
+
+  camera2.aspect = insetWidth / insetHeight;
+  camera2.updateProjectionMatrix();
+});
+
+initGui();
+
 function initGui() {
-  gui = new GUI();
+  const gui = new GUI();
 
   const param = {
     'line type': 0,
