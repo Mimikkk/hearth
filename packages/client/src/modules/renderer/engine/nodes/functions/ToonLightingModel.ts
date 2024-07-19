@@ -5,7 +5,7 @@ import { normalGeometry } from '../accessors/NormalNode.js';
 import { mix, smoothstep } from '../math/MathNode.js';
 import { materialReference } from '../accessors/MaterialReferenceNode.js';
 import { tslFn } from '@modules/renderer/engine/nodes/shadernode/tslFn.js';
-import { float, vec2, vec3 } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.primitves.js';
+import { float, vec2, vec3 } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.js';
 
 const getGradientIrradiance = tslFn(({ normal, lightDirection, builder }) => {
   // dotNL will be from -1.0 to 1.0

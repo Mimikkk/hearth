@@ -1,5 +1,5 @@
 import TextureNode from './TextureNode.js';
-import { nodeProxy } from '../shadernode/ShaderNodes.js';
+import { nodeProxy } from '../shadernode/ShaderNode.js';
 
 class TextureStoreNode extends TextureNode {
   static type = 'TextureStoreNode';

@@ -1,6 +1,6 @@
 import SpotLightNode from './SpotLightNode.js';
 import { texture } from '../accessors/TextureNode.js';
-import { vec2 } from '../shadernode/ShaderNodes.js';
+import { vec2 } from '../shadernode/ShaderNode.js';
 
 class IESSpotLightNode extends SpotLightNode {
   static type = 'IESSpotLightNode';

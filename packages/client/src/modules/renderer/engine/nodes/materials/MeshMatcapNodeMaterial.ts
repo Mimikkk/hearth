@@ -4,7 +4,7 @@ import { mix } from '../math/MathNode.js';
 import { matcapUV } from '../utils/MatcapUVNode.js';
 import { MeshMatcapMaterial } from '@modules/renderer/engine/materials/MeshMatcapMaterial.js';
 import { NodeMaterial } from '@modules/renderer/engine/nodes/materials/NodeMaterial.js';
-import { vec3 } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.primitves.js';
+import { vec3 } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.js';
 
 const defaultValues = new MeshMatcapMaterial();
 

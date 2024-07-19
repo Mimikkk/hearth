@@ -6,7 +6,6 @@ import {
   CubeTexture,
   Fog,
   FogExp2,
-  Mapping,
   Material,
   Object3D,
   Scene,
@@ -56,11 +55,9 @@ export class Nodes extends DataMap<any, any> {
     const name = groupNode.name;
 
     // objectGroup is every updated
-
     if (name === objectGroup.name) return true;
 
     // renderGroup is updated once per render/compute call
-
     if (name === renderGroup.name) {
       const uniformsGroupData = this.get(nodeUniformsGroup);
       const renderId = this.frame.id;
@@ -75,7 +72,6 @@ export class Nodes extends DataMap<any, any> {
     }
 
     // frameGroup is updated once per frame
-
     if (name === frameGroup.name) {
       const uniformsGroupData = this.get(nodeUniformsGroup);
       const frameId = this.frame.frameId;
@@ -90,7 +86,6 @@ export class Nodes extends DataMap<any, any> {
     }
 
     // other groups are updated just when groupNode.needsUpdate is true
-
     const groupChain = [groupNode, nodeUniformsGroup];
 
     let groupData = this.groupsData.get(groupChain);
@@ -414,13 +409,7 @@ export class Nodes extends DataMap<any, any> {
   }
 }
 
-const isCubeTexture = (item: any): item is Texture => {
-  return (
-    item.isCubeTexture ||
-    item.mapping === Mapping.EquirectangularReflection ||
-    item.mapping === Mapping.EquirectangularRefraction
-  );
-};
+const isCubeTexture = (item: any): item is Texture => item.isCubeTexture;
 const isTexture = (item: any): item is CubeTexture => item.isTexture;
 const isColor = (item: any): item is Color => item.isColor;
 

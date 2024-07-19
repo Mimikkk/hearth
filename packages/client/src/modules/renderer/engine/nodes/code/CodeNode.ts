@@ -1,5 +1,5 @@
 import Node from '../core/Node.js';
-import { nodeProxy } from '../shadernode/ShaderNodes.js';
+import { nodeProxy } from '../shadernode/ShaderNode.js';
 import NodeBuilder from '@modules/renderer/engine/nodes/core/NodeBuilder.js';
 
 export interface CodeNodeInclude {

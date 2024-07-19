@@ -1,6 +1,6 @@
 import FogNode from './FogNode.js';
 import Node from '../core/Node.js';
-import { addNodeElement, nodeProxy } from '../shadernode/ShaderNodes.js';
+import { addNodeElement, nodeProxy } from '../shadernode/ShaderNode.js';
 import NodeBuilder from '@modules/renderer/engine/nodes/core/NodeBuilder.js';
 
 class FogExp2Node extends FogNode {

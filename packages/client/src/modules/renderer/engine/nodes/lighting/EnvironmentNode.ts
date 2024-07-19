@@ -9,7 +9,7 @@ import {
   transformedNormalWorld,
 } from '../accessors/NormalNode.js';
 import { positionViewDirection } from '../accessors/PositionNode.js';
-import { float } from '../shadernode/ShaderNodes.js';
+import { float } from '../shadernode/ShaderNode.js';
 import { reference } from '../accessors/ReferenceNode.js';
 import { pmremTexture } from '@modules/renderer/engine/nodes/pmrem/PMREMNode.js';
 

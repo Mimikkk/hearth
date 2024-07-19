@@ -4,7 +4,7 @@ import { normalize } from '../math/MathNode.js';
 import { cameraViewMatrix } from './CameraNode.js';
 import { normalGeometry, normalLocal, normalView, normalWorld, transformedNormalView } from './NormalNode.js';
 import { tangentGeometry, tangentLocal, tangentView, tangentWorld, transformedTangentView } from './TangentNode.js';
-import { nodeImmutable } from '../shadernode/ShaderNodes.js';
+import { nodeImmutable } from '../shadernode/ShaderNode.js';
 
 class BitangentNode extends Node {
   static type = 'BitangentNode';

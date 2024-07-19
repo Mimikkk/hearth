@@ -1,7 +1,7 @@
 import TempNode from '../core/TempNode.js';
 import { add, div, mul } from '../math/OperatorNode.js';
 import { ceil, floor, fract, pow } from '../math/MathNode.js';
-import { addNodeElement, float, int, nodeProxy, vec2, vec4 } from '../shadernode/ShaderNodes.js';
+import { addNodeElement, float, int, nodeProxy, vec2, vec4 } from '../shadernode/ShaderNode.js';
 
 // Mipped Bicubic Texture Filtering by N8
 // https://www.shadertoy.com/view/Dl2SDW

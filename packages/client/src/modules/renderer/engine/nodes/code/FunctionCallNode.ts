@@ -1,5 +1,5 @@
 import TempNode from '../core/TempNode.js';
-import { addNodeElement, nodeArray, nodeObject, nodeObjects } from '../shadernode/ShaderNodes.js';
+import { addNodeElement, nodeArray, nodeObject, nodeObjects } from '../shadernode/ShaderNode.js';
 import FunctionNode from './FunctionNode.js';
 import NodeBuilder from '@modules/renderer/engine/nodes/core/NodeBuilder.js';
 import { NodeTypeOption } from '@modules/renderer/engine/nodes/core/constants.js';

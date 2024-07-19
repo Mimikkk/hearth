@@ -2,7 +2,7 @@ import Node from '../core/Node.js';
 import { cameraViewMatrix } from './CameraNode.js';
 import { transformedNormalView } from './NormalNode.js';
 import { positionViewDirection } from './PositionNode.js';
-import { nodeImmutable } from '../shadernode/ShaderNodes.js';
+import { nodeImmutable } from '../shadernode/ShaderNode.js';
 
 class ReflectVectorNode extends Node {
   static type = 'ReflectVectorNode';

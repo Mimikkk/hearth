@@ -1,6 +1,6 @@
 import TempNode from '../core/TempNode.js';
 import { EPSILON } from '../math/MathNode.js';
-import { addNodeElement, nodeProxy, tslFn, vec3 } from '../shadernode/ShaderNodes.js';
+import { addNodeElement, nodeProxy, tslFn, vec3 } from '../shadernode/ShaderNode.js';
 
 export const BurnNode = tslFn(({ base, blend }) => {
   const fn = c => blend[c].lessThan(EPSILON).cond(blend[c], base[c].oneMinus().div(blend[c]).oneMinus().max(0));

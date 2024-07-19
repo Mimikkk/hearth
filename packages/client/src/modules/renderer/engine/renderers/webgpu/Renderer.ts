@@ -41,6 +41,7 @@ import { RenderItem, RenderList } from '@modules/renderer/engine/renderers/commo
 import LightsNode from '@modules/renderer/engine/nodes/lighting/LightsNode.js';
 import { ShadowNodeMaterial } from '@modules/renderer/engine/nodes/materials/ShadowNodeMaterial.js';
 import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
+import { throttle } from 'lodash-es';
 
 const _scene = new Scene();
 const _screen = Vec2.new();
@@ -58,12 +59,12 @@ export class Renderer {
   useScissor: boolean;
 
   _attributes: Attributes;
-  _geometries: Geometries;
-  _nodes: Nodes;
+  geometries: Geometries;
+  nodes: Nodes;
   _animation: Animation;
-  _bindings: Bindings;
+  bindings: Bindings;
   _objects: RenderObjects;
-  _pipelines: Pipelines;
+  pipelines: Pipelines;
   _renderLists: RenderLists;
   _renderContexts: RenderContexts;
   _textures: Textures;
@@ -115,7 +116,7 @@ export class Renderer {
       alpha: options?.alpha ?? true,
       antialias,
       sampleCount: antialias ? options?.sampleCount ?? 4 : 1,
-      autoClear: options?.autoClear ?? true,
+      useAutoClear: options?.autoClear ?? true,
       autoClearColor: options?.autoClearColor ?? true,
       autoClearDepth: options?.autoClearDepth ?? true,
       autoClearStencil: options?.autoClearStencil ?? true,
@@ -149,14 +150,14 @@ export class Renderer {
     this.useScissor = false;
 
     this.info = new Info();
-    this._nodes = new Nodes(this);
+    this.nodes = new Nodes(this);
     this._animation = new Animation(this);
     this._attributes = new Attributes(this);
     this._background = new Background(this);
-    this._geometries = new Geometries(this);
+    this.geometries = new Geometries(this);
     this._textures = new Textures(this);
-    this._pipelines = new Pipelines(this);
-    this._bindings = new Bindings(this);
+    this.pipelines = new Pipelines(this);
+    this.bindings = new Bindings(this);
     this._objects = new RenderObjects(this);
     this._renderLists = new RenderLists();
     this._renderContexts = new RenderContexts();
@@ -211,7 +212,7 @@ export class Renderer {
   }
 
   async compile(scene: Scene, camera: Camera, targetScene: Scene | null = null) {
-    const frame = this._nodes.frame;
+    const frame = this.nodes.frame;
     const previousRenderId = frame.id;
     const previousRenderContext = this.activeContext;
     const previousRenderObjectFunction = this._activeRenderObject;
@@ -268,7 +269,7 @@ export class Renderer {
       renderContext.depthTexture = null;
     }
 
-    this._nodes.updateScene(sceneRef);
+    this.nodes.updateScene(sceneRef);
 
     this._background.update(sceneRef, list, renderContext);
 
@@ -286,7 +287,7 @@ export class Renderer {
   }
 
   async render(scene: Scene, camera: Camera) {
-    const frame = this._nodes.frame;
+    const frame = this.nodes.frame;
     const previousFrameId = frame.id;
     const previousContext = this.activeContext;
     const previousRenderObject = this._activeRenderObject;
@@ -372,7 +373,7 @@ export class Renderer {
     context.activeMipmapLevel = activeMipmapLevel;
     context.occlusionQueryCount = list.occlusionCount;
 
-    this._nodes.updateScene(sceneRef);
+    this.nodes.updateScene(sceneRef);
     this._background.update(sceneRef, list, context);
 
     this.backend.beginRender(context);
@@ -395,7 +396,7 @@ export class Renderer {
   }
 
   async compute(computeNodes: ComputeNode | ComputeNode[]) {
-    const frame = this._nodes.frame;
+    const frame = this.nodes.frame;
 
     const previousRenderId = frame.id;
 
@@ -407,9 +408,9 @@ export class Renderer {
     //
 
     const backend = this.backend;
-    const pipelines = this._pipelines;
-    const bindings = this._bindings;
-    const nodes = this._nodes;
+    const pipelines = this.pipelines;
+    const bindings = this.bindings;
+    const nodes = this.nodes;
     const list = Array.isArray(computeNodes) ? computeNodes : [computeNodes];
 
     backend.beginCompute(computeNodes);
@@ -495,9 +496,9 @@ export class Renderer {
     this.info.dispose();
     this._animation.dispose();
     this._objects.dispose();
-    this._pipelines.dispose();
-    this._nodes.dispose();
-    this._bindings.dispose();
+    this.pipelines.dispose();
+    this.nodes.dispose();
+    this.bindings.dispose();
     this._renderLists.dispose();
     this._renderContexts.dispose();
     this._textures.dispose();
@@ -651,15 +652,15 @@ export class Renderer {
   ): void {
     const item = this._objects.get(object, material, scene, camera, lightsNode, this.activeContext, passId);
 
-    this._nodes.updateBefore(item);
+    this.nodes.updateBefore(item);
 
     object.modelViewMatrix.from(camera.matrixWorldInverse).mul(object.matrixWorld);
     object.normalMatrix.fromNMat4(object.modelViewMatrix);
 
-    this._nodes.updateForRender(item);
-    this._geometries.updateForRender(item);
-    this._bindings.updateForRender(item);
-    this._pipelines.updateForRender(item);
+    this.nodes.updateForRender(item);
+    this.geometries.updateForRender(item);
+    this.bindings.updateForRender(item);
+    this.pipelines.updateForRender(item);
 
     this.backend.draw(item, this.info);
   }
@@ -674,12 +675,12 @@ export class Renderer {
   ): void {
     const item = this._objects.get(object, material, scene, camera, lightsNode, this.activeContext, passId);
 
-    this._nodes.updateBefore(item);
-    this._nodes.updateForRender(item);
-    this._geometries.updateForRender(item);
-    this._bindings.updateForRender(item);
+    this.nodes.updateBefore(item);
+    this.nodes.updateForRender(item);
+    this.geometries.updateForRender(item);
+    this.bindings.updateForRender(item);
 
-    this._pipelines.getForRender(item);
+    this.pipelines.getForRender(item);
   }
 }
 
@@ -715,7 +716,7 @@ export namespace Renderer {
     alpha: boolean;
     antialias: boolean;
     sampleCount: number;
-    autoClear: boolean;
+    useAutoClear: boolean;
     autoClearColor: boolean;
     autoClearDepth: boolean;
     autoClearStencil: boolean;
@@ -777,3 +778,5 @@ const painterSortStable: SortFn = (a, b) => {
   return a.id - b.id;
 };
 const reversePainterSortStable: SortFn = (a, b) => painterSortStable(b, a);
+
+// const slowlog = throttle(console.log, 1000);

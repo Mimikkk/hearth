@@ -1,10 +1,8 @@
 import Node from './Node.js';
 import { cond } from '../math/CondNode.js';
-import { nodeProxy, NodeStack, ShaderNode } from '../shadernode/ShaderNodes.js';
+import { ShaderNode, nodeProxy, getCurrentStack, setCurrentStack } from '../shadernode/ShaderNode.js';
 
 class StackNode extends Node {
-  static type = 'StackNode';
-
   constructor(parent = null) {
     super();
 
@@ -52,15 +50,15 @@ class StackNode extends Node {
   }
 
   build(builder, ...params) {
-    const previousStack = NodeStack.get();
+    const previousStack = getCurrentStack();
 
-    NodeStack.set(this);
+    setCurrentStack(this);
 
     for (const node of this.nodes) {
       node.build(builder, 'void');
     }
 
-    NodeStack.set(previousStack);
+    setCurrentStack(previousStack);
 
     return this.outputNode ? this.outputNode.build(builder, ...params) : super.build(builder, ...params);
   }

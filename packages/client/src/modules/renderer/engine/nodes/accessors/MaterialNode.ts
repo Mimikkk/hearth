@@ -2,7 +2,7 @@ import Node from '../core/Node.js';
 import { reference } from './ReferenceNode.js';
 import { materialReference } from './MaterialReferenceNode.js';
 import { normalView } from './NormalNode.js';
-import { float, nodeImmutable } from '../shadernode/ShaderNodes.js';
+import { float, nodeImmutable } from '../shadernode/ShaderNode.js';
 
 const _propertyCache = new Map();
 

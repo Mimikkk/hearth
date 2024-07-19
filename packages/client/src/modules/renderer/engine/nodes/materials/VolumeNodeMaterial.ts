@@ -8,7 +8,7 @@ import { loop, Break } from '../utils/LoopNode.js';
 import { texture3D } from '../accessors/Texture3DNode.js';
 import { NodeMaterial } from '@modules/renderer/engine/nodes/materials/NodeMaterial.js';
 import { tslFn } from '@modules/renderer/engine/nodes/shadernode/tslFn.js';
-import { vec2, vec3, vec4 } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.primitves.js';
+import { vec2, vec3, vec4 } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.js';
 import { modelWorldMatrixInverse } from '@modules/renderer/engine/nodes/accessors/ModelNode.js';
 
 export class VolumeNodeMaterial extends NodeMaterial {

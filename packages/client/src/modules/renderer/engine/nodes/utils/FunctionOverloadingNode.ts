@@ -1,5 +1,5 @@
 import Node from '../core/Node.js';
-import { nodeProxy } from '../shadernode/ShaderNodes.js';
+import { nodeProxy } from '../shadernode/ShaderNode.js';
 
 class FunctionOverloadingNode extends Node {
   static type = 'FunctionOverloadingNode';

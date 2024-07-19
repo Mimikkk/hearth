@@ -1,6 +1,6 @@
 import UniformNode from '../core/UniformNode.js';
 import { NodeUpdateType } from '../core/constants.js';
-import { nodeImmutable, nodeObject } from '../shadernode/ShaderNodes.js';
+import { nodeImmutable, nodeObject } from '../shadernode/ShaderNode.js';
 
 class TimerNode extends UniformNode {
   static type = 'TimerNode';
@@ -43,4 +43,6 @@ export default TimerNode;
 export const timerLocal = (timeScale, value = 0) => nodeObject(new TimerNode(TimerNode.LOCAL, timeScale, value));
 export const timerGlobal = (timeScale, value = 0) => nodeObject(new TimerNode(TimerNode.GLOBAL, timeScale, value));
 export const timerDelta = (timeScale, value = 0) => nodeObject(new TimerNode(TimerNode.DELTA, timeScale, value));
+
+console.log(nodeImmutable(TimerNode, TimerNode.FRAME));
 export const frameId = nodeImmutable(TimerNode, TimerNode.FRAME).uint();

@@ -1,5 +1,5 @@
 import Node from '../core/Node.js';
-import { addNodeElement, nodeProxy } from '../shadernode/ShaderNodes.js';
+import { addNodeElement, nodeProxy } from '../shadernode/ShaderNode.js';
 
 class HashNode extends Node {
   static type = 'HashNode';

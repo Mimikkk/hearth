@@ -1,9 +1,10 @@
 import InputNode from './InputNode.js';
 
 class ConstNode extends InputNode {
+  declare isConstNode: boolean;
   static type = 'ConstNode';
 
-  constructor(value, nodeType = null) {
+  constructor(value, nodeType: string | null = null) {
     super(value, nodeType);
 
     this.isConstNode = true;

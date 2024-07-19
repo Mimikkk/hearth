@@ -1,5 +1,5 @@
 import TempNode from '../core/TempNode.js';
-import { addNodeElement, mat2, mat4, nodeProxy, vec4 } from '../shadernode/ShaderNodes.js';
+import { addNodeElement, mat2, mat4, nodeProxy, vec4 } from '../shadernode/ShaderNode.js';
 import { cos, sin } from '../math/MathNode.js';
 
 class RotateNode extends TempNode {

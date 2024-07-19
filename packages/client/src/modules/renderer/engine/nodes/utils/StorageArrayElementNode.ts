@@ -1,4 +1,4 @@
-import { addNodeElement, nodeProxy } from '../shadernode/ShaderNodes.js';
+import { addNodeElement, nodeProxy } from '../shadernode/ShaderNode.js';
 import ArrayElementNode from './ArrayElementNode.js';
 
 class StorageArrayElementNode extends ArrayElementNode {

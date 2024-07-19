@@ -15,7 +15,7 @@ import {
 import { modelViewMatrix } from '../accessors/ModelNode.js';
 import { positionGeometry } from '../accessors/PositionNode.js';
 import { mix, smoothstep } from '@modules/renderer/engine/nodes/math/MathNode.js';
-import { float, NodeStack, tslFn, vec2, vec3, vec4 } from '../shadernode/ShaderNodes.js';
+import { If, float, tslFn, vec2, vec3, vec4 } from '../shadernode/ShaderNode.js';
 import { uv } from '../accessors/UVNode.js';
 import { viewport } from '../display/ViewportNode.js';
 
@@ -98,8 +98,8 @@ export class Line2NodeMaterial extends NodeMaterial {
 
       const perspective = cameraProjectionMatrix.element(2).element(3).equal(-1.0); // 4th entry in the 3rd column
 
-      NodeStack.if(perspective, () => {
-        NodeStack.if(start.z.lessThan(0.0).and(end.z.greaterThan(0.0)), () => {
+      If(perspective, () => {
+        If(start.z.lessThan(0.0).and(end.z.greaterThan(0.0)), () => {
           end.assign(trimSegment({ start: start, end: end }));
         }).elseif(end.z.lessThan(0.0).and(start.z.greaterThanEqual(0.0)), () => {
           start.assign(trimSegment({ start: end, end: start }));
@@ -151,7 +151,7 @@ export class Line2NodeMaterial extends NodeMaterial {
           worldPos.addAssign(vec4(worldFwd.mul(hw), 0));
 
           // endcaps
-          NodeStack.if(positionGeometry.y.greaterThan(1.0).or(positionGeometry.y.lessThan(0.0)), () => {
+          If(positionGeometry.y.greaterThan(1.0).or(positionGeometry.y.lessThan(0.0)), () => {
             worldPos.subAssign(vec4(worldFwd.mul(2.0).mul(hw), 0));
           });
         }
@@ -178,7 +178,7 @@ export class Line2NodeMaterial extends NodeMaterial {
         offset.assign(positionGeometry.x.lessThan(0.0).cond(offset.negate(), offset));
 
         // endcaps
-        NodeStack.if(positionGeometry.y.lessThan(0.0), () => {
+        If(positionGeometry.y.lessThan(0.0), () => {
           offset.assign(offset.sub(dir));
         }).elseif(positionGeometry.y.greaterThan(1.0), () => {
           offset.assign(offset.add(dir));
@@ -289,11 +289,11 @@ export class Line2NodeMaterial extends NodeMaterial {
           const dlen = property('float', 'dlen');
           dlen.assign(len2.fwidth());
 
-          NodeStack.if(vUv.y.abs().greaterThan(1.0), () => {
+          If(vUv.y.abs().greaterThan(1.0), () => {
             alpha.assign(smoothstep(dlen.oneMinus(), dlen.add(1), len2).oneMinus());
           });
         } else {
-          NodeStack.if(vUv.y.abs().greaterThan(1.0), () => {
+          If(vUv.y.abs().greaterThan(1.0), () => {
             const a = vUv.x;
             const b = vUv.y.greaterThan(0.0).cond(vUv.y.sub(1.0), vUv.y.add(1.0));
             const len2 = a.mul(a).add(b.mul(b));

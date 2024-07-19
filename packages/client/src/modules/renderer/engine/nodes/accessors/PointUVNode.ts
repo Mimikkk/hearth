@@ -1,5 +1,5 @@
 import Node from '../core/Node.js';
-import { nodeImmutable } from '../shadernode/ShaderNodes.js';
+import { nodeImmutable } from '../shadernode/ShaderNode.js';
 
 class PointUVNode extends Node {
   static type = 'PointUVNode';

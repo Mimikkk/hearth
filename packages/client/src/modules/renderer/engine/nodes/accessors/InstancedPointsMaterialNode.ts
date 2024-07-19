@@ -1,5 +1,5 @@
 import MaterialNode from './MaterialNode.js';
-import { nodeImmutable } from '../shadernode/ShaderNodes.js';
+import { nodeImmutable } from '../shadernode/ShaderNode.js';
 
 class InstancedPointsMaterialNode extends MaterialNode {
   static type = 'InstancedPointsMaterialNode';

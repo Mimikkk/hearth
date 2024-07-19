@@ -1,6 +1,6 @@
 import Node from '../core/Node.js';
 import { scriptableValue } from './ScriptableValueNode.js';
-import { addNodeElement, float, nodeProxy } from '../shadernode/ShaderNodes.js';
+import { addNodeElement, float, nodeProxy } from '../shadernode/ShaderNode.js';
 import CodeNode from '@modules/renderer/engine/nodes/code/CodeNode.js';
 import NodeBuilder from '@modules/renderer/engine/nodes/core/NodeBuilder.js';
 import { NodeTypeOption } from '@modules/renderer/engine/nodes/core/constants.js';

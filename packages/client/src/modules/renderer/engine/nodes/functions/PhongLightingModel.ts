@@ -5,7 +5,7 @@ import { diffuseColor, shininess, specularColor } from '../core/PropertyNode.js'
 import { transformedNormalView } from '../accessors/NormalNode.js';
 import { materialSpecularStrength } from '../accessors/MaterialNode.js';
 import { positionViewDirection } from '../accessors/PositionNode.js';
-import { float, tslFn } from '../shadernode/ShaderNodes.js';
+import { float, tslFn } from '../shadernode/ShaderNode.js';
 
 const G_BlinnPhong_Implicit = () => float(0.25);
 

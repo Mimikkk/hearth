@@ -1,4 +1,4 @@
-import { nodeObject } from '../shadernode/ShaderNodes.js';
+import { nodeObject } from '../shadernode/ShaderNode.js';
 import PropertyNode from './PropertyNode.js';
 
 class ParameterNode extends PropertyNode {

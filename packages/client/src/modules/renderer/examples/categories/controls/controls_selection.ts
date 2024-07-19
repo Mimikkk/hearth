@@ -14,7 +14,7 @@ import { useStats } from '@modules/renderer/examples/utilities/useStats.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { Fog } from '@modules/renderer/engine/scenes/Fog.js';
 import { normalWorld } from '@modules/renderer/engine/nodes/accessors/NormalNode.js';
-import { color } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.primitves.js';
+import { color } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.js';
 import { Group } from '@modules/renderer/engine/objects/Group.js';
 import { UI } from '@mimi/ui';
 import { Random } from '@modules/renderer/engine/math/random.js';

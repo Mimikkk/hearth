@@ -1,5 +1,5 @@
 import TempNode from '../core/TempNode.js';
-import { addNodeElement, nodeProxy } from '../shadernode/ShaderNodes.js';
+import { addNodeElement, nodeProxy } from '../shadernode/ShaderNode.js';
 
 class OperatorNode extends TempNode {
   static type = 'OperatorNode';

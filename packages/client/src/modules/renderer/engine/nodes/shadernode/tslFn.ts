@@ -1,15 +1,12 @@
 import { ShaderNode } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.js';
-import { ShaderNodeObject } from '@modules/renderer/engine/nodes/shadernode/ShaderNodeObject.js';
 
-export const tslFn = jsFn => {
-  const node = new ShaderNode(jsFn);
+export const tslFn = jsFunc => {
+  const shaderNode = new ShaderNode(jsFunc);
 
   const fn = (...params) => {
     let inputs;
 
-    for (const name in params) {
-      params[name] = ShaderNodeObject(params[name]);
-    }
+    nodeObjects(params);
 
     if (params[0] && params[0].isNode) {
       inputs = [...params];
@@ -17,11 +14,13 @@ export const tslFn = jsFn => {
       inputs = params[0];
     }
 
-    return node.call(inputs);
+    return shaderNode.call(inputs);
   };
-  fn.shaderNode = node;
+
+  fn.shaderNode = shaderNode;
   fn.setLayout = layout => {
-    node.setLayout(layout);
+    shaderNode.setLayout(layout);
+
     return fn;
   };
 

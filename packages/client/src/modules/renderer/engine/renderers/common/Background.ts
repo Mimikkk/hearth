@@ -13,6 +13,7 @@ import {
 import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 import RenderContext from '@modules/renderer/engine/renderers/common/RenderContext.js';
 import { RenderList } from '@modules/renderer/engine/renderers/common/RenderList.js';
+import { throttle } from 'lodash-es';
 
 const _clearColor = new Color(0, 0, 0, 1);
 
@@ -23,8 +24,9 @@ class Background extends DataMap<any, any> {
 
   update(scene: Scene, renderList: RenderList, renderContext: RenderContext) {
     const renderer = this.renderer;
-    const background = this.renderer._nodes.getBackgroundNode(scene) || scene.background;
+    const background = this.renderer.nodes.getBackgroundNode(scene) || scene.background;
 
+    if (background) slowlog(background);
     let forceClear = false;
 
     if (background === null) {
@@ -90,7 +92,7 @@ class Background extends DataMap<any, any> {
 
     //
 
-    if (renderer.parameters.autoClear || forceClear) {
+    if (renderer.parameters.useAutoClear || forceClear) {
       const clearColorValue = renderContext.clearColorValue;
 
       clearColorValue.r = _clearColor.r;
@@ -113,3 +115,5 @@ class Background extends DataMap<any, any> {
 }
 
 export default Background;
+
+const slowlog = throttle(console.log, 100000);

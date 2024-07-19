@@ -1,6 +1,6 @@
 import Node from '../core/Node.js';
 import { NodeUpdateType } from '../core/constants.js';
-import { addNodeElement, nodeObject } from '../shadernode/ShaderNodes.js';
+import { addNodeElement, nodeObject } from '../shadernode/ShaderNode.js';
 import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 import NodeBuilder from '@modules/renderer/engine/nodes/core/NodeBuilder.js';
 

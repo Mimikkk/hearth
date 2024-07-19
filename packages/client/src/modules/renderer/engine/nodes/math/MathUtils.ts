@@ -1,5 +1,5 @@
 import { add, div, mul, sub } from './OperatorNode.js';
-import { addNodeElement } from '../shadernode/ShaderNodes.js';
+import { addNodeElement } from '../shadernode/ShaderNode.js';
 import { PI, pow, sin } from './MathNode.js';
 
 // remapping functions https://iquilezles.org/articles/functions/

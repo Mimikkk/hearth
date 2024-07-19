@@ -1,5 +1,5 @@
 import TextureNode from './TextureNode.js';
-import { nodeProxy, vec3 } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.primitves.js';
+import { nodeProxy, vec3 } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.js';
 import { tslFn } from '@modules/renderer/engine/nodes/shadernode/tslFn.js';
 
 const normal = tslFn(({ texture, uv }) => {

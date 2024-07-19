@@ -1,6 +1,6 @@
 import CondNode from '../math/CondNode.js';
 import { expression } from '../code/ExpressionNode.js';
-import { addNodeElement, nodeProxy } from '../shadernode/ShaderNodes.js';
+import { addNodeElement, nodeProxy } from '../shadernode/ShaderNode.js';
 
 let discardExpression;
 

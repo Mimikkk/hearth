@@ -1,6 +1,6 @@
 import Node from './Node.js';
 import { varying } from './VaryingNode.js';
-import { nodeImmutable } from '../shadernode/ShaderNodes.js';
+import { nodeImmutable } from '../shadernode/ShaderNode.js';
 
 class IndexNode extends Node {
   static type = 'IndexNode';

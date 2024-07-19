@@ -1,7 +1,7 @@
 import TempNode from '../core/TempNode.js';
 import TextureNode from '../accessors/TextureNode.js';
 import { NodeUpdateType } from '../core/constants.js';
-import { nodeObject } from '../shadernode/ShaderNodes.js';
+import { nodeObject } from '../shadernode/ShaderNode.js';
 import { uniform } from '../core/UniformNode.js';
 import { perspectiveDepthToViewZ, viewZToOrthographicDepth } from './ViewportDepthNode.js';
 import { DepthTexture, RenderTarget, TextureDataType, ToneMapping } from '@modules/renderer/engine/engine.js';
