@@ -40,7 +40,8 @@ import { Frustum } from '@modules/renderer/engine/math/Frustum.js';
 import { throttle } from 'lodash-es';
 import { Scissor, Viewport } from '@modules/renderer/engine/renderers/common/RenderContext.js';
 import ComputeNode from '@modules/renderer/engine/nodes/gpgpu/ComputeNode.js';
-import LightNode from '@modules/renderer/engine/nodes/lighting/LightNode.js';
+import RenderList, { RenderItem } from '@modules/renderer/engine/renderers/common/RenderList.js';
+import LightsNode from '@modules/renderer/engine/nodes/lighting/LightsNode.js';
 
 const _scene = new Scene();
 const _drawingBufferSize = Vec3.new();
@@ -224,20 +225,20 @@ export class Renderer {
     //@ts-expect-error
     sceneRef.onBeforeRender(this, scene, camera);
 
-    const renderList = this._renderLists.get(scene, camera);
-    renderList.begin();
+    const list = this._renderLists.get(scene, camera);
+    list.begin();
 
-    this._projectObject(scene, camera, 0, renderList);
+    this._projectObject(scene, camera, 0, list);
 
     if (targetScene !== scene) {
       targetScene.traverseVisible(object => {
         if (Light.is(object) && object.layers.test(camera.layers)) {
-          renderList.pushLight(object);
+          list.pushLight(object);
         }
       });
     }
 
-    renderList.finish();
+    list.finish();
 
     if (target !== null) {
       this._textures.updateRenderTarget(target, activeMipmapLevel);
@@ -253,11 +254,11 @@ export class Renderer {
 
     this._nodes.updateScene(sceneRef);
 
-    this._background.update(sceneRef, renderList, renderContext);
+    this._background.update(sceneRef, list, renderContext);
 
-    const opaqueObjects = renderList.opaque;
-    const transparentObjects = renderList.transparent;
-    const lightsNode = renderList.lightsNode;
+    const opaqueObjects = list.opaque;
+    const transparentObjects = list.transparent;
+    const lightsNode = list.lightsNode;
 
     if (opaqueObjects.length > 0) this._renderObjects(opaqueObjects, camera, sceneRef, lightsNode);
     if (transparentObjects.length > 0) this._renderObjects(transparentObjects, camera, sceneRef, lightsNode);
@@ -560,7 +561,7 @@ export class Renderer {
     geometry: BufferGeometry,
     material: Material,
     group: Group,
-    lightsNode: LightNode,
+    lightsNode: LightsNode,
   ) {
     let overridePositionNode;
     let overrideFragmentNode;
@@ -640,7 +641,7 @@ export class Renderer {
     object.onAfterRender(this, scene, camera, geometry, material, group);
   }
 
-  _projectObject(object: Object3D, camera: Camera, groupOrder, renderList) {
+  _projectObject(object: Object3D, camera: Camera, groupOrder: number, list: RenderList): void {
     if (object.visible === false) return;
 
     const visible = object.layers.test(camera.layers);
@@ -651,7 +652,7 @@ export class Renderer {
       } else if (LOD.is(object)) {
         if (object.autoUpdate === true) object.update(camera);
       } else if (Light.is(object)) {
-        renderList.pushLight(object);
+        list.pushLight(object);
       } else if (Sprite.is(object)) {
         if (!object.frustumCulled || _frustum.intersectsSphere(object)) {
           if (this.parameters.sortObjects) {
@@ -662,7 +663,7 @@ export class Renderer {
           const material = object.material;
 
           if (material.visible) {
-            renderList.push(object, geometry, material, groupOrder, _vector3.z, null);
+            list.push(object, geometry, material, groupOrder, _vector3.z, null);
           }
         }
       } else if (Mesh.is(object) || Line.is(object) || Points.is(object)) {
@@ -684,11 +685,11 @@ export class Renderer {
               const groupMaterial = material[group.materialIndex];
 
               if (groupMaterial && groupMaterial.visible) {
-                renderList.push(object, geometry, groupMaterial, groupOrder, _vector3.z, group);
+                list.push(object, geometry, groupMaterial, groupOrder, _vector3.z, group);
               }
             }
           } else if (material.visible) {
-            renderList.push(object, geometry, material, groupOrder, _vector3.z, null);
+            list.push(object, geometry, material, groupOrder, _vector3.z, null);
           }
         }
       }
@@ -697,21 +698,26 @@ export class Renderer {
     const children = object.children;
 
     for (let i = 0, l = children.length; i < l; i++) {
-      this._projectObject(children[i], camera, groupOrder, renderList);
+      this._projectObject(children[i], camera, groupOrder, list);
     }
   }
 
-  _renderObjects(renderList, camera, scene, lightsNode) {
-    for (let i = 0, il = renderList.length; i < il; i++) {
-      const renderItem = renderList[i];
-
-      const { object, geometry, material, group } = renderItem;
+  _renderObjects(items: RenderItem[], camera: Camera, scene: Scene, lightsNode: LightsNode): void {
+    for (let i = 0, il = items.length; i < il; i++) {
+      const { object, geometry, material, group } = items[i];
 
       this._currentRenderObjectFunction(object, scene, camera, geometry, material, group, lightsNode);
     }
   }
 
-  _renderObjectDirect(object, material, scene, camera, lightsNode, passId) {
+  _renderObjectDirect(
+    object: Object3D,
+    material: Material,
+    scene: Scene,
+    camera: Camera,
+    lightsNode: LightsNode,
+    passId: number,
+  ): void {
     const renderObject = this._objects.get(
       object,
       material,
@@ -743,7 +749,14 @@ export class Renderer {
     this.backend.draw(renderObject, this.info);
   }
 
-  _createObjectPipeline(object, material, scene, camera, lightsNode, passId) {
+  _createObjectPipeline(
+    object: Object3D,
+    material: Material,
+    scene: Scene,
+    camera: Camera,
+    lightsNode: LightsNode,
+    passId: number,
+  ): void {
     const renderObject = this._objects.get(
       object,
       material,
@@ -766,8 +779,6 @@ export class Renderer {
     this._pipelines.getForRender(renderObject);
   }
 }
-
-const col = throttle(console.log, 1000);
 
 export namespace Renderer {
   export interface Options {

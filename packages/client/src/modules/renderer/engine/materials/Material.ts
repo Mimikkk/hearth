@@ -18,8 +18,6 @@ import type { Scene } from '@modules/renderer/engine/scenes/Scene.js';
 import type { Camera } from '@modules/renderer/engine/cameras/Camera.js';
 import type { BufferGeometry } from '@modules/renderer/engine/core/BufferGeometry.js';
 import type { Group } from '@modules/renderer/engine/objects/Group.js';
-import { ShaderNodeObject } from 'three/examples/jsm/nodes/shadernode/ShaderNode.js';
-import ProgrammableStage from '@modules/renderer/engine/renderers/common/ProgrammableStage.js';
 
 let _materialId = 0;
 
