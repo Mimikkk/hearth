@@ -1,5 +1,5 @@
 import { Quaternion } from '../math/Quaternion.js';
-import { IVec3, Vector3 } from '../math/Vector3.js';
+import { Vec3, Vector3 } from '../math/Vector3.js';
 import { Matrix4 } from '../math/Matrix4.js';
 import { EventDispatcher } from './EventDispatcher.js';
 import { Euler } from '../math/Euler.js';
@@ -262,12 +262,12 @@ export class Object3D<EventMap extends Object3DEventMap = any> {
   }
 
   setScale(x: number, y: number, z: number): this {
-    IVec3.set(this.scale, x, y, z);
+    Vec3.set(this.scale, x, y, z);
     return this;
   }
 
   setPosition(x: number, y: number, z: number): this {
-    IVec3.set(this.position, x, y, z);
+    Vec3.set(this.position, x, y, z);
     return this;
   }
 

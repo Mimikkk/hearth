@@ -1,10 +1,10 @@
-import { IVec3 } from './Vector3.js';
+import { Vec3 } from './Vector3.js';
 import { Box3_ } from '@modules/renderer/engine/math/Box3.js';
 import { Const } from '@modules/renderer/engine/math/types.js';
 
 export interface Capsule {
-  start: IVec3;
-  end: IVec3;
+  start: Vec3;
+  end: Vec3;
   radius: number;
 }
 
@@ -18,8 +18,8 @@ export namespace Capsule {
     endZ: number,
     radius: number,
   ): Capsule => ({
-    start: IVec3.create(startX, startY, startZ),
-    end: IVec3.create(endX, endY, endZ),
+    start: Vec3.create(startX, startY, startZ),
+    end: Vec3.create(endX, endY, endZ),
     radius,
   });
   export const empty = (): Capsule => create(0, 0, 0, 0, 0, 0, 0);
@@ -59,19 +59,19 @@ export namespace Capsule {
   export const clone = (self: Const<Capsule>): Capsule => fill_(self, empty());
   export const clone_ = (from: Const<Capsule>, into: Capsule): Capsule => fill_(into, from);
 
-  export const translate = (capsule: Capsule, vec: Const<IVec3>): Capsule => translate_(capsule, vec, capsule);
-  export const translate_ = (self: Const<Capsule>, vec: Const<IVec3>, into: Capsule): Capsule => {
-    IVec3.add_(self.start, vec, into.start);
-    IVec3.add_(self.end, vec, into.end);
+  export const translate = (capsule: Capsule, vec: Const<Vec3>): Capsule => translate_(capsule, vec, capsule);
+  export const translate_ = (self: Const<Capsule>, vec: Const<Vec3>, into: Capsule): Capsule => {
+    Vec3.add_(self.start, vec, into.start);
+    Vec3.add_(self.end, vec, into.end);
 
     return into;
   };
-  export const translated = (capsule: Const<Capsule>, vec: Const<IVec3>): Capsule =>
+  export const translated = (capsule: Const<Capsule>, vec: Const<Vec3>): Capsule =>
     translate(clone_(capsule, empty()), vec);
 
-  export const center = (capsule: Const<Capsule>): IVec3 => center_(capsule, IVec3.empty());
-  export const center_ = ({ start, end }: Const<Capsule>, into: IVec3): IVec3 =>
-    IVec3.scale(IVec3.add_(start, end, into), 0.5);
+  export const center = (capsule: Const<Capsule>): Vec3 => center_(capsule, Vec3.empty());
+  export const center_ = ({ start, end }: Const<Capsule>, into: Vec3): Vec3 =>
+    Vec3.scale(Vec3.add_(start, end, into), 0.5);
 
   const isAABBAxis = (
     p1x: number,

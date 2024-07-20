@@ -1,4 +1,4 @@
-import { IVec3, Vector3 } from './Vector3.js';
+import { Vec3, Vector3 } from './Vector3.js';
 import { Line3 } from './Line3.js';
 import { Plane_ } from './Plane.js';
 import { Triangle } from './Triangle.js';
@@ -11,7 +11,7 @@ const Deleted = 1;
 const _v1 = new Vector3();
 const _line3 = Line3.empty();
 const _plane = Plane_.empty();
-const _closest = IVec3.empty();
+const _closest = Vec3.empty();
 const _triangle = Triangle.empty();
 
 export class ConvexHull {
@@ -414,7 +414,7 @@ export class ConvexHull {
       if (vertex !== v0 && vertex !== v1) {
         Line3.closestTo_(_line3, vertex.point, _closest);
 
-        const distance = IVec3.distanceSqTo(_closest, vertex.point);
+        const distance = Vec3.distanceSqTo(_closest, vertex.point);
 
         if (distance > maxDistance) {
           maxDistance = distance;
@@ -775,7 +775,7 @@ export class Face {
     Triangle.normal_(_triangle, this.normal);
     Triangle.midpoint_(_triangle, this.midpoint);
     this.area = Triangle.area(_triangle);
-    this.constant = IVec3.dot(this.normal, this.midpoint);
+    this.constant = Vec3.dot(this.normal, this.midpoint);
 
     return this;
   }

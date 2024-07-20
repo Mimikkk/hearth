@@ -1,5 +1,5 @@
 import { Vec2, Vector2 } from '../math/Vector2.js';
-import { IVec3, Vector3 } from '../math/Vector3.js';
+import { Vec3, Vector3 } from '../math/Vector3.js';
 import { Matrix4 } from '../math/Matrix4.js';
 import { Triangle } from '../math/Triangle.js';
 import { Object3D } from '../core/Object3D.js';
@@ -91,9 +91,9 @@ export class Sprite extends Object3D {
 
     const center = this.center;
 
-    IVec3.set(_vA, -0.5, -0.5, 0);
-    IVec3.set(_vB, 0.5, -0.5, 0);
-    IVec3.set(_vC, 0.5, 0.5, 0);
+    Vec3.set(_vA, -0.5, -0.5, 0);
+    Vec3.set(_vB, 0.5, -0.5, 0);
+    Vec3.set(_vC, 0.5, 0.5, 0);
 
     transformVertex(_vA, _mv, center, _worldScale, sin, cos);
     transformVertex(_vB, _mv, center, _worldScale, sin, cos);
@@ -107,7 +107,7 @@ export class Sprite extends Object3D {
     let intersect = raycaster.ray.intersectTriangle(_vA, _vB, _vC, false, _intersect);
 
     if (intersect === null) {
-      IVec3.set(_vA, -0.5, 0.5, 0);
+      Vec3.set(_vA, -0.5, 0.5, 0);
       transformVertex(_vB, _mv, center, _worldScale, sin, cos);
       Vec2.set(_uvB, 0, 1);
 
@@ -115,7 +115,7 @@ export class Sprite extends Object3D {
       if (intersect === null) return;
     }
 
-    const distance = IVec3.distanceTo(raycaster.ray.origin, _intersect);
+    const distance = Vec3.distanceTo(raycaster.ray.origin, _intersect);
 
     if (distance < raycaster.near || distance > raycaster.far) return;
 
@@ -147,16 +147,16 @@ export class Sprite extends Object3D {
 Sprite.prototype.isSprite = true;
 Sprite.prototype.type = 'Sprite';
 
-function transformVertex(vec: Vector3, mv: IVec3, center: Vec2, scale: IVec3, sin?: number, cos?: number) {
+function transformVertex(vec: Vector3, mv: Vec3, center: Vec2, scale: Vec3, sin?: number, cos?: number) {
   Vec2.sub_(vec, center, _align);
   Vec2.scale(_align, 0.5);
   Vec2.mul(_align, scale);
 
   if (sin !== undefined && cos !== undefined) {
-    IVec3.set(vec, mv.x + (cos * _align.x - sin * _align.y), mv.y + (sin * _align.x + cos * _align.y), mv.z);
+    Vec3.set(vec, mv.x + (cos * _align.x - sin * _align.y), mv.y + (sin * _align.x + cos * _align.y), mv.z);
   } else {
-    IVec3.set(vec, mv.x + _align.x, mv.y + _align.y, mv.z);
+    Vec3.set(vec, mv.x + _align.x, mv.y + _align.y, mv.z);
   }
 
-  IVec3.applyMat4(vec, _viewWorldMatrix);
+  Vec3.applyMat4(vec, _viewWorldMatrix);
 }

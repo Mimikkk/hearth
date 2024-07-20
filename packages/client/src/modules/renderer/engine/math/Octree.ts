@@ -1,5 +1,5 @@
 import { Capsule } from './Capsule.js';
-import { IVec3, Vector3 } from './Vector3.js';
+import { Vec3, Vector3 } from './Vector3.js';
 import { Plane_ } from './Plane.js';
 import { Line3 } from './Line3.js';
 import { Sphere_ } from './Sphere.js';
@@ -11,8 +11,8 @@ import { Mesh } from '@modules/renderer/engine/objects/Mesh.js';
 import { clamp } from '@modules/renderer/engine/math/MathUtils.js';
 
 interface Intersection {
-  normal: IVec3;
-  point?: IVec3;
+  normal: Vec3;
+  point?: Vec3;
   depth: number;
 }
 
@@ -31,15 +31,15 @@ const _temp2 = new Vector3();
 const _temp3 = new Vector3();
 
 const lineToLineClosestPoints = (line1: Line3, line2: Line3, target1: Vector3, target2: Vector3) => {
-  const r = IVec3.sub_(line1.end, line1.start, _temp1);
-  const s = IVec3.sub_(line2.end, line2.start, _temp2);
-  const w = IVec3.sub_(line2.start, line1.start, _temp3);
+  const r = Vec3.sub_(line1.end, line1.start, _temp1);
+  const s = Vec3.sub_(line2.end, line2.start, _temp2);
+  const w = Vec3.sub_(line2.start, line1.start, _temp3);
 
-  const drs = IVec3.dot(r, s);
-  const drr = IVec3.dot(r, r);
-  const dss = IVec3.dot(s, s);
-  const dsw = IVec3.dot(s, w);
-  const drw = IVec3.dot(r, w);
+  const drs = Vec3.dot(r, s);
+  const drr = Vec3.dot(r, r);
+  const dss = Vec3.dot(s, s);
+  const dsw = Vec3.dot(s, w);
+  const drw = Vec3.dot(r, w);
 
   let t1: number;
   let t2: number;
@@ -65,12 +65,12 @@ const lineToLineClosestPoints = (line1: Line3, line2: Line3, target1: Vector3, t
   t2 = clamp(t2, 0, 1);
 
   if (target1) {
-    IVec3.scale_(r, t1, target1);
-    IVec3.add(target1, line1.start);
+    Vec3.scale_(r, t1, target1);
+    Vec3.add(target1, line1.start);
   }
   if (target2) {
-    IVec3.scale_(s, t2, target2);
-    IVec3.add(target2, line2.start);
+    Vec3.scale_(s, t2, target2);
+    Vec3.add(target2, line2.start);
   }
 };
 
@@ -189,12 +189,12 @@ export class Octree {
 
     const delta = Math.abs(d1 / (Math.abs(d1) + Math.abs(d2)));
 
-    const intersectPoint = IVec3.lerp_(capsule.start, capsule.end, delta, _v1);
+    const intersectPoint = Vec3.lerp_(capsule.start, capsule.end, delta, _v1);
 
     if (Triangle.containsVec(triangle, intersectPoint)) {
       return {
         normal: new Vector3(_plane.normal.x, _plane.normal.y, _plane.normal.z),
-        point: IVec3.clone(_v1),
+        point: Vec3.clone(_v1),
         depth: Math.abs(Math.min(d1, d2)),
       };
     }
@@ -214,7 +214,7 @@ export class Octree {
 
       lineToLineClosestPoints(_line1, _line2, _point1, _point2);
 
-      const distanceSq = IVec3.distanceSqTo(_point1, _point2);
+      const distanceSq = Vec3.distanceSqTo(_point1, _point2);
       if (distanceSq < r2) {
         return {
           normal: _point1.clone().sub(_point2).normalize(),
@@ -253,11 +253,11 @@ export class Octree {
       Line3.fillEnds(_line1, lines[i][0], lines[i][1]);
       Line3.closestTo_(_line1, plainPoint, _v2);
 
-      const distance = IVec3.distanceSqTo(_v2, sphere.center);
+      const distance = Vec3.distanceSqTo(_v2, sphere.center);
 
       if (distance >= r2) continue;
-      const s = IVec3.subbed(sphere.center, _v2);
-      IVec3.normalize(s);
+      const s = Vec3.subbed(sphere.center, _v2);
+      Vec3.normalize(s);
 
       const normal = new Vector3(s.x, s.y, s.z);
 
@@ -314,13 +314,13 @@ export class Octree {
       if (!result) continue;
 
       hit = true;
-      IVec3.add(_sphere.center, IVec3.scale(result.normal, result.depth));
+      Vec3.add(_sphere.center, Vec3.scale(result.normal, result.depth));
     }
 
     if (!hit) return;
-    const collision = IVec3.subbed(_sphere.center, sphere.center);
-    const depth = IVec3.length(collision);
-    const normal = IVec3.normalize(collision);
+    const collision = Vec3.subbed(_sphere.center, sphere.center);
+    const depth = Vec3.length(collision);
+    const normal = Vec3.normalize(collision);
 
     return { normal, depth };
   }
@@ -338,16 +338,16 @@ export class Octree {
       if ((result = this.triangleCapsuleIntersect(_capsule, triangles[i]))) {
         hit = true;
 
-        Capsule.translate(_capsule, IVec3.scale(result.normal, result.depth));
+        Capsule.translate(_capsule, Vec3.scale(result.normal, result.depth));
       }
     }
 
     if (!hit) return;
-    Capsule.center_(_capsule, IVec3.temp0);
-    Capsule.center_(capsule, IVec3.temp1);
-    const collision = IVec3.subbed(IVec3.temp0, IVec3.temp1);
-    const depth = IVec3.length(collision);
-    const normal = IVec3.normalize(collision);
+    Capsule.center_(_capsule, Vec3.temp0);
+    Capsule.center_(capsule, Vec3.temp1);
+    const collision = Vec3.subbed(Vec3.temp0, Vec3.temp1);
+    const depth = Vec3.length(collision);
+    const normal = Vec3.normalize(collision);
 
     return { normal, depth };
   }

@@ -15,7 +15,7 @@ import { LineSegmentsGeometry } from './LineSegmentsGeometry.js';
 import { LineMaterial } from './LineMaterial.js';
 import { Intersection } from '@modules/renderer/engine/core/Raycaster.js';
 import { Line3 } from '@modules/renderer/engine/math/Line3.js';
-import { IVec3 } from '@modules/renderer/engine/math/Vector3.js';
+import { Vec3 } from '@modules/renderer/engine/math/Vector3.js';
 import { Sphere_ } from '@modules/renderer/engine/math/Sphere.js';
 import { Box3_ } from '@modules/renderer/engine/math/Box3.js';
 
@@ -65,8 +65,8 @@ function raycastWorldUnits(lineSegments: LineSegments, intersects: Intersection[
   const segmentCount = Math.min(geometry.instanceCount, instanceStart.count);
 
   for (let i = 0, l = segmentCount; i < l; i++) {
-    IVec3.fromAttribute_(instanceStart, i, _line.start);
-    IVec3.fromAttribute_(instanceEnd, i, _line.end);
+    Vec3.fromAttribute_(instanceStart, i, _line.start);
+    Vec3.fromAttribute_(instanceEnd, i, _line.end);
     Line3.applyMat4(_line, matrixWorld);
 
     const pointOnLine = new Vector3();
@@ -167,10 +167,10 @@ function raycastScreenSpace(lineSegments: LineSegments, camera: Camera, intersec
     _end4.y *= resolution.y / 2;
 
     // create 2d segment
-    IVec3.set(_line.start, _start4.x, _start4.y, 0);
+    Vec3.set(_line.start, _start4.x, _start4.y, 0);
     _line.start.z = 0;
 
-    IVec3.set(_line.end, _end4.x, _end4.y, 0);
+    Vec3.set(_line.end, _end4.x, _end4.y, 0);
 
     // get closest point on ray to segment
     const param = Line3.closestAt(_line, _ssOrigin3);
@@ -183,10 +183,10 @@ function raycastScreenSpace(lineSegments: LineSegments, camera: Camera, intersec
     const isInside = _ssOrigin3.distanceTo(_closestPoint) < _lineWidth * 0.5;
 
     if (isInClipSpace && isInside) {
-      IVec3.fromAttribute_(instanceStart, i, _line.start);
-      IVec3.fromAttribute_(instanceEnd, i, _line.end);
-      IVec3.applyMat4(_line.start, matrixWorld);
-      IVec3.applyMat4(_line.end, matrixWorld);
+      Vec3.fromAttribute_(instanceStart, i, _line.start);
+      Vec3.fromAttribute_(instanceEnd, i, _line.end);
+      Vec3.applyMat4(_line.start, matrixWorld);
+      Vec3.applyMat4(_line.end, matrixWorld);
 
       const pointOnLine = new Vector3();
       const point = new Vector3();

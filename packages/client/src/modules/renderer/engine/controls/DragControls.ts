@@ -1,7 +1,7 @@
 import { Plane, Plane_ } from '../math/Plane.js';
 import { Intersection, Raycaster } from '../core/Raycaster.js';
 import { Vec2, Vector2 } from '../math/Vector2.js';
-import { IVec3, Vector3 } from '../math/Vector3.js';
+import { Vec3, Vector3 } from '../math/Vector3.js';
 import { Matrix4 } from '../math/Matrix4.js';
 import { Object3D } from '../core/Object3D.js';
 import { EventDispatcher } from '../core/EventDispatcher.js';
@@ -64,7 +64,7 @@ export class DragControls {
           Vec2.sub_(_location, _previousPointer, _diff);
           const { x, y } = Vec2.scale(_diff, this.configuration.rotateSpeed);
 
-          IVec3.normalize(_right);
+          Vec3.normalize(_right);
           selected.rotateOnWorldAxis(_up, x);
           selected.rotateOnWorldAxis(_right, -y);
         }
@@ -146,13 +146,13 @@ export class DragControls {
             // Vec3.sub_(_intersection, _world, _offset);
             _offset.copy(_intersection).sub(_world.setFromMatrixPosition(selected!.matrixWorld));
           } else if (this.configuration.mode === 'rotate') {
-            IVec3.set(_up, 0, 1, 0);
-            IVec3.applyQuaternion(_up, camera.quaternion);
-            IVec3.normalize(_up);
+            Vec3.set(_up, 0, 1, 0);
+            Vec3.applyQuaternion(_up, camera.quaternion);
+            Vec3.normalize(_up);
 
-            IVec3.set(_right, 1, 0, 0);
-            IVec3.applyQuaternion(_right, camera.quaternion);
-            IVec3.normalize(_right);
+            Vec3.set(_right, 1, 0, 0);
+            Vec3.applyQuaternion(_right, camera.quaternion);
+            Vec3.normalize(_right);
           }
         }
 

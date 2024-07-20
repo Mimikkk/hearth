@@ -1,4 +1,4 @@
-import { IVec3, Vector3 } from '../math/Vector3.js';
+import { Vec3, Vector3 } from '../math/Vector3.js';
 import type { Mesh } from '../objects/Mesh.js';
 import type { Scene } from '../scenes/Scene.js';
 import { Quaternion } from '../math/Quaternion.js';
@@ -120,7 +120,7 @@ export class SelectionControl {
       Plane_.fillCoplanar(planes[4], _vecTopRight, _vecDownRight, _vecDownLeft);
       Plane_.fillCoplanar(planes[5], _vectemp3, _vectemp2, _vectemp1);
 
-      IVec3.negate(planes[5].normal);
+      Vec3.negate(planes[5].normal);
     } else if (isOrthographicCamera(this.camera)) {
       const left = Math.min(startPoint.x, endPoint.x);
       const top = Math.max(startPoint.y, endPoint.y);
@@ -154,7 +154,7 @@ export class SelectionControl {
       Plane_.fillCoplanar(planes[3], _vecFarDownLeft, _vecFarTopLeft, _vecTopLeft);
       Plane_.fillCoplanar(planes[4], _vecTopRight, _vecDownRight, _vecDownLeft);
       Plane_.fillCoplanar(planes[5], _vecFarDownRight, _vecFarTopRight, _vecFarTopLeft);
-      IVec3.negate(planes[5].normal);
+      Vec3.negate(planes[5].normal);
     }
   }
 

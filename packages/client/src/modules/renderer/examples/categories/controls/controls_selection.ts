@@ -11,7 +11,7 @@ import { SelectionControl } from '@modules/renderer/engine/interactive/Selection
 import { SelectionVisualizer } from '@modules/renderer/engine/interactive/SelectionVisualizer.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 import { useStats } from '@modules/renderer/examples/utilities/useStats.js';
-import { IVec3 } from '@modules/renderer/engine/math/Vector3.js';
+import { Vec3 } from '@modules/renderer/engine/math/Vector3.js';
 import { Fog } from '@modules/renderer/engine/scenes/Fog.js';
 import { normalWorld } from '@modules/renderer/engine/nodes/accessors/NormalNode.js';
 import { color } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.primitves.js';
@@ -84,8 +84,8 @@ useWindowResizer(renderer, camera);
 
 const selection = new SelectionControl(camera, scene);
 const visualizer = new SelectionVisualizer(renderer);
-const updateVec = (vec3: IVec3, event: PointerEvent) => {
-  IVec3.set(vec3, (event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1, 0.5);
+const updateVec = (vec3: Vec3, event: PointerEvent) => {
+  Vec3.set(vec3, (event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1, 0.5);
 };
 renderer.parameters.canvas.addEventListener('pointerdown', event => {
   for (const object of selection.collection) {
@@ -125,7 +125,7 @@ const ui = UI.create('Selection')
     for (const object of selection.collection) {
       (object.material as MeshLambertMaterial).emissive.set(0x000000);
     }
-    IVec3.clear(selection.start);
-    IVec3.clear(selection.end);
+    Vec3.clear(selection.start);
+    Vec3.clear(selection.end);
     selection.collection.length = 0;
   });

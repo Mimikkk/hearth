@@ -1,4 +1,4 @@
-import { IVec3 } from './Vector3.js';
+import { Vec3 } from './Vector3.js';
 import { Sphere_ } from './Sphere.js';
 import { Plane_ } from './Plane.js';
 import type { Matrix4 } from './Matrix4.js';
@@ -111,10 +111,10 @@ export namespace Frustum {
     return true;
   };
 
-  const _vec3 = IVec3.empty();
+  const _vec3 = Vec3.empty();
 
-  const setVec = (plane: Const<Plane_>, box: Const<Box3_>): IVec3 =>
-    IVec3.set(
+  const setVec = (plane: Const<Plane_>, box: Const<Box3_>): Vec3 =>
+    Vec3.set(
       _vec3,
       plane.normal.x > 0 ? box.min.x : box.max.x,
       plane.normal.y > 0 ? box.min.y : box.max.y,
@@ -130,7 +130,7 @@ export namespace Frustum {
 
     return true;
   };
-  export const containsVec = ({ planes }: Const<Frustum>, point: Const<IVec3>): boolean => {
+  export const containsVec = ({ planes }: Const<Frustum>, point: Const<Vec3>): boolean => {
     if (Plane_.distanceToVec(planes[0], point) < 0) return false;
     if (Plane_.distanceToVec(planes[1], point) < 0) return false;
     if (Plane_.distanceToVec(planes[2], point) < 0) return false;

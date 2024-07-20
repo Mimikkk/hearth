@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import { Sphere, Sphere_ } from './Sphere.js';
-import { IVec3, Vector3 } from './Vector3.js';
+import { Vec3, Vector3 } from './Vector3.js';
 import { Box3, Box3_ } from './Box3.js';
 import { Plane } from '@modules/renderer/engine/math/Plane.js';
 import { Matrix4 } from '@modules/renderer/engine/math/Matrix4.js';
 
-const { vec3 } = IVec3;
+const { vec3 } = Vec3;
 
 const expectWithin = (actual: Sphere_, expected: Sphere_, epsilon = Number.EPSILON) => {
   expect(Math.abs(actual.center.x - expected.center.x)).within(-epsilon, epsilon);

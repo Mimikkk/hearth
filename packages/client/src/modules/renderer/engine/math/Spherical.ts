@@ -1,4 +1,4 @@
-import type { IVec3 } from './Vector3.js';
+import type { Vec3 } from './Vector3.js';
 import { clamp as clampNumber } from './MathUtils.js';
 import { Const } from '@modules/renderer/engine/math/types.js';
 
@@ -25,8 +25,8 @@ export namespace Spherical {
   export const clone = (from: Const<Spherical>): Spherical => clone_(from, empty());
   export const clone_ = (from: Const<Spherical>, into: Spherical): Spherical => fill_(into, from);
 
-  export const fromCartesian = (from: Const<IVec3>): Spherical => fromCartesian_(from, empty());
-  export const fromCartesian_ = ({ x, y, z }: Const<IVec3>, into: Spherical): Spherical => {
+  export const fromCartesian = (from: Const<Vec3>): Spherical => fromCartesian_(from, empty());
+  export const fromCartesian_ = ({ x, y, z }: Const<Vec3>, into: Spherical): Spherical => {
     into.radius = Math.sqrt(x * x + y * y + z * z);
 
     if (into.radius === 0) {
@@ -39,7 +39,7 @@ export namespace Spherical {
 
     return into;
   };
-  export const fillCartesian = (self: Spherical, from: Const<IVec3>): Spherical => fromCartesian_(from, self);
+  export const fillCartesian = (self: Spherical, from: Const<Vec3>): Spherical => fromCartesian_(from, self);
 
   export const clamp = (self: Spherical): Spherical => {
     self.phi = clampNumber(self.phi, Number.EPSILON, Math.PI - Number.EPSILON);
