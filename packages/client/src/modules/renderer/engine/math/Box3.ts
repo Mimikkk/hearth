@@ -1,5 +1,4 @@
 import { Vec3 } from './Vec3.js';
-import type { BufferAttribute } from '../core/BufferAttribute.js';
 import type { Object3D } from '../core/Object3D.js';
 import type { Triangle } from './Triangle.js';
 import type { Plane } from './Plane.js';
@@ -8,6 +7,7 @@ import type { Mat4 } from './Mat4.js';
 import { Mesh } from '@modules/renderer/engine/objects/Mesh.js';
 import { Const } from '@modules/renderer/engine/math/types.js';
 import { Attribute } from '@modules/renderer/engine/core/types.js';
+import { NumberArray } from '@modules/renderer/engine/math/MathUtils.js';
 
 export class Box3 {
   declare isBox3: true;
@@ -69,7 +69,7 @@ export class Box3 {
     return into.fromAttribute(attribute);
   }
 
-  static fromArray(array: number[], into: Box3 = Box3.new()): Box3 {
+  static fromArray(array: Const<NumberArray>, into: Box3 = Box3.new()): Box3 {
     return into.fromArray(array);
   }
 
@@ -101,7 +101,7 @@ export class Box3 {
     return this;
   }
 
-  fromArray(array: number[]): this {
+  fromArray(array: Const<NumberArray>): this {
     this.clear();
 
     for (let i = 0, il = array.length; i < il; i += 3) {

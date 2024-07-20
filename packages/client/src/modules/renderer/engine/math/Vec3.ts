@@ -486,7 +486,7 @@ export class Vec3 implements IVec3 {
   }
 
   setFromCylindrical(cylindrical: Cylindrical): this {
-    return this.setFromCylindricalCoords(cylindrical.radius, cylindrical.theta, cylindrical.y);
+    return this.setFromCylindricalCoords(cylindrical.radius, cylindrical.theta, cylindrical.height);
   }
 
   setFromCylindricalCoords(radius: number, theta: number, y: number): this {
