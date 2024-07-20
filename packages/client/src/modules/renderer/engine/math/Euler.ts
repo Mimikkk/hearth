@@ -30,6 +30,7 @@ export class Euler {
 
   set x(value: number) {
     this._x = value;
+    this._onChangeCallback();
   }
 
   get y(): number {
@@ -38,6 +39,7 @@ export class Euler {
 
   set y(value: number) {
     this._y = value;
+    this._onChangeCallback();
   }
 
   get z(): number {
@@ -46,6 +48,7 @@ export class Euler {
 
   set z(value: number) {
     this._z = value;
+    this._onChangeCallback();
   }
 
   get order(): EulerOrder {
@@ -54,6 +57,7 @@ export class Euler {
 
   set order(value: EulerOrder) {
     this._order = value;
+    this._onChangeCallback();
   }
 
   set(x: number, y: number, z: number, order: EulerOrder = this._order) {
@@ -61,6 +65,8 @@ export class Euler {
     this._y = y;
     this._z = z;
     this._order = order;
+
+    this._onChangeCallback();
 
     return this;
   }
@@ -75,10 +81,12 @@ export class Euler {
     this._z = euler._z;
     this._order = euler._order;
 
+    this._onChangeCallback();
+
     return this;
   }
 
-  setFromRotationMatrix(m: Matrix4, order: EulerOrder = this._order): this {
+  setFromRotationMatrix(m: Matrix4, order: EulerOrder = this._order, update: boolean = true): this {
     // assumes the upper 3x3 of m is a pure rotation matrix (i.e, unscaled)
 
     const te = m.elements;
@@ -165,6 +173,8 @@ export class Euler {
     }
     this._order = order;
 
+    if (update) this._onChangeCallback();
+
     return this;
   }
 
@@ -194,6 +204,8 @@ export class Euler {
     this._z = array[2];
     if (array[3] !== undefined) this._order = array[3];
 
+    this._onChangeCallback();
+
     return this;
   }
 
@@ -208,6 +220,14 @@ export class Euler {
 
     return array;
   }
+
+  _onChange(callback: () => void): this {
+    this._onChangeCallback = callback;
+
+    return this;
+  }
+
+  _onChangeCallback() {}
 
   *[Symbol.iterator](): Iterator<number | EulerOrder> {
     yield this._x;

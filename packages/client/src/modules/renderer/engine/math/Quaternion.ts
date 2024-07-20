@@ -129,6 +129,7 @@ export class Quaternion {
 
   set x(value: number) {
     this._x = value;
+    this._onChangeCallback();
   }
 
   get y(): number {
@@ -137,6 +138,7 @@ export class Quaternion {
 
   set y(value: number) {
     this._y = value;
+    this._onChangeCallback();
   }
 
   get z(): number {
@@ -145,6 +147,7 @@ export class Quaternion {
 
   set z(value: number) {
     this._z = value;
+    this._onChangeCallback();
   }
 
   get w(): number {
@@ -153,6 +156,7 @@ export class Quaternion {
 
   set w(value: number) {
     this._w = value;
+    this._onChangeCallback();
   }
 
   set(x: number, y: number, z: number, w: number): this {
@@ -160,6 +164,8 @@ export class Quaternion {
     this._y = y;
     this._z = z;
     this._w = w;
+
+    this._onChangeCallback();
 
     return this;
   }
@@ -174,10 +180,12 @@ export class Quaternion {
     this._z = quaternion.z;
     this._w = quaternion.w;
 
+    this._onChangeCallback();
+
     return this;
   }
 
-  setFromEuler(euler: Euler): this {
+  setFromEuler(euler: Euler, update: boolean = true): this {
     const x = euler._x;
     const y = euler._y;
     const z = euler._z;
@@ -241,6 +249,8 @@ export class Quaternion {
         console.warn('engine.Quaternion: .setFromEuler() encountered an unknown order: ' + order);
     }
 
+    if (update) this._onChangeCallback();
+
     return this;
   }
 
@@ -256,6 +266,8 @@ export class Quaternion {
     this._y = axis.y * s;
     this._z = axis.z * s;
     this._w = Math.cos(halfAngle);
+
+    this._onChangeCallback();
 
     return this;
   }
@@ -306,6 +318,8 @@ export class Quaternion {
       this._y = (m23 + m32) / s;
       this._z = 0.25 * s;
     }
+
+    this._onChangeCallback();
 
     return this;
   }
@@ -374,6 +388,8 @@ export class Quaternion {
     this._y *= -1;
     this._z *= -1;
 
+    this._onChangeCallback();
+
     return this;
   }
 
@@ -406,6 +422,8 @@ export class Quaternion {
       this._w = this._w * l;
     }
 
+    this._onChangeCallback();
+
     return this;
   }
 
@@ -433,6 +451,8 @@ export class Quaternion {
     this._y = qay * qbw + qaw * qby + qaz * qbx - qax * qbz;
     this._z = qaz * qbw + qaw * qbz + qax * qby - qay * qbx;
     this._w = qaw * qbw - qax * qbx - qay * qby - qaz * qbz;
+
+    this._onChangeCallback();
 
     return this;
   }
@@ -479,7 +499,7 @@ export class Quaternion {
       this._y = s * y + t * this._y;
       this._z = s * z + t * this._z;
 
-      this.normalize();
+      this.normalize(); // normalize calls _onChangeCallback()
 
       return this;
     }
@@ -493,6 +513,8 @@ export class Quaternion {
     this._x = x * ratioA + this._x * ratioB;
     this._y = y * ratioA + this._y * ratioB;
     this._z = z * ratioA + this._z * ratioB;
+
+    this._onChangeCallback();
 
     return this;
   }
@@ -530,6 +552,8 @@ export class Quaternion {
     this._z = array[offset + 2];
     this._w = array[offset + 3];
 
+    this._onChangeCallback();
+
     return this;
   }
 
@@ -548,8 +572,18 @@ export class Quaternion {
     this._z = attribute.getZ(index);
     this._w = attribute.getW(index);
 
+    this._onChangeCallback();
+
     return this;
   }
+
+  _onChange(callback: () => void) {
+    this._onChangeCallback = callback;
+
+    return this;
+  }
+
+  _onChangeCallback() {}
 
   *[Symbol.iterator]() {
     yield this._x;
