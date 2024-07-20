@@ -804,10 +804,6 @@ export class Renderer {
             renderList.push(object, geometry, material, groupOrder, _vector3.z, null);
           }
         }
-      } else if (object.isLineLoop) {
-        console.error(
-          'engine.Renderer: Objects of type engine.LineLoop are not supported. Please use engine.Line or engine.LineSegments.',
-        );
       } else if (object.isMesh || object.isLine || object.isPoints) {
         if (!object.frustumCulled || _frustum.intersectsObject(object)) {
           const geometry = object.geometry;

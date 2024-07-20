@@ -19,7 +19,6 @@ import {
   InterpolationMode,
   Line,
   LineBasicMaterial,
-  LineLoop,
   LineSegments,
   LoaderUtils,
   Material,
@@ -2901,7 +2900,7 @@ class Parser {
         } else if (primitive.mode === WEBGL_CONSTANTS.LINE_STRIP) {
           mesh = new Line(geometry, material);
         } else if (primitive.mode === WEBGL_CONSTANTS.LINE_LOOP) {
-          mesh = new LineLoop(geometry, material);
+          throw new Error('THREE.GLTFLoader: LINE_LOOP mode is not supported.');
         } else if (primitive.mode === WEBGL_CONSTANTS.POINTS) {
           mesh = new Points(geometry, material);
         } else {
