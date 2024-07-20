@@ -17,7 +17,6 @@ import { normalWorld } from '@modules/renderer/engine/nodes/accessors/NormalNode
 import { color } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.primitves.js';
 import { Group } from '@modules/renderer/engine/objects/Group.js';
 import { UI } from '@modules/renderer/examples/utilities/UI.js';
-import { Vec2 } from '@modules/renderer/engine/math/Vector2.js';
 
 const createCamera = () => {
   const camera = new PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 500);
@@ -85,6 +84,7 @@ useWindowResizer(renderer, camera);
 
 const selection = new SelectionControl(camera, scene);
 const visualizer = new SelectionVisualizer(renderer);
+
 const updateVec = (vec3: Vec3, event: PointerEvent) => {
   Vec3.set(vec3, (event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1, 0.5);
 };
@@ -115,18 +115,14 @@ renderer.parameters.canvas.addEventListener('pointerup', event => {
   }
 });
 
-const formatVec = ({ x, y }: Vec2) => x.toFixed(2) + ', ' + y.toFixed(2);
-
 const ui = UI.create('Selection')
   .text('Selected count:', () => selection.collection.length)
-  .text('Mouse start (x, y):', () => formatVec(selection.start))
-  .text('Mouse end (x, y):', () => formatVec(selection.end))
+  .text('Mouse start (x, y):', () => selection.start.x.toFixed(2) + ', ' + selection.start.y.toFixed(2))
+  .text('Mouse end (x, y):', () => selection.end.x.toFixed(2) + ', ' + selection.end.y.toFixed(2))
   .action('Log selection', () => console.log(selection.collection))
   .action('Clear selection', () => {
     for (const object of selection.collection) {
       (object.material as MeshLambertMaterial).emissive.set(0x000000);
     }
-    Vec3.clear(selection.start);
-    Vec3.clear(selection.end);
     selection.collection.length = 0;
   });
