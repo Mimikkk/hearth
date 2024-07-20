@@ -2,7 +2,7 @@ import { Box3 } from './Box3.js';
 import { Vec3 } from './Vec3.js';
 import type { Plane } from './Plane.js';
 import type { Mat4 } from './Mat4.js';
-import { Const } from '@modules/renderer/engine/math/types.js';
+import { Const, lazy } from '@modules/renderer/engine/math/types.js';
 
 export class Sphere {
   declare isSphere: true;
@@ -28,10 +28,6 @@ export class Sphere {
     return sphere?.isSphere === true;
   }
 
-  static into(into: Sphere, sphere: Const<Sphere>): Sphere {
-    return into.from(sphere);
-  }
-
   static from(sphere: Const<Sphere>, into: Sphere = Sphere.new()): Sphere {
     return into.from(sphere);
   }
@@ -46,7 +42,7 @@ export class Sphere {
     return into.setParams(centerX, centerY, centerZ, radius);
   }
 
-  static fromCoords(coords: Vec3[], center?: Const<Vec3>, into: Sphere = Sphere.new()): Sphere {
+  static fromCoords(coords: Const<Vec3[]>, center?: Const<Vec3>, into: Sphere = Sphere.new()): Sphere {
     return into.fromCoords(coords, center);
   }
 
@@ -81,11 +77,11 @@ export class Sphere {
     return this.set(sphere.center, sphere.radius);
   }
 
-  fromCoords(coords: Vec3[], center: Vec3 = this.center): Sphere {
+  fromCoords(coords: Const<Vec3[]>, center: Const<Vec3> = this.center): Sphere {
     if (center !== this.center) {
       this.center.from(center);
     } else {
-      Box3.fromCoords(coords).center(this.center);
+      _box0().fromCoords(coords).center(this.center);
     }
 
     let maxRadiusSq = 0;
@@ -208,3 +204,4 @@ Sphere.prototype.isSphere = true;
 const _vec0 = Vec3.new();
 const _vec1 = Vec3.new();
 const _vec2 = Vec3.new();
+const _box0 = lazy(() => Box3.new());

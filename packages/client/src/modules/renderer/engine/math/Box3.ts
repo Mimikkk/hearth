@@ -61,7 +61,7 @@ export class Box3 {
     return into.fromCenterAndSize(center, size);
   }
 
-  static fromCoords(coords: Const<Vec3>[], into: Box3 = Box3.new()): Box3 {
+  static fromCoords(coords: Const<Vec3[]>, into: Box3 = Box3.new()): Box3 {
     return into.fromCoords(coords);
   }
 
@@ -73,7 +73,7 @@ export class Box3 {
     return into.fromArray(array);
   }
 
-  static fromObject(object: Object3D, precise: boolean = false, into: Box3 = Box3.new()): Box3 {
+  static fromObject(object: Const<Object3D>, precise: boolean = false, into: Box3 = Box3.new()): Box3 {
     return into.fromObject(object, precise);
   }
 
