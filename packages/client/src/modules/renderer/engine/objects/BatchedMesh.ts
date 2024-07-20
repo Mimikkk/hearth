@@ -68,7 +68,7 @@ const _renderList = new MultiDrawRenderList();
 const _mesh = new Mesh(null!, null!);
 const _batchIntersects: Intersection[] = [];
 
-function copyAttributeData(src: BufferAttribute, target: BufferAttribute, targetOffset: number) {
+function copyAttributeData(src: BufferAttribute<any>, target: BufferAttribute<any>, targetOffset: number) {
   const itemSize = target.itemSize;
   //@ts-expect-error
   if (src.isInterleavedBufferAttribute || src.array.constructor !== target.array.constructor) {

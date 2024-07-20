@@ -471,11 +471,11 @@ export class Renderer {
     this._animation.setAnimationLoop(callback);
   }
 
-  getArrayBuffer(attribute: BufferAttribute) {
+  getArrayBuffer(attribute: BufferAttribute<any>) {
     return this.getArrayBufferAsync(attribute);
   }
 
-  async getArrayBufferAsync(attribute: BufferAttribute) {
+  async getArrayBufferAsync(attribute: BufferAttribute<any>) {
     return await this.backend.getArrayBufferAsync(attribute);
   }
 

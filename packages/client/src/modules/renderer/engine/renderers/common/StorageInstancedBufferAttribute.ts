@@ -1,7 +1,7 @@
 import { InstancedBufferAttribute } from '@modules/renderer/engine/engine.js';
 import { NumberArray, TypedArrayConstructor } from '@modules/renderer/engine/math/MathUtils.js';
 
-class StorageInstancedBufferAttribute extends InstancedBufferAttribute {
+class StorageInstancedBufferAttribute extends InstancedBufferAttribute<any> {
   declare isStorageInstancedBufferAttribute: true;
 
   constructor(array: NumberArray, itemSize: number, typeClass: TypedArrayConstructor = Float32Array) {
