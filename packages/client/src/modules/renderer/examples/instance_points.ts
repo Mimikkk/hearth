@@ -18,11 +18,12 @@ import { Quaternion } from '@modules/renderer/engine/math/Quaternion.js';
 
 let renderer, scene, camera, camera2, controls, backgroundNode;
 let material;
-let stats: any;
-let gui: GUI;
+let stats;
+let gui;
 
-let insetWidth: number;
-let insetHeight: number;
+// viewport
+let insetWidth;
+let insetHeight;
 
 init();
 
@@ -37,7 +38,7 @@ async function init() {
   camera.position.set(-40, 0, 60);
 
   camera2 = new Engine.PerspectiveCamera(40, 1, 1, 1000);
-  camera2.position.from(camera.position);
+  camera2.position.copy(camera.position);
 
   controls = new OrbitControls(camera, renderer.parameters.canvas);
   controls.enableDamping = true;
@@ -130,7 +131,7 @@ function animate() {
 
   camera2.position.copy(camera.position);
 
-  camera.quaternion.from(camera2.quaternion);
+  Quaternion.clone_(camera.quaternion, camera2.quaternion);
 
   renderer.parameters.autoClear = false;
 

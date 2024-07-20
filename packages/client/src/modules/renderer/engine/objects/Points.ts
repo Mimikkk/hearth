@@ -6,7 +6,6 @@ import { Vec3 } from '../math/Vec3.js';
 import { PointsMaterial } from '../materials/PointsMaterial.js';
 import { BufferGeometry } from '../core/BufferGeometry.js';
 import { Intersection, Raycaster } from '@modules/renderer/engine/core/Raycaster.js';
-import { PointsNodeMaterial } from '@modules/renderer/engine/nodes/materials/PointsNodeMaterial.js';
 
 const _inverseMatrix = new Mat4();
 const _ray = new Ray();
@@ -17,11 +16,11 @@ export class Points extends Object3D {
   declare isPoints: true;
   declare type: string | 'Points';
   declare geometry: BufferGeometry;
-  declare material: PointsMaterial | PointsNodeMaterial;
+  declare material: PointsMaterial;
   morphTargetInfluences: number[];
   morphTargetDictionary: Record<string, number>;
 
-  constructor(geometry: BufferGeometry, material: PointsMaterial | PointsNodeMaterial) {
+  constructor(geometry: BufferGeometry, material: PointsMaterial) {
     super();
 
     this.geometry = geometry;

@@ -22,9 +22,9 @@ import {
   LineLoop,
   LineSegments,
   LoaderUtils,
-  Mat4,
   Material,
   MathUtils,
+  Mat4,
   Mesh,
   MeshBasicMaterial,
   MeshPhysicalMaterial,
@@ -58,7 +58,6 @@ import { Quaternion } from '@modules/renderer/engine/math/Quaternion.js';
 import { MeshoptDecoder } from 'meshoptimizer';
 import { classLoader } from '@modules/renderer/engine/loaders/types.js';
 import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
-import { InterpolateLinear } from 'three';
 
 export type PluginFn = (parser: Parser) => Plugin;
 
@@ -97,14 +96,7 @@ export interface GLTF {
 }
 
 export type MeshoptDecoder = typeof MeshoptDecoder;
-
-export class GLTFLoader extends classLoader<{
-  This: GLTFLoader;
-  Url: string;
-  Return: GLTF;
-  Options: any;
-  Configuration: any;
-}>(
+class GLTFLoader extends classLoader(
   () => {},
   async function (url, configuration, handlers) {
     const buffer = await FileLoader.loadAsync(url, { responseType: ResponseType.Buffer }, handlers);
@@ -174,7 +166,7 @@ export class GLTFLoader extends classLoader<{
     return this;
   }
 
-  parse(data: ArrayBuffer, path: string): Promise<GLTF> {
+  parse(data: ArrayBuffer, path: string) {
     let json;
     const extensions = {};
     const plugins = {};
@@ -1279,7 +1271,7 @@ class GLTFMeshGpuInstancing implements Plugin {
           }
 
           if (attributes.ROTATION) {
-            q.fromAttribute(attributes.ROTATION, i);
+            Quaternion.fillAttribute(q, attributes.ROTATION, i);
           }
 
           if (attributes.SCALE) {
@@ -1570,7 +1562,9 @@ class GLTFCubicSplineQuaternionInterpolant extends GLTFCubicSplineInterpolant {
   interpolate_(i1, t0, t, t1) {
     const result = super.interpolate_(i1, t0, t, t1);
 
-    _q.fromArray(result).normalize().intoArray(result);
+    Quaternion.fillArray(_q, result, 0);
+    Quaternion.normalize(_q);
+    Quaternion.intoArray_(_q, 0, result);
 
     return result;
   }
@@ -1953,7 +1947,7 @@ class Parser {
     this.plugins = plugins;
   }
 
-  async parse() {
+  parse() {
     const parser = this;
     const json = this.json;
     const extensions = this.extensions;
@@ -1963,35 +1957,49 @@ class Parser {
     this.nodeCache = {};
 
     // Mark the special nodes/meshes in json for efficient parse
-    await Promise.all(this._invokeAll(extension => extension._markDefs?.()));
-    await Promise.all(this._invokeAll(extension => extension.beforeRoot?.()));
+    this._invokeAll(function (ext) {
+      return ext._markDefs && ext._markDefs();
+    });
 
-    const [scenes, animations, cameras] = await Promise.all([
-      parser.getDependencies('scene'),
-      parser.getDependencies('animation'),
-      parser.getDependencies('camera'),
-    ]);
+    return Promise.all(
+      this._invokeAll(function (ext) {
+        return ext.beforeRoot && ext.beforeRoot();
+      }),
+    )
+      .then(function () {
+        return Promise.all([
+          parser.getDependencies('scene'),
+          parser.getDependencies('animation'),
+          parser.getDependencies('camera'),
+        ]);
+      })
+      .then(function (dependencies) {
+        const result = {
+          scene: dependencies[0][json.scene || 0],
+          scenes: dependencies[0],
+          animations: dependencies[1],
+          cameras: dependencies[2],
+          asset: json.asset,
+          parser: parser,
+          userData: {},
+        };
 
-    const result = {
-      scene: scenes[json.scene || 0],
-      scenes,
-      animations,
-      cameras,
-      asset: json.asset,
-      parser: parser,
-      userData: {},
-    };
+        addUnknownExtensionsToUserData(extensions, result, json);
 
-    addUnknownExtensionsToUserData(extensions, result, json);
-    assignExtrasToUserData(result, json);
+        assignExtrasToUserData(result, json);
 
-    await Promise.all(parser._invokeAll(extension => extension.afterRoot?.(result)));
+        return Promise.all(
+          parser._invokeAll(function (ext) {
+            return ext.afterRoot && ext.afterRoot(result);
+          }),
+        ).then(function () {
+          for (const scene of result.scenes) {
+            scene.updateMatrixWorld();
+          }
 
-    for (const scene of result.scenes) {
-      scene.updateMatrixWorld();
-    }
-
-    return result;
+          return result;
+        });
+      });
   }
 
   /**
@@ -3264,7 +3272,7 @@ class Parser {
         }
 
         if (nodeDef.rotation !== undefined) {
-          node.quaternion.fromArray(nodeDef.rotation);
+          Quaternion.fillArray(node.quaternion, nodeDef.rotation, 0);
         }
 
         if (nodeDef.scale !== undefined) {
@@ -3392,7 +3400,7 @@ class Parser {
     }
 
     const interpolation =
-      sampler.interpolation !== undefined ? INTERPOLATION[sampler.interpolation] : InterpolationMode.Linear;
+      sampler.interpolation !== undefined ? INTERPOLATION[sampler.interpolation] : InterpolateLinear;
 
     const outputArray = this._getArrayFromAccessor(outputAccessor);
 
@@ -3584,3 +3592,5 @@ function addPrimitiveAttributes(geometry, primitiveDef, parser) {
     return primitiveDef.targets !== undefined ? addMorphTargets(geometry, primitiveDef.targets, parser) : geometry;
   });
 }
+
+export { GLTFLoader };

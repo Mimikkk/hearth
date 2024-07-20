@@ -22,10 +22,8 @@ import { SpriteMaterialBuilder } from '@modules/renderer/engine/materials/Sprite
 
 const createCamera = () => {
   const perspectiveCamera = new PerspectiveCamera(80, window.innerWidth / window.innerHeight, 0.1, 100);
-  perspectiveCamera.setPosition(0, 0, 3);
+  perspectiveCamera.position.set(0, 0, 3);
   perspectiveCamera.lookAt(0, 0, 0);
-
-  console.log({ perspectiveCamera });
 
   const frustumCamera = new OrthographicCamera(-1, 1, 1, -1, 1, 6);
   frustumCamera.position.set(0, 0, -3);
@@ -58,7 +56,7 @@ const useOrbitControls = (canvas: HTMLCanvasElement) => {
 };
 
 const { perspectiveCamera, frustumCamera } = createCamera();
-const state = <{ camera: PerspectiveCamera | OrthographicCamera }>{ camera: perspectiveCamera };
+const state = <{ camera: Camera }>{ camera: perspectiveCamera };
 
 const scene = createScene();
 const light = createLight();

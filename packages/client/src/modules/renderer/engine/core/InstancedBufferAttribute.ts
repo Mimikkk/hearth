@@ -8,7 +8,7 @@ export class InstancedBufferAttribute<T extends TypedArray> extends BufferAttrib
   constructor(
     array: T,
     itemSize: number,
-    normalized: boolean = false,
+    normalized: boolean,
     public meshPerAttribute: number = 1,
   ) {
     super(array, itemSize, normalized);
