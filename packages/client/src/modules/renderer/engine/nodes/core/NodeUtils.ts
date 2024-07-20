@@ -99,9 +99,9 @@ export function getValueFromType(type, ...params) {
   } else if (last4 === 'vec4') {
     return new Vec4(...params);
   } else if (last4 === 'mat3') {
-    return new Mat3(...params);
+    return new Mat3().set(...params);
   } else if (last4 === 'mat4') {
-    return new Mat4(...params);
+    return new Mat4().set(...params);
   } else if (type === 'bool') {
     return params[0] || false;
   } else if (type === 'float' || type === 'int' || type === 'uint') {

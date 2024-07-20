@@ -952,7 +952,7 @@ export class Renderer {
     //
 
     object.modelViewMatrix.asMul(camera.matrixWorldInverse, object.matrixWorld);
-    object.normalMatrix.getNormalMatrix(object.modelViewMatrix);
+    object.normalMatrix.fromNMat4(object.modelViewMatrix);
 
     //
 

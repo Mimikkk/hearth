@@ -126,7 +126,7 @@ export class Texture {
   }
 
   updateMatrix(): this {
-    this.matrix.setUvTransform(
+    this.matrix.asUvTransform(
       this.offset.x,
       this.offset.y,
       this.repeat.x,
@@ -169,7 +169,7 @@ export class Texture {
     this.rotation = source.rotation;
 
     this.matrixAutoUpdate = source.matrixAutoUpdate;
-    this.matrix.copy(source.matrix);
+    this.matrix.from(source.matrix);
 
     this.generateMipmaps = source.generateMipmaps;
     this.premultiplyAlpha = source.premultiplyAlpha;

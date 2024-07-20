@@ -39,7 +39,7 @@ export class VertexNormalsHelper extends LineSegments {
   update() {
     this.object.updateMatrixWorld(true);
 
-    _normalMatrix.getNormalMatrix(this.object.matrixWorld);
+    _normalMatrix.fromNMat4(this.object.matrixWorld);
 
     const matrixWorld = this.object.matrixWorld;
 

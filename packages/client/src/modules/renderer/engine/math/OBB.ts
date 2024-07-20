@@ -72,13 +72,13 @@ export class OBB {
   copy(obb: OBB) {
     this.center.from(obb.center);
     this.halfSize.from(obb.halfSize);
-    this.rotation.copy(obb.rotation);
+    this.rotation.from(obb.rotation);
 
     return this;
   }
 
   clone() {
-    return new OBB(new Vec3().from(this.center), new Vec3().from(this.halfSize), new Mat3().copy(this.rotation));
+    return new OBB(new Vec3().from(this.center), new Vec3().from(this.halfSize), new Mat3().from(this.rotation));
   }
 
   getSize(result: Vec3): Vec3 {
@@ -333,7 +333,7 @@ export class OBB {
 
     box3.size(this.halfSize).scale(0.5);
 
-    this.rotation.identity();
+    this.rotation.asIdentity();
 
     return this;
   }
@@ -352,7 +352,7 @@ export class OBB {
     const det = matrix.determinant();
     if (det < 0) sx = -sx;
 
-    rotationMatrix.setFromMat4(matrix);
+    rotationMatrix.fromMat4(matrix);
 
     const invSX = 1 / sx;
     const invSY = 1 / sy;
@@ -370,7 +370,7 @@ export class OBB {
     rotationMatrix.elements[7] *= invSZ;
     rotationMatrix.elements[8] *= invSZ;
 
-    this.rotation.multiply(rotationMatrix);
+    this.rotation.mul(rotationMatrix);
 
     this.halfSize.x *= sx;
     this.halfSize.y *= sy;

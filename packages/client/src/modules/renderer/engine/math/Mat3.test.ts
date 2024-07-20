@@ -185,7 +185,7 @@ describe('Math - Mat3', () => {
 
   it('scale', () => {
     const a = Mat3.identity();
-    a.scale(Vec2.new(2, 3));
+    a.mulScalar(Vec2.new(2, 3));
 
     expect(a.elements).toEqual([2, 0, 0, 0, 3, 0, 0, 0, 1]);
   });

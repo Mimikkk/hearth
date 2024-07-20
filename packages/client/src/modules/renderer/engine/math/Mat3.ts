@@ -1,15 +1,24 @@
 import { Mat4 } from './Mat4.js';
 import { Vec3 } from './Vec3.js';
 import { Vec2 } from './Vec2.js';
+import { Const } from '@modules/renderer/engine/math/types.js';
+import { NumberArray } from '@modules/renderer/engine/math/MathUtils.js';
 
 export interface Matrix {
   elements: number[];
+
   identity(): Matrix;
+
   copy(m: this): this;
+
   scale(s: number): Matrix;
+
   determinant(): number;
+
   transpose(): Matrix;
+
   invert(): Matrix;
+
   clone(): Matrix;
 }
 
@@ -17,10 +26,41 @@ export class Mat3 {
   declare ['constructor']: typeof Mat3;
   declare isMat3: true;
 
-  elements: number[];
+  constructor(public elements: number[] = [1, 0, 0, 0, 1, 0, 0, 0, 1]) {}
 
-  constructor();
-  constructor(
+  static new(elements: number[] = [1, 0, 0, 0, 1, 0, 0, 0, 1]): Mat3 {
+    return new Mat3(elements);
+  }
+
+  static empty(): Mat3 {
+    return Mat3.new();
+  }
+
+  static clone(matrix: Const<Mat3>, into: Mat3 = Mat3.empty()): Mat3 {
+    return into.from(matrix);
+  }
+
+  static is(matrix: any): matrix is Mat3 {
+    return matrix?.isMat3 === true;
+  }
+
+  static into(into: Mat3, matrix: Const<Mat3>): Mat3 {
+    return into.from(matrix);
+  }
+
+  static from(matrix: Const<Mat3>, into: Mat3 = Mat3.empty()): Mat3 {
+    return into.from(matrix);
+  }
+
+  static fromArray(array: number[], offset: number = 0, into: Mat3 = Mat3.empty()): Mat3 {
+    return into.fromArray(array, offset);
+  }
+
+  static fromBasis(xAxis: Const<Vec3>, yAxis: Const<Vec3>, zAxis: Const<Vec3>, into: Mat3 = Mat3.empty()): Mat3 {
+    return into.fromBasis(xAxis, yAxis, zAxis);
+  }
+
+  static fromColumnOrder(
     n11: number,
     n12: number,
     n13: number,
@@ -30,23 +70,48 @@ export class Mat3 {
     n31: number,
     n32: number,
     n33: number,
-  );
-  constructor(
-    n11?: number,
-    n12?: number,
-    n13?: number,
-    n21?: number,
-    n22?: number,
-    n23?: number,
-    n31?: number,
-    n32?: number,
-    n33?: number,
-  ) {
-    this.elements = [1, 0, 0, 0, 1, 0, 0, 0, 1];
+    into: Mat3 = Mat3.empty(),
+  ): Mat3 {
+    return into.set(n11, n12, n13, n21, n22, n23, n31, n32, n33);
+  }
 
-    if (n11 !== undefined) {
-      this.set(n11, n12!, n13!, n21!, n22!, n23!, n31!, n32!, n33!);
-    }
+  static fromRowOrder(
+    n11: number,
+    n12: number,
+    n13: number,
+    n21: number,
+    n22: number,
+    n23: number,
+    n31: number,
+    n32: number,
+    n33: number,
+    into: Mat3 = Mat3.empty(),
+  ): Mat3 {
+    return into.set(n11, n21, n31, n12, n22, n32, n13, n23, n33);
+  }
+
+  static fromMat4(matrix: Const<Mat4>, into: Mat3 = Mat3.empty()): Mat3 {
+    return into.fromMat4(matrix);
+  }
+
+  static fromNMat4(matrix: Const<Mat4>, into: Mat3 = Mat3.empty()): Mat3 {
+    return into.fromNMat4(matrix);
+  }
+
+  static rotation(theta: number, into: Mat3 = Mat3.empty()): Mat3 {
+    return into.asRotation(theta);
+  }
+
+  static scale(scale: Const<Vec2>, into: Mat3 = Mat3.empty()): Mat3 {
+    return into.asScale(scale);
+  }
+
+  static translation(translation: Const<Vec2>, into: Mat3 = Mat3.empty()): Mat3 {
+    return into.asTranslation(translation);
+  }
+
+  static identity(into: Mat3 = Mat3.empty()): Mat3 {
+    return into.asIdentity();
   }
 
   set(
@@ -59,7 +124,7 @@ export class Mat3 {
     n31: number,
     n32: number,
     n33: number,
-  ): Mat3 {
+  ): this {
     const te = this.elements;
 
     te[0] = n11;
@@ -75,13 +140,7 @@ export class Mat3 {
     return this;
   }
 
-  identity(): Mat3 {
-    this.set(1, 0, 0, 0, 1, 0, 0, 0, 1);
-
-    return this;
-  }
-
-  copy(matrix: Mat3): this {
+  from(matrix: Const<Mat3>): this {
     const te = this.elements;
     const me = matrix.elements;
 
@@ -98,7 +157,29 @@ export class Mat3 {
     return this;
   }
 
-  extractBasis(xAxis: Vec3, yAxis: Vec3, zAxis: Vec3): Mat3 {
+  fromBasis(xAxis: Const<Vec3>, yAxis: Const<Vec3>, zAxis: Const<Vec3>): this {
+    const te = this.elements;
+
+    te[0] = xAxis.x;
+    te[3] = xAxis.y;
+    te[6] = xAxis.z;
+
+    te[1] = yAxis.x;
+    te[4] = yAxis.y;
+    te[7] = yAxis.z;
+
+    te[2] = zAxis.x;
+    te[5] = zAxis.y;
+    te[8] = zAxis.z;
+
+    return this;
+  }
+
+  clone(into = Mat3.new()): Mat3 {
+    return into.from(this);
+  }
+
+  extractBasis(xAxis: Vec3, yAxis: Vec3, zAxis: Vec3): this {
     xAxis.fromMat3Column(this, 0);
     yAxis.fromMat3Column(this, 1);
     zAxis.fromMat3Column(this, 2);
@@ -106,23 +187,21 @@ export class Mat3 {
     return this;
   }
 
-  setFromMat4(matrix: Mat4): Mat3 {
+  fromMat4(matrix: Const<Mat4>): this {
     const me = matrix.elements;
 
-    this.set(me[0], me[4], me[8], me[1], me[5], me[9], me[2], me[6], me[10]);
-
-    return this;
+    return this.set(me[0], me[4], me[8], me[1], me[5], me[9], me[2], me[6], me[10]);
   }
 
-  multiply(matrix: Mat3): Mat3 {
+  mul(matrix: Const<Mat3>): this {
     return this.asMul(this, matrix);
   }
 
-  premultiply(matrix: Mat3): Mat3 {
+  premul(matrix: Const<Mat3>): this {
     return this.asMul(matrix, this);
   }
 
-  asMul(a: Mat3, b: Mat3): Mat3 {
+  asMul(a: Const<Mat3>, b: Const<Mat3>): this {
     const ae = a.elements;
     const be = b.elements;
     const te = this.elements;
@@ -162,7 +241,7 @@ export class Mat3 {
     return this;
   }
 
-  scale(scalar: number): Mat3 {
+  mulScalar(scalar: number): this {
     const te = this.elements;
 
     te[0] *= scalar;
@@ -194,7 +273,7 @@ export class Mat3 {
     return a * e * i - a * f * h - b * d * i + b * f * g + c * d * h - c * e * g;
   }
 
-  invert(): Mat3 {
+  invert(): this {
     const te = this.elements,
       n11 = te[0],
       n21 = te[1],
@@ -229,7 +308,7 @@ export class Mat3 {
     return this;
   }
 
-  transpose(): Mat3 {
+  transpose(): this {
     let tmp;
     const m = this.elements;
 
@@ -246,27 +325,23 @@ export class Mat3 {
     return this;
   }
 
-  getNormalMatrix(matrix: Mat4): Mat3 {
-    return this.setFromMat4(matrix).invert().transpose();
+  fromNMat4(matrix: Const<Mat4>): this {
+    return this.fromMat4(matrix).invert().transpose();
   }
 
-  transposeIntoArray(array: number[]): Mat3 {
-    const m = this.elements;
-
-    array[0] = m[0];
-    array[1] = m[3];
-    array[2] = m[6];
-    array[3] = m[1];
-    array[4] = m[4];
-    array[5] = m[7];
-    array[6] = m[2];
-    array[7] = m[5];
-    array[8] = m[8];
-
-    return this;
+  rotate(theta: number): this {
+    return this.premul(_rotate.asRotation(-theta));
   }
 
-  setUvTransform(
+  translate(vec: Vec2): this {
+    return this.premul(_translate.asTranslation(vec));
+  }
+
+  scale(vec: Vec2): this {
+    return this.premul(_scale.asScale(vec));
+  }
+
+  asUvTransform(
     transformX: number,
     transformY: number,
     scaleX: number,
@@ -293,35 +368,15 @@ export class Mat3 {
     return this;
   }
 
-  scale(scaleX: number, scaleY: number): Mat3 {
-    this.premultiply(new Mat3().makeScale(scaleX, scaleY));
-
-    return this;
+  asIdentity(): this {
+    return this.set(1, 0, 0, 0, 1, 0, 0, 0, 1);
   }
 
-  rotate(theta: number): Mat3 {
-    this.premultiply(new Mat3().makeRotation(-theta));
-
-    return this;
+  asTranslation({ x, y }: Const<Vec2>): this {
+    return this.set(1, 0, x, 0, 1, y!, 0, 0, 1);
   }
 
-  translate(x: number, y: number): Mat3 {
-    this.premultiply(new Mat3().makeTranslation(x, y));
-
-    return this;
-  }
-
-  makeTranslation(x: number | Vec2, y?: number): this {
-    if (x instanceof Vec2) {
-      this.set(1, 0, x.x, 0, 1, x.y, 0, 0, 1);
-    } else {
-      this.set(1, 0, x, 0, 1, y!, 0, 0, 1);
-    }
-
-    return this;
-  }
-
-  makeRotation(theta: number): Mat3 {
+  asRotation(theta: number): this {
     const c = Math.cos(theta);
     const s = Math.sin(theta);
 
@@ -330,13 +385,13 @@ export class Mat3 {
     return this;
   }
 
-  makeScale(x: number, y: number): Mat3 {
+  asScale({ x, y }: Const<Vec2>): this {
     this.set(x, 0, 0, 0, y, 0, 0, 0, 1);
 
     return this;
   }
 
-  equals(matrix: Mat3): boolean {
+  equals(matrix: Const<Mat3>): boolean {
     const te = this.elements;
     const me = matrix.elements;
 
@@ -347,7 +402,7 @@ export class Mat3 {
     return true;
   }
 
-  fromArray(array: Const<NumberArray>, offset: number = 0): Mat3 {
+  fromArray(array: Const<NumberArray>, offset: number = 0): this {
     for (let i = 0; i < 9; i++) {
       this.elements[i] = array[i + offset];
     }
@@ -372,9 +427,10 @@ export class Mat3 {
 
     return array;
   }
-
-  clone(): Mat3 {
-    return new this.constructor().fromArray(this.elements);
-  }
 }
+
 Mat3.prototype.isMat3 = true;
+
+const _rotate = new Mat3();
+const _translate = new Mat3();
+const _scale = new Mat3();
