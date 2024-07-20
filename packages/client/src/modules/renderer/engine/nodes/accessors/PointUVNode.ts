@@ -1,4 +1,4 @@
-import Node from '../core/Node.ts';
+import Node from '../core/Node.js';
 import { nodeImmutable } from '../shadernode/ShaderNodes.js';
 
 class PointUVNode extends Node {

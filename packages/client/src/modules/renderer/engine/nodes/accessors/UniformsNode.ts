@@ -1,5 +1,5 @@
 import { nodeObject } from '../shadernode/ShaderNodes.js';
-import { NodeUpdateType } from '../core/constants.ts';
+import { NodeUpdateType } from '../core/constants.js';
 import { getValueType } from '../core/NodeUtils.js';
 import ArrayElementNode from '../utils/ArrayElementNode.js';
 import BufferNode from './BufferNode.js';

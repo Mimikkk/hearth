@@ -1,5 +1,5 @@
-import Node from '../core/Node.ts';
-import { NodeUpdateType } from '../core/constants.ts';
+import Node from '../core/Node.js';
+import { NodeUpdateType } from '../core/constants.js';
 import { int, ivec2, nodeProxy, tslFn } from '../shadernode/ShaderNodes.js';
 import { uniform } from '../core/UniformNode.js';
 import { reference } from './ReferenceNode.js';
