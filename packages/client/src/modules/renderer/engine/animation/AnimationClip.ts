@@ -6,10 +6,10 @@ import { NumberKeyframeTrack } from './tracks/NumberKeyframeTrack.js';
 import { QuaternionKeyframeTrack } from './tracks/QuaternionKeyframeTrack.js';
 import { StringKeyframeTrack } from './tracks/StringKeyframeTrack.js';
 import { VectorKeyframeTrack } from './tracks/VectorKeyframeTrack.js';
+import * as MathUtils from '../math/MathUtils.js';
 import { AnimationBlendMode } from '../constants.js';
 import { Object3D } from '@modules/renderer/engine/core/Object3D.js';
 import { Vector3 } from '@modules/renderer/engine/math/Vector3.js';
-import { v4 } from 'uuid';
 
 export interface MorphTarget {
   name: string;
@@ -34,7 +34,7 @@ export class AnimationClip {
     this.duration = duration;
     this.blendMode = blendMode;
 
-    this.uuid = v4();
+    this.uuid = MathUtils.generateUuid();
 
     // this means it should figure out its duration by scanning the tracks
     if (this.duration < 0) this.resetDuration();

@@ -252,7 +252,9 @@ class TextureNode extends UniformNode {
   update() {
     const texture = this.value;
 
-    if (texture.matrixAutoUpdate) texture.updateMatrix();
+    if (texture.matrixAutoUpdate === true) {
+      texture.updateMatrix();
+    }
   }
 
   clone() {

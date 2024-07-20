@@ -168,7 +168,7 @@ export class BackendTextures {
     // texture creation
 
     if (isVideoTexture(texture)) {
-      const video = texture.source;
+      const video = texture.source.data;
       const videoFrame = new VideoFrame(video);
 
       (textureDescriptorGPU.size as GPUExtent3DDictStrict).width = videoFrame.displayWidth;
@@ -317,7 +317,9 @@ export class BackendTextures {
     } else if (isCubeTexture(texture)) {
       this._copyCubeMapToTexture(options.images, textureData.texture, textureDescriptorGPU, texture.flipY);
     } else if (isVideoTexture(texture)) {
-      textureData.externalTexture = texture.source;
+      const video = texture.source.data;
+
+      textureData.externalTexture = video;
     } else {
       this._copyImageToTexture(options.image, textureData.texture, textureDescriptorGPU, 0, texture.flipY);
     }
@@ -325,6 +327,8 @@ export class BackendTextures {
     //
 
     textureData.version = texture.version;
+
+    if (texture.onUpdate) texture.onUpdate(texture);
   }
 
   async copyTextureToBuffer(texture: Texture, x: number, y: number, width: number, height: number) {

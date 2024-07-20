@@ -1,9 +1,9 @@
 import { EventDispatcher } from '@modules/renderer/engine/engine.js';
 import { NodeTypeOption, NodeUpdateType } from './constants.ts';
 import { getCacheKey, getNodeChildren } from './NodeUtils.js';
+import { generateUuid } from '../../math/MathUtils.ts';
 import NodeBuilder from '@modules/renderer/engine/nodes/core/NodeBuilder.js';
 import NodeFrame from '@modules/renderer/engine/nodes/core/NodeFrame.js';
-import { v4 } from 'uuid';
 
 let _nodeId = 0;
 
@@ -26,7 +26,7 @@ class Node {
     this.updateType = NodeUpdateType.NONE;
     this.updateBeforeType = NodeUpdateType.NONE;
 
-    this.uuid = v4();
+    this.uuid = generateUuid();
 
     this.version = 0;
 

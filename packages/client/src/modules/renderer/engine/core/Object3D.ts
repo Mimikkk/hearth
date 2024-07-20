@@ -17,7 +17,6 @@ import type { Vector2 } from '../math/Vector2.js';
 import { Box3 } from '@modules/renderer/engine/math/Box3.js';
 import { Renderer } from '../renderers/webgpu/Renderer.js';
 import { throttle } from 'lodash-es';
-import { v4 } from 'uuid';
 
 let _object3DId = 0;
 
@@ -94,7 +93,7 @@ export class Object3D<EventMap extends Object3DEventMap = any> {
 
   constructor() {
     this.id = _object3DId++;
-    this.uuid = v4();
+    this.uuid = MathUtils.generateUuid();
 
     this.name = '';
     this.type = 'Object3D';
