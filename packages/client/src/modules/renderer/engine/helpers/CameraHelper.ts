@@ -11,6 +11,13 @@ import { OrthographicCamera } from '@modules/renderer/engine/cameras/Orthographi
 const _vector = /*@__PURE__*/ new Vector3();
 const _camera = /*@__PURE__*/ new Camera();
 
+/**
+ *  - shows frustum, line of sight and up of the camera
+ *  - suitable for fast updates
+ *  - based on frustum visualization in lightgl.js shadowmap example
+ *    https://github.com/evanw/lightgl.js/blob/master/tests/shadowmap.html
+ */
+
 export class CameraHelper extends LineSegments {
   camera: Camera;
   pointMap: Record<string, number[]>;
@@ -199,33 +206,41 @@ export class CameraHelper extends LineSegments {
     const geometry = this.geometry;
     const pointMap = this.pointMap;
 
-    const w = 1;
-    const h = 1;
+    const w = 1,
+      h = 1;
+
+    // we need just camera projection matrix inverse
+    // world matrix must be identity
 
     _camera.projectionMatrixInverse.copy(this.camera.projectionMatrixInverse);
 
     // center / target
+
     setPoint('c', pointMap, geometry, _camera, 0, 0, -1);
     setPoint('t', pointMap, geometry, _camera, 0, 0, 1);
 
     // near
+
     setPoint('n1', pointMap, geometry, _camera, -w, -h, -1);
     setPoint('n2', pointMap, geometry, _camera, w, -h, -1);
     setPoint('n3', pointMap, geometry, _camera, -w, h, -1);
     setPoint('n4', pointMap, geometry, _camera, w, h, -1);
 
     // far
+
     setPoint('f1', pointMap, geometry, _camera, -w, -h, 1);
     setPoint('f2', pointMap, geometry, _camera, w, -h, 1);
     setPoint('f3', pointMap, geometry, _camera, -w, h, 1);
     setPoint('f4', pointMap, geometry, _camera, w, h, 1);
 
     // up
+
     setPoint('u1', pointMap, geometry, _camera, w * 0.7, h * 1.1, -1);
     setPoint('u2', pointMap, geometry, _camera, -w * 0.7, h * 1.1, -1);
     setPoint('u3', pointMap, geometry, _camera, 0, h * 2, -1);
 
     // cross
+
     setPoint('cf1', pointMap, geometry, _camera, -w, 0, 1);
     setPoint('cf2', pointMap, geometry, _camera, w, 0, 1);
     setPoint('cf3', pointMap, geometry, _camera, 0, -h, 1);

@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { Frustum_ } from './Frustum.ts';
+import { Frustum } from 'three';
+import { Frustum as Fru2, Frustum_ } from './Frustum.ts';
 import { Plane_ } from './Plane.ts';
 import { Vec3 } from './Vector3.ts';
 import { Matrix4 } from './Matrix4.ts';
@@ -10,6 +11,77 @@ import { Mesh } from '@modules/renderer/engine/objects/Mesh.js';
 import { BoxGeometry } from '@modules/renderer/engine/geometries/BoxGeometry.js';
 
 describe('Maths - Frustum', () => {
+  it.only('Constants', () => {
+    const matrix = new Matrix4().makePerspective(-1, 1, 1, -1, 1, 100);
+    let a = new Frustum().setFromProjectionMatrix(matrix);
+
+    expect(!a.intersectsSphere(Sphere_.create(0, 0, 0, 0))).toBe(true);
+    expect(!a.intersectsSphere(Sphere_.create(0, 0, 0, 0.9))).toBe(true);
+    expect(a.intersectsSphere(Sphere_.create(0, 0, 0, 1.1))).toBe(true);
+    expect(a.intersectsSphere(Sphere_.create(0, 0, -50, 0))).toBe(true);
+    expect(a.intersectsSphere(Sphere_.create(0, 0, -1.001, 0))).toBe(true);
+    expect(a.intersectsSphere(Sphere_.create(-1, -1, -1.001, 0))).toBe(true);
+    expect(!a.intersectsSphere(Sphere_.create(-1.1, -1.1, -1.001, 0))).toBe(true);
+    expect(a.intersectsSphere(Sphere_.create(-1.1, -1.1, -1.001, 0.5))).toBe(true);
+    expect(a.intersectsSphere(Sphere_.create(1, 1, -1.001, 0))).toBe(true);
+    expect(!a.intersectsSphere(Sphere_.create(1.1, 1.1, -1.001, 0))).toBe(true);
+    expect(a.intersectsSphere(Sphere_.create(1.1, 1.1, -1.001, 0.5))).toBe(true);
+    expect(a.intersectsSphere(Sphere_.create(0, 0, -99.999, 0))).toBe(true);
+    expect(a.intersectsSphere(Sphere_.create(-99.999, -99.999, -99.999, 0))).toBe(true);
+    expect(!a.intersectsSphere(Sphere_.create(-100.1, -100.1, -100.1, 0))).toBe(true);
+    expect(a.intersectsSphere(Sphere_.create(-100.1, -100.1, -100.1, 0.5))).toBe(true);
+    expect(a.intersectsSphere(Sphere_.create(99.999, 99.999, -99.999, 0))).toBe(true);
+    expect(!a.intersectsSphere(Sphere_.create(100.1, 100.1, -100.1, 0))).toBe(true);
+    expect(a.intersectsSphere(Sphere_.create(100.1, 100.1, -100.1, 0.2))).toBe(true);
+    expect(!a.intersectsSphere(Sphere_.create(0, 0, -101, 0))).toBe(true);
+    expect(a.intersectsSphere(Sphere_.create(0, 0, -101, 1.1))).toBe(true);
+    a = new Fru2().setFromProjectionMatrix(matrix);
+
+    expect(!a.intersectsSphere(Sphere_.create(0, 0, 0, 0))).toBe(true);
+    expect(!a.intersectsSphere(Sphere_.create(0, 0, 0, 0.9))).toBe(true);
+    expect(a.intersectsSphere(Sphere_.create(0, 0, 0, 1.1))).toBe(true);
+    expect(a.intersectsSphere(Sphere_.create(0, 0, -50, 0))).toBe(true);
+    expect(a.intersectsSphere(Sphere_.create(0, 0, -1.001, 0))).toBe(true);
+    expect(a.intersectsSphere(Sphere_.create(-1, -1, -1.001, 0))).toBe(true);
+    expect(!a.intersectsSphere(Sphere_.create(-1.1, -1.1, -1.001, 0))).toBe(true);
+    expect(a.intersectsSphere(Sphere_.create(-1.1, -1.1, -1.001, 0.5))).toBe(true);
+    expect(a.intersectsSphere(Sphere_.create(1, 1, -1.001, 0))).toBe(true);
+    expect(!a.intersectsSphere(Sphere_.create(1.1, 1.1, -1.001, 0))).toBe(true);
+    expect(a.intersectsSphere(Sphere_.create(1.1, 1.1, -1.001, 0.5))).toBe(true);
+    expect(a.intersectsSphere(Sphere_.create(0, 0, -99.999, 0))).toBe(true);
+    expect(a.intersectsSphere(Sphere_.create(-99.999, -99.999, -99.999, 0))).toBe(true);
+    expect(!a.intersectsSphere(Sphere_.create(-100.1, -100.1, -100.1, 0))).toBe(true);
+    expect(a.intersectsSphere(Sphere_.create(-100.1, -100.1, -100.1, 0.5))).toBe(true);
+    expect(a.intersectsSphere(Sphere_.create(99.999, 99.999, -99.999, 0))).toBe(true);
+    expect(!a.intersectsSphere(Sphere_.create(100.1, 100.1, -100.1, 0))).toBe(true);
+    expect(a.intersectsSphere(Sphere_.create(100.1, 100.1, -100.1, 0.2))).toBe(true);
+    expect(!a.intersectsSphere(Sphere_.create(0, 0, -101, 0))).toBe(true);
+    expect(a.intersectsSphere(Sphere_.create(0, 0, -101, 1.1))).toBe(true);
+
+    const frustum = Frustum_.fromProjection(m);
+
+    expect(Frustum_.intersectsSphere(frustum, Sphere_.create(0, 0, 0, 0))).toBe(false);
+    expect(Frustum_.intersectsSphere(frustum, Sphere_.create(0, 0, 0, 0.9))).toBe(false);
+    expect(Frustum_.intersectsSphere(frustum, Sphere_.create(0, 0, 0, 1.1))).toBe(true);
+    expect(Frustum_.intersectsSphere(frustum, Sphere_.create(0, 0, -50, 0))).toBe(true);
+    expect(Frustum_.intersectsSphere(frustum, Sphere_.create(0, 0, -1.001, 0))).toBe(true);
+    expect(Frustum_.intersectsSphere(frustum, Sphere_.create(-1, -1, -1.001, 0))).toBe(true);
+    expect(Frustum_.intersectsSphere(frustum, Sphere_.create(-1.1, -1.1, -1.001, 0))).toBe(false);
+    expect(Frustum_.intersectsSphere(frustum, Sphere_.create(-1.1, -1.1, -1.001, 0.5))).toBe(true);
+    expect(Frustum_.intersectsSphere(frustum, Sphere_.create(1, 1, -1.001, 0))).toBe(true);
+    expect(Frustum_.intersectsSphere(frustum, Sphere_.create(1.1, 1.1, -1.001, 0))).toBe(false);
+    expect(Frustum_.intersectsSphere(frustum, Sphere_.create(1.1, 1.1, -1.001, 0.5))).toBe(true);
+    expect(Frustum_.intersectsSphere(frustum, Sphere_.create(0, 0, -99.999, 0))).toBe(true);
+    expect(Frustum_.intersectsSphere(frustum, Sphere_.create(-99.999, -99.999, -99.999, 0))).toBe(true);
+    expect(Frustum_.intersectsSphere(frustum, Sphere_.create(-100.1, -100.1, -100.1, 0))).toBe(false);
+    expect(Frustum_.intersectsSphere(frustum, Sphere_.create(-100.1, -100.1, -100.1, 0.5))).toBe(true);
+    expect(Frustum_.intersectsSphere(frustum, Sphere_.create(99.999, 99.999, -99.999, 0))).toBe(true);
+    expect(Frustum_.intersectsSphere(frustum, Sphere_.create(100.1, 100.1, -100.1, 0))).toBe(false);
+    expect(Frustum_.intersectsSphere(frustum, Sphere_.create(100.1, 100.1, -100.1, 0.2))).toBe(true);
+    expect(Frustum_.intersectsSphere(frustum, Sphere_.create(0, 0, -101, 0))).toBe(false);
+    expect(Frustum_.intersectsSphere(frustum, Sphere_.create(0, 0, -101, 1.1))).toBe(true);
+  });
+
   it('Instancing', () => {
     let a = Frustum_.empty();
 
@@ -119,28 +191,30 @@ describe('Maths - Frustum', () => {
     expect(Frustum_.containsVec(frustum, Vec3.create(0, 0, -101))).toBe(false);
   });
 
-  it.only('fromProjection/intersectsSphere', () => {
-    const webgpu = { bounds: { bottom: 0, top: 1, left: 1, right: 0 }, near: 1, far: 100 };
-    const {
-      bounds: { bottom, top, left, right },
-      near,
-      far,
-    } = webgpu;
+  it('fromProjection/intersectsSphere', () => {
+    const mat = new Matrix4().makePerspective(-1, 1, 1, -1, 1, 100);
+    const frustum = Frustum_.fromProjection(mat);
 
-    const matrix = new Matrix4().makePerspective(left, right, top, bottom, near, far);
-    const frustum = Frustum_.fromProjection(matrix);
-
-    const point = (x: number, y: number, z: number) => Sphere_.create(x, y, z, 0);
-
-    const exterior = [point(0, 0, 0)];
-    for (const point of exterior) {
-      expect(Frustum_.intersectsSphere(frustum, point)).toBe(false);
-    }
-
-    const interior = [point(0, 0, 0)];
-    for (const point of interior) {
-      expect(Frustum_.intersectsSphere(frustum, point)).toBe(false);
-    }
+    expect(Frustum_.intersectsSphere(frustum, Sphere_.create(0, 0, 0, 0))).toBe(false);
+    expect(Frustum_.intersectsSphere(frustum, Sphere_.create(0, 0, 0, 0.9))).toBe(false);
+    expect(Frustum_.intersectsSphere(frustum, Sphere_.create(0, 0, 0, 1.1))).toBe(true);
+    expect(Frustum_.intersectsSphere(frustum, Sphere_.create(0, 0, -50, 0))).toBe(true);
+    expect(Frustum_.intersectsSphere(frustum, Sphere_.create(0, 0, -1.001, 0))).toBe(true);
+    expect(Frustum_.intersectsSphere(frustum, Sphere_.create(-1, -1, -1.001, 0))).toBe(true);
+    expect(Frustum_.intersectsSphere(frustum, Sphere_.create(-1.1, -1.1, -1.001, 0))).toBe(false);
+    expect(Frustum_.intersectsSphere(frustum, Sphere_.create(-1.1, -1.1, -1.001, 0.5))).toBe(true);
+    expect(Frustum_.intersectsSphere(frustum, Sphere_.create(1, 1, -1.001, 0))).toBe(true);
+    expect(Frustum_.intersectsSphere(frustum, Sphere_.create(1.1, 1.1, -1.001, 0))).toBe(false);
+    expect(Frustum_.intersectsSphere(frustum, Sphere_.create(1.1, 1.1, -1.001, 0.5))).toBe(true);
+    expect(Frustum_.intersectsSphere(frustum, Sphere_.create(0, 0, -99.999, 0))).toBe(true);
+    expect(Frustum_.intersectsSphere(frustum, Sphere_.create(-99.999, -99.999, -99.999, 0))).toBe(true);
+    expect(Frustum_.intersectsSphere(frustum, Sphere_.create(-100.1, -100.1, -100.1, 0))).toBe(false);
+    expect(Frustum_.intersectsSphere(frustum, Sphere_.create(-100.1, -100.1, -100.1, 0.5))).toBe(true);
+    expect(Frustum_.intersectsSphere(frustum, Sphere_.create(99.999, 99.999, -99.999, 0))).toBe(true);
+    expect(Frustum_.intersectsSphere(frustum, Sphere_.create(100.1, 100.1, -100.1, 0))).toBe(false);
+    expect(Frustum_.intersectsSphere(frustum, Sphere_.create(100.1, 100.1, -100.1, 0.2))).toBe(true);
+    expect(Frustum_.intersectsSphere(frustum, Sphere_.create(0, 0, -101, 0))).toBe(false);
+    expect(Frustum_.intersectsSphere(frustum, Sphere_.create(0, 0, -101, 1.1))).toBe(true);
   });
 
   it('intersectsObject', () => {

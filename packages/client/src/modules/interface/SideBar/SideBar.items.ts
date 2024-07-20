@@ -125,8 +125,7 @@ export const SideBarItems: AccordionItem[] = [
     title: 'Cameras & Rendering',
     icon: 'BsCamera',
     children: [
-      { id: Example.Camera.Frustum, title: 'Camera Frustum' },
-      { id: Example.Camera.LogarithmicDepthBuffer, title: 'Camera Logarithmic Depth Buffer' },
+      { id: Example.CameraLogarithmicDepthBuffer, title: 'Camera Logarithmic Depth Buffer' },
       { id: Example.DepthTexture, title: 'Depth Texture', maintenance: true },
       { id: Example.Equirectangular, title: 'Equirectangular' },
       { id: Example.MultipleRenderTargets, title: 'Multiple Render Targets', maintenance: true },

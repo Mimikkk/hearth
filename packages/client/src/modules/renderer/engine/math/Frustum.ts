@@ -165,7 +165,7 @@ export class Frustum {
 }
 
 export interface Frustum_ {
-  planes: [right: Plane_, left: Plane_, bottom: Plane_, top: Plane_, far: Plane_, near: Plane_];
+  planes: [Plane_, Plane_, Plane_, Plane_, Plane_, Plane_];
 }
 
 export namespace Frustum_ {
