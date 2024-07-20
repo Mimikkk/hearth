@@ -164,7 +164,7 @@ export class TeapotGeometry extends BufferGeometry {
     const vsdir = new Vec3();
     const vtdir = new Vec3();
 
-    const mst = ms.clone();
+    const mst = ms.from();
     mst.transpose();
 
     // internal function: test if triangle has any matching vertices;
@@ -230,8 +230,8 @@ export class TeapotGeometry extends BufferGeometry {
 
           gmx.set(g[0], g[1], g[2], g[3], g[4], g[5], g[6], g[7], g[8], g[9], g[10], g[11], g[12], g[13], g[14], g[15]);
 
-          tmtx.multiplyMatrices(gmx, ms);
-          mgm[i].multiplyMatrices(mst, tmtx);
+          tmtx.asMul(gmx, ms);
+          mgm[i].asMul(mst, tmtx);
         }
 
         // step along, get points, and output

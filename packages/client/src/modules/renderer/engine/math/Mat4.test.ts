@@ -242,7 +242,7 @@ describe('Math - Mat4', () => {
     const a = Mat4.identity();
     const s = Vec3.new(1, 2, 3);
 
-    expect(a.scale(s)).toBe(a);
+    expect(a.mulVec(s)).toBe(a);
     expect(a.elements).toEqual([1, 0, 0, 0, 0, 2, 0, 0, 0, 0, 3, 0, 0, 0, 0, 1]);
   });
 
@@ -271,8 +271,8 @@ describe('Math - Mat4', () => {
   });
 
   it('extractRotation', () => {
-    const m = Mat4.identity().scale(Vec3.new(1, 2, 3));
-    const r = Mat4.identity().extractRotation(m);
+    const m = Mat4.identity().mulVec(Vec3.new(1, 2, 3));
+    const r = Mat4.identity().fromMat4Rotation(m);
 
     expect(r).toEqual(Mat4.identity());
   });

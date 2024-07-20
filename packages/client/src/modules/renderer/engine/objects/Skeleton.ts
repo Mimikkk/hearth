@@ -58,7 +58,7 @@ export class Skeleton {
       const inverse = new Mat4();
 
       if (this.bones[i]) {
-        inverse.copy(this.bones[i].matrixWorld).invert();
+        inverse.clone(this.bones[i].matrixWorld).invert();
       }
 
       this.boneInverses.push(inverse);
@@ -72,7 +72,7 @@ export class Skeleton {
       const bone = this.bones[i];
 
       if (bone) {
-        bone.matrixWorld.copy(this.boneInverses[i]).invert();
+        bone.matrixWorld.clone(this.boneInverses[i]).invert();
       }
     }
 
@@ -85,10 +85,10 @@ export class Skeleton {
 
       if (bone) {
         if (isBone(bone.parent)) {
-          bone.matrix.copy(bone.parent.matrixWorld).invert();
-          bone.matrix.multiply(bone.matrixWorld);
+          bone.matrix.clone(bone.parent.matrixWorld).invert();
+          bone.matrix.mul(bone.matrixWorld);
         } else {
-          bone.matrix.copy(bone.matrixWorld);
+          bone.matrix.clone(bone.matrixWorld);
         }
 
         bone.matrix.decompose(bone.position, bone.quaternion, bone.scale);
@@ -109,7 +109,7 @@ export class Skeleton {
 
       const matrix = bones[i] ? bones[i].matrixWorld : _identityMatrix;
 
-      _offsetMatrix.multiplyMatrices(matrix, boneInverses[i]);
+      _offsetMatrix.asMul(matrix, boneInverses[i]);
       _offsetMatrix.intoArray(boneMatrices as never as number[], i * 16);
     }
 

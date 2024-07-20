@@ -374,7 +374,7 @@ export class Renderer {
 
     //
 
-    _projScreenMatrix.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse);
+    _projScreenMatrix.asMul(camera.projectionMatrix, camera.matrixWorldInverse);
     _frustum.setFromProjectionMatrix(_projScreenMatrix, coordinateSystem);
 
     const renderList = this._renderLists.get(scene, camera);
@@ -951,7 +951,7 @@ export class Renderer {
 
     //
 
-    object.modelViewMatrix.multiplyMatrices(camera.matrixWorldInverse, object.matrixWorld);
+    object.modelViewMatrix.asMul(camera.matrixWorldInverse, object.matrixWorld);
     object.normalMatrix.getNormalMatrix(object.modelViewMatrix);
 
     //

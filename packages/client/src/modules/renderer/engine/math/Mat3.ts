@@ -13,7 +13,7 @@ export interface Matrix {
   clone(): Matrix;
 }
 
-export class Mat3 implements Matrix {
+export class Mat3 {
   declare ['constructor']: typeof Mat3;
   declare isMat3: true;
 
@@ -115,14 +115,14 @@ export class Mat3 implements Matrix {
   }
 
   multiply(matrix: Mat3): Mat3 {
-    return this.multiplyMatrices(this, matrix);
+    return this.asMul(this, matrix);
   }
 
   premultiply(matrix: Mat3): Mat3 {
-    return this.multiplyMatrices(matrix, this);
+    return this.asMul(matrix, this);
   }
 
-  multiplyMatrices(a: Mat3, b: Mat3): Mat3 {
+  asMul(a: Mat3, b: Mat3): Mat3 {
     const ae = a.elements;
     const be = b.elements;
     const te = this.elements;

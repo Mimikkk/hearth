@@ -157,7 +157,7 @@ export class InstancedMesh extends Mesh {
 
       this.getMatrixAt(instanceId, _instanceLocalMatrix);
 
-      _instanceWorldMatrix.multiplyMatrices(matrixWorld, _instanceLocalMatrix);
+      _instanceWorldMatrix.asMul(matrixWorld, _instanceLocalMatrix);
 
       // the mesh represents this single instance
 

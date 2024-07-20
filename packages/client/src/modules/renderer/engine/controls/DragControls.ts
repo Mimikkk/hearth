@@ -184,7 +184,7 @@ class DragControls {
         if (_raycaster.ray.intersectPlane(_plane, _intersection)) {
           if (scope.mode === 'translate') {
             //@ts-expect-error
-            _inverseMatrix.copy(_selected.parent.matrixWorld).invert();
+            _inverseMatrix.clone(_selected.parent.matrixWorld).invert();
             //@ts-expect-error
             _offset.from(_intersection).sub(_worldPosition.fromMat4Position(_selected.matrixWorld));
           } else if (scope.mode === 'rotate') {

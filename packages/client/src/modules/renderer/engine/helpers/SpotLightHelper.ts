@@ -58,12 +58,12 @@ export class SpotLightHelper extends Object3D {
     if (this.parent) {
       this.parent.updateWorldMatrix(true, false);
 
-      this.matrix.copy(this.parent.matrixWorld).invert().multiply(this.light.matrixWorld);
+      this.matrix.clone(this.parent.matrixWorld).invert().mul(this.light.matrixWorld);
     } else {
-      this.matrix.copy(this.light.matrixWorld);
+      this.matrix.clone(this.light.matrixWorld);
     }
 
-    this.matrixWorld.copy(this.light.matrixWorld);
+    this.matrixWorld.clone(this.light.matrixWorld);
 
     const coneLength = this.light.distance ? this.light.distance : 1000;
     const coneWidth = coneLength * Math.tan(this.light.angle);

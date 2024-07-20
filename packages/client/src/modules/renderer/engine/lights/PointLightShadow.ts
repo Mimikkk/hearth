@@ -88,11 +88,13 @@ export class PointLightShadow extends LightShadow<PerspectiveCamera> {
     camera.lookAt(_lookTarget);
     camera.updateMatrixWorld();
 
-    shadowMatrix.makeTranslation(-_lightPositionWorld.x, -_lightPositionWorld.y, -_lightPositionWorld.z);
+    shadowMatrix.asTranslation(_update.set(-_lightPositionWorld.x, -_lightPositionWorld.y, -_lightPositionWorld.z));
 
-    _projScreenMatrix.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse);
+    _projScreenMatrix.asMul(camera.projectionMatrix, camera.matrixWorldInverse);
     this._frustum.setFromProjectionMatrix(_projScreenMatrix);
     return this;
   }
 }
 PointLightShadow.prototype.isPointLightShadow = true;
+
+const _update = Vec3.new();

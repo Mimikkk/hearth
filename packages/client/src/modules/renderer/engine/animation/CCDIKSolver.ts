@@ -273,7 +273,7 @@ export class CCDIKHelper extends Object3D {
     this.root = mesh;
     this.iks = iks;
 
-    this.matrix.copy(mesh.matrixWorld);
+    this.matrix.clone(mesh.matrixWorld);
     this.matrixAutoUpdate = false;
 
     this.sphereGeometry = new SphereGeometry(sphereSize, 16, 8);
@@ -321,7 +321,7 @@ export class CCDIKHelper extends Object3D {
       const iks = this.iks;
       const bones = (mesh as unknown as { skeleton: Skeleton }).skeleton.bones;
 
-      _matrix.copy(mesh.matrixWorld).invert();
+      _matrix.clone(mesh.matrixWorld).invert();
 
       for (let i = 0, il = iks.length; i < il; i++) {
         const ik = iks[i];
@@ -360,7 +360,7 @@ export class CCDIKHelper extends Object3D {
       }
     }
 
-    this.matrix.copy(mesh.matrixWorld);
+    this.matrix.clone(mesh.matrixWorld);
 
     return super.updateMatrixWorld(force);
   }

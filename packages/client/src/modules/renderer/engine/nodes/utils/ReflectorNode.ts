@@ -119,7 +119,7 @@ class ReflectorNode extends TextureNode {
     _reflectorWorldPosition.fromMat4Position(target.matrixWorld);
     _cameraWorldPosition.fromMat4Position(camera.matrixWorld);
 
-    _rotationMatrix.extractRotation(target.matrixWorld);
+    _rotationMatrix.fromMat4Rotation(target.matrixWorld);
 
     _normal.set(0, 0, 1);
     _normal.applyMat4(_rotationMatrix);
@@ -133,7 +133,7 @@ class ReflectorNode extends TextureNode {
     _view.reflect(_normal).negate();
     _view.add(_reflectorWorldPosition);
 
-    _rotationMatrix.extractRotation(camera.matrixWorld);
+    _rotationMatrix.fromMat4Rotation(camera.matrixWorld);
 
     _lookAtPosition.set(0, 0, -1);
     _lookAtPosition.applyMat4(_rotationMatrix);

@@ -70,17 +70,17 @@ export class SkeletonHelper extends LineSegments {
     const geometry = this.geometry;
     const position = geometry.getAttribute('position');
 
-    _matrixWorldInv.copy(this.root.matrixWorld).invert();
+    _matrixWorldInv.clone(this.root.matrixWorld).invert();
 
     for (let i = 0, j = 0; i < bones.length; i++) {
       const bone = bones[i];
 
       if (bone.parent instanceof Bone) {
-        _boneMatrix.multiplyMatrices(_matrixWorldInv, bone.matrixWorld);
+        _boneMatrix.asMul(_matrixWorldInv, bone.matrixWorld);
         _vector.fromMat4Position(_boneMatrix);
         position.setXYZ(j, _vector.x, _vector.y, _vector.z);
 
-        _boneMatrix.multiplyMatrices(_matrixWorldInv, bone.parent.matrixWorld);
+        _boneMatrix.asMul(_matrixWorldInv, bone.parent.matrixWorld);
         _vector.fromMat4Position(_boneMatrix);
         position.setXYZ(j + 1, _vector.x, _vector.y, _vector.z);
 

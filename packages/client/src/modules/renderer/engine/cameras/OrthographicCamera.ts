@@ -112,9 +112,9 @@ export class OrthographicCamera extends Camera {
       bottom = top - scaleH * this.view.height;
     }
 
-    this.projectionMatrix.makeOrthographic(left, right, top, bottom, this.near, this.far, this.coordinateSystem);
+    this.projectionMatrix.asOrthographic(left, right, top, bottom, this.near, this.far, this.coordinateSystem);
 
-    this.projectionMatrixInverse.copy(this.projectionMatrix).invert();
+    this.projectionMatrixInverse.clone(this.projectionMatrix).invert();
     return this;
   }
 }

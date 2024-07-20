@@ -70,8 +70,8 @@ async function init() {
   box2 = new Engine.InstancedMesh(geometryBox, materialBoxInner, count);
 
   for (let i = 0; i < count; i++) {
-    box.setMatrixAt(i, mat4.identity().setPosition(positions[i]));
-    box2.setMatrixAt(i, mat4.scale(0.996).setPosition(positions[i]));
+    box.setMatrixAt(i, mat4.asIdentity().setPosition(positions[i]));
+    box2.setMatrixAt(i, mat4.mulVec(0.996).setPosition(positions[i]));
   }
 
   scene.add(box, box2);

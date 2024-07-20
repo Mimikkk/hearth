@@ -657,7 +657,7 @@ export class BatchedMesh extends Mesh {
       _mesh.geometry.setDrawRange(drawRange.start, drawRange.count);
 
       // ge the intersects
-      this.getMatrixAt(i, _mesh.matrixWorld)!.premultiply(matrixWorld);
+      this.getMatrixAt(i, _mesh.matrixWorld)!.premul(matrixWorld);
       this.getBoundingBoxAt(i, _mesh.geometry.boundingBox);
       this.getBoundingSphereAt(i, _mesh.geometry.boundingSphere);
       _mesh.raycast(raycaster, _batchIntersects);
@@ -753,14 +753,14 @@ export class BatchedMesh extends Mesh {
 
     // prepare the frustum in the local frame
     if (perObjectFrustumCulled) {
-      _projScreenMatrix.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse).multiply(this.matrixWorld);
+      _projScreenMatrix.asMul(camera.projectionMatrix, camera.matrixWorldInverse).mul(this.matrixWorld);
       _frustum.setFromProjectionMatrix(_projScreenMatrix, renderer.coordinateSystem);
     }
 
     let count = 0;
     if (this.sortObjects) {
       // get the camera position in the local frame
-      _invMatrixWorld.copy(this.matrixWorld).invert();
+      _invMatrixWorld.clone(this.matrixWorld).invert();
       _vector.fromMat4Position(camera.matrixWorld).applyMat4(_invMatrixWorld);
 
       for (let i = 0, l = visibility.length; i < l; i++) {
