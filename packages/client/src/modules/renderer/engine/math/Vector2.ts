@@ -377,7 +377,7 @@ export class Vector2 implements IVector2 {
 
 Vector2.prototype.isVector2 = true;
 
-export class CVec2 {
+export class CVec2 implements IVector2 {
   constructor(
     public x: number,
     public y: number,
@@ -395,12 +395,8 @@ export class CVec2 {
     return CVec2.new(0, 0);
   }
 
-  static clone({ x, y }: Const<CVec2>, into: CVec2 = CVec2.empty()): CVec2 {
+  static clone({ x, y }: Const<IVector2>, into: CVec2 = CVec2.empty()): CVec2 {
     return into.set(x, y);
-  }
-
-  static is(vec: any): vec is CVec2 {
-    return vec instanceof Vector2;
   }
 
   static fromAttribute(attribute: BufferAttribute, index: number, into: CVec2 = CVec2.empty()): CVec2 {
@@ -411,14 +407,13 @@ export class CVec2 {
     return into.fillArray(array, offset);
   }
 
-  fill(from: Const<CVec2>): this {
+  fill(from: Const<IVector2>): this {
     return this.set(from.x, from.y);
   }
 
   fillAttribute(attribute: Const<BufferAttribute>, index: number): this {
     return this.set(attribute.getX(index), attribute.getY(index));
   }
-
   intoAttribute(attribute: BufferAttribute, index: number): this {
     attribute.setXY(index, this.x, this.y);
     return this;
@@ -427,7 +422,6 @@ export class CVec2 {
   fillArray(array: Const<number[]>, offset: number = 0): this {
     return this.set(array[offset], array[offset + 1]);
   }
-
   intoArray(array: number[] = [], offset: number = 0): number[] {
     array[offset] = this.x;
     array[offset + 1] = this.y;
@@ -460,7 +454,7 @@ export class CVec2 {
     return this.set(this.x * scalar, this.y * scalar);
   }
 
-  div({ x, y }: Const<CVec2>): this {
+  div({ x, y }: Const<IVector2>): this {
     return this.set(this.x / x, this.y / y);
   }
 
@@ -468,7 +462,7 @@ export class CVec2 {
     return this.set(this.x / scalar, this.y / scalar);
   }
 
-  mul({ x, y }: Const<CVec2>): this {
+  mul({ x, y }: Const<IVector2>): this {
     return this.set(this.x * x, this.y * y);
   }
 
@@ -476,7 +470,7 @@ export class CVec2 {
     return this.set(this.x * scalar, this.y * scalar);
   }
 
-  add({ x, y }: Const<CVec2>): this {
+  add({ x, y }: Const<IVector2>): this {
     return this.set(this.x + x, this.y + y);
   }
 
@@ -484,11 +478,11 @@ export class CVec2 {
     return this.set(this.x + scalar, this.y + scalar);
   }
 
-  addScaled({ x, y }: Const<CVec2>, scalar: number): this {
+  addScaled({ x, y }: Const<IVector2>, scalar: number): this {
     return this.set(this.x + x * scalar, this.y + y * scalar);
   }
 
-  sub({ x, y }: Const<CVec2>): this {
+  sub({ x, y }: Const<IVector2>): this {
     return this.set(this.x - x, this.y - y);
   }
 
@@ -496,23 +490,23 @@ export class CVec2 {
     return this.set(this.x - scalar, this.y - scalar);
   }
 
-  subScaled({ x, y }: Const<CVec2>, scalar: number): this {
+  subScaled({ x, y }: Const<IVector2>, scalar: number): this {
     return this.set(this.x - x * scalar, this.y - y * scalar);
   }
 
-  min({ x, y }: Const<CVec2>): this {
+  min({ x, y }: Const<IVector2>): this {
     return this.set(Math.min(this.x, x), Math.min(this.y, y));
   }
 
-  max({ x, y }: Const<CVec2>): this {
+  max({ x, y }: Const<IVector2>): this {
     return this.set(Math.max(this.x, x), Math.max(this.y, y));
   }
 
-  equals({ x, y }: Const<CVec2>): boolean {
+  equals({ x, y }: Const<IVector2>): boolean {
     return this.x === x && this.y === y;
   }
 
-  clamp(min: Const<CVec2>, max: Const<CVec2>): this {
+  clamp(min: Const<IVector2>, max: Const<IVector2>): this {
     return this.set(clamp(this.x, min.x, max.x), clamp(this.y, min.y, max.y));
   }
 
@@ -544,11 +538,11 @@ export class CVec2 {
     return this.set(-this.x, -this.y);
   }
 
-  dot({ x, y }: Const<CVec2>): number {
+  dot({ x, y }: Const<IVector2>): number {
     return this.x * x + this.y * y;
   }
 
-  cross({ x, y }: Const<CVec2>): number {
+  cross({ x, y }: Const<IVector2>): number {
     return this.x * y - this.y * x;
   }
 
@@ -572,24 +566,24 @@ export class CVec2 {
     return Math.atan2(-this.y, -this.x) + Math.PI;
   }
 
-  angleTo(to: Const<CVec2>): number {
-    const denominator = Math.sqrt(this.euclideanSq() * to.euclideanSq());
+  angleTo({ x, y }: Const<IVector2>): number {
+    const denominator = Math.sqrt(this.euclideanSq() * (x * x + y * y));
     if (denominator === 0) return Math.PI / 2;
-    const theta = this.dot(to) / denominator;
+    const theta = this.dot({ x, y }) / denominator;
     return Math.acos(clamp(theta, -1, 1));
   }
 
-  euclideanSqTo({ x, y }: Const<CVec2>): number {
-    const dx = this.x - x;
-    const dy = this.y - y;
+  euclideanSqTo({ x, y }: Const<IVector2>): number {
+    const dx = this.x - x,
+      dy = this.y - y;
     return dx * dx + dy * dy;
   }
 
-  euclideanTo(to: Const<CVec2>): number {
-    return Math.sqrt(this.euclideanSqTo(to));
+  euclideanTo({ x, y }: Const<IVector2>): number {
+    return Math.sqrt(this.euclideanSqTo({ x, y }));
   }
 
-  manhattanTo({ x, y }: Const<CVec2>): number {
+  manhattanTo({ x, y }: Const<IVector2>): number {
     return Math.abs(this.x - x) + Math.abs(this.y - y);
   }
 
@@ -597,17 +591,17 @@ export class CVec2 {
     return this.normalize().scale(length);
   }
 
-  lerp(to: Const<CVec2>, step: number): this {
-    return this.addScaled(to, step);
+  lerp({ x, y }: Const<IVector2>, step: number): this {
+    return this.addScaled({ x, y }, step);
   }
 
-  rotateAround(center: Const<CVec2>, angle: number): this {
+  rotateAround(center: Const<IVector2>, angle: number): this {
     const cos = Math.cos(angle);
     const sin = Math.sin(angle);
-    const x = this.x - center.x;
-    const y = this.y - center.y;
+    const offsetX = this.x - center.x;
+    const offsetY = this.y - center.y;
 
-    return this.set(x * cos - y * sin + center.x, x * sin + y * cos + center.y);
+    return this.set(offsetX * cos - offsetY * sin + center.x, offsetX * sin + offsetY * cos + center.y);
   }
 
   *[Symbol.iterator](): Iterator<number> {
