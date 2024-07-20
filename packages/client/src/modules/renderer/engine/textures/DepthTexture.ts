@@ -29,10 +29,6 @@ export class DepthTexture extends Texture {
     this.compareFunction = options?.compareFunction ?? null;
   }
 
-  static is(item: any): item is DepthTexture {
-    return item?.isDepthTexture === true;
-  }
-
   copy(source: this): this {
     super.copy(source);
     this.compareFunction = source.compareFunction;
@@ -40,13 +36,12 @@ export class DepthTexture extends Texture {
   }
 }
 
-DepthTexture.prototype.isDepthTexture = true;
-
 export namespace DepthTexture {
   export type Options = Omit<Texture.Options, 'format'> & {
     format?: TextureFormat.Depth | TextureFormat.DepthStencil;
     compareFunction?: DepthComparison;
   };
 }
-
 type Options = DepthTexture.Options;
+
+DepthTexture.prototype.isDepthTexture = true;

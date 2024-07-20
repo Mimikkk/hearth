@@ -20,10 +20,6 @@ export class VideoTexture extends Texture<HTMLVideoElement> {
     video.requestVideoFrameCallback(updateVideo);
   }
 
-  static is(item: any): item is VideoTexture {
-    return item?.isVideoTexture === true;
-  }
-
   clone() {
     return new this.constructor(this.image).copy(this);
   }
@@ -34,9 +30,9 @@ export class VideoTexture extends Texture<HTMLVideoElement> {
   }
 }
 
-VideoTexture.prototype.isVideoTexture = true;
-
 export namespace VideoTexture {
   export type Options = Omit<Texture.Options, 'minFilter' | 'magFilter' | 'generateMipmaps'>;
 }
 type Options = VideoTexture.Options;
+
+VideoTexture.prototype.isVideoTexture = true;

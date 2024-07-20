@@ -25,10 +25,6 @@ export class DataArrayTexture extends Texture<DataArraySource> {
       },
     );
   }
-
-  static is(item: any): item is DataArrayTexture {
-    return item?.isDataArrayTexture === true;
-  }
 }
 
 DataArrayTexture.prototype.isDataArrayTexture = true;

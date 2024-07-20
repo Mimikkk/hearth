@@ -18,6 +18,7 @@ import { v4 } from 'uuid';
 let _textureId = 0;
 
 export class Texture<T = any> {
+  declare ['constructor']: typeof Texture;
   declare isTexture: true;
   eventDispatcher = new EventDispatcher<{ dispose: {} }>();
   id: number;
@@ -88,10 +89,6 @@ export class Texture<T = any> {
     }
 
     this.configure(configuration);
-  }
-
-  static is(item: any): item is Texture {
-    return item?.isTexture === true;
   }
 
   updateMatrix(): this {

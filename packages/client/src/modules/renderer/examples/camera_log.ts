@@ -72,7 +72,7 @@ const createCameraView = async (container: HTMLDivElement, type: 'logarithmic' |
   const camera = new Engine.PerspectiveCamera(50, (screensplit * width) / height, Near, Far);
 
   const renderer = await Renderer.create({ logarithmicDepthBuffer: type === 'logarithmic' });
-  renderer.updateSize(width / 2, height);
+  renderer.setSize(width / 2, height);
 
   renderer.parameters.canvas.style.position = 'relative';
   renderer.parameters.canvas.id = `renderer_${type}`;
@@ -86,13 +86,13 @@ const updateRenderers = () => {
 
   screensplit_right = 1 - screensplit;
 
-  objects.normal.renderer.updateSize(screensplit * width, height);
+  objects.normal.renderer.setSize(screensplit * width, height);
   objects.normal.camera.aspect = (screensplit * width) / height;
   objects.normal.camera.updateProjectionMatrix();
   objects.normal.camera.setViewOffset(width, height, 0, 0, width * screensplit, height);
   objects.normal.container.style.width = screensplit * 100 + '%';
 
-  objects.logarithmic.renderer.updateSize(screensplit_right * width, height);
+  objects.logarithmic.renderer.setSize(screensplit_right * width, height);
   objects.logarithmic.camera.aspect = (screensplit_right * width) / height;
   objects.logarithmic.camera.updateProjectionMatrix();
   objects.logarithmic.camera.setViewOffset(width, height, width * screensplit, 0, width * screensplit_right, height);

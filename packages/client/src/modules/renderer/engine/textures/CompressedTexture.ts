@@ -20,10 +20,6 @@ export class CompressedTexture extends Texture<CompressedImage> {
   ) {
     super({ width, height }, { mipmaps, flipY: false, generateMipmaps: false, ...options });
   }
-
-  static is(item: any): item is CompressedTexture {
-    return item?.isCompressedTexture === true;
-  }
 }
 
 CompressedTexture.prototype.isCompressedTexture = true;

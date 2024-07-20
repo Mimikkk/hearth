@@ -227,8 +227,8 @@ async function animate() {
     if (renderer.info.render.calls % 5 === 0) {
       timestamps.innerHTML = `
 
-							Compute ${renderer.info.compute.calls} pass in ${renderer.info.compute.timestamp.toFixed(6)}ms<br>
-							Draw ${renderer.info.render.calls} pass in ${renderer.info.render.timestamp.toFixed(6)}ms`;
+							Compute ${renderer.info.compute.computeCalls} pass in ${renderer.info.compute.timestamp.toFixed(6)}ms<br>
+							Draw ${renderer.info.render.drawCalls} pass in ${renderer.info.render.timestamp.toFixed(6)}ms`;
     }
   } else {
     timestamps.innerHTML = 'Timestamp queries not supported';
