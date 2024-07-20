@@ -160,10 +160,4 @@ export const SideBarItems: AccordionItem[] = [
       { id: Example.VideoPanorama, title: 'Video Panorama' },
     ],
   },
-  {
-    id: 'physics',
-    title: 'Physics',
-    icon: 'SiAtom',
-    children: [{ id: Example.Physics.Ammo, title: 'Ammo' }],
-  },
 ];

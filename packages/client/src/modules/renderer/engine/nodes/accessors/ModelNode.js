@@ -1,7 +1,5 @@
 import Object3DNode from './Object3DNode.js';
 import { nodeImmutable } from '../shadernode/ShaderNodes.js';
-import { uniform } from '../core/UniformNode.js';
-import { Matrix4 } from '@modules/renderer/engine/math/Matrix4.ts';
 
 class ModelNode extends Object3DNode {
   static type = 'ModelNode';
@@ -28,6 +26,3 @@ export const modelWorldMatrix = nodeImmutable(ModelNode, ModelNode.WORLD_MATRIX)
 export const modelPosition = nodeImmutable(ModelNode, ModelNode.POSITION);
 export const modelScale = nodeImmutable(ModelNode, ModelNode.SCALE);
 export const modelViewPosition = nodeImmutable(ModelNode, ModelNode.VIEW_POSITION);
-export const modelWorldMatrixInverse = uniform(new Matrix4()).onObjectUpdate(({ object }, self) =>
-  self.value.copy(object.matrixWorld).invert(),
-);
