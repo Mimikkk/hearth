@@ -47,15 +47,5 @@
     @apply w-full bg-transparent text-primary-dark placeholder-primary-white;
 
     @apply focus:outline-none focus:border-transparent;
-
-    &:autofill {
-      @apply bg-transparent #{!important};
-    }
   }
-}
-input:-webkit-autofill,
-input:-webkit-autofill:hover,
-input:-webkit-autofill:focus,
-input:-webkit-autofill:active {
-  transition-delay: 9999999s;
 }
