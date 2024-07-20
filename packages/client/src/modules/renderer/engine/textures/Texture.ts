@@ -30,7 +30,6 @@ export class Texture<T = any> {
   channel: number;
   wrapS: Wrapping;
   wrapT: Wrapping;
-  wrapR: Wrapping;
   magFilter: MagnificationTextureFilter;
   minFilter: MinificationTextureFilter;
   anisotropy: number;
@@ -105,7 +104,8 @@ export class Texture<T = any> {
   }
 
   clone(): Texture<T> {
-    return new this.constructor(this.image).copy(this);
+    //@ts-expect-error
+    return new this.constructor(undefined!).copy(this);
   }
 
   copy(source: this): this {
@@ -116,7 +116,6 @@ export class Texture<T = any> {
     this.channel = source.channel;
     this.wrapS = source.wrapS;
     this.wrapT = source.wrapT;
-    this.wrapR = source.wrapR;
     this.magFilter = source.magFilter;
     this.minFilter = source.minFilter;
     this.anisotropy = source.anisotropy;
@@ -209,7 +208,6 @@ export class Texture<T = any> {
     this.channel = configuration.channel;
     this.wrapS = configuration.wrapS;
     this.wrapT = configuration.wrapT;
-    this.wrapR = configuration.wrapR;
     this.magFilter = configuration.magFilter;
     this.minFilter = configuration.minFilter;
     this.anisotropy = configuration.anisotropy;
@@ -241,7 +239,6 @@ export class Texture<T = any> {
       channel: options?.channel ?? 0,
       wrapS: options?.wrapS ?? Wrapping.ClampToEdge,
       wrapT: options?.wrapT ?? Wrapping.ClampToEdge,
-      wrapR: options?.wrapR ?? Wrapping.ClampToEdge,
       magFilter: options?.magFilter ?? MagnificationTextureFilter.Linear,
       minFilter: options?.minFilter ?? MinificationTextureFilter.LinearMipmapLinear,
       anisotropy: options?.anisotropy ?? 1,
@@ -277,7 +274,6 @@ export namespace Texture {
     channel?: number;
     wrapS?: Wrapping;
     wrapT?: Wrapping;
-    wrapR?: Wrapping;
     magFilter?: MagnificationTextureFilter;
     minFilter?: MinificationTextureFilter;
     anisotropy?: number;
@@ -308,7 +304,6 @@ export namespace Texture {
     channel: number;
     wrapS: Wrapping;
     wrapT: Wrapping;
-    wrapR: Wrapping;
     magFilter: MagnificationTextureFilter;
     minFilter: MinificationTextureFilter;
     anisotropy: number;

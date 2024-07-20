@@ -21,7 +21,6 @@ export class DepthTexture extends Texture {
           options?.format === TextureFormat.DepthStencil ? TextureDataType.UnsignedInt248 : TextureDataType.UnsignedInt,
         flipY: false,
         generateMipmaps: false,
-        format: options?.format ?? TextureFormat.Depth,
         ...options,
       },
     );

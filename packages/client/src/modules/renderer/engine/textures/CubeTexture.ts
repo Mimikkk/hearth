@@ -1,21 +1,48 @@
 import { Texture } from './Texture.js';
-import { CubeMapping } from '../constants.js';
+import {
+  ColorSpace,
+  CubeMapping,
+  DepthTextureFormat,
+  MagnificationTextureFilter,
+  Mapping,
+  MinificationTextureFilter,
+  TextureDataType,
+  TextureFormat,
+  Wrapping,
+} from '../constants.js';
 
-export type CubeImage = TexImageSource[];
-export type CubeImages = [
-  posX: CubeImage,
-  negX: CubeImage,
-  posY: CubeImage,
-  negY: CubeImage,
-  posZ: CubeImage,
-  negZ: CubeImage,
-];
-
-export class CubeTexture extends Texture<CubeImages> {
+export class CubeTexture extends Texture {
   declare isCubeTexture: true;
 
-  constructor(images: CubeImages, options?: Texture.Options) {
-    super(images, { flipY: false, mapping: CubeMapping.Reflection, ...options });
+  constructor(
+    images: (HTMLImageElement | HTMLCanvasElement | { width: number; height: number; depth: number })[],
+    mapping: CubeMapping,
+    wrapS: Wrapping,
+    wrapT: Wrapping,
+    magFilter: MagnificationTextureFilter,
+    minFilter: MinificationTextureFilter,
+    format: DepthTextureFormat | null,
+    type: TextureDataType,
+    anisotropy: number,
+    colorSpace: ColorSpace,
+  ) {
+    images = images ?? [];
+    mapping = mapping ?? CubeMapping.Reflection;
+
+    super(
+      images as never,
+      mapping as unknown as Mapping,
+      wrapS,
+      wrapT,
+      magFilter,
+      minFilter,
+      format as unknown as TextureFormat,
+      type,
+      anisotropy,
+      colorSpace,
+    );
+
+    this.flipY = false;
   }
 }
 

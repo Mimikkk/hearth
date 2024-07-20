@@ -2,8 +2,8 @@ import {
   ColorSpace,
   CompressedArrayTexture,
   CompressedCubeTexture,
-  CompressedTexture,
   CompressedTextureFormat,
+  CompressedTexture,
   Data3DTexture,
   DataTexture,
   MagnificationTextureFilter,
@@ -232,7 +232,8 @@ async function createRawTexture(container: KTX2Container) {
   } else {
     if (container.pixelDepth > 0) throw new Error('engine.KTX2Loader: Unsupported pixelDepth.');
 
-    texture = new CompressedTexture({ mipmaps, width: container.pixelWidth, height: container.pixelHeight });
+    /*@ts-expect-error*/
+    texture = new CompressedTexture(mipmaps, container.pixelWidth, container.pixelHeight);
   }
 
   /*@ts-expect-error*/
@@ -275,17 +276,14 @@ async function createTexture(
   let texture;
 
   if (container.faceCount === 6) {
-    texture = new CompressedCubeTexture(faces, { format, type: TextureDataType.UnsignedByte });
+    texture = new CompressedCubeTexture(faces, format, TextureDataType.UnsignedByte);
   } else {
     const mipmaps = faces[0].mipmaps;
 
     texture =
       container.layerCount > 1
-        ? new CompressedArrayTexture(
-            { mipmaps, width, height, depth: container.layerCount },
-            { format, type: TextureDataType.UnsignedByte },
-          )
-        : new CompressedTexture({ mipmaps, width, height }, { format, type: TextureDataType.UnsignedByte });
+        ? new CompressedArrayTexture(mipmaps, width, height, container.layerCount, format, TextureDataType.UnsignedByte)
+        : new CompressedTexture(mipmaps, width, height, format, TextureDataType.UnsignedByte);
   }
 
   texture.minFilter =

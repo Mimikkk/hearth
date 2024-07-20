@@ -1,18 +1,13 @@
 import { Texture } from './Texture.js';
-import { MagnificationTextureFilter, MinificationTextureFilter } from '../constants.js';
+import { MagnificationTextureFilter, MinificationTextureFilter, Wrapping } from '../constants.js';
 
 type DataArraySource = { data: BufferSource | null; width: number; height: number; depth: number };
 
 export class DataArrayTexture extends Texture<DataArraySource> {
   declare isDataArrayTexture: true;
+  wrapR: Wrapping;
 
-  constructor(
-    data: BufferSource | null = null,
-    width: number = 1,
-    height: number = 1,
-    depth: number = 1,
-    options?: Texture.Options,
-  ) {
+  constructor(data: BufferSource | null = null, width: number = 1, height: number = 1, depth: number = 1) {
     super(
       { data, width, height, depth },
       {
@@ -21,9 +16,10 @@ export class DataArrayTexture extends Texture<DataArraySource> {
         generateMipmaps: false,
         flipY: false,
         unpackAlignment: 1,
-        ...options,
       },
     );
+
+    this.wrapR = Wrapping.ClampToEdge;
   }
 }
 
