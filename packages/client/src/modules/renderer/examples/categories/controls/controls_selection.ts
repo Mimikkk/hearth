@@ -1,7 +1,7 @@
 import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 import { PerspectiveCamera } from '@modules/renderer/engine/cameras/PerspectiveCamera.js';
 import { Scene } from '@modules/renderer/engine/scenes/Scene.js';
-import { Color, ColorMap } from '@modules/renderer/engine/math/Color.js';
+import { Color } from '@modules/renderer/engine/math/Color.js';
 import { AmbientLight } from '@modules/renderer/engine/lights/AmbientLight.js';
 import { SpotLight } from '@modules/renderer/engine/lights/SpotLight.js';
 import { BoxGeometry } from '@modules/renderer/engine/geometries/BoxGeometry.js';
@@ -18,7 +18,6 @@ import { color } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.prim
 import { Group } from '@modules/renderer/engine/objects/Group.js';
 import { UI } from '@mimi/ui';
 import { Vec2 } from '@modules/renderer/engine/math/Vector2.js';
-import { Random } from '@modules/renderer/engine/math/random.js';
 
 const createCamera = () => {
   const camera = new PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 500);
@@ -27,13 +26,13 @@ const createCamera = () => {
 };
 const createScene = () => {
   const scene = new Scene();
-  scene.fog = new Fog(ColorMap.blue, 1, 500);
-  scene.backgroundNode = normalWorld.y.mix(color(ColorMap.white), color(ColorMap.wheat));
+  scene.fog = new Fog('blue', 1, 500);
+  scene.backgroundNode = normalWorld.y.mix(color('white'), color('wheat'));
   scene.add(new AmbientLight(0xaaaaaa));
   return scene;
 };
 const createLight = () => {
-  const light = new SpotLight(ColorMap.white, 10000);
+  const light = new SpotLight(0xffffff, 10000);
   light.position.set(0, 25, 50);
   light.angle = Math.PI / 5;
   light.castShadow = true;
@@ -54,13 +53,15 @@ const createBoxes = () => {
   const geometry = new BoxGeometry();
 
   const group = new Group();
-  const randomScale = () => Random.between(1, 3);
+  const randomScale = () => Math.random() * 2 + 1;
+  const randomAngle = () => Math.random() * 2 * Math.PI;
+  const randomColor = () => new Color(Math.random() * 0xffffff);
 
   for (let i = 0; i < 200; ++i) {
-    const box = new Mesh(geometry, new MeshLambertMaterial({ color: Random.color() }));
+    const box = new Mesh(geometry, new MeshLambertMaterial({ color: randomColor() }));
 
     box.setPosition(Math.random() * 80 - 40, Math.random() * 45 - 25, Math.random() * 45 - 25);
-    box.setRotation(Random.radian(), Random.radian(), Random.radian());
+    box.setRotation(randomAngle(), randomAngle(), randomAngle());
     box.setScale(randomScale(), randomScale(), randomScale());
 
     group.add(box);

@@ -63,8 +63,10 @@ export class UI<S extends {} = {}> {
       handler(this.state);
       this.update();
     };
+    const controller = this.ui.add({ handle }, 'handle').name(title);
 
-    this.ui.add({ handle }, 'handle').name(title);
+    this.controllers.push(controller);
+    this.update();
 
     return this;
   }

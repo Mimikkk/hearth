@@ -8,7 +8,7 @@
     "copyfiles": "^2.4.1",
     "prettier": "^3.2.5",
     "rimraf": "^5.0.5",
-    "typescript": "5.5.3",
+    "typescript": "5.4.2",
     "vitest": "^1.6.0",
     "@arktype/attest": "^0.6.2",
     "vite-node": "^1.6.0"
