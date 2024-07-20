@@ -8,8 +8,6 @@ import { Material } from '@modules/renderer/engine/materials/Material.js';
 type SortFn = (a: RenderItem, b: RenderItem) => number;
 
 const painterSortStable: SortFn = (a, b) => {
-  console.log({ a: a.groupOrder, b: b.groupOrder });
-
   if (a.groupOrder !== b.groupOrder) {
     return a.groupOrder - b.groupOrder;
   } else if (a.renderOrder !== b.renderOrder) {

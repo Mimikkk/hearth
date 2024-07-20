@@ -12,20 +12,18 @@ import {
   Scene,
   SphereGeometry,
   SpotLight,
-  Sprite,
 } from '@modules/renderer/engine/engine.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 import { float } from 'three/examples/jsm/nodes/shadernode/ShaderNode.js';
 import { UI } from '@modules/renderer/examples/utilities/UI.js';
 import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
-import { SpriteMaterialBuilder } from '@modules/renderer/engine/materials/SpriteMaterialBuilder.js';
 
 const createCamera = () => {
   const perspectiveCamera = new PerspectiveCamera(80, window.innerWidth / window.innerHeight, 0.1, 100);
   perspectiveCamera.position.set(0, 0, 3);
   perspectiveCamera.lookAt(0, 0, 0);
 
-  const frustumCamera = new OrthographicCamera(-1, 1, 1, -1, 1, 6);
+  const frustumCamera = new OrthographicCamera(-1, 1, 1, -1, 1, 5);
   frustumCamera.position.set(0, 0, -3);
   frustumCamera.lookAt(0, 0, 0);
 
@@ -61,46 +59,30 @@ const state = <{ camera: Camera }>{ camera: perspectiveCamera };
 const scene = createScene();
 const light = createLight();
 const clock = new Clock();
-const points = new Group();
 const spheres = new Group();
 
 const geometry = new SphereGeometry(0.25, 32, 24);
-
-const smb = SpriteMaterialBuilder.create({ height: 256, width: 256 }).addCircle({ radius: 128 }).addText('+');
-
-const sprites = new Group();
 const addSphere = (x: number, y: number, z: number) => {
   const material = new MeshStandardNodeMaterial({ color: Math.random() * 0xffffff });
   material.roughnessNode = float(0.8);
   material.metalnessNode = float(0.2);
 
   const mesh = new Mesh(geometry, material);
-
-  const sprite = new Sprite(smb.build());
-  sprites.add(sprite);
-
   mesh.position.set(x, y, z);
-
-  return mesh;
+  spheres.add(mesh);
 };
 
-points.add(addSphere(0, 0, 3));
-points.add(addSphere(0, 0, -3));
-points.add(addSphere(2.5, 1.5, 0));
+addSphere(0, 0, 3);
+addSphere(0, 0, -3);
 
-spheres.add(addSphere(0, 0, 0));
-spheres.add(addSphere(1, 0, 0));
-spheres.add(addSphere(0, 1, 0));
-spheres.add(addSphere(1, 1, 0));
-spheres.add(addSphere(-1, 0, 0));
-spheres.add(addSphere(0, -1, 0));
-spheres.add(addSphere(-1, -1, 0));
-spheres.add(addSphere(-1, 1, 0));
-spheres.add(addSphere(1, -1, 0));
+addSphere(0, 0, 0);
+addSphere(1, 0, 0);
+addSphere(0, 1, 0);
+addSphere(1, 1, 0);
 
 const frustumVisualizer = new CameraVisualizer(frustumCamera);
 perspectiveCamera.add(light);
-scene.add(frustumVisualizer, frustumCamera, perspectiveCamera, sprites, spheres, points);
+scene.add(frustumVisualizer, frustumCamera, perspectiveCamera, spheres);
 
 const renderer = await createRenderer(() => {
   spheres.rotateZ(clock.getDelta());
