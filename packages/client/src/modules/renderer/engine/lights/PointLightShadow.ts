@@ -80,11 +80,11 @@ export class PointLightShadow extends LightShadow<PerspectiveCamera> {
     }
 
     _lightPositionWorld.fromMat4Position(light.matrixWorld);
-    camera.position.from(_lightPositionWorld);
+    camera.position.copy(_lightPositionWorld);
 
-    _lookTarget.from(camera.position);
+    _lookTarget.copy(camera.position);
     _lookTarget.add(this._cubeDirections[viewportIndex]);
-    camera.up.from(this._cubeUps[viewportIndex]);
+    camera.up.copy(this._cubeUps[viewportIndex]);
     camera.lookAt(_lookTarget);
     camera.updateMatrixWorld();
 

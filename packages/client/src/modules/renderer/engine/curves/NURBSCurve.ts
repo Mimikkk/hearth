@@ -30,6 +30,6 @@ export class NURBSCurve extends Curve<Vec3> {
 
     const u = knots[0] + t * (knots[knots.length - 1] - knots[0]);
     const ders = NURBSUtils.calcNURBSDerivatives(degree, knots, controlPoints, u, 1);
-    return target.from(ders[1]).normalize();
+    return target.copy(ders[1]).normalize();
   }
 }

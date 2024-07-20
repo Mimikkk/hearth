@@ -234,9 +234,9 @@ export class WorldAxesVisualizer extends Object3D {
 
     this.radius = this.camera.position.distanceTo(this.center);
 
-    this.animation.position.scale(this.radius).add(this.center);
+    this.animation.position.multiplyScalar(this.radius).add(this.center);
 
-    this.dummy.position.from(this.center);
+    this.dummy.position.copy(this.center);
     this.dummy.lookAt(this.camera.position);
     Quaternion.clone_(this.dummy.quaternion, this.q1);
 
@@ -252,7 +252,7 @@ export class WorldAxesVisualizer extends Object3D {
 
     Quaternion.rotateTowards(q1, q2, step);
 
-    this.camera.position.set(0, 0, 1).applyQuaternion(q1).scale(this.radius).add(this.center);
+    this.camera.position.set(0, 0, 1).applyQuaternion(q1).multiplyScalar(this.radius).add(this.center);
     Quaternion.rotateTowards(this.camera.quaternion, this.animation.rotation, step);
 
     if (Quaternion.angleTo(q1, q2) === 0) this.animation = null;

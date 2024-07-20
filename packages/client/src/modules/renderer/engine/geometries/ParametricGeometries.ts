@@ -49,7 +49,7 @@ class TubeGeometry extends ParametricGeometry {
       position.y += cx * normal.y + cy * binormal.y;
       position.z += cx * normal.z + cy * binormal.z;
 
-      target.from(position);
+      target.copy(position);
     }
 
     super(ParametricTube, segments, segmentsRadius);
@@ -126,7 +126,7 @@ class TorusKnotGeometry extends TubeGeometry {
         const y = (1 + r * Math.cos(q * t)) * Math.sin(p * t);
         const z = r * Math.sin(q * t);
 
-        return point.set(x, y, z).scale(radius);
+        return point.set(x, y, z).multiplyScalar(radius);
       }
     }
 

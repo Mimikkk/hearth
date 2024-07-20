@@ -58,7 +58,7 @@ export class DragControls {
       if (selected) {
         if (this.configuration.mode === 'translate') {
           if (_raycaster.ray.intersectPlane(_plane, _intersection)) {
-            selected.position.from(_intersection.sub(_offset).applyMat4(_inverseMatrix));
+            selected.position.copy(_intersection.sub(_offset).applyMat4(_inverseMatrix));
           }
         } else if (this.configuration.mode === 'rotate') {
           const { x, y } = _diff.from(_location).sub(_previousPointer).scale(this.configuration.rotateSpeed);
@@ -141,7 +141,7 @@ export class DragControls {
 
             // Vec3.fillMat4Position(_world, selected!.matrixWorld);
             // Vec3.sub_(_intersection, _world, _offset);
-            _offset.from(_intersection).sub(_world.fromMat4Position(selected!.matrixWorld));
+            _offset.copy(_intersection).sub(_world.fromMat4Position(selected!.matrixWorld));
           } else if (this.configuration.mode === 'rotate') {
             Vec3.set(_up, 0, 1, 0);
             Vec3.applyQuaternion(_up, camera.quaternion);

@@ -16,10 +16,10 @@ export class LineCurve3 extends Curve<Vec3> {
     const point = optionalTarget;
 
     if (t === 1) {
-      point.from(this.v2);
+      point.copy(this.v2);
     } else {
-      point.from(this.v2).sub(this.v1);
-      point.scale(t).add(this.v1);
+      point.copy(this.v2).sub(this.v1);
+      point.multiplyScalar(t).add(this.v1);
     }
 
     return point;
@@ -41,8 +41,8 @@ export class LineCurve3 extends Curve<Vec3> {
   copy(source: this): this {
     super.copy(source);
 
-    this.v1.from(source.v1);
-    this.v2.from(source.v2);
+    this.v1.copy(source.v1);
+    this.v2.copy(source.v2);
 
     return this;
   }

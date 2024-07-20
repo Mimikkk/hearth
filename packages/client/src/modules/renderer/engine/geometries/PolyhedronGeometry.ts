@@ -83,8 +83,8 @@ export class PolyhedronGeometry extends BufferGeometry {
       for (let i = 0; i <= cols; i++) {
         v[i] = [];
 
-        const aj = a.clone().lerp(a, c, i / cols);
-        const bj = b.clone().lerp(b, c, i / cols);
+        const aj = a.clone().lerp(c, i / cols);
+        const bj = b.clone().lerp(c, i / cols);
 
         const rows = cols - i;
 
@@ -92,7 +92,7 @@ export class PolyhedronGeometry extends BufferGeometry {
           if (j === 0 && i === cols) {
             v[i][j] = aj;
           } else {
-            v[i][j] = aj.clone().lerp(aj, bj, j / rows);
+            v[i][j] = aj.clone().lerp(bj, j / rows);
           }
         }
       }
@@ -126,7 +126,7 @@ export class PolyhedronGeometry extends BufferGeometry {
         vertex.y = vertexBuffer[i + 1];
         vertex.z = vertexBuffer[i + 2];
 
-        vertex.normalize().scale(radius);
+        vertex.normalize().multiplyScalar(radius);
 
         vertexBuffer[i + 0] = vertex.x;
         vertexBuffer[i + 1] = vertex.y;
@@ -207,11 +207,7 @@ export class PolyhedronGeometry extends BufferGeometry {
         uvB.set(uvBuffer[j + 2], uvBuffer[j + 3]);
         uvC.set(uvBuffer[j + 4], uvBuffer[j + 5]);
 
-        centroid
-          .from(a)
-          .add(b)
-          .add(c)
-          .scale(1 / 3);
+        centroid.copy(a).add(b).add(c).divideScalar(3);
 
         const azi = azimuth(centroid);
 

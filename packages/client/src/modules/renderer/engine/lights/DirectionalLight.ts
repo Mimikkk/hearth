@@ -12,7 +12,7 @@ export class DirectionalLight extends Light<DirectionalLightShadow> {
   constructor(color: ColorRepresentation, intensity: number) {
     super(color, intensity);
 
-    this.position.from(Object3D.Up);
+    this.position.copy(Object3D.Up);
     this.updateMatrix();
 
     this.target = new Object3D();

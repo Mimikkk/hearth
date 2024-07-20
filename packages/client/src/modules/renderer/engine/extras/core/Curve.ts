@@ -171,7 +171,7 @@ export abstract class Curve<T extends Vec2 | Vec3> {
     if (Vec2.is(tangent)) {
       tangent.from(pt2).sub(pt1).normalize();
     } else {
-      tangent.from(pt2).sub(pt1).normalize();
+      tangent.copy(pt2).sub(pt1).normalize();
     }
 
     return tangent;

@@ -3472,8 +3472,8 @@ function computeBounds(geometry, primitiveDef, parser) {
 
       if (accessor.normalized) {
         const boxScale = getNormalizedComponentScale(WEBGL_COMPONENT_TYPES[accessor.componentType]);
-        box.min.scale(boxScale);
-        box.max.scale(boxScale);
+        box.min.multiplyScalar(boxScale);
+        box.max.multiplyScalar(boxScale);
       }
     } else {
       console.warn('THREE.GLTFLoader: Missing min/max properties for accessor POSITION.');
@@ -3508,7 +3508,7 @@ function computeBounds(geometry, primitiveDef, parser) {
 
           if (accessor.normalized) {
             const boxScale = getNormalizedComponentScale(WEBGL_COMPONENT_TYPES[accessor.componentType]);
-            vector.scale(boxScale);
+            vector.multiplyScalar(boxScale);
           }
 
           // Note: this assumes that the sum of all weights is at most 1. This isn't quite correct - it's more conservative
