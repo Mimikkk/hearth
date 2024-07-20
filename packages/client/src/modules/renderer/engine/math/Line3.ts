@@ -1,4 +1,4 @@
-import { Vec3, Vector3 } from './Vector3.js';
+import { Vector3 } from './Vector3.js';
 import { Matrix4 } from './Matrix4.js';
 import * as MathUtils from './MathUtils.js';
 
@@ -14,9 +14,9 @@ export class Line3 {
     public end: Vector3 = new Vector3(),
   ) {}
 
-  set(start: Vec3, end: Vec3): Line3 {
-    Vec3.fill_(start, this.start);
-    Vec3.fill_(end, this.end);
+  set(start: Vector3, end: Vector3): Line3 {
+    this.start.copy(start);
+    this.end.copy(end);
 
     return this;
   }

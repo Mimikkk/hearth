@@ -654,11 +654,6 @@ export namespace Vec3 {
   };
   export const normalized = (self: Readonly<Vec3>): Vec3 => normalize_(self, empty());
 
-  export const lerp = (a: Vec3, b: Readonly<Vec3>, step: number): Vec3 => lerp_(a, b, step, a);
-  export const lerp_ = (a: Readonly<Vec3>, b: Readonly<Vec3>, step: number, into: Vec3): Vec3 =>
-    fill(into, a.x + (b.x - a.x) * step, a.y + (b.y - a.y) * step, a.z + (b.z - a.z) * step);
-  export const lerped = (a: Readonly<Vec3>, b: Readonly<Vec3>, step: number): Vec3 => lerp_(a, b, step, empty());
-
   export const lengthSq = (self: Readonly<Vec3>): number => self.x * self.x + self.y * self.y + self.z * self.z;
   export const length = (self: Readonly<Vec3>): number => Math.sqrt(lengthSq(self));
 
