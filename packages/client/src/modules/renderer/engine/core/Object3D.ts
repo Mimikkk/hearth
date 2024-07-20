@@ -2,7 +2,7 @@ import { Quaternion } from '../math/Quaternion.js';
 import { Vector3 } from '../math/Vector3.js';
 import { Matrix4 } from '../math/Matrix4.js';
 import { EventDispatcher } from './EventDispatcher.js';
-import { Euler_ } from '../math/Euler.js';
+import { Euler } from '../math/Euler.js';
 import { Layers } from './Layers.js';
 import { Matrix3 } from '../math/Matrix3.js';
 import * as MathUtils from '../math/MathUtils.js';
@@ -185,8 +185,8 @@ export class Object3D<EventMap extends Object3DEventMap = any> {
     return this;
   }
 
-  setRotationFromEuler(euler: Euler_): this {
-    this.quaternion.setFromEuler(euler);
+  setRotationFromEuler(euler: Euler): this {
+    this.quaternion.setFromEuler(euler, true);
     return this;
   }
 
@@ -224,19 +224,19 @@ export class Object3D<EventMap extends Object3DEventMap = any> {
   }
 
   setRotationX(angle: number): this {
-    return this.setRotationFromEuler(Euler_.create(angle, this.getRotationY(), this.getRotationZ()));
+    return this.setRotationFromEuler(new Euler(angle, this.getRotationY(), this.getRotationZ()));
   }
 
   setRotationY(angle: number): this {
-    return this.setRotationFromEuler(Euler_.create(this.getRotationX(), angle, this.getRotationZ()));
+    return this.setRotationFromEuler(new Euler(this.getRotationX(), angle, this.getRotationZ()));
   }
 
   setRotationZ(angle: number): this {
-    return this.setRotationFromEuler(Euler_.create(this.getRotationX(), this.getRotationY(), angle));
+    return this.setRotationFromEuler(new Euler(this.getRotationX(), this.getRotationY(), angle));
   }
 
   setRotation(angleX: number, angleY: number, angleZ: number): this {
-    return this.setRotationFromEuler(Euler_.create(angleX, angleY, angleZ));
+    return this.setRotationFromEuler(new Euler(angleX, angleY, angleZ));
   }
 
   getRotationX(): number {
@@ -271,7 +271,7 @@ export class Object3D<EventMap extends Object3DEventMap = any> {
   }
 
   rotate(angleX: number, angleY: number, angleZ: number): this {
-    _q1.setFromEuler(Euler_.create(angleX, angleY, angleZ));
+    _q1.setFromEuler(new Euler(angleX, angleY, angleZ));
 
     this.quaternion.multiply(_q1);
 

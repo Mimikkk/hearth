@@ -3,6 +3,7 @@ import {
   BufferGeometry,
   Camera,
   CylinderGeometry,
+  Euler,
   Float32BufferAttribute,
   Line,
   LineBasicMaterial,
@@ -23,7 +24,6 @@ import {
 } from '../engine.js';
 import { Object3DEventMap } from '@modules/renderer/engine/core/Object3D.js';
 import { Intersection } from '@modules/renderer/engine/core/Raycaster.js';
-import { Euler_ } from '@modules/renderer/engine/math/Euler.js';
 
 const _raycaster = new Raycaster();
 
@@ -704,7 +704,7 @@ function intersectObjectWithRay(
 
 // Reusable utility variables
 
-const _tempEuler = Euler_.empty();
+const _tempEuler = new Euler();
 const _alignVector = new Vector3(0, 1, 0);
 const _zeroVector = new Vector3(0, 0, 0);
 const _lookAtMatrix = new Matrix4();

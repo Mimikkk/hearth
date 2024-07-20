@@ -16,7 +16,7 @@ export function cloneUniforms(src) {
           property.isVector3 ||
           property.isVector4 ||
           property.isTexture ||
-          (typeof property === 'object' && 'w' in property))
+          'w' in property)
       ) {
         if (property.isRenderTargetTexture) {
           console.warn(
