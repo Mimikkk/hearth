@@ -75,7 +75,7 @@ export class Path extends CurvePath<Vec2> {
     const curve = new SplineCurve(npts);
     this.curves.push(curve);
 
-    this.currentPoint.copy(pts[pts.length - 1]);
+    this.currentPoint.from(pts[pts.length - 1]);
 
     return this;
   }
@@ -134,7 +134,7 @@ export class Path extends CurvePath<Vec2> {
     this.curves.push(curve);
 
     const lastPoint = curve.getPoint(1, new Vec2());
-    this.currentPoint.copy(lastPoint);
+    this.currentPoint.from(lastPoint);
 
     return this;
   }
@@ -142,7 +142,7 @@ export class Path extends CurvePath<Vec2> {
   copy(source: this): this {
     super.copy(source);
 
-    this.currentPoint.copy(source.currentPoint);
+    this.currentPoint.from(source.currentPoint);
 
     return this;
   }

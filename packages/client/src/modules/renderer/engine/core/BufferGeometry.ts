@@ -446,9 +446,9 @@ export class BufferGeometry<
       vB.fromBufferAttribute(positionAttribute, b);
       vC.fromBufferAttribute(positionAttribute, c);
 
-      uvA.fromBufferAttribute(uvAttribute, a);
-      uvB.fromBufferAttribute(uvAttribute, b);
-      uvC.fromBufferAttribute(uvAttribute, c);
+      uvA.fromAttribute(uvAttribute, a);
+      uvB.fromAttribute(uvAttribute, b);
+      uvC.fromAttribute(uvAttribute, c);
 
       vB.sub(vA);
       vC.sub(vA);

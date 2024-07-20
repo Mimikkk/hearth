@@ -146,7 +146,7 @@ export class MeshLambertMaterial extends Material {
 
     this.normalMap = source.normalMap;
     this.normalMapType = source.normalMapType;
-    this.normalScale.copy(source.normalScale);
+    this.normalScale.from(source.normalScale);
 
     this.displacementMap = source.displacementMap;
     this.displacementScale = source.displacementScale;

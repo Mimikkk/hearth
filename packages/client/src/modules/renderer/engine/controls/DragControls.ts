@@ -104,14 +104,14 @@ class DragControls {
             _selected.position.copy(_intersection.sub(_offset).applyMat4(_inverseMatrix));
           }
         } else if (scope.mode === 'rotate') {
-          _diff.subVectors(_pointer, _previousPointer).multiplyScalar(scope.rotateSpeed);
+          _diff.asSub(_pointer, _previousPointer).scale(scope.rotateSpeed);
           _selected.rotateOnWorldAxis(_up, _diff.x);
           _selected.rotateOnWorldAxis(_right.normalize(), -_diff.y);
         }
 
         scope.eventDispatcher.dispatch({ type: 'drag', object: _selected }, this);
 
-        _previousPointer.copy(_pointer);
+        _previousPointer.from(_pointer);
       } else {
         // hover support
 
@@ -153,7 +153,7 @@ class DragControls {
         }
       }
 
-      _previousPointer.copy(_pointer);
+      _previousPointer.from(_pointer);
     }
 
     function onPointerDown(event: PointerEvent) {
@@ -200,7 +200,7 @@ class DragControls {
         scope.eventDispatcher.dispatch({ type: 'dragstart', object: _selected }, this);
       }
 
-      _previousPointer.copy(_pointer);
+      _previousPointer.from(_pointer);
     }
 
     function onPointerCancel() {

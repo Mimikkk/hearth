@@ -348,17 +348,17 @@ function checkGeometryIntersection(
 
   if (intersection) {
     if (uv) {
-      _uvA.fromBufferAttribute(uv, a);
-      _uvB.fromBufferAttribute(uv, b);
-      _uvC.fromBufferAttribute(uv, c);
+      _uvA.fromAttribute(uv, a);
+      _uvB.fromAttribute(uv, b);
+      _uvC.fromAttribute(uv, c);
 
       intersection.uv = Triangle.getInterpolation(_intersectionPoint, _vA, _vB, _vC, _uvA, _uvB, _uvC, new Vec2())!;
     }
 
     if (uv1) {
-      _uvA.fromBufferAttribute(uv1, a);
-      _uvB.fromBufferAttribute(uv1, b);
-      _uvC.fromBufferAttribute(uv1, c);
+      _uvA.fromAttribute(uv1, a);
+      _uvB.fromAttribute(uv1, b);
+      _uvC.fromAttribute(uv1, c);
 
       intersection.uv1 = Triangle.getInterpolation(_intersectionPoint, _vA, _vB, _vC, _uvA, _uvB, _uvC, new Vec2())!;
     }

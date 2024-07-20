@@ -602,7 +602,7 @@ export class OrbitControls {
     function handleMouseMoveRotate(event: MouseEvent) {
       rotateEnd.set(event.clientX, event.clientY);
 
-      rotateDelta.subVectors(rotateEnd, rotateStart).multiplyScalar(scope.rotateSpeed);
+      rotateDelta.asSub(rotateEnd, rotateStart).scale(scope.rotateSpeed);
 
       const element = scope.domElement;
 
@@ -610,7 +610,7 @@ export class OrbitControls {
 
       rotateUp((2 * Math.PI * rotateDelta.y) / element.clientHeight);
 
-      rotateStart.copy(rotateEnd);
+      rotateStart.from(rotateEnd);
 
       scope.update();
     }
@@ -618,7 +618,7 @@ export class OrbitControls {
     function handleMouseMoveDolly(event: MouseEvent) {
       dollyEnd.set(event.clientX, event.clientY);
 
-      dollyDelta.subVectors(dollyEnd, dollyStart);
+      dollyDelta.asSub(dollyEnd, dollyStart);
 
       if (dollyDelta.y > 0) {
         dollyOut(getZoomScale(dollyDelta.y));
@@ -626,7 +626,7 @@ export class OrbitControls {
         dollyIn(getZoomScale(dollyDelta.y));
       }
 
-      dollyStart.copy(dollyEnd);
+      dollyStart.from(dollyEnd);
 
       scope.update();
     }
@@ -634,11 +634,11 @@ export class OrbitControls {
     function handleMouseMovePan(event: MouseEvent) {
       panEnd.set(event.clientX, event.clientY);
 
-      panDelta.subVectors(panEnd, panStart).multiplyScalar(scope.panSpeed);
+      panDelta.asSub(panEnd, panStart).scale(scope.panSpeed);
 
       pan(panDelta.x, panDelta.y);
 
-      panStart.copy(panEnd);
+      panStart.from(panEnd);
 
       scope.update();
     }

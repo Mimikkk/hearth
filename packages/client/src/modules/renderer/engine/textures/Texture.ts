@@ -163,9 +163,9 @@ export class Texture {
     this.internalFormat = source.internalFormat;
     this.type = source.type;
 
-    this.offset.copy(source.offset);
-    this.repeat.copy(source.repeat);
-    this.center.copy(source.center);
+    this.offset.from(source.offset);
+    this.repeat.from(source.repeat);
+    this.center.from(source.center);
     this.rotation = source.rotation;
 
     this.matrixAutoUpdate = source.matrixAutoUpdate;

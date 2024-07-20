@@ -127,7 +127,7 @@ export class Sprite extends Object3D {
   copy(source: this, recursive?: boolean): this {
     super.copy(source, recursive);
 
-    if (source.center !== undefined) this.center.copy(source.center);
+    if (source.center !== undefined) this.center.from(source.center);
 
     this.material = source.material;
 
@@ -147,14 +147,14 @@ function transformVertex(
   cos?: number,
 ) {
   // compute position in camera space
-  _alignedPosition.subVectors(vertexPosition, center).addScalar(0.5).multiply(scale);
+  _alignedPosition.asSub(vertexPosition, center).addScalar(0.5).mul(scale);
 
   // to check if rotation is not zero
   if (sin !== undefined && cos !== undefined) {
     _rotatedPosition.x = cos * _alignedPosition.x - sin * _alignedPosition.y;
     _rotatedPosition.y = sin * _alignedPosition.x + cos * _alignedPosition.y;
   } else {
-    _rotatedPosition.copy(_alignedPosition);
+    _rotatedPosition.from(_alignedPosition);
   }
 
   vertexPosition.copy(mvPosition);

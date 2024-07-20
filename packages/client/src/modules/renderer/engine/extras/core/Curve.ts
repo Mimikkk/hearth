@@ -172,7 +172,7 @@ export abstract class Curve<T extends Vec2 | Vec3> {
 
     const tangent = optionalTarget || (pt1.isVec2 ? new Vec2() : new Vec3());
 
-    tangent.copy(pt2).sub(pt1).normalize();
+    tangent.from(pt2).sub(pt1).normalize();
 
     return tangent;
   }

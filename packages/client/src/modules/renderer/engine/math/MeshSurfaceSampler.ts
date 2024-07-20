@@ -135,13 +135,7 @@ export class MeshSurfaceSampler<TGeometry extends BufferGeometry, TMaterial exte
     return index;
   }
 
-  sampleFace(
-    faceIndex: number,
-    targetPosition: Vec3,
-    targetNormal?: Vec3,
-    targetColor?: Color,
-    targetUV?: Vec2,
-  ): this {
+  sampleFace(faceIndex: number, targetPosition: Vec3, targetNormal?: Vec3, targetColor?: Color, targetUV?: Vec2): this {
     let u = this.randomFunction();
     let v = this.randomFunction();
 
@@ -204,14 +198,14 @@ export class MeshSurfaceSampler<TGeometry extends BufferGeometry, TMaterial exte
     }
 
     if (targetUV !== undefined && this.uvAttribute !== undefined) {
-      _uva.fromBufferAttribute(this.uvAttribute, i0);
-      _uvb.fromBufferAttribute(this.uvAttribute, i1);
-      _uvc.fromBufferAttribute(this.uvAttribute, i2);
+      _uva.fromAttribute(this.uvAttribute, i0);
+      _uvb.fromAttribute(this.uvAttribute, i1);
+      _uvc.fromAttribute(this.uvAttribute, i2);
       targetUV
         .set(0, 0)
-        .addScaledVector(_uva, u)
-        .addScaledVector(_uvb, v)
-        .addScaledVector(_uvc, 1 - (u + v));
+        .addScaled(_uva, u)
+        .addScaled(_uvb, v)
+        .addScaled(_uvc, 1 - (u + v));
     }
 
     return this;

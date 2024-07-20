@@ -1,4 +1,4 @@
-import { clamp } from './MathUtils.js';
+import { clamp, NumberArray } from './MathUtils.js';
 import type { BufferAttribute } from '../core/BufferAttribute.js';
 import type { Mat3 } from './Mat3.js';
 import { Attribute } from '@modules/renderer/engine/core/types.js';
@@ -46,16 +46,59 @@ export class Vec2 implements IVec2 {
     return into.set(x, y);
   }
 
+  static fromArray(array: NumberArray, offset: number = 0, into: Vec2 = Vec2.new()): Vec2 {
+    return into.fromArray(array, offset);
+  }
+
   static fromAttribute(attribute: Attribute, index: number, into: Vec2 = Vec2.new()): Vec2 {
     return into.fromAttribute(attribute, index);
   }
 
-  static fromArray(array: number[], offset: number = 0, into: Vec2 = Vec2.new()): Vec2 {
-    return into.fromArray(array, offset);
-  }
-
   static lerp(from: Const<Vec2>, to: Const<Vec2>, step: number, into: Vec2 = Vec2.new()): Vec2 {
     return into.lerp(from, to, step);
+  }
+
+  from(from: Const<Vec2>): this {
+    return this.set(from.x, from.y);
+  }
+
+  into(into: Vec2): void {
+    into.x = this.x;
+    into.y = this.y;
+  }
+
+  fromAttribute(attribute: Attribute, index: number): this {
+    return this.set(attribute.getX(index), attribute.getY(index));
+  }
+
+  fillAttribute(attribute: Attribute, index: number): this {
+    attribute.setXY(index, this.x, this.y);
+    return this;
+  }
+
+  fromArray(array: Const<NumberArray>, offset: number = 0): this {
+    return this.set(array[offset], array[offset + 1]);
+  }
+
+  intoArray<T extends NumberArray>(array: T = [] as never, offset: number = 0): T {
+    array[offset] = this.x;
+    array[offset + 1] = this.y;
+    return array;
+  }
+
+  asAdd(a: Const<Vec2>, b: Const<Vec2>): this {
+    return this.set(a.x + b.x, a.y + b.y);
+  }
+
+  asSub(a: Const<Vec2>, b: Const<Vec2>): this {
+    return this.set(a.x - b.x, a.y - b.y);
+  }
+
+  asLerp(v1: Vec2, v2: Vec2, step: number): this {
+    this.x = v1.x + (v2.x - v1.x) * step;
+    this.y = v1.y + (v2.y - v1.y) * step;
+
+    return this;
   }
 
   get width(): number {
@@ -77,27 +120,21 @@ export class Vec2 implements IVec2 {
   set(x: number, y: number): this {
     this.x = x;
     this.y = y;
-
     return this;
   }
 
-  setScalar(scalar: number) {
-    this.x = scalar;
-    this.y = scalar;
-
-    return this;
-  }
-
-  setX(x: number) {
+  setX(x: number): this {
     this.x = x;
-
     return this;
   }
 
-  setY(y: number) {
+  setY(y: number): this {
     this.y = y;
-
     return this;
+  }
+
+  setScalar(scalar: number): this {
+    return this.set(scalar, scalar);
   }
 
   setComponent(index: 0 | 1, value: number): this {
@@ -127,228 +164,174 @@ export class Vec2 implements IVec2 {
   }
 
   clone(): Vec2 {
-    return new this.constructor(this.x, this.y);
+    return Vec2.from(this);
   }
 
-  copy(v: Vec2): this {
-    this.x = v.x;
-    this.y = v.y;
-
-    return this;
+  scale(scalar: number): this {
+    return this.set(this.x * scalar, this.y * scalar);
   }
 
-  add(vector: Vec2): this {
-    this.x += vector.x;
-    this.y += vector.y;
+  div({ x, y }: Const<Vec2>): this {
+    return this.set(this.x / x, this.y / y);
+  }
 
-    return this;
+  divScalar(scalar: number): this {
+    return this.set(this.x / scalar, this.y / scalar);
+  }
+
+  mul({ x, y }: Const<Vec2>): this {
+    return this.set(this.x * x, this.y * y);
+  }
+
+  mulScalar(scalar: number): this {
+    return this.set(this.x * scalar, this.y * scalar);
+  }
+
+  add({ x, y }: Const<Vec2>): this {
+    return this.set(this.x + x, this.y + y);
   }
 
   addScalar(scalar: number): this {
-    this.x += scalar;
-    this.y += scalar;
-
-    return this;
+    return this.set(this.x + scalar, this.y + scalar);
   }
 
-  addVectors(a: Vec2, b: Vec2): this {
-    this.x = a.x + b.x;
-    this.y = a.y + b.y;
-
-    return this;
+  addScaled({ x, y }: Const<Vec2>, scalar: number): this {
+    return this.set(this.x + x * scalar, this.y + y * scalar);
   }
 
-  addScaledVector(vector: Vec2, scale: number): this {
-    this.x += vector.x * scale;
-    this.y += vector.y * scale;
-
-    return this;
-  }
-
-  sub(vector: Vec2): this {
-    this.x -= vector.x;
-    this.y -= vector.y;
-
-    return this;
+  sub({ x, y }: Const<Vec2>): this {
+    return this.set(this.x - x, this.y - y);
   }
 
   subScalar(scalar: number): this {
-    this.x -= scalar;
-    this.y -= scalar;
-
-    return this;
+    return this.set(this.x - scalar, this.y - scalar);
   }
 
-  subVectors(a: Vec2, b: Vec2): this {
-    this.x = a.x - b.x;
-    this.y = a.y - b.y;
-
-    return this;
+  subScaled({ x, y }: Const<Vec2>, scalar: number): this {
+    return this.set(this.x - x * scalar, this.y - y * scalar);
   }
 
-  multiply(vector: Vec2): this {
-    this.x *= vector.x;
-    this.y *= vector.y;
-
-    return this;
+  min({ x, y }: Const<Vec2>): this {
+    return this.set(Math.min(this.x, x), Math.min(this.y, y));
   }
 
-  multiplyScalar(scalar: number): this {
-    this.x *= scalar;
-    this.y *= scalar;
-
-    return this;
+  max({ x, y }: Const<Vec2>): this {
+    return this.set(Math.max(this.x, x), Math.max(this.y, y));
   }
 
-  divide(vector: Vec2): this {
-    this.x /= vector.x;
-    this.y /= vector.y;
-
-    return this;
+  equals({ x, y }: Const<Vec2>): boolean {
+    return this.x === x && this.y === y;
   }
 
-  divideScalar(scalar: number): this {
-    return this.multiplyScalar(1 / scalar);
-  }
-
-  applyMat3(matrix: Mat3): this {
-    const x = this.x,
-      y = this.y;
-    const e = matrix.elements;
-
-    this.x = e[0] * x + e[3] * y + e[6];
-    this.y = e[1] * x + e[4] * y + e[7];
-
-    return this;
-  }
-
-  min(vector: Vec2): this {
-    this.x = Math.min(this.x, vector.x);
-    this.y = Math.min(this.y, vector.y);
-
-    return this;
-  }
-
-  max(vector: Vec2): this {
-    this.x = Math.max(this.x, vector.x);
-    this.y = Math.max(this.y, vector.y);
-
-    return this;
-  }
-
-  clamp(min: Vec2, max: Vec2): this {
-    // assumes min < max, componentwise
-
-    this.x = Math.max(min.x, Math.min(max.x, this.x));
-    this.y = Math.max(min.y, Math.min(max.y, this.y));
-
-    return this;
+  clamp(min: Const<Vec2>, max: Const<Vec2>): this {
+    return this.set(clamp(this.x, min.x, max.x), clamp(this.y, min.y, max.y));
   }
 
   clampScalar(min: number, max: number): this {
-    this.x = Math.max(min, Math.min(max, this.x));
-    this.y = Math.max(min, Math.min(max, this.y));
-
-    return this;
+    return this.set(clamp(this.x, min, max), clamp(this.y, min, max));
   }
 
   clampLength(min: number, max: number): this {
-    const length = this.length();
-
-    return this.divideScalar(length || 1).multiplyScalar(Math.max(min, Math.min(max, length)));
+    return this.normalize().scale(clamp(this.euclidean(), min, max));
   }
 
   floor(): this {
-    this.x = Math.floor(this.x);
-    this.y = Math.floor(this.y);
-
-    return this;
+    return this.set(Math.floor(this.x), Math.floor(this.y));
   }
 
   ceil(): this {
-    this.x = Math.ceil(this.x);
-    this.y = Math.ceil(this.y);
-
-    return this;
+    return this.set(Math.ceil(this.x), Math.ceil(this.y));
   }
 
   round(): this {
-    this.x = Math.round(this.x);
-    this.y = Math.round(this.y);
-
-    return this;
+    return this.set(Math.round(this.x), Math.round(this.y));
   }
 
-  roundToZero(): this {
-    this.x = Math.trunc(this.x);
-    this.y = Math.trunc(this.y);
-
-    return this;
+  truncate(): this {
+    return this.set(Math.trunc(this.x), Math.trunc(this.y));
   }
 
   negate(): this {
-    this.x = -this.x;
-    this.y = -this.y;
-
-    return this;
+    return this.set(-this.x, -this.y);
   }
 
-  dot(v: Vec2): number {
-    return this.x * v.x + this.y * v.y;
+  dot({ x, y }: Const<Vec2>): number {
+    return this.x * x + this.y * y;
   }
 
-  cross(v: Vec2): number {
-    return this.x * v.y - this.y * v.x;
+  cross({ x, y }: Const<Vec2>): number {
+    return this.x * y - this.y * x;
   }
 
-  lengthSq(): number {
+  euclideanSq(): number {
     return this.x * this.x + this.y * this.y;
   }
 
-  length(): number {
-    return Math.sqrt(this.x * this.x + this.y * this.y);
+  euclidean(): number {
+    return Math.sqrt(this.euclideanSq());
   }
 
-  manhattanLength(): number {
+  lengthSq(): number {
+    return this.euclideanSq();
+  }
+
+  length(): number {
+    return Math.sqrt(this.lengthSq());
+  }
+
+  manhattan(): number {
     return Math.abs(this.x) + Math.abs(this.y);
   }
 
   normalize(): this {
-    return this.divideScalar(this.length() || 1);
+    return this.divScalar(this.euclidean() || 1);
   }
 
   angle(): number {
     return Math.atan2(-this.y, -this.x) + Math.PI;
   }
 
-  angleTo(vector: Vec2): number {
-    const denominator = Math.sqrt(this.lengthSq() * vector.lengthSq());
-
+  angleTo(to: Const<Vec2>): number {
+    const denominator = Math.sqrt(this.euclideanSq() * to.euclideanSq());
     if (denominator === 0) return Math.PI / 2;
-
-    const theta = this.dot(vector) / denominator;
-
-    // clamp, to handle numerical problems
-
+    const theta = this.dot(to) / denominator;
     return Math.acos(clamp(theta, -1, 1));
   }
 
-  distanceTo(vector: Vec2): number {
-    return Math.sqrt(this.distanceToSquared(vector));
-  }
-
-  distanceToSquared(v: Vec2): number {
-    const dx = this.x - v.x,
-      dy = this.y - v.y;
+  euclideanSqTo({ x, y }: Const<Vec2>): number {
+    const dx = this.x - x;
+    const dy = this.y - y;
     return dx * dx + dy * dy;
   }
 
-  manhattanDistanceTo(v: Vec2): number {
-    return Math.abs(this.x - v.x) + Math.abs(this.y - v.y);
+  euclideanTo(to: Const<Vec2>): number {
+    return Math.sqrt(this.euclideanSqTo(to));
+  }
+
+  distanceTo(to: Const<Vec2>): number {
+    return this.euclideanTo(to);
+  }
+
+  distanceSqTo(to: Const<Vec2>): number {
+    return this.euclideanSqTo(to);
+  }
+
+  manhattanTo({ x, y }: Const<Vec2>): number {
+    return Math.abs(this.x - x) + Math.abs(this.y - y);
   }
 
   setLength(length: number): this {
-    return this.normalize().multiplyScalar(length);
+    return this.normalize().scale(length);
+  }
+
+  applyMat3({ elements: e }: Const<Mat3>): this {
+    const { x, y } = this;
+
+    return this.set(e[0] * x + e[3] * y + e[6], e[1] * x + e[4] * y + e[7]);
+  }
+
+  applyNMat3(mat: Const<Mat3>): this {
+    return this.applyMat3(mat).normalize();
   }
 
   lerp(vector: Vec2, step: number): this {
@@ -358,56 +341,20 @@ export class Vec2 implements IVec2 {
     return this;
   }
 
-  lerpVectors(v1: Vec2, v2: Vec2, step: number): this {
-    this.x = v1.x + (v2.x - v1.x) * step;
-    this.y = v1.y + (v2.y - v1.y) * step;
-
-    return this;
-  }
-
-  equals(vector: Vec2) {
-    return vector.x === this.x && vector.y === this.y;
-  }
-
-  fromArray(array: number[], offset: number = 0): this {
-    this.x = array[offset];
-    this.y = array[offset + 1];
-
-    return this;
-  }
-
-  toArray(array: number[] = [], offset: number = 0): number[] {
-    array[offset] = this.x;
-    array[offset + 1] = this.y;
-
-    return array;
-  }
-
-  fromBufferAttribute(attribute: BufferAttribute, index: number): this {
-    this.x = attribute.getX(index);
-    this.y = attribute.getY(index);
-
-    return this;
-  }
-
-  rotateAround(center: Vec2, angle: number): this {
-    const c = Math.cos(angle),
-      s = Math.sin(angle);
-
+  rotateAround(center: Const<Vec2>, angle: number): this {
+    const cos = Math.cos(angle);
+    const sin = Math.sin(angle);
     const x = this.x - center.x;
     const y = this.y - center.y;
 
-    this.x = x * c - y * s + center.x;
-    this.y = x * s + y * c + center.y;
-
-    return this;
+    return this.set(x * cos - y * sin + center.x, x * sin + y * cos + center.y);
   }
 
-  random(): this {
-    this.x = Math.random();
-    this.y = Math.random();
+  rotate(angle: number): this {
+    const cos = Math.cos(angle);
+    const sin = Math.sin(angle);
 
-    return this;
+    return this.set(this.x * cos - this.y * sin, this.x * sin + this.y * cos);
   }
 
   *[Symbol.iterator](): Iterator<number> {
@@ -415,4 +362,5 @@ export class Vec2 implements IVec2 {
     yield this.y;
   }
 }
+
 Vec2.prototype.isVec2 = true;

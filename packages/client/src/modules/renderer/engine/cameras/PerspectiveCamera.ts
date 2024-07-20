@@ -112,17 +112,17 @@ export class PerspectiveCamera extends Camera {
   getViewBounds(distance: number, minTarget: Vec2, maxTarget: Vec2): void {
     _v3.set(-1, -1, 0.5).applyMat4(this.projectionMatrixInverse);
 
-    minTarget.set(_v3.x, _v3.y).multiplyScalar(-distance / _v3.z);
+    minTarget.set(_v3.x, _v3.y).scale(-distance / _v3.z);
 
     _v3.set(1, 1, 0.5).applyMat4(this.projectionMatrixInverse);
 
-    maxTarget.set(_v3.x, _v3.y).multiplyScalar(-distance / _v3.z);
+    maxTarget.set(_v3.x, _v3.y).scale(-distance / _v3.z);
   }
 
   getViewSize(distance: number, target: Vec2): Vec2 {
     this.getViewBounds(distance, _minTarget, _maxTarget);
 
-    return target.subVectors(_maxTarget, _minTarget);
+    return target.asSub(_maxTarget, _minTarget);
   }
 
   setViewOffset(fullWidth: number, fullHeight: number, x: number, y: number, width: number, height: number): this {

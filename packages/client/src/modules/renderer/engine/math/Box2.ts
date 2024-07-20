@@ -10,8 +10,8 @@ export class Box2 {
   ) {}
 
   set(min: Vec2, max: Vec2): Box2 {
-    this.min.copy(min);
-    this.max.copy(max);
+    this.min.from(min);
+    this.max.from(max);
 
     return this;
   }
@@ -27,9 +27,9 @@ export class Box2 {
   }
 
   setFromCenterAndSize(center: Vec2, size: Vec2): this {
-    const halfSize = new Vec2().copy(size).multiplyScalar(0.5);
-    this.min.copy(center).sub(halfSize);
-    this.max.copy(center).add(halfSize);
+    const halfSize = new Vec2().from(size).scale(0.5);
+    this.min.from(center).sub(halfSize);
+    this.max.from(center).add(halfSize);
 
     return this;
   }
@@ -39,8 +39,8 @@ export class Box2 {
   }
 
   copy(box: Box2): this {
-    this.min.copy(box.min);
-    this.max.copy(box.max);
+    this.min.from(box.min);
+    this.max.from(box.max);
 
     return this;
   }
@@ -59,11 +59,11 @@ export class Box2 {
   }
 
   getCenter(target: Vec2): Vec2 {
-    return this.isEmpty() ? target.set(0, 0) : target.addVectors(this.min, this.max).multiplyScalar(0.5);
+    return this.isEmpty() ? target.set(0, 0) : target.asAdd(this.min, this.max).scale(0.5);
   }
 
   getSize(target: Vec2): Vec2 {
-    return this.isEmpty() ? target.set(0, 0) : target.subVectors(this.max, this.min);
+    return this.isEmpty() ? target.set(0, 0) : target.asSub(this.max, this.min);
   }
 
   expandByPoint(point: Vec2): this {
@@ -112,7 +112,7 @@ export class Box2 {
   }
 
   clampPoint(point: Vec2, target: Vec2): Vec2 {
-    return target.copy(point).clamp(this.min, this.max);
+    return target.from(point).clamp(this.min, this.max);
   }
 
   distanceToPoint(point: Vec2): number {

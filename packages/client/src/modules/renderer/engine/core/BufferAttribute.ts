@@ -93,7 +93,7 @@ export class BufferAttribute<T extends TypedArray> {
   applyMat3(m: Mat3): this {
     if (this.itemSize === 2) {
       for (let i = 0, l = this.count; i < l; i++) {
-        _Vec2.fromBufferAttribute(this, i);
+        _Vec2.fromAttribute(this, i);
         _Vec2.applyMat3(m);
 
         this.setXY(i, _Vec2.x, _Vec2.y);

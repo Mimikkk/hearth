@@ -103,7 +103,7 @@ export class LightShadow<C extends Camera = Camera> {
     this.bias = source.bias;
     this.radius = source.radius;
 
-    this.mapSize.copy(source.mapSize);
+    this.mapSize.from(source.mapSize);
 
     return this;
   }

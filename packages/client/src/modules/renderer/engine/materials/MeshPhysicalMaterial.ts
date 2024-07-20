@@ -224,7 +224,7 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
     this.clearcoatRoughness = source.clearcoatRoughness;
     this.clearcoatRoughnessMap = source.clearcoatRoughnessMap;
     this.clearcoatNormalMap = source.clearcoatNormalMap;
-    this.clearcoatNormalScale.copy(source.clearcoatNormalScale);
+    this.clearcoatNormalScale.from(source.clearcoatNormalScale);
 
     this.ior = source.ior;
 
