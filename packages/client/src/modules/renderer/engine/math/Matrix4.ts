@@ -1,7 +1,7 @@
 import { CoordinateSystem } from '../constants.js';
 import { IVec3, Vector3 } from './Vector3.js';
 import { Matrix, Matrix3 } from './Matrix3.js';
-import type { Euler } from '@modules/renderer/engine/math/Euler.js';
+import { Euler } from '@modules/renderer/engine/math/Euler.js';
 import { Quaternion } from '@modules/renderer/engine/math/Quaternion.js';
 
 export class Matrix4 implements Matrix {

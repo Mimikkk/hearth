@@ -2,8 +2,8 @@ import { clamp, clamp as clampNumber, NumberArray } from './MathUtils.js';
 import { Quaternion } from './Quaternion.js';
 import type { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
 import type { InterleavedBufferAttribute } from '@modules/renderer/engine/core/InterleavedBufferAttribute.js';
-import type { Color } from '@modules/renderer/engine/math/Color.js';
-import type { Euler } from '@modules/renderer/engine/math/Euler.js';
+import { Color } from '@modules/renderer/engine/math/Color.js';
+import { Euler } from '@modules/renderer/engine/math/Euler.js';
 import type { Matrix3 } from '@modules/renderer/engine/math/Matrix3.js';
 import type { Matrix4 } from '@modules/renderer/engine/math/Matrix4.js';
 import { Cylindrical } from '@modules/renderer/engine/math/Cylindrical.js';
@@ -12,7 +12,13 @@ import type { Camera } from '@modules/renderer/engine/cameras/Camera.js';
 import { Const } from '@modules/renderer/engine/math/types.js';
 import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
 
-export class Vector3 implements IVec3 {
+export interface IVector3 {
+  x: number;
+  y: number;
+  z: number;
+}
+
+export class Vector3 implements IVector3 {
   declare isVector3: true;
   declare ['constructor']: typeof Vector3;
 
@@ -588,6 +594,7 @@ export class Vector3 implements IVec3 {
     yield this.z;
   }
 }
+
 Vector3.prototype.isVector3 = true;
 
 export interface IVec3 {
@@ -676,8 +683,16 @@ export class Vec3 implements IVec3 {
     return this.set(color.r, color.g, color.b);
   }
 
+  intoColor(color: Color = new Color()): Color {
+    return color.set(this.x, this.y, this.z);
+  }
+
   fromEuler(euler: Const<Euler>): this {
     return this.set(euler.x, euler.y, euler.z);
+  }
+
+  intoEuler(euler: Euler = Euler.empty()): Euler {
+    return Euler.set(euler, this.x, this.y, this.z, euler.order);
   }
 
   fromSpherical({ radius, theta, phi }: Const<Spherical>): this {
@@ -686,8 +701,16 @@ export class Vec3 implements IVec3 {
     return this.set(sinPhiRadius * Math.sin(theta), Math.cos(phi) * radius, sinPhiRadius * Math.cos(theta));
   }
 
+  intoSpherical(spherical: Spherical = Spherical.empty()): Spherical {
+    return Spherical.fromCartesian_(this, spherical);
+  }
+
   fromCylindrical({ radius, theta, height }: Const<Cylindrical>): this {
     return this.set(radius * Math.sin(theta), height, radius * Math.cos(theta));
+  }
+
+  intoCylindrical(cylindrical: Cylindrical = Cylindrical.empty()): Cylindrical {
+    return Cylindrical.fromCartesian_(this, cylindrical);
   }
 
   fromMat4Position({ elements: e }: Const<Matrix4>): this {
@@ -983,7 +1006,7 @@ export class Vec3 implements IVec3 {
 Vec3.prototype.isVector3 = true;
 Vec3.prototype.isVec3 = true;
 
-const _quaternion: Quaternion = { x: 0, y: 0, z: 0, w: 0 };
+const _quaternion = Quaternion.identity();
 const _v1 = Vec3.new();
 const _v2 = Vec3.new();
 const as = (from: any): Vec3 => _v1.from(from);
