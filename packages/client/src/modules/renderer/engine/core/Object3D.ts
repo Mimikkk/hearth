@@ -1,4 +1,4 @@
-import { Quaternion, Quaternion_ } from '../math/Quaternion.js';
+import { Quaternion } from '../math/Quaternion.js';
 import { Vector3 } from '../math/Vector3.js';
 import { Matrix4 } from '../math/Matrix4.js';
 import { EventDispatcher } from './EventDispatcher.js';
@@ -20,13 +20,13 @@ import { Renderer } from '../renderers/webgpu/Renderer.js';
 let _object3DId = 0;
 
 const _v1 = /*@__PURE__*/ new Vector3();
-const _q1 = /*@__PURE__*/ Quaternion_.identity();
+const _q1 = /*@__PURE__*/ new Quaternion();
 const _m1 = /*@__PURE__*/ new Matrix4();
 const _target = /*@__PURE__*/ new Vector3();
 
 const _position = /*@__PURE__*/ new Vector3();
 const _scale = /*@__PURE__*/ new Vector3();
-const _quaternion = /*@__PURE__*/ Quaternion_.identity();
+const _quaternion = /*@__PURE__*/ new Quaternion();
 
 const _xAxis = /*@__PURE__*/ new Vector3(1, 0, 0);
 const _yAxis = /*@__PURE__*/ new Vector3(0, 1, 0);
@@ -70,7 +70,7 @@ export class Object3D<EventMap extends Object3DEventMap = any> {
   children: Object3D[];
   up: Vector3;
   position: Vector3;
-  quaternion: Quaternion_;
+  quaternion: Quaternion;
   scale: Vector3;
   modelViewMatrix: Matrix4;
   normalMatrix: Matrix3;
@@ -175,28 +175,28 @@ export class Object3D<EventMap extends Object3DEventMap = any> {
     return this;
   }
 
-  applyQuaternion(q: Quaternion_): this {
-    Quaternion_.premultiply(this.quaternion, q);
+  applyQuaternion(q: Quaternion): this {
+    this.quaternion.premultiply(q);
     return this;
   }
 
   setRotationFromAxisAngle(axis: Vector3, angle: number): this {
-    Quaternion_.fillAxisAngle(this.quaternion, axis, angle);
+    this.quaternion.setFromAxisAngle(axis, angle);
     return this;
   }
 
   setRotationFromEuler(euler: Euler): this {
-    Quaternion_.fillEuler(this.quaternion, euler);
+    this.quaternion.setFromEuler(euler);
     return this;
   }
 
   setRotationFromMatrix(m: Matrix4): this {
-    Quaternion_.fillRotation(this.quaternion, m);
+    this.quaternion.setFromRotationMatrix(m);
     return this;
   }
 
-  setRotationFromQuaternion(q: Quaternion_): this {
-    Quaternion_.fill_(q, this.quaternion);
+  setRotationFromQuaternion(q: Quaternion): this {
+    this.quaternion.copy(q);
     return this;
   }
 
@@ -204,8 +204,9 @@ export class Object3D<EventMap extends Object3DEventMap = any> {
     // rotate object on axis in object space
     // axis is assumed to be normalized
 
-    Quaternion_.fillAxisAngle(_q1, axis, angle);
-    Quaternion_.multiply(this.quaternion, _q1);
+    _q1.setFromAxisAngle(axis, angle);
+
+    this.quaternion.multiply(_q1);
 
     return this;
   }
@@ -215,8 +216,9 @@ export class Object3D<EventMap extends Object3DEventMap = any> {
     // axis is assumed to be normalized
     // method assumes no rotated parent
 
-    Quaternion_.fillAxisAngle(_q1, axis, angle);
-    Quaternion_.premultiply(this.quaternion, _q1);
+    _q1.setFromAxisAngle(axis, angle);
+
+    this.quaternion.premultiply(_q1);
 
     return this;
   }
@@ -269,8 +271,9 @@ export class Object3D<EventMap extends Object3DEventMap = any> {
   }
 
   rotate(angleX: number, angleY: number, angleZ: number): this {
-    Quaternion_.fillEuler(_q1, Euler.create(angleX, angleY, angleZ));
-    Quaternion_.multiply(this.quaternion, _q1);
+    _q1.setFromEuler(Euler.create(angleX, angleY, angleZ));
+
+    this.quaternion.multiply(_q1);
 
     return this;
   }
@@ -333,13 +336,12 @@ export class Object3D<EventMap extends Object3DEventMap = any> {
       _m1.lookAt(_target, _position, this.up);
     }
 
-    Quaternion_.fillRotation(this.quaternion, _m1);
+    this.quaternion.setFromRotationMatrix(_m1);
 
     if (parent) {
       _m1.extractRotation(parent.matrixWorld);
-      Quaternion_.fillRotation(_q1, _m1);
-      Quaternion_.invert(_q1);
-      Quaternion_.premultiply(this.quaternion, _q1);
+      _q1.setFromRotationMatrix(_m1);
+      this.quaternion.premultiply(_q1.invert());
     }
     return this;
   }
@@ -487,7 +489,7 @@ export class Object3D<EventMap extends Object3DEventMap = any> {
     return target.setFromMatrixPosition(this.matrixWorld);
   }
 
-  getWorldQuaternion(target: Quaternion_): Quaternion_ {
+  getWorldQuaternion(target: Quaternion): Quaternion {
     this.updateWorldMatrix(true, false);
 
     this.matrixWorld.decompose(_position, target, _scale);
@@ -628,7 +630,7 @@ export class Object3D<EventMap extends Object3DEventMap = any> {
     this.up.copy(source.up);
 
     this.position.copy(source.position);
-    Quaternion_.fill_(source.quaternion, this.quaternion);
+    this.quaternion.copy(source.quaternion);
     this.scale.copy(source.scale);
 
     this.matrix.copy(source.matrix);

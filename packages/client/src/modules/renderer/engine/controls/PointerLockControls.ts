@@ -105,7 +105,8 @@ function onMouseMove(event: MouseEvent) {
   const movementY = event.movementY;
 
   const camera = this.camera;
-  Euler.fillQuaternion(_euler, camera.quaternion);
+  //@ts-expect-error
+  _euler.setFromQuaternion(camera.quaternion);
 
   _euler.y -= movementX * 0.002 * this.pointerSpeed;
   _euler.x -= movementY * 0.002 * this.pointerSpeed;

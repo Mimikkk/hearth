@@ -9,20 +9,19 @@ import {
   Mesh,
   MeshBasicMaterial,
   Object3D,
+  Quaternion,
   Skeleton,
   SphereGeometry,
   Vector3,
 } from '../engine.js';
-import { Quaternion_ } from '@modules/renderer/engine/math/Quaternion.js';
-import { NumberArray } from '@modules/renderer/engine/math/MathUtils.js';
 
-const _q = Quaternion_.identity();
+const _q = new Quaternion();
 const _targetPos = new Vector3();
 const _targetVec = new Vector3();
 const _effectorPos = new Vector3();
 const _effectorVec = new Vector3();
 const _linkPos = new Vector3();
-const _invLinkQ = Quaternion_.identity();
+const _invLinkQ = new Quaternion();
 const _linkScale = new Vector3();
 const _axis = new Vector3();
 const _vector = new Vector3();
@@ -126,9 +125,10 @@ export class CCDIKSolver {
         const rotationMin = links[j].rotationMin;
         const rotationMax = links[j].rotationMax;
 
+        // don't use getWorldPosition/Quaternion() here for the performance
+        // because they call updateMatrixWorld( true ) inside.
         link.matrixWorld.decompose(_linkPos, _invLinkQ, _linkScale);
-        Quaternion_.invert(_invLinkQ);
-
+        _invLinkQ.invert();
         _effectorPos.setFromMatrixPosition(effector.matrixWorld);
 
         // work in link world
@@ -164,8 +164,8 @@ export class CCDIKSolver {
         _axis.crossVectors(_effectorVec, _targetVec);
         _axis.normalize();
 
-        Quaternion_.fillAxisAngle(_q, _axis, angle);
-        Quaternion_.multiply(link.quaternion, _q);
+        _q.setFromAxisAngle(_axis, angle);
+        link.quaternion.multiply(_q);
 
         // TODO: re-consider the limitation specification
         if (limitation !== undefined) {
@@ -174,7 +174,7 @@ export class CCDIKSolver {
           if (c > 1.0) c = 1.0;
 
           const c2 = math.sqrt(1 - c * c);
-          Quaternion_.fill(link.quaternion, limitation.x * c2, limitation.y * c2, limitation.z * c2, c);
+          link.quaternion.set(limitation.x * c2, limitation.y * c2, limitation.z * c2, c);
         }
 
         if (rotationMin !== undefined) {
@@ -244,7 +244,12 @@ function getPosition(bone: Bone, matrixWorldInv: Matrix4): Vector3 {
   return _vector.setFromMatrixPosition(bone.matrixWorld).applyMatrix4(matrixWorldInv);
 }
 
-function setPositionOfBoneToAttributeArray(array: NumberArray, index: number, bone: Bone, matrixWorldInv: Matrix4) {
+function setPositionOfBoneToAttributeArray(
+  array: ArrayLike<number>,
+  index: number,
+  bone: Bone,
+  matrixWorldInv: Matrix4,
+) {
   const v = getPosition(bone, matrixWorldInv);
 
   array[index * 3 + 0] = v.x;

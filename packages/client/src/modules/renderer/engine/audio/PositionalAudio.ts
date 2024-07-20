@@ -1,9 +1,9 @@
 import { Vector3 } from '../math/Vector3.js';
-import { Quaternion_ } from '../math/Quaternion.js';
+import { Quaternion } from '../math/Quaternion.js';
 import { Audio } from './Audio.js';
 
 const _position = /*@__PURE__*/ new Vector3();
-const _quaternion = /*@__PURE__*/ Quaternion_.identity();
+const _quaternion = /*@__PURE__*/ new Quaternion();
 const _scale = /*@__PURE__*/ new Vector3();
 const _orientation = /*@__PURE__*/ new Vector3();
 

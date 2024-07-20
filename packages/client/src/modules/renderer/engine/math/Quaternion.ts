@@ -1,7 +1,7 @@
 import * as MathUtils from './MathUtils.js';
-import { NumberArray } from './MathUtils.js';
+import { NumberArray, TypedArray } from './MathUtils.js';
 import type { Euler } from './Euler.js';
-import { Vec3, Vector3 } from './Vector3.js';
+import type { Vector3 } from './Vector3.js';
 import type { Matrix4 } from './Matrix4.js';
 import type { BufferAttribute } from '../core/BufferAttribute.js';
 import type { InterleavedBufferAttribute } from '../core/InterleavedBufferAttribute.js';
@@ -18,6 +18,108 @@ export class Quaternion {
     this.y = y;
     this.z = z;
     this.w = w;
+  }
+
+  static slerpFlat(
+    dst: TypedArray | number[],
+    dstOffset: number,
+    src0: TypedArray | number[],
+    srcOffset0: number,
+    src1: TypedArray | number[],
+    srcOffset1: number,
+    t: number,
+  ): void {
+    // fuzz-free, array-based Quaternion SLERP operation
+
+    let x0 = src0[srcOffset0];
+    let y0 = src0[srcOffset0 + 1];
+    let z0 = src0[srcOffset0 + 2];
+    let w0 = src0[srcOffset0 + 3];
+
+    const x1 = src1[srcOffset1];
+    const y1 = src1[srcOffset1 + 1];
+    const z1 = src1[srcOffset1 + 2];
+    const w1 = src1[srcOffset1 + 3];
+
+    if (t === 0) {
+      dst[dstOffset + 0] = x0;
+      dst[dstOffset + 1] = y0;
+      dst[dstOffset + 2] = z0;
+      dst[dstOffset + 3] = w0;
+      return;
+    }
+
+    if (t === 1) {
+      dst[dstOffset + 0] = x1;
+      dst[dstOffset + 1] = y1;
+      dst[dstOffset + 2] = z1;
+      dst[dstOffset + 3] = w1;
+      return;
+    }
+
+    if (w0 !== w1 || x0 !== x1 || y0 !== y1 || z0 !== z1) {
+      let s = 1 - t;
+      const cos = x0 * x1 + y0 * y1 + z0 * z1 + w0 * w1,
+        dir = cos >= 0 ? 1 : -1,
+        sqrSin = 1 - cos * cos;
+
+      // Skip the Slerp for tiny steps to avoid numeric problems:
+      if (sqrSin > Number.EPSILON) {
+        const sin = Math.sqrt(sqrSin),
+          len = Math.atan2(sin, cos * dir);
+
+        s = Math.sin(s * len) / sin;
+        t = Math.sin(t * len) / sin;
+      }
+
+      const tDir = t * dir;
+
+      x0 = x0 * s + x1 * tDir;
+      y0 = y0 * s + y1 * tDir;
+      z0 = z0 * s + z1 * tDir;
+      w0 = w0 * s + w1 * tDir;
+
+      // Normalize in case we just did a lerp:
+      if (s === 1 - t) {
+        const f = 1 / Math.sqrt(x0 * x0 + y0 * y0 + z0 * z0 + w0 * w0);
+
+        x0 *= f;
+        y0 *= f;
+        z0 *= f;
+        w0 *= f;
+      }
+    }
+
+    dst[dstOffset] = x0;
+    dst[dstOffset + 1] = y0;
+    dst[dstOffset + 2] = z0;
+    dst[dstOffset + 3] = w0;
+  }
+
+  static multiplyQuaternionsFlat(
+    dst: TypedArray | number[],
+    dstOffset: number,
+    src0: TypedArray | number[],
+    srcOffset0: number,
+    src1: TypedArray | number[],
+    srcOffset1: number,
+  ): TypedArray | number[] {
+    const x0 = src0[srcOffset0];
+    const y0 = src0[srcOffset0 + 1];
+    const z0 = src0[srcOffset0 + 2];
+    const w0 = src0[srcOffset0 + 3];
+
+    const x1 = src1[srcOffset1];
+    const y1 = src1[srcOffset1 + 1];
+    const z1 = src1[srcOffset1 + 2];
+    const w1 = src1[srcOffset1 + 3];
+
+    dst[dstOffset] = x0 * w1 + w0 * x1 + y0 * z1 - z0 * y1;
+    dst[dstOffset + 1] = y0 * w1 + w0 * y1 + z0 * x1 - x0 * z1;
+    dst[dstOffset + 2] = z0 * w1 + w0 * z1 + x0 * y1 - y0 * x1;
+    dst[dstOffset + 3] = w0 * w1 - x0 * x1 - y0 * y1 - z0 * z1;
+
+    return dst;
   }
 
   set(x: number, y: number, z: number, w: number): this {
@@ -123,6 +225,10 @@ export class Quaternion {
   }
 
   setFromRotationMatrix(m: Matrix4): this {
+    // http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToQuaternion/index.htm
+
+    // assumes the upper 3x3 of m is a pure rotation matrix (i.e, unscaled)
+
     const te = m.elements,
       m11 = te[0],
       m12 = te[4],
@@ -411,6 +517,19 @@ export class Quaternion {
   }
 }
 
+export interface Vec3 {
+  x: number;
+  y: number;
+  z: number;
+}
+
+export namespace Vec3 {
+  export const create = (x: number, y: number, z: number): Vec3 => ({ x, y, z });
+  export const vec3 = create;
+
+  export const dot = (a: Readonly<Vec3>, b: Readonly<Vec3>): number => a.x * b.x + a.y * b.y + a.z * b.z;
+}
+
 export interface Quaternion_ {
   x: number;
   y: number;
@@ -530,47 +649,6 @@ export namespace Quaternion_ {
     return into;
   };
   export const intoArray = (self: Readonly<Quaternion_>): number[] => intoArray_(self, 0, [0, 0, 0, 0]);
-
-  export const fromRotation = (matrix: Readonly<Matrix4>): Quaternion_ => fromRotation_(matrix, identity());
-  export const fromRotation_ = (matrix: Readonly<Matrix4>, into: Quaternion_): Quaternion_ => {
-    const te = matrix.elements;
-    const m11 = te[0];
-    const m12 = te[4];
-    const m13 = te[8];
-    const m21 = te[1];
-    const m22 = te[5];
-    const m23 = te[9];
-    const m31 = te[2];
-    const m32 = te[6];
-    const m33 = te[10];
-    const trace = m11 + m22 + m33;
-
-    if (trace > 0) {
-      const s = 0.5 / Math.sqrt(trace + 1.0);
-
-      return fill(into, (m32 - m23) * s, (m13 - m31) * s, (m21 - m12) * s, 0.25 / s);
-    }
-
-    if (m11 > m22 && m11 > m33) {
-      const s = 2.0 * Math.sqrt(1.0 + m11 - m22 - m33);
-
-      into.x = 0.25 * s;
-      into.y = (m12 + m21) / s;
-      into.z = (m13 + m31) / s;
-      into.w = (m32 - m23) / s;
-      return fill(into, 0.25 * s, (m12 + m21) / s, (m13 + m31) / s, (m32 - m23) / s);
-    }
-
-    if (m22 > m33) {
-      const s = 2.0 * Math.sqrt(1.0 + m22 - m11 - m33);
-      return fill(into, (m12 + m21) / s, 0.25 * s, (m23 + m32) / s, (m13 - m31) / s);
-    }
-
-    const s = 2.0 * Math.sqrt(1.0 + m33 - m11 - m22);
-    return fill(into, (m13 + m31) / s, (m23 + m32) / s, 0.25 * s, (m21 - m12) / s);
-  };
-  export const fillRotation = (self: Quaternion_, matrix: Readonly<Matrix4>): Quaternion_ =>
-    fromRotation_(matrix, self);
 
   export const fromAxisAngle = (axis: Readonly<Vec3>, angle: number): Quaternion_ =>
     fromAxisAngle_(axis, angle, identity());

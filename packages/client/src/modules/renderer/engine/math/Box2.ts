@@ -1,5 +1,12 @@
-import { Vec2 } from '@modules/renderer/engine/math/Vector2.js';
+export interface Vec2 {
+  x: number;
+  y: number;
+}
 
+export namespace Vec2 {
+  export const create = (x: number, y: number): Vec2 => ({ x, y });
+  export const vec2 = create;
+}
 const { vec2 } = Vec2;
 
 export interface Box2 {

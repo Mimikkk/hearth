@@ -1,5 +1,5 @@
 import { Interpolant } from '../Interpolant.js';
-import { QuaternionArray } from '../Quaternion.js';
+import { Quaternion } from '../Quaternion.js';
 import type { TypedArray } from '../MathUtils.js';
 
 export class QuaternionLinearInterpolant<T extends TypedArray, V extends TypedArray> extends Interpolant<T, V> {
@@ -16,7 +16,7 @@ export class QuaternionLinearInterpolant<T extends TypedArray, V extends TypedAr
     let offset = i1 * stride;
 
     for (let end = offset + stride; offset !== end; offset += 4) {
-      QuaternionArray.slerp(result, 0, values, offset - stride, values, offset, alpha);
+      Quaternion.slerpFlat(result, 0, values, offset - stride, values, offset, alpha);
     }
 
     return result;

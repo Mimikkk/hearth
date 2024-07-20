@@ -37,6 +37,7 @@ import {
   Points,
   PointsMaterial,
   PropertyBinding,
+  Quaternion,
   QuaternionKeyframeTrack,
   Side,
   Skeleton,
@@ -54,8 +55,8 @@ import { FileLoader, ResponseType } from '@modules/renderer/engine/loaders/files
 import { ImageBitmapLoader } from '@modules/renderer/engine/loaders/textures/ImageBitmapLoader/ImageBitmapLoader.ts';
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { KTX2Loader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/KTX2Loader.js';
+import { MeshoptDecoder } from 'meshoptimizer';
 import { DRACOLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/DRACOLoader.js';
-import { Quaternion_ } from '@modules/renderer/engine/math/Quaternion.js';
 
 export type PluginFn = (parser: Parser) => Plugin;
 
@@ -1255,7 +1256,7 @@ class GLTFMeshGpuInstancing implements Plugin {
         // Temporal variables
         const m = new Matrix4();
         const p = new Vector3();
-        const q = Quaternion_.identity();
+        const q = new Quaternion();
         const s = new Vector3(1, 1, 1);
 
         const instancedMesh = new InstancedMesh(mesh.geometry, mesh.material, count);
@@ -1266,7 +1267,7 @@ class GLTFMeshGpuInstancing implements Plugin {
           }
 
           if (attributes.ROTATION) {
-            Quaternion_.fillAttribute(q, attributes.ROTATION, i);
+            q.fromBufferAttribute(attributes.ROTATION, i);
           }
 
           if (attributes.SCALE) {
@@ -1551,15 +1552,13 @@ class GLTFCubicSplineInterpolant extends Interpolant {
   }
 }
 
-const _q = Quaternion_.identity();
+const _q = new Quaternion();
 
 class GLTFCubicSplineQuaternionInterpolant extends GLTFCubicSplineInterpolant {
   interpolate_(i1, t0, t, t1) {
     const result = super.interpolate_(i1, t0, t, t1);
 
-    Quaternion_.fillArray(_q, result, 0);
-    Quaternion_.normalize(_q);
-    Quaternion_.intoArray_(_q, 0, result);
+    _q.fromArray(result).normalize().toArray(result);
 
     return result;
   }
@@ -3267,7 +3266,7 @@ class Parser {
         }
 
         if (nodeDef.rotation !== undefined) {
-          Quaternion_.fillArray(node.quaternion, nodeDef.rotation, 0);
+          node.quaternion.fromArray(nodeDef.rotation);
         }
 
         if (nodeDef.scale !== undefined) {

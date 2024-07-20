@@ -1,8 +1,9 @@
 import type { Vector3 } from './Vector3.js';
 import type { Matrix4 } from './Matrix4.js';
-import type { Quaternion_ } from './Quaternion.js';
+import type { Quaternion } from './Quaternion.js';
 import type { Matrix3 } from './Matrix3.js';
 import type { BufferAttribute } from '../core/BufferAttribute.js';
+import { IVector2 } from '@modules/renderer/engine/math/Vector2.js';
 
 export interface IVector4 {
   x: number;
@@ -226,7 +227,7 @@ export class Vector4 implements IVector4 {
     return this.multiplyScalar(1 / scalar);
   }
 
-  setAxisAngleFromQuaternion(quaternion: Quaternion_): this {
+  setAxisAngleFromQuaternion(quaternion: Quaternion): this {
     this.w = 2 * Math.acos(quaternion.w);
 
     const s = Math.sqrt(1 - quaternion.w * quaternion.w);

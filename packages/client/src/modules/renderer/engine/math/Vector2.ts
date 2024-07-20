@@ -374,13 +374,3 @@ export class Vector2 implements IVector2 {
   }
 }
 Vector2.prototype.isVector2 = true;
-
-export interface Vec2 {
-  x: number;
-  y: number;
-}
-
-export namespace Vec2 {
-  export const create = (x: number, y: number): Vec2 => ({ x, y });
-  export const vec2 = create;
-}

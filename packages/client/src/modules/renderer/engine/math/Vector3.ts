@@ -1,5 +1,5 @@
 import { clamp } from './MathUtils.js';
-import { Quaternion_ } from './Quaternion.js';
+import { Quaternion } from './Quaternion.js';
 import type { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
 import type { InterleavedBufferAttribute } from '@modules/renderer/engine/core/InterleavedBufferAttribute.js';
 import type { Color } from '@modules/renderer/engine/math/Color.js';
@@ -184,11 +184,11 @@ export class Vector3 implements IVector3 {
   }
 
   applyEuler(euler: Euler): this {
-    return this.applyQuaternion(Quaternion_.fromEuler(euler));
+    return this.applyQuaternion(new Quaternion().setFromEuler(euler));
   }
 
   applyAxisAngle(axis: Vector3, angle: number): this {
-    return this.applyQuaternion(Quaternion_.fromAxisAngle(axis, angle));
+    return this.applyQuaternion(new Quaternion().setFromAxisAngle(axis, angle));
   }
 
   applyMatrix3(matrix: Matrix3): this {
@@ -223,14 +223,16 @@ export class Vector3 implements IVector3 {
     return this;
   }
 
-  applyQuaternion(quaternion: Quaternion_): this {
-    const vx = this.x;
-    const vy = this.y;
-    const vz = this.z;
-    const qx = quaternion.x;
-    const qy = quaternion.y;
-    const qz = quaternion.z;
-    const qw = quaternion.w;
+  applyQuaternion(quaternion: Quaternion): this {
+    // quaternion q is assumed to have unit length
+
+    const vx = this.x,
+      vy = this.y,
+      vz = this.z;
+    const qx = quaternion.x,
+      qy = quaternion.y,
+      qz = quaternion.z,
+      qw = quaternion.w;
 
     // t = 2 * cross( q.xyz, v );
     const tx = 2 * (qy * vz - qz * vy);
@@ -592,18 +594,4 @@ export class Vector3 implements IVector3 {
     yield this.z;
   }
 }
-
 Vector3.prototype.isVector3 = true;
-
-export interface Vec3 {
-  x: number;
-  y: number;
-  z: number;
-}
-
-export namespace Vec3 {
-  export const create = (x: number, y: number, z: number): Vec3 => ({ x, y, z });
-  export const vec3 = create;
-
-  export const dot = (a: Readonly<Vec3>, b: Readonly<Vec3>): number => a.x * b.x + a.y * b.y + a.z * b.z;
-}

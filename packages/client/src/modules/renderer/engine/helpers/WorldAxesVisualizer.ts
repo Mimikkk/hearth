@@ -7,6 +7,7 @@ import {
   MeshBasicMaterial,
   Object3D,
   OrthographicCamera,
+  Quaternion,
   Raycaster,
   Sprite,
   SpriteMaterial,
@@ -16,7 +17,6 @@ import {
 } from '../engine.js';
 import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 import { Euler } from '@modules/renderer/engine/math/Euler.js';
-import { Quaternion_ } from '@modules/renderer/engine/math/Quaternion.js';
 
 const turnRate = 2 * Math.PI;
 const dim = 128;
@@ -59,7 +59,7 @@ const createSpriteMaterial = (color: Color, text: string | null = null) => {
 
 type AnimateState = {
   position: Vector3;
-  rotation: Quaternion_;
+  rotation: Quaternion;
 };
 
 export class WorldAxesVisualizer extends Object3D {
@@ -72,8 +72,8 @@ export class WorldAxesVisualizer extends Object3D {
   raycaster: Raycaster = new Raycaster();
   dummy: Object3D = new Object3D();
   orthoCamera: OrthographicCamera;
-  q1: Quaternion_ = Quaternion_.identity();
-  q2: Quaternion_ = Quaternion_.identity();
+  q1: Quaternion = new Quaternion();
+  q2: Quaternion = new Quaternion();
   viewport: Vector4 = new Vector4();
   point: Vector3 = new Vector3();
   unsubscribeClick: () => void;
@@ -137,32 +137,32 @@ export class WorldAxesVisualizer extends Object3D {
     if (posX === object) {
       return {
         position: new Vector3(1, 0, 0),
-        rotation: Quaternion_.fromEuler(Euler.create(0, Math.PI * 0.5, 0)),
+        rotation: new Quaternion().setFromEuler(Euler.create(0, Math.PI * 0.5, 0)),
       };
     } else if (posY === object) {
       return {
         position: new Vector3(0, 1, 0),
-        rotation: Quaternion_.fromEuler(Euler.create(-Math.PI * 0.5, 0, 0)),
+        rotation: new Quaternion().setFromEuler(Euler.create(-Math.PI * 0.5, 0, 0)),
       };
     } else if (posZ === object) {
       return {
         position: new Vector3(0, 0, 1),
-        rotation: Quaternion_.fromEuler(Euler.create(0, 0, 0)),
+        rotation: new Quaternion().setFromEuler(Euler.create(0, 0, 0)),
       };
     } else if (negX === object) {
       return {
         position: new Vector3(-1, 0, 0),
-        rotation: Quaternion_.fromEuler(Euler.create(0, -Math.PI * 0.5, 0)),
+        rotation: new Quaternion().setFromEuler(Euler.create(0, -Math.PI * 0.5, 0)),
       };
     } else if (negY === object) {
       return {
         position: new Vector3(0, -1, 0),
-        rotation: Quaternion_.fromEuler(Euler.create(Math.PI * 0.5, 0, 0)),
+        rotation: new Quaternion().setFromEuler(Euler.create(Math.PI * 0.5, 0, 0)),
       };
     } else if (negZ === object) {
       return {
         position: new Vector3(0, 0, -1),
-        rotation: Quaternion_.fromEuler(Euler.create(0, Math.PI, 0)),
+        rotation: new Quaternion().setFromEuler(Euler.create(0, Math.PI, 0)),
       };
     }
 
@@ -238,10 +238,10 @@ export class WorldAxesVisualizer extends Object3D {
 
     this.dummy.position.copy(this.center);
     this.dummy.lookAt(this.camera.position);
-    Quaternion_.fill_(this.dummy.quaternion, this.q1);
+    this.q1.copy(this.dummy.quaternion);
 
     this.dummy.lookAt(this.animation.position);
-    Quaternion_.fill_(this.dummy.quaternion, this.q2);
+    this.q2.copy(this.dummy.quaternion);
   }
 
   update(delta: number): void {
@@ -250,12 +250,12 @@ export class WorldAxesVisualizer extends Object3D {
     const step = delta * turnRate;
     const { q1, q2 } = this;
 
-    Quaternion_.rotateTowards(q1, q2, step);
+    this.q1.rotateTowards(q2, step);
 
     this.camera.position.set(0, 0, 1).applyQuaternion(q1).multiplyScalar(this.radius).add(this.center);
-    Quaternion_.rotateTowards(this.camera.quaternion, this.animation.rotation, step);
+    this.camera.quaternion.rotateTowards(this.animation.rotation, step);
 
-    if (Quaternion_.angleTo(q1, q2) === 0) this.animation = null;
+    if (q1.angleTo(q2) === 0) this.animation = null;
   }
 
   dispose(): void {
