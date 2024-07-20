@@ -82,7 +82,7 @@ async function init() {
 
   // ensure shaders/pipelines are all complete before rendering
 
-  await renderer.compile(scene, camera);
+  await renderer.compileAsync(scene, camera);
 
   renderer.setAnimationLoop(render);
   document.body.appendChild(renderer.parameters.canvas);

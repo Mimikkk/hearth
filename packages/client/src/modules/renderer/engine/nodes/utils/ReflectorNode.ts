@@ -145,6 +145,7 @@ class ReflectorNode extends TextureNode {
 
     //
 
+    virtualCamera.coordinateSystem = camera.coordinateSystem;
     virtualCamera.position.copy(_view);
     virtualCamera.up.set(0, 1, 0);
     virtualCamera.up.applyMat4(_rotationMatrix);

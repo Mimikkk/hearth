@@ -1,4 +1,13 @@
-import { BufferAttribute, Object3D, RenderTarget, Scene, Texture, Vec3 } from '../../engine.js';
+import {
+  BufferAttribute,
+  Color,
+  CoordinateSystem,
+  Object3D,
+  RenderTarget,
+  Scene,
+  Texture,
+  Vec3,
+} from '../../engine.js';
 
 import {
   GPUFeatureNameType,
@@ -104,6 +113,10 @@ export class Backend {
     this.pipelines = new BackendPipelines(this);
     this.textures = new BackendTextures(this);
     this.resolveBufferMap = new Map();
+  }
+
+  get coordinateSystem() {
+    return CoordinateSystem.WebGPU;
   }
 
   async getArrayBufferAsync(attribute: BufferAttribute) {
