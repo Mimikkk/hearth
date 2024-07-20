@@ -4,7 +4,10 @@ import {
   depthTexture,
   MeshBasicNodeMaterial,
   MeshStandardNodeMaterial,
+  mx_cell_noise_float,
+  mx_fractal_noise_float,
   mx_perlin_noise_float,
+  mx_worley_noise_float,
   normalWorld,
   objectPosition,
   pass,
@@ -42,11 +45,20 @@ import {
   Mesh,
   PerspectiveCamera,
   Scene,
+  TextureLoader,
   Vector3,
   Wrapping,
 } from '@modules/renderer/engine/engine.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
+import { throttle } from 'lodash-es';
+
+// let camera, scene, renderer;
+// let mixer, objects, clock;
+// let model, floor, floorPosition;
+// let postProcessing;
+// let controls;
+// let stats;
 
 const camera = new PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.25, 30);
 camera.position.set(3, 2, 4);

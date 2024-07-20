@@ -38,6 +38,8 @@ async function init() {
   initGUI();
 
   renderer = await Renderer.create();
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(function () {
     renderer.render(scene, camera);
   });

@@ -48,6 +48,8 @@ async function init() {
 
   renderer = await Renderer.create();
 
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.parameters.toneMapping = Engine.ToneMapping.Linear;
   renderer.parameters.toneMappingExposure = 1;
   renderer.setAnimationLoop(render);

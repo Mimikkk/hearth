@@ -118,6 +118,7 @@ async function init() {
   scene.add(plane);
 
   const renderer = await Renderer.create({ trackTimestamp: true });
+  renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
 
   document.body.appendChild(renderer.parameters.canvas);

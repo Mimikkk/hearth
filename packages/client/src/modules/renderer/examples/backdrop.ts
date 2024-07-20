@@ -49,9 +49,10 @@ const createLight = () => {
 };
 const createRenderer = async (onAnimate: () => void) => {
   const renderer = await Renderer.create();
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(onAnimate);
   renderer.parameters.toneMappingNode = toneMapping(ToneMapping.Linear, 0.15);
-  document.body.append(renderer.parameters.canvas);
 
   return renderer;
 };
@@ -69,6 +70,7 @@ const camera = createCamera();
 const scene = createScene();
 const light = createLight();
 const clock = new Clock();
+
 const { object, mixer } = await loadMichelle();
 
 const spheres = new Group();
@@ -111,4 +113,6 @@ const renderer = await createRenderer(() => {
 
   renderer.render(scene, camera);
 });
+document.body.append(renderer.parameters.canvas);
+
 useWindowResizer(renderer, camera);

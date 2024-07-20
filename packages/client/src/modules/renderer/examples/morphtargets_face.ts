@@ -30,6 +30,8 @@ async function init() {
   scene.add(new Engine.HemisphereLight(0xffffff, 0x443333, 2));
 
   const renderer = await Renderer.create();
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.parameters.toneMapping = Engine.ToneMapping.ACESFilmic;
   renderer.setAnimationLoop(animate);
 
