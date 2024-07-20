@@ -1,4 +1,4 @@
-import { Quaternion } from '../math/Quaternion.js';
+import { QuaternionArray } from '../math/Quaternion.js';
 import type { PropertyBinding } from './PropertyBinding.js';
 
 export class PropertyMixer {
@@ -246,7 +246,7 @@ export class PropertyMixer {
   }
 
   _slerp(buffer: Float64Array | number[], dstOffset: number, srcOffset: number, t: number, stride: number): void {
-    Quaternion.slerpFlat(buffer, dstOffset, buffer, dstOffset, buffer, srcOffset, t);
+    QuaternionArray.slerp(buffer, dstOffset, buffer, dstOffset, buffer, srcOffset, t);
   }
 
   _slerpAdditive(
@@ -259,10 +259,10 @@ export class PropertyMixer {
     const workOffset = this._workIndex * stride;
 
     // Store result in intermediate buffer offset
-    Quaternion.multiplyQuaternionsFlat(buffer, workOffset, buffer, dstOffset, buffer, srcOffset);
+    QuaternionArray.multiply(buffer, workOffset, buffer, dstOffset, buffer, srcOffset);
 
     // Slerp to the intermediate result
-    Quaternion.slerpFlat(buffer, dstOffset, buffer, dstOffset, buffer, workOffset, t);
+    QuaternionArray.slerp(buffer, dstOffset, buffer, dstOffset, buffer, workOffset, t);
   }
 
   _lerp(buffer: Float64Array | number[], dstOffset: number, srcOffset: number, t: number, stride: number): void {

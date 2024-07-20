@@ -1,10 +1,11 @@
 import * as MathUtils from './MathUtils.js';
-import { TypedArray } from './MathUtils.js';
+import { NumberArray, TypedArray } from './MathUtils.js';
 import type { Euler } from './Euler.js';
 import type { Vec3 } from './Vec3.js';
 import type { Mat4 } from './Mat4.js';
 import type { BufferAttribute } from '../core/BufferAttribute.js';
 import type { InterleavedBufferAttribute } from '../core/InterleavedBufferAttribute.js';
+import { Const } from '@modules/renderer/engine/math/types.js';
 
 export class Quaternion {
   declare isQuaternion: true;
@@ -19,108 +20,6 @@ export class Quaternion {
     this._y = y;
     this._z = z;
     this._w = w;
-  }
-
-  static slerpFlat(
-    dst: TypedArray | number[],
-    dstOffset: number,
-    src0: TypedArray | number[],
-    srcOffset0: number,
-    src1: TypedArray | number[],
-    srcOffset1: number,
-    t: number,
-  ): void {
-    // fuzz-free, array-based Quaternion SLERP operation
-
-    let x0 = src0[srcOffset0];
-    let y0 = src0[srcOffset0 + 1];
-    let z0 = src0[srcOffset0 + 2];
-    let w0 = src0[srcOffset0 + 3];
-
-    const x1 = src1[srcOffset1];
-    const y1 = src1[srcOffset1 + 1];
-    const z1 = src1[srcOffset1 + 2];
-    const w1 = src1[srcOffset1 + 3];
-
-    if (t === 0) {
-      dst[dstOffset + 0] = x0;
-      dst[dstOffset + 1] = y0;
-      dst[dstOffset + 2] = z0;
-      dst[dstOffset + 3] = w0;
-      return;
-    }
-
-    if (t === 1) {
-      dst[dstOffset + 0] = x1;
-      dst[dstOffset + 1] = y1;
-      dst[dstOffset + 2] = z1;
-      dst[dstOffset + 3] = w1;
-      return;
-    }
-
-    if (w0 !== w1 || x0 !== x1 || y0 !== y1 || z0 !== z1) {
-      let s = 1 - t;
-      const cos = x0 * x1 + y0 * y1 + z0 * z1 + w0 * w1,
-        dir = cos >= 0 ? 1 : -1,
-        sqrSin = 1 - cos * cos;
-
-      // Skip the Slerp for tiny steps to avoid numeric problems:
-      if (sqrSin > Number.EPSILON) {
-        const sin = Math.sqrt(sqrSin),
-          len = Math.atan2(sin, cos * dir);
-
-        s = Math.sin(s * len) / sin;
-        t = Math.sin(t * len) / sin;
-      }
-
-      const tDir = t * dir;
-
-      x0 = x0 * s + x1 * tDir;
-      y0 = y0 * s + y1 * tDir;
-      z0 = z0 * s + z1 * tDir;
-      w0 = w0 * s + w1 * tDir;
-
-      // Normalize in case we just did a lerp:
-      if (s === 1 - t) {
-        const f = 1 / Math.sqrt(x0 * x0 + y0 * y0 + z0 * z0 + w0 * w0);
-
-        x0 *= f;
-        y0 *= f;
-        z0 *= f;
-        w0 *= f;
-      }
-    }
-
-    dst[dstOffset] = x0;
-    dst[dstOffset + 1] = y0;
-    dst[dstOffset + 2] = z0;
-    dst[dstOffset + 3] = w0;
-  }
-
-  static multiplyQuaternionsFlat(
-    dst: TypedArray | number[],
-    dstOffset: number,
-    src0: TypedArray | number[],
-    srcOffset0: number,
-    src1: TypedArray | number[],
-    srcOffset1: number,
-  ): TypedArray | number[] {
-    const x0 = src0[srcOffset0];
-    const y0 = src0[srcOffset0 + 1];
-    const z0 = src0[srcOffset0 + 2];
-    const w0 = src0[srcOffset0 + 3];
-
-    const x1 = src1[srcOffset1];
-    const y1 = src1[srcOffset1 + 1];
-    const z1 = src1[srcOffset1 + 2];
-    const w1 = src1[srcOffset1 + 3];
-
-    dst[dstOffset] = x0 * w1 + w0 * x1 + y0 * z1 - z0 * y1;
-    dst[dstOffset + 1] = y0 * w1 + w0 * y1 + z0 * x1 - x0 * z1;
-    dst[dstOffset + 2] = z0 * w1 + w0 * z1 + x0 * y1 - y0 * x1;
-    dst[dstOffset + 3] = w0 * w1 - x0 * x1 - y0 * y1 - z0 * z1;
-
-    return dst;
   }
 
   get x(): number {
@@ -592,4 +491,111 @@ export class Quaternion {
     yield this._w;
   }
 }
+
+export namespace QuaternionArray {
+  export function slerp<T extends NumberArray>(
+    dst: T,
+    dstOffset: number,
+    src0: Const<NumberArray>,
+    srcOffset0: number,
+    src1: Const<NumberArray>,
+    srcOffset1: number,
+    t: number,
+  ): T {
+    // fuzz-free, array-based Quaternion SLERP operation
+
+    let x0 = src0[srcOffset0];
+    let y0 = src0[srcOffset0 + 1];
+    let z0 = src0[srcOffset0 + 2];
+    let w0 = src0[srcOffset0 + 3];
+
+    const x1 = src1[srcOffset1];
+    const y1 = src1[srcOffset1 + 1];
+    const z1 = src1[srcOffset1 + 2];
+    const w1 = src1[srcOffset1 + 3];
+
+    if (t === 0) {
+      dst[dstOffset + 0] = x0;
+      dst[dstOffset + 1] = y0;
+      dst[dstOffset + 2] = z0;
+      dst[dstOffset + 3] = w0;
+      return dst;
+    }
+
+    if (t === 1) {
+      dst[dstOffset + 0] = x1;
+      dst[dstOffset + 1] = y1;
+      dst[dstOffset + 2] = z1;
+      dst[dstOffset + 3] = w1;
+      return dst;
+    }
+
+    if (w0 !== w1 || x0 !== x1 || y0 !== y1 || z0 !== z1) {
+      let s = 1 - t;
+      const cos = x0 * x1 + y0 * y1 + z0 * z1 + w0 * w1,
+        dir = cos >= 0 ? 1 : -1,
+        sqrSin = 1 - cos * cos;
+
+      // Skip the Slerp for tiny steps to avoid numeric problems:
+      if (sqrSin > Number.EPSILON) {
+        const sin = Math.sqrt(sqrSin),
+          len = Math.atan2(sin, cos * dir);
+
+        s = Math.sin(s * len) / sin;
+        t = Math.sin(t * len) / sin;
+      }
+
+      const tDir = t * dir;
+
+      x0 = x0 * s + x1 * tDir;
+      y0 = y0 * s + y1 * tDir;
+      z0 = z0 * s + z1 * tDir;
+      w0 = w0 * s + w1 * tDir;
+
+      // Normalize in case we just did a lerp:
+      if (s === 1 - t) {
+        const f = 1 / Math.sqrt(x0 * x0 + y0 * y0 + z0 * z0 + w0 * w0);
+
+        x0 *= f;
+        y0 *= f;
+        z0 *= f;
+        w0 *= f;
+      }
+    }
+
+    dst[dstOffset] = x0;
+    dst[dstOffset + 1] = y0;
+    dst[dstOffset + 2] = z0;
+    dst[dstOffset + 3] = w0;
+
+    return dst;
+  }
+
+  export function multiply<T extends NumberArray>(
+    dst: T,
+    dstOffset: number,
+    src0: Const<NumberArray>,
+    srcOffset0: number,
+    src1: Const<NumberArray>,
+    srcOffset1: number,
+  ): T {
+    const x0 = src0[srcOffset0];
+    const y0 = src0[srcOffset0 + 1];
+    const z0 = src0[srcOffset0 + 2];
+    const w0 = src0[srcOffset0 + 3];
+
+    const x1 = src1[srcOffset1];
+    const y1 = src1[srcOffset1 + 1];
+    const z1 = src1[srcOffset1 + 2];
+    const w1 = src1[srcOffset1 + 3];
+
+    dst[dstOffset] = x0 * w1 + w0 * x1 + y0 * z1 - z0 * y1;
+    dst[dstOffset + 1] = y0 * w1 + w0 * y1 + z0 * x1 - x0 * z1;
+    dst[dstOffset + 2] = z0 * w1 + w0 * z1 + x0 * y1 - y0 * x1;
+    dst[dstOffset + 3] = w0 * w1 - x0 * x1 - y0 * y1 - z0 * z1;
+
+    return dst;
+  }
+}
+
 Quaternion.prototype.isQuaternion = true;

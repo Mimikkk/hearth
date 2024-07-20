@@ -1,4 +1,4 @@
-import { Quaternion } from '../math/Quaternion.js';
+import { Quaternion, QuaternionArray } from '../math/Quaternion.js';
 import { AnimationBlendMode } from '../constants.js';
 import { ArrayMap, NumberArray, TypedArray, TypedArrayConstructor } from '@modules/renderer/engine/math/MathUtils.js';
 import { AnimationClip } from '@modules/renderer/engine/animation/AnimationClip.js';
@@ -230,14 +230,7 @@ export function makeClipAdditive(
 
       if (referenceTrackType === 'quaternion') {
         // Multiply the conjugate for quaternion track types
-        Quaternion.multiplyQuaternionsFlat(
-          targetTrack.values,
-          valueStart,
-          referenceValue,
-          0,
-          targetTrack.values,
-          valueStart,
-        );
+        QuaternionArray.multiply(targetTrack.values, valueStart, referenceValue, 0, targetTrack.values, valueStart);
       } else {
         const valueEnd = targetValueSize - targetOffset * 2;
 
