@@ -3,13 +3,15 @@ import { createEffect, createMemo, createSignal, JSXElement, onCleanup, ParentPr
 import { Search } from '@logic/Search/Search.js';
 import { createQueryable } from '@logic/createQueryable.js';
 import { ExampleNs } from '@modules/managment/exampleNs.js';
+import { PreviewButton } from '@modules/interface/SideBar/Examples/PreviewButton.js';
 import { CollapseButton } from '@modules/interface/SideBar/Examples/CollapseButton.js';
 import { Accordion, AccordionItem } from '@shared/components/control/Accordion/Accordion.jsx';
 import { Path } from 'a-path';
 import { SideBarItems } from '@modules/interface/SideBar/SideBar.items.js';
 import { useContent } from '@modules/managment/useContent.js';
 import { createEffectListener } from '@logic/createListener.js';
-import { ExampleName } from '@modules/renderer/examples/examples.js';
+import { Example } from '@modules/renderer/examples/examples.js';
+import cx from 'clsx';
 import { Shortcut } from '@shared/components/forms/Shortcut/Shortcut.tsx';
 
 const flatBy = <T extends Record<string, any>>(items: T[], key: Path.Of<T, T[] | undefined>): T[] => {
@@ -46,7 +48,12 @@ const findNested = (items: AccordionItem[], filtered: Set<AccordionItem>) => {
 };
 
 const cleanupSearch = () =>
-  Search.clears([ExampleNs.Search.SelectedId, ExampleNs.Search.CollapseId, ExampleNs.Search.QueryId]);
+  Search.clears([
+    ExampleNs.Search.SelectedId,
+    ExampleNs.Search.CollapseId,
+    ExampleNs.Search.PreviewId,
+    ExampleNs.Search.QueryId,
+  ]);
 
 const createSideBarSearch = () => {
   const [results, get, set] = createQueryable(SideBarItems, {
@@ -69,7 +76,7 @@ export const Examples = () => {
 
   createEffect(() => {
     const item = AccordionItem.findOnlyId(examples());
-    if (item) selectExample(item.id as ExampleName);
+    if (item) selectExample(item.id as Example);
   });
 
   let searchRef!: HTMLInputElement;
@@ -77,7 +84,7 @@ export const Examples = () => {
     if (key === 'Enter') {
       const found = AccordionItem.searchWithin(query(), SideBarItems);
 
-      if (found) selectExample(found.id as ExampleName);
+      if (found) selectExample(found.id as Example);
     } else if (key === 'Escape') {
       if (query() === '') {
         selectExample('');
@@ -117,6 +124,7 @@ export const Examples = () => {
         />
         <div class="flex ml-auto gap-2">
           <CollapseButton />
+          <PreviewButton />
         </div>
       </div>
       <Accordion
