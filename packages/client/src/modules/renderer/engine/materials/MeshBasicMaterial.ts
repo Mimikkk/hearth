@@ -1,7 +1,7 @@
 import { Material, MaterialParameters } from './Material.js';
 import { Operation } from '../constants.js';
 import { Color, ColorRepresentation } from '../math/Color.js';
-import { Euler } from '../math/Euler.js';
+import { Euler_ } from '../math/Euler.js';
 import { Texture } from '../textures/Texture.js';
 
 export interface MeshBasicMaterialParameters extends MaterialParameters {
@@ -38,7 +38,7 @@ export class MeshBasicMaterial extends Material {
   specularMap: Texture | null;
   alphaMap: Texture | null;
   envMap: Texture | null;
-  envMapRotation: Euler;
+  envMapRotation: Euler_;
   combine: Operation;
   reflectivity: number;
   refractionRatio: number;
@@ -66,7 +66,7 @@ export class MeshBasicMaterial extends Material {
     this.alphaMap = null;
 
     this.envMap = null;
-    this.envMapRotation = Euler.empty();
+    this.envMapRotation = Euler_.empty();
     this.combine = Operation.Multiply;
     this.reflectivity = 1;
     this.refractionRatio = 0.98;
@@ -102,7 +102,7 @@ export class MeshBasicMaterial extends Material {
     this.alphaMap = source.alphaMap;
 
     this.envMap = source.envMap;
-    Euler.fill_(this.envMapRotation, source.envMapRotation);
+    Euler_.fill_(this.envMapRotation, source.envMapRotation);
     this.combine = source.combine;
     this.reflectivity = source.reflectivity;
     this.refractionRatio = source.refractionRatio;

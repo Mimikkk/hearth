@@ -3,7 +3,7 @@ import { Quaternion } from './Quaternion.js';
 import type { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
 import type { InterleavedBufferAttribute } from '@modules/renderer/engine/core/InterleavedBufferAttribute.js';
 import type { Color } from '@modules/renderer/engine/math/Color.js';
-import { Euler } from '@modules/renderer/engine/math/Euler.js';
+import { Euler_ } from '@modules/renderer/engine/math/Euler.js';
 import type { Matrix3 } from '@modules/renderer/engine/math/Matrix3.js';
 import type { Matrix4 } from '@modules/renderer/engine/math/Matrix4.js';
 import type { Cylindrical } from '@modules/renderer/engine/math/Cylindrical.js';
@@ -183,7 +183,7 @@ export class Vector3 implements IVector3 {
     return this;
   }
 
-  applyEuler(euler: Euler): this {
+  applyEuler(euler: Euler_): this {
     return this.applyQuaternion(new Quaternion().setFromEuler(euler));
   }
 
@@ -522,7 +522,7 @@ export class Vector3 implements IVector3 {
     return this.fromArray(matrix.elements, index * 3);
   }
 
-  setFromEuler(euler: Euler): this {
+  setFromEuler(euler: Euler_): this {
     this.x = euler.x;
     this.y = euler.y;
     this.z = euler.z;

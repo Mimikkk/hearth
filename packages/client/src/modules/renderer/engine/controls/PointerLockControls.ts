@@ -1,7 +1,7 @@
 import { Camera, EventDispatcher, Vector3 } from '../engine.js';
-import { Euler } from '@modules/renderer/engine/math/Euler.js';
+import { Euler_ } from '@modules/renderer/engine/math/Euler.js';
 
-const _euler = Euler.create(0, 0, 0, 'YXZ');
+const _euler = Euler_.create(0, 0, 0, 'YXZ');
 const _vector = new Vector3();
 
 const _changeEvent = { type: 'change' };

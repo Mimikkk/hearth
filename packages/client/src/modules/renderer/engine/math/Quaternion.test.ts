@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { Quaternion_, QuaternionArray, Vec3 } from './Quaternion.ts';
-import { Euler } from './Euler.ts';
+import { Euler_ } from './Euler.ts';
 import { BufferAttribute } from '../core/BufferAttribute.ts';
 
 const expectWithin = (actual: number, expected: number, epsilon: number = Number.EPSILON) => {
@@ -210,8 +210,8 @@ describe('Math - Quaternion', () => {
 
   it('angleTo', () => {
     const a = Quaternion_.identity();
-    const b = Quaternion_.fromEuler(Euler.create(0, Math.PI, 0));
-    const c = Quaternion_.fromEuler(Euler.create(0, 2 * Math.PI, 0));
+    const b = Quaternion_.fromEuler(Euler_.create(0, Math.PI, 0));
+    const c = Quaternion_.fromEuler(Euler_.create(0, 2 * Math.PI, 0));
 
     expect(Quaternion_.angleTo(a, a)).toBe(0);
     expect(Quaternion_.angleTo(a, b)).toBe(Math.PI);
@@ -220,7 +220,7 @@ describe('Math - Quaternion', () => {
 
   it('rotateTowards', () => {
     const a = Quaternion_.identity();
-    const b = Quaternion_.fromEuler(Euler.create(0, Math.PI, 0));
+    const b = Quaternion_.fromEuler(Euler_.create(0, Math.PI, 0));
     const c = Quaternion_.identity();
 
     expect(Quaternion_.rotateTowards_(a, b, 0, c)).toBe(c);

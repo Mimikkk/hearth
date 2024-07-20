@@ -16,7 +16,7 @@ import {
   Vector4,
 } from '../engine.js';
 import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
-import { Euler } from '@modules/renderer/engine/math/Euler.js';
+import { Euler_ } from '@modules/renderer/engine/math/Euler.js';
 
 const turnRate = 2 * Math.PI;
 const dim = 128;
@@ -137,32 +137,32 @@ export class WorldAxesVisualizer extends Object3D {
     if (posX === object) {
       return {
         position: new Vector3(1, 0, 0),
-        rotation: new Quaternion().setFromEuler(Euler.create(0, Math.PI * 0.5, 0)),
+        rotation: new Quaternion().setFromEuler(Euler_.create(0, Math.PI * 0.5, 0)),
       };
     } else if (posY === object) {
       return {
         position: new Vector3(0, 1, 0),
-        rotation: new Quaternion().setFromEuler(Euler.create(-Math.PI * 0.5, 0, 0)),
+        rotation: new Quaternion().setFromEuler(Euler_.create(-Math.PI * 0.5, 0, 0)),
       };
     } else if (posZ === object) {
       return {
         position: new Vector3(0, 0, 1),
-        rotation: new Quaternion().setFromEuler(Euler.create(0, 0, 0)),
+        rotation: new Quaternion().setFromEuler(Euler_.create(0, 0, 0)),
       };
     } else if (negX === object) {
       return {
         position: new Vector3(-1, 0, 0),
-        rotation: new Quaternion().setFromEuler(Euler.create(0, -Math.PI * 0.5, 0)),
+        rotation: new Quaternion().setFromEuler(Euler_.create(0, -Math.PI * 0.5, 0)),
       };
     } else if (negY === object) {
       return {
         position: new Vector3(0, -1, 0),
-        rotation: new Quaternion().setFromEuler(Euler.create(Math.PI * 0.5, 0, 0)),
+        rotation: new Quaternion().setFromEuler(Euler_.create(Math.PI * 0.5, 0, 0)),
       };
     } else if (negZ === object) {
       return {
         position: new Vector3(0, 0, -1),
-        rotation: new Quaternion().setFromEuler(Euler.create(0, Math.PI, 0)),
+        rotation: new Quaternion().setFromEuler(Euler_.create(0, Math.PI, 0)),
       };
     }
 

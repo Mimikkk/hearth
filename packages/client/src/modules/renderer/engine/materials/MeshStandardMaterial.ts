@@ -2,7 +2,7 @@ import { NormalMapType } from '../constants.js';
 import { Material, MaterialParameters } from './Material.js';
 import { Vector2 } from '../math/Vector2.js';
 import { Color, ColorRepresentation } from '../math/Color.js';
-import { Euler } from '../math/Euler.js';
+import { Euler_ } from '../math/Euler.js';
 import { Texture } from '@modules/renderer/engine/textures/Texture.js';
 
 export interface MeshStandardMaterialParameters extends MaterialParameters {
@@ -63,7 +63,7 @@ export class MeshStandardMaterial extends Material {
   metalnessMap: Texture | null;
   alphaMap: Texture | null;
   envMap: Texture | null;
-  envMapRotation: Euler;
+  envMapRotation: Euler_;
   envMapIntensity: number;
   wireframe: boolean;
   wireframeLinewidth: number;
@@ -116,7 +116,7 @@ export class MeshStandardMaterial extends Material {
     this.alphaMap = null;
 
     this.envMap = null;
-    this.envMapRotation = Euler.empty();
+    this.envMapRotation = Euler_.empty();
     this.envMapIntensity = 1.0;
 
     this.wireframe = false;
@@ -174,7 +174,7 @@ export class MeshStandardMaterial extends Material {
     this.alphaMap = source.alphaMap;
 
     this.envMap = source.envMap;
-    Euler.fill_(this.envMapRotation, source.envMapRotation);
+    Euler_.fill_(this.envMapRotation, source.envMapRotation);
     this.envMapIntensity = source.envMapIntensity;
 
     this.wireframe = source.wireframe;

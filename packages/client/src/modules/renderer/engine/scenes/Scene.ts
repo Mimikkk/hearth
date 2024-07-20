@@ -1,5 +1,5 @@
 import { Object3D } from '../core/Object3D.js';
-import { Euler } from '../math/Euler.js';
+import { Euler_ } from '../math/Euler.js';
 import type { Fog } from './Fog.js';
 import type { Material } from '../materials/Material.js';
 import type { Color } from '../math/Color.js';
@@ -19,8 +19,8 @@ export class Scene extends Object3D {
   environment: any;
   backgroundBlurriness: number;
   backgroundIntensity: number;
-  backgroundRotation: Euler;
-  environmentRotation: Euler;
+  backgroundRotation: Euler_;
+  environmentRotation: Euler_;
   overrideMaterial: Material | null;
 
   constructor() {
@@ -33,8 +33,8 @@ export class Scene extends Object3D {
     this.fog = null;
     this.backgroundBlurriness = 0;
     this.backgroundIntensity = 1;
-    this.backgroundRotation = Euler.empty();
-    this.environmentRotation = Euler.empty();
+    this.backgroundRotation = Euler_.empty();
+    this.environmentRotation = Euler_.empty();
     this.overrideMaterial = null;
   }
 
@@ -47,8 +47,8 @@ export class Scene extends Object3D {
 
     this.backgroundBlurriness = source.backgroundBlurriness;
     this.backgroundIntensity = source.backgroundIntensity;
-    Euler.fill_(this.backgroundRotation, source.backgroundRotation);
-    Euler.fill_(this.environmentRotation, source.environmentRotation);
+    Euler_.fill_(this.backgroundRotation, source.backgroundRotation);
+    Euler_.fill_(this.environmentRotation, source.environmentRotation);
 
     if (source.overrideMaterial !== null) this.overrideMaterial = source.overrideMaterial.clone();
 
