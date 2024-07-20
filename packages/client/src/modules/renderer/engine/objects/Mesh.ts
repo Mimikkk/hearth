@@ -185,6 +185,9 @@ export class Mesh extends Object3D {
     const groups = geometry.groups;
     const range = geometry.drawRange;
 
+    // console.dir({  index, position, uv, uv1, normal, groups, range, raycaster }, { depth: null });
+    console.log({ raycaster }, { depth: null });
+
     if (index) {
       if (Array.isArray(material)) {
         for (let i = 0, it = groups.length; i < it; i++) {

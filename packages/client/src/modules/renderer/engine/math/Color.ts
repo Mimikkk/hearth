@@ -210,10 +210,6 @@ export class Color {
     return this.set(r as number, g as number, b as number);
   }
 
-  static new(): Color {
-    return new Color();
-  }
-
   set(r: ColorRepresentation): this;
   set(r: number, g: number, b: number): this;
   set(r: ColorRepresentation, g?: number, b?: number): this {

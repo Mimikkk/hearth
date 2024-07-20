@@ -78,6 +78,8 @@ export class DragControls {
           _raycaster.setFromCamera(_location, camera);
           _raycaster.intersects(draggable, this.configuration.recursive, intersections);
 
+          console.log(_location, camera, intersections);
+
           if (intersections.length > 0) {
             const object = intersections[0].object;
 
