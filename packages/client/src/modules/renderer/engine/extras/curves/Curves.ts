@@ -14,6 +14,7 @@ export const Curves = {
     ArcCurve,
     CubicBezierCurve,
     EllipseCurve,
+
     LineCurve,
     QuadraticBezierCurve,
     SplineCurve,
