@@ -110,7 +110,7 @@ describe('Math - Quaternion', () => {
     const identity = Quaternion.identity();
     expect(identity).toEqual({ x: 0, y: 0, z: 0, w: 1 });
 
-    const copy = Quaternion.copy(identity);
+    const copy = Quaternion.clone(identity);
     expect(copy).not.toBe(identity);
     expect(copy).toEqual(identity);
 
@@ -118,7 +118,7 @@ describe('Math - Quaternion', () => {
     expect(Quaternion.fill(fill, 5, 6, 7, 8)).toBe(fill);
     expect(fill).toEqual({ x: 5, y: 6, z: 7, w: 8 });
 
-    expect(Quaternion.fill_(fill, copy)).toBe(copy);
+    expect(Quaternion.clone_(fill, copy)).toBe(copy);
     expect(copy).toEqual(fill);
   });
 
@@ -222,7 +222,7 @@ describe('Math - Quaternion', () => {
 
   it('conjugate', () => {
     const a = Quaternion.create(1, 2, 3, 4);
-    const c = Quaternion.copy(a);
+    const c = Quaternion.clone(a);
 
     expect(Quaternion.conjugate(a)).toBe(a);
     expect(a).toEqual({ x: -1, y: -2, z: -3, w: 4 });

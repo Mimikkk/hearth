@@ -201,7 +201,7 @@ export class Object3D<EventMap extends Object3DEventMap = any> {
   }
 
   setRotationFromQuaternion(q: Quaternion): this {
-    Quaternion.fill_(q, this.quaternion);
+    Quaternion.clone_(q, this.quaternion);
     return this;
   }
 
@@ -633,7 +633,7 @@ export class Object3D<EventMap extends Object3DEventMap = any> {
     this.up.copy(source.up);
 
     this.position.copy(source.position);
-    Quaternion.fill_(source.quaternion, this.quaternion);
+    Quaternion.clone_(source.quaternion, this.quaternion);
     this.scale.copy(source.scale);
 
     this.matrix.copy(source.matrix);

@@ -2,6 +2,7 @@ import { Box3, Box3_ } from './Box3.js';
 import { Vec3, Vector3 } from './Vector3.js';
 import type { Plane } from './Plane.js';
 import type { Matrix4 } from './Matrix4.js';
+import { Const } from '@modules/renderer/engine/math/types.js';
 
 export class Sphere {
   declare isSphere: true;
@@ -186,19 +187,28 @@ export namespace Sphere_ {
   export const empty = (): Sphere_ => ({ center: Vec3.create(0, 0, 0), radius: -1 });
   export const clear = (self: Sphere_): Sphere_ => fill(self, 0, 0, 0, -1);
 
-  export const clone = ({ center, radius }: Readonly<Sphere_>): Sphere_ => ({ center, radius });
-  export const copy = ({ center: { x, y, z }, radius }: Readonly<Sphere_>): Sphere_ => create(x, y, z, radius);
   export const fill = (self: Sphere_, centerX: number, centerY: number, centerZ: number, radius: number): Sphere_ => {
     Vec3.fill(self.center, centerX, centerY, centerZ);
     self.radius = radius;
 
     return self;
   };
-  export const fill_ = ({ center: { x, y, z }, radius }: Readonly<Sphere_>, into: Sphere_): Sphere_ =>
+  export const fill_ = (into: Sphere_, { center: { x, y, z }, radius }: Const<Sphere_>): Sphere_ =>
     fill(into, x, y, z, radius);
 
-  export const fromVecs = (vecs: Readonly<Vec3>[]): Sphere_ => fromVecs_(vecs, empty());
-  export const fromVecs_ = (vecs: Readonly<Vec3>[], into: Sphere_): Sphere_ => {
+  export const copy = (from: Const<Sphere_>): Sphere_ => copy_(from, empty());
+  export const copy_ = ({ center, radius }: Const<Sphere_>, into: Sphere_): Sphere_ => {
+    into.center = center;
+    into.radius = radius;
+
+    return into;
+  };
+
+  export const clone = (from: Const<Sphere_>): Sphere_ => clone_(from, empty());
+  export const clone_ = (from: Const<Sphere_>, into: Sphere_): Sphere_ => fill_(into, from);
+
+  export const fromVecs = (vecs: Const<Vec3>[]): Sphere_ => fromVecs_(vecs, empty());
+  export const fromVecs_ = (vecs: Const<Vec3>[], into: Sphere_): Sphere_ => {
     const center = Box3_.center_(Box3_.fromVecs_(vecs, Box3_.temp0), Vec3.temp0);
 
     let maxRadiusSq = 0;
@@ -211,36 +221,35 @@ export namespace Sphere_ {
 
     return fill(into, center.x, center.y, center.z, radius);
   };
-  export const fillVecs = (self: Sphere_, vecs: Readonly<Vec3>[]): Sphere_ => fromVecs_(vecs, self);
+  export const fillVecs = (self: Sphere_, vecs: Const<Vec3>[]): Sphere_ => fromVecs_(vecs, self);
 
   export const isEmpty = ({ radius }: Sphere_): boolean => radius < 0;
-  export const containsVec = ({ center, radius }: Readonly<Sphere_>, vec: Readonly<Vec3>): boolean =>
+  export const containsVec = ({ center, radius }: Const<Sphere_>, vec: Const<Vec3>): boolean =>
     Vec3.distanceSqTo(center, vec) <= radius * radius;
 
-  export const distanceToVec = ({ center, radius }: Readonly<Sphere_>, vec: Readonly<Vec3>): number =>
+  export const distanceToVec = ({ center, radius }: Const<Sphere_>, vec: Const<Vec3>): number =>
     Vec3.distanceTo(center, vec) - radius;
 
-  export const intersects = (a: Readonly<Sphere_>, b: Readonly<Sphere_>): boolean => {
+  export const intersects = (a: Const<Sphere_>, b: Const<Sphere_>): boolean => {
     const radius = a.radius + b.radius;
 
     return Vec3.distanceSqTo(a.center, b.center) <= radius * radius;
   };
-  export const intersectsBox = (self: Readonly<Sphere_>, box: Readonly<Box3_>): boolean =>
-    Box3_.intersectsSphere(box, self);
-  export const intersectsPlane = (self: Readonly<Sphere_>, plane: Plane): boolean =>
+  export const intersectsBox = (self: Const<Sphere_>, box: Const<Box3_>): boolean => Box3_.intersectsSphere(box, self);
+  export const intersectsPlane = (self: Const<Sphere_>, plane: Plane): boolean =>
     Math.abs(plane.distanceToPoint(self.center)) <= self.radius;
 
-  export const bbox = (self: Readonly<Sphere_>): Box3_ => bbox_(self, Box3_.empty());
-  export const bbox_ = (self: Readonly<Sphere_>, into: Box3_): Box3_ => {
+  export const bbox = (self: Const<Sphere_>): Box3_ => bbox_(self, Box3_.empty());
+  export const bbox_ = (self: Const<Sphere_>, into: Box3_): Box3_ => {
     if (isEmpty(self)) return Box3_.clear(into);
 
     return Box3_.fillCenterAndRadius(into, self.center, self.radius);
   };
 
-  export const union = (self: Sphere_, sphere: Readonly<Sphere_>): Sphere_ => union_(self, sphere, self);
-  export const union_ = (self: Readonly<Sphere_>, sphere: Readonly<Sphere_>, into: Sphere_): Sphere_ => {
-    if (isEmpty(sphere)) return fill_(sphere, into);
-    if (isEmpty(self)) return fill_(self, into);
+  export const union = (self: Sphere_, sphere: Const<Sphere_>): Sphere_ => union_(self, sphere, self);
+  export const union_ = (self: Const<Sphere_>, sphere: Const<Sphere_>, into: Sphere_): Sphere_ => {
+    if (isEmpty(sphere)) return clone_(sphere, into);
+    if (isEmpty(self)) return clone_(self, into);
 
     if (Vec3.equals(self.center, sphere.center)) {
       into.radius = Math.max(self.radius, sphere.radius);
@@ -255,10 +264,10 @@ export namespace Sphere_ {
 
     return into;
   };
-  export const united = (self: Readonly<Sphere_>, sphere: Readonly<Sphere_>): Sphere_ => union_(self, sphere, empty());
+  export const united = (self: Const<Sphere_>, sphere: Const<Sphere_>): Sphere_ => union_(self, sphere, empty());
 
-  export const expandByVec = (self: Sphere_, vec: Readonly<Vec3>): Sphere_ => expandByVec_(self, vec, self);
-  export const expandByVec_ = (self: Readonly<Sphere_>, vec: Readonly<Vec3>, into: Sphere_): Sphere_ => {
+  export const expandByVec = (self: Sphere_, vec: Const<Vec3>): Sphere_ => expandByVec_(self, vec, self);
+  export const expandByVec_ = (self: Const<Sphere_>, vec: Const<Vec3>, into: Sphere_): Sphere_ => {
     if (isEmpty(self)) return clear(into);
 
     const offset = Vec3.sub_(vec, self.center, Vec3.temp2);
@@ -276,11 +285,10 @@ export namespace Sphere_ {
 
     return into;
   };
-  export const expandedByVec = (self: Readonly<Sphere_>, vec: Readonly<Vec3>): Sphere_ =>
-    expandByVec_(self, vec, empty());
+  export const expandedByVec = (self: Const<Sphere_>, vec: Const<Vec3>): Sphere_ => expandByVec_(self, vec, empty());
 
-  export const clampVec = (self: Readonly<Sphere_>, vec: Vec3) => clampVec_(self, vec, vec);
-  export const clampVec_ = (self: Readonly<Sphere_>, vec: Readonly<Vec3>, into: Vec3): Vec3 => {
+  export const clampVec = (self: Const<Sphere_>, vec: Vec3) => clampVec_(self, vec, vec);
+  export const clampVec_ = (self: Const<Sphere_>, vec: Const<Vec3>, into: Vec3): Vec3 => {
     const lenSq = Vec3.distanceSqTo(self.center, vec);
 
     Vec3.fill_(vec, into);
@@ -294,8 +302,8 @@ export namespace Sphere_ {
     return into;
   };
 
-  export const applyMat4 = (self: Sphere_, mat: Readonly<Matrix4>): Sphere_ => applyMat4_(self, mat, self);
-  export const applyMat4_ = (self: Readonly<Sphere_>, mat: Readonly<Matrix4>, into: Sphere_): Sphere_ => {
+  export const applyMat4 = (self: Sphere_, mat: Const<Matrix4>): Sphere_ => applyMat4_(self, mat, self);
+  export const applyMat4_ = (self: Const<Sphere_>, mat: Const<Matrix4>, into: Sphere_): Sphere_ => {
     const { x, y, z } = Vec3.applyMat4_(self.center, mat, Vec3.temp0);
     const radius = self.radius * mat.getMaxScaleOnAxis();
 
@@ -303,14 +311,14 @@ export namespace Sphere_ {
   };
 
   export const translate = (self: Sphere_, vec: Vec3): Sphere_ => translate_(self, vec, self);
-  export const translate_ = (self: Readonly<Sphere_>, vec: Readonly<Vec3>, into: Sphere_): Sphere_ => {
+  export const translate_ = (self: Const<Sphere_>, vec: Const<Vec3>, into: Sphere_): Sphere_ => {
     const { x, y, z } = Vec3.add_(self.center, vec, Vec3.temp0);
 
     return fill(into, x, y, z, self.radius);
   };
-  export const translated = (self: Readonly<Sphere_>, vec: Readonly<Vec3>): Sphere_ => translate_(self, vec, empty());
+  export const translated = (self: Const<Sphere_>, vec: Const<Vec3>): Sphere_ => translate_(self, vec, empty());
 
-  export const equals = (a: Readonly<Sphere_>, b: Readonly<Sphere_>): boolean =>
+  export const equals = (a: Const<Sphere_>, b: Const<Sphere_>): boolean =>
     Vec3.equals(a.center, b.center) && a.radius === b.radius;
 
   export const is = (o: any): o is Sphere_ => Vec3.is(o.center) && typeof o?.radius === 'number';
