@@ -116,7 +116,7 @@ export class BufferAttribute<T extends TypedArray = any> {
     return this;
   }
 
-  applyNMat3(m: Const<Mat3>): this {
+  applyMat3N(m: Const<Mat3>): this {
     for (let i = 0, l = this.count; i < l; i++) {
       _vec3.fromAttribute(this, i);
 

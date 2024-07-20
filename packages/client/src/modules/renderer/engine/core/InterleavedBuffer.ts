@@ -3,6 +3,7 @@ import { BufferUsage } from '../constants.js';
 import { v4 } from 'uuid';
 
 export class InterleavedBuffer<T extends TypedArray = any> {
+  declare ['constructor']: typeof InterleavedBuffer<T>;
   declare isInterleavedBuffer: true;
   array: T;
   stride: number;
@@ -15,13 +16,17 @@ export class InterleavedBuffer<T extends TypedArray = any> {
   constructor(array: T, stride: number) {
     this.array = array;
     this.stride = stride;
-    this.count = array.length / stride;
+    this.count = array !== undefined ? array.length / stride : 0;
 
     this.usage = BufferUsage.StaticDraw;
     this.updateRanges = [];
+
     this.version = 0;
+
     this.uuid = v4();
   }
+
+  onUploadCallback() {}
 
   set needsUpdate(value: boolean) {
     if (value) ++this.version;
@@ -94,8 +99,14 @@ export class InterleavedBuffer<T extends TypedArray = any> {
     const ib = new this.constructor(array, this.stride);
     ib.setUsage(this.usage);
 
+    //@ts-expect-error
     return ib;
   }
-}
 
+  onUpload(callback: () => void): this {
+    this.onUploadCallback = callback;
+
+    return this;
+  }
+}
 InterleavedBuffer.prototype.isInterleavedBuffer = true;

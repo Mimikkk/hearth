@@ -7,9 +7,5 @@ import { InterleavedBuffer } from '@modules/renderer/engine/core/InterleavedBuff
 export type Attribute<T extends TypedArray = any> =
   | BufferAttribute<T>
   | InstancedBufferAttribute<T>
-  | InterleavedBufferAttribute<T>;
-
-export type Buffer<T extends TypedArray = any> =
-  | InterleavedBuffer<T>
-  | BufferAttribute<T>
-  | InstancedBufferAttribute<T>;
+  | InterleavedBufferAttribute<T>
+  | InterleavedBuffer<T>;

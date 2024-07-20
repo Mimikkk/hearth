@@ -22,6 +22,37 @@ import { Skeleton } from '@modules/renderer/engine/objects/Skeleton.js';
 
 let _id = 0;
 
+const _v1 = Vec3.new();
+const _q1 = Quaternion.identity();
+const _m1 = new Mat4();
+const _target = Vec3.new();
+
+const _position = Vec3.new();
+const _scale = Vec3.new();
+const _quaternion = Quaternion.identity();
+
+const _xAxis = Vec3.new(1, 0, 0);
+const _yAxis = Vec3.new(0, 1, 0);
+const _zAxis = Vec3.new(0, 0, 1);
+
+export interface Object3DEventMap {
+  added: {};
+  removed: {};
+  childadded: { child: Object3D };
+  childremoved: { child: Object3D };
+  pointerdown: { data: Vec2 };
+  pointerup: { data: Vec2 };
+  pointermove: { data: Vec2 };
+  mousedown: { data: Vec2 };
+  mouseup: { data: Vec2 };
+  mousemove: { data: Vec2 };
+  click: { data: Vec2 };
+  dispose: {};
+}
+
+const isCamera = (object: any): object is Camera => object.isCamera;
+const isLight = (object: any): object is Light<any> => object.isLight;
+
 export class Object3D<EventMap extends Object3DEventMap = any> {
   declare ['constructor']: typeof Object3D;
   declare isObject3D: true;
@@ -182,33 +213,33 @@ export class Object3D<EventMap extends Object3DEventMap = any> {
   }
 
   rotateOnLocalAxis(axis: Vec3, angle: number): this {
-    _quaternion.fromAxisAngle(axis, angle);
-    this.quaternion.mul(_quaternion);
+    _q1.fromAxisAngle(axis, angle);
+    this.quaternion.mul(_q1);
 
     return this;
   }
 
   rotateOnWorldAxis(axis: Vec3, angle: number): this {
-    _quaternion.fromAxisAngle(axis, angle);
-    this.quaternion.premul(_quaternion);
+    _q1.fromAxisAngle(axis, angle);
+    this.quaternion.premul(_q1);
 
     return this;
   }
 
   setRotationX(angle: number): this {
-    return this.setRotationFromEuler(_euler.set(angle, this.getRotationY(), this.getRotationZ()));
+    return this.setRotationFromEuler(Euler.new(angle, this.getRotationY(), this.getRotationZ()));
   }
 
   setRotationY(angle: number): this {
-    return this.setRotationFromEuler(_euler.set(this.getRotationX(), angle, this.getRotationZ()));
+    return this.setRotationFromEuler(Euler.new(this.getRotationX(), angle, this.getRotationZ()));
   }
 
   setRotationZ(angle: number): this {
-    return this.setRotationFromEuler(_euler.set(this.getRotationX(), this.getRotationY(), angle));
+    return this.setRotationFromEuler(Euler.new(this.getRotationX(), this.getRotationY(), angle));
   }
 
   setRotation(angleX: number, angleY: number, angleZ: number): this {
-    return this.setRotationFromEuler(_euler.set(angleX, angleY, angleZ));
+    return this.setRotationFromEuler(Euler.new(angleX, angleY, angleZ));
   }
 
   getRotationX(): number {
@@ -253,16 +284,16 @@ export class Object3D<EventMap extends Object3DEventMap = any> {
   }
 
   rotate(angleX: number, angleY: number, angleZ: number): this {
-    _quaternion.fromEuler(_euler.set(angleX, angleY, angleZ));
-    this.quaternion.mul(_quaternion);
+    _q1.fromEuler(Euler.new(angleX, angleY, angleZ));
+    this.quaternion.mul(_q1);
 
     return this;
   }
 
   translateOnAxis(axis: Const<Vec3>, distance: number): this {
-    _vec3.from(axis).applyQuaternion(this.quaternion);
+    _v1.from(axis).applyQuaternion(this.quaternion);
 
-    this.position.add(_vec3.scale(distance));
+    this.position.add(_v1.scale(distance));
 
     return this;
   }
@@ -288,7 +319,7 @@ export class Object3D<EventMap extends Object3DEventMap = any> {
   worldToLocal(into: Vec3 = Vec3.new()): Vec3 {
     this.updateWorldMatrix(true, false);
 
-    return into.applyMat4(_mat4.from(this.matrixWorld).invert());
+    return into.applyMat4(_m1.from(this.matrixWorld).invert());
   }
 
   lookAt(x: Vec3): this;
@@ -309,15 +340,17 @@ export class Object3D<EventMap extends Object3DEventMap = any> {
     _position.fromMat4Position(this.matrixWorld);
 
     if (isCamera(this) || isLight(this)) {
-      _mat4.lookAt(_position, _target, this.up);
+      _m1.lookAt(_position, _target, this.up);
     } else {
-      _mat4.lookAt(_target, _position, this.up);
+      _m1.lookAt(_target, _position, this.up);
     }
 
-    this.setRotationFromMatrix(_mat4);
+    this.setRotationFromMatrix(_m1);
+
     if (parent) {
-      _mat4.extractRotation(parent.matrixWorld);
-      this.applyQuaternion(_quaternion.fromRotation(_mat4).invert());
+      _m1.extractRotation(parent.matrixWorld);
+
+      this.applyQuaternion(_q1.fromRotation(_m1).invert());
     }
     return this;
   }
@@ -399,15 +432,15 @@ export class Object3D<EventMap extends Object3DEventMap = any> {
 
     this.updateWorldMatrix(true, false);
 
-    _mat4.from(this.matrixWorld).invert();
+    _m1.from(this.matrixWorld).invert();
 
     if (object.parent !== null) {
       object.parent.updateWorldMatrix(true, false);
 
-      _mat4.mul(object.parent.matrixWorld);
+      _m1.mul(object.parent.matrixWorld);
     }
 
-    object.applyMat4(_mat4);
+    object.applyMat4(_m1);
 
     object.removeFromParent();
     object.parent = this!;
@@ -627,37 +660,5 @@ export class Object3D<EventMap extends Object3DEventMap = any> {
     return this;
   }
 }
-
-const _vec3 = Vec3.new();
-const _mat4 = Mat4.new();
-const _euler = Euler.new();
-
-const _target = Vec3.new();
-const _position = Vec3.new();
-const _scale = Vec3.new();
-
-const _quaternion = Quaternion.identity();
-
-const _xAxis = Vec3.new(1, 0, 0);
-const _yAxis = Vec3.new(0, 1, 0);
-const _zAxis = Vec3.new(0, 0, 1);
-
-export interface Object3DEventMap {
-  added: {};
-  removed: {};
-  childadded: { child: Object3D };
-  childremoved: { child: Object3D };
-  pointerdown: { data: Vec2 };
-  pointerup: { data: Vec2 };
-  pointermove: { data: Vec2 };
-  mousedown: { data: Vec2 };
-  mouseup: { data: Vec2 };
-  mousemove: { data: Vec2 };
-  click: { data: Vec2 };
-  dispose: {};
-}
-const isCamera = (object: any): object is Camera => object.isCamera;
-
-const isLight = (object: any): object is Light<any> => object.isLight;
 
 Object3D.prototype.isObject3D = true;

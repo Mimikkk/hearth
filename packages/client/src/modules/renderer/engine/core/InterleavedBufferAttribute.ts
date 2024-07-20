@@ -4,7 +4,6 @@ import { denormalize, normalize, TypedArray } from '../math/MathUtils.js';
 import { InterleavedBuffer } from '@modules/renderer/engine/core/InterleavedBuffer.js';
 import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
 import { Mat3 } from '@modules/renderer/engine/math/Mat3.js';
-import { Const } from '@modules/renderer/engine/math/types.js';
 
 const _vector = new Vec3();
 
@@ -33,7 +32,7 @@ export class InterleavedBufferAttribute<T extends TypedArray = any> {
     return this.data.count;
   }
 
-  get array(): T {
+  get array(): TypedArray {
     return this.data.array;
   }
 
@@ -41,27 +40,35 @@ export class InterleavedBufferAttribute<T extends TypedArray = any> {
     this.data.needsUpdate = value;
   }
 
-  applyMat4(mat: Const<Mat4>): this {
-    for (let i = 0, it = this.data.count; i < it; i++) {
-      const { x, y, z } = _vector.fromAttribute(this, i).applyMat4(mat);
-      this.setXYZ(i, x, y, z);
-    }
-    return this;
-  }
+  applyMat4(m: Mat4): this {
+    for (let i = 0, l = this.data.count; i < l; i++) {
+      _vector.fromAttribute(this, i);
 
-  applyNMat3(mat: Const<Mat3>): this {
-    for (let i = 0, it = this.count; i < it; i++) {
-      const { x, y, z } = _vector.fromAttribute(this, i).applyNMat3(mat);
+      _vector.applyMat4(m);
 
-      this.setXYZ(i, x, y, z);
+      this.setXYZ(i, _vector.x, _vector.y, _vector.z);
     }
 
     return this;
   }
 
-  transformDirection(mat: Const<Mat4>): this {
-    for (let i = 0, it = this.count; i < it; i++) {
-      _vector.fromAttribute(this, i).transformDirection(mat);
+  applyNormalMatrix(m: Mat3): this {
+    for (let i = 0, l = this.count; i < l; i++) {
+      _vector.fromAttribute(this, i);
+
+      _vector.applyNMat3(m);
+
+      this.setXYZ(i, _vector.x, _vector.y, _vector.z);
+    }
+
+    return this;
+  }
+
+  transformDirection(m: Mat4): this {
+    for (let i = 0, l = this.count; i < l; i++) {
+      _vector.fromAttribute(this, i);
+
+      _vector.transformDirection(m);
 
       this.setXYZ(i, _vector.x, _vector.y, _vector.z);
     }
@@ -232,5 +239,4 @@ export class InterleavedBufferAttribute<T extends TypedArray = any> {
     }
   }
 }
-
 InterleavedBufferAttribute.prototype.isInterleavedBufferAttribute = true;
