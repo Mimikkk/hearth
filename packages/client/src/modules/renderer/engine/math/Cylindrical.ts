@@ -53,5 +53,3 @@ export class Cylindrical {
     return this.set(Math.sqrt(x * x + z * z), Math.atan2(x, z), y);
   }
 }
-
-Cylindrical.prototype.isCylindrical = true;

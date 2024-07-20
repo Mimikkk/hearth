@@ -1,78 +1,48 @@
-import { Vec3 } from './Vector3.js';
+import type { IVec3 } from './Vector3.js';
 import { clamp as clampNumber } from './MathUtils.js';
 import { Const } from '@modules/renderer/engine/math/types.js';
 
-export class Spherical {
-  declare isSpherical: true;
-
-  constructor(
-    public radius: number = 0,
-    public phi: number = 0,
-    public theta: number = 0,
-  ) {}
-
-  static new(radius: number = 0, phi: number = 0, theta: number = 0): Spherical {
-    return new Spherical(radius, phi, theta);
-  }
-
-  static empty(): Spherical {
-    return Spherical.new();
-  }
-
-  static clone({ radius, phi, theta }: Const<Spherical>, into: Spherical = Spherical.empty()): Spherical {
-    return into.set(radius, phi, theta);
-  }
-
-  static is(spherical: any): spherical is Spherical {
-    return spherical?.isSpherical === true;
-  }
-
-  static into(into: Spherical, { radius, phi, theta }: Const<Spherical>): Spherical {
-    return into.set(radius, phi, theta);
-  }
-
-  static from({ radius, phi, theta }: Const<Spherical>, into: Spherical = Spherical.empty()): Spherical {
-    return into.set(radius, phi, theta);
-  }
-
-  static fromCoord(coord: Const<Vec3>, into: Spherical = Spherical.new()): Spherical {
-    return into.fromCoord(coord);
-  }
-
-  from({ radius, phi, theta }: Const<Spherical>): this {
-    return this.set(radius, phi, theta);
-  }
-
-  set(radius: number, phi: number, theta: number): this {
-    this.radius = radius;
-    this.phi = phi;
-    this.theta = theta;
-    return this;
-  }
-
-  fromCoord(vec: Const<Vec3>): this {
-    const { x, y, z } = vec;
-    this.radius = vec.euclidean();
-
-    if (this.radius === 0) return this.set(0, 0, 0);
-    return this.set(this.radius, Math.acos(clampNumber(y / this.radius, -1, 1)), Math.atan2(x, z));
-  }
-
-  clamp(): this {
-    this.phi = clampNumber(this.phi, Number.EPSILON, Math.PI - Number.EPSILON);
-    return this;
-  }
-
-  fromArray(array: number[], offset: number = 0): this {
-    return this.set(array[offset], array[offset + 1], array[offset + 2]);
-  }
-
-  intoArray(array: number[] = [], offset: number = 0): number[] {
-    array[offset] = this.radius;
-    array[offset + 1] = this.phi;
-    array[offset + 2] = this.theta;
-    return array;
-  }
+export interface Spherical {
+  radius: number;
+  phi: number;
+  theta: number;
 }
 
-Spherical.prototype.isSpherical = true;
+export namespace Spherical {
+  export const create = (radius: number, phi: number, theta: number): Spherical => ({ radius, phi, theta });
+  export const empty = (): Spherical => create(0, 0, 0);
+  export const clear = (self: Spherical): Spherical => set(self, 0, 0, 0);
+
+  export const set = (self: Spherical, radius: number, phi: number, theta: number): Spherical => {
+    self.radius = radius;
+    self.phi = phi;
+    self.theta = theta;
+    return self;
+  };
+  export const fill_ = (self: Spherical, { phi, radius, theta }: Const<Spherical>): Spherical =>
+    set(self, radius, phi, theta);
+
+  export const clone = (from: Const<Spherical>): Spherical => clone_(from, empty());
+  export const clone_ = (from: Const<Spherical>, into: Spherical): Spherical => fill_(into, from);
+
+  export const fromCartesian = (from: Const<IVec3>): Spherical => fromCartesian_(from, empty());
+  export const fromCartesian_ = ({ x, y, z }: Const<IVec3>, into: Spherical): Spherical => {
+    into.radius = Math.sqrt(x * x + y * y + z * z);
+
+    if (into.radius === 0) {
+      into.theta = 0;
+      into.phi = 0;
+    } else {
+      into.theta = Math.atan2(x, z);
+      into.phi = Math.acos(clampNumber(y / into.radius, -1, 1));
+    }
+
+    return into;
+  };
+  export const fillCartesian = (self: Spherical, from: Const<IVec3>): Spherical => fromCartesian_(from, self);
+
+  export const clamp = (self: Spherical): Spherical => {
+    self.phi = clampNumber(self.phi, Number.EPSILON, Math.PI - Number.EPSILON);
+    return self;
+  };
+}
