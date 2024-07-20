@@ -4,6 +4,97 @@ import * as MathUtils from './MathUtils.js';
 import { clamp } from './MathUtils.js';
 import { Const } from '@modules/renderer/engine/math/types.js';
 
+const _startP = /*@__PURE__*/ new Vector3();
+const _startEnd = /*@__PURE__*/ new Vector3();
+
+export class Line3 {
+  declare isLine3: true;
+  declare ['constructor']: typeof Line3;
+
+  constructor(
+    public start: Vector3 = new Vector3(),
+    public end: Vector3 = new Vector3(),
+  ) {
+    console.log('epic');
+  }
+
+  set(start: Vec3, end: Vec3): Line3 {
+    Vec3.clone_(start, this.start);
+    Vec3.clone_(end, this.end);
+
+    return this;
+  }
+
+  copy(line: Line3): Line3 {
+    this.start.copy(line.start);
+    this.end.copy(line.end);
+
+    return this;
+  }
+
+  getCenter(target: Vector3): Vector3 {
+    Vec3.add_(this.start, this.end, target);
+    Vec3.mulScalar(target, 0.5);
+    return target;
+  }
+
+  delta(target: Vector3): Vector3 {
+    Vec3.sub_(this.end, this.start, target);
+    return target;
+  }
+
+  distanceSq(): number {
+    return this.start.distanceToSquared(this.end);
+  }
+
+  distance(): number {
+    return this.start.distanceTo(this.end);
+  }
+
+  at(t: number, target: Vector3): Vector3 {
+    return this.delta(target).multiplyScalar(t).add(this.start);
+  }
+
+  closestPointToPointParameter(point: Vector3, clampToLine: boolean): number {
+    _startP.subVectors(point, this.start);
+    _startEnd.subVectors(this.end, this.start);
+
+    const startEnd2 = _startEnd.dot(_startEnd);
+    const startEnd_startP = _startEnd.dot(_startP);
+
+    let t = startEnd_startP / startEnd2;
+
+    if (clampToLine) {
+      t = MathUtils.clamp(t, 0, 1);
+    }
+
+    return t;
+  }
+
+  closestPointToPoint(point: Vector3, clampToLine: boolean, target: Vector3): Vector3 {
+    const t = this.closestPointToPointParameter(point, clampToLine);
+
+    return this.delta(target).multiplyScalar(t).add(this.start);
+  }
+
+  applyMatrix4(matrix: Matrix4): Line3 {
+    this.start.applyMatrix4(matrix);
+    this.end.applyMatrix4(matrix);
+
+    return this;
+  }
+
+  equals(line: Line3): boolean {
+    return line.start.equals(this.start) && line.end.equals(this.end);
+  }
+
+  clone(): Line3 {
+    return new this.constructor().copy(this);
+  }
+}
+
+Line3.prototype.isLine3 = true;
+
 export interface Line3_ {
   start: Vec3;
   end: Vec3;
@@ -73,11 +164,6 @@ export namespace Line3_ {
 
   export const delta = (from: Const<Line3_>): Vec3 => delta_(from, Vec3.empty());
   export const delta_ = ({ end, start }: Const<Line3_>, into: Vec3): Vec3 => Vec3.sub_(end, start, into);
-
-  export const fromEnds = (start: Const<Vec3>, end: Const<Vec3>): Line3_ => fromEnds_(start, end, empty());
-  export const fromEnds_ = (start: Const<Vec3>, end: Const<Vec3>, into: Line3_): Line3_ =>
-    set(into, start.x, start.y, start.z, end.x, end.y, end.z);
-  export const fillEnds = (self: Line3_, start: Const<Vec3>, end: Const<Vec3>): Line3_ => fromEnds_(start, end, self);
 
   export const applyMat4 = (self: Line3_, matrix: Const<Matrix4>): Line3_ => applyMat4_(self, matrix, self);
   export const applyMat4_ = (from: Const<Line3_>, matrix: Const<Matrix4>, into: Line3_): Line3_ => {
