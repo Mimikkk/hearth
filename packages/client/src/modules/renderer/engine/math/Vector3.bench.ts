@@ -12,7 +12,7 @@ const closeTo = (a: IVec3, b: IVec3, epsilon = Number.EPSILON) => {
 };
 
 const create1 = (x: number, y: number, z: number) => ({ x, y, z });
-const create2 = Vec3.create;
+const create2 = Vec3.new;
 
 describe('Math - Vec3', () => {
   bench('set1', () => {
