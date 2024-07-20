@@ -63,7 +63,7 @@ export class Nodes extends DataMap<any, any> {
 
     if (name === renderGroup.name) {
       const uniformsGroupData = this.get(nodeUniformsGroup);
-      const renderId = this.frame.id;
+      const renderId = this.frame.renderId;
 
       if (uniformsGroupData.renderId !== renderId) {
         uniformsGroupData.renderId = renderId;

@@ -106,6 +106,14 @@ export class Backend {
     this.resolveBufferMap = new Map();
   }
 
+  async getArrayBufferAsync(attribute: BufferAttribute) {
+    return await this.attributes.getArrayBufferAsync(attribute);
+  }
+
+  getContext(): GPUCanvasContext {
+    return this.renderer.parameters.context;
+  }
+
   _getDefaultRenderPassDescriptor() {
     let descriptor = this.renderPassDescriptor;
 
@@ -965,8 +973,8 @@ export class Backend {
 
   // pipelines
 
-  createRenderPipeline(renderObject: RenderObject) {
-    this.pipelines.createRenderPipeline(renderObject);
+  createRenderPipeline(renderObject: RenderObject, promises: Promise<void>[] | null = null) {
+    this.pipelines.createRenderPipeline(renderObject, promises);
   }
 
   createComputePipeline(computePipeline: ComputePipeline, bindings: Binding[]) {

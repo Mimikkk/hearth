@@ -154,7 +154,7 @@ export default class RenderObject {
   getMaterialCacheKey() {
     const { object, material } = this;
 
-    let cacheKey = '';
+    let cacheKey = material.customProgramCacheKey();
 
     for (const property in material) {
       if (/^(is[A-Z])|^(visible|version|uuid|name|opacity|userData)$/.test(property)) continue;

@@ -13,7 +13,7 @@ import { Camera } from '@modules/renderer/engine/cameras/Camera.js';
 import { Intersection, Raycaster } from '@modules/renderer/engine/core/Raycaster.js';
 import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 import { Scene } from '@modules/renderer/engine/scenes/Scene.js';
-import { RenderTarget } from '@modules/renderer/engine/core/RenderTarget.js';
+import { Group } from '@modules/renderer/engine/objects/Group.js';
 
 const sortAsc = (a: { z: number }, b: { z: number }): number => a.z - b.z;
 const sortDesc = (a: { z: number }, b: { z: number }): number => b.z - a.z;
@@ -114,7 +114,6 @@ export class BatchedMesh extends Mesh {
   static is(object: any): object is BatchedMesh {
     return object?.isBatchedMesh === true;
   }
-
   get maxGeometryCount() {
     return this._maxGeometryCount;
   }
@@ -714,7 +713,14 @@ export class BatchedMesh extends Mesh {
     return this;
   }
 
-  onBeforeRender(renderer: Renderer, scene: Scene, camera: Camera, target?: RenderTarget) {
+  onBeforeRender(
+    renderer: Renderer,
+    scene: Scene,
+    camera: Camera,
+    geometry: BufferGeometry,
+    material: Material,
+    group: Group,
+  ) {
     // if visibility has not changed and frustum culling and object sorting is not required
     // then skip iterating over all items
     if (!this._visibilityChanged && !this.perObjectFrustumCulled && !this.sortObjects) {
@@ -808,7 +814,14 @@ export class BatchedMesh extends Mesh {
     this._visibilityChanged = false;
   }
 
-  onBeforeShadow(renderer: Renderer, scene: Scene, shadowCamera: Camera, target?: RenderTarget) {
+  onBeforeShadow(
+    renderer: Renderer,
+    scene: Scene,
+    shadowCamera: Camera,
+    geometry: BufferGeometry,
+    depthMaterial: Material,
+    group: Group,
+  ) {
     this.onBeforeRender(renderer, scene, shadowCamera, geometry, depthMaterial, group);
   }
 }

@@ -82,7 +82,7 @@ class Pipelines extends DataMap<any, any> {
     return data.pipeline;
   }
 
-  getForRender(renderObject: RenderObject) {
+  getForRender(renderObject: RenderObject, promises = null) {
     const data = this.get(renderObject);
 
     if (this._needsRenderUpdate(renderObject)) {
@@ -133,7 +133,7 @@ class Pipelines extends DataMap<any, any> {
       if (pipeline === undefined) {
         if (previousPipeline && previousPipeline.usedTimes === 0) this._releasePipeline(previousPipeline);
 
-        pipeline = this._getRenderPipeline(renderObject, stageVertex, stageFragment, cacheKey);
+        pipeline = this._getRenderPipeline(renderObject, stageVertex, stageFragment, cacheKey, promises);
       } else {
         renderObject.pipeline = pipeline;
       }
@@ -221,7 +221,8 @@ class Pipelines extends DataMap<any, any> {
     stageVertex: ProgrammableStage,
     stageFragment: ProgrammableStage,
     cacheKey: string,
-  ): Promise<RenderPipeline> {
+    promises?: any,
+  ): RenderPipeline {
     cacheKey = cacheKey || this._getRenderCacheKey(renderObject, stageVertex, stageFragment);
 
     let pipeline = this.caches.get(cacheKey);
@@ -233,7 +234,7 @@ class Pipelines extends DataMap<any, any> {
 
       renderObject.pipeline = pipeline;
 
-      this.renderer.backend.createRenderPipeline(renderObject);
+      this.renderer.backend.createRenderPipeline(renderObject, promises);
     }
 
     return pipeline;
