@@ -7,26 +7,26 @@ import type { Sprite } from '../objects/Sprite.js';
 import type { Object3D } from '../core/Object3D.js';
 import { Const } from '@modules/renderer/engine/math/types.js';
 
-export interface Frustum {
+export interface Frustum_ {
   planes: [right: Plane_, left: Plane_, bottom: Plane_, top: Plane_, far: Plane_, near: Plane_];
 }
 
-export namespace Frustum {
-  export const create = (p0: Plane_, p1: Plane_, p2: Plane_, p3: Plane_, p4: Plane_, p5: Plane_): Frustum => ({
+export namespace Frustum_ {
+  export const create = (p0: Plane_, p1: Plane_, p2: Plane_, p3: Plane_, p4: Plane_, p5: Plane_): Frustum_ => ({
     planes: [p0, p1, p2, p3, p4, p5],
   });
 
-  export const empty = (): Frustum =>
+  export const empty = (): Frustum_ =>
     create(Plane_.empty(), Plane_.empty(), Plane_.empty(), Plane_.empty(), Plane_.empty(), Plane_.empty());
   export const set = (
-    self: Frustum,
+    self: Frustum_,
     p0: Plane_,
     p1: Plane_,
     p2: Plane_,
     p3: Plane_,
     p4: Plane_,
     p5: Plane_,
-  ): Frustum => {
+  ): Frustum_ => {
     Plane_.fill_(self.planes[0], p0);
     Plane_.fill_(self.planes[1], p1);
     Plane_.fill_(self.planes[2], p2);
@@ -35,12 +35,12 @@ export namespace Frustum {
     Plane_.fill_(self.planes[5], p5);
     return self;
   };
-  export const fill_ = (self: Frustum, { planes: [p0, p1, p2, p3, p4, p5] }: Const<Frustum>): Frustum =>
+  export const fill_ = (self: Frustum_, { planes: [p0, p1, p2, p3, p4, p5] }: Const<Frustum_>): Frustum_ =>
     set(self, p0, p1, p2, p3, p4, p5);
 
-  export const fromProjection = (matrix: Const<Matrix4>): Frustum => fromProjection_(matrix, empty());
+  export const fromProjection = (matrix: Const<Matrix4>): Frustum_ => fromProjection_(matrix, empty());
 
-  export const fromProjection_ = (matrix: Const<Matrix4>, into: Frustum): Frustum => {
+  export const fromProjection_ = (matrix: Const<Matrix4>, into: Frustum_): Frustum_ => {
     const planes = into.planes;
     const [e0, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15] = matrix.elements;
 
@@ -64,18 +64,18 @@ export namespace Frustum {
 
     return into;
   };
-  export const fillProjection = (self: Frustum, matrix: Const<Matrix4>): Frustum => fromProjection_(matrix, self);
+  export const fillProjection = (self: Frustum_, matrix: Const<Matrix4>): Frustum_ => fromProjection_(matrix, self);
 
-  export const copy = (from: Frustum): Frustum => copy_(from, empty());
-  export const copy_ = (from: Frustum, into: Frustum): Frustum => {
+  export const copy = (from: Frustum_): Frustum_ => copy_(from, empty());
+  export const copy_ = (from: Frustum_, into: Frustum_): Frustum_ => {
     into.planes = from.planes;
     return into;
   };
 
-  export const clone = (from: Const<Frustum>): Frustum => clone_(from, empty());
-  export const clone_ = (from: Const<Frustum>, into: Frustum): Frustum => fill_(into, from);
+  export const clone = (from: Const<Frustum_>): Frustum_ => clone_(from, empty());
+  export const clone_ = (from: Const<Frustum_>, into: Frustum_): Frustum_ => fill_(into, from);
 
-  export const intersectsObject = (self: Const<Frustum>, object: Object3D): boolean => {
+  export const intersectsObject = (self: Const<Frustum_>, object: Object3D): boolean => {
     if (object.boundingSphere !== undefined) {
       if (object.boundingSphere === null) object.computeBoundingSphere();
 
@@ -93,13 +93,13 @@ export namespace Frustum {
   };
   const _sphere = Sphere_.empty();
   const cosPi4 = 0.7071067811865476;
-  export const intersectsSprite = (self: Const<Frustum>, sprite: Sprite): boolean => {
+  export const intersectsSprite = (self: Const<Frustum_>, sprite: Sprite): boolean => {
     Sphere_.set(_sphere, 0, 0, 0, cosPi4);
     Sphere_.applyMat4(_sphere, sprite.matrixWorld);
 
     return intersectsSphere(self, _sphere);
   };
-  export const intersectsSphere = ({ planes }: Const<Frustum>, { center, radius }: Sphere_): boolean => {
+  export const intersectsSphere = ({ planes }: Const<Frustum_>, { center, radius }: Sphere_): boolean => {
     radius = -radius;
 
     if (Plane_.distanceToVec(planes[0], center) < radius) return false;
@@ -120,7 +120,7 @@ export namespace Frustum {
       plane.normal.y > 0 ? box.min.y : box.max.y,
       plane.normal.z > 0 ? box.min.z : box.max.z,
     );
-  export const intersectsBox = ({ planes }: Const<Frustum>, box: Box3_): boolean => {
+  export const intersectsBox = ({ planes }: Const<Frustum_>, box: Box3_): boolean => {
     if (Plane_.distanceToVec(planes[0], setVec(planes[0], box)) < 0) return false;
     if (Plane_.distanceToVec(planes[1], setVec(planes[1], box)) < 0) return false;
     if (Plane_.distanceToVec(planes[2], setVec(planes[2], box)) < 0) return false;
@@ -130,7 +130,7 @@ export namespace Frustum {
 
     return true;
   };
-  export const containsVec = ({ planes }: Const<Frustum>, point: Const<Vec3>): boolean => {
+  export const containsVec = ({ planes }: Const<Frustum_>, point: Const<Vec3>): boolean => {
     if (Plane_.distanceToVec(planes[0], point) < 0) return false;
     if (Plane_.distanceToVec(planes[1], point) < 0) return false;
     if (Plane_.distanceToVec(planes[2], point) < 0) return false;

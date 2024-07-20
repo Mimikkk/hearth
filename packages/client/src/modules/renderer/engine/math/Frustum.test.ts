@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { Frustum } from './Frustum.ts';
+import { Frustum_ } from './Frustum.ts';
 import { Plane_ } from './Plane.ts';
 import { Vec3 } from './Vector3.ts';
 import { Matrix4 } from './Matrix4.ts';
@@ -11,7 +11,7 @@ import { BoxGeometry } from '@modules/renderer/engine/geometries/BoxGeometry.js'
 
 describe('Maths - Frustum', () => {
   it('Instancing', () => {
-    let a = Frustum.empty();
+    let a = Frustum_.empty();
 
     expect(a.planes).toBeDefined();
     expect(a.planes.length).toBe(6);
@@ -28,7 +28,7 @@ describe('Maths - Frustum', () => {
     const p4 = Plane_.create(1, 0, 0, 4);
     const p5 = Plane_.create(1, 0, 0, 5);
 
-    a = Frustum.create(p0, p1, p2, p3, p4, p5);
+    a = Frustum_.create(p0, p1, p2, p3, p4, p5);
     expect(a.planes[0]).toEqual(p0);
     expect(a.planes[0]).toBe(p0);
     expect(a.planes[1]).toEqual(p1);
@@ -49,7 +49,7 @@ describe('Maths - Frustum', () => {
     const pa = Plane_.create(1, 0, 0, 4);
     const pb = Plane_.create(1, 0, 0, 5);
 
-    Frustum.set(a, p6, p7, p8, p9, pa, pb);
+    Frustum_.set(a, p6, p7, p8, p9, pa, pb);
     expect(a.planes[0]).toEqual(p6);
     expect(a.planes[0]).not.toBe(p6);
     expect(a.planes[1]).toEqual(p7);
@@ -63,10 +63,10 @@ describe('Maths - Frustum', () => {
     expect(a.planes[5]).toEqual(pb);
     expect(a.planes[5]).not.toBe(pb);
 
-    const b = Frustum.copy(a);
+    const b = Frustum_.copy(a);
     expect(b.planes).toBe(a.planes);
 
-    const c = Frustum.clone(a);
+    const c = Frustum_.clone(a);
     expect(c.planes[0]).toEqual(p6);
     expect(c.planes[0]).not.toBe(p6);
     expect(c.planes[1]).toEqual(p7);
@@ -83,40 +83,40 @@ describe('Maths - Frustum', () => {
 
   it('fromOrthographic/containsVec', () => {
     const mat = new Matrix4().makeOrthographic(-1, 1, -1, 1, 1, 100);
-    const frustum = Frustum.fromProjection(mat);
+    const frustum = Frustum_.fromProjection(mat);
 
-    expect(Frustum.containsVec(frustum, Vec3.create(0, 0, 0))).toBe(false);
-    expect(Frustum.containsVec(frustum, Vec3.create(0, 0, -50))).toBe(true);
-    expect(Frustum.containsVec(frustum, Vec3.create(0, 0, -1.001))).toBe(true);
-    expect(Frustum.containsVec(frustum, Vec3.create(-1, -1, -1.001))).toBe(true);
-    expect(Frustum.containsVec(frustum, Vec3.create(-1.1, -1.1, -1.001))).toBe(false);
-    expect(Frustum.containsVec(frustum, Vec3.create(1, 1, -1.001))).toBe(true);
-    expect(Frustum.containsVec(frustum, Vec3.create(1.1, 1.1, -1.001))).toBe(false);
-    expect(Frustum.containsVec(frustum, Vec3.create(0, 0, -100))).toBe(true);
-    expect(Frustum.containsVec(frustum, Vec3.create(-1, -1, -100))).toBe(true);
-    expect(Frustum.containsVec(frustum, Vec3.create(-1.1, -1.1, -100.1))).toBe(false);
-    expect(Frustum.containsVec(frustum, Vec3.create(1, 1, -100))).toBe(true);
-    expect(Frustum.containsVec(frustum, Vec3.create(1.1, 1.1, -100.1))).toBe(false);
-    expect(Frustum.containsVec(frustum, Vec3.create(0, 0, -101))).toBe(false);
+    expect(Frustum_.containsVec(frustum, Vec3.create(0, 0, 0))).toBe(false);
+    expect(Frustum_.containsVec(frustum, Vec3.create(0, 0, -50))).toBe(true);
+    expect(Frustum_.containsVec(frustum, Vec3.create(0, 0, -1.001))).toBe(true);
+    expect(Frustum_.containsVec(frustum, Vec3.create(-1, -1, -1.001))).toBe(true);
+    expect(Frustum_.containsVec(frustum, Vec3.create(-1.1, -1.1, -1.001))).toBe(false);
+    expect(Frustum_.containsVec(frustum, Vec3.create(1, 1, -1.001))).toBe(true);
+    expect(Frustum_.containsVec(frustum, Vec3.create(1.1, 1.1, -1.001))).toBe(false);
+    expect(Frustum_.containsVec(frustum, Vec3.create(0, 0, -100))).toBe(true);
+    expect(Frustum_.containsVec(frustum, Vec3.create(-1, -1, -100))).toBe(true);
+    expect(Frustum_.containsVec(frustum, Vec3.create(-1.1, -1.1, -100.1))).toBe(false);
+    expect(Frustum_.containsVec(frustum, Vec3.create(1, 1, -100))).toBe(true);
+    expect(Frustum_.containsVec(frustum, Vec3.create(1.1, 1.1, -100.1))).toBe(false);
+    expect(Frustum_.containsVec(frustum, Vec3.create(0, 0, -101))).toBe(false);
   });
 
   it('fromProjection/containsVec', () => {
     const mat = new Matrix4().makePerspective(-1, 1, 1, -1, 1, 100);
-    const frustum = Frustum.fromProjection(mat);
+    const frustum = Frustum_.fromProjection(mat);
 
-    expect(Frustum.containsVec(frustum, Vec3.create(0, 0, 0))).toBe(false);
-    expect(Frustum.containsVec(frustum, Vec3.create(0, 0, -50))).toBe(true);
-    expect(Frustum.containsVec(frustum, Vec3.create(0, 0, -1.001))).toBe(true);
-    expect(Frustum.containsVec(frustum, Vec3.create(-1, -1, -1.001))).toBe(true);
-    expect(Frustum.containsVec(frustum, Vec3.create(-1.1, -1.1, -1.001))).toBe(false);
-    expect(Frustum.containsVec(frustum, Vec3.create(1, 1, -1.001))).toBe(true);
-    expect(Frustum.containsVec(frustum, Vec3.create(1.1, 1.1, -1.001))).toBe(false);
-    expect(Frustum.containsVec(frustum, Vec3.create(0, 0, -99.999))).toBe(true);
-    expect(Frustum.containsVec(frustum, Vec3.create(-99.999, -99.999, -99.999))).toBe(true);
-    expect(Frustum.containsVec(frustum, Vec3.create(-100.1, -100.1, -100.1))).toBe(false);
-    expect(Frustum.containsVec(frustum, Vec3.create(99.999, 99.999, -99.999))).toBe(true);
-    expect(Frustum.containsVec(frustum, Vec3.create(100.1, 100.1, -100.1))).toBe(false);
-    expect(Frustum.containsVec(frustum, Vec3.create(0, 0, -101))).toBe(false);
+    expect(Frustum_.containsVec(frustum, Vec3.create(0, 0, 0))).toBe(false);
+    expect(Frustum_.containsVec(frustum, Vec3.create(0, 0, -50))).toBe(true);
+    expect(Frustum_.containsVec(frustum, Vec3.create(0, 0, -1.001))).toBe(true);
+    expect(Frustum_.containsVec(frustum, Vec3.create(-1, -1, -1.001))).toBe(true);
+    expect(Frustum_.containsVec(frustum, Vec3.create(-1.1, -1.1, -1.001))).toBe(false);
+    expect(Frustum_.containsVec(frustum, Vec3.create(1, 1, -1.001))).toBe(true);
+    expect(Frustum_.containsVec(frustum, Vec3.create(1.1, 1.1, -1.001))).toBe(false);
+    expect(Frustum_.containsVec(frustum, Vec3.create(0, 0, -99.999))).toBe(true);
+    expect(Frustum_.containsVec(frustum, Vec3.create(-99.999, -99.999, -99.999))).toBe(true);
+    expect(Frustum_.containsVec(frustum, Vec3.create(-100.1, -100.1, -100.1))).toBe(false);
+    expect(Frustum_.containsVec(frustum, Vec3.create(99.999, 99.999, -99.999))).toBe(true);
+    expect(Frustum_.containsVec(frustum, Vec3.create(100.1, 100.1, -100.1))).toBe(false);
+    expect(Frustum_.containsVec(frustum, Vec3.create(0, 0, -101))).toBe(false);
   });
 
   it.only('fromProjection/intersectsSphere', () => {
@@ -128,82 +128,82 @@ describe('Maths - Frustum', () => {
     } = webgpu;
 
     const matrix = new Matrix4().makePerspective(left, right, top, bottom, near, far);
-    const frustum = Frustum.fromProjection(matrix);
+    const frustum = Frustum_.fromProjection(matrix);
 
     const point = (x: number, y: number, z: number) => Sphere_.create(x, y, z, 0);
 
     const exterior = [point(0, 0, 0)];
     for (const point of exterior) {
-      expect(Frustum.intersectsSphere(frustum, point)).toBe(false);
+      expect(Frustum_.intersectsSphere(frustum, point)).toBe(false);
     }
 
     const interior = [point(0, 0, 0)];
     for (const point of interior) {
-      expect(Frustum.intersectsSphere(frustum, point)).toBe(false);
+      expect(Frustum_.intersectsSphere(frustum, point)).toBe(false);
     }
   });
 
   it('intersectsObject', () => {
     const mat = new Matrix4().makePerspective(-1, 1, 1, -1, 1, 100);
-    const frustum = Frustum.fromProjection(mat);
+    const frustum = Frustum_.fromProjection(mat);
     const mesh = new Mesh(new BoxGeometry(1, 1, 1));
 
-    expect(Frustum.intersectsObject(frustum, mesh)).toBe(false);
+    expect(Frustum_.intersectsObject(frustum, mesh)).toBe(false);
 
     mesh.position.set(-5, -5, -5);
     mesh.updateMatrixWorld();
 
-    expect(Frustum.intersectsObject(frustum, mesh)).toBe(true);
+    expect(Frustum_.intersectsObject(frustum, mesh)).toBe(true);
 
     mesh.position.set(5, 5, 5);
     mesh.updateMatrixWorld();
 
-    expect(Frustum.intersectsObject(frustum, mesh)).toBe(false);
+    expect(Frustum_.intersectsObject(frustum, mesh)).toBe(false);
   });
 
   it('intersectsSprite', () => {
     const mat = new Matrix4().makePerspective(-1, 1, 1, -1, 1, 100);
-    const frustum = Frustum.fromProjection(mat);
+    const frustum = Frustum_.fromProjection(mat);
     const sprite = new Sprite();
 
-    expect(Frustum.intersectsSprite(frustum, sprite)).toBe(false);
+    expect(Frustum_.intersectsSprite(frustum, sprite)).toBe(false);
 
     sprite.position.set(-1, -1, -1);
 
-    expect(Frustum.intersectsSprite(frustum, sprite)).toBe(false);
+    expect(Frustum_.intersectsSprite(frustum, sprite)).toBe(false);
 
     sprite.updateMatrixWorld();
 
-    expect(Frustum.intersectsSprite(frustum, sprite)).toBe(true);
+    expect(Frustum_.intersectsSprite(frustum, sprite)).toBe(true);
   });
 
   it('intersectsSphere', () => {
     const mat = new Matrix4().makePerspective(-1, 1, 1, -1, 1, 100);
-    const frustum = Frustum.fromProjection(mat);
+    const frustum = Frustum_.fromProjection(mat);
     const sphere = Sphere_.create(0, 0, 0, 0);
 
-    expect(Frustum.intersectsSphere(frustum, sphere)).toBe(false);
+    expect(Frustum_.intersectsSphere(frustum, sphere)).toBe(false);
     Sphere_.set(sphere, 0, 0, -50, 0);
-    expect(Frustum.intersectsSphere(frustum, sphere)).toBe(true);
+    expect(Frustum_.intersectsSphere(frustum, sphere)).toBe(true);
   });
 
   it('intersectsBox', () => {
     const mat = new Matrix4().makePerspective(-1, 1, 1, -1, 1, 100);
-    const frustum = Frustum.fromProjection(mat);
+    const frustum = Frustum_.fromProjection(mat);
     const box = Box3_.create(0, 0, 0, 1, 1, 1);
 
-    expect(Frustum.intersectsBox(frustum, box)).toBe(false);
+    expect(Frustum_.intersectsBox(frustum, box)).toBe(false);
 
     Box3_.translate(box, Vec3.create(-1 - Number.EPSILON, -1 - Number.EPSILON, -1 - Number.EPSILON));
 
-    expect(Frustum.intersectsBox(frustum, box)).toBe(false);
+    expect(Frustum_.intersectsBox(frustum, box)).toBe(false);
   });
 
   it('containsVec', () => {
     const mat = new Matrix4().makePerspective(-1, 1, 1, -1, 1, 100);
-    const frustum = Frustum.fromProjection(mat);
+    const frustum = Frustum_.fromProjection(mat);
 
-    expect(Frustum.containsVec(frustum, Vec3.create(0, 0, 0))).toBe(false);
-    expect(Frustum.containsVec(frustum, Vec3.create(0, 0, -50))).toBe(true);
+    expect(Frustum_.containsVec(frustum, Vec3.create(0, 0, 0))).toBe(false);
+    expect(Frustum_.containsVec(frustum, Vec3.create(0, 0, -50))).toBe(true);
   });
 });
