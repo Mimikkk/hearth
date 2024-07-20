@@ -58,7 +58,7 @@ export class Skeleton {
       const inverse = new Mat4();
 
       if (this.bones[i]) {
-        inverse.clone(this.bones[i].matrixWorld).invert();
+        inverse.from(this.bones[i].matrixWorld).invert();
       }
 
       this.boneInverses.push(inverse);
@@ -72,7 +72,7 @@ export class Skeleton {
       const bone = this.bones[i];
 
       if (bone) {
-        bone.matrixWorld.clone(this.boneInverses[i]).invert();
+        bone.matrixWorld.from(this.boneInverses[i]).invert();
       }
     }
 
@@ -85,10 +85,10 @@ export class Skeleton {
 
       if (bone) {
         if (isBone(bone.parent)) {
-          bone.matrix.clone(bone.parent.matrixWorld).invert();
+          bone.matrix.from(bone.parent.matrixWorld).invert();
           bone.matrix.mul(bone.matrixWorld);
         } else {
-          bone.matrix.clone(bone.matrixWorld);
+          bone.matrix.from(bone.matrixWorld);
         }
 
         bone.matrix.decompose(bone.position, bone.quaternion, bone.scale);

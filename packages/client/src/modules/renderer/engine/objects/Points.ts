@@ -56,7 +56,7 @@ export class Points extends Object3D {
 
     //
 
-    _inverseMatrix.clone(matrixWorld).invert();
+    _inverseMatrix.from(matrixWorld).invert();
     _ray.from(raycaster.ray).applyMat4(_inverseMatrix);
 
     const localThreshold = threshold / ((this.scale.x + this.scale.y + this.scale.z) / 3);

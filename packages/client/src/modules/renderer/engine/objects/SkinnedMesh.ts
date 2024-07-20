@@ -70,8 +70,8 @@ export class SkinnedMesh extends Mesh {
     super.copy(source, recursive);
 
     this.bindMode = source.bindMode;
-    this.bindMatrix.clone(source.bindMatrix);
-    this.bindMatrixInverse.clone(source.bindMatrixInverse);
+    this.bindMatrix.from(source.bindMatrix);
+    this.bindMatrixInverse.from(source.bindMatrixInverse);
 
     this.skeleton = source.skeleton;
 
@@ -98,7 +98,7 @@ export class SkinnedMesh extends Mesh {
 
     // convert ray to local space of skinned mesh
 
-    _inverseMatrix.clone(matrixWorld).invert();
+    _inverseMatrix.from(matrixWorld).invert();
     _ray.from(raycaster.ray).applyMat4(_inverseMatrix);
 
     // test with bounding box in local space
@@ -131,8 +131,8 @@ export class SkinnedMesh extends Mesh {
       bindMatrix = this.matrixWorld;
     }
 
-    this.bindMatrix.clone(bindMatrix);
-    this.bindMatrixInverse.clone(bindMatrix).invert();
+    this.bindMatrix.from(bindMatrix);
+    this.bindMatrixInverse.from(bindMatrix).invert();
   }
 
   pose() {
@@ -163,9 +163,9 @@ export class SkinnedMesh extends Mesh {
     super.updateMatrixWorld(force);
 
     if (this.bindMode === BindMode.Attached) {
-      this.bindMatrixInverse.clone(this.matrixWorld).invert();
+      this.bindMatrixInverse.from(this.matrixWorld).invert();
     } else if (this.bindMode === BindMode.Detached) {
-      this.bindMatrixInverse.clone(this.bindMatrix).invert();
+      this.bindMatrixInverse.from(this.bindMatrix).invert();
     } else {
       console.warn('engine.SkinnedMesh: Unrecognized bindMode: ' + this.bindMode);
     }
@@ -186,7 +186,7 @@ export class SkinnedMesh extends Mesh {
     if (weightX !== 0) {
       const boneIndex = _index.x;
 
-      _matrix4.clone(skeleton.bones[boneIndex].matrixWorld).mul(skeleton.boneInverses[boneIndex]);
+      _matrix4.from(skeleton.bones[boneIndex].matrixWorld).mul(skeleton.boneInverses[boneIndex]);
       into.addScaled(_vector3.from(_position).applyMat4(_matrix4), weightX);
     }
 
@@ -194,7 +194,7 @@ export class SkinnedMesh extends Mesh {
     if (weightY !== 0) {
       const boneIndex = _index.y;
 
-      _matrix4.clone(skeleton.bones[boneIndex].matrixWorld).mul(skeleton.boneInverses[boneIndex]);
+      _matrix4.from(skeleton.bones[boneIndex].matrixWorld).mul(skeleton.boneInverses[boneIndex]);
       into.addScaled(_vector3.from(_position).applyMat4(_matrix4), weightY);
     }
 
@@ -202,7 +202,7 @@ export class SkinnedMesh extends Mesh {
     if (weightZ !== 0) {
       const boneIndex = _index.z;
 
-      _matrix4.clone(skeleton.bones[boneIndex].matrixWorld).mul(skeleton.boneInverses[boneIndex]);
+      _matrix4.from(skeleton.bones[boneIndex].matrixWorld).mul(skeleton.boneInverses[boneIndex]);
       into.addScaled(_vector3.from(_position).applyMat4(_matrix4), weightZ);
     }
 
@@ -210,7 +210,7 @@ export class SkinnedMesh extends Mesh {
     if (weightW !== 0) {
       const boneIndex = _index.w;
 
-      _matrix4.clone(skeleton.bones[boneIndex].matrixWorld).mul(skeleton.boneInverses[boneIndex]);
+      _matrix4.from(skeleton.bones[boneIndex].matrixWorld).mul(skeleton.boneInverses[boneIndex]);
       into.addScaled(_vector3.from(_position).applyMat4(_matrix4), weightW);
     }
 

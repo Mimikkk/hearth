@@ -164,7 +164,7 @@ export class TeapotGeometry extends BufferGeometry {
     const vsdir = new Vec3();
     const vtdir = new Vec3();
 
-    const mst = ms.from();
+    const mst = ms.clone();
     mst.transpose();
 
     // internal function: test if triangle has any matching vertices;

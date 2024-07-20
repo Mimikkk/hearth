@@ -308,7 +308,7 @@ export class Object3D<EventMap extends Object3DEventMap = Object3DEventMap> {
   worldToLocal(vector: Vec3): Vec3 {
     this.updateWorldMatrix(true, false);
 
-    return vector.applyMat4(_m1.clone(this.matrixWorld).invert());
+    return vector.applyMat4(_m1.from(this.matrixWorld).invert());
   }
 
   lookAt(x: Vec3): this;
@@ -421,7 +421,7 @@ export class Object3D<EventMap extends Object3DEventMap = Object3DEventMap> {
 
     this.updateWorldMatrix(true, false);
 
-    _m1.clone(this.matrixWorld).invert();
+    _m1.from(this.matrixWorld).invert();
 
     if (object.parent !== null) {
       object.parent.updateWorldMatrix(true, false);
@@ -563,7 +563,7 @@ export class Object3D<EventMap extends Object3DEventMap = Object3DEventMap> {
 
     if (this.matrixWorldNeedsUpdate || force) {
       if (this.parent === null) {
-        this.matrixWorld.clone(this.matrix);
+        this.matrixWorld.from(this.matrix);
       } else {
         this.matrixWorld.asMul(this.parent.matrixWorld, this.matrix);
       }
@@ -597,7 +597,7 @@ export class Object3D<EventMap extends Object3DEventMap = Object3DEventMap> {
     if (this.matrixAutoUpdate) this.updateMatrix();
 
     if (this.parent === null) {
-      this.matrixWorld.clone(this.matrix);
+      this.matrixWorld.from(this.matrix);
     } else {
       this.matrixWorld.asMul(this.parent.matrixWorld, this.matrix);
     }
@@ -631,8 +631,8 @@ export class Object3D<EventMap extends Object3DEventMap = Object3DEventMap> {
     this.quaternion.from(source.quaternion);
     this.scale.from(source.scale);
 
-    this.matrix.clone(source.matrix);
-    this.matrixWorld.clone(source.matrixWorld);
+    this.matrix.from(source.matrix);
+    this.matrixWorld.from(source.matrixWorld);
 
     this.matrixAutoUpdate = source.matrixAutoUpdate;
 

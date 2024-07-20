@@ -5,6 +5,7 @@ import { Euler } from '@modules/renderer/engine/math/Euler.js';
 import { Quaternion } from '@modules/renderer/engine/math/Quaternion.js';
 import { Const } from '@modules/renderer/engine/math/types.js';
 import { NumberArray } from '@modules/renderer/engine/math/MathUtils.js';
+import { Attribute } from '@modules/renderer/engine/core/types.js';
 
 export class Mat4 {
   declare isMat4: true;
@@ -84,7 +85,7 @@ export class Mat4 {
     n44: number,
     into: Mat4 = Mat4.new(),
   ): Mat4 {
-    return into.setRowOrder(n11, n12, n13, n14, n21, n22, n23, n24, n31, n32, n33, n34, n41, n42, n43, n44);
+    return into.set(n11, n21, n31, n41, n12, n22, n32, n42, n13, n23, n33, n43, n14, n24, n34, n44);
   }
 
   static fromArray(array: Const<NumberArray>, offset = 0, into = Mat4.new()): Mat4 {
@@ -206,11 +207,11 @@ export class Mat4 {
     return this.set(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
   }
 
-  from(into: Mat4 = Mat4.new()): Mat4 {
+  clone(into: Mat4 = Mat4.new()): Mat4 {
     return into.fromArray(this.elements);
   }
 
-  clone(mat: Const<Mat4>): this {
+  from(mat: Const<Mat4>): this {
     const te = this.elements;
     const me = mat.elements;
 
@@ -294,10 +295,25 @@ export class Mat4 {
     return this;
   }
 
-  asBasis(xAxis: Const<Vec3>, yAxis: Const<Vec3>, zAxis: Const<Vec3>): this {
-    this.set(xAxis.x, yAxis.x, zAxis.x, 0, xAxis.y, yAxis.y, zAxis.y, 0, xAxis.z, yAxis.z, zAxis.z, 0, 0, 0, 0, 1);
-
-    return this;
+  fromBasis(xAxis: Const<Vec3>, yAxis: Const<Vec3>, zAxis: Const<Vec3>): this {
+    return this.set(
+      xAxis.x,
+      yAxis.x,
+      zAxis.x,
+      0,
+      xAxis.y,
+      yAxis.y,
+      zAxis.y,
+      0,
+      xAxis.z,
+      yAxis.z,
+      zAxis.z,
+      0,
+      0,
+      0,
+      0,
+      1,
+    );
   }
 
   asRotationFromEuler(euler: Const<Euler>): this {
@@ -861,7 +877,7 @@ export class Mat4 {
     position.z = te[14];
 
     // scale the rotation part
-    const _m1 = new Mat4().clone(this);
+    const _m1 = new Mat4().from(this);
 
     const invSX = 1 / sx;
     const invSY = 1 / sy;

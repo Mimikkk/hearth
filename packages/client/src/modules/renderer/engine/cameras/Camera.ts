@@ -28,9 +28,9 @@ export class Camera extends Object3D {
   copy(source: Camera, recursive?: boolean): this {
     super.copy(source as unknown as Object3D, recursive);
 
-    this.matrixWorldInverse.clone(source.matrixWorldInverse);
-    this.projectionMatrix.clone(source.projectionMatrix);
-    this.projectionMatrixInverse.clone(source.projectionMatrixInverse);
+    this.matrixWorldInverse.from(source.matrixWorldInverse);
+    this.projectionMatrix.from(source.projectionMatrix);
+    this.projectionMatrixInverse.from(source.projectionMatrixInverse);
     this.coordinateSystem = source.coordinateSystem;
 
     return this;
@@ -43,7 +43,7 @@ export class Camera extends Object3D {
   updateMatrixWorld(force?: boolean): this {
     super.updateMatrixWorld(force);
 
-    this.matrixWorldInverse.clone(this.matrixWorld).invert();
+    this.matrixWorldInverse.from(this.matrixWorld).invert();
 
     return this;
   }
@@ -51,7 +51,7 @@ export class Camera extends Object3D {
   updateWorldMatrix(updateParents: boolean, updateChildren: boolean): this {
     super.updateWorldMatrix(updateParents, updateChildren);
 
-    this.matrixWorldInverse.clone(this.matrixWorld).invert();
+    this.matrixWorldInverse.from(this.matrixWorld).invert();
 
     return this;
   }

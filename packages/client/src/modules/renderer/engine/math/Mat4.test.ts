@@ -319,7 +319,7 @@ describe('Math - Mat4', () => {
     const a = Mat4.new();
     const b = Mat4.fromColumnOrder(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
-    a.from(b).invert();
+    a.clone(b).invert();
     expect(a).toEqual(zero);
 
     const testMatrices = [

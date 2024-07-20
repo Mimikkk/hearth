@@ -70,7 +70,7 @@ export class Sprite extends Object3D {
 
     _worldScale.fromMat4Scale(this.matrixWorld);
 
-    _viewWorldMatrix.clone(raycaster.camera.matrixWorld);
+    _viewWorldMatrix.from(raycaster.camera.matrixWorld);
     this.modelViewMatrix.asMul(raycaster.camera.matrixWorldInverse, this.matrixWorld);
 
     _mvPosition.fromMat4Position(this.modelViewMatrix);

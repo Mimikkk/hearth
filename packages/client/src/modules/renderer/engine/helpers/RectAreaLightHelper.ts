@@ -67,7 +67,7 @@ export class RectAreaLightHelper extends Line {
       .mulVec(this.scale)
       .fromMat4Position(this.light.matrixWorld);
 
-    this.children[0].matrixWorld.clone(this.matrixWorld);
+    this.children[0].matrixWorld.from(this.matrixWorld);
     return this;
   }
 

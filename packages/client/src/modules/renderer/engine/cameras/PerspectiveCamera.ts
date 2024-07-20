@@ -184,7 +184,7 @@ export class PerspectiveCamera extends Camera {
 
     this.projectionMatrix.asPerspective(left, left + width, top, top - height, near, this.far, this.coordinateSystem);
 
-    this.projectionMatrixInverse.clone(this.projectionMatrix).invert();
+    this.projectionMatrixInverse.from(this.projectionMatrix).invert();
     return this;
   }
 }

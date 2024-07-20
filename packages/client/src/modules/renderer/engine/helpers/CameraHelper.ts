@@ -212,7 +212,7 @@ export class CameraHelper extends LineSegments {
     // we need just camera projection matrix inverse
     // world matrix must be identity
 
-    _camera.projectionMatrixInverse.clone(this.camera.projectionMatrixInverse);
+    _camera.projectionMatrixInverse.from(this.camera.projectionMatrixInverse);
 
     // center / target
 

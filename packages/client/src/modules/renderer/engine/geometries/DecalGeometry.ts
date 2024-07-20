@@ -36,7 +36,7 @@ export class DecalGeometry extends BufferGeometry {
     projectorMatrix.setPosition(position);
 
     const projectorMatrixInverse = new Mat4();
-    projectorMatrixInverse.clone(projectorMatrix).invert();
+    projectorMatrixInverse.from(projectorMatrix).invert();
 
     // generate buffers
 

@@ -153,7 +153,7 @@ export class Mesh extends Object3D {
 
     // convert ray to local space of mesh
 
-    _inverseMatrix.clone(matrixWorld).invert();
+    _inverseMatrix.from(matrixWorld).invert();
     _ray.from(raycaster.ray).applyMat4(_inverseMatrix);
 
     // test with bounding box in local space
