@@ -4,7 +4,7 @@ import {
   depthTexture,
   MeshBasicNodeMaterial,
   MeshStandardNodeMaterial,
-  node_perlin_noise_f32,
+  mx_perlin_noise_float,
   normalWorld,
   objectPosition,
   pass,
@@ -160,8 +160,8 @@ scene.add(objects);
 const timer = timerLocal(1);
 const floorUV = positionWorld.xzy;
 
-const waterLayer0 = node_perlin_noise_f32(floorUV.mul(4).add(timer));
-const waterLayer1 = node_perlin_noise_f32(floorUV.mul(2).add(timer));
+const waterLayer0 = mx_perlin_noise_float(floorUV.mul(4).add(timer));
+const waterLayer1 = mx_perlin_noise_float(floorUV.mul(2).add(timer));
 const waterIntensity = waterLayer0.mul(waterLayer1);
 const waterColor = waterIntensity.mul(1.4).mix(color(0x0487e2), color(0x74ccf4));
 const depthWater = depthTexture(viewportDepthTexture()).sub(depth);
