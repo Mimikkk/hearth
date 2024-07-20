@@ -251,7 +251,7 @@ describe('Math - Vec3', () => {
     const coord = vec3();
     const expected = vec3(1, 0, 1);
 
-    const cylindrical = Cylindrical.fromCoord(expected);
+    const cylindrical = Cylindrical.fromCartesian(expected);
     closeTo(coord.fromCylindrical(cylindrical), expected, Number.EPSILON * 4);
   });
 
