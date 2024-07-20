@@ -10,7 +10,7 @@ import { HDRCubeTextureLoader } from '@modules/renderer/engine/loaders/textures/
 import { createFlakesCanvas } from '@modules/renderer/engine/textures/createFlakesCanvas.js';
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
+import { Vec2 } from '@modules/renderer/engine/math/Vector2.js';
 
 let container, stats;
 

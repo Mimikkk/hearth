@@ -1,6 +1,6 @@
 import UniformBuffer from './UniformBuffer.js';
 import { STD140ChunkBytes } from './Constants.js';
-import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
+import { Matrix4 } from '@modules/renderer/engine/math/Matrix4.js';
 import {
   Uniform,
   ColorUniform,

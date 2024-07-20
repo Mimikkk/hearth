@@ -2,7 +2,7 @@ import { BufferGeometry } from '../core/BufferGeometry.js';
 import { Float32BufferAttribute } from '../core/BufferAttribute.js';
 import { Shape } from '../extras/core/Shape.js';
 import { ShapeUtils } from '../extras/ShapeUtils.js';
-import { Vec2 } from '../math/Vec2.js';
+import { Vec2 } from '../math/Vector2.js';
 
 export class ShapeGeometry extends BufferGeometry {
   declare type: string | 'ShapeGeometry';

@@ -1,6 +1,6 @@
 import { Curve } from '../core/Curve.js';
 import { CubicBezier } from '../core/Interpolations.js';
-import { Vec2 } from '../../math/Vec2.js';
+import { Vec2 } from '../../math/Vector2.js';
 
 class CubicBezierCurve extends Curve<Vec2> {
   declare isCubicBezierCurve: true;

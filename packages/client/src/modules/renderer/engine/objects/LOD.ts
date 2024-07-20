@@ -1,11 +1,11 @@
-import { Vec3 } from '../math/Vec3.js';
+import { Vector3 } from '../math/Vector3.js';
 import { Object3D } from '../core/Object3D.js';
 import { Intersection, Raycaster } from '../core/Raycaster.js';
 import { PerspectiveCamera } from '../cameras/PerspectiveCamera.js';
 import { OrthographicCamera } from '../cameras/OrthographicCamera.js';
 
-const _v1 = new Vec3();
-const _v2 = new Vec3();
+const _v1 = new Vector3();
+const _v2 = new Vector3();
 
 export class LOD extends Object3D {
   declare isLOD: true;
@@ -99,7 +99,7 @@ export class LOD extends Object3D {
     const levels = this.levels;
 
     if (levels.length > 0) {
-      _v1.fromMat4Position(this.matrixWorld);
+      _v1.setFromMatrixPosition(this.matrixWorld);
 
       const distance = raycaster.ray.origin.distanceTo(_v1);
 
@@ -111,8 +111,8 @@ export class LOD extends Object3D {
     const levels = this.levels;
 
     if (levels.length > 1) {
-      _v1.fromMat4Position(camera.matrixWorld);
-      _v2.fromMat4Position(this.matrixWorld);
+      _v1.setFromMatrixPosition(camera.matrixWorld);
+      _v2.setFromMatrixPosition(this.matrixWorld);
 
       const distance = _v1.distanceTo(_v2) / camera.zoom;
 

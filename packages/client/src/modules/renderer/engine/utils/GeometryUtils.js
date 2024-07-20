@@ -1,4 +1,4 @@
-import { Vec3 } from '../engine.js';
+import { Vector3 } from '../engine.js';
 
 /**
  * Generates 2D-Coordinates in a very fast way.
@@ -14,14 +14,14 @@ import { Vec3 } from '../engine.js';
  * @param v2         Corner index +X, +Z.
  * @param v3         Corner index +X, -Z.
  */
-function hilbert2D(center = new Vec3(0, 0, 0), size = 10, iterations = 1, v0 = 0, v1 = 1, v2 = 2, v3 = 3) {
+function hilbert2D(center = new Vector3(0, 0, 0), size = 10, iterations = 1, v0 = 0, v1 = 1, v2 = 2, v3 = 3) {
   const half = size / 2;
 
   const vec_s = [
-    new Vec3(center.x - half, center.y, center.z - half),
-    new Vec3(center.x - half, center.y, center.z + half),
-    new Vec3(center.x + half, center.y, center.z + half),
-    new Vec3(center.x + half, center.y, center.z - half),
+    new Vector3(center.x - half, center.y, center.z - half),
+    new Vector3(center.x - half, center.y, center.z + half),
+    new Vector3(center.x + half, center.y, center.z + half),
+    new Vector3(center.x + half, center.y, center.z - half),
   ];
 
   const vec = [vec_s[v0], vec_s[v1], vec_s[v2], vec_s[v3]];
@@ -59,7 +59,7 @@ function hilbert2D(center = new Vec3(0, 0, 0), size = 10, iterations = 1, v0 = 0
  * @param v7         Corner index +X, +Y, -Z.
  */
 function hilbert3D(
-  center = new Vec3(0, 0, 0),
+  center = new Vector3(0, 0, 0),
   size = 10,
   iterations = 1,
   v0 = 0,
@@ -75,14 +75,14 @@ function hilbert3D(
   const half = size / 2;
 
   const vec_s = [
-    new Vec3(center.x - half, center.y + half, center.z - half),
-    new Vec3(center.x - half, center.y + half, center.z + half),
-    new Vec3(center.x - half, center.y - half, center.z + half),
-    new Vec3(center.x - half, center.y - half, center.z - half),
-    new Vec3(center.x + half, center.y - half, center.z - half),
-    new Vec3(center.x + half, center.y - half, center.z + half),
-    new Vec3(center.x + half, center.y + half, center.z + half),
-    new Vec3(center.x + half, center.y + half, center.z - half),
+    new Vector3(center.x - half, center.y + half, center.z - half),
+    new Vector3(center.x - half, center.y + half, center.z + half),
+    new Vector3(center.x - half, center.y - half, center.z + half),
+    new Vector3(center.x - half, center.y - half, center.z - half),
+    new Vector3(center.x + half, center.y - half, center.z - half),
+    new Vector3(center.x + half, center.y - half, center.z + half),
+    new Vector3(center.x + half, center.y + half, center.z + half),
+    new Vector3(center.x + half, center.y + half, center.z - half),
   ];
 
   const vec = [vec_s[v0], vec_s[v1], vec_s[v2], vec_s[v3], vec_s[v4], vec_s[v5], vec_s[v6], vec_s[v7]];

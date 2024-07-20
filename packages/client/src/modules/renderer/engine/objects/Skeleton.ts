@@ -1,18 +1,21 @@
 import { TextureDataType, TextureFormat } from '../constants.js';
 import { Bone } from './Bone.js';
-import { Mat4 } from '../math/Mat4.js';
+import { Matrix4 } from '../math/Matrix4.js';
 import { DataTexture } from '../textures/DataTexture.js';
 import { v4 } from 'uuid';
+
+const _offsetMatrix = new Matrix4();
+const _identityMatrix = new Matrix4();
 
 export class Skeleton {
   uuid: string;
   bones: Bone[];
-  boneInverses: Mat4[];
+  boneInverses: Matrix4[];
   boneMatrices: Float32Array;
   boneTexture: DataTexture | null;
   frame: number;
 
-  constructor(bones: Bone[] = [], boneInverses: Mat4[] = []) {
+  constructor(bones: Bone[] = [], boneInverses: Matrix4[] = []) {
     this.uuid = v4();
 
     this.bones = bones.slice(0);
@@ -42,7 +45,7 @@ export class Skeleton {
         this.boneInverses = [];
 
         for (let i = 0, il = this.bones.length; i < il; i++) {
-          this.boneInverses.push(new Mat4());
+          this.boneInverses.push(new Matrix4());
         }
       }
     }
@@ -52,10 +55,10 @@ export class Skeleton {
     this.boneInverses.length = 0;
 
     for (let i = 0, il = this.bones.length; i < il; i++) {
-      const inverse = new Mat4();
+      const inverse = new Matrix4();
 
       if (this.bones[i]) {
-        inverse.from(this.bones[i].matrixWorld).invert();
+        inverse.copy(this.bones[i].matrixWorld).invert();
       }
 
       this.boneInverses.push(inverse);
@@ -69,7 +72,7 @@ export class Skeleton {
       const bone = this.bones[i];
 
       if (bone) {
-        bone.matrixWorld.from(this.boneInverses[i]).invert();
+        bone.matrixWorld.copy(this.boneInverses[i]).invert();
       }
     }
 
@@ -82,10 +85,10 @@ export class Skeleton {
 
       if (bone) {
         if (isBone(bone.parent)) {
-          bone.matrix.from(bone.parent.matrixWorld).invert();
+          bone.matrix.copy(bone.parent.matrixWorld).invert();
           bone.matrix.multiply(bone.matrixWorld);
         } else {
-          bone.matrix.from(bone.matrixWorld);
+          bone.matrix.copy(bone.matrixWorld);
         }
 
         bone.matrix.decompose(bone.position, bone.quaternion, bone.scale);
@@ -166,6 +169,3 @@ export class Skeleton {
     }
   }
 }
-
-const _offsetMatrix = new Mat4();
-const _identityMatrix = new Mat4();

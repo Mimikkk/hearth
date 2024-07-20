@@ -2,7 +2,7 @@ import { Backend } from '@modules/renderer/engine/renderers/webgpu/Backend.js';
 import { ColorSpace, Side, ToneMapping } from '@modules/renderer/engine/constants.js';
 import ToneMappingNode from '@modules/renderer/engine/nodes/display/ToneMappingNode.js';
 import { Info } from '@modules/renderer/engine/renderers/common/Info.js';
-import { Vec4 } from '@modules/renderer/engine/math/Vec4.js';
+import { Vector4 } from '@modules/renderer/engine/math/Vector4.js';
 import Attributes from '@modules/renderer/engine/renderers/common/Attributes.js';
 import Geometries from '@modules/renderer/engine/renderers/common/Geometries.js';
 import Nodes from '@modules/renderer/engine/renderers/common/nodes/Nodes.js';
@@ -19,18 +19,18 @@ import { Scene } from '@modules/renderer/engine/scenes/Scene.js';
 import { Camera } from '@modules/renderer/engine/cameras/Camera.js';
 import ClippingContext from '@modules/renderer/engine/renderers/common/ClippingContext.js';
 import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
-import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
-import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
-import { Mat4, Object3D, Plane } from '@modules/renderer/engine/engine.js';
+import { Vector3 } from '@modules/renderer/engine/math/Vector3.js';
+import { Vec2 } from '@modules/renderer/engine/math/Vector2.js';
+import { Matrix4, Object3D, Plane } from '@modules/renderer/engine/engine.js';
 import { GPUFeatureNameType, GPUTextureFormatType } from '@modules/renderer/engine/renderers/webgpu/utils/constants.js';
 import { Frustum } from '@modules/renderer/engine/math/Frustum.js';
 
 const _scene = new Scene();
-const _drawingBufferSize = new Vec3();
-const _screen = new Vec4();
+const _drawingBufferSize = new Vector3();
+const _screen = new Vector4();
 const _frustum = Frustum.empty();
-const _projScreenMatrix = new Mat4();
-const _vector3 = new Vec3();
+const _projScreenMatrix = new Matrix4();
+const _vector3 = new Vector3();
 
 export class Renderer {
   backend: Backend;
@@ -38,8 +38,8 @@ export class Renderer {
   _pixelRatio: number;
   _width: number;
   _height: number;
-  _viewport: Vec4;
-  _scissor: Vec4;
+  _viewport: Vector4;
+  _scissor: Vector4;
   _scissorTest: boolean;
   _attributes: Attributes;
   _geometries: Geometries;
@@ -107,8 +107,8 @@ export class Renderer {
     this._pixelRatio = window.devicePixelRatio;
     this._width = this.parameters.canvas.width;
     this._height = this.parameters.canvas.height;
-    this._viewport = new Vec4(0, 0, this._width, this._height);
-    this._scissor = new Vec4(0, 0, this._width, this._height);
+    this._viewport = new Vector4(0, 0, this._width, this._height);
+    this._scissor = new Vector4(0, 0, this._width, this._height);
     this._scissorTest = false;
     this._nodes = new Nodes(this);
     this._animation = new Animation(this);
@@ -357,14 +357,14 @@ export class Renderer {
     const minDepth = viewport.minDepth === undefined ? 0 : viewport.minDepth;
     const maxDepth = viewport.maxDepth === undefined ? 1 : viewport.maxDepth;
 
-    renderContext.viewportValue.from(viewport).scale(pixelRatio).floor();
+    renderContext.viewportValue.copy(viewport).multiplyScalar(pixelRatio).floor();
     renderContext.viewportValue.width >>= activeMipmapLevel;
     renderContext.viewportValue.height >>= activeMipmapLevel;
     renderContext.viewportValue.minDepth = minDepth;
     renderContext.viewportValue.maxDepth = maxDepth;
     renderContext.viewport = renderContext.viewportValue.equals(_screen) === false;
 
-    renderContext.scissorValue.from(scissor).scale(pixelRatio).floor();
+    renderContext.scissorValue.copy(scissor).multiplyScalar(pixelRatio).floor();
     renderContext.scissor = this._scissorTest && renderContext.scissorValue.equals(_screen) === false;
     renderContext.scissorValue.width >>= activeMipmapLevel;
     renderContext.scissorValue.height >>= activeMipmapLevel;
@@ -379,7 +379,7 @@ export class Renderer {
     //
 
     _projScreenMatrix.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse);
-    _frustum.fromProjection(_projScreenMatrix);
+    Frustum.fillProjection(_frustum, _projScreenMatrix);
 
     const renderList = this._renderLists.get(scene, camera);
     renderList.begin();
@@ -495,8 +495,8 @@ export class Renderer {
     return this._pixelRatio;
   }
 
-  getDrawingBufferSize(target: Vec3) {
-    return target.set(this._width * this._pixelRatio, this._height * this._pixelRatio, 0).floor();
+  getDrawingBufferSize(target: Vector3) {
+    return target.set(this._width * this._pixelRatio, this._height * this._pixelRatio).floor();
   }
 
   getSize(into: Vec2 = Vec2.new()) {
@@ -562,8 +562,8 @@ export class Renderer {
   setScissor(x, y, width, height) {
     const scissor = this._scissor;
 
-    if (x.isVec4) {
-      scissor.from(x);
+    if (x.isVector4) {
+      scissor.copy(x);
     } else {
       scissor.set(x, y, width, height);
     }
@@ -586,8 +586,8 @@ export class Renderer {
   setViewport(x, y, width, height, minDepth = 0, maxDepth = 1) {
     const viewport = this._viewport;
 
-    if (x.isVec4) {
-      viewport.from(x);
+    if (x.isVector4) {
+      viewport.copy(x);
     } else {
       viewport.set(x, y, width, height);
     }
@@ -802,9 +802,9 @@ export class Renderer {
       } else if (object.isLight) {
         renderList.pushLight(object);
       } else if (object.isSprite) {
-        if (!object.frustumCulled || _frustum.intersectsSphere(object)) {
+        if (!object.frustumCulled || Frustum.intersectsSphere(_frustum, object)) {
           if (this.parameters.sortObjects) {
-            _vector3.fromMat4Position(object.matrixWorld).applyMat4(_projScreenMatrix);
+            _vector3.setFromMatrixPosition(object.matrixWorld).applyMatrix4(_projScreenMatrix);
           }
 
           const geometry = object.geometry;
@@ -819,14 +819,17 @@ export class Renderer {
           'engine.Renderer: Objects of type engine.LineLoop are not supported. Please use engine.Line or engine.LineSegments.',
         );
       } else if (object.isMesh || object.isLine || object.isPoints) {
-        if (!object.frustumCulled || _frustum.intersectsObject(object)) {
+        if (!object.frustumCulled || Frustum.intersectsObject(_frustum, object)) {
           const geometry = object.geometry;
           const material = object.material;
 
           if (this.parameters.sortObjects) {
             if (geometry.boundingSphere === null) geometry.computeBoundingSphere();
 
-            _vector3.from(geometry.boundingSphere.center).applyMat4(object.matrixWorld).applyMat4(_projScreenMatrix);
+            _vector3
+              .copy(geometry.boundingSphere.center)
+              .applyMatrix4(object.matrixWorld)
+              .applyMatrix4(_projScreenMatrix);
           }
 
           if (Array.isArray(material)) {
@@ -960,7 +963,7 @@ export class Renderer {
     //
 
     object.modelViewMatrix.multiplyMatrices(camera.matrixWorldInverse, object.matrixWorld);
-    object.normalMatrix.fromMat4Normal(object.modelViewMatrix);
+    object.normalMatrix.getNormalMatrix(object.modelViewMatrix);
 
     //
 

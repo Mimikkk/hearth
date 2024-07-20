@@ -1,6 +1,6 @@
 import { BufferGeometry } from '../core/BufferGeometry.js';
 import { Float32BufferAttribute } from '../core/BufferAttribute.js';
-import { Vec3 } from '../math/Vec3.js';
+import { Vector3 } from '../math/Vector3.js';
 
 export class WireframeGeometry extends BufferGeometry {
   declare type: string | 'WireframeGeometry';
@@ -25,8 +25,8 @@ export class WireframeGeometry extends BufferGeometry {
 
       // helper variables
 
-      const start = new Vec3();
-      const end = new Vec3();
+      const start = new Vector3();
+      const end = new Vector3();
 
       if (geometry.index !== null) {
         // indexed BufferGeometry
@@ -52,8 +52,8 @@ export class WireframeGeometry extends BufferGeometry {
               const index1 = indices.getX(i + j);
               const index2 = indices.getX(i + ((j + 1) % 3));
 
-              start.fromAttribute(position, index1);
-              end.fromAttribute(position, index2);
+              start.fromBufferAttribute(position, index1);
+              end.fromBufferAttribute(position, index2);
 
               if (isUniqueEdge(start, end, edges) === true) {
                 vertices.push(start.x, start.y, start.z);
@@ -75,8 +75,8 @@ export class WireframeGeometry extends BufferGeometry {
             const index1 = 3 * i + j;
             const index2 = 3 * i + ((j + 1) % 3);
 
-            start.fromAttribute(position, index1);
-            end.fromAttribute(position, index2);
+            start.fromBufferAttribute(position, index1);
+            end.fromBufferAttribute(position, index2);
 
             if (isUniqueEdge(start, end, edges) === true) {
               vertices.push(start.x, start.y, start.z);
@@ -102,7 +102,7 @@ export class WireframeGeometry extends BufferGeometry {
 }
 WireframeGeometry.prototype.type = 'WireframeGeometry';
 
-function isUniqueEdge(start: Vec3, end: Vec3, edges: Set<string>) {
+function isUniqueEdge(start: Vector3, end: Vector3, edges: Set<string>) {
   const hash1 = `${start.x},${start.y},${start.z}-${end.x},${end.y},${end.z}`;
   const hash2 = `${end.x},${end.y},${end.z}-${start.x},${start.y},${start.z}`; // coincident edge
 

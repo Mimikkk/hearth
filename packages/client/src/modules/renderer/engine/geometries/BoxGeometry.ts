@@ -1,6 +1,6 @@
 import { BufferGeometry } from '../core/BufferGeometry.js';
 import { Float32BufferAttribute } from '../core/BufferAttribute.js';
-import { Vec3 } from '../math/Vec3.js';
+import { Vector3 } from '../math/Vector3.js';
 
 export class BoxGeometry extends BufferGeometry {
   declare parameters: {
@@ -100,7 +100,7 @@ export class BoxGeometry extends BufferGeometry {
       let vertexCounter = 0;
       let groupCount = 0;
 
-      const vector = new Vec3();
+      const vector = new Vector3();
 
       // generate vertices, normals and uvs
 

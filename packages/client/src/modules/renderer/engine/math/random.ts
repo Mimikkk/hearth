@@ -1,7 +1,7 @@
 import { Color, ColorMap } from '@modules/renderer/engine/math/Color.js';
-import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
-import { Vec4 } from '@modules/renderer/engine/math/Vec4.js';
-import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
+import { IVec3 } from '@modules/renderer/engine/math/Vector3.js';
+import { Vec4 } from '@modules/renderer/engine/math/Vector4.js';
+import { Vec2 } from '@modules/renderer/engine/math/Vector2.js';
 
 export namespace Random {
   export const number = (min: number = 0, max: number = 1): number => Math.random() * (max - min) + min;
@@ -12,8 +12,8 @@ export namespace Random {
   export const color = (min: number = 0, max: number = ColorMap.white): Color => new Color(number(min, max));
 
   export const vec4 = (min: number = 0, max: number = 1): Vec4 =>
-    Vec4.new(number(min, max), number(min, max), number(min, max), number(min, max));
-  export const vec3 = (min: number = 0, max: number = 1): Vec3 =>
-    Vec3.new(number(min, max), number(min, max), number(min, max));
+    Vec4.create(number(min, max), number(min, max), number(min, max), number(min, max));
+  export const vec3 = (min: number = 0, max: number = 1): IVec3 =>
+    IVec3.create(number(min, max), number(min, max), number(min, max));
   export const vec2 = (min: number = 0, max: number = 1): Vec2 => Vec2.new(number(min, max), number(min, max));
 }

@@ -1,10 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { Euler } from './Euler.ts';
 import { Quaternion } from '@modules/renderer/engine/math/Quaternion.js';
-import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
-import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
+import { Matrix4 } from '@modules/renderer/engine/math/Matrix4.js';
 
-const expectMatrices = (a: Mat4, b: Mat4) => {
+const expectMatrices = (a: Matrix4, b: Matrix4) => {
   for (let i = 0; i < 16; i++) {
     expect(a.elements[i]).within(b.elements[i] - Number.EPSILON, b.elements[i] + Number.EPSILON);
   }
@@ -54,18 +53,18 @@ describe('Math - Quaternion', () => {
     const testValues = [eulerZero, eulerAxyz, eulerAzyx];
     for (let i = 0; i < testValues.length; i++) {
       const euler1 = testValues[i];
-      const mat = new Mat4().makeRotationFromEuler(euler1);
+      const mat = new Matrix4().makeRotationFromEuler(euler1);
 
       const euler2 = Euler.fromMat4(mat, euler1.order);
-      const expected = new Mat4().makeRotationFromEuler(euler2);
+      const expected = new Matrix4().makeRotationFromEuler(euler2);
 
       expectMatrices(mat, expected);
     }
   });
 
   it('fromVec', () => {
-    const a = Euler.fromVec(Vec3.new(1, 2, 3), 'XYZ');
-    expect(a).toEqual(Euler.new(1, 2, 3, 'XYZ'));
+    const a = Euler.fromVec({ x: 1, y: 2, z: 3 }, 'XYZ');
+    expect(a).toEqual({ x: 1, y: 2, z: 3, order: 'XYZ' });
   });
 
   it('reorder', () => {
@@ -75,11 +74,11 @@ describe('Math - Quaternion', () => {
     const resultEuler = Euler.empty();
 
     for (let euler of eulers) {
-      expectedQuaternion.fromEuler(euler);
+      Quaternion.fillEuler(expectedQuaternion, euler);
 
       for (let order of Euler.orders) {
         resultEuler.from(euler).reorder(order);
-        resultQuaternion.fromEuler(resultEuler);
+        Quaternion.fillEuler(resultQuaternion, resultEuler);
 
         expectQuaternions(expectedQuaternion, resultQuaternion);
       }
@@ -108,7 +107,7 @@ describe('Math - Quaternion', () => {
     const array = [1, 2, 3, 'XYZ'];
     const a = Euler.fromArray(array, 0);
 
-    expect(a).toEqual(Euler.new(1, 2, 3, 'XYZ'));
+    expect(a).toEqual({ x: 1, y: 2, z: 3, order: 'XYZ' });
 
     const into = Euler.empty();
     expect(into.fromArray(array, 0)).toEqual(a);

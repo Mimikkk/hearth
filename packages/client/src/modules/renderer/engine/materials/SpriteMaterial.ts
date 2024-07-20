@@ -23,7 +23,7 @@ export class SpriteMaterial extends Material {
   transparent: boolean;
   fog: boolean;
 
-  constructor(parameters?: SpriteMaterialParameters) {
+  constructor(parameters: SpriteMaterialParameters) {
     super(parameters);
 
     this.color = new Color(0xffffff);
@@ -43,7 +43,7 @@ export class SpriteMaterial extends Material {
     this.setValues(parameters);
   }
 
-  setValues(parameters?: SpriteMaterialParameters): void {
+  setValues(parameters: SpriteMaterialParameters): void {
     super.setValues(parameters);
   }
 

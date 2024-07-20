@@ -315,8 +315,8 @@ async function init() {
   const gui = new GUI();
 
   // use lerp to smooth the movement
-  collisionBoxPosUI = new Engine.Vec3().copy(collisionBox.position);
-  collisionBoxPos = new Engine.Vec3();
+  collisionBoxPosUI = new Engine.Vector3().copy(collisionBox.position);
+  collisionBoxPos = new Engine.Vector3();
 
   gui.add(collisionBoxPosUI, 'z', -50, 50, 0.001).name('position');
   gui.add(collisionBox.scale, 'x', 0.1, 3.5, 0.01).name('scale');

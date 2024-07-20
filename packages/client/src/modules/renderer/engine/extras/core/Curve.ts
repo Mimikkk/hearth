@@ -1,9 +1,9 @@
 import * as MathUtils from '../../math/MathUtils.js';
-import { Vec2 } from '../../math/Vec2.js';
-import { Vec3 } from '../../math/Vec3.js';
-import { Mat4 } from '../../math/Mat4.js';
+import { Vec2 } from '../../math/Vector2.js';
+import { Vector3 } from '../../math/Vector3.js';
+import { Matrix4 } from '../../math/Matrix4.js';
 
-export abstract class Curve<T extends Vec2 | Vec3> {
+export abstract class Curve<T extends Vec2 | Vector3> {
   type: string = 'Curve';
   arcLengthDivisions: number;
   needsUpdate: boolean;
@@ -166,7 +166,7 @@ export abstract class Curve<T extends Vec2 | Vec3> {
 
     const isVec2 = Vec2.is(pt1);
 
-    const tangent = into || (isVec2 ? Vec2.new() : new Vec3());
+    const tangent = into || (isVec2 ? Vec2.new() : new Vector3());
 
     if (Vec2.is(tangent)) {
       tangent.from(pt2).sub(pt1).normalize();
@@ -186,34 +186,34 @@ export abstract class Curve<T extends Vec2 | Vec3> {
     segments: number,
     closed: boolean,
   ): {
-    tangents: Vec3[];
-    normals: Vec3[];
-    binormals: Vec3[];
+    tangents: Vector3[];
+    normals: Vector3[];
+    binormals: Vector3[];
   } {
     // see http://www.cs.indiana.edu/pub/techreports/TR425.pdf
 
-    const normal = new Vec3();
+    const normal = new Vector3();
 
     const tangents = [];
     const normals = [];
     const binormals = [];
 
-    const vec = new Vec3();
-    const mat = new Mat4();
+    const vec = new Vector3();
+    const mat = new Matrix4();
 
     // compute the tangent vectors for each segment on the curve
 
     for (let i = 0; i <= segments; i++) {
       const u = i / segments;
 
-      tangents[i] = this.getTangentAt(u, new Vec3());
+      tangents[i] = this.getTangentAt(u, new Vector3());
     }
 
     // select an initial normal vector perpendicular to the first tangent vector,
     // and in the direction of the minimum tangent xyz component
 
-    normals[0] = new Vec3();
-    binormals[0] = new Vec3();
+    normals[0] = new Vector3();
+    binormals[0] = new Vector3();
     let min = Number.MAX_VALUE;
     const tx = Math.abs(tangents[0].x);
     const ty = Math.abs(tangents[0].y);
@@ -252,7 +252,7 @@ export abstract class Curve<T extends Vec2 | Vec3> {
 
         const theta = Math.acos(MathUtils.clamp(tangents[i - 1].dot(tangents[i]), -1, 1)); // clamp for floating pt errors
 
-        normals[i].applyMat4(mat.makeRotationAxis(vec, theta));
+        normals[i].applyMatrix4(mat.makeRotationAxis(vec, theta));
       }
 
       binormals[i].crossVectors(tangents[i], normals[i]);
@@ -270,7 +270,7 @@ export abstract class Curve<T extends Vec2 | Vec3> {
 
       for (let i = 1; i <= segments; i++) {
         // twist a little...
-        normals[i].applyMat4(mat.makeRotationAxis(tangents[i], theta * i));
+        normals[i].applyMatrix4(mat.makeRotationAxis(tangents[i], theta * i));
         binormals[i].crossVectors(tangents[i], normals[i]);
       }
     }

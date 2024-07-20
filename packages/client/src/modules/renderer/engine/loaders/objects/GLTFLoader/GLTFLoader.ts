@@ -24,7 +24,7 @@ import {
   LoaderUtils,
   Material,
   MathUtils,
-  Mat4,
+  Matrix4,
   Mesh,
   MeshBasicMaterial,
   MeshPhysicalMaterial,
@@ -44,7 +44,7 @@ import {
   Sphere,
   SpotLight,
   Texture,
-  Vec3,
+  Vector3,
   VectorKeyframeTrack,
   Wrapping,
 } from '@modules/renderer/engine/engine.js';
@@ -57,7 +57,7 @@ import { DRACOLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader
 import { Quaternion } from '@modules/renderer/engine/math/Quaternion.js';
 import { MeshoptDecoder } from 'meshoptimizer';
 import { classLoader } from '@modules/renderer/engine/loaders/types.js';
-import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
+import { Vec2 } from '@modules/renderer/engine/math/Vector2.js';
 
 export type PluginFn = (parser: Parser) => Plugin;
 
@@ -1258,16 +1258,16 @@ class GLTFMeshGpuInstancing implements Plugin {
 
       for (const mesh of meshes) {
         // Temporal variables
-        const m = new Mat4();
-        const p = new Vec3();
+        const m = new Matrix4();
+        const p = new Vector3();
         const q = Quaternion.identity();
-        const s = new Vec3(1, 1, 1);
+        const s = new Vector3(1, 1, 1);
 
         const instancedMesh = new InstancedMesh(mesh.geometry, mesh.material, count);
 
         for (let i = 0; i < count; i++) {
           if (attributes.TRANSLATION) {
-            p.fromAttribute(attributes.TRANSLATION, i);
+            p.fromBufferAttribute(attributes.TRANSLATION, i);
           }
 
           if (attributes.ROTATION) {
@@ -1275,7 +1275,7 @@ class GLTFMeshGpuInstancing implements Plugin {
           }
 
           if (attributes.SCALE) {
-            s.fromAttribute(attributes.SCALE, i);
+            s.fromBufferAttribute(attributes.SCALE, i);
           }
 
           instancedMesh.setMatrixAt(i, m.compose(p, q, s));
@@ -1879,7 +1879,7 @@ function getImageURIMimeType(uri) {
   return 'image/png';
 }
 
-const _identityMatrix = new Mat4();
+const _identityMatrix = new Matrix4();
 
 /* GLTF PARSER */
 
@@ -3025,7 +3025,7 @@ class Parser {
         if (jointNode) {
           bones.push(jointNode);
 
-          const mat = new Mat4();
+          const mat = new Matrix4();
 
           if (inverseBindMatrices !== null) {
             mat.fromArray(inverseBindMatrices.array, i * 16);
@@ -3263,9 +3263,9 @@ class Parser {
       if (nodeDef.extensions) addUnknownExtensionsToUserData(extensions, node, nodeDef);
 
       if (nodeDef.matrix !== undefined) {
-        const matrix = new Mat4();
+        const matrix = new Matrix4();
         matrix.fromArray(nodeDef.matrix);
-        node.applyMat4(matrix);
+        node.applyMatrix4(matrix);
       } else {
         if (nodeDef.translation !== undefined) {
           node.position.fromArray(nodeDef.translation);
@@ -3476,7 +3476,7 @@ function computeBounds(geometry, primitiveDef, parser) {
     // glTF requires 'min' and 'max', but VRM (which extends glTF) currently ignores that requirement.
 
     if (min !== undefined && max !== undefined) {
-      box.set(new Vec3(min[0], min[1], min[2]), new Vec3(max[0], max[1], max[2]));
+      box.set(new Vector3(min[0], min[1], min[2]), new Vector3(max[0], max[1], max[2]));
 
       if (accessor.normalized) {
         const boxScale = getNormalizedComponentScale(WEBGL_COMPONENT_TYPES[accessor.componentType]);
@@ -3495,8 +3495,8 @@ function computeBounds(geometry, primitiveDef, parser) {
   const targets = primitiveDef.targets;
 
   if (targets !== undefined) {
-    const maxDisplacement = new Vec3();
-    const vector = new Vec3();
+    const maxDisplacement = new Vector3();
+    const vector = new Vector3();
 
     for (let i = 0, il = targets.length; i < il; i++) {
       const target = targets[i];

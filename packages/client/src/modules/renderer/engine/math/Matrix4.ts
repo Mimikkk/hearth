@@ -1,12 +1,12 @@
 import { CoordinateSystem } from '../constants.js';
-import { Vec3 } from './Vec3.js';
-import { Mat3 } from './Mat3.js';
+import { IVec3, Vector3 } from './Vector3.js';
+import { Matrix, Matrix3 } from './Matrix3.js';
 import type { Euler } from '@modules/renderer/engine/math/Euler.js';
-import type { Quaternion } from '@modules/renderer/engine/math/Quaternion.js';
+import { Quaternion } from '@modules/renderer/engine/math/Quaternion.js';
 
-export class Mat4 {
-  declare ['constructor']: typeof Mat4;
-  declare isMat4: true;
+export class Matrix4 implements Matrix {
+  declare ['constructor']: typeof Matrix4;
+  declare isMatrix4: true;
   elements: number[];
 
   constructor();
@@ -99,11 +99,11 @@ export class Mat4 {
     return this;
   }
 
-  clone(): Mat4 {
-    return new Mat4().fromArray(this.elements);
+  clone(): Matrix4 {
+    return new Matrix4().fromArray(this.elements);
   }
 
-  from(m: Mat4): this {
+  copy(m: Matrix4): this {
     const te = this.elements;
     const me = m.elements;
 
@@ -127,7 +127,7 @@ export class Mat4 {
     return this;
   }
 
-  copyPosition(m: Mat4): this {
+  copyPosition(m: Matrix4): this {
     const te = this.elements,
       me = m.elements;
 
@@ -138,7 +138,7 @@ export class Mat4 {
     return this;
   }
 
-  setFromMatrix3(m: Mat3): this {
+  setFromMatrix3(m: Matrix3): this {
     const me = m.elements;
 
     this.set(me[0], me[3], me[6], 0, me[1], me[4], me[7], 0, me[2], me[5], me[8], 0, 0, 0, 0, 1);
@@ -146,29 +146,29 @@ export class Mat4 {
     return this;
   }
 
-  extractBasis(xAxis: Vec3, yAxis: Vec3, zAxis: Vec3): this {
-    xAxis.fromMat4Column(this, 0);
-    yAxis.fromMat4Column(this, 1);
-    zAxis.fromMat4Column(this, 2);
+  extractBasis(xAxis: Vector3, yAxis: Vector3, zAxis: Vector3): this {
+    xAxis.setFromMatrixColumn(this, 0);
+    yAxis.setFromMatrixColumn(this, 1);
+    zAxis.setFromMatrixColumn(this, 2);
 
     return this;
   }
 
-  makeBasis(xAxis: Vec3, yAxis: Vec3, zAxis: Vec3): this {
+  makeBasis(xAxis: Vector3, yAxis: Vector3, zAxis: Vector3): this {
     this.set(xAxis.x, yAxis.x, zAxis.x, 0, xAxis.y, yAxis.y, zAxis.y, 0, xAxis.z, yAxis.z, zAxis.z, 0, 0, 0, 0, 1);
 
     return this;
   }
 
-  extractRotation(m: Mat4): this {
+  extractRotation(m: Matrix4): this {
     // this method does not support reflection matrices
 
     const te = this.elements;
     const me = m.elements;
 
-    const scaleX = 1 / Vec3.fromMat4Column(m, 0).length();
-    const scaleY = 1 / Vec3.fromMat4Column(m, 1).length();
-    const scaleZ = 1 / Vec3.fromMat4Column(m, 2).length();
+    const scaleX = 1 / new Vector3().setFromMatrixColumn(m, 0).length();
+    const scaleY = 1 / new Vector3().setFromMatrixColumn(m, 1).length();
+    const scaleZ = 1 / new Vector3().setFromMatrixColumn(m, 2).length();
 
     te[0] = me[0] * scaleX;
     te[1] = me[1] * scaleX;
@@ -325,13 +325,13 @@ export class Mat4 {
   }
 
   makeRotationFromQuaternion(q: Quaternion): this {
-    return this.compose(new Vec3(0, 0, 0), q, new Vec3(1, 1, 1));
+    return this.compose(new Vector3(0, 0, 0), q, new Vector3(1, 1, 1));
   }
 
-  lookAt(eye: Vec3, target: Vec3, up: Vec3): this {
+  lookAt(eye: Vector3, target: Vector3, up: Vector3): this {
     const te = this.elements;
 
-    const _z = Vec3.from(eye).sub(target);
+    const _z = new Vector3().subVectors(eye, target);
 
     if (_z.lengthSq() === 0) {
       // eye and target are in the same position
@@ -340,7 +340,7 @@ export class Mat4 {
     }
 
     _z.normalize();
-    const _x = Vec3.from(up).cross(_z);
+    const _x = new Vector3().crossVectors(up, _z);
 
     if (_x.lengthSq() === 0) {
       // up and z are parallel
@@ -352,11 +352,11 @@ export class Mat4 {
       }
 
       _z.normalize();
-      _x.from(up).cross(_z);
+      _x.crossVectors(up, _z);
     }
 
     _x.normalize();
-    const _y = Vec3.from(_z).cross(_x);
+    const _y = new Vector3().crossVectors(_z, _x);
 
     te[0] = _x.x;
     te[4] = _y.x;
@@ -371,15 +371,15 @@ export class Mat4 {
     return this;
   }
 
-  multiply(m: Mat4): this {
+  multiply(m: Matrix4): this {
     return this.multiplyMatrices(this, m);
   }
 
-  premultiply(m: Mat4): this {
+  premultiply(m: Matrix4): this {
     return this.multiplyMatrices(m, this);
   }
 
-  multiplyMatrices(a: Mat4, b: Mat4): this {
+  multiplyMatrices(a: Matrix4, b: Matrix4): this {
     const ae = a.elements;
     const be = b.elements;
     const te = this.elements;
@@ -525,12 +525,12 @@ export class Mat4 {
     return this;
   }
 
-  setPosition(x: Vec3): this;
+  setPosition(x: IVec3): this;
   setPosition(x: number, y: number, z: number): this;
-  setPosition(x: Vec3 | number, y?: number, z?: number): this {
+  setPosition(x: IVec3 | number, y?: number, z?: number): this {
     const te = this.elements;
 
-    if (Vec3.is(x)) {
+    if (IVec3.is(x)) {
       te[12] = x.x;
       te[13] = x.y;
       te[14] = x.z;
@@ -620,7 +620,7 @@ export class Mat4 {
     return this;
   }
 
-  scale(v: Vec3): this {
+  scale(v: Vector3): this {
     const te = this.elements;
     const x = v.x,
       y = v.y,
@@ -652,10 +652,10 @@ export class Mat4 {
     return Math.sqrt(Math.max(scaleXSq, scaleYSq, scaleZSq));
   }
 
-  makeTranslation(x: Vec3): this;
+  makeTranslation(x: Vector3): this;
   makeTranslation(x: number, y: number, z: number): this;
-  makeTranslation(x: Vec3 | number, y?: number, z?: number): this {
-    if (x instanceof Vec3) {
+  makeTranslation(x: Vector3 | number, y?: number, z?: number): this {
+    if (x instanceof Vector3) {
       this.set(1, 0, 0, x.x, 0, 1, 0, x.y, 0, 0, 1, x.z, 0, 0, 0, 1);
     } else {
       this.set(1, 0, 0, x, 0, 1, 0, y!, 0, 0, 1, z!, 0, 0, 0, 1);
@@ -691,7 +691,7 @@ export class Mat4 {
     return this;
   }
 
-  makeRotationAxis(axis: Vec3, angle: number): this {
+  makeRotationAxis(axis: Vector3, angle: number): this {
     // Based on http://www.gamedev.net/reference/articles/article1199.asp
 
     const c = Math.cos(angle);
@@ -737,7 +737,7 @@ export class Mat4 {
     return this;
   }
 
-  compose(position: Vec3, quaternion: Quaternion, scale: Vec3): this {
+  compose(position: Vector3, quaternion: Quaternion, scale: Vector3): this {
     const te = this.elements;
 
     const x = quaternion.x,
@@ -784,12 +784,12 @@ export class Mat4 {
     return this;
   }
 
-  decompose(position: Vec3, quaternion: Quaternion, scale: Vec3): this {
+  decompose(position: Vector3, quaternion: Quaternion, scale: Vector3): this {
     const te = this.elements;
 
-    let sx = new Vec3(te[0], te[1], te[2]).length();
-    const sy = new Vec3(te[4], te[5], te[6]).length();
-    const sz = new Vec3(te[8], te[9], te[10]).length();
+    let sx = new Vector3(te[0], te[1], te[2]).length();
+    const sy = new Vector3(te[4], te[5], te[6]).length();
+    const sz = new Vector3(te[8], te[9], te[10]).length();
 
     // if determine is negative, we need to invert one scale
     const det = this.determinant();
@@ -800,7 +800,7 @@ export class Mat4 {
     position.z = te[14];
 
     // scale the rotation part
-    const _m1 = new Mat4().from(this);
+    const _m1 = new Matrix4().copy(this);
 
     const invSX = 1 / sx;
     const invSY = 1 / sy;
@@ -818,7 +818,7 @@ export class Mat4 {
     _m1.elements[9] *= invSZ;
     _m1.elements[10] *= invSZ;
 
-    quaternion.fromRotation(_m1);
+    Quaternion.fillRotation(quaternion, _m1);
 
     scale.x = sx;
     scale.y = sy;
@@ -924,7 +924,7 @@ export class Mat4 {
     return this;
   }
 
-  equals(matrix: Mat4): boolean {
+  equals(matrix: Matrix4): boolean {
     const te = this.elements;
     const me = matrix.elements;
 
@@ -969,5 +969,4 @@ export class Mat4 {
     return array;
   }
 }
-
-Mat4.prototype.isMat4 = true;
+Matrix4.prototype.isMatrix4 = true;

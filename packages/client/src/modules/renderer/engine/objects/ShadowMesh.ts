@@ -1,14 +1,16 @@
-import { Mat4, Mesh, MeshBasicMaterial, Plane, StencilFunction, StencilOperation, Vec4 } from '../engine.js';
-import { Const } from '@modules/renderer/engine/math/types.js';
+import { Matrix4, Mesh, MeshBasicMaterial, Plane, StencilFunction, StencilOperation, Vector4 } from '../engine.js';
 
 /**
  * A shadow Mesh that follows a shadow-casting Mesh in the scene, but is confined to a single plane.
  */
+
+const _shadowMatrix = new Matrix4();
+
 export class ShadowMesh extends Mesh {
   declare isShadowMesh: true;
   declare type: string | 'ShadowMesh';
 
-  meshMatrix: Mat4;
+  meshMatrix: Matrix4;
 
   constructor(mesh: Mesh) {
     const shadowMaterial = new MeshBasicMaterial({
@@ -30,7 +32,7 @@ export class ShadowMesh extends Mesh {
     this.matrixAutoUpdate = false;
   }
 
-  update(plane: Const<Plane>, lightPosition4D: Const<Vec4>) {
+  update(plane: Plane, lightPosition4D: Vector4) {
     const dot =
       plane.normal.x * lightPosition4D.x +
       plane.normal.y * lightPosition4D.y +
@@ -40,27 +42,28 @@ export class ShadowMesh extends Mesh {
     const sme = _shadowMatrix.elements;
 
     sme[0] = dot - lightPosition4D.x * plane.normal.x;
-    sme[1] = -lightPosition4D.y * plane.normal.x;
-    sme[2] = -lightPosition4D.z * plane.normal.x;
-    sme[3] = -lightPosition4D.w * plane.normal.x;
     sme[4] = -lightPosition4D.x * plane.normal.y;
-    sme[5] = dot - lightPosition4D.y * plane.normal.y;
-    sme[6] = -lightPosition4D.z * plane.normal.y;
-    sme[7] = -lightPosition4D.w * plane.normal.y;
     sme[8] = -lightPosition4D.x * plane.normal.z;
-    sme[9] = -lightPosition4D.y * plane.normal.z;
-    sme[10] = dot - lightPosition4D.z * plane.normal.z;
-    sme[11] = -lightPosition4D.w * plane.normal.z;
     sme[12] = -lightPosition4D.x * -plane.constant;
+
+    sme[1] = -lightPosition4D.y * plane.normal.x;
+    sme[5] = dot - lightPosition4D.y * plane.normal.y;
+    sme[9] = -lightPosition4D.y * plane.normal.z;
     sme[13] = -lightPosition4D.y * -plane.constant;
+
+    sme[2] = -lightPosition4D.z * plane.normal.x;
+    sme[6] = -lightPosition4D.z * plane.normal.y;
+    sme[10] = dot - lightPosition4D.z * plane.normal.z;
     sme[14] = -lightPosition4D.z * -plane.constant;
+
+    sme[3] = -lightPosition4D.w * plane.normal.x;
+    sme[7] = -lightPosition4D.w * plane.normal.y;
+    sme[11] = -lightPosition4D.w * plane.normal.z;
     sme[15] = dot - lightPosition4D.w * -plane.constant;
 
     this.matrix.multiplyMatrices(_shadowMatrix, this.meshMatrix);
   }
 }
-
-const _shadowMatrix = new Mat4();
 
 ShadowMesh.prototype.isShadowMesh = true;
 ShadowMesh.prototype.type = 'ShadowMesh';

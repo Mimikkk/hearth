@@ -1,55 +1,60 @@
 import { Triangle } from './Triangle.js';
-import { Vec3 } from './Vec3.js';
-import { Vec2 } from './Vec2.js';
+import { Vector3 } from './Vector3.js';
+import { Vec2 } from './Vector2.js';
 import type { Mesh } from '../objects/Mesh.js';
 import type { Material } from '../materials/Material.js';
+import type { BufferAttribute } from '../core/BufferAttribute.js';
 import type { Color } from './Color.js';
 import { BufferGeometry } from '@modules/renderer/engine/core/BufferGeometry.js';
-import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
 
 const _face = Triangle.empty();
-const _color = Vec3.new();
+const _color = new Vector3();
 const _uva = Vec2.new();
 const _uvb = Vec2.new();
 const _uvc = Vec2.new();
 
-type Attributes = {
-  position: Attribute;
-  normal: Attribute;
-  index: Attribute;
-
-  weight?: Attribute;
-  color?: Attribute;
-  uv?: Attribute;
-};
-
 export class MeshSurfaceSampler<TGeometry extends BufferGeometry, TMaterial extends Material | Material[]> {
-  random: () => number;
   geometry: BufferGeometry;
+  randomFunction: () => number;
+  indexAttribute: BufferAttribute<Uint32Array | Uint16Array>;
+  positionAttribute: BufferAttribute<Float32Array>;
+  normalAttribute: BufferAttribute<Float32Array>;
+  colorAttribute: BufferAttribute<Float32Array>;
+  uvAttribute: BufferAttribute<Float32Array>;
+  weightAttribute: BufferAttribute<Float32Array>;
   distribution: Float32Array;
-  attributes: Attributes;
 
   constructor(mesh: Mesh) {
     this.geometry = mesh.geometry as never;
-    this.random = Math.random;
+    this.randomFunction = Math.random;
 
-    this.attributes = this.geometry.attributes as Attributes;
+    this.indexAttribute = this.geometry.index! as never as BufferAttribute<Uint32Array | Uint16Array>;
+    this.positionAttribute = this.geometry.getAttribute('position')! as never as BufferAttribute<Float32Array>;
+    this.normalAttribute = this.geometry.getAttribute('normal')! as never as BufferAttribute<Float32Array>;
+    this.colorAttribute = this.geometry.getAttribute('color')! as never as BufferAttribute<Float32Array>;
+    this.uvAttribute = this.geometry.getAttribute('uv')! as never as BufferAttribute<Float32Array>;
 
+    this.weightAttribute = null!;
     this.distribution = null!;
   }
 
   setWeightAttribute(name: string): this {
-    this.attributes.weight = this.geometry.attributes[name];
+    //@ts-expect-error
+    this.weightAttribute = name ? this.geometry.getAttribute(name) : null;
+
     return this;
   }
 
   build(): this {
-    const { index, position, weight } = this.attributes;
+    const indexAttribute = this.indexAttribute;
+    const positionAttribute = this.positionAttribute;
+    const weightAttribute = this.weightAttribute;
 
-    const totalFaces = index ? index.count / 3 : position.count / 3;
+    const totalFaces = indexAttribute ? indexAttribute.count / 3 : positionAttribute.count / 3;
     const faceWeights = new Float32Array(totalFaces);
 
     // Accumulate weights for each mesh face.
+
     for (let i = 0; i < totalFaces; i++) {
       let faceWeight = 1;
 
@@ -57,27 +62,28 @@ export class MeshSurfaceSampler<TGeometry extends BufferGeometry, TMaterial exte
       let i1 = 3 * i + 1;
       let i2 = 3 * i + 2;
 
-      if (index) {
-        i0 = index.getX(i0);
-        i1 = index.getX(i1);
-        i2 = index.getX(i2);
+      if (indexAttribute) {
+        i0 = indexAttribute.getX(i0);
+        i1 = indexAttribute.getX(i1);
+        i2 = indexAttribute.getX(i2);
       }
 
-      if (weight) {
-        faceWeight = weight.getX(i0) + weight.getX(i1) + weight.getX(i2);
+      if (weightAttribute) {
+        faceWeight = weightAttribute.getX(i0) + weightAttribute.getX(i1) + weightAttribute.getX(i2);
       }
 
-      _face.fromAttribute(position, i0, i1, i2);
-      faceWeight *= _face.area();
+      Triangle.fillAttributeAndIndices(_face, positionAttribute, i0, i1, i2);
+      faceWeight *= Triangle.area(_face);
 
       faceWeights[i] = faceWeight;
     }
 
     // Store cumulative total face weights in an array, where weight index
     // corresponds to face index.
-    const distribution = new Float32Array(totalFaces);
 
+    const distribution = new Float32Array(totalFaces);
     let cumulativeTotal = 0;
+
     for (let i = 0; i < totalFaces; i++) {
       cumulativeTotal += faceWeights[i];
       distribution[i] = cumulativeTotal;
@@ -87,16 +93,20 @@ export class MeshSurfaceSampler<TGeometry extends BufferGeometry, TMaterial exte
     return this;
   }
 
-  sample(intoPosition?: Vec3, intoNormal?: Vec3, intoColor?: Color, targetUV?: Vec2): this {
-    const faceIndex = this.sampleFaceIndex();
+  setRandomGenerator(randomFunction: () => number): this {
+    this.randomFunction = randomFunction;
+    return this;
+  }
 
-    return this.sampleFace(faceIndex, intoPosition, intoNormal, intoColor, targetUV);
+  sample(targetPosition: Vector3, targetNormal?: Vector3, targetColor?: Color, targetUV?: Vec2): this {
+    const faceIndex = this.sampleFaceIndex();
+    return this.sampleFace(faceIndex, targetPosition, targetNormal, targetColor, targetUV);
   }
 
   sampleFaceIndex() {
-    const total = this.distribution[this.distribution.length - 1];
+    const cumulativeTotal = this.distribution[this.distribution.length - 1];
 
-    return this.binarySearch(this.random() * total);
+    return this.binarySearch(this.randomFunction() * cumulativeTotal);
   }
 
   binarySearch(x: number): number {
@@ -123,68 +133,74 @@ export class MeshSurfaceSampler<TGeometry extends BufferGeometry, TMaterial exte
     return index;
   }
 
-  sampleFace(faceIndex: number, intoPosition?: Vec3, intoNormal?: Vec3, intoColor?: Color, intoUV?: Vec2): this {
-    let u = this.random();
-    let v = this.random();
+  sampleFace(
+    faceIndex: number,
+    targetPosition: Vector3,
+    targetNormal?: Vector3,
+    targetColor?: Color,
+    targetUV?: Vec2,
+  ): this {
+    let u = this.randomFunction();
+    let v = this.randomFunction();
 
     if (u + v > 1) {
       u = 1 - u;
       v = 1 - v;
     }
 
-    const { uv, color, position, normal, index } = this.attributes;
-
+    // get the vertex attribute indices
+    const indexAttribute = this.indexAttribute;
     let i0 = faceIndex * 3;
     let i1 = faceIndex * 3 + 1;
     let i2 = faceIndex * 3 + 2;
-    if (index) {
-      i0 = index.getX(i0);
-      i1 = index.getX(i1);
-      i2 = index.getX(i2);
+    if (indexAttribute) {
+      i0 = indexAttribute.getX(i0);
+      i1 = indexAttribute.getX(i1);
+      i2 = indexAttribute.getX(i2);
     }
 
-    _face.fromAttribute(position, i0, i1, i2);
+    Triangle.fillAttributeAndIndices(_face, this.positionAttribute, i0, i1, i2);
 
-    if (intoPosition) {
-      intoPosition
-        .set(0, 0, 0)
-        .addScaled(_face.a, u)
-        .addScaled(_face.b, v)
-        .addScaled(_face.c, 1 - (u + v));
-    }
+    targetPosition
+      .set(0, 0, 0)
+      .addScaledVector(_face.a, u)
+      .addScaledVector(_face.b, v)
+      .addScaledVector(_face.c, 1 - (u + v));
 
-    if (intoNormal) {
-      if (normal) {
-        _face.fromAttribute(normal, i0, i1, i2);
-        intoNormal
+    if (targetNormal !== undefined) {
+      if (this.normalAttribute !== undefined) {
+        Triangle.fillAttributeAndIndices(_face, this.normalAttribute, i0, i1, i2);
+        targetNormal
           .set(0, 0, 0)
-          .addScaled(_face.a, u)
-          .addScaled(_face.b, v)
-          .addScaled(_face.c, 1 - (u + v))
+          .addScaledVector(_face.a, u)
+          .addScaledVector(_face.b, v)
+          .addScaledVector(_face.c, 1 - (u + v))
           .normalize();
       } else {
-        _face.normal(intoNormal);
+        Triangle.normal_(_face, targetNormal);
       }
     }
 
-    if (intoColor && color) {
-      _face.fromAttribute(color, i0, i1, i2);
+    if (targetColor !== undefined && this.colorAttribute !== undefined) {
+      Triangle.fillAttributeAndIndices(_face, this.colorAttribute, i0, i1, i2);
 
       _color
         .set(0, 0, 0)
-        .addScaled(_face.a, u)
-        .addScaled(_face.b, v)
-        .addScaled(_face.c, 1 - (u + v));
+        .addScaledVector(_face.a, u)
+        .addScaledVector(_face.b, v)
+        .addScaledVector(_face.c, 1 - (u + v));
 
-      intoColor.fromVec(_color);
+      targetColor.r = _color.x;
+      targetColor.g = _color.y;
+      targetColor.b = _color.z;
     }
 
-    if (intoUV && uv) {
-      _uva.fromAttribute(uv, i0);
-      _uvb.fromAttribute(uv, i1);
-      _uvc.fromAttribute(uv, i2);
+    if (targetUV !== undefined && this.uvAttribute !== undefined) {
+      _uva.fromAttribute(this.uvAttribute, i0);
+      _uvb.fromAttribute(this.uvAttribute, i1);
+      _uvc.fromAttribute(this.uvAttribute, i2);
 
-      intoUV
+      targetUV
         .set(0, 0)
         .addScaled(_uva, u)
         .addScaled(_uvb, v)

@@ -3,8 +3,8 @@ import { ColorManagement, DefinedColorSpace, LinearToSRGB, SRGBToLinear } from '
 import { ColorSpace } from '../constants.js';
 import type { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
 import type { InterleavedBufferAttribute } from '@modules/renderer/engine/core/InterleavedBufferAttribute.js';
-import type { Mat3 } from '@modules/renderer/engine/math/Mat3.js';
-import type { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
+import type { Matrix3 } from '@modules/renderer/engine/math/Matrix3.js';
+import type { Vector3 } from '@modules/renderer/engine/math/Vector3.js';
 
 export const ColorMap = {
   aliceblue: 0xf0f8ff,
@@ -603,11 +603,15 @@ export class Color {
     return this;
   }
 
-  fromVec({ x, y, z }: Vec3): this {
-    return this.set(x, y, z);
+  setFromVector3(vector: Vector3): this {
+    this.r = vector.x;
+    this.g = vector.y;
+    this.b = vector.z;
+
+    return this;
   }
 
-  applyMatrix3(matrix: Mat3): this {
+  applyMatrix3(matrix: Matrix3): this {
     const r = this.r,
       g = this.g,
       b = this.b;
@@ -640,7 +644,7 @@ export class Color {
     return array;
   }
 
-  fromAttribute(attribute: BufferAttribute | InterleavedBufferAttribute, index: number): this {
+  fromBufferAttribute(attribute: BufferAttribute | InterleavedBufferAttribute, index: number): this {
     this.r = attribute.getX(index);
     this.g = attribute.getY(index);
     this.b = attribute.getZ(index);
@@ -654,5 +658,4 @@ export class Color {
     yield this.b;
   }
 }
-
 Color.prototype.isColor = true;

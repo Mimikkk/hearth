@@ -39,7 +39,7 @@ async function init() {
   camera = new Engine.PerspectiveCamera(60, width / height, 1, 2100);
   camera.position.set(0, 400, 700);
 
-  cameraTarget = new Engine.Vec3(0, 150, 0);
+  cameraTarget = new Engine.Vector3(0, 150, 0);
 
   // SCENE
 

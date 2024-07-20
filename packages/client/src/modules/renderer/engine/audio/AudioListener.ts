@@ -1,13 +1,13 @@
-import { Vec3 } from '../math/Vec3.js';
+import { Vector3 } from '../math/Vector3.js';
 import { Quaternion } from '../math/Quaternion.js';
 import { Clock } from '../core/Clock.js';
 import { Object3D } from '../core/Object3D.js';
 import { AudioContextManager } from './AudioContextManager.js';
 
-const _position = Vec3.new();
-const _quaternion = Quaternion.new();
-const _scale = Vec3.new();
-const _orientation = Vec3.new();
+const _position = new Vector3();
+const _quaternion = Quaternion.identity();
+const _scale = new Vector3();
+const _orientation = new Vector3();
 
 export class AudioListener extends Object3D {
   context: AudioContext;

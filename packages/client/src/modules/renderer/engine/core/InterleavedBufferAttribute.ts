@@ -1,11 +1,11 @@
-import { Vec3 } from '../math/Vec3.js';
+import { Vector3 } from '../math/Vector3.js';
 import { BufferAttribute } from './BufferAttribute.js';
 import { denormalize, normalize, TypedArray } from '../math/MathUtils.js';
 import { InterleavedBuffer } from '@modules/renderer/engine/core/InterleavedBuffer.js';
-import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
-import { Mat3 } from '@modules/renderer/engine/math/Mat3.js';
+import { Matrix4 } from '@modules/renderer/engine/math/Matrix4.js';
+import { Matrix, Matrix3 } from '@modules/renderer/engine/math/Matrix3.js';
 
-const _vector = new Vec3();
+const _vector = new Vector3();
 
 export class InterleavedBufferAttribute<T extends TypedArray = any> {
   declare ['constructor']: typeof InterleavedBufferAttribute<T>;
@@ -36,11 +36,11 @@ export class InterleavedBufferAttribute<T extends TypedArray = any> {
     this.data.needsUpdate = value;
   }
 
-  applyMat4(m: Mat4): this {
+  applyMatrix4(m: Matrix4): this {
     for (let i = 0, l = this.data.count; i < l; i++) {
-      _vector.fromAttribute(this, i);
+      _vector.fromBufferAttribute(this, i);
 
-      _vector.applyMat4(m);
+      _vector.applyMatrix4(m);
 
       this.setXYZ(i, _vector.x, _vector.y, _vector.z);
     }
@@ -48,9 +48,9 @@ export class InterleavedBufferAttribute<T extends TypedArray = any> {
     return this;
   }
 
-  applyNormalMatrix(m: Mat3): this {
+  applyNormalMatrix(m: Matrix3): this {
     for (let i = 0, l = this.count; i < l; i++) {
-      _vector.fromAttribute(this, i);
+      _vector.fromBufferAttribute(this, i);
 
       _vector.applyNormalMatrix(m);
 
@@ -60,9 +60,9 @@ export class InterleavedBufferAttribute<T extends TypedArray = any> {
     return this;
   }
 
-  transformDirection(m: Mat4): this {
+  transformDirection(m: Matrix4): this {
     for (let i = 0, l = this.count; i < l; i++) {
-      _vector.fromAttribute(this, i);
+      _vector.fromBufferAttribute(this, i);
 
       _vector.transformDirection(m);
 

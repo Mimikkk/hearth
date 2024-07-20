@@ -1,6 +1,6 @@
 import Stats from 'stats-js';
 import { PerspectiveCamera } from '../engine/cameras/PerspectiveCamera.ts';
-import { Vec3 } from '../engine/math/Vec3.js';
+import { Vector3 } from '../engine/math/Vector3';
 import { Scene } from '../engine/scenes/Scene';
 import { Color } from '../engine/math/Color';
 import { Fog } from '../engine/scenes/Fog';
@@ -25,7 +25,7 @@ async function init() {
   camera = new PerspectiveCamera(35, window.innerWidth / window.innerHeight, 1, 15);
   camera.position.set(3, 0.15, 3);
 
-  cameraTarget = new Vec3(0, -0.25, 0);
+  cameraTarget = new Vector3(0, -0.25, 0);
 
   scene = new Scene();
   scene.background = new Color(0x72645b);

@@ -1,7 +1,7 @@
 import { InstancedBufferAttribute } from '../core/InstancedBufferAttribute.js';
 import { Mesh } from './Mesh.js';
 import { Box3 } from '../math/Box3.js';
-import { Mat4 } from '../math/Mat4.js';
+import { Matrix4 } from '../math/Matrix4.js';
 import { Sphere } from '../math/Sphere.js';
 import { DataTexture } from '../textures/DataTexture.js';
 import { TextureDataType, TextureFormat } from '../constants.js';
@@ -9,6 +9,16 @@ import { BufferGeometry } from '@modules/renderer/engine/core/BufferGeometry.js'
 import { Material } from '@modules/renderer/engine/materials/Material.js';
 import { Intersection, Raycaster } from '@modules/renderer/engine/core/Raycaster.js';
 import { Color } from '@modules/renderer/engine/math/Color.js';
+
+const _instanceLocalMatrix = new Matrix4();
+const _instanceWorldMatrix = new Matrix4();
+
+const _instanceIntersects: Intersection[] = [];
+
+const _box3 = new Box3();
+const _identity = new Matrix4();
+const _mesh = new Mesh(null!, null!);
+const _sphere = new Sphere();
 
 export class InstancedMesh extends Mesh {
   declare isInstancedMesh: true;
@@ -89,9 +99,11 @@ export class InstancedMesh extends Mesh {
 
     this.instanceMatrix.copy(source.instanceMatrix);
 
-    if (source.instanceColor !== null) this.instanceColor = source.instanceColor.clone();
+    if (source.instanceColor !== null)
+      this.instanceColor = source.instanceColor.clone() as InstancedBufferAttribute<Float32Array>;
 
     this.count = source.count;
+
     if (source.boundingBox !== null) this.boundingBox = source.boundingBox.clone();
     if (source.boundingSphere !== null) this.boundingSphere = source.boundingSphere.clone();
 
@@ -102,7 +114,7 @@ export class InstancedMesh extends Mesh {
     color.fromArray(this.instanceColor!.array as never, index * 3);
   }
 
-  getMatrixAt(index: number, matrix: Mat4): void {
+  getMatrixAt(index: number, matrix: Matrix4): void {
     matrix.fromArray(this.instanceMatrix.array as never, index * 16);
   }
 
@@ -133,7 +145,8 @@ export class InstancedMesh extends Mesh {
 
     if (this.boundingSphere === null) this.computeBoundingSphere();
 
-    _sphere.from(this.boundingSphere!).applyMat4(matrixWorld);
+    _sphere.copy(this.boundingSphere!);
+    _sphere.applyMat4(matrixWorld);
 
     if (raycaster.ray.intersectsSphere(_sphere) === false) return;
 
@@ -173,7 +186,7 @@ export class InstancedMesh extends Mesh {
     color.toArray(this.instanceColor.array as never, index * 3);
   }
 
-  setMatrixAt(index: number, matrix: Mat4) {
+  setMatrixAt(index: number, matrix: Matrix4) {
     matrix.toArray(this.instanceMatrix.array as never, index * 16);
   }
 
@@ -212,11 +225,3 @@ export class InstancedMesh extends Mesh {
     this.eventDispatcher.dispatch({ type: 'dispose' }, this);
   }
 }
-
-const _instanceLocalMatrix = new Mat4();
-const _instanceWorldMatrix = new Mat4();
-const _instanceIntersects: Intersection[] = [];
-const _box3 = Box3.new();
-const _identity = new Mat4();
-const _mesh = new Mesh();
-const _sphere = new Sphere();

@@ -1,4 +1,4 @@
-import { Vec3 } from '../math/Vec3.js';
+import { Vector3 } from '../math/Vector3.js';
 import { Object3D } from '../core/Object3D.js';
 import { Line } from '../objects/Line.js';
 import { Float32BufferAttribute } from '../core/BufferAttribute.js';
@@ -7,9 +7,9 @@ import { LineBasicMaterial } from '../materials/LineBasicMaterial.js';
 import { DirectionalLight } from '@modules/renderer/engine/lights/DirectionalLight.js';
 import { Color } from '@modules/renderer/engine/math/Color.js';
 
-const _v1 = new Vec3();
-const _v2 = new Vec3();
-const _v3 = new Vec3();
+const _v1 = new Vector3();
+const _v2 = new Vector3();
+const _v3 = new Vector3();
 
 export class DirectionalLightHelper extends Object3D {
   declare type: string | 'DirectionalLightHelper';
@@ -59,8 +59,8 @@ export class DirectionalLightHelper extends Object3D {
     this.light.updateWorldMatrix(true, false);
     this.light.target.updateWorldMatrix(true, false);
 
-    _v1.fromMat4Position(this.light.matrixWorld);
-    _v2.fromMat4Position(this.light.target.matrixWorld);
+    _v1.setFromMatrixPosition(this.light.matrixWorld);
+    _v2.setFromMatrixPosition(this.light.target.matrixWorld);
     _v3.subVectors(_v2, _v1);
 
     this.lightPlane.lookAt(_v2);

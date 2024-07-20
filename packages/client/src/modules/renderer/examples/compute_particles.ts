@@ -20,7 +20,7 @@ import Stats from 'stats-js';
 import { GUI } from 'lil-gui';
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
+import { Vec2 } from '@modules/renderer/engine/math/Vector2.js';
 
 const particleCount = 1000000;
 
@@ -29,7 +29,7 @@ const bounce = uniform(0.8);
 const friction = uniform(0.99);
 const size = uniform(0.12);
 
-const clickPosition = uniform(new Engine.Vec3());
+const clickPosition = uniform(new Engine.Vector3());
 
 let camera, scene, renderer;
 let controls, stats;
@@ -171,7 +171,7 @@ async function init() {
   function onMove(event) {
     pointer.set((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1);
 
-    raycaster.fromCamera(pointer, camera);
+    raycaster.setFromCamera(pointer, camera);
 
     const intersects = raycaster.intersects([plane], false);
 

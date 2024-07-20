@@ -22,8 +22,8 @@
 
 import { BufferGeometry } from '../core/BufferGeometry.js';
 import { Float32BufferAttribute } from '../core/BufferAttribute.js';
-import { Vec2 } from '../math/Vec2.js';
-import { Vec3 } from '../math/Vec3.js';
+import { Vec2 } from '../math/Vector2.js';
+import { Vector3 } from '../math/Vector3.js';
 import { Shape } from '../extras/core/Shape.js';
 import { ShapeUtils } from '../extras/ShapeUtils.js';
 import { Curve } from '@modules/renderer/engine/extras/core/Curve.js';
@@ -50,7 +50,7 @@ export interface ExtrudeGeometryOptions {
   bevelSize?: number;
   bevelOffset?: number;
   bevelSegments?: number;
-  extrudePath?: Curve<Vec3>;
+  extrudePath?: Curve<Vector3>;
   UVGenerator?: UVGenerator;
 }
 
@@ -137,9 +137,9 @@ export class ExtrudeGeometry extends BufferGeometry {
 
         splineTube = extrudePath.computeFrenetFrames(steps, false);
 
-        binormal = new Vec3();
-        normal = new Vec3();
-        position2 = new Vec3();
+        binormal = new Vector3();
+        normal = new Vector3();
+        position2 = new Vector3();
       }
 
       // Safeguards if bevels are not enabled

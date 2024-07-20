@@ -1,6 +1,6 @@
 import { Curve } from '../core/Curve.js';
 import { QuadraticBezier } from '../core/Interpolations.js';
-import { Vec2 } from '../../math/Vec2.js';
+import { Vec2 } from '../../math/Vector2.js';
 
 export class QuadraticBezierCurve extends Curve<Vec2> {
   declare isQuadraticBezierCurve: true;

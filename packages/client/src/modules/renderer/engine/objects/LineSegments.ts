@@ -1,28 +1,32 @@
 import { Line } from './Line.js';
+import { Vector3 } from '../math/Vector3.js';
 import { Float32BufferAttribute } from '../core/BufferAttribute.js';
-import { LineMaterial } from '@modules/renderer/engine/lines/LineMaterial.js';
-import { Line3 } from '../math/Line3.ts';
+
+const _start = new Vector3();
+const _end = new Vector3();
 
 export class LineSegments extends Line {
   declare isLineSegments: true;
   declare type: string | 'LineSegments';
-  declare material: LineMaterial;
 
   computeLineDistances() {
     const geometry = this.geometry;
+
+    // we assume non-indexed geometry
 
     if (geometry.index === null) {
       const positionAttribute = geometry.attributes.position;
       const lineDistances: number[] = [];
 
       for (let i = 0, l = positionAttribute.count; i < l; i += 2) {
-        _line.fromAttribute(positionAttribute, i, i + 1);
+        _start.fromBufferAttribute(positionAttribute, i);
+        _end.fromBufferAttribute(positionAttribute, i + 1);
 
         lineDistances[i] = i === 0 ? 0 : lineDistances[i - 1];
-        lineDistances[i + 1] = lineDistances[i] + _line.distance();
+        lineDistances[i + 1] = lineDistances[i] + _start.distanceTo(_end);
       }
 
-      geometry.attributes.lineDistance = new Float32BufferAttribute(lineDistances, 1);
+      geometry.setAttribute('lineDistance', new Float32BufferAttribute(lineDistances, 1));
     } else {
       throw Error(
         'engine.LineSegments.computeLineDistances(): Computation only possible with non-indexed BufferGeometry.',
@@ -32,8 +36,6 @@ export class LineSegments extends Line {
     return this;
   }
 }
-
-const _line = Line3.new();
 
 LineSegments.prototype.isLineSegments = true;
 LineSegments.prototype.type = 'LineSegments';

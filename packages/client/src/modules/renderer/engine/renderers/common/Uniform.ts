@@ -1,5 +1,5 @@
-import { Color, Mat3, Mat4, Vec3, Vec4 } from '@modules/renderer/engine/engine.js';
-import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
+import { Color, Matrix3, Matrix4, Vector3, Vector4 } from '@modules/renderer/engine/engine.js';
+import { Vec2 } from '@modules/renderer/engine/math/Vector2.js';
 
 export abstract class Uniform<T> {
   // STD140 layout
@@ -47,24 +47,24 @@ export class Vector2Uniform extends Uniform<Vec2> {
 
 Vector2Uniform.prototype.isVector2Uniform = true;
 
-export class Vector3Uniform extends Uniform<Vec3> {
+export class Vector3Uniform extends Uniform<Vector3> {
   declare isVector3Uniform: true;
   boundary: number = 16;
   itemSize: number = 3;
 
-  constructor(name: string, value: Vec3 = new Vec3()) {
+  constructor(name: string, value: Vector3 = new Vector3()) {
     super(name, value);
   }
 }
 
 Vector3Uniform.prototype.isVector3Uniform = true;
 
-export class Vector4Uniform extends Uniform<Vec4> {
+export class Vector4Uniform extends Uniform<Vector4> {
   declare isVector4Uniform: true;
   boundary: number = 16;
   itemSize: number = 4;
 
-  constructor(name: string, value: Vec4 = new Vec4()) {
+  constructor(name: string, value: Vector4 = new Vector4()) {
     super(name, value);
   }
 }
@@ -83,24 +83,24 @@ export class ColorUniform extends Uniform<Color> {
 
 ColorUniform.prototype.isColorUniform = true;
 
-export class Matrix3Uniform extends Uniform<Mat3> {
+export class Matrix3Uniform extends Uniform<Matrix3> {
   declare isMatrix3Uniform: true;
   boundary: number = 48;
   itemSize: number = 12;
 
-  constructor(name: string, value: Mat3 = new Mat3()) {
+  constructor(name: string, value: Matrix3 = new Matrix3()) {
     super(name, value);
   }
 }
 
 Matrix3Uniform.prototype.isMatrix3Uniform = true;
 
-export class Matrix4Uniform extends Uniform<Mat4> {
+export class Matrix4Uniform extends Uniform<Matrix4> {
   declare isMatrix4Uniform: true;
   boundary: number = 64;
   itemSize: number = 16;
 
-  constructor(name: string, value: Mat4 = new Mat4()) {
+  constructor(name: string, value: Matrix4 = new Matrix4()) {
     super(name, value);
   }
 }

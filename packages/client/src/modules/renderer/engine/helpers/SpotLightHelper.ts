@@ -1,4 +1,4 @@
-import { Vec3 } from '../math/Vec3.js';
+import { Vector3 } from '../math/Vector3.js';
 import { Object3D } from '../core/Object3D.js';
 import { LineSegments } from '../objects/LineSegments.js';
 import { LineBasicMaterial } from '../materials/LineBasicMaterial.js';
@@ -7,7 +7,7 @@ import { BufferGeometry } from '../core/BufferGeometry.js';
 import { SpotLight } from '@modules/renderer/engine/lights/SpotLight.js';
 import { Color } from '@modules/renderer/engine/math/Color.js';
 
-const _vector = new Vec3();
+const _vector = new Vector3();
 
 export class SpotLightHelper extends Object3D {
   declare type: string | 'SpotLightHelper';
@@ -58,19 +58,19 @@ export class SpotLightHelper extends Object3D {
     if (this.parent) {
       this.parent.updateWorldMatrix(true, false);
 
-      this.matrix.from(this.parent.matrixWorld).invert().multiply(this.light.matrixWorld);
+      this.matrix.copy(this.parent.matrixWorld).invert().multiply(this.light.matrixWorld);
     } else {
-      this.matrix.from(this.light.matrixWorld);
+      this.matrix.copy(this.light.matrixWorld);
     }
 
-    this.matrixWorld.from(this.light.matrixWorld);
+    this.matrixWorld.copy(this.light.matrixWorld);
 
     const coneLength = this.light.distance ? this.light.distance : 1000;
     const coneWidth = coneLength * Math.tan(this.light.angle);
 
     this.cone.scale.set(coneWidth, coneWidth, coneLength);
 
-    _vector.fromMat4Position(this.light.target.matrixWorld);
+    _vector.setFromMatrixPosition(this.light.target.matrixWorld);
 
     this.cone.lookAt(_vector);
 

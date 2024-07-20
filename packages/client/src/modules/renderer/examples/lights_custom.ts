@@ -64,7 +64,7 @@ async function init() {
   const points = [];
 
   for (let i = 0; i < 3000; i++) {
-    const point = new Engine.Vec3().random().subScalar(0.5).multiplyScalar(2);
+    const point = new Engine.Vector3().random().subScalar(0.5).multiplyScalar(2);
     points.push(point);
   }
 

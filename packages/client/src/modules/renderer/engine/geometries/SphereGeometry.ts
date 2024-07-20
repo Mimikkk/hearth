@@ -1,6 +1,6 @@
 import { BufferGeometry } from '../core/BufferGeometry.js';
 import { Float32BufferAttribute, Uint16BufferAttribute } from '../core/BufferAttribute.js';
-import { Vec3 } from '../math/Vec3.js';
+import { IVec3 } from '../math/Vector3.js';
 
 export class SphereGeometry extends BufferGeometry {
   declare parameters: SphereGeometryConfiguration;
@@ -79,7 +79,7 @@ interface Buffers {
   uv: Float32BufferAttribute;
 }
 
-const _vec = Vec3.empty();
+const _vec = IVec3.empty();
 const generateBuffers = ({
   radius,
   widthSegments,
@@ -121,10 +121,10 @@ const generateBuffers = ({
     for (let x = 0; x <= widthSegments; x++) {
       const u = x / widthSegments;
       const phi = phiStart + u * phiLength;
-      _vec.set(-radius * Math.cos(phi) * sinTheta, vecY, radius * Math.sin(phi) * sinTheta);
+      IVec3.set(_vec, -radius * Math.cos(phi) * sinTheta, vecY, radius * Math.sin(phi) * sinTheta);
       vertices.push(_vec.x, _vec.y, _vec.z);
 
-      _vec.normalize();
+      IVec3.normalize(_vec);
       normals.push(_vec.x, _vec.y, _vec.z);
 
       uvs.push(u + uOffset, invV);

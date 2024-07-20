@@ -1,7 +1,7 @@
 import { Quaternion } from './Quaternion.js';
-import { Mat4 } from './Mat4.js';
+import { Matrix4 } from './Matrix4.js';
 import { clamp } from './MathUtils.js';
-import type { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
+import type { IVec3 } from '@modules/renderer/engine/math/Vector3.js';
 import type { Const } from '@modules/renderer/engine/math/types.js';
 
 export type EulerOrder = 'XYZ' | 'YXZ' | 'ZXY' | 'ZYX' | 'YZX' | 'XZY';
@@ -41,11 +41,11 @@ export class Euler {
     return into.from(from);
   }
 
-  static fromVec(vec: Const<Vec3>, order: EulerOrder = 'XYZ', into: Euler = Euler.new()): Euler {
+  static fromVec(vec: Const<IVec3>, order: EulerOrder = 'XYZ', into: Euler = Euler.new()): Euler {
     return into.fromVec(vec, order);
   }
 
-  static fromMat4(matrix: Const<Mat4>, order: EulerOrder, into: Euler = Euler.new()): Euler {
+  static fromMat4(matrix: Const<Matrix4>, order: EulerOrder, into: Euler = Euler.new()): Euler {
     return into.fromMat4(matrix, order);
   }
 
@@ -93,11 +93,11 @@ export class Euler {
     return this.set(x, y, z, order);
   }
 
-  fromVec({ x, y, z }: Const<Vec3>, order: EulerOrder = 'XYZ'): this {
+  fromVec({ x, y, z }: Const<IVec3>, order: EulerOrder = 'XYZ'): this {
     return this.set(x, y, z, order);
   }
 
-  fromMat4({ elements: e }: Const<Mat4>, order: EulerOrder): this {
+  fromMat4({ elements: e }: Const<Matrix4>, order: EulerOrder): this {
     const m11 = e[0];
     const m12 = e[4];
     const m13 = e[8];
@@ -175,7 +175,7 @@ export class Euler {
   }
 
   fromQuaternion(quaternion: Const<Quaternion>, order: EulerOrder): this {
-    return this.fromMat4(new Mat4().makeRotationFromQuaternion(quaternion), order);
+    return this.fromMat4(new Matrix4().makeRotationFromQuaternion(quaternion), order);
   }
 
   fromArray(array: Const<number | string>[], offset: number): this {

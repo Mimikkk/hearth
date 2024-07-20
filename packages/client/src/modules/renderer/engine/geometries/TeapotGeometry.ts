@@ -1,4 +1,4 @@
-import { BufferAttribute, BufferGeometry, Mat4, Vec3, Vec4 } from '../engine.js';
+import { BufferAttribute, BufferGeometry, Matrix4, Vector3, Vector4 } from '../engine.js';
 
 export class TeapotGeometry extends BufferGeometry {
   constructor(
@@ -123,7 +123,7 @@ export class TeapotGeometry extends BufferGeometry {
     const uvs = new Float32Array(numVertices * 2);
 
     // Bezier form
-    const ms = new Mat4();
+    const ms = new Matrix4();
     ms.set(-1.0, 3.0, -3.0, 1.0, 3.0, -6.0, 3.0, 0.0, -3.0, 3.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0);
 
     const g = [];
@@ -141,7 +141,7 @@ export class TeapotGeometry extends BufferGeometry {
     const sdir = [];
     const tdir = [];
 
-    const norm = new Vec3();
+    const norm = new Vector3();
 
     let tcoord;
 
@@ -151,18 +151,18 @@ export class TeapotGeometry extends BufferGeometry {
     let dsval = 0;
     let dtval = 0;
 
-    const normOut = new Vec3();
+    const normOut = new Vector3();
 
-    const gmx = new Mat4();
-    const tmtx = new Mat4();
+    const gmx = new Matrix4();
+    const tmtx = new Matrix4();
 
-    const vsp = new Vec4();
-    const vtp = new Vec4();
-    const vdsp = new Vec4();
-    const vdtp = new Vec4();
+    const vsp = new Vector4();
+    const vtp = new Vector4();
+    const vdsp = new Vector4();
+    const vdtp = new Vector4();
 
-    const vsdir = new Vec3();
-    const vtdir = new Vec3();
+    const vsdir = new Vector3();
+    const vtdir = new Vector3();
 
     const mst = ms.clone();
     mst.transpose();
@@ -183,7 +183,7 @@ export class TeapotGeometry extends BufferGeometry {
       );
 
     for (let i = 0; i < 3; i++) {
-      mgm[i] = new Mat4();
+      mgm[i] = new Matrix4();
     }
 
     const minPatches = body ? 0 : 20;
@@ -269,16 +269,16 @@ export class TeapotGeometry extends BufferGeometry {
             for (let i = 0; i < 3; i++) {
               // multiply power vectors times matrix to get value
               tcoord = vsp.clone();
-              tcoord.applyMat4(mgm[i]);
+              tcoord.applyMatrix4(mgm[i]);
               vert[i] = tcoord.dot(vtp);
 
               // get s and t tangent vectors
               tcoord = vdsp.clone();
-              tcoord.applyMat4(mgm[i]);
+              tcoord.applyMatrix4(mgm[i]);
               sdir[i] = tcoord.dot(vtp);
 
               tcoord = vsp.clone();
-              tcoord.applyMat4(mgm[i]);
+              tcoord.applyMatrix4(mgm[i]);
               tdir[i] = tcoord.dot(vdtp);
             }
 
@@ -320,7 +320,7 @@ export class TeapotGeometry extends BufferGeometry {
             const v4 = v1 + vertPerRow;
 
             // Normals and UVs cannot be shared. Without clone(), you can see the consequences
-            // of sharing if you call geometry.applyMat4( matrix ).
+            // of sharing if you call geometry.applyMatrix4( matrix ).
             if (notDegenerate(v1, v2, v3)) {
               indices[indexCount++] = v1;
               indices[indexCount++] = v2;

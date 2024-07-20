@@ -6,28 +6,17 @@ import {
   InstancedInterleavedBuffer,
   InterleavedBufferAttribute,
   LineSegments,
-  Mat4,
+  Matrix4,
   Mesh,
   Sphere,
-  Vec3,
+  Vector3,
   WireframeGeometry,
 } from '../engine.js';
-import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
-import { Line3 } from '@modules/renderer/engine/math/Line3.js';
 
 const _box = new Box3();
-const _vector = new Vec3();
-
-interface LineAttributes extends Record<string, Attribute> {
-  instanceStart: InterleavedBufferAttribute;
-  instanceEnd: InterleavedBufferAttribute;
-  instanceDistanceStart: InterleavedBufferAttribute;
-  instanceDistanceEnd: InterleavedBufferAttribute;
-}
+const _vector = new Vector3();
 
 export class LineSegmentsGeometry extends InstancedBufferGeometry {
-  declare attributes: LineAttributes;
-
   constructor() {
     super();
 
@@ -40,14 +29,14 @@ export class LineSegmentsGeometry extends InstancedBufferGeometry {
     this.setAttribute('uv', new Float32BufferAttribute(uvs, 2));
   }
 
-  applyMat4(matrix: Mat4): this {
+  applyMatrix4(matrix: Matrix4): this {
     const start = this.attributes.instanceStart;
     const end = this.attributes.instanceEnd;
 
     if (start !== undefined) {
-      start.applyMat4(matrix);
+      start.applyMatrix4(matrix);
 
-      end.applyMat4(matrix);
+      end.applyMatrix4(matrix);
 
       start.needsUpdate = true;
     }
@@ -150,37 +139,22 @@ export class LineSegmentsGeometry extends InstancedBufferGeometry {
       let maxRadiusSq = 0;
 
       for (let i = 0, il = start.count; i < il; i++) {
-        _vector.fromAttribute(start, i);
-        maxRadiusSq = Math.max(maxRadiusSq, center.distanceSqTo(_vector));
+        _vector.fromBufferAttribute(start, i);
+        maxRadiusSq = Math.max(maxRadiusSq, center.distanceToSquared(_vector));
 
-        _vector.fromAttribute(end, i);
-        maxRadiusSq = Math.max(maxRadiusSq, center.distanceSqTo(_vector));
+        _vector.fromBufferAttribute(end, i);
+        maxRadiusSq = Math.max(maxRadiusSq, center.distanceToSquared(_vector));
       }
 
       this.boundingSphere.radius = Math.sqrt(maxRadiusSq);
+
+      if (isNaN(this.boundingSphere.radius)) {
+        console.error(
+          'engine.LineSegmentsGeometry.computeBoundingSphere(): Computed radius is NaN. The instanced position data is likely to have NaN values.',
+          this,
+        );
+      }
     }
-    return this;
-  }
-
-  computeLineDistances(): this {
-    const start = this.attributes.instanceStart;
-    const end = this.attributes.instanceEnd;
-    const distances = new Float32Array(2 * start.count);
-
-    for (let i = 0, j = 0, l = start.count; i < l; i++, j += 2) {
-      _start.fromAttribute(start, i);
-      _end.fromAttribute(end, i);
-
-      distances[j] = j === 0 ? 0 : distances[j - 1];
-      distances[j + 1] = distances[j] + _start.distanceTo(_end);
-    }
-
-    const distance = new InstancedInterleavedBuffer(distances, 2, 1);
-    this.attributes.instanceDistanceStart = new InterleavedBufferAttribute(distance, 1, 0);
-    this.attributes.instanceDistanceEnd = new InterleavedBufferAttribute(distance, 1, 1);
-
     return this;
   }
 }
-const _start = Vec3.new();
-const _end = Vec3.new();

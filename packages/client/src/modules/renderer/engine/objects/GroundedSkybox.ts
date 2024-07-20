@@ -1,4 +1,4 @@
-import { Mesh, MeshBasicMaterial, SphereGeometry, Texture, Vec3 } from '../engine.js';
+import { Mesh, MeshBasicMaterial, SphereGeometry, Texture, Vector3 } from '../engine.js';
 
 /**
  * A ground-projected skybox. The height is how far the camera that took the photo was above the ground -
@@ -16,17 +16,18 @@ export class GroundedSkybox extends Mesh {
     const geometry = new SphereGeometry({ radius, widthSegments: 2 * resolution, heightSegments: resolution });
     geometry.scale(1, 1, -1);
 
-    const pos = geometry.attributes.position;
-    const tmp = new Vec3();
+    const pos = geometry.getAttribute('position');
+    const tmp = new Vector3();
 
     for (let i = 0; i < pos.count; ++i) {
-      tmp.fromAttribute(pos, i);
+      tmp.fromBufferAttribute(pos, i);
 
       if (tmp.y < 0) {
         // Smooth out the transition from flat floor to sphere:
         const y1 = (-height * 3) / 2;
         const f = tmp.y < y1 ? -height / tmp.y : 1 - (tmp.y * tmp.y) / (3 * y1 * y1);
-        tmp.scale(f).intoArray(pos.array, 3 * i);
+        tmp.multiplyScalar(f);
+        tmp.toArray(pos.array as never as number[], 3 * i);
       }
     }
 

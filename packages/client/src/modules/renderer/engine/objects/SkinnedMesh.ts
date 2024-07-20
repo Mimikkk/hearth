@@ -1,9 +1,9 @@
 import { Mesh } from './Mesh.js';
 import { Box3 } from '../math/Box3.js';
-import { Mat4 } from '../math/Mat4.js';
-import { Sphere } from '../math/Sphere.js';
-import { Vec3 } from '../math/Vec3.js';
-import { Vec4 } from '../math/Vec4.js';
+import { Matrix4 } from '../math/Matrix4.js';
+import { Sphere_ } from '../math/Sphere.js';
+import { Vector3 } from '../math/Vector3.js';
+import { Vector4 } from '../math/Vector4.js';
 import { Ray } from '../math/Ray.js';
 import { BindMode } from '../constants.js';
 import { BufferGeometry } from '@modules/renderer/engine/core/BufferGeometry.js';
@@ -11,14 +11,27 @@ import { Material } from '@modules/renderer/engine/materials/Material.js';
 import { Skeleton } from '@modules/renderer/engine/objects/Skeleton.js';
 import { Intersection, Raycaster } from '@modules/renderer/engine/core/Raycaster.js';
 
+const _basePosition = new Vector3();
+
+const _skinIndex = new Vector4();
+const _skinWeight = new Vector4();
+
+const _vector3 = new Vector3();
+const _matrix4 = new Matrix4();
+const _vertex = new Vector3();
+
+const _sphere = Sphere_.empty();
+const _inverseMatrix = new Matrix4();
+const _ray = new Ray();
+
 export class SkinnedMesh extends Mesh {
   declare isSkinnedMesh: true;
   declare type: string | 'SkinnedMesh';
 
   bindMode: BindMode;
-  bindMatrix: Mat4;
-  bindMatrixInverse: Mat4;
-  boundingSphere: Sphere | null;
+  bindMatrix: Matrix4;
+  bindMatrixInverse: Matrix4;
+  boundingSphere: Sphere_ | null;
   skeleton: Skeleton | null;
   declare geometry: BufferGeometry;
   declare material: Material;
@@ -27,8 +40,8 @@ export class SkinnedMesh extends Mesh {
     super(geometry, material);
 
     this.bindMode = BindMode.Attached;
-    this.bindMatrix = new Mat4();
-    this.bindMatrixInverse = new Mat4();
+    this.bindMatrix = new Matrix4();
+    this.bindMatrixInverse = new Matrix4();
 
     this.boundingBox = null!;
     this.boundingSphere = null;
@@ -36,10 +49,12 @@ export class SkinnedMesh extends Mesh {
 
   computeBoundingBox() {
     const geometry = this.geometry!;
+
     if (this.boundingBox === null) this.boundingBox = new Box3();
 
     this.boundingBox!.clear();
-    const positionAttribute = geometry.attributes.position;
+
+    const positionAttribute = geometry.getAttribute('position');
 
     for (let i = 0; i < positionAttribute.count; i++) {
       this.getVertexPosition(i, _vertex);
@@ -51,14 +66,15 @@ export class SkinnedMesh extends Mesh {
     const geometry = this.geometry!;
 
     if (this.boundingSphere === null) {
-      this.boundingSphere = Sphere.new();
+      this.boundingSphere = Sphere_.empty();
     }
-    this.boundingSphere.clear();
+    Sphere_.clear(this.boundingSphere);
 
-    const positionAttribute = geometry.attributes.position;
+    const positionAttribute = geometry.getAttribute('position');
+
     for (let i = 0; i < positionAttribute.count; i++) {
       this.getVertexPosition(i, _vertex);
-      this.boundingSphere.expandCoord(_vertex);
+      Sphere_.expandByVec(this.boundingSphere, _vertex);
     }
   }
 
@@ -66,51 +82,62 @@ export class SkinnedMesh extends Mesh {
     super.copy(source, recursive);
 
     this.bindMode = source.bindMode;
-    this.bindMatrix.from(source.bindMatrix);
-    this.bindMatrixInverse.from(source.bindMatrixInverse);
+    this.bindMatrix.copy(source.bindMatrix);
+    this.bindMatrixInverse.copy(source.bindMatrixInverse);
 
     this.skeleton = source.skeleton;
 
     if (source.boundingBox !== null) this.boundingBox = source.boundingBox.clone();
     if (source.boundingSphere !== null) {
       if (this.boundingSphere === null) {
-        this.boundingSphere = Sphere.from(source.boundingSphere);
+        this.boundingSphere = Sphere_.clone(source.boundingSphere);
       } else {
-        source.boundingSphere.from(source.boundingSphere);
+        Sphere_.clone_(source.boundingSphere, this.boundingSphere);
       }
     }
     return this;
   }
 
   raycast(raycaster: Raycaster, intersects: Intersection[]): void {
-    const { material, matrixWorld } = this;
+    const material = this.material;
+    const matrixWorld = this.matrixWorld;
+
     if (material === undefined) return;
 
     // test with bounding sphere in world space
-    if (this.boundingSphere === null) this.computeBoundingSphere();
-    _sphere.from(this.boundingSphere!).applyMat4(matrixWorld);
 
-    if (!raycaster.ray.intersectsSphere(_sphere)) return;
+    if (this.boundingSphere === null) this.computeBoundingSphere();
+
+    Sphere_.clone_(this.boundingSphere!, _sphere);
+    Sphere_.applyMat4(_sphere, matrixWorld);
+
+    if (raycaster.ray.intersectsSphere(_sphere) === false) return;
 
     // convert ray to local space of skinned mesh
-    _inverseMatrix.from(matrixWorld).invert();
-    _ray.clone(raycaster.ray).applyMat4(_inverseMatrix);
+
+    _inverseMatrix.copy(matrixWorld).invert();
+    _ray.copy(raycaster.ray).applyMat4(_inverseMatrix);
 
     // test with bounding box in local space
-    if (this.boundingBox && !_ray.intersectsBox(this.boundingBox)) return;
+
+    if (this.boundingBox !== null) {
+      if (_ray.intersectsBox(this.boundingBox) === false) return;
+    }
 
     // test for intersections with geometry
+
     this._computeIntersections(raycaster, intersects, _ray);
   }
 
-  getVertexPosition(index: number, into: Vec3 = Vec3.new()): Vec3 {
-    super.getVertexPosition(index, into);
-    this.applyBoneTransform(index, into);
+  getVertexPosition(index: number, target: Vector3): Vector3 {
+    super.getVertexPosition(index, target);
 
-    return into;
+    this.applyBoneTransform(index, target);
+
+    return target;
   }
 
-  bind(skeleton: Skeleton, bindMatrix?: Mat4): void {
+  bind(skeleton: Skeleton, bindMatrix?: Matrix4): void {
     this.skeleton = skeleton;
 
     if (bindMatrix === undefined) {
@@ -121,8 +148,8 @@ export class SkinnedMesh extends Mesh {
       bindMatrix = this.matrixWorld;
     }
 
-    this.bindMatrix.from(bindMatrix);
-    this.bindMatrixInverse.from(bindMatrix).invert();
+    this.bindMatrix.copy(bindMatrix);
+    this.bindMatrixInverse.copy(bindMatrix).invert();
   }
 
   pose() {
@@ -130,17 +157,17 @@ export class SkinnedMesh extends Mesh {
   }
 
   normalizeSkinWeights() {
-    const vector = new Vec4();
+    const vector = new Vector4();
 
     const skinWeight = this.geometry.attributes.skinWeight;
 
     for (let i = 0, l = skinWeight.count; i < l; i++) {
-      vector.fromAttribute(skinWeight, i);
+      vector.fromBufferAttribute(skinWeight, i);
 
-      const scale = 1.0 / vector.manhattan();
+      const scale = 1.0 / vector.manhattanLength();
 
       if (scale !== Infinity) {
-        vector.scale(scale);
+        vector.multiplyScalar(scale);
       } else {
         vector.set(1, 0, 0, 0); // do something reasonable
       }
@@ -149,78 +176,46 @@ export class SkinnedMesh extends Mesh {
     }
   }
 
-  updateMatrixWorld(force?: boolean): this {
+  updateMatrixWorld(force: boolean): this {
     super.updateMatrixWorld(force);
 
-    switch (this.bindMode) {
-      case BindMode.Attached:
-        this.bindMatrixInverse.from(this.matrixWorld).invert();
-        break;
-      case BindMode.Detached:
-        this.bindMatrixInverse.from(this.bindMatrix).invert();
-        break;
+    if (this.bindMode === BindMode.Attached) {
+      this.bindMatrixInverse.copy(this.matrixWorld).invert();
+    } else if (this.bindMode === BindMode.Detached) {
+      this.bindMatrixInverse.copy(this.bindMatrix).invert();
+    } else {
+      console.warn('engine.SkinnedMesh: Unrecognized bindMode: ' + this.bindMode);
     }
 
     return this;
   }
 
-  applyBoneTransform(index: number, into: Vec3 = Vec3.new()): Vec3 {
+  applyBoneTransform(index: number, vector: Vector3): Vector3 {
     const skeleton = this.skeleton!;
     const geometry = this.geometry!;
 
-    _index.fromAttribute(geometry.attributes.skinIndex, index);
-    _weight.fromAttribute(geometry.attributes.skinWeight, index);
-    _position.from(into).applyMat4(this.bindMatrix);
+    _skinIndex.fromBufferAttribute(geometry.attributes.skinIndex, index);
+    _skinWeight.fromBufferAttribute(geometry.attributes.skinWeight, index);
 
-    into.set(0, 0, 0);
-    const weightX = _weight.x;
-    if (weightX !== 0) {
-      const boneIndex = _index.x;
+    _basePosition.copy(vector).applyMatrix4(this.bindMatrix);
 
-      _matrix4.multiplyMatrices(skeleton.bones[boneIndex].matrixWorld, skeleton.boneInverses[boneIndex]);
-      into.addScaled(_vector3.from(_position).applyMat4(_matrix4), weightX);
+    vector.set(0, 0, 0);
+
+    for (let i = 0; i < 4; i++) {
+      const weight = _skinWeight.getComponent(i);
+
+      if (weight !== 0) {
+        const boneIndex = _skinIndex.getComponent(i);
+
+        _matrix4.multiplyMatrices(skeleton.bones[boneIndex].matrixWorld, skeleton.boneInverses[boneIndex]);
+
+        vector.addScaledVector(_vector3.copy(_basePosition).applyMatrix4(_matrix4), weight);
+      }
     }
 
-    const weightY = _weight.y;
-    if (weightY !== 0) {
-      const boneIndex = _index.y;
-
-      _matrix4.multiplyMatrices(skeleton.bones[boneIndex].matrixWorld, skeleton.boneInverses[boneIndex]);
-      into.addScaled(_vector3.from(_position).applyMat4(_matrix4), weightY);
-    }
-
-    const weightZ = _weight.z;
-    if (weightZ !== 0) {
-      const boneIndex = _index.z;
-
-      _matrix4.multiplyMatrices(skeleton.bones[boneIndex].matrixWorld, skeleton.boneInverses[boneIndex]);
-      into.addScaled(_vector3.from(_position).applyMat4(_matrix4), weightZ);
-    }
-
-    const weightW = _weight.w;
-    if (weightW !== 0) {
-      const boneIndex = _index.w;
-
-      _matrix4.multiplyMatrices(skeleton.bones[boneIndex].matrixWorld, skeleton.boneInverses[boneIndex]);
-      into.addScaled(_vector3.from(_position).applyMat4(_matrix4), weightW);
-    }
-
-    return into.applyMat4(this.bindMatrixInverse);
+    return vector.applyMatrix4(this.bindMatrixInverse);
   }
 }
-
-const _position = Vec3.new();
-const _index = Vec4.new();
-
-const _weight = Vec4.new();
-const _vector3 = Vec3.new();
-const _matrix4 = new Mat4();
-
-const _vertex = Vec3.new();
-const _sphere = Sphere.new();
-const _inverseMatrix = new Mat4();
-
-const _ray = Ray.new();
 
 SkinnedMesh.prototype.isSkinnedMesh = true;
 SkinnedMesh.prototype.type = 'SkinnedMesh';

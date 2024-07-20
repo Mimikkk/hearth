@@ -80,8 +80,8 @@ async function init() {
   const hueNode = reference('hue', 'float', adjustments);
   const saturationNode = reference('saturation', 'float', adjustments);
 
-  const rotateY1Matrix = new Engine.Mat4();
-  const rotateY2Matrix = new Engine.Mat4();
+  const rotateY1Matrix = new Engine.Matrix4();
+  const rotateY2Matrix = new Engine.Matrix4();
 
   const getEnvironmentNode = (reflectNode, positionNode) => {
     const custom1UV = reflectNode.xyz.mul(uniform(rotateY1Matrix));

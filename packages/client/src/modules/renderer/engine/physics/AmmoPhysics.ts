@@ -1,6 +1,6 @@
 import { Mesh } from '../objects/Mesh.js';
 import { Object3D } from '../core/Object3D.js';
-import { Vec3 } from '../math/Vec3.js';
+import { Vector3 } from '../math/Vector3.js';
 import Ammo from 'ammojs3';
 import { BufferGeometry } from '@modules/renderer/engine/core/BufferGeometry.js';
 import { Scene } from '@modules/renderer/engine/scenes/Scene.js';
@@ -9,7 +9,7 @@ import { Quaternion } from '@modules/renderer/engine/math/Quaternion.js';
 export interface AmmoPhysicsObject {
   addScene: (scene: Object3D) => void;
   addMesh: (mesh: Mesh, mass?: number) => void;
-  setMeshPosition: (mesh: Mesh, position: Vec3, index?: number) => void;
+  setMeshPosition: (mesh: Mesh, position: Vector3, index?: number) => void;
 }
 export async function AmmoPhysics(): Promise<AmmoPhysicsObject> {
   // eslint-disable-line no-undef
@@ -145,7 +145,7 @@ export async function AmmoPhysics(): Promise<AmmoPhysicsObject> {
 
   //
 
-  function setMeshPosition(mesh: Mesh, position: Vec3, index: number = 0) {
+  function setMeshPosition(mesh: Mesh, position: Vector3, index: number = 0) {
     //@ts-expect-error
     if (mesh.isInstancedMesh) {
       const bodies = meshMap.get(mesh);

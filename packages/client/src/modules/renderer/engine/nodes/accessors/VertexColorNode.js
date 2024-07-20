@@ -1,6 +1,6 @@
 import AttributeNode from '../core/AttributeNode.js';
 import { nodeObject } from '../shadernode/ShaderNodes.js';
-import { Vec4 } from '@modules/renderer/engine/engine.js';
+import { Vector4 } from '@modules/renderer/engine/engine.js';
 
 class VertexColorNode extends AttributeNode {
   static type = 'VertexColorNode';
@@ -29,7 +29,7 @@ class VertexColorNode extends AttributeNode {
       result = super.generate(builder);
     } else {
       // Vertex color fallback should be white
-      result = builder.generateConst(this.nodeType, new Vec4(1, 1, 1, 1));
+      result = builder.generateConst(this.nodeType, new Vector4(1, 1, 1, 1));
     }
 
     return result;

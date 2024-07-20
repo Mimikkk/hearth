@@ -63,12 +63,16 @@ class ScriptableValueNode extends Node {
       value.value !== undefined &&
       (((this.inputType === 'URL' || this.inputType === 'String') && typeof value.value === 'string') ||
         (this.inputType === 'Number' && typeof value.value === 'number') ||
-        (this.inputType === 'Vec2' && value.value.isVec2) ||
-        (this.inputType === 'Vec3' && value.value.isVec3) ||
-        (this.inputType === 'Vec4' && value.value.isVec4) ||
+        ((this.inputType === 'Vector2' || this.inputType === 'Vec2') &&
+          (value.value.isVector2 || value.value.isVec2)) ||
+        ((this.inputType === 'Vector3' || this.inputType === 'Vec3') &&
+          (value.value.isVector3 || value.value.isVec3)) ||
+        ((this.inputType === 'Vector4' || this.inputType === 'Vec4') &&
+          (value.value.isVector4 || value.value.isVec4)) ||
         (this.inputType === 'Color' && value.value.isColor) ||
-        (this.inputType === 'Mat3' && value.value.isMat3) ||
-        (this.inputType === 'Mat4' && value.value.isMat4))
+        ((this.inputType === 'Matrix3' || this.inputType === 'Mat3') &&
+          (value.value.isMatrix3 || value.value.isMat3)) ||
+        ((this.inputType === 'Matrix4' || this.inputType === 'Mat4') && (value.value.isMatrix4 || value.value.isMat4)))
     ) {
       return value.value;
     }

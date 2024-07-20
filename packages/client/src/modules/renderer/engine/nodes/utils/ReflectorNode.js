@@ -4,27 +4,27 @@ import { NodeUpdateType } from '../core/constants.ts';
 import { viewportTopLeft } from '../display/ViewportNode.ts';
 import {
   Filter,
-  Mat4,
+  Matrix4,
   Object3D,
   Plane,
   RenderTarget,
   TextureDataType,
-  Vec3,
-  Vec4,
+  Vector3,
+  Vector4,
 } from '@modules/renderer/engine/engine.js';
-import { Vec2 } from '@modules/renderer/engine/math/Vec2.ts';
+import { Vec2 } from '@modules/renderer/engine/math/Vector2.ts';
 
 const _reflectorPlane = new Plane();
-const _normal = new Vec3();
-const _reflectorWorldPosition = new Vec3();
-const _cameraWorldPosition = new Vec3();
-const _rotationMatrix = new Mat4();
-const _lookAtPosition = new Vec3(0, 0, -1);
-const clipPlane = new Vec4();
+const _normal = new Vector3();
+const _reflectorWorldPosition = new Vector3();
+const _cameraWorldPosition = new Vector3();
+const _rotationMatrix = new Matrix4();
+const _lookAtPosition = new Vector3(0, 0, -1);
+const clipPlane = new Vector4();
 
-const _view = new Vec3();
-const _target = new Vec3();
-const _q = new Vec4();
+const _view = new Vector3();
+const _target = new Vector3();
+const _q = new Vector4();
 
 const _size = Vec2.new();
 
@@ -116,13 +116,13 @@ class ReflectorNode extends TextureNode {
 
     //
 
-    _reflectorWorldPosition.fromMat4Position(target.matrixWorld);
-    _cameraWorldPosition.fromMat4Position(camera.matrixWorld);
+    _reflectorWorldPosition.setFromMatrixPosition(target.matrixWorld);
+    _cameraWorldPosition.setFromMatrixPosition(camera.matrixWorld);
 
     _rotationMatrix.extractRotation(target.matrixWorld);
 
     _normal.set(0, 0, 1);
-    _normal.applyMat4(_rotationMatrix);
+    _normal.applyMatrix4(_rotationMatrix);
 
     _view.subVectors(_reflectorWorldPosition, _cameraWorldPosition);
 
@@ -136,7 +136,7 @@ class ReflectorNode extends TextureNode {
     _rotationMatrix.extractRotation(camera.matrixWorld);
 
     _lookAtPosition.set(0, 0, -1);
-    _lookAtPosition.applyMat4(_rotationMatrix);
+    _lookAtPosition.applyMatrix4(_rotationMatrix);
     _lookAtPosition.add(_cameraWorldPosition);
 
     _target.subVectors(_reflectorWorldPosition, _lookAtPosition);
@@ -148,7 +148,7 @@ class ReflectorNode extends TextureNode {
     virtualCamera.coordinateSystem = camera.coordinateSystem;
     virtualCamera.position.copy(_view);
     virtualCamera.up.set(0, 1, 0);
-    virtualCamera.up.applyMat4(_rotationMatrix);
+    virtualCamera.up.applyMatrix4(_rotationMatrix);
     virtualCamera.up.reflect(_normal);
     virtualCamera.lookAt(_target);
 
@@ -156,12 +156,12 @@ class ReflectorNode extends TextureNode {
     virtualCamera.far = camera.far;
 
     virtualCamera.updateMatrixWorld();
-    virtualCamera.projectionMatrix.from(camera.projectionMatrix);
+    virtualCamera.projectionMatrix.copy(camera.projectionMatrix);
 
     // Now update projection matrix with new clip plane, implementing code from: http://www.terathon.com/code/oblique.html
     // Paper explaining this technique: http://www.terathon.com/lengyel/Lengyel-Oblique.pdf
-    _reflectorPlane.fromNormalAndCoplanar(_normal, _reflectorWorldPosition);
-    _reflectorPlane.applyMat4(virtualCamera.matrixWorldInverse);
+    _reflectorPlane.setFromNormalAndCoplanarPoint(_normal, _reflectorWorldPosition);
+    _reflectorPlane.applyMatrix4(virtualCamera.matrixWorldInverse);
 
     clipPlane.set(
       _reflectorPlane.normal.x,
@@ -178,7 +178,7 @@ class ReflectorNode extends TextureNode {
     _q.w = (1.0 + projectionMatrix.elements[10]) / projectionMatrix.elements[14];
 
     // Calculate the scaled plane vector
-    clipPlane.scale(1.0 / clipPlane.dot(_q));
+    clipPlane.multiplyScalar(1.0 / clipPlane.dot(_q));
 
     const clipBias = 0;
 

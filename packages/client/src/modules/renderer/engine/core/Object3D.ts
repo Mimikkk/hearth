@@ -1,10 +1,10 @@
 import { Quaternion } from '../math/Quaternion.js';
-import { Vec3 } from '../math/Vec3.js';
-import { Mat4 } from '../math/Mat4.js';
+import { IVec3, Vector3 } from '../math/Vector3.js';
+import { Matrix4 } from '../math/Matrix4.js';
 import { EventDispatcher } from './EventDispatcher.js';
 import { Euler } from '../math/Euler.js';
 import { Layers } from './Layers.js';
-import { Mat3 } from '../math/Mat3.js';
+import { Matrix3 } from '../math/Matrix3.js';
 import type { Intersection, Raycaster } from './Raycaster.js';
 import type { Light } from '../lights/Light.js';
 import type { Scene } from '../scenes/Scene.js';
@@ -12,27 +12,26 @@ import type { BufferGeometry } from './BufferGeometry.js';
 import type { Camera } from '../cameras/Camera.js';
 import type { Material } from '../materials/Material.js';
 import type { Group } from '../objects/Group.js';
-import type { Vec2 } from '../math/Vec2.js';
+import type { Vec2 } from '../math/Vector2.js';
 import { Box3 } from '@modules/renderer/engine/math/Box3.js';
 import { Renderer } from '../renderers/webgpu/Renderer.js';
 import { v4 } from 'uuid';
 import { Sphere } from '@modules/renderer/engine/math/Sphere.js';
-import { Const } from '@modules/renderer/engine/math/types.js';
 
-let _id = 0;
+let _object3DId = 0;
 
-const _v1 = Vec3.new();
+const _v1 = new Vector3();
 const _q1 = Quaternion.identity();
-const _m1 = new Mat4();
-const _target = Vec3.new();
+const _m1 = new Matrix4();
+const _target = new Vector3();
 
-const _position = Vec3.new();
-const _scale = Vec3.new();
+const _position = new Vector3();
+const _scale = new Vector3();
 const _quaternion = Quaternion.identity();
 
-const _xAxis = Vec3.new(1, 0, 0);
-const _yAxis = Vec3.new(0, 1, 0);
-const _zAxis = Vec3.new(0, 0, 1);
+const _xAxis = new Vector3(1, 0, 0);
+const _yAxis = new Vector3(0, 1, 0);
+const _zAxis = new Vector3(0, 0, 1);
 
 export interface Object3DEventMap {
   added: {};
@@ -55,10 +54,9 @@ const isLight = (object: any): object is Light<any> => object.isLight;
 export class Object3D<EventMap extends Object3DEventMap = any> {
   declare ['constructor']: typeof Object3D;
   declare isObject3D: true;
-  declare isInstancedMesh: boolean;
-  static Up: Vec3 = Vec3.new(0, 1, 0);
-  static AutoUpdateLocalMat: boolean = true;
-  static AutoUpdateWorldMat: boolean = true;
+  static DEFAULT_UP: Vector3 = new Vector3(0, 1, 0);
+  static DEFAULT_MATRIX_AUTO_UPDATE: boolean = true;
+  static DEFAULT_MATRIX_WORLD_AUTO_UPDATE: boolean = true;
 
   eventDispatcher = new EventDispatcher<EventMap>();
 
@@ -74,14 +72,14 @@ export class Object3D<EventMap extends Object3DEventMap = any> {
   type: string | 'Object3D';
   parent: Object3D | null;
   children: Object3D[];
-  up: Vec3;
-  position: Vec3;
+  up: Vector3;
+  position: Vector3;
   quaternion: Quaternion;
-  scale: Vec3;
-  modelViewMatrix: Mat4;
-  normalMatrix: Mat3;
-  matrix: Mat4;
-  matrixWorld: Mat4;
+  scale: Vector3;
+  modelViewMatrix: Matrix4;
+  normalMatrix: Matrix3;
+  matrix: Matrix4;
+  matrixWorld: Matrix4;
   matrixAutoUpdate: boolean;
   matrixWorldAutoUpdate: boolean;
   matrixWorldNeedsUpdate: boolean;
@@ -95,7 +93,7 @@ export class Object3D<EventMap extends Object3DEventMap = any> {
   userData: Record<string, any>;
 
   constructor() {
-    this.id = _id++;
+    this.id = _object3DId++;
     this.uuid = v4();
 
     this.name = '';
@@ -104,22 +102,22 @@ export class Object3D<EventMap extends Object3DEventMap = any> {
     this.parent = null;
     this.children = [];
 
-    this.up = Object3D.Up.clone();
+    this.up = Object3D.DEFAULT_UP.clone();
 
-    this.position = Vec3.new();
+    this.position = new Vector3();
 
     this.quaternion = Quaternion.identity();
-    this.scale = Vec3.new(1, 1, 1);
-    this.modelViewMatrix = new Mat4();
-    this.normalMatrix = new Mat3();
+    this.scale = new Vector3(1, 1, 1);
+    this.modelViewMatrix = new Matrix4();
+    this.normalMatrix = new Matrix3();
 
-    this.matrix = new Mat4();
-    this.matrixWorld = new Mat4();
+    this.matrix = new Matrix4();
+    this.matrixWorld = new Matrix4();
 
-    this.matrixAutoUpdate = Object3D.AutoUpdateLocalMat;
+    this.matrixAutoUpdate = Object3D.DEFAULT_MATRIX_AUTO_UPDATE;
 
     // checked by the renderer
-    this.matrixWorldAutoUpdate = Object3D.AutoUpdateWorldMat;
+    this.matrixWorldAutoUpdate = Object3D.DEFAULT_MATRIX_WORLD_AUTO_UPDATE;
     this.matrixWorldNeedsUpdate = false;
 
     this.layers = new Layers();
@@ -172,68 +170,76 @@ export class Object3D<EventMap extends Object3DEventMap = any> {
     group: Group,
   ): void {}
 
-  applyMat4(matrix: Const<Mat4>): this {
+  applyMatrix4(matrix: Matrix4): this {
     if (this.matrixAutoUpdate) this.updateMatrix();
 
     this.matrix.premultiply(matrix);
+
     this.matrix.decompose(this.position, this.quaternion, this.scale);
 
     return this;
   }
 
-  applyQuaternion(quaternion: Const<Quaternion>): this {
-    this.quaternion.premul(quaternion);
+  applyQuaternion(q: Quaternion): this {
+    Quaternion.premultiply(this.quaternion, q);
     return this;
   }
 
-  setRotationFromAxisAngle(axis: Const<Vec3>, angle: number): this {
-    this.quaternion.fromAxisAngle(axis, angle);
+  setRotationFromAxisAngle(axis: Vector3, angle: number): this {
+    Quaternion.fillAxisAngle(this.quaternion, axis, angle);
     return this;
   }
 
-  setRotationFromEuler(euler: Const<Euler>): this {
-    this.quaternion.fromEuler(euler);
+  setRotationFromEuler(euler: Euler): this {
+    Quaternion.fillEuler(this.quaternion, euler);
     return this;
   }
 
-  setRotationFromMatrix(mat: Const<Mat4>): this {
-    this.quaternion.fromRotation(mat);
+  setRotationFromMatrix(m: Matrix4): this {
+    Quaternion.fillRotation(this.quaternion, m);
     return this;
   }
 
-  setRotationFromQuaternion(quaternion: Quaternion): this {
-    this.quaternion.from(quaternion);
+  setRotationFromQuaternion(q: Quaternion): this {
+    Quaternion.clone_(q, this.quaternion);
     return this;
   }
 
-  rotateOnLocalAxis(axis: Vec3, angle: number): this {
-    _q1.fromAxisAngle(axis, angle);
-    this.quaternion.mul(_q1);
+  rotateOnAxis(axis: Vector3, angle: number): this {
+    // rotate object on axis in object space
+    // axis is assumed to be normalized
+
+    Quaternion.fillAxisAngle(_q1, axis, angle);
+    Quaternion.multiply(this.quaternion, _q1);
 
     return this;
   }
 
-  rotateOnWorldAxis(axis: Vec3, angle: number): this {
-    _q1.fromAxisAngle(axis, angle);
-    this.quaternion.premul(_q1);
+  rotateOnWorldAxis(axis: Vector3, angle: number): this {
+    // rotate object on axis in world space
+    // axis is assumed to be normalized
+    // method assumes no rotated parent
+
+    Quaternion.fillAxisAngle(_q1, axis, angle);
+    Quaternion.premultiply(this.quaternion, _q1);
 
     return this;
   }
 
   setRotationX(angle: number): this {
-    return this.setRotationFromEuler(Euler.new(angle, this.getRotationY(), this.getRotationZ()));
+    return this.setRotationFromEuler(Euler.create(angle, this.getRotationY(), this.getRotationZ()));
   }
 
   setRotationY(angle: number): this {
-    return this.setRotationFromEuler(Euler.new(this.getRotationX(), angle, this.getRotationZ()));
+    return this.setRotationFromEuler(Euler.create(this.getRotationX(), angle, this.getRotationZ()));
   }
 
   setRotationZ(angle: number): this {
-    return this.setRotationFromEuler(Euler.new(this.getRotationX(), this.getRotationY(), angle));
+    return this.setRotationFromEuler(Euler.create(this.getRotationX(), this.getRotationY(), angle));
   }
 
   setRotation(angleX: number, angleY: number, angleZ: number): this {
-    return this.setRotationFromEuler(Euler.new(angleX, angleY, angleZ));
+    return this.setRotationFromEuler(Euler.create(angleX, angleY, angleZ));
   }
 
   getRotationX(): number {
@@ -256,38 +262,41 @@ export class Object3D<EventMap extends Object3DEventMap = any> {
   }
 
   setScale(x: number, y: number, z: number): this {
-    this.scale.set(x, y, z);
+    IVec3.set(this.scale, x, y, z);
     return this;
   }
 
   setPosition(x: number, y: number, z: number): this {
-    this.position.set(x, y, z);
+    IVec3.set(this.position, x, y, z);
     return this;
   }
 
   rotateX(angle: number): this {
-    return this.rotateOnLocalAxis(_xAxis, angle);
+    return this.rotateOnAxis(_xAxis, angle);
   }
 
   rotateY(angle: number): this {
-    return this.rotateOnLocalAxis(_yAxis, angle);
+    return this.rotateOnAxis(_yAxis, angle);
   }
 
   rotateZ(angle: number): this {
-    return this.rotateOnLocalAxis(_zAxis, angle);
+    return this.rotateOnAxis(_zAxis, angle);
   }
 
   rotate(angleX: number, angleY: number, angleZ: number): this {
-    _q1.fromEuler(Euler.new(angleX, angleY, angleZ));
-    this.quaternion.mul(_q1);
+    Quaternion.fillEuler(_q1, Euler.create(angleX, angleY, angleZ));
+    Quaternion.multiply(this.quaternion, _q1);
 
     return this;
   }
 
-  translateOnAxis(axis: Const<Vec3>, distance: number): this {
-    _v1.from(axis).applyQuaternion(this.quaternion);
+  translateOnAxis(axis: Vector3, distance: number): this {
+    // translate object by distance along axis in object space
+    // axis is assumed to be normalized
 
-    this.position.add(_v1.scale(distance));
+    _v1.copy(axis).applyQuaternion(this.quaternion);
+
+    this.position.add(_v1.multiplyScalar(distance));
 
     return this;
   }
@@ -304,25 +313,25 @@ export class Object3D<EventMap extends Object3DEventMap = any> {
     return this.translateOnAxis(_zAxis, distance);
   }
 
-  localToWorld(into: Vec3 = Vec3.new()): Vec3 {
+  localToWorld(vector: Vector3): Vector3 {
     this.updateWorldMatrix(true, false);
 
-    return into.applyMat4(this.matrixWorld);
+    return vector.applyMatrix4(this.matrixWorld);
   }
 
-  worldToLocal(into: Vec3 = Vec3.new()): Vec3 {
+  worldToLocal(vector: Vector3): Vector3 {
     this.updateWorldMatrix(true, false);
 
-    return into.applyMat4(_m1.from(this.matrixWorld).invert());
+    return vector.applyMatrix4(_m1.copy(this.matrixWorld).invert());
   }
 
-  lookAt(x: Vec3): this;
+  lookAt(x: Vector3): this;
   lookAt(x: number, y: number, z: number): this;
-  lookAt(x: number | Vec3, y?: number, z?: number): this {
+  lookAt(x: number | Vector3, y?: number, z?: number): this {
     // This method does not support objects having non-uniformly-scaled parent(s)
 
-    if (Vec3.is(x)) {
-      _target.from(x);
+    if (x instanceof Vector3) {
+      _target.copy(x);
     } else {
       _target.set(x, y!, z!);
     }
@@ -331,7 +340,7 @@ export class Object3D<EventMap extends Object3DEventMap = any> {
 
     this.updateWorldMatrix(true, false);
 
-    _position.fromMat4Position(this.matrixWorld);
+    _position.setFromMatrixPosition(this.matrixWorld);
 
     if (isCamera(this) || isLight(this)) {
       _m1.lookAt(_position, _target, this.up);
@@ -339,12 +348,13 @@ export class Object3D<EventMap extends Object3DEventMap = any> {
       _m1.lookAt(_target, _position, this.up);
     }
 
-    this.setRotationFromMatrix(_m1);
+    Quaternion.fillRotation(this.quaternion, _m1);
 
     if (parent) {
       _m1.extractRotation(parent.matrixWorld);
-
-      this.applyQuaternion(_q1.fromRotation(_m1).invert());
+      Quaternion.fillRotation(_q1, _m1);
+      Quaternion.invert(_q1);
+      Quaternion.premultiply(this.quaternion, _q1);
     }
     return this;
   }
@@ -426,7 +436,7 @@ export class Object3D<EventMap extends Object3DEventMap = any> {
 
     this.updateWorldMatrix(true, false);
 
-    _m1.from(this.matrixWorld).invert();
+    _m1.copy(this.matrixWorld).invert();
 
     if (object.parent !== null) {
       object.parent.updateWorldMatrix(true, false);
@@ -434,7 +444,7 @@ export class Object3D<EventMap extends Object3DEventMap = any> {
       _m1.multiply(object.parent.matrixWorld);
     }
 
-    object.applyMat4(_m1);
+    object.applyMatrix4(_m1);
 
     object.removeFromParent();
     object.parent = this!;
@@ -473,34 +483,47 @@ export class Object3D<EventMap extends Object3DEventMap = any> {
     return undefined;
   }
 
-  getWorldPosition(into: Vec3 = Vec3.new()): Vec3 {
-    this.updateWorldMatrix(true, false);
+  getObjectsByProperty(name: string, value: any, result: Object3D[] = []): Object3D[] {
+    // @ts-expect-error
+    if (this[name] === value) result.push(this);
 
-    return into.fromMat4Position(this.matrixWorld);
+    const children = this.children;
+
+    for (let i = 0, l = children.length; i < l; i++) {
+      children[i].getObjectsByProperty(name, value, result);
+    }
+
+    return result;
   }
 
-  getWorldQuaternion(into: Quaternion = Quaternion.new()): Quaternion {
+  getWorldPosition(target: Vector3): Vector3 {
     this.updateWorldMatrix(true, false);
 
-    this.matrixWorld.decompose(_position, into, _scale);
-
-    return into;
+    return target.setFromMatrixPosition(this.matrixWorld);
   }
 
-  getWorldScale(into: Vec3 = Vec3.new()): Vec3 {
+  getWorldQuaternion(target: Quaternion): Quaternion {
     this.updateWorldMatrix(true, false);
 
-    this.matrixWorld.decompose(_position, _quaternion, into);
+    this.matrixWorld.decompose(_position, target, _scale);
 
-    return into;
+    return target;
   }
 
-  getWorldDirection(into: Vec3 = Vec3.new()): Vec3 {
+  getWorldScale(target: Vector3): Vector3 {
+    this.updateWorldMatrix(true, false);
+
+    this.matrixWorld.decompose(_position, _quaternion, target);
+
+    return target;
+  }
+
+  getWorldDirection(target: Vector3): Vector3 {
     this.updateWorldMatrix(true, false);
 
     const e = this.matrixWorld.elements;
 
-    return into.set(e[8], e[9], e[10]).normalize();
+    return target.set(e[8], e[9], e[10]).normalize();
   }
 
   raycast(raycaster: Raycaster, intersects: Intersection[]) {}
@@ -510,7 +533,7 @@ export class Object3D<EventMap extends Object3DEventMap = any> {
 
     const children = this.children;
 
-    for (let i = 0, l = children.length; i < l; ++i) {
+    for (let i = 0, l = children.length; i < l; i++) {
       children[i].traverse(callback);
     }
 
@@ -518,13 +541,13 @@ export class Object3D<EventMap extends Object3DEventMap = any> {
   }
 
   traverseVisible(callback: (object: Object3D) => void): this {
-    if (!this.visible) return this;
+    if (this.visible === false) return this;
 
     callback(this);
 
     const children = this.children;
 
-    for (let i = 0, l = children.length; i < l; ++i) {
+    for (let i = 0, l = children.length; i < l; i++) {
       children[i].traverseVisible(callback);
     }
 
@@ -536,6 +559,7 @@ export class Object3D<EventMap extends Object3DEventMap = any> {
 
     if (parent !== null) {
       callback(parent);
+
       parent.traverseAncestors(callback);
     }
 
@@ -554,7 +578,7 @@ export class Object3D<EventMap extends Object3DEventMap = any> {
 
     if (this.matrixWorldNeedsUpdate || force) {
       if (this.parent === null) {
-        this.matrixWorld.from(this.matrix);
+        this.matrixWorld.copy(this.matrix);
       } else {
         this.matrixWorld.multiplyMatrices(this.parent.matrixWorld, this.matrix);
       }
@@ -564,11 +588,14 @@ export class Object3D<EventMap extends Object3DEventMap = any> {
       force = true;
     }
 
+    // update children
+
     const children = this.children;
+
     for (let i = 0, l = children.length; i < l; i++) {
       const child = children[i];
 
-      if (child.matrixWorldAutoUpdate || force) {
+      if (child.matrixWorldAutoUpdate === true || force === true) {
         child.updateMatrixWorld(force);
       }
     }
@@ -578,21 +605,21 @@ export class Object3D<EventMap extends Object3DEventMap = any> {
   updateWorldMatrix(updateParents: boolean, updateChildren: boolean): this {
     const parent = this.parent;
 
-    if (updateParents && parent && parent.matrixWorldAutoUpdate) {
+    if (updateParents === true && parent !== null && parent.matrixWorldAutoUpdate === true) {
       parent.updateWorldMatrix(true, false);
     }
 
     if (this.matrixAutoUpdate) this.updateMatrix();
 
-    if (!parent) {
-      this.matrixWorld.from(this.matrix);
+    if (this.parent === null) {
+      this.matrixWorld.copy(this.matrix);
     } else {
-      this.matrixWorld.multiplyMatrices(parent.matrixWorld, this.matrix);
+      this.matrixWorld.multiplyMatrices(this.parent.matrixWorld, this.matrix);
     }
 
     // update children
 
-    if (updateChildren) {
+    if (updateChildren === true) {
       const children = this.children;
 
       for (let i = 0, l = children.length; i < l; i++) {
@@ -613,14 +640,14 @@ export class Object3D<EventMap extends Object3DEventMap = any> {
   copy(source: Object3D, recursive: boolean = true) {
     this.name = source.name;
 
-    this.up.from(source.up);
+    this.up.copy(source.up);
 
-    this.position.from(source.position);
-    this.quaternion.from(source.quaternion);
-    this.scale.from(source.scale);
+    this.position.copy(source.position);
+    Quaternion.clone_(source.quaternion, this.quaternion);
+    this.scale.copy(source.scale);
 
-    this.matrix.from(source.matrix);
-    this.matrixWorld.from(source.matrixWorld);
+    this.matrix.copy(source.matrix);
+    this.matrixWorld.copy(source.matrixWorld);
 
     this.matrixAutoUpdate = source.matrixAutoUpdate;
 

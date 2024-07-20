@@ -4,7 +4,7 @@ import { buffer } from '../accessors/BufferNode.js';
 import { instanceIndex } from '../core/IndexNode.js';
 import { float, nodeProxy } from '../shadernode/ShaderNodes.js';
 
-import { Vec4 } from '@modules/renderer/engine/engine.js';
+import { Vector4 } from '@modules/renderer/engine/engine.js';
 import { lerp } from '../../math/MathUtils.ts';
 
 let min = null;
@@ -43,8 +43,8 @@ class RangeNode extends Node {
       const minLength = builder.getTypeLength(getValueType(minValue));
       const maxLength = builder.getTypeLength(getValueType(maxValue));
 
-      min = min || new Vec4();
-      max = max || new Vec4();
+      min = min || new Vector4();
+      max = max || new Vector4();
 
       min.setScalar(0);
       max.setScalar(0);

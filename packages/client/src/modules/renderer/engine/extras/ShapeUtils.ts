@@ -1,5 +1,5 @@
 import { triangulate } from './Earcut.js';
-import { Vec2 } from '../math/Vec2.js';
+import { Vec2 } from '../math/Vector2.js';
 
 export class ShapeUtils {
   static area(contour: Vec2[]): number {

@@ -7,7 +7,7 @@ import { texturePass } from './PassNode.js';
 import { uniform } from '../core/UniformNode.js';
 import { RenderTarget } from '@modules/renderer/engine/engine.js';
 import { QuadMesh } from '../../objects/QuadMesh.js';
-import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
+import { Vec2 } from '@modules/renderer/engine/math/Vector2.js';
 
 // WebGPU: The use of a single QuadMesh for both gaussian blur passes results in a single RenderObject with a SampledTexture binding that
 // alternates between source textures and triggers creation of new BindGroups and BindGroupLayouts every frame.

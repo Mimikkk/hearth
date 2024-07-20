@@ -1,7 +1,7 @@
 import { Color } from '../engine.js';
 import { Material, MaterialParameters } from '@modules/renderer/engine/materials/Material.js';
 import { ColorRepresentation } from '@modules/renderer/engine/math/Color.js';
-import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
+import { Vec2 } from '@modules/renderer/engine/math/Vector2.js';
 
 export interface LineMaterialParameters extends MaterialParameters {
   alphaToCoverage?: boolean | undefined;

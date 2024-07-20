@@ -1,45 +1,47 @@
 import { CoordinateSystem } from '../constants.js';
-import { Mat4 } from '../math/Mat4.js';
+import { Matrix4 } from '../math/Matrix4.js';
 import { Object3D } from '../core/Object3D.js';
-import { Vec3 } from '../math/Vec3.js';
+import { Vector3 } from '../math/Vector3.js';
 
 export class Camera extends Object3D {
+  declare ['constructor']: typeof Camera;
   declare isCamera: true;
   declare type: string | 'Camera';
-  matrixWorldInverse: Mat4;
-  projectionMatrix: Mat4;
-  projectionMatrixInverse: Mat4;
+  matrixWorldInverse: Matrix4;
+  projectionMatrix: Matrix4;
+  projectionMatrixInverse: Matrix4;
   coordinateSystem: CoordinateSystem;
 
   constructor() {
     super();
 
-    this.matrixWorldInverse = new Mat4();
-    this.projectionMatrix = new Mat4();
-    this.projectionMatrixInverse = new Mat4();
+    this.matrixWorldInverse = new Matrix4();
+
+    this.projectionMatrix = new Matrix4();
+    this.projectionMatrixInverse = new Matrix4();
 
     this.coordinateSystem = CoordinateSystem.WebGL;
   }
 
   copy(source: Camera, recursive?: boolean): this {
-    super.copy(source, recursive);
+    super.copy(source as unknown as Object3D, recursive);
 
-    this.matrixWorldInverse.from(source.matrixWorldInverse);
-    this.projectionMatrix.from(source.projectionMatrix);
-    this.projectionMatrixInverse.from(source.projectionMatrixInverse);
+    this.matrixWorldInverse.copy(source.matrixWorldInverse);
+    this.projectionMatrix.copy(source.projectionMatrix);
+    this.projectionMatrixInverse.copy(source.projectionMatrixInverse);
     this.coordinateSystem = source.coordinateSystem;
 
     return this;
   }
 
-  getWorldDirection(into: Vec3 = Vec3.new()): Vec3 {
-    return super.getWorldDirection(into).negate();
+  getWorldDirection(target: Vector3): Vector3 {
+    return super.getWorldDirection(target).negate();
   }
 
   updateMatrixWorld(force?: boolean): this {
     super.updateMatrixWorld(force);
 
-    this.matrixWorldInverse.from(this.matrixWorld).invert();
+    this.matrixWorldInverse.copy(this.matrixWorld).invert();
 
     return this;
   }
@@ -47,11 +49,15 @@ export class Camera extends Object3D {
   updateWorldMatrix(updateParents: boolean, updateChildren: boolean): this {
     super.updateWorldMatrix(updateParents, updateChildren);
 
-    this.matrixWorldInverse.from(this.matrixWorld).invert();
+    this.matrixWorldInverse.copy(this.matrixWorld).invert();
 
     return this;
   }
-}
 
+  clone(): this {
+    //@ts-expect-error
+    return new this.constructor().copy(this);
+  }
+}
 Camera.prototype.isCamera = true;
 Camera.prototype.type = 'Camera';

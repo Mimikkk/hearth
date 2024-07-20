@@ -26,7 +26,7 @@ import {
   TextureDataType,
   TextureFormat,
   ToneMapping,
-  Vec3,
+  Vector3,
 } from '@modules/renderer/engine/engine.js';
 
 const LOD_MIN = 4;
@@ -54,16 +54,16 @@ const INV_PHI = 1 / PHI;
 // Vertices of a dodecahedron (except the opposites, which represent the
 // same axis), used as axis directions evenly spread on a sphere.
 const _axisDirections = [
-  new Vec3(1, 1, 1),
-  new Vec3(-1, 1, 1),
-  new Vec3(1, 1, -1),
-  new Vec3(-1, 1, -1),
-  new Vec3(0, PHI, INV_PHI),
-  new Vec3(0, PHI, -INV_PHI),
-  new Vec3(INV_PHI, 0, PHI),
-  new Vec3(-INV_PHI, 0, PHI),
-  new Vec3(PHI, INV_PHI, 0),
-  new Vec3(-PHI, INV_PHI, 0),
+  new Vector3(1, 1, 1),
+  new Vector3(-1, 1, 1),
+  new Vector3(1, 1, -1),
+  new Vector3(-1, 1, -1),
+  new Vector3(0, PHI, INV_PHI),
+  new Vector3(0, PHI, -INV_PHI),
+  new Vector3(INV_PHI, 0, PHI),
+  new Vector3(-INV_PHI, 0, PHI),
+  new Vector3(PHI, INV_PHI, 0),
+  new Vector3(-PHI, INV_PHI, 0),
 ];
 
 //
@@ -568,7 +568,7 @@ function _getMaterial() {
 
 function _getBlurShader(lodMax, width, height) {
   const weights = uniforms(new Array(MAX_SAMPLES).fill(0));
-  const poleAxis = uniform(new Vec3(0, 1, 0));
+  const poleAxis = uniform(new Vector3(0, 1, 0));
   const dTheta = uniform(0);
   const n = float(MAX_SAMPLES);
   const latitudinal = uniform(0); // false, bool

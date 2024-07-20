@@ -64,7 +64,7 @@ export class RectAreaLightHelper extends Line {
     // ignore world scale on light
     this.matrixWorld.extractRotation(this.light.matrixWorld).scale(this.scale).copyPosition(this.light.matrixWorld);
 
-    this.children[0].matrixWorld.from(this.matrixWorld);
+    this.children[0].matrixWorld.copy(this.matrixWorld);
     return this;
   }
 

@@ -1,7 +1,7 @@
 import { BufferGeometry } from '../core/BufferGeometry.js';
 import { Float32BufferAttribute } from '../core/BufferAttribute.js';
-import { Vec2 } from '../math/Vec2.js';
-import { Vec3 } from '../math/Vec3.js';
+import { Vec2 } from '../math/Vector2.js';
+import { Vector3 } from '../math/Vector3.js';
 
 export class RingGeometry extends BufferGeometry {
   declare type: string | 'RingGeometry';
@@ -47,7 +47,7 @@ export class RingGeometry extends BufferGeometry {
 
     let radius = innerRadius;
     const radiusStep = (outerRadius - innerRadius) / phiSegments;
-    const vertex = new Vec3();
+    const vertex = new Vector3();
     const uv = Vec2.new();
 
     // generate vertices, normals and uvs

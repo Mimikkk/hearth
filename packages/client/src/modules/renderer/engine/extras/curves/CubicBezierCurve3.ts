@@ -1,21 +1,21 @@
 import { Curve } from '../core/Curve.js';
 import { CubicBezier } from '../core/Interpolations.js';
-import { Vec3 } from '../../math/Vec3.js';
+import { Vector3 } from '../../math/Vector3.js';
 
-export class CubicBezierCurve3 extends Curve<Vec3> {
+export class CubicBezierCurve3 extends Curve<Vector3> {
   declare isCubicBezierCurve3: true;
   declare type: 'CubicBezierCurve3';
 
   constructor(
-    public v0: Vec3 = new Vec3(),
-    public v1: Vec3 = new Vec3(),
-    public v2: Vec3 = new Vec3(),
-    public v3: Vec3 = new Vec3(),
+    public v0: Vector3 = new Vector3(),
+    public v1: Vector3 = new Vector3(),
+    public v2: Vector3 = new Vector3(),
+    public v3: Vector3 = new Vector3(),
   ) {
     super();
   }
 
-  getPoint(t: number, optionalTarget: Vec3 = new Vec3()): Vec3 {
+  getPoint(t: number, optionalTarget: Vector3 = new Vector3()): Vector3 {
     const point = optionalTarget;
 
     const { v0, v1, v2, v3 } = this;

@@ -1,16 +1,16 @@
-import { Sphere } from '../math/Sphere.js';
+import { Sphere_ } from '../math/Sphere.js';
 import { Ray } from '../math/Ray.js';
-import { Mat4 } from '../math/Mat4.js';
+import { Matrix4 } from '../math/Matrix4.js';
 import { Object3D } from '../core/Object3D.js';
-import { Vec3 } from '../math/Vec3.js';
+import { Vector3 } from '../math/Vector3.js';
 import { PointsMaterial } from '../materials/PointsMaterial.js';
 import { BufferGeometry } from '../core/BufferGeometry.js';
 import { Intersection, Raycaster } from '@modules/renderer/engine/core/Raycaster.js';
 
-const _inverseMatrix = new Mat4();
+const _inverseMatrix = new Matrix4();
 const _ray = new Ray();
-const _sphere = Sphere.new();
-const _position = new Vec3();
+const _sphere = Sphere_.empty();
+const _position = new Vector3();
 
 export class Points extends Object3D {
   declare isPoints: true;
@@ -48,15 +48,16 @@ export class Points extends Object3D {
 
     if (geometry.boundingSphere === null) geometry.computeBoundingSphere();
 
-    _sphere.from(geometry.boundingSphere!).applyMat4(matrixWorld);
+    Sphere_.fill_(_sphere, geometry.boundingSphere!);
+    Sphere_.applyMat4(_sphere, matrixWorld);
     _sphere.radius += threshold;
 
     if (raycaster.ray.intersectsSphere(_sphere) === false) return;
 
     //
 
-    _inverseMatrix.from(matrixWorld).invert();
-    _ray.clone(raycaster.ray).applyMat4(_inverseMatrix);
+    _inverseMatrix.copy(matrixWorld).invert();
+    _ray.copy(raycaster.ray).applyMat4(_inverseMatrix);
 
     const localThreshold = threshold / ((this.scale.x + this.scale.y + this.scale.z) / 3);
     const localThresholdSq = localThreshold * localThreshold;
@@ -72,7 +73,7 @@ export class Points extends Object3D {
       for (let i = start, il = end; i < il; i++) {
         const a = index.getX(i);
 
-        _position.fromAttribute(positionAttribute, a);
+        _position.fromBufferAttribute(positionAttribute, a);
 
         testPoint(_position, a, localThresholdSq, matrixWorld, raycaster, intersects, this);
       }
@@ -81,7 +82,7 @@ export class Points extends Object3D {
       const end = Math.min(positionAttribute.count, drawRange.start + drawRange.count);
 
       for (let i = start, l = end; i < l; i++) {
-        _position.fromAttribute(positionAttribute, i);
+        _position.fromBufferAttribute(positionAttribute, i);
 
         testPoint(_position, i, localThresholdSq, matrixWorld, raycaster, intersects, this);
       }
@@ -116,10 +117,10 @@ Points.prototype.isPoints = true;
 Points.prototype.type = 'Points';
 
 function testPoint(
-  point: Vec3,
+  point: Vector3,
   index: number,
   localThresholdSq: number,
-  matrixWorld: Mat4,
+  matrixWorld: Matrix4,
   raycaster: Raycaster,
   intersects: Intersection[],
   object: Points,
@@ -127,10 +128,10 @@ function testPoint(
   const rayPointDistanceSq = _ray.distanceSqTo(point);
 
   if (rayPointDistanceSq < localThresholdSq) {
-    const intersectPoint = new Vec3();
+    const intersectPoint = new Vector3();
 
     _ray.closestAt(point, intersectPoint);
-    intersectPoint.applyMat4(matrixWorld);
+    intersectPoint.applyMatrix4(matrixWorld);
 
     const distance = raycaster.ray.origin.distanceTo(intersectPoint);
 

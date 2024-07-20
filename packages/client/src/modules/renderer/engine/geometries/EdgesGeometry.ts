@@ -2,11 +2,11 @@ import { BufferGeometry } from '../core/BufferGeometry.js';
 import { Float32BufferAttribute } from '../core/BufferAttribute.js';
 import * as MathUtils from '../math/MathUtils.js';
 import { Triangle } from '../math/Triangle.js';
-import { Vec3 } from '../math/Vec3.js';
+import { Vector3 } from '../math/Vector3.js';
 
-const _v0 = new Vec3();
-const _v1 = new Vec3();
-const _normal = new Vec3();
+const _v0 = new Vector3();
+const _v1 = new Vector3();
+const _normal = new Vector3();
 const _triangle = Triangle.empty();
 
 export class EdgesGeometry extends BufferGeometry {
@@ -26,14 +26,14 @@ export class EdgesGeometry extends BufferGeometry {
       const thresholdDot = Math.cos(MathUtils.DegreeToRadian * thresholdAngle);
 
       const indexAttr = geometry.getIndex();
-      const positionAttr = geometry.attributes.position;
+      const positionAttr = geometry.getAttribute('position');
       const indexCount = indexAttr ? indexAttr.count : positionAttr.count;
 
       const indexArr = [0, 0, 0];
       const vertKeys = ['a', 'b', 'c'];
       const hashes = new Array(3);
 
-      const edgeData: Record<string, { index0: number; index1: number; normal: Vec3 | null }> = {};
+      const edgeData: Record<string, { index0: number; index1: number; normal: Vector3 | null }> = {};
       const vertices: number[] = [];
       for (let i = 0; i < indexCount; i += 3) {
         if (indexAttr) {
@@ -100,8 +100,8 @@ export class EdgesGeometry extends BufferGeometry {
       for (const key in edgeData) {
         if (edgeData[key]) {
           const { index0, index1 } = edgeData[key];
-          _v0.fromAttribute(positionAttr, index0);
-          _v1.fromAttribute(positionAttr, index1);
+          _v0.fromBufferAttribute(positionAttr, index0);
+          _v1.fromBufferAttribute(positionAttr, index1);
 
           vertices.push(_v0.x, _v0.y, _v0.z);
           vertices.push(_v1.x, _v1.y, _v1.z);

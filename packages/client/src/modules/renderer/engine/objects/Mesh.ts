@@ -1,8 +1,8 @@
-import { Vec3 } from '../math/Vec3.js';
-import { Vec2 } from '../math/Vec2.js';
-import { Sphere } from '../math/Sphere.js';
+import { IVec3, Vector3 } from '../math/Vector3.js';
+import { Vec2 } from '../math/Vector2.js';
+import { Sphere_ } from '../math/Sphere.js';
 import { Ray } from '../math/Ray.js';
-import { Mat4 } from '../math/Mat4.js';
+import { Matrix4 } from '../math/Matrix4.js';
 import { Object3D } from '../core/Object3D.js';
 import { Triangle } from '../math/Triangle.js';
 import { Side } from '../constants.js';
@@ -10,7 +10,33 @@ import { BufferGeometry } from '../core/BufferGeometry.js';
 import { Material } from '../materials/Material.js';
 import { Intersection, Raycaster } from '../core/Raycaster.js';
 import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
-import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
+
+const _inverseMatrix = new Matrix4();
+const _ray = new Ray();
+const _sphere = Sphere_.empty();
+const _sphereHitAt = new Vector3();
+
+const _vA = new Vector3();
+const _vB = new Vector3();
+const _vC = new Vector3();
+
+const _tempA = new Vector3();
+const _morphA = new Vector3();
+
+const _uvA = Vec2.new();
+const _uvB = Vec2.new();
+const _uvC = Vec2.new();
+
+const _normalA = new Vector3();
+const _normalB = new Vector3();
+const _normalC = new Vector3();
+
+const _intersectionPoint = new Vector3();
+const _intersectionPointWorld = new Vector3();
+
+const _intersect = IVec3.empty();
+const _triangle1 = Triangle.empty();
+const _triangle2 = Triangle.empty();
 
 export class Mesh extends Object3D {
   declare isMesh: true;
@@ -71,45 +97,41 @@ export class Mesh extends Object3D {
     }
   }
 
-  getVertexPosition(index: number, into: Vec3 = Vec3.new()): Vec3 {
+  getVertexPosition(index: number, target: Vector3): Vector3 {
     const geometry = this.geometry;
     const position = geometry.attributes.position;
-    const positionMorphs = geometry.morphAttributes.position as unknown as Attribute[];
-    const isRelative = geometry.morphTargetsRelative;
+    const morphPosition = geometry.morphAttributes.position as unknown as number[];
+    const morphTargetsRelative = geometry.morphTargetsRelative;
 
-    into.fromAttribute(position, index);
+    IVec3.fillAttribute(target, position, 0);
 
     const morphInfluences = this.morphTargetInfluences;
 
-    if (positionMorphs && morphInfluences) {
+    if (morphPosition && morphInfluences) {
       _morphA.set(0, 0, 0);
 
-      for (let i = 0, il = positionMorphs.length; i < il; i++) {
+      for (let i = 0, il = morphPosition.length; i < il; i++) {
         const influence = morphInfluences[i];
-        const morph = positionMorphs[i];
+        const morphAttribute = morphPosition[i] as any;
 
         if (influence === 0) continue;
 
-        _tempA.fromAttribute(morph, index);
-        if (!isRelative) _tempA.sub(into);
+        _tempA.fromBufferAttribute(morphAttribute, index);
 
-        _morphA.addScaled(_tempA, influence);
+        if (morphTargetsRelative) {
+          _morphA.addScaledVector(_tempA, influence);
+        } else {
+          _morphA.addScaledVector(_tempA.sub(target), influence);
+        }
       }
 
-      into.add(_morphA);
+      IVec3.add(target, _morphA);
     }
 
-    return into;
+    return target;
   }
 
-  getTrianglePosition(a: number, b: number, c: number, into = Triangle.new()): Triangle {
-    this.getVertexPosition(a, into.a);
-    this.getVertexPosition(b, into.b);
-    this.getVertexPosition(c, into.c);
-    return into;
-  }
-
-  raycast(raycaster: Raycaster, into: Intersection[] = []): void {
+  raycast(raycaster: Raycaster, intersects: Intersection[]): void {
     const geometry = this.geometry;
     const material = this.material;
     const matrixWorld = this.matrixWorld;
@@ -120,22 +142,23 @@ export class Mesh extends Object3D {
 
     if (geometry.boundingSphere === null) geometry.computeBoundingSphere();
 
-    _sphere.from(geometry.boundingSphere!).applyMat4(matrixWorld);
+    Sphere_.fill_(_sphere, geometry.boundingSphere!);
+    Sphere_.applyMat4(_sphere, matrixWorld);
 
     // check distance from ray origin to bounding sphere
 
-    _ray.clone(raycaster.ray).recast(raycaster.near);
+    _ray.copy(raycaster.ray).recast(raycaster.near);
 
-    if (!_sphere.containsVec(_ray.origin)) {
+    if (!Sphere_.containsVec(_sphere, _ray.origin)) {
       if (_ray.intersectSphere(_sphere, _sphereHitAt) === null) return;
 
-      if (_ray.origin.distanceSqTo(_sphereHitAt) > (raycaster.far - raycaster.near) ** 2) return;
+      if (_ray.origin.distanceToSquared(_sphereHitAt) > (raycaster.far - raycaster.near) ** 2) return;
     }
 
     // convert ray to local space of mesh
 
-    _inverseMatrix.from(matrixWorld).invert();
-    _ray.clone(raycaster.ray).applyMat4(_inverseMatrix);
+    _inverseMatrix.copy(matrixWorld).invert();
+    _ray.copy(raycaster.ray).applyMat4(_inverseMatrix);
 
     // test with bounding box in local space
 
@@ -145,7 +168,7 @@ export class Mesh extends Object3D {
 
     // test for intersections with geometry
 
-    this._computeIntersections(raycaster, into, _ray);
+    this._computeIntersections(raycaster, intersects, _ray);
   }
 
   _computeIntersections(raycaster: Raycaster, intersects: Intersection[], rayLocalSpace: Ray) {
@@ -268,41 +291,28 @@ export class Mesh extends Object3D {
 Mesh.prototype.isMesh = true;
 Mesh.prototype.type = 'Mesh';
 
-const _inverseMatrix = new Mat4();
-const _ray = new Ray();
-const _sphere = Sphere.new();
-const _sphereHitAt = Vec3.new();
-
-const _tempA = Vec3.new();
-const _morphA = Vec3.new();
-
-const _intersectionPoint = Vec3.new();
-const _intersectionPointWorld = Vec3.new();
-
-const _intersect = Vec3.empty();
-const _triangle1 = Triangle.empty();
-const _triangle2 = Triangle.empty();
-
 function checkIntersection(
   object: Mesh,
   material: Material,
   raycaster: Raycaster,
   ray: Ray,
-  triangle: Triangle,
-  point: Vec3,
+  pA: Vector3,
+  pB: Vector3,
+  pC: Vector3,
+  point: Vector3,
 ): Intersection | null {
   let intersect;
 
   if (material.side === Side.Back) {
-    _triangle2.set(triangle.c, triangle.b, triangle.a);
-    intersect = ray.intersectTriangle(_triangle2, true, point);
+    intersect = ray.intersectTriangle(pC, pB, pA, true, point);
   } else {
-    intersect = ray.intersectTriangle(triangle, material.side === Side.Front, point);
+    intersect = ray.intersectTriangle(pA, pB, pC, material.side === Side.Front, point);
   }
 
   if (intersect === null) return null;
 
-  _intersectionPointWorld.from(point).applyMat4(object.matrixWorld);
+  IVec3.fill(_intersectionPointWorld, point);
+  IVec3.applyMat4(_intersectionPointWorld, object.matrixWorld);
 
   const distance = raycaster.ray.origin.distanceTo(_intersectionPointWorld);
 
@@ -320,51 +330,70 @@ function checkGeometryIntersection(
   material: Material,
   raycaster: Raycaster,
   ray: Ray,
-  uv: Attribute,
-  uv1: Attribute,
-  normal: Attribute,
+  uv: BufferAttribute<Float32Array>,
+  uv1: BufferAttribute<Float32Array>,
+  normal: BufferAttribute<Float32Array>,
   a: number,
   b: number,
   c: number,
 ): Intersection | null {
-  object.getTrianglePosition(a, b, c, _triangle1);
+  object.getVertexPosition(a, _vA);
+  object.getVertexPosition(b, _vB);
+  object.getVertexPosition(c, _vC);
+  Triangle.set(_triangle1, _vA, _vB, _vC);
 
-  const intersection = checkIntersection(object, material, raycaster, ray, _triangle2, _intersectionPoint);
+  const intersection = checkIntersection(object, material, raycaster, ray, _vA, _vB, _vC, _intersectionPoint);
 
   if (intersection) {
     if (uv) {
-      _triangle2.fromAttribute(uv, a, b, c);
-      Triangle.interpolate(_triangle1, _triangle2, _intersectionPoint, _intersect);
+      _uvA.fromAttribute(uv, a);
+      _uvB.fromAttribute(uv, b);
+      _uvC.fromAttribute(uv, c);
 
-      intersection.uv = Vec2.new(_intersect.x, _intersect.y);
+      Triangle.set(_triangle2, _uvA, _uvB, _uvC);
+      Triangle.interpolate_(_triangle1, _triangle2, _intersectionPoint, _intersect);
+
+      intersection.uv = new Vec2(_intersect.x, _intersect.y);
     }
 
     if (uv1) {
-      _triangle2.fromAttribute(uv1, a, b, c);
-      Triangle.interpolate(_triangle1, _triangle2, _intersectionPoint, _intersect);
+      _uvA.fromAttribute(uv, a);
+      _uvB.fromAttribute(uv, b);
+      _uvC.fromAttribute(uv, c);
 
-      intersection.uv1 = Vec2.new(_intersect.x, _intersect.y);
+      Triangle.set(_triangle2, _uvA, _uvB, _uvC);
+      Triangle.interpolate_(_triangle1, _triangle2, _intersectionPoint, _intersect);
+      Triangle.interpolate_(_triangle1, _triangle2, _intersectionPoint, _intersect);
+
+      intersection.uv1 = new Vec2(_intersect.x, _intersect.y);
     }
 
     if (normal) {
-      _triangle2.fromAttribute(normal, a, b, c);
-      Triangle.interpolate(_triangle1, _triangle2, _intersectionPoint, _intersect);
+      IVec3.fillAttribute(_normalA, normal, a);
+      IVec3.fillAttribute(_normalB, normal, b);
+      IVec3.fillAttribute(_normalC, normal, c);
 
-      intersection.normal = Vec3.from(_intersect);
-      if (intersection.normal.dot(ray.direction) > 0) intersection.normal.negate();
+      Triangle.set(_triangle2, _normalA, _normalB, _normalC);
+      Triangle.interpolate_(_triangle1, _triangle2, _intersectionPoint, _intersect);
+
+      intersection.normal = new Vector3(_intersect.x, _intersect.y, _intersect.z);
+
+      if (IVec3.dot(intersection.normal, ray.direction) > 0) {
+        IVec3.negate(intersection.normal);
+      }
     }
 
     const face = {
       a: a,
       b: b,
       c: c,
-      normal: Vec3.new(),
+      normal: new Vector3(),
       materialIndex: 0,
     };
 
-    _triangle1.normal(face.normal);
+    Triangle.normal_(_triangle1, face.normal);
 
-    intersection.face = face as any;
+    intersection.face = face as never;
   }
 
   return intersection;

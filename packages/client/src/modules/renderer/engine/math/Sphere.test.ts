@@ -1,13 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { Sphere } from './Sphere.js';
-import { Vec3 } from './Vec3.js';
-import { Box3 } from './Box3.js';
+import { Sphere, Sphere_ } from './Sphere.js';
+import { IVec3, Vector3 } from './Vector3.js';
+import { Box3, Box3_ } from './Box3.js';
 import { Plane } from '@modules/renderer/engine/math/Plane.js';
-import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
+import { Matrix4 } from '@modules/renderer/engine/math/Matrix4.js';
 
-const vec3 = Vec3.new;
+const { vec3 } = IVec3;
 
-const expectWithin = (actual: Sphere, expected: Sphere, epsilon = Number.EPSILON) => {
+const expectWithin = (actual: Sphere_, expected: Sphere_, epsilon = Number.EPSILON) => {
   expect(Math.abs(actual.center.x - expected.center.x)).within(-epsilon, epsilon);
   expect(Math.abs(actual.center.y - expected.center.y)).within(-epsilon, epsilon);
   expect(Math.abs(actual.center.z - expected.center.z)).within(-epsilon, epsilon);
@@ -16,7 +16,7 @@ const expectWithin = (actual: Sphere, expected: Sphere, epsilon = Number.EPSILON
 
 describe('Math - Sphere', () => {
   it('Instancing', () => {
-    const a = Sphere.empty();
+    const a = Sphere_.empty();
     expect(a.center).toEqual(vec3(0, 0, 0));
     expect(a.radius).toBe(-1);
 
@@ -24,10 +24,15 @@ describe('Math - Sphere', () => {
     expect(b.center).toEqual(vec3(1, 2, 3));
     expect(b.radius).toBe(4);
 
-    const cloned = Sphere.clone(b);
-    expect(cloned.center).not.toBe(b.center);
-    expect(cloned.radius).toEqual(b.radius);
-    expect(cloned.center).toEqual(b.center);
+    const cloned = Sphere_.copy(b);
+    expect(cloned).not.toBe(b);
+    expect(cloned.center).toBe(b.center);
+    expect(cloned.radius).toBe(b.radius);
+
+    const copied = Sphere_.clone(b);
+    expect(copied.center).not.toBe(b.center);
+    expect(copied.radius).toEqual(b.radius);
+    expect(copied.center).toEqual(b.center);
   });
 
   it('is/equals', () => {
@@ -36,8 +41,8 @@ describe('Math - Sphere', () => {
     const c = Sphere.fromParams(1, 2, 3, 5);
     const vec = vec3(0, 0, 0);
 
-    expect(Sphere.is(a)).toBe(true);
-    expect(Sphere.is(vec)).toBe(false);
+    expect(Sphere_.is(a)).toBe(true);
+    expect(Sphere_.is(vec)).toBe(false);
     expect(a.equals(b)).toBe(true);
     expect(a.equals(c)).toBe(false);
   });
@@ -129,9 +134,9 @@ describe('Math - Sphere', () => {
 
   it('intersectsPlane', () => {
     const sphere = Sphere.fromParams(0, 0, 0, 1);
-    const b = new Plane(Vec3.new(0, 1, 0), 1);
-    const c = new Plane(Vec3.new(0, 1, 0), 1.25);
-    const d = new Plane(Vec3.new(0, -1, 0), 1.25);
+    const b = new Plane(new Vector3(0, 1, 0), 1);
+    const c = new Plane(new Vector3(0, 1, 0), 1.25);
+    const d = new Plane(new Vector3(0, -1, 0), 1.25);
 
     expect(sphere.intersectsPlane(b)).toBe(true);
     expect(sphere.intersectsPlane(c)).toBe(false);
@@ -151,20 +156,20 @@ describe('Math - Sphere', () => {
 
     expect(sphere.setParams(1, 1, 1, 1)).toBe(sphere);
     expect(sphere.bbox(box)).toBe(box);
-    expect(box).toEqual(Box3.fromParams(0, 0, 0, 2, 2, 2));
+    expect(box).toEqual(Box3_.create(0, 0, 0, 2, 2, 2));
 
     expect(sphere.setParams(0, 0, 0, 0)).toBe(sphere);
     expect(sphere.bbox(box)).toBe(box);
-    expect(box).toEqual(Box3.fromParams(0, 0, 0, 0, 0, 0));
+    expect(box).toEqual(Box3_.create(0, 0, 0, 0, 0, 0));
 
-    expect(sphere.clear()).toBe(sphere);
+    expect(Sphere_.clear(sphere)).toBe(sphere);
     expect(sphere.bbox(box)).toBe(box);
-    expect(box.isEmpty()).toBe(true);
+    expect(Box3_.isEmpty(box)).toBe(true);
   });
 
   it('applyMat4', () => {
     const sphere = Sphere.fromParams(1, 1, 1, 1);
-    const mat = new Mat4().makeTranslation(1, -2, 1);
+    const mat = new Matrix4().makeTranslation(1, -2, 1);
 
     const box1 = sphere.bbox().applyMat4(mat);
     expect(sphere.applyMat4(mat)).toBe(sphere);

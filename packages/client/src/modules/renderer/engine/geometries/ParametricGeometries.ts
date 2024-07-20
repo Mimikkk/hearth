@@ -1,4 +1,4 @@
-import { Curve, Vec3 } from '../engine.js';
+import { Curve, Vector3 } from '../engine.js';
 
 import { ParametricGeometry } from './ParametricGeometry.js';
 
@@ -7,17 +7,17 @@ import { ParametricGeometry } from './ParametricGeometry.js';
  */
 
 class TubeGeometry extends ParametricGeometry {
-  tangents: Vec3[];
-  normals: Vec3[];
-  binormals: Vec3[];
-  path: Curve<Vec3>;
+  tangents: Vector3[];
+  normals: Vector3[];
+  binormals: Vector3[];
+  path: Curve<Vector3>;
   segments: number;
   radius: number;
   segmentsRadius: number;
   closed: boolean;
 
   constructor(
-    path: Curve<Vec3>,
+    path: Curve<Vector3>,
     segments: number = 64,
     radius: number = 1,
     segmentsRadius: number = 8,
@@ -30,9 +30,9 @@ class TubeGeometry extends ParametricGeometry {
       normals = frames.normals,
       binormals = frames.binormals;
 
-    const position = new Vec3();
+    const position = new Vector3();
 
-    function ParametricTube(u: number, v: number, target: Vec3) {
+    function ParametricTube(u: number, v: number, target: Vector3) {
       v *= 2 * Math.PI;
 
       const i = Math.floor(u * (numpoints - 1));
@@ -70,7 +70,7 @@ class TubeGeometry extends ParametricGeometry {
 
 class SphereGeometry extends ParametricGeometry {
   constructor(size: number, u: number, v: number) {
-    function sphere(u: number, v: number, target: Vec3) {
+    function sphere(u: number, v: number, target: Vector3) {
       u *= Math.PI;
       v *= 2 * Math.PI;
 
@@ -87,7 +87,7 @@ class SphereGeometry extends ParametricGeometry {
 
 class PlaneGeometry extends ParametricGeometry {
   constructor(width: number, depth: number, segmentsWidth: number, segmentsDepth: number) {
-    function plane(u: number, v: number, target: Vec3) {
+    function plane(u: number, v: number, target: Vector3) {
       const x = u * width;
       const y = 0;
       const z = v * depth;
@@ -114,8 +114,8 @@ class TorusKnotGeometry extends TubeGeometry {
     p: number = 2,
     q: number = 3,
   ) {
-    class TorusKnotCurve extends Curve<Vec3> {
-      getPoint(t: number, optionalTarget: Vec3 = new Vec3()) {
+    class TorusKnotCurve extends Curve<Vector3> {
+      getPoint(t: number, optionalTarget: Vector3 = new Vector3()) {
         const point = optionalTarget;
 
         t *= Math.PI * 2;
@@ -146,7 +146,7 @@ class TorusKnotGeometry extends TubeGeometry {
 }
 
 export const ParametricGeometries = {
-  klein: function (v: number, u: number, target: Vec3) {
+  klein: function (v: number, u: number, target: Vector3) {
     u *= Math.PI;
     v *= 2 * Math.PI;
 
@@ -166,7 +166,7 @@ export const ParametricGeometries = {
   },
 
   plane: function (width: number, height: number) {
-    return function (u: number, v: number, target: Vec3) {
+    return function (u: number, v: number, target: Vector3) {
       const x = u * width;
       const y = 0;
       const z = v * height;
@@ -175,7 +175,7 @@ export const ParametricGeometries = {
     };
   },
 
-  mobius: function (u: number, t: number, target: Vec3) {
+  mobius: function (u: number, t: number, target: Vector3) {
     // flat mobius strip
     // http://www.wolframalpha.com/input/?i=M%C3%B6bius+strip+parametric+equations&lk=1&a=ClashPrefs_*Surface.MoebiusStrip.SurfaceProperty.ParametricEquations-
     u = u - 0.5;
@@ -190,7 +190,7 @@ export const ParametricGeometries = {
     target.set(x, y, z);
   },
 
-  mobius3d: function (u: number, t: number, target: Vec3) {
+  mobius3d: function (u: number, t: number, target: Vector3) {
     // volumetric mobius strip
 
     u *= Math.PI;

@@ -1,4 +1,4 @@
-import { Vec2 } from '../../math/Vec2.js';
+import { Vec2 } from '../../math/Vector2.js';
 import { CurvePath } from './CurvePath.js';
 import { EllipseCurve } from '../curves/EllipseCurve.js';
 import { SplineCurve } from '../curves/SplineCurve.js';

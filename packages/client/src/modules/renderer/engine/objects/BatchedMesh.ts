@@ -2,12 +2,12 @@ import { BufferAttribute } from '../core/BufferAttribute.js';
 import { BufferGeometry } from '../core/BufferGeometry.js';
 import { DataTexture } from '../textures/DataTexture.js';
 import { TextureDataType, TextureFormat } from '../constants.js';
-import { Mat4 } from '../math/Mat4.js';
+import { Matrix4 } from '../math/Matrix4.js';
 import { Mesh } from './Mesh.js';
 import { Box3 } from '../math/Box3.js';
 import { Sphere } from '../math/Sphere.js';
 import { Frustum } from '../math/Frustum.js';
-import { Vec3 } from '../math/Vec3.js';
+import { Vector3 } from '../math/Vector3.js';
 import { Material } from '@modules/renderer/engine/materials/Material.js';
 import { Camera } from '@modules/renderer/engine/cameras/Camera.js';
 import { Intersection, Raycaster } from '@modules/renderer/engine/core/Raycaster.js';
@@ -56,14 +56,14 @@ export class MultiDrawRenderList {
 }
 
 const ID_ATTR_NAME = 'batchId';
-const _matrix = new Mat4();
-const _invMatrixWorld = new Mat4();
-const _identityMatrix = new Mat4();
-const _projScreenMatrix = new Mat4();
+const _matrix = new Matrix4();
+const _invMatrixWorld = new Matrix4();
+const _identityMatrix = new Matrix4();
+const _projScreenMatrix = new Matrix4();
 const _frustum = Frustum.empty();
 const _box = new Box3();
 const _sphere = new Sphere();
-const _vector = new Vec3();
+const _vector = new Vector3();
 const _renderList = new MultiDrawRenderList();
 const _mesh = new Mesh(null!, null!);
 const _batchIntersects: Intersection[] = [];
@@ -178,6 +178,7 @@ export class BatchedMesh extends Mesh {
         const srcAttribute = reference.getAttribute(attributeName);
         const { array, itemSize, normalized } = srcAttribute;
 
+        //@ts-expect-error
         const dstArray = new array.constructor(maxVertexCount * itemSize);
         //@ts-expect-error
         const dstAttribute = new srcAttribute.constructor(dstArray, itemSize, normalized);
@@ -194,6 +195,7 @@ export class BatchedMesh extends Mesh {
       }
 
       const idArray = maxGeometryCount > 65536 ? new Uint32Array(maxVertexCount) : new Uint16Array(maxVertexCount);
+      //@ts-expect-error
       geometry.setAttribute(ID_ATTR_NAME, new BufferAttribute(idArray, 1));
 
       this._geometryInitialized = true;
@@ -302,7 +304,7 @@ export class BatchedMesh extends Mesh {
     }
 
     if (vertexCount === -1) {
-      reservedRange.vertexCount = geometry.attributes.position.count;
+      reservedRange.vertexCount = geometry.getAttribute('position').count;
     } else {
       reservedRange.vertexCount = vertexCount;
     }
@@ -453,7 +455,7 @@ export class BatchedMesh extends Mesh {
     }
 
     if (geometry.boundingSphere !== null) {
-      geometry.boundingSphere.from(bound.sphere);
+      bound.sphere.copy(geometry.boundingSphere);
       bound.sphereInitialized = true;
     } else {
       bound.sphereInitialized = false;
@@ -461,7 +463,7 @@ export class BatchedMesh extends Mesh {
 
     // set drawRange count
     const drawRange = this._drawRanges[id];
-    const posAttr = geometry.attributes.position;
+    const posAttr = geometry.getAttribute('position');
     drawRange.count = hasIndex ? srcIndex.count : posAttr.count;
     this._visibilityChanged = true;
 
@@ -505,7 +507,7 @@ export class BatchedMesh extends Mesh {
           iv = index.getX(iv);
         }
 
-        box.expandCoord(_vector.fromAttribute(position, iv));
+        box.expandCoord(_vector.fromBufferAttribute(position, iv));
       }
 
       bound.boxInitialized = true;
@@ -516,7 +518,7 @@ export class BatchedMesh extends Mesh {
   }
 
   // get bounding sphere and compute it if it doesn't exist
-  getBoundingSphereAt(id: number, into: Sphere): Sphere | null {
+  getBoundingSphereAt(id: number, target: Sphere): Sphere | null {
     const active = this._active;
     if (active[id] === false) {
       return null;
@@ -543,18 +545,19 @@ export class BatchedMesh extends Mesh {
           iv = index.getX(iv);
         }
 
-        _vector.fromAttribute(position, iv);
-        maxRadiusSq = Math.max(maxRadiusSq, sphere.center.distanceSqTo(_vector));
+        _vector.fromBufferAttribute(position, iv);
+        maxRadiusSq = Math.max(maxRadiusSq, sphere.center.distanceToSquared(_vector));
       }
 
       sphere.radius = Math.sqrt(maxRadiusSq);
       bound.sphereInitialized = true;
     }
 
-    return into.from(sphere);
+    target.copy(sphere);
+    return target;
   }
 
-  setMatrixAt(geometryId: number, matrix: Mat4): this {
+  setMatrixAt(geometryId: number, matrix: Matrix4): this {
     // @TODO: Map geometryId to index of the arrays because
     //        optimize() can make geometryId mismatch the index
 
@@ -572,7 +575,7 @@ export class BatchedMesh extends Mesh {
     return this;
   }
 
-  getMatrixAt(geometryId: number, matrix: Mat4): Mat4 | null {
+  getMatrixAt(geometryId: number, matrix: Matrix4): Matrix4 | null {
     const active = this._active;
     const matricesArray = this._matricesTexture.image.data;
     const geometryCount = this._geometryCount;
@@ -739,14 +742,14 @@ export class BatchedMesh extends Mesh {
     // prepare the frustum in the local frame
     if (perObjectFrustumCulled) {
       _projScreenMatrix.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse).multiply(this.matrixWorld);
-      _frustum.fromProjection(_projScreenMatrix);
+      Frustum.fillProjection(_frustum, _projScreenMatrix);
     }
 
     let count = 0;
     if (this.sortObjects) {
       // get the camera position in the local frame
-      _invMatrixWorld.from(this.matrixWorld).invert();
-      _vector.fromMat4Position(camera.matrixWorld).applyMat4(_invMatrixWorld);
+      _invMatrixWorld.copy(this.matrixWorld).invert();
+      _vector.setFromMatrixPosition(camera.matrixWorld).applyMatrix4(_invMatrixWorld);
 
       for (let i = 0, l = visibility.length; i < l; i++) {
         if (visibility[i] && active[i]) {
@@ -757,7 +760,7 @@ export class BatchedMesh extends Mesh {
           // determine whether the batched geometry is within the frustum
           let culled = false;
           if (perObjectFrustumCulled) {
-            culled = !_frustum.intersectsSphere(_sphere);
+            culled = !Frustum.intersectsSphere(_frustum, _sphere);
           }
 
           if (!culled) {
@@ -794,7 +797,7 @@ export class BatchedMesh extends Mesh {
             // get the bounds in world space
             this.getMatrixAt(i, _matrix);
             this.getBoundingSphereAt(i, _sphere)!.applyMat4(_matrix);
-            culled = !_frustum.intersectsSphere(_sphere);
+            culled = !Frustum.intersectsSphere(_frustum, _sphere);
           }
 
           if (!culled) {

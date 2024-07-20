@@ -26,8 +26,8 @@ import {
   Float16BufferAttribute,
   RenderTarget,
   Revision,
-  Vec3,
-  Vec4,
+  Vector3,
+  Vector4,
 } from '@modules/renderer/engine/engine.js';
 
 import { stack } from './StackNode.js';
@@ -37,7 +37,7 @@ import ChainMap from '../../renderers/common/ChainMap.ts';
 
 import PMREMGenerator from '../../renderers/common/extras/PMREMGenerator.ts';
 import { NodeMaterials } from '@modules/renderer/engine/nodes/materials/NodeMaterialMap.js';
-import { Vec2 } from '@modules/renderer/engine/math/Vec2.ts';
+import { Vec2 } from '@modules/renderer/engine/math/Vector2.ts';
 
 const uniformsGroupCache = new ChainMap();
 
@@ -296,8 +296,8 @@ class NodeBuilder {
       else if (type === 'bool') value = false;
       else if (type === 'color') value = new Color();
       else if (type === 'vec2') value = Vec2.new();
-      else if (type === 'vec3') value = new Vec3();
-      else if (type === 'vec4') value = new Vec4();
+      else if (type === 'vec3') value = new Vector3();
+      else if (type === 'vec4') value = new Vector4();
     }
 
     if (type === 'float') return toFloat(value);

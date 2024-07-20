@@ -1,4 +1,4 @@
-import { BufferAttribute, BufferGeometry, BufferUsage, Color, Material, Mesh, Sphere, Vec3 } from '../engine.js';
+import { BufferAttribute, BufferGeometry, BufferUsage, Color, Material, Mesh, Sphere, Vector3 } from '../engine.js';
 
 /**
  * Port of http://webglsamples.org/blob/blob.html
@@ -122,7 +122,7 @@ export class MarchingCubes extends Mesh {
         geometry.setAttribute('color', colorAttribute);
       }
 
-      geometry.boundingSphere = new Sphere(new Vec3(), 1);
+      geometry.boundingSphere = new Sphere(new Vector3(), 1);
     };
 
     ///////////////////////
@@ -754,7 +754,7 @@ export class MarchingCubes extends Mesh {
 
       // update geometry data
 
-      geometry.attributes.position.needsUpdate = true;
+      geometry.getAttribute('position').needsUpdate = true;
       geometry.getAttribute('normal').needsUpdate = true;
 
       if (this.enableUvs) geometry.getAttribute('uv').needsUpdate = true;

@@ -41,7 +41,7 @@ async function init() {
   // create nodes
 
   const lifeRange = range(0.1, 1);
-  const offsetRange = range(new Engine.Vec3(-2, 3, -2), new Engine.Vec3(2, 5, 2));
+  const offsetRange = range(new Engine.Vector3(-2, 3, -2), new Engine.Vector3(2, 5, 2));
 
   const timer = timerLocal(0.2, 1 /*100000*/); // @TODO: need to work with 64-bit precision
 
@@ -79,7 +79,7 @@ async function init() {
 
   const fireNodeMaterial = new SpriteNodeMaterial();
   fireNodeMaterial.colorNode = mix(color(0xb72f17), color(0xb72f17), life);
-  fireNodeMaterial.positionNode = range(new Engine.Vec3(-1, 1, -1), new Engine.Vec3(1, 2, 1)).mul(lifeTime);
+  fireNodeMaterial.positionNode = range(new Engine.Vector3(-1, 1, -1), new Engine.Vector3(1, 2, 1)).mul(lifeTime);
   fireNodeMaterial.scaleNode = smokeNodeMaterial.scaleNode;
   fireNodeMaterial.opacityNode = opacityNode;
   fireNodeMaterial.blending = Engine.Blending.Additive;

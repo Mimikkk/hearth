@@ -1,8 +1,8 @@
-import { Camera, Material, Mat3, Mat4, Plane, Vec4 } from '@modules/renderer/engine/engine.js';
+import { Camera, Material, Matrix3, Matrix4, Plane, Vector4 } from '@modules/renderer/engine/engine.js';
 import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 
 const _plane = new Plane();
-const _viewNormalMatrix = new Mat3();
+const _viewNormalMatrix = new Matrix3();
 
 let _clippingContextVersion = 0;
 
@@ -12,9 +12,9 @@ export class ClippingContext {
   localClippingCount: number;
   localClippingEnabled: boolean;
   localClipIntersection: boolean;
-  planes: Vec4[];
+  planes: Vector4[];
   parentVersion: number;
-  viewMatrix: Mat4 | null;
+  viewMatrix: Matrix4 | null;
 
   constructor() {
     this.version = ++_clippingContextVersion;
@@ -35,7 +35,7 @@ export class ClippingContext {
     const planes = this.planes;
 
     for (let i = 0; i < l; i++) {
-      _plane.clone(source[i]).applyMat4(this.viewMatrix!, _viewNormalMatrix);
+      _plane.copy(source[i]).applyMatrix4(this.viewMatrix!, _viewNormalMatrix);
 
       const v = planes[offset + i];
       const normal = _plane.normal;
@@ -51,7 +51,7 @@ export class ClippingContext {
     const rendererClippingPlanes = renderer.parameters.clippingPlanes;
     this.viewMatrix = camera.matrixWorldInverse;
 
-    _viewNormalMatrix.fromMat4Normal(this.viewMatrix!);
+    _viewNormalMatrix.getNormalMatrix(this.viewMatrix!);
 
     let update = false;
 
@@ -62,7 +62,7 @@ export class ClippingContext {
         const planes = [];
 
         for (let i = 0; i < l; i++) {
-          planes.push(new Vec4());
+          planes.push(new Vector4());
         }
 
         this.globalClippingCount = l;
@@ -111,7 +111,7 @@ export class ClippingContext {
           planes.length = offset + l;
 
           for (let i = 0; i < l; i++) {
-            planes[offset + i] = new Vec4();
+            planes[offset + i] = new Vector4();
           }
 
           this.localClippingCount = l;

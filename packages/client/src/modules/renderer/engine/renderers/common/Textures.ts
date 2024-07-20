@@ -8,11 +8,11 @@ import {
   Texture,
   TextureDataType,
   TextureFormat,
-  Vec3,
+  Vector3,
 } from '@modules/renderer/engine/engine.js';
 import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 
-const _size = new Vec3();
+const _size = new Vector3();
 
 class Textures extends DataMap<any, any> {
   constructor(public renderer: Renderer) {

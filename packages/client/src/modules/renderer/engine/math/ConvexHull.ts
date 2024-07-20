@@ -1,6 +1,6 @@
-import { Vec3 } from './Vec3.js';
+import { IVec3, Vector3 } from './Vector3.js';
 import { Line3 } from './Line3.js';
-import { Plane } from './Plane.js';
+import { Plane_ } from './Plane.js';
 import { Triangle } from './Triangle.js';
 import { Object3D } from '@modules/renderer/engine/core/Object3D.js';
 import { Ray } from '@modules/renderer/engine/math/Ray.js';
@@ -8,11 +8,11 @@ import { Ray } from '@modules/renderer/engine/math/Ray.js';
 const Visible = 0;
 const Deleted = 1;
 
-const _v1 = Vec3.new();
-const _line3 = Line3.new();
-const _plane = Plane.new();
-const _closest = Vec3.new();
-const _triangle = Triangle.new();
+const _v1 = new Vector3();
+const _line3 = Line3.empty();
+const _plane = Plane_.empty();
+const _closest = IVec3.empty();
+const _triangle = Triangle.empty();
 
 export class ConvexHull {
   tolerance: number;
@@ -46,7 +46,7 @@ export class ConvexHull {
     this.vertices = [];
   }
 
-  setFromPoints(points: Vec3[]): this {
+  setFromPoints(points: Vector3[]): this {
     if (points.length >= 4) {
       this.makeEmpty();
 
@@ -61,7 +61,7 @@ export class ConvexHull {
   }
 
   setFromObject(object: Object3D): this {
-    const points: Vec3[] = [];
+    const points: Vector3[] = [];
 
     object.updateMatrixWorld(true);
 
@@ -73,14 +73,18 @@ export class ConvexHull {
 
       if (!attribute) return;
       for (let i = 0, l = attribute.count; i < l; i++) {
-        points.push(Vec3.fromAttribute(attribute, i).applyMat4(node.matrixWorld));
+        const point = new Vector3();
+
+        point.fromBufferAttribute(attribute, i).applyMatrix4(node.matrixWorld);
+
+        points.push(point);
       }
     });
 
     return this.setFromPoints(points);
   }
 
-  containsPoint(point: Vec3): boolean {
+  containsPoint(point: Vector3): boolean {
     const faces = this.faces;
 
     for (let i = 0, l = faces.length; i < l; i++) {
@@ -94,7 +98,7 @@ export class ConvexHull {
     return true;
   }
 
-  intersectRay(ray: Ray, target: Vec3): Vec3 | null {
+  intersectRay(ray: Ray, target: Vector3): Vector3 | null {
     // based on "Fast Ray-Convex Polyhedron Intersection" by Eric Haines, GRAPHICS GEMS II
 
     const faces = this.faces;
@@ -316,15 +320,20 @@ export class ConvexHull {
   // Computes the extremes of a simplex which will be the initial hull
 
   computeExtremes(): { min: VertexNode[]; max: VertexNode[] } {
-    const min = Vec3.new();
-    const max = Vec3.new();
+    const min = new Vector3();
+    const max = new Vector3();
 
-    const minVertices = [this.vertices[0], this.vertices[0], this.vertices[0]];
-    const maxVertices = [this.vertices[0], this.vertices[0], this.vertices[0]];
+    const minVertices = [];
+    const maxVertices = [];
 
     // initially assume that the first vertex is the min/max
-    min.from(this.vertices[0].point);
-    max.from(this.vertices[0].point);
+
+    for (let i = 0; i < 3; i++) {
+      minVertices[i] = maxVertices[i] = this.vertices[0];
+    }
+
+    min.copy(this.vertices[0].point);
+    max.copy(this.vertices[0].point);
 
     // compute the min/max vertex on all six directions
 
@@ -332,30 +341,22 @@ export class ConvexHull {
       const vertex = this.vertices[i];
       const point = vertex.point;
 
-      if (point.x < min.x) {
-        min.x = point.x;
-        minVertices[0] = vertex;
-      }
-      if (point.y < min.y) {
-        min.y = point.y;
-        minVertices[1] = vertex;
-      }
-      if (point.z < min.z) {
-        min.z = point.z;
-        minVertices[2] = vertex;
+      // update the min coordinates
+
+      for (let j = 0; j < 3; j++) {
+        if (point.getComponent(j) < min.getComponent(j)) {
+          min.setComponent(j, point.getComponent(j));
+          minVertices[j] = vertex;
+        }
       }
 
-      if (point.x > max.x) {
-        max.x = point.x;
-        maxVertices[0] = vertex;
-      }
-      if (point.y > max.y) {
-        max.y = point.y;
-        maxVertices[1] = vertex;
-      }
-      if (point.z > max.z) {
-        max.z = point.z;
-        maxVertices[2] = vertex;
+      // update the max coordinates
+
+      for (let j = 0; j < 3; j++) {
+        if (point.getComponent(j) > max.getComponent(j)) {
+          max.setComponent(j, point.getComponent(j));
+          maxVertices[j] = vertex;
+        }
       }
     }
 
@@ -386,20 +387,16 @@ export class ConvexHull {
     // (max.z - min.z)
 
     let maxDistance = 0;
-
     let index = 0;
-    const distanceX = max[0].point.x - min[0].point.x;
-    if (distanceX > maxDistance) {
-      maxDistance = distanceX;
-      index = 0;
+
+    for (let i = 0; i < 3; i++) {
+      const distance = max[i].point.getComponent(i) - min[i].point.getComponent(i);
+
+      if (distance > maxDistance) {
+        maxDistance = distance;
+        index = i;
+      }
     }
-    const distanceY = max[1].point.y - min[1].point.y;
-    if (distanceY > maxDistance) {
-      maxDistance = distanceY;
-      index = 1;
-    }
-    const distanceZ = max[2].point.z - min[2].point.z;
-    if (distanceZ > maxDistance) index = 2;
 
     const v0 = min[index];
     const v1 = max[index];
@@ -409,15 +406,15 @@ export class ConvexHull {
     // 2. The next vertex 'v2' is the one farthest to the line formed by 'v0' and 'v1'
 
     maxDistance = 0;
-    _line3.set(v0.point, v1.point);
+    Line3.fillEnds(_line3, v0.point, v1.point);
 
     for (let i = 0, l = this.vertices.length; i < l; i++) {
       const vertex = vertices[i];
 
       if (vertex !== v0 && vertex !== v1) {
-        _line3.closestTo(vertex.point, _closest);
+        Line3.closestTo_(_line3, vertex.point, _closest);
 
-        const distance = _closest.distanceSqTo(vertex.point);
+        const distance = IVec3.distanceSqTo(_closest, vertex.point);
 
         if (distance > maxDistance) {
           maxDistance = distance;
@@ -429,13 +426,13 @@ export class ConvexHull {
     // 3. The next vertex 'v3' is the one farthest to the plane 'v0', 'v1', 'v2'
 
     maxDistance = -1;
-    _plane.fromCoplanar(v0.point, v1.point, v2.point);
+    Plane_.fillCoplanar(_plane, v0.point, v1.point, v2.point);
 
     for (let i = 0, l = this.vertices.length; i < l; i++) {
       const vertex = vertices[i];
 
       if (vertex !== v0 && vertex !== v1 && vertex !== v2) {
-        const distance = Math.abs(_plane.distanceTo(vertex.point));
+        const distance = Math.abs(Plane_.distanceToVec(_plane, vertex.point));
 
         if (distance > maxDistance) {
           maxDistance = distance;
@@ -446,7 +443,7 @@ export class ConvexHull {
 
     const faces = [];
 
-    if (_plane.distanceTo(v3.point) < 0) {
+    if (Plane_.distanceToVec(_plane, v3.point) < 0) {
       // the face is not able to see the point so 'plane.normal' is pointing outside the tetrahedron
 
       faces.push(Face.create(v0, v1, v2), Face.create(v3, v1, v0), Face.create(v3, v2, v1), Face.create(v3, v0, v2));
@@ -570,7 +567,7 @@ export class ConvexHull {
   // For an edge to be part of the horizon it must join a face that can see
   // 'eyePoint' and a face that cannot see 'eyePoint'.
 
-  computeHorizon(eyePoint: Vec3, crossEdge: HalfEdge | null, face: Face, horizon: HalfEdge[]): this {
+  computeHorizon(eyePoint: Vector3, crossEdge: HalfEdge | null, face: Face, horizon: HalfEdge[]): this {
     // moves face's vertices to the 'unassigned' vertex list
 
     this.deleteFaceVertices(face);
@@ -711,8 +708,8 @@ export class ConvexHull {
 }
 
 export class Face {
-  normal: Vec3;
-  midpoint: Vec3;
+  normal: Vector3;
+  midpoint: Vector3;
   area: number;
   constant: number;
   outside: VertexNode | null;
@@ -721,8 +718,8 @@ export class Face {
   materialIndex: number;
 
   constructor() {
-    this.normal = Vec3.new();
-    this.midpoint = Vec3.new();
+    this.normal = new Vector3();
+    this.midpoint = new Vector3();
     this.area = 0;
 
     // signed distance from face to the origin
@@ -774,16 +771,16 @@ export class Face {
     const b = this.edge!.head()!;
     const c = this.edge!.next!.head()!;
 
-    _triangle.set(a.point, b.point, c.point);
-    _triangle.normal(this.normal);
-    _triangle.midpoint(this.midpoint);
-    this.area = _triangle.area();
-    this.constant = this.normal.dot(this.midpoint);
+    Triangle.set(_triangle, a.point, b.point, c.point);
+    Triangle.normal_(_triangle, this.normal);
+    Triangle.midpoint_(_triangle, this.midpoint);
+    this.area = Triangle.area(_triangle);
+    this.constant = IVec3.dot(this.normal, this.midpoint);
 
     return this;
   }
 
-  distanceToPoint(point: Vec3): number {
+  distanceToPoint(point: Vector3): number {
     return this.normal.dot(point) - this.constant;
   }
 }
@@ -821,7 +818,7 @@ export class HalfEdge {
     const head = this.head();
     const tail = this.tail();
 
-    return tail !== null ? tail.point.distanceSqTo(head.point) : -1;
+    return tail !== null ? tail.point.distanceToSquared(head.point) : -1;
   }
 
   setTwin(edge: HalfEdge): HalfEdge {
@@ -837,7 +834,7 @@ export class VertexNode {
   next: VertexNode | null = null;
   face: Face | null = null;
 
-  constructor(public point: Vec3) {}
+  constructor(public point: Vector3) {}
 }
 
 export class VertexList {

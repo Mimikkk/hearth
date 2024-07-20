@@ -1,6 +1,6 @@
 import { Material, MaterialParameters } from './Material.js';
 import { Texture } from '../textures/Texture.js';
-import { Vec3 } from '../math/Vec3.js';
+import { Vector3 } from '../math/Vector3.js';
 
 export interface MeshDistanceMaterialParameters extends MaterialParameters {
   map?: Texture | null | undefined;
@@ -10,7 +10,7 @@ export interface MeshDistanceMaterialParameters extends MaterialParameters {
   displacementBias?: number | undefined;
   farDistance?: number | undefined;
   nearDistance?: number | undefined;
-  referencePosition?: Vec3 | undefined;
+  referencePosition?: Vector3 | undefined;
 }
 
 export class MeshDistanceMaterial extends Material {

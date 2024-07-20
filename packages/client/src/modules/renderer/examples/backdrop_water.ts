@@ -41,7 +41,7 @@ import {
   Mesh,
   PerspectiveCamera,
   Scene,
-  Vec3,
+  Vector3,
   Wrapping,
 } from '@modules/renderer/engine/engine.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
@@ -212,7 +212,7 @@ const stats = useStats();
 // gui
 
 const gui = new GUI();
-const floorPosition = new Vec3(0, 0.2, 0);
+const floorPosition = new Vector3(0, 0.2, 0);
 gui.add(floorPosition, 'y', -1, 1, 0.001).name('position');
 
 // post processing

@@ -5,28 +5,28 @@ import {
   Color,
   Line,
   LineBasicMaterial,
-  Mat4,
+  Matrix4,
   Mesh,
   MeshBasicMaterial,
   Object3D,
   Skeleton,
   SphereGeometry,
-  Vec3,
+  Vector3,
 } from '../engine.js';
 import { Quaternion } from '@modules/renderer/engine/math/Quaternion.js';
 import { NumberArray } from '@modules/renderer/engine/math/MathUtils.js';
 
 const _q = Quaternion.identity();
-const _targetPos = new Vec3();
-const _targetVec = new Vec3();
-const _effectorPos = new Vec3();
-const _effectorVec = new Vec3();
-const _linkPos = new Vec3();
+const _targetPos = new Vector3();
+const _targetVec = new Vector3();
+const _effectorPos = new Vector3();
+const _effectorVec = new Vector3();
+const _linkPos = new Vector3();
 const _invLinkQ = Quaternion.identity();
-const _linkScale = new Vec3();
-const _axis = new Vec3();
-const _vector = new Vec3();
-const _matrix = new Mat4();
+const _linkScale = new Vector3();
+const _axis = new Vector3();
+const _vector = new Vector3();
+const _matrix = new Matrix4();
 
 export interface IKS {
   effector: number;
@@ -34,9 +34,9 @@ export interface IKS {
   links: Array<{
     enabled?: boolean | undefined;
     index: number;
-    limitation?: Vec3 | undefined;
-    rotationMin?: Vec3 | undefined;
-    rotationMax?: Vec3 | undefined;
+    limitation?: Vector3 | undefined;
+    rotationMin?: Vector3 | undefined;
+    rotationMax?: Vector3 | undefined;
   }>;
   minAngle?: number | undefined;
   maxAngle?: number | undefined;
@@ -107,7 +107,7 @@ export class CCDIKSolver {
 
     // don't use getWorldPosition() here for the performance
     // because it calls updateMatrixWorld( true ) inside.
-    _targetPos.fromMat4Position(target.matrixWorld);
+    _targetPos.setFromMatrixPosition(target.matrixWorld);
 
     const links = ik.links;
     const iteration = ik.iteration !== undefined ? ik.iteration : 1;
@@ -129,7 +129,7 @@ export class CCDIKSolver {
         link.matrixWorld.decompose(_linkPos, _invLinkQ, _linkScale);
         Quaternion.invert(_invLinkQ);
 
-        _effectorPos.fromMat4Position(effector.matrixWorld);
+        _effectorPos.setFromMatrixPosition(effector.matrixWorld);
 
         // work in link world
         _effectorVec.subVectors(_effectorPos, _linkPos);
@@ -165,7 +165,7 @@ export class CCDIKSolver {
         _axis.normalize();
 
         Quaternion.fillAxisAngle(_q, _axis, angle);
-        Quaternion.mul(link.quaternion, _q);
+        Quaternion.multiply(link.quaternion, _q);
 
         // TODO: re-consider the limitation specification
         if (limitation !== undefined) {
@@ -240,11 +240,11 @@ export class CCDIKSolver {
   }
 }
 
-function getPosition(bone: Bone, matrixWorldInv: Mat4): Vec3 {
-  return _vector.fromMat4Position(bone.matrixWorld).applyMat4(matrixWorldInv);
+function getPosition(bone: Bone, matrixWorldInv: Matrix4): Vector3 {
+  return _vector.setFromMatrixPosition(bone.matrixWorld).applyMatrix4(matrixWorldInv);
 }
 
-function setPositionOfBoneToAttributeArray(array: NumberArray, index: number, bone: Bone, matrixWorldInv: Mat4) {
+function setPositionOfBoneToAttributeArray(array: NumberArray, index: number, bone: Bone, matrixWorldInv: Matrix4) {
   const v = getPosition(bone, matrixWorldInv);
 
   array[index * 3 + 0] = v.x;
@@ -273,7 +273,7 @@ export class CCDIKHelper extends Object3D {
     this.root = mesh;
     this.iks = iks;
 
-    this.matrix.from(mesh.matrixWorld);
+    this.matrix.copy(mesh.matrixWorld);
     this.matrixAutoUpdate = false;
 
     this.sphereGeometry = new SphereGeometry({ radius: sphereSize, widthSegments: 16, heightSegments: 8 });
@@ -321,7 +321,7 @@ export class CCDIKHelper extends Object3D {
       const iks = this.iks;
       const bones = (mesh as unknown as { skeleton: Skeleton }).skeleton.bones;
 
-      _matrix.from(mesh.matrixWorld).invert();
+      _matrix.copy(mesh.matrixWorld).invert();
 
       for (let i = 0, il = iks.length; i < il; i++) {
         const ik = iks[i];
@@ -360,7 +360,7 @@ export class CCDIKHelper extends Object3D {
       }
     }
 
-    this.matrix.from(mesh.matrixWorld);
+    this.matrix.copy(mesh.matrixWorld);
 
     return super.updateMatrixWorld(force);
   }

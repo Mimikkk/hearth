@@ -1,6 +1,6 @@
 import { Curve } from '../core/Curve.js';
 import { CatmullRom } from '../core/Interpolations.js';
-import { Vec2 } from '../../math/Vec2.js';
+import { Vec2 } from '../../math/Vector2.js';
 
 export class SplineCurve extends Curve<Vec2> {
   declare isSplineCurve: true;

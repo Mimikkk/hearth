@@ -1,15 +1,15 @@
-import { BufferGeometry, Float32BufferAttribute, Vec3 } from '../engine.js';
+import { BufferGeometry, Float32BufferAttribute, Vector3 } from '../engine.js';
 
 export class ParametricGeometry extends BufferGeometry {
   declare type: string | 'ParametricGeometry';
   declare parameters: {
-    func: (u: number, v: number, target: Vec3) => void;
+    func: (u: number, v: number, target: Vector3) => void;
     slices: number;
     stacks: number;
   };
 
   constructor(
-    func = (u: number, v: number, target: Vec3): void => {
+    func = (u: number, v: number, target: Vector3): void => {
       target.set(u, v, Math.cos(u) * Math.sin(v));
     },
     slices = 8,
@@ -34,12 +34,12 @@ export class ParametricGeometry extends BufferGeometry {
 
     const EPS = 0.00001;
 
-    const normal = new Vec3();
+    const normal = new Vector3();
 
-    const p0 = new Vec3(),
-      p1 = new Vec3();
-    const pu = new Vec3(),
-      pv = new Vec3();
+    const p0 = new Vector3(),
+      p1 = new Vector3();
+    const pu = new Vector3(),
+      pv = new Vector3();
 
     // generate vertices, normals and uvs
 

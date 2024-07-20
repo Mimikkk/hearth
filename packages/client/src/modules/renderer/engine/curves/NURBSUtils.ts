@@ -1,4 +1,4 @@
-import { Vec3, Vec4 } from '../engine.js';
+import { Vector3, Vector4 } from '../engine.js';
 
 /*
 Finds knot vector span.
@@ -83,10 +83,10 @@ u : parametric point
 
 returns point for given u
 */
-export function calcBSplinePoint(p: number, U: number[], P: Vec4[], u: number): Vec4 {
+export function calcBSplinePoint(p: number, U: number[], P: Vector4[], u: number): Vector4 {
   const span = findSpan(p, u, U);
   const N = calcBasisFunctions(span, u, p, U);
-  const C = new Vec4(0, 0, 0, 0);
+  const C = new Vector4(0, 0, 0, 0);
 
   for (let j = 0; j <= p; ++j) {
     const point = P[span - p + j];
@@ -218,7 +218,7 @@ export function calcBasisFunctionDerivatives(span: number, u: number, p: number,
 
 	returns array[d+1] with derivatives
 	*/
-export function calcBSplineDerivatives(p: number, U: number[], P: Vec4[], u: number, nd: number): Vec4[] {
+export function calcBSplineDerivatives(p: number, U: number[], P: Vector4[], u: number, nd: number): Vector4[] {
   const du = nd < p ? nd : p;
   const CK = [];
   const span = findSpan(p, u, U);
@@ -237,7 +237,7 @@ export function calcBSplineDerivatives(p: number, U: number[], P: Vec4[], u: num
   }
 
   for (let k = 0; k <= du; ++k) {
-    const point = Pw[span - p].clone().scale(nders[k][0]);
+    const point = Pw[span - p].clone().multiplyScalar(nders[k][0]);
 
     for (let j = 1; j <= p; ++j) {
       point.add(Pw[span - p + j].clone().multiplyScalar(nders[k][j]));
@@ -247,7 +247,7 @@ export function calcBSplineDerivatives(p: number, U: number[], P: Vec4[], u: num
   }
 
   for (let k = du + 1; k <= nd + 1; ++k) {
-    CK[k] = new Vec4(0, 0, 0);
+    CK[k] = new Vector4(0, 0, 0);
   }
 
   return CK;
@@ -285,14 +285,14 @@ Pders : result of function calcBSplineDerivatives
 
 returns array with derivatives for rational curve.
 */
-export function calcRationalCurveDerivatives(Pders: Vec4[]): Vec3[] {
+export function calcRationalCurveDerivatives(Pders: Vector4[]): Vector3[] {
   const nd = Pders.length;
   const Aders = [];
   const wders = [];
 
   for (let i = 0; i < nd; ++i) {
     const point = Pders[i];
-    Aders[i] = new Vec3(point.x, point.y, point.z);
+    Aders[i] = new Vector3(point.x, point.y, point.z);
     wders[i] = point.w;
   }
 
@@ -322,7 +322,7 @@ nd : number of derivatives
 
 returns array with derivatives.
 */
-export function calcNURBSDerivatives(p: number, U: number[], P: Vec4[], u: number, nd: number): Vec3[] {
+export function calcNURBSDerivatives(p: number, U: number[], P: Vector4[], u: number, nd: number): Vector3[] {
   const Pders = calcBSplineDerivatives(p, U, P, u, nd);
   return calcRationalCurveDerivatives(Pders);
 }
@@ -342,11 +342,11 @@ export function calcSurfacePoint(
   q: number,
   U: number[],
   V: number[],
-  P: Vec4[][],
+  P: Vector4[][],
   u: number,
   v: number,
-  target: Vec3,
-): Vec3 {
+  target: Vector3,
+): Vector3 {
   const uspan = findSpan(p, u, U);
   const vspan = findSpan(q, v, V);
   const Nu = calcBasisFunctions(uspan, u, p, U);
@@ -354,23 +354,23 @@ export function calcSurfacePoint(
   const temp = [];
 
   for (let l = 0; l <= q; ++l) {
-    temp[l] = new Vec4(0, 0, 0, 0);
+    temp[l] = new Vector4(0, 0, 0, 0);
     for (let k = 0; k <= p; ++k) {
       const point = P[uspan - p + k][vspan - q + l].clone();
       const w = point.w;
       point.x *= w;
       point.y *= w;
       point.z *= w;
-      temp[l].add(point.scale(Nu[k]));
+      temp[l].add(point.multiplyScalar(Nu[k]));
     }
   }
 
-  const Sw = new Vec4(0, 0, 0, 0);
+  const Sw = new Vector4(0, 0, 0, 0);
   for (let l = 0; l <= q; ++l) {
-    Sw.add(temp[l].scale(Nv[l]));
+    Sw.add(temp[l].multiplyScalar(Nv[l]));
   }
 
-  Sw.divScalar(Sw.w);
+  Sw.divideScalar(Sw.w);
   target.set(Sw.x, Sw.y, Sw.z);
   return target;
 }
@@ -392,43 +392,43 @@ export function calcVolumePoint(
   U: number[],
   V: number[],
   W: number[],
-  P: Vec4[][][],
+  P: Vector4[][][],
   u: number,
   v: number,
   w: number,
-  target: Vec3,
-): Vec3 {
+  target: Vector3,
+): Vector3 {
   const uspan = findSpan(p, u, U);
   const vspan = findSpan(q, v, V);
   const wspan = findSpan(r, w, W);
   const Nu = calcBasisFunctions(uspan, u, p, U);
   const Nv = calcBasisFunctions(vspan, v, q, V);
   const Nw = calcBasisFunctions(wspan, w, r, W);
-  const temp: Vec4[][] = [];
+  const temp: Vector4[][] = [];
 
   for (let m = 0; m <= r; ++m) {
     temp[m] = [];
 
     for (let l = 0; l <= q; ++l) {
-      temp[m][l] = new Vec4(0, 0, 0, 0);
+      temp[m][l] = new Vector4(0, 0, 0, 0);
       for (let k = 0; k <= p; ++k) {
         const point = P[uspan - p + k][vspan - q + l][wspan - r + m].clone();
         const w = point.w;
         point.x *= w;
         point.y *= w;
         point.z *= w;
-        temp[m][l].add(point.scale(Nu[k]));
+        temp[m][l].add(point.multiplyScalar(Nu[k]));
       }
     }
   }
-  const Sw = new Vec4(0, 0, 0, 0);
+  const Sw = new Vector4(0, 0, 0, 0);
   for (let m = 0; m <= r; ++m) {
     for (let l = 0; l <= q; ++l) {
-      Sw.add(temp[m][l].scale(Nw[m]).scale(Nv[l]));
+      Sw.add(temp[m][l].multiplyScalar(Nw[m]).multiplyScalar(Nv[l]));
     }
   }
 
-  Sw.divScalar(Sw.w);
+  Sw.divideScalar(Sw.w);
   target.set(Sw.x, Sw.y, Sw.z);
   return target;
 }
