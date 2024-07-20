@@ -1,7 +1,6 @@
 import { Backend } from '@modules/renderer/engine/renderers/webgpu/Backend.js';
 import { ColorSpace, Side, ToneMapping } from '@modules/renderer/engine/constants.js';
 import ToneMappingNode from '@modules/renderer/engine/nodes/display/ToneMappingNode.js';
-import { Node } from '@modules/renderer/engine/nodes/core/Node.js';
 import { Info } from '@modules/renderer/engine/renderers/common/Info.js';
 import { Vec4 } from '@modules/renderer/engine/math/Vec4.js';
 import Attributes from '@modules/renderer/engine/renderers/common/Attributes.js';
@@ -24,16 +23,11 @@ import {
   Color,
   Group,
   Light,
-  Line,
-  LOD,
   Mat4,
   Material,
-  Mesh,
   Object3D,
   Plane,
-  Points,
   RenderTarget,
-  Sprite,
 } from '@modules/renderer/engine/engine.js';
 import { GPUFeatureNameType, GPUTextureFormatType } from '@modules/renderer/engine/renderers/webgpu/utils/constants.js';
 import { Frustum } from '@modules/renderer/engine/math/Frustum.js';
@@ -573,11 +567,12 @@ export class Renderer {
 
     //
 
-    if (scene.overrideMaterial) {
+    if (scene.overrideMaterial !== null) {
       const overrideMaterial = scene.overrideMaterial;
 
-      if (material.positionNode && Node.is(material.positionNode)) {
+      if (material.positionNode && material.positionNode.isNode) {
         overridePositionNode = overrideMaterial.positionNode;
+
         overrideMaterial.positionNode = material.positionNode;
       }
 
@@ -611,14 +606,12 @@ export class Renderer {
 
     //
 
-    if (material.transparent && material.side === Side.Double && !material.forceSinglePass) {
+    if (material.transparent === true && material.side === Side.Double && material.forceSinglePass === false) {
       material.side = Side.Back;
-      // create backSide pass id
-      this._handleObjectFunction(object, material, scene, camera, lightsNode, 'backSide');
+      this._handleObjectFunction(object, material, scene, camera, lightsNode, 'backSide'); // create backSide pass id
 
       material.side = Side.Front;
-      // use default pass id
-      this._handleObjectFunction(object, material, scene, camera, lightsNode);
+      this._handleObjectFunction(object, material, scene, camera, lightsNode); // use default pass id
 
       material.side = Side.Double;
     } else {
@@ -640,19 +633,19 @@ export class Renderer {
     object.onAfterRender(this, scene, camera, geometry, material, group);
   }
 
-  _projectObject(object: Object3D, camera: Camera, groupOrder, renderList) {
+  _projectObject(object, camera, groupOrder, renderList) {
     if (object.visible === false) return;
 
     const visible = object.layers.test(camera.layers);
 
     if (visible) {
-      if (Group.is(object)) {
+      if (object.isGroup) {
         groupOrder = object.renderOrder;
-      } else if (LOD.is(object)) {
+      } else if (object.isLOD) {
         if (object.autoUpdate === true) object.update(camera);
-      } else if (Light.is(object)) {
+      } else if (object.isLight) {
         renderList.pushLight(object);
-      } else if (Sprite.is(object)) {
+      } else if (object.isSprite) {
         if (!object.frustumCulled || _frustum.intersectsSphere(object)) {
           if (this.parameters.sortObjects) {
             _vector3.fromMat4Position(object.matrixWorld).applyMat4(_projScreenMatrix);
@@ -665,7 +658,11 @@ export class Renderer {
             renderList.push(object, geometry, material, groupOrder, _vector3.z, null);
           }
         }
-      } else if (Mesh.is(object) || Line.is(object) || Points.is(object)) {
+      } else if (object.isLineLoop) {
+        console.error(
+          'engine.Renderer: Objects of type engine.LineLoop are not supported. Please use engine.Line or engine.LineSegments.',
+        );
+      } else if (object.isMesh || object.isLine || object.isPoints) {
         if (!object.frustumCulled || _frustum.intersectsObject(object)) {
           const geometry = object.geometry;
           const material = object.material;
@@ -673,7 +670,7 @@ export class Renderer {
           if (this.parameters.sortObjects) {
             if (geometry.boundingSphere === null) geometry.computeBoundingSphere();
 
-            _vector3.from(geometry.boundingSphere!.center).applyMat4(object.matrixWorld).applyMat4(_projScreenMatrix);
+            _vector3.from(geometry.boundingSphere.center).applyMat4(object.matrixWorld).applyMat4(_projScreenMatrix);
           }
 
           if (Array.isArray(material)) {

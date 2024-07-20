@@ -7,7 +7,7 @@ import { v4 } from 'uuid';
 
 let _nodeId = 0;
 
-export class Node {
+class Node {
   declare static type: any;
   declare isNode: true;
   eventDispatcher = new EventDispatcher<{ dispose: {} }>();
