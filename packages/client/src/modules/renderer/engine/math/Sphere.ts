@@ -259,7 +259,7 @@ export namespace Sphere_ {
     } else {
       const offset = Vec3.sub_(sphere.center, self.center, Vec3.temp0);
       Vec3.normalize(offset);
-      Vec3.scale(offset, sphere.radius);
+      Vec3.mulScalar(offset, sphere.radius);
 
       expandByVec(into, Vec3.add_(sphere.center, offset, Vec3.temp1));
       expandByVec(into, Vec3.sub_(sphere.center, offset, Vec3.temp1));
@@ -278,7 +278,7 @@ export namespace Sphere_ {
     if (lengthSq > self.radius * self.radius) {
       const length = Math.sqrt(lengthSq);
       const delta = (length - self.radius) * 0.5;
-      Vec3.scale(offset, delta / length);
+      Vec3.mulScalar(offset, delta / length);
 
       Vec3.add_(into.center, offset, into.center);
       into.radius = self.radius + delta;
@@ -298,7 +298,7 @@ export namespace Sphere_ {
     if (lenSq > self.radius * self.radius) {
       Vec3.sub(into, self.center);
       Vec3.normalize(into);
-      Vec3.scale(into, self.radius);
+      Vec3.mulScalar(into, self.radius);
       Vec3.add(into, self.center);
     }
 

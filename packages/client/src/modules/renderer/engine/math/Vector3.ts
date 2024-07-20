@@ -640,10 +640,10 @@ export namespace Vec3 {
   export const mul_ = (a: Const<Vec3>, b: Const<Vec3>, into: Vec3): Vec3 => set(into, a.x * b.x, a.y * b.y, a.z * b.z);
   export const mulled = (a: Const<Vec3>, b: Const<Vec3>): Vec3 => mul_(a, b, empty());
 
-  export const scale = (a: Vec3, scalar: number): Vec3 => scale_(a, scalar, a);
-  export const scale_ = (a: Const<Vec3>, scalar: number, into: Vec3): Vec3 =>
+  export const mulScalar = (a: Vec3, scalar: number): Vec3 => mulScalar_(a, scalar, a);
+  export const mulScalar_ = (a: Const<Vec3>, scalar: number, into: Vec3): Vec3 =>
     set(into, a.x * scalar, a.y * scalar, a.z * scalar);
-  export const scaled = (a: Const<Vec3>, scalar: number): Vec3 => scale_(a, scalar, empty());
+  export const mulledScalar = (a: Const<Vec3>, scalar: number): Vec3 => mulScalar_(a, scalar, empty());
 
   export const div = (a: Vec3, b: Const<Vec3>): Vec3 => div_(a, b, a);
   export const div_ = (a: Const<Vec3>, b: Const<Vec3>, into: Vec3): Vec3 => set(into, a.x / b.x, a.y / b.y, a.z / b.z);

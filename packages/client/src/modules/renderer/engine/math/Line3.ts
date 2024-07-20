@@ -65,7 +65,7 @@ export namespace Line3 {
   export const at = (self: Line3, step: number): Vec3 => at_(self, step, Vec3.empty());
   export const at_ = (from: Const<Line3>, step: number, into: Vec3): Vec3 => {
     delta_(from, into);
-    Vec3.scale(into, clamp(step, 0, 1));
+    Vec3.mulScalar(into, clamp(step, 0, 1));
     Vec3.add(into, from.start);
 
     return into;
@@ -74,7 +74,7 @@ export namespace Line3 {
   export const center = (from: Const<Line3>): Vec3 => center_(from, Vec3.empty());
   export const center_ = ({ end, start }: Const<Line3>, into: Vec3): Vec3 => {
     Vec3.add_(start, end, into);
-    Vec3.scale(into, 0.5);
+    Vec3.mulScalar(into, 0.5);
     return into;
   };
 
