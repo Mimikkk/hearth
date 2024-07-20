@@ -289,7 +289,7 @@ export class Octree {
   }
 
   sphereIntersect(sphere: Sphere): undefined | Intersection {
-    _sphere.copy(sphere);
+    _sphere.from(sphere);
 
     const triangles: Triangle[] = [];
     let hit = false;

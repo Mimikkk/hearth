@@ -75,7 +75,7 @@ export class SkinnedMesh extends Mesh {
 
     for (let i = 0; i < positionAttribute.count; i++) {
       this.getVertexPosition(i, _vertex);
-      this.boundingSphere.expandByPoint(_vertex);
+      this.boundingSphere.expandCoord(_vertex);
     }
   }
 
@@ -104,7 +104,7 @@ export class SkinnedMesh extends Mesh {
 
     if (this.boundingSphere === null) this.computeBoundingSphere();
 
-    _sphere.copy(this.boundingSphere!);
+    _sphere.from(this.boundingSphere!);
     _sphere.applyMat4(matrixWorld);
 
     if (raycaster.ray.intersectsSphere(_sphere) === false) return;

@@ -88,7 +88,7 @@ export class InstancedMesh extends Mesh {
     for (let i = 0; i < count; i++) {
       this.getMatrixAt(i, _instanceLocalMatrix);
 
-      _sphere.copy(geometry.boundingSphere!).applyMat4(_instanceLocalMatrix);
+      _sphere.from(geometry.boundingSphere!).applyMat4(_instanceLocalMatrix);
 
       this.boundingSphere.union(_sphere);
     }
@@ -145,7 +145,7 @@ export class InstancedMesh extends Mesh {
 
     if (this.boundingSphere === null) this.computeBoundingSphere();
 
-    _sphere.copy(this.boundingSphere!);
+    _sphere.from(this.boundingSphere!);
     _sphere.applyMat4(matrixWorld);
 
     if (raycaster.ray.intersectsSphere(_sphere) === false) return;

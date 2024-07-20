@@ -6,47 +6,95 @@ import { Const } from '@modules/renderer/engine/math/types.js';
 
 export class Sphere {
   declare isSphere: true;
-  declare ['constructor']: typeof Sphere;
 
   constructor(
     public center: Vec3 = new Vec3(),
     public radius: number = -1,
   ) {}
 
-  static new(center: Const<Vec3> = Vec3.new(), radius: number = -1): Sphere {
+  static new(center: Vec3 = Vec3.new(), radius: number = -1): Sphere {
     return new Sphere(center, radius);
   }
 
-  set(center: Vec3, radius: number): this {
+  static empty(): Sphere {
+    return Sphere.new();
+  }
+
+  static clone(sphere: Const<Sphere>, into: Sphere = Sphere.empty()): Sphere {
+    return into.from(sphere);
+  }
+
+  static is(sphere: any): sphere is Sphere {
+    return sphere?.isSphere === true;
+  }
+
+  static into(into: Sphere, sphere: Const<Sphere>): Sphere {
+    return into.from(sphere);
+  }
+
+  static from(sphere: Const<Sphere>, into: Sphere = Sphere.empty()): Sphere {
+    return into.from(sphere);
+  }
+
+  static fromParams(
+    centerX: number,
+    centerY: number,
+    centerZ: number,
+    radius: number,
+    into: Sphere = Sphere.empty(),
+  ): Sphere {
+    return into.setParams(centerX, centerY, centerZ, radius);
+  }
+
+  static fromCoords(coords: Vec3[], center?: Const<Vec3>, into: Sphere = Sphere.new()): Sphere {
+    return into.fromCoords(coords, center);
+  }
+
+  clone(into: Sphere = Sphere.empty()): Sphere {
+    return Sphere.clone(this, into);
+  }
+
+  set(center: Const<Vec3>, radius: number): this {
     this.center.from(center);
     this.radius = radius;
 
     return this;
   }
 
-  setFromPoints(points: Vec3[], optionalCenter?: Vec3): Sphere {
-    const center = this.center;
-
-    if (optionalCenter !== undefined) {
-      center.from(optionalCenter);
-    } else {
-      new Box3().fromCoords(points).center(center);
-    }
-
-    let maxRadiusSq = 0;
-
-    for (let i = 0, il = points.length; i < il; i++) {
-      maxRadiusSq = Math.max(maxRadiusSq, center.distanceSqTo(points[i]));
-    }
-
-    this.radius = Math.sqrt(maxRadiusSq);
-
+  setCenter(center: Const<Vec3>): this {
+    this.center.from(center);
     return this;
   }
 
-  copy(sphere: Sphere): this {
-    this.center.from(sphere.center);
-    this.radius = sphere.radius;
+  setRadius(radius: number): this {
+    this.radius = radius;
+    return this;
+  }
+
+  setParams(centerX: number, centerY: number, centerZ: number, radius: number): this {
+    this.center.set(centerX, centerY, centerZ);
+    this.radius = radius;
+    return this;
+  }
+
+  from(sphere: Const<Sphere>): this {
+    return this.set(sphere.center, sphere.radius);
+  }
+
+  fromCoords(coords: Vec3[], center: Vec3 = this.center): Sphere {
+    if (center !== this.center) {
+      this.center.from(center);
+    } else {
+      Box3.fromCoords(coords).center(this.center);
+    }
+
+    let maxRadiusSq = 0;
+    for (let i = 0, il = coords.length; i < il; i++) {
+      const distance = coords[i].distanceSqTo(center);
+      if (distance > maxRadiusSq) maxRadiusSq = distance;
+    }
+
+    this.radius = Math.sqrt(maxRadiusSq);
 
     return this;
   }
@@ -58,129 +106,105 @@ export class Sphere {
   clear(): this {
     this.center.set(0, 0, 0);
     this.radius = -1;
-
     return this;
   }
 
-  containsPoint(point: Vec3): boolean {
+  containsVec(point: Const<Vec3>): boolean {
     return point.distanceSqTo(this.center) <= this.radius * this.radius;
   }
 
-  distanceToPoint(point: Vec3): number {
+  distanceTo(point: Const<Vec3>): number {
     return point.distanceTo(this.center) - this.radius;
   }
 
-  intersectsSphere(sphere: Sphere): boolean {
+  intersectsSphere(sphere: Const<Sphere>): boolean {
     const radiusSum = this.radius + sphere.radius;
 
     return sphere.center.distanceSqTo(this.center) <= radiusSum * radiusSum;
   }
 
-  intersectsBox(box: Box3): boolean {
+  intersectsBox(box: Const<Box3>): boolean {
     return box.intersectsSphere(this);
   }
 
-  intersectsPlane(plane: Plane): boolean {
+  intersectsPlane(plane: Const<Plane>): boolean {
     return Math.abs(plane.distanceTo(this.center)) <= this.radius;
   }
 
-  clampPoint(point: Vec3, target: Vec3): Vec3 {
-    const deltaLengthSq = this.center.distanceSqTo(point);
-
-    target.from(point);
+  clamp(vec: Const<Vec3>, into: Vec3 = Vec3.new()): Vec3 {
+    const deltaLengthSq = this.center.distanceSqTo(vec);
+    into.from(vec);
 
     if (deltaLengthSq > this.radius * this.radius) {
-      target.sub(this.center).normalize();
-      target.scale(this.radius).add(this.center);
+      into.sub(this.center).normalize();
+      into.scale(this.radius).add(this.center);
     }
 
-    return target;
+    return into;
   }
 
-  getBoundingBox(target: Box3): Box3 {
-    if (this.isEmpty()) {
-      // Empty sphere produces empty bounding box
-      target.clear();
-      return target;
-    }
+  bbox(into: Box3 = Box3.new()): Box3 {
+    if (this.isEmpty()) return into.clear();
 
-    target.set(this.center, this.center);
-    target.expandScalar(this.radius);
+    into.set(this.center, this.center);
+    into.expandScalar(this.radius);
 
-    return target;
+    return into;
   }
 
-  applyMat4(matrix: Mat4): this {
+  applyMat4(matrix: Const<Mat4>): this {
     this.center.applyMat4(matrix);
     this.radius = this.radius * matrix.getMaxScaleOnAxis();
 
     return this;
   }
 
-  translate(offset: Vec3): this {
+  translate(offset: Const<Vec3>): this {
     this.center.add(offset);
 
     return this;
   }
 
-  expandByPoint(point: Vec3): this {
-    if (this.isEmpty()) {
-      this.center.from(point);
+  expandCoord(point: Const<Vec3>): this {
+    if (this.isEmpty()) return this.set(point, 0);
+    const offset = _vec0.from(point).sub(this.center);
 
-      this.radius = 0;
-
-      return this;
-    }
-
-    const _v1 = new Vec3().subVectors(point, this.center);
-
-    const lengthSq = _v1.lengthSq();
-
+    const lengthSq = offset.lengthSq();
     if (lengthSq > this.radius * this.radius) {
-      // calculate the minimal sphere
-
       const length = Math.sqrt(lengthSq);
 
       const delta = (length - this.radius) * 0.5;
 
-      this.center.addScaled(_v1, delta / length);
-
+      this.center.addScaled(offset, delta / length);
       this.radius += delta;
     }
 
     return this;
   }
 
-  union(sphere: Sphere): this {
-    if (sphere.isEmpty()) {
-      return this;
-    }
-
-    if (this.isEmpty()) {
-      this.copy(sphere);
-
-      return this;
-    }
+  union(sphere: Const<Sphere>): this {
+    if (sphere.isEmpty()) return this;
+    if (this.isEmpty()) return this.from(sphere);
 
     if (this.center.equals(sphere.center)) {
       this.radius = Math.max(this.radius, sphere.radius);
     } else {
-      const _v2 = new Vec3().subVectors(sphere.center, this.center).setLength(sphere.radius);
+      const _v2 = _vec1.from(sphere.center).sub(this.center).setLength(sphere.radius);
 
-      this.expandByPoint(new Vec3().from(sphere.center).add(_v2));
-
-      this.expandByPoint(new Vec3().from(sphere.center).sub(_v2));
+      this.expandCoord(_vec2.from(sphere.center).add(_v2));
+      this.expandCoord(_vec2.from(sphere.center).sub(_v2));
     }
 
     return this;
   }
 
-  equals(sphere: Sphere): boolean {
+  equals(sphere: Const<Sphere>): boolean {
     return sphere.center.equals(this.center) && sphere.radius === this.radius;
   }
-
-  clone(): Sphere {
-    return new this.constructor().copy(this);
-  }
 }
+
 Sphere.prototype.isSphere = true;
+
+const _vec0 = Vec3.new();
+const _vec1 = Vec3.new();
+const _vec2 = Vec3.new();

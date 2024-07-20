@@ -467,7 +467,7 @@ export class BatchedMesh extends Mesh {
     }
 
     if (geometry.boundingSphere !== null) {
-      bound.sphere.copy(geometry.boundingSphere);
+      bound.sphere.from(geometry.boundingSphere);
       bound.sphereInitialized = true;
     } else {
       bound.sphereInitialized = false;
@@ -565,7 +565,7 @@ export class BatchedMesh extends Mesh {
       bound.sphereInitialized = true;
     }
 
-    target.copy(sphere);
+    target.from(sphere);
     return target;
   }
 

@@ -114,8 +114,8 @@ describe('Math - Sphere', () => {
     const b = Sphere.fromParams(0, 0, 0, 1);
     const c = Sphere.fromParams(0, 0, 0, 0.25);
 
-    expect(a.intersects(b)).toBe(true);
-    expect(a.intersects(c)).toBe(false);
+    expect(a.intersectsSphere(b)).toBe(true);
+    expect(a.intersectsSphere(c)).toBe(false);
   });
 
   it('intersectsBox', () => {

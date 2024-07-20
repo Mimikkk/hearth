@@ -76,7 +76,7 @@ export class Line extends Object3D {
 
     if (geometry.boundingSphere === null) geometry.computeBoundingSphere();
 
-    _sphere.copy(geometry.boundingSphere!);
+    _sphere.from(geometry.boundingSphere!);
     _sphere.applyMat4(matrixWorld);
     _sphere.radius += threshold;
 

@@ -265,14 +265,14 @@ export class LineSegments2 extends Mesh {
       geometry.computeBoundingSphere();
     }
 
-    _sphere.copy(geometry.boundingSphere).applyMat4(matrixWorld);
+    _sphere.from(geometry.boundingSphere).applyMat4(matrixWorld);
 
     // increase the sphere bounds by the worst case line screen space width
     let sphereMargin;
     if (worldUnits) {
       sphereMargin = _lineWidth * 0.5;
     } else {
-      const distanceToSphere = Math.max(camera.near, _sphere.distanceToPoint(_ray.origin));
+      const distanceToSphere = Math.max(camera.near, _sphere.distanceTo(_ray.origin));
       sphereMargin = getWorldSpaceHalfWidth(camera, distanceToSphere, material.resolution);
     }
 

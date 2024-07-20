@@ -88,13 +88,13 @@ export class Frustum {
     if (object.boundingSphere !== undefined) {
       if (object.boundingSphere === null) object.computeBoundingSphere();
 
-      _sphere.copy(object.boundingSphere).applyMat4(object.matrixWorld);
+      _sphere.from(object.boundingSphere).applyMat4(object.matrixWorld);
     } else {
       const geometry = object.geometry;
 
       if (geometry.boundingSphere === null) geometry.computeBoundingSphere();
 
-      _sphere.copy(geometry.boundingSphere).applyMat4(object.matrixWorld);
+      _sphere.from(geometry.boundingSphere).applyMat4(object.matrixWorld);
     }
 
     return this.intersectsSphere(_sphere);
