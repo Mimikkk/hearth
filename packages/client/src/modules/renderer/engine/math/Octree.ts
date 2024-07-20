@@ -1,7 +1,7 @@
 import { Capsule } from './Capsule.js';
 import { Vec3, Vector3 } from './Vector3.js';
 import { Plane_ } from './Plane.js';
-import { Line3_ } from './Line3.js';
+import { Line3 } from './Line3.js';
 import { Sphere } from './Sphere.js';
 import { Box3 } from './Box3.js';
 import { Triangle } from './Triangle.js';
@@ -20,8 +20,8 @@ const _v2 = new Vector3();
 const _point1 = new Vector3();
 const _point2 = new Vector3();
 const _plane = Plane_.empty();
-const _line1 = Line3_.empty();
-const _line2 = Line3_.empty();
+const _line1 = Line3.empty();
+const _line2 = Line3.empty();
 const _sphere = new Sphere();
 const _capsule = Capsule.empty();
 
@@ -30,7 +30,7 @@ const _temp2 = new Vector3();
 const _temp3 = new Vector3();
 const EPS = 1e-10;
 
-function lineToLineClosestPoints(line1: Line3_, line2: Line3_, target1: Vector3, target2: Vector3) {
+function lineToLineClosestPoints(line1: Line3, line2: Line3, target1: Vector3, target2: Vector3) {
   const r = _temp1.copy(line1.end).sub(line1.start);
   const s = _temp2.copy(line2.end).sub(line2.start);
   const w = _temp3.copy(line2.start).sub(line1.start);
@@ -195,7 +195,7 @@ export class Octree {
 
     const r2 = capsule.radius * capsule.radius;
 
-    Line3_.fillEnds(_line1, capsule.start, capsule.end);
+    Line3.fillEnds(_line1, capsule.start, capsule.end);
 
     const lines = [
       [triangle.a, triangle.b],
@@ -204,7 +204,7 @@ export class Octree {
     ];
 
     for (let i = 0; i < lines.length; i++) {
-      Line3_.fillEnds(_line2, lines[i][0], lines[i][1]);
+      Line3.fillEnds(_line2, lines[i][0], lines[i][1]);
 
       lineToLineClosestPoints(_line1, _line2, _point1, _point2);
 
@@ -243,8 +243,8 @@ export class Octree {
     ];
 
     for (let i = 0; i < lines.length; i++) {
-      Line3_.fillEnds(_line1, lines[i][0], lines[i][1]);
-      Line3_.closestTo_(_line1, plainPoint, _v2);
+      Line3.fillEnds(_line1, lines[i][0], lines[i][1]);
+      Line3.closestTo_(_line1, plainPoint, _v2);
 
       const d = Vec3.distanceSqTo(_v2, sphere.center);
 
