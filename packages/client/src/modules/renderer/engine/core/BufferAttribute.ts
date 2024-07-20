@@ -2,9 +2,12 @@ import { Vec3 } from '../math/Vec3.js';
 import { Vec2 } from '../math/Vec2.js';
 import { denormalize, normalize, TypedArray, TypedArrayConstructor } from '../math/MathUtils.js';
 import { BufferUsage, TextureDataType } from '../constants.js';
+import { fromHalfFloat, toHalfFloat } from '../extras/DataUtils.js';
 import { Mat3 } from '@modules/renderer/engine/math/Mat3.js';
 import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
-import { Const } from '@modules/renderer/engine/math/types.js';
+
+const _vec3 = new Vec3();
+const _vec2 = Vec2.new();
 
 export class BufferAttribute<T extends TypedArray = any> {
   declare ['constructor']: typeof BufferAttribute<T>;
@@ -38,6 +41,8 @@ export class BufferAttribute<T extends TypedArray = any> {
     this.version = 0;
   }
 
+  onUploadCallback() {}
+
   set needsUpdate(value: boolean) {
     if (value) ++this.version;
   }
@@ -68,23 +73,24 @@ export class BufferAttribute<T extends TypedArray = any> {
     return this;
   }
 
-  setAt(at: number, attribute: BufferAttribute<T>, from: number): this {
-    at *= this.itemSize;
-    from *= attribute.itemSize;
+  copyAt(index1: number, attribute: BufferAttribute<T>, index2: number): this {
+    index1 *= this.itemSize;
+    index2 *= attribute.itemSize;
 
     for (let i = 0, l = this.itemSize; i < l; i++) {
-      this.array[at + i] = attribute.array[from + i];
+      this.array[index1 + i] = attribute.array[index2 + i];
     }
 
     return this;
   }
 
-  setArray(array: number[]): this {
+  copyArray(array: number[]): this {
     this.array.set(array);
+
     return this;
   }
 
-  applyMat3(m: Const<Mat3>): this {
+  applyMatrix3(m: Mat3): this {
     if (this.itemSize === 2) {
       for (let i = 0, l = this.count; i < l; i++) {
         _vec2.fromAttribute(this, i);
@@ -95,7 +101,7 @@ export class BufferAttribute<T extends TypedArray = any> {
     } else if (this.itemSize === 3) {
       for (let i = 0, l = this.count; i < l; i++) {
         _vec3.fromAttribute(this, i);
-        _vec3.applyMat3(m);
+        _vec3.applyMatrix3(m);
 
         this.setXYZ(i, _vec3.x, _vec3.y, _vec3.z);
       }
@@ -104,7 +110,7 @@ export class BufferAttribute<T extends TypedArray = any> {
     return this;
   }
 
-  applyMat4(m: Const<Mat4>): this {
+  applyMat4(m: Mat4): this {
     for (let i = 0, l = this.count; i < l; i++) {
       _vec3.fromAttribute(this, i);
 
@@ -116,11 +122,11 @@ export class BufferAttribute<T extends TypedArray = any> {
     return this;
   }
 
-  applyMat3N(m: Const<Mat3>): this {
+  applyNormalMatrix(m: Mat3): this {
     for (let i = 0, l = this.count; i < l; i++) {
       _vec3.fromAttribute(this, i);
 
-      _vec3.applyNMat3(m);
+      _vec3.applyNormalMatrix(m);
 
       this.setXYZ(i, _vec3.x, _vec3.y, _vec3.z);
     }
@@ -128,9 +134,12 @@ export class BufferAttribute<T extends TypedArray = any> {
     return this;
   }
 
-  transformDirection(m: Const<Mat4>): this {
+  transformDirection(m: Mat4): this {
     for (let i = 0, l = this.count; i < l; i++) {
-      _vec3.fromAttribute(this, i).transformDirection(m);
+      _vec3.fromAttribute(this, i);
+
+      _vec3.transformDirection(m);
+
       this.setXYZ(i, _vec3.x, _vec3.y, _vec3.z);
     }
 
@@ -272,18 +281,51 @@ export class BufferAttribute<T extends TypedArray = any> {
     return this;
   }
 
+  onUpload(callback: () => void): this {
+    this.onUploadCallback = callback;
+
+    return this;
+  }
+
   clone(): BufferAttribute<T> {
-    return new BufferAttribute<T>(this.array, this.itemSize).copy(this);
+    return new this.constructor(this.array, this.itemSize).copy(this);
   }
 }
 BufferAttribute.prototype.isBufferAttribute = true;
 
-const _vec3 = Vec3.new();
-const _vec2 = Vec2.new();
+export class Int8BufferAttribute extends BufferAttribute<Int8Array> {
+  constructor(array: number[], itemSize: number, normalized?: boolean) {
+    super(new Int8Array(array), itemSize, normalized);
+  }
+}
+
+export class Uint8BufferAttribute extends BufferAttribute<Uint8Array> {
+  constructor(array: number[], itemSize: number, normalized?: boolean) {
+    super(new Uint8Array(array), itemSize, normalized);
+  }
+}
+
+export class Uint8ClampedBufferAttribute extends BufferAttribute<Uint8ClampedArray> {
+  constructor(array: number[], itemSize: number, normalized?: boolean) {
+    super(new Uint8ClampedArray(array), itemSize, normalized);
+  }
+}
+
+export class Int16BufferAttribute extends BufferAttribute<Int16Array> {
+  constructor(array: number[], itemSize: number, normalized?: boolean) {
+    super(new Int16Array(array), itemSize, normalized);
+  }
+}
 
 export class Uint16BufferAttribute extends BufferAttribute<Uint16Array> {
   constructor(array: number[], itemSize: number, normalized?: boolean) {
     super(new Uint16Array(array), itemSize, normalized);
+  }
+}
+
+export class Int32BufferAttribute extends BufferAttribute<Int32Array> {
+  constructor(array: number[], itemSize: number, normalized?: boolean) {
+    super(new Int32Array(array), itemSize, normalized);
   }
 }
 
@@ -292,6 +334,127 @@ export class Uint32BufferAttribute extends BufferAttribute<Uint32Array> {
     super(new Uint32Array(array), itemSize, normalized);
   }
 }
+
+export class Float16BufferAttribute extends BufferAttribute<Uint16Array> {
+  declare isFloat16BufferAttribute: true;
+
+  constructor(array: number[], itemSize: number, normalized?: boolean) {
+    super(new Uint16Array(array), itemSize, normalized);
+  }
+
+  override getX(index: number): number {
+    let x = fromHalfFloat(this.array[index * this.itemSize]);
+
+    if (this.normalized) x = denormalize(x, this.array);
+
+    return x;
+  }
+
+  override setX(index: number, x: number): this {
+    if (this.normalized) x = normalize(x, this.array);
+
+    this.array[index * this.itemSize] = toHalfFloat(x);
+
+    return this;
+  }
+
+  override getY(index: number): number {
+    let y = fromHalfFloat(this.array[index * this.itemSize + 1]);
+
+    if (this.normalized) y = denormalize(y, this.array);
+
+    return y;
+  }
+
+  override setY(index: number, y: number): this {
+    if (this.normalized) y = normalize(y, this.array);
+
+    this.array[index * this.itemSize + 1] = toHalfFloat(y);
+
+    return this;
+  }
+
+  override getZ(index: number): number {
+    let z = fromHalfFloat(this.array[index * this.itemSize + 2]);
+
+    if (this.normalized) z = denormalize(z, this.array);
+
+    return z;
+  }
+
+  override setZ(index: number, z: number): this {
+    if (this.normalized) z = normalize(z, this.array);
+
+    this.array[index * this.itemSize + 2] = toHalfFloat(z);
+
+    return this;
+  }
+
+  override getW(index: number): number {
+    let w = fromHalfFloat(this.array[index * this.itemSize + 3]);
+
+    if (this.normalized) w = denormalize(w, this.array);
+
+    return w;
+  }
+
+  override setW(index: number, w: number): this {
+    if (this.normalized) w = normalize(w, this.array);
+
+    this.array[index * this.itemSize + 3] = toHalfFloat(w);
+
+    return this;
+  }
+
+  override setXY(index: number, x: number, y: number): this {
+    index *= this.itemSize;
+
+    if (this.normalized) {
+      x = normalize(x, this.array);
+      y = normalize(y, this.array);
+    }
+
+    this.array[index + 0] = toHalfFloat(x);
+    this.array[index + 1] = toHalfFloat(y);
+
+    return this;
+  }
+
+  override setXYZ(index: number, x: number, y: number, z: number): this {
+    index *= this.itemSize;
+
+    if (this.normalized) {
+      x = normalize(x, this.array);
+      y = normalize(y, this.array);
+      z = normalize(z, this.array);
+    }
+
+    this.array[index + 0] = toHalfFloat(x);
+    this.array[index + 1] = toHalfFloat(y);
+    this.array[index + 2] = toHalfFloat(z);
+
+    return this;
+  }
+
+  override setXYZW(index: number, x: number, y: number, z: number, w: number): this {
+    index *= this.itemSize;
+
+    if (this.normalized) {
+      x = normalize(x, this.array);
+      y = normalize(y, this.array);
+      z = normalize(z, this.array);
+      w = normalize(w, this.array);
+    }
+
+    this.array[index + 0] = toHalfFloat(x);
+    this.array[index + 1] = toHalfFloat(y);
+    this.array[index + 2] = toHalfFloat(z);
+    this.array[index + 3] = toHalfFloat(w);
+
+    return this;
+  }
+}
+Float16BufferAttribute.prototype.isFloat16BufferAttribute = true;
 
 export class Float32BufferAttribute extends BufferAttribute<Float32Array> {
   constructor(array: number[], itemSize: number, normalized?: boolean) {

@@ -22,7 +22,7 @@ class ViewportTextureNode extends TextureNode {
 
     this.isOutputTextureNode = true;
 
-    this.updateBeforeType = NodeUpdateType.Frame;
+    this.updateBeforeType = NodeUpdateType.FRAME;
   }
 
   updateBefore(frame) {

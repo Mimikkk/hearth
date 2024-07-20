@@ -20,7 +20,7 @@ class OcclusionNode extends Node {
   constructor(testObject: Engine.Object3D, normalColor: Engine.Color, occludedColor: Engine.Color) {
     super('vec3');
 
-    this.updateType = NodeUpdateType.Object;
+    this.updateType = NodeUpdateType.OBJECT;
 
     this.uniformNode = uniform(new Engine.Color());
 

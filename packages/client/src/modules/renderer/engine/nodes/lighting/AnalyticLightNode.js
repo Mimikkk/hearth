@@ -16,7 +16,7 @@ class AnalyticLightNode extends LightingNode {
   constructor(light = null) {
     super();
 
-    this.updateType = NodeUpdateType.Frame;
+    this.updateType = NodeUpdateType.FRAME;
 
     this.light = light;
 
@@ -144,7 +144,7 @@ class AnalyticLightNode extends LightingNode {
 
       //
 
-      this.updateBeforeType = NodeUpdateType.Render;
+      this.updateBeforeType = NodeUpdateType.RENDER;
     }
   }
 

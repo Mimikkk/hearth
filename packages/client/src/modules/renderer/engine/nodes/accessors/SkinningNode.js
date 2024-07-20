@@ -19,7 +19,7 @@ class SkinningNode extends Node {
     this.skinnedMesh = skinnedMesh;
     this.useReference = useReference;
 
-    this.updateType = NodeUpdateType.Object;
+    this.updateType = NodeUpdateType.OBJECT;
 
     //
 

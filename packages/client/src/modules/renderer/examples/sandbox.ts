@@ -71,6 +71,10 @@ async function init() {
 
   materialBox.colorNode = mix(textureNode, checker(animateUV), 0.5);
 
+  // test uv 2
+  //geometryBox.setAttribute( 'uv1', geometryBox.getAttribute( 'uv' ) );
+  //materialBox.colorNode = texture( uvTexture, uv( 1 ) );
+
   box = new Engine.Mesh(geometryBox, materialBox);
   box.position.set(0, 1, 0);
   scene.add(box);

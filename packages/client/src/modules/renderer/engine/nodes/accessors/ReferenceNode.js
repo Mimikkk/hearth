@@ -44,7 +44,7 @@ class ReferenceNode extends Node {
     this.reference = null;
     this.node = null;
 
-    this.updateType = NodeUpdateType.Object;
+    this.updateType = NodeUpdateType.OBJECT;
   }
 
   element(indexNode) {

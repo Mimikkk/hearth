@@ -115,10 +115,10 @@ export class RenderTarget {
     this.height = source.height;
     this.depth = source.depth;
 
-    this.scissor.from(source.scissor);
+    this.scissor.copy(source.scissor);
     this.scissorTest = source.scissorTest;
 
-    this.viewport.from(source.viewport);
+    this.viewport.copy(source.viewport);
 
     this.textures.length = 0;
 

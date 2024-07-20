@@ -143,7 +143,7 @@ class MorphNode extends Node {
     this.mesh = mesh;
     this.morphBaseInfluence = uniform(1);
 
-    this.updateType = NodeUpdateType.Object;
+    this.updateType = NodeUpdateType.OBJECT;
   }
 
   setup(builder) {

@@ -46,7 +46,7 @@ class ReflectorNode extends TextureNode {
     this.generateMipmaps = generateMipmaps;
     this.bounces = bounces;
 
-    this.updateBeforeType = bounces ? NodeUpdateType.Render : NodeUpdateType.Frame;
+    this.updateBeforeType = bounces ? NodeUpdateType.RENDER : NodeUpdateType.FRAME;
 
     this.virtualCameras = new WeakMap();
     this.renderTargets = new WeakMap();

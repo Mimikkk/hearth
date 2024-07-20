@@ -1,5 +1,4 @@
 import type { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
-import { Clock } from '@modules/renderer/engine/core/Clock.js';
 export type AnimationLoopFn = (time: number, frame?: number) => void;
 
 export class Animation {
@@ -9,11 +8,7 @@ export class Animation {
   constructor(public renderer: Renderer) {
     this.animationLoop = null;
 
-    let previousTime = 0;
-
     const update = (time: number, frame?: number) => {
-      const delta = (time - previousTime) / 1000;
-      previousTime = time;
       this.requestId = self.requestAnimationFrame(update);
 
       if (this.renderer.info.autoReset) this.renderer.info.reset();
@@ -22,7 +17,7 @@ export class Animation {
 
       this.renderer.info.frame = this.renderer._nodes.nodeFrame.frameId;
 
-      if (this.animationLoop !== null) this.animationLoop(delta, frame);
+      if (this.animationLoop !== null) this.animationLoop(time, frame);
     };
 
     update(0);
