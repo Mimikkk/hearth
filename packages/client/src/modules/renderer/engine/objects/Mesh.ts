@@ -4,7 +4,7 @@ import { Sphere } from '../math/Sphere.js';
 import { Ray } from '../math/Ray.js';
 import { Matrix4 } from '../math/Matrix4.js';
 import { Object3D } from '../core/Object3D.js';
-import { Triangle } from '../math/Triangle.js';
+import { Triangle_ } from '../math/Triangle.js';
 import { Side } from '../constants.js';
 import { BufferGeometry } from '../core/BufferGeometry.js';
 import { Material } from '../materials/Material.js';
@@ -35,8 +35,8 @@ const _intersectionPoint = /*@__PURE__*/ new Vector3();
 const _intersectionPointWorld = /*@__PURE__*/ new Vector3();
 
 const _intersect = Vec3.empty();
-const _triangle1 = Triangle.empty();
-const _triangle2 = Triangle.empty();
+const _triangle1 = Triangle_.empty();
+const _triangle2 = Triangle_.empty();
 
 export class Mesh extends Object3D {
   declare isMesh: true;
@@ -347,7 +347,7 @@ function checkGeometryIntersection(
   object.getVertexPosition(a, _vA);
   object.getVertexPosition(b, _vB);
   object.getVertexPosition(c, _vC);
-  Triangle.set(_triangle1, _vA, _vB, _vC);
+  Triangle_.set(_triangle1, _vA, _vB, _vC);
 
   const intersection = checkIntersection(object, material, raycaster, ray, _vA, _vB, _vC, _intersectionPoint);
 
@@ -357,8 +357,8 @@ function checkGeometryIntersection(
       Vec2.fillAttribute(_uvB, uv, b);
       Vec2.fillAttribute(_uvC, uv, c);
 
-      Triangle.set(_triangle2, _uvA, _uvB, _uvC);
-      Triangle.interpolate_(_triangle1, _triangle2, _intersectionPoint, _intersect);
+      Triangle_.set(_triangle2, _uvA, _uvB, _uvC);
+      Triangle_.interpolate_(_triangle1, _triangle2, _intersectionPoint, _intersect);
 
       intersection.uv = new Vector2(_intersect.x, _intersect.y);
     }
@@ -368,9 +368,9 @@ function checkGeometryIntersection(
       Vec2.fillAttribute(_uvB, uv1, b);
       Vec2.fillAttribute(_uvC, uv1, c);
 
-      Triangle.set(_triangle2, _uvA, _uvB, _uvC);
-      Triangle.interpolate_(_triangle1, _triangle2, _intersectionPoint, _intersect);
-      Triangle.interpolate_(_triangle1, _triangle2, _intersectionPoint, _intersect);
+      Triangle_.set(_triangle2, _uvA, _uvB, _uvC);
+      Triangle_.interpolate_(_triangle1, _triangle2, _intersectionPoint, _intersect);
+      Triangle_.interpolate_(_triangle1, _triangle2, _intersectionPoint, _intersect);
 
       intersection.uv1 = new Vector2(_intersect.x, _intersect.y);
     }
@@ -380,8 +380,8 @@ function checkGeometryIntersection(
       Vec3.fillAttribute(_normalB, normal, b);
       Vec3.fillAttribute(_normalC, normal, c);
 
-      Triangle.set(_triangle2, _normalA, _normalB, _normalC);
-      Triangle.interpolate_(_triangle1, _triangle2, _intersectionPoint, _intersect);
+      Triangle_.set(_triangle2, _normalA, _normalB, _normalC);
+      Triangle_.interpolate_(_triangle1, _triangle2, _intersectionPoint, _intersect);
 
       intersection.normal = new Vector3(_intersect.x, _intersect.y, _intersect.z);
 
@@ -398,7 +398,7 @@ function checkGeometryIntersection(
       materialIndex: 0,
     };
 
-    Triangle.normal_(_triangle1, face.normal);
+    Triangle_.normal_(_triangle1, face.normal);
 
     intersection.face = face as never;
   }

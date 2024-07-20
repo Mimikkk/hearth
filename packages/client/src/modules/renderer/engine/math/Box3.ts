@@ -1,7 +1,7 @@
 import { Vec3, Vector3 } from './Vector3.js';
 import type { BufferAttribute } from '../core/BufferAttribute.js';
 import type { Object3D } from '../core/Object3D.js';
-import type { Triangle } from './Triangle.js';
+import type { Triangle_ } from './Triangle.js';
 import type { Plane, Plane_ } from './Plane.js';
 import { Sphere, Sphere_ } from './Sphere.js';
 import type { Matrix4 } from './Matrix4.js';
@@ -365,7 +365,7 @@ export class Box3 {
     return min <= -plane.constant && max >= -plane.constant;
   }
 
-  intersectsTriangle(triangle: Triangle): boolean {
+  intersectsTriangle(triangle: Triangle_): boolean {
     if (this.isEmpty()) {
       return false;
     }
@@ -797,7 +797,7 @@ export namespace Box3_ {
     return true;
   };
 
-  export const intersectsTriangle = (self: Const<Box3_>, triangle: Const<Triangle>): boolean => {
+  export const intersectsTriangle = (self: Const<Box3_>, triangle: Const<Triangle_>): boolean => {
     if (isEmpty(self)) return false;
 
     // compute box center and extents

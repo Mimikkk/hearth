@@ -1,4 +1,4 @@
-import { Triangle } from './Triangle.js';
+import { Triangle_ } from './Triangle.js';
 import { Vector3 } from './Vector3.js';
 import { Vector2 } from './Vector2.js';
 import type { Mesh } from '../objects/Mesh.js';
@@ -7,7 +7,7 @@ import type { BufferAttribute } from '../core/BufferAttribute.js';
 import type { Color } from './Color.js';
 import { BufferGeometry } from '@modules/renderer/engine/core/BufferGeometry.js';
 
-const _face = Triangle.empty();
+const _face = Triangle_.empty();
 const _color = new Vector3();
 const _uva = new Vector2();
 const _uvb = new Vector2();
@@ -72,8 +72,8 @@ export class MeshSurfaceSampler<TGeometry extends BufferGeometry, TMaterial exte
         faceWeight = weightAttribute.getX(i0) + weightAttribute.getX(i1) + weightAttribute.getX(i2);
       }
 
-      Triangle.fillAttributeAndIndices(_face, positionAttribute, i0, i1, i2);
-      faceWeight *= Triangle.area(_face);
+      Triangle_.fillAttributeAndIndices(_face, positionAttribute, i0, i1, i2);
+      faceWeight *= Triangle_.area(_face);
 
       faceWeights[i] = faceWeight;
     }
@@ -159,7 +159,7 @@ export class MeshSurfaceSampler<TGeometry extends BufferGeometry, TMaterial exte
       i2 = indexAttribute.getX(i2);
     }
 
-    Triangle.fillAttributeAndIndices(_face, this.positionAttribute, i0, i1, i2);
+    Triangle_.fillAttributeAndIndices(_face, this.positionAttribute, i0, i1, i2);
 
     targetPosition
       .set(0, 0, 0)
@@ -169,7 +169,7 @@ export class MeshSurfaceSampler<TGeometry extends BufferGeometry, TMaterial exte
 
     if (targetNormal !== undefined) {
       if (this.normalAttribute !== undefined) {
-        Triangle.fillAttributeAndIndices(_face, this.normalAttribute, i0, i1, i2);
+        Triangle_.fillAttributeAndIndices(_face, this.normalAttribute, i0, i1, i2);
         targetNormal
           .set(0, 0, 0)
           .addScaledVector(_face.a, u)
@@ -177,12 +177,12 @@ export class MeshSurfaceSampler<TGeometry extends BufferGeometry, TMaterial exte
           .addScaledVector(_face.c, 1 - (u + v))
           .normalize();
       } else {
-        Triangle.normal_(_face, targetNormal);
+        Triangle_.normal_(_face, targetNormal);
       }
     }
 
     if (targetColor !== undefined && this.colorAttribute !== undefined) {
-      Triangle.fillAttributeAndIndices(_face, this.colorAttribute, i0, i1, i2);
+      Triangle_.fillAttributeAndIndices(_face, this.colorAttribute, i0, i1, i2);
 
       _color
         .set(0, 0, 0)
