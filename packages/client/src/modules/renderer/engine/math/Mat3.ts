@@ -37,10 +37,6 @@ export class Mat3 {
     return into.fromArray(array, offset);
   }
 
-  static fromBasis(xAxis: Const<Vec3>, yAxis: Const<Vec3>, zAxis: Const<Vec3>, into: Mat3 = Mat3.empty()): Mat3 {
-    return into.fromBasis(xAxis, yAxis, zAxis);
-  }
-
   static fromColumnOrder(
     n11: number,
     n12: number,
@@ -116,39 +112,7 @@ export class Mat3 {
     return this;
   }
 
-  setRowOrder(
-    n11: number,
-    n12: number,
-    n13: number,
-    n21: number,
-    n22: number,
-    n23: number,
-    n31: number,
-    n32: number,
-    n33: number,
-  ): this {
-    return this.set(n11, n21, n31, n12, n22, n32, n13, n23, n33);
-  }
-
-  setColumnOrder(
-    n11: number,
-    n12: number,
-    n13: number,
-    n21: number,
-    n22: number,
-    n23: number,
-    n31: number,
-    n32: number,
-    n33: number,
-  ): this {
-    return this.set(n11, n12, n13, n21, n22, n23, n31, n32, n33);
-  }
-
-  static identity(into: Mat3 = Mat3.empty()): Mat3 {
-    return into.asIdentity();
-  }
-
-  asIdentity(): this {
+  identity(): this {
     return this.set(1, 0, 0, 0, 1, 0, 0, 0, 1);
   }
 
@@ -156,15 +120,11 @@ export class Mat3 {
     return this.set(e[0], e[1], e[2], e[3], e[4], e[5], e[6], e[7], e[8]);
   }
 
-  intoBasis(xAxis: Vec3, yAxis: Vec3, zAxis: Vec3): this {
+  extractBasis(xAxis: Vec3, yAxis: Vec3, zAxis: Vec3): this {
     xAxis.fromMat3Column(this, 0);
     yAxis.fromMat3Column(this, 1);
     zAxis.fromMat3Column(this, 2);
     return this;
-  }
-
-  fromBasis(xAxis: Const<Vec3>, yAxis: Const<Vec3>, zAxis: Const<Vec3>): this {
-    return this.set(xAxis.x, yAxis.x, zAxis.x, xAxis.y, yAxis.y, zAxis.y, xAxis.z, yAxis.z, zAxis.z);
   }
 
   fromElements(
@@ -271,7 +231,7 @@ export class Mat3 {
     if (det === 0) return this.set(0, 0, 0, 0, 0, 0, 0, 0, 0);
     const inv = 1 / det;
 
-    return this.setRowOrder(
+    return this.set(
       t1 * inv,
       (e2 * e7 - e8 * e1) * inv,
       (e5 * e1 - e2 * e4) * inv,
@@ -348,16 +308,36 @@ Mat3.prototype.isMat3 = true;
 const _mat = Mat3.new();
 
 function multiply(a: Const<Mat3>, b: Const<Mat3>, into: Mat3 = Mat3.new()): Mat3 {
-  const [a11, a21, a31, a12, a22, a32, a13, a23, a33] = a.elements;
-  const [b11, b21, b31, b12, b22, b32, b13, b23, b33] = b.elements;
+  const ae = a.elements;
+  const be = b.elements;
 
-  return into.setRowOrder(
+  const a11 = ae[0];
+  const a12 = ae[3];
+  const a13 = ae[6];
+  const a21 = ae[1];
+  const a22 = ae[4];
+  const a23 = ae[7];
+  const a31 = ae[2];
+  const a32 = ae[5];
+  const a33 = ae[8];
+
+  const b11 = be[0];
+  const b12 = be[3];
+  const b13 = be[6];
+  const b21 = be[1];
+  const b22 = be[4];
+  const b23 = be[7];
+  const b31 = be[2];
+  const b32 = be[5];
+  const b33 = be[8];
+
+  return into.set(
     a11 * b11 + a12 * b21 + a13 * b31,
     a21 * b11 + a22 * b21 + a23 * b31,
-    a31 * b11 + a32 * b21 + a33 * b31,
     a11 * b12 + a12 * b22 + a13 * b32,
-    a21 * b12 + a22 * b22 + a23 * b32,
+    a31 * b11 + a32 * b21 + a33 * b31,
     a31 * b12 + a32 * b22 + a33 * b32,
+    a21 * b12 + a22 * b22 + a23 * b32,
     a11 * b13 + a12 * b23 + a13 * b33,
     a21 * b13 + a22 * b23 + a23 * b33,
     a31 * b13 + a32 * b23 + a33 * b33,

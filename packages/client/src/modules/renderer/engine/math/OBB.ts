@@ -39,7 +39,7 @@ export class OBB {
   fromBox3(box3: Const<Box3>) {
     box3.center(this.center);
     box3.size(this.halfSize).scale(0.5);
-    this.rotation.asIdentity();
+    this.rotation.identity();
 
     return this;
   }
@@ -52,7 +52,7 @@ export class OBB {
     const halfSize = this.halfSize;
 
     v1.from(point).sub(this.center);
-    this.rotation.intoBasis(xAxis, yAxis, zAxis);
+    this.rotation.extractBasis(xAxis, yAxis, zAxis);
 
     // start at the center position of the OBB
 
@@ -74,7 +74,7 @@ export class OBB {
 
   containsVec(point: Const<Vec3>): boolean {
     v1.from(point).sub(this.center);
-    this.rotation.intoBasis(xAxis, yAxis, zAxis);
+    this.rotation.extractBasis(xAxis, yAxis, zAxis);
 
     return (
       Math.abs(v1.dot(xAxis)) <= this.halfSize.x &&
@@ -100,7 +100,7 @@ export class OBB {
     a.e[0] = this.halfSize.x;
     a.e[1] = this.halfSize.y;
     a.e[2] = this.halfSize.z;
-    this.rotation.intoBasis(a.u[0], a.u[1], a.u[2]);
+    this.rotation.extractBasis(a.u[0], a.u[1], a.u[2]);
 
     b.c = obb.center;
     b.e[0] = obb.halfSize.x;
@@ -211,7 +211,7 @@ export class OBB {
   }
 
   intersectsPlane(plane: Const<Plane>): boolean {
-    this.rotation.intoBasis(xAxis, yAxis, zAxis);
+    this.rotation.extractBasis(xAxis, yAxis, zAxis);
 
     // compute the projection interval radius of this OBB onto L(t) = this->center + t * p.normal;
 

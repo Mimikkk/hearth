@@ -1003,25 +1003,29 @@ Mat4.prototype.isMat4 = true;
 function multiply(a: Const<Mat4>, b: Const<Mat4>, into: Mat4): Mat4 {
   const [a11, a21, a31, a41, a12, a22, a32, a42, a13, a23, a33, a43, a14, a24, a34, a44] = a.elements;
   const [b11, b21, b31, b41, b12, b22, b32, b42, b13, b23, b33, b43, b14, b24, b34, b44] = b.elements;
+  const it = into.elements;
 
-  return into.setRowOrder(
-    a11 * b11 + a12 * b21 + a13 * b31 + a14 * b41,
-    a21 * b11 + a22 * b21 + a23 * b31 + a24 * b41,
-    a31 * b11 + a32 * b21 + a33 * b31 + a34 * b41,
-    a41 * b11 + a42 * b21 + a43 * b31 + a44 * b41,
-    a11 * b12 + a12 * b22 + a13 * b32 + a14 * b42,
-    a21 * b12 + a22 * b22 + a23 * b32 + a24 * b42,
-    a31 * b12 + a32 * b22 + a33 * b32 + a34 * b42,
-    a41 * b12 + a42 * b22 + a43 * b32 + a44 * b42,
-    a11 * b13 + a12 * b23 + a13 * b33 + a14 * b43,
-    a21 * b13 + a22 * b23 + a23 * b33 + a24 * b43,
-    a31 * b13 + a32 * b23 + a33 * b33 + a34 * b43,
-    a41 * b13 + a42 * b23 + a43 * b33 + a44 * b43,
-    a11 * b14 + a12 * b24 + a13 * b34 + a14 * b44,
-    a21 * b14 + a22 * b24 + a23 * b34 + a24 * b44,
-    a31 * b14 + a32 * b24 + a33 * b34 + a34 * b44,
-    a41 * b14 + a42 * b24 + a43 * b34 + a44 * b44,
-  );
+  it[0] = a11 * b11 + a12 * b21 + a13 * b31 + a14 * b41;
+  it[4] = a11 * b12 + a12 * b22 + a13 * b32 + a14 * b42;
+  it[8] = a11 * b13 + a12 * b23 + a13 * b33 + a14 * b43;
+  it[12] = a11 * b14 + a12 * b24 + a13 * b34 + a14 * b44;
+
+  it[1] = a21 * b11 + a22 * b21 + a23 * b31 + a24 * b41;
+  it[5] = a21 * b12 + a22 * b22 + a23 * b32 + a24 * b42;
+  it[9] = a21 * b13 + a22 * b23 + a23 * b33 + a24 * b43;
+  it[13] = a21 * b14 + a22 * b24 + a23 * b34 + a24 * b44;
+
+  it[2] = a31 * b11 + a32 * b21 + a33 * b31 + a34 * b41;
+  it[6] = a31 * b12 + a32 * b22 + a33 * b32 + a34 * b42;
+  it[10] = a31 * b13 + a32 * b23 + a33 * b33 + a34 * b43;
+  it[14] = a31 * b14 + a32 * b24 + a33 * b34 + a34 * b44;
+
+  it[3] = a41 * b11 + a42 * b21 + a43 * b31 + a44 * b41;
+  it[7] = a41 * b12 + a42 * b22 + a43 * b32 + a44 * b42;
+  it[11] = a41 * b13 + a42 * b23 + a43 * b33 + a44 * b43;
+  it[15] = a41 * b14 + a42 * b24 + a43 * b34 + a44 * b44;
+
+  return into;
 }
 
 const zero = Vec3.new(0, 0, 0);
