@@ -1,7 +1,7 @@
 import { Texture } from './Texture.js';
 import {
   ColorSpace,
-  CompressedTextureFormat,
+  CompressedPixelFormat,
   MagnificationTextureFilter,
   Mapping,
   MinificationTextureFilter,
@@ -17,7 +17,7 @@ export class CompressedTexture extends Texture {
     mipmaps: ImageData[],
     width: number,
     height: number,
-    format: CompressedTextureFormat,
+    format: CompressedPixelFormat,
     type?: TextureDataType,
     mapping?: Mapping,
     wrapS?: Wrapping,

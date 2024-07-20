@@ -7,6 +7,8 @@ import {
 import { DataUtils } from '@modules/renderer/engine/extras/DataUtils.js';
 import { DataTexture } from '@modules/renderer/engine/textures/DataTexture.js';
 import { lerp } from '../../../math/MathUtils.js';
+import { classLoader } from '@modules/renderer/engine/loaders/types.js';
+import { FileLoader, ResponseType } from '@modules/renderer/engine/loaders/files/FileLoader/FileLoader.js';
 
 export type SupportedType = TextureDataType.Float | TextureDataType.HalfFloat | TextureDataType.UnsignedByte;
 export interface SupportedMap {
@@ -15,15 +17,15 @@ export interface SupportedMap {
   [TextureDataType.Float]: Float32Array;
 }
 
-const createDataTexture = (data: Uint8Array | Uint16Array | Float32Array, type: SupportedType): DataTexture =>
-  new DataTexture(data, 180, 1, {
-    format: TextureFormat.Red,
-    type,
-    minFilter: MinificationTextureFilter.Linear,
-    magFilter: MagnificationTextureFilter.Linear,
-    version: 1,
-  });
+const createDataTexture = (data: Uint8Array | Uint16Array | Float32Array, type: SupportedType): DataTexture => {
+  //@ts-expect-error - improve texture handling
+  const texture = new DataTexture(data, 180, 1, TextureFormat.Red, type);
+  texture.minFilter = MinificationTextureFilter.Linear;
+  texture.magFilter = MagnificationTextureFilter.Linear;
+  texture.needsUpdate = true;
 
+  return texture;
+};
 const readIes = <ST extends SupportedType>(iesLamp: IESLamp, type: SupportedType): SupportedMap[ST] => {
   const width = 360;
   const height = 180;

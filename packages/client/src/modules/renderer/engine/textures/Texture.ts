@@ -1,8 +1,6 @@
 import { EventDispatcher } from '../core/EventDispatcher.js';
 import {
   ColorSpace,
-  CompressedTextureFormat,
-  CubeMapping,
   MagnificationTextureFilter,
   Mapping,
   MinificationTextureFilter,
@@ -13,27 +11,29 @@ import {
 } from '../constants.js';
 import { Vector2 } from '../math/Vector2.js';
 import { Matrix3 } from '../math/Matrix3.js';
+import type { CubeTexture } from './CubeTexture.js';
 import { v4 } from 'uuid';
 
 let _textureId = 0;
 
-export class Texture<T = any> {
+export class Texture<T> {
   declare ['constructor']: typeof Texture;
   declare isTexture: true;
   eventDispatcher = new EventDispatcher<{ dispose: {} }>();
   id: number;
   uuid: string;
   name: string;
-  image: T;
-  mipmaps: ImageData[];
-  mapping: Mapping | CubeMapping;
+  source: T;
+  mipmaps: (ImageData | CubeTexture)[];
+  mapping: Mapping;
   channel: number;
   wrapS: Wrapping;
   wrapT: Wrapping;
+  wrapR: Wrapping;
   magFilter: MagnificationTextureFilter;
   minFilter: MinificationTextureFilter;
   anisotropy: number;
-  format: TextureFormat | CompressedTextureFormat;
+  format: TextureFormat;
   internalFormat: PixelFormat | null;
   type: TextureDataType;
   offset: Vector2;
@@ -55,7 +55,7 @@ export class Texture<T = any> {
   userData: any;
 
   constructor(
-    image: T,
+    source: T,
     options: Options | Mapping = Mapping.UV,
     wrapS: Wrapping = Wrapping.ClampToEdge,
     wrapT: Wrapping = Wrapping.ClampToEdge,
@@ -68,26 +68,43 @@ export class Texture<T = any> {
   ) {
     this.id = ++_textureId;
     this.uuid = v4();
-    this.image = image;
+    this.source = source;
 
-    let configuration: Configuration;
-    if (typeof options !== 'object') {
-      configuration = Texture.configure({
-        mapping: options,
-        wrapS,
-        wrapT,
-        magFilter,
-        minFilter,
-        format,
-        type,
-        anisotropy,
-        colorSpace,
-      });
-    } else {
-      configuration = Texture.configure(options);
-    }
+    this.name = '';
+    this.mipmaps = [];
+    this.mapping = options;
+    this.channel = 0;
+    this.wrapS = wrapS;
+    this.wrapT = wrapT;
+    this.magFilter = magFilter;
+    this.minFilter = minFilter;
+    this.anisotropy = anisotropy;
+    this.format = format;
+    this.internalFormat = null;
+    this.type = type;
+    this.offset = new Vector2(0, 0);
+    this.repeat = new Vector2(1, 1);
+    this.center = new Vector2(0, 0);
+    this.rotation = 0;
+    this.matrixAutoUpdate = true;
+    this.matrix = new Matrix3();
+    this.generateMipmaps = true;
+    this.premultiplyAlpha = false;
+    this.flipY = true;
+    this.unpackAlignment = 4;
+    this.colorSpace = colorSpace;
+    this.userData = {};
+    this.version = 0;
+    this.isRenderTargetTexture = false;
+    this.needsPMREMUpdate = false;
+  }
 
-    this.configure(configuration);
+  get image() {
+    return this.source;
+  }
+
+  set image(value) {
+    this.source = value;
   }
 
   updateMatrix(): this {
@@ -104,37 +121,48 @@ export class Texture<T = any> {
   }
 
   clone(): Texture<T> {
-    //@ts-expect-error
     return new this.constructor(undefined!).copy(this);
   }
 
   copy(source: this): this {
     this.name = source.name;
-    this.image = source.image;
+
+    this.source = source.source;
     this.mipmaps = source.mipmaps.slice(0);
+
     this.mapping = source.mapping;
     this.channel = source.channel;
+
     this.wrapS = source.wrapS;
     this.wrapT = source.wrapT;
+
     this.magFilter = source.magFilter;
     this.minFilter = source.minFilter;
+
     this.anisotropy = source.anisotropy;
+
     this.format = source.format;
     this.internalFormat = source.internalFormat;
     this.type = source.type;
+
     this.offset.copy(source.offset);
     this.repeat.copy(source.repeat);
     this.center.copy(source.center);
     this.rotation = source.rotation;
+
     this.matrixAutoUpdate = source.matrixAutoUpdate;
     this.matrix.copy(source.matrix);
+
     this.generateMipmaps = source.generateMipmaps;
     this.premultiplyAlpha = source.premultiplyAlpha;
     this.flipY = source.flipY;
     this.unpackAlignment = source.unpackAlignment;
     this.colorSpace = source.colorSpace;
+
     this.userData = JSON.parse(JSON.stringify(source.userData));
+
     this.needsUpdate = true;
+
     return this;
   }
 
@@ -201,131 +229,16 @@ export class Texture<T = any> {
     ++this.version;
   }
 
-  configure(configuration: Configuration) {
-    this.name = configuration.name;
-    this.mipmaps = configuration.mipmaps;
-    this.mapping = configuration.mapping;
-    this.channel = configuration.channel;
-    this.wrapS = configuration.wrapS;
-    this.wrapT = configuration.wrapT;
-    this.magFilter = configuration.magFilter;
-    this.minFilter = configuration.minFilter;
-    this.anisotropy = configuration.anisotropy;
-    this.format = configuration.format;
-    this.internalFormat = configuration.internalFormat;
-    this.type = configuration.type;
-    this.offset = configuration.offset;
-    this.repeat = configuration.repeat;
-    this.center = configuration.center;
-    this.rotation = configuration.rotation;
-    this.matrixAutoUpdate = configuration.matrixAutoUpdate;
-    this.matrix = configuration.matrix;
-    this.generateMipmaps = configuration.generateMipmaps;
-    this.premultiplyAlpha = configuration.premultiplyAlpha;
-    this.flipY = configuration.flipY;
-    this.unpackAlignment = configuration.unpackAlignment;
-    this.colorSpace = configuration.colorSpace;
-    this.userData = configuration.userData;
-    this.version = configuration.version;
-    this.isRenderTargetTexture = configuration.isRenderTargetTexture;
-    this.needsPMREMUpdate = configuration.needsPMREMUpdate;
-  }
-
   static configure(options?: Options): Configuration {
-    return {
-      name: options?.name ?? '',
-      mipmaps: options?.mipmaps ?? [],
-      mapping: options?.mapping ?? Mapping.UV,
-      channel: options?.channel ?? 0,
-      wrapS: options?.wrapS ?? Wrapping.ClampToEdge,
-      wrapT: options?.wrapT ?? Wrapping.ClampToEdge,
-      magFilter: options?.magFilter ?? MagnificationTextureFilter.Linear,
-      minFilter: options?.minFilter ?? MinificationTextureFilter.LinearMipmapLinear,
-      anisotropy: options?.anisotropy ?? 1,
-      format: options?.format ?? TextureFormat.RGBA,
-      internalFormat: options?.internalFormat ?? null,
-      type: options?.type ?? TextureDataType.UnsignedByte,
-      offset: options?.offset ?? new Vector2(0, 0),
-      repeat: options?.repeat ?? new Vector2(1, 1),
-      center: options?.center ?? new Vector2(0, 0),
-      rotation: options?.rotation ?? 0,
-      matrixAutoUpdate: options?.matrixAutoUpdate ?? true,
-      matrix: options?.matrix ?? new Matrix3(),
-      generateMipmaps: options?.generateMipmaps ?? true,
-      premultiplyAlpha: options?.premultiplyAlpha ?? false,
-      flipY: options?.flipY ?? true,
-      unpackAlignment: options?.unpackAlignment ?? 4,
-      colorSpace: options?.colorSpace ?? ColorSpace.No,
-      userData: options?.userData ?? {},
-      version: options?.version ?? 0,
-      isRenderTargetTexture: options?.isRenderTargetTexture ?? false,
-      needsPMREMUpdate: options?.needsPMREMUpdate ?? false,
-    };
+    return {};
   }
 }
 
 Texture.prototype.isTexture = true;
 
 export namespace Texture {
-  export interface Options {
-    name?: string;
-    mipmaps?: ImageData[];
-    mapping?: Mapping | CubeMapping;
-    channel?: number;
-    wrapS?: Wrapping;
-    wrapT?: Wrapping;
-    magFilter?: MagnificationTextureFilter;
-    minFilter?: MinificationTextureFilter;
-    anisotropy?: number;
-    format?: TextureFormat | CompressedTextureFormat;
-    internalFormat?: PixelFormat | null;
-    type?: TextureDataType;
-    offset?: Vector2;
-    repeat?: Vector2;
-    center?: Vector2;
-    rotation?: number;
-    matrixAutoUpdate?: boolean;
-    matrix?: Matrix3;
-    generateMipmaps?: boolean;
-    premultiplyAlpha?: boolean;
-    flipY?: boolean;
-    unpackAlignment?: 1 | 2 | 4 | 8;
-    colorSpace?: ColorSpace;
-    userData?: any;
-    version?: number;
-    isRenderTargetTexture?: boolean;
-    needsPMREMUpdate?: boolean;
-  }
-
-  export interface Configuration {
-    name: string;
-    mipmaps: ImageData[];
-    mapping: Mapping | CubeMapping;
-    channel: number;
-    wrapS: Wrapping;
-    wrapT: Wrapping;
-    magFilter: MagnificationTextureFilter;
-    minFilter: MinificationTextureFilter;
-    anisotropy: number;
-    format: TextureFormat | CompressedTextureFormat;
-    internalFormat: PixelFormat | null;
-    type: TextureDataType;
-    offset: Vector2;
-    repeat: Vector2;
-    center: Vector2;
-    rotation: number;
-    matrixAutoUpdate: boolean;
-    matrix: Matrix3;
-    generateMipmaps: boolean;
-    premultiplyAlpha: boolean;
-    flipY: boolean;
-    unpackAlignment: 1 | 2 | 4 | 8;
-    colorSpace: ColorSpace;
-    userData: any;
-    version: number;
-    isRenderTargetTexture: boolean;
-    needsPMREMUpdate: boolean;
-  }
+  export type Options = {};
+  export type Configuration = {};
 }
 type Options = Texture.Options;
 type Configuration = Texture.Configuration;

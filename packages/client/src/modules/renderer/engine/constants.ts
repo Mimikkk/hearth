@@ -181,7 +181,7 @@ export enum DepthTextureFormat {
   DepthStencil = TextureFormat.DepthStencil,
 }
 
-export enum CompressedTextureFormat {
+export enum CompressedPixelFormat {
   RGB_S3TC_DXT1 = 33776,
   RGBA_S3TC_DXT1 = 33777,
   RGBA_S3TC_DXT3 = 33778,

@@ -162,10 +162,22 @@ export class BatchedMesh extends Mesh {
     size = Math.max(size, 4);
 
     const matricesArray = new Float32Array(size * size * 4); // 4 floats per RGBA pixel
-    this._matricesTexture = new DataTexture(matricesArray, size, size, {
-      format: TextureFormat.RGBA,
-      type: TextureDataType.Float,
-    });
+    const matricesTexture = new DataTexture(
+      matricesArray,
+      size,
+      size,
+      TextureFormat.RGBA,
+      TextureDataType.Float,
+      undefined!,
+      undefined!,
+      undefined!,
+      undefined!,
+      undefined!,
+      undefined!,
+      undefined!,
+    );
+
+    this._matricesTexture = matricesTexture;
   }
 
   _initializeGeometry(reference: BufferGeometry) {

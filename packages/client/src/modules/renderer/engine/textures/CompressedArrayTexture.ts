@@ -1,4 +1,4 @@
-import { CompressedTextureFormat, TextureDataType, Wrapping } from '../constants.js';
+import { CompressedPixelFormat, TextureDataType, Wrapping } from '../constants.js';
 import { CompressedTexture } from './CompressedTexture.js';
 
 export class CompressedArrayTexture extends CompressedTexture {
@@ -9,7 +9,7 @@ export class CompressedArrayTexture extends CompressedTexture {
     width: number,
     height: number,
     depth: number,
-    format: CompressedTextureFormat,
+    format: CompressedPixelFormat,
     type: TextureDataType,
   ) {
     super(mipmaps, width, height, format, type);
