@@ -17,7 +17,8 @@ export const Example = {
   BackdropWater: 'backdrop_water',
   Camera: {
     Frustum: 'camera_frustum',
-    LogarithmicDepthBuffer: 'camera_log',
+    Selection: 'camera_selection',
+    LogarithmicDepthBuffer: 'camera_logarithmicdepthbuffer',
   },
   Clearcoat: 'clearcoat',
   Clipping: 'clipping',
@@ -70,11 +71,6 @@ export const Example = {
   TslTranspiler: 'tsl_transpiler',
   VideoPanorama: 'video_panorama',
   Primitives: 'primitives',
-  Controls: {
-    Drag: 'controls_drag',
-    Orbit: 'controls_orbit',
-    Selection: 'controls_selection',
-  },
   Loaders: {
     Stl: 'loader_stl',
     Tiff: 'loader_tiff',
