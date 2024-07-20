@@ -238,10 +238,10 @@ export class WorldAxesVisualizer extends Object3D {
 
     this.dummy.position.copy(this.center);
     this.dummy.lookAt(this.camera.position);
-    Quaternion.clone_(this.dummy.quaternion, this.q1);
+    Quaternion.fill_(this.dummy.quaternion, this.q1);
 
     this.dummy.lookAt(this.animation.position);
-    Quaternion.clone_(this.dummy.quaternion, this.q2);
+    Quaternion.fill_(this.dummy.quaternion, this.q2);
   }
 
   update(delta: number): void {

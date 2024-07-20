@@ -390,7 +390,7 @@ export class OrbitControls {
           scope.eventDispatcher.dispatch(_changeEvent, this);
 
           lastPosition.copy(scope.object.position);
-          Quaternion.clone_(scope.object.quaternion, lastQuaternion);
+          Quaternion.fill_(scope.object.quaternion, lastQuaternion);
           lastTargetPosition.copy(scope.target);
 
           return true;

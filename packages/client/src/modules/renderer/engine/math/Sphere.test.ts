@@ -24,12 +24,12 @@ describe('Math - Sphere', () => {
     expect(b.center).toEqual(vec3(1, 2, 3));
     expect(b.radius).toBe(4);
 
-    const cloned = Sphere_.copy(b);
+    const cloned = Sphere_.clone(b);
     expect(cloned).not.toBe(b);
     expect(cloned.center).toBe(b.center);
     expect(cloned.radius).toBe(b.radius);
 
-    const copied = Sphere_.clone(b);
+    const copied = Sphere_.copy(b);
     expect(copied.center).not.toBe(b.center);
     expect(copied.radius).toEqual(b.radius);
     expect(copied.center).toEqual(b.center);
@@ -230,7 +230,7 @@ describe('Math - Sphere', () => {
     expect(Sphere_.equals(a, c)).toBe(false);
     expect(Sphere_.equals(b, c)).toBe(false);
 
-    Sphere_.clone_(b, a);
+    Sphere_.fill_(b, a);
     expect(Sphere_.equals(a, b)).toBe(true);
   });
 });

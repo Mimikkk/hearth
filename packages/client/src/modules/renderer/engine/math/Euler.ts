@@ -22,6 +22,7 @@ export namespace Euler {
   export const empty = (): Euler => create(0, 0, 0, 'XYZ');
   export type Order = 'XYZ' | 'YXZ' | 'ZXY' | 'ZYX' | 'YZX' | 'XZY';
 
+  export const copy = ({ x, y, z, order }: Euler): Euler => create(x, y, z, order);
   export const fill = (self: Euler, x: number, y: number, z: number, order: Order): Euler => {
     self.x = x;
     self.y = y;
@@ -30,10 +31,14 @@ export namespace Euler {
 
     return self;
   };
-  export const fill_ = (into: Euler, { order, x, y, z }: Euler): Euler => fill(into, x, y, z, order);
+  export const fill_ = ({ order, x, y, z }: Euler, into: Euler): Euler => {
+    into.x = x;
+    into.y = y;
+    into.z = z;
+    into.order = order;
 
-  export const clone = (from: Euler): Euler => fill_(empty(), from);
-  export const clone_ = (from: Euler, into: Euler): Euler => fill_(into, from);
+    return into;
+  };
 
   export const fromVec = ({ x, y, z }: Const<Vec3>, order: Order = 'XYZ'): Euler => create(x, y, z, order);
   export const fromVec_ = ({ x, y, z }: Const<Vec3>, into: Euler): Euler => fill(into, x, y, z, into.order);
