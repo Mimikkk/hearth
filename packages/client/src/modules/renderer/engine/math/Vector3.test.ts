@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { IVec3 } from './Vector3.ts';
-import { Vec2 } from './Vector2.ts';
+import { IVec2 } from './Vector2.ts';
 import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
 import { Spherical } from '@modules/renderer/engine/math/Spherical.js';
 import { Euler } from './Euler.ts';
@@ -12,7 +12,7 @@ import { Quaternion } from './Quaternion.ts';
 import { PerspectiveCamera } from '../cameras/PerspectiveCamera.ts';
 
 const { vec3 } = IVec3;
-const vec2 = Vec2.new;
+const { vec2 } = IVec2;
 
 const closeTo = (a: IVec3, b: IVec3, epsilon = Number.EPSILON) => {
   expect(a.x).closeTo(b.x, epsilon);

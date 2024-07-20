@@ -1,6 +1,6 @@
 import { Plane, Plane_ } from '../math/Plane.js';
 import { Intersection, Raycaster } from '../core/Raycaster.js';
-import { Vec2 } from '../math/Vector2.js';
+import { IVec2, Vector2 } from '../math/Vector2.js';
 import { IVec3, Vector3 } from '../math/Vector3.js';
 import { Matrix4 } from '../math/Matrix4.js';
 import { Object3D } from '../core/Object3D.js';
@@ -11,10 +11,10 @@ import { Group } from '@modules/renderer/engine/objects/Group.js';
 const _plane = new Plane();
 const _raycaster = new Raycaster();
 
-const _location = Vec2.new();
+const _location = new Vector2();
 const _offset = new Vector3();
-const _diff = Vec2.new();
-const _previousPointer = Vec2.new();
+const _diff = new Vector2();
+const _previousPointer = new Vector2();
 const _intersection = new Vector3();
 const _world = new Vector3();
 const _inverseMatrix = new Matrix4();
@@ -61,7 +61,8 @@ export class DragControls {
             selected.position.copy(_intersection.sub(_offset).applyMatrix4(_inverseMatrix));
           }
         } else if (this.configuration.mode === 'rotate') {
-          const { x, y } = _diff.from(_location).sub(_previousPointer).scale(this.configuration.rotateSpeed);
+          IVec2.sub_(_location, _previousPointer, _diff);
+          const { x, y } = IVec2.scale(_diff, this.configuration.rotateSpeed);
 
           IVec3.normalize(_right);
           selected.rotateOnWorldAxis(_up, x);
@@ -70,7 +71,7 @@ export class DragControls {
 
         this.events.dispatch({ type: 'drag', object: selected }, event);
 
-        Vec2.clone(_location, _previousPointer);
+        _previousPointer.copy(_location);
       } else {
         if (event.pointerType === 'mouse' || event.pointerType === 'pen') {
           intersections.length = 0;
@@ -112,7 +113,7 @@ export class DragControls {
         }
       }
 
-      Vec2.clone(_location, _previousPointer);
+      _previousPointer.copy(_location);
     };
     const onPointerDown = (event: PointerEvent) => {
       if (!this.configuration.enabled) return;
@@ -160,7 +161,7 @@ export class DragControls {
         this.events.dispatch({ type: 'dragstart', object: selected! }, event);
       }
 
-      Vec2.clone(_location, _previousPointer);
+      _previousPointer.copy(_location);
     };
     const onPointerCancel = (event: PointerEvent) => {
       if (!this.configuration.enabled) return;
@@ -193,7 +194,6 @@ export class DragControls {
 
   activate: () => void;
   deactivate: () => void;
-
   dispose(): void {
     this.deactivate();
   }
@@ -229,7 +229,7 @@ const configure = (parameters?: Parameters): Configuration => {
 function updateLocation({ clientX, clientY }: PointerEvent, dom: HTMLElement) {
   const { left, top, width, height } = dom.getBoundingClientRect();
 
-  _location.set((clientX - left) / width, (clientY - top) / height);
+  IVec2.set(_location, ((clientX - left) / width) * 2 - 1, (-(clientY - top) / height) * 2 + 1);
 }
 
 function findGroup(object: Object3D, group: Group | null = null) {

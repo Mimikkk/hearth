@@ -1,8 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { Box2 } from './Box2.js';
-import { Vec2 } from './Vector2.ts';
-
-const vec2 = Vec2.new;
+import { IVec2 } from './Vector2.ts';
 
 describe('Math - Box2', () => {
   it('Instancing', () => {
@@ -59,72 +57,72 @@ describe('Math - Box2', () => {
     const box1 = Box2.fromVecs([]);
     expect(Box2.isEmpty(box1)).toEqual(true);
 
-    const box2 = Box2.fromVecs([vec2(0, 0), vec2(1, 1), vec2(2, 2)]);
+    const box2 = Box2.fromVecs([IVec2.create(0, 0), IVec2.create(1, 1), IVec2.create(2, 2)]);
     expect(box2).toEqual(Box2.create(0, 0, 2, 2));
 
-    const box3 = Box2.fromVecs([vec2(1, 1)]);
+    const box3 = Box2.fromVecs([IVec2.create(1, 1)]);
     expect(box3).toEqual(Box2.create(1, 1, 1, 1));
   });
 
   it('fromCenterAndSize', () => {
-    const box1 = Box2.fromCenterAndSize(vec2(0, 0), vec2(2, 2));
+    const box1 = Box2.fromCenterAndSize(IVec2.create(0, 0), IVec2.create(2, 2));
     expect(box1).toEqual(Box2.create(-1, -1, 1, 1));
 
-    const box2 = Box2.fromCenterAndSize(vec2(1, 1), vec2(2, 2));
+    const box2 = Box2.fromCenterAndSize(IVec2.create(1, 1), IVec2.create(2, 2));
     expect(box2).toEqual(Box2.create(0, 0, 2, 2));
 
-    const box3 = Box2.fromCenterAndSize(vec2(0, 0), vec2(0, 0));
+    const box3 = Box2.fromCenterAndSize(IVec2.create(0, 0), IVec2.create(0, 0));
     expect(box3).toEqual(Box2.create(0, 0, 0, 0));
 
     const box4 = Box2.create(0, 0, 0, 0);
 
-    expect(Box2.fromCenterAndSize_(vec2(0, 0), vec2(2, 2), box4)).toBe(box4);
+    expect(Box2.fromCenterAndSize_(IVec2.create(0, 0), IVec2.create(2, 2), box4)).toBe(box4);
     expect(box4).toEqual(Box2.create(-1, -1, 1, 1));
   });
 
   it('center', () => {
     const box1 = Box2.create(0, 0, 0, 0);
-    const center1 = vec2(0, 0);
+    const center1 = IVec2.create(0, 0);
     expect(Box2.center_(box1, center1)).toBe(center1);
-    expect(center1).toEqual(vec2(0, 0));
+    expect(center1).toEqual(IVec2.create(0, 0));
 
     const box2 = Box2.create(0, 0, 1, 1);
     const center2 = Box2.center(box2);
-    expect(center2).toEqual(vec2(0.5, 0.5));
+    expect(center2).toEqual(IVec2.create(0.5, 0.5));
   });
 
   it('size', () => {
     const box1 = Box2.create(0, 0, 0, 0);
     const size1 = Box2.size(box1);
-    expect(size1).toEqual(vec2(0, 0));
+    expect(size1).toEqual(IVec2.create(0, 0));
 
     const box2 = Box2.create(0, 0, 1, 1);
     const size2 = Box2.size(box2);
 
-    expect(size2).toEqual(vec2(1, 1));
+    expect(size2).toEqual(IVec2.create(1, 1));
 
     const box3 = Box2.create(-1, -1, 1, 1);
     const size3 = Box2.size(box3);
-    expect(size3).toEqual(vec2(2, 2));
+    expect(size3).toEqual(IVec2.create(2, 2));
 
-    const size = vec2(0, 0);
+    const size = IVec2.create(0, 0);
     expect(Box2.size_(box3, size)).toBe(size);
-    expect(size).toEqual(vec2(2, 2));
+    expect(size).toEqual(IVec2.create(2, 2));
   });
 
   it('expandByVec', () => {
     const box1 = Box2.create(0, 0, 0, 0);
 
-    expect(Box2.expandByVec(box1, vec2(0, 0))).toBe(box1);
+    expect(Box2.expandByVec(box1, IVec2.create(0, 0))).toBe(box1);
     expect(box1).toEqual(Box2.create(0, 0, 0, 0));
 
-    expect(Box2.expandByVec(box1, vec2(1, 1))).toBe(box1);
+    expect(Box2.expandByVec(box1, IVec2.create(1, 1))).toBe(box1);
     expect(box1).toEqual(Box2.create(0, 0, 1, 1));
 
-    expect(Box2.expandByVec(box1, vec2(-1, -1))).toBe(box1);
+    expect(Box2.expandByVec(box1, IVec2.create(-1, -1))).toBe(box1);
     expect(box1).toEqual(Box2.create(-1, -1, 1, 1));
 
-    expect(Box2.expandByVec(box1, vec2(-1, -1))).toBe(box1);
+    expect(Box2.expandByVec(box1, IVec2.create(-1, -1))).toBe(box1);
     expect(box1).toEqual(Box2.create(-1, -1, 1, 1));
   });
 
@@ -161,13 +159,13 @@ describe('Math - Box2', () => {
 
   it('containsVec', () => {
     const box1 = Box2.create(0, 0, 0, 0);
-    expect(Box2.containsVec(box1, vec2(0, 0))).toBe(true);
-    expect(Box2.containsVec(box1, vec2(1, 1))).toBe(false);
+    expect(Box2.containsVec(box1, IVec2.create(0, 0))).toBe(true);
+    expect(Box2.containsVec(box1, IVec2.create(1, 1))).toBe(false);
 
     Box2.expandByScalar(box1, 1);
-    expect(Box2.containsVec(box1, vec2(0, 0))).toBe(true);
-    expect(Box2.containsVec(box1, vec2(1, 1))).toBe(true);
-    expect(Box2.containsVec(box1, vec2(-1, -1))).toBe(true);
+    expect(Box2.containsVec(box1, IVec2.create(0, 0))).toBe(true);
+    expect(Box2.containsVec(box1, IVec2.create(1, 1))).toBe(true);
+    expect(Box2.containsVec(box1, IVec2.create(-1, -1))).toBe(true);
   });
 
   it('intersects', () => {
@@ -183,7 +181,7 @@ describe('Math - Box2', () => {
     expect(Box2.intersects(box3, box1)).toBe(true);
     expect(Box2.intersects(box2, box3)).toBe(true);
 
-    Box2.translate(box2, vec2(2, 2));
+    Box2.translate(box2, IVec2.create(2, 2));
     expect(Box2.intersects(box1, box2)).toBe(false);
     expect(Box2.intersects(box2, box1)).toBe(false);
     expect(Box2.intersects(box2, box3)).toBe(false);
@@ -192,36 +190,36 @@ describe('Math - Box2', () => {
   it('clampVec', () => {
     const box1 = Box2.create(0, 0, 0, 0);
     const box2 = Box2.create(-1, -1, 1, 1);
-    const point1 = vec2(0, 0);
+    const point1 = IVec2.create(0, 0);
 
     expect(Box2.clampVec_(box1, point1, point1)).toBe(point1);
-    expect(point1).toEqual(vec2(0, 0));
+    expect(point1).toEqual(IVec2.create(0, 0));
 
-    const point2 = vec2(2, 2);
+    const point2 = IVec2.create(2, 2);
     expect(Box2.clampVec_(box2, point2, point2)).toBe(point2);
-    expect(point2).toEqual(vec2(1, 1));
+    expect(point2).toEqual(IVec2.create(1, 1));
 
-    const point3 = vec2(2, 2);
+    const point3 = IVec2.create(2, 2);
     const point4 = Box2.clampVec(box2, point3);
-    expect(point3).toEqual(vec2(2, 2));
-    expect(point4).toEqual(vec2(1, 1));
+    expect(point3).toEqual(IVec2.create(2, 2));
+    expect(point4).toEqual(IVec2.create(1, 1));
   });
 
   it('distanceTo', () => {
     const box1 = Box2.create(0, 0, 0, 0);
-    expect(Box2.distanceTo(box1, vec2(0, 0))).toBe(0);
-    expect(Box2.distanceTo(box1, vec2(1, 1))).toBe(Math.sqrt(2));
-    expect(Box2.distanceTo(box1, vec2(-1, -1))).toBe(Math.sqrt(2));
+    expect(Box2.distanceTo(box1, IVec2.create(0, 0))).toBe(0);
+    expect(Box2.distanceTo(box1, IVec2.create(1, 1))).toBe(Math.sqrt(2));
+    expect(Box2.distanceTo(box1, IVec2.create(-1, -1))).toBe(Math.sqrt(2));
 
     const box2 = Box2.create(-1, -1, 1, 1);
-    expect(Box2.distanceTo(box2, vec2(1, 1))).toBe(0);
-    expect(Box2.distanceTo(box2, vec2(0, 0))).toBe(0);
-    expect(Box2.distanceTo(box2, vec2(-1, -1))).toBe(0);
-    expect(Box2.distanceTo(box2, vec2(-2, -2))).toBe(Math.sqrt(2));
+    expect(Box2.distanceTo(box2, IVec2.create(1, 1))).toBe(0);
+    expect(Box2.distanceTo(box2, IVec2.create(0, 0))).toBe(0);
+    expect(Box2.distanceTo(box2, IVec2.create(-1, -1))).toBe(0);
+    expect(Box2.distanceTo(box2, IVec2.create(-2, -2))).toBe(Math.sqrt(2));
 
-    expect(Box2.distanceSqTo(box1, vec2(0, 0))).toBe(0);
-    expect(Box2.distanceSqTo(box1, vec2(1, 1))).toBe(2);
-    expect(Box2.distanceSqTo(box1, vec2(-1, -1))).toBe(2);
+    expect(Box2.distanceSqTo(box1, IVec2.create(0, 0))).toBe(0);
+    expect(Box2.distanceSqTo(box1, IVec2.create(1, 1))).toBe(2);
+    expect(Box2.distanceSqTo(box1, IVec2.create(-1, -1))).toBe(2);
   });
 
   it('intersect', () => {
@@ -258,16 +256,16 @@ describe('Math - Box2', () => {
 
   it('translate', () => {
     const box1 = Box2.create(1, 2, 3, 4);
-    expect(Box2.translate(box1, vec2(1, 1))).toBe(box1);
+    expect(Box2.translate(box1, IVec2.create(1, 1))).toBe(box1);
     expect(box1).toEqual(Box2.create(2, 3, 4, 5));
 
-    expect(Box2.translate(box1, vec2(-1, -1))).toBe(box1);
+    expect(Box2.translate(box1, IVec2.create(-1, -1))).toBe(box1);
     expect(box1).toEqual(Box2.create(1, 2, 3, 4));
 
-    expect(Box2.translate(box1, vec2(0, 0))).toBe(box1);
+    expect(Box2.translate(box1, IVec2.create(0, 0))).toBe(box1);
     expect(box1).toEqual(Box2.create(1, 2, 3, 4));
 
-    const box2 = Box2.translated(box1, vec2(1, 1));
+    const box2 = Box2.translated(box1, IVec2.create(1, 1));
     expect(box1).toEqual(Box2.create(1, 2, 3, 4));
     expect(box2).toEqual(Box2.create(2, 3, 4, 5));
   });
