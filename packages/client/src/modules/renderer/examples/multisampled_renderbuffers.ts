@@ -9,7 +9,7 @@ import { QuadMesh } from '@modules/renderer/engine/objects/QuadMesh.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, renderer;
-const mouse = new Engine.Vector2();
+const mouse = new Engine.Vec2();
 
 let quadMesh, renderTarget;
 
@@ -22,7 +22,7 @@ const params = {
   samples: 4,
 };
 
-const mat4 = new Engine.Matrix4();
+const mat4 = new Engine.Mat4();
 
 const count = 50;
 const fullRadius = 20; // Radius of the sphere
@@ -33,7 +33,7 @@ const positions = new Array(count).fill().map((_, i) => {
   const phi = Math.acos(2 * Math.random() - 1) - Math.PI / 2; // phi: latitude, range -π/2 to π/2
   const theta = 2 * Math.PI * Math.random(); // theta: longitude, range 0 to 2π
 
-  return new Engine.Vector3(
+  return new Engine.Vec3(
     radius * Math.cos(phi) * Math.cos(theta), // x
     radius * Math.sin(phi), // y
     radius * Math.cos(phi) * Math.sin(theta), // z

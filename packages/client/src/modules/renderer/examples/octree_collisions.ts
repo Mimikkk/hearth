@@ -10,7 +10,7 @@ import { IcosahedronGeometry } from '@modules/renderer/engine/geometries/Icosahe
 import { MeshLambertMaterial } from '@modules/renderer/engine/materials/MeshLambertMaterial.js';
 import { Mesh } from '@modules/renderer/engine/objects/Mesh.js';
 import { Sphere } from '@modules/renderer/engine/math/Sphere.js';
-import { Vector3 } from '@modules/renderer/engine/math/Vector3.js';
+import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { Octree } from '@modules/renderer/engine/math/Octree.js';
 import { Capsule } from '@modules/renderer/engine/math/Capsule.js';
 import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/GLTFLoader.js';
@@ -61,7 +61,7 @@ const sphereMaterial = new MeshLambertMaterial({ color: 0xdede8d });
 const spheres: {
   mesh: Mesh;
   collider: Sphere;
-  velocity: Vector3;
+  velocity: Vec3;
 }[] = [];
 let sphereIdx = 0;
 
@@ -74,26 +74,26 @@ for (let i = 0; i < NUM_SPHERES; i++) {
 
   spheres.push({
     mesh: sphere,
-    collider: new Sphere(new Vector3(0, -100, 0), SPHERE_RADIUS),
-    velocity: new Vector3(),
+    collider: new Sphere(new Vec3(0, -100, 0), SPHERE_RADIUS),
+    velocity: new Vec3(),
   });
 }
 
 const worldOctree = new Octree();
 
-const playerCollider = new Capsule(new Vector3(0, 0.35, 0), new Vector3(0, 1, 0), 0.35);
+const playerCollider = new Capsule(new Vec3(0, 0.35, 0), new Vec3(0, 1, 0), 0.35);
 
-const playerVelocity = new Vector3();
-const playerDirection = new Vector3();
+const playerVelocity = new Vec3();
+const playerDirection = new Vec3();
 
 let playerOnFloor = false;
 let mouseTime = 0;
 
 const keyStates: Record<string, boolean> = {};
 
-const vector1 = new Vector3();
-const vector2 = new Vector3();
-const vector3 = new Vector3();
+const vector1 = new Vec3();
+const vec2 = new Vec3();
+const vec3 = new Vec3();
 
 const renderer = await Renderer.create({ antialias: true });
 renderer._animation.animationLoop = animate;
@@ -198,7 +198,7 @@ function updatePlayer(deltaTime: number) {
   camera.position.copy(playerCollider.end);
 }
 
-function playerSphereCollision(sphere: { collider: Sphere; velocity: Vector3 }) {
+function playerSphereCollision(sphere: { collider: Sphere; velocity: Vec3 }) {
   const center = vector1.copy(playerCollider.start).add(playerCollider.end).multiplyScalar(0.5);
 
   const sphere_center = sphere.collider.center;
@@ -213,8 +213,8 @@ function playerSphereCollision(sphere: { collider: Sphere; velocity: Vector3 }) 
 
     if (d2 < r2) {
       const normal = vector1.copy(point).sub(sphere_center).normalize();
-      const v1 = vector2.copy(normal).multiplyScalar(normal.dot(playerVelocity));
-      const v2 = vector3.copy(normal).multiplyScalar(normal.dot(sphere.velocity));
+      const v1 = vec2.copy(normal).multiplyScalar(normal.dot(playerVelocity));
+      const v2 = vec3.copy(normal).multiplyScalar(normal.dot(sphere.velocity));
 
       playerVelocity.add(v2).sub(v1);
       sphere.velocity.add(v1).sub(v2);
@@ -238,8 +238,8 @@ function spheresCollisions() {
 
       if (d2 < r2) {
         const normal = vector1.copy(s1.collider.center).sub(s2.collider.center).normalize();
-        const v1 = vector2.copy(normal).multiplyScalar(normal.dot(s1.velocity));
-        const v2 = vector3.copy(normal).multiplyScalar(normal.dot(s2.velocity));
+        const v1 = vec2.copy(normal).multiplyScalar(normal.dot(s1.velocity));
+        const v2 = vec3.copy(normal).multiplyScalar(normal.dot(s2.velocity));
 
         s1.velocity.add(v2).sub(v1);
         s2.velocity.add(v1).sub(v2);

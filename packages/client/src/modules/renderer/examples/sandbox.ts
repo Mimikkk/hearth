@@ -126,7 +126,7 @@ async function init() {
   const points = [];
 
   for (let i = 0; i < 1000; i++) {
-    const point = new Engine.Vector3().random().subScalar(0.5);
+    const point = new Engine.Vec3().random().subScalar(0.5);
     points.push(point);
   }
 
@@ -142,11 +142,11 @@ async function init() {
   // lines
 
   const geometryLine = new Engine.BufferGeometry().setFromPoints([
-    new Engine.Vector3(-0.5, -0.5, 0),
-    new Engine.Vector3(0.5, -0.5, 0),
-    new Engine.Vector3(0.5, 0.5, 0),
-    new Engine.Vector3(-0.5, 0.5, 0),
-    new Engine.Vector3(-0.5, -0.5, 0),
+    new Engine.Vec3(-0.5, -0.5, 0),
+    new Engine.Vec3(0.5, -0.5, 0),
+    new Engine.Vec3(0.5, 0.5, 0),
+    new Engine.Vec3(-0.5, 0.5, 0),
+    new Engine.Vec3(-0.5, -0.5, 0),
   ]);
 
   geometryLine.setAttribute('color', geometryLine.getAttribute('position'));

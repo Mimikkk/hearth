@@ -1,9 +1,9 @@
 import { Quaternion } from './Quaternion.js';
-import { Matrix4 } from './Matrix4.js';
+import { Mat4 } from './Mat4.js';
 import { clamp } from './MathUtils.js';
-import { Vector3 } from '@modules/renderer/engine/math/Vector3.js';
+import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 
-const _matrix = /*@__PURE__*/ new Matrix4();
+const _matrix = /*@__PURE__*/ new Mat4();
 const _quaternion = /*@__PURE__*/ new Quaternion();
 
 type EulerOrder = 'XYZ' | 'YXZ' | 'ZXY' | 'ZYX' | 'YZX' | 'XZY';
@@ -86,7 +86,7 @@ export class Euler {
     return this;
   }
 
-  setFromRotationMatrix(m: Matrix4, order: EulerOrder = this._order, update: boolean = true): this {
+  setFromRotationMatrix(m: Mat4, order: EulerOrder = this._order, update: boolean = true): this {
     // assumes the upper 3x3 of m is a pure rotation matrix (i.e, unscaled)
 
     const te = m.elements;
@@ -184,7 +184,7 @@ export class Euler {
     return this.setFromRotationMatrix(_matrix, order, update);
   }
 
-  setFromVector3(v: Vector3, order: EulerOrder = this._order): this {
+  setFromVec3(v: Vec3, order: EulerOrder = this._order): this {
     return this.set(v.x, v.y, v.z, order);
   }
 

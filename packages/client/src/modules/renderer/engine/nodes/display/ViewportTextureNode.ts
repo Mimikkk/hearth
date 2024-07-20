@@ -2,9 +2,9 @@ import TextureNode from '../accessors/TextureNode.js';
 import { NodeUpdateType } from '../core/constants.js';
 import { addNodeElement, nodeProxy } from '../shadernode/ShaderNodes.js';
 import { viewportTopLeft } from './ViewportNode.js';
-import { Filter, FramebufferTexture, Vector2 } from '@modules/renderer/engine/engine.js';
+import { Filter, FramebufferTexture, Vec2 } from '@modules/renderer/engine/engine.js';
 
-const _size = new Vector2();
+const _size = new Vec2();
 
 class ViewportTextureNode extends TextureNode {
   static type = 'ViewportTextureNode';

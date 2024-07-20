@@ -1,7 +1,7 @@
 import { BufferGeometry } from '../core/BufferGeometry.js';
 import { Float32BufferAttribute } from '../core/BufferAttribute.js';
-import { Vector3 } from '../math/Vector3.js';
-import { Vector2 } from '../math/Vector2.js';
+import { Vec3 } from '../math/Vec3.js';
+import { Vec2 } from '../math/Vec2.js';
 
 export class PolyhedronGeometry extends BufferGeometry {
   declare type: string | 'PolyhedronGeometry';
@@ -52,9 +52,9 @@ export class PolyhedronGeometry extends BufferGeometry {
     // helper functions
 
     function subdivide(detail: number) {
-      const a = new Vector3();
-      const b = new Vector3();
-      const c = new Vector3();
+      const a = new Vec3();
+      const b = new Vec3();
+      const c = new Vec3();
 
       // iterate over all faces and apply a subdivision with the given detail value
 
@@ -71,12 +71,12 @@ export class PolyhedronGeometry extends BufferGeometry {
       }
     }
 
-    function subdivideFace(a: Vector3, b: Vector3, c: Vector3, detail: number) {
+    function subdivideFace(a: Vec3, b: Vec3, c: Vec3, detail: number) {
       const cols = detail + 1;
 
       // we use this multidimensional array as a data structure for creating the subdivision
 
-      const v: Vector3[][] = [];
+      const v: Vec3[][] = [];
 
       // construct all of the vertices for this subdivision
 
@@ -117,7 +117,7 @@ export class PolyhedronGeometry extends BufferGeometry {
     }
 
     function applyRadius(radius: number) {
-      const vertex = new Vector3();
+      const vertex = new Vec3();
 
       // iterate over the entire buffer and apply the radius to each vertex
 
@@ -135,7 +135,7 @@ export class PolyhedronGeometry extends BufferGeometry {
     }
 
     function generateUVs() {
-      const vertex = new Vector3();
+      const vertex = new Vec3();
 
       for (let i = 0; i < vertexBuffer.length; i += 3) {
         vertex.x = vertexBuffer[i + 0];
@@ -175,11 +175,11 @@ export class PolyhedronGeometry extends BufferGeometry {
       }
     }
 
-    function pushVertex(vertex: Vector3) {
+    function pushVertex(vertex: Vec3) {
       vertexBuffer.push(vertex.x, vertex.y, vertex.z);
     }
 
-    function getVertexByIndex(index: number, vertex: Vector3) {
+    function getVertexByIndex(index: number, vertex: Vec3) {
       const stride = index * 3;
 
       vertex.x = vertices[stride + 0];
@@ -188,15 +188,15 @@ export class PolyhedronGeometry extends BufferGeometry {
     }
 
     function correctUVs() {
-      const a = new Vector3();
-      const b = new Vector3();
-      const c = new Vector3();
+      const a = new Vec3();
+      const b = new Vec3();
+      const c = new Vec3();
 
-      const centroid = new Vector3();
+      const centroid = new Vec3();
 
-      const uvA = new Vector2();
-      const uvB = new Vector2();
-      const uvC = new Vector2();
+      const uvA = new Vec2();
+      const uvB = new Vec2();
+      const uvC = new Vec2();
 
       for (let i = 0, j = 0; i < vertexBuffer.length; i += 9, j += 6) {
         a.set(vertexBuffer[i + 0], vertexBuffer[i + 1], vertexBuffer[i + 2]);
@@ -217,7 +217,7 @@ export class PolyhedronGeometry extends BufferGeometry {
       }
     }
 
-    function correctUV(uv: Vector2, stride: number, vector: Vector3, azimuth: number) {
+    function correctUV(uv: Vec2, stride: number, vector: Vec3, azimuth: number) {
       if (azimuth < 0 && uv.x === 1) {
         uvBuffer[stride] = uv.x - 1;
       }
@@ -229,13 +229,13 @@ export class PolyhedronGeometry extends BufferGeometry {
 
     // Angle around the Y axis, counter-clockwise when looking from above.
 
-    function azimuth(vector: Vector3) {
+    function azimuth(vector: Vec3) {
       return Math.atan2(vector.z, -vector.x);
     }
 
     // Angle above the XZ plane.
 
-    function inclination(vector: Vector3) {
+    function inclination(vector: Vec3) {
       return Math.atan2(-vector.y, Math.sqrt(vector.x * vector.x + vector.z * vector.z));
     }
   }

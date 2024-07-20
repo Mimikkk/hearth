@@ -1,15 +1,8 @@
-import {
-  BufferGeometry,
-  Float32BufferAttribute,
-  LineSegments,
-  LineBasicMaterial,
-  Vector3,
-  Object3D,
-} from '../engine.js';
+import { BufferGeometry, Float32BufferAttribute, LineSegments, LineBasicMaterial, Vec3, Object3D } from '../engine.js';
 import { ColorRepresentation } from '@modules/renderer/engine/math/Color.js';
 
-const _v1 = new Vector3();
-const _v2 = new Vector3();
+const _v1 = new Vec3();
+const _v2 = new Vec3();
 
 export class VertexTangentsHelper extends LineSegments {
   declare type: string | 'VertexTangentsHelper';
@@ -51,7 +44,7 @@ export class VertexTangentsHelper extends LineSegments {
     let idx = 0;
 
     for (let j = 0, jl = objPos.count; j < jl; j++) {
-      _v1.fromBufferAttribute(objPos, j).applyMatrix4(matrixWorld);
+      _v1.fromBufferAttribute(objPos, j).applyMat4(matrixWorld);
 
       _v2.fromBufferAttribute(objTan, j);
 

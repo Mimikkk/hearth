@@ -1,8 +1,8 @@
 import { CoordinateSystem } from '../constants.js';
-import { Vector3 } from './Vector3.js';
+import { Vec3 } from './Vec3.js';
 import { Sphere } from './Sphere.js';
 import { Plane } from './Plane.js';
-import type { Matrix4 } from './Matrix4.js';
+import type { Mat4 } from './Mat4.js';
 import type { Box3 } from './Box3.js';
 import type { Sprite } from '../objects/Sprite.js';
 import type { Object3D } from '../core/Object3D.js';
@@ -45,7 +45,7 @@ export class Frustum {
     return this;
   }
 
-  setFromProjectionMatrix(matrix: Matrix4, coordinateSystem: CoordinateSystem = CoordinateSystem.WebGL): this {
+  setFromProjectionMatrix(matrix: Mat4, coordinateSystem: CoordinateSystem = CoordinateSystem.WebGL): this {
     const planes = this.planes;
     const me = matrix.elements;
     const me0 = me[0],
@@ -88,21 +88,21 @@ export class Frustum {
     if (object.boundingSphere !== undefined) {
       if (object.boundingSphere === null) object.computeBoundingSphere();
 
-      _sphere.copy(object.boundingSphere).applyMatrix4(object.matrixWorld);
+      _sphere.copy(object.boundingSphere).applyMat4(object.matrixWorld);
     } else {
       const geometry = object.geometry;
 
       if (geometry.boundingSphere === null) geometry.computeBoundingSphere();
 
-      _sphere.copy(geometry.boundingSphere).applyMatrix4(object.matrixWorld);
+      _sphere.copy(geometry.boundingSphere).applyMat4(object.matrixWorld);
     }
 
     return this.intersectsSphere(_sphere);
   }
 
   intersectsSprite(sprite: Sprite): boolean {
-    const _sphere = new Sphere(new Vector3(0, 0, 0), 0.7071067811865476);
-    _sphere.applyMatrix4(sprite.matrixWorld);
+    const _sphere = new Sphere(new Vec3(0, 0, 0), 0.7071067811865476);
+    _sphere.applyMat4(sprite.matrixWorld);
 
     return this.intersectsSphere(_sphere);
   }
@@ -131,7 +131,7 @@ export class Frustum {
 
       // corner at max distance
 
-      const _vector = new Vector3(
+      const _vector = new Vec3(
         plane.normal.x > 0 ? box.min.x : box.max.x,
         plane.normal.y > 0 ? box.min.y : box.max.y,
         plane.normal.z > 0 ? box.min.z : box.max.z,
@@ -145,7 +145,7 @@ export class Frustum {
     return true;
   }
 
-  containsPoint(point: Vector3): boolean {
+  containsPoint(point: Vec3): boolean {
     const planes = this.planes;
 
     for (let i = 0; i < 6; i++) {

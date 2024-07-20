@@ -21,8 +21,8 @@ import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindow
 let camera, scene, renderer;
 let computeNode;
 
-const pointerVector = new Engine.Vector2(-10.0, -10.0); // Out of bounds first
-const scaleVector = new Engine.Vector2(1, 1);
+const pointerVector = new Engine.Vec2(-10.0, -10.0); // Out of bounds first
+const scaleVector = new Engine.Vec2(1, 1);
 
 init();
 

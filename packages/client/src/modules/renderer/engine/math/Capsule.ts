@@ -1,4 +1,4 @@
-import { Vector3 } from './Vector3.js';
+import { Vec3 } from './Vec3.js';
 import { Box3 } from '@modules/renderer/engine/math/Box3.js';
 
 export class Capsule {
@@ -6,8 +6,8 @@ export class Capsule {
   declare isCapsule: true;
 
   constructor(
-    public start: Vector3 = new Vector3(0, 0, 0),
-    public end: Vector3 = new Vector3(0, 1, 0),
+    public start: Vec3 = new Vec3(0, 0, 0),
+    public end: Vec3 = new Vec3(0, 1, 0),
     public radius: number = 1,
   ) {}
 
@@ -15,7 +15,7 @@ export class Capsule {
     return new Capsule(this.start.clone(), this.end.clone(), this.radius);
   }
 
-  set(start: Vector3, end: Vector3, radius: number): this {
+  set(start: Vec3, end: Vec3, radius: number): this {
     this.start.copy(start);
     this.end.copy(end);
     this.radius = radius;
@@ -31,11 +31,11 @@ export class Capsule {
     return this;
   }
 
-  getCenter(target: Vector3): Vector3 {
+  getCenter(target: Vec3): Vec3 {
     return target.copy(this.end).add(this.start).multiplyScalar(0.5);
   }
 
-  translate(v: Vector3): this {
+  translate(v: Vec3): this {
     this.start.add(v);
     this.end.add(v);
 

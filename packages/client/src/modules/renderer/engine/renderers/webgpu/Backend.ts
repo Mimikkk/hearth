@@ -1,13 +1,4 @@
-import {
-  BufferAttribute,
-  CoordinateSystem,
-  Object3D,
-  RenderTarget,
-  Scene,
-  Texture,
-  Vector2,
-  Vector3,
-} from '../../engine.js';
+import { BufferAttribute, CoordinateSystem, Object3D, RenderTarget, Scene, Texture, Vec2, Vec3 } from '../../engine.js';
 
 import {
   GPUFeatureNameType,
@@ -46,9 +37,9 @@ export class Backend {
   }
 
   getDrawingBufferSize() {
-    const vector2 = new Vector2();
+    const vec2 = new Vec2();
 
-    return this.renderer.getDrawingBufferSize(vector2);
+    return this.renderer.getDrawingBufferSize(vec2);
   }
 
   getClearColor() {
@@ -1059,7 +1050,7 @@ export class Backend {
     return this.adapter.features.has(name);
   }
 
-  copyTextureToTexture(position: Vector3, srcTexture: Texture, dstTexture: Texture, level: number = 0) {
+  copyTextureToTexture(position: Vec3, srcTexture: Texture, dstTexture: Texture, level: number = 0) {
     const encoder = this.device.createCommandEncoder({
       label: 'copyTextureToTexture_' + srcTexture.id + '_' + dstTexture.id,
     });

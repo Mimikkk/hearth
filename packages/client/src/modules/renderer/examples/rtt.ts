@@ -8,7 +8,7 @@ import { TextureLoader } from '@modules/renderer/engine/loaders/textures/Texture
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, renderer;
-const mouse = new Engine.Vector2();
+const mouse = new Engine.Vec2();
 
 let quadMesh, renderTarget;
 

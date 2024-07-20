@@ -1,20 +1,20 @@
-import { Vector3 } from './Vector3.js';
-import { Matrix4 } from './Matrix4.js';
+import { Vec3 } from './Vec3.js';
+import { Mat4 } from './Mat4.js';
 import * as MathUtils from './MathUtils.js';
 
-const _startP = /*@__PURE__*/ new Vector3();
-const _startEnd = /*@__PURE__*/ new Vector3();
+const _startP = /*@__PURE__*/ new Vec3();
+const _startEnd = /*@__PURE__*/ new Vec3();
 
 export class Line3 {
   declare isLine3: true;
   declare ['constructor']: typeof Line3;
 
   constructor(
-    public start: Vector3 = new Vector3(),
-    public end: Vector3 = new Vector3(),
+    public start: Vec3 = new Vec3(),
+    public end: Vec3 = new Vec3(),
   ) {}
 
-  set(start: Vector3, end: Vector3): Line3 {
+  set(start: Vec3, end: Vec3): Line3 {
     this.start.copy(start);
     this.end.copy(end);
 
@@ -28,11 +28,11 @@ export class Line3 {
     return this;
   }
 
-  getCenter(target: Vector3): Vector3 {
+  getCenter(target: Vec3): Vec3 {
     return target.addVectors(this.start, this.end).multiplyScalar(0.5);
   }
 
-  delta(target: Vector3): Vector3 {
+  delta(target: Vec3): Vec3 {
     return target.subVectors(this.end, this.start);
   }
 
@@ -44,11 +44,11 @@ export class Line3 {
     return this.start.distanceTo(this.end);
   }
 
-  at(t: number, target: Vector3): Vector3 {
+  at(t: number, target: Vec3): Vec3 {
     return this.delta(target).multiplyScalar(t).add(this.start);
   }
 
-  closestPointToPointParameter(point: Vector3, clampToLine: boolean): number {
+  closestPointToPointParameter(point: Vec3, clampToLine: boolean): number {
     _startP.subVectors(point, this.start);
     _startEnd.subVectors(this.end, this.start);
 
@@ -64,15 +64,15 @@ export class Line3 {
     return t;
   }
 
-  closestPointToPoint(point: Vector3, clampToLine: boolean, target: Vector3): Vector3 {
+  closestPointToPoint(point: Vec3, clampToLine: boolean, target: Vec3): Vec3 {
     const t = this.closestPointToPointParameter(point, clampToLine);
 
     return this.delta(target).multiplyScalar(t).add(this.start);
   }
 
-  applyMatrix4(matrix: Matrix4): Line3 {
-    this.start.applyMatrix4(matrix);
-    this.end.applyMatrix4(matrix);
+  applyMat4(matrix: Mat4): Line3 {
+    this.start.applyMat4(matrix);
+    this.end.applyMat4(matrix);
 
     return this;
   }

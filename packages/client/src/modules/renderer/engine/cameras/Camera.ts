@@ -1,25 +1,25 @@
 import { CoordinateSystem } from '../constants.js';
-import { Matrix4 } from '../math/Matrix4.js';
+import { Mat4 } from '../math/Mat4.js';
 import { Object3D } from '../core/Object3D.js';
-import { Vector3 } from '../math/Vector3.js';
+import { Vec3 } from '../math/Vec3.js';
 
 export class Camera extends Object3D {
   //@ts-expect-error
   declare ['constructor']: typeof Camera;
   declare isCamera: true;
   declare type: string | 'Camera';
-  matrixWorldInverse: Matrix4;
-  projectionMatrix: Matrix4;
-  projectionMatrixInverse: Matrix4;
+  matrixWorldInverse: Mat4;
+  projectionMatrix: Mat4;
+  projectionMatrixInverse: Mat4;
   coordinateSystem: CoordinateSystem;
 
   constructor() {
     super();
 
-    this.matrixWorldInverse = new Matrix4();
+    this.matrixWorldInverse = new Mat4();
 
-    this.projectionMatrix = new Matrix4();
-    this.projectionMatrixInverse = new Matrix4();
+    this.projectionMatrix = new Mat4();
+    this.projectionMatrixInverse = new Mat4();
 
     this.coordinateSystem = CoordinateSystem.WebGL;
   }
@@ -36,7 +36,7 @@ export class Camera extends Object3D {
     return this;
   }
 
-  getWorldDirection(target: Vector3): Vector3 {
+  getWorldDirection(target: Vec3): Vec3 {
     return super.getWorldDirection(target).negate();
   }
 

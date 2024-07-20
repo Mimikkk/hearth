@@ -1,5 +1,5 @@
 import { Capsule } from './Capsule.js';
-import { Vector3 } from './Vector3.js';
+import { Vec3 } from './Vec3.js';
 import { Plane } from './Plane.js';
 import { Line3 } from './Line3.js';
 import { Sphere } from './Sphere.js';
@@ -10,27 +10,27 @@ import { Object3D } from '@modules/renderer/engine/core/Object3D.js';
 import { Mesh } from '@modules/renderer/engine/objects/Mesh.js';
 
 interface Intersection {
-  normal: Vector3;
-  point?: Vector3;
+  normal: Vec3;
+  point?: Vec3;
   depth: number;
 }
 
-const _v1 = new Vector3();
-const _v2 = new Vector3();
-const _point1 = new Vector3();
-const _point2 = new Vector3();
+const _v1 = new Vec3();
+const _v2 = new Vec3();
+const _point1 = new Vec3();
+const _point2 = new Vec3();
 const _plane = new Plane();
 const _line1 = new Line3();
 const _line2 = new Line3();
 const _sphere = new Sphere();
 const _capsule = new Capsule();
 
-const _temp1 = new Vector3();
-const _temp2 = new Vector3();
-const _temp3 = new Vector3();
+const _temp1 = new Vec3();
+const _temp2 = new Vec3();
+const _temp3 = new Vec3();
 const EPS = 1e-10;
 
-function lineToLineClosestPoints(line1: Line3, line2: Line3, target1: Vector3, target2: Vector3) {
+function lineToLineClosestPoints(line1: Line3, line2: Line3, target1: Vec3, target2: Vec3) {
   const r = _temp1.copy(line1.end).sub(line1.start);
   const s = _temp2.copy(line2.end).sub(line2.start);
   const w = _temp3.copy(line2.start).sub(line1.start);
@@ -76,7 +76,7 @@ export class Octree {
   subTrees: Octree[];
   triangles: Triangle[];
 
-  constructor(public box: Box3) {
+  constructor(public box: Box3 = new Box3()) {
     this.bounds = new Box3();
 
     this.subTrees = [];
@@ -330,19 +330,19 @@ export class Octree {
     }
 
     if (hit) {
-      const collisionVector = _capsule.getCenter(new Vector3()).sub(capsule.getCenter(_v1));
+      const collisionVector = _capsule.getCenter(new Vec3()).sub(capsule.getCenter(_v1));
       const depth = collisionVector.length();
 
       return { normal: collisionVector.normalize(), depth: depth };
     }
   }
 
-  rayIntersect(ray: Ray): undefined | { distance: number; triangle: Triangle; position: Vector3 } {
+  rayIntersect(ray: Ray): undefined | { distance: number; triangle: Triangle; position: Vec3 } {
     if (ray.direction.length() === 0) return;
 
     const triangles: Triangle[] = [];
     let triangle!: Triangle;
-    let position!: Vector3;
+    let position!: Vec3;
     let distance = Infinity;
 
     this.getRayTriangles(ray, triangles);
@@ -381,13 +381,13 @@ export class Octree {
         const positionAttribute = geometry.getAttribute('position');
 
         for (let i = 0; i < positionAttribute.count; i += 3) {
-          const v1 = new Vector3().fromBufferAttribute(positionAttribute, i);
-          const v2 = new Vector3().fromBufferAttribute(positionAttribute, i + 1);
-          const v3 = new Vector3().fromBufferAttribute(positionAttribute, i + 2);
+          const v1 = new Vec3().fromBufferAttribute(positionAttribute, i);
+          const v2 = new Vec3().fromBufferAttribute(positionAttribute, i + 1);
+          const v3 = new Vec3().fromBufferAttribute(positionAttribute, i + 2);
 
-          v1.applyMatrix4(obj.matrixWorld);
-          v2.applyMatrix4(obj.matrixWorld);
-          v3.applyMatrix4(obj.matrixWorld);
+          v1.applyMat4(obj.matrixWorld);
+          v2.applyMat4(obj.matrixWorld);
+          v3.applyMat4(obj.matrixWorld);
 
           this.addTriangle(new Triangle(v1, v2, v3));
         }

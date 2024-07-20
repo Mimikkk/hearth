@@ -6,7 +6,7 @@ import { NodeUpdateType } from '../core/constants.js';
 import { threshold } from './ColorAdjustmentNode.js';
 import { uv } from '../accessors/UVNode.js';
 import { texturePass } from './PassNode.js';
-import { RenderTarget, Vector2 } from '@modules/renderer/engine/engine.js';
+import { RenderTarget, Vec2 } from '@modules/renderer/engine/engine.js';
 import { QuadMesh } from '../../objects/QuadMesh.js';
 
 const quadMesh = new QuadMesh();
@@ -20,12 +20,12 @@ class AnamorphicNode extends TempNode {
     this.scaleNode = scaleNode;
     this.colorNode = vec3(0.1, 0.0, 1.0);
     this.samples = samples;
-    this.resolution = new Vector2(1, 1);
+    this.resolution = new Vec2(1, 1);
 
     this._renderTarget = new RenderTarget();
     this._renderTarget.texture.name = 'anamorphic';
 
-    this._invSize = uniform(new Vector2());
+    this._invSize = uniform(new Vec2());
 
     this._textureNode = texturePass(this, this._renderTarget.texture);
 

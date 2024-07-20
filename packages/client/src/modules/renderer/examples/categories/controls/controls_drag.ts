@@ -47,7 +47,7 @@ const useDragControls = () => {
   const objects: Object3D[] = [box1, box2];
   const controls = new DragControls([...objects], camera, renderer.parameters.canvas);
 
-  // const mouse = new Vector2();
+  // const mouse = new Vec2();
   // const raycaster = new Raycaster();
 
   // renderer.parameters.canvas.addEventListener('click', event => {

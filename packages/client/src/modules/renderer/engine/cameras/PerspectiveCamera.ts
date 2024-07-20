@@ -1,11 +1,11 @@
 import { Camera } from './Camera.js';
 import * as MathUtils from '../math/MathUtils.js';
-import { Vector2 } from '../math/Vector2.js';
-import { Vector3 } from '../math/Vector3.js';
+import { Vec2 } from '../math/Vec2.js';
+import { Vec3 } from '../math/Vec3.js';
 
-const _v3 = /*@__PURE__*/ new Vector3();
-const _minTarget = /*@__PURE__*/ new Vector2();
-const _maxTarget = /*@__PURE__*/ new Vector2();
+const _v3 = /*@__PURE__*/ new Vec3();
+const _minTarget = /*@__PURE__*/ new Vec2();
+const _maxTarget = /*@__PURE__*/ new Vec2();
 
 export class PerspectiveCamera extends Camera {
   declare isPerspectiveCamera: true;
@@ -105,17 +105,17 @@ export class PerspectiveCamera extends Camera {
     return this.filmGaugeMM / Math.max(this.aspect, 1);
   }
 
-  getViewBounds(distance: number, minTarget: Vector2, maxTarget: Vector2): void {
-    _v3.set(-1, -1, 0.5).applyMatrix4(this.projectionMatrixInverse);
+  getViewBounds(distance: number, minTarget: Vec2, maxTarget: Vec2): void {
+    _v3.set(-1, -1, 0.5).applyMat4(this.projectionMatrixInverse);
 
     minTarget.set(_v3.x, _v3.y).multiplyScalar(-distance / _v3.z);
 
-    _v3.set(1, 1, 0.5).applyMatrix4(this.projectionMatrixInverse);
+    _v3.set(1, 1, 0.5).applyMat4(this.projectionMatrixInverse);
 
     maxTarget.set(_v3.x, _v3.y).multiplyScalar(-distance / _v3.z);
   }
 
-  getViewSize(distance: number, target: Vector2): Vector2 {
+  getViewSize(distance: number, target: Vec2): Vec2 {
     this.getViewBounds(distance, _minTarget, _maxTarget);
 
     return target.subVectors(_maxTarget, _minTarget);

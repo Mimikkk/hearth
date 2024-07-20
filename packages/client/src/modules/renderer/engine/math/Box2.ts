@@ -1,22 +1,22 @@
-import { Vector2 } from './Vector2.js';
+import { Vec2 } from './Vec2.js';
 
 export class Box2 {
   declare isBox2: true;
   declare ['constructor']: typeof Box2;
 
   constructor(
-    public min: Vector2 = new Vector2(+Infinity, +Infinity),
-    public max: Vector2 = new Vector2(-Infinity, -Infinity),
+    public min: Vec2 = new Vec2(+Infinity, +Infinity),
+    public max: Vec2 = new Vec2(-Infinity, -Infinity),
   ) {}
 
-  set(min: Vector2, max: Vector2): Box2 {
+  set(min: Vec2, max: Vec2): Box2 {
     this.min.copy(min);
     this.max.copy(max);
 
     return this;
   }
 
-  setFromPoints(points: Vector2[]): this {
+  setFromPoints(points: Vec2[]): this {
     this.makeEmpty();
 
     for (let i = 0, il = points.length; i < il; ++i) {
@@ -26,8 +26,8 @@ export class Box2 {
     return this;
   }
 
-  setFromCenterAndSize(center: Vector2, size: Vector2): this {
-    const halfSize = new Vector2().copy(size).multiplyScalar(0.5);
+  setFromCenterAndSize(center: Vec2, size: Vec2): this {
+    const halfSize = new Vec2().copy(size).multiplyScalar(0.5);
     this.min.copy(center).sub(halfSize);
     this.max.copy(center).add(halfSize);
 
@@ -58,22 +58,22 @@ export class Box2 {
     return this.max.x < this.min.x || this.max.y < this.min.y;
   }
 
-  getCenter(target: Vector2): Vector2 {
+  getCenter(target: Vec2): Vec2 {
     return this.isEmpty() ? target.set(0, 0) : target.addVectors(this.min, this.max).multiplyScalar(0.5);
   }
 
-  getSize(target: Vector2): Vector2 {
+  getSize(target: Vec2): Vec2 {
     return this.isEmpty() ? target.set(0, 0) : target.subVectors(this.max, this.min);
   }
 
-  expandByPoint(point: Vector2): this {
+  expandByPoint(point: Vec2): this {
     this.min.min(point);
     this.max.max(point);
 
     return this;
   }
 
-  expandByVector(vector: Vector2): this {
+  expandByVector(vector: Vec2): this {
     this.min.sub(vector);
     this.max.add(vector);
 
@@ -87,7 +87,7 @@ export class Box2 {
     return this;
   }
 
-  containsPoint(point: Vector2): boolean {
+  containsPoint(point: Vec2): boolean {
     return !(point.x < this.min.x || point.x > this.max.x || point.y < this.min.y || point.y > this.max.y);
   }
 
@@ -95,7 +95,7 @@ export class Box2 {
     return this.min.x <= box.min.x && box.max.x <= this.max.x && this.min.y <= box.min.y && box.max.y <= this.max.y;
   }
 
-  getParameter(point: Vector2, target: Vector2): Vector2 {
+  getParameter(point: Vec2, target: Vec2): Vec2 {
     // This can potentially have a divide by zero if the box
     // has a size dimension of 0.
 
@@ -111,12 +111,12 @@ export class Box2 {
     return !(box.max.x < this.min.x || box.min.x > this.max.x || box.max.y < this.min.y || box.min.y > this.max.y);
   }
 
-  clampPoint(point: Vector2, target: Vector2): Vector2 {
+  clampPoint(point: Vec2, target: Vec2): Vec2 {
     return target.copy(point).clamp(this.min, this.max);
   }
 
-  distanceToPoint(point: Vector2): number {
-    return this.clampPoint(point, new Vector2(0, 0)).distanceTo(point);
+  distanceToPoint(point: Vec2): number {
+    return this.clampPoint(point, new Vec2(0, 0)).distanceTo(point);
   }
 
   intersect(box: Box2): this {
@@ -135,7 +135,7 @@ export class Box2 {
     return this;
   }
 
-  translate(offset: Vector2): this {
+  translate(offset: Vec2): this {
     this.min.add(offset);
     this.max.add(offset);
 

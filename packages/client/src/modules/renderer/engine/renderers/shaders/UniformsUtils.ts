@@ -10,11 +10,11 @@ export function cloneUniforms(src: object) {
       if (
         property &&
         (property.isColor ||
-          property.isMatrix3 ||
-          property.isMatrix4 ||
-          property.isVector2 ||
-          property.isVector3 ||
-          property.isVector4 ||
+          property.isMat3 ||
+          property.isMat4 ||
+          property.isVec2 ||
+          property.isVec3 ||
+          property.isVec4 ||
           property.isTexture ||
           property.isQuaternion)
       ) {

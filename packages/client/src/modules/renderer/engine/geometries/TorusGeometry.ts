@@ -1,6 +1,6 @@
 import { BufferGeometry } from '../core/BufferGeometry.js';
 import { Float32BufferAttribute } from '../core/BufferAttribute.js';
-import { Vector3 } from '../math/Vector3.js';
+import { Vec3 } from '../math/Vec3.js';
 
 export class TorusGeometry extends BufferGeometry {
   declare type: string | 'TorusGeometry';
@@ -36,9 +36,9 @@ export class TorusGeometry extends BufferGeometry {
 
     // helper variables
 
-    const center = new Vector3();
-    const vertex = new Vector3();
-    const normal = new Vector3();
+    const center = new Vec3();
+    const vertex = new Vec3();
+    const normal = new Vec3();
 
     // generate vertices, normals and uvs
 

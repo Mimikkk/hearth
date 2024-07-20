@@ -10,8 +10,8 @@ import {
   Wrapping,
 } from '../constants.js';
 import * as MathUtils from '../math/MathUtils.js';
-import { Vector2 } from '../math/Vector2.js';
-import { Matrix3 } from '../math/Matrix3.js';
+import { Vec2 } from '../math/Vec2.js';
+import { Mat3 } from '../math/Mat3.js';
 import { Source } from './Source.js';
 import type { CubeTexture } from './CubeTexture.js';
 
@@ -37,12 +37,12 @@ export class Texture {
   format: TextureFormat;
   internalFormat: PixelFormat | null;
   type: TextureDataType;
-  offset: Vector2;
-  repeat: Vector2;
-  center: Vector2;
+  offset: Vec2;
+  repeat: Vec2;
+  center: Vec2;
   rotation: number;
   matrixAutoUpdate: boolean;
-  matrix: Matrix3;
+  matrix: Mat3;
   generateMipmaps: boolean;
   premultiplyAlpha: boolean;
   flipY: boolean;
@@ -90,13 +90,13 @@ export class Texture {
     this.internalFormat = null;
     this.type = type;
 
-    this.offset = new Vector2(0, 0);
-    this.repeat = new Vector2(1, 1);
-    this.center = new Vector2(0, 0);
+    this.offset = new Vec2(0, 0);
+    this.repeat = new Vec2(1, 1);
+    this.center = new Vec2(0, 0);
     this.rotation = 0;
 
     this.matrixAutoUpdate = true;
-    this.matrix = new Matrix3();
+    this.matrix = new Mat3();
 
     this.generateMipmaps = true;
     this.premultiplyAlpha = false;
@@ -188,10 +188,10 @@ export class Texture {
     this.eventDispatcher.dispatch({ type: 'dispose' }, this);
   }
 
-  transformUv(uv: Vector2): Vector2 {
+  transformUv(uv: Vec2): Vec2 {
     if (this.mapping !== Mapping.UV) return uv;
 
-    uv.applyMatrix3(this.matrix);
+    uv.applyMat3(this.matrix);
 
     if (uv.x < 0 || uv.x > 1) {
       switch (this.wrapS) {

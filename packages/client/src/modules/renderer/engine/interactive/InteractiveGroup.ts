@@ -1,5 +1,5 @@
 import { Group } from '../objects/Group.js';
-import { Vector2 } from '../math/Vector2.js';
+import { Vec2 } from '../math/Vec2.js';
 import { Raycaster } from '../core/Raycaster.js';
 import { Camera } from '../cameras/Camera.js';
 import { Renderer } from '../renderers/webgpu/Renderer.js';
@@ -8,9 +8,9 @@ type InteractionType = 'pointerdown' | 'pointerup' | 'pointermove' | 'mousedown'
 
 interface InteractionEvent {
   type: InteractionType;
-  data: Vector2;
+  data: Vec2;
 }
-const createInteractionEvent = (type: InteractionType, data: Vector2): InteractionEvent => ({ type, data });
+const createInteractionEvent = (type: InteractionType, data: Vec2): InteractionEvent => ({ type, data });
 
 export class InteractiveGroup extends Group {
   listenToPointerEvents(renderer: Renderer, camera: Camera) {
@@ -23,7 +23,7 @@ export class InteractiveGroup extends Group {
       event.stopPropagation();
 
       const { width, height, left, top } = renderer.parameters.canvas.getBoundingClientRect();
-      const pointer = new Vector2(((event.clientX - left) / width) * 2 - 1, (-(event.clientY - top) / height) * 2 + 1);
+      const pointer = new Vec2(((event.clientX - left) / width) * 2 - 1, (-(event.clientY - top) / height) * 2 + 1);
       raycaster.setFromCamera(pointer, camera);
 
       const intersection = raycaster.intersects(scope.children, false)[0];

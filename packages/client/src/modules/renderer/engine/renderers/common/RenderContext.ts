@@ -1,4 +1,4 @@
-import { Vector4 } from '@modules/renderer/engine/engine.js';
+import { Vec4 } from '@modules/renderer/engine/engine.js';
 import { RGBA } from '@modules/renderer/engine/renderers/common/Color4.js';
 import ClippingContext from '@modules/renderer/engine/renderers/common/ClippingContext.js';
 
@@ -16,9 +16,9 @@ export class RenderContext {
   clearStencil: boolean;
   clearStencilValue: number;
   viewport: boolean;
-  viewportValue: Vector4;
+  viewportValue: Vec4;
   scissor: boolean;
-  scissorValue: Vector4;
+  scissorValue: Vec4;
   textures: any;
   depthTexture: any;
   activeCubeFace: number;
@@ -46,10 +46,10 @@ export class RenderContext {
     this.clearStencilValue = 1;
 
     this.viewport = false;
-    this.viewportValue = new Vector4();
+    this.viewportValue = new Vec4();
 
     this.scissor = false;
-    this.scissorValue = new Vector4();
+    this.scissorValue = new Vec4();
 
     this.textures = null;
     this.depthTexture = null;

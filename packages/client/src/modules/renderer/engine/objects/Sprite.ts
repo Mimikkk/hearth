@@ -1,6 +1,6 @@
-import { Vector2 } from '../math/Vector2.js';
-import { Vector3 } from '../math/Vector3.js';
-import { Matrix4 } from '../math/Matrix4.js';
+import { Vec2 } from '../math/Vec2.js';
+import { Vec3 } from '../math/Vec3.js';
+import { Mat4 } from '../math/Mat4.js';
 import { Triangle } from '../math/Triangle.js';
 import { Object3D } from '../core/Object3D.js';
 import { BufferGeometry } from '../core/BufferGeometry.js';
@@ -10,21 +10,21 @@ import { SpriteMaterial } from '../materials/SpriteMaterial.js';
 import { Intersection, Raycaster } from '../core/Raycaster.js';
 import { PerspectiveCamera } from '../cameras/PerspectiveCamera.js';
 
-const _intersectPoint = /*@__PURE__*/ new Vector3();
-const _worldScale = /*@__PURE__*/ new Vector3();
-const _mvPosition = /*@__PURE__*/ new Vector3();
+const _intersectPoint = /*@__PURE__*/ new Vec3();
+const _worldScale = /*@__PURE__*/ new Vec3();
+const _mvPosition = /*@__PURE__*/ new Vec3();
 
-const _alignedPosition = /*@__PURE__*/ new Vector2();
-const _rotatedPosition = /*@__PURE__*/ new Vector2();
-const _viewWorldMatrix = /*@__PURE__*/ new Matrix4();
+const _alignedPosition = /*@__PURE__*/ new Vec2();
+const _rotatedPosition = /*@__PURE__*/ new Vec2();
+const _viewWorldMatrix = /*@__PURE__*/ new Mat4();
 
-const _vA = /*@__PURE__*/ new Vector3();
-const _vB = /*@__PURE__*/ new Vector3();
-const _vC = /*@__PURE__*/ new Vector3();
+const _vA = /*@__PURE__*/ new Vec3();
+const _vB = /*@__PURE__*/ new Vec3();
+const _vC = /*@__PURE__*/ new Vec3();
 
-const _uvA = /*@__PURE__*/ new Vector2();
-const _uvB = /*@__PURE__*/ new Vector2();
-const _uvC = /*@__PURE__*/ new Vector2();
+const _uvA = /*@__PURE__*/ new Vec2();
+const _uvB = /*@__PURE__*/ new Vec2();
+const _uvC = /*@__PURE__*/ new Vec2();
 
 let _geometry: BufferGeometry;
 
@@ -32,7 +32,7 @@ export class Sprite extends Object3D {
   declare isSprite: true;
   declare type: string | 'Sprite';
 
-  center: Vector2;
+  center: Vec2;
   geometry: BufferGeometry;
   material: SpriteMaterial;
 
@@ -60,7 +60,7 @@ export class Sprite extends Object3D {
     this.geometry = _geometry;
     this.material = material;
 
-    this.center = new Vector2(0.5, 0.5);
+    this.center = new Vec2(0.5, 0.5);
   }
 
   raycast(raycaster: Raycaster, intersects: Intersection[]): void {
@@ -118,7 +118,7 @@ export class Sprite extends Object3D {
     intersects.push({
       distance: distance,
       point: _intersectPoint.clone(),
-      uv: Triangle.getInterpolation(_intersectPoint, _vA, _vB, _vC, _uvA, _uvB, _uvC, new Vector2())!,
+      uv: Triangle.getInterpolation(_intersectPoint, _vA, _vB, _vC, _uvA, _uvB, _uvC, new Vec2())!,
       face: null,
       object: this,
     });
@@ -139,10 +139,10 @@ Sprite.prototype.isSprite = true;
 Sprite.prototype.type = 'Sprite';
 
 function transformVertex(
-  vertexPosition: Vector3,
-  mvPosition: Vector3,
-  center: Vector2,
-  scale: Vector3,
+  vertexPosition: Vec3,
+  mvPosition: Vec3,
+  center: Vec2,
+  scale: Vec3,
   sin?: number,
   cos?: number,
 ) {
@@ -162,5 +162,5 @@ function transformVertex(
   vertexPosition.y += _rotatedPosition.y;
 
   // transform to world space
-  vertexPosition.applyMatrix4(_viewWorldMatrix);
+  vertexPosition.applyMat4(_viewWorldMatrix);
 }

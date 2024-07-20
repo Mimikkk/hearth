@@ -1,11 +1,11 @@
-import { Vector3 } from '../math/Vector3.js';
+import { Vec3 } from '../math/Vec3.js';
 import { Quaternion } from '../math/Quaternion.js';
 import { Audio } from './Audio.js';
 
-const _position = /*@__PURE__*/ new Vector3();
+const _position = /*@__PURE__*/ new Vec3();
 const _quaternion = /*@__PURE__*/ new Quaternion();
-const _scale = /*@__PURE__*/ new Vector3();
-const _orientation = /*@__PURE__*/ new Vector3();
+const _scale = /*@__PURE__*/ new Vec3();
+const _orientation = /*@__PURE__*/ new Vec3();
 
 export class PositionalAudio extends Audio<PannerNode> {
   panner: PannerNode;

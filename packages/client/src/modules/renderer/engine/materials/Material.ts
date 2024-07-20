@@ -11,7 +11,7 @@ import {
   StencilOperation,
 } from '../constants.js';
 import * as MathUtils from '../math/MathUtils.js';
-import { Vector3 } from '@modules/renderer/engine/math/Vector3.js';
+import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { Plane } from '@modules/renderer/engine/math/Plane.js';
 
 let _materialId = 0;
@@ -206,7 +206,7 @@ export class Material {
   setValues(values: MaterialParameters): void {
     if (values === undefined) return;
 
-    const isVector3 = (v: any): v is Vector3 => v instanceof Vector3;
+    const isVec3 = (v: any): v is Vec3 => v instanceof Vec3;
     const isColor = (v: any): v is Color => v instanceof Color;
 
     for (const key in values) {
@@ -215,7 +215,7 @@ export class Material {
 
       if (isColor(next)) {
         next.set(current);
-      } else if (isVector3(next) && isVector3(current)) {
+      } else if (isVec3(next) && isVec3(current)) {
         next.copy(current);
       } else {
         this[key as unknown as keyof this] = current;

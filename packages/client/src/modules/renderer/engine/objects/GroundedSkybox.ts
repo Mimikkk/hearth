@@ -1,4 +1,4 @@
-import { Mesh, MeshBasicMaterial, SphereGeometry, Texture, Vector3 } from '../engine.js';
+import { Mesh, MeshBasicMaterial, SphereGeometry, Texture, Vec3 } from '../engine.js';
 
 /**
  * A ground-projected skybox. The height is how far the camera that took the photo was above the ground -
@@ -17,7 +17,7 @@ export class GroundedSkybox extends Mesh {
     geometry.scale(1, 1, -1);
 
     const pos = geometry.getAttribute('position');
-    const tmp = new Vector3();
+    const tmp = new Vec3();
 
     for (let i = 0; i < pos.count; ++i) {
       tmp.fromBufferAttribute(pos, i);

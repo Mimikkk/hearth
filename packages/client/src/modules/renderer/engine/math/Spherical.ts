@@ -1,4 +1,4 @@
-import type { Vector3 } from './Vector3.js';
+import type { Vec3 } from './Vec3.js';
 import { clamp } from './MathUtils.js';
 
 export class Spherical {
@@ -35,7 +35,7 @@ export class Spherical {
     return this;
   }
 
-  setFromVector3(v: Vector3): this {
+  setFromVec3(v: Vec3): this {
     return this.setFromCartesianCoords(v.x, v.y, v.z);
   }
 

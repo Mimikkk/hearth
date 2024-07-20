@@ -1,43 +1,43 @@
-import { Vector3 } from '../math/Vector3.js';
+import { Vec3 } from '../math/Vec3.js';
 import type { Mesh } from '../objects/Mesh.js';
 import type { Scene } from '../scenes/Scene.js';
 import { Quaternion } from '../math/Quaternion.js';
-import { Matrix4 } from '../math/Matrix4.js';
+import { Mat4 } from '../math/Mat4.js';
 import { Frustum } from '../math/Frustum.js';
 import type { Object3D } from '../core/Object3D.js';
 import { PerspectiveCamera } from '@modules/renderer/engine/cameras/PerspectiveCamera.js';
 import { OrthographicCamera } from '@modules/renderer/engine/cameras/OrthographicCamera.js';
 
 const _frustum = new Frustum();
-const _center = new Vector3();
+const _center = new Vec3();
 
-const _tmpPoint = new Vector3();
+const _tmpPoint = new Vec3();
 
-const _vecNear = new Vector3();
-const _vecTopLeft = new Vector3();
-const _vecTopRight = new Vector3();
-const _vecDownRight = new Vector3();
-const _vecDownLeft = new Vector3();
+const _vecNear = new Vec3();
+const _vecTopLeft = new Vec3();
+const _vecTopRight = new Vec3();
+const _vecDownRight = new Vec3();
+const _vecDownLeft = new Vec3();
 
-const _vecFarTopLeft = new Vector3();
-const _vecFarTopRight = new Vector3();
-const _vecFarDownRight = new Vector3();
-const _vecFarDownLeft = new Vector3();
+const _vecFarTopLeft = new Vec3();
+const _vecFarTopRight = new Vec3();
+const _vecFarDownRight = new Vec3();
+const _vecFarDownLeft = new Vec3();
 
-const _vectemp1 = new Vector3();
-const _vectemp2 = new Vector3();
-const _vectemp3 = new Vector3();
+const _vectemp1 = new Vec3();
+const _vectemp2 = new Vec3();
+const _vectemp3 = new Vec3();
 
-const _matrix = new Matrix4();
+const _matrix = new Mat4();
 const _quaternion = new Quaternion();
-const _scale = new Vector3();
+const _scale = new Vec3();
 
 const isPerspectiveCamera = (camera: any): camera is PerspectiveCamera => camera.isPerspectiveCamera;
 const isOrthographicCamera = (camera: any): camera is OrthographicCamera => camera.isOrthographicCamera;
 
 export class SelectionBox {
-  startPoint: Vector3 = new Vector3();
-  endPoint: Vector3 = new Vector3();
+  startPoint: Vec3 = new Vec3();
+  endPoint: Vec3 = new Vec3();
   collection: Mesh[] = [];
   instances: Record<string, number[]> = {};
 
@@ -46,13 +46,13 @@ export class SelectionBox {
     public scene: Scene,
     public deep: number = Number.MAX_VALUE,
   ) {
-    this.startPoint = new Vector3();
-    this.endPoint = new Vector3();
+    this.startPoint = new Vec3();
+    this.endPoint = new Vec3();
     this.collection = [];
     this.instances = {};
   }
 
-  select(startPoint: Vector3, endPoint: Vector3): Mesh[] {
+  select(startPoint: Vec3, endPoint: Vec3): Mesh[] {
     this.startPoint = startPoint || this.startPoint;
     this.endPoint = endPoint || this.endPoint;
     this.collection = [];
@@ -63,7 +63,7 @@ export class SelectionBox {
     return this.collection;
   }
 
-  updateFrustum(startPoint: Vector3, endPoint: Vector3): void {
+  updateFrustum(startPoint: Vec3, endPoint: Vec3): void {
     startPoint = startPoint || this.startPoint;
     endPoint = endPoint || this.endPoint;
 
@@ -165,7 +165,7 @@ export class SelectionBox {
         for (let instanceId = 0; instanceId < object.count; instanceId++) {
           object.getMatrixAt(instanceId, _matrix);
           _matrix.decompose(_center, _quaternion, _scale);
-          _center.applyMatrix4(object.matrixWorld);
+          _center.applyMat4(object.matrixWorld);
 
           if (frustum.containsPoint(_center)) {
             this.instances[object.uuid].push(instanceId);
@@ -176,7 +176,7 @@ export class SelectionBox {
 
         _center.copy(object.geometry.boundingSphere.center);
 
-        _center.applyMatrix4(object.matrixWorld);
+        _center.applyMat4(object.matrixWorld);
 
         if (frustum.containsPoint(_center)) {
           this.collection.push(object);

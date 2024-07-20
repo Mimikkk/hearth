@@ -1,12 +1,12 @@
-import { Vector2 } from '../engine.js';
+import { Vec2 } from '../engine.js';
 import type { Renderer } from '../renderers/webgpu/Renderer.js';
 
 export class SelectionHelper {
   element: HTMLDivElement;
   renderer: Renderer;
-  startPoint: Vector2;
-  pointTopLeft: Vector2;
-  pointBottomRight: Vector2;
+  startPoint: Vec2;
+  pointTopLeft: Vec2;
+  pointBottomRight: Vec2;
   isDown: boolean;
   enabled: boolean;
   onPointerDown: (event: PointerEvent) => void;
@@ -20,9 +20,9 @@ export class SelectionHelper {
 
     this.renderer = renderer;
 
-    this.startPoint = new Vector2();
-    this.pointTopLeft = new Vector2();
-    this.pointBottomRight = new Vector2();
+    this.startPoint = new Vec2();
+    this.pointTopLeft = new Vec2();
+    this.pointBottomRight = new Vec2();
 
     this.isDown = false;
     this.enabled = true;

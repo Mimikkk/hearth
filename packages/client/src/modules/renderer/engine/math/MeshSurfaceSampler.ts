@@ -1,6 +1,6 @@
 import { Triangle } from './Triangle.js';
-import { Vector3 } from './Vector3.js';
-import { Vector2 } from './Vector2.js';
+import { Vec3 } from './Vec3.js';
+import { Vec2 } from './Vec2.js';
 import type { Mesh } from '../objects/Mesh.js';
 import type { Material } from '../materials/Material.js';
 import type { BufferAttribute } from '../core/BufferAttribute.js';
@@ -8,10 +8,10 @@ import type { Color } from './Color.js';
 import { BufferGeometry } from '@modules/renderer/engine/core/BufferGeometry.js';
 
 const _face = new Triangle();
-const _color = new Vector3();
-const _uva = new Vector2();
-const _uvb = new Vector2();
-const _uvc = new Vector2();
+const _color = new Vec3();
+const _uva = new Vec2();
+const _uvb = new Vec2();
+const _uvc = new Vec2();
 
 export class MeshSurfaceSampler<TGeometry extends BufferGeometry, TMaterial extends Material | Material[]> {
   geometry: BufferGeometry;
@@ -100,7 +100,7 @@ export class MeshSurfaceSampler<TGeometry extends BufferGeometry, TMaterial exte
     return this;
   }
 
-  sample(targetPosition: Vector3, targetNormal?: Vector3, targetColor?: Color, targetUV?: Vector2): this {
+  sample(targetPosition: Vec3, targetNormal?: Vec3, targetColor?: Color, targetUV?: Vec2): this {
     const faceIndex = this.sampleFaceIndex();
     return this.sampleFace(faceIndex, targetPosition, targetNormal, targetColor, targetUV);
   }
@@ -137,10 +137,10 @@ export class MeshSurfaceSampler<TGeometry extends BufferGeometry, TMaterial exte
 
   sampleFace(
     faceIndex: number,
-    targetPosition: Vector3,
-    targetNormal?: Vector3,
+    targetPosition: Vec3,
+    targetNormal?: Vec3,
     targetColor?: Color,
-    targetUV?: Vector2,
+    targetUV?: Vec2,
   ): this {
     let u = this.randomFunction();
     let v = this.randomFunction();

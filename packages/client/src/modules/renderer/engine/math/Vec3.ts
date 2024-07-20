@@ -4,21 +4,21 @@ import type { BufferAttribute } from '@modules/renderer/engine/core/BufferAttrib
 import type { InterleavedBufferAttribute } from '@modules/renderer/engine/core/InterleavedBufferAttribute.js';
 import type { Color } from '@modules/renderer/engine/math/Color.js';
 import type { Euler } from '@modules/renderer/engine/math/Euler.js';
-import type { Matrix3 } from '@modules/renderer/engine/math/Matrix3.js';
-import type { Matrix4 } from '@modules/renderer/engine/math/Matrix4.js';
+import type { Mat3 } from '@modules/renderer/engine/math/Mat3.js';
+import type { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
 import type { Cylindrical } from '@modules/renderer/engine/math/Cylindrical.js';
 import type { Spherical } from '@modules/renderer/engine/math/Spherical.js';
 import type { Camera } from '@modules/renderer/engine/cameras/Camera.js';
 
-export interface IVector3 {
+export interface IVec3 {
   x: number;
   y: number;
   z: number;
 }
 
-export class Vector3 implements IVector3 {
-  declare isVector3: true;
-  declare ['constructor']: typeof Vector3;
+export class Vec3 implements IVec3 {
+  declare isVec3: true;
+  declare ['constructor']: typeof Vec3;
 
   constructor(
     public x: number = 0,
@@ -91,11 +91,11 @@ export class Vector3 implements IVector3 {
     }
   }
 
-  clone(): Vector3 {
+  clone(): Vec3 {
     return new this.constructor(this.x, this.y, this.z);
   }
 
-  copy(v: Vector3): this {
+  copy(v: Vec3): this {
     this.x = v.x;
     this.y = v.y;
     this.z = v.z;
@@ -103,7 +103,7 @@ export class Vector3 implements IVector3 {
     return this;
   }
 
-  add(v: Vector3): this {
+  add(v: Vec3): this {
     this.x += v.x;
     this.y += v.y;
     this.z += v.z;
@@ -119,7 +119,7 @@ export class Vector3 implements IVector3 {
     return this;
   }
 
-  addVectors(a: Vector3, b: Vector3): this {
+  addVectors(a: Vec3, b: Vec3): this {
     this.x = a.x + b.x;
     this.y = a.y + b.y;
     this.z = a.z + b.z;
@@ -127,7 +127,7 @@ export class Vector3 implements IVector3 {
     return this;
   }
 
-  addScaledVector(vector: Vector3, scale: number): this {
+  addScaledVector(vector: Vec3, scale: number): this {
     this.x += vector.x * scale;
     this.y += vector.y * scale;
     this.z += vector.z * scale;
@@ -135,7 +135,7 @@ export class Vector3 implements IVector3 {
     return this;
   }
 
-  sub(vector: Vector3): this {
+  sub(vector: Vec3): this {
     this.x -= vector.x;
     this.y -= vector.y;
     this.z -= vector.z;
@@ -151,7 +151,7 @@ export class Vector3 implements IVector3 {
     return this;
   }
 
-  subVectors(a: Vector3, b: Vector3): this {
+  subVectors(a: Vec3, b: Vec3): this {
     this.x = a.x - b.x;
     this.y = a.y - b.y;
     this.z = a.z - b.z;
@@ -159,7 +159,7 @@ export class Vector3 implements IVector3 {
     return this;
   }
 
-  multiply(vector: Vector3): this {
+  multiply(vector: Vec3): this {
     this.x *= vector.x;
     this.y *= vector.y;
     this.z *= vector.z;
@@ -175,7 +175,7 @@ export class Vector3 implements IVector3 {
     return this;
   }
 
-  multiplyVectors(a: Vector3, b: Vector3): this {
+  multiplyVectors(a: Vec3, b: Vec3): this {
     this.x = a.x * b.x;
     this.y = a.y * b.y;
     this.z = a.z * b.z;
@@ -187,11 +187,11 @@ export class Vector3 implements IVector3 {
     return this.applyQuaternion(new Quaternion().setFromEuler(euler));
   }
 
-  applyAxisAngle(axis: Vector3, angle: number): this {
+  applyAxisAngle(axis: Vec3, angle: number): this {
     return this.applyQuaternion(new Quaternion().setFromAxisAngle(axis, angle));
   }
 
-  applyMatrix3(matrix: Matrix3): this {
+  applyMat3(matrix: Mat3): this {
     const x = this.x,
       y = this.y,
       z = this.z;
@@ -204,11 +204,11 @@ export class Vector3 implements IVector3 {
     return this;
   }
 
-  applyNormalMatrix(matrix: Matrix3): this {
-    return this.applyMatrix3(matrix).normalize();
+  applyNormalMatrix(matrix: Mat3): this {
+    return this.applyMat3(matrix).normalize();
   }
 
-  applyMatrix4(matrix: Matrix4): this {
+  applyMat4(matrix: Mat4): this {
     const x = this.x,
       y = this.y,
       z = this.z;
@@ -248,15 +248,15 @@ export class Vector3 implements IVector3 {
   }
 
   project(camera: Camera): this {
-    return this.applyMatrix4(camera.matrixWorldInverse).applyMatrix4(camera.projectionMatrix);
+    return this.applyMat4(camera.matrixWorldInverse).applyMat4(camera.projectionMatrix);
   }
 
   unproject(camera: Camera): this {
-    return this.applyMatrix4(camera.projectionMatrixInverse).applyMatrix4(camera.matrixWorld);
+    return this.applyMat4(camera.projectionMatrixInverse).applyMat4(camera.matrixWorld);
   }
 
-  transformDirection(m: Matrix4): this {
-    // input: engine.Matrix4 affine matrix
+  transformDirection(m: Mat4): this {
+    // input: engine.Mat4 affine matrix
     // vector interpreted as a direction
 
     const x = this.x,
@@ -271,7 +271,7 @@ export class Vector3 implements IVector3 {
     return this.normalize();
   }
 
-  divide(vector: Vector3): this {
+  divide(vector: Vec3): this {
     this.x /= vector.x;
     this.y /= vector.y;
     this.z /= vector.z;
@@ -283,7 +283,7 @@ export class Vector3 implements IVector3 {
     return this.multiplyScalar(1 / scalar);
   }
 
-  min(vector: Vector3): this {
+  min(vector: Vec3): this {
     this.x = Math.min(this.x, vector.x);
     this.y = Math.min(this.y, vector.y);
     this.z = Math.min(this.z, vector.z);
@@ -291,7 +291,7 @@ export class Vector3 implements IVector3 {
     return this;
   }
 
-  max(vector: Vector3): this {
+  max(vector: Vec3): this {
     this.x = Math.max(this.x, vector.x);
     this.y = Math.max(this.y, vector.y);
     this.z = Math.max(this.z, vector.z);
@@ -299,7 +299,7 @@ export class Vector3 implements IVector3 {
     return this;
   }
 
-  clamp(min: Vector3, max: Vector3): this {
+  clamp(min: Vec3, max: Vec3): this {
     this.x = Math.max(min.x, Math.min(max.x, this.x));
     this.y = Math.max(min.y, Math.min(max.y, this.y));
     this.z = Math.max(min.z, Math.min(max.z, this.z));
@@ -361,7 +361,7 @@ export class Vector3 implements IVector3 {
     return this;
   }
 
-  dot(vector: Vector3): number {
+  dot(vector: Vec3): number {
     return this.x * vector.x + this.y * vector.y + this.z * vector.z;
   }
 
@@ -385,7 +385,7 @@ export class Vector3 implements IVector3 {
     return this.normalize().multiplyScalar(length);
   }
 
-  lerp(vector: Vector3, step: number): this {
+  lerp(vector: Vec3, step: number): this {
     this.x += (vector.x - this.x) * step;
     this.y += (vector.y - this.y) * step;
     this.z += (vector.z - this.z) * step;
@@ -393,7 +393,7 @@ export class Vector3 implements IVector3 {
     return this;
   }
 
-  lerpVectors(from: Vector3, to: Vector3, step: number): this {
+  lerpVectors(from: Vec3, to: Vec3, step: number): this {
     this.x = from.x + (to.x - from.x) * step;
     this.y = from.y + (to.y - from.y) * step;
     this.z = from.z + (to.z - from.z) * step;
@@ -401,11 +401,11 @@ export class Vector3 implements IVector3 {
     return this;
   }
 
-  cross(vector: Vector3): this {
+  cross(vector: Vec3): this {
     return this.crossVectors(this, vector);
   }
 
-  crossVectors(a: Vector3, b: Vector3): this {
+  crossVectors(a: Vec3, b: Vec3): this {
     const ax = a.x,
       ay = a.y,
       az = a.z;
@@ -420,7 +420,7 @@ export class Vector3 implements IVector3 {
     return this;
   }
 
-  projectOnVector(vector: Vector3): this {
+  projectOnVector(vector: Vec3): this {
     const denominator = vector.lengthSq();
 
     if (denominator === 0) return this.set(0, 0, 0);
@@ -430,15 +430,15 @@ export class Vector3 implements IVector3 {
     return this.copy(vector).multiplyScalar(scalar);
   }
 
-  projectOnPlane(normal: Vector3): this {
+  projectOnPlane(normal: Vec3): this {
     return this.sub(this.clone().projectOnVector(normal));
   }
 
-  reflect(normal: Vector3): this {
+  reflect(normal: Vec3): this {
     return this.sub(normal.clone().multiplyScalar(2 * this.dot(normal)));
   }
 
-  angleTo(vector: Vector3): number {
+  angleTo(vector: Vec3): number {
     const denominator = Math.sqrt(this.lengthSq() * vector.lengthSq());
 
     if (denominator === 0) return Math.PI / 2;
@@ -450,11 +450,11 @@ export class Vector3 implements IVector3 {
     return Math.acos(clamp(theta, -1, 1));
   }
 
-  distanceTo(vector: Vector3): number {
+  distanceTo(vector: Vec3): number {
     return Math.sqrt(this.distanceToSquared(vector));
   }
 
-  distanceToSquared(vector: Vector3): number {
+  distanceToSquared(vector: Vec3): number {
     const dx = this.x - vector.x,
       dy = this.y - vector.y,
       dz = this.z - vector.z;
@@ -462,7 +462,7 @@ export class Vector3 implements IVector3 {
     return dx * dx + dy * dy + dz * dz;
   }
 
-  manhattanDistanceTo(vector: Vector3): number {
+  manhattanDistanceTo(vector: Vec3): number {
     return Math.abs(this.x - vector.x) + Math.abs(this.y - vector.y) + Math.abs(this.z - vector.z);
   }
 
@@ -492,7 +492,7 @@ export class Vector3 implements IVector3 {
     return this;
   }
 
-  setFromMatrixPosition(matrix: Matrix4): this {
+  setFromMatrixPosition(matrix: Mat4): this {
     const e = matrix.elements;
 
     this.x = e[12];
@@ -502,7 +502,7 @@ export class Vector3 implements IVector3 {
     return this;
   }
 
-  setFromMatrixScale(matrix: Matrix4): this {
+  setFromMatrixScale(matrix: Mat4): this {
     const sx = this.setFromMatrixColumn(matrix, 0).length();
     const sy = this.setFromMatrixColumn(matrix, 1).length();
     const sz = this.setFromMatrixColumn(matrix, 2).length();
@@ -514,11 +514,11 @@ export class Vector3 implements IVector3 {
     return this;
   }
 
-  setFromMatrixColumn(matrix: Matrix4, index: number): this {
+  setFromMatrixColumn(matrix: Mat4, index: number): this {
     return this.fromArray(matrix.elements, index * 4);
   }
 
-  setFromMatrix3Column(matrix: Matrix3, index: number): this {
+  setFromMat3Column(matrix: Mat3, index: number): this {
     return this.fromArray(matrix.elements, index * 3);
   }
 
@@ -538,7 +538,7 @@ export class Vector3 implements IVector3 {
     return this;
   }
 
-  equals(vector: Vector3): boolean {
+  equals(vector: Vec3): boolean {
     return vector.x === this.x && vector.y === this.y && vector.z === this.z;
   }
 
@@ -594,4 +594,5 @@ export class Vector3 implements IVector3 {
     yield this.z;
   }
 }
-Vector3.prototype.isVector3 = true;
+
+Vec3.prototype.isVec3 = true;

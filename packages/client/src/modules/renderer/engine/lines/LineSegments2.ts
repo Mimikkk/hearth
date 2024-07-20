@@ -6,33 +6,33 @@ import {
   Line3,
   LineSegments,
   MathUtils,
-  Matrix4,
+  Mat4,
   Mesh,
   Ray,
   Raycaster,
   Sphere,
-  Vector3,
-  Vector4,
+  Vec3,
+  Vec4,
 } from '../engine.js';
 import { LineSegmentsGeometry } from './LineSegmentsGeometry.js';
 import { LineMaterial } from './LineMaterial.js';
 import { Intersection } from '@modules/renderer/engine/core/Raycaster.js';
 
-const _start = new Vector3();
-const _end = new Vector3();
+const _start = new Vec3();
+const _end = new Vec3();
 
-const _start4 = new Vector4();
-const _end4 = new Vector4();
+const _start4 = new Vec4();
+const _end4 = new Vec4();
 
-const _ssOrigin = new Vector4();
-const _ssOrigin3 = new Vector3();
-const _mvMatrix = new Matrix4();
+const _ssOrigin = new Vec4();
+const _ssOrigin3 = new Vec3();
+const _mvMatrix = new Mat4();
 const _line = new Line3();
-const _closestPoint = new Vector3();
+const _closestPoint = new Vec3();
 
 const _box = new Box3();
 const _sphere = new Sphere();
-const _clipToWorldVector = new Vector4();
+const _clipToWorldVector = new Vec4();
 
 let _ray: Ray, _lineWidth: number;
 
@@ -46,11 +46,11 @@ function getWorldSpaceHalfWidth(
   // transform into clip space, adjust the x and y values by the pixel width offset, then
   // transform back into world space to get world offset. Note clip space is [-1, 1] so full
   // width does not need to be halved.
-  _clipToWorldVector.set(0, 0, -distance, 1.0).applyMatrix4(camera.projectionMatrix);
+  _clipToWorldVector.set(0, 0, -distance, 1.0).applyMat4(camera.projectionMatrix);
   _clipToWorldVector.multiplyScalar(1.0 / _clipToWorldVector.w);
   _clipToWorldVector.x = _lineWidth / resolution.width;
   _clipToWorldVector.y = _lineWidth / resolution.height;
-  _clipToWorldVector.applyMatrix4(camera.projectionMatrixInverse);
+  _clipToWorldVector.applyMat4(camera.projectionMatrixInverse);
   _clipToWorldVector.multiplyScalar(1.0 / _clipToWorldVector.w);
 
   return Math.abs(Math.max(_clipToWorldVector.x, _clipToWorldVector.y));
@@ -67,10 +67,10 @@ function raycastWorldUnits(lineSegments: LineSegments, intersects: Intersection[
     _line.start.fromBufferAttribute(instanceStart, i);
     _line.end.fromBufferAttribute(instanceEnd, i);
 
-    _line.applyMatrix4(matrixWorld);
+    _line.applyMat4(matrixWorld);
 
-    const pointOnLine = new Vector3();
-    const point = new Vector3();
+    const pointOnLine = new Vec3();
+    const point = new Vec3();
 
     _ray.distanceSqToSegment(_line.start, _line.end, point, pointOnLine);
     const isInside = point.distanceTo(pointOnLine) < _lineWidth * 0.5;
@@ -110,8 +110,8 @@ function raycastScreenSpace(lineSegments: LineSegments, camera: Camera, intersec
 
   // ndc space [ - 1.0, 1.0 ]
   _ssOrigin.w = 1;
-  _ssOrigin.applyMatrix4(camera.matrixWorldInverse);
-  _ssOrigin.applyMatrix4(projectionMatrix);
+  _ssOrigin.applyMat4(camera.matrixWorldInverse);
+  _ssOrigin.applyMat4(projectionMatrix);
   _ssOrigin.multiplyScalar(1 / _ssOrigin.w);
 
   // screen space
@@ -131,8 +131,8 @@ function raycastScreenSpace(lineSegments: LineSegments, camera: Camera, intersec
     _end4.w = 1;
 
     // camera space
-    _start4.applyMatrix4(_mvMatrix);
-    _end4.applyMatrix4(_mvMatrix);
+    _start4.applyMat4(_mvMatrix);
+    _end4.applyMat4(_mvMatrix);
 
     // skip the segment if it's entirely behind the camera
     const isBehindCameraNear = _start4.z > near && _end4.z > near;
@@ -152,8 +152,8 @@ function raycastScreenSpace(lineSegments: LineSegments, camera: Camera, intersec
     }
 
     // clip space
-    _start4.applyMatrix4(projectionMatrix);
-    _end4.applyMatrix4(projectionMatrix);
+    _start4.applyMat4(projectionMatrix);
+    _end4.applyMat4(projectionMatrix);
 
     // ndc space [ - 1.0, 1.0 ]
     _start4.multiplyScalar(1 / _start4.w);
@@ -187,11 +187,11 @@ function raycastScreenSpace(lineSegments: LineSegments, camera: Camera, intersec
       _line.start.fromBufferAttribute(instanceStart, i);
       _line.end.fromBufferAttribute(instanceEnd, i);
 
-      _line.start.applyMatrix4(matrixWorld);
-      _line.end.applyMatrix4(matrixWorld);
+      _line.start.applyMat4(matrixWorld);
+      _line.end.applyMat4(matrixWorld);
 
-      const pointOnLine = new Vector3();
-      const point = new Vector3();
+      const pointOnLine = new Vec3();
+      const point = new Vec3();
 
       _ray.distanceSqToSegment(_line.start, _line.end, point, pointOnLine);
 
@@ -265,7 +265,7 @@ export class LineSegments2 extends Mesh {
       geometry.computeBoundingSphere();
     }
 
-    _sphere.copy(geometry.boundingSphere).applyMatrix4(matrixWorld);
+    _sphere.copy(geometry.boundingSphere).applyMat4(matrixWorld);
 
     // increase the sphere bounds by the worst case line screen space width
     let sphereMargin;
@@ -287,7 +287,7 @@ export class LineSegments2 extends Mesh {
       geometry.computeBoundingBox();
     }
 
-    _box.copy(geometry.boundingBox).applyMatrix4(matrixWorld);
+    _box.copy(geometry.boundingBox).applyMat4(matrixWorld);
 
     // increase the box bounds by the worst case line width
     let boxMargin;

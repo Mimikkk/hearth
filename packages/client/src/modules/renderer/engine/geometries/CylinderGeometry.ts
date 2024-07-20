@@ -1,7 +1,7 @@
 import { BufferGeometry } from '../core/BufferGeometry.js';
 import { Float32BufferAttribute } from '../core/BufferAttribute.js';
-import { Vector3 } from '../math/Vector3.js';
-import { Vector2 } from '../math/Vector2.js';
+import { Vec3 } from '../math/Vec3.js';
+import { Vec2 } from '../math/Vec2.js';
 
 export class CylinderGeometry extends BufferGeometry {
   declare type: string | 'CylinderGeometry';
@@ -75,8 +75,8 @@ export class CylinderGeometry extends BufferGeometry {
     this.setAttribute('uv', new Float32BufferAttribute(uvs, 2));
 
     function generateTorso() {
-      const normal = new Vector3();
-      const vertex = new Vector3();
+      const normal = new Vec3();
+      const vertex = new Vec3();
 
       let groupCount = 0;
 
@@ -163,8 +163,8 @@ export class CylinderGeometry extends BufferGeometry {
       // save the index of the first center vertex
       const centerIndexStart = index;
 
-      const uv = new Vector2();
-      const vertex = new Vector3();
+      const uv = new Vec2();
+      const vertex = new Vec3();
 
       let groupCount = 0;
 

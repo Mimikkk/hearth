@@ -1,16 +1,16 @@
 import { Sphere } from '../math/Sphere.js';
 import { Ray } from '../math/Ray.js';
-import { Matrix4 } from '../math/Matrix4.js';
+import { Mat4 } from '../math/Mat4.js';
 import { Object3D } from '../core/Object3D.js';
-import { Vector3 } from '../math/Vector3.js';
+import { Vec3 } from '../math/Vec3.js';
 import { PointsMaterial } from '../materials/PointsMaterial.js';
 import { BufferGeometry } from '../core/BufferGeometry.js';
 import { Intersection, Raycaster } from '@modules/renderer/engine/core/Raycaster.js';
 
-const _inverseMatrix = /*@__PURE__*/ new Matrix4();
+const _inverseMatrix = /*@__PURE__*/ new Mat4();
 const _ray = /*@__PURE__*/ new Ray();
 const _sphere = /*@__PURE__*/ new Sphere();
-const _position = /*@__PURE__*/ new Vector3();
+const _position = /*@__PURE__*/ new Vec3();
 
 export class Points extends Object3D {
   declare isPoints: true;
@@ -49,7 +49,7 @@ export class Points extends Object3D {
     if (geometry.boundingSphere === null) geometry.computeBoundingSphere();
 
     _sphere.copy(geometry.boundingSphere!);
-    _sphere.applyMatrix4(matrixWorld);
+    _sphere.applyMat4(matrixWorld);
     _sphere.radius += threshold;
 
     if (raycaster.ray.intersectsSphere(_sphere) === false) return;
@@ -57,7 +57,7 @@ export class Points extends Object3D {
     //
 
     _inverseMatrix.copy(matrixWorld).invert();
-    _ray.copy(raycaster.ray).applyMatrix4(_inverseMatrix);
+    _ray.copy(raycaster.ray).applyMat4(_inverseMatrix);
 
     const localThreshold = threshold / ((this.scale.x + this.scale.y + this.scale.z) / 3);
     const localThresholdSq = localThreshold * localThreshold;
@@ -117,10 +117,10 @@ Points.prototype.isPoints = true;
 Points.prototype.type = 'Points';
 
 function testPoint(
-  point: Vector3,
+  point: Vec3,
   index: number,
   localThresholdSq: number,
-  matrixWorld: Matrix4,
+  matrixWorld: Mat4,
   raycaster: Raycaster,
   intersects: Intersection[],
   object: Points,
@@ -128,10 +128,10 @@ function testPoint(
   const rayPointDistanceSq = _ray.distanceSqToPoint(point);
 
   if (rayPointDistanceSq < localThresholdSq) {
-    const intersectPoint = new Vector3();
+    const intersectPoint = new Vec3();
 
     _ray.closestPointToPoint(point, intersectPoint);
-    intersectPoint.applyMatrix4(matrixWorld);
+    intersectPoint.applyMat4(matrixWorld);
 
     const distance = raycaster.ray.origin.distanceTo(intersectPoint);
 

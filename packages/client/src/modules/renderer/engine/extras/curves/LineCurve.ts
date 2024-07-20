@@ -1,18 +1,18 @@
-import { Vector2 } from '../../math/Vector2.js';
+import { Vec2 } from '../../math/Vec2.js';
 import { Curve } from '../core/Curve.js';
 
-export class LineCurve extends Curve<Vector2> {
+export class LineCurve extends Curve<Vec2> {
   declare isLineCurve: true;
   declare type: 'LineCurve';
 
   constructor(
-    public v1: Vector2 = new Vector2(),
-    public v2: Vector2 = new Vector2(),
+    public v1: Vec2 = new Vec2(),
+    public v2: Vec2 = new Vec2(),
   ) {
     super();
   }
 
-  getPoint(t: number, optionalTarget: Vector2 = new Vector2()): Vector2 {
+  getPoint(t: number, optionalTarget: Vec2 = new Vec2()): Vec2 {
     const point = optionalTarget;
 
     if (t === 1) {
@@ -25,15 +25,15 @@ export class LineCurve extends Curve<Vector2> {
     return point;
   }
 
-  getPointAt(u: number, optionalTarget: Vector2 = new Vector2()): Vector2 {
+  getPointAt(u: number, optionalTarget: Vec2 = new Vec2()): Vec2 {
     return this.getPoint(u, optionalTarget);
   }
 
-  getTangent(t: number, optionalTarget: Vector2 = new Vector2()): Vector2 {
+  getTangent(t: number, optionalTarget: Vec2 = new Vec2()): Vec2 {
     return optionalTarget.subVectors(this.v2, this.v1).normalize();
   }
 
-  getTangentAt(u: number, optionalTarget: Vector2 = new Vector2()): Vector2 {
+  getTangentAt(u: number, optionalTarget: Vec2 = new Vec2()): Vec2 {
     return this.getTangent(u, optionalTarget);
   }
 

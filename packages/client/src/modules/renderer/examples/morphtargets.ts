@@ -66,8 +66,8 @@ function createGeometry() {
 
   // for the second morph target, we'll twist the cubes vertices
   const twistPositions = [];
-  const direction = new Engine.Vector3(1, 0, 0);
-  const vertex = new Engine.Vector3();
+  const direction = new Engine.Vec3(1, 0, 0);
+  const vertex = new Engine.Vec3();
 
   for (let i = 0; i < positionAttribute.count; i++) {
     const x = positionAttribute.getX(i);

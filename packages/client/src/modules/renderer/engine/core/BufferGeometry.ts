@@ -1,5 +1,5 @@
-import { Vector3 } from '../math/Vector3.js';
-import { Vector2 } from '../math/Vector2.js';
+import { Vec3 } from '../math/Vec3.js';
+import { Vec2 } from '../math/Vec2.js';
 import { Box3 } from '../math/Box3.js';
 import { EventDispatcher } from './EventDispatcher.js';
 import {
@@ -10,8 +10,8 @@ import {
 } from './BufferAttribute.js';
 import { Sphere } from '../math/Sphere.js';
 import { Object3D } from './Object3D.js';
-import { Matrix4 } from '../math/Matrix4.js';
-import { Matrix3 } from '../math/Matrix3.js';
+import { Mat4 } from '../math/Mat4.js';
+import { Mat3 } from '../math/Mat3.js';
 import * as MathUtils from '../math/MathUtils.js';
 import { isArrayUint32 } from '../utils.js';
 import { InterleavedBufferAttribute } from '@modules/renderer/engine/core/InterleavedBufferAttribute.js';
@@ -19,12 +19,12 @@ import { Quaternion } from '@modules/renderer/engine/math/Quaternion.js';
 
 let _id = 0;
 
-const _m1 = /*@__PURE__*/ new Matrix4();
+const _m1 = /*@__PURE__*/ new Mat4();
 const _obj = /*@__PURE__*/ new Object3D();
-const _offset = /*@__PURE__*/ new Vector3();
+const _offset = /*@__PURE__*/ new Vec3();
 const _box = /*@__PURE__*/ new Box3();
 const _boxMorphTargets = /*@__PURE__*/ new Box3();
-const _vector = /*@__PURE__*/ new Vector3();
+const _vector = /*@__PURE__*/ new Vec3();
 
 type AttributeRecord = Record<string, Float32BufferAttribute | InterleavedBufferAttribute>;
 
@@ -134,11 +134,11 @@ export class BufferGeometry<
     return this;
   }
 
-  applyMatrix4(matrix: Matrix4): this {
+  applyMat4(matrix: Mat4): this {
     const position = this.attributes.position;
 
     if (position !== undefined) {
-      position.applyMatrix4(matrix);
+      position.applyMat4(matrix);
 
       position.needsUpdate = true;
     }
@@ -146,7 +146,7 @@ export class BufferGeometry<
     const normal = this.attributes.normal;
 
     if (normal !== undefined) {
-      const normalMatrix = new Matrix3().getNormalMatrix(matrix);
+      const normalMatrix = new Mat3().getNormalMatrix(matrix);
 
       normal.applyNormalMatrix(normalMatrix);
 
@@ -175,7 +175,7 @@ export class BufferGeometry<
   applyQuaternion(q: Quaternion): this {
     _m1.makeRotationFromQuaternion(q);
 
-    this.applyMatrix4(_m1);
+    this.applyMat4(_m1);
 
     return this;
   }
@@ -185,7 +185,7 @@ export class BufferGeometry<
 
     _m1.makeRotationX(angle);
 
-    this.applyMatrix4(_m1);
+    this.applyMat4(_m1);
 
     return this;
   }
@@ -195,7 +195,7 @@ export class BufferGeometry<
 
     _m1.makeRotationY(angle);
 
-    this.applyMatrix4(_m1);
+    this.applyMat4(_m1);
 
     return this;
   }
@@ -205,7 +205,7 @@ export class BufferGeometry<
 
     _m1.makeRotationZ(angle);
 
-    this.applyMatrix4(_m1);
+    this.applyMat4(_m1);
 
     return this;
   }
@@ -215,7 +215,7 @@ export class BufferGeometry<
 
     _m1.makeTranslation(x, y, z);
 
-    this.applyMatrix4(_m1);
+    this.applyMat4(_m1);
 
     return this;
   }
@@ -225,17 +225,17 @@ export class BufferGeometry<
 
     _m1.makeScale(x, y, z);
 
-    this.applyMatrix4(_m1);
+    this.applyMat4(_m1);
 
     return this;
   }
 
-  lookAt(vector: Vector3): this {
+  lookAt(vector: Vec3): this {
     _obj.lookAt(vector);
 
     _obj.updateMatrix();
 
-    this.applyMatrix4(_obj.matrix);
+    this.applyMat4(_obj.matrix);
 
     return this;
   }
@@ -250,7 +250,7 @@ export class BufferGeometry<
     return this;
   }
 
-  setFromPoints(points: Vector3[]): this {
+  setFromPoints(points: Vec3[]): this {
     const position: number[] = [];
 
     for (let i = 0, l = points.length; i < l; i++) {
@@ -424,22 +424,22 @@ export class BufferGeometry<
 
     const tangentAttribute = this.getAttribute('tangent');
 
-    const tan1: Vector3[] = [];
-    const tan2: Vector3[] = [];
+    const tan1: Vec3[] = [];
+    const tan2: Vec3[] = [];
 
     for (let i = 0; i < positionAttribute.count; i++) {
-      tan1[i] = new Vector3();
-      tan2[i] = new Vector3();
+      tan1[i] = new Vec3();
+      tan2[i] = new Vec3();
     }
 
-    const vA = new Vector3(),
-      vB = new Vector3(),
-      vC = new Vector3(),
-      uvA = new Vector2(),
-      uvB = new Vector2(),
-      uvC = new Vector2(),
-      sdir = new Vector3(),
-      tdir = new Vector3();
+    const vA = new Vec3(),
+      vB = new Vec3(),
+      vC = new Vec3(),
+      uvA = new Vec2(),
+      uvB = new Vec2(),
+      uvC = new Vec2(),
+      sdir = new Vec3(),
+      tdir = new Vec3();
 
     function handleTriangle(a: number, b: number, c: number): void {
       vA.fromBufferAttribute(positionAttribute, a);
@@ -495,10 +495,10 @@ export class BufferGeometry<
       }
     }
 
-    const tmp = new Vector3(),
-      tmp2 = new Vector3();
-    const n = new Vector3(),
-      n2 = new Vector3();
+    const tmp = new Vec3(),
+      tmp2 = new Vec3();
+    const n = new Vec3(),
+      n2 = new Vec3();
 
     function handleVertex(v: number): void {
       n.fromBufferAttribute(normalAttribute, v);
@@ -555,14 +555,14 @@ export class BufferGeometry<
         }
       }
 
-      const pA = new Vector3(),
-        pB = new Vector3(),
-        pC = new Vector3();
-      const nA = new Vector3(),
-        nB = new Vector3(),
-        nC = new Vector3();
-      const cb = new Vector3(),
-        ab = new Vector3();
+      const pA = new Vec3(),
+        pB = new Vec3(),
+        pC = new Vec3();
+      const nA = new Vec3(),
+        nB = new Vec3(),
+        nC = new Vec3();
+      const cb = new Vec3(),
+        ab = new Vec3();
 
       // indexed elements
 

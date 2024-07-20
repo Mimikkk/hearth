@@ -1,4 +1,4 @@
-import { Color, Matrix3, Matrix4, Vector2, Vector3, Vector4 } from '@modules/renderer/engine/engine.js';
+import { Color, Mat3, Mat4, Vec2, Vec3, Vec4 } from '@modules/renderer/engine/engine.js';
 
 export function getCacheKey(object, force = false) {
   let cacheKey = '{';
@@ -60,15 +60,15 @@ export function getValueType(value) {
     return 'string';
   } else if (typeOf === 'function') {
     return 'shader';
-  } else if (value.isVector2 === true) {
+  } else if (value.isVec2 === true) {
     return 'vec2';
-  } else if (value.isVector3 === true) {
+  } else if (value.isVec3 === true) {
     return 'vec3';
-  } else if (value.isVector4 === true) {
+  } else if (value.isVec4 === true) {
     return 'vec4';
-  } else if (value.isMatrix3 === true) {
+  } else if (value.isMat3 === true) {
     return 'mat3';
-  } else if (value.isMatrix4 === true) {
+  } else if (value.isMat4 === true) {
     return 'mat4';
   } else if (value.isColor === true) {
     return 'color';
@@ -93,15 +93,15 @@ export function getValueFromType(type, ...params) {
   if (type === 'color') {
     return new Color(...params);
   } else if (last4 === 'vec2') {
-    return new Vector2(...params);
+    return new Vec2(...params);
   } else if (last4 === 'vec3') {
-    return new Vector3(...params);
+    return new Vec3(...params);
   } else if (last4 === 'vec4') {
-    return new Vector4(...params);
+    return new Vec4(...params);
   } else if (last4 === 'mat3') {
-    return new Matrix3(...params);
+    return new Mat3(...params);
   } else if (last4 === 'mat4') {
-    return new Matrix4(...params);
+    return new Mat4(...params);
   } else if (type === 'bool') {
     return params[0] || false;
   } else if (type === 'float' || type === 'int' || type === 'uint') {

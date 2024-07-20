@@ -7,7 +7,7 @@ import {
   Float32BufferAttribute,
   Line,
   LineBasicMaterial,
-  Matrix4,
+  Mat4,
   Mesh,
   MeshBasicMaterial,
   Object3D,
@@ -20,20 +20,20 @@ import {
   Side,
   SphereGeometry,
   TorusGeometry,
-  Vector3,
+  Vec3,
 } from '../engine.js';
 import { Object3DEventMap } from '@modules/renderer/engine/core/Object3D.js';
 import { Intersection } from '@modules/renderer/engine/core/Raycaster.js';
 
 const _raycaster = new Raycaster();
 
-const _tempVector = new Vector3();
-const _tempVector2 = new Vector3();
+const _tempVector = new Vec3();
+const _tempVec2 = new Vec3();
 const _tempQuaternion = new Quaternion();
 const _unit = {
-  X: new Vector3(1, 0, 0),
-  Y: new Vector3(0, 1, 0),
-  Z: new Vector3(0, 0, 1),
+  X: new Vec3(1, 0, 0),
+  Y: new Vec3(0, 1, 0),
+  Z: new Vec3(0, 0, 1),
 };
 
 const _changeEvent = { type: 'change' } as const;
@@ -174,17 +174,17 @@ export class TransformControls extends Object3D<TransformControlsEventMap> {
 
     // Reusable utility variables
 
-    const worldPosition = new Vector3();
-    const worldPositionStart = new Vector3();
+    const worldPosition = new Vec3();
+    const worldPositionStart = new Vec3();
     const worldQuaternion = new Quaternion();
     const worldQuaternionStart = new Quaternion();
-    const cameraPosition = new Vector3();
+    const cameraPosition = new Vec3();
     const cameraQuaternion = new Quaternion();
-    const pointStart = new Vector3();
-    const pointEnd = new Vector3();
-    const rotationAxis = new Vector3();
+    const pointStart = new Vec3();
+    const pointEnd = new Vec3();
+    const rotationAxis = new Vec3();
     const rotationAngle = 0;
-    const eye = new Vector3();
+    const eye = new Vec3();
 
     // TODO: remove properties unused in plane and gizmo
 
@@ -200,23 +200,23 @@ export class TransformControls extends Object3D<TransformControlsEventMap> {
     defineProperty('rotationAngle', rotationAngle);
     defineProperty('eye', eye);
 
-    this._offset = new Vector3();
-    this._startNorm = new Vector3();
-    this._endNorm = new Vector3();
-    this._cameraScale = new Vector3();
+    this._offset = new Vec3();
+    this._startNorm = new Vec3();
+    this._endNorm = new Vec3();
+    this._cameraScale = new Vec3();
 
-    this._parentPosition = new Vector3();
+    this._parentPosition = new Vec3();
     this._parentQuaternion = new Quaternion();
     this._parentQuaternionInv = new Quaternion();
-    this._parentScale = new Vector3();
+    this._parentScale = new Vec3();
 
-    this._worldScaleStart = new Vector3();
+    this._worldScaleStart = new Vec3();
     this._worldQuaternionInv = new Quaternion();
-    this._worldScale = new Vector3();
+    this._worldScale = new Vec3();
 
-    this._positionStart = new Vector3();
+    this._positionStart = new Vec3();
     this._quaternionStart = new Quaternion();
-    this._scaleStart = new Vector3();
+    this._scaleStart = new Vec3();
 
     this._getPointer = getPointer.bind(this);
     this._onPointerDown = onPointerDown.bind(this);
@@ -229,23 +229,23 @@ export class TransformControls extends Object3D<TransformControlsEventMap> {
     this.domElement.addEventListener('pointerup', this._onPointerUp);
   }
 
-  _offset: Vector3;
-  _startNorm: Vector3;
-  _endNorm: Vector3;
-  _cameraScale: Vector3;
+  _offset: Vec3;
+  _startNorm: Vec3;
+  _endNorm: Vec3;
+  _cameraScale: Vec3;
 
-  _parentPosition: Vector3;
+  _parentPosition: Vec3;
   _parentQuaternion: Quaternion;
   _parentQuaternionInv: Quaternion;
-  _parentScale: Vector3;
+  _parentScale: Vec3;
 
-  _worldScaleStart: Vector3;
+  _worldScaleStart: Vec3;
   _worldQuaternionInv: Quaternion;
-  _worldScale: Vector3;
+  _worldScale: Vec3;
 
-  _positionStart: Vector3;
+  _positionStart: Vec3;
   _quaternionStart: Quaternion;
-  _scaleStart: Vector3;
+  _scaleStart: Vec3;
 
   _getPointer: (event: PointerEvent) => { x: number; y: number; button: number };
   _onPointerDown: (event: PointerEvent) => void;
@@ -325,11 +325,11 @@ export class TransformControls extends Object3D<TransformControlsEventMap> {
     }
   }
 
-  worldPosition: Vector3;
-  worldPositionStart: Vector3;
+  worldPosition: Vec3;
+  worldPositionStart: Vec3;
   worldQuaternion: Quaternion;
   worldQuaternionStart: Quaternion;
-  cameraPosition: Vector3;
+  cameraPosition: Vec3;
   cameraQuaternion: Quaternion;
 
   pointerMove(pointer: PointerEvent) {
@@ -426,32 +426,32 @@ export class TransformControls extends Object3D<TransformControlsEventMap> {
 
         if (this.pointEnd!.dot(this.pointStart!) < 0) d *= -1;
 
-        _tempVector2.set(d, d, d);
+        _tempVec2.set(d, d, d);
       } else {
         _tempVector.copy(this.pointStart!);
-        _tempVector2.copy(this.pointEnd!);
+        _tempVec2.copy(this.pointEnd!);
 
         _tempVector.applyQuaternion(this._worldQuaternionInv);
-        _tempVector2.applyQuaternion(this._worldQuaternionInv);
+        _tempVec2.applyQuaternion(this._worldQuaternionInv);
 
-        _tempVector2.divide(_tempVector);
+        _tempVec2.divide(_tempVector);
 
         if (axis.search('X') === -1) {
-          _tempVector2.x = 1;
+          _tempVec2.x = 1;
         }
 
         if (axis.search('Y') === -1) {
-          _tempVector2.y = 1;
+          _tempVec2.y = 1;
         }
 
         if (axis.search('Z') === -1) {
-          _tempVector2.z = 1;
+          _tempVec2.z = 1;
         }
       }
 
       // Apply scale
 
-      object.scale.copy(this._scaleStart).multiply(_tempVector2);
+      object.scale.copy(this._scaleStart).multiply(_tempVec2);
 
       if (this.scaleSnap) {
         if (axis.search('X') !== -1) {
@@ -525,7 +525,7 @@ export class TransformControls extends Object3D<TransformControlsEventMap> {
     this.eventDispatcher.dispatch(_changeEvent, this);
     this.eventDispatcher.dispatch(_objectChangeEvent, this);
   }
-  eye: Vector3;
+  eye: Vec3;
   pointerUp(pointer: PointerEvent) {
     if (pointer !== null && pointer.button !== 0) return;
 
@@ -537,7 +537,7 @@ export class TransformControls extends Object3D<TransformControlsEventMap> {
     this.dragging = false;
     this.axis = null;
   }
-  rotationAxis: Vector3;
+  rotationAxis: Vec3;
   rotationAngle: number;
 
   dispose() {
@@ -586,8 +586,8 @@ export class TransformControls extends Object3D<TransformControlsEventMap> {
     }
   }
 
-  pointStart: Vector3 | null;
-  pointEnd: Vector3 | null;
+  pointStart: Vec3 | null;
+  pointEnd: Vec3 | null;
 
   getRaycaster() {
     return _raycaster;
@@ -705,21 +705,21 @@ function intersectObjectWithRay(
 // Reusable utility variables
 
 const _tempEuler = new Euler();
-const _alignVector = new Vector3(0, 1, 0);
-const _zeroVector = new Vector3(0, 0, 0);
-const _lookAtMatrix = new Matrix4();
+const _alignVector = new Vec3(0, 1, 0);
+const _zeroVector = new Vec3(0, 0, 0);
+const _lookAtMatrix = new Mat4();
 const _tempQuaternion2 = new Quaternion();
 const _identityQuaternion = new Quaternion();
-const _dirVector = new Vector3();
-const _tempMatrix = new Matrix4();
+const _dirVector = new Vec3();
+const _tempMatrix = new Mat4();
 
-const _unitX = new Vector3(1, 0, 0);
-const _unitY = new Vector3(0, 1, 0);
-const _unitZ = new Vector3(0, 0, 1);
+const _unitX = new Vec3(1, 0, 0);
+const _unitY = new Vec3(0, 1, 0);
+const _unitZ = new Vec3(0, 0, 1);
 
-const _v1 = new Vector3();
-const _v2 = new Vector3();
-const _v3 = new Vector3();
+const _v1 = new Vec3();
+const _v2 = new Vec3();
+const _v3 = new Vec3();
 
 export class TransformControlsGizmo extends Object3D {
   declare type: 'TransformControlsGizmo';
@@ -998,7 +998,7 @@ export class TransformControlsGizmo extends Object3D {
           object.updateMatrix();
 
           const tempGeometry = object.geometry.clone();
-          tempGeometry.applyMatrix4(object.matrix);
+          tempGeometry.applyMat4(object.matrix);
           object.geometry = tempGeometry;
           object.renderOrder = Infinity;
 
@@ -1048,11 +1048,11 @@ export class TransformControlsGizmo extends Object3D {
   showZ: boolean = true;
 
   camera: Camera;
-  cameraPosition: Vector3;
-  worldPosition: Vector3;
-  worldPositionStart: Vector3;
+  cameraPosition: Vec3;
+  worldPosition: Vec3;
+  worldPositionStart: Vec3;
   worldQuaternion: Quaternion;
-  eye: Vector3;
+  eye: Vec3;
 
   updateMatrixWorld(force?: boolean): this {
     const space = this.mode === 'scale' ? 'local' : this.space; // scale always oriented to local rotation
@@ -1300,8 +1300,8 @@ export class TransformControlsPlane extends Mesh {
   mode: 'translate' | 'scale' | 'rotate';
   axis: 'X' | 'Y' | 'Z' | 'XY' | 'YZ' | 'XZ' | 'XYZ' | 'E';
   space: 'local' | 'world';
-  eye: Vector3;
-  worldPosition: Vector3;
+  eye: Vec3;
+  worldPosition: Vec3;
   worldQuaternion: Quaternion;
   cameraQuaternion: Quaternion;
 

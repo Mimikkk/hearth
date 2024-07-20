@@ -1,12 +1,12 @@
 import { CoordinateSystem } from '../constants.js';
-import { Vector3 } from './Vector3.js';
-import { Matrix, Matrix3 } from './Matrix3.js';
+import { Vec3 } from './Vec3.js';
+import { Matrix, Mat3 } from './Mat3.js';
 import { Euler } from '@modules/renderer/engine/math/Euler.js';
 import { Quaternion } from '@modules/renderer/engine/math/Quaternion.js';
 
-export class Matrix4 implements Matrix {
-  declare ['constructor']: typeof Matrix4;
-  declare isMatrix4: true;
+export class Mat4 implements Matrix {
+  declare ['constructor']: typeof Mat4;
+  declare isMat4: true;
   elements: number[];
 
   constructor();
@@ -99,11 +99,11 @@ export class Matrix4 implements Matrix {
     return this;
   }
 
-  clone(): Matrix4 {
-    return new Matrix4().fromArray(this.elements);
+  clone(): Mat4 {
+    return new Mat4().fromArray(this.elements);
   }
 
-  copy(m: Matrix4): this {
+  copy(m: Mat4): this {
     const te = this.elements;
     const me = m.elements;
 
@@ -127,7 +127,7 @@ export class Matrix4 implements Matrix {
     return this;
   }
 
-  copyPosition(m: Matrix4): this {
+  copyPosition(m: Mat4): this {
     const te = this.elements,
       me = m.elements;
 
@@ -138,7 +138,7 @@ export class Matrix4 implements Matrix {
     return this;
   }
 
-  setFromMatrix3(m: Matrix3): this {
+  setFromMat3(m: Mat3): this {
     const me = m.elements;
 
     this.set(me[0], me[3], me[6], 0, me[1], me[4], me[7], 0, me[2], me[5], me[8], 0, 0, 0, 0, 1);
@@ -146,7 +146,7 @@ export class Matrix4 implements Matrix {
     return this;
   }
 
-  extractBasis(xAxis: Vector3, yAxis: Vector3, zAxis: Vector3): this {
+  extractBasis(xAxis: Vec3, yAxis: Vec3, zAxis: Vec3): this {
     xAxis.setFromMatrixColumn(this, 0);
     yAxis.setFromMatrixColumn(this, 1);
     zAxis.setFromMatrixColumn(this, 2);
@@ -154,21 +154,21 @@ export class Matrix4 implements Matrix {
     return this;
   }
 
-  makeBasis(xAxis: Vector3, yAxis: Vector3, zAxis: Vector3): this {
+  makeBasis(xAxis: Vec3, yAxis: Vec3, zAxis: Vec3): this {
     this.set(xAxis.x, yAxis.x, zAxis.x, 0, xAxis.y, yAxis.y, zAxis.y, 0, xAxis.z, yAxis.z, zAxis.z, 0, 0, 0, 0, 1);
 
     return this;
   }
 
-  extractRotation(m: Matrix4): this {
+  extractRotation(m: Mat4): this {
     // this method does not support reflection matrices
 
     const te = this.elements;
     const me = m.elements;
 
-    const scaleX = 1 / new Vector3().setFromMatrixColumn(m, 0).length();
-    const scaleY = 1 / new Vector3().setFromMatrixColumn(m, 1).length();
-    const scaleZ = 1 / new Vector3().setFromMatrixColumn(m, 2).length();
+    const scaleX = 1 / new Vec3().setFromMatrixColumn(m, 0).length();
+    const scaleY = 1 / new Vec3().setFromMatrixColumn(m, 1).length();
+    const scaleZ = 1 / new Vec3().setFromMatrixColumn(m, 2).length();
 
     te[0] = me[0] * scaleX;
     te[1] = me[1] * scaleX;
@@ -325,13 +325,13 @@ export class Matrix4 implements Matrix {
   }
 
   makeRotationFromQuaternion(q: Quaternion): this {
-    return this.compose(new Vector3(0, 0, 0), q, new Vector3(1, 1, 1));
+    return this.compose(new Vec3(0, 0, 0), q, new Vec3(1, 1, 1));
   }
 
-  lookAt(eye: Vector3, target: Vector3, up: Vector3): this {
+  lookAt(eye: Vec3, target: Vec3, up: Vec3): this {
     const te = this.elements;
 
-    const _z = new Vector3().subVectors(eye, target);
+    const _z = new Vec3().subVectors(eye, target);
 
     if (_z.lengthSq() === 0) {
       // eye and target are in the same position
@@ -340,7 +340,7 @@ export class Matrix4 implements Matrix {
     }
 
     _z.normalize();
-    const _x = new Vector3().crossVectors(up, _z);
+    const _x = new Vec3().crossVectors(up, _z);
 
     if (_x.lengthSq() === 0) {
       // up and z are parallel
@@ -356,7 +356,7 @@ export class Matrix4 implements Matrix {
     }
 
     _x.normalize();
-    const _y = new Vector3().crossVectors(_z, _x);
+    const _y = new Vec3().crossVectors(_z, _x);
 
     te[0] = _x.x;
     te[4] = _y.x;
@@ -371,15 +371,15 @@ export class Matrix4 implements Matrix {
     return this;
   }
 
-  multiply(m: Matrix4): this {
+  multiply(m: Mat4): this {
     return this.multiplyMatrices(this, m);
   }
 
-  premultiply(m: Matrix4): this {
+  premultiply(m: Mat4): this {
     return this.multiplyMatrices(m, this);
   }
 
-  multiplyMatrices(a: Matrix4, b: Matrix4): this {
+  multiplyMatrices(a: Mat4, b: Mat4): this {
     const ae = a.elements;
     const be = b.elements;
     const te = this.elements;
@@ -525,12 +525,12 @@ export class Matrix4 implements Matrix {
     return this;
   }
 
-  setPosition(x: Vector3): this;
+  setPosition(x: Vec3): this;
   setPosition(x: number, y: number, z: number): this;
-  setPosition(x: Vector3 | number, y?: number, z?: number): this {
+  setPosition(x: Vec3 | number, y?: number, z?: number): this {
     const te = this.elements;
 
-    if (x instanceof Vector3) {
+    if (x instanceof Vec3) {
       te[12] = x.x;
       te[13] = x.y;
       te[14] = x.z;
@@ -620,7 +620,7 @@ export class Matrix4 implements Matrix {
     return this;
   }
 
-  scale(v: Vector3): this {
+  scale(v: Vec3): this {
     const te = this.elements;
     const x = v.x,
       y = v.y,
@@ -652,10 +652,10 @@ export class Matrix4 implements Matrix {
     return Math.sqrt(Math.max(scaleXSq, scaleYSq, scaleZSq));
   }
 
-  makeTranslation(x: Vector3): this;
+  makeTranslation(x: Vec3): this;
   makeTranslation(x: number, y: number, z: number): this;
-  makeTranslation(x: Vector3 | number, y?: number, z?: number): this {
-    if (x instanceof Vector3) {
+  makeTranslation(x: Vec3 | number, y?: number, z?: number): this {
+    if (x instanceof Vec3) {
       this.set(1, 0, 0, x.x, 0, 1, 0, x.y, 0, 0, 1, x.z, 0, 0, 0, 1);
     } else {
       this.set(1, 0, 0, x, 0, 1, 0, y!, 0, 0, 1, z!, 0, 0, 0, 1);
@@ -691,7 +691,7 @@ export class Matrix4 implements Matrix {
     return this;
   }
 
-  makeRotationAxis(axis: Vector3, angle: number): this {
+  makeRotationAxis(axis: Vec3, angle: number): this {
     // Based on http://www.gamedev.net/reference/articles/article1199.asp
 
     const c = Math.cos(angle);
@@ -737,7 +737,7 @@ export class Matrix4 implements Matrix {
     return this;
   }
 
-  compose(position: Vector3, quaternion: Quaternion, scale: Vector3): this {
+  compose(position: Vec3, quaternion: Quaternion, scale: Vec3): this {
     const te = this.elements;
 
     const x = quaternion._x,
@@ -784,12 +784,12 @@ export class Matrix4 implements Matrix {
     return this;
   }
 
-  decompose(position: Vector3, quaternion: Quaternion, scale: Vector3): this {
+  decompose(position: Vec3, quaternion: Quaternion, scale: Vec3): this {
     const te = this.elements;
 
-    let sx = new Vector3(te[0], te[1], te[2]).length();
-    const sy = new Vector3(te[4], te[5], te[6]).length();
-    const sz = new Vector3(te[8], te[9], te[10]).length();
+    let sx = new Vec3(te[0], te[1], te[2]).length();
+    const sy = new Vec3(te[4], te[5], te[6]).length();
+    const sz = new Vec3(te[8], te[9], te[10]).length();
 
     // if determine is negative, we need to invert one scale
     const det = this.determinant();
@@ -800,7 +800,7 @@ export class Matrix4 implements Matrix {
     position.z = te[14];
 
     // scale the rotation part
-    const _m1 = new Matrix4().copy(this);
+    const _m1 = new Mat4().copy(this);
 
     const invSX = 1 / sx;
     const invSY = 1 / sy;
@@ -852,7 +852,7 @@ export class Matrix4 implements Matrix {
       c = -far / (far - near);
       d = (-far * near) / (far - near);
     } else {
-      throw new Error('engine.Matrix4.makePerspective(): Invalid coordinate system: ' + coordinateSystem);
+      throw new Error('engine.Mat4.makePerspective(): Invalid coordinate system: ' + coordinateSystem);
     }
 
     te[0] = x;
@@ -901,7 +901,7 @@ export class Matrix4 implements Matrix {
       z = near * p;
       zInv = -1 * p;
     } else {
-      throw new Error('engine.Matrix4.makeOrthographic(): Invalid coordinate system: ' + coordinateSystem);
+      throw new Error('engine.Mat4.makeOrthographic(): Invalid coordinate system: ' + coordinateSystem);
     }
 
     te[0] = 2 * w;
@@ -924,7 +924,7 @@ export class Matrix4 implements Matrix {
     return this;
   }
 
-  equals(matrix: Matrix4): boolean {
+  equals(matrix: Mat4): boolean {
     const te = this.elements;
     const me = matrix.elements;
 
@@ -969,4 +969,4 @@ export class Matrix4 implements Matrix {
     return array;
   }
 }
-Matrix4.prototype.isMatrix4 = true;
+Mat4.prototype.isMat4 = true;

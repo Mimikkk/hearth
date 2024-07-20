@@ -1,15 +1,15 @@
 import { clamp } from './MathUtils.js';
 import type { BufferAttribute } from '../core/BufferAttribute.js';
-import type { Matrix3 } from './Matrix3.js';
+import type { Mat3 } from './Mat3.js';
 
-export interface IVector2 {
+export interface IVec2 {
   x: number;
   y: number;
 }
 
-export class Vector2 implements IVector2 {
-  declare isVector2: true;
-  declare ['constructor']: typeof Vector2;
+export class Vec2 implements IVec2 {
+  declare isVec2: true;
+  declare ['constructor']: typeof Vec2;
 
   constructor(
     public x: number = 0,
@@ -84,18 +84,18 @@ export class Vector2 implements IVector2 {
     }
   }
 
-  clone(): Vector2 {
+  clone(): Vec2 {
     return new this.constructor(this.x, this.y);
   }
 
-  copy(v: Vector2): this {
+  copy(v: Vec2): this {
     this.x = v.x;
     this.y = v.y;
 
     return this;
   }
 
-  add(vector: Vector2): this {
+  add(vector: Vec2): this {
     this.x += vector.x;
     this.y += vector.y;
 
@@ -109,21 +109,21 @@ export class Vector2 implements IVector2 {
     return this;
   }
 
-  addVectors(a: Vector2, b: Vector2): this {
+  addVectors(a: Vec2, b: Vec2): this {
     this.x = a.x + b.x;
     this.y = a.y + b.y;
 
     return this;
   }
 
-  addScaledVector(vector: Vector2, scale: number): this {
+  addScaledVector(vector: Vec2, scale: number): this {
     this.x += vector.x * scale;
     this.y += vector.y * scale;
 
     return this;
   }
 
-  sub(vector: Vector2): this {
+  sub(vector: Vec2): this {
     this.x -= vector.x;
     this.y -= vector.y;
 
@@ -137,14 +137,14 @@ export class Vector2 implements IVector2 {
     return this;
   }
 
-  subVectors(a: Vector2, b: Vector2): this {
+  subVectors(a: Vec2, b: Vec2): this {
     this.x = a.x - b.x;
     this.y = a.y - b.y;
 
     return this;
   }
 
-  multiply(vector: Vector2): this {
+  multiply(vector: Vec2): this {
     this.x *= vector.x;
     this.y *= vector.y;
 
@@ -158,7 +158,7 @@ export class Vector2 implements IVector2 {
     return this;
   }
 
-  divide(vector: Vector2): this {
+  divide(vector: Vec2): this {
     this.x /= vector.x;
     this.y /= vector.y;
 
@@ -169,7 +169,7 @@ export class Vector2 implements IVector2 {
     return this.multiplyScalar(1 / scalar);
   }
 
-  applyMatrix3(matrix: Matrix3): this {
+  applyMat3(matrix: Mat3): this {
     const x = this.x,
       y = this.y;
     const e = matrix.elements;
@@ -180,21 +180,21 @@ export class Vector2 implements IVector2 {
     return this;
   }
 
-  min(vector: Vector2): this {
+  min(vector: Vec2): this {
     this.x = Math.min(this.x, vector.x);
     this.y = Math.min(this.y, vector.y);
 
     return this;
   }
 
-  max(vector: Vector2): this {
+  max(vector: Vec2): this {
     this.x = Math.max(this.x, vector.x);
     this.y = Math.max(this.y, vector.y);
 
     return this;
   }
 
-  clamp(min: Vector2, max: Vector2): this {
+  clamp(min: Vec2, max: Vec2): this {
     // assumes min < max, componentwise
 
     this.x = Math.max(min.x, Math.min(max.x, this.x));
@@ -251,11 +251,11 @@ export class Vector2 implements IVector2 {
     return this;
   }
 
-  dot(v: Vector2): number {
+  dot(v: Vec2): number {
     return this.x * v.x + this.y * v.y;
   }
 
-  cross(v: Vector2): number {
+  cross(v: Vec2): number {
     return this.x * v.y - this.y * v.x;
   }
 
@@ -279,7 +279,7 @@ export class Vector2 implements IVector2 {
     return Math.atan2(-this.y, -this.x) + Math.PI;
   }
 
-  angleTo(vector: Vector2): number {
+  angleTo(vector: Vec2): number {
     const denominator = Math.sqrt(this.lengthSq() * vector.lengthSq());
 
     if (denominator === 0) return Math.PI / 2;
@@ -291,17 +291,17 @@ export class Vector2 implements IVector2 {
     return Math.acos(clamp(theta, -1, 1));
   }
 
-  distanceTo(vector: Vector2): number {
+  distanceTo(vector: Vec2): number {
     return Math.sqrt(this.distanceToSquared(vector));
   }
 
-  distanceToSquared(v: Vector2): number {
+  distanceToSquared(v: Vec2): number {
     const dx = this.x - v.x,
       dy = this.y - v.y;
     return dx * dx + dy * dy;
   }
 
-  manhattanDistanceTo(v: Vector2): number {
+  manhattanDistanceTo(v: Vec2): number {
     return Math.abs(this.x - v.x) + Math.abs(this.y - v.y);
   }
 
@@ -309,21 +309,21 @@ export class Vector2 implements IVector2 {
     return this.normalize().multiplyScalar(length);
   }
 
-  lerp(vector: Vector2, step: number): this {
+  lerp(vector: Vec2, step: number): this {
     this.x += (vector.x - this.x) * step;
     this.y += (vector.y - this.y) * step;
 
     return this;
   }
 
-  lerpVectors(v1: Vector2, v2: Vector2, step: number): this {
+  lerpVectors(v1: Vec2, v2: Vec2, step: number): this {
     this.x = v1.x + (v2.x - v1.x) * step;
     this.y = v1.y + (v2.y - v1.y) * step;
 
     return this;
   }
 
-  equals(vector: Vector2) {
+  equals(vector: Vec2) {
     return vector.x === this.x && vector.y === this.y;
   }
 
@@ -348,7 +348,7 @@ export class Vector2 implements IVector2 {
     return this;
   }
 
-  rotateAround(center: Vector2, angle: number): this {
+  rotateAround(center: Vec2, angle: number): this {
     const c = Math.cos(angle),
       s = Math.sin(angle);
 
@@ -373,4 +373,4 @@ export class Vector2 implements IVector2 {
     yield this.y;
   }
 }
-Vector2.prototype.isVector2 = true;
+Vec2.prototype.isVec2 = true;

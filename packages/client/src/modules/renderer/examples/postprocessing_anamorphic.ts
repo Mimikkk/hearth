@@ -69,7 +69,7 @@ async function init() {
   const samples = 64;
 
   const anamorphicPass = scenePass.getTextureNode().anamorphic(threshold, scaleNode, samples);
-  anamorphicPass.resolution = new Engine.Vector2(0.2, 0.2); // 1 = full resolution
+  anamorphicPass.resolution = new Engine.Vec2(0.2, 0.2); // 1 = full resolution
 
   postProcessing = new PostProcessing(renderer);
   postProcessing.outputNode = scenePass.add(anamorphicPass.mul(intensity));

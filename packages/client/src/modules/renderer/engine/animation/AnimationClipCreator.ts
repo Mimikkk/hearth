@@ -4,7 +4,7 @@ import {
   Color,
   ColorKeyframeTrack,
   NumberKeyframeTrack,
-  Vector3,
+  Vec3,
   VectorKeyframeTrack,
 } from '../engine.js';
 
@@ -31,10 +31,10 @@ export namespace AnimationClipCreator {
     return new AnimationClip(null, period, [track]);
   }
 
-  export function CreateShakeAnimation(duration: number, shakeScale: Vector3) {
+  export function CreateShakeAnimation(duration: number, shakeScale: Vec3) {
     const times: number[] = [];
     const values: number[] = [];
-    const tmp = new Vector3();
+    const tmp = new Vec3();
 
     for (let i = 0; i < duration * 10; i++) {
       times.push(i / 10);
@@ -55,7 +55,7 @@ export namespace AnimationClipCreator {
   export function CreatePulsationAnimation(duration: number, pulseScale: number) {
     const times: number[] = [];
     const values: number[] = [];
-    const tmp = new Vector3();
+    const tmp = new Vec3();
 
     for (let i = 0; i < duration * 10; i++) {
       times.push(i / 10);

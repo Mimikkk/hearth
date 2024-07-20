@@ -1,8 +1,8 @@
 import * as MathUtils from './MathUtils.js';
 import { TypedArray } from './MathUtils.js';
 import type { Euler } from './Euler.js';
-import type { Vector3 } from './Vector3.js';
-import type { Matrix4 } from './Matrix4.js';
+import type { Vec3 } from './Vec3.js';
+import type { Mat4 } from './Mat4.js';
 import type { BufferAttribute } from '../core/BufferAttribute.js';
 import type { InterleavedBufferAttribute } from '../core/InterleavedBufferAttribute.js';
 
@@ -254,7 +254,7 @@ export class Quaternion {
     return this;
   }
 
-  setFromAxisAngle(axis: Vector3, angle: number): this {
+  setFromAxisAngle(axis: Vec3, angle: number): this {
     // http://www.euclideanspace.com/maths/geometry/rotations/conversions/angleToQuaternion/index.htm
 
     // assumes axis is normalized
@@ -272,7 +272,7 @@ export class Quaternion {
     return this;
   }
 
-  setFromRotationMatrix(m: Matrix4): this {
+  setFromRotationMatrix(m: Mat4): this {
     // http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToQuaternion/index.htm
 
     // assumes the upper 3x3 of m is a pure rotation matrix (i.e, unscaled)
@@ -324,7 +324,7 @@ export class Quaternion {
     return this;
   }
 
-  setFromUnitVectors(vFrom: Vector3, vTo: Vector3): this {
+  setFromUnitVectors(vFrom: Vec3, vTo: Vec3): this {
     // assumes direction vectors vFrom and vTo are normalized
 
     let r = vFrom.dot(vTo) + 1;
@@ -346,7 +346,7 @@ export class Quaternion {
         this._w = r;
       }
     } else {
-      // crossVectors( vFrom, vTo ); // inlined to avoid cyclic dependency on Vector3
+      // crossVectors( vFrom, vTo ); // inlined to avoid cyclic dependency on Vec3
 
       this._x = vFrom.y * vTo.z - vFrom.z * vTo.y;
       this._y = vFrom.z * vTo.x - vFrom.x * vTo.z;

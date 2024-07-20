@@ -2,11 +2,11 @@ import { BufferGeometry } from '../core/BufferGeometry.js';
 import { Float32BufferAttribute } from '../core/BufferAttribute.js';
 import * as MathUtils from '../math/MathUtils.js';
 import { Triangle } from '../math/Triangle.js';
-import { Vector3 } from '../math/Vector3.js';
+import { Vec3 } from '../math/Vec3.js';
 
-const _v0 = /*@__PURE__*/ new Vector3();
-const _v1 = /*@__PURE__*/ new Vector3();
-const _normal = /*@__PURE__*/ new Vector3();
+const _v0 = /*@__PURE__*/ new Vec3();
+const _v1 = /*@__PURE__*/ new Vec3();
+const _normal = /*@__PURE__*/ new Vec3();
 const _triangle = /*@__PURE__*/ new Triangle();
 
 export class EdgesGeometry extends BufferGeometry {
@@ -33,7 +33,7 @@ export class EdgesGeometry extends BufferGeometry {
       const vertKeys = ['a', 'b', 'c'];
       const hashes = new Array(3);
 
-      const edgeData: Record<string, { index0: number; index1: number; normal: Vector3 | null }> = {};
+      const edgeData: Record<string, { index0: number; index1: number; normal: Vec3 | null }> = {};
       const vertices: number[] = [];
       for (let i = 0; i < indexCount; i += 3) {
         if (indexAttr) {

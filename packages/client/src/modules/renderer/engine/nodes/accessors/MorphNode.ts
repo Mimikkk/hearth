@@ -7,11 +7,11 @@ import { positionLocal } from './PositionNode.js';
 import { normalLocal } from './NormalNode.js';
 import { textureLoad } from './TextureNode.js';
 import { vertexIndex } from '../core/IndexNode.js';
-import { DataArrayTexture, TextureDataType, Vector2, Vector4 } from '@modules/renderer/engine/engine.js';
+import { DataArrayTexture, TextureDataType, Vec2, Vec4 } from '@modules/renderer/engine/engine.js';
 import { loop } from '../utils/LoopNode.js';
 
 const morphTextures = new WeakMap();
-const morphVec4 = new Vector4();
+const morphVec4 = new Vec4();
 
 const getMorph = tslFn(({ bufferMap, influence, stride, width, depth, offset }) => {
   const texelIndex = int(vertexIndex).mul(stride).add(offset);
@@ -114,7 +114,7 @@ function getEntry(geometry) {
       count: morphTargetsCount,
       texture: bufferTexture,
       stride: vertexDataCount,
-      size: new Vector2(width, height),
+      size: new Vec2(width, height),
     };
 
     morphTextures.set(geometry, entry);

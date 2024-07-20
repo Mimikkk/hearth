@@ -23,7 +23,7 @@ import {
   LoaderUtils,
   Material,
   MathUtils,
-  Matrix4,
+  Mat4,
   Mesh,
   MeshBasicMaterial,
   MeshPhysicalMaterial,
@@ -44,8 +44,8 @@ import {
   Sphere,
   SpotLight,
   Texture,
-  Vector2,
-  Vector3,
+  Vec2,
+  Vec3,
   VectorKeyframeTrack,
   Wrapping,
 } from '@modules/renderer/engine/engine.js';
@@ -531,7 +531,7 @@ class GLTFMaterialsClearcoatExtension implements Plugin {
       if (extension.clearcoatNormalTexture.scale !== undefined) {
         const scale = extension.clearcoatNormalTexture.scale;
 
-        materialParams.clearcoatNormalScale = new Vector2(scale, scale);
+        materialParams.clearcoatNormalScale = new Vec2(scale, scale);
       }
     }
 
@@ -1264,10 +1264,10 @@ class GLTFMeshGpuInstancing implements Plugin {
 
       for (const mesh of meshes) {
         // Temporal variables
-        const m = new Matrix4();
-        const p = new Vector3();
+        const m = new Mat4();
+        const p = new Vec3();
         const q = new Quaternion();
-        const s = new Vector3(1, 1, 1);
+        const s = new Vec3(1, 1, 1);
 
         const instancedMesh = new InstancedMesh(mesh.geometry, mesh.material, count);
 
@@ -1883,7 +1883,7 @@ function getImageURIMimeType(uri) {
   return 'image/png';
 }
 
-const _identityMatrix = new Matrix4();
+const _identityMatrix = new Mat4();
 
 /* GLTF PARSER */
 
@@ -2732,7 +2732,7 @@ class Parser {
     if (materialDef.normalTexture !== undefined && materialType !== MeshBasicMaterial) {
       pending.push(parser.assignTexture(materialParams, 'normalMap', materialDef.normalTexture));
 
-      materialParams.normalScale = new Vector2(1, 1);
+      materialParams.normalScale = new Vec2(1, 1);
 
       if (materialDef.normalTexture.scale !== undefined) {
         const scale = materialDef.normalTexture.scale;
@@ -3029,7 +3029,7 @@ class Parser {
         if (jointNode) {
           bones.push(jointNode);
 
-          const mat = new Matrix4();
+          const mat = new Mat4();
 
           if (inverseBindMatrices !== null) {
             mat.fromArray(inverseBindMatrices.array, i * 16);
@@ -3267,9 +3267,9 @@ class Parser {
       if (nodeDef.extensions) addUnknownExtensionsToUserData(extensions, node, nodeDef);
 
       if (nodeDef.matrix !== undefined) {
-        const matrix = new Matrix4();
+        const matrix = new Mat4();
         matrix.fromArray(nodeDef.matrix);
-        node.applyMatrix4(matrix);
+        node.applyMat4(matrix);
       } else {
         if (nodeDef.translation !== undefined) {
           node.position.fromArray(nodeDef.translation);
@@ -3480,7 +3480,7 @@ function computeBounds(geometry, primitiveDef, parser) {
     // glTF requires 'min' and 'max', but VRM (which extends glTF) currently ignores that requirement.
 
     if (min !== undefined && max !== undefined) {
-      box.set(new Vector3(min[0], min[1], min[2]), new Vector3(max[0], max[1], max[2]));
+      box.set(new Vec3(min[0], min[1], min[2]), new Vec3(max[0], max[1], max[2]));
 
       if (accessor.normalized) {
         const boxScale = getNormalizedComponentScale(WEBGL_COMPONENT_TYPES[accessor.componentType]);
@@ -3499,8 +3499,8 @@ function computeBounds(geometry, primitiveDef, parser) {
   const targets = primitiveDef.targets;
 
   if (targets !== undefined) {
-    const maxDisplacement = new Vector3();
-    const vector = new Vector3();
+    const maxDisplacement = new Vec3();
+    const vector = new Vec3();
 
     for (let i = 0, il = targets.length; i < il; i++) {
       const target = targets[i];

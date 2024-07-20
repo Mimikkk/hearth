@@ -1,16 +1,16 @@
 import { Curve } from '../core/Curve.js';
 import { CatmullRom } from '../core/Interpolations.js';
-import { Vector2 } from '../../math/Vector2.js';
+import { Vec2 } from '../../math/Vec2.js';
 
-export class SplineCurve extends Curve<Vector2> {
+export class SplineCurve extends Curve<Vec2> {
   declare isSplineCurve: true;
   declare type: 'SplineCurve';
 
-  constructor(public points: Vector2[] = []) {
+  constructor(public points: Vec2[] = []) {
     super();
   }
 
-  getPoint(t: number, optionalTarget: Vector2 = new Vector2()): Vector2 {
+  getPoint(t: number, optionalTarget: Vec2 = new Vec2()): Vec2 {
     const point = optionalTarget;
 
     const points = this.points;

@@ -5,27 +5,27 @@ import {
   Color,
   Line,
   LineBasicMaterial,
-  Matrix4,
+  Mat4,
   Mesh,
   MeshBasicMaterial,
   Object3D,
   Quaternion,
   Skeleton,
   SphereGeometry,
-  Vector3,
+  Vec3,
 } from '../engine.js';
 
 const _q = new Quaternion();
-const _targetPos = new Vector3();
-const _targetVec = new Vector3();
-const _effectorPos = new Vector3();
-const _effectorVec = new Vector3();
-const _linkPos = new Vector3();
+const _targetPos = new Vec3();
+const _targetVec = new Vec3();
+const _effectorPos = new Vec3();
+const _effectorVec = new Vec3();
+const _linkPos = new Vec3();
 const _invLinkQ = new Quaternion();
-const _linkScale = new Vector3();
-const _axis = new Vector3();
-const _vector = new Vector3();
-const _matrix = new Matrix4();
+const _linkScale = new Vec3();
+const _axis = new Vec3();
+const _vector = new Vec3();
+const _matrix = new Mat4();
 
 export interface IKS {
   effector: number;
@@ -33,9 +33,9 @@ export interface IKS {
   links: Array<{
     enabled?: boolean | undefined;
     index: number;
-    limitation?: Vector3 | undefined;
-    rotationMin?: Vector3 | undefined;
-    rotationMax?: Vector3 | undefined;
+    limitation?: Vec3 | undefined;
+    rotationMin?: Vec3 | undefined;
+    rotationMax?: Vec3 | undefined;
   }>;
   minAngle?: number | undefined;
   maxAngle?: number | undefined;
@@ -55,7 +55,7 @@ export interface IKS {
  * iks = [ {
  *  target: 1,
  *  effector: 2,
- *  links: [ { index: 5, limitation: new Vector3( 1, 0, 0 ) }, { index: 4, enabled: false }, { index : 3 } ],
+ *  links: [ { index: 5, limitation: new Vec3( 1, 0, 0 ) }, { index: 4, enabled: false }, { index : 3 } ],
  *  iteration: 10,
  *  minAngle: 0.0,
  *  maxAngle: 1.0,
@@ -178,11 +178,11 @@ export class CCDIKSolver {
         }
 
         if (rotationMin !== undefined) {
-          link.rotation.setFromVector3(_vector.setFromEuler(link.rotation).max(rotationMin));
+          link.rotation.setFromVec3(_vector.setFromEuler(link.rotation).max(rotationMin));
         }
 
         if (rotationMax !== undefined) {
-          link.rotation.setFromVector3(_vector.setFromEuler(link.rotation).min(rotationMax));
+          link.rotation.setFromVec3(_vector.setFromEuler(link.rotation).min(rotationMax));
         }
 
         link.updateMatrixWorld(true);
@@ -232,16 +232,11 @@ export class CCDIKSolver {
   }
 }
 
-function getPosition(bone: Bone, matrixWorldInv: Matrix4): Vector3 {
-  return _vector.setFromMatrixPosition(bone.matrixWorld).applyMatrix4(matrixWorldInv);
+function getPosition(bone: Bone, matrixWorldInv: Mat4): Vec3 {
+  return _vector.setFromMatrixPosition(bone.matrixWorld).applyMat4(matrixWorldInv);
 }
 
-function setPositionOfBoneToAttributeArray(
-  array: ArrayLike<number>,
-  index: number,
-  bone: Bone,
-  matrixWorldInv: Matrix4,
-) {
+function setPositionOfBoneToAttributeArray(array: ArrayLike<number>, index: number, bone: Bone, matrixWorldInv: Mat4) {
   const v = getPosition(bone, matrixWorldInv);
 
   array[index * 3 + 0] = v.x;

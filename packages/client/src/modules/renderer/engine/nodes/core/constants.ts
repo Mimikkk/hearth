@@ -13,12 +13,12 @@ export enum NodeType {
   BOOLEAN = 'bool',
   INTEGER = 'int',
   FLOAT = 'float',
-  VECTOR2 = 'vec2',
-  VECTOR3 = 'vec3',
-  VECTOR4 = 'vec4',
+  Vec2 = 'vec2',
+  Vec3 = 'vec3',
+  Vec4 = 'vec4',
   MATRIX2 = 'mat2',
-  MATRIX3 = 'mat3',
-  MATRIX4 = 'mat4',
+  Mat3 = 'mat3',
+  Mat4 = 'mat4',
 }
 
 export type NodeTypeOption =

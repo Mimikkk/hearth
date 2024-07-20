@@ -56,9 +56,9 @@ async function init() {
 
   // ***** Clipping planes: *****
 
-  const localPlane = new Engine.Plane(new Engine.Vector3(0, -1, 0), 0.8);
-  const localPlane2 = new Engine.Plane(new Engine.Vector3(0, 0, -1), 0.1);
-  const globalPlane = new Engine.Plane(new Engine.Vector3(-1, 0, 0), 0.1);
+  const localPlane = new Engine.Plane(new Engine.Vec3(0, -1, 0), 0.8);
+  const localPlane2 = new Engine.Plane(new Engine.Vec3(0, 0, -1), 0.1);
+  const globalPlane = new Engine.Plane(new Engine.Vec3(-1, 0, 0), 0.1);
 
   // Geometry
 

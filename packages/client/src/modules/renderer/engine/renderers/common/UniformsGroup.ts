@@ -1,25 +1,25 @@
 import UniformBuffer from './UniformBuffer.js';
 import { STD140ChunkBytes } from './Constants.js';
-import { Matrix4 } from '@modules/renderer/engine/math/Matrix4.js';
+import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
 import {
   Uniform,
   ColorUniform,
   FloatUniform,
-  Matrix3Uniform,
-  Matrix4Uniform,
-  Vector2Uniform,
-  Vector3Uniform,
-  Vector4Uniform,
+  Mat3Uniform,
+  Mat4Uniform,
+  Vec2Uniform,
+  Vec3Uniform,
+  Vec4Uniform,
 } from '@modules/renderer/engine/renderers/common/Uniform.js';
 import {
   ColorNodeUniform,
   FloatNodeUniform,
-  Matrix3NodeUniform,
-  Matrix4NodeUniform,
+  Mat3NodeUniform,
+  Mat4NodeUniform,
   ValueNodeUniform,
-  Vector2NodeUniform,
-  Vector3NodeUniform,
-  Vector4NodeUniform,
+  Vec2NodeUniform,
+  Vec3NodeUniform,
+  Vec4NodeUniform,
 } from '@modules/renderer/engine/renderers/common/nodes/NodeUniform.js';
 
 class UniformsGroup extends UniformBuffer {
@@ -111,12 +111,12 @@ class UniformsGroup extends UniformBuffer {
 
   updateByType(uniform: ValueNodeUniform) {
     if (uniform instanceof FloatNodeUniform) return this.updateNumber(uniform);
-    if (uniform instanceof Vector2NodeUniform) return this.updateVector2(uniform);
-    if (uniform instanceof Vector3NodeUniform) return this.updateVector3(uniform);
-    if (uniform instanceof Vector4NodeUniform) return this.updateVector4(uniform);
+    if (uniform instanceof Vec2NodeUniform) return this.updateVec2(uniform);
+    if (uniform instanceof Vec3NodeUniform) return this.updateVec3(uniform);
+    if (uniform instanceof Vec4NodeUniform) return this.updateVec4(uniform);
     if (uniform instanceof ColorNodeUniform) return this.updateColor(uniform);
-    if (uniform instanceof Matrix3NodeUniform) return this.updateMatrix3(uniform);
-    if (uniform instanceof Matrix4NodeUniform) return this.updateMatrix4(uniform);
+    if (uniform instanceof Mat3NodeUniform) return this.updateMat3(uniform);
+    if (uniform instanceof Mat4NodeUniform) return this.updateMat4(uniform);
 
     console.error('engine.WebGPUUniformsGroup: Unsupported uniform type.', uniform);
   }
@@ -136,7 +136,7 @@ class UniformsGroup extends UniformBuffer {
     return updated;
   }
 
-  updateVector2(uniform: Vector2NodeUniform): boolean {
+  updateVec2(uniform: Vec2NodeUniform): boolean {
     let updated = false;
 
     const a = this.buffer;
@@ -153,7 +153,7 @@ class UniformsGroup extends UniformBuffer {
     return updated;
   }
 
-  updateVector3(uniform: Vector3NodeUniform): boolean {
+  updateVec3(uniform: Vec3NodeUniform): boolean {
     let updated = false;
 
     const a = this.buffer;
@@ -171,7 +171,7 @@ class UniformsGroup extends UniformBuffer {
     return updated;
   }
 
-  updateVector4(uniform: Vector4NodeUniform): boolean {
+  updateVec4(uniform: Vec4NodeUniform): boolean {
     let updated = false;
 
     const a = this.buffer;
@@ -208,7 +208,7 @@ class UniformsGroup extends UniformBuffer {
     return updated;
   }
 
-  updateMatrix3(uniform: Matrix3NodeUniform): boolean {
+  updateMat3(uniform: Mat3NodeUniform): boolean {
     let updated = false;
 
     const a = this.buffer;
@@ -242,7 +242,7 @@ class UniformsGroup extends UniformBuffer {
     return updated;
   }
 
-  updateMatrix4(uniform: Matrix4NodeUniform): boolean {
+  updateMat4(uniform: Mat4NodeUniform): boolean {
     let updated = false;
 
     const a = this.buffer;

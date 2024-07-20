@@ -1,7 +1,7 @@
 import { Curve } from '../core/Curve.js';
-import { Vector2 } from '../../math/Vector2.js';
+import { Vec2 } from '../../math/Vec2.js';
 
-export class EllipseCurve extends Curve<Vector2> {
+export class EllipseCurve extends Curve<Vec2> {
   declare isEllipseCurve: true;
   declare type: string | 'EllipseCurve';
 
@@ -18,7 +18,7 @@ export class EllipseCurve extends Curve<Vector2> {
     super();
   }
 
-  getPoint(t: number, optionalTarget: Vector2 = new Vector2()): Vector2 {
+  getPoint(t: number, optionalTarget: Vec2 = new Vec2()): Vec2 {
     const point = optionalTarget;
 
     const twoPi = Math.PI * 2;

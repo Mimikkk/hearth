@@ -1,8 +1,8 @@
 import { Sphere } from '../math/Sphere.js';
 import { Ray } from '../math/Ray.js';
-import { Matrix4 } from '../math/Matrix4.js';
+import { Mat4 } from '../math/Mat4.js';
 import { Object3D } from '../core/Object3D.js';
-import { Vector3 } from '../math/Vector3.js';
+import { Vec3 } from '../math/Vec3.js';
 import { LineBasicMaterial } from '../materials/LineBasicMaterial.js';
 import { BufferGeometry } from '../core/BufferGeometry.js';
 import { Float32BufferAttribute } from '../core/BufferAttribute.js';
@@ -10,9 +10,9 @@ import { Material } from '@modules/renderer/engine/materials/Material.js';
 import { Intersection, Raycaster } from '@modules/renderer/engine/core/Raycaster.js';
 import { LineSegments } from '@modules/renderer/engine/objects/LineSegments.js';
 
-const _start = /*@__PURE__*/ new Vector3();
-const _end = /*@__PURE__*/ new Vector3();
-const _inverseMatrix = /*@__PURE__*/ new Matrix4();
+const _start = /*@__PURE__*/ new Vec3();
+const _end = /*@__PURE__*/ new Vec3();
+const _inverseMatrix = /*@__PURE__*/ new Mat4();
 const _ray = /*@__PURE__*/ new Ray();
 const _sphere = /*@__PURE__*/ new Sphere();
 
@@ -77,7 +77,7 @@ export class Line extends Object3D {
     if (geometry.boundingSphere === null) geometry.computeBoundingSphere();
 
     _sphere.copy(geometry.boundingSphere!);
-    _sphere.applyMatrix4(matrixWorld);
+    _sphere.applyMat4(matrixWorld);
     _sphere.radius += threshold;
 
     if (raycaster.ray.intersectsSphere(_sphere) === false) return;
@@ -85,15 +85,15 @@ export class Line extends Object3D {
     //
 
     _inverseMatrix.copy(matrixWorld).invert();
-    _ray.copy(raycaster.ray).applyMatrix4(_inverseMatrix);
+    _ray.copy(raycaster.ray).applyMat4(_inverseMatrix);
 
     const localThreshold = threshold / ((this.scale.x + this.scale.y + this.scale.z) / 3);
     const localThresholdSq = localThreshold * localThreshold;
 
-    const vStart = new Vector3();
-    const vEnd = new Vector3();
-    const interSegment = new Vector3();
-    const interRay = new Vector3();
+    const vStart = new Vec3();
+    const vEnd = new Vec3();
+    const interSegment = new Vec3();
+    const interRay = new Vec3();
 
     const isLineSegments = (object: any): object is LineSegments => object.isLineSegments;
     const step = isLineSegments(this) ? 2 : 1;
@@ -117,7 +117,7 @@ export class Line extends Object3D {
 
         if (distSq > localThresholdSq) continue;
 
-        interRay.applyMatrix4(this.matrixWorld); //Move back to world space for distance calculation
+        interRay.applyMat4(this.matrixWorld); //Move back to world space for distance calculation
 
         const distance = raycaster.ray.origin.distanceTo(interRay);
 
@@ -127,7 +127,7 @@ export class Line extends Object3D {
           distance: distance,
           // What do we want? intersection point on the ray or on the segment??
           // point: raycaster.ray.at( distance ),
-          point: interSegment.clone().applyMatrix4(this.matrixWorld),
+          point: interSegment.clone().applyMat4(this.matrixWorld),
           index: i,
           object: this,
         });
@@ -144,7 +144,7 @@ export class Line extends Object3D {
 
         if (distSq > localThresholdSq) continue;
 
-        interRay.applyMatrix4(this.matrixWorld); //Move back to world space for distance calculation
+        interRay.applyMat4(this.matrixWorld); //Move back to world space for distance calculation
 
         const distance = raycaster.ray.origin.distanceTo(interRay);
 
@@ -154,7 +154,7 @@ export class Line extends Object3D {
           distance: distance,
           // What do we want? intersection point on the ray or on the segment??
           // point: raycaster.ray.at( distance ),
-          point: interSegment.clone().applyMatrix4(this.matrixWorld),
+          point: interSegment.clone().applyMat4(this.matrixWorld),
           index: i,
           object: this,
         });

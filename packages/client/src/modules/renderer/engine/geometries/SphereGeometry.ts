@@ -1,6 +1,6 @@
 import { BufferGeometry } from '../core/BufferGeometry.js';
 import { Float32BufferAttribute } from '../core/BufferAttribute.js';
-import { Vector3 } from '../math/Vector3.js';
+import { Vec3 } from '../math/Vec3.js';
 
 export class SphereGeometry extends BufferGeometry {
   declare type: string | 'SphereGeometry';
@@ -45,8 +45,8 @@ export class SphereGeometry extends BufferGeometry {
     let index = 0;
     const grid = [];
 
-    const vertex = new Vector3();
-    const normal = new Vector3();
+    const vertex = new Vec3();
+    const normal = new Vec3();
 
     // buffers
 

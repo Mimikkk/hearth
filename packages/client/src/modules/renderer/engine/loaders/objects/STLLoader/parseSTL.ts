@@ -3,7 +3,7 @@ import {
   BufferGeometry,
   Color,
   Float32BufferAttribute,
-  Vector3,
+  Vec3,
 } from '@modules/renderer/engine/engine.js';
 
 function isBinary(data: ArrayBuffer) {
@@ -158,7 +158,7 @@ function parseASCII(text: string) {
   const normals = [];
   const groupNames = [];
 
-  const normal = new Vector3();
+  const normal = new Vec3();
 
   let result;
 

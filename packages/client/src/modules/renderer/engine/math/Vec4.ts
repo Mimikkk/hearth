@@ -1,20 +1,20 @@
-import type { Vector3 } from './Vector3.js';
-import type { Matrix4 } from './Matrix4.js';
+import type { Vec3 } from './Vec3.js';
+import type { Mat4 } from './Mat4.js';
 import type { Quaternion } from './Quaternion.js';
-import type { Matrix3 } from './Matrix3.js';
+import type { Mat3 } from './Mat3.js';
 import type { BufferAttribute } from '../core/BufferAttribute.js';
-import { IVector2 } from '@modules/renderer/engine/math/Vector2.js';
+import { IVec2 } from '@modules/renderer/engine/math/Vec2.js';
 
-export interface IVector4 {
+export interface IVec4 {
   x: number;
   y: number;
   z: number;
   w: number;
 }
 
-export class Vector4 implements IVector4 {
-  declare isVector4: true;
-  declare ['constructor']: typeof Vector4;
+export class Vec4 implements IVec4 {
+  declare isVec4: true;
+  declare ['constructor']: typeof Vec4;
 
   constructor(
     public x: number = 0,
@@ -117,11 +117,11 @@ export class Vector4 implements IVector4 {
     }
   }
 
-  clone(): Vector4 {
+  clone(): Vec4 {
     return new this.constructor(this.x, this.y, this.z, this.w);
   }
 
-  copy(vector: Vector3 | Vector4): this {
+  copy(vector: Vec3 | Vec4): this {
     this.x = vector.x;
     this.y = vector.y;
     this.z = vector.z;
@@ -130,7 +130,7 @@ export class Vector4 implements IVector4 {
     return this;
   }
 
-  add(vector: Vector4): this {
+  add(vector: Vec4): this {
     this.x += vector.x;
     this.y += vector.y;
     this.z += vector.z;
@@ -148,7 +148,7 @@ export class Vector4 implements IVector4 {
     return this;
   }
 
-  addVectors(a: Vector4, b: Vector4): this {
+  addVectors(a: Vec4, b: Vec4): this {
     this.x = a.x + b.x;
     this.y = a.y + b.y;
     this.z = a.z + b.z;
@@ -157,7 +157,7 @@ export class Vector4 implements IVector4 {
     return this;
   }
 
-  addScaledVector(vector: Vector4, scale: number): this {
+  addScaledVector(vector: Vec4, scale: number): this {
     this.x += vector.x * scale;
     this.y += vector.y * scale;
     this.z += vector.z * scale;
@@ -166,7 +166,7 @@ export class Vector4 implements IVector4 {
     return this;
   }
 
-  sub(vector: Vector4): this {
+  sub(vector: Vec4): this {
     this.x -= vector.x;
     this.y -= vector.y;
     this.z -= vector.z;
@@ -184,7 +184,7 @@ export class Vector4 implements IVector4 {
     return this;
   }
 
-  subVectors(a: Vector4, b: Vector4): this {
+  subVectors(a: Vec4, b: Vec4): this {
     this.x = a.x - b.x;
     this.y = a.y - b.y;
     this.z = a.z - b.z;
@@ -193,7 +193,7 @@ export class Vector4 implements IVector4 {
     return this;
   }
 
-  multiply(vector: Vector4): this {
+  multiply(vector: Vec4): this {
     this.x *= vector.x;
     this.y *= vector.y;
     this.z *= vector.z;
@@ -211,7 +211,7 @@ export class Vector4 implements IVector4 {
     return this;
   }
 
-  applyMatrix4(matrix: Matrix4): this {
+  applyMat4(matrix: Mat4): this {
     const { x, y, z, w } = this;
     const e = matrix.elements;
 
@@ -245,7 +245,7 @@ export class Vector4 implements IVector4 {
     return this;
   }
 
-  setAxisAngleFromRotationMatrix(matrix: Matrix3 | Matrix4): this {
+  setAxisAngleFromRotationMatrix(matrix: Mat3 | Mat4): this {
     // http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToAngle/index.htm
 
     // assumes the upper 3x3 of m is a pure rotation matrix (i.e, unscaled)
@@ -353,7 +353,7 @@ export class Vector4 implements IVector4 {
     return this;
   }
 
-  min(vector: Vector4): this {
+  min(vector: Vec4): this {
     this.x = Math.min(this.x, vector.x);
     this.y = Math.min(this.y, vector.y);
     this.z = Math.min(this.z, vector.z);
@@ -362,7 +362,7 @@ export class Vector4 implements IVector4 {
     return this;
   }
 
-  max(vector: Vector4): this {
+  max(vector: Vec4): this {
     this.x = Math.max(this.x, vector.x);
     this.y = Math.max(this.y, vector.y);
     this.z = Math.max(this.z, vector.z);
@@ -371,7 +371,7 @@ export class Vector4 implements IVector4 {
     return this;
   }
 
-  clamp(min: Vector4, max: Vector4): this {
+  clamp(min: Vec4, max: Vec4): this {
     this.x = Math.max(min.x, Math.min(max.x, this.x));
     this.y = Math.max(min.y, Math.min(max.y, this.y));
     this.z = Math.max(min.z, Math.min(max.z, this.z));
@@ -440,7 +440,7 @@ export class Vector4 implements IVector4 {
     return this;
   }
 
-  dot(vector: Vector4) {
+  dot(vector: Vec4) {
     return this.x * vector.x + this.y * vector.y + this.z * vector.z + this.w * vector.w;
   }
 
@@ -464,7 +464,7 @@ export class Vector4 implements IVector4 {
     return this.normalize().multiplyScalar(length);
   }
 
-  lerp(vector: Vector4, alpha: number): this {
+  lerp(vector: Vec4, alpha: number): this {
     this.x += (vector.x - this.x) * alpha;
     this.y += (vector.y - this.y) * alpha;
     this.z += (vector.z - this.z) * alpha;
@@ -473,7 +473,7 @@ export class Vector4 implements IVector4 {
     return this;
   }
 
-  lerpVectors(from: Vector4, to: Vector4, alpha: number): this {
+  lerpVectors(from: Vec4, to: Vec4, alpha: number): this {
     this.x = from.x + (to.x - from.x) * alpha;
     this.y = from.y + (to.y - from.y) * alpha;
     this.z = from.z + (to.z - from.z) * alpha;
@@ -482,7 +482,7 @@ export class Vector4 implements IVector4 {
     return this;
   }
 
-  equals(vector: Vector4): boolean {
+  equals(vector: Vec4): boolean {
     return vector.x === this.x && vector.y === this.y && vector.z === this.z && vector.w === this.w;
   }
 
@@ -530,4 +530,4 @@ export class Vector4 implements IVector4 {
   }
 }
 
-Vector4.prototype.isVector4 = true;
+Vec4.prototype.isVec4 = true;

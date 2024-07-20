@@ -6,10 +6,10 @@ import { MeshBasicMaterial } from '../materials/MeshBasicMaterial.js';
 import { LineBasicMaterial } from '../materials/LineBasicMaterial.js';
 import { Mesh } from '../objects/Mesh.js';
 import { Line } from '../objects/Line.js';
-import { Vector3 } from '../math/Vector3.js';
+import { Vec3 } from '../math/Vec3.js';
 import { Color } from '@modules/renderer/engine/math/Color.js';
 
-const _axis = /*@__PURE__*/ new Vector3();
+const _axis = /*@__PURE__*/ new Vec3();
 let _lineGeometry!: BufferGeometry;
 let _coneGeometry!: CylinderGeometry;
 
@@ -19,8 +19,8 @@ export class ArrowHelper extends Object3D {
   cone: Mesh;
 
   constructor(
-    dir = new Vector3(0, 0, 1),
-    origin = new Vector3(0, 0, 0),
+    dir = new Vec3(0, 0, 1),
+    origin = new Vec3(0, 0, 0),
     length = 1,
     color = 0xffff00,
     headLength = length * 0.2,
@@ -52,7 +52,7 @@ export class ArrowHelper extends Object3D {
     this.setLength(length, headLength, headWidth);
   }
 
-  setDirection(dir: Vector3) {
+  setDirection(dir: Vec3) {
     // dir is assumed to be normalized
 
     if (dir.y > 0.99999) {

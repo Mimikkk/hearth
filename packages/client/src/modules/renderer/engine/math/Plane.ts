@@ -1,20 +1,20 @@
-import { Matrix3 } from './Matrix3.js';
-import { Vector3 } from './Vector3.js';
+import { Mat3 } from './Mat3.js';
+import { Vec3 } from './Vec3.js';
 import type { Sphere } from './Sphere.js';
 import type { Line3 } from './Line3.js';
 import type { Box3 } from './Box3.js';
-import type { Matrix4 } from './Matrix4.js';
+import type { Mat4 } from './Mat4.js';
 
 export class Plane {
   declare ['constructor']: typeof Plane;
   declare isPlane: true;
 
   constructor(
-    public normal: Vector3 = new Vector3(1, 0, 0),
+    public normal: Vec3 = new Vec3(1, 0, 0),
     public constant: number = 0,
   ) {}
 
-  set(normal: Vector3, constant: number): this {
+  set(normal: Vec3, constant: number): this {
     this.normal.copy(normal);
     this.constant = constant;
 
@@ -28,15 +28,15 @@ export class Plane {
     return this;
   }
 
-  setFromNormalAndCoplanarPoint(normal: Vector3, point: Vector3): this {
+  setFromNormalAndCoplanarPoint(normal: Vec3, point: Vec3): this {
     this.normal.copy(normal);
     this.constant = -point.dot(this.normal);
 
     return this;
   }
 
-  setFromCoplanarPoints(a: Vector3, b: Vector3, c: Vector3): this {
-    const normal = new Vector3().subVectors(c, b).cross(new Vector3().subVectors(a, b)).normalize();
+  setFromCoplanarPoints(a: Vec3, b: Vec3, c: Vec3): this {
+    const normal = new Vec3().subVectors(c, b).cross(new Vec3().subVectors(a, b)).normalize();
 
     // Q: should an error be thrown if normal is zero (e.g. degenerate this)?
 
@@ -69,7 +69,7 @@ export class Plane {
     return this;
   }
 
-  distanceToPoint(point: Vector3): number {
+  distanceToPoint(point: Vec3): number {
     return this.normal.dot(point) + this.constant;
   }
 
@@ -77,12 +77,12 @@ export class Plane {
     return this.distanceToPoint(sphere.center) - sphere.radius;
   }
 
-  projectPoint(point: Vector3, target: Vector3): Vector3 {
+  projectPoint(point: Vec3, target: Vec3): Vec3 {
     return target.copy(point).addScaledVector(this.normal, -this.distanceToPoint(point));
   }
 
-  intersectLine(line: Line3, target: Vector3): Vector3 | null {
-    const direction = line.delta(new Vector3());
+  intersectLine(line: Line3, target: Vec3): Vec3 | null {
+    const direction = line.delta(new Vec3());
 
     const denominator = this.normal.dot(direction);
 
@@ -122,23 +122,23 @@ export class Plane {
     return sphere.intersectsPlane(this);
   }
 
-  coplanarPoint(target: Vector3): Vector3 {
+  coplanarPoint(target: Vec3): Vec3 {
     return target.copy(this.normal).multiplyScalar(-this.constant);
   }
 
-  applyMatrix4(matrix: Matrix4, optionalNormalMatrix?: Matrix3): Plane {
-    const normalMatrix = optionalNormalMatrix || new Matrix3().getNormalMatrix(matrix);
+  applyMat4(matrix: Mat4, optionalNormalMatrix?: Mat3): Plane {
+    const normalMatrix = optionalNormalMatrix || new Mat3().getNormalMatrix(matrix);
 
-    const referencePoint = this.coplanarPoint(new Vector3()).applyMatrix4(matrix);
+    const referencePoint = this.coplanarPoint(new Vec3()).applyMat4(matrix);
 
-    const normal = this.normal.applyMatrix3(normalMatrix).normalize();
+    const normal = this.normal.applyMat3(normalMatrix).normalize();
 
     this.constant = -referencePoint.dot(normal);
 
     return this;
   }
 
-  translate(offset: Vector3): Plane {
+  translate(offset: Vec3): Plane {
     this.constant -= offset.dot(this.normal);
 
     return this;

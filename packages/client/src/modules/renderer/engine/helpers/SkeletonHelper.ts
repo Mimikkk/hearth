@@ -1,16 +1,16 @@
 import { LineSegments } from '../objects/LineSegments.js';
-import { Matrix4 } from '../math/Matrix4.js';
+import { Mat4 } from '../math/Mat4.js';
 import { LineBasicMaterial } from '../materials/LineBasicMaterial.js';
 import { Color } from '../math/Color.js';
-import { Vector3 } from '../math/Vector3.js';
+import { Vec3 } from '../math/Vec3.js';
 import { BufferGeometry } from '../core/BufferGeometry.js';
 import { Float32BufferAttribute } from '../core/BufferAttribute.js';
 import { Object3D } from '@modules/renderer/engine/core/Object3D.js';
 import { Bone } from '@modules/renderer/engine/objects/Bone.js';
 
-const _vector = /*@__PURE__*/ new Vector3();
-const _boneMatrix = /*@__PURE__*/ new Matrix4();
-const _matrixWorldInv = /*@__PURE__*/ new Matrix4();
+const _vector = /*@__PURE__*/ new Vec3();
+const _boneMatrix = /*@__PURE__*/ new Mat4();
+const _matrixWorldInv = /*@__PURE__*/ new Mat4();
 
 export class SkeletonHelper extends LineSegments {
   declare isSkeletonHelper: true;

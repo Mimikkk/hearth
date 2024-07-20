@@ -3,15 +3,15 @@ import {
   Float32BufferAttribute,
   LineSegments,
   LineBasicMaterial,
-  Matrix3,
-  Vector3,
+  Mat3,
+  Vec3,
   Object3D,
 } from '../engine.js';
 import { ColorRepresentation } from '@modules/renderer/engine/math/Color.js';
 
-const _v1 = new Vector3();
-const _v2 = new Vector3();
-const _normalMatrix = new Matrix3();
+const _v1 = new Vec3();
+const _v2 = new Vec3();
+const _normalMatrix = new Mat3();
 
 export class VertexNormalsHelper extends LineSegments {
   declare type: string | 'VertexNormalsHelper';
@@ -59,11 +59,11 @@ export class VertexNormalsHelper extends LineSegments {
       // for simplicity, ignore index and drawcalls, and render every normal
 
       for (let j = 0, jl = objPos.count; j < jl; j++) {
-        _v1.fromBufferAttribute(objPos, j).applyMatrix4(matrixWorld);
+        _v1.fromBufferAttribute(objPos, j).applyMat4(matrixWorld);
 
         _v2.fromBufferAttribute(objNorm, j);
 
-        _v2.applyMatrix3(_normalMatrix).normalize().multiplyScalar(this.size).add(_v1);
+        _v2.applyMat3(_normalMatrix).normalize().multiplyScalar(this.size).add(_v1);
 
         position.setXYZ(idx, _v1.x, _v1.y, _v1.z);
 

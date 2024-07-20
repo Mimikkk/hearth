@@ -1,8 +1,8 @@
 import { Plane } from '../math/Plane.js';
 import { Intersection, Raycaster } from '../core/Raycaster.js';
-import { Vector2 } from '../math/Vector2.js';
-import { Vector3 } from '../math/Vector3.js';
-import { Matrix4 } from '../math/Matrix4.js';
+import { Vec2 } from '../math/Vec2.js';
+import { Vec3 } from '../math/Vec3.js';
+import { Mat4 } from '../math/Mat4.js';
 import { Object3D } from '../core/Object3D.js';
 import { EventDispatcher } from '../core/EventDispatcher.js';
 import { Camera } from '../cameras/Camera.js';
@@ -10,16 +10,16 @@ import { Camera } from '../cameras/Camera.js';
 const _plane = new Plane();
 const _raycaster = new Raycaster();
 
-const _pointer = new Vector2();
-const _offset = new Vector3();
-const _diff = new Vector2();
-const _previousPointer = new Vector2();
-const _intersection = new Vector3();
-const _worldPosition = new Vector3();
-const _inverseMatrix = new Matrix4();
+const _pointer = new Vec2();
+const _offset = new Vec3();
+const _diff = new Vec2();
+const _previousPointer = new Vec2();
+const _intersection = new Vec3();
+const _worldPosition = new Vec3();
+const _inverseMatrix = new Mat4();
 
-const _up = new Vector3();
-const _right = new Vector3();
+const _up = new Vec3();
+const _right = new Vec3();
 
 export interface DragControlsEventMap {
   hoveron: { object: Object3D };
@@ -101,7 +101,7 @@ class DragControls {
       if (_selected) {
         if (scope.mode === 'translate') {
           if (_raycaster.ray.intersectPlane(_plane, _intersection)) {
-            _selected.position.copy(_intersection.sub(_offset).applyMatrix4(_inverseMatrix));
+            _selected.position.copy(_intersection.sub(_offset).applyMat4(_inverseMatrix));
           }
         } else if (scope.mode === 'rotate') {
           _diff.subVectors(_pointer, _previousPointer).multiplyScalar(scope.rotateSpeed);

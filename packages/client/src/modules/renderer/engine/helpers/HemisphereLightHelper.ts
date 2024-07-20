@@ -1,4 +1,4 @@
-import { Vector3 } from '../math/Vector3.js';
+import { Vec3 } from '../math/Vec3.js';
 import { Color } from '../math/Color.js';
 import { Object3D } from '../core/Object3D.js';
 import { Mesh } from '../objects/Mesh.js';
@@ -7,7 +7,7 @@ import { OctahedronGeometry } from '../geometries/OctahedronGeometry.js';
 import { BufferAttribute } from '../core/BufferAttribute.js';
 import { HemisphereLight } from '@modules/renderer/engine/lights/HemisphereLight.js';
 
-const _vector = /*@__PURE__*/ new Vector3();
+const _vector = /*@__PURE__*/ new Vec3();
 const _color1 = /*@__PURE__*/ new Color();
 const _color2 = /*@__PURE__*/ new Color();
 

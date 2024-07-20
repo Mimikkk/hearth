@@ -6,15 +6,15 @@ import {
   InstancedInterleavedBuffer,
   InterleavedBufferAttribute,
   LineSegments,
-  Matrix4,
+  Mat4,
   Mesh,
   Sphere,
-  Vector3,
+  Vec3,
   WireframeGeometry,
 } from '../engine.js';
 
 const _box = new Box3();
-const _vector = new Vector3();
+const _vector = new Vec3();
 
 export class LineSegmentsGeometry extends InstancedBufferGeometry {
   constructor() {
@@ -29,14 +29,14 @@ export class LineSegmentsGeometry extends InstancedBufferGeometry {
     this.setAttribute('uv', new Float32BufferAttribute(uvs, 2));
   }
 
-  applyMatrix4(matrix: Matrix4): this {
+  applyMat4(matrix: Mat4): this {
     const start = this.attributes.instanceStart;
     const end = this.attributes.instanceEnd;
 
     if (start !== undefined) {
-      start.applyMatrix4(matrix);
+      start.applyMat4(matrix);
 
-      end.applyMatrix4(matrix);
+      end.applyMat4(matrix);
 
       start.needsUpdate = true;
     }

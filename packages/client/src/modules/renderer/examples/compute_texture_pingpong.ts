@@ -12,7 +12,7 @@ let material;
 let phase = true;
 let lastUpdate = -1;
 
-const seed = uniform(new Engine.Vector2());
+const seed = uniform(new Engine.Vec2());
 
 await init();
 render();

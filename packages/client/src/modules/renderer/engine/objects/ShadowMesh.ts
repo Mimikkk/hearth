@@ -1,16 +1,16 @@
-import { Matrix4, Mesh, MeshBasicMaterial, Plane, StencilFunction, StencilOperation, Vector4 } from '../engine.js';
+import { Mat4, Mesh, MeshBasicMaterial, Plane, StencilFunction, StencilOperation, Vec4 } from '../engine.js';
 
 /**
  * A shadow Mesh that follows a shadow-casting Mesh in the scene, but is confined to a single plane.
  */
 
-const _shadowMatrix = new Matrix4();
+const _shadowMatrix = new Mat4();
 
 export class ShadowMesh extends Mesh {
   declare isShadowMesh: true;
   declare type: string | 'ShadowMesh';
 
-  meshMatrix: Matrix4;
+  meshMatrix: Mat4;
 
   constructor(mesh: Mesh) {
     const shadowMaterial = new MeshBasicMaterial({
@@ -32,7 +32,7 @@ export class ShadowMesh extends Mesh {
     this.matrixAutoUpdate = false;
   }
 
-  update(plane: Plane, lightPosition4D: Vector4) {
+  update(plane: Plane, lightPosition4D: Vec4) {
     const dot =
       plane.normal.x * lightPosition4D.x +
       plane.normal.y * lightPosition4D.y +

@@ -1,11 +1,11 @@
 import {
   FloatUniform,
-  Vector2Uniform,
-  Vector3Uniform,
-  Vector4Uniform,
+  Vec2Uniform,
+  Vec3Uniform,
+  Vec4Uniform,
   ColorUniform,
-  Matrix3Uniform,
-  Matrix4Uniform,
+  Mat3Uniform,
+  Mat4Uniform,
 } from '../Uniform.js';
 
 import NodeUniform from '@modules/renderer/engine/nodes/core/NodeUniform.js';
@@ -20,7 +20,7 @@ export class FloatNodeUniform extends FloatUniform {
   }
 }
 
-export class Vector2NodeUniform extends Vector2Uniform {
+export class Vec2NodeUniform extends Vec2Uniform {
   constructor(public nodeUniform: NodeUniform) {
     super(nodeUniform.name, nodeUniform.value);
 
@@ -32,7 +32,7 @@ export class Vector2NodeUniform extends Vector2Uniform {
   }
 }
 
-export class Vector3NodeUniform extends Vector3Uniform {
+export class Vec3NodeUniform extends Vec3Uniform {
   constructor(public nodeUniform: NodeUniform) {
     super(nodeUniform.name, nodeUniform.value);
 
@@ -44,7 +44,7 @@ export class Vector3NodeUniform extends Vector3Uniform {
   }
 }
 
-export class Vector4NodeUniform extends Vector4Uniform {
+export class Vec4NodeUniform extends Vec4Uniform {
   constructor(public nodeUniform: NodeUniform) {
     super(nodeUniform.name, nodeUniform.value);
 
@@ -68,7 +68,7 @@ export class ColorNodeUniform extends ColorUniform {
   }
 }
 
-export class Matrix3NodeUniform extends Matrix3Uniform {
+export class Mat3NodeUniform extends Mat3Uniform {
   constructor(public nodeUniform: NodeUniform) {
     super(nodeUniform.name, nodeUniform.value);
 
@@ -80,7 +80,7 @@ export class Matrix3NodeUniform extends Matrix3Uniform {
   }
 }
 
-export class Matrix4NodeUniform extends Matrix4Uniform {
+export class Mat4NodeUniform extends Mat4Uniform {
   constructor(public nodeUniform: NodeUniform) {
     super(nodeUniform.name, nodeUniform.value);
 
@@ -94,9 +94,9 @@ export class Matrix4NodeUniform extends Matrix4Uniform {
 
 export type ValueNodeUniform =
   | FloatNodeUniform
-  | Vector2NodeUniform
-  | Vector3NodeUniform
-  | Vector4NodeUniform
+  | Vec2NodeUniform
+  | Vec3NodeUniform
+  | Vec4NodeUniform
   | ColorNodeUniform
-  | Matrix3NodeUniform
-  | Matrix4NodeUniform;
+  | Mat3NodeUniform
+  | Mat4NodeUniform;

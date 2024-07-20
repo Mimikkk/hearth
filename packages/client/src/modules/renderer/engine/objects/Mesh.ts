@@ -1,8 +1,8 @@
-import { Vector3 } from '../math/Vector3.js';
-import { Vector2 } from '../math/Vector2.js';
+import { Vec3 } from '../math/Vec3.js';
+import { Vec2 } from '../math/Vec2.js';
 import { Sphere } from '../math/Sphere.js';
 import { Ray } from '../math/Ray.js';
-import { Matrix4 } from '../math/Matrix4.js';
+import { Mat4 } from '../math/Mat4.js';
 import { Object3D } from '../core/Object3D.js';
 import { Triangle } from '../math/Triangle.js';
 import { Side } from '../constants.js';
@@ -11,28 +11,28 @@ import { Material } from '../materials/Material.js';
 import { Intersection, Raycaster } from '../core/Raycaster.js';
 import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
 
-const _inverseMatrix = /*@__PURE__*/ new Matrix4();
+const _inverseMatrix = /*@__PURE__*/ new Mat4();
 const _ray = /*@__PURE__*/ new Ray();
 const _sphere = /*@__PURE__*/ new Sphere();
-const _sphereHitAt = /*@__PURE__*/ new Vector3();
+const _sphereHitAt = /*@__PURE__*/ new Vec3();
 
-const _vA = /*@__PURE__*/ new Vector3();
-const _vB = /*@__PURE__*/ new Vector3();
-const _vC = /*@__PURE__*/ new Vector3();
+const _vA = /*@__PURE__*/ new Vec3();
+const _vB = /*@__PURE__*/ new Vec3();
+const _vC = /*@__PURE__*/ new Vec3();
 
-const _tempA = /*@__PURE__*/ new Vector3();
-const _morphA = /*@__PURE__*/ new Vector3();
+const _tempA = /*@__PURE__*/ new Vec3();
+const _morphA = /*@__PURE__*/ new Vec3();
 
-const _uvA = /*@__PURE__*/ new Vector2();
-const _uvB = /*@__PURE__*/ new Vector2();
-const _uvC = /*@__PURE__*/ new Vector2();
+const _uvA = /*@__PURE__*/ new Vec2();
+const _uvB = /*@__PURE__*/ new Vec2();
+const _uvC = /*@__PURE__*/ new Vec2();
 
-const _normalA = /*@__PURE__*/ new Vector3();
-const _normalB = /*@__PURE__*/ new Vector3();
-const _normalC = /*@__PURE__*/ new Vector3();
+const _normalA = /*@__PURE__*/ new Vec3();
+const _normalB = /*@__PURE__*/ new Vec3();
+const _normalC = /*@__PURE__*/ new Vec3();
 
-const _intersectionPoint = /*@__PURE__*/ new Vector3();
-const _intersectionPointWorld = /*@__PURE__*/ new Vector3();
+const _intersectionPoint = /*@__PURE__*/ new Vec3();
+const _intersectionPointWorld = /*@__PURE__*/ new Vec3();
 
 export class Mesh extends Object3D {
   declare isMesh: true;
@@ -93,7 +93,7 @@ export class Mesh extends Object3D {
     }
   }
 
-  getVertexPosition(index: number, target: Vector3): Vector3 {
+  getVertexPosition(index: number, target: Vec3): Vec3 {
     const geometry = this.geometry;
     const position = geometry.attributes.position;
     const morphPosition = geometry.morphAttributes.position as unknown as number[];
@@ -139,7 +139,7 @@ export class Mesh extends Object3D {
     if (geometry.boundingSphere === null) geometry.computeBoundingSphere();
 
     _sphere.copy(geometry.boundingSphere!);
-    _sphere.applyMatrix4(matrixWorld);
+    _sphere.applyMat4(matrixWorld);
 
     // check distance from ray origin to bounding sphere
 
@@ -154,7 +154,7 @@ export class Mesh extends Object3D {
     // convert ray to local space of mesh
 
     _inverseMatrix.copy(matrixWorld).invert();
-    _ray.copy(raycaster.ray).applyMatrix4(_inverseMatrix);
+    _ray.copy(raycaster.ray).applyMat4(_inverseMatrix);
 
     // test with bounding box in local space
 
@@ -299,10 +299,10 @@ function checkIntersection(
   material: Material,
   raycaster: Raycaster,
   ray: Ray,
-  pA: Vector3,
-  pB: Vector3,
-  pC: Vector3,
-  point: Vector3,
+  pA: Vec3,
+  pB: Vec3,
+  pC: Vec3,
+  point: Vec3,
 ): Intersection | null {
   let intersect;
 
@@ -315,7 +315,7 @@ function checkIntersection(
   if (intersect === null) return null;
 
   _intersectionPointWorld.copy(point);
-  _intersectionPointWorld.applyMatrix4(object.matrixWorld);
+  _intersectionPointWorld.applyMat4(object.matrixWorld);
 
   const distance = raycaster.ray.origin.distanceTo(_intersectionPointWorld);
 
@@ -352,7 +352,7 @@ function checkGeometryIntersection(
       _uvB.fromBufferAttribute(uv, b);
       _uvC.fromBufferAttribute(uv, c);
 
-      intersection.uv = Triangle.getInterpolation(_intersectionPoint, _vA, _vB, _vC, _uvA, _uvB, _uvC, new Vector2())!;
+      intersection.uv = Triangle.getInterpolation(_intersectionPoint, _vA, _vB, _vC, _uvA, _uvB, _uvC, new Vec2())!;
     }
 
     if (uv1) {
@@ -360,7 +360,7 @@ function checkGeometryIntersection(
       _uvB.fromBufferAttribute(uv1, b);
       _uvC.fromBufferAttribute(uv1, c);
 
-      intersection.uv1 = Triangle.getInterpolation(_intersectionPoint, _vA, _vB, _vC, _uvA, _uvB, _uvC, new Vector2())!;
+      intersection.uv1 = Triangle.getInterpolation(_intersectionPoint, _vA, _vB, _vC, _uvA, _uvB, _uvC, new Vec2())!;
     }
 
     if (normal) {
@@ -376,7 +376,7 @@ function checkGeometryIntersection(
         _normalA,
         _normalB,
         _normalC,
-        new Vector3(),
+        new Vec3(),
       )!;
 
       if (intersection.normal.dot(ray.direction) > 0) {
@@ -388,7 +388,7 @@ function checkGeometryIntersection(
       a: a,
       b: b,
       c: c,
-      normal: new Vector3(),
+      normal: new Vec3(),
       materialIndex: 0,
     };
 

@@ -1,5 +1,5 @@
 import { Sphere } from '../../../math/Sphere.js';
-import { Vector3 } from '../../../math/Vector3.js';
+import { Vec3 } from '../../../math/Vec3.js';
 import { BufferAttribute } from '../../../core/BufferAttribute.js';
 import { BufferGeometry } from '../../../core/BufferGeometry.js';
 import { InstancedBufferGeometry } from '../../../core/InstancedBufferGeometry.js';
@@ -157,7 +157,7 @@ export const parseBufferGeometry = (json: JsonContent): BufferGeometry => {
   const boundingSphere = json.data.boundingSphere;
 
   if (boundingSphere !== undefined) {
-    const center = new Vector3();
+    const center = new Vec3();
 
     if (boundingSphere.center !== undefined) {
       center.fromArray(boundingSphere.center);

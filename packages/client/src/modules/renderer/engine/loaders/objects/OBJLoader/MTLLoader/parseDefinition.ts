@@ -2,7 +2,7 @@ import { ColorSpace, Side, Wrapping } from '@modules/renderer/engine/constants.j
 import { MeshPhongMaterial } from '@modules/renderer/engine/materials/MeshPhongMaterial.js';
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { Color } from '@modules/renderer/engine/math/Color.js';
-import { Vector2 } from '@modules/renderer/engine/math/Vector2.js';
+import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 import { MaterialDefinition, Token } from '@modules/renderer/engine/loaders/objects/OBJLoader/MTLLoader/parseMTL.js';
 import { LoaderUtils } from '@modules/renderer/engine/loaders/LoaderUtils.js';
 
@@ -12,13 +12,13 @@ function parseParams(
   value: string,
   materialParams: { bumpScale?: number },
 ): {
-  scale: Vector2;
-  offset: Vector2;
+  scale: Vec2;
+  offset: Vec2;
   url: string;
 } {
   const textureParams = {
-    scale: new Vector2(1, 1),
-    offset: new Vector2(0, 0),
+    scale: new Vec2(1, 1),
+    offset: new Vec2(0, 0),
     url: '',
   };
 

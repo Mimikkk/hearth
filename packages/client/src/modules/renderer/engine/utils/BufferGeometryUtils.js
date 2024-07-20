@@ -6,7 +6,7 @@ import {
   InstancedBufferAttribute,
   InterleavedBuffer,
   InterleavedBufferAttribute,
-  Vector3,
+  Vec3,
 } from '../engine.js';
 
 function computeMikkTSpaceTangents(geometry, MikkTSpace, negateSign = true) {
@@ -712,17 +712,17 @@ function toTrianglesDrawMode(geometry, drawMode) {
  * @return {Object} An Object with original position/normal attributes and morphed ones.
  */
 function computeMorphedAttributes(object) {
-  const _vA = new Vector3();
-  const _vB = new Vector3();
-  const _vC = new Vector3();
+  const _vA = new Vec3();
+  const _vB = new Vec3();
+  const _vC = new Vec3();
 
-  const _tempA = new Vector3();
-  const _tempB = new Vector3();
-  const _tempC = new Vector3();
+  const _tempA = new Vec3();
+  const _tempB = new Vec3();
+  const _tempC = new Vec3();
 
-  const _morphA = new Vector3();
-  const _morphB = new Vector3();
-  const _morphC = new Vector3();
+  const _morphA = new Vec3();
+  const _morphB = new Vec3();
+  const _morphC = new Vec3();
 
   function _calculateMorphedAttributeData(
     object,
@@ -1055,11 +1055,11 @@ function toCreasedNormals(geometry, creaseAngle = Math.PI / 3 /* 60 degrees */) 
   const hashMultiplier = (1 + 1e-10) * 1e2;
 
   // reusable vectors
-  const verts = [new Vector3(), new Vector3(), new Vector3()];
-  const tempVec1 = new Vector3();
-  const tempVec2 = new Vector3();
-  const tempNorm = new Vector3();
-  const tempNorm2 = new Vector3();
+  const verts = [new Vec3(), new Vec3(), new Vec3()];
+  const tempVec1 = new Vec3();
+  const tempVec2 = new Vec3();
+  const tempNorm = new Vec3();
+  const tempNorm2 = new Vec3();
 
   // hashes a vector
   function hashVertex(v) {
@@ -1086,7 +1086,7 @@ function toCreasedNormals(geometry, creaseAngle = Math.PI / 3 /* 60 degrees */) 
     tempVec2.subVectors(a, b);
 
     // add the normal to the map for all vertices
-    const normal = new Vector3().crossVectors(tempVec1, tempVec2).normalize();
+    const normal = new Vec3().crossVectors(tempVec1, tempVec2).normalize();
     for (let n = 0; n < 3; n++) {
       const vert = verts[n];
       const hash = hashVertex(vert);

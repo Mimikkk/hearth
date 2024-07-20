@@ -1,6 +1,6 @@
-import { Matrix4 } from './Matrix4.js';
-import { Vector3 } from './Vector3.js';
-import { Vector2 } from './Vector2.js';
+import { Mat4 } from './Mat4.js';
+import { Vec3 } from './Vec3.js';
+import { Vec2 } from './Vec2.js';
 
 export interface Matrix {
   elements: number[];
@@ -13,9 +13,9 @@ export interface Matrix {
   clone(): Matrix;
 }
 
-export class Matrix3 implements Matrix {
-  declare ['constructor']: typeof Matrix3;
-  declare isMatrix3: true;
+export class Mat3 implements Matrix {
+  declare ['constructor']: typeof Mat3;
+  declare isMat3: true;
 
   elements: number[];
 
@@ -59,7 +59,7 @@ export class Matrix3 implements Matrix {
     n31: number,
     n32: number,
     n33: number,
-  ): Matrix3 {
+  ): Mat3 {
     const te = this.elements;
 
     te[0] = n11;
@@ -75,13 +75,13 @@ export class Matrix3 implements Matrix {
     return this;
   }
 
-  identity(): Matrix3 {
+  identity(): Mat3 {
     this.set(1, 0, 0, 0, 1, 0, 0, 0, 1);
 
     return this;
   }
 
-  copy(matrix: Matrix3): this {
+  copy(matrix: Mat3): this {
     const te = this.elements;
     const me = matrix.elements;
 
@@ -98,15 +98,15 @@ export class Matrix3 implements Matrix {
     return this;
   }
 
-  extractBasis(xAxis: Vector3, yAxis: Vector3, zAxis: Vector3): Matrix3 {
-    xAxis.setFromMatrix3Column(this, 0);
-    yAxis.setFromMatrix3Column(this, 1);
-    zAxis.setFromMatrix3Column(this, 2);
+  extractBasis(xAxis: Vec3, yAxis: Vec3, zAxis: Vec3): Mat3 {
+    xAxis.setFromMat3Column(this, 0);
+    yAxis.setFromMat3Column(this, 1);
+    zAxis.setFromMat3Column(this, 2);
 
     return this;
   }
 
-  setFromMatrix4(matrix: Matrix4): Matrix3 {
+  setFromMat4(matrix: Mat4): Mat3 {
     const me = matrix.elements;
 
     this.set(me[0], me[4], me[8], me[1], me[5], me[9], me[2], me[6], me[10]);
@@ -114,15 +114,15 @@ export class Matrix3 implements Matrix {
     return this;
   }
 
-  multiply(matrix: Matrix3): Matrix3 {
+  multiply(matrix: Mat3): Mat3 {
     return this.multiplyMatrices(this, matrix);
   }
 
-  premultiply(matrix: Matrix3): Matrix3 {
+  premultiply(matrix: Mat3): Mat3 {
     return this.multiplyMatrices(matrix, this);
   }
 
-  multiplyMatrices(a: Matrix3, b: Matrix3): Matrix3 {
+  multiplyMatrices(a: Mat3, b: Mat3): Mat3 {
     const ae = a.elements;
     const be = b.elements;
     const te = this.elements;
@@ -162,7 +162,7 @@ export class Matrix3 implements Matrix {
     return this;
   }
 
-  multiplyScalar(scalar: number): Matrix3 {
+  multiplyScalar(scalar: number): Mat3 {
     const te = this.elements;
 
     te[0] *= scalar;
@@ -194,7 +194,7 @@ export class Matrix3 implements Matrix {
     return a * e * i - a * f * h - b * d * i + b * f * g + c * d * h - c * e * g;
   }
 
-  invert(): Matrix3 {
+  invert(): Mat3 {
     const te = this.elements,
       n11 = te[0],
       n21 = te[1],
@@ -229,7 +229,7 @@ export class Matrix3 implements Matrix {
     return this;
   }
 
-  transpose(): Matrix3 {
+  transpose(): Mat3 {
     let tmp;
     const m = this.elements;
 
@@ -246,11 +246,11 @@ export class Matrix3 implements Matrix {
     return this;
   }
 
-  getNormalMatrix(matrix: Matrix4): Matrix3 {
-    return this.setFromMatrix4(matrix).invert().transpose();
+  getNormalMatrix(matrix: Mat4): Mat3 {
+    return this.setFromMat4(matrix).invert().transpose();
   }
 
-  transposeIntoArray(array: number[]): Matrix3 {
+  transposeIntoArray(array: number[]): Mat3 {
     const m = this.elements;
 
     array[0] = m[0];
@@ -274,7 +274,7 @@ export class Matrix3 implements Matrix {
     rotation: number,
     centerX: number,
     centerY: number,
-  ): Matrix3 {
+  ): Mat3 {
     const cosine = Math.cos(rotation);
     const sine = Math.sin(rotation);
 
@@ -293,26 +293,26 @@ export class Matrix3 implements Matrix {
     return this;
   }
 
-  scale(scaleX: number, scaleY: number): Matrix3 {
-    this.premultiply(new Matrix3().makeScale(scaleX, scaleY));
+  scale(scaleX: number, scaleY: number): Mat3 {
+    this.premultiply(new Mat3().makeScale(scaleX, scaleY));
 
     return this;
   }
 
-  rotate(theta: number): Matrix3 {
-    this.premultiply(new Matrix3().makeRotation(-theta));
+  rotate(theta: number): Mat3 {
+    this.premultiply(new Mat3().makeRotation(-theta));
 
     return this;
   }
 
-  translate(x: number, y: number): Matrix3 {
-    this.premultiply(new Matrix3().makeTranslation(x, y));
+  translate(x: number, y: number): Mat3 {
+    this.premultiply(new Mat3().makeTranslation(x, y));
 
     return this;
   }
 
-  makeTranslation(x: number | Vector2, y?: number): this {
-    if (x instanceof Vector2) {
+  makeTranslation(x: number | Vec2, y?: number): this {
+    if (x instanceof Vec2) {
       this.set(1, 0, x.x, 0, 1, x.y, 0, 0, 1);
     } else {
       this.set(1, 0, x, 0, 1, y!, 0, 0, 1);
@@ -321,7 +321,7 @@ export class Matrix3 implements Matrix {
     return this;
   }
 
-  makeRotation(theta: number): Matrix3 {
+  makeRotation(theta: number): Mat3 {
     const c = Math.cos(theta);
     const s = Math.sin(theta);
 
@@ -330,13 +330,13 @@ export class Matrix3 implements Matrix {
     return this;
   }
 
-  makeScale(x: number, y: number): Matrix3 {
+  makeScale(x: number, y: number): Mat3 {
     this.set(x, 0, 0, 0, y, 0, 0, 0, 1);
 
     return this;
   }
 
-  equals(matrix: Matrix3): boolean {
+  equals(matrix: Mat3): boolean {
     const te = this.elements;
     const me = matrix.elements;
 
@@ -347,7 +347,7 @@ export class Matrix3 implements Matrix {
     return true;
   }
 
-  fromArray(array: number[], offset: number = 0): Matrix3 {
+  fromArray(array: number[], offset: number = 0): Mat3 {
     for (let i = 0; i < 9; i++) {
       this.elements[i] = array[i + offset];
     }
@@ -373,8 +373,8 @@ export class Matrix3 implements Matrix {
     return array;
   }
 
-  clone(): Matrix3 {
+  clone(): Mat3 {
     return new this.constructor().fromArray(this.elements);
   }
 }
-Matrix3.prototype.isMatrix3 = true;
+Mat3.prototype.isMat3 = true;

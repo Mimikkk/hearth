@@ -1,20 +1,20 @@
 import { Float32BufferAttribute } from '../core/BufferAttribute.js';
 import { BufferGeometry } from '../core/BufferGeometry.js';
-import { Vector3 } from '../math/Vector3.js';
-import { Vector2 } from '../math/Vector2.js';
+import { Vec3 } from '../math/Vec3.js';
+import { Vec2 } from '../math/Vec2.js';
 import * as MathUtils from '../math/MathUtils.js';
 
 export class LatheGeometry extends BufferGeometry {
   declare type: string | 'LatheGeometry';
   declare parameters: {
-    points: Vector2[];
+    points: Vec2[];
     segments: number;
     phiStart: number;
     phiLength: number;
   };
 
   constructor(
-    points: Vector2[] = [new Vector2(0, -0.5), new Vector2(0.5, 0), new Vector2(0, 0.5)],
+    points: Vec2[] = [new Vec2(0, -0.5), new Vec2(0.5, 0), new Vec2(0, 0.5)],
     segments: number = 12,
     phiStart: number = 0,
     phiLength: number = Math.PI * 2,
@@ -45,11 +45,11 @@ export class LatheGeometry extends BufferGeometry {
     // helper variables
 
     const inverseSegments = 1.0 / segments;
-    const vertex = new Vector3();
-    const uv = new Vector2();
-    const normal = new Vector3();
-    const curNormal = new Vector3();
-    const prevNormal = new Vector3();
+    const vertex = new Vec3();
+    const uv = new Vec2();
+    const normal = new Vec3();
+    const curNormal = new Vec3();
+    const prevNormal = new Vec3();
     let dx = 0;
     let dy = 0;
 

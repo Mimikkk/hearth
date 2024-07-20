@@ -6,7 +6,7 @@ import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindow
 let camera, scene, renderer, clock, dataTexture, diffuseMap;
 
 let last = 0;
-const position = new Engine.Vector2();
+const position = new Engine.Vec2();
 const color = new Engine.Color();
 
 init();

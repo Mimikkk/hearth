@@ -68,7 +68,7 @@ async function init() {
   scene.add(buildMesh);
 
   const dummy = new Engine.Object3D();
-  const center = new Engine.Vector3();
+  const center = new Engine.Vec3();
 
   for (let i = 0; i < buildMesh.count; i++) {
     const scaleY = Math.random() * 7 + 0.5;

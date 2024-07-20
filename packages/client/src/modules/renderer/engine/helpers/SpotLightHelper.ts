@@ -1,4 +1,4 @@
-import { Vector3 } from '../math/Vector3.js';
+import { Vec3 } from '../math/Vec3.js';
 import { Object3D } from '../core/Object3D.js';
 import { LineSegments } from '../objects/LineSegments.js';
 import { LineBasicMaterial } from '../materials/LineBasicMaterial.js';
@@ -7,7 +7,7 @@ import { BufferGeometry } from '../core/BufferGeometry.js';
 import { SpotLight } from '@modules/renderer/engine/lights/SpotLight.js';
 import { Color } from '@modules/renderer/engine/math/Color.js';
 
-const _vector = /*@__PURE__*/ new Vector3();
+const _vector = /*@__PURE__*/ new Vec3();
 
 export class SpotLightHelper extends Object3D {
   declare type: string | 'SpotLightHelper';

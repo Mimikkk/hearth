@@ -1,9 +1,9 @@
 import { Line } from './Line.js';
-import { Vector3 } from '../math/Vector3.js';
+import { Vec3 } from '../math/Vec3.js';
 import { Float32BufferAttribute } from '../core/BufferAttribute.js';
 
-const _start = /*@__PURE__*/ new Vector3();
-const _end = /*@__PURE__*/ new Vector3();
+const _start = /*@__PURE__*/ new Vec3();
+const _end = /*@__PURE__*/ new Vec3();
 
 export class LineSegments extends Line {
   declare isLineSegments: true;

@@ -28,7 +28,7 @@ const bounce = uniform(0.8);
 const friction = uniform(0.99);
 const size = uniform(0.12);
 
-const clickPosition = uniform(new Engine.Vector3());
+const clickPosition = uniform(new Engine.Vec3());
 
 let camera, scene, renderer;
 let controls, stats;
@@ -134,7 +134,7 @@ async function init() {
   scene.add(plane);
 
   const raycaster = new Engine.Raycaster();
-  const pointer = new Engine.Vector2();
+  const pointer = new Engine.Vec2();
 
   //
 

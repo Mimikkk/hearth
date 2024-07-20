@@ -1,4 +1,4 @@
-import { Vector3 } from '../../math/Vector3.js';
+import { Vec3 } from '../../math/Vec3.js';
 import { Curve } from '../core/Curve.js';
 
 const CubicPoly = () => {
@@ -46,17 +46,17 @@ const CubicPoly = () => {
 };
 
 type CurveType = 'centripetal' | 'chordal' | 'catmullrom';
-const tmp = new Vector3();
+const tmp = new Vec3();
 const px = CubicPoly();
 const py = CubicPoly();
 const pz = CubicPoly();
 
-class CatmullRomCurve3 extends Curve<Vector3> {
+class CatmullRomCurve3 extends Curve<Vec3> {
   declare isCatmullRomCurve3: true;
   declare type: 'CatmullRomCurve3';
 
   constructor(
-    public points: Vector3[] = [],
+    public points: Vec3[] = [],
     public closed: boolean = false,
     public curveType: CurveType = 'centripetal',
     public tension: number = 0.5,
@@ -64,7 +64,7 @@ class CatmullRomCurve3 extends Curve<Vector3> {
     super();
   }
 
-  getPoint(t: number, optionalTarget: Vector3 = new Vector3()): Vector3 {
+  getPoint(t: number, optionalTarget: Vec3 = new Vec3()): Vec3 {
     const point = optionalTarget;
 
     const points = this.points;

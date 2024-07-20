@@ -2,7 +2,7 @@ import { Backend } from '@modules/renderer/engine/renderers/webgpu/Backend.js';
 import { ColorSpace, Side, ToneMapping } from '@modules/renderer/engine/constants.js';
 import ToneMappingNode from '@modules/renderer/engine/nodes/display/ToneMappingNode.js';
 import { Info } from '@modules/renderer/engine/renderers/common/Info.js';
-import { Vector4 } from '@modules/renderer/engine/math/Vector4.js';
+import { Vec4 } from '@modules/renderer/engine/math/Vec4.js';
 import Attributes from '@modules/renderer/engine/renderers/common/Attributes.js';
 import Geometries from '@modules/renderer/engine/renderers/common/Geometries.js';
 import Nodes from '@modules/renderer/engine/renderers/common/nodes/Nodes.js';
@@ -19,17 +19,17 @@ import { Scene } from '@modules/renderer/engine/scenes/Scene.js';
 import { Camera } from '@modules/renderer/engine/cameras/Camera.js';
 import ClippingContext from '@modules/renderer/engine/renderers/common/ClippingContext.js';
 import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
-import { Vector3 } from '@modules/renderer/engine/math/Vector3.js';
-import { Vector2 } from '@modules/renderer/engine/math/Vector2.js';
-import { Frustum, Matrix4, Object3D, Plane } from '@modules/renderer/engine/engine.js';
+import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
+import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
+import { Frustum, Mat4, Object3D, Plane } from '@modules/renderer/engine/engine.js';
 import { GPUFeatureNameType, GPUTextureFormatType } from '@modules/renderer/engine/renderers/webgpu/utils/constants.js';
 
 const _scene = new Scene();
-const _drawingBufferSize = new Vector2();
-const _screen = new Vector4();
+const _drawingBufferSize = new Vec2();
+const _screen = new Vec4();
 const _frustum = new Frustum();
-const _projScreenMatrix = new Matrix4();
-const _vector3 = new Vector3();
+const _projScreenMatrix = new Mat4();
+const _Vec3 = new Vec3();
 
 export class Renderer {
   backend: Backend;
@@ -37,8 +37,8 @@ export class Renderer {
   _pixelRatio: number;
   _width: number;
   _height: number;
-  _viewport: Vector4;
-  _scissor: Vector4;
+  _viewport: Vec4;
+  _scissor: Vec4;
   _scissorTest: boolean;
   _attributes: Attributes;
   _geometries: Geometries;
@@ -106,8 +106,8 @@ export class Renderer {
     this._pixelRatio = window.devicePixelRatio;
     this._width = this.parameters.canvas.width;
     this._height = this.parameters.canvas.height;
-    this._viewport = new Vector4(0, 0, this._width, this._height);
-    this._scissor = new Vector4(0, 0, this._width, this._height);
+    this._viewport = new Vec4(0, 0, this._width, this._height);
+    this._scissor = new Vec4(0, 0, this._width, this._height);
     this._scissorTest = false;
     this._nodes = new Nodes(this);
     this._animation = new Animation(this);
@@ -157,6 +157,12 @@ export class Renderer {
       usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.COPY_SRC,
       alphaMode: renderer.parameters.alpha ? 'premultiplied' : 'opaque',
     });
+
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    if (parameters?.autoinsert === undefined || parameters.autoinsert) {
+      document.body.appendChild(renderer.parameters.canvas);
+    }
+    if (parameters?.animate) renderer._animation.loop = parameters.animate;
 
     return renderer;
   }
@@ -485,11 +491,11 @@ export class Renderer {
     return this._pixelRatio;
   }
 
-  getDrawingBufferSize(target: Vector3) {
+  getDrawingBufferSize(target: Vec3) {
     return target.set(this._width * this._pixelRatio, this._height * this._pixelRatio).floor();
   }
 
-  getSize(target: Vector2) {
+  getSize(target: Vec2) {
     return target.set(this._width, this._height);
   }
 
@@ -552,7 +558,7 @@ export class Renderer {
   setScissor(x, y, width, height) {
     const scissor = this._scissor;
 
-    if (x.isVector4) {
+    if (x.isVec4) {
       scissor.copy(x);
     } else {
       scissor.set(x, y, width, height);
@@ -576,7 +582,7 @@ export class Renderer {
   setViewport(x, y, width, height, minDepth = 0, maxDepth = 1) {
     const viewport = this._viewport;
 
-    if (x.isVector4) {
+    if (x.isVec4) {
       viewport.copy(x);
     } else {
       viewport.set(x, y, width, height);
@@ -794,14 +800,14 @@ export class Renderer {
       } else if (object.isSprite) {
         if (!object.frustumCulled || _frustum.intersectsSprite(object)) {
           if (this.parameters.sortObjects) {
-            _vector3.setFromMatrixPosition(object.matrixWorld).applyMatrix4(_projScreenMatrix);
+            _Vec3.setFromMatrixPosition(object.matrixWorld).applyMat4(_projScreenMatrix);
           }
 
           const geometry = object.geometry;
           const material = object.material;
 
           if (material.visible) {
-            renderList.push(object, geometry, material, groupOrder, _vector3.z, null);
+            renderList.push(object, geometry, material, groupOrder, _Vec3.z, null);
           }
         }
       } else if (object.isMesh || object.isLine || object.isPoints) {
@@ -812,10 +818,7 @@ export class Renderer {
           if (this.parameters.sortObjects) {
             if (geometry.boundingSphere === null) geometry.computeBoundingSphere();
 
-            _vector3
-              .copy(geometry.boundingSphere.center)
-              .applyMatrix4(object.matrixWorld)
-              .applyMatrix4(_projScreenMatrix);
+            _Vec3.copy(geometry.boundingSphere.center).applyMat4(object.matrixWorld).applyMat4(_projScreenMatrix);
           }
 
           if (Array.isArray(material)) {
@@ -826,11 +829,11 @@ export class Renderer {
               const groupMaterial = material[group.materialIndex];
 
               if (groupMaterial && groupMaterial.visible) {
-                renderList.push(object, geometry, groupMaterial, groupOrder, _vector3.z, group);
+                renderList.push(object, geometry, groupMaterial, groupOrder, _Vec3.z, group);
               }
             }
           } else if (material.visible) {
-            renderList.push(object, geometry, material, groupOrder, _vector3.z, null);
+            renderList.push(object, geometry, material, groupOrder, _Vec3.z, null);
           }
         }
       }
@@ -1012,6 +1015,8 @@ export namespace Renderer {
     toneMappingNode?: ToneMappingNode | null;
     requiredLimits?: Record<string, GPUSize64>;
     trackTimestamp?: boolean;
+    autoinsert?: boolean;
+    animate?: AnimationLoopFn;
   }
 
   export interface Configuration {

@@ -1,4 +1,4 @@
-import type { Vector3 } from './Vector3.js';
+import type { Vec3 } from './Vec3.js';
 
 export class Cylindrical {
   declare ['constructor']: typeof Cylindrical;
@@ -25,7 +25,7 @@ export class Cylindrical {
     return this;
   }
 
-  setFromVector3(v: Vector3): this {
+  setFromVec3(v: Vec3): this {
     return this.setFromCartesianCoords(v.x, v.y, v.z);
   }
 

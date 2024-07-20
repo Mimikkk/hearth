@@ -13,11 +13,11 @@ import { buildStages, NodeUpdateType, shaderStages } from './constants.ts';
 import {
   ColorNodeUniform,
   FloatNodeUniform,
-  Matrix3NodeUniform,
-  Matrix4NodeUniform,
-  Vector2NodeUniform,
-  Vector3NodeUniform,
-  Vector4NodeUniform,
+  Mat3NodeUniform,
+  Mat4NodeUniform,
+  Vec2NodeUniform,
+  Vec3NodeUniform,
+  Vec4NodeUniform,
 } from '../../renderers/common/nodes/NodeUniform.ts';
 
 import {
@@ -26,9 +26,9 @@ import {
   Float16BufferAttribute,
   RenderTarget,
   Revision,
-  Vector2,
-  Vector3,
-  Vector4,
+  Vec2,
+  Vec3,
+  Vec4,
 } from '@modules/renderer/engine/engine.js';
 
 import { stack } from './StackNode.js';
@@ -295,9 +295,9 @@ class NodeBuilder {
       if (type === 'float' || type === 'int' || type === 'uint') value = 0;
       else if (type === 'bool') value = false;
       else if (type === 'color') value = new Color();
-      else if (type === 'vec2') value = new Vector2();
-      else if (type === 'vec3') value = new Vector3();
-      else if (type === 'vec4') value = new Vector4();
+      else if (type === 'vec2') value = new Vec2();
+      else if (type === 'vec3') value = new Vec3();
+      else if (type === 'vec4') value = new Vec4();
     }
 
     if (type === 'float') return toFloat(value);
@@ -319,7 +319,7 @@ class NodeBuilder {
       return `${this.getType(type)}( ${generateConst(value.x)}, ${generateConst(value.y)}, ${generateConst(value.z)} )`;
     } else if (typeLength === 4) {
       return `${this.getType(type)}( ${generateConst(value.x)}, ${generateConst(value.y)}, ${generateConst(value.z)}, ${generateConst(value.w)} )`;
-    } else if (typeLength > 4 && value && (value.isMatrix3 || value.isMatrix4)) {
+    } else if (typeLength > 4 && value && (value.isMat3 || value.isMat4)) {
       return `${this.getType(type)}( ${value.elements.map(generateConst).join(', ')} )`;
     } else if (typeLength > 4) {
       return `${this.getType(type)}()`;
@@ -913,12 +913,12 @@ class NodeBuilder {
 
   getNodeUniform(uniformNode, type) {
     if (type === 'float') return new FloatNodeUniform(uniformNode);
-    if (type === 'vec2') return new Vector2NodeUniform(uniformNode);
-    if (type === 'vec3') return new Vector3NodeUniform(uniformNode);
-    if (type === 'vec4') return new Vector4NodeUniform(uniformNode);
+    if (type === 'vec2') return new Vec2NodeUniform(uniformNode);
+    if (type === 'vec3') return new Vec3NodeUniform(uniformNode);
+    if (type === 'vec4') return new Vec4NodeUniform(uniformNode);
     if (type === 'color') return new ColorNodeUniform(uniformNode);
-    if (type === 'mat3') return new Matrix3NodeUniform(uniformNode);
-    if (type === 'mat4') return new Matrix4NodeUniform(uniformNode);
+    if (type === 'mat3') return new Mat3NodeUniform(uniformNode);
+    if (type === 'mat4') return new Mat4NodeUniform(uniformNode);
 
     throw new Error(`Uniform "${type}" not declared.`);
   }

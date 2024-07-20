@@ -1,4 +1,4 @@
-import { Vector3 } from './Vector3.js';
+import { Vec3 } from './Vec3.js';
 import { Line3 } from './Line3.js';
 import { Plane } from './Plane.js';
 import { Triangle } from './Triangle.js';
@@ -8,10 +8,10 @@ import { Ray } from '@modules/renderer/engine/math/Ray.js';
 const Visible = 0;
 const Deleted = 1;
 
-const _v1 = new Vector3();
+const _v1 = new Vec3();
 const _line3 = new Line3();
 const _plane = new Plane();
-const _closestPoint = new Vector3();
+const _closestPoint = new Vec3();
 const _triangle = new Triangle();
 
 export class ConvexHull {
@@ -46,7 +46,7 @@ export class ConvexHull {
     this.vertices = [];
   }
 
-  setFromPoints(points: Vector3[]): this {
+  setFromPoints(points: Vec3[]): this {
     if (points.length >= 4) {
       this.makeEmpty();
 
@@ -61,7 +61,7 @@ export class ConvexHull {
   }
 
   setFromObject(object: Object3D): this {
-    const points: Vector3[] = [];
+    const points: Vec3[] = [];
 
     object.updateMatrixWorld(true);
 
@@ -73,9 +73,9 @@ export class ConvexHull {
 
       if (!attribute) return;
       for (let i = 0, l = attribute.count; i < l; i++) {
-        const point = new Vector3();
+        const point = new Vec3();
 
-        point.fromBufferAttribute(attribute, i).applyMatrix4(node.matrixWorld);
+        point.fromBufferAttribute(attribute, i).applyMat4(node.matrixWorld);
 
         points.push(point);
       }
@@ -84,7 +84,7 @@ export class ConvexHull {
     return this.setFromPoints(points);
   }
 
-  containsPoint(point: Vector3): boolean {
+  containsPoint(point: Vec3): boolean {
     const faces = this.faces;
 
     for (let i = 0, l = faces.length; i < l; i++) {
@@ -98,7 +98,7 @@ export class ConvexHull {
     return true;
   }
 
-  intersectRay(ray: Ray, target: Vector3): Vector3 | null {
+  intersectRay(ray: Ray, target: Vec3): Vec3 | null {
     // based on "Fast Ray-Convex Polyhedron Intersection" by Eric Haines, GRAPHICS GEMS II
 
     const faces = this.faces;
@@ -320,8 +320,8 @@ export class ConvexHull {
   // Computes the extremes of a simplex which will be the initial hull
 
   computeExtremes(): { min: VertexNode[]; max: VertexNode[] } {
-    const min = new Vector3();
-    const max = new Vector3();
+    const min = new Vec3();
+    const max = new Vec3();
 
     const minVertices = [];
     const maxVertices = [];
@@ -567,7 +567,7 @@ export class ConvexHull {
   // For an edge to be part of the horizon it must join a face that can see
   // 'eyePoint' and a face that cannot see 'eyePoint'.
 
-  computeHorizon(eyePoint: Vector3, crossEdge: HalfEdge | null, face: Face, horizon: HalfEdge[]): this {
+  computeHorizon(eyePoint: Vec3, crossEdge: HalfEdge | null, face: Face, horizon: HalfEdge[]): this {
     // moves face's vertices to the 'unassigned' vertex list
 
     this.deleteFaceVertices(face);
@@ -708,8 +708,8 @@ export class ConvexHull {
 }
 
 export class Face {
-  normal: Vector3;
-  midpoint: Vector3;
+  normal: Vec3;
+  midpoint: Vec3;
   area: number;
   constant: number;
   outside: VertexNode | null;
@@ -718,8 +718,8 @@ export class Face {
   materialIndex: number;
 
   constructor() {
-    this.normal = new Vector3();
-    this.midpoint = new Vector3();
+    this.normal = new Vec3();
+    this.midpoint = new Vec3();
     this.area = 0;
 
     // signed distance from face to the origin
@@ -782,7 +782,7 @@ export class Face {
     return this;
   }
 
-  distanceToPoint(point: Vector3): number {
+  distanceToPoint(point: Vec3): number {
     return this.normal.dot(point) - this.constant;
   }
 }
@@ -836,7 +836,7 @@ export class VertexNode {
   next: VertexNode | null = null;
   face: Face | null = null;
 
-  constructor(public point: Vector3) {}
+  constructor(public point: Vec3) {}
 }
 
 export class VertexList {

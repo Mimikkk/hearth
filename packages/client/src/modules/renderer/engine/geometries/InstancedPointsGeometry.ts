@@ -4,11 +4,11 @@ import {
   InstancedBufferGeometry,
   InstancedBufferAttribute,
   Sphere,
-  Vector3,
-  Matrix4,
+  Vec3,
+  Mat4,
 } from '../engine.js';
 
-const _vector = new Vector3();
+const _vector = new Vec3();
 
 export class InstancedPointsGeometry extends InstancedBufferGeometry {
   declare isInstancedPointsGeometry: true;
@@ -26,11 +26,11 @@ export class InstancedPointsGeometry extends InstancedBufferGeometry {
     this.setAttribute('uv', new Float32BufferAttribute(uvs, 2));
   }
 
-  applyMatrix4(matrix: Matrix4): this {
+  applyMat4(matrix: Mat4): this {
     const pos = this.attributes.instancePosition;
 
     if (pos !== undefined) {
-      pos.applyMatrix4(matrix);
+      pos.applyMat4(matrix);
 
       pos.needsUpdate = true;
     }

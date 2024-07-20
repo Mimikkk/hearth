@@ -1,10 +1,10 @@
 import { Ray } from '../math/Ray.js';
 import { Layers } from './Layers.js';
-import type { Vector3 } from '../math/Vector3.js';
+import type { Vec3 } from '../math/Vec3.js';
 import type { Camera } from '../cameras/Camera.js';
 import type { Object3D } from './Object3D.js';
 import type { Face } from '../math/ConvexHull.js';
-import type { Vector2 } from '../math/Vector2.js';
+import type { Vec2 } from '../math/Vec2.js';
 import { PerspectiveCamera } from '../cameras/PerspectiveCamera.js';
 import { OrthographicCamera } from '../cameras/OrthographicCamera.js';
 
@@ -20,16 +20,16 @@ export interface RaycasterParameters {
 export interface Intersection<T extends Object3D = Object3D> {
   distance: number;
   distanceToRay?: number | undefined;
-  point: Vector3;
+  point: Vec3;
   index?: number | undefined;
   face?: Face | null | undefined;
   faceIndex?: number | undefined;
   object: T;
-  uv?: Vector2 | undefined;
-  uv1?: Vector2 | undefined;
-  normal?: Vector3;
+  uv?: Vec2 | undefined;
+  uv1?: Vec2 | undefined;
+  normal?: Vec3;
   instanceId?: number | undefined;
-  pointOnLine?: Vector3;
+  pointOnLine?: Vec3;
   batchId?: number;
 }
 
@@ -61,7 +61,7 @@ export class Raycaster {
   layers: Layers;
   params: RaycasterParameters;
 
-  constructor(origin?: Vector3, direction?: Vector3, near: number = 0, far: number = Infinity) {
+  constructor(origin?: Vec3, direction?: Vec3, near: number = 0, far: number = Infinity) {
     this.ray = new Ray(origin, direction);
     this.camera = null!;
     this.near = near;
@@ -77,12 +77,12 @@ export class Raycaster {
     };
   }
 
-  set(origin: Vector3, direction: Vector3): this {
+  set(origin: Vec3, direction: Vec3): this {
     this.ray.set(origin, direction);
     return this;
   }
 
-  setFromCamera(coords: Vector2, camera: Camera): this {
+  setFromCamera(coords: Vec2, camera: Camera): this {
     if (camera instanceof PerspectiveCamera) {
       this.ray.origin.setFromMatrixPosition(camera.matrixWorld);
       this.ray.direction.set(coords.x, coords.y, 0.5).unproject(camera).sub(this.ray.origin).normalize();

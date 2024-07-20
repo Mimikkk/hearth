@@ -9,11 +9,11 @@ import { VectorKeyframeTrack } from './tracks/VectorKeyframeTrack.js';
 import * as MathUtils from '../math/MathUtils.js';
 import { AnimationBlendMode } from '../constants.js';
 import { Object3D } from '@modules/renderer/engine/core/Object3D.js';
-import { Vector3 } from '@modules/renderer/engine/math/Vector3.js';
+import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 
 export interface MorphTarget {
   name: string;
-  vertices: Vector3[];
+  vertices: Vec3[];
 }
 
 export class AnimationClip {
@@ -294,9 +294,9 @@ type TypeName =
   | 'number'
   | 'integer'
   | 'vector'
-  | 'vector2'
-  | 'vector3'
-  | 'vector4'
+  | 'Vec2'
+  | 'Vec3'
+  | 'Vec4'
   | 'color'
   | 'quaternion'
   | 'bool'
@@ -313,9 +313,9 @@ function getTrackTypeForValueTypeName(typeName: TypeName) {
       return NumberKeyframeTrack;
 
     case 'vector':
-    case 'vector2':
-    case 'vector3':
-    case 'vector4':
+    case 'Vec2':
+    case 'Vec3':
+    case 'Vec4':
       return VectorKeyframeTrack;
 
     case 'color':

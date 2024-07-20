@@ -1,8 +1,8 @@
 import { ColorPrimary, ColorSpace, TransferFunction } from '../constants.js';
-import { Matrix3 } from './Matrix3.js';
+import { Mat3 } from './Mat3.js';
 import type { Color } from './Color.js';
 
-const LinearSRGBToLinearDisplayP3 = new Matrix3(
+const LinearSRGBToLinearDisplayP3 = new Mat3(
   0.8224621,
   0.177538,
   0.0,
@@ -14,7 +14,7 @@ const LinearSRGBToLinearDisplayP3 = new Matrix3(
   0.9105199,
 );
 
-const LinearDisplayP3ToLinearSRGB = new Matrix3(
+const LinearDisplayP3ToLinearSRGB = new Mat3(
   1.2249401,
   -0.2249404,
   0.0,
@@ -57,14 +57,14 @@ const ColorSpaceMap: Record<
   [ColorSpace.LinearDisplayP3]: {
     transfer: TransferFunction.Linear,
     primaries: ColorPrimary.P3,
-    toReference: color => color.applyMatrix3(LinearDisplayP3ToLinearSRGB),
-    fromReference: color => color.applyMatrix3(LinearSRGBToLinearDisplayP3),
+    toReference: color => color.applyMat3(LinearDisplayP3ToLinearSRGB),
+    fromReference: color => color.applyMat3(LinearSRGBToLinearDisplayP3),
   },
   [ColorSpace.DisplayP3]: {
     transfer: TransferFunction.SRGB,
     primaries: ColorPrimary.P3,
-    toReference: color => color.convertSRGBToLinear().applyMatrix3(LinearDisplayP3ToLinearSRGB),
-    fromReference: color => color.applyMatrix3(LinearSRGBToLinearDisplayP3).convertLinearToSRGB(),
+    toReference: color => color.convertSRGBToLinear().applyMat3(LinearDisplayP3ToLinearSRGB),
+    fromReference: color => color.applyMat3(LinearSRGBToLinearDisplayP3).convertLinearToSRGB(),
   },
 };
 

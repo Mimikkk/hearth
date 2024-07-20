@@ -1,21 +1,21 @@
 import { TextureDataType, TextureFormat } from '../constants.js';
 import { Bone } from './Bone.js';
-import { Matrix4 } from '../math/Matrix4.js';
+import { Mat4 } from '../math/Mat4.js';
 import { DataTexture } from '../textures/DataTexture.js';
 import * as MathUtils from '../math/MathUtils.js';
 
-const _offsetMatrix = /*@__PURE__*/ new Matrix4();
-const _identityMatrix = /*@__PURE__*/ new Matrix4();
+const _offsetMatrix = /*@__PURE__*/ new Mat4();
+const _identityMatrix = /*@__PURE__*/ new Mat4();
 
 export class Skeleton {
   uuid: string;
   bones: Bone[];
-  boneInverses: Matrix4[];
+  boneInverses: Mat4[];
   boneMatrices: Float32Array;
   boneTexture: DataTexture | null;
   frame: number;
 
-  constructor(bones: Bone[] = [], boneInverses: Matrix4[] = []) {
+  constructor(bones: Bone[] = [], boneInverses: Mat4[] = []) {
     this.uuid = MathUtils.generateUuid();
 
     this.bones = bones.slice(0);
@@ -45,7 +45,7 @@ export class Skeleton {
         this.boneInverses = [];
 
         for (let i = 0, il = this.bones.length; i < il; i++) {
-          this.boneInverses.push(new Matrix4());
+          this.boneInverses.push(new Mat4());
         }
       }
     }
@@ -55,7 +55,7 @@ export class Skeleton {
     this.boneInverses.length = 0;
 
     for (let i = 0, il = this.bones.length; i < il; i++) {
-      const inverse = new Matrix4();
+      const inverse = new Mat4();
 
       if (this.bones[i]) {
         inverse.copy(this.bones[i].matrixWorld).invert();
