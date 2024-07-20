@@ -1,11 +1,10 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
-import { skinning, uniform } from '@modules/renderer/engine/nodes/Nodes.js';
+import { PointsNodeMaterial, skinning, uniform } from '@modules/renderer/engine/nodes/Nodes.js';
 
 import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/GLTFLoader.js';
 
 import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import { PointsNodeMaterial } from '@modules/renderer/engine/nodes/materials/PointsNodeMaterial.js';
 
 let camera, scene, renderer;
 

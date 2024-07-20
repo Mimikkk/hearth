@@ -7,6 +7,9 @@ export interface ShadowMaterialParameters extends MaterialParameters {
 }
 
 export class ShadowMaterial extends Material {
+  declare isShadowMaterial: true;
+  declare type: string | 'ShadowMaterial';
+
   color: Color;
   fog: boolean;
 
@@ -33,3 +36,5 @@ export class ShadowMaterial extends Material {
     return this;
   }
 }
+ShadowMaterial.prototype.isShadowMaterial = true;
+ShadowMaterial.prototype.type = 'ShadowMaterial';

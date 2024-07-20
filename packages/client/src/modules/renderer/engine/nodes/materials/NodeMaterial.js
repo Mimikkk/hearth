@@ -1,4 +1,4 @@
-import { ColorSpace, ShaderMaterial } from '@modules/renderer/engine/engine.ts';
+import { ColorSpace, ShaderMaterial } from '@modules/renderer/engine/engine.js';
 import { getCacheKey } from '../core/NodeUtils.js';
 import { attribute } from '../core/AttributeNode.js';
 import { diffuseColor, output } from '../core/PropertyNode.js';

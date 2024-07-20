@@ -26,6 +26,9 @@ export interface MeshBasicMaterialParameters extends MaterialParameters {
 }
 
 export class MeshBasicMaterial extends Material {
+  declare isMeshBasicMaterial: true;
+  declare type: 'MeshBasicMaterial';
+
   color: Color;
   map: Texture | null;
   lightMap: Texture | null;
@@ -114,3 +117,6 @@ export class MeshBasicMaterial extends Material {
     return this;
   }
 }
+
+MeshBasicMaterial.prototype.isMeshBasicMaterial = true;
+MeshBasicMaterial.prototype.type = 'MeshBasicMaterial';

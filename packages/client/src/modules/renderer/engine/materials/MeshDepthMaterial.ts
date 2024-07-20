@@ -14,6 +14,9 @@ export interface MeshDepthMaterialParameters extends MaterialParameters {
 }
 
 export class MeshDepthMaterial extends Material {
+  declare isMeshDepthMaterial: true;
+  declare type: 'MeshDepthMaterial';
+
   depthPacking: DepthPackingStrategy;
   map: Texture | null;
   alphaMap: Texture | null;
@@ -64,3 +67,5 @@ export class MeshDepthMaterial extends Material {
     return this;
   }
 }
+MeshDepthMaterial.prototype.isMeshDepthMaterial = true;
+MeshDepthMaterial.prototype.type = 'MeshDepthMaterial';

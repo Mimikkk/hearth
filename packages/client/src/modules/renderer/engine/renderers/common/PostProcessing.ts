@@ -1,7 +1,6 @@
-import { vec4 } from '../../nodes/Nodes.js';
+import { vec4, NodeMaterial } from '../../nodes/Nodes.js';
 import { QuadMesh } from '../../objects/QuadMesh.js';
 import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
-import { NodeMaterial } from '@modules/renderer/engine/nodes/materials/NodeMaterial.js';
 
 const mesh = new QuadMesh(new NodeMaterial());
 

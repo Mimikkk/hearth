@@ -7,7 +7,7 @@ import { positionLocal } from './PositionNode.js';
 import { normalLocal } from './NormalNode.js';
 import { textureLoad } from './TextureNode.js';
 import { vertexIndex } from '../core/IndexNode.js';
-import { DataArrayTexture, TextureDataType, Vector2, Vector4 } from '@modules/renderer/engine/engine.ts';
+import { DataArrayTexture, TextureDataType, Vector2, Vector4 } from '@modules/renderer/engine/engine.js';
 import { loop } from '../utils/LoopNode.js';
 
 const morphTextures = new WeakMap();

@@ -42,6 +42,9 @@ export interface MeshPhongMaterialParameters extends MaterialParameters {
 }
 
 export class MeshPhongMaterial extends Material {
+  declare isMeshPhongMaterial: true;
+  declare type: 'MeshPhongMaterial';
+
   color: Color;
   specular: Color;
   shininess: number;
@@ -182,3 +185,6 @@ export class MeshPhongMaterial extends Material {
     return this;
   }
 }
+
+MeshPhongMaterial.prototype.isMeshPhongMaterial = true;
+MeshPhongMaterial.prototype.type = 'MeshPhongMaterial';

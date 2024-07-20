@@ -4,7 +4,7 @@ import { varying } from '../core/VaryingNode.js';
 import { materialLineDashSize, materialLineGapSize, materialLineScale } from '../accessors/MaterialNode.js';
 import { dashSize, gapSize } from '../core/PropertyNode.js';
 import { float } from '../shadernode/ShaderNodes.js';
-import { LineDashedMaterial } from '@modules/renderer/engine/engine.ts';
+import { LineDashedMaterial } from '@modules/renderer/engine/engine.js';
 
 const defaultValues = new LineDashedMaterial();
 

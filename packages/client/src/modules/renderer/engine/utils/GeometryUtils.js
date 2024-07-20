@@ -1,4 +1,4 @@
-import { Vector3 } from '../engine.ts';
+import { Vector3 } from '../engine.js';
 
 /**
  * Generates 2D-Coordinates in a very fast way.

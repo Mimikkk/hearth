@@ -4,7 +4,7 @@ import { buffer } from '../accessors/BufferNode.js';
 import { instanceIndex } from '../core/IndexNode.js';
 import { float, nodeProxy } from '../shadernode/ShaderNodes.js';
 
-import { Vector4 } from '@modules/renderer/engine/engine.ts';
+import { Vector4 } from '@modules/renderer/engine/engine.js';
 import { lerp } from '../../math/MathUtils.ts';
 
 let min = null;
