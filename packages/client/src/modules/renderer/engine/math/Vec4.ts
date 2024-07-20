@@ -63,11 +63,6 @@ export class Vec4 {
     return this;
   }
 
-  intoAttribute(attribute: Attribute, index: number): this {
-    attribute.setXYZW(index, this.x, this.y, this.z, this.w);
-    return this;
-  }
-
   fromArray(array: Const<NumberArray>, offset: number = 0): this {
     this.x = array[offset];
     this.y = array[offset + 1];
@@ -84,10 +79,6 @@ export class Vec4 {
     array[offset + 3] = this.w;
 
     return array;
-  }
-
-  fromMat4Position({ elements: e }: Const<Mat4>): this {
-    return this.set(e[12], e[13], e[14], e[15]);
   }
 
   set(x: number, y: number, z: number, w: number): this {
