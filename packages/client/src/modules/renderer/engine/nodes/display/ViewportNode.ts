@@ -6,7 +6,6 @@ import { nodeImmutable, vec2 } from '../shadernode/ShaderNodes.js';
 import { Vec4 } from '@modules/renderer/engine/engine.js';
 import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 import { NodeBuilder } from '../Nodes.js';
-import { Viewport } from '@modules/renderer/engine/renderers/common/RenderContext.js';
 
 let resolution = Vec2.new();
 let viewportResult = Vec4.new();
@@ -44,13 +43,11 @@ export class ViewportNode extends Node {
     return updateType;
   }
 
-  update({ renderer }: NodeBuilder) {
+  update({ renderer }) {
     if (this.scope === ViewportType.Viewport) {
-      const viewport = renderer.viewport as Viewport;
-
-      viewportResult.set(viewport.x, viewport.y, viewport.width, viewport.height);
+      renderer.getViewport(viewportResult);
     } else {
-      renderer.getDrawSize(resolution);
+      renderer.getDrawingBufferSize(resolution);
     }
   }
 

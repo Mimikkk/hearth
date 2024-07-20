@@ -1,9 +1,9 @@
 import { LineSegmentsGeometry } from './LineSegmentsGeometry.js';
 import { Line } from '@modules/renderer/engine/objects/Line.js';
-import { NumberArray, TypedArray } from '@modules/renderer/engine/math/MathUtils.js';
+import { TypedArray } from '@modules/renderer/engine/math/MathUtils.js';
 
 export class LineGeometry extends LineSegmentsGeometry {
-  setPositions(array: NumberArray): this {
+  setPositions(array: TypedArray): this {
     // converts [ x1, y1, z1,  x2, y2, z2, ... ] to pairs format
 
     const length = array.length - 3;
@@ -24,7 +24,7 @@ export class LineGeometry extends LineSegmentsGeometry {
     return this;
   }
 
-  setColors(array: NumberArray): this {
+  setColors(array: TypedArray): this {
     // converts [ r1, g1, b1,  r2, g2, b2, ... ] to pairs format
 
     const length = array.length - 3;
