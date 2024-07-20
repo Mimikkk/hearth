@@ -276,7 +276,7 @@ export class CCDIKHelper extends Object3D {
     this.matrix.copy(mesh.matrixWorld);
     this.matrixAutoUpdate = false;
 
-    this.sphereGeometry = new SphereGeometry({ radius: sphereSize, widthSegments: 16, heightSegments: 8 });
+    this.sphereGeometry = new SphereGeometry(sphereSize, 16, 8);
 
     this.targetSphereMaterial = new MeshBasicMaterial({
       color: new Color(0xff8888),

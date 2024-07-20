@@ -138,8 +138,8 @@ describe('Math - Box3', () => {
 
   it('fromObject/precise', () => {
     const box = Box3_.create(0, 0, 0, 1, 1, 1);
-    const object = new Mesh(new SphereGeometry({ radius: 1, widthSegments: 32, heightSegments: 32 }));
-    const child = new Mesh(new SphereGeometry({ radius: 2, widthSegments: 32, heightSegments: 32 }));
+    const object = new Mesh(new SphereGeometry(1, 32, 32));
+    const child = new Mesh(new SphereGeometry(2, 32, 32));
     object.add(child);
 
     const c = new Box3(new Vector3(0, 0, 0), new Vector3(1, 1, 1));

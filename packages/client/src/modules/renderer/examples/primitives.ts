@@ -52,8 +52,8 @@ const createSpheres = () => {
 
   const group = new Group();
   const box = new Mesh(new BoxGeometry(0.24, 0.24, 0.24), material);
-  const sphere1 = new Mesh(new SphereGeometry({ radius: 0.12, widthSegments: 32, heightSegments: 32 }), material);
-  const sphere2 = new Mesh(new SphereGeometry({ radius: 0.24, widthSegments: 32, heightSegments: 32 }), material);
+  const sphere1 = new Mesh(new SphereGeometry(0.12, 32, 32), material);
+  const sphere2 = new Mesh(new SphereGeometry(0.24, 32, 32), material);
 
   group.position.set(0, 1, 0);
   box.position.set(0, 0.5, 0);
@@ -144,8 +144,8 @@ const light = createLight();
 const camera = createCamera();
 camera.add(light);
 
-const reference = createSphere(new SphereGeometry({ radius: 0.1, widthSegments: 32, heightSegments: 24 }), 0, 0, 0);
-const sphere = createSphere(new SphereGeometry({ radius: 0.25, widthSegments: 32, heightSegments: 24 }), 1, 0, 0);
+const reference = createSphere(new SphereGeometry(0.1, 32, 24), 0, 0, 0);
+const sphere = createSphere(new SphereGeometry(0.25, 32, 24), 1, 0, 0);
 // const spheres = createSpheres();
 
 const scene = createScene();

@@ -921,7 +921,7 @@ export class TransformControlsGizmo extends Object3D {
     };
 
     const pickerRotate = {
-      XYZE: [[new Mesh(new SphereGeometry({ radius: 0.25, widthSegments: 10, heightSegments: 8 }), matInvisible)]],
+      XYZE: [[new Mesh(new SphereGeometry(0.25, 10, 8), matInvisible)]],
       X: [[new Mesh(new TorusGeometry(0.5, 0.1, 4, 24), matInvisible), [0, 0, 0], [0, -Math.PI / 2, -Math.PI / 2]]],
       Y: [[new Mesh(new TorusGeometry(0.5, 0.1, 4, 24), matInvisible), [0, 0, 0], [Math.PI / 2, 0, 0]]],
       Z: [[new Mesh(new TorusGeometry(0.5, 0.1, 4, 24), matInvisible), [0, 0, 0], [0, 0, -Math.PI / 2]]],

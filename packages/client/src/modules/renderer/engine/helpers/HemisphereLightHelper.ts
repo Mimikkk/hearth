@@ -1,5 +1,5 @@
 import { Vector3 } from '../math/Vector3.js';
-import { Color, ColorMap } from '../math/Color.js';
+import { Color } from '../math/Color.js';
 import { Object3D } from '../core/Object3D.js';
 import { Mesh } from '../objects/Mesh.js';
 import { MeshBasicMaterial } from '../materials/MeshBasicMaterial.js';
@@ -17,7 +17,7 @@ export class HemisphereLightHelper extends Object3D {
   color: Color;
   material: MeshBasicMaterial;
 
-  constructor(light: HemisphereLight, size: number, color: Color = new Color(ColorMap.white)) {
+  constructor(light: HemisphereLight, size: number, color: Color) {
     super();
 
     this.light = light;

@@ -236,7 +236,7 @@ class DragControls {
     // API
 
     this.enabled = true;
-    this.recursive = false;
+    this.recursive = true;
     this.transformGroup = false;
 
     this.activate = activate;

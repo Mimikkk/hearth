@@ -74,7 +74,7 @@ const { object, mixer } = await loadMichelle();
 
 const spheres = new Group();
 
-const geometry = new SphereGeometry({ radius: 0.3, widthSegments: 32, heightSegments: 16 });
+const geometry = new SphereGeometry(0.3, 32, 16);
 const addBackdropSphere = (backdropNode: any) => {
   const distance = 1;
   const id = spheres.children.length;
