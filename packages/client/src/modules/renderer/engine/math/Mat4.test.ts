@@ -191,13 +191,13 @@ describe('Math - Mat4', () => {
   it('asPerspective', () => {
     const a = Mat4.perspective(1, 2, 3, 4, 5, 6);
 
-    expect(a.elements).toEqual([10, 0, 0, 0, 0, -10, 0, 0, 3, -7, -6, -1, 0, 0, -30, 0]);
+    expect(a.elements).toEqual([10, 0, 0, 0, 0, -10, 0, 0, 3, -7, -11, -1, 0, 0, -60, 0]);
   });
 
   it('asOrthographic', () => {
     const a = Mat4.orthographic(1, 2, 3, 4, 5, 6);
 
-    expect(a.elements).toEqual([2, 0, 0, 0, 0, -2, 0, 0, 0, 0, -1, 0, -3, 7, -5, 1]);
+    expect(a.elements).toEqual([2, 0, 0, 0, 0, -2, 0, 0, 0, 0, -2, 0, -3, 7, -11, 1]);
   });
 
   it('asRotationX', () => {

@@ -166,7 +166,7 @@ describe('Math - Frustum', () => {
 
     box.translate(Vec3.new(-1 - Number.EPSILON, -1 - Number.EPSILON, -1 - Number.EPSILON));
 
-    expect(frustum.intersectsBox(box)).toBe(true);
+    expect(frustum.intersectsBox(box)).toBe(false);
   });
 
   it('containsVec', () => {
