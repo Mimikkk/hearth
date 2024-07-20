@@ -196,7 +196,7 @@ export class Euler {
   }
 
   reorder(order: EulerOrder): this {
-    return this.fromQuaternion(_quaternion.setFromEuler(this), order);
+    return this.fromQuaternion(_quaternion.fromEuler(this), order);
   }
 
   equals(euler: Const<Euler>): boolean {

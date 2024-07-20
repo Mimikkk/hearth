@@ -266,8 +266,8 @@ export class TransformControls extends Object3D<TransformControlsEventMap> {
 
       this.object.matrixWorld.decompose(this.worldPosition, this.worldQuaternion, this._worldScale);
 
-      this._parentQuaternionInv.copy(this._parentQuaternion).invert();
-      this._worldQuaternionInv.copy(this.worldQuaternion).invert();
+      this._parentQuaternionInv.from(this._parentQuaternion).invert();
+      this._worldQuaternionInv.from(this.worldQuaternion).invert();
     }
 
     this.camera.updateMatrixWorld();
@@ -311,7 +311,7 @@ export class TransformControls extends Object3D<TransformControlsEventMap> {
         this.object.parent!.updateMatrixWorld();
 
         this._positionStart.from(this.object.position);
-        this._quaternionStart.copy(this.object.quaternion);
+        this._quaternionStart.from(this.object.quaternion);
         this._scaleStart.from(this.object.scale);
 
         this.object.matrixWorld.decompose(this.worldPositionStart, this.worldQuaternionStart, this._worldScaleStart);
@@ -381,7 +381,7 @@ export class TransformControls extends Object3D<TransformControlsEventMap> {
 
       if (this.translationSnap) {
         if (space === 'local') {
-          object.position.applyQuaternion(_tempQuaternion.copy(this._quaternionStart).invert());
+          object.position.applyQuaternion(_tempQuaternion.from(this._quaternionStart).invert());
 
           if (axis.search('X') !== -1) {
             object.position.x = Math.round(object.position.x / this.translationSnap) * this.translationSnap;
@@ -513,12 +513,12 @@ export class TransformControls extends Object3D<TransformControlsEventMap> {
 
       // Apply rotate
       if (space === 'local' && axis !== 'E' && axis !== 'XYZE') {
-        object.quaternion.copy(this._quaternionStart);
-        object.quaternion.multiply(_tempQuaternion.setFromAxisAngle(this.rotationAxis, this.rotationAngle)).normalize();
+        object.quaternion.from(this._quaternionStart);
+        object.quaternion.mul(_tempQuaternion.fromAxisAngle(this.rotationAxis, this.rotationAngle)).normalize();
       } else {
         this.rotationAxis.applyQuaternion(this._parentQuaternionInv);
-        object.quaternion.copy(_tempQuaternion.setFromAxisAngle(this.rotationAxis, this.rotationAngle));
-        object.quaternion.multiply(this._quaternionStart).normalize();
+        object.quaternion.from(_tempQuaternion.fromAxisAngle(this.rotationAxis, this.rotationAngle));
+        object.quaternion.mul(this._quaternionStart).normalize();
       }
     }
 
@@ -576,7 +576,7 @@ export class TransformControls extends Object3D<TransformControlsEventMap> {
 
     if (this.dragging) {
       this.object!.position.from(this._positionStart);
-      this.object!.quaternion.copy(this._quaternionStart);
+      this.object!.quaternion.from(this._quaternionStart);
       this.object!.scale.from(this._scaleStart);
 
       this.eventDispatcher.dispatch(_changeEvent, this);
@@ -1106,7 +1106,7 @@ export class TransformControlsGizmo extends Object3D {
           handle.visible = !!this.axis;
 
           if (this.axis === 'X') {
-            _tempQuaternion.setFromEuler(_tempEuler.set(0, 0, 0));
+            _tempQuaternion.fromEuler(_tempEuler.set(0, 0, 0));
             handle.quaternion.copy(quaternion).multiply(_tempQuaternion);
 
             if (Math.abs(_alignVector.from(_unitX).applyQuaternion(quaternion).dot(this.eye)) > 0.9) {
@@ -1115,7 +1115,7 @@ export class TransformControlsGizmo extends Object3D {
           }
 
           if (this.axis === 'Y') {
-            _tempQuaternion.setFromEuler(_tempEuler.set(0, 0, Math.PI / 2));
+            _tempQuaternion.fromEuler(_tempEuler.set(0, 0, Math.PI / 2));
             handle.quaternion.copy(quaternion).multiply(_tempQuaternion);
 
             if (Math.abs(_alignVector.from(_unitY).applyQuaternion(quaternion).dot(this.eye)) > 0.9) {
@@ -1124,7 +1124,7 @@ export class TransformControlsGizmo extends Object3D {
           }
 
           if (this.axis === 'Z') {
-            _tempQuaternion.setFromEuler(_tempEuler.set(0, Math.PI / 2, 0));
+            _tempQuaternion.fromEuler(_tempEuler.set(0, Math.PI / 2, 0));
             handle.quaternion.copy(quaternion).multiply(_tempQuaternion);
 
             if (Math.abs(_alignVector.from(_unitZ).applyQuaternion(quaternion).dot(this.eye)) > 0.9) {
@@ -1133,7 +1133,7 @@ export class TransformControlsGizmo extends Object3D {
           }
 
           if (this.axis === 'XYZE') {
-            _tempQuaternion.setFromEuler(_tempEuler.set(0, Math.PI / 2, 0));
+            _tempQuaternion.fromEuler(_tempEuler.set(0, Math.PI / 2, 0));
             //@ts-expect-error
             _alignVector.from(this.rotationAxis);
             handle.quaternion.setFromRotationMatrix(_lookAtMatrix.lookAt(_zeroVector, _alignVector, _unitY));
@@ -1231,28 +1231,28 @@ export class TransformControlsGizmo extends Object3D {
       } else if (this.mode === 'rotate') {
         // Align handles to current local or world rotation
 
-        _tempQuaternion2.copy(quaternion);
-        _alignVector.from(this.eye).applyQuaternion(_tempQuaternion.copy(quaternion).invert());
+        _tempQuaternion2.from(quaternion);
+        _alignVector.from(this.eye).applyQuaternion(_tempQuaternion.from(quaternion).invert());
 
         if (handle.name.search('E') !== -1) {
           handle.quaternion.setFromRotationMatrix(_lookAtMatrix.lookAt(this.eye, _zeroVector, _unitY));
         }
 
         if (handle.name === 'X') {
-          _tempQuaternion.setFromAxisAngle(_unitX, Math.atan2(-_alignVector.y, _alignVector.z));
-          _tempQuaternion.multiplyQuaternions(_tempQuaternion2, _tempQuaternion);
+          _tempQuaternion.fromAxisAngle(_unitX, Math.atan2(-_alignVector.y, _alignVector.z));
+          _tempQuaternion.asMul(_tempQuaternion2, _tempQuaternion);
           handle.quaternion.copy(_tempQuaternion);
         }
 
         if (handle.name === 'Y') {
-          _tempQuaternion.setFromAxisAngle(_unitY, Math.atan2(_alignVector.x, _alignVector.z));
-          _tempQuaternion.multiplyQuaternions(_tempQuaternion2, _tempQuaternion);
+          _tempQuaternion.fromAxisAngle(_unitY, Math.atan2(_alignVector.x, _alignVector.z));
+          _tempQuaternion.asMul(_tempQuaternion2, _tempQuaternion);
           handle.quaternion.copy(_tempQuaternion);
         }
 
         if (handle.name === 'Z') {
-          _tempQuaternion.setFromAxisAngle(_unitZ, Math.atan2(_alignVector.y, _alignVector.x));
-          _tempQuaternion.multiplyQuaternions(_tempQuaternion2, _tempQuaternion);
+          _tempQuaternion.fromAxisAngle(_unitZ, Math.atan2(_alignVector.y, _alignVector.x));
+          _tempQuaternion.asMul(_tempQuaternion2, _tempQuaternion);
           handle.quaternion.copy(_tempQuaternion);
         }
       }
@@ -1375,11 +1375,11 @@ export class TransformControlsPlane extends Mesh {
 
     if (_dirVector.length() === 0) {
       // If in rotate mode, make the plane parallel to camera
-      this.quaternion.copy(this.cameraQuaternion);
+      this.quaternion.from(this.cameraQuaternion);
     } else {
       _tempMatrix.lookAt(_tempVector.set(0, 0, 0), _dirVector, _alignVector);
 
-      this.quaternion.setFromRotationMatrix(_tempMatrix);
+      this.quaternion.fromRotation(_tempMatrix);
     }
 
     return super.updateMatrixWorld(force);

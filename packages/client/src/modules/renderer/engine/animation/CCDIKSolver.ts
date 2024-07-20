@@ -164,7 +164,7 @@ export class CCDIKSolver {
         _axis.crossVectors(_effectorVec, _targetVec);
         _axis.normalize();
 
-        _q.setFromAxisAngle(_axis, angle);
+        _q.fromAxisAngle(_axis, angle);
         link.quaternion.multiply(_q);
 
         // TODO: re-consider the limitation specification

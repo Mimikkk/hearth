@@ -189,11 +189,11 @@ export class Vec3 implements IVec3 {
   }
 
   applyEuler(euler: Euler): this {
-    return this.applyQuaternion(new Quaternion().setFromEuler(euler));
+    return this.applyQuaternion(new Quaternion().fromEuler(euler));
   }
 
   applyAxisAngle(axis: Vec3, angle: number): this {
-    return this.applyQuaternion(new Quaternion().setFromAxisAngle(axis, angle));
+    return this.applyQuaternion(new Quaternion().fromAxisAngle(axis, angle));
   }
 
   applyMat3(matrix: Mat3): this {

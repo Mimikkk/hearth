@@ -29,7 +29,7 @@ const _vectemp2 = new Vec3();
 const _vectemp3 = new Vec3();
 
 const _matrix = new Mat4();
-const _quaternion = new Quaternion().identity();
+const _quaternion = new Quaternion().asIdentity();
 const _scale = new Vec3();
 
 export class SelectionControl {

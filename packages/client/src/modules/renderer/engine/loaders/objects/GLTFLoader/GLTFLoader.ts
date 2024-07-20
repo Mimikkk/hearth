@@ -1277,7 +1277,7 @@ class GLTFMeshGpuInstancing implements Plugin {
           }
 
           if (attributes.ROTATION) {
-            q.fromBufferAttribute(attributes.ROTATION, i);
+            q.fromAttribute(attributes.ROTATION, i);
           }
 
           if (attributes.SCALE) {

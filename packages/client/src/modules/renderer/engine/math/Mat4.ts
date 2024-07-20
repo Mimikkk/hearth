@@ -740,10 +740,10 @@ export class Mat4 implements Matrix {
   compose(position: Vec3, quaternion: Quaternion, scale: Vec3): this {
     const te = this.elements;
 
-    const x = quaternion._x,
-      y = quaternion._y,
-      z = quaternion._z,
-      w = quaternion._w;
+    const x = quaternion.x,
+      y = quaternion.y,
+      z = quaternion.z,
+      w = quaternion.w;
     const x2 = x + x,
       y2 = y + y,
       z2 = z + z;
@@ -818,7 +818,7 @@ export class Mat4 implements Matrix {
     _m1.elements[9] *= invSZ;
     _m1.elements[10] *= invSZ;
 
-    quaternion.setFromRotationMatrix(_m1);
+    quaternion.fromRotation(_m1);
 
     scale.x = sx;
     scale.y = sy;

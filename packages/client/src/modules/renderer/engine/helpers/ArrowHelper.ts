@@ -64,7 +64,7 @@ export class ArrowHelper extends Object3D {
 
       const radians = Math.acos(dir.y);
 
-      this.quaternion.setFromAxisAngle(_axis, radians);
+      this.quaternion.fromAxisAngle(_axis, radians);
     }
   }
 

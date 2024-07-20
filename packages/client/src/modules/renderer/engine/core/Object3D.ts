@@ -108,7 +108,7 @@ export class Object3D<EventMap extends Object3DEventMap = Object3DEventMap> {
     this.up = Object3D.Up.clone();
 
     this.position = Vec3.new();
-    this.quaternion = new Quaternion().identity();
+    this.quaternion = new Quaternion().asIdentity();
     this.scale = Vec3.new(1, 1, 1);
     this.modelViewMatrix = new Mat4();
     this.normalMatrix = new Mat3();
@@ -182,27 +182,27 @@ export class Object3D<EventMap extends Object3DEventMap = Object3DEventMap> {
   }
 
   applyQuaternion(q: Quaternion): this {
-    this.quaternion.premultiply(q);
+    this.quaternion.premul(q);
     return this;
   }
 
   setRotationFromAxisAngle(axis: Vec3, angle: number): this {
-    this.quaternion.setFromAxisAngle(axis, angle);
+    this.quaternion.fromAxisAngle(axis, angle);
     return this;
   }
 
   setRotationFromEuler(euler: Euler): this {
-    this.quaternion.setFromEuler(euler, true);
+    this.quaternion.fromEuler(euler, true);
     return this;
   }
 
   setRotationFromMatrix(m: Mat4): this {
-    this.quaternion.setFromRotationMatrix(m);
+    this.quaternion.fromRotation(m);
     return this;
   }
 
   setRotationFromQuaternion(q: Quaternion): this {
-    this.quaternion.copy(q);
+    this.quaternion.from(q);
     return this;
   }
 
@@ -245,9 +245,9 @@ export class Object3D<EventMap extends Object3DEventMap = Object3DEventMap> {
     // rotate object on axis in object space
     // axis is assumed to be normalized
 
-    _q1.setFromAxisAngle(axis, angle);
+    _q1.fromAxisAngle(axis, angle);
 
-    this.quaternion.multiply(_q1);
+    this.quaternion.mul(_q1);
 
     return this;
   }
@@ -257,9 +257,9 @@ export class Object3D<EventMap extends Object3DEventMap = Object3DEventMap> {
     // axis is assumed to be normalized
     // method assumes no rotated parent
 
-    _q1.setFromAxisAngle(axis, angle);
+    _q1.fromAxisAngle(axis, angle);
 
-    this.quaternion.premultiply(_q1);
+    this.quaternion.premul(_q1);
 
     return this;
   }
@@ -334,12 +334,12 @@ export class Object3D<EventMap extends Object3DEventMap = Object3DEventMap> {
       _m1.lookAt(_target, _position, this.up);
     }
 
-    this.quaternion.setFromRotationMatrix(_m1);
+    this.quaternion.fromRotation(_m1);
 
     if (parent) {
       _m1.extractRotation(parent.matrixWorld);
-      _q1.setFromRotationMatrix(_m1);
-      this.quaternion.premultiply(_q1.invert());
+      _q1.fromRotation(_m1);
+      this.quaternion.premul(_q1.invert());
     }
     return this;
   }
@@ -628,7 +628,7 @@ export class Object3D<EventMap extends Object3DEventMap = Object3DEventMap> {
     this.up.from(source.up);
 
     this.position.from(source.position);
-    this.quaternion.copy(source.quaternion);
+    this.quaternion.from(source.quaternion);
     this.scale.from(source.scale);
 
     this.matrix.copy(source.matrix);

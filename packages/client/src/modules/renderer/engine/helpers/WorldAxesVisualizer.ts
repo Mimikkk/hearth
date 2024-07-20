@@ -137,32 +137,32 @@ export class WorldAxesVisualizer extends Object3D {
     if (posX === object) {
       return {
         position: new Vec3(1, 0, 0),
-        rotation: new Quaternion().setFromEuler(new Euler(0, Math.PI * 0.5, 0)),
+        rotation: new Quaternion().fromEuler(new Euler(0, Math.PI * 0.5, 0)),
       };
     } else if (posY === object) {
       return {
         position: new Vec3(0, 1, 0),
-        rotation: new Quaternion().setFromEuler(new Euler(-Math.PI * 0.5, 0, 0)),
+        rotation: new Quaternion().fromEuler(new Euler(-Math.PI * 0.5, 0, 0)),
       };
     } else if (posZ === object) {
       return {
         position: new Vec3(0, 0, 1),
-        rotation: new Quaternion().setFromEuler(new Euler()),
+        rotation: new Quaternion().fromEuler(new Euler()),
       };
     } else if (negX === object) {
       return {
         position: new Vec3(-1, 0, 0),
-        rotation: new Quaternion().setFromEuler(new Euler(0, -Math.PI * 0.5, 0)),
+        rotation: new Quaternion().fromEuler(new Euler(0, -Math.PI * 0.5, 0)),
       };
     } else if (negY === object) {
       return {
         position: new Vec3(0, -1, 0),
-        rotation: new Quaternion().setFromEuler(new Euler(Math.PI * 0.5, 0, 0)),
+        rotation: new Quaternion().fromEuler(new Euler(Math.PI * 0.5, 0, 0)),
       };
     } else if (negZ === object) {
       return {
         position: new Vec3(0, 0, -1),
-        rotation: new Quaternion().setFromEuler(new Euler(0, Math.PI, 0)),
+        rotation: new Quaternion().fromEuler(new Euler(0, Math.PI, 0)),
       };
     }
 
@@ -176,7 +176,7 @@ export class WorldAxesVisualizer extends Object3D {
       axisLines: [posX, posY, posZ, negX, negY, negZ],
     } = this;
 
-    quaternion.copy(this.camera.quaternion).invert();
+    quaternion.from(this.camera.quaternion).invert();
     this.updateMatrixWorld();
 
     point.set(0, 0, 1);
@@ -238,10 +238,10 @@ export class WorldAxesVisualizer extends Object3D {
 
     this.dummy.position.from(this.center);
     this.dummy.lookAt(this.camera.position);
-    this.q1.copy(this.dummy.quaternion);
+    this.q1.from(this.dummy.quaternion);
 
     this.dummy.lookAt(this.animation.position);
-    this.q2.copy(this.dummy.quaternion);
+    this.q2.from(this.dummy.quaternion);
   }
 
   update(delta: number): void {

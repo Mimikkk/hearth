@@ -205,7 +205,7 @@ export class OrbitControls {
       const offset = new Vec3();
 
       // so camera.up is the orbit axis
-      const quat = new Quaternion().setFromUnitVectors(object.up, new Vec3(0, 1, 0));
+      const quat = new Quaternion().fromUnit(object.up, new Vec3(0, 1, 0));
       const quatInverse = quat.clone().invert();
 
       const lastPosition = new Vec3();
@@ -390,7 +390,7 @@ export class OrbitControls {
           scope.eventDispatcher.dispatch(_changeEvent, this);
 
           lastPosition.from(scope.object.position);
-          lastQuaternion.copy(scope.object.quaternion);
+          lastQuaternion.from(scope.object.quaternion);
           lastTargetPosition.from(scope.target);
 
           return true;
