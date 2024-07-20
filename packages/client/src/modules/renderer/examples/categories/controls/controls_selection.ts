@@ -38,8 +38,8 @@ const createLight = () => {
   light.castShadow = true;
   light.shadow.camera.near = 10;
   light.shadow.camera.far = 100;
-  light.shadow.mapSize.x = 1024;
-  light.shadow.mapSize.y = 1024;
+  light.shadow.mapSize.width = 1024;
+  light.shadow.mapSize.height = 1024;
 
   return light;
 };

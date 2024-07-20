@@ -33,8 +33,8 @@ async function init() {
   spotLight.castShadow = true;
   spotLight.shadow.camera.near = 3;
   spotLight.shadow.camera.far = 10;
-  spotLight.shadow.mapSize.x = 2048;
-  spotLight.shadow.mapSize.y = 2048;
+  spotLight.shadow.mapSize.width = 2048;
+  spotLight.shadow.mapSize.height = 2048;
   spotLight.shadow.bias = -0.002;
   spotLight.shadow.radius = 4;
   scene.add(spotLight);
@@ -50,8 +50,8 @@ async function init() {
   dirLight.shadow.camera.top = 1;
   dirLight.shadow.camera.bottom = -1;
 
-  dirLight.shadow.mapSize.x = 1024;
-  dirLight.shadow.mapSize.y = 1024;
+  dirLight.shadow.mapSize.width = 1024;
+  dirLight.shadow.mapSize.height = 1024;
   scene.add(dirLight);
 
   // ***** Clipping planes: *****

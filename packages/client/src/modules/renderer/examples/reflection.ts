@@ -47,8 +47,8 @@ async function init() {
   sunLight.shadow.camera.left = -2;
   sunLight.shadow.camera.top = 2;
   sunLight.shadow.camera.bottom = -2;
-  sunLight.shadow.mapSize.x = 2048;
-  sunLight.shadow.mapSize.y = 2048;
+  sunLight.shadow.mapSize.width = 2048;
+  sunLight.shadow.mapSize.height = 2048;
   sunLight.shadow.bias = -0.001;
   sunLight.position.set(0.5, 3, 0.5);
 

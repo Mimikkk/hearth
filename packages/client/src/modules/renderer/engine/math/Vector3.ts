@@ -1182,7 +1182,7 @@ export namespace IVec3 {
 
   export const fromCylindrical = (cylindrical: Const<Cylindrical>): IVec3 => fromCylindrical_(cylindrical, empty());
   export const fromCylindrical_ = ({ radius, theta, height }: Const<Cylindrical>, into: IVec3): IVec3 =>
-    set(into, radius * Math.sin(theta), height, radius * Math.cos(theta));
+    set(into, radius * Math.sin(theta), y, radius * Math.cos(theta));
   export const fillCylindrical = (self: IVec3, cylindrical: Const<Cylindrical>): IVec3 =>
     fromCylindrical_(cylindrical, self);
 

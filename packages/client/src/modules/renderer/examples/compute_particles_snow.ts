@@ -63,8 +63,8 @@ async function init() {
   dirLight.shadow.camera.left = -30;
   dirLight.shadow.camera.top = 30;
   dirLight.shadow.camera.bottom = -30;
-  dirLight.shadow.mapSize.x = 2048;
-  dirLight.shadow.mapSize.y = 2048;
+  dirLight.shadow.mapSize.width = 2048;
+  dirLight.shadow.mapSize.height = 2048;
   dirLight.shadow.bias = -0.009;
   scene.add(dirLight);
 

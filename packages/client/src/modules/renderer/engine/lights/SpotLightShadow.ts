@@ -16,7 +16,7 @@ export class SpotLightShadow extends LightShadow<PerspectiveCamera> {
     const camera = this.camera;
 
     const fov = MathUtils.RadianToDegree * 2 * light.angle * this.focus;
-    const aspect = this.mapSize.x / this.mapSize.y;
+    const aspect = this.mapSize.width / this.mapSize.height;
     const far = light.distance || camera.far;
 
     if (fov !== camera.fov || aspect !== camera.aspect || far !== camera.far) {

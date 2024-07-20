@@ -70,8 +70,8 @@ const createSunLight = () => {
   light.shadow.camera.left = -2;
   light.shadow.camera.top = 1;
   light.shadow.camera.bottom = -2;
-  light.shadow.mapSize.x = 2048;
-  light.shadow.mapSize.y = 2048;
+  light.shadow.mapSize.width = 2048;
+  light.shadow.mapSize.height = 2048;
   light.shadow.bias = -0.001;
   light.position.set(0.5, 3, 0.5);
 
