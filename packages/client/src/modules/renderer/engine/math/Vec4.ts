@@ -3,7 +3,7 @@ import type { Mat4 } from './Mat4.js';
 import type { Quaternion } from './Quaternion.js';
 import { Const } from '@modules/renderer/engine/math/types.js';
 import { Attribute } from '@modules/renderer/engine/core/types.js';
-import { NumberArray } from '@modules/renderer/engine/math/MathUtils.js';
+import { clamp, NumberArray } from '@modules/renderer/engine/math/MathUtils.js';
 
 export interface IVec4 {
   x: number;
@@ -37,76 +37,6 @@ export class Vec4 implements IVec4 {
 
   set height(value: number) {
     this.w = value;
-  }
-
-  setComponent(index: 0 | 1 | 2 | 3 | number, value: number): this {
-    switch (index) {
-      case 0:
-        this.x = value;
-        break;
-      case 1:
-        this.y = value;
-        break;
-      case 2:
-        this.z = value;
-        break;
-      case 3:
-        this.w = value;
-        break;
-      default:
-        throw Error(`index out of range: ${index}`);
-    }
-
-    return this;
-  }
-
-  getComponent(index: 0 | 1 | 2 | 3 | number): number {
-    switch (index) {
-      case 0:
-        return this.x;
-      case 1:
-        return this.y;
-      case 2:
-        return this.z;
-      case 3:
-        return this.w;
-      default:
-        throw new Error('index is out of range: ' + index);
-    }
-  }
-
-  asAdd(a: Vec4, b: Vec4): this {
-    this.x = a.x + b.x;
-    this.y = a.y + b.y;
-    this.z = a.z + b.z;
-    this.w = a.w + b.w;
-
-    return this;
-  }
-
-  asSub(a: Vec4, b: Vec4): this {
-    this.x = a.x - b.x;
-    this.y = a.y - b.y;
-    this.z = a.z - b.z;
-    this.w = a.w - b.w;
-
-    return this;
-  }
-
-  asLerp(from: Const<Vec4>, to: Const<Vec4>, alpha: number): this {
-    return this.set(
-      from.x + (to.x - from.x) * alpha,
-      from.y + (to.y - from.y) * alpha,
-      from.z + (to.z - from.z) * alpha,
-      from.w + (to.w - from.w) * alpha,
-    );
-  }
-
-  *[Symbol.iterator](): Iterator<number> {
-    yield this.x;
-    yield this.y;
-    yield this.z;
-    yield this.w;
   }
 
   static new(x: number = 0, y: number = 0, z: number = 0, w: number = 1): Vec4 {
@@ -143,6 +73,33 @@ export class Vec4 implements IVec4 {
 
   static lerp(from: Const<Vec4>, to: Const<Vec4>, step: number, into: Vec4 = Vec4.empty()): Vec4 {
     return into.lerp(from, to, step);
+  }
+
+  asAdd(a: Vec4, b: Vec4): this {
+    this.x = a.x + b.x;
+    this.y = a.y + b.y;
+    this.z = a.z + b.z;
+    this.w = a.w + b.w;
+
+    return this;
+  }
+
+  asSub(a: Vec4, b: Vec4): this {
+    this.x = a.x - b.x;
+    this.y = a.y - b.y;
+    this.z = a.z - b.z;
+    this.w = a.w - b.w;
+
+    return this;
+  }
+
+  asLerp(from: Const<Vec4>, to: Const<Vec4>, alpha: number): this {
+    return this.set(
+      from.x + (to.x - from.x) * alpha,
+      from.y + (to.y - from.y) * alpha,
+      from.z + (to.z - from.z) * alpha,
+      from.w + (to.w - from.w) * alpha,
+    );
   }
 
   from(from: Const<Vec4>): this {

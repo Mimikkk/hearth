@@ -70,7 +70,7 @@ export class Vec2 implements IVec2 {
     return this.set(attribute.getX(index), attribute.getY(index));
   }
 
-  fillAttribute(attribute: Attribute, index: number): this {
+  intoAttribute(attribute: Attribute, index: number): this {
     attribute.setXY(index, this.x, this.y);
     return this;
   }
@@ -131,32 +131,6 @@ export class Vec2 implements IVec2 {
 
   setScalar(scalar: number): this {
     return this.set(scalar, scalar);
-  }
-
-  setComponent(index: 0 | 1, value: number): this {
-    switch (index) {
-      case 0:
-        this.x = value;
-        break;
-      case 1:
-        this.y = value;
-        break;
-      default:
-        throw new Error(`index is out of range: ${index}`);
-    }
-
-    return this;
-  }
-
-  getComponent(index: 0 | 1): number {
-    switch (index) {
-      case 0:
-        return this.x;
-      case 1:
-        return this.y;
-      default:
-        throw new Error(`index is out of range: ${index}`);
-    }
   }
 
   clone(): Vec2 {

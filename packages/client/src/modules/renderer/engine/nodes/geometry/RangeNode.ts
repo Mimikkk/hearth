@@ -65,8 +65,9 @@ class RangeNode extends Node {
       for (let i = 0; i < length; i++) {
         const index = i % stride;
 
-        const minElementValue = min.getComponent(index);
-        const maxElementValue = max.getComponent(index);
+        let x = index === 0 ? 'x' : index === 1 ? 'y' : index === 2 ? 'z' : 'w';
+        const minElementValue = min[x];
+        const maxElementValue = max[x];
 
         array[i] = lerp(minElementValue, maxElementValue, Math.random());
       }
