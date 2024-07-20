@@ -107,7 +107,7 @@ export { HemisphereLightHelper } from './helpers/HemisphereLightHelper.ts';
 export { GridHelper } from './helpers/GridHelper.ts';
 export { PolarGridHelper } from './helpers/PolarGridHelper.ts';
 export { DirectionalLightHelper } from './helpers/DirectionalLightHelper.ts';
-export { CameraVisualizer } from './helpers/CameraVisualizer.ts';
+export { CameraHelper } from './helpers/CameraHelper.ts';
 export { BoxHelper } from './helpers/BoxHelper.ts';
 export { Box3Helper } from './helpers/Box3Helper.ts';
 export { PlaneHelper } from './helpers/PlaneHelper.ts';

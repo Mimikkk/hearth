@@ -1,5 +1,4 @@
 import {
-  Camera,
   EventDispatcher,
   Matrix4,
   Mouse,
@@ -13,6 +12,13 @@ import {
 } from '../engine.js';
 import { DegreeToRadian } from '../math/MathUtils.js';
 import { Quaternion } from '@modules/renderer/engine/math/Quaternion.js';
+
+// OrbitControls performs orbiting, dollying (zooming), and panning.
+// Unlike TrackballControls, it maintains the "up" direction object.up (+Y by default).
+//
+//    Orbit - left mouse / touch: one-finger move
+//    Zoom - middle mouse, or mousewheel / touch: two-finger spread or squish
+//    Pan - right mouse, or left mouse + ctrl/meta/shiftKey, or arrow keys / touch: two-finger move
 
 const _changeEvent = { type: 'change' } as const;
 const _startEvent = { type: 'start' } as const;
@@ -73,7 +79,7 @@ export class OrbitControls {
   dispose: () => void;
 
   constructor(
-    public object: Camera,
+    public object: OrthographicCamera | PerspectiveCamera,
     public domElement: HTMLElement,
   ) {
     this.domElement.style.touchAction = 'none'; // disable touch scroll

@@ -11,11 +11,11 @@ import { OrthographicCamera } from '@modules/renderer/engine/cameras/Orthographi
 const _vector = /*@__PURE__*/ new Vector3();
 const _camera = /*@__PURE__*/ new Camera();
 
-export class CameraVisualizer extends LineSegments {
-  camera: PerspectiveCamera | OrthographicCamera;
+export class CameraHelper extends LineSegments {
+  camera: Camera;
   pointMap: Record<string, number[]>;
 
-  constructor(camera: PerspectiveCamera | OrthographicCamera) {
+  constructor(camera: Camera) {
     const geometry = new BufferGeometry();
     const material = new LineBasicMaterial({ color: 0xffffff, vertexColors: true, toneMapped: false });
 
@@ -25,39 +25,46 @@ export class CameraVisualizer extends LineSegments {
     const pointMap: Record<string, number[]> = {};
 
     // near
+
     addLine('n1', 'n2');
     addLine('n2', 'n4');
     addLine('n4', 'n3');
     addLine('n3', 'n1');
 
     // far
+
     addLine('f1', 'f2');
     addLine('f2', 'f4');
     addLine('f4', 'f3');
     addLine('f3', 'f1');
 
     // sides
+
     addLine('n1', 'f1');
     addLine('n2', 'f2');
     addLine('n3', 'f3');
     addLine('n4', 'f4');
 
     // cone
+
     addLine('p', 'n1');
     addLine('p', 'n2');
     addLine('p', 'n3');
     addLine('p', 'n4');
 
     // up
+
     addLine('u1', 'u2');
     addLine('u2', 'u3');
     addLine('u3', 'u1');
 
     // target
+
     addLine('c', 't');
     addLine('p', 'c');
 
     // cross
+
     addLine('cn1', 'cn2');
     addLine('cn3', 'cn4');
 
@@ -73,7 +80,9 @@ export class CameraVisualizer extends LineSegments {
       vertices.push(0, 0, 0);
       colors.push(0, 0, 0);
 
-      if (pointMap[id] === undefined) pointMap[id] = [];
+      if (pointMap[id] === undefined) {
+        pointMap[id] = [];
+      }
 
       pointMap[id].push(vertices.length / 3 - 1);
     }
@@ -83,8 +92,10 @@ export class CameraVisualizer extends LineSegments {
 
     super(geometry, material);
 
+    this.type = 'CameraHelper';
+
     this.camera = camera;
-    this.camera.updateProjectionMatrix();
+    (this.camera as PerspectiveCamera | OrthographicCamera)?.updateProjectionMatrix();
 
     this.matrix = camera.matrixWorld;
     this.matrixAutoUpdate = false;
@@ -94,6 +105,7 @@ export class CameraVisualizer extends LineSegments {
     this.update();
 
     // colors
+
     const colorFrustum = new Color(0xffaa00);
     const colorCone = new Color(0xff0000);
     const colorUp = new Color(0x00aaff);

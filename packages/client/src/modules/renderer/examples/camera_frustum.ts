@@ -2,7 +2,7 @@ import { MeshStandardNodeMaterial } from '@modules/renderer/engine/nodes/Nodes.j
 import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 import {
   Camera,
-  CameraVisualizer,
+  CameraHelper,
   Clock,
   Color,
   Group,
@@ -16,15 +16,14 @@ import {
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 import { float } from 'three/examples/jsm/nodes/shadernode/ShaderNode.js';
 import { UI } from '@modules/renderer/examples/utilities/UI.js';
-import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
 
 const createCamera = () => {
   const perspectiveCamera = new PerspectiveCamera(80, window.innerWidth / window.innerHeight, 0.1, 100);
   perspectiveCamera.position.set(0, 0, 3);
   perspectiveCamera.lookAt(0, 0, 0);
 
-  const frustumCamera = new OrthographicCamera(-1, 1, 1, -1, 1, 5);
-  frustumCamera.position.set(0, 0, -3);
+  const frustumCamera = new OrthographicCamera(0, 1, 1, 0, 5, 100);
+  frustumCamera.position.set(0, 0, 3);
   frustumCamera.lookAt(0, 0, 0);
 
   return { perspectiveCamera, frustumCamera };
@@ -41,16 +40,6 @@ const createRenderer = async (onAnimate: () => void) => {
   document.body.append(renderer.parameters.canvas);
 
   return renderer;
-};
-const useOrbitControls = (canvas: HTMLCanvasElement) => {
-  const controls = new OrbitControls(state.camera, canvas);
-  controls.minDistance = 1;
-  controls.maxDistance = 10;
-  controls.maxPolarAngle = Math.PI * 0.9;
-  controls.target.set(0, 0.2, 0);
-  controls.update();
-
-  return controls;
 };
 
 const { perspectiveCamera, frustumCamera } = createCamera();
@@ -80,25 +69,23 @@ addSphere(1, 0, 0);
 addSphere(0, 1, 0);
 addSphere(1, 1, 0);
 
-const frustumVisualizer = new CameraVisualizer(frustumCamera);
+const frustumHelper = new CameraHelper(frustumCamera);
 perspectiveCamera.add(light);
-scene.add(frustumVisualizer, frustumCamera, perspectiveCamera, spheres);
+scene.add(frustumHelper, frustumCamera, perspectiveCamera, spheres);
 
 const renderer = await createRenderer(() => {
-  spheres.rotateZ(clock.getDelta());
+  const delta = clock.getDelta();
 
-  controls.update();
+  spheres.rotateZ(delta * 0.5);
+
   renderer.render(scene, state.camera);
 });
-const controls = useOrbitControls(renderer.parameters.canvas);
 useWindowResizer.updateSize(renderer, state.camera);
 useWindowResizer(renderer, state.camera);
 
 UI.create<{ camera: Camera }>('Controls', state)
   .action('Switch camera', s => {
     s.camera = s.camera === perspectiveCamera ? frustumCamera : perspectiveCamera;
-    controls.enabled = s.camera === perspectiveCamera;
-
     useWindowResizer.updateSize(renderer, s.camera);
   })
   .action('Reset camera position', () => {
