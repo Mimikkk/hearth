@@ -357,9 +357,14 @@ const ConvertType = function (type, cacheMap = null) {
     }
 
     if (params.length === 1) {
+      if (type === 'color') {
+        console.log('here', params);
+      }
+
       const node = getConstNode(params[0], type);
 
       if (safeGetNodeType(node) === type) return nodeObject(node);
+      if (safeGetNodeType(node) === undefined) console.log('error', type, node, node.getNodeType);
 
       return nodeObject(new ConvertNode(node, type));
     }

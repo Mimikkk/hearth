@@ -1,9 +1,5 @@
-import { Color } from '../../math/Color.js';
-import { Mat3 } from '../../math/Mat3.js';
-import { Mat4 } from '../../math/Mat4.js';
-import { Vec2 } from '../../math/Vec2.js';
-import { Vec3 } from '../../math/Vec3.js';
-import { Vec4 } from '../../math/Vec4.js';
+import { Color, Mat3, Mat4, Vec3, Vec4 } from '@modules/renderer/engine/engine.js';
+import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 
 export function getCacheKey(object, force = false) {
   let cacheKey = '{';
@@ -21,7 +17,7 @@ export function getCacheKey(object, force = false) {
   return cacheKey;
 }
 
-export function* getNodeChildren(node, toJSON = false) {
+export function* getNodeChildren(node) {
   for (const property in node) {
     // Ignore private properties.
     if (property.startsWith('_') === true) continue;
@@ -32,7 +28,7 @@ export function* getNodeChildren(node, toJSON = false) {
       for (let i = 0; i < object.length; i++) {
         const child = object[i];
 
-        if (child && (child.isNode === true || (toJSON && typeof child.toJSON === 'function'))) {
+        if (child && child.isNode === true) {
           yield { property, index: i, childNode: child };
         }
       }
@@ -42,7 +38,7 @@ export function* getNodeChildren(node, toJSON = false) {
       for (const subProperty in object) {
         const child = object[subProperty];
 
-        if (child && (child.isNode === true || (toJSON && typeof child.toJSON === 'function'))) {
+        if (child && child.isNode === true) {
           yield { property, index: subProperty, childNode: child };
         }
       }
@@ -52,35 +48,20 @@ export function* getNodeChildren(node, toJSON = false) {
 
 export function getValueType(value) {
   if (value === undefined || value === null) return null;
+  if (value.isNode) return 'node';
 
-  const typeOf = typeof value;
-
-  if (value.isNode === true) {
-    return 'node';
-  } else if (typeOf === 'number') {
-    return 'float';
-  } else if (typeOf === 'boolean') {
-    return 'bool';
-  } else if (typeOf === 'string') {
-    return 'string';
-  } else if (typeOf === 'function') {
-    return 'shader';
-  } else if (value.isVec2 === true) {
-    return 'vec2';
-  } else if (value.isVec3 === true) {
-    return 'vec3';
-  } else if (value.isVec4 === true) {
-    return 'vec4';
-  } else if (value.isMat3 === true) {
-    return 'mat3';
-  } else if (value.isMat4 === true) {
-    return 'mat4';
-  } else if (value.isColor === true) {
-    return 'color';
-  } else if (value instanceof ArrayBuffer) {
-    return 'ArrayBuffer';
-  }
-
+  const type = typeof value;
+  if (type === 'number') return 'float';
+  if (type === 'boolean') return 'bool';
+  if (type === 'string') return 'string';
+  if (type === 'function') return 'shader';
+  if (value.isVec2) return 'vec2';
+  if (value.isVec3) return 'vec3';
+  if (value.isVec4) return 'vec4';
+  if (value.isMat3) return 'mat3';
+  if (value.isMat4) return 'mat4';
+  if (value.isColor) return 'color';
+  if (value instanceof ArrayBuffer) return 'ArrayBuffer';
   return null;
 }
 
@@ -89,34 +70,22 @@ export function getValueFromType(type, ...params) {
 
   if (params.length === 1) {
     // ensure same behaviour as in NodeBuilder.format()
-
     if (last4 === 'vec2') params = [params[0], params[0]];
     else if (last4 === 'vec3') params = [params[0], params[0], params[0]];
     else if (last4 === 'vec4') params = [params[0], params[0], params[0], params[0]];
   }
 
-  if (type === 'color') {
-    console.log('here', params, new Color(...params));
-    return new Color(...params);
-  } else if (last4 === 'vec2') {
-    return new Vec2(...params);
-  } else if (last4 === 'vec3') {
-    return new Vec3(...params);
-  } else if (last4 === 'vec4') {
-    return new Vec4(...params);
-  } else if (last4 === 'mat3') {
-    return new Mat3(...params);
-  } else if (last4 === 'mat4') {
-    return new Mat4(...params);
-  } else if (type === 'bool') {
-    return params[0] || false;
-  } else if (type === 'float' || type === 'int' || type === 'uint') {
-    return params[0] || 0;
-  } else if (type === 'string') {
-    return params[0] || '';
-  } else if (type === 'ArrayBuffer') {
-    return base64ToArrayBuffer(params[0]);
-  }
+  if (type === 'color') return Color.new(...params);
+  if (last4 === 'vec2') return Vec2.new(...params);
+  if (last4 === 'vec3') return Vec3.new(...params);
+  if (last4 === 'vec4') return Vec4.new(...params);
+  if (last4 === 'mat3') return Mat3.new(...params);
+  if (last4 === 'mat4') return new Mat4(...params);
+  if (type === 'bool') return params[0] || false;
+  if (type === 'float' || type === 'int' || type === 'uint') return params[0] || 0;
+  if (type === 'string') return params[0] || '';
+
+  if (type === 'ArrayBuffer') return base64ToArrayBuffer(params[0]);
 
   return null;
 }

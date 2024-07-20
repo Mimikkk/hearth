@@ -1,4 +1,4 @@
-import { color, MeshStandardNodeMaterial, normalWorld } from '@modules/renderer/engine/nodes/Nodes.js';
+import { MeshStandardNodeMaterial } from '@modules/renderer/engine/nodes/Nodes.js';
 import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 import {
   Camera,
@@ -34,7 +34,6 @@ const createCamera = () => {
 const createScene = () => {
   const scene = new Scene();
   scene.background = new Color('lightblue');
-  scene.backgroundNode = normalWorld.y.mix(color(0x0066ff), color(0xff0066));
   return scene;
 };
 const createLight = () => new SpotLight(0xffffff, 10);
