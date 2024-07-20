@@ -1,5 +1,5 @@
 import { Box3, Box3_ } from './Box3.js';
-import { IVec3, Vec3, Vector3 } from './Vector3.js';
+import { IVec3, Vector3 } from './Vector3.js';
 import { Plane, Plane_ } from './Plane.js';
 import type { Matrix4 } from './Matrix4.js';
 import { Const } from './types.ts';
@@ -173,7 +173,7 @@ export class Sphere {
 Sphere.prototype.isSphere = true;
 
 export interface Sphere_ {
-  center: Vec3;
+  center: IVec3;
   radius: number;
 }
 
