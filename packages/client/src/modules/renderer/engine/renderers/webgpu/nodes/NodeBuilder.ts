@@ -9,15 +9,11 @@ import {
   Vec3,
   Vec4,
 } from '../../../engine.js';
-
 import NodeUniformsGroup from '../../common/nodes/NodeUniformsGroup.ts';
-
 import NodeSampler from '../../common/nodes/NodeSampler.ts';
 import { NodeSampledCubeTexture, NodeSampledTexture } from '../../common/nodes/NodeSampledTexture.ts';
-
 import NodeUniformBuffer from '../../common/nodes/NodeUniformBuffer.ts';
 import NodeStorageBuffer from '../../common/nodes/NodeStorageBuffer.ts';
-
 import {
   buildStages,
   CodeNode,
@@ -27,9 +23,7 @@ import {
   shaderStages,
   stack,
 } from '@modules/renderer/engine/nodes/Nodes.js';
-
 import { getFormat } from '../utils/BackendTextures.ts';
-
 import WGSLNodeParser from './WGSLNodeParser.js';
 import ChainMap from '@modules/renderer/engine/renderers/common/ChainMap.js';
 import NodeKeywords from '@modules/renderer/engine/nodes/core/NodeKeywords.js';
@@ -79,6 +73,127 @@ const toFloat = value => {
   return value + (value % 1 ? '' : '.0');
 };
 
+// GPUShaderStage is not defined in browsers not supporting WebGPU
+const GPUShaderStage = self.GPUShaderStage;
+
+const gpuShaderStageLib = {
+  vertex: GPUShaderStage ? GPUShaderStage.VERTEX : 1,
+  fragment: GPUShaderStage ? GPUShaderStage.FRAGMENT : 2,
+  compute: GPUShaderStage ? GPUShaderStage.COMPUTE : 4,
+};
+
+const supports = {
+  instance: true,
+  storageBuffer: true,
+};
+
+const wgslFnOpLib = {
+  '^^': 'engine_xor',
+};
+
+const wgslTypeLib = {
+  float: 'f32',
+  int: 'i32',
+  uint: 'u32',
+  bool: 'bool',
+  color: 'vec3<f32>',
+
+  vec2: 'vec2<f32>',
+  ivec2: 'vec2<i32>',
+  uvec2: 'vec2<u32>',
+  bvec2: 'vec2<bool>',
+
+  vec3: 'vec3<f32>',
+  ivec3: 'vec3<i32>',
+  uvec3: 'vec3<u32>',
+  bvec3: 'vec3<bool>',
+
+  vec4: 'vec4<f32>',
+  ivec4: 'vec4<i32>',
+  uvec4: 'vec4<u32>',
+  bvec4: 'vec4<bool>',
+
+  mat2: 'mat2x2<f32>',
+  imat2: 'mat2x2<i32>',
+  umat2: 'mat2x2<u32>',
+  bmat2: 'mat2x2<bool>',
+
+  mat3: 'mat3x3<f32>',
+  imat3: 'mat3x3<i32>',
+  umat3: 'mat3x3<u32>',
+  bmat3: 'mat3x3<bool>',
+
+  mat4: 'mat4x4<f32>',
+  imat4: 'mat4x4<i32>',
+  umat4: 'mat4x4<u32>',
+  bmat4: 'mat4x4<bool>',
+};
+
+const wgslMethods = {
+  dFdx: 'dpdx',
+  dFdy: '- dpdy',
+  mod_float: 'engine_mod_float',
+  mod_vec2: 'engine_mod_vec2',
+  mod_vec3: 'engine_mod_vec3',
+  mod_vec4: 'engine_mod_vec4',
+  equals_bool: 'engine_equals_bool',
+  equals_bvec2: 'engine_equals_bvec2',
+  equals_bvec3: 'engine_equals_bvec3',
+  equals_bvec4: 'engine_equals_bvec4',
+  lessThanEqual: 'engine_lessThanEqual',
+  greaterThan: 'engine_greaterThan',
+  inversesqrt: 'inverseSqrt',
+  bitcast: 'bitcast<f32>',
+};
+
+const wgslPolyfill = {
+  engine_xor: new CodeNode(`
+fn engine_xor( a : bool, b : bool ) -> bool {
+
+	return ( a || b ) && !( a && b );
+
+}
+`),
+  lessThanEqual: new CodeNode(`
+fn engine_lessThanEqual( a : vec3<f32>, b : vec3<f32> ) -> vec3<bool> {
+
+	return vec3<bool>( a.x <= b.x, a.y <= b.y, a.z <= b.z );
+
+}
+`),
+  greaterThan: new CodeNode(`
+fn engine_greaterThan( a : vec3<f32>, b : vec3<f32> ) -> vec3<bool> {
+
+	return vec3<bool>( a.x > b.x, a.y > b.y, a.z > b.z );
+
+}
+`),
+  mod_float: new CodeNode('fn engine_mod_float( x : f32, y : f32 ) -> f32 { return x - y * floor( x / y ); }'),
+  mod_vec2: new CodeNode('fn engine_mod_vec2( x : vec2f, y : vec2f ) -> vec2f { return x - y * floor( x / y ); }'),
+  mod_vec3: new CodeNode('fn engine_mod_vec3( x : vec3f, y : vec3f ) -> vec3f { return x - y * floor( x / y ); }'),
+  mod_vec4: new CodeNode('fn engine_mod_vec4( x : vec4f, y : vec4f ) -> vec4f { return x - y * floor( x / y ); }'),
+  equals_bool: new CodeNode('fn engine_equals_bool( a : bool, b : bool ) -> bool { return a == b; }'),
+  equals_bvec2: new CodeNode(
+    'fn engine_equals_bvec2( a : vec2f, b : vec2f ) -> vec2<bool> { return vec2<bool>( a.x == b.x, a.y == b.y ); }',
+  ),
+  equals_bvec3: new CodeNode(
+    'fn engine_equals_bvec3( a : vec3f, b : vec3f ) -> vec3<bool> { return vec3<bool>( a.x == b.x, a.y == b.y, a.z == b.z ); }',
+  ),
+  equals_bvec4: new CodeNode(
+    'fn engine_equals_bvec4( a : vec4f, b : vec4f ) -> vec4<bool> { return vec4<bool>( a.x == b.x, a.y == b.y, a.z == b.z, a.w == b.w ); }',
+  ),
+  repeatWrapping: new CodeNode(`
+fn engine_repeatWrapping( uv : vec2<f32>, dimension : vec2<u32> ) -> vec2<u32> {
+
+	let uvScaled = vec2<u32>( uv * vec2<f32>( dimension ) );
+
+	return ( ( uvScaled % dimension ) + dimension ) % dimension;
+
+}
+`),
+};
+
+// to merge
 class BaseNodeBuilder {
   constructor(object, renderer, parser, scene = null, material = null) {
     this.object = object;
@@ -1008,126 +1123,6 @@ class BaseNodeBuilder {
     return `// engine.js r${Revision} - NodeMaterial System\n`;
   }
 }
-
-// GPUShaderStage is not defined in browsers not supporting WebGPU
-const GPUShaderStage = self.GPUShaderStage;
-
-const gpuShaderStageLib = {
-  vertex: GPUShaderStage ? GPUShaderStage.VERTEX : 1,
-  fragment: GPUShaderStage ? GPUShaderStage.FRAGMENT : 2,
-  compute: GPUShaderStage ? GPUShaderStage.COMPUTE : 4,
-};
-
-const supports = {
-  instance: true,
-  storageBuffer: true,
-};
-
-const wgslFnOpLib = {
-  '^^': 'engine_xor',
-};
-
-const wgslTypeLib = {
-  float: 'f32',
-  int: 'i32',
-  uint: 'u32',
-  bool: 'bool',
-  color: 'vec3<f32>',
-
-  vec2: 'vec2<f32>',
-  ivec2: 'vec2<i32>',
-  uvec2: 'vec2<u32>',
-  bvec2: 'vec2<bool>',
-
-  vec3: 'vec3<f32>',
-  ivec3: 'vec3<i32>',
-  uvec3: 'vec3<u32>',
-  bvec3: 'vec3<bool>',
-
-  vec4: 'vec4<f32>',
-  ivec4: 'vec4<i32>',
-  uvec4: 'vec4<u32>',
-  bvec4: 'vec4<bool>',
-
-  mat2: 'mat2x2<f32>',
-  imat2: 'mat2x2<i32>',
-  umat2: 'mat2x2<u32>',
-  bmat2: 'mat2x2<bool>',
-
-  mat3: 'mat3x3<f32>',
-  imat3: 'mat3x3<i32>',
-  umat3: 'mat3x3<u32>',
-  bmat3: 'mat3x3<bool>',
-
-  mat4: 'mat4x4<f32>',
-  imat4: 'mat4x4<i32>',
-  umat4: 'mat4x4<u32>',
-  bmat4: 'mat4x4<bool>',
-};
-
-const wgslMethods = {
-  dFdx: 'dpdx',
-  dFdy: '- dpdy',
-  mod_float: 'engine_mod_float',
-  mod_vec2: 'engine_mod_vec2',
-  mod_vec3: 'engine_mod_vec3',
-  mod_vec4: 'engine_mod_vec4',
-  equals_bool: 'engine_equals_bool',
-  equals_bvec2: 'engine_equals_bvec2',
-  equals_bvec3: 'engine_equals_bvec3',
-  equals_bvec4: 'engine_equals_bvec4',
-  lessThanEqual: 'engine_lessThanEqual',
-  greaterThan: 'engine_greaterThan',
-  inversesqrt: 'inverseSqrt',
-  bitcast: 'bitcast<f32>',
-};
-
-const wgslPolyfill = {
-  engine_xor: new CodeNode(`
-fn engine_xor( a : bool, b : bool ) -> bool {
-
-	return ( a || b ) && !( a && b );
-
-}
-`),
-  lessThanEqual: new CodeNode(`
-fn engine_lessThanEqual( a : vec3<f32>, b : vec3<f32> ) -> vec3<bool> {
-
-	return vec3<bool>( a.x <= b.x, a.y <= b.y, a.z <= b.z );
-
-}
-`),
-  greaterThan: new CodeNode(`
-fn engine_greaterThan( a : vec3<f32>, b : vec3<f32> ) -> vec3<bool> {
-
-	return vec3<bool>( a.x > b.x, a.y > b.y, a.z > b.z );
-
-}
-`),
-  mod_float: new CodeNode('fn engine_mod_float( x : f32, y : f32 ) -> f32 { return x - y * floor( x / y ); }'),
-  mod_vec2: new CodeNode('fn engine_mod_vec2( x : vec2f, y : vec2f ) -> vec2f { return x - y * floor( x / y ); }'),
-  mod_vec3: new CodeNode('fn engine_mod_vec3( x : vec3f, y : vec3f ) -> vec3f { return x - y * floor( x / y ); }'),
-  mod_vec4: new CodeNode('fn engine_mod_vec4( x : vec4f, y : vec4f ) -> vec4f { return x - y * floor( x / y ); }'),
-  equals_bool: new CodeNode('fn engine_equals_bool( a : bool, b : bool ) -> bool { return a == b; }'),
-  equals_bvec2: new CodeNode(
-    'fn engine_equals_bvec2( a : vec2f, b : vec2f ) -> vec2<bool> { return vec2<bool>( a.x == b.x, a.y == b.y ); }',
-  ),
-  equals_bvec3: new CodeNode(
-    'fn engine_equals_bvec3( a : vec3f, b : vec3f ) -> vec3<bool> { return vec3<bool>( a.x == b.x, a.y == b.y, a.z == b.z ); }',
-  ),
-  equals_bvec4: new CodeNode(
-    'fn engine_equals_bvec4( a : vec4f, b : vec4f ) -> vec4<bool> { return vec4<bool>( a.x == b.x, a.y == b.y, a.z == b.z, a.w == b.w ); }',
-  ),
-  repeatWrapping: new CodeNode(`
-fn engine_repeatWrapping( uv : vec2<f32>, dimension : vec2<u32> ) -> vec2<u32> {
-
-	let uvScaled = vec2<u32>( uv * vec2<f32>( dimension ) );
-
-	return ( ( uvScaled % dimension ) + dimension ) % dimension;
-
-}
-`),
-};
 
 export class NodeBuilder extends BaseNodeBuilder {
   constructor(object, renderer, scene = null) {
