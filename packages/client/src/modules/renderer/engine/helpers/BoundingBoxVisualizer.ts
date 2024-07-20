@@ -31,7 +31,7 @@ export class BoundingBoxVisualizer extends LineSegments {
 
   update() {
     if (this.object) {
-      _box.fromObject(this.object, false);
+      _box.setFromObject(this.object, false);
       Box3_.fillObject(_box, this.object, false);
     }
 

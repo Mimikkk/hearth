@@ -112,9 +112,9 @@ export class LineSegmentsGeometry extends InstancedBufferGeometry {
     const end = this.attributes.instanceEnd;
 
     if (start !== undefined && end !== undefined) {
-      this.boundingBox.fromAttribute(start);
+      this.boundingBox.setFromBufferAttribute(start);
 
-      _box.fromAttribute(end);
+      _box.setFromBufferAttribute(end);
 
       this.boundingBox.union(_box);
     }
@@ -134,7 +134,7 @@ export class LineSegmentsGeometry extends InstancedBufferGeometry {
     if (start !== undefined && end !== undefined) {
       const center = this.boundingSphere.center;
 
-      this.boundingBox!.center(center);
+      this.boundingBox!.getCenter(center);
 
       let maxRadiusSq = 0;
 

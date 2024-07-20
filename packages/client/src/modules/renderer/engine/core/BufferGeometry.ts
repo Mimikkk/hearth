@@ -243,7 +243,7 @@ export class BufferGeometry<
   center(): this {
     this.computeBoundingBox();
 
-    this.boundingBox!.center(_offset).negate();
+    this.boundingBox!.getCenter(_offset).negate();
 
     this.translate(_offset.x, _offset.y, _offset.z);
 

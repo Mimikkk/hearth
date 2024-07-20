@@ -60,11 +60,9 @@ export class Object3D<EventMap extends Object3DEventMap = any> {
 
   eventDispatcher = new EventDispatcher<EventMap>();
 
-  computeBoundingSphere?(): void;
   boundingSphere: Sphere | null;
   occlusionTest: boolean;
   geometry: BufferGeometry | null;
-  computeBoundingBox?(): void;
   boundingBox: Box3 | null;
   id: number;
   uuid: string;

@@ -3,7 +3,7 @@ import type { Matrix4 } from './Matrix4.js';
 import type { Quaternion } from './Quaternion.js';
 import type { Matrix3 } from './Matrix3.js';
 import type { BufferAttribute } from '../core/BufferAttribute.js';
-import type { Const } from '@modules/renderer/engine/math/types.js';
+import { Const } from '@modules/renderer/engine/math/types.js';
 
 export interface IVector4 {
   x: number;

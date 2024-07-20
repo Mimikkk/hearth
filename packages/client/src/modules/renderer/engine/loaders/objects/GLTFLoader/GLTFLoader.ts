@@ -3531,14 +3531,14 @@ function computeBounds(geometry, primitiveDef, parser) {
     }
 
     // As per comment above this box isn't conservative, but has a reasonable size for a very large number of morph targets.
-    box.expandVec(maxDisplacement);
+    box.expandByVector(maxDisplacement);
   }
 
   geometry.boundingBox = box;
 
   const sphere = new Sphere();
 
-  box.center(sphere.center);
+  box.getCenter(sphere.center);
   sphere.radius = box.min.distanceTo(box.max) / 2;
 
   geometry.boundingSphere = sphere;

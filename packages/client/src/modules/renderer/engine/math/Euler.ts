@@ -1,208 +1,169 @@
 import { Quaternion } from './Quaternion.js';
 import { Matrix4 } from './Matrix4.js';
 import { clamp } from './MathUtils.js';
-import type { IVec3 } from '@modules/renderer/engine/math/Vector3.js';
-import type { Const } from '@modules/renderer/engine/math/types.js';
+import { IVec3 } from '@modules/renderer/engine/math/Vector3.js';
+import { Const } from '@modules/renderer/engine/math/types.js';
 
-export type EulerOrder = 'XYZ' | 'YXZ' | 'ZXY' | 'ZYX' | 'YZX' | 'XZY';
+export interface Euler {
+  x: number;
+  y: number;
+  z: number;
+  order: EulerOrder;
+}
 
-export class Euler {
-  static orders: EulerOrder[] = ['XYZ', 'YXZ', 'ZXY', 'ZYX', 'YZX', 'XZY'];
-  declare isEuler: true;
+type Mat4x4 = number[];
 
-  constructor(
-    public x: number = 0,
-    public y: number = 0,
-    public z: number = 0,
-    public order: EulerOrder = 'XYZ',
-  ) {}
+const _matrix = new Matrix4();
+const _quaternion: Quaternion = { x: 0, y: 0, z: 0, w: 1 };
+export namespace Euler {
+  export const create = (x: number, y: number, z: number, order: Order = 'XYZ'): Euler => ({ x, y, z, order });
+  export const euler = create;
 
-  static new(x: number = 0, y: number = 0, z: number = 0, order: EulerOrder = 'XYZ'): Euler {
-    return new Euler(x, y, z, order);
-  }
+  export const empty = (): Euler => create(0, 0, 0, 'XYZ');
+  export type Order = 'XYZ' | 'YXZ' | 'ZXY' | 'ZYX' | 'YZX' | 'XZY';
 
-  static empty(): Euler {
-    return new Euler(0, 0, 0, 'XYZ');
-  }
+  export const set = (self: Euler, x: number, y: number, z: number, order: Order): Euler => {
+    self.x = x;
+    self.y = y;
+    self.z = z;
+    self.order = order;
 
-  static clone(from: Const<Euler>, into: Euler = Euler.new()): Euler {
-    return into.from(from);
-  }
+    return self;
+  };
+  export const fill_ = (into: Euler, { order, x, y, z }: Euler): Euler => set(into, x, y, z, order);
 
-  static is(from: any): from is Euler {
-    return from?.isEuler === true;
-  }
+  export const clone = (from: Euler): Euler => clone_(from, empty());
+  export const clone_ = (from: Euler, into: Euler): Euler => fill_(into, from);
 
-  static into(into: Euler, from: Const<Euler>): Euler {
-    return into.from(from);
-  }
+  export const fromVec = ({ x, y, z }: Const<IVec3>, order: Order = 'XYZ'): Euler => create(x, y, z, order);
+  export const fromVec_ = ({ x, y, z }: Const<IVec3>, into: Euler): Euler => set(into, x, y, z, into.order);
+  export const fillVec = (self: Euler, vec: Const<IVec3>): Euler => {
+    self.x = vec.x;
+    self.y = vec.y;
+    self.z = vec.z;
 
-  static from(from: Const<Euler>, into: Euler = Euler.new()): Euler {
-    return into.from(from);
-  }
+    return self;
+  };
 
-  static fromVec(vec: Const<IVec3>, order: EulerOrder = 'XYZ', into: Euler = Euler.new()): Euler {
-    return into.fromVec(vec, order);
-  }
-
-  static fromMat4(matrix: Const<Matrix4>, order: EulerOrder, into: Euler = Euler.new()): Euler {
-    return into.fromMat4(matrix, order);
-  }
-
-  static fromQuaternion(quaternion: Const<Quaternion>, order: EulerOrder, into: Euler = Euler.new()): Euler {
-    return into.fromQuaternion(quaternion, order);
-  }
-
-  static fromArray(array: Const<number | string>[], offset: number, into: Euler = Euler.new()): Euler {
-    return into.fromArray(array, offset);
-  }
-
-  set(x: number, y: number, z: number, order: EulerOrder): this {
-    this.x = x;
-    this.y = y;
-    this.z = z;
-    this.order = order;
-    return this;
-  }
-
-  setX(x: number): this {
-    this.x = x;
-    return this;
-  }
-
-  setY(y: number): this {
-    this.y = y;
-    return this;
-  }
-
-  setZ(z: number): this {
-    this.z = z;
-    return this;
-  }
-
-  setOrder(order: EulerOrder): this {
-    this.order = order;
-    return this;
-  }
-
-  fill(into: Euler): void {
-    into.from(this);
-  }
-
-  from({ order, x, y, z }: Const<Euler>): this {
-    return this.set(x, y, z, order);
-  }
-
-  fromVec({ x, y, z }: Const<IVec3>, order: EulerOrder = 'XYZ'): this {
-    return this.set(x, y, z, order);
-  }
-
-  fromMat4({ elements: e }: Const<Matrix4>, order: EulerOrder): this {
-    const m11 = e[0];
-    const m12 = e[4];
-    const m13 = e[8];
-    const m21 = e[1];
-    const m22 = e[5];
-    const m23 = e[9];
-    const m31 = e[2];
-    const m32 = e[6];
-    const m33 = e[10];
+  export const fromMat = (matrix: Const<Mat4x4>, order: Order): Euler => fromMat_(matrix, order, empty());
+  export const fromMat_ = (matrix: Const<Mat4x4>, order: Order, into: Euler): Euler => {
+    const m11 = matrix[0];
+    const m12 = matrix[4];
+    const m13 = matrix[8];
+    const m21 = matrix[1];
+    const m22 = matrix[5];
+    const m23 = matrix[9];
+    const m31 = matrix[2];
+    const m32 = matrix[6];
+    const m33 = matrix[10];
 
     switch (order) {
       case 'XYZ':
-        this.y = Math.asin(clamp(m13, -1, 1));
+        into.y = Math.asin(clamp(m13, -1, 1));
         if (Math.abs(m13) < 0.9999999) {
-          this.x = Math.atan2(-m23, m33);
-          this.z = Math.atan2(-m12, m11);
+          into.x = Math.atan2(-m23, m33);
+          into.z = Math.atan2(-m12, m11);
         } else {
-          this.x = Math.atan2(m32, m22);
-          this.z = 0;
+          into.x = Math.atan2(m32, m22);
+          into.z = 0;
         }
         break;
       case 'YXZ':
-        this.x = Math.asin(-clamp(m23, -1, 1));
+        into.x = Math.asin(-clamp(m23, -1, 1));
         if (Math.abs(m23) < 0.9999999) {
-          this.y = Math.atan2(m13, m33);
-          this.z = Math.atan2(m21, m22);
+          into.y = Math.atan2(m13, m33);
+          into.z = Math.atan2(m21, m22);
         } else {
-          this.y = Math.atan2(-m31, m11);
-          this.z = 0;
+          into.y = Math.atan2(-m31, m11);
+          into.z = 0;
         }
         break;
       case 'ZXY':
-        this.x = Math.asin(clamp(m32, -1, 1));
+        into.x = Math.asin(clamp(m32, -1, 1));
         if (Math.abs(m32) < 0.9999999) {
-          this.y = Math.atan2(-m31, m33);
-          this.z = Math.atan2(-m12, m22);
+          into.y = Math.atan2(-m31, m33);
+          into.z = Math.atan2(-m12, m22);
         } else {
-          this.y = 0;
-          this.z = Math.atan2(m21, m11);
+          into.y = 0;
+          into.z = Math.atan2(m21, m11);
         }
         break;
       case 'ZYX':
-        this.y = Math.asin(-clamp(m31, -1, 1));
+        into.y = Math.asin(-clamp(m31, -1, 1));
         if (Math.abs(m31) < 0.9999999) {
-          this.x = Math.atan2(m32, m33);
-          this.z = Math.atan2(m21, m11);
+          into.x = Math.atan2(m32, m33);
+          into.z = Math.atan2(m21, m11);
         } else {
-          this.x = 0;
-          this.z = Math.atan2(-m12, m22);
+          into.x = 0;
+          into.z = Math.atan2(-m12, m22);
         }
         break;
       case 'YZX':
-        this.z = Math.asin(clamp(m21, -1, 1));
+        into.z = Math.asin(clamp(m21, -1, 1));
         if (Math.abs(m21) < 0.9999999) {
-          this.x = Math.atan2(-m23, m22);
-          this.y = Math.atan2(-m31, m11);
+          into.x = Math.atan2(-m23, m22);
+          into.y = Math.atan2(-m31, m11);
         } else {
-          this.x = 0;
-          this.y = Math.atan2(m13, m33);
+          into.x = 0;
+          into.y = Math.atan2(m13, m33);
         }
         break;
       case 'XZY':
-        this.z = Math.asin(-clamp(m12, -1, 1));
+        into.z = Math.asin(-clamp(m12, -1, 1));
         if (Math.abs(m12) < 0.9999999) {
-          this.x = Math.atan2(m32, m22);
-          this.y = Math.atan2(m13, m11);
+          into.x = Math.atan2(m32, m22);
+          into.y = Math.atan2(m13, m11);
         } else {
-          this.x = Math.atan2(-m23, m33);
-          this.y = 0;
+          into.x = Math.atan2(-m23, m33);
+          into.y = 0;
         }
         break;
     }
-    this.order = order;
-    return this;
-  }
+    into.order = order;
+    return into;
+  };
+  export const fillMat = (self: Euler, matrix: Const<Mat4x4>): Euler => fromMat_(matrix, self.order, self);
 
-  fromQuaternion(quaternion: Const<Quaternion>, order: EulerOrder): this {
-    return this.fromMat4(new Matrix4().makeRotationFromQuaternion(quaternion), order);
-  }
+  export const fromQuaternion = (quaternion: Quaternion, order: Order): Euler =>
+    fromQuaternion_(quaternion, order, empty());
+  export const fromQuaternion_ = (quaternion: Quaternion, order: Order, into: Euler): Euler =>
+    fromMat_(_matrix.makeRotationFromQuaternion(quaternion).elements, order, into);
+  export const fillQuaternion = (self: Euler, quaternion: Quaternion): Euler =>
+    fromQuaternion_(quaternion, self.order, self);
 
-  fromArray(array: Const<number | string>[], offset: number): this {
-    return this.set(
+  export const fromArray = (array: Const<(number | string)[]>, offset: number) => fromArray_(array, offset, empty());
+  export const fromArray_ = (array: Const<(number | string)[]>, offset: number, into: Euler) =>
+    set(
+      into,
       array[offset] as number,
       array[offset + 1] as number,
       array[offset + 2] as number,
-      array[offset + 3] as EulerOrder,
+      array[offset + 3] as Order,
     );
-  }
-
-  intoArray(array: (number | string)[] = [0, 0, 0, 'XYZ'], offset: number = 0): (number | string)[] {
-    array[offset] = this.x;
-    array[offset + 1] = this.y;
-    array[offset + 2] = this.z;
-    array[offset + 3] = this.order;
+  export const fillArray = (self: Euler, array: (number | string)[], offset: number) => fromArray_(array, offset, self);
+  export const intoArray_ = (
+    { x, y, z, order }: Euler,
+    array: (number | string)[],
+    offset: number,
+  ): (number | string)[] => {
+    array[offset] = x;
+    array[offset + 1] = y;
+    array[offset + 2] = z;
+    array[offset + 3] = order;
 
     return array;
-  }
+  };
+  export const intoArray = (self: Euler): (number | string)[] => intoArray_(self, [0, 0, 0, 'XYZ'], 0);
 
-  reorder(order: EulerOrder): this {
-    return this.fromQuaternion(Quaternion.fromEuler(this), order);
-  }
+  export const reorder = (self: Euler, order: Order): Euler => reorder_(self, order, self);
+  export const reorder_ = (self: Euler, order: Order, into: Euler): Euler =>
+    fromQuaternion_(Quaternion.fromEuler_(self, _quaternion), order, into);
+  export const reordered = (self: Euler, order: Order): Euler => reorder_(self, order, empty());
 
-  equals(euler: Const<Euler>): boolean {
-    return euler.x === this.x && euler.y === this.y && euler.z === this.z && euler.order === this.order;
-  }
+  export const equals = (a: Euler, b: Euler): boolean =>
+    b.x === a.x && b.y === a.y && b.z === a.z && b.order === a.order;
+
+  export const orders: Order[] = ['XYZ', 'YXZ', 'ZXY', 'ZYX', 'YZX', 'XZY'];
 }
 
-Euler.prototype.isEuler = true;
+export type EulerOrder = Euler.Order;

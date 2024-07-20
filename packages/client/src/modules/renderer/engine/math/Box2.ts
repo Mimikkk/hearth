@@ -1,5 +1,5 @@
 import { IVec2, Vec2 } from '@modules/renderer/engine/math/Vector2.js';
-import { Const, temp } from './types.ts';
+import { Const } from './types.ts';
 
 export class Box2 {
   declare isBox2: true;
@@ -13,12 +13,16 @@ export class Box2 {
     return new Box2(min, max);
   }
 
+  static corners(minX: number, minY: number, maxX: number, maxY: number): Box2 {
+    return Box2.new().setCorners(minX, minY, maxX, maxY);
+  }
+
   static empty(): Box2 {
     return Box2.new();
   }
 
-  static clone(box: Const<Box2>, into: Box2 = Box2.empty()): Box2 {
-    return into.from(box);
+  static clone({ min, max }: Const<Box2>, into: Box2 = Box2.empty()): Box2 {
+    return into.set(min, max);
   }
 
   static is(box: any): box is Box2 {
@@ -29,12 +33,8 @@ export class Box2 {
     return into.set(min, max);
   }
 
-  static from(box: Const<Box2>, into: Box2 = Box2.empty()): Box2 {
-    return into.from(box);
-  }
-
-  static fromParams(minX: number, minY: number, maxX: number, maxY: number, into: Box2 = Box2.new()): Box2 {
-    return into.setParams(minX, minY, maxX, maxY);
+  static from({ min, max }: Const<Box2>, into: Box2 = Box2.empty()): Box2 {
+    return into.set(min, max);
   }
 
   static fromArray(array: number[], offset: number = 0, into: Box2 = Box2.empty()): Box2 {
@@ -59,7 +59,7 @@ export class Box2 {
   }
 
   fromArray(array: number[], offset: number = 0): this {
-    return this.setParams(array[offset], array[offset + 1], array[offset + 2], array[offset + 3]);
+    return this.setCorners(array[offset], array[offset + 1], array[offset + 2], array[offset + 3]);
   }
 
   intoArray(array: number[] = [], offset: number = 0): number[] {
@@ -78,7 +78,7 @@ export class Box2 {
     const halfSizeX = size.x / 2;
     const halfSizeY = size.y / 2;
 
-    return this.setParams(center.x - halfSizeX, center.y - halfSizeY, center.x + halfSizeX, center.y + halfSizeY);
+    return this.setCorners(center.x - halfSizeX, center.y - halfSizeY, center.x + halfSizeX, center.y + halfSizeY);
   }
 
   set(min: Vec2, max: Vec2): this {
@@ -97,7 +97,7 @@ export class Box2 {
     return this;
   }
 
-  setParams(minX: number, minY: number, maxX: number, maxY: number): this {
+  setCorners(minX: number, minY: number, maxX: number, maxY: number): this {
     this.min.set(minX, minY);
     this.max.set(maxX, maxY);
     return this;
@@ -162,12 +162,12 @@ export class Box2 {
     return this;
   }
 
-  clamp(vec: Const<Vec2>, into = Vec2.new()): Vec2 {
-    return into.from(vec).clamp(this.min, this.max);
+  clamp(vec: Vec2): Vec2 {
+    return vec.clamp(this.min, this.max);
   }
 
   euclideanSqTo(vec: Const<IVec2>): number {
-    return this.clamp(Vec2.from(vec)).distanceSqTo(vec);
+    return this.clamp(as(vec)).distanceSqTo(vec);
   }
 
   euclideanTo(vec: Const<IVec2>): number {
@@ -209,3 +209,6 @@ export class Box2 {
     return this;
   }
 }
+
+const _vec = Vec2.new();
+const as = (item: any) => _vec.from(item);

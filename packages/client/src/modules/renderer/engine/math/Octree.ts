@@ -421,7 +421,7 @@ export class Octree {
 
   clear() {
     this.box = null!;
-    this.bounds.clear();
+    this.bounds.makeEmpty();
 
     this.subTrees.length = 0;
     this.triangles.length = 0;

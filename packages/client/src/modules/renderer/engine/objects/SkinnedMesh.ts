@@ -52,13 +52,13 @@ export class SkinnedMesh extends Mesh {
 
     if (this.boundingBox === null) this.boundingBox = new Box3();
 
-    this.boundingBox!.clear();
+    this.boundingBox!.makeEmpty();
 
     const positionAttribute = geometry.getAttribute('position');
 
     for (let i = 0; i < positionAttribute.count; i++) {
       this.getVertexPosition(i, _vertex);
-      this.boundingBox!.expandCoord(_vertex);
+      this.boundingBox!.expandByPoint(_vertex);
     }
   }
 
