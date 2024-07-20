@@ -40,13 +40,13 @@ describe('Math - Box2', () => {
   it('isEmpty', () => {
     const box = Box2.empty();
 
-    Box2.set(box, 0, 0, 0, 0);
+    Box2.fill(box, 0, 0, 0, 0);
     expect(Box2.isEmpty(box)).toBe(false);
 
-    Box2.set(box, 0, 0, 1, 1);
+    Box2.fill(box, 0, 0, 1, 1);
     expect(Box2.isEmpty(box)).toBe(false);
 
-    Box2.set(box, 2, 2, 1, 1);
+    Box2.fill(box, 2, 2, 1, 1);
     expect(Box2.isEmpty(box)).toBe(true);
 
     Box2.clear(box);
@@ -137,7 +137,7 @@ describe('Math - Box2', () => {
     expect(Box2.expandByScalar(box1, -1)).toBe(box1);
     expect(box1).toEqual(Box2.create(-1, -1, 1, 1));
 
-    Box2.set(box1, 0, 0, 0, 0);
+    Box2.fill(box1, 0, 0, 0, 0);
     const box2 = Box2.expandedByScalar(box1, 1);
     expect(box1).toEqual(Box2.create(0, 0, 0, 0));
     expect(box2).toEqual(Box2.create(-1, -1, 1, 1));
@@ -230,7 +230,7 @@ describe('Math - Box2', () => {
     expect(box1).toEqual(Box2.create(5, 6, 3, 4));
     expect(box2).toEqual(Box2.create(5, 6, 7, 8));
 
-    Box2.set(box1, 1, 2, 3, 4);
+    Box2.fill(box1, 1, 2, 3, 4);
     const box3 = Box2.intersected(box1, box2);
 
     expect(box1).toEqual(Box2.create(1, 2, 3, 4));
@@ -246,7 +246,7 @@ describe('Math - Box2', () => {
     expect(box1).toEqual(Box2.create(1, 2, 7, 8));
     expect(box2).toEqual(Box2.create(5, 6, 7, 8));
 
-    Box2.set(box1, 1, 2, 3, 4);
+    Box2.fill(box1, 1, 2, 3, 4);
     const box3 = Box2.united(box1, box2);
 
     expect(box1).toEqual(Box2.create(1, 2, 3, 4));
@@ -276,11 +276,11 @@ describe('Math - Box2', () => {
     expect(Box2.equals(box1, box2)).toEqual(true);
     expect(Box2.equals(box2, box1)).toEqual(true);
 
-    Box2.set(box2, 1, 2, 3, 5);
+    Box2.fill(box2, 1, 2, 3, 5);
     expect(Box2.equals(box1, box2)).toEqual(false);
     expect(Box2.equals(box2, box1)).toEqual(false);
 
-    Box2.set(box2, 1, 2, 3, 4);
+    Box2.fill(box2, 1, 2, 3, 4);
     expect(Box2.equals(box1, box2)).toEqual(true);
     expect(Box2.equals(box2, box1)).toEqual(true);
   });

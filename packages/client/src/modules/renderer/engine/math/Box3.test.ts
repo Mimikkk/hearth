@@ -44,11 +44,11 @@ describe('Math - Box3', () => {
 
   it.only('isEmpty', () => {
     const a = Box3_.empty();
-    Box3_.set(a, 0, 0, 0, 0, 0, 0);
+    Box3_.fill(a, 0, 0, 0, 0, 0, 0);
     expect(Box3_.isEmpty(a)).toBe(false);
-    Box3_.set(a, 0, 0, 0, 1, 1, 1);
+    Box3_.fill(a, 0, 0, 0, 1, 1, 1);
     expect(Box3_.isEmpty(a)).toBe(false);
-    Box3_.set(a, 2, 2, 2, 1, 1, 1);
+    Box3_.fill(a, 2, 2, 2, 1, 1, 1);
     expect(Box3_.isEmpty(a)).toBe(true);
     Box3_.clear(a);
     expect(Box3_.isEmpty(a)).toBe(true);

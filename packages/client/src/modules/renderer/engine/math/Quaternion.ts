@@ -26,7 +26,7 @@ export namespace Quaternion {
 
   export const identity = (): Quaternion => create(0, 0, 0, 1);
 
-  export const set = (self: Quaternion, x: number, y: number, z: number, w: number): Quaternion => {
+  export const fill = (self: Quaternion, x: number, y: number, z: number, w: number): Quaternion => {
     self.x = x;
     self.y = y;
     self.z = z;
@@ -34,7 +34,7 @@ export namespace Quaternion {
 
     return self;
   };
-  export const fill_ = (into: Quaternion, { w, x, y, z }: Const<Quaternion>): Quaternion => set(into, x, y, z, w);
+  export const fill_ = (into: Quaternion, { w, x, y, z }: Const<Quaternion>): Quaternion => fill(into, x, y, z, w);
 
   export const clone = (from: Const<Quaternion>): Quaternion => clone_(from, identity());
   export const clone_ = (from: Const<Quaternion>, into: Quaternion): Quaternion => fill_(into, from);
@@ -54,7 +54,7 @@ export namespace Quaternion {
 
     switch (order) {
       case 'XYZ':
-        return set(
+        return fill(
           into,
           s1 * c2 * c3 + c1 * s2 * s3,
           c1 * s2 * c3 - s1 * c2 * s3,
@@ -62,7 +62,7 @@ export namespace Quaternion {
           c1 * c2 * c3 - s1 * s2 * s3,
         );
       case 'YXZ':
-        return set(
+        return fill(
           into,
           s1 * c2 * c3 + c1 * s2 * s3,
           c1 * s2 * c3 - s1 * c2 * s3,
@@ -70,7 +70,7 @@ export namespace Quaternion {
           c1 * c2 * c3 + s1 * s2 * s3,
         );
       case 'ZXY':
-        return set(
+        return fill(
           into,
           s1 * c2 * c3 - c1 * s2 * s3,
           c1 * s2 * c3 + s1 * c2 * s3,
@@ -78,7 +78,7 @@ export namespace Quaternion {
           c1 * c2 * c3 - s1 * s2 * s3,
         );
       case 'ZYX':
-        return set(
+        return fill(
           into,
           s1 * c2 * c3 - c1 * s2 * s3,
           c1 * s2 * c3 + s1 * c2 * s3,
@@ -86,7 +86,7 @@ export namespace Quaternion {
           c1 * c2 * c3 + s1 * s2 * s3,
         );
       case 'YZX':
-        return set(
+        return fill(
           into,
           s1 * c2 * c3 + c1 * s2 * s3,
           c1 * s2 * c3 + s1 * c2 * s3,
@@ -94,7 +94,7 @@ export namespace Quaternion {
           c1 * c2 * c3 - s1 * s2 * s3,
         );
       case 'XZY':
-        return set(
+        return fill(
           into,
           s1 * c2 * c3 - c1 * s2 * s3,
           c1 * s2 * c3 - s1 * c2 * s3,
@@ -113,12 +113,12 @@ export namespace Quaternion {
       r = 0;
 
       if (Math.abs(from.x) > Math.abs(from.z)) {
-        set(into, -from.y, from.x, 0, r);
+        fill(into, -from.y, from.x, 0, r);
       } else {
-        set(into, 0, -from.z, from.y, r);
+        fill(into, 0, -from.z, from.y, r);
       }
     } else {
-      set(into, from.y * to.z - from.z * to.y, from.z * to.x - from.x * to.z, from.x * to.y - from.y * to.x, r);
+      fill(into, from.y * to.z - from.z * to.y, from.z * to.x - from.x * to.z, from.x * to.y - from.y * to.x, r);
     }
 
     return normalize(into);
@@ -129,7 +129,7 @@ export namespace Quaternion {
   export const fromArray = (array: Const<NumberArray>, offset: number): Quaternion =>
     fromArray_(array, offset, identity());
   export const fromArray_ = (array: Const<NumberArray>, offset: number, into: Quaternion): Quaternion =>
-    set(into, array[offset], array[offset + 1], array[offset + 2], array[offset + 3]);
+    fill(into, array[offset], array[offset + 1], array[offset + 2], array[offset + 3]);
   export const fillArray = (self: Quaternion, array: Const<NumberArray>, offset: number): Quaternion =>
     fromArray_(array, offset, self);
   export const intoArray_ = <T extends NumberArray>({ x, y, z, w }: Const<Quaternion>, offset: number, into: T): T => {
@@ -159,7 +159,7 @@ export namespace Quaternion {
     if (trace > 0) {
       const s = 0.5 / Math.sqrt(trace + 1.0);
 
-      return set(into, (m32 - m23) * s, (m13 - m31) * s, (m21 - m12) * s, 0.25 / s);
+      return fill(into, (m32 - m23) * s, (m13 - m31) * s, (m21 - m12) * s, 0.25 / s);
     }
 
     if (m11 > m22 && m11 > m33) {
@@ -169,16 +169,16 @@ export namespace Quaternion {
       into.y = (m12 + m21) / s;
       into.z = (m13 + m31) / s;
       into.w = (m32 - m23) / s;
-      return set(into, 0.25 * s, (m12 + m21) / s, (m13 + m31) / s, (m32 - m23) / s);
+      return fill(into, 0.25 * s, (m12 + m21) / s, (m13 + m31) / s, (m32 - m23) / s);
     }
 
     if (m22 > m33) {
       const s = 2.0 * Math.sqrt(1.0 + m22 - m11 - m33);
-      return set(into, (m12 + m21) / s, 0.25 * s, (m23 + m32) / s, (m13 - m31) / s);
+      return fill(into, (m12 + m21) / s, 0.25 * s, (m23 + m32) / s, (m13 - m31) / s);
     }
 
     const s = 2.0 * Math.sqrt(1.0 + m33 - m11 - m22);
-    return set(into, (m13 + m31) / s, (m23 + m32) / s, 0.25 * s, (m21 - m12) / s);
+    return fill(into, (m13 + m31) / s, (m23 + m32) / s, 0.25 * s, (m21 - m12) / s);
   };
   export const fillRotation = (self: Quaternion, matrix: Const<Matrix4>): Quaternion => fromRotation_(matrix, self);
 
@@ -188,7 +188,7 @@ export namespace Quaternion {
     const halfAngle = angle / 2;
     const s = Math.sin(halfAngle);
 
-    return set(into, axis.x * s, axis.y * s, axis.z * s, Math.cos(halfAngle));
+    return fill(into, axis.x * s, axis.y * s, axis.z * s, Math.cos(halfAngle));
   };
   export const fillAxisAngle = (self: Quaternion, axis: Const<Vec3>, angle: number): Quaternion =>
     fromAxisAngle_(axis, angle, self);
@@ -200,7 +200,7 @@ export namespace Quaternion {
     index: number,
     into: Quaternion,
   ): Quaternion =>
-    set(into, attribute.getX(index), attribute.getY(index), attribute.getZ(index), attribute.getW(index));
+    fill(into, attribute.getX(index), attribute.getY(index), attribute.getZ(index), attribute.getW(index));
   export const fillAttribute = (
     self: Quaternion,
     attribute: Const<BufferAttribute | InterleavedBufferAttribute>,
@@ -261,8 +261,8 @@ export namespace Quaternion {
   export const invert_ = (self: Const<Quaternion>, into: Quaternion): Quaternion => {
     const { x, y, z, w } = self;
     const len = 1 / lengthSq(self);
-    if (len === 0) return set(into, 0, 0, 0, 1);
-    return set(into, -x * len, -y * len, -z * len, w * len);
+    if (len === 0) return fill(into, 0, 0, 0, 1);
+    return fill(into, -x * len, -y * len, -z * len, w * len);
   };
   export const inverted = (self: Const<Quaternion>): Quaternion => invert_(self, clone(self));
 
@@ -326,7 +326,7 @@ export namespace Quaternion {
 
     let cosHalfTheta = aw * bw + ax * bx + ay * by + az * bz;
     if (cosHalfTheta < 0) {
-      set(into, -bx, -by, -bz, -bw);
+      fill(into, -bx, -by, -bz, -bw);
       cosHalfTheta = -cosHalfTheta;
     } else {
       clone_(other, into);

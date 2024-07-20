@@ -17,11 +17,11 @@ export namespace Box2 {
   export const box2 = create;
 
   export const empty = (): Box2 => create(+Infinity, +Infinity, -Infinity, -Infinity);
-  export const clear = (self: Box2): Box2 => set(self, +Infinity, +Infinity, -Infinity, -Infinity);
+  export const clear = (self: Box2): Box2 => fill(self, +Infinity, +Infinity, -Infinity, -Infinity);
 
   export const isEmpty = (self: Const<Box2>): boolean => self.max.x < self.min.x || self.max.y < self.min.y;
 
-  export const set = (into: Box2, minX: number, minY: number, maxX: number, maxY: number): Box2 => {
+  export const fill = (into: Box2, minX: number, minY: number, maxX: number, maxY: number): Box2 => {
     into.min.x = minX;
     into.min.y = minY;
     into.max.x = maxX;
@@ -29,7 +29,7 @@ export namespace Box2 {
 
     return into;
   };
-  export const fill_ = (into: Box2, { min, max }: Const<Box2>): Box2 => set(into, min.x, min.y, max.x, max.y);
+  export const fill_ = (into: Box2, { min, max }: Const<Box2>): Box2 => fill(into, min.x, min.y, max.x, max.y);
 
   export const copy = (from: Const<Box2>): Box2 => copy_(from, empty());
   export const copy_ = ({ min, max }: Const<Box2>, into: Box2): Box2 => {
@@ -89,7 +89,7 @@ export namespace Box2 {
     const halfSizeX = size.x / 2;
     const halfSizeY = size.y / 2;
 
-    return set(into, center.x - halfSizeX, center.y - halfSizeY, center.x + halfSizeX, center.y + halfSizeY);
+    return fill(into, center.x - halfSizeX, center.y - halfSizeY, center.x + halfSizeX, center.y + halfSizeY);
   };
 
   export const contains = (self: Const<Box2>, box: Const<Box2>): boolean =>
@@ -140,7 +140,7 @@ export namespace Box2 {
 
   export const translate = (self: Box2, vec: Const<Vec2>): Box2 => translate_(self, vec, self);
   export const translate_ = (self: Const<Box2>, { x, y }: Const<Vec2>, into: Box2): Box2 =>
-    set(into, self.min.x + x, self.min.y + y, self.max.x + x, self.max.y + y);
+    fill(into, self.min.x + x, self.min.y + y, self.max.x + x, self.max.y + y);
   export const translated = (self: Const<Box2>, vec: Const<Vec2>): Box2 => translate(clone(self), vec);
 
   export const distanceSqTo = (self: Const<Box2>, vec: Const<Vec2>): number => {

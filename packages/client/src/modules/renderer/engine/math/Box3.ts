@@ -550,12 +550,12 @@ export namespace Box3_ {
 
   export const empty = (): Box3_ => create(+Infinity, +Infinity, +Infinity, -Infinity, -Infinity, -Infinity);
   export const clear = (self: Box3_): Box3_ =>
-    set(self, +Infinity, +Infinity, +Infinity, -Infinity, -Infinity, -Infinity);
+    fill(self, +Infinity, +Infinity, +Infinity, -Infinity, -Infinity, -Infinity);
 
   export const isEmpty = (self: Const<Box3_>): boolean =>
     self.max.x < self.min.x || self.max.y < self.min.y || self.max.z < self.min.z;
 
-  export const set = (
+  export const fill = (
     into: Box3_,
     minX: number,
     minY: number,
@@ -598,14 +598,14 @@ export namespace Box3_ {
   export const size = (self: Const<Box3_>): Vec3 => size_(self, Vec3.empty());
   export const size_ = (self: Const<Box3_>, into: Vec3): Vec3 =>
     isEmpty(self)
-      ? Vec3.set(into, 0, 0, 0)
-      : Vec3.set(into, self.max.x - self.min.x, self.max.y - self.min.y, self.max.z - self.min.z);
+      ? Vec3.fill(into, 0, 0, 0)
+      : Vec3.fill(into, self.max.x - self.min.x, self.max.y - self.min.y, self.max.z - self.min.z);
 
   export const center = (self: Const<Box3_>): Vec3 => center_(self, Vec3.empty());
   export const center_ = (self: Const<Box3_>, into: Vec3): Vec3 =>
     isEmpty(self)
-      ? Vec3.set(into, 0, 0, 0)
-      : Vec3.set(into, (self.min.x + self.max.x) / 2, (self.min.y + self.max.y) / 2, (self.min.z + self.max.z) / 2);
+      ? Vec3.fill(into, 0, 0, 0)
+      : Vec3.fill(into, (self.min.x + self.max.x) / 2, (self.min.y + self.max.y) / 2, (self.min.z + self.max.z) / 2);
 
   export const expandByVec = (self: Box3_, { x, y, z }: Const<Vec3>): Box3_ => {
     if (x < self.min.x) self.min.x = x;
@@ -640,7 +640,7 @@ export namespace Box3_ {
   export const fromCenterAndRadius = (center: Const<Vec3>, radius: number): Box3_ =>
     fromCenterAndRadius_(center, radius, empty());
   export const fromCenterAndRadius_ = ({ x, y, z }: Const<Vec3>, radius: number, into: Box3_): Box3_ =>
-    set(into, x - radius, y - radius, z - radius, x + radius, y + radius, z + radius);
+    fill(into, x - radius, y - radius, z - radius, x + radius, y + radius, z + radius);
   export const fillCenterAndRadius = (self: Box3_, center: Const<Vec3>, radius: number): Box3_ =>
     fromCenterAndRadius_(center, radius, self);
 
@@ -655,7 +655,7 @@ export namespace Box3_ {
     const halfY = size.y / 2;
     const halfZ = size.z / 2;
 
-    return set(
+    return fill(
       into,
       center.x - halfX,
       center.y - halfY,
@@ -683,7 +683,7 @@ export namespace Box3_ {
   export const fromArray = <T extends NumberArray>(array: Const<T>, offset: number): Box3_ =>
     fromArray_(array, offset, empty());
   export const fromArray_ = <T extends NumberArray>(array: Const<T>, offset: number, into: Box3_): Box3_ =>
-    set(
+    fill(
       into,
       array[offset],
       array[offset + 1],
@@ -926,28 +926,28 @@ export namespace Box3_ {
 
     clone_(self, into);
 
-    Vec3.applyMat4(Vec3.set(Vec3.temp0, self.min.x, self.min.y, self.min.z), matrix);
+    Vec3.applyMat4(Vec3.fill(Vec3.temp0, self.min.x, self.min.y, self.min.z), matrix);
     expandByVec(into, Vec3.temp0);
 
-    Vec3.applyMat4(Vec3.set(Vec3.temp0, self.min.x, self.min.y, self.max.z), matrix);
+    Vec3.applyMat4(Vec3.fill(Vec3.temp0, self.min.x, self.min.y, self.max.z), matrix);
     expandByVec(into, Vec3.temp0);
 
-    Vec3.applyMat4(Vec3.set(Vec3.temp0, self.min.x, self.max.y, self.min.z), matrix);
+    Vec3.applyMat4(Vec3.fill(Vec3.temp0, self.min.x, self.max.y, self.min.z), matrix);
     expandByVec(into, Vec3.temp0);
 
-    Vec3.applyMat4(Vec3.set(Vec3.temp0, self.min.x, self.max.y, self.max.z), matrix);
+    Vec3.applyMat4(Vec3.fill(Vec3.temp0, self.min.x, self.max.y, self.max.z), matrix);
     expandByVec(into, Vec3.temp0);
 
-    Vec3.applyMat4(Vec3.set(Vec3.temp0, self.max.x, self.min.y, self.min.z), matrix);
+    Vec3.applyMat4(Vec3.fill(Vec3.temp0, self.max.x, self.min.y, self.min.z), matrix);
     expandByVec(into, Vec3.temp0);
 
-    Vec3.applyMat4(Vec3.set(Vec3.temp0, self.max.x, self.min.y, self.max.z), matrix);
+    Vec3.applyMat4(Vec3.fill(Vec3.temp0, self.max.x, self.min.y, self.max.z), matrix);
     expandByVec(into, Vec3.temp0);
 
-    Vec3.applyMat4(Vec3.set(Vec3.temp0, self.max.x, self.max.y, self.min.z), matrix);
+    Vec3.applyMat4(Vec3.fill(Vec3.temp0, self.max.x, self.max.y, self.min.z), matrix);
     expandByVec(into, Vec3.temp0);
 
-    Vec3.applyMat4(Vec3.set(Vec3.temp0, self.max.x, self.max.y, self.max.z), matrix);
+    Vec3.applyMat4(Vec3.fill(Vec3.temp0, self.max.x, self.max.y, self.max.z), matrix);
     expandByVec(into, Vec3.temp0);
 
     return into;

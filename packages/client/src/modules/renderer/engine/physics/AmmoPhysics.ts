@@ -217,7 +217,7 @@ export async function AmmoPhysics(): Promise<AmmoPhysicsObject> {
           const position = worldTransform.getOrigin();
           const quaternion = worldTransform.getRotation();
           mesh.position.set(position.x(), position.y(), position.z());
-          Quaternion.set(mesh.quaternion, quaternion.x(), quaternion.y(), quaternion.z(), quaternion.w());
+          Quaternion.fill(mesh.quaternion, quaternion.x(), quaternion.y(), quaternion.z(), quaternion.w());
         }
       }
     }

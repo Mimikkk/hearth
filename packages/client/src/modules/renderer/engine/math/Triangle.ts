@@ -41,7 +41,7 @@ export class Triangle {
     const denom = dot00 * dot11 - dot01 * dot01;
 
     if (denom === 0) {
-      Vec3.set(target, 0, 0, 0);
+      Vec3.fill(target, 0, 0, 0);
       return null;
     }
 
@@ -49,7 +49,7 @@ export class Triangle {
     const u = (dot11 * dot02 - dot01 * dot12) * invDenom;
     const v = (dot00 * dot12 - dot01 * dot02) * invDenom;
 
-    return Vec3.set(target, 1 - u - v, v, u);
+    return Vec3.fill(target, 1 - u - v, v, u);
   }
 
   static containsPoint(point: Vec3, a: Vec3, b: Vec3, c: Vec3): boolean {

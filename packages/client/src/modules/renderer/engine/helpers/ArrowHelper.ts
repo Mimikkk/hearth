@@ -57,9 +57,9 @@ export class ArrowHelper extends Object3D {
     // dir is assumed to be normalized
 
     if (dir.y > 0.99999) {
-      Quaternion.set(this.quaternion, 0, 0, 0, 1);
+      Quaternion.fill(this.quaternion, 0, 0, 0, 1);
     } else if (dir.y < -0.99999) {
-      Quaternion.set(this.quaternion, 1, 0, 0, 0);
+      Quaternion.fill(this.quaternion, 1, 0, 0, 0);
     } else {
       _axis.set(dir.z, 0, -dir.x).normalize();
 

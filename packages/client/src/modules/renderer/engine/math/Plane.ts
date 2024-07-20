@@ -168,7 +168,7 @@ export namespace Plane_ {
   });
   export const empty = (): Plane_ => create(0, 0, 0, 0);
 
-  export const set = (self: Plane_, normalX: number, normalY: number, normalZ: number, constant: number): Plane_ => {
+  export const fill = (self: Plane_, normalX: number, normalY: number, normalZ: number, constant: number): Plane_ => {
     self.normal.x = normalX;
     self.normal.y = normalY;
     self.normal.z = normalZ;
@@ -177,7 +177,7 @@ export namespace Plane_ {
     return self;
   };
   export const fill_ = (self: Plane_, { constant, normal: { x, y, z } }: Const<Plane_>): Plane_ =>
-    set(self, x, y, z, constant);
+    fill(self, x, y, z, constant);
 
   export const clone = (from: Const<Plane_>): Plane_ => clone_(from, empty());
   export const clone_ = (from: Const<Plane_>, into: Plane_): Plane_ => fill_(into, from);

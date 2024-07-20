@@ -607,14 +607,14 @@ export namespace Vec3 {
   export const empty = (): Vec3 => create(0, 0, 0);
   export const vec3 = create;
 
-  export const set = (self: Vec3, x: number, y: number, z: number): Vec3 => {
+  export const fill = (self: Vec3, x: number, y: number, z: number): Vec3 => {
     self.x = x;
     self.y = y;
     self.z = z;
 
     return self;
   };
-  export const fill_ = (into: Vec3, { x, y, z }: Const<Vec3>): Vec3 => set(into, x, y, z);
+  export const fill_ = (into: Vec3, { x, y, z }: Const<Vec3>): Vec3 => fill(into, x, y, z);
 
   export const clone = (from: Const<Vec3>): Vec3 => fill_(from, empty());
   export const clone_ = (from: Const<Vec3>, into: Vec3): Vec3 => fill_(into, from);
@@ -623,47 +623,47 @@ export namespace Vec3 {
     !!o && typeof o.x === 'number' && typeof o.y === 'number' && typeof o.z === 'number';
 
   export const add = (a: Vec3, b: Const<Vec3>): Vec3 => add_(a, b, a);
-  export const add_ = (a: Const<Vec3>, b: Const<Vec3>, into: Vec3): Vec3 => set(into, a.x + b.x, a.y + b.y, a.z + b.z);
+  export const add_ = (a: Const<Vec3>, b: Const<Vec3>, into: Vec3): Vec3 => fill(into, a.x + b.x, a.y + b.y, a.z + b.z);
   export const added = (a: Vec3, b: Const<Vec3>): Vec3 => add_(a, b, empty());
 
   export const sub = (a: Vec3, b: Const<Vec3>): Vec3 => sub_(a, b, a);
-  export const sub_ = (a: Const<Vec3>, b: Const<Vec3>, into: Vec3): Vec3 => set(into, a.x - b.x, a.y - b.y, a.z - b.z);
+  export const sub_ = (a: Const<Vec3>, b: Const<Vec3>, into: Vec3): Vec3 => fill(into, a.x - b.x, a.y - b.y, a.z - b.z);
   export const subbed = (a: Const<Vec3>, b: Const<Vec3>): Vec3 => sub_(a, b, empty());
 
   export const mul = (a: Vec3, b: Const<Vec3>): Vec3 => mul_(a, b, a);
-  export const mul_ = (a: Const<Vec3>, b: Const<Vec3>, into: Vec3): Vec3 => set(into, a.x * b.x, a.y * b.y, a.z * b.z);
+  export const mul_ = (a: Const<Vec3>, b: Const<Vec3>, into: Vec3): Vec3 => fill(into, a.x * b.x, a.y * b.y, a.z * b.z);
   export const mulled = (a: Const<Vec3>, b: Const<Vec3>): Vec3 => mul_(a, b, empty());
 
   export const mulScalar = (a: Vec3, scalar: number): Vec3 => mulScalar_(a, scalar, a);
   export const mulScalar_ = (a: Const<Vec3>, scalar: number, into: Vec3): Vec3 =>
-    set(into, a.x * scalar, a.y * scalar, a.z * scalar);
+    fill(into, a.x * scalar, a.y * scalar, a.z * scalar);
   export const mulledScalar = (a: Const<Vec3>, scalar: number): Vec3 => mulScalar_(a, scalar, empty());
 
   export const div = (a: Vec3, b: Const<Vec3>): Vec3 => div_(a, b, a);
-  export const div_ = (a: Const<Vec3>, b: Const<Vec3>, into: Vec3): Vec3 => set(into, a.x / b.x, a.y / b.y, a.z / b.z);
+  export const div_ = (a: Const<Vec3>, b: Const<Vec3>, into: Vec3): Vec3 => fill(into, a.x / b.x, a.y / b.y, a.z / b.z);
   export const dived = (a: Const<Vec3>, b: Const<Vec3>): Vec3 => div_(a, b, empty());
 
   export const divScalar = (a: Vec3, scalar: number): Vec3 => divScalar_(a, scalar, a);
   export const divScalar_ = (a: Const<Vec3>, scalar: number, into: Vec3): Vec3 =>
-    set(into, a.x / scalar, a.y / scalar, a.z / scalar);
+    fill(into, a.x / scalar, a.y / scalar, a.z / scalar);
   export const divedScalar = (a: Const<Vec3>, scalar: number): Vec3 => divScalar_(a, scalar, empty());
 
   export const cross = (a: Const<Vec3>, b: Const<Vec3>): Vec3 => cross_(a, b, empty());
   export const cross_ = (a: Const<Vec3>, b: Const<Vec3>, into: Vec3): Vec3 =>
-    set(into, a.y * b.z - a.z * b.y, a.z * b.x - a.x * b.z, a.x * b.y - a.y * b.x);
+    fill(into, a.y * b.z - a.z * b.y, a.z * b.x - a.x * b.z, a.x * b.y - a.y * b.x);
   export const crossed = (a: Const<Vec3>, b: Const<Vec3>): Vec3 => cross_(a, b, empty());
 
   export const normalize = (self: Vec3): Vec3 => normalize_(self, self);
   export const normalize_ = (self: Const<Vec3>, into: Vec3): Vec3 => {
     const length = Math.sqrt(self.x * self.x + self.y * self.y + self.z * self.z);
 
-    return set(into, self.x / length, self.y / length, self.z / length);
+    return fill(into, self.x / length, self.y / length, self.z / length);
   };
   export const normalized = (self: Const<Vec3>): Vec3 => normalize_(self, empty());
 
   export const lerp = (a: Vec3, b: Const<Vec3>, step: number): Vec3 => lerp_(a, b, step, a);
   export const lerp_ = (a: Const<Vec3>, b: Const<Vec3>, step: number, into: Vec3): Vec3 =>
-    set(into, a.x + (b.x - a.x) * step, a.y + (b.y - a.y) * step, a.z + (b.z - a.z) * step);
+    fill(into, a.x + (b.x - a.x) * step, a.y + (b.y - a.y) * step, a.z + (b.z - a.z) * step);
   export const lerped = (a: Const<Vec3>, b: Const<Vec3>, step: number): Vec3 => lerp_(a, b, step, empty());
 
   export const lengthSq = (self: Const<Vec3>): number => self.x * self.x + self.y * self.y + self.z * self.z;
@@ -673,7 +673,7 @@ export namespace Vec3 {
 
   export const fromArray = (array: Const<NumberArray>, offset: number): Vec3 => fromArray_(array, offset, empty());
   export const fromArray_ = (array: Const<NumberArray>, offset: number, into: Vec3): Vec3 =>
-    set(into, array[offset], array[offset + 1], array[offset + 2]);
+    fill(into, array[offset], array[offset + 1], array[offset + 2]);
   export const fillArray = (self: Vec3, array: Const<NumberArray>, offset: number): Vec3 =>
     fromArray_(array, offset, self);
   export const intoArray_ = <T extends NumberArray>({ x, y, z }: Const<Vec3>, offset: number, into: T): T => {
@@ -688,7 +688,7 @@ export namespace Vec3 {
   export const fromAttribute = (attribute: BufferAttribute<Float32Array>, index: number): Vec3 =>
     fromAttribute_(attribute, index, empty());
   export const fromAttribute_ = (attribute: BufferAttribute<Float32Array>, index: number, into: Vec3): Vec3 =>
-    set(into, attribute.getX(index), attribute.getY(index), attribute.getZ(index));
+    fill(into, attribute.getX(index), attribute.getY(index), attribute.getZ(index));
   export const fillAttribute = (self: Vec3, attribute: BufferAttribute<Float32Array>, index: number): Vec3 =>
     fromAttribute_(attribute, index, self);
   export const intoAttribute_ = (
@@ -715,7 +715,7 @@ export namespace Vec3 {
 
     const w = 1 / (elements[3] * x + elements[7] * y + elements[11] * z + elements[15]);
 
-    return set(
+    return fill(
       into,
       (elements[0] * x + elements[4] * y + elements[8] * z + elements[12]) * w,
       (elements[1] * x + elements[5] * y + elements[9] * z + elements[13]) * w,

@@ -184,16 +184,16 @@ export namespace Sphere_ {
   export const sphere = create;
 
   export const empty = (): Sphere_ => ({ center: Vec3.create(0, 0, 0), radius: -1 });
-  export const clear = (self: Sphere_): Sphere_ => set(self, 0, 0, 0, -1);
+  export const clear = (self: Sphere_): Sphere_ => fill(self, 0, 0, 0, -1);
 
-  export const set = (self: Sphere_, centerX: number, centerY: number, centerZ: number, radius: number): Sphere_ => {
-    Vec3.set(self.center, centerX, centerY, centerZ);
+  export const fill = (self: Sphere_, centerX: number, centerY: number, centerZ: number, radius: number): Sphere_ => {
+    Vec3.fill(self.center, centerX, centerY, centerZ);
     self.radius = radius;
 
     return self;
   };
   export const fill_ = (self: Sphere_, { center: { x, y, z }, radius }: Readonly<Sphere_>): Sphere_ =>
-    set(self, x, y, z, radius);
+    fill(self, x, y, z, radius);
 
   export const copy = (from: Readonly<Sphere_>): Sphere_ => copy_(from, empty());
   export const copy_ = ({ center, radius }: Readonly<Sphere_>, into: Sphere_): Sphere_ => {
@@ -221,7 +221,7 @@ export namespace Sphere_ {
 
     const radius = Math.sqrt(maxRadiusSq);
 
-    return set(into, center.x, center.y, center.z, radius);
+    return fill(into, center.x, center.y, center.z, radius);
   };
   export const fillVecs = (self: Sphere_, vecs: Readonly<Vec3>[]): Sphere_ => fromVecs_(vecs, self);
 
@@ -311,14 +311,14 @@ export namespace Sphere_ {
     const { x, y, z } = Vec3.applyMat4_(self.center, mat, Vec3.temp0);
     const radius = self.radius * mat.getMaxScaleOnAxis();
 
-    return set(into, x, y, z, radius);
+    return fill(into, x, y, z, radius);
   };
 
   export const translate = (self: Sphere_, vec: Vec3): Sphere_ => translate_(self, vec, self);
   export const translate_ = (self: Readonly<Sphere_>, vec: Readonly<Vec3>, into: Sphere_): Sphere_ => {
     const { x, y, z } = Vec3.add_(self.center, vec, Vec3.temp0);
 
-    return set(into, x, y, z, self.radius);
+    return fill(into, x, y, z, self.radius);
   };
   export const translated = (self: Readonly<Sphere_>, vec: Readonly<Vec3>): Sphere_ => translate_(self, vec, empty());
 
