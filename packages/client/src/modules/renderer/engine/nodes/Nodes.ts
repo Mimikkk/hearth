@@ -418,8 +418,8 @@ export { default as GLSLNodeParser } from './parsers/GLSLNodeParser.js'; // @TOD
 // materials
 export * from './materials/Materials.js';
 
-// noise
-export * from '@modules/renderer/engine/nodes/noise/noiseNodes.js';
+// materialX
+export * from '@modules/renderer/engine/nodes/noise/MaterialXNodes.js';
 
 // functions
 export { default as BRDF_GGX } from './functions/BSDF/BRDF_GGX.js';
