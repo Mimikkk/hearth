@@ -13,8 +13,8 @@ export class Vec2 implements IVec2 {
   declare isVec2: true;
 
   constructor(
-    public x: number = 0,
-    public y: number = 0,
+    public x: number,
+    public y: number,
   ) {}
 
   static new(x: number = 0, y: number = 0): Vec2 {
