@@ -1,20 +1,11 @@
-import type { Vec3 } from './Vec3.js';
 import type { Mat4 } from './Mat4.js';
 import type { Quaternion } from './Quaternion.js';
 import { Const } from '@modules/renderer/engine/math/types.js';
 import { Attribute } from '@modules/renderer/engine/core/types.js';
 import { clamp, NumberArray } from '@modules/renderer/engine/math/MathUtils.js';
 
-export interface IVec4 {
-  x: number;
-  y: number;
-  z: number;
-  w: number;
-}
-
-export class Vec4 implements IVec4 {
+export class Vec4 {
   declare isVec4: true;
-  declare ['constructor']: typeof Vec4;
 
   constructor(
     public x: number = 0,

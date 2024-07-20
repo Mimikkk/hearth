@@ -1,7 +1,5 @@
 import { clamp, NumberArray } from './MathUtils.js';
 import { Quaternion } from './Quaternion.js';
-import type { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
-import type { InterleavedBufferAttribute } from '@modules/renderer/engine/core/InterleavedBufferAttribute.js';
 import type { Color } from '@modules/renderer/engine/math/Color.js';
 import type { Euler } from '@modules/renderer/engine/math/Euler.js';
 import type { Mat3 } from '@modules/renderer/engine/math/Mat3.js';
@@ -12,15 +10,8 @@ import type { Camera } from '@modules/renderer/engine/cameras/Camera.js';
 import { Const } from '@modules/renderer/engine/math/types.js';
 import { Attribute } from '@modules/renderer/engine/core/types.js';
 
-export interface IVec3 {
-  x: number;
-  y: number;
-  z: number;
-}
-
-export class Vec3 implements IVec3 {
+export class Vec3 {
   declare isVec3: true;
-  declare ['constructor']: typeof Vec3;
 
   constructor(
     public x: number = 0,

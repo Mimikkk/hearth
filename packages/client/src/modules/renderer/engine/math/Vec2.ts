@@ -3,14 +3,8 @@ import type { Mat3 } from './Mat3.js';
 import { Attribute } from '@modules/renderer/engine/core/types.js';
 import { Const } from '@modules/renderer/engine/math/types.js';
 
-export interface IVec2 {
-  x: number;
-  y: number;
-}
-
-export class Vec2 implements IVec2 {
+export class Vec2 {
   declare isVec2: true;
-  declare ['constructor']: typeof Vec2;
 
   constructor(
     public x: number = 0,
