@@ -52,7 +52,7 @@ class ComputeNode extends Node {
 
   updateBefore(x: { renderer: Renderer }) {
     const { renderer } = x;
-    renderer.compute(this);
+    renderer.computeAsync(this);
   }
 
   generate(builder: NodeBuilder) {

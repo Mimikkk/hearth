@@ -72,7 +72,7 @@ async function init() {
   document.body.appendChild(renderer.parameters.canvas);
 
   // compute texture
-  renderer.compute(computeNode);
+  renderer.computeAsync(computeNode);
   useWindowResizer(renderer, camera, () => {
     const aspect = window.innerWidth / window.innerHeight;
 
@@ -88,5 +88,5 @@ async function init() {
 }
 
 function render() {
-  renderer.render(scene, camera);
+  renderer.renderAsync(scene, camera);
 }

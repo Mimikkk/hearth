@@ -297,7 +297,7 @@ async function init() {
 
   //
 
-  renderer.compute(computeInit);
+  renderer.computeAsync(computeInit);
 
   //
 
@@ -347,7 +347,7 @@ function animate() {
 
   // compute
 
-  renderer.compute(computeParticles);
+  renderer.computeAsync(computeParticles);
 
   // result
 

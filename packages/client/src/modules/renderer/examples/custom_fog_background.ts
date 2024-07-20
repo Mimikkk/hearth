@@ -82,5 +82,5 @@ async function init() {
 //
 
 function render() {
-  postProcessing.renderer.render();
+  postProcessing.renderAsync();
 }

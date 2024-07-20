@@ -133,7 +133,7 @@ async function init() {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
 
-    const dpr = renderer._pixelRatio;
+    const dpr = renderer.getPixelRatio();
     renderTarget.setSize(window.innerWidth * dpr, window.innerHeight * dpr);
   });
 }

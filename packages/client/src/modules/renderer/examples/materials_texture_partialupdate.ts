@@ -57,7 +57,7 @@ async function animate() {
 
   const elapsedTime = clock.getElapsedTime();
 
-  await renderer.render(scene, camera);
+  await renderer.renderAsync(scene, camera);
 
   if (elapsedTime - last > 0.1) {
     last = elapsedTime;

@@ -32,7 +32,7 @@ init();
 
 async function init() {
   renderer = await Renderer.create();
-  renderer._clearColor.a = 0;
+  renderer.setClearColor(0x000000, 0.0);
   renderer.setAnimationLoop(animate);
   document.body.appendChild(renderer.parameters.canvas);
 

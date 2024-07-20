@@ -52,7 +52,7 @@ export class InterleavedBufferAttribute<T extends TypedArray = any> {
     for (let i = 0, l = this.count; i < l; i++) {
       _vector.fromAttribute(this, i);
 
-      _vector.applyNMat3(m);
+      _vector.applyNormalMatrix(m);
 
       this.setXYZ(i, _vector.x, _vector.y, _vector.z);
     }
