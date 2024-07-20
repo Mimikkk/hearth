@@ -948,7 +948,7 @@ export namespace IVec3 {
     );
   };
 
-  const _quaternion: Quaternion = { x: 0, y: 0, z: 0, w: 0 };
+  const _quaternion = Quaternion.identity();
   export const applyAxisAngle = (self: IVec3, axis: Const<IVec3>, angle: number): IVec3 =>
     applyAxisAngle_(self, axis, angle, self);
   export const applyAxisAngle_ = (self: Const<IVec3>, axis: Const<IVec3>, angle: number, into: IVec3): IVec3 => {
