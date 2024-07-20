@@ -23,7 +23,7 @@ export class Vec3 {
     return new Vec3(x, y, z);
   }
 
-  static scalar(scalar: number, into: Vec3 = Vec3.new()): Vec3 {
+  static scalar(scalar: number, into: Vec3 = Vec3.empty()): Vec3 {
     return into.setScalar(scalar);
   }
 
@@ -31,7 +31,7 @@ export class Vec3 {
     return Vec3.new(0, 0);
   }
 
-  static clone({ x, y, z }: Const<Vec3>, into: Vec3 = Vec3.new()): Vec3 {
+  static clone({ x, y, z }: Const<Vec3>, into: Vec3 = Vec3.empty()): Vec3 {
     return into.set(x, y, z);
   }
 
@@ -43,52 +43,48 @@ export class Vec3 {
     return into.set(x, y, z);
   }
 
-  static from({ x, y, z }: Const<Vec3>, into: Vec3 = Vec3.new()): Vec3 {
+  static from({ x, y, z }: Const<Vec3>, into: Vec3 = Vec3.empty()): Vec3 {
     return into.set(x, y, z);
   }
 
-  static fromAttribute(attribute: Const<Attribute>, index: number, into: Vec3 = Vec3.new()): Vec3 {
+  static fromAttribute(attribute: Const<Attribute>, index: number, into: Vec3 = Vec3.empty()): Vec3 {
     return into.fromAttribute(attribute, index);
   }
 
-  static fromArray(array: Const<NumberArray>, offset: number = 0, into: Vec3 = Vec3.new()): Vec3 {
+  static fromArray(array: Const<NumberArray>, offset: number = 0, into: Vec3 = Vec3.empty()): Vec3 {
     return into.fromArray(array, offset);
   }
 
-  static fromColor(color: Color, into: Vec3 = Vec3.new()): Vec3 {
+  static fromColor(color: Color, into: Vec3 = Vec3.empty()): Vec3 {
     return into.fromColor(color);
   }
 
-  static fromEuler(euler: Euler, into: Vec3 = Vec3.new()): Vec3 {
+  static fromEuler(euler: Euler, into: Vec3 = Vec3.empty()): Vec3 {
     return into.fromEuler(euler);
   }
 
-  static fromSpherical(spherical: Spherical, into: Vec3 = Vec3.new()): Vec3 {
+  static fromSpherical(spherical: Spherical, into: Vec3 = Vec3.empty()): Vec3 {
     return into.fromSpherical(spherical);
   }
 
-  static fromCylindrical(cylindrical: Cylindrical, into: Vec3 = Vec3.new()): Vec3 {
+  static fromCylindrical(cylindrical: Cylindrical, into: Vec3 = Vec3.empty()): Vec3 {
     return into.fromCylindrical(cylindrical);
   }
 
-  static fromMat4Position(matrix: Mat4, into: Vec3 = Vec3.new()): Vec3 {
+  static fromMat4Position(matrix: Mat4, into: Vec3 = Vec3.empty()): Vec3 {
     return into.fromMat4Position(matrix);
   }
 
-  static fromMat4Scale(matrix: Mat4, into: Vec3 = Vec3.new()): Vec3 {
+  static fromMat4Scale(matrix: Mat4, into: Vec3 = Vec3.empty()): Vec3 {
     return into.fromMat4Scale(matrix);
   }
 
-  static fromMat4Column(matrix: Mat4, index: number, into: Vec3 = Vec3.new()): Vec3 {
+  static fromMat4Column(matrix: Mat4, index: number, into: Vec3 = Vec3.empty()): Vec3 {
     return into.fromMat4Column(matrix, index);
   }
 
-  static fromMat3Column(matrix: Mat3, index: number, into: Vec3 = Vec3.new()): Vec3 {
+  static fromMat3Column(matrix: Mat3, index: number, into: Vec3 = Vec3.empty()): Vec3 {
     return into.fromMat3Column(matrix, index);
-  }
-
-  static lerp(from: Const<Vec3>, to: Const<Vec3>, step: number, into: Vec3 = Vec3.new()): Vec3 {
-    return into.lerp(from, to, step);
   }
 
   from({ x, y, z }: Const<Vec3>): this {

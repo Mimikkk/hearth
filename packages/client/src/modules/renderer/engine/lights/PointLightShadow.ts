@@ -3,6 +3,7 @@ import { PerspectiveCamera } from '../cameras/PerspectiveCamera.js';
 import { Mat4 } from '../math/Mat4.js';
 import { Vec2 } from '../math/Vec2.js';
 import { Vec3 } from '../math/Vec3.js';
+import { Vec4 } from '../math/Vec4.js';
 import { PointLight } from './PointLight.js';
 
 const _projScreenMatrix = new Mat4();
@@ -11,12 +12,60 @@ const _lookTarget = new Vec3();
 
 export class PointLightShadow extends LightShadow<PerspectiveCamera> {
   declare isPointLightShadow: true;
+  _cubeDirections: Vec3[];
+  _cubeUps: Vec3[];
 
   constructor() {
     super(new PerspectiveCamera(90, 1, 0.5, 500));
-    this.frameExtents = Vec2.new(4, 2);
+    this._frameExtents = Vec2.new(4, 2);
 
-    this.viewportCount = 6;
+    this._viewportCount = 6;
+
+    this._viewports = [
+      // These viewports map a cube-map onto a 2D texture with the
+      // following orientation:
+      //
+      //  xzXZ
+      //   y Y
+      //
+      // X - Positive x direction
+      // x - Negative x direction
+      // Y - Positive y direction
+      // y - Negative y direction
+      // Z - Positive z direction
+      // z - Negative z direction
+
+      // positive X
+      new Vec4(2, 1, 1, 1),
+      // negative X
+      new Vec4(0, 1, 1, 1),
+      // positive Z
+      new Vec4(3, 1, 1, 1),
+      // negative Z
+      new Vec4(1, 1, 1, 1),
+      // positive Y
+      new Vec4(3, 0, 1, 1),
+      // negative Y
+      new Vec4(1, 0, 1, 1),
+    ];
+
+    this._cubeDirections = [
+      new Vec3(1, 0, 0),
+      new Vec3(-1, 0, 0),
+      new Vec3(0, 0, 1),
+      new Vec3(0, 0, -1),
+      new Vec3(0, 1, 0),
+      new Vec3(0, -1, 0),
+    ];
+
+    this._cubeUps = [
+      new Vec3(0, 1, 0),
+      new Vec3(0, 1, 0),
+      new Vec3(0, 1, 0),
+      new Vec3(0, 1, 0),
+      new Vec3(0, 0, 1),
+      new Vec3(0, 0, -1),
+    ];
   }
 
   updateMatrices(light: PointLight, viewportIndex: number = 0): this {
@@ -34,34 +83,16 @@ export class PointLightShadow extends LightShadow<PerspectiveCamera> {
     camera.position.from(_lightPositionWorld);
 
     _lookTarget.from(camera.position);
-    _lookTarget.add(_directions[viewportIndex]);
-    camera.up.from(_ups[viewportIndex]);
+    _lookTarget.add(this._cubeDirections[viewportIndex]);
+    camera.up.from(this._cubeUps[viewportIndex]);
     camera.lookAt(_lookTarget);
     camera.updateMatrixWorld();
 
     shadowMatrix.makeTranslation(-_lightPositionWorld.x, -_lightPositionWorld.y, -_lightPositionWorld.z);
 
     _projScreenMatrix.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse);
-    this.frustum.fromProjection(_projScreenMatrix);
+    this._frustum.setFromProjectionMatrix(_projScreenMatrix);
     return this;
   }
 }
-
 PointLightShadow.prototype.isPointLightShadow = true;
-
-const _ups = [
-  Vec3.new(0, 1, 0),
-  Vec3.new(0, 1, 0),
-  Vec3.new(0, 1, 0),
-  Vec3.new(0, 1, 0),
-  Vec3.new(0, 0, 1),
-  Vec3.new(0, 0, -1),
-];
-const _directions = [
-  Vec3.new(1, 0, 0),
-  Vec3.new(-1, 0, 0),
-  Vec3.new(0, 0, 1),
-  Vec3.new(0, 0, -1),
-  Vec3.new(0, 1, 0),
-  Vec3.new(0, -1, 0),
-];

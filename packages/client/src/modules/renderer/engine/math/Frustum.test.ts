@@ -21,6 +21,27 @@ describe('Maths - Frustum', () => {
       expect(a.planes[i]).toEqual(plane);
     }
 
+    const p0 = Plane.fromParams(1, 0, 0, -1);
+    const p1 = Plane.fromParams(1, 0, 0, 1);
+    const p2 = Plane.fromParams(1, 0, 0, 2);
+    const p3 = Plane.fromParams(1, 0, 0, 3);
+    const p4 = Plane.fromParams(1, 0, 0, 4);
+    const p5 = Plane.fromParams(1, 0, 0, 5);
+
+    a = Frustum.fromParams(p0, p1, p2, p3, p4, p5);
+    expect(a.planes[0]).toEqual(p0);
+    expect(a.planes[0]).toBe(p0);
+    expect(a.planes[1]).toEqual(p1);
+    expect(a.planes[1]).toBe(p1);
+    expect(a.planes[2]).toEqual(p2);
+    expect(a.planes[2]).toBe(p2);
+    expect(a.planes[3]).toEqual(p3);
+    expect(a.planes[3]).toBe(p3);
+    expect(a.planes[4]).toEqual(p4);
+    expect(a.planes[4]).toBe(p4);
+    expect(a.planes[5]).toEqual(p5);
+    expect(a.planes[5]).toBe(p5);
+
     const p6 = Plane.fromParams(1, 0, 0, -1);
     const p7 = Plane.fromParams(1, 0, 0, 1);
     const p8 = Plane.fromParams(1, 0, 0, 2);

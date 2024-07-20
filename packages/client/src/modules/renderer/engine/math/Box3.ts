@@ -218,16 +218,15 @@ export class Box3 {
       } else {
         if (object.boundingBox !== undefined) {
           if (object.boundingBox === null) object.computeBoundingBox!();
-
-          _box1.from(object.boundingBox!);
+          _box.from(object.boundingBox!);
         } else {
           if (geometry.boundingBox === null) geometry.computeBoundingBox();
-          _box1.from(geometry.boundingBox!);
+          _box.from(geometry.boundingBox!);
         }
 
-        _box1.applyMat4(object!.matrixWorld!);
+        _box.applyMat4(object!.matrixWorld!);
 
-        this.union(_box1);
+        this.union(_box);
       }
     }
 
@@ -384,7 +383,8 @@ export class Box3 {
   applyMat4(mat: Const<Mat4>): this {
     if (this.isEmpty()) return this;
 
-    const { min, max } = _box2.from(this);
+    const { min, max } = _box.from(this);
+
     this.clear();
     this.expandCoord(_v1.set(min.x, min.y, min.z).applyMat4(mat));
     this.expandCoord(_v1.set(min.x, min.y, max.z).applyMat4(mat));
@@ -441,5 +441,4 @@ const _v4 = Vec3.new();
 const _v5 = Vec3.new();
 const _v7 = Vec3.new();
 const _v9 = Vec3.new();
-const _box1 = Box3.new();
-const _box2 = Box3.new();
+const _box = Box3.new();

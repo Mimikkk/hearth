@@ -67,15 +67,6 @@ export class Quaternion {
     return into.fromUnit(from, to);
   }
 
-  static slerp(
-    from: Const<Quaternion>,
-    to: Const<Quaternion>,
-    step: number,
-    into: Quaternion = Quaternion.new(),
-  ): Quaternion {
-    return into.slerp(from, to, step);
-  }
-
   fill(quaternion: Quaternion): void {
     quaternion.from(this);
   }
@@ -325,14 +316,12 @@ export class Quaternion {
     let { x: ax, y: ay, z: az, w: aw } = from;
     let { x: bx, y: by, z: bz, w: bw } = to;
 
-    let cosHalfTheta = ax * bx + ay * by + az * bz + aw * bw;
+    let cosHalfTheta = aw * bw + ax * bx + ay * by + az * bz;
     if (cosHalfTheta < 0) {
-      bx = -bx;
-      by = -by;
-      bz = -bz;
-      bw = -bw;
-
+      this.set(-bx, -by, -bz, -bw);
       cosHalfTheta = -cosHalfTheta;
+    } else {
+      this.from(to);
     }
 
     if (cosHalfTheta >= 1) return this.from(from);
@@ -341,21 +330,26 @@ export class Quaternion {
 
     if (sqrSinHalfTheta <= Number.EPSILON) {
       const s = 1 - step;
-
-      return this.set(ax * s + bx * step, ay * s + by * step, az * s + bz * step, aw * s + bw * step).normalize();
+      return this.set(
+        s * ax + step * from.x,
+        s * ay + step * from.y,
+        s * az + step * from.z,
+        s * aw + step * from.w,
+      ).normalize();
     }
 
     const sinHalfTheta = Math.sqrt(sqrSinHalfTheta);
     const halfTheta = Math.atan2(sinHalfTheta, cosHalfTheta);
+
     const ratioA = Math.sin((1 - step) * halfTheta) / sinHalfTheta;
     const ratioB = Math.sin(step * halfTheta) / sinHalfTheta;
 
     return this.set(
-      ax * ratioA + bx * ratioB,
-      ay * ratioA + by * ratioB,
-      az * ratioA + bz * ratioB,
-      aw * ratioA + bw * ratioB,
-    ).normalize();
+      ax * ratioA + from.x * ratioB,
+      ay * ratioA + from.y * ratioB,
+      az * ratioA + from.z * ratioB,
+      aw * ratioA + from.w * ratioB,
+    );
   }
 }
 

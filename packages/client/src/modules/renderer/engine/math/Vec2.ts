@@ -15,7 +15,7 @@ export class Vec2 {
     return new Vec2(x, y);
   }
 
-  static scalar(scalar: number, into: Vec2 = Vec2.new()): Vec2 {
+  static scalar(scalar: number, into: Vec2 = Vec2.empty()): Vec2 {
     return into.setScalar(scalar);
   }
 
@@ -23,7 +23,7 @@ export class Vec2 {
     return Vec2.new(0, 0);
   }
 
-  static clone({ x, y }: Const<Vec2>, into: Vec2 = Vec2.new()): Vec2 {
+  static clone({ x, y }: Const<Vec2>, into: Vec2 = Vec2.empty()): Vec2 {
     return into.set(x, y);
   }
 
@@ -35,20 +35,16 @@ export class Vec2 {
     return into.set(x, y);
   }
 
-  static from({ x, y }: Const<Vec2>, into: Vec2 = Vec2.new()): Vec2 {
+  static from({ x, y }: Const<Vec2>, into: Vec2 = Vec2.empty()): Vec2 {
     return into.set(x, y);
   }
 
-  static fromAttribute(attribute: Attribute, index: number, into: Vec2 = Vec2.new()): Vec2 {
+  static fromAttribute(attribute: Attribute, index: number, into: Vec2 = Vec2.empty()): Vec2 {
     return into.fromAttribute(attribute, index);
   }
 
-  static fromArray(array: number[], offset: number = 0, into: Vec2 = Vec2.new()): Vec2 {
+  static fromArray(array: number[], offset: number = 0, into: Vec2 = Vec2.empty()): Vec2 {
     return into.fromArray(array, offset);
-  }
-
-  static lerp(from: Const<Vec2>, to: Const<Vec2>, step: number, into: Vec2 = Vec2.new()): Vec2 {
-    return into.lerp(from, to, step);
   }
 
   from(from: Const<Vec2>): this {
