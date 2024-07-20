@@ -1,6 +1,7 @@
 import { BufferGeometry } from '../core/BufferGeometry.js';
 import { Float32BufferAttribute } from '../core/BufferAttribute.js';
-import { Vec2 } from '../math/Vector2.js';
+import * as Curves from '../extras/curves/Curves.js';
+import { Vector2 } from '../math/Vector2.js';
 import { Vector3 } from '../math/Vector3.js';
 import { Curve } from '@modules/renderer/engine/extras/core/Curve.js';
 import { QuadraticBezierCurve3 } from '../extras/curves/Curves.js';
@@ -54,7 +55,7 @@ export class TubeGeometry extends BufferGeometry {
 
     const vertex = new Vector3();
     const normal = new Vector3();
-    const uv = Vec2.new();
+    const uv = new Vector2();
     let P = new Vector3();
 
     // buffer

@@ -4,8 +4,7 @@ import { NodeUpdateType } from '../core/constants.js';
 import { nodeObject } from '../shadernode/ShaderNodes.js';
 import { uniform } from '../core/UniformNode.js';
 import { perspectiveDepthToViewZ, viewZToOrthographicDepth } from './ViewportDepthNode.js';
-import { DepthTexture, RenderTarget, TextureDataType, ToneMapping } from '@modules/renderer/engine/engine.js';
-import { Vec2 } from '@modules/renderer/engine/math/Vector2.js';
+import { DepthTexture, RenderTarget, TextureDataType, ToneMapping, Vector2 } from '@modules/renderer/engine/engine.js';
 
 class PassTextureNode extends TextureNode {
   constructor(passNode, texture) {
@@ -111,7 +110,7 @@ class PassNode extends TempNode {
 
     this._pixelRatio = renderer.getPixelRatio();
 
-    const size = renderer.getSize(Vec2.new());
+    const size = renderer.getSize(new Vector2());
 
     this.setSize(size.width, size.height);
 

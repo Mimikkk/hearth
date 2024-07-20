@@ -2,10 +2,9 @@ import TextureNode from '../accessors/TextureNode.js';
 import { NodeUpdateType } from '../core/constants.js';
 import { addNodeElement, nodeProxy } from '../shadernode/ShaderNodes.js';
 import { viewportTopLeft } from './ViewportNode.js';
-import { Filter, FramebufferTexture } from '@modules/renderer/engine/engine.js';
-import { Vec2 } from '@modules/renderer/engine/math/Vector2.js';
+import { Filter, FramebufferTexture, Vector2 } from '@modules/renderer/engine/engine.js';
 
-const _size = Vec2.new();
+const _size = new Vector2();
 
 class ViewportTextureNode extends TextureNode {
   static type = 'ViewportTextureNode';
@@ -33,9 +32,9 @@ class ViewportTextureNode extends TextureNode {
 
     const framebufferTexture = this.value;
 
-    if (framebufferTexture.image.width !== _size.x || framebufferTexture.image.height !== _size.y) {
-      framebufferTexture.image.width = _size.x;
-      framebufferTexture.image.height = _size.y;
+    if (framebufferTexture.image.width !== _size.width || framebufferTexture.image.height !== _size.height) {
+      framebufferTexture.image.width = _size.width;
+      framebufferTexture.image.height = _size.height;
       framebufferTexture.needsUpdate = true;
     }
 

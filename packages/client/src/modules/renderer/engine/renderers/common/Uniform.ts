@@ -1,5 +1,4 @@
-import { Color, Matrix3, Matrix4, Vector3, Vector4 } from '@modules/renderer/engine/engine.js';
-import { Vec2 } from '@modules/renderer/engine/math/Vector2.js';
+import { Color, Matrix3, Matrix4, Vector2, Vector3, Vector4 } from '@modules/renderer/engine/engine.js';
 
 export abstract class Uniform<T> {
   // STD140 layout
@@ -35,12 +34,12 @@ export class FloatUniform extends Uniform<number> {
 
 FloatUniform.prototype.isFloatUniform = true;
 
-export class Vector2Uniform extends Uniform<Vec2> {
+export class Vector2Uniform extends Uniform<Vector2> {
   declare isVector2Uniform: true;
   boundary: number = 8;
   itemSize: number = 2;
 
-  constructor(name: string, value: Vec2) {
+  constructor(name: string, value: Vector2) {
     super(name, value);
   }
 }

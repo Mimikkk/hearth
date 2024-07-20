@@ -17,13 +17,12 @@ import { GUI } from 'lil-gui';
 import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 import StorageInstancedBufferAttribute from '@modules/renderer/engine/renderers/common/StorageInstancedBufferAttribute.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import { Vec2 } from '@modules/renderer/engine/math/Vector2.js';
 
 let camera, scene, renderer;
 let computeNode;
 
-const pointerVector = Vec2.new(-10.0, -10.0); // Out of bounds first
-const scaleVector = Vec2.new(1, 1);
+const pointerVector = new Engine.Vector2(-10.0, -10.0); // Out of bounds first
+const scaleVector = new Engine.Vector2(1, 1);
 
 init();
 

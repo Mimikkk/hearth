@@ -2,7 +2,7 @@ import { Color } from '../../math/Color.js';
 import { Path } from './Path.js';
 import { Shape } from './Shape.js';
 import { ShapeUtils } from '../ShapeUtils.js';
-import { Vec2 } from '@modules/renderer/engine/math/Vector2.js';
+import { Vector2 } from '@modules/renderer/engine/math/Vector2.js';
 
 export class ShapePath {
   declare type: string | 'ShapePath';
@@ -38,7 +38,7 @@ export class ShapePath {
     return this;
   }
 
-  splineThru(pts: Vec2[]): this {
+  splineThru(pts: Vector2[]): this {
     this.currentPath?.splineThru(pts);
 
     return this;
@@ -60,7 +60,7 @@ export class ShapePath {
       return shapes;
     }
 
-    function isPointInsidePolygon(inPt: Vec2, inPolygon: Vec2[]): boolean {
+    function isPointInsidePolygon(inPt: Vector2, inPolygon: Vector2[]): boolean {
       const polyLen = inPolygon.length;
 
       // inPt on polygon contour => immediate success    or
@@ -129,12 +129,12 @@ export class ShapePath {
 
     const betterShapeHoles: {
       h: Path;
-      p: Vec2;
+      p: Vector2;
     }[][] = [];
     const newShapes = [];
     let newShapeHoles: {
       h: Path;
-      p: Vec2;
+      p: Vector2;
     }[][] = [];
     let mainIdx = 0;
     let tmpPoints;

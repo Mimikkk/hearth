@@ -1,9 +1,9 @@
 import { Curve } from './Curve.js';
 import * as Curves from '../curves/Curves.js';
-import { Vec2 } from '../../math/Vector2.js';
+import type { Vector2 } from '../../math/Vector2.js';
 import type { Vector3 } from '../../math/Vector3.js';
 
-export class CurvePath<T extends Vec2 | Vector3> extends Curve<T> {
+export class CurvePath<T extends Vector2 | Vector3> extends Curve<T> {
   declare type: string | 'CurvePath';
   autoClose: boolean = false;
   curves: Curve<T>[] = [];
@@ -19,7 +19,7 @@ export class CurvePath<T extends Vec2 | Vector3> extends Curve<T> {
     const startPoint = this.curves[0].getPoint(0);
     const endPoint = this.curves[this.curves.length - 1].getPoint(1);
 
-    if (!startPoint.equals(endPoint)) {
+    if (!startPoint.equals(endPoint as Vector2 & Vector3)) {
       //@ts-expect-error
       const lineType = startPoint.isVector2 === true ? 'LineCurve' : 'LineCurve3';
       //@ts-expect-error

@@ -1,11 +1,12 @@
+import * as MathUtils from '../math/MathUtils.js';
 import { TypedArray, TypedArrayConstructor } from '../math/MathUtils.js';
 import { BufferUsage } from '../constants.js';
 import { v4 } from 'uuid';
 
-export class InterleavedBuffer<T extends TypedArray = any> {
-  declare ['constructor']: typeof InterleavedBuffer<T>;
+export class InterleavedBuffer {
+  declare ['constructor']: typeof InterleavedBuffer;
   declare isInterleavedBuffer: true;
-  array: T;
+  array: TypedArray;
   stride: number;
   count: number;
   usage: BufferUsage;
@@ -13,7 +14,7 @@ export class InterleavedBuffer<T extends TypedArray = any> {
   version: number;
   uuid: string;
 
-  constructor(array: T, stride: number) {
+  constructor(array: TypedArray, stride: number) {
     this.array = array;
     this.stride = stride;
     this.count = array !== undefined ? array.length / stride : 0;
@@ -49,7 +50,7 @@ export class InterleavedBuffer<T extends TypedArray = any> {
   }
 
   copy(source: InterleavedBuffer): this {
-    this.array = new (source.array.constructor() as TypedArrayConstructor)(source.array) as T;
+    this.array = new (source.array.constructor() as TypedArrayConstructor)(source.array) as TypedArray;
     this.count = source.count;
     this.stride = source.stride;
     this.usage = source.usage;

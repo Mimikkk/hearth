@@ -1,21 +1,21 @@
 import { Curve } from '../core/Curve.js';
 import { CubicBezier } from '../core/Interpolations.js';
-import { Vec2 } from '../../math/Vector2.js';
+import { Vector2 } from '../../math/Vector2.js';
 
-class CubicBezierCurve extends Curve<Vec2> {
+class CubicBezierCurve extends Curve<Vector2> {
   declare isCubicBezierCurve: true;
   declare type: 'CubicBezierCurve';
 
   constructor(
-    public v0: Vec2 = Vec2.new(),
-    public v1: Vec2 = Vec2.new(),
-    public v2: Vec2 = Vec2.new(),
-    public v3: Vec2 = Vec2.new(),
+    public v0: Vector2 = new Vector2(),
+    public v1: Vector2 = new Vector2(),
+    public v2: Vector2 = new Vector2(),
+    public v3: Vector2 = new Vector2(),
   ) {
     super();
   }
 
-  getPoint(t: number, optionalTarget: Vec2 = Vec2.new()): Vec2 {
+  getPoint(t: number, optionalTarget: Vector2 = new Vector2()): Vector2 {
     const point = optionalTarget;
     const { v0, v1, v2, v3 } = this;
 
@@ -27,10 +27,10 @@ class CubicBezierCurve extends Curve<Vec2> {
   copy(source: this): this {
     super.copy(source);
 
-    this.v0.from(source.v0);
-    this.v1.from(source.v1);
-    this.v2.from(source.v2);
-    this.v3.from(source.v3);
+    this.v0.copy(source.v0);
+    this.v1.copy(source.v1);
+    this.v2.copy(source.v2);
+    this.v3.copy(source.v3);
 
     return this;
   }

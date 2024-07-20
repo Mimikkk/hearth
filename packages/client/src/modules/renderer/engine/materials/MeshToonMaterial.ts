@@ -1,6 +1,6 @@
 import { NormalMapType } from '../constants.js';
 import { Material, MaterialParameters } from './Material.js';
-import { Vec2 } from '../math/Vector2.js';
+import { Vector2 } from '../math/Vector2.js';
 import { Color, ColorRepresentation } from '../math/Color.js';
 import { Texture } from '@modules/renderer/engine/textures/Texture.js';
 
@@ -20,7 +20,7 @@ export interface MeshToonMaterialParameters extends MaterialParameters {
   bumpScale?: number | undefined;
   normalMap?: Texture | null | undefined;
   normalMapType?: NormalMapType | undefined;
-  normalScale?: Vec2 | undefined;
+  normalScale?: Vector2 | undefined;
   displacementMap?: Texture | null | undefined;
   displacementScale?: number | undefined;
   displacementBias?: number | undefined;
@@ -50,7 +50,7 @@ export class MeshToonMaterial extends Material {
   bumpScale: number;
   normalMap: Texture | null;
   normalMapType: NormalMapType;
-  normalScale: Vec2;
+  normalScale: Vector2;
   displacementMap: Texture | null;
   displacementScale: number;
   displacementBias: number;
@@ -86,7 +86,7 @@ export class MeshToonMaterial extends Material {
 
     this.normalMap = null;
     this.normalMapType = NormalMapType.TangentSpace;
-    this.normalScale = Vec2.new(1, 1);
+    this.normalScale = new Vector2(1, 1);
 
     this.displacementMap = null;
     this.displacementScale = 1;

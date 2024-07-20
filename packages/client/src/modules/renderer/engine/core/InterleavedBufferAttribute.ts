@@ -7,16 +7,16 @@ import { Matrix, Matrix3 } from '@modules/renderer/engine/math/Matrix3.js';
 
 const _vector = new Vector3();
 
-export class InterleavedBufferAttribute<T extends TypedArray = any> {
-  declare ['constructor']: typeof InterleavedBufferAttribute<T>;
+export class InterleavedBufferAttribute {
+  declare ['constructor']: typeof InterleavedBufferAttribute;
   declare isInterleavedBufferAttribute: true;
   name: string;
-  data: InterleavedBuffer<T>;
+  data: InterleavedBuffer;
   itemSize: number;
   offset: number;
   normalized: boolean;
 
-  constructor(interleavedBuffer: InterleavedBuffer<T>, itemSize: number, offset: number, normalized: boolean = false) {
+  constructor(interleavedBuffer: InterleavedBuffer, itemSize: number, offset: number, normalized: boolean = false) {
     this.name = '';
     this.data = interleavedBuffer;
     this.itemSize = itemSize;
@@ -200,7 +200,7 @@ export class InterleavedBufferAttribute<T extends TypedArray = any> {
     return this;
   }
 
-  clone(data?: InterleavedBufferAttribute<T>): this {
+  clone(data?: InterleavedBufferAttribute): this {
     if (data === undefined) {
       console.error(
         'engine.InterleavedBufferAttribute.clone(): Cloning an interleaved buffer attribute will de-interleave buffer data.',

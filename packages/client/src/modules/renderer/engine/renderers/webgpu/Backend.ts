@@ -1,4 +1,13 @@
-import { BufferAttribute, CoordinateSystem, Object3D, RenderTarget, Scene, Texture, Vector3 } from '../../engine.js';
+import {
+  BufferAttribute,
+  CoordinateSystem,
+  Object3D,
+  RenderTarget,
+  Scene,
+  Texture,
+  Vector2,
+  Vector3,
+} from '../../engine.js';
 
 import {
   GPUFeatureNameType,
@@ -36,9 +45,10 @@ export class Backend {
     return geometry.isInstancedBufferGeometry ? geometry.instanceCount : object.isInstancedMesh ? object.count : 1;
   }
 
-  getDrawingBufferSize(): Vector3 {
-    const vec3 = new Vector3();
-    return this.renderer.getDrawingBufferSize(vec3);
+  getDrawingBufferSize() {
+    const vector2 = new Vector2();
+
+    return this.renderer.getDrawingBufferSize(vector2);
   }
 
   getClearColor() {

@@ -1,4 +1,4 @@
-import { Vec2 } from '../math/Vector2.js';
+import { Vec2, Vector2 } from '../math/Vector2.js';
 import { IVec3, Vector3 } from '../math/Vector3.js';
 import { Matrix4 } from '../math/Matrix4.js';
 import { Triangle } from '../math/Triangle.js';
@@ -9,7 +9,6 @@ import { InterleavedBufferAttribute } from '../core/InterleavedBufferAttribute.j
 import { SpriteMaterial } from '../materials/SpriteMaterial.js';
 import { Intersection, Raycaster } from '../core/Raycaster.js';
 import { PerspectiveCamera } from '../cameras/PerspectiveCamera.js';
-import { Uint16BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
 
 const _intersect = new Vector3();
 const _worldScale = new Vector3();
@@ -34,12 +33,8 @@ let _geometry: BufferGeometry;
 export class Sprite extends Object3D {
   declare isSprite: true;
   declare type: string | 'Sprite';
-  declare attributes: {
-    position: InterleavedBufferAttribute;
-    uv: InterleavedBufferAttribute;
-  };
 
-  center: Vec2;
+  center: Vector2;
   geometry: BufferGeometry;
   material: SpriteMaterial;
 
@@ -59,15 +54,15 @@ export class Sprite extends Object3D {
 
       const interleavedBuffer = new InterleavedBuffer(float32Array, 5);
 
-      _geometry.index = new Uint16BufferAttribute([0, 1, 2, 0, 2, 3], 1);
-      _geometry.attributes.position = new InterleavedBufferAttribute(interleavedBuffer, 3, 0, false);
-      _geometry.attributes.uv = new InterleavedBufferAttribute(interleavedBuffer, 2, 3, false);
+      _geometry.setIndex([0, 1, 2, 0, 2, 3]);
+      _geometry.setAttribute('position', new InterleavedBufferAttribute(interleavedBuffer, 3, 0, false));
+      _geometry.setAttribute('uv', new InterleavedBufferAttribute(interleavedBuffer, 2, 3, false));
     }
 
     this.geometry = _geometry;
     this.material = material;
 
-    this.center = Vec2.new(0.5, 0.5);
+    this.center = new Vector2(0.5, 0.5);
   }
 
   raycast(raycaster: Raycaster, intersects: Intersection[]): void {
@@ -136,7 +131,7 @@ export class Sprite extends Object3D {
     intersects.push({
       distance: distance,
       point: _intersect.clone(),
-      uv: Vec2.new(uv.x, uv.y),
+      uv: new Vector2(uv.x, uv.y),
       face: null,
       object: this,
     });
@@ -145,7 +140,7 @@ export class Sprite extends Object3D {
   copy(source: this, recursive?: boolean): this {
     super.copy(source, recursive);
 
-    if (source.center !== undefined) this.center.from(source.center);
+    if (source.center !== undefined) this.center.copy(source.center);
 
     this.material = source.material;
 

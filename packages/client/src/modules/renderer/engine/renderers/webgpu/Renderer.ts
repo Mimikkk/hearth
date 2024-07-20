@@ -20,13 +20,13 @@ import { Camera } from '@modules/renderer/engine/cameras/Camera.js';
 import ClippingContext from '@modules/renderer/engine/renderers/common/ClippingContext.js';
 import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
 import { Vector3 } from '@modules/renderer/engine/math/Vector3.js';
-import { Vec2 } from '@modules/renderer/engine/math/Vector2.js';
+import { Vector2 } from '@modules/renderer/engine/math/Vector2.js';
 import { Matrix4, Object3D, Plane } from '@modules/renderer/engine/engine.js';
 import { GPUFeatureNameType, GPUTextureFormatType } from '@modules/renderer/engine/renderers/webgpu/utils/constants.js';
 import { Frustum } from '@modules/renderer/engine/math/Frustum.js';
 
 const _scene = new Scene();
-const _drawingBufferSize = new Vector3();
+const _drawingBufferSize = new Vector2();
 const _screen = new Vector4();
 const _frustum = Frustum.empty();
 const _projScreenMatrix = new Matrix4();
@@ -352,7 +352,7 @@ export class Renderer {
 
     this.getDrawingBufferSize(_drawingBufferSize);
 
-    _screen.set(0, 0, _drawingBufferSize.x, _drawingBufferSize.y);
+    _screen.set(0, 0, _drawingBufferSize.width, _drawingBufferSize.height);
 
     const minDepth = viewport.minDepth === undefined ? 0 : viewport.minDepth;
     const maxDepth = viewport.maxDepth === undefined ? 1 : viewport.maxDepth;
@@ -499,8 +499,8 @@ export class Renderer {
     return target.set(this._width * this._pixelRatio, this._height * this._pixelRatio).floor();
   }
 
-  getSize(into: Vec2 = Vec2.new()) {
-    return into.set(this._width, this._height);
+  getSize(target: Vector2) {
+    return target.set(this._width, this._height);
   }
 
   setPixelRatio(value: number = 1) {

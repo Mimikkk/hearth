@@ -10,7 +10,6 @@ import { HDRCubeTextureLoader } from '@modules/renderer/engine/loaders/textures/
 import { createFlakesCanvas } from '@modules/renderer/engine/textures/createFlakesCanvas.js';
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import { Vec2 } from '@modules/renderer/engine/math/Vector2.js';
 
 let container, stats;
 
@@ -84,7 +83,7 @@ async function init() {
         roughness: 0.5,
         color: 0x0000ff,
         normalMap: normalMap3,
-        normalScale: Vec2.new(0.15, 0.15),
+        normalScale: new Engine.Vector2(0.15, 0.15),
       });
       let mesh = new Engine.Mesh(geometry, material);
       mesh.position.x = -1;
@@ -115,7 +114,7 @@ async function init() {
         clearcoatNormalMap: clearcoatNormalMap,
 
         // y scale is negated to compensate for normal map handedness.
-        clearcoatNormalScale: Vec2.new(2.0, -2.0),
+        clearcoatNormalScale: new Engine.Vector2(2.0, -2.0),
       });
       mesh = new Engine.Mesh(geometry, material);
       mesh.position.x = -1;
@@ -129,11 +128,11 @@ async function init() {
         metalness: 1.0,
         color: 0xff0000,
         normalMap: normalMap2,
-        normalScale: Vec2.new(0.15, 0.15),
+        normalScale: new Engine.Vector2(0.15, 0.15),
         clearcoatNormalMap: clearcoatNormalMap,
 
         // y scale is negated to compensate for normal map handedness.
-        clearcoatNormalScale: Vec2.new(2.0, -2.0),
+        clearcoatNormalScale: new Engine.Vector2(2.0, -2.0),
       });
       mesh = new Engine.Mesh(geometry, material);
       mesh.position.x = 1;

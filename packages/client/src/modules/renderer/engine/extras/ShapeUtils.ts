@@ -1,8 +1,8 @@
 import { triangulate } from './Earcut.js';
-import { Vec2 } from '../math/Vector2.js';
+import type { Vector2 } from '../math/Vector2.js';
 
 export class ShapeUtils {
-  static area(contour: Vec2[]): number {
+  static area(contour: Vector2[]): number {
     const n = contour.length;
     let a = 0.0;
 
@@ -13,11 +13,11 @@ export class ShapeUtils {
     return a * 0.5;
   }
 
-  static isClockWise(pts: Vec2[]): boolean {
+  static isClockWise(pts: Vector2[]): boolean {
     return ShapeUtils.area(pts) < 0;
   }
 
-  static triangulateShape(contour: Vec2[], holes: Vec2[][]): [number, number, number][] {
+  static triangulateShape(contour: Vector2[], holes: Vector2[][]): [number, number, number][] {
     const vertices: number[] = [];
     const holeIndices: number[] = [];
     const faces: [number, number, number][] = [];
@@ -44,7 +44,7 @@ export class ShapeUtils {
   }
 }
 
-function removeDuplicateEndPoints(points: Vec2[]) {
+function removeDuplicateEndPoints(points: Vector2[]) {
   const l = points.length;
 
   if (l > 2 && points[l - 1].equals(points[0])) {
@@ -52,7 +52,7 @@ function removeDuplicateEndPoints(points: Vec2[]) {
   }
 }
 
-function addContour(vertices: number[], contour: Vec2[]): void {
+function addContour(vertices: number[], contour: Vector2[]): void {
   for (let i = 0; i < contour.length; i++) {
     vertices.push(contour[i].x, contour[i].y);
   }

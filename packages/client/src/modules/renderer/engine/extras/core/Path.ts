@@ -1,4 +1,4 @@
-import { Vec2 } from '../../math/Vector2.js';
+import { Vector2 } from '../../math/Vector2.js';
 import { CurvePath } from './CurvePath.js';
 import { EllipseCurve } from '../curves/EllipseCurve.js';
 import { SplineCurve } from '../curves/SplineCurve.js';
@@ -6,20 +6,20 @@ import { CubicBezierCurve } from '../curves/CubicBezierCurve.js';
 import { QuadraticBezierCurve } from '../curves/QuadraticBezierCurve.js';
 import { LineCurve } from '../curves/LineCurve.js';
 
-export class Path extends CurvePath<Vec2> {
+export class Path extends CurvePath<Vector2> {
   declare type: string | 'Path';
-  currentPoint: Vec2;
+  currentPoint: Vector2;
 
-  constructor(points?: Vec2[]) {
+  constructor(points?: Vector2[]) {
     super();
 
     this.type = 'Path';
 
-    this.currentPoint = Vec2.new();
+    this.currentPoint = new Vector2();
     if (points) this.setFromPoints(points);
   }
 
-  setFromPoints(points: Vec2[]) {
+  setFromPoints(points: Vector2[]) {
     this.moveTo(points[0].x, points[0].y);
 
     for (let i = 1, l = points.length; i < l; i++) {
@@ -36,7 +36,7 @@ export class Path extends CurvePath<Vec2> {
   }
 
   lineTo(x: number, y: number): this {
-    const curve = new LineCurve(Vec2.clone(this.currentPoint), Vec2.new(x, y));
+    const curve = new LineCurve(this.currentPoint.clone(), new Vector2(x, y));
     this.curves.push(curve);
 
     this.currentPoint.set(x, y);
@@ -45,7 +45,7 @@ export class Path extends CurvePath<Vec2> {
   }
 
   quadraticCurveTo(aCPx: number, aCPy: number, aX: number, aY: number): this {
-    const curve = new QuadraticBezierCurve(Vec2.from(this.currentPoint), Vec2.new(aCPx, aCPy), Vec2.new(aX, aY));
+    const curve = new QuadraticBezierCurve(this.currentPoint.clone(), new Vector2(aCPx, aCPy), new Vector2(aX, aY));
 
     this.curves.push(curve);
 
@@ -56,10 +56,10 @@ export class Path extends CurvePath<Vec2> {
 
   bezierCurveTo(aCP1x: number, aCP1y: number, aCP2x: number, aCP2y: number, aX: number, aY: number): this {
     const curve = new CubicBezierCurve(
-      Vec2.clone(this.currentPoint),
-      Vec2.new(aCP1x, aCP1y),
-      Vec2.new(aCP2x, aCP2y),
-      Vec2.new(aX, aY),
+      this.currentPoint.clone(),
+      new Vector2(aCP1x, aCP1y),
+      new Vector2(aCP2x, aCP2y),
+      new Vector2(aX, aY),
     );
 
     this.curves.push(curve);
@@ -69,13 +69,13 @@ export class Path extends CurvePath<Vec2> {
     return this;
   }
 
-  splineThru(pts: Vec2[]): this {
-    const npts = [Vec2.clone(this.currentPoint)].concat(pts);
+  splineThru(pts: Vector2[]): this {
+    const npts = [this.currentPoint.clone()].concat(pts);
 
     const curve = new SplineCurve(npts);
     this.curves.push(curve);
 
-    pts[pts.length - 1].from(this.currentPoint);
+    this.currentPoint.copy(pts[pts.length - 1]);
 
     return this;
   }
@@ -124,7 +124,7 @@ export class Path extends CurvePath<Vec2> {
 
     if (this.curves.length > 0) {
       // if a previous curve is present, attempt to join
-      const firstPoint = curve.getPoint(0, Vec2.new());
+      const firstPoint = curve.getPoint(0, new Vector2());
 
       if (!firstPoint.equals(this.currentPoint)) {
         this.lineTo(firstPoint.x, firstPoint.y);
@@ -133,8 +133,8 @@ export class Path extends CurvePath<Vec2> {
 
     this.curves.push(curve);
 
-    const lastPoint = curve.getPoint(1, Vec2.new());
-    lastPoint.from(this.currentPoint);
+    const lastPoint = curve.getPoint(1, new Vector2());
+    this.currentPoint.copy(lastPoint);
 
     return this;
   }
@@ -142,7 +142,7 @@ export class Path extends CurvePath<Vec2> {
   copy(source: this): this {
     super.copy(source);
 
-    this.currentPoint.from(source.currentPoint);
+    this.currentPoint.copy(source.currentPoint);
 
     return this;
   }

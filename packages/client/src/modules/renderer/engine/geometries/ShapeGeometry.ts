@@ -2,7 +2,7 @@ import { BufferGeometry } from '../core/BufferGeometry.js';
 import { Float32BufferAttribute } from '../core/BufferAttribute.js';
 import { Shape } from '../extras/core/Shape.js';
 import { ShapeUtils } from '../extras/ShapeUtils.js';
-import { Vec2 } from '../math/Vector2.js';
+import { Vector2 } from '../math/Vector2.js';
 
 export class ShapeGeometry extends BufferGeometry {
   declare type: string | 'ShapeGeometry';
@@ -12,7 +12,7 @@ export class ShapeGeometry extends BufferGeometry {
   };
 
   constructor(
-    shapes: Shape | Shape[] = new Shape([Vec2.new(0, 0.5), Vec2.new(-0.5, -0.5), Vec2.new(0.5, -0.5)]),
+    shapes: Shape | Shape[] = new Shape([new Vector2(0, 0.5), new Vector2(-0.5, -0.5), new Vector2(0.5, -0.5)]),
     curveSegments: number = 12,
   ) {
     super();

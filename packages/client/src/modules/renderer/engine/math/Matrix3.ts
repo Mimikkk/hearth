@@ -1,6 +1,6 @@
 import { Matrix4 } from './Matrix4.js';
 import { Vector3 } from './Vector3.js';
-import { Vec2 } from './Vector2.js';
+import { Vector2 } from './Vector2.js';
 
 export interface Matrix {
   elements: number[];
@@ -311,8 +311,8 @@ export class Matrix3 implements Matrix {
     return this;
   }
 
-  makeTranslation(x: number | Vec2, y?: number): this {
-    if (Vec2.is(x)) {
+  makeTranslation(x: number | Vector2, y?: number): this {
+    if (x instanceof Vector2) {
       this.set(1, 0, x.x, 0, 1, x.y, 0, 0, 1);
     } else {
       this.set(1, 0, x, 0, 1, y!, 0, 0, 1);

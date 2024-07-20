@@ -22,14 +22,21 @@
 
 import { BufferGeometry } from '../core/BufferGeometry.js';
 import { Float32BufferAttribute } from '../core/BufferAttribute.js';
-import { Vec2 } from '../math/Vector2.js';
+import * as Curves from '../extras/curves/Curves.js';
+import { Vector2 } from '../math/Vector2.js';
 import { Vector3 } from '../math/Vector3.js';
 import { Shape } from '../extras/core/Shape.js';
 import { ShapeUtils } from '../extras/ShapeUtils.js';
 import { Curve } from '@modules/renderer/engine/extras/core/Curve.js';
 
 export interface UVGenerator {
-  generateTopUV(geometry: ExtrudeGeometry, vertices: number[], indexA: number, indexB: number, indexC: number): Vec2[];
+  generateTopUV(
+    geometry: ExtrudeGeometry,
+    vertices: number[],
+    indexA: number,
+    indexB: number,
+    indexC: number,
+  ): Vector2[];
 
   generateSideWallUV(
     geometry: ExtrudeGeometry,
@@ -38,7 +45,7 @@ export interface UVGenerator {
     indexB: number,
     indexC: number,
     indexD: number,
-  ): Vec2[];
+  ): Vector2[];
 }
 
 export interface ExtrudeGeometryOptions {
@@ -63,10 +70,10 @@ export class ExtrudeGeometry extends BufferGeometry {
 
   constructor(
     shapes: Shape | Shape[] = new Shape([
-      Vec2.new(0.5, 0.5),
-      Vec2.new(-0.5, 0.5),
-      Vec2.new(-0.5, -0.5),
-      Vec2.new(0.5, -0.5),
+      new Vector2(0.5, 0.5),
+      new Vector2(-0.5, 0.5),
+      new Vector2(-0.5, -0.5),
+      new Vector2(0.5, -0.5),
     ]),
     options: ExtrudeGeometryOptions = {},
   ) {
@@ -186,10 +193,10 @@ export class ExtrudeGeometry extends BufferGeometry {
         vertices = vertices.concat(ahole);
       }
 
-      function scalePt2(pt: Vec2, vec: Vec2, size: number): Vec2 {
+      function scalePt2(pt: Vector2, vec: Vector2, size: number): Vector2 {
         if (!vec) console.error('engine.ExtrudeGeometry: vec does not exist');
 
-        return Vec2.from(pt).addScaled(vec, size);
+        return pt.clone().addScaledVector(vec, size);
       }
 
       const vlen = vertices.length,
@@ -197,7 +204,7 @@ export class ExtrudeGeometry extends BufferGeometry {
 
       // Find directions for point movement
 
-      function getBevelVec(inPt: Vec2, inPrev: Vec2, inNext: Vec2): Vec2 {
+      function getBevelVec(inPt: Vector2, inPrev: Vector2, inNext: Vector2): Vector2 {
         // computes for inPt the corresponding point inPt' on a new contour
         //   shifted by 1 unit (length of normalized vector) to the left
         // if we walk along contour clockwise, this new contour is outside the old one
@@ -251,7 +258,7 @@ export class ExtrudeGeometry extends BufferGeometry {
           //  but prevent crazy spikes
           const v_trans_lensq = v_trans_x * v_trans_x + v_trans_y * v_trans_y;
           if (v_trans_lensq <= 2) {
-            return Vec2.new(v_trans_x, v_trans_y);
+            return new Vector2(v_trans_x, v_trans_y);
           } else {
             shrink_by = Math.sqrt(v_trans_lensq / 2);
           }
@@ -287,7 +294,7 @@ export class ExtrudeGeometry extends BufferGeometry {
           }
         }
 
-        return Vec2.new(v_trans_x / shrink_by, v_trans_y / shrink_by);
+        return new Vector2(v_trans_x / shrink_by, v_trans_y / shrink_by);
       }
 
       const contourMovements = [];
@@ -502,7 +509,7 @@ export class ExtrudeGeometry extends BufferGeometry {
         scope.addGroup(start, verticesArray.length / 3 - start, 1);
       }
 
-      function sidewalls(contour: Vec2[], layeroffset: number) {
+      function sidewalls(contour: Vector2[], layeroffset: number) {
         let i = contour.length;
 
         while (--i >= 0) {
@@ -577,9 +584,9 @@ export class ExtrudeGeometry extends BufferGeometry {
         verticesArray.push(placeholder[index * 3 + 2]);
       }
 
-      function addUV(vec: Vec2) {
-        uvArray.push(vec.x);
-        uvArray.push(vec.y);
+      function addUV(vector2: Vector2) {
+        uvArray.push(vector2.x);
+        uvArray.push(vector2.y);
       }
     }
   }
@@ -602,7 +609,7 @@ const WorldUVGenerator: UVGenerator = {
     const c_x = vertices[indexC * 3];
     const c_y = vertices[indexC * 3 + 1];
 
-    return [Vec2.new(a_x, a_y), Vec2.new(b_x, b_y), Vec2.new(c_x, c_y)];
+    return [new Vector2(a_x, a_y), new Vector2(b_x, b_y), new Vector2(c_x, c_y)];
   },
 
   generateSideWallUV(geometry, vertices, indexA, indexB, indexC, indexD) {
@@ -620,9 +627,19 @@ const WorldUVGenerator: UVGenerator = {
     const d_z = vertices[indexD * 3 + 2];
 
     if (Math.abs(a_y - b_y) < Math.abs(a_x - b_x)) {
-      return [Vec2.new(a_x, 1 - a_z), Vec2.new(b_x, 1 - b_z), Vec2.new(c_x, 1 - c_z), Vec2.new(d_x, 1 - d_z)];
+      return [
+        new Vector2(a_x, 1 - a_z),
+        new Vector2(b_x, 1 - b_z),
+        new Vector2(c_x, 1 - c_z),
+        new Vector2(d_x, 1 - d_z),
+      ];
     } else {
-      return [Vec2.new(a_y, 1 - a_z), Vec2.new(b_y, 1 - b_z), Vec2.new(c_y, 1 - c_z), Vec2.new(d_y, 1 - d_z)];
+      return [
+        new Vector2(a_y, 1 - a_z),
+        new Vector2(b_y, 1 - b_z),
+        new Vector2(c_y, 1 - c_z),
+        new Vector2(d_y, 1 - d_z),
+      ];
     }
   },
 };

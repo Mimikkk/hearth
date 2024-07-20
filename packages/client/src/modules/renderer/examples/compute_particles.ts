@@ -20,7 +20,6 @@ import Stats from 'stats-js';
 import { GUI } from 'lil-gui';
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import { Vec2 } from '@modules/renderer/engine/math/Vector2.js';
 
 const particleCount = 1000000;
 
@@ -135,7 +134,7 @@ async function init() {
   scene.add(plane);
 
   const raycaster = new Engine.Raycaster();
-  const pointer = Vec2.new();
+  const pointer = new Engine.Vector2();
 
   //
 

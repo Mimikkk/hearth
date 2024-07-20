@@ -11,7 +11,7 @@ import {
   TextureFormat,
   Wrapping,
 } from '../constants.js';
-import { Vec2 } from '../math/Vector2.js';
+import { Vector2 } from '../math/Vector2.js';
 import { Matrix3 } from '../math/Matrix3.js';
 import { v4 } from 'uuid';
 
@@ -37,9 +37,9 @@ export class Texture<T = any> {
   format: TextureFormat | CompressedTextureFormat;
   internalFormat: PixelFormat | null;
   type: TextureDataType;
-  offset: Vec2;
-  repeat: Vec2;
-  center: Vec2;
+  offset: Vector2;
+  repeat: Vector2;
+  center: Vector2;
   rotation: number;
   matrixAutoUpdate: boolean;
   matrix: Matrix3;
@@ -123,9 +123,9 @@ export class Texture<T = any> {
     this.format = source.format;
     this.internalFormat = source.internalFormat;
     this.type = source.type;
-    this.offset.from(source.offset);
-    this.repeat.from(source.repeat);
-    this.center.from(source.center);
+    this.offset.copy(source.offset);
+    this.repeat.copy(source.repeat);
+    this.center.copy(source.center);
     this.rotation = source.rotation;
     this.matrixAutoUpdate = source.matrixAutoUpdate;
     this.matrix.copy(source.matrix);
@@ -143,10 +143,10 @@ export class Texture<T = any> {
     this.eventDispatcher.dispatch({ type: 'dispose' }, this);
   }
 
-  transformUv(uv: Vec2): Vec2 {
+  transformUv(uv: Vector2): Vector2 {
     if (this.mapping !== Mapping.UV) return uv;
 
-    uv.applyMat3(this.matrix);
+    uv.applyMatrix3(this.matrix);
 
     if (uv.x < 0 || uv.x > 1) {
       switch (this.wrapS) {
@@ -248,9 +248,9 @@ export class Texture<T = any> {
       format: options?.format ?? TextureFormat.RGBA,
       internalFormat: options?.internalFormat ?? null,
       type: options?.type ?? TextureDataType.UnsignedByte,
-      offset: options?.offset ?? Vec2.new(0, 0),
-      repeat: options?.repeat ?? Vec2.new(1, 1),
-      center: options?.center ?? Vec2.new(0, 0),
+      offset: options?.offset ?? new Vector2(0, 0),
+      repeat: options?.repeat ?? new Vector2(1, 1),
+      center: options?.center ?? new Vector2(0, 0),
       rotation: options?.rotation ?? 0,
       matrixAutoUpdate: options?.matrixAutoUpdate ?? true,
       matrix: options?.matrix ?? new Matrix3(),
@@ -284,9 +284,9 @@ export namespace Texture {
     format?: TextureFormat | CompressedTextureFormat;
     internalFormat?: PixelFormat | null;
     type?: TextureDataType;
-    offset?: Vec2;
-    repeat?: Vec2;
-    center?: Vec2;
+    offset?: Vector2;
+    repeat?: Vector2;
+    center?: Vector2;
     rotation?: number;
     matrixAutoUpdate?: boolean;
     matrix?: Matrix3;
@@ -315,9 +315,9 @@ export namespace Texture {
     format: TextureFormat | CompressedTextureFormat;
     internalFormat: PixelFormat | null;
     type: TextureDataType;
-    offset: Vec2;
-    repeat: Vec2;
-    center: Vec2;
+    offset: Vector2;
+    repeat: Vector2;
+    center: Vector2;
     rotation: number;
     matrixAutoUpdate: boolean;
     matrix: Matrix3;

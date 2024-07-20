@@ -4,7 +4,6 @@ import { texture, textureStore, wgslFn, code, instanceIndex, uniform } from '@mo
 import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 import StorageTexture from '@modules/renderer/engine/renderers/common/StorageTexture.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import { Vec2 } from '@modules/renderer/engine/math/Vector2.js';
 
 let camera, scene, renderer;
 let computeInitNode, computeToPing, computeToPong;
@@ -13,7 +12,7 @@ let material;
 let phase = true;
 let lastUpdate = -1;
 
-const seed = uniform(Vec2.new());
+const seed = uniform(new Engine.Vector2());
 
 await init();
 render();

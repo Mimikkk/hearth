@@ -28,7 +28,6 @@ import PostProcessing from '@modules/renderer/engine/renderers/common/PostProces
 import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 import { WorldAxesVisualizer } from '@modules/renderer/engine/helpers/WorldAxesVisualizer.js';
-import { Vec2 } from '@modules/renderer/engine/math/Vector2.js';
 
 const maxParticleCount = 100000;
 
@@ -277,10 +276,10 @@ async function init() {
 
   const teapotTreePass = pass(teapotTree, camera).getTextureNode();
   const teapotTreePassBlurred = teapotTreePass.gaussianBlur(3);
-  teapotTreePassBlurred.resolution = Vec2.new(0.2, 0.2);
+  teapotTreePassBlurred.resolution = new Engine.Vector2(0.2, 0.2);
 
   const scenePassColorBlurred = scenePassColor.gaussianBlur();
-  scenePassColorBlurred.resolution = Vec2.new(0.5, 0.5);
+  scenePassColorBlurred.resolution = new Engine.Vector2(0.5, 0.5);
   scenePassColorBlurred.directionNode = vec2(1);
 
   // compose

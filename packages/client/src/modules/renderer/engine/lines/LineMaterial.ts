@@ -1,7 +1,6 @@
-import { Color } from '../engine.js';
+import { Color, Vector2 } from '../engine.js';
 import { Material, MaterialParameters } from '@modules/renderer/engine/materials/Material.js';
 import { ColorRepresentation } from '@modules/renderer/engine/math/Color.js';
-import { Vec2 } from '@modules/renderer/engine/math/Vector2.js';
 
 export interface LineMaterialParameters extends MaterialParameters {
   alphaToCoverage?: boolean | undefined;
@@ -12,7 +11,7 @@ export interface LineMaterialParameters extends MaterialParameters {
   dashOffset?: number | undefined;
   gapSize?: number | undefined;
   linewidth?: number | undefined;
-  resolution?: Vec2 | undefined;
+  resolution?: Vector2 | undefined;
   wireframe?: boolean | undefined;
   worldUnits?: boolean | undefined;
 }
@@ -110,12 +109,12 @@ export class LineMaterial extends Material {
     this.uniforms.opacity.value = value;
   }
 
-  get resolution(): Vec2 {
+  get resolution(): Vector2 {
     return this.uniforms.resolution.value;
   }
 
-  set resolution(value: Vec2) {
-    this.uniforms.resolution.value.from(value);
+  set resolution(value: Vector2) {
+    this.uniforms.resolution.value.copy(value);
   }
 
   get alphaToCoverage(): boolean {

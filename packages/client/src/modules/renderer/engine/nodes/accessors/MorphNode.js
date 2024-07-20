@@ -7,9 +7,8 @@ import { positionLocal } from './PositionNode.js';
 import { normalLocal } from './NormalNode.js';
 import { textureLoad } from './TextureNode.js';
 import { vertexIndex } from '../core/IndexNode.js';
-import { DataArrayTexture, TextureDataType, Vector4 } from '@modules/renderer/engine/engine.js';
+import { DataArrayTexture, TextureDataType, Vector2, Vector4 } from '@modules/renderer/engine/engine.js';
 import { loop } from '../utils/LoopNode.js';
-import { Vec2 } from '@modules/renderer/engine/math/Vector2.ts';
 
 const morphTextures = new WeakMap();
 const morphVec4 = new Vector4();
@@ -115,7 +114,7 @@ function getEntry(geometry) {
       count: morphTargetsCount,
       texture: bufferTexture,
       stride: vertexDataCount,
-      size: Vec2.new(width, height),
+      size: new Vector2(width, height),
     };
 
     morphTextures.set(geometry, entry);

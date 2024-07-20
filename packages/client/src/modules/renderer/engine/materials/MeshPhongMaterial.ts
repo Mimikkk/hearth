@@ -1,6 +1,6 @@
 import { NormalMapType, Operation } from '../constants.js';
 import { Material, MaterialParameters } from './Material.js';
-import { Vec2 } from '../math/Vector2.js';
+import { Vector2 } from '../math/Vector2.js';
 import { Color, ColorRepresentation } from '../math/Color.js';
 import { Euler } from '../math/Euler.js';
 import { Texture } from '../textures/Texture.js';
@@ -23,7 +23,7 @@ export interface MeshPhongMaterialParameters extends MaterialParameters {
   bumpScale?: number | undefined;
   normalMap?: Texture | null | undefined;
   normalMapType?: NormalMapType | undefined;
-  normalScale?: Vec2 | undefined;
+  normalScale?: Vector2 | undefined;
   displacementMap?: Texture | null | undefined;
   displacementScale?: number | undefined;
   displacementBias?: number | undefined;
@@ -60,7 +60,7 @@ export class MeshPhongMaterial extends Material {
   bumpScale: number;
   normalMap: Texture | null;
   normalMapType: NormalMapType;
-  normalScale: Vec2;
+  normalScale: Vector2;
   displacementMap: Texture | null;
   displacementScale: number;
   displacementBias: number;
@@ -102,7 +102,7 @@ export class MeshPhongMaterial extends Material {
 
     this.normalMap = null;
     this.normalMapType = NormalMapType.TangentSpace;
-    this.normalScale = Vec2.new(1, 1);
+    this.normalScale = new Vector2(1, 1);
 
     this.displacementMap = null;
     this.displacementScale = 1;

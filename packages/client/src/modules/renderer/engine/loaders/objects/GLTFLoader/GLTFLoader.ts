@@ -44,6 +44,7 @@ import {
   Sphere,
   SpotLight,
   Texture,
+  Vector2,
   Vector3,
   VectorKeyframeTrack,
   Wrapping,
@@ -57,7 +58,6 @@ import { DRACOLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader
 import { Quaternion } from '@modules/renderer/engine/math/Quaternion.js';
 import { MeshoptDecoder } from 'meshoptimizer';
 import { classLoader } from '@modules/renderer/engine/loaders/types.js';
-import { Vec2 } from '@modules/renderer/engine/math/Vector2.js';
 
 export type PluginFn = (parser: Parser) => Plugin;
 
@@ -525,7 +525,7 @@ class GLTFMaterialsClearcoatExtension implements Plugin {
       if (extension.clearcoatNormalTexture.scale !== undefined) {
         const scale = extension.clearcoatNormalTexture.scale;
 
-        materialParams.clearcoatNormalScale = Vec2.new(scale, scale);
+        materialParams.clearcoatNormalScale = new Vector2(scale, scale);
       }
     }
 
@@ -2728,7 +2728,7 @@ class Parser {
     if (materialDef.normalTexture !== undefined && materialType !== MeshBasicMaterial) {
       pending.push(parser.assignTexture(materialParams, 'normalMap', materialDef.normalTexture));
 
-      materialParams.normalScale = Vec2.new(1, 1);
+      materialParams.normalScale = new Vector2(1, 1);
 
       if (materialDef.normalTexture.scale !== undefined) {
         const scale = materialDef.normalTexture.scale;

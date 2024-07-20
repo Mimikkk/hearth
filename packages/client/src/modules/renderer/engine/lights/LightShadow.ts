@@ -1,5 +1,5 @@
 import { Matrix4 } from '../math/Matrix4.js';
-import { Vec2 } from '../math/Vector2.js';
+import { Vector2 } from '../math/Vector2.js';
 import { Vector3 } from '../math/Vector3.js';
 import { Vector4 } from '../math/Vector4.js';
 import { Frustum } from '../math/Frustum.js';
@@ -17,14 +17,14 @@ export class LightShadow<C extends Camera = Camera> {
   normalBias: number;
   radius: number;
   blurSamples: number;
-  mapSize: Vec2;
+  mapSize: Vector2;
   map: RenderTarget | null;
   mapPass: RenderTarget | null;
   matrix: Matrix4;
   autoUpdate: boolean;
   needsUpdate: boolean;
   _frustum: Frustum;
-  _frameExtents: Vec2;
+  _frameExtents: Vector2;
   _viewportCount: number;
   _viewports: Vector4[];
 
@@ -34,7 +34,7 @@ export class LightShadow<C extends Camera = Camera> {
     this.radius = 1;
     this.blurSamples = 8;
 
-    this.mapSize = Vec2.new(512, 512);
+    this.mapSize = new Vector2(512, 512);
 
     this.map = null;
     this.mapPass = null;
@@ -44,7 +44,7 @@ export class LightShadow<C extends Camera = Camera> {
     this.needsUpdate = false;
 
     this._frustum = Frustum.empty();
-    this._frameExtents = Vec2.new(1, 1);
+    this._frameExtents = new Vector2(1, 1);
 
     this._viewportCount = 1;
 
@@ -103,7 +103,7 @@ export class LightShadow<C extends Camera = Camera> {
     this.bias = source.bias;
     this.radius = source.radius;
 
-    this.mapSize.from(source.mapSize);
+    this.mapSize.copy(source.mapSize);
 
     return this;
   }

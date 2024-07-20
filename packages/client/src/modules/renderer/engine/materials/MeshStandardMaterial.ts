@@ -1,6 +1,6 @@
 import { NormalMapType } from '../constants.js';
 import { Material, MaterialParameters } from './Material.js';
-import { Vec2 } from '../math/Vector2.js';
+import { Vector2 } from '../math/Vector2.js';
 import { Color, ColorRepresentation } from '../math/Color.js';
 import { Euler } from '../math/Euler.js';
 import { Texture } from '@modules/renderer/engine/textures/Texture.js';
@@ -21,7 +21,7 @@ export interface MeshStandardMaterialParameters extends MaterialParameters {
   bumpScale?: number | undefined;
   normalMap?: Texture | null | undefined;
   normalMapType?: NormalMapType | undefined;
-  normalScale?: Vec2 | undefined;
+  normalScale?: Vector2 | undefined;
   displacementMap?: Texture | null | undefined;
   displacementScale?: number | undefined;
   displacementBias?: number | undefined;
@@ -55,7 +55,7 @@ export class MeshStandardMaterial extends Material {
   bumpScale: number;
   normalMap: Texture | null;
   normalMapType: NormalMapType;
-  normalScale: Vec2;
+  normalScale: Vector2;
   displacementMap: Texture | null;
   displacementScale: number;
   displacementBias: number;
@@ -103,7 +103,7 @@ export class MeshStandardMaterial extends Material {
 
     this.normalMap = null;
     this.normalMapType = NormalMapType.TangentSpace;
-    this.normalScale = Vec2.new(1, 1);
+    this.normalScale = new Vector2(1, 1);
 
     this.displacementMap = null;
     this.displacementScale = 1;
@@ -131,7 +131,7 @@ export class MeshStandardMaterial extends Material {
     this.setValues(parameters);
   }
 
-  setValues(values?: MeshStandardMaterialParameters): void {
+  setValues(values: MeshStandardMaterialParameters): void {
     super.setValues(values);
   }
 
@@ -161,7 +161,7 @@ export class MeshStandardMaterial extends Material {
 
     this.normalMap = source.normalMap;
     this.normalMapType = source.normalMapType;
-    this.normalScale.from(source.normalScale);
+    this.normalScale.copy(source.normalScale);
 
     this.displacementMap = source.displacementMap;
     this.displacementScale = source.displacementScale;

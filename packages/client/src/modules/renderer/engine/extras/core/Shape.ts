@@ -1,12 +1,13 @@
 import { Path } from './Path.js';
-import { Vec2 } from '../../math/Vector2.js';
+import * as MathUtils from '../../math/MathUtils.js';
+import type { Vector2 } from '../../math/Vector2.js';
 import { v4 } from 'uuid';
 
 export class Shape extends Path {
   uuid: string;
   holes: Path[];
 
-  constructor(points?: Vec2[]) {
+  constructor(points?: Vector2[]) {
     super(points);
 
     this.uuid = v4();
