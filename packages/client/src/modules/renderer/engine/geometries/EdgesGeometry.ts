@@ -50,7 +50,7 @@ export class EdgesGeometry extends BufferGeometry {
         a.fromAttribute(positionAttr, indexArr[0]);
         b.fromAttribute(positionAttr, indexArr[1]);
         c.fromAttribute(positionAttr, indexArr[2]);
-        _triangle.getNormal(_normal);
+        _triangle.normal(_normal);
 
         // create hashes for the edge from the vertices
         hashes[0] = `${Math.round(a.x * precision)},${Math.round(a.y * precision)},${Math.round(a.z * precision)}`;

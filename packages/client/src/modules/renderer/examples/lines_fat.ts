@@ -43,7 +43,7 @@ async function init() {
   camera.position.set(-40, 0, 60);
 
   camera2 = new Engine.PerspectiveCamera(40, 1, 1, 1000);
-  camera2.position.copy(camera.position);
+  camera2.position.from(camera.position);
 
   controls = new OrbitControls(camera, renderer.parameters.canvas);
   controls.enableDamping = true;
@@ -151,8 +151,8 @@ function animate() {
 
   renderer.setViewport(20, 20, insetWidth, insetHeight);
 
-  camera2.position.copy(camera.position);
-  camera2.quaternion.copy(camera.quaternion);
+  camera2.position.from(camera.position);
+  camera2.quaternion.from(camera.quaternion);
 
   renderer.parameters.autoClear = false;
 

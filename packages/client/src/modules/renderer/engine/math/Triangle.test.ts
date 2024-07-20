@@ -185,25 +185,25 @@ describe('Math - Triangle', () => {
     let a = Triangle.empty();
     const midpoint = Vec3.empty();
 
-    expect(a.containsVec(a.a)).toBe(false);
-    expect(a.containsVec(a.b)).toBe(false);
-    expect(a.containsVec(a.c)).toBe(false);
+    expect(a.contains(a.a)).toBe(false);
+    expect(a.contains(a.b)).toBe(false);
+    expect(a.contains(a.c)).toBe(false);
 
     a = Triangle.new(Vec3.new(0, 0, 0), Vec3.new(1, 0, 0), Vec3.new(0, 1, 0));
     a.midpoint(midpoint);
-    expect(a.containsVec(a.a)).toBe(true);
-    expect(a.containsVec(a.b)).toBe(true);
-    expect(a.containsVec(a.c)).toBe(true);
-    expect(a.containsVec(midpoint)).toBe(true);
-    expect(a.containsVec(Vec3.new(-1, -1, -1))).toBe(false);
+    expect(a.contains(a.a)).toBe(true);
+    expect(a.contains(a.b)).toBe(true);
+    expect(a.contains(a.c)).toBe(true);
+    expect(a.contains(midpoint)).toBe(true);
+    expect(a.contains(Vec3.new(-1, -1, -1))).toBe(false);
 
     a = Triangle.new(Vec3.new(2, 0, 0), Vec3.new(0, 0, 0), Vec3.new(0, 0, 2));
     a.midpoint(midpoint);
-    expect(a.containsVec(a.a)).toBe(true);
-    expect(a.containsVec(a.b)).toBe(true);
-    expect(a.containsVec(a.c)).toBe(true);
-    expect(a.containsVec(midpoint)).toBe(true);
-    expect(a.containsVec(Vec3.new(-1, -1, -1))).toBe(false);
+    expect(a.contains(a.a)).toBe(true);
+    expect(a.contains(a.b)).toBe(true);
+    expect(a.contains(a.c)).toBe(true);
+    expect(a.contains(midpoint)).toBe(true);
+    expect(a.contains(Vec3.new(-1, -1, -1))).toBe(false);
   });
 
   it('intersectsBox', () => {

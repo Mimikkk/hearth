@@ -785,9 +785,9 @@ export class Face {
 
     _triangle.set(a.point, b.point, c.point);
 
-    _triangle.getNormal(this.normal);
-    _triangle.getMidpoint(this.midpoint);
-    this.area = _triangle.getArea();
+    _triangle.normal(this.normal);
+    _triangle.midpoint(this.midpoint);
+    this.area = _triangle.area();
 
     this.constant = this.normal.dot(this.midpoint);
 

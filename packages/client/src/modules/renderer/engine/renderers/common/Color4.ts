@@ -19,7 +19,7 @@ class Color4 extends Color {
     return super.set(r, g, b);
   }
 
-  copy(color: RGB | RGBA) {
+  from(color: RGB | RGBA) {
     if ('a' in color) this.a = color.a;
 
     return super.copy(color as any);

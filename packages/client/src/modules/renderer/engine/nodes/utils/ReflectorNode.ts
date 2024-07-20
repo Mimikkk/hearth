@@ -146,7 +146,7 @@ class ReflectorNode extends TextureNode {
     //
 
     virtualCamera.coordinateSystem = camera.coordinateSystem;
-    virtualCamera.position.copy(_view);
+    virtualCamera.position.from(_view);
     virtualCamera.up.set(0, 1, 0);
     virtualCamera.up.applyMat4(_rotationMatrix);
     virtualCamera.up.reflect(_normal);
@@ -156,7 +156,7 @@ class ReflectorNode extends TextureNode {
     virtualCamera.far = camera.far;
 
     virtualCamera.updateMatrixWorld();
-    virtualCamera.projectionMatrix.copy(camera.projectionMatrix);
+    virtualCamera.projectionMatrix.from(camera.projectionMatrix);
 
     // Now update projection matrix with new clip plane, implementing code from: http://www.terathon.com/code/oblique.html
     // Paper explaining this technique: http://www.terathon.com/lengyel/Lengyel-Oblique.pdf

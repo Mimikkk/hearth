@@ -75,7 +75,7 @@ export class MeshSurfaceSampler<TGeometry extends BufferGeometry, TMaterial exte
       _face.a.fromAttribute(positionAttribute, i0);
       _face.b.fromAttribute(positionAttribute, i1);
       _face.c.fromAttribute(positionAttribute, i2);
-      faceWeight *= _face.getArea();
+      faceWeight *= _face.area();
 
       faceWeights[i] = faceWeight;
     }
@@ -177,7 +177,7 @@ export class MeshSurfaceSampler<TGeometry extends BufferGeometry, TMaterial exte
           .addScaled(_face.c, 1 - (u + v))
           .normalize();
       } else {
-        _face.getNormal(targetNormal);
+        _face.normal(targetNormal);
       }
     }
 

@@ -21,7 +21,7 @@ import ClippingContext from '@modules/renderer/engine/renderers/common/ClippingC
 import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
-import { Frustum, Mat4, Object3D, Plane } from '@modules/renderer/engine/engine.js';
+import { Color, Frustum, Mat4, Object3D, Plane } from '@modules/renderer/engine/engine.js';
 import { GPUFeatureNameType, GPUTextureFormatType } from '@modules/renderer/engine/renderers/webgpu/utils/constants.js';
 
 const _scene = new Scene();
@@ -572,11 +572,11 @@ export class Renderer {
   setScissorTest(boolean) {
     this._scissorTest = boolean;
 
-    this.backend.setScissorTest(boolean);
+    this.backend._scissorTest = boolean;
   }
 
   getViewport(target) {
-    return target.copy(this._viewport);
+    return target.from(this._viewport);
   }
 
   setViewport(x, y, width, height, minDepth = 0, maxDepth = 1) {
@@ -593,7 +593,7 @@ export class Renderer {
   }
 
   getClearColor(target) {
-    return target.copy(this._clearColor);
+    return target.from(this._clearColor);
   }
 
   setClearColor(color, alpha = 1) {

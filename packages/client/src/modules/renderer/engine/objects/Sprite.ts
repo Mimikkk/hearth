@@ -117,10 +117,14 @@ export class Sprite extends Object3D {
 
     if (distance < raycaster.near || distance > raycaster.far) return;
 
+    _triangle1.set(_vA, _vB, _vC);
+    _triangle2.set(_uvA, _uvB, _uvC);
+
+    const { x, y } = Triangle.interpolate(_triangle1, _triangle2, _intersectPoint);
     intersects.push({
       distance: distance,
       point: _intersectPoint.clone(),
-      uv: Triangle.getInterpolation(_intersectPoint, _vA, _vB, _vC, _uvA, _uvB, _uvC, new Vec2())!,
+      uv: Vec2.new(x, y),
       face: null,
       object: this,
     });
@@ -141,6 +145,8 @@ Sprite.prototype.isSprite = true;
 Sprite.prototype.type = 'Sprite';
 
 const _triangle = new Triangle();
+const _triangle1 = new Triangle();
+const _triangle2 = new Triangle();
 
 function transformVertex(
   vertexPosition: Vec3,

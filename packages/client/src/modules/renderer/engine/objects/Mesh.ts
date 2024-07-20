@@ -348,21 +348,26 @@ function checkGeometryIntersection(
 
   const intersection = checkIntersection(object, material, raycaster, ray, _vA, _vB, _vC, _intersectionPoint);
 
+  _triangle1.set(_vA, _vB, _vC);
   if (intersection) {
     if (uv) {
       _uvA.fromAttribute(uv, a);
       _uvB.fromAttribute(uv, b);
       _uvC.fromAttribute(uv, c);
+      _triangle1.set(_uvA, _uvB, _uvC);
 
-      intersection.uv = Triangle.getInterpolation(_intersectionPoint, _vA, _vB, _vC, _uvA, _uvB, _uvC, new Vec2())!;
+      const { x, y } = Triangle.interpolate(_triangle1, _triangle2, _intersectionPoint)!;
+      intersection.uv = Vec2.new(x, y);
     }
 
     if (uv1) {
       _uvA.fromAttribute(uv1, a);
       _uvB.fromAttribute(uv1, b);
       _uvC.fromAttribute(uv1, c);
+      _triangle1.set(_uvA, _uvB, _uvC);
 
-      intersection.uv1 = Triangle.getInterpolation(_intersectionPoint, _vA, _vB, _vC, _uvA, _uvB, _uvC, new Vec2())!;
+      const { x, y } = Triangle.interpolate(_triangle1, _triangle2, _intersectionPoint)!;
+      intersection.uv1 = Vec2.new(x, y);
     }
 
     if (normal) {
@@ -370,31 +375,21 @@ function checkGeometryIntersection(
       _normalB.fromAttribute(normal, b);
       _normalC.fromAttribute(normal, c);
 
-      intersection.normal = Triangle.getInterpolation(
-        _intersectionPoint,
-        _vA,
-        _vB,
-        _vC,
-        _normalA,
-        _normalB,
-        _normalC,
-        new Vec3(),
-      )!;
+      _triangle1.set(_vA, _vB, _vC);
+      _triangle2.set(_normalA, _normalB, _normalC);
 
-      if (intersection.normal.dot(ray.direction) > 0) {
-        intersection.normal.scale(-1);
-      }
+      intersection.normal = Triangle.interpolate(_triangle1, _triangle2, _intersectionPoint)!;
+      if (intersection.normal.dot(ray.direction) > 0) intersection.normal.scale(-1);
     }
 
+    _triangle2.set(_vA, _vB, _vC);
     const face = {
       a: a,
       b: b,
       c: c,
-      normal: new Vec3(),
+      normal: _triangle2.normal(),
       materialIndex: 0,
     };
-
-    Triangle.getNormal(_vA, _vB, _vC, face.normal);
 
     intersection.face = face as never;
   }
@@ -403,3 +398,5 @@ function checkGeometryIntersection(
 }
 
 const _triangle = new Triangle();
+const _triangle1 = new Triangle();
+const _triangle2 = new Triangle();

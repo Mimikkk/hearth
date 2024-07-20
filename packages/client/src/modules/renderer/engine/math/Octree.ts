@@ -177,7 +177,7 @@ export class Octree {
   }
 
   triangleCapsuleIntersect(capsule: Capsule, triangle: Triangle): Intersection | undefined {
-    triangle.getPlane(_plane);
+    triangle.plane(_plane);
 
     const d1 = _plane.distanceTo(capsule.start) - capsule.radius;
     const d2 = _plane.distanceTo(capsule.end) - capsule.radius;
@@ -187,7 +187,7 @@ export class Octree {
     const delta = Math.abs(d1 / (Math.abs(d1) + Math.abs(d2)));
     const intersectPoint = _v1.from(capsule.start).lerp(capsule.end, delta);
 
-    if (triangle.containsPoint(intersectPoint)) {
+    if (triangle.contains(intersectPoint)) {
       return { normal: _plane.normal.clone(), point: intersectPoint.clone(), depth: Math.abs(Math.min(d1, d2)) };
     }
 
@@ -217,7 +217,7 @@ export class Octree {
   }
 
   triangleSphereIntersect(sphere: Sphere, triangle: Triangle): undefined | Intersection {
-    triangle.getPlane(_plane);
+    triangle.plane(_plane);
 
     if (!sphere.intersectsPlane(_plane)) return;
 
@@ -226,7 +226,7 @@ export class Octree {
 
     const plainPoint = _plane.project(sphere.center, _v1);
 
-    if (triangle.containsPoint(sphere.center)) {
+    if (triangle.contains(sphere.center)) {
       return {
         normal: _plane.normal.clone(),
         point: plainPoint.clone(),
