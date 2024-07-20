@@ -72,7 +72,7 @@ export class Vec4 implements IVec4 {
   }
 
   static lerp(from: Const<Vec4>, to: Const<Vec4>, step: number, into: Vec4 = Vec4.empty()): Vec4 {
-    return into.lerp(from, to, step);
+    return into.asLerp(from, to, step);
   }
 
   asAdd(a: Vec4, b: Vec4): this {

@@ -97,7 +97,7 @@ export class Vec3 implements IVec3 {
   }
 
   static lerp(from: Const<Vec3>, to: Const<Vec3>, step: number, into: Vec3 = Vec3.new()): Vec3 {
-    return into.lerp(from, to, step);
+    return into.asLerp(from, to, step);
   }
 
   clone(into: Vec3 = Vec3.new()): Vec3 {
@@ -586,7 +586,7 @@ export class Vec3 implements IVec3 {
     return array;
   }
 
-  fromAttribute(attribute: Attribute, index: number): this {
+  fromAttribute(attribute: Const<Attribute>, index: number): this {
     return this.set(attribute.getX(index), attribute.getY(index), attribute.getZ(index));
   }
 
