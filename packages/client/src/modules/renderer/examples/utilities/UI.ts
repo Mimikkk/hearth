@@ -7,7 +7,7 @@ type Handler<S, K extends Path<S>> = {
   onChange?: (value: Path.At<S, K>, state: S) => void;
 } & (Path.At<S, K> extends number ? { min: number; max: number; step: number } : {});
 
-export class UI<S extends {} = {}> {
+export class UI<S extends {}> {
   controllers: Controller[];
   ui: GUI;
 
@@ -21,15 +21,9 @@ export class UI<S extends {} = {}> {
     this.shortcuts = [];
 
     this.ui = ui;
-    this.ui.domElement.onclick = event => {
-      event.preventDefault();
-      event.stopPropagation();
-    };
-
-    console.log(this.ui);
   }
 
-  static create<S extends {}>(title: string, state: S = {} as S) {
+  static create<S extends {}>(title: string, state: S = {}) {
     return new this(title, state);
   }
 
@@ -57,11 +51,17 @@ export class UI<S extends {} = {}> {
   }
 
   action(title: string, handler: (state: S) => void): this {
-    const handle = () => {
-      handler(this.state);
-      this.update();
-    };
-    const controller = this.ui.add({ handle }, 'handle').name(title);
+    const controller = this.ui
+      .add(
+        {
+          handler: () => {
+            handler(this.state);
+            this.update();
+          },
+        },
+        'handler',
+      )
+      .name(title);
 
     this.controllers.push(controller);
     this.update();
@@ -151,8 +151,8 @@ export class UI<S extends {} = {}> {
     return this;
   }
 
-  text(key: string, fn: string | ((state: S) => string | number | null | undefined)) {
-    const description = `${typeof fn === 'string' ? fn : fn(this.state)}`;
+  text(key: string, fn: string | ((state: S) => string)) {
+    const description = typeof fn === 'string' ? fn : fn(this.state);
 
     const controller = this.ui.add({ [key]: description }, key).name(key);
 
@@ -169,10 +169,12 @@ export class UI<S extends {} = {}> {
 
     controller.$widget.append(text);
     controller.$widget.style.overflow = 'hidden';
+
     controller.$widget.addEventListener('mouseenter', () => {
       controller.$widget.style.overflow = 'visible';
       text.style.whiteSpace = 'normal';
     });
+
     controller.$widget.addEventListener('mouseleave', () => {
       controller.$widget.style.overflow = 'hidden';
       text.style.whiteSpace = 'nowrap';
@@ -181,9 +183,6 @@ export class UI<S extends {} = {}> {
 
     if (typeof fn !== 'string') {
       this.controllers.push(controller);
-      this.#updaters.set(controller, () => {
-        text.textContent = `${fn(this.state) ?? 'None'}`;
-      });
       this.update();
     }
 
@@ -233,13 +232,9 @@ export class UI<S extends {} = {}> {
     this.#maybePlaceLastShortcuts();
   }
 
-  #updaters: Map<Controller, (state: S) => void> = new Map();
-
   #updateControllers() {
     for (const controller of this.ui.controllersRecursive()) {
       controller.updateDisplay();
-      const updater = this.#updaters.get(controller);
-      if (updater) updater(this.state);
     }
   }
 

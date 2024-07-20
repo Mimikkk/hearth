@@ -161,13 +161,6 @@ export class Renderer {
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth, window.innerHeight);
 
-    if (parameters?.autoinsert === undefined || parameters.autoinsert) {
-      document.body.appendChild(renderer.parameters.canvas);
-    }
-    if (parameters?.animate) {
-      renderer.setAnimationLoop(parameters.animate);
-    }
-
     return renderer;
   }
 
@@ -1004,8 +997,6 @@ export class Renderer {
 
 export namespace Renderer {
   export interface Options {
-    autoinsert?: boolean;
-    animate?: AnimationLoopFn;
     alpha?: boolean;
     antialias?: boolean;
     sampleCount?: number;

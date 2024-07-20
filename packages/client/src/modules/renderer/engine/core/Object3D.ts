@@ -1,5 +1,5 @@
 import { Quaternion } from '../math/Quaternion.js';
-import { Vec3, Vector3 } from '../math/Vector3.js';
+import { Vector3 } from '../math/Vector3.js';
 import { Matrix4 } from '../math/Matrix4.js';
 import { EventDispatcher } from './EventDispatcher.js';
 import { Euler } from '../math/Euler.js';
@@ -259,16 +259,6 @@ export class Object3D<EventMap extends Object3DEventMap = any> {
     const { x, y, z, w } = this.quaternion;
 
     return Math.atan2(2 * (x * y - z * w), 1 - 2 * (x * x + y * y));
-  }
-
-  setScale(x: number, y: number, z: number): this {
-    Vec3.set(this.scale, x, y, z);
-    return this;
-  }
-
-  setPosition(x: number, y: number, z: number): this {
-    Vec3.set(this.position, x, y, z);
-    return this;
   }
 
   rotateX(angle: number): this {

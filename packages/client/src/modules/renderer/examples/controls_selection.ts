@@ -7,116 +7,133 @@ import { SpotLight } from '@modules/renderer/engine/lights/SpotLight.js';
 import { BoxGeometry } from '@modules/renderer/engine/geometries/BoxGeometry.js';
 import { Mesh } from '@modules/renderer/engine/objects/Mesh.js';
 import { MeshLambertMaterial } from '@modules/renderer/engine/materials/MeshLambertMaterial.js';
-import { SelectionControl } from '@modules/renderer/engine/interactive/SelectionControl.js';
-import { SelectionVisualizer } from '@modules/renderer/engine/interactive/SelectionVisualizer.js';
-import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import { useStats } from '@modules/renderer/examples/utilities/useStats.js';
-import { Vec3 } from '@modules/renderer/engine/math/Vector3.js';
-import { Fog } from '@modules/renderer/engine/scenes/Fog.js';
-import { normalWorld } from '@modules/renderer/engine/nodes/accessors/NormalNode.js';
-import { color } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.primitves.js';
-import { Group } from '@modules/renderer/engine/objects/Group.js';
-import { UI } from '@modules/renderer/examples/utilities/UI.js';
+import { SelectionBox } from '@modules/renderer/engine/interactive/SelectionBox.js';
+import { SelectionHelper } from '@modules/renderer/engine/interactive/SelectionHelper.js';
+import Stats from 'stats-js';
 
-const createCamera = () => {
-  const camera = new PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 500);
+let container, stats;
+let camera, scene, renderer;
+
+await init();
+
+async function init() {
+  container = document.createElement('div');
+  document.body.appendChild(container);
+
+  camera = new PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 500);
   camera.position.z = 50;
-  return camera;
-};
-const createScene = () => {
-  const scene = new Scene();
-  scene.fog = new Fog('blue', 1, 500);
-  scene.backgroundNode = normalWorld.y.mix(color('white'), color('wheat'));
+
+  scene = new Scene();
+  scene.background = new Color(0xf0f0f0);
+
   scene.add(new AmbientLight(0xaaaaaa));
-  return scene;
-};
-const createLight = () => {
+
   const light = new SpotLight(0xffffff, 10000);
   light.position.set(0, 25, 50);
   light.angle = Math.PI / 5;
+
   light.castShadow = true;
   light.shadow.camera.near = 10;
   light.shadow.camera.far = 100;
   light.shadow.mapSize.width = 1024;
   light.shadow.mapSize.height = 1024;
 
-  return light;
-};
+  scene.add(light);
 
-const camera = createCamera();
-const scene = createScene();
-const light = createLight();
-scene.add(light);
-
-const createBoxes = () => {
   const geometry = new BoxGeometry();
 
-  const group = new Group();
-  const randomScale = () => Math.random() * 2 + 1;
-  const randomAngle = () => Math.random() * 2 * Math.PI;
-  const randomColor = () => new Color(Math.random() * 0xffffff);
+  for (let i = 0; i < 200; i++) {
+    const object = new Mesh(geometry, new MeshLambertMaterial({ color: Math.random() * 0xffffff }));
 
-  for (let i = 0; i < 200; ++i) {
-    const box = new Mesh(geometry, new MeshLambertMaterial({ color: randomColor() }));
+    object.position.x = Math.random() * 80 - 40;
+    object.position.y = Math.random() * 45 - 25;
+    object.position.z = Math.random() * 45 - 25;
 
-    box.setPosition(Math.random() * 80 - 40, Math.random() * 45 - 25, Math.random() * 45 - 25);
-    box.setRotation(randomAngle(), randomAngle(), randomAngle());
-    box.setScale(randomScale(), randomScale(), randomScale());
+    object.setRotation(Math.random() * 2 * Math.PI, Math.random() * 2 * Math.PI, Math.random() * 2 * Math.PI);
 
-    group.add(box);
+    object.scale.x = Math.random() * 2 + 1;
+    object.scale.y = Math.random() * 2 + 1;
+    object.scale.z = Math.random() * 2 + 1;
+
+    // object.castShadow = true;
+    // object.receiveShadow = true;
+
+    scene.add(object);
   }
 
-  return group;
-};
+  renderer = await Renderer.create({ antialias: true });
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setAnimationLoop(animate);
 
-const boxes = createBoxes();
-scene.add(boxes);
+  container.appendChild(renderer.parameters.canvas);
 
-const stats = useStats();
-const renderer = await Renderer.create({
-  animate() {
-    renderer.render(scene, camera);
-    stats.update();
-    ui.update();
-  },
-});
-useWindowResizer(renderer, camera);
+  stats = new Stats();
+  container.appendChild(stats.dom);
 
-const selection = new SelectionControl(camera, scene);
-const visualizer = new SelectionVisualizer(renderer);
+  window.addEventListener('resize', onWindowResize);
+}
 
-const updateVec = (vec3: Vec3, event: PointerEvent) => {
-  Vec3.set(vec3, (event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1, 0.5);
-};
-renderer.parameters.canvas.addEventListener('pointerdown', event => {
-  for (const object of selection.collection) {
-    (object.material as MeshLambertMaterial).emissive.set(0x000000);
+function onWindowResize() {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+
+  renderer.setSize(window.innerWidth, window.innerHeight);
+}
+
+//
+
+function animate() {
+  renderer.render(scene, camera);
+
+  stats.update();
+}
+
+const selectionBox = new SelectionBox(camera, scene);
+const helper = new SelectionHelper(renderer, 'selectBox');
+
+document.addEventListener('pointerdown', function (event) {
+  for (const item of selectionBox.collection) {
+    item.material.emissive.set(0x000000);
   }
 
-  updateVec(selection.start, event);
-});
-renderer.parameters.canvas.addEventListener('pointermove', event => {
-  if (!visualizer.isDown) return;
-  for (const object of selection.collection) {
-    (object.material as MeshLambertMaterial).emissive.set(0x000000);
-  }
-
-  updateVec(selection.end, event);
-
-  for (const object of selection.select()) {
-    (object.material as MeshLambertMaterial).emissive.set(0xff0000);
-  }
-});
-renderer.parameters.canvas.addEventListener('pointerup', event => {
-  updateVec(selection.end, event);
-
-  for (const object of selection.select()) {
-    (object.material as MeshLambertMaterial).emissive.set(0xff0000);
-  }
+  selectionBox.startPoint.set(
+    (event.clientX / window.innerWidth) * 2 - 1,
+    -(event.clientY / window.innerHeight) * 2 + 1,
+    0.5,
+  );
 });
 
-const ui = UI.create('Selection')
-  .text('Mouse start (x, y):', () => selection.start.x.toFixed(2) + ', ' + selection.start.y.toFixed(2))
-  .text('Mouse end (x, y):', () => selection.end.x.toFixed(2) + ', ' + selection.end.y.toFixed(2))
-  .text('Selected count:', () => selection.collection.length)
-  .action('Log selected', () => console.log(selection.collection));
+document.addEventListener('pointermove', function (event) {
+  if (helper.isDown) {
+    for (let i = 0; i < selectionBox.collection.length; i++) {
+      selectionBox.collection[i].material.emissive.set(0x000000);
+    }
+
+    selectionBox.endPoint.set(
+      (event.clientX / window.innerWidth) * 2 - 1,
+      -(event.clientY / window.innerHeight) * 2 + 1,
+      0.5,
+    );
+
+    const allSelected = selectionBox.select();
+
+    for (let i = 0; i < allSelected.length; i++) {
+      allSelected[i].material.emissive.set(0xffffff);
+    }
+  }
+});
+
+document.addEventListener('pointerup', function (event) {
+  selectionBox.endPoint.set(
+    (event.clientX / window.innerWidth) * 2 - 1,
+    -(event.clientY / window.innerHeight) * 2 + 1,
+    0.5,
+  );
+
+  const allSelected = selectionBox.select();
+
+  for (let i = 0; i < allSelected.length; i++) {
+    allSelected[i].material.emissive.set(0xffffff);
+  }
+});
