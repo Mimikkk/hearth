@@ -9,7 +9,6 @@ import {
   ColorManagement,
   ColorSpace,
   DirectionalLight,
-  DrawMode,
   Filter,
   Group,
   InstancedBufferAttribute,
@@ -59,6 +58,7 @@ import { Quaternion } from '@modules/renderer/engine/math/Quaternion.js';
 import { MeshoptDecoder } from 'meshoptimizer';
 import { classLoader } from '@modules/renderer/engine/loaders/types.js';
 import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
+import { InterpolateLinear } from 'three';
 
 export type PluginFn = (parser: Parser) => Plugin;
 
@@ -2884,14 +2884,15 @@ class Parser {
           // .isSkinnedMesh isn't in glTF spec. See ._markDefs()
           mesh = meshDef.isSkinnedMesh === true ? new SkinnedMesh(geometry, material) : new Mesh(geometry, material);
 
-          if (SkinnedMesh.is(mesh)) {
+          if (mesh.isSkinnedMesh === true) {
+            // normalize skin weights to fix malformed assets (see #15319)
             mesh.normalizeSkinWeights();
           }
 
           if (primitive.mode === WEBGL_CONSTANTS.TRIANGLE_STRIP) {
-            mesh.geometry = toTrianglesDrawMode(mesh.geometry, DrawMode.TriangleStrip);
+            mesh.geometry = toTrianglesDrawMode(mesh.geometry, TriangleStripDrawMode);
           } else if (primitive.mode === WEBGL_CONSTANTS.TRIANGLE_FAN) {
-            mesh.geometry = toTrianglesDrawMode(mesh.geometry, DrawMode.TriangleFan);
+            mesh.geometry = toTrianglesDrawMode(mesh.geometry, TriangleFanDrawMode);
           }
         } else if (primitive.mode === WEBGL_CONSTANTS.LINES) {
           mesh = new LineSegments(geometry, material);

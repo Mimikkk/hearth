@@ -6,10 +6,6 @@ export class InstancedPoints extends Mesh {
   declare isInstancedPoints: true;
   declare type: string | 'InstancedPoints';
 
-  static is(object: any): object is InstancedPoints {
-    return object?.isInstancedPoints === true;
-  }
-
   constructor(geometry: InstancedPointsGeometry, material: InstancedPointsNodeMaterial) {
     super(geometry, material);
   }

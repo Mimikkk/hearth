@@ -61,6 +61,7 @@ const scene = createScene();
 
 scene.add(camera, reference, sphere);
 
+console.log(reference, sphere);
 const renderer = await Renderer.create({
   animate() {
     controls.update();

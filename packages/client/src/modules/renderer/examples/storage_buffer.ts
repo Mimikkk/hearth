@@ -129,7 +129,7 @@ async function init() {
 
   const stepAnimation = async () => {
     await renderer.computeAsync(compute);
-    await renderer.render(scene, camera);
+    await renderer.renderAsync(scene, camera);
 
     const computeCalls = renderer.info?.compute?.computeCalls.toFixed(0);
     const renderCalls = renderer.info?.render?.drawCalls.toFixed(0);

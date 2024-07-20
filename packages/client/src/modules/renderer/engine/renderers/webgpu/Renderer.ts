@@ -21,11 +21,10 @@ import ClippingContext from '@modules/renderer/engine/renderers/common/ClippingC
 import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
-import { Light, Mat4, Object3D, Plane, RenderTarget } from '@modules/renderer/engine/engine.js';
+import { Mat4, Object3D, Plane } from '@modules/renderer/engine/engine.js';
 import { GPUFeatureNameType, GPUTextureFormatType } from '@modules/renderer/engine/renderers/webgpu/utils/constants.js';
 import { Frustum } from '@modules/renderer/engine/math/Frustum.js';
 import { throttle } from 'lodash-es';
-import { Scissor } from '@modules/renderer/engine/renderers/common/RenderContext.js';
 
 const _scene = new Scene();
 const _drawingBufferSize = new Vec3();
@@ -41,7 +40,7 @@ export class Renderer {
   _width: number;
   _height: number;
   _viewport: Vec4;
-  _scissor: Scissor;
+  _scissor: Vec4;
   _scissorTest: boolean;
   _attributes: Attributes;
   _geometries: Geometries;
@@ -60,7 +59,7 @@ export class Renderer {
   _clearColor: Color4;
   _clearDepth: number;
   _clearStencil: number;
-  _renderTarget: RenderTarget | null;
+  _renderTarget: any;
   _activeCubeFace: number;
   _activeMipmapLevel: number;
   _renderObjectFunction: any;
@@ -110,7 +109,7 @@ export class Renderer {
     this._width = this.parameters.canvas.width;
     this._height = this.parameters.canvas.height;
     this._viewport = new Vec4(0, 0, this._width, this._height);
-    this._scissor = Scissor.fromSize(this._width, this._height);
+    this._scissor = new Vec4(0, 0, this._width, this._height);
     this._scissorTest = false;
     this._nodes = new Nodes(this);
     this._animation = new Animation(this);
@@ -234,7 +233,7 @@ export class Renderer {
     // include lights from target scene
     if (targetScene !== scene) {
       targetScene.traverseVisible(object => {
-        if (Light.is(object) && object.layers.test(camera.layers)) {
+        if (object.isLight && object.layers.test(camera.layers)) {
           renderList.pushLight(object);
         }
       });
@@ -288,15 +287,26 @@ export class Renderer {
     await Promise.all(compilationPromises);
   }
 
+  async renderAsync(scene: Scene, camera: Camera) {
+    this._renderScene(scene, camera);
+  }
+
   render(scene: Object3D, camera: Camera) {
+    this._renderScene(scene, camera);
+  }
+
+  _renderScene(scene: Object3D, camera: Camera) {
+    // preserve render tree
+
     const nodeFrame = this._nodes.nodeFrame;
+
     const previousRenderId = nodeFrame.renderId;
     const previousRenderContext = this._currentRenderContext;
     const previousRenderObjectFunction = this._currentRenderObjectFunction;
 
     //
 
-    const sceneRef = Scene.is(scene) ? scene : _scene;
+    const sceneRef = scene.isScene === true ? scene : _scene;
 
     const renderTarget = this._renderTarget;
     const renderContext = this._renderContexts.get(scene, camera, renderTarget);
@@ -325,9 +335,9 @@ export class Renderer {
 
     //
 
-    if (scene.matrixWorldAutoUpdate) scene.updateMatrixWorld();
+    if (scene.matrixWorldAutoUpdate === true) scene.updateMatrixWorld();
 
-    if (camera.parent === null && camera.matrixWorldAutoUpdate) camera.updateMatrixWorld();
+    if (camera.parent === null && camera.matrixWorldAutoUpdate === true) camera.updateMatrixWorld();
 
     //
 
@@ -355,14 +365,10 @@ export class Renderer {
     renderContext.viewportValue.maxDepth = maxDepth;
     renderContext.viewport = renderContext.viewportValue.equals(_screen) === false;
 
-    renderContext.scissor.set(
-      scissor.x * pixelRatio,
-      scissor.y * pixelRatio,
-      renderContext.scissor.width >> activeMipmapLevel,
-      renderContext.scissor.height >> activeMipmapLevel,
-    );
-
-    renderContext.scissor.enabled = this._scissorTest && !renderContext.scissor.equals(_screen);
+    renderContext.scissorValue.from(scissor).scale(pixelRatio).floor();
+    renderContext.scissor = this._scissorTest && renderContext.scissorValue.equals(_screen) === false;
+    renderContext.scissorValue.width >>= activeMipmapLevel;
+    renderContext.scissorValue.height >>= activeMipmapLevel;
 
     if (!renderContext.clippingContext) renderContext.clippingContext = new ClippingContext();
     renderContext.clippingContext.updateGlobal(this, camera);

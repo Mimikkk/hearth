@@ -351,8 +351,8 @@ export class Backend {
       this.updateViewport(renderContext);
     }
 
-    if (renderContext.scissor.enabled) {
-      const { x, y, width, height } = renderContext.scissor;
+    if (renderContext.scissor) {
+      const { x, y, width, height } = renderContext.scissorValue;
 
       currentPass.setScissorRect(x, renderContext.height - height - y, width, height);
     }

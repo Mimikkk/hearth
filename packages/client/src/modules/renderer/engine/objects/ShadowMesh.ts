@@ -30,10 +30,6 @@ export class ShadowMesh extends Mesh {
     this.matrixAutoUpdate = false;
   }
 
-  static is(object: any): object is ShadowMesh {
-    return object?.isShadowMesh === true;
-  }
-
   update(plane: Const<Plane>, lightPosition4D: Const<Vec4>) {
     const dot =
       plane.normal.x * lightPosition4D.x +

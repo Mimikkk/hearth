@@ -25,6 +25,8 @@ const createCamera = () => {
   perspectiveCamera.setPosition(0, 0, 3);
   perspectiveCamera.lookAt(0, 0, 0);
 
+  console.log({ perspectiveCamera });
+
   const frustumCamera = new OrthographicCamera(-1, 1, 1, -1, 1, 6);
   frustumCamera.position.set(0, 0, -3);
   frustumCamera.lookAt(0, 0, 0);

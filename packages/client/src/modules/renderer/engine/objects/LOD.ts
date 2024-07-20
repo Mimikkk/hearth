@@ -35,10 +35,6 @@ export class LOD extends Object3D {
     this.autoUpdate = true;
   }
 
-  static is(object: any): object is LOD {
-    return object?.isLOD === true;
-  }
-
   copy(source: this, recursive?: boolean): this {
     super.copy(source, recursive);
 

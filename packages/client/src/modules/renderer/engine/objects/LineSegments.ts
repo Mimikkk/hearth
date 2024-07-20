@@ -24,14 +24,12 @@ export class LineSegments extends Line {
 
       geometry.attributes.lineDistance = new Float32BufferAttribute(lineDistances, 1);
     } else {
-      throw Error('Available for non-indexed BufferGeometry only.');
+      throw Error(
+        'engine.LineSegments.computeLineDistances(): Computation only possible with non-indexed BufferGeometry.',
+      );
     }
 
     return this;
-  }
-
-  static is(object: any): object is LineSegments {
-    return object?.isLineSegments === true;
   }
 }
 

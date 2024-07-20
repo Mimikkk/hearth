@@ -23,10 +23,6 @@ export class Skeleton {
     this.init();
   }
 
-  static is(object: any): object is Skeleton {
-    return object?.isSkeleton === true;
-  }
-
   init() {
     const bones = this.bones;
     const boneInverses = this.boneInverses;

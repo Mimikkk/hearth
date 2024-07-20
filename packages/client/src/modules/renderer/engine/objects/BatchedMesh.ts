@@ -111,9 +111,6 @@ export class BatchedMesh extends Mesh {
   _matricesTexture: DataTexture;
   _maxGeometryCount: number;
 
-  static is(object: any): object is BatchedMesh {
-    return object?.isBatchedMesh === true;
-  }
   get maxGeometryCount() {
     return this._maxGeometryCount;
   }

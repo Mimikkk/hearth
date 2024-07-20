@@ -27,9 +27,6 @@ export class Line extends Object3D {
     this.updateMorphTargets();
   }
 
-  static is(object: any): object is Line {
-    return object?.isLine === true;
-  }
   copy(source: this, recursive?: boolean): this {
     super.copy(source, recursive);
 

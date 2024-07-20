@@ -19,10 +19,6 @@ export class Light<S extends LightShadow | undefined> extends Object3D {
     this.intensity = intensity;
   }
 
-  static is(object: any): object is Light<any> {
-    return object?.isLight === true;
-  }
-
   dispose() {}
 
   copy(source: this, recursive?: boolean): this {

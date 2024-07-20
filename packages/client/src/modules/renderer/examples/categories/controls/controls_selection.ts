@@ -29,6 +29,7 @@ const createScene = () => {
   scene.fog = new Fog(ColorMap.blue, 1, 500);
   scene.backgroundNode = normalWorld.y.mix(color(ColorMap.white), color(ColorMap.wheat));
   scene.add(new AmbientLight(0xaaaaaa));
+  console.log(scene);
   return scene;
 };
 const createLight = () => {

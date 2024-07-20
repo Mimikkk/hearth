@@ -34,10 +34,6 @@ export class SkinnedMesh extends Mesh {
     this.boundingSphere = null;
   }
 
-  static is(object: any): object is SkinnedMesh {
-    return object?.isSkinnedMesh === true;
-  }
-
   computeBoundingBox() {
     const geometry = this.geometry!;
     if (this.boundingBox === null) this.boundingBox = new Box3();

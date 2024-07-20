@@ -1,7 +1,6 @@
 import { Vec4 } from '@modules/renderer/engine/engine.js';
 import { RGBA } from '@modules/renderer/engine/renderers/common/Color4.js';
 import ClippingContext from '@modules/renderer/engine/renderers/common/ClippingContext.js';
-import { Const } from '@modules/renderer/engine/math/types.js';
 
 let id = 0;
 
@@ -18,7 +17,8 @@ export class RenderContext {
   clearStencilValue: number;
   viewport: boolean;
   viewportValue: Vec4;
-  scissor: Scissor;
+  scissor: boolean;
+  scissorValue: Vec4;
   textures: any;
   depthTexture: any;
   activeCubeFace: number;
@@ -48,7 +48,8 @@ export class RenderContext {
     this.viewport = false;
     this.viewportValue = new Vec4();
 
-    this.scissor = Scissor.new();
+    this.scissor = false;
+    this.scissorValue = new Vec4();
 
     this.textures = null;
     this.depthTexture = null;
@@ -63,42 +64,3 @@ export class RenderContext {
 }
 
 export default RenderContext;
-
-export class Scissor {
-  constructor(
-    public x: number = 0,
-    public y: number = 0,
-    public width: number = 0,
-    public height: number = 0,
-    public enabled: boolean = false,
-  ) {}
-
-  static new() {
-    return new Scissor();
-  }
-
-  static from({ x, y, width, height, enabled }: Const<Scissor>): Scissor {
-    return new Scissor(x, y, width, height, enabled);
-  }
-
-  static fromSize(width: number, height: number): Scissor {
-    return new Scissor(0, 0, width, height, false);
-  }
-
-  set(x: number, y: number, width: number, height: number, enabled: boolean = this.enabled): this {
-    this.x = x;
-    this.y = y;
-    this.width = width;
-    this.height = height;
-    this.enabled = enabled;
-    return this;
-  }
-
-  from({ x, y, width, height, enabled }: Const<Scissor>): this {
-    return this.set(x, y, width, height, enabled);
-  }
-
-  equals({ x, y, z: width, w: height }: Const<Vec4>): boolean {
-    return this.x === x && this.y === y && this.width === width && this.height === height;
-  }
-}
