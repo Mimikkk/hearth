@@ -143,7 +143,7 @@ export class Sphere {
 
       const delta = (length - this.radius) * 0.5;
 
-      this.center.addScaledVector(_v1, delta / length);
+      this.center.addScaled(_v1, delta / length);
 
       this.radius += delta;
     }

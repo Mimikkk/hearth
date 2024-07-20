@@ -132,7 +132,7 @@ export class Vec3 implements IVec3 {
     return this;
   }
 
-  addScaledVector(vector: Vec3, scale: number): this {
+  addScaled(vector: Vec3, scale: number): this {
     this.x += vector.x * scale;
     this.y += vector.y * scale;
     this.z += vector.z * scale;
@@ -555,7 +555,7 @@ export class Vec3 implements IVec3 {
     return this;
   }
 
-  toArray(array: number[] = [], offset: number = 0): number[] {
+  intoArray(array: number[] = [], offset: number = 0): number[] {
     array[offset] = this.x;
     array[offset + 1] = this.y;
     array[offset + 2] = this.z;

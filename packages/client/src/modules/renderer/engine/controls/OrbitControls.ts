@@ -265,7 +265,7 @@ export class OrbitControls {
         // move target to panned location
 
         if (scope.enableDamping === true) {
-          scope.target.addScaledVector(panOffset, scope.dampingFactor);
+          scope.target.addScaled(panOffset, scope.dampingFactor);
         } else {
           scope.target.add(panOffset);
         }
@@ -316,7 +316,7 @@ export class OrbitControls {
             newRadius = clampDistance(prevRadius * scale);
 
             const radiusDelta = prevRadius - newRadius;
-            scope.object.position.addScaledVector(dollyDirection, radiusDelta);
+            scope.object.position.addScaled(dollyDirection, radiusDelta);
             scope.object.updateMatrixWorld();
 
             zoomChanged = !!radiusDelta;

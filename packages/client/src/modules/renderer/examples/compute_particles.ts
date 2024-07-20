@@ -181,7 +181,7 @@ async function init() {
 
       // move to uniform
 
-      clickPosition.value.copy(point);
+      clickPosition.value.from(point);
       clickPosition.value.y = -1;
 
       // compute

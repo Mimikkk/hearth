@@ -756,13 +756,13 @@ function computeMorphedAttributes(object) {
         _tempC.fromAttribute(morph, c);
 
         if (morphTargetsRelative) {
-          _morphA.addScaledVector(_tempA, influence);
-          _morphB.addScaledVector(_tempB, influence);
-          _morphC.addScaledVector(_tempC, influence);
+          _morphA.addScaled(_tempA, influence);
+          _morphB.addScaled(_tempB, influence);
+          _morphC.addScaled(_tempC, influence);
         } else {
-          _morphA.addScaledVector(_tempA.sub(_vA), influence);
-          _morphB.addScaledVector(_tempB.sub(_vB), influence);
-          _morphC.addScaledVector(_tempC.sub(_vC), influence);
+          _morphA.addScaled(_tempA.sub(_vA), influence);
+          _morphB.addScaled(_tempB.sub(_vB), influence);
+          _morphC.addScaled(_tempC.sub(_vC), influence);
         }
       }
 

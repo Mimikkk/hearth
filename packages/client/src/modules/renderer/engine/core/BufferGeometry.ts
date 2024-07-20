@@ -461,8 +461,8 @@ export class BufferGeometry<
       // silently ignore degenerate uv triangles having coincident or colinear vertices
 
       if (!isFinite(r)) return this;
-      sdir.from(vB).scale(uvC.y).addScaledVector(vC, -uvB.y).scale(r);
-      tdir.from(vC).scale(uvB.x).addScaledVector(vB, -uvC.x).scale(r);
+      sdir.from(vB).scale(uvC.y).addScaled(vC, -uvB.y).scale(r);
+      tdir.from(vC).scale(uvB.x).addScaled(vB, -uvC.x).scale(r);
 
       tan1[a].add(sdir);
       tan1[b].add(sdir);

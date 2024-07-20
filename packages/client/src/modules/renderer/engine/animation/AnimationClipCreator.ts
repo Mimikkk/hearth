@@ -42,7 +42,7 @@ export namespace AnimationClipCreator {
       tmp
         .set(Math.random() * 2.0 - 1.0, Math.random() * 2.0 - 1.0, Math.random() * 2.0 - 1.0)
         .multiply(shakeScale)
-        .toArray(values, values.length);
+        .intoArray(values, values.length);
     }
 
     const trackName = '.position';
@@ -61,7 +61,7 @@ export namespace AnimationClipCreator {
       times.push(i / 10);
 
       const scaleFactor = Math.random() * pulseScale;
-      tmp.set(scaleFactor, scaleFactor, scaleFactor).toArray(values, values.length);
+      tmp.set(scaleFactor, scaleFactor, scaleFactor).intoArray(values, values.length);
     }
 
     const trackName = '.scale';

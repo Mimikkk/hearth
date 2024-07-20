@@ -161,9 +161,9 @@ export class MeshSurfaceSampler<TGeometry extends BufferGeometry, TMaterial exte
 
     targetPosition
       .set(0, 0, 0)
-      .addScaledVector(_face.a, u)
-      .addScaledVector(_face.b, v)
-      .addScaledVector(_face.c, 1 - (u + v));
+      .addScaled(_face.a, u)
+      .addScaled(_face.b, v)
+      .addScaled(_face.c, 1 - (u + v));
 
     if (targetNormal !== undefined) {
       if (this.normalAttribute !== undefined) {
@@ -172,9 +172,9 @@ export class MeshSurfaceSampler<TGeometry extends BufferGeometry, TMaterial exte
         _face.c.fromAttribute(this.normalAttribute, i2);
         targetNormal
           .set(0, 0, 0)
-          .addScaledVector(_face.a, u)
-          .addScaledVector(_face.b, v)
-          .addScaledVector(_face.c, 1 - (u + v))
+          .addScaled(_face.a, u)
+          .addScaled(_face.b, v)
+          .addScaled(_face.c, 1 - (u + v))
           .normalize();
       } else {
         _face.getNormal(targetNormal);
@@ -188,9 +188,9 @@ export class MeshSurfaceSampler<TGeometry extends BufferGeometry, TMaterial exte
 
       _color
         .set(0, 0, 0)
-        .addScaledVector(_face.a, u)
-        .addScaledVector(_face.b, v)
-        .addScaledVector(_face.c, 1 - (u + v));
+        .addScaled(_face.a, u)
+        .addScaled(_face.b, v)
+        .addScaled(_face.c, 1 - (u + v));
 
       targetColor.r = _color.x;
       targetColor.g = _color.y;

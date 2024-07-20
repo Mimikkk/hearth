@@ -157,7 +157,7 @@ export class Vec4 implements IVec4 {
     return this;
   }
 
-  addScaledVector(vector: Vec4, scale: number): this {
+  addScaled(vector: Vec4, scale: number): this {
     this.x += vector.x * scale;
     this.y += vector.y * scale;
     this.z += vector.z * scale;

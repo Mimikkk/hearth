@@ -27,7 +27,7 @@ export class Ray {
   }
 
   at(t: number, target: Vec3): Vec3 {
-    return target.from(this.origin).addScaledVector(this.direction, t);
+    return target.from(this.origin).addScaled(this.direction, t);
   }
 
   lookAt(v: Vec3): this {
@@ -51,7 +51,7 @@ export class Ray {
       return target.from(this.origin);
     }
 
-    return target.from(this.origin).addScaledVector(this.direction, directionDistance);
+    return target.from(this.origin).addScaled(this.direction, directionDistance);
   }
 
   distanceToPoint(point: Vec3): number {
@@ -67,7 +67,7 @@ export class Ray {
       return this.origin.distanceSqTo(point);
     }
 
-    return new Vec3().from(this.origin).addScaledVector(this.direction, directionDistance).distanceSqTo(point);
+    return new Vec3().from(this.origin).addScaled(this.direction, directionDistance).distanceSqTo(point);
   }
 
   distanceSqToSegment(v0: Vec3, v1: Vec3, optionalPointOnRay?: Vec3, optionalPointOnSegment?: Vec3): number {
@@ -144,11 +144,11 @@ export class Ray {
     }
 
     if (optionalPointOnRay) {
-      optionalPointOnRay.from(this.origin).addScaledVector(this.direction, s0);
+      optionalPointOnRay.from(this.origin).addScaled(this.direction, s0);
     }
 
     if (optionalPointOnSegment) {
-      optionalPointOnSegment.from(_segCenter).addScaledVector(_segDir, s1);
+      optionalPointOnSegment.from(_segCenter).addScaled(_segDir, s1);
     }
 
     return sqrDist;

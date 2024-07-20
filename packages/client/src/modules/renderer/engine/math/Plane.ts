@@ -78,7 +78,7 @@ export class Plane {
   }
 
   projectPoint(point: Vec3, target: Vec3): Vec3 {
-    return target.from(point).addScaledVector(this.normal, -this.distanceToPoint(point));
+    return target.from(point).addScaled(this.normal, -this.distanceToPoint(point));
   }
 
   intersectLine(line: Line3, target: Vec3): Vec3 | null {
@@ -102,7 +102,7 @@ export class Plane {
       return null;
     }
 
-    return target.from(line.start).addScaledVector(direction, t);
+    return target.from(line.start).addScaled(direction, t);
   }
 
   intersectsLine(line: Line3): boolean {

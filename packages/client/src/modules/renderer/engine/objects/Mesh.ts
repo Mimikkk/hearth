@@ -115,9 +115,9 @@ export class Mesh extends Object3D {
         _tempA.fromAttribute(morphAttribute, index);
 
         if (morphTargetsRelative) {
-          _morphA.addScaledVector(_tempA, influence);
+          _morphA.addScaled(_tempA, influence);
         } else {
-          _morphA.addScaledVector(_tempA.sub(target), influence);
+          _morphA.addScaled(_tempA.sub(target), influence);
         }
       }
 

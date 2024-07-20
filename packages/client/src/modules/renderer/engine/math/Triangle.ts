@@ -85,9 +85,9 @@ export class Triangle {
     }
 
     target.setScalar(0);
-    target.addScaledVector(v1 as never, _v3.x);
-    target.addScaledVector(v2 as never, _v3.y);
-    target.addScaledVector(v3 as never, _v3.z);
+    target.addScaled(v1 as never, _v3.x);
+    target.addScaled(v2 as never, _v3.y);
+    target.addScaled(v3 as never, _v3.z);
 
     return target;
   }
@@ -210,7 +210,7 @@ export class Triangle {
     if (vc <= 0 && d1 >= 0 && d3 <= 0) {
       v = d1 / (d1 - d3);
       // edge region of AB; barycentric coords (1-v, v, 0)
-      return target.from(a).addScaledVector(_vab, v);
+      return target.from(a).addScaled(_vab, v);
     }
 
     const _vcp = new Vec3().subVectors(p, c);
@@ -225,7 +225,7 @@ export class Triangle {
     if (vb <= 0 && d2 >= 0 && d6 <= 0) {
       w = d2 / (d2 - d6);
       // edge region of AC; barycentric coords (1-w, 0, w)
-      return target.from(a).addScaledVector(_vac, w);
+      return target.from(a).addScaled(_vac, w);
     }
 
     const va = d3 * d6 - d5 * d4;
@@ -233,14 +233,14 @@ export class Triangle {
       const _vbc = new Vec3().subVectors(c, b);
       w = (d4 - d3) / (d4 - d3 + (d5 - d6));
       // edge region of BC; barycentric coords (0, 1-w, w)
-      return target.from(b).addScaledVector(_vbc, w); // edge region of BC
+      return target.from(b).addScaled(_vbc, w); // edge region of BC
     }
 
     const denom = 1 / (va + vb + vc);
     v = vb * denom;
     w = vc * denom;
 
-    return target.from(a).addScaledVector(_vab, v).addScaledVector(_vac, w);
+    return target.from(a).addScaled(_vab, v).addScaled(_vac, w);
   }
 
   equals(triangle: Triangle): boolean {

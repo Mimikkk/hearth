@@ -313,7 +313,7 @@ export class Octree {
   }
 
   capsuleIntersect(capsule: Capsule): undefined | Intersection {
-    _capsule.copy(capsule);
+    _capsule.from(capsule);
 
     const triangles: Triangle[] = [];
     let result,
@@ -330,7 +330,7 @@ export class Octree {
     }
 
     if (hit) {
-      const collisionVector = _capsule.getCenter(new Vec3()).sub(capsule.getCenter(_v1));
+      const collisionVector = _capsule.center(new Vec3()).sub(capsule.center(_v1));
       const depth = collisionVector.length();
 
       return { normal: collisionVector.normalize(), depth: depth };

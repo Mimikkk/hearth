@@ -27,7 +27,7 @@ export class GroundedSkybox extends Mesh {
         const y1 = (-height * 3) / 2;
         const f = tmp.y < y1 ? -height / tmp.y : 1 - (tmp.y * tmp.y) / (3 * y1 * y1);
         tmp.scale(f);
-        tmp.toArray(pos.array as never as number[], 3 * i);
+        tmp.intoArray(pos.array as never as number[], 3 * i);
       }
     }
 

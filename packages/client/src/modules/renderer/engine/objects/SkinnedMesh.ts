@@ -205,7 +205,7 @@ export class SkinnedMesh extends Mesh {
 
         _Mat4.multiplyMatrices(skeleton.bones[boneIndex].matrixWorld, skeleton.boneInverses[boneIndex]);
 
-        vector.addScaledVector(_Vec3.from(_basePosition).applyMat4(_Mat4), weight);
+        vector.addScaled(_Vec3.from(_basePosition).applyMat4(_Mat4), weight);
       }
     }
 
