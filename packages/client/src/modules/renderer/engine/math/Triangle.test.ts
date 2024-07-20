@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { Triangle_ } from './Triangle.js';
-import { Vec3 } from './Vector3.ts';
+import { Triangle, Triangle_ } from './Triangle.js';
+import { Vec3, Vector3 } from './Vector3.ts';
 import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
 import { Plane_ } from './Plane.ts';
 import { Box3_ } from '@modules/renderer/engine/math/Box3.js';

@@ -1,7 +1,7 @@
-import { Vec3, Vector3 } from './Vector3.js';
+import { Vector3 } from './Vector3.js';
 import { Line3 } from './Line3.js';
-import { Plane_ } from './Plane.js';
-import { Triangle_ } from './Triangle.js';
+import { Plane } from './Plane.js';
+import { Triangle } from './Triangle.js';
 import { Object3D } from '@modules/renderer/engine/core/Object3D.js';
 import { Ray } from '@modules/renderer/engine/math/Ray.js';
 
@@ -10,9 +10,9 @@ const Deleted = 1;
 
 const _v1 = new Vector3();
 const _line3 = Line3.empty();
-const _plane = Plane_.empty();
-const _closest = Vec3.empty();
-const _triangle = Triangle_.empty();
+const _plane = new Plane();
+const _closestPoint = new Vector3();
+const _triangle = new Triangle();
 
 export class ConvexHull {
   tolerance: number;
@@ -412,9 +412,9 @@ export class ConvexHull {
       const vertex = vertices[i];
 
       if (vertex !== v0 && vertex !== v1) {
-        Line3.closestTo_(_line3, vertex.point, _closest);
+        Line3.closestTo_(_line3, vertex.point, _closestPoint);
 
-        const distance = Vec3.distanceSqTo(_closest, vertex.point);
+        const distance = _closestPoint.distanceToSquared(vertex.point);
 
         if (distance > maxDistance) {
           maxDistance = distance;
@@ -426,13 +426,13 @@ export class ConvexHull {
     // 3. The next vertex 'v3' is the one farthest to the plane 'v0', 'v1', 'v2'
 
     maxDistance = -1;
-    Plane_.fillCoplanar(_plane, v0.point, v1.point, v2.point);
+    _plane.setFromCoplanarPoints(v0.point, v1.point, v2.point);
 
     for (let i = 0, l = this.vertices.length; i < l; i++) {
       const vertex = vertices[i];
 
       if (vertex !== v0 && vertex !== v1 && vertex !== v2) {
-        const distance = Math.abs(Plane_.distanceToVec(_plane, vertex.point));
+        const distance = Math.abs(_plane.distanceToPoint(vertex.point));
 
         if (distance > maxDistance) {
           maxDistance = distance;
@@ -443,7 +443,7 @@ export class ConvexHull {
 
     const faces = [];
 
-    if (Plane_.distanceToVec(_plane, v3.point) < 0) {
+    if (_plane.distanceToPoint(v3.point) < 0) {
       // the face is not able to see the point so 'plane.normal' is pointing outside the tetrahedron
 
       faces.push(Face.create(v0, v1, v2), Face.create(v3, v1, v0), Face.create(v3, v2, v1), Face.create(v3, v0, v2));
@@ -771,11 +771,13 @@ export class Face {
     const b = this.edge!.head()!;
     const c = this.edge!.next!.head()!;
 
-    Triangle_.set(_triangle, a.point, b.point, c.point);
-    Triangle_.normal_(_triangle, this.normal);
-    Triangle_.midpoint_(_triangle, this.midpoint);
-    this.area = Triangle_.area(_triangle);
-    this.constant = Vec3.dot(this.normal, this.midpoint);
+    _triangle.set(a.point, b.point, c.point);
+
+    _triangle.getNormal(this.normal);
+    _triangle.getMidpoint(this.midpoint);
+    this.area = _triangle.getArea();
+
+    this.constant = this.normal.dot(this.midpoint);
 
     return this;
   }

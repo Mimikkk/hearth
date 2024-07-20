@@ -1,13 +1,15 @@
 import { Vec3, Vector3 } from './Vector3.js';
 import type { BufferAttribute } from '../core/BufferAttribute.js';
 import type { Object3D } from '../core/Object3D.js';
-import type { Triangle_ } from './Triangle.js';
+import type { Triangle, Triangle_ } from './Triangle.js';
 import type { Plane, Plane_ } from './Plane.js';
 import { Sphere, Sphere_ } from './Sphere.js';
 import type { Matrix4 } from './Matrix4.js';
 import { Mesh } from '@modules/renderer/engine/objects/Mesh.js';
 import { clamp, NumberArray } from '@modules/renderer/engine/math/MathUtils.js';
 import { Const } from '@modules/renderer/engine/math/types.js';
+
+const { vec3 } = Vec3;
 
 export class Box3C {
   constructor(
