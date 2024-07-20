@@ -7,7 +7,7 @@ import Stats from 'stats-js';
 import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
 import { HDRCubeTextureLoader } from '@modules/renderer/engine/loaders/textures/HDRCubeTextureLoader/HDRCubeTextureLoader.js';
 
-import { createFlakesCanvas } from '@modules/renderer/engine/textures/createFlakesCanvas.js';
+import { FlakesTexture } from '@modules/renderer/engine/textures/FlakesTexture.js';
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
@@ -61,7 +61,7 @@ async function init() {
 
       const normalMap2 = await textureLoader.loadAsync('resources/textures/water/Water_1_M_Normal.jpg');
 
-      const normalMap3 = new Engine.CanvasTexture(createFlakesCanvas(512, 512));
+      const normalMap3 = new Engine.CanvasTexture(new FlakesTexture());
       normalMap3.wrapS = Engine.Wrapping.Repeat;
       normalMap3.wrapT = Engine.Wrapping.Repeat;
       normalMap3.repeat.x = 10;
