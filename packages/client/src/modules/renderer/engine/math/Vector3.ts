@@ -7,7 +7,7 @@ import { Euler } from '@modules/renderer/engine/math/Euler.js';
 import type { Matrix3 } from '@modules/renderer/engine/math/Matrix3.js';
 import type { Matrix4 } from '@modules/renderer/engine/math/Matrix4.js';
 import type { Cylindrical } from '@modules/renderer/engine/math/Cylindrical.js';
-import type { Spherical_ } from '@modules/renderer/engine/math/Spherical.js';
+import type { Spherical } from '@modules/renderer/engine/math/Spherical.js';
 import type { Camera } from '@modules/renderer/engine/cameras/Camera.js';
 import { Const } from '@modules/renderer/engine/math/types.js';
 
@@ -465,7 +465,7 @@ export class Vector3 implements IVector3 {
     return Math.abs(this.x - vector.x) + Math.abs(this.y - vector.y) + Math.abs(this.z - vector.z);
   }
 
-  setFromSpherical(spherical: Spherical_): this {
+  setFromSpherical(spherical: Spherical): this {
     return this.setFromSphericalCoords(spherical.radius, spherical.phi, spherical.theta);
   }
 
@@ -632,19 +632,9 @@ export namespace Vec3 {
     set(into, from.x + vec.x, from.y + vec.y, from.z + vec.z);
   export const added = (a: Vec3, b: Const<Vec3>): Vec3 => add_(a, b, empty());
 
-  export const addScaled = (self: Vec3, vec: Const<Vec3>, scale: number): Vec3 => addScaled_(self, vec, scale, self);
-  export const addScaled_ = (from: Const<Vec3>, vec: Const<Vec3>, scale: number, into: Vec3): Vec3 =>
-    set(into, from.x + vec.x * scale, from.y + vec.y * scale, from.z + vec.z * scale);
-  export const addedScaled = (a: Const<Vec3>, b: Const<Vec3>, scale: number): Vec3 => addScaled_(a, b, scale, empty());
-
   export const sub = (a: Vec3, b: Const<Vec3>): Vec3 => sub_(a, b, a);
   export const sub_ = (a: Const<Vec3>, b: Const<Vec3>, into: Vec3): Vec3 => set(into, a.x - b.x, a.y - b.y, a.z - b.z);
   export const subbed = (a: Const<Vec3>, b: Const<Vec3>): Vec3 => sub_(a, b, empty());
-
-  export const subScaled = (self: Vec3, vec: Const<Vec3>, scale: number): Vec3 => subScaled_(self, vec, scale, self);
-  export const subScaled_ = (from: Const<Vec3>, vec: Const<Vec3>, scale: number, into: Vec3): Vec3 =>
-    set(into, from.x - vec.x * scale, from.y - vec.y * scale, from.z - vec.z * scale);
-  export const subbedScaled = (a: Const<Vec3>, b: Const<Vec3>, scale: number): Vec3 => subScaled_(a, b, scale, empty());
 
   export const mul = (a: Vec3, b: Const<Vec3>): Vec3 => mul_(a, b, a);
   export const mul_ = (a: Const<Vec3>, b: Const<Vec3>, into: Vec3): Vec3 => set(into, a.x * b.x, a.y * b.y, a.z * b.z);
@@ -659,10 +649,10 @@ export namespace Vec3 {
   export const div_ = (a: Const<Vec3>, b: Const<Vec3>, into: Vec3): Vec3 => set(into, a.x / b.x, a.y / b.y, a.z / b.z);
   export const dived = (a: Const<Vec3>, b: Const<Vec3>): Vec3 => div_(a, b, empty());
 
-  export const invScale = (a: Vec3, scalar: number): Vec3 => invScale_(a, scalar, a);
-  export const invScale_ = (a: Const<Vec3>, scalar: number, into: Vec3): Vec3 =>
+  export const divScalar = (a: Vec3, scalar: number): Vec3 => divScalar_(a, scalar, a);
+  export const divScalar_ = (a: Const<Vec3>, scalar: number, into: Vec3): Vec3 =>
     set(into, a.x / scalar, a.y / scalar, a.z / scalar);
-  export const InvScaled = (a: Const<Vec3>, scalar: number): Vec3 => invScale_(a, scalar, empty());
+  export const divedScalar = (a: Const<Vec3>, scalar: number): Vec3 => divScalar_(a, scalar, empty());
 
   export const cross = (a: Const<Vec3>, b: Const<Vec3>): Vec3 => cross_(a, b, a);
   export const cross_ = (a: Const<Vec3>, b: Const<Vec3>, into: Vec3): Vec3 =>

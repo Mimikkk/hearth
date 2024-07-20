@@ -1,4 +1,5 @@
 import {
+  Camera,
   EventDispatcher,
   Matrix4,
   Mouse,
@@ -6,19 +7,18 @@ import {
   PerspectiveCamera,
   Plane,
   Ray,
+  Spherical,
   Vector2,
   Vector3,
 } from '../engine.js';
 import { DegreeToRadian } from '../math/MathUtils.js';
 import { Quaternion } from '@modules/renderer/engine/math/Quaternion.js';
-import { Spherical_ } from '@modules/renderer/engine/math/Spherical.js';
-import { Plane_ } from '@modules/renderer/engine/math/Plane.js';
 
 const _changeEvent = { type: 'change' } as const;
 const _startEvent = { type: 'start' } as const;
 const _endEvent = { type: 'end' } as const;
 const _ray = new Ray();
-const _plane = Plane_.empty();
+const _plane = new Plane();
 const TILT_LIMIT = Math.cos(70 * DegreeToRadian);
 
 export interface OrbitControlsEventMap {
@@ -73,7 +73,7 @@ export class OrbitControls {
   dispose: () => void;
 
   constructor(
-    public object: PerspectiveCamera | OrthographicCamera,
+    public object: Camera,
     public domElement: HTMLElement,
   ) {
     this.domElement.style.touchAction = 'none'; // disable touch scroll
@@ -212,10 +212,12 @@ export class OrbitControls {
         const position = scope.object.position;
 
         offset.copy(position).sub(scope.target);
+
+        // rotate offset to "y-axis-is-up" space
         offset.applyQuaternion(quat);
 
         // angle from z-axis around y-axis
-        Spherical_.fromCartesian_(offset, spherical);
+        spherical.setFromVector3(offset);
 
         if (scope.autoRotate && state === STATE.NONE) {
           rotateLeft(getAutoRotationAngle(deltaTime));
@@ -251,7 +253,8 @@ export class OrbitControls {
 
         // restrict phi to be between desired limits
         spherical.phi = Math.max(scope.minPolarAngle, Math.min(scope.maxPolarAngle, spherical.phi));
-        Spherical_.clamp(spherical);
+
+        spherical.makeSafe();
 
         // move target to panned location
 
@@ -292,7 +295,7 @@ export class OrbitControls {
 
           panOffset.multiplyScalar(1 - scope.dampingFactor);
         } else {
-          Spherical_.clear(sphericalDelta);
+          sphericalDelta.set(0, 0, 0);
 
           panOffset.set(0, 0, 0);
         }
@@ -350,7 +353,7 @@ export class OrbitControls {
               if (Math.abs(scope.object.up.dot(_ray.direction)) < TILT_LIMIT) {
                 object.lookAt(scope.target);
               } else {
-                Plane_.fillFromNormalAndCoplanar_(_plane, scope.object.up, scope.target);
+                _plane.setFromNormalAndCoplanarPoint(scope.object.up, scope.target);
                 _ray.intersectPlane(_plane, scope.target);
               }
             }
@@ -429,8 +432,8 @@ export class OrbitControls {
     const EPS = 0.000001;
 
     // current position in spherical coordinates
-    const spherical = Spherical_.empty();
-    const sphericalDelta = Spherical_.empty();
+    const spherical = new Spherical();
+    const sphericalDelta = new Spherical();
 
     let scale = 1;
     const panOffset = new Vector3();
@@ -524,7 +527,7 @@ export class OrbitControls {
           // we use only clientHeight here so aspect ratio does not distort speed
           panLeft((2 * deltaX * targetDistance) / element.clientHeight, scope.object.matrix);
           panUp((2 * deltaY * targetDistance) / element.clientHeight, scope.object.matrix);
-        } else if (scope.object instanceof OrthographicCamera) {
+        } else if (scope.object.isOrthographicCamera) {
           // orthographic
           panLeft(
             (deltaX * (scope.object.right - scope.object.left)) / scope.object.zoom / element.clientWidth,
@@ -698,7 +701,6 @@ export class OrbitControls {
         scope.update();
       }
     }
-
     //
     // event handlers - FSM: listen for events and reset state
     //
