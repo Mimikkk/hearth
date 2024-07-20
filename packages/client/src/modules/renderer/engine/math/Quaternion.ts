@@ -15,120 +15,6 @@ export class Quaternion {
     public w: number = 1,
   ) {}
 
-  asIdentity(): this {
-    return this.set(0, 0, 0, 1);
-  }
-
-  asMul(a: Quaternion, b: Quaternion): this {
-    // from http://www.euclideanspace.com/maths/algebra/realNormedAlgebra/quaternions/code/index.htm
-
-    const qax = a.x,
-      qay = a.y,
-      qaz = a.z,
-      qaw = a.w;
-    const qbx = b.x,
-      qby = b.y,
-      qbz = b.z,
-      qbw = b.w;
-
-    this.x = qax * qbw + qaw * qbx + qay * qbz - qaz * qby;
-    this.y = qay * qbw + qaw * qby + qaz * qbx - qax * qbz;
-    this.z = qaz * qbw + qaw * qbz + qax * qby - qay * qbx;
-    this.w = qaw * qbw - qax * qbx - qay * qby - qaz * qbz;
-
-    return this;
-  }
-
-  slerp(to: Quaternion, step: number): this {
-    if (step === 0) return this;
-    if (step === 1) return this.from(to);
-
-    const x = this.x,
-      y = this.y,
-      z = this.z,
-      w = this.w;
-
-    // http://www.euclideanspace.com/maths/algebra/realNormedAlgebra/quaternions/slerp/
-
-    let cosHalfTheta = w * to.w + x * to.x + y * to.y + z * to.z;
-
-    if (cosHalfTheta < 0) {
-      this.w = -to.w;
-      this.x = -to.x;
-      this.y = -to.y;
-      this.z = -to.z;
-
-      cosHalfTheta = -cosHalfTheta;
-    } else {
-      this.from(to);
-    }
-
-    if (cosHalfTheta >= 1.0) {
-      this.w = w;
-      this.x = x;
-      this.y = y;
-      this.z = z;
-
-      return this;
-    }
-
-    const sqrSinHalfTheta = 1.0 - cosHalfTheta * cosHalfTheta;
-
-    if (sqrSinHalfTheta <= Number.EPSILON) {
-      const s = 1 - step;
-      this.w = s * w + step * this.w;
-      this.x = s * x + step * this.x;
-      this.y = s * y + step * this.y;
-      this.z = s * z + step * this.z;
-
-      this.normalize(); // normalize calls _onChangeCallback()
-
-      return this;
-    }
-
-    const sinHalfTheta = Math.sqrt(sqrSinHalfTheta);
-    const halfTheta = Math.atan2(sinHalfTheta, cosHalfTheta);
-    const ratioA = Math.sin((1 - step) * halfTheta) / sinHalfTheta,
-      ratioB = Math.sin(step * halfTheta) / sinHalfTheta;
-
-    this.w = w * ratioA + this.w * ratioB;
-    this.x = x * ratioA + this.x * ratioB;
-    this.y = y * ratioA + this.y * ratioB;
-    this.z = z * ratioA + this.z * ratioB;
-
-    return this;
-  }
-
-  asSlerp(from: Quaternion, to: Quaternion, step: number): this {
-    return this.from(from).slerp(to, step);
-  }
-
-  random(): this {
-    // sets this quaternion to a uniform random unit quaternnion
-
-    // Ken Shoemake
-    // Uniform random rotations
-    // D. Kirk, editor, Graphics Gems III, pages 124-132. Academic Press, New York, 1992.
-
-    const theta1 = 2 * Math.PI * Math.random();
-    const theta2 = 2 * Math.PI * Math.random();
-
-    const x0 = Math.random();
-    const r1 = Math.sqrt(1 - x0);
-    const r2 = Math.sqrt(x0);
-
-    return this.set(r1 * Math.sin(theta1), r1 * Math.cos(theta1), r2 * Math.sin(theta2), r2 * Math.cos(theta2));
-  }
-
-  _onChangeCallback() {}
-
-  *[Symbol.iterator]() {
-    yield this.x;
-    yield this.y;
-    yield this.z;
-    yield this.w;
-  }
-
   static new(x: number = 0, y: number = 0, z: number = 0, w: number = 1): Quaternion {
     return new Quaternion(x, y, z, w);
   }
@@ -190,12 +76,8 @@ export class Quaternion {
     return into.asSlerp(from, to, step);
   }
 
-  fill(quaternion: Quaternion): void {
-    quaternion.from(this);
-  }
-
-  clone(): Quaternion {
-    return Quaternion.clone(this);
+  clone(into: Quaternion = Quaternion.new()): Quaternion {
+    return into.from(this);
   }
 
   set(x: number, y: number, z: number, w: number): this {
@@ -288,6 +170,74 @@ export class Quaternion {
 
   intoAttribute(attribute: Attribute, index: number): Attribute {
     return attribute.setXYZW(index, this.x, this.y, this.z, this.w);
+  }
+
+  asIdentity(): this {
+    return this.set(0, 0, 0, 1);
+  }
+
+  slerp(to: Const<Quaternion>, step: number): this {
+    if (step === 0) return this;
+    if (step === 1) return this.from(to);
+
+    const x = this.x,
+      y = this.y,
+      z = this.z,
+      w = this.w;
+
+    // http://www.euclideanspace.com/maths/algebra/realNormedAlgebra/quaternions/slerp/
+
+    let cosHalfTheta = w * to.w + x * to.x + y * to.y + z * to.z;
+
+    if (cosHalfTheta < 0) {
+      this.w = -to.w;
+      this.x = -to.x;
+      this.y = -to.y;
+      this.z = -to.z;
+
+      cosHalfTheta = -cosHalfTheta;
+    } else {
+      this.from(to);
+    }
+
+    if (cosHalfTheta >= 1.0) {
+      this.w = w;
+      this.x = x;
+      this.y = y;
+      this.z = z;
+
+      return this;
+    }
+
+    const sqrSinHalfTheta = 1.0 - cosHalfTheta * cosHalfTheta;
+
+    if (sqrSinHalfTheta <= Number.EPSILON) {
+      const s = 1 - step;
+      this.w = s * w + step * this.w;
+      this.x = s * x + step * this.x;
+      this.y = s * y + step * this.y;
+      this.z = s * z + step * this.z;
+
+      this.normalize(); // normalize calls _onChangeCallback()
+
+      return this;
+    }
+
+    const sinHalfTheta = Math.sqrt(sqrSinHalfTheta);
+    const halfTheta = Math.atan2(sinHalfTheta, cosHalfTheta);
+    const ratioA = Math.sin((1 - step) * halfTheta) / sinHalfTheta,
+      ratioB = Math.sin(step * halfTheta) / sinHalfTheta;
+
+    this.w = w * ratioA + this.w * ratioB;
+    this.x = x * ratioA + this.x * ratioB;
+    this.y = y * ratioA + this.y * ratioB;
+    this.z = z * ratioA + this.z * ratioB;
+
+    return this;
+  }
+
+  asSlerp(from: Const<Quaternion>, to: Const<Quaternion>, step: number): this {
+    return this.from(from).slerp(to, step);
   }
 
   fromEuler({ x, y, z, order }: Const<Euler>): this {
@@ -423,6 +373,26 @@ export class Quaternion {
     );
   }
 
+  asMul(a: Const<Quaternion>, b: Const<Quaternion>): this {
+    // from http://www.euclideanspace.com/maths/algebra/realNormedAlgebra/quaternions/code/index.htm
+
+    const qax = a.x,
+      qay = a.y,
+      qaz = a.z,
+      qaw = a.w;
+    const qbx = b.x,
+      qby = b.y,
+      qbz = b.z,
+      qbw = b.w;
+
+    this.x = qax * qbw + qaw * qbx + qay * qbz - qaz * qby;
+    this.y = qay * qbw + qaw * qby + qaz * qbx - qax * qbz;
+    this.z = qaz * qbw + qaw * qbz + qax * qby - qay * qbx;
+    this.w = qaw * qbw - qax * qbx - qay * qby - qaz * qbz;
+
+    return this;
+  }
+
   premul({ x, y, z, w }: Const<Quaternion>): this {
     return this.set(
       x * this.w + w * this.x + y * this.z - z * this.y,
@@ -430,6 +400,13 @@ export class Quaternion {
       z * this.w + w * this.z + x * this.y - y * this.x,
       w * this.w - x * this.x - y * this.y - z * this.z,
     );
+  }
+
+  *[Symbol.iterator]() {
+    yield this.x;
+    yield this.y;
+    yield this.z;
+    yield this.w;
   }
 }
 

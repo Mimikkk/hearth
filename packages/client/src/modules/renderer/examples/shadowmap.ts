@@ -84,7 +84,7 @@ async function init() {
   })();
 
   torusKnot = new Engine.Mesh(geometry, materialCustomShadow);
-  torusKnot.scale.multiplyScalar(1 / 18);
+  torusKnot.scale.scale(1 / 18);
   torusKnot.position.y = 3;
   torusKnot.castShadow = true;
   torusKnot.receiveShadow = true;

@@ -1,9 +1,9 @@
 import type { Vec3 } from './Vec3.js';
 import type { Mat4 } from './Mat4.js';
 import type { Quaternion } from './Quaternion.js';
-import type { Mat3 } from './Mat3.js';
-import type { BufferAttribute } from '../core/BufferAttribute.js';
-import { IVec2 } from '@modules/renderer/engine/math/Vec2.js';
+import { Const } from '@modules/renderer/engine/math/types.js';
+import { Attribute } from '@modules/renderer/engine/core/types.js';
+import { NumberArray } from '@modules/renderer/engine/math/MathUtils.js';
 
 export interface IVec4 {
   x: number;
@@ -37,6 +37,152 @@ export class Vec4 implements IVec4 {
 
   set height(value: number) {
     this.w = value;
+  }
+
+  setComponent(index: 0 | 1 | 2 | 3 | number, value: number): this {
+    switch (index) {
+      case 0:
+        this.x = value;
+        break;
+      case 1:
+        this.y = value;
+        break;
+      case 2:
+        this.z = value;
+        break;
+      case 3:
+        this.w = value;
+        break;
+      default:
+        throw Error(`index out of range: ${index}`);
+    }
+
+    return this;
+  }
+
+  getComponent(index: 0 | 1 | 2 | 3 | number): number {
+    switch (index) {
+      case 0:
+        return this.x;
+      case 1:
+        return this.y;
+      case 2:
+        return this.z;
+      case 3:
+        return this.w;
+      default:
+        throw new Error('index is out of range: ' + index);
+    }
+  }
+
+  asAdd(a: Vec4, b: Vec4): this {
+    this.x = a.x + b.x;
+    this.y = a.y + b.y;
+    this.z = a.z + b.z;
+    this.w = a.w + b.w;
+
+    return this;
+  }
+
+  asSub(a: Vec4, b: Vec4): this {
+    this.x = a.x - b.x;
+    this.y = a.y - b.y;
+    this.z = a.z - b.z;
+    this.w = a.w - b.w;
+
+    return this;
+  }
+
+  asLerp(from: Const<Vec4>, to: Const<Vec4>, alpha: number): this {
+    return this.set(
+      from.x + (to.x - from.x) * alpha,
+      from.y + (to.y - from.y) * alpha,
+      from.z + (to.z - from.z) * alpha,
+      from.w + (to.w - from.w) * alpha,
+    );
+  }
+
+  *[Symbol.iterator](): Iterator<number> {
+    yield this.x;
+    yield this.y;
+    yield this.z;
+    yield this.w;
+  }
+
+  static new(x: number = 0, y: number = 0, z: number = 0, w: number = 1): Vec4 {
+    return new Vec4(x, y, z, w);
+  }
+
+  static empty(): Vec4 {
+    return Vec4.new();
+  }
+
+  static clone(vec: Const<Vec4>, into: Vec4 = Vec4.empty()): Vec4 {
+    return into.from(vec);
+  }
+
+  static is(vector: any): vector is Vec4 {
+    return vector?.isVec4 === true;
+  }
+
+  static into(into: Vec4, vector: Const<Vec4>): Vec4 {
+    return into.from(vector);
+  }
+
+  static from(vector: Const<Vec4>, into: Vec4 = Vec4.empty()): Vec4 {
+    return into.from(vector);
+  }
+
+  static fromArray(array: number[], offset: number = 0, into: Vec4 = Vec4.empty()): Vec4 {
+    return into.fromArray(array, offset);
+  }
+
+  static fromAttribute(attribute: Const<Attribute>, index: number, into: Vec4 = Vec4.empty()): Vec4 {
+    return into.fromAttribute(attribute, index);
+  }
+
+  static lerp(from: Const<Vec4>, to: Const<Vec4>, step: number, into: Vec4 = Vec4.empty()): Vec4 {
+    return into.lerp(from, to, step);
+  }
+
+  from(from: Const<Vec4>): this {
+    return this.set(from.x, from.y, from.z, from.w);
+  }
+
+  fromAttribute(attribute: Const<Attribute>, index: number): this {
+    this.x = attribute.getX(index);
+    this.y = attribute.getY(index);
+    this.z = attribute.getZ(index);
+    this.w = attribute.getW(index);
+
+    return this;
+  }
+
+  intoAttribute(attribute: Attribute, index: number): this {
+    attribute.setXYZW(index, this.x, this.y, this.z, this.w);
+    return this;
+  }
+
+  fromArray(array: Const<NumberArray>, offset: number = 0): this {
+    this.x = array[offset];
+    this.y = array[offset + 1];
+    this.z = array[offset + 2];
+    this.w = array[offset + 3];
+
+    return this;
+  }
+
+  intoArray<T extends NumberArray>(array: T = [] as never, offset: number = 0): T {
+    array[offset] = this.x;
+    array[offset + 1] = this.y;
+    array[offset + 2] = this.z;
+    array[offset + 3] = this.w;
+
+    return array;
+  }
+
+  fromMat4Position({ elements: e }: Const<Mat4>): this {
+    return this.set(e[12], e[13], e[14], e[15]);
   }
 
   set(x: number, y: number, z: number, w: number): this {
@@ -81,190 +227,91 @@ export class Vec4 implements IVec4 {
     return this;
   }
 
-  setComponent(index: 0 | 1 | 2 | 3 | number, value: number): this {
-    switch (index) {
-      case 0:
-        this.x = value;
-        break;
-      case 1:
-        this.y = value;
-        break;
-      case 2:
-        this.z = value;
-        break;
-      case 3:
-        this.w = value;
-        break;
-      default:
-        throw Error(`index out of range: ${index}`);
-    }
-
-    return this;
-  }
-
-  getComponent(index: 0 | 1 | 2 | 3 | number): number {
-    switch (index) {
-      case 0:
-        return this.x;
-      case 1:
-        return this.y;
-      case 2:
-        return this.z;
-      case 3:
-        return this.w;
-      default:
-        throw new Error('index is out of range: ' + index);
-    }
-  }
-
   clone(): Vec4 {
-    return new this.constructor(this.x, this.y, this.z, this.w);
+    return Vec4.from(this);
   }
 
-  copy(vector: Vec3 | Vec4): this {
-    this.x = vector.x;
-    this.y = vector.y;
-    this.z = vector.z;
-    this.w = 'w' in vector ? vector.w : 1;
-
-    return this;
-  }
-
-  add(vector: Vec4): this {
-    this.x += vector.x;
-    this.y += vector.y;
-    this.z += vector.z;
-    this.w += vector.w;
-
-    return this;
+  add({ x, y, z, w }: Const<Vec4>): this {
+    return this.set(this.x + x, this.y + y, this.z + z, this.w + w);
   }
 
   addScalar(scalar: number): this {
-    this.x += scalar;
-    this.y += scalar;
-    this.z += scalar;
-    this.w += scalar;
-
-    return this;
+    return this.set(this.x + scalar, this.y + scalar, this.z + scalar, this.w + scalar);
   }
 
-  addVectors(a: Vec4, b: Vec4): this {
-    this.x = a.x + b.x;
-    this.y = a.y + b.y;
-    this.z = a.z + b.z;
-    this.w = a.w + b.w;
-
-    return this;
+  addScaled({ x, y, z, w }: Const<Vec4>, scale: number): this {
+    return this.set(this.x + x * scale, this.y + y * scale, this.z + z * scale, this.w + w * scale);
   }
 
-  addScaled(vector: Vec4, scale: number): this {
-    this.x += vector.x * scale;
-    this.y += vector.y * scale;
-    this.z += vector.z * scale;
-    this.w += vector.w * scale;
-
-    return this;
-  }
-
-  sub(vector: Vec4): this {
-    this.x -= vector.x;
-    this.y -= vector.y;
-    this.z -= vector.z;
-    this.w -= vector.w;
-
-    return this;
+  sub({ x, y, z, w }: Const<Vec4>): this {
+    return this.set(this.x - x, this.y - y, this.z - z, this.w - w);
   }
 
   subScalar(scalar: number): this {
-    this.x -= scalar;
-    this.y -= scalar;
-    this.z -= scalar;
-    this.w -= scalar;
-
-    return this;
+    return this.set(this.x - scalar, this.y - scalar, this.z - scalar, this.w - scalar);
   }
 
-  subVectors(a: Vec4, b: Vec4): this {
-    this.x = a.x - b.x;
-    this.y = a.y - b.y;
-    this.z = a.z - b.z;
-    this.w = a.w - b.w;
-
-    return this;
+  subScaled({ x, y, z, w }: Const<Vec4>, scale: number): this {
+    return this.set(this.x - x * scale, this.y - y * scale, this.z - z * scale, this.w - w * scale);
   }
 
-  multiply(vector: Vec4): this {
-    this.x *= vector.x;
-    this.y *= vector.y;
-    this.z *= vector.z;
-    this.w *= vector.w;
-
-    return this;
+  mul({ x, y, z, w }: Const<Vec4>): this {
+    return this.set(this.x * x, this.y * y, this.z * z, this.w * w);
   }
 
-  multiplyScalar(scalar: number): this {
-    this.x *= scalar;
-    this.y *= scalar;
-    this.z *= scalar;
-    this.w *= scalar;
-
-    return this;
+  mulScalar(scalar: number): this {
+    return this.set(this.x * scalar, this.y * scalar, this.z * scalar, this.w * scalar);
   }
 
-  applyMat4(matrix: Mat4): this {
+  scale(scalar: number): this {
+    return this.mulScalar(scalar);
+  }
+
+  applyMat4({ elements: e }: Const<Mat4>): this {
     const { x, y, z, w } = this;
-    const e = matrix.elements;
 
-    this.x = e[0] * x + e[4] * y + e[8] * z + e[12] * w;
-    this.y = e[1] * x + e[5] * y + e[9] * z + e[13] * w;
-    this.z = e[2] * x + e[6] * y + e[10] * z + e[14] * w;
-    this.w = e[3] * x + e[7] * y + e[11] * z + e[15] * w;
-
-    return this;
+    return this.set(
+      e[0] * x + e[4] * y + e[8] * z + e[12] * w,
+      e[1] * x + e[5] * y + e[9] * z + e[13] * w,
+      e[2] * x + e[6] * y + e[10] * z + e[14] * w,
+      e[3] * x + e[7] * y + e[11] * z + e[15] * w,
+    );
   }
 
-  divideScalar(scalar: number): this {
-    return this.multiplyScalar(1 / scalar);
+  div({ x, y, z, w }: Const<Vec4>): this {
+    return this.set(this.x / x, this.y / y, this.z / z, this.w / w);
   }
 
-  setAxisAngleFromQuaternion(quaternion: Quaternion): this {
-    this.w = 2 * Math.acos(quaternion.w);
-
-    const s = Math.sqrt(1 - quaternion.w * quaternion.w);
-
-    if (s < 0.0001) {
-      this.x = 1;
-      this.y = 0;
-      this.z = 0;
-    } else {
-      this.x = quaternion.x / s;
-      this.y = quaternion.y / s;
-      this.z = quaternion.z / s;
-    }
-
-    return this;
+  divScalar(scalar: number): this {
+    return this.scale(1 / scalar);
   }
 
-  setAxisAngleFromRotationMatrix(matrix: Mat3 | Mat4): this {
-    // http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToAngle/index.htm
+  asAxisAngleFromQuaternion({ x, y, z, w }: Const<Quaternion>): this {
+    const s = Math.sqrt(1 - w * w);
 
-    // assumes the upper 3x3 of m is a pure rotation matrix (i.e, unscaled)
+    if (s < 0.0001) return this.set(1, 0, 0, 2 * Math.acos(w));
+    return this.set(x / s, y / s, z / s, 2 * Math.acos(w));
+  }
 
-    let angle, x, y, z; // variables for result
-    const epsilon = 0.01, // margin to allow for rounding errors
-      epsilon2 = 0.1, // margin to distinguish between 0 and 180 degrees
-      te = matrix.elements,
-      m11 = te[0],
-      m12 = te[4],
-      m13 = te[8],
-      m21 = te[1],
-      m22 = te[5],
-      m23 = te[9],
-      m31 = te[2],
-      m32 = te[6],
-      m33 = te[10];
+  asAxisAngleFromRotation(matrix: Const<Mat4>): this {
+    // variables for result
+    let angle, x, y, z;
+    // margin to allow for rounding errors
+    const epsilon1 = 0.01;
+    // margin to distinguish between 0 and 180 degrees
+    const epsilon2 = 0.1;
+    const te = matrix.elements;
+    const m11 = te[0];
+    const m12 = te[4];
+    const m13 = te[8];
+    const m21 = te[1];
+    const m22 = te[5];
+    const m23 = te[9];
+    const m31 = te[2];
+    const m32 = te[6];
+    const m33 = te[10];
 
-    if (Math.abs(m12 - m21) < epsilon && Math.abs(m13 - m31) < epsilon && Math.abs(m23 - m32) < epsilon) {
+    if (Math.abs(m12 - m21) < epsilon1 && Math.abs(m13 - m31) < epsilon1 && Math.abs(m23 - m32) < epsilon1) {
       // singularity found
       // first check for identity matrix which must have +1 for all terms
       // in leading diagonal and zero in other terms
@@ -275,17 +322,11 @@ export class Vec4 implements IVec4 {
         Math.abs(m23 + m32) < epsilon2 &&
         Math.abs(m11 + m22 + m33 - 3) < epsilon2
       ) {
-        // this singularity is identity matrix so angle = 0
-
-        this.set(1, 0, 0, 0);
-
-        return this; // zero angle, arbitrary axis
+        return this.set(1, 0, 0, 0);
       }
 
       // otherwise this singularity is angle = 180
-
       angle = Math.PI;
-
       const xx = (m11 + 1) / 2;
       const yy = (m22 + 1) / 2;
       const zz = (m33 + 1) / 2;
@@ -295,11 +336,10 @@ export class Vec4 implements IVec4 {
 
       if (xx > yy && xx > zz) {
         // m11 is the largest diagonal term
-
-        if (xx < epsilon) {
+        if (xx < epsilon1) {
           x = 0;
-          y = 0.707106781;
-          z = 0.707106781;
+          y = Math.SQRT1_2;
+          z = Math.SQRT1_2;
         } else {
           x = Math.sqrt(xx);
           y = xy / x;
@@ -307,11 +347,10 @@ export class Vec4 implements IVec4 {
         }
       } else if (yy > zz) {
         // m22 is the largest diagonal term
-
-        if (yy < epsilon) {
-          x = 0.707106781;
+        if (yy < epsilon1) {
+          x = Math.SQRT1_2;
           y = 0;
-          z = 0.707106781;
+          z = Math.SQRT1_2;
         } else {
           y = Math.sqrt(yy);
           x = xy / y;
@@ -319,10 +358,9 @@ export class Vec4 implements IVec4 {
         }
       } else {
         // m33 is the largest diagonal term so base result on this
-
-        if (zz < epsilon) {
-          x = 0.707106781;
-          y = 0.707106781;
+        if (zz < epsilon1) {
+          x = Math.SQRT1_2;
+          y = Math.SQRT1_2;
           z = 0;
         } else {
           z = Math.sqrt(zz);
@@ -331,195 +369,114 @@ export class Vec4 implements IVec4 {
         }
       }
 
-      this.set(x, y, z, angle);
-
-      return this; // return 180 deg rotation
+      return this.set(x, y, z, angle);
     }
 
     // as we have reached here there are no singularities so we can handle normally
-
     let s = Math.sqrt((m32 - m23) * (m32 - m23) + (m13 - m31) * (m13 - m31) + (m21 - m12) * (m21 - m12)); // used to normalize
 
     if (Math.abs(s) < 0.001) s = 1;
-
-    // prevent divide by zero, should not happen if matrix is orthogonal and should be
-    // caught by singularity test above, but I've left it in just in case
-
-    this.x = (m32 - m23) / s;
-    this.y = (m13 - m31) / s;
-    this.z = (m21 - m12) / s;
-    this.w = Math.acos((m11 + m22 + m33 - 1) / 2);
-
-    return this;
+    return this.set((m32 - m23) / s, (m13 - m31) / s, (m21 - m12) / s, Math.acos((m11 + m22 + m33 - 1) / 2));
   }
 
-  min(vector: Vec4): this {
-    this.x = Math.min(this.x, vector.x);
-    this.y = Math.min(this.y, vector.y);
-    this.z = Math.min(this.z, vector.z);
-    this.w = Math.min(this.w, vector.w);
-
-    return this;
+  min({ x, y, z, w }: Const<Vec4>): this {
+    return this.set(Math.min(this.x, x), Math.min(this.y, y), Math.min(this.z, z), Math.min(this.w, w));
   }
 
-  max(vector: Vec4): this {
-    this.x = Math.max(this.x, vector.x);
-    this.y = Math.max(this.y, vector.y);
-    this.z = Math.max(this.z, vector.z);
-    this.w = Math.max(this.w, vector.w);
-
-    return this;
+  max({ x, y, z, w }: Const<Vec4>): this {
+    return this.set(Math.max(this.x, x), Math.max(this.y, y), Math.max(this.z, z), Math.max(this.w, w));
   }
 
-  clamp(min: Vec4, max: Vec4): this {
-    this.x = Math.max(min.x, Math.min(max.x, this.x));
-    this.y = Math.max(min.y, Math.min(max.y, this.y));
-    this.z = Math.max(min.z, Math.min(max.z, this.z));
-    this.w = Math.max(min.w, Math.min(max.w, this.w));
-
-    return this;
+  clamp(min: Const<Vec4>, max: Const<Vec4>): this {
+    return this.set(
+      clamp(this.x, min.x, max.x),
+      clamp(this.y, min.y, max.y),
+      clamp(this.z, min.z, max.z),
+      clamp(this.w, min.w, max.w),
+    );
   }
 
   clampScalar(min: number, max: number): this {
-    this.x = Math.max(min, Math.min(max, this.x));
-    this.y = Math.max(min, Math.min(max, this.y));
-    this.z = Math.max(min, Math.min(max, this.z));
-    this.w = Math.max(min, Math.min(max, this.w));
-
-    return this;
+    return this.set(clamp(this.x, min, max), clamp(this.y, min, max), clamp(this.z, min, max), clamp(this.w, min, max));
   }
 
   clampLength(min: number, max: number): this {
     const length = this.length();
 
-    return this.divideScalar(length || 1).multiplyScalar(Math.max(min, Math.min(max, length)));
+    return this.divScalar(length || 1).scale(clamp(length, min, max));
   }
 
   floor(): this {
-    this.x = Math.floor(this.x);
-    this.y = Math.floor(this.y);
-    this.z = Math.floor(this.z);
-    this.w = Math.floor(this.w);
-
-    return this;
+    return this.set(Math.floor(this.x), Math.floor(this.y), Math.floor(this.z), Math.floor(this.w));
   }
 
   ceil(): this {
-    this.x = Math.ceil(this.x);
-    this.y = Math.ceil(this.y);
-    this.z = Math.ceil(this.z);
-    this.w = Math.ceil(this.w);
-
-    return this;
+    return this.set(Math.ceil(this.x), Math.ceil(this.y), Math.ceil(this.z), Math.ceil(this.w));
   }
 
   round(): this {
-    this.x = Math.round(this.x);
-    this.y = Math.round(this.y);
-    this.z = Math.round(this.z);
-    this.w = Math.round(this.w);
-
-    return this;
+    return this.set(Math.round(this.x), Math.round(this.y), Math.round(this.z), Math.round(this.w));
   }
 
-  roundToZero(): this {
-    this.x = Math.trunc(this.x);
-    this.y = Math.trunc(this.y);
-    this.z = Math.trunc(this.z);
-    this.w = Math.trunc(this.w);
-
-    return this;
+  truncate(): this {
+    return this.set(Math.trunc(this.x), Math.trunc(this.y), Math.trunc(this.z), Math.trunc(this.w));
   }
 
   negate(): this {
-    this.x = -this.x;
-    this.y = -this.y;
-    this.z = -this.z;
-    this.w = -this.w;
-
-    return this;
+    return this.set(-this.x, -this.y, -this.z, -this.w);
   }
 
-  dot(vector: Vec4) {
-    return this.x * vector.x + this.y * vector.y + this.z * vector.z + this.w * vector.w;
+  dot({ x, y, z, w }: Const<Vec4>): number {
+    return this.x * x + this.y * y + this.z * z + this.w * w;
   }
 
   lengthSq(): number {
-    return this.x * this.x + this.y * this.y + this.z * this.z + this.w * this.w;
+    return this.euclideanSq();
   }
 
   length(): number {
-    return Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z + this.w * this.w);
+    return this.euclidean();
   }
 
-  manhattanLength(): number {
+  euclideanSq(): number {
+    return this.x * this.x + this.y * this.y + this.z * this.z + this.w * this.w;
+  }
+
+  euclidean(): number {
+    return Math.sqrt(this.euclideanSq());
+  }
+
+  manhattan(): number {
     return Math.abs(this.x) + Math.abs(this.y) + Math.abs(this.z) + Math.abs(this.w);
   }
 
   normalize(): this {
-    return this.divideScalar(this.length() || 1);
+    return this.divScalar(this.length() || 1);
+  }
+
+  distanceSqTo(vec: Const<Vec4>): number {
+    const dx = this.x - vec.x;
+    const dy = this.y - vec.y;
+    const dz = this.z - vec.z;
+    const dw = this.w - vec.w;
+
+    return dx * dx + dy * dy + dz * dz + dw * dw;
+  }
+
+  distanceTo(vec: Const<Vec4>): number {
+    return Math.sqrt(this.distanceSqTo(vec));
   }
 
   setLength(length: number): this {
-    return this.normalize().multiplyScalar(length);
+    return this.normalize().scale(length);
   }
 
-  lerp(vector: Vec4, alpha: number): this {
-    this.x += (vector.x - this.x) * alpha;
-    this.y += (vector.y - this.y) * alpha;
-    this.z += (vector.z - this.z) * alpha;
-    this.w += (vector.w - this.w) * alpha;
-
-    return this;
+  lerp(to: Const<Vec4>, step: number): this {
+    return this.asLerp(this, to, step);
   }
 
-  lerpVectors(from: Vec4, to: Vec4, alpha: number): this {
-    this.x = from.x + (to.x - from.x) * alpha;
-    this.y = from.y + (to.y - from.y) * alpha;
-    this.z = from.z + (to.z - from.z) * alpha;
-    this.w = from.w + (to.w - from.w) * alpha;
-
-    return this;
-  }
-
-  equals(vector: Vec4): boolean {
-    return vector.x === this.x && vector.y === this.y && vector.z === this.z && vector.w === this.w;
-  }
-
-  fromArray(array: number[], offset: number = 0): this {
-    this.x = array[offset];
-    this.y = array[offset + 1];
-    this.z = array[offset + 2];
-    this.w = array[offset + 3];
-
-    return this;
-  }
-
-  intoArray(array: number[] = [], offset: number = 0): number[] {
-    array[offset] = this.x;
-    array[offset + 1] = this.y;
-    array[offset + 2] = this.z;
-    array[offset + 3] = this.w;
-
-    return array;
-  }
-
-  fromBufferAttribute(attribute: BufferAttribute, index: number): this {
-    this.x = attribute.getX(index);
-    this.y = attribute.getY(index);
-    this.z = attribute.getZ(index);
-    this.w = attribute.getW(index);
-
-    return this;
-  }
-
-  random(): this {
-    this.x = Math.random();
-    this.y = Math.random();
-    this.z = Math.random();
-    this.w = Math.random();
-
-    return this;
+  equals({ x, y, z, w }: Const<Vec4>): boolean {
+    return x === this.x && y === this.y && z === this.z && w === this.w;
   }
 
   *[Symbol.iterator](): Iterator<number> {

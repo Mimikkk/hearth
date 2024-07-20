@@ -51,12 +51,12 @@ export class RectAreaLightHelper extends Line {
       (this.material as MeshBasicMaterial).color.set(this.color);
       ((this.children[0] as Mesh).material as MeshBasicMaterial).color.set(this.color);
     } else {
-      (this.material as MeshBasicMaterial).color.copy(this.light.color).multiplyScalar(this.light.intensity);
+      (this.material as MeshBasicMaterial).color.copy(this.light.color).scale(this.light.intensity);
 
       // prevent hue shift
       const c = (this.material as MeshBasicMaterial).color;
       const max = Math.max(c.r, c.g, c.b);
-      if (max > 1) c.multiplyScalar(1 / max);
+      if (max > 1) c.scale(1 / max);
 
       ((this.children[0] as Mesh).material as MeshBasicMaterial).color.copy((this.material as MeshBasicMaterial).color);
     }

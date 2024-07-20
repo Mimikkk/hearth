@@ -91,7 +91,7 @@ class Background extends DataMap<any, any> {
     //
 
     if (renderer.parameters.autoClear || forceClear) {
-      _clearColor.multiplyScalar(_clearColor.a);
+      _clearColor.scale(_clearColor.a);
 
       const clearColorValue = renderContext.clearColorValue;
 

@@ -353,14 +353,14 @@ export class Renderer {
     const minDepth = viewport.minDepth === undefined ? 0 : viewport.minDepth;
     const maxDepth = viewport.maxDepth === undefined ? 1 : viewport.maxDepth;
 
-    renderContext.viewportValue.copy(viewport).multiplyScalar(pixelRatio).floor();
+    renderContext.viewportValue.from(viewport).scale(pixelRatio).floor();
     renderContext.viewportValue.width >>= activeMipmapLevel;
     renderContext.viewportValue.height >>= activeMipmapLevel;
     renderContext.viewportValue.minDepth = minDepth;
     renderContext.viewportValue.maxDepth = maxDepth;
     renderContext.viewport = renderContext.viewportValue.equals(_screen) === false;
 
-    renderContext.scissorValue.copy(scissor).multiplyScalar(pixelRatio).floor();
+    renderContext.scissorValue.from(scissor).scale(pixelRatio).floor();
     renderContext.scissor = this._scissorTest && renderContext.scissorValue.equals(_screen) === false;
     renderContext.scissorValue.width >>= activeMipmapLevel;
     renderContext.scissorValue.height >>= activeMipmapLevel;
@@ -559,7 +559,7 @@ export class Renderer {
     const scissor = this._scissor;
 
     if (x.isVec4) {
-      scissor.copy(x);
+      scissor.from(x);
     } else {
       scissor.set(x, y, width, height);
     }
@@ -583,7 +583,7 @@ export class Renderer {
     const viewport = this._viewport;
 
     if (x.isVec4) {
-      viewport.copy(x);
+      viewport.from(x);
     } else {
       viewport.set(x, y, width, height);
     }

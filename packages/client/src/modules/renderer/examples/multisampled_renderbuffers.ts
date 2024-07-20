@@ -71,7 +71,7 @@ async function init() {
 
   for (let i = 0; i < count; i++) {
     box.setMatrixAt(i, mat4.identity().setPosition(positions[i]));
-    box2.setMatrixAt(i, mat4.multiplyScalar(0.996).setPosition(positions[i]));
+    box2.setMatrixAt(i, mat4.scale(0.996).setPosition(positions[i]));
   }
 
   scene.add(box, box2);

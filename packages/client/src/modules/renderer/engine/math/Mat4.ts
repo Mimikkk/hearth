@@ -441,7 +441,7 @@ export class Mat4 implements Matrix {
     return this;
   }
 
-  multiplyScalar(s: number): this {
+  scale(s: number): this {
     const te = this.elements;
 
     te[0] *= s;

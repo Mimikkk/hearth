@@ -6,7 +6,7 @@ export interface Matrix {
   elements: number[];
   identity(): Matrix;
   copy(m: this): this;
-  multiplyScalar(s: number): Matrix;
+  scale(s: number): Matrix;
   determinant(): number;
   transpose(): Matrix;
   invert(): Matrix;
@@ -162,7 +162,7 @@ export class Mat3 implements Matrix {
     return this;
   }
 
-  multiplyScalar(scalar: number): Mat3 {
+  scale(scalar: number): Mat3 {
     const te = this.elements;
 
     te[0] *= scalar;

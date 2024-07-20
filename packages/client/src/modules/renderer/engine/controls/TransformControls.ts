@@ -1095,7 +1095,7 @@ export class TransformControlsGizmo extends Object3D {
         factor = 0;
       }
 
-      handle.scale.set(1, 1, 1).multiplyScalar((factor * this.size) / 4);
+      handle.scale.set(1, 1, 1).scale((factor * this.size) / 4);
 
       // TODO: simplify helpers and consider decoupling from gizmo
 

@@ -158,12 +158,12 @@ export class SkinnedMesh extends Mesh {
     const skinWeight = this.geometry.attributes.skinWeight;
 
     for (let i = 0, l = skinWeight.count; i < l; i++) {
-      vector.fromBufferAttribute(skinWeight, i);
+      vector.fromAttribute(skinWeight, i);
 
-      const scale = 1.0 / vector.manhattanLength();
+      const scale = 1.0 / vector.manhattan();
 
       if (scale !== Infinity) {
-        vector.multiplyScalar(scale);
+        vector.mulScalar(scale);
       } else {
         vector.set(1, 0, 0, 0); // do something reasonable
       }
@@ -190,8 +190,8 @@ export class SkinnedMesh extends Mesh {
     const skeleton = this.skeleton!;
     const geometry = this.geometry!;
 
-    _skinIndex.fromBufferAttribute(geometry.attributes.skinIndex, index);
-    _skinWeight.fromBufferAttribute(geometry.attributes.skinWeight, index);
+    _skinIndex.fromAttribute(geometry.attributes.skinIndex, index);
+    _skinWeight.fromAttribute(geometry.attributes.skinWeight, index);
 
     _basePosition.from(vector).applyMat4(this.bindMatrix);
 

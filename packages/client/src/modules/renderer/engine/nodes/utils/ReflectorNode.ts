@@ -178,7 +178,7 @@ class ReflectorNode extends TextureNode {
     _q.w = (1.0 + projectionMatrix.elements[10]) / projectionMatrix.elements[14];
 
     // Calculate the scaled plane vector
-    clipPlane.multiplyScalar(1.0 / clipPlane.dot(_q));
+    clipPlane.mulScalar(1.0 / clipPlane.dot(_q));
 
     const clipBias = 0;
 

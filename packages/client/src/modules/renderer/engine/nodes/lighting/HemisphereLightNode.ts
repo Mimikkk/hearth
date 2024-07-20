@@ -25,7 +25,7 @@ class HemisphereLightNode extends AnalyticLightNode {
 
     this.lightPositionNode.object3d = light;
 
-    this.groundColorNode.value.copy(light.groundColor).multiplyScalar(light.intensity);
+    this.groundColorNode.value.copy(light.groundColor).scale(light.intensity);
   }
 
   setup(builder) {

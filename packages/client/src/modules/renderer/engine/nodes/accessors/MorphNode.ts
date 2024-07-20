@@ -82,7 +82,7 @@ function getEntry(geometry) {
         const stride = j * vertexDataStride;
 
         if (hasMorphPosition === true) {
-          morphVec4.fromBufferAttribute(morphTarget, j);
+          morphVec4.fromAttribute(morphTarget, j);
 
           buffer[offset + stride + 0] = morphVec4.x;
           buffer[offset + stride + 1] = morphVec4.y;
@@ -91,7 +91,7 @@ function getEntry(geometry) {
         }
 
         if (hasMorphNormals === true) {
-          morphVec4.fromBufferAttribute(morphNormal, j);
+          morphVec4.fromAttribute(morphNormal, j);
 
           buffer[offset + stride + 4] = morphVec4.x;
           buffer[offset + stride + 5] = morphVec4.y;
@@ -100,7 +100,7 @@ function getEntry(geometry) {
         }
 
         if (hasMorphColors === true) {
-          morphVec4.fromBufferAttribute(morphColor, j);
+          morphVec4.fromAttribute(morphColor, j);
 
           buffer[offset + stride + 8] = morphVec4.x;
           buffer[offset + stride + 9] = morphVec4.y;

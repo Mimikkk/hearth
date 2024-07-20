@@ -44,7 +44,7 @@ async function init() {
 
   camera = new Engine.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.01, 30);
   camera.position.set(2.5, 1, 3);
-  camera.position.multiplyScalar(0.8);
+  camera.position.scale(0.8);
   camera.lookAt(0, 1, 0);
 
   clock = new Engine.Clock();

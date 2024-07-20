@@ -371,8 +371,8 @@ export class ExtrudeGeometry extends BufferGeometry {
         } else {
           // v( vert.x, vert.y + extrudePts[ 0 ].y, extrudePts[ 0 ].x );
 
-          normal!.copy(splineTube!.normals[0]).multiplyScalar(vert.x);
-          binormal!.copy(splineTube!.binormals[0]).multiplyScalar(vert.y);
+          normal!.copy(splineTube!.normals[0]).scale(vert.x);
+          binormal!.copy(splineTube!.binormals[0]).scale(vert.y);
 
           position2!.copy(extrudePts![0]).add(normal!).add(binormal!);
 
@@ -392,8 +392,8 @@ export class ExtrudeGeometry extends BufferGeometry {
           } else {
             // v( vert.x, vert.y + extrudePts[ s - 1 ].y, extrudePts[ s - 1 ].x );
 
-            normal!.copy(splineTube!.normals[s]).multiplyScalar(vert.x);
-            binormal!.copy(splineTube!.binormals[s]).multiplyScalar(vert.y);
+            normal!.copy(splineTube!.normals[s]).scale(vert.x);
+            binormal!.copy(splineTube!.binormals[s]).scale(vert.y);
 
             position2!.copy(extrudePts![s]).add(normal!).add(binormal!);
 

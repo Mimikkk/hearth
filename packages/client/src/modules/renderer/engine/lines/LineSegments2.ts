@@ -47,11 +47,11 @@ function getWorldSpaceHalfWidth(
   // transform back into world space to get world offset. Note clip space is [-1, 1] so full
   // width does not need to be halved.
   _clipToWorldVector.set(0, 0, -distance, 1.0).applyMat4(camera.projectionMatrix);
-  _clipToWorldVector.multiplyScalar(1.0 / _clipToWorldVector.w);
+  _clipToWorldVector.mulScalar(1.0 / _clipToWorldVector.w);
   _clipToWorldVector.x = _lineWidth / resolution.width;
   _clipToWorldVector.y = _lineWidth / resolution.height;
   _clipToWorldVector.applyMat4(camera.projectionMatrixInverse);
-  _clipToWorldVector.multiplyScalar(1.0 / _clipToWorldVector.w);
+  _clipToWorldVector.mulScalar(1.0 / _clipToWorldVector.w);
 
   return Math.abs(Math.max(_clipToWorldVector.x, _clipToWorldVector.y));
 }
@@ -112,7 +112,7 @@ function raycastScreenSpace(lineSegments: LineSegments, camera: Camera, intersec
   _ssOrigin.w = 1;
   _ssOrigin.applyMat4(camera.matrixWorldInverse);
   _ssOrigin.applyMat4(projectionMatrix);
-  _ssOrigin.multiplyScalar(1 / _ssOrigin.w);
+  _ssOrigin.mulScalar(1 / _ssOrigin.w);
 
   // screen space
   _ssOrigin.x *= resolution.x / 2;
@@ -124,8 +124,8 @@ function raycastScreenSpace(lineSegments: LineSegments, camera: Camera, intersec
   _mvMatrix.multiplyMatrices(camera.matrixWorldInverse, matrixWorld);
 
   for (let i = 0, l = segmentCount; i < l; i++) {
-    _start4.fromBufferAttribute(instanceStart, i);
-    _end4.fromBufferAttribute(instanceEnd, i);
+    _start4.fromAttribute(instanceStart, i);
+    _end4.fromAttribute(instanceEnd, i);
 
     _start4.w = 1;
     _end4.w = 1;
@@ -156,8 +156,8 @@ function raycastScreenSpace(lineSegments: LineSegments, camera: Camera, intersec
     _end4.applyMat4(projectionMatrix);
 
     // ndc space [ - 1.0, 1.0 ]
-    _start4.multiplyScalar(1 / _start4.w);
-    _end4.multiplyScalar(1 / _end4.w);
+    _start4.mulScalar(1 / _start4.w);
+    _end4.mulScalar(1 / _end4.w);
 
     // screen space
     _start4.x *= resolution.x / 2;

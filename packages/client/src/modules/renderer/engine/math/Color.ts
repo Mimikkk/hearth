@@ -562,7 +562,7 @@ export class Color {
     return this;
   }
 
-  multiplyScalar(s: number): this {
+  scale(s: number): this {
     this.r *= s;
     this.g *= s;
     this.b *= s;

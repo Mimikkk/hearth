@@ -202,7 +202,7 @@ class AnalyticLightNode extends LightingNode {
   update(/*frame*/) {
     const { light } = this;
 
-    this.color.copy(light.color).multiplyScalar(light.intensity);
+    this.color.copy(light.color).scale(light.intensity);
   }
 }
 
