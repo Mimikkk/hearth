@@ -46,6 +46,7 @@ import {
   Vec4NodeUniform,
 } from '@modules/renderer/engine/renderers/common/nodes/NodeUniform.js';
 import { NodeMaterials } from '@modules/renderer/engine/nodes/materials/NodeMaterialMap.js';
+import { FeatureName, FeatureSupportMap } from '@modules/renderer/engine/renderers/webgpu/nodes/FeatureSupportMap.js';
 
 const uniformsGroupCache = new ChainMap();
 
@@ -80,11 +81,6 @@ const gpuShaderStageLib = {
   vertex: GPUShaderStage ? GPUShaderStage.VERTEX : 1,
   fragment: GPUShaderStage ? GPUShaderStage.FRAGMENT : 2,
   compute: GPUShaderStage ? GPUShaderStage.COMPUTE : 4,
-};
-
-const supports = {
-  instance: true,
-  storageBuffer: true,
 };
 
 const wgslFnOpLib = {
@@ -1155,9 +1151,8 @@ export class NodeBuilder {
   getFunctionOperator(op) {
     const fnOp = wgslFnOpLib[op];
 
-    if (fnOp !== undefined) {
+    if (fnOp) {
       this._include(fnOp);
-
       return fnOp;
     }
 
@@ -1645,8 +1640,8 @@ ${flowData.code}
     return wgslTypeLib[type] || type;
   }
 
-  isAvailable(name) {
-    return supports[name] === true;
+  isAvailable(name: FeatureName): boolean {
+    return FeatureSupportMap.has(name);
   }
 
   _getWGSLMethod(method) {
