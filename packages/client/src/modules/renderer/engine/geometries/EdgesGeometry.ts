@@ -4,9 +4,9 @@ import * as MathUtils from '../math/MathUtils.js';
 import { Triangle } from '../math/Triangle.js';
 import { Vector3 } from '../math/Vector3.js';
 
-const _v0 = new Vector3();
-const _v1 = new Vector3();
-const _normal = new Vector3();
+const _v0 = /*@__PURE__*/ new Vector3();
+const _v1 = /*@__PURE__*/ new Vector3();
+const _normal = /*@__PURE__*/ new Vector3();
 const _triangle = Triangle.empty();
 
 export class EdgesGeometry extends BufferGeometry {

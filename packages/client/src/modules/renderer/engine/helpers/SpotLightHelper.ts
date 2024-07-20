@@ -7,7 +7,7 @@ import { BufferGeometry } from '../core/BufferGeometry.js';
 import { SpotLight } from '@modules/renderer/engine/lights/SpotLight.js';
 import { Color } from '@modules/renderer/engine/math/Color.js';
 
-const _vector = new Vector3();
+const _vector = /*@__PURE__*/ new Vector3();
 
 export class SpotLightHelper extends Object3D {
   declare type: string | 'SpotLightHelper';

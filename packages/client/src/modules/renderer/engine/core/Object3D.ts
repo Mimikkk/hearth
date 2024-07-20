@@ -5,6 +5,7 @@ import { EventDispatcher } from './EventDispatcher.js';
 import { Euler } from '../math/Euler.js';
 import { Layers } from './Layers.js';
 import { Matrix3 } from '../math/Matrix3.js';
+import * as MathUtils from '../math/MathUtils.js';
 import type { Intersection, Raycaster } from './Raycaster.js';
 import type { Light } from '../lights/Light.js';
 import type { Scene } from '../scenes/Scene.js';
@@ -12,39 +13,40 @@ import type { BufferGeometry } from './BufferGeometry.js';
 import type { Camera } from '../cameras/Camera.js';
 import type { Material } from '../materials/Material.js';
 import type { Group } from '../objects/Group.js';
-import type { Vec2 } from '../math/Vector2.js';
+import type { Vector2 } from '../math/Vector2.js';
 import { Box3 } from '@modules/renderer/engine/math/Box3.js';
 import { Renderer } from '../renderers/webgpu/Renderer.js';
+import { throttle } from 'lodash-es';
 import { v4 } from 'uuid';
 import { Sphere } from '@modules/renderer/engine/math/Sphere.js';
 
 let _object3DId = 0;
 
-const _v1 = new Vector3();
-const _q1 = Quaternion.identity();
-const _m1 = new Matrix4();
-const _target = new Vector3();
+const _v1 = /*@__PURE__*/ new Vector3();
+const _q1 = /*@__PURE__*/ Quaternion.identity();
+const _m1 = /*@__PURE__*/ new Matrix4();
+const _target = /*@__PURE__*/ new Vector3();
 
-const _position = new Vector3();
-const _scale = new Vector3();
-const _quaternion = Quaternion.identity();
+const _position = /*@__PURE__*/ new Vector3();
+const _scale = /*@__PURE__*/ new Vector3();
+const _quaternion = /*@__PURE__*/ Quaternion.identity();
 
-const _xAxis = new Vector3(1, 0, 0);
-const _yAxis = new Vector3(0, 1, 0);
-const _zAxis = new Vector3(0, 0, 1);
+const _xAxis = /*@__PURE__*/ new Vector3(1, 0, 0);
+const _yAxis = /*@__PURE__*/ new Vector3(0, 1, 0);
+const _zAxis = /*@__PURE__*/ new Vector3(0, 0, 1);
 
 export interface Object3DEventMap {
   added: {};
   removed: {};
   childadded: { child: Object3D };
   childremoved: { child: Object3D };
-  pointerdown: { data: Vec2 };
-  pointerup: { data: Vec2 };
-  pointermove: { data: Vec2 };
-  mousedown: { data: Vec2 };
-  mouseup: { data: Vec2 };
-  mousemove: { data: Vec2 };
-  click: { data: Vec2 };
+  pointerdown: { data: Vector2 };
+  pointerup: { data: Vector2 };
+  pointermove: { data: Vector2 };
+  mousedown: { data: Vector2 };
+  mouseup: { data: Vector2 };
+  mousemove: { data: Vector2 };
+  click: { data: Vector2 };
   dispose: {};
 }
 

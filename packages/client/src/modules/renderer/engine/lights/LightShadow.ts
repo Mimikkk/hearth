@@ -7,9 +7,9 @@ import { Camera } from '../cameras/Camera.js';
 import { Light } from './Light.js';
 import { RenderTarget } from '@modules/renderer/engine/core/RenderTarget.js';
 
-const _projScreenMatrix = new Matrix4();
-const _lightPositionWorld = new Vector3();
-const _lookTarget = new Vector3();
+const _projScreenMatrix = /*@__PURE__*/ new Matrix4();
+const _lightPositionWorld = /*@__PURE__*/ new Vector3();
+const _lookTarget = /*@__PURE__*/ new Vector3();
 
 export class LightShadow<C extends Camera = Camera> {
   declare ['constructor']: typeof LightShadow;

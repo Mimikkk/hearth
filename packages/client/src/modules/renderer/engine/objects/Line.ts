@@ -10,10 +10,10 @@ import { Material } from '@modules/renderer/engine/materials/Material.js';
 import { Intersection, Raycaster } from '@modules/renderer/engine/core/Raycaster.js';
 import { LineSegments } from '@modules/renderer/engine/objects/LineSegments.js';
 
-const _start = new Vector3();
-const _end = new Vector3();
-const _inverseMatrix = new Matrix4();
-const _ray = new Ray();
+const _start = /*@__PURE__*/ new Vector3();
+const _end = /*@__PURE__*/ new Vector3();
+const _inverseMatrix = /*@__PURE__*/ new Matrix4();
+const _ray = /*@__PURE__*/ new Ray();
 const _sphere = Sphere_.empty();
 
 export class Line extends Object3D {

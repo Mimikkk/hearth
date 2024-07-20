@@ -41,8 +41,8 @@ const EXTRA_LOD_SIGMA = [0.125, 0.215, 0.35, 0.446, 0.526, 0.582];
 // samples and exit early, but not recompile the shader.
 const MAX_SAMPLES = 20;
 
-const _flatCamera = new OrthographicCamera(-1, 1, 1, -1, 0, 1);
-const _clearColor = new Color();
+const _flatCamera = /*@__PURE__*/ new OrthographicCamera(-1, 1, 1, -1, 0, 1);
+const _clearColor = /*@__PURE__*/ new Color();
 let _oldTarget = null;
 let _oldActiveCubeFace = 0;
 let _oldActiveMipmapLevel = 0;
@@ -54,16 +54,16 @@ const INV_PHI = 1 / PHI;
 // Vertices of a dodecahedron (except the opposites, which represent the
 // same axis), used as axis directions evenly spread on a sphere.
 const _axisDirections = [
-  new Vector3(1, 1, 1),
-  new Vector3(-1, 1, 1),
-  new Vector3(1, 1, -1),
-  new Vector3(-1, 1, -1),
-  new Vector3(0, PHI, INV_PHI),
-  new Vector3(0, PHI, -INV_PHI),
-  new Vector3(INV_PHI, 0, PHI),
-  new Vector3(-INV_PHI, 0, PHI),
-  new Vector3(PHI, INV_PHI, 0),
-  new Vector3(-PHI, INV_PHI, 0),
+  /*@__PURE__*/ new Vector3(1, 1, 1),
+  /*@__PURE__*/ new Vector3(-1, 1, 1),
+  /*@__PURE__*/ new Vector3(1, 1, -1),
+  /*@__PURE__*/ new Vector3(-1, 1, -1),
+  /*@__PURE__*/ new Vector3(0, PHI, INV_PHI),
+  /*@__PURE__*/ new Vector3(0, PHI, -INV_PHI),
+  /*@__PURE__*/ new Vector3(INV_PHI, 0, PHI),
+  /*@__PURE__*/ new Vector3(-INV_PHI, 0, PHI),
+  /*@__PURE__*/ new Vector3(PHI, INV_PHI, 0),
+  /*@__PURE__*/ new Vector3(-PHI, INV_PHI, 0),
 ];
 
 //

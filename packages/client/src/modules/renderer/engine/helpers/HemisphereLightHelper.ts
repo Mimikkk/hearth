@@ -7,9 +7,9 @@ import { OctahedronGeometry } from '../geometries/OctahedronGeometry.js';
 import { BufferAttribute } from '../core/BufferAttribute.js';
 import { HemisphereLight } from '@modules/renderer/engine/lights/HemisphereLight.js';
 
-const _vector = new Vector3();
-const _color1 = new Color();
-const _color2 = new Color();
+const _vector = /*@__PURE__*/ new Vector3();
+const _color1 = /*@__PURE__*/ new Color();
+const _color2 = /*@__PURE__*/ new Color();
 
 export class HemisphereLightHelper extends Object3D {
   declare type: string | 'HemisphereLightHelper';

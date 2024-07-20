@@ -2,14 +2,13 @@ import { clamp } from './MathUtils.js';
 import type { BufferAttribute } from '../core/BufferAttribute.js';
 import type { Matrix3 } from './Matrix3.js';
 import { Const } from '@modules/renderer/engine/math/types.js';
-import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
 
-export interface IVec2 {
+export interface IVector2 {
   x: number;
   y: number;
 }
 
-export class Vector2 implements IVec2 {
+export class Vector2 implements IVector2 {
   declare isVector2: true;
   declare ['constructor']: typeof Vector2;
 
@@ -378,7 +377,7 @@ export class Vector2 implements IVec2 {
 
 Vector2.prototype.isVector2 = true;
 
-export class Vec2 implements IVec2 {
+export class Vec2 {
   declare isVec2: true;
 
   constructor(
@@ -398,7 +397,7 @@ export class Vec2 implements IVec2 {
     return Vec2.new(0, 0);
   }
 
-  static clone({ x, y }: Const<IVec2>, into: Vec2 = Vec2.empty()): Vec2 {
+  static clone({ x, y }: Const<Vec2>, into: Vec2 = Vec2.empty()): Vec2 {
     return into.set(x, y);
   }
 
@@ -406,15 +405,11 @@ export class Vec2 implements IVec2 {
     return vec?.isVec2 === true;
   }
 
-  static into(into: Vec2, { x, y }: Const<IVec2>) {
+  static from({ x, y }: Const<{ x: number; y: number }>, into: Vec2 = Vec2.empty()): Vec2 {
     return into.set(x, y);
   }
 
-  static from({ x, y }: Const<IVec2>, into: Vec2 = Vec2.empty()): Vec2 {
-    return into.set(x, y);
-  }
-
-  static fromAttribute(attribute: Attribute, index: number, into: Vec2 = Vec2.empty()): Vec2 {
+  static fromAttribute(attribute: BufferAttribute, index: number, into: Vec2 = Vec2.empty()): Vec2 {
     return into.fromAttribute(attribute, index);
   }
 
@@ -422,20 +417,20 @@ export class Vec2 implements IVec2 {
     return into.fromArray(array, offset);
   }
 
-  from(from: Const<IVec2>): this {
+  from(from: Const<{ x: number; y: number }>): this {
     return this.set(from.x, from.y);
   }
 
-  fill(into: IVec2): void {
+  fill(into: { x: number; y: number }): void {
     into.x = this.x;
     into.y = this.y;
   }
 
-  fromAttribute(attribute: Const<Attribute>, index: number): this {
+  fromAttribute(attribute: Const<BufferAttribute>, index: number): this {
     return this.set(attribute.getX(index), attribute.getY(index));
   }
 
-  intoAttribute(attribute: Attribute, index: number): this {
+  intoAttribute(attribute: BufferAttribute, index: number): this {
     attribute.setXY(index, this.x, this.y);
     return this;
   }
@@ -470,11 +465,13 @@ export class Vec2 implements IVec2 {
     return this.set(scalar, scalar);
   }
 
+  //#region Math
+
   scale(scalar: number): this {
     return this.set(this.x * scalar, this.y * scalar);
   }
 
-  div({ x, y }: Const<IVec2>): this {
+  div({ x, y }: Const<Vec2>): this {
     return this.set(this.x / x, this.y / y);
   }
 
@@ -482,7 +479,7 @@ export class Vec2 implements IVec2 {
     return this.set(this.x / scalar, this.y / scalar);
   }
 
-  mul({ x, y }: Const<IVec2>): this {
+  mul({ x, y }: Const<Vec2>): this {
     return this.set(this.x * x, this.y * y);
   }
 
@@ -490,7 +487,7 @@ export class Vec2 implements IVec2 {
     return this.set(this.x * scalar, this.y * scalar);
   }
 
-  add({ x, y }: Const<IVec2>): this {
+  add({ x, y }: Const<Vec2>): this {
     return this.set(this.x + x, this.y + y);
   }
 
@@ -498,11 +495,11 @@ export class Vec2 implements IVec2 {
     return this.set(this.x + scalar, this.y + scalar);
   }
 
-  addScaled({ x, y }: Const<IVec2>, scalar: number): this {
+  addScaled({ x, y }: Const<Vec2>, scalar: number): this {
     return this.set(this.x + x * scalar, this.y + y * scalar);
   }
 
-  sub({ x, y }: Const<IVec2>): this {
+  sub({ x, y }: Const<Vec2>): this {
     return this.set(this.x - x, this.y - y);
   }
 
@@ -510,23 +507,23 @@ export class Vec2 implements IVec2 {
     return this.set(this.x - scalar, this.y - scalar);
   }
 
-  subScaled({ x, y }: Const<IVec2>, scalar: number): this {
+  subScaled({ x, y }: Const<Vec2>, scalar: number): this {
     return this.set(this.x - x * scalar, this.y - y * scalar);
   }
 
-  min({ x, y }: Const<IVec2>): this {
+  min({ x, y }: Const<Vec2>): this {
     return this.set(Math.min(this.x, x), Math.min(this.y, y));
   }
 
-  max({ x, y }: Const<IVec2>): this {
+  max({ x, y }: Const<Vec2>): this {
     return this.set(Math.max(this.x, x), Math.max(this.y, y));
   }
 
-  equals({ x, y }: Const<IVec2>): boolean {
+  equals({ x, y }: Const<Vec2>): boolean {
     return this.x === x && this.y === y;
   }
 
-  clamp(min: Const<IVec2>, max: Const<IVec2>): this {
+  clamp(min: Const<Vec2>, max: Const<Vec2>): this {
     return this.set(clamp(this.x, min.x, max.x), clamp(this.y, min.y, max.y));
   }
 
@@ -558,11 +555,11 @@ export class Vec2 implements IVec2 {
     return this.set(-this.x, -this.y);
   }
 
-  dot({ x, y }: Const<IVec2>): number {
+  dot({ x, y }: Const<Vec2>): number {
     return this.x * x + this.y * y;
   }
 
-  cross({ x, y }: Const<IVec2>): number {
+  cross({ x, y }: Const<Vec2>): number {
     return this.x * y - this.y * x;
   }
 
@@ -586,24 +583,24 @@ export class Vec2 implements IVec2 {
     return Math.atan2(-this.y, -this.x) + Math.PI;
   }
 
-  angleTo(to: Const<IVec2>): number {
-    const denominator = Math.sqrt(this.euclideanSq() * Vec2.into(_temp1, to).euclideanSq());
+  angleTo(to: Const<Vec2>): number {
+    const denominator = Math.sqrt(this.euclideanSq() * to.euclideanSq());
     if (denominator === 0) return Math.PI / 2;
     const theta = this.dot(to) / denominator;
     return Math.acos(clamp(theta, -1, 1));
   }
 
-  euclideanSqTo({ x, y }: Const<IVec2>): number {
+  euclideanSqTo({ x, y }: Const<Vec2>): number {
     const dx = this.x - x;
     const dy = this.y - y;
     return dx * dx + dy * dy;
   }
 
-  euclideanTo(to: Const<IVec2>): number {
+  euclideanTo(to: Const<Vec2>): number {
     return Math.sqrt(this.euclideanSqTo(to));
   }
 
-  manhattanTo({ x, y }: Const<IVec2>): number {
+  manhattanTo({ x, y }: Const<Vec2>): number {
     return Math.abs(this.x - x) + Math.abs(this.y - y);
   }
 
@@ -611,17 +608,11 @@ export class Vec2 implements IVec2 {
     return this.normalize().scale(length);
   }
 
-  applyMat3({ elements: e }: Const<Matrix3>): this {
-    const { x, y } = this;
-
-    return this.set(e[0] * x + e[3] * y + e[6], e[1] * x + e[4] * y + e[7]);
-  }
-
-  lerp(to: Const<IVec2>, step: number): this {
+  lerp(to: Const<Vec2>, step: number): this {
     return this.addScaled(to, step);
   }
 
-  rotateAround(center: Const<IVec2>, angle: number): this {
+  rotateAround(center: Const<Vec2>, angle: number): this {
     const cos = Math.cos(angle);
     const sin = Math.sin(angle);
     const x = this.x - center.x;
@@ -635,7 +626,5 @@ export class Vec2 implements IVec2 {
     yield this.y;
   }
 }
-
-const _temp1 = Vec2.new();
 
 Vec2.prototype.isVec2 = true;

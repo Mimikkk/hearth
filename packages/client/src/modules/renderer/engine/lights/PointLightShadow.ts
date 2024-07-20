@@ -6,9 +6,9 @@ import { Vector3 } from '../math/Vector3.js';
 import { Vector4 } from '../math/Vector4.js';
 import { PointLight } from './PointLight.js';
 
-const _projScreenMatrix = new Matrix4();
-const _lightPositionWorld = new Vector3();
-const _lookTarget = new Vector3();
+const _projScreenMatrix = /*@__PURE__*/ new Matrix4();
+const _lightPositionWorld = /*@__PURE__*/ new Vector3();
+const _lookTarget = /*@__PURE__*/ new Vector3();
 
 export class PointLightShadow extends LightShadow<PerspectiveCamera> {
   declare isPointLightShadow: true;

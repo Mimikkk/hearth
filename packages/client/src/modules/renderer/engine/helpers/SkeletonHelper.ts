@@ -8,9 +8,9 @@ import { Float32BufferAttribute } from '../core/BufferAttribute.js';
 import { Object3D } from '@modules/renderer/engine/core/Object3D.js';
 import { Bone } from '@modules/renderer/engine/objects/Bone.js';
 
-const _vector = new Vector3();
-const _boneMatrix = new Matrix4();
-const _matrixWorldInv = new Matrix4();
+const _vector = /*@__PURE__*/ new Vector3();
+const _boneMatrix = /*@__PURE__*/ new Matrix4();
+const _matrixWorldInv = /*@__PURE__*/ new Matrix4();
 
 export class SkeletonHelper extends LineSegments {
   declare isSkeletonHelper: true;

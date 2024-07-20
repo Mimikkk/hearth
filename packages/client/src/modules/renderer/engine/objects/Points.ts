@@ -7,10 +7,10 @@ import { PointsMaterial } from '../materials/PointsMaterial.js';
 import { BufferGeometry } from '../core/BufferGeometry.js';
 import { Intersection, Raycaster } from '@modules/renderer/engine/core/Raycaster.js';
 
-const _inverseMatrix = new Matrix4();
-const _ray = new Ray();
+const _inverseMatrix = /*@__PURE__*/ new Matrix4();
+const _ray = /*@__PURE__*/ new Ray();
 const _sphere = Sphere_.empty();
-const _position = new Vector3();
+const _position = /*@__PURE__*/ new Vector3();
 
 export class Points extends Object3D {
   declare isPoints: true;

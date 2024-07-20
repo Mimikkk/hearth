@@ -8,8 +8,8 @@ import { Float32BufferAttribute } from '../core/BufferAttribute.js';
 import { PerspectiveCamera } from '@modules/renderer/engine/cameras/PerspectiveCamera.js';
 import { OrthographicCamera } from '@modules/renderer/engine/cameras/OrthographicCamera.js';
 
-const _vector = new Vector3();
-const _camera = new Camera();
+const _vector = /*@__PURE__*/ new Vector3();
+const _camera = /*@__PURE__*/ new Camera();
 
 export class CameraVisualizer extends LineSegments {
   camera: PerspectiveCamera | OrthographicCamera;

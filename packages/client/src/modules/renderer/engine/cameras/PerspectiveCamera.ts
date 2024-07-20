@@ -1,11 +1,11 @@
 import { Camera } from './Camera.js';
 import * as MathUtils from '../math/MathUtils.js';
-import { Vec2 } from '../math/Vector2.js';
+import { Vector2 } from '../math/Vector2.js';
 import { Vector3 } from '../math/Vector3.js';
 
-const _vec3 = new Vector3();
-const _min = Vec2.new();
-const _max = Vec2.new();
+const _v3 = /*@__PURE__*/ new Vector3();
+const _minTarget = /*@__PURE__*/ new Vector2();
+const _maxTarget = /*@__PURE__*/ new Vector2();
 
 export class PerspectiveCamera extends Camera {
   declare isPerspectiveCamera: true;
@@ -68,7 +68,16 @@ export class PerspectiveCamera extends Camera {
     return this;
   }
 
+  /**
+   * Sets the FOV by focal length in respect to the current .filmGauge.
+   *
+   * The default film gauge is 35, so that the focal length can be specified for
+   * a 35mm (full frame) camera.
+   *
+   * Values for focal length and film gauge must have the same unit.
+   */
   setFocalLength(focalLength: number): this {
+    /** see {@link http://www.bobatkins.com/photography/technical/field_of_view.html} */
     const vExtentSlope = (0.5 * this.getFilmHeight()) / focalLength;
 
     this.fov = MathUtils.RadianToDegree * 2 * Math.atan(vExtentSlope);
@@ -87,6 +96,7 @@ export class PerspectiveCamera extends Camera {
   }
 
   getFilmWidth(): number {
+    // film not completely covered in portrait format (aspect < 1)
     return this.filmGaugeMM * Math.min(this.aspect, 1);
   }
 
@@ -95,18 +105,20 @@ export class PerspectiveCamera extends Camera {
     return this.filmGaugeMM / Math.max(this.aspect, 1);
   }
 
-  getViewBounds(distance: number, min: Vec2, max: Vec2): void {
-    _vec3.set(-1, -1, 0.5).applyMatrix4(this.projectionMatrixInverse);
-    min.set(_vec3.x, _vec3.y).scale(-distance / _vec3.z);
+  getViewBounds(distance: number, minTarget: Vector2, maxTarget: Vector2): void {
+    _v3.set(-1, -1, 0.5).applyMatrix4(this.projectionMatrixInverse);
 
-    _vec3.set(1, 1, 0.5).applyMatrix4(this.projectionMatrixInverse);
-    max.set(_vec3.x, _vec3.y).scale(-distance / _vec3.z);
+    minTarget.set(_v3.x, _v3.y).multiplyScalar(-distance / _v3.z);
+
+    _v3.set(1, 1, 0.5).applyMatrix4(this.projectionMatrixInverse);
+
+    maxTarget.set(_v3.x, _v3.y).multiplyScalar(-distance / _v3.z);
   }
 
-  getViewSize(distance: number, into: Vec2): Vec2 {
-    this.getViewBounds(distance, _min, _max);
+  getViewSize(distance: number, target: Vector2): Vector2 {
+    this.getViewBounds(distance, _minTarget, _maxTarget);
 
-    return Vec2.into(into, _max).sub(_min);
+    return target.subVectors(_maxTarget, _minTarget);
   }
 
   setViewOffset(fullWidth: number, fullHeight: number, x: number, y: number, width: number, height: number): this {
