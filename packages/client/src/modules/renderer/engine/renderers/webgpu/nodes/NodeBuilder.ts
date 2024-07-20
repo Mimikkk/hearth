@@ -193,14 +193,13 @@ fn engine_repeatWrapping( uv : vec2<f32>, dimension : vec2<u32> ) -> vec2<u32> {
 `),
 };
 
-// to merge
-class BaseNodeBuilder {
-  constructor(object, renderer, parser, scene = null, material = null) {
+export class NodeBuilder {
+  constructor(object, renderer, scene = null, material = null) {
     this.object = object;
     this.material = material || (object && object.material) || null;
     this.geometry = (object && object.geometry) || null;
     this.renderer = renderer;
-    this.parser = parser;
+    this.parser = new WGSLNodeParser();
     this.scene = scene;
 
     this.nodes = [];
@@ -251,6 +250,10 @@ class BaseNodeBuilder {
 
     this.shaderStage = null;
     this.buildStage = null;
+
+    this.uniformGroups = {};
+
+    this.builtins = {};
   }
 
   get currentNode() {
@@ -357,10 +360,6 @@ class BaseNodeBuilder {
     }
   }
 
-  getMethod(method) {
-    return method;
-  }
-
   getNodeFromHash(hash) {
     return this.hashNodes[hash];
   }
@@ -385,38 +384,6 @@ class BaseNodeBuilder {
 
   getCache() {
     return this.cache;
-  }
-
-  isAvailable(/*name*/) {
-    return false;
-  }
-
-  getVertexIndex() {
-    console.warn('Abstract function.');
-  }
-
-  getInstanceIndex() {
-    console.warn('Abstract function.');
-  }
-
-  getFrontFacing() {
-    console.warn('Abstract function.');
-  }
-
-  getFragCoord() {
-    console.warn('Abstract function.');
-  }
-
-  isFlipY() {
-    return false;
-  }
-
-  generateTexture(/* texture, textureProperty, uvSnippet */) {
-    console.warn('Abstract function.');
-  }
-
-  generateTextureLod(/* texture, textureProperty, uvSnippet, levelSnippet */) {
-    console.warn('Abstract function.');
   }
 
   generateConst(type, value = null) {
@@ -457,12 +424,6 @@ class BaseNodeBuilder {
     throw new Error(`NodeBuilder: Type '${type}' not found in generate constant attempt.`);
   }
 
-  getType(type) {
-    if (type === 'color') return 'vec3';
-
-    return type;
-  }
-
   generateMethod(method) {
     return method;
   }
@@ -491,31 +452,12 @@ class BaseNodeBuilder {
     return attribute;
   }
 
-  getPropertyName(node /*, shaderStage*/) {
-    return node.name;
-  }
-
   isVector(type) {
     return /vec\d/.test(type);
   }
 
   isMatrix(type) {
     return /mat\d/.test(type);
-  }
-
-  isReference(type) {
-    return (
-      type === 'void' ||
-      type === 'property' ||
-      type === 'sampler' ||
-      type === 'texture' ||
-      type === 'cubeTexture' ||
-      type === 'storageTexture'
-    );
-  }
-
-  needsColorSpaceToLinear(/*texture*/) {
-    return false;
   }
 
   getTextureColorSpaceFromMap(map) {
@@ -684,24 +626,6 @@ class BaseNodeBuilder {
     }
 
     return node;
-  }
-
-  getUniformFromNode(node, type, shaderStage = this.shaderStage, name = null) {
-    const nodeData = this.getDataFromNode(node, shaderStage, this.globalCache);
-
-    let nodeUniform = nodeData.uniform;
-
-    if (nodeUniform === undefined) {
-      const index = this.uniforms.index++;
-
-      nodeUniform = new NodeUniform(name || 'nodeUniform' + index, type, node);
-
-      this.uniforms[shaderStage].push(nodeUniform);
-
-      nodeData.uniform = nodeUniform;
-    }
-
-    return nodeUniform;
   }
 
   getVarFromNode(node, name = null, type = node.getNodeType(this), shaderStage = this.shaderStage) {
@@ -882,10 +806,6 @@ class BaseNodeBuilder {
     return flow;
   }
 
-  getFunctionOperator() {
-    return null;
-  }
-
   flowChildNode(node, output = null) {
     const previousFlow = this.flow;
 
@@ -924,36 +844,6 @@ class BaseNodeBuilder {
     return this.attributes.concat(this.bufferAttributes);
   }
 
-  getAttributes(/*shaderStage*/) {
-    console.warn('Abstract function.');
-  }
-
-  getVaryings(/*shaderStage*/) {
-    console.warn('Abstract function.');
-  }
-
-  getVar(type, name) {
-    return `${this.getType(type)} ${name}`;
-  }
-
-  getVars(shaderStage) {
-    let snippet = '';
-
-    const vars = this.vars[shaderStage];
-
-    if (vars !== undefined) {
-      for (const variable of vars) {
-        snippet += `${this.getVar(variable.type, variable.name)}; `;
-      }
-    }
-
-    return snippet;
-  }
-
-  getUniforms(/*shaderStage*/) {
-    console.warn('Abstract function.');
-  }
-
   getCodes(shaderStage) {
     const codes = this.codes[shaderStage];
 
@@ -986,10 +876,6 @@ class BaseNodeBuilder {
 
   getBuildStage() {
     return this.buildStage;
-  }
-
-  buildCode() {
-    console.warn('Abstract function.');
   }
 
   build(convertMaterial = true) {
@@ -1121,16 +1007,6 @@ class BaseNodeBuilder {
 
   getSignature() {
     return `// engine.js r${Revision} - NodeMaterial System\n`;
-  }
-}
-
-export class NodeBuilder extends BaseNodeBuilder {
-  constructor(object, renderer, scene = null) {
-    super(object, renderer, new WGSLNodeParser(), scene);
-
-    this.uniformGroups = {};
-
-    this.builtins = {};
   }
 
   needsColorSpaceToLinear(texture) {
@@ -1269,7 +1145,7 @@ export class NodeBuilder extends BaseNodeBuilder {
       }
     }
 
-    return super.getPropertyName(node);
+    return node.name;
   }
 
   _getUniformGroupCount(shaderStage) {
@@ -1289,7 +1165,26 @@ export class NodeBuilder extends BaseNodeBuilder {
   }
 
   getUniformFromNode(node, type, shaderStage, name = null) {
-    const uniformNode = super.getUniformFromNode(node, type, shaderStage, name);
+    const getUniformFromNode = (node, type, shaderStage = this.shaderStage, name = null) => {
+      const nodeData = this.getDataFromNode(node, shaderStage, this.globalCache);
+
+      let nodeUniform = nodeData.uniform;
+
+      if (nodeUniform === undefined) {
+        const index = this.uniforms.index++;
+
+        nodeUniform = new NodeUniform(name || 'nodeUniform' + index, type, node);
+
+        this.uniforms[shaderStage].push(nodeUniform);
+
+        nodeData.uniform = nodeUniform;
+      }
+
+      return nodeUniform;
+    };
+
+    const uniformNode = getUniformFromNode(node, type, shaderStage, name);
+
     const nodeData = this.getDataFromNode(node, shaderStage, this.globalCache);
 
     if (nodeData.uniformGPU === undefined) {
@@ -1363,7 +1258,12 @@ export class NodeBuilder extends BaseNodeBuilder {
 
   isReference(type) {
     return (
-      super.isReference(type) ||
+      type === 'void' ||
+      type === 'property' ||
+      type === 'sampler' ||
+      type === 'texture' ||
+      type === 'cubeTexture' ||
+      type === 'storageTexture' ||
       type === 'texture_2d' ||
       type === 'texture_cube' ||
       type === 'texture_depth_2d' ||
