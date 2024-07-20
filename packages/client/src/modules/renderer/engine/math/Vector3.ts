@@ -605,7 +605,6 @@ export interface Vec3 {
 export namespace Vec3 {
   export const create = (x: number, y: number, z: number): Vec3 => ({ x, y, z });
   export const empty = (): Vec3 => create(0, 0, 0);
-  export const clear = (self: Vec3): Vec3 => set(self, 0, 0, 0);
   export const vec3 = create;
 
   export const set = (self: Vec3, x: number, y: number, z: number): Vec3 => {
@@ -654,7 +653,7 @@ export namespace Vec3 {
     set(into, a.x / scalar, a.y / scalar, a.z / scalar);
   export const divedScalar = (a: Const<Vec3>, scalar: number): Vec3 => divScalar_(a, scalar, empty());
 
-  export const cross = (a: Const<Vec3>, b: Const<Vec3>): Vec3 => cross_(a, b, a);
+  export const cross = (a: Const<Vec3>, b: Const<Vec3>): Vec3 => cross_(a, b, empty());
   export const cross_ = (a: Const<Vec3>, b: Const<Vec3>, into: Vec3): Vec3 =>
     set(into, a.y * b.z - a.z * b.y, a.z * b.x - a.x * b.z, a.x * b.y - a.y * b.x);
   export const crossed = (a: Const<Vec3>, b: Const<Vec3>): Vec3 => cross_(a, b, empty());
@@ -662,7 +661,7 @@ export namespace Vec3 {
   export const normalize = (self: Vec3): Vec3 => normalize_(self, self);
   export const normalize_ = (self: Const<Vec3>, into: Vec3): Vec3 => {
     const length = Math.sqrt(self.x * self.x + self.y * self.y + self.z * self.z);
-    if (length == 0) return set(into, 0, 0, 0);
+
     return set(into, self.x / length, self.y / length, self.z / length);
   };
   export const normalized = (self: Const<Vec3>): Vec3 => normalize_(self, empty());
@@ -691,14 +690,17 @@ export namespace Vec3 {
   };
   export const intoArray = (self: Const<Vec3>): number[] => intoArray_(self, 0, [0, 0, 0]);
 
-  export const fromAttribute = (attribute: Const<BufferAttribute>, index: number): Vec3 =>
+  export const fromAttribute = (attribute: BufferAttribute<Float32Array>, index: number): Vec3 =>
     fromAttribute_(attribute, index, empty());
-  export const fromAttribute_ = (attribute: Const<BufferAttribute>, index: number, into: Vec3): Vec3 =>
+  export const fromAttribute_ = (attribute: BufferAttribute<Float32Array>, index: number, into: Vec3): Vec3 =>
     set(into, attribute.getX(index), attribute.getY(index), attribute.getZ(index));
-  export const fillAttribute = (self: Vec3, attribute: Const<BufferAttribute>, index: number): Vec3 =>
+  export const fillAttribute = (self: Vec3, attribute: BufferAttribute<Float32Array>, index: number): Vec3 =>
     fromAttribute_(attribute, index, self);
-  export const intoAttribute_ = (self: Const<Vec3>, attribute: BufferAttribute, index: number): BufferAttribute =>
-    attribute.setXYZ(index, self.x, self.y, self.z);
+  export const intoAttribute_ = (
+    self: Const<Vec3>,
+    attribute: BufferAttribute<Float32Array>,
+    index: number,
+  ): BufferAttribute<Float32Array> => attribute.setXYZ(index, self.x, self.y, self.z);
 
   export const distanceSqTo = (a: Const<Vec3>, b: Const<Vec3>): number => {
     const dx = a.x - b.x;
