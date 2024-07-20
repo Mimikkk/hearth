@@ -1,12 +1,12 @@
-import { IVec2 } from '@modules/renderer/engine/math/Vector2.js';
+import { Vec2 } from '@modules/renderer/engine/math/Vector2.js';
 import { clamp } from '@modules/renderer/engine/math/MathUtils.js';
 import { Const } from './types.ts';
 
-const { vec2 } = IVec2;
+const { vec2 } = Vec2;
 
 export interface Box2 {
-  min: IVec2;
-  max: IVec2;
+  min: Vec2;
+  max: Vec2;
 }
 
 export namespace Box2 {
@@ -42,24 +42,23 @@ export namespace Box2 {
   export const clone = (from: Const<Box2>): Box2 => clone_(from, empty());
   export const clone_ = (from: Const<Box2>, into: Box2): Box2 => fill_(into, from);
 
-  export const size = (self: Const<Box2>): IVec2 => vec2(self.max.x - self.min.x, self.max.y - self.min.y);
-  export const size_ = (self: Const<Box2>, into: IVec2): IVec2 => {
+  export const size = (self: Const<Box2>): Vec2 => vec2(self.max.x - self.min.x, self.max.y - self.min.y);
+  export const size_ = (self: Const<Box2>, into: Vec2): Vec2 => {
     into.x = self.max.x - self.min.x;
     into.y = self.max.y - self.min.y;
 
     return into;
   };
 
-  export const center = (self: Const<Box2>): IVec2 =>
-    vec2((self.min.x + self.max.x) / 2, (self.min.y + self.max.y) / 2);
-  export const center_ = (self: Const<Box2>, into: IVec2): IVec2 => {
+  export const center = (self: Const<Box2>): Vec2 => vec2((self.min.x + self.max.x) / 2, (self.min.y + self.max.y) / 2);
+  export const center_ = (self: Const<Box2>, into: Vec2): Vec2 => {
     into.x = (self.min.x + self.max.x) / 2;
     into.y = (self.min.y + self.max.y) / 2;
 
     return into;
   };
 
-  export const expandByVec = (self: Box2, { x, y }: Const<IVec2>): Box2 => {
+  export const expandByVec = (self: Box2, { x, y }: Const<Vec2>): Box2 => {
     if (x < self.min.x) self.min.x = x;
     if (y < self.min.y) self.min.y = y;
     if (x > self.max.x) self.max.x = x;
@@ -67,12 +66,12 @@ export namespace Box2 {
 
     return self;
   };
-  export const expandedByVec = (self: Const<Box2>, vec: Const<IVec2>): Box2 => expandByVec(clone(self), vec);
-  export const expandByVecs = (self: Box2, vecs: Const<IVec2>[]): Box2 => {
+  export const expandedByVec = (self: Const<Box2>, vec: Const<Vec2>): Box2 => expandByVec(clone(self), vec);
+  export const expandByVecs = (self: Box2, vecs: Const<Vec2>[]): Box2 => {
     for (let i = 0, it = vecs.length; i < it; ++i) expandByVec(self, vecs[i]);
     return self;
   };
-  export const expandedByVecs = (self: Const<Box2>, vecs: Const<IVec2>[]): Box2 => expandByVecs(clone(self), vecs);
+  export const expandedByVecs = (self: Const<Box2>, vecs: Const<Vec2>[]): Box2 => expandByVecs(clone(self), vecs);
   export const expandByScalar = (self: Box2, scalar: number): Box2 => {
     self.min.x -= scalar;
     self.min.y -= scalar;
@@ -83,10 +82,10 @@ export namespace Box2 {
   };
   export const expandedByScalar = (self: Const<Box2>, scalar: number): Box2 => expandByScalar(clone(self), scalar);
 
-  export const fromVecs = (vecs: Const<IVec2>[]): Box2 => expandByVecs(empty(), vecs);
-  export const fromCenterAndSize = (center: Const<IVec2>, size: Const<IVec2>): Box2 =>
+  export const fromVecs = (vecs: Const<Vec2>[]): Box2 => expandByVecs(empty(), vecs);
+  export const fromCenterAndSize = (center: Const<Vec2>, size: Const<Vec2>): Box2 =>
     fromCenterAndSize_(center, size, empty());
-  export const fromCenterAndSize_ = (center: Const<IVec2>, size: Const<IVec2>, into: Box2): Box2 => {
+  export const fromCenterAndSize_ = (center: Const<Vec2>, size: Const<Vec2>, into: Box2): Box2 => {
     const halfSizeX = size.x / 2;
     const halfSizeY = size.y / 2;
 
@@ -96,15 +95,15 @@ export namespace Box2 {
   export const contains = (self: Const<Box2>, box: Const<Box2>): boolean =>
     self.min.x <= box.min.x && box.max.x <= self.max.x && self.min.y <= box.min.y && box.max.y <= self.max.y;
 
-  export const containsVec = (self: Const<Box2>, { x, y }: Const<IVec2>): boolean =>
+  export const containsVec = (self: Const<Box2>, { x, y }: Const<Vec2>): boolean =>
     !(x < self.min.x || x > self.max.x || y < self.min.y || y > self.max.y);
 
   export const intersects = (self: Const<Box2>, box: Const<Box2>): boolean =>
     box.max.x >= self.min.x && box.min.x <= self.max.x && box.max.y >= self.min.y && box.min.y <= self.max.y;
 
-  export const clampVec = (self: Const<Box2>, { x, y }: Const<IVec2>): IVec2 =>
+  export const clampVec = (self: Const<Box2>, { x, y }: Const<Vec2>): Vec2 =>
     vec2(clamp(x, self.min.x, self.max.x), clamp(y, self.min.y, self.max.y));
-  export const clampVec_ = (self: Const<Box2>, { x, y }: Const<IVec2>, into: IVec2): IVec2 => {
+  export const clampVec_ = (self: Const<Box2>, { x, y }: Const<Vec2>, into: Vec2): Vec2 => {
     into.x = clamp(x, self.min.x, self.max.x);
     into.y = clamp(y, self.min.y, self.max.y);
 
@@ -139,18 +138,18 @@ export namespace Box2 {
   };
   export const united = (self: Const<Box2>, box: Const<Box2>): Box2 => union(clone(self), box);
 
-  export const translate = (self: Box2, vec: Const<IVec2>): Box2 => translate_(self, vec, self);
-  export const translate_ = (self: Const<Box2>, { x, y }: Const<IVec2>, into: Box2): Box2 =>
+  export const translate = (self: Box2, vec: Const<Vec2>): Box2 => translate_(self, vec, self);
+  export const translate_ = (self: Const<Box2>, { x, y }: Const<Vec2>, into: Box2): Box2 =>
     set(into, self.min.x + x, self.min.y + y, self.max.x + x, self.max.y + y);
-  export const translated = (self: Const<Box2>, vec: Const<IVec2>): Box2 => translate(clone(self), vec);
+  export const translated = (self: Const<Box2>, vec: Const<Vec2>): Box2 => translate(clone(self), vec);
 
-  export const distanceSqTo = (self: Const<Box2>, vec: Const<IVec2>): number => {
+  export const distanceSqTo = (self: Const<Box2>, vec: Const<Vec2>): number => {
     const x = clamp(vec.x, self.min.x, self.max.x) - vec.x;
     const y = clamp(vec.y, self.min.y, self.max.y) - vec.y;
 
     return x * x + y * y;
   };
-  export const distanceTo = (self: Const<Box2>, vec: Const<IVec2>): number => Math.sqrt(distanceSqTo(self, vec));
+  export const distanceTo = (self: Const<Box2>, vec: Const<Vec2>): number => Math.sqrt(distanceSqTo(self, vec));
 
   export const equals = (a: Const<Box2>, b: Const<Box2>): boolean =>
     b.min.x === a.min.x && b.min.y === a.min.y && b.max.x === a.max.x && b.max.y === a.max.y;

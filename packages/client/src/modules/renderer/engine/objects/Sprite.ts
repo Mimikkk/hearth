@@ -1,4 +1,4 @@
-import { IVec2, Vector2 } from '../math/Vector2.js';
+import { Vec2, Vector2 } from '../math/Vector2.js';
 import { IVec3, Vector3 } from '../math/Vector3.js';
 import { Matrix4 } from '../math/Matrix4.js';
 import { Triangle } from '../math/Triangle.js';
@@ -14,7 +14,7 @@ const _intersect = /*@__PURE__*/ new Vector3();
 const _worldScale = new Vector3();
 const _mv = /*@__PURE__*/ new Vector3();
 
-const _align = IVec2.empty();
+const _align = Vec2.empty();
 const _viewWorldMatrix = /*@__PURE__*/ new Matrix4();
 
 const _vA = /*@__PURE__*/ new Vector3();
@@ -99,9 +99,9 @@ export class Sprite extends Object3D {
     transformVertex(_vB, _mv, center, _worldScale, sin, cos);
     transformVertex(_vC, _mv, center, _worldScale, sin, cos);
 
-    IVec2.set(_uvA, 0, 0);
-    IVec2.set(_uvB, 1, 0);
-    IVec2.set(_uvC, 1, 1);
+    Vec2.set(_uvA, 0, 0);
+    Vec2.set(_uvB, 1, 0);
+    Vec2.set(_uvC, 1, 1);
 
     // check first triangle
     let intersect = raycaster.ray.intersectTriangle(_vA, _vB, _vC, false, _intersect);
@@ -109,7 +109,7 @@ export class Sprite extends Object3D {
     if (intersect === null) {
       IVec3.set(_vA, -0.5, 0.5, 0);
       transformVertex(_vB, _mv, center, _worldScale, sin, cos);
-      IVec2.set(_uvB, 0, 1);
+      Vec2.set(_uvB, 0, 1);
 
       intersect = raycaster.ray.intersectTriangle(_vA, _vC, _vB, false, _intersect);
       if (intersect === null) return;
@@ -147,10 +147,10 @@ export class Sprite extends Object3D {
 Sprite.prototype.isSprite = true;
 Sprite.prototype.type = 'Sprite';
 
-function transformVertex(vec: Vector3, mv: IVec3, center: IVec2, scale: IVec3, sin?: number, cos?: number) {
-  IVec2.sub_(vec, center, _align);
-  IVec2.scale(_align, 0.5);
-  IVec2.mul(_align, scale);
+function transformVertex(vec: Vector3, mv: IVec3, center: Vec2, scale: IVec3, sin?: number, cos?: number) {
+  Vec2.sub_(vec, center, _align);
+  Vec2.scale(_align, 0.5);
+  Vec2.mul(_align, scale);
 
   if (sin !== undefined && cos !== undefined) {
     IVec3.set(vec, mv.x + (cos * _align.x - sin * _align.y), mv.y + (sin * _align.x + cos * _align.y), mv.z);

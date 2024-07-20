@@ -1,14 +1,14 @@
 import type { Renderer } from '../renderers/webgpu/Renderer.js';
-import { IVec2 } from '@modules/renderer/engine/math/Vector2.js';
+import { Vec2 } from '@modules/renderer/engine/math/Vector2.js';
 import { Box2 } from '@modules/renderer/engine/math/Box2.js';
 
 export class SelectionVisualizer {
   element: HTMLDivElement;
   renderer: Renderer;
-  start: IVec2;
+  start: Vec2;
   box: Box2;
-  topLeft: IVec2;
-  bottomRight: IVec2;
+  topLeft: Vec2;
+  bottomRight: Vec2;
   isDown: boolean;
   enabled: boolean;
   onPointerDown: (event: PointerEvent) => void;
@@ -24,11 +24,11 @@ export class SelectionVisualizer {
     this.element.style.pointerEvents = 'none';
 
     this.renderer = renderer;
-    this.start = IVec2.empty();
+    this.start = Vec2.empty();
 
     this.box = Box2.empty();
-    this.topLeft = IVec2.empty();
-    this.bottomRight = IVec2.empty();
+    this.topLeft = Vec2.empty();
+    this.bottomRight = Vec2.empty();
 
     this.isDown = false;
     this.enabled = true;
