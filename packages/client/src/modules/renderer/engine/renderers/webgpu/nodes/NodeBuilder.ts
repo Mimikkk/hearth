@@ -1,9 +1,13 @@
 import {
+  BufferGeometry,
   Color,
   ColorSpace,
   Float16BufferAttribute,
+  Material,
+  Object3D,
   RenderTarget,
   Revision,
+  Scene,
   TextureDataType,
   Vec2,
   Vec3,
@@ -17,6 +21,7 @@ import NodeStorageBuffer from '../../common/nodes/NodeStorageBuffer.ts';
 import {
   buildStages,
   CodeNode,
+  LightsNode,
   NodeMaterial,
   NodeStack,
   NodeUpdateType,
@@ -47,152 +52,72 @@ import {
 } from '@modules/renderer/engine/renderers/common/nodes/NodeUniform.js';
 import { NodeMaterials } from '@modules/renderer/engine/nodes/materials/NodeMaterialMap.js';
 import { FeatureName, FeatureSupportMap } from '@modules/renderer/engine/renderers/webgpu/nodes/FeatureSupportMap.js';
-
-const uniformsGroupCache = new ChainMap();
-
-const typeFromLength = new Map([
-  [2, 'vec2'],
-  [3, 'vec3'],
-  [4, 'vec4'],
-  [9, 'mat3'],
-  [16, 'mat4'],
-]);
-
-const typeFromArray = new Map([
-  [Int8Array, 'int'],
-  [Int16Array, 'int'],
-  [Int32Array, 'int'],
-  [Uint8Array, 'uint'],
-  [Uint16Array, 'uint'],
-  [Uint32Array, 'uint'],
-  [Float32Array, 'float'],
-]);
-
-const formatAsFloat = (value: number): string => value + (value % 1 ? '' : '.0');
-
-// GPUShaderStage is not defined in browsers not supporting WebGPU
-const GPUShaderStage = self.GPUShaderStage;
-
-const gpuShaderStageLib = {
-  vertex: GPUShaderStage ? GPUShaderStage.VERTEX : 1,
-  fragment: GPUShaderStage ? GPUShaderStage.FRAGMENT : 2,
-  compute: GPUShaderStage ? GPUShaderStage.COMPUTE : 4,
-};
-
-const wgslFnOpLib = {
-  '^^': 'engine_xor',
-};
-
-const wgslTypeLib = {
-  float: 'f32',
-  int: 'i32',
-  uint: 'u32',
-  bool: 'bool',
-  color: 'vec3<f32>',
-
-  vec2: 'vec2<f32>',
-  ivec2: 'vec2<i32>',
-  uvec2: 'vec2<u32>',
-  bvec2: 'vec2<bool>',
-
-  vec3: 'vec3<f32>',
-  ivec3: 'vec3<i32>',
-  uvec3: 'vec3<u32>',
-  bvec3: 'vec3<bool>',
-
-  vec4: 'vec4<f32>',
-  ivec4: 'vec4<i32>',
-  uvec4: 'vec4<u32>',
-  bvec4: 'vec4<bool>',
-
-  mat2: 'mat2x2<f32>',
-  imat2: 'mat2x2<i32>',
-  umat2: 'mat2x2<u32>',
-  bmat2: 'mat2x2<bool>',
-
-  mat3: 'mat3x3<f32>',
-  imat3: 'mat3x3<i32>',
-  umat3: 'mat3x3<u32>',
-  bmat3: 'mat3x3<bool>',
-
-  mat4: 'mat4x4<f32>',
-  imat4: 'mat4x4<i32>',
-  umat4: 'mat4x4<u32>',
-  bmat4: 'mat4x4<bool>',
-};
-
-const wgslMethods = {
-  dFdx: 'dpdx',
-  dFdy: '- dpdy',
-  mod_float: 'engine_mod_float',
-  mod_vec2: 'engine_mod_vec2',
-  mod_vec3: 'engine_mod_vec3',
-  mod_vec4: 'engine_mod_vec4',
-  equals_bool: 'engine_equals_bool',
-  equals_bvec2: 'engine_equals_bvec2',
-  equals_bvec3: 'engine_equals_bvec3',
-  equals_bvec4: 'engine_equals_bvec4',
-  lessThanEqual: 'engine_lessThanEqual',
-  greaterThan: 'engine_greaterThan',
-  inversesqrt: 'inverseSqrt',
-  bitcast: 'bitcast<f32>',
-};
-
-const wgslPolyfill = {
-  engine_xor: new CodeNode(`
-fn engine_xor( a : bool, b : bool ) -> bool {
-
-	return ( a || b ) && !( a && b );
-
-}
-`),
-  lessThanEqual: new CodeNode(`
-fn engine_lessThanEqual( a : vec3<f32>, b : vec3<f32> ) -> vec3<bool> {
-
-	return vec3<bool>( a.x <= b.x, a.y <= b.y, a.z <= b.z );
-
-}
-`),
-  greaterThan: new CodeNode(`
-fn engine_greaterThan( a : vec3<f32>, b : vec3<f32> ) -> vec3<bool> {
-
-	return vec3<bool>( a.x > b.x, a.y > b.y, a.z > b.z );
-
-}
-`),
-  mod_float: new CodeNode('fn engine_mod_float( x : f32, y : f32 ) -> f32 { return x - y * floor( x / y ); }'),
-  mod_vec2: new CodeNode('fn engine_mod_vec2( x : vec2f, y : vec2f ) -> vec2f { return x - y * floor( x / y ); }'),
-  mod_vec3: new CodeNode('fn engine_mod_vec3( x : vec3f, y : vec3f ) -> vec3f { return x - y * floor( x / y ); }'),
-  mod_vec4: new CodeNode('fn engine_mod_vec4( x : vec4f, y : vec4f ) -> vec4f { return x - y * floor( x / y ); }'),
-  equals_bool: new CodeNode('fn engine_equals_bool( a : bool, b : bool ) -> bool { return a == b; }'),
-  equals_bvec2: new CodeNode(
-    'fn engine_equals_bvec2( a : vec2f, b : vec2f ) -> vec2<bool> { return vec2<bool>( a.x == b.x, a.y == b.y ); }',
-  ),
-  equals_bvec3: new CodeNode(
-    'fn engine_equals_bvec3( a : vec3f, b : vec3f ) -> vec3<bool> { return vec3<bool>( a.x == b.x, a.y == b.y, a.z == b.z ); }',
-  ),
-  equals_bvec4: new CodeNode(
-    'fn engine_equals_bvec4( a : vec4f, b : vec4f ) -> vec4<bool> { return vec4<bool>( a.x == b.x, a.y == b.y, a.z == b.z, a.w == b.w ); }',
-  ),
-  repeatWrapping: new CodeNode(`
-fn engine_repeatWrapping( uv : vec2<f32>, dimension : vec2<u32> ) -> vec2<u32> {
-
-	let uvScaled = vec2<u32>( uv * vec2<f32>( dimension ) );
-
-	return ( ( uvScaled % dimension ) + dimension ) % dimension;
-
-}
-`),
-};
+import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
+import StackNode from '@modules/renderer/engine/nodes/core/StackNode.js';
+import EnvironmentNode from '@modules/renderer/engine/nodes/lighting/EnvironmentNode.js';
+import FogNode from '@modules/renderer/engine/nodes/fog/FogNode.js';
+import ToneMappingNode from '@modules/renderer/engine/nodes/display/ToneMappingNode.js';
+import ClippingContext from '@modules/renderer/engine/renderers/common/ClippingContext.js';
+import { TypedArrayConstructor } from '@modules/renderer/engine/math/MathUtils.js';
 
 export class NodeBuilder {
-  constructor(object, renderer, scene = null, material = null) {
-    this.object = object;
-    this.material = material || (object && object.material) || null;
-    this.geometry = (object && object.geometry) || null;
-    this.renderer = renderer;
+  material: Material | null;
+  geometry: BufferGeometry | null;
+
+  parser: WGSLNodeParser;
+
+  nodes: Node[];
+  updateNodes: Node[];
+  updateBeforeNodes: Node[];
+  hashNodes: Record<string, Node>;
+  lightsNode: LightsNode | null;
+  environmentNode: EnvironmentNode | null;
+  fogNode: FogNode | null;
+  toneMappingNode: ToneMappingNode | null;
+  clippingContext: ClippingContext | null;
+  vertexShader: string | null;
+  fragmentShader: string | null;
+  computeShader: string | null;
+  flowNodes: Record<ShaderStage, Node[]>;
+  flowCode: Record<ShaderStage, string>;
+  uniforms: Record<ShaderStage, NodeUniformsGroup[]> & { index: number };
+  structs: Record<ShaderStage, NodeUniformsGroup[]> & { index: number };
+  bindings: Record<ShaderStage, NodeUniformsGroup[]>;
+  bindingsOffset: Record<ShaderStage, number>;
+  bindingsArray: NodeUniformBuffer | NodeStorageBuffer | null;
+  attributes: NodeAttribute[];
+  bufferAttributes: NodeAttribute[];
+  varyings: NodeVarying[];
+  codes: Record<ShaderStage, NodeCode[]>;
+  vars: Record<ShaderStage, NodeVar[]>;
+  flow: {
+    code: string;
+  };
+  chaining: Node[];
+  stack: StackNode;
+  stacks: StackNode[];
+  tab: string;
+  currentFunctionNode: FunctionNode | null;
+  context: {
+    keywords: NodeKeywords;
+    material: Material | null;
+  };
+  cache: NodeCache;
+  globalCache: NodeCache;
+  flowsData: WeakMap<Node, any>;
+  shaderStage: ShaderStage | null;
+  buildStage: BuildStage | null;
+  uniformGroups: Record<ShaderStage, Record<string, NodeUniformsGroup>>;
+  builtins: Record<ShaderStage, Map<string, { name: string; property: string; type: string }>>;
+
+  constructor(
+    public object: Object3D,
+    public renderer: Renderer,
+    public scene: Scene,
+  ) {
+    this.material = object?.material ?? null;
+    this.geometry = object?.geometry ?? null;
     this.parser = new WGSLNodeParser();
-    this.scene = scene;
 
     this.nodes = [];
     this.updateNodes = [];
@@ -211,7 +136,7 @@ export class NodeBuilder {
     this.computeShader = null;
 
     this.flowNodes = { vertex: [], fragment: [], compute: [] };
-    this.flowCode = { vertex: '', fragment: '', compute: [] };
+    this.flowCode = { vertex: '', fragment: '', compute: '' };
     this.uniforms = { vertex: [], fragment: [], compute: [], index: 0 };
     this.structs = { vertex: [], fragment: [], compute: [], index: 0 };
     this.bindings = { vertex: [], fragment: [], compute: [] };
@@ -220,12 +145,12 @@ export class NodeBuilder {
     this.attributes = [];
     this.bufferAttributes = [];
     this.varyings = [];
-    this.codes = {};
-    this.vars = {};
+    this.codes = { vertex: [], compute: [], fragment: [] };
+    this.vars = { vertex: [], compute: [], fragment: [] };
     this.flow = { code: '' };
     this.chaining = [];
-    this.stack = stack();
     this.stacks = [];
+    this.stack = stack();
     this.tab = '\t';
 
     this.currentFunctionNode = null;
@@ -243,16 +168,12 @@ export class NodeBuilder {
     this.shaderStage = null;
     this.buildStage = null;
 
-    this.uniformGroups = {};
+    this.uniformGroups = { vertex: {}, compute: {}, fragment: {} };
 
     this.builtins = {};
   }
 
-  get currentNode() {
-    return this.chaining[this.chaining.length - 1];
-  }
-
-  createRenderTarget(width, height, options) {
+  createRenderTarget(width: number, height: number, options?: RenderTarget.Options) {
     return new RenderTarget(width, height, options);
   }
 
@@ -274,10 +195,10 @@ export class NodeBuilder {
         // nodes is the chainmap key
         const nodes = binding.getNodes();
 
-        let sharedBinding = uniformsGroupCache.get(nodes);
+        let sharedBinding = UniformsGroup.get(nodes);
 
         if (sharedBinding === undefined) {
-          uniformsGroupCache.set(nodes, binding);
+          UniformsGroup.set(nodes, binding);
 
           sharedBinding = binding;
         }
@@ -356,7 +277,7 @@ export class NodeBuilder {
     return this.hashNodes[hash];
   }
 
-  addFlow(shaderStage, node) {
+  addFlow(shaderStage: ShaderStage | null, node) {
     this.flowNodes[shaderStage].push(node);
 
     return node;
@@ -490,14 +411,14 @@ export class NodeBuilder {
   getTypeFromLength(length, componentType = 'float') {
     if (length === 1) return componentType;
 
-    const baseType = typeFromLength.get(length);
+    const baseType = TypeByLength.get(length);
     const prefix = componentType === 'float' ? '' : componentType[0];
 
     return prefix + baseType;
   }
 
   getTypeFromArray(array) {
-    return typeFromArray.get(array.constructor);
+    return TypeByArray.get(array.constructor);
   }
 
   getTypeFromAttribute(attribute) {
@@ -565,7 +486,7 @@ export class NodeBuilder {
     return lastStack;
   }
 
-  getDataFromNode(node, shaderStage = this.shaderStage, cache = null) {
+  getDataFromNode(node, shaderStage: ShaderStage | null = this.shaderStage, cache = null) {
     cache = cache === null ? (node.isGlobal(this) ? this.globalCache : this.cache) : cache;
 
     let nodeData = cache.getNodeData(node);
@@ -581,7 +502,7 @@ export class NodeBuilder {
     return nodeData[shaderStage];
   }
 
-  getNodeProperties(node, shaderStage = 'any') {
+  getNodeProperties(node, shaderStage: ShaderStage | null = null) {
     const nodeData = this.getDataFromNode(node, shaderStage);
 
     return nodeData.properties || (nodeData.properties = { outputNode: null });
@@ -605,7 +526,7 @@ export class NodeBuilder {
     return bufferAttribute;
   }
 
-  getStructTypeFromNode(node, shaderStage = this.shaderStage) {
+  getStructTypeFromNode(node, shaderStage: ShaderStage = this.shaderStage) {
     const nodeData = this.getDataFromNode(node, shaderStage);
 
     if (nodeData.structType === undefined) {
@@ -661,7 +582,7 @@ export class NodeBuilder {
     return nodeVarying;
   }
 
-  getCodeFromNode(node, type, shaderStage = this.shaderStage) {
+  getCodeFromNode(node, type, shaderStage: ShaderStage = this.shaderStage) {
     const nodeData = this.getDataFromNode(node);
 
     let nodeCode = nodeData.code;
@@ -670,6 +591,7 @@ export class NodeBuilder {
       const codes = this.codes[shaderStage] || (this.codes[shaderStage] = []);
       const index = codes.length;
 
+      console.log(this);
       nodeCode = new NodeCode('nodeCode' + index, type);
 
       codes.push(nodeCode);
@@ -1145,7 +1067,7 @@ export class NodeBuilder {
   }
 
   getFunctionOperator(op) {
-    const fnOp = wgslFnOpLib[op];
+    const fnOp = FnOpMap[op];
 
     if (fnOp) {
       this._include(fnOp);
@@ -1155,7 +1077,7 @@ export class NodeBuilder {
     return null;
   }
 
-  getUniformFromNode(node, type, shaderStage, name = null) {
+  getUniformFromNode(node, type, shaderStage: ShaderStage, name: string | null = null) {
     const getUniformFromNode = (node, type, shaderStage = this.shaderStage, name = null) => {
       const nodeData = this.getDataFromNode(node, shaderStage, this.globalCache);
 
@@ -1193,11 +1115,11 @@ export class NodeBuilder {
         }
 
         texture.store = node.isStoreTextureNode === true;
-        texture.setVisibility(gpuShaderStageLib[shaderStage]);
+        texture.setVisibility(GpuShaderStage[shaderStage]);
 
         if (shaderStage === 'fragment' && this.isUnfilterable(node.value) === false && texture.store === false) {
           const sampler = new NodeSampler(`${uniformNode.name}_sampler`, uniformNode.node);
-          sampler.setVisibility(gpuShaderStageLib[shaderStage]);
+          sampler.setVisibility(GpuShaderStage[shaderStage]);
 
           bindings.push(sampler, texture);
 
@@ -1210,7 +1132,7 @@ export class NodeBuilder {
       } else if (type === 'buffer' || type === 'storageBuffer') {
         const bufferClass = type === 'storageBuffer' ? NodeStorageBuffer : NodeUniformBuffer;
         const buffer = new bufferClass(node);
-        buffer.setVisibility(gpuShaderStageLib[shaderStage]);
+        buffer.setVisibility(GpuShaderStage[shaderStage]);
 
         bindings.push(buffer);
 
@@ -1219,13 +1141,13 @@ export class NodeBuilder {
         const group = node.groupNode;
         const groupName = group.name;
 
-        const uniformsStage = this.uniformGroups[shaderStage] || (this.uniformGroups[shaderStage] = {});
+        const uniformsStage = this.uniformGroups[shaderStage];
 
         let uniformsGroup = uniformsStage[groupName];
 
         if (uniformsGroup === undefined) {
           uniformsGroup = new NodeUniformsGroup(groupName, group);
-          uniformsGroup.setVisibility(gpuShaderStageLib[shaderStage]);
+          uniformsGroup.setVisibility(GpuShaderStage[shaderStage]);
 
           uniformsStage[groupName] = uniformsGroup;
 
@@ -1272,6 +1194,8 @@ export class NodeBuilder {
         type,
       });
     }
+
+    console.log(name, map);
 
     return property;
   }
@@ -1633,7 +1557,7 @@ ${flowData.code}
   }
 
   getType(type) {
-    return wgslTypeLib[type] || type;
+    return TypeMap[type] || type;
   }
 
   isAvailable(name: FeatureName): boolean {
@@ -1641,15 +1565,15 @@ ${flowData.code}
   }
 
   _getWGSLMethod(method) {
-    if (wgslPolyfill[method] !== undefined) {
+    if (PolyfillMap[method] !== undefined) {
       this._include(method);
     }
 
-    return wgslMethods[method];
+    return MethodMap[method];
   }
 
   _include(name) {
-    const codeNode = wgslPolyfill[name];
+    const codeNode = PolyfillMap[name];
     codeNode.build(this);
 
     if (this.currentFunctionNode !== null) {
@@ -1755,3 +1679,145 @@ ${vars}
 var<${access}> ${name} : ${structName};`;
   }
 }
+
+export enum ShaderStage {
+  Vertex = 'vertex',
+  Fragment = 'fragment',
+  Compute = 'compute',
+}
+
+export enum BuildStage {
+  Construct = 'construct',
+  Analyze = 'analyze',
+  Generate = 'generate',
+}
+
+const formatAsFloat = (value: number): string => value + (value % 1 ? '' : '.0');
+
+const UniformsGroup = new ChainMap();
+
+const TypeByLength = new Map<number, string>([
+  [2, 'vec2'],
+  [3, 'vec3'],
+  [4, 'vec4'],
+  [9, 'mat3'],
+  [16, 'mat4'],
+]);
+
+const TypeByArray = new Map<TypedArrayConstructor, string>([
+  [Int8Array, 'int'],
+  [Int16Array, 'int'],
+  [Int32Array, 'int'],
+  [Uint8Array, 'uint'],
+  [Uint16Array, 'uint'],
+  [Uint32Array, 'uint'],
+  [Float32Array, 'float'],
+]);
+
+const GpuShaderStage: Record<ShaderStage, number> = {
+  vertex: GPUShaderStage.VERTEX,
+  fragment: GPUShaderStage.FRAGMENT,
+  compute: GPUShaderStage.COMPUTE,
+};
+const FnOpMap = {
+  '^^': 'engine_xor',
+};
+const TypeMap = {
+  float: 'f32',
+  int: 'i32',
+  uint: 'u32',
+  bool: 'bool',
+  color: 'vec3<f32>',
+
+  vec2: 'vec2<f32>',
+  ivec2: 'vec2<i32>',
+  uvec2: 'vec2<u32>',
+  bvec2: 'vec2<bool>',
+
+  vec3: 'vec3<f32>',
+  ivec3: 'vec3<i32>',
+  uvec3: 'vec3<u32>',
+  bvec3: 'vec3<bool>',
+
+  vec4: 'vec4<f32>',
+  ivec4: 'vec4<i32>',
+  uvec4: 'vec4<u32>',
+  bvec4: 'vec4<bool>',
+
+  mat2: 'mat2x2<f32>',
+  imat2: 'mat2x2<i32>',
+  umat2: 'mat2x2<u32>',
+  bmat2: 'mat2x2<bool>',
+
+  mat3: 'mat3x3<f32>',
+  imat3: 'mat3x3<i32>',
+  umat3: 'mat3x3<u32>',
+  bmat3: 'mat3x3<bool>',
+
+  mat4: 'mat4x4<f32>',
+  imat4: 'mat4x4<i32>',
+  umat4: 'mat4x4<u32>',
+  bmat4: 'mat4x4<bool>',
+};
+const MethodMap = {
+  dFdx: 'dpdx',
+  dFdy: '- dpdy',
+  mod_float: 'engine_mod_float',
+  mod_vec2: 'engine_mod_vec2',
+  mod_vec3: 'engine_mod_vec3',
+  mod_vec4: 'engine_mod_vec4',
+  equals_bool: 'engine_equals_bool',
+  equals_bvec2: 'engine_equals_bvec2',
+  equals_bvec3: 'engine_equals_bvec3',
+  equals_bvec4: 'engine_equals_bvec4',
+  lessThanEqual: 'engine_lessThanEqual',
+  greaterThan: 'engine_greaterThan',
+  inversesqrt: 'inverseSqrt',
+  bitcast: 'bitcast<f32>',
+};
+const PolyfillMap = {
+  engine_xor: new CodeNode(`
+fn engine_xor( a : bool, b : bool ) -> bool {
+
+	return ( a || b ) && !( a && b );
+
+}
+`),
+  lessThanEqual: new CodeNode(`
+fn engine_lessThanEqual( a : vec3<f32>, b : vec3<f32> ) -> vec3<bool> {
+
+	return vec3<bool>( a.x <= b.x, a.y <= b.y, a.z <= b.z );
+
+}
+`),
+  greaterThan: new CodeNode(`
+fn engine_greaterThan( a : vec3<f32>, b : vec3<f32> ) -> vec3<bool> {
+
+	return vec3<bool>( a.x > b.x, a.y > b.y, a.z > b.z );
+
+}
+`),
+  mod_float: new CodeNode('fn engine_mod_float( x : f32, y : f32 ) -> f32 { return x - y * floor( x / y ); }'),
+  mod_vec2: new CodeNode('fn engine_mod_vec2( x : vec2f, y : vec2f ) -> vec2f { return x - y * floor( x / y ); }'),
+  mod_vec3: new CodeNode('fn engine_mod_vec3( x : vec3f, y : vec3f ) -> vec3f { return x - y * floor( x / y ); }'),
+  mod_vec4: new CodeNode('fn engine_mod_vec4( x : vec4f, y : vec4f ) -> vec4f { return x - y * floor( x / y ); }'),
+  equals_bool: new CodeNode('fn engine_equals_bool( a : bool, b : bool ) -> bool { return a == b; }'),
+  equals_bvec2: new CodeNode(
+    'fn engine_equals_bvec2( a : vec2f, b : vec2f ) -> vec2<bool> { return vec2<bool>( a.x == b.x, a.y == b.y ); }',
+  ),
+  equals_bvec3: new CodeNode(
+    'fn engine_equals_bvec3( a : vec3f, b : vec3f ) -> vec3<bool> { return vec3<bool>( a.x == b.x, a.y == b.y, a.z == b.z ); }',
+  ),
+  equals_bvec4: new CodeNode(
+    'fn engine_equals_bvec4( a : vec4f, b : vec4f ) -> vec4<bool> { return vec4<bool>( a.x == b.x, a.y == b.y, a.z == b.z, a.w == b.w ); }',
+  ),
+  repeatWrapping: new CodeNode(`
+fn engine_repeatWrapping( uv : vec2<f32>, dimension : vec2<u32> ) -> vec2<u32> {
+
+	let uvScaled = vec2<u32>( uv * vec2<f32>( dimension ) );
+
+	return ( ( uvScaled % dimension ) + dimension ) % dimension;
+
+}
+`),
+};

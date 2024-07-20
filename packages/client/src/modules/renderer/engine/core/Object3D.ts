@@ -67,6 +67,8 @@ export class Object3D<EventMap extends Object3DEventMap = Object3DEventMap> {
   computeBoundingSphere(): void {}
   computeBoundingBox(): void {}
 
+  declare material: Material | null;
+
   occlusionTest: boolean;
   boundingBox: Box3 | null;
   id: number;
