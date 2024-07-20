@@ -126,13 +126,13 @@ describe('Math - Box2', () => {
     const box2 = Box2.fromParams(0, 0, 1, 1);
     const box3 = Box2.fromParams(-1, -1, 1, 1);
 
-    expect(box1.contains(box1)).toBe(true);
-    expect(box1.contains(box2)).toBe(false);
-    expect(box1.contains(box3)).toBe(false);
+    expect(box1.containsBox(box1)).toBe(true);
+    expect(box1.containsBox(box2)).toBe(false);
+    expect(box1.containsBox(box3)).toBe(false);
 
-    expect(box2.contains(box1)).toBe(true);
-    expect(box3.contains(box1)).toBe(true);
-    expect(box2.contains(box3)).toBe(false);
+    expect(box2.containsBox(box1)).toBe(true);
+    expect(box3.containsBox(box1)).toBe(true);
+    expect(box2.containsBox(box3)).toBe(false);
   });
 
   it('containsVec', () => {
@@ -151,18 +151,18 @@ describe('Math - Box2', () => {
     const box2 = Box2.fromParams(0, 0, 1, 1);
     const box3 = Box2.fromParams(-1, -1, 1, 1);
 
-    expect(box1.intersects(box1)).toBe(true);
-    expect(box1.intersects(box2)).toBe(true);
-    expect(box1.intersects(box3)).toBe(true);
+    expect(box1.intersectsBox(box1)).toBe(true);
+    expect(box1.intersectsBox(box2)).toBe(true);
+    expect(box1.intersectsBox(box3)).toBe(true);
 
-    expect(box2.intersects(box1)).toBe(true);
-    expect(box3.intersects(box1)).toBe(true);
-    expect(box2.intersects(box3)).toBe(true);
+    expect(box2.intersectsBox(box1)).toBe(true);
+    expect(box3.intersectsBox(box1)).toBe(true);
+    expect(box2.intersectsBox(box3)).toBe(true);
 
     box2.translate(vec2(2, 2));
-    expect(box1.intersects(box2)).toBe(false);
-    expect(box2.intersects(box1)).toBe(false);
-    expect(box2.intersects(box3)).toBe(false);
+    expect(box1.intersectsBox(box2)).toBe(false);
+    expect(box2.intersectsBox(box1)).toBe(false);
+    expect(box2.intersectsBox(box3)).toBe(false);
   });
 
   it('clamp', () => {
