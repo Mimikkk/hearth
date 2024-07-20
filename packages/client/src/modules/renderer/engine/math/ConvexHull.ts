@@ -341,22 +341,30 @@ export class ConvexHull {
       const vertex = this.vertices[i];
       const point = vertex.point;
 
-      // update the min coordinates
-
-      for (let j = 0; j < 3; j++) {
-        if (point.getComponent(j) < min.getComponent(j)) {
-          min.setComponent(j, point.getComponent(j));
-          minVertices[j] = vertex;
-        }
+      if (point.x < min.x) {
+        min.x = point.x;
+        minVertices[0] = vertex;
+      }
+      if (point.y < min.y) {
+        min.y = point.y;
+        minVertices[1] = vertex;
+      }
+      if (point.z < min.z) {
+        min.z = point.z;
+        minVertices[2] = vertex;
       }
 
-      // update the max coordinates
-
-      for (let j = 0; j < 3; j++) {
-        if (point.getComponent(j) > max.getComponent(j)) {
-          max.setComponent(j, point.getComponent(j));
-          maxVertices[j] = vertex;
-        }
+      if (point.x > max.x) {
+        max.x = point.x;
+        maxVertices[0] = vertex;
+      }
+      if (point.y > max.y) {
+        max.y = point.y;
+        maxVertices[1] = vertex;
+      }
+      if (point.z > max.z) {
+        max.z = point.z;
+        maxVertices[2] = vertex;
       }
     }
 
@@ -387,16 +395,20 @@ export class ConvexHull {
     // (max.z - min.z)
 
     let maxDistance = 0;
+
     let index = 0;
-
-    for (let i = 0; i < 3; i++) {
-      const distance = max[i].point.getComponent(i) - min[i].point.getComponent(i);
-
-      if (distance > maxDistance) {
-        maxDistance = distance;
-        index = i;
-      }
+    const distanceX = max[0].point.x - min[0].point.x;
+    if (distanceX > maxDistance) {
+      maxDistance = distanceX;
+      index = 0;
     }
+    const distanceY = max[1].point.y - min[1].point.y;
+    if (distanceY > maxDistance) {
+      maxDistance = distanceY;
+      index = 1;
+    }
+    const distanceZ = max[2].point.z - min[2].point.z;
+    if (distanceZ > maxDistance) index = 2;
 
     const v0 = min[index];
     const v1 = max[index];

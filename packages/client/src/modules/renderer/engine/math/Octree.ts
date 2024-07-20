@@ -119,7 +119,7 @@ export class Octree {
           const box = new Box3();
           const v = _v1.set(x, y, z);
 
-          box.min.from(this.box.min).add(v.multiply(halfsize));
+          box.min.from(this.box.min).add(v.mul(halfsize));
           box.max.from(box.min).add(halfsize);
 
           subTrees.push(new Octree(box));

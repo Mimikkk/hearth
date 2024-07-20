@@ -87,7 +87,7 @@ export class Ray {
   }
 
   closestTo(coord: Const<Vec3>, into: Vec3 = Vec3.new()): Vec3 {
-    const distance = into.subVectors(coord, this.origin).dot(this.direction);
+    const distance = into.asSub(coord, this.origin).dot(this.direction);
     into.from(this.origin);
 
     return distance < 0 ? into : into.addScaled(this.direction, distance);
@@ -98,7 +98,7 @@ export class Ray {
   }
 
   distanceSqTo(coord: Const<Vec3>): number {
-    const directionDistance = _distance1.subVectors(coord, this.origin).dot(this.direction);
+    const directionDistance = _distance1.asSub(coord, this.origin).dot(this.direction);
 
     // point behind the ray
 
@@ -247,7 +247,7 @@ export class Ray {
   }
 
   intersectSphere(sphere: Const<Sphere>, into: Vec3 = Vec3.new()): Vec3 | null {
-    const _vector = _sphere.subVectors(sphere.center, this.origin);
+    const _vector = _sphere.asSub(sphere.center, this.origin);
     const tca = _vector.dot(this.direction);
     const d2 = _vector.dot(_vector) - tca * tca;
     const radius2 = sphere.radius * sphere.radius;
@@ -327,9 +327,9 @@ export class Ray {
 
     // from https://github.com/pmjoniak/GeometricTools/blob/master/GTEngine/Include/Mathematics/GteIntrRay3Triangle3.h
 
-    const _edge1 = _triangle0.subVectors(b, a);
-    const _edge2 = _triangle1.subVectors(c, a);
-    const _normal = _triangle2.crossVectors(_edge1, _edge2);
+    const _edge1 = _triangle0.asSub(b, a);
+    const _edge2 = _triangle1.asSub(c, a);
+    const _normal = _triangle2.asCross(_edge1, _edge2);
 
     // Solve Q + t*D = b1*E1 + b2*E2 (Q = kDiff, D = ray direction,
     // E1 = kEdge1, E2 = kEdge2, N = Cross(E1,E2)) by
@@ -349,8 +349,8 @@ export class Ray {
       return null;
     }
 
-    const _diff = _triangle3.subVectors(this.origin, a);
-    const DdQxE2 = sign * this.direction.dot(_edge2.crossVectors(_diff, _edge2));
+    const _diff = _triangle3.asSub(this.origin, a);
+    const DdQxE2 = sign * this.direction.dot(_edge2.asCross(_diff, _edge2));
 
     // b1 < 0, no intersection
     if (DdQxE2 < 0) {

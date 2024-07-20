@@ -1,4 +1,4 @@
-import { clamp } from './MathUtils.js';
+import { clamp, NumberArray } from './MathUtils.js';
 import { Quaternion } from './Quaternion.js';
 import type { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
 import type { InterleavedBufferAttribute } from '@modules/renderer/engine/core/InterleavedBufferAttribute.js';
@@ -10,6 +10,7 @@ import type { Cylindrical } from '@modules/renderer/engine/math/Cylindrical.js';
 import type { Spherical } from '@modules/renderer/engine/math/Spherical.js';
 import type { Camera } from '@modules/renderer/engine/cameras/Camera.js';
 import { Const } from '@modules/renderer/engine/math/types.js';
+import { Attribute } from '@modules/renderer/engine/core/types.js';
 
 export interface IVec3 {
   x: number;
@@ -31,41 +32,102 @@ export class Vec3 implements IVec3 {
     return new Vec3(x, y, z);
   }
 
+  static scalar(scalar: number, into: Vec3 = Vec3.new()): Vec3 {
+    return into.setScalar(scalar);
+  }
+
+  static empty(): Vec3 {
+    return Vec3.new(0, 0);
+  }
+
+  static clone({ x, y, z }: Const<Vec3>, into: Vec3 = Vec3.new()): Vec3 {
+    return into.set(x, y, z);
+  }
+
+  static is(vec: any): vec is Vec3 {
+    return vec?.isVec3 === true;
+  }
+
+  static into(into: Vec3, { x, y, z }: Const<Vec3>) {
+    return into.set(x, y, z);
+  }
+
+  static from({ x, y, z }: Const<Vec3>, into: Vec3 = Vec3.new()): Vec3 {
+    return into.set(x, y, z);
+  }
+
+  static fromAttribute(attribute: Const<Attribute>, index: number, into: Vec3 = Vec3.new()): Vec3 {
+    return into.fromAttribute(attribute, index);
+  }
+
+  static fromArray(array: Const<NumberArray>, offset: number = 0, into: Vec3 = Vec3.new()): Vec3 {
+    return into.fromArray(array, offset);
+  }
+
+  static fromColor(color: Const<Color>, into: Vec3 = Vec3.new()): Vec3 {
+    return into.fromColor(color);
+  }
+
+  static fromEuler(euler: Const<Euler>, into: Vec3 = Vec3.new()): Vec3 {
+    return into.fromEuler(euler);
+  }
+
+  static fromSpherical(spherical: Const<Spherical>, into: Vec3 = Vec3.new()): Vec3 {
+    return into.fromSpherical(spherical);
+  }
+
+  static fromCylindrical(cylindrical: Const<Cylindrical>, into: Vec3 = Vec3.new()): Vec3 {
+    return into.fromCylindrical(cylindrical);
+  }
+
+  static fromMat4Position(mat: Const<Mat4>, into: Vec3 = Vec3.new()): Vec3 {
+    return into.fromMat4Position(mat);
+  }
+
+  static fromMat4Scale(mat: Const<Mat4>, into: Vec3 = Vec3.new()): Vec3 {
+    return into.fromMat4Scale(mat);
+  }
+
+  static fromMat4Column(mat: Const<Mat4>, index: number, into: Vec3 = Vec3.new()): Vec3 {
+    return into.fromMat4Column(mat, index);
+  }
+
+  static fromMat3Column(matrix: Const<Mat3>, index: number, into: Vec3 = Vec3.new()): Vec3 {
+    return into.fromMat3Column(matrix, index);
+  }
+
+  static lerp(from: Const<Vec3>, to: Const<Vec3>, step: number, into: Vec3 = Vec3.new()): Vec3 {
+    return into.lerp(from, to, step);
+  }
+
   clone(into: Vec3 = Vec3.new()): Vec3 {
     return into.from(this);
   }
 
-  set(x: number, y: number, z?: number): this {
+  set(x: number, y: number, z: number): this {
     this.x = x;
     this.y = y;
-    this.z = z ?? this.z;
+    this.z = z;
 
     return this;
   }
 
   setScalar(scalar: number): this {
-    this.x = scalar;
-    this.y = scalar;
-    this.z = scalar;
-
-    return this;
+    return this.set(scalar, scalar, scalar);
   }
 
   setX(x: number): this {
     this.x = x;
-
     return this;
   }
 
   setY(y: number): this {
     this.y = y;
-
     return this;
   }
 
   setZ(z: number): this {
     this.z = z;
-
     return this;
   }
 
@@ -100,12 +162,8 @@ export class Vec3 implements IVec3 {
     }
   }
 
-  from(v: Const<Vec3>): this {
-    this.x = v.x;
-    this.y = v.y;
-    this.z = v.z;
-
-    return this;
+  from({ x, y, z }: Const<Vec3>): this {
+    return this.set(x, y, z);
   }
 
   add(v: Vec3): this {
@@ -124,7 +182,7 @@ export class Vec3 implements IVec3 {
     return this;
   }
 
-  addVectors(a: Vec3, b: Vec3): this {
+  asAdd(a: Const<Vec3>, b: Const<Vec3>): this {
     this.x = a.x + b.x;
     this.y = a.y + b.y;
     this.z = a.z + b.z;
@@ -132,7 +190,7 @@ export class Vec3 implements IVec3 {
     return this;
   }
 
-  addScaled(vector: Vec3, scale: number): this {
+  addScaled(vector: Const<Vec3>, scale: number): this {
     this.x += vector.x * scale;
     this.y += vector.y * scale;
     this.z += vector.z * scale;
@@ -140,7 +198,7 @@ export class Vec3 implements IVec3 {
     return this;
   }
 
-  sub(vector: Vec3): this {
+  sub(vector: Const<Vec3>): this {
     this.x -= vector.x;
     this.y -= vector.y;
     this.z -= vector.z;
@@ -156,7 +214,7 @@ export class Vec3 implements IVec3 {
     return this;
   }
 
-  subVectors(a: Vec3, b: Vec3): this {
+  asSub(a: Const<Vec3>, b: Const<Vec3>): this {
     this.x = a.x - b.x;
     this.y = a.y - b.y;
     this.z = a.z - b.z;
@@ -164,7 +222,7 @@ export class Vec3 implements IVec3 {
     return this;
   }
 
-  multiply(vector: Vec3): this {
+  mul(vector: Const<Vec3>): this {
     this.x *= vector.x;
     this.y *= vector.y;
     this.z *= vector.z;
@@ -180,7 +238,7 @@ export class Vec3 implements IVec3 {
     return this;
   }
 
-  multiplyVectors(a: Vec3, b: Vec3): this {
+  asMul(a: Const<Vec3>, b: Const<Vec3>): this {
     this.x = a.x * b.x;
     this.y = a.y * b.y;
     this.z = a.z * b.z;
@@ -188,15 +246,15 @@ export class Vec3 implements IVec3 {
     return this;
   }
 
-  applyEuler(euler: Euler): this {
+  applyEuler(euler: Const<Euler>): this {
     return this.applyQuaternion(new Quaternion().fromEuler(euler));
   }
 
-  applyAxisAngle(axis: Vec3, angle: number): this {
+  applyAxisAngle(axis: Const<Vec3>, angle: number): this {
     return this.applyQuaternion(new Quaternion().fromAxisAngle(axis, angle));
   }
 
-  applyMat3(matrix: Mat3): this {
+  applyMat3(matrix: Const<Mat3>): this {
     const x = this.x,
       y = this.y,
       z = this.z;
@@ -209,11 +267,11 @@ export class Vec3 implements IVec3 {
     return this;
   }
 
-  applyNormalMatrix(matrix: Mat3): this {
+  applyNMat3(matrix: Const<Mat3>): this {
     return this.applyMat3(matrix).normalize();
   }
 
-  applyMat4(matrix: Mat4): this {
+  applyMat4(matrix: Const<Mat4>): this {
     const x = this.x,
       y = this.y,
       z = this.z;
@@ -228,7 +286,7 @@ export class Vec3 implements IVec3 {
     return this;
   }
 
-  applyQuaternion(quaternion: Quaternion): this {
+  applyQuaternion(quaternion: Const<Quaternion>): this {
     // quaternion q is assumed to have unit length
 
     const vx = this.x,
@@ -252,22 +310,22 @@ export class Vec3 implements IVec3 {
     return this;
   }
 
-  project(camera: Camera): this {
+  project(camera: Const<Camera>): this {
     return this.applyMat4(camera.matrixWorldInverse).applyMat4(camera.projectionMatrix);
   }
 
-  unproject(camera: Camera): this {
+  unproject(camera: Const<Camera>): this {
     return this.applyMat4(camera.projectionMatrixInverse).applyMat4(camera.matrixWorld);
   }
 
-  transformDirection(m: Mat4): this {
+  transformDirection(affine: Const<Mat4>): this {
     // input: engine.Mat4 affine matrix
     // vector interpreted as a direction
 
     const x = this.x,
       y = this.y,
       z = this.z;
-    const e = m.elements;
+    const e = affine.elements;
 
     this.x = e[0] * x + e[4] * y + e[8] * z;
     this.y = e[1] * x + e[5] * y + e[9] * z;
@@ -276,7 +334,7 @@ export class Vec3 implements IVec3 {
     return this.normalize();
   }
 
-  divide(vector: Vec3): this {
+  div(vector: Const<Vec3>): this {
     this.x /= vector.x;
     this.y /= vector.y;
     this.z /= vector.z;
@@ -284,11 +342,11 @@ export class Vec3 implements IVec3 {
     return this;
   }
 
-  divideScalar(scalar: number): this {
+  divScalar(scalar: number): this {
     return this.scale(1 / scalar);
   }
 
-  min(vector: Vec3): this {
+  min(vector: Const<Vec3>): this {
     this.x = Math.min(this.x, vector.x);
     this.y = Math.min(this.y, vector.y);
     this.z = Math.min(this.z, vector.z);
@@ -296,7 +354,7 @@ export class Vec3 implements IVec3 {
     return this;
   }
 
-  max(vector: Vec3): this {
+  max(vector: Const<Vec3>): this {
     this.x = Math.max(this.x, vector.x);
     this.y = Math.max(this.y, vector.y);
     this.z = Math.max(this.z, vector.z);
@@ -304,7 +362,7 @@ export class Vec3 implements IVec3 {
     return this;
   }
 
-  clamp(min: Vec3, max: Vec3): this {
+  clamp(min: Const<Vec3>, max: Const<Vec3>): this {
     this.x = Math.max(min.x, Math.min(max.x, this.x));
     this.y = Math.max(min.y, Math.min(max.y, this.y));
     this.z = Math.max(min.z, Math.min(max.z, this.z));
@@ -323,7 +381,7 @@ export class Vec3 implements IVec3 {
   clampLength(min: number, max: number): this {
     const length = this.length();
 
-    return this.divideScalar(length || 1).scale(Math.max(min, Math.min(max, length)));
+    return this.divScalar(length || 1).scale(Math.max(min, Math.min(max, length)));
   }
 
   floor(): this {
@@ -350,7 +408,7 @@ export class Vec3 implements IVec3 {
     return this;
   }
 
-  roundToZero(): this {
+  truncate(): this {
     this.x = Math.trunc(this.x);
     this.y = Math.trunc(this.y);
     this.z = Math.trunc(this.z);
@@ -366,7 +424,7 @@ export class Vec3 implements IVec3 {
     return this;
   }
 
-  dot(vector: Vec3): number {
+  dot(vector: Const<Vec3>): number {
     return this.x * vector.x + this.y * vector.y + this.z * vector.z;
   }
 
@@ -378,19 +436,19 @@ export class Vec3 implements IVec3 {
     return Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
   }
 
-  manhattanLength(): number {
+  manhattan(): number {
     return Math.abs(this.x) + Math.abs(this.y) + Math.abs(this.z);
   }
 
   normalize(): this {
-    return this.divideScalar(this.length() || 1);
+    return this.divScalar(this.length() || 1);
   }
 
   setLength(length: number): this {
     return this.normalize().scale(length);
   }
 
-  lerp(vector: Vec3, step: number): this {
+  lerp(vector: Const<Vec3>, step: number): this {
     this.x += (vector.x - this.x) * step;
     this.y += (vector.y - this.y) * step;
     this.z += (vector.z - this.z) * step;
@@ -398,7 +456,7 @@ export class Vec3 implements IVec3 {
     return this;
   }
 
-  lerpVectors(from: Vec3, to: Vec3, step: number): this {
+  asLerp(from: Const<Vec3>, to: Const<Vec3>, step: number): this {
     this.x = from.x + (to.x - from.x) * step;
     this.y = from.y + (to.y - from.y) * step;
     this.z = from.z + (to.z - from.z) * step;
@@ -407,10 +465,10 @@ export class Vec3 implements IVec3 {
   }
 
   cross(vector: Vec3): this {
-    return this.crossVectors(this, vector);
+    return this.asCross(this, vector);
   }
 
-  crossVectors(a: Vec3, b: Vec3): this {
+  asCross(a: Const<Vec3>, b: Const<Vec3>): this {
     const ax = a.x,
       ay = a.y,
       az = a.z;
@@ -425,7 +483,7 @@ export class Vec3 implements IVec3 {
     return this;
   }
 
-  projectOnVector(vector: Vec3): this {
+  projectOnVec(vector: Const<Vec3>): this {
     const denominator = vector.lengthSq();
 
     if (denominator === 0) return this.set(0, 0, 0);
@@ -435,15 +493,15 @@ export class Vec3 implements IVec3 {
     return this.from(vector).scale(scalar);
   }
 
-  projectOnPlane(normal: Vec3): this {
-    return this.sub(this.clone().projectOnVector(normal));
+  projectOnPlane(normal: Const<Vec3>): this {
+    return this.sub(this.clone().projectOnVec(normal));
   }
 
-  reflect(normal: Vec3): this {
+  reflect(normal: Const<Vec3>): this {
     return this.sub(normal.clone().scale(2 * this.dot(normal)));
   }
 
-  angleTo(vector: Vec3): number {
+  angleTo(vector: Const<Vec3>): number {
     const denominator = Math.sqrt(this.lengthSq() * vector.lengthSq());
 
     if (denominator === 0) return Math.PI / 2;
@@ -455,11 +513,11 @@ export class Vec3 implements IVec3 {
     return Math.acos(clamp(theta, -1, 1));
   }
 
-  distanceTo(vector: Vec3): number {
+  distanceTo(vector: Const<Vec3>): number {
     return Math.sqrt(this.distanceSqTo(vector));
   }
 
-  distanceSqTo(vector: Vec3): number {
+  distanceSqTo(vector: Const<Vec3>): number {
     const dx = this.x - vector.x,
       dy = this.y - vector.y,
       dz = this.z - vector.z;
@@ -467,15 +525,15 @@ export class Vec3 implements IVec3 {
     return dx * dx + dy * dy + dz * dz;
   }
 
-  manhattanDistanceTo(vector: Vec3): number {
+  manhattanTo(vector: Const<Vec3>): number {
     return Math.abs(this.x - vector.x) + Math.abs(this.y - vector.y) + Math.abs(this.z - vector.z);
   }
 
-  setFromSpherical(spherical: Spherical): this {
-    return this.setFromSphericalCoords(spherical.radius, spherical.phi, spherical.theta);
+  fromSpherical(spherical: Const<Spherical>): this {
+    return this.fromSphericalCoords(spherical.radius, spherical.phi, spherical.theta);
   }
 
-  setFromSphericalCoords(radius: number, phi: number, theta: number): this {
+  fromSphericalCoords(radius: number, phi: number, theta: number): this {
     const sinPhiRadius = Math.sin(phi) * radius;
 
     this.x = sinPhiRadius * Math.sin(theta);
@@ -485,11 +543,11 @@ export class Vec3 implements IVec3 {
     return this;
   }
 
-  setFromCylindrical(cylindrical: Cylindrical): this {
-    return this.setFromCylindricalCoords(cylindrical.radius, cylindrical.theta, cylindrical.height);
+  fromCylindrical(cylindrical: Const<Cylindrical>): this {
+    return this.fromCylindricalCoords(cylindrical.radius, cylindrical.theta, cylindrical.height);
   }
 
-  setFromCylindricalCoords(radius: number, theta: number, y: number): this {
+  fromCylindricalCoords(radius: number, theta: number, y: number): this {
     this.x = radius * Math.sin(theta);
     this.y = y;
     this.z = radius * Math.cos(theta);
@@ -497,7 +555,7 @@ export class Vec3 implements IVec3 {
     return this;
   }
 
-  setFromMatrixPosition(matrix: Mat4): this {
+  fromMat4Position(matrix: Const<Mat4>): this {
     const e = matrix.elements;
 
     this.x = e[12];
@@ -507,10 +565,10 @@ export class Vec3 implements IVec3 {
     return this;
   }
 
-  setFromMatrixScale(matrix: Mat4): this {
-    const sx = this.setFromMatrixColumn(matrix, 0).length();
-    const sy = this.setFromMatrixColumn(matrix, 1).length();
-    const sz = this.setFromMatrixColumn(matrix, 2).length();
+  fromMat4Scale(matrix: Const<Mat4>): this {
+    const sx = this.fromMat4Column(matrix, 0).length();
+    const sy = this.fromMat4Column(matrix, 1).length();
+    const sz = this.fromMat4Column(matrix, 2).length();
 
     this.x = sx;
     this.y = sy;
@@ -519,15 +577,15 @@ export class Vec3 implements IVec3 {
     return this;
   }
 
-  setFromMatrixColumn(matrix: Mat4, index: number): this {
+  fromMat4Column(matrix: Const<Mat4>, index: number): this {
     return this.fromArray(matrix.elements, index * 4);
   }
 
-  setFromMat3Column(matrix: Mat3, index: number): this {
+  fromMat3Column(matrix: Const<Mat3>, index: number): this {
     return this.fromArray(matrix.elements, index * 3);
   }
 
-  setFromEuler(euler: Euler): this {
+  fromEuler(euler: Const<Euler>): this {
     this.x = euler.x;
     this.y = euler.y;
     this.z = euler.z;
@@ -535,7 +593,7 @@ export class Vec3 implements IVec3 {
     return this;
   }
 
-  setFromColor(color: Color): this {
+  fromColor(color: Const<Color>): this {
     this.x = color.r;
     this.y = color.g;
     this.z = color.b;
@@ -543,11 +601,7 @@ export class Vec3 implements IVec3 {
     return this;
   }
 
-  equals(vector: Vec3): boolean {
-    return vector.x === this.x && vector.y === this.y && vector.z === this.z;
-  }
-
-  fromArray(array: number[], offset = 0): this {
+  fromArray(array: Const<NumberArray>, offset = 0): this {
     this.x = array[offset];
     this.y = array[offset + 1];
     this.z = array[offset + 2];
@@ -555,7 +609,7 @@ export class Vec3 implements IVec3 {
     return this;
   }
 
-  intoArray(array: number[] = [], offset: number = 0): number[] {
+  intoArray<T extends NumberArray>(array: T = [] as never, offset: number = 0): T {
     array[offset] = this.x;
     array[offset + 1] = this.y;
     array[offset + 2] = this.z;
@@ -563,34 +617,17 @@ export class Vec3 implements IVec3 {
     return array;
   }
 
-  fromAttribute(attribute: BufferAttribute<Float32Array> | InterleavedBufferAttribute, index: number): this {
-    this.x = attribute.getX(index);
-    this.y = attribute.getY(index);
-    this.z = attribute.getZ(index);
+  fromAttribute(attribute: Attribute, index: number): this {
+    return this.set(attribute.getX(index), attribute.getY(index), attribute.getZ(index));
+  }
 
+  intoAttribute(attribute: Attribute, index: number): this {
+    attribute.setXYZ(index, this.x, this.y, this.z);
     return this;
   }
 
-  random(): this {
-    this.x = Math.random();
-    this.y = Math.random();
-    this.z = Math.random();
-
-    return this;
-  }
-
-  randomDirection(): this {
-    // https://mathworld.wolfram.com/SpherePointPicking.html
-
-    const theta = Math.random() * Math.PI * 2;
-    const u = Math.random() * 2 - 1;
-    const c = Math.sqrt(1 - u * u);
-
-    this.x = c * Math.cos(theta);
-    this.y = u;
-    this.z = c * Math.sin(theta);
-
-    return this;
+  equals(vector: Const<Vec3>): boolean {
+    return vector.x === this.x && vector.y === this.y && vector.z === this.z;
   }
 
   *[Symbol.iterator](): Iterator<number> {

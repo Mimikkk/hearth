@@ -12,6 +12,7 @@ import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js'
 
 import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
+import { Random } from '@modules/renderer/engine/math/random.js';
 
 class CustomLightingModel extends LightingModel {
   direct({ lightColor, reflectedLight }, stack) {
@@ -64,7 +65,7 @@ async function init() {
   const points = [];
 
   for (let i = 0; i < 3000; i++) {
-    const point = new Engine.Vec3().random().subScalar(0.5).scale(2);
+    const point = Random.vec3().subScalar(0.5).scale(2);
     points.push(point);
   }
 

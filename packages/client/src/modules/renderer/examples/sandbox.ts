@@ -22,6 +22,7 @@ import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js'
 import { TextureFormat } from '@modules/renderer/engine/engine.js';
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
+import { Random } from '@modules/renderer/engine/math/random.js';
 
 let camera, scene, renderer;
 
@@ -126,7 +127,7 @@ async function init() {
   const points = [];
 
   for (let i = 0; i < 1000; i++) {
-    const point = new Engine.Vec3().random().subScalar(0.5);
+    const point = Random.vec3().subScalar(0.5);
     points.push(point);
   }
 

@@ -68,7 +68,7 @@ export class HemisphereLightHelper extends Object3D {
 
     this.light.updateWorldMatrix(true, false);
 
-    mesh.lookAt(_vector.setFromMatrixPosition(this.light.matrixWorld).negate());
+    mesh.lookAt(_vector.fromMat4Position(this.light.matrixWorld).negate());
   }
 }
 

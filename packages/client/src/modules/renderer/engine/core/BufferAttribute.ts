@@ -126,7 +126,7 @@ export class BufferAttribute<T extends TypedArray> {
     for (let i = 0, l = this.count; i < l; i++) {
       _vector.fromAttribute(this, i);
 
-      _vector.applyNormalMatrix(m);
+      _vector.applyNMat3(m);
 
       this.setXYZ(i, _vector.x, _vector.y, _vector.z);
     }

@@ -82,7 +82,7 @@ export class SelectionControl {
       endPoint.x = Math.max(startPoint.x, endPoint.x);
       endPoint.y = Math.min(startPoint.y, endPoint.y);
 
-      _vecNear.setFromMatrixPosition(this.camera.matrixWorld);
+      _vecNear.fromMat4Position(this.camera.matrixWorld);
       _vecTopLeft.from(_tmpPoint);
       _vecTopRight.set(endPoint.x, _tmpPoint.y, 0);
       _vecDownRight.from(endPoint);

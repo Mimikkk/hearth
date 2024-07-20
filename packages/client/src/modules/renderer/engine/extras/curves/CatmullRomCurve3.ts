@@ -87,7 +87,7 @@ class CatmullRomCurve3 extends Curve<Vec3> {
       p0 = points[(intPoint - 1) % l];
     } else {
       // extrapolate first point
-      tmp.subVectors(points[0], points[1]).add(points[0]);
+      tmp.asSub(points[0], points[1]).add(points[0]);
       p0 = tmp;
     }
 
@@ -98,7 +98,7 @@ class CatmullRomCurve3 extends Curve<Vec3> {
       p3 = points[(intPoint + 2) % l];
     } else {
       // extrapolate last point
-      tmp.subVectors(points[l - 1], points[l - 2]).add(points[l - 1]);
+      tmp.asSub(points[l - 1], points[l - 2]).add(points[l - 1]);
       p3 = tmp;
     }
 

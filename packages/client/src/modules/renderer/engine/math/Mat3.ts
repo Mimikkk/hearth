@@ -99,9 +99,9 @@ export class Mat3 implements Matrix {
   }
 
   extractBasis(xAxis: Vec3, yAxis: Vec3, zAxis: Vec3): Mat3 {
-    xAxis.setFromMat3Column(this, 0);
-    yAxis.setFromMat3Column(this, 1);
-    zAxis.setFromMat3Column(this, 2);
+    xAxis.fromMat3Column(this, 0);
+    yAxis.fromMat3Column(this, 1);
+    zAxis.fromMat3Column(this, 2);
 
     return this;
   }
@@ -347,7 +347,7 @@ export class Mat3 implements Matrix {
     return true;
   }
 
-  fromArray(array: number[], offset: number = 0): Mat3 {
+  fromArray(array: Const<NumberArray>, offset: number = 0): Mat3 {
     for (let i = 0; i < 9; i++) {
       this.elements[i] = array[i + offset];
     }
@@ -355,7 +355,7 @@ export class Mat3 implements Matrix {
     return this;
   }
 
-  intoArray(array: number[] = [], offset: number = 0): number[] {
+  intoArray<T extends NumberArray>(array: T = [] as never, offset: number = 0): T {
     const te = this.elements;
 
     array[offset] = te[0];

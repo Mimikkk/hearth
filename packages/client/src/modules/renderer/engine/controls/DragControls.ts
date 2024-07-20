@@ -126,7 +126,7 @@ class DragControls {
 
             _plane.fromNormalAndCoplanar(
               _camera.getWorldDirection(_plane.normal),
-              _worldPosition.setFromMatrixPosition(object.matrixWorld),
+              _worldPosition.fromMat4Position(object.matrixWorld),
             );
 
             if (_hovered !== object && _hovered !== null) {
@@ -178,7 +178,7 @@ class DragControls {
         _plane.fromNormalAndCoplanar(
           _camera.getWorldDirection(_plane.normal),
           //@ts-expect-error
-          _worldPosition.setFromMatrixPosition(_selected.matrixWorld),
+          _worldPosition.fromMat4Position(_selected.matrixWorld),
         );
 
         if (_raycaster.ray.intersectPlane(_plane, _intersection)) {
@@ -186,7 +186,7 @@ class DragControls {
             //@ts-expect-error
             _inverseMatrix.copy(_selected.parent.matrixWorld).invert();
             //@ts-expect-error
-            _offset.from(_intersection).sub(_worldPosition.setFromMatrixPosition(_selected.matrixWorld));
+            _offset.from(_intersection).sub(_worldPosition.fromMat4Position(_selected.matrixWorld));
           } else if (scope.mode === 'rotate') {
             // the controls only support Y+ up
             _up.set(0, 1, 0).applyQuaternion(_camera.quaternion).normalize();

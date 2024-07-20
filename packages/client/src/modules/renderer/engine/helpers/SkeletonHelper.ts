@@ -77,11 +77,11 @@ export class SkeletonHelper extends LineSegments {
 
       if (bone.parent instanceof Bone) {
         _boneMatrix.multiplyMatrices(_matrixWorldInv, bone.matrixWorld);
-        _vector.setFromMatrixPosition(_boneMatrix);
+        _vector.fromMat4Position(_boneMatrix);
         position.setXYZ(j, _vector.x, _vector.y, _vector.z);
 
         _boneMatrix.multiplyMatrices(_matrixWorldInv, bone.parent.matrixWorld);
-        _vector.setFromMatrixPosition(_boneMatrix);
+        _vector.fromMat4Position(_boneMatrix);
         position.setXYZ(j + 1, _vector.x, _vector.y, _vector.z);
 
         j += 2;

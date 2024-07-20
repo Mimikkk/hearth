@@ -761,7 +761,7 @@ export class BatchedMesh extends Mesh {
     if (this.sortObjects) {
       // get the camera position in the local frame
       _invMatrixWorld.copy(this.matrixWorld).invert();
-      _vector.setFromMatrixPosition(camera.matrixWorld).applyMat4(_invMatrixWorld);
+      _vector.fromMat4Position(camera.matrixWorld).applyMat4(_invMatrixWorld);
 
       for (let i = 0, l = visibility.length; i < l; i++) {
         if (visibility[i] && active[i]) {

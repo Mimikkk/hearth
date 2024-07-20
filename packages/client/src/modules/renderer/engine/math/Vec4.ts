@@ -133,7 +133,7 @@ export class Vec4 implements IVec4 {
     return into.from(vector);
   }
 
-  static fromArray(array: number[], offset: number = 0, into: Vec4 = Vec4.empty()): Vec4 {
+  static fromArray(array: Const<NumberArray>, offset: number = 0, into: Vec4 = Vec4.empty()): Vec4 {
     return into.fromArray(array, offset);
   }
 

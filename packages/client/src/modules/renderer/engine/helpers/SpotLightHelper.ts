@@ -70,7 +70,7 @@ export class SpotLightHelper extends Object3D {
 
     this.cone.scale.set(coneWidth, coneWidth, coneLength);
 
-    _vector.setFromMatrixPosition(this.light.target.matrixWorld);
+    _vector.fromMat4Position(this.light.target.matrixWorld);
 
     this.cone.lookAt(_vector);
 

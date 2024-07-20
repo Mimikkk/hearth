@@ -326,7 +326,7 @@ export class Object3D<EventMap extends Object3DEventMap = Object3DEventMap> {
 
     this.updateWorldMatrix(true, false);
 
-    _position.setFromMatrixPosition(this.matrixWorld);
+    _position.fromMat4Position(this.matrixWorld);
 
     if (isCamera(this) || isLight(this)) {
       _m1.lookAt(_position, _target, this.up);
@@ -484,7 +484,7 @@ export class Object3D<EventMap extends Object3DEventMap = Object3DEventMap> {
   getWorldPosition(target: Vec3): Vec3 {
     this.updateWorldMatrix(true, false);
 
-    return target.setFromMatrixPosition(this.matrixWorld);
+    return target.fromMat4Position(this.matrixWorld);
   }
 
   getWorldQuaternion(target: Quaternion): Quaternion {

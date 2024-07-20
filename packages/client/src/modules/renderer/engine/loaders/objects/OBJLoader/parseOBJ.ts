@@ -225,8 +225,8 @@ class ParserState {
     _vB.fromArray(src, b);
     _vC.fromArray(src, c);
 
-    _cb.subVectors(_vC, _vB);
-    _ab.subVectors(_vA, _vB);
+    _cb.asSub(_vC, _vB);
+    _ab.asSub(_vA, _vB);
     _cb.cross(_ab);
 
     _cb.normalize();

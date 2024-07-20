@@ -31,7 +31,7 @@ export class LineCurve3 extends Curve<Vec3> {
   }
 
   getTangent(t: number, optionalTarget: Vec3 = new Vec3()) {
-    return optionalTarget.subVectors(this.v2, this.v1).normalize();
+    return optionalTarget.asSub(this.v2, this.v1).normalize();
   }
 
   getTangentAt(u: number, optionalTarget: Vec3 = new Vec3()) {

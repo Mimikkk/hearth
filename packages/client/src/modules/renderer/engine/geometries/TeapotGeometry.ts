@@ -285,7 +285,7 @@ export class TeapotGeometry extends BufferGeometry {
             // find normal
             vsdir.fromArray(sdir);
             vtdir.fromArray(tdir);
-            norm.crossVectors(vtdir, vsdir);
+            norm.asCross(vtdir, vsdir);
             norm.normalize();
 
             // if X and Z length is 0, at the cusp, so point the normal up or down, depending on patch number

@@ -68,12 +68,12 @@ export class Sprite extends Object3D {
       throw Error('engine.Sprite: "Raycaster.camera" needs to be set in order to raycast against sprites.');
     }
 
-    _worldScale.setFromMatrixScale(this.matrixWorld);
+    _worldScale.fromMat4Scale(this.matrixWorld);
 
     _viewWorldMatrix.copy(raycaster.camera.matrixWorld);
     this.modelViewMatrix.multiplyMatrices(raycaster.camera.matrixWorldInverse, this.matrixWorld);
 
-    _mvPosition.setFromMatrixPosition(this.modelViewMatrix);
+    _mvPosition.fromMat4Position(this.modelViewMatrix);
 
     if (raycaster.camera instanceof PerspectiveCamera && this.material.sizeAttenuation === false) {
       _worldScale.scale(-_mvPosition.z);

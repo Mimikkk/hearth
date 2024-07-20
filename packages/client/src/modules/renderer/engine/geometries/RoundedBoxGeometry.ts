@@ -61,7 +61,7 @@ export class RoundedBoxGeometry extends BoxGeometry {
     const position = new Vec3();
     const normal = new Vec3();
 
-    const box = new Vec3(width, height, depth).divideScalar(2).subScalar(radius);
+    const box = new Vec3(width, height, depth).divScalar(2).subScalar(radius);
 
     const positions = this.attributes.position.array;
     const normals = this.attributes.normal.array;

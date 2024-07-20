@@ -84,7 +84,7 @@ export class Raycaster {
 
   setFromCamera(coords: Vec2, camera: Camera): this {
     if (camera instanceof PerspectiveCamera) {
-      this.ray.origin.setFromMatrixPosition(camera.matrixWorld);
+      this.ray.origin.fromMat4Position(camera.matrixWorld);
       this.ray.direction.set(coords.x, coords.y, 0.5).unproject(camera).sub(this.ray.origin).normalize();
       this.camera = camera;
     } else if (camera instanceof OrthographicCamera) {

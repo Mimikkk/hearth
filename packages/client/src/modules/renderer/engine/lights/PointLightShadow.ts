@@ -79,7 +79,7 @@ export class PointLightShadow extends LightShadow<PerspectiveCamera> {
       camera.updateProjectionMatrix();
     }
 
-    _lightPositionWorld.setFromMatrixPosition(light.matrixWorld);
+    _lightPositionWorld.fromMat4Position(light.matrixWorld);
     camera.position.from(_lightPositionWorld);
 
     _lookTarget.from(camera.position);

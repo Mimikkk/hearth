@@ -41,7 +41,7 @@ export namespace AnimationClipCreator {
 
       tmp
         .set(Math.random() * 2.0 - 1.0, Math.random() * 2.0 - 1.0, Math.random() * 2.0 - 1.0)
-        .multiply(shakeScale)
+        .mul(shakeScale)
         .intoArray(values, values.length);
     }
 

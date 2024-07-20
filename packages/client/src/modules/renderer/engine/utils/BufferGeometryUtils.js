@@ -1082,11 +1082,11 @@ function toCreasedNormals(geometry, creaseAngle = Math.PI / 3 /* 60 degrees */) 
     const b = verts[1].fromAttribute(posAttr, i3 + 1);
     const c = verts[2].fromAttribute(posAttr, i3 + 2);
 
-    tempVec1.subVectors(c, b);
-    tempVec2.subVectors(a, b);
+    tempVec1.asSub(c, b);
+    tempVec2.asSub(a, b);
 
     // add the normal to the map for all vertices
-    const normal = new Vec3().crossVectors(tempVec1, tempVec2).normalize();
+    const normal = new Vec3().asCross(tempVec1, tempVec2).normalize();
     for (let n = 0; n < 3; n++) {
       const vert = verts[n];
       const hash = hashVertex(vert);
@@ -1109,10 +1109,10 @@ function toCreasedNormals(geometry, creaseAngle = Math.PI / 3 /* 60 degrees */) 
     const b = verts[1].fromAttribute(posAttr, i3 + 1);
     const c = verts[2].fromAttribute(posAttr, i3 + 2);
 
-    tempVec1.subVectors(c, b);
-    tempVec2.subVectors(a, b);
+    tempVec1.asSub(c, b);
+    tempVec2.asSub(a, b);
 
-    tempNorm.crossVectors(tempVec1, tempVec2).normalize();
+    tempNorm.asCross(tempVec1, tempVec2).normalize();
 
     // average all normals that meet the threshold and set the normal value
     for (let n = 0; n < 3; n++) {

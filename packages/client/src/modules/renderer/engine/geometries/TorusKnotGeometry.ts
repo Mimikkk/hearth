@@ -71,10 +71,10 @@ export class TorusKnotGeometry extends BufferGeometry {
 
       // calculate orthonormal basis
 
-      T.subVectors(P2, P1);
-      N.addVectors(P2, P1);
-      B.crossVectors(T, N);
-      N.crossVectors(B, T);
+      T.asSub(P2, P1);
+      N.asAdd(P2, P1);
+      B.asCross(T, N);
+      N.asCross(B, T);
 
       // normalize B, N. T can be ignored, we don't use it
 
@@ -100,7 +100,7 @@ export class TorusKnotGeometry extends BufferGeometry {
 
         // normal (P1 is always the center/origin of the extrusion, thus we can use it to calculate the normal)
 
-        normal.subVectors(vertex, P1).normalize();
+        normal.asSub(vertex, P1).normalize();
 
         normals.push(normal.x, normal.y, normal.z);
 

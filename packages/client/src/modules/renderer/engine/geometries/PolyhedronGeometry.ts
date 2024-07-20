@@ -207,7 +207,7 @@ export class PolyhedronGeometry extends BufferGeometry {
         uvB.set(uvBuffer[j + 2], uvBuffer[j + 3]);
         uvC.set(uvBuffer[j + 4], uvBuffer[j + 5]);
 
-        centroid.from(a).add(b).add(c).divideScalar(3);
+        centroid.from(a).add(b).add(c).divScalar(3);
 
         const azi = azimuth(centroid);
 

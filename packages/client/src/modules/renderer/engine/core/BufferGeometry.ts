@@ -284,10 +284,10 @@ export class BufferGeometry<
           _box.fromAttribute(morphAttribute);
 
           if (this.morphTargetsRelative) {
-            _vector.addVectors(this.boundingBox.min, _box.min);
+            _vector.asAdd(this.boundingBox.min, _box.min);
             this.boundingBox.expandCoord(_vector);
 
-            _vector.addVectors(this.boundingBox.max, _box.max);
+            _vector.asAdd(this.boundingBox.max, _box.max);
             this.boundingBox.expandCoord(_vector);
           } else {
             this.boundingBox.expandCoord(_box.min);
@@ -334,10 +334,10 @@ export class BufferGeometry<
           _boxMorphTargets.fromAttribute(morphAttribute);
 
           if (this.morphTargetsRelative) {
-            _vector.addVectors(_box.min, _boxMorphTargets.min);
+            _vector.asAdd(_box.min, _boxMorphTargets.min);
             _box.expandCoord(_vector);
 
-            _vector.addVectors(_box.max, _boxMorphTargets.max);
+            _vector.asAdd(_box.max, _boxMorphTargets.max);
             _box.expandCoord(_vector);
           } else {
             _box.expandCoord(_boxMorphTargets.min);
@@ -513,7 +513,7 @@ export class BufferGeometry<
 
       // Calculate handedness
 
-      tmp2.crossVectors(n2, t);
+      tmp2.asCross(n2, t);
       const test = tmp2.dot(tan2[v]);
       const w = test < 0.0 ? -1.0 : 1.0;
 
@@ -576,8 +576,8 @@ export class BufferGeometry<
           pB.fromAttribute(positionAttribute, vB);
           pC.fromAttribute(positionAttribute, vC);
 
-          cb.subVectors(pC, pB);
-          ab.subVectors(pA, pB);
+          cb.asSub(pC, pB);
+          ab.asSub(pA, pB);
           cb.cross(ab);
 
           nA.fromAttribute(normalAttribute, vA);
@@ -600,8 +600,8 @@ export class BufferGeometry<
           pB.fromAttribute(positionAttribute, i + 1);
           pC.fromAttribute(positionAttribute, i + 2);
 
-          cb.subVectors(pC, pB);
-          ab.subVectors(pA, pB);
+          cb.asSub(pC, pB);
+          ab.asSub(pA, pB);
           cb.cross(ab);
 
           normalAttribute.setXYZ(i + 0, cb.x, cb.y, cb.z);

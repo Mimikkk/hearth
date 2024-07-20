@@ -147,9 +147,9 @@ export class Mat4 implements Matrix {
   }
 
   extractBasis(xAxis: Vec3, yAxis: Vec3, zAxis: Vec3): this {
-    xAxis.setFromMatrixColumn(this, 0);
-    yAxis.setFromMatrixColumn(this, 1);
-    zAxis.setFromMatrixColumn(this, 2);
+    xAxis.fromMat4Column(this, 0);
+    yAxis.fromMat4Column(this, 1);
+    zAxis.fromMat4Column(this, 2);
 
     return this;
   }
@@ -166,9 +166,9 @@ export class Mat4 implements Matrix {
     const te = this.elements;
     const me = m.elements;
 
-    const scaleX = 1 / new Vec3().setFromMatrixColumn(m, 0).length();
-    const scaleY = 1 / new Vec3().setFromMatrixColumn(m, 1).length();
-    const scaleZ = 1 / new Vec3().setFromMatrixColumn(m, 2).length();
+    const scaleX = 1 / new Vec3().fromMat4Column(m, 0).length();
+    const scaleY = 1 / new Vec3().fromMat4Column(m, 1).length();
+    const scaleZ = 1 / new Vec3().fromMat4Column(m, 2).length();
 
     te[0] = me[0] * scaleX;
     te[1] = me[1] * scaleX;
@@ -331,7 +331,7 @@ export class Mat4 implements Matrix {
   lookAt(eye: Vec3, target: Vec3, up: Vec3): this {
     const te = this.elements;
 
-    const _z = new Vec3().subVectors(eye, target);
+    const _z = new Vec3().asSub(eye, target);
 
     if (_z.lengthSq() === 0) {
       // eye and target are in the same position
@@ -340,7 +340,7 @@ export class Mat4 implements Matrix {
     }
 
     _z.normalize();
-    const _x = new Vec3().crossVectors(up, _z);
+    const _x = new Vec3().asCross(up, _z);
 
     if (_x.lengthSq() === 0) {
       // up and z are parallel
@@ -352,11 +352,11 @@ export class Mat4 implements Matrix {
       }
 
       _z.normalize();
-      _x.crossVectors(up, _z);
+      _x.asCross(up, _z);
     }
 
     _x.normalize();
-    const _y = new Vec3().crossVectors(_z, _x);
+    const _y = new Vec3().asCross(_z, _x);
 
     te[0] = _x.x;
     te[4] = _y.x;
@@ -935,7 +935,7 @@ export class Mat4 implements Matrix {
     return true;
   }
 
-  fromArray(array: number[], offset: number = 0): this {
+  fromArray(array: Const<NumberArray>, offset: number = 0): this {
     for (let i = 0; i < 16; i++) {
       this.elements[i] = array[i + offset];
     }
@@ -943,7 +943,7 @@ export class Mat4 implements Matrix {
     return this;
   }
 
-  intoArray(array: number[] = [], offset: number = 0): number[] {
+  intoArray<T extends NumberArray>(array: T = [] as never, offset: number = 0): T {
     const te = this.elements;
 
     array[offset] = te[0];

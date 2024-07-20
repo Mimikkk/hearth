@@ -286,7 +286,7 @@ export class OrbitControls {
           zoomChanged = prevRadius != spherical.radius;
         }
 
-        offset.setFromSpherical(spherical);
+        offset.fromSpherical(spherical);
 
         // rotate offset back to "camera-up-vector-is-up" space
         offset.applyQuaternion(quatInverse);
@@ -490,7 +490,7 @@ export class OrbitControls {
       const v = new Vec3();
 
       return function panLeft(distance: number, objectMatrix: Mat4) {
-        v.setFromMatrixColumn(objectMatrix, 0); // get X column of objectMatrix
+        v.fromMat4Column(objectMatrix, 0); // get X column of objectMatrix
         v.scale(-distance);
 
         panOffset.add(v);
@@ -502,10 +502,10 @@ export class OrbitControls {
 
       return function panUp(distance: number, objectMatrix: Mat4) {
         if (scope.screenSpacePanning === true) {
-          v.setFromMatrixColumn(objectMatrix, 1);
+          v.fromMat4Column(objectMatrix, 1);
         } else {
-          v.setFromMatrixColumn(objectMatrix, 0);
-          v.crossVectors(scope.object.up, v);
+          v.fromMat4Column(objectMatrix, 0);
+          v.asCross(scope.object.up, v);
         }
 
         v.scale(distance);

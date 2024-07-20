@@ -50,11 +50,11 @@ class Object3DNode extends Node {
     } else if (scope === Object3DNode.POSITION) {
       uniformNode.value = uniformNode.value || new Vec3();
 
-      uniformNode.value.setFromMatrixPosition(object.matrixWorld);
+      uniformNode.value.fromMat4Position(object.matrixWorld);
     } else if (scope === Object3DNode.SCALE) {
       uniformNode.value = uniformNode.value || new Vec3();
 
-      uniformNode.value.setFromMatrixScale(object.matrixWorld);
+      uniformNode.value.fromMat4Scale(object.matrixWorld);
     } else if (scope === Object3DNode.DIRECTION) {
       uniformNode.value = uniformNode.value || new Vec3();
 
@@ -63,7 +63,7 @@ class Object3DNode extends Node {
       const camera = frame.camera;
 
       uniformNode.value = uniformNode.value || new Vec3();
-      uniformNode.value.setFromMatrixPosition(object.matrixWorld);
+      uniformNode.value.fromMat4Position(object.matrixWorld);
 
       uniformNode.value.applyMat4(camera.matrixWorldInverse);
     }

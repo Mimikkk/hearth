@@ -62,23 +62,23 @@ export class ParametricGeometry extends BufferGeometry {
 
         if (u - EPS >= 0) {
           func(u - EPS, v, p1);
-          pu.subVectors(p0, p1);
+          pu.asSub(p0, p1);
         } else {
           func(u + EPS, v, p1);
-          pu.subVectors(p1, p0);
+          pu.asSub(p1, p0);
         }
 
         if (v - EPS >= 0) {
           func(u, v - EPS, p1);
-          pv.subVectors(p0, p1);
+          pv.asSub(p0, p1);
         } else {
           func(u, v + EPS, p1);
-          pv.subVectors(p1, p0);
+          pv.asSub(p1, p0);
         }
 
         // cross product of tangent vectors returns surface normal
 
-        normal.crossVectors(pu, pv).normalize();
+        normal.asCross(pu, pv).normalize();
         normals.push(normal.x, normal.y, normal.z);
 
         // uv

@@ -92,7 +92,7 @@ export class OBB {
   clampPoint(point: Vec3, result: Vec3): Vec3 {
     const halfSize = this.halfSize;
 
-    v1.subVectors(point, this.center);
+    v1.asSub(point, this.center);
     this.rotation.extractBasis(xAxis, yAxis, zAxis);
 
     // start at the center position of the OBB
@@ -114,7 +114,7 @@ export class OBB {
   }
 
   containsPoint(point: Vec3): boolean {
-    v1.subVectors(point, this.center);
+    v1.asSub(point, this.center);
     this.rotation.extractBasis(xAxis, yAxis, zAxis);
 
     // project v1 onto each axis and check if these points lie inside the OBB
@@ -170,7 +170,7 @@ export class OBB {
 
     // compute translation vector
 
-    v1.subVectors(b.c, a.c);
+    v1.asSub(b.c, a.c);
 
     // bring translation into a's coordinate frame
 
@@ -376,7 +376,7 @@ export class OBB {
     this.halfSize.y *= sy;
     this.halfSize.z *= sz;
 
-    v1.setFromMatrixPosition(matrix);
+    v1.fromMat4Position(matrix);
     this.center.add(v1);
 
     return this;

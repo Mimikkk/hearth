@@ -800,7 +800,7 @@ export class Renderer {
       } else if (object.isSprite) {
         if (!object.frustumCulled || _frustum.intersectsSprite(object)) {
           if (this.parameters.sortObjects) {
-            _Vec3.setFromMatrixPosition(object.matrixWorld).applyMat4(_projScreenMatrix);
+            _Vec3.fromMat4Position(object.matrixWorld).applyMat4(_projScreenMatrix);
           }
 
           const geometry = object.geometry;

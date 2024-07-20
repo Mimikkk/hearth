@@ -106,7 +106,7 @@ export class CCDIKSolver {
 
     // don't use getWorldPosition() here for the performance
     // because it calls updateMatrixWorld( true ) inside.
-    _targetPos.setFromMatrixPosition(target.matrixWorld);
+    _targetPos.fromMat4Position(target.matrixWorld);
 
     const links = ik.links;
     const iteration = ik.iteration !== undefined ? ik.iteration : 1;
@@ -129,14 +129,14 @@ export class CCDIKSolver {
         // because they call updateMatrixWorld( true ) inside.
         link.matrixWorld.decompose(_linkPos, _invLinkQ, _linkScale);
         _invLinkQ.invert();
-        _effectorPos.setFromMatrixPosition(effector.matrixWorld);
+        _effectorPos.fromMat4Position(effector.matrixWorld);
 
         // work in link world
-        _effectorVec.subVectors(_effectorPos, _linkPos);
+        _effectorVec.asSub(_effectorPos, _linkPos);
         _effectorVec.applyQuaternion(_invLinkQ);
         _effectorVec.normalize();
 
-        _targetVec.subVectors(_targetPos, _linkPos);
+        _targetVec.asSub(_targetPos, _linkPos);
         _targetVec.applyQuaternion(_invLinkQ);
         _targetVec.normalize();
 
@@ -161,7 +161,7 @@ export class CCDIKSolver {
           angle = ik.maxAngle;
         }
 
-        _axis.crossVectors(_effectorVec, _targetVec);
+        _axis.asCross(_effectorVec, _targetVec);
         _axis.normalize();
 
         _q.fromAxisAngle(_axis, angle);
@@ -241,7 +241,7 @@ export class CCDIKSolver {
 }
 
 function getPosition(bone: Bone, matrixWorldInv: Mat4): Vec3 {
-  return _vector.setFromMatrixPosition(bone.matrixWorld).applyMat4(matrixWorldInv);
+  return _vector.fromMat4Position(bone.matrixWorld).applyMat4(matrixWorldInv);
 }
 
 function setPositionOfBoneToAttributeArray(array: ArrayLike<number>, index: number, bone: Bone, matrixWorldInv: Mat4) {

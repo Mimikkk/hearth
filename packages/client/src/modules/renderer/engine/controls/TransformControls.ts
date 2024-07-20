@@ -370,9 +370,9 @@ export class TransformControls extends Object3D<TransformControlsEventMap> {
       if (axis.indexOf('Z') === -1) this._offset.z = 0;
 
       if (space === 'local' && axis !== 'XYZ') {
-        this._offset.applyQuaternion(this._quaternionStart).divide(this._parentScale);
+        this._offset.applyQuaternion(this._quaternionStart).div(this._parentScale);
       } else {
-        this._offset.applyQuaternion(this._parentQuaternionInv).divide(this._parentScale);
+        this._offset.applyQuaternion(this._parentQuaternionInv).div(this._parentScale);
       }
 
       object.position.from(this._offset).add(this._positionStart);
@@ -400,7 +400,7 @@ export class TransformControls extends Object3D<TransformControlsEventMap> {
 
         if (space === 'world') {
           if (object.parent) {
-            object.position.add(_tempVector.setFromMatrixPosition(object.parent.matrixWorld));
+            object.position.add(_tempVector.fromMat4Position(object.parent.matrixWorld));
           }
 
           if (axis.search('X') !== -1) {
@@ -416,7 +416,7 @@ export class TransformControls extends Object3D<TransformControlsEventMap> {
           }
 
           if (object.parent) {
-            object.position.sub(_tempVector.setFromMatrixPosition(object.parent.matrixWorld));
+            object.position.sub(_tempVector.fromMat4Position(object.parent.matrixWorld));
           }
         }
       }
@@ -434,7 +434,7 @@ export class TransformControls extends Object3D<TransformControlsEventMap> {
         _tempVector.applyQuaternion(this._worldQuaternionInv);
         _tempVec2.applyQuaternion(this._worldQuaternionInv);
 
-        _tempVec2.divide(_tempVector);
+        _tempVec2.div(_tempVector);
 
         if (axis.search('X') === -1) {
           _tempVec2.x = 1;
@@ -451,7 +451,7 @@ export class TransformControls extends Object3D<TransformControlsEventMap> {
 
       // Apply scale
 
-      object.scale.from(this._scaleStart).multiply(_tempVec2);
+      object.scale.from(this._scaleStart).mul(_tempVec2);
 
       if (this.scaleSnap) {
         if (axis.search('X') !== -1) {
@@ -469,8 +469,7 @@ export class TransformControls extends Object3D<TransformControlsEventMap> {
     } else if (mode === 'rotate') {
       this._offset.from(this.pointEnd!).sub(this.pointStart!);
 
-      const ROTATION_SPEED =
-        20 / this.worldPosition.distanceTo(_tempVector.setFromMatrixPosition(this.camera.matrixWorld));
+      const ROTATION_SPEED = 20 / this.worldPosition.distanceTo(_tempVector.fromMat4Position(this.camera.matrixWorld));
 
       let _inPlaneRotation = false;
 

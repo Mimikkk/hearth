@@ -16,8 +16,8 @@ export class Triangle {
   ) {}
 
   static getNormal(a: Vec3, b: Vec3, c: Vec3, target: Vec3): Vec3 {
-    target.subVectors(c, b);
-    target.cross(new Vec3().subVectors(a, b));
+    target.asSub(c, b);
+    target.cross(new Vec3().asSub(a, b));
 
     const targetLengthSq = target.lengthSq();
     if (targetLengthSq > 0) {
@@ -28,9 +28,9 @@ export class Triangle {
   }
 
   static getBarycoord(point: Vec3, a: Vec3, b: Vec3, c: Vec3, target: Vec3): Vec3 | null {
-    const _v0 = new Vec3().subVectors(c, a);
-    const _v1 = new Vec3().subVectors(b, a);
-    const _v2 = new Vec3().subVectors(point, a);
+    const _v0 = new Vec3().asSub(c, a);
+    const _v1 = new Vec3().asSub(b, a);
+    const _v2 = new Vec3().asSub(point, a);
 
     const dot00 = _v0.dot(_v0);
     const dot01 = _v0.dot(_v1);
@@ -93,7 +93,7 @@ export class Triangle {
   }
 
   static isFrontFacing(a: Vec3, b: Vec3, c: Vec3, direction: Vec3): boolean {
-    return new Vec3().subVectors(c, b).cross(new Vec3().subVectors(a, b)).dot(direction) < 0;
+    return new Vec3().asSub(c, b).cross(new Vec3().asSub(a, b)).dot(direction) < 0;
   }
 
   set(a: Vec3, b: Vec3, c: Vec3): this {
@@ -138,12 +138,12 @@ export class Triangle {
   }
 
   getArea(): number {
-    return new Vec3().subVectors(this.c, this.b).cross(new Vec3().subVectors(this.a, this.b)).length() * 0.5;
+    return new Vec3().asSub(this.c, this.b).cross(new Vec3().asSub(this.a, this.b)).length() * 0.5;
   }
 
   getMidpoint(target: Vec3): Vec3 {
     return target
-      .addVectors(this.a, this.b)
+      .asAdd(this.a, this.b)
       .add(this.c)
       .scale(1 / 3);
   }
@@ -188,9 +188,9 @@ export class Triangle {
     // basically, we're distinguishing which of the voronoi regions of the triangle
     // the point lies in with the minimum amount of redundant computation.
 
-    const _vab = new Vec3().subVectors(b, a);
-    const _vac = new Vec3().subVectors(c, a);
-    const _vap = new Vec3().subVectors(p, a);
+    const _vab = new Vec3().asSub(b, a);
+    const _vac = new Vec3().asSub(c, a);
+    const _vap = new Vec3().asSub(p, a);
     const d1 = _vab.dot(_vap);
     const d2 = _vac.dot(_vap);
     if (d1 <= 0 && d2 <= 0) {
@@ -198,7 +198,7 @@ export class Triangle {
       return target.from(a);
     }
 
-    const _vbp = new Vec3().subVectors(p, b);
+    const _vbp = new Vec3().asSub(p, b);
     const d3 = _vab.dot(_vbp);
     const d4 = _vac.dot(_vbp);
     if (d3 >= 0 && d4 <= d3) {
@@ -213,7 +213,7 @@ export class Triangle {
       return target.from(a).addScaled(_vab, v);
     }
 
-    const _vcp = new Vec3().subVectors(p, c);
+    const _vcp = new Vec3().asSub(p, c);
     const d5 = _vab.dot(_vcp);
     const d6 = _vac.dot(_vcp);
     if (d6 >= 0 && d5 <= d6) {
@@ -230,7 +230,7 @@ export class Triangle {
 
     const va = d3 * d6 - d5 * d4;
     if (va <= 0 && d4 - d3 >= 0 && d5 - d6 >= 0) {
-      const _vbc = new Vec3().subVectors(c, b);
+      const _vbc = new Vec3().asSub(c, b);
       w = (d4 - d3) / (d4 - d3 + (d5 - d6));
       // edge region of BC; barycentric coords (0, 1-w, w)
       return target.from(b).addScaled(_vbc, w); // edge region of BC

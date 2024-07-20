@@ -99,7 +99,7 @@ export class LOD extends Object3D {
     const levels = this.levels;
 
     if (levels.length > 0) {
-      _v1.setFromMatrixPosition(this.matrixWorld);
+      _v1.fromMat4Position(this.matrixWorld);
 
       const distance = raycaster.ray.origin.distanceTo(_v1);
 
@@ -111,8 +111,8 @@ export class LOD extends Object3D {
     const levels = this.levels;
 
     if (levels.length > 1) {
-      _v1.setFromMatrixPosition(camera.matrixWorld);
-      _v2.setFromMatrixPosition(this.matrixWorld);
+      _v1.fromMat4Position(camera.matrixWorld);
+      _v2.fromMat4Position(this.matrixWorld);
 
       const distance = _v1.distanceTo(_v2) / camera.zoom;
 

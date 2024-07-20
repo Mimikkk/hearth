@@ -59,7 +59,7 @@ export class TorusGeometry extends BufferGeometry {
 
         center.x = radius * Math.cos(u);
         center.y = radius * Math.sin(u);
-        normal.subVectors(vertex, center).normalize();
+        normal.asSub(vertex, center).normalize();
 
         normals.push(normal.x, normal.y, normal.z);
 

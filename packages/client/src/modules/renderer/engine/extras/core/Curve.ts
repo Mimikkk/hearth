@@ -226,10 +226,10 @@ export abstract class Curve<T extends Vec2 | Vec3> {
       normal.set(0, 0, 1);
     }
 
-    vec.crossVectors(tangents[0], normal).normalize();
+    vec.asCross(tangents[0], normal).normalize();
 
-    normals[0].crossVectors(tangents[0], vec);
-    binormals[0].crossVectors(tangents[0], normals[0]);
+    normals[0].asCross(tangents[0], vec);
+    binormals[0].asCross(tangents[0], normals[0]);
 
     // compute the slowly-varying normal and binormal vectors for each segment on the curve
 
@@ -238,7 +238,7 @@ export abstract class Curve<T extends Vec2 | Vec3> {
 
       binormals[i] = binormals[i - 1].clone();
 
-      vec.crossVectors(tangents[i - 1], tangents[i]);
+      vec.asCross(tangents[i - 1], tangents[i]);
 
       if (vec.length() > Number.EPSILON) {
         vec.normalize();
@@ -248,7 +248,7 @@ export abstract class Curve<T extends Vec2 | Vec3> {
         normals[i].applyMat4(mat.makeRotationAxis(vec, theta));
       }
 
-      binormals[i].crossVectors(tangents[i], normals[i]);
+      binormals[i].asCross(tangents[i], normals[i]);
     }
 
     // if the curve is closed, postprocess the vectors so the first and last normal vectors are the same
@@ -257,14 +257,14 @@ export abstract class Curve<T extends Vec2 | Vec3> {
       let theta = Math.acos(MathUtils.clamp(normals[0].dot(normals[segments]), -1, 1));
       theta /= segments;
 
-      if (tangents[0].dot(vec.crossVectors(normals[0], normals[segments])) > 0) {
+      if (tangents[0].dot(vec.asCross(normals[0], normals[segments])) > 0) {
         theta = -theta;
       }
 
       for (let i = 1; i <= segments; i++) {
         // twist a little...
         normals[i].applyMat4(mat.makeRotationAxis(tangents[i], theta * i));
-        binormals[i].crossVectors(tangents[i], normals[i]);
+        binormals[i].asCross(tangents[i], normals[i]);
       }
     }
 

@@ -59,9 +59,9 @@ export class DirectionalLightHelper extends Object3D {
     this.light.updateWorldMatrix(true, false);
     this.light.target.updateWorldMatrix(true, false);
 
-    _v1.setFromMatrixPosition(this.light.matrixWorld);
-    _v2.setFromMatrixPosition(this.light.target.matrixWorld);
-    _v3.subVectors(_v2, _v1);
+    _v1.fromMat4Position(this.light.matrixWorld);
+    _v2.fromMat4Position(this.light.target.matrixWorld);
+    _v3.asSub(_v2, _v1);
 
     this.lightPlane.lookAt(_v2);
 

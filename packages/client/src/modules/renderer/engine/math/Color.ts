@@ -624,7 +624,7 @@ export class Color {
     return color.r === this.r && color.g === this.g && color.b === this.b;
   }
 
-  fromArray(array: number[], offset: number = 0): this {
+  fromArray(array: Const<NumberArray>, offset: number = 0): this {
     this.r = array[offset];
     this.g = array[offset + 1];
     this.b = array[offset + 2];
@@ -632,7 +632,7 @@ export class Color {
     return this;
   }
 
-  intoArray(array: number[] = [], offset: number = 0): number[] {
+  intoArray<T extends NumberArray>(array: T = [] as never, offset: number = 0): T {
     array[offset] = this.r;
     array[offset + 1] = this.g;
     array[offset + 2] = this.b;
