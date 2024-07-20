@@ -1,5 +1,4 @@
 import { clamp, NumberArray } from './MathUtils.js';
-import type { BufferAttribute } from '../core/BufferAttribute.js';
 import type { Mat3 } from './Mat3.js';
 import { Attribute } from '@modules/renderer/engine/core/types.js';
 import { Const } from '@modules/renderer/engine/math/types.js';
@@ -55,7 +54,7 @@ export class Vec2 implements IVec2 {
   }
 
   static lerp(from: Const<Vec2>, to: Const<Vec2>, step: number, into: Vec2 = Vec2.new()): Vec2 {
-    return into.lerp(from, to, step);
+    return into.asLerp(from, to, step);
   }
 
   from(from: Const<Vec2>): this {
@@ -94,11 +93,8 @@ export class Vec2 implements IVec2 {
     return this.set(a.x - b.x, a.y - b.y);
   }
 
-  asLerp(v1: Vec2, v2: Vec2, step: number): this {
-    this.x = v1.x + (v2.x - v1.x) * step;
-    this.y = v1.y + (v2.y - v1.y) * step;
-
-    return this;
+  asLerp(v1: Const<Vec2>, v2: Const<Vec2>, step: number): this {
+    return this.set(v1.x + (v2.x - v1.x) * step, v1.y + (v2.y - v1.y) * step);
   }
 
   get width(): number {
@@ -335,10 +331,7 @@ export class Vec2 implements IVec2 {
   }
 
   lerp(vector: Vec2, step: number): this {
-    this.x += (vector.x - this.x) * step;
-    this.y += (vector.y - this.y) * step;
-
-    return this;
+    return this.asLerp(this, vector, step);
   }
 
   rotateAround(center: Const<Vec2>, angle: number): this {
