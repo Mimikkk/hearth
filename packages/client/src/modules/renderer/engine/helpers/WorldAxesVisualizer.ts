@@ -16,7 +16,7 @@ import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js'
 import { Euler } from '@modules/renderer/engine/math/Euler.js';
 import { Quaternion } from '@modules/renderer/engine/math/Quaternion.js';
 import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
-import { Viewport } from '@modules/renderer/engine/renderers/common/RenderContext.js';
+import { ViewportValue } from '@modules/renderer/engine/renderers/common/RenderContext.js';
 
 const turnRate = 2 * Math.PI;
 const dim = 128;
@@ -74,7 +74,7 @@ export class WorldAxesVisualizer extends Object3D {
   orthoCamera: OrthographicCamera;
   q1: Quaternion = Quaternion.identity();
   q2: Quaternion = Quaternion.identity();
-  viewport: Viewport = Viewport.new();
+  viewport: ViewportValue = ViewportValue.new();
   point: Vec3 = new Vec3();
   unsubscribeClick: () => void;
 
@@ -205,10 +205,10 @@ export class WorldAxesVisualizer extends Object3D {
     }
 
     renderer.clearDepth();
-    this.viewport.from(renderer.viewport);
-    renderer.viewport.set(this.canvas.offsetWidth - dim, 0, dim, dim);
+    renderer.getViewport(this.viewport);
+    renderer.setViewport(this.canvas.offsetWidth - dim, 0, dim, dim);
     renderer.render(this, this.orthoCamera);
-    renderer.viewport.from(this.viewport);
+    renderer.setViewport(this.viewport.x, this.viewport.y, this.viewport.z, this.viewport.w);
   }
 
   handleClick(event: MouseEvent): void {

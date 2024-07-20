@@ -59,16 +59,16 @@ export class Info {
   update(object: Object3D, count: number, instanceCount: number = 1) {
     this.render.drawCalls++;
 
-    if (Mesh.is(object) || Sprite.is(object)) {
+    if (object instanceof Mesh || object instanceof Sprite) {
       this.render.triangles += instanceCount * (count / 3);
-    } else if (Points.is(object)) {
+    } else if (object instanceof Points) {
       this.render.points += instanceCount * count;
-    } else if (LineSegments.is(object)) {
+    } else if (object instanceof LineSegments) {
       this.render.lines += instanceCount * (count / 2);
-    } else if (Line.is(object)) {
+    } else if (object instanceof Line) {
       this.render.lines += instanceCount * (count - 1);
     } else {
-      throw Error('Unknown object type');
+      console.error('engine.WebGPUInfo: Unknown object type.');
     }
   }
 
@@ -79,27 +79,26 @@ export class Info {
   reset() {
     this.render.drawCalls = 0;
     this.compute.computeCalls = 0;
+
     this.render.triangles = 0;
     this.render.points = 0;
     this.render.lines = 0;
+
     this.render.timestamp = 0;
     this.compute.timestamp = 0;
   }
 
   dispose() {
     this.reset();
+
     this.calls = 0;
+
     this.render.calls = 0;
     this.compute.calls = 0;
+
     this.render.timestamp = 0;
     this.compute.timestamp = 0;
     this.memory.geometries = 0;
     this.memory.textures = 0;
-  }
-
-  updateRender(): this {
-    this.calls++;
-    this.render.calls++;
-    return this;
   }
 }

@@ -18,6 +18,12 @@ class PostProcessing {
 
     mesh.render(this.renderer);
   }
+
+  renderAsync() {
+    (mesh.material as NodeMaterial).fragmentNode = this.outputNode;
+
+    return mesh.renderAsync(this.renderer);
+  }
 }
 
 export default PostProcessing;

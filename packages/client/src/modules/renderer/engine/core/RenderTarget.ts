@@ -10,15 +10,17 @@ import {
   TextureFormat,
   Wrapping,
 } from '../constants.js';
-import { Scissor, Viewport } from '@modules/renderer/engine/renderers/common/RenderContext.js';
+import { Vec4 } from '../math/Vec4.js';
+import { Scissor } from '@modules/renderer/engine/renderers/common/RenderContext.js';
 
 export class RenderTarget {
+  declare ['constructor']: typeof RenderTarget;
   declare isRenderTarget: true;
   eventDispatcher = new EventDispatcher<{ dispose: {} }>();
 
   depth: number;
   scissor: Scissor;
-  viewport: Viewport;
+  viewport: Vec4;
   textures: Texture[];
   depthBuffer: boolean;
   stencilBuffer: boolean;
@@ -36,7 +38,7 @@ export class RenderTarget {
 
     this.scissor = Scissor.fromSize(width, height);
 
-    this.viewport = Viewport.fromSize(width, height);
+    this.viewport = new Vec4(0, 0, width, height);
 
     const image = { width: width, height: height, depth: 1 };
 
@@ -75,10 +77,6 @@ export class RenderTarget {
     this.samples = configuration.samples;
   }
 
-  static is(value: any): value is RenderTarget {
-    return value && value.isRenderTarget;
-  }
-
   get texture(): Texture {
     return this.textures[0];
   }
@@ -102,9 +100,13 @@ export class RenderTarget {
       this.dispose();
     }
 
-    this.viewport.setSize(width, height);
-    this.scissor.setSize(width, height);
+    this.viewport.set(0, 0, width, height);
+    this.scissor.set(0, 0, width, height);
     return this;
+  }
+
+  clone() {
+    return new this.constructor().copy(this);
   }
 
   copy(source: this): this {

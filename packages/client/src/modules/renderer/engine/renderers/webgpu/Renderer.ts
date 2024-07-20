@@ -25,8 +25,7 @@ import { Light, Mat4, Object3D, Plane, RenderTarget } from '@modules/renderer/en
 import { GPUFeatureNameType, GPUTextureFormatType } from '@modules/renderer/engine/renderers/webgpu/utils/constants.js';
 import { Frustum } from '@modules/renderer/engine/math/Frustum.js';
 import { throttle } from 'lodash-es';
-import { Scissor, Viewport } from '@modules/renderer/engine/renderers/common/RenderContext.js';
-import { Const } from '@modules/renderer/engine/math/types.js';
+import { Scissor } from '@modules/renderer/engine/renderers/common/RenderContext.js';
 
 const _scene = new Scene();
 const _drawingBufferSize = new Vec3();
@@ -41,9 +40,9 @@ export class Renderer {
   _pixelRatio: number;
   _width: number;
   _height: number;
-  viewport: Viewport;
-  scissor: Scissor;
-  enabledScissor: boolean;
+  _viewport: Vec4;
+  _scissor: Scissor;
+  _scissorTest: boolean;
   _attributes: Attributes;
   _geometries: Geometries;
   _nodes: Nodes;
@@ -110,9 +109,9 @@ export class Renderer {
     this._pixelRatio = window.devicePixelRatio;
     this._width = this.parameters.canvas.width;
     this._height = this.parameters.canvas.height;
-    this.viewport = Viewport.fromSize(this._width, this._height);
-    this.scissor = Scissor.fromSize(this._width, this._height);
-    this.enabledScissor = false;
+    this._viewport = new Vec4(0, 0, this._width, this._height);
+    this._scissor = Scissor.fromSize(this._width, this._height);
+    this._scissorTest = false;
     this._nodes = new Nodes(this);
     this._animation = new Animation(this);
     this._attributes = new Attributes(this);
@@ -295,17 +294,23 @@ export class Renderer {
     const previousRenderContext = this._currentRenderContext;
     const previousRenderObjectFunction = this._currentRenderObjectFunction;
 
-    const into = this._renderTarget;
-    const context = this._renderContexts.get(scene, camera, into);
+    //
+
+    const sceneRef = Scene.is(scene) ? scene : _scene;
+
+    const renderTarget = this._renderTarget;
+    const renderContext = this._renderContexts.get(scene, camera, renderTarget);
     const activeCubeFace = this._activeCubeFace;
     const activeMipmapLevel = this._activeMipmapLevel;
 
-    this._currentRenderContext = context;
+    this._currentRenderContext = renderContext;
     this._currentRenderObjectFunction = this._renderObjectFunction || this.renderObject;
 
     //
 
-    this.info.updateRender();
+    this.info.calls++;
+    this.info.render.calls++;
+
     nodeFrame.renderId = this.info.calls;
 
     //
@@ -326,13 +331,13 @@ export class Renderer {
 
     //
 
-    let viewport = this.viewport;
-    let scissor = this.scissor;
+    let viewport = this._viewport;
+    let scissor = this._scissor;
     let pixelRatio = this._pixelRatio;
 
-    if (into !== null) {
-      viewport = into.viewport;
-      scissor = into.scissor;
+    if (renderTarget !== null) {
+      viewport = renderTarget.viewport;
+      scissor = renderTarget.scissor;
       pixelRatio = 1;
     }
 
@@ -343,103 +348,115 @@ export class Renderer {
     const minDepth = viewport.minDepth === undefined ? 0 : viewport.minDepth;
     const maxDepth = viewport.maxDepth === undefined ? 1 : viewport.maxDepth;
 
-    context.viewport.set(
-      ~~(viewport.x * pixelRatio),
-      ~~(viewport.y * pixelRatio),
-      context.viewport.width >> activeMipmapLevel,
-      context.viewport.height >> activeMipmapLevel,
-      minDepth,
-      maxDepth,
-      context.viewport.equals(_screen),
-    );
+    renderContext.viewportValue.from(viewport).scale(pixelRatio).floor();
+    renderContext.viewportValue.width >>= activeMipmapLevel;
+    renderContext.viewportValue.height >>= activeMipmapLevel;
+    renderContext.viewportValue.minDepth = minDepth;
+    renderContext.viewportValue.maxDepth = maxDepth;
+    renderContext.viewport = renderContext.viewportValue.equals(_screen) === false;
 
-    context.scissor.set(
+    renderContext.scissor.set(
       scissor.x * pixelRatio,
       scissor.y * pixelRatio,
-      context.scissor.width >> activeMipmapLevel,
-      context.scissor.height >> activeMipmapLevel,
-      this.enabledScissor && !context.scissor.equals(_screen),
+      renderContext.scissor.width >> activeMipmapLevel,
+      renderContext.scissor.height >> activeMipmapLevel,
     );
 
-    if (!context.clippingContext) context.clippingContext = new ClippingContext();
-    context.clippingContext.updateGlobal(this, camera);
+    renderContext.scissor.enabled = this._scissorTest && !renderContext.scissor.equals(_screen);
+
+    if (!renderContext.clippingContext) renderContext.clippingContext = new ClippingContext();
+    renderContext.clippingContext.updateGlobal(this, camera);
 
     //
 
-    const sceneRef = Scene.is(scene) ? scene : _scene;
-    sceneRef.onBeforeRender(this, scene, camera, into);
+    sceneRef.onBeforeRender(this, scene, camera, renderTarget);
 
     //
 
     _projScreenMatrix.from(camera.projectionMatrix).mul(camera.matrixWorldInverse);
     _frustum.fromProjection(_projScreenMatrix);
 
-    const list = this._renderLists.get(scene, camera);
-    list.begin();
+    const renderList = this._renderLists.get(scene, camera);
+    renderList.begin();
 
-    col(list);
-    this._projectObject(scene, camera, 0, list);
+    col(renderList);
+    this._projectObject(scene, camera, 0, renderList);
 
-    list.finish();
+    renderList.finish();
 
     if (this.parameters.sortObjects) {
-      list.sort(this._opaqueSort, this._transparentSort);
+      renderList.sort(this._opaqueSort, this._transparentSort);
     }
 
     //
 
-    if (into !== null) {
-      this._textures.updateRenderTarget(into, activeMipmapLevel);
+    if (renderTarget !== null) {
+      this._textures.updateRenderTarget(renderTarget, activeMipmapLevel);
 
-      const renderTargetData = this._textures.get(into);
+      const renderTargetData = this._textures.get(renderTarget);
 
-      context.textures = renderTargetData.textures;
-      context.depthTexture = renderTargetData.depthTexture;
-      context.width = renderTargetData.width;
-      context.height = renderTargetData.height;
-      context.renderTarget = into;
-      context.depth = into.depthBuffer;
-      context.stencil = into.stencilBuffer;
+      renderContext.textures = renderTargetData.textures;
+      renderContext.depthTexture = renderTargetData.depthTexture;
+      renderContext.width = renderTargetData.width;
+      renderContext.height = renderTargetData.height;
+      renderContext.renderTarget = renderTarget;
+      renderContext.depth = renderTarget.depthBuffer;
+      renderContext.stencil = renderTarget.stencilBuffer;
     } else {
-      context.textures = null;
-      context.depthTexture = null;
-      context.width = this.parameters.canvas.width;
-      context.height = this.parameters.canvas.height;
-      context.depth = this.parameters.depth;
-      context.stencil = this.parameters.stencil;
+      renderContext.textures = null;
+      renderContext.depthTexture = null;
+      renderContext.width = this.parameters.canvas.width;
+      renderContext.height = this.parameters.canvas.height;
+      renderContext.depth = this.parameters.depth;
+      renderContext.stencil = this.parameters.stencil;
     }
 
-    context.width >>= activeMipmapLevel;
-    context.height >>= activeMipmapLevel;
-    context.activeCubeFace = activeCubeFace;
-    context.activeMipmapLevel = activeMipmapLevel;
-    context.occlusionQueryCount = list.occlusionQueryCount;
+    renderContext.width >>= activeMipmapLevel;
+    renderContext.height >>= activeMipmapLevel;
+    renderContext.activeCubeFace = activeCubeFace;
+    renderContext.activeMipmapLevel = activeMipmapLevel;
+    renderContext.occlusionQueryCount = renderList.occlusionQueryCount;
+
+    //
 
     this._nodes.updateScene(sceneRef);
-    this._background.update(sceneRef, list, context);
 
-    this.backend.beginRender(context);
-    const opaqueObjects = list.opaque;
-    const transparentObjects = list.transparent;
-    const lightsNode = list.lightsNode;
+    //
+
+    this._background.update(sceneRef, renderList, renderContext);
+
+    //
+
+    this.backend.beginRender(renderContext);
+
+    // process render lists
+
+    const opaqueObjects = renderList.opaque;
+    const transparentObjects = renderList.transparent;
+    const lightsNode = renderList.lightsNode;
 
     if (opaqueObjects.length > 0) this._renderObjects(opaqueObjects, camera, sceneRef, lightsNode);
     if (transparentObjects.length > 0) this._renderObjects(transparentObjects, camera, sceneRef, lightsNode);
 
-    this.backend.finishRender(context);
+    // finish render pass
+
+    this.backend.finishRender(renderContext);
+
+    // restore render tree
 
     nodeFrame.renderId = previousRenderId;
+
     this._currentRenderContext = previousRenderContext;
     this._currentRenderObjectFunction = previousRenderObjectFunction;
 
     //
 
-    sceneRef.onAfterRender(this, scene, camera, into);
+    sceneRef.onAfterRender(this, scene, camera, renderTarget);
 
     //
-    this.backend.resolveTimestampAsync(context, 'render');
+    this.backend.resolveTimestampAsync(renderContext, 'render');
 
-    return context;
+    return renderContext;
   }
 
   getMaxAnisotropy() {
@@ -458,12 +475,28 @@ export class Renderer {
     this._animation.setAnimationLoop(callback);
   }
 
+  getArrayBuffer(attribute: BufferAttribute) {
+    return this.getArrayBufferAsync(attribute);
+  }
+
   async getArrayBufferAsync(attribute: BufferAttribute) {
     return await this.backend.getArrayBufferAsync(attribute);
   }
 
+  getContext() {
+    return this.backend.getContext();
+  }
+
+  getPixelRatio() {
+    return this._pixelRatio;
+  }
+
   getDrawingBufferSize(target: Vec3) {
     return target.set(this._width * this._pixelRatio, this._height * this._pixelRatio, 0).floor();
+  }
+
+  getSize(into: Vec2 = Vec2.new()) {
+    return into.set(this._width, this._height);
   }
 
   setPixelRatio(value: number = 1) {
@@ -472,18 +505,35 @@ export class Renderer {
     this.setSize(this._width, this._height, false);
   }
 
-  setSize(width: number, height: number, updateStyle: boolean = true): this {
+  setDrawingBufferSize(width, height, pixelRatio) {
     this._width = width;
     this._height = height;
+
+    this._pixelRatio = pixelRatio;
+
+    this.parameters.canvas.width = Math.floor(width * pixelRatio);
+    this.parameters.canvas.height = Math.floor(height * pixelRatio);
+
+    this.setViewport(0, 0, width, height);
+
+    this.backend.updateSize();
+  }
+
+  setSize(width, height, updateStyle = true) {
+    this._width = width;
+    this._height = height;
+
     this.parameters.canvas.width = Math.floor(width * this._pixelRatio);
     this.parameters.canvas.height = Math.floor(height * this._pixelRatio);
-    if (updateStyle) {
+
+    if (updateStyle === true) {
       this.parameters.canvas.style.width = width + 'px';
       this.parameters.canvas.style.height = height + 'px';
     }
-    this.viewport.setSize(width, height);
+
+    this.setViewport(0, 0, width, height);
+
     this.backend.updateSize();
-    return this;
   }
 
   setOpaqueSort(method) {
@@ -492,6 +542,54 @@ export class Renderer {
 
   setTransparentSort(method) {
     this._transparentSort = method;
+  }
+
+  getScissor(target) {
+    const scissor = this._scissor;
+
+    target.x = scissor.x;
+    target.y = scissor.y;
+    target.width = scissor.width;
+    target.height = scissor.height;
+
+    return target;
+  }
+
+  setScissor(x, y, width, height) {
+    const scissor = this._scissor;
+
+    if (x.isVec4) {
+      scissor.from(x);
+    } else {
+      scissor.set(x, y, width, height);
+    }
+  }
+
+  getScissorTest() {
+    return this._scissorTest;
+  }
+
+  setScissorTest(boolean) {
+    this._scissorTest = boolean;
+
+    this.backend.setScissorTest(boolean);
+  }
+
+  getViewport(target) {
+    return target.copy(this._viewport);
+  }
+
+  setViewport(x, y, width, height, minDepth = 0, maxDepth = 1) {
+    const viewport = this._viewport;
+
+    if (x.isVec4) {
+      viewport.from(x);
+    } else {
+      viewport.set(x, y, width, height);
+    }
+
+    viewport.minDepth = minDepth;
+    viewport.maxDepth = maxDepth;
   }
 
   getClearColor(target) {
@@ -572,6 +670,7 @@ export class Renderer {
 
   dispose() {
     this.info.dispose();
+
     this._animation.dispose();
     this._objects.dispose();
     this._pipelines.dispose();
@@ -580,6 +679,7 @@ export class Renderer {
     this._renderLists.dispose();
     this._renderContexts.dispose();
     this._textures.dispose();
+
     this.setRenderTarget(null);
     this.setAnimationLoop(null);
   }

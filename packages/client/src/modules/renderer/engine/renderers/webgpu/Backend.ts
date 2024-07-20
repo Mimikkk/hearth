@@ -347,7 +347,7 @@ export class Backend {
 
     //
 
-    if (renderContext.viewport.enabled) {
+    if (renderContext.viewport) {
       this.updateViewport(renderContext);
     }
 
@@ -466,7 +466,7 @@ export class Backend {
 
   updateViewport(renderContext: RenderContext) {
     const { currentPass } = this.get(renderContext);
-    const { x, y, width, height, minDepth, maxDepth } = renderContext.viewport;
+    const { x, y, width, height, minDepth, maxDepth } = renderContext.viewportValue;
 
     currentPass.setViewport(x, renderContext.height - height - y, width, height, minDepth, maxDepth);
   }
