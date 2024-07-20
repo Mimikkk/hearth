@@ -1,5 +1,4 @@
 import { Vec2 } from '@modules/renderer/engine/math/Vector2.js';
-import { clamp } from '@modules/renderer/engine/math/MathUtils.js';
 
 const { vec2 } = Vec2;
 
@@ -8,6 +7,7 @@ export interface Box2 {
   max: Vec2;
 }
 
+const clamp = (value: number, min: number, max: number): number => Math.max(min, Math.min(max, value));
 export namespace Box2 {
   export const create = (minX: number, minY: number, maxX: number, maxY: number): Box2 => ({
     min: { x: minX, y: minY },
