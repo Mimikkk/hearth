@@ -9,7 +9,7 @@ import { Sprite } from '@modules/renderer/engine/objects/Sprite.js';
 import { Mesh } from '@modules/renderer/engine/objects/Mesh.js';
 import { BoxGeometry } from '@modules/renderer/engine/geometries/BoxGeometry.js';
 
-describe('Math - Frustum', () => {
+describe('Maths - Frustum', () => {
   it('Instancing', () => {
     let a = Frustum.empty();
 
