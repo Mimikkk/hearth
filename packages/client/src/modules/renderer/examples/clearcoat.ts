@@ -157,7 +157,7 @@ async function init() {
   particleLight.add(new Engine.PointLight(0xffffff, 30));
 
   renderer = await Renderer.create();
-  renderer._animation.loop = animate;
+  renderer.setAnimationLoop(animate);
   container.appendChild(renderer.parameters.canvas);
 
   //

@@ -41,7 +41,7 @@ async function init() {
   scene.add(light);
 
   renderer = await Renderer.create();
-  renderer._animation.loop = render;
+  renderer.setAnimationLoop(render);
   container.appendChild(renderer.parameters.canvas);
 
   video = document.getElementById('video') as HTMLVideoElement;

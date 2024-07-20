@@ -140,7 +140,7 @@ async function init() {
   //
 
   renderer = await Renderer.create({ trackTimestamp: true });
-  renderer._animation.loop = animate;
+  renderer.setAnimationLoop(animate);
   document.body.appendChild(renderer.parameters.canvas);
 
   stats = new Stats();

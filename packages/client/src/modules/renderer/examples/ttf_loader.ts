@@ -83,7 +83,7 @@ async function init() {
   // RENDERER
 
   renderer = await Renderer.create();
-  renderer._animation.loop = render;
+  renderer.setAnimationLoop(render);
   document.body.appendChild(renderer.parameters.canvas);
 
   // EVENTS

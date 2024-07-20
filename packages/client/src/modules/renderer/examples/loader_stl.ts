@@ -114,7 +114,7 @@ async function init() {
   // renderer
 
   renderer = await Renderer.create();
-  renderer._animation.loop = animate;
+  renderer.setAnimationLoop(animate);
 
   // renderer.shadowMap.enabled = true;
 

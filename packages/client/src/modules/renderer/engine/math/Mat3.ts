@@ -76,7 +76,7 @@ export class Mat3 {
   }
 
   static fromMat4Normal(matrix: Const<Mat4>, into: Mat3 = Mat3.empty()): Mat3 {
-    return into.fromNMat4(matrix);
+    return into.fromMat4Normal(matrix);
   }
 
   static rotation(theta: number, into: Mat3 = Mat3.empty()): Mat3 {
@@ -167,13 +167,13 @@ export class Mat3 {
     return this.set(xAxis.x, yAxis.x, zAxis.x, xAxis.y, yAxis.y, zAxis.y, xAxis.z, yAxis.z, zAxis.z);
   }
 
-  fromMat4(mat: Const<Mat4>): this {
-    const e = mat.elements;
+  fromMat4(matrix: Const<Mat4>): this {
+    const e = matrix.elements;
     return this.set(e[0], e[4], e[8], e[1], e[5], e[9], e[2], e[6], e[10]);
   }
 
-  fromNMat4(mat: Const<Mat4>): this {
-    return this.fromMat4(mat).invert().transpose();
+  fromMat4Normal(matrix: Const<Mat4>): this {
+    return this.fromMat4(matrix).invert().transpose();
   }
 
   fromArray(array: NumberArray, offset: number = 0): Mat3 {
@@ -312,19 +312,14 @@ export class Mat3 {
     return this.premul(_mat.fromTranslation(translation));
   }
 
-  equals(mat: Const<Mat3>): boolean {
-    const [a0, a1, a2, a3, a4, a5, a6, a7, a8] = this.elements;
-    const [b0, b1, b2, b3, b4, b5, b6, b7, b8] = mat.elements;
+  equals(matrix: Const<Mat3>): boolean {
+    const te = this.elements;
+    const me = matrix.elements;
 
-    if (a0 !== b0) return false;
-    if (a1 !== b1) return false;
-    if (a2 !== b2) return false;
-    if (a3 !== b3) return false;
-    if (a4 !== b4) return false;
-    if (a5 !== b5) return false;
-    if (a6 !== b6) return false;
-    if (a7 !== b7) return false;
-    if (a8 !== b8) return false;
+    for (let i = 0; i < 9; i++) {
+      if (te[i] !== me[i]) return false;
+    }
+
     return true;
   }
 

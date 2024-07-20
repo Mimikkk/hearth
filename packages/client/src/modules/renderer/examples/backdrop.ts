@@ -50,7 +50,7 @@ const createLight = () => {
 };
 const createRenderer = async (onAnimate: () => void) => {
   const renderer = await Renderer.create();
-  renderer._animation.loop = onAnimate;
+  renderer.setAnimationLoop(onAnimate);
   renderer.parameters.toneMappingNode = toneMapping(ToneMapping.Linear, 0.15);
   document.body.append(renderer.parameters.canvas);
 

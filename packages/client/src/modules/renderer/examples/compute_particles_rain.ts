@@ -201,7 +201,7 @@ async function init() {
   rainMaterial.vertexNode = billboarding();
   rainMaterial.opacity = 0.2;
   rainMaterial.side = Engine.Side.Double;
-  rainMaterial.useSinglePass = true;
+  rainMaterial.forceSinglePass = true;
   rainMaterial.depthWrite = false;
   rainMaterial.depthTest = true;
   rainMaterial.transparent = true;
@@ -227,7 +227,7 @@ async function init() {
   rippleMaterial.positionNode = positionGeometry.add(ripplePositionBuffer.toAttribute());
   rippleMaterial.opacityNode = rippleTime.mul(0.3).oneMinus().max(0).mul(0.5);
   rippleMaterial.side = Engine.Side.Double;
-  rippleMaterial.useSinglePass = true;
+  rippleMaterial.forceSinglePass = true;
   rippleMaterial.depthWrite = false;
   rippleMaterial.depthTest = true;
   rippleMaterial.transparent = true;
@@ -290,7 +290,7 @@ async function init() {
   //
 
   renderer = await Renderer.create();
-  renderer._animation.loop = animate;
+  renderer.setAnimationLoop(animate);
   document.body.appendChild(renderer.parameters.canvas);
   stats = new Stats();
   document.body.appendChild(stats.dom);

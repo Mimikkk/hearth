@@ -31,7 +31,7 @@ async function init() {
 
   const renderer = await Renderer.create();
   renderer.parameters.toneMapping = Engine.ToneMapping.ACESFilmic;
-  renderer._animation.loop = animate;
+  renderer.setAnimationLoop(animate);
 
   container.appendChild(renderer.parameters.canvas);
 

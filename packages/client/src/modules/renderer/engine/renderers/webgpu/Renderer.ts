@@ -38,7 +38,7 @@ import { GPUFeatureNameType, GPUTextureFormatType } from '@modules/renderer/engi
 import { Frustum } from '@modules/renderer/engine/math/Frustum.js';
 import { Scissor, Viewport } from '@modules/renderer/engine/renderers/common/RenderContext.js';
 import ComputeNode from '@modules/renderer/engine/nodes/gpgpu/ComputeNode.js';
-import { RenderList, RenderItem } from '@modules/renderer/engine/renderers/common/RenderList.js';
+import RenderList, { RenderItem } from '@modules/renderer/engine/renderers/common/RenderList.js';
 import LightsNode from '@modules/renderer/engine/nodes/lighting/LightsNode.js';
 import { ShadowNodeMaterial } from '@modules/renderer/engine/nodes/materials/ShadowNodeMaterial.js';
 import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
@@ -70,14 +70,14 @@ export class Renderer {
   _textures: Textures;
   _background: Background;
   _activeRenderContext: any;
-  sortOpaque: SortFn;
-  sortTransparent: SortFn;
+  _opaqueSort: any;
+  _transparentSort: any;
   _clearColor: Color;
   _clearDepth: number;
   _clearStencil: number;
   target: RenderTarget | null;
-  activeFace: number;
-  activeMipmap: number;
+  _activeCubeFace: number;
+  _activeMipmapLevel: number;
   _renderObject: (
     object: Object3D,
     scene: Scene,
@@ -93,7 +93,7 @@ export class Renderer {
     camera: Camera,
     geometry: BufferGeometry,
     material: Material,
-    group: Group | null,
+    group: Group,
     lightsNode: LightsNode,
   ) => void;
   _handleObject: (
@@ -129,7 +129,7 @@ export class Renderer {
       outputColorSpace: options?.outputColorSpace ?? ColorSpace.SRGB,
       outputEncoding: options?.outputEncoding ?? 'sRGB',
       powerPreference: options?.powerPreference ?? 'high-performance',
-      useSort: options?.sortObjects ?? true,
+      sortObjects: options?.sortObjects ?? true,
       stencil: options?.stencil ?? false,
       toneMapping: options?.toneMapping ?? ToneMapping.None,
       toneMappingExposure: options?.toneMappingExposure ?? 1.0,
@@ -142,6 +142,7 @@ export class Renderer {
   private constructor(parameters?: Options) {
     this.parameters = Renderer.configure(parameters);
     this.backend = new Backend(this);
+    this.info = new Info();
 
     const { width, height } = this.parameters.canvas;
     this.size = ViewSize.fromSize(width, height);
@@ -149,7 +150,6 @@ export class Renderer {
     this.scissor = Scissor.fromSize(width, height);
     this.useScissor = false;
 
-    this.info = new Info();
     this._nodes = new Nodes(this);
     this._animation = new Animation(this);
     this._attributes = new Attributes(this);
@@ -162,18 +162,14 @@ export class Renderer {
     this._renderLists = new RenderLists();
     this._renderContexts = new RenderContexts();
     this._activeRenderContext = null;
-
-    this.sortOpaque = painterSortStable;
-    this.sortTransparent = reversePainterSortStable;
-
+    this._opaqueSort = null;
+    this._transparentSort = null;
     this._clearColor = Color.new(0, 0, 0, this.parameters.alpha ? 0 : 1);
     this._clearDepth = 1;
     this._clearStencil = 0;
-
     this.target = null;
-    this.activeFace = 0;
-    this.activeMipmap = 0;
-
+    this._activeCubeFace = 0;
+    this._activeMipmapLevel = 0;
     this._renderObject = null!;
     this._activeRenderObject = this.renderObject;
     this._handleObject = this._renderObjectDirect;
@@ -225,7 +221,7 @@ export class Renderer {
 
     const target = this.target;
     const renderContext = this._renderContexts.get(targetScene, camera, target);
-    const activeMipmapLevel = this.activeMipmap;
+    const activeMipmapLevel = this._activeMipmapLevel;
 
     this._activeRenderContext = renderContext;
     this._activeRenderObject = this.renderObject;
@@ -251,7 +247,7 @@ export class Renderer {
     if (targetScene !== scene) {
       targetScene.traverseVisible(object => {
         if (Light.is(object) && object.layers.test(camera.layers)) {
-          list.lights.push(object);
+          list.pushLight(object);
         }
       });
     }
@@ -276,7 +272,7 @@ export class Renderer {
 
     const opaqueObjects = list.opaque;
     const transparentObjects = list.transparent;
-    const lightsNode = list.node;
+    const lightsNode = list.lightsNode;
 
     if (opaqueObjects.length > 0) this._renderObjects(opaqueObjects, camera, sceneRef, lightsNode);
     if (transparentObjects.length > 0) this._renderObjects(transparentObjects, camera, sceneRef, lightsNode);
@@ -287,25 +283,28 @@ export class Renderer {
     this._handleObject = this._renderObjectDirect;
   }
 
-  async render(scene: Object3D, camera: Camera) {
-    const frame = this._nodes.frame;
-    const previousFrameId = frame.id;
-    const previousContext = this._activeRenderContext;
-    const previousRenderObject = this._activeRenderObject;
+  render(scene: Object3D, camera: Camera) {
+    const nodeFrame = this._nodes.frame;
+    const previousRenderId = nodeFrame.id;
+    const previousRenderContext = this._activeRenderContext;
+    const previousRenderObjectFunction = this._activeRenderObject;
 
     const target = this.target;
     const context = this._renderContexts.get(scene, camera, target);
-    const activeCubeFace = this.activeFace;
-    const activeMipmapLevel = this.activeMipmap;
+    const activeCubeFace = this._activeCubeFace;
+    const activeMipmapLevel = this._activeMipmapLevel;
 
     this._activeRenderContext = context;
     this._activeRenderObject = this._renderObject || this.renderObject;
 
-    this.info.updateRender();
-    frame.id = this.info.passes;
+    //
 
-    if (scene.useMatrixWorldAutoUpdate) scene.updateMatrixWorld();
-    if (camera.parent === null && camera.useMatrixWorldAutoUpdate) camera.updateMatrixWorld();
+    this.info.updateRender();
+    nodeFrame.id = this.info.passes;
+
+    if (scene.matrixWorldAutoUpdate) scene.updateMatrixWorld();
+
+    if (camera.parent === null && camera.matrixWorldAutoUpdate) camera.updateMatrixWorld();
 
     const viewport = target?.viewport ?? this.viewport;
     const scissor = target?.scissor ?? this.scissor;
@@ -350,7 +349,7 @@ export class Renderer {
     this._projectObject(scene, camera, 0, list);
     list.finish();
 
-    if (this.parameters.useSort) list.sort(this.sortOpaque, this.sortTransparent);
+    if (this.parameters.sortObjects) list.sort(this._opaqueSort, this._transparentSort);
 
     if (target) {
       this._textures.updateRenderTarget(target, activeMipmapLevel);
@@ -377,26 +376,31 @@ export class Renderer {
     context.height >>= activeMipmapLevel;
     context.activeCubeFace = activeCubeFace;
     context.activeMipmapLevel = activeMipmapLevel;
-    context.occlusionQueryCount = list.occlusionCount;
+    context.occlusionQueryCount = list.occlusionQueryCount;
 
     this._nodes.updateScene(sceneRef);
     this._background.update(sceneRef, list, context);
 
     this.backend.beginRender(context);
-    const opaque = list.opaque;
-    const transparent = list.transparent;
-    const lightsNode = list.node;
+    const opaqueObjects = list.opaque;
+    const transparentObjects = list.transparent;
+    const lightsNode = list.lightsNode;
 
-    if (opaque.length > 0) this._renderObjects(opaque, camera, sceneRef, lightsNode);
-    if (transparent.length > 0) this._renderObjects(transparent, camera, sceneRef, lightsNode);
+    if (opaqueObjects.length > 0) this._renderObjects(opaqueObjects, camera, sceneRef, lightsNode);
+    if (transparentObjects.length > 0) this._renderObjects(transparentObjects, camera, sceneRef, lightsNode);
+
     this.backend.finishRender(context);
 
-    frame.id = previousFrameId;
-    this._activeRenderContext = previousContext;
-    this._activeRenderObject = previousRenderObject;
+    nodeFrame.id = previousRenderId;
+    this._activeRenderContext = previousRenderContext;
+    this._activeRenderObject = previousRenderObjectFunction;
+
+    //
 
     sceneRef.onAfterRender(this, scene, camera, target);
-    await this.backend.resolveTimestampAsync(context, 'render');
+
+    //
+    this.backend.resolveTimestampAsync(context, 'render');
 
     return context;
   }
@@ -462,6 +466,22 @@ export class Renderer {
     frame.id = previousRenderId;
   }
 
+  getMaxAnisotropy() {
+    return this.backend.getMaxAnisotropy();
+  }
+
+  getActiveCubeFace() {
+    return this._activeCubeFace;
+  }
+
+  getActiveMipmapLevel() {
+    return this._activeMipmapLevel;
+  }
+
+  setAnimationLoop(loop: AnimationLoopFn | null) {
+    this._animation.loop = loop;
+  }
+
   getDrawSize(into: Vec2 = Vec2.new()): Vec2 {
     return into.set(this.size.width * this.size.pixelRatio, this.size.height * this.size.pixelRatio).floor();
   }
@@ -514,13 +534,13 @@ export class Renderer {
     this._renderContexts.dispose();
     this._textures.dispose();
     this.target = null;
-    this._animation.loop = null;
+    this.setAnimationLoop(null);
   }
 
   setRenderTarget(target: RenderTarget | null, face: number = 0, mipmap: number = 0) {
     this.target = target;
-    this.activeFace = face;
-    this.activeMipmap = mipmap;
+    this._activeCubeFace = face;
+    this._activeMipmapLevel = mipmap;
   }
 
   renderObject(
@@ -573,7 +593,7 @@ export class Renderer {
       material = overrideMaterial;
     }
 
-    if (material.transparent && material.side === Side.Double && !material.useSinglePass) {
+    if (material.transparent && material.side === Side.Double && !material.forceSinglePass) {
       material.side = Side.Back;
       this._handleObject(object, material, scene, camera, lightsNode, 'first');
       material.side = Side.Front;
@@ -583,7 +603,6 @@ export class Renderer {
     } else {
       this._handleObject(object, material, scene, camera, lightsNode, 'first');
     }
-
     if (overridePositionNode) scene.overrideMaterial!.positionNode = overridePositionNode;
     if (overrideFragmentNode) scene.overrideMaterial!.fragmentNode = overrideFragmentNode;
 
@@ -591,7 +610,7 @@ export class Renderer {
   }
 
   _projectObject(object: Object3D, camera: Camera, groupOrder: number, list: RenderList): void {
-    if (!object.visible) return;
+    if (object.visible === false) return;
 
     const visible = object.layers.test(camera.layers);
 
@@ -599,23 +618,28 @@ export class Renderer {
       if (Group.is(object)) {
         groupOrder = object.renderOrder;
       } else if (LOD.is(object)) {
-        if (object.autoUpdate) object.update(camera);
+        if (object.autoUpdate === true) object.update(camera);
       } else if (Light.is(object)) {
-        list.lights.push(object);
+        list.pushLight(object);
       } else if (Sprite.is(object)) {
         if (!object.frustumCulled || _frustum.intersectsSphere(object)) {
-          if (this.parameters.useSort) _vector3.fromMat4Position(object.matrixWorld).applyMat4(_projScreenMatrix);
+          if (this.parameters.sortObjects) {
+            _vector3.fromMat4Position(object.matrixWorld).applyMat4(_projScreenMatrix);
+          }
 
           const geometry = object.geometry;
           const material = object.material;
-          if (material.visible) list.push(object, geometry, material, groupOrder, _vector3.z, null);
+
+          if (material.visible) {
+            list.push(object, geometry, material, groupOrder, _vector3.z, null);
+          }
         }
       } else if (Mesh.is(object) || Line.is(object) || Points.is(object)) {
         if (!object.frustumCulled || _frustum.intersectsObject(object)) {
           const geometry = object.geometry;
           const material = object.material;
 
-          if (this.parameters.useSort) {
+          if (this.parameters.sortObjects) {
             if (geometry.boundingSphere === null) geometry.computeBoundingSphere();
 
             _vector3.from(geometry.boundingSphere!.center).applyMat4(object.matrixWorld).applyMat4(_projScreenMatrix);
@@ -624,7 +648,7 @@ export class Renderer {
           if (Array.isArray(material)) {
             const groups = geometry.groups;
 
-            for (let i = 0, it = groups.length; i < it; i++) {
+            for (let i = 0, l = groups.length; i < l; i++) {
               const group = groups[i];
               const groupMaterial = material[group.materialIndex];
 
@@ -640,13 +664,14 @@ export class Renderer {
     }
 
     const children = object.children;
-    for (let i = 0, it = children.length; i < it; i++) {
+
+    for (let i = 0, l = children.length; i < l; i++) {
       this._projectObject(children[i], camera, groupOrder, list);
     }
   }
 
   _renderObjects(items: RenderItem[], camera: Camera, scene: Scene, lightsNode: LightsNode): void {
-    for (let i = 0, it = items.length; i < it; i++) {
+    for (let i = 0, il = items.length; i < il; i++) {
       const { object, geometry, material, group } = items[i];
 
       this._activeRenderObject(object, scene, camera, geometry, material, group, lightsNode);
@@ -674,7 +699,7 @@ export class Renderer {
     this._nodes.updateBefore(renderObject);
 
     object.modelViewMatrix.from(camera.matrixWorldInverse).mul(object.matrixWorld);
-    object.normalMatrix.fromNMat4(object.modelViewMatrix);
+    object.normalMatrix.fromMat4Normal(object.modelViewMatrix);
 
     this._nodes.updateForRender(renderObject);
     this._geometries.updateForRender(renderObject);
@@ -701,7 +726,13 @@ export class Renderer {
       this._activeRenderContext,
       passId,
     );
+
+    //
+
     this._nodes.updateBefore(renderObject);
+
+    //
+
     this._nodes.updateForRender(renderObject);
     this._geometries.updateForRender(renderObject);
     this._bindings.updateForRender(renderObject);
@@ -754,7 +785,7 @@ export namespace Renderer {
     outputColorSpace: ColorSpace;
     outputEncoding: string;
     powerPreference: GPUPowerPreference;
-    useSort: boolean;
+    sortObjects: boolean;
     stencil: boolean;
     toneMapping: ToneMapping;
     toneMappingExposure: number;
@@ -805,13 +836,3 @@ export class ViewSize {
     return this;
   }
 }
-
-type SortFn = (a: RenderItem, b: RenderItem) => number;
-const painterSortStable: SortFn = (a, b) => {
-  if (a.groupOrder !== b.groupOrder) return a.groupOrder - b.groupOrder;
-  if (a.renderOrder !== b.renderOrder) return a.renderOrder - b.renderOrder;
-  if (a.material.id !== b.material.id) return a.material.id - b.material.id;
-  if (a.z !== b.z) return a.z - b.z;
-  return a.id - b.id;
-};
-const reversePainterSortStable: SortFn = (a, b) => painterSortStable(b, a);

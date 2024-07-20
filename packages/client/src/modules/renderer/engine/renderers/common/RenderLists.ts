@@ -1,5 +1,5 @@
 import ChainMap from './ChainMap.js';
-import { RenderList } from './RenderList.js';
+import RenderList from './RenderList.js';
 import { Scene } from '@modules/renderer/engine/scenes/Scene.js';
 import { Camera } from '@modules/renderer/engine/cameras/Camera.js';
 
@@ -16,7 +16,8 @@ class RenderLists {
 
     let list = lists.get(keys);
     if (list === undefined) {
-      list = RenderList.empty();
+      list = new RenderList();
+
       lists.set(keys, list);
     }
 

@@ -38,7 +38,7 @@ export class NodeMaterial extends ShaderMaterial {
 
     this.type = this.constructor.type;
 
-    this.useSinglePass = false;
+    this.forceSinglePass = false;
 
     this.fog = true;
     this.lights = true;

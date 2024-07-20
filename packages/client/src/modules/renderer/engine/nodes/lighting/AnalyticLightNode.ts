@@ -14,44 +14,34 @@ import {
   DepthTexture,
   Filter,
   Group,
-  Light,
   Material,
   Object3D,
-  RenderTarget,
   Scene,
 } from '@modules/renderer/engine/engine.js';
 import LightsNode from '@modules/renderer/engine/nodes/lighting/LightsNode.js';
 import { ShadowNodeMaterial } from '@modules/renderer/engine/nodes/materials/ShadowNodeMaterial.js';
-import NodeFrame from '@modules/renderer/engine/nodes/core/NodeFrame.js';
-import NodeBuilder from '@modules/renderer/engine/nodes/core/NodeBuilder.js';
 
 let overrideMaterial: ShadowNodeMaterial | null = null;
 
 class AnalyticLightNode extends LightingNode {
-  isAnalyticLightNode: boolean = true;
   static type = 'AnalyticLightNode';
-  rtt: RenderTarget | null;
-  shadowNode: any;
-  color: Color;
-  _defaultColorNode: any;
-  colorNode: ColorNode;
 
-  constructor(public light: Light) {
+  constructor(light = null) {
     super();
+
     this.updateType = NodeUpdateType.Frame;
+
+    this.light = light;
 
     this.rtt = null;
     this.shadowNode = null;
-    this.color = Color.new();
+
+    this.color = new Color();
     this._defaultColorNode = uniform(this.color);
 
     this.colorNode = this._defaultColorNode;
 
     this.isAnalyticLightNode = true;
-  }
-
-  static is(item: any): item is AnalyticLightNode {
-    return item?.isAnalyticLightNode;
   }
 
   getCacheKey() {
@@ -62,7 +52,7 @@ class AnalyticLightNode extends LightingNode {
     return this.light.uuid;
   }
 
-  setupShadow(builder: NodeBuilder) {
+  setupShadow(builder) {
     let shadowNode = this.shadowNode;
 
     if (shadowNode === null) {
@@ -125,12 +115,12 @@ class AnalyticLightNode extends LightingNode {
     }
   }
 
-  setup(builder: NodeBuilder) {
+  setup(builder) {
     if (this.light.castShadow) this.setupShadow(builder);
     else if (this.shadowNode !== null) this.disposeShadow();
   }
 
-  updateShadow(frame: NodeFrame) {
+  updateShadow(frame) {
     const { rtt, light } = this;
     const { renderer, scene } = frame;
 
@@ -175,19 +165,17 @@ class AnalyticLightNode extends LightingNode {
     this.colorNode = this._defaultColorNode;
   }
 
-  updateBefore(frame: NodeFrame) {
+  updateBefore(frame) {
     const { light } = this;
 
     if (light.castShadow) this.updateShadow(frame);
   }
 
-  update(frame: NodeFrame) {
+  update(/*frame*/) {
     const { light } = this;
 
     this.color.copy(light.color).multiplyScalar(light.intensity);
   }
 }
-
-AnalyticLightNode.prototype.isAnalyticLightNode = true;
 
 export default AnalyticLightNode;

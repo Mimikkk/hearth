@@ -81,7 +81,7 @@ const createWaterLight = () => new HemisphereLight(0x333366, 0x74ccf4, 5);
 const createSkyLight = () => new HemisphereLight(0x74ccf4, 0, 1);
 const createRenderer = async () => {
   const renderer = await Renderer.create();
-  renderer._animation.loop = animate;
+  renderer.setAnimationLoop(animate);
   document.body.append(renderer.parameters.canvas);
 
   return renderer;

@@ -42,7 +42,7 @@ async function init() {
   });
 
   renderer = await Renderer.create();
-  renderer._animation.loop = animate;
+  renderer.setAnimationLoop(animate);
   renderer.parameters.toneMapping = Engine.ToneMapping.ACESFilmic;
   renderer.parameters.toneMappingExposure = 1;
   container.appendChild(renderer.parameters.canvas);

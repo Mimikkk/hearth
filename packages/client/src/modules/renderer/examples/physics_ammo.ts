@@ -88,7 +88,7 @@ physics.addScene(scene);
 
 const renderer = await Renderer.create({ antialias: true, alpha: true });
 renderer.updateSize(window.innerWidth, window.innerHeight);
-renderer._animation.loop = animate;
+renderer.setAnimationLoop(animate);
 document.body.appendChild(renderer.parameters.canvas);
 
 const stats = new Stats();

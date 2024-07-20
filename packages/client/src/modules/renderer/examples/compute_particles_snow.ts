@@ -256,7 +256,7 @@ async function init() {
 
   renderer = await Renderer.create();
   renderer.parameters.toneMapping = Engine.ToneMapping.ACESFilmic;
-  renderer._animation.loop = animate;
+  renderer.setAnimationLoop(animate);
   document.body.appendChild(renderer.parameters.canvas);
 
   viewHelper = new WorldAxesVisualizer(camera, renderer.parameters.canvas);

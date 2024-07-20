@@ -88,7 +88,7 @@ async function init() {
   // renderer
 
   renderer = await Renderer.create();
-  renderer._animation.loop = animate;
+  renderer.setAnimationLoop(animate);
   renderer.parameters.toneMapping = Engine.ToneMapping.Reinhard;
   renderer.parameters.toneMappingExposure = 6;
   document.body.appendChild(renderer.parameters.canvas);

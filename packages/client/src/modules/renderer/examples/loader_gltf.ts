@@ -29,7 +29,7 @@ async function init() {
   });
 
   viewHelper = new WorldAxesVisualizer(camera, renderer.parameters.canvas);
-  renderer._animation.loop = animate;
+  renderer.setAnimationLoop(animate);
   renderer.parameters.toneMapping = ToneMapping.ACESFilmic;
   container.appendChild(renderer.parameters.canvas);
 

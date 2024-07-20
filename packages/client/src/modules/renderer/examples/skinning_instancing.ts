@@ -98,7 +98,7 @@ async function init() {
   // renderer
 
   renderer = await Renderer.create();
-  renderer._animation.loop = animate;
+  renderer.setAnimationLoop(animate);
   document.body.appendChild(renderer.parameters.canvas);
 
   // post processing ( just for WebGPUBackend for now )

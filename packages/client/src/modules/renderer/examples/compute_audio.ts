@@ -159,7 +159,7 @@ async function init() {
   // renderer
 
   renderer = await Renderer.create();
-  renderer._animation.loop = render;
+  renderer.setAnimationLoop(render);
   container.appendChild(renderer.parameters.canvas);
 
   document.onclick = () => {

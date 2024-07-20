@@ -39,7 +39,7 @@ const createScene = () => {
 const createLight = () => new SpotLight(0xffffff, 10);
 const createRenderer = async (onAnimate: () => void) => {
   const renderer = await Renderer.create();
-  renderer._animation.loop = onAnimate;
+  renderer.setAnimationLoop(onAnimate);
   document.body.append(renderer.parameters.canvas);
 
   return renderer;

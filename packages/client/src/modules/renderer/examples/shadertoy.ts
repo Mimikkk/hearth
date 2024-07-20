@@ -85,7 +85,7 @@ async function init() {
   //
 
   renderer = await Renderer.create();
-  renderer._animation.loop = animate;
+  renderer.setAnimationLoop(animate);
   renderer.outputColorSpace = Engine.ColorSpace.LinearSRGB;
   document.body.appendChild(renderer.parameters.canvas);
 

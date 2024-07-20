@@ -3,7 +3,7 @@ import { Color, ColorRepresentation } from '../math/Color.js';
 import { LightShadow } from './LightShadow.js';
 import { RenderTarget } from '@modules/renderer/engine/core/RenderTarget.js';
 
-export class Light<S extends LightShadow | undefined = undefined> extends Object3D {
+export class Light<S extends LightShadow | undefined> extends Object3D {
   declare isLight: true;
   declare type: string | 'Light';
 

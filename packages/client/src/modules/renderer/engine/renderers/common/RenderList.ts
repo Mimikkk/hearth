@@ -7,145 +7,175 @@ import { Material } from '@modules/renderer/engine/materials/Material.js';
 
 type SortFn = (a: RenderItem, b: RenderItem) => number;
 
-export class RenderList {
-  constructor(
-    public items: RenderItem[] = [],
-    public activeIndex: number = 0,
-    public node: LightsNode = LightsNode.new(),
-    public lights: Light[] = [],
-    public opaque: RenderItem[] = [],
-    public transparent: RenderItem[] = [],
-    public occlusionCount: number = 0,
-  ) {}
+const painterSortStable: SortFn = (a, b) => {
+  if (a.groupOrder !== b.groupOrder) {
+    return a.groupOrder - b.groupOrder;
+  } else if (a.renderOrder !== b.renderOrder) {
+    return a.renderOrder - b.renderOrder;
+  } else if (a.material.id !== b.material.id) {
+    return a.material.id - b.material.id;
+  } else if (a.z !== b.z) {
+    return a.z - b.z;
+  } else {
+    return a.id - b.id;
+  }
+};
 
-  static empty(): RenderList {
-    return new RenderList();
+const reversePainterSortStable: SortFn = (a, b) => {
+  if (a.groupOrder !== b.groupOrder) {
+    return a.groupOrder - b.groupOrder;
+  } else if (a.renderOrder !== b.renderOrder) {
+    return a.renderOrder - b.renderOrder;
+  } else if (a.z !== b.z) {
+    return b.z - a.z;
+  } else {
+    return a.id - b.id;
+  }
+};
+
+export interface RenderItem {
+  id: number;
+  object: Object3D;
+  geometry: BufferGeometry | null;
+  material: Material;
+  groupOrder: number;
+  renderOrder: number;
+  z: number;
+  group: Group | null;
+}
+
+class RenderList {
+  renderItems: RenderItem[];
+  renderItemsIndex: number;
+  lightsNode: LightsNode;
+  lightsArray: Light<any>[];
+  opaque: RenderItem[];
+  transparent: RenderItem[];
+  occlusionQueryCount: number;
+
+  constructor() {
+    this.renderItems = [];
+    this.renderItemsIndex = 0;
+
+    this.opaque = [];
+    this.transparent = [];
+
+    this.lightsNode = new LightsNode([]);
+    this.lightsArray = [];
+
+    this.occlusionQueryCount = 0;
   }
 
   begin() {
-    this.activeIndex = 0;
+    this.renderItemsIndex = 0;
     this.opaque.length = 0;
     this.transparent.length = 0;
-    this.lights.length = 0;
-    this.occlusionCount = 0;
+    this.lightsArray.length = 0;
+    this.occlusionQueryCount = 0;
 
     return this;
   }
 
-  next(
+  getNextRenderItem(
     object: Object3D,
-    geometry: BufferGeometry,
+    geometry: BufferGeometry | null,
     material: Material,
     groupOrder: number,
     z: number,
     group: Group | null,
   ) {
-    let item = this.items[this.activeIndex];
+    let renderItem = this.renderItems[this.renderItemsIndex];
 
-    if (item) {
-      item.set(object, geometry, material, groupOrder, z, group);
+    if (renderItem === undefined) {
+      renderItem = {
+        id: object.id,
+        object: object,
+        geometry: geometry,
+        material: material,
+        groupOrder: groupOrder,
+        renderOrder: object.renderOrder,
+        z: z,
+        group: group,
+      };
+
+      this.renderItems[this.renderItemsIndex] = renderItem;
     } else {
-      item = RenderItem.new(object, geometry, material, groupOrder, z, group);
-      this.items[this.activeIndex] = item;
+      renderItem.id = object.id;
+      renderItem.object = object;
+      renderItem.geometry = geometry;
+      renderItem.material = material;
+      renderItem.groupOrder = groupOrder;
+      renderItem.renderOrder = object.renderOrder;
+      renderItem.z = z;
+      renderItem.group = group;
     }
 
-    ++this.activeIndex;
+    this.renderItemsIndex++;
 
-    return item;
-  }
-
-  listOf({ material }: RenderItem): RenderItem[] {
-    return material.transparent ? this.transparent : this.opaque;
+    return renderItem;
   }
 
   push(
     object: Object3D,
-    geometry: BufferGeometry,
+    geometry: BufferGeometry | null,
     material: Material,
     groupOrder: number,
     z: number,
     group: Group | null,
   ) {
-    const item = this.next(object, geometry, material, groupOrder, z, group);
+    const renderItem = this.getNextRenderItem(object, geometry, material, groupOrder, z, group);
 
-    if (object.useOcclusion) ++this.occlusionCount;
+    if (object.occlusionTest === true) this.occlusionQueryCount++;
 
-    this.listOf(item).push(item);
+    (material.transparent === true ? this.transparent : this.opaque).push(renderItem);
   }
 
   unshift(
     object: Object3D,
-    geometry: BufferGeometry,
+    geometry: BufferGeometry | null,
     material: Material,
     groupOrder: number,
     z: number,
     group: Group | null,
   ) {
-    const item = this.next(object, geometry, material, groupOrder, z, group);
-    this.listOf(item).unshift(item);
+    const renderItem = this.getNextRenderItem(object, geometry, material, groupOrder, z, group);
+
+    (material.transparent === true ? this.transparent : this.opaque).unshift(renderItem);
   }
 
-  sort(sortOpaque: SortFn, sortTransparent: SortFn) {
-    if (this.opaque.length > 1) this.opaque.sort(sortOpaque);
-    if (this.transparent.length > 1) this.transparent.sort(sortTransparent);
+  pushLight(light: Light<any>) {
+    this.lightsArray.push(light);
+  }
+
+  getLightsNode() {
+    return this.lightsNode.fromLights(this.lightsArray);
+  }
+
+  sort(customOpaqueSort?: SortFn, customTransparentSort?: SortFn) {
+    if (this.opaque.length > 1) this.opaque.sort(customOpaqueSort || painterSortStable);
+    if (this.transparent.length > 1) this.transparent.sort(customTransparentSort || reversePainterSortStable);
   }
 
   finish() {
-    this.node.fromLights(this.lights);
-    for (let i = this.activeIndex, it = this.items.length; i < it; ++i) this.items[i].clear();
+    // update lights
+    this.lightsNode.fromLights(this.lightsArray);
+
+    // Clear references from inactive renderItems in the list
+    for (let i = this.renderItemsIndex, il = this.renderItems.length; i < il; i++) {
+      const renderItem = this.renderItems[i];
+
+      if (renderItem.id === null) break;
+
+      renderItem.id = null!;
+      renderItem.object = null!;
+      renderItem.geometry = null!;
+      renderItem.material = null!;
+      renderItem.groupOrder = null!;
+      renderItem.renderOrder = null!;
+      renderItem.z = null!;
+      renderItem.group = null!;
+    }
   }
 }
 
-export class RenderItem {
-  constructor(
-    public object: Object3D,
-    public geometry: BufferGeometry,
-    public material: Material,
-    public groupOrder: number,
-    public z: number,
-    public group: Group | null,
-    public id: number = object.id,
-    public renderOrder: number = object.renderOrder,
-  ) {}
-
-  static new(
-    object: Object3D,
-    geometry: BufferGeometry,
-    material: Material,
-    groupOrder: number,
-    z: number,
-    group: Group | null,
-  ): RenderItem {
-    return new RenderItem(object, geometry, material, groupOrder, z, group);
-  }
-
-  set(
-    object: Object3D,
-    geometry: BufferGeometry,
-    material: Material,
-    groupOrder: number,
-    z: number,
-    group: Group | null,
-  ): this {
-    this.object = object;
-    this.geometry = geometry;
-    this.material = material;
-    this.groupOrder = groupOrder;
-    this.z = z;
-    this.group = group;
-    this.id = object.id;
-    this.renderOrder = object.renderOrder;
-    return this;
-  }
-
-  clear(): this {
-    if (this.id === null) return this;
-    this.object = null!;
-    this.geometry = null!;
-    this.material = null!;
-    this.group = null!;
-    this.id = null!;
-    this.renderOrder = null!;
-    return this;
-  }
-}
+export default RenderList;

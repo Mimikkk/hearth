@@ -19,7 +19,7 @@ createGUI();
 
 async function init() {
   renderer = await Renderer.create();
-  renderer._animation.loop = animate;
+  renderer.setAnimationLoop(animate);
   document.body.appendChild(renderer.parameters.canvas);
 
   camera = new Engine.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 1000);

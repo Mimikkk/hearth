@@ -83,7 +83,7 @@ async function init() {
   //
 
   renderer = await Renderer.create();
-  renderer._animation.loop = render;
+  renderer.setAnimationLoop(render);
   document.body.appendChild(renderer.parameters.canvas);
 
   camera = new Engine.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.1, 100);
