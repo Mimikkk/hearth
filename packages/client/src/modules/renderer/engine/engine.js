@@ -87,6 +87,7 @@ export * as MathUtils from './math/MathUtils.ts';
 export { Spherical } from './math/Spherical.ts';
 export { Cylindrical } from './math/Cylindrical.ts';
 export { Plane } from './math/Plane.ts';
+export { Frustum } from './math/Frustum.ts';
 export { Sphere } from './math/Sphere.ts';
 export { Ray } from './math/Ray.ts';
 export { Matrix4 } from './math/Matrix4.ts';
