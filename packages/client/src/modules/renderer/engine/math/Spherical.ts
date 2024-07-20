@@ -34,7 +34,7 @@ export namespace Spherical {
       into.phi = 0;
     } else {
       into.theta = Math.atan2(x, z);
-      into.phi = Math.acos(clampNumber(y / into.radius, -1, 1));
+      into.phi = Math.acos(clamp(y / into.radius, -1, 1));
     }
 
     return into;
