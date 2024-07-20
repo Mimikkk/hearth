@@ -10,15 +10,7 @@ import { SideBarItems } from '@modules/interface/SideBar/SideBar.items.js';
 import { useContent } from '@modules/managment/useContent.js';
 import { createEffectListener } from '@logic/createListener.js';
 import { ExampleName } from '@modules/renderer/examples/examples.js';
-import { Shortcut } from '@components/forms/Shortcut/Shortcut.js';
-
-const FocusShortcut = () => (
-  <Shortcut class="absolute right-0 pr-1 opacity-50">
-    <Shortcut.Key border>ctrl</Shortcut.Key>
-    <Shortcut.Key border>alt</Shortcut.Key>
-    <Shortcut.Key>f</Shortcut.Key>
-  </Shortcut>
-);
+import { Shortcut } from '@shared/components/forms/Shortcut/Shortcut.tsx';
 
 const flatBy = <T extends Record<string, any>>(items: T[], key: Path.Of<T, T[] | undefined>): T[] => {
   const results = [];
@@ -121,7 +113,11 @@ export const Examples = () => {
           onFocusChange={setIsFocused}
           after={
             <Show when={!isFocused()}>
-              <FocusShortcut />
+              <Shortcut class="absolute right-0 pr-1 opacity-50">
+                <Shortcut.Key border>ctrl</Shortcut.Key>
+                <Shortcut.Key border>alt</Shortcut.Key>
+                <Shortcut.Key>f</Shortcut.Key>
+              </Shortcut>
             </Show>
           }
         />
@@ -132,7 +128,7 @@ export const Examples = () => {
       <Accordion
         items={examples()}
         selected={selectedExample()}
-        onSelectChange={example => example && selectExample(example as ExampleName)}
+        onSelectChange={selectExample}
         expanded={isFiltered()}
       />
     </div>
