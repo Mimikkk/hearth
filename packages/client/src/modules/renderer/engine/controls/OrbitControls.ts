@@ -223,7 +223,7 @@ export class OrbitControls {
         offset.applyQuaternion(quat);
 
         // angle from z-axis around y-axis
-        spherical.setFromVec3(offset);
+        spherical.fromCoord(offset);
 
         if (scope.autoRotate && state === STATE.NONE) {
           rotateLeft(getAutoRotationAngle(deltaTime));
@@ -260,7 +260,7 @@ export class OrbitControls {
         // restrict phi to be between desired limits
         spherical.phi = Math.max(scope.minPolarAngle, Math.min(scope.maxPolarAngle, spherical.phi));
 
-        spherical.makeSafe();
+        spherical.asClamp();
 
         // move target to panned location
 

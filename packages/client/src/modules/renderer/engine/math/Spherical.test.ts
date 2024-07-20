@@ -24,15 +24,15 @@ describe('Math - Spherical', () => {
     const justRight = 1.5;
     const spherical = Spherical.new(1, tooLow, 0);
 
-    spherical.clamp();
+    spherical.asClamp();
     expect(spherical.phi).toBe(Number.EPSILON);
 
     spherical.set(1, tooHigh, 0);
-    spherical.clamp();
+    spherical.asClamp();
     expect(spherical.phi).toBe(Math.PI - Number.EPSILON);
 
     spherical.set(1, justRight, 0);
-    spherical.clamp();
+    spherical.asClamp();
     expect(spherical.phi).toBe(justRight);
   });
 

@@ -35,7 +35,7 @@ export class Capsule {
     return into.set(start, end, radius);
   }
 
-  static fromArray(array: number[], offset: number = 0, into: Capsule = Capsule.new()): Capsule {
+  static fromArray(array: Const<NumberArray>, offset: number = 0, into: Capsule = Capsule.new()): Capsule {
     return into.fromArray(array, offset);
   }
 
@@ -55,7 +55,7 @@ export class Capsule {
     return this.set(capsule.start, capsule.end, capsule.radius);
   }
 
-  fromArray(array: number[], offset: number = 0): this {
+  fromArray(array: Const<NumberArray>, offset: number = 0): this {
     this.start.fromArray(array, offset);
     this.end.fromArray(array, offset + 3);
     this.radius = array[offset + 6];

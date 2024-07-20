@@ -39,7 +39,7 @@ export class Box2 {
     return into.setParams(minX, minY, maxX, maxY);
   }
 
-  static fromArray(array: number[], offset: number = 0, into: Box2 = Box2.empty()): Box2 {
+  static fromArray(array: Const<NumberArray>, offset: number = 0, into: Box2 = Box2.empty()): Box2 {
     return into.fromArray(array, offset);
   }
 
@@ -81,7 +81,7 @@ export class Box2 {
     return this.set(min, max);
   }
 
-  fromArray(array: number[], offset: number = 0): this {
+  fromArray(array: Const<NumberArray>, offset: number = 0): this {
     return this.setParams(array[offset], array[offset + 1], array[offset + 2], array[offset + 3]);
   }
 
