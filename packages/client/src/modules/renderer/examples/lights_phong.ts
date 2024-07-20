@@ -96,13 +96,8 @@ async function init() {
   rightObject.position.x = 3;
   scene.add(rightObject);
 
-  leftObject.setRotationY(Math.PI * -0.5);
-  centerObject.setRotationY(Math.PI * -0.5);
-  rightObject.setRotationY(Math.PI * -0.5);
-
-  leftObject.position.y = -1;
-  centerObject.position.y = -1;
-  rightObject.position.y = -1;
+  leftObject.rotation.y = centerObject.rotation.y = rightObject.rotation.y = Math.PI * -0.5;
+  leftObject.position.y = centerObject.position.y = rightObject.position.y = -1;
 
   // renderer
 

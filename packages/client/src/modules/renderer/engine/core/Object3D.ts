@@ -50,7 +50,7 @@ export interface Object3DEventMap {
 const isCamera = (object: any): object is Camera => object.isCamera;
 const isLight = (object: any): object is Light<any> => object.isLight;
 
-export class Object3D<EventMap extends Object3DEventMap = any> {
+export class Object3D<EventMap extends Object3DEventMap = Object3DEventMap> {
   declare ['constructor']: typeof Object3D;
   declare isObject3D: true;
   static DEFAULT_UP: Vector3 = new Vector3(0, 1, 0);
@@ -70,6 +70,7 @@ export class Object3D<EventMap extends Object3DEventMap = any> {
   children: Object3D[];
   up: Vector3;
   position: Vector3;
+  rotation: Euler;
   quaternion: Quaternion;
   scale: Vector3;
   modelViewMatrix: Matrix4;
@@ -100,19 +101,57 @@ export class Object3D<EventMap extends Object3DEventMap = any> {
 
     this.up = Object3D.DEFAULT_UP.clone();
 
-    this.position = new Vector3();
-    this.quaternion = new Quaternion();
-    this.scale = new Vector3(1, 1, 1);
-    this.modelViewMatrix = new Matrix4();
-    this.normalMatrix = new Matrix3();
+    const position = new Vector3();
+    const rotation = new Euler();
+    const quaternion = new Quaternion();
+    const scale = new Vector3(1, 1, 1);
+
+    function onRotationChange() {
+      quaternion.setFromEuler(rotation, false);
+    }
+
+    function onQuaternionChange() {
+      rotation.setFromQuaternion(quaternion, undefined!, false);
+    }
+
+    rotation._onChange(onRotationChange);
+    quaternion._onChange(onQuaternionChange);
+
+    Object.defineProperties(this, {
+      position: {
+        configurable: true,
+        enumerable: true,
+        value: position,
+      },
+      rotation: {
+        configurable: true,
+        enumerable: true,
+        value: rotation,
+      },
+      quaternion: {
+        configurable: true,
+        enumerable: true,
+        value: quaternion,
+      },
+      scale: {
+        configurable: true,
+        enumerable: true,
+        value: scale,
+      },
+      modelViewMatrix: {
+        value: new Matrix4(),
+      },
+      normalMatrix: {
+        value: new Matrix3(),
+      },
+    });
 
     this.matrix = new Matrix4();
     this.matrixWorld = new Matrix4();
 
     this.matrixAutoUpdate = Object3D.DEFAULT_MATRIX_AUTO_UPDATE;
 
-    // checked by the renderer
-    this.matrixWorldAutoUpdate = Object3D.DEFAULT_MATRIX_WORLD_AUTO_UPDATE;
+    this.matrixWorldAutoUpdate = Object3D.DEFAULT_MATRIX_WORLD_AUTO_UPDATE; // checked by the renderer
     this.matrixWorldNeedsUpdate = false;
 
     this.layers = new Layers();
@@ -223,41 +262,6 @@ export class Object3D<EventMap extends Object3DEventMap = any> {
     return this;
   }
 
-  setRotationX(angle: number): this {
-    return this.setRotationFromEuler(new Euler(angle, this.getRotationY(), this.getRotationZ()));
-  }
-
-  setRotationY(angle: number): this {
-    return this.setRotationFromEuler(new Euler(this.getRotationX(), angle, this.getRotationZ()));
-  }
-
-  setRotationZ(angle: number): this {
-    return this.setRotationFromEuler(new Euler(this.getRotationX(), this.getRotationY(), angle));
-  }
-
-  setRotation(angleX: number, angleY: number, angleZ: number): this {
-    return this.setRotationFromEuler(new Euler(angleX, angleY, angleZ));
-  }
-
-  getRotationX(): number {
-    const { x, y, z, w } = this.quaternion;
-
-    return Math.atan2(2 * (x * w - y * z), 1 - 2 * (x * x - z * z));
-  }
-
-  getRotationY(): number {
-    const { x, y, z, w } = this.quaternion;
-
-    return Math.asin(2 * (x * z + y * w));
-  }
-
-  getRotationZ(): number {
-    // get form quaternion
-    const { x, y, z, w } = this.quaternion;
-
-    return Math.atan2(2 * (x * y - z * w), 1 - 2 * (x * x + y * y));
-  }
-
   rotateX(angle: number): this {
     return this.rotateOnAxis(_xAxis, angle);
   }
@@ -268,14 +272,6 @@ export class Object3D<EventMap extends Object3DEventMap = any> {
 
   rotateZ(angle: number): this {
     return this.rotateOnAxis(_zAxis, angle);
-  }
-
-  rotate(angleX: number, angleY: number, angleZ: number): this {
-    _q1.setFromEuler(new Euler(angleX, angleY, angleZ));
-
-    this.quaternion.multiply(_q1);
-
-    return this;
   }
 
   translateOnAxis(axis: Vector3, distance: number): this {
@@ -346,9 +342,9 @@ export class Object3D<EventMap extends Object3DEventMap = any> {
     return this;
   }
 
-  add(object: Object3D): this;
-  add(...object: Object3D[]): this;
-  add(object: Object3D): this {
+  add(object: Object3D<any>): this;
+  add(...object: Object3D<any>[]): this;
+  add(object: Object3D<any>): this {
     if (arguments.length > 1) {
       for (let i = 0; i < arguments.length; i++) {
         this.add(arguments[i]);
@@ -630,6 +626,7 @@ export class Object3D<EventMap extends Object3DEventMap = any> {
     this.up.copy(source.up);
 
     this.position.copy(source.position);
+    this.rotation.order = source.rotation.order;
     this.quaternion.copy(source.quaternion);
     this.scale.copy(source.scale);
 

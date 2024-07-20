@@ -237,10 +237,3 @@ export class Euler {
   }
 }
 Euler.prototype.isEuler = true;
-
-export interface Euler_ {
-  x: number;
-  y: number;
-  z: number;
-  order: EulerOrder;
-}

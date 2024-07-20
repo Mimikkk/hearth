@@ -95,8 +95,8 @@ export class WorldAxesVisualizer extends Object3D {
     const xAxis = new Mesh(this.geometry, createAxisMaterial(red));
     const yAxis = new Mesh(this.geometry, createAxisMaterial(green));
     const zAxis = new Mesh(this.geometry, createAxisMaterial(blue));
-    yAxis.rotateZ(Math.PI / 2);
-    zAxis.rotateY(-Math.PI / 2);
+    yAxis.rotation.z = Math.PI / 2;
+    zAxis.rotation.y = -Math.PI / 2;
 
     const posX = new Sprite(createSpriteMaterial(red, 'X'));
     posX.name = '+X';

@@ -90,11 +90,11 @@ async function init() {
   const geometry = new Engine.PlaneGeometry(100, 100);
 
   const mesh1 = new Engine.Mesh(geometry, material1);
-  mesh1.setRotationX(-Math.PI / 2);
+  mesh1.rotation.x = -Math.PI / 2;
   mesh1.scale.set(1000, 1000, 1000);
 
   const mesh2 = new Engine.Mesh(geometry, material2);
-  mesh2.setRotationX(-Math.PI / 2);
+  mesh2.rotation.x = -Math.PI / 2;
   mesh2.scale.set(1000, 1000, 1000);
 
   scene1.add(mesh1);

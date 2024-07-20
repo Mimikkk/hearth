@@ -51,7 +51,6 @@ import {
 } from '@modules/renderer/engine/engine.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
-import { throttle } from 'lodash-es';
 
 // let camera, scene, renderer;
 // let mixer, objects, clock;
@@ -131,7 +130,7 @@ for (let i = 0; i < count; i++) {
 
   const mesh = new Mesh(geometry, material);
   mesh.position.set(x * scale, 0, y * scale);
-  mesh.setRotation(Math.random(), Math.random(), Math.random());
+  mesh.rotation.set(Math.random(), Math.random(), Math.random());
   objects.add(mesh);
 }
 
@@ -261,7 +260,7 @@ function animate() {
 
   for (const object of objects.children) {
     object.position.y = Math.sin(clock.elapsedTime + object.id) * 0.3;
-    object.rotateY(delta * 0.3);
+    object.rotation.y += delta * 0.3;
   }
 
   postProcessing.render();

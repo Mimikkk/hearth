@@ -74,8 +74,8 @@ function onWindowMouseMove(e) {
 }
 
 function animate() {
-  box.rotateX(0.01);
-  box.rotateY(0.02);
+  box.rotation.x += 0.01;
+  box.rotation.y += 0.02;
 
   renderer.setRenderTarget(renderTarget);
   renderer.render(scene, camera);

@@ -110,10 +110,10 @@ function onWindowMouseMove(e) {
 
 function animate() {
   if (params.animated) {
-    box.rotateX(0.001);
-    box.rotateY(0.002);
-    box2.rotateX(0.001);
-    box2.rotateY(0.002);
+    box.rotation.x += 0.001;
+    box.rotation.y += 0.002;
+    box2.rotation.x += 0.001;
+    box2.rotation.y += 0.002;
   }
 
   renderTarget.samples = params.samples;

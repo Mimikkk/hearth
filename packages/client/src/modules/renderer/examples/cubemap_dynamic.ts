@@ -106,15 +106,15 @@ function animation(msTime) {
   cube.position.y = Math.sin(time) * 30;
   cube.position.z = Math.sin(time) * 30;
 
-  cube.rotateX(0.02);
-  cube.rotateY(0.03);
+  cube.rotation.x += 0.02;
+  cube.rotation.y += 0.03;
 
   torus.position.x = Math.cos(time + 10) * 30;
   torus.position.y = Math.sin(time + 10) * 30;
   torus.position.z = Math.sin(time + 10) * 30;
 
-  torus.rotateX(0.02);
-  torus.rotateY(0.03);
+  torus.rotation.x += 0.02;
+  torus.rotation.y += 0.03;
 
   material.visible = false;
 

@@ -40,6 +40,7 @@ async function init() {
 
   const materials = await new MTLLoader().loadAsync('resources/models/obj/male02/male02.mtl');
   await materials.preload();
+  console.log({ materials });
 
   const object = await new OBJLoader({ materials }).loadAsync('resources/models/obj/male02/male02.obj');
   object.position.y = -0.95;

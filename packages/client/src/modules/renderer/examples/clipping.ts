@@ -85,7 +85,7 @@ async function init() {
     new MeshPhongNodeMaterial({ color: 0xa0adaf, shininess: 150 }),
   );
 
-  ground.rotateX(-Math.PI / 2); // rotates X/Y to X/Z
+  ground.rotation.x = -Math.PI / 2; // rotates X/Y to X/Z
   ground.receiveShadow = true;
   scene.add(ground);
 
@@ -195,8 +195,8 @@ function animate(currentTime) {
   const time = (currentTime - startTime) / 1000;
 
   object.position.y = 0.8;
-  object.setRotation(time * 0.5, time * 0.2, 0);
-
+  object.rotation.x = time * 0.5;
+  object.rotation.y = time * 0.2;
   object.scale.setScalar(Math.cos(time) * 0.125 + 0.875);
 
   stats.begin();

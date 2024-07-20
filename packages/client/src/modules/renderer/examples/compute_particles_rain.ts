@@ -276,7 +276,7 @@ async function init() {
     monkey = new Engine.Mesh(geometry, new Engine.MeshStandardMaterial({ roughness: 1, metalness: 0 }));
     monkey.receiveShadow = true;
     monkey.scale.setScalar(5);
-    monkey.setRotationY(Math.PI / 2);
+    monkey.rotation.y = Math.PI / 2;
     monkey.position.y = 4.5;
     monkey.layers.enable(1); // add to collision layer
 
@@ -334,7 +334,7 @@ function animate() {
   const delta = clock.getDelta();
 
   if (monkey) {
-    monkey.rotateY(delta);
+    monkey.rotation.y += delta;
   }
 
   collisionBoxPos.set(collisionBoxPosUI.x, collisionBoxPosUI.y, -collisionBoxPosUI.z);

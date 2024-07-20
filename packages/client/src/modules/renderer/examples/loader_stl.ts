@@ -34,7 +34,7 @@ async function init() {
   // Ground
 
   const plane = new Mesh(new PlaneGeometry(40, 40), new MeshPhongMaterial({ color: 0xcbcbcb, specular: 0x474747 }));
-  plane.setRotationX(-Math.PI / 2);
+  plane.rotation.x = -Math.PI / 2;
   plane.position.y = -0.5;
   scene.add(plane);
 
@@ -47,7 +47,7 @@ async function init() {
     const mesh = new Mesh(geometry, material);
 
     mesh.position.set(0, -0.25, 0.6);
-    mesh.setRotation(0, -Math.PI / 2, 0);
+    mesh.rotation.set(0, -Math.PI / 2, 0);
     mesh.scale.set(0.5, 0.5, 0.5);
 
     mesh.castShadow = true;
@@ -63,12 +63,13 @@ async function init() {
     const mesh = new Mesh(geometry, material);
 
     mesh.position.set(0, -0.37, -0.6);
-    mesh.setRotation(-Math.PI / 2, 0, 0);
+    mesh.rotation.set(-Math.PI / 2, 0, 0);
     mesh.scale.set(2, 2, 2);
 
     mesh.castShadow = true;
     mesh.receiveShadow = true;
 
+    console.log(mesh);
     scene.add(mesh);
   });
 
@@ -76,7 +77,7 @@ async function init() {
     const mesh = new Mesh(geometry, material);
 
     mesh.position.set(0.136, -0.37, -0.6);
-    mesh.setRotation(-Math.PI / 2, 0.3, 0);
+    mesh.rotation.set(-Math.PI / 2, 0.3, 0);
     mesh.scale.set(2, 2, 2);
 
     mesh.castShadow = true;
@@ -96,7 +97,7 @@ async function init() {
     const mesh = new Mesh(geometry, meshMaterial);
 
     mesh.position.set(0.5, 0.2, 0);
-    mesh.setRotation(-Math.PI / 2, Math.PI / 2, 0);
+    mesh.rotation.set(-Math.PI / 2, Math.PI / 2, 0);
     mesh.scale.set(0.3, 0.3, 0.3);
 
     mesh.castShadow = true;

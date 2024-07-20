@@ -988,7 +988,7 @@ export class TransformControlsGizmo extends Object3D {
           }
 
           if (rotation) {
-            object.setRotation(rotation[0], rotation[1], rotation[2]);
+            object.rotation.set(rotation[0], rotation[1], rotation[2]);
           }
 
           if (scale) {
@@ -1003,7 +1003,7 @@ export class TransformControlsGizmo extends Object3D {
           object.renderOrder = Infinity;
 
           object.position.set(0, 0, 0);
-          object.setRotation(0, 0, 0);
+          object.rotation.set(0, 0, 0);
           object.scale.set(1, 1, 1);
 
           gizmo.add(object);
@@ -1080,7 +1080,7 @@ export class TransformControlsGizmo extends Object3D {
       // hide aligned to camera
 
       handle.visible = true;
-      handle.setRotation(0, 0, 0);
+      handle.rotation.set(0, 0, 0);
       handle.position.copy(this.worldPosition);
 
       let factor;

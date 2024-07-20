@@ -100,7 +100,7 @@ async function init() {
   });
 
   const ground = new Engine.Mesh(planeGeometry, planeMaterial);
-  ground.setRotationX(-Math.PI / 2);
+  ground.rotation.x = -Math.PI / 2;
   ground.scale.multiplyScalar(3);
   ground.castShadow = true;
   ground.receiveShadow = true;
