@@ -125,7 +125,9 @@ export function subclip(sourceClip: AnimationClip, name: string, startFrame: num
 
     if (times.length === 0) continue;
 
+    //@ts-expect-error
     track.times = convertArray(times, track.times.constructor);
+    //@ts-expect-error
     track.values = convertArray(values, track.values.constructor);
 
     tracks.push(track);

@@ -37,6 +37,7 @@ class Textures extends DataMap<any, any> {
     let textureNeedsUpdate = false;
 
     if (depthTexture === undefined) {
+      //@ts-expect-error
       depthTexture = new DepthTexture();
       depthTexture.format = renderTarget.stencilBuffer ? TextureFormat.DepthStencil : TextureFormat.Depth;
       depthTexture.type = renderTarget.stencilBuffer ? TextureDataType.UnsignedInt248 : TextureDataType.UnsignedInt;

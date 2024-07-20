@@ -5,16 +5,14 @@ export class FramebufferTexture extends Texture {
   declare isFramebufferTexture: true;
 
   constructor(width: number, height: number) {
-    super(
-      { width, height },
-      {
-        magFilter: MagnificationTextureFilter.Nearest,
-        minFilter: MinificationTextureFilter.Nearest,
-        generateMipmaps: false,
-        version: 1,
-      },
-    );
+    super({ width, height } as TexImageSource);
+
+    this.magFilter = MagnificationTextureFilter.Nearest;
+    this.minFilter = MinificationTextureFilter.Nearest;
+
+    this.generateMipmaps = false;
+
+    this.needsUpdate = true;
   }
 }
-
 FramebufferTexture.prototype.isFramebufferTexture = true;

@@ -2,6 +2,7 @@ import { Texture } from './Texture.js';
 import { MagnificationTextureFilter, MinificationTextureFilter } from '../constants.js';
 
 export class VideoTexture extends Texture<HTMLVideoElement> {
+  declare ['constructor']: typeof VideoTexture;
   declare isVideoTexture: true;
 
   constructor(video: HTMLVideoElement, options?: Options) {
@@ -12,12 +13,10 @@ export class VideoTexture extends Texture<HTMLVideoElement> {
       generateMipmaps: false,
     });
 
-    const updateVideo = () => {
+    video.requestVideoFrameCallback(function update() {
+      video.requestVideoFrameCallback(update);
       this.needsUpdate = true;
-      video.requestVideoFrameCallback(updateVideo);
-    };
-
-    video.requestVideoFrameCallback(updateVideo);
+    });
   }
 
   clone() {

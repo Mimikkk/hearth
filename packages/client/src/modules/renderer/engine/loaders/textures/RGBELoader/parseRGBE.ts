@@ -49,6 +49,7 @@ type ParseResult = {
   type: TextureDataType;
 };
 const createDataTexture = (result: ParseResult): DataTexture => {
+  //@ts-expect-error
   const texture = new DataTexture();
 
   texture.wrapS = Wrapping.ClampToEdge;

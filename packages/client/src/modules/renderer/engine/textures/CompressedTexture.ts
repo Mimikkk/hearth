@@ -1,13 +1,51 @@
 import { Texture } from './Texture.js';
+import {
+  ColorSpace,
+  CompressedTextureFormat,
+  MagnificationTextureFilter,
+  Mapping,
+  MinificationTextureFilter,
+  TextureDataType,
+  TextureFormat,
+  Wrapping,
+} from '../constants.js';
 
-type CompressedImage = { width: number; height: number; depth?: number };
-
-export class CompressedTexture extends Texture<CompressedImage> {
+export class CompressedTexture extends Texture {
   declare isCompressedTexture: true;
 
-  constructor(mipmaps: ImageData[], width: number, height: number, options?: Texture.Options) {
-    super({ width, height }, { ...options, mipmaps, flipY: false, generateMipmaps: false });
+  constructor(
+    mipmaps: ImageData[],
+    width: number,
+    height: number,
+    format: CompressedTextureFormat,
+    type?: TextureDataType,
+    mapping?: Mapping,
+    wrapS?: Wrapping,
+    wrapT?: Wrapping,
+    magFilter?: MagnificationTextureFilter,
+    minFilter?: MinificationTextureFilter,
+    anisotropy?: number,
+    colorSpace?: ColorSpace,
+  ) {
+    super(
+      null as never,
+      mapping,
+      wrapS,
+      wrapT,
+      magFilter,
+      minFilter,
+      format as unknown as TextureFormat,
+      type,
+      anisotropy,
+      colorSpace,
+    );
+
+    this.image = { width: width, height: height };
+    this.mipmaps = mipmaps;
+
+    this.flipY = false;
+
+    this.generateMipmaps = false;
   }
 }
-
 CompressedTexture.prototype.isCompressedTexture = true;

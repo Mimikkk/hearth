@@ -61,6 +61,7 @@ export class BackendTextures {
 
     this.colorBuffer = null;
 
+    //@ts-expect-error
     this.depthTexture = new DepthTexture();
     this.depthTexture.name = 'depthBuffer';
   }
