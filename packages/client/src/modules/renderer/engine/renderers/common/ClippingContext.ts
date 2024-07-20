@@ -35,7 +35,7 @@ export class ClippingContext {
     const planes = this.planes;
 
     for (let i = 0; i < l; i++) {
-      _plane.copy(source[i]).applyMat4(this.viewMatrix!, _viewNormalMatrix);
+      _plane.from(source[i]).applyMat4(this.viewMatrix!, _viewNormalMatrix);
 
       const v = planes[offset + i];
       const normal = _plane.normal;

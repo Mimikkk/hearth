@@ -124,7 +124,7 @@ class DragControls {
           if (_intersections.length > 0) {
             const object = _intersections[0].object;
 
-            _plane.setFromNormalAndCoplanarPoint(
+            _plane.fromNormalAndCoplanar(
               _camera.getWorldDirection(_plane.normal),
               _worldPosition.setFromMatrixPosition(object.matrixWorld),
             );
@@ -175,7 +175,7 @@ class DragControls {
           _selected = _intersections[0].object;
         }
 
-        _plane.setFromNormalAndCoplanarPoint(
+        _plane.fromNormalAndCoplanar(
           _camera.getWorldDirection(_plane.normal),
           //@ts-expect-error
           _worldPosition.setFromMatrixPosition(_selected.matrixWorld),

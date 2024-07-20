@@ -160,7 +160,7 @@ class ReflectorNode extends TextureNode {
 
     // Now update projection matrix with new clip plane, implementing code from: http://www.terathon.com/code/oblique.html
     // Paper explaining this technique: http://www.terathon.com/lengyel/Lengyel-Oblique.pdf
-    _reflectorPlane.setFromNormalAndCoplanarPoint(_normal, _reflectorWorldPosition);
+    _reflectorPlane.fromNormalAndCoplanar(_normal, _reflectorWorldPosition);
     _reflectorPlane.applyMat4(virtualCamera.matrixWorldInverse);
 
     clipPlane.set(

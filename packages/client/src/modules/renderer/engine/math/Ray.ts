@@ -191,7 +191,7 @@ export class Ray {
 
     if (denominator === 0) {
       // line is coplanar, return origin
-      if (plane.distanceToPoint(this.origin) === 0) {
+      if (plane.distanceTo(this.origin) === 0) {
         return 0;
       }
 
@@ -220,7 +220,7 @@ export class Ray {
   intersectsPlane(plane: Plane) {
     // check if the ray lies on the plane first
 
-    const distToPoint = plane.distanceToPoint(this.origin);
+    const distToPoint = plane.distanceTo(this.origin);
 
     if (distToPoint === 0) {
       return true;

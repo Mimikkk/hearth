@@ -25,12 +25,12 @@ export class Frustum {
   set(p0: Plane, p1: Plane, p2: Plane, p3: Plane, p4: Plane, p5: Plane): this {
     const planes = this.planes;
 
-    planes[0].copy(p0);
-    planes[1].copy(p1);
-    planes[2].copy(p2);
-    planes[3].copy(p3);
-    planes[4].copy(p4);
-    planes[5].copy(p5);
+    planes[0].from(p0);
+    planes[1].from(p1);
+    planes[2].from(p2);
+    planes[3].from(p3);
+    planes[4].from(p4);
+    planes[5].from(p5);
 
     return this;
   }
@@ -39,7 +39,7 @@ export class Frustum {
     const planes = this.planes;
 
     for (let i = 0; i < 6; i++) {
-      planes[i].copy(frustum.planes[i]);
+      planes[i].from(frustum.planes[i]);
     }
 
     return this;
@@ -65,16 +65,16 @@ export class Frustum {
       me14 = me[14],
       me15 = me[15];
 
-    planes[0].setComponents(me3 - me0, me7 - me4, me11 - me8, me15 - me12).normalize();
-    planes[1].setComponents(me3 + me0, me7 + me4, me11 + me8, me15 + me12).normalize();
-    planes[2].setComponents(me3 + me1, me7 + me5, me11 + me9, me15 + me13).normalize();
-    planes[3].setComponents(me3 - me1, me7 - me5, me11 - me9, me15 - me13).normalize();
-    planes[4].setComponents(me3 - me2, me7 - me6, me11 - me10, me15 - me14).normalize();
+    planes[0].setParams(me3 - me0, me7 - me4, me11 - me8, me15 - me12).normalize();
+    planes[1].setParams(me3 + me0, me7 + me4, me11 + me8, me15 + me12).normalize();
+    planes[2].setParams(me3 + me1, me7 + me5, me11 + me9, me15 + me13).normalize();
+    planes[3].setParams(me3 - me1, me7 - me5, me11 - me9, me15 - me13).normalize();
+    planes[4].setParams(me3 - me2, me7 - me6, me11 - me10, me15 - me14).normalize();
 
     if (coordinateSystem === CoordinateSystem.WebGL) {
-      planes[5].setComponents(me3 + me2, me7 + me6, me11 + me10, me15 + me14).normalize();
+      planes[5].setParams(me3 + me2, me7 + me6, me11 + me10, me15 + me14).normalize();
     } else if (coordinateSystem === CoordinateSystem.WebGPU) {
-      planes[5].setComponents(me2, me6, me10, me14).normalize();
+      planes[5].setParams(me2, me6, me10, me14).normalize();
     } else {
       throw new Error('engine.Frustum.setFromProjectionMatrix(): Invalid coordinate system: ' + coordinateSystem);
     }
@@ -113,7 +113,7 @@ export class Frustum {
     const negRadius = -sphere.radius;
 
     for (let i = 0; i < 6; i++) {
-      const distance = planes[i].distanceToPoint(center);
+      const distance = planes[i].distanceTo(center);
 
       if (distance < negRadius) {
         return false;
@@ -137,7 +137,7 @@ export class Frustum {
         plane.normal.z > 0 ? box.min.z : box.max.z,
       );
 
-      if (plane.distanceToPoint(_vector) < 0) {
+      if (plane.distanceTo(_vector) < 0) {
         return false;
       }
     }
@@ -149,7 +149,7 @@ export class Frustum {
     const planes = this.planes;
 
     for (let i = 0; i < 6; i++) {
-      if (planes[i].distanceToPoint(point) < 0) {
+      if (planes[i].distanceTo(point) < 0) {
         return false;
       }
     }

@@ -108,12 +108,12 @@ export class SelectionControl {
       _vectemp3.add(_vecNear);
 
       const planes = _frustum.planes;
-      planes[0].setFromCoplanarPoints(_vecNear, _vecTopLeft, _vecTopRight);
-      planes[1].setFromCoplanarPoints(_vecNear, _vecTopRight, _vecDownRight);
-      planes[2].setFromCoplanarPoints(_vecDownRight, _vecDownLeft, _vecNear);
-      planes[3].setFromCoplanarPoints(_vecDownLeft, _vecTopLeft, _vecNear);
-      planes[4].setFromCoplanarPoints(_vecTopRight, _vecDownRight, _vecDownLeft);
-      planes[5].setFromCoplanarPoints(_vectemp3, _vectemp2, _vectemp1).negate();
+      planes[0].fromCoplanar(_vecNear, _vecTopLeft, _vecTopRight);
+      planes[1].fromCoplanar(_vecNear, _vecTopRight, _vecDownRight);
+      planes[2].fromCoplanar(_vecDownRight, _vecDownLeft, _vecNear);
+      planes[3].fromCoplanar(_vecDownLeft, _vecTopLeft, _vecNear);
+      planes[4].fromCoplanar(_vecTopRight, _vecDownRight, _vecDownLeft);
+      planes[5].fromCoplanar(_vectemp3, _vectemp2, _vectemp1).negate();
     } else if (OrthographicCamera.is(this.camera)) {
       const left = Math.min(startPoint.x, endPoint.x);
       const top = Math.max(startPoint.y, endPoint.y);
@@ -141,12 +141,12 @@ export class SelectionControl {
       _vecFarDownLeft.unproject(this.camera);
 
       const planes = _frustum.planes;
-      planes[0].setFromCoplanarPoints(_vecTopLeft, _vecFarTopLeft, _vecFarTopRight);
-      planes[1].setFromCoplanarPoints(_vecTopRight, _vecFarTopRight, _vecFarDownRight);
-      planes[2].setFromCoplanarPoints(_vecFarDownRight, _vecFarDownLeft, _vecDownLeft);
-      planes[3].setFromCoplanarPoints(_vecFarDownLeft, _vecFarTopLeft, _vecTopLeft);
-      planes[4].setFromCoplanarPoints(_vecTopRight, _vecDownRight, _vecDownLeft);
-      planes[5].setFromCoplanarPoints(_vecFarDownRight, _vecFarTopRight, _vecFarTopLeft).negate();
+      planes[0].fromCoplanar(_vecTopLeft, _vecFarTopLeft, _vecFarTopRight);
+      planes[1].fromCoplanar(_vecTopRight, _vecFarTopRight, _vecFarDownRight);
+      planes[2].fromCoplanar(_vecFarDownRight, _vecFarDownLeft, _vecDownLeft);
+      planes[3].fromCoplanar(_vecFarDownLeft, _vecFarTopLeft, _vecTopLeft);
+      planes[4].fromCoplanar(_vecTopRight, _vecDownRight, _vecDownLeft);
+      planes[5].fromCoplanar(_vecFarDownRight, _vecFarTopRight, _vecFarTopLeft).negate();
     }
   }
 

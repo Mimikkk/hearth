@@ -179,8 +179,8 @@ export class Octree {
   triangleCapsuleIntersect(capsule: Capsule, triangle: Triangle): Intersection | undefined {
     triangle.getPlane(_plane);
 
-    const d1 = _plane.distanceToPoint(capsule.start) - capsule.radius;
-    const d2 = _plane.distanceToPoint(capsule.end) - capsule.radius;
+    const d1 = _plane.distanceTo(capsule.start) - capsule.radius;
+    const d2 = _plane.distanceTo(capsule.end) - capsule.radius;
 
     if ((d1 > 0 && d2 > 0) || (d1 < -capsule.radius && d2 < -capsule.radius)) return;
 
@@ -224,7 +224,7 @@ export class Octree {
     const depth = Math.abs(_plane.distanceToSphere(sphere));
     const r2 = sphere.radius * sphere.radius - depth * depth;
 
-    const plainPoint = _plane.projectPoint(sphere.center, _v1);
+    const plainPoint = _plane.project(sphere.center, _v1);
 
     if (triangle.containsPoint(sphere.center)) {
       return {

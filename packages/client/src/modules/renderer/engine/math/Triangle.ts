@@ -153,7 +153,7 @@ export class Triangle {
   }
 
   getPlane(target: Plane): Plane {
-    return target.setFromCoplanarPoints(this.a, this.b, this.c);
+    return target.fromCoplanar(this.a, this.b, this.c);
   }
 
   getBarycoord(point: Vec3, target: Vec3): Vec3 | null {

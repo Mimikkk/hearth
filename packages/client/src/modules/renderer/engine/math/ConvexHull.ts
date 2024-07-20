@@ -426,13 +426,13 @@ export class ConvexHull {
     // 3. The next vertex 'v3' is the one farthest to the plane 'v0', 'v1', 'v2'
 
     maxDistance = -1;
-    _plane.setFromCoplanarPoints(v0.point, v1.point, v2.point);
+    _plane.fromCoplanar(v0.point, v1.point, v2.point);
 
     for (let i = 0, l = this.vertices.length; i < l; i++) {
       const vertex = vertices[i];
 
       if (vertex !== v0 && vertex !== v1 && vertex !== v2) {
-        const distance = Math.abs(_plane.distanceToPoint(vertex.point));
+        const distance = Math.abs(_plane.distanceTo(vertex.point));
 
         if (distance > maxDistance) {
           maxDistance = distance;
@@ -443,7 +443,7 @@ export class ConvexHull {
 
     const faces = [];
 
-    if (_plane.distanceToPoint(v3.point) < 0) {
+    if (_plane.distanceTo(v3.point) < 0) {
       // the face is not able to see the point so 'plane.normal' is pointing outside the tetrahedron
 
       faces.push(Face.create(v0, v1, v2), Face.create(v3, v1, v0), Face.create(v3, v2, v1), Face.create(v3, v0, v2));
