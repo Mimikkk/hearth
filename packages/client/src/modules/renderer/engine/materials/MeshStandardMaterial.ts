@@ -73,7 +73,7 @@ export class MeshStandardMaterial extends Material {
   fog: boolean;
   defines: Record<string, any>;
 
-  constructor(parameters?: MeshStandardMaterialParameters) {
+  constructor(parameters: MeshStandardMaterialParameters) {
     super(parameters);
 
     this.isMeshStandardMaterial = true;

@@ -136,11 +136,15 @@ export class Mesh extends Object3D {
     const material = this.material;
     const matrixWorld = this.matrixWorld;
 
+    console.log('h1');
+
     if (material === undefined) return;
+    console.log('h2');
 
     // test with bounding sphere in world space
 
     if (geometry.boundingSphere === null) geometry.computeBoundingSphere();
+    console.log('h3');
 
     Sphere_.fill_(_sphere, geometry.boundingSphere!);
     Sphere_.applyMat4(_sphere, matrixWorld);
@@ -149,11 +153,13 @@ export class Mesh extends Object3D {
 
     _ray.copy(raycaster.ray).recast(raycaster.near);
 
+    console.log('h4');
     if (!Sphere_.containsVec(_sphere, _ray.origin)) {
       if (_ray.intersectSphere(_sphere, _sphereHitAt) === null) return;
 
       if (_ray.origin.distanceToSquared(_sphereHitAt) > (raycaster.far - raycaster.near) ** 2) return;
     }
+    console.log('h5');
 
     // convert ray to local space of mesh
 
@@ -165,6 +171,7 @@ export class Mesh extends Object3D {
     if (geometry.boundingBox !== null) {
       if (_ray.intersectsBox(geometry.boundingBox) === false) return;
     }
+    console.log('h6');
 
     // test for intersections with geometry
 
@@ -183,21 +190,20 @@ export class Mesh extends Object3D {
     const uv1 = geometry.attributes.uv1 as BufferAttribute<Float32Array>;
     const normal = geometry.attributes.normal as BufferAttribute<Float32Array>;
     const groups = geometry.groups;
-    const range = geometry.drawRange;
+    const drawRange = geometry.drawRange;
 
-    // console.dir({  index, position, uv, uv1, normal, groups, range, raycaster }, { depth: null });
-    // console.dir({ raycaster }, { depth: null });
-
-    if (index) {
+    if (index !== null) {
+      // indexed buffer geometry
       if (Array.isArray(material)) {
-        for (let i = 0, it = groups.length; i < it; i++) {
+        console.log('b1');
+        for (let i = 0, il = groups.length; i < il; i++) {
           const group = groups[i];
           const groupMaterial = material[group.materialIndex as any];
 
-          const start = Math.max(group.start, range.start);
-          const end = Math.min(index.count, Math.min(group.start + group.count, range.start + range.count));
+          const start = Math.max(group.start, drawRange.start);
+          const end = Math.min(index.count, Math.min(group.start + group.count, drawRange.start + drawRange.count));
 
-          for (let j = start; j < end; j += 3) {
+          for (let j = start, jl = end; j < jl; j += 3) {
             const a = index.getX(j);
             const b = index.getX(j + 1);
             const c = index.getX(j + 2);
@@ -215,36 +221,43 @@ export class Mesh extends Object3D {
               c,
             );
 
-            if (!intersection) continue;
-            intersection.faceIndex = Math.floor(j / 3);
-            intersection.face!.materialIndex = group.materialIndex!;
-            intersects.push(intersection);
+            if (intersection) {
+              intersection.faceIndex = Math.floor(j / 3); // triangle number in indexed buffer semantics
+              intersection.face!.materialIndex = group.materialIndex!;
+              intersects.push(intersection);
+            }
           }
         }
       } else {
-        const start = Math.max(0, range.start);
-        const end = Math.min(index.count, range.start + range.count);
+        console.log('b2');
+        const start = Math.max(0, drawRange.start);
+        const end = Math.min(index.count, drawRange.start + drawRange.count);
 
-        for (let i = start; i < end; i += 3) {
+        for (let i = start, il = end; i < il; i += 3) {
           const a = index.getX(i);
           const b = index.getX(i + 1);
           const c = index.getX(i + 2);
 
           intersection = checkGeometryIntersection(this, material, raycaster, rayLocalSpace, uv, uv1, normal, a, b, c);
-          if (!intersection) continue;
 
-          intersection.faceIndex = Math.floor(i / 3);
-          intersects.push(intersection);
+          console.log({ intersection });
+
+          if (intersection) {
+            intersection.faceIndex = Math.floor(i / 3); // triangle number in indexed buffer semantics
+            intersects.push(intersection);
+          }
         }
       }
-    } else if (position) {
+    } else if (position !== undefined) {
+      // non-indexed buffer geometry
+
       if (Array.isArray(material)) {
-        for (let i = 0, it = groups.length; i < it; i++) {
+        for (let i = 0, il = groups.length; i < il; i++) {
           const group = groups[i];
           const groupMaterial = material[group.materialIndex!];
 
-          const start = Math.max(group.start, range.start);
-          const end = Math.min(position.count, Math.min(group.start + group.count, range.start + range.count));
+          const start = Math.max(group.start, drawRange.start);
+          const end = Math.min(position.count, Math.min(group.start + group.count, drawRange.start + drawRange.count));
 
           for (let j = start, jl = end; j < jl; j += 3) {
             const a = j;
@@ -272,19 +285,20 @@ export class Mesh extends Object3D {
           }
         }
       } else {
-        const start = Math.max(0, range.start);
-        const end = Math.min(position.count, range.start + range.count);
+        const start = Math.max(0, drawRange.start);
+        const end = Math.min(position.count, drawRange.start + drawRange.count);
 
-        for (let i = start; i < end; i += 3) {
+        for (let i = start, il = end; i < il; i += 3) {
           const a = i;
           const b = i + 1;
           const c = i + 2;
 
           intersection = checkGeometryIntersection(this, material, raycaster, rayLocalSpace, uv, uv1, normal, a, b, c);
-          if (!intersection) continue;
 
-          intersection.faceIndex = Math.floor(i / 3);
-          intersects.push(intersection);
+          if (intersection) {
+            intersection.faceIndex = Math.floor(i / 3); // triangle number in non-indexed buffer semantics
+            intersects.push(intersection);
+          }
         }
       }
     }
@@ -306,6 +320,7 @@ function checkIntersection(
 ): Intersection | null {
   let intersect;
 
+  console.log(material.side);
   if (material.side === Side.Back) {
     intersect = ray.intersectTriangle(pC, pB, pA, true, point);
   } else {
@@ -314,17 +329,18 @@ function checkIntersection(
 
   if (intersect === null) return null;
 
-  Vec3.fill_(_intersectionPointWorld, point);
-  Vec3.applyMat4(_intersectionPointWorld, object.matrixWorld);
+  console.log(point, _intersectionPointWorld);
+  _intersectionPointWorld.copy(point);
+  _intersectionPointWorld.applyMatrix4(object.matrixWorld);
 
   const distance = raycaster.ray.origin.distanceTo(_intersectionPointWorld);
 
   if (distance < raycaster.near || distance > raycaster.far) return null;
 
   return {
-    distance,
+    distance: distance,
     point: _intersectionPointWorld.clone(),
-    object,
+    object: object,
   };
 }
 
@@ -346,6 +362,8 @@ function checkGeometryIntersection(
   Triangle.set(_triangle1, _vA, _vB, _vC);
 
   const intersection = checkIntersection(object, material, raycaster, ray, _vA, _vB, _vC, _intersectionPoint);
+
+  console.log({ intersection });
 
   if (intersection) {
     if (uv) {

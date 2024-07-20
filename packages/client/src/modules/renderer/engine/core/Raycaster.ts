@@ -4,7 +4,7 @@ import type { Vector3 } from '../math/Vector3.js';
 import type { Camera } from '../cameras/Camera.js';
 import type { Object3D } from './Object3D.js';
 import type { Face } from '../math/ConvexHull.js';
-import { Vec2, Vector2 } from '../math/Vector2.js';
+import type { Vector2 } from '../math/Vector2.js';
 import { PerspectiveCamera } from '../cameras/PerspectiveCamera.js';
 import { OrthographicCamera } from '../cameras/OrthographicCamera.js';
 
@@ -42,6 +42,7 @@ const findIntersections = <T extends Object3D>(
   recursive: boolean,
 ): Intersection<T>[] => {
   if (object.layers.test(raycaster.layers)) {
+    console.log({ object });
     object.raycast(raycaster, intersects);
   }
 
@@ -84,11 +85,10 @@ export class Raycaster {
     return this;
   }
 
-  setFromCamera(coords: Vec2, camera: Camera): this {
+  setFromCamera(coords: Vector2, camera: Camera): this {
     if (camera instanceof PerspectiveCamera) {
       this.ray.origin.setFromMatrixPosition(camera.matrixWorld);
       this.ray.direction.set(coords.x, coords.y, 0.5).unproject(camera).sub(this.ray.origin).normalize();
-
       this.camera = camera;
     } else if (camera instanceof OrthographicCamera) {
       // set origin in plane of camera
@@ -100,7 +100,6 @@ export class Raycaster {
     } else {
       console.error('engine.Raycaster: Unsupported camera type: ' + camera.type);
     }
-
     return this;
   }
 
@@ -111,12 +110,11 @@ export class Raycaster {
   intersects<T extends Object3D>(
     objects: Object3D[],
     recursive: boolean = true,
-    intersections: Intersection<T>[] = [],
+    intersects: Intersection<T>[] = [],
   ): Intersection<T>[] {
-    for (let i = 0, it = objects.length; i < it; i++) {
-      findIntersections(objects[i], this, intersections, recursive);
-    }
+    console.log('start');
+    for (let i = 0, l = objects.length; i < l; i++) findIntersections(objects[i], this, intersects, recursive);
 
-    return intersections.sort(asc);
+    return intersects.sort(asc);
   }
 }

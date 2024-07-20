@@ -261,7 +261,7 @@ async function init() {
 
 						const result = local.get( 'result', init );
 
-						//console.info( 'result', result );
+						//console.log( 'result', result );
 
 						return result;
 
@@ -270,6 +270,7 @@ async function init() {
 				`).scriptable();
 
   const scriptableNode = js(`
+
 					layout = {
 						outputType: 'node',
 						elements: [
@@ -287,7 +288,7 @@ async function init() {
 
 					function helloWorld() {
 
-						console.info( "Hello World!" );
+						console.log( "Hello World!" );
 
 					}
 
@@ -298,15 +299,15 @@ async function init() {
 
 						const material = local.get( 'material' );
 
-						//console.info( 'vector3', parameters.get( 'vector3' ) );
+						//console.log( 'vector3', parameters.get( 'vector3' ) );
 
 						if ( parameters.get( 'execFrom' ) === 'serialized' ) {
 
-							//console.info( 'message', parameters.get( 'message' ).value );
-							//console.info( 'binary', parameters.get( 'binary' ) );
-							//console.info( 'object3d', parameters.get( 'object3d' ) ); // unserializable yet
+							//console.log( 'message', parameters.get( 'message' ).value );
+							//console.log( 'binary', parameters.get( 'binary' ) );
+							//console.log( 'object3d', parameters.get( 'object3d' ) ); // unserializable yet
 
-							//console.info( global.get( 'renderer' ) );
+							//console.log( global.get( 'renderer' ) );
 
 						}
 

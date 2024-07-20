@@ -278,7 +278,7 @@ class DRACOLoader {
   }
 
   debug() {
-    console.info(
+    console.log(
       'Task load: ',
       this.workerPool.map(worker => worker._taskLoad),
     );

@@ -11,7 +11,7 @@ export async function makeBasis(Module = {}) {
     }
   }
 
-  const out = console.info.bind(console);
+  const out = console.log.bind(console);
   const err = console.warn.bind(console);
   for (let key in moduleOverrides) {
     if (moduleOverrides.hasOwnProperty(key)) {
