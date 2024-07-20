@@ -1,7 +1,6 @@
-import { Color, RenderTarget } from '@modules/renderer/engine/engine.js';
+import { Color, RenderTarget, Vec4 } from '@modules/renderer/engine/engine.js';
 import ClippingContext from '@modules/renderer/engine/renderers/common/ClippingContext.js';
 import { Const } from '@modules/renderer/engine/math/types.js';
-import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 
 let id = 0;
 
@@ -29,7 +28,7 @@ export class RenderContext {
   isRenderContext: boolean;
   stencilClearValue: number;
   depthClearValue: number;
-  clip: ClippingContext;
+  clippingContext: ClippingContext;
   renderTarget: RenderTarget;
 
   constructor() {
@@ -104,8 +103,8 @@ export class Scissor {
     return this.set(x, y, width, height, enabled);
   }
 
-  equals({ x: width, y: height }: Const<Vec2>): boolean {
-    return this.width === width && this.height === height;
+  equals({ x, y, z: width, w: height }: Const<Vec4>): boolean {
+    return this.x === x && this.y === y && this.width === width && this.height === height;
   }
 }
 
@@ -161,7 +160,7 @@ export class Viewport {
     return this.set(x, y, width, height, minDepth, maxDepth, enabled);
   }
 
-  equals({ x: width, y: height }: Const<Vec2>): boolean {
-    return this.width === width && this.height === height;
+  equals({ x, y, z: width, w: height }: Const<Vec4>): boolean {
+    return this.x === x && this.y === y && this.width === width && this.height === height;
   }
 }

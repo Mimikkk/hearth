@@ -56,7 +56,7 @@ export default class RenderObject {
     this.buffers = null;
     this.pipeline = null;
 
-    this.updateClipping(renderContext.clip);
+    this.updateClipping(renderContext.clippingContext);
 
     this.clippingContextVersion = this.clippingContext.version;
 

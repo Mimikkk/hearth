@@ -24,7 +24,6 @@ import { Info } from '@modules/renderer/engine/renderers/common/Info.js';
 import RenderObject from '@modules/renderer/engine/renderers/common/RenderObject.js';
 import ProgrammableStage from '@modules/renderer/engine/renderers/common/ProgrammableStage.js';
 import { ResourceManager } from './utils/ResourceManager.js';
-import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 
 export class Backend {
   data: WeakMap<any, any>;
@@ -34,6 +33,11 @@ export class Backend {
     const { object, geometry } = renderObject;
 
     return geometry.isInstancedBufferGeometry ? geometry.instanceCount : object.isInstancedMesh ? object.count : 1;
+  }
+
+  getDrawingBufferSize(): Vec3 {
+    const vec3 = new Vec3();
+    return this.renderer.getDrawingBufferSize(vec3);
   }
 
   getClearColor() {
