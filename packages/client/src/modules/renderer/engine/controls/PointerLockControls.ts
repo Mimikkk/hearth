@@ -1,6 +1,5 @@
 import { Camera, EventDispatcher, Vector3 } from '../engine.js';
 import { Euler } from '@modules/renderer/engine/math/Euler.js';
-import { Quaternion_ } from '@modules/renderer/engine/math/Quaternion.js';
 
 const _euler = Euler.create(0, 0, 0, 'YXZ');
 const _vector = new Vector3();
@@ -113,7 +112,7 @@ function onMouseMove(event: MouseEvent) {
 
   _euler.x = Math.max(_PI_2 - this.maxPolarAngle, Math.min(_PI_2 - this.minPolarAngle, _euler.x));
 
-  Quaternion_.fillEuler(camera.quaternion, _euler);
+  camera.quaternion.setFromEuler(_euler);
 
   this.eventDispatcher.dispatch(_changeEvent, this);
 }

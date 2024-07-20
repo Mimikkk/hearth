@@ -8,7 +8,6 @@ import { Mesh } from '../objects/Mesh.js';
 import { Line } from '../objects/Line.js';
 import { Vector3 } from '../math/Vector3.js';
 import { Color } from '@modules/renderer/engine/math/Color.js';
-import { Quaternion_ } from '@modules/renderer/engine/math/Quaternion.js';
 
 const _axis = /*@__PURE__*/ new Vector3();
 let _lineGeometry!: BufferGeometry;
@@ -57,14 +56,15 @@ export class ArrowHelper extends Object3D {
     // dir is assumed to be normalized
 
     if (dir.y > 0.99999) {
-      Quaternion_.fill(this.quaternion, 0, 0, 0, 1);
+      this.quaternion.set(0, 0, 0, 1);
     } else if (dir.y < -0.99999) {
-      Quaternion_.fill(this.quaternion, 1, 0, 0, 0);
+      this.quaternion.set(1, 0, 0, 0);
     } else {
       _axis.set(dir.z, 0, -dir.x).normalize();
 
       const radians = Math.acos(dir.y);
-      Quaternion_.fillAxisAngle(this.quaternion, _axis, radians);
+
+      this.quaternion.setFromAxisAngle(_axis, radians);
     }
   }
 

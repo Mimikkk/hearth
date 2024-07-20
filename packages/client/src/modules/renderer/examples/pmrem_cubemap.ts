@@ -37,6 +37,8 @@ async function init() {
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.parameters.toneMapping = Engine.ToneMapping.ACESFilmic;
 
+  await renderer.init();
+
   container.appendChild(renderer.parameters.canvas);
 
   const controls = new OrbitControls(camera, renderer.parameters.canvas);

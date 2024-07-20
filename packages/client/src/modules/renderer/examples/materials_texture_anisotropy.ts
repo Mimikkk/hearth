@@ -18,7 +18,6 @@ async function init() {
   const SCREEN_WIDTH = window.innerWidth;
   const SCREEN_HEIGHT = window.innerHeight;
 
-  stats = new Stats();
   container = document.createElement('div');
   document.body.appendChild(container);
 
@@ -103,6 +102,7 @@ async function init() {
 
   // STATS1
 
+  stats = new Stats();
   container.appendChild(stats.dom);
 
   document.addEventListener('mousemove', onDocumentMouseMove);
@@ -137,9 +137,15 @@ function render() {
   camera.lookAt(scene1.position);
   renderer.clear();
 
+  renderer.setScissorTest(true);
+
   renderer.setScissor(0, 0, SCREEN_WIDTH / 2 - 2, SCREEN_HEIGHT);
   renderer.render(scene1, camera);
 
+  renderer.setScissorTest(true);
+
   renderer.setScissor(SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2 - 2, SCREEN_HEIGHT);
   renderer.render(scene2, camera);
+
+  // renderer.setScissorTest( false );
 }

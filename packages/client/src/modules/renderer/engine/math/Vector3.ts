@@ -604,8 +604,6 @@ export interface Vec3 {
 export namespace Vec3 {
   export const create = (x: number, y: number, z: number): Vec3 => ({ x, y, z });
   export const vec3 = create;
-  export const is = (v: any): v is Vec3 =>
-    v && typeof v.x === 'number' && typeof v.y === 'number' && typeof v.z === 'number';
 
   export const dot = (a: Readonly<Vec3>, b: Readonly<Vec3>): number => a.x * b.x + a.y * b.y + a.z * b.z;
 }

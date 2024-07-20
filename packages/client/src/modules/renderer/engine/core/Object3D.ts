@@ -1,4 +1,4 @@
-import { Quaternion_ } from '../math/Quaternion.js';
+import { Quaternion, Quaternion_ } from '../math/Quaternion.js';
 import { Vector3 } from '../math/Vector3.js';
 import { Matrix4 } from '../math/Matrix4.js';
 import { EventDispatcher } from './EventDispatcher.js';
@@ -16,7 +16,6 @@ import type { Group } from '../objects/Group.js';
 import type { Vector2 } from '../math/Vector2.js';
 import { Box3 } from '@modules/renderer/engine/math/Box3.js';
 import { Renderer } from '../renderers/webgpu/Renderer.js';
-import { throttle } from 'lodash-es';
 
 let _object3DId = 0;
 
@@ -47,8 +46,6 @@ export interface Object3DEventMap {
   click: { data: Vector2 };
   dispose: {};
 }
-
-const con = throttle(console.log, 1000);
 
 const isCamera = (object: any): object is Camera => object.isCamera;
 const isLight = (object: any): object is Light<any> => object.isLight;
@@ -104,8 +101,7 @@ export class Object3D<EventMap extends Object3DEventMap = any> {
     this.up = Object3D.DEFAULT_UP.clone();
 
     this.position = new Vector3();
-
-    this.quaternion = Quaternion_.identity();
+    this.quaternion = new Quaternion();
     this.scale = new Vector3(1, 1, 1);
     this.modelViewMatrix = new Matrix4();
     this.normalMatrix = new Matrix3();

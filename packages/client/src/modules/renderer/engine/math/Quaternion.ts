@@ -421,12 +421,6 @@ export interface Quaternion_ {
 export namespace Quaternion_ {
   export const create = (x: number, y: number, z: number, w: number): Quaternion_ => ({ x, y, z, w });
   export const quaternion = create;
-  export const is = (value: any): value is Quaternion_ =>
-    typeof value === 'object' &&
-    typeof value.x === 'number' &&
-    typeof value.y === 'number' &&
-    typeof value.z === 'number' &&
-    typeof value.w === 'number';
 
   export const identity = (): Quaternion_ => create(0, 0, 0, 1);
 
