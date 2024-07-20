@@ -3,6 +3,7 @@ import {
   Camera,
   InstancedInterleavedBuffer,
   InterleavedBufferAttribute,
+  Line3,
   LineSegments,
   MathUtils,
   Matrix4,
@@ -16,8 +17,6 @@ import {
 import { LineSegmentsGeometry } from './LineSegmentsGeometry.js';
 import { LineMaterial } from './LineMaterial.js';
 import { Intersection } from '@modules/renderer/engine/core/Raycaster.js';
-import { Line3 } from '@modules/renderer/engine/math/Line3.js';
-import { Vec3 } from '@modules/renderer/engine/math/Vector3.js';
 
 const _start = new Vector3();
 const _end = new Vector3();
@@ -28,7 +27,7 @@ const _end4 = new Vector4();
 const _ssOrigin = new Vector4();
 const _ssOrigin3 = new Vector3();
 const _mvMatrix = new Matrix4();
-const _line = Line3.empty();
+const _line = new Line3();
 const _closestPoint = new Vector3();
 
 const _box = new Box3();
@@ -65,9 +64,10 @@ function raycastWorldUnits(lineSegments: LineSegments, intersects: Intersection[
   const segmentCount = Math.min(geometry.instanceCount, instanceStart.count);
 
   for (let i = 0, l = segmentCount; i < l; i++) {
-    Vec3.fromAttribute_(instanceStart, i, _line.start);
-    Vec3.fromAttribute_(instanceEnd, i, _line.end);
-    Line3.applyMat4(_line, matrixWorld);
+    _line.start.fromBufferAttribute(instanceStart, i);
+    _line.end.fromBufferAttribute(instanceEnd, i);
+
+    _line.applyMatrix4(matrixWorld);
 
     const pointOnLine = new Vector3();
     const point = new Vector3();
@@ -167,14 +167,15 @@ function raycastScreenSpace(lineSegments: LineSegments, camera: Camera, intersec
     _end4.y *= resolution.y / 2;
 
     // create 2d segment
-    Vec3.set(_line.start, _start4.x, _start4.y, 0);
+    _line.start.copy(_start4);
     _line.start.z = 0;
 
-    Vec3.set(_line.end, _end4.x, _end4.y, 0);
+    _line.end.copy(_end4);
+    _line.end.z = 0;
 
     // get closest point on ray to segment
-    const param = Line3.closestAt(_line, _ssOrigin3);
-    Line3.at_(_line, param, _closestPoint);
+    const param = _line.closestPointToPointParameter(_ssOrigin3, true);
+    _line.at(param, _closestPoint);
 
     // check if the intersection point is within clip space
     const zPos = MathUtils.lerp(_start4.z, _end4.z, param);
@@ -183,10 +184,11 @@ function raycastScreenSpace(lineSegments: LineSegments, camera: Camera, intersec
     const isInside = _ssOrigin3.distanceTo(_closestPoint) < _lineWidth * 0.5;
 
     if (isInClipSpace && isInside) {
-      Vec3.fromAttribute_(instanceStart, i, _line.start);
-      Vec3.fromAttribute_(instanceEnd, i, _line.end);
-      Vec3.applyMat4(_line.start, matrixWorld);
-      Vec3.applyMat4(_line.end, matrixWorld);
+      _line.start.fromBufferAttribute(instanceStart, i);
+      _line.end.fromBufferAttribute(instanceEnd, i);
+
+      _line.start.applyMatrix4(matrixWorld);
+      _line.end.applyMatrix4(matrixWorld);
 
       const pointOnLine = new Vector3();
       const point = new Vector3();

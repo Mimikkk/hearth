@@ -20,8 +20,8 @@ const _v2 = new Vector3();
 const _point1 = new Vector3();
 const _point2 = new Vector3();
 const _plane = new Plane();
-const _line1 = Line3.empty();
-const _line2 = Line3.empty();
+const _line1 = new Line3();
+const _line2 = new Line3();
 const _sphere = new Sphere();
 const _capsule = Capsule.empty();
 
@@ -195,7 +195,7 @@ export class Octree {
 
     const r2 = capsule.radius * capsule.radius;
 
-    Line3.fillEnds(_line1, capsule.start, capsule.end);
+    const line1 = _line1.set(capsule.start, capsule.end);
 
     const lines = [
       [triangle.a, triangle.b],
@@ -204,9 +204,9 @@ export class Octree {
     ];
 
     for (let i = 0; i < lines.length; i++) {
-      Line3.fillEnds(_line2, lines[i][0], lines[i][1]);
+      const line2 = _line2.set(lines[i][0], lines[i][1]);
 
-      lineToLineClosestPoints(_line1, _line2, _point1, _point2);
+      lineToLineClosestPoints(line1, line2, _point1, _point2);
 
       if (_point1.distanceToSquared(_point2) < r2) {
         return {
@@ -243,8 +243,8 @@ export class Octree {
     ];
 
     for (let i = 0; i < lines.length; i++) {
-      Line3.fillEnds(_line1, lines[i][0], lines[i][1]);
-      Line3.closestTo_(_line1, plainPoint, _v2);
+      _line1.set(lines[i][0], lines[i][1]);
+      _line1.closestPointToPoint(plainPoint, true, _v2);
 
       const d = _v2.distanceToSquared(sphere.center);
 
