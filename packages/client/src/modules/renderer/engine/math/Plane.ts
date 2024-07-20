@@ -1,6 +1,6 @@
 import { Matrix3 } from './Matrix3.js';
-import { Vec3, Vector3 } from './Vector3.js';
-import type { Sphere, Sphere_ } from './Sphere.js';
+import { Vector3 } from './Vector3.js';
+import type { Sphere } from './Sphere.js';
 import type { Line3 } from './Line3.js';
 import type { Box3 } from './Box3.js';
 import type { Matrix4 } from './Matrix4.js';
@@ -69,11 +69,11 @@ export class Plane {
     return this;
   }
 
-  distanceToPoint(point: Vec3): number {
-    return Vec3.dot(this.normal, point) + this.constant;
+  distanceToPoint(point: Vector3): number {
+    return this.normal.dot(point) + this.constant;
   }
 
-  distanceToSphere(sphere: Sphere_): number {
+  distanceToSphere(sphere: Sphere): number {
     return this.distanceToPoint(sphere.center) - sphere.radius;
   }
 
