@@ -77,8 +77,8 @@ async function render() {
   if (mesh) {
     const time = Date.now() * 0.001;
 
-    mesh.rotation.x = Math.sin(time / 4);
-    mesh.rotation.y = Math.sin(time / 2);
+    mesh.setRotationX(Math.sin(time / 4));
+    mesh.setRotationY(Math.sin(time / 2));
 
     let i = 0;
     const offset = (amount - 1) / 2;
@@ -87,8 +87,8 @@ async function render() {
       for (let y = 0; y < amount; y++) {
         for (let z = 0; z < amount; z++) {
           dummy.position.set(offset - x, offset - y, offset - z);
-          dummy.rotation.y = Math.sin(x / 4 + time) + Math.sin(y / 4 + time) + Math.sin(z / 4 + time);
-          dummy.rotation.z = dummy.rotation.y * 2;
+          dummy.setRotationY(Math.sin(x / 4 + time) + Math.sin(y / 4 + time) + Math.sin(z / 4 + time));
+          dummy.setRotationZ(dummy.getRotationY() * 2);
 
           dummy.updateMatrix();
 

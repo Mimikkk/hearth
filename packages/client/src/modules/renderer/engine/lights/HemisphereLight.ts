@@ -10,7 +10,7 @@ export class HemisphereLight extends Light<undefined> {
   constructor(skyColor: ColorRepresentation, groundColor: ColorRepresentation, intensity: number) {
     super(skyColor, intensity);
 
-    this.position.from(Object3D.DEFAULT_UP);
+    this.position.from(Object3D.Up);
     this.updateMatrix();
 
     this.groundColor = new Color(groundColor);

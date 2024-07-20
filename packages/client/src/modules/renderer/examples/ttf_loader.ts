@@ -76,7 +76,7 @@ async function init() {
     new Engine.MeshBasicMaterial({ color: 0xffffff, opacity: 0.5, transparent: true }),
   );
   plane.position.y = 100;
-  plane.rotation.x = -Math.PI / 2;
+  plane.setRotationX(-Math.PI / 2);
   scene.add(plane);
 
   // RENDERER
@@ -157,8 +157,8 @@ function createText() {
   textMesh1.position.y = hover;
   textMesh1.position.z = 0;
 
-  textMesh1.rotation.x = 0;
-  textMesh1.rotation.y = Math.PI * 2;
+  textMesh1.setRotationX(0);
+  textMesh1.setRotationY(Math.PI * 2);
 
   group.add(textMesh1);
 
@@ -169,8 +169,8 @@ function createText() {
     textMesh2.position.y = -hover;
     textMesh2.position.z = depth;
 
-    textMesh2.rotation.x = Math.PI;
-    textMesh2.rotation.y = Math.PI * 2;
+    textMesh2.setRotationX(Math.PI);
+    textMesh2.setRotationY(Math.PI * 2);
 
     group.add(textMesh2);
   }
@@ -213,7 +213,7 @@ function onPointerUp() {
 //
 
 function render() {
-  group.rotation.y += (targetRotation - group.rotation.y) * 0.05;
+  group.rotateY((targetRotation - group.getRotationY()) * 0.05);
 
   camera.lookAt(cameraTarget);
 

@@ -54,7 +54,7 @@ const createBoxes = () => {
     const box = new Mesh(geometry, new MeshLambertMaterial({ color: Random.color() }));
 
     box.position.set(Math.random() * 80 - 40, Math.random() * 45 - 25, Math.random() * 45 - 25);
-    box.rotation.set(Random.radian(), Random.radian(), Random.radian());
+    box.setRotation(Random.radian(), Random.radian(), Random.radian());
     box.scale.set(randomScale(), randomScale(), randomScale());
 
     group.add(box);

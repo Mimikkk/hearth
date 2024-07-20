@@ -16,8 +16,10 @@ import type { Group } from '../objects/Group.js';
 import type { Vec2 } from '../math/Vec2.js';
 import { Box3 } from '@modules/renderer/engine/math/Box3.js';
 import { Renderer } from '../renderers/webgpu/Renderer.js';
+import { Sphere } from '@modules/renderer/engine/math/Sphere.js';
+import { v4 } from 'uuid';
 
-let _object3DId = 0;
+let _id = 0;
 
 const _v1 = /*@__PURE__*/ new Vec3();
 const _q1 = /*@__PURE__*/ new Quaternion();
@@ -53,14 +55,19 @@ const isLight = (object: any): object is Light<any> => object.isLight;
 export class Object3D<EventMap extends Object3DEventMap = Object3DEventMap> {
   declare ['constructor']: typeof Object3D;
   declare isObject3D: true;
-  static DEFAULT_UP: Vec3 = new Vec3(0, 1, 0);
-  static DEFAULT_MATRIX_AUTO_UPDATE: boolean = true;
-  static DEFAULT_MATRIX_WORLD_AUTO_UPDATE: boolean = true;
+  static Up: Vec3 = new Vec3(0, 1, 0);
+  static UseLocalAutoUpdate: boolean = true;
+  static UseWorldAutoUpdate: boolean = true;
 
   eventDispatcher = new EventDispatcher<EventMap>();
 
-  occlusionTest: boolean;
+  boundingSphere: Sphere | null;
   geometry: BufferGeometry | null;
+
+  computeBoundingSphere(): void {}
+  computeBoundingBox(): void {}
+
+  occlusionTest: boolean;
   boundingBox: Box3 | null;
   id: number;
   uuid: string;
@@ -90,8 +97,8 @@ export class Object3D<EventMap extends Object3DEventMap = Object3DEventMap> {
   userData: Record<string, any>;
 
   constructor() {
-    this.id = _object3DId++;
-    this.uuid = MathUtils.generateUuid();
+    this.id = _id++;
+    this.uuid = v4();
 
     this.name = '';
     this.type = 'Object3D';
@@ -99,59 +106,20 @@ export class Object3D<EventMap extends Object3DEventMap = Object3DEventMap> {
     this.parent = null;
     this.children = [];
 
-    this.up = Object3D.DEFAULT_UP.clone();
+    this.up = Object3D.Up.clone();
 
-    const position = new Vec3();
-    const rotation = new Euler();
-    const quaternion = new Quaternion();
-    const scale = new Vec3(1, 1, 1);
-
-    function onRotationChange() {
-      quaternion.setFromEuler(rotation, false);
-    }
-
-    function onQuaternionChange() {
-      rotation.setFromQuaternion(quaternion, undefined!, false);
-    }
-
-    rotation._onChange(onRotationChange);
-    quaternion._onChange(onQuaternionChange);
-
-    Object.defineProperties(this, {
-      position: {
-        configurable: true,
-        enumerable: true,
-        value: position,
-      },
-      rotation: {
-        configurable: true,
-        enumerable: true,
-        value: rotation,
-      },
-      quaternion: {
-        configurable: true,
-        enumerable: true,
-        value: quaternion,
-      },
-      scale: {
-        configurable: true,
-        enumerable: true,
-        value: scale,
-      },
-      modelViewMatrix: {
-        value: new Mat4(),
-      },
-      normalMatrix: {
-        value: new Mat3(),
-      },
-    });
+    this.position = Vec3.new();
+    this.quaternion = new Quaternion().identity();
+    this.scale = Vec3.new(1, 1, 1);
+    this.modelViewMatrix = new Mat4();
+    this.normalMatrix = new Mat3();
 
     this.matrix = new Mat4();
     this.matrixWorld = new Mat4();
 
-    this.matrixAutoUpdate = Object3D.DEFAULT_MATRIX_AUTO_UPDATE;
+    this.matrixAutoUpdate = Object3D.UseLocalAutoUpdate;
 
-    this.matrixWorldAutoUpdate = Object3D.DEFAULT_MATRIX_WORLD_AUTO_UPDATE; // checked by the renderer
+    this.matrixWorldAutoUpdate = Object3D.UseWorldAutoUpdate; // checked by the renderer
     this.matrixWorldNeedsUpdate = false;
 
     this.layers = new Layers();
@@ -237,6 +205,41 @@ export class Object3D<EventMap extends Object3DEventMap = Object3DEventMap> {
   setRotationFromQuaternion(q: Quaternion): this {
     this.quaternion.copy(q);
     return this;
+  }
+
+  setRotationX(angle: number): this {
+    return this.setRotationFromEuler(_euler.set(angle, this.getRotationY(), this.getRotationZ()));
+  }
+
+  setRotationY(angle: number): this {
+    return this.setRotationFromEuler(_euler.set(this.getRotationX(), angle, this.getRotationZ()));
+  }
+
+  setRotationZ(angle: number): this {
+    return this.setRotationFromEuler(_euler.set(this.getRotationX(), this.getRotationY(), angle));
+  }
+
+  setRotation(angleX: number, angleY: number, angleZ: number): this {
+    return this.setRotationFromEuler(_euler.set(angleX, angleY, angleZ));
+  }
+
+  getRotationX(): number {
+    const { x, y, z, w } = this.quaternion;
+
+    return Math.atan2(2 * (x * w - y * z), 1 - 2 * (x * x - z * z));
+  }
+
+  getRotationY(): number {
+    const { x, y, z, w } = this.quaternion;
+
+    return Math.asin(2 * (x * z + y * w));
+  }
+
+  getRotationZ(): number {
+    // get form quaternion
+    const { x, y, z, w } = this.quaternion;
+
+    return Math.atan2(2 * (x * y - z * w), 1 - 2 * (x * x + y * y));
   }
 
   rotateOnAxis(axis: Vec3, angle: number): this {
@@ -661,5 +664,7 @@ export class Object3D<EventMap extends Object3DEventMap = Object3DEventMap> {
     return this;
   }
 }
+
+const _euler = new Euler();
 
 Object3D.prototype.isObject3D = true;

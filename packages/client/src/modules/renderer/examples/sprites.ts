@@ -89,9 +89,9 @@ function render() {
     sprite.scale.set(scale * imageWidth, scale * imageHeight, 1.0);
   }
 
-  group.rotation.x = time * 0.5;
-  group.rotation.y = time * 0.75;
-  group.rotation.z = time * 1.0;
+  group.setRotationX(time * 0.5);
+  group.setRotationY(time * 0.75);
+  group.setRotationZ(time * 1.0);
 
   renderer.render(scene, camera);
 }

@@ -56,8 +56,8 @@ function createGUI() {
 }
 
 function render() {
-  mesh.rotation.x += 0.0075;
-  mesh.rotation.y += 0.015;
+  mesh.rotateX(0.0075);
+  mesh.rotateY(0.015);
 
   postProcessing.render();
 }

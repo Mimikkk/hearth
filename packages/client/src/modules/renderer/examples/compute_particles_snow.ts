@@ -251,14 +251,8 @@ async function init() {
 
   scene.backgroundNode = viewportTopLeft.distance(0.5).mul(2).mix(color(0x0f4140), color(0x060a0d));
 
-  //
-
   renderer = await Renderer.create();
-  renderer.parameters.toneMapping = Engine.ToneMapping.ACESFilmic;
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.setAnimationLoop(animate);
-  document.body.appendChild(renderer.parameters.canvas);
+  //
 
   viewHelper = new WorldAxesVisualizer(camera, renderer.parameters.canvas);
   controls = new OrbitControls(camera, renderer.parameters.canvas);
@@ -291,10 +285,16 @@ async function init() {
   totalPass = totalPass.mul(vignet);
   totalPass = totalPass.add(teapotTreePass.mul(10).add(teapotTreePassBlurred));
 
+  //
+
+  renderer.parameters.toneMapping = Engine.ToneMapping.ACESFilmic;
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setAnimationLoop(animate);
+  document.body.appendChild(renderer.parameters.canvas);
+
   postProcessing = new PostProcessing(renderer);
   postProcessing.outputNode = totalPass;
-
-  //
 
   await renderer.computeAsync(computeInit);
 
@@ -304,7 +304,7 @@ async function init() {
 }
 
 async function animate() {
-  controls.update();
+  controls?.update();
 
   // position
 

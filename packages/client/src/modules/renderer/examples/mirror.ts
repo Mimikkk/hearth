@@ -174,15 +174,15 @@ async function init() {
 function animate() {
   const timer = Date.now() * 0.01;
 
-  sphereGroup.rotation.y -= 0.002;
+  sphereGroup.rotateY(-0.002);
 
   smallSphere.position.set(
     Math.cos(timer * 0.1) * 30,
     Math.abs(Math.cos(timer * 0.2)) * 20 + 5,
     Math.sin(timer * 0.1) * 30,
   );
-  smallSphere.rotation.y = Math.PI / 2 - timer * 0.1;
-  smallSphere.rotation.z = timer * 0.8;
+  smallSphere.setRotationY(Math.PI / 2 - timer * 0.1);
+  smallSphere.setRotationZ(timer * 0.8);
 
   renderer.render(scene, camera);
 }
