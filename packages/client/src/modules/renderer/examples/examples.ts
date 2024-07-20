@@ -80,9 +80,6 @@ export const Example = {
       Sheen: 'loader_gltf_sheen',
     },
   },
-  Collisions: {
-    Octree: 'octree_collisions',
-  },
   Physics: {
     Ammo: 'physics_ammo',
   },
