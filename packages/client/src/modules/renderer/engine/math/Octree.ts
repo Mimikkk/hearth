@@ -315,7 +315,7 @@ export class Octree {
   }
 
   capsuleIntersect(capsule: Capsule): undefined | Intersection {
-    Capsule.copy_(capsule, _capsule);
+    Capsule.fill_(capsule, _capsule);
 
     const triangles: Triangle[] = [];
     let result,

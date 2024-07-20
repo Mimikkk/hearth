@@ -2,7 +2,6 @@ import { Quaternion } from './Quaternion.js';
 import { Matrix4 } from './Matrix4.js';
 import { clamp } from './MathUtils.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vector3.js';
-import { Const } from '@modules/renderer/engine/math/types.js';
 
 export interface Euler {
   x: number;
@@ -40,9 +39,9 @@ export namespace Euler {
     return into;
   };
 
-  export const fromVec = ({ x, y, z }: Const<Vec3>, order: Order = 'XYZ'): Euler => create(x, y, z, order);
-  export const fromVec_ = ({ x, y, z }: Const<Vec3>, into: Euler): Euler => fill(into, x, y, z, into.order);
-  export const fillVec = (self: Euler, vec: Const<Vec3>): Euler => {
+  export const fromVec = ({ x, y, z }: Readonly<Vec3>, order: Order = 'XYZ'): Euler => create(x, y, z, order);
+  export const fromVec_ = ({ x, y, z }: Readonly<Vec3>, into: Euler): Euler => fill(into, x, y, z, into.order);
+  export const fillVec = (self: Euler, vec: Readonly<Vec3>): Euler => {
     self.x = vec.x;
     self.y = vec.y;
     self.z = vec.z;
@@ -50,8 +49,8 @@ export namespace Euler {
     return self;
   };
 
-  export const fromMat = (matrix: Const<Mat4x4>, order: Order): Euler => fromMat_(matrix, order, empty());
-  export const fromMat_ = (matrix: Const<Mat4x4>, order: Order, into: Euler): Euler => {
+  export const fromMat = (matrix: Readonly<Mat4x4>, order: Order): Euler => fromMat_(matrix, order, empty());
+  export const fromMat_ = (matrix: Readonly<Mat4x4>, order: Order, into: Euler): Euler => {
     const m11 = matrix[0];
     const m12 = matrix[4];
     const m13 = matrix[8];
@@ -127,7 +126,7 @@ export namespace Euler {
     into.order = order;
     return into;
   };
-  export const fillMat = (self: Euler, matrix: Const<Mat4x4>): Euler => fromMat_(matrix, self.order, self);
+  export const fillMat = (self: Euler, matrix: Readonly<Mat4x4>): Euler => fromMat_(matrix, self.order, self);
 
   export const fromQuaternion = (quaternion: Quaternion, order: Order): Euler =>
     fromQuaternion_(quaternion, order, empty());
@@ -136,8 +135,8 @@ export namespace Euler {
   export const fillQuaternion = (self: Euler, quaternion: Quaternion): Euler =>
     fromQuaternion_(quaternion, self.order, self);
 
-  export const fromArray = (array: Const<(number | string)[]>, offset: number) => fromArray_(array, offset, empty());
-  export const fromArray_ = (array: Const<(number | string)[]>, offset: number, into: Euler) =>
+  export const fromArray = (array: Readonly<(number | string)[]>, offset: number) => fromArray_(array, offset, empty());
+  export const fromArray_ = (array: Readonly<(number | string)[]>, offset: number, into: Euler) =>
     fill(
       into,
       array[offset] as number,

@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { Box2 } from './Box2.js';
-import { Vec2 } from './Vector2.ts';
+import { Box2, Vec2 } from './Box2.js';
 
 describe('Math - Box2', () => {
   it('Instancing', () => {
@@ -32,7 +31,7 @@ describe('Math - Box2', () => {
     expect(empty.max.y).toBe(-Infinity);
 
     const fill = Box2.empty();
-    Box2.copy_(box, fill);
+    Box2.fill_(box, fill);
     expect(fill).not.toBe(box);
     expect(fill).toEqual(box);
   });

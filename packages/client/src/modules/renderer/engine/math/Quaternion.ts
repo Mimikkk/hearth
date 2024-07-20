@@ -1,11 +1,10 @@
 import * as MathUtils from './MathUtils.js';
 import { NumberArray } from './MathUtils.js';
 import type { Euler } from './Euler.js';
-import { Vec3 } from './Vector3.js';
+import { Vec3, Vector3 } from './Vector3.js';
 import type { Matrix4 } from './Matrix4.js';
 import type { BufferAttribute } from '../core/BufferAttribute.js';
 import type { InterleavedBufferAttribute } from '../core/InterleavedBufferAttribute.js';
-import { Const } from './types.ts';
 
 export interface Quaternion {
   x: number;
@@ -26,8 +25,8 @@ export namespace Quaternion {
 
   export const identity = (): Quaternion => create(0, 0, 0, 1);
 
-  export const fromEuler = (euler: Const<Euler>): Quaternion => fromEuler_(euler, identity());
-  export const fromEuler_ = ({ order, x, y, z }: Const<Euler>, into: Quaternion) => {
+  export const fromEuler = (euler: Readonly<Euler>): Quaternion => fromEuler_(euler, identity());
+  export const fromEuler_ = ({ order, x, y, z }: Readonly<Euler>, into: Quaternion) => {
     x /= 2;
     y /= 2;
     z /= 2;
@@ -90,10 +89,10 @@ export namespace Quaternion {
         );
     }
   };
-  export const fillEuler = (self: Quaternion, euler: Const<Euler>): Quaternion => fromEuler_(euler, self);
+  export const fillEuler = (self: Quaternion, euler: Readonly<Euler>): Quaternion => fromEuler_(euler, self);
 
-  export const fromUnit = (from: Const<Vec3>, to: Const<Vec3>): Quaternion => fromUnit_(from, to, identity());
-  export const fromUnit_ = (from: Const<Vec3>, to: Const<Vec3>, into: Quaternion): Quaternion => {
+  export const fromUnit = (from: Readonly<Vec3>, to: Readonly<Vec3>): Quaternion => fromUnit_(from, to, identity());
+  export const fromUnit_ = (from: Readonly<Vec3>, to: Readonly<Vec3>, into: Quaternion): Quaternion => {
     let r = Vec3.dot(from, to) + 1;
 
     if (r < Number.EPSILON) {
@@ -110,16 +109,20 @@ export namespace Quaternion {
 
     return normalize(into);
   };
-  export const fillUnit = (self: Quaternion, from: Const<Vec3>, to: Const<Vec3>): Quaternion =>
+  export const fillUnit = (self: Quaternion, from: Readonly<Vec3>, to: Readonly<Vec3>): Quaternion =>
     fromUnit_(from, to, self);
 
-  export const fromArray = (array: Const<NumberArray>, offset: number): Quaternion =>
+  export const fromArray = (array: Readonly<NumberArray>, offset: number): Quaternion =>
     fromArray_(array, offset, identity());
-  export const fromArray_ = (array: Const<NumberArray>, offset: number, into: Quaternion): Quaternion =>
+  export const fromArray_ = (array: Readonly<NumberArray>, offset: number, into: Quaternion): Quaternion =>
     fill(into, array[offset], array[offset + 1], array[offset + 2], array[offset + 3]);
-  export const fillArray = (self: Quaternion, array: Const<NumberArray>, offset: number): Quaternion =>
+  export const fillArray = (self: Quaternion, array: Readonly<NumberArray>, offset: number): Quaternion =>
     fromArray_(array, offset, self);
-  export const intoArray_ = <T extends NumberArray>({ x, y, z, w }: Const<Quaternion>, offset: number, into: T): T => {
+  export const intoArray_ = <T extends NumberArray>(
+    { x, y, z, w }: Readonly<Quaternion>,
+    offset: number,
+    into: T,
+  ): T => {
     into[offset] = x;
     into[offset + 1] = y;
     into[offset + 2] = z;
@@ -127,10 +130,10 @@ export namespace Quaternion {
 
     return into;
   };
-  export const intoArray = (self: Const<Quaternion>): number[] => intoArray_(self, 0, [0, 0, 0, 0]);
+  export const intoArray = (self: Readonly<Quaternion>): number[] => intoArray_(self, 0, [0, 0, 0, 0]);
 
-  export const fromRotation = (matrix: Const<Matrix4>): Quaternion => fromRotation_(matrix, identity());
-  export const fromRotation_ = (matrix: Const<Matrix4>, into: Quaternion): Quaternion => {
+  export const fromRotation = (matrix: Readonly<Matrix4>): Quaternion => fromRotation_(matrix, identity());
+  export const fromRotation_ = (matrix: Readonly<Matrix4>, into: Quaternion): Quaternion => {
     const te = matrix.elements;
     const m11 = te[0];
     const m12 = te[4];
@@ -167,34 +170,34 @@ export namespace Quaternion {
     const s = 2.0 * Math.sqrt(1.0 + m33 - m11 - m22);
     return fill(into, (m13 + m31) / s, (m23 + m32) / s, 0.25 * s, (m21 - m12) / s);
   };
-  export const fillRotation = (self: Quaternion, matrix: Const<Matrix4>): Quaternion => fromRotation_(matrix, self);
+  export const fillRotation = (self: Quaternion, matrix: Readonly<Matrix4>): Quaternion => fromRotation_(matrix, self);
 
-  export const fromAxisAngle = (axis: Const<Vec3>, angle: number): Quaternion =>
+  export const fromAxisAngle = (axis: Readonly<Vec3>, angle: number): Quaternion =>
     fromAxisAngle_(axis, angle, identity());
-  export const fromAxisAngle_ = (axis: Const<Vec3>, angle: number, into: Quaternion): Quaternion => {
+  export const fromAxisAngle_ = (axis: Readonly<Vec3>, angle: number, into: Quaternion): Quaternion => {
     const halfAngle = angle / 2;
     const s = Math.sin(halfAngle);
 
     return fill(into, axis.x * s, axis.y * s, axis.z * s, Math.cos(halfAngle));
   };
-  export const fillAxisAngle = (self: Quaternion, axis: Const<Vec3>, angle: number): Quaternion =>
+  export const fillAxisAngle = (self: Quaternion, axis: Readonly<Vec3>, angle: number): Quaternion =>
     fromAxisAngle_(axis, angle, self);
 
-  export const fromAttribute = (attribute: Const<BufferAttribute | InterleavedBufferAttribute>, index: number) =>
+  export const fromAttribute = (attribute: Readonly<BufferAttribute | InterleavedBufferAttribute>, index: number) =>
     fromAttribute_(attribute, index, identity());
   export const fromAttribute_ = (
-    attribute: Const<BufferAttribute | InterleavedBufferAttribute>,
+    attribute: Readonly<BufferAttribute | InterleavedBufferAttribute>,
     index: number,
     into: Quaternion,
   ): Quaternion =>
     fill(into, attribute.getX(index), attribute.getY(index), attribute.getZ(index), attribute.getW(index));
   export const fillAttribute = (
     self: Quaternion,
-    attribute: Const<BufferAttribute | InterleavedBufferAttribute>,
+    attribute: Readonly<BufferAttribute | InterleavedBufferAttribute>,
     index: number,
   ): Quaternion => fromAttribute_(attribute, index, self);
   export const intoAttribute_ = (
-    { x, y, z, w }: Const<Quaternion>,
+    { x, y, z, w }: Readonly<Quaternion>,
     attribute: BufferAttribute | InterleavedBufferAttribute,
     index: number,
   ) => {
@@ -203,7 +206,7 @@ export namespace Quaternion {
     return attribute;
   };
 
-  export const copy = ({ x, y, z, w }: Const<Quaternion>): Quaternion => create(x, y, z, w);
+  export const copy = ({ x, y, z, w }: Readonly<Quaternion>): Quaternion => create(x, y, z, w);
   export const fill = (self: Quaternion, x: number, y: number, z: number, w: number): Quaternion => {
     self.x = x;
     self.y = y;
@@ -212,7 +215,7 @@ export namespace Quaternion {
 
     return self;
   };
-  export const fill_ = ({ w, x, y, z }: Const<Quaternion>, into: Quaternion): Quaternion => {
+  export const fill_ = ({ w, x, y, z }: Readonly<Quaternion>, into: Quaternion): Quaternion => {
     into.x = x;
     into.y = y;
     into.z = z;
@@ -221,17 +224,17 @@ export namespace Quaternion {
     return into;
   };
 
-  export const equals = (a: Const<Quaternion>, b: Const<Quaternion>): boolean =>
+  export const equals = (a: Readonly<Quaternion>, b: Readonly<Quaternion>): boolean =>
     b.x === a.x && b.y === a.y && b.z === a.z && b.w === a.w;
 
-  export const dot = (a: Const<Quaternion>, b: Const<Quaternion>): number =>
+  export const dot = (a: Readonly<Quaternion>, b: Readonly<Quaternion>): number =>
     a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w;
 
-  export const lengthSq = ({ x, y, z, w }: Const<Quaternion>): number => x * x + y * y + z * z + w * w;
-  export const length = (self: Const<Quaternion>): number => Math.sqrt(lengthSq(self));
+  export const lengthSq = ({ x, y, z, w }: Readonly<Quaternion>): number => x * x + y * y + z * z + w * w;
+  export const length = (self: Readonly<Quaternion>): number => Math.sqrt(lengthSq(self));
 
   export const conjugate = (self: Quaternion): Quaternion => conjugate_(self, self);
-  export const conjugate_ = ({ x, y, z, w }: Const<Quaternion>, into: Quaternion): Quaternion => {
+  export const conjugate_ = ({ x, y, z, w }: Readonly<Quaternion>, into: Quaternion): Quaternion => {
     into.x = -x;
     into.y = -y;
     into.z = -z;
@@ -239,10 +242,10 @@ export namespace Quaternion {
 
     return into;
   };
-  export const conjugated = (self: Const<Quaternion>): Quaternion => conjugate_(self, identity());
+  export const conjugated = (self: Readonly<Quaternion>): Quaternion => conjugate_(self, identity());
 
   export const normalize = (self: Quaternion): Quaternion => normalize_(self, self);
-  export const normalize_ = (self: Const<Quaternion>, into: Quaternion): Quaternion => {
+  export const normalize_ = (self: Readonly<Quaternion>, into: Quaternion): Quaternion => {
     let len = length(self);
 
     if (len === 0) {
@@ -260,25 +263,25 @@ export namespace Quaternion {
 
     return into;
   };
-  export const normalized = (self: Const<Quaternion>): Quaternion => normalize_(self, identity());
+  export const normalized = (self: Readonly<Quaternion>): Quaternion => normalize_(self, identity());
 
   export const invert = (self: Quaternion): Quaternion => invert_(self, self);
-  export const invert_ = (self: Const<Quaternion>, into: Quaternion): Quaternion => {
+  export const invert_ = (self: Readonly<Quaternion>, into: Quaternion): Quaternion => {
     const { x, y, z, w } = self;
     const len = 1 / lengthSq(self);
     if (len === 0) return fill(into, 0, 0, 0, 1);
     return fill(into, -x * len, -y * len, -z * len, w * len);
   };
-  export const inverted = (self: Const<Quaternion>): Quaternion => invert_(self, copy(self));
+  export const inverted = (self: Readonly<Quaternion>): Quaternion => invert_(self, copy(self));
 
-  export const angleTo = (a: Const<Quaternion>, b: Const<Quaternion>): number =>
+  export const angleTo = (a: Readonly<Quaternion>, b: Readonly<Quaternion>): number =>
     2 * Math.acos(Math.abs(MathUtils.clamp(dot(a, b), -1, 1)));
 
-  export const rotateTowards = (self: Quaternion, target: Const<Quaternion>, step: number): Quaternion =>
+  export const rotateTowards = (self: Quaternion, target: Readonly<Quaternion>, step: number): Quaternion =>
     rotateTowards_(self, target, step, self);
   export const rotateTowards_ = (
-    self: Const<Quaternion>,
-    target: Const<Quaternion>,
+    self: Readonly<Quaternion>,
+    target: Readonly<Quaternion>,
     step: number,
     into: Quaternion,
   ): Quaternion => {
@@ -290,14 +293,14 @@ export namespace Quaternion {
 
     return slerp_(self, target, t, into);
   };
-  export const rotatedTowards = (self: Const<Quaternion>, target: Const<Quaternion>, step: number): Quaternion =>
+  export const rotatedTowards = (self: Readonly<Quaternion>, target: Readonly<Quaternion>, step: number): Quaternion =>
     rotateTowards_(self, target, step, identity());
 
-  export const multiply = (self: Quaternion, other: Const<Quaternion>): Quaternion => multiply_(self, other, self);
+  export const multiply = (self: Quaternion, other: Readonly<Quaternion>): Quaternion => multiply_(self, other, self);
 
   export const multiply_ = (
-    { x: ax, y: ay, z: az, w: aw }: Const<Quaternion>,
-    { x: bx, y: by, z: bz, w: bw }: Const<Quaternion>,
+    { x: ax, y: ay, z: az, w: aw }: Readonly<Quaternion>,
+    { x: bx, y: by, z: bz, w: bw }: Readonly<Quaternion>,
     into: Quaternion,
   ): Quaternion => {
     into.x = ax * bw + aw * bx + ay * bz - az * by;
@@ -307,19 +310,21 @@ export namespace Quaternion {
 
     return into;
   };
-  export const multiplied = (a: Const<Quaternion>, b: Const<Quaternion>): Quaternion => multiply_(a, b, identity());
+  export const multiplied = (a: Readonly<Quaternion>, b: Readonly<Quaternion>): Quaternion =>
+    multiply_(a, b, identity());
 
-  export const premultiply = (self: Quaternion, other: Const<Quaternion>): Quaternion => multiply_(other, self, self);
-  export const premultiply_ = (self: Const<Quaternion>, other: Const<Quaternion>, into: Quaternion) =>
+  export const premultiply = (self: Quaternion, other: Readonly<Quaternion>): Quaternion =>
+    multiply_(other, self, self);
+  export const premultiply_ = (self: Readonly<Quaternion>, other: Readonly<Quaternion>, into: Quaternion) =>
     multiply_(other, self, into);
-  export const premultiplied = (self: Const<Quaternion>, other: Const<Quaternion>): Quaternion =>
+  export const premultiplied = (self: Readonly<Quaternion>, other: Readonly<Quaternion>): Quaternion =>
     multiply_(other, self, identity());
 
-  export const slerp = (self: Quaternion, other: Const<Quaternion>, t: number): Quaternion =>
+  export const slerp = (self: Quaternion, other: Readonly<Quaternion>, t: number): Quaternion =>
     slerp_(self, other, t, self);
   export const slerp_ = (
-    self: Const<Quaternion>,
-    other: Const<Quaternion>,
+    self: Readonly<Quaternion>,
+    other: Readonly<Quaternion>,
     t: number,
     into: Quaternion,
   ): Quaternion => {
@@ -366,7 +371,7 @@ export namespace Quaternion {
 
     return into;
   };
-  export const slerped = (a: Const<Quaternion>, b: Const<Quaternion>, t: number): Quaternion =>
+  export const slerped = (a: Readonly<Quaternion>, b: Readonly<Quaternion>, t: number): Quaternion =>
     slerp_(a, b, t, identity());
 }
 
@@ -374,9 +379,9 @@ export namespace QuaternionArray {
   export function slerp<T extends NumberArray>(
     dst: T,
     dstOffset: number,
-    src0: Const<NumberArray>,
+    src0: Readonly<NumberArray>,
     srcOffset0: number,
-    src1: Const<NumberArray>,
+    src1: Readonly<NumberArray>,
     srcOffset1: number,
     t: number,
   ): T {
@@ -452,9 +457,9 @@ export namespace QuaternionArray {
   export function multiply<T extends NumberArray>(
     dst: T,
     dstOffset: number,
-    src0: Const<NumberArray>,
+    src0: Readonly<NumberArray>,
     srcOffset0: number,
-    src1: Const<NumberArray>,
+    src1: Readonly<NumberArray>,
     srcOffset1: number,
   ): T {
     const x0 = src0[srcOffset0];
