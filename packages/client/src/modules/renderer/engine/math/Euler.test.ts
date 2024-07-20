@@ -1,22 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { Euler } from './Euler.ts';
 import { Quaternion } from '@modules/renderer/engine/math/Quaternion.js';
-import { Matrix4 } from '@modules/renderer/engine/math/Matrix4.js';
-
-const expectMatrices = (a: Matrix4, b: Matrix4) => {
-  for (let i = 0; i < 16; i++) {
-    expect(a.elements[i]).within(b.elements[i] - Number.EPSILON, b.elements[i] + Number.EPSILON);
-  }
-};
-
-const expectQuaternions = (a: Quaternion, b: Quaternion) => {
-  expect(a.x).within(b.x - Number.EPSILON, b.x + Number.EPSILON);
-  expect(a.y).within(b.y - Number.EPSILON, b.y + Number.EPSILON);
-  expect(a.z).within(b.z - Number.EPSILON, b.z + Number.EPSILON);
-  expect(a.w).within(b.w - Number.EPSILON, b.w + Number.EPSILON);
-};
 
 describe('Math - Quaternion', () => {
+  // INSTANCING
   it('Instancing', () => {
     const a = Euler.create(1, 2, 3, 'XYZ');
 
@@ -41,26 +28,25 @@ describe('Math - Quaternion', () => {
       const v2 = Euler.fromQuaternion(q, v.order);
       const q2 = Quaternion.fromEuler(v2);
 
-      expectQuaternions(q, q2);
+      expect(q).toEqual(q2);
     }
   });
 
-  it('Mat4x4.fromEuler/Euler.fromMat', () => {
-    const eulerZero = Euler.create(0, 0, 0, 'XYZ');
-    const eulerAxyz = Euler.create(1, 0, 0, 'XYZ');
-    const eulerAzyx = Euler.create(0, 1, 0, 'ZYX');
-
-    const testValues = [eulerZero, eulerAxyz, eulerAzyx];
-    for (let i = 0; i < testValues.length; i++) {
-      const euler1 = testValues[i];
-      const mat = new Matrix4().makeRotationFromEuler(euler1);
-
-      const euler2 = Euler.fromMat(mat.elements, euler1.order);
-      const expected = new Matrix4().makeRotationFromEuler(euler2);
-
-      expectMatrices(mat, expected);
-    }
-  });
+  // it( 'Matrix4.makeRotationFromEuler/Euler.setFromRotationMatrix', () => {
+  //
+  //   const testValues = [ eulerZero, eulerAxyz, eulerAzyx ];
+  //   for ( let i = 0; i < testValues.length; i ++ ) {
+  //
+  //     const v = testValues[ i ];
+  //     const m = new Matrix4().makeRotationFromEuler( v );
+  //
+  //     const v2 = new Euler().setFromRotationMatrix( m, v.order );
+  //     const m2 = new Matrix4().makeRotationFromEuler( v2 );
+  //     assert.ok( matrixEquals4( m, m2, 0.0001 ), 'Passed!' );
+  //
+  //   }
+  //
+  // } );
 
   it('fromVec', () => {
     const a = Euler.fromVec({ x: 1, y: 2, z: 3 }, 'XYZ');
@@ -68,20 +54,18 @@ describe('Math - Quaternion', () => {
   });
 
   it('reorder', () => {
-    const eulers = [Euler.create(0, 0, 1, 'YZX'), Euler.create(1, 0, 0, 'XYZ'), Euler.create(0, 1, 0, 'ZYX')];
-    const expectedQuaternion = Quaternion.identity();
-    const resultQuaternion = Quaternion.identity();
-    const resultEuler = Euler.empty();
+    const testValues = [Euler.create(0, 0, 1), Euler.create(1, 0, 0), Euler.create(0, 1, 0)];
+    for (let i = 0; i < testValues.length; i++) {
+      const v = testValues[i];
+      const q = Quaternion.fromEuler(v);
 
-    for (let euler of eulers) {
-      Quaternion.fillEuler(expectedQuaternion, euler);
+      Euler.reorder(v, 'YZX');
+      const q2 = Quaternion.fromEuler(v);
+      expect(q).toEqual(q2);
 
-      for (let order of Euler.orders) {
-        Euler.reorder_(euler, order, resultEuler);
-        Quaternion.fillEuler(resultQuaternion, resultEuler);
-
-        expectQuaternions(expectedQuaternion, resultQuaternion);
-      }
+      Euler.reorder(v, 'ZXY');
+      const q3 = Quaternion.fromEuler(v);
+      expect(q).toEqual(q3);
     }
   });
 

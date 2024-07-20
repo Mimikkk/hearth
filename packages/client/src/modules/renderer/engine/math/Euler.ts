@@ -166,7 +166,5 @@ export namespace Euler {
 
   export const equals = (a: Euler, b: Euler): boolean =>
     b.x === a.x && b.y === a.y && b.z === a.z && b.order === a.order;
-
-  export const orders: Order[] = ['XYZ', 'YXZ', 'ZXY', 'ZYX', 'YZX', 'XZY'];
 }
 export type EulerOrder = Euler.Order;
