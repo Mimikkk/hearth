@@ -3,7 +3,7 @@ import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js'
 import { PerspectiveCamera } from '@modules/renderer/engine/cameras/PerspectiveCamera.js';
 import { Scene } from '@modules/renderer/engine/scenes/Scene.js';
 import { normalWorld } from '@modules/renderer/engine/nodes/accessors/NormalNode.js';
-import { color } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.js';
+import { color } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.primitves.js';
 import {
   BufferGeometry,
   Fog,

@@ -1,5 +1,5 @@
 import ContextNode from '../core/ContextNode.js';
-import { addNodeElement, float, nodeProxy, vec3 } from '../shadernode/ShaderNode.js';
+import { addNodeElement, float, nodeProxy, vec3 } from '../shadernode/ShaderNodes.js';
 
 class LightingContextNode extends ContextNode {
   static type = 'LightingContextNode';

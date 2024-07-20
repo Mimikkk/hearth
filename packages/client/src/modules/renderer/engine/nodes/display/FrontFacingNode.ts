@@ -1,5 +1,5 @@
-import { Node } from '../core/Node.js';
-import { float, nodeImmutable } from '../shadernode/ShaderNode.js';
+import Node from '../core/Node.js';
+import { float, nodeImmutable } from '../shadernode/ShaderNodes.js';
 
 class FrontFacingNode extends Node {
   static type = 'FrontFacingNode';

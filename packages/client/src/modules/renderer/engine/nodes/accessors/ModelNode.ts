@@ -1,5 +1,5 @@
 import Object3DNode from './Object3DNode.js';
-import { nodeImmutable } from '../shadernode/ShaderNode.js';
+import { nodeImmutable } from '../shadernode/ShaderNodes.js';
 import { uniform } from '../core/UniformNode.js';
 import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
 

@@ -1,5 +1,5 @@
 import Node from '../core/Node.js';
-import { nodeObject, tslFn } from '../shadernode/ShaderNode.js';
+import { nodeObject, tslFn } from '../shadernode/ShaderNodes.js';
 import { positionView } from './PositionNode.js';
 import { diffuseColor, property } from '../core/PropertyNode.js';
 import { loop } from '../utils/LoopNode.js';

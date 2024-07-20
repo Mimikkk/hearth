@@ -11,7 +11,7 @@ import {
   worley_noise_vec3 as worley_noise_vec3,
 } from './noise.js';
 import { uv } from '../accessors/UVNode.js';
-import { int, vec2, vec4 } from '../shadernode/ShaderNode.js';
+import { int, vec2, vec4 } from '../shadernode/ShaderNodes.js';
 
 export const node_perlin_noise_f32 = (texcoord = uv(), amplitude = 1, pivot = 0) =>
   perlin_noise_f32(texcoord.convert('vec2|vec3')).mul(amplitude).add(pivot);

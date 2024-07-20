@@ -9,7 +9,6 @@ import ParameterNode from './ParameterNode.js';
 import FunctionNode from '../code/FunctionNode.js';
 import { NodeMaterial } from '../materials/NodeMaterial.js';
 import { buildStages, NodeUpdateType, shaderStages } from './constants.js';
-import { getCurrentStack, setCurrentStack } from '../shadernode/ShaderNode.js';
 
 import {
   ColorNodeUniform,
@@ -24,6 +23,7 @@ import {
 import { Color, ColorSpace, RenderTarget, Revision, Vec3, Vec4 } from '@modules/renderer/engine/engine.js';
 
 import { stack } from './StackNode.js';
+import { NodeStack } from '../shadernode/ShaderNodes.js';
 
 import ChainMap from '../../renderers/common/ChainMap.js';
 
@@ -479,8 +479,8 @@ class NodeBuilder {
   addStack() {
     this.stack = stack(this.stack);
 
-    this.stacks.push(getCurrentStack() || this.stack);
-    setCurrentStack(this.stack);
+    this.stacks.push(NodeStack.get() || this.stack);
+    NodeStack.set(this.stack);
 
     return this.stack;
   }
@@ -489,7 +489,7 @@ class NodeBuilder {
     const lastStack = this.stack;
     this.stack = lastStack.parent;
 
-    setCurrentStack(this.stacks.pop());
+    NodeStack.set(this.stacks.pop());
 
     return lastStack;
   }

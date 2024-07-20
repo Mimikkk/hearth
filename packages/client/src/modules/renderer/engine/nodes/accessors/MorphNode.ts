@@ -1,6 +1,6 @@
 import Node from '../core/Node.js';
 import { NodeUpdateType } from '../core/constants.js';
-import { int, ivec2, nodeProxy, tslFn } from '../shadernode/ShaderNode.js';
+import { int, ivec2, nodeProxy, tslFn } from '../shadernode/ShaderNodes.js';
 import { uniform } from '../core/UniformNode.js';
 import { reference } from './ReferenceNode.js';
 import { positionLocal } from './PositionNode.js';

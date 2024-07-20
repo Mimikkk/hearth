@@ -3,7 +3,7 @@ import { attribute } from '../core/AttributeNode.js';
 import { varying } from '../core/VaryingNode.js';
 import { normalize } from '../math/MathNode.js';
 import { modelViewMatrix, modelWorldMatrix } from './ModelNode.js';
-import { nodeImmutable } from '../shadernode/ShaderNode.js';
+import { nodeImmutable } from '../shadernode/ShaderNodes.js';
 
 export class PositionNode extends Node {
   static type = 'PositionNode';

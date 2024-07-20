@@ -20,7 +20,7 @@ import {
 } from '../core/PropertyNode.js';
 import { transformedClearcoatNormalView, transformedNormalView } from '../accessors/NormalNode.js';
 import { positionViewDirection } from '../accessors/PositionNode.js';
-import { float, mat3, tslFn, vec3 } from '../shadernode/ShaderNode.js';
+import { float, mat3, tslFn, vec3 } from '../shadernode/ShaderNodes.js';
 import { cond } from '@modules/renderer/engine/nodes/math/CondNode.js';
 import { mix, smoothstep } from '@modules/renderer/engine/nodes/math/MathNode.js';
 

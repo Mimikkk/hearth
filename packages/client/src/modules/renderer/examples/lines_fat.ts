@@ -49,7 +49,7 @@ const renderer = await Renderer.create({
     stats.update();
     controls.update();
 
-    renderer.parameters.useAutoClear = true;
+    renderer.parameters.autoClear = true;
 
     scene.backgroundNode = null;
 
@@ -62,7 +62,7 @@ const renderer = await Renderer.create({
     // camera2.position.from(camera.position);
     // camera.quaternion.from(camera2.quaternion);
 
-    renderer.parameters.useAutoClear = false;
+    renderer.parameters.autoClear = false;
 
     scene.backgroundNode = backgroundNode;
     renderer.render(scene, camera2);

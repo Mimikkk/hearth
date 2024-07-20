@@ -1,5 +1,5 @@
 import Node from '../core/Node.js';
-import { addNodeElement, float, nodeProxy } from '../shadernode/ShaderNode.js';
+import { addNodeElement, float, nodeProxy } from '../shadernode/ShaderNodes.js';
 
 class RemapNode extends Node {
   static type = 'RemapNode';

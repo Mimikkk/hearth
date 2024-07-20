@@ -1,5 +1,5 @@
 import TempNode from '../core/TempNode.js';
-import { addNodeElement, nodeProxy } from '../shadernode/ShaderNode.js';
+import { addNodeElement, nodeProxy } from '../shadernode/ShaderNodes.js';
 
 class PackingNode extends TempNode {
   static type = 'PackingNode';

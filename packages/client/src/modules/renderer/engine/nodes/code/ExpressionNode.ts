@@ -1,5 +1,5 @@
 import Node from '../core/Node.js';
-import { nodeProxy } from '../shadernode/ShaderNode.js';
+import { nodeProxy } from '../shadernode/ShaderNodes.js';
 import NodeBuilder from '@modules/renderer/engine/nodes/core/NodeBuilder.js';
 import { NodeTypeOption } from '@modules/renderer/engine/nodes/core/constants.js';
 

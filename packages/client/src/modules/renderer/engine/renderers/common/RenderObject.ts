@@ -103,7 +103,7 @@ export default class RenderObject {
   }
 
   getNodeBuilderState() {
-    return this._nodeBuilderState || (this._nodeBuilderState = this.renderer.nodes.getForRender(this));
+    return this._nodeBuilderState || (this._nodeBuilderState = this.renderer._nodes.getForRender(this));
   }
 
   getBindings() {
@@ -111,7 +111,7 @@ export default class RenderObject {
   }
 
   getIndex() {
-    return this.renderer.geometries.getIndex(this);
+    return this.renderer._geometries.getIndex(this);
   }
 
   getChainArray() {
@@ -198,7 +198,7 @@ export default class RenderObject {
 
   getNodesCacheKey(): string {
     // Environment Nodes Cache Key
-    return this.renderer.nodes.getCacheKey(this.scene, this.lightsNode);
+    return this.renderer._nodes.getCacheKey(this.scene, this.lightsNode);
   }
 
   getCacheKey(): string {

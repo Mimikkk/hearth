@@ -1,4 +1,4 @@
-import { nodeObject } from '../shadernode/ShaderNode.js';
+import { nodeObject } from '../shadernode/ShaderNodes.js';
 import { NodeUpdateType } from '../core/constants.js';
 import { getValueType } from '../core/NodeUtils.js';
 import ArrayElementNode from '../utils/ArrayElementNode.js';

@@ -3,7 +3,7 @@ import { NodeUpdateType } from '../core/constants.js';
 import { uniform } from '../core/UniformNode.js';
 import { texture } from './TextureNode.js';
 import { buffer } from './BufferNode.js';
-import { nodeObject } from '../shadernode/ShaderNode.js';
+import { nodeObject } from '../shadernode/ShaderNodes.js';
 import { uniforms } from './UniformsNode.js';
 import ArrayElementNode from '../utils/ArrayElementNode.js';
 

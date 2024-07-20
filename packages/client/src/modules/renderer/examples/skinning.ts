@@ -1,5 +1,6 @@
 import {
   AnimationMixer,
+  Clock,
   PerspectiveCamera,
   PointLight,
   Scene,
@@ -23,7 +24,7 @@ const createCamera = (at: Const<Vec3>) => {
 };
 const createScene = () => {
   const scene = new Scene();
-  scene.backgroundNode = viewportTopLeft.y.mix(color(0x66bbff), color(0x4466ff));
+  scene.backgroundNode = viewportTopLeft.y.mix(color(ColorMap.beige), color(ColorMap.skyblue));
   return scene;
 };
 const loadMichelle = async () => {
@@ -47,20 +48,19 @@ const createPointLight = () => {
 const camera = createCamera(Vec3.new(1, 2, 3));
 const scene = createScene();
 
-// const light = createPointLight();
-// camera.add(light);
-// const { michelle, mixer } = await loadMichelle();
+const light = createPointLight();
+camera.add(light);
+const { michelle, mixer } = await loadMichelle();
 
-// scene.add(camera, michelle);
-scene.add(camera);
+scene.add(camera, michelle);
 
 const renderer = await Renderer.create({
   animate(delta) {
-    // mixer.update(delta);
+    mixer.update(delta);
     renderer.render(scene, camera);
   },
-  // toneMapping: ToneMapping.Linear,
-  // toneMappingExposure: 0.4,
+  toneMapping: ToneMapping.Linear,
+  toneMappingExposure: 0.4,
 });
 
 useWindowResizer(renderer, camera);

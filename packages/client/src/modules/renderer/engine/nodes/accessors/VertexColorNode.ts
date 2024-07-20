@@ -1,5 +1,5 @@
 import AttributeNode from '../core/AttributeNode.js';
-import { nodeObject } from '../shadernode/ShaderNode.js';
+import { nodeObject } from '../shadernode/ShaderNodes.js';
 import { Vec4 } from '@modules/renderer/engine/engine.js';
 
 class VertexColorNode extends AttributeNode {

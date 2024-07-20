@@ -1,7 +1,7 @@
 import ReferenceNode from './ReferenceNode.js';
 //import { renderGroup } from '../core/UniformGroupNode.js';
 //import { NodeUpdateType } from '../core/constants.js';
-import { nodeObject } from '../shadernode/ShaderNode.js';
+import { nodeObject } from '../shadernode/ShaderNodes.js';
 
 class MaterialReferenceNode extends ReferenceNode {
   static type = 'MaterialReferenceNode';

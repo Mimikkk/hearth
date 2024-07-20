@@ -1,6 +1,6 @@
 import InputNode from '../core/InputNode.js';
 import { varying } from '../core/VaryingNode.js';
-import { addNodeElement, nodeObject } from '../shadernode/ShaderNode.js';
+import { addNodeElement, nodeObject } from '../shadernode/ShaderNodes.js';
 import { BufferUsage, InterleavedBuffer, InterleavedBufferAttribute } from '@modules/renderer/engine/engine.js';
 
 class BufferAttributeNode extends InputNode {

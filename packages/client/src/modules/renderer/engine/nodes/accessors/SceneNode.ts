@@ -1,5 +1,5 @@
 import Node from '../core/Node.js';
-import { nodeImmutable } from '../shadernode/ShaderNode.js';
+import { nodeImmutable } from '../shadernode/ShaderNodes.js';
 import { reference } from './ReferenceNode.js';
 
 class SceneNode extends Node {

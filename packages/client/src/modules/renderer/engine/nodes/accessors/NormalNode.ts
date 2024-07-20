@@ -5,7 +5,7 @@ import { property } from '../core/PropertyNode.js';
 import { normalize } from '../math/MathNode.js';
 import { cameraViewMatrix } from './CameraNode.js';
 import { modelNormalMatrix } from './ModelNode.js';
-import { nodeImmutable } from '../shadernode/ShaderNode.js';
+import { nodeImmutable } from '../shadernode/ShaderNodes.js';
 
 class NormalNode extends Node {
   static type = 'NormalNode';

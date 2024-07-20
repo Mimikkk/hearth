@@ -1,5 +1,5 @@
 import Node from '../core/Node.js';
-import { nodeImmutable, nodeProxy } from '../shadernode/ShaderNode.js';
+import { nodeImmutable, nodeProxy } from '../shadernode/ShaderNodes.js';
 import { cameraFar, cameraNear } from '../accessors/CameraNode.js';
 import { positionView } from '../accessors/PositionNode.js';
 import { viewportDepthTexture } from './ViewportDepthTextureNode.js';

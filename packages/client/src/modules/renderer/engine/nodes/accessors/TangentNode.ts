@@ -5,7 +5,7 @@ import { varying } from '../core/VaryingNode.js';
 import { normalize } from '../math/MathNode.js';
 import { cameraViewMatrix } from './CameraNode.js';
 import { modelViewMatrix } from './ModelNode.js';
-import { nodeImmutable, vec4 } from '../shadernode/ShaderNode.js';
+import { nodeImmutable, vec4 } from '../shadernode/ShaderNodes.js';
 
 class TangentNode extends Node {
   static type = 'TangentNode';

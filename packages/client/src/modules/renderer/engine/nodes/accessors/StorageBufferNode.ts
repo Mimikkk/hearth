@@ -1,6 +1,6 @@
 import BufferNode from './BufferNode.js';
 import { bufferAttribute } from './BufferAttributeNode.js';
-import { nodeObject } from '../shadernode/ShaderNode.js';
+import { nodeObject } from '../shadernode/ShaderNodes.js';
 import { varying } from '../core/VaryingNode.js';
 import { storageElement } from '../utils/StorageArrayElementNode.js';
 

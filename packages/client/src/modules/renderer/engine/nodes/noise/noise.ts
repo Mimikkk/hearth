@@ -1,4 +1,4 @@
-import { bool, float, If, int, tslFn, uint, uvec3, vec2, vec3, vec4 } from '../shadernode/ShaderNode.js';
+import { bool, float, int, NodeStack, tslFn, uint, uvec3, vec2, vec3, vec4 } from '../shadernode/ShaderNodes.js';
 import { cond } from '@modules/renderer/engine/nodes/math/CondNode.js';
 import { mul, sub } from '@modules/renderer/engine/nodes/math/OperatorNode.js';
 import { abs, dot, floor, max, min, sqrt } from '@modules/renderer/engine/nodes/math/MathNode.js';
@@ -658,11 +658,11 @@ const worley_distance_0 = tslFn(
     const cellpos = vec2(vec2(float(x), float(y)).add(off)).toVar();
     const diff = vec2(cellpos.sub(p)).toVar();
 
-    If(metric.equal(int(2)), () => {
+    NodeStack.if(metric.equal(int(2)), () => {
       return abs(diff.x).add(abs(diff.y));
     });
 
-    If(metric.equal(int(3)), () => {
+    NodeStack.if(metric.equal(int(3)), () => {
       return max(abs(diff.x), abs(diff.y));
     });
 
@@ -698,11 +698,11 @@ const worley_distance_1 = tslFn(
     const cellpos = vec3(vec3(float(x), float(y), float(z)).add(off)).toVar();
     const diff = vec3(cellpos.sub(p)).toVar();
 
-    If(metric.equal(int(2)), () => {
+    NodeStack.if(metric.equal(int(2)), () => {
       return abs(diff.x).add(abs(diff.y).add(abs(diff.z)));
     });
 
-    If(metric.equal(int(3)), () => {
+    NodeStack.if(metric.equal(int(3)), () => {
       return max(max(abs(diff.x), abs(diff.y)), abs(diff.z));
     });
 
@@ -728,7 +728,7 @@ const worley_noise_float_0 = tslFn(([p_immutable, jitter_immutable, metric_immut
     });
   });
 
-  If(metric.equal(int(0)), () => {
+  NodeStack.if(metric.equal(int(0)), () => {
     sqdist.assign(sqrt(sqdist));
   });
 
@@ -748,7 +748,7 @@ const worley_noise_vec2_0 = tslFn(([p_immutable, jitter_immutable, metric_immuta
     loop({ start: -1, end: int(1), name: 'y', condition: '<=' }, ({ y }) => {
       const dist = float(worley_distance(localpos, x, y, X, Y, jitter, metric)).toVar();
 
-      If(dist.lessThan(sqdist.x), () => {
+      NodeStack.if(dist.lessThan(sqdist.x), () => {
         sqdist.y.assign(sqdist.x);
         sqdist.x.assign(dist);
       }).elseif(dist.lessThan(sqdist.y), () => {
@@ -757,7 +757,7 @@ const worley_noise_vec2_0 = tslFn(([p_immutable, jitter_immutable, metric_immuta
     });
   });
 
-  If(metric.equal(int(0)), () => {
+  NodeStack.if(metric.equal(int(0)), () => {
     sqdist.assign(sqrt(sqdist));
   });
 
@@ -777,7 +777,7 @@ const worley_noise_vec3_0 = tslFn(([p_immutable, jitter_immutable, metric_immuta
     loop({ start: -1, end: int(1), name: 'y', condition: '<=' }, ({ y }) => {
       const dist = float(worley_distance(localpos, x, y, X, Y, jitter, metric)).toVar();
 
-      If(dist.lessThan(sqdist.x), () => {
+      NodeStack.if(dist.lessThan(sqdist.x), () => {
         sqdist.z.assign(sqdist.y);
         sqdist.y.assign(sqdist.x);
         sqdist.x.assign(dist);
@@ -792,7 +792,7 @@ const worley_noise_vec3_0 = tslFn(([p_immutable, jitter_immutable, metric_immuta
     });
   });
 
-  If(metric.equal(int(0)), () => {
+  NodeStack.if(metric.equal(int(0)), () => {
     sqdist.assign(sqrt(sqdist));
   });
 
@@ -818,7 +818,7 @@ const worley_noise_float_1 = tslFn(([p_immutable, jitter_immutable, metric_immut
     });
   });
 
-  If(metric.equal(int(0)), () => {
+  NodeStack.if(metric.equal(int(0)), () => {
     sqdist.assign(sqrt(sqdist));
   });
 
@@ -842,7 +842,7 @@ const worley_noise_vec2_1 = tslFn(([p_immutable, jitter_immutable, metric_immuta
       loop({ start: -1, end: int(1), name: 'z', condition: '<=' }, ({ z }) => {
         const dist = float(worley_distance(localpos, x, y, z, X, Y, Z, jitter, metric)).toVar();
 
-        If(dist.lessThan(sqdist.x), () => {
+        NodeStack.if(dist.lessThan(sqdist.x), () => {
           sqdist.y.assign(sqdist.x);
           sqdist.x.assign(dist);
         }).elseif(dist.lessThan(sqdist.y), () => {
@@ -852,7 +852,7 @@ const worley_noise_vec2_1 = tslFn(([p_immutable, jitter_immutable, metric_immuta
     });
   });
 
-  If(metric.equal(int(0)), () => {
+  NodeStack.if(metric.equal(int(0)), () => {
     sqdist.assign(sqrt(sqdist));
   });
 
@@ -876,7 +876,7 @@ const worley_noise_vec3_1 = tslFn(([p_immutable, jitter_immutable, metric_immuta
       loop({ start: -1, end: int(1), name: 'z', condition: '<=' }, ({ z }) => {
         const dist = float(worley_distance(localpos, x, y, z, X, Y, Z, jitter, metric)).toVar();
 
-        If(dist.lessThan(sqdist.x), () => {
+        NodeStack.if(dist.lessThan(sqdist.x), () => {
           sqdist.z.assign(sqdist.y);
           sqdist.y.assign(sqdist.x);
           sqdist.x.assign(dist);
@@ -892,7 +892,7 @@ const worley_noise_vec3_1 = tslFn(([p_immutable, jitter_immutable, metric_immuta
     });
   });
 
-  If(metric.equal(int(0)), () => {
+  NodeStack.if(metric.equal(int(0)), () => {
     sqdist.assign(sqrt(sqdist));
   });
 

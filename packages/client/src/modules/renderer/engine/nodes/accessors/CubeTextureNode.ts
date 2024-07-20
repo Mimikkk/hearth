@@ -1,6 +1,6 @@
 import TextureNode from './TextureNode.js';
 import { reflectVector } from './ReflectVectorNode.js';
-import { addNodeElement, nodeProxy, vec3 } from '../shadernode/ShaderNode.js';
+import { addNodeElement, nodeProxy, vec3 } from '../shadernode/ShaderNodes.js';
 
 class CubeTextureNode extends TextureNode {
   static type = 'CubeTextureNode';

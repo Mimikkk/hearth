@@ -1,7 +1,7 @@
 import Node from '../core/Node.js';
 import { NodeUpdateType } from '../core/constants.js';
 import UniformNode from '../core/UniformNode.js';
-import { nodeProxy } from '../shadernode/ShaderNode.js';
+import { nodeProxy } from '../shadernode/ShaderNodes.js';
 
 import { Vec3 } from '@modules/renderer/engine/engine.js';
 

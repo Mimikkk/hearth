@@ -1,5 +1,5 @@
 import getGeometryRoughness from './getGeometryRoughness.js';
-import { tslFn } from '../../shadernode/ShaderNode.js';
+import { tslFn } from '../../shadernode/ShaderNodes.js';
 
 const getRoughness = tslFn(inputs => {
   const { roughness } = inputs;
