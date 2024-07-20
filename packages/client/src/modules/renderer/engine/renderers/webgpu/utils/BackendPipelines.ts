@@ -120,7 +120,7 @@ class BackendPipelines {
         depthWriteEnabled: material.depthWrite,
         depthCompare: depthCompare,
         stencilFront: stencilFront,
-        // engine.js does not provide an API to configure the back function (gl.stencilFuncSeparate() was never used)
+        // engine.ts does not provide an API to configure the back function (gl.stencilFuncSeparate() was never used)
         stencilBack: {},
         stencilReadMask: material.stencilFuncMask,
         stencilWriteMask: material.stencilWriteMask,

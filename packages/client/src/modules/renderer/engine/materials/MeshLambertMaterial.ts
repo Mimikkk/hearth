@@ -37,9 +37,6 @@ export interface MeshLambertMaterialParameters extends MaterialParameters {
 }
 
 export class MeshLambertMaterial extends Material {
-  declare isMeshLambertMaterial: true;
-  declare type: 'MeshLambertMaterial';
-
   color: Color;
   map: Texture | null;
   lightMap: Texture | null;
@@ -174,6 +171,3 @@ export class MeshLambertMaterial extends Material {
     return this;
   }
 }
-
-MeshLambertMaterial.prototype.isMeshLambertMaterial = true;
-MeshLambertMaterial.prototype.type = 'MeshLambertMaterial';

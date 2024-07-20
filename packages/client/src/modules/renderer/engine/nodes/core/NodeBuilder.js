@@ -29,7 +29,7 @@ import {
   Vector2,
   Vector3,
   Vector4,
-} from '@modules/renderer/engine/engine.js';
+} from '@modules/renderer/engine/engine.ts';
 
 import { stack } from './StackNode.js';
 import { NodeStack } from '../shadernode/ShaderNodes.js';

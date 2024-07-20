@@ -12,8 +12,7 @@ export interface AmmoPhysicsObject {
   setMeshPosition: (mesh: Mesh, position: Vector3, index?: number) => void;
 }
 export async function AmmoPhysics(): Promise<AmmoPhysicsObject> {
-  // eslint-disable-line no-undef
-  const AmmoLib = await Ammo();
+  const AmmoLib = await new Ammo();
 
   const frameRate = 60;
 
@@ -143,11 +142,9 @@ export async function AmmoPhysics(): Promise<AmmoPhysicsObject> {
     }
   }
 
-  //
-
   function setMeshPosition(mesh: Mesh, position: Vector3, index: number = 0) {
-    //@ts-expect-error
     if (mesh.isInstancedMesh) {
+      console.log(meshMap, mesh);
       const bodies = meshMap.get(mesh);
       const body = bodies[index];
 
@@ -168,8 +165,6 @@ export async function AmmoPhysics(): Promise<AmmoPhysicsObject> {
       body.setWorldTransform(worldTransform);
     }
   }
-
-  //
 
   let lastTime = 0;
 
@@ -225,15 +220,12 @@ export async function AmmoPhysics(): Promise<AmmoPhysicsObject> {
     lastTime = time;
   }
 
-  // animate
-
   setInterval(step, 1000 / frameRate);
 
   return {
-    addScene: addScene,
-    addMesh: addMesh,
-    setMeshPosition: setMeshPosition,
-    // addCompoundMesh
+    addScene,
+    addMesh,
+    setMeshPosition,
   };
 }
 
