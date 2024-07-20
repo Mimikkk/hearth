@@ -90,9 +90,9 @@ export class SkinnedMesh extends Mesh {
     if (source.boundingBox !== null) this.boundingBox = source.boundingBox.clone();
     if (source.boundingSphere !== null) {
       if (this.boundingSphere === null) {
-        this.boundingSphere = Sphere_.clone(source.boundingSphere);
+        this.boundingSphere = Sphere_.copy(source.boundingSphere);
       } else {
-        Sphere_.clone_(source.boundingSphere, this.boundingSphere);
+        Sphere_.fill_(source.boundingSphere, this.boundingSphere);
       }
     }
     return this;
@@ -108,7 +108,7 @@ export class SkinnedMesh extends Mesh {
 
     if (this.boundingSphere === null) this.computeBoundingSphere();
 
-    Sphere_.clone_(this.boundingSphere!, _sphere);
+    Sphere_.fill_(this.boundingSphere!, _sphere);
     Sphere_.applyMat4(_sphere, matrixWorld);
 
     if (raycaster.ray.intersectsSphere(_sphere) === false) return;

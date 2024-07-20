@@ -26,19 +26,6 @@ export namespace Quaternion {
 
   export const identity = (): Quaternion => create(0, 0, 0, 1);
 
-  export const fill = (self: Quaternion, x: number, y: number, z: number, w: number): Quaternion => {
-    self.x = x;
-    self.y = y;
-    self.z = z;
-    self.w = w;
-
-    return self;
-  };
-  export const fill_ = (into: Quaternion, { w, x, y, z }: Const<Quaternion>): Quaternion => fill(into, x, y, z, w);
-
-  export const clone = (from: Const<Quaternion>): Quaternion => clone_(from, identity());
-  export const clone_ = (from: Const<Quaternion>, into: Quaternion): Quaternion => fill_(into, from);
-
   export const fromEuler = (euler: Const<Euler>): Quaternion => fromEuler_(euler, identity());
   export const fromEuler_ = ({ order, x, y, z }: Const<Euler>, into: Quaternion) => {
     x /= 2;
@@ -216,6 +203,24 @@ export namespace Quaternion {
     return attribute;
   };
 
+  export const copy = ({ x, y, z, w }: Const<Quaternion>): Quaternion => create(x, y, z, w);
+  export const fill = (self: Quaternion, x: number, y: number, z: number, w: number): Quaternion => {
+    self.x = x;
+    self.y = y;
+    self.z = z;
+    self.w = w;
+
+    return self;
+  };
+  export const fill_ = ({ w, x, y, z }: Const<Quaternion>, into: Quaternion): Quaternion => {
+    into.x = x;
+    into.y = y;
+    into.z = z;
+    into.w = w;
+
+    return into;
+  };
+
   export const equals = (a: Const<Quaternion>, b: Const<Quaternion>): boolean =>
     b.x === a.x && b.y === a.y && b.z === a.z && b.w === a.w;
 
@@ -264,7 +269,7 @@ export namespace Quaternion {
     if (len === 0) return fill(into, 0, 0, 0, 1);
     return fill(into, -x * len, -y * len, -z * len, w * len);
   };
-  export const inverted = (self: Const<Quaternion>): Quaternion => invert_(self, clone(self));
+  export const inverted = (self: Const<Quaternion>): Quaternion => invert_(self, copy(self));
 
   export const angleTo = (a: Const<Quaternion>, b: Const<Quaternion>): number =>
     2 * Math.acos(Math.abs(MathUtils.clamp(dot(a, b), -1, 1)));
@@ -279,7 +284,7 @@ export namespace Quaternion {
   ): Quaternion => {
     const angle = angleTo(self, target);
 
-    if (angle === 0) return clone_(self, into);
+    if (angle === 0) return fill_(self, into);
 
     const t = Math.min(1, step / angle);
 
@@ -318,8 +323,8 @@ export namespace Quaternion {
     t: number,
     into: Quaternion,
   ): Quaternion => {
-    if (t === 0) return clone_(self, into);
-    if (t === 1) return clone_(other, into);
+    if (t === 0) return fill_(self, into);
+    if (t === 1) return fill_(other, into);
 
     const { x: ax, y: ay, z: az, w: aw } = self;
     const { x: bx, y: by, z: bz, w: bw } = other;
@@ -329,11 +334,11 @@ export namespace Quaternion {
       fill(into, -bx, -by, -bz, -bw);
       cosHalfTheta = -cosHalfTheta;
     } else {
-      clone_(other, into);
+      fill_(other, into);
     }
 
     if (cosHalfTheta >= 1) {
-      return clone_(self, into);
+      return fill_(self, into);
     }
 
     const sqrSinHalfTheta = 1 - cosHalfTheta * cosHalfTheta;

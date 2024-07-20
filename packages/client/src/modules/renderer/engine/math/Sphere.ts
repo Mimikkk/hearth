@@ -186,32 +186,20 @@ export namespace Sphere_ {
   export const empty = (): Sphere_ => ({ center: Vec3.create(0, 0, 0), radius: -1 });
   export const clear = (self: Sphere_): Sphere_ => fill(self, 0, 0, 0, -1);
 
+  export const clone = ({ center, radius }: Readonly<Sphere_>): Sphere_ => ({ center, radius });
+  export const copy = ({ center: { x, y, z }, radius }: Readonly<Sphere_>): Sphere_ => create(x, y, z, radius);
   export const fill = (self: Sphere_, centerX: number, centerY: number, centerZ: number, radius: number): Sphere_ => {
     Vec3.fill(self.center, centerX, centerY, centerZ);
     self.radius = radius;
 
     return self;
   };
-  export const fill_ = (self: Sphere_, { center: { x, y, z }, radius }: Readonly<Sphere_>): Sphere_ =>
-    fill(self, x, y, z, radius);
-
-  export const copy = (from: Readonly<Sphere_>): Sphere_ => copy_(from, empty());
-  export const copy_ = ({ center, radius }: Readonly<Sphere_>, into: Sphere_): Sphere_ => {
-    into.center = center;
-    into.radius = radius;
-
-    return into;
-  };
-
-  export const clone = (from: Readonly<Sphere_>): Sphere_ => clone_(from, empty());
-  export const clone_ = (from: Readonly<Sphere_>, into: Sphere_): Sphere_ => fill_(into, from);
+  export const fill_ = ({ center: { x, y, z }, radius }: Readonly<Sphere_>, into: Sphere_): Sphere_ =>
+    fill(into, x, y, z, radius);
 
   export const fromVecs = (vecs: Readonly<Vec3>[]): Sphere_ => fromVecs_(vecs, empty());
-
-  const _box: Box3_ = { min: Vec3.empty(), max: Vec3.empty() };
-  const _vec = Vec3.empty();
   export const fromVecs_ = (vecs: Readonly<Vec3>[], into: Sphere_): Sphere_ => {
-    const center = Box3_.center_(Box3_.fromVecs_(vecs, _box), _vec);
+    const center = Box3_.center_(Box3_.fromVecs_(vecs, Box3_.temp0), Vec3.temp0);
 
     let maxRadiusSq = 0;
     for (let i = 0, il = vecs.length; i < il; i++) {
@@ -251,8 +239,8 @@ export namespace Sphere_ {
 
   export const union = (self: Sphere_, sphere: Readonly<Sphere_>): Sphere_ => union_(self, sphere, self);
   export const union_ = (self: Readonly<Sphere_>, sphere: Readonly<Sphere_>, into: Sphere_): Sphere_ => {
-    if (isEmpty(sphere)) return clone_(sphere, into);
-    if (isEmpty(self)) return clone_(self, into);
+    if (isEmpty(sphere)) return fill_(sphere, into);
+    if (isEmpty(self)) return fill_(self, into);
 
     if (Vec3.equals(self.center, sphere.center)) {
       into.radius = Math.max(self.radius, sphere.radius);
@@ -295,7 +283,7 @@ export namespace Sphere_ {
   export const clampVec_ = (self: Readonly<Sphere_>, vec: Readonly<Vec3>, into: Vec3): Vec3 => {
     const lenSq = Vec3.distanceSqTo(self.center, vec);
 
-    Vec3.clone_(vec, into);
+    Vec3.fill_(vec, into);
     if (lenSq > self.radius * self.radius) {
       Vec3.sub(into, self.center);
       Vec3.normalize(into);

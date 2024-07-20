@@ -102,7 +102,7 @@ export class MeshBasicMaterial extends Material {
     this.alphaMap = source.alphaMap;
 
     this.envMap = source.envMap;
-    Euler.clone_(this.envMapRotation, source.envMapRotation);
+    Euler.fill_(this.envMapRotation, source.envMapRotation);
     this.combine = source.combine;
     this.reflectivity = source.reflectivity;
     this.refractionRatio = source.refractionRatio;
