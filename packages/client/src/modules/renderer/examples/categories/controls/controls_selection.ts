@@ -14,14 +14,15 @@ import { useStats } from '@modules/renderer/examples/utilities/useStats.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { Fog } from '@modules/renderer/engine/scenes/Fog.js';
 import { normalWorld } from '@modules/renderer/engine/nodes/accessors/NormalNode.js';
-import { color } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.js';
+import { color } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.primitves.js';
 import { Group } from '@modules/renderer/engine/objects/Group.js';
 import { UI } from '@mimi/ui';
 import { Random } from '@modules/renderer/engine/math/random.js';
 
 const createCamera = () => {
-  const camera = new PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 500);
+  const camera = new PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 500);
   camera.position.z = 50;
+  camera.lookAt(0, 1, 0);
   return camera;
 };
 const createScene = () => {
@@ -43,12 +44,6 @@ const createLight = () => {
 
   return light;
 };
-
-const camera = createCamera();
-const scene = createScene();
-const light = createLight();
-scene.add(light);
-
 const createBoxes = () => {
   const geometry = new BoxGeometry();
 
@@ -58,9 +53,9 @@ const createBoxes = () => {
   for (let i = 0; i < 200; ++i) {
     const box = new Mesh(geometry, new MeshLambertMaterial({ color: Random.color() }));
 
-    box.setPosition(Math.random() * 80 - 40, Math.random() * 45 - 25, Math.random() * 45 - 25);
-    box.setRotation(Random.radian(), Random.radian(), Random.radian());
-    box.setScale(randomScale(), randomScale(), randomScale());
+    box.position.set(Math.random() * 80 - 40, Math.random() * 45 - 25, Math.random() * 45 - 25);
+    box.rotation.set(Random.radian(), Random.radian(), Random.radian());
+    box.scale.set(randomScale(), randomScale(), randomScale());
 
     group.add(box);
   }
@@ -68,15 +63,18 @@ const createBoxes = () => {
   return group;
 };
 
+const camera = createCamera();
+const scene = createScene();
+const light = createLight();
 const boxes = createBoxes();
-scene.add(boxes);
+scene.add(light, camera, boxes);
 
 const stats = useStats();
 const renderer = await Renderer.create({
   animate() {
-    renderer.render(scene, camera);
-    stats.update();
     ui.update();
+    stats.update();
+    renderer.render(scene, camera);
   },
 });
 useWindowResizer(renderer, camera);

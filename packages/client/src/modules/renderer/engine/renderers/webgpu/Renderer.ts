@@ -162,7 +162,7 @@ export class Renderer {
     if (parameters?.autoinsert === undefined || parameters.autoinsert) {
       document.body.appendChild(renderer.parameters.canvas);
     }
-    if (parameters?.animate) renderer._animation.loop = parameters.animate;
+    if (parameters?.animate) renderer._animation.animationLoop = parameters.animate;
 
     return renderer;
   }

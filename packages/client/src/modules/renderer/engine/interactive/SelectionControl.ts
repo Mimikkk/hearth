@@ -29,15 +29,12 @@ const _vectemp2 = new Vec3();
 const _vectemp3 = new Vec3();
 
 const _matrix = new Mat4();
-const _quaternion = new Quaternion();
+const _quaternion = new Quaternion().identity();
 const _scale = new Vec3();
 
-const isPerspectiveCamera = (camera: any): camera is PerspectiveCamera => camera.isPerspectiveCamera;
-const isOrthographicCamera = (camera: any): camera is OrthographicCamera => camera.isOrthographicCamera;
-
-export class SelectionBox {
-  startPoint: Vec3 = new Vec3();
-  endPoint: Vec3 = new Vec3();
+export class SelectionControl {
+  start: Vec3 = new Vec3();
+  end: Vec3 = new Vec3();
   collection: Mesh[] = [];
   instances: Record<string, number[]> = {};
 
@@ -46,26 +43,26 @@ export class SelectionBox {
     public scene: Scene,
     public deep: number = Number.MAX_VALUE,
   ) {
-    this.startPoint = new Vec3();
-    this.endPoint = new Vec3();
+    this.start = new Vec3();
+    this.end = new Vec3();
     this.collection = [];
     this.instances = {};
   }
 
-  select(startPoint: Vec3, endPoint: Vec3): Mesh[] {
-    this.startPoint = startPoint || this.startPoint;
-    this.endPoint = endPoint || this.endPoint;
+  select(startPoint?: Vec3, endPoint?: Vec3): Mesh[] {
+    this.start = startPoint || this.start;
+    this.end = endPoint || this.end;
     this.collection = [];
 
-    this.updateFrustum(this.startPoint, this.endPoint);
+    this.updateFrustum(this.start, this.end);
     this.searchChildInFrustum(_frustum, this.scene);
 
     return this.collection;
   }
 
   updateFrustum(startPoint: Vec3, endPoint: Vec3): void {
-    startPoint = startPoint || this.startPoint;
-    endPoint = endPoint || this.endPoint;
+    startPoint = startPoint || this.start;
+    endPoint = endPoint || this.end;
 
     if (startPoint.x === endPoint.x) {
       endPoint.x += Number.EPSILON;
@@ -78,7 +75,7 @@ export class SelectionBox {
     this.camera.updateProjectionMatrix();
     this.camera.updateMatrixWorld();
 
-    if (isPerspectiveCamera(this.camera)) {
+    if (PerspectiveCamera.is(this.camera)) {
       _tmpPoint.copy(startPoint);
       _tmpPoint.x = Math.min(startPoint.x, endPoint.x);
       _tmpPoint.y = Math.max(startPoint.y, endPoint.y);
@@ -111,15 +108,13 @@ export class SelectionBox {
       _vectemp3.add(_vecNear);
 
       const planes = _frustum.planes;
-
       planes[0].setFromCoplanarPoints(_vecNear, _vecTopLeft, _vecTopRight);
       planes[1].setFromCoplanarPoints(_vecNear, _vecTopRight, _vecDownRight);
       planes[2].setFromCoplanarPoints(_vecDownRight, _vecDownLeft, _vecNear);
       planes[3].setFromCoplanarPoints(_vecDownLeft, _vecTopLeft, _vecNear);
       planes[4].setFromCoplanarPoints(_vecTopRight, _vecDownRight, _vecDownLeft);
-      planes[5].setFromCoplanarPoints(_vectemp3, _vectemp2, _vectemp1);
-      planes[5].normal.multiplyScalar(-1);
-    } else if (isOrthographicCamera(this.camera)) {
+      planes[5].setFromCoplanarPoints(_vectemp3, _vectemp2, _vectemp1).negate();
+    } else if (OrthographicCamera.is(this.camera)) {
       const left = Math.min(startPoint.x, endPoint.x);
       const top = Math.max(startPoint.y, endPoint.y);
       const right = Math.max(startPoint.x, endPoint.x);
@@ -146,14 +141,12 @@ export class SelectionBox {
       _vecFarDownLeft.unproject(this.camera);
 
       const planes = _frustum.planes;
-
       planes[0].setFromCoplanarPoints(_vecTopLeft, _vecFarTopLeft, _vecFarTopRight);
       planes[1].setFromCoplanarPoints(_vecTopRight, _vecFarTopRight, _vecFarDownRight);
       planes[2].setFromCoplanarPoints(_vecFarDownRight, _vecFarDownLeft, _vecDownLeft);
       planes[3].setFromCoplanarPoints(_vecFarDownLeft, _vecFarTopLeft, _vecTopLeft);
       planes[4].setFromCoplanarPoints(_vecTopRight, _vecDownRight, _vecDownLeft);
-      planes[5].setFromCoplanarPoints(_vecFarDownRight, _vecFarTopRight, _vecFarTopLeft);
-      planes[5].normal.multiplyScalar(-1);
+      planes[5].setFromCoplanarPoints(_vecFarDownRight, _vecFarTopRight, _vecFarTopLeft).negate();
     }
   }
 
@@ -174,7 +167,7 @@ export class SelectionBox {
       } else {
         if (object.geometry.boundingSphere === null) object.geometry.computeBoundingSphere();
 
-        _center.copy(object.geometry.boundingSphere.center);
+        _center.copy(object.geometry!.boundingSphere!.center);
 
         _center.applyMat4(object.matrixWorld);
 
