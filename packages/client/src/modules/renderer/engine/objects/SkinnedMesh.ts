@@ -11,19 +11,6 @@ import { Material } from '@modules/renderer/engine/materials/Material.js';
 import { Skeleton } from '@modules/renderer/engine/objects/Skeleton.js';
 import { Intersection, Raycaster } from '@modules/renderer/engine/core/Raycaster.js';
 
-const _basePosition = /*@__PURE__*/ new Vec3();
-
-const _skinIndex = /*@__PURE__*/ new Vec4();
-const _skinWeight = /*@__PURE__*/ new Vec4();
-
-const _Vec3 = /*@__PURE__*/ new Vec3();
-const _Mat4 = /*@__PURE__*/ new Mat4();
-const _vertex = /*@__PURE__*/ new Vec3();
-
-const _sphere = /*@__PURE__*/ new Sphere();
-const _inverseMatrix = /*@__PURE__*/ new Mat4();
-const _ray = /*@__PURE__*/ new Ray();
-
 export class SkinnedMesh extends Mesh {
   declare isSkinnedMesh: true;
   declare type: string | 'SkinnedMesh';
@@ -186,32 +173,60 @@ export class SkinnedMesh extends Mesh {
     return this;
   }
 
-  applyBoneTransform(index: number, vector: Vec3): Vec3 {
+  applyBoneTransform(index: number, into: Vec3): Vec3 {
     const skeleton = this.skeleton!;
     const geometry = this.geometry!;
 
-    _skinIndex.fromAttribute(geometry.attributes.skinIndex, index);
-    _skinWeight.fromAttribute(geometry.attributes.skinWeight, index);
+    _index.fromAttribute(geometry.attributes.skinIndex, index);
+    _weight.fromAttribute(geometry.attributes.skinWeight, index);
+    _position.from(into).applyMat4(this.bindMatrix);
 
-    _basePosition.from(vector).applyMat4(this.bindMatrix);
+    into.set(0, 0, 0);
+    const weightX = _weight.x;
+    if (weightX !== 0) {
+      const boneIndex = _index.x;
 
-    vector.set(0, 0, 0);
-
-    for (let i = 0; i < 4; i++) {
-      const weight = _skinWeight.getComponent(i);
-
-      if (weight !== 0) {
-        const boneIndex = _skinIndex.getComponent(i);
-
-        _Mat4.multiplyMatrices(skeleton.bones[boneIndex].matrixWorld, skeleton.boneInverses[boneIndex]);
-
-        vector.addScaled(_Vec3.from(_basePosition).applyMat4(_Mat4), weight);
-      }
+      _matrix4.copy(skeleton.bones[boneIndex].matrixWorld).multiply(skeleton.boneInverses[boneIndex]);
+      into.addScaled(_vector3.from(_position).applyMat4(_matrix4), weightX);
     }
 
-    return vector.applyMat4(this.bindMatrixInverse);
+    const weightY = _weight.y;
+    if (weightY !== 0) {
+      const boneIndex = _index.y;
+
+      _matrix4.copy(skeleton.bones[boneIndex].matrixWorld).multiply(skeleton.boneInverses[boneIndex]);
+      into.addScaled(_vector3.from(_position).applyMat4(_matrix4), weightY);
+    }
+
+    const weightZ = _weight.z;
+    if (weightZ !== 0) {
+      const boneIndex = _index.z;
+
+      _matrix4.copy(skeleton.bones[boneIndex].matrixWorld).multiply(skeleton.boneInverses[boneIndex]);
+      into.addScaled(_vector3.from(_position).applyMat4(_matrix4), weightZ);
+    }
+
+    const weightW = _weight.w;
+    if (weightW !== 0) {
+      const boneIndex = _index.w;
+
+      _matrix4.copy(skeleton.bones[boneIndex].matrixWorld).multiply(skeleton.boneInverses[boneIndex]);
+      into.addScaled(_vector3.from(_position).applyMat4(_matrix4), weightW);
+    }
+
+    return into.applyMat4(this.bindMatrixInverse);
   }
 }
 
 SkinnedMesh.prototype.isSkinnedMesh = true;
 SkinnedMesh.prototype.type = 'SkinnedMesh';
+
+const _vector3 = Vec3.new();
+const _matrix4 = new Mat4();
+const _position = new Vec3();
+const _index = new Vec4();
+const _weight = new Vec4();
+const _vertex = new Vec3();
+const _sphere = new Sphere();
+const _inverseMatrix = new Mat4();
+const _ray = new Ray();
