@@ -15,7 +15,7 @@ import { Matrix3 } from '../math/Matrix3.js';
 import * as MathUtils from '../math/MathUtils.js';
 import { isArrayUint32 } from '../utils.js';
 import { InterleavedBufferAttribute } from '@modules/renderer/engine/core/InterleavedBufferAttribute.js';
-import { Quaternion } from '@modules/renderer/engine/math/Quaternion.js';
+import { Quaternion_ } from '@modules/renderer/engine/math/Quaternion.js';
 
 let _id = 0;
 
@@ -172,7 +172,7 @@ export class BufferGeometry<
     return this;
   }
 
-  applyQuaternion(q: Quaternion): this {
+  applyQuaternion(q: Quaternion_): this {
     _m1.makeRotationFromQuaternion(q);
 
     this.applyMatrix4(_m1);

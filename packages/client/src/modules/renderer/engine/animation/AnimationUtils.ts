@@ -1,4 +1,4 @@
-import { Quaternion, QuaternionArray } from '../math/Quaternion.js';
+import { Quaternion_, QuaternionArray } from '../math/Quaternion.js';
 import { AnimationBlendMode } from '../constants.js';
 import { ArrayMap, NumberArray, TypedArray, TypedArrayConstructor } from '@modules/renderer/engine/math/MathUtils.js';
 import { AnimationClip } from '@modules/renderer/engine/animation/AnimationClip.js';
@@ -218,10 +218,10 @@ export function makeClipAdditive(
 
     // Conjugate the quaternion
     if (referenceTrackType === 'quaternion') {
-      const referenceQuat = Quaternion.fromArray(referenceValue, 0);
-      Quaternion.normalize(referenceQuat);
-      Quaternion.conjugate(referenceQuat);
-      Quaternion.intoArray_(referenceQuat, 0, referenceValue);
+      const referenceQuat = Quaternion_.fromArray(referenceValue, 0);
+      Quaternion_.normalize(referenceQuat);
+      Quaternion_.conjugate(referenceQuat);
+      Quaternion_.intoArray_(referenceQuat, 0, referenceValue);
     }
 
     // Subtract the reference value from all of the track values

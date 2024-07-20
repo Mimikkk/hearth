@@ -1,5 +1,5 @@
 import { clamp } from './MathUtils.js';
-import { Quaternion } from './Quaternion.js';
+import { Quaternion_ } from './Quaternion.js';
 import type { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
 import type { InterleavedBufferAttribute } from '@modules/renderer/engine/core/InterleavedBufferAttribute.js';
 import type { Color } from '@modules/renderer/engine/math/Color.js';
@@ -184,11 +184,11 @@ export class Vector3 implements IVector3 {
   }
 
   applyEuler(euler: Euler): this {
-    return this.applyQuaternion(Quaternion.fromEuler(euler));
+    return this.applyQuaternion(Quaternion_.fromEuler(euler));
   }
 
   applyAxisAngle(axis: Vector3, angle: number): this {
-    return this.applyQuaternion(Quaternion.fromAxisAngle(axis, angle));
+    return this.applyQuaternion(Quaternion_.fromAxisAngle(axis, angle));
   }
 
   applyMatrix3(matrix: Matrix3): this {
@@ -223,7 +223,7 @@ export class Vector3 implements IVector3 {
     return this;
   }
 
-  applyQuaternion(quaternion: Quaternion): this {
+  applyQuaternion(quaternion: Quaternion_): this {
     const vx = this.x;
     const vy = this.y;
     const vz = this.z;

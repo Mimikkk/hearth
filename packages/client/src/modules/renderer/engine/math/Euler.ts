@@ -1,4 +1,4 @@
-import { Quaternion } from './Quaternion.js';
+import { Quaternion_ } from './Quaternion.js';
 import { Matrix4 } from './Matrix4.js';
 import { clamp } from './MathUtils.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vector3.js';
@@ -13,7 +13,7 @@ export interface Euler {
 type Mat4x4 = number[];
 
 const _matrix = /*@__PURE__*/ new Matrix4();
-const _quaternion = Quaternion.identity();
+const _quaternion = Quaternion_.identity();
 export namespace Euler {
   export const create = (x: number, y: number, z: number, order: Order = 'XYZ'): Euler => ({ x, y, z, order });
   export const euler = create;
@@ -128,11 +128,11 @@ export namespace Euler {
   };
   export const fillMat = (self: Euler, matrix: Readonly<Mat4x4>): Euler => fromMat_(matrix, self.order, self);
 
-  export const fromQuaternion = (quaternion: Quaternion, order: Order): Euler =>
+  export const fromQuaternion = (quaternion: Quaternion_, order: Order): Euler =>
     fromQuaternion_(quaternion, order, empty());
-  export const fromQuaternion_ = (quaternion: Quaternion, order: Order, into: Euler): Euler =>
+  export const fromQuaternion_ = (quaternion: Quaternion_, order: Order, into: Euler): Euler =>
     fromMat_(_matrix.makeRotationFromQuaternion(quaternion).elements, order, into);
-  export const fillQuaternion = (self: Euler, quaternion: Quaternion): Euler =>
+  export const fillQuaternion = (self: Euler, quaternion: Quaternion_): Euler =>
     fromQuaternion_(quaternion, self.order, self);
 
   export const fromArray = (array: Readonly<(number | string)[]>, offset: number) => fromArray_(array, offset, empty());
@@ -161,7 +161,7 @@ export namespace Euler {
 
   export const reorder = (self: Euler, order: Order): Euler => reorder_(self, order, self);
   export const reorder_ = (self: Euler, order: Order, into: Euler): Euler =>
-    fromQuaternion_(Quaternion.fromEuler_(self, _quaternion), order, into);
+    fromQuaternion_(Quaternion_.fromEuler_(self, _quaternion), order, into);
   export const reordered = (self: Euler, order: Order): Euler => reorder_(self, order, empty());
 
   export const equals = (a: Euler, b: Euler): boolean =>

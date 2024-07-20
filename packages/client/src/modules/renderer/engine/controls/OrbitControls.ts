@@ -11,7 +11,7 @@ import {
   Vector3,
 } from '../engine.js';
 import { DegreeToRadian } from '../math/MathUtils.js';
-import { Quaternion } from '@modules/renderer/engine/math/Quaternion.js';
+import { Quaternion_ } from '@modules/renderer/engine/math/Quaternion.js';
 
 // OrbitControls performs orbiting, dollying (zooming), and panning.
 // Unlike TrackballControls, it maintains the "up" direction object.up (+Y by default).
@@ -205,11 +205,11 @@ export class OrbitControls {
       const offset = new Vector3();
 
       // so camera.up is the orbit axis
-      const quat = Quaternion.fromUnit(object.up, new Vector3(0, 1, 0));
-      const quatInverse = Quaternion.inverted(quat);
+      const quat = Quaternion_.fromUnit(object.up, new Vector3(0, 1, 0));
+      const quatInverse = Quaternion_.inverted(quat);
 
       const lastPosition = new Vector3();
-      const lastQuaternion = Quaternion.identity();
+      const lastQuaternion = Quaternion_.identity();
       const lastTargetPosition = new Vector3();
 
       const twoPI = 2 * Math.PI;
@@ -384,13 +384,13 @@ export class OrbitControls {
         if (
           zoomChanged ||
           lastPosition.distanceToSquared(scope.object.position) > EPS ||
-          8 * (1 - Quaternion.dot(lastQuaternion, scope.object.quaternion)) > EPS ||
+          8 * (1 - Quaternion_.dot(lastQuaternion, scope.object.quaternion)) > EPS ||
           lastTargetPosition.distanceToSquared(scope.target) > EPS
         ) {
           scope.eventDispatcher.dispatch(_changeEvent, this);
 
           lastPosition.copy(scope.object.position);
-          Quaternion.fill_(scope.object.quaternion, lastQuaternion);
+          Quaternion_.fill_(scope.object.quaternion, lastQuaternion);
           lastTargetPosition.copy(scope.target);
 
           return true;

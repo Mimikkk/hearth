@@ -13,16 +13,16 @@ import {
   SphereGeometry,
   Vector3,
 } from '../engine.js';
-import { Quaternion } from '@modules/renderer/engine/math/Quaternion.js';
+import { Quaternion_ } from '@modules/renderer/engine/math/Quaternion.js';
 import { NumberArray } from '@modules/renderer/engine/math/MathUtils.js';
 
-const _q = Quaternion.identity();
+const _q = Quaternion_.identity();
 const _targetPos = new Vector3();
 const _targetVec = new Vector3();
 const _effectorPos = new Vector3();
 const _effectorVec = new Vector3();
 const _linkPos = new Vector3();
-const _invLinkQ = Quaternion.identity();
+const _invLinkQ = Quaternion_.identity();
 const _linkScale = new Vector3();
 const _axis = new Vector3();
 const _vector = new Vector3();
@@ -127,7 +127,7 @@ export class CCDIKSolver {
         const rotationMax = links[j].rotationMax;
 
         link.matrixWorld.decompose(_linkPos, _invLinkQ, _linkScale);
-        Quaternion.invert(_invLinkQ);
+        Quaternion_.invert(_invLinkQ);
 
         _effectorPos.setFromMatrixPosition(effector.matrixWorld);
 
@@ -164,8 +164,8 @@ export class CCDIKSolver {
         _axis.crossVectors(_effectorVec, _targetVec);
         _axis.normalize();
 
-        Quaternion.fillAxisAngle(_q, _axis, angle);
-        Quaternion.multiply(link.quaternion, _q);
+        Quaternion_.fillAxisAngle(_q, _axis, angle);
+        Quaternion_.multiply(link.quaternion, _q);
 
         // TODO: re-consider the limitation specification
         if (limitation !== undefined) {
@@ -174,7 +174,7 @@ export class CCDIKSolver {
           if (c > 1.0) c = 1.0;
 
           const c2 = math.sqrt(1 - c * c);
-          Quaternion.fill(link.quaternion, limitation.x * c2, limitation.y * c2, limitation.z * c2, c);
+          Quaternion_.fill(link.quaternion, limitation.x * c2, limitation.y * c2, limitation.z * c2, c);
         }
 
         if (rotationMin !== undefined) {

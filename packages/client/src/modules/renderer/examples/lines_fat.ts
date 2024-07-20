@@ -16,7 +16,7 @@ import { Line2 } from '@modules/renderer/engine/lines/Line2.js';
 import { LineGeometry } from '@modules/renderer/engine/lines/LineGeometry.js';
 import * as GeometryUtils from '@modules/renderer/engine/utils/GeometryUtils.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import { Quaternion } from '@modules/renderer/engine/math/Quaternion.js';
+import { Quaternion_ } from '@modules/renderer/engine/math/Quaternion.js';
 
 let line, renderer, scene, camera, camera2, controls, backgroundNode;
 let line1;
@@ -153,7 +153,7 @@ function animate() {
   renderer.setViewport(20, 20, insetWidth, insetHeight);
 
   camera2.position.copy(camera.position);
-  Quaternion.fill_(camera.quaternion, camera2.quaternion);
+  Quaternion_.fill_(camera.quaternion, camera2.quaternion);
 
   renderer.parameters.autoClear = false;
 

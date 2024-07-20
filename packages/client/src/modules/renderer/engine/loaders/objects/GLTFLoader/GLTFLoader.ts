@@ -55,7 +55,7 @@ import { ImageBitmapLoader } from '@modules/renderer/engine/loaders/textures/Ima
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { KTX2Loader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/KTX2Loader.js';
 import { DRACOLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/DRACOLoader.js';
-import { Quaternion } from '@modules/renderer/engine/math/Quaternion.js';
+import { Quaternion_ } from '@modules/renderer/engine/math/Quaternion.js';
 
 export type PluginFn = (parser: Parser) => Plugin;
 
@@ -1255,7 +1255,7 @@ class GLTFMeshGpuInstancing implements Plugin {
         // Temporal variables
         const m = new Matrix4();
         const p = new Vector3();
-        const q = Quaternion.identity();
+        const q = Quaternion_.identity();
         const s = new Vector3(1, 1, 1);
 
         const instancedMesh = new InstancedMesh(mesh.geometry, mesh.material, count);
@@ -1266,7 +1266,7 @@ class GLTFMeshGpuInstancing implements Plugin {
           }
 
           if (attributes.ROTATION) {
-            Quaternion.fillAttribute(q, attributes.ROTATION, i);
+            Quaternion_.fillAttribute(q, attributes.ROTATION, i);
           }
 
           if (attributes.SCALE) {
@@ -1551,15 +1551,15 @@ class GLTFCubicSplineInterpolant extends Interpolant {
   }
 }
 
-const _q = Quaternion.identity();
+const _q = Quaternion_.identity();
 
 class GLTFCubicSplineQuaternionInterpolant extends GLTFCubicSplineInterpolant {
   interpolate_(i1, t0, t, t1) {
     const result = super.interpolate_(i1, t0, t, t1);
 
-    Quaternion.fillArray(_q, result, 0);
-    Quaternion.normalize(_q);
-    Quaternion.intoArray_(_q, 0, result);
+    Quaternion_.fillArray(_q, result, 0);
+    Quaternion_.normalize(_q);
+    Quaternion_.intoArray_(_q, 0, result);
 
     return result;
   }
@@ -3267,7 +3267,7 @@ class Parser {
         }
 
         if (nodeDef.rotation !== undefined) {
-          Quaternion.fillArray(node.quaternion, nodeDef.rotation, 0);
+          Quaternion_.fillArray(node.quaternion, nodeDef.rotation, 0);
         }
 
         if (nodeDef.scale !== undefined) {

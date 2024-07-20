@@ -14,7 +14,7 @@ import { color, InstancedPointsNodeMaterial } from '@modules/renderer/engine/nod
 
 import * as GeometryUtils from '@modules/renderer/engine/utils/GeometryUtils.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import { Quaternion } from '@modules/renderer/engine/math/Quaternion.js';
+import { Quaternion_ } from '@modules/renderer/engine/math/Quaternion.js';
 
 let renderer, scene, camera, camera2, controls, backgroundNode;
 let material;
@@ -135,7 +135,7 @@ function animate() {
 
   camera2.position.copy(camera.position);
 
-  Quaternion.fill_(camera.quaternion, camera2.quaternion);
+  Quaternion_.fill_(camera.quaternion, camera2.quaternion);
 
   renderer.parameters.autoClear = false;
 

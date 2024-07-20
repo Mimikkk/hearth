@@ -1,5 +1,5 @@
 // Characters [].:/ are reserved for track binding syntax.
-import { Quaternion } from '@modules/renderer/engine/math/Quaternion.js';
+import { Quaternion_ } from '@modules/renderer/engine/math/Quaternion.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vector3.js';
 
 const _RESERVED_CHARS_RE = '\\[\\]\\.:\\/';
@@ -571,7 +571,7 @@ export class PropertyBinding {
 
       this.resolvedProperty = nodeProperty;
       this.propertyIndex = propertyIndex;
-    } else if (Quaternion.is(nodeProperty)) {
+    } else if (Quaternion_.is(nodeProperty)) {
       bindingType = this.BindingType.IsQuaternion;
 
       this.resolvedProperty = nodeProperty;

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { Euler } from './Euler.ts';
-import { Quaternion } from '@modules/renderer/engine/math/Quaternion.js';
+import { Quaternion_ } from '@modules/renderer/engine/math/Quaternion.js';
 
 describe('Math - Quaternion', () => {
   // INSTANCING
@@ -23,10 +23,10 @@ describe('Math - Quaternion', () => {
     const testValues = [Euler.create(0, 0, 1), Euler.create(1, 0, 0), Euler.create(0, 1, 0)];
     for (let i = 0; i < testValues.length; i++) {
       const v = testValues[i];
-      const q = Quaternion.fromEuler(v);
+      const q = Quaternion_.fromEuler(v);
 
       const v2 = Euler.fromQuaternion(q, v.order);
-      const q2 = Quaternion.fromEuler(v2);
+      const q2 = Quaternion_.fromEuler(v2);
 
       expect(q).toEqual(q2);
     }
@@ -57,14 +57,14 @@ describe('Math - Quaternion', () => {
     const testValues = [Euler.create(0, 0, 1), Euler.create(1, 0, 0), Euler.create(0, 1, 0)];
     for (let i = 0; i < testValues.length; i++) {
       const v = testValues[i];
-      const q = Quaternion.fromEuler(v);
+      const q = Quaternion_.fromEuler(v);
 
       Euler.reorder(v, 'YZX');
-      const q2 = Quaternion.fromEuler(v);
+      const q2 = Quaternion_.fromEuler(v);
       expect(q).toEqual(q2);
 
       Euler.reorder(v, 'ZXY');
-      const q3 = Quaternion.fromEuler(v);
+      const q3 = Quaternion_.fromEuler(v);
       expect(q).toEqual(q3);
     }
   });
