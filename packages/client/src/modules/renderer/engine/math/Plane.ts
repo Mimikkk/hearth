@@ -1,6 +1,6 @@
 import { Matrix3 } from './Matrix3.js';
 import { Vec3, Vector3 } from './Vector3.js';
-import { Sphere_ } from './Sphere.js';
+import { Sphere, Sphere_ } from './Sphere.js';
 import { Line3 } from './Line3.js';
 import { Box3, Box3_ } from './Box3.js';
 import type { Matrix4 } from './Matrix4.js';
@@ -121,8 +121,8 @@ export class Plane {
     return box.intersectsPlane(this);
   }
 
-  intersectsSphere(sphere: Sphere_): boolean {
-    return Sphere_.intersectsPlane(sphere, this);
+  intersectsSphere(sphere: Sphere): boolean {
+    return sphere.intersectsPlane(this);
   }
 
   coplanarPoint(target: Vector3): Vector3 {
@@ -273,6 +273,7 @@ export namespace Plane_ {
 
     return into;
   };
+  export const projected = (self: Const<Plane_>, point: Const<Vec3>): Vec3 => project_(self, point, Vec3.empty());
 
   export const intersectLine = (self: Const<Plane_>, line: Const<Line3>): Vec3 | null =>
     intersectLine_(self, line, Vec3.empty());
