@@ -38,6 +38,27 @@ export const SideBarItems: AccordionItem[] = [
     ],
   },
   {
+    id: 'controls',
+    title: 'Controls',
+    icon: 'HiSolidHandRaised',
+    children: [
+      {
+        id: Example.Controls.Drag,
+        title: 'Controls Drag',
+      },
+      {
+        id: Example.Controls.Orbit,
+        title: 'Controls Orbit',
+        masterdisk: true,
+      },
+      {
+        id: Example.Controls.Selection,
+        title: 'Controls Selection',
+        masterdisk: true,
+      },
+    ],
+  },
+  {
     id: 'environment',
     title: 'Environment',
     icon: 'IoEarth',
@@ -83,6 +104,7 @@ export const SideBarItems: AccordionItem[] = [
     title: 'Geometry & Meshes',
     icon: 'SiMetro',
     children: [
+      { id: Example.Primitives, title: 'Primitives' },
       { id: Example.InstanceMesh, title: 'Instance Mesh' },
       { id: Example.InstancePoints, title: 'Instance Points' },
       { id: Example.InstanceUniform, title: 'Instance Uniform' },
@@ -125,7 +147,8 @@ export const SideBarItems: AccordionItem[] = [
     title: 'Cameras & Rendering',
     icon: 'BsCamera',
     children: [
-      { id: Example.CameraLogarithmicDepthBuffer, title: 'Camera Logarithmic Depth Buffer' },
+      { id: Example.Camera.Frustum, title: 'Camera Frustum' },
+      { id: Example.Camera.LogarithmicDepthBuffer, title: 'Camera Logarithmic Depth Buffer' },
       { id: Example.DepthTexture, title: 'Depth Texture', maintenance: true },
       { id: Example.Equirectangular, title: 'Equirectangular' },
       { id: Example.MultipleRenderTargets, title: 'Multiple Render Targets', maintenance: true },
@@ -158,6 +181,15 @@ export const SideBarItems: AccordionItem[] = [
       { id: Example.TslEditor, title: 'Tsl Editor' },
       { id: Example.TslTranspiler, title: 'Tsl Transpiler' },
       { id: Example.VideoPanorama, title: 'Video Panorama' },
+    ],
+  },
+  {
+    id: 'physics',
+    title: 'Physics',
+    icon: 'SiAtom',
+    children: [
+      { id: Example.Physics.Ammo, title: 'Ammo' },
+      { id: Example.Collisions.Octree, title: 'Octree collisions' },
     ],
   },
 ];

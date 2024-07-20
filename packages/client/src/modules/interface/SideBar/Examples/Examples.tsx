@@ -10,9 +10,17 @@ import { Path } from 'a-path';
 import { SideBarItems } from '@modules/interface/SideBar/SideBar.items.js';
 import { useContent } from '@modules/managment/useContent.js';
 import { createEffectListener } from '@logic/createListener.js';
-import { Example } from '@modules/renderer/examples/examples.js';
-import cx from 'clsx';
-import { Shortcut } from '@shared/components/forms/Shortcut/Shortcut.tsx';
+import { ExampleName } from '@modules/renderer/examples/examples.js';
+import { Shortcut } from '@components/forms/Shortcut/Shortcut.js';
+import { ButtonIcon } from '@components/buttons/ButtonIcon/ButtonIcon.js';
+
+const FocusShortcut = () => (
+  <Shortcut class="absolute right-0 pr-1 opacity-50">
+    <Shortcut.Key border>ctrl</Shortcut.Key>
+    <Shortcut.Key border>alt</Shortcut.Key>
+    <Shortcut.Key>f</Shortcut.Key>
+  </Shortcut>
+);
 
 const flatBy = <T extends Record<string, any>>(items: T[], key: Path.Of<T, T[] | undefined>): T[] => {
   const results = [];
@@ -69,6 +77,14 @@ const createSideBarSearch = () => {
   return [filtered, isFiltered, get, set] as const;
 };
 
+const CollapsedItems = flatBy(SideBarItems, 'children')
+  .filter(x => !x.children)
+  .sort((a, b) => a.title.localeCompare(b.title));
+
+const GoldenItems = flatBy(SideBarItems, 'children')
+  .filter(x => !x.children)
+  .filter(x => x.masterdisk);
+
 export const Examples = () => {
   onCleanup(cleanupSearch);
   const { selectedExample, selectExample } = useContent();
@@ -113,7 +129,14 @@ export const Examples = () => {
           onChange={setQuery}
           onFocusChange={setIsFocused}
           after={
-            <Show when={!isFocused()}>
+            <Show
+              when={!query().length && !isFocused()}
+              fallback={
+                <Show when={query().length}>
+                  <ButtonIcon onClick={() => setQuery('')} icon="ImCross" size="xs" variant="text" />
+                </Show>
+              }
+            >
               <Shortcut class="absolute right-0 pr-1 opacity-50">
                 <Shortcut.Key border>ctrl</Shortcut.Key>
                 <Shortcut.Key border>alt</Shortcut.Key>
@@ -122,7 +145,13 @@ export const Examples = () => {
             </Show>
           }
         />
-        <div class="flex ml-auto gap-2">
+        <div class="flex justify-between gap-2">
+          <span class="center gap-1 text-sm text-primary-7">
+            visible:
+            <span class="center text-sm text-primary-9">
+              {examples().length}/{CollapsedItems.length}/<span class="text-golden-3">{GoldenItems.length}</span>
+            </span>
+          </span>
           <CollapseButton />
           <PreviewButton />
         </div>

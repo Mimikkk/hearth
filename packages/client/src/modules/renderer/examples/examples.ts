@@ -15,7 +15,10 @@ export const Example = {
   Backdrop: 'backdrop',
   BackdropArea: 'backdrop_area',
   BackdropWater: 'backdrop_water',
-  CameraLogarithmicDepthBuffer: 'camera_logarithmicdepthbuffer',
+  Camera: {
+    Frustum: 'camera_frustum',
+    LogarithmicDepthBuffer: 'camera_log',
+  },
   Clearcoat: 'clearcoat',
   Clipping: 'clipping',
   CubemapAdjustments: 'cubemap_adjustments',
@@ -66,6 +69,12 @@ export const Example = {
   TslEditor: 'tsl_editor',
   TslTranspiler: 'tsl_transpiler',
   VideoPanorama: 'video_panorama',
+  Primitives: 'primitives',
+  Controls: {
+    Drag: 'categories/controls/controls_drag',
+    Orbit: 'categories/controls/controls_orbit',
+    Selection: 'categories/controls/controls_selection',
+  },
   Loaders: {
     Stl: 'loader_stl',
     Tiff: 'loader_tiff',
@@ -79,6 +88,12 @@ export const Example = {
       Iridescence: 'loader_gltf_iridescence',
       Sheen: 'loader_gltf_sheen',
     },
+  },
+  Collisions: {
+    Octree: 'octree_collisions',
+  },
+  Physics: {
+    Ammo: 'physics_ammo',
   },
 };
 
