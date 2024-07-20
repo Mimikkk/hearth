@@ -11,7 +11,7 @@ import {
 } from '../engine.js';
 import { DegreeToRadian } from '../math/MathUtils.js';
 import { Quaternion } from '@modules/renderer/engine/math/Quaternion.js';
-import { Spherical } from '@modules/renderer/engine/math/Spherical.js';
+import { Spherical_ } from '@modules/renderer/engine/math/Spherical.js';
 import { Plane_ } from '@modules/renderer/engine/math/Plane.js';
 
 const _changeEvent = { type: 'change' } as const;
@@ -215,7 +215,7 @@ export class OrbitControls {
         offset.applyQuaternion(quat);
 
         // angle from z-axis around y-axis
-        Spherical.fromCartesian_(offset, spherical);
+        Spherical_.fromCartesian_(offset, spherical);
 
         if (scope.autoRotate && state === STATE.NONE) {
           rotateLeft(getAutoRotationAngle(deltaTime));
@@ -251,7 +251,7 @@ export class OrbitControls {
 
         // restrict phi to be between desired limits
         spherical.phi = Math.max(scope.minPolarAngle, Math.min(scope.maxPolarAngle, spherical.phi));
-        Spherical.clamp(spherical);
+        Spherical_.clamp(spherical);
 
         // move target to panned location
 
@@ -292,7 +292,7 @@ export class OrbitControls {
 
           panOffset.multiplyScalar(1 - scope.dampingFactor);
         } else {
-          Spherical.clear(sphericalDelta);
+          Spherical_.clear(sphericalDelta);
 
           panOffset.set(0, 0, 0);
         }
@@ -429,8 +429,8 @@ export class OrbitControls {
     const EPS = 0.000001;
 
     // current position in spherical coordinates
-    const spherical = Spherical.empty();
-    const sphericalDelta = Spherical.empty();
+    const spherical = Spherical_.empty();
+    const sphericalDelta = Spherical_.empty();
 
     let scale = 1;
     const panOffset = new Vector3();

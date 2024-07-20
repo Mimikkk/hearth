@@ -7,7 +7,7 @@ import { Euler } from '@modules/renderer/engine/math/Euler.js';
 import type { Matrix3 } from '@modules/renderer/engine/math/Matrix3.js';
 import type { Matrix4 } from '@modules/renderer/engine/math/Matrix4.js';
 import type { Cylindrical } from '@modules/renderer/engine/math/Cylindrical.js';
-import type { Spherical } from '@modules/renderer/engine/math/Spherical.js';
+import type { Spherical_ } from '@modules/renderer/engine/math/Spherical.js';
 import type { Camera } from '@modules/renderer/engine/cameras/Camera.js';
 import { Const } from '@modules/renderer/engine/math/types.js';
 
@@ -465,7 +465,7 @@ export class Vector3 implements IVector3 {
     return Math.abs(this.x - vector.x) + Math.abs(this.y - vector.y) + Math.abs(this.z - vector.z);
   }
 
-  setFromSpherical(spherical: Spherical): this {
+  setFromSpherical(spherical: Spherical_): this {
     return this.setFromSphericalCoords(spherical.radius, spherical.phi, spherical.theta);
   }
 
