@@ -68,11 +68,7 @@ const typeFromArray = new Map([
   [Float32Array, 'float'],
 ]);
 
-const toFloat = value => {
-  value = Number(value);
-
-  return value + (value % 1 ? '' : '.0');
-};
+const formatAsFloat = (value: number): string => value + (value % 1 ? '' : '.0');
 
 // GPUShaderStage is not defined in browsers not supporting WebGPU
 const GPUShaderStage = self.GPUShaderStage;
@@ -392,12 +388,12 @@ export class NodeBuilder {
       else if (type === 'vec4') value = new Vec4();
     }
 
-    if (type === 'float') return toFloat(value);
+    if (type === 'float') return formatAsFloat(value);
     if (type === 'int') return `${Math.round(value)}`;
     if (type === 'uint') return value >= 0 ? `${Math.round(value)}u` : '0u';
     if (type === 'bool') return value ? 'true' : 'false';
     if (type === 'color')
-      return `${this.getType('vec3')}( ${toFloat(value.r)}, ${toFloat(value.g)}, ${toFloat(value.b)} )`;
+      return `${this.getType('vec3')}( ${formatAsFloat(value.r)}, ${formatAsFloat(value.g)}, ${formatAsFloat(value.b)} )`;
 
     const typeLength = this.getTypeLength(type);
 
