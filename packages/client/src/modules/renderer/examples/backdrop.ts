@@ -28,7 +28,6 @@ import {
 } from '@modules/renderer/engine/engine.js';
 import { degreeToRadian } from '@modules/renderer/engine/math/MathUtils.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import { useStats } from '@modules/renderer/examples/utilities/useStats.js';
 
 const createCamera = () => {
   const camera = new PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.01, 100);

@@ -109,6 +109,8 @@ async function init() {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
 
+    renderer.setSize(window.innerWidth, window.innerHeight);
+
     insetWidth = window.innerHeight / 4; // square
     insetHeight = window.innerHeight / 4;
 

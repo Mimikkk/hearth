@@ -141,6 +141,8 @@ async function init() {
   document.body.appendChild(renderer.parameters.canvas);
 
   useWindowResizer(renderer, camera, () => {
+    renderer.setSize(window.innerWidth, window.innerHeight);
+
     const aspect = window.innerWidth / window.innerHeight;
 
     const frustumHeight = camera.top - camera.bottom;

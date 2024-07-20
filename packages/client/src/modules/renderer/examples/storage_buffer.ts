@@ -118,6 +118,7 @@ async function init() {
   scene.add(plane);
 
   const renderer = await Renderer.create({ trackTimestamp: true });
+  renderer.setSize(window.innerWidth, window.innerHeight);
 
   document.body.appendChild(renderer.parameters.canvas);
   renderer.parameters.canvas.style.height = '100%';

@@ -79,6 +79,7 @@ async function init() {
   // renderer
 
   renderer = await Renderer.create();
+  renderer.setSize(window.innerWidth, window.innerHeight);
 
   // ensure shaders/pipelines are all complete before rendering
 

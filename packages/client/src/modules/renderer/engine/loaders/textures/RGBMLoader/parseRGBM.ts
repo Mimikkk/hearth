@@ -82,7 +82,7 @@ const parseDataTexture = (buffer: ArrayBuffer, type: SupportedType, maxRange: nu
 export const parseRGBM = (buffers: ArrayBuffer[], type: SupportedType, maxRange: number): CubeTexture => {
   //@ts-expect-error - improve texture handling
   const texture = new CubeTexture();
-  texture.image = buffers.map(buffer => parseDataTexture(buffer, type, maxRange));
+  texture.images = buffers.map(buffer => parseDataTexture(buffer, type, maxRange));
   texture.type = type;
   texture.format = TextureFormat.RGBA;
   texture.minFilter = MinificationTextureFilter.Linear;

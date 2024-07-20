@@ -5,7 +5,7 @@ export const parseCubeTexture = (images: HTMLImageElement[]): CubeTexture => {
   //@ts-expect-error
   const texture = new CubeTexture();
   texture.colorSpace = ColorSpace.SRGB;
-  texture.image = images;
+  texture.images = images;
   texture.needsUpdate = true;
   return texture;
 };
