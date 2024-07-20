@@ -364,7 +364,7 @@ export class BatchedMesh extends Mesh {
     this._geometryCount++;
 
     // initialize matrix information
-    _identityMatrix.toArray(matricesArray, geometryId * 16);
+    _identityMatrix.intoArray(matricesArray, geometryId * 16);
     matricesTexture.needsUpdate = true;
 
     // add the reserved range and draw range objects
@@ -581,7 +581,7 @@ export class BatchedMesh extends Mesh {
       return this;
     }
 
-    matrix.toArray(matricesArray, geometryId * 16);
+    matrix.intoArray(matricesArray, geometryId * 16);
     matricesTexture.needsUpdate = true;
 
     return this;

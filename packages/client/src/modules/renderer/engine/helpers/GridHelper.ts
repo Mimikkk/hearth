@@ -29,13 +29,13 @@ export class GridHelper extends LineSegments {
 
       const color = i === center ? color1 : color2;
 
-      color.toArray(colors, j);
+      color.intoArray(colors, j);
       j += 3;
-      color.toArray(colors, j);
+      color.intoArray(colors, j);
       j += 3;
-      color.toArray(colors, j);
+      color.intoArray(colors, j);
       j += 3;
-      color.toArray(colors, j);
+      color.intoArray(colors, j);
       j += 3;
     }
 

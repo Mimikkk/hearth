@@ -495,7 +495,7 @@ export class Vec4 implements IVec4 {
     return this;
   }
 
-  toArray(array: number[] = [], offset: number = 0): number[] {
+  intoArray(array: number[] = [], offset: number = 0): number[] {
     array[offset] = this.x;
     array[offset + 1] = this.y;
     array[offset + 2] = this.z;

@@ -632,7 +632,7 @@ export class Color {
     return this;
   }
 
-  toArray(array: number[] = [], offset: number = 0): number[] {
+  intoArray(array: number[] = [], offset: number = 0): number[] {
     array[offset] = this.r;
     array[offset + 1] = this.g;
     array[offset + 2] = this.b;

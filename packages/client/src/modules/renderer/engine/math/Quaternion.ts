@@ -456,7 +456,7 @@ export class Quaternion {
     return this;
   }
 
-  toArray(array: number[] = [], offset: number = 0): number[] {
+  intoArray(array: number[] = [], offset: number = 0): number[] {
     array[offset] = this._x;
     array[offset + 1] = this._y;
     array[offset + 2] = this._z;

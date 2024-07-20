@@ -214,7 +214,7 @@ export class PropertyBinding {
   }
 
   _getValue_toArray(buffer, offset) {
-    this.resolvedProperty.toArray(buffer, offset);
+    this.resolvedProperty.intoArray(buffer, offset);
   }
 
   // Direct
@@ -486,7 +486,7 @@ export class PropertyBinding {
 
       this.resolvedProperty = nodeProperty;
       this.propertyIndex = propertyIndex;
-    } else if (nodeProperty.fromArray !== undefined && nodeProperty.toArray !== undefined) {
+    } else if (nodeProperty.fromArray !== undefined && nodeProperty.intoArray !== undefined) {
       // must use copy for Object3D.Euler/Quaternion
 
       bindingType = this.BindingType.HasFromToArray;

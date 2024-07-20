@@ -26,16 +26,16 @@ class AxesHelper extends LineSegments {
     const array = this.geometry.attributes.color.array;
 
     color.set(xAxisColor);
-    color.toArray(array, 0);
-    color.toArray(array, 3);
+    color.intoArray(array, 0);
+    color.intoArray(array, 3);
 
     color.set(yAxisColor);
-    color.toArray(array, 6);
-    color.toArray(array, 9);
+    color.intoArray(array, 6);
+    color.intoArray(array, 9);
 
     color.set(zAxisColor);
-    color.toArray(array, 12);
-    color.toArray(array, 15);
+    color.intoArray(array, 12);
+    color.intoArray(array, 15);
 
     this.geometry.attributes.color.needsUpdate = true;
 

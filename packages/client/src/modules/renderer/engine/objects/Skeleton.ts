@@ -110,7 +110,7 @@ export class Skeleton {
       const matrix = bones[i] ? bones[i].matrixWorld : _identityMatrix;
 
       _offsetMatrix.multiplyMatrices(matrix, boneInverses[i]);
-      _offsetMatrix.toArray(boneMatrices as never as number[], i * 16);
+      _offsetMatrix.intoArray(boneMatrices as never as number[], i * 16);
     }
 
     if (boneTexture !== null) {

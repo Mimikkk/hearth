@@ -183,11 +183,11 @@ export class InstancedMesh extends Mesh {
       this.instanceColor = new InstancedBufferAttribute(new Float32Array(this.instanceMatrix.count * 3), 3, false, 1);
     }
 
-    color.toArray(this.instanceColor.array as never, index * 3);
+    color.intoArray(this.instanceColor.array as never, index * 3);
   }
 
   setMatrixAt(index: number, matrix: Mat4) {
-    matrix.toArray(this.instanceMatrix.array as never, index * 16);
+    matrix.intoArray(this.instanceMatrix.array as never, index * 16);
   }
 
   setMorphAt(index: number, object: Mesh) {

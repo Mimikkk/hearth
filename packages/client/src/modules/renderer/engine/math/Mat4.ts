@@ -943,7 +943,7 @@ export class Mat4 implements Matrix {
     return this;
   }
 
-  toArray(array: number[] = [], offset: number = 0): number[] {
+  intoArray(array: number[] = [], offset: number = 0): number[] {
     const te = this.elements;
 
     array[offset] = te[0];

@@ -64,7 +64,7 @@ export function flattenJSON(jsonKeys: string[], times: number[], values: number[
 
       key = jsonKeys[i++];
     } while (key !== undefined);
-  } else if (value.toArray !== undefined) {
+  } else if (value.intoArray !== undefined) {
     // ...assume engine.Math-ish
 
     do {
@@ -74,7 +74,7 @@ export function flattenJSON(jsonKeys: string[], times: number[], values: number[
       if (value !== undefined) {
         //@ts-expect-error
         times.push(key.time);
-        value.toArray(values, values.length);
+        value.intoArray(values, values.length);
       }
 
       key = jsonKeys[i++];
@@ -219,7 +219,7 @@ export function makeClipAdditive(
     // Conjugate the quaternion
     if (referenceTrackType === 'quaternion') {
       const referenceQuat = new Quaternion().fromArray(referenceValue).normalize().conjugate();
-      referenceQuat.toArray(referenceValue);
+      referenceQuat.intoArray(referenceValue);
     }
 
     // Subtract the reference value from all of the track values
