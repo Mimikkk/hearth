@@ -23,7 +23,7 @@ export class Ray {
     return Ray.new();
   }
 
-  static clone(ray: Const<Ray>, into: Ray = Ray.empty()): Ray {
+  static clone(ray: Const<Ray>, into: Ray = Ray.new()): Ray {
     return into.from(ray);
   }
 
@@ -31,7 +31,7 @@ export class Ray {
     return ray?.isRay === true;
   }
 
-  static from(ray: Const<Ray>, into: Ray = Ray.empty()): Ray {
+  static from(ray: Const<Ray>, into: Ray = Ray.new()): Ray {
     return into.from(ray);
   }
 
@@ -66,11 +66,8 @@ export class Ray {
     return this;
   }
 
-  from(from: Const<Ray>): this {
-    this.origin.from(from.origin);
-    this.direction.from(from.direction);
-
-    return this;
+  from({ origin, direction }: Const<Ray>): this {
+    return this.set(origin, direction);
   }
 
   at(step: number, into: Vec3 = Vec3.new()): Vec3 {
@@ -84,7 +81,7 @@ export class Ray {
   }
 
   recast(step: number): this {
-    this.origin.from(this.at(step, new Vec3(0, 0, 0)));
+    this.origin.from(this.at(step, _distance1));
 
     return this;
   }
@@ -101,7 +98,7 @@ export class Ray {
   }
 
   distanceSqTo(coord: Const<Vec3>): number {
-    const directionDistance = new Vec3().subVectors(coord, this.origin).dot(this.direction);
+    const directionDistance = _distance1.subVectors(coord, this.origin).dot(this.direction);
 
     // point behind the ray
 
@@ -109,7 +106,7 @@ export class Ray {
       return this.origin.distanceSqTo(coord);
     }
 
-    return new Vec3().from(this.origin).addScaled(this.direction, directionDistance).distanceSqTo(coord);
+    return _distance2.from(this.origin).addScaled(this.direction, directionDistance).distanceSqTo(coord);
   }
 
   distanceToLine(line: Const<Line3>): number {
@@ -246,11 +243,11 @@ export class Ray {
   }
 
   intersectsBox(box: Const<Box3>): boolean {
-    return this.intersectBox(box, new Vec3(0, 0, 0)) !== null;
+    return this.intersectBox(box, _intersect) !== null;
   }
 
   intersectSphere(sphere: Const<Sphere>, into: Vec3 = Vec3.new()): Vec3 | null {
-    const _vector = new Vec3().subVectors(sphere.center, this.origin);
+    const _vector = _sphere.subVectors(sphere.center, this.origin);
     const tca = _vector.dot(this.direction);
     const d2 = _vector.dot(_vector) - tca * tca;
     const radius2 = sphere.radius * sphere.radius;
@@ -267,20 +264,16 @@ export class Ray {
 
   intersectPlane(plane: Const<Plane>, into: Vec3 = Vec3.new()): Vec3 | null {
     const t = this.distanceToPlane(plane);
-
-    if (t === null) {
-      return null;
-    }
-
+    if (t === null) return null;
     return this.at(t, into);
   }
 
   intersectBox(box: Const<Box3>, into: Vec3 = Vec3.new()): Vec3 | null {
     let tmin, tmax, tymin, tymax, tzmin, tzmax;
 
-    const invdirx = 1 / this.direction.x,
-      invdiry = 1 / this.direction.y,
-      invdirz = 1 / this.direction.z;
+    const invdirx = 1 / this.direction.x;
+    const invdiry = 1 / this.direction.y;
+    const invdirz = 1 / this.direction.z;
 
     const origin = this.origin;
 
@@ -320,8 +313,6 @@ export class Ray {
 
     if (tzmax < tmax || tmax !== tmax) tmax = tzmax;
 
-    //return point closest to the ray (positive side)
-
     if (tmax < 0) return null;
 
     return this.at(tmin >= 0 ? tmin : tmax, into);
@@ -336,9 +327,9 @@ export class Ray {
 
     // from https://github.com/pmjoniak/GeometricTools/blob/master/GTEngine/Include/Mathematics/GteIntrRay3Triangle3.h
 
-    const _edge1 = new Vec3().subVectors(b, a);
-    const _edge2 = new Vec3().subVectors(c, a);
-    const _normal = new Vec3().crossVectors(_edge1, _edge2);
+    const _edge1 = _triangle0.subVectors(b, a);
+    const _edge2 = _triangle1.subVectors(c, a);
+    const _normal = _triangle2.crossVectors(_edge1, _edge2);
 
     // Solve Q + t*D = b1*E1 + b2*E2 (Q = kDiff, D = ray direction,
     // E1 = kEdge1, E2 = kEdge2, N = Cross(E1,E2)) by
@@ -358,7 +349,7 @@ export class Ray {
       return null;
     }
 
-    const _diff = new Vec3().subVectors(this.origin, a);
+    const _diff = _triangle3.subVectors(this.origin, a);
     const DdQxE2 = sign * this.direction.dot(_edge2.crossVectors(_diff, _edge2));
 
     // b1 < 0, no intersection
@@ -408,6 +399,14 @@ export class Ray {
 
 Ray.prototype.isRay = true;
 
+const _sphere = Vec3.new();
+const _distance1 = Vec3.new();
+const _distance2 = Vec3.new();
+const _intersect = Vec3.new();
 const _vec0 = Vec3.new();
 const _vec1 = Vec3.new();
 const _vec2 = Vec3.new();
+const _triangle0 = Vec3.new();
+const _triangle1 = Vec3.new();
+const _triangle2 = Vec3.new();
+const _triangle3 = Vec3.new();
