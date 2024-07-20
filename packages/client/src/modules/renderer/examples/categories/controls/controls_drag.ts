@@ -78,12 +78,12 @@ const useDragControls = () => {
   //   //     group.attach(object);
   //   //   }
   //   //
-  //   //   controls.configuration.transformGroup = true;
+  //   //   controls.transformGroup = true;
   //   //   draggableObjects.push(group);
   //   // }
   //
   //   // if (group.children.length === 0) {
-  //   //   controls.configuration.transformGroup = false;
+  //   //   controls.transformGroup = false;
   //   //   draggableObjects.push(...objects);
   //   // }
   // });
@@ -137,16 +137,16 @@ const state = <State>{
 UI.create<State>('Drag controls', state)
   .shortcut('s', 'Toggle selection', state => {
     state.drag.selection = !state.drag.selection;
-    dragControls.configuration.enabled = state.drag.selection;
+    dragControls.enabled = state.drag.selection;
   })
   .shortcut('m', 'Toggle drag mode', state => {
     state.drag.mode = state.drag.mode === 'translate' ? 'rotate' : 'translate';
-    dragControls.configuration.mode = state.drag.mode;
+    dragControls.mode = state.drag.mode;
   })
   .text('Selected:', s => (s.drag.selected ? s.drag.selected.uuid : 'None'))
   .action('Log selected', s => console.info({ selected: s.drag.selected, intersections: s.drag.intersections }))
   .folder('Options')
-  .boolean('drag.selection', 'Selection', value => (dragControls.configuration.enabled = value))
+  .boolean('drag.selection', 'Selection', value => (dragControls.enabled = value))
   .option<'translate' | 'rotate'>(
     'drag.mode',
     'Mode',
@@ -154,7 +154,7 @@ UI.create<State>('Drag controls', state)
       translate: 'Translate',
       rotate: 'Rotate',
     },
-    value => (dragControls.configuration.mode = value),
+    value => (dragControls.mode = value),
   )
   .boolean('drag.showBoundingSpheres', 'Show bounding spheres', () => {
     sphere1.visible = state.drag.showBoundingSpheres;

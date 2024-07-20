@@ -350,7 +350,7 @@ export class OrbitControls {
               if (Math.abs(scope.object.up.dot(_ray.direction)) < TILT_LIMIT) {
                 object.lookAt(scope.target);
               } else {
-                Plane_.fillFromNormalAndCoplanar(_plane, scope.object.up, scope.target);
+                Plane_.fillFromNormalAndCoplanar_(_plane, scope.object.up, scope.target);
                 _ray.intersectPlane(_plane, scope.target);
               }
             }

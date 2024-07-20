@@ -724,6 +724,7 @@ export namespace Vec3 {
     fromAttribute_(attribute, index, self);
   export const intoAttribute_ = (self: Const<Vec3>, attribute: BufferAttribute, index: number): BufferAttribute =>
     attribute.setXYZ(index, self.x, self.y, self.z);
+
   export const distanceSqTo = (a: Const<Vec3>, b: Const<Vec3>): number => {
     const dx = a.x - b.x;
     const dy = a.y - b.y;
@@ -758,64 +759,6 @@ export namespace Vec3 {
       elements[1] * self.x + elements[4] * self.y + elements[7] * self.z,
       elements[2] * self.x + elements[5] * self.y + elements[8] * self.z,
     );
-
-  export const applyEuler = (self: Vec3, euler: Const<Euler>): Vec3 => applyEuler_(self, euler, self);
-  export const applyEuler_ = (self: Const<Vec3>, { x, y, z }: Const<Euler>, into: Vec3): Vec3 => {
-    const { cos, sin } = Math;
-
-    const c1 = cos(z);
-    const s1 = sin(z);
-    const c2 = cos(y);
-    const s2 = sin(y);
-    const c3 = cos(x);
-    const s3 = sin(x);
-
-    return set(
-      into,
-      c1 * c2 * self.x - s1 * c2 * self.y + s2 * self.z,
-      s1 * c3 * self.x + c1 * c3 * self.y - s3 * self.z,
-      -c1 * s2 * self.x + s1 * s2 * self.y + c2 * self.z,
-    );
-  };
-
-  export const applyQuaternion = (self: Vec3, quaternion: Const<Quaternion>): Vec3 =>
-    applyQuaternion_(self, quaternion, self);
-  export const applyQuaternion_ = (self: Const<Vec3>, quaternion: Const<Quaternion>, into: Vec3): Vec3 => {
-    const { x, y, z, w } = quaternion;
-    const tx = 2 * (y * self.z - z * self.y);
-    const ty = 2 * (z * self.x - x * self.z);
-    const tz = 2 * (x * self.y - y * self.x);
-
-    return set(
-      into,
-      self.x + w * tx + y * tz - z * ty,
-      self.y + w * ty + z * tx - x * tz,
-      self.z + w * tz + x * ty - y * tx,
-    );
-  };
-
-  export const applyAxisAngle = (self: Vec3, axis: Const<Vec3>, angle: number): Vec3 =>
-    applyAxisAngle_(self, axis, angle, self);
-  export const applyAxisAngle_ = (self: Const<Vec3>, axis: Const<Vec3>, angle: number, into: Vec3): Vec3 => {
-    const { x, y, z } = axis;
-    const { cos, sin } = Math;
-    const c = cos(angle);
-    const s = sin(angle);
-    const t = 1 - c;
-    const tx = t * x;
-    const ty = t * y;
-
-    return set(
-      into,
-      self.x * (t * x + c) + self.y * (tx - z * s) + self.z * (tx + y * s),
-      self.y * (t * y + c) + self.z * (ty - x * s) + self.x * (ty + z * s),
-      self.z * (t * z + c) + self.x * (tx - y * s) + self.y * (ty + x * s),
-    );
-  };
-
-  export const applyNormalMatrix = (self: Vec3, matrix: Const<Matrix3>): Vec3 => applyNormalMatrix_(self, matrix, self);
-  export const applyNormalMatrix_ = (self: Const<Vec3>, matrix: Const<Matrix3>, into: Vec3): Vec3 =>
-    normalize(applyMat3_(self, matrix, into));
 
   export const equals = (a: Const<Vec3>, b: Const<Vec3>): boolean => a.x === b.x && a.y === b.y && a.z === b.z;
 
