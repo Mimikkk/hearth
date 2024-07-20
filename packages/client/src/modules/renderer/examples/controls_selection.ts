@@ -116,13 +116,7 @@ renderer.parameters.canvas.addEventListener('pointerup', event => {
 });
 
 const ui = UI.create('Selection')
-  .text('Selected count:', () => selection.collection.length)
   .text('Mouse start (x, y):', () => selection.start.x.toFixed(2) + ', ' + selection.start.y.toFixed(2))
   .text('Mouse end (x, y):', () => selection.end.x.toFixed(2) + ', ' + selection.end.y.toFixed(2))
-  .action('Log selection', () => console.log(selection.collection))
-  .action('Clear selection', () => {
-    for (const object of selection.collection) {
-      (object.material as MeshLambertMaterial).emissive.set(0x000000);
-    }
-    selection.collection.length = 0;
-  });
+  .text('Selected count:', () => selection.collection.length)
+  .action('Log selected', () => console.log(selection.collection));
