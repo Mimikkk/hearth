@@ -76,8 +76,8 @@ export class Sphere {
     return box.intersectsSphere(this);
   }
 
-  intersectsPlane(plane: Plane): boolean {
-    return Math.abs(plane.distanceToPoint(this.center)) <= this.radius;
+  intersectsPlane(plane: Plane_): boolean {
+    return Math.abs(Plane_.distanceToVec(plane, this.center)) <= this.radius;
   }
 
   clampPoint(point: Vector3, target: Vector3): Vector3 {
