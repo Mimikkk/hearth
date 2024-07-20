@@ -1,9 +1,9 @@
 import { Vec3 } from './Vec3.js';
-import type { Mat3 } from './Mat3.js';
+import { Mat3 } from './Mat3.js';
 import type { Euler } from '@modules/renderer/engine/math/Euler.js';
 import type { Quaternion } from '@modules/renderer/engine/math/Quaternion.js';
-import type { Const } from '@modules/renderer/engine/math/types.js';
-import type { NumberArray } from '@modules/renderer/engine/math/MathUtils.js';
+import { Const } from '@modules/renderer/engine/math/types.js';
+import { NumberArray } from '@modules/renderer/engine/math/MathUtils.js';
 
 export class Mat4 {
   declare isMat4: true;

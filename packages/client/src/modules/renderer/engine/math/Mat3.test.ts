@@ -41,7 +41,7 @@ describe('Math - Mat3', () => {
 
   it('fromMat4Normal', () => {
     const a = Mat4.scale(2, 3, 4);
-    const n = Mat3.fromNMat4(a);
+    const n = Mat3.fromMat4Normal(a);
 
     expect(n.elements).toEqual([0.5, 0, 0, 0, 1 / 3, 0, 0, 0, 0.25]);
   });

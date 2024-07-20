@@ -123,7 +123,7 @@ const toneMappingLib = {
   [ToneMapping.AgX]: AGXToneMappingNode,
 };
 
-export class ToneMappingNode extends TempNode {
+class ToneMappingNode extends TempNode {
   static type = 'ToneMappingNode';
 
   constructor(toneMapping = ToneMapping.None, exposureNode = toneMappingExposure, colorNode = null) {

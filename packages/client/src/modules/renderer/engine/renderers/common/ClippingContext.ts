@@ -1,9 +1,10 @@
 import { Camera, Material, Mat3, Mat4, Plane, Vec4 } from '@modules/renderer/engine/engine.js';
-import type { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
+import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 
+const _plane = new Plane();
 const _viewNormalMatrix = new Mat3();
 
-let _version = 0;
+let _clippingContextVersion = 0;
 
 export class ClippingContext {
   version: number;
@@ -16,7 +17,7 @@ export class ClippingContext {
   viewMatrix: Mat4 | null;
 
   constructor() {
-    this.version = ++_version;
+    this.version = ++_clippingContextVersion;
 
     this.globalClippingCount = 0;
 
@@ -34,7 +35,7 @@ export class ClippingContext {
     const planes = this.planes;
 
     for (let i = 0; i < l; i++) {
-      const _plane = source[i].clone().applyMat4(this.viewMatrix!, _viewNormalMatrix);
+      _plane.clone(source[i]).applyMat4(this.viewMatrix!, _viewNormalMatrix);
 
       const v = planes[offset + i];
       const normal = _plane.normal;
@@ -82,7 +83,7 @@ export class ClippingContext {
       update = true;
     }
 
-    if (update) this.version = _version++;
+    if (update) this.version = _clippingContextVersion++;
   }
 
   update(parent: ClippingContext, material: Material) {
@@ -129,7 +130,7 @@ export class ClippingContext {
       }
     }
 
-    if (update) this.version = _version++;
+    if (update) this.version = _clippingContextVersion++;
   }
 }
 
