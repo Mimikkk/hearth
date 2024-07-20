@@ -12,17 +12,14 @@ import {
   Group,
   Mesh,
   Object3D,
-  Raycaster,
+  PlaneGeometry,
   SphereGeometry,
   SpotLight,
-  Vector2,
 } from '@modules/renderer/engine/engine.js';
 import { MeshStandardNodeMaterial } from '@modules/renderer/engine/nodes/materials/MeshStandardNodeMaterial.js';
 import { float } from 'three/examples/jsm/nodes/shadernode/ShaderNode.js';
 import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vector3.js';
-import { DragControls } from '@modules/renderer/engine/controls/DragControls.js';
-import { UI } from '@modules/renderer/examples/utilities/UI.js';
 
 const container = document.createElement('div');
 document.body.appendChild(container);
@@ -75,38 +72,18 @@ const createSphere = (geometry: BufferGeometry, x: number, y: number, z: number)
   return mesh;
 };
 
-const state = {
-  drag: {
-    mode: 'translate' as 'translate' | 'rotate',
-    selection: false,
-  },
-};
 const useVisualizer = (scene: Scene, of: Object3D) => {
   const visualizer = new BoundingBoxVisualizer(of, 'red');
 
   scene.add(visualizer);
 };
-const useOrbitControls = () => {
-  const controls = new OrbitControls(camera, renderer.parameters.canvas);
+const useOrbitControls = (canvas: HTMLCanvasElement) => {
+  const controls = new OrbitControls(camera, canvas);
   controls.minDistance = 1;
   controls.maxDistance = 10;
   controls.maxPolarAngle = Math.PI * 0.9;
   controls.target.set(0, 0.2, 0);
   controls.update();
-
-  return controls;
-};
-const useDragControls = () => {
-  const controls = new DragControls(scene.children, camera, renderer.parameters.canvas);
-
-  const mouse = new Vector2();
-  const raycaster = new Raycaster();
-
-  document.addEventListener('click', () => {
-    if (state.drag.selection) {
-      console.log('here1');
-    } else console.log('here2');
-  });
 
   return controls;
 };
@@ -123,40 +100,15 @@ const sphere = createSphere(bigSphereGeometry, 1, 0, 0);
 const spheres = createSpheres();
 
 const scene = createScene();
-const group = new Group();
-scene.add(camera, reference, sphere, spheres, group);
+scene.add(camera, reference, sphere, spheres);
 
 useVisualizer(scene, reference);
 useVisualizer(scene, sphere);
 useVisualizer(scene, spheres);
 
 const renderer = await createRenderer(() => {
-  orbitControls.update();
+  controls.update();
   renderer.render(scene, camera);
 });
-
 useWindowResizer(renderer, camera);
-
-const dragControls = useDragControls();
-const orbitControls = useOrbitControls(spheres);
-
-UI.create('Controls', state)
-  .shortcut('s', 'Toggle selection', state => {
-    state.drag.selection = !state.drag.selection;
-    dragControls.enabled = state.drag.selection;
-  })
-  .shortcut('m', 'Toggle drag mode', state => {
-    state.drag.mode = state.drag.mode === 'translate' ? 'rotate' : 'translate';
-    dragControls.mode = state.drag.mode;
-  })
-  .folder('Drag options')
-  .boolean('drag.selection', 'Selection', value => (dragControls.enabled = value))
-  .option<'translate' | 'rotate'>(
-    'drag.mode',
-    'Mode',
-    {
-      translate: 'Translate',
-      rotate: 'Rotate',
-    },
-    value => (dragControls.mode = value),
-  );
+const controls = useOrbitControls(renderer.parameters.canvas);
