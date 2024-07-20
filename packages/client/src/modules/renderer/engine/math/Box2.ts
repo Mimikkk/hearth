@@ -38,7 +38,7 @@ export namespace Box2 {
     return into;
   };
 
-  export const clone = (from: Const<Box2>): Box2 => clone_(from, empty());
+  export const clone = (from: Const<Box2>): Box2 => fill_(empty(), from);
   export const clone_ = (from: Const<Box2>, into: Box2): Box2 => fill_(into, from);
 
   export const size = (self: Const<Box2>): Vec2 => vec2(self.max.x - self.min.x, self.max.y - self.min.y);
