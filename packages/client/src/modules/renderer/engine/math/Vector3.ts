@@ -193,9 +193,9 @@ export class Vector3 implements IVector3 {
   }
 
   applyMatrix3(matrix: Matrix3): this {
-    const x = this.x;
-    const y = this.y;
-    const z = this.z;
+    const x = this.x,
+      y = this.y,
+      z = this.z;
     const e = matrix.elements;
 
     this.x = e[0] * x + e[3] * y + e[6] * z;
@@ -622,13 +622,8 @@ export namespace Vec3 {
   export const is = (o: any): o is Vec3 =>
     !!o && typeof o.x === 'number' && typeof o.y === 'number' && typeof o.z === 'number';
 
-  export const negate = (self: Vec3): Vec3 => negate_(self, self);
-  export const negate_ = ({ x, y, z }: Const<Vec3>, into: Vec3): Vec3 => set(into, -x, -y, -z);
-  export const negated = (from: Const<Vec3>): Vec3 => negate_(from, empty());
-
-  export const add = (self: Vec3, vec: Const<Vec3>): Vec3 => add_(self, vec, self);
-  export const add_ = (from: Const<Vec3>, vec: Const<Vec3>, into: Vec3): Vec3 =>
-    set(into, from.x + vec.x, from.y + vec.y, from.z + vec.z);
+  export const add = (a: Vec3, b: Const<Vec3>): Vec3 => add_(a, b, a);
+  export const add_ = (a: Const<Vec3>, b: Const<Vec3>, into: Vec3): Vec3 => set(into, a.x + b.x, a.y + b.y, a.z + b.z);
   export const added = (a: Vec3, b: Const<Vec3>): Vec3 => add_(a, b, empty());
 
   export const sub = (a: Vec3, b: Const<Vec3>): Vec3 => sub_(a, b, a);
@@ -727,15 +722,6 @@ export namespace Vec3 {
       (elements[2] * x + elements[6] * y + elements[10] * z + elements[14]) * w,
     );
   };
-
-  export const applyMat3 = (self: Vec3, matrix: Const<Matrix3>): Vec3 => applyMat3_(self, matrix, self);
-  export const applyMat3_ = (self: Const<Vec3>, { elements }: Const<Matrix3>, into: Vec3): Vec3 =>
-    set(
-      into,
-      elements[0] * self.x + elements[3] * self.y + elements[6] * self.z,
-      elements[1] * self.x + elements[4] * self.y + elements[7] * self.z,
-      elements[2] * self.x + elements[5] * self.y + elements[8] * self.z,
-    );
 
   export const equals = (a: Const<Vec3>, b: Const<Vec3>): boolean => a.x === b.x && a.y === b.y && a.z === b.z;
 
