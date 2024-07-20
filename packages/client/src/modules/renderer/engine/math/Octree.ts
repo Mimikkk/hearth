@@ -348,7 +348,7 @@ export class Octree {
     this.getRayTriangles(ray, triangles);
 
     for (let i = 0; i < triangles.length; i++) {
-      const result = ray.intersectTriangle(triangles[i].a, triangles[i].b, triangles[i].c, true, _v1);
+      const result = ray.intersectTriangle(triangles[i], true, _v1);
 
       if (!result) continue;
       const newdistance = result.sub(ray.origin).length();

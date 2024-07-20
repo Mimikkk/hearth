@@ -143,7 +143,7 @@ export class Mesh extends Object3D {
 
     // check distance from ray origin to bounding sphere
 
-    _ray.copy(raycaster.ray).recast(raycaster.near);
+    _ray.from(raycaster.ray).recast(raycaster.near);
 
     if (_sphere.containsVec(_ray.origin) === false) {
       if (_ray.intersectSphere(_sphere, _sphereHitAt) === null) return;
@@ -154,7 +154,7 @@ export class Mesh extends Object3D {
     // convert ray to local space of mesh
 
     _inverseMatrix.copy(matrixWorld).invert();
-    _ray.copy(raycaster.ray).applyMat4(_inverseMatrix);
+    _ray.from(raycaster.ray).applyMat4(_inverseMatrix);
 
     // test with bounding box in local space
 
@@ -307,9 +307,11 @@ function checkIntersection(
   let intersect;
 
   if (material.side === Side.Back) {
-    intersect = ray.intersectTriangle(pC, pB, pA, true, point);
+    _triangle.set(pC, pB, pA);
+    intersect = ray.intersectTriangle(_triangle, true, point);
   } else {
-    intersect = ray.intersectTriangle(pA, pB, pC, material.side === Side.Front, point);
+    _triangle.set(pA, pB, pC);
+    intersect = ray.intersectTriangle(_triangle, material.side === Side.Front, point);
   }
 
   if (intersect === null) return null;
@@ -399,3 +401,5 @@ function checkGeometryIntersection(
 
   return intersection;
 }
+
+const _triangle = new Triangle();

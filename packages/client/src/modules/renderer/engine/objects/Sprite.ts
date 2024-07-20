@@ -99,13 +99,15 @@ export class Sprite extends Object3D {
     _uvC.set(1, 1);
 
     // check first triangle
-    let intersect = raycaster.ray.intersectTriangle(_vA, _vB, _vC, false, _intersectPoint);
+    _triangle.set(_vA, _vB, _vC);
+    let intersect = raycaster.ray.intersectTriangle(_triangle, false, _intersectPoint);
 
     if (intersect === null) {
       transformVertex(_vB.set(-0.5, 0.5, 0), _mvPosition, center, _worldScale, sin, cos);
       _uvB.set(0, 1);
 
-      intersect = raycaster.ray.intersectTriangle(_vA, _vC, _vB, false, _intersectPoint);
+      _triangle.set(_vA, _vC, _vB);
+      intersect = raycaster.ray.intersectTriangle(_triangle, false, _intersectPoint);
       if (intersect === null) {
         return;
       }
@@ -137,6 +139,8 @@ export class Sprite extends Object3D {
 
 Sprite.prototype.isSprite = true;
 Sprite.prototype.type = 'Sprite';
+
+const _triangle = new Triangle();
 
 function transformVertex(
   vertexPosition: Vec3,

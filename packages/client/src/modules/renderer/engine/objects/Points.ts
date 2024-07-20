@@ -57,7 +57,7 @@ export class Points extends Object3D {
     //
 
     _inverseMatrix.copy(matrixWorld).invert();
-    _ray.copy(raycaster.ray).applyMat4(_inverseMatrix);
+    _ray.from(raycaster.ray).applyMat4(_inverseMatrix);
 
     const localThreshold = threshold / ((this.scale.x + this.scale.y + this.scale.z) / 3);
     const localThresholdSq = localThreshold * localThreshold;
@@ -125,12 +125,12 @@ function testPoint(
   intersects: Intersection[],
   object: Points,
 ) {
-  const rayPointDistanceSq = _ray.distanceSqToPoint(point);
+  const rayPointDistanceSq = _ray.distanceSqTo(point);
 
   if (rayPointDistanceSq < localThresholdSq) {
     const intersectPoint = new Vec3();
 
-    _ray.closestPointToPoint(point, intersectPoint);
+    _ray.closestTo(point, intersectPoint);
     intersectPoint.applyMat4(matrixWorld);
 
     const distance = raycaster.ray.origin.distanceTo(intersectPoint);

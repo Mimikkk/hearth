@@ -9,6 +9,7 @@ import { Float32BufferAttribute } from '../core/BufferAttribute.js';
 import { Material } from '@modules/renderer/engine/materials/Material.js';
 import { Intersection, Raycaster } from '@modules/renderer/engine/core/Raycaster.js';
 import { LineSegments } from '@modules/renderer/engine/objects/LineSegments.js';
+import { Line3 } from '@modules/renderer/engine/math/Line3.js';
 
 const _start = /*@__PURE__*/ new Vec3();
 const _end = /*@__PURE__*/ new Vec3();
@@ -85,7 +86,7 @@ export class Line extends Object3D {
     //
 
     _inverseMatrix.copy(matrixWorld).invert();
-    _ray.copy(raycaster.ray).applyMat4(_inverseMatrix);
+    _ray.from(raycaster.ray).applyMat4(_inverseMatrix);
 
     const localThreshold = threshold / ((this.scale.x + this.scale.y + this.scale.z) / 3);
     const localThresholdSq = localThreshold * localThreshold;
@@ -112,8 +113,9 @@ export class Line extends Object3D {
 
         vStart.fromAttribute(positionAttribute, a);
         vEnd.fromAttribute(positionAttribute, b);
+        _line.set(vStart, vEnd);
 
-        const distSq = _ray.distanceSqToSegment(vStart, vEnd, interRay, interSegment);
+        const distSq = _ray.distanceSqToLine(_line, interRay, interSegment);
 
         if (distSq > localThresholdSq) continue;
 
@@ -139,8 +141,9 @@ export class Line extends Object3D {
       for (let i = start, l = end - 1; i < l; i += step) {
         vStart.fromAttribute(positionAttribute, i);
         vEnd.fromAttribute(positionAttribute, i + 1);
+        _line.set(vStart, vEnd);
 
-        const distSq = _ray.distanceSqToSegment(vStart, vEnd, interRay, interSegment);
+        const distSq = _ray.distanceSqToLine(_line, interRay, interSegment);
 
         if (distSq > localThresholdSq) continue;
 
@@ -191,3 +194,5 @@ export class Line extends Object3D {
 
 Line.prototype.isLine = true;
 Line.prototype.type = 'Line';
+
+const _line = Line3.new();

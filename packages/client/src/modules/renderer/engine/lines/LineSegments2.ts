@@ -72,7 +72,7 @@ function raycastWorldUnits(lineSegments: LineSegments, intersects: Intersection[
     const pointOnLine = new Vec3();
     const point = new Vec3();
 
-    _ray.distanceSqToSegment(_line.start, _line.end, point, pointOnLine);
+    _ray.distanceSqToLine(_line, point, pointOnLine);
     const isInside = point.distanceTo(pointOnLine) < _lineWidth * 0.5;
 
     if (isInside) {
@@ -193,7 +193,7 @@ function raycastScreenSpace(lineSegments: LineSegments, camera: Camera, intersec
       const pointOnLine = new Vec3();
       const point = new Vec3();
 
-      _ray.distanceSqToSegment(_line.start, _line.end, point, pointOnLine);
+      _ray.distanceSqToLine(_line, point, pointOnLine);
 
       intersects.push({
         point: point,

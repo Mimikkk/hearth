@@ -307,7 +307,7 @@ export class OBB {
     // transform ray to the local space of the OBB
 
     inverse.copy(matrix).invert();
-    localRay.copy(ray).applyMat4(inverse);
+    localRay.from(ray).applyMat4(inverse);
 
     // perform ray <-> AABB intersection test
 
