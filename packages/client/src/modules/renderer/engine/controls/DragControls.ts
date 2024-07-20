@@ -139,10 +139,17 @@ export class DragControls {
           if (this.configuration.mode === 'translate') {
             _inverseMatrix.from(selected!.parent!.matrixWorld).invert();
 
+            // Vec3.fillMat4Position(_world, selected!.matrixWorld);
+            // Vec3.sub_(_intersection, _world, _offset);
             _offset.from(_intersection).sub(_world.fromMat4Position(selected!.matrixWorld));
           } else if (this.configuration.mode === 'rotate') {
-            _up.set(0, 1, 0).applyQuaternion(camera.quaternion).normalize();
-            _right.set(1, 0, 0).applyQuaternion(camera.quaternion).normalize();
+            Vec3.set(_up, 0, 1, 0);
+            Vec3.applyQuaternion(_up, camera.quaternion);
+            Vec3.normalize(_up);
+
+            Vec3.set(_right, 1, 0, 0);
+            Vec3.applyQuaternion(_right, camera.quaternion);
+            Vec3.normalize(_right);
           }
         }
 

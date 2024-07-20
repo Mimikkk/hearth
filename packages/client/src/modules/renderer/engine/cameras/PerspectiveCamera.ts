@@ -49,10 +49,6 @@ export class PerspectiveCamera extends Camera {
     this.updateProjectionMatrix();
   }
 
-  static is(value: any): value is PerspectiveCamera {
-    return value?.isPerspectiveCamera === true;
-  }
-
   copy(source: PerspectiveCamera, recursive?: boolean): this {
     super.copy(source, recursive);
 

@@ -1,4 +1,4 @@
-import { Vec3 } from '../math/Vec3.js';
+import { Vec3, Vec3 } from '../math/Vec3.js';
 import type { Mesh } from '../objects/Mesh.js';
 import type { Scene } from '../scenes/Scene.js';
 import { Quaternion } from '../math/Quaternion.js';
@@ -7,6 +7,8 @@ import { Frustum } from '../math/Frustum.js';
 import type { Object3D } from '../core/Object3D.js';
 import { PerspectiveCamera } from '@modules/renderer/engine/cameras/PerspectiveCamera.js';
 import { OrthographicCamera } from '@modules/renderer/engine/cameras/OrthographicCamera.js';
+import { throttle } from 'lodash-es';
+import { Plane_ } from '@modules/renderer/engine/math/Plane.js';
 
 const _frustum = Frustum.empty();
 const _center = new Vec3();
@@ -31,6 +33,9 @@ const _vectemp3 = new Vec3();
 const _matrix = new Mat4();
 const _quaternion = Quaternion.identity();
 const _scale = new Vec3();
+
+const isPerspectiveCamera = (camera: any): camera is PerspectiveCamera => camera.isPerspectiveCamera;
+const isOrthographicCamera = (camera: any): camera is OrthographicCamera => camera.isOrthographicCamera;
 
 export class SelectionControl {
   start: Vec3 = new Vec3();
@@ -75,7 +80,7 @@ export class SelectionControl {
     this.camera.updateProjectionMatrix();
     this.camera.updateMatrixWorld();
 
-    if (PerspectiveCamera.is(this.camera)) {
+    if (isPerspectiveCamera(this.camera)) {
       _tmpPoint.from(startPoint);
       _tmpPoint.x = Math.min(startPoint.x, endPoint.x);
       _tmpPoint.y = Math.max(startPoint.y, endPoint.y);
@@ -108,13 +113,15 @@ export class SelectionControl {
       _vectemp3.add(_vecNear);
 
       const planes = _frustum.planes;
-      planes[0].fromCoplanar(_vecNear, _vecTopLeft, _vecTopRight);
-      planes[1].fromCoplanar(_vecNear, _vecTopRight, _vecDownRight);
-      planes[2].fromCoplanar(_vecDownRight, _vecDownLeft, _vecNear);
-      planes[3].fromCoplanar(_vecDownLeft, _vecTopLeft, _vecNear);
-      planes[4].fromCoplanar(_vecTopRight, _vecDownRight, _vecDownLeft);
-      planes[5].fromCoplanar(_vectemp3, _vectemp2, _vectemp1).negate();
-    } else if (OrthographicCamera.is(this.camera)) {
+      Plane_.fillCoplanar(planes[0], _vecNear, _vecTopLeft, _vecTopRight);
+      Plane_.fillCoplanar(planes[1], _vecNear, _vecTopRight, _vecDownRight);
+      Plane_.fillCoplanar(planes[2], _vecDownRight, _vecDownLeft, _vecNear);
+      Plane_.fillCoplanar(planes[3], _vecDownLeft, _vecTopLeft, _vecNear);
+      Plane_.fillCoplanar(planes[4], _vecTopRight, _vecDownRight, _vecDownLeft);
+      Plane_.fillCoplanar(planes[5], _vectemp3, _vectemp2, _vectemp1);
+
+      Vec3.negate(planes[5].normal);
+    } else if (isOrthographicCamera(this.camera)) {
       const left = Math.min(startPoint.x, endPoint.x);
       const top = Math.max(startPoint.y, endPoint.y);
       const right = Math.max(startPoint.x, endPoint.x);
@@ -141,12 +148,13 @@ export class SelectionControl {
       _vecFarDownLeft.unproject(this.camera);
 
       const planes = _frustum.planes;
-      planes[0].fromCoplanar(_vecTopLeft, _vecFarTopLeft, _vecFarTopRight);
-      planes[1].fromCoplanar(_vecTopRight, _vecFarTopRight, _vecFarDownRight);
-      planes[2].fromCoplanar(_vecFarDownRight, _vecFarDownLeft, _vecDownLeft);
-      planes[3].fromCoplanar(_vecFarDownLeft, _vecFarTopLeft, _vecTopLeft);
-      planes[4].fromCoplanar(_vecTopRight, _vecDownRight, _vecDownLeft);
-      planes[5].fromCoplanar(_vecFarDownRight, _vecFarTopRight, _vecFarTopLeft).negate();
+      Plane_.fillCoplanar(planes[0], _vecTopLeft, _vecFarTopLeft, _vecFarTopRight);
+      Plane_.fillCoplanar(planes[1], _vecTopRight, _vecFarTopRight, _vecFarDownRight);
+      Plane_.fillCoplanar(planes[2], _vecFarDownRight, _vecFarDownLeft, _vecDownLeft);
+      Plane_.fillCoplanar(planes[3], _vecFarDownLeft, _vecFarTopLeft, _vecTopLeft);
+      Plane_.fillCoplanar(planes[4], _vecTopRight, _vecDownRight, _vecDownLeft);
+      Plane_.fillCoplanar(planes[5], _vecFarDownRight, _vecFarTopRight, _vecFarTopLeft);
+      Vec3.negate(planes[5].normal);
     }
   }
 
@@ -160,7 +168,7 @@ export class SelectionControl {
           _matrix.decompose(_center, _quaternion, _scale);
           _center.applyMat4(object.matrixWorld);
 
-          if (frustum.contains(_center)) {
+          if (Frustum.contains(frustum, _center)) {
             this.instances[object.uuid].push(instanceId);
           }
         }
@@ -171,7 +179,7 @@ export class SelectionControl {
 
         _center.applyMat4(object.matrixWorld);
 
-        if (frustum.contains(_center)) {
+        if (Frustum.contains(frustum, _center)) {
           this.collection.push(object);
         }
       }

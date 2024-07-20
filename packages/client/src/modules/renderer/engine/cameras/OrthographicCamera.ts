@@ -37,10 +37,6 @@ export class OrthographicCamera extends Camera {
     this.updateProjectionMatrix();
   }
 
-  static is(value: any): value is OrthographicCamera {
-    return value?.isOrthographicCamera === true;
-  }
-
   copy(source: OrthographicCamera, recursive?: boolean): this {
     super.copy(source, recursive);
 

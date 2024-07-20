@@ -84,7 +84,7 @@ useWindowResizer(renderer, camera);
 const selection = new SelectionControl(camera, scene);
 const visualizer = new SelectionVisualizer(renderer);
 const updateVec = (vec3: Vec3, event: PointerEvent) => {
-  vec3.set((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1, 0.5);
+  Vec3.set(vec3, (event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1, 0.5);
 };
 renderer.parameters.canvas.addEventListener('pointerdown', event => {
   for (const object of selection.collection) {
@@ -124,7 +124,7 @@ const ui = UI.create('Selection')
     for (const object of selection.collection) {
       (object.material as MeshLambertMaterial).emissive.set(0x000000);
     }
-    selection.start.set(0, 0, 0);
-    selection.end.set(0, 0, 0);
+    Vec3.clear(selection.start);
+    Vec3.clear(selection.end);
     selection.collection.length = 0;
   });
