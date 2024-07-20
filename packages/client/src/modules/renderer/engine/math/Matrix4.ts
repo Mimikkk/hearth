@@ -1,5 +1,5 @@
 import { CoordinateSystem } from '../constants.js';
-import { Vec3, Vector3 } from './Vector3.js';
+import { Vector3 } from './Vector3.js';
 import { Matrix, Matrix3 } from './Matrix3.js';
 import { Euler } from '@modules/renderer/engine/math/Euler.js';
 import { Quaternion } from '@modules/renderer/engine/math/Quaternion.js';
@@ -525,12 +525,12 @@ export class Matrix4 implements Matrix {
     return this;
   }
 
-  setPosition(x: Vec3): this;
+  setPosition(x: Vector3): this;
   setPosition(x: number, y: number, z: number): this;
-  setPosition(x: Vec3 | number, y?: number, z?: number): this {
+  setPosition(x: Vector3 | number, y?: number, z?: number): this {
     const te = this.elements;
 
-    if (Vec3.is(x)) {
+    if (x instanceof Vector3) {
       te[12] = x.x;
       te[13] = x.y;
       te[14] = x.z;
