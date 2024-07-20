@@ -16,7 +16,7 @@ export function cloneUniforms(src) {
           property.isVector3 ||
           property.isVector4 ||
           property.isTexture ||
-          'w' in property)
+          property.isQuaternion)
       ) {
         if (property.isRenderTargetTexture) {
           console.warn(

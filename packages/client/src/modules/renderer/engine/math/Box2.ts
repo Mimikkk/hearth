@@ -46,6 +46,7 @@ export namespace Box2 {
   };
 
   export const clone = ({ min, max }: Box2): Box2 => ({ min, max });
+  export const cloneVec = (min: Vec2, max: Vec2): Box2 => ({ min, max });
 
   export const size = (self: Box2): Vec2 => vec2(self.max.x - self.min.x, self.max.y - self.min.y);
   export const size_ = (self: Box2, into: Vec2): Vec2 => {
@@ -153,8 +154,13 @@ export namespace Box2 {
 
     return x * x + y * y;
   };
-  export const distanceTo = (self: Box2, vec: Vec2): number => Math.sqrt(distanceSqTo(self, vec));
+  export const distanceTo = (self: Box2, vec: Vec2): number => {
+    const x = clamp(vec.x, self.min.x, self.max.x) - vec.x;
+    const y = clamp(vec.y, self.min.y, self.max.y) - vec.y;
 
-  export const equals = (a: Box2, b: Box2): boolean =>
-    b.min.x === a.min.x && b.min.y === a.min.y && b.max.x === a.max.x && b.max.y === a.max.y;
+    return Math.sqrt(x * x + y * y);
+  };
+
+  export const equals = (self: Box2, box: Box2): boolean =>
+    box.min.x === self.min.x && box.min.y === self.min.y && box.max.x === self.max.x && box.max.y === self.max.y;
 }

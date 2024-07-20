@@ -740,10 +740,10 @@ export class Matrix4 implements Matrix {
   compose(position: Vector3, quaternion: Quaternion, scale: Vector3): this {
     const te = this.elements;
 
-    const x = quaternion.x,
-      y = quaternion.y,
-      z = quaternion.z,
-      w = quaternion.w;
+    const x = quaternion._x,
+      y = quaternion._y,
+      z = quaternion._z,
+      w = quaternion._w;
     const x2 = x + x,
       y2 = y + y,
       z2 = z + z;
