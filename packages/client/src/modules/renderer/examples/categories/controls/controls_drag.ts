@@ -21,7 +21,6 @@ import { Random } from '@modules/renderer/engine/math/random.js';
 import { normalWorld } from '@modules/renderer/engine/nodes/accessors/NormalNode.js';
 import { color } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.primitves.js';
 import { Intersection } from 'three';
-import { BoundingSphereVisualizer } from '@modules/renderer/engine/helpers/BoundingSphereVisualizer.js';
 
 const createCamera = () => {
   const camera = new PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.25, 30);
@@ -120,8 +119,8 @@ const box2 = createBox(new BoxGeometry(0.2, 0.4, 0.7), -0.5, 0, 0);
 
 const scene = createScene();
 
-const sphere1 = BoundingSphereVisualizer.attach(box1);
-const sphere2 = BoundingSphereVisualizer.attach(box2);
+const sphere1 = useVisualizeSphere(box1);
+const sphere2 = useVisualizeSphere(box2);
 
 scene.add(camera, reference, box1, box2);
 

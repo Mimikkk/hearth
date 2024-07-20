@@ -29,7 +29,7 @@ export interface DragControlsEventMap {
   dragend: { object: Object3D };
 }
 
-export class DragControls {
+class DragControls {
   eventDispatcher = new EventDispatcher<DragControlsEventMap>();
 
   object: Camera;
@@ -43,6 +43,7 @@ export class DragControls {
   rotateSpeed: number;
 
   constructor(_objects: Object3D[], _camera: Camera, _domElement: HTMLElement) {
+    // disable touch scroll
     _domElement.style.touchAction = 'none';
 
     let _selected: Object3D | null = null;
@@ -253,3 +254,5 @@ export class DragControls {
   getRaycaster: () => Raycaster;
   setObjects: (objects: Object3D[]) => void;
 }
+
+export { DragControls };
