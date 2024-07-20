@@ -1,39 +1,105 @@
 import { Vec3 } from './Vec3.js';
 import { Mat4 } from './Mat4.js';
 import * as MathUtils from './MathUtils.js';
+import { Const } from './types.ts';
+import { Attribute } from '@modules/renderer/engine/core/types.js';
+import { clamp } from './MathUtils.js';
 
 const _startP = /*@__PURE__*/ new Vec3();
 const _startEnd = /*@__PURE__*/ new Vec3();
 
 export class Line3 {
   declare isLine3: true;
-  declare ['constructor']: typeof Line3;
 
   constructor(
     public start: Vec3 = new Vec3(),
     public end: Vec3 = new Vec3(),
   ) {}
 
-  set(start: Vec3, end: Vec3): Line3 {
+  static new(start: Vec3 = Vec3.new(), end: Vec3 = Vec3.new()): Line3 {
+    return new Line3(start, end);
+  }
+
+  static empty(): Line3 {
+    return Line3.new();
+  }
+
+  static clone({ start, end }: Const<Line3>, into: Line3 = Line3.empty()): Line3 {
+    return into.set(start, end);
+  }
+
+  static is(line: any): line is Line3 {
+    return line?.isLine3 === true;
+  }
+
+  static into(into: Line3, { start, end }: Const<Line3>): Line3 {
+    return into.set(start, end);
+  }
+
+  static from({ start, end }: Const<Line3>, into: Line3 = Line3.empty()): Line3 {
+    return into.set(start, end);
+  }
+
+  static fromParams(
+    x1: number,
+    y1: number,
+    z1: number,
+    x2: number,
+    y2: number,
+    z2: number,
+    into: Line3 = Line3.empty(),
+  ): Line3 {
+    return into.setParams(x1, y1, z1, x2, y2, z2);
+  }
+
+  static fromAttribute(
+    attribute: Const<Attribute>,
+    i0: number = 0,
+    i1: number = 1,
+    into: Line3 = Line3.empty(),
+  ): Line3 {
+    return into.fromAttribute(attribute, i0, i1);
+  }
+
+  clone(into: Line3 = Line3.new()): Line3 {
+    return into.from(this);
+  }
+
+  set(start: Const<Vec3>, end: Const<Vec3>): this {
     this.start.from(start);
     this.end.from(end);
-
     return this;
   }
 
-  copy(line: Line3): Line3 {
-    this.start.from(line.start);
-    this.end.from(line.end);
-
+  setStart(vec: Const<Vec3>): this {
+    this.start.from(vec);
     return this;
   }
 
-  getCenter(target: Vec3): Vec3 {
-    return target.addVectors(this.start, this.end).scale(0.5);
+  setEnd(vec: Const<Vec3>): this {
+    this.end.from(vec);
+    return this;
   }
 
-  delta(target: Vec3): Vec3 {
-    return target.subVectors(this.end, this.start);
+  setParams(x1: number, y1: number, z1: number, x2: number, y2: number, z2: number): this {
+    this.start.set(x1, y1, z1);
+    this.end.set(x2, y2, z2);
+    return this;
+  }
+
+  fromAttribute(attribute: Const<Attribute>, i0: number = 0, i1: number = 1): this {
+    this.start.fromAttribute(attribute, i0);
+    this.end.fromAttribute(attribute, i1);
+    return this;
+  }
+
+  fill(into: Line3): this {
+    into.from(this);
+    return this;
+  }
+
+  from(line: Const<Line3>): this {
+    return this.set(line.start, line.end);
   }
 
   distanceSq(): number {
@@ -44,45 +110,47 @@ export class Line3 {
     return this.start.distanceTo(this.end);
   }
 
-  at(t: number, target: Vec3): Vec3 {
-    return this.delta(target).scale(t).add(this.start);
+  euclideanSq(): number {
+    return this.distanceSq();
   }
 
-  closestPointToPointParameter(point: Vec3, clampToLine: boolean): number {
-    _startP.subVectors(point, this.start);
-    _startEnd.subVectors(this.end, this.start);
-
-    const startEnd2 = _startEnd.dot(_startEnd);
-    const startEnd_startP = _startEnd.dot(_startP);
-
-    let t = startEnd_startP / startEnd2;
-
-    if (clampToLine) {
-      t = MathUtils.clamp(t, 0, 1);
-    }
-
-    return t;
+  euclidean(): number {
+    return this.distance();
   }
 
-  closestPointToPoint(point: Vec3, clampToLine: boolean, target: Vec3): Vec3 {
-    const t = this.closestPointToPointParameter(point, clampToLine);
-
-    return this.delta(target).scale(t).add(this.start);
+  at(step: number, into: Vec3 = Vec3.new()): Vec3 {
+    return this.delta(into).scale(step).add(this.start);
   }
 
-  applyMat4(matrix: Mat4): Line3 {
+  closestTo(vec: Const<Vec3>, into: Vec3 = Vec3.new()): Vec3 {
+    return this.at(clamp(this.closestAt(vec), 0, 1), into);
+  }
+
+  closestAt(vec: Const<Vec3>): number {
+    const offset = _vec1.from(vec).sub(this.start);
+    const delta = this.delta();
+
+    return clamp(delta.dot(offset) / delta.dot(delta), 0, 1);
+  }
+
+  applyMat4(matrix: Const<Mat4>): this {
     this.start.applyMat4(matrix);
     this.end.applyMat4(matrix);
-
     return this;
   }
 
-  equals(line: Line3): boolean {
-    return line.start.equals(this.start) && line.end.equals(this.end);
+  equals({ end, start }: Const<Line3>): boolean {
+    return this.start.equals(start) && this.end.equals(end);
   }
 
-  clone(): Line3 {
-    return new this.constructor().copy(this);
+  delta(into: Vec3 = Vec3.new()): Vec3 {
+    return into.from(this.end).sub(this.start);
+  }
+
+  center(into: Vec3 = Vec3.new()): Vec3 {
+    return into.from(this.start).add(this.end).scale(0.5);
   }
 }
 Line3.prototype.isLine3 = true;
+
+const _vec1 = Vec3.new();

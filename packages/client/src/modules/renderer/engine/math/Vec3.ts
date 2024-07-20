@@ -31,6 +31,10 @@ export class Vec3 implements IVec3 {
     return new Vec3(x, y, z);
   }
 
+  clone(into: Vec3 = Vec3.new()): Vec3 {
+    return into.from(this);
+  }
+
   set(x: number, y: number, z?: number): this {
     this.x = x;
     this.y = y;
@@ -94,10 +98,6 @@ export class Vec3 implements IVec3 {
       default:
         throw new Error('index is out of range: ' + index);
     }
-  }
-
-  clone(): Vec3 {
-    return new this.constructor(this.x, this.y, this.z);
   }
 
   from(v: Const<Vec3>): this {

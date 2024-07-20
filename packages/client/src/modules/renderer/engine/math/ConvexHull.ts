@@ -412,7 +412,7 @@ export class ConvexHull {
       const vertex = vertices[i];
 
       if (vertex !== v0 && vertex !== v1) {
-        _line3.closestPointToPoint(vertex.point, true, _closestPoint);
+        _line3.closestTo(vertex.point, _closestPoint);
 
         const distance = _closestPoint.distanceSqTo(vertex.point);
 

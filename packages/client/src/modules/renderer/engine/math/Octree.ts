@@ -242,7 +242,7 @@ export class Octree {
 
     for (let i = 0; i < lines.length; i++) {
       _line1.set(lines[i][0], lines[i][1]);
-      _line1.closestPointToPoint(plainPoint, true, _v2);
+      _line1.closestTo(plainPoint, _v2);
 
       const d = _v2.distanceSqTo(sphere.center);
 

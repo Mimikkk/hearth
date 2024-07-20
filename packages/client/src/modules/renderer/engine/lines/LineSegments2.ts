@@ -174,7 +174,7 @@ function raycastScreenSpace(lineSegments: LineSegments, camera: Camera, intersec
     _line.end.z = 0;
 
     // get closest point on ray to segment
-    const param = _line.closestPointToPointParameter(_ssOrigin3, true);
+    const param = _line.closestAt(_ssOrigin3);
     _line.at(param, _closestPoint);
 
     // check if the intersection point is within clip space
