@@ -53,19 +53,14 @@ export const Canvas = () => {
   const drag = createResizer({ vertical: false });
 
   return (
-    <div class="w-full h-full rounded-sm border border-primary-3 flex gap-1">
-      <div
-        ref={drag.target.ref}
-        class={cx('relative flex-shrink-0', showCode() ? 'w-[50%] min-w-[10%] max-w-[80%]' : 'w-full')}
-      >
+    <div class="w-full h-full rounded-sm border border-primary-3 flex gap-2">
+      <div ref={drag.target.ref} class={cx('relative flex-shrink-0', showCode() ? 'w-[50%] max-w-[80%]' : 'w-full')}>
         <Show when={isWebGpuAvailable} fallback={<Unavailable />}>
           <Show when={selectedExample()} fallback={<Backdrop />}>
-            <Frame class="w-full h-full overflow-hidden" src={srcHtml()} />
+            <Frame class="w-full h-full rounded-sm" src={srcHtml()} />
           </Show>
         </Show>
-        <Show when={showCode()}>
-          <DragCorner onDoubleClick={drag.reset} onDrag={drag.start} type="right" />
-        </Show>
+        <DragCorner onDoubleClick={drag.reset} onDrag={drag.start} type="right" />
       </div>
       <Show when={showCode()}>
         <CodeView src={srcTs()} />

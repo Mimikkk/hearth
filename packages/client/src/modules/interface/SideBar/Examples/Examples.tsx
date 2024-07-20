@@ -1,5 +1,5 @@
 import { TextField } from '@components/forms/TextField/TextField.js';
-import { Accessor, createEffect, createMemo, createSignal, onCleanup, Show } from 'solid-js';
+import { createEffect, createMemo, createSignal, JSXElement, onCleanup, ParentProps, Show } from 'solid-js';
 import { Search } from '@logic/Search/Search.js';
 import { createQueryable } from '@logic/createQueryable.js';
 import { ExampleNs } from '@modules/managment/exampleNs.js';
@@ -48,30 +48,24 @@ const findNested = (items: AccordionItem[], filtered: Set<AccordionItem>) => {
 const cleanupSearch = () =>
   Search.clears([ExampleNs.Search.SelectedId, ExampleNs.Search.CollapseId, ExampleNs.Search.QueryId]);
 
-const createSideBarSearch = (items: Accessor<AccordionItem[]>) => {
-  const [results, get, set] = createQueryable(items(), {
+const createSideBarSearch = () => {
+  const [results, get, set] = createQueryable(SideBarItems, {
     initialQuery: Search.get(ExampleNs.Search.QueryId) ?? '',
     keys: ['title'],
     recursiveBy: 'children',
     threshold: 0.2,
   });
 
-  const filtered = createMemo(() => findNested(items(), new Set(flatBy(results(), 'children'))));
-  const isFiltered = createMemo(() => filtered().length !== items().length);
+  const filtered = createMemo(() => findNested(SideBarItems, new Set(flatBy(results(), 'children'))));
+  const isFiltered = createMemo(() => filtered().length !== SideBarItems.length);
 
   return [filtered, isFiltered, get, set] as const;
 };
 
-const CollapsedItems = flatBy(SideBarItems, 'children')
-  .filter(x => !x.children)
-  .sort((a, b) => a.title.localeCompare(b.title));
-
 export const Examples = () => {
   onCleanup(cleanupSearch);
-  const { selectedExample, selectExample, isCollapsed } = useContent();
-
-  const items = createMemo(() => (isCollapsed() ? CollapsedItems : SideBarItems));
-  const [examples, isFiltered, query, setQuery] = createSideBarSearch(items);
+  const { selectedExample, selectExample } = useContent();
+  const [examples, isFiltered, query, setQuery] = createSideBarSearch();
 
   createEffect(() => {
     const item = AccordionItem.findOnlyId(examples());
@@ -81,7 +75,7 @@ export const Examples = () => {
   let searchRef!: HTMLInputElement;
   createEffectListener('keydown', ({ key, ctrlKey, altKey }) => {
     if (key === 'Enter') {
-      const found = AccordionItem.searchWithin(query(), items());
+      const found = AccordionItem.searchWithin(query(), SideBarItems);
 
       if (found) selectExample(found.id as ExampleName);
     } else if (key === 'Escape') {

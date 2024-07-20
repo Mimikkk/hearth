@@ -7,19 +7,15 @@ interface ContentProps {
   class?: string;
 }
 
-const CodeButton = () => {
+export const Content = (props: ContentProps) => {
   const { showCode, toggleCode } = useContent();
 
   return (
-    <div class="z-10 absolute bottom-2 right-2">
-      <ButtonIcon cross={showCode()} variant="text" icon="VsCode" onClick={toggleCode} />
+    <div class={cx(props.class, 'w-full h-full relative overflow-hidden')}>
+      <div class="z-10 absolute right-2 bottom-1">
+        <ButtonIcon cross={showCode()} variant="text" icon="VsCode" onClick={toggleCode} />
+      </div>
+      <Canvas />
     </div>
   );
 };
-
-export const Content = (props: ContentProps) => (
-  <div class={cx(props.class, 'w-full h-full relative overflow-hidden')}>
-    <CodeButton />
-    <Canvas />
-  </div>
-);
