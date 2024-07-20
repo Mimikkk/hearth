@@ -1,7 +1,8 @@
 import TempNode from '../core/TempNode.js';
 import { addNodeElement, nodeArray, nodeObject, nodeObjects } from '../shadernode/ShaderNodes.js';
 import FunctionNode from './FunctionNode.ts';
-import NodeBuilder from '@modules/renderer/engine/nodes/core/NodeBuilder.js';
+import { NodeBuilder } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.js';
+
 import { NodeTypeOption } from '@modules/renderer/engine/nodes/core/constants.js';
 
 class FunctionCallNode extends TempNode {

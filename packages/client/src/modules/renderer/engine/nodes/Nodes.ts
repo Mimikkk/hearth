@@ -16,7 +16,6 @@ export { default as LightingModel } from './core/LightingModel.js';
 export { default as Node } from './core/Node.ts';
 export { default as VarNode, temp } from './core/VarNode.js';
 export { default as NodeAttribute } from './core/NodeAttribute.js';
-export { default as NodeBuilder } from './core/NodeBuilder.js';
 export { default as NodeCache } from './core/NodeCache.js';
 export { default as NodeCode } from './core/NodeCode.js';
 export { default as NodeFrame } from './core/NodeFrame.js';

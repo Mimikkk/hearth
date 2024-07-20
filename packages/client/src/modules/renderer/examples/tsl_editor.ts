@@ -6,7 +6,7 @@ import * as monaco from 'monaco-editor';
 import { Color, ColorSpace, Mesh, PerspectiveCamera, PlaneGeometry, Scene } from '@modules/renderer/engine/engine.js';
 import './tsl_editor.css';
 import './utilities/monaco-vite.js';
-import WGSLNodeBuilder from '@modules/renderer/engine/renderers/webgpu/nodes/WGSLNodeBuilder.js';
+import { NodeBuilder } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.js';
 import { resolveScript } from '@modules/renderer/examples/utilities/resolveScript.js';
 
 const createContainers = () => {
@@ -52,7 +52,7 @@ const options: {
   preview: true,
 };
 
-let builder: WGSLNodeBuilder | null = null;
+let builder: NodeBuilder | null = null;
 
 const renderer = await Renderer.create();
 renderer.outputColorSpace = ColorSpace.LinearSRGB;
@@ -66,7 +66,7 @@ const refreshEditorView = async () => {
   mesh.material.fragmentNode = await resolveScript(code);
   mesh.material.needsUpdate = true;
 
-  builder = new WGSLNodeBuilder(mesh, renderer).build();
+  builder = new NodeBuilder(mesh, renderer).build();
 
   refreshResultView();
 };

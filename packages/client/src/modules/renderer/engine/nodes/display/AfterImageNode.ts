@@ -8,9 +8,10 @@ import { uniform } from '../core/UniformNode.js';
 import { RenderTarget } from '@modules/renderer/engine/engine.js';
 import { max, sign } from '../math/MathNode.js';
 import { QuadMesh } from '../../objects/QuadMesh.js';
-import { NodeBuilder, TextureNode } from '@modules/renderer/engine/nodes/Nodes.js';
+import { TextureNode } from '@modules/renderer/engine/nodes/Nodes.js';
 import { NodeMaterial } from '@modules/renderer/engine/nodes/materials/NodeMaterial.js';
 import NodeFrame from '@modules/renderer/engine/nodes/core/NodeFrame.js';
+import type { NodeBuilder } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.js';
 
 const quadMeshComp = new QuadMesh(null);
 

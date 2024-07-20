@@ -1,6 +1,7 @@
 import CodeNode, { CodeNodeInclude } from './CodeNode.ts';
 import { nodeObject } from '../shadernode/ShaderNodes.js';
-import NodeBuilder from '@modules/renderer/engine/nodes/core/NodeBuilder.js';
+import { NodeBuilder } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.js';
+
 import { NodeType } from '@modules/renderer/engine/nodes/core/constants.js';
 
 class FunctionNode extends CodeNode {

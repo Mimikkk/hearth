@@ -32,7 +32,8 @@ import {
 import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 import NodeUniformsGroup from '@modules/renderer/engine/renderers/common/nodes/NodeUniformsGroup.js';
 import RenderObject from '@modules/renderer/engine/renderers/common/RenderObject.js';
-import NodeBuilder from '@modules/renderer/engine/nodes/core/NodeBuilder.js';
+import { NodeBuilder } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.js';
+
 import { types } from 'sass';
 import Color = types.Color;
 

@@ -2,7 +2,8 @@ import { EventDispatcher } from '@modules/renderer/engine/engine.js';
 import { NodeTypeOption, NodeUpdateType } from './constants.ts';
 import { getCacheKey, getNodeChildren } from './NodeUtils.js';
 import { generateUuid } from '../../math/MathUtils.ts';
-import NodeBuilder from '@modules/renderer/engine/nodes/core/NodeBuilder.js';
+import { NodeBuilder } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.js';
+
 import NodeFrame from '@modules/renderer/engine/nodes/core/NodeFrame.js';
 
 let _nodeId = 0;

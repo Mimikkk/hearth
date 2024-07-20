@@ -2,7 +2,7 @@ import FogNode from './FogNode.js';
 import { smoothstep } from '../math/MathNode.js';
 import Node from '../core/Node.ts';
 import { addNodeElement, nodeProxy } from '../shadernode/ShaderNodes.js';
-import NodeBuilder from '@modules/renderer/engine/nodes/core/NodeBuilder.js';
+import { NodeBuilder } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.js';
 
 class FogRangeNode extends FogNode {
   static type = 'FogRangeNode';

@@ -8,8 +8,6 @@ import {
   GPUTextureViewDimensionType,
 } from './utils/constants.js';
 
-import WGSLNodeBuilder from './nodes/WGSLNodeBuilder.js';
-
 import { BackendUtilities } from './utils/BackendUtilities.js';
 import { BackendAttributes } from './utils/BackendAttributes.js';
 import { BackendBindings } from './utils/BackendBindings.js';
@@ -25,6 +23,7 @@ import RenderObject from '@modules/renderer/engine/renderers/common/RenderObject
 import ProgrammableStage from '@modules/renderer/engine/renderers/common/ProgrammableStage.js';
 import Color4 from '@modules/renderer/engine/renderers/common/Color4.js';
 import { ResourceManager } from './utils/ResourceManager.js';
+import { NodeBuilder } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.js';
 
 export class Backend {
   data: WeakMap<any, any>;
@@ -960,7 +959,7 @@ export class Backend {
   // node builder
 
   createNodeBuilder(object: Object3D, renderer: Renderer, scene: Scene | null = null) {
-    return new WGSLNodeBuilder(object, renderer, scene);
+    return new NodeBuilder(object, renderer, scene);
   }
 
   // program

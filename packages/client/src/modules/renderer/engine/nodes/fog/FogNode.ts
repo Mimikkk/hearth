@@ -1,7 +1,7 @@
 import Node from '../core/Node.js';
 import { positionView } from '../accessors/PositionNode.js';
 import { addNodeElement, nodeProxy } from '../shadernode/ShaderNodes.js';
-import NodeBuilder from '@modules/renderer/engine/nodes/core/NodeBuilder.js';
+import { NodeBuilder } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.js';
 
 class FogNode extends Node {
   static type = 'FogNode';
