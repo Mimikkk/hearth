@@ -77,7 +77,6 @@ export class Object3D<EventMap extends Object3DEventMap = Object3DEventMap> {
   children: Object3D[];
   up: Vec3;
   position: Vec3;
-  rotation: Euler;
   quaternion: Quaternion;
   scale: Vec3;
   modelViewMatrix: Mat4;
@@ -629,7 +628,6 @@ export class Object3D<EventMap extends Object3DEventMap = Object3DEventMap> {
     this.up.from(source.up);
 
     this.position.from(source.position);
-    this.rotation.order = source.rotation.order;
     this.quaternion.copy(source.quaternion);
     this.scale.from(source.scale);
 
