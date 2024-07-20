@@ -1,5 +1,5 @@
 import { CompressedTextureFormat, TextureFormat } from '@modules/renderer/engine/constants.js';
-import { Basis, createBasis } from '@mimi/basis';
+import { Basis, createBasis } from '@zd/basis';
 
 type ResultTranscode = {
   type: 'transcode';
