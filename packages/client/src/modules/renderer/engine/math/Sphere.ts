@@ -20,7 +20,7 @@ export class Sphere {
     return Sphere.new();
   }
 
-  static clone(sphere: Const<Sphere>, into: Sphere = Sphere.empty()): Sphere {
+  static clone(sphere: Const<Sphere>, into: Sphere = Sphere.new()): Sphere {
     return into.from(sphere);
   }
 
@@ -32,7 +32,7 @@ export class Sphere {
     return into.from(sphere);
   }
 
-  static from(sphere: Const<Sphere>, into: Sphere = Sphere.empty()): Sphere {
+  static from(sphere: Const<Sphere>, into: Sphere = Sphere.new()): Sphere {
     return into.from(sphere);
   }
 
@@ -41,7 +41,7 @@ export class Sphere {
     centerY: number,
     centerZ: number,
     radius: number,
-    into: Sphere = Sphere.empty(),
+    into: Sphere = Sphere.new(),
   ): Sphere {
     return into.setParams(centerX, centerY, centerZ, radius);
   }
@@ -50,7 +50,7 @@ export class Sphere {
     return into.fromCoords(coords, center);
   }
 
-  clone(into: Sphere = Sphere.empty()): Sphere {
+  clone(into: Sphere = Sphere.new()): Sphere {
     return Sphere.clone(this, into);
   }
 
