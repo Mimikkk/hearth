@@ -185,7 +185,7 @@ function raycastScreenSpace(lineSegments: LineSegments2, camera: Camera, interse
 
   _ssOrigin3.set(_ssOrigin.x, _ssOrigin.y, 0);
 
-  _mvMatrix.from(camera.matrixWorldInverse).mul(matrixWorld);
+  _mvMatrix.multiplyMatrices(camera.matrixWorldInverse, matrixWorld);
 
   for (let i = 0, l = segmentCount; i < l; i++) {
     _start4.fromAttribute(instanceStart, i);

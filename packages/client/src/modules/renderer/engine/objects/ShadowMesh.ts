@@ -56,7 +56,7 @@ export class ShadowMesh extends Mesh {
     sme[14] = -lightPosition4D.z * -plane.constant;
     sme[15] = dot - lightPosition4D.w * -plane.constant;
 
-    this.matrix.from(_shadowMatrix).mul(this.meshMatrix);
+    this.matrix.multiplyMatrices(_shadowMatrix, this.meshMatrix);
   }
 }
 

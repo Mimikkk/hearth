@@ -35,7 +35,7 @@ export class Sprite extends Object3D {
     _worldScale.fromMat4Scale(this.matrixWorld);
 
     _viewWorldMatrix.from(raycaster.camera.matrixWorld);
-    this.modelViewMatrix.from(raycaster.camera.matrixWorldInverse).mul(this.matrixWorld);
+    this.modelViewMatrix.multiplyMatrices(raycaster.camera.matrixWorldInverse, this.matrixWorld);
 
     _mv.fromMat4Position(this.modelViewMatrix);
 

@@ -41,7 +41,7 @@ export class PointLightShadow extends LightShadow<PerspectiveCamera> {
 
     shadowMatrix.asTranslation(-_lightPositionWorld.x, -_lightPositionWorld.y, -_lightPositionWorld.z);
 
-    _projScreenMatrix.from(camera.projectionMatrix).mul(camera.matrixWorldInverse);
+    _projScreenMatrix.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse);
     this.frustum.fromProjection(_projScreenMatrix);
     return this;
   }
