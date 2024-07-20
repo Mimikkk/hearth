@@ -617,10 +617,10 @@ export namespace Vec3 {
 
     return self;
   };
-  export const fill_ = (into: Vec3, { x, y, z }: Const<Vec3>): Vec3 => fill(into, x, y, z);
+  export const fill_ = (into: Vec3, from: Const<Vec3>): Vec3 => clone_(from, into);
 
-  export const clone = (from: Const<Vec3>): Vec3 => clone_(from, empty());
-  export const clone_ = (from: Const<Vec3>, into: Vec3): Vec3 => fill_(into, from);
+  export const clone = (from: Const<Vec3>): Vec3 => fill_(from, empty());
+  export const clone_ = ({ x, y, z }: Const<Vec3>, into: Vec3): Vec3 => fill(into, x, y, z);
 
   export const add = (a: Vec3, b: Const<Vec3>): Vec3 => add_(a, b, a);
   export const add_ = (a: Const<Vec3>, b: Const<Vec3>, into: Vec3): Vec3 => fill(into, a.x + b.x, a.y + b.y, a.z + b.z);

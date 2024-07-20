@@ -56,7 +56,7 @@ export namespace Capsule {
     return into;
   };
 
-  export const clone = (from: Const<Capsule>): Capsule => clone_(from, empty());
+  export const clone = (from: Const<Capsule>): Capsule => fill_(from, empty());
   export const clone_ = (from: Const<Capsule>, into: Capsule): Capsule => fill_(into, from);
 
   export const translate = (capsule: Capsule, vec: Const<Vec3>): Capsule => translate_(capsule, vec, capsule);
