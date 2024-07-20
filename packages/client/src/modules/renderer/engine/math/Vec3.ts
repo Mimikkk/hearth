@@ -135,7 +135,7 @@ export class Vec3 implements IVec3 {
     return this.set(x, y, z);
   }
 
-  add(v: Vec3): this {
+  add(v: Const<Vec3>): this {
     this.x += v.x;
     this.y += v.y;
     this.z += v.z;

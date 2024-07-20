@@ -75,7 +75,7 @@ export class Vec4 implements IVec4 {
     return into.asLerp(from, to, step);
   }
 
-  asAdd(a: Vec4, b: Vec4): this {
+  asAdd(a: Const<Vec4>, b: Const<Vec4>): this {
     this.x = a.x + b.x;
     this.y = a.y + b.y;
     this.z = a.z + b.z;
@@ -84,7 +84,7 @@ export class Vec4 implements IVec4 {
     return this;
   }
 
-  asSub(a: Vec4, b: Vec4): this {
+  asSub(a: Const<Vec4>, b: Const<Vec4>): this {
     this.x = a.x - b.x;
     this.y = a.y - b.y;
     this.z = a.z - b.z;
