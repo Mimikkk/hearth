@@ -81,7 +81,7 @@ export { DiscreteInterpolant } from './math/interpolants/DiscreteInterpolant.ts'
 export { CubicInterpolant } from './math/interpolants/CubicInterpolant.ts';
 export { Interpolant } from './math/Interpolant.ts';
 export * as MathUtils from './math/MathUtils.ts';
-export { ICylindrical } from './math/Cylindrical.ts';
+export { Cylindrical } from './math/Cylindrical.ts';
 export { Plane } from './math/Plane.ts';
 export { Sphere } from './math/Sphere.ts';
 export { Ray } from './math/Ray.ts';

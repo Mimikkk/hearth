@@ -6,7 +6,7 @@ import type { Color } from '@modules/renderer/engine/math/Color.js';
 import { Euler } from '@modules/renderer/engine/math/Euler.js';
 import type { Matrix3 } from '@modules/renderer/engine/math/Matrix3.js';
 import type { Matrix4 } from '@modules/renderer/engine/math/Matrix4.js';
-import type { ICylindrical } from '@modules/renderer/engine/math/Cylindrical.js';
+import type { Cylindrical } from '@modules/renderer/engine/math/Cylindrical.js';
 import type { Spherical } from '@modules/renderer/engine/math/Spherical.js';
 import type { Camera } from '@modules/renderer/engine/cameras/Camera.js';
 import { Const } from '@modules/renderer/engine/math/types.js';
@@ -479,7 +479,7 @@ export class Vector3 implements IVector3 {
     return this;
   }
 
-  setFromCylindrical(cylindrical: ICylindrical): this {
+  setFromCylindrical(cylindrical: Cylindrical): this {
     return this.setFromCylindricalCoords(cylindrical.radius, cylindrical.theta, cylindrical.y);
   }
 
@@ -833,10 +833,10 @@ export namespace IVec3 {
   };
   export const fillSpherical = (self: IVec3, spherical: Const<Spherical>): IVec3 => fromSpherical_(spherical, self);
 
-  export const fromCylindrical = (cylindrical: Const<ICylindrical>): IVec3 => fromCylindrical_(cylindrical, empty());
-  export const fromCylindrical_ = ({ radius, theta, y }: Const<ICylindrical>, into: IVec3): IVec3 =>
+  export const fromCylindrical = (cylindrical: Const<Cylindrical>): IVec3 => fromCylindrical_(cylindrical, empty());
+  export const fromCylindrical_ = ({ radius, theta, y }: Const<Cylindrical>, into: IVec3): IVec3 =>
     set(into, radius * Math.sin(theta), y, radius * Math.cos(theta));
-  export const fillCylindrical = (self: IVec3, cylindrical: Const<ICylindrical>): IVec3 =>
+  export const fillCylindrical = (self: IVec3, cylindrical: Const<Cylindrical>): IVec3 =>
     fromCylindrical_(cylindrical, self);
 
   export const fromMat4Position = (matrix: Const<Matrix4>): IVec3 => fromMat4Position_(matrix, empty());
