@@ -186,10 +186,10 @@ export class Quaternion {
   }
 
   setFromEuler(euler: Euler, update: boolean = true): this {
-    const x = euler._x;
-    const y = euler._y;
-    const z = euler._z;
-    const order = euler._order;
+    const x = euler.x;
+    const y = euler.y;
+    const z = euler.z;
+    const order = euler.order;
 
     const cos = Math.cos;
     const sin = Math.sin;
