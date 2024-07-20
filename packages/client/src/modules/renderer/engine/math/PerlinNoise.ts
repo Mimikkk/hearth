@@ -31,37 +31,39 @@ function lerp(t: number, a: number, b: number): number {
 
 function grad(hash: number, x: number, y: number, z: number): number {
   const h = hash & 15;
-  const u = h < 8 ? x : y;
-  const v = h < 4 ? y : h == 12 || h == 14 ? x : z;
+  const u = h < 8 ? x : y,
+    v = h < 4 ? y : h == 12 || h == 14 ? x : z;
   return ((h & 1) == 0 ? u : -u) + ((h & 2) == 0 ? v : -v);
 }
 
 export class PerlinNoise {
-  static noise(x: number, y: number, z: number): number {
-    const floorX = Math.floor(x);
-    const floorY = Math.floor(y);
-    const floorZ = Math.floor(z);
-    const X = floorX & 255;
-    const Y = floorY & 255;
-    const Z = floorZ & 255;
+  noise(x: number, y: number, z: number): number {
+    const floorX = Math.floor(x),
+      floorY = Math.floor(y),
+      floorZ = Math.floor(z);
+
+    const X = floorX & 255,
+      Y = floorY & 255,
+      Z = floorZ & 255;
+
     x -= floorX;
     y -= floorY;
     z -= floorZ;
 
-    const xMinus1 = x - 1;
-    const yMinus1 = y - 1;
-    const zMinus1 = z - 1;
+    const xMinus1 = x - 1,
+      yMinus1 = y - 1,
+      zMinus1 = z - 1;
 
-    const u = fade(x);
-    const v = fade(y);
-    const w = fade(z);
+    const u = fade(x),
+      v = fade(y),
+      w = fade(z);
 
-    const A = lut[X] + Y;
-    const AA = lut[A] + Z;
-    const AB = lut[A + 1] + Z;
-    const B = lut[X + 1] + Y;
-    const BA = lut[B] + Z;
-    const BB = lut[B + 1] + Z;
+    const A = lut[X] + Y,
+      AA = lut[A] + Z,
+      AB = lut[A + 1] + Z,
+      B = lut[X + 1] + Y,
+      BA = lut[B] + Z,
+      BB = lut[B + 1] + Z;
 
     return lerp(
       w,
