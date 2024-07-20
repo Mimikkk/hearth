@@ -9,8 +9,10 @@ import {
   TextureFormat,
   Wrapping,
 } from '../constants.js';
+import * as MathUtils from '../math/MathUtils.js';
 import { Vector2 } from '../math/Vector2.js';
 import { Matrix3 } from '../math/Matrix3.js';
+import { Source } from './Source.js';
 import type { CubeTexture } from './CubeTexture.js';
 import { v4 } from 'uuid';
 
