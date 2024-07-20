@@ -11,7 +11,6 @@ export interface AccordionItem {
   id: string;
   children?: AccordionItem[];
   maintenance?: boolean;
-  masterdisk?: boolean;
 }
 
 export namespace AccordionItem {
@@ -135,7 +134,6 @@ export const Accordion = (props: AccordionProps) => {
           class={cx(
             'cursor-pointer transition-all flex justify-between p-1 rounded-sm select-none',
             item.maintenance && 'text-accent-7',
-            item.masterdisk && 'text-golden-3',
             selected() === item.id
               ? 'bg-accent-5 hover:bg-accent-4 active:bg-accent-3'
               : 'hover:bg-accent-4 active:bg-accent-3 active',
@@ -147,20 +145,7 @@ export const Accordion = (props: AccordionProps) => {
             </Show>
             <span>{item.title}</span>
             <Show when={item.maintenance}>
-              <ButtonIcon
-                class="ml-auto self-center !w-5 !h-5"
-                iconclass="fill-secondary-7 !w-3 !h-3"
-                variant="text"
-                icon="FaSolidWrench"
-              />
-            </Show>
-            <Show when={item.masterdisk}>
-              <ButtonIcon
-                class="ml-auto self-center !w-5 !h-5"
-                iconclass="fill-golden-3 !w-5 !h-5"
-                variant="text"
-                icon="IoDiscSharp"
-              />
+              <ButtonIcon class="ml-auto" size="sm" variant="contained" icon="BsWrenchAdjustable" />
             </Show>
           </div>
           <Show when={item.children}>
