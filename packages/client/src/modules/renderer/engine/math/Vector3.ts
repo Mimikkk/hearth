@@ -1,4 +1,4 @@
-import { clamp as clampNumber, NumberArray } from './MathUtils.js';
+import { clamp, NumberArray } from './MathUtils.js';
 import { Quaternion } from './Quaternion.js';
 import type { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
 import type { InterleavedBufferAttribute } from '@modules/renderer/engine/core/InterleavedBufferAttribute.js';
@@ -446,7 +446,7 @@ export class Vector3 implements IVector3 {
 
     // clamp, to handle numerical problems
 
-    return Math.acos(clampNumber(theta, -1, 1));
+    return Math.acos(clamp(theta, -1, 1));
   }
 
   distanceTo(vector: Vector3): number {
@@ -627,11 +627,6 @@ export namespace Vec3 {
   export const negate_ = ({ x, y, z }: Const<Vec3>, into: Vec3): Vec3 => set(into, -x, -y, -z);
   export const negated = (from: Const<Vec3>): Vec3 => negate_(from, empty());
 
-  export const clamp = (self: Vec3, min: Const<Vec3>, max: Const<Vec3>): Vec3 => clamp_(self, min, max, self);
-  export const clamp_ = (from: Const<Vec3>, min: Const<Vec3>, max: Const<Vec3>, into: Vec3): Vec3 =>
-    set(into, clampNumber(from.x, min.x, max.x), clampNumber(from.y, min.y, max.y), clampNumber(from.z, min.z, max.z));
-  export const clamped = (a: Const<Vec3>, min: Const<Vec3>, max: Const<Vec3>): Vec3 => clamp_(a, min, max, empty());
-
   export const add = (self: Vec3, vec: Const<Vec3>): Vec3 => add_(self, vec, self);
   export const add_ = (from: Const<Vec3>, vec: Const<Vec3>, into: Vec3): Vec3 =>
     set(into, from.x + vec.x, from.y + vec.y, from.z + vec.z);
@@ -654,16 +649,6 @@ export namespace Vec3 {
   export const mul = (a: Vec3, b: Const<Vec3>): Vec3 => mul_(a, b, a);
   export const mul_ = (a: Const<Vec3>, b: Const<Vec3>, into: Vec3): Vec3 => set(into, a.x * b.x, a.y * b.y, a.z * b.z);
   export const mulled = (a: Const<Vec3>, b: Const<Vec3>): Vec3 => mul_(a, b, empty());
-
-  export const min = (a: Vec3, b: Const<Vec3>): Vec3 => min_(a, b, a);
-  export const min_ = (a: Const<Vec3>, b: Const<Vec3>, into: Vec3): Vec3 =>
-    set(into, Math.min(a.x, b.x), Math.min(a.y, b.y), Math.min(a.z, b.z));
-  export const mined = (a: Const<Vec3>, b: Const<Vec3>): Vec3 => min_(a, b, empty());
-
-  export const max = (a: Vec3, b: Const<Vec3>): Vec3 => max_(a, b, a);
-  export const max_ = (a: Const<Vec3>, b: Const<Vec3>, into: Vec3): Vec3 =>
-    set(into, Math.max(a.x, b.x), Math.max(a.y, b.y), Math.max(a.z, b.z));
-  export const maxed = (a: Const<Vec3>, b: Const<Vec3>): Vec3 => max_(a, b, empty());
 
   export const scale = (a: Vec3, scalar: number): Vec3 => scale_(a, scalar, a);
   export const scale_ = (a: Const<Vec3>, scalar: number, into: Vec3): Vec3 =>

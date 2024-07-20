@@ -9,6 +9,93 @@ import { Mesh } from '@modules/renderer/engine/objects/Mesh.js';
 import { clamp, NumberArray } from '@modules/renderer/engine/math/MathUtils.js';
 import { Const } from '@modules/renderer/engine/math/types.js';
 
+export class Box3C {
+  constructor(
+    public min: Vector3 = new Vector3(+Infinity, +Infinity, +Infinity),
+    public max: Vector3 = new Vector3(-Infinity, -Infinity, -Infinity),
+  ) {}
+
+  expandByObject(object: Object3D, precise: boolean = false): this {
+    // Computes the world-axis-aligned bounding box of an object (including its children),
+    // accounting for both the object's, and children's, world transforms
+
+    object.updateWorldMatrix(false, false);
+
+    const geometry = object.geometry;
+
+    if (geometry) {
+      const positionAttribute = geometry.getAttribute('position');
+
+      // precise AABB computation based on vertex data requires at least a position attribute.
+      // instancing isn't supported so far and uses the normal (conservative) code path.
+
+      const isInstancedMesh = (obj: any): obj is Mesh => obj.isInstancedMesh;
+
+      //@ts-expect-error
+      if (precise === true && positionAttribute !== undefined && object.isInstancedMesh !== true) {
+        for (let i = 0, l = positionAttribute.count; i < l; i++) {
+          let _vector: Vector3 = new Vector3();
+
+          const isMesh = (obj: any): obj is Mesh => obj.isMesh;
+
+          if (isMesh(object)) {
+            object.getVertexPosition(i, _vector);
+          } else {
+            _vector.fromBufferAttribute(positionAttribute, i);
+          }
+
+          _vector.applyMatrix4(object.matrixWorld);
+          this.expandByPoint(_vector);
+        }
+      } else {
+        const _box = new Box3();
+
+        if (object.boundingBox !== undefined) {
+          // object-level bounding box
+
+          if (object.boundingBox === null) {
+            object.computeBoundingBox();
+          }
+
+          _box.copy(object.boundingBox);
+        } else {
+          // geometry-level bounding box
+
+          if (geometry.boundingBox === null) {
+            geometry.computeBoundingBox();
+          }
+
+          _box.copy(geometry.boundingBox);
+        }
+
+        _box.applyMatrix4(object.matrixWorld);
+
+        this.union(_box);
+      }
+    }
+
+    const children = object.children;
+
+    for (let i = 0, l = children.length; i < l; i++) {
+      this.expandByObject(children[i], precise);
+    }
+
+    return this;
+  }
+
+  getBoundingSphere(target: Sphere): Sphere {
+    if (this.isEmpty()) {
+      target.makeEmpty();
+    } else {
+      this.getCenter(target.center);
+
+      target.radius = this.getSize(new Vector3(0, 0, 0)).length() * 0.5;
+    }
+
+    return target;
+  }
+}
+
 export class Box3 {
   declare isBox3: true;
   declare ['constructor']: typeof Box3;
@@ -66,6 +153,7 @@ export class Box3 {
 
   setFromObject(object: Object3D, precise: boolean = false): this {
     this.makeEmpty();
+
     return this.expandByObject(object, precise);
   }
 
@@ -517,29 +605,25 @@ export namespace Box3_ {
       ? Vec3.set(into, 0, 0, 0)
       : Vec3.set(into, (self.min.x + self.max.x) / 2, (self.min.y + self.max.y) / 2, (self.min.z + self.max.z) / 2);
 
-  export const expandCoord = (self: Box3_, coord: Const<Vec3>): Box3_ => {
-    Vec3.min(self.min, coord);
-    Vec3.max(self.max, coord);
+  export const expandByVec = (self: Box3_, { x, y, z }: Const<Vec3>): Box3_ => {
+    if (x < self.min.x) self.min.x = x;
+    if (y < self.min.y) self.min.y = y;
+    if (z < self.min.z) self.min.z = z;
+    if (x > self.max.x) self.max.x = x;
+    if (y > self.max.y) self.max.y = y;
+    if (z > self.max.z) self.max.z = z;
 
     return self;
   };
-  export const expandedCoord = (self: Const<Box3_>, vec: Const<Vec3>): Box3_ => expandCoord(clone(self), vec);
+  export const expandedByVec = (self: Const<Box3_>, vec: Const<Vec3>): Box3_ => expandByVec(clone(self), vec);
 
-  export const expandCoords = (self: Box3_, vecs: Const<Vec3>[]): Box3_ => {
-    for (let i = 0, it = vecs.length; i < it; ++i) expandCoord(self, vecs[i]);
+  export const expandByVecs = (self: Box3_, vecs: Const<Vec3>[]): Box3_ => {
+    for (let i = 0, it = vecs.length; i < it; ++i) expandByVec(self, vecs[i]);
     return self;
   };
-  export const expandedCoords = (self: Const<Box3_>, vecs: Const<Vec3>[]): Box3_ => expandCoords(clone(self), vecs);
+  export const expandedByVecs = (self: Const<Box3_>, vecs: Const<Vec3>[]): Box3_ => expandByVecs(clone(self), vecs);
 
-  export const expandVec = (self: Box3_, vec: Const<Vec3>): Box3_ => {
-    Vec3.sub(self.min, vec);
-    Vec3.add(self.max, vec);
-
-    return self;
-  };
-  export const expandedVec = (self: Const<Box3_>, vec: Const<Vec3>): Box3_ => expandVec(clone(self), vec);
-
-  export const expandScalar = (self: Box3_, scalar: number): Box3_ => {
+  export const expandByScalar = (self: Box3_, scalar: number): Box3_ => {
     self.min.x -= scalar;
     self.min.y -= scalar;
     self.min.z -= scalar;
@@ -549,11 +633,9 @@ export namespace Box3_ {
 
     return self;
   };
-  export const expandedScalar = (self: Const<Box3_>, scalar: number): Box3_ => expandScalar(clone(self), scalar);
+  export const expandedByScalar = (self: Const<Box3_>, scalar: number): Box3_ => expandByScalar(clone(self), scalar);
 
-  const isInstancedMesh = (obj: any): obj is Mesh => obj.isInstancedMesh;
-  const _vec = Vec3.empty();
-  export const expandObject = (self: Const<Box3_>, object: Const<Object3D>, precise: boolean): Box3_ => {
+  export const expandByObject = (self: Const<Box3_>, object: Const<Object3D>, precise: boolean): Box3_ => {
     // Computes the world-axis-aligned bounding box of an object (including its children),
     // accounting for both the object's, and children's, world transforms
 
@@ -562,34 +644,42 @@ export namespace Box3_ {
     const geometry = object.geometry;
 
     if (geometry) {
+      const positionAttribute = geometry.getAttribute('position');
+
       // precise AABB computation based on vertex data requires at least a position attribute.
       // instancing isn't supported so far and uses the normal (conservative) code path.
 
-      const positionAttribute = geometry.attributes.position;
-      if (precise && positionAttribute && !isInstancedMesh(object)) {
+      const isInstancedMesh = (obj: any): obj is Mesh => obj.isInstancedMesh;
+
+      if (precise && positionAttribute !== undefined && !isInstancedMesh(object)) {
         for (let i = 0, l = positionAttribute.count; i < l; i++) {
+          let _vector = Vec3.empty();
+
           const isMesh = (obj: any): obj is Mesh => obj.isMesh;
 
           if (isMesh(object)) {
-            object.getVertexPosition(i, _vec);
+            object.getVertexPosition(i, _vector);
           } else {
-            Vec3.fillAttribute(_vec, positionAttribute, i);
+            Vec3.fillAttribute(_vector, positionAttribute, i);
           }
 
-          Vec3.applyMat4(_vec, object.matrixWorld);
-          expandCoord(self, _vec);
+          Vec3.applyMat4(_vector, object.matrixWorld);
+          expandByVec(self, _vector);
         }
       } else {
         const _box = empty();
 
         if (object.boundingBox !== undefined) {
+          // object-level bounding box
+
           if (object.boundingBox === null) object.computeBoundingBox();
 
           fill_(_box, object.boundingBox!);
         } else {
+          // geometry-level bounding box
           if (geometry.boundingBox === null) geometry.computeBoundingBox();
 
-          fill_(_box, geometry.boundingBox!);
+          fill_(_box, object.boundingBox);
         }
 
         applyMat4(_box, object.matrixWorld);
@@ -601,13 +691,13 @@ export namespace Box3_ {
     const children = object.children;
 
     for (let i = 0, l = children.length; i < l; i++) {
-      expandObject(self, children[i], precise);
+      expandByObject(self, children[i], precise);
     }
 
     return self;
   };
-  export const expandedObject = (self: Const<Box3_>, object: Const<Object3D>, precise: boolean): Box3_ =>
-    expandObject(clone(self), object, precise);
+  export const expandedByObject = (self: Const<Box3_>, object: Const<Object3D>, precise: boolean): Box3_ =>
+    expandByObject(clone(self), object, precise);
 
   export const fromCenterAndRadius = (center: Const<Vec3>, radius: number): Box3_ =>
     fromCenterAndRadius_(center, radius, empty());
@@ -616,9 +706,9 @@ export namespace Box3_ {
   export const fillCenterAndRadius = (self: Box3_, center: Const<Vec3>, radius: number): Box3_ =>
     fromCenterAndRadius_(center, radius, self);
 
-  export const fromCoords = (vecs: Const<Vec3>[]): Box3_ => fromCoords_(vecs, empty());
-  export const fromCoords_ = (vecs: Const<Vec3>[], into: Box3_): Box3_ => expandCoords(into, vecs);
-  export const fillCoords = (self: Box3_, vecs: Const<Vec3>[]): Box3_ => fromCoords_(vecs, clear(self));
+  export const fromVecs = (vecs: Const<Vec3>[]): Box3_ => fromVecs_(vecs, empty());
+  export const fromVecs_ = (vecs: Const<Vec3>[], into: Box3_): Box3_ => expandByVecs(into, vecs);
+  export const fillVecs = (self: Box3_, vecs: Const<Vec3>[]): Box3_ => fromVecs_(vecs, self);
 
   export const fromCenterAndSize = (center: Const<Vec3>, size: Const<Vec3>): Box3_ =>
     fromCenterAndSize_(center, size, empty());
@@ -645,7 +735,7 @@ export namespace Box3_ {
     Box3_.clear(into);
 
     for (let i = 0; i < attribute.count; ++i) {
-      expandCoord(into, Vec3.fillAttribute(Vec3.temp0, attribute, i));
+      expandByVec(into, Vec3.fillAttribute(Vec3.temp0, attribute, i));
     }
 
     return into;
@@ -679,8 +769,10 @@ export namespace Box3_ {
   };
 
   export const fromObject = (object: Const<Object3D>, precise: boolean): Box3_ => fromObject_(object, precise, empty());
-  export const fromObject_ = (object: Const<Object3D>, precise: boolean, into: Box3_): Box3_ =>
-    expandObject(clear(into), object, precise);
+  export const fromObject_ = (object: Const<Object3D>, precise: boolean, into: Box3_): Box3_ => {
+    clear(into);
+    return expandByObject(into, object, precise);
+  };
   export const fillObject = (self: Box3_, object: Const<Object3D>, precise: boolean): Box3_ =>
     fromObject_(object, precise, self);
 
@@ -846,18 +938,33 @@ export namespace Box3_ {
   };
 
   export const intersect = (self: Box3_, box: Const<Box3_>): Box3_ => {
-    Vec3.max(self.min, box.min);
-    Vec3.min(self.max, box.max);
+    if (box.min.x > self.min.x) self.min.x = box.min.x;
+    if (box.min.y > self.min.y) self.min.y = box.min.y;
+    if (box.min.z > self.min.z) self.min.z = box.min.z;
+    if (box.max.x < self.max.x) self.max.x = box.max.x;
+    if (box.max.y < self.max.y) self.max.y = box.max.y;
+    if (box.max.z < self.max.z) self.max.z = box.max.z;
 
     if (isEmpty(self)) clear(self);
 
     return self;
   };
   export const intersected = (self: Const<Box3_>, box: Const<Box3_>): Box3_ => intersect(clone(self), box);
+  export const intersectSphere = (self: Const<Box3_>): Sphere_ => intersectSphere_(self, Sphere_.empty());
+  export const intersectSphere_ = (self: Const<Box3_>, into: Sphere_): Sphere_ => {
+    const center = center_(self, Vec3.temp0);
+    const size = size_(self, Vec3.temp1);
+
+    return Sphere_.fromCenterAndSize(into, center, size.length() / 2);
+  };
 
   export const union = (self: Box3_, box: Const<Box3_>): Box3_ => {
-    Vec3.min(self.min, box.min);
-    Vec3.max(self.max, box.max);
+    if (box.min.x < self.min.x) self.min.x = box.min.x;
+    if (box.min.y < self.min.y) self.min.y = box.min.y;
+    if (box.min.z < self.min.z) self.min.z = box.min.z;
+    if (box.max.x > self.max.x) self.max.x = box.max.x;
+    if (box.max.y > self.max.y) self.max.y = box.max.y;
+    if (box.max.z > self.max.z) self.max.z = box.max.z;
 
     return self;
   };
@@ -875,65 +982,53 @@ export namespace Box3_ {
   };
   export const translated = (self: Const<Box3_>, vec: Const<Vec3>): Box3_ => translate(clone(self), vec);
 
-  export const sphere = (self: Const<Box3_>) => sphere_(self, Sphere_.empty());
-  export const sphere_ = (self: Const<Box3_>, into: Sphere_): Sphere_ => {
-    if (isEmpty(self)) return Sphere_.clear(into);
-
-    center_(self, into.center);
-    into.radius = Vec3.length(size_(self, _vec)) * 0.5;
-
-    return into;
-  };
-
   export const applyMat4 = (self: Const<Box3_>, matrix: Const<Matrix4>): Box3_ => applyMat4_(self, matrix, self);
   export const applyMat4_ = (self: Const<Box3_>, matrix: Const<Matrix4>, into: Box3_): Box3_ => {
     if (isEmpty(self)) return clear(into);
 
-    clear(into);
+    clone_(self, into);
 
-    Vec3.set(_vec, self.min.x, self.min.y, self.min.z);
-    Vec3.applyMat4(_vec, matrix);
-    expandCoord(into, _vec);
+    Vec3.applyMat4(Vec3.set(Vec3.temp0, self.min.x, self.min.y, self.min.z), matrix);
+    expandByVec(into, Vec3.temp0);
 
-    Vec3.set(_vec, self.min.x, self.min.y, self.max.z);
-    Vec3.applyMat4(_vec, matrix);
-    expandCoord(into, _vec);
+    Vec3.applyMat4(Vec3.set(Vec3.temp0, self.min.x, self.min.y, self.max.z), matrix);
+    expandByVec(into, Vec3.temp0);
 
-    Vec3.set(_vec, self.min.x, self.max.y, self.min.z);
-    Vec3.applyMat4(_vec, matrix);
-    expandCoord(into, _vec);
+    Vec3.applyMat4(Vec3.set(Vec3.temp0, self.min.x, self.max.y, self.min.z), matrix);
+    expandByVec(into, Vec3.temp0);
 
-    Vec3.set(_vec, self.min.x, self.max.y, self.max.z);
-    Vec3.applyMat4(_vec, matrix);
-    expandCoord(into, _vec);
+    Vec3.applyMat4(Vec3.set(Vec3.temp0, self.min.x, self.max.y, self.max.z), matrix);
+    expandByVec(into, Vec3.temp0);
 
-    Vec3.set(_vec, self.max.x, self.min.y, self.min.z);
-    Vec3.applyMat4(_vec, matrix);
-    expandCoord(into, _vec);
+    Vec3.applyMat4(Vec3.set(Vec3.temp0, self.max.x, self.min.y, self.min.z), matrix);
+    expandByVec(into, Vec3.temp0);
 
-    Vec3.set(_vec, self.max.x, self.min.y, self.max.z);
-    Vec3.applyMat4(_vec, matrix);
-    expandCoord(into, _vec);
+    Vec3.applyMat4(Vec3.set(Vec3.temp0, self.max.x, self.min.y, self.max.z), matrix);
+    expandByVec(into, Vec3.temp0);
 
-    Vec3.set(_vec, self.max.x, self.max.y, self.min.z);
-    Vec3.applyMat4(_vec, matrix);
-    expandCoord(into, _vec);
+    Vec3.applyMat4(Vec3.set(Vec3.temp0, self.max.x, self.max.y, self.min.z), matrix);
+    expandByVec(into, Vec3.temp0);
 
-    Vec3.set(_vec, self.max.x, self.max.y, self.max.z);
-    Vec3.applyMat4(_vec, matrix);
-    expandCoord(into, _vec);
+    Vec3.applyMat4(Vec3.set(Vec3.temp0, self.max.x, self.max.y, self.max.z), matrix);
+    expandByVec(into, Vec3.temp0);
 
     return into;
   };
-  export const appliedMat4 = (self: Const<Box3_>, matrix: Const<Matrix4>): Box3_ => applyMat4_(self, matrix, empty());
 
   export const distanceSqTo = (self: Const<Box3_>, vec: Const<Vec3>): number => {
-    Vec3.clamp_(vec, self.min, self.max, _vec);
+    const x = clamp(vec.x, self.min.x, self.max.x);
+    const y = clamp(vec.y, self.min.y, self.max.y);
+    const z = clamp(vec.z, self.min.z, self.max.z);
 
-    return Vec3.distanceSqTo(_vec, vec);
+    return x * x + y * y + z * z;
   };
   export const distanceTo = (self: Const<Box3_>, vec: Const<Vec3>): number => Math.sqrt(distanceSqTo(self, vec));
 
   export const equals = (a: Const<Box3_>, b: Const<Box3_>): boolean =>
-    Vec3.equals(a.min, b.min) && Vec3.equals(a.max, b.max);
+    b.min.x === a.min.x &&
+    b.min.y === a.min.y &&
+    b.min.z === a.min.z &&
+    b.max.x === a.max.x &&
+    b.max.y === a.max.y &&
+    b.max.z === a.max.z;
 }

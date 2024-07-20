@@ -47,7 +47,7 @@ export class Mesh extends Object3D {
   morphTargetInfluences: number[];
   morphTargetDictionary: Record<string, number>;
 
-  constructor(geometry: BufferGeometry = new BufferGeometry(), material: Material = null!) {
+  constructor(geometry: BufferGeometry = new BufferGeometry(), material: Material) {
     super();
 
     this.geometry = geometry;

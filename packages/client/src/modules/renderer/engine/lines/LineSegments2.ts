@@ -296,7 +296,7 @@ export class LineSegments2 extends Mesh {
       boxMargin = getWorldSpaceHalfWidth(camera, distanceToBox, material.resolution);
     }
 
-    Box3_.expandScalar(_box, boxMargin);
+    Box3_.expandByScalar(_box, boxMargin);
 
     if (_ray.intersectsBox(_box) === false) {
       return intersects;

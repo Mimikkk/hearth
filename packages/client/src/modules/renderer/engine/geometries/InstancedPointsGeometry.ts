@@ -1,21 +1,14 @@
 import {
   Box3,
   Float32BufferAttribute,
-  InstancedBufferAttribute,
   InstancedBufferGeometry,
-  Matrix4,
+  InstancedBufferAttribute,
   Sphere,
-  Uint16BufferAttribute,
   Vector3,
+  Matrix4,
 } from '../engine.js';
-import { Box3_ } from '@modules/renderer/engine/math/Box3.js';
-import { Vec3 } from '@modules/renderer/engine/math/Vector3.js';
 
 const _vector = new Vector3();
-
-const positions = [-1, 1, 0, 1, 1, 0, -1, -1, 0, 1, -1, 0];
-const uvs = [-1, 1, 1, 1, -1, -1, 1, -1];
-const index = [0, 2, 1, 2, 3, 1];
 
 export class InstancedPointsGeometry extends InstancedBufferGeometry {
   declare isInstancedPointsGeometry: true;
@@ -24,30 +17,48 @@ export class InstancedPointsGeometry extends InstancedBufferGeometry {
   constructor() {
     super();
 
-    this.index = new Uint16BufferAttribute(index, 1);
-    this.attributes.uv = new Float32BufferAttribute(uvs, 2);
-    this.attributes.position = new Float32BufferAttribute(positions, 3);
+    const positions = [-1, 1, 0, 1, 1, 0, -1, -1, 0, 1, -1, 0];
+    const uvs = [-1, 1, 1, 1, -1, -1, 1, -1];
+    const index = [0, 2, 1, 2, 3, 1];
+
+    this.setIndex(index);
+    this.setAttribute('position', new Float32BufferAttribute(positions, 3));
+    this.setAttribute('uv', new Float32BufferAttribute(uvs, 2));
   }
 
   applyMatrix4(matrix: Matrix4): this {
-    const position = this.attributes.instancePosition;
+    const pos = this.attributes.instancePosition;
 
-    if (position !== undefined) {
-      position.applyMatrix4(matrix);
+    if (pos !== undefined) {
+      pos.applyMatrix4(matrix);
 
-      position.needsUpdate = true;
+      pos.needsUpdate = true;
     }
 
-    if (this.boundingBox !== null) this.computeBoundingBox();
-    if (this.boundingSphere !== null) this.computeBoundingSphere();
+    if (this.boundingBox !== null) {
+      this.computeBoundingBox();
+    }
+
+    if (this.boundingSphere !== null) {
+      this.computeBoundingSphere();
+    }
 
     return this;
   }
 
   setPositions(array: Float32Array | number[]): this {
-    const points = array instanceof Float32Array ? array : new Float32Array(array);
+    let points;
 
-    this.attributes.instancePosition = new InstancedBufferAttribute(points, 3);
+    if (array instanceof Float32Array) {
+      points = array;
+    } else if (Array.isArray(array)) {
+      points = new Float32Array(array);
+    }
+
+    //@ts-expect-error
+    this.setAttribute('instancePosition', new InstancedBufferAttribute(points, 3)); // xyz
+
+    //
 
     this.computeBoundingBox();
     this.computeBoundingSphere();
@@ -56,9 +67,16 @@ export class InstancedPointsGeometry extends InstancedBufferGeometry {
   }
 
   setColors(array: Float32Array | number[]): this {
-    const colors = array instanceof Float32Array ? array : new Float32Array(array);
+    let colors;
 
-    this.attributes.instanceColor = new InstancedBufferAttribute(colors, 3);
+    if (array instanceof Float32Array) {
+      colors = array;
+    } else if (Array.isArray(array)) {
+      colors = new Float32Array(array);
+    }
+
+    //@ts-expect-error
+    this.setAttribute('instanceColor', new InstancedBufferAttribute(colors, 3)); // rgb
 
     return this;
   }
@@ -68,8 +86,11 @@ export class InstancedPointsGeometry extends InstancedBufferGeometry {
       this.boundingBox = new Box3();
     }
 
-    const position = this.attributes.instancePosition;
-    if (position) Box3_.fillAttribute(this.boundingBox, position);
+    const pos = this.attributes.instancePosition as InstancedBufferAttribute<Float32Array>;
+
+    if (pos !== undefined) {
+      this.boundingBox.setFromBufferAttribute(pos);
+    }
 
     return this;
   }
@@ -79,26 +100,35 @@ export class InstancedPointsGeometry extends InstancedBufferGeometry {
       this.boundingSphere = new Sphere();
     }
 
-    if (this.boundingBox === null) this.computeBoundingBox();
-
-    const position = this.attributes.instancePosition;
-
-    if (!position) return this;
-    const center = this.boundingSphere.center;
-    Box3_.center_(this.boundingBox!, center);
-
-    let maxRadiusSq = 0;
-    for (let i = 0, il = position.count; i < il; i++) {
-      Vec3.fillAttribute(_vector, position, i);
-      const radiusSq = Vec3.distanceSqTo(center, _vector);
-      if (radiusSq > maxRadiusSq) maxRadiusSq = radiusSq;
+    if (this.boundingBox === null) {
+      this.computeBoundingBox();
     }
 
-    this.boundingSphere.radius = Math.sqrt(maxRadiusSq);
+    const pos = this.attributes.instancePosition;
 
+    if (pos !== undefined) {
+      const center = this.boundingSphere.center;
+
+      this.boundingBox!.getCenter(center);
+
+      let maxRadiusSq = 0;
+
+      for (let i = 0, il = pos.count; i < il; i++) {
+        _vector.fromBufferAttribute(pos, i);
+        maxRadiusSq = Math.max(maxRadiusSq, center.distanceToSquared(_vector));
+      }
+
+      this.boundingSphere.radius = Math.sqrt(maxRadiusSq);
+
+      if (isNaN(this.boundingSphere.radius)) {
+        console.error(
+          'engine.InstancedPointsGeometry.computeBoundingSphere(): Computed radius is NaN. The instanced position data is likely to have NaN values.',
+          this,
+        );
+      }
+    }
     return this;
   }
 }
-
 InstancedPointsGeometry.prototype.isInstancedPointsGeometry = true;
 InstancedPointsGeometry.prototype.type = 'InstancedPointsGeometry';

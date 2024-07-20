@@ -212,7 +212,7 @@ export namespace Sphere_ {
   const _box: Box3_ = { min: Vec3.empty(), max: Vec3.empty() };
   const _vec = Vec3.empty();
   export const fromVecs_ = (vecs: Const<Vec3>[], into: Sphere_): Sphere_ => {
-    const center = Box3_.center_(Box3_.fromCoords_(vecs, _box), _vec);
+    const center = Box3_.center_(Box3_.fromVecs_(vecs, _box), _vec);
 
     let maxRadiusSq = 0;
     for (let i = 0, il = vecs.length; i < il; i++) {
