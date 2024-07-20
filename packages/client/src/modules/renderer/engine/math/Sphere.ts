@@ -155,7 +155,7 @@ export class Sphere {
 
   applyMat4(matrix: Const<Mat4>): this {
     this.center.applyMat4(matrix);
-    this.radius = this.radius * matrix.maxScaleOnAxis();
+    this.radius = this.radius * matrix.getMaxScaleOnAxis();
 
     return this;
   }
