@@ -8,11 +8,7 @@ type Handler<S, K extends Path<S>> = {
 } & (Path.At<S, K> extends number ? { min: number; max: number; step: number } : {});
 
 export class UI<S extends {} = {}> {
-  shortcutsFolder: UI<S> | null = null;
-  shortcutsShown: Set<() => void>;
-  shortcuts: Shortcut[];
   controllers: Controller[];
-  updaters: Map<Controller, (state: S) => void> = new Map();
   ui: GUI;
 
   constructor(
@@ -129,6 +125,28 @@ export class UI<S extends {} = {}> {
     return this;
   }
 
+  #addValue<K extends Path<S>>(options: Handler<S, K>): this {
+    const { key, title, onChange } = options;
+    const parent = key.split('.');
+    let last = parent.pop()!;
+    const parentPath = parent.join('.') as Path<S>;
+
+    const controller = this.ui.add(Path.get(this.state, parentPath) ?? this.state, last);
+    if ('min' in options) controller.min(options.min).max(options.max).step(options.step);
+    if (title) controller.name(title);
+
+    controller.onChange((value: Path.At<S, K>) => {
+      Path.set(this.state, key, value);
+      onChange?.(value, this.state);
+      this.update();
+    });
+
+    this.controllers.push(controller);
+    this.update();
+
+    return this;
+  }
+
   text(key: string, fn: string | ((state: S) => string | number | null | undefined)) {
     const description = `${typeof fn === 'string' ? fn : fn(this.state)}`;
 
@@ -159,7 +177,7 @@ export class UI<S extends {} = {}> {
 
     if (typeof fn !== 'string') {
       this.controllers.push(controller);
-      this.updaters.set(controller, () => {
+      this.#updaters.set(controller, () => {
         text.textContent = `${fn(this.state) ?? 'None'}`;
       });
       this.update();
@@ -168,32 +186,9 @@ export class UI<S extends {} = {}> {
     return this;
   }
 
-  update() {
-    this.#updateShortcuts();
-    this.#updateControllers();
-  }
-
-  #addValue<K extends Path<S>>(options: Handler<S, K>): this {
-    const { key, title, onChange } = options;
-    const parent = key.split('.');
-    let last = parent.pop()!;
-    const parentPath = parent.join('.') as Path<S>;
-
-    const controller = this.ui.add(Path.get(this.state, parentPath) ?? this.state, last);
-    if ('min' in options) controller.min(options.min).max(options.max).step(options.step);
-    if (title) controller.name(title);
-
-    controller.onChange((value: Path.At<S, K>) => {
-      Path.set(this.state, key, value);
-      onChange?.(value, this.state);
-      this.update();
-    });
-
-    this.controllers.push(controller);
-    this.update();
-
-    return this;
-  }
+  shortcutsFolder: UI<S> | null = null;
+  shortcutsShown: Set<() => void>;
+  shortcuts: { key: ShortcutKey; description: string; unsubscribe: () => void }[];
 
   #maybeCreateShortcuts() {
     if (this.shortcutsFolder || this.shortcuts.length === 0) return;
@@ -234,13 +229,20 @@ export class UI<S extends {} = {}> {
     this.#maybePlaceLastShortcuts();
   }
 
+  #updaters: Map<Controller, (state: S) => void> = new Map();
+
   #updateControllers() {
     for (const controller of this.ui.controllersRecursive()) {
       controller.updateDisplay();
-      this.updaters.get(controller)?.(this.state);
+      const updater = this.#updaters.get(controller);
+      if (updater) updater(this.state);
     }
+  }
+
+  update() {
+    this.#updateShortcuts();
+    this.#updateControllers();
   }
 }
 
-type Shortcut = { key: ShortcutKey; description: string; unsubscribe: () => void };
 type ShortcutKey = { control?: boolean; shift?: boolean; key: string } | string;
