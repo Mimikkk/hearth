@@ -1,6 +1,24 @@
 import { NodeUpdateType } from './constants.ts';
+import { Scene } from '@modules/renderer/engine/scenes/Scene.js';
+import { Object3D } from '@modules/renderer/engine/core/Object3D.js';
+import { Camera } from '@modules/renderer/engine/cameras/Camera.js';
+import { Material } from '@modules/renderer/engine/materials/Material.js';
+import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 
 class NodeFrame {
+  time: number;
+  deltaTime: number;
+  frameId: number;
+  renderId: number;
+  startTime: number | null;
+  updateMap: WeakMap<any, any>;
+  updateBeforeMap: WeakMap<any, any>;
+  renderer: Renderer | null;
+  material: Material | null;
+  camera: Camera | null;
+  object: Object3D | null;
+  scene: Scene | null;
+
   constructor() {
     this.time = 0;
     this.deltaTime = 0;
@@ -20,14 +38,11 @@ class NodeFrame {
     this.scene = null;
   }
 
-  _getMaps(referenceMap, nodeRef) {
+  map(referenceMap: Map<any, any>, nodeRef: Node) {
     let maps = referenceMap.get(nodeRef);
 
     if (maps === undefined) {
-      maps = {
-        renderMap: new WeakMap(),
-        frameMap: new WeakMap(),
-      };
+      maps = { renderMap: new WeakMap(), frameMap: new WeakMap() };
 
       referenceMap.set(nodeRef, maps);
     }
@@ -35,12 +50,12 @@ class NodeFrame {
     return maps;
   }
 
-  updateBeforeNode(node) {
+  updateBeforeNode(node: Node) {
     const updateType = node.getUpdateBeforeType();
     const reference = node.setReference(this);
 
     if (updateType === NodeUpdateType.FRAME) {
-      const { frameMap } = this._getMaps(this.updateBeforeMap, reference);
+      const { frameMap } = this.map(this.updateBeforeMap, reference);
 
       if (frameMap.get(node) !== this.frameId) {
         if (node.updateBefore(this) !== false) {
@@ -48,7 +63,7 @@ class NodeFrame {
         }
       }
     } else if (updateType === NodeUpdateType.RENDER) {
-      const { renderMap } = this._getMaps(this.updateBeforeMap, reference);
+      const { renderMap } = this.map(this.updateBeforeMap, reference);
 
       if (renderMap.get(node) !== this.renderId) {
         if (node.updateBefore(this) !== false) {
@@ -65,7 +80,7 @@ class NodeFrame {
     const reference = node.setReference(this);
 
     if (updateType === NodeUpdateType.FRAME) {
-      const { frameMap } = this._getMaps(this.updateMap, reference);
+      const { frameMap } = this.map(this.updateMap, reference);
 
       if (frameMap.get(node) !== this.frameId) {
         if (node.update(this) !== false) {
@@ -73,7 +88,7 @@ class NodeFrame {
         }
       }
     } else if (updateType === NodeUpdateType.RENDER) {
-      const { renderMap } = this._getMaps(this.updateMap, reference);
+      const { renderMap } = this.map(this.updateMap, reference);
 
       if (renderMap.get(node) !== this.renderId) {
         if (node.update(this) !== false) {
@@ -99,3 +114,13 @@ class NodeFrame {
 }
 
 export default NodeFrame;
+
+export class ReferenceMap {
+  frameMap: WeakMap<any, any>;
+  renderMap: WeakMap<any, any>;
+
+  constructor() {
+    this.frameMap = new WeakMap();
+    this.renderMap = new WeakMap();
+  }
+}

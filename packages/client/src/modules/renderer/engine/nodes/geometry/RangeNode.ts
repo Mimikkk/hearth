@@ -75,7 +75,6 @@ class RangeNode extends Node {
       const nodeType = this.getNodeType(builder);
 
       output = buffer(array, 'vec4', object.count).element(instanceIndex).convert(nodeType);
-      //output = bufferAttribute( array, 'vec4', 4, 0 ).convert( nodeType );
     } else {
       output = float(0);
     }

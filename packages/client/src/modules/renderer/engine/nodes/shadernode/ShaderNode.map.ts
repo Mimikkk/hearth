@@ -2,7 +2,9 @@ import ConstNode from '@modules/renderer/engine/nodes/core/ConstNode.js';
 
 export const NodeElements = new Map();
 
-const createEntryByType = type => value => [value, new ConstNode(value, type)];
+const createEntryByType =
+  (type: string) =>
+  <T>(value: T) => [value, new ConstNode(value, type)];
 const createBool = createEntryByType('bool');
 const createUint = createEntryByType('uint');
 const createSint = createEntryByType('int');

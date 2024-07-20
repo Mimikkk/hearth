@@ -1,5 +1,5 @@
 import { TextField } from '@components/forms/TextField/TextField.js';
-import { createEffect, createMemo, createSignal, JSXElement, onCleanup, ParentProps, Show } from 'solid-js';
+import { createEffect, createMemo, createSignal, onCleanup, Show } from 'solid-js';
 import { Search } from '@logic/Search/Search.js';
 import { createQueryable } from '@logic/createQueryable.js';
 import { ExampleNs } from '@modules/managment/exampleNs.js';
@@ -92,7 +92,7 @@ export const Examples = () => {
 
   createEffect(() => {
     const item = AccordionItem.findOnlyId(examples());
-    if (item) selectExample(item.id as Example);
+    if (item) selectExample(item.id as ExampleName);
   });
 
   let searchRef!: HTMLInputElement;
@@ -100,7 +100,7 @@ export const Examples = () => {
     if (key === 'Enter') {
       const found = AccordionItem.searchWithin(query(), SideBarItems);
 
-      if (found) selectExample(found.id as Example);
+      if (found) selectExample(found.id as ExampleName);
     } else if (key === 'Escape') {
       if (query() === '') {
         selectExample('');
@@ -137,11 +137,7 @@ export const Examples = () => {
                 </Show>
               }
             >
-              <Shortcut class="absolute right-0 pr-1 opacity-50">
-                <Shortcut.Key border>ctrl</Shortcut.Key>
-                <Shortcut.Key border>alt</Shortcut.Key>
-                <Shortcut.Key>f</Shortcut.Key>
-              </Shortcut>
+              <FocusShortcut />
             </Show>
           }
         />

@@ -1,7 +1,7 @@
-import { clamp, NumberArray } from './MathUtils.js';
+import { clamp, type NumberArray } from './MathUtils.js';
 import type { Mat3 } from './Mat3.js';
-import { Attribute } from '@modules/renderer/engine/core/types.js';
-import { Const } from '@modules/renderer/engine/math/types.js';
+import type { Attribute } from '@modules/renderer/engine/core/types.js';
+import type { Const } from '@modules/renderer/engine/math/types.js';
 
 export class Vec2 {
   declare isVec2: true;

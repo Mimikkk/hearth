@@ -12,7 +12,7 @@ import { ShaderNodeArray } from './ShaderNodeArray.js';
 import { ShaderNodeProxy } from './ShaderNodeProxy.js';
 import { ShaderNodeImmutable } from './ShaderNodeImmutable.js';
 
-const createConvertType = (type, cacheMap = null) => {
+const createConvertType = (type: string, cacheMap: Map<any, any> = null) => {
   return (...params) => {
     if (
       params.length === 0 ||

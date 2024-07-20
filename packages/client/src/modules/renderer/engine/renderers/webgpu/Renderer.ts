@@ -601,14 +601,6 @@ export class Renderer {
     this._clearColor.a = alpha;
   }
 
-  getClearAlpha() {
-    return this._clearColor.a;
-  }
-
-  setClearAlpha(alpha) {
-    this._clearColor.a = alpha;
-  }
-
   getClearDepth() {
     return this._clearDepth;
   }
@@ -779,10 +771,6 @@ export class Renderer {
     this._textures.updateTexture(dstTexture);
 
     this.backend.copyTextureToTexture(position, srcTexture, dstTexture, level);
-  }
-
-  readRenderTargetPixelsAsync(renderTarget, x, y, width, height) {
-    return this.backend.copyTextureToBuffer(renderTarget.texture, x, y, width, height);
   }
 
   _projectObject(object, camera, groupOrder, renderList) {

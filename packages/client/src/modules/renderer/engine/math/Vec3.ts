@@ -7,8 +7,8 @@ import type { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
 import type { Cylindrical } from '@modules/renderer/engine/math/Cylindrical.js';
 import type { Spherical } from '@modules/renderer/engine/math/Spherical.js';
 import type { Camera } from '@modules/renderer/engine/cameras/Camera.js';
-import { Const } from '@modules/renderer/engine/math/types.js';
-import { Attribute } from '@modules/renderer/engine/core/types.js';
+import type { Const } from '@modules/renderer/engine/math/types.js';
+import type { Attribute } from '@modules/renderer/engine/core/types.js';
 
 export class Vec3 {
   declare isVec3: true;
