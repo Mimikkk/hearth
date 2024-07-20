@@ -20,8 +20,7 @@
     "ammojs3": "^0.0.11",
     "@zd/basis": "workspace:*",
     "upng-js": "^2.1.0",
-    "uuid": "^10.0.0",
-    "three": "^0.166.1"
+    "uuid": "^10.0.0"
   },
   "description": "Prototype application with the usage of @zd/engine",
   "devDependencies": {

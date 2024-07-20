@@ -18,7 +18,6 @@ import { Box3 } from '@modules/renderer/engine/math/Box3.js';
 import { Renderer } from '../renderers/webgpu/Renderer.js';
 import { throttle } from 'lodash-es';
 import { v4 } from 'uuid';
-import { Sphere } from '@modules/renderer/engine/math/Sphere.js';
 
 let _object3DId = 0;
 
@@ -64,7 +63,6 @@ export class Object3D<EventMap extends Object3DEventMap = any> {
 
   eventDispatcher = new EventDispatcher<EventMap>();
 
-  boundingSphere: Sphere | null;
   occlusionTest: boolean;
   geometry: BufferGeometry | null;
   boundingBox: Box3 | null;
