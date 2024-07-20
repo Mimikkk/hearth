@@ -1,6 +1,8 @@
 import { clamp } from './MathUtils.js';
 import type { BufferAttribute } from '../core/BufferAttribute.js';
 import type { Mat3 } from './Mat3.js';
+import { Attribute } from '@modules/renderer/engine/core/types.js';
+import { Const } from '@modules/renderer/engine/math/types.js';
 
 export interface IVec2 {
   x: number;
@@ -15,6 +17,46 @@ export class Vec2 implements IVec2 {
     public x: number = 0,
     public y: number = 0,
   ) {}
+
+  static new(x: number = 0, y: number = 0): Vec2 {
+    return new Vec2(x, y);
+  }
+
+  static scalar(scalar: number, into: Vec2 = Vec2.new()): Vec2 {
+    return into.setScalar(scalar);
+  }
+
+  static empty(): Vec2 {
+    return Vec2.new(0, 0);
+  }
+
+  static clone({ x, y }: Const<Vec2>, into: Vec2 = Vec2.new()): Vec2 {
+    return into.set(x, y);
+  }
+
+  static is(vec: any): vec is Vec2 {
+    return vec?.isVec2 === true;
+  }
+
+  static into(into: Vec2, { x, y }: Const<Vec2>) {
+    return into.set(x, y);
+  }
+
+  static from({ x, y }: Const<Vec2>, into: Vec2 = Vec2.new()): Vec2 {
+    return into.set(x, y);
+  }
+
+  static fromAttribute(attribute: Attribute, index: number, into: Vec2 = Vec2.new()): Vec2 {
+    return into.fromAttribute(attribute, index);
+  }
+
+  static fromArray(array: number[], offset: number = 0, into: Vec2 = Vec2.new()): Vec2 {
+    return into.fromArray(array, offset);
+  }
+
+  static lerp(from: Const<Vec2>, to: Const<Vec2>, step: number, into: Vec2 = Vec2.new()): Vec2 {
+    return into.lerp(from, to, step);
+  }
 
   get width(): number {
     return this.x;

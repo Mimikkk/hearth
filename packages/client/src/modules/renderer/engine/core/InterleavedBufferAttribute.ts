@@ -7,11 +7,11 @@ import { Matrix, Mat3 } from '@modules/renderer/engine/math/Mat3.js';
 
 const _vector = /*@__PURE__*/ new Vec3();
 
-export class InterleavedBufferAttribute {
+export class InterleavedBufferAttribute<T extends TypedArray = any> {
   declare ['constructor']: typeof InterleavedBufferAttribute;
   declare isInterleavedBufferAttribute: true;
   name: string;
-  data: InterleavedBuffer;
+  data: InterleavedBuffer<T>;
   itemSize: number;
   offset: number;
   normalized: boolean;
