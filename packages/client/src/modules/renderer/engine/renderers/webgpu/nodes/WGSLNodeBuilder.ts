@@ -1,16 +1,16 @@
 import { ColorSpace, TextureDataType } from '../../../engine.js';
 
-import NodeUniformsGroup from '../../common/nodes/NodeUniformsGroup.js';
+import NodeUniformsGroup from '../../common/nodes/NodeUniformsGroup.ts';
 
-import NodeSampler from '../../common/nodes/NodeSampler.js';
-import { NodeSampledCubeTexture, NodeSampledTexture } from '../../common/nodes/NodeSampledTexture.js';
+import NodeSampler from '../../common/nodes/NodeSampler.ts';
+import { NodeSampledCubeTexture, NodeSampledTexture } from '../../common/nodes/NodeSampledTexture.ts';
 
-import NodeUniformBuffer from '../../common/nodes/NodeUniformBuffer.js';
-import NodeStorageBuffer from '../../common/nodes/NodeStorageBuffer.js';
+import NodeUniformBuffer from '../../common/nodes/NodeUniformBuffer.ts';
+import NodeStorageBuffer from '../../common/nodes/NodeStorageBuffer.ts';
 
 import { CodeNode, NodeBuilder } from '@modules/renderer/engine/nodes/Nodes.js';
 
-import { getFormat } from '../utils/BackendTextures.js';
+import { getFormat } from '../utils/BackendTextures.ts';
 
 import WGSLNodeParser from './WGSLNodeParser.js';
 

@@ -1,5 +1,5 @@
 import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
-import type { Const } from './types.js';
+import type { Const } from './types.ts';
 import type { NumberArray } from '@modules/renderer/engine/math/MathUtils.js';
 
 export class Box2 {

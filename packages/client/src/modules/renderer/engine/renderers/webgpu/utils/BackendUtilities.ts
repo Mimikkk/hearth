@@ -1,4 +1,4 @@
-import { GPUPrimitiveTopologyType, GPUTextureFormatType } from './constants.js';
+import { GPUPrimitiveTopologyType, GPUTextureFormatType } from './constants.ts';
 import RenderContext from '@modules/renderer/engine/renderers/common/RenderContext.js';
 import { Object3D } from '@modules/renderer/engine/core/Object3D.js';
 import { Material } from '@modules/renderer/engine/materials/Material.js';

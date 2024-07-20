@@ -7,7 +7,7 @@ import {
   GPUFrontFaceType,
   GPUIndexFormatType,
   GPUStencilOperationType,
-} from './constants.js';
+} from './constants.ts';
 
 import {
   Blending,

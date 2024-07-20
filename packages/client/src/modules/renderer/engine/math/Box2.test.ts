@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { Box2 } from './Box2.js';
-import { Vec2 } from './Vec2.js';
+import { Vec2 } from './Vec2.ts';
 
 const vec2 = Vec2.new;
 

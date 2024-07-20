@@ -1,4 +1,4 @@
-import Node from '../core/Node.js';
+import Node from '../core/Node.ts';
 import { nodeProxy } from '../shadernode/ShaderNodes.js';
 import NodeBuilder from '@modules/renderer/engine/nodes/core/NodeBuilder.js';
 

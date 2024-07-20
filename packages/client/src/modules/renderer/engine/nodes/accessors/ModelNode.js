@@ -1,0 +1,33 @@
+import Object3DNode from './Object3DNode.js';
+import { nodeImmutable } from '../shadernode/ShaderNodes.js';
+import { uniform } from '../core/UniformNode.js';
+import { Mat4 } from '@modules/renderer/engine/math/Mat4.ts';
+
+class ModelNode extends Object3DNode {
+  static type = 'ModelNode';
+
+  constructor(scope = ModelNode.VIEW_MATRIX) {
+    super(scope);
+  }
+
+  update(frame) {
+    this.object3d = frame.object;
+
+    super.update(frame);
+  }
+}
+
+export default ModelNode;
+
+export const modelDirection = nodeImmutable(ModelNode, ModelNode.DIRECTION);
+export const modelViewMatrix = nodeImmutable(ModelNode, ModelNode.VIEW_MATRIX)
+  .label('modelViewMatrix')
+  .temp('ModelViewMatrix');
+export const modelNormalMatrix = nodeImmutable(ModelNode, ModelNode.NORMAL_MATRIX);
+export const modelWorldMatrix = nodeImmutable(ModelNode, ModelNode.WORLD_MATRIX);
+export const modelPosition = nodeImmutable(ModelNode, ModelNode.POSITION);
+export const modelScale = nodeImmutable(ModelNode, ModelNode.SCALE);
+export const modelViewPosition = nodeImmutable(ModelNode, ModelNode.VIEW_POSITION);
+export const modelWorldMatrixInverse = uniform(new Mat4()).onObjectUpdate(({ object }, self) =>
+  self.value.copy(object.matrixWorld).invert(),
+);

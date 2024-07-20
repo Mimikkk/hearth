@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { Triangle } from './Triangle.js';
-import { Vec3 } from './Vec3.js';
+import { Vec3 } from './Vec3.ts';
 import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
-import { Plane } from './Plane.js';
+import { Plane } from './Plane.ts';
 import { Box3 } from '@modules/renderer/engine/math/Box3.js';
 
 describe('Math - Triangle', () => {

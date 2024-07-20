@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { Vec4 } from './Vec4.js';
-import { Vec2 } from './Vec2.js';
+import { Vec2 } from './Vec2.ts';
 import { Mat4 } from './Mat4.js';
 import { Quaternion } from './Quaternion.js';
-import { Euler } from './Euler.js';
+import { Euler } from './Euler.ts';
 import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
 
 const expectCloseTo = (a: Vec4, b: Vec4) => {

@@ -1,5 +1,5 @@
 import { CubeTexture, TextureDataType } from '@modules/renderer/engine/engine.js';
-import { classLoader } from '../../types.js';
+import { classLoader } from '../../types.ts';
 import { FileLoader, ResponseType } from '@modules/renderer/engine/loaders/files/FileLoader/FileLoader.js';
 import { parseRGBM } from '@modules/renderer/engine/loaders/textures/RGBMLoader/parseRGBM.js';
 

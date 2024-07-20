@@ -2,7 +2,7 @@ import { Box3 } from './Box3.js';
 import { Vec3 } from './Vec3.js';
 import type { Plane } from './Plane.js';
 import type { Mat4 } from './Mat4.js';
-import type { Const } from './types.js';
+import type { Const } from './types.ts';
 
 export class Sphere {
   declare isSphere: true;

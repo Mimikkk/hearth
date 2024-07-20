@@ -1,4 +1,4 @@
-import Node from '../core/Node.js';
+import Node from '../core/Node.ts';
 import { addNodeElement, float, nodeProxy } from '../shadernode/ShaderNodes.js';
 import { EventDispatcher } from '@modules/renderer/engine/engine.js';
 import NodeBuilder from '@modules/renderer/engine/nodes/core/NodeBuilder.js';

@@ -1,5 +1,5 @@
 import { EventDispatcher } from '@modules/renderer/engine/engine.js';
-import { NodeTypeOption, NodeUpdateType } from './constants.js';
+import { NodeTypeOption, NodeUpdateType } from './constants.ts';
 import { getCacheKey, getNodeChildren } from './NodeUtils.js';
 import NodeBuilder from '@modules/renderer/engine/nodes/core/NodeBuilder.js';
 import NodeFrame from '@modules/renderer/engine/nodes/core/NodeFrame.js';

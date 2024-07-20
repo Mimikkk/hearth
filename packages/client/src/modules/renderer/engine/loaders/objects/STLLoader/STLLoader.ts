@@ -1,5 +1,5 @@
 import { BufferGeometry } from '@modules/renderer/engine/engine.js';
-import { FileLoader, ResponseType } from '@modules/renderer/engine/loaders/files/FileLoader/FileLoader.js';
+import { FileLoader, ResponseType } from '@modules/renderer/engine/loaders/files/FileLoader/FileLoader.ts';
 import { classLoader } from '@modules/renderer/engine/loaders/types.js';
 import { parseSTL } from '@modules/renderer/engine/loaders/objects/STLLoader/parseSTL.js';
 

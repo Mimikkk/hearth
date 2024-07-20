@@ -1,15 +1,15 @@
 import { describe, expect, it } from 'vitest';
-import { Vec3 } from './Vec3.js';
-import { Vec2 } from './Vec2.js';
+import { Vec3 } from './Vec3.ts';
+import { Vec2 } from './Vec2.ts';
 import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
 import { Spherical } from '@modules/renderer/engine/math/Spherical.js';
-import { Euler } from './Euler.js';
+import { Euler } from './Euler.ts';
 import { Cylindrical } from '@modules/renderer/engine/math/Cylindrical.js';
-import { Color } from './Color.js';
-import { Mat4 } from './Mat4.js';
-import { Mat3 } from './Mat3.js';
-import { Quaternion } from './Quaternion.js';
-import { PerspectiveCamera } from '../cameras/PerspectiveCamera.js';
+import { Color } from './Color.ts';
+import { Mat4 } from './Mat4.ts';
+import { Mat3 } from './Mat3.ts';
+import { Quaternion } from './Quaternion.ts';
+import { PerspectiveCamera } from '../cameras/PerspectiveCamera.ts';
 
 const vec3 = Vec3.new;
 const vec2 = Vec2.new;

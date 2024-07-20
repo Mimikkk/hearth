@@ -6,7 +6,7 @@ import { Line3 } from '@modules/renderer/engine/math/Line3.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { Sphere } from '@modules/renderer/engine/math/Sphere.js';
 import { Box3 } from '@modules/renderer/engine/math/Box3.js';
-import { Random } from '../math/random.js';
+import { Random } from '../math/random.ts';
 
 export class LineSegments2 extends Mesh {
   declare geometry: LineSegmentsGeometry;

@@ -1,4 +1,4 @@
-import { TextureDataType } from '../../../constants.js';
+import { TextureDataType } from '../../../constants.ts';
 import { DataTexture } from '@modules/renderer/engine/textures/DataTexture.js';
 import { FileLoader, ResponseType } from '@modules/renderer/engine/loaders/files/FileLoader/FileLoader.js';
 import { classLoader } from '@modules/renderer/engine/loaders/types.js';

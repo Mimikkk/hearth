@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { Quaternion, QuaternionArray } from './Quaternion.js';
-import { Euler } from './Euler.js';
-import { BufferAttribute } from '../core/BufferAttribute.js';
-import { Vec3 } from './Vec3.js';
+import { Quaternion, QuaternionArray } from './Quaternion.ts';
+import { Euler } from './Euler.ts';
+import { BufferAttribute } from '../core/BufferAttribute.ts';
+import { Vec3 } from './Vec3.ts';
 import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
 
 const expectWithin = (actual: number, expected: number, epsilon: number = Number.EPSILON) => {

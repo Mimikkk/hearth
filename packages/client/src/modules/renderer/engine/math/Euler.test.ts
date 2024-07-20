@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { Euler } from './Euler.js';
+import { Euler } from './Euler.ts';
 import { Quaternion } from '@modules/renderer/engine/math/Quaternion.js';
 import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';

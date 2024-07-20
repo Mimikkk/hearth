@@ -1,7 +1,7 @@
 import { Line } from './Line.js';
 import { Float32BufferAttribute } from '../core/BufferAttribute.js';
 import { LineMaterial } from '@modules/renderer/engine/lines/LineMaterial.js';
-import { Line3 } from '../math/Line3.js';
+import { Line3 } from '../math/Line3.ts';
 
 export class LineSegments extends Line {
   declare isLineSegments: true;
