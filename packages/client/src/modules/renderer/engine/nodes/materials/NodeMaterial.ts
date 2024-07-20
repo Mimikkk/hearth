@@ -1,4 +1,5 @@
 import { ColorSpace, ShaderMaterial } from '@modules/renderer/engine/engine.js';
+import { getCacheKey } from '../core/NodeUtils.js';
 import { attribute } from '../core/AttributeNode.js';
 import { diffuseColor, output } from '../core/PropertyNode.js';
 import {
@@ -65,6 +66,10 @@ export class NodeMaterial extends ShaderMaterial {
 
     this.fragmentNode = null;
     this.vertexNode = null;
+  }
+
+  customProgramCacheKey() {
+    return this.type + getCacheKey(this);
   }
 
   build(builder) {
@@ -221,7 +226,7 @@ export class NodeMaterial extends ShaderMaterial {
     }
   }
 
-  setupVariants(builder) {
+  setupVariants(/*builder*/) {
     // Interface function.
   }
 
@@ -277,7 +282,7 @@ export class NodeMaterial extends ShaderMaterial {
     return lightsN;
   }
 
-  setupLightingModel(builder) {
+  setupLightingModel(/*builder*/) {
     // Interface function.
   }
 
@@ -334,7 +339,7 @@ export class NodeMaterial extends ShaderMaterial {
     // ENCODING
 
     if (this.colorSpaced === true) {
-      const outputColorSpace = renderer.activeColorSpace;
+      const outputColorSpace = renderer.currentColorSpace;
 
       if (outputColorSpace !== ColorSpace.LinearSRGB && outputColorSpace !== ColorSpace.No) {
         outputNode = outputNode.linearToColorSpace(outputColorSpace);

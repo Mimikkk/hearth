@@ -6,11 +6,11 @@ export type Const<T> = T extends (...args: never[]) => unknown
       ? ReadonlySet<Const<V>>
       : { readonly [P in keyof T]: Const<T[P]> };
 
-export const lazy = <Fn extends (...params: any) => any>(fn: Fn): Fn => {
-  let value: ReturnType<Fn> | undefined;
+export const lazy = <T>(fn: () => T): (() => T) => {
+  let value: T | undefined;
 
-  return ((...params) => {
-    if (value === undefined) value = fn(...params);
+  return () => {
+    if (value === undefined) value = fn();
     return value;
-  }) as Fn;
+  };
 };

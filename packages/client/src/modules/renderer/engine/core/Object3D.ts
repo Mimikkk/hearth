@@ -18,7 +18,6 @@ import { Renderer } from '../renderers/webgpu/Renderer.js';
 import { v4 } from 'uuid';
 import { Sphere } from '@modules/renderer/engine/math/Sphere.js';
 import { Const } from '@modules/renderer/engine/math/types.js';
-import { Skeleton } from '@modules/renderer/engine/objects/Skeleton.js';
 
 let _id = 0;
 
@@ -71,8 +70,6 @@ export class Object3D<EventMap extends Object3DEventMap = any> {
 
   computeBoundingBox?(): void;
 
-  declare skeleton?: Skeleton;
-  declare morphTargetInfluences?: number[];
   boundingBox: Box3 | null;
   id: number;
   uuid: string;

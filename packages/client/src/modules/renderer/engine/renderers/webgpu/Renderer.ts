@@ -37,11 +37,11 @@ import {
 } from '@modules/renderer/engine/engine.js';
 import { GPUFeatureNameType, GPUTextureFormatType } from '@modules/renderer/engine/renderers/webgpu/utils/constants.js';
 import { Frustum } from '@modules/renderer/engine/math/Frustum.js';
+import { throttle } from 'lodash-es';
 import { Scissor, Viewport } from '@modules/renderer/engine/renderers/common/RenderContext.js';
 import ComputeNode from '@modules/renderer/engine/nodes/gpgpu/ComputeNode.js';
 import RenderList, { RenderItem } from '@modules/renderer/engine/renderers/common/RenderList.js';
 import LightsNode from '@modules/renderer/engine/nodes/lighting/LightsNode.js';
-import { ShadowNodeMaterial } from '@modules/renderer/engine/nodes/materials/ShadowNodeMaterial.js';
 
 const _scene = new Scene();
 const _drawingBufferSize = Vec3.new();
@@ -84,14 +84,7 @@ export class Renderer {
   _activeMipmapLevel: number;
   _renderObjectFunction: any;
   _currentRenderObjectFunction: any;
-  _handleObjectFunction: (
-    object: Object3D,
-    material: Material,
-    scene: Scene,
-    camera: Camera,
-    lightsNode: LightsNode,
-    passId: string,
-  ) => void;
+  _handleObjectFunction: any;
   _compilationPromises: any;
   parameters: Configuration;
 
@@ -522,7 +515,7 @@ export class Renderer {
     return this;
   }
 
-  get activeColorSpace() {
+  get currentColorSpace() {
     const target = this.target;
     if (target) {
       const texture = target.texture;
@@ -553,6 +546,14 @@ export class Renderer {
     this._activeMipmapLevel = mipmap;
   }
 
+  setRenderObjectFunction(renderObjectFunction) {
+    this._renderObjectFunction = renderObjectFunction;
+  }
+
+  getRenderObjectFunction() {
+    return this._renderObjectFunction;
+  }
+
   renderObject(
     object: Object3D,
     scene: Scene,
@@ -562,11 +563,17 @@ export class Renderer {
     group: Group,
     lightsNode: LightsNode,
   ) {
-    object.onBeforeRender(this, scene, camera, geometry, material, group);
-    material.onBeforeRender(this, scene, camera, geometry, material, group);
-
     let overridePositionNode;
     let overrideFragmentNode;
+
+    //
+
+    object.onBeforeRender(this, scene, camera, geometry, material, group);
+
+    material.onBeforeRender(this, scene, camera, geometry, material, group);
+
+    //
+
     if (scene.overrideMaterial) {
       const overrideMaterial = scene.overrideMaterial;
 
@@ -575,10 +582,10 @@ export class Renderer {
         overrideMaterial.positionNode = material.positionNode;
       }
 
-      if (ShadowNodeMaterial.is(overrideMaterial)) {
+      if (overrideMaterial.isShadowNodeMaterial) {
         overrideMaterial.side = material.shadowSide === null ? material.side : material.shadowSide;
 
-        if (Node.is(material.shadowNode)) {
+        if (material.shadowNode && material.shadowNode.isNode) {
           overrideFragmentNode = overrideMaterial.fragmentNode;
           overrideMaterial.fragmentNode = material.shadowNode;
         }
@@ -603,18 +610,33 @@ export class Renderer {
       material = overrideMaterial;
     }
 
+    //
+
     if (material.transparent && material.side === Side.Double && !material.forceSinglePass) {
       material.side = Side.Back;
-      this._handleObjectFunction(object, material, scene, camera, lightsNode, 'first');
+      // create backSide pass id
+      this._handleObjectFunction(object, material, scene, camera, lightsNode, 'backSide');
+
       material.side = Side.Front;
-      this._handleObjectFunction(object, material, scene, camera, lightsNode, 'second');
+      // use default pass id
+      this._handleObjectFunction(object, material, scene, camera, lightsNode);
 
       material.side = Side.Double;
     } else {
-      this._handleObjectFunction(object, material, scene, camera, lightsNode, 'first');
+      this._handleObjectFunction(object, material, scene, camera, lightsNode);
     }
-    if (overridePositionNode) scene.overrideMaterial!.positionNode = overridePositionNode;
-    if (overrideFragmentNode) scene.overrideMaterial!.fragmentNode = overrideFragmentNode;
+
+    //
+
+    if (overridePositionNode !== undefined) {
+      scene.overrideMaterial.positionNode = overridePositionNode;
+    }
+
+    if (overrideFragmentNode !== undefined) {
+      scene.overrideMaterial.fragmentNode = overrideFragmentNode;
+    }
+
+    //
 
     object.onAfterRender(this, scene, camera, geometry, material, group);
   }
@@ -694,7 +716,7 @@ export class Renderer {
     scene: Scene,
     camera: Camera,
     lightsNode: LightsNode,
-    passId: string,
+    passId: number,
   ): void {
     const renderObject = this._objects.get(
       object,
@@ -706,15 +728,23 @@ export class Renderer {
       passId,
     );
 
+    //
+
     this._nodes.updateBefore(renderObject);
+
+    //
 
     object.modelViewMatrix.from(camera.matrixWorldInverse).mul(object.matrixWorld);
     object.normalMatrix.fromMat4Normal(object.modelViewMatrix);
+
+    //
 
     this._nodes.updateForRender(renderObject);
     this._geometries.updateForRender(renderObject);
     this._bindings.updateForRender(renderObject);
     this._pipelines.updateForRender(renderObject);
+
+    //
 
     this.backend.draw(renderObject, this.info);
   }
@@ -725,7 +755,7 @@ export class Renderer {
     scene: Scene,
     camera: Camera,
     lightsNode: LightsNode,
-    passId: string,
+    passId: number,
   ): void {
     const renderObject = this._objects.get(
       object,

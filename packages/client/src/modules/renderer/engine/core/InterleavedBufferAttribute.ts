@@ -24,10 +24,6 @@ export class InterleavedBufferAttribute<T extends TypedArray = any> {
     this.normalized = normalized;
   }
 
-  static is(value: any): value is InterleavedBufferAttribute {
-    return value?.isInterleavedBufferAttribute === true;
-  }
-
   get count(): number {
     return this.data.count;
   }

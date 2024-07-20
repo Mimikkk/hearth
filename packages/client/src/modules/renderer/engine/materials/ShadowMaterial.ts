@@ -13,7 +13,7 @@ export class ShadowMaterial extends Material {
   color: Color;
   fog: boolean;
 
-  constructor(parameters?: ShadowMaterialParameters) {
+  constructor(parameters: ShadowMaterialParameters) {
     super(parameters);
 
     this.color = new Color(0x000000);
@@ -23,7 +23,7 @@ export class ShadowMaterial extends Material {
     this.setValues(parameters);
   }
 
-  setValues(values?: MaterialParameters) {
+  setValues(values: MaterialParameters) {
     super.setValues(values);
   }
 
