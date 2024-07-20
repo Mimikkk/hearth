@@ -9,7 +9,7 @@ import type { Matrix4 } from '@modules/renderer/engine/math/Matrix4.js';
 import type { ICylindrical } from '@modules/renderer/engine/math/Cylindrical.js';
 import type { Spherical } from '@modules/renderer/engine/math/Spherical.js';
 import type { Camera } from '@modules/renderer/engine/cameras/Camera.js';
-import { as, Const } from '@modules/renderer/engine/math/types.js';
+import { Const } from '@modules/renderer/engine/math/types.js';
 
 export interface IVector3 {
   x: number;
@@ -602,6 +602,7 @@ export interface IVec3 {
   z: number;
 }
 
+const empty = () => Vec3.empty;
 export class Vec3 implements IVec3 {
   constructor(
     public x: number,
@@ -609,7 +610,7 @@ export class Vec3 implements IVec3 {
     public z: number,
   ) {}
 
-  static new(x: number, y: number, z: number): Vec3 {
+  static create(x: number, y: number, z: number): Vec3 {
     return new Vec3(x, y, z);
   }
 
@@ -629,17 +630,17 @@ export class Vec3 implements IVec3 {
     return IVec3.fill(this, vec);
   }
 
-  clone<T extends IVec3 = Vec3>(into: T = Vec3.empty()): T {
+  clone<T extends IVec3 = Vec3>(into: T = Vec3.empty<T>()): T {
     return IVec3.clone_(this, into);
   }
 
-  negate<T extends IVec3 = Vec3>(into: T = as(this)): T {
+  negate<T extends IVec3 = Vec3>(into: T = this as never): T {
     return IVec3.negate_(this, into);
   }
 }
 
 export namespace IVec3 {
-  export const create = Vec3.new;
+  export const create = Vec3.create;
   export const empty = Vec3.empty;
   export const vec3 = create;
 
@@ -833,8 +834,8 @@ export namespace IVec3 {
   export const fillSpherical = (self: IVec3, spherical: Const<Spherical>): IVec3 => fromSpherical_(spherical, self);
 
   export const fromCylindrical = (cylindrical: Const<ICylindrical>): IVec3 => fromCylindrical_(cylindrical, empty());
-  export const fromCylindrical_ = ({ radius, theta, height }: Const<ICylindrical>, into: IVec3): IVec3 =>
-    set(into, radius * Math.sin(theta), height, radius * Math.cos(theta));
+  export const fromCylindrical_ = ({ radius, theta, y }: Const<ICylindrical>, into: IVec3): IVec3 =>
+    set(into, radius * Math.sin(theta), y, radius * Math.cos(theta));
   export const fillCylindrical = (self: IVec3, cylindrical: Const<ICylindrical>): IVec3 =>
     fromCylindrical_(cylindrical, self);
 
@@ -947,7 +948,7 @@ export namespace IVec3 {
     );
   };
 
-  const _quaternion: Quaternion = { x: 0, y: 0, z: 0, w: 0 };
+  const _quaternion = Quaternion.identity();
   export const applyAxisAngle = (self: IVec3, axis: Const<IVec3>, angle: number): IVec3 =>
     applyAxisAngle_(self, axis, angle, self);
   export const applyAxisAngle_ = (self: Const<IVec3>, axis: Const<IVec3>, angle: number, into: IVec3): IVec3 => {

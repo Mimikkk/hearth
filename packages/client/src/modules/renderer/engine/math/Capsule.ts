@@ -1,87 +1,15 @@
-import { IVec3, Vec3 } from './Vector3.js';
+import { IVec3 } from './Vector3.js';
 import { Box3_ } from '@modules/renderer/engine/math/Box3.js';
-import { as, Const } from '@modules/renderer/engine/math/types.js';
+import { Const } from '@modules/renderer/engine/math/types.js';
 
-export class Capsule implements ICapsule {
-  constructor(
-    public start: Vec3,
-    public end: Vec3,
-    public radius: number,
-  ) {}
-
-  static new(start: Vec3, end: Vec3, radius: number): Capsule {
-    return new C(start, end, radius);
-  }
-
-  static empty(): Capsule {
-    return C.new(Vec3.empty(), Vec3.empty(), 0);
-  }
-
-  static clone<S extends T>(from: Const<T>, into: S = I.empty()): S {
-    return I.from.self(from, into);
-  }
-
-  static copy<S extends T>(from: Const<T>, into: S = I.empty()): S {
-    return I.copy(from, into);
-  }
-
-  static fromEnds<S extends T>(start: Const<IVec3>, end: Const<IVec3>, radius: number, into: S = I.empty()): S {
-    return I.from.ends(start, end, radius, into);
-  }
-
-  fill(from: Const<T>): this {
-    return I.from.self(from, this);
-  }
-
-  fillEnds(start: Const<IVec3>, end: Const<IVec3>, radius: number): this {
-    return I.from.ends(start, end, radius, this);
-  }
-
-  set(startX: number, startY: number, startZ: number, endX: number, endY: number, endZ: number, radius: number): this {
-    return I.fill(this, startX, startY, startZ, endX, endY, endZ, radius);
-  }
-
-  setEnds(start: Const<IVec3>, end: Const<IVec3>): this {
-    return I.from.ends(start, end, this.radius, this);
-  }
-
-  setStart(start: Const<IVec3>): this {
-    return I.set.start(this, start);
-  }
-
-  setEnd(end: Const<IVec3>): this {
-    return I.set.end(this, end);
-  }
-
-  setRadius(radius: number): this {
-    return I.set.radius(this, radius);
-  }
-
-  translate<S extends T>(vec: Const<IVec3>, into: S = as(this)): S {
-    return I.translate(this, vec, into);
-  }
-
-  center<T extends IVec3>(into: T = Vec3.empty()): T {
-    return I.center(this, into);
-  }
-
-  intersectsBox(box: Const<Box3_>): boolean {
-    return I.intersectsBox(this, box);
-  }
-}
-
-export interface ICapsule {
+export interface Capsule {
   start: IVec3;
   end: IVec3;
   radius: number;
 }
 
-export namespace ICapsule {
-  export const create = Capsule.new as <S extends T>(start: Vec3, end: Vec3, radius: number) => S;
-  export const empty = Capsule.empty as <S extends T>() => S;
-
-  export const fill = <S extends T>(
-    into: S,
+export namespace Capsule {
+  export const create = (
     startX: number,
     startY: number,
     startZ: number,
@@ -89,7 +17,23 @@ export namespace ICapsule {
     endY: number,
     endZ: number,
     radius: number,
-  ): S => {
+  ): Capsule => ({
+    start: IVec3.create(startX, startY, startZ),
+    end: IVec3.create(endX, endY, endZ),
+    radius,
+  });
+  export const empty = (): Capsule => create(0, 0, 0, 0, 0, 0, 0);
+
+  export const set = (
+    into: Capsule,
+    startX: number,
+    startY: number,
+    startZ: number,
+    endX: number,
+    endY: number,
+    endZ: number,
+    radius: number,
+  ): Capsule => {
     into.start.x = startX;
     into.start.y = startY;
     into.start.z = startZ;
@@ -100,55 +44,34 @@ export namespace ICapsule {
 
     return into;
   };
+  export const fill_ = (into: Capsule, { start, end, radius }: Const<Capsule>): Capsule =>
+    set(into, start.x, start.y, start.z, end.x, end.y, end.z, radius);
 
-  export namespace set {
-    export const start = <S extends T>(self: S, start: Const<IVec3>): S => {
-      IVec3.fill(self.start, start);
-      return self;
-    };
-
-    export const end = <S extends T>(self: S, end: Const<IVec3>): S => {
-      IVec3.fill(self.end, end);
-      return self;
-    };
-
-    export const radius = <S extends T>(self: S, radius: number): S => {
-      self.radius = radius;
-      return self;
-    };
-  }
-
-  export namespace from {
-    export const self = <S extends T>({ start, end, radius }: Const<T>, into: S = empty()): S =>
-      fill(into, start.x, start.y, start.z, end.x, end.y, end.z, radius);
-
-    export const ends = <S extends T>(start: Const<IVec3>, end: Const<IVec3>, radius: number, into: S = empty()): S =>
-      fill(into, start.x, start.y, start.z, end.x, end.y, end.z, radius);
-  }
-
-  export const clone = from.self;
-
-  export const copy = <S extends T>(self: Const<ICapsule>, into: S = empty()): S => {
-    into.start = self.start;
-    into.end = self.end;
-    into.radius = self.radius;
+  export const copy = (self: Const<Capsule>): Capsule => copy_(self, empty());
+  export const copy_ = ({ start, end, radius }: Const<Capsule>, into: Capsule): Capsule => {
+    into.start = start;
+    into.end = end;
+    into.radius = radius;
 
     return into;
   };
 
-  export const translate = <S extends T>(capsule: Const<ICapsule>, vec: Const<IVec3>, into: S = capsule as S): S => {
-    IVec3.add_(capsule.start, vec, into.start);
-    IVec3.add_(capsule.end, vec, into.end);
+  export const clone = (self: Const<Capsule>): Capsule => fill_(self, empty());
+  export const clone_ = (from: Const<Capsule>, into: Capsule): Capsule => fill_(into, from);
+
+  export const translate = (capsule: Capsule, vec: Const<IVec3>): Capsule => translate_(capsule, vec, capsule);
+  export const translate_ = (self: Const<Capsule>, vec: Const<IVec3>, into: Capsule): Capsule => {
+    IVec3.add_(self.start, vec, into.start);
+    IVec3.add_(self.end, vec, into.end);
 
     return into;
   };
+  export const translated = (capsule: Const<Capsule>, vec: Const<IVec3>): Capsule =>
+    translate(clone_(capsule, empty()), vec);
 
-  export const center = <S extends IVec3>({ start, end }: Const<ICapsule>, into: S = IVec3.empty()): S => {
-    IVec3.add_(start, end, into);
-    IVec3.scale(into, 0.5);
-
-    return into;
-  };
+  export const center = (capsule: Const<Capsule>): IVec3 => center_(capsule, IVec3.empty());
+  export const center_ = ({ start, end }: Const<Capsule>, into: IVec3): IVec3 =>
+    IVec3.scale(IVec3.add_(start, end, into), 0.5);
 
   const isAABBAxis = (
     p1x: number,
@@ -166,12 +89,8 @@ export namespace ICapsule {
     (miny - p1y < radius || miny - p2y < radius) &&
     (p1y - maxy < radius || p2y - maxy < radius);
 
-  export const intersectsBox = ({ start, end, radius }: Const<ICapsule>, { min, max }: Const<Box3_>): boolean =>
+  export const intersectsBox = ({ start, end, radius }: Const<Capsule>, { min, max }: Const<Box3_>): boolean =>
     isAABBAxis(start.x, start.y, end.x, end.y, min.x, max.x, min.y, max.y, radius) &&
     isAABBAxis(start.x, start.z, end.x, end.z, min.x, max.x, min.z, max.z, radius) &&
     isAABBAxis(start.y, start.z, end.y, end.z, min.y, max.y, min.z, max.z, radius);
 }
-
-const I = ICapsule;
-const C = Capsule;
-type T = ICapsule;
