@@ -21,6 +21,9 @@ export namespace Box2 {
 
   export const isEmpty = (self: Const<Box2>): boolean => self.max.x < self.min.x || self.max.y < self.min.y;
 
+  export const clone = ({ min, max }: Const<Box2>): Box2 => create(min.x, min.y, max.x, max.y);
+  export const clone_ = ({ min, max }: Const<Box2>, into: Box2): Box2 => fill(into, min.x, min.y, max.x, max.y);
+
   export const fill = (self: Box2, minX: number, minY: number, maxX: number, maxY: number): Box2 => {
     self.min.x = minX;
     self.min.y = minY;
@@ -29,17 +32,10 @@ export namespace Box2 {
 
     return self;
   };
-  export const fill_ = (self: Box2, { min, max }: Const<Box2>): Box2 => fill(self, min.x, min.y, max.x, max.y);
+  export const fill_ = (self: Box2, from: Const<Box2>): Box2 => clone_(from, self);
 
   export const copy = (from: Const<Box2>): Box2 => copy_(from, empty());
-  export const copy_ = (from: Const<Box2>, into: Box2): Box2 => {
-    into.min = from.min;
-    into.max = from.max;
-    return into;
-  };
-
-  export const clone = (from: Const<Box2>): Box2 => fill_(empty(), from);
-  export const clone_ = (from: Const<Box2>, into: Box2): Box2 => fill_(into, from);
+  export const copy_ = (from: Const<Box2>, into: Box2): Box2 => fill_(into, from);
 
   export const size = (self: Const<Box2>): Vec2 => vec2(self.max.x - self.min.x, self.max.y - self.min.y);
   export const size_ = (self: Const<Box2>, into: Vec2): Vec2 => {
@@ -141,7 +137,7 @@ export namespace Box2 {
   export const translate = (self: Box2, vec: Const<Vec2>): Box2 => translate_(self, vec, self);
   export const translate_ = (self: Const<Box2>, { x, y }: Const<Vec2>, into: Box2): Box2 =>
     fill(into, self.min.x + x, self.min.y + y, self.max.x + x, self.max.y + y);
-  export const translated = (self: Const<Box2>, vec: Const<Vec2>): Box2 => translate_(self, vec, empty());
+  export const translated = (self: Const<Box2>, vec: Const<Vec2>): Box2 => translate(self, vec);
 
   export const distanceSqTo = (self: Const<Box2>, vec: Const<Vec2>): number => {
     const x = clamp(vec.x, self.min.x, self.max.x) - vec.x;
