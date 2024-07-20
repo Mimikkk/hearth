@@ -56,6 +56,7 @@ import { TextureLoader } from '@modules/renderer/engine/loaders/textures/Texture
 import { KTX2Loader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/KTX2Loader.js';
 import { MeshoptDecoder } from 'meshoptimizer';
 import { DRACOLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/DRACOLoader.js';
+import { classLoader } from '@modules/renderer/engine/loaders/types.js';
 
 export type PluginFn = (parser: Parser) => Plugin;
 
@@ -93,13 +94,29 @@ export interface GLTF {
   userData: Record<string, any>;
 }
 
-class GLTFLoader {
+export type MeshoptDecoder = typeof MeshoptDecoder;
+
+export class GLTFLoader extends classLoader<{
+  This: GLTFLoader;
+  Url: string;
+  Return: GLTF;
+  Options: any;
+  Configuration: any;
+}>(
+  () => {},
+  async function (url, configuration, handlers) {
+    const buffer = await FileLoader.loadAsync(url, { responseType: ResponseType.Buffer }, handlers);
+
+    return this.parse(buffer, LoaderUtils.extractUrlBase(url));
+  },
+) {
   dracoLoader: null | DRACOLoader;
   ktx2Loader: null | KTX2Loader;
   meshoptDecoder: null | MeshoptDecoder;
   pluginCallbacks: PluginFn[];
 
   constructor() {
+    super();
     this.dracoLoader = null;
     this.ktx2Loader = null;
     this.meshoptDecoder = null;
@@ -122,12 +139,6 @@ class GLTFLoader {
       parser => new GLTFMeshoptCompression(parser),
       parser => new GLTFMeshGpuInstancing(parser),
     ];
-  }
-
-  async loadAsync(url, handlers) {
-    const buffer = await FileLoader.loadAsync(url, { responseType: ResponseType.Buffer }, handlers);
-
-    return this.parse(buffer, LoaderUtils.extractUrlBase(url));
   }
 
   setDRACOLoader(dracoLoader: DRACOLoader): this {
@@ -3585,5 +3596,3 @@ function addPrimitiveAttributes(geometry, primitiveDef, parser) {
     return primitiveDef.targets !== undefined ? addMorphTargets(geometry, primitiveDef.targets, parser) : geometry;
   });
 }
-
-export { GLTFLoader };
