@@ -167,6 +167,20 @@ export class Mat3 {
     return this.set(xAxis.x, yAxis.x, zAxis.x, xAxis.y, yAxis.y, zAxis.y, xAxis.z, yAxis.z, zAxis.z);
   }
 
+  fromElements(
+    n11: number,
+    n12: number,
+    n13: number,
+    n21: number,
+    n22: number,
+    n23: number,
+    n31: number,
+    n32: number,
+    n33: number,
+  ): this {
+    return this.set(n11, n12, n13, n21, n22, n23, n31, n32, n33);
+  }
+
   fromMat4(matrix: Const<Mat4>): this {
     const e = matrix.elements;
     return this.set(e[0], e[4], e[8], e[1], e[5], e[9], e[2], e[6], e[10]);

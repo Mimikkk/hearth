@@ -24,7 +24,6 @@ import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 import { Mat4, Object3D, Plane } from '@modules/renderer/engine/engine.js';
 import { GPUFeatureNameType, GPUTextureFormatType } from '@modules/renderer/engine/renderers/webgpu/utils/constants.js';
 import { Frustum } from '@modules/renderer/engine/math/Frustum.js';
-import { throttle } from 'lodash-es';
 
 const _scene = new Scene();
 const _drawingBufferSize = new Vec3();
@@ -385,7 +384,6 @@ export class Renderer {
     const renderList = this._renderLists.get(scene, camera);
     renderList.begin();
 
-    col(renderList);
     this._projectObject(scene, camera, 0, renderList);
 
     renderList.finish();
@@ -1000,8 +998,6 @@ export class Renderer {
     this._pipelines.getForRender(renderObject, this._compilationPromises);
   }
 }
-
-const col = throttle(console.log, 1000);
 
 export namespace Renderer {
   export interface Options {
