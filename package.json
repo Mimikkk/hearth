@@ -8,7 +8,7 @@
     "copyfiles": "^2.4.1",
     "prettier": "^3.2.5",
     "rimraf": "^5.0.5",
-    "typescript": "5.4.2",
+    "typescript": "5.5.3",
     "vitest": "^1.3.1",
     "@arktype/attest": "^0.6.2",
     "vite-node": "^1.3.1"
@@ -18,12 +18,13 @@
     "WebGPU"
   ],
   "license": "MIT",
-  "name": "zd",
+  "name": "mimi",
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "build": "pnpm run build:library -c blue.bold",
     "build:library": "cd packages/engine && pnpm run build",
     "build:basis": "cd packages/basis && pnpm run build",
+    "build:ui": "cd packages/ui && pnpm run build",
     "dev": "concurrently 'pnpm:dev:client' -c blue.bold",
     "redev": "pnpm run build && pnpm run dev",
     "dev:client": "cd ./packages/client && pnpm run dev"

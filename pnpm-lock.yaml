@@ -56,7 +56,7 @@ importers:
 
   packages/client:
     dependencies:
-      '@zd/basis':
+      '@mimi/basis':
         specifier: workspace:*
         version: link:../basis
       ammojs3:

@@ -1,0 +1,35 @@
+{
+  "author": "Daniel Zdancewicz <zdancewicz.daniel@gmail.com>",
+  "description": "Lil GUI Wrapper",
+  "dependencies": {
+    "a-path": "^2.0.1",
+    "lil-gui": "^0.19.2"
+  },
+  "devDependencies": {
+    "prettier": "^3.2.5",
+    "vite": "^5.1.3",
+    "vite-plugin-arraybuffer": "^0.0.7",
+    "vite-plugin-dts": "^3.9.1"
+  },
+  "homepage": "https://github.com/Mimikkk/webpgu-engine/tree/master/packages/ui",
+  "keywords": [
+    "UI"
+  ],
+  "license": "MIT",
+  "name": "@mimi/ui",
+  "scripts": {
+    "build": "vite build"
+  },
+  "type": "module",
+  "version": "0.0.0",
+  "main": "./build/ui.js",
+  "module": "./build/ui.js",
+  "types": "./build/ui.d.ts",
+  "exports": {
+    ".": {
+      "types": "./build/ui.d.ts",
+      "import": "./build/ui.js",
+      "require": "./build/ui.cjs"
+    }
+  }
+}

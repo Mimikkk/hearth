@@ -12,6 +12,8 @@
     "importHelpers": true,
     "isolatedModules": true,
     "strictNullChecks": true,
+    "jsx": "preserve",
+    "jsxImportSource": "solid-js",
     "lib": [
       "DOM",
       "ESNext"
