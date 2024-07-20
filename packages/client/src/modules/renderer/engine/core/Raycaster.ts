@@ -41,10 +41,7 @@ const findIntersections = <T extends Object3D>(
   intersects: Intersection<T>[],
   recursive: boolean,
 ): Intersection<T>[] => {
-  if (object.layers.test(raycaster.layers)) {
-    console.log({ object });
-    object.raycast(raycaster, intersects);
-  }
+  if (object.layers.test(raycaster.layers)) object.raycast(raycaster, intersects);
 
   if (!recursive) return intersects;
 
@@ -112,7 +109,6 @@ export class Raycaster {
     recursive: boolean = true,
     intersects: Intersection<T>[] = [],
   ): Intersection<T>[] {
-    console.log('start');
     for (let i = 0, l = objects.length; i < l; i++) findIntersections(objects[i], this, intersects, recursive);
 
     return intersects.sort(asc);

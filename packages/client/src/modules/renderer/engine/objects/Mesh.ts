@@ -136,15 +136,11 @@ export class Mesh extends Object3D {
     const material = this.material;
     const matrixWorld = this.matrixWorld;
 
-    console.log('h1');
-
     if (material === undefined) return;
-    console.log('h2');
 
     // test with bounding sphere in world space
 
     if (geometry.boundingSphere === null) geometry.computeBoundingSphere();
-    console.log('h3');
 
     Sphere_.fill_(_sphere, geometry.boundingSphere!);
     Sphere_.applyMat4(_sphere, matrixWorld);
@@ -153,13 +149,11 @@ export class Mesh extends Object3D {
 
     _ray.copy(raycaster.ray).recast(raycaster.near);
 
-    console.log('h4');
     if (!Sphere_.containsVec(_sphere, _ray.origin)) {
       if (_ray.intersectSphere(_sphere, _sphereHitAt) === null) return;
 
       if (_ray.origin.distanceToSquared(_sphereHitAt) > (raycaster.far - raycaster.near) ** 2) return;
     }
-    console.log('h5');
 
     // convert ray to local space of mesh
 
@@ -171,7 +165,6 @@ export class Mesh extends Object3D {
     if (geometry.boundingBox !== null) {
       if (_ray.intersectsBox(geometry.boundingBox) === false) return;
     }
-    console.log('h6');
 
     // test for intersections with geometry
 
@@ -194,8 +187,8 @@ export class Mesh extends Object3D {
 
     if (index !== null) {
       // indexed buffer geometry
+
       if (Array.isArray(material)) {
-        console.log('b1');
         for (let i = 0, il = groups.length; i < il; i++) {
           const group = groups[i];
           const groupMaterial = material[group.materialIndex as any];
@@ -229,7 +222,6 @@ export class Mesh extends Object3D {
           }
         }
       } else {
-        console.log('b2');
         const start = Math.max(0, drawRange.start);
         const end = Math.min(index.count, drawRange.start + drawRange.count);
 
@@ -239,8 +231,6 @@ export class Mesh extends Object3D {
           const c = index.getX(i + 2);
 
           intersection = checkGeometryIntersection(this, material, raycaster, rayLocalSpace, uv, uv1, normal, a, b, c);
-
-          console.log({ intersection });
 
           if (intersection) {
             intersection.faceIndex = Math.floor(i / 3); // triangle number in indexed buffer semantics
@@ -320,7 +310,6 @@ function checkIntersection(
 ): Intersection | null {
   let intersect;
 
-  console.log(material.side);
   if (material.side === Side.Back) {
     intersect = ray.intersectTriangle(pC, pB, pA, true, point);
   } else {
@@ -329,7 +318,6 @@ function checkIntersection(
 
   if (intersect === null) return null;
 
-  console.log(point, _intersectionPointWorld);
   _intersectionPointWorld.copy(point);
   _intersectionPointWorld.applyMatrix4(object.matrixWorld);
 
@@ -362,8 +350,6 @@ function checkGeometryIntersection(
   Triangle.set(_triangle1, _vA, _vB, _vC);
 
   const intersection = checkIntersection(object, material, raycaster, ray, _vA, _vB, _vC, _intersectionPoint);
-
-  console.log({ intersection });
 
   if (intersection) {
     if (uv) {
