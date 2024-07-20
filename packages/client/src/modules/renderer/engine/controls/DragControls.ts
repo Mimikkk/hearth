@@ -101,7 +101,7 @@ class DragControls {
       if (_selected) {
         if (scope.mode === 'translate') {
           if (_raycaster.ray.intersectPlane(_plane, _intersection)) {
-            _selected.position.copy(_intersection.sub(_offset).applyMat4(_inverseMatrix));
+            _selected.position.from(_intersection.sub(_offset).applyMat4(_inverseMatrix));
           }
         } else if (scope.mode === 'rotate') {
           _diff.asSub(_pointer, _previousPointer).scale(scope.rotateSpeed);
@@ -186,7 +186,7 @@ class DragControls {
             //@ts-expect-error
             _inverseMatrix.copy(_selected.parent.matrixWorld).invert();
             //@ts-expect-error
-            _offset.copy(_intersection).sub(_worldPosition.setFromMatrixPosition(_selected.matrixWorld));
+            _offset.from(_intersection).sub(_worldPosition.setFromMatrixPosition(_selected.matrixWorld));
           } else if (scope.mode === 'rotate') {
             // the controls only support Y+ up
             _up.set(0, 1, 0).applyQuaternion(_camera.quaternion).normalize();

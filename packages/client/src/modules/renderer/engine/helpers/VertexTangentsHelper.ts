@@ -44,11 +44,11 @@ export class VertexTangentsHelper extends LineSegments {
     let idx = 0;
 
     for (let j = 0, jl = objPos.count; j < jl; j++) {
-      _v1.fromBufferAttribute(objPos, j).applyMat4(matrixWorld);
+      _v1.fromAttribute(objPos, j).applyMat4(matrixWorld);
 
-      _v2.fromBufferAttribute(objTan, j);
+      _v2.fromAttribute(objTan, j);
 
-      _v2.transformDirection(matrixWorld).multiplyScalar(this.size).add(_v1);
+      _v2.transformDirection(matrixWorld).scale(this.size).add(_v1);
 
       position.setXYZ(idx, _v1.x, _v1.y, _v1.z);
 

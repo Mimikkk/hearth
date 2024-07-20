@@ -38,7 +38,7 @@ export class InterleavedBufferAttribute<T extends TypedArray = any> {
 
   applyMat4(m: Mat4): this {
     for (let i = 0, l = this.data.count; i < l; i++) {
-      _vector.fromBufferAttribute(this, i);
+      _vector.fromAttribute(this, i);
 
       _vector.applyMat4(m);
 
@@ -50,7 +50,7 @@ export class InterleavedBufferAttribute<T extends TypedArray = any> {
 
   applyNormalMatrix(m: Mat3): this {
     for (let i = 0, l = this.count; i < l; i++) {
-      _vector.fromBufferAttribute(this, i);
+      _vector.fromAttribute(this, i);
 
       _vector.applyNormalMatrix(m);
 
@@ -62,7 +62,7 @@ export class InterleavedBufferAttribute<T extends TypedArray = any> {
 
   transformDirection(m: Mat4): this {
     for (let i = 0, l = this.count; i < l; i++) {
-      _vector.fromBufferAttribute(this, i);
+      _vector.fromAttribute(this, i);
 
       _vector.transformDirection(m);
 

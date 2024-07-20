@@ -2,6 +2,7 @@ import { Box3 } from './Box3.js';
 import { Vec3 } from './Vec3.js';
 import type { Plane } from './Plane.js';
 import type { Mat4 } from './Mat4.js';
+import { Const } from '@modules/renderer/engine/math/types.js';
 
 export class Sphere {
   declare isSphere: true;
@@ -12,8 +13,12 @@ export class Sphere {
     public radius: number = -1,
   ) {}
 
+  static new(center: Const<Vec3> = Vec3.new(), radius: number = -1): Sphere {
+    return new Sphere(center, radius);
+  }
+
   set(center: Vec3, radius: number): this {
-    this.center.copy(center);
+    this.center.from(center);
     this.radius = radius;
 
     return this;
@@ -23,15 +28,15 @@ export class Sphere {
     const center = this.center;
 
     if (optionalCenter !== undefined) {
-      center.copy(optionalCenter);
+      center.from(optionalCenter);
     } else {
-      new Box3().setFromPoints(points).getCenter(center);
+      new Box3().fromCoords(points).center(center);
     }
 
     let maxRadiusSq = 0;
 
     for (let i = 0, il = points.length; i < il; i++) {
-      maxRadiusSq = Math.max(maxRadiusSq, center.distanceToSquared(points[i]));
+      maxRadiusSq = Math.max(maxRadiusSq, center.distanceSqTo(points[i]));
     }
 
     this.radius = Math.sqrt(maxRadiusSq);
@@ -40,7 +45,7 @@ export class Sphere {
   }
 
   copy(sphere: Sphere): this {
-    this.center.copy(sphere.center);
+    this.center.from(sphere.center);
     this.radius = sphere.radius;
 
     return this;
@@ -50,7 +55,7 @@ export class Sphere {
     return this.radius < 0;
   }
 
-  makeEmpty(): this {
+  clear(): this {
     this.center.set(0, 0, 0);
     this.radius = -1;
 
@@ -58,7 +63,7 @@ export class Sphere {
   }
 
   containsPoint(point: Vec3): boolean {
-    return point.distanceToSquared(this.center) <= this.radius * this.radius;
+    return point.distanceSqTo(this.center) <= this.radius * this.radius;
   }
 
   distanceToPoint(point: Vec3): number {
@@ -68,7 +73,7 @@ export class Sphere {
   intersectsSphere(sphere: Sphere): boolean {
     const radiusSum = this.radius + sphere.radius;
 
-    return sphere.center.distanceToSquared(this.center) <= radiusSum * radiusSum;
+    return sphere.center.distanceSqTo(this.center) <= radiusSum * radiusSum;
   }
 
   intersectsBox(box: Box3): boolean {
@@ -80,13 +85,13 @@ export class Sphere {
   }
 
   clampPoint(point: Vec3, target: Vec3): Vec3 {
-    const deltaLengthSq = this.center.distanceToSquared(point);
+    const deltaLengthSq = this.center.distanceSqTo(point);
 
-    target.copy(point);
+    target.from(point);
 
     if (deltaLengthSq > this.radius * this.radius) {
       target.sub(this.center).normalize();
-      target.multiplyScalar(this.radius).add(this.center);
+      target.scale(this.radius).add(this.center);
     }
 
     return target;
@@ -95,12 +100,12 @@ export class Sphere {
   getBoundingBox(target: Box3): Box3 {
     if (this.isEmpty()) {
       // Empty sphere produces empty bounding box
-      target.makeEmpty();
+      target.clear();
       return target;
     }
 
     target.set(this.center, this.center);
-    target.expandByScalar(this.radius);
+    target.expandScalar(this.radius);
 
     return target;
   }
@@ -120,7 +125,7 @@ export class Sphere {
 
   expandByPoint(point: Vec3): this {
     if (this.isEmpty()) {
-      this.center.copy(point);
+      this.center.from(point);
 
       this.radius = 0;
 
@@ -162,9 +167,9 @@ export class Sphere {
     } else {
       const _v2 = new Vec3().subVectors(sphere.center, this.center).setLength(sphere.radius);
 
-      this.expandByPoint(new Vec3().copy(sphere.center).add(_v2));
+      this.expandByPoint(new Vec3().from(sphere.center).add(_v2));
 
-      this.expandByPoint(new Vec3().copy(sphere.center).sub(_v2));
+      this.expandByPoint(new Vec3().from(sphere.center).sub(_v2));
     }
 
     return this;

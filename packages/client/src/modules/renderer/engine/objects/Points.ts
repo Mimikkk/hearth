@@ -73,7 +73,7 @@ export class Points extends Object3D {
       for (let i = start, il = end; i < il; i++) {
         const a = index.getX(i);
 
-        _position.fromBufferAttribute(positionAttribute, a);
+        _position.fromAttribute(positionAttribute, a);
 
         testPoint(_position, a, localThresholdSq, matrixWorld, raycaster, intersects, this);
       }
@@ -82,7 +82,7 @@ export class Points extends Object3D {
       const end = Math.min(positionAttribute.count, drawRange.start + drawRange.count);
 
       for (let i = start, l = end; i < l; i++) {
-        _position.fromBufferAttribute(positionAttribute, i);
+        _position.fromAttribute(positionAttribute, i);
 
         testPoint(_position, i, localThresholdSq, matrixWorld, raycaster, intersects, this);
       }

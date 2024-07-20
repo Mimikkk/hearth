@@ -75,7 +75,7 @@ export class ConvexHull {
       for (let i = 0, l = attribute.count; i < l; i++) {
         const point = new Vec3();
 
-        point.fromBufferAttribute(attribute, i).applyMat4(node.matrixWorld);
+        point.fromAttribute(attribute, i).applyMat4(node.matrixWorld);
 
         points.push(point);
       }
@@ -332,8 +332,8 @@ export class ConvexHull {
       minVertices[i] = maxVertices[i] = this.vertices[0];
     }
 
-    min.copy(this.vertices[0].point);
-    max.copy(this.vertices[0].point);
+    min.from(this.vertices[0].point);
+    max.from(this.vertices[0].point);
 
     // compute the min/max vertex on all six directions
 
@@ -414,7 +414,7 @@ export class ConvexHull {
       if (vertex !== v0 && vertex !== v1) {
         _line3.closestPointToPoint(vertex.point, true, _closestPoint);
 
-        const distance = _closestPoint.distanceToSquared(vertex.point);
+        const distance = _closestPoint.distanceSqTo(vertex.point);
 
         if (distance > maxDistance) {
           maxDistance = distance;
@@ -820,7 +820,7 @@ export class HalfEdge {
     const head = this.head();
     const tail = this.tail();
 
-    return tail !== null ? tail.point.distanceToSquared(head.point) : -1;
+    return tail !== null ? tail.point.distanceSqTo(head.point) : -1;
   }
 
   setTwin(edge: HalfEdge): HalfEdge {

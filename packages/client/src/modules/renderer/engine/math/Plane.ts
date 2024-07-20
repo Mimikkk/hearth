@@ -15,7 +15,7 @@ export class Plane {
   ) {}
 
   set(normal: Vec3, constant: number): this {
-    this.normal.copy(normal);
+    this.normal.from(normal);
     this.constant = constant;
 
     return this;
@@ -29,7 +29,7 @@ export class Plane {
   }
 
   setFromNormalAndCoplanarPoint(normal: Vec3, point: Vec3): this {
-    this.normal.copy(normal);
+    this.normal.from(normal);
     this.constant = -point.dot(this.normal);
 
     return this;
@@ -46,7 +46,7 @@ export class Plane {
   }
 
   copy(plane: Plane): this {
-    this.normal.copy(plane.normal);
+    this.normal.from(plane.normal);
     this.constant = plane.constant;
 
     return this;
@@ -56,7 +56,7 @@ export class Plane {
     // Note: will lead to a divide by zero if the plane is invalid.
 
     const inverseNormalLength = 1.0 / this.normal.length();
-    this.normal.multiplyScalar(inverseNormalLength);
+    this.normal.scale(inverseNormalLength);
     this.constant *= inverseNormalLength;
 
     return this;
@@ -78,7 +78,7 @@ export class Plane {
   }
 
   projectPoint(point: Vec3, target: Vec3): Vec3 {
-    return target.copy(point).addScaledVector(this.normal, -this.distanceToPoint(point));
+    return target.from(point).addScaledVector(this.normal, -this.distanceToPoint(point));
   }
 
   intersectLine(line: Line3, target: Vec3): Vec3 | null {
@@ -89,7 +89,7 @@ export class Plane {
     if (denominator === 0) {
       // line is coplanar, return origin
       if (this.distanceToPoint(line.start) === 0) {
-        return target.copy(line.start);
+        return target.from(line.start);
       }
 
       // Unsure if this is the correct method to handle this case.
@@ -102,7 +102,7 @@ export class Plane {
       return null;
     }
 
-    return target.copy(line.start).addScaledVector(direction, t);
+    return target.from(line.start).addScaledVector(direction, t);
   }
 
   intersectsLine(line: Line3): boolean {
@@ -123,7 +123,7 @@ export class Plane {
   }
 
   coplanarPoint(target: Vec3): Vec3 {
-    return target.copy(this.normal).multiplyScalar(-this.constant);
+    return target.from(this.normal).scale(-this.constant);
   }
 
   applyMat4(matrix: Mat4, optionalNormalMatrix?: Mat3): Plane {

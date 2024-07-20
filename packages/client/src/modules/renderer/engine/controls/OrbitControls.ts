@@ -182,14 +182,14 @@ export class OrbitControls {
     };
 
     this.saveState = function () {
-      scope.target0.copy(scope.target);
-      scope.position0.copy(scope.object.position);
+      scope.target0.from(scope.target);
+      scope.position0.from(scope.object.position);
       scope.zoom0 = scope.object.zoom;
     };
 
     this.reset = function () {
-      scope.target.copy(scope.target0);
-      scope.object.position.copy(scope.position0);
+      scope.target.from(scope.target0);
+      scope.object.position.from(scope.position0);
       scope.object.zoom = scope.zoom0;
 
       scope.object.updateProjectionMatrix();
@@ -217,7 +217,7 @@ export class OrbitControls {
       return function update(deltaTime = null!) {
         const position = scope.object.position;
 
-        offset.copy(position).sub(scope.target);
+        offset.from(position).sub(scope.target);
 
         // rotate offset to "y-axis-is-up" space
         offset.applyQuaternion(quat);
@@ -291,7 +291,7 @@ export class OrbitControls {
         // rotate offset back to "camera-up-vector-is-up" space
         offset.applyQuaternion(quatInverse);
 
-        position.copy(scope.target).add(offset);
+        position.from(scope.target).add(offset);
 
         scope.object.lookAt(scope.target);
 
@@ -299,7 +299,7 @@ export class OrbitControls {
           sphericalDelta.theta *= 1 - scope.dampingFactor;
           sphericalDelta.phi *= 1 - scope.dampingFactor;
 
-          panOffset.multiplyScalar(1 - scope.dampingFactor);
+          panOffset.scale(1 - scope.dampingFactor);
         } else {
           sphericalDelta.set(0, 0, 0);
 
@@ -347,11 +347,11 @@ export class OrbitControls {
               scope.target
                 .set(0, 0, -1)
                 .transformDirection(scope.object.matrix)
-                .multiplyScalar(newRadius)
+                .scale(newRadius)
                 .add(scope.object.position);
             } else {
               // get the ray and translation plane to compute target
-              _ray.origin.copy(scope.object.position);
+              _ray.origin.from(scope.object.position);
               _ray.direction.set(0, 0, -1).transformDirection(scope.object.matrix);
 
               // if the camera is 20 degrees above the horizon then don't adjust the focus target to avoid
@@ -383,15 +383,15 @@ export class OrbitControls {
 
         if (
           zoomChanged ||
-          lastPosition.distanceToSquared(scope.object.position) > EPS ||
+          lastPosition.distanceSqTo(scope.object.position) > EPS ||
           8 * (1 - lastQuaternion.dot(scope.object.quaternion)) > EPS ||
-          lastTargetPosition.distanceToSquared(scope.target) > EPS
+          lastTargetPosition.distanceSqTo(scope.target) > EPS
         ) {
           scope.eventDispatcher.dispatch(_changeEvent, this);
 
-          lastPosition.copy(scope.object.position);
+          lastPosition.from(scope.object.position);
           lastQuaternion.copy(scope.object.quaternion);
-          lastTargetPosition.copy(scope.target);
+          lastTargetPosition.from(scope.target);
 
           return true;
         }
@@ -491,7 +491,7 @@ export class OrbitControls {
 
       return function panLeft(distance: number, objectMatrix: Mat4) {
         v.setFromMatrixColumn(objectMatrix, 0); // get X column of objectMatrix
-        v.multiplyScalar(-distance);
+        v.scale(-distance);
 
         panOffset.add(v);
       };
@@ -508,7 +508,7 @@ export class OrbitControls {
           v.crossVectors(scope.object.up, v);
         }
 
-        v.multiplyScalar(distance);
+        v.scale(distance);
 
         panOffset.add(v);
       };
@@ -524,7 +524,7 @@ export class OrbitControls {
         if (scope.object instanceof PerspectiveCamera) {
           // perspective
           const position = scope.object.position;
-          offset.copy(position).sub(scope.target);
+          offset.from(position).sub(scope.target);
           let targetDistance = offset.length();
 
           // half of the fov is center to top of screen

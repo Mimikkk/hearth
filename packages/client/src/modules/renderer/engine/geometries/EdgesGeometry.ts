@@ -47,9 +47,9 @@ export class EdgesGeometry extends BufferGeometry {
         }
 
         const { a, b, c } = _triangle;
-        a.fromBufferAttribute(positionAttr, indexArr[0]);
-        b.fromBufferAttribute(positionAttr, indexArr[1]);
-        c.fromBufferAttribute(positionAttr, indexArr[2]);
+        a.fromAttribute(positionAttr, indexArr[0]);
+        b.fromAttribute(positionAttr, indexArr[1]);
+        c.fromAttribute(positionAttr, indexArr[2]);
         _triangle.getNormal(_normal);
 
         // create hashes for the edge from the vertices
@@ -102,8 +102,8 @@ export class EdgesGeometry extends BufferGeometry {
       for (const key in edgeData) {
         if (edgeData[key]) {
           const { index0, index1 } = edgeData[key];
-          _v0.fromBufferAttribute(positionAttr, index0);
-          _v1.fromBufferAttribute(positionAttr, index1);
+          _v0.fromAttribute(positionAttr, index0);
+          _v1.fromAttribute(positionAttr, index1);
 
           vertices.push(_v0.x, _v0.y, _v0.z);
           vertices.push(_v1.x, _v1.y, _v1.z);

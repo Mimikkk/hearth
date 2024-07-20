@@ -60,12 +60,12 @@ export class InstancedMesh extends Mesh {
       geometry.computeBoundingBox();
     }
 
-    this.boundingBox.makeEmpty();
+    this.boundingBox.clear();
 
     for (let i = 0; i < count; i++) {
       this.getMatrixAt(i, _instanceLocalMatrix);
 
-      _box3.copy(geometry.boundingBox!).applyMat4(_instanceLocalMatrix);
+      _box3.from(geometry.boundingBox!).applyMat4(_instanceLocalMatrix);
 
       this.boundingBox.union(_box3);
     }
@@ -83,7 +83,7 @@ export class InstancedMesh extends Mesh {
       geometry.computeBoundingSphere();
     }
 
-    this.boundingSphere.makeEmpty();
+    this.boundingSphere.clear();
 
     for (let i = 0; i < count; i++) {
       this.getMatrixAt(i, _instanceLocalMatrix);

@@ -27,7 +27,7 @@ export class BoxHelper extends LineSegments {
   }
 
   update() {
-    if (this.object !== undefined) _box.setFromObject(this.object);
+    if (this.object !== undefined) _box.fromObject(this.object);
 
     if (_box.isEmpty()) return;
 

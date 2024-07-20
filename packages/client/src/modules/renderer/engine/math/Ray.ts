@@ -13,31 +13,31 @@ export class Ray {
   ) {}
 
   set(origin: Vec3, direction: Vec3): this {
-    this.origin.copy(origin);
-    this.direction.copy(direction);
+    this.origin.from(origin);
+    this.direction.from(direction);
 
     return this;
   }
 
   copy(ray: Ray): this {
-    this.origin.copy(ray.origin);
-    this.direction.copy(ray.direction);
+    this.origin.from(ray.origin);
+    this.direction.from(ray.direction);
 
     return this;
   }
 
   at(t: number, target: Vec3): Vec3 {
-    return target.copy(this.origin).addScaledVector(this.direction, t);
+    return target.from(this.origin).addScaledVector(this.direction, t);
   }
 
   lookAt(v: Vec3): this {
-    this.direction.copy(v).sub(this.origin).normalize();
+    this.direction.from(v).sub(this.origin).normalize();
 
     return this;
   }
 
   recast(t: number): this {
-    this.origin.copy(this.at(t, new Vec3(0, 0, 0)));
+    this.origin.from(this.at(t, new Vec3(0, 0, 0)));
 
     return this;
   }
@@ -48,10 +48,10 @@ export class Ray {
     const directionDistance = target.dot(this.direction);
 
     if (directionDistance < 0) {
-      return target.copy(this.origin);
+      return target.from(this.origin);
     }
 
-    return target.copy(this.origin).addScaledVector(this.direction, directionDistance);
+    return target.from(this.origin).addScaledVector(this.direction, directionDistance);
   }
 
   distanceToPoint(point: Vec3): number {
@@ -64,16 +64,16 @@ export class Ray {
     // point behind the ray
 
     if (directionDistance < 0) {
-      return this.origin.distanceToSquared(point);
+      return this.origin.distanceSqTo(point);
     }
 
-    return new Vec3().copy(this.origin).addScaledVector(this.direction, directionDistance).distanceToSquared(point);
+    return new Vec3().from(this.origin).addScaledVector(this.direction, directionDistance).distanceSqTo(point);
   }
 
   distanceSqToSegment(v0: Vec3, v1: Vec3, optionalPointOnRay?: Vec3, optionalPointOnSegment?: Vec3): number {
-    const _segCenter = new Vec3().copy(v0).add(v1).multiplyScalar(0.5);
-    const _segDir = new Vec3().copy(v1).sub(v0).normalize();
-    const _diff = new Vec3().copy(this.origin).sub(_segCenter);
+    const _segCenter = new Vec3().from(v0).add(v1).scale(0.5);
+    const _segDir = new Vec3().from(v1).sub(v0).normalize();
+    const _diff = new Vec3().from(this.origin).sub(_segCenter);
 
     const segExtent = v0.distanceTo(v1) * 0.5;
     const a01 = -this.direction.dot(_segDir);
@@ -144,11 +144,11 @@ export class Ray {
     }
 
     if (optionalPointOnRay) {
-      optionalPointOnRay.copy(this.origin).addScaledVector(this.direction, s0);
+      optionalPointOnRay.from(this.origin).addScaledVector(this.direction, s0);
     }
 
     if (optionalPointOnSegment) {
-      optionalPointOnSegment.copy(_segCenter).addScaledVector(_segDir, s1);
+      optionalPointOnSegment.from(_segCenter).addScaledVector(_segDir, s1);
     }
 
     return sqrDist;

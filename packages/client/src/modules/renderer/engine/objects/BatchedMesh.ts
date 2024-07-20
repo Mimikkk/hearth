@@ -260,7 +260,7 @@ export class BatchedMesh extends Mesh {
     const boundingBox = this.boundingBox;
     const active = this._active;
 
-    boundingBox.makeEmpty();
+    boundingBox.clear();
     for (let i = 0; i < geometryCount; i++) {
       if (active[i] === false) continue;
 
@@ -279,7 +279,7 @@ export class BatchedMesh extends Mesh {
     const boundingSphere = this.boundingSphere;
     const active = this._active;
 
-    boundingSphere.makeEmpty();
+    boundingSphere.clear();
     for (let i = 0; i < geometryCount; i++) {
       if (active[i] === false) continue;
 
@@ -460,7 +460,7 @@ export class BatchedMesh extends Mesh {
     // store the bounding boxes
     const bound = this._bounds[id];
     if (geometry.boundingBox !== null) {
-      bound.box.copy(geometry.boundingBox);
+      bound.box.from(geometry.boundingBox);
       bound.boxInitialized = true;
     } else {
       bound.boxInitialized = false;
@@ -508,7 +508,7 @@ export class BatchedMesh extends Mesh {
     const box = bound.box;
     const geometry = this.geometry;
     if (bound.boxInitialized === false) {
-      box.makeEmpty();
+      box.clear();
 
       const index = geometry.index;
       const position = geometry.attributes.position;
@@ -519,13 +519,13 @@ export class BatchedMesh extends Mesh {
           iv = index.getX(iv);
         }
 
-        box.expandByPoint(_vector.fromBufferAttribute(position, iv));
+        box.expandCoord(_vector.fromAttribute(position, iv));
       }
 
       bound.boxInitialized = true;
     }
 
-    target.copy(box);
+    target.from(box);
     return target;
   }
 
@@ -541,10 +541,10 @@ export class BatchedMesh extends Mesh {
     const sphere = bound.sphere;
     const geometry = this.geometry;
     if (bound.sphereInitialized === false) {
-      sphere.makeEmpty();
+      sphere.clear();
 
       this.getBoundingBoxAt(id, _box);
-      _box.getCenter(sphere.center);
+      _box.center(sphere.center);
 
       const index = geometry.index;
       const position = geometry.attributes.position;
@@ -557,8 +557,8 @@ export class BatchedMesh extends Mesh {
           iv = index.getX(iv);
         }
 
-        _vector.fromBufferAttribute(position, iv);
-        maxRadiusSq = Math.max(maxRadiusSq, sphere.center.distanceToSquared(_vector));
+        _vector.fromAttribute(position, iv);
+        maxRadiusSq = Math.max(maxRadiusSq, sphere.center.distanceSqTo(_vector));
       }
 
       sphere.radius = Math.sqrt(maxRadiusSq);

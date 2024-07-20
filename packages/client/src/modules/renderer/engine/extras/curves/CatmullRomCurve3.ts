@@ -106,8 +106,8 @@ class CatmullRomCurve3 extends Curve<Vec3> {
       // init Centripetal / Chordal Catmull-Rom
       const pow = this.curveType === 'chordal' ? 0.5 : 0.25;
       let dt0 = Math.pow(p0.distanceToSquared(p1), pow);
-      let dt1 = Math.pow(p1.distanceToSquared(p2), pow);
-      let dt2 = Math.pow(p2.distanceToSquared(p3), pow);
+      let dt1 = Math.pow(p1.distanceSqTo(p2), pow);
+      let dt2 = Math.pow(p2.distanceSqTo(p3), pow);
 
       // safety check for repeated points
       if (dt1 < 1e-4) dt1 = 1.0;

@@ -100,7 +100,7 @@ export class BufferAttribute<T extends TypedArray> {
       }
     } else if (this.itemSize === 3) {
       for (let i = 0, l = this.count; i < l; i++) {
-        _vector.fromBufferAttribute(this, i);
+        _vector.fromAttribute(this, i);
         _vector.applyMat3(m);
 
         this.setXYZ(i, _vector.x, _vector.y, _vector.z);
@@ -112,7 +112,7 @@ export class BufferAttribute<T extends TypedArray> {
 
   applyMat4(m: Mat4): this {
     for (let i = 0, l = this.count; i < l; i++) {
-      _vector.fromBufferAttribute(this, i);
+      _vector.fromAttribute(this, i);
 
       _vector.applyMat4(m);
 
@@ -124,7 +124,7 @@ export class BufferAttribute<T extends TypedArray> {
 
   applyNormalMatrix(m: Mat3): this {
     for (let i = 0, l = this.count; i < l; i++) {
-      _vector.fromBufferAttribute(this, i);
+      _vector.fromAttribute(this, i);
 
       _vector.applyNormalMatrix(m);
 
@@ -136,7 +136,7 @@ export class BufferAttribute<T extends TypedArray> {
 
   transformDirection(m: Mat4): this {
     for (let i = 0, l = this.count; i < l; i++) {
-      _vector.fromBufferAttribute(this, i);
+      _vector.fromAttribute(this, i);
 
       _vector.transformDirection(m);
 

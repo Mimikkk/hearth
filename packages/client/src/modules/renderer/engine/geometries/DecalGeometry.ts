@@ -72,8 +72,8 @@ export class DecalGeometry extends BufferGeometry {
         const index = geometry.index;
 
         for (let i = 0; i < index.count; i++) {
-          vertex.fromBufferAttribute(positionAttribute, index.getX(i));
-          normal.fromBufferAttribute(normalAttribute, index.getX(i));
+          vertex.fromAttribute(positionAttribute, index.getX(i));
+          normal.fromAttribute(normalAttribute, index.getX(i));
 
           pushDecalVertex(decalVertices, vertex, normal);
         }
@@ -81,8 +81,8 @@ export class DecalGeometry extends BufferGeometry {
         // non-indexed BufferGeometry
 
         for (let i = 0; i < positionAttribute.count; i++) {
-          vertex.fromBufferAttribute(positionAttribute, i);
-          normal.fromBufferAttribute(normalAttribute, i);
+          vertex.fromAttribute(positionAttribute, i);
+          normal.fromAttribute(normalAttribute, i);
 
           pushDecalVertex(decalVertices, vertex, normal);
         }

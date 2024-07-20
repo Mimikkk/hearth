@@ -19,8 +19,8 @@ export class LineSegments extends Line {
       const lineDistances: number[] = [];
 
       for (let i = 0, l = positionAttribute.count; i < l; i += 2) {
-        _start.fromBufferAttribute(positionAttribute, i);
-        _end.fromBufferAttribute(positionAttribute, i + 1);
+        _start.fromAttribute(positionAttribute, i);
+        _end.fromAttribute(positionAttribute, i + 1);
 
         lineDistances[i] = i === 0 ? 0 : lineDistances[i - 1];
         lineDistances[i + 1] = lineDistances[i] + _start.distanceTo(_end);

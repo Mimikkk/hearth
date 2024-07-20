@@ -126,7 +126,7 @@ export class PolyhedronGeometry extends BufferGeometry {
         vertex.y = vertexBuffer[i + 1];
         vertex.z = vertexBuffer[i + 2];
 
-        vertex.normalize().multiplyScalar(radius);
+        vertex.normalize().scale(radius);
 
         vertexBuffer[i + 0] = vertex.x;
         vertexBuffer[i + 1] = vertex.y;
@@ -207,7 +207,7 @@ export class PolyhedronGeometry extends BufferGeometry {
         uvB.set(uvBuffer[j + 2], uvBuffer[j + 3]);
         uvC.set(uvBuffer[j + 4], uvBuffer[j + 5]);
 
-        centroid.copy(a).add(b).add(c).divideScalar(3);
+        centroid.from(a).add(b).add(c).divideScalar(3);
 
         const azi = azimuth(centroid);
 

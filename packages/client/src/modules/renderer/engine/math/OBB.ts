@@ -70,19 +70,19 @@ export class OBB {
   }
 
   copy(obb: OBB) {
-    this.center.copy(obb.center);
-    this.halfSize.copy(obb.halfSize);
+    this.center.from(obb.center);
+    this.halfSize.from(obb.halfSize);
     this.rotation.copy(obb.rotation);
 
     return this;
   }
 
   clone() {
-    return new OBB(new Vec3().copy(this.center), new Vec3().copy(this.halfSize), new Mat3().copy(this.rotation));
+    return new OBB(new Vec3().from(this.center), new Vec3().from(this.halfSize), new Mat3().copy(this.rotation));
   }
 
   getSize(result: Vec3): Vec3 {
-    return result.copy(this.halfSize).multiplyScalar(2);
+    return result.from(this.halfSize).scale(2);
   }
 
   /**
@@ -97,18 +97,18 @@ export class OBB {
 
     // start at the center position of the OBB
 
-    result.copy(this.center);
+    result.from(this.center);
 
     // project the target onto the OBB axes and walk towards that point
 
     const x = clamp(v1.dot(xAxis), -halfSize.x, halfSize.x);
-    result.add(xAxis.multiplyScalar(x));
+    result.add(xAxis.scale(x));
 
     const y = clamp(v1.dot(yAxis), -halfSize.y, halfSize.y);
-    result.add(yAxis.multiplyScalar(y));
+    result.add(yAxis.scale(y));
 
     const z = clamp(v1.dot(zAxis), -halfSize.z, halfSize.z);
-    result.add(zAxis.multiplyScalar(z));
+    result.add(zAxis.scale(z));
 
     return result;
   }
@@ -137,7 +137,7 @@ export class OBB {
 
     // if that point is inside the sphere, the OBB and sphere intersect
 
-    return closestPoint.distanceToSquared(sphere.center) <= sphere.radius * sphere.radius;
+    return closestPoint.distanceSqTo(sphere.center) <= sphere.radius * sphere.radius;
   }
 
   /**
@@ -297,7 +297,7 @@ export class OBB {
     // of the OBB.
 
     this.getSize(size);
-    aabb.setFromCenterAndSize(v1.set(0, 0, 0), size);
+    aabb.fromCenterAndSize(v1.set(0, 0, 0), size);
 
     // create a 4x4 transformation matrix
 
@@ -329,9 +329,9 @@ export class OBB {
   }
 
   fromBox3(box3: Box3) {
-    box3.getCenter(this.center);
+    box3.center(this.center);
 
-    box3.getSize(this.halfSize).multiplyScalar(0.5);
+    box3.size(this.halfSize).scale(0.5);
 
     this.rotation.identity();
 

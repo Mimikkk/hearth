@@ -278,9 +278,9 @@ export class Object3D<EventMap extends Object3DEventMap = Object3DEventMap> {
     // translate object by distance along axis in object space
     // axis is assumed to be normalized
 
-    _v1.copy(axis).applyQuaternion(this.quaternion);
+    _v1.from(axis).applyQuaternion(this.quaternion);
 
-    this.position.add(_v1.multiplyScalar(distance));
+    this.position.add(_v1.scale(distance));
 
     return this;
   }
@@ -315,7 +315,7 @@ export class Object3D<EventMap extends Object3DEventMap = Object3DEventMap> {
     // This method does not support objects having non-uniformly-scaled parent(s)
 
     if (x instanceof Vec3) {
-      _target.copy(x);
+      _target.from(x);
     } else {
       _target.set(x, y!, z!);
     }
@@ -623,12 +623,12 @@ export class Object3D<EventMap extends Object3DEventMap = Object3DEventMap> {
   copy(source: Object3D, recursive: boolean = true) {
     this.name = source.name;
 
-    this.up.copy(source.up);
+    this.up.from(source.up);
 
-    this.position.copy(source.position);
+    this.position.from(source.position);
     this.rotation.order = source.rotation.order;
     this.quaternion.copy(source.quaternion);
-    this.scale.copy(source.scale);
+    this.scale.from(source.scale);
 
     this.matrix.copy(source.matrix);
     this.matrixWorld.copy(source.matrixWorld);

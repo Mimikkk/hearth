@@ -51,8 +51,8 @@ export class Line extends Object3D {
       const lineDistances = [0];
 
       for (let i = 1, l = positionAttribute.count; i < l; i++) {
-        _start.fromBufferAttribute(positionAttribute, i - 1);
-        _end.fromBufferAttribute(positionAttribute, i);
+        _start.fromAttribute(positionAttribute, i - 1);
+        _end.fromAttribute(positionAttribute, i);
 
         lineDistances[i] = lineDistances[i - 1];
         lineDistances[i] += _start.distanceTo(_end);
@@ -110,8 +110,8 @@ export class Line extends Object3D {
         const a = index.getX(i);
         const b = index.getX(i + 1);
 
-        vStart.fromBufferAttribute(positionAttribute, a);
-        vEnd.fromBufferAttribute(positionAttribute, b);
+        vStart.fromAttribute(positionAttribute, a);
+        vEnd.fromAttribute(positionAttribute, b);
 
         const distSq = _ray.distanceSqToSegment(vStart, vEnd, interRay, interSegment);
 
@@ -137,8 +137,8 @@ export class Line extends Object3D {
       const end = Math.min(positionAttribute.count, drawRange.start + drawRange.count);
 
       for (let i = start, l = end - 1; i < l; i += step) {
-        vStart.fromBufferAttribute(positionAttribute, i);
-        vEnd.fromBufferAttribute(positionAttribute, i + 1);
+        vStart.fromAttribute(positionAttribute, i);
+        vEnd.fromAttribute(positionAttribute, i + 1);
 
         const distSq = _ray.distanceSqToSegment(vStart, vEnd, interRay, interSegment);
 

@@ -1273,7 +1273,7 @@ class GLTFMeshGpuInstancing implements Plugin {
 
         for (let i = 0; i < count; i++) {
           if (attributes.TRANSLATION) {
-            p.fromBufferAttribute(attributes.TRANSLATION, i);
+            p.fromAttribute(attributes.TRANSLATION, i);
           }
 
           if (attributes.ROTATION) {
@@ -1281,7 +1281,7 @@ class GLTFMeshGpuInstancing implements Plugin {
           }
 
           if (attributes.SCALE) {
-            s.fromBufferAttribute(attributes.SCALE, i);
+            s.fromAttribute(attributes.SCALE, i);
           }
 
           instancedMesh.setMatrixAt(i, m.compose(p, q, s));
@@ -3484,8 +3484,8 @@ function computeBounds(geometry, primitiveDef, parser) {
 
       if (accessor.normalized) {
         const boxScale = getNormalizedComponentScale(WEBGL_COMPONENT_TYPES[accessor.componentType]);
-        box.min.multiplyScalar(boxScale);
-        box.max.multiplyScalar(boxScale);
+        box.min.scale(boxScale);
+        box.max.scale(boxScale);
       }
     } else {
       console.warn('THREE.GLTFLoader: Missing min/max properties for accessor POSITION.');
@@ -3520,7 +3520,7 @@ function computeBounds(geometry, primitiveDef, parser) {
 
           if (accessor.normalized) {
             const boxScale = getNormalizedComponentScale(WEBGL_COMPONENT_TYPES[accessor.componentType]);
-            vector.multiplyScalar(boxScale);
+            vector.scale(boxScale);
           }
 
           // Note: this assumes that the sum of all weights is at most 1. This isn't quite correct - it's more conservative
@@ -3535,14 +3535,14 @@ function computeBounds(geometry, primitiveDef, parser) {
     }
 
     // As per comment above this box isn't conservative, but has a reasonable size for a very large number of morph targets.
-    box.expandByVector(maxDisplacement);
+    box.expandVec(maxDisplacement);
   }
 
   geometry.boundingBox = box;
 
   const sphere = new Sphere();
 
-  box.getCenter(sphere.center);
+  box.center(sphere.center);
   sphere.radius = box.min.distanceTo(box.max) / 2;
 
   geometry.boundingSphere = sphere;

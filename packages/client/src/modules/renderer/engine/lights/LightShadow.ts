@@ -64,7 +64,7 @@ export class LightShadow<C extends Camera = Camera> {
     const shadowMatrix = this.matrix;
 
     _lightPositionWorld.setFromMatrixPosition(light.matrixWorld);
-    shadowCamera.position.copy(_lightPositionWorld);
+    shadowCamera.position.from(_lightPositionWorld);
 
     _lookTarget.setFromMatrixPosition(light.target.matrixWorld);
     shadowCamera.lookAt(_lookTarget);

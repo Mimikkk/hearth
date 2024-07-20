@@ -59,11 +59,11 @@ export class VertexNormalsHelper extends LineSegments {
       // for simplicity, ignore index and drawcalls, and render every normal
 
       for (let j = 0, jl = objPos.count; j < jl; j++) {
-        _v1.fromBufferAttribute(objPos, j).applyMat4(matrixWorld);
+        _v1.fromAttribute(objPos, j).applyMat4(matrixWorld);
 
-        _v2.fromBufferAttribute(objNorm, j);
+        _v2.fromAttribute(objNorm, j);
 
-        _v2.applyMat3(_normalMatrix).normalize().multiplyScalar(this.size).add(_v1);
+        _v2.applyMat3(_normalMatrix).normalize().scale(this.size).add(_v1);
 
         position.setXYZ(idx, _v1.x, _v1.y, _v1.z);
 

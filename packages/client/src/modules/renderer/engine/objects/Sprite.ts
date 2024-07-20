@@ -76,7 +76,7 @@ export class Sprite extends Object3D {
     _mvPosition.setFromMatrixPosition(this.modelViewMatrix);
 
     if (raycaster.camera instanceof PerspectiveCamera && this.material.sizeAttenuation === false) {
-      _worldScale.multiplyScalar(-_mvPosition.z);
+      _worldScale.scale(-_mvPosition.z);
     }
 
     const rotation = this.material.rotation;
@@ -157,7 +157,7 @@ function transformVertex(
     _rotatedPosition.from(_alignedPosition);
   }
 
-  vertexPosition.copy(mvPosition);
+  vertexPosition.from(mvPosition);
   vertexPosition.x += _rotatedPosition.x;
   vertexPosition.y += _rotatedPosition.y;
 

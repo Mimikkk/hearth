@@ -15,21 +15,21 @@ export class Line3 {
   ) {}
 
   set(start: Vec3, end: Vec3): Line3 {
-    this.start.copy(start);
-    this.end.copy(end);
+    this.start.from(start);
+    this.end.from(end);
 
     return this;
   }
 
   copy(line: Line3): Line3 {
-    this.start.copy(line.start);
-    this.end.copy(line.end);
+    this.start.from(line.start);
+    this.end.from(line.end);
 
     return this;
   }
 
   getCenter(target: Vec3): Vec3 {
-    return target.addVectors(this.start, this.end).multiplyScalar(0.5);
+    return target.addVectors(this.start, this.end).scale(0.5);
   }
 
   delta(target: Vec3): Vec3 {
@@ -37,7 +37,7 @@ export class Line3 {
   }
 
   distanceSq(): number {
-    return this.start.distanceToSquared(this.end);
+    return this.start.distanceSqTo(this.end);
   }
 
   distance(): number {
@@ -45,7 +45,7 @@ export class Line3 {
   }
 
   at(t: number, target: Vec3): Vec3 {
-    return this.delta(target).multiplyScalar(t).add(this.start);
+    return this.delta(target).scale(t).add(this.start);
   }
 
   closestPointToPointParameter(point: Vec3, clampToLine: boolean): number {
@@ -67,7 +67,7 @@ export class Line3 {
   closestPointToPoint(point: Vec3, clampToLine: boolean, target: Vec3): Vec3 {
     const t = this.closestPointToPointParameter(point, clampToLine);
 
-    return this.delta(target).multiplyScalar(t).add(this.start);
+    return this.delta(target).scale(t).add(this.start);
   }
 
   applyMat4(matrix: Mat4): Line3 {

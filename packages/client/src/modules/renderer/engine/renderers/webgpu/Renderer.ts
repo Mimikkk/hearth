@@ -818,7 +818,7 @@ export class Renderer {
           if (this.parameters.sortObjects) {
             if (geometry.boundingSphere === null) geometry.computeBoundingSphere();
 
-            _Vec3.copy(geometry.boundingSphere.center).applyMat4(object.matrixWorld).applyMat4(_projScreenMatrix);
+            _Vec3.from(geometry.boundingSphere.center).applyMat4(object.matrixWorld).applyMat4(_projScreenMatrix);
           }
 
           if (Array.isArray(material)) {

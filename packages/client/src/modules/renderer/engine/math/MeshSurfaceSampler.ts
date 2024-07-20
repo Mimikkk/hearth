@@ -72,9 +72,9 @@ export class MeshSurfaceSampler<TGeometry extends BufferGeometry, TMaterial exte
         faceWeight = weightAttribute.getX(i0) + weightAttribute.getX(i1) + weightAttribute.getX(i2);
       }
 
-      _face.a.fromBufferAttribute(positionAttribute, i0);
-      _face.b.fromBufferAttribute(positionAttribute, i1);
-      _face.c.fromBufferAttribute(positionAttribute, i2);
+      _face.a.fromAttribute(positionAttribute, i0);
+      _face.b.fromAttribute(positionAttribute, i1);
+      _face.c.fromAttribute(positionAttribute, i2);
       faceWeight *= _face.getArea();
 
       faceWeights[i] = faceWeight;
@@ -155,9 +155,9 @@ export class MeshSurfaceSampler<TGeometry extends BufferGeometry, TMaterial exte
       i2 = indexAttribute.getX(i2);
     }
 
-    _face.a.fromBufferAttribute(this.positionAttribute, i0);
-    _face.b.fromBufferAttribute(this.positionAttribute, i1);
-    _face.c.fromBufferAttribute(this.positionAttribute, i2);
+    _face.a.fromAttribute(this.positionAttribute, i0);
+    _face.b.fromAttribute(this.positionAttribute, i1);
+    _face.c.fromAttribute(this.positionAttribute, i2);
 
     targetPosition
       .set(0, 0, 0)
@@ -167,9 +167,9 @@ export class MeshSurfaceSampler<TGeometry extends BufferGeometry, TMaterial exte
 
     if (targetNormal !== undefined) {
       if (this.normalAttribute !== undefined) {
-        _face.a.fromBufferAttribute(this.normalAttribute, i0);
-        _face.b.fromBufferAttribute(this.normalAttribute, i1);
-        _face.c.fromBufferAttribute(this.normalAttribute, i2);
+        _face.a.fromAttribute(this.normalAttribute, i0);
+        _face.b.fromAttribute(this.normalAttribute, i1);
+        _face.c.fromAttribute(this.normalAttribute, i2);
         targetNormal
           .set(0, 0, 0)
           .addScaledVector(_face.a, u)
@@ -182,9 +182,9 @@ export class MeshSurfaceSampler<TGeometry extends BufferGeometry, TMaterial exte
     }
 
     if (targetColor !== undefined && this.colorAttribute !== undefined) {
-      _face.a.fromBufferAttribute(this.colorAttribute, i0);
-      _face.b.fromBufferAttribute(this.colorAttribute, i1);
-      _face.c.fromBufferAttribute(this.colorAttribute, i2);
+      _face.a.fromAttribute(this.colorAttribute, i0);
+      _face.b.fromAttribute(this.colorAttribute, i1);
+      _face.c.fromAttribute(this.colorAttribute, i2);
 
       _color
         .set(0, 0, 0)

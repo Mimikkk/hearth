@@ -52,8 +52,8 @@ export class WireframeGeometry extends BufferGeometry {
               const index1 = indices.getX(i + j);
               const index2 = indices.getX(i + ((j + 1) % 3));
 
-              start.fromBufferAttribute(position, index1);
-              end.fromBufferAttribute(position, index2);
+              start.fromAttribute(position, index1);
+              end.fromAttribute(position, index2);
 
               if (isUniqueEdge(start, end, edges) === true) {
                 vertices.push(start.x, start.y, start.z);
@@ -75,8 +75,8 @@ export class WireframeGeometry extends BufferGeometry {
             const index1 = 3 * i + j;
             const index2 = 3 * i + ((j + 1) % 3);
 
-            start.fromBufferAttribute(position, index1);
-            end.fromBufferAttribute(position, index2);
+            start.fromAttribute(position, index1);
+            end.fromAttribute(position, index2);
 
             if (isUniqueEdge(start, end, edges) === true) {
               vertices.push(start.x, start.y, start.z);

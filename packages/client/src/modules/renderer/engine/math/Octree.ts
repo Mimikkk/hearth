@@ -31,9 +31,9 @@ const _temp3 = new Vec3();
 const EPS = 1e-10;
 
 function lineToLineClosestPoints(line1: Line3, line2: Line3, target1: Vec3, target2: Vec3) {
-  const r = _temp1.copy(line1.end).sub(line1.start);
-  const s = _temp2.copy(line2.end).sub(line2.start);
-  const w = _temp3.copy(line2.start).sub(line1.start);
+  const r = _temp1.from(line1.end).sub(line1.start);
+  const s = _temp2.from(line2.end).sub(line2.start);
+  const w = _temp3.from(line2.start).sub(line1.start);
 
   const a = r.dot(s),
     b = r.dot(r),
@@ -64,11 +64,11 @@ function lineToLineClosestPoints(line1: Line3, line2: Line3, target1: Vec3, targ
   t1 = Math.max(0, Math.min(1, t1));
 
   if (target1) {
-    target1.copy(r).multiplyScalar(t1).add(line1.start);
+    target1.from(r).scale(t1).add(line1.start);
   }
 
   if (target2) {
-    target2.copy(s).multiplyScalar(t2).add(line2.start);
+    target2.from(s).scale(t2).add(line2.start);
   }
 }
 export class Octree {
@@ -111,7 +111,7 @@ export class Octree {
     if (!this.box) return this;
 
     const subTrees = [];
-    const halfsize = _v2.copy(this.box.max).sub(this.box.min).multiplyScalar(0.5);
+    const halfsize = _v2.from(this.box.max).sub(this.box.min).scale(0.5);
 
     for (let x = 0; x < 2; x++) {
       for (let y = 0; y < 2; y++) {
@@ -119,8 +119,8 @@ export class Octree {
           const box = new Box3();
           const v = _v1.set(x, y, z);
 
-          box.min.copy(this.box.min).add(v.multiply(halfsize));
-          box.max.copy(box.min).add(halfsize);
+          box.min.from(this.box.min).add(v.multiply(halfsize));
+          box.max.from(box.min).add(halfsize);
 
           subTrees.push(new Octree(box));
         }
@@ -185,7 +185,7 @@ export class Octree {
     if ((d1 > 0 && d2 > 0) || (d1 < -capsule.radius && d2 < -capsule.radius)) return;
 
     const delta = Math.abs(d1 / (Math.abs(d1) + Math.abs(d2)));
-    const intersectPoint = _v1.copy(capsule.start).lerp(capsule.end, delta);
+    const intersectPoint = _v1.from(capsule.start).lerp(capsule.end, delta);
 
     if (triangle.containsPoint(intersectPoint)) {
       return { normal: _plane.normal.clone(), point: intersectPoint.clone(), depth: Math.abs(Math.min(d1, d2)) };
@@ -206,7 +206,7 @@ export class Octree {
 
       lineToLineClosestPoints(line1, line2, _point1, _point2);
 
-      if (_point1.distanceToSquared(_point2) < r2) {
+      if (_point1.distanceSqTo(_point2) < r2) {
         return {
           normal: _point1.clone().sub(_point2).normalize(),
           point: _point2.clone(),
@@ -244,7 +244,7 @@ export class Octree {
       _line1.set(lines[i][0], lines[i][1]);
       _line1.closestPointToPoint(plainPoint, true, _v2);
 
-      const d = _v2.distanceToSquared(sphere.center);
+      const d = _v2.distanceSqTo(sphere.center);
 
       if (d < r2) {
         return {
@@ -301,7 +301,7 @@ export class Octree {
       if (!result) continue;
 
       hit = true;
-      _sphere.center.add(result.normal.multiplyScalar(result.depth));
+      _sphere.center.add(result.normal.scale(result.depth));
     }
 
     if (hit) {
@@ -325,7 +325,7 @@ export class Octree {
       if ((result = this.triangleCapsuleIntersect(_capsule, triangles[i]))) {
         hit = true;
 
-        _capsule.translate(result.normal.multiplyScalar(result.depth));
+        _capsule.translate(result.normal.scale(result.depth));
       }
     }
 
@@ -381,9 +381,9 @@ export class Octree {
         const positionAttribute = geometry.getAttribute('position');
 
         for (let i = 0; i < positionAttribute.count; i += 3) {
-          const v1 = new Vec3().fromBufferAttribute(positionAttribute, i);
-          const v2 = new Vec3().fromBufferAttribute(positionAttribute, i + 1);
-          const v3 = new Vec3().fromBufferAttribute(positionAttribute, i + 2);
+          const v1 = new Vec3().fromAttribute(positionAttribute, i);
+          const v2 = new Vec3().fromAttribute(positionAttribute, i + 1);
+          const v3 = new Vec3().fromAttribute(positionAttribute, i + 2);
 
           v1.applyMat4(obj.matrixWorld);
           v2.applyMat4(obj.matrixWorld);
@@ -405,7 +405,7 @@ export class Octree {
 
   clear() {
     this.box = null!;
-    this.bounds.makeEmpty();
+    this.bounds.clear();
 
     this.subTrees.length = 0;
     this.triangles.length = 0;

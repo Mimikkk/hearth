@@ -243,7 +243,7 @@ export class BufferGeometry<
   center(): this {
     this.computeBoundingBox();
 
-    this.boundingBox!.getCenter(_offset).negate();
+    this.boundingBox!.center(_offset).negate();
 
     this.translate(_offset.x, _offset.y, _offset.z);
 
@@ -272,7 +272,7 @@ export class BufferGeometry<
     const morphAttributesPosition = this.morphAttributes.position;
 
     if (position !== undefined) {
-      this.boundingBox.setFromBufferAttribute(position);
+      this.boundingBox.fromAttribute(position);
 
       // process morph attributes if present
 
@@ -281,22 +281,22 @@ export class BufferGeometry<
         for (let i = 0, il = morphAttributesPosition.length; i < il; i++) {
           //@ts-expect-error
           const morphAttribute = morphAttributesPosition[i];
-          _box.setFromBufferAttribute(morphAttribute);
+          _box.fromAttribute(morphAttribute);
 
           if (this.morphTargetsRelative) {
             _vector.addVectors(this.boundingBox.min, _box.min);
-            this.boundingBox.expandByPoint(_vector);
+            this.boundingBox.expandCoord(_vector);
 
             _vector.addVectors(this.boundingBox.max, _box.max);
-            this.boundingBox.expandByPoint(_vector);
+            this.boundingBox.expandCoord(_vector);
           } else {
-            this.boundingBox.expandByPoint(_box.min);
-            this.boundingBox.expandByPoint(_box.max);
+            this.boundingBox.expandCoord(_box.min);
+            this.boundingBox.expandCoord(_box.max);
           }
         }
       }
     } else {
-      this.boundingBox.makeEmpty();
+      this.boundingBox.clear();
     }
 
     if (isNaN(this.boundingBox.min.x) || isNaN(this.boundingBox.min.y) || isNaN(this.boundingBox.min.z)) {
@@ -322,7 +322,7 @@ export class BufferGeometry<
 
       const center = this.boundingSphere.center;
 
-      _box.setFromBufferAttribute(position);
+      _box.fromAttribute(position);
 
       // process morph attributes if present
 
@@ -331,22 +331,22 @@ export class BufferGeometry<
         for (let i = 0, il = morphAttributesPosition.length; i < il; i++) {
           //@ts-expect-error
           const morphAttribute = morphAttributesPosition[i];
-          _boxMorphTargets.setFromBufferAttribute(morphAttribute);
+          _boxMorphTargets.fromAttribute(morphAttribute);
 
           if (this.morphTargetsRelative) {
             _vector.addVectors(_box.min, _boxMorphTargets.min);
-            _box.expandByPoint(_vector);
+            _box.expandCoord(_vector);
 
             _vector.addVectors(_box.max, _boxMorphTargets.max);
-            _box.expandByPoint(_vector);
+            _box.expandCoord(_vector);
           } else {
-            _box.expandByPoint(_boxMorphTargets.min);
-            _box.expandByPoint(_boxMorphTargets.max);
+            _box.expandCoord(_boxMorphTargets.min);
+            _box.expandCoord(_boxMorphTargets.max);
           }
         }
       }
 
-      _box.getCenter(center);
+      _box.center(center);
 
       // second, try to find a boundingSphere with a radius smaller than the
       // boundingSphere of the boundingBox: sqrt(3) smaller in the best case
@@ -354,9 +354,9 @@ export class BufferGeometry<
       let maxRadiusSq = 0;
 
       for (let i = 0, il = position.count; i < il; i++) {
-        _vector.fromBufferAttribute(position, i);
+        _vector.fromAttribute(position, i);
 
-        maxRadiusSq = Math.max(maxRadiusSq, center.distanceToSquared(_vector));
+        maxRadiusSq = Math.max(maxRadiusSq, center.distanceSqTo(_vector));
       }
 
       // process morph attributes if present
@@ -369,14 +369,14 @@ export class BufferGeometry<
           const morphTargetsRelative = this.morphTargetsRelative;
 
           for (let j = 0, jl = morphAttribute.count; j < jl; j++) {
-            _vector.fromBufferAttribute(morphAttribute, j);
+            _vector.fromAttribute(morphAttribute, j);
 
             if (morphTargetsRelative) {
-              _offset.fromBufferAttribute(position, j);
+              _offset.fromAttribute(position, j);
               _vector.add(_offset);
             }
 
-            maxRadiusSq = Math.max(maxRadiusSq, center.distanceToSquared(_vector));
+            maxRadiusSq = Math.max(maxRadiusSq, center.distanceSqTo(_vector));
           }
         }
       }
@@ -442,9 +442,9 @@ export class BufferGeometry<
       tdir = new Vec3();
 
     function handleTriangle(a: number, b: number, c: number): void {
-      vA.fromBufferAttribute(positionAttribute, a);
-      vB.fromBufferAttribute(positionAttribute, b);
-      vC.fromBufferAttribute(positionAttribute, c);
+      vA.fromAttribute(positionAttribute, a);
+      vB.fromAttribute(positionAttribute, b);
+      vC.fromAttribute(positionAttribute, c);
 
       uvA.fromAttribute(uvAttribute, a);
       uvB.fromAttribute(uvAttribute, b);
@@ -461,8 +461,8 @@ export class BufferGeometry<
       // silently ignore degenerate uv triangles having coincident or colinear vertices
 
       if (!isFinite(r)) return this;
-      sdir.copy(vB).multiplyScalar(uvC.y).addScaledVector(vC, -uvB.y).multiplyScalar(r);
-      tdir.copy(vC).multiplyScalar(uvB.x).addScaledVector(vB, -uvC.x).multiplyScalar(r);
+      sdir.from(vB).scale(uvC.y).addScaledVector(vC, -uvB.y).scale(r);
+      tdir.from(vC).scale(uvB.x).addScaledVector(vB, -uvC.x).scale(r);
 
       tan1[a].add(sdir);
       tan1[b].add(sdir);
@@ -501,15 +501,15 @@ export class BufferGeometry<
       n2 = new Vec3();
 
     function handleVertex(v: number): void {
-      n.fromBufferAttribute(normalAttribute, v);
-      n2.copy(n);
+      n.fromAttribute(normalAttribute, v);
+      n2.from(n);
 
       const t = tan1[v];
 
       // Gram-Schmidt orthogonalize
 
-      tmp.copy(t);
-      tmp.sub(n.multiplyScalar(n.dot(t))).normalize();
+      tmp.from(t);
+      tmp.sub(n.scale(n.dot(t))).normalize();
 
       // Calculate handedness
 
@@ -572,17 +572,17 @@ export class BufferGeometry<
           const vB = index.getX(i + 1);
           const vC = index.getX(i + 2);
 
-          pA.fromBufferAttribute(positionAttribute, vA);
-          pB.fromBufferAttribute(positionAttribute, vB);
-          pC.fromBufferAttribute(positionAttribute, vC);
+          pA.fromAttribute(positionAttribute, vA);
+          pB.fromAttribute(positionAttribute, vB);
+          pC.fromAttribute(positionAttribute, vC);
 
           cb.subVectors(pC, pB);
           ab.subVectors(pA, pB);
           cb.cross(ab);
 
-          nA.fromBufferAttribute(normalAttribute, vA);
-          nB.fromBufferAttribute(normalAttribute, vB);
-          nC.fromBufferAttribute(normalAttribute, vC);
+          nA.fromAttribute(normalAttribute, vA);
+          nB.fromAttribute(normalAttribute, vB);
+          nC.fromAttribute(normalAttribute, vC);
 
           nA.add(cb);
           nB.add(cb);
@@ -596,9 +596,9 @@ export class BufferGeometry<
         // non-indexed elements (unconnected triangle soup)
 
         for (let i = 0, il = positionAttribute.count; i < il; i += 3) {
-          pA.fromBufferAttribute(positionAttribute, i + 0);
-          pB.fromBufferAttribute(positionAttribute, i + 1);
-          pC.fromBufferAttribute(positionAttribute, i + 2);
+          pA.fromAttribute(positionAttribute, i + 0);
+          pB.fromAttribute(positionAttribute, i + 1);
+          pC.fromAttribute(positionAttribute, i + 2);
 
           cb.subVectors(pC, pB);
           ab.subVectors(pA, pB);
@@ -622,7 +622,7 @@ export class BufferGeometry<
     const normals = this.attributes.normal;
 
     for (let i = 0, il = normals.count; i < il; i++) {
-      _vector.fromBufferAttribute(normals, i);
+      _vector.fromAttribute(normals, i);
 
       _vector.normalize();
 

@@ -9,6 +9,7 @@ import type { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
 import type { Cylindrical } from '@modules/renderer/engine/math/Cylindrical.js';
 import type { Spherical } from '@modules/renderer/engine/math/Spherical.js';
 import type { Camera } from '@modules/renderer/engine/cameras/Camera.js';
+import { Const } from '@modules/renderer/engine/math/types.js';
 
 export interface IVec3 {
   x: number;
@@ -25,6 +26,10 @@ export class Vec3 implements IVec3 {
     public y: number = 0,
     public z: number = 0,
   ) {}
+
+  static new(x: number = 0, y: number = 0, z: number = 0): Vec3 {
+    return new Vec3(x, y, z);
+  }
 
   set(x: number, y: number, z?: number): this {
     this.x = x;
@@ -95,7 +100,7 @@ export class Vec3 implements IVec3 {
     return new this.constructor(this.x, this.y, this.z);
   }
 
-  copy(v: Vec3): this {
+  from(v: Const<Vec3>): this {
     this.x = v.x;
     this.y = v.y;
     this.z = v.z;
@@ -167,7 +172,7 @@ export class Vec3 implements IVec3 {
     return this;
   }
 
-  multiplyScalar(scalar: number): this {
+  scale(scalar: number): this {
     this.x *= scalar;
     this.y *= scalar;
     this.z *= scalar;
@@ -280,7 +285,7 @@ export class Vec3 implements IVec3 {
   }
 
   divideScalar(scalar: number): this {
-    return this.multiplyScalar(1 / scalar);
+    return this.scale(1 / scalar);
   }
 
   min(vector: Vec3): this {
@@ -318,7 +323,7 @@ export class Vec3 implements IVec3 {
   clampLength(min: number, max: number): this {
     const length = this.length();
 
-    return this.divideScalar(length || 1).multiplyScalar(Math.max(min, Math.min(max, length)));
+    return this.divideScalar(length || 1).scale(Math.max(min, Math.min(max, length)));
   }
 
   floor(): this {
@@ -382,7 +387,7 @@ export class Vec3 implements IVec3 {
   }
 
   setLength(length: number): this {
-    return this.normalize().multiplyScalar(length);
+    return this.normalize().scale(length);
   }
 
   lerp(vector: Vec3, step: number): this {
@@ -427,7 +432,7 @@ export class Vec3 implements IVec3 {
 
     const scalar = vector.dot(this) / denominator;
 
-    return this.copy(vector).multiplyScalar(scalar);
+    return this.from(vector).scale(scalar);
   }
 
   projectOnPlane(normal: Vec3): this {
@@ -435,7 +440,7 @@ export class Vec3 implements IVec3 {
   }
 
   reflect(normal: Vec3): this {
-    return this.sub(normal.clone().multiplyScalar(2 * this.dot(normal)));
+    return this.sub(normal.clone().scale(2 * this.dot(normal)));
   }
 
   angleTo(vector: Vec3): number {
@@ -451,10 +456,10 @@ export class Vec3 implements IVec3 {
   }
 
   distanceTo(vector: Vec3): number {
-    return Math.sqrt(this.distanceToSquared(vector));
+    return Math.sqrt(this.distanceSqTo(vector));
   }
 
-  distanceToSquared(vector: Vec3): number {
+  distanceSqTo(vector: Vec3): number {
     const dx = this.x - vector.x,
       dy = this.y - vector.y,
       dz = this.z - vector.z;
@@ -558,7 +563,7 @@ export class Vec3 implements IVec3 {
     return array;
   }
 
-  fromBufferAttribute(attribute: BufferAttribute<Float32Array> | InterleavedBufferAttribute, index: number): this {
+  fromAttribute(attribute: BufferAttribute<Float32Array> | InterleavedBufferAttribute, index: number): this {
     this.x = attribute.getX(index);
     this.y = attribute.getY(index);
     this.z = attribute.getZ(index);

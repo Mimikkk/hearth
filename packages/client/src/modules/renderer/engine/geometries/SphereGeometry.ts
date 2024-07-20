@@ -85,7 +85,7 @@ export class SphereGeometry extends BufferGeometry {
 
         // normal
 
-        normal.copy(vertex).normalize();
+        normal.from(vertex).normalize();
         normals.push(normal.x, normal.y, normal.z);
 
         // uv

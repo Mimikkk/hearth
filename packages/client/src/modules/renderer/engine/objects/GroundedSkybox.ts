@@ -20,13 +20,13 @@ export class GroundedSkybox extends Mesh {
     const tmp = new Vec3();
 
     for (let i = 0; i < pos.count; ++i) {
-      tmp.fromBufferAttribute(pos, i);
+      tmp.fromAttribute(pos, i);
 
       if (tmp.y < 0) {
         // Smooth out the transition from flat floor to sphere:
         const y1 = (-height * 3) / 2;
         const f = tmp.y < y1 ? -height / tmp.y : 1 - (tmp.y * tmp.y) / (3 * y1 * y1);
-        tmp.multiplyScalar(f);
+        tmp.scale(f);
         tmp.toArray(pos.array as never as number[], 3 * i);
       }
     }

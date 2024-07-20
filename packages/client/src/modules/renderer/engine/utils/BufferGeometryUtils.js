@@ -734,9 +734,9 @@ function computeMorphedAttributes(object) {
     c,
     modifiedAttributeArray,
   ) {
-    _vA.fromBufferAttribute(attribute, a);
-    _vB.fromBufferAttribute(attribute, b);
-    _vC.fromBufferAttribute(attribute, c);
+    _vA.fromAttribute(attribute, a);
+    _vB.fromAttribute(attribute, b);
+    _vC.fromAttribute(attribute, c);
 
     const morphInfluences = object.morphTargetInfluences;
 
@@ -751,9 +751,9 @@ function computeMorphedAttributes(object) {
 
         if (influence === 0) continue;
 
-        _tempA.fromBufferAttribute(morph, a);
-        _tempB.fromBufferAttribute(morph, b);
-        _tempC.fromBufferAttribute(morph, c);
+        _tempA.fromAttribute(morph, a);
+        _tempB.fromAttribute(morph, b);
+        _tempC.fromAttribute(morph, c);
 
         if (morphTargetsRelative) {
           _morphA.addScaledVector(_tempA, influence);
@@ -1078,9 +1078,9 @@ function toCreasedNormals(geometry, creaseAngle = Math.PI / 3 /* 60 degrees */) 
   // find all the normals shared by commonly located vertices
   for (let i = 0, l = posAttr.count / 3; i < l; i++) {
     const i3 = 3 * i;
-    const a = verts[0].fromBufferAttribute(posAttr, i3 + 0);
-    const b = verts[1].fromBufferAttribute(posAttr, i3 + 1);
-    const c = verts[2].fromBufferAttribute(posAttr, i3 + 2);
+    const a = verts[0].fromAttribute(posAttr, i3 + 0);
+    const b = verts[1].fromAttribute(posAttr, i3 + 1);
+    const c = verts[2].fromAttribute(posAttr, i3 + 2);
 
     tempVec1.subVectors(c, b);
     tempVec2.subVectors(a, b);
@@ -1105,9 +1105,9 @@ function toCreasedNormals(geometry, creaseAngle = Math.PI / 3 /* 60 degrees */) 
   for (let i = 0, l = posAttr.count / 3; i < l; i++) {
     // get the face normal for this vertex
     const i3 = 3 * i;
-    const a = verts[0].fromBufferAttribute(posAttr, i3 + 0);
-    const b = verts[1].fromBufferAttribute(posAttr, i3 + 1);
-    const c = verts[2].fromBufferAttribute(posAttr, i3 + 2);
+    const a = verts[0].fromAttribute(posAttr, i3 + 0);
+    const b = verts[1].fromAttribute(posAttr, i3 + 1);
+    const c = verts[2].fromAttribute(posAttr, i3 + 2);
 
     tempVec1.subVectors(c, b);
     tempVec2.subVectors(a, b);

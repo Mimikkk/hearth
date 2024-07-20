@@ -256,14 +256,14 @@ describe('Math - Box3', () => {
   it('containsVec', () => {
     const box = Box3.fromParams(0, 0, 0, 0, 0, 0);
 
-    expect(box.containsVec(vec3(0, 0, 0))).toBe(true);
-    expect(box.containsVec(vec3(1, 1, 1))).toBe(false);
+    expect(box.containsCoord(vec3(0, 0, 0))).toBe(true);
+    expect(box.containsCoord(vec3(1, 1, 1))).toBe(false);
 
     box.expandScalar(1);
 
-    expect(box.containsVec(vec3(0, 0, 0))).toBe(true);
-    expect(box.containsVec(vec3(1, 1, 1))).toBe(true);
-    expect(box.containsVec(vec3(-1, -1, -1))).toBe(true);
+    expect(box.containsCoord(vec3(0, 0, 0))).toBe(true);
+    expect(box.containsCoord(vec3(1, 1, 1))).toBe(true);
+    expect(box.containsCoord(vec3(-1, -1, -1))).toBe(true);
   });
 
   it('containsBox', () => {
@@ -271,13 +271,13 @@ describe('Math - Box3', () => {
     const b = Box3.fromParams(0, 0, 0, 1, 1, 1);
     const c = Box3.fromParams(-1, -1, -1, 1, 1, 1);
 
-    expect(a.contains(a)).toBe(true);
-    expect(a.contains(b)).toBe(false);
-    expect(a.contains(c)).toBe(false);
+    expect(a.containsBox(a)).toBe(true);
+    expect(a.containsBox(b)).toBe(false);
+    expect(a.containsBox(c)).toBe(false);
 
-    expect(b.contains(a)).toBe(true);
-    expect(c.contains(a)).toBe(true);
-    expect(b.contains(c)).toBe(false);
+    expect(b.containsBox(a)).toBe(true);
+    expect(c.containsBox(a)).toBe(true);
+    expect(b.containsBox(c)).toBe(false);
   });
 
   it('intersectsBox', () => {
@@ -285,18 +285,18 @@ describe('Math - Box3', () => {
     const b = Box3.fromParams(0, 0, 0, 1, 1, 1);
     const c = Box3.fromParams(-1, -1, -1, 1, 1, 1);
 
-    expect(a.intersects(a)).toBe(true);
-    expect(a.intersects(b)).toBe(true);
-    expect(a.intersects(c)).toBe(true);
+    expect(a.intersectsBox(a)).toBe(true);
+    expect(a.intersectsBox(b)).toBe(true);
+    expect(a.intersectsBox(c)).toBe(true);
 
-    expect(b.intersects(a)).toBe(true);
-    expect(c.intersects(a)).toBe(true);
-    expect(b.intersects(c)).toBe(true);
+    expect(b.intersectsBox(a)).toBe(true);
+    expect(c.intersectsBox(a)).toBe(true);
+    expect(b.intersectsBox(c)).toBe(true);
 
     b.translate(vec3(2, 2, 2));
-    expect(a.intersects(b)).toBe(false);
-    expect(b.intersects(a)).toBe(false);
-    expect(b.intersects(c)).toBe(false);
+    expect(a.intersectsBox(b)).toBe(false);
+    expect(b.intersectsBox(a)).toBe(false);
+    expect(b.intersectsBox(c)).toBe(false);
   });
 
   it('intersectsSphere', () => {

@@ -52,13 +52,13 @@ export class SkinnedMesh extends Mesh {
 
     if (this.boundingBox === null) this.boundingBox = new Box3();
 
-    this.boundingBox!.makeEmpty();
+    this.boundingBox!.clear();
 
     const positionAttribute = geometry.getAttribute('position');
 
     for (let i = 0; i < positionAttribute.count; i++) {
       this.getVertexPosition(i, _vertex);
-      this.boundingBox!.expandByPoint(_vertex);
+      this.boundingBox!.expandCoord(_vertex);
     }
   }
 
@@ -69,7 +69,7 @@ export class SkinnedMesh extends Mesh {
       this.boundingSphere = new Sphere();
     }
 
-    this.boundingSphere.makeEmpty();
+    this.boundingSphere.clear();
 
     const positionAttribute = geometry.getAttribute('position');
 
@@ -193,7 +193,7 @@ export class SkinnedMesh extends Mesh {
     _skinIndex.fromBufferAttribute(geometry.attributes.skinIndex, index);
     _skinWeight.fromBufferAttribute(geometry.attributes.skinWeight, index);
 
-    _basePosition.copy(vector).applyMat4(this.bindMatrix);
+    _basePosition.from(vector).applyMat4(this.bindMatrix);
 
     vector.set(0, 0, 0);
 
@@ -205,7 +205,7 @@ export class SkinnedMesh extends Mesh {
 
         _Mat4.multiplyMatrices(skeleton.bones[boneIndex].matrixWorld, skeleton.boneInverses[boneIndex]);
 
-        vector.addScaledVector(_Vec3.copy(_basePosition).applyMat4(_Mat4), weight);
+        vector.addScaledVector(_Vec3.from(_basePosition).applyMat4(_Mat4), weight);
       }
     }
 

@@ -216,7 +216,7 @@ export class Material {
       if (isColor(next)) {
         next.set(current);
       } else if (isVec3(next) && isVec3(current)) {
-        next.copy(current);
+        next.from(current);
       } else {
         this[key as unknown as keyof this] = current;
       }

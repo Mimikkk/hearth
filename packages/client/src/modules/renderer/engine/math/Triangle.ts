@@ -21,7 +21,7 @@ export class Triangle {
 
     const targetLengthSq = target.lengthSq();
     if (targetLengthSq > 0) {
-      return target.multiplyScalar(1 / Math.sqrt(targetLengthSq));
+      return target.scale(1 / Math.sqrt(targetLengthSq));
     }
 
     return target.set(0, 0, 0);
@@ -97,17 +97,17 @@ export class Triangle {
   }
 
   set(a: Vec3, b: Vec3, c: Vec3): this {
-    this.a.copy(a);
-    this.b.copy(b);
-    this.c.copy(c);
+    this.a.from(a);
+    this.b.from(b);
+    this.c.from(c);
 
     return this;
   }
 
   setFromPointsAndIndices(points: Vec3[], i0: number, i1: number, i2: number): this {
-    this.a.copy(points[i0]);
-    this.b.copy(points[i1]);
-    this.c.copy(points[i2]);
+    this.a.from(points[i0]);
+    this.b.from(points[i1]);
+    this.c.from(points[i2]);
 
     return this;
   }
@@ -118,9 +118,9 @@ export class Triangle {
     i1: number,
     i2: number,
   ): this {
-    this.a.fromBufferAttribute(attribute, i0);
-    this.b.fromBufferAttribute(attribute, i1);
-    this.c.fromBufferAttribute(attribute, i2);
+    this.a.fromAttribute(attribute, i0);
+    this.b.fromAttribute(attribute, i1);
+    this.c.fromAttribute(attribute, i2);
 
     return this;
   }
@@ -130,9 +130,9 @@ export class Triangle {
   }
 
   copy(triangle: Triangle): this {
-    this.a.copy(triangle.a);
-    this.b.copy(triangle.b);
-    this.c.copy(triangle.c);
+    this.a.from(triangle.a);
+    this.b.from(triangle.b);
+    this.c.from(triangle.c);
 
     return this;
   }
@@ -145,7 +145,7 @@ export class Triangle {
     return target
       .addVectors(this.a, this.b)
       .add(this.c)
-      .multiplyScalar(1 / 3);
+      .scale(1 / 3);
   }
 
   getNormal(target: Vec3): Vec3 {
@@ -195,7 +195,7 @@ export class Triangle {
     const d2 = _vac.dot(_vap);
     if (d1 <= 0 && d2 <= 0) {
       // vertex region of A; barycentric coords (1, 0, 0)
-      return target.copy(a);
+      return target.from(a);
     }
 
     const _vbp = new Vec3().subVectors(p, b);
@@ -203,14 +203,14 @@ export class Triangle {
     const d4 = _vac.dot(_vbp);
     if (d3 >= 0 && d4 <= d3) {
       // vertex region of B; barycentric coords (0, 1, 0)
-      return target.copy(b);
+      return target.from(b);
     }
 
     const vc = d1 * d4 - d3 * d2;
     if (vc <= 0 && d1 >= 0 && d3 <= 0) {
       v = d1 / (d1 - d3);
       // edge region of AB; barycentric coords (1-v, v, 0)
-      return target.copy(a).addScaledVector(_vab, v);
+      return target.from(a).addScaledVector(_vab, v);
     }
 
     const _vcp = new Vec3().subVectors(p, c);
@@ -218,14 +218,14 @@ export class Triangle {
     const d6 = _vac.dot(_vcp);
     if (d6 >= 0 && d5 <= d6) {
       // vertex region of C; barycentric coords (0, 0, 1)
-      return target.copy(c);
+      return target.from(c);
     }
 
     const vb = d5 * d2 - d1 * d6;
     if (vb <= 0 && d2 >= 0 && d6 <= 0) {
       w = d2 / (d2 - d6);
       // edge region of AC; barycentric coords (1-w, 0, w)
-      return target.copy(a).addScaledVector(_vac, w);
+      return target.from(a).addScaledVector(_vac, w);
     }
 
     const va = d3 * d6 - d5 * d4;
@@ -233,14 +233,14 @@ export class Triangle {
       const _vbc = new Vec3().subVectors(c, b);
       w = (d4 - d3) / (d4 - d3 + (d5 - d6));
       // edge region of BC; barycentric coords (0, 1-w, w)
-      return target.copy(b).addScaledVector(_vbc, w); // edge region of BC
+      return target.from(b).addScaledVector(_vbc, w); // edge region of BC
     }
 
     const denom = 1 / (va + vb + vc);
     v = vb * denom;
     w = vc * denom;
 
-    return target.copy(a).addScaledVector(_vab, v).addScaledVector(_vac, w);
+    return target.from(a).addScaledVector(_vab, v).addScaledVector(_vac, w);
   }
 
   equals(triangle: Triangle): boolean {

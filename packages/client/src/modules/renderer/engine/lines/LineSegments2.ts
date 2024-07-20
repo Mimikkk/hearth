@@ -64,8 +64,8 @@ function raycastWorldUnits(lineSegments: LineSegments, intersects: Intersection[
   const segmentCount = Math.min(geometry.instanceCount, instanceStart.count);
 
   for (let i = 0, l = segmentCount; i < l; i++) {
-    _line.start.fromBufferAttribute(instanceStart, i);
-    _line.end.fromBufferAttribute(instanceEnd, i);
+    _line.start.fromAttribute(instanceStart, i);
+    _line.end.fromAttribute(instanceEnd, i);
 
     _line.applyMat4(matrixWorld);
 
@@ -119,7 +119,7 @@ function raycastScreenSpace(lineSegments: LineSegments, camera: Camera, intersec
   _ssOrigin.y *= resolution.y / 2;
   _ssOrigin.z = 0;
 
-  _ssOrigin3.copy(_ssOrigin);
+  _ssOrigin3.from(_ssOrigin);
 
   _mvMatrix.multiplyMatrices(camera.matrixWorldInverse, matrixWorld);
 
@@ -167,10 +167,10 @@ function raycastScreenSpace(lineSegments: LineSegments, camera: Camera, intersec
     _end4.y *= resolution.y / 2;
 
     // create 2d segment
-    _line.start.copy(_start4);
+    _line.start.from(_start4);
     _line.start.z = 0;
 
-    _line.end.copy(_end4);
+    _line.end.from(_end4);
     _line.end.z = 0;
 
     // get closest point on ray to segment
@@ -184,8 +184,8 @@ function raycastScreenSpace(lineSegments: LineSegments, camera: Camera, intersec
     const isInside = _ssOrigin3.distanceTo(_closestPoint) < _lineWidth * 0.5;
 
     if (isInClipSpace && isInside) {
-      _line.start.fromBufferAttribute(instanceStart, i);
-      _line.end.fromBufferAttribute(instanceEnd, i);
+      _line.start.fromAttribute(instanceStart, i);
+      _line.end.fromAttribute(instanceEnd, i);
 
       _line.start.applyMat4(matrixWorld);
       _line.end.applyMat4(matrixWorld);
@@ -225,8 +225,8 @@ export class LineSegments2 extends Mesh {
     const lineDistances = new Float32Array(2 * instanceStart.count);
 
     for (let i = 0, j = 0, l = instanceStart.count; i < l; i++, j += 2) {
-      _start.fromBufferAttribute(instanceStart, i);
-      _end.fromBufferAttribute(instanceEnd, i);
+      _start.fromAttribute(instanceStart, i);
+      _end.fromAttribute(instanceEnd, i);
 
       lineDistances[j] = j === 0 ? 0 : lineDistances[j - 1];
       lineDistances[j + 1] = lineDistances[j] + _start.distanceTo(_end);
@@ -287,18 +287,18 @@ export class LineSegments2 extends Mesh {
       geometry.computeBoundingBox();
     }
 
-    _box.copy(geometry.boundingBox).applyMat4(matrixWorld);
+    _box.from(geometry.boundingBox).applyMat4(matrixWorld);
 
     // increase the box bounds by the worst case line width
     let boxMargin;
     if (worldUnits) {
       boxMargin = _lineWidth * 0.5;
     } else {
-      const distanceToBox = Math.max(camera.near, _box.distanceToPoint(_ray.origin));
+      const distanceToBox = Math.max(camera.near, _box.distanceTo(_ray.origin));
       boxMargin = getWorldSpaceHalfWidth(camera, distanceToBox, material.resolution);
     }
 
-    _box.expandByScalar(boxMargin);
+    _box.expandScalar(boxMargin);
 
     if (_ray.intersectsBox(_box) === false) {
       return intersects;

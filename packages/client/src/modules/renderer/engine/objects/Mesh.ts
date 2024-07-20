@@ -99,7 +99,7 @@ export class Mesh extends Object3D {
     const morphPosition = geometry.morphAttributes.position as unknown as number[];
     const morphTargetsRelative = geometry.morphTargetsRelative;
 
-    target.fromBufferAttribute(position, index);
+    target.fromAttribute(position, index);
 
     const morphInfluences = this.morphTargetInfluences;
 
@@ -112,7 +112,7 @@ export class Mesh extends Object3D {
 
         if (influence === 0) continue;
 
-        _tempA.fromBufferAttribute(morphAttribute, index);
+        _tempA.fromAttribute(morphAttribute, index);
 
         if (morphTargetsRelative) {
           _morphA.addScaledVector(_tempA, influence);
@@ -148,7 +148,7 @@ export class Mesh extends Object3D {
     if (_sphere.containsPoint(_ray.origin) === false) {
       if (_ray.intersectSphere(_sphere, _sphereHitAt) === null) return;
 
-      if (_ray.origin.distanceToSquared(_sphereHitAt) > (raycaster.far - raycaster.near) ** 2) return;
+      if (_ray.origin.distanceSqTo(_sphereHitAt) > (raycaster.far - raycaster.near) ** 2) return;
     }
 
     // convert ray to local space of mesh
@@ -314,7 +314,7 @@ function checkIntersection(
 
   if (intersect === null) return null;
 
-  _intersectionPointWorld.copy(point);
+  _intersectionPointWorld.from(point);
   _intersectionPointWorld.applyMat4(object.matrixWorld);
 
   const distance = raycaster.ray.origin.distanceTo(_intersectionPointWorld);
@@ -364,9 +364,9 @@ function checkGeometryIntersection(
     }
 
     if (normal) {
-      _normalA.fromBufferAttribute(normal, a);
-      _normalB.fromBufferAttribute(normal, b);
-      _normalC.fromBufferAttribute(normal, c);
+      _normalA.fromAttribute(normal, a);
+      _normalB.fromAttribute(normal, b);
+      _normalC.fromAttribute(normal, c);
 
       intersection.normal = Triangle.getInterpolation(
         _intersectionPoint,
@@ -380,7 +380,7 @@ function checkGeometryIntersection(
       )!;
 
       if (intersection.normal.dot(ray.direction) > 0) {
-        intersection.normal.multiplyScalar(-1);
+        intersection.normal.scale(-1);
       }
     }
 

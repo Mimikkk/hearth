@@ -16,23 +16,23 @@ export class Capsule {
   }
 
   set(start: Vec3, end: Vec3, radius: number): this {
-    this.start.copy(start);
-    this.end.copy(end);
+    this.start.from(start);
+    this.end.from(end);
     this.radius = radius;
 
     return this;
   }
 
   copy(capsule: Capsule): this {
-    this.start.copy(capsule.start);
-    this.end.copy(capsule.end);
+    this.start.from(capsule.start);
+    this.end.from(capsule.end);
     this.radius = capsule.radius;
 
     return this;
   }
 
   getCenter(target: Vec3): Vec3 {
-    return target.copy(this.end).add(this.start).multiplyScalar(0.5);
+    return target.from(this.end).add(this.start).scale(0.5);
   }
 
   translate(v: Vec3): this {

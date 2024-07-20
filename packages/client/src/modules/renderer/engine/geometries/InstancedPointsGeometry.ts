@@ -89,7 +89,7 @@ export class InstancedPointsGeometry extends InstancedBufferGeometry {
     const pos = this.attributes.instancePosition as InstancedBufferAttribute<Float32Array>;
 
     if (pos !== undefined) {
-      this.boundingBox.setFromBufferAttribute(pos);
+      this.boundingBox.fromAttribute(pos);
     }
 
     return this;
@@ -109,13 +109,13 @@ export class InstancedPointsGeometry extends InstancedBufferGeometry {
     if (pos !== undefined) {
       const center = this.boundingSphere.center;
 
-      this.boundingBox!.getCenter(center);
+      this.boundingBox!.center(center);
 
       let maxRadiusSq = 0;
 
       for (let i = 0, il = pos.count; i < il; i++) {
-        _vector.fromBufferAttribute(pos, i);
-        maxRadiusSq = Math.max(maxRadiusSq, center.distanceToSquared(_vector));
+        _vector.fromAttribute(pos, i);
+        maxRadiusSq = Math.max(maxRadiusSq, center.distanceSqTo(_vector));
       }
 
       this.boundingSphere.radius = Math.sqrt(maxRadiusSq);
