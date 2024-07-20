@@ -93,7 +93,7 @@ describe('Math - Ray', () => {
 
   it('applyMat4', () => {
     const ray = Ray.fromParams(0, 0, 0, 1, 0, 0);
-    const mat4 = new Mat4().asRotationY(Math.PI / 2);
+    const mat4 = new Mat4().makeRotationY(Math.PI / 2);
     ray.applyMat4(mat4);
     expectCloseTo(ray, Ray.fromParams(0, 0, 0, 0, 0, -1));
   });

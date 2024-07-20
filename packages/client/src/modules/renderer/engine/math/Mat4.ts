@@ -3,47 +3,14 @@ import { Vec3 } from './Vec3.js';
 import { Mat3 } from './Mat3.js';
 import type { Euler } from '@modules/renderer/engine/math/Euler.js';
 import type { Quaternion } from '@modules/renderer/engine/math/Quaternion.js';
-import { Const } from '@modules/renderer/engine/math/types.js';
-import { NumberArray } from '@modules/renderer/engine/math/MathUtils.js';
 
 export class Mat4 {
+  declare ['constructor']: typeof Mat4;
   declare isMat4: true;
+  elements: number[];
 
-  constructor(public elements: number[] = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]) {}
-
-  static new(elements: number[] = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]): Mat4 {
-    return new Mat4(elements);
-  }
-
-  static empty(): Mat4 {
-    return Mat4.new();
-  }
-
-  static identity(into = Mat4.new()): Mat4 {
-    return into.asIdentity();
-  }
-
-  static clone(from: Const<Mat4>, into: Mat4 = Mat4.new()): Mat4 {
-    return into.from(from);
-  }
-
-  static is(value: any): value is Mat4 {
-    return value?.isMat4 === true;
-  }
-
-  static from(value: Const<Mat4>, into: Mat4 = Mat4.new()): Mat4 {
-    return into.from(value);
-  }
-
-  static fromMat3(value: Const<Mat3>, into: Mat4 = Mat4.new()): Mat4 {
-    return into.fromMat3(value);
-  }
-
-  static fromBasis(xAxis: Const<Vec3>, yAxis: Const<Vec3>, zAxis: Const<Vec3>, into: Mat4 = Mat4.new()): Mat4 {
-    return into.fromBasis(xAxis, yAxis, zAxis);
-  }
-
-  static fromColumnOrder(
+  constructor();
+  constructor(
     n11: number,
     n12: number,
     n13: number,
@@ -60,107 +27,30 @@ export class Mat4 {
     n42: number,
     n43: number,
     n44: number,
-    into: Mat4 = Mat4.new(),
-  ): Mat4 {
-    return into.set(n11, n12, n13, n14, n21, n22, n23, n24, n31, n32, n33, n34, n41, n42, n43, n44);
-  }
+  );
+  constructor(
+    n11?: number,
+    n12?: number,
+    n13?: number,
+    n14?: number,
+    n21?: number,
+    n22?: number,
+    n23?: number,
+    n24?: number,
+    n31?: number,
+    n32?: number,
+    n33?: number,
+    n34?: number,
+    n41?: number,
+    n42?: number,
+    n43?: number,
+    n44?: number,
+  ) {
+    this.elements = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
 
-  static fromRowOrder(
-    n11: number,
-    n12: number,
-    n13: number,
-    n14: number,
-    n21: number,
-    n22: number,
-    n23: number,
-    n24: number,
-    n31: number,
-    n32: number,
-    n33: number,
-    n34: number,
-    n41: number,
-    n42: number,
-    n43: number,
-    n44: number,
-    into: Mat4 = Mat4.new(),
-  ): Mat4 {
-    return into.setRowOrder(n11, n12, n13, n14, n21, n22, n23, n24, n31, n32, n33, n34, n41, n42, n43, n44);
-  }
-
-  static fromArray(array: Const<NumberArray>, offset = 0, into = Mat4.new()): Mat4 {
-    return into.fromArray(array, offset);
-  }
-
-  static orthographic(
-    left: number,
-    right: number,
-    bottom: number,
-    top: number,
-    near: number,
-    far: number,
-    into = Mat4.new(),
-  ): Mat4 {
-    return into.asOrthographic(left, right, bottom, top, near, far);
-  }
-
-  static perspective(
-    left: number,
-    right: number,
-    bottom: number,
-    top: number,
-    near: number,
-    far: number,
-    into = Mat4.new(),
-  ): Mat4 {
-    return into.asPerspective(left, right, bottom, top, near, far);
-  }
-
-  static scale(x: number, y: number, z: number, into = Mat4.new()): Mat4 {
-    return into.asScale(x, y, z);
-  }
-
-  static shear(xy: number, xz: number, yx: number, yz: number, zx: number, zy: number, into = Mat4.new()): Mat4 {
-    return into.asShear(xy, xz, yx, yz, zx, zy);
-  }
-
-  static translation(x: number, y: number, z: number, into = Mat4.new()): Mat4 {
-    return into.asTranslation(x, y, z);
-  }
-
-  static rotationX(theta: number, into = Mat4.new()): Mat4 {
-    return into.asRotationX(theta);
-  }
-
-  static rotationY(theta: number, into = Mat4.new()): Mat4 {
-    return into.asRotationY(theta);
-  }
-
-  static rotationZ(theta: number, into = Mat4.new()): Mat4 {
-    return into.asRotationZ(theta);
-  }
-
-  static rotationAxis(axis: Const<Vec3>, angle: number, into = Mat4.new()): Mat4 {
-    return into.asRotationAxis(axis, angle);
-  }
-
-  static rotationFromEuler(euler: Const<Euler>, into = Mat4.new()): Mat4 {
-    return into.asRotationFromEuler(euler);
-  }
-
-  static rotationFromQuaternion(quaternion: Const<Quaternion>, into = Mat4.new()): Mat4 {
-    return into.asRotationFromQuaternion(quaternion);
-  }
-
-  static lookAt(eye: Const<Vec3>, target: Const<Vec3>, up: Const<Vec3>, into = Mat4.new()): Mat4 {
-    return into.lookAt(eye, target, up);
-  }
-
-  static compose(position: Const<Vec3>, quaternion: Const<Quaternion>, scale: Const<Vec3>, into = Mat4.new()): Mat4 {
-    return into.compose(position, quaternion, scale);
-  }
-
-  static fromRotation(rotation: Const<Mat4>, into = Mat4.new()): Mat4 {
-    return into.extractRotation(rotation);
+    if (n11 !== undefined) {
+      this.set(n11, n12!, n13!, n14!, n21!, n22!, n23!, n24!, n31!, n32!, n33!, n34!, n41!, n42!, n43!, n44!);
+    }
   }
 
   set(
@@ -181,80 +71,65 @@ export class Mat4 {
     n43: number,
     n44: number,
   ): this {
-    const e = this.elements;
+    const te = this.elements;
 
-    e[0] = n11;
-    e[1] = n21;
-    e[2] = n31;
-    e[3] = n41;
-    e[4] = n12;
-    e[5] = n22;
-    e[6] = n32;
-    e[7] = n42;
-    e[8] = n13;
-    e[9] = n23;
-    e[10] = n33;
-    e[11] = n43;
-    e[12] = n14;
-    e[13] = n24;
-    e[14] = n34;
-    e[15] = n44;
+    te[0] = n11;
+    te[4] = n12;
+    te[8] = n13;
+    te[12] = n14;
+    te[1] = n21;
+    te[5] = n22;
+    te[9] = n23;
+    te[13] = n24;
+    te[2] = n31;
+    te[6] = n32;
+    te[10] = n33;
+    te[14] = n34;
+    te[3] = n41;
+    te[7] = n42;
+    te[11] = n43;
+    te[15] = n44;
 
     return this;
   }
 
-  setColumnOrder(
-    n11: number,
-    n12: number,
-    n13: number,
-    n14: number,
-    n21: number,
-    n22: number,
-    n23: number,
-    n24: number,
-    n31: number,
-    n32: number,
-    n33: number,
-    n34: number,
-    n41: number,
-    n42: number,
-    n43: number,
-    n44: number,
-  ): this {
-    return this.set(n11, n12, n13, n14, n21, n22, n23, n24, n31, n32, n33, n34, n41, n42, n43, n44);
+  identity(): this {
+    this.set(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+
+    return this;
   }
 
-  setRowOrder(
-    n11: number,
-    n21: number,
-    n31: number,
-    n41: number,
-    n12: number,
-    n22: number,
-    n32: number,
-    n42: number,
-    n13: number,
-    n23: number,
-    n33: number,
-    n43: number,
-    n14: number,
-    n24: number,
-    n34: number,
-    n44: number,
-  ): this {
-    return this.set(n11, n12, n13, n14, n21, n22, n23, n24, n31, n32, n33, n34, n41, n42, n43, n44);
+  clone(): Mat4 {
+    return new Mat4().fromArray(this.elements);
   }
 
-  clone(into = Mat4.new()): Mat4 {
-    return into.from(this);
-  }
-
-  from({ elements }: Const<Mat4>): this {
-    return this.fromArray(elements);
-  }
-
-  fromPosition({ elements: me }: Const<Mat4>): this {
+  from(m: Mat4): this {
     const te = this.elements;
+    const me = m.elements;
+
+    te[0] = me[0];
+    te[1] = me[1];
+    te[2] = me[2];
+    te[3] = me[3];
+    te[4] = me[4];
+    te[5] = me[5];
+    te[6] = me[6];
+    te[7] = me[7];
+    te[8] = me[8];
+    te[9] = me[9];
+    te[10] = me[10];
+    te[11] = me[11];
+    te[12] = me[12];
+    te[13] = me[13];
+    te[14] = me[14];
+    te[15] = me[15];
+
+    return this;
+  }
+
+  copyPosition(m: Mat4): this {
+    const te = this.elements,
+      me = m.elements;
 
     te[12] = me[12];
     te[13] = me[13];
@@ -263,321 +138,90 @@ export class Mat4 {
     return this;
   }
 
-  fromMat3({ elements: [m11, m12, m13, m21, m22, m23, m31, m32, m33] }: Const<Mat3>): this {
-    return this.set(m11, m12, m13, 0, m21, m22, m23, 0, m31, m32, m33, 0, 0, 0, 0, 1);
-  }
+  setFromMatrix3(m: Mat3): this {
+    const me = m.elements;
 
-  intoBasis(xAxis: Vec3, yAxis: Vec3, zAxis: Vec3): this {
-    xAxis.fromMat4Column(this, 0);
-    yAxis.fromMat4Column(this, 1);
-    zAxis.fromMat4Column(this, 2);
+    this.set(me[0], me[3], me[6], 0, me[1], me[4], me[7], 0, me[2], me[5], me[8], 0, 0, 0, 0, 1);
+
     return this;
   }
 
-  fromBasis(xAxis: Const<Vec3>, yAxis: Const<Vec3>, zAxis: Const<Vec3>): this {
+  extractBasis(xAxis: Vec3, yAxis: Vec3, zAxis: Vec3): this {
+    xAxis.fromMat4Column(this, 0);
+    yAxis.fromMat4Column(this, 1);
+    zAxis.fromMat4Column(this, 2);
+
+    return this;
+  }
+
+  makeBasis(xAxis: Vec3, yAxis: Vec3, zAxis: Vec3): this {
     this.set(xAxis.x, yAxis.x, zAxis.x, 0, xAxis.y, yAxis.y, zAxis.y, 0, xAxis.z, yAxis.z, zAxis.z, 0, 0, 0, 0, 1);
 
     return this;
   }
 
-  extractRotation(mat: Const<Mat4>): this {
-    const scaleX = 1 / Vec3.fromMat4Column(mat, 0).length();
-    const scaleY = 1 / Vec3.fromMat4Column(mat, 1).length();
-    const scaleZ = 1 / Vec3.fromMat4Column(mat, 2).length();
-    const [e0, e1, e2, , e4, e5, e6, , e8, e9, e10] = mat.elements;
+  extractRotation(m: Mat4): this {
+    // this method does not support reflection matrices
 
-    return this.setColumnOrder(
-      e0 * scaleX,
-      e1 * scaleX,
-      e2 * scaleX,
-      0,
-      e4 * scaleY,
-      e5 * scaleY,
-      e6 * scaleY,
-      0,
-      e8 * scaleZ,
-      e9 * scaleZ,
-      e10 * scaleZ,
-      0,
-      0,
-      0,
-      0,
-      1,
-    );
-  }
-
-  lookAt(eye: Const<Vec3>, target: Const<Vec3>, up: Const<Vec3>): this {
     const te = this.elements;
+    const me = m.elements;
 
-    const _z = Vec3.from(eye).sub(target);
+    const scaleX = 1 / Vec3.fromMat4Column(m, 0).length();
+    const scaleY = 1 / Vec3.fromMat4Column(m, 1).length();
+    const scaleZ = 1 / Vec3.fromMat4Column(m, 2).length();
 
-    if (_z.lengthSq() === 0) {
-      // eye and target are in the same position
+    te[0] = me[0] * scaleX;
+    te[1] = me[1] * scaleX;
+    te[2] = me[2] * scaleX;
+    te[3] = 0;
 
-      _z.z = 1;
-    }
+    te[4] = me[4] * scaleY;
+    te[5] = me[5] * scaleY;
+    te[6] = me[6] * scaleY;
+    te[7] = 0;
 
-    _z.normalize();
-    const _x = Vec3.from(up).cross(_z);
+    te[8] = me[8] * scaleZ;
+    te[9] = me[9] * scaleZ;
+    te[10] = me[10] * scaleZ;
+    te[11] = 0;
 
-    if (_x.lengthSq() === 0) {
-      // up and z are parallel
-
-      if (Math.abs(up.z) === 1) {
-        _z.x += 0.0001;
-      } else {
-        _z.z += 0.0001;
-      }
-
-      _z.normalize();
-      _x.from(up).cross(_z);
-    }
-
-    _x.normalize();
-    const _y = Vec3.from(_z).cross(_x);
-
-    te[0] = _x.x;
-    te[4] = _y.x;
-    te[8] = _z.x;
-    te[1] = _x.y;
-    te[5] = _y.y;
-    te[9] = _z.y;
-    te[2] = _x.z;
-    te[6] = _y.z;
-    te[10] = _z.z;
+    te[12] = 0;
+    te[13] = 0;
+    te[14] = 0;
+    te[15] = 1;
 
     return this;
   }
 
-  mul(mat: Const<Mat4>): this {
-    return multiply(this, mat, this) as this;
-  }
-
-  premul(mat: Const<Mat4>): this {
-    return multiply(mat, this, this) as this;
-  }
-
-  mulScalar(scalar: number): this {
-    const [e0, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15] = this.elements;
-
-    return this.setRowOrder(
-      e0 * scalar,
-      e1 * scalar,
-      e2 * scalar,
-      e3 * scalar,
-      e4 * scalar,
-      e5 * scalar,
-      e6 * scalar,
-      e7 * scalar,
-      e8 * scalar,
-      e9 * scalar,
-      e10 * scalar,
-      e11 * scalar,
-      e12 * scalar,
-      e13 * scalar,
-      e14 * scalar,
-      e15 * scalar,
-    );
-  }
-
-  determinant(): number {
+  makeRotationFromEuler(euler: Euler): this {
     const te = this.elements;
 
-    const n11 = te[0];
-    const n12 = te[4];
-    const n13 = te[8];
-    const n14 = te[12];
-    const n21 = te[1];
-    const n22 = te[5];
-    const n23 = te[9];
-    const n24 = te[13];
-    const n31 = te[2];
-    const n32 = te[6];
-    const n33 = te[10];
-    const n34 = te[14];
-    const n41 = te[3];
-    const n42 = te[7];
-    const n43 = te[11];
-    const n44 = te[15];
-
-    return (
-      n41 *
-        (+n14 * n23 * n32 - n13 * n24 * n32 - n14 * n22 * n33 + n12 * n24 * n33 + n13 * n22 * n34 - n12 * n23 * n34) +
-      n42 *
-        (+n11 * n23 * n34 - n11 * n24 * n33 + n14 * n21 * n33 - n13 * n21 * n34 + n13 * n24 * n31 - n14 * n23 * n31) +
-      n43 *
-        (+n11 * n24 * n32 - n11 * n22 * n34 - n14 * n21 * n32 + n12 * n21 * n34 + n14 * n22 * n31 - n12 * n24 * n31) +
-      n44 * (-n13 * n22 * n31 - n11 * n23 * n32 + n11 * n22 * n33 + n13 * n21 * n32 - n12 * n21 * n33 + n12 * n23 * n31)
-    );
-  }
-
-  transpose(): this {
-    const e = this.elements;
-
-    return this.set(
-      e[0],
-      e[4],
-      e[8],
-      e[12],
-      e[1],
-      e[5],
-      e[9],
-      e[13],
-      e[2],
-      e[6],
-      e[10],
-      e[14],
-      e[3],
-      e[7],
-      e[11],
-      e[15],
-    );
-  }
-
-  setPosition({ x, y, z }: Const<Vec3>): this {
-    const e = this.elements;
-    e[12] = x;
-    e[13] = y;
-    e[14] = z;
-    return this;
-  }
-
-  invert(): this {
-    // based on http://www.euclideanspace.com/maths/algebra/matrix/functions/inverse/fourD/index.htm
-    const te = this.elements,
-      n11 = te[0],
-      n21 = te[1],
-      n31 = te[2],
-      n41 = te[3],
-      n12 = te[4],
-      n22 = te[5],
-      n32 = te[6],
-      n42 = te[7],
-      n13 = te[8],
-      n23 = te[9],
-      n33 = te[10],
-      n43 = te[11],
-      n14 = te[12],
-      n24 = te[13],
-      n34 = te[14],
-      n44 = te[15],
-      t11 = n23 * n34 * n42 - n24 * n33 * n42 + n24 * n32 * n43 - n22 * n34 * n43 - n23 * n32 * n44 + n22 * n33 * n44,
-      t12 = n14 * n33 * n42 - n13 * n34 * n42 - n14 * n32 * n43 + n12 * n34 * n43 + n13 * n32 * n44 - n12 * n33 * n44,
-      t13 = n13 * n24 * n42 - n14 * n23 * n42 + n14 * n22 * n43 - n12 * n24 * n43 - n13 * n22 * n44 + n12 * n23 * n44,
-      t14 = n14 * n23 * n32 - n13 * n24 * n32 - n14 * n22 * n33 + n12 * n24 * n33 + n13 * n22 * n34 - n12 * n23 * n34;
-
-    const det = n11 * t11 + n21 * t12 + n31 * t13 + n41 * t14;
-
-    if (det === 0) return this.set(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-
-    const detInv = 1 / det;
-
-    te[0] = t11 * detInv;
-    te[1] =
-      (n24 * n33 * n41 - n23 * n34 * n41 - n24 * n31 * n43 + n21 * n34 * n43 + n23 * n31 * n44 - n21 * n33 * n44) *
-      detInv;
-    te[2] =
-      (n22 * n34 * n41 - n24 * n32 * n41 + n24 * n31 * n42 - n21 * n34 * n42 - n22 * n31 * n44 + n21 * n32 * n44) *
-      detInv;
-    te[3] =
-      (n23 * n32 * n41 - n22 * n33 * n41 - n23 * n31 * n42 + n21 * n33 * n42 + n22 * n31 * n43 - n21 * n32 * n43) *
-      detInv;
-
-    te[4] = t12 * detInv;
-    te[5] =
-      (n13 * n34 * n41 - n14 * n33 * n41 + n14 * n31 * n43 - n11 * n34 * n43 - n13 * n31 * n44 + n11 * n33 * n44) *
-      detInv;
-    te[6] =
-      (n14 * n32 * n41 - n12 * n34 * n41 - n14 * n31 * n42 + n11 * n34 * n42 + n12 * n31 * n44 - n11 * n32 * n44) *
-      detInv;
-    te[7] =
-      (n12 * n33 * n41 - n13 * n32 * n41 + n13 * n31 * n42 - n11 * n33 * n42 - n12 * n31 * n43 + n11 * n32 * n43) *
-      detInv;
-
-    te[8] = t13 * detInv;
-    te[9] =
-      (n14 * n23 * n41 - n13 * n24 * n41 - n14 * n21 * n43 + n11 * n24 * n43 + n13 * n21 * n44 - n11 * n23 * n44) *
-      detInv;
-    te[10] =
-      (n12 * n24 * n41 - n14 * n22 * n41 + n14 * n21 * n42 - n11 * n24 * n42 - n12 * n21 * n44 + n11 * n22 * n44) *
-      detInv;
-    te[11] =
-      (n13 * n22 * n41 - n12 * n23 * n41 - n13 * n21 * n42 + n11 * n23 * n42 + n12 * n21 * n43 - n11 * n22 * n43) *
-      detInv;
-
-    te[12] = t14 * detInv;
-    te[13] =
-      (n13 * n24 * n31 - n14 * n23 * n31 + n14 * n21 * n33 - n11 * n24 * n33 - n13 * n21 * n34 + n11 * n23 * n34) *
-      detInv;
-    te[14] =
-      (n14 * n22 * n31 - n12 * n24 * n31 - n14 * n21 * n32 + n11 * n24 * n32 + n12 * n21 * n34 - n11 * n22 * n34) *
-      detInv;
-    te[15] =
-      (n12 * n23 * n31 - n13 * n22 * n31 + n13 * n21 * n32 - n11 * n23 * n32 - n12 * n21 * n33 + n11 * n22 * n33) *
-      detInv;
-
-    return this;
-  }
-
-  scale(v: Const<Vec3>): this {
-    const te = this.elements;
-    const x = v.x,
-      y = v.y,
-      z = v.z;
-
-    te[0] *= x;
-    te[4] *= y;
-    te[8] *= z;
-    te[1] *= x;
-    te[5] *= y;
-    te[9] *= z;
-    te[2] *= x;
-    te[6] *= y;
-    te[10] *= z;
-    te[3] *= x;
-    te[7] *= y;
-    te[11] *= z;
-
-    return this;
-  }
-
-  getMaxScaleOnAxis(): number {
-    const te = this.elements;
-
-    const scaleXSq = te[0] * te[0] + te[1] * te[1] + te[2] * te[2];
-    const scaleYSq = te[4] * te[4] + te[5] * te[5] + te[6] * te[6];
-    const scaleZSq = te[8] * te[8] + te[9] * te[9] + te[10] * te[10];
-
-    return Math.sqrt(Math.max(scaleXSq, scaleYSq, scaleZSq));
-  }
-
-  asRotationFromEuler(euler: Const<Euler>): this {
-    const te = this.elements;
-
-    const { x, y, z } = euler;
-    const a = Math.cos(x);
-    const b = Math.sin(x);
-    const c = Math.cos(y);
-    const d = Math.sin(y);
-    const e = Math.cos(z);
-    const f = Math.sin(z);
+    const x = euler.x,
+      y = euler.y,
+      z = euler.z;
+    const a = Math.cos(x),
+      b = Math.sin(x);
+    const c = Math.cos(y),
+      d = Math.sin(y);
+    const e = Math.cos(z),
+      f = Math.sin(z);
 
     if (euler.order === 'XYZ') {
-      const ae = a * e;
-      const af = a * f;
-      const be = b * e;
-      const bf = b * f;
+      const ae = a * e,
+        af = a * f,
+        be = b * e,
+        bf = b * f;
 
       te[0] = c * e;
-      te[1] = af + be * d;
-      te[2] = bf - ae * d;
-
       te[4] = -c * f;
-      te[5] = ae - bf * d;
-      te[6] = be + af * d;
-
       te[8] = d;
+
+      te[1] = af + be * d;
+      te[5] = ae - bf * d;
       te[9] = -b * c;
+
+      te[2] = bf - ae * d;
+      te[6] = be + af * d;
       te[10] = a * c;
     } else if (euler.order === 'YXZ') {
       const ce = c * e,
@@ -680,46 +324,386 @@ export class Mat4 {
     return this;
   }
 
-  asRotationFromQuaternion(quaternion: Const<Quaternion>): this {
-    return this.compose(zero, quaternion, one);
+  makeRotationFromQuaternion(q: Quaternion): this {
+    return this.compose(new Vec3(0, 0, 0), q, new Vec3(1, 1, 1));
   }
 
-  asTranslation(x: number, y: number, z: number): this {
-    return this.set(1, 0, 0, x, 0, 1, 0, y, 0, 0, 1, z, 0, 0, 0, 1);
+  lookAt(eye: Vec3, target: Vec3, up: Vec3): this {
+    const te = this.elements;
+
+    const _z = Vec3.from(eye).sub(target);
+
+    if (_z.lengthSq() === 0) {
+      // eye and target are in the same position
+
+      _z.z = 1;
+    }
+
+    _z.normalize();
+    const _x = Vec3.from(up).cross(_z);
+
+    if (_x.lengthSq() === 0) {
+      // up and z are parallel
+
+      if (Math.abs(up.z) === 1) {
+        _z.x += 0.0001;
+      } else {
+        _z.z += 0.0001;
+      }
+
+      _z.normalize();
+      _x.from(up).cross(_z);
+    }
+
+    _x.normalize();
+    const _y = Vec3.from(_z).cross(_x);
+
+    te[0] = _x.x;
+    te[4] = _y.x;
+    te[8] = _z.x;
+    te[1] = _x.y;
+    te[5] = _y.y;
+    te[9] = _z.y;
+    te[2] = _x.z;
+    te[6] = _y.z;
+    te[10] = _z.z;
+
+    return this;
   }
 
-  asRotationX(theta: number): this {
-    const c = Math.cos(theta);
-    const s = Math.sin(theta);
-
-    return this.set(1, 0, 0, 0, 0, c, -s, 0, 0, s, c, 0, 0, 0, 0, 1);
+  multiply(m: Mat4): this {
+    return this.multiplyMatrices(this, m);
   }
 
-  asRotationY(theta: number): this {
-    const c = Math.cos(theta);
-    const s = Math.sin(theta);
-
-    return this.set(c, 0, s, 0, 0, 1, 0, 0, -s, 0, c, 0, 0, 0, 0, 1);
+  premultiply(m: Mat4): this {
+    return this.multiplyMatrices(m, this);
   }
 
-  asRotationZ(theta: number): this {
-    const c = Math.cos(theta);
-    const s = Math.sin(theta);
+  multiplyMatrices(a: Mat4, b: Mat4): this {
+    const ae = a.elements;
+    const be = b.elements;
+    const te = this.elements;
 
-    return this.set(c, -s, 0, 0, s, c, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+    const a11 = ae[0],
+      a12 = ae[4],
+      a13 = ae[8],
+      a14 = ae[12];
+    const a21 = ae[1],
+      a22 = ae[5],
+      a23 = ae[9],
+      a24 = ae[13];
+    const a31 = ae[2],
+      a32 = ae[6],
+      a33 = ae[10],
+      a34 = ae[14];
+    const a41 = ae[3],
+      a42 = ae[7],
+      a43 = ae[11],
+      a44 = ae[15];
+
+    const b11 = be[0],
+      b12 = be[4],
+      b13 = be[8],
+      b14 = be[12];
+    const b21 = be[1],
+      b22 = be[5],
+      b23 = be[9],
+      b24 = be[13];
+    const b31 = be[2],
+      b32 = be[6],
+      b33 = be[10],
+      b34 = be[14];
+    const b41 = be[3],
+      b42 = be[7],
+      b43 = be[11],
+      b44 = be[15];
+
+    te[0] = a11 * b11 + a12 * b21 + a13 * b31 + a14 * b41;
+    te[4] = a11 * b12 + a12 * b22 + a13 * b32 + a14 * b42;
+    te[8] = a11 * b13 + a12 * b23 + a13 * b33 + a14 * b43;
+    te[12] = a11 * b14 + a12 * b24 + a13 * b34 + a14 * b44;
+
+    te[1] = a21 * b11 + a22 * b21 + a23 * b31 + a24 * b41;
+    te[5] = a21 * b12 + a22 * b22 + a23 * b32 + a24 * b42;
+    te[9] = a21 * b13 + a22 * b23 + a23 * b33 + a24 * b43;
+    te[13] = a21 * b14 + a22 * b24 + a23 * b34 + a24 * b44;
+
+    te[2] = a31 * b11 + a32 * b21 + a33 * b31 + a34 * b41;
+    te[6] = a31 * b12 + a32 * b22 + a33 * b32 + a34 * b42;
+    te[10] = a31 * b13 + a32 * b23 + a33 * b33 + a34 * b43;
+    te[14] = a31 * b14 + a32 * b24 + a33 * b34 + a34 * b44;
+
+    te[3] = a41 * b11 + a42 * b21 + a43 * b31 + a44 * b41;
+    te[7] = a41 * b12 + a42 * b22 + a43 * b32 + a44 * b42;
+    te[11] = a41 * b13 + a42 * b23 + a43 * b33 + a44 * b43;
+    te[15] = a41 * b14 + a42 * b24 + a43 * b34 + a44 * b44;
+
+    return this;
   }
 
-  asRotationAxis(axis: Const<Vec3>, angle: number): this {
+  multiplyScalar(s: number): this {
+    const te = this.elements;
+
+    te[0] *= s;
+    te[4] *= s;
+    te[8] *= s;
+    te[12] *= s;
+    te[1] *= s;
+    te[5] *= s;
+    te[9] *= s;
+    te[13] *= s;
+    te[2] *= s;
+    te[6] *= s;
+    te[10] *= s;
+    te[14] *= s;
+    te[3] *= s;
+    te[7] *= s;
+    te[11] *= s;
+    te[15] *= s;
+
+    return this;
+  }
+
+  determinant(): number {
+    const te = this.elements;
+
+    const n11 = te[0],
+      n12 = te[4],
+      n13 = te[8],
+      n14 = te[12];
+    const n21 = te[1],
+      n22 = te[5],
+      n23 = te[9],
+      n24 = te[13];
+    const n31 = te[2],
+      n32 = te[6],
+      n33 = te[10],
+      n34 = te[14];
+    const n41 = te[3],
+      n42 = te[7],
+      n43 = te[11],
+      n44 = te[15];
+
+    //TODO: make this more efficient
+    //( based on http://www.euclideanspace.com/maths/algebra/matrix/functions/inverse/fourD/index.htm )
+
+    return (
+      n41 *
+        (+n14 * n23 * n32 - n13 * n24 * n32 - n14 * n22 * n33 + n12 * n24 * n33 + n13 * n22 * n34 - n12 * n23 * n34) +
+      n42 *
+        (+n11 * n23 * n34 - n11 * n24 * n33 + n14 * n21 * n33 - n13 * n21 * n34 + n13 * n24 * n31 - n14 * n23 * n31) +
+      n43 *
+        (+n11 * n24 * n32 - n11 * n22 * n34 - n14 * n21 * n32 + n12 * n21 * n34 + n14 * n22 * n31 - n12 * n24 * n31) +
+      n44 * (-n13 * n22 * n31 - n11 * n23 * n32 + n11 * n22 * n33 + n13 * n21 * n32 - n12 * n21 * n33 + n12 * n23 * n31)
+    );
+  }
+
+  transpose(): this {
+    const te = this.elements;
+    let tmp;
+
+    tmp = te[1];
+    te[1] = te[4];
+    te[4] = tmp;
+    tmp = te[2];
+    te[2] = te[8];
+    te[8] = tmp;
+    tmp = te[6];
+    te[6] = te[9];
+    te[9] = tmp;
+
+    tmp = te[3];
+    te[3] = te[12];
+    te[12] = tmp;
+    tmp = te[7];
+    te[7] = te[13];
+    te[13] = tmp;
+    tmp = te[11];
+    te[11] = te[14];
+    te[14] = tmp;
+
+    return this;
+  }
+
+  setPosition(x: Vec3): this;
+  setPosition(x: number, y: number, z: number): this;
+  setPosition(x: Vec3 | number, y?: number, z?: number): this {
+    const te = this.elements;
+
+    if (Vec3.is(x)) {
+      te[12] = x.x;
+      te[13] = x.y;
+      te[14] = x.z;
+    } else {
+      te[12] = x!;
+      te[13] = y!;
+      te[14] = z!;
+    }
+
+    return this;
+  }
+
+  invert(): this {
+    // based on http://www.euclideanspace.com/maths/algebra/matrix/functions/inverse/fourD/index.htm
+    const te = this.elements,
+      n11 = te[0],
+      n21 = te[1],
+      n31 = te[2],
+      n41 = te[3],
+      n12 = te[4],
+      n22 = te[5],
+      n32 = te[6],
+      n42 = te[7],
+      n13 = te[8],
+      n23 = te[9],
+      n33 = te[10],
+      n43 = te[11],
+      n14 = te[12],
+      n24 = te[13],
+      n34 = te[14],
+      n44 = te[15],
+      t11 = n23 * n34 * n42 - n24 * n33 * n42 + n24 * n32 * n43 - n22 * n34 * n43 - n23 * n32 * n44 + n22 * n33 * n44,
+      t12 = n14 * n33 * n42 - n13 * n34 * n42 - n14 * n32 * n43 + n12 * n34 * n43 + n13 * n32 * n44 - n12 * n33 * n44,
+      t13 = n13 * n24 * n42 - n14 * n23 * n42 + n14 * n22 * n43 - n12 * n24 * n43 - n13 * n22 * n44 + n12 * n23 * n44,
+      t14 = n14 * n23 * n32 - n13 * n24 * n32 - n14 * n22 * n33 + n12 * n24 * n33 + n13 * n22 * n34 - n12 * n23 * n34;
+
+    const det = n11 * t11 + n21 * t12 + n31 * t13 + n41 * t14;
+
+    if (det === 0) return this.set(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+
+    const detInv = 1 / det;
+
+    te[0] = t11 * detInv;
+    te[1] =
+      (n24 * n33 * n41 - n23 * n34 * n41 - n24 * n31 * n43 + n21 * n34 * n43 + n23 * n31 * n44 - n21 * n33 * n44) *
+      detInv;
+    te[2] =
+      (n22 * n34 * n41 - n24 * n32 * n41 + n24 * n31 * n42 - n21 * n34 * n42 - n22 * n31 * n44 + n21 * n32 * n44) *
+      detInv;
+    te[3] =
+      (n23 * n32 * n41 - n22 * n33 * n41 - n23 * n31 * n42 + n21 * n33 * n42 + n22 * n31 * n43 - n21 * n32 * n43) *
+      detInv;
+
+    te[4] = t12 * detInv;
+    te[5] =
+      (n13 * n34 * n41 - n14 * n33 * n41 + n14 * n31 * n43 - n11 * n34 * n43 - n13 * n31 * n44 + n11 * n33 * n44) *
+      detInv;
+    te[6] =
+      (n14 * n32 * n41 - n12 * n34 * n41 - n14 * n31 * n42 + n11 * n34 * n42 + n12 * n31 * n44 - n11 * n32 * n44) *
+      detInv;
+    te[7] =
+      (n12 * n33 * n41 - n13 * n32 * n41 + n13 * n31 * n42 - n11 * n33 * n42 - n12 * n31 * n43 + n11 * n32 * n43) *
+      detInv;
+
+    te[8] = t13 * detInv;
+    te[9] =
+      (n14 * n23 * n41 - n13 * n24 * n41 - n14 * n21 * n43 + n11 * n24 * n43 + n13 * n21 * n44 - n11 * n23 * n44) *
+      detInv;
+    te[10] =
+      (n12 * n24 * n41 - n14 * n22 * n41 + n14 * n21 * n42 - n11 * n24 * n42 - n12 * n21 * n44 + n11 * n22 * n44) *
+      detInv;
+    te[11] =
+      (n13 * n22 * n41 - n12 * n23 * n41 - n13 * n21 * n42 + n11 * n23 * n42 + n12 * n21 * n43 - n11 * n22 * n43) *
+      detInv;
+
+    te[12] = t14 * detInv;
+    te[13] =
+      (n13 * n24 * n31 - n14 * n23 * n31 + n14 * n21 * n33 - n11 * n24 * n33 - n13 * n21 * n34 + n11 * n23 * n34) *
+      detInv;
+    te[14] =
+      (n14 * n22 * n31 - n12 * n24 * n31 - n14 * n21 * n32 + n11 * n24 * n32 + n12 * n21 * n34 - n11 * n22 * n34) *
+      detInv;
+    te[15] =
+      (n12 * n23 * n31 - n13 * n22 * n31 + n13 * n21 * n32 - n11 * n23 * n32 - n12 * n21 * n33 + n11 * n22 * n33) *
+      detInv;
+
+    return this;
+  }
+
+  scale(v: Vec3): this {
+    const te = this.elements;
+    const x = v.x,
+      y = v.y,
+      z = v.z;
+
+    te[0] *= x;
+    te[4] *= y;
+    te[8] *= z;
+    te[1] *= x;
+    te[5] *= y;
+    te[9] *= z;
+    te[2] *= x;
+    te[6] *= y;
+    te[10] *= z;
+    te[3] *= x;
+    te[7] *= y;
+    te[11] *= z;
+
+    return this;
+  }
+
+  getMaxScaleOnAxis(): number {
+    const te = this.elements;
+
+    const scaleXSq = te[0] * te[0] + te[1] * te[1] + te[2] * te[2];
+    const scaleYSq = te[4] * te[4] + te[5] * te[5] + te[6] * te[6];
+    const scaleZSq = te[8] * te[8] + te[9] * te[9] + te[10] * te[10];
+
+    return Math.sqrt(Math.max(scaleXSq, scaleYSq, scaleZSq));
+  }
+
+  makeTranslation(x: Vec3): this;
+  makeTranslation(x: number, y: number, z: number): this;
+  makeTranslation(x: Vec3 | number, y?: number, z?: number): this {
+    if (x instanceof Vec3) {
+      this.set(1, 0, 0, x.x, 0, 1, 0, x.y, 0, 0, 1, x.z, 0, 0, 0, 1);
+    } else {
+      this.set(1, 0, 0, x, 0, 1, 0, y!, 0, 0, 1, z!, 0, 0, 0, 1);
+    }
+
+    return this;
+  }
+
+  makeRotationX(theta: number): this {
+    const c = Math.cos(theta),
+      s = Math.sin(theta);
+
+    this.set(1, 0, 0, 0, 0, c, -s, 0, 0, s, c, 0, 0, 0, 0, 1);
+
+    return this;
+  }
+
+  makeRotationY(theta: number): this {
+    const c = Math.cos(theta),
+      s = Math.sin(theta);
+
+    this.set(c, 0, s, 0, 0, 1, 0, 0, -s, 0, c, 0, 0, 0, 0, 1);
+
+    return this;
+  }
+
+  makeRotationZ(theta: number): this {
+    const c = Math.cos(theta),
+      s = Math.sin(theta);
+
+    this.set(c, -s, 0, 0, s, c, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+
+    return this;
+  }
+
+  makeRotationAxis(axis: Vec3, angle: number): this {
+    // Based on http://www.gamedev.net/reference/articles/article1199.asp
+
     const c = Math.cos(angle);
     const s = Math.sin(angle);
     const t = 1 - c;
-    const x = axis.x;
-    const y = axis.y;
-    const z = axis.z;
-    const tx = t * x;
-    const ty = t * y;
+    const x = axis.x,
+      y = axis.y,
+      z = axis.z;
+    const tx = t * x,
+      ty = t * y;
 
-    return this.set(
+    this.set(
       tx * x + c,
       tx * y - s * z,
       tx * z + s * y,
@@ -737,17 +721,23 @@ export class Mat4 {
       0,
       1,
     );
+
+    return this;
   }
 
-  asScale(x: number, y: number, z: number): this {
-    return this.set(x, 0, 0, 0, 0, y, 0, 0, 0, 0, z, 0, 0, 0, 0, 1);
+  makeScale(x: number, y: number, z: number): this {
+    this.set(x, 0, 0, 0, 0, y, 0, 0, 0, 0, z, 0, 0, 0, 0, 1);
+
+    return this;
   }
 
-  asShear(xy: number, xz: number, yx: number, yz: number, zx: number, zy: number): this {
-    return this.set(1, yx, zx, 0, xy, 1, zy, 0, xz, yz, 1, 0, 0, 0, 0, 1);
+  makeShear(xy: number, xz: number, yx: number, yz: number, zx: number, zy: number): this {
+    this.set(1, yx, zx, 0, xy, 1, zy, 0, xz, yz, 1, 0, 0, 0, 0, 1);
+
+    return this;
   }
 
-  compose(position: Const<Vec3>, quaternion: Const<Quaternion>, scale: Const<Vec3>): this {
+  compose(position: Vec3, quaternion: Quaternion, scale: Vec3): this {
     const te = this.elements;
 
     const x = quaternion.x,
@@ -837,13 +827,7 @@ export class Mat4 {
     return this;
   }
 
-  asIdentity(): this {
-    this.set(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
-
-    return this;
-  }
-
-  asPerspective(
+  makePerspective(
     left: number,
     right: number,
     top: number,
@@ -891,7 +875,7 @@ export class Mat4 {
     return this;
   }
 
-  asOrthographic(
+  makeOrthographic(
     left: number,
     right: number,
     top: number,
@@ -944,89 +928,46 @@ export class Mat4 {
     const te = this.elements;
     const me = matrix.elements;
 
-    if (te[0] !== me[0] || te[1] !== me[1] || te[2] !== me[2] || te[3] !== me[3]) return false;
-    if (te[4] !== me[4] || te[5] !== me[5] || te[6] !== me[6] || te[7] !== me[7]) return false;
-    if (te[8] !== me[8] || te[9] !== me[9] || te[10] !== me[10] || te[11] !== me[11]) return false;
-    if (te[12] !== me[12] || te[13] !== me[13] || te[14] !== me[14] || te[15] !== me[15]) return false;
+    for (let i = 0; i < 16; i++) {
+      if (te[i] !== me[i]) return false;
+    }
+
     return true;
   }
 
-  fromArray(from: Const<NumberArray>, offset: number = 0): this {
-    return this.setRowOrder(
-      from[offset],
-      from[offset + 1],
-      from[offset + 2],
-      from[offset + 3],
-      from[offset + 4],
-      from[offset + 5],
-      from[offset + 6],
-      from[offset + 7],
-      from[offset + 8],
-      from[offset + 9],
-      from[offset + 10],
-      from[offset + 11],
-      from[offset + 12],
-      from[offset + 13],
-      from[offset + 14],
-      from[offset + 15],
-    );
+  fromArray(array: number[], offset: number = 0): this {
+    for (let i = 0; i < 16; i++) {
+      this.elements[i] = array[i + offset];
+    }
+
+    return this;
   }
 
-  intoArray<T extends NumberArray = number[]>(into: T = [] as never, offset: number = 0): T {
-    const {
-      elements: [e0, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15],
-    } = this;
+  toArray(array: number[] = [], offset: number = 0): number[] {
+    const te = this.elements;
 
-    into[offset] = e0;
-    into[offset + 1] = e1;
-    into[offset + 2] = e2;
-    into[offset + 3] = e3;
-    into[offset + 4] = e4;
-    into[offset + 5] = e5;
-    into[offset + 6] = e6;
-    into[offset + 7] = e7;
-    into[offset + 8] = e8;
-    into[offset + 9] = e9;
-    into[offset + 10] = e10;
-    into[offset + 11] = e11;
-    into[offset + 12] = e12;
-    into[offset + 13] = e13;
-    into[offset + 14] = e14;
-    into[offset + 15] = e15;
+    array[offset] = te[0];
+    array[offset + 1] = te[1];
+    array[offset + 2] = te[2];
+    array[offset + 3] = te[3];
 
-    return into;
+    array[offset + 4] = te[4];
+    array[offset + 5] = te[5];
+    array[offset + 6] = te[6];
+    array[offset + 7] = te[7];
+
+    array[offset + 8] = te[8];
+    array[offset + 9] = te[9];
+    array[offset + 10] = te[10];
+    array[offset + 11] = te[11];
+
+    array[offset + 12] = te[12];
+    array[offset + 13] = te[13];
+    array[offset + 14] = te[14];
+    array[offset + 15] = te[15];
+
+    return array;
   }
 }
 
 Mat4.prototype.isMat4 = true;
-
-function multiply(a: Const<Mat4>, b: Const<Mat4>, into: Mat4): Mat4 {
-  const [a11, a21, a31, a41, a12, a22, a32, a42, a13, a23, a33, a43, a14, a24, a34, a44] = a.elements;
-  const [b11, b21, b31, b41, b12, b22, b32, b42, b13, b23, b33, b43, b14, b24, b34, b44] = b.elements;
-  const it = into.elements;
-
-  it[0] = a11 * b11 + a12 * b21 + a13 * b31 + a14 * b41;
-  it[4] = a11 * b12 + a12 * b22 + a13 * b32 + a14 * b42;
-  it[8] = a11 * b13 + a12 * b23 + a13 * b33 + a14 * b43;
-  it[12] = a11 * b14 + a12 * b24 + a13 * b34 + a14 * b44;
-
-  it[1] = a21 * b11 + a22 * b21 + a23 * b31 + a24 * b41;
-  it[5] = a21 * b12 + a22 * b22 + a23 * b32 + a24 * b42;
-  it[9] = a21 * b13 + a22 * b23 + a23 * b33 + a24 * b43;
-  it[13] = a21 * b14 + a22 * b24 + a23 * b34 + a24 * b44;
-
-  it[2] = a31 * b11 + a32 * b21 + a33 * b31 + a34 * b41;
-  it[6] = a31 * b12 + a32 * b22 + a33 * b32 + a34 * b42;
-  it[10] = a31 * b13 + a32 * b23 + a33 * b33 + a34 * b43;
-  it[14] = a31 * b14 + a32 * b24 + a33 * b34 + a34 * b44;
-
-  it[3] = a41 * b11 + a42 * b21 + a43 * b31 + a44 * b41;
-  it[7] = a41 * b12 + a42 * b22 + a43 * b32 + a44 * b42;
-  it[11] = a41 * b13 + a42 * b23 + a43 * b33 + a44 * b43;
-  it[15] = a41 * b14 + a42 * b24 + a43 * b34 + a44 * b44;
-
-  return into;
-}
-
-const zero = Vec3.new(0, 0, 0);
-const one = Vec3.new(1, 1, 1);

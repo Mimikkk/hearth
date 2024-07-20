@@ -58,7 +58,7 @@ export class SpotLightHelper extends Object3D {
     if (this.parent) {
       this.parent.updateWorldMatrix(true, false);
 
-      this.matrix.from(this.parent.matrixWorld).invert().mul(this.light.matrixWorld);
+      this.matrix.from(this.parent.matrixWorld).invert().multiply(this.light.matrixWorld);
     } else {
       this.matrix.from(this.light.matrixWorld);
     }

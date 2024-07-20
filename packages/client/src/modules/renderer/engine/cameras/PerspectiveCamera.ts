@@ -166,7 +166,7 @@ export class PerspectiveCamera extends Camera {
     const skew = this.filmOffsetMM;
     if (skew !== 0) left += (near * skew) / this.getFilmWidth();
 
-    this.projectionMatrix.asPerspective(left, left + width, top, top - height, near, this.far, this.coordinateSystem);
+    this.projectionMatrix.makePerspective(left, left + width, top, top - height, near, this.far, this.coordinateSystem);
 
     this.projectionMatrixInverse.from(this.projectionMatrix).invert();
     return this;

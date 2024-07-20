@@ -239,7 +239,7 @@ export class OBB {
 
     // create a 4x4 transformation matrix
 
-    matrix.fromMat3(this.rotation);
+    matrix.setFromMatrix3(this.rotation);
     matrix.setPosition(this.center);
 
     // transform ray to the local space of the OBB

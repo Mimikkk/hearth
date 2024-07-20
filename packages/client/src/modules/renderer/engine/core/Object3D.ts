@@ -178,7 +178,7 @@ export class Object3D<EventMap extends Object3DEventMap = any> {
   applyMat4(matrix: Const<Mat4>): this {
     if (this.matrixAutoUpdate) this.updateMatrix();
 
-    this.matrix.premul(matrix);
+    this.matrix.premultiply(matrix);
     this.matrix.decompose(this.position, this.quaternion, this.scale);
 
     return this;
@@ -434,7 +434,7 @@ export class Object3D<EventMap extends Object3DEventMap = any> {
     if (object.parent !== null) {
       object.parent.updateWorldMatrix(true, false);
 
-      _m1.mul(object.parent.matrixWorld);
+      _m1.multiply(object.parent.matrixWorld);
     }
 
     object.applyMat4(_m1);

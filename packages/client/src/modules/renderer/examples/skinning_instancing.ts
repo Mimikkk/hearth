@@ -87,7 +87,7 @@ async function init() {
 
           dummy.updateMatrix();
 
-          dummy.matrix.intoArray(child.instanceMatrix.array, i * 16);
+          dummy.matrix.toArray(child.instanceMatrix.array, i * 16);
         }
       }
     });

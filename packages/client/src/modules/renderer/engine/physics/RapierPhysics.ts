@@ -177,7 +177,7 @@ export async function RapierPhysics(): Promise<RapierPhysicsObject> {
           const position = body.translation();
           Quaternion.clone_(body.rotation(), _quaternion);
 
-          _matrix.compose(position, _quaternion, _scale).intoArray(array, j * 16);
+          _matrix.compose(position, _quaternion, _scale).toArray(array, j * 16);
         }
 
         //@ts-expect-error

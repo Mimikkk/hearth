@@ -174,7 +174,7 @@ export class BufferGeometry<
   }
 
   applyQuaternion(q: Quaternion): this {
-    _m1.asRotationFromQuaternion(q);
+    _m1.makeRotationFromQuaternion(q);
 
     this.applyMat4(_m1);
 
@@ -184,7 +184,7 @@ export class BufferGeometry<
   rotateX(angle: number): this {
     // rotate geometry around world x-axis
 
-    _m1.asRotationX(angle);
+    _m1.makeRotationX(angle);
 
     this.applyMat4(_m1);
 
@@ -194,7 +194,7 @@ export class BufferGeometry<
   rotateY(angle: number): this {
     // rotate geometry around world y-axis
 
-    _m1.asRotationY(angle);
+    _m1.makeRotationY(angle);
 
     this.applyMat4(_m1);
 
@@ -204,7 +204,7 @@ export class BufferGeometry<
   rotateZ(angle: number): this {
     // rotate geometry around world z-axis
 
-    _m1.asRotationZ(angle);
+    _m1.makeRotationZ(angle);
 
     this.applyMat4(_m1);
 
@@ -214,7 +214,7 @@ export class BufferGeometry<
   translate(x: number, y: number, z: number): this {
     // translate geometry
 
-    _m1.asTranslation(x, y, z);
+    _m1.makeTranslation(x, y, z);
 
     this.applyMat4(_m1);
 
@@ -224,7 +224,7 @@ export class BufferGeometry<
   scale(x: number, y: number, z: number): this {
     // scale geometry
 
-    _m1.asScale(x, y, z);
+    _m1.makeScale(x, y, z);
 
     this.applyMat4(_m1);
 

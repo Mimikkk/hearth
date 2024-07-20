@@ -60,7 +60,7 @@ export class LightShadow<C extends Camera = Camera> {
     this.frustum.fromProjection(shadowCamera.projectionMatrix);
 
     shadowMatrix.set(0.5, 0.0, 0.0, 0.5, 0.0, 0.5, 0.0, 0.5, 0.0, 0.0, 0.5, 0.5, 0.0, 0.0, 0.0, 1.0);
-    shadowMatrix.mul(_projectionMat);
+    shadowMatrix.multiply(_projectionMat);
 
     return this;
   }

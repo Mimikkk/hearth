@@ -55,35 +55,35 @@ export class Vec3 {
     return into.fromArray(array, offset);
   }
 
-  static fromColor(color: Const<Color>, into: Vec3 = Vec3.new()): Vec3 {
+  static fromColor(color: Color, into: Vec3 = Vec3.new()): Vec3 {
     return into.fromColor(color);
   }
 
-  static fromEuler(euler: Const<Euler>, into: Vec3 = Vec3.new()): Vec3 {
+  static fromEuler(euler: Euler, into: Vec3 = Vec3.new()): Vec3 {
     return into.fromEuler(euler);
   }
 
-  static fromSpherical(spherical: Const<Spherical>, into: Vec3 = Vec3.new()): Vec3 {
+  static fromSpherical(spherical: Spherical, into: Vec3 = Vec3.new()): Vec3 {
     return into.fromSpherical(spherical);
   }
 
-  static fromCylindrical(cylindrical: Const<Cylindrical>, into: Vec3 = Vec3.new()): Vec3 {
+  static fromCylindrical(cylindrical: Cylindrical, into: Vec3 = Vec3.new()): Vec3 {
     return into.fromCylindrical(cylindrical);
   }
 
-  static fromMat4Position(mat: Const<Mat4>, into: Vec3 = Vec3.new()): Vec3 {
-    return into.fromMat4Position(mat);
+  static fromMat4Position(matrix: Mat4, into: Vec3 = Vec3.new()): Vec3 {
+    return into.fromMat4Position(matrix);
   }
 
-  static fromMat4Scale(mat: Const<Mat4>, into: Vec3 = Vec3.new()): Vec3 {
-    return into.fromMat4Scale(mat);
+  static fromMat4Scale(matrix: Mat4, into: Vec3 = Vec3.new()): Vec3 {
+    return into.fromMat4Scale(matrix);
   }
 
-  static fromMat4Column(mat: Const<Mat4>, index: number, into: Vec3 = Vec3.new()): Vec3 {
-    return into.fromMat4Column(mat, index);
+  static fromMat4Column(matrix: Mat4, index: number, into: Vec3 = Vec3.new()): Vec3 {
+    return into.fromMat4Column(matrix, index);
   }
 
-  static fromMat3Column(matrix: Const<Mat3>, index: number, into: Vec3 = Vec3.new()): Vec3 {
+  static fromMat3Column(matrix: Mat3, index: number, into: Vec3 = Vec3.new()): Vec3 {
     return into.fromMat3Column(matrix, index);
   }
 
