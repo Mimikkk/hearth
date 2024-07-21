@@ -2,9 +2,9 @@ import { EventDispatcher } from '@modules/renderer/engine/engine.js';
 import { NodeTypeOption, NodeUpdateType } from './constants.ts';
 import { getCacheKey, getNodeChildren } from './NodeUtils.js';
 import { generateUuid } from '../../math/MathUtils.ts';
-import { NodeBuilder } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.js';
-
+import type { NodeBuilder } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.js';
 import NodeFrame from '@modules/renderer/engine/nodes/core/NodeFrame.js';
+import { BuildStage } from '@modules/renderer/engine/renderers/webgpu/nodes/types.js';
 
 let _nodeId = 0;
 
@@ -187,16 +187,11 @@ class Node {
     builder.addNode(this);
     builder.addChain(this);
 
-    /* Build stages expected results:
-			- "setup"		-> Node
-			- "analyze"		-> null
-			- "generate"	-> String
-		*/
     let result = null;
 
-    const buildStage = builder.getBuildStage();
+    const buildStage = builder.buildStage;
 
-    if (buildStage === 'setup') {
+    if (buildStage === BuildStage.Setup) {
       this.setReference(builder);
 
       const properties = builder.getNodeProperties(this);
@@ -217,9 +212,9 @@ class Node {
           }
         }
       }
-    } else if (buildStage === 'analyze') {
+    } else if (buildStage === BuildStage.Analyze) {
       this.analyze(builder);
-    } else if (buildStage === 'generate') {
+    } else if (buildStage === BuildStage.Generate) {
       const isGenerateOnce = this.generate.length === 1;
 
       if (isGenerateOnce) {

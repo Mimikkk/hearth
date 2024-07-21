@@ -5,8 +5,6 @@ export enum NodeUpdateType {
   OBJECT = 'object',
 }
 
-export const buildStages = ['setup', 'analyze', 'generate'] as const;
-export const shaderStages = ['fragment', 'vertex', 'compute'] as const;
 export const vectorComponents = ['x', 'y', 'z', 'w'] as const;
 
 export enum NodeType {

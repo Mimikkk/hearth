@@ -1,22 +1,22 @@
 import Node from './Node.ts';
+import type { NodeBuilder } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.js';
+import { BuildStage } from '@modules/renderer/engine/renderers/webgpu/nodes/types.js';
 
 class TempNode extends Node {
   static type = 'TempNode';
 
-  constructor(type) {
+  constructor(type: string) {
     super(type);
-
-    this.isTempNode = true;
   }
 
-  hasDependencies(builder) {
+  hasDependencies(builder: NodeBuilder): boolean {
     return builder.getDataFromNode(this).usageCount > 1;
   }
 
-  build(builder, output) {
-    const buildStage = builder.getBuildStage();
+  build(builder: NodeBuilder, output) {
+    const buildStage = builder.buildStage;
 
-    if (buildStage === 'generate') {
+    if (buildStage === BuildStage.Generate) {
       const type = builder.getVectorType(this.getNodeType(builder, output));
       const nodeData = builder.getDataFromNode(this);
 
