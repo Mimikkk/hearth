@@ -1,10 +1,11 @@
 import { EventDispatcher } from '@modules/renderer/engine/engine.js';
-import { NodeTypeOption, NodeUpdateType } from './constants.ts';
+import { NodeUpdateType } from './constants.ts';
 import { getCacheKey, getNodeChildren } from './NodeUtils.js';
 import { generateUuid } from '../../math/MathUtils.ts';
 import { NodeBuilder } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.js';
 
 import NodeFrame from '@modules/renderer/engine/nodes/core/NodeFrame.js';
+import { TypeName } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.types.js';
 
 let _nodeId = 0;
 
@@ -13,7 +14,7 @@ export class Node {
   declare isNode: true;
   name?: string;
   eventDispatcher = new EventDispatcher<{ dispose: {} }>();
-  nodeType: NodeTypeOption | null;
+  nodeType: TypeName | null;
   updateType: NodeUpdateType;
   updateBeforeType: NodeUpdateType;
   uuid: string;
@@ -22,7 +23,7 @@ export class Node {
   _cacheKeyVersion: number;
   id: number;
 
-  constructor(nodeType: NodeTypeOption | null = null) {
+  constructor(nodeType: TypeName | null = null) {
     this.nodeType = nodeType;
 
     this.updateType = NodeUpdateType.NONE;
@@ -107,7 +108,7 @@ export class Node {
     return this.updateBeforeType;
   }
 
-  getNodeType(builder: NodeBuilder): NodeTypeOption | null {
+  getNodeType(builder: NodeBuilder): TypeName | null {
     const nodeProperties = builder.getNodeProperties(this);
 
     if (nodeProperties.outputNode) {

@@ -2,7 +2,7 @@ import CodeNode, { CodeNodeInclude } from './CodeNode.ts';
 import { nodeObject } from '../shadernode/ShaderNodes.js';
 import { NodeBuilder } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.js';
 
-import { NodeType } from '@modules/renderer/engine/nodes/core/constants.js';
+import { TypeName } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.types.js';
 
 class FunctionNode extends CodeNode {
   static type = 'FunctionNode';
@@ -14,7 +14,7 @@ class FunctionNode extends CodeNode {
     this.keywords = {};
   }
 
-  getNodeType(builder: NodeBuilder): NodeType {
+  getNodeType(builder: NodeBuilder): TypeName {
     return this.getNodeFunction(builder).type;
   }
 

@@ -1,15 +1,14 @@
 import Node from '../core/Node.ts';
 import { nodeProxy } from '../shadernode/ShaderNodes.js';
 import { NodeBuilder } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.js';
-
-import { NodeTypeOption } from '@modules/renderer/engine/nodes/core/constants.js';
+import { TypeName } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.types.js';
 
 class ExpressionNode extends Node {
   static type = 'ExpressionNode';
 
   constructor(
     public snippet: string,
-    nodeType: NodeTypeOption = 'void',
+    nodeType: TypeName = TypeName.void,
   ) {
     super(nodeType);
   }
@@ -18,10 +17,10 @@ class ExpressionNode extends Node {
     const type = this.getNodeType(builder);
     const snippet = this.snippet;
 
-    if (type === 'void') {
+    if (type === TypeName.void) {
       builder.addLineFlowCode(snippet);
     } else {
-      return builder.format(`( ${snippet} )`, type, output);
+      return builder.format(`(${snippet})`, type, output);
     }
   }
 }

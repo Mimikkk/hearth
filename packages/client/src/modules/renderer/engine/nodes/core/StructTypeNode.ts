@@ -1,17 +1,11 @@
 import Node from './Node.ts';
+import { TypeName } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.types.js';
 
 class StructTypeNode extends Node {
   static type = 'StructTypeNode';
 
-  constructor(types) {
+  constructor(public types: TypeName[]) {
     super();
-
-    this.types = types;
-    this.isStructTypeNode = true;
-  }
-
-  getMemberTypes() {
-    return this.types;
   }
 }
 

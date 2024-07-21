@@ -49,9 +49,10 @@ import FogNode from '@modules/renderer/engine/nodes/fog/FogNode.js';
 import ToneMappingNode from '@modules/renderer/engine/nodes/display/ToneMappingNode.js';
 import { Node } from '@modules/renderer/engine/nodes/core/Node.js';
 import ClippingContext from '@modules/renderer/engine/renderers/common/ClippingContext.js';
-import { TypedArrayConstructor } from '@modules/renderer/engine/math/MathUtils.js';
+import { TypedArray, TypedArrayConstructor } from '@modules/renderer/engine/math/MathUtils.js';
 import { BuildStage, BuiltinType, ShaderStage, TypeMap, TypeName } from './NodeBuilder.types.js';
 import { PolyfillMap, PolyfillName } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.polyfills.js';
+import StructTypeNode from '@modules/renderer/engine/nodes/core/StructTypeNode.js';
 
 export class NodeBuilder {
   material: Material | null;
@@ -75,7 +76,7 @@ export class NodeBuilder {
   flowNodes: Record<ShaderStage, Node[]>;
   flowCode: Record<ShaderStage, string>;
   uniforms: Record<ShaderStage, NodeUniformsGroup[]> & { index: number };
-  structs: Record<ShaderStage, NodeUniformsGroup[]> & { index: number };
+  structs: Record<ShaderStage, StructTypeNode[]> & { index: number };
   bindings: Record<ShaderStage, NodeUniformsGroup[]>;
   bindingsOffset: Record<ShaderStage, number>;
   bindingsArray: NodeUniformBuffer | NodeStorageBuffer | null;
@@ -217,16 +218,10 @@ export class NodeBuilder {
     return bindingsArray;
   }
 
-  setHashNode(node, hash) {
-    this.hashNodes[hash] = node;
-  }
-
-  addNode(node) {
-    if (this.nodes.includes(node) === false) {
-      this.nodes.push(node);
-
-      this.setHashNode(node, node.getHash(this));
-    }
+  addNode(node: Node): void {
+    if (this.nodes.includes(node)) return;
+    this.nodes.push(node);
+    this.hashNodes[node.getHash(this)] = node;
   }
 
   buildUpdateNodes() {
@@ -244,7 +239,7 @@ export class NodeBuilder {
     }
   }
 
-  addChain(node) {
+  addChain(node: Node) {
     /*
 		if (this.chaining.indexOf(node) !== - 1) {
 
@@ -256,7 +251,7 @@ export class NodeBuilder {
     this.chaining.push(node);
   }
 
-  removeChain(node) {
+  removeChain(node: Node) {
     const lastChain = this.chaining.pop();
 
     if (lastChain !== node) {
@@ -264,7 +259,7 @@ export class NodeBuilder {
     }
   }
 
-  addFlow(shaderStage: ShaderStage, node) {
+  addFlow(shaderStage: ShaderStage, node: Node) {
     this.flowNodes[shaderStage].push(node);
 
     return node;
@@ -332,15 +327,15 @@ export class NodeBuilder {
     return attribute;
   }
 
-  isVector(type) {
+  isVector(type: TypeName): boolean {
     return /vec\d/.test(type);
   }
 
-  isMatrix(type) {
+  isMatrix(type: TypeName): boolean {
     return /mat\d/.test(type);
   }
 
-  getComponentType(type) {
+  getComponentType(type: TypeName): TypeName | null {
     type = this.getVectorType(type);
 
     if (type === 'f32' || type === 'bool' || type === 'i32' || type === 'u32') return type;
@@ -356,7 +351,7 @@ export class NodeBuilder {
     return 'f32';
   }
 
-  getVectorType(type) {
+  getVectorType(type: TypeName): TypeName {
     if (type === 'color') return 'vec3';
     if (type === 'texture' || type === 'cubeTexture' || type === 'storageTexture') return 'vec4';
 
@@ -372,8 +367,8 @@ export class NodeBuilder {
     return prefix + baseType;
   }
 
-  getTypeFromArray(array) {
-    return TypeByArray.get(array.constructor);
+  getTypeFromArray(array: TypedArray): TypeName {
+    return TypeByArray.get(array.constructor as TypedArrayConstructor);
   }
 
   getTypeFromAttribute(attribute) {
@@ -698,7 +693,7 @@ export class NodeBuilder {
     const { object, material } = this;
 
     if (convertMaterial) {
-      if (material !== null) {
+      if (material) {
         NodeMaterial.fromMaterial(material).build(this);
       } else {
         this.addFlow(ShaderStage.Compute, object);
@@ -1155,18 +1150,6 @@ ${flowData.code}
     return snippets.join(',\n\t');
   }
 
-  getStructMembers(struct) {
-    const snippets = [];
-    const members = struct.getMemberTypes();
-
-    for (let i = 0; i < members.length; i++) {
-      const member = members[i];
-      snippets.push(`\t@location(${i}) m${i}: ${member}<f32>`);
-    }
-
-    return snippets.join(',\n');
-  }
-
   code(): void {
     if (this.isCompute) {
       this.computeShader = Snippet.compute({
@@ -1199,29 +1182,26 @@ ${flowData.code}
     }
   }
 
-  codeStructures(shaderStage: ShaderStage) {
+  codeStructures(stage: ShaderStage) {
     const snippets = [];
-    const structs = this.structs[shaderStage];
+    const structs = this.structs[stage];
 
-    for (let index = 0, length = structs.length; index < length; index++) {
-      const struct = structs[index];
-      const name = struct.name;
+    for (const { name, types } of structs) {
+      snippets.push(`struct ${name} {
+      ${types.map((type, i) => `@location(${i}) m${i}: ${type}`).join(',\n')}
+      }`);
 
-      let snippet = `\struct ${name} {\n`;
-      snippet += this.getStructMembers(struct);
-      snippet += '\n}';
-
-      snippets.push(snippet);
+      console.log(snippets);
     }
 
-    if (shaderStage === ShaderStage.Fragment) {
+    if (stage === ShaderStage.Fragment) {
       const flowNodes = this.flowNodes[ShaderStage.Fragment];
       const mainNode = flowNodes[flowNodes.length - 1];
       const outputNode = mainNode.outputNode;
 
       if (outputNode?.isOutputStructNode) {
       } else {
-        let members = '\t@location(0) color: vec4<f32>';
+        let members = '@location(0) color: vec4<f32>';
 
         const builtins = this.getBuiltins(BuiltinType.Output);
         if (builtins) members += ',\n\t' + builtins;
@@ -1397,7 +1377,7 @@ ${flowData.code}
     let code = this.flowCode[ShaderStage.Fragment];
 
     const flowNodes = this.flowNodes[ShaderStage.Fragment];
-    const mainNode = flowNodes[flowNodes.length - 1];
+    const mainNode = flowNodes[flowNodes.length - 1] as StackNode;
     const outputNode = mainNode.outputNode;
 
     for (const node of flowNodes) {
@@ -1612,21 +1592,21 @@ namespace Inbuilt {
 const formatAsFloat = (value: number): string => value + (value % 1 ? '' : '.0');
 
 const UniformsGroup = new ChainMap();
-const TypeByLength = new Map<number, string>([
-  [2, 'vec2'],
-  [3, 'vec3'],
-  [4, 'vec4'],
-  [9, 'mat3'],
-  [16, 'mat4'],
+const TypeByLength = new Map<number, TypeName>([
+  [2, TypeName.vec2],
+  [3, TypeName.vec3],
+  [4, TypeName.vec4],
+  [9, TypeName.mat3],
+  [16, TypeName.mat4],
 ]);
-const TypeByArray = new Map<TypedArrayConstructor, string>([
-  [Int8Array, 'i32'],
-  [Int16Array, 'i32'],
-  [Int32Array, 'i32'],
-  [Uint8Array, 'u32'],
-  [Uint16Array, 'u32'],
-  [Uint32Array, 'u32'],
-  [Float32Array, 'f32'],
+const TypeByArray = new Map<TypedArrayConstructor, TypeName>([
+  [Int8Array, TypeName.i32],
+  [Int16Array, TypeName.i32],
+  [Int32Array, TypeName.i32],
+  [Uint8Array, TypeName.u32],
+  [Uint16Array, TypeName.u32],
+  [Uint32Array, TypeName.u32],
+  [Float32Array, TypeName.f32],
 ]);
 const GpuShaderStage: Record<ShaderStage, number> = {
   vertex: GPUShaderStage.VERTEX,

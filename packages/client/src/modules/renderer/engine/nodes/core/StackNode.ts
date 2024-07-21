@@ -1,25 +1,28 @@
 import Node from './Node.ts';
 import { cond } from '../math/CondNode.js';
 import { nodeProxy, NodeStack, ShaderNode } from '../shadernode/ShaderNodes.js';
+import { NodeBuilder } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.js';
+import CondNode from 'three/examples/jsm/nodes/math/CondNode.js';
+import { TypeName } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.types.js';
 
 class StackNode extends Node {
   static type = 'StackNode';
+  outputNode: Node | null;
+  nodes: Node[];
+  parent: Node | null;
+  _currentCond: CondNode | null;
+  declare isStackNode: boolean;
 
-  constructor(parent = null) {
+  constructor(public parent: Node | null = null) {
     super();
 
     this.nodes = [];
     this.outputNode = null;
-
-    this.parent = parent;
-
     this._currentCond = null;
-
-    this.isStackNode = true;
   }
 
-  getNodeType(builder) {
-    return this.outputNode ? this.outputNode.getNodeType(builder) : 'void';
+  getNodeType(builder: NodeBuilder): TypeName {
+    return this.outputNode ? this.outputNode.getNodeType(builder) : TypeName.void;
   }
 
   add(node) {
@@ -65,6 +68,8 @@ class StackNode extends Node {
     return this.outputNode ? this.outputNode.build(builder, ...params) : super.build(builder, ...params);
   }
 }
+
+StackNode.prototype.isStackNode = true;
 
 export default StackNode;
 

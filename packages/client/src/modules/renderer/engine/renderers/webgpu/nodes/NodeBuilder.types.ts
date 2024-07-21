@@ -88,4 +88,10 @@ export enum TypeName {
   imat4 = 'imat4',
   umat4 = 'umat4',
   bmat4 = 'bmat4',
+  void = 'void',
+  int = 'int',
+  property = 'property',
+  sampler = 'sampler',
+  texture = 'texture',
+  cubeTexture = 'cubeTexture',
 }

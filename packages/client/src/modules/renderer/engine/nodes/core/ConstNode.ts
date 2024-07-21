@@ -1,12 +1,12 @@
 import InputNode from './InputNode.js';
-import { NodeType } from '@modules/renderer/engine/nodes/core/constants.js';
 import { NodeBuilder } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.js';
+import { TypeName } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.types.js';
 
 export class ConstNode<T = any> extends InputNode {
   declare isConstNode: boolean;
   static type = 'ConstNode';
 
-  constructor(value: T, nodeType: NodeType | null = null) {
+  constructor(value: T, nodeType: TypeName | null = null) {
     super(value, nodeType);
 
     this.isConstNode = true;

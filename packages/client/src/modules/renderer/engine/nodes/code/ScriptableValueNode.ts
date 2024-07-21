@@ -3,7 +3,7 @@ import { addNodeElement, f32, nodeProxy } from '../shadernode/ShaderNodes.js';
 import { EventDispatcher } from '@modules/renderer/engine/engine.js';
 import { NodeBuilder } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.js';
 
-import { NodeTypeOption } from '@modules/renderer/engine/nodes/core/constants.js';
+import { TypeName } from '@modules/renderer/engine/nodes/core/constants.js';
 
 class ScriptableValueNode extends Node {
   static type = 'ScriptableValueNode';
@@ -77,7 +77,7 @@ class ScriptableValueNode extends Node {
     return this._cache || value;
   }
 
-  getNodeType(builder: NodeBuilder): NodeTypeOption {
+  getNodeType(builder: NodeBuilder): TypeName {
     return this.value && this.value.isNode ? this.value.getNodeType(builder) : 'f32';
   }
 

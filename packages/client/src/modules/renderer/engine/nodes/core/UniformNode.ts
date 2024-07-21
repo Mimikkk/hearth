@@ -40,7 +40,7 @@ class UniformNode extends InputNode {
     let sharedNode = builder.hashNodes[hash];
 
     if (sharedNode === undefined) {
-      builder.setHashNode(this, hash);
+      builder.hashNodes[hash] = this;
 
       sharedNode = this;
     }
