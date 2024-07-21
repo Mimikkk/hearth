@@ -1,6 +1,7 @@
 import Node from './Node.ts';
 import { varying } from './VaryingNode.js';
 import { nodeObject } from '../shadernode/ShaderNodes.js';
+import { ShaderStage } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.types.js';
 
 class AttributeNode extends Node {
   static type = 'AttributeNode';
@@ -58,7 +59,7 @@ class AttributeNode extends Node {
 
       const nodeAttribute = builder.getAttribute(attributeName, attributeType);
 
-      if (builder.shaderStage === 'vertex') {
+      if (builder.shaderStage === ShaderStage.Vertex) {
         return builder.format(nodeAttribute.name, attributeType, nodeType);
       } else {
         const nodeVarying = varying(this);

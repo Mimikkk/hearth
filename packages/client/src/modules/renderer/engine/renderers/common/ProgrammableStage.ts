@@ -1,6 +1,6 @@
-let _id = 0;
+import { ShaderStage } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.types.js';
 
-export type StageType = 'compute' | 'vertex' | 'fragment';
+let _id = 0;
 
 export class ProgrammableStage {
   usedTimes: number = 0;
@@ -8,7 +8,7 @@ export class ProgrammableStage {
 
   constructor(
     public code: string,
-    public stage: StageType,
+    public stage: ShaderStage,
     public attributes: any = null,
   ) {
     this.id = _id++;

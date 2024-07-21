@@ -67,16 +67,7 @@ class ViewportNode extends Node {
   }
 
   generate(builder) {
-    if (this.scope === ViewportNode.COORDINATE) {
-      let coord = builder.useFragCoord();
-
-      // follow webgpu standards
-      const resolution = builder.getNodeProperties(viewportResolution).outputNode.build(builder);
-      coord = `${builder.getType('vec2')}( ${coord}.x, ${resolution}.y - ${coord}.y )`;
-
-      return coord;
-    }
-
+    if (this.scope === ViewportNode.COORDINATE) return builder.useFragCoord();
     return super.generate(builder);
   }
 }

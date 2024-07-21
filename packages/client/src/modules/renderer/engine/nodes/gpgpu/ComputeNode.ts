@@ -3,6 +3,7 @@ import { NodeUpdateType } from '../core/constants.ts';
 import { addNodeElement, nodeObject } from '../shadernode/ShaderNodes.js';
 import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 import { NodeBuilder } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.js';
+import { ShaderStage } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.types.js';
 
 class ComputeNode extends Node {
   static type = 'ComputeNode';
@@ -58,7 +59,7 @@ class ComputeNode extends Node {
   generate(builder: NodeBuilder) {
     const { shaderStage } = builder;
 
-    if (shaderStage === 'compute') {
+    if (shaderStage === ShaderStage.Compute) {
       const snippet = this.computeNode.build(builder, 'void');
 
       if (snippet !== '') {

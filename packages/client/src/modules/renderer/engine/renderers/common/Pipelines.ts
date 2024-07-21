@@ -1,16 +1,17 @@
 import DataMap from './DataMap.js';
 import RenderPipeline from './RenderPipeline.js';
 import ComputePipeline from './ComputePipeline.js';
-import ProgrammableStage, { StageType } from './ProgrammableStage.js';
+import ProgrammableStage from './ProgrammableStage.js';
 import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 import ComputeNode from '@modules/renderer/engine/nodes/gpgpu/ComputeNode.js';
 import Binding from '@modules/renderer/engine/renderers/common/Binding.js';
 import RenderObject from '@modules/renderer/engine/renderers/common/RenderObject.js';
 import Pipeline from '@modules/renderer/engine/renderers/common/Pipeline.js';
+import { ShaderStage } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.types.js';
 
 class Pipelines extends DataMap<any, any> {
   caches: Map<any, any>;
-  programs: Record<StageType, Map<string, ProgrammableStage>>;
+  programs: Record<ShaderStage, Map<string, ProgrammableStage>>;
 
   constructor(public renderer: Renderer) {
     super();
@@ -48,7 +49,7 @@ class Pipelines extends DataMap<any, any> {
 
         stageCompute = new ProgrammableStage(
           nodeBuilderState.computeShader!,
-          'compute',
+          ShaderStage.Compute,
           nodeBuilderState.nodeAttributes,
         );
         this.programs.compute.set(nodeBuilderState.computeShader!, stageCompute);
@@ -106,7 +107,7 @@ class Pipelines extends DataMap<any, any> {
         if (previousPipeline && previousPipeline.vertexProgram.usedTimes === 0)
           this._releaseProgram(previousPipeline.vertexProgram);
 
-        stageVertex = new ProgrammableStage(nodeBuilderState.vertexShader, 'vertex');
+        stageVertex = new ProgrammableStage(nodeBuilderState.vertexShader, ShaderStage.Vertex);
         this.programs.vertex.set(nodeBuilderState.vertexShader, stageVertex);
 
         this.renderer.backend.createProgram(stageVertex);
@@ -118,7 +119,7 @@ class Pipelines extends DataMap<any, any> {
         if (previousPipeline && previousPipeline.fragmentProgram.usedTimes === 0)
           this._releaseProgram(previousPipeline.fragmentProgram);
 
-        stageFragment = new ProgrammableStage(nodeBuilderState.fragmentShader, 'fragment');
+        stageFragment = new ProgrammableStage(nodeBuilderState.fragmentShader, ShaderStage.Fragment);
         this.programs.fragment.set(nodeBuilderState.fragmentShader, stageFragment);
 
         this.renderer.backend.createProgram(stageFragment);

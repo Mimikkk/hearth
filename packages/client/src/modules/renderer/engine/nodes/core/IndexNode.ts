@@ -1,6 +1,7 @@
 import Node from './Node.ts';
 import { varying } from './VaryingNode.js';
 import { nodeImmutable } from '../shadernode/ShaderNodes.js';
+import { ShaderStage } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.types.js';
 
 class IndexNode extends Node {
   static type = 'IndexNode';
@@ -22,14 +23,14 @@ class IndexNode extends Node {
     if (scope === IndexNode.VERTEX) {
       propertyName = builder.getVertexIndex();
     } else if (scope === IndexNode.INSTANCE) {
-      propertyName = builder.getInstanceIndex();
+      propertyName = builder.UseInstanceIndex();
     } else {
       throw new Error('engine.IndexNode: Unknown scope: ' + scope);
     }
 
     let output;
 
-    if (builder.shaderStage === 'vertex' || builder.shaderStage === 'compute') {
+    if (builder.shaderStage === ShaderStage.Vertex || builder.shaderStage === ShaderStage.Compute) {
       output = propertyName;
     } else {
       const nodeVarying = varying(this);

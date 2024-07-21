@@ -1,6 +1,7 @@
 import { Backend } from '../../Backend.js';
 import { GPUFilterModeType } from '../constants.js';
 import mipmapSource from './mipmap.wgsl?raw';
+import { ShaderStage } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.types.js';
 
 const names = {
   linear: 'mipmap-linear',
@@ -24,7 +25,7 @@ export class MipmapShader {
   vertexState(): GPUVertexState {
     return {
       module: this.shader,
-      entryPoint: 'vertex',
+      entryPoint: ShaderStage.Vertex,
     };
   }
 

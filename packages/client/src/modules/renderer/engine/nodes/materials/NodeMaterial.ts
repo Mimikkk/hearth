@@ -28,6 +28,7 @@ import { cameraLogDepth } from '../accessors/CameraNode.js';
 import { clipping, clippingAlpha } from '../accessors/ClippingNode.js';
 import { faceDirection } from '../display/FrontFacingNode.ts';
 import { NodeMaterials } from '@modules/renderer/engine/nodes/materials/NodeMaterialMap.js';
+import { ShaderStage } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.types.js';
 
 export class NodeMaterial extends ShaderMaterial {
   static type = 'NodeMaterial';
@@ -83,7 +84,7 @@ export class NodeMaterial extends ShaderMaterial {
 
     builder.stack.outputNode = this.vertexNode || this.setupPosition(builder);
 
-    builder.addFlow('vertex', builder.removeStack());
+    builder.addFlow(ShaderStage.Vertex, builder.removeStack());
 
     // < FRAGMENT STAGE >
 
@@ -124,7 +125,7 @@ export class NodeMaterial extends ShaderMaterial {
 
     builder.stack.outputNode = resultNode;
 
-    builder.addFlow('fragment', builder.removeStack());
+    builder.addFlow(ShaderStage.Fragment, builder.removeStack());
   }
 
   setupClipping(builder) {

@@ -63,17 +63,6 @@ class TextureNode extends UniformNode {
   }
 
   setupUV(builder, uvNode) {
-    const texture = this.value;
-
-    if (
-      builder.isFlipY() &&
-      (texture.isRenderTargetTexture === true ||
-        texture.isFramebufferTexture === true ||
-        texture.isDepthTexture === true)
-    ) {
-      uvNode = uvNode.setY(uvNode.y.oneMinus());
-    }
-
     return uvNode;
   }
 

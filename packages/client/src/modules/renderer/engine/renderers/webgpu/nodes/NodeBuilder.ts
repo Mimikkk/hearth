@@ -252,9 +252,9 @@ export class NodeBuilder {
 
   addChain(node) {
     /*
-		if ( this.chaining.indexOf( node ) !== - 1 ) {
+		if (this.chaining.indexOf(node) !== - 1) {
 
-			console.warn( 'Recursive node: ', node );
+			console.warn('Recursive node: ', node);
 
 		}
 		*/
@@ -291,7 +291,7 @@ export class NodeBuilder {
     if (type === 'uint') return value >= 0 ? `${Math.round(value)}u` : '0u';
     if (type === 'bool') return value ? 'true' : 'false';
     if (type === 'color')
-      return `${this.getType('vec3')}( ${formatAsFloat(value.r)}, ${formatAsFloat(value.g)}, ${formatAsFloat(value.b)} )`;
+      return `${this.getType('vec3')}(${formatAsFloat(value.r)}, ${formatAsFloat(value.g)}, ${formatAsFloat(value.b)})`;
 
     const typeLength = this.getTypeLength(type);
 
@@ -300,13 +300,13 @@ export class NodeBuilder {
     const generateConst = value => this.generateConst(componentType, value);
 
     if (typeLength === 2) {
-      return `${this.getType(type)}( ${generateConst(value.x)}, ${generateConst(value.y)} )`;
+      return `${this.getType(type)}(${generateConst(value.x)}, ${generateConst(value.y)})`;
     } else if (typeLength === 3) {
-      return `${this.getType(type)}( ${generateConst(value.x)}, ${generateConst(value.y)}, ${generateConst(value.z)} )`;
+      return `${this.getType(type)}(${generateConst(value.x)}, ${generateConst(value.y)}, ${generateConst(value.z)})`;
     } else if (typeLength === 4) {
-      return `${this.getType(type)}( ${generateConst(value.x)}, ${generateConst(value.y)}, ${generateConst(value.z)}, ${generateConst(value.w)} )`;
+      return `${this.getType(type)}(${generateConst(value.x)}, ${generateConst(value.y)}, ${generateConst(value.z)}, ${generateConst(value.w)})`;
     } else if (typeLength > 4 && value && (value.isMat3 || value.isMat4)) {
-      return `${this.getType(type)}( ${value.elements.map(generateConst).join(', ')} )`;
+      return `${this.getType(type)}(${value.elements.map(generateConst).join(', ')})`;
     } else if (typeLength > 4) {
       return `${this.getType(type)}()`;
     }
@@ -782,7 +782,7 @@ export class NodeBuilder {
     }
 
     if (fromTypeLength === toTypeLength) {
-      return `${this.getType(toType)}( ${snippet} )`;
+      return `${this.getType(toType)}(${snippet})`;
     }
 
     if (fromTypeLength > toTypeLength) {
@@ -796,25 +796,25 @@ export class NodeBuilder {
     if (toTypeLength === 4 && fromTypeLength > 1) {
       // toType is vec4-like
 
-      return `${this.getType(toType)}( ${this.format(snippet, fromType, 'vec3')}, 1.0 )`;
+      return `${this.getType(toType)}(${this.format(snippet, fromType, 'vec3')}, 1.0)`;
     }
 
     if (fromTypeLength === 2) {
       // fromType is vec2-like and toType is vec3-like
 
-      return `${this.getType(toType)}( ${this.format(snippet, fromType, 'vec2')}, 0.0 )`;
+      return `${this.getType(toType)}(${this.format(snippet, fromType, 'vec2')}, 0.0)`;
     }
 
     if (fromTypeLength === 1 && toTypeLength > 1 && fromType[0] !== toType[0]) {
       // fromType is float-like
 
       // convert a number value to vector type, e.g:
-      // vec3( 1u ) -> vec3( float( 1u ) )
+      // vec3(1u) -> vec3(float(1u))
 
-      snippet = `${this.getType(this.getComponentType(toType))}( ${snippet} )`;
+      snippet = `${this.getType(this.getComponentType(toType))}(${snippet})`;
     }
 
-    return `${this.getType(toType)}( ${snippet} )`; // fromType is float-like
+    return `${this.getType(toType)}(${snippet})`; // fromType is float-like
   }
 
   needsColorSpaceToLinear(texture) {
@@ -824,9 +824,9 @@ export class NodeBuilder {
   _generateTextureSample(texture, textureProperty, uvSnippet, depthSnippet, shaderStage = this.shaderStage) {
     if (shaderStage === ShaderStage.Fragment) {
       if (depthSnippet) {
-        return `textureSample( ${textureProperty}, ${textureProperty}_sampler, ${uvSnippet}, ${depthSnippet} )`;
+        return `textureSample(${textureProperty}, ${textureProperty}_sampler, ${uvSnippet}, ${depthSnippet})`;
       } else {
-        return `textureSample( ${textureProperty}, ${textureProperty}_sampler, ${uvSnippet} )`;
+        return `textureSample(${textureProperty}, ${textureProperty}_sampler, ${uvSnippet})`;
       }
     } else {
       return this.generateTextureLod(texture, textureProperty, uvSnippet);
@@ -835,7 +835,7 @@ export class NodeBuilder {
 
   _generateVideoSample(textureProperty, uvSnippet, shaderStage = this.shaderStage) {
     if (shaderStage === ShaderStage.Fragment) {
-      return `textureSampleBaseClampToEdge( ${textureProperty}, ${textureProperty}_sampler, vec2<f32>( ${uvSnippet}.x, 1.0 - ${uvSnippet}.y ) )`;
+      return `textureSampleBaseClampToEdge(${textureProperty}, ${textureProperty}_sampler, vec2<f32>(${uvSnippet}.x, 1.0 - ${uvSnippet}.y))`;
     } else {
       console.error(`WebGPURenderer: engine.VideoTexture does not support ${shaderStage} shader.`);
     }
@@ -850,7 +850,7 @@ export class NodeBuilder {
     shaderStage = this.shaderStage,
   ) {
     if (shaderStage === ShaderStage.Fragment && this.isUnfilterable(texture) === false) {
-      return `textureSampleLevel( ${textureProperty}, ${textureProperty}_sampler, ${uvSnippet}, ${levelSnippet} )`;
+      return `textureSampleLevel(${textureProperty}, ${textureProperty}_sampler, ${uvSnippet}, ${levelSnippet})`;
     } else {
       return this.generateTextureLod(texture, textureProperty, uvSnippet, levelSnippet);
     }
@@ -859,21 +859,21 @@ export class NodeBuilder {
   generateTextureLod(texture, textureProperty, uvSnippet, levelSnippet = '0') {
     this.polyfill('repeatWrapping');
 
-    const dimension = `textureDimensions( ${textureProperty}, 0 )`;
+    const dimension = `textureDimensions(${textureProperty}, 0)`;
 
-    return `textureLoad( ${textureProperty}, engine_repeatWrapping( ${uvSnippet}, ${dimension} ), i32( ${levelSnippet} ) )`;
+    return `textureLoad(${textureProperty}, repeatWrapping(${uvSnippet}, ${dimension}), i32(${levelSnippet}))`;
   }
 
   generateTextureLoad(texture, textureProperty, uvIndexSnippet, depthSnippet, levelSnippet = '0u') {
     if (depthSnippet) {
-      return `textureLoad( ${textureProperty}, ${uvIndexSnippet}, ${depthSnippet}, ${levelSnippet} )`;
+      return `textureLoad(${textureProperty}, ${uvIndexSnippet}, ${depthSnippet}, ${levelSnippet})`;
     } else {
-      return `textureLoad( ${textureProperty}, ${uvIndexSnippet}, ${levelSnippet} )`;
+      return `textureLoad(${textureProperty}, ${uvIndexSnippet}, ${levelSnippet})`;
     }
   }
 
   generateTextureStore(texture, textureProperty, uvIndexSnippet, valueSnippet) {
-    return `textureStore( ${textureProperty}, ${uvIndexSnippet}, ${valueSnippet} )`;
+    return `textureStore(${textureProperty}, ${uvIndexSnippet}, ${valueSnippet})`;
   }
 
   isUnfilterable(texture) {
@@ -903,7 +903,7 @@ export class NodeBuilder {
     shaderStage = this.shaderStage,
   ) {
     if (shaderStage === ShaderStage.Fragment) {
-      return `textureSampleCompare( ${textureProperty}, ${textureProperty}_sampler, ${uvSnippet}, ${compareSnippet} )`;
+      return `textureSampleCompare(${textureProperty}, ${textureProperty}_sampler, ${uvSnippet}, ${compareSnippet})`;
     } else {
       console.error(`WebGPURenderer: engine.DepthTexture.compareFunction() does not support ${shaderStage} shader.`);
     }
@@ -954,12 +954,6 @@ export class NodeBuilder {
     }
 
     return node.name;
-  }
-
-  getFunctionOperator(op: PolyfillOperatorName): PolyfillName | string {
-    const name = PolyfillOperatorMap[op] ?? null;
-    if (name) this.polyfill(name);
-    return name;
   }
 
   getUniformFromNode(node, type, shaderStage: ShaderStage, name: string | null = null) {
@@ -1051,7 +1045,7 @@ export class NodeBuilder {
       nodeData.uniformGPU = uniformGPU;
 
       if (shaderStage === ShaderStage.Vertex) {
-        this.bindingsOffset['fragment'] = bindings.length;
+        this.bindingsOffset[ShaderStage.Fragment] = bindings.length;
       }
     }
 
@@ -1096,28 +1090,24 @@ export class NodeBuilder {
     const parameters = [];
 
     for (const input of layout.inputs) {
-      parameters.push(input.name + ' : ' + this.getType(input.type));
+      parameters.push(input.name + ': ' + this.getType(input.type));
     }
 
     //
 
-    const code = `fn ${layout.name}( ${parameters.join(', ')} ) -> ${this.getType(layout.type)} {
+    //
+
+    return `fn ${layout.name}(${parameters.join(', ')}) -> ${this.getType(layout.type)} {
 ${flowData.vars}
 ${flowData.code}
 	return ${flowData.result};
 
 }`;
-
-    //
-
-    return code;
   }
 
-  getInstanceIndex(): string {
-    if (this.shaderStage === ShaderStage.Vertex) {
+  UseInstanceIndex(): string {
+    if (this.shaderStage === ShaderStage.Vertex)
       return this.useBuiltin('instance_index', 'instanceIndex', 'u32', BuiltinType.Attribute);
-    }
-
     return 'instanceIndex';
   }
 
@@ -1133,17 +1123,13 @@ ${flowData.code}
     return 'output.' + this.useBuiltin('frag_depth', 'depth', 'f32', BuiltinType.Output);
   }
 
-  isFlipY(): boolean {
-    return true;
-  }
-
   getBuiltins(shaderStage: BuiltinType) {
     const snippets = [];
     const builtins = this.builtins[shaderStage];
 
     if (builtins !== undefined) {
       for (const { name, property, type } of builtins.values()) {
-        snippets.push(`@builtin( ${name} ) ${property} : ${type}`);
+        snippets.push(`@builtin(${name}) ${property}: ${type}`);
       }
     }
 
@@ -1169,7 +1155,7 @@ ${flowData.code}
       const name = attribute.name;
       const type = this.getType(attribute.type);
 
-      snippets.push(`@location( ${index} ) ${name} : ${type}`);
+      snippets.push(`@location(${index}) ${name}: ${type}`);
     }
 
     return snippets.join(',\n\t');
@@ -1181,7 +1167,7 @@ ${flowData.code}
 
     for (let i = 0; i < members.length; i++) {
       const member = members[i];
-      snippets.push(`\t@location( ${i} ) m${i} : ${member}<f32>`);
+      snippets.push(`\t@location(${i}) m${i}: ${member}<f32>`);
     }
 
     return snippets.join(',\n');
@@ -1248,7 +1234,7 @@ ${flowData.code}
 
         snippets.push(`
           ${Snippet.struct({ name: Inbuilt.Struct.Output, members })}
-          var<private> output : ${Inbuilt.Struct.Output};
+          var<private> output: ${Inbuilt.Struct.Output};
           `);
       }
     }
@@ -1288,13 +1274,13 @@ ${flowData.code}
         const varying = varyings[index];
 
         if (varying.needsInterpolation) {
-          let attributesSnippet = `@location( ${index} )`;
+          let attributesSnippet = `@location(${index})`;
 
           if (/^(int|uint|ivec|uvec)/.test(varying.type)) {
-            attributesSnippet += ' @interpolate( flat )';
+            attributesSnippet += ' @interpolate(flat)';
           }
 
-          snippets.push(`${attributesSnippet} ${varying.name} : ${this.getType(varying.type)}`);
+          snippets.push(`${attributesSnippet} ${varying.name}: ${this.getType(varying.type)}`);
         } else if (shaderStage === ShaderStage.Vertex && vars.includes(varying) === false) {
           vars.push(varying);
         }
@@ -1332,11 +1318,9 @@ ${flowData.code}
           uniform.node.isStoreTextureNode !== true
         ) {
           if (texture.isDepthTexture === true && texture.compareFunction !== null) {
-            bindingSnippets.push(
-              `@binding( ${index++} ) @group( 0 ) var ${uniform.name}_sampler : sampler_comparison;`,
-            );
+            bindingSnippets.push(`@binding(${index++}) @group(0) var ${uniform.name}_sampler: sampler_comparison;`);
           } else {
-            bindingSnippets.push(`@binding( ${index++} ) @group( 0 ) var ${uniform.name}_sampler : sampler;`);
+            bindingSnippets.push(`@binding(${index++}) @group(0) var ${uniform.name}_sampler: sampler;`);
           }
         }
 
@@ -1358,7 +1342,7 @@ ${flowData.code}
           textureType = 'texture_2d<f32>';
         }
 
-        bindingSnippets.push(`@binding( ${index++} ) @group( 0 ) var ${uniform.name} : ${textureType};`);
+        bindingSnippets.push(`@binding(${index++}) @group(0) var ${uniform.name}: ${textureType};`);
       } else if (uniform.type === 'buffer' || uniform.type === 'storageBuffer') {
         const bufferNode = uniform.node;
         const bufferType = this.getType(bufferNode.bufferType);
@@ -1383,7 +1367,7 @@ ${flowData.code}
             snippets: [],
           });
 
-        group.snippets.push(`\t${uniform.name} : ${vectorType}`);
+        group.snippets.push(`\t${uniform.name}: ${vectorType}`);
       }
     }
 
@@ -1655,10 +1639,6 @@ const GpuShaderStage: Record<ShaderStage, number> = {
   compute: GPUShaderStage.COMPUTE,
 };
 
-const PolyfillOperatorMap: Record<string, PolyfillName> = {};
-
-type PolyfillOperatorName = keyof typeof PolyfillOperatorMap;
-
 const TypeMap = {
   float: 'f32',
   int: 'i32',
@@ -1702,16 +1682,16 @@ type TypeName = keyof typeof TypeMap;
 const MethodMap = {
   dFdx: 'dpdx',
   dFdy: '- dpdy',
-  mod_float: 'engine_mod_float',
-  mod_vec2: 'engine_mod_vec2',
-  mod_vec3: 'engine_mod_vec3',
-  mod_vec4: 'engine_mod_vec4',
-  equals_bool: 'engine_equals_bool',
-  equals_bvec2: 'engine_equals_bvec2',
-  equals_bvec3: 'engine_equals_bvec3',
-  equals_bvec4: 'engine_equals_bvec4',
-  lessThanEqual: 'engine_lessThanEqual',
-  greaterThan: 'engine_greaterThan',
+  mod_float: 'mod_float',
+  mod_vec2: 'mod_vec2',
+  mod_vec3: 'mod_vec3',
+  mod_vec4: 'mod_vec4',
+  equals_bool: 'equals_bool',
+  equals_bvec2: 'equals_bvec2',
+  equals_bvec3: 'equals_bvec3',
+  equals_bvec4: 'equals_bvec4',
+  lessThanEqual: 'lessThanEqual',
+  greaterThan: 'greaterThan',
   inversesqrt: 'inverseSqrt',
   bitcast: 'bitcast<f32>',
 };
@@ -1720,40 +1700,34 @@ type MethodName = keyof typeof MethodMap;
 
 const PolyfillMap = {
   lessThanEqual: new CodeNode(`
-fn engine_lessThanEqual( a : vec3<f32>, b : vec3<f32> ) -> vec3<bool> {
-
-	return vec3<bool>( a.x <= b.x, a.y <= b.y, a.z <= b.z );
-
+fn lessThanEqual(a: vec3<f32>, b: vec3<f32>) -> vec3<bool> {
+	return vec3<bool>(a.x <= b.x, a.y <= b.y, a.z <= b.z);
 }
 `),
   greaterThan: new CodeNode(`
-fn engine_greaterThan( a : vec3<f32>, b : vec3<f32> ) -> vec3<bool> {
-
-	return vec3<bool>( a.x > b.x, a.y > b.y, a.z > b.z );
-
+fn greaterThan(a: vec3<f32>, b: vec3<f32>) -> vec3<bool> {
+	return vec3<bool>(a.x > b.x, a.y > b.y, a.z > b.z);
 }
 `),
-  mod_float: new CodeNode('fn engine_mod_float( x : f32, y : f32 ) -> f32 { return x - y * floor( x / y ); }'),
-  mod_vec2: new CodeNode('fn engine_mod_vec2( x : vec2f, y : vec2f ) -> vec2f { return x - y * floor( x / y ); }'),
-  mod_vec3: new CodeNode('fn engine_mod_vec3( x : vec3f, y : vec3f ) -> vec3f { return x - y * floor( x / y ); }'),
-  mod_vec4: new CodeNode('fn engine_mod_vec4( x : vec4f, y : vec4f ) -> vec4f { return x - y * floor( x / y ); }'),
-  equals_bool: new CodeNode('fn engine_equals_bool( a : bool, b : bool ) -> bool { return a == b; }'),
+  mod_float: new CodeNode('fn mod_float(x: f32, y: f32) -> f32 { return x - y * floor(x / y); }'),
+  mod_vec2: new CodeNode('fn mod_vec2(x: vec2f, y: vec2f) -> vec2f { return x - y * floor(x / y); }'),
+  mod_vec3: new CodeNode('fn mod_vec3(x: vec3f, y: vec3f) -> vec3f { return x - y * floor(x / y); }'),
+  mod_vec4: new CodeNode('fn mod_vec4(x: vec4f, y: vec4f) -> vec4f { return x - y * floor(x / y); }'),
+  equals_bool: new CodeNode('fn equals_bool(a: bool, b: bool) -> bool { return a == b; }'),
   equals_bvec2: new CodeNode(
-    'fn engine_equals_bvec2( a : vec2f, b : vec2f ) -> vec2<bool> { return vec2<bool>( a.x == b.x, a.y == b.y ); }',
+    'fn equals_bvec2(a: vec2f, b: vec2f) -> vec2<bool> { return vec2<bool>(a.x == b.x, a.y == b.y); }',
   ),
   equals_bvec3: new CodeNode(
-    'fn engine_equals_bvec3( a : vec3f, b : vec3f ) -> vec3<bool> { return vec3<bool>( a.x == b.x, a.y == b.y, a.z == b.z ); }',
+    'fn equals_bvec3(a: vec3f, b: vec3f) -> vec3<bool> { return vec3<bool>(a.x == b.x, a.y == b.y, a.z == b.z); }',
   ),
   equals_bvec4: new CodeNode(
-    'fn engine_equals_bvec4( a : vec4f, b : vec4f ) -> vec4<bool> { return vec4<bool>( a.x == b.x, a.y == b.y, a.z == b.z, a.w == b.w ); }',
+    'fn equals_bvec4(a: vec4f, b: vec4f) -> vec4<bool> { return vec4<bool>(a.x == b.x, a.y == b.y, a.z == b.z, a.w == b.w); }',
   ),
   repeatWrapping: new CodeNode(`
-fn engine_repeatWrapping( uv : vec2<f32>, dimension : vec2<u32> ) -> vec2<u32> {
-
-	let uvScaled = vec2<u32>( uv * vec2<f32>( dimension ) );
-
-	return ( ( uvScaled % dimension ) + dimension ) % dimension;
-
+fn repeatWrapping(uv: vec2<f32>, dimension: vec2<u32>) -> vec2<u32> {
+  let uvScaled = vec2<u32>(uv * vec2<f32>(dimension));
+  
+  return ((uvScaled % dimension) + dimension) % dimension;
 }
 `),
 };

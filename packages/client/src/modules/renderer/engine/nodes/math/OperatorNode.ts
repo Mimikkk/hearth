@@ -112,7 +112,6 @@ class OperatorNode extends TempNode {
     const b = typeof bNode !== 'undefined' ? bNode.build(builder, typeB) : null;
 
     const outputLength = builder.getTypeLength(output);
-    const polyfill = builder.getFunctionOperator(op);
 
     if (output !== 'void') {
       if (op === '<' && outputLength > 1) {
@@ -125,17 +124,11 @@ class OperatorNode extends TempNode {
         return builder.format(`${builder.getMethod('greaterThanEqual')}(${a}, ${b})`, type, output);
       } else if (op === '!' || op === '~') {
         return builder.format(`(${op}${a})`, typeA, output);
-      } else if (polyfill) {
-        return builder.format(`${polyfill}(${a}, ${b})`, type, output);
       } else {
         return builder.format(`(${a} ${op} ${b})`, type, output);
       }
     } else if (typeA !== 'void') {
-      if (polyfill) {
-        return builder.format(`${polyfill}(${a}, ${b})`, type, output);
-      } else {
-        return builder.format(`${a} ${op} ${b}`, type, output);
-      }
+      return builder.format(`${a} ${op} ${b}`, type, output);
     }
   }
 }

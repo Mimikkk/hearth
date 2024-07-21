@@ -1,5 +1,6 @@
 import Node from './Node.ts';
 import { addNodeElement, nodeProxy } from '../shadernode/ShaderNodes.js';
+import { ShaderStage } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.types.js';
 
 class VaryingNode extends Node {
   static type = 'VaryingNode';
@@ -34,12 +35,12 @@ class VaryingNode extends Node {
     const nodeVarying = builder.getVaryingFromNode(this, name, type);
 
     // this property can be used to check if the varying can be optimized for a var
-    nodeVarying.needsInterpolation || (nodeVarying.needsInterpolation = builder.shaderStage === 'fragment');
+    nodeVarying.needsInterpolation || (nodeVarying.needsInterpolation = builder.shaderStage === ShaderStage.Fragment);
 
-    const propertyName = builder.getPropertyName(nodeVarying, 'vertex');
+    const propertyName = builder.getPropertyName(nodeVarying, ShaderStage.Vertex);
 
     // force node run in vertex stage
-    builder.flowNodeFromShaderStage('vertex', node, type, propertyName);
+    builder.flowNodeFromShaderStage(ShaderStage.Vertex, node, type, propertyName);
 
     return builder.getPropertyName(nodeVarying);
   }

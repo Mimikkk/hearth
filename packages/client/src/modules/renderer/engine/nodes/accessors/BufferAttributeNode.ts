@@ -2,6 +2,7 @@ import InputNode from '../core/InputNode.js';
 import { varying } from '../core/VaryingNode.js';
 import { addNodeElement, nodeObject } from '../shadernode/ShaderNodes.js';
 import { BufferUsage, InterleavedBuffer, InterleavedBufferAttribute } from '@modules/renderer/engine/engine.js';
+import { ShaderStage } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.types.js';
 
 class BufferAttributeNode extends InputNode {
   static type = 'BufferAttributeNode';
@@ -61,7 +62,7 @@ class BufferAttributeNode extends InputNode {
 
     let output = null;
 
-    if (builder.shaderStage === 'vertex' || builder.shaderStage === 'compute') {
+    if (builder.shaderStage === ShaderStage.Vertex || builder.shaderStage === ShaderStage.Compute) {
       this.name = propertyName;
 
       output = propertyName;
