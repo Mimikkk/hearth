@@ -37,7 +37,7 @@ class UniformNode extends InputNode {
 
     const hash = this.getUniformHash(builder);
 
-    let sharedNode = builder.getNodeFromHash(hash);
+    let sharedNode = builder.hashNodes[hash];
 
     if (sharedNode === undefined) {
       builder.setHashNode(this, hash);

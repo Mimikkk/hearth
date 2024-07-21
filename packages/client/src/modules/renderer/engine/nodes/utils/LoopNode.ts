@@ -130,7 +130,7 @@ class LoopNode extends Node {
         }
       }
 
-      declarationSnippet += builder.getVar(type, name) + ' = ' + startSnippet;
+      declarationSnippet += builder.codeVar(type, name) + ' = ' + startSnippet;
 
       conditionalSnippet += name + ' ' + condition + ' ' + endSnippet;
       updateSnippet += name + ' ' + update;
