@@ -1,6 +1,5 @@
 import DataMap from './DataMap.js';
-import Color4 from './Color4.js';
-import { Camera, Mesh, Scene, Side, SphereGeometry } from '@modules/renderer/engine/engine.js';
+import { Camera, Color, Mesh, Scene, Side, SphereGeometry } from '@modules/renderer/engine/engine.js';
 import {
   backgroundBlurriness,
   backgroundIntensity,
@@ -14,7 +13,7 @@ import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js'
 import RenderContext from '@modules/renderer/engine/renderers/common/RenderContext.js';
 import RenderList from '@modules/renderer/engine/renderers/common/RenderList.js';
 
-const _clearColor = new Color4(0, 0, 0, 1);
+const _clearColor = new Color(0, 0, 0, 1);
 
 class Background extends DataMap<any, any> {
   constructor(public renderer: Renderer) {

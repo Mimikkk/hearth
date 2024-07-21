@@ -14,7 +14,6 @@ import RenderLists from '@modules/renderer/engine/renderers/common/RenderLists.j
 import RenderContexts from '@modules/renderer/engine/renderers/common/RenderContexts.js';
 import Textures from '@modules/renderer/engine/renderers/common/Textures.js';
 import Background from '@modules/renderer/engine/renderers/common/Background.js';
-import Color4 from '@modules/renderer/engine/renderers/common/Color4.js';
 import { Scene } from '@modules/renderer/engine/scenes/Scene.js';
 import { Camera } from '@modules/renderer/engine/cameras/Camera.js';
 import ClippingContext from '@modules/renderer/engine/renderers/common/ClippingContext.js';
@@ -54,7 +53,7 @@ export class Renderer {
   _currentRenderContext: any;
   _opaqueSort: any;
   _transparentSort: any;
-  _clearColor: Color4;
+  _clearColor: Color;
   _clearDepth: number;
   _clearStencil: number;
   _renderTarget: any;
@@ -123,7 +122,7 @@ export class Renderer {
     this._currentRenderContext = null;
     this._opaqueSort = null;
     this._transparentSort = null;
-    this._clearColor = new Color4(0, 0, 0, this.parameters.alpha ? 0 : 1);
+    this._clearColor = new Color(0, 0, 0, this.parameters.alpha ? 0 : 1);
     this._clearDepth = 1;
     this._clearStencil = 0;
     this._renderTarget = null;
