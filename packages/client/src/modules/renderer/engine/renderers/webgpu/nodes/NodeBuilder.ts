@@ -105,10 +105,10 @@ export class NodeBuilder {
   cache: NodeCache;
   globalCache: NodeCache;
   flowsData: WeakMap<Node, any>;
-  shaderStage: ShaderStage | null;
-  buildStage: BuildStage | null;
+  shaderStage: ShaderStage;
+  buildStage: BuildStage;
   uniformGroups: Record<ShaderStage, Record<string, NodeUniformsGroup>>;
-  builtins: Record<ShaderStage, Map<string, { name: string; property: string; type: string }>>;
+  builtins: Record<BuiltinType, Map<string, { name: string; property: string; type: string }>>;
 
   constructor(
     public object: Object3D,
@@ -165,12 +165,18 @@ export class NodeBuilder {
 
     this.flowsData = new WeakMap();
 
-    this.shaderStage = null;
-    this.buildStage = null;
+    this.shaderStage = null!;
+    this.buildStage = null!;
 
     this.uniformGroups = { vertex: {}, compute: {}, fragment: {} };
 
-    this.builtins = {};
+    this.builtins = {
+      vertex: new Map(),
+      fragment: new Map(),
+      compute: new Map(),
+      attribute: new Map(),
+      output: new Map(),
+    };
   }
 
   createRenderTarget(width: number, height: number, options?: RenderTarget.Options) {
@@ -277,7 +283,7 @@ export class NodeBuilder {
     return this.hashNodes[hash];
   }
 
-  addFlow(shaderStage: ShaderStage | null, node) {
+  addFlow(shaderStage: ShaderStage, node) {
     this.flowNodes[shaderStage].push(node);
 
     return node;
@@ -1184,15 +1190,12 @@ export class NodeBuilder {
     );
   }
 
-  getBuiltin(name, property, type, shaderStage = this.shaderStage) {
-    const map = this.builtins[shaderStage] || (this.builtins[shaderStage] = new Map());
+  getBuiltin(name, property, type, builtin: BuiltinType) {
+    // console.log({ name, property, type, shaderStage });
+    const map = this.builtins[builtin] || (this.builtins[builtin] = new Map());
 
-    if (map.has(name) === false) {
-      map.set(name, {
-        name,
-        property,
-        type,
-      });
+    if (!map.has(name)) {
+      map.set(name, { name, property, type });
     }
 
     console.log(name, map);
@@ -1200,9 +1203,9 @@ export class NodeBuilder {
     return property;
   }
 
-  getVertexIndex() {
+  getVertexIndex(): string {
     if (this.shaderStage === 'vertex') {
-      return this.getBuiltin('vertex_index', 'vertexIndex', 'u32', 'attribute');
+      return this.getBuiltin('vertex_index', 'vertexIndex', 'u32', BuiltinType.Attribute);
     }
 
     return 'vertexIndex';
@@ -1232,31 +1235,31 @@ ${flowData.code}
     return code;
   }
 
-  getInstanceIndex() {
+  getInstanceIndex(): string {
     if (this.shaderStage === 'vertex') {
-      return this.getBuiltin('instance_index', 'instanceIndex', 'u32', 'attribute');
+      return this.getBuiltin('instance_index', 'instanceIndex', 'u32', BuiltinType.Attribute);
     }
 
     return 'instanceIndex';
   }
 
-  getFrontFacing() {
-    return this.getBuiltin('front_facing', 'isFront', 'bool');
+  getFrontFacing(): string {
+    return this.getBuiltin('front_facing', 'isFront', 'bool', BuiltinType.Fragment);
   }
 
-  getFragCoord() {
-    return this.getBuiltin('position', 'fragCoord', 'vec4<f32>') + '.xy';
+  getFragCoord(): string {
+    return this.getBuiltin('position', 'fragCoord', 'vec4<f32>', BuiltinType.Fragment) + '.xy';
   }
 
-  getFragDepth() {
-    return 'output.' + this.getBuiltin('frag_depth', 'depth', 'f32', 'output');
+  getFragDepth(): string {
+    return 'output.' + this.getBuiltin('frag_depth', 'depth', 'f32', BuiltinType.Output);
   }
 
-  isFlipY() {
+  isFlipY(): boolean {
     return false;
   }
 
-  getBuiltins(shaderStage) {
+  getBuiltins(shaderStage: BuiltinType) {
     const snippets = [];
     const builtins = this.builtins[shaderStage];
 
@@ -1273,11 +1276,11 @@ ${flowData.code}
     const snippets = [];
 
     if (shaderStage === 'compute') {
-      this.getBuiltin('global_invocation_id', 'id', 'vec3<u32>', 'attribute');
+      this.getBuiltin('global_invocation_id', 'id', 'vec3<u32>', BuiltinType.Attribute);
     }
 
     if (shaderStage === 'vertex' || shaderStage === 'compute') {
-      const builtins = this.getBuiltins('attribute');
+      const builtins = this.getBuiltins(BuiltinType.Attribute);
 
       if (builtins) snippets.push(builtins);
 
@@ -1346,7 +1349,7 @@ ${flowData.code}
     const snippets = [];
 
     if (shaderStage === 'vertex') {
-      this.getBuiltin('position', 'Vertex', 'vec4<f32>', 'vertex');
+      this.getBuiltin('position', 'Vertex', 'vec4<f32>', BuiltinType.Vertex);
     }
 
     if (shaderStage === 'vertex' || shaderStage === 'fragment') {
@@ -1514,7 +1517,7 @@ ${flowData.code}
             } else {
               let structSnippet = '\t@location(0) color: vec4<f32>';
 
-              const builtins = this.getBuiltins('output');
+              const builtins = this.getBuiltins(BuiltinType.Output);
 
               if (builtins) structSnippet += ',\n\t' + builtins;
 
@@ -1690,6 +1693,14 @@ export enum BuildStage {
   Construct = 'construct',
   Analyze = 'analyze',
   Generate = 'generate',
+}
+
+export enum BuiltinType {
+  Attribute = 'attribute',
+  Output = 'output',
+  Vertex = 'vertex',
+  Compute = 'compute',
+  Fragment = 'fragment',
 }
 
 const formatAsFloat = (value: number): string => value + (value % 1 ? '' : '.0');
