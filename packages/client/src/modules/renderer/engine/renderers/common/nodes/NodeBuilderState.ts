@@ -19,7 +19,10 @@ export class NodeBuilderState {
     const bindings = [];
 
     for (let binding of this.bindings) {
-      if (!binding.shared) binding = binding.clone();
+      if (binding.shared !== true) {
+        binding = binding.clone();
+      }
+
       bindings.push(binding);
     }
 

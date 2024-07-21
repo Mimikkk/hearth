@@ -4,7 +4,7 @@ import { addNodeElement, float, nodeProxy } from '../shadernode/ShaderNodes.js';
 import CodeNode from '@modules/renderer/engine/nodes/code/CodeNode.js';
 import { NodeBuilder } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.js';
 
-import { ONodeType } from '@modules/renderer/engine/nodes/core/constants.js';
+import { NodeTypeOption } from '@modules/renderer/engine/nodes/core/constants.js';
 
 class Resources extends Map {
   get<Fn extends (...args: any) => any>(
@@ -200,7 +200,7 @@ class ScriptableNode extends Node {
     }
   }
 
-  getNodeType(builder: NodeBuilder): ONodeType {
+  getNodeType(builder: NodeBuilder): NodeTypeOption {
     return this.getDefaultOutputNode().getNodeType(builder);
   }
 

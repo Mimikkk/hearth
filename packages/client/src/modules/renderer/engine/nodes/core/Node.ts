@@ -1,5 +1,5 @@
 import { EventDispatcher } from '@modules/renderer/engine/engine.js';
-import { ONodeType, NodeUpdateType } from './constants.ts';
+import { NodeTypeOption, NodeUpdateType } from './constants.ts';
 import { getCacheKey, getNodeChildren } from './NodeUtils.js';
 import { generateUuid } from '../../math/MathUtils.ts';
 import { NodeBuilder } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.js';
@@ -12,7 +12,7 @@ class Node {
   declare static type: any;
   declare isNode: true;
   eventDispatcher = new EventDispatcher<{ dispose: {} }>();
-  nodeType: ONodeType | null;
+  nodeType: NodeTypeOption | null;
   updateType: NodeUpdateType;
   updateBeforeType: NodeUpdateType;
   uuid: string;
@@ -21,7 +21,7 @@ class Node {
   _cacheKeyVersion: number;
   id: number;
 
-  constructor(nodeType: ONodeType | null = null) {
+  constructor(nodeType: NodeTypeOption | null = null) {
     this.nodeType = nodeType;
 
     this.updateType = NodeUpdateType.NONE;
@@ -106,7 +106,7 @@ class Node {
     return this.updateBeforeType;
   }
 
-  getNodeType(builder: NodeBuilder): ONodeType | null {
+  getNodeType(builder: NodeBuilder): NodeTypeOption | null {
     const nodeProperties = builder.getNodeProperties(this);
 
     if (nodeProperties.outputNode) {

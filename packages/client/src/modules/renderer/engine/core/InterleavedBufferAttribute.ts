@@ -202,7 +202,7 @@ export class InterleavedBufferAttribute<T extends TypedArray = any> {
 
   clone(data?: InterleavedBufferAttribute): this {
     if (data === undefined) {
-      console.info(
+      console.log(
         'engine.InterleavedBufferAttribute.clone(): Cloning an interleaved buffer attribute will de-interleave buffer data.',
       );
 

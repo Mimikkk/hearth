@@ -180,15 +180,15 @@ export class Nodes extends DataMap<any, any> {
     return nodeBuilderState;
   }
 
-  _createNodeBuilderState(builder: NodeBuilder) {
+  _createNodeBuilderState(nodeBuilder: NodeBuilder) {
     return new NodeBuilderState(
-      builder.vertexShader,
-      builder.fragmentShader,
-      builder.computeShader,
-      builder.getAttributesArray(),
-      builder.getBindings(),
-      builder.updateNodes,
-      builder.updateBeforeNodes,
+      nodeBuilder.vertexShader,
+      nodeBuilder.fragmentShader,
+      nodeBuilder.computeShader,
+      nodeBuilder.getAttributesArray(),
+      nodeBuilder.getBindings(),
+      nodeBuilder.updateNodes,
+      nodeBuilder.updateBeforeNodes,
     );
   }
 

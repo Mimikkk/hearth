@@ -3,7 +3,7 @@ import { addNodeElement, nodeArray, nodeObject, nodeObjects } from '../shadernod
 import FunctionNode from './FunctionNode.ts';
 import { NodeBuilder } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.js';
 
-import { ONodeType } from '@modules/renderer/engine/nodes/core/constants.js';
+import { NodeTypeOption } from '@modules/renderer/engine/nodes/core/constants.js';
 
 class FunctionCallNode extends TempNode {
   static type = 'FunctionCallNode';
@@ -15,7 +15,7 @@ class FunctionCallNode extends TempNode {
     super();
   }
 
-  getNodeType(builder: NodeBuilder): ONodeType {
+  getNodeType(builder: NodeBuilder): NodeTypeOption {
     return this.functionNode.getNodeType(builder);
   }
 
