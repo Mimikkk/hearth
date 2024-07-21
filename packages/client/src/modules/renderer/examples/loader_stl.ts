@@ -69,7 +69,6 @@ async function init() {
     mesh.castShadow = true;
     mesh.receiveShadow = true;
 
-    console.log(mesh);
     scene.add(mesh);
   });
 

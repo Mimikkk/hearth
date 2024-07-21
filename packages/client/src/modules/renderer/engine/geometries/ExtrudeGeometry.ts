@@ -138,7 +138,7 @@ export class ExtrudeGeometry extends BufferGeometry {
 
         splineTube = extrudePath.computeFrenetFrames(steps, false);
 
-        // console.log(splineTube, 'splineTube', splineTube.normals.length, 'steps', steps, 'extrudePts', extrudePts.length);
+        // console.info(splineTube, 'splineTube', splineTube.normals.length, 'steps', steps, 'extrudePts', extrudePts.length);
 
         binormal = new Vec3();
         normal = new Vec3();
@@ -280,12 +280,12 @@ export class ExtrudeGeometry extends BufferGeometry {
           }
 
           if (direction_eq) {
-            // console.log("Warning: lines are a straight sequence");
+            // console.info("Warning: lines are a straight sequence");
             v_trans_x = -v_prev_y;
             v_trans_y = v_prev_x;
             shrink_by = Math.sqrt(v_prev_lensq);
           } else {
-            // console.log("Warning: lines are a straight spike");
+            // console.info("Warning: lines are a straight spike");
             v_trans_x = v_prev_x;
             v_trans_y = v_prev_y;
             shrink_by = Math.sqrt(v_prev_lensq / 2);
@@ -302,7 +302,7 @@ export class ExtrudeGeometry extends BufferGeometry {
         if (k === il) k = 0;
 
         //  (j)---(i)---(k)
-        // console.log('i,j,k', i, j , k)
+        // console.info('i,j,k', i, j , k)
 
         contourMovements[i] = getBevelVec(contour[i], contour[j], contour[k]);
       }
@@ -516,7 +516,7 @@ export class ExtrudeGeometry extends BufferGeometry {
           let k = i - 1;
           if (k < 0) k = contour.length - 1;
 
-          //console.log('b', i,j, i-1, k,vertices.length);
+          //console.info('b', i,j, i-1, k,vertices.length);
 
           for (let s = 0, sl = steps + bevelSegments * 2; s < sl; s++) {
             const slen1 = vlen * s;
