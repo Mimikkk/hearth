@@ -186,7 +186,7 @@ export class Nodes extends DataMap<any, any> {
       nodeBuilder.fragmentShader,
       nodeBuilder.computeShader,
       nodeBuilder.getAttributesArray(),
-      nodeBuilder.getBindings(),
+      nodeBuilder.useBindings(),
       nodeBuilder.updateNodes,
       nodeBuilder.updateBeforeNodes,
     );

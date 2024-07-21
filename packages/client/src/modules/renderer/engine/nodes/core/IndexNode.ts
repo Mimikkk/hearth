@@ -21,7 +21,7 @@ class IndexNode extends Node {
     let propertyName;
 
     if (scope === IndexNode.VERTEX) {
-      propertyName = builder.getVertexIndex();
+      propertyName = builder.useVertexIndex();
     } else if (scope === IndexNode.INSTANCE) {
       propertyName = builder.UseInstanceIndex();
     } else {

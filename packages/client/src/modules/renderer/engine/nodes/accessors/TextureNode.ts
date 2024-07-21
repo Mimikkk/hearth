@@ -111,13 +111,13 @@ class TextureNode extends UniformNode {
     let snippet;
 
     if (levelSnippet) {
-      snippet = builder.generateTextureLevel(texture, textureProperty, uvSnippet, levelSnippet, depthSnippet);
+      snippet = builder.codeTextureLevel(texture, textureProperty, uvSnippet, levelSnippet, depthSnippet);
     } else if (compareSnippet) {
-      snippet = builder.generateTextureCompare(texture, textureProperty, uvSnippet, compareSnippet, depthSnippet);
+      snippet = builder.codeTextureCompare(texture, textureProperty, uvSnippet, compareSnippet, depthSnippet);
     } else if (this.sampler === false) {
-      snippet = builder.generateTextureLoad(texture, textureProperty, uvSnippet, depthSnippet);
+      snippet = builder.codeTextureLoad(texture, textureProperty, uvSnippet, depthSnippet);
     } else {
-      snippet = builder.generateTexture(texture, textureProperty, uvSnippet, depthSnippet);
+      snippet = builder.codeTexture(texture, textureProperty, uvSnippet, depthSnippet);
     }
 
     return snippet;
@@ -194,8 +194,6 @@ class TextureNode extends UniformNode {
   getSampler() {
     return this.sampler;
   }
-
-  // @TODO: Move to TSL
 
   uv(uvNode) {
     const textureNode = this.clone();

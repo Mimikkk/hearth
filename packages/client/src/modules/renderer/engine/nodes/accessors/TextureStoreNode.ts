@@ -44,7 +44,7 @@ class TextureStoreNode extends TextureNode {
     const uvSnippet = uvNode.build(builder, 'uvec2');
     const storeSnippet = storeNode.build(builder, 'vec4');
 
-    const snippet = builder.generateTextureStore(builder, textureProperty, uvSnippet, storeSnippet);
+    const snippet = builder.codeTextureStore(builder, textureProperty, uvSnippet, storeSnippet);
 
     builder.addLineFlowCode(snippet);
   }
