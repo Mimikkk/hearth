@@ -710,7 +710,7 @@ export class NodeBuilder {
     this.flow = flow;
     this.vars = {};
 
-    for (const buildStage of BuildStage.all) {
+    for (const buildStage of BuildStage.order) {
       this.setBuildStage(buildStage);
 
       flow.result = node.build(this, output);
@@ -812,14 +812,14 @@ export class NodeBuilder {
     // analyze()   -> stage 2: analyze nodes to possible optimization and validation
     // generate()  -> stage 3: generate shader
 
-    for (const buildStage of BuildStage.all) {
+    for (const buildStage of BuildStage.order) {
       this.setBuildStage(buildStage);
 
       if (this.context.vertex && this.context.vertex.isNode) {
         this.flowNodeFromShaderStage('vertex', this.context.vertex);
       }
 
-      for (const shaderStage of ShaderStage.all) {
+      for (const shaderStage of ShaderStage.order) {
         this.setShaderStage(shaderStage);
 
         const flowNodes = this.flowNodes[shaderStage];
