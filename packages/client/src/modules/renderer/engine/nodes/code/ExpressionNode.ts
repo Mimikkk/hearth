@@ -2,14 +2,14 @@ import Node from '../core/Node.ts';
 import { nodeProxy } from '../shadernode/ShaderNodes.js';
 import { NodeBuilder } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.js';
 
-import { NodeTypeOption } from '@modules/renderer/engine/nodes/core/constants.js';
+import { ONodeType } from '@modules/renderer/engine/nodes/core/constants.js';
 
 class ExpressionNode extends Node {
   static type = 'ExpressionNode';
 
   constructor(
     public snippet: string,
-    nodeType: NodeTypeOption = 'void',
+    nodeType: ONodeType = 'void',
   ) {
     super(nodeType);
   }

@@ -21,7 +21,7 @@ export enum NodeType {
   Mat4 = 'mat4',
 }
 
-export type NodeTypeOption =
+export type ONodeType =
   | 'bool'
   | 'int'
   | 'float'
