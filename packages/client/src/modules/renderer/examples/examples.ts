@@ -67,7 +67,6 @@ export const Example = {
   StorageBuffer: 'storage_buffer',
   Textures2dArray: 'textures_2d-array',
   TslEditor: 'tsl_editor',
-  TslTranspiler: 'tsl_transpiler',
   VideoPanorama: 'video_panorama',
   Primitives: 'primitives',
   Controls: {

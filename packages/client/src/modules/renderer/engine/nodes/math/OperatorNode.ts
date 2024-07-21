@@ -38,7 +38,7 @@ class OperatorNode extends TempNode {
       return typeA;
     } else if (op === '~' || op === '&' || op === '|' || op === '^' || op === '>>' || op === '<<') {
       return builder.getIntegerType(typeA);
-    } else if (op === '!' || op === '==' || op === '&&' || op === '||' || op === '^^') {
+    } else if (op === '!' || op === '==' || op === '&&' || op === '||') {
       return 'bool';
     } else if (op === '<' || op === '>' || op === '<=' || op === '>=') {
       const typeLength = output
@@ -156,7 +156,6 @@ export const greaterThanEqual = nodeProxy(OperatorNode, '>=');
 export const and = nodeProxy(OperatorNode, '&&');
 export const or = nodeProxy(OperatorNode, '||');
 export const not = nodeProxy(OperatorNode, '!');
-export const xor = nodeProxy(OperatorNode, '^^');
 export const bitAnd = nodeProxy(OperatorNode, '&');
 export const bitNot = nodeProxy(OperatorNode, '~');
 export const bitOr = nodeProxy(OperatorNode, '|');
@@ -178,7 +177,6 @@ addNodeElement('greaterThanEqual', greaterThanEqual);
 addNodeElement('and', and);
 addNodeElement('or', or);
 addNodeElement('not', not);
-addNodeElement('xor', xor);
 addNodeElement('bitAnd', bitAnd);
 addNodeElement('bitNot', bitNot);
 addNodeElement('bitOr', bitOr);

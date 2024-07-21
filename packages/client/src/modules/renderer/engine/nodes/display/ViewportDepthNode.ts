@@ -20,7 +20,7 @@ class ViewportDepthNode extends Node {
     const { scope } = this;
 
     if (scope === ViewportDepthNode.DEPTH_PIXEL) {
-      return builder.getFragDepth();
+      return builder.useFragDepth();
     }
 
     return super.generate(builder);

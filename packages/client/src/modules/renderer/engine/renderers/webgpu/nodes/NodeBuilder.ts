@@ -1073,7 +1073,7 @@ export class NodeBuilder {
     );
   }
 
-  getBuiltin(name: string, property: string, type: string, builtin: BuiltinType): string {
+  useBuiltin(name: string, property: string, type: string, builtin: BuiltinType): string {
     const map = this.builtins[builtin];
 
     if (!map.has(name)) map.set(name, { name, property, type });
@@ -1083,7 +1083,7 @@ export class NodeBuilder {
 
   getVertexIndex(): string {
     if (this.shaderStage === ShaderStage.Vertex) {
-      return this.getBuiltin('vertex_index', 'vertexIndex', 'u32', BuiltinType.Attribute);
+      return this.useBuiltin('vertex_index', 'vertexIndex', 'u32', BuiltinType.Attribute);
     }
 
     return 'vertexIndex';
@@ -1115,26 +1115,26 @@ ${flowData.code}
 
   getInstanceIndex(): string {
     if (this.shaderStage === ShaderStage.Vertex) {
-      return this.getBuiltin('instance_index', 'instanceIndex', 'u32', BuiltinType.Attribute);
+      return this.useBuiltin('instance_index', 'instanceIndex', 'u32', BuiltinType.Attribute);
     }
 
     return 'instanceIndex';
   }
 
-  getFrontFacing(): string {
-    return this.getBuiltin('front_facing', 'isFront', 'bool', BuiltinType.Fragment);
+  useFrontFacing(): string {
+    return this.useBuiltin('front_facing', 'isFront', 'bool', BuiltinType.Fragment);
   }
 
-  getFragCoord(): string {
-    return this.getBuiltin('position', 'fragCoord', 'vec4<f32>', BuiltinType.Fragment) + '.xy';
+  useFragCoord(): string {
+    return this.useBuiltin('position', 'fragCoord', 'vec4<f32>', BuiltinType.Fragment) + '.xy';
   }
 
-  getFragDepth(): string {
-    return 'output.' + this.getBuiltin('frag_depth', 'depth', 'f32', BuiltinType.Output);
+  useFragDepth(): string {
+    return 'output.' + this.useBuiltin('frag_depth', 'depth', 'f32', BuiltinType.Output);
   }
 
   isFlipY(): boolean {
-    return false;
+    return true;
   }
 
   getBuiltins(shaderStage: BuiltinType) {
@@ -1155,7 +1155,7 @@ ${flowData.code}
 
     const snippets = [];
     if (shaderStage === ShaderStage.Compute) {
-      this.getBuiltin('global_invocation_id', 'id', 'vec3<u32>', BuiltinType.Attribute);
+      this.useBuiltin('global_invocation_id', 'id', 'vec3<u32>', BuiltinType.Attribute);
     }
 
     const builtins = this.getBuiltins(BuiltinType.Attribute);
@@ -1277,7 +1277,7 @@ ${flowData.code}
     const snippets = [];
 
     if (shaderStage === ShaderStage.Vertex) {
-      this.getBuiltin('position', 'Vertex', 'vec4<f32>', BuiltinType.Vertex);
+      this.useBuiltin('position', 'Vertex', 'vec4<f32>', BuiltinType.Vertex);
     }
 
     if (shaderStage === ShaderStage.Vertex || shaderStage === ShaderStage.Fragment) {
@@ -1655,9 +1655,7 @@ const GpuShaderStage: Record<ShaderStage, number> = {
   compute: GPUShaderStage.COMPUTE,
 };
 
-const PolyfillOperatorMap: Record<string, PolyfillName> = {
-  '^^': 'engine_xor',
-};
+const PolyfillOperatorMap: Record<string, PolyfillName> = {};
 
 type PolyfillOperatorName = keyof typeof PolyfillOperatorMap;
 
@@ -1721,13 +1719,6 @@ const MethodMap = {
 type MethodName = keyof typeof MethodMap;
 
 const PolyfillMap = {
-  engine_xor: new CodeNode(`
-fn engine_xor( a : bool, b : bool ) -> bool {
-
-	return ( a || b ) && !( a && b );
-
-}
-`),
   lessThanEqual: new CodeNode(`
 fn engine_lessThanEqual( a : vec3<f32>, b : vec3<f32> ) -> vec3<bool> {
 

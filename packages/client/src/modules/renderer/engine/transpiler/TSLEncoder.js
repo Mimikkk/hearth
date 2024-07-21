@@ -16,7 +16,6 @@ const opLib = {
   '==': 'equal',
   '&&': 'and',
   '||': 'or',
-  '^^': 'xor',
   '&': 'bitAnd',
   '|': 'bitOr',
   '^': 'bitXor',
@@ -35,12 +34,12 @@ const opLib = {
 };
 
 const unaryLib = {
-  '+': '', // positive
+  '+': '',
   '-': 'negate',
   '~': 'bitNot',
   '!': 'not',
-  '++': 'increment', // incrementBefore
-  '--': 'decrement', // decrementBefore
+  '++': 'increment',
+  '--': 'decrement',
 };
 
 const isPrimitive = value => /^(true|false|-?\d)/.test(value);

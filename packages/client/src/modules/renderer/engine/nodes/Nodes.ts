@@ -143,7 +143,6 @@ export {
   and,
   or,
   not,
-  xor,
   bitAnd,
   bitNot,
   bitOr,

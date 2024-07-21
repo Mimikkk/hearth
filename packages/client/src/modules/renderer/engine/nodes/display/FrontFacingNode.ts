@@ -11,7 +11,7 @@ class FrontFacingNode extends Node {
   }
 
   generate(builder) {
-    return builder.getFrontFacing();
+    return builder.useFrontFacing();
   }
 }
 

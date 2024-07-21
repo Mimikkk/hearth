@@ -179,7 +179,6 @@ export const SideBarItems: AccordionItem[] = [
       { id: Example.SkinningPoints, title: 'Skinning Points' },
       { id: Example.Textures2dArray, title: 'Textures 2d Array' },
       { id: Example.TslEditor, title: 'Tsl Editor' },
-      { id: Example.TslTranspiler, title: 'Tsl Transpiler' },
       { id: Example.VideoPanorama, title: 'Video Panorama' },
     ],
   },
