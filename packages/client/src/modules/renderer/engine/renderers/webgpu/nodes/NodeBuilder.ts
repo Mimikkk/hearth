@@ -19,11 +19,13 @@ import { NodeSampledCubeTexture, NodeSampledTexture } from '../../common/nodes/N
 import NodeUniformBuffer from '../../common/nodes/NodeUniformBuffer.ts';
 import NodeStorageBuffer from '../../common/nodes/NodeStorageBuffer.ts';
 import {
+  buildStages,
   CodeNode,
   LightsNode,
   NodeMaterial,
   NodeStack,
   NodeUpdateType,
+  shaderStages,
   stack,
 } from '@modules/renderer/engine/nodes/Nodes.js';
 import { getFormat } from '../utils/BackendTextures.ts';
@@ -49,19 +51,14 @@ import {
   Vec4NodeUniform,
 } from '@modules/renderer/engine/renderers/common/nodes/NodeUniform.js';
 import { NodeMaterials } from '@modules/renderer/engine/nodes/materials/NodeMaterialMap.js';
-import {
-  type FeatureName,
-  FeatureSupportMap,
-} from '@modules/renderer/engine/renderers/webgpu/nodes/FeatureSupportMap.js';
-import type { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
-import type StackNode from '@modules/renderer/engine/nodes/core/StackNode.js';
-import type EnvironmentNode from '@modules/renderer/engine/nodes/lighting/EnvironmentNode.js';
-import type FogNode from '@modules/renderer/engine/nodes/fog/FogNode.js';
-import type ToneMappingNode from '@modules/renderer/engine/nodes/display/ToneMappingNode.js';
-import type ClippingContext from '@modules/renderer/engine/renderers/common/ClippingContext.js';
-import type { TypedArrayConstructor } from '@modules/renderer/engine/math/MathUtils.js';
-import type { ShaderNode } from 'three/examples/jsm/nodes/shadernode/ShaderNode.js';
-import { BuildStage, ShaderStage, BuiltinType } from '@modules/renderer/engine/renderers/webgpu/nodes/types.js';
+import { FeatureName, FeatureSupportMap } from '@modules/renderer/engine/renderers/webgpu/nodes/FeatureSupportMap.js';
+import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
+import StackNode from '@modules/renderer/engine/nodes/core/StackNode.js';
+import EnvironmentNode from '@modules/renderer/engine/nodes/lighting/EnvironmentNode.js';
+import FogNode from '@modules/renderer/engine/nodes/fog/FogNode.js';
+import ToneMappingNode from '@modules/renderer/engine/nodes/display/ToneMappingNode.js';
+import ClippingContext from '@modules/renderer/engine/renderers/common/ClippingContext.js';
+import { TypedArrayConstructor } from '@modules/renderer/engine/math/MathUtils.js';
 
 export class NodeBuilder {
   material: Material | null;
@@ -495,11 +492,9 @@ export class NodeBuilder {
     return lastStack;
   }
 
-  getDataFromNode(
-    node,
-    shaderStage: ShaderStage | null = this.shaderStage,
-    cache: NodeCache = node.isGlobal(this) ? this.globalCache : this.cache,
-  ) {
+  getDataFromNode(node, shaderStage: ShaderStage | null = this.shaderStage, cache = null) {
+    cache = cache === null ? (node.isGlobal(this) ? this.globalCache : this.cache) : cache;
+
     let nodeData = cache.getNodeData(node);
 
     if (nodeData === undefined) {
@@ -645,7 +640,7 @@ export class NodeBuilder {
     return this;
   }
 
-  getFlowData(node) {
+  getFlowData(node /*, shaderStage*/) {
     return this.flowsData.get(node);
   }
 
@@ -659,7 +654,7 @@ export class NodeBuilder {
     return flowData;
   }
 
-  buildFunctionNode(shaderNode: ShaderNode) {
+  buildFunctionNode(shaderNode) {
     const fn = new FunctionNode();
 
     const previous = this.currentFunctionNode;
@@ -673,7 +668,7 @@ export class NodeBuilder {
     return fn;
   }
 
-  flowShaderNode(shaderNode: ShaderNode) {
+  flowShaderNode(shaderNode) {
     const layout = shaderNode.layout;
 
     let inputs;
@@ -711,19 +706,13 @@ export class NodeBuilder {
 
     const flow = {
       code: '',
-      result: '',
-      vars: {},
-    } as {
-      code: string;
-      result: string;
-      vars: Record<string, NodeVar>;
     };
 
     this.flow = flow;
-    this.vars = { vertex: [], compute: [], fragment: [] };
+    this.vars = {};
 
-    for (const stage of BuildStage.all) {
-      this.buildStage = stage;
+    for (const buildStage of buildStages) {
+      this.setBuildStage(buildStage);
 
       flow.result = node.build(this, output);
     }
@@ -732,7 +721,7 @@ export class NodeBuilder {
 
     this.flow = previousFlow;
     this.vars = previousVars;
-    this.buildStage = previousBuildStage;
+    this.setBuildStage(previousBuildStage);
 
     return flow;
   }
@@ -756,7 +745,7 @@ export class NodeBuilder {
   flowNodeFromShaderStage(shaderStage, node, output = null, propertyName = null) {
     const previousShaderStage = this.shaderStage;
 
-    this.shaderStage = shaderStage;
+    this.setShaderStage(shaderStage);
 
     const flowData = this.flowChildNode(node, output);
 
@@ -766,7 +755,7 @@ export class NodeBuilder {
 
     this.flowCode[shaderStage] = this.flowCode[shaderStage] + flowData.code;
 
-    this.shaderStage = previousShaderStage;
+    this.setShaderStage(previousShaderStage);
 
     return flowData;
   }
@@ -793,6 +782,22 @@ export class NodeBuilder {
     return this.vertexShader + this.fragmentShader + this.computeShader;
   }
 
+  setShaderStage(shaderStage) {
+    this.shaderStage = shaderStage;
+  }
+
+  getShaderStage() {
+    return this.shaderStage;
+  }
+
+  setBuildStage(buildStage) {
+    this.buildStage = buildStage;
+  }
+
+  getBuildStage() {
+    return this.buildStage;
+  }
+
   build(convertMaterial = true) {
     const { object, material } = this;
 
@@ -800,7 +805,7 @@ export class NodeBuilder {
       if (material !== null) {
         NodeMaterial.fromMaterial(material).build(this);
       } else {
-        this.addFlow(ShaderStage.Compute, object);
+        this.addFlow('compute', object);
       }
     }
 
@@ -808,15 +813,15 @@ export class NodeBuilder {
     // analyze()   -> stage 2: analyze nodes to possible optimization and validation
     // generate()  -> stage 3: generate shader
 
-    for (const buildStage of BuildStage.all) {
-      this.buildStage = buildStage;
+    for (const buildStage of buildStages) {
+      this.setBuildStage(buildStage);
 
       if (this.context.vertex && this.context.vertex.isNode) {
         this.flowNodeFromShaderStage('vertex', this.context.vertex);
       }
 
-      for (const shaderStage of ShaderStage.all) {
-        this.shaderStage = shaderStage;
+      for (const shaderStage of shaderStages) {
+        this.setShaderStage(shaderStage);
 
         const flowNodes = this.flowNodes[shaderStage];
 
@@ -830,8 +835,8 @@ export class NodeBuilder {
       }
     }
 
-    this.buildStage = null;
-    this.shaderStage = null;
+    this.setBuildStage(null);
+    this.setShaderStage(null);
 
     // stage 4: build code for a specific output
 
@@ -1079,19 +1084,27 @@ export class NodeBuilder {
   }
 
   getUniformFromNode(node, type, shaderStage: ShaderStage, name: string | null = null) {
+    const getUniformFromNode = (node, type, shaderStage = this.shaderStage, name = null) => {
+      const nodeData = this.getDataFromNode(node, shaderStage, this.globalCache);
+
+      let nodeUniform = nodeData.uniform;
+
+      if (nodeUniform === undefined) {
+        const index = this.uniforms.index++;
+
+        nodeUniform = new NodeUniform(name || 'nodeUniform' + index, type, node);
+
+        this.uniforms[shaderStage].push(nodeUniform);
+
+        nodeData.uniform = nodeUniform;
+      }
+
+      return nodeUniform;
+    };
+
+    const uniformNode = getUniformFromNode(node, type, shaderStage, name);
+
     const nodeData = this.getDataFromNode(node, shaderStage, this.globalCache);
-
-    let uniformNode = nodeData.uniform;
-
-    if (uniformNode === undefined) {
-      const index = this.uniforms.index++;
-
-      uniformNode = new NodeUniform(name || 'nodeUniform' + index, type, node);
-
-      this.uniforms[shaderStage].push(uniformNode);
-
-      nodeData.uniform = uniformNode;
-    }
 
     if (nodeData.uniformGPU === undefined) {
       let uniformGPU;
@@ -1668,6 +1681,26 @@ ${vars}
 @binding( ${binding} ) @group( ${group} )
 var<${access}> ${name} : ${structName};`;
   }
+}
+
+export enum ShaderStage {
+  Vertex = 'vertex',
+  Fragment = 'fragment',
+  Compute = 'compute',
+}
+
+export enum BuildStage {
+  Construct = 'construct',
+  Analyze = 'analyze',
+  Generate = 'generate',
+}
+
+export enum BuiltinType {
+  Attribute = 'attribute',
+  Output = 'output',
+  Vertex = 'vertex',
+  Compute = 'compute',
+  Fragment = 'fragment',
 }
 
 const formatAsFloat = (value: number): string => value + (value % 1 ? '' : '.0');
