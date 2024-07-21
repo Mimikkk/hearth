@@ -13,7 +13,7 @@ import {
   timerDelta,
   timerLocal,
   tslFn,
-  uint,
+  u32,
   uv,
   vec2,
 } from '@modules/renderer/engine/nodes/Nodes.js';
@@ -98,7 +98,7 @@ async function init() {
 
   const timer = timerLocal();
 
-  const randUint = () => uint(Math.random() * 0xffffff);
+  const randUint = () => u32(Math.random() * 0xffffff);
 
   const computeInit = tslFn(() => {
     const position = positionBuffer.element(instanceIndex);

@@ -1,4 +1,4 @@
-import { float, int, NodeStack, tslFn, vec2, vec3, vec4 } from '../shadernode/ShaderNodes.js';
+import { float, i32, NodeStack, tslFn, vec2, vec3, vec4 } from '../shadernode/ShaderNodes.js';
 import { abs, all, clamp, cos, cross, exp2, floor, fract, log2, max, mix, normalize, sin } from '../math/MathNode.js';
 import { mul } from '../math/OperatorNode.js';
 import { cond } from '../math/CondNode.js';
@@ -236,7 +236,7 @@ export const blur = tslFn(
 
     const gl_FragColor = vec3().toVar();
     gl_FragColor.addAssign(
-      weights.element(int(0)).mul(
+      weights.element(i32(0)).mul(
         getSample({
           theta: 0.0,
           axis,
@@ -250,7 +250,7 @@ export const blur = tslFn(
       ),
     );
 
-    loop({ start: int(1), end: n }, ({ i }) => {
+    loop({ start: i32(1), end: n }, ({ i }) => {
       NodeStack.if(i.greaterThanEqual(samples), () => {
         Break();
       });

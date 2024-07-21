@@ -106,7 +106,7 @@ class TSLEncoder {
 
       code = node.property;
     } else if (node.isNumber) {
-      if (node.type === 'int' || node.type === 'uint') {
+      if (node.type === 'i32' || node.type === 'u32') {
         code = node.type + '( ' + node.value + ' )';
 
         this.addImport(node.type);
@@ -291,7 +291,7 @@ ${this.tab}} )`;
     const update = node.afterthought.type;
 
     const nameParam = name !== 'i' ? `, name: '${name}'` : '';
-    const typeParam = type !== 'int' ? `, type: '${type}'` : '';
+    const typeParam = type !== 'i32' ? `, type: '${type}'` : '';
     const conditionParam = condition !== '<' ? `, condition: '${condition}'` : '';
     const updateParam = update !== '++' ? `, update: '${update}'` : '';
 

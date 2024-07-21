@@ -104,7 +104,7 @@ export function getValueFromType(type, ...params) {
     return new Mat4().set(...params);
   } else if (type === 'bool') {
     return params[0] || false;
-  } else if (type === 'float' || type === 'int' || type === 'uint') {
+  } else if (type === 'float' || type === 'i32' || type === 'u32') {
     return params[0] || 0;
   } else if (type === 'string') {
     return params[0] || '';

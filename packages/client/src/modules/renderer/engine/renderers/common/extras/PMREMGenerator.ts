@@ -572,9 +572,9 @@ function _getBlurShader(lodMax, width, height) {
   const dTheta = uniform(0);
   const n = float(MAX_SAMPLES);
   const latitudinal = uniform(0); // false, bool
-  const samples = uniform(1); // int
+  const samples = uniform(1); // i32
   const envMap = texture(null);
-  const mipInt = uniform(0); // int
+  const mipInt = uniform(0); // i32
   const CUBEUV_TEXEL_WIDTH = float(1 / width);
   const CUBEUV_TEXEL_HEIGHT = float(1 / height);
   const CUBEUV_MAX_MIP = float(lodMax);

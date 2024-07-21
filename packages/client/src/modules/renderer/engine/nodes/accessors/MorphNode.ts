@@ -1,6 +1,6 @@
 import Node from '../core/Node.js';
 import { NodeUpdateType } from '../core/constants.js';
-import { int, ivec2, nodeProxy, tslFn } from '../shadernode/ShaderNodes.js';
+import { i32, ivec2, nodeProxy, tslFn } from '../shadernode/ShaderNodes.js';
 import { uniform } from '../core/UniformNode.js';
 import { reference } from './ReferenceNode.js';
 import { positionLocal } from './PositionNode.js';
@@ -14,7 +14,7 @@ const morphTextures = new WeakMap();
 const morphVec4 = new Vec4();
 
 const getMorph = tslFn(({ bufferMap, influence, stride, width, depth, offset }) => {
-  const texelIndex = int(vertexIndex).mul(stride).add(offset);
+  const texelIndex = i32(vertexIndex).mul(stride).add(offset);
 
   const y = texelIndex.div(width);
   const x = texelIndex.sub(y.mul(width));
@@ -162,7 +162,7 @@ class MorphNode extends Node {
     if (hasMorphPosition === true) positionLocal.mulAssign(this.morphBaseInfluence);
     if (hasMorphNormals === true) normalLocal.mulAssign(this.morphBaseInfluence);
 
-    const width = int(size.width);
+    const width = i32(size.width);
 
     loop(morphTargetsCount, ({ i }) => {
       const influence = reference('morphTargetInfluences', 'float').element(i);
@@ -175,7 +175,7 @@ class MorphNode extends Node {
             stride,
             width,
             depth: i,
-            offset: int(0),
+            offset: i32(0),
           }),
         );
       }
@@ -188,7 +188,7 @@ class MorphNode extends Node {
             stride,
             width,
             depth: i,
-            offset: int(1),
+            offset: i32(1),
           }),
         );
       }

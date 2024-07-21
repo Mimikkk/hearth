@@ -18,7 +18,7 @@ class ArrayElementNode extends Node {
 
   generate(builder) {
     const nodeSnippet = this.node.build(builder);
-    const indexSnippet = this.indexNode.build(builder, 'uint');
+    const indexSnippet = this.indexNode.build(builder, 'u32');
 
     return `${nodeSnippet}[ ${indexSnippet} ]`;
   }

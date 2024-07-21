@@ -64,7 +64,7 @@ export const handlers = {
       } else if (/^\d+$/.test(prop) === true) {
         // accessing array
 
-        return ShaderNodeObject(new ArrayElementNode(nodeObj, new ConstNode(Number(prop), 'uint')));
+        return ShaderNodeObject(new ArrayElementNode(nodeObj, new ConstNode(Number(prop), 'u32')));
       }
     }
 

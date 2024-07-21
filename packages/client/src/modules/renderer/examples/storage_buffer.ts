@@ -6,7 +6,7 @@ import {
   NodeStack,
   storageObject,
   tslFn,
-  uint,
+  u32,
   uv,
   vec3,
 } from '@modules/renderer/engine/nodes/Nodes.js';
@@ -57,7 +57,7 @@ async function init() {
 
   const computeInvertOrder = tslFn(() => {
     for (let i = 0; i < type.length; i++) {
-      const invertIndex = arrayBufferNodes[i].element(uint(size).sub(instanceIndex));
+      const invertIndex = arrayBufferNodes[i].element(u32(size).sub(instanceIndex));
       arrayBufferNodes[i].element(instanceIndex).assign(invertIndex);
     }
   });
@@ -71,10 +71,10 @@ async function init() {
   const material = new MeshBasicNodeMaterial({ color: 0x00ff00 });
 
   material.colorNode = tslFn(() => {
-    const index = uint(uv().x.mul(size).floor()).toVar();
+    const index = u32(uv().x.mul(size).floor()).toVar();
 
     NodeStack.if(index.greaterThanEqual(size), () => {
-      index.assign(uint(size).sub(1));
+      index.assign(u32(size).sub(1));
     });
 
     const color = vec3(0, 0, 0).toVar();

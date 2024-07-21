@@ -7,7 +7,7 @@ class IndexNode extends Node {
   static type = 'IndexNode';
 
   constructor(scope) {
-    super('uint');
+    super('u32');
 
     this.scope = scope;
 

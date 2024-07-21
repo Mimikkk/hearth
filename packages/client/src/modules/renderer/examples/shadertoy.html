@@ -111,12 +111,12 @@
     return mix(fade1, fade2, fy);
   }
 
-  float pnoise(vec2 co, float freq, int steps, float persistence)
+  float pnoise(vec2 co, float freq, i32 steps, float persistence)
   {
     float value = 0.0;
     float ampl = 1.0;
     float sum = 0.0;
-    for (int i=0; i<steps; i++)
+    for (i32 i=0; i<steps; i++)
     {
       sum += ampl;
       value += noise(co, freq) * ampl;

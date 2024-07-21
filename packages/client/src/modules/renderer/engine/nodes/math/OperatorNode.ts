@@ -90,7 +90,7 @@ class OperatorNode extends TempNode {
         }
       } else if (op === '>>' || op === '<<') {
         typeA = type;
-        typeB = builder.changeComponentType(typeB, 'uint');
+        typeB = builder.changeComponentType(typeB, 'u32');
       } else if (builder.isMatrix(typeA) && builder.isVector(typeB)) {
         // matrix x vector
 

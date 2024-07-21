@@ -9,7 +9,7 @@ export const vectorComponents = ['x', 'y', 'z', 'w'] as const;
 
 export enum NodeType {
   BOOLEAN = 'bool',
-  INTEGER = 'int',
+  INTEGER = 'i32',
   FLOAT = 'float',
   Vec2 = 'vec2',
   Vec3 = 'vec3',
@@ -21,7 +21,7 @@ export enum NodeType {
 
 export type NodeTypeOption =
   | 'bool'
-  | 'int'
+  | 'i32'
   | 'float'
   | 'vec2'
   | 'vec3'
@@ -33,9 +33,9 @@ export type NodeTypeOption =
   | 'code'
   /* NodeUtis.getValueType */
   | 'color'
-  | 'uint'
+  | 'u32'
   /* NodeBuilder.getComponentType */
-  | 'int'
+  | 'i32'
   | 'void'
   | 'property'
   | 'sampler'

@@ -30,7 +30,7 @@ class LoopNode extends Node {
       const param = this.params[i];
 
       const name = (param.isNode !== true && param.name) || this.getVarName(i);
-      const type = (param.isNode !== true && param.type) || 'int';
+      const type = (param.isNode !== true && param.type) || 'i32';
 
       inputs[name] = expression(name, type);
     }
@@ -72,13 +72,13 @@ class LoopNode extends Node {
         update = null;
 
       if (param.isNode) {
-        type = 'int';
+        type = 'i32';
         name = this.getVarName(i);
         start = '0';
         end = param.build(builder, type);
         condition = '<';
       } else {
-        type = param.type || 'int';
+        type = param.type || 'i32';
         name = param.name || this.getVarName(i);
         start = param.start;
         end = param.end;
@@ -121,7 +121,7 @@ class LoopNode extends Node {
       let updateSnippet = '';
 
       if (!update) {
-        if (type === 'int' || type === 'uint') {
+        if (type === 'i32' || type === 'u32') {
           if (condition.includes('<')) update = '++';
           else update = '--';
         } else {
@@ -154,7 +154,7 @@ class LoopNode extends Node {
 
 export default LoopNode;
 
-export const loop = (...params) => nodeObject(new LoopNode(nodeArray(params, 'int'))).append();
+export const loop = (...params) => nodeObject(new LoopNode(nodeArray(params, 'i32'))).append();
 export const Continue = () => expression('continue').append();
 export const Break = () => expression('break').append();
 

@@ -278,7 +278,7 @@ export class NodeBuilder {
 
   generateConst(type, value = null) {
     if (value === null) {
-      if (type === 'float' || type === 'int' || type === 'uint') value = 0;
+      if (type === 'float' || type === 'i32' || type === 'u32') value = 0;
       else if (type === 'bool') value = false;
       else if (type === 'color') value = new Color();
       else if (type === 'vec2') value = new Vec2();
@@ -287,8 +287,8 @@ export class NodeBuilder {
     }
 
     if (type === 'float') return formatAsFloat(value);
-    if (type === 'int') return `${Math.round(value)}`;
-    if (type === 'uint') return value >= 0 ? `${Math.round(value)}u` : '0u';
+    if (type === 'i32') return `${Math.round(value)}`;
+    if (type === 'u32') return value >= 0 ? `${Math.round(value)}u` : '0u';
     if (type === 'bool') return value ? 'true' : 'false';
     if (type === 'color')
       return `${this.getType('vec3')}(${formatAsFloat(value.r)}, ${formatAsFloat(value.g)}, ${formatAsFloat(value.b)})`;
@@ -349,15 +349,15 @@ export class NodeBuilder {
   getComponentType(type) {
     type = this.getVectorType(type);
 
-    if (type === 'float' || type === 'bool' || type === 'int' || type === 'uint') return type;
+    if (type === 'float' || type === 'bool' || type === 'i32' || type === 'u32') return type;
 
     const componentType = /(b|i|u|)(vec|mat)([2-4])/.exec(type);
 
     if (componentType === null) return null;
 
     if (componentType[1] === 'b') return 'bool';
-    if (componentType[1] === 'i') return 'int';
-    if (componentType[1] === 'u') return 'uint';
+    if (componentType[1] === 'i') return 'i32';
+    if (componentType[1] === 'u') return 'u32';
 
     return 'float';
   }
@@ -405,7 +405,7 @@ export class NodeBuilder {
     const vecNum = /vec([2-4])/.exec(vecType);
 
     if (vecNum !== null) return Number(vecNum[1]);
-    if (vecType === 'float' || vecType === 'bool' || vecType === 'int' || vecType === 'uint') return 1;
+    if (vecType === 'float' || vecType === 'bool' || vecType === 'i32' || vecType === 'u32') return 1;
     if (/mat2/.test(type) === true) return 4;
     if (/mat3/.test(type) === true) return 9;
     if (/mat4/.test(type) === true) return 16;
@@ -424,9 +424,9 @@ export class NodeBuilder {
   getIntegerType(type) {
     const componentType = this.getComponentType(type);
 
-    if (componentType === 'int' || componentType === 'uint') return type;
+    if (componentType === 'i32' || componentType === 'u32') return type;
 
-    return this.changeComponentType(type, 'int');
+    return this.changeComponentType(type, 'i32');
   }
 
   addStack() {
@@ -1276,7 +1276,7 @@ ${flowData.code}
         if (varying.needsInterpolation) {
           let attributesSnippet = `@location(${index})`;
 
-          if (/^(int|uint|ivec|uvec)/.test(varying.type)) {
+          if (/^(i32|u32|ivec|uvec)/.test(varying.type)) {
             attributesSnippet += ' @interpolate(flat)';
           }
 
@@ -1625,12 +1625,12 @@ const TypeByLength = new Map<number, string>([
   [16, 'mat4'],
 ]);
 const TypeByArray = new Map<TypedArrayConstructor, string>([
-  [Int8Array, 'int'],
-  [Int16Array, 'int'],
-  [Int32Array, 'int'],
-  [Uint8Array, 'uint'],
-  [Uint16Array, 'uint'],
-  [Uint32Array, 'uint'],
+  [Int8Array, 'i32'],
+  [Int16Array, 'i32'],
+  [Int32Array, 'i32'],
+  [Uint8Array, 'u32'],
+  [Uint16Array, 'u32'],
+  [Uint32Array, 'u32'],
   [Float32Array, 'float'],
 ]);
 const GpuShaderStage: Record<ShaderStage, number> = {
@@ -1641,8 +1641,8 @@ const GpuShaderStage: Record<ShaderStage, number> = {
 
 const TypeMap = {
   float: 'f32',
-  int: 'i32',
-  uint: 'u32',
+  i32: 'i32',
+  u32: 'u32',
   bool: 'bool',
   color: 'vec3<f32>',
 

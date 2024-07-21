@@ -16,7 +16,7 @@ const createConvertType = (type: string, cacheMap: Map<any, any> = null) => {
   return (...params) => {
     if (
       params.length === 0 ||
-      (!['bool', 'float', 'int', 'uint'].includes(type) && params.every(param => typeof param !== 'object'))
+      (!['bool', 'float', 'i32', 'u32'].includes(type) && params.every(param => typeof param !== 'object'))
     ) {
       params = [getValueFromType(type, ...params)];
     }
@@ -42,8 +42,8 @@ const createConvertType = (type: string, cacheMap: Map<any, any> = null) => {
 
 export const color = createConvertType('color');
 export const float = createConvertType('float', floatMap);
-export const int = createConvertType('int', sintMap);
-export const uint = createConvertType('uint', uintMap);
+export const i32 = createConvertType('i32', sintMap);
+export const u32 = createConvertType('u32', uintMap);
 export const bool = createConvertType('bool', boolMap);
 export const vec2 = createConvertType('vec2');
 export const ivec2 = createConvertType('ivec2');

@@ -14,7 +14,7 @@ import {
   imat2,
   imat3,
   imat4,
-  int,
+  i32,
   ivec2,
   ivec3,
   ivec4,
@@ -22,7 +22,7 @@ import {
   mat3,
   mat4,
   string,
-  uint,
+  u32,
   umat2,
   umat3,
   umat4,
@@ -39,8 +39,8 @@ import { NodeStack } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.
 NodeElements.set('append', NodeStack.append);
 NodeElements.set('color', color);
 NodeElements.set('float', float);
-NodeElements.set('int', int);
-NodeElements.set('uint', uint);
+NodeElements.set('i32', i32);
+NodeElements.set('u32', u32);
 NodeElements.set('bool', bool);
 NodeElements.set('vec2', vec2);
 NodeElements.set('ivec2', ivec2);

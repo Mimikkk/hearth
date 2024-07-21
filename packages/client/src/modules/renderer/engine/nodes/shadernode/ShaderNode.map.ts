@@ -6,8 +6,8 @@ const createEntryByType =
   (type: string) =>
   <T>(value: T) => [value, new ConstNode(value, type)];
 const createBool = createEntryByType('bool');
-const createUint = createEntryByType('uint');
-const createSint = createEntryByType('int');
+const createUint = createEntryByType('u32');
+const createSint = createEntryByType('i32');
 const createFloat = createEntryByType('float');
 
 export const boolMap = new Map([false, true].map(createBool));

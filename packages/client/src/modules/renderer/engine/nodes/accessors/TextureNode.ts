@@ -148,7 +148,7 @@ class TextureNode extends UniformNode {
 
         const uvSnippet = this.generateUV(builder, uvNode);
         const levelSnippet = levelNode ? levelNode.build(builder, 'float') : null;
-        const depthSnippet = depthNode ? depthNode.build(builder, 'int') : null;
+        const depthSnippet = depthNode ? depthNode.build(builder, 'i32') : null;
         const compareSnippet = compareNode ? compareNode.build(builder, 'float') : null;
 
         const nodeVar = builder.getVarFromNode(this);
