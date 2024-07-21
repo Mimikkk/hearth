@@ -1,11 +1,9 @@
-import { CoordinateSystem } from '../constants.js';
 import { Vec3 } from './Vec3.js';
 import { Mat3 } from './Mat3.js';
 import { Euler } from '@modules/renderer/engine/math/Euler.js';
 import { Quaternion } from '@modules/renderer/engine/math/Quaternion.js';
 import { Const } from '@modules/renderer/engine/math/types.js';
 import { NumberArray } from '@modules/renderer/engine/math/MathUtils.js';
-import { Attribute } from '@modules/renderer/engine/core/types.js';
 
 export class Mat4 {
   declare isMat4: true;
@@ -904,15 +902,7 @@ export class Mat4 {
     return this;
   }
 
-  asPerspective(
-    left: number,
-    right: number,
-    top: number,
-    bottom: number,
-    near: number,
-    far: number,
-    coordinateSystem: CoordinateSystem = CoordinateSystem.WebGL,
-  ): this {
+  asPerspective(left: number, right: number, top: number, bottom: number, near: number, far: number): this {
     const te = this.elements;
     const x = (2 * near) / (right - left);
     const y = (2 * near) / (top - bottom);
@@ -920,17 +910,8 @@ export class Mat4 {
     const a = (right + left) / (right - left);
     const b = (top + bottom) / (top - bottom);
 
-    let c, d;
-
-    if (coordinateSystem === CoordinateSystem.WebGL) {
-      c = -(far + near) / (far - near);
-      d = (-2 * far * near) / (far - near);
-    } else if (coordinateSystem === CoordinateSystem.WebGPU) {
-      c = -far / (far - near);
-      d = (-far * near) / (far - near);
-    } else {
-      throw new Error('engine.Mat4.makePerspective(): Invalid coordinate system: ' + coordinateSystem);
-    }
+    const c = -far / (far - near);
+    const d = (-far * near) / (far - near);
 
     te[0] = x;
     te[4] = 0;
@@ -952,15 +933,7 @@ export class Mat4 {
     return this;
   }
 
-  asOrthographic(
-    left: number,
-    right: number,
-    top: number,
-    bottom: number,
-    near: number,
-    far: number,
-    coordinateSystem: CoordinateSystem = CoordinateSystem.WebGL,
-  ): this {
+  asOrthographic(left: number, right: number, top: number, bottom: number, near: number, far: number): this {
     const te = this.elements;
     const w = 1.0 / (right - left);
     const h = 1.0 / (top - bottom);
@@ -969,17 +942,8 @@ export class Mat4 {
     const x = (right + left) * w;
     const y = (top + bottom) * h;
 
-    let z, zInv;
-
-    if (coordinateSystem === CoordinateSystem.WebGL) {
-      z = (far + near) * p;
-      zInv = -2 * p;
-    } else if (coordinateSystem === CoordinateSystem.WebGPU) {
-      z = near * p;
-      zInv = -1 * p;
-    } else {
-      throw new Error('engine.Mat4.makeOrthographic(): Invalid coordinate system: ' + coordinateSystem);
-    }
+    const z = near * p;
+    const zInv = -1 * p;
 
     te[0] = 2 * w;
     te[4] = 0;

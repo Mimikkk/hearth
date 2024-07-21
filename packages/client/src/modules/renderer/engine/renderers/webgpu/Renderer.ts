@@ -167,10 +167,6 @@ export class Renderer {
     return renderer;
   }
 
-  get coordinateSystem() {
-    return this.backend.coordinateSystem;
-  }
-
   async compileAsync(scene: Scene, camera: Camera, targetScene: Scene | null = null) {
     // preserve render tree
 
@@ -320,16 +316,6 @@ export class Renderer {
 
     //
 
-    const coordinateSystem = this.coordinateSystem;
-
-    if (camera.coordinateSystem !== coordinateSystem) {
-      camera.coordinateSystem = coordinateSystem;
-
-      camera.updateProjectionMatrix();
-    }
-
-    //
-
     if (scene.matrixWorldAutoUpdate === true) scene.updateMatrixWorld();
 
     if (camera.parent === null && camera.matrixWorldAutoUpdate === true) camera.updateMatrixWorld();
@@ -375,7 +361,7 @@ export class Renderer {
     //
 
     _projScreenMatrix.asMul(camera.projectionMatrix, camera.matrixWorldInverse);
-    _frustum.setFromProjectionMatrix(_projScreenMatrix, coordinateSystem);
+    _frustum.setFromProjectionMatrix(_projScreenMatrix);
 
     const renderList = this._renderLists.get(scene, camera);
     renderList.begin();

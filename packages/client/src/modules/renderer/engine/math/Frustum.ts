@@ -1,4 +1,3 @@
-import { CoordinateSystem } from '../constants.js';
 import { Vec3 } from './Vec3.js';
 import { Sphere } from './Sphere.js';
 import { Plane } from './Plane.js';
@@ -45,7 +44,7 @@ export class Frustum {
     return this;
   }
 
-  setFromProjectionMatrix(matrix: Mat4, coordinateSystem: CoordinateSystem = CoordinateSystem.WebGL): this {
+  setFromProjectionMatrix(matrix: Mat4): this {
     const planes = this.planes;
     const me = matrix.elements;
     const me0 = me[0],
@@ -70,14 +69,7 @@ export class Frustum {
     planes[2].setParams(me3 + me1, me7 + me5, me11 + me9, me15 + me13).normalize();
     planes[3].setParams(me3 - me1, me7 - me5, me11 - me9, me15 - me13).normalize();
     planes[4].setParams(me3 - me2, me7 - me6, me11 - me10, me15 - me14).normalize();
-
-    if (coordinateSystem === CoordinateSystem.WebGL) {
-      planes[5].setParams(me3 + me2, me7 + me6, me11 + me10, me15 + me14).normalize();
-    } else if (coordinateSystem === CoordinateSystem.WebGPU) {
-      planes[5].setParams(me2, me6, me10, me14).normalize();
-    } else {
-      throw new Error('engine.Frustum.setFromProjectionMatrix(): Invalid coordinate system: ' + coordinateSystem);
-    }
+    planes[5].setParams(me2, me6, me10, me14).normalize();
 
     return this;
   }

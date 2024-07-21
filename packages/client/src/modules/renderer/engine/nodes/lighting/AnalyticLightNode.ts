@@ -6,7 +6,7 @@ import { reference } from '../accessors/ReferenceNode.js';
 import { texture } from '../accessors/TextureNode.js';
 import { positionWorld } from '../accessors/PositionNode.js';
 import { normalWorld } from '../accessors/NormalNode.js';
-import { Color, CoordinateSystem, DepthComparison, DepthTexture, Filter } from '@modules/renderer/engine/engine.js';
+import { Color, DepthComparison, DepthTexture, Filter } from '@modules/renderer/engine/engine.js';
 
 let overrideMaterial = null;
 
@@ -78,12 +78,7 @@ class AnalyticLightNode extends LightingNode {
         .and(shadowCoord.y.lessThanEqual(1))
         .and(shadowCoord.z.lessThanEqual(1));
 
-      let coordZ = shadowCoord.z.add(bias);
-
-      if (builder.renderer.coordinateSystem === CoordinateSystem.WebGPU) {
-        coordZ = coordZ.mul(2).sub(1); // WebGPU: Convertion [ 0, 1 ] to [ - 1, 1 ]
-      }
-
+      let coordZ = shadowCoord.z.add(bias).mul(2).sub(1);
       shadowCoord = vec3(
         shadowCoord.x,
         shadowCoord.y.oneMinus(), // follow webgpu standards

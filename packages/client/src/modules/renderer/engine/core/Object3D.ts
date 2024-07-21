@@ -346,9 +346,9 @@ export class Object3D<EventMap extends Object3DEventMap = Object3DEventMap> {
     return this;
   }
 
-  add(object: Object3D<any>): this;
-  add(...object: Object3D<any>[]): this;
-  add(object: Object3D<any>): this {
+  add(object: Object3D): this;
+  add(...object: Object3D[]): this;
+  add(object: Object3D): this {
     if (arguments.length > 1) {
       for (let i = 0; i < arguments.length; i++) {
         this.add(arguments[i]);

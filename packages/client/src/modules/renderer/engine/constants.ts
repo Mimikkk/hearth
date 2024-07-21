@@ -318,11 +318,6 @@ export enum BufferUsage {
   StreamCopy = 35042,
 }
 
-export enum CoordinateSystem {
-  WebGL = 2000,
-  WebGPU = 2001,
-}
-
 export type PixelFormat =
   | 'ALPHA'
   | 'RGB'
