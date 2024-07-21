@@ -2,7 +2,7 @@ import {
   BufferGeometry,
   Color,
   ColorSpace,
-  InterleavedBufferAttribute,
+  Float16BufferAttribute,
   Material,
   Object3D,
   RenderTarget,
@@ -18,14 +18,7 @@ import NodeSampler from '../../common/nodes/NodeSampler.ts';
 import { NodeSampledCubeTexture, NodeSampledTexture } from '../../common/nodes/NodeSampledTexture.ts';
 import NodeUniformBuffer from '../../common/nodes/NodeUniformBuffer.ts';
 import NodeStorageBuffer from '../../common/nodes/NodeStorageBuffer.ts';
-import {
-  LightsNode,
-  NodeMaterial,
-  NodeStack,
-  NodeUpdateType,
-  ShaderNode,
-  stack,
-} from '@modules/renderer/engine/nodes/Nodes.js';
+import { LightsNode, NodeMaterial, NodeStack, NodeUpdateType, stack } from '@modules/renderer/engine/nodes/Nodes.js';
 import { getFormat } from '../utils/BackendTextures.ts';
 import WGSLNodeParser from './WGSLNodeParser.js';
 import ChainMap from '@modules/renderer/engine/renderers/common/ChainMap.js';
@@ -56,11 +49,10 @@ import FogNode from '@modules/renderer/engine/nodes/fog/FogNode.js';
 import ToneMappingNode from '@modules/renderer/engine/nodes/display/ToneMappingNode.js';
 import { Node } from '@modules/renderer/engine/nodes/core/Node.js';
 import ClippingContext from '@modules/renderer/engine/renderers/common/ClippingContext.js';
-import { TypedArray } from '@modules/renderer/engine/math/MathUtils.js';
-import { BuildStage, BuiltinType, GpuShaderStage, ShaderStage, TypeMap, TypeName } from './NodeBuilder.types.js';
+import { TypedArray, TypedArrayConstructor } from '@modules/renderer/engine/math/MathUtils.js';
+import { BuildStage, BuiltinType, ShaderStage, TypeMap, TypeName } from './NodeBuilder.types.js';
 import { PolyfillMap, PolyfillName } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.polyfills.js';
 import StructTypeNode from '@modules/renderer/engine/nodes/core/StructTypeNode.js';
-import { Attribute } from '@modules/renderer/engine/core/types.js';
 
 export class NodeBuilder {
   material: Material | null;
@@ -87,7 +79,7 @@ export class NodeBuilder {
   structs: Record<ShaderStage, StructTypeNode[]> & { index: number };
   bindings: Record<ShaderStage, NodeUniformsGroup[]>;
   bindingsOffset: Record<ShaderStage, number>;
-  bindingsArray: NodeUniformsGroup[];
+  bindingsArray: NodeUniformBuffer | NodeStorageBuffer | null;
   attributes: NodeAttribute[];
   bufferAttributes: NodeAttribute[];
   varyings: NodeVarying[];
@@ -187,7 +179,7 @@ export class NodeBuilder {
     return new RenderTarget(width, height, options);
   }
 
-  _getSharedBindings(bindings: NodeUniformsGroup[]): NodeUniformsGroup[] {
+  _getSharedBindings(bindings) {
     const shared = [];
 
     for (const binding of bindings) {
@@ -212,7 +204,7 @@ export class NodeBuilder {
     return shared;
   }
 
-  getBindings(): NodeUniformsGroup[] {
+  getBindings() {
     let bindingsArray = this.bindingsArray;
 
     if (!bindingsArray) {
@@ -366,25 +358,33 @@ export class NodeBuilder {
     return type;
   }
 
-  getTypeFromLength(length: number, componentType: 'f32' | 'i32' | 'u32' | 'bool' = 'f32'): TypeName {
-    if (length === 1) return componentType as TypeName;
+  getTypeFromLength(length, componentType = 'f32') {
+    if (length === 1) return componentType;
 
-    const baseType = componentByLength(length);
+    const baseType = TypeByLength.get(length);
     const prefix = componentType === 'f32' ? '' : componentType[0];
 
     return prefix + baseType;
   }
 
-  getTypeFromAttribute(attribute: Attribute) {
+  getTypeFromArray(array: TypedArray): TypeName {
+    return TypeByArray.get(array.constructor as TypedArrayConstructor);
+  }
+
+  getTypeFromAttribute(attribute) {
     let dataAttribute = attribute;
-    if (InterleavedBufferAttribute.is(attribute)) dataAttribute = attribute.data;
+
+    if (attribute.isInterleavedBufferAttribute) dataAttribute = attribute.data;
 
     const array = dataAttribute.array;
     const itemSize = attribute.itemSize;
     const normalized = attribute.normalized;
 
     let arrayType;
-    if (normalized) arrayType = componentTypeByArray(array);
+
+    if (!(attribute instanceof Float16BufferAttribute) && normalized !== true) {
+      arrayType = this.getTypeFromArray(array);
+    }
 
     return this.getTypeFromLength(itemSize, arrayType);
   }
@@ -541,6 +541,7 @@ export class NodeBuilder {
       const codes = this.codes[shaderStage] || (this.codes[shaderStage] = []);
       const index = codes.length;
 
+      console.log(this);
       nodeCode = new NodeCode('nodeCode' + index, type);
 
       codes.push(nodeCode);
@@ -746,13 +747,28 @@ export class NodeBuilder {
     fromType = this.getVectorType(fromType);
     toType = this.getVectorType(toType);
 
-    if (fromType === toType || toType === null || this.isReference(toType)) return snippet;
+    if (fromType === toType || toType === null || this.isReference(toType)) {
+      return snippet;
+    }
 
     const fromTypeLength = this.getTypeLength(fromType);
     const toTypeLength = this.getTypeLength(toType);
 
-    if (fromTypeLength > 4) return snippet;
-    if (toTypeLength > 4 || toTypeLength === 0) return snippet;
+    if (fromTypeLength > 4) {
+      // fromType is matrix-like
+
+      // @TODO: ignore for now
+
+      return snippet;
+    }
+
+    if (toTypeLength > 4 || toTypeLength === 0) {
+      // toType is matrix-like or unknown
+
+      // @TODO: ignore for now
+
+      return snippet;
+    }
 
     if (fromTypeLength === toTypeLength) {
       return `${this.getType(toType)}(${snippet})`;
@@ -1056,7 +1072,7 @@ export class NodeBuilder {
     return 'vertexIndex';
   }
 
-  buildFunctionCode(shaderNode: ShaderNode) {
+  buildFunctionCode(shaderNode) {
     const layout = shaderNode.layout;
     const flowData = this.flowShaderNode(shaderNode);
 
@@ -1174,6 +1190,8 @@ ${flowData.code}
       snippets.push(`struct ${name} {
       ${types.map((type, i) => `@location(${i}) m${i}: ${type}`).join(',\n')}
       }`);
+
+      console.log(snippets);
     }
 
     if (stage === ShaderStage.Fragment) {
@@ -1574,36 +1592,24 @@ namespace Inbuilt {
 const formatAsFloat = (value: number): string => value + (value % 1 ? '' : '.0');
 
 const UniformsGroup = new ChainMap();
-
-const componentTypeByArray = (array: TypedArray): TypeName => {
-  switch (array.constructor) {
-    case Int8Array:
-    case Int16Array:
-    case Int32Array:
-      return TypeName.i32;
-    case Uint8Array:
-    case Uint16Array:
-    case Uint32Array:
-      return TypeName.u32;
-    case Float32Array:
-      return TypeName.f32;
-    default:
-      throw Error(`Unsupported array type: ${array.constructor}`);
-  }
-};
-const componentByLength = (length: number): TypeName => {
-  switch (length) {
-    case 2:
-      return TypeName.vec2;
-    case 3:
-      return TypeName.vec3;
-    case 4:
-      return TypeName.vec4;
-    case 9:
-      return TypeName.mat3;
-    case 16:
-      return TypeName.mat4;
-    default:
-      throw Error(`Unsupported length: ${length}`);
-  }
+const TypeByLength = new Map<number, TypeName>([
+  [2, TypeName.vec2],
+  [3, TypeName.vec3],
+  [4, TypeName.vec4],
+  [9, TypeName.mat3],
+  [16, TypeName.mat4],
+]);
+const TypeByArray = new Map<TypedArrayConstructor, TypeName>([
+  [Int8Array, TypeName.i32],
+  [Int16Array, TypeName.i32],
+  [Int32Array, TypeName.i32],
+  [Uint8Array, TypeName.u32],
+  [Uint16Array, TypeName.u32],
+  [Uint32Array, TypeName.u32],
+  [Float32Array, TypeName.f32],
+]);
+const GpuShaderStage: Record<ShaderStage, number> = {
+  vertex: GPUShaderStage.VERTEX,
+  fragment: GPUShaderStage.FRAGMENT,
+  compute: GPUShaderStage.COMPUTE,
 };

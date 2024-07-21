@@ -1,4 +1,4 @@
-import { BufferAttribute, InterleavedBufferAttribute } from '../../../engine.js';
+import { BufferAttribute, Float16BufferAttribute, InterleavedBufferAttribute } from '../../../engine.js';
 import { GPUInputStepModeType } from './constants.ts';
 import { Backend } from '@modules/renderer/engine/renderers/webgpu/Backend.js';
 import RenderObject from '@modules/renderer/engine/renderers/common/RenderObject.js';
@@ -196,7 +196,9 @@ export class BackendAttributes {
     } else {
       let prefixOptions!: string[];
 
-      if (ArrayType == Int8Array) {
+      if (AttributeType === Float16BufferAttribute) {
+        prefixOptions = ['float16'];
+      } else if (ArrayType == Int8Array) {
         prefixOptions = ['sint8', 'snorm8'];
       } else if (ArrayType == Uint8Array) {
         prefixOptions = ['uint8', 'unorm8'];

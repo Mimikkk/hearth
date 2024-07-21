@@ -24,10 +24,6 @@ export class InterleavedBufferAttribute<T extends TypedArray = any> {
     this.normalized = normalized;
   }
 
-  static is(data: any): data is InterleavedBufferAttribute {
-    return data?.isInterleavedBufferAttribute === true;
-  }
-
   get count(): number {
     return this.data.count;
   }
@@ -206,7 +202,7 @@ export class InterleavedBufferAttribute<T extends TypedArray = any> {
 
   clone(data?: InterleavedBufferAttribute): this {
     if (data === undefined) {
-      console.info(
+      console.log(
         'engine.InterleavedBufferAttribute.clone(): Cloning an interleaved buffer attribute will de-interleave buffer data.',
       );
 

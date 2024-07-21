@@ -335,6 +335,127 @@ export class Uint32BufferAttribute extends BufferAttribute<Uint32Array> {
   }
 }
 
+export class Float16BufferAttribute extends BufferAttribute<Uint16Array> {
+  declare isFloat16BufferAttribute: true;
+
+  constructor(array: number[], itemSize: number, normalized?: boolean) {
+    super(new Uint16Array(array), itemSize, normalized);
+  }
+
+  override getX(index: number): number {
+    let x = fromHalfFloat(this.array[index * this.itemSize]);
+
+    if (this.normalized) x = denormalize(x, this.array);
+
+    return x;
+  }
+
+  override setX(index: number, x: number): this {
+    if (this.normalized) x = normalize(x, this.array);
+
+    this.array[index * this.itemSize] = toHalfFloat(x);
+
+    return this;
+  }
+
+  override getY(index: number): number {
+    let y = fromHalfFloat(this.array[index * this.itemSize + 1]);
+
+    if (this.normalized) y = denormalize(y, this.array);
+
+    return y;
+  }
+
+  override setY(index: number, y: number): this {
+    if (this.normalized) y = normalize(y, this.array);
+
+    this.array[index * this.itemSize + 1] = toHalfFloat(y);
+
+    return this;
+  }
+
+  override getZ(index: number): number {
+    let z = fromHalfFloat(this.array[index * this.itemSize + 2]);
+
+    if (this.normalized) z = denormalize(z, this.array);
+
+    return z;
+  }
+
+  override setZ(index: number, z: number): this {
+    if (this.normalized) z = normalize(z, this.array);
+
+    this.array[index * this.itemSize + 2] = toHalfFloat(z);
+
+    return this;
+  }
+
+  override getW(index: number): number {
+    let w = fromHalfFloat(this.array[index * this.itemSize + 3]);
+
+    if (this.normalized) w = denormalize(w, this.array);
+
+    return w;
+  }
+
+  override setW(index: number, w: number): this {
+    if (this.normalized) w = normalize(w, this.array);
+
+    this.array[index * this.itemSize + 3] = toHalfFloat(w);
+
+    return this;
+  }
+
+  override setXY(index: number, x: number, y: number): this {
+    index *= this.itemSize;
+
+    if (this.normalized) {
+      x = normalize(x, this.array);
+      y = normalize(y, this.array);
+    }
+
+    this.array[index + 0] = toHalfFloat(x);
+    this.array[index + 1] = toHalfFloat(y);
+
+    return this;
+  }
+
+  override setXYZ(index: number, x: number, y: number, z: number): this {
+    index *= this.itemSize;
+
+    if (this.normalized) {
+      x = normalize(x, this.array);
+      y = normalize(y, this.array);
+      z = normalize(z, this.array);
+    }
+
+    this.array[index + 0] = toHalfFloat(x);
+    this.array[index + 1] = toHalfFloat(y);
+    this.array[index + 2] = toHalfFloat(z);
+
+    return this;
+  }
+
+  override setXYZW(index: number, x: number, y: number, z: number, w: number): this {
+    index *= this.itemSize;
+
+    if (this.normalized) {
+      x = normalize(x, this.array);
+      y = normalize(y, this.array);
+      z = normalize(z, this.array);
+      w = normalize(w, this.array);
+    }
+
+    this.array[index + 0] = toHalfFloat(x);
+    this.array[index + 1] = toHalfFloat(y);
+    this.array[index + 2] = toHalfFloat(z);
+    this.array[index + 3] = toHalfFloat(w);
+
+    return this;
+  }
+}
+Float16BufferAttribute.prototype.isFloat16BufferAttribute = true;
+
 export class Float32BufferAttribute extends BufferAttribute<Float32Array> {
   constructor(array: number[], itemSize: number, normalized?: boolean) {
     super(new Float32Array(array), itemSize, normalized);

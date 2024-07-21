@@ -74,11 +74,9 @@ class ShaderCallNodeImpl extends Node {
 }
 
 class ShaderNodeImpl extends Node {
-  layout: any[] | null;
-  jsFunc: string;
-
-  constructor(jsFunc: string) {
+  constructor(jsFunc) {
     super();
+
     this.jsFunc = jsFunc;
     this.layout = null;
   }
@@ -87,13 +85,13 @@ class ShaderNodeImpl extends Node {
     return /^\((\s+)?\[/.test(this.jsFunc.toString());
   }
 
-  setLayout(layout: any): this {
+  setLayout(layout) {
     this.layout = layout;
 
     return this;
   }
 
-  call(inputs: any[] = null): any {
+  call(inputs = null) {
     for (const name in inputs) {
       inputs[name] = ShaderNodeObject(inputs[name]);
     }
@@ -109,7 +107,7 @@ class ShaderNodeImpl extends Node {
 export class ShaderNode {
   static type = 'ShaderNode';
 
-  constructor(jsFn: string) {
+  constructor(jsFn) {
     return new Proxy(new ShaderNodeImpl(jsFn), handlers);
   }
 }

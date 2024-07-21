@@ -127,7 +127,7 @@ export class ShapePath {
     let holesFirst = !isClockWise(subPaths[0].getPoints());
     holesFirst = isCCW ? !holesFirst : holesFirst;
 
-    // console.info("Holes first", holesFirst);
+    // console.log("Holes first", holesFirst);
 
     const betterShapeHoles: {
       h: Path;
@@ -159,11 +159,11 @@ export class ShapePath {
         if (holesFirst) mainIdx++;
         newShapeHoles[mainIdx] = [];
 
-        //console.info('cw', i);
+        //console.log('cw', i);
       } else {
         newShapeHoles[mainIdx].push({ h: tmpPath, p: tmpPoints[0] });
 
-        //console.info('ccw', i);
+        //console.log('ccw', i);
       }
     }
 

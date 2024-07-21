@@ -95,9 +95,3 @@ export enum TypeName {
   texture = 'texture',
   cubeTexture = 'cubeTexture',
 }
-
-export const GpuShaderStage: Record<ShaderStage, number> = {
-  vertex: GPUShaderStage.VERTEX,
-  fragment: GPUShaderStage.FRAGMENT,
-  compute: GPUShaderStage.COMPUTE,
-};
