@@ -115,13 +115,13 @@ class OperatorNode extends TempNode {
 
     if (output !== 'void') {
       if (op === '<' && outputLength > 1) {
-        return builder.format(`${builder.getMethod('lessThan')}(${a}, ${b})`, type, output);
+        return builder.format(`${builder.codeMethod('lessThan')}(${a}, ${b})`, type, output);
       } else if (op === '<=' && outputLength > 1) {
-        return builder.format(`${builder.getMethod('lessThanEqual')}(${a}, ${b})`, type, output);
+        return builder.format(`${builder.codeMethod('lessThanEqual')}(${a}, ${b})`, type, output);
       } else if (op === '>' && outputLength > 1) {
-        return builder.format(`${builder.getMethod('greaterThan')}(${a}, ${b})`, type, output);
+        return builder.format(`${builder.codeMethod('greaterThan')}(${a}, ${b})`, type, output);
       } else if (op === '>=' && outputLength > 1) {
-        return builder.format(`${builder.getMethod('greaterThanEqual')}(${a}, ${b})`, type, output);
+        return builder.format(`${builder.codeMethod('greaterThanEqual')}(${a}, ${b})`, type, output);
       } else if (op === '!' || op === '~') {
         return builder.format(`(${op}${a})`, typeA, output);
       } else {

@@ -17,10 +17,10 @@ import { NormalMapType } from '@modules/renderer/engine/engine.js';
 const perturbNormal2Arb = tslFn(inputs => {
   const { eye_pos, surf_norm, mapN, uv } = inputs;
 
-  const q0 = eye_pos.dFdx();
-  const q1 = eye_pos.dFdy();
-  const st0 = uv.dFdx();
-  const st1 = uv.dFdy();
+  const q0 = eye_pos.dpdx();
+  const q1 = eye_pos.dpdy();
+  const st0 = uv.dpdx();
+  const st1 = uv.dpdy();
 
   const N = surf_norm; // normalized
 

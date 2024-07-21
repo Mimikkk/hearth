@@ -118,7 +118,7 @@ class MathNode extends TempNode {
         if (c !== null) params.push(c.build(builder, inputType));
       }
 
-      return builder.format(`${builder.getMethod(method, type)}( ${params.join(', ')} )`, type, output);
+      return builder.format(`${builder.codeMethod(method, type)}( ${params.join(', ')} )`, type, output);
     }
   }
 }
@@ -136,7 +136,7 @@ MathNode.EXP2 = 'exp2';
 MathNode.LOG = 'log';
 MathNode.LOG2 = 'log2';
 MathNode.SQRT = 'sqrt';
-MathNode.INVERSE_SQRT = 'inversesqrt';
+MathNode.INVERSE_SQRT = 'inverseSqrt';
 MathNode.FLOOR = 'floor';
 MathNode.CEIL = 'ceil';
 MathNode.NORMALIZE = 'normalize';
@@ -152,8 +152,8 @@ MathNode.SIGN = 'sign';
 MathNode.LENGTH = 'length';
 MathNode.NEGATE = 'negate';
 MathNode.ONE_MINUS = 'oneMinus';
-MathNode.DFDX = 'dFdx';
-MathNode.DFDY = 'dFdy';
+MathNode.dpdx = 'dpdx';
+MathNode.dpdy = 'dpdy';
 MathNode.ROUND = 'round';
 MathNode.RECIPROCAL = 'reciprocal';
 MathNode.TRUNC = 'trunc';
@@ -217,8 +217,8 @@ export const sign = nodeProxy(MathNode, MathNode.SIGN);
 export const length = nodeProxy(MathNode, MathNode.LENGTH);
 export const negate = nodeProxy(MathNode, MathNode.NEGATE);
 export const oneMinus = nodeProxy(MathNode, MathNode.ONE_MINUS);
-export const dFdx = nodeProxy(MathNode, MathNode.DFDX);
-export const dFdy = nodeProxy(MathNode, MathNode.DFDY);
+export const dpdx = nodeProxy(MathNode, MathNode.dpdx);
+export const dpdy = nodeProxy(MathNode, MathNode.dpdy);
 export const round = nodeProxy(MathNode, MathNode.ROUND);
 export const reciprocal = nodeProxy(MathNode, MathNode.RECIPROCAL);
 export const trunc = nodeProxy(MathNode, MathNode.TRUNC);
@@ -282,8 +282,8 @@ addNodeElement('length', length);
 addNodeElement('lengthSq', lengthSq);
 addNodeElement('negate', negate);
 addNodeElement('oneMinus', oneMinus);
-addNodeElement('dFdx', dFdx);
-addNodeElement('dFdy', dFdy);
+addNodeElement('dpdx', dpdx);
+addNodeElement('dpdy', dpdy);
 addNodeElement('round', round);
 addNodeElement('reciprocal', reciprocal);
 addNodeElement('trunc', trunc);
