@@ -119,7 +119,7 @@ export class Node {
 
   getShared(builder: NodeBuilder) {
     const hash = this.getHash(builder);
-    const nodeFromHash = builder.getNodeFromHash(hash);
+    const nodeFromHash = builder.hashNodes[hash];
 
     return nodeFromHash || this;
   }

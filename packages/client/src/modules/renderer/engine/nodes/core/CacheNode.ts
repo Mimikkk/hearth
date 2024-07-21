@@ -1,32 +1,31 @@
 import Node from './Node.ts';
 import NodeCache from './NodeCache.js';
 import { addNodeElement, nodeProxy } from '../shadernode/ShaderNodes.js';
+import { NodeBuilder } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.js';
 
 class CacheNode extends Node {
   static type = 'CacheNode';
+  node: Node;
+  cache: NodeCache;
 
-  constructor(node, cache = new NodeCache()) {
+  constructor(node: Node, cache = new NodeCache()) {
     super();
-
-    this.isCacheNode = true;
 
     this.node = node;
     this.cache = cache;
   }
 
-  getNodeType(builder) {
+  getNodeType(builder: NodeBuilder) {
     return this.node.getNodeType(builder);
   }
 
-  build(builder, ...params) {
-    const previousCache = builder.getCache();
-    const cache = this.cache || builder.globalCache;
-
-    builder.setCache(cache);
+  build(builder: NodeBuilder, ...params) {
+    const previousCache = builder.cache;
+    builder.cache = this.cache || builder.globalCache;
 
     const data = this.node.build(builder, ...params);
 
-    builder.setCache(previousCache);
+    builder.cache = previousCache;
 
     return data;
   }

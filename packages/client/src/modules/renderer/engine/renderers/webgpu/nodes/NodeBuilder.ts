@@ -280,30 +280,10 @@ export class NodeBuilder {
     }
   }
 
-  getNodeFromHash(hash) {
-    return this.hashNodes[hash];
-  }
-
   addFlow(shaderStage: ShaderStage, node) {
     this.flowNodes[shaderStage].push(node);
 
     return node;
-  }
-
-  setContext(context) {
-    this.context = context;
-  }
-
-  getContext() {
-    return this.context;
-  }
-
-  setCache(cache) {
-    this.cache = cache;
-  }
-
-  getCache() {
-    return this.cache;
   }
 
   generateConst(type, value = null) {
@@ -344,10 +324,6 @@ export class NodeBuilder {
     throw new Error(`NodeBuilder: Type '${type}' not found in generate constant attempt.`);
   }
 
-  generateMethod(method) {
-    return method;
-  }
-
   hasGeometryAttribute(name) {
     return this.geometry && this.geometry.getAttribute(name) !== undefined;
   }
@@ -378,18 +354,6 @@ export class NodeBuilder {
 
   isMatrix(type) {
     return /mat\d/.test(type);
-  }
-
-  getTextureColorSpaceFromMap(map) {
-    let colorSpace;
-
-    if (map && map.isTexture) {
-      colorSpace = map.colorSpace;
-    } else {
-      colorSpace = ColorSpace.No;
-    }
-
-    return colorSpace;
   }
 
   getComponentType(type) {
@@ -902,10 +866,6 @@ export class NodeBuilder {
     return `${this.getType(toType)}( ${snippet} )`; // fromType is float-like
   }
 
-  getSignature() {
-    return `// engine.js r${Revision} - NodeMaterial System\n`;
-  }
-
   needsColorSpaceToLinear(texture) {
     return texture.isVideoTexture === true && texture.colorSpace !== ColorSpace.No;
   }
@@ -1043,10 +1003,6 @@ export class NodeBuilder {
     }
 
     return node.name;
-  }
-
-  _getUniformGroupCount(shaderStage) {
-    return Object.keys(this.uniforms[shaderStage]).length;
   }
 
   getFunctionOperator(op) {

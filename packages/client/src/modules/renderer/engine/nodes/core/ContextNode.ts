@@ -18,25 +18,25 @@ class ContextNode extends Node {
   }
 
   setup(builder) {
-    const previousContext = builder.getContext();
+    const previousContext = builder.context;
 
-    builder.setContext({ ...builder.context, ...this.context });
+    builder.context = { ...builder.context, ...this.context };
 
     const node = this.node.build(builder);
 
-    builder.setContext(previousContext);
+    builder.context = previousContext;
 
     return node;
   }
 
   generate(builder, output) {
-    const previousContext = builder.getContext();
+    const previousContext = builder.context;
 
-    builder.setContext({ ...builder.context, ...this.context });
+    builder.context = { ...builder.context, ...this.context };
 
     const snippet = this.node.build(builder, output);
 
-    builder.setContext(previousContext);
+    builder.context = previousContext;
 
     return snippet;
   }
