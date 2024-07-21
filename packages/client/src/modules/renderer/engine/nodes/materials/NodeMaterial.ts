@@ -19,7 +19,7 @@ import { texture } from '../accessors/TextureNode.js';
 import { cubeTexture } from '../accessors/CubeTextureNode.js';
 import { lightsNode } from '../lighting/LightsNode.js';
 import { mix } from '@modules/renderer/engine/nodes/math/MathNode.js';
-import { float, vec3, vec4 } from '../shadernode/ShaderNodes.js';
+import { f32, vec3, vec4 } from '../shadernode/ShaderNodes.js';
 import AONode from '../lighting/AONode.js';
 import { lightingContext } from '../lighting/LightingContextNode.js';
 import EnvironmentNode from '../lighting/EnvironmentNode.js';
@@ -215,13 +215,13 @@ export class NodeMaterial extends ShaderMaterial {
 
     // OPACITY
 
-    const opacityNode = this.opacityNode ? float(this.opacityNode) : materialOpacity;
+    const opacityNode = this.opacityNode ? f32(this.opacityNode) : materialOpacity;
     diffuseColor.a.assign(diffuseColor.a.mul(opacityNode));
 
     // ALPHA TEST
 
     if (this.alphaTestNode !== null || this.alphaTest > 0) {
-      const alphaTestNode = this.alphaTestNode !== null ? float(this.alphaTestNode) : materialAlphaTest;
+      const alphaTestNode = this.alphaTestNode !== null ? f32(this.alphaTestNode) : materialAlphaTest;
 
       diffuseColor.a.lessThanEqual(alphaTestNode).discard();
     }

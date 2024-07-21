@@ -1,7 +1,7 @@
 // engine.js Transpiler
 // https://raw.githubusercontent.com/AcademySoftwareFoundation/MaterialX/main/libraries/stdlib/genglsl/lib/mx_noise.glsl
 
-import { bool, float, i32, NodeStack, tslFn, u32, uvec3, vec2, vec3, vec4 } from '../../shadernode/ShaderNodes.js';
+import { bool, f32, i32, NodeStack, tslFn, u32, uvec3, vec2, vec3, vec4 } from '../../shadernode/ShaderNodes.js';
 import { cond } from '@modules/renderer/engine/nodes/math/CondNode.js';
 import { mul, sub } from '@modules/renderer/engine/nodes/math/OperatorNode.js';
 import { abs, dot, floor, max, min, sqrt } from '@modules/renderer/engine/nodes/math/MathNode.js';
@@ -9,8 +9,8 @@ import { overloadingFn } from '../../utils/FunctionOverloadingNode.js';
 import { loop } from '../../utils/LoopNode.js';
 
 export const mx_select = tslFn(([b_immutable, t_immutable, f_immutable]) => {
-  const f = float(f_immutable).toVar();
-  const t = float(t_immutable).toVar();
+  const f = f32(f_immutable).toVar();
+  const t = f32(t_immutable).toVar();
   const b = bool(b_immutable).toVar();
 
   return cond(b, t, f);
@@ -18,32 +18,32 @@ export const mx_select = tslFn(([b_immutable, t_immutable, f_immutable]) => {
 
 export const mx_negate_if = tslFn(([val_immutable, b_immutable]) => {
   const b = bool(b_immutable).toVar();
-  const val = float(val_immutable).toVar();
+  const val = f32(val_immutable).toVar();
 
   return cond(b, val.negate(), val);
 });
 
 export const mx_floor = tslFn(([x_immutable]) => {
-  const x = float(x_immutable).toVar();
+  const x = f32(x_immutable).toVar();
 
   return i32(floor(x));
 });
 
 export const mx_floorfrac = tslFn(([x_immutable, i]) => {
-  const x = float(x_immutable).toVar();
+  const x = f32(x_immutable).toVar();
   i.assign(mx_floor(x));
 
-  return x.sub(float(i));
+  return x.sub(f32(i));
 });
 
 const mx_bilerp_0 = tslFn(([v0_immutable, v1_immutable, v2_immutable, v3_immutable, s_immutable, t_immutable]) => {
-  const t = float(t_immutable).toVar();
-  const s = float(s_immutable).toVar();
-  const v3 = float(v3_immutable).toVar();
-  const v2 = float(v2_immutable).toVar();
-  const v1 = float(v1_immutable).toVar();
-  const v0 = float(v0_immutable).toVar();
-  const s1 = float(sub(1.0, s)).toVar();
+  const t = f32(t_immutable).toVar();
+  const s = f32(s_immutable).toVar();
+  const v3 = f32(v3_immutable).toVar();
+  const v2 = f32(v2_immutable).toVar();
+  const v1 = f32(v1_immutable).toVar();
+  const v0 = f32(v0_immutable).toVar();
+  const s1 = f32(sub(1.0, s)).toVar();
 
   return sub(1.0, t)
     .mul(v0.mul(s1).add(v1.mul(s)))
@@ -51,13 +51,13 @@ const mx_bilerp_0 = tslFn(([v0_immutable, v1_immutable, v2_immutable, v3_immutab
 });
 
 const mx_bilerp_1 = tslFn(([v0_immutable, v1_immutable, v2_immutable, v3_immutable, s_immutable, t_immutable]) => {
-  const t = float(t_immutable).toVar();
-  const s = float(s_immutable).toVar();
+  const t = f32(t_immutable).toVar();
+  const s = f32(s_immutable).toVar();
   const v3 = vec3(v3_immutable).toVar();
   const v2 = vec3(v2_immutable).toVar();
   const v1 = vec3(v1_immutable).toVar();
   const v0 = vec3(v0_immutable).toVar();
-  const s1 = float(sub(1.0, s)).toVar();
+  const s1 = f32(sub(1.0, s)).toVar();
 
   return sub(1.0, t)
     .mul(v0.mul(s1).add(v1.mul(s)))
@@ -80,20 +80,20 @@ const mx_trilerp_0 = tslFn(
     t_immutable,
     r_immutable,
   ]) => {
-    const r = float(r_immutable).toVar();
-    const t = float(t_immutable).toVar();
-    const s = float(s_immutable).toVar();
-    const v7 = float(v7_immutable).toVar();
-    const v6 = float(v6_immutable).toVar();
-    const v5 = float(v5_immutable).toVar();
-    const v4 = float(v4_immutable).toVar();
-    const v3 = float(v3_immutable).toVar();
-    const v2 = float(v2_immutable).toVar();
-    const v1 = float(v1_immutable).toVar();
-    const v0 = float(v0_immutable).toVar();
-    const s1 = float(sub(1.0, s)).toVar();
-    const t1 = float(sub(1.0, t)).toVar();
-    const r1 = float(sub(1.0, r)).toVar();
+    const r = f32(r_immutable).toVar();
+    const t = f32(t_immutable).toVar();
+    const s = f32(s_immutable).toVar();
+    const v7 = f32(v7_immutable).toVar();
+    const v6 = f32(v6_immutable).toVar();
+    const v5 = f32(v5_immutable).toVar();
+    const v4 = f32(v4_immutable).toVar();
+    const v3 = f32(v3_immutable).toVar();
+    const v2 = f32(v2_immutable).toVar();
+    const v1 = f32(v1_immutable).toVar();
+    const v0 = f32(v0_immutable).toVar();
+    const s1 = f32(sub(1.0, s)).toVar();
+    const t1 = f32(sub(1.0, t)).toVar();
+    const r1 = f32(sub(1.0, r)).toVar();
 
     return r1
       .mul(t1.mul(v0.mul(s1).add(v1.mul(s))).add(t.mul(v2.mul(s1).add(v3.mul(s)))))
@@ -115,9 +115,9 @@ const mx_trilerp_1 = tslFn(
     t_immutable,
     r_immutable,
   ]) => {
-    const r = float(r_immutable).toVar();
-    const t = float(t_immutable).toVar();
-    const s = float(s_immutable).toVar();
+    const r = f32(r_immutable).toVar();
+    const t = f32(t_immutable).toVar();
+    const s = f32(s_immutable).toVar();
     const v7 = vec3(v7_immutable).toVar();
     const v6 = vec3(v6_immutable).toVar();
     const v5 = vec3(v5_immutable).toVar();
@@ -126,9 +126,9 @@ const mx_trilerp_1 = tslFn(
     const v2 = vec3(v2_immutable).toVar();
     const v1 = vec3(v1_immutable).toVar();
     const v0 = vec3(v0_immutable).toVar();
-    const s1 = float(sub(1.0, s)).toVar();
-    const t1 = float(sub(1.0, t)).toVar();
-    const r1 = float(sub(1.0, r)).toVar();
+    const s1 = f32(sub(1.0, s)).toVar();
+    const t1 = f32(sub(1.0, t)).toVar();
+    const r1 = f32(sub(1.0, r)).toVar();
 
     return r1
       .mul(t1.mul(v0.mul(s1).add(v1.mul(s))).add(t.mul(v2.mul(s1).add(v3.mul(s)))))
@@ -139,24 +139,24 @@ const mx_trilerp_1 = tslFn(
 export const mx_trilerp = overloadingFn([mx_trilerp_0, mx_trilerp_1]);
 
 const mx_gradient_float_0 = tslFn(([hash_immutable, x_immutable, y_immutable]) => {
-  const y = float(y_immutable).toVar();
-  const x = float(x_immutable).toVar();
+  const y = f32(y_immutable).toVar();
+  const x = f32(x_immutable).toVar();
   const hash = u32(hash_immutable).toVar();
   const h = u32(hash.bitAnd(u32(7))).toVar();
-  const u = float(mx_select(h.lessThan(u32(4)), x, y)).toVar();
-  const v = float(mul(2.0, mx_select(h.lessThan(u32(4)), y, x))).toVar();
+  const u = f32(mx_select(h.lessThan(u32(4)), x, y)).toVar();
+  const v = f32(mul(2.0, mx_select(h.lessThan(u32(4)), y, x))).toVar();
 
   return mx_negate_if(u, bool(h.bitAnd(u32(1)))).add(mx_negate_if(v, bool(h.bitAnd(u32(2)))));
 });
 
 const mx_gradient_float_1 = tslFn(([hash_immutable, x_immutable, y_immutable, z_immutable]) => {
-  const z = float(z_immutable).toVar();
-  const y = float(y_immutable).toVar();
-  const x = float(x_immutable).toVar();
+  const z = f32(z_immutable).toVar();
+  const y = f32(y_immutable).toVar();
+  const x = f32(x_immutable).toVar();
   const hash = u32(hash_immutable).toVar();
   const h = u32(hash.bitAnd(u32(15))).toVar();
-  const u = float(mx_select(h.lessThan(u32(8)), x, y)).toVar();
-  const v = float(mx_select(h.lessThan(u32(4)), y, mx_select(h.equal(u32(12)).or(h.equal(u32(14))), x, z))).toVar();
+  const u = f32(mx_select(h.lessThan(u32(8)), x, y)).toVar();
+  const v = f32(mx_select(h.lessThan(u32(4)), y, mx_select(h.equal(u32(12)).or(h.equal(u32(14))), x, z))).toVar();
 
   return mx_negate_if(u, bool(h.bitAnd(u32(1)))).add(mx_negate_if(v, bool(h.bitAnd(u32(2)))));
 });
@@ -164,17 +164,17 @@ const mx_gradient_float_1 = tslFn(([hash_immutable, x_immutable, y_immutable, z_
 export const mx_gradient_float = overloadingFn([mx_gradient_float_0, mx_gradient_float_1]);
 
 const mx_gradient_vec3_0 = tslFn(([hash_immutable, x_immutable, y_immutable]) => {
-  const y = float(y_immutable).toVar();
-  const x = float(x_immutable).toVar();
+  const y = f32(y_immutable).toVar();
+  const x = f32(x_immutable).toVar();
   const hash = uvec3(hash_immutable).toVar();
 
   return vec3(mx_gradient_float(hash.x, x, y), mx_gradient_float(hash.y, x, y), mx_gradient_float(hash.z, x, y));
 });
 
 const mx_gradient_vec3_1 = tslFn(([hash_immutable, x_immutable, y_immutable, z_immutable]) => {
-  const z = float(z_immutable).toVar();
-  const y = float(y_immutable).toVar();
-  const x = float(x_immutable).toVar();
+  const z = f32(z_immutable).toVar();
+  const y = f32(y_immutable).toVar();
+  const x = f32(x_immutable).toVar();
   const hash = uvec3(hash_immutable).toVar();
 
   return vec3(
@@ -187,13 +187,13 @@ const mx_gradient_vec3_1 = tslFn(([hash_immutable, x_immutable, y_immutable, z_i
 export const mx_gradient_vec3 = overloadingFn([mx_gradient_vec3_0, mx_gradient_vec3_1]);
 
 const mx_gradient_scale2d_0 = tslFn(([v_immutable]) => {
-  const v = float(v_immutable).toVar();
+  const v = f32(v_immutable).toVar();
 
   return mul(0.6616, v);
 });
 
 const mx_gradient_scale3d_0 = tslFn(([v_immutable]) => {
-  const v = float(v_immutable).toVar();
+  const v = f32(v_immutable).toVar();
 
   return mul(0.982, v);
 });
@@ -267,11 +267,11 @@ export const mx_bjfinal = tslFn(([a_immutable, b_immutable, c_immutable]) => {
 export const mx_bits_to_01 = tslFn(([bits_immutable]) => {
   const bits = u32(bits_immutable).toVar();
 
-  return float(bits).div(float(u32(i32(0xffffffff))));
+  return f32(bits).div(f32(u32(i32(0xffffffff))));
 });
 
 export const mx_fade = tslFn(([t_immutable]) => {
-  const t = float(t_immutable).toVar();
+  const t = f32(t_immutable).toVar();
 
   return t.mul(t.mul(t.mul(t.mul(t.mul(6.0).sub(15.0)).add(10.0))));
 });
@@ -387,11 +387,11 @@ const mx_perlin_noise_float_0 = tslFn(([p_immutable]) => {
   const p = vec2(p_immutable).toVar();
   const X = i32().toVar(),
     Y = i32().toVar();
-  const fx = float(mx_floorfrac(p.x, X)).toVar();
-  const fy = float(mx_floorfrac(p.y, Y)).toVar();
-  const u = float(mx_fade(fx)).toVar();
-  const v = float(mx_fade(fy)).toVar();
-  const result = float(
+  const fx = f32(mx_floorfrac(p.x, X)).toVar();
+  const fy = f32(mx_floorfrac(p.y, Y)).toVar();
+  const u = f32(mx_fade(fx)).toVar();
+  const v = f32(mx_fade(fy)).toVar();
+  const result = f32(
     mx_bilerp(
       mx_gradient_float(mx_hash_int(X, Y), fx, fy),
       mx_gradient_float(mx_hash_int(X.add(i32(1)), Y), fx.sub(1.0), fy),
@@ -410,13 +410,13 @@ const mx_perlin_noise_float_1 = tslFn(([p_immutable]) => {
   const X = i32().toVar(),
     Y = i32().toVar(),
     Z = i32().toVar();
-  const fx = float(mx_floorfrac(p.x, X)).toVar();
-  const fy = float(mx_floorfrac(p.y, Y)).toVar();
-  const fz = float(mx_floorfrac(p.z, Z)).toVar();
-  const u = float(mx_fade(fx)).toVar();
-  const v = float(mx_fade(fy)).toVar();
-  const w = float(mx_fade(fz)).toVar();
-  const result = float(
+  const fx = f32(mx_floorfrac(p.x, X)).toVar();
+  const fy = f32(mx_floorfrac(p.y, Y)).toVar();
+  const fz = f32(mx_floorfrac(p.z, Z)).toVar();
+  const u = f32(mx_fade(fx)).toVar();
+  const v = f32(mx_fade(fy)).toVar();
+  const w = f32(mx_fade(fz)).toVar();
+  const result = f32(
     mx_trilerp(
       mx_gradient_float(mx_hash_int(X, Y, Z), fx, fy, fz),
       mx_gradient_float(mx_hash_int(X.add(i32(1)), Y, Z), fx.sub(1.0), fy, fz),
@@ -446,10 +446,10 @@ const mx_perlin_noise_vec3_0 = tslFn(([p_immutable]) => {
   const p = vec2(p_immutable).toVar();
   const X = i32().toVar(),
     Y = i32().toVar();
-  const fx = float(mx_floorfrac(p.x, X)).toVar();
-  const fy = float(mx_floorfrac(p.y, Y)).toVar();
-  const u = float(mx_fade(fx)).toVar();
-  const v = float(mx_fade(fy)).toVar();
+  const fx = f32(mx_floorfrac(p.x, X)).toVar();
+  const fy = f32(mx_floorfrac(p.y, Y)).toVar();
+  const u = f32(mx_fade(fx)).toVar();
+  const v = f32(mx_fade(fy)).toVar();
   const result = vec3(
     mx_bilerp(
       mx_gradient_vec3(mx_hash_vec3(X, Y), fx, fy),
@@ -469,12 +469,12 @@ const mx_perlin_noise_vec3_1 = tslFn(([p_immutable]) => {
   const X = i32().toVar(),
     Y = i32().toVar(),
     Z = i32().toVar();
-  const fx = float(mx_floorfrac(p.x, X)).toVar();
-  const fy = float(mx_floorfrac(p.y, Y)).toVar();
-  const fz = float(mx_floorfrac(p.z, Z)).toVar();
-  const u = float(mx_fade(fx)).toVar();
-  const v = float(mx_fade(fy)).toVar();
-  const w = float(mx_fade(fz)).toVar();
+  const fx = f32(mx_floorfrac(p.x, X)).toVar();
+  const fy = f32(mx_floorfrac(p.y, Y)).toVar();
+  const fz = f32(mx_floorfrac(p.z, Z)).toVar();
+  const u = f32(mx_fade(fx)).toVar();
+  const v = f32(mx_fade(fy)).toVar();
+  const w = f32(mx_fade(fz)).toVar();
   const result = vec3(
     mx_trilerp(
       mx_gradient_vec3(mx_hash_vec3(X, Y, Z), fx, fy, fz),
@@ -502,7 +502,7 @@ const mx_perlin_noise_vec3_1 = tslFn(([p_immutable]) => {
 export const mx_perlin_noise_vec3 = overloadingFn([mx_perlin_noise_vec3_0, mx_perlin_noise_vec3_1]);
 
 const mx_cell_noise_float_0 = tslFn(([p_immutable]) => {
-  const p = float(p_immutable).toVar();
+  const p = f32(p_immutable).toVar();
   const ix = i32(mx_floor(p)).toVar();
 
   return mx_bits_to_01(mx_hash_int(ix));
@@ -543,7 +543,7 @@ export const mx_cell_noise_float = overloadingFn([
 ]);
 
 const mx_cell_noise_vec3_0 = tslFn(([p_immutable]) => {
-  const p = float(p_immutable).toVar();
+  const p = f32(p_immutable).toVar();
   const ix = i32(mx_floor(p)).toVar();
 
   return vec3(
@@ -601,12 +601,12 @@ export const mx_cell_noise_vec3 = overloadingFn([
 
 export const mx_fractal_noise_float = tslFn(
   ([p_immutable, octaves_immutable, lacunarity_immutable, diminish_immutable]) => {
-    const diminish = float(diminish_immutable).toVar();
-    const lacunarity = float(lacunarity_immutable).toVar();
+    const diminish = f32(diminish_immutable).toVar();
+    const lacunarity = f32(lacunarity_immutable).toVar();
     const octaves = i32(octaves_immutable).toVar();
     const p = vec3(p_immutable).toVar();
-    const result = float(0.0).toVar();
-    const amplitude = float(1.0).toVar();
+    const result = f32(0.0).toVar();
+    const amplitude = f32(1.0).toVar();
 
     loop({ start: i32(0), end: octaves }, ({ i }) => {
       result.addAssign(amplitude.mul(mx_perlin_noise_float(p)));
@@ -620,12 +620,12 @@ export const mx_fractal_noise_float = tslFn(
 
 export const mx_fractal_noise_vec3 = tslFn(
   ([p_immutable, octaves_immutable, lacunarity_immutable, diminish_immutable]) => {
-    const diminish = float(diminish_immutable).toVar();
-    const lacunarity = float(lacunarity_immutable).toVar();
+    const diminish = f32(diminish_immutable).toVar();
+    const lacunarity = f32(lacunarity_immutable).toVar();
     const octaves = i32(octaves_immutable).toVar();
     const p = vec3(p_immutable).toVar();
     const result = vec3(0.0).toVar();
-    const amplitude = float(1.0).toVar();
+    const amplitude = f32(1.0).toVar();
 
     loop({ start: i32(0), end: octaves }, ({ i }) => {
       result.addAssign(amplitude.mul(mx_perlin_noise_vec3(p)));
@@ -639,8 +639,8 @@ export const mx_fractal_noise_vec3 = tslFn(
 
 export const mx_fractal_noise_vec2 = tslFn(
   ([p_immutable, octaves_immutable, lacunarity_immutable, diminish_immutable]) => {
-    const diminish = float(diminish_immutable).toVar();
-    const lacunarity = float(lacunarity_immutable).toVar();
+    const diminish = f32(diminish_immutable).toVar();
+    const lacunarity = f32(lacunarity_immutable).toVar();
     const octaves = i32(octaves_immutable).toVar();
     const p = vec3(p_immutable).toVar();
 
@@ -653,12 +653,12 @@ export const mx_fractal_noise_vec2 = tslFn(
 
 export const mx_fractal_noise_vec4 = tslFn(
   ([p_immutable, octaves_immutable, lacunarity_immutable, diminish_immutable]) => {
-    const diminish = float(diminish_immutable).toVar();
-    const lacunarity = float(lacunarity_immutable).toVar();
+    const diminish = f32(diminish_immutable).toVar();
+    const lacunarity = f32(lacunarity_immutable).toVar();
     const octaves = i32(octaves_immutable).toVar();
     const p = vec3(p_immutable).toVar();
     const c = vec3(mx_fractal_noise_vec3(p, octaves, lacunarity, diminish)).toVar();
-    const f = float(
+    const f = f32(
       mx_fractal_noise_float(p.add(vec3(i32(19), i32(193), i32(17))), octaves, lacunarity, diminish),
     ).toVar();
 
@@ -669,7 +669,7 @@ export const mx_fractal_noise_vec4 = tslFn(
 const mx_worley_distance_0 = tslFn(
   ([p_immutable, x_immutable, y_immutable, xoff_immutable, yoff_immutable, jitter_immutable, metric_immutable]) => {
     const metric = i32(metric_immutable).toVar();
-    const jitter = float(jitter_immutable).toVar();
+    const jitter = f32(jitter_immutable).toVar();
     const yoff = i32(yoff_immutable).toVar();
     const xoff = i32(xoff_immutable).toVar();
     const y = i32(y_immutable).toVar();
@@ -680,7 +680,7 @@ const mx_worley_distance_0 = tslFn(
     off.subAssign(0.5);
     off.mulAssign(jitter);
     off.addAssign(0.5);
-    const cellpos = vec2(vec2(float(x), float(y)).add(off)).toVar();
+    const cellpos = vec2(vec2(f32(x), f32(y)).add(off)).toVar();
     const diff = vec2(cellpos.sub(p)).toVar();
 
     NodeStack.if(metric.equal(i32(2)), () => {
@@ -708,7 +708,7 @@ const mx_worley_distance_1 = tslFn(
     metric_immutable,
   ]) => {
     const metric = i32(metric_immutable).toVar();
-    const jitter = float(jitter_immutable).toVar();
+    const jitter = f32(jitter_immutable).toVar();
     const zoff = i32(zoff_immutable).toVar();
     const yoff = i32(yoff_immutable).toVar();
     const xoff = i32(xoff_immutable).toVar();
@@ -720,7 +720,7 @@ const mx_worley_distance_1 = tslFn(
     off.subAssign(0.5);
     off.mulAssign(jitter);
     off.addAssign(0.5);
-    const cellpos = vec3(vec3(float(x), float(y), float(z)).add(off)).toVar();
+    const cellpos = vec3(vec3(f32(x), f32(y), f32(z)).add(off)).toVar();
     const diff = vec3(cellpos.sub(p)).toVar();
 
     NodeStack.if(metric.equal(i32(2)), () => {
@@ -739,16 +739,16 @@ export const mx_worley_distance = overloadingFn([mx_worley_distance_0, mx_worley
 
 const mx_worley_noise_float_0 = tslFn(([p_immutable, jitter_immutable, metric_immutable]) => {
   const metric = i32(metric_immutable).toVar();
-  const jitter = float(jitter_immutable).toVar();
+  const jitter = f32(jitter_immutable).toVar();
   const p = vec2(p_immutable).toVar();
   const X = i32().toVar(),
     Y = i32().toVar();
   const localpos = vec2(mx_floorfrac(p.x, X), mx_floorfrac(p.y, Y)).toVar();
-  const sqdist = float(1e6).toVar();
+  const sqdist = f32(1e6).toVar();
 
   loop({ start: -1, end: i32(1), name: 'x', condition: '<=' }, ({ x }) => {
     loop({ start: -1, end: i32(1), name: 'y', condition: '<=' }, ({ y }) => {
-      const dist = float(mx_worley_distance(localpos, x, y, X, Y, jitter, metric)).toVar();
+      const dist = f32(mx_worley_distance(localpos, x, y, X, Y, jitter, metric)).toVar();
       sqdist.assign(min(sqdist, dist));
     });
   });
@@ -762,7 +762,7 @@ const mx_worley_noise_float_0 = tslFn(([p_immutable, jitter_immutable, metric_im
 
 const mx_worley_noise_vec2_0 = tslFn(([p_immutable, jitter_immutable, metric_immutable]) => {
   const metric = i32(metric_immutable).toVar();
-  const jitter = float(jitter_immutable).toVar();
+  const jitter = f32(jitter_immutable).toVar();
   const p = vec2(p_immutable).toVar();
   const X = i32().toVar(),
     Y = i32().toVar();
@@ -771,7 +771,7 @@ const mx_worley_noise_vec2_0 = tslFn(([p_immutable, jitter_immutable, metric_imm
 
   loop({ start: -1, end: i32(1), name: 'x', condition: '<=' }, ({ x }) => {
     loop({ start: -1, end: i32(1), name: 'y', condition: '<=' }, ({ y }) => {
-      const dist = float(mx_worley_distance(localpos, x, y, X, Y, jitter, metric)).toVar();
+      const dist = f32(mx_worley_distance(localpos, x, y, X, Y, jitter, metric)).toVar();
 
       NodeStack.if(dist.lessThan(sqdist.x), () => {
         sqdist.y.assign(sqdist.x);
@@ -791,7 +791,7 @@ const mx_worley_noise_vec2_0 = tslFn(([p_immutable, jitter_immutable, metric_imm
 
 const mx_worley_noise_vec3_0 = tslFn(([p_immutable, jitter_immutable, metric_immutable]) => {
   const metric = i32(metric_immutable).toVar();
-  const jitter = float(jitter_immutable).toVar();
+  const jitter = f32(jitter_immutable).toVar();
   const p = vec2(p_immutable).toVar();
   const X = i32().toVar(),
     Y = i32().toVar();
@@ -800,7 +800,7 @@ const mx_worley_noise_vec3_0 = tslFn(([p_immutable, jitter_immutable, metric_imm
 
   loop({ start: -1, end: i32(1), name: 'x', condition: '<=' }, ({ x }) => {
     loop({ start: -1, end: i32(1), name: 'y', condition: '<=' }, ({ y }) => {
-      const dist = float(mx_worley_distance(localpos, x, y, X, Y, jitter, metric)).toVar();
+      const dist = f32(mx_worley_distance(localpos, x, y, X, Y, jitter, metric)).toVar();
 
       NodeStack.if(dist.lessThan(sqdist.x), () => {
         sqdist.z.assign(sqdist.y);
@@ -826,18 +826,18 @@ const mx_worley_noise_vec3_0 = tslFn(([p_immutable, jitter_immutable, metric_imm
 
 const mx_worley_noise_float_1 = tslFn(([p_immutable, jitter_immutable, metric_immutable]) => {
   const metric = i32(metric_immutable).toVar();
-  const jitter = float(jitter_immutable).toVar();
+  const jitter = f32(jitter_immutable).toVar();
   const p = vec3(p_immutable).toVar();
   const X = i32().toVar(),
     Y = i32().toVar(),
     Z = i32().toVar();
   const localpos = vec3(mx_floorfrac(p.x, X), mx_floorfrac(p.y, Y), mx_floorfrac(p.z, Z)).toVar();
-  const sqdist = float(1e6).toVar();
+  const sqdist = f32(1e6).toVar();
 
   loop({ start: -1, end: i32(1), name: 'x', condition: '<=' }, ({ x }) => {
     loop({ start: -1, end: i32(1), name: 'y', condition: '<=' }, ({ y }) => {
       loop({ start: -1, end: i32(1), name: 'z', condition: '<=' }, ({ z }) => {
-        const dist = float(mx_worley_distance(localpos, x, y, z, X, Y, Z, jitter, metric)).toVar();
+        const dist = f32(mx_worley_distance(localpos, x, y, z, X, Y, Z, jitter, metric)).toVar();
         sqdist.assign(min(sqdist, dist));
       });
     });
@@ -854,7 +854,7 @@ export const mx_worley_noise_float = overloadingFn([mx_worley_noise_float_0, mx_
 
 const mx_worley_noise_vec2_1 = tslFn(([p_immutable, jitter_immutable, metric_immutable]) => {
   const metric = i32(metric_immutable).toVar();
-  const jitter = float(jitter_immutable).toVar();
+  const jitter = f32(jitter_immutable).toVar();
   const p = vec3(p_immutable).toVar();
   const X = i32().toVar(),
     Y = i32().toVar(),
@@ -865,7 +865,7 @@ const mx_worley_noise_vec2_1 = tslFn(([p_immutable, jitter_immutable, metric_imm
   loop({ start: -1, end: i32(1), name: 'x', condition: '<=' }, ({ x }) => {
     loop({ start: -1, end: i32(1), name: 'y', condition: '<=' }, ({ y }) => {
       loop({ start: -1, end: i32(1), name: 'z', condition: '<=' }, ({ z }) => {
-        const dist = float(mx_worley_distance(localpos, x, y, z, X, Y, Z, jitter, metric)).toVar();
+        const dist = f32(mx_worley_distance(localpos, x, y, z, X, Y, Z, jitter, metric)).toVar();
 
         NodeStack.if(dist.lessThan(sqdist.x), () => {
           sqdist.y.assign(sqdist.x);
@@ -888,7 +888,7 @@ export const mx_worley_noise_vec2 = overloadingFn([mx_worley_noise_vec2_0, mx_wo
 
 const mx_worley_noise_vec3_1 = tslFn(([p_immutable, jitter_immutable, metric_immutable]) => {
   const metric = i32(metric_immutable).toVar();
-  const jitter = float(jitter_immutable).toVar();
+  const jitter = f32(jitter_immutable).toVar();
   const p = vec3(p_immutable).toVar();
   const X = i32().toVar(),
     Y = i32().toVar(),
@@ -899,7 +899,7 @@ const mx_worley_noise_vec3_1 = tslFn(([p_immutable, jitter_immutable, metric_imm
   loop({ start: -1, end: i32(1), name: 'x', condition: '<=' }, ({ x }) => {
     loop({ start: -1, end: i32(1), name: 'y', condition: '<=' }, ({ y }) => {
       loop({ start: -1, end: i32(1), name: 'z', condition: '<=' }, ({ z }) => {
-        const dist = float(mx_worley_distance(localpos, x, y, z, X, Y, Z, jitter, metric)).toVar();
+        const dist = f32(mx_worley_distance(localpos, x, y, z, X, Y, Z, jitter, metric)).toVar();
 
         NodeStack.if(dist.lessThan(sqdist.x), () => {
           sqdist.z.assign(sqdist.y);
@@ -930,19 +930,19 @@ export const mx_worley_noise_vec3 = overloadingFn([mx_worley_noise_vec3_0, mx_wo
 
 mx_select.setLayout({
   name: 'mx_select',
-  type: 'float',
+  type: 'f32',
   inputs: [
     { name: 'b', type: 'bool' },
-    { name: 't', type: 'float' },
-    { name: 'f', type: 'float' },
+    { name: 't', type: 'f32' },
+    { name: 'f', type: 'f32' },
   ],
 });
 
 mx_negate_if.setLayout({
   name: 'mx_negate_if',
-  type: 'float',
+  type: 'f32',
   inputs: [
-    { name: 'val', type: 'float' },
+    { name: 'val', type: 'f32' },
     { name: 'b', type: 'bool' },
   ],
 });
@@ -950,19 +950,19 @@ mx_negate_if.setLayout({
 mx_floor.setLayout({
   name: 'mx_floor',
   type: 'i32',
-  inputs: [{ name: 'x', type: 'float' }],
+  inputs: [{ name: 'x', type: 'f32' }],
 });
 
 mx_bilerp_0.setLayout({
   name: 'mx_bilerp_0',
-  type: 'float',
+  type: 'f32',
   inputs: [
-    { name: 'v0', type: 'float' },
-    { name: 'v1', type: 'float' },
-    { name: 'v2', type: 'float' },
-    { name: 'v3', type: 'float' },
-    { name: 's', type: 'float' },
-    { name: 't', type: 'float' },
+    { name: 'v0', type: 'f32' },
+    { name: 'v1', type: 'f32' },
+    { name: 'v2', type: 'f32' },
+    { name: 'v3', type: 'f32' },
+    { name: 's', type: 'f32' },
+    { name: 't', type: 'f32' },
   ],
 });
 
@@ -974,26 +974,26 @@ mx_bilerp_1.setLayout({
     { name: 'v1', type: 'vec3' },
     { name: 'v2', type: 'vec3' },
     { name: 'v3', type: 'vec3' },
-    { name: 's', type: 'float' },
-    { name: 't', type: 'float' },
+    { name: 's', type: 'f32' },
+    { name: 't', type: 'f32' },
   ],
 });
 
 mx_trilerp_0.setLayout({
   name: 'mx_trilerp_0',
-  type: 'float',
+  type: 'f32',
   inputs: [
-    { name: 'v0', type: 'float' },
-    { name: 'v1', type: 'float' },
-    { name: 'v2', type: 'float' },
-    { name: 'v3', type: 'float' },
-    { name: 'v4', type: 'float' },
-    { name: 'v5', type: 'float' },
-    { name: 'v6', type: 'float' },
-    { name: 'v7', type: 'float' },
-    { name: 's', type: 'float' },
-    { name: 't', type: 'float' },
-    { name: 'r', type: 'float' },
+    { name: 'v0', type: 'f32' },
+    { name: 'v1', type: 'f32' },
+    { name: 'v2', type: 'f32' },
+    { name: 'v3', type: 'f32' },
+    { name: 'v4', type: 'f32' },
+    { name: 'v5', type: 'f32' },
+    { name: 'v6', type: 'f32' },
+    { name: 'v7', type: 'f32' },
+    { name: 's', type: 'f32' },
+    { name: 't', type: 'f32' },
+    { name: 'r', type: 'f32' },
   ],
 });
 
@@ -1009,30 +1009,30 @@ mx_trilerp_1.setLayout({
     { name: 'v5', type: 'vec3' },
     { name: 'v6', type: 'vec3' },
     { name: 'v7', type: 'vec3' },
-    { name: 's', type: 'float' },
-    { name: 't', type: 'float' },
-    { name: 'r', type: 'float' },
+    { name: 's', type: 'f32' },
+    { name: 't', type: 'f32' },
+    { name: 'r', type: 'f32' },
   ],
 });
 
 mx_gradient_float_0.setLayout({
   name: 'mx_gradient_float_0',
-  type: 'float',
+  type: 'f32',
   inputs: [
     { name: 'hash', type: 'u32' },
-    { name: 'x', type: 'float' },
-    { name: 'y', type: 'float' },
+    { name: 'x', type: 'f32' },
+    { name: 'y', type: 'f32' },
   ],
 });
 
 mx_gradient_float_1.setLayout({
   name: 'mx_gradient_float_1',
-  type: 'float',
+  type: 'f32',
   inputs: [
     { name: 'hash', type: 'u32' },
-    { name: 'x', type: 'float' },
-    { name: 'y', type: 'float' },
-    { name: 'z', type: 'float' },
+    { name: 'x', type: 'f32' },
+    { name: 'y', type: 'f32' },
+    { name: 'z', type: 'f32' },
   ],
 });
 
@@ -1041,8 +1041,8 @@ mx_gradient_vec3_0.setLayout({
   type: 'vec3',
   inputs: [
     { name: 'hash', type: 'uvec3' },
-    { name: 'x', type: 'float' },
-    { name: 'y', type: 'float' },
+    { name: 'x', type: 'f32' },
+    { name: 'y', type: 'f32' },
   ],
 });
 
@@ -1051,22 +1051,22 @@ mx_gradient_vec3_1.setLayout({
   type: 'vec3',
   inputs: [
     { name: 'hash', type: 'uvec3' },
-    { name: 'x', type: 'float' },
-    { name: 'y', type: 'float' },
-    { name: 'z', type: 'float' },
+    { name: 'x', type: 'f32' },
+    { name: 'y', type: 'f32' },
+    { name: 'z', type: 'f32' },
   ],
 });
 
 mx_gradient_scale2d_0.setLayout({
   name: 'mx_gradient_scale2d_0',
-  type: 'float',
-  inputs: [{ name: 'v', type: 'float' }],
+  type: 'f32',
+  inputs: [{ name: 'v', type: 'f32' }],
 });
 
 mx_gradient_scale3d_0.setLayout({
   name: 'mx_gradient_scale3d_0',
-  type: 'float',
-  inputs: [{ name: 'v', type: 'float' }],
+  type: 'f32',
+  inputs: [{ name: 'v', type: 'f32' }],
 });
 
 mx_gradient_scale2d_1.setLayout({
@@ -1102,14 +1102,14 @@ mx_bjfinal.setLayout({
 
 mx_bits_to_01.setLayout({
   name: 'mx_bits_to_01',
-  type: 'float',
+  type: 'f32',
   inputs: [{ name: 'bits', type: 'u32' }],
 });
 
 mx_fade.setLayout({
   name: 'mx_fade',
-  type: 'float',
-  inputs: [{ name: 't', type: 'float' }],
+  type: 'f32',
+  inputs: [{ name: 't', type: 'f32' }],
 });
 
 mx_hash_int_0.setLayout({
@@ -1181,13 +1181,13 @@ mx_hash_vec3_1.setLayout({
 
 mx_perlin_noise_float_0.setLayout({
   name: 'mx_perlin_noise_float_0',
-  type: 'float',
+  type: 'f32',
   inputs: [{ name: 'p', type: 'vec2' }],
 });
 
 mx_perlin_noise_float_1.setLayout({
   name: 'mx_perlin_noise_float_1',
-  type: 'float',
+  type: 'f32',
   inputs: [{ name: 'p', type: 'vec3' }],
 });
 
@@ -1205,32 +1205,32 @@ mx_perlin_noise_vec3_1.setLayout({
 
 mx_cell_noise_float_0.setLayout({
   name: 'mx_cell_noise_float_0',
-  type: 'float',
-  inputs: [{ name: 'p', type: 'float' }],
+  type: 'f32',
+  inputs: [{ name: 'p', type: 'f32' }],
 });
 
 mx_cell_noise_float_1.setLayout({
   name: 'mx_cell_noise_float_1',
-  type: 'float',
+  type: 'f32',
   inputs: [{ name: 'p', type: 'vec2' }],
 });
 
 mx_cell_noise_float_2.setLayout({
   name: 'mx_cell_noise_float_2',
-  type: 'float',
+  type: 'f32',
   inputs: [{ name: 'p', type: 'vec3' }],
 });
 
 mx_cell_noise_float_3.setLayout({
   name: 'mx_cell_noise_float_3',
-  type: 'float',
+  type: 'f32',
   inputs: [{ name: 'p', type: 'vec4' }],
 });
 
 mx_cell_noise_vec3_0.setLayout({
   name: 'mx_cell_noise_vec3_0',
   type: 'vec3',
-  inputs: [{ name: 'p', type: 'float' }],
+  inputs: [{ name: 'p', type: 'f32' }],
 });
 
 mx_cell_noise_vec3_1.setLayout({
@@ -1253,12 +1253,12 @@ mx_cell_noise_vec3_3.setLayout({
 
 mx_fractal_noise_float.setLayout({
   name: 'mx_fractal_noise_float',
-  type: 'float',
+  type: 'f32',
   inputs: [
     { name: 'p', type: 'vec3' },
     { name: 'octaves', type: 'i32' },
-    { name: 'lacunarity', type: 'float' },
-    { name: 'diminish', type: 'float' },
+    { name: 'lacunarity', type: 'f32' },
+    { name: 'diminish', type: 'f32' },
   ],
 });
 
@@ -1268,8 +1268,8 @@ mx_fractal_noise_vec3.setLayout({
   inputs: [
     { name: 'p', type: 'vec3' },
     { name: 'octaves', type: 'i32' },
-    { name: 'lacunarity', type: 'float' },
-    { name: 'diminish', type: 'float' },
+    { name: 'lacunarity', type: 'f32' },
+    { name: 'diminish', type: 'f32' },
   ],
 });
 
@@ -1279,8 +1279,8 @@ mx_fractal_noise_vec2.setLayout({
   inputs: [
     { name: 'p', type: 'vec3' },
     { name: 'octaves', type: 'i32' },
-    { name: 'lacunarity', type: 'float' },
-    { name: 'diminish', type: 'float' },
+    { name: 'lacunarity', type: 'f32' },
+    { name: 'diminish', type: 'f32' },
   ],
 });
 
@@ -1290,28 +1290,28 @@ mx_fractal_noise_vec4.setLayout({
   inputs: [
     { name: 'p', type: 'vec3' },
     { name: 'octaves', type: 'i32' },
-    { name: 'lacunarity', type: 'float' },
-    { name: 'diminish', type: 'float' },
+    { name: 'lacunarity', type: 'f32' },
+    { name: 'diminish', type: 'f32' },
   ],
 });
 
 mx_worley_distance_0.setLayout({
   name: 'mx_worley_distance_0',
-  type: 'float',
+  type: 'f32',
   inputs: [
     { name: 'p', type: 'vec2' },
     { name: 'x', type: 'i32' },
     { name: 'y', type: 'i32' },
     { name: 'xoff', type: 'i32' },
     { name: 'yoff', type: 'i32' },
-    { name: 'jitter', type: 'float' },
+    { name: 'jitter', type: 'f32' },
     { name: 'metric', type: 'i32' },
   ],
 });
 
 mx_worley_distance_1.setLayout({
   name: 'mx_worley_distance_1',
-  type: 'float',
+  type: 'f32',
   inputs: [
     { name: 'p', type: 'vec3' },
     { name: 'x', type: 'i32' },
@@ -1320,17 +1320,17 @@ mx_worley_distance_1.setLayout({
     { name: 'xoff', type: 'i32' },
     { name: 'yoff', type: 'i32' },
     { name: 'zoff', type: 'i32' },
-    { name: 'jitter', type: 'float' },
+    { name: 'jitter', type: 'f32' },
     { name: 'metric', type: 'i32' },
   ],
 });
 
 mx_worley_noise_float_0.setLayout({
   name: 'mx_worley_noise_float_0',
-  type: 'float',
+  type: 'f32',
   inputs: [
     { name: 'p', type: 'vec2' },
-    { name: 'jitter', type: 'float' },
+    { name: 'jitter', type: 'f32' },
     { name: 'metric', type: 'i32' },
   ],
 });
@@ -1340,7 +1340,7 @@ mx_worley_noise_vec2_0.setLayout({
   type: 'vec2',
   inputs: [
     { name: 'p', type: 'vec2' },
-    { name: 'jitter', type: 'float' },
+    { name: 'jitter', type: 'f32' },
     { name: 'metric', type: 'i32' },
   ],
 });
@@ -1350,17 +1350,17 @@ mx_worley_noise_vec3_0.setLayout({
   type: 'vec3',
   inputs: [
     { name: 'p', type: 'vec2' },
-    { name: 'jitter', type: 'float' },
+    { name: 'jitter', type: 'f32' },
     { name: 'metric', type: 'i32' },
   ],
 });
 
 mx_worley_noise_float_1.setLayout({
   name: 'mx_worley_noise_float_1',
-  type: 'float',
+  type: 'f32',
   inputs: [
     { name: 'p', type: 'vec3' },
-    { name: 'jitter', type: 'float' },
+    { name: 'jitter', type: 'f32' },
     { name: 'metric', type: 'i32' },
   ],
 });
@@ -1370,7 +1370,7 @@ mx_worley_noise_vec2_1.setLayout({
   type: 'vec2',
   inputs: [
     { name: 'p', type: 'vec3' },
-    { name: 'jitter', type: 'float' },
+    { name: 'jitter', type: 'f32' },
     { name: 'metric', type: 'i32' },
   ],
 });
@@ -1380,7 +1380,7 @@ mx_worley_noise_vec3_1.setLayout({
   type: 'vec3',
   inputs: [
     { name: 'p', type: 'vec3' },
-    { name: 'jitter', type: 'float' },
+    { name: 'jitter', type: 'f32' },
     { name: 'metric', type: 'i32' },
   ],
 });

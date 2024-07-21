@@ -10,7 +10,7 @@ import {
   color,
   convert,
   element,
-  float,
+  f32,
   imat2,
   imat3,
   imat4,
@@ -38,7 +38,7 @@ import { NodeStack } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.
 
 NodeElements.set('append', NodeStack.append);
 NodeElements.set('color', color);
-NodeElements.set('float', float);
+NodeElements.set('f32', f32);
 NodeElements.set('i32', i32);
 NodeElements.set('u32', u32);
 NodeElements.set('bool', bool);

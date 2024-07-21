@@ -8,7 +8,7 @@ class ViewportDepthNode extends Node {
   static type = 'ViewportDepthNode';
 
   constructor(scope, valueNode = null) {
-    super('float');
+    super('f32');
 
     this.scope = scope;
     this.valueNode = valueNode;

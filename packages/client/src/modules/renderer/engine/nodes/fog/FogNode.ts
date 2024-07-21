@@ -11,7 +11,7 @@ class FogNode extends Node {
     public colorNode: Node,
     public factorNode: Node | null = null,
   ) {
-    super('float');
+    super('f32');
 
     this.isFogNode = true;
   }

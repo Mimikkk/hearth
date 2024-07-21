@@ -15,7 +15,7 @@ import {
   Sprite,
 } from '@modules/renderer/engine/engine.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import { float } from 'three/examples/jsm/nodes/shadernode/ShaderNode.js';
+import { f32 } from 'three/examples/jsm/nodes/shadernode/ShaderNode.js';
 import { UI } from '@mimi/ui';
 import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
 import { SpriteMaterialBuilder } from '@modules/renderer/engine/materials/SpriteMaterialBuilder.js';
@@ -72,8 +72,8 @@ const smb = SpriteMaterialBuilder.create({ height: 256, width: 256 }).addCircle(
 const sprites = new Group();
 const createSphere = (x: number, y: number, z: number) => {
   const material = new MeshStandardNodeMaterial({ color: Math.random() * 0xffffff });
-  material.roughnessNode = float(0.8);
-  material.metalnessNode = float(0.2);
+  material.roughnessNode = f32(0.8);
+  material.metalnessNode = f32(0.2);
 
   const mesh = new Mesh(geometry, material);
 

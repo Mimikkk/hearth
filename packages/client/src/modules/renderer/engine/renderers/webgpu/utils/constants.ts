@@ -278,7 +278,7 @@ export enum GPUTextureSampleTypeType {
   UnfilterableFloat = 'unfilterable-float',
   Depth = 'depth',
   SInt = 'sint',
-  UInt = 'u32',
+  UInt = 'uint',
 }
 
 export enum GPUTextureDimensionType {

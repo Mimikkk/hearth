@@ -10,7 +10,7 @@ export const vectorComponents = ['x', 'y', 'z', 'w'] as const;
 export enum NodeType {
   BOOLEAN = 'bool',
   INTEGER = 'i32',
-  FLOAT = 'float',
+  FLOAT = 'f32',
   Vec2 = 'vec2',
   Vec3 = 'vec3',
   Vec4 = 'vec4',
@@ -22,7 +22,7 @@ export enum NodeType {
 export type NodeTypeOption =
   | 'bool'
   | 'i32'
-  | 'float'
+  | 'f32'
   | 'vec2'
   | 'vec3'
   | 'vec4'

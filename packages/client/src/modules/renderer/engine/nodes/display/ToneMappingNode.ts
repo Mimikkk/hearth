@@ -1,5 +1,5 @@
 import TempNode from '../core/TempNode.js';
-import { addNodeElement, float, mat3, nodeObject, tslFn, vec3 } from '../shadernode/ShaderNodes.js';
+import { addNodeElement, f32, mat3, nodeObject, tslFn, vec3 } from '../shadernode/ShaderNodes.js';
 import { rendererReference } from '../accessors/RendererReferenceNode.js';
 import { clamp, log2, max, pow } from '../math/MathNode.js';
 import { mul } from '../math/OperatorNode.js';
@@ -75,7 +75,7 @@ const agxDefaultContrastApprox = tslFn(([x_immutable]) => {
   const x2 = vec3(x.mul(x)).toVar();
   const x4 = vec3(x2.mul(x2)).toVar();
 
-  return float(15.5)
+  return f32(15.5)
     .mul(x4.mul(x2))
     .sub(mul(40.14, x4.mul(x)))
     .add(
@@ -97,8 +97,8 @@ const AGXToneMappingNode = tslFn(({ color, exposure }) => {
     vec3(-0.11060664309660323, 1.157823702216272, -0.11060664309660294),
     vec3(-0.016493938717834573, -0.016493938717834257, 1.2519364065950405),
   );
-  const AgxMinEv = float(-12.47393);
-  const AgxMaxEv = float(4.026069);
+  const AgxMinEv = f32(-12.47393);
+  const AgxMaxEv = f32(4.026069);
   colortone.mulAssign(exposure);
   colortone.assign(LINEAR_SRGB_TO_LINEAR_REC2020.mul(colortone));
   colortone.assign(AgXInsetMatrix.mul(colortone));
@@ -169,6 +169,6 @@ export default ToneMappingNode;
 
 export const toneMapping = (mapping, exposure, color) =>
   nodeObject(new ToneMappingNode(mapping, nodeObject(exposure), nodeObject(color)));
-export const toneMappingExposure = rendererReference('parameters.toneMappingExposure', 'float');
+export const toneMappingExposure = rendererReference('parameters.toneMappingExposure', 'f32');
 
 addNodeElement('toneMapping', (color, mapping, exposure) => toneMapping(mapping, exposure, color));

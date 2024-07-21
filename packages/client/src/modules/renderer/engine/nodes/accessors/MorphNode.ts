@@ -165,7 +165,7 @@ class MorphNode extends Node {
     const width = i32(size.width);
 
     loop(morphTargetsCount, ({ i }) => {
-      const influence = reference('morphTargetInfluences', 'float').element(i);
+      const influence = reference('morphTargetInfluences', 'f32').element(i);
 
       if (hasMorphPosition === true) {
         positionLocal.addAssign(

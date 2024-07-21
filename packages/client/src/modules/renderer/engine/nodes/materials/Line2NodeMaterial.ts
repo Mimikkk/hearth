@@ -15,7 +15,7 @@ import {
 import { modelViewMatrix } from '../accessors/ModelNode.js';
 import { positionGeometry } from '../accessors/PositionNode.js';
 import { mix, smoothstep } from '@modules/renderer/engine/nodes/math/MathNode.js';
-import { float, NodeStack, tslFn, vec2, vec3, vec4 } from '../shadernode/ShaderNodes.js';
+import { f32, NodeStack, tslFn, vec2, vec3, vec4 } from '../shadernode/ShaderNodes.js';
 import { uv } from '../accessors/UVNode.js';
 import { viewport } from '../display/ViewportNode.ts';
 
@@ -227,10 +227,10 @@ export class Line2NodeMaterial extends NodeMaterial {
       const vUv = varyingProperty('vec2', 'vUv');
 
       if (useDash) {
-        const offsetNode = this.offsetNode ? float(this.offsetNodeNode) : materialLineDashOffset;
-        const dashScaleNode = this.dashScaleNode ? float(this.dashScaleNode) : materialLineScale;
-        const dashSizeNode = this.dashSizeNode ? float(this.dashSizeNode) : materialLineDashSize;
-        const gapSizeNode = this.dashSizeNode ? float(this.dashGapNode) : materialLineGapSize;
+        const offsetNode = this.offsetNode ? f32(this.offsetNodeNode) : materialLineDashOffset;
+        const dashScaleNode = this.dashScaleNode ? f32(this.dashScaleNode) : materialLineScale;
+        const dashSizeNode = this.dashSizeNode ? f32(this.dashSizeNode) : materialLineDashSize;
+        const gapSizeNode = this.dashSizeNode ? f32(this.dashGapNode) : materialLineGapSize;
 
         dashSize.assign(dashSizeNode);
         gapSize.assign(gapSizeNode);
@@ -250,7 +250,7 @@ export class Line2NodeMaterial extends NodeMaterial {
       }
 
       // force assignment into correct place in flow
-      const alpha = property('float', 'alpha');
+      const alpha = property('f32', 'alpha');
       alpha.assign(1);
 
       if (useWorldUnits) {
@@ -286,7 +286,7 @@ export class Line2NodeMaterial extends NodeMaterial {
           const len2 = a.mul(a).add(b.mul(b));
 
           // force assignment out of following 'if' statement - to avoid uniform control flow errors
-          const dlen = property('float', 'dlen');
+          const dlen = property('f32', 'dlen');
           dlen.assign(len2.fwidth());
 
           NodeStack.if(vUv.y.abs().greaterThan(1.0), () => {

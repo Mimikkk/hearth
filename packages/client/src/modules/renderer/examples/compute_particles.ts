@@ -1,6 +1,6 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
 import {
-  float,
+  f32,
   instanceIndex,
   NodeStack,
   SpriteNodeMaterial,
@@ -159,7 +159,7 @@ async function init() {
 
     const dist = position.distance(clickPosition);
     const direction = position.sub(clickPosition).normalize();
-    const distArea = float(6).sub(dist).max(0);
+    const distArea = f32(6).sub(dist).max(0);
 
     const power = distArea.mul(0.01);
     const relativePower = power.mul(instanceIndex.hash().mul(0.5).add(0.5));

@@ -16,7 +16,7 @@ class CheckerNode extends TempNode {
   static type = 'CheckerNode';
 
   constructor(uvNode = uv()) {
-    super('float');
+    super('f32');
 
     this.uvNode = uvNode;
   }

@@ -74,11 +74,11 @@ async function init() {
     saturation: 1,
   };
 
-  const mixNode = reference('mix', 'float', adjustments);
-  const proceduralNode = reference('procedural', 'float', adjustments);
-  const intensityNode = reference('intensity', 'float', adjustments);
-  const hueNode = reference('hue', 'float', adjustments);
-  const saturationNode = reference('saturation', 'float', adjustments);
+  const mixNode = reference('mix', 'f32', adjustments);
+  const proceduralNode = reference('procedural', 'f32', adjustments);
+  const intensityNode = reference('intensity', 'f32', adjustments);
+  const hueNode = reference('hue', 'f32', adjustments);
+  const saturationNode = reference('saturation', 'f32', adjustments);
 
   const rotateY1Matrix = new Engine.Mat4();
   const rotateY2Matrix = new Engine.Mat4();

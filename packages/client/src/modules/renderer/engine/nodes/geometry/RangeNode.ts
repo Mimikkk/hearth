@@ -2,7 +2,7 @@ import Node from '../core/Node.ts';
 import { getValueType } from '../core/NodeUtils.js';
 import { buffer } from '../accessors/BufferNode.js';
 import { instanceIndex } from '../core/IndexNode.js';
-import { float, nodeProxy } from '../shadernode/ShaderNodes.js';
+import { f32, nodeProxy } from '../shadernode/ShaderNodes.js';
 
 import { Vec4 } from '@modules/renderer/engine/engine.js';
 import { lerp } from '../../math/MathUtils.ts';
@@ -13,7 +13,7 @@ let max = null;
 class RangeNode extends Node {
   static type = 'RangeNode';
 
-  constructor(minNode = float(), maxNode = float()) {
+  constructor(minNode = f32(), maxNode = f32()) {
     super();
 
     this.minNode = minNode;
@@ -28,7 +28,7 @@ class RangeNode extends Node {
   }
 
   getNodeType(builder) {
-    return builder.object.isInstancedMesh === true ? builder.getTypeFromLength(this.getVectorLength(builder)) : 'float';
+    return builder.object.isInstancedMesh === true ? builder.getTypeFromLength(this.getVectorLength(builder)) : 'f32';
   }
 
   setup(builder) {
@@ -76,7 +76,7 @@ class RangeNode extends Node {
 
       output = buffer(array, 'vec4', object.count).element(instanceIndex).convert(nodeType);
     } else {
-      output = float(0);
+      output = f32(0);
     }
 
     return output;

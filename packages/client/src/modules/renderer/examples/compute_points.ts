@@ -4,7 +4,7 @@ import {
   uniform,
   storage,
   attribute,
-  float,
+  f32,
   vec2,
   vec3,
   color,
@@ -72,7 +72,7 @@ async function init() {
   computeNode = computeShaderFn().compute(particleNum);
   computeNode.onInit = ({ renderer }) => {
     const precomputeShaderNode = tslFn(() => {
-      const particleIndex = float(instanceIndex);
+      const particleIndex = f32(instanceIndex);
 
       const randomAngle = particleIndex.mul(0.005).mul(Math.PI * 2);
       const randomSpeed = particleIndex.mul(0.00000001).add(0.0000001);

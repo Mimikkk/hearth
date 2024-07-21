@@ -8,7 +8,7 @@ const createEntryByType =
 const createBool = createEntryByType('bool');
 const createUint = createEntryByType('u32');
 const createSint = createEntryByType('i32');
-const createFloat = createEntryByType('float');
+const createFloat = createEntryByType('f32');
 
 export const boolMap = new Map([false, true].map(createBool));
 export const uintMap = new Map([0, 1, 2, 3].map(createUint));

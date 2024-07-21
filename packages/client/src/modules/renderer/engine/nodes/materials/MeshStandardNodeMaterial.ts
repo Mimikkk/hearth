@@ -4,7 +4,7 @@ import { mix } from '@modules/renderer/engine/nodes/math/MathNode.js';
 import { materialMetalness, materialRoughness } from '../accessors/MaterialNode.js';
 import getRoughness from '../functions/material/getRoughness.js';
 import PhysicalLightingModel from '../functions/PhysicalLightingModel.js';
-import { float, vec3, vec4 } from '../shadernode/ShaderNodes.js';
+import { f32, vec3, vec4 } from '../shadernode/ShaderNodes.js';
 
 import { MeshStandardMaterial } from '@modules/renderer/engine/engine.js';
 
@@ -35,13 +35,13 @@ export class MeshStandardNodeMaterial extends NodeMaterial {
   setupVariants() {
     // METALNESS
 
-    const metalnessNode = this.metalnessNode ? float(this.metalnessNode) : materialMetalness;
+    const metalnessNode = this.metalnessNode ? f32(this.metalnessNode) : materialMetalness;
 
     metalness.assign(metalnessNode);
 
     // ROUGHNESS
 
-    let roughnessNode = this.roughnessNode ? float(this.roughnessNode) : materialRoughness;
+    let roughnessNode = this.roughnessNode ? f32(this.roughnessNode) : materialRoughness;
     roughnessNode = getRoughness({ roughness: roughnessNode });
 
     roughness.assign(roughnessNode);

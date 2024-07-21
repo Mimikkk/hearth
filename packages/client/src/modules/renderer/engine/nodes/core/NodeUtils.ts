@@ -53,7 +53,7 @@ export function getValueType(value) {
   if (value.isNode === true) {
     return 'node';
   } else if (typeOf === 'number') {
-    return 'float';
+    return 'f32';
   } else if (typeOf === 'boolean') {
     return 'bool';
   } else if (typeOf === 'string') {
@@ -104,7 +104,7 @@ export function getValueFromType(type, ...params) {
     return new Mat4().set(...params);
   } else if (type === 'bool') {
     return params[0] || false;
-  } else if (type === 'float' || type === 'i32' || type === 'u32') {
+  } else if (type === 'f32' || type === 'i32' || type === 'u32') {
     return params[0] || 0;
   } else if (type === 'string') {
     return params[0] || '';

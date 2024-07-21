@@ -1,7 +1,7 @@
 import TempNode from '../core/TempNode.js';
 import { dot, mix } from '../math/MathNode.js';
 import { add } from '../math/OperatorNode.js';
-import { addNodeElement, float, nodeProxy, tslFn, vec3 } from '../shadernode/ShaderNodes.js';
+import { addNodeElement, f32, nodeProxy, tslFn, vec3 } from '../shadernode/ShaderNodes.js';
 
 const saturationNode = tslFn(({ color, adjustment }) => {
   return adjustment.mix(luminance(color.rgb), color.rgb);
@@ -34,7 +34,7 @@ const hueNode = tslFn(({ color, adjustment }) => {
 class ColorAdjustmentNode extends TempNode {
   static type = 'ColorAdjustmentNode';
 
-  constructor(method, colorNode, adjustmentNode = float(1)) {
+  constructor(method, colorNode, adjustmentNode = f32(1)) {
     super('vec3');
 
     this.method = method;

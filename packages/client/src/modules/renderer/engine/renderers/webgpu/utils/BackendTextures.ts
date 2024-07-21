@@ -581,7 +581,7 @@ export class BackendTextures {
     if (format === GPUTextureFormatType.BC5RGUnorm || format === GPUTextureFormatType.BC5RGSnorm)
       return { byteLength: 16, width: 4, height: 4 }; // RGTC2
     if (format === GPUTextureFormatType.BC6HRGBUFloat || format === GPUTextureFormatType.BC6HRGBFloat)
-      return { byteLength: 16, width: 4, height: 4 }; // BPTC (float)
+      return { byteLength: 16, width: 4, height: 4 }; // BPTC (f32)
     //@ts-expect-error
     if (format === GPUTextureFormatType.BC7RGBAUnorm || format === GPUTextureFormatType.BC7RGBAUnormSRGB)
       return { byteLength: 16, width: 4, height: 4 }; // BPTC (unorm)

@@ -1,6 +1,6 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
 import {
-  float,
+  f32,
   instanceIndex,
   MeshBasicNodeMaterial,
   NodeStack,
@@ -36,7 +36,7 @@ async function init() {
 
   const size = 1024; // non power of two buffer size is not well supported in WebGPU
 
-  const type = ['float', 'vec2', 'vec3', 'vec4'];
+  const type = ['f32', 'vec2', 'vec3', 'vec4'];
 
   const arrayBufferNodes = [];
 
@@ -81,28 +81,28 @@ async function init() {
 
     NodeStack.if(uv().y.greaterThan(0.0), () => {
       const indexValue = arrayBufferNodes[0].element(index).toVar();
-      const value = float(indexValue).div(float(size)).mul(20).floor().div(20);
+      const value = f32(indexValue).div(f32(size)).mul(20).floor().div(20);
 
       color.assign(vec3(value, 0, 0));
     });
 
     NodeStack.if(uv().y.greaterThan(0.25), () => {
       const indexValue = arrayBufferNodes[1].element(index).toVar();
-      const value = float(indexValue).div(float(size)).mul(20).floor().div(20);
+      const value = f32(indexValue).div(f32(size)).mul(20).floor().div(20);
 
       color.assign(vec3(0, value, 0));
     });
 
     NodeStack.if(uv().y.greaterThan(0.5), () => {
       const indexValue = arrayBufferNodes[2].element(index).toVar();
-      const value = float(indexValue).div(float(size)).mul(20).floor().div(20);
+      const value = f32(indexValue).div(f32(size)).mul(20).floor().div(20);
 
       color.assign(vec3(0, 0, value));
     });
 
     NodeStack.if(uv().y.greaterThan(0.75), () => {
       const indexValue = arrayBufferNodes[3].element(index).toVar();
-      const value = float(indexValue).div(float(size)).mul(20).floor().div(20);
+      const value = f32(indexValue).div(f32(size)).mul(20).floor().div(20);
 
       color.assign(vec3(value, value, value));
     });

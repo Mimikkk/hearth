@@ -9,7 +9,7 @@ import {
   transformedNormalWorld,
 } from '../accessors/NormalNode.js';
 import { positionViewDirection } from '../accessors/PositionNode.js';
-import { float } from '../shadernode/ShaderNodes.js';
+import { f32 } from '../shadernode/ShaderNodes.js';
 import { reference } from '../accessors/ReferenceNode.js';
 import { pmremTexture } from '@modules/renderer/engine/nodes/pmrem/PMREMNode.js';
 
@@ -41,7 +41,7 @@ class EnvironmentNode extends LightingNode {
 
     //
 
-    const intensity = reference('envMapIntensity', 'float', builder.material); // @TODO: Add materialEnvIntensity in MaterialNode
+    const intensity = reference('envMapIntensity', 'f32', builder.material); // @TODO: Add materialEnvIntensity in MaterialNode
 
     const radiance = context(envNode, createRadianceContext(roughness, transformedNormalView)).mul(intensity);
     const irradiance = context(envNode, createIrradianceContext(transformedNormalWorld)).mul(Math.PI).mul(intensity);
@@ -95,7 +95,7 @@ const createIrradianceContext = normalWorldNode => {
       return normalWorldNode;
     },
     getTextureLevel: () => {
-      return float(1.0);
+      return f32(1.0);
     },
   };
 };

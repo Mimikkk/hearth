@@ -11,8 +11,8 @@ const Schlick_to_F0 = tslFn(({ f, f90, dotVH }) => {
   type: 'vec3',
   inputs: [
     { name: 'f', type: 'vec3' },
-    { name: 'f90', type: 'float' },
-    { name: 'dotVH', type: 'float' },
+    { name: 'f90', type: 'f32' },
+    { name: 'dotVH', type: 'f32' },
   ],
 });
 

@@ -33,10 +33,10 @@ class ClippingNode extends Node {
     return tslFn(() => {
       const clippingPlanes = uniforms(planes);
 
-      const distanceToPlane = property('float', 'distanceToPlane');
-      const distanceGradient = property('float', 'distanceToGradient');
+      const distanceToPlane = property('f32', 'distanceToPlane');
+      const distanceGradient = property('f32', 'distanceToGradient');
 
-      const clipOpacity = property('float', 'clipOpacity');
+      const clipOpacity = property('f32', 'clipOpacity');
 
       clipOpacity.assign(1);
 
@@ -54,7 +54,7 @@ class ClippingNode extends Node {
       });
 
       if (numUnionClippingPlanes < numClippingPlanes) {
-        const unionClipOpacity = property('float', 'unionclipOpacity');
+        const unionClipOpacity = property('f32', 'unionclipOpacity');
 
         unionClipOpacity.assign(1);
 

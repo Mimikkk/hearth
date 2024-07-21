@@ -20,7 +20,7 @@ import {
 } from '../core/PropertyNode.js';
 import { transformedClearcoatNormalView, transformedNormalView } from '../accessors/NormalNode.js';
 import { positionViewDirection } from '../accessors/PositionNode.js';
-import { float, mat3, tslFn, vec3 } from '../shadernode/ShaderNodes.js';
+import { f32, mat3, tslFn, vec3 } from '../shadernode/ShaderNodes.js';
 import { cond } from '@modules/renderer/engine/nodes/math/CondNode.js';
 import { mix, smoothstep } from '@modules/renderer/engine/nodes/math/MathNode.js';
 
@@ -62,7 +62,7 @@ const evalSensitivity = (OPD, shift) => {
   const pos = vec3(1.681e6, 1.7953e6, 2.2084e6);
   const VAR = vec3(4.3278e9, 9.3046e9, 6.6121e9);
 
-  const x = float(9.747e-14 * Math.sqrt(2.0 * Math.PI * 4.5282e9))
+  const x = f32(9.747e-14 * Math.sqrt(2.0 * Math.PI * 4.5282e9))
     .mul(phase.mul(2.2399e6).add(shift.x).cos())
     .mul(phase.pow2().mul(-4.5282e9).exp());
 
@@ -81,10 +81,10 @@ const evalIridescence = tslFn(({ outsideIOR, eta2, cosTheta1, thinFilmThickness,
   // Force iridescenceIOR -> outsideIOR when thinFilmThickness -> 0.0
   const iridescenceIOR = mix(outsideIOR, eta2, smoothstep(0.0, 0.03, thinFilmThickness));
   // Evaluate the cosTheta on the base layer (Snell law)
-  const sinTheta2Sq = outsideIOR.div(iridescenceIOR).pow2().mul(float(1).sub(cosTheta1.pow2()));
+  const sinTheta2Sq = outsideIOR.div(iridescenceIOR).pow2().mul(f32(1).sub(cosTheta1.pow2()));
 
   // Handle TIR:
-  const cosTheta2Sq = float(1).sub(sinTheta2Sq);
+  const cosTheta2Sq = f32(1).sub(sinTheta2Sq);
   /*if ( cosTheta2Sq < 0.0 ) {
 
       return vec3( 1.0 );
@@ -99,7 +99,7 @@ const evalIridescence = tslFn(({ outsideIOR, eta2, cosTheta1, thinFilmThickness,
   //const R21 = R12;
   const T121 = R12.oneMinus();
   const phi12 = iridescenceIOR.lessThan(outsideIOR).cond(Math.PI, 0.0);
-  const phi21 = float(Math.PI).sub(phi12);
+  const phi21 = f32(Math.PI).sub(phi12);
 
   // Second interface
   const baseIOR = Fresnel0ToIor(baseF0.clamp(0.0, 0.9999)); // guard against 1.0
@@ -128,7 +128,7 @@ const evalIridescence = tslFn(({ outsideIOR, eta2, cosTheta1, thinFilmThickness,
   let Cm = Rs.sub(T121);
   for (let m = 1; m <= 2; ++m) {
     Cm = Cm.mul(r123);
-    const Sm = evalSensitivity(float(m).mul(OPD), float(m).mul(phi)).mul(2.0);
+    const Sm = evalSensitivity(f32(m).mul(OPD), f32(m).mul(phi)).mul(2.0);
     I = I.add(Cm.mul(Sm));
   }
 
@@ -138,10 +138,10 @@ const evalIridescence = tslFn(({ outsideIOR, eta2, cosTheta1, thinFilmThickness,
   name: 'evalIridescence',
   type: 'vec3',
   inputs: [
-    { name: 'outsideIOR', type: 'float' },
-    { name: 'eta2', type: 'float' },
-    { name: 'cosTheta1', type: 'float' },
-    { name: 'thinFilmThickness', type: 'float' },
+    { name: 'outsideIOR', type: 'f32' },
+    { name: 'eta2', type: 'f32' },
+    { name: 'cosTheta1', type: 'f32' },
+    { name: 'thinFilmThickness', type: 'f32' },
     { name: 'baseF0', type: 'vec3' },
   ],
 });
@@ -160,17 +160,17 @@ const IBLSheenBRDF = tslFn(({ normal, viewDir, roughness }) => {
 
   const a = cond(
     roughness.lessThan(0.25),
-    float(-339.2).mul(r2).add(float(161.4).mul(roughness)).sub(25.9),
-    float(-8.48).mul(r2).add(float(14.3).mul(roughness)).sub(9.95),
+    f32(-339.2).mul(r2).add(f32(161.4).mul(roughness)).sub(25.9),
+    f32(-8.48).mul(r2).add(f32(14.3).mul(roughness)).sub(9.95),
   );
 
   const b = cond(
     roughness.lessThan(0.25),
-    float(44.0).mul(r2).sub(float(23.7).mul(roughness)).add(3.26),
-    float(1.97).mul(r2).sub(float(3.27).mul(roughness)).add(0.72),
+    f32(44.0).mul(r2).sub(f32(23.7).mul(roughness)).add(3.26),
+    f32(1.97).mul(r2).sub(f32(3.27).mul(roughness)).add(0.72),
   );
 
-  const DG = cond(roughness.lessThan(0.25), 0.0, float(0.1).mul(roughness).sub(0.025)).add(a.mul(dotNV).add(b).exp());
+  const DG = cond(roughness.lessThan(0.25), 0.0, f32(0.1).mul(roughness).sub(0.025)).add(a.mul(dotNV).add(b).exp());
 
   return DG.mul(1.0 / Math.PI).saturate();
 });
@@ -213,7 +213,7 @@ class PhysicalLightingModel extends LightingModel {
       const dotNVi = transformedNormalView.dot(positionViewDirection).clamp();
 
       this.iridescenceFresnel = evalIridescence({
-        outsideIOR: float(1.0),
+        outsideIOR: f32(1.0),
         eta2: iridescenceIOR,
         cosTheta1: dotNVi,
         thinFilmThickness: iridescenceThickness,
@@ -228,7 +228,7 @@ class PhysicalLightingModel extends LightingModel {
   // Approximates multiscattering in order to preserve energy.
   // http://www.jcgt.org/published/0008/01/03/
 
-  computeMultiscattering(singleScatter, multiScatter, specularF90 = float(1)) {
+  computeMultiscattering(singleScatter, multiScatter, specularF90 = f32(1)) {
     const dotNV = transformedNormalView.dot(positionViewDirection).clamp(); // @ TODO: Move to core dotNV
 
     const fab = DFGApprox({ roughness, dotNV });

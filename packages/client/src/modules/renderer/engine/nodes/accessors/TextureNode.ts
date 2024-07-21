@@ -32,7 +32,7 @@ class TextureNode extends UniformNode {
   }
 
   getNodeType(/*builder*/) {
-    if (this.value.isDepthTexture === true) return 'float';
+    if (this.value.isDepthTexture === true) return 'f32';
 
     return 'vec4';
   }
@@ -147,9 +147,9 @@ class TextureNode extends UniformNode {
         const { uvNode, levelNode, compareNode, depthNode } = properties;
 
         const uvSnippet = this.generateUV(builder, uvNode);
-        const levelSnippet = levelNode ? levelNode.build(builder, 'float') : null;
+        const levelSnippet = levelNode ? levelNode.build(builder, 'f32') : null;
         const depthSnippet = depthNode ? depthNode.build(builder, 'i32') : null;
-        const compareSnippet = compareNode ? compareNode.build(builder, 'float') : null;
+        const compareSnippet = compareNode ? compareNode.build(builder, 'f32') : null;
 
         const nodeVar = builder.getVarFromNode(this);
 

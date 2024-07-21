@@ -1,5 +1,5 @@
 import Node from '../core/Node.js';
-import { float, nodeImmutable } from '../shadernode/ShaderNodes.js';
+import { f32, nodeImmutable } from '../shadernode/ShaderNodes.js';
 
 class FrontFacingNode extends Node {
   static type = 'FrontFacingNode';
@@ -18,4 +18,4 @@ class FrontFacingNode extends Node {
 export default FrontFacingNode;
 
 export const frontFacing = nodeImmutable(FrontFacingNode);
-export const faceDirection = float(frontFacing).mul(2.0).sub(1.0);
+export const faceDirection = f32(frontFacing).mul(2.0).sub(1.0);

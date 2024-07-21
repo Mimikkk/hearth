@@ -5,12 +5,12 @@
  *
  *  curveSegments: <i32>, // number of points on the curves
  *  steps: <i32>, // number of points for z-side extrusions / used for subdividing segments of extrude spline too
- *  depth: <float>, // Depth to extrude the shape
+ *  depth: <f32>, // Depth to extrude the shape
  *
  *  bevelEnabled: <bool>, // turn on bevel
- *  bevelThickness: <float>, // how deep into the original shape bevel goes
- *  bevelSize: <float>, // how far from shape outline (including bevelOffset) is bevel
- *  bevelOffset: <float>, // how far from shape outline does bevel start
+ *  bevelThickness: <f32>, // how deep into the original shape bevel goes
+ *  bevelSize: <f32>, // how far from shape outline (including bevelOffset) is bevel
+ *  bevelOffset: <f32>, // how far from shape outline does bevel start
  *  bevelSegments: <i32>, // number of bevel layers
  *
  *  extrudePath: <engine.Curve> // curve to extrude shape along

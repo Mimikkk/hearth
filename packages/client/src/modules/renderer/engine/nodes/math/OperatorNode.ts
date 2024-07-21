@@ -47,7 +47,7 @@ class OperatorNode extends TempNode {
 
       return typeLength > 1 ? `bvec${typeLength}` : 'bool';
     } else {
-      if (typeA === 'float' && builder.isMatrix(typeB)) {
+      if (typeA === 'f32' && builder.isMatrix(typeB)) {
         return typeB;
       } else if (builder.isMatrix(typeA) && builder.isVector(typeB)) {
         // matrix x vector
@@ -86,7 +86,7 @@ class OperatorNode extends TempNode {
         if (builder.isVector(typeA)) {
           typeB = typeA;
         } else {
-          typeA = typeB = 'float';
+          typeA = typeB = 'f32';
         }
       } else if (op === '>>' || op === '<<') {
         typeA = type;

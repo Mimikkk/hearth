@@ -44,7 +44,7 @@ async function init() {
   const material = new SpriteNodeMaterial();
   material.colorNode = textureNode.mul(uv()).mul(2);
   material.opacityNode = textureNode.a;
-  material.rotationNode = userData('rotation', 'float'); // get value of: sprite.userData.rotation
+  material.rotationNode = userData('rotation', 'f32'); // get value of: sprite.userData.rotation
   material.transparent = true;
 
   for (let a = 0; a < amount; a++) {

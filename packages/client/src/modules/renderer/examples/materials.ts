@@ -2,7 +2,7 @@ import * as Engine from '@modules/renderer/engine/engine.js';
 import * as Nodes from '@modules/renderer/engine/nodes/Nodes.js';
 import {
   color,
-  float,
+  f32,
   global,
   js,
   loop,
@@ -197,7 +197,7 @@ async function init() {
 
   // Triplanar Texture Mapping
   material = new MeshBasicNodeMaterial();
-  material.colorNode = triplanarTexture(texture(uvTexture), null, null, float(0.01));
+  material.colorNode = triplanarTexture(texture(uvTexture), null, null, f32(0.01));
   materials.push(material);
 
   // Screen Projection Texture
@@ -241,19 +241,19 @@ async function init() {
 						outputType: 'node'
 					};
 
-					const { float } = TSL;
+					const { f32 } = TSL;
 
 					function init() {
 
 						setTimeout( () => {
 
-							local.set( 'result', float( 1.0 ) );
+							local.set( 'result', f32( 1.0 ) );
 
 							refresh(); // refresh the node
 
 						}, 1000 );
 
-						return float( 0.0 );
+						return f32( 0.0 );
 
 					}
 
@@ -284,7 +284,7 @@ async function init() {
 						]
 					};
 
-					const { saturation, float, oscSine, mul } = TSL;
+					const { saturation, f32, oscSine, mul } = TSL;
 
 					function helloWorld() {
 
@@ -294,8 +294,8 @@ async function init() {
 
 					function main() {
 
-						const source = parameters.get( 'source' ) || float();
-						const contrast = parameters.get( 'contrast' ) || float();
+						const source = parameters.get( 'source' ) || f32();
+						const contrast = parameters.get( 'contrast' ) || f32();
 
 						const material = local.get( 'material' );
 

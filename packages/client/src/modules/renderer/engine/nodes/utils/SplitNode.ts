@@ -63,7 +63,7 @@ class SplitNode extends Node {
         snippet = builder.format(`${nodeSnippet}.${this.components}`, this.getNodeType(builder), output);
       }
     } else {
-      // ignore .components if .node returns float/integer
+      // ignore .components if .node returns f32/integer
 
       snippet = node.build(builder, output);
     }

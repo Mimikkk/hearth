@@ -65,8 +65,8 @@ class AnalyticLightNode extends LightingNode {
 
       //
 
-      const bias = reference('bias', 'float', shadow);
-      const normalBias = reference('normalBias', 'float', shadow);
+      const bias = reference('bias', 'f32', shadow);
+      const normalBias = reference('normalBias', 'f32', shadow);
 
       let shadowCoord = uniform(shadow.matrix).mul(positionWorld.add(normalWorld.mul(normalBias)));
       shadowCoord = shadowCoord.xyz.div(shadowCoord.w);
@@ -101,7 +101,7 @@ class AnalyticLightNode extends LightingNode {
       // PCFShadowMap
       /*
 			const mapSize = reference( 'mapSize', 'vec2', shadow );
-			const radius = reference( 'radius', 'float', shadow );
+			const radius = reference( 'radius', 'f32', shadow );
 
 			const texelSize = vec2( 1 ).div( mapSize );
 			const dx0 = texelSize.x.negate().mul( radius );

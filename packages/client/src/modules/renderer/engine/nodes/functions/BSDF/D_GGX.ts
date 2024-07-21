@@ -11,10 +11,10 @@ const D_GGX = tslFn(({ alpha, dotNH }) => {
   return a2.div(denom.pow2()).mul(1 / Math.PI);
 }).setLayout({
   name: 'D_GGX',
-  type: 'float',
+  type: 'f32',
   inputs: [
-    { name: 'alpha', type: 'float' },
-    { name: 'dotNH', type: 'float' },
+    { name: 'alpha', type: 'f32' },
+    { name: 'dotNH', type: 'f32' },
   ],
 }); // validated
 

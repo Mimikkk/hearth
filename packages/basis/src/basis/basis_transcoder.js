@@ -1762,7 +1762,7 @@ export async function makeBasis(Module = {}) {
           return this['fromWireType'](HEAPF64[pointer >> 3]);
         };
       default:
-        throw new TypeError('Unknown float type: ' + name);
+        throw new TypeError('Unknown f32 type: ' + name);
     }
   }
 

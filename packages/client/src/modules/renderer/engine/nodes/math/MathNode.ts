@@ -1,6 +1,6 @@
 import TempNode from '../core/TempNode.js';
 import { div, mul, sub } from './OperatorNode.js';
-import { addNodeElement, float, nodeObject, nodeProxy, vec3, vec4 } from '../shadernode/ShaderNodes.js';
+import { addNodeElement, f32, nodeObject, nodeProxy, vec3, vec4 } from '../shadernode/ShaderNodes.js';
 
 class MathNode extends TempNode {
   static type = 'MathNode';
@@ -39,7 +39,7 @@ class MathNode extends TempNode {
     const method = this.method;
 
     if (method === MathNode.LENGTH || method === MathNode.DISTANCE || method === MathNode.DOT) {
-      return 'float';
+      return 'f32';
     } else if (method === MathNode.CROSS) {
       return 'vec3';
     } else if (method === MathNode.ALL) {
@@ -96,21 +96,21 @@ class MathNode extends TempNode {
         params.push(a.build(builder, type), b.build(builder, type));
       } else if (method === MathNode.STEP) {
         params.push(
-          a.build(builder, builder.getTypeLength(a.getNodeType(builder)) === 1 ? 'float' : inputType),
+          a.build(builder, builder.getTypeLength(a.getNodeType(builder)) === 1 ? 'f32' : inputType),
           b.build(builder, inputType),
         );
       } else if ((isWebGL && (method === MathNode.MIN || method === MathNode.MAX)) || method === MathNode.MOD) {
         params.push(
           a.build(builder, inputType),
-          b.build(builder, builder.getTypeLength(b.getNodeType(builder)) === 1 ? 'float' : inputType),
+          b.build(builder, builder.getTypeLength(b.getNodeType(builder)) === 1 ? 'f32' : inputType),
         );
       } else if (method === MathNode.REFRACT) {
-        params.push(a.build(builder, inputType), b.build(builder, inputType), c.build(builder, 'float'));
+        params.push(a.build(builder, inputType), b.build(builder, inputType), c.build(builder, 'f32'));
       } else if (method === MathNode.MIX) {
         params.push(
           a.build(builder, inputType),
           b.build(builder, inputType),
-          c.build(builder, builder.getTypeLength(c.getNodeType(builder)) === 1 ? 'float' : inputType),
+          c.build(builder, builder.getTypeLength(c.getNodeType(builder)) === 1 ? 'f32' : inputType),
         );
       } else {
         params.push(a.build(builder, inputType));
@@ -185,10 +185,10 @@ MathNode.FACEFORWARD = 'faceforward';
 
 export default MathNode;
 
-export const EPSILON = float(1e-6);
-export const INFINITY = float(1e6);
-export const PI = float(Math.PI);
-export const PI2 = float(Math.PI * 2);
+export const EPSILON = f32(1e-6);
+export const INFINITY = f32(1e6);
+export const PI = f32(Math.PI);
+export const PI2 = f32(Math.PI * 2);
 
 export const all = nodeProxy(MathNode, MathNode.ALL);
 export const any = nodeProxy(MathNode, MathNode.ANY);

@@ -1,6 +1,6 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
 import {
-  float,
+  f32,
   instanceIndex,
   MeshBasicNodeMaterial,
   texture,
@@ -42,8 +42,8 @@ async function init() {
 
     // https://www.shadertoy.com/view/Xst3zN
 
-    const x = float(posX).div(50.0);
-    const y = float(posY).div(50.0);
+    const x = f32(posX).div(50.0);
+    const y = f32(posY).div(50.0);
 
     const v1 = x.sin();
     const v2 = y.sin();

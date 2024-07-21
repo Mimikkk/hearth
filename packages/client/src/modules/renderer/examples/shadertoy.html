@@ -16,13 +16,13 @@
 <script id="example1" type="x-shader/x-fragment">
   // https://www.shadertoy.com/view/Mt2SzR
 
-  float random(float x) {
+  f32 random(f32 x) {
 
     return fract(sin(x) * 10000.);
 
   }
 
-  float noise(vec2 p) {
+  f32 noise(vec2 p) {
 
     return random(p.x + p.y * 10000.);
 
@@ -33,18 +33,18 @@
   vec2 nw(vec2 p) { return vec2(floor(p.x), ceil(p.y)); }
   vec2 ne(vec2 p) { return vec2(ceil(p.x), ceil(p.y)); }
 
-  float smoothNoise(vec2 p) {
+  f32 smoothNoise(vec2 p) {
 
     vec2 interp = smoothstep(0., 1., fract(p));
-    float s = mix(noise(sw(p)), noise(se(p)), interp.x);
-    float n = mix(noise(nw(p)), noise(ne(p)), interp.x);
+    f32 s = mix(noise(sw(p)), noise(se(p)), interp.x);
+    f32 n = mix(noise(nw(p)), noise(ne(p)), interp.x);
     return mix(s, n, interp.y);
 
   }
 
-  float fractalNoise(vec2 p) {
+  f32 fractalNoise(vec2 p) {
 
-    float x = 0.;
+    f32 x = 0.;
     x += smoothNoise(p);
     x += smoothNoise(p * 2.) / 2.;
     x += smoothNoise(p * 4.) / 4.;
@@ -55,19 +55,19 @@
 
   }
 
-  float movingNoise(vec2 p) {
+  f32 movingNoise(vec2 p) {
 
-    float x = fractalNoise(p + iTime);
-    float y = fractalNoise(p - iTime);
+    f32 x = fractalNoise(p + iTime);
+    f32 y = fractalNoise(p - iTime);
     return fractalNoise(p + vec2(x, y));
 
   }
 
   // call this for water noise function
-  float nestedNoise(vec2 p) {
+  f32 nestedNoise(vec2 p) {
 
-    float x = movingNoise(p);
-    float y = movingNoise(p + 100.);
+    f32 x = movingNoise(p);
+    f32 y = movingNoise(p + 100.);
     return movingNoise(p + vec2(x, y));
 
   }
@@ -75,7 +75,7 @@
   void mainImage(out vec4 fragColor, in vec2 fragCoord)
   {
     vec2 uv = fragCoord.xy / iResolution.xy;
-    float n = nestedNoise(uv * 6.);
+    f32 n = nestedNoise(uv * 6.);
 
     fragColor = vec4(mix(vec3(.4, .6, 1.), vec3(.1, .2, 1.), n), 1.);
   }
@@ -84,38 +84,38 @@
 <script id="example2" type="x-shader/x-fragment">
   // https://www.shadertoy.com/view/3tcBzH
 
-  float rand(vec2 co){
+  f32 rand(vec2 co){
     return fract(sin(dot(co.xy, vec2(12.9898, 78.233))) * 43758.5453);
   }
 
-  float hermite(float t)
+  f32 hermite(f32 t)
   {
     return t * t * (3.0 - 2.0 * t);
   }
 
-  float noise(vec2 co, float frequency)
+  f32 noise(vec2 co, f32 frequency)
   {
     vec2 v = vec2(co.x * frequency, co.y * frequency);
 
-    float ix1 = floor(v.x);
-    float iy1 = floor(v.y);
-    float ix2 = floor(v.x + 1.0);
-    float iy2 = floor(v.y + 1.0);
+    f32 ix1 = floor(v.x);
+    f32 iy1 = floor(v.y);
+    f32 ix2 = floor(v.x + 1.0);
+    f32 iy2 = floor(v.y + 1.0);
 
-    float fx = hermite(fract(v.x));
-    float fy = hermite(fract(v.y));
+    f32 fx = hermite(fract(v.x));
+    f32 fy = hermite(fract(v.y));
 
-    float fade1 = mix(rand(vec2(ix1, iy1)), rand(vec2(ix2, iy1)), fx);
-    float fade2 = mix(rand(vec2(ix1, iy2)), rand(vec2(ix2, iy2)), fx);
+    f32 fade1 = mix(rand(vec2(ix1, iy1)), rand(vec2(ix2, iy1)), fx);
+    f32 fade2 = mix(rand(vec2(ix1, iy2)), rand(vec2(ix2, iy2)), fx);
 
     return mix(fade1, fade2, fy);
   }
 
-  float pnoise(vec2 co, float freq, i32 steps, float persistence)
+  f32 pnoise(vec2 co, f32 freq, i32 steps, f32 persistence)
   {
-    float value = 0.0;
-    float ampl = 1.0;
-    float sum = 0.0;
+    f32 value = 0.0;
+    f32 ampl = 1.0;
+    f32 sum = 0.0;
     for (i32 i=0; i<steps; i++)
     {
       sum += ampl;
@@ -128,8 +128,8 @@
 
   void mainImage(out vec4 fragColor, in vec2 fragCoord) {
     vec2 uv = fragCoord.xy / iResolution.xy;
-    float gradient = 1.0 - uv.y;
-    float gradientStep = 0.2;
+    f32 gradient = 1.0 - uv.y;
+    f32 gradientStep = 0.2;
 
     vec2 pos = fragCoord.xy / iResolution.x;
     pos.y -= iTime * 0.3125;
@@ -138,14 +138,14 @@
     vec4 darkerColor = vec4(1.0, 0.0, 0.15, 0.0625);
     vec4 middleColor = mix(brighterColor, darkerColor, 0.5);
 
-    float noiseTexel = pnoise(pos, 10.0, 5, 0.5);
+    f32 noiseTexel = pnoise(pos, 10.0, 5, 0.5);
 
-    float firstStep = smoothstep(0.0, noiseTexel, gradient);
-    float darkerColorStep = smoothstep(0.0, noiseTexel, gradient - gradientStep);
-    float darkerColorPath = firstStep - darkerColorStep;
+    f32 firstStep = smoothstep(0.0, noiseTexel, gradient);
+    f32 darkerColorStep = smoothstep(0.0, noiseTexel, gradient - gradientStep);
+    f32 darkerColorPath = firstStep - darkerColorStep;
     vec4 color = mix(brighterColor, darkerColor, darkerColorPath);
 
-    float middleColorStep = smoothstep(0.0, noiseTexel, gradient - 0.2 * 2.0);
+    f32 middleColorStep = smoothstep(0.0, noiseTexel, gradient - 0.2 * 2.0);
 
     color = mix(color, middleColor, darkerColorStep - middleColorStep);
     color = mix(vec4(0.0), color, firstStep);

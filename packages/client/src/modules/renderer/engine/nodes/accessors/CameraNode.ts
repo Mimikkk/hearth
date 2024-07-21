@@ -22,7 +22,7 @@ class CameraNode extends Object3DNode {
     if (scope === CameraNode.PROJECTION_MATRIX || scope === CameraNode.PROJECTION_MATRIX_INVERSE) {
       return 'mat4';
     } else if (scope === CameraNode.NEAR || scope === CameraNode.FAR || scope === CameraNode.LOG_DEPTH) {
-      return 'float';
+      return 'f32';
     }
 
     return super.getNodeType(builder);
@@ -60,7 +60,7 @@ class CameraNode extends Object3DNode {
     if (scope === CameraNode.PROJECTION_MATRIX || scope === CameraNode.PROJECTION_MATRIX_INVERSE) {
       this._uniformNode.nodeType = 'mat4';
     } else if (scope === CameraNode.NEAR || scope === CameraNode.FAR || scope === CameraNode.LOG_DEPTH) {
-      this._uniformNode.nodeType = 'float';
+      this._uniformNode.nodeType = 'f32';
     }
 
     return super.generate(builder);

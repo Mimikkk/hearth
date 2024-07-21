@@ -1,7 +1,7 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
 import {
   color,
-  float,
+  f32,
   instanceIndex,
   storage,
   storageObject,
@@ -86,11 +86,11 @@ async function init() {
 
   waveGPUBuffer = new StorageInstancedBufferAttribute(waveBuffer, 1);
 
-  const waveStorageNode = storage(waveGPUBuffer, 'float', waveBuffer.length);
+  const waveStorageNode = storage(waveGPUBuffer, 'f32', waveBuffer.length);
 
   // read-only buffer
 
-  const waveNode = storageObject(new StorageInstancedBufferAttribute(waveBuffer, 1), 'float', waveBuffer.length);
+  const waveNode = storageObject(new StorageInstancedBufferAttribute(waveBuffer, 1), 'f32', waveBuffer.length);
 
   // params
 
@@ -101,7 +101,7 @@ async function init() {
   // compute (shader-node)
 
   const computeShaderFn = tslFn(() => {
-    const index = float(instanceIndex);
+    const index = f32(instanceIndex);
 
     // pitch
 

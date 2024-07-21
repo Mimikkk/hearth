@@ -1,6 +1,6 @@
 import Node from '../core/Node.ts';
 import { scriptableValue } from './ScriptableValueNode.js';
-import { addNodeElement, float, nodeProxy } from '../shadernode/ShaderNodes.js';
+import { addNodeElement, f32, nodeProxy } from '../shadernode/ShaderNodes.js';
 import CodeNode from '@modules/renderer/engine/nodes/code/CodeNode.js';
 import { NodeBuilder } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.js';
 
@@ -274,7 +274,7 @@ class ScriptableNode extends Node {
       return output;
     }
 
-    return float();
+    return f32();
   }
 
   getDefaultOutput() {

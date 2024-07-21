@@ -1,5 +1,5 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
-import { float, mix, oscSine, pmremTexture, timerLocal, toneMapping } from '@modules/renderer/engine/nodes/Nodes.js';
+import { f32, mix, oscSine, pmremTexture, timerLocal, toneMapping } from '@modules/renderer/engine/nodes/Nodes.js';
 
 import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 
@@ -49,7 +49,7 @@ async function init() {
   scene.environmentNode = mix(pmremTexture(cube2Texture), pmremTexture(cube1Texture), oscSine(timerLocal(0.1)));
 
   scene.backgroundNode = scene.environmentNode.context({
-    getTextureLevel: () => float(0.5),
+    getTextureLevel: () => f32(0.5),
   });
 
   const loader = new GLTFLoader();

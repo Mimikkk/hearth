@@ -2,7 +2,7 @@ import Node from '../core/Node.js';
 import { reference } from './ReferenceNode.js';
 import { materialReference } from './MaterialReferenceNode.js';
 import { normalView } from './NormalNode.js';
-import { float, nodeImmutable } from '../shadernode/ShaderNodes.js';
+import { f32, nodeImmutable } from '../shadernode/ShaderNodes.js';
 
 const _propertyCache = new Map();
 
@@ -28,7 +28,7 @@ class MaterialNode extends Node {
   }
 
   getFloat(property) {
-    return this.getCache(property, 'float');
+    return this.getCache(property, 'f32');
   }
 
   getColor(property) {
@@ -65,7 +65,7 @@ class MaterialNode extends Node {
       if (material.specularMap && material.specularMap.isTexture === true) {
         node = this.getTexture(scope).r;
       } else {
-        node = float(1);
+        node = f32(1);
       }
     } else if (scope === MaterialNode.ROUGHNESS) {
       // TODO: cleanup similar branches
@@ -142,10 +142,10 @@ class MaterialNode extends Node {
 
       node = node.clamp(0.07, 1.0);
     } else if (scope === MaterialNode.IRIDESCENCE_THICKNESS) {
-      const iridescenceThicknessMaximum = reference('1', 'float', material.iridescenceThicknessRange);
+      const iridescenceThicknessMaximum = reference('1', 'f32', material.iridescenceThicknessRange);
 
       if (material.iridescenceThicknessMap) {
-        const iridescenceThicknessMinimum = reference('0', 'float', material.iridescenceThicknessRange);
+        const iridescenceThicknessMinimum = reference('0', 'f32', material.iridescenceThicknessRange);
 
         node = iridescenceThicknessMaximum
           .sub(iridescenceThicknessMinimum)

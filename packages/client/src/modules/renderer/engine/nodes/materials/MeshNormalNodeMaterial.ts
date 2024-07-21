@@ -3,7 +3,7 @@ import { diffuseColor } from '../core/PropertyNode.js';
 import { directionToColor } from '../utils/PackingNode.js';
 import { materialOpacity } from '../accessors/MaterialNode.js';
 import { transformedNormalView } from '../accessors/NormalNode.js';
-import { float, vec4 } from '../shadernode/ShaderNodes.js';
+import { f32, vec4 } from '../shadernode/ShaderNodes.js';
 
 import { MeshNormalMaterial } from '@modules/renderer/engine/engine.js';
 
@@ -25,7 +25,7 @@ export class MeshNormalNodeMaterial extends NodeMaterial {
   }
 
   setupDiffuseColor() {
-    const opacityNode = this.opacityNode ? float(this.opacityNode) : materialOpacity;
+    const opacityNode = this.opacityNode ? f32(this.opacityNode) : materialOpacity;
 
     diffuseColor.assign(vec4(directionToColor(transformedNormalView), opacityNode));
   }

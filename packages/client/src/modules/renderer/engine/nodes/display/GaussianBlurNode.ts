@@ -1,5 +1,5 @@
 import TempNode from '../core/TempNode.js';
-import { addNodeElement, float, nodeObject, tslFn, vec2, vec4 } from '../shadernode/ShaderNodes.js';
+import { addNodeElement, f32, nodeObject, tslFn, vec2, vec4 } from '../shadernode/ShaderNodes.js';
 import { NodeUpdateType } from '../core/constants.js';
 import { mul } from '../math/OperatorNode.js';
 import { uv } from '../accessors/UVNode.js';
@@ -115,12 +115,12 @@ class GaussianBlurNode extends TempNode {
       const invSize = this._invSize;
       const direction = vec2(this.directionNode).mul(this._passDirection);
 
-      const weightSum = float(gaussianCoefficients[0]).toVar();
+      const weightSum = f32(gaussianCoefficients[0]).toVar();
       const diffuseSum = vec4(sampleTexture(uvNode).mul(weightSum)).toVar();
 
       for (let i = 1; i < kernelSize; i++) {
-        const x = float(i);
-        const w = float(gaussianCoefficients[i]);
+        const x = f32(i);
+        const w = f32(gaussianCoefficients[i]);
 
         const uvOffset = vec2(direction.mul(invSize.mul(x))).toVar();
 

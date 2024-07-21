@@ -15,11 +15,11 @@ const V_GGX_SmithCorrelated = tslFn(inputs => {
   return div(0.5, gv.add(gl).max(EPSILON));
 }).setLayout({
   name: 'V_GGX_SmithCorrelated',
-  type: 'float',
+  type: 'f32',
   inputs: [
-    { name: 'alpha', type: 'float' },
-    { name: 'dotNL', type: 'float' },
-    { name: 'dotNV', type: 'float' },
+    { name: 'alpha', type: 'f32' },
+    { name: 'dotNL', type: 'f32' },
+    { name: 'dotNV', type: 'f32' },
   ],
 }); // validated
 

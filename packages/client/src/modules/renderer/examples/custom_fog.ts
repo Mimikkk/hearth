@@ -1,7 +1,7 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
 import {
   color,
-  float,
+  f32,
   fog,
   MeshPhongNodeMaterial,
   normalWorld,
@@ -36,7 +36,7 @@ async function init() {
 
   const distance = fogNoiseDistance.mul(20).max(4);
   const alpha = 0.98;
-  const groundFogArea = float(distance).sub(positionWorld.y).div(distance).pow(3).saturate().mul(alpha);
+  const groundFogArea = f32(distance).sub(positionWorld.y).div(distance).pow(3).saturate().mul(alpha);
 
   const timer = timerLocal(1);
 

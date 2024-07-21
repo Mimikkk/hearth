@@ -1,7 +1,7 @@
 import {
   checker,
   color,
-  float,
+  f32,
   MeshStandardNodeMaterial,
   oscSine,
   output,
@@ -78,8 +78,8 @@ function addBackdropSphere(backdropNode, backdropAlphaNode = null) {
   const rotation = degreeToRadian(id * 45);
 
   const material = new MeshStandardNodeMaterial({ color: 0x0066ff });
-  material.roughnessNode = float(0.2);
-  material.metalnessNode = float(0);
+  material.roughnessNode = f32(0.2);
+  material.metalnessNode = f32(0);
   material.backdropNode = backdropNode;
   material.backdropAlphaNode = backdropAlphaNode;
   material.transparent = true;

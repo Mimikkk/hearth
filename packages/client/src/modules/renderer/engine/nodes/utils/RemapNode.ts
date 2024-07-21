@@ -1,10 +1,10 @@
 import Node from '../core/Node.ts';
-import { addNodeElement, float, nodeProxy } from '../shadernode/ShaderNodes.js';
+import { addNodeElement, f32, nodeProxy } from '../shadernode/ShaderNodes.js';
 
 class RemapNode extends Node {
   static type = 'RemapNode';
 
-  constructor(node, inLowNode, inHighNode, outLowNode = float(0), outHighNode = float(1)) {
+  constructor(node, inLowNode, inHighNode, outLowNode = f32(0), outHighNode = f32(1)) {
     super();
 
     this.node = node;

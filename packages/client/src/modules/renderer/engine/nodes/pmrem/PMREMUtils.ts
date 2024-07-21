@@ -1,4 +1,4 @@
-import { float, i32, NodeStack, tslFn, vec2, vec3, vec4 } from '../shadernode/ShaderNodes.js';
+import { f32, i32, NodeStack, tslFn, vec2, vec3, vec4 } from '../shadernode/ShaderNodes.js';
 import { abs, all, clamp, cos, cross, exp2, floor, fract, log2, max, mix, normalize, sin } from '../math/MathNode.js';
 import { mul } from '../math/OperatorNode.js';
 import { cond } from '../math/CondNode.js';
@@ -6,19 +6,19 @@ import { Break, loop } from '../utils/LoopNode.js';
 
 // These defines must match with PMREMGenerator
 
-const cubeUV_r0 = float(1.0);
-const cubeUV_m0 = float(-2.0);
-const cubeUV_r1 = float(0.8);
-const cubeUV_m1 = float(-1.0);
-const cubeUV_r4 = float(0.4);
-const cubeUV_m4 = float(2.0);
-const cubeUV_r5 = float(0.305);
-const cubeUV_m5 = float(3.0);
-const cubeUV_r6 = float(0.21);
-const cubeUV_m6 = float(4.0);
+const cubeUV_r0 = f32(1.0);
+const cubeUV_m0 = f32(-2.0);
+const cubeUV_r1 = f32(0.8);
+const cubeUV_m1 = f32(-1.0);
+const cubeUV_r4 = f32(0.4);
+const cubeUV_m4 = f32(2.0);
+const cubeUV_r5 = f32(0.305);
+const cubeUV_m5 = f32(3.0);
+const cubeUV_r6 = f32(0.21);
+const cubeUV_m6 = f32(4.0);
 
-const cubeUV_minMipLevel = float(4.0);
-const cubeUV_minTileSize = float(16.0);
+const cubeUV_minMipLevel = f32(4.0);
+const cubeUV_minTileSize = f32(16.0);
 
 // These shader functions convert between the UV coordinates of a single face of
 // a cubemap, the 0-5 integer index of a cube face, and the direction vector for
@@ -26,7 +26,7 @@ const cubeUV_minTileSize = float(16.0);
 
 const getFace = tslFn(([direction]) => {
   const absDirection = vec3(abs(direction)).toVar();
-  const face = float(-1.0).toVar();
+  const face = f32(-1.0).toVar();
 
   NodeStack.if(absDirection.x.greaterThan(absDirection.z), () => {
     NodeStack.if(absDirection.x.greaterThan(absDirection.y), () => {
@@ -45,7 +45,7 @@ const getFace = tslFn(([direction]) => {
   return face;
 }).setLayout({
   name: 'getFace',
-  type: 'float',
+  type: 'f32',
   inputs: [{ name: 'direction', type: 'vec3' }],
 });
 
@@ -78,12 +78,12 @@ const getUV = tslFn(([direction, face]) => {
   type: 'vec2',
   inputs: [
     { name: 'direction', type: 'vec3' },
-    { name: 'face', type: 'float' },
+    { name: 'face', type: 'f32' },
   ],
 });
 
 const roughnessToMip = tslFn(([roughness]) => {
-  const mip = float(0.0).toVar();
+  const mip = f32(0.0).toVar();
 
   NodeStack.if(roughness.greaterThanEqual(cubeUV_r1), () => {
     mip.assign(cubeUV_r0.sub(roughness).mul(cubeUV_m1.sub(cubeUV_m0)).div(cubeUV_r0.sub(cubeUV_r1)).add(cubeUV_m0));
@@ -98,14 +98,14 @@ const roughnessToMip = tslFn(([roughness]) => {
       mip.assign(cubeUV_r5.sub(roughness).mul(cubeUV_m6.sub(cubeUV_m5)).div(cubeUV_r5.sub(cubeUV_r6)).add(cubeUV_m5));
     })
     .else(() => {
-      mip.assign(float(-2.0).mul(log2(mul(1.16, roughness)))); // 1.16 = 1.79^0.25
+      mip.assign(f32(-2.0).mul(log2(mul(1.16, roughness)))); // 1.16 = 1.79^0.25
     });
 
   return mip;
 }).setLayout({
   name: 'roughnessToMip',
-  type: 'float',
-  inputs: [{ name: 'roughness', type: 'float' }],
+  type: 'f32',
+  inputs: [{ name: 'roughness', type: 'f32' }],
 });
 
 // RH coordinate system; PMREM face-indexing convention
@@ -142,7 +142,7 @@ export const getDirection = tslFn(([uv_immutable, face]) => {
   type: 'vec3',
   inputs: [
     { name: 'uv', type: 'vec2' },
-    { name: 'face', type: 'float' },
+    { name: 'face', type: 'f32' },
   ],
 });
 
@@ -150,7 +150,7 @@ export const getDirection = tslFn(([uv_immutable, face]) => {
 
 export const textureCubeUV = tslFn(
   ([envMap, sampleDir_immutable, roughness_immutable, CUBEUV_TEXEL_WIDTH, CUBEUV_TEXEL_HEIGHT, CUBEUV_MAX_MIP]) => {
-    const roughness = float(roughness_immutable);
+    const roughness = f32(roughness_immutable);
     const sampleDir = vec3(sampleDir_immutable);
 
     const mip = clamp(roughnessToMip(roughness), cubeUV_m0, CUBEUV_MAX_MIP);
@@ -174,12 +174,12 @@ export const textureCubeUV = tslFn(
 
 const bilinearCubeUV = tslFn(
   ([envMap, direction_immutable, mipInt_immutable, CUBEUV_TEXEL_WIDTH, CUBEUV_TEXEL_HEIGHT, CUBEUV_MAX_MIP]) => {
-    const mipInt = float(mipInt_immutable).toVar();
+    const mipInt = f32(mipInt_immutable).toVar();
     const direction = vec3(direction_immutable);
-    const face = float(getFace(direction)).toVar();
-    const filterInt = float(max(cubeUV_minMipLevel.sub(mipInt), 0.0)).toVar();
+    const face = f32(getFace(direction)).toVar();
+    const filterInt = f32(max(cubeUV_minMipLevel.sub(mipInt), 0.0)).toVar();
     mipInt.assign(max(mipInt, cubeUV_minMipLevel));
-    const faceSize = float(exp2(mipInt)).toVar();
+    const faceSize = f32(exp2(mipInt)).toVar();
     const uv = vec2(getUV(direction, face).mul(faceSize.sub(2.0)).add(1.0)).toVar();
 
     NodeStack.if(face.greaterThan(2.0), () => {
@@ -255,7 +255,7 @@ export const blur = tslFn(
         Break();
       });
 
-      const theta = float(dTheta.mul(float(i))).toVar();
+      const theta = f32(dTheta.mul(f32(i))).toVar();
       gl_FragColor.addAssign(
         weights.element(i).mul(
           getSample({

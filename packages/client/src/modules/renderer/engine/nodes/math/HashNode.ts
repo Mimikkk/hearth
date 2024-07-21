@@ -17,7 +17,7 @@ class HashNode extends Node {
     const word = state.shiftRight(state.shiftRight(28).add(4)).bitXor(state).mul(277803737);
     const result = word.shiftRight(22).bitXor(word);
 
-    return result.float().mul(1 / 2 ** 32); // Convert to range [0, 1)
+    return result.f32().mul(1 / 2 ** 32); // Convert to range [0, 1)
   }
 }
 

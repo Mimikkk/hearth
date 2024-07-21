@@ -19,9 +19,9 @@ class SceneNode extends Node {
     let output;
 
     if (scope === SceneNode.BACKGROUND_BLURRINESS) {
-      output = reference('backgroundBlurriness', 'float', scene);
+      output = reference('backgroundBlurriness', 'f32', scene);
     } else if (scope === SceneNode.BACKGROUND_INTENSITY) {
-      output = reference('backgroundIntensity', 'float', scene);
+      output = reference('backgroundIntensity', 'f32', scene);
     } else {
       console.error('engine.SceneNode: Unknown scope:', scope);
     }

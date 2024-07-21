@@ -5,7 +5,7 @@ import { uniform } from '../../../nodes/core/UniformNode.js';
 import { uniforms } from '../../../nodes/accessors/UniformsNode.js';
 import { texture } from '../../../nodes/accessors/TextureNode.js';
 import { cubeTexture } from '../../../nodes/accessors/CubeTextureNode.js';
-import { float, vec3 } from '../../../nodes/shadernode/ShaderNodes.js';
+import { f32, vec3 } from '../../../nodes/shadernode/ShaderNodes.js';
 import { uv } from '../../../nodes/accessors/UVNode.js';
 import { attribute } from '../../../nodes/core/AttributeNode.js';
 import {
@@ -570,14 +570,14 @@ function _getBlurShader(lodMax, width, height) {
   const weights = uniforms(new Array(MAX_SAMPLES).fill(0));
   const poleAxis = uniform(new Vec3(0, 1, 0));
   const dTheta = uniform(0);
-  const n = float(MAX_SAMPLES);
+  const n = f32(MAX_SAMPLES);
   const latitudinal = uniform(0); // false, bool
   const samples = uniform(1); // i32
   const envMap = texture(null);
   const mipInt = uniform(0); // i32
-  const CUBEUV_TEXEL_WIDTH = float(1 / width);
-  const CUBEUV_TEXEL_HEIGHT = float(1 / height);
-  const CUBEUV_MAX_MIP = float(lodMax);
+  const CUBEUV_TEXEL_WIDTH = f32(1 / width);
+  const CUBEUV_TEXEL_HEIGHT = f32(1 / height);
+  const CUBEUV_MAX_MIP = f32(lodMax);
 
   const materialUniforms = {
     n,

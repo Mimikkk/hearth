@@ -1,7 +1,7 @@
 import TempNode from '../core/TempNode.js';
 import { add, div, mul } from '../math/OperatorNode.js';
 import { ceil, floor, fract, pow } from '../math/MathNode.js';
-import { addNodeElement, float, i32, nodeProxy, vec2, vec4 } from '../shadernode/ShaderNodes.js';
+import { addNodeElement, f32, i32, nodeProxy, vec2, vec4 } from '../shadernode/ShaderNodes.js';
 
 // Mipped Bicubic Texture Filtering by N8
 // https://www.shadertoy.com/view/Dl2SDW
@@ -64,7 +64,7 @@ const textureBicubicMethod = (textureNode, lodNode) => {
 class TextureBicubicNode extends TempNode {
   static type = 'TextureBicubicNode';
 
-  constructor(textureNode, blurNode = float(3)) {
+  constructor(textureNode, blurNode = f32(3)) {
     super('vec4');
 
     this.textureNode = textureNode;

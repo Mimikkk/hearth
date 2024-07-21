@@ -3,7 +3,7 @@ import { add } from '../math/OperatorNode.js';
 import { normalLocal } from '../accessors/NormalNode.js';
 import { positionLocal } from '../accessors/PositionNode.js';
 import { texture } from '../accessors/TextureNode.js';
-import { addNodeElement, float, nodeProxy, vec3 } from '../shadernode/ShaderNodes.js';
+import { addNodeElement, f32, nodeProxy, vec3 } from '../shadernode/ShaderNodes.js';
 
 class TriplanarTexturesNode extends Node {
   static type = 'TriplanarTexturesNode';
@@ -12,7 +12,7 @@ class TriplanarTexturesNode extends Node {
     textureXNode,
     textureYNode = null,
     textureZNode = null,
-    scaleNode = float(1),
+    scaleNode = f32(1),
     positionNode = positionLocal,
     normalNode = normalLocal,
   ) {

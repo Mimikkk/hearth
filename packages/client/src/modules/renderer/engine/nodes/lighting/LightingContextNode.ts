@@ -1,5 +1,5 @@
 import ContextNode from '../core/ContextNode.js';
-import { addNodeElement, float, nodeProxy, vec3 } from '../shadernode/ShaderNodes.js';
+import { addNodeElement, f32, nodeProxy, vec3 } from '../shadernode/ShaderNodes.js';
 
 class LightingContextNode extends ContextNode {
   static type = 'LightingContextNode';
@@ -33,7 +33,7 @@ class LightingContextNode extends ContextNode {
       radiance: vec3().temp('radiance'),
       irradiance: vec3().temp('irradiance'),
       iblIrradiance: vec3().temp('iblIrradiance'),
-      ambientOcclusion: float(1).temp('ambientOcclusion'),
+      ambientOcclusion: f32(1).temp('ambientOcclusion'),
       reflectedLight,
       backdrop: backdropNode,
       backdropAlpha: backdropAlphaNode,

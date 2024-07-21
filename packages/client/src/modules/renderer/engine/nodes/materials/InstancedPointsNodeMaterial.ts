@@ -81,7 +81,7 @@ export class InstancedPointsNodeMaterial extends NodeMaterial {
       const vUv = varying(vec2(), 'vUv');
 
       // force assignment into correct place in flow
-      const alpha = property('float', 'alpha');
+      const alpha = property('f32', 'alpha');
       alpha.assign(1);
 
       const a = vUv.x;
@@ -91,7 +91,7 @@ export class InstancedPointsNodeMaterial extends NodeMaterial {
 
       if (useAlphaToCoverage) {
         // force assignment out of following 'if' statement - to avoid uniform control flow errors
-        const dlen = property('float', 'dlen');
+        const dlen = property('f32', 'dlen');
         dlen.assign(len2.fwidth());
 
         alpha.assign(smoothstep(dlen.oneMinus(), dlen.add(1), len2).oneMinus());

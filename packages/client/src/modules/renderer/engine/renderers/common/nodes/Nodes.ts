@@ -308,12 +308,12 @@ export class Nodes extends DataMap<any, any> {
         let fogNode = null;
 
         if (fog instanceof FogExp2) {
-          fogNode = densityFog(reference('color', 'color', fog), reference('density', 'float', fog));
+          fogNode = densityFog(reference('color', 'color', fog), reference('density', 'f32', fog));
         } else if (fog instanceof Fog) {
           fogNode = rangeFog(
             reference('color', 'color', fog),
-            reference('near', 'float', fog),
-            reference('far', 'float', fog),
+            reference('near', 'f32', fog),
+            reference('far', 'f32', fog),
           );
         } else {
           console.error('WebGPUNodes: Unsupported fog configuration.', fog);

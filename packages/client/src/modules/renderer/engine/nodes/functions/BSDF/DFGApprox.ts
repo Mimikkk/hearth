@@ -20,7 +20,7 @@ const DFGApprox = tslFn(({ roughness, dotNV }) => {
   name: 'DFGApprox',
   type: 'vec2',
   inputs: [
-    { name: 'roughness', type: 'float' },
+    { name: 'roughness', type: 'f32' },
     { name: 'dotNV', type: 'vec3' },
   ],
 });

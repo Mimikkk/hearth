@@ -278,7 +278,7 @@ export class NodeBuilder {
 
   generateConst(type, value = null) {
     if (value === null) {
-      if (type === 'float' || type === 'i32' || type === 'u32') value = 0;
+      if (type === 'f32' || type === 'i32' || type === 'u32') value = 0;
       else if (type === 'bool') value = false;
       else if (type === 'color') value = new Color();
       else if (type === 'vec2') value = new Vec2();
@@ -286,7 +286,7 @@ export class NodeBuilder {
       else if (type === 'vec4') value = new Vec4();
     }
 
-    if (type === 'float') return formatAsFloat(value);
+    if (type === 'f32') return formatAsFloat(value);
     if (type === 'i32') return `${Math.round(value)}`;
     if (type === 'u32') return value >= 0 ? `${Math.round(value)}u` : '0u';
     if (type === 'bool') return value ? 'true' : 'false';
@@ -349,7 +349,7 @@ export class NodeBuilder {
   getComponentType(type) {
     type = this.getVectorType(type);
 
-    if (type === 'float' || type === 'bool' || type === 'i32' || type === 'u32') return type;
+    if (type === 'f32' || type === 'bool' || type === 'i32' || type === 'u32') return type;
 
     const componentType = /(b|i|u|)(vec|mat)([2-4])/.exec(type);
 
@@ -359,7 +359,7 @@ export class NodeBuilder {
     if (componentType[1] === 'i') return 'i32';
     if (componentType[1] === 'u') return 'u32';
 
-    return 'float';
+    return 'f32';
   }
 
   getVectorType(type) {
@@ -369,11 +369,11 @@ export class NodeBuilder {
     return type;
   }
 
-  getTypeFromLength(length, componentType = 'float') {
+  getTypeFromLength(length, componentType = 'f32') {
     if (length === 1) return componentType;
 
     const baseType = TypeByLength.get(length);
-    const prefix = componentType === 'float' ? '' : componentType[0];
+    const prefix = componentType === 'f32' ? '' : componentType[0];
 
     return prefix + baseType;
   }
@@ -405,7 +405,7 @@ export class NodeBuilder {
     const vecNum = /vec([2-4])/.exec(vecType);
 
     if (vecNum !== null) return Number(vecNum[1]);
-    if (vecType === 'float' || vecType === 'bool' || vecType === 'i32' || vecType === 'u32') return 1;
+    if (vecType === 'f32' || vecType === 'bool' || vecType === 'i32' || vecType === 'u32') return 1;
     if (/mat2/.test(type) === true) return 4;
     if (/mat3/.test(type) === true) return 9;
     if (/mat4/.test(type) === true) return 16;
@@ -739,7 +739,7 @@ export class NodeBuilder {
   }
 
   getNodeUniform(uniformNode, type) {
-    if (type === 'float') return new FloatNodeUniform(uniformNode);
+    if (type === 'f32') return new FloatNodeUniform(uniformNode);
     if (type === 'vec2') return new Vec2NodeUniform(uniformNode);
     if (type === 'vec3') return new Vec3NodeUniform(uniformNode);
     if (type === 'vec4') return new Vec4NodeUniform(uniformNode);
@@ -806,15 +806,15 @@ export class NodeBuilder {
     }
 
     if (fromTypeLength === 1 && toTypeLength > 1 && fromType[0] !== toType[0]) {
-      // fromType is float-like
+      // fromType is f32-like
 
       // convert a number value to vector type, e.g:
-      // vec3(1u) -> vec3(float(1u))
+      // vec3(1u) -> vec3(f32(1u))
 
       snippet = `${this.getType(this.getComponentType(toType))}(${snippet})`;
     }
 
-    return `${this.getType(toType)}(${snippet})`; // fromType is float-like
+    return `${this.getType(toType)}(${snippet})`; // fromType is f32-like
   }
 
   needsColorSpaceToLinear(texture) {
@@ -1631,7 +1631,7 @@ const TypeByArray = new Map<TypedArrayConstructor, string>([
   [Uint8Array, 'u32'],
   [Uint16Array, 'u32'],
   [Uint32Array, 'u32'],
-  [Float32Array, 'float'],
+  [Float32Array, 'f32'],
 ]);
 const GpuShaderStage: Record<ShaderStage, number> = {
   vertex: GPUShaderStage.VERTEX,
@@ -1640,7 +1640,7 @@ const GpuShaderStage: Record<ShaderStage, number> = {
 };
 
 const TypeMap = {
-  float: 'f32',
+  f32: 'f32',
   i32: 'i32',
   u32: 'u32',
   bool: 'bool',
@@ -1682,7 +1682,7 @@ type TypeName = keyof typeof TypeMap;
 const MethodMap = {
   dFdx: 'dpdx',
   dFdy: '- dpdy',
-  mod_float: 'mod_float',
+  mod_f32: 'mod_f32',
   mod_vec2: 'mod_vec2',
   mod_vec3: 'mod_vec3',
   mod_vec4: 'mod_vec4',
@@ -1709,7 +1709,7 @@ fn greaterThan(a: vec3<f32>, b: vec3<f32>) -> vec3<bool> {
 	return vec3<bool>(a.x > b.x, a.y > b.y, a.z > b.z);
 }
 `),
-  mod_float: new CodeNode('fn mod_float(x: f32, y: f32) -> f32 { return x - y * floor(x / y); }'),
+  mod_f32: new CodeNode('fn mod_f32(x: f32, y: f32) -> f32 { return x - y * floor(x / y); }'),
   mod_vec2: new CodeNode('fn mod_vec2(x: vec2f, y: vec2f) -> vec2f { return x - y * floor(x / y); }'),
   mod_vec3: new CodeNode('fn mod_vec3(x: vec3f, y: vec3f) -> vec3f { return x - y * floor(x / y); }'),
   mod_vec4: new CodeNode('fn mod_vec4(x: vec4f, y: vec4f) -> vec4f { return x - y * floor(x / y); }'),

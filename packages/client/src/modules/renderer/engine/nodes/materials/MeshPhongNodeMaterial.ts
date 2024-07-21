@@ -1,7 +1,7 @@
 import { NodeMaterial } from './NodeMaterial.js';
 import { shininess, specularColor } from '../core/PropertyNode.js';
 import { materialShininess, materialSpecularColor } from '../accessors/MaterialNode.js';
-import { float } from '../shadernode/ShaderNodes.js';
+import { f32 } from '../shadernode/ShaderNodes.js';
 import PhongLightingModel from '../functions/PhongLightingModel.js';
 
 import { MeshPhongMaterial } from '@modules/renderer/engine/engine.js';
@@ -33,7 +33,7 @@ export class MeshPhongNodeMaterial extends NodeMaterial {
   setupVariants() {
     // SHININESS
 
-    const shininessNode = (this.shininessNode ? float(this.shininessNode) : materialShininess).max(1e-4); // to prevent pow( 0.0, 0.0 )
+    const shininessNode = (this.shininessNode ? f32(this.shininessNode) : materialShininess).max(1e-4); // to prevent pow( 0.0, 0.0 )
 
     shininess.assign(shininessNode);
 

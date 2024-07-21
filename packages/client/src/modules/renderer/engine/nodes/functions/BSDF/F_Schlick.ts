@@ -2,7 +2,7 @@ import { tslFn } from '../../shadernode/ShaderNodes.js';
 
 const F_Schlick = tslFn(({ f0, f90, dotVH }) => {
   // Original approximation by Christophe Schlick '94
-  // float fresnel = pow( 1.0 - dotVH, 5.0 );
+  // f32 fresnel = pow( 1.0 - dotVH, 5.0 );
 
   // Optimized variant (presented by Epic at SIGGRAPH '13)
   // https://cdn2.unrealengine.com/Resources/files/2013SiggraphPresentationsNotes-26915738.pdf

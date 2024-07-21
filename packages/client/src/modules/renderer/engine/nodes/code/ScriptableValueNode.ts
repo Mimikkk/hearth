@@ -1,5 +1,5 @@
 import Node from '../core/Node.ts';
-import { addNodeElement, float, nodeProxy } from '../shadernode/ShaderNodes.js';
+import { addNodeElement, f32, nodeProxy } from '../shadernode/ShaderNodes.js';
 import { EventDispatcher } from '@modules/renderer/engine/engine.js';
 import { NodeBuilder } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.js';
 
@@ -78,11 +78,11 @@ class ScriptableValueNode extends Node {
   }
 
   getNodeType(builder: NodeBuilder): NodeTypeOption {
-    return this.value && this.value.isNode ? this.value.getNodeType(builder) : 'float';
+    return this.value && this.value.isNode ? this.value.getNodeType(builder) : 'f32';
   }
 
   setup() {
-    return this.value && this.value.isNode ? this.value : float();
+    return this.value && this.value.isNode ? this.value : f32();
   }
 }
 

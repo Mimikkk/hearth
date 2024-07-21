@@ -43,7 +43,7 @@ const parse = (
     const name = propsMatches[i++][0];
     let type = propsMatches[i++][0];
 
-    if (type === 'f32') type = 'float';
+    if (type === 'f32') type = 'f32';
 
     // precision
 

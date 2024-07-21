@@ -31,7 +31,7 @@ class AttributeNode extends Node {
 
         nodeType = builder.getTypeFromAttribute(attribute);
       } else {
-        nodeType = 'float';
+        nodeType = 'f32';
       }
     }
 

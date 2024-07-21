@@ -2,7 +2,7 @@ import { transformedNormalView } from '../accessors/NormalNode.js';
 import { positionViewDirection } from '../accessors/PositionNode.js';
 import PhysicalLightingModel from '../functions/PhysicalLightingModel.js';
 import { MeshPhysicalNodeMaterial } from './MeshPhysicalNodeMaterial.js';
-import { float, vec3 } from '../shadernode/ShaderNodes.js';
+import { f32, vec3 } from '../shadernode/ShaderNodes.js';
 
 class SSSLightingModel extends PhysicalLightingModel {
   constructor(useClearcoat, useSheen, useIridescence, useSSS) {
@@ -25,7 +25,7 @@ class SSSLightingModel extends PhysicalLightingModel {
       } = material;
 
       const scatteringHalf = lightDirection.add(transformedNormalView.mul(thicknessDistortionNode)).normalize();
-      const scatteringDot = float(
+      const scatteringDot = f32(
         positionViewDirection.dot(scatteringHalf.negate()).saturate().pow(thicknessPowerNode).mul(thicknessScaleNode),
       );
       const scatteringIllu = vec3(scatteringDot.add(thicknessAmbientNode).mul(thicknessColorNode));
@@ -44,11 +44,11 @@ export class MeshSSSNodeMaterial extends MeshPhysicalNodeMaterial {
     super(parameters);
 
     this.thicknessColorNode = null;
-    this.thicknessDistortionNode = float(0.1);
-    this.thicknessAmbientNode = float(0.0);
-    this.thicknessAttenuationNode = float(0.1);
-    this.thicknessPowerNode = float(2.0);
-    this.thicknessScaleNode = float(10.0);
+    this.thicknessDistortionNode = f32(0.1);
+    this.thicknessAmbientNode = f32(0.0);
+    this.thicknessAttenuationNode = f32(0.1);
+    this.thicknessPowerNode = f32(2.0);
+    this.thicknessScaleNode = f32(10.0);
   }
 
   get useSSS() {

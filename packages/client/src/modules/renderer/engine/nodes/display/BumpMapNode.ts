@@ -3,7 +3,7 @@ import { uv } from '../accessors/UVNode.js';
 import { normalView } from '../accessors/NormalNode.js';
 import { positionView } from '../accessors/PositionNode.js';
 import { faceDirection } from './FrontFacingNode.js';
-import { addNodeElement, float, nodeProxy, tslFn, vec2 } from '../shadernode/ShaderNodes.js';
+import { addNodeElement, f32, nodeProxy, tslFn, vec2 } from '../shadernode/ShaderNodes.js';
 
 // Bump Mapping Unparametrized Surfaces on the GPU by Morten S. Mikkelsen
 // https://mmikk.github.io/papers3d/mm_sfgrad_bump.pdf
@@ -23,15 +23,15 @@ const dHdxy_fwd = tslFn(({ textureNode, bumpScale }) => {
     throw new Error('engine.TSL: dHdxy_fwd() requires a TextureNode.');
   }
 
-  const Hll = float(textureNode);
+  const Hll = f32(textureNode);
   const uvNode = texNode.uvNode || uv();
 
   // It's used to preserve the same TextureNode instance
   const sampleTexture = uv => textureNode.cache().context({ getUV: () => uv, forceUVContext: true });
 
   return vec2(
-    float(sampleTexture(uvNode.add(uvNode.dFdx()))).sub(Hll),
-    float(sampleTexture(uvNode.add(uvNode.dFdy()))).sub(Hll),
+    f32(sampleTexture(uvNode.add(uvNode.dFdx()))).sub(Hll),
+    f32(sampleTexture(uvNode.add(uvNode.dFdy()))).sub(Hll),
   ).mul(bumpScale);
 });
 

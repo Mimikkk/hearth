@@ -22,7 +22,7 @@ export const ShaderNodeObject = function (object, altType = null) {
   }
 
   if (
-    (altType === null && (type === 'float' || type === 'boolean')) ||
+    (altType === null && (type === 'f32' || type === 'boolean')) ||
     (type && type !== 'shader' && type !== 'string')
   ) {
     return ShaderNodeObject(getConstNode(object, altType));

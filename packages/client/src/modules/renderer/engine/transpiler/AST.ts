@@ -101,7 +101,7 @@ export class Number {
 
   constructor(
     public value: string,
-    public type: string = 'float',
+    public type: string = 'f32',
   ) {}
 }
 
