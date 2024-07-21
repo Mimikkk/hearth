@@ -19,13 +19,11 @@ import { NodeSampledCubeTexture, NodeSampledTexture } from '../../common/nodes/N
 import NodeUniformBuffer from '../../common/nodes/NodeUniformBuffer.ts';
 import NodeStorageBuffer from '../../common/nodes/NodeStorageBuffer.ts';
 import {
-  buildStages,
   CodeNode,
   LightsNode,
   NodeMaterial,
   NodeStack,
   NodeUpdateType,
-  shaderStages,
   stack,
 } from '@modules/renderer/engine/nodes/Nodes.js';
 import { getFormat } from '../utils/BackendTextures.ts';
@@ -59,6 +57,7 @@ import FogNode from '@modules/renderer/engine/nodes/fog/FogNode.js';
 import ToneMappingNode from '@modules/renderer/engine/nodes/display/ToneMappingNode.js';
 import ClippingContext from '@modules/renderer/engine/renderers/common/ClippingContext.js';
 import { TypedArrayConstructor } from '@modules/renderer/engine/math/MathUtils.js';
+import { BuildStage, BuiltinType, ShaderStage } from './NodeBuilder.types.js';
 
 export class NodeBuilder {
   material: Material | null;
@@ -711,7 +710,7 @@ export class NodeBuilder {
     this.flow = flow;
     this.vars = {};
 
-    for (const buildStage of buildStages) {
+    for (const buildStage of BuildStage.all) {
       this.setBuildStage(buildStage);
 
       flow.result = node.build(this, output);
@@ -813,14 +812,14 @@ export class NodeBuilder {
     // analyze()   -> stage 2: analyze nodes to possible optimization and validation
     // generate()  -> stage 3: generate shader
 
-    for (const buildStage of buildStages) {
+    for (const buildStage of BuildStage.all) {
       this.setBuildStage(buildStage);
 
       if (this.context.vertex && this.context.vertex.isNode) {
         this.flowNodeFromShaderStage('vertex', this.context.vertex);
       }
 
-      for (const shaderStage of shaderStages) {
+      for (const shaderStage of ShaderStage.all) {
         this.setShaderStage(shaderStage);
 
         const flowNodes = this.flowNodes[shaderStage];
@@ -1681,26 +1680,6 @@ ${vars}
 @binding( ${binding} ) @group( ${group} )
 var<${access}> ${name} : ${structName};`;
   }
-}
-
-export enum ShaderStage {
-  Vertex = 'vertex',
-  Fragment = 'fragment',
-  Compute = 'compute',
-}
-
-export enum BuildStage {
-  Construct = 'construct',
-  Analyze = 'analyze',
-  Generate = 'generate',
-}
-
-export enum BuiltinType {
-  Attribute = 'attribute',
-  Output = 'output',
-  Vertex = 'vertex',
-  Compute = 'compute',
-  Fragment = 'fragment',
 }
 
 const formatAsFloat = (value: number): string => value + (value % 1 ? '' : '.0');
