@@ -4,7 +4,7 @@ import { generateUuid } from '../../math/MathUtils.ts';
 import { NodeBuilder } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.js';
 
 import NodeFrame from '@modules/renderer/engine/nodes/core/NodeFrame.js';
-import { TypeName } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.types.js';
+import { BuildStage, TypeName } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.types.js';
 
 let _nodeId = 0;
 
@@ -40,9 +40,7 @@ export class Node {
   }
 
   set needsUpdate(value: boolean) {
-    if (value === true) {
-      this.version++;
-    }
+    if (value) this.version++;
   }
 
   get type(): string {
@@ -52,12 +50,10 @@ export class Node {
   declare self: this;
 
   getSelf(): this {
-    // Returns non-node object.
-
     return this.self || this;
   }
 
-  setReference(state: NodeBuilder) {
+  setReference(state: NodeBuilder): this {
     return this;
   }
 
@@ -173,7 +169,7 @@ export class Node {
     console.warn('Abstract function.');
   }
 
-  build(builder: NodeBuilder, output: string | null = null) {
+  build(builder: NodeBuilder, output: string | null = null): string | null {
     const refNode = this.getShared(builder);
 
     if (this !== refNode) {
@@ -192,7 +188,7 @@ export class Node {
 
     const buildStage = builder.buildStage;
 
-    if (buildStage === 'setup') {
+    if (buildStage === BuildStage.Setup) {
       this.setReference(builder);
 
       const properties = builder.getNodeProperties(this);
@@ -213,9 +209,9 @@ export class Node {
           }
         }
       }
-    } else if (buildStage === 'analyze') {
+    } else if (buildStage === BuildStage.Analyze) {
       this.analyze(builder);
-    } else if (buildStage === 'generate') {
+    } else if (buildStage === BuildStage.Generate) {
       const isGenerateOnce = this.generate.length === 1;
 
       if (isGenerateOnce) {

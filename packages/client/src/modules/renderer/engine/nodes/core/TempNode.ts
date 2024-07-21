@@ -1,4 +1,5 @@
 import Node from './Node.ts';
+import { BuildStage } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.types.js';
 
 class TempNode extends Node {
   static type = 'TempNode';
@@ -16,7 +17,7 @@ class TempNode extends Node {
   build(builder, output) {
     const buildStage = builder.buildStage;
 
-    if (buildStage === 'generate') {
+    if (buildStage === BuildStage.Generate) {
       const type = builder.getVectorType(this.getNodeType(builder, output));
       const nodeData = builder.getDataFromNode(this);
 
