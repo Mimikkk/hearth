@@ -782,7 +782,7 @@ class GLSLDecoder {
     }
 
     if (polyfill) {
-      polyfill = '// Polyfills\n\n' + polyfill + '\n';
+      polyfill = '// Polyfills\n' + polyfill + '\n';
     }
 
     this.index = 0;

@@ -296,9 +296,9 @@ ${this.tab}} )`;
     const conditionParam = condition !== '<' ? `, condition: '${condition}'` : '';
     const updateParam = update !== '++' ? `, update: '${update}'` : '';
 
-    let loopStr = `loop( { start: ${start}, end: ${end + nameParam + typeParam + conditionParam + updateParam} }, ( { ${name} } ) => {\n\n`;
+    let loopStr = `loop( { start: ${start}, end: ${end + nameParam + typeParam + conditionParam + updateParam} }, ( { ${name} } ) => {\n`;
 
-    loopStr += this.emitBody(node.body) + '\n\n';
+    loopStr += this.emitBody(node.body) + '\n';
 
     loopStr += this.tab + '} )';
 
@@ -334,14 +334,14 @@ ${this.tab}} )`;
 
     this.tab += '\t';
 
-    let forStr = '{\n\n' + this.tab + initialization + ';\n\n';
-    forStr += `${this.tab}While( ${condition}, () => {\n\n`;
+    let forStr = '{\n' + this.tab + initialization + ';\n';
+    forStr += `${this.tab}While( ${condition}, () => {\n`;
 
-    forStr += this.emitBody(node.body) + '\n\n';
+    forStr += this.emitBody(node.body) + '\n';
 
-    forStr += this.tab + '\t' + afterthought + ';\n\n';
+    forStr += this.tab + '\t' + afterthought + ';\n';
 
-    forStr += this.tab + '} )\n\n';
+    forStr += this.tab + '} )\n';
 
     this.tab = this.tab.slice(0, -1);
 
@@ -469,7 +469,7 @@ ${this.tab}} );\n`;
 ${this.tab}\tname: '${uniqueName}',
 ${this.tab}\ttype: '${type}',
 ${this.tab}\tinputs: [${layoutInput}]
-${this.tab}} );\n\n`;
+${this.tab}} );\n`;
     }
 
     this.imports.add('tslFn');
@@ -534,13 +534,13 @@ ${this.tab}} );\n\n`;
     const imports = [...this.imports];
     const exports = [...this.global];
 
-    const layouts = this.layoutsCode.length > 0 ? `\n${this.tab}// layouts\n\n` + this.layoutsCode : '';
+    const layouts = this.layoutsCode.length > 0 ? `\n${this.tab}// layouts\n` + this.layoutsCode : '';
 
-    let header = '// engine.js Transpiler r' + Revision + '\n\n';
+    let header = '// engine.js Transpiler r' + Revision + '\n';
     let footer = '';
 
     if (this.iife) {
-      header += '( function ( TSL, uniforms ) {\n\n';
+      header += '( function ( TSL, uniforms ) {\n';
 
       header += imports.length > 0 ? '\tconst { ' + imports.join(', ') + ' } = TSL;\n' : '';
       footer += exports.length > 0 ? '\treturn { ' + exports.join(', ') + ' };\n' : '';

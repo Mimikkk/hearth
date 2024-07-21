@@ -4,6 +4,7 @@ import { textureCubeUV } from './PMREMUtils.js';
 import { uniform } from '../core/UniformNode.js';
 import { NodeUpdateType } from '../core/constants.ts';
 import { nodeProxy } from '../shadernode/ShaderNodes.js';
+import PMREMGenerator from '@modules/renderer/engine/renderers/common/extras/PMREMGenerator.js';
 
 let _generator = null;
 
@@ -94,7 +95,7 @@ class PMREMNode extends TempNode {
 
   setup(builder) {
     if (_generator === null) {
-      _generator = builder.createPMREMGenerator();
+      _generator = new PMREMGenerator(builder.renderer);
     }
 
     //

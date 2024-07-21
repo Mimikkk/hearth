@@ -130,27 +130,23 @@ class LoopNode extends Node {
         }
       }
 
-      declarationSnippet += builder.codeVar(type, name) + ' = ' + startSnippet;
+      declarationSnippet += builder.codeVariable(type, name) + ' = ' + startSnippet;
 
       conditionalSnippet += name + ' ' + condition + ' ' + endSnippet;
       updateSnippet += name + ' ' + update;
 
       const forSnippet = `for ( ${declarationSnippet}; ${conditionalSnippet}; ${updateSnippet} )`;
 
-      builder.addFlowCode((i === 0 ? '\n' : '') + builder.tab + forSnippet + ' {\n\n').addFlowTab();
+      builder.flow.code += (i === 0 ? '\n' : '') + forSnippet + ' {\n';
     }
 
     const stackSnippet = context(stackNode, contextData).build(builder, 'void');
-
     const returnsSnippet = properties.returnsNode ? properties.returnsNode.build(builder) : '';
 
-    builder.removeFlowTab().addFlowCode('\n' + builder.tab + stackSnippet);
-
+    builder.flow.code += '\n' + stackSnippet;
     for (let i = 0, l = this.params.length - 1; i < l; i++) {
-      builder.addFlowCode((i === 0 ? '' : builder.tab) + '}\n\n').removeFlowTab();
+      builder.flow.code += '}\n';
     }
-
-    builder.addFlowTab();
 
     return returnsSnippet;
   }

@@ -48,7 +48,7 @@ class CondNode extends Node {
 
     const nodeSnippet = contextNode(this.condNode /*, context*/).build(builder, 'bool');
 
-    builder.addFlowCode(`\n${builder.tab}if ( ${nodeSnippet} ) {\n\n`).addFlowTab();
+    builder.flow.code += `\nif ( ${nodeSnippet} ) {\n`;
 
     let ifSnippet = contextNode(ifNode, context).build(builder, type);
 
@@ -60,10 +60,10 @@ class CondNode extends Node {
       }
     }
 
-    builder.removeFlowTab().addFlowCode(builder.tab + '\t' + ifSnippet + '\n\n' + builder.tab + '}');
+    builder.flow.code += '\t' + ifSnippet + '\n}';
 
     if (elseNode !== null) {
-      builder.addFlowCode(' else {\n\n').addFlowTab();
+      builder.flow.code += ' else {\n';
 
       let elseSnippet = contextNode(elseNode, context).build(builder, type);
 
@@ -75,9 +75,9 @@ class CondNode extends Node {
         }
       }
 
-      builder.removeFlowTab().addFlowCode(builder.tab + '\t' + elseSnippet + '\n\n' + builder.tab + '}\n\n');
+      builder.flow.code += '\t' + elseSnippet + '\n' + '}\n';
     } else {
-      builder.addFlowCode('\n\n');
+      builder.flow.code += '\n';
     }
 
     return builder.format(nodeProperty, type, output);
