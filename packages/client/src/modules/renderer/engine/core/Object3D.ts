@@ -11,7 +11,6 @@ import type { BufferGeometry } from './BufferGeometry.js';
 import type { Camera } from '../cameras/Camera.js';
 import type { Material } from '../materials/Material.js';
 import type { Group } from '../objects/Group.js';
-import type { Vec2 } from '../math/Vec2.js';
 import { Box3 } from '@modules/renderer/engine/math/Box3.js';
 import { Renderer } from '../renderers/webgpu/Renderer.js';
 import { Sphere } from '@modules/renderer/engine/math/Sphere.js';
@@ -32,25 +31,10 @@ const _xAxis = /*@__PURE__*/ new Vec3(1, 0, 0);
 const _yAxis = /*@__PURE__*/ new Vec3(0, 1, 0);
 const _zAxis = /*@__PURE__*/ new Vec3(0, 0, 1);
 
-export interface Object3DEventMap {
-  added: {};
-  removed: {};
-  childadded: { child: Object3D };
-  childremoved: { child: Object3D };
-  pointerdown: { data: Vec2 };
-  pointerup: { data: Vec2 };
-  pointermove: { data: Vec2 };
-  mousedown: { data: Vec2 };
-  mouseup: { data: Vec2 };
-  mousemove: { data: Vec2 };
-  click: { data: Vec2 };
-  dispose: {};
-}
-
 const isCamera = (object: any): object is Camera => object.isCamera;
 const isLight = (object: any): object is Light<any> => object.isLight;
 
-export class Object3D<EventMap extends Object3DEventMap = Object3DEventMap> {
+export class Object3D {
   declare ['constructor']: typeof Object3D;
   declare isObject3D: true;
   static Up: Vec3 = new Vec3(0, 1, 0);

@@ -22,7 +22,6 @@ import {
   TorusGeometry,
   Vec3,
 } from '../engine.js';
-import { Object3DEventMap } from '@modules/renderer/engine/core/Object3D.js';
 import { Intersection } from '@modules/renderer/engine/core/Raycaster.js';
 
 const _raycaster = new Raycaster();
