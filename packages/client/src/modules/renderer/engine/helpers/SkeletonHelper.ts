@@ -91,11 +91,6 @@ export class SkeletonHelper extends LineSegments {
     geometry.getAttribute('position').needsUpdate = true;
     return super.updateMatrixWorld(force);
   }
-
-  dispose() {
-    this.geometry.dispose();
-    this.material.dispose();
-  }
 }
 
 SkeletonHelper.prototype.isSkeletonHelper = true;

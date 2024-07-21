@@ -1,7 +1,6 @@
 import { Vec3 } from '../math/Vec3.js';
 import { Vec2 } from '../math/Vec2.js';
 import { Box3 } from '../math/Box3.js';
-import { EventDispatcher } from './EventDispatcher.js';
 import {
   BufferAttribute,
   Float32BufferAttribute,
@@ -49,8 +48,6 @@ export class BufferGeometry<
   drawRange: { start: number; count: number };
   userData: Record<string, any>;
   parameters?: Record<string, any>;
-
-  eventDispatcher = new EventDispatcher<{ dispose: {} }>();
 
   constructor() {
     this.id = _id++;
@@ -810,10 +807,6 @@ export class BufferGeometry<
     this.userData = source.userData;
 
     return this;
-  }
-
-  dispose() {
-    this.eventDispatcher.dispatch({ type: 'dispose' }, this);
   }
 }
 BufferGeometry.prototype.isBufferGeometry = true;

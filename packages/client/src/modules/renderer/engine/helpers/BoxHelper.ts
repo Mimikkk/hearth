@@ -97,11 +97,6 @@ export class BoxHelper extends LineSegments {
 
     return this;
   }
-
-  dispose() {
-    this.geometry.dispose();
-    this.material.dispose();
-  }
 }
 
 BoxHelper.prototype.type = 'BoxHelper';

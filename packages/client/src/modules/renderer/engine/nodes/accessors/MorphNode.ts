@@ -39,8 +39,6 @@ function getEntry(geometry) {
   let entry = morphTextures.get(geometry);
 
   if (entry === undefined || entry.count !== morphTargetsCount) {
-    if (entry !== undefined) entry.texture.dispose();
-
     const morphTargets = geometry.morphAttributes.position || [];
     const morphNormals = geometry.morphAttributes.normal || [];
     const morphColors = geometry.morphAttributes.color || [];
@@ -118,16 +116,6 @@ function getEntry(geometry) {
     };
 
     morphTextures.set(geometry, entry);
-
-    function disposeTexture() {
-      bufferTexture.dispose();
-
-      morphTextures.delete(geometry);
-
-      geometry.eventDispatcher.remove('dispose', disposeTexture);
-    }
-
-    geometry.eventDispatcher.add('dispose', disposeTexture);
   }
 
   return entry;

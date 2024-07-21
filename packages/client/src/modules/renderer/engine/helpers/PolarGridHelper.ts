@@ -78,11 +78,6 @@ export class PolarGridHelper extends LineSegments {
 
     super(geometry, material);
   }
-
-  dispose() {
-    this.geometry.dispose();
-    this.material.dispose();
-  }
 }
 
 PolarGridHelper.prototype.type = 'PolarGridHelper';

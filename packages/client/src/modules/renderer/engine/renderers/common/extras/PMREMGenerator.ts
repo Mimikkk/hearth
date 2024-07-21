@@ -180,28 +180,10 @@ class PMREMGenerator {
    * so you should not need more than one PMREMGenerator object. If you do, calling dispose() on
    * one of them will cause any others to also become unusable.
    */
-  dispose() {
-    this._dispose();
-
-    if (this._cubemapMaterial !== null) this._cubemapMaterial.dispose();
-    if (this._equirectMaterial !== null) this._equirectMaterial.dispose();
-  }
-
   // private interface
-
   _setSize(cubeSize) {
     this._lodMax = Math.floor(Math.log2(cubeSize));
     this._cubeSize = Math.pow(2, this._lodMax);
-  }
-
-  _dispose() {
-    if (this._blurMaterial !== null) this._blurMaterial.dispose();
-
-    if (this._pingPongRenderTarget !== null) this._pingPongRenderTarget.dispose();
-
-    for (let i = 0; i < this._lodPlanes.length; i++) {
-      this._lodPlanes[i].dispose();
-    }
   }
 
   _cleanup(outputTarget) {
@@ -252,10 +234,6 @@ class PMREMGenerator {
       this._pingPongRenderTarget.width !== width ||
       this._pingPongRenderTarget.height !== height
     ) {
-      if (this._pingPongRenderTarget !== null) {
-        this._dispose();
-      }
-
       this._pingPongRenderTarget = _createRenderTarget(width, height, params);
 
       const { _lodMax } = this;
@@ -341,9 +319,6 @@ class PMREMGenerator {
 
       renderer.render(scene, cubeCamera);
     }
-
-    backgroundBox.geometry.dispose();
-    backgroundBox.material.dispose();
 
     renderer.parameters.toneMapping = toneMapping;
     renderer.parameters.autoClear = originalAutoClear;

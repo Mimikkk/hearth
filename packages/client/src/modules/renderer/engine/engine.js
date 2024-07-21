@@ -73,7 +73,6 @@ export * from './core/BufferAttribute.ts';
 export { Object3D } from './core/Object3D.ts';
 export { Raycaster } from './core/Raycaster.ts';
 export { Layers } from './core/Layers.ts';
-export { EventDispatcher } from './core/EventDispatcher.ts';
 export { Clock } from './core/Clock.ts';
 export { QuaternionLinearInterpolant } from './math/interpolants/QuaternionLinearInterpolant.ts';
 export { LinearInterpolant } from './math/interpolants/LinearInterpolant.ts';

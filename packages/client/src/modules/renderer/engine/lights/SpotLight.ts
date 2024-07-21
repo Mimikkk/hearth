@@ -45,10 +45,6 @@ export class SpotLight extends Light<SpotLightShadow> {
     this.intensity = power / Math.PI;
   }
 
-  dispose() {
-    this.shadow.dispose();
-  }
-
   copy(source: this, recursive?: boolean): this {
     super.copy(source, recursive);
 

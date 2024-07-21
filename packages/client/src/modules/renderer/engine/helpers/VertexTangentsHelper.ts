@@ -61,11 +61,6 @@ export class VertexTangentsHelper extends LineSegments {
 
     position.needsUpdate = true;
   }
-
-  dispose() {
-    this.geometry.dispose();
-    this.material.dispose();
-  }
 }
 
 VertexTangentsHelper.prototype.type = 'VertexTangentsHelper';

@@ -1007,7 +1007,6 @@ function mergeGroups(geometry) {
     }
   }
 
-  geometry.dispose(); // Required to force buffer recreation
   geometry.setIndex(newIndices);
 
   // update groups indices

@@ -253,11 +253,6 @@ export class CameraHelper extends LineSegments {
 
     geometry.getAttribute('position').needsUpdate = true;
   }
-
-  dispose() {
-    this.geometry.dispose();
-    this.material.dispose();
-  }
 }
 
 function setPoint(

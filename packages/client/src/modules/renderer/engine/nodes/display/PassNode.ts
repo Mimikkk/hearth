@@ -147,10 +147,6 @@ class PassNode extends TempNode {
 
     this.setSize(this._width, this._height);
   }
-
-  dispose() {
-    this.renderTarget.dispose();
-  }
 }
 
 PassNode.COLOR = 'color';

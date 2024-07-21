@@ -115,8 +115,8 @@ controls.target.set(0, 1, 0);
 let rotate = true;
 
 const toggleRotation = () => (rotate = !rotate);
-controls.eventDispatcher.add('start', toggleRotation);
-controls.eventDispatcher.add('end', toggleRotation);
+controls.onStart = toggleRotation;
+controls.onEnd = toggleRotation;
 controls.update();
 
 useWindowResizer(renderer, camera);

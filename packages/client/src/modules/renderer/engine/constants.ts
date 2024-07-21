@@ -309,13 +309,6 @@ export enum DepthComparison {
 export enum BufferUsage {
   StaticDraw = 35044,
   DynamicDraw = 35048,
-  StreamDraw = 35040,
-  StaticRead = 35045,
-  DynamicRead = 35049,
-  StreamRead = 35041,
-  StaticCopy = 35046,
-  DynamicCopy = 35050,
-  StreamCopy = 35042,
 }
 
 export type PixelFormat =
@@ -357,7 +350,6 @@ export type PixelFormat =
   | 'RGB32UI'
   | 'RGB32F'
   | 'RGB9_E5'
-  | 'SRGB8'
   | 'R11F_G11F_B10F'
   | 'RGBA4'
   | 'RGBA8'

@@ -48,13 +48,6 @@ export class DirectionalLightHelper extends Object3D {
     this.update();
   }
 
-  dispose() {
-    this.lightPlane.geometry.dispose();
-    this.lightPlane.material.dispose();
-    this.targetLine.geometry.dispose();
-    this.targetLine.material.dispose();
-  }
-
   update() {
     this.light.updateWorldMatrix(true, false);
     this.light.target.updateWorldMatrix(true, false);

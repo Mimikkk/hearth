@@ -717,10 +717,6 @@ export class BatchedMesh extends Mesh {
   }
 
   dispose() {
-    // Assuming the geometry is not shared with other meshes
-    this.geometry.dispose();
-
-    this._matricesTexture.dispose();
     this._matricesTexture = null!;
     return this;
   }

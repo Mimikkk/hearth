@@ -57,15 +57,8 @@ export class OctreeHelper extends LineSegments {
 
     traverse(this.octree.subTrees);
 
-    this.geometry.dispose();
-
     this.geometry = new BufferGeometry();
     this.geometry.setAttribute('position', new Float32BufferAttribute(vertices, 3));
-  }
-
-  dispose() {
-    this.geometry.dispose();
-    this.material.dispose();
   }
 }
 OctreeHelper.prototype.type = 'OctreeHelper';

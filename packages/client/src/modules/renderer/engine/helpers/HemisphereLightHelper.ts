@@ -41,11 +41,6 @@ export class HemisphereLightHelper extends Object3D {
     this.update();
   }
 
-  dispose() {
-    (this.children[0] as Mesh).geometry.dispose();
-    (this.children[0] as Mesh).material.dispose();
-  }
-
   update() {
     const mesh = this.children[0];
 

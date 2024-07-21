@@ -170,12 +170,4 @@ export class Skeleton {
 
     return undefined;
   }
-
-  dispose() {
-    if (this.boneTexture !== null) {
-      this.boneTexture.dispose();
-
-      this.boneTexture = null;
-    }
-  }
 }

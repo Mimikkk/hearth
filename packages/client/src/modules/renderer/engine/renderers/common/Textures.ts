@@ -89,24 +89,6 @@ class Textures extends DataMap<any, any> {
 
     if (renderTargetData.initialized !== true) {
       renderTargetData.initialized = true;
-
-      // dispose
-
-      const onDispose = () => {
-        renderTarget.eventDispatcher.remove('dispose', onDispose);
-
-        if (textures !== undefined) {
-          for (let i = 0; i < textures.length; i++) {
-            this._destroyTexture(textures[i]);
-          }
-        } else {
-          this._destroyTexture(texture);
-        }
-
-        this._destroyTexture(depthTexture);
-      };
-
-      renderTarget.eventDispatcher.add('dispose', onDispose);
     }
   }
 
@@ -118,8 +100,6 @@ class Textures extends DataMap<any, any> {
     const backend = this.renderer.backend;
 
     if (isRenderTarget && textureData.initialized === true) {
-      // it's an update
-
       backend.destroySampler(texture);
       backend.destroyTexture(texture);
     }
@@ -196,26 +176,12 @@ class Textures extends DataMap<any, any> {
       }
     }
 
-    // dispose handler
-
     if (textureData.initialized !== true) {
       textureData.initialized = true;
 
       //
 
       this.renderer.info.memory.textures++;
-
-      // dispose
-
-      const onDispose = () => {
-        texture.eventDispatcher.remove('dispose', onDispose);
-
-        this._destroyTexture(texture);
-
-        this.renderer.info.memory.textures--;
-      };
-
-      texture.eventDispatcher.add('dispose', onDispose);
     }
 
     //

@@ -87,16 +87,6 @@ export class LightShadow<C extends Camera = Camera> {
     return this._frameExtents;
   }
 
-  dispose() {
-    if (this.map) {
-      this.map.dispose();
-    }
-
-    if (this.mapPass) {
-      this.mapPass.dispose();
-    }
-  }
-
   copy(source: this, recursive?: boolean): this {
     this.camera = source.camera.clone();
 

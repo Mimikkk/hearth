@@ -67,19 +67,7 @@ class RenderObjects {
     renderContext: RenderContext,
     passId: string,
   ) {
-    const chainMap = this.getChainMap(passId);
-
-    const renderObject = new RenderObject(this.renderer, object, material, scene, camera, lightsNode, renderContext);
-
-    renderObject.onDispose = () => {
-      this.renderer._pipelines.delete(renderObject);
-      this.renderer._bindings.delete(renderObject);
-      this.renderer._nodes.delete(renderObject);
-
-      chainMap.delete(renderObject.getChainArray());
-    };
-
-    return renderObject;
+    return new RenderObject(this.renderer, object, material, scene, camera, lightsNode, renderContext);
   }
 }
 

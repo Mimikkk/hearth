@@ -77,11 +77,6 @@ export class VertexNormalsHelper extends LineSegments {
 
     position.needsUpdate = true;
   }
-
-  dispose() {
-    this.geometry.dispose();
-    this.material.dispose();
-  }
 }
 
 VertexNormalsHelper.prototype.type = 'VertexNormalsHelper';

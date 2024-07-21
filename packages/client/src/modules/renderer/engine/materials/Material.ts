@@ -1,5 +1,4 @@
 import { Color, ColorRepresentation } from '../math/Color.js';
-import { EventDispatcher } from '../core/EventDispatcher.js';
 import {
   Blending,
   BlendingEquation,
@@ -65,7 +64,6 @@ export interface MaterialParameters {
 }
 
 export class Material {
-  eventDispatcher = new EventDispatcher<{ dispose: {} }>();
   declare isMaterial: true;
   declare type: string | 'Material';
   id: number;
@@ -301,10 +299,6 @@ export class Material {
     this.userData = JSON.parse(JSON.stringify(source.userData));
 
     return this;
-  }
-
-  dispose() {
-    this.eventDispatcher.dispatch({ type: 'dispose' }, this);
   }
 
   set needsUpdate(value: boolean) {

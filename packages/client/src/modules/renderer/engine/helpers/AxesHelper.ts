@@ -41,11 +41,6 @@ class AxesHelper extends LineSegments {
 
     return this;
   }
-
-  dispose() {
-    this.geometry.dispose();
-    this.material.dispose();
-  }
 }
 
 export { AxesHelper };

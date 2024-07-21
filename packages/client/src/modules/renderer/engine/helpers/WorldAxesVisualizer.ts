@@ -260,25 +260,5 @@ export class WorldAxesVisualizer extends Object3D {
 
   dispose(): void {
     this.unsubscribeClick();
-
-    this.geometry.dispose();
-    const [xAxis, yAxis, zAxis] = this.axisMeshes;
-    xAxis.material.dispose();
-    yAxis.material.dispose();
-    zAxis.material.dispose();
-
-    const [posX, posY, posZ, negX, negY, negZ] = this.axisLines;
-    posX.material.map?.dispose();
-    posX.material.dispose();
-    posY.material.map?.dispose();
-    posY.material.dispose();
-    posZ.material.map?.dispose();
-    posZ.material.dispose();
-    negX.material.map?.dispose();
-    negX.material.dispose();
-    negY.material.map?.dispose();
-    negY.material.dispose();
-    negZ.material.map?.dispose();
-    negZ.material.dispose();
   }
 }

@@ -1,4 +1,3 @@
-import { EventDispatcher } from '@modules/renderer/engine/engine.js';
 import { NodeUpdateType } from './constants.ts';
 import { getCacheKey, getNodeChildren } from './NodeUtils.js';
 import { generateUuid } from '../../math/MathUtils.ts';
@@ -13,7 +12,6 @@ export class Node {
   declare static type: any;
   declare isNode: true;
   name?: string;
-  eventDispatcher = new EventDispatcher<{ dispose: {} }>();
   nodeType: TypeName | null;
   updateType: NodeUpdateType;
   updateBeforeType: NodeUpdateType;
@@ -71,10 +69,6 @@ export class Node {
     for (const { childNode } of getNodeChildren(this)) {
       yield childNode;
     }
-  }
-
-  dispose() {
-    this.eventDispatcher.dispatch({ type: 'dispose' }, this);
   }
 
   traverse(callback: (node: Node) => void) {

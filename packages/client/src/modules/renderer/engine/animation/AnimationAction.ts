@@ -413,12 +413,6 @@ export class AnimationAction {
         else this.enabled = false;
 
         this.time = time;
-
-        this._mixer.eventDispatcher.dispatch({
-          type: 'finished',
-          action: this,
-          direction: deltaTime < 0 ? -1 : 1,
-        });
       }
     } else {
       // repetitive Repeat or PingPong
@@ -458,12 +452,6 @@ export class AnimationAction {
           time = deltaTime > 0 ? duration : 0;
 
           this.time = time;
-
-          this._mixer.eventDispatcher.dispatch({
-            type: 'finished',
-            action: this,
-            direction: deltaTime > 0 ? 1 : -1,
-          });
         } else {
           // keep running
 
@@ -479,12 +467,6 @@ export class AnimationAction {
           this._loopCount = loopCount;
 
           this.time = time;
-
-          this._mixer.eventDispatcher.dispatch({
-            type: 'loop',
-            action: this,
-            loopDelta: loopDelta,
-          });
         }
       } else {
         this.time = time;

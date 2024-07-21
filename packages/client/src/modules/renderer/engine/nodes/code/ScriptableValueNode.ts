@@ -1,17 +1,11 @@
 import Node from '../core/Node.ts';
 import { addNodeElement, f32, nodeProxy } from '../shadernode/ShaderNodes.js';
-import { EventDispatcher } from '@modules/renderer/engine/engine.js';
 import { NodeBuilder } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.js';
-
-import { TypeName } from '@modules/renderer/engine/nodes/core/constants.js';
+import { TypeName } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.types.js';
 
 class ScriptableValueNode extends Node {
   static type = 'ScriptableValueNode';
   declare isScriptableValueNode: true;
-  events = new EventDispatcher<{
-    change: {};
-    refresh: {};
-  }>();
   inputType: string | null;
   outputType: string | null;
   _value: any;
@@ -43,14 +37,6 @@ class ScriptableValueNode extends Node {
     }
 
     this._value = val;
-
-    this.events.dispatch({ type: 'change' }, this);
-
-    this.refresh();
-  }
-
-  refresh() {
-    this.events.dispatch({ type: 'refresh' }, this);
   }
 
   getValue() {

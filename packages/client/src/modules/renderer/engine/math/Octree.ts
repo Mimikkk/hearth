@@ -368,11 +368,9 @@ export class Octree {
     const isMesh = (obj: Object3D): obj is Mesh => 'isMesh' in obj;
     group.traverse(obj => {
       if (isMesh(obj)) {
-        let geometry,
-          isTemp = false;
+        let geometry;
 
         if (obj.geometry.index !== null) {
-          isTemp = true;
           geometry = obj.geometry.toNonIndexed();
         } else {
           geometry = obj.geometry;
@@ -390,10 +388,6 @@ export class Octree {
           v3.applyMat4(obj.matrixWorld);
 
           this.addTriangle(new Triangle(v1, v2, v3));
-        }
-
-        if (isTemp) {
-          geometry.dispose();
         }
       }
     });

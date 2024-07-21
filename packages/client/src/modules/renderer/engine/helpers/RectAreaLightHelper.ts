@@ -70,13 +70,6 @@ export class RectAreaLightHelper extends Line {
     this.children[0].matrixWorld.from(this.matrixWorld);
     return this;
   }
-
-  dispose() {
-    this.geometry.dispose();
-    this.material.dispose();
-    (this.children[0].geometry as BufferGeometry).dispose();
-    (this.children[0] as Mesh).material.dispose();
-  }
 }
 
 RectAreaLightHelper.prototype.type = 'RectAreaLightHelper';

@@ -63,7 +63,7 @@ async function init() {
   const controls = new OrbitControls(camera, renderer.parameters.canvas);
   controls.minDistance = 2;
   controls.maxDistance = 5;
-  controls.eventDispatcher.add('change', render);
+  controls.onChange = render;
 
   useWindowResizer(renderer, camera);
 

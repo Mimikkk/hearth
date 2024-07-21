@@ -76,7 +76,7 @@ async function init() {
   controls.maxDistance = 5;
   controls.target.set(0, -0.1, -0.2);
   controls.update();
-  controls.eventDispatcher.add('change', render); // use if there is no animation loop
+  controls.onChange = render;
 
   useWindowResizer(renderer, camera);
 }

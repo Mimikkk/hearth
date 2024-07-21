@@ -365,24 +365,6 @@ export class CCDIKHelper extends Object3D {
     return super.updateMatrixWorld(force);
   }
 
-  dispose() {
-    this.sphereGeometry.dispose();
-    this.targetSphereMaterial.dispose();
-    this.effectorSphereMaterial.dispose();
-    this.linkSphereMaterial.dispose();
-    this.lineMaterial.dispose();
-
-    const children = this.children;
-
-    for (let i = 0; i < children.length; i++) {
-      const child = children[i];
-
-      if (child instanceof Line) child.geometry.dispose();
-    }
-  }
-
-  // private method
-
   _init() {
     const scope = this;
     const iks = this.iks;

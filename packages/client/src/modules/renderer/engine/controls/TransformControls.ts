@@ -47,39 +47,7 @@ const _mouseUpEvent = { type: 'mouseUp' as const, mode: null } as unknown as {
 };
 const _objectChangeEvent = { type: 'objectChange' } as const;
 
-export interface TransformControlsEventMap extends Object3DEventMap {
-  change: {};
-  mouseDown: {};
-  mouseUp: {};
-  objectChange: {};
-  'camera-changed': { value: unknown };
-  'object-changed': { value: unknown };
-  'enabled-changed': { value: unknown };
-  'axis-changed': { value: unknown };
-  'mode-changed': { value: unknown };
-  'translationSnap-changed': { value: unknown };
-  'rotationSnap-changed': { value: unknown };
-  'scaleSnap-changed': { value: unknown };
-  'space-changed': { value: unknown };
-  'size-changed': { value: unknown };
-  'dragging-changed': { value: unknown };
-  'showX-changed': { value: unknown };
-  'showY-changed': { value: unknown };
-  'showZ-changed': { value: unknown };
-  'worldPosition-changed': { value: unknown };
-  'worldPositionStart-changed': { value: unknown };
-  'worldQuaternion-changed': { value: unknown };
-  'worldQuaternionStart-changed': { value: unknown };
-  'cameraPosition-changed': { value: unknown };
-  'cameraQuaternion-changed': { value: unknown };
-  'pointStart-changed': { value: unknown };
-  'pointEnd-changed': { value: unknown };
-  'rotationAxis-changed': { value: unknown };
-  'rotationAngle-changed': { value: unknown };
-  'eye-changed': { value: unknown };
-}
-
-export class TransformControls extends Object3D<TransformControlsEventMap> {
+export class TransformControls extends Object3D {
   declare type: 'TransformControls';
   declare isTransformControls: true;
   _gizmo: TransformControlsGizmo;
@@ -133,12 +101,9 @@ export class TransformControls extends Object3D<TransformControlsEventMap> {
         set: function (value) {
           if (propValue !== value) {
             propValue = value;
-            //@ts-expect-error
             _plane[propName] = value;
-            //@ts-expect-error
             _gizmo[propName] = value;
 
-            //@ts-expect-error
             scope.eventDispatcher.dispatch({ type: propName + '-changed', value: value }, this);
             scope.eventDispatcher.dispatch(_changeEvent, this);
           }
@@ -544,13 +509,6 @@ export class TransformControls extends Object3D<TransformControlsEventMap> {
     this.domElement.removeEventListener('pointermove', this._onPointerHover);
     this.domElement.removeEventListener('pointermove', this._onPointerMove);
     this.domElement.removeEventListener('pointerup', this._onPointerUp);
-
-    this.traverse(function (child) {
-      //@ts-expect-error
-      if (child.geometry) child.geometry.dispose();
-      //@ts-expect-error
-      if (child.material) child.material.dispose();
-    });
   }
 
   // Set current object

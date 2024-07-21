@@ -25,9 +25,7 @@ export default class RenderObject {
   initialCacheKey: string;
   _nodeBuilderState: any;
   _bindings: any;
-  onDispose: any;
   isRenderObject: boolean;
-  onMaterialDispose: any;
 
   constructor(
     public renderer: Renderer,
@@ -64,15 +62,7 @@ export default class RenderObject {
     this._nodeBuilderState = null;
     this._bindings = null;
 
-    this.onDispose = null;
-
     this.isRenderObject = true;
-
-    this.onMaterialDispose = () => {
-      this.dispose();
-    };
-
-    this.material.eventDispatcher.add('dispose', this.onMaterialDispose);
   }
 
   updateClipping(parent: ClippingContext) {
@@ -196,11 +186,5 @@ export default class RenderObject {
 
   getCacheKey(): string {
     return this.getMaterialCacheKey() + ',' + this.getNodesCacheKey();
-  }
-
-  dispose() {
-    this.material.eventDispatcher.remove('dispose', this.onMaterialDispose);
-
-    this.onDispose();
   }
 }

@@ -25,11 +25,6 @@ export class PointLightHelper extends Mesh {
     this.update();
   }
 
-  dispose() {
-    this.geometry.dispose();
-    this.material.dispose();
-  }
-
   update() {
     this.light.updateWorldMatrix(true, false);
 

@@ -60,13 +60,6 @@ export class PlaneHelper extends Line {
 
     return super.updateMatrixWorld(force);
   }
-
-  dispose() {
-    this.geometry.dispose();
-    this.material.dispose();
-    (this.children[0] as Mesh).geometry.dispose();
-    (this.children[0] as Mesh).material.dispose();
-  }
 }
 
 PlaneHelper.prototype.type = 'PlaneHelper';

@@ -1,5 +1,4 @@
 import {
-  EventDispatcher,
   Mat4,
   Mouse,
   OrthographicCamera,
@@ -13,28 +12,15 @@ import {
 } from '../engine.js';
 import { DegreeToRadian } from '../math/MathUtils.js';
 
-// OrbitControls performs orbiting, dollying (zooming), and panning.
-// Unlike TrackballControls, it maintains the "up" direction object.up (+Y by default).
-//
-//    Orbit - left mouse / touch: one-finger move
-//    Zoom - middle mouse, or mousewheel / touch: two-finger spread or squish
-//    Pan - right mouse, or left mouse + ctrl/meta/shiftKey, or arrow keys / touch: two-finger move
-
-const _changeEvent = { type: 'change' } as const;
-const _startEvent = { type: 'start' } as const;
-const _endEvent = { type: 'end' } as const;
 const _ray = new Ray();
 const _plane = new Plane();
 const TILT_LIMIT = Math.cos(70 * DegreeToRadian);
 
-export interface OrbitControlsEventMap {
-  change: {};
-  start: {};
-  end: {};
-}
-
 export class OrbitControls {
-  eventDispatcher = new EventDispatcher<OrbitControlsEventMap>();
+  onChange?: () => void;
+  onStart?: () => void;
+  onEnd?: () => void;
+
   enabled: boolean;
   target: Vec3;
   cursor: Vec3;
@@ -193,7 +179,7 @@ export class OrbitControls {
       scope.object.zoom = scope.zoom0;
 
       scope.object.updateProjectionMatrix();
-      scope.eventDispatcher.dispatch(_changeEvent, this);
+      scope.onChange?.();
 
       scope.update();
 
@@ -387,7 +373,7 @@ export class OrbitControls {
           8 * (1 - lastQuaternion.dot(scope.object.quaternion)) > EPS ||
           lastTargetPosition.distanceSqTo(scope.target) > EPS
         ) {
-          scope.eventDispatcher.dispatch(_changeEvent, this);
+          scope.onChange?.();
 
           lastPosition.from(scope.object.position);
           lastQuaternion.from(scope.object.quaternion);
@@ -748,7 +734,7 @@ export class OrbitControls {
           scope.domElement.removeEventListener('pointermove', onPointerMove);
           scope.domElement.removeEventListener('pointerup', onPointerUp);
 
-          scope.eventDispatcher.dispatch(_endEvent, this);
+          scope.onEnd?.();
 
           state = STATE.NONE;
 
@@ -831,7 +817,7 @@ export class OrbitControls {
       }
 
       if (state !== STATE.NONE) {
-        scope.eventDispatcher.dispatch(_startEvent, this);
+        scope.onStart?.();
       }
     }
 
@@ -865,11 +851,11 @@ export class OrbitControls {
 
       event.preventDefault();
 
-      scope.eventDispatcher.dispatch(_startEvent, this);
+      scope.onEnd?.();
 
       handleMouseWheel(customWheelEvent(event));
 
-      scope.eventDispatcher.dispatch(_endEvent, this);
+      scope?.onStart?.();
     }
 
     function customWheelEvent(event: WheelEvent): WheelEvent {

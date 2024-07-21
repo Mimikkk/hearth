@@ -19,10 +19,6 @@ export class DirectionalLight extends Light<DirectionalLightShadow> {
     this.shadow = new DirectionalLightShadow();
   }
 
-  dispose() {
-    this.shadow.dispose();
-  }
-
   copy(source: this): this {
     super.copy(source);
 

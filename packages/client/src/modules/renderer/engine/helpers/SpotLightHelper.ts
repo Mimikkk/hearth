@@ -45,11 +45,6 @@ export class SpotLightHelper extends Object3D {
     this.update();
   }
 
-  dispose() {
-    this.cone.geometry.dispose();
-    this.cone.material.dispose();
-  }
-
   update() {
     this.light.updateWorldMatrix(true, false);
     this.light.target.updateWorldMatrix(true, false);

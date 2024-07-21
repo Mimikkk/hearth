@@ -40,11 +40,6 @@ export class Box3Helper extends LineSegments {
     this.scale.scale(0.5);
     return super.updateMatrixWorld(force);
   }
-
-  dispose() {
-    this.geometry.dispose();
-    this.material.dispose();
-  }
 }
 
 Box3Helper.prototype.type = 'Box3Helper';

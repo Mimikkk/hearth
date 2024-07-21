@@ -1,7 +1,6 @@
 import { Quaternion } from '../math/Quaternion.js';
 import { Vec3 } from '../math/Vec3.js';
 import { Mat4 } from '../math/Mat4.js';
-import { EventDispatcher } from './EventDispatcher.js';
 import { Euler } from '../math/Euler.js';
 import { Layers } from './Layers.js';
 import { Mat3 } from '../math/Mat3.js';
@@ -57,8 +56,6 @@ export class Object3D<EventMap extends Object3DEventMap = Object3DEventMap> {
   static Up: Vec3 = new Vec3(0, 1, 0);
   static UseLocalAutoUpdate: boolean = true;
   static UseWorldAutoUpdate: boolean = true;
-
-  eventDispatcher = new EventDispatcher<EventMap>();
 
   boundingSphere: Sphere | null;
   geometry: BufferGeometry | null;
@@ -366,10 +363,6 @@ export class Object3D<EventMap extends Object3DEventMap = Object3DEventMap> {
       object.removeFromParent();
       object.parent = this!;
       this.children.push(object);
-
-      object.eventDispatcher.dispatch({ type: 'added' }, this);
-
-      this.eventDispatcher.dispatch({ child: object, type: 'childadded' }, this);
     } else {
       console.error('engine.Object3D.add: object not an instance of engine.Object3D.', object);
     }
@@ -393,10 +386,6 @@ export class Object3D<EventMap extends Object3DEventMap = Object3DEventMap> {
     if (index !== -1) {
       object.parent = null;
       this.children.splice(index, 1);
-
-      object.eventDispatcher.dispatch({ type: 'removed' }, this);
-
-      this.eventDispatcher.dispatch({ type: 'childremoved', child: object }, this);
     }
 
     return this;
@@ -438,10 +427,6 @@ export class Object3D<EventMap extends Object3DEventMap = Object3DEventMap> {
     this.children.push(object);
 
     object.updateWorldMatrix(false, true);
-
-    object.eventDispatcher.dispatch({ type: 'added' }, this);
-
-    this.eventDispatcher.dispatch({ type: 'childadded', child: object }, this);
 
     return this;
   }

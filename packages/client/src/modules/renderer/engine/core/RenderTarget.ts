@@ -1,4 +1,3 @@
-import { EventDispatcher } from './EventDispatcher.js';
 import { Texture } from '../textures/Texture.js';
 import {
   ColorSpace,
@@ -16,7 +15,6 @@ import { Source } from '../textures/Source.js';
 export class RenderTarget {
   declare ['constructor']: typeof RenderTarget;
   declare isRenderTarget: true;
-  eventDispatcher = new EventDispatcher<{ dispose: {} }>();
 
   depth: number;
   scissor: Vec4;
@@ -98,8 +96,6 @@ export class RenderTarget {
         this.textures[i].image.height = height;
         this.textures[i].image.depth = depth;
       }
-
-      this.dispose();
     }
 
     this.viewport.set(0, 0, width, height);
@@ -141,10 +137,6 @@ export class RenderTarget {
     this.samples = source.samples;
 
     return this;
-  }
-
-  dispose(): void {
-    this.eventDispatcher.dispatch({ type: 'dispose' }, this);
   }
 }
 

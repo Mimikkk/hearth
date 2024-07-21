@@ -95,12 +95,6 @@ export class PositionalAudioHelper extends Line {
 
     if (coneInnerAngle === coneOuterAngle) (this.material as never as LineBasicMaterial[])[0].visible = false;
   }
-
-  dispose() {
-    this.geometry.dispose();
-    (this.material as never as LineBasicMaterial[])[0].dispose();
-    (this.material as never as LineBasicMaterial[])[1].dispose();
-  }
 }
 
 PositionalAudioHelper.prototype.type = 'PositionalAudioHelper';

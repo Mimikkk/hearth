@@ -1,4 +1,3 @@
-import { EventDispatcher } from '../core/EventDispatcher.js';
 import {
   ColorSpace,
   MagnificationTextureFilter,
@@ -20,7 +19,6 @@ let _textureId = 0;
 export class Texture {
   declare ['constructor']: typeof Texture;
   declare isTexture: true;
-  eventDispatcher = new EventDispatcher<{ dispose: {} }>();
   id: number;
   uuid: string;
   name: string;
@@ -182,10 +180,6 @@ export class Texture {
     this.needsUpdate = true;
 
     return this;
-  }
-
-  dispose() {
-    this.eventDispatcher.dispatch({ type: 'dispose' }, this);
   }
 
   transformUv(uv: Vec2): Vec2 {

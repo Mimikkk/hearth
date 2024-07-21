@@ -230,8 +230,4 @@ export class InstancedMesh extends Mesh {
   }
 
   updateMorphTargets() {}
-
-  dispose() {
-    this.eventDispatcher.dispatch({ type: 'dispose' }, this);
-  }
 }

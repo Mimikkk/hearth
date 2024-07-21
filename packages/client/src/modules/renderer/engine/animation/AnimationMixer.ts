@@ -1,5 +1,4 @@
 import { AnimationAction } from './AnimationAction.js';
-import { EventDispatcher } from '../core/EventDispatcher.js';
 import { LinearInterpolant } from '../math/interpolants/LinearInterpolant.js';
 import { PropertyBinding } from './PropertyBinding.js';
 import { PropertyMixer } from './PropertyMixer.js';
@@ -9,8 +8,6 @@ import { AnimationBlendMode } from '../constants.js';
 const _controlInterpolantsResultBuffer = new Float32Array(1);
 
 class AnimationMixer {
-  eventDispatcher = new EventDispatcher();
-
   constructor(root) {
     this._root = root;
     this._initMemoryManager();

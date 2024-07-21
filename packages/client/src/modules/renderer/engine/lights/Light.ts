@@ -17,8 +17,6 @@ export class Light<S extends LightShadow | undefined> extends Object3D {
     this.intensity = intensity;
   }
 
-  dispose() {}
-
   copy(source: this, recursive?: boolean): this {
     super.copy(source, recursive);
 

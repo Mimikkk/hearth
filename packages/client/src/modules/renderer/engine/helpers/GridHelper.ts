@@ -47,11 +47,6 @@ export class GridHelper extends LineSegments {
 
     super(geometry, material);
   }
-
-  dispose() {
-    this.geometry.dispose();
-    this.material.dispose();
-  }
 }
 
 GridHelper.prototype.type = 'GridHelper';

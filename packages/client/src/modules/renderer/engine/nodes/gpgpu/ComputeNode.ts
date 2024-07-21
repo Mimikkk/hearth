@@ -31,10 +31,6 @@ class ComputeNode extends Node {
     this.updateDispatchCount();
   }
 
-  dispose() {
-    this.eventDispatcher.dispatch({ type: 'dispose' }, this);
-  }
-
   set needsUpdate(value: boolean) {
     if (value === true) this.version++;
   }

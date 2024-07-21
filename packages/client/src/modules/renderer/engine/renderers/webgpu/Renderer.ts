@@ -711,18 +711,6 @@ export class Renderer {
       // onInit
 
       if (pipelines.has(computeNode) === false) {
-        const dispose = () => {
-          computeNode.eventDispatcher.remove('dispose', dispose);
-
-          pipelines.delete(computeNode);
-          bindings.delete(computeNode);
-          nodes.delete(computeNode);
-        };
-
-        computeNode.eventDispatcher.add('dispose', dispose);
-
-        //
-
         computeNode.onInit({ renderer: this });
       }
 

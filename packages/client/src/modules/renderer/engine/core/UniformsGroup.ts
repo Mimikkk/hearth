@@ -1,4 +1,3 @@
-import { EventDispatcher } from './EventDispatcher.js';
 import { BufferUsage } from '../constants.js';
 import type { Uniform } from './Uniform.js';
 
@@ -11,7 +10,6 @@ export class UniformsGroup<A> {
   name: string;
   usage: BufferUsage;
   uniforms: (Uniform<A> | Uniform<A>[])[];
-  eventDispatcher = new EventDispatcher<{ dispose: {} }>();
 
   constructor() {
     this.usage = BufferUsage.StaticDraw;
@@ -37,11 +35,6 @@ export class UniformsGroup<A> {
 
   setUsage(value: BufferUsage): this {
     this.usage = value;
-    return this;
-  }
-
-  dispose() {
-    this.eventDispatcher.dispatch({ type: 'dispose' }, this);
     return this;
   }
 

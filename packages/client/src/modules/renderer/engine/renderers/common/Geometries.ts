@@ -3,8 +3,8 @@ import { AttributeType } from './Constants.js';
 import { Uint32BufferAttribute, Uint16BufferAttribute, WireframeGeometry } from '@modules/renderer/engine/engine.js';
 import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 import RenderObject from '@modules/renderer/engine/renderers/common/RenderObject.js';
-import { Attribute } from '@modules/renderer/engine/renderers/common/Attributes.js';
 import { isArrayUint32 } from '@modules/renderer/engine/utils.js';
+import { Attribute } from '@modules/renderer/engine/core/types.js';
 
 function getWireframeVersion(geometry: WireframeGeometry): number {
   //@ts-expect-error
@@ -75,31 +75,6 @@ export class Geometries extends DataMap<any, any> {
     geometryData.initialized = true;
 
     this.renderer.info.memory.geometries++;
-
-    const onDispose = () => {
-      this.renderer.info.memory.geometries--;
-
-      const index = geometry.index;
-      const geometryAttributes = renderObject.getAttributes();
-
-      if (index !== null) {
-        this.renderer._attributes.delete(index);
-      }
-
-      for (const geometryAttribute of geometryAttributes) {
-        this.renderer._attributes.delete(geometryAttribute);
-      }
-
-      const wireframeAttribute = this.wireframes.get(geometry);
-
-      if (wireframeAttribute !== undefined) {
-        this.renderer._attributes.delete(wireframeAttribute);
-      }
-
-      geometry.eventDispatcher.remove('dispose', onDispose);
-    };
-
-    geometry.eventDispatcher.add('dispose', onDispose);
   }
 
   updateAttributes(renderObject: RenderObject) {

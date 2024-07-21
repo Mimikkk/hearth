@@ -305,11 +305,6 @@ class ScriptableNode extends Node {
 
   dispose() {
     if (this._method === null) return;
-
-    if (this._object && typeof this._object.dispose === 'function') {
-      this._object.dispose();
-    }
-
     this._method = null;
     this._object = null;
     this._source = null!;
