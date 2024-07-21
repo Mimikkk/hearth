@@ -14,7 +14,7 @@ class TempNode extends Node {
   }
 
   build(builder, output) {
-    const buildStage = builder.getBuildStage();
+    const buildStage = builder.buildStage;
 
     if (buildStage === 'generate') {
       const type = builder.getVectorType(this.getNodeType(builder, output));

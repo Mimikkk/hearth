@@ -5,7 +5,6 @@ import { EventDispatcher } from './EventDispatcher.js';
 import { Euler } from '../math/Euler.js';
 import { Layers } from './Layers.js';
 import { Mat3 } from '../math/Mat3.js';
-import * as MathUtils from '../math/MathUtils.js';
 import type { Intersection, Raycaster } from './Raycaster.js';
 import type { Light } from '../lights/Light.js';
 import type { Scene } from '../scenes/Scene.js';
@@ -65,10 +64,11 @@ export class Object3D<EventMap extends Object3DEventMap = Object3DEventMap> {
   geometry: BufferGeometry | null;
 
   computeBoundingSphere(): void {}
+
   computeBoundingBox(): void {}
 
   declare material: Material | null;
-
+  declare workgroupSize?: [number, number, number] | [number, number] | [number];
   occlusionTest: boolean;
   boundingBox: Box3 | null;
   id: number;

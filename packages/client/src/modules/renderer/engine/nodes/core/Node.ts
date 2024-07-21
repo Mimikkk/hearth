@@ -8,9 +8,10 @@ import NodeFrame from '@modules/renderer/engine/nodes/core/NodeFrame.js';
 
 let _nodeId = 0;
 
-class Node {
+export class Node {
   declare static type: any;
   declare isNode: true;
+  name?: string;
   eventDispatcher = new EventDispatcher<{ dispose: {} }>();
   nodeType: NodeTypeOption | null;
   updateType: NodeUpdateType;
@@ -194,7 +195,7 @@ class Node {
 		*/
     let result = null;
 
-    const buildStage = builder.getBuildStage();
+    const buildStage = builder.buildStage;
 
     if (buildStage === 'setup') {
       this.setReference(builder);

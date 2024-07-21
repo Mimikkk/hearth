@@ -1,11 +1,13 @@
 import NodeVar from './NodeVar.js';
 
 class NodeVarying extends NodeVar {
-  constructor(name, type) {
+  needsInterpolation = false;
+  isNodeVarying = true;
+
+  constructor(name: string, type: string) {
     super(name, type);
 
     this.needsInterpolation = false;
-
     this.isNodeVarying = true;
   }
 }
