@@ -151,35 +151,27 @@ export abstract class Curve<T extends Vec2 | Vec3> {
     normals: Vec3[];
     binormals: Vec3[];
   } {
-    // see http://www.cs.indiana.edu/pub/techreports/TR425.pdf
-
     const normal = new Vec3();
 
-    const tangents = [];
-    const normals = [];
-    const binormals = [];
+    const tangents: Vec3[] = [];
+    const normals: Vec3[] = [];
+    const binormals: Vec3[] = [];
 
     const vec = new Vec3();
     const mat = new Mat4();
 
-    // compute the tangent vectors for each segment on the curve
-
     for (let i = 0; i <= segments; i++) {
       const u = i / segments;
-
-      tangents[i] = this.getTangentAt(u, new Vec3());
+      tangents[i] = this.getTangentAt(u) as never as Vec3;
     }
-
-    // select an initial normal vector perpendicular to the first tangent vector,
-    // and in the direction of the minimum tangent xyz component
 
     normals[0] = new Vec3();
     binormals[0] = new Vec3();
-    let min = Number.MAX_VALUE;
     const tx = Math.abs(tangents[0].x);
     const ty = Math.abs(tangents[0].y);
     const tz = Math.abs(tangents[0].z);
 
+    let min = Number.MAX_VALUE;
     if (tx <= min) {
       min = tx;
       normal.set(1, 0, 0);
@@ -199,8 +191,6 @@ export abstract class Curve<T extends Vec2 | Vec3> {
     normals[0].asCross(tangents[0], vec);
     binormals[0].asCross(tangents[0], normals[0]);
 
-    // compute the slowly-varying normal and binormal vectors for each segment on the curve
-
     for (let i = 1; i <= segments; i++) {
       normals[i] = normals[i - 1].clone();
 
@@ -211,7 +201,7 @@ export abstract class Curve<T extends Vec2 | Vec3> {
       if (vec.length() > Number.EPSILON) {
         vec.normalize();
 
-        const theta = Math.acos(MathUtils.clamp(tangents[i - 1].dot(tangents[i]), -1, 1)); // clamp for floating pt errors
+        const theta = Math.acos(MathUtils.clamp(tangents[i - 1].dot(tangents[i]), -1, 1));
 
         normals[i].applyMat4(mat.asRotationAxis(vec, theta));
       }
@@ -219,9 +209,7 @@ export abstract class Curve<T extends Vec2 | Vec3> {
       binormals[i].asCross(tangents[i], normals[i]);
     }
 
-    // if the curve is closed, postprocess the vectors so the first and last normal vectors are the same
-
-    if (closed === true) {
+    if (closed) {
       let theta = Math.acos(MathUtils.clamp(normals[0].dot(normals[segments]), -1, 1));
       theta /= segments;
 
@@ -230,17 +218,12 @@ export abstract class Curve<T extends Vec2 | Vec3> {
       }
 
       for (let i = 1; i <= segments; i++) {
-        // twist a little...
         normals[i].applyMat4(mat.asRotationAxis(tangents[i], theta * i));
         binormals[i].asCross(tangents[i], normals[i]);
       }
     }
 
-    return {
-      tangents: tangents,
-      normals: normals,
-      binormals: binormals,
-    };
+    return { tangents, normals, binormals };
   }
 
   clone() {
