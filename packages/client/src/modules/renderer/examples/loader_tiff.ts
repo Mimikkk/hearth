@@ -3,7 +3,7 @@ import { Scene } from '@modules/renderer/engine/scenes/Scene.js';
 import { PlaneGeometry } from '@modules/renderer/engine/geometries/PlaneGeometry.js';
 import { MeshBasicMaterial } from '@modules/renderer/engine/materials/MeshBasicMaterial.js';
 import { Mesh } from '@modules/renderer/engine/objects/Mesh.js';
-import { ColorSpace } from '../engine/constants.ts';
+import { ColorSpace } from '../engine/constants.js';
 import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 import { TiffLoader } from '@modules/renderer/engine/loaders/textures/TIFFLoader/TIFFLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';

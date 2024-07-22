@@ -1,4 +1,4 @@
-import Node from './Node.ts';
+import Node from './Node.js';
 import { TypeName } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.types.js';
 
 class StructTypeNode extends Node {

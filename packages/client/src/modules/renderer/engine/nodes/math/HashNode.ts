@@ -1,4 +1,4 @@
-import Node from '../core/Node.ts';
+import Node from '../core/Node.js';
 import { addNodeElement, nodeProxy } from '../shadernode/ShaderNodes.js';
 
 class HashNode extends Node {

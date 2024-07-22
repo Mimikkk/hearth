@@ -1,4 +1,4 @@
-import Node from '../core/Node.ts';
+import Node from '../core/Node.js';
 import AnalyticLightNode from './AnalyticLightNode.js';
 import { nodeObject, nodeProxy, vec3 } from '../shadernode/ShaderNodes.js';
 import { LightNodeMap } from '@modules/renderer/engine/nodes/lighting/LightsNodeMap.js';

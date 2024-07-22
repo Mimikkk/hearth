@@ -1,4 +1,4 @@
-import Node from '../core/Node.ts';
+import Node from '../core/Node.js';
 import { timerLocal } from './TimerNode.js';
 import { nodeObject, nodeProxy } from '../shadernode/ShaderNodes.js';
 

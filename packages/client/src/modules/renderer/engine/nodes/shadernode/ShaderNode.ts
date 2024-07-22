@@ -1,4 +1,4 @@
-import Node from '../core/Node.ts';
+import Node from '../core/Node.js';
 import { ShaderNodeObject } from '@modules/renderer/engine/nodes/shadernode/ShaderNodeObject.js';
 import { handlers } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.handlers.js';
 

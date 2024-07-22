@@ -3,7 +3,7 @@ import {
   GPUTextureAspectType,
   GPUTextureSampleTypeType,
   GPUTextureViewDimensionType,
-} from './constants.ts';
+} from './constants.js';
 import { DataArrayTexture, DataTexture, DepthTexture, TextureDataType, VideoTexture } from '../../../engine.js';
 import { Backend } from '@modules/renderer/engine/renderers/webgpu/Backend.js';
 import Binding from '@modules/renderer/engine/renderers/common/Binding.js';

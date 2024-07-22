@@ -1,5 +1,5 @@
 import LightingNode from './LightingNode.js';
-import { NodeUpdateType } from '../core/constants.ts';
+import { NodeUpdateType } from '../core/constants.js';
 import { uniform } from '../core/UniformNode.js';
 import { vec3, vec4 } from '../shadernode/ShaderNodes.js';
 import { reference } from '../accessors/ReferenceNode.js';

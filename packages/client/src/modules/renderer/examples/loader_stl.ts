@@ -1,5 +1,5 @@
 import Stats from 'stats-js';
-import { PerspectiveCamera } from '../engine/cameras/PerspectiveCamera.ts';
+import { PerspectiveCamera } from '../engine/cameras/PerspectiveCamera.js';
 import { Vec3 } from '../engine/math/Vec3.js';
 import { Scene } from '../engine/scenes/Scene';
 import { Color } from '../engine/math/Color';

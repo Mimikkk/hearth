@@ -1,11 +1,11 @@
-import Node from '../core/Node.ts';
+import Node from '../core/Node.js';
 import { getValueType } from '../core/NodeUtils.js';
 import { buffer } from '../accessors/BufferNode.js';
 import { instanceIndex } from '../core/IndexNode.js';
 import { f32, nodeProxy } from '../shadernode/ShaderNodes.js';
 
 import { Vec4 } from '@modules/renderer/engine/engine.js';
-import { lerp } from '../../math/MathUtils.ts';
+import { lerp } from '../../math/MathUtils.js';
 
 let min = null;
 let max = null;

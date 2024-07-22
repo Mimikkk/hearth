@@ -1,5 +1,5 @@
 import TempNode from '../core/TempNode.js';
-import { vectorComponents } from '../core/constants.ts';
+import { vectorComponents } from '../core/constants.js';
 
 class SetNode extends TempNode {
   static type = 'SetNode';

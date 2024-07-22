@@ -1,4 +1,4 @@
-import Node from '../core/Node.ts';
+import Node from '../core/Node.js';
 
 class ArrayElementNode extends Node {
   static type = 'ArrayElementNode';

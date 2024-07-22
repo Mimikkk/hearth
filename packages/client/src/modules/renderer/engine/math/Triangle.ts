@@ -3,7 +3,7 @@ import { Box3 } from '@modules/renderer/engine/math/Box3.js';
 import { Plane } from '@modules/renderer/engine/math/Plane.js';
 import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 import { Vec4 } from '@modules/renderer/engine/math/Vec4.js';
-import { Attribute } from '../core/types.ts';
+import { Attribute } from '../core/types.js';
 import { Const } from '@modules/renderer/engine/math/types.js';
 
 export class Triangle {

@@ -2,7 +2,7 @@ import TempNode from '../core/TempNode.js';
 import { texture } from '../accessors/TextureNode.js';
 import { textureCubeUV } from './PMREMUtils.js';
 import { uniform } from '../core/UniformNode.js';
-import { NodeUpdateType } from '../core/constants.ts';
+import { NodeUpdateType } from '../core/constants.js';
 import { nodeProxy } from '../shadernode/ShaderNodes.js';
 import PMREMGenerator from '@modules/renderer/engine/renderers/common/extras/PMREMGenerator.js';
 

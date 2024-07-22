@@ -23,10 +23,10 @@ import { f32, vec3, vec4 } from '../shadernode/ShaderNodes.js';
 import AONode from '../lighting/AONode.js';
 import { lightingContext } from '../lighting/LightingContextNode.js';
 import EnvironmentNode from '../lighting/EnvironmentNode.js';
-import { depthPixel } from '../display/ViewportDepthNode.ts';
+import { depthPixel } from '../display/ViewportDepthNode.js';
 import { cameraLogDepth } from '../accessors/CameraNode.js';
 import { clipping, clippingAlpha } from '../accessors/ClippingNode.js';
-import { faceDirection } from '../display/FrontFacingNode.ts';
+import { faceDirection } from '../display/FrontFacingNode.js';
 import { NodeMaterials } from '@modules/renderer/engine/nodes/materials/NodeMaterialMap.js';
 import { ShaderStage } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.types.js';
 

@@ -1,5 +1,5 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
-import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.ts';
+import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { MeshStandardNodeMaterial, parallaxUV, texture, uv } from '@modules/renderer/engine/nodes/Nodes.js';
 
 import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';

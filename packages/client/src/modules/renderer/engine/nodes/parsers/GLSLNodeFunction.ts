@@ -1,5 +1,5 @@
-import NodeFunction from '../core/NodeFunction.ts';
-import NodeFunctionInput from '../core/NodeFunctionInput.ts';
+import NodeFunction from '../core/NodeFunction.js';
+import NodeFunctionInput from '../core/NodeFunctionInput.js';
 
 const declarationRegexp = /^\s*(highp|mediump|lowp)?\s*([a-z_0-9]+)\s*([a-z_0-9]+)?\s*\(([\s\S]*?)\)/i;
 const propertiesRegexp = /[a-z_0-9]+/gi;

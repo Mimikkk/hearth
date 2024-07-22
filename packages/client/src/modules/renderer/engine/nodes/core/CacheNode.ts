@@ -1,4 +1,4 @@
-import Node from './Node.ts';
+import Node from './Node.js';
 import NodeCache from './NodeCache.js';
 import { addNodeElement, nodeProxy } from '../shadernode/ShaderNodes.js';
 import { NodeBuilder } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.js';

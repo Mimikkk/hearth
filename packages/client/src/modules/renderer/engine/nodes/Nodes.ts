@@ -2,7 +2,7 @@
 // this will also solve issues like "import TempNode from '../core/Node.ts'"
 
 // constants
-export * from './core/constants.ts';
+export * from './core/constants.js';
 
 // core
 export { default as AssignNode, assign } from './core/AssignNode.js';
@@ -13,13 +13,13 @@ export { default as ConstNode } from './core/ConstNode.js';
 export { default as ContextNode, context, label } from './core/ContextNode.js';
 export { default as IndexNode, vertexIndex, instanceIndex } from './core/IndexNode.js';
 export { default as LightingModel } from './core/LightingModel.js';
-export { default as Node } from './core/Node.ts';
+export { default as Node } from './core/Node.js';
 export { default as VarNode, temp } from './core/VarNode.js';
 export { default as NodeAttribute } from './core/NodeAttribute.js';
 export { default as NodeCache } from './core/NodeCache.js';
 export { default as NodeCode } from './core/NodeCode.js';
 export { default as NodeFrame } from './core/NodeFrame.js';
-export { default as NodeFunctionInput } from './core/NodeFunctionInput.ts';
+export { default as NodeFunctionInput } from './core/NodeFunctionInput.js';
 export { default as NodeKeywords } from './core/NodeKeywords.js';
 export { default as NodeUniform } from './core/NodeUniform.js';
 export { default as NodeVar } from './core/NodeVar.js';
@@ -317,8 +317,8 @@ export { default as UVNode, uv } from './accessors/UVNode.js';
 export { default as UserDataNode, userData } from './accessors/UserDataNode.js';
 
 // display
-export { default as BlendModeNode, burn, dodge, overlay, screen } from './display/BlendModeNode.ts';
-export { default as BumpMapNode, bumpMap } from './display/BumpMapNode.ts';
+export { default as BlendModeNode, burn, dodge, overlay, screen } from './display/BlendModeNode.js';
+export { default as BumpMapNode, bumpMap } from './display/BumpMapNode.js';
 export {
   default as ColorAdjustmentNode,
   saturation,
@@ -327,18 +327,18 @@ export {
   lumaCoeffs,
   luminance,
   threshold,
-} from './display/ColorAdjustmentNode.ts';
+} from './display/ColorAdjustmentNode.js';
 export {
   default as ColorSpaceNode,
   linearToColorSpace,
   colorSpaceToLinear,
   linearTosRGB,
   sRGBToLinear,
-} from './display/ColorSpaceNode.ts';
-export { default as FrontFacingNode, frontFacing, faceDirection } from './display/FrontFacingNode.ts';
-export { default as NormalMapNode, normalMap } from './display/NormalMapNode.ts';
-export { default as PosterizeNode, posterize } from './display/PosterizeNode.ts';
-export { default as ToneMappingNode, toneMapping } from './display/ToneMappingNode.ts';
+} from './display/ColorSpaceNode.js';
+export { default as FrontFacingNode, frontFacing, faceDirection } from './display/FrontFacingNode.js';
+export { default as NormalMapNode, normalMap } from './display/NormalMapNode.js';
+export { default as PosterizeNode, posterize } from './display/PosterizeNode.js';
+export { default as ToneMappingNode, toneMapping } from './display/ToneMappingNode.js';
 export {
   default as ViewportNode,
   viewport,
@@ -348,10 +348,10 @@ export {
   viewportBottomLeft,
   viewportTopRight,
   viewportBottomRight,
-} from './display/ViewportNode.ts';
-export { default as ViewportTextureNode, viewportTexture, viewportMipTexture } from './display/ViewportTextureNode.ts';
-export { default as ViewportSharedTextureNode, viewportSharedTexture } from './display/ViewportSharedTextureNode.ts';
-export { default as ViewportDepthTextureNode, viewportDepthTexture } from './display/ViewportDepthTextureNode.ts';
+} from './display/ViewportNode.js';
+export { default as ViewportTextureNode, viewportTexture, viewportMipTexture } from './display/ViewportTextureNode.js';
+export { default as ViewportSharedTextureNode, viewportSharedTexture } from './display/ViewportSharedTextureNode.js';
+export { default as ViewportDepthTextureNode, viewportDepthTexture } from './display/ViewportDepthTextureNode.js';
 export {
   default as ViewportDepthNode,
   viewZToOrthographicDepth,
@@ -361,31 +361,31 @@ export {
   depth,
   depthTexture,
   depthPixel,
-} from './display/ViewportDepthNode.ts';
-export { default as GaussianBlurNode, gaussianBlur } from './display/GaussianBlurNode.ts';
-export { default as AfterImageNode, afterImage } from './display/AfterImageNode.ts';
-export { default as AnamorphicNode, anamorphic } from './display/AnamorphicNode.ts';
+} from './display/ViewportDepthNode.js';
+export { default as GaussianBlurNode, gaussianBlur } from './display/GaussianBlurNode.js';
+export { default as AfterImageNode, afterImage } from './display/AfterImageNode.js';
+export { default as AnamorphicNode, anamorphic } from './display/AnamorphicNode.js';
 
-export { default as PassNode, pass, depthPass } from './display/PassNode.ts';
+export { default as PassNode, pass, depthPass } from './display/PassNode.js';
 
 // code
-export { default as ExpressionNode, expression } from './code/ExpressionNode.ts';
-export { default as CodeNode, code, js, wgsl, glsl } from './code/CodeNode.ts';
-export { default as FunctionCallNode, call } from './code/FunctionCallNode.ts';
-export { default as FunctionNode, wgslFn, glslFn } from './code/FunctionNode.ts';
-export { default as ScriptableNode, scriptable, global } from './code/ScriptableNode.ts';
-export { default as ScriptableValueNode, scriptableValue } from './code/ScriptableValueNode.ts';
+export { default as ExpressionNode, expression } from './code/ExpressionNode.js';
+export { default as CodeNode, code, js, wgsl, glsl } from './code/CodeNode.js';
+export { default as FunctionCallNode, call } from './code/FunctionCallNode.js';
+export { default as FunctionNode, wgslFn, glslFn } from './code/FunctionNode.js';
+export { default as ScriptableNode, scriptable, global } from './code/ScriptableNode.js';
+export { default as ScriptableValueNode, scriptableValue } from './code/ScriptableValueNode.js';
 
 // fog
-export { default as FogNode, fog } from './fog/FogNode.ts';
-export { default as FogRangeNode, rangeFog } from './fog/FogRangeNode.ts';
-export { default as FogExp2Node, densityFog } from './fog/FogExp2Node.ts';
+export { default as FogNode, fog } from './fog/FogNode.js';
+export { default as FogRangeNode, rangeFog } from './fog/FogRangeNode.js';
+export { default as FogExp2Node, densityFog } from './fog/FogExp2Node.js';
 
 // geometry
 export { default as RangeNode, range } from './geometry/RangeNode.js';
 
 // gpgpu
-export { default as ComputeNode, compute } from './gpgpu/ComputeNode.ts';
+export { default as ComputeNode, compute } from './gpgpu/ComputeNode.js';
 
 // lighting
 export { default as LightNode, lightTargetDirection } from './lighting/LightNode.js';
@@ -401,7 +401,7 @@ export { default as HemisphereLightNode } from './lighting/HemisphereLightNode.j
 export { default as EnvironmentNode } from './lighting/EnvironmentNode.js';
 export { default as AONode } from './lighting/AONode.js';
 export { default as AnalyticLightNode } from './lighting/AnalyticLightNode.js';
-import './lighting/LightsNodeMap.initialize.ts';
+import './lighting/LightsNodeMap.initialize.js';
 
 // pmrem
 export { default as PMREMNode, pmremTexture } from './pmrem/PMREMNode.js';

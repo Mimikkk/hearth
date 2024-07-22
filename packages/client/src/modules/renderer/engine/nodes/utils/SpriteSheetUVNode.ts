@@ -1,4 +1,4 @@
-import Node from '../core/Node.ts';
+import Node from '../core/Node.js';
 import { uv } from '../accessors/UVNode.js';
 import { f32, nodeProxy, vec2 } from '../shadernode/ShaderNodes.js';
 

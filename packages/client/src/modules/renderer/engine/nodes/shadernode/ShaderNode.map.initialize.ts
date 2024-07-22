@@ -34,7 +34,7 @@ import {
   vec4,
 } from './ShaderNode.primitves.js';
 import { NodeElements } from './ShaderNode.map.js';
-import { NodeStack } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.stack.ts';
+import { NodeStack } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.stack.js';
 
 NodeElements.set('append', NodeStack.append);
 NodeElements.set('color', color);

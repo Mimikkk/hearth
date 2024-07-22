@@ -1,4 +1,4 @@
-import Node from './Node.ts';
+import Node from './Node.js';
 import { BuildStage } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.types.js';
 
 class TempNode extends Node {

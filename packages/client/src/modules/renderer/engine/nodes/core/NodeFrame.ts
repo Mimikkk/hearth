@@ -1,4 +1,4 @@
-import { NodeUpdateType } from './constants.ts';
+import { NodeUpdateType } from './constants.js';
 import { Scene } from '@modules/renderer/engine/scenes/Scene.js';
 import { Object3D } from '@modules/renderer/engine/core/Object3D.js';
 import { Camera } from '@modules/renderer/engine/cameras/Camera.js';

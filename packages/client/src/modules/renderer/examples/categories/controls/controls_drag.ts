@@ -16,7 +16,7 @@ import { UI } from '@mimi/ui';
 import { ColorMap } from '@modules/renderer/engine/math/Color.js';
 import { Random } from '@modules/renderer/engine/math/random.js';
 import { normalWorld } from '@modules/renderer/engine/nodes/accessors/NormalNode.js';
-import { color } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.primitves.ts';
+import { color } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.primitves.js';
 import { BoundingSphereVisualizer } from '@modules/renderer/engine/helpers/BoundingSphereVisualizer.js';
 import { Intersection } from '@modules/renderer/engine/core/Raycaster.js';
 

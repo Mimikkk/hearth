@@ -1,7 +1,7 @@
 import { Vec3 } from './Vec3.js';
 import { Mat4 } from './Mat4.js';
 import * as MathUtils from './MathUtils.js';
-import { Const } from './types.ts';
+import { Const } from './types.js';
 import { Attribute } from '@modules/renderer/engine/core/types.js';
 import { clamp } from './MathUtils.js';
 

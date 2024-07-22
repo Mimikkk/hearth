@@ -1,5 +1,5 @@
-import Node from '../core/Node.ts';
-import { vectorComponents } from '../core/constants.ts';
+import Node from '../core/Node.js';
+import { vectorComponents } from '../core/constants.js';
 
 const stringVectorComponents = vectorComponents.join('');
 

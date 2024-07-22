@@ -1,4 +1,4 @@
-import Node from './Node.ts';
+import Node from './Node.js';
 import { getValueType } from './NodeUtils.js';
 
 class InputNode extends Node {

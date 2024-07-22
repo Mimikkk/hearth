@@ -1,6 +1,6 @@
 import TempNode from '../core/TempNode.js';
 import { addNodeElement, nodeProxy } from '../shadernode/ShaderNodes.js';
-import { vectorComponents } from './constants.ts';
+import { vectorComponents } from './constants.js';
 
 class AssignNode extends TempNode {
   static type = 'AssignNode';

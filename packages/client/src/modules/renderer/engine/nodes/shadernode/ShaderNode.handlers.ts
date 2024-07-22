@@ -6,7 +6,7 @@ import SplitNode from '@modules/renderer/engine/nodes/utils/SplitNode.js';
 import ArrayElementNode from '@modules/renderer/engine/nodes/utils/ArrayElementNode.js';
 import ConstNode from '@modules/renderer/engine/nodes/core/ConstNode.js';
 import SetNode from '@modules/renderer/engine/nodes/utils/SetNode.js';
-import { NodeStack } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.stack.ts';
+import { NodeStack } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.stack.js';
 
 export const handlers = {
   setup(NodeClosure, params) {

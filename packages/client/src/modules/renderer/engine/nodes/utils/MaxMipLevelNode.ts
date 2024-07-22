@@ -1,5 +1,5 @@
 import UniformNode from '../core/UniformNode.js';
-import { NodeUpdateType } from '../core/constants.ts';
+import { NodeUpdateType } from '../core/constants.js';
 import { nodeProxy } from '../shadernode/ShaderNodes.js';
 
 class MaxMipLevelNode extends UniformNode {

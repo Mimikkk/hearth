@@ -1,6 +1,6 @@
-import { NodeUpdateType } from './constants.ts';
+import { NodeUpdateType } from './constants.js';
 import { getCacheKey, getNodeChildren } from './NodeUtils.js';
-import { generateUuid } from '../../math/MathUtils.ts';
+import { generateUuid } from '../../math/MathUtils.js';
 import { NodeBuilder } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.js';
 
 import NodeFrame from '@modules/renderer/engine/nodes/core/NodeFrame.js';

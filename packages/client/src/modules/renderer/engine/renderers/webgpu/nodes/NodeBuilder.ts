@@ -14,11 +14,11 @@ import {
   Vec3,
   Vec4,
 } from '../../../engine.js';
-import NodeUniformsGroup from '../../common/nodes/NodeUniformsGroup.ts';
-import NodeSampler from '../../common/nodes/NodeSampler.ts';
-import { NodeSampledCubeTexture, NodeSampledTexture } from '../../common/nodes/NodeSampledTexture.ts';
-import NodeUniformBuffer from '../../common/nodes/NodeUniformBuffer.ts';
-import NodeStorageBuffer from '../../common/nodes/NodeStorageBuffer.ts';
+import NodeUniformsGroup from '../../common/nodes/NodeUniformsGroup.js';
+import NodeSampler from '../../common/nodes/NodeSampler.js';
+import { NodeSampledCubeTexture, NodeSampledTexture } from '../../common/nodes/NodeSampledTexture.js';
+import NodeUniformBuffer from '../../common/nodes/NodeUniformBuffer.js';
+import NodeStorageBuffer from '../../common/nodes/NodeStorageBuffer.js';
 import {
   LightsNode,
   NodeMaterial,
@@ -27,7 +27,7 @@ import {
   stack,
   UniformNode,
 } from '@modules/renderer/engine/nodes/Nodes.js';
-import { getFormat } from '../utils/BackendTextures.ts';
+import { getFormat } from '../utils/BackendTextures.js';
 import WGSLNodeParser from './WGSLNodeParser.js';
 import ChainMap from '@modules/renderer/engine/renderers/common/ChainMap.js';
 import NodeKeywords from '@modules/renderer/engine/nodes/core/NodeKeywords.js';

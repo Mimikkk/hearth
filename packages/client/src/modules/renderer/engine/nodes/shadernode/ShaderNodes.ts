@@ -4,6 +4,6 @@ import { NodeElements } from '@modules/renderer/engine/nodes/shadernode/ShaderNo
 export const addNodeElement = (name, nodeElement) => NodeElements.set(name, nodeElement);
 
 export * from './ShaderNode.primitves.js';
-export * from './ShaderNode.stack.ts';
+export * from './ShaderNode.stack.js';
 export * from './ShaderNode.js';
 export * from './tslFn.js';

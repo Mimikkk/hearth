@@ -1,4 +1,4 @@
-import Node from './Node.ts';
+import Node from './Node.js';
 import { addNodeElement, nodeProxy } from '../shadernode/ShaderNodes.js';
 
 class ContextNode extends Node {
