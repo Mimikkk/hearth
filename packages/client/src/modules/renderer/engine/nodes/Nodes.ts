@@ -410,9 +410,6 @@ export * as PMREMUtils from './pmrem/PMREMUtils.js';
 // procedural
 export { default as CheckerNode, checker } from './procedural/CheckerNode.js';
 
-// parsers
-export { default as GLSLNodeParser } from './parsers/GLSLNodeParser.js'; // @TODO: Move to jsm/renderers/webgl.
-
 // materials
 export * from './materials/Materials.js';
 

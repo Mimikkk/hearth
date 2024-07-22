@@ -49,7 +49,7 @@ import {
   Vec4NodeUniform,
 } from '@modules/renderer/engine/renderers/common/nodes/NodeUniform.js';
 import { NodeMaterials } from '@modules/renderer/engine/nodes/materials/NodeMaterialMap.js';
-import { FeatureMap, FeatureName } from '@modules/renderer/engine/renderers/webgpu/nodes/FeatureMap.js';
+import { FeatureMap, FeatureName } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.features.ts';
 import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 import StackNode from '@modules/renderer/engine/nodes/core/StackNode.js';
 import EnvironmentNode from '@modules/renderer/engine/nodes/lighting/EnvironmentNode.js';
