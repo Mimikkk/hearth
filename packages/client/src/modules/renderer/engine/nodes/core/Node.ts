@@ -102,7 +102,7 @@ export class Node {
     return this.updateBeforeType;
   }
 
-  getNodeType(builder: NodeBuilder): TypeName | null {
+  getNodeType(builder: NodeBuilder): TypeName {
     const nodeProperties = builder.getNodeProperties(this);
 
     if (nodeProperties.outputNode) {

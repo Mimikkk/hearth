@@ -2,29 +2,29 @@ import Node from './Node.js';
 import NodeCache from './NodeCache.js';
 import { addNodeElement, nodeProxy } from '../shadernode/ShaderNodes.js';
 import { NodeBuilder } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.js';
+import { TypeName } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.types.js';
 
 class CacheNode extends Node {
   static type = 'CacheNode';
   node: Node;
   cache: NodeCache;
 
-  constructor(node: Node, cache = new NodeCache()) {
+  constructor(node: Node, cache: NodeCache = new NodeCache()) {
     super();
 
     this.node = node;
     this.cache = cache;
   }
 
-  getNodeType(builder: NodeBuilder) {
+  getNodeType(builder: NodeBuilder): TypeName {
     return this.node.getNodeType(builder);
   }
 
-  build(builder: NodeBuilder, ...params) {
+  build(builder: NodeBuilder, type?: TypeName) {
     const previousCache = builder.cache;
+
     builder.cache = this.cache || builder.globalCache;
-
-    const data = this.node.build(builder, ...params);
-
+    const data = this.node.build(builder, type);
     builder.cache = previousCache;
 
     return data;
@@ -34,7 +34,7 @@ class CacheNode extends Node {
 export default CacheNode;
 
 export const cache = nodeProxy(CacheNode);
-export const globalCache = node => cache(node, null);
+export const globalCache = <T extends Node>(node: T) => cache(node, null);
 
 addNodeElement('cache', cache);
 addNodeElement('globalCache', globalCache);

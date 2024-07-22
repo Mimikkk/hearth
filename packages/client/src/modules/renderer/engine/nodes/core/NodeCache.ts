@@ -1,17 +1,13 @@
-let id = 0;
+export class NodeCache {
+  constructor(public map: WeakMap<Node, any> = new WeakMap()) {}
 
-class NodeCache {
-  constructor() {
-    this.id = id++;
-    this.nodesData = new WeakMap();
+  get<T>(node: Node): T {
+    return this.map.get(node);
   }
 
-  getNodeData(node) {
-    return this.nodesData.get(node);
-  }
-
-  setNodeData(node, data) {
-    this.nodesData.set(node, data);
+  set(node: Node, data: any): this {
+    this.map.set(node, data);
+    return this;
   }
 }
 

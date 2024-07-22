@@ -23,17 +23,17 @@ class FunctionNode extends CodeNode {
   }
 
   getNodeFunction(builder: NodeBuilder) {
-    const nodeData = builder.getDataFromNode(this);
+    const data = builder.getDataFromNode(this);
 
-    let nodeFunction = nodeData.nodeFunction;
+    let fn = data.nodeFunction;
 
-    if (nodeFunction === undefined) {
-      nodeFunction = builder.parser.parseFunction(this.code);
+    if (fn === undefined) {
+      fn = builder.parseFn(this.code);
 
-      nodeData.nodeFunction = nodeFunction;
+      data.nodeFunction = fn;
     }
 
-    return nodeFunction;
+    return fn;
   }
 
   generate(builder: NodeBuilder, output?: string | 'property') {
@@ -98,5 +98,4 @@ const nativeFn = (code: string, includes: CodeNodeInclude[] = []) => {
   return fn;
 };
 
-export const glslFn = (code: string, includes?: CodeNodeInclude[]) => nativeFn(code, includes);
 export const wgslFn = (code: string, includes?: CodeNodeInclude[]) => nativeFn(code, includes);

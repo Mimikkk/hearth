@@ -28,7 +28,6 @@ import {
   UniformNode,
 } from '@modules/renderer/engine/nodes/Nodes.js';
 import { getFormat } from '../utils/BackendTextures.js';
-import WGSLNodeParser from './WGSLNodeParser.js';
 import ChainMap from '@modules/renderer/engine/renderers/common/ChainMap.js';
 import NodeKeywords from '@modules/renderer/engine/nodes/core/NodeKeywords.js';
 import NodeCache from '@modules/renderer/engine/nodes/core/NodeCache.js';
@@ -64,13 +63,16 @@ import StructTypeNode from '@modules/renderer/engine/nodes/core/StructTypeNode.j
 import { ShaderNode } from 'three/examples/jsm/nodes/shadernode/ShaderNode.js';
 import { Attribute } from '@modules/renderer/engine/core/types.js';
 import ConstNode from '@modules/renderer/engine/nodes/core/ConstNode.js';
+import NodeFunction from '@modules/renderer/engine/renderers/webgpu/nodes/NodeFunction.js';
+
+type ParseFn = (source: string) => NodeFunction;
 
 export class NodeBuilder {
   material: Material | null;
   geometry: BufferGeometry | null;
   isCompute: boolean;
 
-  parser: WGSLNodeParser;
+  parseFn: ParseFn;
 
   nodes: Node[];
   updateNodes: Node[];
@@ -123,7 +125,7 @@ export class NodeBuilder {
   ) {
     this.material = object?.material ?? null;
     this.geometry = object?.geometry ?? null;
-    this.parser = new WGSLNodeParser();
+    this.parseFn = (source: string) => new NodeFunction(source);
 
     this.nodes = [];
     this.updateNodes = [];
@@ -442,12 +444,12 @@ export class NodeBuilder {
   getDataFromNode(node: Node, shaderStage: ShaderStage | null = this.shaderStage, cache = null) {
     cache = cache === null ? (node.isGlobal(this) ? this.globalCache : this.cache) : cache;
 
-    let nodeData = cache.getNodeData(node);
+    let nodeData = cache.get(node);
 
     if (nodeData === undefined) {
       nodeData = {};
 
-      cache.setNodeData(node, nodeData);
+      cache.set(node, nodeData);
     }
 
     if (nodeData[shaderStage] === undefined) nodeData[shaderStage] = {};

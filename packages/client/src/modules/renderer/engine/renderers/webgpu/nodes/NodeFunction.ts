@@ -1,5 +1,5 @@
-import NodeFunction from '../../../nodes/core/NodeFunction.js';
 import NodeFunctionInput from '../../../nodes/core/NodeFunctionInput.js';
+import { TypeName } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.types.js';
 
 const declarationRegexp = /^[fn]*\s*([a-z_0-9]+)?\s*\(([\s\S]*?)\)\s*[\->]*\s*([a-z_0-9]+)?/i;
 const propertiesRegexp = /[a-z_0-9]+|<(.*?)>+/gi;
@@ -70,14 +70,19 @@ const parse = (
   };
 };
 
-export class WGSLNodeFunction extends NodeFunction {
+export class NodeFunction {
   declare inputsCode: string;
   declare blockCode: string;
+  type: TypeName;
+  inputs: NodeFunctionInput[];
+  name: string;
 
   constructor(source: string) {
     const { type, inputs, name, inputsCode, blockCode } = parse(source);
 
-    super(type, inputs, name);
+    this.type = type;
+    this.inputs = inputs;
+    this.name = name;
 
     this.inputsCode = inputsCode;
     this.blockCode = blockCode;
@@ -90,4 +95,4 @@ export class WGSLNodeFunction extends NodeFunction {
   }
 }
 
-export default WGSLNodeFunction;
+export default NodeFunction;
