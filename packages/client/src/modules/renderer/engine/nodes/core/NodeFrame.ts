@@ -26,7 +26,6 @@ class NodeFrame {
   constructor() {
     this.time = 0;
     this.deltaTime = 0;
-
     this.frameId = 0;
     this.renderId = 0;
 

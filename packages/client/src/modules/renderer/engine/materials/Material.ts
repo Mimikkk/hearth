@@ -156,8 +156,6 @@ export class Material {
 
     this.colorWrite = true;
 
-    this.precision = null; // override the renderer's default precision for this material
-
     this.polygonOffset = false;
     this.polygonOffsetFactor = 0;
     this.polygonOffsetUnits = 0;
@@ -277,8 +275,6 @@ export class Material {
     this.shadowSide = source.shadowSide;
 
     this.colorWrite = source.colorWrite;
-
-    this.precision = source.precision;
 
     this.polygonOffset = source.polygonOffset;
     this.polygonOffsetFactor = source.polygonOffsetFactor;

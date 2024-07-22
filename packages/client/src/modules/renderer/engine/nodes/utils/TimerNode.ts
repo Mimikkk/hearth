@@ -1,46 +1,53 @@
 import UniformNode from '../core/UniformNode.js';
 import { NodeUpdateType } from '../core/constants.js';
 import { nodeImmutable, nodeObject } from '../shadernode/ShaderNodes.js';
+import NodeFrame from '@modules/renderer/engine/nodes/core/NodeFrame.js';
 
-class TimerNode extends UniformNode {
+export class TimerNode extends UniformNode<number> {
   static type = 'TimerNode';
 
-  constructor(scope = TimerNode.LOCAL, scale = 1, value = 0) {
+  constructor(
+    public scope: TimerType,
+    public scale: number = 1,
+    value: number = 0,
+  ) {
     super(value);
-
-    this.scope = scope;
-    this.scale = scale;
-
     this.updateType = NodeUpdateType.FRAME;
   }
 
-  update(frame) {
-    const scope = this.scope;
-    const scale = this.scale;
+  update(frame: NodeFrame): void {
+    const { scope, scale } = this;
 
-    if (scope === TimerNode.LOCAL) {
-      this.value += frame.deltaTime * scale;
-    } else if (scope === TimerNode.DELTA) {
-      this.value = frame.deltaTime * scale;
-    } else if (scope === TimerNode.FRAME) {
-      this.value = frame.frameId;
-    } else {
-      // global
-
-      this.value = frame.time * scale;
+    switch (scope) {
+      case TimerType.Local:
+        this.value += frame.clock.delta * scale;
+        break;
+      case TimerType.Delta:
+        this.value = frame.clock.delta * scale;
+        break;
+      case TimerType.Frame:
+        this.value = frame.frameId;
+        break;
+      case TimerType.Total:
+        this.value = frame.clock.total * scale;
+        break;
     }
   }
 }
 
-TimerNode.LOCAL = 'local';
-TimerNode.GLOBAL = 'global';
-TimerNode.DELTA = 'delta';
-TimerNode.FRAME = 'frame';
+export enum TimerType {
+  Local = 'local',
+  Total = 'global',
+  Delta = 'delta',
+  Frame = 'frame',
+}
 
 export default TimerNode;
 
-// @TODO: add support to use node in timeScale
-export const timerLocal = (timeScale, value = 0) => nodeObject(new TimerNode(TimerNode.LOCAL, timeScale, value));
-export const timerGlobal = (timeScale, value = 0) => nodeObject(new TimerNode(TimerNode.GLOBAL, timeScale, value));
-export const timerDelta = (timeScale, value = 0) => nodeObject(new TimerNode(TimerNode.DELTA, timeScale, value));
-export const frameId = nodeImmutable(TimerNode, TimerNode.FRAME).u32();
+export const timerLocal = (timeScale: number, value: number = 0) =>
+  nodeObject(new TimerNode(TimerType.Local, timeScale, value));
+export const timerGlobal = (timeScale: number, value: number = 0) =>
+  nodeObject(new TimerNode(TimerType.Total, timeScale, value));
+export const timerDelta = (timeScale: number, value: number = 0) =>
+  nodeObject(new TimerNode(TimerType.Delta, timeScale, value));
+export const frameId = nodeImmutable(TimerNode, TimerType.Frame).u32();

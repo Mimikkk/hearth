@@ -1,41 +1,39 @@
 import Node from './Node.js';
 import { getValueType } from './NodeUtils.js';
 import { TypeName } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.types.js';
+import { NodeBuilder } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.js';
 
 class InputNode<T = any> extends Node {
   static type = 'InputNode';
+  declare isInputNode: true;
 
   constructor(
     public value: T,
-    nodeType: TypeName = getValueType(value),
+    type: TypeName | null = getValueType(value),
   ) {
-    super(nodeType);
-
-    this.isInputNode = true;
+    super(type);
 
     this.value = value;
-    this.precision = null;
   }
 
-  getNodeType() {
-    if (this.nodeType === null) return getValueType(this.value);
+  static isInputNode(node: any): node is InputNode {
+    return node?.isInputNode === true;
+  }
 
+  getNodeType(builder: NodeBuilder): TypeName | null {
+    if (this.nodeType === null) return getValueType(this.value);
     return this.nodeType;
   }
 
-  getInputType(builder) {
+  getInputType(builder: NodeBuilder) {
     return this.getNodeType(builder);
   }
 
-  setPrecision(precision) {
-    this.precision = precision;
-
-    return this;
-  }
-
-  generate(/*builder, output*/) {
+  generate(builder: NodeBuilder, output: any) {
     console.warn('Abstract function.');
   }
 }
+
+InputNode.prototype.isInputNode = true;
 
 export default InputNode;

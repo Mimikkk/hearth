@@ -57,7 +57,7 @@ export class Node {
     return this.self || this;
   }
 
-  updateReference(state: NodeFrame): this {
+  updateReference(state: NodeFrame | NodeBuilder): this {
     return this;
   }
 
@@ -130,14 +130,6 @@ export class Node {
     return null;
   }
 
-  construct(builder: NodeBuilder) {
-    // @deprecated, r157
-
-    console.warn('engine.Node: construct() is deprecated. Use setup() instead.');
-
-    return this.setup(builder);
-  }
-
   increaseUsage(builder: NodeBuilder) {
     const nodeData = builder.getDataFromNode(this);
     nodeData.usageCount = nodeData.usageCount === undefined ? 1 : nodeData.usageCount + 1;
@@ -157,7 +149,7 @@ export class Node {
     }
   }
 
-  generate(builder: NodeBuilder, output: string | null = null) {
+  generate(builder: NodeBuilder, output: TypeName | null = null) {
     const { outputNode } = builder.getNodeProperties(this);
 
     if (outputNode && outputNode.isNode) {
@@ -165,14 +157,12 @@ export class Node {
     }
   }
 
-  updateBefore(frame: NodeFrame): boolean | undefined {
+  updateBefore(frame: NodeFrame): boolean | void {
     console.warn('Abstract function.');
-    return undefined;
   }
 
-  update(frame: NodeFrame): boolean | undefined {
+  update(frame: NodeFrame): boolean | void {
     console.warn('Abstract function.');
-    return undefined;
   }
 
   build(builder: NodeBuilder, output: string | null = null): string | null {
