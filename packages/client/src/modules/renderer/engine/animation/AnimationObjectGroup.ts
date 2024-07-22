@@ -4,7 +4,7 @@ import Binding from '@modules/renderer/engine/renderers/common/Binding.js';
 import { Object3D } from '@modules/renderer/engine/core/Object3D.js';
 
 export class AnimationObjectGroup {
-  declare isAnimationObjectGroup: boolean;
+  declare isAnimationObjectGroup: true;
   uuid: string;
   _objects: any[];
   nCachedObjects_: number;

@@ -42,7 +42,7 @@ class Background extends DataMap<any, any> {
       const sceneData = this.get(scene);
       const backgroundNode = background;
 
-      _clearColor.copy(renderer._clearColor);
+      _clearColor.from(renderer._clearColor);
 
       let backgroundMesh = sceneData.backgroundMesh;
 

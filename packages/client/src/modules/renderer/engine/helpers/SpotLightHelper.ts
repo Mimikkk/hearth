@@ -72,7 +72,7 @@ export class SpotLightHelper extends Object3D {
     if (this.color !== undefined) {
       (this.cone.material as LineBasicMaterial).color.set(this.color);
     } else {
-      (this.cone.material as LineBasicMaterial).color.copy(this.light.color);
+      (this.cone.material as LineBasicMaterial).color.from(this.light.color);
     }
   }
 }

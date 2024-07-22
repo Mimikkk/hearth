@@ -31,7 +31,7 @@ export class PointLightHelper extends Mesh {
     if (this.color !== undefined) {
       (this.material as MeshBasicMaterial).color.set(this.color);
     } else {
-      (this.material as MeshBasicMaterial).color.copy(this.light.color);
+      (this.material as MeshBasicMaterial).color.from(this.light.color);
     }
   }
 }

@@ -242,7 +242,7 @@ export class Material {
     this.blendSrcAlpha = source.blendSrcAlpha;
     this.blendDstAlpha = source.blendDstAlpha;
     this.blendEquationAlpha = source.blendEquationAlpha;
-    this.blendColor.copy(source.blendColor);
+    this.blendColor.from(source.blendColor);
     this.blendAlpha = source.blendAlpha;
 
     this.depthFunc = source.depthFunc;

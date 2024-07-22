@@ -235,7 +235,7 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
     this.iridescenceThicknessMap = source.iridescenceThicknessMap;
 
     this.sheen = source.sheen;
-    this.sheenColor.copy(source.sheenColor);
+    this.sheenColor.from(source.sheenColor);
     this.sheenColorMap = source.sheenColorMap;
     this.sheenRoughness = source.sheenRoughness;
     this.sheenRoughnessMap = source.sheenRoughnessMap;
@@ -246,11 +246,11 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
     this.thickness = source.thickness;
     this.thicknessMap = source.thicknessMap;
     this.attenuationDistance = source.attenuationDistance;
-    this.attenuationColor.copy(source.attenuationColor);
+    this.attenuationColor.from(source.attenuationColor);
 
     this.specularIntensity = source.specularIntensity;
     this.specularIntensityMap = source.specularIntensityMap;
-    this.specularColor.copy(source.specularColor);
+    this.specularColor.from(source.specularColor);
     this.specularColorMap = source.specularColorMap;
 
     return this;

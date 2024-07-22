@@ -87,7 +87,7 @@ export class MeshBasicMaterial extends Material {
   copy(source: this): this {
     super.copy(source);
 
-    this.color.copy(source.color);
+    this.color.from(source.color);
 
     this.map = source.map;
 

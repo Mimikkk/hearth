@@ -22,6 +22,7 @@ import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 import { Color, Frustum, Mat4, Object3D, Plane } from '@modules/renderer/engine/engine.js';
 import { GPUFeatureNameType, GPUTextureFormatType } from '@modules/renderer/engine/renderers/webgpu/utils/constants.js';
+import { SortFn } from '@modules/renderer/engine/renderers/common/RenderList.js';
 
 const _scene = new Scene();
 const _drawingBufferSize = new Vec2();
@@ -51,8 +52,8 @@ export class Renderer {
   _textures: Textures;
   _background: Background;
   _currentRenderContext: any;
-  _opaqueSort: any;
-  _transparentSort: any;
+  _opaqueSort: SortFn = sortPainterAsc;
+  _transparentSort: SortFn = sortPainterDesc;
   _clearColor: Color;
   _clearDepth: number;
   _clearStencil: number;
@@ -120,8 +121,7 @@ export class Renderer {
     this._renderLists = new RenderLists();
     this._renderContexts = new RenderContexts();
     this._currentRenderContext = null;
-    this._opaqueSort = null;
-    this._transparentSort = null;
+
     this._clearColor = new Color(0, 0, 0, this.parameters.alpha ? 0 : 1);
     this._clearDepth = 1;
     this._clearStencil = 0;
@@ -1006,5 +1006,22 @@ export namespace Renderer {
     trackTimestamp: boolean;
   }
 }
+
 type Options = Renderer.Options;
 type Configuration = Renderer.Configuration;
+
+const sortPainterAsc: SortFn = (a, b) => {
+  if (a.groupOrder !== b.groupOrder) {
+    return a.groupOrder - b.groupOrder;
+  } else if (a.renderOrder !== b.renderOrder) {
+    return a.renderOrder - b.renderOrder;
+  } else if (a.material.id !== b.material.id) {
+    return a.material.id - b.material.id;
+  } else if (a.z !== b.z) {
+    return a.z - b.z;
+  } else {
+    return a.id - b.id;
+  }
+};
+
+const sortPainterDesc: SortFn = (a, b) => sortPainterAsc(b, a);

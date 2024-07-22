@@ -39,6 +39,10 @@ export class Node {
     this.id = _nodeId++;
   }
 
+  static is(node: any): node is Node {
+    return node?.isNode === true;
+  }
+
   set needsUpdate(value: boolean) {
     if (value) this.version++;
   }

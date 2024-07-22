@@ -127,7 +127,7 @@ export class MeshLambertMaterial extends Material {
   copy(source: this): this {
     super.copy(source);
 
-    this.color.copy(source.color);
+    this.color.from(source.color);
 
     this.map = source.map;
 
@@ -137,7 +137,7 @@ export class MeshLambertMaterial extends Material {
     this.aoMap = source.aoMap;
     this.aoMapIntensity = source.aoMapIntensity;
 
-    this.emissive.copy(source.emissive);
+    this.emissive.from(source.emissive);
     this.emissiveMap = source.emissiveMap;
     this.emissiveIntensity = source.emissiveIntensity;
 

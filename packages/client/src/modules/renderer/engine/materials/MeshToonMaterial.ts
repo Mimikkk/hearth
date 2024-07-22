@@ -109,7 +109,7 @@ export class MeshToonMaterial extends Material {
   copy(source: this): this {
     super.copy(source);
 
-    this.color.copy(source.color);
+    this.color.from(source.color);
 
     this.map = source.map;
     this.gradientMap = source.gradientMap;
@@ -120,7 +120,7 @@ export class MeshToonMaterial extends Material {
     this.aoMap = source.aoMap;
     this.aoMapIntensity = source.aoMapIntensity;
 
-    this.emissive.copy(source.emissive);
+    this.emissive.from(source.emissive);
     this.emissiveMap = source.emissiveMap;
     this.emissiveIntensity = source.emissiveIntensity;
 

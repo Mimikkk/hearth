@@ -571,12 +571,12 @@ export async function parseOBJ(text: string, materialCreator?: MTLMaterialCreato
           if (isLine && material && !(material instanceof LineBasicMaterial)) {
             const materialLine = new LineBasicMaterial();
             Material.prototype.copy.call(materialLine, material);
-            materialLine.color.copy(material.color);
+            materialLine.color.from(material.color);
             material = materialLine;
           } else if (isPoints && material && !(material instanceof PointsMaterial)) {
             const materialPoints = new PointsMaterial({ size: 10, sizeAttenuation: false });
             Material.prototype.copy.call(materialPoints, material);
-            materialPoints.color.copy(material.color);
+            materialPoints.color.from(material.color);
             materialPoints.map = material.map;
             material = materialPoints;
           }

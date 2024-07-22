@@ -32,7 +32,7 @@ const _yAxis = /*@__PURE__*/ new Vec3(0, 1, 0);
 const _zAxis = /*@__PURE__*/ new Vec3(0, 0, 1);
 
 const isCamera = (object: any): object is Camera => object.isCamera;
-const isLight = (object: any): object is Light<any> => object.isLight;
+const isLight = (object: any): object is Light => object.isLight;
 
 export class Object3D {
   declare ['constructor']: typeof Object3D;

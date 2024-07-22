@@ -81,7 +81,7 @@ export class MeshMatcapMaterial extends Material {
 
     this.defines = { MATCAP: '' };
 
-    this.color.copy(source.color);
+    this.color.from(source.color);
 
     this.matcap = source.matcap;
 

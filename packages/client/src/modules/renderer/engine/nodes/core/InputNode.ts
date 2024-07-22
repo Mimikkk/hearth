@@ -1,10 +1,14 @@
 import Node from './Node.js';
 import { getValueType } from './NodeUtils.js';
+import { TypeName } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.types.js';
 
-class InputNode extends Node {
+class InputNode<T = any> extends Node {
   static type = 'InputNode';
 
-  constructor(value, nodeType = null) {
+  constructor(
+    public value: T,
+    nodeType: TypeName = getValueType(value),
+  ) {
     super(nodeType);
 
     this.isInputNode = true;
@@ -13,10 +17,8 @@ class InputNode extends Node {
     this.precision = null;
   }
 
-  getNodeType(/*builder*/) {
-    if (this.nodeType === null) {
-      return getValueType(this.value);
-    }
+  getNodeType() {
+    if (this.nodeType === null) return getValueType(this.value);
 
     return this.nodeType;
   }

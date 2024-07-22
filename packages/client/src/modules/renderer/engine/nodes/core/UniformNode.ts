@@ -1,4 +1,5 @@
 import InputNode from './InputNode.js';
+import { Node } from '../core/Node.js';
 import { objectGroup } from './UniformGroupNode.js';
 import { nodeObject } from '../shadernode/ShaderNodes.js';
 
@@ -63,10 +64,9 @@ class UniformNode extends InputNode {
 
 export default UniformNode;
 
-export const uniform = (arg1, arg2) => {
-  const nodeType = getConstNodeType(arg2 || arg1);
+export const uniform = <T>(nodeOrValue: Node | T, maybeValue?: T): UniformNode<T> => {
+  const type = getConstNodeType(maybeValue ?? nodeOrValue);
+  const value = Node.is(nodeOrValue) ? nodeOrValue.node?.value ?? nodeOrValue.value : nodeOrValue;
 
-  const value = arg1 && arg1.isNode === true ? (arg1.node && arg1.node.value) || arg1.value : arg1;
-
-  return nodeObject(new UniformNode(value, nodeType));
+  return nodeObject(new UniformNode(value, type));
 };

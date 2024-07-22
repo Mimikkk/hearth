@@ -41,7 +41,7 @@ export class PointsMaterial extends Material {
   copy(source: this): this {
     super.copy(source);
 
-    this.color.copy(source.color);
+    this.color.from(source.color);
     this.map = source.map;
     this.alphaMap = source.alphaMap;
     this.size = source.size;

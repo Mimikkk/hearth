@@ -136,8 +136,8 @@ export class MeshPhongMaterial extends Material {
   copy(source: this): this {
     super.copy(source);
 
-    this.color.copy(source.color);
-    this.specular.copy(source.specular);
+    this.color.from(source.color);
+    this.specular.from(source.specular);
     this.shininess = source.shininess;
 
     this.map = source.map;
@@ -148,7 +148,7 @@ export class MeshPhongMaterial extends Material {
     this.aoMap = source.aoMap;
     this.aoMapIntensity = source.aoMapIntensity;
 
-    this.emissive.copy(source.emissive);
+    this.emissive.from(source.emissive);
     this.emissiveMap = source.emissiveMap;
     this.emissiveIntensity = source.emissiveIntensity;
 

@@ -62,8 +62,8 @@ export class DirectionalLightHelper extends Object3D {
       (this.lightPlane.material as LineBasicMaterial).color.set(this.color);
       (this.targetLine.material as LineBasicMaterial).color.set(this.color);
     } else {
-      (this.lightPlane.material as LineBasicMaterial).color.copy(this.light.color);
-      (this.targetLine.material as LineBasicMaterial).color.copy(this.light.color);
+      (this.lightPlane.material as LineBasicMaterial).color.from(this.light.color);
+      (this.targetLine.material as LineBasicMaterial).color.from(this.light.color);
     }
 
     this.targetLine.lookAt(_v2);

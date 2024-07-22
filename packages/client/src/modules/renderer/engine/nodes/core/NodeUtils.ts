@@ -1,4 +1,5 @@
 import { Color, Mat3, Mat4, Vec2, Vec3, Vec4 } from '@modules/renderer/engine/engine.js';
+import { TypeName } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.types.js';
 
 export function getCacheKey(object, force = false) {
   let cacheKey = '{';
@@ -45,13 +46,13 @@ export function* getNodeChildren(node) {
   }
 }
 
-export function getValueType(value) {
+export function getValueType(value: any): TypeName | null {
   if (value === undefined || value === null) return null;
 
   const typeOf = typeof value;
 
   if (value.isNode === true) {
-    return 'node';
+    return TypeName.node;
   } else if (typeOf === 'number') {
     return 'f32';
   } else if (typeOf === 'boolean') {

@@ -209,12 +209,16 @@ export class Color {
     return this.set(r, g, b, a);
   }
 
+  static new(r?: number | ColorRepresentation, g?: number, b?: number, a: number = 1): Color {
+    return new Color(r, g, b, a);
+  }
+
   set(r: ColorRepresentation, g?: number, b?: number, a?: number): this {
     if (g === undefined && b === undefined) {
       const value = r;
 
       if (value && value instanceof Color) {
-        this.copy(value);
+        this.from(value);
       } else if (typeof value === 'number') {
         this.setHex(value);
       } else {
@@ -398,7 +402,7 @@ export class Color {
     return new this.constructor(this.r, this.g, this.b, this.a);
   }
 
-  copy(color: Color): this {
+  from(color: Color): this {
     this.r = color.r;
     this.g = color.g;
     this.b = color.b;
@@ -436,7 +440,7 @@ export class Color {
   }
 
   getHex(colorSpace: DefinedColorSpace = ColorSpace.SRGB): number {
-    const _color = ColorManagement.fromWorkingColorSpace(new Color().copy(this), colorSpace);
+    const _color = ColorManagement.fromWorkingColorSpace(new Color().from(this), colorSpace);
 
     return (
       Math.round(clamp(_color.r * 255, 0, 255)) * 65536 +
@@ -450,7 +454,7 @@ export class Color {
   }
 
   getHSL(target: HSL, colorSpace: DefinedColorSpace = ColorManagement.workingColorSpace): HSL {
-    const _color = ColorManagement.fromWorkingColorSpace(new Color().copy(this), colorSpace);
+    const _color = ColorManagement.fromWorkingColorSpace(new Color().from(this), colorSpace);
 
     const { r, g, b } = _color;
 
@@ -492,7 +496,7 @@ export class Color {
   }
 
   getRGB(target: RGB, colorSpace: DefinedColorSpace = ColorManagement.workingColorSpace): RGB {
-    const _color = ColorManagement.fromWorkingColorSpace(new Color().copy(this), colorSpace);
+    const _color = ColorManagement.fromWorkingColorSpace(new Color().from(this), colorSpace);
 
     target.r = _color.r;
     target.g = _color.g;
@@ -502,7 +506,7 @@ export class Color {
   }
 
   getStyle(colorSpace: DefinedColorSpace = ColorSpace.SRGB): string {
-    const _color = ColorManagement.fromWorkingColorSpace(new Color().copy(this), colorSpace);
+    const _color = ColorManagement.fromWorkingColorSpace(new Color().from(this), colorSpace);
 
     const r = _color.r,
       g = _color.g,
