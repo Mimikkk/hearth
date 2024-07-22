@@ -51,7 +51,7 @@ async function init() {
   const positions = [];
   const colors = [];
 
-  const points = GeometryUtils.hilbert3D(new Engine.Vec3(0, 0, 0), 20.0, 1, 0, 1, 2, 3, 4, 5, 6, 7);
+  const points = GeometryUtils.generateHilbert(new Engine.Vec3(0, 0, 0), 20.0, 1, 0, 1, 2, 3, 4, 5, 6, 7);
 
   const spline = new Engine.CatmullRomCurve3(points);
   const divisions = Math.round(4 * points.length);

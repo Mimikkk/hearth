@@ -30,7 +30,7 @@ let insetHeight;
 init();
 
 async function init() {
-  const points = GeometryUtils.hilbert3D(new Engine.Vec3(0, 0, 0), 20.0, 1, 0, 1, 2, 3, 4, 5, 6, 7);
+  const points = GeometryUtils.generateHilbert(new Engine.Vec3(0, 0, 0), 20.0, 1, 0, 1, 2, 3, 4, 5, 6, 7);
 
   renderer = await Renderer.create();
   renderer.setPixelRatio(window.devicePixelRatio);
