@@ -544,7 +544,6 @@ export class NodeBuilder {
       const codes = this.codes[shaderStage] || (this.codes[shaderStage] = []);
       const index = codes.length;
 
-      console.log(this);
       nodeCode = new NodeCode('nodeCode' + index, type);
 
       codes.push(nodeCode);
@@ -923,8 +922,6 @@ export class NodeBuilder {
     depthSnippet: string,
     shaderStage: ShaderStage = this.shaderStage,
   ): string {
-    console.log({ texture, textureProperty, uvSnippet, levelSnippet, depthSnippet, shaderStage });
-
     let snippet = null;
 
     if (texture.isVideoTexture === true) {
@@ -1204,8 +1201,6 @@ ${flow.code}
       snippets.push(`struct ${name} {
       ${types.map((type, i) => `@location(${i}) m${i}: ${type}`).join(',\n')}
       }`);
-
-      console.log(snippets);
     }
 
     if (stage === ShaderStage.Fragment) {
@@ -1551,14 +1546,14 @@ fn main(${parameters}) -> ${Inbuilt.Struct.Vertex} {
   }
 
   export const fragment = ({
-                             parameters,
-                             uniforms,
-                             structures,
-                             functions,
-                             code,
-                             variables,
-                             return: returnType,
-                           }: Fragment): string => `
+    parameters,
+    uniforms,
+    structures,
+    functions,
+    code,
+    variables,
+    return: returnType,
+  }: Fragment): string => `
 ${Signature}
 ${block('uniforms', uniforms)}
 ${block('structures', structures)}

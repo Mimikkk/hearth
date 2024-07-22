@@ -12,7 +12,6 @@ export class VertexTangentsHelper extends LineSegments {
   constructor(object: Object3D, size: number = 1, color: ColorRepresentation = 0x00ffff) {
     const geometry = new BufferGeometry();
 
-    console.log(object.geometry);
     const nTangents = object.geometry!.attributes.tangent.count;
     const positions = new Float32BufferAttribute(new Array(nTangents * 2 * 3), 3);
 

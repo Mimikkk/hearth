@@ -261,7 +261,7 @@ async function init() {
 
 						const result = local.get( 'result', init );
 
-						//console.log( 'result', result );
+						//console.info( 'result', result );
 
 						return result;
 
@@ -288,7 +288,7 @@ async function init() {
 
 					function helloWorld() {
 
-						console.log( "Hello World!" );
+						console.info( "Hello World!" );
 
 					}
 
@@ -299,15 +299,15 @@ async function init() {
 
 						const material = local.get( 'material' );
 
-						//console.log( 'Vec3', parameters.get( 'Vec3' ) );
+						//console.info( 'Vec3', parameters.get( 'Vec3' ) );
 
 						if ( parameters.get( 'execFrom' ) === 'serialized' ) {
 
-							//console.log( 'message', parameters.get( 'message' ).value );
-							//console.log( 'binary', parameters.get( 'binary' ) );
-							//console.log( 'object3d', parameters.get( 'object3d' ) ); // unserializable yet
+							//console.info( 'message', parameters.get( 'message' ).value );
+							//console.info( 'binary', parameters.get( 'binary' ) );
+							//console.info( 'object3d', parameters.get( 'object3d' ) ); // unserializable yet
 
-							//console.log( global.get( 'renderer' ) );
+							//console.info( global.get( 'renderer' ) );
 
 						}
 

@@ -37,7 +37,7 @@ async function init() {
   function onProgress(xhr) {
     if (xhr.lengthComputable) {
       const percentComplete = (xhr.loaded / xhr.total) * 100;
-      console.log('model ' + percentComplete.toFixed(2) + '% downloaded');
+      console.info('model ' + percentComplete.toFixed(2) + '% downloaded');
     }
   }
 
