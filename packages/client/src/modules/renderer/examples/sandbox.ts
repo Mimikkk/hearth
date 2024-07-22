@@ -150,7 +150,7 @@ async function init() {
     new Engine.Vec3(-0.5, -0.5, 0),
   ]);
 
-  geometryLine.setAttribute('color', geometryLine.getAttribute('position'));
+  geometryLine.setAttribute('color', geometryLine.attributes.position);
 
   const materialLine = new LineBasicNodeMaterial();
   materialLine.colorNode = attribute('color');

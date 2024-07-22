@@ -125,7 +125,7 @@ export class CameraHelper extends LineSegments {
   setColors(frustum: Color, cone: Color, up: Color, target: Color, cross: Color) {
     const geometry = this.geometry;
 
-    const colorAttribute = geometry.getAttribute('color');
+    const colorAttribute = geometry.attributes.color;
 
     // near
 
@@ -251,7 +251,7 @@ export class CameraHelper extends LineSegments {
     setPoint('cn3', pointMap, geometry, _camera, 0, -h, -1);
     setPoint('cn4', pointMap, geometry, _camera, 0, h, -1);
 
-    geometry.getAttribute('position').needsUpdate = true;
+    geometry.attributes.position.needsUpdate = true;
   }
 }
 
@@ -269,7 +269,7 @@ function setPoint(
   const points = pointMap[point];
 
   if (points !== undefined) {
-    const position = geometry.getAttribute('position');
+    const position = geometry.attributes.position;
 
     for (let i = 0, l = points.length; i < l; i++) {
       position.setXYZ(points[i], _vector.x, _vector.y, _vector.z);

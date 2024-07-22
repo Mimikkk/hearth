@@ -41,7 +41,7 @@ export class SkinnedMesh extends Mesh {
 
     this.boundingBox!.clear();
 
-    const positionAttribute = geometry.getAttribute('position');
+    const positionAttribute = geometry.attributes.position;
 
     for (let i = 0; i < positionAttribute.count; i++) {
       this.getVertexPosition(i, _vertex);
@@ -58,7 +58,7 @@ export class SkinnedMesh extends Mesh {
 
     this.boundingSphere.clear();
 
-    const positionAttribute = geometry.getAttribute('position');
+    const positionAttribute = geometry.attributes.position;
 
     for (let i = 0; i < positionAttribute.count; i++) {
       this.getVertexPosition(i, _vertex);

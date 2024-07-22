@@ -376,7 +376,7 @@ export class Octree {
           geometry = obj.geometry;
         }
 
-        const positionAttribute = geometry.getAttribute('position');
+        const positionAttribute = geometry.attributes.position;
 
         for (let i = 0; i < positionAttribute.count; i += 3) {
           const v1 = new Vec3().fromAttribute(positionAttribute, i);

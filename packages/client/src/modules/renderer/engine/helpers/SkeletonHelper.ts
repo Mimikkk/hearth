@@ -68,7 +68,7 @@ export class SkeletonHelper extends LineSegments {
     const bones = this.bones;
 
     const geometry = this.geometry;
-    const position = geometry.getAttribute('position');
+    const position = geometry.attributes.position;
 
     _matrixWorldInv.from(this.root.matrixWorld).invert();
 
@@ -88,7 +88,7 @@ export class SkeletonHelper extends LineSegments {
       }
     }
 
-    geometry.getAttribute('position').needsUpdate = true;
+    geometry.attributes.position.needsUpdate = true;
     return super.updateMatrixWorld(force);
   }
 }

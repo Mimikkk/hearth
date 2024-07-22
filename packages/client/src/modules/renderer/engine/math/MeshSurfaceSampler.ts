@@ -29,10 +29,10 @@ export class MeshSurfaceSampler<TGeometry extends BufferGeometry, TMaterial exte
     this.randomFunction = Math.random;
 
     this.indexAttribute = this.geometry.index! as never as BufferAttribute<Uint32Array | Uint16Array>;
-    this.positionAttribute = this.geometry.getAttribute('position')! as never as BufferAttribute<Float32Array>;
-    this.normalAttribute = this.geometry.getAttribute('normal')! as never as BufferAttribute<Float32Array>;
-    this.colorAttribute = this.geometry.getAttribute('color')! as never as BufferAttribute<Float32Array>;
-    this.uvAttribute = this.geometry.getAttribute('uv')! as never as BufferAttribute<Float32Array>;
+    this.positionAttribute = this.geometry.attributes.position! as never as BufferAttribute<Float32Array>;
+    this.normalAttribute = this.geometry.attributes.normal! as never as BufferAttribute<Float32Array>;
+    this.colorAttribute = this.geometry.attributes.color! as never as BufferAttribute<Float32Array>;
+    this.uvAttribute = this.geometry.attributes.uv! as never as BufferAttribute<Float32Array>;
 
     this.weightAttribute = null!;
     this.distribution = null!;

@@ -16,7 +16,7 @@ export class GroundedSkybox extends Mesh {
     const geometry = new SphereGeometry(radius, 2 * resolution, resolution);
     geometry.scale(1, 1, -1);
 
-    const pos = geometry.getAttribute('position');
+    const pos = geometry.attributes.position;
     const tmp = new Vec3();
 
     for (let i = 0; i < pos.count; ++i) {

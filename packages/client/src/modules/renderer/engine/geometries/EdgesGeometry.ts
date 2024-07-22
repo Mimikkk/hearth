@@ -26,7 +26,7 @@ export class EdgesGeometry extends BufferGeometry {
       const thresholdDot = Math.cos(MathUtils.DegreeToRadian * thresholdAngle);
 
       const indexAttr = geometry.getIndex();
-      const positionAttr = geometry.getAttribute('position');
+      const positionAttr = geometry.attributes.position;
       const indexCount = indexAttr ? indexAttr.count : positionAttr.count;
 
       const indexArr = [0, 0, 0];

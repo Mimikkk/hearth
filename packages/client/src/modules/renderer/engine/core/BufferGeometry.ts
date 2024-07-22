@@ -417,7 +417,7 @@ export class BufferGeometry<
       this.setAttribute('tangent', new BufferAttribute(new Float32Array(4 * positionAttribute.count), 4));
     }
 
-    const tangentAttribute = this.getAttribute('tangent');
+    const tangentAttribute = this.attributes.tangent;
 
     const tan1: Vec3[] = [];
     const tan2: Vec3[] = [];
@@ -533,10 +533,10 @@ export class BufferGeometry<
 
   computeVertexNormals(): this {
     const index = this.index;
-    const positionAttribute = this.getAttribute('position');
+    const positionAttribute = this.attributes.position;
 
     if (positionAttribute !== undefined) {
-      let normalAttribute = this.getAttribute('normal');
+      let normalAttribute = this.attributes.normal;
 
       if (normalAttribute === undefined) {
         //@ts-expect-error

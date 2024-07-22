@@ -754,11 +754,11 @@ export class MarchingCubes extends Mesh {
 
       // update geometry data
 
-      geometry.getAttribute('position').needsUpdate = true;
-      geometry.getAttribute('normal').needsUpdate = true;
+      geometry.attributes.position.needsUpdate = true;
+      geometry.attributes.normal.needsUpdate = true;
 
-      if (this.enableUvs) geometry.getAttribute('uv').needsUpdate = true;
-      if (this.enableColors) geometry.getAttribute('color').needsUpdate = true;
+      if (this.enableUvs) geometry.attributes.uv.needsUpdate = true;
+      if (this.enableColors) geometry.attributes.color.needsUpdate = true;
 
       // safety check
 

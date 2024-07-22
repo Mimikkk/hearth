@@ -31,7 +31,7 @@ export class HemisphereLightHelper extends Object3D {
     this.material = new MeshBasicMaterial({ wireframe: true, fog: false, toneMapped: false });
     if (this.color === undefined) this.material.vertexColors = true;
 
-    const position = geometry.getAttribute('position');
+    const position = geometry.attributes.position;
     const colors = new Float32Array(position.count * 3);
 
     geometry.setAttribute('color', new BufferAttribute(colors, 3));
@@ -47,7 +47,7 @@ export class HemisphereLightHelper extends Object3D {
     if (this.color !== undefined) {
       this.material.color.set(this.color);
     } else {
-      const colors = mesh.geometry!.getAttribute('color');
+      const colors = mesh.geometry!.attributes.color;
 
       _color1.copy(this.light.color);
       _color2.copy(this.light.groundColor);

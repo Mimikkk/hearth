@@ -316,7 +316,7 @@ export class BatchedMesh extends Mesh {
     }
 
     if (vertexCount === -1) {
-      reservedRange.vertexCount = geometry.getAttribute('position').count;
+      reservedRange.vertexCount = geometry.attributes.position.count;
     } else {
       reservedRange.vertexCount = vertexCount;
     }
@@ -475,7 +475,7 @@ export class BatchedMesh extends Mesh {
 
     // set drawRange count
     const drawRange = this._drawRanges[id];
-    const posAttr = geometry.getAttribute('position');
+    const posAttr = geometry.attributes.position;
     drawRange.count = hasIndex ? srcIndex.count : posAttr.count;
     this._visibilityChanged = true;
 

@@ -6,10 +6,10 @@ import { fromHalfFloat, toHalfFloat } from '../extras/DataUtils.js';
 import { Mat3 } from '@modules/renderer/engine/math/Mat3.js';
 import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
 
-const _vector = /*@__PURE__*/ new Vec3();
-const _Vec2 = /*@__PURE__*/ new Vec2();
+const _vector = new Vec3();
+const _Vec2 = new Vec2();
 
-export class BufferAttribute<T extends TypedArray> {
+export class BufferAttribute<T extends TypedArray = any> {
   declare ['constructor']: typeof BufferAttribute<T>;
   declare isBufferAttribute: true;
   name: string;
