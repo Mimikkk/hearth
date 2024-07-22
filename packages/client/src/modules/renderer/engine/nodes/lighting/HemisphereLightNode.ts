@@ -4,40 +4,48 @@ import { mix } from '@modules/renderer/engine/nodes/math/MathNode.js';
 import { normalView } from '../accessors/NormalNode.js';
 import { objectPosition } from '../accessors/Object3DNode.js';
 
-import { Color } from '@modules/renderer/engine/engine.js';
+import { Color, HemisphereLight } from '@modules/renderer/engine/engine.js';
+import PositionNode from '@modules/renderer/engine/nodes/accessors/PositionNode.js';
+import UniformNode from 'three/examples/jsm/nodes/core/UniformNode.js';
+import { NodeBuilder } from '../../renderers/webgpu/nodes/NodeBuilder.ts';
+import NodeFrame from '@modules/renderer/engine/nodes/core/NodeFrame.js';
 
-class HemisphereLightNode extends AnalyticLightNode {
+export class HemisphereLightNode extends AnalyticLightNode {
   static type = 'HemisphereLightNode';
+  declare isHemisphereLightNode: true;
 
-  constructor(light = null) {
+  lightPositionNode: PositionNode;
+  lightDirectionNode: PositionNode;
+  groundColorNode: UniformNode<Color>;
+  declare light: HemisphereLight;
+
+  constructor(light: HemisphereLight) {
     super(light);
 
     this.lightPositionNode = objectPosition(light);
     this.lightDirectionNode = this.lightPositionNode.normalize();
-
-    this.groundColorNode = uniform(new Color());
+    this.groundColorNode = uniform(Color.new());
   }
 
-  update(frame) {
+  update(frame: NodeFrame): void {
+    super.update(frame);
     const { light } = this;
 
-    super.update(frame);
-
     this.lightPositionNode.object3d = light;
-
-    this.groundColorNode.value.copy(light.groundColor).scale(light.intensity);
+    this.groundColorNode.value.from(light.groundColor).scale(light.intensity);
   }
 
-  setup(builder) {
+  setup(builder: NodeBuilder): void {
     const { colorNode, groundColorNode, lightDirectionNode } = this;
 
     const dotNL = normalView.dot(lightDirectionNode);
-    const hemiDiffuseWeight = dotNL.mul(0.5).add(0.5);
-
-    const irradiance = mix(groundColorNode, colorNode, hemiDiffuseWeight);
+    const diffuseWeight = dotNL.mul(0.5).add(0.5);
+    const irradiance = mix(groundColorNode, colorNode, diffuseWeight);
 
     builder.context.irradiance.addAssign(irradiance);
   }
 }
+
+HemisphereLightNode.prototype.isHemisphereLightNode = true;
 
 export default HemisphereLightNode;

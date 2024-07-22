@@ -48,86 +48,50 @@ export function* getNodeChildren(node) {
 
 export function getValueType(value: any): TypeName | null {
   if (value === undefined || value === null) return null;
-
+  if (value.isNode) return TypeName.node;
   const typeOf = typeof value;
-
-  if (value.isNode === true) {
-    return TypeName.node;
-  } else if (typeOf === 'number') {
-    return 'f32';
-  } else if (typeOf === 'boolean') {
-    return 'bool';
-  } else if (typeOf === 'string') {
-    return 'string';
-  } else if (typeOf === 'function') {
-    return 'shader';
-  } else if (value.isVec2 === true) {
-    return 'vec2';
-  } else if (value.isVec3 === true) {
-    return 'vec3';
-  } else if (value.isVec4 === true) {
-    return 'vec4';
-  } else if (value.isMat3 === true) {
-    return 'mat3';
-  } else if (value.isMat4 === true) {
-    return 'mat4';
-  } else if (value.isColor === true) {
-    return 'color';
-  } else if (value instanceof ArrayBuffer) {
-    return 'ArrayBuffer';
-  }
+  if (typeOf === 'number') return TypeName.f32;
+  if (typeOf === 'string') return TypeName.string;
+  if (typeOf === 'boolean') return TypeName.bool;
+  if (typeOf === 'function') return TypeName.shader;
+  if (Vec2.is(value)) return TypeName.vec2;
+  if (Vec3.is(value)) return TypeName.vec3;
+  if (Vec4.is(value)) return TypeName.vec4;
+  if (Mat3.is(value)) return TypeName.mat3;
+  if (Mat4.is(value)) return TypeName.mat4;
+  if (Color.is(value)) return TypeName.color;
 
   return null;
 }
 
-export function getValueFromType(type, ...params) {
-  const last4 = type ? type.slice(-4) : undefined;
-
-  if (params.length === 1) {
-    // ensure same behaviour as in NodeBuilder.format()
-
-    if (last4 === 'vec2') params = [params[0], params[0]];
-    else if (last4 === 'vec3') params = [params[0], params[0], params[0]];
-    else if (last4 === 'vec4') params = [params[0], params[0], params[0], params[0]];
+export function getValueFromType(type: TypeName, ...params: any) {
+  if (type === TypeName.color) {
+    return Color.new(...params);
   }
-
-  if (type === 'color') {
-    return new Color(...params);
-  } else if (last4 === 'vec2') {
-    return new Vec2(...params);
-  } else if (last4 === 'vec3') {
-    return new Vec3(...params);
-  } else if (last4 === 'vec4') {
-    return new Vec4(...params);
-  } else if (last4 === 'mat3') {
-    return new Mat3().set(...params);
-  } else if (last4 === 'mat4') {
-    return new Mat4().set(...params);
-  } else if (type === 'bool') {
+  if (type === TypeName.vec2 || type === TypeName.uvec2 || type === TypeName.bvec2 || type === TypeName.ivec2) {
+    if (params.length === 1) return Vec2.new(params[0], params[0]);
+    return Vec2.new(...params);
+  }
+  if (type === TypeName.vec3 || type === TypeName.uvec3 || type === TypeName.bvec3 || type === TypeName.ivec3) {
+    if (params.length === 1) return Vec3.new(params[0], params[0], params[0]);
+    return Vec3.new(...params);
+  }
+  if (type === TypeName.vec4 || type === TypeName.uvec4 || type === TypeName.bvec4 || type === TypeName.ivec4) {
+    if (params.length === 1) return Vec4.new(params[0], params[0], params[0], params[0]);
+    return Vec4.new(...params);
+  }
+  if (type === TypeName.mat3 || type === TypeName.imat3 || type === TypeName.umat3 || type === TypeName.bmat3) {
+    return Mat3.fromColumnOrder(...params);
+  }
+  if (type === TypeName.mat4 || type === TypeName.imat4 || type === TypeName.umat4 || type === TypeName.bmat4) {
+    return Mat4.fromColumnOrder(...params);
+  }
+  if (type === TypeName.bool) {
     return params[0] || false;
-  } else if (type === 'f32' || type === 'i32' || type === 'u32') {
+  }
+  if (type === TypeName.f32 || type === TypeName.i32 || type === TypeName.u32) {
     return params[0] || 0;
-  } else if (type === 'string') {
-    return params[0] || '';
-  } else if (type === 'ArrayBuffer') {
-    return base64ToArrayBuffer(params[0]);
   }
 
-  return null;
-}
-
-export function arrayBufferToBase64(arrayBuffer) {
-  let chars = '';
-
-  const array = new Uint8Array(arrayBuffer);
-
-  for (let i = 0; i < array.length; i++) {
-    chars += String.fromCharCode(array[i]);
-  }
-
-  return btoa(chars);
-}
-
-export function base64ToArrayBuffer(base64) {
-  return Uint8Array.from(atob(base64), c => c.charCodeAt(0)).buffer;
+  throw new Error(`Unknown type: ${type}`);
 }

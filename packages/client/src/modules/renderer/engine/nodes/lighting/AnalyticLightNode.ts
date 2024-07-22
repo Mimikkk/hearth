@@ -153,7 +153,7 @@ export class AnalyticLightNode extends LightingNode {
     if (this.light.castShadow) this.updateShadow(frame);
   }
 
-  update(): void {
+  update(frame: NodeFrame): void {
     const { light } = this;
 
     this.color.from(light.color).scale(light.intensity);

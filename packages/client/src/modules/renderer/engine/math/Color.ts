@@ -1,10 +1,11 @@
-import { clamp, euclideanModulo, lerp } from './MathUtils.js';
+import { clamp, euclideanModulo, lerp, NumberArray } from './MathUtils.js';
 import { ColorManagement, DefinedColorSpace, LinearToSRGB, SRGBToLinear } from './ColorManagement.js';
 import { ColorSpace } from '../constants.js';
 import type { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
 import type { InterleavedBufferAttribute } from '@modules/renderer/engine/core/InterleavedBufferAttribute.js';
 import type { Mat3 } from '@modules/renderer/engine/math/Mat3.js';
 import type { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
+import { Const } from '@modules/renderer/engine/math/types.js';
 
 export const ColorMap = {
   aliceblue: 0xf0f8ff,
@@ -211,6 +212,10 @@ export class Color {
 
   static new(r?: number | ColorRepresentation, g?: number, b?: number, a: number = 1): Color {
     return new Color(r, g, b, a);
+  }
+
+  static is(value: any): value is Color {
+    return value?.isColor === true;
   }
 
   set(r: ColorRepresentation, g?: number, b?: number, a?: number): this {

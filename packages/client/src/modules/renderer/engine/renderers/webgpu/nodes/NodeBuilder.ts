@@ -743,18 +743,10 @@ export class NodeBuilder {
     const toTypeLength = this.getTypeLength(toType);
 
     if (fromTypeLength > 4) {
-      // fromType is matrix-like
-
-      // @TODO: ignore for now
-
       return snippet;
     }
 
     if (toTypeLength > 4 || toTypeLength === 0) {
-      // toType is matrix-like or unknown
-
-      // @TODO: ignore for now
-
       return snippet;
     }
 
@@ -771,27 +763,18 @@ export class NodeBuilder {
     }
 
     if (toTypeLength === 4 && fromTypeLength > 1) {
-      // toType is vec4-like
-
       return `${this.getType(toType)}(${this.format(snippet, fromType, 'vec3')}, 1.0)`;
     }
 
     if (fromTypeLength === 2) {
-      // fromType is vec2-like and toType is vec3-like
-
       return `${this.getType(toType)}(${this.format(snippet, fromType, 'vec2')}, 0.0)`;
     }
 
     if (fromTypeLength === 1 && toTypeLength > 1 && fromType[0] !== toType[0]) {
-      // fromType is f32-like
-
-      // convert a number value to vector type, e.g:
-      // vec3(1u) -> vec3(f32(1u))
-
       snippet = `${this.getType(this.getComponentType(toType))}(${snippet})`;
     }
 
-    return `${this.getType(toType)}(${snippet})`; // fromType is f32-like
+    return `${this.getType(toType)}(${snippet})`;
   }
 
   needsColorSpaceToLinear(texture: Texture): boolean {

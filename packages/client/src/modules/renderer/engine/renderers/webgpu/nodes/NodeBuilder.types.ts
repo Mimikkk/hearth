@@ -94,5 +94,9 @@ export enum TypeName {
   sampler = 'sampler',
   texture = 'texture',
   cubeTexture = 'cubeTexture',
+
   node = 'node',
+  string = 'string',
+  shader = 'shader',
+  buffer = 'buffer',
 }
