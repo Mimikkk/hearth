@@ -578,7 +578,7 @@ export class Renderer {
   }
 
   getClearColor(target) {
-    return target.from(this._clearColor);
+    return target.copy(this._clearColor);
   }
 
   setClearColor(color, alpha = 1) {

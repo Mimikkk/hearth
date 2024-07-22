@@ -57,8 +57,8 @@ const loadMap = async (
   const textureParams = parseParams(value, materialParameters);
   const texture = await TextureLoader.loadAsync(LoaderUtils.resolveUrl(textureParams.url, baseUrl));
 
-  texture.repeat.copy(textureParams.scale);
-  texture.offset.copy(textureParams.offset);
+  texture.repeat.from(textureParams.scale);
+  texture.offset.from(textureParams.offset);
   texture.wrapS = wrap;
   texture.wrapT = wrap;
   if (useColorspace) texture.colorSpace = ColorSpace.SRGB;

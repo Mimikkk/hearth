@@ -56,6 +56,7 @@ export class ShaderMaterial extends Material {
   copy(source: this): this {
     super.copy(source);
 
+    console.log('this');
     this.uniforms = cloneUniforms(source.uniforms);
     this.defines = Object.assign({}, source.defines);
     this.wireframe = source.wireframe;

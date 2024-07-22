@@ -7,7 +7,7 @@ import { Material } from '@modules/renderer/engine/materials/Material.js';
 
 type SortFn = (a: RenderItem, b: RenderItem) => number;
 
-const painterSortStable: SortFn = (a, b) => {
+const sortPainterAsc: SortFn = (a, b) => {
   if (a.groupOrder !== b.groupOrder) {
     return a.groupOrder - b.groupOrder;
   } else if (a.renderOrder !== b.renderOrder) {
@@ -21,7 +21,7 @@ const painterSortStable: SortFn = (a, b) => {
   }
 };
 
-const reversePainterSortStable: SortFn = (a, b) => {
+const sortPainterDesc: SortFn = (a, b) => {
   if (a.groupOrder !== b.groupOrder) {
     return a.groupOrder - b.groupOrder;
   } else if (a.renderOrder !== b.renderOrder) {
@@ -152,8 +152,8 @@ class RenderList {
   }
 
   sort(customOpaqueSort?: SortFn, customTransparentSort?: SortFn) {
-    if (this.opaque.length > 1) this.opaque.sort(customOpaqueSort || painterSortStable);
-    if (this.transparent.length > 1) this.transparent.sort(customTransparentSort || reversePainterSortStable);
+    if (this.opaque.length > 1) this.opaque.sort(customOpaqueSort || sortPainterAsc);
+    if (this.transparent.length > 1) this.transparent.sort(customTransparentSort || sortPainterDesc);
   }
 
   finish() {

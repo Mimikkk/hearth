@@ -11,6 +11,8 @@ let scene!: Scene;
 let renderer!: Renderer;
 let viewHelper!: WorldAxesVisualizer;
 
+const clock = new Clock();
+
 await init();
 render();
 
@@ -55,8 +57,6 @@ async function init() {
 
   useWindowResizer(renderer, camera);
 }
-
-const clock = new Clock();
 
 async function animate() {
   const delta = clock.getDelta();
