@@ -3,7 +3,7 @@ import { getCacheKey, getNodeChildren } from './NodeUtils.js';
 import { generateUuid } from '../../math/MathUtils.js';
 import { NodeBuilder } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.js';
 
-import NodeFrame from '@modules/renderer/engine/nodes/core/NodeFrame.js';
+import { NodeFrame } from '@modules/renderer/engine/nodes/core/NodeFrame.js';
 import { BuildStage, TypeName } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.types.js';
 
 let _nodeId = 0;
@@ -175,11 +175,6 @@ export class Node {
     builder.addNode(this);
     builder.addChain(this);
 
-    /* Build stages expected results:
-			- "setup"		-> Node
-			- "analyze"		-> null
-			- "generate"	-> String
-		*/
     let result = null;
 
     const buildStage = builder.buildStage;
@@ -216,7 +211,7 @@ export class Node {
 
         result = nodeData.snippet;
 
-        if (result === undefined /*|| builder.context.tempRead === false*/) {
+        if (result === undefined) {
           result = this.generate(builder) || '';
 
           nodeData.snippet = result;

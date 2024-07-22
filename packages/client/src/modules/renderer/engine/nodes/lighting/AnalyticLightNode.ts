@@ -10,7 +10,7 @@ import { Color, DepthComparison, DepthTexture, Filter, Light, RenderTarget } fro
 import UniformNode from 'three/examples/jsm/nodes/core/UniformNode.js';
 import TextureNode from 'three/examples/jsm/nodes/accessors/TextureNode.js';
 import { NodeBuilder } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.js';
-import NodeFrame from '@modules/renderer/engine/nodes/core/NodeFrame.js';
+import { NodeFrame } from '@modules/renderer/engine/nodes/core/NodeFrame.js';
 
 let overrideMaterial: any = null;
 

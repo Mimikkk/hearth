@@ -7,7 +7,7 @@ import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js'
 import { Node } from '../core/Node.js';
 import { Clock } from '@modules/renderer/engine/core/Clock.js';
 
-class NodeFrame {
+export class NodeFrame {
   time: number;
   deltaTime: number;
   lastTime: number;

@@ -1,7 +1,7 @@
 import UniformNode from '../core/UniformNode.js';
 import { NodeUpdateType } from '../core/constants.js';
 import { nodeImmutable, nodeObject } from '../shadernode/ShaderNodes.js';
-import NodeFrame from '@modules/renderer/engine/nodes/core/NodeFrame.js';
+import { NodeFrame } from '@modules/renderer/engine/nodes/core/NodeFrame.js';
 
 export class TimerNode extends UniformNode<number> {
   static type = 'TimerNode';
