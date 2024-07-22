@@ -1551,14 +1551,14 @@ fn main(${parameters}) -> ${Inbuilt.Struct.Vertex} {
   }
 
   export const fragment = ({
-    parameters,
-    uniforms,
-    structures,
-    functions,
-    code,
-    variables,
-    return: returnType,
-  }: Fragment): string => `
+                             parameters,
+                             uniforms,
+                             structures,
+                             functions,
+                             code,
+                             variables,
+                             return: returnType,
+                           }: Fragment): string => `
 ${Signature}
 ${block('uniforms', uniforms)}
 ${block('structures', structures)}
