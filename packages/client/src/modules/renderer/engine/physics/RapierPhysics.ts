@@ -156,7 +156,7 @@ export async function RapierPhysics(): Promise<RapierPhysicsObject> {
   const clock = new Clock();
 
   function step() {
-    world.timestep = clock.getDelta();
+    world.timestep = clock.tick();
     world.step();
 
     //

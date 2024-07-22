@@ -78,7 +78,7 @@ export class AudioListener extends Object3D {
     const listener = this.context.listener;
     const up = this.up;
 
-    this.timeDelta = this._clock.getDelta();
+    this.timeDelta = this._clock.delta();
 
     this.matrixWorld.decompose(_position, _quaternion, _scale);
 

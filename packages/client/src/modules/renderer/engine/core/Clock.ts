@@ -1,53 +1,19 @@
 export class Clock {
-  public autoStart: boolean;
-  public startTime: number;
-  public oldTime: number;
-  public elapsedTime: number;
-  public running: boolean;
+  constructor(
+    public previous: number = 0,
+    public total: number = 0,
+    public delta: number = 0,
+  ) {}
 
-  constructor(autoStart: boolean = true) {
-    this.autoStart = autoStart;
-    this.startTime = 0;
-    this.oldTime = 0;
-    this.elapsedTime = 0;
-    this.running = false;
+  static new() {
+    return new Clock();
   }
 
-  start() {
-    this.startTime = performance.now();
-    this.oldTime = this.startTime;
-    this.elapsedTime = 0;
-    this.running = true;
-  }
-
-  stop() {
-    this.getElapsedTime();
-    this.running = false;
-    this.autoStart = false;
-  }
-
-  getElapsedTime() {
-    this.getDelta();
-    return this.elapsedTime;
-  }
-
-  getDelta() {
-    let diff = 0;
-
-    if (this.autoStart && !this.running) {
-      this.start();
-      return 0;
-    }
-
-    if (this.running) {
-      const newTime = performance.now();
-
-      diff = (newTime - this.oldTime) / 1000;
-      this.oldTime = newTime;
-
-      this.elapsedTime += diff;
-    }
-
-    return diff;
+  tick() {
+    const time = performance.now();
+    this.delta = (time - this.previous || performance.now()) / 1000;
+    this.previous = time;
+    this.total += this.delta;
+    return this.delta;
   }
 }

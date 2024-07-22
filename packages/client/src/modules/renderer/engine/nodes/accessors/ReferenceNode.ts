@@ -83,7 +83,7 @@ class ReferenceNode extends Node {
     return value;
   }
 
-  setReference(state) {
+  updateReference(state) {
     this.reference = this.object !== null ? this.object : state.object;
 
     return this.reference;

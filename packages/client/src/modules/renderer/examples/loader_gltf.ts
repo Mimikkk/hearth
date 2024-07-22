@@ -59,7 +59,7 @@ async function init() {
 }
 
 async function animate() {
-  const delta = clock.getDelta();
+  const delta = clock.tick();
   viewHelper.update(delta);
   render();
 }

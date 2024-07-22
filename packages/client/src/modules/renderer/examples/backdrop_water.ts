@@ -248,7 +248,7 @@ function animate() {
 
   controls.update();
 
-  const delta = clock.getDelta();
+  const delta = clock.tick();
 
   floor.position.y = floorPosition.y - 5;
 
@@ -259,7 +259,7 @@ function animate() {
   }
 
   for (const object of objects.children) {
-    object.position.y = Math.sin(clock.elapsedTime + object.id) * 0.3;
+    object.position.y = Math.sin(clock.total + object.id) * 0.3;
     object.rotateY(delta * 0.3);
   }
 

@@ -45,7 +45,7 @@ class TextureNode extends UniformNode {
     return uv(this.value.channel);
   }
 
-  setReference(/*state*/) {
+  updateReference(/*state*/) {
     return this.value;
   }
 

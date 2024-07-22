@@ -104,7 +104,7 @@ perspectiveCamera.add(light);
 scene.add(frustumVisualizer, frustumCamera, perspectiveCamera, sprites, spheres, points);
 
 const renderer = await createRenderer(() => {
-  spheres.rotateZ(clock.getDelta());
+  spheres.rotateZ(clock.delta());
 
   controls.update();
   renderer.render(scene, state.camera);

@@ -57,7 +57,7 @@ export class Node {
     return this.self || this;
   }
 
-  setReference(state: NodeBuilder): this {
+  updateReference(state: NodeFrame): this {
     return this;
   }
 
@@ -165,12 +165,14 @@ export class Node {
     }
   }
 
-  updateBefore(frame: NodeFrame) {
+  updateBefore(frame: NodeFrame): boolean | undefined {
     console.warn('Abstract function.');
+    return undefined;
   }
 
-  update(frame: NodeFrame) {
+  update(frame: NodeFrame): boolean | undefined {
     console.warn('Abstract function.');
+    return undefined;
   }
 
   build(builder: NodeBuilder, output: string | null = null): string | null {
@@ -193,7 +195,7 @@ export class Node {
     const buildStage = builder.buildStage;
 
     if (buildStage === BuildStage.Setup) {
-      this.setReference(builder);
+      this.updateReference(builder);
 
       const properties = builder.getNodeProperties(this);
 
