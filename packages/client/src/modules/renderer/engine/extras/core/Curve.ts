@@ -4,30 +4,23 @@ import { Vec3 } from '../../math/Vec3.js';
 import { Mat4 } from '../../math/Mat4.js';
 
 export abstract class Curve<T extends Vec2 | Vec3> {
+  declare type: 'Curve';
+  arcLengthDivisions: number;
+  needsUpdate: boolean;
+
   constructor() {
     this.type = 'Curve';
-
     this.arcLengthDivisions = 200;
   }
-  // Virtual base class method to overwrite and implement in subclasses
-  //	- t [0 .. 1]
 
-  getPoint(/* t, optionalTarget */) {
-    console.warn('engine.Curve: .getPoint() not implemented.');
-    return null;
-  }
+  abstract getPoint(t: number, into?: T): T;
 
-  // Get point at relative position in curve according to arc length
-  // - u [0 .. 1]
-
-  getPointAt(u, optionalTarget) {
+  getPointAt(u: number, into?: T): T {
     const t = this.getUtoTmapping(u);
-    return this.getPoint(t, optionalTarget);
+    return this.getPoint(t, into);
   }
 
-  // Get sequence of points using getPoint( t )
-
-  getPoints(divisions = 5) {
+  getPoints(divisions: number = 5): T[] {
     const points = [];
 
     for (let d = 0; d <= divisions; d++) {
@@ -37,9 +30,7 @@ export abstract class Curve<T extends Vec2 | Vec3> {
     return points;
   }
 
-  // Get sequence of points using getPointAt( u )
-
-  getSpacedPoints(divisions = 5) {
+  getSpacedPoints(divisions: number = 5): T[] {
     const points = [];
 
     for (let d = 0; d <= divisions; d++) {
@@ -49,49 +40,28 @@ export abstract class Curve<T extends Vec2 | Vec3> {
     return points;
   }
 
-  // Get total curve arc length
-
-  getLength() {
+  getLength(): number {
     const lengths = this.getLengths();
     return lengths[lengths.length - 1];
   }
 
-  // Get list of cumulative segment lengths
+  getLengths(divisions: number = this.arcLengthDivisions): number[] {
+    const lengths = [0];
+    let current: T;
+    let last = this.getPoint(0);
 
-  getLengths(divisions = this.arcLengthDivisions) {
-    if (this.cacheArcLengths && this.cacheArcLengths.length === divisions + 1 && !this.needsUpdate) {
-      return this.cacheArcLengths;
-    }
-
-    this.needsUpdate = false;
-
-    const cache = [];
-    let current,
-      last = this.getPoint(0);
     let sum = 0;
-
-    cache.push(0);
-
     for (let p = 1; p <= divisions; p++) {
       current = this.getPoint(p / divisions);
       sum += current.distanceTo(last);
-      cache.push(sum);
+      lengths.push(sum);
       last = current;
     }
 
-    this.cacheArcLengths = cache;
-
-    return cache; // { sums: cache, sum: sum }; Sum is in the last element.
+    return lengths;
   }
 
-  updateArcLengths() {
-    this.needsUpdate = true;
-    this.getLengths();
-  }
-
-  // Given u ( 0 .. 1 ), get a t to find p. This gives you points which are equidistant
-
-  getUtoTmapping(u, distance) {
+  getUtoTmapping(u: number, distance?: number): number {
     const arcLengths = this.getLengths();
 
     let i = 0;
@@ -152,17 +122,10 @@ export abstract class Curve<T extends Vec2 | Vec3> {
     return t;
   }
 
-  // Returns a unit vector tangent at t
-  // In case any sub curve does not implement its tangent derivation,
-  // 2 points a small delta apart will be used to find its gradient
-  // which seems to give a reasonable approximation
-
-  getTangent(t, optionalTarget) {
+  getTangent(t: number, into?: T): T {
     const delta = 0.0001;
     let t1 = t - delta;
     let t2 = t + delta;
-
-    // Capping in case of danger
 
     if (t1 < 0) t1 = 0;
     if (t2 > 1) t2 = 1;
@@ -170,19 +133,24 @@ export abstract class Curve<T extends Vec2 | Vec3> {
     const pt1 = this.getPoint(t1);
     const pt2 = this.getPoint(t2);
 
-    const tangent = optionalTarget || (pt1.isVec2 ? new Vec2() : new Vec3());
+    into ??= Vec2.is(pt1) ? Vec2.new() : Vec3.new();
 
-    tangent.from(pt2).sub(pt1).normalize();
-
-    return tangent;
+    return into.asSub(pt2, pt1).normalize();
   }
 
-  getTangentAt(u, optionalTarget) {
+  getTangentAt(u: number, into?: T): T {
     const t = this.getUtoTmapping(u);
-    return this.getTangent(t, optionalTarget);
+    return this.getTangent(t, into);
   }
 
-  computeFrenetFrames(segments, closed) {
+  computeFrenetFrames(
+    segments: number,
+    closed?: number,
+  ): {
+    tangents: Vec3[];
+    normals: Vec3[];
+    binormals: Vec3[];
+  } {
     // see http://www.cs.indiana.edu/pub/techreports/TR425.pdf
 
     const normal = new Vec3();
@@ -279,31 +247,11 @@ export abstract class Curve<T extends Vec2 | Vec3> {
     return new this.constructor().copy(this);
   }
 
-  copy(source) {
+  copy(source: this): this {
     this.arcLengthDivisions = source.arcLengthDivisions;
 
     return this;
   }
-
-  toJSON() {
-    const data = {
-      metadata: {
-        version: 4.6,
-        type: 'Curve',
-        generator: 'Curve.toJSON',
-      },
-    };
-
-    data.arcLengthDivisions = this.arcLengthDivisions;
-    data.type = this.type;
-
-    return data;
-  }
-
-  fromJSON(json) {
-    this.arcLengthDivisions = json.arcLengthDivisions;
-
-    return this;
-  }
 }
+
 Curve.prototype.type = 'Curve';

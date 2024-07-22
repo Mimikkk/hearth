@@ -49,7 +49,7 @@ export class InterleavedBuffer<T extends TypedArray = any> {
   }
 
   copy(source: InterleavedBuffer): this {
-    this.array = new (source.array.constructor() as TypedArrayConstructor)(source.array) as TypedArray;
+    this.array = new (source.array.constructor() as TypedArrayConstructor)(source.array) as T;
     this.count = source.count;
     this.stride = source.stride;
     this.usage = source.usage;

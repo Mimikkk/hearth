@@ -38,7 +38,6 @@ export class CurvePath<T extends Vec2 | Vec3> extends Curve<T> {
   // 3. Get t for the curve
   // 4. Return curve.getPointAt(t')
 
-  //@ts-expect-error
   getPoint(t: number, optionalTarget?: T): T | null {
     const d = t * this.getLength();
     const curveLengths = this.getCurveLengths();
@@ -70,9 +69,6 @@ export class CurvePath<T extends Vec2 | Vec3> extends Curve<T> {
 
   // cacheLengths must be recalculated.
   updateArcLengths(): number[] {
-    this.needsUpdate = true;
-    this.lengths = [];
-
     return this.getCurveLengths();
   }
 
