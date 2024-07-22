@@ -361,7 +361,7 @@ function teleportPlayerIfOob() {
 }
 
 function animate() {
-  const deltaTime = Math.min(0.05, clock.delta()) / STEPS_PER_FRAME;
+  const deltaTime = Math.min(0.05, clock.tick()) / STEPS_PER_FRAME;
 
   // we look for collisions in substeps to mitigate the risk of
   // an object traversing another too quickly for detection.
