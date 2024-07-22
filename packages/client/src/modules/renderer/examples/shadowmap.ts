@@ -145,7 +145,7 @@ async function init() {
 }
 
 function animate(time) {
-  const delta = clock.getDelta();
+  const delta = clock.tick();
 
   torusKnot.rotateX(0.25 * delta);
   torusKnot.rotateY(0.5 * delta);

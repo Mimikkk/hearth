@@ -176,51 +176,62 @@ export class Node {
     builder.addChain(this);
 
     let result = null;
+    const stage = builder.buildStage;
 
-    const buildStage = builder.buildStage;
+    switch (stage) {
+      case BuildStage.Setup:
+        {
+          this.updateReference(builder);
 
-    if (buildStage === BuildStage.Setup) {
-      this.updateReference(builder);
+          const properties = builder.getNodeProperties(this);
 
-      const properties = builder.getNodeProperties(this);
+          if (properties.initialized !== true) {
+            const stackNodesBeforeSetup = builder.stack.nodes.length;
 
-      if (properties.initialized !== true || builder.context.tempRead === false) {
-        const stackNodesBeforeSetup = builder.stack.nodes.length;
+            properties.initialized = true;
+            properties.outputNode = this.setup(builder);
 
-        properties.initialized = true;
-        properties.outputNode = this.setup(builder);
+            if (properties.outputNode !== null && builder.stack.nodes.length !== stackNodesBeforeSetup) {
+              properties.outputNode = builder.stack;
+            }
 
-        if (properties.outputNode !== null && builder.stack.nodes.length !== stackNodesBeforeSetup) {
-          properties.outputNode = builder.stack;
-        }
-
-        for (const childNode of Object.values(properties) as Node[]) {
-          if (childNode?.isNode) {
-            childNode.build(builder);
+            for (const childNode of Object.values(properties) as Node[]) {
+              if (childNode?.isNode) {
+                childNode.build(builder);
+              }
+            }
           }
         }
-      }
-    } else if (buildStage === BuildStage.Analyze) {
-      this.analyze(builder);
-    } else if (buildStage === BuildStage.Generate) {
-      const isGenerateOnce = this.generate.length === 1;
-
-      if (isGenerateOnce) {
-        const type = this.getNodeType(builder);
-        const nodeData = builder.getDataFromNode(this);
-
-        result = nodeData.snippet;
-
-        if (result === undefined) {
-          result = this.generate(builder) || '';
-
-          nodeData.snippet = result;
+        break;
+      case BuildStage.Analyze:
+        {
+          this.analyze(builder);
         }
+        break;
+      case BuildStage.Generate:
+        {
+          const isGenerateOnce = this.generate.length === 1;
 
-        result = builder.format(result, type, output);
-      } else {
-        result = this.generate(builder, output) || '';
-      }
+          if (isGenerateOnce) {
+            const type = this.getNodeType(builder);
+            const nodeData = builder.getDataFromNode(this);
+
+            result = nodeData.snippet;
+
+            if (result === undefined) {
+              result = this.generate(builder) || '';
+
+              nodeData.snippet = result;
+            }
+
+            result = builder.format(result, type, output);
+          } else {
+            result = this.generate(builder, output) || '';
+          }
+        }
+        break;
+      default:
+        throw Error(`Unsupported build stage ${stage}.`);
     }
 
     builder.removeChain(this);

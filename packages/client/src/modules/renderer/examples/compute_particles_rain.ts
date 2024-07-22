@@ -331,7 +331,7 @@ async function init() {
 function animate() {
   stats.update();
 
-  const delta = clock.getDelta();
+  const delta = clock.tick();
 
   if (monkey) {
     monkey.rotateY(delta);

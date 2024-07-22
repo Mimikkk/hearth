@@ -53,7 +53,7 @@ async function init() {
 }
 
 function animate() {
-  const delta = clock.getDelta();
+  const delta = clock.tick();
 
   if (mixer) mixer.update(delta);
 

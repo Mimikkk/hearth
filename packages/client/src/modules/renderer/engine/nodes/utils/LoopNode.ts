@@ -56,7 +56,7 @@ class LoopNode extends Node {
   generate(builder) {
     const properties = this.getProperties(builder);
 
-    const contextData = { tempWrite: false };
+    const contextData = {};
 
     const params = this.params;
     const stackNode = properties.stackNode;

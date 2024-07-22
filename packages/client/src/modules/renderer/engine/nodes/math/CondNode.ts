@@ -10,7 +10,6 @@ class CondNode extends Node {
     super();
 
     this.condNode = condNode;
-
     this.ifNode = ifNode;
     this.elseNode = elseNode;
   }
@@ -31,7 +30,7 @@ class CondNode extends Node {
 
   generate(builder, output) {
     const type = this.getNodeType(builder);
-    const context = { tempWrite: false };
+    const context = {};
 
     const nodeData = builder.getDataFromNode(this);
 
@@ -46,7 +45,7 @@ class CondNode extends Node {
 
     nodeData.nodeProperty = nodeProperty;
 
-    const nodeSnippet = contextNode(this.condNode /*, context*/).build(builder, 'bool');
+    const nodeSnippet = contextNode(this.condNode).build(builder, 'bool');
 
     builder.flow.code += `\nif ( ${nodeSnippet} ) {\n`;
 

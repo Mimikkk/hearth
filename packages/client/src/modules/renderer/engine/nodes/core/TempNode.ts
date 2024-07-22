@@ -1,34 +1,33 @@
 import Node from './Node.js';
-import { BuildStage } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.types.js';
+import { BuildStage, TypeName } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.types.js';
+import { NodeBuilder } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.js';
 
-class TempNode extends Node {
+export class TempNode extends Node {
   static type = 'TempNode';
+  isTempNode: true;
 
-  constructor(type) {
+  constructor(type: TypeName | null = null) {
     super(type);
-
-    this.isTempNode = true;
   }
 
-  hasDependencies(builder) {
+  static is(node: any): node is TempNode {
+    return node?.isTempNode === true;
+  }
+
+  hasDependencies(builder: NodeBuilder): boolean {
     return builder.getDataFromNode(this).usageCount > 1;
   }
 
-  build(builder, output) {
+  build(builder: NodeBuilder, output: TypeName) {
     const buildStage = builder.buildStage;
 
     if (buildStage === BuildStage.Generate) {
       const type = builder.getVectorType(this.getNodeType(builder, output));
       const nodeData = builder.getDataFromNode(this);
 
-      if (builder.context.tempRead !== false && nodeData.propertyName !== undefined) {
+      if (nodeData.propertyName !== undefined) {
         return builder.format(nodeData.propertyName, type, output);
-      } else if (
-        builder.context.tempWrite !== false &&
-        type !== 'void' &&
-        output !== 'void' &&
-        this.hasDependencies(builder)
-      ) {
+      } else if (type !== TypeName.void && output !== TypeName.void && this.hasDependencies(builder)) {
         const snippet = super.build(builder, type);
 
         const nodeVar = builder.getVarFromNode(this, null, type);
@@ -46,5 +45,7 @@ class TempNode extends Node {
     return super.build(builder, output);
   }
 }
+
+TempNode.prototype.isTempNode = true;
 
 export default TempNode;

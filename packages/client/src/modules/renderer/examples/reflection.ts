@@ -150,7 +150,7 @@ function animate() {
 
   controls.update();
 
-  const delta = clock.getDelta();
+  const delta = clock.tick();
 
   if (model) {
     mixer.update(delta);
