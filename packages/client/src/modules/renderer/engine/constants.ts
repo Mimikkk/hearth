@@ -16,20 +16,6 @@ export enum Touch {
   DollyRotate = 3,
 }
 
-export enum CullFace {
-  None = 0,
-  Back = 1,
-  Front = 2,
-  FrontBack = 3,
-}
-
-export enum ShadowMap {
-  Basic = 0,
-  PCF = 1,
-  PCFSoft = 2,
-  VSM = 3,
-}
-
 export enum Side {
   Front = 0,
   Back = 1,

@@ -1,9 +1,8 @@
 import DataMap from './DataMap.js';
 import { AttributeType } from './Constants.js';
-import { Uint32BufferAttribute, Uint16BufferAttribute, WireframeGeometry } from '@modules/renderer/engine/engine.js';
+import { Uint16BufferAttribute, Uint32BufferAttribute, WireframeGeometry } from '@modules/renderer/engine/engine.js';
 import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 import RenderObject from '@modules/renderer/engine/renderers/common/RenderObject.js';
-import { isArrayUint32 } from '@modules/renderer/engine/utils.js';
 import { Attribute } from '@modules/renderer/engine/core/types.js';
 
 function getWireframeVersion(geometry: WireframeGeometry): number {
@@ -39,7 +38,7 @@ function getWireframeIndex(geometry: WireframeGeometry): Uint16BufferAttribute |
     }
   }
 
-  const attribute = new (isArrayUint32(indices) ? Uint32BufferAttribute : Uint16BufferAttribute)(indices, 1);
+  const attribute = new Uint32BufferAttribute(indices, 1);
   attribute.version = getWireframeVersion(geometry);
 
   return attribute;

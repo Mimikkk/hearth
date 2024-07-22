@@ -1,18 +1,12 @@
 import { Vec3 } from '../math/Vec3.js';
 import { Vec2 } from '../math/Vec2.js';
 import { Box3 } from '../math/Box3.js';
-import {
-  BufferAttribute,
-  Float32BufferAttribute,
-  Uint16BufferAttribute,
-  Uint32BufferAttribute,
-} from './BufferAttribute.js';
+import { BufferAttribute, Float32BufferAttribute, Uint32BufferAttribute } from './BufferAttribute.js';
 import { Sphere } from '../math/Sphere.js';
 import { Object3D } from './Object3D.js';
 import { Mat4 } from '../math/Mat4.js';
 import { Mat3 } from '../math/Mat3.js';
 import * as MathUtils from '../math/MathUtils.js';
-import { isArrayUint32 } from '../utils.js';
 import { InterleavedBufferAttribute } from '@modules/renderer/engine/core/InterleavedBufferAttribute.js';
 import { Quaternion } from '@modules/renderer/engine/math/Quaternion.js';
 
@@ -79,10 +73,7 @@ export class BufferGeometry<
 
   setIndex(index: BufferAttribute<IndexT> | number[] | null): this {
     if (Array.isArray(index)) {
-      this.index = new (isArrayUint32(index) ? Uint32BufferAttribute : Uint16BufferAttribute)(
-        index,
-        1,
-      ) as BufferAttribute<IndexT>;
+      this.index = new Uint32BufferAttribute(index, 1) as BufferAttribute<IndexT>;
     } else {
       this.index = index;
     }
@@ -809,6 +800,7 @@ export class BufferGeometry<
     return this;
   }
 }
+
 BufferGeometry.prototype.isBufferGeometry = true;
 BufferGeometry.prototype.type = 'BufferGeometry';
 
