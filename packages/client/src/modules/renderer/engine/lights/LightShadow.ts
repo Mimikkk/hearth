@@ -71,7 +71,7 @@ export class LightShadow<C extends Camera = Camera> {
     shadowCamera.updateMatrixWorld();
 
     _projScreenMatrix.asMul(shadowCamera.projectionMatrix, shadowCamera.matrixWorldInverse);
-    this._frustum.setFromProjectionMatrix(_projScreenMatrix);
+    this._frustum.fromProjection(_projScreenMatrix);
 
     shadowMatrix.set(0.5, 0.0, 0.0, 0.5, 0.0, 0.5, 0.0, 0.5, 0.0, 0.0, 0.5, 0.5, 0.0, 0.0, 0.0, 1.0);
 

@@ -160,7 +160,7 @@ export class SelectionControl {
           _matrix.decompose(_center, _quaternion, _scale);
           _center.applyMat4(object.matrixWorld);
 
-          if (frustum.containsPoint(_center)) {
+          if (frustum.contains(_center)) {
             this.instances[object.uuid].push(instanceId);
           }
         }
@@ -171,7 +171,7 @@ export class SelectionControl {
 
         _center.applyMat4(object.matrixWorld);
 
-        if (frustum.containsPoint(_center)) {
+        if (frustum.contains(_center)) {
           this.collection.push(object);
         }
       }

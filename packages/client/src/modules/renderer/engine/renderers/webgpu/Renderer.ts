@@ -247,7 +247,7 @@ export class Renderer {
     context.clippingContext.updateGlobal(this, camera);
     sceneRef.onBeforeRender(this, scene, camera, target);
     _projection.asMul(camera.projectionMatrix, camera.matrixWorldInverse);
-    _frustum.setFromProjectionMatrix(_projection);
+    _frustum.fromProjection(_projection);
 
     const renderList = this.renderLists.get(scene, camera);
     renderList.begin();
