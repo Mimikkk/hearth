@@ -20,7 +20,16 @@ import ClippingContext from '@modules/renderer/engine/renderers/common/ClippingC
 import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
-import { Color, Frustum, Mat4, Object3D, Plane, RenderTarget } from '@modules/renderer/engine/engine.js';
+import {
+  Color,
+  FramebufferTexture,
+  Frustum,
+  Mat4,
+  Object3D,
+  Plane,
+  RenderTarget,
+  Texture,
+} from '@modules/renderer/engine/engine.js';
 import { GPUFeatureNameType, GPUTextureFormatType } from '@modules/renderer/engine/renderers/webgpu/utils/constants.js';
 import { SortFn } from '@modules/renderer/engine/renderers/common/RenderList.js';
 import { Attribute } from '@modules/renderer/engine/core/types.js';
@@ -561,19 +570,17 @@ export class Renderer {
     this._activeMipmapLevel = activeMipmapLevel;
   }
 
-  copyFramebufferToTexture(framebufferTexture) {
-    const renderContext = this._currentRenderContext;
+  copyFramebufferToTexture(texture: FramebufferTexture): void {
+    this._textures.updateTexture(texture);
 
-    this._textures.updateTexture(framebufferTexture);
-
-    this.backend.copyFramebufferToTexture(framebufferTexture, renderContext);
+    this.backend.copyFramebufferToTexture(texture, this._currentRenderContext);
   }
 
-  copyTextureToTexture(position, srcTexture, dstTexture, level = 0) {
-    this._textures.updateTexture(srcTexture);
-    this._textures.updateTexture(dstTexture);
+  copyTextureToTexture(at: Vec2, from: Texture, into: Texture, level: number = 0): void {
+    this._textures.updateTexture(from);
+    this._textures.updateTexture(into);
 
-    this.backend.copyTextureToTexture(position, srcTexture, dstTexture, level);
+    this.backend.copyTextureToTexture(at, from, into, level);
   }
 
   _projectObject(object, camera, groupOrder, renderList) {

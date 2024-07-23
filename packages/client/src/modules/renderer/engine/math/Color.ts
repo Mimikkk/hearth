@@ -645,6 +645,7 @@ export class Color {
     array[offset] = this.r;
     array[offset + 1] = this.g;
     array[offset + 2] = this.b;
+    array[offset + 3] = this.a;
 
     return array;
   }

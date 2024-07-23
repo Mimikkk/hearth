@@ -1,100 +1,70 @@
-import * as Engine from '@modules/renderer/engine/engine.js';
+import {
+  Clock,
+  Color,
+  ColorSpace,
+  DataTexture,
+  Mesh,
+  MeshBasicMaterial,
+  MinificationTextureFilter,
+  PerspectiveCamera,
+  PlaneGeometry,
+  Scene,
+  Vec2,
+} from '@modules/renderer/engine/engine.js';
 import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-
-let camera, scene, renderer, clock, dataTexture, diffuseMap;
+import { Random } from '@modules/renderer/engine/math/random.js';
+import { ColorMap } from '@modules/renderer/engine/math/Color.js';
 
 let last = 0;
-const position = new Engine.Vec2();
-const color = new Engine.Color();
 
-init();
+const camera = new PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 10);
+camera.position.z = 2;
 
-async function init() {
-  camera = new Engine.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 10);
-  camera.position.z = 2;
+const scene = new Scene();
+const clock = new Clock();
 
-  scene = new Engine.Scene();
+const diffuseMap = await TextureLoader.loadAsync('resources/textures/carbon/Carbon.png');
+diffuseMap.colorSpace = ColorSpace.SRGB;
+diffuseMap.minFilter = MinificationTextureFilter.Linear;
+diffuseMap.generateMipmaps = false;
 
-  clock = new Engine.Clock();
+const mesh = new Mesh(new PlaneGeometry(2, 2), new MeshBasicMaterial({ map: diffuseMap }));
+scene.add(mesh);
 
-  const loader = new TextureLoader();
-  diffuseMap = await loader.loadAsync('resources/textures/carbon/Carbon.png');
-  diffuseMap.colorSpace = Engine.ColorSpace.SRGB;
-  diffuseMap.minFilter = Engine.MinificationTextureFilter.Linear;
-  diffuseMap.generateMipmaps = false;
+const renderer = await Renderer.create({
+  async animate() {
+    clock.tick();
 
-  const geometry = new Engine.PlaneGeometry(2, 2);
-  const material = new Engine.MeshBasicMaterial({ map: diffuseMap });
+    await renderer.render(scene, camera);
 
-  const mesh = new Engine.Mesh(geometry, material);
-  scene.add(mesh);
+    const { total } = clock;
+    if (total - last <= 0.5) return;
+    randomizePosition(position);
+    regenerateDataTexture(texture);
+    renderer.copyTextureToTexture(position, texture, diffuseMap);
+  },
+});
 
-  //
+useWindowResizer(renderer, camera);
 
-  const width = 32;
-  const height = 32;
+const position = Vec2.new();
 
-  const data = new Uint8Array(width * height * 4);
-  dataTexture = new Engine.DataTexture(data, width, height);
-
-  //
-
-  renderer = await Renderer.create();
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-
-  document.body.appendChild(renderer.parameters.canvas);
-
-  //
-  animate();
-
-  useWindowResizer(renderer, camera);
+function randomizePosition(into: Vec2): void {
+  into.set(Random.integer(0, 15), Random.integer(0, 15)).scale(32);
 }
 
-async function animate() {
-  requestAnimationFrame(animate);
+const color = Color.new();
+const texture = new DataTexture(new Uint8Array(32 * 32 * 4), 32, 32);
 
-  const elapsedTime = clock.getElapsedTime();
+function regenerateDataTexture(into: DataTexture): void {
+  const { data } = into.image;
+  Random.color(ColorMap.white, ColorMap.black, color).scale(255);
 
-  await renderer.render(scene, camera);
-
-  if (elapsedTime - last > 0.1) {
-    last = elapsedTime;
-
-    position.x = 32 * Engine.MathUtils.randInt(1, 16) - 32;
-    position.y = 32 * Engine.MathUtils.randInt(1, 16) - 32;
-
-    // generate new color data
-    updateDataTexture(dataTexture);
-
-    // perform copy from src to dest texture to a random position
-
-    renderer.copyTextureToTexture(position, dataTexture, diffuseMap);
-  }
-}
-
-function updateDataTexture(texture) {
-  const size = texture.image.width * texture.image.height;
-  const data = texture.image.data;
-
-  // generate a random color and update texture data
-
-  color.setHex(Math.random() * 0xffffff);
-
-  const r = Math.floor(color.r * 255);
-  const g = Math.floor(color.g * 255);
-  const b = Math.floor(color.b * 255);
-
-  for (let i = 0; i < size; i++) {
-    const stride = i * 4;
-
-    data[stride] = r;
-    data[stride + 1] = g;
-    data[stride + 2] = b;
-    data[stride + 3] = 1;
+  for (let offset = 0; offset < data.length; offset += 4) {
+    color.intoArray(data, offset);
   }
 
-  texture.needsUpdate = true;
+  into.needsUpdate = true;
 }

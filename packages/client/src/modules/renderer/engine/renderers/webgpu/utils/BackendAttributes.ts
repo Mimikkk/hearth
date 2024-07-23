@@ -173,7 +173,7 @@ export class BackendAttributes {
     return readBufferGPU.getMappedRange();
   }
 
-  _getVertexFormat(attribute: Attribute): string {
+  _getVertexFormat(attribute: Attribute): GPUVertexFormat {
     const { itemSize, normalized } = attribute;
     const ArrayType = attribute.array.constructor;
     const AttributeType = attribute.constructor;
