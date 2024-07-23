@@ -1,7 +1,7 @@
 import type { Mat4 } from './Mat4.js';
 import type { Quaternion } from './Quaternion.js';
 import { Const } from '@modules/renderer/engine/math/types.js';
-import { Attribute } from '@modules/renderer/engine/core/types.js';
+import { AttributeType } from '@modules/renderer/engine/core/types.js';
 import { clamp, NumberArray } from '@modules/renderer/engine/math/MathUtils.js';
 
 export class Vec4 {
@@ -58,7 +58,7 @@ export class Vec4 {
     return into.fromArray(array, offset);
   }
 
-  static fromAttribute(attribute: Const<Attribute>, index: number, into: Vec4 = Vec4.empty()): Vec4 {
+  static fromAttribute(attribute: Const<AttributeType>, index: number, into: Vec4 = Vec4.empty()): Vec4 {
     return into.fromAttribute(attribute, index);
   }
 
@@ -97,7 +97,7 @@ export class Vec4 {
     return this.set(from.x, from.y, from.z, from.w);
   }
 
-  fromAttribute(attribute: Const<Attribute>, index: number): this {
+  fromAttribute(attribute: Const<AttributeType>, index: number): this {
     this.x = attribute.getX(index);
     this.y = attribute.getY(index);
     this.z = attribute.getZ(index);
@@ -106,7 +106,7 @@ export class Vec4 {
     return this;
   }
 
-  intoAttribute(attribute: Attribute, index: number): this {
+  intoAttribute(attribute: AttributeType, index: number): this {
     attribute.setXYZW(index, this.x, this.y, this.z, this.w);
     return this;
   }

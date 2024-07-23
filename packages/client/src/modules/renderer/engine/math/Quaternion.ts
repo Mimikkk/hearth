@@ -3,7 +3,7 @@ import type { Euler } from './Euler.js';
 import type { Vec3 } from './Vec3.js';
 import type { Mat4 } from './Mat4.js';
 import { Const } from '@modules/renderer/engine/math/types.js';
-import { Attribute } from '@modules/renderer/engine/core/types.js';
+import { AttributeType } from '@modules/renderer/engine/core/types.js';
 
 export class Quaternion {
   declare isQuaternion: true;
@@ -59,7 +59,7 @@ export class Quaternion {
     return into.fromAxisAngle(axis, angle);
   }
 
-  static fromAttribute(attribute: Attribute, index: number, into: Quaternion = Quaternion.new()): Quaternion {
+  static fromAttribute(attribute: AttributeType, index: number, into: Quaternion = Quaternion.new()): Quaternion {
     return into.fromAttribute(attribute, index);
   }
 
@@ -164,11 +164,11 @@ export class Quaternion {
     return this.set(x * s, y * s, z * s, Math.cos(halfAngle));
   }
 
-  fromAttribute(attribute: Attribute, index: number): this {
+  fromAttribute(attribute: AttributeType, index: number): this {
     return this.set(attribute.getX(index), attribute.getY(index), attribute.getZ(index), attribute.getW(index));
   }
 
-  intoAttribute(attribute: Attribute, index: number): Attribute {
+  intoAttribute(attribute: AttributeType, index: number): AttributeType {
     return attribute.setXYZW(index, this.x, this.y, this.z, this.w);
   }
 

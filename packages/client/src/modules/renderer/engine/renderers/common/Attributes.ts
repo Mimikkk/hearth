@@ -2,14 +2,14 @@ import DataMap from './DataMap.js';
 import { AttributeType } from './Constants.js';
 import { BufferAttribute, BufferUsage, InterleavedBufferAttribute } from '@modules/renderer/engine/engine.js';
 import type { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
-import { Attribute } from '@modules/renderer/engine/core/types.js';
+import { AttributeType } from '@modules/renderer/engine/core/types.js';
 
-export class Attributes extends DataMap<Attribute, any> {
+export class Attributes extends DataMap<AttributeType, any> {
   constructor(public renderer: Renderer) {
     super();
   }
 
-  delete(attribute: Attribute) {
+  delete(attribute: AttributeType) {
     const data = super.delete(attribute);
 
     if (data !== undefined) {
@@ -19,7 +19,7 @@ export class Attributes extends DataMap<Attribute, any> {
     return data;
   }
 
-  update(attribute: Attribute, type: AttributeType) {
+  update(attribute: AttributeType, type: AttributeType) {
     const data = this.get(attribute);
 
     if (data.version === undefined) {
@@ -43,7 +43,7 @@ export class Attributes extends DataMap<Attribute, any> {
     }
   }
 
-  _getBufferAttribute(attribute: Attribute): BufferAttribute<any> {
+  _getBufferAttribute(attribute: AttributeType): BufferAttribute<any> {
     if (attribute instanceof InterleavedBufferAttribute) attribute = attribute.data as unknown as BufferAttribute<any>;
     return attribute;
   }

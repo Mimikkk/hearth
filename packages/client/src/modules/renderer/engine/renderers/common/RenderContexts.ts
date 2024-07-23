@@ -2,7 +2,7 @@ import ChainMap from './ChainMap.js';
 import RenderContext from './RenderContext.js';
 import { Scene } from '@modules/renderer/engine/scenes/Scene.js';
 import { Camera } from '@modules/renderer/engine/cameras/Camera.js';
-import { RenderTarget } from '@modules/renderer/engine/core/RenderTarget.js';
+import { RenderTarget } from '@modules/renderer/engine/renderers/common/RenderTarget.js';
 import { Entity } from '@modules/renderer/engine/core/Entity.js';
 
 class RenderContexts {

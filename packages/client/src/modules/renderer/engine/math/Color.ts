@@ -3,7 +3,7 @@ import { ColorManagement, LinearToSRGB, SRGBToLinear } from './ColorManagement.j
 import { ColorSpace } from '../constants.js';
 import type { Mat3 } from '@modules/renderer/engine/math/Mat3.js';
 import { Const } from '@modules/renderer/engine/math/types.js';
-import { Attribute } from '@modules/renderer/engine/core/types.js';
+import { AttributeType } from '@modules/renderer/engine/core/types.js';
 
 export { ColorMap } from './Color.map.js';
 
@@ -50,7 +50,7 @@ export class Color {
     return into.fromArray(array, offset);
   }
 
-  static fromAttribute(attribute: Attribute, index: number, into: Color = Color.new()): Color {
+  static fromAttribute(attribute: AttributeType, index: number, into: Color = Color.new()): Color {
     return into.fromAttribute(attribute, index);
   }
 
@@ -238,11 +238,11 @@ export class Color {
     return array;
   }
 
-  fromAttribute(attribute: Attribute, index: number): this {
+  fromAttribute(attribute: AttributeType, index: number): this {
     return this.set(attribute.getX(index), attribute.getY(index), attribute.getZ(index), attribute.getW(index));
   }
 
-  intoAttribute(attribute: Attribute, index: number): this {
+  intoAttribute(attribute: AttributeType, index: number): this {
     attribute.setXYZW(index, this.r, this.g, this.b, this.a);
     return this;
   }

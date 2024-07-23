@@ -1,8 +1,8 @@
 import { BufferAttribute, BufferGeometry, DrawMode } from '../engine.js';
-import { Attribute } from '@modules/renderer/engine/core/types.js';
+import { AttributeType } from '@modules/renderer/engine/core/types.js';
 import { ArrayConstructorMap, TypedArray } from '@modules/renderer/engine/math/MathUtils.js';
 
-export function mergeAttributes<T extends TypedArray>(attributes: Attribute<T>[]): BufferAttribute<T> {
+export function mergeAttributes<T extends TypedArray>(attributes: AttributeType<T>[]): BufferAttribute<T> {
   let itemSize: number = attributes[0].itemSize;
   let normalized: boolean = attributes[0].normalized;
 

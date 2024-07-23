@@ -2,7 +2,7 @@ import { Vec3 } from './Vec3.js';
 import { Mat4 } from './Mat4.js';
 import * as MathUtils from './MathUtils.js';
 import { Const } from './types.js';
-import { Attribute } from '@modules/renderer/engine/core/types.js';
+import { AttributeType } from '@modules/renderer/engine/core/types.js';
 import { clamp } from './MathUtils.js';
 
 const _startP = Vec3.new();
@@ -53,7 +53,7 @@ export class Line3 {
   }
 
   static fromAttribute(
-    attribute: Const<Attribute>,
+    attribute: Const<AttributeType>,
     i0: number = 0,
     i1: number = 1,
     into: Line3 = Line3.empty(),
@@ -87,7 +87,7 @@ export class Line3 {
     return this;
   }
 
-  fromAttribute(attribute: Const<Attribute>, i0: number = 0, i1: number = 1): this {
+  fromAttribute(attribute: Const<AttributeType>, i0: number = 0, i1: number = 1): this {
     this.start.fromAttribute(attribute, i0);
     this.end.fromAttribute(attribute, i1);
     return this;

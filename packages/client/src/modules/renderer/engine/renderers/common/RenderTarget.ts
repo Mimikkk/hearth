@@ -1,4 +1,4 @@
-import { Texture } from '../textures/Texture.js';
+import { Texture } from '../../textures/Texture.js';
 import {
   ColorSpace,
   Filter,
@@ -8,9 +8,9 @@ import {
   TextureDataType,
   TextureFormat,
   Wrapping,
-} from '../constants.js';
-import { Vec4 } from '../math/Vec4.js';
-import { Source } from '../textures/Source.js';
+} from '../../constants.js';
+import { Vec4 } from '../../math/Vec4.js';
+import { Source } from '../../textures/Source.js';
 
 export class RenderTarget {
   declare ['constructor']: typeof RenderTarget;
@@ -158,7 +158,7 @@ export namespace RenderTarget {
     format: TextureFormat;
     type: TextureDataType;
     anisotropy: number;
-    colorSpace: ColorSpace;
+    colorSpace: ColorSpace | null;
   }
 
   export interface Options extends Partial<Configuration> {}

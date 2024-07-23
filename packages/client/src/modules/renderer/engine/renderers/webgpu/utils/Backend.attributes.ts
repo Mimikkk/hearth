@@ -3,12 +3,12 @@ import { GPUInputStepModeType } from './constants.js';
 import { Backend } from '@modules/renderer/engine/renderers/webgpu/Backend.js';
 import RenderObject from '@modules/renderer/engine/renderers/common/RenderObject.js';
 import StorageBufferAttribute from '@modules/renderer/engine/renderers/common/StorageBufferAttribute.js';
-import { Attribute } from '@modules/renderer/engine/core/types.js';
+import { AttributeType } from '@modules/renderer/engine/core/types.js';
 
 export class BackendAttributes {
   constructor(public backend: Backend) {}
 
-  createAttribute(attribute: Attribute, usage: GPUBufferUsageFlags): void {
+  createAttribute(attribute: AttributeType, usage: GPUBufferUsageFlags): void {
     const bufferAttribute = this._getBufferAttribute(attribute);
 
     const backend = this.backend;
@@ -50,7 +50,7 @@ export class BackendAttributes {
     }
   }
 
-  updateAttribute(attribute: Attribute): void {
+  updateAttribute(attribute: AttributeType): void {
     const bufferAttribute = this._getBufferAttribute(attribute);
 
     const backend = this.backend;
@@ -81,7 +81,7 @@ export class BackendAttributes {
     }
   }
 
-  createShaderVertexBuffers(renderObject: RenderObject): Attribute[] {
+  createShaderVertexBuffers(renderObject: RenderObject): AttributeType[] {
     const attributes = renderObject.getAttributes();
     const vertexBuffers = new Map();
 
@@ -130,12 +130,12 @@ export class BackendAttributes {
     return Array.from(vertexBuffers.values());
   }
 
-  destroyAttribute(attribute: Attribute): void {
+  destroyAttribute(attribute: AttributeType): void {
     this.backend.memo.get(this._getBufferAttribute(attribute)).buffer.destroy();
     this.backend.memo.delete(attribute);
   }
 
-  async getArrayBuffer(attribute: Attribute): Promise<ArrayBuffer> {
+  async getArrayBuffer(attribute: AttributeType): Promise<ArrayBuffer> {
     const backend = this.backend;
     const device = backend.device;
 
@@ -173,7 +173,7 @@ export class BackendAttributes {
     return readBufferGPU.getMappedRange();
   }
 
-  _getVertexFormat(attribute: Attribute): GPUVertexFormat {
+  _getVertexFormat(attribute: AttributeType): GPUVertexFormat {
     const { itemSize, normalized } = attribute;
     const ArrayType = attribute.array.constructor;
     const AttributeType = attribute.constructor;
@@ -223,8 +223,8 @@ export class BackendAttributes {
     return format;
   }
 
-  _getBufferAttribute(attribute: Attribute): Attribute {
-    if (isInterleavedBufferAttribute(attribute)) attribute = attribute.data as unknown as Attribute;
+  _getBufferAttribute(attribute: AttributeType): AttributeType {
+    if (isInterleavedBufferAttribute(attribute)) attribute = attribute.data as unknown as AttributeType;
     return attribute;
   }
 }

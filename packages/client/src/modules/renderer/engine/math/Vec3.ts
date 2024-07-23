@@ -8,7 +8,7 @@ import type { Cylindrical } from '@modules/renderer/engine/math/Cylindrical.js';
 import type { Spherical } from '@modules/renderer/engine/math/Spherical.js';
 import type { Camera } from '@modules/renderer/engine/cameras/Camera.js';
 import type { Const } from '@modules/renderer/engine/math/types.js';
-import type { Attribute } from '@modules/renderer/engine/core/types.js';
+import type { AttributeType } from '@modules/renderer/engine/core/types.js';
 
 export class Vec3 {
   declare isVec3: true;
@@ -47,7 +47,7 @@ export class Vec3 {
     return into.set(x, y, z);
   }
 
-  static fromAttribute(attribute: Const<Attribute>, index: number, into: Vec3 = Vec3.new()): Vec3 {
+  static fromAttribute(attribute: Const<AttributeType>, index: number, into: Vec3 = Vec3.new()): Vec3 {
     return into.fromAttribute(attribute, index);
   }
 
@@ -577,11 +577,11 @@ export class Vec3 {
     return array;
   }
 
-  fromAttribute(attribute: Const<Attribute>, index: number): this {
+  fromAttribute(attribute: Const<AttributeType>, index: number): this {
     return this.set(attribute.getX(index), attribute.getY(index), attribute.getZ(index));
   }
 
-  intoAttribute(attribute: Attribute, index: number): this {
+  intoAttribute(attribute: AttributeType, index: number): this {
     attribute.setXYZ(index, this.x, this.y, this.z);
     return this;
   }

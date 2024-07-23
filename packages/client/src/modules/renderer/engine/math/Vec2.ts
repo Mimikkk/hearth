@@ -1,6 +1,6 @@
 import { clamp, type NumberArray } from './MathUtils.js';
 import type { Mat3 } from './Mat3.js';
-import type { Attribute } from '@modules/renderer/engine/core/types.js';
+import type { AttributeType } from '@modules/renderer/engine/core/types.js';
 import type { Const } from '@modules/renderer/engine/math/types.js';
 
 export class Vec2 {
@@ -43,7 +43,7 @@ export class Vec2 {
     return into.fromArray(array, offset);
   }
 
-  static fromAttribute(attribute: Attribute, index: number, into: Vec2 = Vec2.new()): Vec2 {
+  static fromAttribute(attribute: AttributeType, index: number, into: Vec2 = Vec2.new()): Vec2 {
     return into.fromAttribute(attribute, index);
   }
 
@@ -60,11 +60,11 @@ export class Vec2 {
     into.y = this.y;
   }
 
-  fromAttribute(attribute: Attribute, index: number): this {
+  fromAttribute(attribute: AttributeType, index: number): this {
     return this.set(attribute.getX(index), attribute.getY(index));
   }
 
-  intoAttribute(attribute: Attribute, index: number): this {
+  intoAttribute(attribute: AttributeType, index: number): this {
     attribute.setXY(index, this.x, this.y);
     return this;
   }

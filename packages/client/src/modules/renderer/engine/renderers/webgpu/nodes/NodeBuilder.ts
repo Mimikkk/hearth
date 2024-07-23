@@ -61,7 +61,7 @@ import { BuildStage, BuiltinType, ShaderStage, TypeMap, TypeName } from './NodeB
 import { PolyfillMap, PolyfillName } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.polyfills.js';
 import StructTypeNode from '@modules/renderer/engine/nodes/core/StructTypeNode.js';
 import { ShaderNode } from 'three/examples/jsm/nodes/shadernode/ShaderNode.js';
-import { Attribute } from '@modules/renderer/engine/core/types.js';
+import { AttributeType } from '@modules/renderer/engine/core/types.js';
 import ConstNode from '@modules/renderer/engine/nodes/core/ConstNode.js';
 import NodeFunction from '@modules/renderer/engine/renderers/webgpu/nodes/NodeFunction.js';
 
@@ -376,7 +376,7 @@ export class NodeBuilder {
     return TypeByArray.get(array.constructor as TypedArrayConstructor);
   }
 
-  getTypeFromAttribute(attribute: Attribute): TypeName {
+  getTypeFromAttribute(attribute: AttributeType): TypeName {
     let dataAttribute = attribute;
 
     if (attribute.isInterleavedBufferAttribute) dataAttribute = attribute.data;

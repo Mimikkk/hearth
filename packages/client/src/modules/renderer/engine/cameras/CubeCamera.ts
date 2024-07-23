@@ -1,6 +1,6 @@
 import { Entity } from '../core/Entity.js';
 import { PerspectiveCamera } from './PerspectiveCamera.js';
-import { CubeRenderTarget } from '../core/CubeRenderTarget.js';
+import { CubeRenderTarget } from '../renderers/common/CubeRenderTarget.js';
 import { Scene } from '@modules/renderer/engine/scenes/Scene.js';
 import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 import { Camera } from '@modules/renderer/engine/cameras/Camera.js';

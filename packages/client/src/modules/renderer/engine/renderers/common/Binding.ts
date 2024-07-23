@@ -1,4 +1,4 @@
-import { Attribute } from '@modules/renderer/engine/renderers/common/Attributes.js';
+import { AttributeType } from '@modules/renderer/engine/renderers/common/Attributes.js';
 
 export class Binding {
   declare shared: boolean;

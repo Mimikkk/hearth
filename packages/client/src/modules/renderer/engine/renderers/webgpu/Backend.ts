@@ -22,7 +22,7 @@ import RenderObject from '@modules/renderer/engine/renderers/common/RenderObject
 import ProgrammableStage from '@modules/renderer/engine/renderers/common/ProgrammableStage.js';
 import { ResourceManager } from './utils/ResourceManager.js';
 import { NodeBuilder } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.js';
-import { Attribute } from '../../core/types.ts';
+import { AttributeType } from '../../core/types.ts';
 import { WeakMemo } from '@modules/renderer/engine/renderers/webgpu/utils/WeakMemo.js';
 
 export class Backend {
@@ -76,7 +76,7 @@ export class Backend {
     this.resolveBufferMap = new Map();
   }
 
-  async getArrayBuffer(attribute: Attribute) {
+  async getArrayBuffer(attribute: AttributeType) {
     return await this.attributes.getArrayBuffer(attribute);
   }
 
@@ -935,32 +935,32 @@ export class Backend {
     this.bindings.updateBinding(binding);
   }
 
-  createIndexAttribute(attribute: Attribute) {
+  createIndexAttribute(attribute: AttributeType) {
     this.attributes.createAttribute(
       attribute,
       GPUBufferUsage.INDEX | GPUBufferUsage.COPY_SRC | GPUBufferUsage.COPY_DST,
     );
   }
 
-  createAttribute(attribute: Attribute) {
+  createAttribute(attribute: AttributeType) {
     this.attributes.createAttribute(
       attribute,
       GPUBufferUsage.VERTEX | GPUBufferUsage.COPY_SRC | GPUBufferUsage.COPY_DST,
     );
   }
 
-  createStorageAttribute(attribute: Attribute) {
+  createStorageAttribute(attribute: AttributeType) {
     this.attributes.createAttribute(
       attribute,
       GPUBufferUsage.STORAGE | GPUBufferUsage.VERTEX | GPUBufferUsage.COPY_SRC | GPUBufferUsage.COPY_DST,
     );
   }
 
-  updateAttribute(attribute: Attribute) {
+  updateAttribute(attribute: AttributeType) {
     this.attributes.updateAttribute(attribute);
   }
 
-  destroyAttribute(attribute: Attribute) {
+  destroyAttribute(attribute: AttributeType) {
     this.attributes.destroyAttribute(attribute);
   }
 

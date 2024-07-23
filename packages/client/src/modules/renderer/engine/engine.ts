@@ -1,4 +1,4 @@
-export { CubeRenderTarget } from './core/CubeRenderTarget.js';
+export { CubeRenderTarget } from './renderers/common/CubeRenderTarget.js';
 export { FogExp2 } from './scenes/FogExp2.js';
 export { Fog } from './scenes/Fog.js';
 export { Scene } from './scenes/Scene.js';
@@ -60,7 +60,7 @@ export { AnimationObjectGroup } from './animation/AnimationObjectGroup.js';
 export { AnimationMixer } from './animation/AnimationMixer.js';
 export { AnimationClip } from './animation/AnimationClip.js';
 export { AnimationAction } from './animation/AnimationAction.js';
-export { RenderTarget } from './core/RenderTarget.js';
+export { RenderTarget } from './renderers/common/RenderTarget.js';
 export { Uniform } from './core/Uniform.js';
 export { UniformGroup } from './core/UniformGroup.js';
 export { InstancedBufferGeometry } from './core/InstancedBufferGeometry.js';

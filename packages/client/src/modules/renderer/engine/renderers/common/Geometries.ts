@@ -3,7 +3,7 @@ import { AttributeType } from './Constants.js';
 import { Uint16BufferAttribute, Uint32BufferAttribute, WireframeGeometry } from '@modules/renderer/engine/engine.js';
 import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 import RenderObject from '@modules/renderer/engine/renderers/common/RenderObject.js';
-import { Attribute } from '@modules/renderer/engine/core/types.js';
+import { AttributeType } from '@modules/renderer/engine/core/types.js';
 
 function getWireframeVersion(geometry: WireframeGeometry): number {
   //@ts-expect-error
@@ -90,7 +90,7 @@ export class Geometries extends DataMap<any, any> {
     }
   }
 
-  updateAttribute(attribute: Attribute, type: AttributeType) {
+  updateAttribute(attribute: AttributeType, type: AttributeType) {
     const callId = this.renderer.info.render.calls;
 
     if (this.attributeCall.get(attribute) !== callId) {

@@ -34,7 +34,7 @@ import {
 } from '@modules/renderer/engine/engine.js';
 import { GPUFeatureNameType, GPUTextureFormatType } from '@modules/renderer/engine/renderers/webgpu/utils/constants.js';
 import { RenderItem, RenderList, SortFn } from '@modules/renderer/engine/renderers/common/RenderList.js';
-import { Attribute } from '@modules/renderer/engine/core/types.js';
+import { AttributeType } from '@modules/renderer/engine/core/types.js';
 import ComputeNode from '@modules/renderer/engine/nodes/gpgpu/ComputeNode.js';
 import RenderContext from '@modules/renderer/engine/renderers/common/RenderContext.js';
 import LightsNode from '@modules/renderer/engine/nodes/lighting/LightsNode.js';
@@ -416,7 +416,7 @@ export class Renderer {
     return this.backend.getMaxAnisotropy();
   }
 
-  async getArrayBuffer(attribute: Attribute) {
+  async getArrayBuffer(attribute: AttributeType) {
     return await this.backend.getArrayBuffer(attribute);
   }
 

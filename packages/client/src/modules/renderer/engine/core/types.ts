@@ -4,7 +4,7 @@ import type { TypedArray } from '@modules/renderer/engine/math/MathUtils.js';
 import type { InterleavedBufferAttribute } from '@modules/renderer/engine/core/InterleavedBufferAttribute.js';
 import type { InterleavedBuffer } from '@modules/renderer/engine/core/InterleavedBuffer.js';
 
-export type Attribute<T extends TypedArray = any> =
+export type AttributeType<T extends TypedArray = any> =
   | BufferAttribute<T>
   | InstancedBufferAttribute<T>
   | InterleavedBufferAttribute<T>;

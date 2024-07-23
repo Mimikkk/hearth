@@ -6,7 +6,7 @@ import { Sphere } from './Sphere.js';
 import type { Mat4 } from './Mat4.js';
 import { Mesh } from '@modules/renderer/engine/objects/Mesh.js';
 import { Const } from '@modules/renderer/engine/math/types.js';
-import { Attribute } from '@modules/renderer/engine/core/types.js';
+import { AttributeType } from '@modules/renderer/engine/core/types.js';
 import { NumberArray } from '@modules/renderer/engine/math/MathUtils.js';
 
 export class Box3 {
@@ -65,7 +65,7 @@ export class Box3 {
     return into.fromCoords(coords);
   }
 
-  static fromAttribute(attribute: Attribute, into: Box3 = Box3.new()): Box3 {
+  static fromAttribute(attribute: AttributeType, into: Box3 = Box3.new()): Box3 {
     return into.fromAttribute(attribute);
   }
 
@@ -111,7 +111,7 @@ export class Box3 {
     return this;
   }
 
-  fromAttribute(attribute: Attribute): this {
+  fromAttribute(attribute: AttributeType): this {
     this.clear();
 
     for (let i = 0, il = attribute.count; i < il; i++) {
