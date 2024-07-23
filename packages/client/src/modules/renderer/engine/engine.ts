@@ -63,7 +63,6 @@ export { AnimationAction } from './animation/AnimationAction.js';
 export { RenderTarget } from './renderers/common/RenderTarget.js';
 export { Uniform } from './core/Uniform.js';
 export { UniformGroup } from './core/UniformGroup.js';
-export { PolyGeometry } from './core/geometry/PolyGeometry.js';
 export { Geometry } from './core/geometry/Geometry.js';
 export { InterleavedBufferAttribute } from './core/attributes/InterleavedBufferAttribute.js';
 export { InstancedInterleavedBuffer } from './core/buffers/InstancedInterleavedBuffer.js';

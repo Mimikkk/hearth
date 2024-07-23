@@ -1,4 +1,4 @@
-import { Color, PolyGeometry, InstancedMesh, Entity, RenderTarget, Scene, Texture } from '../../engine.js';
+import { Color, Entity, RenderTarget, Scene, Texture } from '../../engine.js';
 
 import {
   GPUFeatureNameType,

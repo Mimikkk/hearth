@@ -2,7 +2,6 @@ import {
   Box3,
   EdgesGeometry,
   Float32BufferAttribute,
-  PolyGeometry,
   InstancedInterleavedBuffer,
   InterleavedBufferAttribute,
   LineSegments,
@@ -11,12 +10,13 @@ import {
   Sphere,
   Vec3,
   WireframeGeometry,
+  Geometry,
 } from '../engine.js';
 
 const _box = Box3.new();
 const _vector = Vec3.new();
 
-export class LineSegmentsGeometry extends PolyGeometry {
+export class LineSegmentsGeometry extends Geometry {
   constructor() {
     super();
 

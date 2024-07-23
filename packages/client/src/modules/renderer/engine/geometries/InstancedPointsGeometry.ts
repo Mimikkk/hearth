@@ -1,6 +1,6 @@
-import { Box3, Float32BufferAttribute, InstancedBufferAttribute, Mat4, PolyGeometry, Sphere, Vec3 } from '../engine.js';
+import { Box3, Float32BufferAttribute, Geometry, InstancedBufferAttribute, Mat4, Sphere, Vec3 } from '../engine.js';
 
-export class InstancedPointsGeometry extends PolyGeometry {
+export class InstancedPointsGeometry extends Geometry {
   declare isInstancedPointsGeometry: true;
   declare type: string | 'InstancedPointsGeometry';
 

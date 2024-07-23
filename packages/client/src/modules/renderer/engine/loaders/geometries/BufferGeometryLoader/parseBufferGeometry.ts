@@ -2,13 +2,10 @@ import { Sphere } from '../../../math/Sphere.js';
 import { Vec3 } from '../../../math/Vec3.js';
 import { BufferAttribute } from '../../../core/attributes/BufferAttribute.js';
 import { Geometry } from '../../../core/geometry/Geometry.js';
-import { PolyGeometry } from '../../../core/geometry/PolyGeometry.js';
 import { InstancedBufferAttribute } from '../../../core/attributes/InstancedBufferAttribute.js';
 import { InterleavedBufferAttribute } from '../../../core/attributes/InterleavedBufferAttribute.js';
 import { InterleavedBuffer } from '../../../core/buffers/InterleavedBuffer.js';
 import { createTypedArray } from '../../../utils.js';
-import { classLoader } from '@modules/renderer/engine/loaders/types.js';
-import { FileLoader, ResponseType } from '@modules/renderer/engine/loaders/files/FileLoader/FileLoader.js';
 
 export interface JsonContent {
   interleavedBuffers: Record<string, any>;
