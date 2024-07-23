@@ -22,13 +22,17 @@ export type ColorRepresentation = Color | number;
 export class Color {
   declare isColor: true;
 
-  constructor(
-    public r: number = 1,
-    public g: number = 1,
-    public b: number = 1,
-    public a: number = 1,
-  ) {}
-
+  r: number;
+  g: number;
+  b: number;
+  a: number;
+  constructor();
+  constructor(r: ColorRepresentation);
+  constructor(r: number, g: number, b: number);
+  constructor(r: number, g: number, b: number, a: number);
+  constructor(r?: number | ColorRepresentation, g?: number, b?: number, a: number = 1) {
+    this.set(r as number, g!, b!, a);
+  }
   static is(value: any): value is Color {
     return value?.isColor === true;
   }
@@ -38,8 +42,7 @@ export class Color {
   static new(r: number, g: number, b: number): Color;
   static new(r: number, g: number, b: number, a: number): Color;
   static new(r?: number | ColorRepresentation, g?: number, b?: number, a: number = 1): Color {
-    if (b === undefined) return new Color().set(r as ColorRepresentation);
-    return new Color(r as number, g, b, a);
+    return new Color(r as number, g!, b!, a);
   }
 
   static from(color: Const<Color>, into: Color = Color.new()): Color {
