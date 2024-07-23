@@ -18,9 +18,9 @@ const perturbNormal2Arb = tslFn(inputs => {
   const { eye_pos, surf_norm, mapN, uv } = inputs;
 
   const q0 = eye_pos.dpdx();
-  const q1 = eye_pos.dpdy();
+  const q1 = eye_pos.dpdy().negate();
   const st0 = uv.dpdx();
-  const st1 = uv.dpdy();
+  const st1 = uv.dpdy().negate();
 
   const N = surf_norm; // normalized
 

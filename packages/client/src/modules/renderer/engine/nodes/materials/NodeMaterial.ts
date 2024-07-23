@@ -233,7 +233,7 @@ export class NodeMaterial extends ShaderMaterial {
     // NORMAL VIEW
 
     if (this.flatShading === true) {
-      const normalNode = positionView.dpdx().cross(positionView.dpdy()).normalize();
+      const normalNode = positionView.dpdx().cross(positionView.dpdy().negate()).normalize();
 
       transformedNormalView.assign(normalNode.mul(faceDirection));
     } else {

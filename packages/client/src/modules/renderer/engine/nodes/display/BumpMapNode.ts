@@ -31,7 +31,7 @@ const dHdxy_fwd = tslFn(({ textureNode, bumpScale }) => {
 
   return vec2(
     f32(sampleTexture(uvNode.add(uvNode.dpdx()))).sub(Hll),
-    f32(sampleTexture(uvNode.add(uvNode.dpdy()))).sub(Hll),
+    f32(sampleTexture(uvNode.add(uvNode.dpdy().negate()))).sub(Hll),
   ).mul(bumpScale);
 });
 
@@ -40,7 +40,7 @@ const perturbNormalArb = tslFn(inputs => {
 
   // normalize is done to ensure that the bump map looks the same regardless of the texture's scale
   const vSigmaX = surf_pos.dpdx().normalize();
-  const vSigmaY = surf_pos.dpdy().normalize();
+  const vSigmaY = surf_pos.dpdy().negate().normalize();
   const vN = surf_norm; // normalized
 
   const R1 = vSigmaY.cross(vN);
