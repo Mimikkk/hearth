@@ -1,5 +1,5 @@
 import { FileLoader, ResponseType } from '@modules/renderer/engine/loaders/files/FileLoader/FileLoader.js';
-import { Geometry } from '@modules/renderer/engine/core/geometry/Geometry.js';
+import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
 import { BufferAttribute } from '@modules/renderer/engine/core/attributes/BufferAttribute.js';
 import { ColorSpace } from '@modules/renderer/engine/constants.js';
 import { Color } from '@modules/renderer/engine/math/Color.js';

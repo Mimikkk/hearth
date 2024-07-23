@@ -5,7 +5,7 @@ import { Mat4 } from '../math/Mat4.js';
 import { Sphere } from '../math/Sphere.js';
 import { DataTexture } from '../textures/DataTexture.js';
 import { TextureDataType, TextureFormat } from '../constants.js';
-import { Geometry } from '@modules/renderer/engine/core/geometry/Geometry.js';
+import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
 import { Material } from '@modules/renderer/engine/materials/Material.js';
 import { Intersection, Raycaster } from '@modules/renderer/engine/core/Raycaster.js';
 import { Color } from '@modules/renderer/engine/math/Color.js';

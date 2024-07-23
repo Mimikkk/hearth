@@ -1,7 +1,7 @@
 import { Sphere } from '../../../math/Sphere.js';
 import { Vec3 } from '../../../math/Vec3.js';
 import { BufferAttribute } from '../../../core/attributes/BufferAttribute.js';
-import { Geometry } from '../../../core/geometry/Geometry.js';
+import { Geometry } from '../../../core/Geometry.js';
 import { InstancedBufferAttribute } from '../../../core/attributes/InstancedBufferAttribute.js';
 import { InterleavedBufferAttribute } from '../../../core/attributes/InterleavedBufferAttribute.js';
 import { InterleavedBuffer } from '../../../core/buffers/InterleavedBuffer.js';

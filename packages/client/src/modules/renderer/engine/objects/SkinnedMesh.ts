@@ -6,7 +6,7 @@ import { Vec3 } from '../math/Vec3.js';
 import { Vec4 } from '../math/Vec4.js';
 import { Ray } from '../math/Ray.js';
 import { BindMode } from '../constants.js';
-import { Geometry } from '@modules/renderer/engine/core/geometry/Geometry.js';
+import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
 import { Material } from '@modules/renderer/engine/materials/Material.js';
 import { Skeleton } from '@modules/renderer/engine/objects/Skeleton.js';
 import { Intersection, Raycaster } from '@modules/renderer/engine/core/Raycaster.js';

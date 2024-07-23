@@ -5,7 +5,7 @@ import type { Mesh } from '../objects/Mesh.js';
 import type { Material } from '../materials/Material.js';
 import type { BufferAttribute } from '../core/attributes/BufferAttribute.js';
 import type { Color } from './Color.js';
-import { Geometry } from '@modules/renderer/engine/core/geometry/Geometry.js';
+import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
 
 const _face = new Triangle();
 const _color = Vec3.new();

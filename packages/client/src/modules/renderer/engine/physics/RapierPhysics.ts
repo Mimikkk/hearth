@@ -1,7 +1,7 @@
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { Entity } from '@modules/renderer/engine/core/Entity.js';
 import { Mesh } from '@modules/renderer/engine/objects/Mesh.js';
-import { Geometry } from '@modules/renderer/engine/core/geometry/Geometry.js';
+import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
 import { Quaternion } from '@modules/renderer/engine/math/Quaternion.js';
 import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
 import { Clock } from '@modules/renderer/engine/core/Clock.js';

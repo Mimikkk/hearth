@@ -4,7 +4,7 @@ import { Mat4 } from '../math/Mat4.js';
 import { Entity } from '../core/Entity.js';
 import { Vec3 } from '../math/Vec3.js';
 import { PointsMaterial } from '../materials/PointsMaterial.js';
-import { Geometry } from '../core/geometry/Geometry.js';
+import { Geometry } from '../core/Geometry.js';
 import { Intersection, Raycaster } from '@modules/renderer/engine/core/Raycaster.js';
 
 const _inverseMatrix = new Mat4();

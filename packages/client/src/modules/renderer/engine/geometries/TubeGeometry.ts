@@ -1,4 +1,4 @@
-import { Geometry } from '../core/geometry/Geometry.js';
+import { Geometry } from '../core/Geometry.js';
 import { Float32BufferAttribute } from '../core/attributes/BufferAttribute.js';
 import * as Curves from '../extras/curves/Curves.js';
 import { Vec2 } from '../math/Vec2.js';

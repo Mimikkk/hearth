@@ -14,7 +14,7 @@ import { Plane } from '@modules/renderer/engine/math/Plane.js';
 import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 import { Scene } from '@modules/renderer/engine/scenes/Scene.js';
 import { Camera } from '@modules/renderer/engine/cameras/Camera.js';
-import { Geometry } from '@modules/renderer/engine/core/geometry/Geometry.js';
+import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
 import { Entity } from '@modules/renderer/engine/core/Entity.js';
 import { Group } from '@modules/renderer/engine/objects/Group.js';
 import { Node } from '@modules/renderer/engine/nodes/core/Node.js';

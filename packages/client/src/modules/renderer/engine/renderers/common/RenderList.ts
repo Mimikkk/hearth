@@ -1,7 +1,7 @@
 import { LightsNode } from '../../nodes/Nodes.js';
 import { Light } from '@modules/renderer/engine/lights/Light.js';
 import { Entity } from '@modules/renderer/engine/core/Entity.js';
-import { Geometry } from '@modules/renderer/engine/core/geometry/Geometry.js';
+import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
 import { Group } from '@modules/renderer/engine/objects/Group.js';
 import { Material } from '@modules/renderer/engine/materials/Material.js';
 

@@ -1,7 +1,7 @@
 import { LineSegments } from '../objects/LineSegments.js';
 import { LineBasicMaterial } from '../materials/LineBasicMaterial.js';
 import { Float32BufferAttribute } from '../core/attributes/BufferAttribute.js';
-import { Geometry } from '../core/geometry/Geometry.js';
+import { Geometry } from '../core/Geometry.js';
 import { Color, ColorRepresentation } from '../math/Color.js';
 
 export class GridHelper extends LineSegments {

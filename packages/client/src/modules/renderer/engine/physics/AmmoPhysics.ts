@@ -2,7 +2,7 @@ import { Mesh } from '../objects/Mesh.js';
 import { Entity } from '../core/Entity.js';
 import { Vec3 } from '../math/Vec3.js';
 import Ammo from 'ammojs3';
-import { Geometry } from '@modules/renderer/engine/core/geometry/Geometry.js';
+import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
 import { Scene } from '@modules/renderer/engine/scenes/Scene.js';
 
 export interface AmmoPhysicsObject {

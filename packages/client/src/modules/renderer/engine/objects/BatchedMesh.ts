@@ -1,5 +1,5 @@
 import { BufferAttribute } from '../core/attributes/BufferAttribute.js';
-import { Geometry } from '../core/geometry/Geometry.js';
+import { Geometry } from '../core/Geometry.js';
 import { DataTexture } from '../textures/DataTexture.js';
 import { TextureDataType, TextureFormat } from '../constants.js';
 import { Mat4 } from '../math/Mat4.js';

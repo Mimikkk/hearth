@@ -3,7 +3,7 @@ import { Mat4 } from '../math/Mat4.js';
 import { LineBasicMaterial } from '../materials/LineBasicMaterial.js';
 import { Color } from '../math/Color.js';
 import { Vec3 } from '../math/Vec3.js';
-import { Geometry } from '../core/geometry/Geometry.js';
+import { Geometry } from '../core/Geometry.js';
 import { Float32BufferAttribute } from '../core/attributes/BufferAttribute.js';
 import { Entity } from '@modules/renderer/engine/core/Entity.js';
 import { Bone } from '@modules/renderer/engine/objects/Bone.js';

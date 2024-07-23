@@ -2,7 +2,7 @@ import { Vec3 } from '../math/Vec3.js';
 import { Entity } from '../core/Entity.js';
 import { Line } from '../objects/Line.js';
 import { Float32BufferAttribute } from '../core/attributes/BufferAttribute.js';
-import { Geometry } from '../core/geometry/Geometry.js';
+import { Geometry } from '../core/Geometry.js';
 import { LineBasicMaterial } from '../materials/LineBasicMaterial.js';
 import { DirectionalLight } from '@modules/renderer/engine/lights/DirectionalLight.js';
 import { Color } from '@modules/renderer/engine/math/Color.js';

@@ -7,7 +7,7 @@ import { Mat3 } from '../math/Mat3.js';
 import type { Intersection, Raycaster } from './Raycaster.js';
 import type { Light } from '../lights/Light.js';
 import type { Scene } from '../scenes/Scene.js';
-import type { Geometry } from './geometry/Geometry.js';
+import type { Geometry } from './Geometry.js';
 import type { Camera } from '../cameras/Camera.js';
 import type { Material } from '../materials/Material.js';
 import type { Group } from '../objects/Group.js';

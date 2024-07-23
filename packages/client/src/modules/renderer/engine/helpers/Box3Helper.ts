@@ -1,7 +1,7 @@
 import { LineSegments } from '../objects/LineSegments.js';
 import { LineBasicMaterial } from '../materials/LineBasicMaterial.js';
 import { BufferAttribute, Float32BufferAttribute } from '../core/attributes/BufferAttribute.js';
-import { Geometry } from '../core/geometry/Geometry.js';
+import { Geometry } from '../core/Geometry.js';
 import { Box3 } from '@modules/renderer/engine/math/Box3.js';
 import { ColorRepresentation } from '@modules/renderer/engine/math/Color.js';
 

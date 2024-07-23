@@ -4,7 +4,7 @@ import { Mat4 } from '../math/Mat4.js';
 import { Entity } from '../core/Entity.js';
 import { Vec3 } from '../math/Vec3.js';
 import { LineBasicMaterial } from '../materials/LineBasicMaterial.js';
-import { Geometry } from '../core/geometry/Geometry.js';
+import { Geometry } from '../core/Geometry.js';
 import { Float32BufferAttribute } from '../core/attributes/BufferAttribute.js';
 import { Material } from '@modules/renderer/engine/materials/Material.js';
 import { Intersection, Raycaster } from '@modules/renderer/engine/core/Raycaster.js';

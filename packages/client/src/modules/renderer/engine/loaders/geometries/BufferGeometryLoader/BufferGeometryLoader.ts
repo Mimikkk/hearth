@@ -1,4 +1,4 @@
-import type { Geometry } from '../../../core/geometry/Geometry.js';
+import type { Geometry } from '../../../core/Geometry.js';
 import { classLoader } from '@modules/renderer/engine/loaders/types.js';
 import { FileLoader, ResponseType } from '@modules/renderer/engine/loaders/files/FileLoader/FileLoader.js';
 import { parseBufferGeometry } from '@modules/renderer/engine/loaders/geometries/BufferGeometryLoader/parseBufferGeometry.js';

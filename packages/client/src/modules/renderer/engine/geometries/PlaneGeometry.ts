@@ -1,4 +1,4 @@
-import { Geometry } from '../core/geometry/Geometry.js';
+import { Geometry } from '../core/Geometry.js';
 import { Float32BufferAttribute } from '../core/attributes/BufferAttribute.js';
 
 export class PlaneGeometry extends Geometry {
