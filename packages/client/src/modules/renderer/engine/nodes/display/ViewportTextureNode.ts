@@ -29,7 +29,7 @@ class ViewportTextureNode extends TextureNode {
 
   updateBefore(frame: NodeFrame): void {
     const renderer = frame.renderer;
-    renderer.getDrawingBufferSize(_size);
+    renderer.getDrawSize(_size);
     ``;
     const framebufferTexture = this.value;
     if (framebufferTexture.image.width !== _size.width || framebufferTexture.image.height !== _size.height) {

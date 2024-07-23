@@ -78,28 +78,28 @@ export class CubeCamera extends Object3D {
 
     renderTarget.texture.generateMipmaps = false;
 
-    renderer.setRenderTarget(renderTarget, 0, activeMipmapLevel);
+    renderer.updateRenderTarget(renderTarget, 0, activeMipmapLevel);
     renderer.render(scene, cameraPX);
 
-    renderer.setRenderTarget(renderTarget, 1, activeMipmapLevel);
+    renderer.updateRenderTarget(renderTarget, 1, activeMipmapLevel);
     renderer.render(scene, cameraNX);
 
-    renderer.setRenderTarget(renderTarget, 2, activeMipmapLevel);
+    renderer.updateRenderTarget(renderTarget, 2, activeMipmapLevel);
     renderer.render(scene, cameraPY);
 
-    renderer.setRenderTarget(renderTarget, 3, activeMipmapLevel);
+    renderer.updateRenderTarget(renderTarget, 3, activeMipmapLevel);
     renderer.render(scene, cameraNY);
 
-    renderer.setRenderTarget(renderTarget, 4, activeMipmapLevel);
+    renderer.updateRenderTarget(renderTarget, 4, activeMipmapLevel);
     renderer.render(scene, cameraPZ);
 
     renderTarget.texture.generateMipmaps = generateMipmaps;
 
-    renderer.setRenderTarget(renderTarget, 5, activeMipmapLevel);
+    renderer.updateRenderTarget(renderTarget, 5, activeMipmapLevel);
 
     renderer.render(scene, cameraNZ);
 
-    renderer.setRenderTarget(currentRenderTarget, currentActiveCubeFace, currentActiveMipmapLevel);
+    renderer.updateRenderTarget(currentRenderTarget, currentActiveCubeFace, currentActiveMipmapLevel);
 
     renderTarget.texture.needsPMREMUpdate = true;
   }

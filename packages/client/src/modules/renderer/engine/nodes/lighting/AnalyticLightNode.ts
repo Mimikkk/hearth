@@ -11,6 +11,7 @@ import UniformNode from 'three/examples/jsm/nodes/core/UniformNode.js';
 import TextureNode from 'three/examples/jsm/nodes/accessors/TextureNode.js';
 import { NodeBuilder } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.js';
 import { NodeFrame } from '@modules/renderer/engine/nodes/core/NodeFrame.js';
+import { TypeName } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.types.js';
 
 let overrideMaterial: any = null;
 
@@ -75,8 +76,8 @@ export class AnalyticLightNode extends LightingNode {
 
       //
 
-      const bias = reference('bias', 'f32', shadow);
-      const normalBias = reference('normalBias', 'f32', shadow);
+      const bias = reference('bias', TypeName.f32, shadow);
+      const normalBias = reference('normalBias', TypeName.f32, shadow);
 
       let shadowCoord = uniform(shadow.matrix).mul(positionWorld.add(normalWorld.mul(normalBias)));
       shadowCoord = shadowCoord.xyz.div(shadowCoord.w);
@@ -124,20 +125,21 @@ export class AnalyticLightNode extends LightingNode {
     light.shadow.updateMatrices(light);
 
     const currentRenderTarget = renderer._renderTarget;
-    const currentRenderObjectFunction = renderer.getRenderObjectFunction();
+    const currentRenderObjectFunction = renderer._renderObjectFunction;
 
-    renderer.setRenderObjectFunction((object, ...params) => {
+    renderer._renderObjectFunction = (object, ...params) => {
       if (object.castShadow === true) {
         renderer.renderObject(object, ...params);
       }
-    });
+    };
 
-    renderer.setRenderTarget(rtt);
+    renderer.updateRenderTarget(rtt);
 
     renderer.render(scene, light.shadow.camera);
 
-    renderer.setRenderTarget(currentRenderTarget);
-    renderer.setRenderObjectFunction(currentRenderObjectFunction);
+    renderer.updateRenderTarget(currentRenderTarget);
+
+    renderer._renderObjectFunction = currentRenderObjectFunction;
 
     scene.overrideMaterial = currentOverrideMaterial;
   }
@@ -145,7 +147,6 @@ export class AnalyticLightNode extends LightingNode {
   disposeShadow(): void {
     this.shadowNode = null;
     this.rtt = null;
-
     this.colorNode = this._colorNode;
   }
 

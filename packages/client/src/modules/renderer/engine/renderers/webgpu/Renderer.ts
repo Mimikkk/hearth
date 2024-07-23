@@ -20,10 +20,11 @@ import ClippingContext from '@modules/renderer/engine/renderers/common/ClippingC
 import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
-import { Color, Frustum, Mat4, Object3D, Plane } from '@modules/renderer/engine/engine.js';
+import { Color, Frustum, Mat4, Object3D, Plane, RenderTarget } from '@modules/renderer/engine/engine.js';
 import { GPUFeatureNameType, GPUTextureFormatType } from '@modules/renderer/engine/renderers/webgpu/utils/constants.js';
 import { SortFn } from '@modules/renderer/engine/renderers/common/RenderList.js';
 import { Attribute } from '@modules/renderer/engine/core/types.js';
+import ComputeNode from '@modules/renderer/engine/nodes/gpgpu/ComputeNode.js';
 
 const _scene = new Scene();
 const _drawingBufferSize = new Vec2();
@@ -135,7 +136,7 @@ export class Renderer {
     this._compilationPromises = null;
   }
 
-  static async create(parameters?: Options) {
+  static async create(parameters?: Options): Promise<Renderer> {
     const renderer = new Renderer(parameters);
     const backend = renderer.backend;
 
@@ -167,7 +168,7 @@ export class Renderer {
     return renderer;
   }
 
-  async compile(scene: Scene, camera: Camera, targetScene: Scene | null = null) {
+  async compile(scene: Scene, camera: Camera, targetScene: Scene | null = null): Promise<void> {
     // preserve render tree
 
     const nodeFrame = this._nodes.nodeFrame;
@@ -278,7 +279,7 @@ export class Renderer {
     await Promise.all(compilationPromises);
   }
 
-  async render(scene: Object3D, camera: Camera) {
+  async render(scene: Object3D, camera: Camera): Promise<void> {
     // preserve render tree
 
     const nodeFrame = this._nodes.nodeFrame;
@@ -324,7 +325,7 @@ export class Renderer {
       pixelRatio = 1;
     }
 
-    this.getDrawingBufferSize(_drawingBufferSize);
+    this.getDrawSize(_drawingBufferSize);
 
     _screen.set(0, 0, _drawingBufferSize.width, _drawingBufferSize.height);
 
@@ -437,7 +438,7 @@ export class Renderer {
     return renderContext;
   }
 
-  async compute(computeNodes) {
+  async compute(computeNodes: ComputeNode | ComputeNode[]): Promise<void> {
     const nodeFrame = this._nodes.nodeFrame;
 
     const previousRenderId = nodeFrame.renderId;
@@ -489,62 +490,57 @@ export class Renderer {
     nodeFrame.renderId = previousRenderId;
   }
 
-  getMaxAnisotropy() {
+  getMaxAnisotropy(): number {
     return this.backend.getMaxAnisotropy();
   }
 
-  async getArrayBufferAsync(attribute: Attribute) {
-    return await this.backend.getArrayBufferAsync(attribute);
+  async getArrayBuffer(attribute: Attribute) {
+    return await this.backend.getArrayBuffer(attribute);
   }
 
-  getDrawingBufferSize(target: Vec2) {
+  getDrawSize(target: Vec2) {
     return target.set(this._width * this._pixelRatio, this._height * this._pixelRatio).floor();
   }
 
-  getSize(target: Vec2) {
-    return target.set(this._width, this._height);
+  getSize(into: Vec2) {
+    return into.set(this._width, this._height);
   }
 
   setPixelRatio(value: number = 1) {
     this._pixelRatio = value;
 
-    this.setSize(this._width, this._height, false);
+    this.setSize(this._width, this._height);
   }
 
-  setSize(width, height, updateStyle = true) {
+  setSize(width: number, height: number): void {
     this._width = width;
     this._height = height;
 
     this.parameters.canvas.width = Math.floor(width * this._pixelRatio);
     this.parameters.canvas.height = Math.floor(height * this._pixelRatio);
-
-    if (updateStyle === true) {
-      this.parameters.canvas.style.width = width + 'px';
-      this.parameters.canvas.style.height = height + 'px';
-    }
+    this.parameters.canvas.style.width = width + 'px';
+    this.parameters.canvas.style.height = height + 'px';
 
     this._viewport.set(0, 0, width, height);
-
     this.backend.updateSize();
   }
 
-  isOccluded(object) {
+  isOccluded(object: Object3D): boolean {
     const renderContext = this._currentRenderContext;
 
     return renderContext && this.backend.isOccluded(renderContext, object);
   }
 
-  clear(color = true, depth = true, stencil = true) {
-    let renderTargetData = null;
-    const renderTarget = this._renderTarget;
+  clear(color: boolean = true, depth: boolean = true, stencil: boolean = true) {
+    const target = this._renderTarget;
 
-    if (renderTarget !== null) {
-      this._textures.updateRenderTarget(renderTarget);
-
-      renderTargetData = this._textures.get(renderTarget);
+    let data = null;
+    if (target) {
+      this._textures.updateRenderTarget(target);
+      data = this._textures.get(target);
     }
 
-    this.backend.clear(color, depth, stencil, renderTargetData);
+    this.backend.clear(color, depth, stencil, data);
   }
 
   get currentColorSpace() {
@@ -559,18 +555,10 @@ export class Renderer {
     return this.parameters.outputColorSpace;
   }
 
-  setRenderTarget(renderTarget, activeCubeFace = 0, activeMipmapLevel = 0) {
+  updateRenderTarget(renderTarget: RenderTarget | null, activeCubeFace: number = 0, activeMipmapLevel: number = 0) {
     this._renderTarget = renderTarget;
     this._activeCubeFace = activeCubeFace;
     this._activeMipmapLevel = activeMipmapLevel;
-  }
-
-  setRenderObjectFunction(renderObjectFunction) {
-    this._renderObjectFunction = renderObjectFunction;
-  }
-
-  getRenderObjectFunction() {
-    return this._renderObjectFunction;
   }
 
   copyFramebufferToTexture(framebufferTexture) {

@@ -68,7 +68,7 @@ class GaussianBlurNode extends TempNode {
 
     // horizontal
 
-    renderer.setRenderTarget(this._horizontalRT);
+    renderer.updateRenderTarget(this._horizontalRT);
 
     this._passDirection.value.set(1, 0);
 
@@ -77,7 +77,7 @@ class GaussianBlurNode extends TempNode {
     // vertical
 
     textureNode.value = this._horizontalRT.texture;
-    renderer.setRenderTarget(this._verticalRT);
+    renderer.updateRenderTarget(this._verticalRT);
 
     this._passDirection.value.set(0, 1);
 
@@ -85,7 +85,7 @@ class GaussianBlurNode extends TempNode {
 
     // restore
 
-    renderer.setRenderTarget(currentRenderTarget);
+    renderer.updateRenderTarget(currentRenderTarget);
     textureNode.value = currentTexture;
   }
 

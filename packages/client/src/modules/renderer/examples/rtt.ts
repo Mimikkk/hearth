@@ -77,9 +77,9 @@ function animate() {
   box.rotateX(0.01);
   box.rotateY(0.02);
 
-  renderer.setRenderTarget(renderTarget);
+  renderer.updateRenderTarget(renderTarget);
   renderer.render(scene, camera);
 
-  renderer.setRenderTarget(null);
+  renderer.updateRenderTarget(null);
   quadMesh.render(renderer);
 }

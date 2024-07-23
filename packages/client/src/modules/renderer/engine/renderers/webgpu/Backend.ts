@@ -34,10 +34,10 @@ export class Backend {
     return geometry.isInstancedBufferGeometry ? geometry.instanceCount : object.isInstancedMesh ? object.count : 1;
   }
 
-  getDrawingBufferSize() {
+  getDrawSize() {
     const vec2 = new Vec2();
 
-    return this.renderer.getDrawingBufferSize(vec2);
+    return this.renderer.getDrawSize(vec2);
   }
 
   getClearColor() {
@@ -107,8 +107,8 @@ export class Backend {
     this.resolveBufferMap = new Map();
   }
 
-  async getArrayBufferAsync(attribute: BufferAttribute<any>) {
-    return await this.attributes.getArrayBufferAsync(attribute);
+  async getArrayBuffer(attribute: BufferAttribute<any>) {
+    return await this.attributes.getArrayBuffer(attribute);
   }
 
   getContext(): GPUCanvasContext {

@@ -62,13 +62,13 @@ class AnamorphicNode extends TempNode {
 
     // render
 
-    renderer.setRenderTarget(this._renderTarget);
+    renderer.updateRenderTarget(this._renderTarget);
 
     quadMesh.render(renderer);
 
     // restore
 
-    renderer.setRenderTarget(currentRenderTarget);
+    renderer.updateRenderTarget(currentRenderTarget);
     textureNode.value = currentTexture;
   }
 

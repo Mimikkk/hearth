@@ -33,11 +33,11 @@ export class CubeRenderTarget extends RenderTarget {
     const currentRenderTarget = renderer._renderTarget;
 
     for (let i = 0; i < 6; i++) {
-      renderer.setRenderTarget(this, i);
+      renderer.updateRenderTarget(this, i);
 
       renderer.clear(color, depth, stencil);
     }
 
-    renderer.setRenderTarget(currentRenderTarget);
+    renderer.updateRenderTarget(currentRenderTarget);
   }
 }

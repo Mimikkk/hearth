@@ -163,10 +163,10 @@ function render(time) {
   torus.setRotationY((time / 1000) * 0.4);
 
   // render scene into target
-  renderer.setRenderTarget(renderTarget);
+  renderer.updateRenderTarget(renderTarget);
   renderer.render(scene, camera);
 
   // render post FX
-  renderer.setRenderTarget(null);
+  renderer.updateRenderTarget(null);
   quadMesh.render(renderer);
 }

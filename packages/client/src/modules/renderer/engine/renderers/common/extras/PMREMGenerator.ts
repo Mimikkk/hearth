@@ -187,7 +187,7 @@ class PMREMGenerator {
   }
 
   _cleanup(outputTarget) {
-    this._renderer.setRenderTarget(_oldTarget, _oldActiveCubeFace, _oldActiveMipmapLevel);
+    this._renderer.updateRenderTarget(_oldTarget, _oldActiveCubeFace, _oldActiveMipmapLevel);
     outputTarget.scissorTest = false;
     _setViewport(outputTarget, 0, 0, outputTarget.width, outputTarget.height);
   }
@@ -291,7 +291,7 @@ class PMREMGenerator {
       useSolidColor = true;
     }
 
-    renderer.setRenderTarget(cubeUVRenderTarget);
+    renderer.updateRenderTarget(cubeUVRenderTarget);
 
     renderer.clear();
 
@@ -349,7 +349,7 @@ class PMREMGenerator {
 
     _setViewport(cubeUVRenderTarget, 0, 0, 3 * size, 2 * size);
 
-    renderer.setRenderTarget(cubeUVRenderTarget);
+    renderer.updateRenderTarget(cubeUVRenderTarget);
     renderer.render(mesh, _flatCamera);
   }
 
@@ -446,7 +446,7 @@ class PMREMGenerator {
     const y = 4 * (this._cubeSize - outputSize);
 
     _setViewport(targetOut, x, y, 3 * outputSize, 2 * outputSize);
-    renderer.setRenderTarget(targetOut);
+    renderer.updateRenderTarget(targetOut);
     renderer.render(blurMesh, _flatCamera);
   }
 }

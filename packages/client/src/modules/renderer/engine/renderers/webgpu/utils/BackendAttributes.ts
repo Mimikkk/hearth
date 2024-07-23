@@ -1,13 +1,14 @@
-import { BufferAttribute, Float16BufferAttribute, InterleavedBufferAttribute } from '../../../engine.js';
+import { Float16BufferAttribute, InstancedBufferAttribute, InterleavedBufferAttribute } from '../../../engine.js';
 import { GPUInputStepModeType } from './constants.js';
 import { Backend } from '@modules/renderer/engine/renderers/webgpu/Backend.js';
 import RenderObject from '@modules/renderer/engine/renderers/common/RenderObject.js';
-import { Attribute } from '@modules/renderer/engine/renderers/common/Attributes.js';
+import StorageBufferAttribute from '@modules/renderer/engine/renderers/common/StorageBufferAttribute.js';
+import { Attribute } from '@modules/renderer/engine/core/types.js';
 
 export class BackendAttributes {
   constructor(public backend: Backend) {}
 
-  createAttribute(attribute: BufferAttribute<any>, usage: GPUBufferUsageFlags) {
+  createAttribute(attribute: Attribute, usage: GPUBufferUsageFlags): void {
     const bufferAttribute = this._getBufferAttribute(attribute);
 
     const backend = this.backend;
@@ -49,7 +50,7 @@ export class BackendAttributes {
     }
   }
 
-  updateAttribute(attribute: BufferAttribute<any>) {
+  updateAttribute(attribute: Attribute): void {
     const bufferAttribute = this._getBufferAttribute(attribute);
 
     const backend = this.backend;
@@ -80,7 +81,7 @@ export class BackendAttributes {
     }
   }
 
-  createShaderVertexBuffers(renderObject: RenderObject) {
+  createShaderVertexBuffers(renderObject: RenderObject): Attribute[] {
     const attributes = renderObject.getAttributes();
     const vertexBuffers = new Map();
 
@@ -129,16 +130,12 @@ export class BackendAttributes {
     return Array.from(vertexBuffers.values());
   }
 
-  destroyAttribute(attribute: BufferAttribute<any>) {
-    const backend = this.backend;
-    const data = backend.get(this._getBufferAttribute(attribute));
-
-    data.buffer.destroy();
-
-    backend.delete(attribute);
+  destroyAttribute(attribute: Attribute): void {
+    this.backend.get(this._getBufferAttribute(attribute)).buffer.destroy();
+    this.backend.delete(attribute);
   }
 
-  async getArrayBufferAsync(attribute: BufferAttribute<any>) {
+  async getArrayBuffer(attribute: Attribute): Promise<ArrayBuffer> {
     const backend = this.backend;
     const device = backend.device;
 
@@ -173,15 +170,13 @@ export class BackendAttributes {
 
     await readBufferGPU.mapAsync(GPUMapMode.READ);
 
-    const arrayBuffer = readBufferGPU.getMappedRange();
-
-    return arrayBuffer;
+    return readBufferGPU.getMappedRange();
   }
 
-  _getVertexFormat(geometryAttribute: BufferAttribute<any>) {
-    const { itemSize, normalized } = geometryAttribute;
-    const ArrayType = geometryAttribute.array.constructor;
-    const AttributeType = geometryAttribute.constructor;
+  _getVertexFormat(attribute: Attribute): string {
+    const { itemSize, normalized } = attribute;
+    const ArrayType = attribute.array.constructor;
+    const AttributeType = attribute.constructor;
 
     let format;
 
@@ -194,56 +189,48 @@ export class BackendAttributes {
         format = 'float32';
       }
     } else {
-      let prefixOptions!: string[];
+      let options!: string[];
 
       if (AttributeType === Float16BufferAttribute) {
-        prefixOptions = ['float16'];
+        options = ['float16'];
       } else if (ArrayType == Int8Array) {
-        prefixOptions = ['sint8', 'snorm8'];
+        options = ['sint8', 'snorm8'];
       } else if (ArrayType == Uint8Array) {
-        prefixOptions = ['uint8', 'unorm8'];
+        options = ['uint8', 'unorm8'];
       } else if (ArrayType == Int16Array) {
-        prefixOptions = ['sint16', 'snorm16'];
+        options = ['sint16', 'snorm16'];
       } else if (ArrayType == Uint16Array) {
-        prefixOptions = ['uint16', 'unorm16'];
+        options = ['uint16', 'unorm16'];
       } else if (ArrayType == Int32Array) {
-        prefixOptions = ['sint32', 'snorm32'];
+        options = ['sint32', 'snorm32'];
       } else if (ArrayType == Uint32Array) {
-        prefixOptions = ['uint32', 'unorm32'];
+        options = ['uint32', 'unorm32'];
       } else if (ArrayType == Float32Array) {
-        prefixOptions = ['float32'];
+        options = ['float32'];
       }
 
-      const prefix = prefixOptions[normalized ? 1 : 0];
+      const prefix = options[normalized ? 1 : 0];
 
       if (prefix) {
         const bytesPerUnit = ArrayType.BYTES_PER_ELEMENT * itemSize;
         const paddedBytesPerUnit = Math.floor((bytesPerUnit + 3) / 4) * 4;
         const paddedItemSize = paddedBytesPerUnit / ArrayType.BYTES_PER_ELEMENT;
 
-        if (paddedItemSize % 1) {
-          throw new Error('engine.WebGPUAttributeUtils: Bad vertex format item size.');
-        }
-
         format = `${prefix}x${paddedItemSize}`;
       }
-    }
-
-    if (!format) {
-      console.error('engine.WebGPUAttributeUtils: Vertex format not supported yet.');
     }
 
     return format;
   }
 
-  _getBufferAttribute(attribute: Attribute) {
-    if (isInterleavedBufferAttribute(attribute)) attribute = attribute.data as unknown as BufferAttribute<any>;
+  _getBufferAttribute(attribute: Attribute): Attribute {
+    if (isInterleavedBufferAttribute(attribute)) attribute = attribute.data as unknown as Attribute;
     return attribute;
   }
 }
 
 const isInterleavedBufferAttribute = (item: any): item is InterleavedBufferAttribute =>
   item.isInterleavedBufferAttribute;
-const isStorageBufferAttribute = (item: any): item is BufferAttribute<any> => item.isStorageBufferAttribute;
-const isStorageInstancedBufferAttribute = (item: any): item is BufferAttribute<any> =>
+const isStorageBufferAttribute = (item: any): item is StorageBufferAttribute => item.isStorageBufferAttribute;
+const isStorageInstancedBufferAttribute = (item: any): item is InstancedBufferAttribute =>
   item.isStorageInstancedBufferAttribute;

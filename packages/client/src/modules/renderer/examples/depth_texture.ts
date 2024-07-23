@@ -79,9 +79,9 @@ async function init() {
 }
 
 function animate() {
-  renderer.setRenderTarget(renderTarget);
+  renderer.updateRenderTarget(renderTarget);
   renderer.render(scene, camera);
 
-  renderer.setRenderTarget(null);
+  renderer.updateRenderTarget(null);
   quad.render(renderer);
 }

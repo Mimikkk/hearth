@@ -123,13 +123,13 @@ class PassNode extends TempNode {
 
     renderer.parameters.toneMapping = ToneMapping.None;
     renderer.parameters.toneMappingNode = null;
-    renderer.setRenderTarget(this.renderTarget);
+    renderer.updateRenderTarget(this.renderTarget);
 
     renderer.render(scene, camera);
 
     renderer.parameters.toneMapping = currentToneMapping;
     renderer.parameters.toneMappingNode = currentToneMappingNode;
-    renderer.setRenderTarget(currentRenderTarget);
+    renderer.updateRenderTarget(currentRenderTarget);
   }
 
   setSize(width, height) {

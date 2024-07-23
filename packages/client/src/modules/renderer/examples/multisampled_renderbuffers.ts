@@ -118,9 +118,9 @@ function animate() {
 
   renderTarget.samples = params.samples;
 
-  renderer.setRenderTarget(renderTarget);
+  renderer.updateRenderTarget(renderTarget);
   renderer.render(scene, camera);
 
-  renderer.setRenderTarget(null);
+  renderer.updateRenderTarget(null);
   quadMesh.render(renderer);
 }

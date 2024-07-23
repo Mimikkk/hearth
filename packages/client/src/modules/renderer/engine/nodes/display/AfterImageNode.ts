@@ -79,7 +79,7 @@ class AfterImageNode extends TempNode {
     // set size before swapping fails
     this.setSize(map.image.width, map.image.height);
 
-    renderer.setRenderTarget(currentRenderTarget);
+    renderer.updateRenderTarget(currentRenderTarget);
     textureNode.value = currentTexture;
   }
 

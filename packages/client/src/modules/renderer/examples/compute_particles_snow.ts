@@ -309,7 +309,7 @@ async function animate() {
   // position
 
   scene.overrideMaterial = collisionPosMaterial;
-  renderer.setRenderTarget(collisionPosRT);
+  renderer.updateRenderTarget(collisionPosRT);
   await renderer.render(scene, collisionCamera);
 
   // compute
@@ -319,7 +319,7 @@ async function animate() {
   // result
 
   scene.overrideMaterial = null;
-  renderer.setRenderTarget(null);
+  renderer.updateRenderTarget(null);
 
   await postProcessing.render();
 }

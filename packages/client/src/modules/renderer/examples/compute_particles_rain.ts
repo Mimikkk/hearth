@@ -344,7 +344,7 @@ function animate() {
   // position
 
   scene.overrideMaterial = collisionPosMaterial;
-  renderer.setRenderTarget(collisionPosRT);
+  renderer.updateRenderTarget(collisionPosRT);
   renderer.render(scene, collisionCamera);
 
   // compute
@@ -354,6 +354,6 @@ function animate() {
   // result
 
   scene.overrideMaterial = null;
-  renderer.setRenderTarget(null);
+  renderer.updateRenderTarget(null);
   renderer.render(scene, camera);
 }

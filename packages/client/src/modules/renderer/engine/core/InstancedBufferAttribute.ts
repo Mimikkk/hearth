@@ -1,7 +1,7 @@
 import { BufferAttribute } from './BufferAttribute.js';
 import { TypedArray } from '../math/MathUtils.js';
 
-export class InstancedBufferAttribute<T extends TypedArray> extends BufferAttribute<T> {
+export class InstancedBufferAttribute<T extends TypedArray = any> extends BufferAttribute<T> {
   declare ['constructor']: typeof InstancedBufferAttribute;
   declare isInstancedBufferAttribute: true;
 
