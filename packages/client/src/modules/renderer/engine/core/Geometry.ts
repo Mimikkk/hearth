@@ -16,8 +16,7 @@ export class Geometry<
   MorphAttributeMap extends AttributeRecord = AttributeRecord,
   IndexT extends TypedArray = Uint32Array,
 > {
-  declare isInstancedBufferGeometry: true;
-  declare isBufferGeometry: true;
+  declare isGeometry: true;
   declare type: string | 'BufferGeometry' | 'InstancedBufferGeometry' | 'InterleavedBufferGeometry';
   id: number;
   uuid: string;
@@ -61,7 +60,7 @@ export class Geometry<
   }
 
   static is(value: any): value is Geometry {
-    return value?.isBufferGeometry === true;
+    return value?.isGeometry === true;
   }
 
   getIndex(): BufferAttribute<IndexT> | null {
@@ -771,7 +770,7 @@ export class Geometry<
   }
 }
 
-Geometry.prototype.isBufferGeometry = true;
+Geometry.prototype.isGeometry = true;
 Geometry.prototype.type = 'BufferGeometry';
 
 type AttributeRecord = Record<string, AttributeType>;

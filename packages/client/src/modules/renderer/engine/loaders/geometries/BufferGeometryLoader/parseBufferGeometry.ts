@@ -10,7 +10,6 @@ import { createTypedArray } from '../../../utils.js';
 export interface JsonContent {
   interleavedBuffers: Record<string, any>;
   arrayBuffers: Record<string, any>;
-  isInstancedBufferGeometry: boolean;
   data: {
     index: {
       type: string;
