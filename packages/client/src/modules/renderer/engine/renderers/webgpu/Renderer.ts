@@ -101,14 +101,14 @@ export class Renderer {
       canvas,
       clippingPlanes: options?.clippingPlanes ?? [],
       context,
-      depth: options?.depth ?? true,
+      useDepth: options?.useDepth ?? true,
       localClippingEnabled: options?.localClippingEnabled ?? false,
       logarithmicDepthBuffer: options?.logarithmicDepthBuffer ?? false,
       outputColorSpace: options?.outputColorSpace ?? ColorSpace.SRGB,
       outputEncoding: options?.outputEncoding ?? 'sRGB',
       powerPreference: options?.powerPreference ?? 'high-performance',
-      sortObjects: options?.sortObjects ?? true,
-      stencil: options?.stencil ?? false,
+      useSort: options?.useSort ?? true,
+      useStencil: options?.useStencil ?? false,
       toneMapping: options?.toneMapping ?? ToneMapping.None,
       toneMappingExposure: options?.toneMappingExposure ?? 1.0,
       toneMappingNode: options?.toneMappingNode ?? null,
@@ -124,9 +124,10 @@ export class Renderer {
     this._pixelRatio = window.devicePixelRatio;
     this._width = this.parameters.canvas.width;
     this._height = this.parameters.canvas.height;
+    this.size = RenderSize.fromCanvas(this.parameters.canvas);
 
     // transform into a class
-    this.viewport = new Vec4(0, 0, this._width, this._height);
+    this.viewport = new Vec4(0, 0, this.size.width, this._height);
     // transform into a class
     this.scissor = new Vec4(0, 0, this._width, this._height);
 
@@ -229,18 +230,15 @@ export class Renderer {
 
     _screen.set(0, 0, _drawSize.width, _drawSize.height);
 
-    const minDepth = viewport.minDepth === undefined ? 0 : viewport.minDepth;
-    const maxDepth = viewport.maxDepth === undefined ? 1 : viewport.maxDepth;
-
     context.viewportValue.from(viewport).scale(pixelRatio).floor();
     context.viewportValue.width >>= activeMipmapLevel;
     context.viewportValue.height >>= activeMipmapLevel;
-    context.viewportValue.minDepth = minDepth;
-    context.viewportValue.maxDepth = maxDepth;
-    context.viewport = context.viewportValue.equals(_screen) === false;
+    context.viewportValue.minDepth = 0;
+    context.viewportValue.maxDepth = 1;
+    context.useViewport = context.viewportValue.equals(_screen) === false;
 
     context.scissorValue.from(scissor).scale(pixelRatio).floor();
-    context.scissor = this.useScissor && context.scissorValue.equals(_screen) === false;
+    context.useScissor = this.useScissor && context.scissorValue.equals(_screen) === false;
     context.scissorValue.width >>= activeMipmapLevel;
     context.scissorValue.height >>= activeMipmapLevel;
 
@@ -257,7 +255,7 @@ export class Renderer {
 
     renderList.finish();
 
-    if (this.parameters.sortObjects) {
+    if (this.parameters.useSort) {
       renderList.sort(this.opaqueSort, this.transparentSort);
     }
     if (target !== null) {
@@ -270,15 +268,15 @@ export class Renderer {
       context.width = renderTargetData.width;
       context.height = renderTargetData.height;
       context.renderTarget = target;
-      context.depth = target.depthBuffer;
-      context.stencil = target.stencilBuffer;
+      context.useDepth = target.depthBuffer;
+      context.useStencil = target.stencilBuffer;
     } else {
       context.textures = null;
       context.depthTexture = null;
       context.width = this.parameters.canvas.width;
       context.height = this.parameters.canvas.height;
-      context.depth = this.parameters.depth;
-      context.stencil = this.parameters.stencil;
+      context.useDepth = this.parameters.useDepth;
+      context.useStencil = this.parameters.useStencil;
     }
 
     context.width >>= activeMipmapLevel;
@@ -367,8 +365,8 @@ export class Renderer {
 
     nodeFrame.renderId++;
     nodeFrame.update();
-    renderContext.depth = this.parameters.depth;
-    renderContext.stencil = this.parameters.stencil;
+    renderContext.useDepth = this.parameters.useDepth;
+    renderContext.useStencil = this.parameters.useStencil;
 
     if (!renderContext.clippingContext) renderContext.clippingContext = new ClippingContext();
     renderContext.clippingContext.updateGlobal(this, camera);
@@ -514,7 +512,7 @@ export class Renderer {
         renderList.pushLight(object);
       } else if (object.isSprite) {
         if (!object.frustumCulled || _frustum.intersectsSprite(object)) {
-          if (this.parameters.sortObjects) {
+          if (this.parameters.useSort) {
             _vec3.fromMat4Position(object.matrixWorld).applyMat4(_projection);
           }
 
@@ -530,7 +528,7 @@ export class Renderer {
           const geometry = object.geometry;
           const material = object.material;
 
-          if (this.parameters.sortObjects) {
+          if (this.parameters.useSort) {
             if (geometry.boundingSphere === null) geometry.computeBoundingSphere();
 
             _vec3.from(geometry.boundingSphere.center).applyMat4(object.matrixWorld).applyMat4(_projection);
@@ -691,14 +689,16 @@ export namespace Renderer {
     autoClearStencil?: boolean;
     canvas?: HTMLCanvasElement;
     clippingPlanes?: Plane[];
-    depth?: boolean;
     localClippingEnabled?: boolean;
     logarithmicDepthBuffer?: boolean;
     outputColorSpace?: ColorSpace;
     outputEncoding?: string;
     powerPreference?: GPUPowerPreference;
-    sortObjects?: boolean;
-    stencil?: boolean;
+
+    useSort?: boolean;
+    useDepth?: boolean;
+    useStencil?: boolean;
+
     toneMapping?: ToneMapping;
     toneMappingExposure?: number;
     toneMappingNode?: ToneMappingNode | null;
@@ -719,14 +719,16 @@ export namespace Renderer {
     canvas: HTMLCanvasElement;
     clippingPlanes: Plane[];
     context: GPUCanvasContext;
-    depth: boolean;
     localClippingEnabled: boolean;
     logarithmicDepthBuffer: boolean;
     outputColorSpace: ColorSpace;
     outputEncoding: string;
     powerPreference: GPUPowerPreference;
-    sortObjects: boolean;
-    stencil: boolean;
+
+    useSort: boolean;
+    useDepth: boolean;
+    useStencil: boolean;
+
     toneMapping: ToneMapping;
     toneMappingExposure: number;
     toneMappingNode: ToneMappingNode | null;
@@ -752,8 +754,12 @@ class RenderSize {
     public pixelRatio: number,
   ) {}
 
-  static new(width: number, height: number, pixelRatio: number): RenderSize {
+  static new(width: number, height: number, pixelRatio: number = window.devicePixelRatio): RenderSize {
     return new RenderSize(width, height, pixelRatio);
+  }
+
+  static fromCanvas(canvas: HTMLCanvasElement): RenderSize {
+    return new RenderSize(canvas.width, canvas.height, window.devicePixelRatio);
   }
 
   set(width: number, height: number, pixelRatio: number): this {
@@ -764,6 +770,8 @@ class RenderSize {
     return this;
   }
 }
+
+class Viewport {}
 
 type RenderFn = (
   object: Object3D,

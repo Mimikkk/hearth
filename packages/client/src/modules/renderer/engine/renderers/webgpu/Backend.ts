@@ -106,7 +106,7 @@ export class Backend {
           },
         ],
         depthStencilAttachment: {
-          view: this.textures.getDepthBuffer(renderer.parameters.depth, renderer.parameters.stencil).createView(),
+          view: this.textures.getDepthBuffer(renderer.parameters.useDepth, renderer.parameters.useStencil).createView(),
         },
       };
 
@@ -258,7 +258,7 @@ export class Backend {
       for (let i = 0; i < colorAttachments.length; i++) {
         const colorAttachment = colorAttachments[i];
 
-        if (renderContext.clearColor) {
+        if (renderContext.useClearColor) {
           colorAttachment.clearValue = renderContext.clearColorValue;
           colorAttachment.loadOp = GPULoadOpType.Clear;
           colorAttachment.storeOp = GPUStoreOpType.Store;
@@ -270,7 +270,7 @@ export class Backend {
     } else {
       const colorAttachment = descriptor.colorAttachments[0];
 
-      if (renderContext.clearColor) {
+      if (renderContext.useClearColor) {
         colorAttachment.clearValue = renderContext.clearColorValue;
         colorAttachment.loadOp = GPULoadOpType.Clear;
         colorAttachment.storeOp = GPUStoreOpType.Store;
@@ -282,8 +282,8 @@ export class Backend {
 
     //
 
-    if (renderContext.depth) {
-      if (renderContext.clearDepth) {
+    if (renderContext.useDepth) {
+      if (renderContext.useClearDepth) {
         depthStencilAttachment.depthClearValue = renderContext.clearDepthValue;
         depthStencilAttachment.depthLoadOp = GPULoadOpType.Clear;
         depthStencilAttachment.depthStoreOp = GPUStoreOpType.Store;
@@ -293,8 +293,8 @@ export class Backend {
       }
     }
 
-    if (renderContext.stencil) {
-      if (renderContext.clearStencil) {
+    if (renderContext.useStencil) {
+      if (renderContext.useClearStencil) {
         depthStencilAttachment.stencilClearValue = renderContext.clearStencilValue;
         depthStencilAttachment.stencilLoadOp = GPULoadOpType.Clear;
         depthStencilAttachment.stencilStoreOp = GPUStoreOpType.Store;
@@ -318,11 +318,11 @@ export class Backend {
 
     //
 
-    if (renderContext.viewport) {
+    if (renderContext.useViewport) {
       this.updateViewport(renderContext);
     }
 
-    if (renderContext.scissor) {
+    if (renderContext.useScissor) {
       const { x, y, width, height } = renderContext.scissorValue;
 
       currentPass.setScissorRect(x, renderContext.height - height - y, width, height);
@@ -461,8 +461,8 @@ export class Backend {
     }
 
     if (renderTargetData === null) {
-      supportsDepth = renderer.parameters.depth;
-      supportsStencil = renderer.parameters.stencil;
+      supportsDepth = renderer.parameters.useDepth;
+      supportsStencil = renderer.parameters.useStencil;
 
       const descriptor = this._getDefaultRenderPassDescriptor();
 
@@ -1033,7 +1033,7 @@ export class Backend {
       }
     } else {
       if (into.isDepthTexture) {
-        sourceGPU = this.textures.getDepthBuffer(context.depth, context.stencil);
+        sourceGPU = this.textures.getDepthBuffer(context.useDepth, context.useStencil);
       } else {
         sourceGPU = this.renderer.parameters.context.getCurrentTexture();
       }
@@ -1067,8 +1067,8 @@ export class Backend {
     if (into.generateMipmaps) this.textures.generateMipmaps(into);
 
     descriptor.colorAttachments[0].loadOp = GPULoadOpType.Load;
-    if (context.depth) descriptor.depthStencilAttachment.depthLoadOp = GPULoadOpType.Load;
-    if (context.stencil) descriptor.depthStencilAttachment.stencilLoadOp = GPULoadOpType.Load;
+    if (context.useDepth) descriptor.depthStencilAttachment.depthLoadOp = GPULoadOpType.Load;
+    if (context.useStencil) descriptor.depthStencilAttachment.stencilLoadOp = GPULoadOpType.Load;
 
     data.currentPass = encoder.beginRenderPass(descriptor);
     data.currentSets = { attributes: {} };

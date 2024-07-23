@@ -102,13 +102,13 @@ class Background extends DataMap<any, any> {
       renderContext.depthClearValue = renderer._clearDepth;
       renderContext.stencilClearValue = renderer._clearStencil;
 
-      renderContext.clearColor = renderer.parameters.autoClearColor;
-      renderContext.clearDepth = renderer.parameters.autoClearDepth;
-      renderContext.clearStencil = renderer.parameters.autoClearStencil;
+      renderContext.useClearColor = renderer.parameters.autoClearColor;
+      renderContext.useClearDepth = renderer.parameters.autoClearDepth;
+      renderContext.useClearStencil = renderer.parameters.autoClearStencil;
     } else {
-      renderContext.clearColor = false;
-      renderContext.clearDepth = false;
-      renderContext.clearStencil = false;
+      renderContext.useClearColor = false;
+      renderContext.useClearDepth = false;
+      renderContext.useClearStencil = false;
     }
   }
 }

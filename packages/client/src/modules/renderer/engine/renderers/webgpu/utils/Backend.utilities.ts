@@ -10,8 +10,8 @@ export class BackendUtilities {
 
   getCurrentDepthStencilFormat(renderContext: RenderContext) {
     if (renderContext.depthTexture) return this.getTextureFormatGPU(renderContext.depthTexture);
-    if (renderContext.depth && renderContext.stencil) return GPUTextureFormatType.Depth24PlusStencil8;
-    if (renderContext.depth) return GPUTextureFormatType.Depth24Plus;
+    if (renderContext.useDepth && renderContext.useStencil) return GPUTextureFormatType.Depth24PlusStencil8;
+    if (renderContext.useDepth) return GPUTextureFormatType.Depth24Plus;
     return undefined;
   }
 

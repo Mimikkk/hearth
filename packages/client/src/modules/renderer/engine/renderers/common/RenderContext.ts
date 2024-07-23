@@ -1,56 +1,66 @@
-import { Color, RenderTarget, Vec4 } from '@modules/renderer/engine/engine.js';
+import { Color, DepthTexture, RenderTarget, Texture, Vec4 } from '@modules/renderer/engine/engine.js';
 import ClippingContext from '@modules/renderer/engine/renderers/common/ClippingContext.js';
 
 let id = 0;
 
 export class RenderContext {
+  declare isRenderContext: true;
   id: number;
-  color: boolean;
-  clearColor: boolean;
+
+  useClearColor: boolean;
   clearColorValue: Color;
-  depth: boolean;
-  clearDepth: boolean;
+
+  useDepth: boolean;
+  depthClearValue: number;
+
+  useClearDepth: boolean;
   clearDepthValue: number;
-  stencil: boolean;
-  clearStencil: boolean;
+
+  useClearStencil: boolean;
+  stencilClearValue: number;
+
+  useStencil: boolean;
   clearStencilValue: number;
-  viewport: boolean;
+
+  useViewport: boolean;
   viewportValue: Vec4;
-  scissor: boolean;
+
+  useScissor: boolean;
   scissorValue: Vec4;
-  textures: any;
-  depthTexture: any;
-  activeCubeFace: number;
-  sampleCount: number;
+
+  textures: Texture[] | null;
+  depthTexture: DepthTexture | null;
+
   width: number;
   height: number;
-  isRenderContext: boolean;
-  stencilClearValue: number;
-  depthClearValue: number;
+
+  sampleCount: number;
+
   clippingContext: ClippingContext;
+
   renderTarget: RenderTarget;
+  activeCubeFace: number;
   activeMipmapLevel: number;
   occlusionQueryCount: number;
 
   constructor() {
     this.id = id++;
 
-    this.color = true;
-    this.clearColor = true;
+    this.useClearColor = true;
     this.clearColorValue = { r: 0, g: 0, b: 0, a: 1 };
 
-    this.depth = true;
-    this.clearDepth = true;
+    this.useDepth = true;
+    this.useClearDepth = true;
     this.clearDepthValue = 1;
 
-    this.stencil = false;
-    this.clearStencil = true;
+    this.useStencil = false;
+    this.useClearStencil = true;
     this.clearStencilValue = 1;
 
-    this.viewport = false;
+    this.useViewport = false;
     this.viewportValue = new Vec4();
 
-    this.scissor = false;
+    this.useScissor = false;
     this.scissorValue = new Vec4();
 
     this.textures = null;
@@ -60,9 +70,9 @@ export class RenderContext {
 
     this.width = 0;
     this.height = 0;
-
-    this.isRenderContext = true;
   }
 }
 
 export default RenderContext;
+
+RenderContext.prototype.isRenderContext = true;
