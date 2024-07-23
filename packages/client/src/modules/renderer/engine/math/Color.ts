@@ -5,6 +5,8 @@ import type { Mat3 } from '@modules/renderer/engine/math/Mat3.js';
 import { Const } from '@modules/renderer/engine/math/types.js';
 import { Attribute } from '@modules/renderer/engine/core/types.js';
 
+export { ColorMap } from './Color.map.js';
+
 function hue2rgb(p: number, q: number, t: number): number {
   if (t < 0) t += 1;
   if (t > 1) t -= 1;
@@ -261,7 +263,5 @@ export class Color {
     yield this.b;
   }
 }
-
-export { ColorMap } from './Color.map.js';
 
 Color.prototype.isColor = true;
