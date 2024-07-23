@@ -1,4 +1,4 @@
-import { BufferAttribute, Color, Object3D, RenderTarget, Scene, Texture, Vec2, Vec3 } from '../../engine.js';
+import { BufferAttribute, Color, Object3D, RenderTarget, Scene, Texture, Vec2 } from '../../engine.js';
 
 import {
   GPUFeatureNameType,
@@ -1044,47 +1044,45 @@ export class Backend {
     return this.adapter.features.has(name);
   }
 
-  copyTextureToTexture(position: Vec3, srcTexture: Texture, dstTexture: Texture, level: number = 0) {
+  patchTextureAt(texture: Texture, patch: Texture, at: { x: number; y: number; z?: number; level?: number }) {
     const encoder = this.device.createCommandEncoder({
-      label: 'copyTextureToTexture_' + srcTexture.id + '_' + dstTexture.id,
+      label: 'copyTextureToTexture_' + patch.id + '_' + texture.id,
     });
-
-    const sourceGPU = this.get(srcTexture).texture;
-    const destinationGPU = this.get(dstTexture).texture;
 
     encoder.copyTextureToTexture(
       {
-        texture: sourceGPU,
-        mipLevel: level,
+        texture: this.get(patch).texture,
+        mipLevel: at.level ?? 0,
         origin: { x: 0, y: 0, z: 0 },
       },
       {
-        texture: destinationGPU,
-        mipLevel: level,
-        origin: { x: position.x, y: position.y, z: position.z },
+        texture: this.get(texture).texture,
+        mipLevel: at.level ?? 0,
+        origin: at,
       },
-      [srcTexture.image.width, srcTexture.image.height],
+      [patch.image.width, patch.image.height],
     );
 
     this.device.queue.submit([encoder.finish()]);
   }
 
-  copyFramebufferToTexture(texture: Texture, renderContext: RenderContext) {
-    const renderContextData = this.get(renderContext);
+  readFramebuffer(texture: Texture, context: RenderContext) {
+    const renderContextData = this.get(context);
 
+    console.log({ context });
     const { encoder, descriptor } = renderContextData;
 
     let sourceGPU = null;
 
-    if (renderContext.renderTarget) {
+    if (context.renderTarget) {
       if (texture.isDepthTexture) {
-        sourceGPU = this.get(renderContext.depthTexture).texture;
+        sourceGPU = this.get(context.depthTexture).texture;
       } else {
-        sourceGPU = this.get(renderContext.textures[0]).texture;
+        sourceGPU = this.get(context.textures[0]).texture;
       }
     } else {
       if (texture.isDepthTexture) {
-        sourceGPU = this.textures.getDepthBuffer(renderContext.depth, renderContext.stencil);
+        sourceGPU = this.textures.getDepthBuffer(context.depth, context.stencil);
       } else {
         sourceGPU = this.renderer.parameters.context.getCurrentTexture();
       }
@@ -1118,8 +1116,8 @@ export class Backend {
     if (texture.generateMipmaps) this.textures.generateMipmaps(texture);
 
     descriptor.colorAttachments[0].loadOp = GPULoadOpType.Load;
-    if (renderContext.depth) descriptor.depthStencilAttachment.depthLoadOp = GPULoadOpType.Load;
-    if (renderContext.stencil) descriptor.depthStencilAttachment.stencilLoadOp = GPULoadOpType.Load;
+    if (context.depth) descriptor.depthStencilAttachment.depthLoadOp = GPULoadOpType.Load;
+    if (context.stencil) descriptor.depthStencilAttachment.stencilLoadOp = GPULoadOpType.Load;
 
     renderContextData.currentPass = encoder.beginRenderPass(descriptor);
     renderContextData.currentSets = { attributes: {} };

@@ -34,6 +34,7 @@ import { GPUFeatureNameType, GPUTextureFormatType } from '@modules/renderer/engi
 import { SortFn } from '@modules/renderer/engine/renderers/common/RenderList.js';
 import { Attribute } from '@modules/renderer/engine/core/types.js';
 import ComputeNode from '@modules/renderer/engine/nodes/gpgpu/ComputeNode.js';
+import RenderContext from '@modules/renderer/engine/renderers/common/RenderContext.js';
 
 const _scene = new Scene();
 const _drawingBufferSize = new Vec2();
@@ -270,9 +271,8 @@ export class Renderer {
     const transparentObjects = renderList.transparent;
     const lightsNode = renderList.lightsNode;
 
-    if (opaqueObjects.length > 0) this._renderObjects(opaqueObjects, camera, sceneRef, lightsNode);
-    if (transparentObjects.length > 0) this._renderObjects(transparentObjects, camera, sceneRef, lightsNode);
-
+    this._renderObjects(opaqueObjects, camera, sceneRef, lightsNode);
+    this._renderObjects(transparentObjects, camera, sceneRef, lightsNode);
     // restore render tree
 
     nodeFrame.renderId = previousRenderId;
@@ -288,7 +288,7 @@ export class Renderer {
     await Promise.all(compilationPromises);
   }
 
-  async render(scene: Object3D, camera: Camera): Promise<void> {
+  async render(scene: Object3D, camera: Camera): Promise<RenderContext> {
     // preserve render tree
 
     const nodeFrame = this._nodes.nodeFrame;
@@ -301,12 +301,12 @@ export class Renderer {
 
     const sceneRef = scene.isScene === true ? scene : _scene;
 
-    const renderTarget = this._renderTarget;
-    const renderContext = this._renderContexts.get(scene, camera, renderTarget);
+    const target = this._renderTarget;
+    const context = this._renderContexts.get(scene, camera, target);
     const activeCubeFace = this._activeCubeFace;
     const activeMipmapLevel = this._activeMipmapLevel;
 
-    this._currentRenderContext = renderContext;
+    this._currentRenderContext = context;
     this._currentRenderObjectFunction = this._renderObjectFunction || this.renderObject;
 
     //
@@ -328,9 +328,9 @@ export class Renderer {
     let scissor = this._scissor;
     let pixelRatio = this._pixelRatio;
 
-    if (renderTarget !== null) {
-      viewport = renderTarget.viewport;
-      scissor = renderTarget.scissor;
+    if (target !== null) {
+      viewport = target.viewport;
+      scissor = target.scissor;
       pixelRatio = 1;
     }
 
@@ -341,24 +341,24 @@ export class Renderer {
     const minDepth = viewport.minDepth === undefined ? 0 : viewport.minDepth;
     const maxDepth = viewport.maxDepth === undefined ? 1 : viewport.maxDepth;
 
-    renderContext.viewportValue.from(viewport).scale(pixelRatio).floor();
-    renderContext.viewportValue.width >>= activeMipmapLevel;
-    renderContext.viewportValue.height >>= activeMipmapLevel;
-    renderContext.viewportValue.minDepth = minDepth;
-    renderContext.viewportValue.maxDepth = maxDepth;
-    renderContext.viewport = renderContext.viewportValue.equals(_screen) === false;
+    context.viewportValue.from(viewport).scale(pixelRatio).floor();
+    context.viewportValue.width >>= activeMipmapLevel;
+    context.viewportValue.height >>= activeMipmapLevel;
+    context.viewportValue.minDepth = minDepth;
+    context.viewportValue.maxDepth = maxDepth;
+    context.viewport = context.viewportValue.equals(_screen) === false;
 
-    renderContext.scissorValue.from(scissor).scale(pixelRatio).floor();
-    renderContext.scissor = this._scissorTest && renderContext.scissorValue.equals(_screen) === false;
-    renderContext.scissorValue.width >>= activeMipmapLevel;
-    renderContext.scissorValue.height >>= activeMipmapLevel;
+    context.scissorValue.from(scissor).scale(pixelRatio).floor();
+    context.scissor = this._scissorTest && context.scissorValue.equals(_screen) === false;
+    context.scissorValue.width >>= activeMipmapLevel;
+    context.scissorValue.height >>= activeMipmapLevel;
 
-    if (!renderContext.clippingContext) renderContext.clippingContext = new ClippingContext();
-    renderContext.clippingContext.updateGlobal(this, camera);
+    if (!context.clippingContext) context.clippingContext = new ClippingContext();
+    context.clippingContext.updateGlobal(this, camera);
 
     //
 
-    sceneRef.onBeforeRender(this, scene, camera, renderTarget);
+    sceneRef.onBeforeRender(this, scene, camera, target);
 
     //
 
@@ -378,73 +378,54 @@ export class Renderer {
 
     //
 
-    if (renderTarget !== null) {
-      this._textures.updateRenderTarget(renderTarget, activeMipmapLevel);
+    if (target !== null) {
+      this._textures.updateRenderTarget(target, activeMipmapLevel);
 
-      const renderTargetData = this._textures.get(renderTarget);
+      const renderTargetData = this._textures.get(target);
 
-      renderContext.textures = renderTargetData.textures;
-      renderContext.depthTexture = renderTargetData.depthTexture;
-      renderContext.width = renderTargetData.width;
-      renderContext.height = renderTargetData.height;
-      renderContext.renderTarget = renderTarget;
-      renderContext.depth = renderTarget.depthBuffer;
-      renderContext.stencil = renderTarget.stencilBuffer;
+      context.textures = renderTargetData.textures;
+      context.depthTexture = renderTargetData.depthTexture;
+      context.width = renderTargetData.width;
+      context.height = renderTargetData.height;
+      context.renderTarget = target;
+      context.depth = target.depthBuffer;
+      context.stencil = target.stencilBuffer;
     } else {
-      renderContext.textures = null;
-      renderContext.depthTexture = null;
-      renderContext.width = this.parameters.canvas.width;
-      renderContext.height = this.parameters.canvas.height;
-      renderContext.depth = this.parameters.depth;
-      renderContext.stencil = this.parameters.stencil;
+      context.textures = null;
+      context.depthTexture = null;
+      context.width = this.parameters.canvas.width;
+      context.height = this.parameters.canvas.height;
+      context.depth = this.parameters.depth;
+      context.stencil = this.parameters.stencil;
     }
 
-    renderContext.width >>= activeMipmapLevel;
-    renderContext.height >>= activeMipmapLevel;
-    renderContext.activeCubeFace = activeCubeFace;
-    renderContext.activeMipmapLevel = activeMipmapLevel;
-    renderContext.occlusionQueryCount = renderList.occlusionQueryCount;
-
-    //
+    context.width >>= activeMipmapLevel;
+    context.height >>= activeMipmapLevel;
+    context.activeCubeFace = activeCubeFace;
+    context.activeMipmapLevel = activeMipmapLevel;
+    context.occlusionQueryCount = renderList.occlusionQueryCount;
 
     this._nodes.updateScene(sceneRef);
+    this._background.update(sceneRef, renderList, context);
+    this.backend.beginRender(context);
 
-    //
-
-    this._background.update(sceneRef, renderList, renderContext);
-
-    //
-
-    this.backend.beginRender(renderContext);
-
-    // process render lists
-
-    const opaqueObjects = renderList.opaque;
-    const transparentObjects = renderList.transparent;
+    const opaque = renderList.opaque;
+    const transparent = renderList.transparent;
     const lightsNode = renderList.lightsNode;
 
-    if (opaqueObjects.length > 0) this._renderObjects(opaqueObjects, camera, sceneRef, lightsNode);
-    if (transparentObjects.length > 0) this._renderObjects(transparentObjects, camera, sceneRef, lightsNode);
+    if (opaque.length > 0) this._renderObjects(opaque, camera, sceneRef, lightsNode);
+    if (transparent.length > 0) this._renderObjects(transparent, camera, sceneRef, lightsNode);
 
-    // finish render pass
-
-    this.backend.finishRender(renderContext);
-
-    // restore render tree
+    this.backend.finishRender(context);
 
     nodeFrame.renderId = previousRenderId;
-
     this._currentRenderContext = previousRenderContext;
     this._currentRenderObjectFunction = previousRenderObjectFunction;
 
-    //
+    sceneRef.onAfterRender(this, scene, camera, target);
+    this.backend.resolveTimestampAsync(context, 'render');
 
-    sceneRef.onAfterRender(this, scene, camera, renderTarget);
-
-    //
-    this.backend.resolveTimestampAsync(renderContext, 'render');
-
-    return renderContext;
+    return context;
   }
 
   async compute(computeNodes: ComputeNode | ComputeNode[]): Promise<void> {
@@ -573,14 +554,14 @@ export class Renderer {
   copyFramebufferToTexture(texture: FramebufferTexture): void {
     this._textures.updateTexture(texture);
 
-    this.backend.copyFramebufferToTexture(texture, this._currentRenderContext);
+    this.backend.readFramebuffer(texture, this._currentRenderContext);
   }
 
-  copyTextureToTexture(at: Vec2, from: Texture, into: Texture, level: number = 0): void {
-    this._textures.updateTexture(from);
-    this._textures.updateTexture(into);
+  patchTextureAt(texture: Texture, patch: Texture, at: { x: number; y: number; z?: number; level?: number }): void {
+    this._textures.updateTexture(patch);
+    this._textures.updateTexture(texture);
 
-    this.backend.copyTextureToTexture(at, from, into, level);
+    this.backend.patchTextureAt(texture, patch, at);
   }
 
   _projectObject(object, camera, groupOrder, renderList) {

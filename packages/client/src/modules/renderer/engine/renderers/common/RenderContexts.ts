@@ -3,49 +3,49 @@ import RenderContext from './RenderContext.js';
 import { Scene } from '@modules/renderer/engine/scenes/Scene.js';
 import { Camera } from '@modules/renderer/engine/cameras/Camera.js';
 import { RenderTarget } from '@modules/renderer/engine/core/RenderTarget.js';
+import { Object3D } from '@modules/renderer/engine/core/Object3D.js';
 
 class RenderContexts {
-  chainMaps: Record<string, ChainMap<any, any>>;
+  chainMaps: Map<string, ChainMap<Object3D, RenderContext>> = new Map();
 
-  constructor() {
-    this.chainMaps = {};
-  }
+  constructor() {}
 
-  get(scene: Scene, camera: Camera, renderTarget: RenderTarget | null = null) {
-    const chainKey = [scene, camera];
+  get(scene: Scene, camera: Camera, target: RenderTarget | null = null): RenderContext {
+    const key = [scene, camera];
 
-    let attachmentState;
-
-    if (renderTarget === null) {
-      attachmentState = 'default';
+    let state: string;
+    if (target === null) {
+      state = 'default';
     } else {
-      const format = renderTarget.texture.format;
-      const count = renderTarget.count;
-
-      attachmentState = `${count}:${format}:${renderTarget.samples}:${renderTarget.depthBuffer}:${renderTarget.stencilBuffer}`;
+      state = `${target.count}:${target.texture.format}:${target.samples}:${target.depthBuffer}:${target.stencilBuffer}`;
     }
 
-    const chainMap = this.getChainMap(attachmentState);
+    const map = this.mapOf(state);
 
-    let renderState = chainMap.get(chainKey);
-
-    if (renderState === undefined) {
-      renderState = new RenderContext();
-
-      chainMap.set(chainKey, renderState);
+    let context = map.get(key);
+    if (context === undefined) {
+      context = new RenderContext();
+      map.set(key, context);
     }
 
-    if (renderTarget !== null) renderState.sampleCount = renderTarget.samples === 0 ? 1 : renderTarget.samples;
+    if (target) context.sampleCount = target.samples === 0 ? 1 : target.samples;
 
-    return renderState;
+    return context;
   }
 
-  getChainMap(attachmentState: string) {
-    return this.chainMaps[attachmentState] || (this.chainMaps[attachmentState] = new ChainMap());
+  mapOf(state: string): ChainMap<Object3D, RenderContext> {
+    let chainMap = this.chainMaps.get(state);
+
+    if (chainMap === undefined) {
+      chainMap = new ChainMap();
+      this.chainMaps.set(state, chainMap);
+    }
+
+    return chainMap;
   }
 
-  dispose() {
-    this.chainMaps = {};
+  dispose(): void {
+    this.chainMaps.clear();
   }
 }
 

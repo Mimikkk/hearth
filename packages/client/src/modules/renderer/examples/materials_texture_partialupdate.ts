@@ -43,7 +43,7 @@ const renderer = await Renderer.create({
     if (total - last <= 0.5) return;
     randomizePosition(position);
     regenerateDataTexture(texture);
-    renderer.copyTextureToTexture(position, texture, diffuseMap);
+    renderer.patchTextureAt(diffuseMap, texture, position);
   },
 });
 

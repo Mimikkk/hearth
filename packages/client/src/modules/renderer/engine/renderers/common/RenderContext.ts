@@ -1,4 +1,4 @@
-import { Color, Vec4 } from '@modules/renderer/engine/engine.js';
+import { Color, RenderTarget, Vec4 } from '@modules/renderer/engine/engine.js';
 import ClippingContext from '@modules/renderer/engine/renderers/common/ClippingContext.js';
 
 let id = 0;
@@ -28,6 +28,9 @@ export class RenderContext {
   stencilClearValue: number;
   depthClearValue: number;
   clippingContext: ClippingContext;
+  renderTarget: RenderTarget;
+  activeMipmapLevel: number;
+  occlusionQueryCount: number;
 
   constructor() {
     this.id = id++;
