@@ -31,7 +31,7 @@ export class Color {
   constructor(r: number, g: number, b: number);
   constructor(r: number, g: number, b: number, a: number);
   constructor(r?: number | ColorRepresentation, g?: number, b?: number, a: number = 1) {
-    this.set(r as number, g!, b!, a);
+    if (r) this.set(r as number, g!, b!, a);
   }
   static is(value: any): value is Color {
     return value?.isColor === true;

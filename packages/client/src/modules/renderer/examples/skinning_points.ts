@@ -34,7 +34,7 @@ async function init() {
         child.visible = false;
 
         const materialPoints = new PointsNodeMaterial();
-        materialPoints.colorNode = uniform(new Engine.Color());
+        materialPoints.colorNode = uniform(new Engine.Color(1, 1, 1, 1));
         materialPoints.positionNode = skinning(child);
 
         const pointCloud = new Engine.Points(child.geometry, materialPoints);
