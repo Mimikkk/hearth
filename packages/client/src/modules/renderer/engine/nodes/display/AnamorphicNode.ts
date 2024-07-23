@@ -22,12 +22,12 @@ class AnamorphicNode extends TempNode {
     this.samples = samples;
     this.resolution = new Vec2(1, 1);
 
-    this._renderTarget = new RenderTarget();
-    this._renderTarget.texture.name = 'anamorphic';
+    this.target = new RenderTarget();
+    this.target.texture.name = 'anamorphic';
 
     this._invSize = uniform(new Vec2());
 
-    this._textureNode = texturePass(this, this._renderTarget.texture);
+    this._textureNode = texturePass(this, this.target.texture);
 
     this.updateBeforeType = NodeUpdateType.RENDER;
   }
@@ -42,7 +42,7 @@ class AnamorphicNode extends TempNode {
     width = Math.max(Math.round(width * this.resolution.x), 1);
     height = Math.max(Math.round(height * this.resolution.y), 1);
 
-    this._renderTarget.setSize(width, height);
+    this.target.setSize(width, height);
   }
 
   updateBefore(frame) {
@@ -51,9 +51,9 @@ class AnamorphicNode extends TempNode {
     const textureNode = this.textureNode;
     const map = textureNode.value;
 
-    this._renderTarget.texture.type = map.type;
+    this.target.texture.type = map.type;
 
-    const currentRenderTarget = renderer._renderTarget;
+    const currentRenderTarget = renderer.target;
     const currentTexture = textureNode.value;
 
     quadMesh.material = this._material;
@@ -62,7 +62,7 @@ class AnamorphicNode extends TempNode {
 
     // render
 
-    renderer.updateRenderTarget(this._renderTarget);
+    renderer.updateRenderTarget(this.target);
 
     quadMesh.render(renderer);
 

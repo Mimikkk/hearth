@@ -116,7 +116,7 @@ class PassNode extends TempNode {
 
     const currentToneMapping = renderer.parameters.toneMapping;
     const currentToneMappingNode = renderer.parameters.toneMappingNode;
-    const currentRenderTarget = renderer._renderTarget;
+    const currentRenderTarget = renderer.target;
 
     this._cameraNear.value = camera.near;
     this._cameraFar.value = camera.far;

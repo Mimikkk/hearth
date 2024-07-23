@@ -113,7 +113,7 @@ class PMREMGenerator {
    * is placed at the origin).
    */
   fromScene(scene, sigma = 0, near = 0.1, far = 100) {
-    _oldTarget = this._renderer._renderTarget;
+    _oldTarget = this._renderer.target;
     _oldActiveCubeFace = this._renderer._activeCubeFace;
     _oldActiveMipmapLevel = this._renderer._activeMipmapLevel;
 
@@ -201,7 +201,7 @@ class PMREMGenerator {
       this._setSize(texture.image.width / 4);
     }
 
-    _oldTarget = this._renderer._renderTarget;
+    _oldTarget = this._renderer.target;
     _oldActiveCubeFace = this._renderer._activeCubeFace;
     _oldActiveMipmapLevel = this._renderer._activeMipmapLevel;
 

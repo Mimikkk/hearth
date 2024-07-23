@@ -70,7 +70,7 @@ export class CubeCamera extends Object3D {
 
     const [cameraPX, cameraNX, cameraPY, cameraNY, cameraPZ, cameraNZ] = this.children as Camera[];
 
-    const currentRenderTarget = renderer._renderTarget;
+    const currentRenderTarget = renderer.target;
     const currentActiveCubeFace = renderer._activeCubeFace;
     const currentActiveMipmapLevel = renderer._activeMipmapLevel;
 
