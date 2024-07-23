@@ -62,13 +62,13 @@ class AfterImageNode extends TempNode {
     this._compRT.texture.type = textureType;
     this._oldRT.texture.type = textureType;
 
-    const currentRenderTarget = renderer.getRenderTarget();
+    const currentRenderTarget = renderer._renderTarget;
     const currentTexture = textureNode.value;
 
     this.textureNodeOld.value = this._oldRT.texture;
 
     // comp
-    renderer.setRenderTarget(this._compRT);
+    renderer._renderTarget = this._compRT;
     quadMeshComp.render(renderer);
 
     // Swap the textures

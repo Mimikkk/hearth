@@ -22,7 +22,7 @@ class PostProcessing {
   renderAsync() {
     (mesh.material as NodeMaterial).fragmentNode = this.outputNode;
 
-    return mesh.renderAsync(this.renderer);
+    return mesh.render(this.renderer);
   }
 }
 

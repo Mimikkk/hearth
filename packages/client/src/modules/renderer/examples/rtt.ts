@@ -44,7 +44,7 @@ async function init() {
   renderer = await Renderer.create();
   renderer.setPixelRatio(dpr);
   renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.setAnimationLoop(animate);
+  renderer._animation.loop = animate;
   document.body.appendChild(renderer.parameters.canvas);
 
   renderTarget = new Engine.RenderTarget(window.innerWidth * dpr, window.innerHeight * dpr);

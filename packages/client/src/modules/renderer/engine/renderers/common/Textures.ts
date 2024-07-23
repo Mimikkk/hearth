@@ -108,7 +108,7 @@ class Textures extends DataMap<any, any> {
 
     if (texture.isFramebufferTexture) {
       const renderer = this.renderer;
-      const renderTarget = renderer.getRenderTarget();
+      const renderTarget = renderer._renderTarget;
 
       if (renderTarget) {
         texture.type = renderTarget.texture.type;

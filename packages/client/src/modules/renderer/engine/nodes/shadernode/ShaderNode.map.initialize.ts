@@ -1,5 +1,4 @@
 import {
-  arrayBuffer,
   bmat2,
   bmat3,
   bmat4,
@@ -21,7 +20,6 @@ import {
   mat2,
   mat3,
   mat4,
-  string,
   u32,
   umat2,
   umat3,
@@ -66,7 +64,5 @@ NodeElements.set('mat4', mat4);
 NodeElements.set('imat4', imat4);
 NodeElements.set('umat4', umat4);
 NodeElements.set('bmat4', bmat4);
-NodeElements.set('string', string);
-NodeElements.set('arrayBuffer', arrayBuffer);
 NodeElements.set('element', element);
 NodeElements.set('convert', convert);

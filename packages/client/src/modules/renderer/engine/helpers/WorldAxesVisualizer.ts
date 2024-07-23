@@ -204,11 +204,11 @@ export class WorldAxesVisualizer extends Object3D {
       negZ.material.opacity = 1;
     }
 
-    renderer.clearDepth();
-    renderer.getViewport(this.viewport);
-    renderer.setViewport(this.canvas.offsetWidth - dim, 0, dim, dim);
+    renderer.clear(false, true, false);
+    this.viewport.from(renderer._viewport);
+    renderer._viewport.set(this.canvas.offsetWidth - dim, 0, dim, dim);
     renderer.render(this, this.orthoCamera);
-    renderer.setViewport(this.viewport.x, this.viewport.y, this.viewport.z, this.viewport.w);
+    renderer._viewport.set(this.viewport.x, this.viewport.y, this.viewport.z, this.viewport.w);
   }
 
   handleClick(event: MouseEvent): void {

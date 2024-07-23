@@ -30,7 +30,7 @@ async function init() {
   });
 
   viewHelper = new WorldAxesVisualizer(camera, renderer.parameters.canvas);
-  renderer.setAnimationLoop(animate);
+  renderer._animation.loop = animate;
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.parameters.toneMapping = ToneMapping.ACESFilmic;

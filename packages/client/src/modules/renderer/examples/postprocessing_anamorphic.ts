@@ -52,7 +52,7 @@ async function init() {
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.parameters.toneMapping = Engine.ToneMapping.Linear;
   renderer.parameters.toneMappingExposure = 1;
-  renderer.setAnimationLoop(render);
+  renderer._animation.loop = render;
   container.appendChild(renderer.parameters.canvas);
 
   const controls = new OrbitControls(camera, renderer.parameters.canvas);

@@ -2,43 +2,41 @@ import TextureNode from '../accessors/TextureNode.js';
 import { NodeUpdateType } from '../core/constants.js';
 import { addNodeElement, nodeProxy } from '../shadernode/ShaderNodes.js';
 import { viewportTopLeft } from './ViewportNode.js';
-import { Filter, FramebufferTexture, Vec2 } from '@modules/renderer/engine/engine.js';
+import { FramebufferTexture, MinificationTextureFilter, Vec2 } from '@modules/renderer/engine/engine.js';
+import NodeFrame from '@modules/renderer/engine/nodes/core/NodeFrame.js';
 
 const _size = new Vec2();
 
 class ViewportTextureNode extends TextureNode {
   static type = 'ViewportTextureNode';
+  generateMipmaps: boolean;
+  isOutputTextureNode: boolean;
+  updateBeforeType: NodeUpdateType;
 
-  constructor(uvNode = viewportTopLeft, levelNode = null, framebufferTexture = null) {
+  constructor(uvNode = viewportTopLeft, levelNode = null, framebufferTexture: FramebufferTexture | null = null) {
     if (framebufferTexture === null) {
       framebufferTexture = new FramebufferTexture();
-      framebufferTexture.minFilter = Filter.LinearMipmapLinear;
+      framebufferTexture.minFilter = MinificationTextureFilter.LinearMipmapLinear;
     }
 
+    console.log({ levelNode });
     super(framebufferTexture, uvNode, levelNode);
 
     this.generateMipmaps = false;
-
     this.isOutputTextureNode = true;
-
     this.updateBeforeType = NodeUpdateType.FRAME;
   }
 
-  updateBefore(frame) {
+  updateBefore(frame: NodeFrame): void {
     const renderer = frame.renderer;
     renderer.getDrawingBufferSize(_size);
-
-    //
-
+    ``;
     const framebufferTexture = this.value;
-
     if (framebufferTexture.image.width !== _size.width || framebufferTexture.image.height !== _size.height) {
       framebufferTexture.image.width = _size.width;
       framebufferTexture.image.height = _size.height;
       framebufferTexture.needsUpdate = true;
     }
-
-    //
 
     const currentGenerateMipmaps = framebufferTexture.generateMipmaps;
     framebufferTexture.generateMipmaps = this.generateMipmaps;
@@ -56,7 +54,7 @@ class ViewportTextureNode extends TextureNode {
 export default ViewportTextureNode;
 
 export const viewportTexture = nodeProxy(ViewportTextureNode);
-export const viewportMipTexture = nodeProxy(ViewportTextureNode, null, null, { generateMipmaps: true });
+export const viewportMipTexture = nodeProxy(ViewportTextureNode, 123, null, { generateMipmaps: true });
 
 addNodeElement('viewportTexture', viewportTexture);
 addNodeElement('viewportMipTexture', viewportMipTexture);

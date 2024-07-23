@@ -33,7 +33,7 @@ async function init() {
   const renderer = await Renderer.create();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.setAnimationLoop(() => renderer.render(scene, camera));
+  renderer._animation.loop = () => renderer.render(scene, camera);
   renderer.parameters.toneMapping = ToneMapping.Reinhard;
   renderer.parameters.toneMappingExposure = 1;
   document.body.appendChild(renderer.parameters.canvas);

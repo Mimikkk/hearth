@@ -123,7 +123,7 @@ export class AnalyticLightNode extends LightingNode {
 
     light.shadow.updateMatrices(light);
 
-    const currentRenderTarget = renderer.getRenderTarget();
+    const currentRenderTarget = renderer._renderTarget;
     const currentRenderObjectFunction = renderer.getRenderObjectFunction();
 
     renderer.setRenderObjectFunction((object, ...params) => {

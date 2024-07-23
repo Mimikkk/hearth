@@ -139,7 +139,7 @@ async function init() {
   renderer = await Renderer.create();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.setAnimationLoop(render);
+  renderer._animation.loop = render;
   document.body.appendChild(renderer.parameters.canvas);
 
   useWindowResizer(renderer, camera, () => {
@@ -157,7 +157,7 @@ async function init() {
     render();
   });
 
-  renderer.computeAsync(computeInitNode);
+  renderer.compute(computeInitNode);
 }
 
 function render() {
@@ -169,14 +169,14 @@ function render() {
   if (phase && seconds !== lastUpdate) {
     seed.value.set(Math.random(), Math.random());
 
-    renderer.computeAsync(computeInitNode);
+    renderer.compute(computeInitNode);
 
     lastUpdate = seconds;
   }
 
   // compute step
 
-  renderer.computeAsync(phase ? computeToPong : computeToPing);
+  renderer.compute(phase ? computeToPong : computeToPing);
 
   material.map = phase ? pongTexture : pingTexture;
 

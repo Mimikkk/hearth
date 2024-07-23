@@ -44,7 +44,7 @@ async function init() {
   renderer = await Renderer.create();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.setAnimationLoop(animate);
+  renderer._animation.loop = animate;
   container.appendChild(renderer.parameters.canvas);
 
   document.addEventListener('pointerdown', onPointerDown);

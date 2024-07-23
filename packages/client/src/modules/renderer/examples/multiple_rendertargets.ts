@@ -88,7 +88,7 @@ async function init() {
   renderer = await Renderer.create();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.setAnimationLoop(render);
+  renderer._animation.loop = render;
   document.body.appendChild(renderer.parameters.canvas);
 
   // Create a multi render target with Float buffers
@@ -136,7 +136,7 @@ async function init() {
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
 
-    const dpr = renderer.getPixelRatio();
+    const dpr = renderer._pixelRatio;
     renderTarget.setSize(window.innerWidth * dpr, window.innerHeight * dpr);
   });
 }

@@ -141,7 +141,7 @@ async function init() {
   renderer = await Renderer.create({ trackTimestamp: true });
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.setAnimationLoop(animate);
+  renderer._animation.loop = animate;
   document.body.appendChild(renderer.parameters.canvas);
 
   stats = new Stats();
@@ -149,7 +149,7 @@ async function init() {
 
   //
 
-  renderer.computeAsync(computeInit);
+  renderer.compute(computeInit);
 
   // click event
 
@@ -186,7 +186,7 @@ async function init() {
 
       // compute
 
-      renderer.computeAsync(computeHit);
+      renderer.compute(computeHit);
     }
   }
 
@@ -218,9 +218,9 @@ async function init() {
 async function animate() {
   stats.update();
 
-  await renderer.computeAsync(computeParticles);
+  await renderer.compute(computeParticles);
 
-  await renderer.renderAsync(scene, camera);
+  await renderer.render(scene, camera);
 
   // throttle the logging
 

@@ -1,4 +1,4 @@
-import { BufferAttribute, Object3D, RenderTarget, Scene, Texture, Vec2, Vec3 } from '../../engine.js';
+import { BufferAttribute, Color, Object3D, RenderTarget, Scene, Texture, Vec2, Vec3 } from '../../engine.js';
 
 import {
   GPUFeatureNameType,
@@ -23,7 +23,6 @@ import RenderObject from '@modules/renderer/engine/renderers/common/RenderObject
 import ProgrammableStage from '@modules/renderer/engine/renderers/common/ProgrammableStage.js';
 import { ResourceManager } from './utils/ResourceManager.js';
 import { NodeBuilder } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.js';
-import { Color } from 'three/src/math/Color.js';
 
 export class Backend {
   data: WeakMap<any, any>;
@@ -44,9 +43,9 @@ export class Backend {
   getClearColor() {
     const renderer = this.renderer;
 
-    const color = new Color(0, 0, 0, 1);
+    const color = Color.new();
 
-    renderer.getClearColor(color);
+    color.from(renderer._clearColor);
 
     color.getRGB(color, this.renderer.currentColorSpace);
 
@@ -547,7 +546,7 @@ export class Backend {
     if (supportsDepth) {
       if (depth) {
         depthStencilAttachment.depthLoadOp = GPULoadOpType.Clear;
-        depthStencilAttachment.depthClearValue = renderer.getClearDepth();
+        depthStencilAttachment.depthClearValue = renderer._clearDepth;
         depthStencilAttachment.depthStoreOp = GPUStoreOpType.Store;
       } else {
         depthStencilAttachment.depthLoadOp = GPULoadOpType.Load;
@@ -560,7 +559,7 @@ export class Backend {
     if (supportsStencil) {
       if (stencil) {
         depthStencilAttachment.stencilLoadOp = GPULoadOpType.Clear;
-        depthStencilAttachment.stencilClearValue = renderer.getClearStencil();
+        depthStencilAttachment.stencilClearValue = renderer._clearStencil;
         depthStencilAttachment.stencilStoreOp = GPUStoreOpType.Store;
       } else {
         depthStencilAttachment.stencilLoadOp = GPULoadOpType.Load;

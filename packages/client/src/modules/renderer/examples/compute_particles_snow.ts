@@ -290,13 +290,13 @@ async function init() {
   renderer.parameters.toneMapping = Engine.ToneMapping.ACESFilmic;
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.setAnimationLoop(animate);
+  renderer._animation.loop = animate;
   document.body.appendChild(renderer.parameters.canvas);
 
   postProcessing = new PostProcessing(renderer);
   postProcessing.outputNode = totalPass;
 
-  await renderer.computeAsync(computeInit);
+  await renderer.compute(computeInit);
 
   //
 
@@ -310,16 +310,16 @@ async function animate() {
 
   scene.overrideMaterial = collisionPosMaterial;
   renderer.setRenderTarget(collisionPosRT);
-  await renderer.renderAsync(scene, collisionCamera);
+  await renderer.render(scene, collisionCamera);
 
   // compute
 
-  await renderer.computeAsync(computeParticles);
+  await renderer.compute(computeParticles);
 
   // result
 
   scene.overrideMaterial = null;
   renderer.setRenderTarget(null);
 
-  await postProcessing.renderAsync();
+  await postProcessing.render();
 }

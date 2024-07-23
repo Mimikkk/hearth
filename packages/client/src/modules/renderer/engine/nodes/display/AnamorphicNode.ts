@@ -53,7 +53,7 @@ class AnamorphicNode extends TempNode {
 
     this._renderTarget.texture.type = map.type;
 
-    const currentRenderTarget = renderer.getRenderTarget();
+    const currentRenderTarget = renderer._renderTarget;
     const currentTexture = textureNode.value;
 
     quadMesh.material = this._material;

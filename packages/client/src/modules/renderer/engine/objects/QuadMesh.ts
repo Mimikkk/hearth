@@ -30,7 +30,7 @@ export class QuadMesh extends Mesh {
   }
 
   renderAsync(renderer: Renderer): Promise<void> {
-    return renderer.renderAsync(this, _camera);
+    return renderer.render(this, _camera);
   }
 
   render(renderer: Renderer): void {

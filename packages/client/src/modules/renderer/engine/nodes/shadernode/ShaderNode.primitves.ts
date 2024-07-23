@@ -3,7 +3,6 @@ import { getValueFromType } from '@modules/renderer/engine/nodes/core/NodeUtils.
 import { getConstNode } from '@modules/renderer/engine/nodes/shadernode/utils.js';
 import ConvertNode from '@modules/renderer/engine/nodes/utils/ConvertNode.js';
 import JoinNode from '@modules/renderer/engine/nodes/utils/JoinNode.js';
-import ConstNode from '@modules/renderer/engine/nodes/core/ConstNode.js';
 import ArrayElementNode from '@modules/renderer/engine/nodes/utils/ArrayElementNode.js';
 import SplitNode from '@modules/renderer/engine/nodes/utils/SplitNode.js';
 import { ShaderNodeObject } from './ShaderNodeObject.js';
@@ -11,8 +10,9 @@ import { ShaderNodeObjects } from './ShaderNodeObjects.js';
 import { ShaderNodeArray } from './ShaderNodeArray.js';
 import { ShaderNodeProxy } from './ShaderNodeProxy.js';
 import { ShaderNodeImmutable } from './ShaderNodeImmutable.js';
+import { TypeName } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.types.js';
 
-const createConvertType = (type: string, cacheMap: Map<any, any> = null) => {
+const createConvertType = (type: TypeName, cacheMap: Map<any, any> = null) => {
   return (...params) => {
     if (
       params.length === 0 ||
@@ -40,45 +40,44 @@ const createConvertType = (type: string, cacheMap: Map<any, any> = null) => {
   };
 };
 
-export const color = createConvertType('color');
-export const f32 = createConvertType('f32', floatMap);
-export const i32 = createConvertType('i32', sintMap);
-export const u32 = createConvertType('u32', uintMap);
-export const bool = createConvertType('bool', boolMap);
-export const vec2 = createConvertType('vec2');
-export const ivec2 = createConvertType('ivec2');
-export const uvec2 = createConvertType('uvec2');
-export const bvec2 = createConvertType('bvec2');
-export const vec3 = createConvertType('vec3');
-export const ivec3 = createConvertType('ivec3');
-export const uvec3 = createConvertType('uvec3');
-export const bvec3 = createConvertType('bvec3');
-export const vec4 = createConvertType('vec4');
-export const ivec4 = createConvertType('ivec4');
-export const uvec4 = createConvertType('uvec4');
-export const bvec4 = createConvertType('bvec4');
-export const mat2 = createConvertType('mat2');
-export const imat2 = createConvertType('imat2');
-export const umat2 = createConvertType('umat2');
-export const bmat2 = createConvertType('bmat2');
-export const mat3 = createConvertType('mat3');
-export const imat3 = createConvertType('imat3');
-export const umat3 = createConvertType('umat3');
-export const bmat3 = createConvertType('bmat3');
-export const mat4 = createConvertType('mat4');
-export const imat4 = createConvertType('imat4');
-export const umat4 = createConvertType('umat4');
-export const bmat4 = createConvertType('bmat4');
+export const color = createConvertType(TypeName.color);
+export const f32 = createConvertType(TypeName.f32, floatMap);
+export const i32 = createConvertType(TypeName.i32, sintMap);
+export const u32 = createConvertType(TypeName.u32, uintMap);
+export const bool = createConvertType(TypeName.bool, boolMap);
+export const vec2 = createConvertType(TypeName.vec2);
+export const ivec2 = createConvertType(TypeName.ivec2);
+export const uvec2 = createConvertType(TypeName.uvec2);
+export const bvec2 = createConvertType(TypeName.bvec2);
+export const vec3 = createConvertType(TypeName.vec3);
+export const ivec3 = createConvertType(TypeName.ivec3);
+export const uvec3 = createConvertType(TypeName.uvec3);
+export const bvec3 = createConvertType(TypeName.bvec3);
+export const vec4 = createConvertType(TypeName.vec4);
+export const ivec4 = createConvertType(TypeName.ivec4);
+export const uvec4 = createConvertType(TypeName.uvec4);
+export const bvec4 = createConvertType(TypeName.bvec4);
+export const mat2 = createConvertType(TypeName.mat2);
+export const imat2 = createConvertType(TypeName.imat2);
+export const umat2 = createConvertType(TypeName.umat2);
+export const bmat2 = createConvertType(TypeName.bmat2);
+export const mat3 = createConvertType(TypeName.mat3);
+export const imat3 = createConvertType(TypeName.imat3);
+export const umat3 = createConvertType(TypeName.umat3);
+export const bmat3 = createConvertType(TypeName.bmat3);
+export const mat4 = createConvertType(TypeName.mat4);
+export const imat4 = createConvertType(TypeName.imat4);
+export const umat4 = createConvertType(TypeName.umat4);
+export const bmat4 = createConvertType(TypeName.bmat4);
 
 export const nodeObject = (val, altType = null) => ShaderNodeObject(val, altType);
 export const nodeObjects = (val, altType = null) => new ShaderNodeObjects(val, altType);
 export const nodeArray = (val, altType = null) => new ShaderNodeArray(val, altType);
-export const nodeProxy = (NodeClass, scope = null, factor = null, settings = null) =>
+
+export const nodeProxy = <T>(NodeClass: T, scope = null, factor = null, settings = null): InstanceType<T> =>
   new ShaderNodeProxy(NodeClass, scope, factor, settings);
 export const nodeImmutable = (...params) => new ShaderNodeImmutable(...params);
 
-export const string = (value = '') => ShaderNodeObject(new ConstNode(value, 'string'));
-export const arrayBuffer = value => ShaderNodeObject(new ConstNode(value, 'ArrayBuffer'));
 export const element = nodeProxy(ArrayElementNode);
 export const convert = (node, types) => ShaderNodeObject(new ConvertNode(ShaderNodeObject(node), types));
 export const split = (node, channels) => ShaderNodeObject(new SplitNode(ShaderNodeObject(node), channels));

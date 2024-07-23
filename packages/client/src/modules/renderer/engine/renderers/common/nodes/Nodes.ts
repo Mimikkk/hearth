@@ -248,9 +248,9 @@ export class Nodes extends DataMap<any, any> {
 
   get isToneMappingState() {
     const renderer = this.renderer;
-    const renderTarget = renderer.getRenderTarget();
+    const renderTarget = renderer._renderTarget;
 
-    return renderTarget && renderTarget.isCubeRenderTarget ? false : true;
+    return !(renderTarget && renderTarget.isCubeRenderTarget);
   }
 
   updateToneMapping() {

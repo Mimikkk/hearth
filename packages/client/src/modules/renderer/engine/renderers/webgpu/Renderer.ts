@@ -23,6 +23,7 @@ import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 import { Color, Frustum, Mat4, Object3D, Plane } from '@modules/renderer/engine/engine.js';
 import { GPUFeatureNameType, GPUTextureFormatType } from '@modules/renderer/engine/renderers/webgpu/utils/constants.js';
 import { SortFn } from '@modules/renderer/engine/renderers/common/RenderList.js';
+import { Attribute } from '@modules/renderer/engine/core/types.js';
 
 const _scene = new Scene();
 const _drawingBufferSize = new Vec2();
@@ -161,12 +162,12 @@ export class Renderer {
     if (parameters?.autoinsert === undefined || parameters.autoinsert) {
       document.body.appendChild(renderer.parameters.canvas);
     }
-    if (parameters?.animate) renderer._animation.animationLoop = parameters.animate;
+    if (parameters?.animate) renderer._animation.loop = parameters.animate;
 
     return renderer;
   }
 
-  async compileAsync(scene: Scene, camera: Camera, targetScene: Scene | null = null) {
+  async compile(scene: Scene, camera: Camera, targetScene: Scene | null = null) {
     // preserve render tree
 
     const nodeFrame = this._nodes.nodeFrame;
@@ -277,15 +278,7 @@ export class Renderer {
     await Promise.all(compilationPromises);
   }
 
-  async renderAsync(scene: Scene, camera: Camera) {
-    this._renderScene(scene, camera);
-  }
-
-  render(scene: Object3D, camera: Camera) {
-    this._renderScene(scene, camera);
-  }
-
-  _renderScene(scene: Object3D, camera: Camera) {
+  async render(scene: Object3D, camera: Camera) {
     // preserve render tree
 
     const nodeFrame = this._nodes.nodeFrame;
@@ -444,242 +437,7 @@ export class Renderer {
     return renderContext;
   }
 
-  getMaxAnisotropy() {
-    return this.backend.getMaxAnisotropy();
-  }
-
-  getActiveCubeFace() {
-    return this._activeCubeFace;
-  }
-
-  getActiveMipmapLevel() {
-    return this._activeMipmapLevel;
-  }
-
-  async setAnimationLoop(callback: AnimationLoopFn) {
-    this._animation.setAnimationLoop(callback);
-  }
-
-  getArrayBuffer(attribute: BufferAttribute<any>) {
-    return this.getArrayBufferAsync(attribute);
-  }
-
-  async getArrayBufferAsync(attribute: BufferAttribute<any>) {
-    return await this.backend.getArrayBufferAsync(attribute);
-  }
-
-  getContext() {
-    return this.backend.getContext();
-  }
-
-  getPixelRatio() {
-    return this._pixelRatio;
-  }
-
-  getDrawingBufferSize(target: Vec3) {
-    return target.set(this._width * this._pixelRatio, this._height * this._pixelRatio).floor();
-  }
-
-  getSize(target: Vec2) {
-    return target.set(this._width, this._height);
-  }
-
-  setPixelRatio(value: number = 1) {
-    this._pixelRatio = value;
-
-    this.setSize(this._width, this._height, false);
-  }
-
-  setDrawingBufferSize(width, height, pixelRatio) {
-    this._width = width;
-    this._height = height;
-
-    this._pixelRatio = pixelRatio;
-
-    this.parameters.canvas.width = Math.floor(width * pixelRatio);
-    this.parameters.canvas.height = Math.floor(height * pixelRatio);
-
-    this.setViewport(0, 0, width, height);
-
-    this.backend.updateSize();
-  }
-
-  setSize(width, height, updateStyle = true) {
-    this._width = width;
-    this._height = height;
-
-    this.parameters.canvas.width = Math.floor(width * this._pixelRatio);
-    this.parameters.canvas.height = Math.floor(height * this._pixelRatio);
-
-    if (updateStyle === true) {
-      this.parameters.canvas.style.width = width + 'px';
-      this.parameters.canvas.style.height = height + 'px';
-    }
-
-    this.setViewport(0, 0, width, height);
-
-    this.backend.updateSize();
-  }
-
-  setOpaqueSort(method) {
-    this._opaqueSort = method;
-  }
-
-  setTransparentSort(method) {
-    this._transparentSort = method;
-  }
-
-  getScissor(target) {
-    const scissor = this._scissor;
-
-    target.x = scissor.x;
-    target.y = scissor.y;
-    target.width = scissor.width;
-    target.height = scissor.height;
-
-    return target;
-  }
-
-  setScissor(x, y, width, height) {
-    const scissor = this._scissor;
-
-    if (x.isVec4) {
-      scissor.from(x);
-    } else {
-      scissor.set(x, y, width, height);
-    }
-  }
-
-  getScissorTest() {
-    return this._scissorTest;
-  }
-
-  setScissorTest(boolean) {
-    this._scissorTest = boolean;
-
-    this.backend._scissorTest = boolean;
-  }
-
-  getViewport(target) {
-    return target.from(this._viewport);
-  }
-
-  setViewport(x, y, width, height, minDepth = 0, maxDepth = 1) {
-    const viewport = this._viewport;
-
-    if (x.isVec4) {
-      viewport.from(x);
-    } else {
-      viewport.set(x, y, width, height);
-    }
-
-    viewport.minDepth = minDepth;
-    viewport.maxDepth = maxDepth;
-  }
-
-  getClearColor(target) {
-    return target.copy(this._clearColor);
-  }
-
-  setClearColor(color, alpha = 1) {
-    this._clearColor.set(color);
-    this._clearColor.a = alpha;
-  }
-
-  getClearDepth() {
-    return this._clearDepth;
-  }
-
-  setClearDepth(depth) {
-    this._clearDepth = depth;
-  }
-
-  getClearStencil() {
-    return this._clearStencil;
-  }
-
-  setClearStencil(stencil) {
-    this._clearStencil = stencil;
-  }
-
-  isOccluded(object) {
-    const renderContext = this._currentRenderContext;
-
-    return renderContext && this.backend.isOccluded(renderContext, object);
-  }
-
-  clear(color = true, depth = true, stencil = true) {
-    let renderTargetData = null;
-    const renderTarget = this._renderTarget;
-
-    if (renderTarget !== null) {
-      this._textures.updateRenderTarget(renderTarget);
-
-      renderTargetData = this._textures.get(renderTarget);
-    }
-
-    this.backend.clear(color, depth, stencil, renderTargetData);
-  }
-
-  clearColor() {
-    return this.clear(true, false, false);
-  }
-
-  clearDepth() {
-    return this.clear(false, true, false);
-  }
-
-  clearStencil() {
-    return this.clear(false, false, true);
-  }
-
-  get currentColorSpace() {
-    const renderTarget = this._renderTarget;
-
-    if (renderTarget !== null) {
-      const texture = renderTarget.texture;
-
-      return (Array.isArray(texture) ? texture[0] : texture).colorSpace;
-    }
-
-    return this.parameters.outputColorSpace;
-  }
-
-  dispose() {
-    this.info.dispose();
-
-    this._animation.dispose();
-    this._objects.dispose();
-    this._pipelines.dispose();
-    this._nodes.dispose();
-    this._bindings.dispose();
-    this._renderLists.dispose();
-    this._renderContexts.dispose();
-    this._textures.dispose();
-
-    this.setRenderTarget(null);
-    this.setAnimationLoop(null);
-  }
-
-  setRenderTarget(renderTarget, activeCubeFace = 0, activeMipmapLevel = 0) {
-    this._renderTarget = renderTarget;
-    this._activeCubeFace = activeCubeFace;
-    this._activeMipmapLevel = activeMipmapLevel;
-  }
-
-  getRenderTarget() {
-    return this._renderTarget;
-  }
-
-  setRenderObjectFunction(renderObjectFunction) {
-    this._renderObjectFunction = renderObjectFunction;
-  }
-
-  getRenderObjectFunction() {
-    return this._renderObjectFunction;
-  }
-
-  async computeAsync(computeNodes) {
+  async compute(computeNodes) {
     const nodeFrame = this._nodes.nodeFrame;
 
     const previousRenderId = nodeFrame.renderId;
@@ -729,6 +487,90 @@ export class Renderer {
     //
 
     nodeFrame.renderId = previousRenderId;
+  }
+
+  getMaxAnisotropy() {
+    return this.backend.getMaxAnisotropy();
+  }
+
+  async getArrayBufferAsync(attribute: Attribute) {
+    return await this.backend.getArrayBufferAsync(attribute);
+  }
+
+  getDrawingBufferSize(target: Vec2) {
+    return target.set(this._width * this._pixelRatio, this._height * this._pixelRatio).floor();
+  }
+
+  getSize(target: Vec2) {
+    return target.set(this._width, this._height);
+  }
+
+  setPixelRatio(value: number = 1) {
+    this._pixelRatio = value;
+
+    this.setSize(this._width, this._height, false);
+  }
+
+  setSize(width, height, updateStyle = true) {
+    this._width = width;
+    this._height = height;
+
+    this.parameters.canvas.width = Math.floor(width * this._pixelRatio);
+    this.parameters.canvas.height = Math.floor(height * this._pixelRatio);
+
+    if (updateStyle === true) {
+      this.parameters.canvas.style.width = width + 'px';
+      this.parameters.canvas.style.height = height + 'px';
+    }
+
+    this._viewport.set(0, 0, width, height);
+
+    this.backend.updateSize();
+  }
+
+  isOccluded(object) {
+    const renderContext = this._currentRenderContext;
+
+    return renderContext && this.backend.isOccluded(renderContext, object);
+  }
+
+  clear(color = true, depth = true, stencil = true) {
+    let renderTargetData = null;
+    const renderTarget = this._renderTarget;
+
+    if (renderTarget !== null) {
+      this._textures.updateRenderTarget(renderTarget);
+
+      renderTargetData = this._textures.get(renderTarget);
+    }
+
+    this.backend.clear(color, depth, stencil, renderTargetData);
+  }
+
+  get currentColorSpace() {
+    const renderTarget = this._renderTarget;
+
+    if (renderTarget !== null) {
+      const texture = renderTarget.texture;
+
+      return (Array.isArray(texture) ? texture[0] : texture).colorSpace;
+    }
+
+    return this.parameters.outputColorSpace;
+  }
+
+  setRenderTarget(renderTarget, activeCubeFace = 0, activeMipmapLevel = 0) {
+    this._renderTarget = renderTarget;
+    this._activeCubeFace = activeCubeFace;
+    this._activeMipmapLevel = activeMipmapLevel;
+  }
+
+  setRenderObjectFunction(renderObjectFunction) {
+    this._renderObjectFunction = renderObjectFunction;
+  }
+
+  getRenderObjectFunction() {
+    return this._renderObjectFunction;
   }
 
   copyFramebufferToTexture(framebufferTexture) {

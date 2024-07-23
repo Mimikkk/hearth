@@ -16,6 +16,7 @@ import { Line2 } from '@modules/renderer/engine/lines/Line2.js';
 import { LineGeometry } from '@modules/renderer/engine/lines/LineGeometry.js';
 import * as GeometryUtils from '@modules/renderer/engine/utils/GeometryUtils.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
+import { Color } from '@modules/renderer/engine/engine.js';
 
 let line, renderer, scene, camera, camera2, controls, backgroundNode;
 let line1;
@@ -34,9 +35,9 @@ async function init() {
 
   renderer = await Renderer.create();
   renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setClearColor(0x000000, 0.0);
+  renderer._clearColor = new Color(0x000000);
   renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.setAnimationLoop(animate);
+  renderer._animation.loop = animate;
   document.body.appendChild(renderer.parameters.canvas);
 
   scene = new Engine.Scene();
@@ -130,9 +131,9 @@ function animate() {
 
   // main scene
 
-  renderer.setClearColor(0x000000, 0);
+  renderer._clearColor = new Color(0x000000);
 
-  renderer.setViewport(0, 0, window.innerWidth, window.innerHeight);
+  renderer._viewport.set(0, 0, window.innerWidth, window.innerHeight);
 
   controls.update();
 
@@ -143,13 +144,12 @@ function animate() {
 
   // inset scene
 
-  renderer.clearDepth(); // important!
+  renderer.clear(false, true, false); // important!
 
-  renderer.setScissorTest(true);
+  renderer._scissorTest = true;
 
-  renderer.setScissor(20, 20, insetWidth, insetHeight);
-
-  renderer.setViewport(20, 20, insetWidth, insetHeight);
+  renderer._scissor.set(20, 20, insetWidth, insetHeight);
+  renderer._viewport.set(20, 20, window.innerWidth, window.innerHeight);
 
   camera2.position.from(camera.position);
   camera2.quaternion.from(camera.quaternion);
@@ -159,7 +159,7 @@ function animate() {
   scene.backgroundNode = backgroundNode;
   renderer.render(scene, camera2);
 
-  renderer.setScissorTest(false);
+  renderer._scissorTest = false;
 }
 
 //

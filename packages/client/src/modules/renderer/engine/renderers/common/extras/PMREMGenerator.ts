@@ -28,6 +28,7 @@ import {
   ToneMapping,
   Vec3,
 } from '@modules/renderer/engine/engine.js';
+import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 
 const LOD_MIN = 4;
 
@@ -90,8 +91,7 @@ const outputDirection = vec3(direction.x, direction.y.negate(), direction.z);
  */
 
 class PMREMGenerator {
-  constructor(renderer) {
-    this._renderer = renderer;
+  constructor(public _renderer: Renderer) {
     this._pingPongRenderTarget = null;
 
     this._lodMax = 0;
@@ -113,9 +113,9 @@ class PMREMGenerator {
    * is placed at the origin).
    */
   fromScene(scene, sigma = 0, near = 0.1, far = 100) {
-    _oldTarget = this._renderer.getRenderTarget();
-    _oldActiveCubeFace = this._renderer.getActiveCubeFace();
-    _oldActiveMipmapLevel = this._renderer.getActiveMipmapLevel();
+    _oldTarget = this._renderer._renderTarget;
+    _oldActiveCubeFace = this._renderer._activeCubeFace;
+    _oldActiveMipmapLevel = this._renderer._activeMipmapLevel;
 
     this._setSize(256);
 
@@ -201,9 +201,9 @@ class PMREMGenerator {
       this._setSize(texture.image.width / 4);
     }
 
-    _oldTarget = this._renderer.getRenderTarget();
-    _oldActiveCubeFace = this._renderer.getActiveCubeFace();
-    _oldActiveMipmapLevel = this._renderer.getActiveMipmapLevel();
+    _oldTarget = this._renderer._renderTarget;
+    _oldActiveCubeFace = this._renderer._activeCubeFace;
+    _oldActiveMipmapLevel = this._renderer._activeMipmapLevel;
 
     const cubeUVRenderTarget = renderTarget || this._allocateTargets();
     this._textureToCubeUV(texture, cubeUVRenderTarget);
@@ -247,7 +247,7 @@ class PMREMGenerator {
 
   _compileMaterial(material) {
     const tmpMesh = new Mesh(this._lodPlanes[0], material);
-    this._renderer.compileAsync(tmpMesh, _flatCamera);
+    this._renderer.compile(tmpMesh, _flatCamera);
   }
 
   _sceneToCubeUV(scene, near, far, cubeUVRenderTarget) {
@@ -263,7 +263,7 @@ class PMREMGenerator {
 
     const originalAutoClear = renderer.parameters.autoClear;
     const toneMapping = renderer.parameters.toneMapping;
-    renderer.getClearColor(_clearColor);
+    _clearColor.from(renderer._clearColor);
 
     renderer.parameters.toneMapping = ToneMapping.None;
     renderer.parameters.autoClear = false;

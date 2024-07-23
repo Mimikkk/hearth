@@ -5,7 +5,7 @@ import { handlers } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.h
 
 const cache = new WeakMap();
 
-export const ShaderNodeObject = function (object, altType = null) {
+export const ShaderNodeObject = (object, altType = null) => {
   const type = getValueType(object);
 
   if (type === 'node') {
