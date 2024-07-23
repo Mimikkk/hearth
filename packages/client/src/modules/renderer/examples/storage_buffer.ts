@@ -133,8 +133,8 @@ async function init() {
     await renderer.compute(compute);
     await renderer.render(scene, camera);
 
-    const computeCalls = renderer.info?.compute?.computeCalls.toFixed(0);
-    const renderCalls = renderer.info?.render?.drawCalls.toFixed(0);
+    const computeCalls = renderer.info?.compute?.calls.toFixed(0);
+    const renderCalls = renderer.info?.render?.draws.toFixed(0);
     dashboard.computeCalls.innerHTML = computeCalls ?? 'N/A';
     dashboard.renderCalls.innerHTML = renderCalls ?? 'N/A';
     const computeMs = renderer.info?.compute?.timestamp.toFixed(6);

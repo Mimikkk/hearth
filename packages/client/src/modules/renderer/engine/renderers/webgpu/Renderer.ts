@@ -1,7 +1,7 @@
 import { Backend } from '@modules/renderer/engine/renderers/webgpu/Backend.js';
 import { ColorSpace, Side, ToneMapping } from '@modules/renderer/engine/constants.js';
 import ToneMappingNode from '@modules/renderer/engine/nodes/display/ToneMappingNode.js';
-import { Info } from '@modules/renderer/engine/renderers/common/Info.js';
+import { Stats } from '@modules/renderer/engine/renderers/common/Stats.js';
 import { Vec4 } from '@modules/renderer/engine/math/Vec4.js';
 import Attributes from '@modules/renderer/engine/renderers/common/Attributes.js';
 import Geometries from '@modules/renderer/engine/renderers/common/Geometries.js';
@@ -43,7 +43,7 @@ import { Node } from '@modules/renderer/engine/nodes/core/Node.js';
 
 export class Renderer {
   backend: Backend;
-  info: Info;
+  info: Stats;
 
   _pixelRatio: number;
   _width: number;
@@ -113,7 +113,7 @@ export class Renderer {
       toneMappingExposure: options?.toneMappingExposure ?? 1.0,
       toneMappingNode: options?.toneMappingNode ?? null,
       requiredLimits: options?.requiredLimits ?? {},
-      trackTimestamp: options?.trackTimestamp ?? false,
+      useTimestamp: options?.trackTimestamp ?? false,
     };
   }
 
@@ -134,7 +134,7 @@ export class Renderer {
     this.useScissor = false;
 
     this.backend = new Backend(this);
-    this.info = new Info();
+    this.info = new Stats();
     this.nodes = new Nodes(this);
     this.animation = new Animation(this);
     this.attributes = new Attributes(this);
@@ -261,12 +261,12 @@ export class Renderer {
     if (target !== null) {
       this.textures.updateRenderTarget(target, activeMipmapLevel);
 
-      const renderTargetData = this.textures.get(target);
+      const data = this.textures.get(target);
 
-      context.textures = renderTargetData.textures;
-      context.depthTexture = renderTargetData.depthTexture;
-      context.width = renderTargetData.width;
-      context.height = renderTargetData.height;
+      context.textures = data.textures;
+      context.depthTexture = data.depthTexture;
+      context.width = data.width;
+      context.height = data.height;
       context.renderTarget = target;
       context.useDepth = target.depthBuffer;
       context.useStencil = target.stencilBuffer;
@@ -303,7 +303,7 @@ export class Renderer {
     this._activeRenderObjectFn = previousRenderObjectFunction;
 
     sceneRef.onAfterRender(this, scene, camera, target);
-    this.backend.resolveTimestampAsync(context, 'render');
+    this.backend.resolveTimestamp(context, 'render');
 
     return context;
   }
@@ -314,7 +314,6 @@ export class Renderer {
     const previousRenderId = frame.renderId;
     this.info.calls++;
     this.info.compute.calls++;
-    this.info.compute.computeCalls++;
     frame.renderId = this.info.calls;
 
     const backend = this.backend;
@@ -338,7 +337,7 @@ export class Renderer {
 
     backend.finishCompute(computeNodes);
 
-    await this.backend.resolveTimestampAsync(computeNodes, 'compute');
+    await this.backend.resolveTimestamp(computeNodes, 'compute');
     frame.renderId = previousRenderId;
   }
 
@@ -733,7 +732,7 @@ export namespace Renderer {
     toneMappingExposure: number;
     toneMappingNode: ToneMappingNode | null;
     requiredLimits: Record<string, GPUSize64>;
-    trackTimestamp: boolean;
+    useTimestamp: boolean;
   }
 }
 

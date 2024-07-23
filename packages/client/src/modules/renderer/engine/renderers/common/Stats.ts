@@ -5,13 +5,13 @@ import { Sprite } from '@modules/renderer/engine/objects/Sprite.js';
 import { Points } from '@modules/renderer/engine/objects/Points.js';
 import { Line } from '@modules/renderer/engine/objects/Line.js';
 
-export class Info {
+export class Stats {
   autoReset: boolean;
   frame: number;
   calls: number;
   render: {
     calls: number;
-    drawCalls: number;
+    draws: number;
     triangles: number;
     points: number;
     lines: number;
@@ -37,7 +37,7 @@ export class Info {
 
     this.render = {
       calls: 0,
-      drawCalls: 0,
+      draws: 0,
       triangles: 0,
       points: 0,
       lines: 0,
@@ -46,7 +46,6 @@ export class Info {
 
     this.compute = {
       calls: 0,
-      computeCalls: 0,
       timestamp: 0,
     };
 
@@ -57,7 +56,7 @@ export class Info {
   }
 
   update(object: Object3D, count: number, instanceCount: number = 1) {
-    this.render.drawCalls++;
+    this.render.draws++;
 
     if (object instanceof Mesh || object instanceof Sprite) {
       this.render.triangles += instanceCount * (count / 3);
@@ -72,14 +71,12 @@ export class Info {
     }
   }
 
-  updateTimestamp(type: 'render' | 'compute', time: number) {
+  stamp(type: 'render' | 'compute', time: number) {
     this[type].timestamp += time;
   }
 
   reset() {
-    this.render.drawCalls = 0;
-    this.compute.computeCalls = 0;
-
+    this.render.draws = 0;
     this.render.triangles = 0;
     this.render.points = 0;
     this.render.lines = 0;

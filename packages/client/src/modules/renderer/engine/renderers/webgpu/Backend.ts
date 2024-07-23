@@ -1,14 +1,4 @@
-import {
-  BufferAttribute,
-  Color,
-  InstancedBufferGeometry,
-  InstancedMesh,
-  Object3D,
-  RenderTarget,
-  Scene,
-  Texture,
-  Vec2,
-} from '../../engine.js';
+import { Color, InstancedBufferGeometry, InstancedMesh, Object3D, RenderTarget, Scene, Texture } from '../../engine.js';
 
 import {
   GPUFeatureNameType,
@@ -28,7 +18,6 @@ import RenderContext from '@modules/renderer/engine/renderers/common/RenderConte
 import ComputeNode from '@modules/renderer/engine/nodes/gpgpu/ComputeNode.js';
 import ComputePipeline from '@modules/renderer/engine/renderers/common/ComputePipeline.js';
 import Binding from '@modules/renderer/engine/renderers/common/Binding.js';
-import { Info } from '@modules/renderer/engine/renderers/common/Info.js';
 import RenderObject from '@modules/renderer/engine/renderers/common/RenderObject.js';
 import ProgrammableStage from '@modules/renderer/engine/renderers/common/ProgrammableStage.js';
 import { ResourceManager } from './utils/ResourceManager.js';
@@ -246,7 +235,7 @@ export class Backend {
       descriptor = this._getRenderPassDescriptor(renderContext);
     }
 
-    this.initTimestampQuery(renderContext, descriptor);
+    this.initTimestampBuffer(renderContext, descriptor);
 
     descriptor.occlusionQuerySet = occlusionQuerySet;
 
@@ -380,7 +369,7 @@ export class Backend {
       this.resolveOccludedAsync(renderContext);
     }
 
-    this.prepareTimestampBuffer(renderContext, renderContextData.encoder);
+    this.prepareTimestamp(renderContext, renderContextData.encoder);
 
     this.device.queue.submit([renderContextData.encoder.finish()]);
 
@@ -561,7 +550,7 @@ export class Backend {
 
     const descriptor = {};
 
-    this.initTimestampQuery(computeGroup, descriptor);
+    this.initTimestampBuffer(computeGroup, descriptor);
 
     groupGPU.cmdEncoderGPU = this.device.createCommandEncoder();
 
@@ -589,7 +578,7 @@ export class Backend {
 
     groupData.passEncoderGPU.end();
 
-    this.prepareTimestampBuffer(computeGroup, groupData.cmdEncoderGPU);
+    this.prepareTimestamp(computeGroup, groupData.cmdEncoderGPU);
 
     this.device.queue.submit([groupData.cmdEncoderGPU.finish()]);
   }
@@ -849,34 +838,27 @@ export class Backend {
     return this.textures.copyTextureToBuffer(texture, x, y, width, height);
   }
 
-  initTimestampQuery(renderContext: RenderContext, descriptor) {
-    if (!this.hasFeature(GPUFeatureNameType.TimestampQuery) || !this.renderer.parameters.trackTimestamp) return;
+  initTimestampBuffer(context: RenderContext, descriptor: GPURenderPassDescriptor): void {
+    if (!this.hasFeature(GPUFeatureNameType.TimestampQuery) || !this.renderer.parameters.useTimestamp) return;
 
-    const renderContextData = this.memo.get(renderContext);
+    const data = this.memo.get(context);
+    if (data.timeStampQuerySet) return;
 
-    if (!renderContextData.timeStampQuerySet) {
-      // Create a GPUQuerySet which holds 2 timestamp query results: one for the
-      // beginning and one for the end of compute pass execution.
-      const timeStampQuerySet = this.device.createQuerySet({ type: 'timestamp', count: 2 });
-
-      const timestampWrites = {
-        querySet: timeStampQuerySet,
-        beginningOfPassWriteIndex: 0, // Write timestamp in index 0 when pass begins.
-        endOfPassWriteIndex: 1, // Write timestamp in index 1 when pass ends.
-      };
-
-      Object.assign(descriptor, {
-        timestampWrites,
-      });
-
-      renderContextData.timeStampQuerySet = timeStampQuerySet;
-    }
+    const timeStampQuerySet = this.device.createQuerySet({ type: 'timestamp', count: 2 });
+    descriptor.timestampWrites = {
+      querySet: timeStampQuerySet,
+      // Write timestamp in index 0 when pass begins.
+      beginningOfPassWriteIndex: 0,
+      // Write timestamp in index 1 when pass ends.
+      endOfPassWriteIndex: 1,
+    };
+    data.timeStampQuerySet = timeStampQuerySet;
   }
 
-  prepareTimestampBuffer(renderContext: RenderContext, encoder: GPUCommandEncoder) {
-    if (!this.hasFeature(GPUFeatureNameType.TimestampQuery) || !this.renderer.parameters.trackTimestamp) return;
+  prepareTimestamp(context: RenderContext, encoder: GPUCommandEncoder) {
+    if (!this.hasFeature(GPUFeatureNameType.TimestampQuery) || !this.renderer.parameters.useTimestamp) return;
 
-    const renderContextData = this.memo.get(renderContext);
+    const data = this.memo.get(context);
 
     const size = 2 * BigInt64Array.BYTES_PER_ELEMENT;
     const resolveBuffer = this.device.createBuffer({
@@ -888,14 +870,14 @@ export class Backend {
       usage: GPUBufferUsage.COPY_DST | GPUBufferUsage.MAP_READ,
     });
 
-    encoder.resolveQuerySet(renderContextData.timeStampQuerySet, 0, 2, resolveBuffer, 0);
+    encoder.resolveQuerySet(data.timeStampQuerySet, 0, 2, resolveBuffer, 0);
     encoder.copyBufferToBuffer(resolveBuffer, 0, resultBuffer, 0, size);
 
-    renderContextData.currentTimestampQueryBuffer = resultBuffer;
+    data.currentTimestampQueryBuffer = resultBuffer;
   }
 
-  async resolveTimestampAsync(renderContext: RenderContext, type: 'render' | 'compute' = 'render') {
-    if (!this.hasFeature(GPUFeatureNameType.TimestampQuery) || !this.renderer.parameters.trackTimestamp) return;
+  async resolveTimestamp(renderContext: RenderContext, type: 'render' | 'compute' = 'render') {
+    if (!this.hasFeature(GPUFeatureNameType.TimestampQuery) || !this.renderer.parameters.useTimestamp) return;
 
     const renderContextData = this.memo.get(renderContext);
     const { currentTimestampQueryBuffer } = renderContextData;
@@ -908,7 +890,7 @@ export class Backend {
       await buffer.mapAsync(GPUMapMode.READ);
       const times = new BigUint64Array(buffer.getMappedRange());
       const duration = Number(times[1] - times[0]) / 1000000;
-      this.renderer.info.updateTimestamp(type, duration);
+      this.renderer.info.stamp(type, duration);
     } catch (error) {
       console.error(`Error mapping buffer: ${error}`);
     } finally {
