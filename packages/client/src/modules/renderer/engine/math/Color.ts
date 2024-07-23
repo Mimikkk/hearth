@@ -22,10 +22,10 @@ export type ColorRepresentation = Color | number;
 export class Color {
   declare isColor: true;
 
-  r: number;
-  g: number;
-  b: number;
-  a: number;
+  r: number = 0;
+  g: number = 0;
+  b: number = 0;
+  a: number = 1;
   constructor();
   constructor(r: ColorRepresentation);
   constructor(r: number, g: number, b: number);
