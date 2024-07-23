@@ -1,7 +1,7 @@
-import { Object3D } from '../core/Object3D.js';
+import { Entity } from '../core/Entity.js';
 import type { AudioListener } from './AudioListener.js';
 
-class Audio extends Object3D {
+class Audio extends Entity {
   listener: AudioListener;
   context: AudioContext;
   gain: GainNode;

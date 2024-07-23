@@ -1,8 +1,8 @@
 import { Mat4 } from '../math/Mat4.js';
-import { Object3D } from '../core/Object3D.js';
+import { Entity } from '../core/Entity.js';
 import { Vec3 } from '../math/Vec3.js';
 
-export class Camera extends Object3D {
+export class Camera extends Entity {
   declare isCamera: true;
   declare type: string | 'Camera';
   matrixWorldInverse: Mat4;
@@ -19,7 +19,7 @@ export class Camera extends Object3D {
   }
 
   copy(source: Camera, recursive?: boolean): this {
-    super.copy(source as unknown as Object3D, recursive);
+    super.copy(source as unknown as Entity, recursive);
 
     this.matrixWorldInverse.from(source.matrixWorldInverse);
     this.projectionMatrix.from(source.projectionMatrix);

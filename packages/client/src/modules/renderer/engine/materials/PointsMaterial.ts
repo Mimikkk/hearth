@@ -25,7 +25,7 @@ export class PointsMaterial extends Material {
   constructor(parameters: PointsMaterialParameters) {
     super(parameters);
 
-    this.color = new Color(0xffffff);
+    this.color = Color.new(0xffffff);
     this.map = null;
     this.alphaMap = null;
     this.size = 1;

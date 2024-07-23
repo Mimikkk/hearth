@@ -16,7 +16,7 @@ export class ShadowMaterial extends Material {
   constructor(parameters: ShadowMaterialParameters) {
     super(parameters);
 
-    this.color = new Color(0x000000);
+    this.color = Color.new(0x000000);
     this.transparent = true;
     this.fog = true;
 

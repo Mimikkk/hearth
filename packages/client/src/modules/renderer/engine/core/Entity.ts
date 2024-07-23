@@ -16,28 +16,13 @@ import { Renderer } from '../renderers/webgpu/Renderer.js';
 import { Sphere } from '@modules/renderer/engine/math/Sphere.js';
 import { v4 } from 'uuid';
 
-let _id = 0;
-
-const _v1 = /*@__PURE__*/ new Vec3();
-const _q1 = /*@__PURE__*/ new Quaternion();
-const _m1 = /*@__PURE__*/ new Mat4();
-const _target = /*@__PURE__*/ new Vec3();
-
-const _position = /*@__PURE__*/ new Vec3();
-const _scale = /*@__PURE__*/ new Vec3();
-const _quaternion = /*@__PURE__*/ new Quaternion();
-
-const _xAxis = /*@__PURE__*/ new Vec3(1, 0, 0);
-const _yAxis = /*@__PURE__*/ new Vec3(0, 1, 0);
-const _zAxis = /*@__PURE__*/ new Vec3(0, 0, 1);
-
 const isCamera = (object: any): object is Camera => object.isCamera;
 const isLight = (object: any): object is Light => object.isLight;
 
-export class Object3D {
-  declare ['constructor']: typeof Object3D;
-  declare isObject3D: true;
-  static Up: Vec3 = new Vec3(0, 1, 0);
+export class Entity {
+  declare ['constructor']: typeof Entity;
+  declare isEntity: true;
+  static Up: Vec3 = Vec3.new(0, 1, 0);
   static UseLocalAutoUpdate: boolean = true;
   static UseWorldAutoUpdate: boolean = true;
 
@@ -56,8 +41,8 @@ export class Object3D {
   uuid: string;
   name: string;
   type: string | 'Object3D';
-  parent: Object3D | null;
-  children: Object3D[];
+  parent: Entity | null;
+  children: Entity[];
   up: Vec3;
   position: Vec3;
   quaternion: Quaternion;
@@ -88,10 +73,10 @@ export class Object3D {
     this.parent = null;
     this.children = [];
 
-    this.up = Object3D.Up.clone();
+    this.up = Entity.Up.clone();
 
     this.position = Vec3.new();
-    this.quaternion = new Quaternion().asIdentity();
+    this.quaternion = Quaternion.new().asIdentity();
     this.scale = Vec3.new(1, 1, 1);
     this.modelViewMatrix = new Mat4();
     this.normalMatrix = new Mat3();
@@ -99,9 +84,9 @@ export class Object3D {
     this.matrix = new Mat4();
     this.matrixWorld = new Mat4();
 
-    this.matrixAutoUpdate = Object3D.UseLocalAutoUpdate;
+    this.matrixAutoUpdate = Entity.UseLocalAutoUpdate;
 
-    this.matrixWorldAutoUpdate = Object3D.UseWorldAutoUpdate; // checked by the renderer
+    this.matrixWorldAutoUpdate = Entity.UseWorldAutoUpdate; // checked by the renderer
     this.matrixWorldNeedsUpdate = false;
 
     this.layers = new Layers();
@@ -327,9 +312,9 @@ export class Object3D {
     return this;
   }
 
-  add(object: Object3D): this;
-  add(...object: Object3D[]): this;
-  add(object: Object3D): this {
+  add(object: Entity): this;
+  add(...object: Entity[]): this;
+  add(object: Entity): this {
     if (arguments.length > 1) {
       for (let i = 0; i < arguments.length; i++) {
         this.add(arguments[i]);
@@ -343,7 +328,7 @@ export class Object3D {
       return this;
     }
 
-    if (object && object.isObject3D) {
+    if (object && object.isEntity) {
       object.removeFromParent();
       object.parent = this!;
       this.children.push(object);
@@ -354,9 +339,9 @@ export class Object3D {
     return this;
   }
 
-  remove(object: Object3D): this;
-  remove(...object: Object3D[]): this;
-  remove(object: Object3D): this {
+  remove(object: Entity): this;
+  remove(...object: Entity[]): this;
+  remove(object: Entity): this {
     if (arguments.length > 1) {
       for (let i = 0; i < arguments.length; i++) {
         this.remove(arguments[i]);
@@ -389,7 +374,7 @@ export class Object3D {
     return this.remove(...this.children);
   }
 
-  attach(object: Object3D): this {
+  attach(object: Entity): this {
     // adds object as a child of this, while maintaining the object's world transform
 
     // Note: This method does not support scene graphs having non-uniformly-scaled nodes(s)
@@ -415,15 +400,15 @@ export class Object3D {
     return this;
   }
 
-  getObjectById(id: number): Object3D | undefined {
+  getObjectById(id: number): Entity | undefined {
     return this.getObjectByProperty('id', id);
   }
 
-  getObjectByName(name: string): Object3D | undefined {
+  getObjectByName(name: string): Entity | undefined {
     return this.getObjectByProperty('name', name);
   }
 
-  getObjectByProperty(name: string, value: any): Object3D | undefined {
+  getObjectByProperty(name: string, value: any): Entity | undefined {
     //@ts-expect-error
     if (this[name] === value) return this;
 
@@ -439,7 +424,7 @@ export class Object3D {
     return undefined;
   }
 
-  getObjectsByProperty(name: string, value: any, result: Object3D[] = []): Object3D[] {
+  getObjectsByProperty(name: string, value: any, result: Entity[] = []): Entity[] {
     // @ts-expect-error
     if (this[name] === value) result.push(this);
 
@@ -484,7 +469,7 @@ export class Object3D {
 
   raycast(raycaster: Raycaster, intersects: Intersection[]) {}
 
-  traverse(callback: (object: Object3D) => void): this {
+  traverse(callback: (object: Entity) => void): this {
     callback(this);
 
     const children = this.children;
@@ -496,7 +481,7 @@ export class Object3D {
     return this;
   }
 
-  traverseVisible(callback: (object: Object3D) => void): this {
+  traverseVisible(callback: (object: Entity) => void): this {
     if (this.visible === false) return this;
 
     callback(this);
@@ -510,7 +495,7 @@ export class Object3D {
     return this;
   }
 
-  traverseAncestors(callback: (object: Object3D) => void): this {
+  traverseAncestors(callback: (object: Entity) => void): this {
     const parent = this.parent;
 
     if (parent !== null) {
@@ -589,11 +574,11 @@ export class Object3D {
     return this;
   }
 
-  clone(recursive: boolean = true): Object3D {
+  clone(recursive: boolean = true): Entity {
     return new this.constructor().copy(this, recursive);
   }
 
-  copy(source: Object3D, recursive: boolean = true) {
+  copy(source: Entity, recursive: boolean = true) {
     this.name = source.name;
 
     this.up.from(source.up);
@@ -633,7 +618,21 @@ export class Object3D {
     return this;
   }
 }
+Entity.prototype.isEntity = true;
 
 const _euler = new Euler();
 
-Object3D.prototype.isObject3D = true;
+let _id = 0;
+
+const _v1 = Vec3.new();
+const _q1 = Quaternion.new();
+const _m1 = new Mat4();
+const _target = Vec3.new();
+
+const _position = Vec3.new();
+const _scale = Vec3.new();
+const _quaternion = Quaternion.new();
+
+const _xAxis = Vec3.new(1, 0, 0);
+const _yAxis = Vec3.new(0, 1, 0);
+const _zAxis = Vec3.new(0, 0, 1);

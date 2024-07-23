@@ -1,6 +1,6 @@
 import { LightsNode } from '../../nodes/Nodes.js';
 import { Light } from '@modules/renderer/engine/lights/Light.js';
-import { Object3D } from '@modules/renderer/engine/core/Object3D.js';
+import { Entity } from '@modules/renderer/engine/core/Entity.js';
 import { BufferGeometry } from '@modules/renderer/engine/core/BufferGeometry.js';
 import { Group } from '@modules/renderer/engine/objects/Group.js';
 import { Material } from '@modules/renderer/engine/materials/Material.js';
@@ -9,7 +9,7 @@ export type SortFn = (a: RenderItem, b: RenderItem) => number;
 
 export interface RenderItem {
   id: number;
-  object: Object3D;
+  object: Entity;
   geometry: BufferGeometry | null;
   material: Material;
   groupOrder: number;
@@ -51,7 +51,7 @@ export class RenderList {
   }
 
   next(
-    object: Object3D,
+    object: Entity,
     geometry: BufferGeometry | null,
     material: Material,
     groupOrder: number,
@@ -74,7 +74,7 @@ export class RenderList {
   }
 
   push(
-    object: Object3D,
+    object: Entity,
     geometry: BufferGeometry | null,
     material: Material,
     groupOrder: number,
@@ -89,7 +89,7 @@ export class RenderList {
   }
 
   unshift(
-    object: Object3D,
+    object: Entity,
     geometry: BufferGeometry | null,
     material: Material,
     groupOrder: number,
@@ -121,7 +121,7 @@ export class RenderList {
 
 export class RenderItem {
   constructor(
-    public object: Object3D,
+    public object: Entity,
     public geometry: BufferGeometry | null,
     public material: Material,
     public groupOrder: number,
@@ -132,7 +132,7 @@ export class RenderItem {
   ) {}
 
   static new(
-    object: Object3D,
+    object: Entity,
     geometry: BufferGeometry | null,
     material: Material,
     groupOrder: number,
@@ -143,7 +143,7 @@ export class RenderItem {
   }
 
   set(
-    object: Object3D,
+    object: Entity,
     geometry: BufferGeometry | null,
     material: Material,
     groupOrder: number,

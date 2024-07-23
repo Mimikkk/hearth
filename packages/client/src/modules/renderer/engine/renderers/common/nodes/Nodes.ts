@@ -8,7 +8,7 @@ import {
   FogExp2,
   Mapping,
   Material,
-  Object3D,
+  Entity,
   Scene,
   Texture,
   ToneMapping,
@@ -356,7 +356,7 @@ export class Nodes extends DataMap<any, any> {
   getNodeFrame(
     renderer: Renderer,
     scene: Scene | null = null,
-    object: Object3D | null = null,
+    object: Entity | null = null,
     camera: Camera | null = null,
     material: Material | null = null,
   ) {

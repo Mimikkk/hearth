@@ -1,7 +1,7 @@
 import { PropertyBinding } from './PropertyBinding.js';
 import * as MathUtils from '../math/MathUtils.js';
 import Binding from '@modules/renderer/engine/renderers/common/Binding.js';
-import { Object3D } from '@modules/renderer/engine/core/Object3D.js';
+import { Entity } from '@modules/renderer/engine/core/Entity.js';
 
 export class AnimationObjectGroup {
   declare isAnimationObjectGroup: true;
@@ -21,7 +21,7 @@ export class AnimationObjectGroup {
     bindingsPerObject: number;
   };
 
-  constructor(...bindings: Object3D[]) {
+  constructor(...bindings: Entity[]) {
     this.isAnimationObjectGroup = true;
 
     this.uuid = MathUtils.generateUuid();

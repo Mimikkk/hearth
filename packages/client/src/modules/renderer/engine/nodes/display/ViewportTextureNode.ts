@@ -5,7 +5,7 @@ import { viewportTopLeft } from './ViewportNode.js';
 import { FramebufferTexture, MinificationTextureFilter, Vec2 } from '@modules/renderer/engine/engine.js';
 import NodeFrame from '@modules/renderer/engine/nodes/core/NodeFrame.js';
 
-const _size = new Vec2();
+const _size = Vec2.new();
 
 class ViewportTextureNode extends TextureNode {
   static type = 'ViewportTextureNode';

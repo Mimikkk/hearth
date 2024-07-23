@@ -4,10 +4,10 @@ import * as MathUtils from '../math/MathUtils.js';
 import { Triangle } from '../math/Triangle.js';
 import { Vec3 } from '../math/Vec3.js';
 
-const _v0 = /*@__PURE__*/ new Vec3();
-const _v1 = /*@__PURE__*/ new Vec3();
-const _normal = /*@__PURE__*/ new Vec3();
-const _triangle = /*@__PURE__*/ new Triangle();
+const _v0 = Vec3.new();
+const _v1 = Vec3.new();
+const _normal = Vec3.new();
+const _triangle = new Triangle();
 
 export class EdgesGeometry extends BufferGeometry {
   constructor(geometry: BufferGeometry | null = null, thresholdAngle: number = 1) {

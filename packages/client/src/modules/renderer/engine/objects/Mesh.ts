@@ -3,7 +3,7 @@ import { Vec2 } from '../math/Vec2.js';
 import { Sphere } from '../math/Sphere.js';
 import { Ray } from '../math/Ray.js';
 import { Mat4 } from '../math/Mat4.js';
-import { Object3D } from '../core/Object3D.js';
+import { Entity } from '../core/Entity.js';
 import { Triangle } from '../math/Triangle.js';
 import { Side } from '../constants.js';
 import { BufferGeometry } from '../core/BufferGeometry.js';
@@ -11,30 +11,30 @@ import { Material } from '../materials/Material.js';
 import { Intersection, Raycaster } from '../core/Raycaster.js';
 import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
 
-const _inverseMatrix = /*@__PURE__*/ new Mat4();
-const _ray = /*@__PURE__*/ new Ray();
-const _sphere = /*@__PURE__*/ new Sphere();
-const _sphereHitAt = /*@__PURE__*/ new Vec3();
+const _inverseMatrix = new Mat4();
+const _ray = new Ray();
+const _sphere = new Sphere();
+const _sphereHitAt = Vec3.new();
 
-const _vA = /*@__PURE__*/ new Vec3();
-const _vB = /*@__PURE__*/ new Vec3();
-const _vC = /*@__PURE__*/ new Vec3();
+const _vA = Vec3.new();
+const _vB = Vec3.new();
+const _vC = Vec3.new();
 
-const _tempA = /*@__PURE__*/ new Vec3();
-const _morphA = /*@__PURE__*/ new Vec3();
+const _tempA = Vec3.new();
+const _morphA = Vec3.new();
 
-const _uvA = /*@__PURE__*/ new Vec2();
-const _uvB = /*@__PURE__*/ new Vec2();
-const _uvC = /*@__PURE__*/ new Vec2();
+const _uvA = Vec2.new();
+const _uvB = Vec2.new();
+const _uvC = Vec2.new();
 
-const _normalA = /*@__PURE__*/ new Vec3();
-const _normalB = /*@__PURE__*/ new Vec3();
-const _normalC = /*@__PURE__*/ new Vec3();
+const _normalA = Vec3.new();
+const _normalB = Vec3.new();
+const _normalC = Vec3.new();
 
-const _intersectionPoint = /*@__PURE__*/ new Vec3();
-const _intersectionPointWorld = /*@__PURE__*/ new Vec3();
+const _intersectionPoint = Vec3.new();
+const _intersectionPointWorld = Vec3.new();
 
-export class Mesh extends Object3D {
+export class Mesh extends Entity {
   declare isMesh: true;
   declare type: string | 'Mesh';
 

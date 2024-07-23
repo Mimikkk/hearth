@@ -17,7 +17,7 @@ import { BufferUsage } from '@modules/renderer/engine/constants.js';
 import Stats from 'stats-js';
 
 const physics = await AmmoPhysics();
-const position = new Vec3();
+const position = Vec3.new();
 
 //
 
@@ -26,7 +26,7 @@ camera.position.set(-1, 1.5, 2);
 camera.lookAt(0, 0.5, 0);
 
 const scene = new Scene();
-scene.background = new Color(0x666666);
+scene.background = Color.new(0x666666);
 
 const hemiLight = new HemisphereLight();
 scene.add(hemiLight);
@@ -48,7 +48,7 @@ scene.add(floor);
 const material = new MeshLambertMaterial();
 
 const matrix = new Mat4();
-const color = new Color();
+const color = Color.new();
 
 // Boxes
 

@@ -340,7 +340,7 @@ export class NodeMaterial extends ShaderMaterial {
     if (this.colorSpaced === true) {
       const outputColorSpace = renderer.currentColorSpace;
 
-      if (outputColorSpace !== ColorSpace.LinearSRGB && outputColorSpace !== ColorSpace.No) {
+      if (outputColorSpace !== ColorSpace.LinearSRGB && outputColorSpace !== null) {
         outputNode = outputNode.linearToColorSpace(outputColorSpace);
       }
     }

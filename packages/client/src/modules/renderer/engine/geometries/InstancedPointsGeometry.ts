@@ -8,7 +8,7 @@ import {
   Mat4,
 } from '../engine.js';
 
-const _vector = new Vec3();
+const _vector = Vec3.new();
 
 export class InstancedPointsGeometry extends InstancedBufferGeometry {
   declare isInstancedPointsGeometry: true;
@@ -83,7 +83,7 @@ export class InstancedPointsGeometry extends InstancedBufferGeometry {
 
   computeBoundingBox(): this {
     if (this.boundingBox === null) {
-      this.boundingBox = new Box3();
+      this.boundingBox = Box3.new();
     }
 
     const pos = this.attributes.instancePosition as InstancedBufferAttribute<Float32Array>;

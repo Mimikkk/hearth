@@ -260,10 +260,10 @@ function parseColorSpace(container: KTX2Container) {
   } else if (dfd.colorPrimaries === KHR_DF_PRIMARIES_DISPLAYP3) {
     return dfd.transferFunction === KHR_DF_TRANSFER_SRGB ? ColorSpace.DisplayP3 : ColorSpace.LinearDisplayP3;
   } else if (dfd.colorPrimaries === KHR_DF_PRIMARIES_UNSPECIFIED) {
-    return ColorSpace.No;
+    return null;
   } else {
     console.warn(`engine.KTX2Loader: Unsupported color primaries, "${dfd.colorPrimaries}"`);
-    return ColorSpace.No;
+    return null;
   }
 }
 

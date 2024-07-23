@@ -1,4 +1,4 @@
-import { Object3D } from '@modules/renderer/engine/core/Object3D.js';
+import { Entity } from '@modules/renderer/engine/core/Entity.js';
 import { LineSegments } from '@modules/renderer/engine/objects/LineSegments.js';
 import { Mesh } from '@modules/renderer/engine/objects/Mesh.js';
 import { Sprite } from '@modules/renderer/engine/objects/Sprite.js';
@@ -55,7 +55,7 @@ export class Stats {
     };
   }
 
-  update(object: Object3D, count: number, instanceCount: number = 1) {
+  update(object: Entity, count: number, instanceCount: number = 1) {
     this.render.draws++;
 
     if (object instanceof Mesh || object instanceof Sprite) {

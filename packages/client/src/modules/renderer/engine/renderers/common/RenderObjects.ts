@@ -6,7 +6,7 @@ import LightsNode from '@modules/renderer/engine/nodes/lighting/LightsNode.js';
 import { Camera } from '@modules/renderer/engine/cameras/Camera.js';
 import { Scene } from '@modules/renderer/engine/scenes/Scene.js';
 import { Material } from '@modules/renderer/engine/materials/Material.js';
-import { Object3D } from '@modules/renderer/engine/core/Object3D.js';
+import { Entity } from '@modules/renderer/engine/core/Entity.js';
 
 class RenderObjects {
   chainMaps: Record<string, ChainMap<any, any>>;
@@ -16,7 +16,7 @@ class RenderObjects {
   }
 
   get(
-    object: Object3D,
+    object: Entity,
     material: Material,
     scene: Scene,
     camera: Camera,
@@ -59,7 +59,7 @@ class RenderObjects {
   }
 
   createRenderObject(
-    object: Object3D,
+    object: Entity,
     material: Material,
     scene: Scene,
     camera: Camera,

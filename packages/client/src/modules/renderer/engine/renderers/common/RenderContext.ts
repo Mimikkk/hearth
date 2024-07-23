@@ -58,10 +58,10 @@ export class RenderContext {
     this.clearStencilValue = 1;
 
     this.useViewport = false;
-    this.viewportValue = new Vec4();
+    this.viewportValue = Vec4.new();
 
     this.useScissor = false;
-    this.scissorValue = new Vec4();
+    this.scissorValue = Vec4.new();
 
     this.textures = null;
     this.depthTexture = null;

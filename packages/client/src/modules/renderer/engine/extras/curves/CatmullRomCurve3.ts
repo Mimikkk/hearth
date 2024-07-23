@@ -46,7 +46,7 @@ const CubicPoly = () => {
 };
 
 type CurveType = 'centripetal' | 'chordal' | 'catmullrom';
-const tmp = new Vec3();
+const tmp = Vec3.new();
 const px = CubicPoly();
 const py = CubicPoly();
 const pz = CubicPoly();
@@ -64,7 +64,7 @@ class CatmullRomCurve3 extends Curve<Vec3> {
     super();
   }
 
-  getPoint(t: number, optionalTarget: Vec3 = new Vec3()): Vec3 {
+  getPoint(t: number, optionalTarget: Vec3 = Vec3.new()): Vec3 {
     const point = optionalTarget;
 
     const points = this.points;

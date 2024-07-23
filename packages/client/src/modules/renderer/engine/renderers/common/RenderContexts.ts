@@ -3,10 +3,10 @@ import RenderContext from './RenderContext.js';
 import { Scene } from '@modules/renderer/engine/scenes/Scene.js';
 import { Camera } from '@modules/renderer/engine/cameras/Camera.js';
 import { RenderTarget } from '@modules/renderer/engine/core/RenderTarget.js';
-import { Object3D } from '@modules/renderer/engine/core/Object3D.js';
+import { Entity } from '@modules/renderer/engine/core/Entity.js';
 
 class RenderContexts {
-  chainMaps: Map<string, ChainMap<Object3D, RenderContext>> = new Map();
+  chainMaps: Map<string, ChainMap<Entity, RenderContext>> = new Map();
 
   constructor() {}
 
@@ -33,7 +33,7 @@ class RenderContexts {
     return context;
   }
 
-  mapOf(state: string): ChainMap<Object3D, RenderContext> {
+  mapOf(state: string): ChainMap<Entity, RenderContext> {
     let chainMap = this.chainMaps.get(state);
 
     if (chainMap === undefined) {

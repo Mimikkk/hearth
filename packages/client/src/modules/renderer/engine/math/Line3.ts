@@ -5,15 +5,15 @@ import { Const } from './types.js';
 import { Attribute } from '@modules/renderer/engine/core/types.js';
 import { clamp } from './MathUtils.js';
 
-const _startP = /*@__PURE__*/ new Vec3();
-const _startEnd = /*@__PURE__*/ new Vec3();
+const _startP = Vec3.new();
+const _startEnd = Vec3.new();
 
 export class Line3 {
   declare isLine3: true;
 
   constructor(
-    public start: Vec3 = new Vec3(),
-    public end: Vec3 = new Vec3(),
+    public start: Vec3 = Vec3.new(),
+    public end: Vec3 = Vec3.new(),
   ) {}
 
   static new(start: Vec3 = Vec3.new(), end: Vec3 = Vec3.new()): Line3 {

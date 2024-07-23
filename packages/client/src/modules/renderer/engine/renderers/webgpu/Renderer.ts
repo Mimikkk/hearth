@@ -27,7 +27,7 @@ import {
   Group,
   Mat4,
   Material,
-  Object3D,
+  Entity,
   Plane,
   RenderTarget,
   Texture,
@@ -127,9 +127,9 @@ export class Renderer {
     this.size = RenderSize.fromCanvas(this.parameters.canvas);
 
     // transform into a class
-    this.viewport = new Vec4(0, 0, this.size.width, this._height);
+    this.viewport = Vec4.new(0, 0, this.size.width, this._height);
     // transform into a class
-    this.scissor = new Vec4(0, 0, this._width, this._height);
+    this.scissor = Vec4.new(0, 0, this._width, this._height);
 
     this.useScissor = false;
 
@@ -149,7 +149,7 @@ export class Renderer {
     this.context = null;
 
     // transform into a class
-    this._clearColor = new Color(0, 0, 0, this.parameters.alpha ? 0 : 1);
+    this._clearColor = Color.new(0, 0, 0, this.parameters.alpha ? 0 : 1);
     this._clearDepth = 1;
     this._clearStencil = 0;
 
@@ -195,7 +195,7 @@ export class Renderer {
     return renderer;
   }
 
-  async render(scene: Object3D, camera: Camera): Promise<RenderContext> {
+  async render(scene: Entity, camera: Camera): Promise<RenderContext> {
     const nodeFrame = this.nodes.nodeFrame;
     const previousRenderId = nodeFrame.renderId;
     const previousRenderContext = this.context;
@@ -447,7 +447,7 @@ export class Renderer {
     this.backend.updateSize();
   }
 
-  isOccluded(object: Object3D): boolean {
+  isOccluded(object: Entity): boolean {
     const renderContext = this.context;
 
     return renderContext && this.backend.isOccluded(renderContext, object);
@@ -497,7 +497,7 @@ export class Renderer {
     this.backend.patchTextureAt(texture, patch, at);
   }
 
-  _projectObject(object: Object3D, camera: Camera, groupOrder: number, renderList: RenderList): void {
+  _projectObject(object: Entity, camera: Camera, groupOrder: number, renderList: RenderList): void {
     if (object.visible === false) return;
 
     const visible = object.layers.test(camera.layers);
@@ -569,7 +569,7 @@ export class Renderer {
   }
 
   renderObject(
-    object: Object3D,
+    object: Entity,
     scene: Scene,
     camera: Camera,
     geometry: BufferGeometry,
@@ -639,7 +639,7 @@ export class Renderer {
   }
 
   _compileObject(
-    object: Object3D,
+    object: Entity,
     material: Material,
     scene: Scene,
     camera: Camera,
@@ -660,7 +660,7 @@ export class Renderer {
   }
 
   _createObject(
-    object: Object3D,
+    object: Entity,
     material: Material,
     scene: Scene,
     camera: Camera,
@@ -740,11 +740,11 @@ type Options = Renderer.Options;
 type Configuration = Renderer.Configuration;
 
 const _scene = new Scene();
-const _drawSize = new Vec2();
-const _screen = new Vec4();
+const _drawSize = Vec2.new();
+const _screen = Vec4.new();
 const _frustum = new Frustum();
 const _projection = new Mat4();
-const _vec3 = new Vec3();
+const _vec3 = Vec3.new();
 
 class RenderSize {
   constructor(
@@ -773,7 +773,7 @@ class RenderSize {
 class Viewport {}
 
 type RenderFn = (
-  object: Object3D,
+  object: Entity,
   material: Material,
   scene: Scene,
   camera: Camera,

@@ -1,19 +1,19 @@
 import { Vec3 } from '../math/Vec3.js';
-import { Object3D } from '../core/Object3D.js';
+import { Entity } from '../core/Entity.js';
 import { Intersection, Raycaster } from '../core/Raycaster.js';
 import { PerspectiveCamera } from '../cameras/PerspectiveCamera.js';
 import { OrthographicCamera } from '../cameras/OrthographicCamera.js';
 
-const _v1 = /*@__PURE__*/ new Vec3();
-const _v2 = /*@__PURE__*/ new Vec3();
+const _v1 = Vec3.new();
+const _v2 = Vec3.new();
 
-export class LOD extends Object3D {
+export class LOD extends Entity {
   declare isLOD: true;
   declare type: string | 'LOD';
 
   _currentLevel: number;
   autoUpdate: boolean;
-  levels: { distance: number; hysteresis: number; object: Object3D }[];
+  levels: { distance: number; hysteresis: number; object: Entity }[];
 
   constructor() {
     super();
@@ -51,7 +51,7 @@ export class LOD extends Object3D {
     return this;
   }
 
-  addLevel(object: Object3D, distance: number, hysteresis: number): this {
+  addLevel(object: Entity, distance: number, hysteresis: number): this {
     distance = Math.abs(distance);
 
     const levels = this.levels;
@@ -71,7 +71,7 @@ export class LOD extends Object3D {
     return this;
   }
 
-  getObjectForDistance(distance: number): Object3D | null {
+  getObjectForDistance(distance: number): Entity | null {
     const levels = this.levels;
 
     if (levels.length > 0) {

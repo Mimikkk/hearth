@@ -26,7 +26,7 @@ export class SpriteMaterial extends Material {
   constructor(parameters: SpriteMaterialParameters) {
     super(parameters);
 
-    this.color = new Color(0xffffff);
+    this.color = Color.new(0xffffff);
 
     this.map = null;
 

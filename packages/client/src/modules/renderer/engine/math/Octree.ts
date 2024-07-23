@@ -6,7 +6,7 @@ import { Sphere } from './Sphere.js';
 import { Box3 } from './Box3.js';
 import { Triangle } from './Triangle.js';
 import { Ray } from './Ray.js';
-import { Object3D } from '@modules/renderer/engine/core/Object3D.js';
+import { Entity } from '@modules/renderer/engine/core/Entity.js';
 import { Mesh } from '@modules/renderer/engine/objects/Mesh.js';
 
 interface Intersection {
@@ -15,19 +15,19 @@ interface Intersection {
   depth: number;
 }
 
-const _v1 = new Vec3();
-const _v2 = new Vec3();
-const _point1 = new Vec3();
-const _point2 = new Vec3();
+const _v1 = Vec3.new();
+const _v2 = Vec3.new();
+const _point1 = Vec3.new();
+const _point2 = Vec3.new();
 const _plane = new Plane();
 const _line1 = new Line3();
 const _line2 = new Line3();
 const _sphere = new Sphere();
-const _capsule = new Capsule();
+const _capsule = Capsule.new();
 
-const _temp1 = new Vec3();
-const _temp2 = new Vec3();
-const _temp3 = new Vec3();
+const _temp1 = Vec3.new();
+const _temp2 = Vec3.new();
+const _temp3 = Vec3.new();
 const EPS = 1e-10;
 
 function lineToLineClosestPoints(line1: Line3, line2: Line3, target1: Vec3, target2: Vec3) {
@@ -76,8 +76,8 @@ export class Octree {
   subTrees: Octree[];
   triangles: Triangle[];
 
-  constructor(public box: Box3 = new Box3()) {
-    this.bounds = new Box3();
+  constructor(public box: Box3 = Box3.new()) {
+    this.bounds = Box3.new();
 
     this.subTrees = [];
     this.triangles = [];
@@ -116,7 +116,7 @@ export class Octree {
     for (let x = 0; x < 2; x++) {
       for (let y = 0; y < 2; y++) {
         for (let z = 0; z < 2; z++) {
-          const box = new Box3();
+          const box = Box3.new();
           const v = _v1.set(x, y, z);
 
           box.min.from(this.box.min).add(v.mul(halfsize));
@@ -330,7 +330,7 @@ export class Octree {
     }
 
     if (hit) {
-      const collisionVector = _capsule.center(new Vec3()).sub(capsule.center(_v1));
+      const collisionVector = _capsule.center(Vec3.new()).sub(capsule.center(_v1));
       const depth = collisionVector.length();
 
       return { normal: collisionVector.normalize(), depth: depth };
@@ -362,10 +362,10 @@ export class Octree {
     return distance !== Infinity ? { distance, triangle, position } : undefined;
   }
 
-  fromGraphNode(group: Object3D): this {
+  fromGraphNode(group: Entity): this {
     group.updateWorldMatrix(true, true);
 
-    const isMesh = (obj: Object3D): obj is Mesh => 'isMesh' in obj;
+    const isMesh = (obj: Entity): obj is Mesh => 'isMesh' in obj;
     group.traverse(obj => {
       if (isMesh(obj)) {
         let geometry;
@@ -379,9 +379,9 @@ export class Octree {
         const positionAttribute = geometry.attributes.position;
 
         for (let i = 0; i < positionAttribute.count; i += 3) {
-          const v1 = new Vec3().fromAttribute(positionAttribute, i);
-          const v2 = new Vec3().fromAttribute(positionAttribute, i + 1);
-          const v3 = new Vec3().fromAttribute(positionAttribute, i + 2);
+          const v1 = Vec3.fromAttribute(positionAttribute, i);
+          const v2 = Vec3.fromAttribute(positionAttribute, i + 1);
+          const v3 = Vec3.fromAttribute(positionAttribute, i + 2);
 
           v1.applyMat4(obj.matrixWorld);
           v2.applyMat4(obj.matrixWorld);

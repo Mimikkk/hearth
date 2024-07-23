@@ -29,7 +29,7 @@ class VertexColorNode extends AttributeNode {
       result = super.generate(builder);
     } else {
       // Vertex color fallback should be white
-      result = builder.generateConst(this.nodeType, new Vec4(1, 1, 1, 1));
+      result = builder.generateConst(this.nodeType, Vec4.new(1, 1, 1, 1));
     }
 
     return result;

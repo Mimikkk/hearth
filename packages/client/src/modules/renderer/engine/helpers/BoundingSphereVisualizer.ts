@@ -1,4 +1,4 @@
-import { Object3D } from '@modules/renderer/engine/core/Object3D.js';
+import { Entity } from '@modules/renderer/engine/core/Entity.js';
 import { SphereGeometry } from '@modules/renderer/engine/geometries/SphereGeometry.js';
 import { Random } from '@modules/renderer/engine/math/random.js';
 import { Mesh } from '@modules/renderer/engine/objects/Mesh.js';
@@ -9,10 +9,10 @@ import {
 import { Sphere } from '@modules/renderer/engine/math/Sphere.js';
 
 export class BoundingSphereVisualizer {
-  object: Object3D;
+  object: Entity;
   bound: Mesh;
 
-  constructor(object: Object3D, parameters?: MeshLambertMaterialParameters) {
+  constructor(object: Entity, parameters?: MeshLambertMaterialParameters) {
     if (!object.boundingSphere) object.geometry!.computeBoundingSphere();
 
     const sphere = object.geometry!.boundingSphere as Sphere;
@@ -29,11 +29,11 @@ export class BoundingSphereVisualizer {
     this.bound.position.from(sphere.center);
   }
 
-  static create(object: Object3D): BoundingSphereVisualizer {
+  static create(object: Entity): BoundingSphereVisualizer {
     return new this(object);
   }
 
-  static attach(object: Object3D) {
+  static attach(object: Entity) {
     const visualizer = new this(object);
 
     object.add(visualizer.bound);

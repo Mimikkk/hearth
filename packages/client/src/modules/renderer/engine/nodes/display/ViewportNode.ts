@@ -48,9 +48,9 @@ class ViewportNode extends Node {
     let output = null;
 
     if (scope === ViewportNode.RESOLUTION) {
-      output = uniform(resolution || (resolution = new Vec2()));
+      output = uniform(resolution || (resolution = Vec2.new()));
     } else if (scope === ViewportNode.VIEWPORT) {
-      output = uniform(viewportResult || (viewportResult = new Vec4()));
+      output = uniform(viewportResult || (viewportResult = Vec4.new()));
     } else {
       output = viewportCoordinate.div(viewportResolution);
 

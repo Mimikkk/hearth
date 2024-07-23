@@ -10,7 +10,7 @@ export class FogExp2 {
     public density: number = 0.00025,
   ) {
     this.name = '';
-    this.color = new Color(color);
+    this.color = Color.new(color);
   }
 
   clone() {

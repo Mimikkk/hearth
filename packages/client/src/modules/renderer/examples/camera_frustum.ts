@@ -33,7 +33,7 @@ const createCamera = () => {
 };
 const createScene = () => {
   const scene = new Scene();
-  scene.background = new Color('lightblue');
+  scene.background = Color.new(0x00aacc);
   scene.backgroundNode = normalWorld.y.mix(color(0x0066ff), color(0xff0066));
   return scene;
 };

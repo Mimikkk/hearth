@@ -10,14 +10,14 @@ export class Triangle {
   declare isTriangle: true;
 
   constructor(
-    public a = new Vec3(),
-    public b = new Vec3(),
-    public c = new Vec3(),
+    public a = Vec3.new(),
+    public b = Vec3.new(),
+    public c = Vec3.new(),
   ) {}
 
   static getNormal(a: Vec3, b: Vec3, c: Vec3, target: Vec3): Vec3 {
     target.asSub(c, b);
-    target.cross(new Vec3().asSub(a, b));
+    target.cross(Vec3.new().asSub(a, b));
 
     const targetLengthSq = target.lengthSq();
     if (targetLengthSq > 0) {
@@ -28,9 +28,9 @@ export class Triangle {
   }
 
   static getBarycoord(point: Vec3, a: Vec3, b: Vec3, c: Vec3, target: Vec3): Vec3 | null {
-    const _v0 = new Vec3().asSub(c, a);
-    const _v1 = new Vec3().asSub(b, a);
-    const _v2 = new Vec3().asSub(point, a);
+    const _v0 = Vec3.new().asSub(c, a);
+    const _v1 = Vec3.new().asSub(b, a);
+    const _v2 = Vec3.new().asSub(point, a);
 
     const dot00 = _v0.dot(_v0);
     const dot01 = _v0.dot(_v1);
@@ -64,7 +64,7 @@ export class Triangle {
     v3: T,
     target: T,
   ): T | null {
-    const _v3 = new Vec3();
+    const _v3 = Vec3.new();
 
     if (this.getBarycoord(point, p1, p2, p3, _v3) === null) {
       target.x = 0;

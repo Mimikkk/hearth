@@ -7,9 +7,9 @@ import { Camera } from '../cameras/Camera.js';
 import { Light } from './Light.js';
 import { RenderTarget } from '@modules/renderer/engine/core/RenderTarget.js';
 
-const _projScreenMatrix = /*@__PURE__*/ new Mat4();
-const _lightPositionWorld = /*@__PURE__*/ new Vec3();
-const _lookTarget = /*@__PURE__*/ new Vec3();
+const _projScreenMatrix = new Mat4();
+const _lightPositionWorld = Vec3.new();
+const _lookTarget = Vec3.new();
 
 export class LightShadow<C extends Camera = Camera> {
   declare ['constructor']: typeof LightShadow;
@@ -34,7 +34,7 @@ export class LightShadow<C extends Camera = Camera> {
     this.radius = 1;
     this.blurSamples = 8;
 
-    this.mapSize = new Vec2(512, 512);
+    this.mapSize = Vec2.new(512, 512);
 
     this.map = null;
     this.mapPass = null;
@@ -44,11 +44,11 @@ export class LightShadow<C extends Camera = Camera> {
     this.needsUpdate = false;
 
     this._frustum = new Frustum();
-    this._frameExtents = new Vec2(1, 1);
+    this._frameExtents = Vec2.new(1, 1);
 
     this.viewportCount = 1;
 
-    this.viewports = [new Vec4(0, 0, 1, 1)];
+    this.viewports = [Vec4.new(0, 0, 1, 1)];
   }
 
   getViewportCount(): number {

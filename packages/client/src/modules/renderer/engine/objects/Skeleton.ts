@@ -4,8 +4,8 @@ import { Mat4 } from '../math/Mat4.js';
 import { DataTexture } from '../textures/DataTexture.js';
 import * as MathUtils from '../math/MathUtils.js';
 
-const _offsetMatrix = /*@__PURE__*/ new Mat4();
-const _identityMatrix = /*@__PURE__*/ new Mat4();
+const _offsetMatrix = new Mat4();
+const _identityMatrix = new Mat4();
 
 export class Skeleton {
   uuid: string;

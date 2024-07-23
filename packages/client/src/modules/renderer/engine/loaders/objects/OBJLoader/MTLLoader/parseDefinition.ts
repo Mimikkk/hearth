@@ -17,8 +17,8 @@ function parseParams(
   url: string;
 } {
   const textureParams = {
-    scale: new Vec2(1, 1),
-    offset: new Vec2(0, 0),
+    scale: Vec2.new(1, 1),
+    offset: Vec2.new(0, 0),
     url: '',
   };
 
@@ -86,15 +86,21 @@ export async function parseDefinition(
 
     switch (token.toLowerCase()) {
       case Token.DiffuseReflectivity: {
-        materialParameters.color = new Color().fromArray(value as number[]).convertSRGBToLinear();
+        materialParameters.color = Color.new()
+          .fromArray(value as number[])
+          .asSRGBToLinear();
         break;
       }
       case Token.SpecularReflectivity: {
-        materialParameters.specular = new Color().fromArray(value as number[]).convertSRGBToLinear();
+        materialParameters.specular = Color.new()
+          .fromArray(value as number[])
+          .asSRGBToLinear();
         break;
       }
       case Token.EmissiveReflectivity: {
-        materialParameters.emissive = new Color().fromArray(value as number[]).convertSRGBToLinear();
+        materialParameters.emissive = Color.new()
+          .fromArray(value as number[])
+          .asSRGBToLinear();
         break;
       }
       case Token.DiffuseMap: {

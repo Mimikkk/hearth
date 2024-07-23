@@ -157,7 +157,7 @@ export const parseBufferGeometry = (json: JsonContent): BufferGeometry => {
   const boundingSphere = json.data.boundingSphere;
 
   if (boundingSphere !== undefined) {
-    const center = new Vec3();
+    const center = Vec3.new();
 
     if (boundingSphere.center !== undefined) {
       center.fromArray(boundingSphere.center);

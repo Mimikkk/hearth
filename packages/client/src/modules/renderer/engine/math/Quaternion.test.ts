@@ -307,9 +307,9 @@ describe('Math - Quaternion', () => {
     let result = Quaternion.slerp(e, f, 0.5);
     expect(result).toEqual(expected);
 
-    const g = new Quaternion(0, D, 0, D);
-    const h = new Quaternion(0, -D, 0, D);
-    expected = new Quaternion(0, 0, 0, 1);
+    const g = Quaternion.new(0, D, 0, D);
+    const h = Quaternion.new(0, -D, 0, D);
+    expected = Quaternion.new(0, 0, 0, 1);
     result = Quaternion.slerp(g, h, 0.5);
     expect(result).toEqual(expected);
   });

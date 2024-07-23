@@ -2815,7 +2815,7 @@ export class RectAreaLightUniformsLib {
       MagnificationTextureFilter.Linear,
       MinificationTextureFilter.Nearest,
       1,
-      ColorSpace.No,
+      null,
     );
     UniformsLib.LTC_FLOAT_2 = new DataTexture(
       ltc_float_2,
@@ -2829,7 +2829,7 @@ export class RectAreaLightUniformsLib {
       MagnificationTextureFilter.Linear,
       MinificationTextureFilter.Nearest,
       1,
-      ColorSpace.No,
+      null,
     );
 
     UniformsLib.LTC_FLOAT_1.needsUpdate = true;
@@ -2859,7 +2859,7 @@ export class RectAreaLightUniformsLib {
       MagnificationTextureFilter.Linear,
       MinificationTextureFilter.Nearest,
       1,
-      ColorSpace.No,
+      null,
     );
     UniformsLib.LTC_HALF_2 = new DataTexture(
       ltc_half_2,
@@ -2873,7 +2873,7 @@ export class RectAreaLightUniformsLib {
       MagnificationTextureFilter.Linear,
       MinificationTextureFilter.Nearest,
       1,
-      ColorSpace.No,
+      null,
     );
 
     UniformsLib.LTC_HALF_1.needsUpdate = true;

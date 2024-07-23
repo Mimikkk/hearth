@@ -35,10 +35,10 @@ export class RenderTarget {
   ) {
     this.depth = 1;
 
-    this.scissor = new Vec4(0, 0, width, height);
+    this.scissor = Vec4.new(0, 0, width, height);
     this.scissorTest = false;
 
-    this.viewport = new Vec4(0, 0, width, height);
+    this.viewport = Vec4.new(0, 0, width, height);
 
     const image = { width: width, height: height, depth: 1 };
 
@@ -180,7 +180,7 @@ export namespace RenderTarget {
     format: TextureFormat.RGBA,
     type: TextureDataType.UnsignedByte,
     anisotropy: 1,
-    colorSpace: ColorSpace.No,
+    colorSpace: null,
   };
   export const configure = (options?: Options): Configuration => ({
     generateMipmaps: options?.generateMipmaps ?? initial.generateMipmaps,

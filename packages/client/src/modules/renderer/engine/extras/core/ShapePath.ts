@@ -6,7 +6,7 @@ import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 
 export class ShapePath {
   declare type: string | 'ShapePath';
-  color: Color = new Color(0, 0, 0);
+  color: Color = Color.new(0, 0, 0);
   subPaths: Path[] = [];
   currentPath: Path | null = null;
 

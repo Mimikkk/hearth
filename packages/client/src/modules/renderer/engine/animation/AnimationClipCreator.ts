@@ -34,7 +34,7 @@ export namespace AnimationClipCreator {
   export function CreateShakeAnimation(duration: number, shakeScale: Vec3) {
     const times: number[] = [];
     const values: number[] = [];
-    const tmp = new Vec3();
+    const tmp = Vec3.new();
 
     for (let i = 0; i < duration * 10; i++) {
       times.push(i / 10);
@@ -55,7 +55,7 @@ export namespace AnimationClipCreator {
   export function CreatePulsationAnimation(duration: number, pulseScale: number) {
     const times: number[] = [];
     const values: number[] = [];
-    const tmp = new Vec3();
+    const tmp = Vec3.new();
 
     for (let i = 0; i < duration * 10; i++) {
       times.push(i / 10);

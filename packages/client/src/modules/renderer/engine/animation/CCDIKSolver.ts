@@ -8,23 +8,23 @@ import {
   Mat4,
   Mesh,
   MeshBasicMaterial,
-  Object3D,
+  Entity,
   Quaternion,
   Skeleton,
   SphereGeometry,
   Vec3,
 } from '../engine.js';
 
-const _q = new Quaternion();
-const _targetPos = new Vec3();
-const _targetVec = new Vec3();
-const _effectorPos = new Vec3();
-const _effectorVec = new Vec3();
-const _linkPos = new Vec3();
-const _invLinkQ = new Quaternion();
-const _linkScale = new Vec3();
-const _axis = new Vec3();
-const _vector = new Vec3();
+const _q = Quaternion.new();
+const _targetPos = Vec3.new();
+const _targetVec = Vec3.new();
+const _effectorPos = Vec3.new();
+const _effectorVec = Vec3.new();
+const _linkPos = Vec3.new();
+const _invLinkQ = Quaternion.new();
+const _linkScale = Vec3.new();
+const _axis = Vec3.new();
+const _vector = Vec3.new();
 const _matrix = new Mat4();
 
 export interface IKS {
@@ -55,7 +55,7 @@ export interface IKS {
  * iks = [ {
  *  target: 1,
  *  effector: 2,
- *  links: [ { index: 5, limitation: new Vec3( 1, 0, 0 ) }, { index: 4, enabled: false }, { index : 3 } ],
+ *  links: [ { index: 5, limitation: Vec3.new( 1, 0, 0 ) }, { index: 4, enabled: false }, { index : 3 } ],
  *  iteration: 10,
  *  minAngle: 0.0,
  *  maxAngle: 1.0,
@@ -258,7 +258,7 @@ function setPositionOfBoneToAttributeArray(array: ArrayLike<number>, index: numb
  * @param {SkinnedMesh} mesh
  * @param {Array<Object>} iks
  */
-export class CCDIKHelper extends Object3D {
+export class CCDIKHelper extends Entity {
   root: Mesh;
   iks: IKS[];
   sphereGeometry: SphereGeometry;
@@ -279,28 +279,28 @@ export class CCDIKHelper extends Object3D {
     this.sphereGeometry = new SphereGeometry(sphereSize, 16, 8);
 
     this.targetSphereMaterial = new MeshBasicMaterial({
-      color: new Color(0xff8888),
+      color: Color.new(0xff8888),
       depthTest: false,
       depthWrite: false,
       transparent: true,
     });
 
     this.effectorSphereMaterial = new MeshBasicMaterial({
-      color: new Color(0x88ff88),
+      color: Color.new(0x88ff88),
       depthTest: false,
       depthWrite: false,
       transparent: true,
     });
 
     this.linkSphereMaterial = new MeshBasicMaterial({
-      color: new Color(0x8888ff),
+      color: Color.new(0x8888ff),
       depthTest: false,
       depthWrite: false,
       transparent: true,
     });
 
     this.lineMaterial = new LineBasicMaterial({
-      color: new Color(0xff0000),
+      color: Color.new(0xff0000),
       depthTest: false,
       depthWrite: false,
       transparent: true,

@@ -19,7 +19,7 @@ async function init() {
   camera.position.set(2, 2, 2);
 
   const scene = new Scene();
-  scene.background = new Color(0xeeeeee);
+  scene.background = Color.new(0xeeeeee);
 
   //lights
 

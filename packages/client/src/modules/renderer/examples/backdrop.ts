@@ -34,7 +34,7 @@ const camera = new PerspectiveCamera(50, window.innerWidth / window.innerHeight,
 camera.position.set(1, 2, 3);
 
 const scene = new Scene();
-scene.background = new Color('lightblue');
+scene.background = Color.new(0x00aacc);
 camera.lookAt(0, 1, 0);
 
 const clock = new Clock();

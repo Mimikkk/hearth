@@ -1,6 +1,6 @@
 import { Light } from './Light.js';
 import { Color, ColorRepresentation } from '../math/Color.js';
-import { Object3D } from '../core/Object3D.js';
+import { Entity } from '../core/Entity.js';
 
 export class HemisphereLight extends Light<undefined> {
   declare isHemisphereLight: true;
@@ -10,10 +10,10 @@ export class HemisphereLight extends Light<undefined> {
   constructor(skyColor: ColorRepresentation, groundColor: ColorRepresentation, intensity: number) {
     super(skyColor, intensity);
 
-    this.position.from(Object3D.Up);
+    this.position.from(Entity.Up);
     this.updateMatrix();
 
-    this.groundColor = new Color(groundColor);
+    this.groundColor = Color.new(groundColor);
   }
 
   copy(source: this, recursive?: boolean): this {

@@ -13,8 +13,8 @@ export class GridHelper extends LineSegments {
     color1: ColorRepresentation = 0x444444,
     color2: ColorRepresentation = 0x888888,
   ) {
-    color1 = new Color(color1);
-    color2 = new Color(color2);
+    color1 = Color.new(color1);
+    color2 = Color.new(color2);
 
     const center = divisions / 2;
     const step = size / divisions;

@@ -2,16 +2,16 @@ import { Vec3 } from './Vec3.js';
 import { Line3 } from './Line3.js';
 import { Plane } from './Plane.js';
 import { Triangle } from './Triangle.js';
-import { Object3D } from '@modules/renderer/engine/core/Object3D.js';
+import { Entity } from '@modules/renderer/engine/core/Entity.js';
 import { Ray } from '@modules/renderer/engine/math/Ray.js';
 
 const Visible = 0;
 const Deleted = 1;
 
-const _v1 = new Vec3();
+const _v1 = Vec3.new();
 const _line3 = new Line3();
 const _plane = new Plane();
-const _closestPoint = new Vec3();
+const _closestPoint = Vec3.new();
 const _triangle = new Triangle();
 
 export class ConvexHull {
@@ -60,7 +60,7 @@ export class ConvexHull {
     return this;
   }
 
-  setFromObject(object: Object3D): this {
+  setFromObject(object: Entity): this {
     const points: Vec3[] = [];
 
     object.updateMatrixWorld(true);
@@ -73,7 +73,7 @@ export class ConvexHull {
 
       if (!attribute) return;
       for (let i = 0, l = attribute.count; i < l; i++) {
-        const point = new Vec3();
+        const point = Vec3.new();
 
         point.fromAttribute(attribute, i).applyMat4(node.matrixWorld);
 
@@ -320,8 +320,8 @@ export class ConvexHull {
   // Computes the extremes of a simplex which will be the initial hull
 
   computeExtremes(): { min: VertexNode[]; max: VertexNode[] } {
-    const min = new Vec3();
-    const max = new Vec3();
+    const min = Vec3.new();
+    const max = Vec3.new();
 
     const minVertices = [];
     const maxVertices = [];
@@ -730,8 +730,8 @@ export class Face {
   materialIndex: number;
 
   constructor() {
-    this.normal = new Vec3();
-    this.midpoint = new Vec3();
+    this.normal = Vec3.new();
+    this.midpoint = Vec3.new();
     this.area = 0;
 
     // signed distance from face to the origin

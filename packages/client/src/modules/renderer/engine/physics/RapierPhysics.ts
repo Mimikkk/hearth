@@ -1,5 +1,5 @@
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
-import { Object3D } from '@modules/renderer/engine/core/Object3D.js';
+import { Entity } from '@modules/renderer/engine/core/Entity.js';
 import { Mesh } from '@modules/renderer/engine/objects/Mesh.js';
 import { BufferGeometry } from '@modules/renderer/engine/core/BufferGeometry.js';
 import { Quaternion } from '@modules/renderer/engine/math/Quaternion.js';
@@ -9,7 +9,7 @@ import { Scene } from '@modules/renderer/engine/scenes/Scene.js';
 type Vector = { x: number; y: number; z: number };
 
 export interface RapierPhysicsObject {
-  addScene: (scene: Object3D) => void;
+  addScene: (scene: Entity) => void;
   addMesh: (mesh: Mesh, mass?: number, restitution?: number) => void;
   setMeshPosition: (mesh: Mesh, position: Vector, index?: number) => void;
   setMeshVelocity: (mesh: Mesh, velocity: Vector, index?: number) => void;
@@ -19,8 +19,8 @@ const RAPIER_PATH = 'https://cdn.skypack.dev/@dimforge/rapier3d-compat@0.11.2';
 
 const frameRate = 60;
 
-const _scale = new Vec3(1, 1, 1);
-const ZERO = new Vec3();
+const _scale = Vec3.new(1, 1, 1);
+const ZERO = Vec3.new();
 
 //@ts-expect-error
 let RAPIER = null;
@@ -55,15 +55,15 @@ export async function RapierPhysics(): Promise<RapierPhysicsObject> {
 
   // Docs: https://rapier.rs/docs/api/javascript/JavaScript3D/
 
-  const gravity = new Vec3(0.0, -9.81, 0.0);
+  const gravity = Vec3.new(0.0, -9.81, 0.0);
   //@ts-expect-error
   const world = new RAPIER.World(gravity);
 
   const meshes: Mesh[] = [];
   const meshMap = new WeakMap();
 
-  const _vector = new Vec3();
-  const _quaternion = new Quaternion();
+  const _vector = Vec3.new();
+  const _quaternion = Quaternion.new();
   const _matrix = new Mat4();
 
   function addScene(scene: Scene) {

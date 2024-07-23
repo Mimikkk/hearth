@@ -29,7 +29,7 @@ import {
   MeshPhysicalMaterial,
   MeshStandardMaterial,
   NumberKeyframeTrack,
-  Object3D,
+  Entity,
   OrthographicCamera,
   PerspectiveCamera,
   PointLight,
@@ -64,7 +64,7 @@ export interface Plugin {
   readonly name: string;
   beforeRoot?: (() => Promise<void> | null) | undefined;
   afterRoot?: ((result: GLTF) => Promise<void> | null) | undefined;
-  loadNode?: ((nodeIndex: number) => Promise<Object3D> | null) | undefined;
+  loadNode?: ((nodeIndex: number) => Promise<Entity> | null) | undefined;
   loadMesh?: ((meshIndex: number) => Promise<Group | Mesh | SkinnedMesh> | null) | undefined;
   loadBufferView?: ((bufferViewIndex: number) => Promise<ArrayBuffer> | null) | undefined;
   loadMaterial?: ((materialIndex: number) => Promise<Material> | null) | undefined;
@@ -74,7 +74,7 @@ export interface Plugin {
     | ((materialIndex: number, materialParams: { [key: string]: any }) => Promise<any> | null)
     | undefined;
   createNodeMesh?: ((nodeIndex: number) => Promise<Group | Mesh | SkinnedMesh> | null) | undefined;
-  createNodeAttachment?: ((nodeIndex: number) => Promise<Object3D> | null) | undefined;
+  createNodeAttachment?: ((nodeIndex: number) => Promise<Entity> | null) | undefined;
 }
 
 export interface GLTF {
@@ -331,7 +331,7 @@ class GLTFLightsExtension implements Plugin {
     const lightDef = lightDefs[lightIndex];
     let lightNode;
 
-    const color = new Color(0xffffff);
+    const color = Color.new(0xffffff);
 
     if (lightDef.color !== undefined)
       color.setRGB(lightDef.color[0], lightDef.color[1], lightDef.color[2], ColorSpace.LinearSRGB);
@@ -426,7 +426,7 @@ class GLTFMaterialsUnlitExtension implements Plugin {
   extendParams(materialParams, materialDef, parser) {
     const pending = [];
 
-    materialParams.color = new Color(1.0, 1.0, 1.0);
+    materialParams.color = Color.new(1.0, 1.0, 1.0);
     materialParams.opacity = 1.0;
 
     const metallicRoughness = materialDef.pbrMetallicRoughness;
@@ -531,7 +531,7 @@ class GLTFMaterialsClearcoatExtension implements Plugin {
       if (extension.clearcoatNormalTexture.scale !== undefined) {
         const scale = extension.clearcoatNormalTexture.scale;
 
-        materialParams.clearcoatNormalScale = new Vec2(scale, scale);
+        materialParams.clearcoatNormalScale = Vec2.new(scale, scale);
       }
     }
 
@@ -671,7 +671,7 @@ class GLTFMaterialsSheenExtension implements Plugin {
 
     const pending = [];
 
-    materialParams.sheenColor = new Color(0, 0, 0);
+    materialParams.sheenColor = Color.new(0, 0, 0);
     materialParams.sheenRoughness = 0;
     materialParams.sheen = 1;
 
@@ -784,7 +784,7 @@ class GLTFMaterialsVolumeExtension implements Plugin {
     materialParams.attenuationDistance = extension.attenuationDistance || Infinity;
 
     const colorArray = extension.attenuationColor || [1, 1, 1];
-    materialParams.attenuationColor = new Color().setRGB(
+    materialParams.attenuationColor = Color.new().setRGB(
       colorArray[0],
       colorArray[1],
       colorArray[2],
@@ -870,7 +870,7 @@ class GLTFMaterialsSpecularExtension implements Plugin {
     }
 
     const colorArray = extension.specularColorFactor || [1, 1, 1];
-    materialParams.specularColor = new Color().setRGB(
+    materialParams.specularColor = Color.new().setRGB(
       colorArray[0],
       colorArray[1],
       colorArray[2],
@@ -1265,9 +1265,9 @@ class GLTFMeshGpuInstancing implements Plugin {
       for (const mesh of meshes) {
         // Temporal variables
         const m = new Mat4();
-        const p = new Vec3();
-        const q = new Quaternion();
-        const s = new Vec3(1, 1, 1);
+        const p = Vec3.new();
+        const q = Quaternion.new();
+        const s = Vec3.new(1, 1, 1);
 
         const instancedMesh = new InstancedMesh(mesh.geometry, mesh.material, count);
 
@@ -1298,7 +1298,7 @@ class GLTFMeshGpuInstancing implements Plugin {
         }
 
         // Just in case
-        Object3D.prototype.copy.call(instancedMesh, mesh);
+        Entity.prototype.copy.call(instancedMesh, mesh);
 
         this.parser.assignFinalMaterial(instancedMesh);
 
@@ -1562,7 +1562,7 @@ class GLTFCubicSplineInterpolant extends Interpolant {
   }
 }
 
-const _q = new Quaternion();
+const _q = Quaternion.new();
 
 class GLTFCubicSplineQuaternionInterpolant extends GLTFCubicSplineInterpolant {
   interpolate_(i1, t0, t, t1) {
@@ -1700,7 +1700,7 @@ function addUnknownExtensionsToUserData(knownExtensions, object, objectDef) {
 }
 
 /**
- * @param {Object3D|Material|BufferGeometry} object
+ * @param {Entity|Material|BufferGeometry} object
  * @param {GLTF.definition} gltfDef
  */
 function assignExtrasToUserData(object, gltfDef) {
@@ -2123,7 +2123,7 @@ class Parser {
    * Requests the specified dependency asynchronously, with caching.
    * @param {string} type
    * @param {number} index
-   * @return {Promise<Object3D|Material|THREE.Texture|AnimationClip|ArrayBuffer|Object>}
+   * @return {Promise<Entity|Material|THREE.Texture|AnimationClip|ArrayBuffer|Object>}
    */
   getDependency(type, index) {
     const cacheKey = type + ':' + index;
@@ -2566,7 +2566,7 @@ class Parser {
    * but reuse of the same glTF material may require multiple threejs materials
    * to accommodate different primitive types, defines, etc. New materials will
    * be created if necessary, and reused from a cache.
-   * @param  {Object3D} mesh Mesh, Line, or Points instance.
+   * @param  {Entity} mesh Mesh, Line, or Points instance.
    */
   assignFinalMaterial(mesh) {
     const geometry = mesh.geometry;
@@ -2673,7 +2673,7 @@ class Parser {
 
       const metallicRoughness = materialDef.pbrMetallicRoughness || {};
 
-      materialParams.color = new Color(1.0, 1.0, 1.0);
+      materialParams.color = Color.new(1.0, 1.0, 1.0);
       materialParams.opacity = 1.0;
 
       if (Array.isArray(metallicRoughness.baseColorFactor)) {
@@ -2732,7 +2732,7 @@ class Parser {
     if (materialDef.normalTexture !== undefined && materialType !== MeshBasicMaterial) {
       pending.push(parser.assignTexture(materialParams, 'normalMap', materialDef.normalTexture));
 
-      materialParams.normalScale = new Vec2(1, 1);
+      materialParams.normalScale = Vec2.new(1, 1);
 
       if (materialDef.normalTexture.scale !== undefined) {
         const scale = materialDef.normalTexture.scale;
@@ -2751,7 +2751,7 @@ class Parser {
 
     if (materialDef.emissiveFactor !== undefined && materialType !== MeshBasicMaterial) {
       const emissiveFactor = materialDef.emissiveFactor;
-      materialParams.emissive = new Color().setRGB(
+      materialParams.emissive = Color.new().setRGB(
         emissiveFactor[0],
         emissiveFactor[1],
         emissiveFactor[2],
@@ -3149,7 +3149,7 @@ class Parser {
   /**
    * Specification: https://github.com/KhronosGroup/glTF/tree/master/specification/2.0#nodes-and-hierarchy
    * @param {number} nodeIndex
-   * @return {Promise<Object3D>}
+   * @return {Promise<Entity>}
    */
   loadNode(nodeIndex) {
     const json = this.json;
@@ -3248,7 +3248,7 @@ class Parser {
       } else if (objects.length === 1) {
         node = objects[0];
       } else {
-        node = new Object3D();
+        node = new Entity();
       }
 
       if (node !== objects[0]) {
@@ -3469,7 +3469,7 @@ class Parser {
 function computeBounds(geometry, primitiveDef, parser) {
   const attributes = primitiveDef.attributes;
 
-  const box = new Box3();
+  const box = Box3.new();
 
   if (attributes.POSITION !== undefined) {
     const accessor = parser.json.accessors[attributes.POSITION];
@@ -3480,7 +3480,7 @@ function computeBounds(geometry, primitiveDef, parser) {
     // glTF requires 'min' and 'max', but VRM (which extends glTF) currently ignores that requirement.
 
     if (min !== undefined && max !== undefined) {
-      box.set(new Vec3(min[0], min[1], min[2]), new Vec3(max[0], max[1], max[2]));
+      box.set(Vec3.new(min[0], min[1], min[2]), Vec3.new(max[0], max[1], max[2]));
 
       if (accessor.normalized) {
         const boxScale = getNormalizedComponentScale(WEBGL_COMPONENT_TYPES[accessor.componentType]);
@@ -3499,8 +3499,8 @@ function computeBounds(geometry, primitiveDef, parser) {
   const targets = primitiveDef.targets;
 
   if (targets !== undefined) {
-    const maxDisplacement = new Vec3();
-    const vector = new Vec3();
+    const maxDisplacement = Vec3.new();
+    const vector = Vec3.new();
 
     for (let i = 0, il = targets.length; i < il; i++) {
       const target = targets[i];
@@ -3582,9 +3582,9 @@ function addPrimitiveAttributes(geometry, primitiveDef, parser) {
     pending.push(accessor);
   }
 
-  if (ColorManagement.workingColorSpace !== ColorSpace.LinearSRGB && 'COLOR_0' in attributes) {
+  if (ColorManagement.space !== ColorSpace.LinearSRGB && 'COLOR_0' in attributes) {
     console.warn(
-      `THREE.GLTFLoader: Converting vertex colors from "srgb-linear" to "${ColorManagement.workingColorSpace}" not supported.`,
+      `THREE.GLTFLoader: Converting vertex colors from "srgb-linear" to "${ColorManagement.space}" not supported.`,
     );
   }
 

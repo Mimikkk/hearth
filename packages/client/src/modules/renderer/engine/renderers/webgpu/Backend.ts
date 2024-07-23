@@ -1,4 +1,4 @@
-import { Color, InstancedBufferGeometry, InstancedMesh, Object3D, RenderTarget, Scene, Texture } from '../../engine.js';
+import { Color, InstancedBufferGeometry, InstancedMesh, Entity, RenderTarget, Scene, Texture } from '../../engine.js';
 
 import {
   GPUFeatureNameType,
@@ -388,7 +388,7 @@ export class Backend {
     }
   }
 
-  isOccluded(renderContext: RenderContext, object: Object3D) {
+  isOccluded(renderContext: RenderContext, object: Entity) {
     const renderContextData = this.memo.get(renderContext);
 
     return renderContextData.occluded && renderContextData.occluded.has(object);
@@ -898,7 +898,7 @@ export class Backend {
     }
   }
 
-  createNodeBuilder(object: Object3D, renderer: Renderer, scene: Scene | null = null) {
+  createNodeBuilder(object: Entity, renderer: Renderer, scene: Scene | null = null) {
     return new NodeBuilder(object, renderer, scene);
   }
 

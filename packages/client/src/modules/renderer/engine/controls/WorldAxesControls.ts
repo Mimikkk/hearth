@@ -6,7 +6,7 @@ import {
   Euler,
   Mesh,
   MeshBasicMaterial,
-  Object3D,
+  Entity,
   OrthographicCamera,
   Quaternion,
   Raycaster,
@@ -21,16 +21,16 @@ import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js'
 const turnRate = 2 * Math.PI;
 const dim = 128;
 const createAxisMaterial = (color: Color) => new MeshBasicMaterial({ color: color, toneMapped: false });
-const red = new Color('#ff3653');
-const green = new Color('#8adb00');
-const blue = new Color('#2c8fff');
+const red = Color.new(0xff3653);
+const green = Color.new(0x8adb00);
+const blue = Color.new(0x2c8fff);
 
 const addCircle = (canvas: HTMLCanvasElement, radius: number, color: Color): HTMLCanvasElement => {
   const context = canvas.getContext('2d')!;
   context.beginPath();
   context.arc(32, 32, radius, 0, 2 * Math.PI);
   context.closePath();
-  context.fillStyle = color.getStyle();
+  context.fillStyle = color.intoStyle();
   context.fill();
 
   return canvas;
@@ -62,20 +62,20 @@ type AnimateState = {
   rotation: Quaternion;
 };
 
-export class WorldAxesControls extends Object3D {
-  center: Vec3 = new Vec3();
+export class WorldAxesControls extends Entity {
+  center: Vec3 = Vec3.new();
 
   radius: number;
   geometry: BoxGeometry = new BoxGeometry(0.8, 0.05, 0.05).translate(0.4, 0, 0);
   axisLines: [posX: Sprite, posY: Sprite, posZ: Sprite, negX: Sprite, negY: Sprite, negZ: Sprite];
   axisMeshes: [xAxis: Mesh, yAxis: Mesh, zAxis: Mesh];
   raycaster: Raycaster = new Raycaster();
-  dummy: Object3D = new Object3D();
+  dummy: Entity = new Entity();
   orthoCamera: OrthographicCamera;
-  q1: Quaternion = new Quaternion();
-  q2: Quaternion = new Quaternion();
-  viewport: Vec4 = new Vec4();
-  point: Vec3 = new Vec3();
+  q1: Quaternion = Quaternion.new();
+  q2: Quaternion = Quaternion.new();
+  viewport: Vec4 = Vec4.new();
+  point: Vec3 = Vec3.new();
   unsubscribeClick: () => void;
 
   animation: AnimateState | null;
@@ -136,33 +136,33 @@ export class WorldAxesControls extends Object3D {
 
     if (posX === object) {
       return {
-        position: new Vec3(1, 0, 0),
-        rotation: new Quaternion().fromEuler(new Euler(0, Math.PI * 0.5, 0)),
+        position: Vec3.new(1, 0, 0),
+        rotation: Quaternion.fromEuler(new Euler(0, Math.PI * 0.5, 0)),
       };
     } else if (posY === object) {
       return {
-        position: new Vec3(0, 1, 0),
-        rotation: new Quaternion().fromEuler(new Euler(-Math.PI * 0.5, 0, 0)),
+        position: Vec3.new(0, 1, 0),
+        rotation: Quaternion.fromEuler(new Euler(-Math.PI * 0.5, 0, 0)),
       };
     } else if (posZ === object) {
       return {
-        position: new Vec3(0, 0, 1),
-        rotation: new Quaternion().fromEuler(new Euler()),
+        position: Vec3.new(0, 0, 1),
+        rotation: Quaternion.fromEuler(new Euler()),
       };
     } else if (negX === object) {
       return {
-        position: new Vec3(-1, 0, 0),
-        rotation: new Quaternion().fromEuler(new Euler(0, -Math.PI * 0.5, 0)),
+        position: Vec3.new(-1, 0, 0),
+        rotation: Quaternion.fromEuler(new Euler(0, -Math.PI * 0.5, 0)),
       };
     } else if (negY === object) {
       return {
-        position: new Vec3(0, -1, 0),
-        rotation: new Quaternion().fromEuler(new Euler(Math.PI * 0.5, 0, 0)),
+        position: Vec3.new(0, -1, 0),
+        rotation: Quaternion.fromEuler(new Euler(Math.PI * 0.5, 0, 0)),
       };
     } else if (negZ === object) {
       return {
-        position: new Vec3(0, 0, -1),
-        rotation: new Quaternion().fromEuler(new Euler(0, Math.PI, 0)),
+        position: Vec3.new(0, 0, -1),
+        rotation: Quaternion.fromEuler(new Euler(0, Math.PI, 0)),
       };
     }
 
@@ -219,7 +219,7 @@ export class WorldAxesControls extends Object3D {
     const offsetY = top + (this.canvas.offsetHeight - dim);
 
     this.raycaster.setFromCamera(
-      new Vec2(
+      Vec2.new(
         ((event.clientX - offsetX) / (right - offsetX)) * 2 - 1,
         -((event.clientY - offsetY) / (bottom - offsetY)) * 2 + 1,
       ),

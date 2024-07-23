@@ -108,7 +108,7 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
     this.clearcoatMap = null;
     this.clearcoatRoughness = 0.0;
     this.clearcoatRoughnessMap = null;
-    this.clearcoatNormalScale = new Vec2(1, 1);
+    this.clearcoatNormalScale = Vec2.new(1, 1);
     this.clearcoatNormalMap = null;
 
     this.ior = 1.5;
@@ -118,7 +118,7 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
     this.iridescenceThicknessRange = [100, 400];
     this.iridescenceThicknessMap = null;
 
-    this.sheenColor = new Color(0x000000);
+    this.sheenColor = Color.new(0x000000);
     this.sheenColorMap = null;
     this.sheenRoughness = 1.0;
     this.sheenRoughnessMap = null;
@@ -128,11 +128,11 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
     this.thickness = 0;
     this.thicknessMap = null;
     this.attenuationDistance = Infinity;
-    this.attenuationColor = new Color(1, 1, 1);
+    this.attenuationColor = Color.new(1, 1, 1);
 
     this.specularIntensity = 1.0;
     this.specularIntensityMap = null;
-    this.specularColor = new Color(1, 1, 1);
+    this.specularColor = Color.new(1, 1, 1);
     this.specularColorMap = null;
 
     this._anisotropy = 0;

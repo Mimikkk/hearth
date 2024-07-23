@@ -8,10 +8,10 @@ import type { Color } from './Color.js';
 import { BufferGeometry } from '@modules/renderer/engine/core/BufferGeometry.js';
 
 const _face = new Triangle();
-const _color = new Vec3();
-const _uva = new Vec2();
-const _uvb = new Vec2();
-const _uvc = new Vec2();
+const _color = Vec3.new();
+const _uva = Vec2.new();
+const _uvb = Vec2.new();
+const _uvc = Vec2.new();
 
 export class MeshSurfaceSampler<TGeometry extends BufferGeometry, TMaterial extends Material | Material[]> {
   geometry: BufferGeometry;

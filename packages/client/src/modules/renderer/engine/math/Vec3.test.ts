@@ -267,7 +267,7 @@ describe('Math - Vec3', () => {
     const coord = vec3();
     const expected = vec3(1, 0, 1);
 
-    expect(coord.fromColor(new Color(1, 0, 1))).toEqual(expected);
+    expect(coord.fromColor(Color.new(1, 0, 1))).toEqual(expected);
   });
 
   it('fromMat4Position', () => {

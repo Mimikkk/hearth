@@ -16,7 +16,7 @@ const animateUv = vec2(uv0.x.add(oscSine(timer)), uv0.y);
 
 // label is optional
 const myMap = texture(samplerTexture, animateUv).rgb.label('myTexture');
-const myColor = uniform(new Color(0x0066ff)).label('myColor');
+const myColor = uniform(Color.new(0x0066ff)).label('myColor');
 const opacity = 0.7;
 
 // try add .temp( 'myVar' ) after saturation()

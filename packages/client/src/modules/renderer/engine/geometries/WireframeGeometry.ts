@@ -25,8 +25,8 @@ export class WireframeGeometry extends BufferGeometry {
 
       // helper variables
 
-      const start = new Vec3();
-      const end = new Vec3();
+      const start = Vec3.new();
+      const end = Vec3.new();
 
       if (geometry.index !== null) {
         // indexed BufferGeometry

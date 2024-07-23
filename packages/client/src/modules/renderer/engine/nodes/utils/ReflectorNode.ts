@@ -5,7 +5,7 @@ import { viewportTopLeft } from '../display/ViewportNode.js';
 import {
   Filter,
   Mat4,
-  Object3D,
+  Entity,
   Plane,
   RenderTarget,
   TextureDataType,
@@ -15,18 +15,18 @@ import {
 } from '@modules/renderer/engine/engine.js';
 
 const _reflectorPlane = new Plane();
-const _normal = new Vec3();
-const _reflectorWorldPosition = new Vec3();
-const _cameraWorldPosition = new Vec3();
+const _normal = Vec3.new();
+const _reflectorWorldPosition = Vec3.new();
+const _cameraWorldPosition = Vec3.new();
 const _rotationMatrix = new Mat4();
-const _lookAtPosition = new Vec3(0, 0, -1);
-const clipPlane = new Vec4();
+const _lookAtPosition = Vec3.new(0, 0, -1);
+const clipPlane = Vec4.new();
 
-const _view = new Vec3();
-const _target = new Vec3();
-const _q = new Vec4();
+const _view = Vec3.new();
+const _target = Vec3.new();
+const _q = Vec4.new();
 
-const _size = new Vec2();
+const _size = Vec2.new();
 
 const _defaultRT = new RenderTarget();
 const _defaultUV = vec2(viewportTopLeft.x.oneMinus(), viewportTopLeft.y);
@@ -37,7 +37,7 @@ class ReflectorNode extends TextureNode {
   constructor(parameters = {}) {
     super(_defaultRT.texture, _defaultUV);
 
-    const { target = new Object3D(), resolution = 1, generateMipmaps = false, bounces = true } = parameters;
+    const { target = new Entity(), resolution = 1, generateMipmaps = false, bounces = true } = parameters;
 
     //
 

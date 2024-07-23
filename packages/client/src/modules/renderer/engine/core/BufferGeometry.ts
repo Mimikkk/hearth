@@ -3,7 +3,7 @@ import { Vec2 } from '../math/Vec2.js';
 import { Box3 } from '../math/Box3.js';
 import { BufferAttribute, Float32BufferAttribute, Uint32BufferAttribute } from './BufferAttribute.js';
 import { Sphere } from '../math/Sphere.js';
-import { Object3D } from './Object3D.js';
+import { Entity } from './Entity.js';
 import { Mat4 } from '../math/Mat4.js';
 import { Mat3 } from '../math/Mat3.js';
 import * as MathUtils from '../math/MathUtils.js';
@@ -12,12 +12,12 @@ import { Quaternion } from '@modules/renderer/engine/math/Quaternion.js';
 
 let _id = 0;
 
-const _m1 = /*@__PURE__*/ new Mat4();
-const _obj = /*@__PURE__*/ new Object3D();
-const _offset = /*@__PURE__*/ new Vec3();
-const _box = /*@__PURE__*/ new Box3();
-const _boxMorphTargets = /*@__PURE__*/ new Box3();
-const _vector = /*@__PURE__*/ new Vec3();
+const _m1 = new Mat4();
+const _obj = new Entity();
+const _offset = Vec3.new();
+const _box = Box3.new();
+const _boxMorphTargets = Box3.new();
+const _vector = Vec3.new();
 
 type AttributeRecord = Record<string, Float32BufferAttribute | InterleavedBufferAttribute>;
 
@@ -251,7 +251,7 @@ export class BufferGeometry<
 
   computeBoundingBox(): this {
     if (this.boundingBox === null) {
-      this.boundingBox = new Box3();
+      this.boundingBox = Box3.new();
     }
 
     const position = this.attributes.position as BufferAttribute<Float32Array>;
@@ -414,18 +414,18 @@ export class BufferGeometry<
     const tan2: Vec3[] = [];
 
     for (let i = 0; i < positionAttribute.count; i++) {
-      tan1[i] = new Vec3();
-      tan2[i] = new Vec3();
+      tan1[i] = Vec3.new();
+      tan2[i] = Vec3.new();
     }
 
-    const vA = new Vec3(),
-      vB = new Vec3(),
-      vC = new Vec3(),
-      uvA = new Vec2(),
-      uvB = new Vec2(),
-      uvC = new Vec2(),
-      sdir = new Vec3(),
-      tdir = new Vec3();
+    const vA = Vec3.new(),
+      vB = Vec3.new(),
+      vC = Vec3.new(),
+      uvA = Vec2.new(),
+      uvB = Vec2.new(),
+      uvC = Vec2.new(),
+      sdir = Vec3.new(),
+      tdir = Vec3.new();
 
     function handleTriangle(a: number, b: number, c: number): void {
       vA.fromAttribute(positionAttribute, a);
@@ -481,10 +481,10 @@ export class BufferGeometry<
       }
     }
 
-    const tmp = new Vec3(),
-      tmp2 = new Vec3();
-    const n = new Vec3(),
-      n2 = new Vec3();
+    const tmp = Vec3.new(),
+      tmp2 = Vec3.new();
+    const n = Vec3.new(),
+      n2 = Vec3.new();
 
     function handleVertex(v: number): void {
       n.fromAttribute(normalAttribute, v);
@@ -541,14 +541,14 @@ export class BufferGeometry<
         }
       }
 
-      const pA = new Vec3(),
-        pB = new Vec3(),
-        pC = new Vec3();
-      const nA = new Vec3(),
-        nB = new Vec3(),
-        nC = new Vec3();
-      const cb = new Vec3(),
-        ab = new Vec3();
+      const pA = Vec3.new(),
+        pB = Vec3.new(),
+        pC = Vec3.new();
+      const nA = Vec3.new(),
+        nB = Vec3.new(),
+        nC = Vec3.new();
+      const cb = Vec3.new(),
+        ab = Vec3.new();
 
       // indexed elements
 

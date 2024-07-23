@@ -3,9 +3,9 @@ import * as MathUtils from '../math/MathUtils.js';
 import { Vec2 } from '../math/Vec2.js';
 import { Vec3 } from '../math/Vec3.js';
 
-const _v3 = /*@__PURE__*/ new Vec3();
-const _minTarget = /*@__PURE__*/ new Vec2();
-const _maxTarget = /*@__PURE__*/ new Vec2();
+const _v3 = Vec3.new();
+const _minTarget = Vec2.new();
+const _maxTarget = Vec2.new();
 
 export class PerspectiveCamera extends Camera {
   declare isPerspectiveCamera: true;

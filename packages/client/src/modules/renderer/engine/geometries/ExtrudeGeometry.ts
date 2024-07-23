@@ -64,10 +64,10 @@ export class ExtrudeGeometry extends BufferGeometry {
 
   constructor(
     shapes: Shape | Shape[] = new Shape([
-      new Vec2(0.5, 0.5),
-      new Vec2(-0.5, 0.5),
-      new Vec2(-0.5, -0.5),
-      new Vec2(0.5, -0.5),
+      Vec2.new(0.5, 0.5),
+      Vec2.new(-0.5, 0.5),
+      Vec2.new(-0.5, -0.5),
+      Vec2.new(0.5, -0.5),
     ]),
     options: ExtrudeGeometryOptions = {},
   ) {
@@ -140,9 +140,9 @@ export class ExtrudeGeometry extends BufferGeometry {
 
         // console.info(splineTube, 'splineTube', splineTube.normals.length, 'steps', steps, 'extrudePts', extrudePts.length);
 
-        binormal = new Vec3();
-        normal = new Vec3();
-        position2 = new Vec3();
+        binormal = Vec3.new();
+        normal = Vec3.new();
+        position2 = Vec3.new();
       }
 
       // Safeguards if bevels are not enabled
@@ -254,7 +254,7 @@ export class ExtrudeGeometry extends BufferGeometry {
           //  but prevent crazy spikes
           const v_trans_lensq = v_trans_x * v_trans_x + v_trans_y * v_trans_y;
           if (v_trans_lensq <= 2) {
-            return new Vec2(v_trans_x, v_trans_y);
+            return Vec2.new(v_trans_x, v_trans_y);
           } else {
             shrink_by = Math.sqrt(v_trans_lensq / 2);
           }
@@ -292,7 +292,7 @@ export class ExtrudeGeometry extends BufferGeometry {
           }
         }
 
-        return new Vec2(v_trans_x / shrink_by, v_trans_y / shrink_by);
+        return Vec2.new(v_trans_x / shrink_by, v_trans_y / shrink_by);
       }
 
       const contourMovements = [];
@@ -610,7 +610,7 @@ const WorldUVGenerator: UVGenerator = {
     const c_x = vertices[indexC * 3];
     const c_y = vertices[indexC * 3 + 1];
 
-    return [new Vec2(a_x, a_y), new Vec2(b_x, b_y), new Vec2(c_x, c_y)];
+    return [Vec2.new(a_x, a_y), Vec2.new(b_x, b_y), Vec2.new(c_x, c_y)];
   },
 
   generateSideWallUV(geometry, vertices, indexA, indexB, indexC, indexD) {
@@ -628,9 +628,9 @@ const WorldUVGenerator: UVGenerator = {
     const d_z = vertices[indexD * 3 + 2];
 
     if (Math.abs(a_y - b_y) < Math.abs(a_x - b_x)) {
-      return [new Vec2(a_x, 1 - a_z), new Vec2(b_x, 1 - b_z), new Vec2(c_x, 1 - c_z), new Vec2(d_x, 1 - d_z)];
+      return [Vec2.new(a_x, 1 - a_z), Vec2.new(b_x, 1 - b_z), Vec2.new(c_x, 1 - c_z), Vec2.new(d_x, 1 - d_z)];
     } else {
-      return [new Vec2(a_y, 1 - a_z), new Vec2(b_y, 1 - b_z), new Vec2(c_y, 1 - c_z), new Vec2(d_y, 1 - d_z)];
+      return [Vec2.new(a_y, 1 - a_z), Vec2.new(b_y, 1 - b_z), Vec2.new(c_y, 1 - c_z), Vec2.new(d_y, 1 - d_z)];
     }
   },
 };

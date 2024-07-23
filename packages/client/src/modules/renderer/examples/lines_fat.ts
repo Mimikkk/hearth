@@ -35,7 +35,7 @@ async function init() {
 
   renderer = await Renderer.create();
   renderer.setPixelRatio(window.devicePixelRatio);
-  renderer._clearColor = new Color(0x000000);
+  renderer._clearColor = Color.new(0x000000);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.animation.loop = animate;
   document.body.appendChild(renderer.parameters.canvas);
@@ -131,7 +131,7 @@ function animate() {
 
   // main scene
 
-  renderer._clearColor = new Color(0x000000);
+  renderer._clearColor = Color.new(0x000000);
 
   renderer.viewport.set(0, 0, window.innerWidth, window.innerHeight);
 

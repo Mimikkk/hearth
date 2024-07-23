@@ -15,7 +15,7 @@ export class Path extends CurvePath<Vec2> {
 
     this.type = 'Path';
 
-    this.currentPoint = new Vec2();
+    this.currentPoint = Vec2.new();
     if (points) this.setFromPoints(points);
   }
 
@@ -36,7 +36,7 @@ export class Path extends CurvePath<Vec2> {
   }
 
   lineTo(x: number, y: number): this {
-    const curve = new LineCurve(this.currentPoint.clone(), new Vec2(x, y));
+    const curve = new LineCurve(this.currentPoint.clone(), Vec2.new(x, y));
     this.curves.push(curve);
 
     this.currentPoint.set(x, y);
@@ -45,7 +45,7 @@ export class Path extends CurvePath<Vec2> {
   }
 
   quadraticCurveTo(aCPx: number, aCPy: number, aX: number, aY: number): this {
-    const curve = new QuadraticBezierCurve(this.currentPoint.clone(), new Vec2(aCPx, aCPy), new Vec2(aX, aY));
+    const curve = new QuadraticBezierCurve(this.currentPoint.clone(), Vec2.new(aCPx, aCPy), Vec2.new(aX, aY));
 
     this.curves.push(curve);
 
@@ -57,9 +57,9 @@ export class Path extends CurvePath<Vec2> {
   bezierCurveTo(aCP1x: number, aCP1y: number, aCP2x: number, aCP2y: number, aX: number, aY: number): this {
     const curve = new CubicBezierCurve(
       this.currentPoint.clone(),
-      new Vec2(aCP1x, aCP1y),
-      new Vec2(aCP2x, aCP2y),
-      new Vec2(aX, aY),
+      Vec2.new(aCP1x, aCP1y),
+      Vec2.new(aCP2x, aCP2y),
+      Vec2.new(aX, aY),
     );
 
     this.curves.push(curve);
@@ -124,7 +124,7 @@ export class Path extends CurvePath<Vec2> {
 
     if (this.curves.length > 0) {
       // if a previous curve is present, attempt to join
-      const firstPoint = curve.getPoint(0, new Vec2());
+      const firstPoint = curve.getPoint(0, Vec2.new());
 
       if (!firstPoint.equals(this.currentPoint)) {
         this.lineTo(firstPoint.x, firstPoint.y);
@@ -133,7 +133,7 @@ export class Path extends CurvePath<Vec2> {
 
     this.curves.push(curve);
 
-    const lastPoint = curve.getPoint(1, new Vec2());
+    const lastPoint = curve.getPoint(1, Vec2.new());
     this.currentPoint.from(lastPoint);
 
     return this;

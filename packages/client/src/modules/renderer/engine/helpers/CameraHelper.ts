@@ -8,8 +8,8 @@ import { Float32BufferAttribute } from '../core/BufferAttribute.js';
 import { PerspectiveCamera } from '@modules/renderer/engine/cameras/PerspectiveCamera.js';
 import { OrthographicCamera } from '@modules/renderer/engine/cameras/OrthographicCamera.js';
 
-const _vector = /*@__PURE__*/ new Vec3();
-const _camera = /*@__PURE__*/ new Camera();
+const _vector = Vec3.new();
+const _camera = new Camera();
 
 /**
  *  - shows frustum, line of sight and up of the camera
@@ -113,11 +113,11 @@ export class CameraHelper extends LineSegments {
 
     // colors
 
-    const colorFrustum = new Color(0xffaa00);
-    const colorCone = new Color(0xff0000);
-    const colorUp = new Color(0x00aaff);
-    const colorTarget = new Color(0xffffff);
-    const colorCross = new Color(0x333333);
+    const colorFrustum = Color.new(0xffaa00);
+    const colorCone = Color.new(0xff0000);
+    const colorUp = Color.new(0x00aaff);
+    const colorTarget = Color.new(0xffffff);
+    const colorCross = Color.new(0x333333);
 
     this.setColors(colorFrustum, colorCone, colorUp, colorTarget, colorCross);
   }

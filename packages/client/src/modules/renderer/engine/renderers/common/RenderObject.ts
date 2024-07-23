@@ -2,7 +2,7 @@ import ClippingContext from './ClippingContext.js';
 import Nodes from '@modules/renderer/engine/renderers/common/nodes/Nodes.js';
 import Geometries from '@modules/renderer/engine/renderers/common/Geometries.js';
 import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
-import { Object3D } from '@modules/renderer/engine/core/Object3D.js';
+import { Entity } from '@modules/renderer/engine/core/Entity.js';
 import { Material } from '@modules/renderer/engine/materials/Material.js';
 import { Scene } from '@modules/renderer/engine/scenes/Scene.js';
 import { Camera } from '@modules/renderer/engine/cameras/Camera.js';
@@ -29,7 +29,7 @@ export default class RenderObject {
 
   constructor(
     public renderer: Renderer,
-    public object: Object3D,
+    public object: Entity,
     public material: Material,
     public scene: Scene,
     public camera: Camera,

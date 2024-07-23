@@ -151,13 +151,13 @@ export abstract class Curve<T extends Vec2 | Vec3> {
     normals: Vec3[];
     binormals: Vec3[];
   } {
-    const normal = new Vec3();
+    const normal = Vec3.new();
 
     const tangents: Vec3[] = [];
     const normals: Vec3[] = [];
     const binormals: Vec3[] = [];
 
-    const vec = new Vec3();
+    const vec = Vec3.new();
     const mat = new Mat4();
 
     for (let i = 0; i <= segments; i++) {
@@ -165,8 +165,8 @@ export abstract class Curve<T extends Vec2 | Vec3> {
       tangents[i] = this.getTangentAt(u) as never as Vec3;
     }
 
-    normals[0] = new Vec3();
-    binormals[0] = new Vec3();
+    normals[0] = Vec3.new();
+    binormals[0] = Vec3.new();
     const tx = Math.abs(tangents[0].x);
     const ty = Math.abs(tangents[0].y);
     const tz = Math.abs(tangents[0].z);

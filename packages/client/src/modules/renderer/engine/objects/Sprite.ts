@@ -2,7 +2,7 @@ import { Vec2 } from '../math/Vec2.js';
 import { Vec3 } from '../math/Vec3.js';
 import { Mat4 } from '../math/Mat4.js';
 import { Triangle } from '../math/Triangle.js';
-import { Object3D } from '../core/Object3D.js';
+import { Entity } from '../core/Entity.js';
 import { BufferGeometry } from '../core/BufferGeometry.js';
 import { InterleavedBuffer } from '../core/InterleavedBuffer.js';
 import { InterleavedBufferAttribute } from '../core/InterleavedBufferAttribute.js';
@@ -10,25 +10,25 @@ import { SpriteMaterial } from '../materials/SpriteMaterial.js';
 import { Intersection, Raycaster } from '../core/Raycaster.js';
 import { PerspectiveCamera } from '../cameras/PerspectiveCamera.js';
 
-const _intersectPoint = /*@__PURE__*/ new Vec3();
-const _worldScale = /*@__PURE__*/ new Vec3();
-const _mvPosition = /*@__PURE__*/ new Vec3();
+const _intersectPoint = Vec3.new();
+const _worldScale = Vec3.new();
+const _mvPosition = Vec3.new();
 
-const _alignedPosition = /*@__PURE__*/ new Vec2();
-const _rotatedPosition = /*@__PURE__*/ new Vec2();
-const _viewWorldMatrix = /*@__PURE__*/ new Mat4();
+const _alignedPosition = Vec2.new();
+const _rotatedPosition = Vec2.new();
+const _viewWorldMatrix = new Mat4();
 
-const _vA = /*@__PURE__*/ new Vec3();
-const _vB = /*@__PURE__*/ new Vec3();
-const _vC = /*@__PURE__*/ new Vec3();
+const _vA = Vec3.new();
+const _vB = Vec3.new();
+const _vC = Vec3.new();
 
-const _uvA = /*@__PURE__*/ new Vec2();
-const _uvB = /*@__PURE__*/ new Vec2();
-const _uvC = /*@__PURE__*/ new Vec2();
+const _uvA = Vec2.new();
+const _uvB = Vec2.new();
+const _uvC = Vec2.new();
 
 let _geometry: BufferGeometry;
 
-export class Sprite extends Object3D {
+export class Sprite extends Entity {
   declare isSprite: true;
   declare type: string | 'Sprite';
 
@@ -60,7 +60,7 @@ export class Sprite extends Object3D {
     this.geometry = _geometry;
     this.material = material;
 
-    this.center = new Vec2(0.5, 0.5);
+    this.center = Vec2.new(0.5, 0.5);
   }
 
   raycast(raycaster: Raycaster, intersects: Intersection[]): void {

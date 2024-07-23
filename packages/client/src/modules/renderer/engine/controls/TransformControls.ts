@@ -10,7 +10,7 @@ import {
   Mat4,
   Mesh,
   MeshBasicMaterial,
-  Object3D,
+  Entity,
   OctahedronGeometry,
   OrthographicCamera,
   PerspectiveCamera,
@@ -26,13 +26,13 @@ import { Intersection } from '@modules/renderer/engine/core/Raycaster.js';
 
 const _raycaster = new Raycaster();
 
-const _tempVector = new Vec3();
-const _tempVec2 = new Vec3();
-const _tempQuaternion = new Quaternion();
+const _tempVector = Vec3.new();
+const _tempVec2 = Vec3.new();
+const _tempQuaternion = Quaternion.new();
 const _unit = {
-  X: new Vec3(1, 0, 0),
-  Y: new Vec3(0, 1, 0),
-  Z: new Vec3(0, 0, 1),
+  X: Vec3.new(1, 0, 0),
+  Y: Vec3.new(0, 1, 0),
+  Z: Vec3.new(0, 0, 1),
 };
 
 const _changeEvent = { type: 'change' } as const;
@@ -46,13 +46,13 @@ const _mouseUpEvent = { type: 'mouseUp' as const, mode: null } as unknown as {
 };
 const _objectChangeEvent = { type: 'objectChange' } as const;
 
-export class TransformControls extends Object3D {
+export class TransformControls extends Entity {
   declare type: 'TransformControls';
   declare isTransformControls: true;
   _gizmo: TransformControlsGizmo;
   _plane: TransformControlsPlane;
   camera: PerspectiveCamera | OrthographicCamera;
-  object: Object3D | undefined;
+  object: Entity | undefined;
   enabled: boolean;
   axis: 'X' | 'Y' | 'Z' | 'E' | 'XYZ' | 'XY' | 'YZ' | 'XZ' | 'XYZE' | null;
   mode: 'translate' | 'rotate' | 'scale';
@@ -138,17 +138,17 @@ export class TransformControls extends Object3D {
 
     // Reusable utility variables
 
-    const worldPosition = new Vec3();
-    const worldPositionStart = new Vec3();
-    const worldQuaternion = new Quaternion();
-    const worldQuaternionStart = new Quaternion();
-    const cameraPosition = new Vec3();
-    const cameraQuaternion = new Quaternion();
-    const pointStart = new Vec3();
-    const pointEnd = new Vec3();
-    const rotationAxis = new Vec3();
+    const worldPosition = Vec3.new();
+    const worldPositionStart = Vec3.new();
+    const worldQuaternion = Quaternion.new();
+    const worldQuaternionStart = Quaternion.new();
+    const cameraPosition = Vec3.new();
+    const cameraQuaternion = Quaternion.new();
+    const pointStart = Vec3.new();
+    const pointEnd = Vec3.new();
+    const rotationAxis = Vec3.new();
     const rotationAngle = 0;
-    const eye = new Vec3();
+    const eye = Vec3.new();
 
     // TODO: remove properties unused in plane and gizmo
 
@@ -164,23 +164,23 @@ export class TransformControls extends Object3D {
     defineProperty('rotationAngle', rotationAngle);
     defineProperty('eye', eye);
 
-    this._offset = new Vec3();
-    this._startNorm = new Vec3();
-    this._endNorm = new Vec3();
-    this._cameraScale = new Vec3();
+    this._offset = Vec3.new();
+    this._startNorm = Vec3.new();
+    this._endNorm = Vec3.new();
+    this._cameraScale = Vec3.new();
 
-    this._parentPosition = new Vec3();
-    this._parentQuaternion = new Quaternion();
-    this._parentQuaternionInv = new Quaternion();
-    this._parentScale = new Vec3();
+    this._parentPosition = Vec3.new();
+    this._parentQuaternion = Quaternion.new();
+    this._parentQuaternionInv = Quaternion.new();
+    this._parentScale = Vec3.new();
 
-    this._worldScaleStart = new Vec3();
-    this._worldQuaternionInv = new Quaternion();
-    this._worldScale = new Vec3();
+    this._worldScaleStart = Vec3.new();
+    this._worldQuaternionInv = Quaternion.new();
+    this._worldScale = Vec3.new();
 
-    this._positionStart = new Vec3();
-    this._quaternionStart = new Quaternion();
-    this._scaleStart = new Vec3();
+    this._positionStart = Vec3.new();
+    this._quaternionStart = Quaternion.new();
+    this._scaleStart = Vec3.new();
 
     this._getPointer = getPointer.bind(this);
     this._onPointerDown = onPointerDown.bind(this);
@@ -511,7 +511,7 @@ export class TransformControls extends Object3D {
   }
 
   // Set current object
-  attach(object: Object3D) {
+  attach(object: Entity) {
     this.object = object;
     this.visible = true;
 
@@ -640,11 +640,7 @@ function onPointerUp(event: PointerEvent) {
   this.pointerUp(this._getPointer(event));
 }
 
-function intersectObjectWithRay(
-  object: Object3D,
-  raycaster: Raycaster,
-  includeInvisible: boolean,
-): Intersection | false {
+function intersectObjectWithRay(object: Entity, raycaster: Raycaster, includeInvisible: boolean): Intersection | false {
   const allIntersections = raycaster.intersect(object, true);
 
   for (let i = 0; i < allIntersections.length; i++) {
@@ -661,40 +657,40 @@ function intersectObjectWithRay(
 // Reusable utility variables
 
 const _tempEuler = new Euler();
-const _alignVector = new Vec3(0, 1, 0);
-const _zeroVector = new Vec3(0, 0, 0);
+const _alignVector = Vec3.new(0, 1, 0);
+const _zeroVector = Vec3.new(0, 0, 0);
 const _lookAtMatrix = new Mat4();
-const _tempQuaternion2 = new Quaternion();
-const _identityQuaternion = new Quaternion();
-const _dirVector = new Vec3();
+const _tempQuaternion2 = Quaternion.new();
+const _identityQuaternion = Quaternion.new();
+const _dirVector = Vec3.new();
 const _tempMatrix = new Mat4();
 
-const _unitX = new Vec3(1, 0, 0);
-const _unitY = new Vec3(0, 1, 0);
-const _unitZ = new Vec3(0, 0, 1);
+const _unitX = Vec3.new(1, 0, 0);
+const _unitY = Vec3.new(0, 1, 0);
+const _unitZ = Vec3.new(0, 0, 1);
 
-const _v1 = new Vec3();
-const _v2 = new Vec3();
-const _v3 = new Vec3();
+const _v1 = Vec3.new();
+const _v2 = Vec3.new();
+const _v3 = Vec3.new();
 
-export class TransformControlsGizmo extends Object3D {
+export class TransformControlsGizmo extends Entity {
   declare type: 'TransformControlsGizmo';
   declare isTransformControlsGizmo: true;
 
   gizmo: {
-    translate: Object3D;
-    rotate: Object3D;
-    scale: Object3D;
+    translate: Entity;
+    rotate: Entity;
+    scale: Entity;
   };
   helper: {
-    translate: Object3D;
-    rotate: Object3D;
-    scale: Object3D;
+    translate: Entity;
+    rotate: Entity;
+    scale: Entity;
   };
   picker: {
-    translate: Object3D;
-    rotate: Object3D;
-    scale: Object3D;
+    translate: Entity;
+    rotate: Entity;
+    scale: Entity;
   };
 
   constructor() {
@@ -925,7 +921,7 @@ export class TransformControlsGizmo extends Object3D {
     // Creates an Object3D with gizmos described in custom hierarchy definition.
 
     function setupGizmo(gizmoMap: any) {
-      const gizmo = new Object3D();
+      const gizmo = new Entity();
 
       for (const name in gizmoMap) {
         for (let i = gizmoMap[name].length; i--; ) {

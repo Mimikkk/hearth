@@ -23,7 +23,7 @@ export class LineBasicMaterial extends Material {
   constructor(parameters: LineBasicMaterialParameters) {
     super(parameters);
 
-    this.color = new Color(0xffffff);
+    this.color = Color.new(0xffffff);
 
     this.map = null;
 

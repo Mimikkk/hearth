@@ -17,7 +17,7 @@ import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindow
 let camera: Camera, scene: Scene, renderer: Renderer, controls: OrbitControls;
 
 class OcclusionNode extends Node {
-  constructor(testObject: Engine.Object3D, normalColor: Engine.Color, occludedColor: Engine.Color) {
+  constructor(testObject: Engine.Entity, normalColor: Engine.Color, occludedColor: Engine.Color) {
     super('vec3');
 
     this.updateType = NodeUpdateType.OBJECT;

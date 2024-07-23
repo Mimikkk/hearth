@@ -7,15 +7,15 @@ export class CubicBezierCurve3 extends Curve<Vec3> {
   declare type: 'CubicBezierCurve3';
 
   constructor(
-    public v0: Vec3 = new Vec3(),
-    public v1: Vec3 = new Vec3(),
-    public v2: Vec3 = new Vec3(),
-    public v3: Vec3 = new Vec3(),
+    public v0: Vec3 = Vec3.new(),
+    public v1: Vec3 = Vec3.new(),
+    public v2: Vec3 = Vec3.new(),
+    public v3: Vec3 = Vec3.new(),
   ) {
     super();
   }
 
-  getPoint(t: number, optionalTarget: Vec3 = new Vec3()): Vec3 {
+  getPoint(t: number, optionalTarget: Vec3 = Vec3.new()): Vec3 {
     const point = optionalTarget;
 
     const { v0, v1, v2, v3 } = this;

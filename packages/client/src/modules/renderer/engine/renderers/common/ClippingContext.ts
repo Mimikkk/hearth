@@ -62,7 +62,7 @@ export class ClippingContext {
         const planes = [];
 
         for (let i = 0; i < l; i++) {
-          planes.push(new Vec4());
+          planes.push(Vec4.new());
         }
 
         this.globalClippingCount = l;
@@ -111,7 +111,7 @@ export class ClippingContext {
           planes.length = offset + l;
 
           for (let i = 0; i < l; i++) {
-            planes[offset + i] = new Vec4();
+            planes[offset + i] = Vec4.new();
           }
 
           this.localClippingCount = l;

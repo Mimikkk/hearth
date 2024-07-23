@@ -1,6 +1,6 @@
 import { Float32BufferAttribute } from '../core/BufferAttribute.js';
 import { BufferGeometry } from '../core/BufferGeometry.js';
-import { Object3D } from '../core/Object3D.js';
+import { Entity } from '../core/Entity.js';
 import { CylinderGeometry } from '../geometries/CylinderGeometry.js';
 import { MeshBasicMaterial } from '../materials/MeshBasicMaterial.js';
 import { LineBasicMaterial } from '../materials/LineBasicMaterial.js';
@@ -9,18 +9,18 @@ import { Line } from '../objects/Line.js';
 import { Vec3 } from '../math/Vec3.js';
 import { Color } from '@modules/renderer/engine/math/Color.js';
 
-const _axis = /*@__PURE__*/ new Vec3();
+const _axis = Vec3.new();
 let _lineGeometry!: BufferGeometry;
 let _coneGeometry!: CylinderGeometry;
 
-export class ArrowHelper extends Object3D {
+export class ArrowHelper extends Entity {
   declare type: string | 'ArrowHelper';
   line: Line;
   cone: Mesh;
 
   constructor(
-    dir = new Vec3(0, 0, 1),
-    origin = new Vec3(0, 0, 0),
+    dir = Vec3.new(0, 0, 1),
+    origin = Vec3.new(0, 0, 0),
     length = 1,
     color = 0xffff00,
     headLength = length * 0.2,

@@ -48,21 +48,21 @@ class Object3DNode extends Node {
     } else if (scope === Object3DNode.WORLD_MATRIX) {
       uniformNode.value = object.matrixWorld;
     } else if (scope === Object3DNode.POSITION) {
-      uniformNode.value = uniformNode.value || new Vec3();
+      uniformNode.value = uniformNode.value || Vec3.new();
 
       uniformNode.value.fromMat4Position(object.matrixWorld);
     } else if (scope === Object3DNode.SCALE) {
-      uniformNode.value = uniformNode.value || new Vec3();
+      uniformNode.value = uniformNode.value || Vec3.new();
 
       uniformNode.value.fromMat4Scale(object.matrixWorld);
     } else if (scope === Object3DNode.DIRECTION) {
-      uniformNode.value = uniformNode.value || new Vec3();
+      uniformNode.value = uniformNode.value || Vec3.new();
 
       object.getWorldDirection(uniformNode.value);
     } else if (scope === Object3DNode.VIEW_POSITION) {
       const camera = frame.camera;
 
-      uniformNode.value = uniformNode.value || new Vec3();
+      uniformNode.value = uniformNode.value || Vec3.new();
       uniformNode.value.fromMat4Position(object.matrixWorld);
 
       uniformNode.value.applyMat4(camera.matrixWorldInverse);

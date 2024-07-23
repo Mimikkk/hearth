@@ -45,8 +45,8 @@ export class SphereGeometry extends BufferGeometry {
     let index = 0;
     const grid = [];
 
-    const vertex = new Vec3();
-    const normal = new Vec3();
+    const vertex = Vec3.new();
+    const normal = Vec3.new();
 
     // buffers
 

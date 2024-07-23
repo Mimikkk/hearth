@@ -1,7 +1,7 @@
 import { Sphere } from '../math/Sphere.js';
 import { Ray } from '../math/Ray.js';
 import { Mat4 } from '../math/Mat4.js';
-import { Object3D } from '../core/Object3D.js';
+import { Entity } from '../core/Entity.js';
 import { Vec3 } from '../math/Vec3.js';
 import { LineBasicMaterial } from '../materials/LineBasicMaterial.js';
 import { BufferGeometry } from '../core/BufferGeometry.js';
@@ -11,13 +11,13 @@ import { Intersection, Raycaster } from '@modules/renderer/engine/core/Raycaster
 import { LineSegments } from '@modules/renderer/engine/objects/LineSegments.js';
 import { Line3 } from '@modules/renderer/engine/math/Line3.js';
 
-const _start = /*@__PURE__*/ new Vec3();
-const _end = /*@__PURE__*/ new Vec3();
-const _inverseMatrix = /*@__PURE__*/ new Mat4();
-const _ray = /*@__PURE__*/ new Ray();
-const _sphere = /*@__PURE__*/ new Sphere();
+const _start = Vec3.new();
+const _end = Vec3.new();
+const _inverseMatrix = new Mat4();
+const _ray = new Ray();
+const _sphere = new Sphere();
 
-export class Line extends Object3D {
+export class Line extends Entity {
   declare isLine: true;
   declare type: string | 'Line';
 
@@ -91,10 +91,10 @@ export class Line extends Object3D {
     const localThreshold = threshold / ((this.scale.x + this.scale.y + this.scale.z) / 3);
     const localThresholdSq = localThreshold * localThreshold;
 
-    const vStart = new Vec3();
-    const vEnd = new Vec3();
-    const interSegment = new Vec3();
-    const interRay = new Vec3();
+    const vStart = Vec3.new();
+    const vEnd = Vec3.new();
+    const interSegment = Vec3.new();
+    const interRay = Vec3.new();
 
     const isLineSegments = (object: any): object is LineSegments => object.isLineSegments;
     const step = isLineSegments(this) ? 2 : 1;

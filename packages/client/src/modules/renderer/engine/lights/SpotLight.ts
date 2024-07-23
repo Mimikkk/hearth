@@ -1,13 +1,13 @@
 import { Light } from './Light.js';
 import { SpotLightShadow } from './SpotLightShadow.js';
-import { Object3D } from '../core/Object3D.js';
+import { Entity } from '../core/Entity.js';
 import { ColorRepresentation } from '../math/Color.js';
 import { Texture } from '../textures/Texture.js';
 
 export class SpotLight extends Light<SpotLightShadow> {
   declare isSpotLight: true;
   declare type: string | 'SpotLight';
-  target: Object3D;
+  target: Entity;
   map: null | Texture;
   shadow: SpotLightShadow;
 
@@ -21,10 +21,10 @@ export class SpotLight extends Light<SpotLightShadow> {
   ) {
     super(color, intensity);
 
-    this.position.from(Object3D.Up);
+    this.position.from(Entity.Up);
     this.updateMatrix();
 
-    this.target = new Object3D();
+    this.target = new Entity();
     this.distance = distance;
     this.angle = angle;
     this.penumbra = penumbra;

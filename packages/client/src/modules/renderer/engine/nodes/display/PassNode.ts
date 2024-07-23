@@ -110,7 +110,7 @@ class PassNode extends TempNode {
 
     this._pixelRatio = renderer._pixelRatio;
 
-    const size = renderer.getSize(new Vec2());
+    const size = renderer.getSize(Vec2.new());
 
     this.setSize(size.width, size.height);
 

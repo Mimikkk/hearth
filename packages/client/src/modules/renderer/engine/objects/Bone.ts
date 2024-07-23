@@ -1,6 +1,6 @@
-import { Object3D } from '../core/Object3D.js';
+import { Entity } from '../core/Entity.js';
 
-export class Bone extends Object3D {
+export class Bone extends Entity {
   declare isBone: true;
   declare type: string | 'Bone';
 }

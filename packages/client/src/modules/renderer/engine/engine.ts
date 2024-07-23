@@ -70,7 +70,7 @@ export { InstancedInterleavedBuffer } from './core/InstancedInterleavedBuffer.js
 export { InterleavedBuffer } from './core/InterleavedBuffer.js';
 export { InstancedBufferAttribute } from './core/InstancedBufferAttribute.js';
 export * from './core/BufferAttribute.js';
-export { Object3D } from './core/Object3D.js';
+export { Entity } from './core/Entity.js';
 export { Raycaster } from './core/Raycaster.js';
 export { Layers } from './core/Layers.js';
 export { Clock } from './core/Clock.js';

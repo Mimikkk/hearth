@@ -13,7 +13,7 @@ import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js'
 import RenderContext from '@modules/renderer/engine/renderers/common/RenderContext.js';
 import RenderList from '@modules/renderer/engine/renderers/common/RenderList.js';
 
-const _clearColor = new Color(0, 0, 0, 1);
+const _clearColor = Color.new(0, 0, 0, 1);
 
 class Background extends DataMap<any, any> {
   constructor(public renderer: Renderer) {

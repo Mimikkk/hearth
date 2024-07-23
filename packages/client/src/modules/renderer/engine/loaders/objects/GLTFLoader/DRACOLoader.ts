@@ -175,10 +175,10 @@ class DRACOLoader {
 
     if (inputColorSpace !== ColorSpace.SRGB) return;
 
-    const _color = new Color();
+    const _color = Color.new();
 
     for (let i = 0, il = attribute.count; i < il; i++) {
-      _color.fromBufferAttribute(attribute, i).convertSRGBToLinear();
+      _color.fromAttribute(attribute, i).asSRGBToLinear();
       attribute.setXYZ(i, _color.r, _color.g, _color.b);
     }
   }

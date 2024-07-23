@@ -6,13 +6,13 @@ export class LineCurve3 extends Curve<Vec3> {
   declare type: 'LineCurve3';
 
   constructor(
-    public v1: Vec3 = new Vec3(),
-    public v2: Vec3 = new Vec3(),
+    public v1: Vec3 = Vec3.new(),
+    public v2: Vec3 = Vec3.new(),
   ) {
     super();
   }
 
-  getPoint(t: number, optionalTarget: Vec3 = new Vec3()): Vec3 {
+  getPoint(t: number, optionalTarget: Vec3 = Vec3.new()): Vec3 {
     const point = optionalTarget;
 
     if (t === 1) {
@@ -26,15 +26,15 @@ export class LineCurve3 extends Curve<Vec3> {
   }
 
   // Line curve is linear, so we can overwrite default getPointAt
-  getPointAt(u: number, optionalTarget: Vec3 = new Vec3()) {
+  getPointAt(u: number, optionalTarget: Vec3 = Vec3.new()) {
     return this.getPoint(u, optionalTarget);
   }
 
-  getTangent(t: number, optionalTarget: Vec3 = new Vec3()) {
+  getTangent(t: number, optionalTarget: Vec3 = Vec3.new()) {
     return optionalTarget.asSub(this.v2, this.v1).normalize();
   }
 
-  getTangentAt(u: number, optionalTarget: Vec3 = new Vec3()) {
+  getTangentAt(u: number, optionalTarget: Vec3 = Vec3.new()) {
     return this.getTangent(u, optionalTarget);
   }
 

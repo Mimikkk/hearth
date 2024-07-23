@@ -4,7 +4,7 @@ import {
   ColorSpace,
   Float16BufferAttribute,
   Material,
-  Object3D,
+  Entity,
   RenderTarget,
   Revision,
   Scene,
@@ -119,7 +119,7 @@ export class NodeBuilder {
   builtins: Record<BuiltinType, Map<string, { name: string; property: string; type: string }>>;
 
   constructor(
-    public object: Object3D,
+    public object: Entity,
     public renderer: Renderer,
     public scene: Scene,
   ) {
@@ -274,10 +274,10 @@ export class NodeBuilder {
     if (value === null) {
       if (type === 'f32' || type === 'i32' || type === 'u32') value = 0;
       else if (type === 'bool') value = false;
-      else if (type === 'color') value = new Color();
-      else if (type === 'vec2') value = new Vec2();
-      else if (type === 'vec3') value = new Vec3();
-      else if (type === 'vec4') value = new Vec4();
+      else if (type === 'color') value = Color.new();
+      else if (type === 'vec2') value = Vec2.new();
+      else if (type === 'vec3') value = Vec3.new();
+      else if (type === 'vec4') value = Vec4.new();
     }
 
     if (type === 'f32') return formatAsFloat(value);
@@ -780,7 +780,7 @@ export class NodeBuilder {
   }
 
   needsColorSpaceToLinear(texture: Texture): boolean {
-    return texture.isVideoTexture === true && texture.colorSpace !== ColorSpace.No;
+    return texture.isVideoTexture === true && texture.colorSpace !== null;
   }
 
   codeFunctions(shaderStage: ShaderStage): string {

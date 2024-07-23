@@ -1,18 +1,18 @@
 import { Sphere } from '../math/Sphere.js';
 import { Ray } from '../math/Ray.js';
 import { Mat4 } from '../math/Mat4.js';
-import { Object3D } from '../core/Object3D.js';
+import { Entity } from '../core/Entity.js';
 import { Vec3 } from '../math/Vec3.js';
 import { PointsMaterial } from '../materials/PointsMaterial.js';
 import { BufferGeometry } from '../core/BufferGeometry.js';
 import { Intersection, Raycaster } from '@modules/renderer/engine/core/Raycaster.js';
 
-const _inverseMatrix = /*@__PURE__*/ new Mat4();
-const _ray = /*@__PURE__*/ new Ray();
-const _sphere = /*@__PURE__*/ new Sphere();
-const _position = /*@__PURE__*/ new Vec3();
+const _inverseMatrix = new Mat4();
+const _ray = new Ray();
+const _sphere = new Sphere();
+const _position = Vec3.new();
 
-export class Points extends Object3D {
+export class Points extends Entity {
   declare isPoints: true;
   declare type: string | 'Points';
   declare geometry: BufferGeometry;
@@ -128,7 +128,7 @@ function testPoint(
   const rayPointDistanceSq = _ray.distanceSqTo(point);
 
   if (rayPointDistanceSq < localThresholdSq) {
-    const intersectPoint = new Vec3();
+    const intersectPoint = Vec3.new();
 
     _ray.closestTo(point, intersectPoint);
     intersectPoint.applyMat4(matrixWorld);

@@ -45,7 +45,7 @@ export class Texture {
   premultiplyAlpha: boolean;
   flipY: boolean;
   unpackAlignment: number;
-  colorSpace: ColorSpace;
+  colorSpace?: ColorSpace | null;
   version: number;
   onUpdate: any;
   isRenderTargetTexture: boolean;
@@ -62,7 +62,7 @@ export class Texture {
     format: TextureFormat = TextureFormat.RGBA,
     type: TextureDataType = TextureDataType.UnsignedByte,
     anisotropy: number = 1,
-    colorSpace: ColorSpace = ColorSpace.No,
+    colorSpace: ColorSpace = null,
   ) {
     this.id = ++_textureId;
 
@@ -88,9 +88,9 @@ export class Texture {
     this.internalFormat = null;
     this.type = type;
 
-    this.offset = new Vec2(0, 0);
-    this.repeat = new Vec2(1, 1);
-    this.center = new Vec2(0, 0);
+    this.offset = Vec2.new(0, 0);
+    this.repeat = Vec2.new(1, 1);
+    this.center = Vec2.new(0, 0);
     this.rotation = 0;
 
     this.matrixAutoUpdate = true;

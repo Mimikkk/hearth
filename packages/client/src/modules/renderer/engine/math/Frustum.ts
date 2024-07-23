@@ -4,7 +4,7 @@ import { Plane } from './Plane.js';
 import type { Mat4 } from './Mat4.js';
 import type { Box3 } from './Box3.js';
 import type { Sprite } from '../objects/Sprite.js';
-import type { Object3D } from '../core/Object3D.js';
+import type { Entity } from '../core/Entity.js';
 import { Const } from '@modules/renderer/engine/math/types.js';
 
 export class Frustum {
@@ -104,7 +104,7 @@ export class Frustum {
     return this;
   }
 
-  intersectsObject(object: Const<Object3D>): boolean {
+  intersectsObject(object: Const<Entity>): boolean {
     if (object.boundingSphere !== undefined) {
       if (object.boundingSphere === null) object.computeBoundingSphere!();
 

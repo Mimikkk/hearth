@@ -22,7 +22,7 @@ import { UI } from '@mimi/ui';
 
 const clock = new Clock();
 const scene = new Scene();
-scene.background = new Color(0x88ccee);
+scene.background = Color.new(0x88ccee);
 scene.fog = new Fog(0x88ccee, 0, 50);
 
 const camera = new PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -74,26 +74,26 @@ for (let i = 0; i < NUM_SPHERES; i++) {
 
   spheres.push({
     mesh: sphere,
-    collider: new Sphere(new Vec3(0, -100, 0), SPHERE_RADIUS),
-    velocity: new Vec3(),
+    collider: new Sphere(Vec3.new(0, -100, 0), SPHERE_RADIUS),
+    velocity: Vec3.new(),
   });
 }
 
 const worldOctree = new Octree();
 
-const playerCollider = new Capsule(new Vec3(0, 0.35, 0), new Vec3(0, 1, 0), 0.35);
+const playerCollider = Capsule.new(Vec3.new(0, 0.35, 0), Vec3.new(0, 1, 0), 0.35);
 
-const playerVelocity = new Vec3();
-const playerDirection = new Vec3();
+const playerVelocity = Vec3.new();
+const playerDirection = Vec3.new();
 
 let playerOnFloor = false;
 let mouseTime = 0;
 
 const keyStates: Record<string, boolean> = {};
 
-const vector1 = new Vec3();
-const vec2 = new Vec3();
-const vec3 = new Vec3();
+const vector1 = Vec3.new();
+const vec2 = Vec3.new();
+const vec3 = Vec3.new();
 
 const renderer = await Renderer.create({ antialias: true });
 renderer.animation.loop = animate;

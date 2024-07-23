@@ -34,12 +34,12 @@ export class ParametricGeometry extends BufferGeometry {
 
     const EPS = 0.00001;
 
-    const normal = new Vec3();
+    const normal = Vec3.new();
 
-    const p0 = new Vec3(),
-      p1 = new Vec3();
-    const pu = new Vec3(),
-      pv = new Vec3();
+    const p0 = Vec3.new(),
+      p1 = Vec3.new();
+    const pu = Vec3.new(),
+      pv = Vec3.new();
 
     // generate vertices, normals and uvs
 

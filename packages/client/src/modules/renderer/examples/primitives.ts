@@ -10,7 +10,7 @@ import {
   Fog,
   Mesh,
   MeshLambertMaterial,
-  Object3D,
+  Entity,
   SphereGeometry,
   SpotLight,
 } from '@modules/renderer/engine/engine.js';
@@ -48,7 +48,7 @@ const createSphere = (geometry: BufferGeometry, x: number, y: number, z: number)
   return mesh;
 };
 
-const useVisualizer = (scene: Scene, of: Object3D) => {
+const useVisualizer = (scene: Scene, of: Entity) => {
   const visualizer = new BoundingBoxVisualizer(of, 'red');
 
   scene.add(visualizer);

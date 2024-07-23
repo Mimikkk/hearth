@@ -42,7 +42,7 @@ export class MeshNormalMaterial extends Material {
 
     this.normalMap = null;
     this.normalMapType = NormalMapType.TangentSpace;
-    this.normalScale = new Vec2(1, 1);
+    this.normalScale = Vec2.new(1, 1);
 
     this.displacementMap = null;
     this.displacementScale = 1;

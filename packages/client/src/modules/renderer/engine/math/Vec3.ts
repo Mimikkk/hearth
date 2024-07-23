@@ -207,11 +207,11 @@ export class Vec3 {
   }
 
   applyEuler(euler: Const<Euler>): this {
-    return this.applyQuaternion(new Quaternion().fromEuler(euler));
+    return this.applyQuaternion(Quaternion.fromEuler(euler));
   }
 
   applyAxisAngle(axis: Const<Vec3>, angle: number): this {
-    return this.applyQuaternion(new Quaternion().fromAxisAngle(axis, angle));
+    return this.applyQuaternion(Quaternion.fromAxisAngle(axis, angle));
   }
 
   applyMat3(matrix: Const<Mat3>): this {

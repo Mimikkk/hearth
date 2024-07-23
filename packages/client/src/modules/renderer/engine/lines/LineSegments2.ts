@@ -18,21 +18,21 @@ import { LineSegmentsGeometry } from './LineSegmentsGeometry.js';
 import { LineMaterial } from './LineMaterial.js';
 import { Intersection } from '@modules/renderer/engine/core/Raycaster.js';
 
-const _start = new Vec3();
-const _end = new Vec3();
+const _start = Vec3.new();
+const _end = Vec3.new();
 
-const _start4 = new Vec4();
-const _end4 = new Vec4();
+const _start4 = Vec4.new();
+const _end4 = Vec4.new();
 
-const _ssOrigin = new Vec4();
-const _ssOrigin3 = new Vec3();
+const _ssOrigin = Vec4.new();
+const _ssOrigin3 = Vec3.new();
 const _mvMatrix = new Mat4();
 const _line = new Line3();
-const _closestPoint = new Vec3();
+const _closestPoint = Vec3.new();
 
-const _box = new Box3();
+const _box = Box3.new();
 const _sphere = new Sphere();
-const _clipToWorldVector = new Vec4();
+const _clipToWorldVector = Vec4.new();
 
 let _ray: Ray, _lineWidth: number;
 
@@ -69,8 +69,8 @@ function raycastWorldUnits(lineSegments: LineSegments, intersects: Intersection[
 
     _line.applyMat4(matrixWorld);
 
-    const pointOnLine = new Vec3();
-    const point = new Vec3();
+    const pointOnLine = Vec3.new();
+    const point = Vec3.new();
 
     _ray.distanceSqToLine(_line, point, pointOnLine);
     const isInside = point.distanceTo(pointOnLine) < _lineWidth * 0.5;
@@ -190,8 +190,8 @@ function raycastScreenSpace(lineSegments: LineSegments, camera: Camera, intersec
       _line.start.applyMat4(matrixWorld);
       _line.end.applyMat4(matrixWorld);
 
-      const pointOnLine = new Vec3();
-      const point = new Vec3();
+      const pointOnLine = Vec3.new();
+      const point = Vec3.new();
 
       _ray.distanceSqToLine(_line, point, pointOnLine);
 

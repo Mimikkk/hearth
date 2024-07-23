@@ -27,7 +27,7 @@ export class DecalGeometry extends BufferGeometry {
 
     // helpers
 
-    const plane = new Vec3();
+    const plane = Vec3.new();
 
     // this matrix represents the transformation of the decal projector
 
@@ -51,8 +51,8 @@ export class DecalGeometry extends BufferGeometry {
     function generate() {
       let decalVertices: DecalVertex[] = [];
 
-      const vertex = new Vec3();
-      const normal = new Vec3();
+      const vertex = Vec3.new();
+      const normal = Vec3.new();
 
       // handle different geometry types
 
@@ -260,12 +260,12 @@ export class DecalGeometry extends BufferGeometry {
       const s0 = d0 / (d0 - d1);
 
       const v = new DecalVertex(
-        new Vec3(
+        Vec3.new(
           v0.position.x + s0 * (v1.position.x - v0.position.x),
           v0.position.y + s0 * (v1.position.y - v0.position.y),
           v0.position.z + s0 * (v1.position.z - v0.position.z),
         ),
-        new Vec3(
+        Vec3.new(
           v0.normal.x + s0 * (v1.normal.x - v0.normal.x),
           v0.normal.y + s0 * (v1.normal.y - v0.normal.y),
           v0.normal.z + s0 * (v1.normal.z - v0.normal.z),

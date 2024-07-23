@@ -4,37 +4,37 @@ import type { Scene } from '../scenes/Scene.js';
 import { Quaternion } from '../math/Quaternion.js';
 import { Mat4 } from '../math/Mat4.js';
 import { Frustum } from '../math/Frustum.js';
-import type { Object3D } from '../core/Object3D.js';
+import type { Entity } from '../core/Entity.js';
 import { PerspectiveCamera } from '@modules/renderer/engine/cameras/PerspectiveCamera.js';
 import { OrthographicCamera } from '@modules/renderer/engine/cameras/OrthographicCamera.js';
 
 const _frustum = new Frustum();
-const _center = new Vec3();
+const _center = Vec3.new();
 
-const _tmpPoint = new Vec3();
+const _tmpPoint = Vec3.new();
 
-const _vecNear = new Vec3();
-const _vecTopLeft = new Vec3();
-const _vecTopRight = new Vec3();
-const _vecDownRight = new Vec3();
-const _vecDownLeft = new Vec3();
+const _vecNear = Vec3.new();
+const _vecTopLeft = Vec3.new();
+const _vecTopRight = Vec3.new();
+const _vecDownRight = Vec3.new();
+const _vecDownLeft = Vec3.new();
 
-const _vecFarTopLeft = new Vec3();
-const _vecFarTopRight = new Vec3();
-const _vecFarDownRight = new Vec3();
-const _vecFarDownLeft = new Vec3();
+const _vecFarTopLeft = Vec3.new();
+const _vecFarTopRight = Vec3.new();
+const _vecFarDownRight = Vec3.new();
+const _vecFarDownLeft = Vec3.new();
 
-const _vectemp1 = new Vec3();
-const _vectemp2 = new Vec3();
-const _vectemp3 = new Vec3();
+const _vectemp1 = Vec3.new();
+const _vectemp2 = Vec3.new();
+const _vectemp3 = Vec3.new();
 
 const _matrix = new Mat4();
-const _quaternion = new Quaternion().asIdentity();
-const _scale = new Vec3();
+const _quaternion = Quaternion.new().asIdentity();
+const _scale = Vec3.new();
 
 export class SelectionControl {
-  start: Vec3 = new Vec3();
-  end: Vec3 = new Vec3();
+  start: Vec3 = Vec3.new();
+  end: Vec3 = Vec3.new();
   collection: Mesh[] = [];
   instances: Record<string, number[]> = {};
 
@@ -43,8 +43,8 @@ export class SelectionControl {
     public scene: Scene,
     public deep: number = Number.MAX_VALUE,
   ) {
-    this.start = new Vec3();
-    this.end = new Vec3();
+    this.start = Vec3.new();
+    this.end = Vec3.new();
     this.collection = [];
     this.instances = {};
   }
@@ -150,7 +150,7 @@ export class SelectionControl {
     }
   }
 
-  searchChildInFrustum(frustum: Frustum, object: Object3D): void {
+  searchChildInFrustum(frustum: Frustum, object: Entity): void {
     if (object.isMesh || object.isLine || object.isPoints) {
       if (object.isInstancedMesh) {
         this.instances[object.uuid] = [];

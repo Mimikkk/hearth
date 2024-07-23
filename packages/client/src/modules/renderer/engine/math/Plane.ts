@@ -10,7 +10,7 @@ export class Plane {
   declare isPlane: true;
 
   constructor(
-    public normal: Vec3 = new Vec3(1, 0, 0),
+    public normal: Vec3 = Vec3.new(1, 0, 0),
     public constant: number = 0,
   ) {}
 

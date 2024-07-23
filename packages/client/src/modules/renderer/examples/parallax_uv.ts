@@ -46,13 +46,13 @@ async function init() {
   topTexture.colorSpace = Engine.ColorSpace.SRGB;
 
   const roughnessTexture = await loader.loadAsync('resources/textures/ambientcg/Ice002_1K-JPG_Roughness.jpg');
-  roughnessTexture.colorSpace = Engine.ColorSpace.No;
+  roughnessTexture.colorSpace = null;
 
   const normalTexture = await loader.loadAsync('resources/textures/ambientcg/Ice002_1K-JPG_NormalGL.jpg');
-  normalTexture.colorSpace = Engine.ColorSpace.No;
+  normalTexture.colorSpace = null;
 
   const displaceTexture = await loader.loadAsync('resources/textures/ambientcg/Ice002_1K-JPG_Displacement.jpg');
-  displaceTexture.colorSpace = Engine.ColorSpace.No;
+  displaceTexture.colorSpace = null;
 
   //
 

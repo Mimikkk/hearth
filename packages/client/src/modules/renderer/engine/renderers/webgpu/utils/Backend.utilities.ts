@@ -1,6 +1,6 @@
 import { GPUPrimitiveTopologyType, GPUTextureFormatType } from './constants.js';
 import RenderContext from '@modules/renderer/engine/renderers/common/RenderContext.js';
-import { Object3D } from '@modules/renderer/engine/core/Object3D.js';
+import { Entity } from '@modules/renderer/engine/core/Entity.js';
 import { Material } from '@modules/renderer/engine/materials/Material.js';
 import { Texture } from '@modules/renderer/engine/textures/Texture.js';
 import type { Backend } from '@modules/renderer/engine/renderers/webgpu/Backend.js';
@@ -31,7 +31,7 @@ export class BackendUtilities {
       : this.backend.renderer.parameters.outputColorSpace;
   }
 
-  getPrimitiveTopology(object: Object3D, material: Material) {
+  getPrimitiveTopology(object: Entity, material: Material) {
     if (isPointsTopology(object)) return GPUPrimitiveTopologyType.PointList;
     if (isLineSegmentsTopology(object, material)) return GPUPrimitiveTopologyType.LineList;
     if (isLineTopology(object)) return GPUPrimitiveTopologyType.LineStrip;

@@ -12,7 +12,7 @@ const a = {
   // center
   c: null,
   // basis vectors
-  u: [new Vec3(), new Vec3(), new Vec3()],
+  u: [Vec3.new(), Vec3.new(), Vec3.new()],
   // half width
   e: [],
 } as {
@@ -25,7 +25,7 @@ const b = {
   // center
   c: null,
   // basis vectors
-  u: [new Vec3(), new Vec3(), new Vec3()],
+  u: [Vec3.new(), Vec3.new(), Vec3.new()],
   // half width
   e: [],
 } as {
@@ -38,14 +38,14 @@ const R: number[][] = [[], [], []];
 const AbsR: number[][] = [[], [], []];
 const t: number[] = [];
 
-const xAxis = new Vec3();
-const yAxis = new Vec3();
-const zAxis = new Vec3();
-const v1 = new Vec3();
-const size = new Vec3();
-const closestPoint = new Vec3();
+const xAxis = Vec3.new();
+const yAxis = Vec3.new();
+const zAxis = Vec3.new();
+const v1 = Vec3.new();
+const size = Vec3.new();
+const closestPoint = Vec3.new();
 const rotationMatrix = new Mat3();
-const aabb = new Box3();
+const aabb = Box3.new();
 const matrix = new Mat4();
 const inverse = new Mat4();
 const localRay = new Ray();
@@ -78,7 +78,7 @@ export class OBB {
   }
 
   clone() {
-    return new OBB(new Vec3().from(this.center), new Vec3().from(this.halfSize), new Mat3().from(this.rotation));
+    return new OBB(Vec3.from(this.center), Vec3.from(this.halfSize), new Mat3().from(this.rotation));
   }
 
   getSize(result: Vec3): Vec3 {
@@ -383,4 +383,4 @@ export class OBB {
   }
 }
 
-const obb = new OBB(new Vec3(), new Vec3(), new Mat3());
+const obb = new OBB(Vec3.new(), Vec3.new(), new Mat3());

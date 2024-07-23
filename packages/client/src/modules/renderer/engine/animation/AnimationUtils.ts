@@ -218,7 +218,7 @@ export function makeClipAdditive(
 
     // Conjugate the quaternion
     if (referenceTrackType === 'quaternion') {
-      const referenceQuat = new Quaternion().fromArray(referenceValue).normalize().conjugate();
+      const referenceQuat = Quaternion.fromArray(referenceValue).normalize().conjugate();
       referenceQuat.intoArray(referenceValue);
     }
 

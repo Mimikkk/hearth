@@ -24,11 +24,11 @@ export class SelectionVisualizer {
     this.element.style.pointerEvents = 'none';
 
     this.renderer = renderer;
-    this.start = new Vec2();
+    this.start = Vec2.new();
 
-    this.box = new Box2();
-    this.topLeft = new Vec2();
-    this.bottomRight = new Vec2();
+    this.box = Box2.new();
+    this.topLeft = Vec2.new();
+    this.bottomRight = Vec2.new();
 
     this.isDown = false;
     this.enabled = true;

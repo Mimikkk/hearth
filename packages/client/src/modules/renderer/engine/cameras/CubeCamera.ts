@@ -1,4 +1,4 @@
-import { Object3D } from '../core/Object3D.js';
+import { Entity } from '../core/Entity.js';
 import { PerspectiveCamera } from './PerspectiveCamera.js';
 import { CubeRenderTarget } from '../core/CubeRenderTarget.js';
 import { Scene } from '@modules/renderer/engine/scenes/Scene.js';
@@ -8,7 +8,7 @@ import { Camera } from '@modules/renderer/engine/cameras/Camera.js';
 const fov = -90; // negative fov is not an error
 const aspect = 1;
 
-export class CubeCamera extends Object3D {
+export class CubeCamera extends Entity {
   declare type: string | 'CubeCamera';
   renderTarget: CubeRenderTarget;
   activeMipmapLevel: number;

@@ -51,7 +51,7 @@ export class MeshBasicMaterial extends Material {
   constructor(parameters: MeshBasicMaterialParameters) {
     super(parameters);
 
-    this.color = new Color(0xffffff); // emissive
+    this.color = Color.new(0xffffff); // emissive
 
     this.map = null;
 

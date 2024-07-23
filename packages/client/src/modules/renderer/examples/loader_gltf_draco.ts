@@ -26,7 +26,7 @@ async function init() {
   camera.position.set(3, 0.25, 3);
 
   scene = new Scene();
-  scene.background = new Color(0x443333);
+  scene.background = Color.new(0x443333);
   scene.fog = new Fog(0x443333, 1, 4);
 
   // Ground

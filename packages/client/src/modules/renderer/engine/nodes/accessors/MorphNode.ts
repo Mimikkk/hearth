@@ -11,7 +11,7 @@ import { DataArrayTexture, TextureDataType, Vec2, Vec4 } from '@modules/renderer
 import { loop } from '../utils/LoopNode.js';
 
 const morphTextures = new WeakMap();
-const morphVec4 = new Vec4();
+const morphVec4 = Vec4.new();
 
 const getMorph = tslFn(({ bufferMap, influence, stride, width, depth, offset }) => {
   const texelIndex = i32(vertexIndex).mul(stride).add(offset);
@@ -112,7 +112,7 @@ function getEntry(geometry) {
       count: morphTargetsCount,
       texture: bufferTexture,
       stride: vertexDataCount,
-      size: new Vec2(width, height),
+      size: Vec2.new(width, height),
     };
 
     morphTextures.set(geometry, entry);

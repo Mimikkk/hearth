@@ -21,11 +21,7 @@ export class TubeGeometry extends BufferGeometry {
   binormals: Vec3[];
 
   constructor(
-    path: QuadraticBezierCurve3 = new QuadraticBezierCurve3(
-      new Vec3(-1, -1, 0),
-      new Vec3(-1, 1, 0),
-      new Vec3(1, 1, 0),
-    ),
+    path: QuadraticBezierCurve3 = new QuadraticBezierCurve3(Vec3.new(-1, -1, 0), Vec3.new(-1, 1, 0), Vec3.new(1, 1, 0)),
     tubularSegments: number = 64,
     radius: number = 1,
     radialSegments: number = 8,
@@ -53,10 +49,10 @@ export class TubeGeometry extends BufferGeometry {
 
     // helper variables
 
-    const vertex = new Vec3();
-    const normal = new Vec3();
-    const uv = new Vec2();
-    let P = new Vec3();
+    const vertex = Vec3.new();
+    const normal = Vec3.new();
+    const uv = Vec2.new();
+    let P = Vec3.new();
 
     // buffer
 

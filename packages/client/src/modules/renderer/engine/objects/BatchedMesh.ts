@@ -61,9 +61,9 @@ const _invMatrixWorld = new Mat4();
 const _identityMatrix = new Mat4();
 const _projScreenMatrix = new Mat4();
 const _frustum = new Frustum();
-const _box = new Box3();
+const _box = Box3.new();
 const _sphere = new Sphere();
-const _vector = new Vec3();
+const _vector = Vec3.new();
 const _renderList = new MultiDrawRenderList();
 const _mesh = new Mesh(null!, null!);
 const _batchIntersects: Intersection[] = [];
@@ -253,7 +253,7 @@ export class BatchedMesh extends Mesh {
 
   computeBoundingBox() {
     if (this.boundingBox === null) {
-      this.boundingBox = new Box3();
+      this.boundingBox = Box3.new();
     }
 
     const geometryCount = this._geometryCount;
@@ -375,7 +375,7 @@ export class BatchedMesh extends Mesh {
     });
     bounds.push({
       boxInitialized: false,
-      box: new Box3(),
+      box: Box3.new(),
 
       sphereInitialized: false,
       sphere: new Sphere(),
@@ -641,7 +641,7 @@ export class BatchedMesh extends Mesh {
     _mesh.geometry.index = batchGeometry.index;
     _mesh.geometry.attributes = batchGeometry.attributes;
     if (_mesh.geometry.boundingBox === null) {
-      _mesh.geometry.boundingBox = new Box3();
+      _mesh.geometry.boundingBox = Box3.new();
     }
 
     if (_mesh.geometry.boundingSphere === null) {

@@ -3,15 +3,15 @@ import { LineSegments } from '../objects/LineSegments.js';
 import { LineBasicMaterial } from '../materials/LineBasicMaterial.js';
 import { BufferAttribute } from '../core/BufferAttribute.js';
 import { BufferGeometry } from '../core/BufferGeometry.js';
-import { Object3D } from '@modules/renderer/engine/core/Object3D.js';
+import { Entity } from '@modules/renderer/engine/core/Entity.js';
 
-const _box = /*@__PURE__*/ new Box3();
+const _box = Box3.new();
 
 export class BoxHelper extends LineSegments {
   declare type: string | 'BoxHelper';
-  object: Object3D;
+  object: Entity;
 
-  constructor(object: Object3D, color = 0xffff00) {
+  constructor(object: Entity, color = 0xffff00) {
     const indices = new Uint16Array([0, 1, 1, 2, 2, 3, 3, 0, 4, 5, 5, 6, 6, 7, 7, 4, 0, 4, 1, 5, 2, 6, 3, 7]);
     const positions = new Float32Array(8 * 3);
 
@@ -83,7 +83,7 @@ export class BoxHelper extends LineSegments {
     this.geometry.computeBoundingSphere();
   }
 
-  setFromObject(object: Object3D) {
+  setFromObject(object: Entity) {
     this.object = object;
     this.update();
 

@@ -26,8 +26,8 @@ export class CircleGeometry extends BufferGeometry {
 
     // helper variables
 
-    const vertex = new Vec3();
-    const uv = new Vec2();
+    const vertex = Vec3.new();
+    const uv = Vec2.new();
 
     // center point
 

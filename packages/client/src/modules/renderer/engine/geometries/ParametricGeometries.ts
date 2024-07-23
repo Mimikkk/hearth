@@ -30,7 +30,7 @@ class TubeGeometry extends ParametricGeometry {
       normals = frames.normals,
       binormals = frames.binormals;
 
-    const position = new Vec3();
+    const position = Vec3.new();
 
     function ParametricTube(u: number, v: number, target: Vec3) {
       v *= 2 * Math.PI;
@@ -115,7 +115,7 @@ class TorusKnotGeometry extends TubeGeometry {
     q: number = 3,
   ) {
     class TorusKnotCurve extends Curve<Vec3> {
-      getPoint(t: number, optionalTarget: Vec3 = new Vec3()) {
+      getPoint(t: number, optionalTarget: Vec3 = Vec3.new()) {
         const point = optionalTarget;
 
         t *= Math.PI * 2;

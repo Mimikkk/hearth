@@ -6,13 +6,13 @@ export class LineCurve extends Curve<Vec2> {
   declare type: 'LineCurve';
 
   constructor(
-    public v1: Vec2 = new Vec2(),
-    public v2: Vec2 = new Vec2(),
+    public v1: Vec2 = Vec2.new(),
+    public v2: Vec2 = Vec2.new(),
   ) {
     super();
   }
 
-  getPoint(t: number, optionalTarget: Vec2 = new Vec2()): Vec2 {
+  getPoint(t: number, optionalTarget: Vec2 = Vec2.new()): Vec2 {
     const point = optionalTarget;
 
     if (t === 1) {
@@ -25,15 +25,15 @@ export class LineCurve extends Curve<Vec2> {
     return point;
   }
 
-  getPointAt(u: number, optionalTarget: Vec2 = new Vec2()): Vec2 {
+  getPointAt(u: number, optionalTarget: Vec2 = Vec2.new()): Vec2 {
     return this.getPoint(u, optionalTarget);
   }
 
-  getTangent(t: number, optionalTarget: Vec2 = new Vec2()): Vec2 {
+  getTangent(t: number, optionalTarget: Vec2 = Vec2.new()): Vec2 {
     return optionalTarget.asSub(this.v2, this.v1).normalize();
   }
 
-  getTangentAt(u: number, optionalTarget: Vec2 = new Vec2()): Vec2 {
+  getTangentAt(u: number, optionalTarget: Vec2 = Vec2.new()): Vec2 {
     return this.getTangent(u, optionalTarget);
   }
 

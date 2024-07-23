@@ -5,20 +5,20 @@ import {
   LineBasicMaterial,
   Mat3,
   Vec3,
-  Object3D,
+  Entity,
 } from '../engine.js';
 import { ColorRepresentation } from '@modules/renderer/engine/math/Color.js';
 
-const _v1 = new Vec3();
-const _v2 = new Vec3();
+const _v1 = Vec3.new();
+const _v2 = Vec3.new();
 const _normalMatrix = new Mat3();
 
 export class VertexNormalsHelper extends LineSegments {
   declare type: string | 'VertexNormalsHelper';
-  object: Object3D;
+  object: Entity;
   size: number;
 
-  constructor(object: Object3D, size: number = 1, color: ColorRepresentation = 0xff0000) {
+  constructor(object: Entity, size: number = 1, color: ColorRepresentation = 0xff0000) {
     const geometry = new BufferGeometry();
 
     const nNormals = object.geometry!.attributes.normal.count;

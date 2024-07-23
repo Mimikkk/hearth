@@ -51,7 +51,7 @@ export class Vec3Uniform extends Uniform<Vec3> {
   boundary: number = 16;
   itemSize: number = 3;
 
-  constructor(name: string, value: Vec3 = new Vec3()) {
+  constructor(name: string, value: Vec3 = Vec3.new()) {
     super(name, value);
   }
 }
@@ -63,7 +63,7 @@ export class Vec4Uniform extends Uniform<Vec4> {
   boundary: number = 16;
   itemSize: number = 4;
 
-  constructor(name: string, value: Vec4 = new Vec4()) {
+  constructor(name: string, value: Vec4 = Vec4.new()) {
     super(name, value);
   }
 }
@@ -75,7 +75,7 @@ export class ColorUniform extends Uniform<Color> {
   boundary: number = 16;
   itemSize: number = 3;
 
-  constructor(name: string, value: Color = new Color()) {
+  constructor(name: string, value: Color = Color.new()) {
     super(name, value);
   }
 }

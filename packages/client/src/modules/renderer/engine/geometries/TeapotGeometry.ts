@@ -141,7 +141,7 @@ export class TeapotGeometry extends BufferGeometry {
     const sdir = [];
     const tdir = [];
 
-    const norm = new Vec3();
+    const norm = Vec3.new();
 
     let tcoord;
 
@@ -151,18 +151,18 @@ export class TeapotGeometry extends BufferGeometry {
     let dsval = 0;
     let dtval = 0;
 
-    const normOut = new Vec3();
+    const normOut = Vec3.new();
 
     const gmx = new Mat4();
     const tmtx = new Mat4();
 
-    const vsp = new Vec4();
-    const vtp = new Vec4();
-    const vdsp = new Vec4();
-    const vdtp = new Vec4();
+    const vsp = Vec4.new();
+    const vtp = Vec4.new();
+    const vdsp = Vec4.new();
+    const vdtp = Vec4.new();
 
-    const vsdir = new Vec3();
-    const vtdir = new Vec3();
+    const vsdir = Vec3.new();
+    const vtdir = Vec3.new();
 
     const mst = ms.clone();
     mst.transpose();

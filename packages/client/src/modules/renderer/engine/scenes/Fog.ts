@@ -11,7 +11,7 @@ export class Fog {
     public far: number = 1000,
   ) {
     this.name = '';
-    this.color = new Color(color);
+    this.color = Color.new(color);
   }
 
   clone(): Fog {

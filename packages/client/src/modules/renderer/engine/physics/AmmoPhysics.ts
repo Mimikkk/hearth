@@ -1,12 +1,12 @@
 import { Mesh } from '../objects/Mesh.js';
-import { Object3D } from '../core/Object3D.js';
+import { Entity } from '../core/Entity.js';
 import { Vec3 } from '../math/Vec3.js';
 import Ammo from 'ammojs3';
 import { BufferGeometry } from '@modules/renderer/engine/core/BufferGeometry.js';
 import { Scene } from '@modules/renderer/engine/scenes/Scene.js';
 
 export interface AmmoPhysicsObject {
-  addScene: (scene: Object3D) => void;
+  addScene: (scene: Entity) => void;
   addMesh: (mesh: Mesh, mass?: number) => void;
   setMeshPosition: (mesh: Mesh, position: Vec3, index?: number) => void;
 }

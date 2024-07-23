@@ -7,9 +7,9 @@ export class QuadraticBezierCurve3 extends Curve<Vec3> {
   declare type: 'QuadraticBezierCurve3';
 
   constructor(
-    public v0: Vec3 = new Vec3(),
-    public v1: Vec3 = new Vec3(),
-    public v2: Vec3 = new Vec3(),
+    public v0: Vec3 = Vec3.new(),
+    public v1: Vec3 = Vec3.new(),
+    public v2: Vec3 = Vec3.new(),
   ) {
     super();
 
@@ -18,7 +18,7 @@ export class QuadraticBezierCurve3 extends Curve<Vec3> {
     this.type = 'QuadraticBezierCurve3';
   }
 
-  getPoint(t: number, optionalTarget: Vec3 = new Vec3()): Vec3 {
+  getPoint(t: number, optionalTarget: Vec3 = Vec3.new()): Vec3 {
     const point = optionalTarget;
     const { v0, v1, v2 } = this;
 

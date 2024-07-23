@@ -1,15 +1,15 @@
 import { Vec3 } from '../math/Vec3.js';
 import { Quaternion } from '../math/Quaternion.js';
 import { Clock } from '../core/Clock.js';
-import { Object3D } from '../core/Object3D.js';
+import { Entity } from '../core/Entity.js';
 import { AudioContextManager } from './AudioContextManager.js';
 
-const _position = /*@__PURE__*/ new Vec3();
-const _quaternion = /*@__PURE__*/ new Quaternion();
-const _scale = /*@__PURE__*/ new Vec3();
-const _orientation = /*@__PURE__*/ new Vec3();
+const _position = Vec3.new();
+const _quaternion = Quaternion.new();
+const _scale = Vec3.new();
+const _orientation = Vec3.new();
 
-export class AudioListener extends Object3D {
+export class AudioListener extends Entity {
   context: AudioContext;
   gain: GainNode;
   filter: AudioNode | null;

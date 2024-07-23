@@ -29,7 +29,7 @@ async function init() {
 
   //
 
-  sphereGroup = new Engine.Object3D();
+  sphereGroup = new Engine.Entity();
   scene.add(sphereGroup);
 
   geometry = new Engine.CylinderGeometry(0.1, 15 * Math.cos((Math.PI / 180) * 30), 0.1, 24, 1);

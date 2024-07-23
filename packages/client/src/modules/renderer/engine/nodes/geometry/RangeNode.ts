@@ -43,8 +43,8 @@ class RangeNode extends Node {
       const minLength = builder.getTypeLength(getValueType(minValue));
       const maxLength = builder.getTypeLength(getValueType(maxValue));
 
-      min = min || new Vec4();
-      max = max || new Vec4();
+      min = min || Vec4.new();
+      max = max || Vec4.new();
 
       min.setScalar(0);
       max.setScalar(0);

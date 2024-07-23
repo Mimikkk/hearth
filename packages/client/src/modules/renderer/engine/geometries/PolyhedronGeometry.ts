@@ -52,9 +52,9 @@ export class PolyhedronGeometry extends BufferGeometry {
     // helper functions
 
     function subdivide(detail: number) {
-      const a = new Vec3();
-      const b = new Vec3();
-      const c = new Vec3();
+      const a = Vec3.new();
+      const b = Vec3.new();
+      const c = Vec3.new();
 
       // iterate over all faces and apply a subdivision with the given detail value
 
@@ -117,7 +117,7 @@ export class PolyhedronGeometry extends BufferGeometry {
     }
 
     function applyRadius(radius: number) {
-      const vertex = new Vec3();
+      const vertex = Vec3.new();
 
       // iterate over the entire buffer and apply the radius to each vertex
 
@@ -135,7 +135,7 @@ export class PolyhedronGeometry extends BufferGeometry {
     }
 
     function generateUVs() {
-      const vertex = new Vec3();
+      const vertex = Vec3.new();
 
       for (let i = 0; i < vertexBuffer.length; i += 3) {
         vertex.x = vertexBuffer[i + 0];
@@ -188,15 +188,15 @@ export class PolyhedronGeometry extends BufferGeometry {
     }
 
     function correctUVs() {
-      const a = new Vec3();
-      const b = new Vec3();
-      const c = new Vec3();
+      const a = Vec3.new();
+      const b = Vec3.new();
+      const c = Vec3.new();
 
-      const centroid = new Vec3();
+      const centroid = Vec3.new();
 
-      const uvA = new Vec2();
-      const uvB = new Vec2();
-      const uvC = new Vec2();
+      const uvA = Vec2.new();
+      const uvB = Vec2.new();
+      const uvC = Vec2.new();
 
       for (let i = 0, j = 0; i < vertexBuffer.length; i += 9, j += 6) {
         a.set(vertexBuffer[i + 0], vertexBuffer[i + 1], vertexBuffer[i + 2]);

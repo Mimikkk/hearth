@@ -122,7 +122,7 @@ export class MarchingCubes extends Mesh {
         geometry.setAttribute('color', colorAttribute);
       }
 
-      geometry.boundingSphere = new Sphere(new Vec3(), 1);
+      geometry.boundingSphere = new Sphere(Vec3.new(), 1);
     };
 
     ///////////////////////
@@ -476,7 +476,7 @@ export class MarchingCubes extends Mesh {
       const sign = Math.sign(strength);
       strength = Math.abs(strength);
       const userDefineColor = !(colors === undefined || colors === null);
-      let ballColor = new Color(ballx, bally, ballz);
+      let ballColor = Color.new(ballx, bally, ballz);
 
       if (userDefineColor) {
         try {
@@ -484,14 +484,14 @@ export class MarchingCubes extends Mesh {
             colors instanceof Color
               ? colors
               : Array.isArray(colors)
-                ? new Color(
+                ? Color.new(
                     Math.min(Math.abs(colors[0]), 1),
                     Math.min(Math.abs(colors[1]), 1),
                     Math.min(Math.abs(colors[2]), 1),
                   )
-                : new Color(colors);
+                : Color.new(colors);
         } catch (err) {
-          ballColor = new Color(ballx, bally, ballz);
+          ballColor = Color.new(ballx, bally, ballz);
         }
       }
 

@@ -3,29 +3,29 @@ import { Intersection, Raycaster } from '../core/Raycaster.js';
 import { Vec2 } from '../math/Vec2.js';
 import { Vec3 } from '../math/Vec3.js';
 import { Mat4 } from '../math/Mat4.js';
-import { Object3D } from '../core/Object3D.js';
+import { Entity } from '../core/Entity.js';
 import { Camera } from '../cameras/Camera.js';
 
 const _plane = new Plane();
 const _raycaster = new Raycaster();
 
-const _pointer = new Vec2();
-const _offset = new Vec3();
-const _diff = new Vec2();
-const _previousPointer = new Vec2();
-const _intersection = new Vec3();
-const _worldPosition = new Vec3();
+const _pointer = Vec2.new();
+const _offset = Vec3.new();
+const _diff = Vec2.new();
+const _previousPointer = Vec2.new();
+const _intersection = Vec3.new();
+const _worldPosition = Vec3.new();
 const _inverseMatrix = new Mat4();
 
-const _up = new Vec3();
-const _right = new Vec3();
+const _up = Vec3.new();
+const _right = Vec3.new();
 
 export class DragControls {
-  onHoverStart: (object: Object3D) => void;
-  onHoverEnd: (object: Object3D) => void;
-  onDragStart: (object: Object3D) => void;
-  onDrag: (object: Object3D) => void;
-  onDragEnd: (object: Object3D) => void;
+  onHoverStart: (object: Entity) => void;
+  onHoverEnd: (object: Entity) => void;
+  onDragStart: (object: Entity) => void;
+  onDrag: (object: Entity) => void;
+  onDragEnd: (object: Entity) => void;
 
   object: Camera;
   enabled: boolean;
@@ -34,11 +34,11 @@ export class DragControls {
   mode: string;
   rotateSpeed: number;
 
-  constructor(objects: Object3D[], camera: Camera, dom: HTMLElement) {
+  constructor(objects: Entity[], camera: Camera, dom: HTMLElement) {
     dom.style.touchAction = 'none';
 
-    let _selected: Object3D | null = null;
-    let _hovered: Object3D | null = null;
+    let _selected: Entity | null = null;
+    let _hovered: Entity | null = null;
 
     const _intersections: Intersection[] = [];
 
@@ -74,7 +74,7 @@ export class DragControls {
       return objects;
     }
 
-    function setObjects(objects: Object3D[]) {
+    function setObjects(objects: Entity[]) {
       objects = objects;
     }
 
@@ -212,7 +212,7 @@ export class DragControls {
       _pointer.y = (-(event.clientY - rect.top) / rect.height) * 2 + 1;
     }
 
-    function findGroup(obj: Object3D, group = null) {
+    function findGroup(obj: Entity, group = null) {
       //@ts-expect-error
       if (obj.isGroup) group = obj;
 
@@ -240,7 +240,7 @@ export class DragControls {
   activate: () => void;
   deactivate: () => void;
   dispose: () => void;
-  getObjects: () => Object3D[];
+  getObjects: () => Entity[];
   getRaycaster: () => Raycaster;
-  setObjects: (objects: Object3D[]) => void;
+  setObjects: (objects: Entity[]) => void;
 }

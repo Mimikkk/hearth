@@ -22,7 +22,7 @@ class AxesHelper extends LineSegments {
   }
 
   setColors(xAxisColor, yAxisColor, zAxisColor) {
-    const color = new Color();
+    const color = Color.new();
     const array = this.geometry.attributes.color.array;
 
     color.set(xAxisColor);

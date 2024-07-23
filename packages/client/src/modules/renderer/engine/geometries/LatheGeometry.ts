@@ -14,7 +14,7 @@ export class LatheGeometry extends BufferGeometry {
   };
 
   constructor(
-    points: Vec2[] = [new Vec2(0, -0.5), new Vec2(0.5, 0), new Vec2(0, 0.5)],
+    points: Vec2[] = [Vec2.new(0, -0.5), Vec2.new(0.5, 0), Vec2.new(0, 0.5)],
     segments: number = 12,
     phiStart: number = 0,
     phiLength: number = Math.PI * 2,
@@ -45,11 +45,11 @@ export class LatheGeometry extends BufferGeometry {
     // helper variables
 
     const inverseSegments = 1.0 / segments;
-    const vertex = new Vec3();
-    const uv = new Vec2();
-    const normal = new Vec3();
-    const curNormal = new Vec3();
-    const prevNormal = new Vec3();
+    const vertex = Vec3.new();
+    const uv = Vec2.new();
+    const normal = Vec3.new();
+    const curNormal = Vec3.new();
+    const prevNormal = Vec3.new();
     let dx = 0;
     let dy = 0;
 

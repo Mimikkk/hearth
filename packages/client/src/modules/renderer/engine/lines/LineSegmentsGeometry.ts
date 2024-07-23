@@ -13,8 +13,8 @@ import {
   WireframeGeometry,
 } from '../engine.js';
 
-const _box = new Box3();
-const _vector = new Vec3();
+const _box = Box3.new();
+const _vector = Vec3.new();
 
 export class LineSegmentsGeometry extends InstancedBufferGeometry {
   constructor() {
@@ -105,7 +105,7 @@ export class LineSegmentsGeometry extends InstancedBufferGeometry {
 
   computeBoundingBox(): this {
     if (this.boundingBox === null) {
-      this.boundingBox = new Box3();
+      this.boundingBox = Box3.new();
     }
 
     const start = this.attributes.instanceStart;

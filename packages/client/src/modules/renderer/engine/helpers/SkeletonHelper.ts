@@ -5,20 +5,20 @@ import { Color } from '../math/Color.js';
 import { Vec3 } from '../math/Vec3.js';
 import { BufferGeometry } from '../core/BufferGeometry.js';
 import { Float32BufferAttribute } from '../core/BufferAttribute.js';
-import { Object3D } from '@modules/renderer/engine/core/Object3D.js';
+import { Entity } from '@modules/renderer/engine/core/Entity.js';
 import { Bone } from '@modules/renderer/engine/objects/Bone.js';
 
-const _vector = /*@__PURE__*/ new Vec3();
-const _boneMatrix = /*@__PURE__*/ new Mat4();
-const _matrixWorldInv = /*@__PURE__*/ new Mat4();
+const _vector = Vec3.new();
+const _boneMatrix = new Mat4();
+const _matrixWorldInv = new Mat4();
 
 export class SkeletonHelper extends LineSegments {
   declare isSkeletonHelper: true;
   declare type: string | 'SkeletonHelper';
-  root: Object3D;
+  root: Entity;
   bones: Bone[];
 
-  constructor(object: Object3D) {
+  constructor(object: Entity) {
     const bones = getBoneList(object);
 
     const geometry = new BufferGeometry();
@@ -26,8 +26,8 @@ export class SkeletonHelper extends LineSegments {
     const vertices = [];
     const colors = [];
 
-    const color1 = new Color(0, 0, 1);
-    const color2 = new Color(0, 1, 0);
+    const color1 = Color.new(0, 0, 1);
+    const color2 = Color.new(0, 1, 0);
 
     for (let i = 0; i < bones.length; i++) {
       const bone = bones[i];
@@ -96,7 +96,7 @@ export class SkeletonHelper extends LineSegments {
 SkeletonHelper.prototype.isSkeletonHelper = true;
 SkeletonHelper.prototype.type = 'SkeletonHelper';
 
-function getBoneList(object: Object3D) {
+function getBoneList(object: Entity) {
   const boneList = [];
 
   if (object instanceof Bone) {

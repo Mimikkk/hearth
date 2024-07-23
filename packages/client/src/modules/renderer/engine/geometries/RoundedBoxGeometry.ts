@@ -1,6 +1,6 @@
 import { BoxGeometry, Vec3 } from '../engine.js';
 
-const _tempNormal = new Vec3();
+const _tempNormal = Vec3.new();
 
 function getUv(
   faceDirVector: Vec3,
@@ -58,17 +58,17 @@ export class RoundedBoxGeometry extends BoxGeometry {
 
     //
 
-    const position = new Vec3();
-    const normal = new Vec3();
+    const position = Vec3.new();
+    const normal = Vec3.new();
 
-    const box = new Vec3(width, height, depth).divScalar(2).subScalar(radius);
+    const box = Vec3.new(width, height, depth).divScalar(2).subScalar(radius);
 
     const positions = this.attributes.position.array;
     const normals = this.attributes.normal.array;
     const uvs = this.attributes.uv.array;
 
     const faceTris = positions.length / 6;
-    const faceDirVector = new Vec3();
+    const faceDirVector = Vec3.new();
     const halfSegmentSize = 0.5 / segments;
 
     for (let i = 0, j = 0; i < positions.length; i += 3, j += 2) {

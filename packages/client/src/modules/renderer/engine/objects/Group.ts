@@ -1,6 +1,6 @@
-import { Object3D } from '../core/Object3D.js';
+import { Entity } from '../core/Entity.js';
 
-export class Group extends Object3D {
+export class Group extends Entity {
   declare isGroup: true;
   declare type: string | 'Group';
 }

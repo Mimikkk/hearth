@@ -8,7 +8,7 @@ import { StringKeyframeTrack } from './tracks/StringKeyframeTrack.js';
 import { VectorKeyframeTrack } from './tracks/VectorKeyframeTrack.js';
 import * as MathUtils from '../math/MathUtils.js';
 import { AnimationBlendMode } from '../constants.js';
-import { Object3D } from '@modules/renderer/engine/core/Object3D.js';
+import { Entity } from '@modules/renderer/engine/core/Entity.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 
 export interface MorphTarget {
@@ -88,7 +88,7 @@ export class AnimationClip {
     return new this(name, -1, tracks);
   }
 
-  static findByName(objectOrClipArray: Object3D | AnimationClip[], name: string): AnimationClip | null {
+  static findByName(objectOrClipArray: Entity | AnimationClip[], name: string): AnimationClip | null {
     let clipArray: AnimationClip[] = objectOrClipArray as never;
 
     if (!Array.isArray(objectOrClipArray)) {

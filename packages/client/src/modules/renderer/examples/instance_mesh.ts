@@ -13,7 +13,7 @@ let camera, scene, renderer, stats;
 let mesh;
 const amount = parseInt(window.location.search.slice(1)) || 10;
 const count = Math.pow(amount, 3);
-const dummy = new Engine.Object3D();
+const dummy = new Engine.Entity();
 
 init();
 

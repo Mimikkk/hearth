@@ -8,7 +8,7 @@ import {
   Fog,
   Mesh,
   MeshLambertMaterial,
-  Object3D,
+  Entity,
   SpotLight,
 } from '@modules/renderer/engine/engine.js';
 import { DragControls } from '@modules/renderer/engine/controls/DragControls.js';
@@ -44,10 +44,10 @@ const createBox = (geometry: BufferGeometry, x: number, y: number, z: number) =>
 };
 
 const useDragControls = () => {
-  const objects: Object3D[] = [box1, box2];
+  const objects: Entity[] = [box1, box2];
   const controls = new DragControls([...objects], camera, renderer.parameters.canvas);
 
-  // const mouse = new Vec2();
+  // const mouse = Vec2.new();
   // const raycaster = new Raycaster();
 
   // renderer.parameters.canvas.addEventListener('click', event => {
@@ -113,7 +113,7 @@ useWindowResizer(renderer, camera);
 
 interface State {
   drag: {
-    selected: Object3D | null;
+    selected: Entity | null;
     mode: 'translate' | 'rotate';
     intersections: Intersection[];
     selection: boolean;

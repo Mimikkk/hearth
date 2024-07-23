@@ -32,7 +32,7 @@ camera.position.z = 0.72;
 camera.lookAt(0, 0, 0);
 
 const scene = new Scene();
-scene.background = new Color(0x222222);
+scene.background = Color.new(0x222222);
 
 const material = new Nodes.NodeMaterial();
 material.fragmentNode = Nodes.vec4(0, 0, 0, 1);

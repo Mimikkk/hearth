@@ -1,6 +1,6 @@
 import { NodeUpdateType } from './constants.js';
 import { Scene } from '@modules/renderer/engine/scenes/Scene.js';
-import { Object3D } from '@modules/renderer/engine/core/Object3D.js';
+import { Entity } from '@modules/renderer/engine/core/Entity.js';
 import { Camera } from '@modules/renderer/engine/cameras/Camera.js';
 import { Material } from '@modules/renderer/engine/materials/Material.js';
 import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
@@ -19,7 +19,7 @@ export class NodeFrame {
   renderer: Renderer;
   material: Material;
   camera: Camera;
-  object: Object3D;
+  object: Entity;
   scene: Scene;
   clock: Clock;
 

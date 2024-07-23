@@ -60,7 +60,7 @@ async function init() {
     action.play();
 
     const instanceCount = 30;
-    const dummy = new Engine.Object3D();
+    const dummy = new Engine.Entity();
 
     object.traverse(child => {
       if (child.isMesh) {

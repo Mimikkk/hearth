@@ -20,12 +20,12 @@ class AnamorphicNode extends TempNode {
     this.scaleNode = scaleNode;
     this.colorNode = vec3(0.1, 0.0, 1.0);
     this.samples = samples;
-    this.resolution = new Vec2(1, 1);
+    this.resolution = Vec2.new(1, 1);
 
     this.target = new RenderTarget();
     this.target.texture.name = 'anamorphic';
 
-    this._invSize = uniform(new Vec2());
+    this._invSize = uniform(Vec2.new());
 
     this._textureNode = texturePass(this, this.target.texture);
 

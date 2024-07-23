@@ -74,10 +74,10 @@ export class OrbitControls {
     this.enabled = true;
 
     // "target" sets the location of focus, where the object orbits around
-    this.target = new Vec3();
+    this.target = Vec3.new();
 
     // Sets the 3D cursor (similar to Blender), from which the maxTargetRadius takes effect
-    this.cursor = new Vec3();
+    this.cursor = Vec3.new();
 
     // How far you can dolly in and out ( PerspectiveCamera only )
     this.minDistance = 0;
@@ -188,15 +188,15 @@ export class OrbitControls {
 
     // this method is exposed, but perhaps it would be better if we can make it private...
     this.update = (function () {
-      const offset = new Vec3();
+      const offset = Vec3.new();
 
       // so camera.up is the orbit axis
-      const quat = new Quaternion().fromUnit(object.up, new Vec3(0, 1, 0));
+      const quat = Quaternion.fromUnit(object.up, Vec3.new(0, 1, 0));
       const quatInverse = quat.clone().invert();
 
-      const lastPosition = new Vec3();
-      const lastQuaternion = new Quaternion();
-      const lastTargetPosition = new Vec3();
+      const lastPosition = Vec3.new();
+      const lastQuaternion = Quaternion.new();
+      const lastTargetPosition = Vec3.new();
 
       const twoPI = 2 * Math.PI;
 
@@ -308,7 +308,7 @@ export class OrbitControls {
             zoomChanged = !!radiusDelta;
           } else if (scope.object instanceof OrthographicCamera) {
             // adjust the ortho camera position based on zoom changes
-            const mouseBefore = new Vec3(mouse.x, mouse.y, 0);
+            const mouseBefore = Vec3.new(mouse.x, mouse.y, 0);
             mouseBefore.unproject(scope.object);
 
             const prevZoom = scope.object.zoom;
@@ -317,7 +317,7 @@ export class OrbitControls {
 
             zoomChanged = prevZoom !== scope.object.zoom;
 
-            const mouseAfter = new Vec3(mouse.x, mouse.y, 0);
+            const mouseAfter = Vec3.new(mouse.x, mouse.y, 0);
             mouseAfter.unproject(scope.object);
 
             scope.object.position.sub(mouseAfter).add(mouseBefore);
@@ -428,22 +428,22 @@ export class OrbitControls {
     const sphericalDelta = new Spherical();
 
     let scale = 1;
-    const panOffset = new Vec3();
+    const panOffset = Vec3.new();
 
-    const rotateStart = new Vec2();
-    const rotateEnd = new Vec2();
-    const rotateDelta = new Vec2();
+    const rotateStart = Vec2.new();
+    const rotateEnd = Vec2.new();
+    const rotateDelta = Vec2.new();
 
-    const panStart = new Vec2();
-    const panEnd = new Vec2();
-    const panDelta = new Vec2();
+    const panStart = Vec2.new();
+    const panEnd = Vec2.new();
+    const panDelta = Vec2.new();
 
-    const dollyStart = new Vec2();
-    const dollyEnd = new Vec2();
-    const dollyDelta = new Vec2();
+    const dollyStart = Vec2.new();
+    const dollyEnd = Vec2.new();
+    const dollyDelta = Vec2.new();
 
-    const dollyDirection = new Vec3();
-    const mouse = new Vec2();
+    const dollyDirection = Vec3.new();
+    const mouse = Vec2.new();
     let performCursorZoom = false;
 
     const pointers: number[] = [];
@@ -473,7 +473,7 @@ export class OrbitControls {
     }
 
     const panLeft = (function () {
-      const v = new Vec3();
+      const v = Vec3.new();
 
       return function panLeft(distance: number, objectMatrix: Mat4) {
         v.fromMat4Column(objectMatrix, 0); // get X column of objectMatrix
@@ -484,7 +484,7 @@ export class OrbitControls {
     })();
 
     const panUp = (function () {
-      const v = new Vec3();
+      const v = Vec3.new();
 
       return function panUp(distance: number, objectMatrix: Mat4) {
         if (scope.screenSpacePanning === true) {
@@ -502,7 +502,7 @@ export class OrbitControls {
 
     // deltaX and deltaY are in pixels; right and down are positive
     const pan = (function () {
-      const offset = new Vec3();
+      const offset = Vec3.new();
 
       return function pan(deltaX: number, deltaY: number) {
         const element = scope.domElement;
@@ -947,7 +947,7 @@ export class OrbitControls {
       let position = pointerPositions[event.pointerId];
 
       if (position === undefined) {
-        position = new Vec2();
+        position = Vec2.new();
         pointerPositions[event.pointerId] = position;
       }
 

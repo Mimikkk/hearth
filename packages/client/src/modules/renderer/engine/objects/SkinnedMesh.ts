@@ -37,7 +37,7 @@ export class SkinnedMesh extends Mesh {
   computeBoundingBox() {
     const geometry = this.geometry!;
 
-    if (this.boundingBox === null) this.boundingBox = new Box3();
+    if (this.boundingBox === null) this.boundingBox = Box3.new();
 
     this.boundingBox!.clear();
 
@@ -140,7 +140,7 @@ export class SkinnedMesh extends Mesh {
   }
 
   normalizeSkinWeights() {
-    const vector = new Vec4();
+    const vector = Vec4.new();
 
     const skinWeight = this.geometry.attributes.skinWeight;
 
@@ -223,10 +223,10 @@ SkinnedMesh.prototype.type = 'SkinnedMesh';
 
 const _vector3 = Vec3.new();
 const _matrix4 = new Mat4();
-const _position = new Vec3();
-const _index = new Vec4();
-const _weight = new Vec4();
-const _vertex = new Vec3();
+const _position = Vec3.new();
+const _index = Vec4.new();
+const _weight = Vec4.new();
+const _vertex = Vec3.new();
 const _sphere = new Sphere();
 const _inverseMatrix = new Mat4();
 const _ray = new Ray();

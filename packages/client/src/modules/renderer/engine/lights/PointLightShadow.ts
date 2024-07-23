@@ -6,9 +6,9 @@ import { Vec3 } from '../math/Vec3.js';
 import { Vec4 } from '../math/Vec4.js';
 import { PointLight } from './PointLight.js';
 
-const _projScreenMatrix = /*@__PURE__*/ new Mat4();
-const _lightPositionWorld = /*@__PURE__*/ new Vec3();
-const _lookTarget = /*@__PURE__*/ new Vec3();
+const _projScreenMatrix = new Mat4();
+const _lightPositionWorld = Vec3.new();
+const _lookTarget = Vec3.new();
 
 export class PointLightShadow extends LightShadow<PerspectiveCamera> {
   declare isPointLightShadow: true;
@@ -17,7 +17,7 @@ export class PointLightShadow extends LightShadow<PerspectiveCamera> {
 
   constructor() {
     super(new PerspectiveCamera(90, 1, 0.5, 500));
-    this._frameExtents = new Vec2(4, 2);
+    this._frameExtents = Vec2.new(4, 2);
 
     this.viewportCount = 6;
 
@@ -36,35 +36,35 @@ export class PointLightShadow extends LightShadow<PerspectiveCamera> {
       // z - Negative z direction
 
       // positive X
-      new Vec4(2, 1, 1, 1),
+      Vec4.new(2, 1, 1, 1),
       // negative X
-      new Vec4(0, 1, 1, 1),
+      Vec4.new(0, 1, 1, 1),
       // positive Z
-      new Vec4(3, 1, 1, 1),
+      Vec4.new(3, 1, 1, 1),
       // negative Z
-      new Vec4(1, 1, 1, 1),
+      Vec4.new(1, 1, 1, 1),
       // positive Y
-      new Vec4(3, 0, 1, 1),
+      Vec4.new(3, 0, 1, 1),
       // negative Y
-      new Vec4(1, 0, 1, 1),
+      Vec4.new(1, 0, 1, 1),
     ];
 
     this._cubeDirections = [
-      new Vec3(1, 0, 0),
-      new Vec3(-1, 0, 0),
-      new Vec3(0, 0, 1),
-      new Vec3(0, 0, -1),
-      new Vec3(0, 1, 0),
-      new Vec3(0, -1, 0),
+      Vec3.new(1, 0, 0),
+      Vec3.new(-1, 0, 0),
+      Vec3.new(0, 0, 1),
+      Vec3.new(0, 0, -1),
+      Vec3.new(0, 1, 0),
+      Vec3.new(0, -1, 0),
     ];
 
     this._cubeUps = [
-      new Vec3(0, 1, 0),
-      new Vec3(0, 1, 0),
-      new Vec3(0, 1, 0),
-      new Vec3(0, 1, 0),
-      new Vec3(0, 0, 1),
-      new Vec3(0, 0, -1),
+      Vec3.new(0, 1, 0),
+      Vec3.new(0, 1, 0),
+      Vec3.new(0, 1, 0),
+      Vec3.new(0, 1, 0),
+      Vec3.new(0, 0, 1),
+      Vec3.new(0, 0, -1),
     ];
   }
 

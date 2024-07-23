@@ -216,4 +216,4 @@ Euler.prototype.isEuler = true;
 export type EulerOrder = 'XYZ' | 'YXZ' | 'ZXY' | 'ZYX' | 'YZX' | 'XZY';
 
 const _mat4 = new Mat4();
-const _quaternion = new Quaternion();
+const _quaternion = Quaternion.new();

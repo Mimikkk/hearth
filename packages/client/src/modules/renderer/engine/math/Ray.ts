@@ -11,8 +11,8 @@ export class Ray {
   declare isRay: true;
 
   constructor(
-    public origin: Vec3 = new Vec3(),
-    public direction: Vec3 = new Vec3(0, 0, -1),
+    public origin: Vec3 = Vec3.new(),
+    public direction: Vec3 = Vec3.new(0, 0, -1),
   ) {}
 
   static new(origin: Vec3 = Vec3.new(), direction: Vec3 = Vec3.new(0, 0, -1)): Ray {

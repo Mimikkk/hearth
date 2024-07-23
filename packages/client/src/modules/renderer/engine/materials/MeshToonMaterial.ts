@@ -66,7 +66,7 @@ export class MeshToonMaterial extends Material {
     super(parameters);
     this.defines = { TOON: '' };
 
-    this.color = new Color(0xffffff);
+    this.color = Color.new(0xffffff);
 
     this.map = null;
     this.gradientMap = null;
@@ -77,7 +77,7 @@ export class MeshToonMaterial extends Material {
     this.aoMap = null;
     this.aoMapIntensity = 1.0;
 
-    this.emissive = new Color(0x000000);
+    this.emissive = Color.new(0x000000);
     this.emissiveIntensity = 1.0;
     this.emissiveMap = null;
 
@@ -86,7 +86,7 @@ export class MeshToonMaterial extends Material {
 
     this.normalMap = null;
     this.normalMapType = NormalMapType.TangentSpace;
-    this.normalScale = new Vec2(1, 1);
+    this.normalScale = Vec2.new(1, 1);
 
     this.displacementMap = null;
     this.displacementScale = 1;

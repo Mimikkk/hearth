@@ -83,7 +83,7 @@ function parseBinary(buffer: ArrayBuffer) {
   const vertices = new Float32Array(faces * 3 * 3);
   const normals = new Float32Array(faces * 3 * 3);
 
-  const color = new Color();
+  const color = Color.new();
 
   for (let face = 0; face < faces; face++) {
     const start = dataOffset + face * faceLength;
@@ -120,7 +120,7 @@ function parseBinary(buffer: ArrayBuffer) {
       normals[componentIdx + 2] = normalZ;
 
       if (colors) {
-        color.set(r, g, b).convertSRGBToLinear();
+        color.set(r, g, b).asSRGBToLinear();
 
         colors[componentIdx] = color.r;
         colors[componentIdx + 1] = color.g;
@@ -158,7 +158,7 @@ function parseASCII(text: string) {
   const normals = [];
   const groupNames = [];
 
-  const normal = new Vec3();
+  const normal = Vec3.new();
 
   let result;
 

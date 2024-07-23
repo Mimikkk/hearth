@@ -7,8 +7,8 @@ export class Box2 {
   declare ['constructor']: typeof Box2;
 
   constructor(
-    public min: Vec2 = new Vec2(+Infinity, +Infinity),
-    public max: Vec2 = new Vec2(-Infinity, -Infinity),
+    public min: Vec2 = Vec2.new(+Infinity, +Infinity),
+    public max: Vec2 = Vec2.new(-Infinity, -Infinity),
   ) {}
 
   static new(min: Vec2 = Vec2.new(Infinity, Infinity), max: Vec2 = Vec2.new(-Infinity, -Infinity)): Box2 {
@@ -66,7 +66,7 @@ export class Box2 {
   }
 
   fromCenterAndSize(center: Vec2, size: Vec2): this {
-    const halfSize = new Vec2().from(size).scale(0.5);
+    const halfSize = Vec2.from(size).scale(0.5);
     this.min.from(center).sub(halfSize);
     this.max.from(center).add(halfSize);
 

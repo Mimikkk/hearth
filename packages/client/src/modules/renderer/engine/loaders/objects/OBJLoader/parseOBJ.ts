@@ -23,12 +23,12 @@ const MaterialUseRe = /^usemtl /;
 const MapUseRe = /^usemap /;
 const DelimiterRe = /\s+/;
 
-const _vA = new Vec3();
-const _vB = new Vec3();
-const _vC = new Vec3();
-const _ab = new Vec3();
-const _cb = new Vec3();
-const _color = new Color();
+const _vA = Vec3.new();
+const _vB = Vec3.new();
+const _vC = Vec3.new();
+const _ab = Vec3.new();
+const _cb = Vec3.new();
+const _color = Color.new();
 
 class ParserState {
   objects = [];
@@ -391,7 +391,7 @@ export async function parseOBJ(text: string, materialCreator?: MTLMaterialCreato
         case OBJToken.Vertex:
           state.vertices.push(+data[1], +data[2], +data[3]);
           if (data.length >= 7) {
-            _color.setRGB(+data[4], +data[5], +data[6]).convertSRGBToLinear();
+            _color.setRGB(+data[4], +data[5], +data[6]).asSRGBToLinear();
 
             state.colors.push(_color.r, _color.g, _color.b);
           } else {

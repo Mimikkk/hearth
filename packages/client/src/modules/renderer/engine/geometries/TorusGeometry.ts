@@ -36,9 +36,9 @@ export class TorusGeometry extends BufferGeometry {
 
     // helper variables
 
-    const center = new Vec3();
-    const vertex = new Vec3();
-    const normal = new Vec3();
+    const center = Vec3.new();
+    const vertex = Vec3.new();
+    const normal = Vec3.new();
 
     // generate vertices, normals and uvs
 

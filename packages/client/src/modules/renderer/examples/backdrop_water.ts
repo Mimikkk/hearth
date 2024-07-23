@@ -111,7 +111,7 @@ loader.loadAsync('resources/models/gltf/Michelle.glb').then(gltf => {
 const iceDiffuse = await new TextureLoader().loadAsync('resources/textures/water/water.jpg');
 iceDiffuse.wrapS = Wrapping.Repeat;
 iceDiffuse.wrapT = Wrapping.Repeat;
-iceDiffuse.colorSpace = ColorSpace.No;
+iceDiffuse.colorSpace = null;
 
 const iceColorNode = triplanarTexture(texture(iceDiffuse)).add(color(0x0066ff)).mul(0.8);
 
@@ -216,7 +216,7 @@ controls.update();
 
 const gui = new GUI();
 
-const floorPosition = new Vec3(0, 0.2, 0);
+const floorPosition = Vec3.new(0, 0.2, 0);
 
 gui.add(floorPosition, 'y', -1, 1, 0.001).name('position');
 

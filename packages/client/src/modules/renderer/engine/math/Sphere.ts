@@ -8,7 +8,7 @@ export class Sphere {
   declare isSphere: true;
 
   constructor(
-    public center: Vec3 = new Vec3(),
+    public center: Vec3 = Vec3.new(),
     public radius: number = -1,
   ) {}
 

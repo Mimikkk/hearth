@@ -12,7 +12,7 @@ export class ShapeGeometry extends BufferGeometry {
   };
 
   constructor(
-    shapes: Shape | Shape[] = new Shape([new Vec2(0, 0.5), new Vec2(-0.5, -0.5), new Vec2(0.5, -0.5)]),
+    shapes: Shape | Shape[] = new Shape([Vec2.new(0, 0.5), Vec2.new(-0.5, -0.5), Vec2.new(0.5, -0.5)]),
     curveSegments: number = 12,
   ) {
     super();

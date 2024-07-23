@@ -25,10 +25,10 @@ async function init() {
   camera = new PerspectiveCamera(35, window.innerWidth / window.innerHeight, 1, 15);
   camera.position.set(3, 0.15, 3);
 
-  cameraTarget = new Vec3(0, -0.25, 0);
+  cameraTarget = Vec3.new(0, -0.25, 0);
 
   scene = new Scene();
-  scene.background = new Color(0x72645b);
+  scene.background = Color.new(0x72645b);
   scene.fog = new Fog(0x72645b, 2, 15);
 
   // Ground

@@ -100,7 +100,7 @@ export class BoxGeometry extends BufferGeometry {
       let vertexCounter = 0;
       let groupCount = 0;
 
-      const vector = new Vec3();
+      const vector = Vec3.new();
 
       // generate vertices, normals and uvs
 

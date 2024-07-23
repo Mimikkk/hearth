@@ -5,7 +5,7 @@ import { InterleavedBuffer } from '@modules/renderer/engine/core/InterleavedBuff
 import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
 import { Matrix, Mat3 } from '@modules/renderer/engine/math/Mat3.js';
 
-const _vector = /*@__PURE__*/ new Vec3();
+const _vector = Vec3.new();
 
 export class InterleavedBufferAttribute<T extends TypedArray = any> {
   declare ['constructor']: typeof InterleavedBufferAttribute;

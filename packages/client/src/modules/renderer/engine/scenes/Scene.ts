@@ -1,4 +1,4 @@
-import { Object3D } from '../core/Object3D.js';
+import { Entity } from '../core/Entity.js';
 import { Euler } from '../math/Euler.js';
 import type { Fog } from './Fog.js';
 import type { Material } from '../materials/Material.js';
@@ -8,7 +8,7 @@ import type { CubeTexture } from '../textures/CubeTexture.js';
 import { EnvironmentNode } from '@modules/renderer/engine/nodes/Nodes.js';
 import FogNode from '@modules/renderer/engine/nodes/fog/FogNode.js';
 
-export class Scene extends Object3D {
+export class Scene extends Entity {
   declare isScene: true;
   declare environmentNode: EnvironmentNode | null;
   declare backgroundNode: Node | null;

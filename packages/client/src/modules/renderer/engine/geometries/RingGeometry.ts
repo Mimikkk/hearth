@@ -47,8 +47,8 @@ export class RingGeometry extends BufferGeometry {
 
     let radius = innerRadius;
     const radiusStep = (outerRadius - innerRadius) / phiSegments;
-    const vertex = new Vec3();
-    const uv = new Vec2();
+    const vertex = Vec3.new();
+    const uv = Vec2.new();
 
     // generate vertices, normals and uvs
 

@@ -75,8 +75,8 @@ export class CylinderGeometry extends BufferGeometry {
     this.setAttribute('uv', new Float32BufferAttribute(uvs, 2));
 
     function generateTorso() {
-      const normal = new Vec3();
-      const vertex = new Vec3();
+      const normal = Vec3.new();
+      const vertex = Vec3.new();
 
       let groupCount = 0;
 
@@ -163,8 +163,8 @@ export class CylinderGeometry extends BufferGeometry {
       // save the index of the first center vertex
       const centerIndexStart = index;
 
-      const uv = new Vec2();
-      const vertex = new Vec3();
+      const uv = Vec2.new();
+      const vertex = Vec3.new();
 
       let groupCount = 0;
 

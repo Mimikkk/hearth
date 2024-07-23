@@ -46,15 +46,15 @@ export class TorusKnotGeometry extends BufferGeometry {
 
     // helper variables
 
-    const vertex = new Vec3();
-    const normal = new Vec3();
+    const vertex = Vec3.new();
+    const normal = Vec3.new();
 
-    const P1 = new Vec3();
-    const P2 = new Vec3();
+    const P1 = Vec3.new();
+    const P2 = Vec3.new();
 
-    const B = new Vec3();
-    const T = new Vec3();
-    const N = new Vec3();
+    const B = Vec3.new();
+    const T = Vec3.new();
+    const N = Vec3.new();
 
     // generate vertices, normals and uvs
 

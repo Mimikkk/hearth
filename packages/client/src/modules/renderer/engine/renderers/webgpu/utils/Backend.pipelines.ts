@@ -18,7 +18,7 @@ import {
   Line,
   LineSegments,
   Material,
-  Object3D,
+  Entity,
   Side,
   StencilFunction,
   StencilOperation,
@@ -462,7 +462,7 @@ class BackendPipelines {
     return blendOperation;
   }
 
-  _getPrimitiveState(object: Object3D, geometry: BufferGeometry, material: Material): GPUPrimitiveState {
+  _getPrimitiveState(object: Entity, geometry: BufferGeometry, material: Material): GPUPrimitiveState {
     const descriptor: GPUPrimitiveState = {};
     const utils = this.backend.utilities;
 

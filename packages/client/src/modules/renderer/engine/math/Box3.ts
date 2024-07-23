@@ -1,5 +1,5 @@
 import { Vec3 } from './Vec3.js';
-import type { Object3D } from '../core/Object3D.js';
+import type { Entity } from '../core/Entity.js';
 import type { Triangle } from './Triangle.js';
 import type { Plane } from './Plane.js';
 import { Sphere } from './Sphere.js';
@@ -14,8 +14,8 @@ export class Box3 {
   declare ['constructor']: typeof Box3;
 
   constructor(
-    public min: Vec3 = new Vec3(+Infinity, +Infinity, +Infinity),
-    public max: Vec3 = new Vec3(-Infinity, -Infinity, -Infinity),
+    public min: Vec3 = Vec3.new(+Infinity, +Infinity, +Infinity),
+    public max: Vec3 = Vec3.new(-Infinity, -Infinity, -Infinity),
   ) {}
 
   static new(
@@ -73,7 +73,7 @@ export class Box3 {
     return into.fromArray(array);
   }
 
-  static fromObject(object: Const<Object3D>, precise: boolean = false, into: Box3 = Box3.new()): Box3 {
+  static fromObject(object: Const<Entity>, precise: boolean = false, into: Box3 = Box3.new()): Box3 {
     return into.fromObject(object, precise);
   }
 
@@ -134,7 +134,7 @@ export class Box3 {
     return this;
   }
 
-  fromObject(object: Const<Object3D>, precise: boolean = false): this {
+  fromObject(object: Const<Entity>, precise: boolean = false): this {
     this.clear();
     return this.expandObject(object, precise);
   }
@@ -197,7 +197,7 @@ export class Box3 {
     return this;
   }
 
-  expandObject(object: Const<Object3D>, precise: boolean = false): this {
+  expandObject(object: Const<Entity>, precise: boolean = false): this {
     object.updateWorldMatrix(false, false);
 
     const geometry = object.geometry;
@@ -207,7 +207,7 @@ export class Box3 {
 
       if (precise && position && !object.isInstancedMesh) {
         for (let i = 0, l = position.count; i < l; i++) {
-          let _vec: Vec3 = new Vec3();
+          let _vec: Vec3 = Vec3.new();
 
           if (isMesh(object)) {
             object.getVertexPosition(i, _vec);
@@ -278,7 +278,7 @@ export class Box3 {
 
   intersectsSphere(sphere: Const<Sphere>): boolean {
     // Find the point on the AABB closest to the sphere center.
-    const _vector = new Vec3();
+    const _vector = Vec3.new();
     this.clamp(sphere.center, _vector);
 
     // If that point is inside the sphere, the AABB and sphere intersect.
@@ -357,7 +357,7 @@ export class Box3 {
   }
 
   distanceTo(vec: Const<Vec3>): number {
-    return this.clamp(vec, new Vec3(0, 0, 0)).distanceTo(vec);
+    return this.clamp(vec, Vec3.new(0, 0, 0)).distanceTo(vec);
   }
 
   sphere(into: Sphere = Sphere.new()): Sphere {

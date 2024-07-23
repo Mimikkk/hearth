@@ -67,7 +67,7 @@ async function init() {
   const buildMesh = new Engine.InstancedMesh(buildGeometry, buildMaterial, 4000);
   scene.add(buildMesh);
 
-  const dummy = new Engine.Object3D();
+  const dummy = new Engine.Entity();
   const center = new Engine.Vec3();
 
   for (let i = 0; i < buildMesh.count; i++) {

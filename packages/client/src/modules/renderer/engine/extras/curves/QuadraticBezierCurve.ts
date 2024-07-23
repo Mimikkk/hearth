@@ -7,14 +7,14 @@ export class QuadraticBezierCurve extends Curve<Vec2> {
   declare type: 'QuadraticBezierCurve';
 
   constructor(
-    public v0: Vec2 = new Vec2(),
-    public v1: Vec2 = new Vec2(),
-    public v2: Vec2 = new Vec2(),
+    public v0: Vec2 = Vec2.new(),
+    public v1: Vec2 = Vec2.new(),
+    public v2: Vec2 = Vec2.new(),
   ) {
     super();
   }
 
-  getPoint(t: number, optionalTarget: Vec2 = new Vec2()): Vec2 {
+  getPoint(t: number, optionalTarget: Vec2 = Vec2.new()): Vec2 {
     const point = optionalTarget;
 
     const v0 = this.v0,

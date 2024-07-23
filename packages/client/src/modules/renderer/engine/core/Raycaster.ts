@@ -2,7 +2,7 @@ import { Ray } from '../math/Ray.js';
 import { Layers } from './Layers.js';
 import type { Vec3 } from '../math/Vec3.js';
 import type { Camera } from '../cameras/Camera.js';
-import type { Object3D } from './Object3D.js';
+import type { Entity } from './Entity.js';
 import type { Face } from '../math/ConvexHull.js';
 import type { Vec2 } from '../math/Vec2.js';
 import { PerspectiveCamera } from '../cameras/PerspectiveCamera.js';
@@ -17,7 +17,7 @@ export interface RaycasterParameters {
   Sprite: any;
 }
 
-export interface Intersection<T extends Object3D = Object3D> {
+export interface Intersection<T extends Entity = Entity> {
   distance: number;
   distanceToRay?: number | undefined;
   point: Vec3;
@@ -33,10 +33,10 @@ export interface Intersection<T extends Object3D = Object3D> {
   batchId?: number;
 }
 
-const asc = <T extends Object3D>(a: Intersection<T>, b: Intersection<T>): number => a.distance - b.distance;
+const asc = <T extends Entity>(a: Intersection<T>, b: Intersection<T>): number => a.distance - b.distance;
 
-const findIntersections = <T extends Object3D>(
-  object: Object3D,
+const findIntersections = <T extends Entity>(
+  object: Entity,
   raycaster: Raycaster,
   intersects: Intersection<T>[],
   recursive: boolean,
@@ -100,12 +100,12 @@ export class Raycaster {
     return this;
   }
 
-  intersect<T extends Object3D>(object: Object3D, recursive: boolean = true, intersects: Intersection<T>[] = []) {
+  intersect<T extends Entity>(object: Entity, recursive: boolean = true, intersects: Intersection<T>[] = []) {
     return findIntersections(object, this, intersects, recursive).sort(asc);
   }
 
-  intersects<T extends Object3D>(
-    objects: Object3D[],
+  intersects<T extends Entity>(
+    objects: Entity[],
     recursive: boolean = true,
     intersects: Intersection<T>[] = [],
   ): Intersection<T>[] {
