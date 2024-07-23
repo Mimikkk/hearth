@@ -906,7 +906,7 @@ export class Backend {
 
   // timestamp utils
 
-  prepareTimestampBuffer(renderContext: RenderContext, encoder) {
+  prepareTimestampBuffer(renderContext: RenderContext, encoder: GPUCommandEncoder) {
     if (!this.hasFeature(GPUFeatureNameType.TimestampQuery) || !this.renderer.parameters.trackTimestamp) return;
 
     const renderContextData = this.get(renderContext);
@@ -916,7 +916,6 @@ export class Backend {
       size,
       usage: GPUBufferUsage.QUERY_RESOLVE | GPUBufferUsage.COPY_SRC,
     });
-
     const resultBuffer = this.device.createBuffer({
       size,
       usage: GPUBufferUsage.COPY_DST | GPUBufferUsage.MAP_READ,
