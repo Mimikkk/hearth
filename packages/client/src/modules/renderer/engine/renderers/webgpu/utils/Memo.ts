@@ -1,7 +1,7 @@
 type CreateFn<Key, Value> = (key: Key) => Value;
 type DisposeFn<Value, Key> = (value: Value, key: Key) => void;
 
-export class CacheMap<Key extends PropertyKey, Value> {
+export class Memo<Key extends PropertyKey, Value> {
   readonly #create: CreateFn<Key, Value>;
   readonly #dispose?: DisposeFn<Value, Key>;
   #map = new Map<Key, Value>();
@@ -14,8 +14,8 @@ export class CacheMap<Key extends PropertyKey, Value> {
   static as<Key extends PropertyKey, Value>(
     create: CreateFn<Key, Value>,
     dispose?: DisposeFn<Value, Key>,
-  ): CacheMap<Key, Value> {
-    return new CacheMap(create, dispose);
+  ): Memo<Key, Value> {
+    return new Memo(create, dispose);
   }
 
   get(key: Key): Value {

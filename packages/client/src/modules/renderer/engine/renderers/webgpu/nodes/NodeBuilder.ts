@@ -27,7 +27,7 @@ import {
   stack,
   UniformNode,
 } from '@modules/renderer/engine/nodes/Nodes.js';
-import { getFormat } from '../utils/BackendTextures.js';
+import { getFormat } from '../utils/Backend.textures.js';
 import ChainMap from '@modules/renderer/engine/renderers/common/ChainMap.js';
 import NodeKeywords from '@modules/renderer/engine/nodes/core/NodeKeywords.js';
 import NodeCache from '@modules/renderer/engine/nodes/core/NodeCache.js';

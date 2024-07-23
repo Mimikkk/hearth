@@ -28,7 +28,7 @@ import {
   Wrapping,
 } from '../../../engine.js';
 
-import { BackendTexturePass } from './BackendTexturePass.js';
+import { BackendTexturePass } from './Backend.texturePass.js';
 import { Backend } from '@modules/renderer/engine/renderers/webgpu/Backend.js';
 import StorageTexture from '@modules/renderer/engine/renderers/common/StorageTexture.js';
 import { TypedArrayConstructor } from '@modules/renderer/engine/math/MathUtils.js';
@@ -373,17 +373,6 @@ export class BackendTextures {
     const buffer = readBuffer.getMappedRange();
 
     return new typedArrayType(buffer);
-  }
-
-  _isEnvironmentTexture(texture: Texture) {
-    const mapping = texture.mapping;
-
-    return (
-      mapping === Mapping.EquirectangularReflection ||
-      mapping === Mapping.EquirectangularRefraction ||
-      mapping === Mapping.CubeReflection ||
-      mapping === Mapping.CubeRefraction
-    );
   }
 
   _getDefaultTextureGPU() {

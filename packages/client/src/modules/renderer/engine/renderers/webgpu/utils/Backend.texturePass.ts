@@ -8,7 +8,7 @@ import {
 
 import { Backend } from '@modules/renderer/engine/renderers/webgpu/Backend.js';
 import { MipmapShader } from '@modules/renderer/engine/renderers/webgpu/utils/shaders/MipmapShader.js';
-import { CacheMap } from '@modules/renderer/engine/renderers/webgpu/utils/CacheMap.js';
+import { Memo } from '@modules/renderer/engine/renderers/webgpu/utils/Memo.js';
 
 const encodePass = (
   device: GPUDevice,
@@ -54,7 +54,7 @@ const transferLabel = (format: GPUTextureFormat) => `${mipmapLabel(format)}-tran
 const flipYLabel = (format: GPUTextureFormat) => `${mipmapLabel(format)}-flip_y`;
 
 export class BackendTexturePass {
-  transferPipelines = new CacheMap(
+  transferPipelines = new Memo(
     (format: GPUTextureFormat) => {
       const { render, bindGroupLayouts } = this.backend.resources;
       const label = mipmapLabel(format);
@@ -99,7 +99,7 @@ export class BackendTexturePass {
       bindGroupLayouts.remove(`${label}-bind-group`);
     },
   );
-  flipYPipelines = new CacheMap(
+  flipYPipelines = new Memo(
     (format: GPUTextureFormat) => {
       const { render, bindGroupLayouts } = this.backend.resources;
       const label = mipmapLabel(format);

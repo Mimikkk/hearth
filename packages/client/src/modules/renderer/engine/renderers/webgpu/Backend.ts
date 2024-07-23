@@ -18,11 +18,11 @@ import {
   GPUTextureViewDimensionType,
 } from './utils/constants.js';
 
-import { BackendUtilities } from './utils/BackendUtilities.js';
-import { BackendAttributes } from './utils/BackendAttributes.js';
-import { BackendBindings } from './utils/BackendBindings.js';
-import BackendPipelines from './utils/BackendPipelines.js';
-import { BackendTextures } from './utils/BackendTextures.js';
+import { BackendUtilities } from './utils/Backend.utilities.js';
+import { BackendAttributes } from './utils/Backend.attributes.js';
+import { BackendBindings } from './utils/Backend.bindings.js';
+import BackendPipelines from './utils/Backend.pipelines.js';
+import { BackendTextures } from './utils/Backend.textures.js';
 import type { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 import RenderContext from '@modules/renderer/engine/renderers/common/RenderContext.js';
 import ComputeNode from '@modules/renderer/engine/nodes/gpgpu/ComputeNode.js';
@@ -1040,29 +1040,29 @@ export class Backend {
     this.device.queue.submit([encoder.finish()]);
   }
 
-  readFramebuffer(texture: Texture) {
-    const context = this.renderer.context;
-    const renderContextData = this.get(context);
+  readFramebuffer(into: Texture): void {
+    const context = this.renderer.context!;
+    const data = this.get(context);
 
-    const { encoder, descriptor } = renderContextData;
+    const { encoder, descriptor } = data;
 
     let sourceGPU = null;
 
     if (context.renderTarget) {
-      if (texture.isDepthTexture) {
+      if (into.isDepthTexture) {
         sourceGPU = this.get(context.depthTexture).texture;
       } else {
         sourceGPU = this.get(context.textures[0]).texture;
       }
     } else {
-      if (texture.isDepthTexture) {
+      if (into.isDepthTexture) {
         sourceGPU = this.textures.getDepthBuffer(context.depth, context.stencil);
       } else {
         sourceGPU = this.renderer.parameters.context.getCurrentTexture();
       }
     }
 
-    const destinationGPU = this.get(texture).texture;
+    const destinationGPU = this.get(into).texture;
 
     if (sourceGPU.format !== destinationGPU.format) {
       console.error(
@@ -1074,7 +1074,7 @@ export class Backend {
       return;
     }
 
-    renderContextData.currentPass.end();
+    data.currentPass.end();
 
     encoder.copyTextureToTexture(
       {
@@ -1084,16 +1084,16 @@ export class Backend {
       {
         texture: destinationGPU,
       },
-      [texture.image.width, texture.image.height],
+      [into.image.width, into.image.height],
     );
 
-    if (texture.generateMipmaps) this.textures.generateMipmaps(texture);
+    if (into.generateMipmaps) this.textures.generateMipmaps(into);
 
     descriptor.colorAttachments[0].loadOp = GPULoadOpType.Load;
     if (context.depth) descriptor.depthStencilAttachment.depthLoadOp = GPULoadOpType.Load;
     if (context.stencil) descriptor.depthStencilAttachment.stencilLoadOp = GPULoadOpType.Load;
 
-    renderContextData.currentPass = encoder.beginRenderPass(descriptor);
-    renderContextData.currentSets = { attributes: {} };
+    data.currentPass = encoder.beginRenderPass(descriptor);
+    data.currentSets = { attributes: {} };
   }
 }
