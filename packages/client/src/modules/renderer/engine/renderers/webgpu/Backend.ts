@@ -1062,7 +1062,7 @@ export class Backend {
 
     if (sourceGPU.format !== destinationGPU.format) {
       console.error(
-        'WebGPUBackend: copyFramebufferToTexture: Source and destination formats do not match.',
+        'WebGPUBackend: readFramebuffer: Source and destination formats do not match.',
         sourceGPU.format,
         destinationGPU.format,
       );

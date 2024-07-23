@@ -461,6 +461,7 @@ export class Renderer {
     let data = null;
     if (target) {
       this._textures.updateRenderTarget(target);
+
       data = this._textures.get(target);
     }
 
@@ -485,7 +486,7 @@ export class Renderer {
     this._activeMipmapLevel = activeMipmapLevel;
   }
 
-  copyFramebufferToTexture(texture: FramebufferTexture): void {
+  readFramebuffer(texture: FramebufferTexture): void {
     this._textures.updateTexture(texture);
 
     this.backend.readFramebuffer(texture, this.context);
@@ -752,9 +753,11 @@ class RenderSize {
     return new RenderSize(width, height, pixelRatio);
   }
 
-  set(width: number, height: number): RenderSize {
+  set(width: number, height: number, pixelRatio: number): this {
     this.width = width;
     this.height = height;
+    this.pixelRatio = pixelRatio;
+
     return this;
   }
 }

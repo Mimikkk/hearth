@@ -40,7 +40,7 @@ class ViewportTextureNode extends TextureNode {
     const currentGenerateMipmaps = framebufferTexture.generateMipmaps;
     framebufferTexture.generateMipmaps = this.generateMipmaps;
 
-    renderer.copyFramebufferToTexture(framebufferTexture);
+    renderer.readFramebuffer(framebufferTexture);
 
     framebufferTexture.generateMipmaps = currentGenerateMipmaps;
   }
