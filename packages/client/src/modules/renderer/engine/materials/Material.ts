@@ -18,6 +18,7 @@ import { Camera } from '@modules/renderer/engine/cameras/Camera.js';
 import { BufferGeometry } from '@modules/renderer/engine/core/BufferGeometry.js';
 import { Object3D } from '@modules/renderer/engine/core/Object3D.js';
 import { Group } from '@modules/renderer/engine/objects/Group.js';
+import { Node } from '@modules/renderer/engine/nodes/core/Node.js';
 
 let _materialId = 0;
 
@@ -48,7 +49,6 @@ export interface MaterialParameters {
   polygonOffsetFactor?: number | undefined;
   polygonOffsetUnits?: number | undefined;
   premultipliedAlpha?: boolean | undefined;
-  forceSinglePass?: boolean | undefined;
   dithering?: boolean | undefined;
   side?: Side | undefined;
   shadowSide?: Side | undefined;
@@ -110,12 +110,14 @@ export class Material {
   dithering: boolean;
   alphaToCoverage: boolean;
   premultipliedAlpha: boolean;
-  forceSinglePass: boolean;
   visible: boolean;
   toneMapped: boolean;
   userData: Record<string, any>;
   version: number;
   _alphaTest: number;
+
+  declare positionNode?: Node;
+  declare fragmentNode?: Node;
 
   constructor(parameters: MaterialParameters) {
     this.id = _materialId++;
@@ -168,7 +170,6 @@ export class Material {
 
     this.alphaToCoverage = false;
     this.premultipliedAlpha = false;
-    this.forceSinglePass = false;
 
     this.visible = true;
 
@@ -299,7 +300,6 @@ export class Material {
     this.alphaHash = source.alphaHash;
     this.alphaToCoverage = source.alphaToCoverage;
     this.premultipliedAlpha = source.premultipliedAlpha;
-    this.forceSinglePass = source.forceSinglePass;
 
     this.visible = source.visible;
 

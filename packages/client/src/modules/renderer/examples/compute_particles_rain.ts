@@ -201,7 +201,6 @@ async function init() {
   rainMaterial.vertexNode = billboarding();
   rainMaterial.opacity = 0.2;
   rainMaterial.side = Engine.Side.Double;
-  rainMaterial.forceSinglePass = true;
   rainMaterial.depthWrite = false;
   rainMaterial.depthTest = true;
   rainMaterial.transparent = true;
@@ -227,7 +226,6 @@ async function init() {
   rippleMaterial.positionNode = positionGeometry.add(ripplePositionBuffer.toAttribute());
   rippleMaterial.opacityNode = rippleTime.mul(0.3).oneMinus().max(0).mul(0.5);
   rippleMaterial.side = Engine.Side.Double;
-  rippleMaterial.forceSinglePass = true;
   rippleMaterial.depthWrite = false;
   rippleMaterial.depthTest = true;
   rippleMaterial.transparent = true;
