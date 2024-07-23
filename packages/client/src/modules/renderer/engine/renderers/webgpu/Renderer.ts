@@ -61,10 +61,11 @@ export class Renderer {
   bindings: Bindings;
   objects: RenderObjects;
   pipelines: Pipelines;
+
   renderLists: RenderLists;
   renderContexts: RenderContexts;
-  _textures: Textures;
-  _background: Background;
+  textures: Textures;
+  background: Background;
 
   context: RenderContext | null;
   target: RenderTarget | null;
@@ -136,9 +137,9 @@ export class Renderer {
     this.nodes = new Nodes(this);
     this.animation = new Animation(this);
     this.attributes = new Attributes(this);
-    this._background = new Background(this);
+    this.background = new Background(this);
     this.geometries = new Geometries(this);
-    this._textures = new Textures(this);
+    this.textures = new Textures(this);
     this.pipelines = new Pipelines(this);
     this.bindings = new Bindings(this);
     this.objects = new RenderObjects(this);
@@ -260,9 +261,9 @@ export class Renderer {
       renderList.sort(this.opaqueSort, this.transparentSort);
     }
     if (target !== null) {
-      this._textures.updateRenderTarget(target, activeMipmapLevel);
+      this.textures.updateRenderTarget(target, activeMipmapLevel);
 
-      const renderTargetData = this._textures.get(target);
+      const renderTargetData = this.textures.get(target);
 
       context.textures = renderTargetData.textures;
       context.depthTexture = renderTargetData.depthTexture;
@@ -287,7 +288,7 @@ export class Renderer {
     context.occlusionQueryCount = renderList.occlusionQueryCount;
 
     this.nodes.updateScene(sceneRef);
-    this._background.update(sceneRef, renderList, context);
+    this.background.update(sceneRef, renderList, context);
     this.backend.beginRender(context);
 
     const opaque = renderList.opaque;
@@ -388,9 +389,9 @@ export class Renderer {
 
     renderList.finish();
     if (renderTarget !== null) {
-      this._textures.updateRenderTarget(renderTarget, activeMipmapLevel);
+      this.textures.updateRenderTarget(renderTarget, activeMipmapLevel);
 
-      const renderTargetData = this._textures.get(renderTarget);
+      const renderTargetData = this.textures.get(renderTarget);
 
       renderContext.textures = renderTargetData.textures;
       renderContext.depthTexture = renderTargetData.depthTexture;
@@ -399,7 +400,7 @@ export class Renderer {
       renderContext.depthTexture = null;
     }
     this.nodes.updateScene(sceneRef);
-    this._background.update(sceneRef, renderList, renderContext);
+    this.background.update(sceneRef, renderList, renderContext);
 
     const opaqueObjects = renderList.opaque;
     const transparentObjects = renderList.transparent;
@@ -460,9 +461,9 @@ export class Renderer {
 
     let data = null;
     if (target) {
-      this._textures.updateRenderTarget(target);
+      this.textures.updateRenderTarget(target);
 
-      data = this._textures.get(target);
+      data = this.textures.get(target);
     }
 
     this.backend.clear(color, depth, stencil, data);
@@ -487,14 +488,14 @@ export class Renderer {
   }
 
   readFramebuffer(texture: FramebufferTexture): void {
-    this._textures.updateTexture(texture);
+    this.textures.updateTexture(texture);
 
-    this.backend.readFramebuffer(texture, this.context);
+    this.backend.readFramebuffer(texture);
   }
 
   patchTextureAt(texture: Texture, patch: Texture, at: { x: number; y: number; z?: number; level?: number }): void {
-    this._textures.updateTexture(patch);
-    this._textures.updateTexture(texture);
+    this.textures.updateTexture(patch);
+    this.textures.updateTexture(texture);
 
     this.backend.patchTextureAt(texture, patch, at);
   }

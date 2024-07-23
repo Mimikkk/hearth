@@ -1040,7 +1040,8 @@ export class Backend {
     this.device.queue.submit([encoder.finish()]);
   }
 
-  readFramebuffer(texture: Texture, context: RenderContext) {
+  readFramebuffer(texture: Texture) {
+    const context = this.renderer.context;
     const renderContextData = this.get(context);
 
     const { encoder, descriptor } = renderContextData;

@@ -62,7 +62,7 @@ class Bindings extends DataMap<any, any> {
   _init(bindings: Binding[]): void {
     for (const binding of bindings) {
       if (binding instanceof SampledTexture) {
-        this.renderer._textures.updateTexture(binding.texture);
+        this.renderer.textures.updateTexture(binding.texture);
       } else if (binding instanceof StorageBuffer) {
         const attribute = binding.attribute;
 
@@ -97,7 +97,7 @@ class Bindings extends DataMap<any, any> {
         const updated = binding.update();
 
         if (updated) {
-          this.renderer._textures.updateTexture(binding.texture);
+          this.renderer.textures.updateTexture(binding.texture);
         }
 
         if (texture instanceof StorageTexture) {
@@ -107,7 +107,7 @@ class Bindings extends DataMap<any, any> {
             textureData.needsMipmap = true;
           } else if (
             texture.generateMipmaps === true &&
-            this.renderer._textures.needsMipmaps(texture) &&
+            this.renderer.textures.needsMipmaps(texture) &&
             textureData.needsMipmap === true
           ) {
             this.renderer.backend.generateMipmaps(texture);
