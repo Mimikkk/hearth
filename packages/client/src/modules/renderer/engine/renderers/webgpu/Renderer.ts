@@ -422,8 +422,8 @@ export class Renderer {
     return await this.backend.getArrayBuffer(attribute);
   }
 
-  getDrawSize(target: Vec2) {
-    return target.set(this._width * this._pixelRatio, this._height * this._pixelRatio).floor();
+  getDrawSize(into: Vec2 = Vec2.new()): Vec2 {
+    return into.set(this._width * this._pixelRatio, this._height * this._pixelRatio).floor();
   }
 
   getSize(into: Vec2) {

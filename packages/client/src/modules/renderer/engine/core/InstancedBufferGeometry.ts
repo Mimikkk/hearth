@@ -1,13 +1,16 @@
 import { BufferGeometry } from './BufferGeometry.js';
 
 export class InstancedBufferGeometry extends BufferGeometry {
-  declare ['constructor']: typeof InstancedBufferGeometry & typeof BufferGeometry;
   declare isInstancedBufferGeometry: true;
   instanceCount: number;
 
   constructor() {
     super();
     this.instanceCount = Infinity;
+  }
+
+  static is(value: any): value is InstancedBufferGeometry {
+    return value?.isInstancedBufferGeometry === true;
   }
 
   copy(source: this): this {

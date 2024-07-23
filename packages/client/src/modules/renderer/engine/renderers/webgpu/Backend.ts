@@ -1,4 +1,14 @@
-import { BufferAttribute, Color, Object3D, RenderTarget, Scene, Texture, Vec2 } from '../../engine.js';
+import {
+  BufferAttribute,
+  Color,
+  InstancedBufferGeometry,
+  InstancedMesh,
+  Object3D,
+  RenderTarget,
+  Scene,
+  Texture,
+  Vec2,
+} from '../../engine.js';
 
 import {
   GPUFeatureNameType,
@@ -32,13 +42,7 @@ export class Backend {
   getInstanceCount(renderObject: RenderObject) {
     const { object, geometry } = renderObject;
 
-    return geometry.isInstancedBufferGeometry ? geometry.instanceCount : object.isInstancedMesh ? object.count : 1;
-  }
-
-  getDrawSize() {
-    const vec2 = new Vec2();
-
-    return this.renderer.getDrawSize(vec2);
+    return InstancedBufferGeometry.is(geometry) ? geometry.instanceCount : InstancedMesh.is(object) ? object.count : 1;
   }
 
   getClearColor() {
@@ -52,8 +56,6 @@ export class Backend {
 
     return color;
   }
-
-  // resource properties
 
   set(object: any, value: any) {
     this.data.set(object, value);

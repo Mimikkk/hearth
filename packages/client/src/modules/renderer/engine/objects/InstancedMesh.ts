@@ -32,12 +32,9 @@ export class InstancedMesh extends Mesh {
   constructor(geometry: BufferGeometry, material: Material, count: number) {
     super(geometry, material);
 
-    this.isInstancedMesh = true;
-
     this.instanceMatrix = new InstancedBufferAttribute(new Float32Array(count * 16), 16, false, 1);
     this.instanceColor = null;
     this.morphTexture = null;
-
     this.count = count;
 
     this.boundingBox = null;
@@ -46,6 +43,10 @@ export class InstancedMesh extends Mesh {
     for (let i = 0; i < count; i++) {
       this.setMatrixAt(i, _identity);
     }
+  }
+
+  static is(value: any): value is InstancedMesh {
+    return value?.isInstancedMesh === true;
   }
 
   computeBoundingBox() {
@@ -231,3 +232,5 @@ export class InstancedMesh extends Mesh {
 
   updateMorphTargets() {}
 }
+
+InstancedMesh.prototype.isInstancedMesh = true;
