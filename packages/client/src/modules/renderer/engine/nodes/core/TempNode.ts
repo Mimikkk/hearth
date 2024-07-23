@@ -27,7 +27,12 @@ export class TempNode extends Node {
 
       if (nodeData.propertyName !== undefined) {
         return builder.format(nodeData.propertyName, type, output);
-      } else if (type !== TypeName.void && output !== TypeName.void && this.hasDependencies(builder)) {
+      } else if (
+        builder.context.tempWrite !== false &&
+        type !== TypeName.void &&
+        output !== TypeName.void &&
+        this.hasDependencies(builder)
+      ) {
         const snippet = super.build(builder, type);
 
         const nodeVar = builder.getVarFromNode(this, null, type);

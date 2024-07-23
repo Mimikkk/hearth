@@ -30,7 +30,7 @@ class CondNode extends Node {
 
   generate(builder, output) {
     const type = this.getNodeType(builder);
-    const context = {};
+    const context = { tempWrite: false };
 
     const nodeData = builder.getDataFromNode(this);
 

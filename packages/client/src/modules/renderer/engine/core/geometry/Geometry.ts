@@ -521,6 +521,7 @@ export class Geometry<
 
   computeVertexNormals(): this {
     const index = this.index;
+
     const positionAttribute = this.attributes.position;
 
     if (positionAttribute !== undefined) {
