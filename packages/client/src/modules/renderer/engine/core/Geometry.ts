@@ -17,7 +17,7 @@ export class Geometry<
   IndexT extends TypedArray = Uint32Array,
 > {
   declare isGeometry: true;
-  declare type: string | 'BufferGeometry' | 'InstancedBufferGeometry' | 'InterleavedBufferGeometry';
+  declare type: 'Geometry';
   id: number;
   uuid: string;
   name: string;
@@ -39,7 +39,7 @@ export class Geometry<
     this.uuid = v4();
 
     this.name = '';
-    this.type = 'BufferGeometry';
+    this.type = 'Geometry';
 
     this.index = null;
     this.attributes = {} as AttributeMap;
@@ -771,7 +771,7 @@ export class Geometry<
 }
 
 Geometry.prototype.isGeometry = true;
-Geometry.prototype.type = 'BufferGeometry';
+Geometry.prototype.type = 'Geometry';
 
 type AttributeRecord = Record<string, AttributeType>;
 
