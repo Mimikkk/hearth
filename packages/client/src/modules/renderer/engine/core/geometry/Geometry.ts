@@ -16,6 +16,7 @@ export class Geometry<
   MorphAttributeMap extends AttributeRecord = AttributeRecord,
   IndexT extends TypedArray = Uint32Array,
 > {
+  declare isInstancedBufferGeometry: true;
   declare isBufferGeometry: true;
   declare type: string | 'BufferGeometry' | 'InstancedBufferGeometry' | 'InterleavedBufferGeometry';
   id: number;

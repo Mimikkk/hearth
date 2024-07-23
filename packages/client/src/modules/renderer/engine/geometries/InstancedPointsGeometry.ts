@@ -1,6 +1,4 @@
-import { Box3, Float32BufferAttribute, PolyGeometry, InstancedBufferAttribute, Sphere, Vec3, Mat4 } from '../engine.js';
-
-const _vector = Vec3.new();
+import { Box3, Float32BufferAttribute, InstancedBufferAttribute, Mat4, PolyGeometry, Sphere, Vec3 } from '../engine.js';
 
 export class InstancedPointsGeometry extends PolyGeometry {
   declare isInstancedPointsGeometry: true;
@@ -39,21 +37,13 @@ export class InstancedPointsGeometry extends PolyGeometry {
   }
 
   setPositions(array: Float32Array | number[]): this {
-    let points;
+    const points = array instanceof Float32Array ? array : new Float32Array(array);
 
-    if (array instanceof Float32Array) {
-      points = array;
-    } else if (Array.isArray(array)) {
-      points = new Float32Array(array);
-    }
-
-    //@ts-expect-error
-    this.setAttribute('instancePosition', new InstancedBufferAttribute(points, 3)); // xyz
-
-    //
+    this.setAttribute('instancePosition', new InstancedBufferAttribute(points, 3));
 
     this.computeBoundingBox();
     this.computeBoundingSphere();
+    this.instanceCount = this.attributes.instancePosition.count;
 
     return this;
   }
@@ -78,49 +68,37 @@ export class InstancedPointsGeometry extends PolyGeometry {
       this.boundingBox = Box3.new();
     }
 
-    const pos = this.attributes.instancePosition as InstancedBufferAttribute<Float32Array>;
+    const position = this.attributes.instancePosition;
 
-    if (pos !== undefined) {
-      this.boundingBox.fromAttribute(pos);
-    }
+    if (position) this.boundingBox.fromAttribute(position);
 
     return this;
   }
 
   computeBoundingSphere(): this {
-    if (this.boundingSphere === null) {
-      this.boundingSphere = new Sphere();
-    }
+    if (this.boundingBox === null) this.computeBoundingBox();
 
-    if (this.boundingBox === null) {
-      this.computeBoundingBox();
-    }
+    if (this.boundingSphere === null) this.boundingSphere = new Sphere();
 
-    const pos = this.attributes.instancePosition;
+    const position = this.attributes.instancePosition;
 
-    if (pos !== undefined) {
+    if (position) {
       const center = this.boundingSphere.center;
-
       this.boundingBox!.center(center);
 
       let maxRadiusSq = 0;
-
-      for (let i = 0, il = pos.count; i < il; i++) {
-        _vector.fromAttribute(pos, i);
+      for (let i = 0, il = position.count; i < il; i++) {
+        _vector.fromAttribute(position, i);
         maxRadiusSq = Math.max(maxRadiusSq, center.distanceSqTo(_vector));
       }
 
       this.boundingSphere.radius = Math.sqrt(maxRadiusSq);
-
-      if (isNaN(this.boundingSphere.radius)) {
-        console.error(
-          'engine.InstancedPointsGeometry.computeBoundingSphere(): Computed radius is NaN. The instanced position data is likely to have NaN values.',
-          this,
-        );
-      }
     }
     return this;
   }
 }
+
 InstancedPointsGeometry.prototype.isInstancedPointsGeometry = true;
 InstancedPointsGeometry.prototype.type = 'InstancedPointsGeometry';
+
+const _vector = Vec3.new();

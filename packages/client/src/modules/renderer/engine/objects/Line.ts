@@ -10,6 +10,7 @@ import { Material } from '@modules/renderer/engine/materials/Material.js';
 import { Intersection, Raycaster } from '@modules/renderer/engine/core/Raycaster.js';
 import { LineSegments } from '@modules/renderer/engine/objects/LineSegments.js';
 import { Line3 } from '@modules/renderer/engine/math/Line3.js';
+import { LineGeometry } from '@modules/renderer/engine/lines/LineGeometry.js';
 
 const _start = Vec3.new();
 const _end = Vec3.new();
@@ -22,9 +23,9 @@ export class Line extends Entity {
   declare type: string | 'Line';
 
   material: Material;
-  geometry: Geometry;
+  geometry: LineGeometry;
 
-  constructor(geometry: Geometry, material: LineBasicMaterial) {
+  constructor(geometry: LineGeometry, material: LineBasicMaterial) {
     super();
 
     this.geometry = geometry;

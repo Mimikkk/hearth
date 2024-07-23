@@ -74,8 +74,6 @@ async function init() {
   geometry.setPositions(positions);
   geometry.setColors(colors);
 
-  geometry.instanceCount = positions.length / 3; // this should not be necessary
-
   material = new InstancedPointsNodeMaterial({
     color: 0xffffff,
     pointWidth: 10, // in pixel units
