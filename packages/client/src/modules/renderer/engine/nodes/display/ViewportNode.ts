@@ -36,7 +36,7 @@ class ViewportNode extends Node {
 
   update({ renderer }) {
     if (this.scope === ViewportNode.VIEWPORT) {
-      viewportResult.from(renderer._viewport);
+      viewportResult.from(renderer.viewport);
     } else {
       renderer.getDrawSize(resolution);
     }

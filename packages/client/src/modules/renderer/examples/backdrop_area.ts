@@ -109,7 +109,7 @@ scene.add(floor);
 const renderer = await Renderer.create();
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
-renderer._animation.loop = animate;
+renderer.animation.loop = animate;
 renderer.parameters.toneMappingNode = toneMapping(ToneMapping.Linear, 0.15);
 document.body.appendChild(renderer.parameters.canvas);
 

@@ -12,6 +12,12 @@ import {
 import * as MathUtils from '../math/MathUtils.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { Plane } from '@modules/renderer/engine/math/Plane.js';
+import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
+import { Scene } from '@modules/renderer/engine/scenes/Scene.js';
+import { Camera } from '@modules/renderer/engine/cameras/Camera.js';
+import { BufferGeometry } from '@modules/renderer/engine/core/BufferGeometry.js';
+import { Object3D } from '@modules/renderer/engine/core/Object3D.js';
+import { Group } from '@modules/renderer/engine/objects/Group.js';
 
 let _materialId = 0;
 
@@ -41,7 +47,6 @@ export interface MaterialParameters {
   polygonOffset?: boolean | undefined;
   polygonOffsetFactor?: number | undefined;
   polygonOffsetUnits?: number | undefined;
-  precision?: 'highp' | 'mediump' | 'lowp' | null | undefined;
   premultipliedAlpha?: boolean | undefined;
   forceSinglePass?: boolean | undefined;
   dithering?: boolean | undefined;
@@ -99,7 +104,6 @@ export class Material {
   clipShadows: boolean;
   shadowSide: Side | null;
   colorWrite: boolean;
-  precision: 'highp' | 'mediump' | 'lowp' | null;
   polygonOffset: boolean;
   polygonOffsetFactor: number;
   polygonOffsetUnits: number;
@@ -189,9 +193,18 @@ export class Material {
     this._alphaTest = value;
   }
 
-  onBuild(/* shaderobject, renderer */) {}
+  onBuild(shaderobject: any, renderer: Renderer) {
+    console.log({ shaderobject });
+  }
 
-  onBeforeRender(/* renderer, scene, camera, geometry, object, group */) {}
+  onBeforeRender(
+    renderer: Renderer,
+    scene: Scene,
+    camera: Camera,
+    geometry: BufferGeometry,
+    object: Object3D,
+    group: Group,
+  ) {}
 
   onBeforeCompile(/* shaderobject, renderer */) {}
 

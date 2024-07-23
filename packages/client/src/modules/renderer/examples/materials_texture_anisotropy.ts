@@ -27,7 +27,7 @@ async function init() {
 
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
-  renderer._animation.loop = animate;
+  renderer.animation.loop = animate;
   renderer.parameters.autoClear = false;
 
   renderer.parameters.canvas.style.position = 'relative';
@@ -137,15 +137,15 @@ function render() {
   camera.lookAt(scene1.position);
   renderer.clear();
 
-  renderer._scissorTest = true;
+  renderer.useScissor = true;
 
-  renderer._scissor.set(0, 0, SCREEN_WIDTH / 2 - 2, SCREEN_HEIGHT);
+  renderer.scissor.set(0, 0, SCREEN_WIDTH / 2 - 2, SCREEN_HEIGHT);
   renderer.render(scene1, camera);
 
-  renderer._scissorTest = true;
+  renderer.useScissor = true;
 
-  renderer._scissor.set(SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2 - 2, SCREEN_HEIGHT);
+  renderer.scissor.set(SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2 - 2, SCREEN_HEIGHT);
   renderer.render(scene2, camera);
 
-  renderer._scissorTest = false;
+  renderer.useScissor = false;
 }

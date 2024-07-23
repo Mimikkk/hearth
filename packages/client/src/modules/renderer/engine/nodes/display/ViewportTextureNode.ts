@@ -19,7 +19,6 @@ class ViewportTextureNode extends TextureNode {
       framebufferTexture.minFilter = MinificationTextureFilter.LinearMipmapLinear;
     }
 
-    console.log({ levelNode });
     super(framebufferTexture, uvNode, levelNode);
 
     this.generateMipmaps = false;

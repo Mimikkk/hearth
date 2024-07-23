@@ -23,6 +23,7 @@ import RenderObject from '@modules/renderer/engine/renderers/common/RenderObject
 import ProgrammableStage from '@modules/renderer/engine/renderers/common/ProgrammableStage.js';
 import { ResourceManager } from './utils/ResourceManager.js';
 import { NodeBuilder } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.js';
+import { Attribute } from '../../core/types.ts';
 
 export class Backend {
   data: WeakMap<any, any>;
@@ -107,12 +108,8 @@ export class Backend {
     this.resolveBufferMap = new Map();
   }
 
-  async getArrayBuffer(attribute: BufferAttribute<any>) {
+  async getArrayBuffer(attribute: Attribute) {
     return await this.attributes.getArrayBuffer(attribute);
-  }
-
-  getContext(): GPUCanvasContext {
-    return this.renderer.parameters.context;
   }
 
   _getDefaultRenderPassDescriptor() {
@@ -580,8 +577,6 @@ export class Backend {
     device.queue.submit([encoder.finish()]);
   }
 
-  // compute
-
   beginCompute(computeGroup: ComputeNode) {
     const groupGPU = this.get(computeGroup);
 
@@ -619,8 +614,6 @@ export class Backend {
 
     this.device.queue.submit([groupData.cmdEncoderGPU.finish()]);
   }
-
-  // render object
 
   draw(renderObject: RenderObject, info: Info) {
     const { object, geometry, context, pipeline } = renderObject;
@@ -722,8 +715,6 @@ export class Backend {
       info.update(object, vertexCount, instanceCount);
     }
   }
-
-  // cache key
 
   needsRenderUpdate(renderObject: RenderObject) {
     const data = this.get(renderObject);
@@ -846,8 +837,6 @@ export class Backend {
     ].join();
   }
 
-  // textures
-
   createSampler(texture: Texture) {
     this.textures.createSampler(texture);
   }
@@ -904,8 +893,6 @@ export class Backend {
     }
   }
 
-  // timestamp utils
-
   prepareTimestampBuffer(renderContext: RenderContext, encoder: GPUCommandEncoder) {
     if (!this.hasFeature(GPUFeatureNameType.TimestampQuery) || !this.renderer.parameters.trackTimestamp) return;
 
@@ -949,13 +936,9 @@ export class Backend {
     }
   }
 
-  // node builder
-
   createNodeBuilder(object: Object3D, renderer: Renderer, scene: Scene | null = null) {
     return new NodeBuilder(object, renderer, scene);
   }
-
-  // program
 
   createProgram(program: ProgrammableStage) {
     const programGPU = this.get(program);
@@ -970,8 +953,6 @@ export class Backend {
     this.delete(program);
   }
 
-  // pipelines
-
   createRenderPipeline(renderObject: RenderObject) {
     this.pipelines.createRenderPipeline(renderObject);
   }
@@ -979,8 +960,6 @@ export class Backend {
   createComputePipeline(computePipeline: ComputePipeline, bindings: Binding[]) {
     this.pipelines.createComputePipeline(computePipeline, bindings);
   }
-
-  // bindings
 
   createBindings(bindings: Binding[]) {
     this.bindings.createBindings(bindings);
@@ -994,45 +973,39 @@ export class Backend {
     this.bindings.updateBinding(binding);
   }
 
-  // attributes
-
-  createIndexAttribute(attribute: BufferAttribute<any>) {
+  createIndexAttribute(attribute: Attribute) {
     this.attributes.createAttribute(
       attribute,
       GPUBufferUsage.INDEX | GPUBufferUsage.COPY_SRC | GPUBufferUsage.COPY_DST,
     );
   }
 
-  createAttribute(attribute: BufferAttribute<any>) {
+  createAttribute(attribute: Attribute) {
     this.attributes.createAttribute(
       attribute,
       GPUBufferUsage.VERTEX | GPUBufferUsage.COPY_SRC | GPUBufferUsage.COPY_DST,
     );
   }
 
-  createStorageAttribute(attribute: BufferAttribute<any>) {
+  createStorageAttribute(attribute: Attribute) {
     this.attributes.createAttribute(
       attribute,
       GPUBufferUsage.STORAGE | GPUBufferUsage.VERTEX | GPUBufferUsage.COPY_SRC | GPUBufferUsage.COPY_DST,
     );
   }
 
-  updateAttribute(attribute: BufferAttribute<any>) {
+  updateAttribute(attribute: Attribute) {
     this.attributes.updateAttribute(attribute);
   }
 
-  destroyAttribute(attribute: BufferAttribute<any>) {
+  destroyAttribute(attribute: Attribute) {
     this.attributes.destroyAttribute(attribute);
   }
-
-  // canvas
 
   updateSize() {
     this.colorBuffer = this.textures.getColorBuffer();
     this.renderPassDescriptor = null;
   }
-
-  // utils public
 
   getMaxAnisotropy() {
     return 16;
@@ -1067,7 +1040,6 @@ export class Backend {
   readFramebuffer(texture: Texture, context: RenderContext) {
     const renderContextData = this.get(context);
 
-    console.log({ context });
     const { encoder, descriptor } = renderContextData;
 
     let sourceGPU = null;

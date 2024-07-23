@@ -100,7 +100,7 @@ async function init() {
 
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer._animation.loop = animate;
+  renderer.animation.loop = animate;
   document.body.appendChild(renderer.parameters.canvas);
 
   // ***** Clipping setup (renderer): *****

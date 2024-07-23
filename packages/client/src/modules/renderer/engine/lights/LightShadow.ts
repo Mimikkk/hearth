@@ -46,13 +46,13 @@ export class LightShadow<C extends Camera = Camera> {
     this._frustum = new Frustum();
     this._frameExtents = new Vec2(1, 1);
 
-    this._viewportCount = 1;
+    this.viewportCount = 1;
 
-    this._viewports = [new Vec4(0, 0, 1, 1)];
+    this.viewports = [new Vec4(0, 0, 1, 1)];
   }
 
   getViewportCount(): number {
-    return this._viewportCount;
+    return this.viewportCount;
   }
 
   getFrustum(): Frustum {
@@ -80,7 +80,7 @@ export class LightShadow<C extends Camera = Camera> {
   }
 
   getViewport(viewportIndex: number): Vec4 {
-    return this._viewports[viewportIndex];
+    return this.viewports[viewportIndex];
   }
 
   getFrameExtents() {

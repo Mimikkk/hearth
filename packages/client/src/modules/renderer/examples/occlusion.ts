@@ -86,7 +86,7 @@ async function init() {
 
   await renderer.compile(scene, camera);
 
-  renderer._animation.loop = render;
+  renderer.animation.loop = render;
   document.body.appendChild(renderer.parameters.canvas);
 
   // controls

@@ -13,9 +13,9 @@ export class Animation {
 
       if (this.renderer.info.autoReset) this.renderer.info.reset();
 
-      this.renderer._nodes.nodeFrame.update();
+      this.renderer.nodes.nodeFrame.update();
 
-      this.renderer.info.frame = this.renderer._nodes.nodeFrame.frameId;
+      this.renderer.info.frame = this.renderer.nodes.nodeFrame.frameId;
 
       if (this.loop !== null) this.loop(time, frame);
     };

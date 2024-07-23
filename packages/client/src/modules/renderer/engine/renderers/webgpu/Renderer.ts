@@ -17,7 +17,6 @@ import Background from '@modules/renderer/engine/renderers/common/Background.js'
 import { Scene } from '@modules/renderer/engine/scenes/Scene.js';
 import { Camera } from '@modules/renderer/engine/cameras/Camera.js';
 import ClippingContext from '@modules/renderer/engine/renderers/common/ClippingContext.js';
-import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 import {
@@ -34,7 +33,7 @@ import {
   Texture,
 } from '@modules/renderer/engine/engine.js';
 import { GPUFeatureNameType, GPUTextureFormatType } from '@modules/renderer/engine/renderers/webgpu/utils/constants.js';
-import { SortFn } from '@modules/renderer/engine/renderers/common/RenderList.js';
+import { RenderItem, RenderList, SortFn } from '@modules/renderer/engine/renderers/common/RenderList.js';
 import { Attribute } from '@modules/renderer/engine/core/types.js';
 import ComputeNode from '@modules/renderer/engine/nodes/gpgpu/ComputeNode.js';
 import RenderContext from '@modules/renderer/engine/renderers/common/RenderContext.js';
@@ -55,6 +54,7 @@ type RenderFn = (
   material: Material,
   group: Group,
   lightsNode: LightsNode,
+  passId: string,
 ) => void;
 
 export class Renderer {
@@ -63,18 +63,21 @@ export class Renderer {
   _pixelRatio: number;
   _width: number;
   _height: number;
-  _viewport: Vec4;
-  _scissor: Vec4;
-  _scissorTest: boolean;
-  _attributes: Attributes;
-  _geometries: Geometries;
-  _nodes: Nodes;
-  _animation: Animation;
-  _bindings: Bindings;
-  _objects: RenderObjects;
+
+  viewport: Vec4;
+
+  scissor: Vec4;
+  useScissor: boolean;
+
+  attributes: Attributes;
+  geometries: Geometries;
+  nodes: Nodes;
+  animation: Animation;
+  bindings: Bindings;
+  objects: RenderObjects;
   pipelines: Pipelines;
-  _renderLists: RenderLists;
-  _renderContexts: RenderContexts;
+  renderLists: RenderLists;
+  renderContexts: RenderContexts;
   _textures: Textures;
   _background: Background;
   _currentRenderContext: any;
@@ -131,20 +134,20 @@ export class Renderer {
     this._pixelRatio = window.devicePixelRatio;
     this._width = this.parameters.canvas.width;
     this._height = this.parameters.canvas.height;
-    this._viewport = new Vec4(0, 0, this._width, this._height);
-    this._scissor = new Vec4(0, 0, this._width, this._height);
-    this._scissorTest = false;
-    this._nodes = new Nodes(this);
-    this._animation = new Animation(this);
-    this._attributes = new Attributes(this);
+    this.viewport = new Vec4(0, 0, this._width, this._height);
+    this.scissor = new Vec4(0, 0, this._width, this._height);
+    this.useScissor = false;
+    this.nodes = new Nodes(this);
+    this.animation = new Animation(this);
+    this.attributes = new Attributes(this);
     this._background = new Background(this);
-    this._geometries = new Geometries(this);
+    this.geometries = new Geometries(this);
     this._textures = new Textures(this);
     this.pipelines = new Pipelines(this);
-    this._bindings = new Bindings(this);
-    this._objects = new RenderObjects(this);
-    this._renderLists = new RenderLists();
-    this._renderContexts = new RenderContexts();
+    this.bindings = new Bindings(this);
+    this.objects = new RenderObjects(this);
+    this.renderLists = new RenderLists();
+    this.renderContexts = new RenderContexts();
     this._currentRenderContext = null;
 
     this._clearColor = new Color(0, 0, 0, this.parameters.alpha ? 0 : 1);
@@ -155,7 +158,7 @@ export class Renderer {
     this._activeMipmapLevel = 0;
     this._renderObjectFunction = null;
     this._currentRenderObjectFunction = null;
-    this._handleObjectFunction = this._renderObjectDirect;
+    this._handleObjectFunction = this._compileObject;
   }
 
   static async create(parameters?: Options): Promise<Renderer> {
@@ -185,7 +188,7 @@ export class Renderer {
     if (parameters?.autoinsert === undefined || parameters.autoinsert) {
       document.body.appendChild(renderer.parameters.canvas);
     }
-    if (parameters?.animate) renderer._animation.loop = parameters.animate;
+    if (parameters?.animate) renderer.animation.loop = parameters.animate;
 
     return renderer;
   }
@@ -193,41 +196,29 @@ export class Renderer {
   async render(scene: Object3D, camera: Camera): Promise<RenderContext> {
     // preserve render tree
 
-    const nodeFrame = this._nodes.nodeFrame;
+    const nodeFrame = this.nodes.nodeFrame;
 
     const previousRenderId = nodeFrame.renderId;
     const previousRenderContext = this._currentRenderContext;
     const previousRenderObjectFunction = this._currentRenderObjectFunction;
-
-    //
-
     const sceneRef = scene.isScene === true ? scene : _scene;
 
     const target = this._renderTarget;
-    const context = this._renderContexts.get(scene, camera, target);
+    const context = this.renderContexts.get(scene, camera, target);
     const activeCubeFace = this._activeCubeFace;
     const activeMipmapLevel = this._activeMipmapLevel;
 
     this._currentRenderContext = context;
     this._currentRenderObjectFunction = this._renderObjectFunction || this.renderObject;
-
-    //
-
     this.info.calls++;
     this.info.render.calls++;
 
     nodeFrame.renderId = this.info.calls;
-
-    //
-
     if (scene.matrixWorldAutoUpdate === true) scene.updateMatrixWorld();
 
     if (camera.parent === null && camera.matrixWorldAutoUpdate === true) camera.updateMatrixWorld();
-
-    //
-
-    let viewport = this._viewport;
-    let scissor = this._scissor;
+    let viewport = this.viewport;
+    let scissor = this.scissor;
     let pixelRatio = this._pixelRatio;
 
     if (target !== null) {
@@ -251,23 +242,17 @@ export class Renderer {
     context.viewport = context.viewportValue.equals(_screen) === false;
 
     context.scissorValue.from(scissor).scale(pixelRatio).floor();
-    context.scissor = this._scissorTest && context.scissorValue.equals(_screen) === false;
+    context.scissor = this.useScissor && context.scissorValue.equals(_screen) === false;
     context.scissorValue.width >>= activeMipmapLevel;
     context.scissorValue.height >>= activeMipmapLevel;
 
     if (!context.clippingContext) context.clippingContext = new ClippingContext();
     context.clippingContext.updateGlobal(this, camera);
-
-    //
-
     sceneRef.onBeforeRender(this, scene, camera, target);
-
-    //
-
     _projScreenMatrix.asMul(camera.projectionMatrix, camera.matrixWorldInverse);
     _frustum.setFromProjectionMatrix(_projScreenMatrix);
 
-    const renderList = this._renderLists.get(scene, camera);
+    const renderList = this.renderLists.get(scene, camera);
     renderList.begin();
 
     this._projectObject(scene, camera, 0, renderList);
@@ -277,9 +262,6 @@ export class Renderer {
     if (this.parameters.sortObjects) {
       renderList.sort(this._opaqueSort, this._transparentSort);
     }
-
-    //
-
     if (target !== null) {
       this._textures.updateRenderTarget(target, activeMipmapLevel);
 
@@ -307,7 +289,7 @@ export class Renderer {
     context.activeMipmapLevel = activeMipmapLevel;
     context.occlusionQueryCount = renderList.occlusionQueryCount;
 
-    this._nodes.updateScene(sceneRef);
+    this.nodes.updateScene(sceneRef);
     this._background.update(sceneRef, renderList, context);
     this.backend.beginRender(context);
 
@@ -331,7 +313,7 @@ export class Renderer {
   }
 
   async compute(computeNodes: ComputeNode | ComputeNode[]): Promise<void> {
-    const frame = this._nodes.nodeFrame;
+    const frame = this.nodes.nodeFrame;
 
     const previousRenderId = frame.renderId;
     this.info.calls++;
@@ -341,8 +323,8 @@ export class Renderer {
 
     const backend = this.backend;
     const pipelines = this.pipelines;
-    const bindings = this._bindings;
-    const nodes = this._nodes;
+    const bindings = this.bindings;
+    const nodes = this.nodes;
     backend.beginCompute(computeNodes);
 
     const computes = Array.isArray(computeNodes) ? computeNodes : [computeNodes];
@@ -367,48 +349,33 @@ export class Renderer {
   async compile(scene: Scene, camera: Camera, targetScene: Scene | null = null): Promise<void> {
     // preserve render tree
 
-    const nodeFrame = this._nodes.nodeFrame;
+    const nodeFrame = this.nodes.nodeFrame;
 
     const previousRenderId = nodeFrame.renderId;
     const previousRenderContext = this._currentRenderContext;
     const previousRenderObjectFunction = this._currentRenderObjectFunction;
-
-    //
-
     const sceneRef = scene.isScene === true ? scene : _scene;
 
     if (targetScene === null) targetScene = scene;
 
     const renderTarget = this._renderTarget;
-    const renderContext = this._renderContexts.get(targetScene, camera, renderTarget);
+    const renderContext = this.renderContexts.get(targetScene, camera, renderTarget);
     const activeMipmapLevel = this._activeMipmapLevel;
 
     this._currentRenderContext = renderContext;
     this._currentRenderObjectFunction = this.renderObject;
 
-    this._handleObjectFunction = this._createObjectPipeline;
+    this._handleObjectFunction = this._renderObject;
 
     nodeFrame.renderId++;
-
-    //
-
     nodeFrame.update();
-
-    //
-
     renderContext.depth = this.parameters.depth;
     renderContext.stencil = this.parameters.stencil;
 
     if (!renderContext.clippingContext) renderContext.clippingContext = new ClippingContext();
     renderContext.clippingContext.updateGlobal(this, camera);
-
-    //
-
     sceneRef.onBeforeRender(this, scene, camera, renderTarget);
-
-    //
-
-    const renderList = this._renderLists.get(scene, camera);
+    const renderList = this.renderLists.get(scene, camera);
     renderList.begin();
 
     this._projectObject(scene, camera, 0, renderList);
@@ -423,9 +390,6 @@ export class Renderer {
     }
 
     renderList.finish();
-
-    //
-
     if (renderTarget !== null) {
       this._textures.updateRenderTarget(renderTarget, activeMipmapLevel);
 
@@ -437,16 +401,8 @@ export class Renderer {
       renderContext.textures = null;
       renderContext.depthTexture = null;
     }
-
-    //
-
-    this._nodes.updateScene(sceneRef);
-
-    //
-
+    this.nodes.updateScene(sceneRef);
     this._background.update(sceneRef, renderList, renderContext);
-
-    // process render lists
 
     const opaqueObjects = renderList.opaque;
     const transparentObjects = renderList.transparent;
@@ -454,18 +410,11 @@ export class Renderer {
 
     this._renderObjects(opaqueObjects, camera, sceneRef, lightsNode);
     this._renderObjects(transparentObjects, camera, sceneRef, lightsNode);
-    // restore render tree
-
     nodeFrame.renderId = previousRenderId;
 
     this._currentRenderContext = previousRenderContext;
     this._currentRenderObjectFunction = previousRenderObjectFunction;
-
-    this._handleObjectFunction = this._renderObjectDirect;
-
-    // wait for all promises setup by backends awaiting compilation/linking/pipeline creation to complete
-
-    await Promise.all(compilationPromises);
+    this._handleObjectFunction = this._compileObject;
   }
 
   getMaxAnisotropy(): number {
@@ -499,7 +448,7 @@ export class Renderer {
     this.parameters.canvas.style.width = width + 'px';
     this.parameters.canvas.style.height = height + 'px';
 
-    this._viewport.set(0, 0, width, height);
+    this.viewport.set(0, 0, width, height);
     this.backend.updateSize();
   }
 
@@ -552,7 +501,7 @@ export class Renderer {
     this.backend.patchTextureAt(texture, patch, at);
   }
 
-  _projectObject(object, camera, groupOrder, renderList) {
+  _projectObject(object: Object3D, camera: Camera, groupOrder: number, renderList: RenderList): void {
     if (object.visible === false) return;
 
     const visible = object.layers.test(camera.layers);
@@ -613,29 +562,31 @@ export class Renderer {
     }
   }
 
-  _renderObjects(renderList, camera, scene, lightsNode) {
-    for (let i = 0, il = renderList.length; i < il; i++) {
-      const renderItem = renderList[i];
+  _renderObjects(renderable: RenderItem[], camera: Camera, scene: Scene, lightsNode: LightsNode): void {
+    for (let i = 0, il = renderable.length; i < il; i++) {
+      const renderItem = renderable[i];
 
       const { object, geometry, material, group } = renderItem;
 
-      this._currentRenderObjectFunction(object, scene, camera, geometry, material, group, lightsNode);
+      this._currentRenderObjectFunction(object, scene, camera, geometry, material, group, lightsNode, 'default');
     }
   }
 
-  renderObject(object, scene, camera, geometry, material, group, lightsNode) {
-    let overridePositionNode;
-    let overrideFragmentNode;
-
-    //
-
+  renderObject(
+    object: Object3D,
+    scene: Scene,
+    camera: Camera,
+    geometry: BufferGeometry,
+    material: Material,
+    group: Group,
+    lightsNode: LightsNode,
+  ): void {
     object.onBeforeRender(this, scene, camera, geometry, material, group);
-
     material.onBeforeRender(this, scene, camera, geometry, material, group);
 
-    //
-
-    if (scene.overrideMaterial !== null) {
+    let overridePositionNode;
+    let overrideFragmentNode;
+    if (scene.overrideMaterial) {
       const overrideMaterial = scene.overrideMaterial;
 
       if (material.positionNode && material.positionNode.isNode) {
@@ -671,38 +622,31 @@ export class Renderer {
 
       material = overrideMaterial;
     }
-
-    //
-
-    if (material.transparent === true && material.side === Side.Double && material.forceSinglePass === false) {
+    if (material.transparent && material.side === Side.Double && !material.forceSinglePass) {
       material.side = Side.Back;
-      this._handleObjectFunction(object, material, scene, camera, lightsNode, 'backSide'); // create backSide pass id
-
+      this._handleObjectFunction(object, material, scene, camera, lightsNode, 'backSide');
       material.side = Side.Front;
-      this._handleObjectFunction(object, material, scene, camera, lightsNode); // use default pass id
+      this._handleObjectFunction(object, material, scene, camera, lightsNode, 'default');
 
       material.side = Side.Double;
     } else {
-      this._handleObjectFunction(object, material, scene, camera, lightsNode);
+      this._handleObjectFunction(object, material, scene, camera, lightsNode, 'default');
     }
-
-    //
-
-    if (overridePositionNode !== undefined) {
-      scene.overrideMaterial.positionNode = overridePositionNode;
-    }
-
-    if (overrideFragmentNode !== undefined) {
-      scene.overrideMaterial.fragmentNode = overrideFragmentNode;
-    }
-
-    //
+    if (overridePositionNode) scene.overrideMaterial.positionNode = overridePositionNode;
+    if (overrideFragmentNode) scene.overrideMaterial.fragmentNode = overrideFragmentNode;
 
     object.onAfterRender(this, scene, camera, geometry, material, group);
   }
 
-  _renderObjectDirect(object, material, scene, camera, lightsNode, passId) {
-    const renderObject = this._objects.get(
+  _compileObject(
+    object: Object3D,
+    material: Material,
+    scene: Scene,
+    camera: Camera,
+    lightsNode: LightsNode,
+    passId: string,
+  ): void {
+    const renderObject = this.objects.get(
       object,
       material,
       scene,
@@ -711,30 +655,25 @@ export class Renderer {
       this._currentRenderContext,
       passId,
     );
-
-    //
-
-    this._nodes.updateBefore(renderObject);
-
-    //
-
+    this.nodes.updateBefore(renderObject);
     object.modelViewMatrix.asMul(camera.matrixWorldInverse, object.matrixWorld);
     object.normalMatrix.fromNMat4(object.modelViewMatrix);
-
-    //
-
-    this._nodes.updateForRender(renderObject);
-    this._geometries.updateForRender(renderObject);
-    this._bindings.updateForRender(renderObject);
+    this.nodes.updateForRender(renderObject);
+    this.geometries.updateForRender(renderObject);
+    this.bindings.updateForRender(renderObject);
     this.pipelines.updateForRender(renderObject);
-
-    //
-
     this.backend.draw(renderObject, this.info);
   }
 
-  _createObjectPipeline(object, material, scene, camera, lightsNode, passId) {
-    const renderObject = this._objects.get(
+  _renderObject(
+    object: Object3D,
+    material: Material,
+    scene: Scene,
+    camera: Camera,
+    lightsNode: LightsNode,
+    passId: string,
+  ): void {
+    const renderable = this.objects.get(
       object,
       material,
       scene,
@@ -743,18 +682,11 @@ export class Renderer {
       this._currentRenderContext,
       passId,
     );
-
-    //
-
-    this._nodes.updateBefore(renderObject);
-
-    //
-
-    this._nodes.updateForRender(renderObject);
-    this._geometries.updateForRender(renderObject);
-    this._bindings.updateForRender(renderObject);
-
-    this.pipelines.getForRender(renderObject);
+    this.nodes.updateBefore(renderable);
+    this.nodes.updateForRender(renderable);
+    this.geometries.updateForRender(renderable);
+    this.bindings.updateForRender(renderable);
+    this.pipelines.getForRender(renderable);
   }
 }
 

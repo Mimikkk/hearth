@@ -290,7 +290,7 @@ async function init() {
   renderer.parameters.toneMapping = Engine.ToneMapping.ACESFilmic;
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer._animation.loop = animate;
+  renderer.animation.loop = animate;
   document.body.appendChild(renderer.parameters.canvas);
 
   postProcessing = new PostProcessing(renderer);

@@ -19,9 +19,9 @@ export class PointLightShadow extends LightShadow<PerspectiveCamera> {
     super(new PerspectiveCamera(90, 1, 0.5, 500));
     this._frameExtents = new Vec2(4, 2);
 
-    this._viewportCount = 6;
+    this.viewportCount = 6;
 
-    this._viewports = [
+    this.viewports = [
       // These viewports map a cube-map onto a 2D texture with the
       // following orientation:
       //

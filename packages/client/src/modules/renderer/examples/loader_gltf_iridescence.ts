@@ -13,7 +13,7 @@ init();
 
 async function init() {
   renderer = await Renderer.create();
-  renderer._animation.loop = render;
+  renderer.animation.loop = render;
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.parameters.toneMapping = Engine.ToneMapping.ACESFilmic;

@@ -94,7 +94,7 @@ export class Geometries extends DataMap<any, any> {
     const callId = this.renderer.info.render.calls;
 
     if (this.attributeCall.get(attribute) !== callId) {
-      this.renderer._attributes.update(attribute, type);
+      this.renderer.attributes.update(attribute, type);
 
       this.attributeCall.set(attribute, callId);
     }
@@ -116,7 +116,7 @@ export class Geometries extends DataMap<any, any> {
 
         wireframes.set(geometry, wireframeAttribute);
       } else if (wireframeAttribute.version !== getWireframeVersion(geometry)) {
-        this.renderer._attributes.delete(wireframeAttribute);
+        this.renderer.attributes.delete(wireframeAttribute);
 
         wireframeAttribute = getWireframeIndex(geometry);
 

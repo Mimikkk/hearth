@@ -109,7 +109,7 @@ async function init() {
   renderer = await Renderer.create();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer._animation.loop = animate;
+  renderer.animation.loop = animate;
   document.body.appendChild(renderer.parameters.canvas);
 
   useWindowResizer(renderer, camera);

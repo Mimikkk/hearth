@@ -45,8 +45,6 @@ const parse = (
 
     if (type === 'f32') type = 'f32';
 
-    // precision
-
     if (i < propsMatches.length && propsMatches[i][0].startsWith('<')) i++;
 
     // add input

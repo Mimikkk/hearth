@@ -30,7 +30,7 @@ async function init() {
   renderer = await Renderer.create();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer._animation.loop = animate;
+  renderer.animation.loop = animate;
   document.body.appendChild(renderer.parameters.canvas);
 
   scene = new Engine.Scene();
@@ -113,7 +113,7 @@ function animate() {
   stats.update();
 
   // main scene
-  renderer._viewport.set(0, 0, window.innerWidth, window.innerHeight);
+  renderer.viewport.set(0, 0, window.innerWidth, window.innerHeight);
 
   controls.update();
 
@@ -127,10 +127,10 @@ function animate() {
 
   renderer.clear(false, true, false);
 
-  renderer._scissorTest = true;
+  renderer.useScissor = true;
 
-  renderer._scissor.set(20, 20, insetWidth, insetHeight);
-  renderer._viewport.set(20, 20, insetWidth, insetHeight);
+  renderer.scissor.set(20, 20, insetWidth, insetHeight);
+  renderer.viewport.set(20, 20, insetWidth, insetHeight);
 
   camera2.position.from(camera.position);
 
@@ -142,7 +142,7 @@ function animate() {
 
   renderer.render(scene, camera2);
 
-  renderer._scissorTest = false;
+  renderer.useScissor = false;
 }
 
 //

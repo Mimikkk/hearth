@@ -37,7 +37,7 @@ async function init() {
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer._clearColor = new Color(0x000000);
   renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer._animation.loop = animate;
+  renderer.animation.loop = animate;
   document.body.appendChild(renderer.parameters.canvas);
 
   scene = new Engine.Scene();
@@ -133,7 +133,7 @@ function animate() {
 
   renderer._clearColor = new Color(0x000000);
 
-  renderer._viewport.set(0, 0, window.innerWidth, window.innerHeight);
+  renderer.viewport.set(0, 0, window.innerWidth, window.innerHeight);
 
   controls.update();
 
@@ -146,10 +146,10 @@ function animate() {
 
   renderer.clear(false, true, false); // important!
 
-  renderer._scissorTest = true;
+  renderer.useScissor = true;
 
-  renderer._scissor.set(20, 20, insetWidth, insetHeight);
-  renderer._viewport.set(20, 20, window.innerWidth, window.innerHeight);
+  renderer.scissor.set(20, 20, insetWidth, insetHeight);
+  renderer.viewport.set(20, 20, window.innerWidth, window.innerHeight);
 
   camera2.position.from(camera.position);
   camera2.quaternion.from(camera.quaternion);
@@ -159,7 +159,7 @@ function animate() {
   scene.backgroundNode = backgroundNode;
   renderer.render(scene, camera2);
 
-  renderer._scissorTest = false;
+  renderer.useScissor = false;
 }
 
 //

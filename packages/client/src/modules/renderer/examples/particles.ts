@@ -43,7 +43,7 @@ async function init() {
   const lifeRange = range(0.1, 1);
   const offsetRange = range(new Engine.Vec3(-2, 3, -2), new Engine.Vec3(2, 5, 2));
 
-  const timer = timerLocal(0.2, 1 /*100000*/); // @TODO: need to work with 64-bit precision
+  const timer = timerLocal(0.2, 1);
 
   const lifeTime = timer.mul(lifeRange).mod(1);
   const scaleRange = range(0.3, 2);
@@ -105,7 +105,7 @@ async function init() {
   renderer = await Renderer.create();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer._animation.loop = render;
+  renderer.animation.loop = render;
   document.body.appendChild(renderer.parameters.canvas);
 
   //

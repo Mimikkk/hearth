@@ -43,7 +43,7 @@ async function init() {
   renderer = await Renderer.create();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer._animation.loop = render;
+  renderer.animation.loop = render;
   container.appendChild(renderer.parameters.canvas);
 
   video = document.getElementById('video');

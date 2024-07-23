@@ -37,7 +37,7 @@ class Pipelines extends DataMap<any, any> {
 
       // get shader
 
-      const nodeBuilderState = this.renderer._nodes.getForCompute(computeNode);
+      const nodeBuilderState = this.renderer.nodes.getForCompute(computeNode);
 
       // programmable stage
 

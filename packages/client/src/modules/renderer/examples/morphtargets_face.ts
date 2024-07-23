@@ -33,7 +33,7 @@ async function init() {
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.parameters.toneMapping = Engine.ToneMapping.ACESFilmic;
-  renderer._animation.loop = animate;
+  renderer.animation.loop = animate;
 
   container.appendChild(renderer.parameters.canvas);
 

@@ -62,7 +62,7 @@ async function init() {
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.parameters.toneMappingNode = toneMapping(Engine.ToneMapping.Linear, 1);
-  renderer._animation.loop = render;
+  renderer.animation.loop = render;
   container.appendChild(renderer.parameters.canvas);
 
   const controls = new OrbitControls(camera, renderer.parameters.canvas);

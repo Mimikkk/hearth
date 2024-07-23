@@ -27,7 +27,7 @@ export class AnimationObjectGroup {
     this.uuid = MathUtils.generateUuid();
 
     // cached objects followed by the active ones
-    this._objects = bindings;
+    this.objects = bindings;
 
     this.nCachedObjects_ = 0;
 
@@ -41,33 +41,33 @@ export class AnimationObjectGroup {
     this._paths = [];
     // inside: { we don't care, here }
     this._parsedPaths = [];
-    this._bindings = [];
+    this.bindings = [];
     // inside: indices in these arrays
-    this._bindingsIndicesByPath = {};
+    this.bindingsIndicesByPath = {};
 
     const scope = this;
 
     this.stats = {
       objects: {
         get total() {
-          return scope._objects.length;
+          return scope.objects.length;
         },
         get inUse() {
           return this.total - scope.nCachedObjects_;
         },
       },
       get bindingsPerObject() {
-        return scope._bindings.length;
+        return scope.bindings.length;
       },
     };
   }
 
   add() {
-    const objects = this._objects,
+    const objects = this.objects,
       indicesByUUID = this._indicesByUuid,
       paths = this._paths,
       parsedPaths = this._parsedPaths,
-      bindings = this._bindings,
+      bindings = this.bindings,
       nBindings = bindings.length;
 
     let knownObject = undefined,
@@ -137,9 +137,9 @@ export class AnimationObjectGroup {
   }
 
   remove() {
-    const objects = this._objects,
+    const objects = this.objects,
       indicesByUUID = this._indicesByUuid,
-      bindings = this._bindings,
+      bindings = this.bindings,
       nBindings = bindings.length;
 
     let nCachedObjects = this.nCachedObjects_;
@@ -179,9 +179,9 @@ export class AnimationObjectGroup {
 
   // remove & forget
   uncache() {
-    const objects = this._objects,
+    const objects = this.objects,
       indicesByUUID = this._indicesByUuid,
-      bindings = this._bindings,
+      bindings = this.bindings,
       nBindings = bindings.length;
 
     let nCachedObjects = this.nCachedObjects_,
@@ -257,15 +257,15 @@ export class AnimationObjectGroup {
     // returns an array of bindings for the given path that is changed
     // according to the contained objects in the group
 
-    const indicesByPath = this._bindingsIndicesByPath;
+    const indicesByPath = this.bindingsIndicesByPath;
     let index = indicesByPath[path];
-    const bindings = this._bindings;
+    const bindings = this.bindings;
 
     if (index !== undefined) return bindings[index];
 
     const paths = this._paths,
       parsedPaths = this._parsedPaths,
-      objects = this._objects,
+      objects = this.objects,
       nObjects = objects.length,
       nCachedObjects = this.nCachedObjects_,
       bindingsForPath = new Array(nObjects);
@@ -290,13 +290,13 @@ export class AnimationObjectGroup {
     // tells the group to forget about a property path and no longer
     // update the array previously obtained with 'subscribe_'
 
-    const indicesByPath = this._bindingsIndicesByPath,
+    const indicesByPath = this.bindingsIndicesByPath,
       index = indicesByPath[path];
 
     if (index !== undefined) {
       const paths = this._paths,
         parsedPaths = this._parsedPaths,
-        bindings = this._bindings,
+        bindings = this.bindings,
         lastBindingsIndex = bindings.length - 1,
         lastBindings = bindings[lastBindingsIndex],
         lastBindingsPath = path[lastBindingsIndex];

@@ -37,7 +37,7 @@ class Bindings extends DataMap<any, any> {
     const data = this.get(computeNode);
 
     if (data.bindings === undefined) {
-      const nodeBuilderState = this.renderer._nodes.getForCompute(computeNode);
+      const nodeBuilderState = this.renderer.nodes.getForCompute(computeNode);
 
       const bindings = nodeBuilderState.bindings;
 
@@ -66,7 +66,7 @@ class Bindings extends DataMap<any, any> {
       } else if (binding instanceof StorageBuffer) {
         const attribute = binding.attribute;
 
-        this.renderer._attributes.update(attribute, AttributeType.Storage);
+        this.renderer.attributes.update(attribute, AttributeType.Storage);
       }
     }
   }
@@ -78,7 +78,7 @@ class Bindings extends DataMap<any, any> {
 
     for (const binding of bindings) {
       if (binding instanceof NodeUniformsGroup) {
-        const updated = this.renderer._nodes.updateGroup(binding);
+        const updated = this.renderer.nodes.updateGroup(binding);
 
         if (!updated) continue;
       }

@@ -23,7 +23,7 @@ class AnimationMixer {
       bindings = action._propertyBindings,
       interpolants = action._interpolants,
       rootUuid = root.uuid,
-      bindingsByRoot = this._bindingsByRootAndName;
+      bindingsByRoot = this.bindingsByRootAndName;
 
     let bindingsByName = bindingsByRoot[rootUuid];
 
@@ -135,10 +135,10 @@ class AnimationMixer {
     // 	actionByRoot: AnimationAction - lookup
     // }
 
-    this._bindings = []; // 'nActiveBindings' followed by inactive ones
+    this.bindings = []; // 'nActiveBindings' followed by inactive ones
     this._nActiveBindings = 0;
 
-    this._bindingsByRootAndName = {}; // inside: Map< name, PropertyMixer >
+    this.bindingsByRootAndName = {}; // inside: Map< name, PropertyMixer >
 
     this._controlInterpolants = []; // same game as above
     this._nActiveControlInterpolants = 0;
@@ -156,7 +156,7 @@ class AnimationMixer {
       },
       bindings: {
         get total() {
-          return scope._bindings.length;
+          return scope.bindings.length;
         },
         get inUse() {
           return scope._nActiveBindings;
@@ -297,8 +297,8 @@ class AnimationMixer {
   // Memory management for PropertyMixer objects
 
   _addInactiveBinding(binding, rootUuid, trackName) {
-    const bindingsByRoot = this._bindingsByRootAndName,
-      bindings = this._bindings;
+    const bindingsByRoot = this.bindingsByRootAndName,
+      bindings = this.bindings;
 
     let bindingByName = bindingsByRoot[rootUuid];
 
@@ -314,11 +314,11 @@ class AnimationMixer {
   }
 
   _removeInactiveBinding(binding) {
-    const bindings = this._bindings,
+    const bindings = this.bindings,
       propBinding = binding.binding,
       rootUuid = propBinding.rootNode.uuid,
       trackName = propBinding.path,
-      bindingsByRoot = this._bindingsByRootAndName,
+      bindingsByRoot = this.bindingsByRootAndName,
       bindingByName = bindingsByRoot[rootUuid],
       lastInactiveBinding = bindings[bindings.length - 1],
       cacheIndex = binding._cacheIndex;
@@ -335,7 +335,7 @@ class AnimationMixer {
   }
 
   _lendBinding(binding) {
-    const bindings = this._bindings,
+    const bindings = this.bindings,
       prevIndex = binding._cacheIndex,
       lastActiveIndex = this._nActiveBindings++,
       firstInactiveBinding = bindings[lastActiveIndex];
@@ -348,7 +348,7 @@ class AnimationMixer {
   }
 
   _takeBackBinding(binding) {
-    const bindings = this._bindings,
+    const bindings = this.bindings,
       prevIndex = binding._cacheIndex,
       firstInactiveIndex = --this._nActiveBindings,
       lastActiveBinding = bindings[firstInactiveIndex];
@@ -494,7 +494,7 @@ class AnimationMixer {
 
     // update scene graph
 
-    const bindings = this._bindings,
+    const bindings = this.bindings,
       nBindings = this._nActiveBindings;
 
     for (let i = 0; i !== nBindings; ++i) {
@@ -570,7 +570,7 @@ class AnimationMixer {
       }
     }
 
-    const bindingsByRoot = this._bindingsByRootAndName,
+    const bindingsByRoot = this.bindingsByRootAndName,
       bindingByName = bindingsByRoot[rootUuid];
 
     if (bindingByName !== undefined) {
