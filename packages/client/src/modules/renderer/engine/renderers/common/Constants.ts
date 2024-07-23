@@ -1,4 +1,4 @@
-export enum AttributeType {
+export enum AttributeLocation {
   Vertex = 1,
   Index = 2,
   Storage = 4,

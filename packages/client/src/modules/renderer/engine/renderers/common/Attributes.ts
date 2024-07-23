@@ -1,6 +1,6 @@
 import DataMap from './DataMap.js';
-import { AttributeType } from './Constants.js';
-import { BufferAttribute, BufferUsage, InterleavedBufferAttribute } from '@modules/renderer/engine/engine.js';
+import { AttributeLocation } from './Constants.js';
+import { BufferUsage, InterleavedBufferAttribute } from '@modules/renderer/engine/engine.js';
 import type { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 import { AttributeType } from '@modules/renderer/engine/core/types.js';
 
@@ -19,15 +19,15 @@ export class Attributes extends DataMap<AttributeType, any> {
     return data;
   }
 
-  update(attribute: AttributeType, type: AttributeType) {
+  update(attribute: AttributeType, type: AttributeLocation) {
     const data = this.get(attribute);
 
     if (data.version === undefined) {
-      if (type === AttributeType.Vertex) {
+      if (type === AttributeLocation.Vertex) {
         this.renderer.backend.createAttribute(attribute);
-      } else if (type === AttributeType.Index) {
+      } else if (type === AttributeLocation.Index) {
         this.renderer.backend.createIndexAttribute(attribute);
-      } else if (type === AttributeType.Storage) {
+      } else if (type === AttributeLocation.Storage) {
         this.renderer.backend.createStorageAttribute(attribute);
       }
 
@@ -43,8 +43,8 @@ export class Attributes extends DataMap<AttributeType, any> {
     }
   }
 
-  _getBufferAttribute(attribute: AttributeType): BufferAttribute<any> {
-    if (attribute instanceof InterleavedBufferAttribute) attribute = attribute.data as unknown as BufferAttribute<any>;
+  _getBufferAttribute(attribute: AttributeType): AttributeType {
+    if (attribute instanceof InterleavedBufferAttribute) attribute = attribute.data as unknown as AttributeType;
     return attribute;
   }
 }

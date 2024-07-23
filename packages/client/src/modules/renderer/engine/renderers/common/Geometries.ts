@@ -1,12 +1,11 @@
 import DataMap from './DataMap.js';
-import { AttributeType } from './Constants.js';
+import { AttributeLocation } from './Constants.js';
 import { Uint16BufferAttribute, Uint32BufferAttribute, WireframeGeometry } from '@modules/renderer/engine/engine.js';
 import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 import RenderObject from '@modules/renderer/engine/renderers/common/RenderObject.js';
 import { AttributeType } from '@modules/renderer/engine/core/types.js';
 
 function getWireframeVersion(geometry: WireframeGeometry): number {
-  //@ts-expect-error
   return geometry.index !== null ? geometry.index.version : geometry.attributes.position.version;
 }
 
@@ -80,17 +79,17 @@ export class Geometries extends DataMap<any, any> {
     const attributes = renderObject.getAttributes();
 
     for (const attribute of attributes) {
-      this.updateAttribute(attribute, AttributeType.Vertex);
+      this.updateAttribute(attribute, AttributeLocation.Vertex);
     }
 
     const index = this.getIndex(renderObject);
 
     if (index !== null) {
-      this.updateAttribute(index, AttributeType.Index);
+      this.updateAttribute(index, AttributeLocation.Index);
     }
   }
 
-  updateAttribute(attribute: AttributeType, type: AttributeType) {
+  updateAttribute(attribute: AttributeType, type: AttributeLocation) {
     const callId = this.renderer.info.render.calls;
 
     if (this.attributeCall.get(attribute) !== callId) {
@@ -105,7 +104,6 @@ export class Geometries extends DataMap<any, any> {
 
     let index = geometry.index;
 
-    //@ts-expect-error
     if (material.wireframe === true) {
       const wireframes = this.wireframes;
 

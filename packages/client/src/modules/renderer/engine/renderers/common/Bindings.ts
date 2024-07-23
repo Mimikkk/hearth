@@ -1,5 +1,5 @@
 import DataMap from './DataMap.js';
-import { AttributeType } from './Constants.js';
+import { AttributeLocation } from './Constants.js';
 import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 import RenderObject from '@modules/renderer/engine/renderers/common/RenderObject.js';
 import Binding from '@modules/renderer/engine/renderers/common/Binding.js';
@@ -66,7 +66,7 @@ class Bindings extends DataMap<any, any> {
       } else if (binding instanceof StorageBuffer) {
         const attribute = binding.attribute;
 
-        this.renderer.attributes.update(attribute, AttributeType.Storage);
+        this.renderer.attributes.update(attribute, AttributeLocation.Storage);
       }
     }
   }
