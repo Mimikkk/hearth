@@ -362,7 +362,7 @@ export class Renderer {
     this.context = renderContext;
     this._activeRenderObjectFn = this.renderObject;
 
-    this._handleObjectFn = this._renderObject;
+    this._handleObjectFn = this._createObject;
 
     nodeFrame.renderId++;
     nodeFrame.update();
@@ -648,19 +648,20 @@ export class Renderer {
     lightsNode: LightsNode,
     passId: string,
   ): void {
-    const renderObject = this.objects.get(object, material, scene, camera, lightsNode, this.context, passId);
+    const renderable = this.objects.get(object, material, scene, camera, lightsNode, this.context, passId);
 
-    this.nodes.updateBefore(renderObject);
+    this.nodes.updateBefore(renderable);
     object.modelViewMatrix.asMul(camera.matrixWorldInverse, object.matrixWorld);
     object.normalMatrix.fromNMat4(object.modelViewMatrix);
-    this.nodes.updateForRender(renderObject);
-    this.geometries.updateForRender(renderObject);
-    this.bindings.updateForRender(renderObject);
-    this.pipelines.updateForRender(renderObject);
-    this.backend.draw(renderObject, this.info);
+
+    this.nodes.updateForRender(renderable);
+    this.geometries.updateForRender(renderable);
+    this.bindings.updateForRender(renderable);
+    this.pipelines.updateForRender(renderable);
+    this.backend.draw(renderable);
   }
 
-  _renderObject(
+  _createObject(
     object: Object3D,
     material: Material,
     scene: Scene,
@@ -669,6 +670,7 @@ export class Renderer {
     passId: string,
   ): void {
     const renderable = this.objects.get(object, material, scene, camera, lightsNode, this.context, passId);
+
     this.nodes.updateBefore(renderable);
     this.nodes.updateForRender(renderable);
     this.geometries.updateForRender(renderable);

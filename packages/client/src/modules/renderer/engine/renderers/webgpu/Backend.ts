@@ -615,7 +615,8 @@ export class Backend {
     this.device.queue.submit([groupData.cmdEncoderGPU.finish()]);
   }
 
-  draw(renderObject: RenderObject, info: Info) {
+  draw(renderObject: RenderObject) {
+    const info = this.renderer.info;
     const { object, geometry, context, pipeline } = renderObject;
 
     const bindingsData = this.get(renderObject.getBindings());
