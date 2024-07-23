@@ -1,7 +1,6 @@
 import { PropertyBinding } from './PropertyBinding.js';
-import * as MathUtils from '../math/MathUtils.js';
-import Binding from '@modules/renderer/engine/renderers/common/Binding.js';
 import { Entity } from '@modules/renderer/engine/core/Entity.js';
+import { v4 } from 'uuid';
 
 export class AnimationObjectGroup {
   declare isAnimationObjectGroup: true;
@@ -24,7 +23,7 @@ export class AnimationObjectGroup {
   constructor(...bindings: Entity[]) {
     this.isAnimationObjectGroup = true;
 
-    this.uuid = MathUtils.generateUuid();
+    this.uuid = v4();
 
     // cached objects followed by the active ones
     this.objects = bindings;

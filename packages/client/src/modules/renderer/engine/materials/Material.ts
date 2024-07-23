@@ -9,7 +9,6 @@ import {
   StencilFunction,
   StencilOperation,
 } from '../constants.js';
-import * as MathUtils from '../math/MathUtils.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { Plane } from '@modules/renderer/engine/math/Plane.js';
 import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
@@ -19,6 +18,7 @@ import { Geometry } from '@modules/renderer/engine/core/geometry/Geometry.js';
 import { Entity } from '@modules/renderer/engine/core/Entity.js';
 import { Group } from '@modules/renderer/engine/objects/Group.js';
 import { Node } from '@modules/renderer/engine/nodes/core/Node.js';
+import { v4 } from 'uuid';
 
 let _materialId = 0;
 
@@ -121,7 +121,7 @@ export class Material {
 
   constructor(parameters: MaterialParameters) {
     this.id = _materialId++;
-    this.uuid = MathUtils.generateUuid();
+    this.uuid = v4();
     this.name = '';
 
     this.blending = Blending.Normal;

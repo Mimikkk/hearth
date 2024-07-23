@@ -6,10 +6,10 @@ import { Sphere } from '../../math/Sphere.js';
 import { Entity } from '../Entity.js';
 import { Mat4 } from '../../math/Mat4.js';
 import { Mat3 } from '../../math/Mat3.js';
-import * as MathUtils from '../../math/MathUtils.js';
 import { TypedArray } from '../../math/MathUtils.js';
 import { Quaternion } from '@modules/renderer/engine/math/Quaternion.js';
 import { AttributeType } from '@modules/renderer/engine/core/types.js';
+import { v4 } from 'uuid';
 
 export class Geometry<
   AttributeMap extends AttributeRecord = AttributeRecord,
@@ -37,7 +37,7 @@ export class Geometry<
   constructor() {
     this.id = _id++;
 
-    this.uuid = MathUtils.generateUuid();
+    this.uuid = v4();
 
     this.name = '';
     this.type = 'BufferGeometry';
@@ -57,7 +57,7 @@ export class Geometry<
 
     this.userData = {};
 
-    this.instanceCount = Infinity;
+    this.instanceCount = 1;
   }
 
   static is(value: any): value is Geometry {

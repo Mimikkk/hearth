@@ -1,6 +1,6 @@
-import * as MathUtils from '../../math/MathUtils.js';
 import { TypedArray, TypedArrayConstructor } from '../../math/MathUtils.js';
 import { BufferUsage } from '../../constants.js';
+import { v4 } from 'uuid';
 
 export class InterleavedBuffer<T extends TypedArray = any> {
   declare ['constructor']: typeof InterleavedBuffer<T>;
@@ -23,7 +23,7 @@ export class InterleavedBuffer<T extends TypedArray = any> {
 
     this.version = 0;
 
-    this.uuid = MathUtils.generateUuid();
+    this.uuid = v4();
   }
 
   onUploadCallback() {}
@@ -84,7 +84,7 @@ export class InterleavedBuffer<T extends TypedArray = any> {
     //@ts-expect-error
     if (this.array.buffer._uuid === undefined) {
       //@ts-expect-error
-      this.array.buffer._uuid = MathUtils.generateUuid();
+      this.array.buffer._uuid = v4();
     }
 
     //@ts-expect-error

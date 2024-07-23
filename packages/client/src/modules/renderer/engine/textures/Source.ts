@@ -1,4 +1,4 @@
-import * as MathUtils from '../math/MathUtils.js';
+import { v4 } from 'uuid';
 
 let _sourceId = 0;
 
@@ -12,7 +12,7 @@ export class Source {
   constructor(data: TexImageSource | OffscreenCanvas) {
     this.id = ++_sourceId;
 
-    this.uuid = MathUtils.generateUuid();
+    this.uuid = v4();
 
     this.data = data;
     this.dataReady = true;

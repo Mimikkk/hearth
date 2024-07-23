@@ -70,7 +70,7 @@ export const parseBufferGeometry = (json: JsonContent): Geometry => {
     return ab;
   }
 
-  const geometry = json.isInstancedBufferGeometry ? new PolyGeometry() : new Geometry();
+  const geometry = new Geometry();
 
   const index = json.data.index;
 

@@ -1,4 +1,4 @@
-import { clamp, euclideanModulo, NumberArray } from './MathUtils.js';
+import { clamp, euclideanMod, NumberArray } from './MathUtils.js';
 import { ColorManagement, LinearToSRGB, SRGBToLinear } from './ColorManagement.js';
 import { ColorSpace } from '../constants.js';
 import type { Mat3 } from '@modules/renderer/engine/math/Mat3.js';
@@ -116,7 +116,7 @@ export class Color {
   }
 
   setHSL(h: number, s: number, l: number, space: ColorSpace = ColorManagement.space): this {
-    h = euclideanModulo(h, 1);
+    h = euclideanMod(h, 1);
     s = clamp(s, 0, 1);
     l = clamp(l, 0, 1);
 

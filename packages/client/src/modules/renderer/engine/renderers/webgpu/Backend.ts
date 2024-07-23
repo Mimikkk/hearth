@@ -29,10 +29,8 @@ export class Backend {
   renderer: Renderer;
   memo: WeakMemo<any, any> = new WeakMemo(() => ({}));
 
-  getInstanceCount(renderObject: RenderObject) {
-    const { object, geometry } = renderObject;
-
-    return PolyGeometry.is(geometry) ? geometry.instanceCount : InstancedMesh.is(object) ? object.count : 1;
+  getInstanceCount({ object, geometry }: RenderObject) {
+    return Math.max(geometry.instanceCount, object.count, 1);
   }
 
   getClearColor() {

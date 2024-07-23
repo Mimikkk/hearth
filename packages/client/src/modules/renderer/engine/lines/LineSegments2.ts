@@ -61,7 +61,7 @@ function raycastWorldUnits(lineSegments: LineSegments, intersects: Intersection[
   const geometry = lineSegments.geometry;
   const instanceStart = geometry.attributes.instanceStart;
   const instanceEnd = geometry.attributes.instanceEnd;
-  const segmentCount = Math.min(geometry.instanceCount, instanceStart.count);
+  const segmentCount = instanceStart.count;
 
   for (let i = 0, l = segmentCount; i < l; i++) {
     _line.start.fromAttribute(instanceStart, i);
@@ -97,7 +97,7 @@ function raycastScreenSpace(lineSegments: LineSegments, camera: Camera, intersec
   const geometry = lineSegments.geometry;
   const instanceStart = geometry.attributes.instanceStart;
   const instanceEnd = geometry.attributes.instanceEnd;
-  const segmentCount = Math.min(geometry.instanceCount, instanceStart.count);
+  const segmentCount = instanceStart.count;
 
   const near = -camera.near;
 

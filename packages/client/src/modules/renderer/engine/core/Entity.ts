@@ -62,6 +62,7 @@ export class Entity {
   renderOrder: number;
   animations: any[];
   userData: Record<string, any>;
+  count: number = 1;
 
   constructor() {
     this.id = _id++;

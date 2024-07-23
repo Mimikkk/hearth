@@ -57,8 +57,7 @@ export class LineSegmentsGeometry extends PolyGeometry {
 
     this.setAttribute('instanceStart', new InterleavedBufferAttribute(instanceBuffer, 3, 0)); // xyz
     this.setAttribute('instanceEnd', new InterleavedBufferAttribute(instanceBuffer, 3, 3)); // xyz
-
-    //
+    this.instanceCount = this.attributes.instanceStart.count;
 
     this.computeBoundingBox();
     this.computeBoundingSphere();

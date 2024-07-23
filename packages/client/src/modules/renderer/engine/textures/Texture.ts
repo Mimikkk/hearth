@@ -8,11 +8,11 @@ import {
   TextureFormat,
   Wrapping,
 } from '../constants.js';
-import * as MathUtils from '../math/MathUtils.js';
 import { Vec2 } from '../math/Vec2.js';
 import { Mat3 } from '../math/Mat3.js';
 import { Source } from './Source.js';
 import type { CubeTexture } from './CubeTexture.js';
+import { v4 } from 'uuid';
 
 let _textureId = 0;
 
@@ -62,11 +62,11 @@ export class Texture {
     format: TextureFormat = TextureFormat.RGBA,
     type: TextureDataType = TextureDataType.UnsignedByte,
     anisotropy: number = 1,
-    colorSpace: ColorSpace = null,
+    colorSpace: ColorSpace | null = null,
   ) {
     this.id = ++_textureId;
 
-    this.uuid = MathUtils.generateUuid();
+    this.uuid = v4();
 
     this.name = '';
 

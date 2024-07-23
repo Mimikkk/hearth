@@ -1,12 +1,8 @@
 import { Vec3 } from './Vec3.js';
 import { Mat4 } from './Mat4.js';
-import * as MathUtils from './MathUtils.js';
 import { Const } from './types.js';
 import { AttributeType } from '@modules/renderer/engine/core/types.js';
 import { clamp } from './MathUtils.js';
-
-const _startP = Vec3.new();
-const _startEnd = Vec3.new();
 
 export class Line3 {
   declare isLine3: true;

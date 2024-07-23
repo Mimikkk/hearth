@@ -1,10 +1,10 @@
 import { NodeUpdateType } from './constants.js';
 import { getCacheKey, getNodeChildren } from './NodeUtils.js';
-import { generateUuid } from '../../math/MathUtils.js';
 import { NodeBuilder } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.js';
 
 import { NodeFrame } from '@modules/renderer/engine/nodes/core/NodeFrame.js';
 import { BuildStage, TypeName } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.types.js';
+import { v4 } from 'uuid';
 
 let _nodeId = 0;
 
@@ -27,7 +27,7 @@ export class Node {
     this.updateType = NodeUpdateType.NONE;
     this.updateBeforeType = NodeUpdateType.NONE;
 
-    this.uuid = generateUuid();
+    this.uuid = v4();
 
     this.version = 0;
 
