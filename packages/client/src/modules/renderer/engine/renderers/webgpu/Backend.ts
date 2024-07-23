@@ -944,7 +944,6 @@ export class Backend {
       this.renderer.info.updateTimestamp(type, duration);
     } catch (error) {
       console.error(`Error mapping buffer: ${error}`);
-      // Optionally handle the error, e.g., re-queue the buffer or skip it
     } finally {
       buffer.unmap();
     }
@@ -973,8 +972,8 @@ export class Backend {
 
   // pipelines
 
-  createRenderPipeline(renderObject: RenderObject, promises: Promise<void>[] | null = null) {
-    this.pipelines.createRenderPipeline(renderObject, promises);
+  createRenderPipeline(renderObject: RenderObject) {
+    this.pipelines.createRenderPipeline(renderObject);
   }
 
   createComputePipeline(computePipeline: ComputePipeline, bindings: Binding[]) {

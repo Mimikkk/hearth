@@ -21,10 +21,13 @@ import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.j
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 import {
+  BufferGeometry,
   Color,
   FramebufferTexture,
   Frustum,
+  Group,
   Mat4,
+  Material,
   Object3D,
   Plane,
   RenderTarget,
@@ -35,6 +38,7 @@ import { SortFn } from '@modules/renderer/engine/renderers/common/RenderList.js'
 import { Attribute } from '@modules/renderer/engine/core/types.js';
 import ComputeNode from '@modules/renderer/engine/nodes/gpgpu/ComputeNode.js';
 import RenderContext from '@modules/renderer/engine/renderers/common/RenderContext.js';
+import LightsNode from '@modules/renderer/engine/nodes/lighting/LightsNode.js';
 
 const _scene = new Scene();
 const _drawingBufferSize = new Vec2();
@@ -42,6 +46,16 @@ const _screen = new Vec4();
 const _frustum = new Frustum();
 const _projScreenMatrix = new Mat4();
 const _Vec3 = new Vec3();
+
+type RenderFn = (
+  object: Object3D,
+  scene: Scene,
+  camera: Camera,
+  geometry: BufferGeometry,
+  material: Material,
+  group: Group,
+  lightsNode: LightsNode,
+) => void;
 
 export class Renderer {
   backend: Backend;
@@ -58,7 +72,7 @@ export class Renderer {
   _animation: Animation;
   _bindings: Bindings;
   _objects: RenderObjects;
-  _pipelines: Pipelines;
+  pipelines: Pipelines;
   _renderLists: RenderLists;
   _renderContexts: RenderContexts;
   _textures: Textures;
@@ -72,10 +86,9 @@ export class Renderer {
   _renderTarget: any;
   _activeCubeFace: number;
   _activeMipmapLevel: number;
-  _renderObjectFunction: any;
-  _currentRenderObjectFunction: any;
-  _handleObjectFunction: any;
-  _compilationPromises: any;
+  _renderObjectFunction: RenderFn;
+  _currentRenderObjectFunction: RenderFn;
+  _handleObjectFunction: RenderFn;
   parameters: Configuration;
 
   static configure(options?: Options): Configuration {
@@ -127,7 +140,7 @@ export class Renderer {
     this._background = new Background(this);
     this._geometries = new Geometries(this);
     this._textures = new Textures(this);
-    this._pipelines = new Pipelines(this);
+    this.pipelines = new Pipelines(this);
     this._bindings = new Bindings(this);
     this._objects = new RenderObjects(this);
     this._renderLists = new RenderLists();
@@ -143,7 +156,6 @@ export class Renderer {
     this._renderObjectFunction = null;
     this._currentRenderObjectFunction = null;
     this._handleObjectFunction = this._renderObjectDirect;
-    this._compilationPromises = null;
   }
 
   static async create(parameters?: Options): Promise<Renderer> {
@@ -176,116 +188,6 @@ export class Renderer {
     if (parameters?.animate) renderer._animation.loop = parameters.animate;
 
     return renderer;
-  }
-
-  async compile(scene: Scene, camera: Camera, targetScene: Scene | null = null): Promise<void> {
-    // preserve render tree
-
-    const nodeFrame = this._nodes.nodeFrame;
-
-    const previousRenderId = nodeFrame.renderId;
-    const previousRenderContext = this._currentRenderContext;
-    const previousRenderObjectFunction = this._currentRenderObjectFunction;
-    const previousCompilationPromises = this._compilationPromises;
-
-    //
-
-    const sceneRef = scene.isScene === true ? scene : _scene;
-
-    if (targetScene === null) targetScene = scene;
-
-    const renderTarget = this._renderTarget;
-    const renderContext = this._renderContexts.get(targetScene, camera, renderTarget);
-    const activeMipmapLevel = this._activeMipmapLevel;
-
-    const compilationPromises: any[] = [];
-
-    this._currentRenderContext = renderContext;
-    this._currentRenderObjectFunction = this.renderObject;
-
-    this._handleObjectFunction = this._createObjectPipeline;
-
-    this._compilationPromises = compilationPromises;
-
-    nodeFrame.renderId++;
-
-    //
-
-    nodeFrame.update();
-
-    //
-
-    renderContext.depth = this.parameters.depth;
-    renderContext.stencil = this.parameters.stencil;
-
-    if (!renderContext.clippingContext) renderContext.clippingContext = new ClippingContext();
-    renderContext.clippingContext.updateGlobal(this, camera);
-
-    //
-
-    sceneRef.onBeforeRender(this, scene, camera, renderTarget);
-
-    //
-
-    const renderList = this._renderLists.get(scene, camera);
-    renderList.begin();
-
-    this._projectObject(scene, camera, 0, renderList);
-
-    // include lights from target scene
-    if (targetScene !== scene) {
-      targetScene.traverseVisible(object => {
-        if (object.isLight && object.layers.test(camera.layers)) {
-          renderList.pushLight(object);
-        }
-      });
-    }
-
-    renderList.finish();
-
-    //
-
-    if (renderTarget !== null) {
-      this._textures.updateRenderTarget(renderTarget, activeMipmapLevel);
-
-      const renderTargetData = this._textures.get(renderTarget);
-
-      renderContext.textures = renderTargetData.textures;
-      renderContext.depthTexture = renderTargetData.depthTexture;
-    } else {
-      renderContext.textures = null;
-      renderContext.depthTexture = null;
-    }
-
-    //
-
-    this._nodes.updateScene(sceneRef);
-
-    //
-
-    this._background.update(sceneRef, renderList, renderContext);
-
-    // process render lists
-
-    const opaqueObjects = renderList.opaque;
-    const transparentObjects = renderList.transparent;
-    const lightsNode = renderList.lightsNode;
-
-    this._renderObjects(opaqueObjects, camera, sceneRef, lightsNode);
-    this._renderObjects(transparentObjects, camera, sceneRef, lightsNode);
-    // restore render tree
-
-    nodeFrame.renderId = previousRenderId;
-
-    this._currentRenderContext = previousRenderContext;
-    this._currentRenderObjectFunction = previousRenderObjectFunction;
-    this._compilationPromises = previousCompilationPromises;
-
-    this._handleObjectFunction = this._renderObjectDirect;
-
-    // wait for all promises setup by backends awaiting compilation/linking/pipeline creation to complete
-
-    await Promise.all(compilationPromises);
   }
 
   async render(scene: Object3D, camera: Camera): Promise<RenderContext> {
@@ -429,38 +331,23 @@ export class Renderer {
   }
 
   async compute(computeNodes: ComputeNode | ComputeNode[]): Promise<void> {
-    const nodeFrame = this._nodes.nodeFrame;
+    const frame = this._nodes.nodeFrame;
 
-    const previousRenderId = nodeFrame.renderId;
-
-    //
-
+    const previousRenderId = frame.renderId;
     this.info.calls++;
     this.info.compute.calls++;
     this.info.compute.computeCalls++;
-
-    nodeFrame.renderId = this.info.calls;
-
-    //
+    frame.renderId = this.info.calls;
 
     const backend = this.backend;
-    const pipelines = this._pipelines;
+    const pipelines = this.pipelines;
     const bindings = this._bindings;
     const nodes = this._nodes;
-    const computeList = Array.isArray(computeNodes) ? computeNodes : [computeNodes];
-
-    if (computeList[0] === undefined || computeList[0].isComputeNode !== true) {
-      throw new Error('engine.Renderer: .compute() expects a ComputeNode.');
-    }
-
     backend.beginCompute(computeNodes);
 
-    for (const computeNode of computeList) {
-      // onInit
-
-      if (pipelines.has(computeNode) === false) {
-        computeNode.onInit({ renderer: this });
-      }
+    const computes = Array.isArray(computeNodes) ? computeNodes : [computeNodes];
+    for (const computeNode of computes) {
+      if (!pipelines.has(computeNode)) computeNode.onInit({ renderer: this });
 
       nodes.updateForCompute(computeNode);
       bindings.updateForCompute(computeNode);
@@ -474,10 +361,111 @@ export class Renderer {
     backend.finishCompute(computeNodes);
 
     await this.backend.resolveTimestampAsync(computeNodes, 'compute');
+    frame.renderId = previousRenderId;
+  }
+
+  async compile(scene: Scene, camera: Camera, targetScene: Scene | null = null): Promise<void> {
+    // preserve render tree
+
+    const nodeFrame = this._nodes.nodeFrame;
+
+    const previousRenderId = nodeFrame.renderId;
+    const previousRenderContext = this._currentRenderContext;
+    const previousRenderObjectFunction = this._currentRenderObjectFunction;
 
     //
 
+    const sceneRef = scene.isScene === true ? scene : _scene;
+
+    if (targetScene === null) targetScene = scene;
+
+    const renderTarget = this._renderTarget;
+    const renderContext = this._renderContexts.get(targetScene, camera, renderTarget);
+    const activeMipmapLevel = this._activeMipmapLevel;
+
+    this._currentRenderContext = renderContext;
+    this._currentRenderObjectFunction = this.renderObject;
+
+    this._handleObjectFunction = this._createObjectPipeline;
+
+    nodeFrame.renderId++;
+
+    //
+
+    nodeFrame.update();
+
+    //
+
+    renderContext.depth = this.parameters.depth;
+    renderContext.stencil = this.parameters.stencil;
+
+    if (!renderContext.clippingContext) renderContext.clippingContext = new ClippingContext();
+    renderContext.clippingContext.updateGlobal(this, camera);
+
+    //
+
+    sceneRef.onBeforeRender(this, scene, camera, renderTarget);
+
+    //
+
+    const renderList = this._renderLists.get(scene, camera);
+    renderList.begin();
+
+    this._projectObject(scene, camera, 0, renderList);
+
+    // include lights from target scene
+    if (targetScene !== scene) {
+      targetScene.traverseVisible(object => {
+        if (object.isLight && object.layers.test(camera.layers)) {
+          renderList.pushLight(object);
+        }
+      });
+    }
+
+    renderList.finish();
+
+    //
+
+    if (renderTarget !== null) {
+      this._textures.updateRenderTarget(renderTarget, activeMipmapLevel);
+
+      const renderTargetData = this._textures.get(renderTarget);
+
+      renderContext.textures = renderTargetData.textures;
+      renderContext.depthTexture = renderTargetData.depthTexture;
+    } else {
+      renderContext.textures = null;
+      renderContext.depthTexture = null;
+    }
+
+    //
+
+    this._nodes.updateScene(sceneRef);
+
+    //
+
+    this._background.update(sceneRef, renderList, renderContext);
+
+    // process render lists
+
+    const opaqueObjects = renderList.opaque;
+    const transparentObjects = renderList.transparent;
+    const lightsNode = renderList.lightsNode;
+
+    this._renderObjects(opaqueObjects, camera, sceneRef, lightsNode);
+    this._renderObjects(transparentObjects, camera, sceneRef, lightsNode);
+    // restore render tree
+
     nodeFrame.renderId = previousRenderId;
+
+    this._currentRenderContext = previousRenderContext;
+    this._currentRenderObjectFunction = previousRenderObjectFunction;
+
+    this._handleObjectFunction = this._renderObjectDirect;
+
+    // wait for all promises setup by backends awaiting compilation/linking/pipeline creation to complete
+
+    await Promise.all(compilationPromises);
   }
 
   getMaxAnisotropy(): number {
@@ -738,7 +726,7 @@ export class Renderer {
     this._nodes.updateForRender(renderObject);
     this._geometries.updateForRender(renderObject);
     this._bindings.updateForRender(renderObject);
-    this._pipelines.updateForRender(renderObject);
+    this.pipelines.updateForRender(renderObject);
 
     //
 
@@ -766,7 +754,7 @@ export class Renderer {
     this._geometries.updateForRender(renderObject);
     this._bindings.updateForRender(renderObject);
 
-    this._pipelines.getForRender(renderObject, this._compilationPromises);
+    this.pipelines.getForRender(renderObject);
   }
 }
 
