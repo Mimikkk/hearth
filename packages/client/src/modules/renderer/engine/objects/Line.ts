@@ -4,8 +4,8 @@ import { Mat4 } from '../math/Mat4.js';
 import { Entity } from '../core/Entity.js';
 import { Vec3 } from '../math/Vec3.js';
 import { LineBasicMaterial } from '../materials/LineBasicMaterial.js';
-import { BufferGeometry } from '../core/BufferGeometry.js';
-import { Float32BufferAttribute } from '../core/BufferAttribute.js';
+import { Geometry } from '../core/geometry/Geometry.js';
+import { Float32BufferAttribute } from '../core/attributes/BufferAttribute.js';
 import { Material } from '@modules/renderer/engine/materials/Material.js';
 import { Intersection, Raycaster } from '@modules/renderer/engine/core/Raycaster.js';
 import { LineSegments } from '@modules/renderer/engine/objects/LineSegments.js';
@@ -22,9 +22,9 @@ export class Line extends Entity {
   declare type: string | 'Line';
 
   material: Material;
-  geometry: BufferGeometry;
+  geometry: Geometry;
 
-  constructor(geometry: BufferGeometry, material: LineBasicMaterial) {
+  constructor(geometry: Geometry, material: LineBasicMaterial) {
     super();
 
     this.geometry = geometry;

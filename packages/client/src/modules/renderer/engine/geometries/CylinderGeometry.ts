@@ -1,9 +1,9 @@
-import { BufferGeometry } from '../core/BufferGeometry.js';
-import { Float32BufferAttribute } from '../core/BufferAttribute.js';
+import { Geometry } from '../core/geometry/Geometry.js';
+import { Float32BufferAttribute } from '../core/attributes/BufferAttribute.js';
 import { Vec3 } from '../math/Vec3.js';
 import { Vec2 } from '../math/Vec2.js';
 
-export class CylinderGeometry extends BufferGeometry {
+export class CylinderGeometry extends Geometry {
   declare type: string | 'CylinderGeometry';
   declare parameters: {
     radiusTop: number;

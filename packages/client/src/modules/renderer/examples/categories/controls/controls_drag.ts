@@ -4,7 +4,7 @@ import { PerspectiveCamera } from '@modules/renderer/engine/cameras/PerspectiveC
 import { Scene } from '@modules/renderer/engine/scenes/Scene.js';
 import {
   BoxGeometry,
-  BufferGeometry,
+  Geometry,
   Fog,
   Mesh,
   MeshLambertMaterial,
@@ -34,7 +34,7 @@ const createScene = () => {
   scene.fog = new Fog(ColorMap.red, 7, 25);
   return scene;
 };
-const createBox = (geometry: BufferGeometry, x: number, y: number, z: number) => {
+const createBox = (geometry: Geometry, x: number, y: number, z: number) => {
   const material = new MeshLambertMaterial({ color: Random.color() });
 
   const mesh = new Mesh(geometry, material);

@@ -3,8 +3,8 @@ import { Mat4 } from '../math/Mat4.js';
 import { LineBasicMaterial } from '../materials/LineBasicMaterial.js';
 import { Color } from '../math/Color.js';
 import { Vec3 } from '../math/Vec3.js';
-import { BufferGeometry } from '../core/BufferGeometry.js';
-import { Float32BufferAttribute } from '../core/BufferAttribute.js';
+import { Geometry } from '../core/geometry/Geometry.js';
+import { Float32BufferAttribute } from '../core/attributes/BufferAttribute.js';
 import { Entity } from '@modules/renderer/engine/core/Entity.js';
 import { Bone } from '@modules/renderer/engine/objects/Bone.js';
 
@@ -21,7 +21,7 @@ export class SkeletonHelper extends LineSegments {
   constructor(object: Entity) {
     const bones = getBoneList(object);
 
-    const geometry = new BufferGeometry();
+    const geometry = new Geometry();
 
     const vertices = [];
     const colors = [];

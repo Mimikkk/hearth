@@ -1,10 +1,10 @@
-import { Float32BufferAttribute } from '../core/BufferAttribute.js';
-import { BufferGeometry } from '../core/BufferGeometry.js';
+import { Float32BufferAttribute } from '../core/attributes/BufferAttribute.js';
+import { Geometry } from '../core/geometry/Geometry.js';
 import { Vec3 } from '../math/Vec3.js';
 import { Vec2 } from '../math/Vec2.js';
 import * as MathUtils from '../math/MathUtils.js';
 
-export class LatheGeometry extends BufferGeometry {
+export class LatheGeometry extends Geometry {
   declare type: string | 'LatheGeometry';
   declare parameters: {
     points: Vec2[];

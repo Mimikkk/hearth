@@ -69,7 +69,7 @@ async function init() {
     points.push(point);
   }
 
-  const geometryPoints = new Engine.BufferGeometry().setFromPoints(points);
+  const geometryPoints = new Engine.Geometry().setFromPoints(points);
   const materialPoints = new PointsNodeMaterial();
 
   // custom lighting model

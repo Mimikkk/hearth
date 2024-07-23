@@ -1,6 +1,6 @@
 import { Line } from './Line.js';
 import { Vec3 } from '../math/Vec3.js';
-import { Float32BufferAttribute } from '../core/BufferAttribute.js';
+import { Float32BufferAttribute } from '../core/attributes/BufferAttribute.js';
 
 const _start = Vec3.new();
 const _end = Vec3.new();

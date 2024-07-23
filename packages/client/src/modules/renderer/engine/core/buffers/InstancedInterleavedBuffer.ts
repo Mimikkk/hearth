@@ -1,12 +1,11 @@
 import { InterleavedBuffer } from './InterleavedBuffer.js';
-import { TypedArray } from '../math/MathUtils.js';
+import { TypedArray } from '../../math/MathUtils.js';
 
-export class InstancedInterleavedBuffer extends InterleavedBuffer {
-  declare ['constructor']: typeof InstancedInterleavedBuffer;
+export class InstancedInterleavedBuffer<T extends TypedArray> extends InterleavedBuffer<T> {
   declare isInstancedInterleavedBuffer: true;
 
   constructor(
-    array: TypedArray,
+    array: T,
     stride: number,
     public meshPerAttribute: number = 1,
   ) {
@@ -21,12 +20,12 @@ export class InstancedInterleavedBuffer extends InterleavedBuffer {
     return this;
   }
 
-  clone(data: InstancedInterleavedBuffer): this {
-    const ib = super.clone(data);
+  clone(into: InstancedInterleavedBuffer<T>): this {
+    const buffer = super.clone(into);
+    buffer.meshPerAttribute = this.meshPerAttribute;
 
-    ib.meshPerAttribute = this.meshPerAttribute;
-
-    return ib;
+    return buffer;
   }
 }
+
 InstancedInterleavedBuffer.prototype.isInstancedInterleavedBuffer = true;

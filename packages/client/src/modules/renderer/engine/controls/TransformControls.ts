@@ -1,6 +1,6 @@
 import {
   BoxGeometry,
-  BufferGeometry,
+  Geometry,
   Camera,
   CylinderGeometry,
   Euler,
@@ -768,7 +768,7 @@ export class TransformControlsGizmo extends Entity {
     const scaleHandleGeometry = new BoxGeometry(0.08, 0.08, 0.08);
     scaleHandleGeometry.translate(0, 0.04, 0);
 
-    const lineGeometry = new BufferGeometry();
+    const lineGeometry = new Geometry();
     lineGeometry.setAttribute('position', new Float32BufferAttribute([0, 0, 0, 1, 0, 0], 3));
 
     const lineGeometry2 = new CylinderGeometry(0.0075, 0.0075, 0.5, 3);
@@ -784,7 +784,7 @@ export class TransformControlsGizmo extends Entity {
     // Special geometry for transform helper. If scaled with position vector it spans from [0,0,0] to position
 
     function TranslateHelperGeometry() {
-      const geometry = new BufferGeometry();
+      const geometry = new Geometry();
 
       geometry.setAttribute('position', new Float32BufferAttribute([0, 0, 0, 1, 1, 1], 3));
 

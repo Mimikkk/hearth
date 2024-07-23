@@ -1,6 +1,6 @@
-import { BufferAttribute, BufferGeometry, Mat4, Vec3, Vec4 } from '../engine.js';
+import { BufferAttribute, Geometry, Mat4, Vec3, Vec4 } from '../engine.js';
 
-export class TeapotGeometry extends BufferGeometry {
+export class TeapotGeometry extends Geometry {
   constructor(
     size: number = 50,
     segments: number = 10,

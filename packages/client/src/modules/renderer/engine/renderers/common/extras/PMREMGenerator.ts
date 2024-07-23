@@ -12,7 +12,7 @@ import {
   Blending,
   BoxGeometry,
   BufferAttribute,
-  BufferGeometry,
+  Geometry,
   Color,
   ColorSpace,
   Filter,
@@ -500,7 +500,7 @@ function _createPlanes(lodMax) {
       faceIndex.set(fill, faceIndexSize * vertices * faceIdx);
     }
 
-    const planes = new BufferGeometry();
+    const planes = new Geometry();
     planes.setAttribute('position', new BufferAttribute(position, positionSize));
     planes.setAttribute('uv', new BufferAttribute(uv, uvSize));
     planes.setAttribute('faceIndex', new BufferAttribute(faceIndex, faceIndexSize));

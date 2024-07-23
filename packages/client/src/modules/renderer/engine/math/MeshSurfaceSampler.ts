@@ -3,9 +3,9 @@ import { Vec3 } from './Vec3.js';
 import { Vec2 } from './Vec2.js';
 import type { Mesh } from '../objects/Mesh.js';
 import type { Material } from '../materials/Material.js';
-import type { BufferAttribute } from '../core/BufferAttribute.js';
+import type { BufferAttribute } from '../core/attributes/BufferAttribute.js';
 import type { Color } from './Color.js';
-import { BufferGeometry } from '@modules/renderer/engine/core/BufferGeometry.js';
+import { Geometry } from '@modules/renderer/engine/core/geometry/Geometry.js';
 
 const _face = new Triangle();
 const _color = Vec3.new();
@@ -13,8 +13,8 @@ const _uva = Vec2.new();
 const _uvb = Vec2.new();
 const _uvc = Vec2.new();
 
-export class MeshSurfaceSampler<TGeometry extends BufferGeometry, TMaterial extends Material | Material[]> {
-  geometry: BufferGeometry;
+export class MeshSurfaceSampler<TGeometry extends Geometry, TMaterial extends Material | Material[]> {
+  geometry: Geometry;
   randomFunction: () => number;
   indexAttribute: BufferAttribute<Uint32Array | Uint16Array>;
   positionAttribute: BufferAttribute<Float32Array>;

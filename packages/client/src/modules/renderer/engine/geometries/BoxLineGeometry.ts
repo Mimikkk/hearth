@@ -1,6 +1,6 @@
-import { BufferGeometry, Float32BufferAttribute } from '../engine.js';
+import { Geometry, Float32BufferAttribute } from '../engine.js';
 
-export class BoxLineGeometry extends BufferGeometry {
+export class BoxLineGeometry extends Geometry {
   constructor(
     width: number = 1,
     height: number = 1,

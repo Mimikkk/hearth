@@ -1,12 +1,4 @@
-import {
-  BufferGeometry,
-  Float32BufferAttribute,
-  LineSegments,
-  LineBasicMaterial,
-  Mat3,
-  Vec3,
-  Entity,
-} from '../engine.js';
+import { Geometry, Float32BufferAttribute, LineSegments, LineBasicMaterial, Mat3, Vec3, Entity } from '../engine.js';
 import { ColorRepresentation } from '@modules/renderer/engine/math/Color.js';
 
 const _v1 = Vec3.new();
@@ -19,7 +11,7 @@ export class VertexNormalsHelper extends LineSegments {
   size: number;
 
   constructor(object: Entity, size: number = 1, color: ColorRepresentation = 0xff0000) {
-    const geometry = new BufferGeometry();
+    const geometry = new Geometry();
 
     const nNormals = object.geometry!.attributes.normal.count;
     const positions = new Float32BufferAttribute(new Array(nNormals * 2 * 3), 3);

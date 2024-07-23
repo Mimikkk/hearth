@@ -1,4 +1,4 @@
-import { BufferGeometry, Float32BufferAttribute, Material, Mesh, OrthographicCamera } from '../engine.js';
+import { Geometry, Float32BufferAttribute, Material, Mesh, OrthographicCamera } from '../engine.js';
 import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 
 // Helper for passes that need to fill the viewport with a single quad.
@@ -7,7 +7,7 @@ const _camera = new OrthographicCamera(-1, 1, 1, -1, 0, 1);
 
 // https://github.com/mrdoob/engine.js/pull/21358
 
-export class QuadGeometry extends BufferGeometry {
+export class QuadGeometry extends Geometry {
   constructor(flipY = false) {
     super();
 

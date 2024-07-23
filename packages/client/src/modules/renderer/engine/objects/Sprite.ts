@@ -3,9 +3,9 @@ import { Vec3 } from '../math/Vec3.js';
 import { Mat4 } from '../math/Mat4.js';
 import { Triangle } from '../math/Triangle.js';
 import { Entity } from '../core/Entity.js';
-import { BufferGeometry } from '../core/BufferGeometry.js';
-import { InterleavedBuffer } from '../core/InterleavedBuffer.js';
-import { InterleavedBufferAttribute } from '../core/InterleavedBufferAttribute.js';
+import { Geometry } from '../core/geometry/Geometry.js';
+import { InterleavedBuffer } from '../core/buffers/InterleavedBuffer.js';
+import { InterleavedBufferAttribute } from '../core/attributes/InterleavedBufferAttribute.js';
 import { SpriteMaterial } from '../materials/SpriteMaterial.js';
 import { Intersection, Raycaster } from '../core/Raycaster.js';
 import { PerspectiveCamera } from '../cameras/PerspectiveCamera.js';
@@ -26,14 +26,14 @@ const _uvA = Vec2.new();
 const _uvB = Vec2.new();
 const _uvC = Vec2.new();
 
-let _geometry: BufferGeometry;
+let _geometry: Geometry;
 
 export class Sprite extends Entity {
   declare isSprite: true;
   declare type: string | 'Sprite';
 
   center: Vec2;
-  geometry: BufferGeometry;
+  geometry: Geometry;
   material: SpriteMaterial;
 
   constructor(material: SpriteMaterial) {
@@ -44,7 +44,7 @@ export class Sprite extends Entity {
     this.type = 'Sprite';
 
     if (_geometry === undefined) {
-      _geometry = new BufferGeometry();
+      _geometry = new Geometry();
 
       const float32Array = new Float32Array([
         -0.5, -0.5, 0, 0, 0, 0.5, -0.5, 0, 1, 0, 0.5, 0.5, 0, 1, 1, -0.5, 0.5, 0, 0, 1,

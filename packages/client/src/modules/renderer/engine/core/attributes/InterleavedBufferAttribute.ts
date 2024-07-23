@@ -1,7 +1,7 @@
-import { Vec3 } from '../math/Vec3.js';
+import { Vec3 } from '../../math/Vec3.js';
 import { BufferAttribute } from './BufferAttribute.js';
-import { denormalize, normalize, TypedArray } from '../math/MathUtils.js';
-import { InterleavedBuffer } from '@modules/renderer/engine/core/InterleavedBuffer.js';
+import { denormalize, normalize, TypedArray } from '../../math/MathUtils.js';
+import { InterleavedBuffer } from '@modules/renderer/engine/core/buffers/InterleavedBuffer.js';
 import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
 import { Matrix, Mat3 } from '@modules/renderer/engine/math/Mat3.js';
 

@@ -1,7 +1,7 @@
 import {
   Bone,
   BufferAttribute,
-  BufferGeometry,
+  Geometry,
   Color,
   Line,
   LineBasicMaterial,
@@ -370,7 +370,7 @@ export class CCDIKHelper extends Entity {
     const iks = this.iks;
 
     function createLineGeometry(ik: IKS) {
-      const geometry = new BufferGeometry();
+      const geometry = new Geometry();
       const vertices = new Float32Array((2 + ik.links.length) * 3);
       geometry.setAttribute('position', new BufferAttribute(vertices, 3));
 

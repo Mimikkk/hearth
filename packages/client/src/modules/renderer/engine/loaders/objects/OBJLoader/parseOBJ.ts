@@ -1,5 +1,5 @@
 import {
-  BufferGeometry,
+  Geometry,
   Color,
   Float32BufferAttribute,
   Group,
@@ -538,7 +538,7 @@ export async function parseOBJ(text: string, materialCreator?: MTLMaterialCreato
       // Skip o/g line declarations that did not follow with any faces
       if (geometry.vertices.length === 0) continue;
 
-      const buffergeometry = new BufferGeometry();
+      const buffergeometry = new Geometry();
 
       buffergeometry.setAttribute('position', new Float32BufferAttribute(geometry.vertices, 3));
 
@@ -638,7 +638,7 @@ export async function parseOBJ(text: string, materialCreator?: MTLMaterialCreato
     if (state.vertices.length > 0) {
       const material = new PointsMaterial({ size: 1, sizeAttenuation: false });
 
-      const buffergeometry = new BufferGeometry();
+      const buffergeometry = new Geometry();
 
       buffergeometry.setAttribute('position', new Float32BufferAttribute(state.vertices, 3));
 

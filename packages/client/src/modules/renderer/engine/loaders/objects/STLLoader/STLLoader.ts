@@ -1,4 +1,4 @@
-import { BufferGeometry } from '@modules/renderer/engine/engine.js';
+import { Geometry } from '@modules/renderer/engine/engine.js';
 import { FileLoader, ResponseType } from '@modules/renderer/engine/loaders/files/FileLoader/FileLoader.js';
 import { classLoader } from '@modules/renderer/engine/loaders/types.js';
 import { parseSTL } from '@modules/renderer/engine/loaders/objects/STLLoader/parseSTL.js';
@@ -6,7 +6,7 @@ import { parseSTL } from '@modules/renderer/engine/loaders/objects/STLLoader/par
 export class STLLoader extends classLoader<{
   This: STLLoader;
   Url: string;
-  Return: BufferGeometry;
+  Return: Geometry;
   Options: STLLoader.Options;
   Configuration: STLLoader.Configuration;
 }>(

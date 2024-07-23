@@ -1,7 +1,7 @@
 import { LightsNode } from '../../nodes/Nodes.js';
 import { Light } from '@modules/renderer/engine/lights/Light.js';
 import { Entity } from '@modules/renderer/engine/core/Entity.js';
-import { BufferGeometry } from '@modules/renderer/engine/core/BufferGeometry.js';
+import { Geometry } from '@modules/renderer/engine/core/geometry/Geometry.js';
 import { Group } from '@modules/renderer/engine/objects/Group.js';
 import { Material } from '@modules/renderer/engine/materials/Material.js';
 
@@ -10,7 +10,7 @@ export type SortFn = (a: RenderItem, b: RenderItem) => number;
 export interface RenderItem {
   id: number;
   object: Entity;
-  geometry: BufferGeometry | null;
+  geometry: Geometry | null;
   material: Material;
   groupOrder: number;
   renderOrder: number;
@@ -52,7 +52,7 @@ export class RenderList {
 
   next(
     object: Entity,
-    geometry: BufferGeometry | null,
+    geometry: Geometry | null,
     material: Material,
     groupOrder: number,
     z: number,
@@ -75,7 +75,7 @@ export class RenderList {
 
   push(
     object: Entity,
-    geometry: BufferGeometry | null,
+    geometry: Geometry | null,
     material: Material,
     groupOrder: number,
     z: number,
@@ -90,7 +90,7 @@ export class RenderList {
 
   unshift(
     object: Entity,
-    geometry: BufferGeometry | null,
+    geometry: Geometry | null,
     material: Material,
     groupOrder: number,
     z: number,
@@ -122,7 +122,7 @@ export class RenderList {
 export class RenderItem {
   constructor(
     public object: Entity,
-    public geometry: BufferGeometry | null,
+    public geometry: Geometry | null,
     public material: Material,
     public groupOrder: number,
     public z: number,
@@ -133,7 +133,7 @@ export class RenderItem {
 
   static new(
     object: Entity,
-    geometry: BufferGeometry | null,
+    geometry: Geometry | null,
     material: Material,
     groupOrder: number,
     z: number,
@@ -144,7 +144,7 @@ export class RenderItem {
 
   set(
     object: Entity,
-    geometry: BufferGeometry | null,
+    geometry: Geometry | null,
     material: Material,
     groupOrder: number,
     z: number,

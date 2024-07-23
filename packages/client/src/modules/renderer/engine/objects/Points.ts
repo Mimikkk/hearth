@@ -4,7 +4,7 @@ import { Mat4 } from '../math/Mat4.js';
 import { Entity } from '../core/Entity.js';
 import { Vec3 } from '../math/Vec3.js';
 import { PointsMaterial } from '../materials/PointsMaterial.js';
-import { BufferGeometry } from '../core/BufferGeometry.js';
+import { Geometry } from '../core/geometry/Geometry.js';
 import { Intersection, Raycaster } from '@modules/renderer/engine/core/Raycaster.js';
 
 const _inverseMatrix = new Mat4();
@@ -15,12 +15,12 @@ const _position = Vec3.new();
 export class Points extends Entity {
   declare isPoints: true;
   declare type: string | 'Points';
-  declare geometry: BufferGeometry;
+  declare geometry: Geometry;
   declare material: PointsMaterial;
   morphTargetInfluences: number[];
   morphTargetDictionary: Record<string, number>;
 
-  constructor(geometry: BufferGeometry, material: PointsMaterial) {
+  constructor(geometry: Geometry, material: PointsMaterial) {
     super();
 
     this.geometry = geometry;

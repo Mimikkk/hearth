@@ -1,7 +1,7 @@
-import { BufferGeometry, Float32BufferAttribute, Vec3 } from '../engine.js';
+import { Geometry, Float32BufferAttribute, Vec3 } from '../engine.js';
 import { ConvexHull } from '../math/ConvexHull.js';
 
-export class ConvexGeometry extends BufferGeometry {
+export class ConvexGeometry extends Geometry {
   constructor(points: Vec3[] = []) {
     super();
 

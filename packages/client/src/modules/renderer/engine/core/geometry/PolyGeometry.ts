@@ -1,6 +1,6 @@
-import { BufferGeometry } from './BufferGeometry.js';
+import { Geometry } from './Geometry.js';
 
-export class InstancedBufferGeometry extends BufferGeometry {
+export class PolyGeometry extends Geometry {
   declare isInstancedBufferGeometry: true;
   instanceCount: number;
 
@@ -9,7 +9,7 @@ export class InstancedBufferGeometry extends BufferGeometry {
     this.instanceCount = Infinity;
   }
 
-  static is(value: any): value is InstancedBufferGeometry {
+  static is(value: any): value is PolyGeometry {
     return value?.isInstancedBufferGeometry === true;
   }
 
@@ -21,5 +21,5 @@ export class InstancedBufferGeometry extends BufferGeometry {
     return this;
   }
 }
-InstancedBufferGeometry.prototype.isInstancedBufferGeometry = true;
-InstancedBufferGeometry.prototype.type = 'InstancedBufferGeometry';
+PolyGeometry.prototype.isInstancedBufferGeometry = true;
+PolyGeometry.prototype.type = 'InstancedBufferGeometry';

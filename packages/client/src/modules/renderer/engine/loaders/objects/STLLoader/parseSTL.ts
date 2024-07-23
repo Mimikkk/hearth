@@ -1,10 +1,4 @@
-import {
-  BufferAttribute,
-  BufferGeometry,
-  Color,
-  Float32BufferAttribute,
-  Vec3,
-} from '@modules/renderer/engine/engine.js';
+import { BufferAttribute, Geometry, Color, Float32BufferAttribute, Vec3 } from '@modules/renderer/engine/engine.js';
 
 function isBinary(data: ArrayBuffer) {
   const reader = new DataView(data);
@@ -78,7 +72,7 @@ function parseBinary(buffer: ArrayBuffer) {
   const dataOffset = 84;
   const faceLength = 12 * 4 + 2;
 
-  const geometry = new BufferGeometry();
+  const geometry = new Geometry();
 
   const vertices = new Float32Array(faces * 3 * 3);
   const normals = new Float32Array(faces * 3 * 3);
@@ -144,7 +138,7 @@ function parseBinary(buffer: ArrayBuffer) {
 }
 
 function parseASCII(text: string) {
-  const geometry = new BufferGeometry();
+  const geometry = new Geometry();
   const patternSolid = /solid([\s\S]*?)endsolid/g;
   const patternFace = /facet([\s\S]*?)endfacet/g;
   const patternName = /solid\s(.+)/;

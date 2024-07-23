@@ -1,11 +1,11 @@
 import { Sphere } from '../../../math/Sphere.js';
 import { Vec3 } from '../../../math/Vec3.js';
-import { BufferAttribute } from '../../../core/BufferAttribute.js';
-import { BufferGeometry } from '../../../core/BufferGeometry.js';
-import { InstancedBufferGeometry } from '../../../core/InstancedBufferGeometry.js';
-import { InstancedBufferAttribute } from '../../../core/InstancedBufferAttribute.js';
-import { InterleavedBufferAttribute } from '../../../core/InterleavedBufferAttribute.js';
-import { InterleavedBuffer } from '../../../core/InterleavedBuffer.js';
+import { BufferAttribute } from '../../../core/attributes/BufferAttribute.js';
+import { Geometry } from '../../../core/geometry/Geometry.js';
+import { PolyGeometry } from '../../../core/geometry/PolyGeometry.js';
+import { InstancedBufferAttribute } from '../../../core/attributes/InstancedBufferAttribute.js';
+import { InterleavedBufferAttribute } from '../../../core/attributes/InterleavedBufferAttribute.js';
+import { InterleavedBuffer } from '../../../core/buffers/InterleavedBuffer.js';
 import { createTypedArray } from '../../../utils.js';
 import { classLoader } from '@modules/renderer/engine/loaders/types.js';
 import { FileLoader, ResponseType } from '@modules/renderer/engine/loaders/files/FileLoader/FileLoader.js';
@@ -36,7 +36,7 @@ export interface JsonContent {
   userData: Record<string, any>;
 }
 
-export const parseBufferGeometry = (json: JsonContent): BufferGeometry => {
+export const parseBufferGeometry = (json: JsonContent): Geometry => {
   const interleavedBufferMap: Record<string, any> = {};
   const arrayBufferMap: Record<string, any> = {};
 
@@ -70,7 +70,7 @@ export const parseBufferGeometry = (json: JsonContent): BufferGeometry => {
     return ab;
   }
 
-  const geometry = json.isInstancedBufferGeometry ? new InstancedBufferGeometry() : new BufferGeometry();
+  const geometry = json.isInstancedBufferGeometry ? new PolyGeometry() : new Geometry();
 
   const index = json.data.index;
 
@@ -169,5 +169,5 @@ export const parseBufferGeometry = (json: JsonContent): BufferGeometry => {
   if (json.name) geometry.name = json.name;
   if (json.userData) geometry.userData = json.userData;
 
-  return geometry as BufferGeometry;
+  return geometry as Geometry;
 };

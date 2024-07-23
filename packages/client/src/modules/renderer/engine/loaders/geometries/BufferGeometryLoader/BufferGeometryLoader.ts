@@ -1,4 +1,4 @@
-import type { BufferGeometry } from '../../../core/BufferGeometry.js';
+import type { Geometry } from '../../../core/geometry/Geometry.js';
 import { classLoader } from '@modules/renderer/engine/loaders/types.js';
 import { FileLoader, ResponseType } from '@modules/renderer/engine/loaders/files/FileLoader/FileLoader.js';
 import { parseBufferGeometry } from '@modules/renderer/engine/loaders/geometries/BufferGeometryLoader/parseBufferGeometry.js';
@@ -6,7 +6,7 @@ import { parseBufferGeometry } from '@modules/renderer/engine/loaders/geometries
 export class BufferGeometryLoader extends classLoader<{
   This: BufferGeometryLoader;
   Url: string;
-  Return: BufferGeometry;
+  Return: Geometry;
   Options: Options;
   Configuration: Configuration;
 }>(

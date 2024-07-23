@@ -1,5 +1,5 @@
 import { Ray } from '../math/Ray.js';
-import { Layers } from './Layers.js';
+import { RaycastLayers } from './RaycastLayers.js';
 import type { Vec3 } from '../math/Vec3.js';
 import type { Camera } from '../cameras/Camera.js';
 import type { Entity } from './Entity.js';
@@ -58,7 +58,7 @@ export class Raycaster {
   near: number;
   far: number;
   camera: Camera;
-  layers: Layers;
+  layers: RaycastLayers;
   params: RaycasterParameters;
 
   constructor(origin?: Vec3, direction?: Vec3, near: number = 0, far: number = Infinity) {
@@ -66,7 +66,7 @@ export class Raycaster {
     this.camera = null!;
     this.near = near;
     this.far = far;
-    this.layers = new Layers();
+    this.layers = new RaycastLayers();
 
     this.params = {
       Mesh: {},

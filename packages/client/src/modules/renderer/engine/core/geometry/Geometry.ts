@@ -1,37 +1,27 @@
-import { Vec3 } from '../math/Vec3.js';
-import { Vec2 } from '../math/Vec2.js';
-import { Box3 } from '../math/Box3.js';
-import { BufferAttribute, Float32BufferAttribute, Uint32BufferAttribute } from './BufferAttribute.js';
-import { Sphere } from '../math/Sphere.js';
-import { Entity } from './Entity.js';
-import { Mat4 } from '../math/Mat4.js';
-import { Mat3 } from '../math/Mat3.js';
-import * as MathUtils from '../math/MathUtils.js';
-import { InterleavedBufferAttribute } from '@modules/renderer/engine/core/InterleavedBufferAttribute.js';
+import { Vec3 } from '../../math/Vec3.js';
+import { Vec2 } from '../../math/Vec2.js';
+import { Box3 } from '../../math/Box3.js';
+import { BufferAttribute, Float32BufferAttribute, Uint32BufferAttribute } from '../attributes/BufferAttribute.js';
+import { Sphere } from '../../math/Sphere.js';
+import { Entity } from '../Entity.js';
+import { Mat4 } from '../../math/Mat4.js';
+import { Mat3 } from '../../math/Mat3.js';
+import * as MathUtils from '../../math/MathUtils.js';
+import { TypedArray } from '../../math/MathUtils.js';
 import { Quaternion } from '@modules/renderer/engine/math/Quaternion.js';
+import { AttributeType } from '@modules/renderer/engine/core/types.js';
 
-let _id = 0;
-
-const _m1 = new Mat4();
-const _obj = new Entity();
-const _offset = Vec3.new();
-const _box = Box3.new();
-const _boxMorphTargets = Box3.new();
-const _vector = Vec3.new();
-
-type AttributeRecord = Record<string, Float32BufferAttribute | InterleavedBufferAttribute>;
-
-export class BufferGeometry<
+export class Geometry<
   AttributeMap extends AttributeRecord = AttributeRecord,
   MorphAttributeMap extends AttributeRecord = AttributeRecord,
-  IndexT extends Uint32Array | Uint16Array = Uint32Array | Uint16Array,
+  IndexT extends TypedArray = Uint32Array,
 > {
-  declare ['constructor']: typeof BufferGeometry;
   declare isBufferGeometry: true;
   declare type: string | 'BufferGeometry' | 'InstancedBufferGeometry' | 'InterleavedBufferGeometry';
   id: number;
   uuid: string;
   name: string;
+  instanceCount: number;
   index: BufferAttribute<IndexT> | null;
   attributes: AttributeMap;
   morphAttributes: MorphAttributeMap;
@@ -65,6 +55,12 @@ export class BufferGeometry<
     this.drawRange = { start: 0, count: Infinity };
 
     this.userData = {};
+
+    this.instanceCount = Infinity;
+  }
+
+  static is(value: any): value is Geometry {
+    return value?.isBufferGeometry === true;
   }
 
   getIndex(): BufferAttribute<IndexT> | null {
@@ -530,7 +526,6 @@ export class BufferGeometry<
       let normalAttribute = this.attributes.normal;
 
       if (normalAttribute === undefined) {
-        //@ts-expect-error
         normalAttribute = new BufferAttribute(new Float32Array(positionAttribute.count * 3), 3);
         this.setAttribute('normal', normalAttribute);
       } else {
@@ -541,14 +536,14 @@ export class BufferGeometry<
         }
       }
 
-      const pA = Vec3.new(),
-        pB = Vec3.new(),
-        pC = Vec3.new();
-      const nA = Vec3.new(),
-        nB = Vec3.new(),
-        nC = Vec3.new();
-      const cb = Vec3.new(),
-        ab = Vec3.new();
+      const pA = Vec3.new();
+      const pB = Vec3.new();
+      const pC = Vec3.new();
+      const nA = Vec3.new();
+      const nB = Vec3.new();
+      const nC = Vec3.new();
+      const cb = Vec3.new();
+      const ab = Vec3.new();
 
       // indexed elements
 
@@ -651,7 +646,7 @@ export class BufferGeometry<
       return this;
     }
 
-    const geometry2 = new BufferGeometry();
+    const geometry2 = new Geometry();
 
     const indices = this.index.array;
     const attributes = this.attributes;
@@ -702,11 +697,11 @@ export class BufferGeometry<
     return geometry2 as this;
   }
 
-  clone(): BufferGeometry<AttributeMap, MorphAttributeMap, IndexT> {
-    return new this.constructor().copy(this) as BufferGeometry<AttributeMap, MorphAttributeMap, IndexT>;
+  clone(): Geometry<AttributeMap, MorphAttributeMap, IndexT> {
+    return new this.constructor().copy(this) as Geometry<AttributeMap, MorphAttributeMap, IndexT>;
   }
 
-  copy(source: this): this {
+  copy(source: Geometry<AttributeMap, MorphAttributeMap, IndexT>): this {
     // reset
 
     this.index = null;
@@ -715,38 +710,25 @@ export class BufferGeometry<
     this.groups = [];
     this.boundingBox = null;
     this.boundingSphere = null;
-
-    // used for storing cloned, shared data
+    this.instanceCount = Infinity;
 
     const data = {};
 
-    // name
-
     this.name = source.name;
-
-    // index
-
     const index = source.index;
-
     if (index !== null) {
       //@ts-expect-error
       this.setIndex(index.clone(data));
     }
 
-    // attributes
-
     const attributes = source.attributes;
-
     for (const name in attributes) {
       const attribute = attributes[name];
       //@ts-expect-error
       this.setAttribute(name, attribute.clone(data));
     }
 
-    // morph attributes
-
     const morphAttributes = source.morphAttributes;
-
     for (const name in morphAttributes) {
       const array = [];
       const morphAttribute = morphAttributes[name]; // morphAttribute: array of Float32BufferAttributes
@@ -763,45 +745,40 @@ export class BufferGeometry<
 
     this.morphTargetsRelative = source.morphTargetsRelative;
 
-    // groups
-
     const groups = source.groups;
-
     for (let i = 0, l = groups.length; i < l; i++) {
       const group = groups[i];
       this.addGroup(group.start, group.count, group.materialIndex);
     }
 
-    // bounding box
-
     const boundingBox = source.boundingBox;
-
     if (boundingBox !== null) {
       this.boundingBox = boundingBox.clone();
     }
 
-    // bounding sphere
-
     const boundingSphere = source.boundingSphere;
-
     if (boundingSphere !== null) {
       this.boundingSphere = boundingSphere.clone();
     }
 
-    // draw range
-
     this.drawRange.start = source.drawRange.start;
     this.drawRange.count = source.drawRange.count;
-
-    // user data
-
     this.userData = source.userData;
 
     return this;
   }
 }
 
-BufferGeometry.prototype.isBufferGeometry = true;
-BufferGeometry.prototype.type = 'BufferGeometry';
+Geometry.prototype.isBufferGeometry = true;
+Geometry.prototype.type = 'BufferGeometry';
 
+type AttributeRecord = Record<string, AttributeType>;
+
+let _id = 0;
+const _m1 = new Mat4();
+const _obj = new Entity();
+const _offset = Vec3.new();
+const _box = Box3.new();
+const _boxMorphTargets = Box3.new();
+const _vector = Vec3.new();
 const _translate = Vec3.new();

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { Triangle } from './Triangle.js';
 import { Vec3 } from './Vec3.js';
-import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
+import { BufferAttribute } from '@modules/renderer/engine/core/attributes/BufferAttribute.js';
 import { Plane } from './Plane.js';
 import { Box3 } from '@modules/renderer/engine/math/Box3.js';
 

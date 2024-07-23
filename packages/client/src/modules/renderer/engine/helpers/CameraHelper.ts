@@ -3,8 +3,8 @@ import { Vec3 } from '../math/Vec3.js';
 import { LineSegments } from '../objects/LineSegments.js';
 import { Color } from '../math/Color.js';
 import { LineBasicMaterial } from '../materials/LineBasicMaterial.js';
-import { BufferGeometry } from '../core/BufferGeometry.js';
-import { Float32BufferAttribute } from '../core/BufferAttribute.js';
+import { Geometry } from '../core/geometry/Geometry.js';
+import { Float32BufferAttribute } from '../core/attributes/BufferAttribute.js';
 import { PerspectiveCamera } from '@modules/renderer/engine/cameras/PerspectiveCamera.js';
 import { OrthographicCamera } from '@modules/renderer/engine/cameras/OrthographicCamera.js';
 
@@ -23,7 +23,7 @@ export class CameraHelper extends LineSegments {
   pointMap: Record<string, number[]>;
 
   constructor(camera: Camera) {
-    const geometry = new BufferGeometry();
+    const geometry = new Geometry();
     const material = new LineBasicMaterial({ color: 0xffffff, vertexColors: true, toneMapped: false });
 
     const vertices: number[] = [];
@@ -258,7 +258,7 @@ export class CameraHelper extends LineSegments {
 function setPoint(
   point: string,
   pointMap: Record<string, number[]>,
-  geometry: BufferGeometry,
+  geometry: Geometry,
   camera: Camera,
   x: number,
   y: number,

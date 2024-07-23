@@ -1,4 +1,4 @@
-export class Layers {
+export class RaycastLayers {
   mask: number = 1;
 
   constructor() {}
@@ -33,7 +33,7 @@ export class Layers {
     return this;
   }
 
-  test(layers: Layers): boolean {
+  test(layers: RaycastLayers): boolean {
     return (this.mask & layers.mask) !== 0;
   }
 

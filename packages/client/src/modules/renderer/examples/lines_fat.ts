@@ -93,7 +93,7 @@ async function init() {
   line.scale.set(1, 1, 1);
   scene.add(line);
 
-  const geo = new Engine.BufferGeometry();
+  const geo = new Engine.Geometry();
   geo.setAttribute('position', new Engine.Float32BufferAttribute(positions, 3));
   geo.setAttribute('color', new Engine.Float32BufferAttribute(colors, 3));
 

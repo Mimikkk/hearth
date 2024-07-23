@@ -1,5 +1,5 @@
-import { Float32BufferAttribute } from '../core/BufferAttribute.js';
-import { BufferGeometry } from '../core/BufferGeometry.js';
+import { Float32BufferAttribute } from '../core/attributes/BufferAttribute.js';
+import { Geometry } from '../core/geometry/Geometry.js';
 import { Entity } from '../core/Entity.js';
 import { CylinderGeometry } from '../geometries/CylinderGeometry.js';
 import { MeshBasicMaterial } from '../materials/MeshBasicMaterial.js';
@@ -10,7 +10,7 @@ import { Vec3 } from '../math/Vec3.js';
 import { Color } from '@modules/renderer/engine/math/Color.js';
 
 const _axis = Vec3.new();
-let _lineGeometry!: BufferGeometry;
+let _lineGeometry!: Geometry;
 let _coneGeometry!: CylinderGeometry;
 
 export class ArrowHelper extends Entity {
@@ -31,7 +31,7 @@ export class ArrowHelper extends Entity {
     this.type = 'ArrowHelper';
 
     if (_lineGeometry === undefined) {
-      _lineGeometry = new BufferGeometry();
+      _lineGeometry = new Geometry();
       _lineGeometry.setAttribute('position', new Float32BufferAttribute([0, 0, 0, 0, 1, 0], 3));
 
       _coneGeometry = new CylinderGeometry(0, 0.5, 1, 5, 1);

@@ -1,5 +1,5 @@
-import { BufferAttribute } from '../core/BufferAttribute.js';
-import { BufferGeometry } from '../core/BufferGeometry.js';
+import { BufferAttribute } from '../core/attributes/BufferAttribute.js';
+import { Geometry } from '../core/geometry/Geometry.js';
 import { DataTexture } from '../textures/DataTexture.js';
 import { TextureDataType, TextureFormat } from '../constants.js';
 import { Mat4 } from '../math/Mat4.js';
@@ -116,7 +116,7 @@ export class BatchedMesh extends Mesh {
   }
 
   constructor(maxGeometryCount: number, material: Material, maxVertexCount: number, maxIndexCount: number) {
-    super(new BufferGeometry(), material);
+    super(new Geometry(), material);
 
     this.isBatchedMesh = true;
     this.perObjectFrustumCulled = true;
@@ -180,7 +180,7 @@ export class BatchedMesh extends Mesh {
     this._matricesTexture = matricesTexture;
   }
 
-  _initializeGeometry(reference: BufferGeometry) {
+  _initializeGeometry(reference: Geometry) {
     const geometry = this.geometry;
     const maxVertexCount = this._maxVertexCount;
     const maxGeometryCount = this._maxGeometryCount;
@@ -215,7 +215,7 @@ export class BatchedMesh extends Mesh {
   }
 
   // Make sure the geometry is compatible with the existing combined geometry atributes
-  _validateGeometry(geometry: BufferGeometry) {
+  _validateGeometry(geometry: Geometry) {
     // check that the geometry doesn't have a version of our reserved id attribute
     if (geometry.getAttribute(ID_ATTR_NAME)) {
       throw new Error(`BatchedMesh: Geometry cannot use attribute "${ID_ATTR_NAME}"`);
@@ -289,7 +289,7 @@ export class BatchedMesh extends Mesh {
     }
   }
 
-  addGeometry(geometry: BufferGeometry, vertexCount: number = -1, indexCount: number = -1): number {
+  addGeometry(geometry: Geometry, vertexCount: number = -1, indexCount: number = -1): number {
     this._initializeGeometry(geometry);
 
     this._validateGeometry(geometry);
@@ -395,7 +395,7 @@ export class BatchedMesh extends Mesh {
     return geometryId;
   }
 
-  setGeometryAt(id: number, geometry: BufferGeometry): number {
+  setGeometryAt(id: number, geometry: Geometry): number {
     if (id >= this._geometryCount) {
       throw new Error('BatchedMesh: Maximum geometry count reached.');
     }
@@ -725,7 +725,7 @@ export class BatchedMesh extends Mesh {
     renderer: Renderer,
     scene: Scene,
     camera: Camera,
-    geometry: BufferGeometry,
+    geometry: Geometry,
     material: Material,
     group: Group,
   ) {
@@ -826,7 +826,7 @@ export class BatchedMesh extends Mesh {
     renderer: Renderer,
     scene: Scene,
     shadowCamera: Camera,
-    geometry: BufferGeometry,
+    geometry: Geometry,
     depthMaterial: Material,
     group: Group,
   ) {

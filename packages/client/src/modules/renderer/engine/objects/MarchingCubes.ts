@@ -1,4 +1,4 @@
-import { BufferAttribute, BufferGeometry, BufferUsage, Color, Material, Mesh, Sphere, Vec3 } from '../engine.js';
+import { BufferAttribute, Geometry, BufferUsage, Color, Material, Mesh, Sphere, Vec3 } from '../engine.js';
 
 /**
  * Port of http://webglsamples.org/blob/blob.html
@@ -47,7 +47,7 @@ export class MarchingCubes extends Mesh {
     enableColors: boolean = false,
     maxPolyCount: number = 10000,
   ) {
-    const geometry = new BufferGeometry();
+    const geometry = new Geometry();
 
     super(geometry, material);
 

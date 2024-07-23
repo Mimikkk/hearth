@@ -6,7 +6,7 @@ import { normalWorld } from '@modules/renderer/engine/nodes/accessors/NormalNode
 import { color } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.js';
 import {
   BoundingBoxVisualizer,
-  BufferGeometry,
+  Geometry,
   Fog,
   Mesh,
   MeshLambertMaterial,
@@ -39,7 +39,7 @@ const createRenderer = async (onAnimate: () => void) => {
   return renderer;
 };
 
-const createSphere = (geometry: BufferGeometry, x: number, y: number, z: number) => {
+const createSphere = (geometry: Geometry, x: number, y: number, z: number) => {
   const material = new MeshLambertMaterial({ color: Math.random() * 0xffffff });
 
   const mesh = new Mesh(geometry, material);

@@ -13,7 +13,7 @@ import {
   Blending,
   BlendingEquation,
   BlendingFactor,
-  BufferGeometry,
+  Geometry,
   Depth,
   Line,
   LineSegments,
@@ -462,7 +462,7 @@ class BackendPipelines {
     return blendOperation;
   }
 
-  _getPrimitiveState(object: Entity, geometry: BufferGeometry, material: Material): GPUPrimitiveState {
+  _getPrimitiveState(object: Entity, geometry: Geometry, material: Material): GPUPrimitiveState {
     const descriptor: GPUPrimitiveState = {};
     const utils = this.backend.utilities;
 

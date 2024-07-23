@@ -1,5 +1,5 @@
-import { BufferGeometry } from '../core/BufferGeometry.js';
-import { Float32BufferAttribute } from '../core/BufferAttribute.js';
+import { Geometry } from '../core/geometry/Geometry.js';
+import { Float32BufferAttribute } from '../core/attributes/BufferAttribute.js';
 import * as MathUtils from '../math/MathUtils.js';
 import { Triangle } from '../math/Triangle.js';
 import { Vec3 } from '../math/Vec3.js';
@@ -9,8 +9,8 @@ const _v1 = Vec3.new();
 const _normal = Vec3.new();
 const _triangle = new Triangle();
 
-export class EdgesGeometry extends BufferGeometry {
-  constructor(geometry: BufferGeometry | null = null, thresholdAngle: number = 1) {
+export class EdgesGeometry extends Geometry {
+  constructor(geometry: Geometry | null = null, thresholdAngle: number = 1) {
     super();
 
     this.type = 'EdgesGeometry';

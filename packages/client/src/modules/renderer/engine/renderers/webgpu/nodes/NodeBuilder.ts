@@ -1,5 +1,5 @@
 import {
-  BufferGeometry,
+  Geometry,
   Color,
   ColorSpace,
   Float16BufferAttribute,
@@ -69,7 +69,7 @@ type ParseFn = (source: string) => NodeFunction;
 
 export class NodeBuilder {
   material: Material | null;
-  geometry: BufferGeometry | null;
+  geometry: Geometry | null;
   isCompute: boolean;
 
   parseFn: ParseFn;

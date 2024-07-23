@@ -5,7 +5,7 @@ import { Scene } from '@modules/renderer/engine/scenes/Scene.js';
 import { normalWorld } from '@modules/renderer/engine/nodes/accessors/NormalNode.js';
 import { color } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.primitves.js';
 import {
-  BufferGeometry,
+  Geometry,
   Fog,
   Mesh,
   MeshLambertMaterial,
@@ -31,7 +31,7 @@ const createScene = () => {
   return scene;
 };
 
-const createSphere = (geometry: BufferGeometry, x: number, y: number, z: number) => {
+const createSphere = (geometry: Geometry, x: number, y: number, z: number) => {
   const material = new MeshLambertMaterial({ color: Random.color() });
   const mesh = new Mesh(geometry, material);
   mesh.position.set(x, y, z);

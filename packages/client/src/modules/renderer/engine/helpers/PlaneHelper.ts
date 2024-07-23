@@ -2,8 +2,8 @@ import { Line } from '../objects/Line.js';
 import { Mesh } from '../objects/Mesh.js';
 import { LineBasicMaterial } from '../materials/LineBasicMaterial.js';
 import { MeshBasicMaterial } from '../materials/MeshBasicMaterial.js';
-import { Float32BufferAttribute } from '../core/BufferAttribute.js';
-import { BufferGeometry } from '../core/BufferGeometry.js';
+import { Float32BufferAttribute } from '../core/attributes/BufferAttribute.js';
+import { Geometry } from '../core/geometry/Geometry.js';
 import { Plane } from '@modules/renderer/engine/math/Plane.js';
 import { ColorRepresentation } from '@modules/renderer/engine/math/Color.js';
 
@@ -17,7 +17,7 @@ export class PlaneHelper extends Line {
 
     const positions = [1, -1, 0, -1, 1, 0, -1, -1, 0, 1, 1, 0, -1, 1, 0, -1, -1, 0, 1, -1, 0, 1, 1, 0];
 
-    const geometry = new BufferGeometry();
+    const geometry = new Geometry();
     geometry.setAttribute('position', new Float32BufferAttribute(positions, 3));
     geometry.computeBoundingSphere();
 
@@ -31,7 +31,7 @@ export class PlaneHelper extends Line {
 
     const positions2 = [1, 1, 0, -1, 1, 0, -1, -1, 0, 1, 1, 0, -1, -1, 0, 1, -1, 0];
 
-    const geometry2 = new BufferGeometry();
+    const geometry2 = new Geometry();
     geometry2.setAttribute('position', new Float32BufferAttribute(positions2, 3));
     geometry2.computeBoundingSphere();
 

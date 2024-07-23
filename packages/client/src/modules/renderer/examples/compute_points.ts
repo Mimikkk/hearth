@@ -92,7 +92,7 @@ async function init() {
 
   const particleNode = attribute('particle', 'vec2');
 
-  const pointsGeometry = new Engine.BufferGeometry();
+  const pointsGeometry = new Engine.Geometry();
   pointsGeometry.setAttribute('position', new Engine.BufferAttribute(new Float32Array(3), 3)); // single vertex ( not triangle )
   pointsGeometry.setAttribute('particle', particleBuffer); // dummy the position points as instances
   pointsGeometry.drawRange.count = 1; // force render points as instances ( not triangle )

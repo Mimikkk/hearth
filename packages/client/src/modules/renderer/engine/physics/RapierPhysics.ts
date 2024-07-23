@@ -1,7 +1,7 @@
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { Entity } from '@modules/renderer/engine/core/Entity.js';
 import { Mesh } from '@modules/renderer/engine/objects/Mesh.js';
-import { BufferGeometry } from '@modules/renderer/engine/core/BufferGeometry.js';
+import { Geometry } from '@modules/renderer/engine/core/geometry/Geometry.js';
 import { Quaternion } from '@modules/renderer/engine/math/Quaternion.js';
 import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
 import { Clock } from '@modules/renderer/engine/core/Clock.js';
@@ -25,7 +25,7 @@ const ZERO = Vec3.new();
 //@ts-expect-error
 let RAPIER = null;
 
-function getCollider(geometry: BufferGeometry) {
+function getCollider(geometry: Geometry) {
   const parameters = geometry.parameters!;
 
   // TODO change type to is*

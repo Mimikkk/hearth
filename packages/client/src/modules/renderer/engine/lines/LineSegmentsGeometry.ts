@@ -2,7 +2,7 @@ import {
   Box3,
   EdgesGeometry,
   Float32BufferAttribute,
-  InstancedBufferGeometry,
+  PolyGeometry,
   InstancedInterleavedBuffer,
   InterleavedBufferAttribute,
   LineSegments,
@@ -16,7 +16,7 @@ import {
 const _box = Box3.new();
 const _vector = Vec3.new();
 
-export class LineSegmentsGeometry extends InstancedBufferGeometry {
+export class LineSegmentsGeometry extends PolyGeometry {
   constructor() {
     super();
 

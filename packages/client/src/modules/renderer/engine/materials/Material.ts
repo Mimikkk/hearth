@@ -15,7 +15,7 @@ import { Plane } from '@modules/renderer/engine/math/Plane.js';
 import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 import { Scene } from '@modules/renderer/engine/scenes/Scene.js';
 import { Camera } from '@modules/renderer/engine/cameras/Camera.js';
-import { BufferGeometry } from '@modules/renderer/engine/core/BufferGeometry.js';
+import { Geometry } from '@modules/renderer/engine/core/geometry/Geometry.js';
 import { Entity } from '@modules/renderer/engine/core/Entity.js';
 import { Group } from '@modules/renderer/engine/objects/Group.js';
 import { Node } from '@modules/renderer/engine/nodes/core/Node.js';
@@ -198,14 +198,7 @@ export class Material {
     console.log({ shaderobject });
   }
 
-  onBeforeRender(
-    renderer: Renderer,
-    scene: Scene,
-    camera: Camera,
-    geometry: BufferGeometry,
-    object: Entity,
-    group: Group,
-  ) {}
+  onBeforeRender(renderer: Renderer, scene: Scene, camera: Camera, geometry: Geometry, object: Entity, group: Group) {}
 
   onBeforeCompile(/* shaderobject, renderer */) {}
 

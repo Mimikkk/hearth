@@ -1,5 +1,5 @@
 import {
-  BufferGeometry,
+  Geometry,
   Float32BufferAttribute,
   Line,
   LineBasicMaterial,
@@ -21,7 +21,7 @@ export class RectAreaLightHelper extends Line {
   constructor(light: RectAreaLight, color?: number) {
     const positions = [1, 1, 0, -1, 1, 0, -1, -1, 0, 1, -1, 0, 1, 1, 0];
 
-    const geometry = new BufferGeometry();
+    const geometry = new Geometry();
     geometry.setAttribute('position', new Float32BufferAttribute(positions, 3));
     geometry.computeBoundingSphere();
 
@@ -37,7 +37,7 @@ export class RectAreaLightHelper extends Line {
 
     const positions2 = [1, 1, 0, -1, 1, 0, -1, -1, 0, 1, 1, 0, -1, -1, 0, 1, -1, 0];
 
-    const geometry2 = new BufferGeometry();
+    const geometry2 = new Geometry();
     geometry2.setAttribute('position', new Float32BufferAttribute(positions2, 3));
     geometry2.computeBoundingSphere();
 

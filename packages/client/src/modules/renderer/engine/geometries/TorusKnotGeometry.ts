@@ -1,8 +1,8 @@
-import { BufferGeometry } from '../core/BufferGeometry.js';
-import { Float32BufferAttribute } from '../core/BufferAttribute.js';
+import { Geometry } from '../core/geometry/Geometry.js';
+import { Float32BufferAttribute } from '../core/attributes/BufferAttribute.js';
 import { Vec3 } from '../math/Vec3.js';
 
-export class TorusKnotGeometry extends BufferGeometry {
+export class TorusKnotGeometry extends Geometry {
   declare type: string | 'TorusKnotGeometry';
   declare parameters: {
     radius: number;

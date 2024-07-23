@@ -1,7 +1,7 @@
 import { LineSegments } from '../objects/LineSegments.js';
 import { LineBasicMaterial } from '../materials/LineBasicMaterial.js';
-import { Float32BufferAttribute } from '../core/BufferAttribute.js';
-import { BufferGeometry } from '../core/BufferGeometry.js';
+import { Float32BufferAttribute } from '../core/attributes/BufferAttribute.js';
+import { Geometry } from '../core/geometry/Geometry.js';
 import { Color, ColorRepresentation } from '../math/Color.js';
 
 export class GridHelper extends LineSegments {
@@ -39,7 +39,7 @@ export class GridHelper extends LineSegments {
       j += 3;
     }
 
-    const geometry = new BufferGeometry();
+    const geometry = new Geometry();
     geometry.setAttribute('position', new Float32BufferAttribute(vertices, 3));
     geometry.setAttribute('color', new Float32BufferAttribute(colors, 3));
 

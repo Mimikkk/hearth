@@ -6,10 +6,10 @@ import { Mat4 } from '../math/Mat4.js';
 import { Entity } from '../core/Entity.js';
 import { Triangle } from '../math/Triangle.js';
 import { Side } from '../constants.js';
-import { BufferGeometry } from '../core/BufferGeometry.js';
+import { Geometry } from '../core/geometry/Geometry.js';
 import { Material } from '../materials/Material.js';
 import { Intersection, Raycaster } from '../core/Raycaster.js';
-import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
+import { BufferAttribute } from '@modules/renderer/engine/core/attributes/BufferAttribute.js';
 
 const _inverseMatrix = new Mat4();
 const _ray = new Ray();
@@ -38,12 +38,12 @@ export class Mesh extends Entity {
   declare isMesh: true;
   declare type: string | 'Mesh';
 
-  geometry: BufferGeometry;
+  geometry: Geometry;
   material: Material;
   morphTargetInfluences: number[];
   morphTargetDictionary: Record<string, number>;
 
-  constructor(geometry: BufferGeometry = new BufferGeometry(), material: Material) {
+  constructor(geometry: Geometry = new Geometry(), material: Material) {
     super();
 
     this.geometry = geometry;

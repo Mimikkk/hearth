@@ -1,7 +1,7 @@
-import { BufferGeometry } from '../core/BufferGeometry.js';
-import { Float32BufferAttribute } from '../core/BufferAttribute.js';
+import { Geometry } from '../core/geometry/Geometry.js';
+import { Float32BufferAttribute } from '../core/attributes/BufferAttribute.js';
 
-export class PlaneGeometry extends BufferGeometry {
+export class PlaneGeometry extends Geometry {
   declare type: string | 'PlaneGeometry';
   declare parameters: {
     width: number;

@@ -6,7 +6,7 @@ import { Vec3 } from '../math/Vec3.js';
 import { Vec4 } from '../math/Vec4.js';
 import { Ray } from '../math/Ray.js';
 import { BindMode } from '../constants.js';
-import { BufferGeometry } from '@modules/renderer/engine/core/BufferGeometry.js';
+import { Geometry } from '@modules/renderer/engine/core/geometry/Geometry.js';
 import { Material } from '@modules/renderer/engine/materials/Material.js';
 import { Skeleton } from '@modules/renderer/engine/objects/Skeleton.js';
 import { Intersection, Raycaster } from '@modules/renderer/engine/core/Raycaster.js';
@@ -20,10 +20,10 @@ export class SkinnedMesh extends Mesh {
   bindMatrixInverse: Mat4;
   boundingSphere: Sphere | null;
   skeleton: Skeleton | null;
-  declare geometry: BufferGeometry;
+  declare geometry: Geometry;
   declare material: Material;
 
-  constructor(geometry: BufferGeometry, material: Material) {
+  constructor(geometry: Geometry, material: Material) {
     super(geometry, material);
 
     this.bindMode = BindMode.Attached;

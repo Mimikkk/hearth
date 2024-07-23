@@ -1,4 +1,4 @@
-import { Color, InstancedBufferGeometry, InstancedMesh, Entity, RenderTarget, Scene, Texture } from '../../engine.js';
+import { Color, PolyGeometry, InstancedMesh, Entity, RenderTarget, Scene, Texture } from '../../engine.js';
 
 import {
   GPUFeatureNameType,
@@ -32,7 +32,7 @@ export class Backend {
   getInstanceCount(renderObject: RenderObject) {
     const { object, geometry } = renderObject;
 
-    return InstancedBufferGeometry.is(geometry) ? geometry.instanceCount : InstancedMesh.is(object) ? object.count : 1;
+    return PolyGeometry.is(geometry) ? geometry.instanceCount : InstancedMesh.is(object) ? object.count : 1;
   }
 
   getClearColor() {

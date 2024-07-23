@@ -4,7 +4,7 @@ import { Vec2 } from './Vec2.js';
 import { Mat4 } from './Mat4.js';
 import { Quaternion } from './Quaternion.js';
 import { Euler } from './Euler.js';
-import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
+import { BufferAttribute } from '@modules/renderer/engine/core/attributes/BufferAttribute.js';
 
 const expectCloseTo = (a: Vec4, b: Vec4) => {
   expect(a.x).toBeCloseTo(b.x);

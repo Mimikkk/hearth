@@ -1,5 +1,5 @@
 import Buffer from './Buffer.js';
-import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
+import { BufferAttribute } from '@modules/renderer/engine/core/attributes/BufferAttribute.js';
 
 class StorageBuffer extends Buffer {
   declare isStorageBuffer: boolean;

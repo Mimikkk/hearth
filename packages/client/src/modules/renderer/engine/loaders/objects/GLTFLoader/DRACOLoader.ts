@@ -1,6 +1,6 @@
 import { FileLoader, ResponseType } from '@modules/renderer/engine/loaders/files/FileLoader/FileLoader.js';
-import { BufferGeometry } from '@modules/renderer/engine/core/BufferGeometry.js';
-import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
+import { Geometry } from '@modules/renderer/engine/core/geometry/Geometry.js';
+import { BufferAttribute } from '@modules/renderer/engine/core/attributes/BufferAttribute.js';
 import { ColorSpace } from '@modules/renderer/engine/constants.js';
 import { Color } from '@modules/renderer/engine/math/Color.js';
 
@@ -141,7 +141,7 @@ class DRACOLoader {
   }
 
   _createGeometry(geometryData) {
-    const geometry = new BufferGeometry();
+    const geometry = new Geometry();
 
     if (geometryData.index) {
       geometry.setIndex(new BufferAttribute(geometryData.index.array, 1));

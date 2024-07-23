@@ -1,6 +1,6 @@
-import * as MathUtils from '../math/MathUtils.js';
-import { TypedArray, TypedArrayConstructor } from '../math/MathUtils.js';
-import { BufferUsage } from '../constants.js';
+import * as MathUtils from '../../math/MathUtils.js';
+import { TypedArray, TypedArrayConstructor } from '../../math/MathUtils.js';
+import { BufferUsage } from '../../constants.js';
 
 export class InterleavedBuffer<T extends TypedArray = any> {
   declare ['constructor']: typeof InterleavedBuffer<T>;

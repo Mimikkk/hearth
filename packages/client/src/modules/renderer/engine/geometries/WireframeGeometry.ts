@@ -1,14 +1,14 @@
-import { BufferGeometry } from '../core/BufferGeometry.js';
-import { Float32BufferAttribute } from '../core/BufferAttribute.js';
+import { Geometry } from '../core/geometry/Geometry.js';
+import { Float32BufferAttribute } from '../core/attributes/BufferAttribute.js';
 import { Vec3 } from '../math/Vec3.js';
 
-export class WireframeGeometry extends BufferGeometry {
+export class WireframeGeometry extends Geometry {
   declare type: string | 'WireframeGeometry';
   declare parameters: {
-    geometry: BufferGeometry;
+    geometry: Geometry;
   };
 
-  constructor(geometry: BufferGeometry) {
+  constructor(geometry: Geometry) {
     super();
 
     this.type = 'WireframeGeometry';

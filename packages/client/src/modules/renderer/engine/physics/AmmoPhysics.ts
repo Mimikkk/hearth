@@ -2,7 +2,7 @@ import { Mesh } from '../objects/Mesh.js';
 import { Entity } from '../core/Entity.js';
 import { Vec3 } from '../math/Vec3.js';
 import Ammo from 'ammojs3';
-import { BufferGeometry } from '@modules/renderer/engine/core/BufferGeometry.js';
+import { Geometry } from '@modules/renderer/engine/core/geometry/Geometry.js';
 import { Scene } from '@modules/renderer/engine/scenes/Scene.js';
 
 export interface AmmoPhysicsObject {
@@ -27,7 +27,7 @@ export async function AmmoPhysics(): Promise<AmmoPhysicsObject> {
 
   //
 
-  function getShape(geometry: BufferGeometry) {
+  function getShape(geometry: Geometry) {
     const parameters = geometry.parameters!;
 
     // TODO change type to is*

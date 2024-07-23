@@ -1,6 +1,6 @@
-import { BufferGeometry, Float32BufferAttribute, Vec3 } from '../engine.js';
+import { Geometry, Float32BufferAttribute, Vec3 } from '../engine.js';
 
-export class ParametricGeometry extends BufferGeometry {
+export class ParametricGeometry extends Geometry {
   declare type: string | 'ParametricGeometry';
   declare parameters: {
     func: (u: number, v: number, target: Vec3) => void;

@@ -1,8 +1,8 @@
-import { Vec3 } from '../math/Vec3.js';
-import { Vec2 } from '../math/Vec2.js';
-import { denormalize, normalize, TypedArray, TypedArrayConstructor } from '../math/MathUtils.js';
-import { BufferUsage, TextureDataType } from '../constants.js';
-import { fromHalfFloat, toHalfFloat } from '../extras/DataUtils.js';
+import { Vec3 } from '../../math/Vec3.js';
+import { Vec2 } from '../../math/Vec2.js';
+import { denormalize, normalize, TypedArray, TypedArrayConstructor } from '../../math/MathUtils.js';
+import { BufferUsage, TextureDataType } from '../../constants.js';
+import { fromHalfFloat, toHalfFloat } from '../../extras/DataUtils.js';
 import { Mat3 } from '@modules/renderer/engine/math/Mat3.js';
 import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
 

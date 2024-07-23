@@ -20,7 +20,7 @@ import ClippingContext from '@modules/renderer/engine/renderers/common/ClippingC
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 import {
-  BufferGeometry,
+  Geometry,
   Color,
   FramebufferTexture,
   Frustum,
@@ -572,7 +572,7 @@ export class Renderer {
     object: Entity,
     scene: Scene,
     camera: Camera,
-    geometry: BufferGeometry,
+    geometry: Geometry,
     material: Material,
     group: Group,
     lightsNode: LightsNode,

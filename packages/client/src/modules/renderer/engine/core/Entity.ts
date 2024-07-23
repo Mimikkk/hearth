@@ -2,12 +2,12 @@ import { Quaternion } from '../math/Quaternion.js';
 import { Vec3 } from '../math/Vec3.js';
 import { Mat4 } from '../math/Mat4.js';
 import { Euler } from '../math/Euler.js';
-import { Layers } from './Layers.js';
+import { RaycastLayers } from './RaycastLayers.js';
 import { Mat3 } from '../math/Mat3.js';
 import type { Intersection, Raycaster } from './Raycaster.js';
 import type { Light } from '../lights/Light.js';
 import type { Scene } from '../scenes/Scene.js';
-import type { BufferGeometry } from './BufferGeometry.js';
+import type { Geometry } from './geometry/Geometry.js';
 import type { Camera } from '../cameras/Camera.js';
 import type { Material } from '../materials/Material.js';
 import type { Group } from '../objects/Group.js';
@@ -27,7 +27,7 @@ export class Entity {
   static UseWorldAutoUpdate: boolean = true;
 
   boundingSphere: Sphere | null;
-  geometry: BufferGeometry | null;
+  geometry: Geometry | null;
 
   computeBoundingSphere(): void {}
 
@@ -54,7 +54,7 @@ export class Entity {
   matrixAutoUpdate: boolean;
   matrixWorldAutoUpdate: boolean;
   matrixWorldNeedsUpdate: boolean;
-  layers: Layers;
+  layers: RaycastLayers;
   visible: boolean;
   castShadow: boolean;
   receiveShadow: boolean;
@@ -89,7 +89,7 @@ export class Entity {
     this.matrixWorldAutoUpdate = Entity.UseWorldAutoUpdate; // checked by the renderer
     this.matrixWorldNeedsUpdate = false;
 
-    this.layers = new Layers();
+    this.layers = new RaycastLayers();
     this.visible = true;
 
     this.castShadow = false;
@@ -107,7 +107,7 @@ export class Entity {
     renderer: Renderer,
     scene: Scene,
     shadowCamera: Camera,
-    geometry: BufferGeometry,
+    geometry: Geometry,
     depthMaterial: Material,
     group: Group,
   ): void {}
@@ -116,7 +116,7 @@ export class Entity {
     renderer: Renderer,
     scene: Scene,
     shadowCamera: Camera,
-    geometry: BufferGeometry,
+    geometry: Geometry,
     depthMaterial: Material,
     group: Group,
   ): void {}
@@ -125,7 +125,7 @@ export class Entity {
     renderer: Renderer,
     scene: Scene,
     camera: Camera,
-    geometry: BufferGeometry,
+    geometry: Geometry,
     material: Material,
     group: Group,
   ): void {}
@@ -134,7 +134,7 @@ export class Entity {
     renderer: Renderer,
     scene: Scene,
     camera: Camera,
-    geometry: BufferGeometry,
+    geometry: Geometry,
     material: Material,
     group: Group,
   ): void {}
@@ -160,7 +160,7 @@ export class Entity {
   }
 
   setRotationFromEuler(euler: Euler): this {
-    this.quaternion.fromEuler(euler, true);
+    this.quaternion.fromEuler(euler);
     return this;
   }
 

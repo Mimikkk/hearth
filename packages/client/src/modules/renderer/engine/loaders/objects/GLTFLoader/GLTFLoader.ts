@@ -3,7 +3,7 @@ import {
   Bone,
   Box3,
   BufferAttribute,
-  BufferGeometry,
+  Geometry,
   Camera,
   Color,
   ColorManagement,
@@ -1700,7 +1700,7 @@ function addUnknownExtensionsToUserData(knownExtensions, object, objectDef) {
 }
 
 /**
- * @param {Entity|Material|BufferGeometry} object
+ * @param {Entity|Material|Geometry} object
  * @param {GLTF.definition} gltfDef
  */
 function assignExtrasToUserData(object, gltfDef) {
@@ -1716,10 +1716,10 @@ function assignExtrasToUserData(object, gltfDef) {
 /**
  * Specification: https://github.com/KhronosGroup/glTF/blob/master/specification/2.0/README.md#morph-targets
  *
- * @param {BufferGeometry} geometry
+ * @param {Geometry} geometry
  * @param {Array<GLTF.Target>} targets
  * @param {Parser} parser
- * @return {Promise<BufferGeometry>}
+ * @return {Promise<Geometry>}
  */
 function addMorphTargets(geometry, targets, parser) {
   let hasMorphPosition = false;
@@ -2797,7 +2797,7 @@ class Parser {
    * Creates BufferGeometries from primitives.
    *
    * @param {Array<GLTF.Primitive>} primitives
-   * @return {Promise<Array<BufferGeometry>>}
+   * @return {Promise<Array<Geometry>>}
    */
   loadGeometries(primitives) {
     const parser = this;
@@ -2832,7 +2832,7 @@ class Parser {
           geometryPromise = createDracoPrimitive(primitive);
         } else {
           // Otherwise create a new geometry
-          geometryPromise = addPrimitiveAttributes(new BufferGeometry(), primitive, parser);
+          geometryPromise = addPrimitiveAttributes(new Geometry(), primitive, parser);
         }
 
         // Cache this geometry
@@ -3462,7 +3462,7 @@ class Parser {
 }
 
 /**
- * @param {BufferGeometry} geometry
+ * @param {Geometry} geometry
  * @param {GLTF.Primitive} primitiveDef
  * @param {Parser} parser
  */
@@ -3549,10 +3549,10 @@ function computeBounds(geometry, primitiveDef, parser) {
 }
 
 /**
- * @param {BufferGeometry} geometry
+ * @param {Geometry} geometry
  * @param {GLTF.Primitive} primitiveDef
  * @param {Parser} parser
- * @return {Promise<BufferGeometry>}
+ * @return {Promise<Geometry>}
  */
 function addPrimitiveAttributes(geometry, primitiveDef, parser) {
   const attributes = primitiveDef.attributes;

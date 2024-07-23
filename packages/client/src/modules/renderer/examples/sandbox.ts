@@ -131,7 +131,7 @@ async function init() {
     points.push(point);
   }
 
-  const geometryPoints = new Engine.BufferGeometry().setFromPoints(points);
+  const geometryPoints = new Engine.Geometry().setFromPoints(points);
   const materialPoints = new PointsNodeMaterial();
 
   materialPoints.colorNode = positionLocal.mul(3);
@@ -142,7 +142,7 @@ async function init() {
 
   // lines
 
-  const geometryLine = new Engine.BufferGeometry().setFromPoints([
+  const geometryLine = new Engine.Geometry().setFromPoints([
     new Engine.Vec3(-0.5, -0.5, 0),
     new Engine.Vec3(0.5, -0.5, 0),
     new Engine.Vec3(0.5, 0.5, 0),

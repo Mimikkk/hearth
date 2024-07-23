@@ -1,4 +1,4 @@
-import { BufferGeometry, Float32BufferAttribute, LineSegments, LineBasicMaterial, Vec3, Entity } from '../engine.js';
+import { Geometry, Float32BufferAttribute, LineSegments, LineBasicMaterial, Vec3, Entity } from '../engine.js';
 import { ColorRepresentation } from '@modules/renderer/engine/math/Color.js';
 
 const _v1 = Vec3.new();
@@ -10,7 +10,7 @@ export class VertexTangentsHelper extends LineSegments {
   size: number;
 
   constructor(object: Entity, size: number = 1, color: ColorRepresentation = 0x00ffff) {
-    const geometry = new BufferGeometry();
+    const geometry = new Geometry();
 
     const nTangents = object.geometry!.attributes.tangent.count;
     const positions = new Float32BufferAttribute(new Array(nTangents * 2 * 3), 3);

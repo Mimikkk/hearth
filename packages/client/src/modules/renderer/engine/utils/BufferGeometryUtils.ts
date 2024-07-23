@@ -1,4 +1,4 @@
-import { BufferAttribute, BufferGeometry, DrawMode } from '../engine.js';
+import { BufferAttribute, Geometry, DrawMode } from '../engine.js';
 import { AttributeType } from '@modules/renderer/engine/core/types.js';
 import { ArrayConstructorMap, TypedArray } from '@modules/renderer/engine/math/MathUtils.js';
 
@@ -35,7 +35,7 @@ export function mergeAttributes<T extends TypedArray>(attributes: AttributeType<
   return result;
 }
 
-export function mergeGeometries(geometries: BufferGeometry[], useGroups?: boolean): BufferGeometry {
+export function mergeGeometries(geometries: Geometry[], useGroups?: boolean): Geometry {
   const isIndexed = geometries[0].index !== null;
 
   const attributesUsed = new Set(Object.keys(geometries[0].attributes));
@@ -44,7 +44,7 @@ export function mergeGeometries(geometries: BufferGeometry[], useGroups?: boolea
   const attributes = {};
   const morphAttributes = {};
 
-  const mergedGeometry = new BufferGeometry();
+  const mergedGeometry = new Geometry();
 
   let offset = 0;
 
@@ -157,7 +157,7 @@ export function mergeGeometries(geometries: BufferGeometry[], useGroups?: boolea
   return mergedGeometry;
 }
 
-export function toTrianglesDrawMode(geometry: BufferGeometry, drawMode: DrawMode): BufferGeometry {
+export function toTrianglesDrawMode(geometry: Geometry, drawMode: DrawMode): Geometry {
   if (drawMode === DrawMode.Triangles) return geometry;
   let index = geometry.index;
   const indices = [];
