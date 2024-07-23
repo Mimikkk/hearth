@@ -38,6 +38,10 @@ export class Scene extends Object3D {
     this.overrideMaterial = null;
   }
 
+  static is(scene: any): scene is Scene {
+    return scene?.isScene === true;
+  }
+
   copy(source: this, recursive?: boolean): this {
     super.copy(source, recursive);
 

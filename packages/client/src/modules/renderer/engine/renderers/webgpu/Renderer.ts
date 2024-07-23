@@ -41,24 +41,6 @@ import LightsNode from '@modules/renderer/engine/nodes/lighting/LightsNode.js';
 import PositionNode from '@modules/renderer/engine/nodes/accessors/PositionNode.js';
 import { Node } from '@modules/renderer/engine/nodes/core/Node.js';
 
-const _scene = new Scene();
-const _drawingBufferSize = new Vec2();
-const _screen = new Vec4();
-const _frustum = new Frustum();
-const _projScreenMatrix = new Mat4();
-const _Vec3 = new Vec3();
-
-type RenderFn = (
-  object: Object3D,
-  scene: Scene,
-  camera: Camera,
-  geometry: BufferGeometry,
-  material: Material,
-  group: Group,
-  lightsNode: LightsNode,
-  passId: string,
-) => void;
-
 export class Renderer {
   backend: Backend;
   info: Info;
@@ -89,14 +71,16 @@ export class Renderer {
   _activeCubeFace: number;
   _activeMipmapLevel: number;
 
-  _opaqueSort: SortFn = sortPainterAsc;
-  _transparentSort: SortFn = sortPainterDesc;
+  opaqueSort: SortFn = sortPainterAsc;
+  transparentSort: SortFn = sortPainterDesc;
+
   _clearColor: Color;
   _clearDepth: number;
   _clearStencil: number;
-  _renderObjectFunction: RenderFn;
-  _currentRenderObjectFunction: RenderFn;
-  _handleObjectFunction: RenderFn;
+
+  _activeRenderObjectFn: RenderFn;
+  _renderObjectFn: RenderFn;
+  _handleObjectFn: RenderFn;
   parameters: Configuration;
 
   static configure(options?: Options): Configuration {
@@ -172,9 +156,9 @@ export class Renderer {
     this._activeCubeFace = 0;
     this._activeMipmapLevel = 0;
 
-    this._renderObjectFunction = null;
-    this._currentRenderObjectFunction = this.renderObject;
-    this._handleObjectFunction = this._compileObject;
+    this._renderObjectFn = null;
+    this._activeRenderObjectFn = this.renderObject;
+    this._handleObjectFn = this._compileObject;
   }
 
   static async create(parameters?: Options): Promise<Renderer> {
@@ -213,8 +197,8 @@ export class Renderer {
     const nodeFrame = this.nodes.nodeFrame;
     const previousRenderId = nodeFrame.renderId;
     const previousRenderContext = this.context;
-    const previousRenderObjectFunction = this._currentRenderObjectFunction;
-    const sceneRef = scene.isScene === true ? scene : _scene;
+    const previousRenderObjectFunction = this._activeRenderObjectFn;
+    const sceneRef = Scene.is(scene) ? scene : _scene;
 
     const target = this.target;
     const context = this.renderContexts.get(scene, camera, target);
@@ -222,14 +206,14 @@ export class Renderer {
     const activeMipmapLevel = this._activeMipmapLevel;
 
     this.context = context;
-    this._currentRenderObjectFunction = this._renderObjectFunction || this.renderObject;
+    this._activeRenderObjectFn = this._renderObjectFn || this.renderObject;
     this.info.calls++;
     this.info.render.calls++;
 
     nodeFrame.renderId = this.info.calls;
-    if (scene.matrixWorldAutoUpdate === true) scene.updateMatrixWorld();
+    if (scene.matrixWorldAutoUpdate) scene.updateMatrixWorld();
 
-    if (camera.parent === null && camera.matrixWorldAutoUpdate === true) camera.updateMatrixWorld();
+    if (camera.parent === null && camera.matrixWorldAutoUpdate) camera.updateMatrixWorld();
     let viewport = this.viewport;
     let scissor = this.scissor;
     let pixelRatio = this._pixelRatio;
@@ -240,9 +224,9 @@ export class Renderer {
       pixelRatio = 1;
     }
 
-    this.getDrawSize(_drawingBufferSize);
+    this.getDrawSize(_drawSize);
 
-    _screen.set(0, 0, _drawingBufferSize.width, _drawingBufferSize.height);
+    _screen.set(0, 0, _drawSize.width, _drawSize.height);
 
     const minDepth = viewport.minDepth === undefined ? 0 : viewport.minDepth;
     const maxDepth = viewport.maxDepth === undefined ? 1 : viewport.maxDepth;
@@ -262,8 +246,8 @@ export class Renderer {
     if (!context.clippingContext) context.clippingContext = new ClippingContext();
     context.clippingContext.updateGlobal(this, camera);
     sceneRef.onBeforeRender(this, scene, camera, target);
-    _projScreenMatrix.asMul(camera.projectionMatrix, camera.matrixWorldInverse);
-    _frustum.setFromProjectionMatrix(_projScreenMatrix);
+    _projection.asMul(camera.projectionMatrix, camera.matrixWorldInverse);
+    _frustum.setFromProjectionMatrix(_projection);
 
     const renderList = this.renderLists.get(scene, camera);
     renderList.begin();
@@ -273,7 +257,7 @@ export class Renderer {
     renderList.finish();
 
     if (this.parameters.sortObjects) {
-      renderList.sort(this._opaqueSort, this._transparentSort);
+      renderList.sort(this.opaqueSort, this.transparentSort);
     }
     if (target !== null) {
       this._textures.updateRenderTarget(target, activeMipmapLevel);
@@ -317,7 +301,7 @@ export class Renderer {
 
     nodeFrame.renderId = previousRenderId;
     this.context = previousRenderContext;
-    this._currentRenderObjectFunction = previousRenderObjectFunction;
+    this._activeRenderObjectFn = previousRenderObjectFunction;
 
     sceneRef.onAfterRender(this, scene, camera, target);
     this.backend.resolveTimestampAsync(context, 'render');
@@ -366,7 +350,7 @@ export class Renderer {
 
     const previousRenderId = nodeFrame.renderId;
     const previousRenderContext = this.context;
-    const previousRenderObjectFunction = this._currentRenderObjectFunction;
+    const previousRenderObjectFunction = this._activeRenderObjectFn;
     const sceneRef = scene.isScene === true ? scene : _scene;
 
     if (targetScene === null) targetScene = scene;
@@ -376,9 +360,9 @@ export class Renderer {
     const activeMipmapLevel = this._activeMipmapLevel;
 
     this.context = renderContext;
-    this._currentRenderObjectFunction = this.renderObject;
+    this._activeRenderObjectFn = this.renderObject;
 
-    this._handleObjectFunction = this._renderObject;
+    this._handleObjectFn = this._renderObject;
 
     nodeFrame.renderId++;
     nodeFrame.update();
@@ -426,8 +410,8 @@ export class Renderer {
     nodeFrame.renderId = previousRenderId;
 
     this.context = previousRenderContext;
-    this._currentRenderObjectFunction = previousRenderObjectFunction;
-    this._handleObjectFunction = this._compileObject;
+    this._activeRenderObjectFn = previousRenderObjectFunction;
+    this._handleObjectFn = this._compileObject;
   }
 
   getMaxAnisotropy(): number {
@@ -529,14 +513,14 @@ export class Renderer {
       } else if (object.isSprite) {
         if (!object.frustumCulled || _frustum.intersectsSprite(object)) {
           if (this.parameters.sortObjects) {
-            _Vec3.fromMat4Position(object.matrixWorld).applyMat4(_projScreenMatrix);
+            _vec3.fromMat4Position(object.matrixWorld).applyMat4(_projection);
           }
 
           const geometry = object.geometry;
           const material = object.material;
 
           if (material.visible) {
-            renderList.push(object, geometry, material, groupOrder, _Vec3.z, null);
+            renderList.push(object, geometry, material, groupOrder, _vec3.z, null);
           }
         }
       } else if (object.isMesh || object.isLine || object.isPoints) {
@@ -547,7 +531,7 @@ export class Renderer {
           if (this.parameters.sortObjects) {
             if (geometry.boundingSphere === null) geometry.computeBoundingSphere();
 
-            _Vec3.from(geometry.boundingSphere.center).applyMat4(object.matrixWorld).applyMat4(_projScreenMatrix);
+            _vec3.from(geometry.boundingSphere.center).applyMat4(object.matrixWorld).applyMat4(_projection);
           }
 
           if (Array.isArray(material)) {
@@ -558,11 +542,11 @@ export class Renderer {
               const groupMaterial = material[group.materialIndex];
 
               if (groupMaterial && groupMaterial.visible) {
-                renderList.push(object, geometry, groupMaterial, groupOrder, _Vec3.z, group);
+                renderList.push(object, geometry, groupMaterial, groupOrder, _vec3.z, group);
               }
             }
           } else if (material.visible) {
-            renderList.push(object, geometry, material, groupOrder, _Vec3.z, null);
+            renderList.push(object, geometry, material, groupOrder, _vec3.z, null);
           }
         }
       }
@@ -581,7 +565,7 @@ export class Renderer {
 
       const { object, geometry, material, group } = renderItem;
 
-      this._currentRenderObjectFunction(object, scene, camera, geometry, material, group, lightsNode, 'default');
+      this._activeRenderObjectFn(object, scene, camera, geometry, material, group, lightsNode, 'default');
     }
   }
 
@@ -638,13 +622,13 @@ export class Renderer {
 
     if (material.transparent && material.side === Side.Double) {
       material.side = Side.Back;
-      this._handleObjectFunction(object, material, scene, camera, lightsNode, 'backSide');
+      this._handleObjectFn(object, material, scene, camera, lightsNode, 'backSide');
       material.side = Side.Front;
-      this._handleObjectFunction(object, material, scene, camera, lightsNode, 'default');
+      this._handleObjectFn(object, material, scene, camera, lightsNode, 'default');
 
       material.side = Side.Double;
     } else {
-      this._handleObjectFunction(object, material, scene, camera, lightsNode, 'default');
+      this._handleObjectFn(object, material, scene, camera, lightsNode, 'default');
     }
 
     if (scene.overrideMaterial) {
@@ -749,6 +733,40 @@ export namespace Renderer {
 
 type Options = Renderer.Options;
 type Configuration = Renderer.Configuration;
+
+const _scene = new Scene();
+const _drawSize = new Vec2();
+const _screen = new Vec4();
+const _frustum = new Frustum();
+const _projection = new Mat4();
+const _vec3 = new Vec3();
+
+class RenderSize {
+  constructor(
+    public width: number,
+    public height: number,
+    public pixelRatio: number,
+  ) {}
+
+  static new(width: number, height: number, pixelRatio: number): RenderSize {
+    return new RenderSize(width, height, pixelRatio);
+  }
+
+  set(width: number, height: number): RenderSize {
+    this.width = width;
+    this.height = height;
+    return this;
+  }
+}
+
+type RenderFn = (
+  object: Object3D,
+  material: Material,
+  scene: Scene,
+  camera: Camera,
+  lightsNode: LightsNode,
+  passId: string,
+) => void;
 
 const sortPainterAsc: SortFn = (a, b) => {
   if (a.groupOrder !== b.groupOrder) {
