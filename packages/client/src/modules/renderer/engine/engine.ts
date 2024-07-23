@@ -62,7 +62,7 @@ export { AnimationClip } from './animation/AnimationClip.js';
 export { AnimationAction } from './animation/AnimationAction.js';
 export { RenderTarget } from './core/RenderTarget.js';
 export { Uniform } from './core/Uniform.js';
-export { UniformsGroup } from './core/UniformsGroup.js';
+export { UniformGroup } from './core/UniformGroup.js';
 export { InstancedBufferGeometry } from './core/InstancedBufferGeometry.js';
 export { BufferGeometry } from './core/BufferGeometry.js';
 export { InterleavedBufferAttribute } from './core/InterleavedBufferAttribute.js';

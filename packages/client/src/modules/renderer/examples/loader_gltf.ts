@@ -4,12 +4,12 @@ import { RGBELoader } from '@modules/renderer/engine/loaders/textures/RGBELoader
 import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
 import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/GLTFLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import { WorldAxesVisualizer } from '@modules/renderer/engine/helpers/WorldAxesVisualizer.js';
+import { WorldAxesControls } from '@modules/renderer/engine/controls/WorldAxesControls.js';
 
 let camera!: PerspectiveCamera;
 let scene!: Scene;
 let renderer!: Renderer;
-let viewHelper!: WorldAxesVisualizer;
+let viewHelper!: WorldAxesControls;
 
 const clock = new Clock();
 
@@ -29,7 +29,7 @@ async function init() {
     autoClear: false,
   });
 
-  viewHelper = new WorldAxesVisualizer(camera, renderer.parameters.canvas);
+  viewHelper = new WorldAxesControls(camera, renderer.parameters.canvas);
   renderer.animation.loop = animate;
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);

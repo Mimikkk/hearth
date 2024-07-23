@@ -27,12 +27,12 @@ import PostProcessing from '@modules/renderer/engine/renderers/common/PostProces
 
 import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import { WorldAxesVisualizer } from '@modules/renderer/engine/helpers/WorldAxesVisualizer.js';
+import { WorldAxesControls } from '@modules/renderer/engine/controls/WorldAxesControls.js';
 
 const maxParticleCount = 100000;
 
 let camera, scene, renderer;
-let viewHelper!: WorldAxesVisualizer;
+let viewHelper!: WorldAxesControls;
 let controls, stats;
 let computeParticles;
 let postProcessing;
@@ -254,7 +254,7 @@ async function init() {
   renderer = await Renderer.create();
   //
 
-  viewHelper = new WorldAxesVisualizer(camera, renderer.parameters.canvas);
+  viewHelper = new WorldAxesControls(camera, renderer.parameters.canvas);
   controls = new OrbitControls(camera, renderer.parameters.canvas);
   controls.target.set(0, 10, 0);
   controls.minDistance = 25;

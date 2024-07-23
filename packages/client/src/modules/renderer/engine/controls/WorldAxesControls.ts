@@ -62,7 +62,7 @@ type AnimateState = {
   rotation: Quaternion;
 };
 
-export class WorldAxesVisualizer extends Object3D {
+export class WorldAxesControls extends Object3D {
   center: Vec3 = new Vec3();
 
   radius: number;

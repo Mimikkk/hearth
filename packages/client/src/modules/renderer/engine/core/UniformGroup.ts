@@ -3,8 +3,8 @@ import type { Uniform } from './Uniform.js';
 
 let _id = 0;
 
-export class UniformsGroup<A> {
-  declare ['constructor']: typeof UniformsGroup<A>;
+export class UniformGroup<A> {
+  declare ['constructor']: typeof UniformGroup<A>;
   declare isUniformsGroup: true;
   id: number;
   name: string;
@@ -38,7 +38,7 @@ export class UniformsGroup<A> {
     return this;
   }
 
-  copy(source: UniformsGroup<A>): this {
+  copy(source: UniformGroup<A>): this {
     this.name = source.name;
     this.usage = source.usage;
 
@@ -57,8 +57,8 @@ export class UniformsGroup<A> {
     return this;
   }
 
-  clone(): UniformsGroup<A> {
+  clone(): UniformGroup<A> {
     return new this.constructor().copy(this);
   }
 }
-UniformsGroup.prototype.isUniformsGroup = true;
+UniformGroup.prototype.isUniformsGroup = true;
