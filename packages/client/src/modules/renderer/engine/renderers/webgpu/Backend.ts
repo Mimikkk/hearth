@@ -34,10 +34,11 @@ import ProgrammableStage from '@modules/renderer/engine/renderers/common/Program
 import { ResourceManager } from './utils/ResourceManager.js';
 import { NodeBuilder } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.js';
 import { Attribute } from '../../core/types.ts';
+import { WeakMemo } from '@modules/renderer/engine/renderers/webgpu/utils/WeakMemo.js';
 
 export class Backend {
-  data: WeakMap<any, any>;
   renderer: Renderer;
+  memo: WeakMemo<any, any> = new WeakMemo(() => ({}));
 
   getInstanceCount(renderObject: RenderObject) {
     const { object, geometry } = renderObject;
@@ -57,29 +58,6 @@ export class Backend {
     return color;
   }
 
-  set(object: any, value: any) {
-    this.data.set(object, value);
-  }
-
-  get(object: any) {
-    let map = this.data.get(object);
-
-    if (map === undefined) {
-      map = {};
-      this.data.set(object, map);
-    }
-
-    return map;
-  }
-
-  has(object: any) {
-    return this.data.has(object);
-  }
-
-  delete(object: any) {
-    this.data.delete(object);
-  }
-
   adapter: GPUAdapter;
   device: GPUDevice;
   colorBuffer: GPUTexture | null;
@@ -93,7 +71,6 @@ export class Backend {
   resources: ResourceManager;
 
   constructor(renderer: Renderer) {
-    this.data = new WeakMap();
     this.renderer = renderer;
 
     this.adapter = null!;
@@ -157,7 +134,7 @@ export class Backend {
 
   _getRenderPassDescriptor(renderContext: RenderContext) {
     const renderTarget = renderContext.renderTarget;
-    const renderTargetData = this.get(renderTarget);
+    const renderTargetData = this.memo.get(renderTarget);
 
     let descriptors = renderTargetData.descriptors;
 
@@ -183,7 +160,7 @@ export class Backend {
       const colorAttachments = [];
 
       for (let i = 0; i < textures.length; i++) {
-        const textureData = this.get(textures[i]);
+        const textureData = this.memo.get(textures[i]);
 
         const textureView = textureData.texture.createView({
           baseMipLevel: renderContext.activeMipmapLevel,
@@ -210,7 +187,7 @@ export class Backend {
         });
       }
 
-      const depthTextureData = this.get(renderContext.depthTexture);
+      const depthTextureData = this.memo.get(renderContext.depthTexture);
 
       const depthStencilAttachment = {
         view: depthTextureData.texture.createView(),
@@ -233,7 +210,7 @@ export class Backend {
   }
 
   beginRender(renderContext: RenderContext) {
-    const renderContextData = this.get(renderContext);
+    const renderContextData = this.memo.get(renderContext);
 
     const device = this.device;
     const occlusionQueryCount = renderContext.occlusionQueryCount;
@@ -353,7 +330,7 @@ export class Backend {
   }
 
   finishRender(renderContext: RenderContext) {
-    const renderContextData = this.get(renderContext);
+    const renderContextData = this.memo.get(renderContext);
     const occlusionQueryCount = renderContext.occlusionQueryCount;
 
     if (occlusionQueryCount > renderContextData.occlusionQueryIndex) {
@@ -423,13 +400,13 @@ export class Backend {
   }
 
   isOccluded(renderContext: RenderContext, object: Object3D) {
-    const renderContextData = this.get(renderContext);
+    const renderContextData = this.memo.get(renderContext);
 
     return renderContextData.occluded && renderContextData.occluded.has(object);
   }
 
   async resolveOccludedAsync(renderContext: RenderContext) {
-    const renderContextData = this.get(renderContext);
+    const renderContextData = this.memo.get(renderContext);
 
     // handle occlusion query results
 
@@ -459,7 +436,7 @@ export class Backend {
   }
 
   updateViewport(renderContext: RenderContext) {
-    const { currentPass } = this.get(renderContext);
+    const { currentPass } = this.memo.get(renderContext);
     const { x, y, width, height, minDepth, maxDepth } = renderContext.viewportValue;
 
     currentPass.setViewport(x, renderContext.height - height - y, width, height, minDepth, maxDepth);
@@ -508,7 +485,7 @@ export class Backend {
 
       if (color) {
         for (const texture of renderTargetData.textures) {
-          const textureData = this.get(texture);
+          const textureData = this.memo.get(texture);
           const textureView = textureData.texture.createView();
 
           let view, resolveTarget;
@@ -532,7 +509,7 @@ export class Backend {
       }
 
       if (supportsDepth || supportsStencil) {
-        const depthTextureData = this.get(renderTargetData.depthTexture);
+        const depthTextureData = this.memo.get(renderTargetData.depthTexture);
 
         depthStencilAttachment = {
           view: depthTextureData.texture.createView(),
@@ -580,7 +557,7 @@ export class Backend {
   }
 
   beginCompute(computeGroup: ComputeNode) {
-    const groupGPU = this.get(computeGroup);
+    const groupGPU = this.memo.get(computeGroup);
 
     const descriptor = {};
 
@@ -592,23 +569,23 @@ export class Backend {
   }
 
   compute(computeGroup: ComputeNode, computeNode: ComputeNode, bindings: Binding[], pipeline: ComputePipeline) {
-    const { passEncoderGPU } = this.get(computeGroup);
+    const { passEncoderGPU } = this.memo.get(computeGroup);
 
     // pipeline
 
-    const pipelineGPU = this.get(pipeline).pipeline;
+    const pipelineGPU = this.memo.get(pipeline).pipeline;
     passEncoderGPU.setPipeline(pipelineGPU);
 
     // bind group
 
-    const bindGroupGPU = this.get(bindings).group;
+    const bindGroupGPU = this.memo.get(bindings).group;
     passEncoderGPU.setBindGroup(0, bindGroupGPU);
 
     passEncoderGPU.dispatchWorkgroups(computeNode.dispatchCount);
   }
 
   finishCompute(computeGroup: ComputeNode) {
-    const groupData = this.get(computeGroup);
+    const groupData = this.memo.get(computeGroup);
 
     groupData.passEncoderGPU.end();
 
@@ -621,9 +598,9 @@ export class Backend {
     const info = this.renderer.info;
     const { object, geometry, context, pipeline } = renderObject;
 
-    const bindingsData = this.get(renderObject.getBindings());
-    const contextData = this.get(context);
-    const pipelineGPU = this.get(pipeline).pipeline;
+    const bindingsData = this.memo.get(renderObject.getBindings());
+    const contextData = this.memo.get(context);
+    const pipelineGPU = this.memo.get(pipeline).pipeline;
     const currentSets = contextData.currentSets;
 
     // pipeline
@@ -651,7 +628,7 @@ export class Backend {
 
     if (hasIndex === true) {
       if (currentSets.index !== index) {
-        const buffer = this.get(index).buffer;
+        const buffer = this.memo.get(index).buffer;
         const indexFormat = index.array instanceof Uint16Array ? GPUIndexFormatType.Uint16 : GPUIndexFormatType.Uint32;
 
         passEncoderGPU.setIndexBuffer(buffer, indexFormat);
@@ -668,7 +645,7 @@ export class Backend {
       const vertexBuffer = vertexBuffers[i];
 
       if (currentSets.attributes[i] !== vertexBuffer) {
-        const buffer = this.get(vertexBuffer).buffer;
+        const buffer = this.memo.get(vertexBuffer).buffer;
         passEncoderGPU.setVertexBuffer(i, buffer);
 
         currentSets.attributes[i] = vertexBuffer;
@@ -720,7 +697,7 @@ export class Backend {
   }
 
   needsRenderUpdate(renderObject: RenderObject) {
-    const data = this.get(renderObject);
+    const data = this.memo.get(renderObject);
 
     const { object, material } = renderObject;
 
@@ -875,7 +852,7 @@ export class Backend {
   initTimestampQuery(renderContext: RenderContext, descriptor) {
     if (!this.hasFeature(GPUFeatureNameType.TimestampQuery) || !this.renderer.parameters.trackTimestamp) return;
 
-    const renderContextData = this.get(renderContext);
+    const renderContextData = this.memo.get(renderContext);
 
     if (!renderContextData.timeStampQuerySet) {
       // Create a GPUQuerySet which holds 2 timestamp query results: one for the
@@ -899,7 +876,7 @@ export class Backend {
   prepareTimestampBuffer(renderContext: RenderContext, encoder: GPUCommandEncoder) {
     if (!this.hasFeature(GPUFeatureNameType.TimestampQuery) || !this.renderer.parameters.trackTimestamp) return;
 
-    const renderContextData = this.get(renderContext);
+    const renderContextData = this.memo.get(renderContext);
 
     const size = 2 * BigInt64Array.BYTES_PER_ELEMENT;
     const resolveBuffer = this.device.createBuffer({
@@ -920,7 +897,7 @@ export class Backend {
   async resolveTimestampAsync(renderContext: RenderContext, type: 'render' | 'compute' = 'render') {
     if (!this.hasFeature(GPUFeatureNameType.TimestampQuery) || !this.renderer.parameters.trackTimestamp) return;
 
-    const renderContextData = this.get(renderContext);
+    const renderContextData = this.memo.get(renderContext);
     const { currentTimestampQueryBuffer } = renderContextData;
 
     if (currentTimestampQueryBuffer === undefined) return;
@@ -944,7 +921,7 @@ export class Backend {
   }
 
   createProgram(program: ProgrammableStage) {
-    const programGPU = this.get(program);
+    const programGPU = this.memo.get(program);
 
     programGPU.module = {
       module: this.device.createShaderModule({ code: program.code, label: program.stage }),
@@ -953,7 +930,7 @@ export class Backend {
   }
 
   destroyProgram(program: ProgrammableStage) {
-    this.delete(program);
+    this.memo.delete(program);
   }
 
   createRenderPipeline(renderObject: RenderObject) {
@@ -1025,12 +1002,12 @@ export class Backend {
 
     encoder.copyTextureToTexture(
       {
-        texture: this.get(patch).texture,
+        texture: this.memo.get(patch).texture,
         mipLevel: at.level ?? 0,
         origin: { x: 0, y: 0, z: 0 },
       },
       {
-        texture: this.get(texture).texture,
+        texture: this.memo.get(texture).texture,
         mipLevel: at.level ?? 0,
         origin: at,
       },
@@ -1042,7 +1019,7 @@ export class Backend {
 
   readFramebuffer(into: Texture): void {
     const context = this.renderer.context!;
-    const data = this.get(context);
+    const data = this.memo.get(context);
 
     const { encoder, descriptor } = data;
 
@@ -1050,9 +1027,9 @@ export class Backend {
 
     if (context.renderTarget) {
       if (into.isDepthTexture) {
-        sourceGPU = this.get(context.depthTexture).texture;
+        sourceGPU = this.memo.get(context.depthTexture).texture;
       } else {
-        sourceGPU = this.get(context.textures[0]).texture;
+        sourceGPU = this.memo.get(context.textures[0]).texture;
       }
     } else {
       if (into.isDepthTexture) {
@@ -1062,7 +1039,7 @@ export class Backend {
       }
     }
 
-    const destinationGPU = this.get(into).texture;
+    const destinationGPU = this.memo.get(into).texture;
 
     if (sourceGPU.format !== destinationGPU.format) {
       console.error(

@@ -61,7 +61,6 @@ export class BackendTextures {
 
     this.colorBuffer = null;
 
-    //@ts-expect-error
     this.depthTexture = new DepthTexture();
     this.depthTexture.name = 'depthBuffer';
   }
@@ -70,7 +69,7 @@ export class BackendTextures {
     const backend = this.backend;
     const device = backend.device;
 
-    const textureGPU = backend.get(texture);
+    const textureGPU = backend.memo.get(texture);
 
     const samplerDescriptorGPU: GPUSamplerDescriptor = {
       addressModeU: this._convertAddressMode(texture.wrapS),
@@ -98,7 +97,7 @@ export class BackendTextures {
       textureGPU = this._getDefaultTextureGPU();
     }
 
-    this.backend.get(texture).texture = textureGPU;
+    this.backend.memo.get(texture).texture = textureGPU;
   }
 
   createTexture(
@@ -113,7 +112,7 @@ export class BackendTextures {
     },
   ) {
     const backend = this.backend;
-    const textureData = backend.get(texture);
+    const textureData = backend.memo.get(texture);
 
     if (textureData.initialized) {
       throw new Error('WebGPUTextureUtils: Texture already initialized.');
@@ -204,24 +203,24 @@ export class BackendTextures {
 
   destroyTexture(texture: Texture) {
     const backend = this.backend;
-    const textureData = backend.get(texture);
+    const textureData = backend.memo.get(texture);
 
     textureData.texture.destroy();
 
     if (textureData.msaaTexture !== undefined) textureData.msaaTexture.destroy();
 
-    backend.delete(texture);
+    backend.memo.delete(texture);
   }
 
   destroySampler(texture: Texture) {
     const backend = this.backend;
-    const textureData = backend.get(texture);
+    const textureData = backend.memo.get(texture);
 
     delete textureData.sampler;
   }
 
   generateMipmaps(texture: Texture) {
-    const textureData = this.backend.get(texture);
+    const textureData = this.backend.memo.get(texture);
 
     if (isCubeTexture(texture)) {
       for (let i = 0; i < 6; i++) {
@@ -252,7 +251,7 @@ export class BackendTextures {
     const { width, height } = backend.renderer.getDrawSize();
 
     const depthTexture = this.depthTexture;
-    const depthTextureGPU = backend.get(depthTexture).texture;
+    const depthTextureGPU = backend.memo.get(depthTexture).texture;
 
     let format!: TextureFormat;
     let type!: TextureDataType;
@@ -286,7 +285,7 @@ export class BackendTextures {
 
     this.createTexture(depthTexture, { sampleCount: backend.renderer.parameters.sampleCount, width, height });
 
-    return backend.get(depthTexture).texture;
+    return backend.memo.get(depthTexture).texture;
   }
 
   updateTexture(
@@ -298,7 +297,7 @@ export class BackendTextures {
         }
       | any,
   ) {
-    const textureData = this.backend.get(texture);
+    const textureData = this.backend.memo.get(texture);
 
     const { textureDescriptorGPU } = textureData;
 
@@ -334,7 +333,7 @@ export class BackendTextures {
   async copyTextureToBuffer(texture: Texture, x: number, y: number, width: number, height: number) {
     const device = this.backend.device;
 
-    const textureData = this.backend.get(texture);
+    const textureData = this.backend.memo.get(texture);
     const textureGPU = textureData.texture;
     const format = textureData.textureDescriptorGPU.format;
     const bytesPerTexel = this._getBytesPerTexel(format);
@@ -389,7 +388,7 @@ export class BackendTextures {
       this.defaultTexture = defaultTexture = texture;
     }
 
-    return this.backend.get(defaultTexture).texture;
+    return this.backend.memo.get(defaultTexture).texture;
   }
 
   _getDefaultCubeTextureGPU() {
@@ -406,7 +405,7 @@ export class BackendTextures {
       this.defaultCubeTexture = defaultCubeTexture = texture;
     }
 
-    return this.backend.get(defaultCubeTexture).texture;
+    return this.backend.memo.get(defaultCubeTexture).texture;
   }
 
   _copyCubeMapToTexture(

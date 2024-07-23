@@ -12,7 +12,7 @@ export class BackendAttributes {
     const bufferAttribute = this._getBufferAttribute(attribute);
 
     const backend = this.backend;
-    const bufferData = backend.get(bufferAttribute);
+    const bufferData = backend.memo.get(bufferAttribute);
 
     let buffer = bufferData.buffer;
 
@@ -56,7 +56,7 @@ export class BackendAttributes {
     const backend = this.backend;
     const device = backend.device;
 
-    const buffer = backend.get(bufferAttribute).buffer;
+    const buffer = backend.memo.get(bufferAttribute).buffer;
 
     const array = bufferAttribute.array;
     const updateRanges = bufferAttribute.updateRanges;
@@ -131,15 +131,15 @@ export class BackendAttributes {
   }
 
   destroyAttribute(attribute: Attribute): void {
-    this.backend.get(this._getBufferAttribute(attribute)).buffer.destroy();
-    this.backend.delete(attribute);
+    this.backend.memo.get(this._getBufferAttribute(attribute)).buffer.destroy();
+    this.backend.memo.delete(attribute);
   }
 
   async getArrayBuffer(attribute: Attribute): Promise<ArrayBuffer> {
     const backend = this.backend;
     const device = backend.device;
 
-    const data = backend.get(this._getBufferAttribute(attribute));
+    const data = backend.memo.get(this._getBufferAttribute(attribute));
 
     const bufferGPU = data.buffer;
     const size = bufferGPU.size;

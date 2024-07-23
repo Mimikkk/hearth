@@ -26,6 +26,10 @@ export class WeakMemo<Key extends WeakKey, Value> {
     return this;
   }
 
+  has(key: Key): boolean {
+    return this.#map.has(key);
+  }
+
   delete(key: Key): boolean {
     return this.#map.delete(key);
   }

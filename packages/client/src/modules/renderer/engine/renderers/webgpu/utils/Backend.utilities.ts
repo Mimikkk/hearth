@@ -16,7 +16,7 @@ export class BackendUtilities {
   }
 
   getTextureFormatGPU(texture: Texture) {
-    return this.backend.get(texture).texture.format;
+    return this.backend.memo.get(texture).texture.format;
   }
 
   getCurrentColorFormat(renderContext: RenderContext) {

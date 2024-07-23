@@ -50,7 +50,7 @@ export class BackendBindings {
       } else if (isSampledTexture(binding) && isVideoTexture(binding.texture)) {
         bindingGPU.externalTexture = {} satisfies GPUExternalTextureBindingLayout;
       } else if (isSampledTexture(binding) && binding.store) {
-        const format = this.backend.get(binding.texture).texture.format;
+        const format = this.backend.memo.get(binding.texture).texture.format;
 
         bindingGPU.storageTexture = { format } satisfies GPUStorageTextureBindingLayout;
       } else if (isSampledTexture(binding)) {
@@ -83,7 +83,7 @@ export class BackendBindings {
 
   createBindings(bindings: Binding[]) {
     const backend = this.backend;
-    const bindingsData = backend.get(bindings);
+    const bindingsData = backend.memo.get(bindings);
 
     // setup (static) binding layout and (dynamic) binding group
 
@@ -100,7 +100,7 @@ export class BackendBindings {
     const device = backend.device;
 
     const buffer = binding.buffer;
-    const bufferGPU = backend.get(binding).buffer;
+    const bufferGPU = backend.memo.get(binding).buffer;
 
     device.queue.writeBuffer(bufferGPU, 0, buffer, 0);
   }
@@ -114,7 +114,7 @@ export class BackendBindings {
 
     for (const binding of bindings) {
       if (isUniformBuffer(binding)) {
-        const bindingData = backend.get(binding);
+        const bindingData = backend.memo.get(binding);
 
         if (bindingData.buffer === undefined) {
           const byteLength = binding.byteLength;
@@ -132,21 +132,21 @@ export class BackendBindings {
 
         entriesGPU.push({ binding: bindingPoint, resource: { buffer: bindingData.buffer } });
       } else if (isStorageBuffer(binding)) {
-        const bindingData = backend.get(binding);
+        const bindingData = backend.memo.get(binding);
 
         if (bindingData.buffer === undefined) {
           const attribute = binding.attribute;
 
-          bindingData.buffer = backend.get(attribute).buffer;
+          bindingData.buffer = backend.memo.get(attribute).buffer;
         }
 
         entriesGPU.push({ binding: bindingPoint, resource: { buffer: bindingData.buffer } });
       } else if (isSampler(binding)) {
-        const textureGPU = backend.get(binding.texture);
+        const textureGPU = backend.memo.get(binding.texture);
 
         entriesGPU.push({ binding: bindingPoint, resource: textureGPU.sampler });
       } else if (isSampledTexture(binding)) {
-        const textureData = backend.get(binding.texture);
+        const textureData = backend.memo.get(binding.texture);
 
         let dimensionViewGPU;
 

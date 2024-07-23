@@ -40,8 +40,8 @@ class BackendPipelines {
     const device = backend.device;
     const utils = backend.utilities;
 
-    const pipelineData = backend.get(pipeline);
-    const bindingsData = backend.get(renderObject.getBindings());
+    const pipelineData = backend.memo.get(pipeline);
+    const bindingsData = backend.memo.get(renderObject.getBindings());
 
     // vertex buffers
 
@@ -94,8 +94,8 @@ class BackendPipelines {
       });
     }
 
-    const vertexModule = backend.get(vertexProgram).module;
-    const fragmentModule = backend.get(fragmentProgram).module;
+    const vertexModule = backend.memo.get(vertexProgram).module;
+    const fragmentModule = backend.memo.get(fragmentProgram).module;
 
     const primitiveState = this._getPrimitiveState(object, geometry, material);
     const depthCompare = this._getDepthCompare(material);
@@ -141,10 +141,10 @@ class BackendPipelines {
     const backend = this.backend;
     const device = backend.device;
 
-    const computeProgram = backend.get(pipeline.computeProgram).module;
+    const computeProgram = backend.memo.get(pipeline.computeProgram).module;
 
-    const pipelineGPU = backend.get(pipeline);
-    const bindingsData = backend.get(bindings);
+    const pipelineGPU = backend.memo.get(pipeline);
+    const bindingsData = backend.memo.get(bindings);
 
     pipelineGPU.pipeline = device.createComputePipeline({
       compute: computeProgram,
