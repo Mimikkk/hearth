@@ -604,6 +604,7 @@ export class Renderer {
 
       if (Node.is(material.positionNode)) {
         overridePositionNode = overrideMaterial.positionNode;
+
         overrideMaterial.positionNode = material.positionNode;
       }
 
@@ -634,8 +635,6 @@ export class Renderer {
 
       material = overrideMaterial;
     }
-    if (overridePositionNode) scene.overrideMaterial.positionNode = overridePositionNode;
-    if (overrideFragmentNode) scene.overrideMaterial.fragmentNode = overrideFragmentNode;
 
     if (material.transparent && material.side === Side.Double) {
       material.side = Side.Back;
@@ -646,6 +645,11 @@ export class Renderer {
       material.side = Side.Double;
     } else {
       this._handleObjectFunction(object, material, scene, camera, lightsNode, 'default');
+    }
+
+    if (scene.overrideMaterial) {
+      if (overridePositionNode) scene.overrideMaterial.positionNode = overridePositionNode;
+      if (overrideFragmentNode) scene.overrideMaterial.fragmentNode = overrideFragmentNode;
     }
 
     object.onAfterRender(this, scene, camera, geometry, material, group);
