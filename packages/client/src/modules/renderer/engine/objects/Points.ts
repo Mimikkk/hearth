@@ -41,7 +41,7 @@ export class Points extends Entity {
   raycast(raycaster: Raycaster, intersects: Intersection[]): void {
     const geometry = this.geometry;
     const matrixWorld = this.matrixWorld;
-    const threshold = raycaster.params.Points.threshold;
+    const threshold = 1;
     const drawRange = geometry.drawRange;
 
     // Checking boundingSphere distance to ray

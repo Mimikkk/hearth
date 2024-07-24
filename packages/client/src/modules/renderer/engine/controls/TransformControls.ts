@@ -250,7 +250,7 @@ export class TransformControls extends Entity {
     if (this.object === undefined || this.dragging === true) return;
 
     //@ts-expect-error
-    if (pointer !== null) _raycaster.setFromCamera(pointer, this.camera);
+    if (pointer !== null) _raycaster.fromCamera(pointer, this.camera);
 
     const intersect = intersectObjectWithRay(this._gizmo.picker[this.mode], _raycaster, false);
 
@@ -266,7 +266,7 @@ export class TransformControls extends Entity {
 
     if (this.axis !== null) {
       //@ts-expect-error
-      if (pointer !== null) _raycaster.setFromCamera(pointer, this.camera);
+      if (pointer !== null) _raycaster.fromCamera(pointer, this.camera);
 
       const planeIntersect = intersectObjectWithRay(this._plane, _raycaster, true);
 
@@ -312,7 +312,7 @@ export class TransformControls extends Entity {
       return;
 
     //@ts-expect-error
-    if (pointer !== null) _raycaster.setFromCamera(pointer, this.camera);
+    if (pointer !== null) _raycaster.fromCamera(pointer, this.camera);
 
     const planeIntersect = intersectObjectWithRay(this._plane, _raycaster, true);
 

@@ -218,7 +218,7 @@ export class WorldAxesControls extends Entity {
     const offsetX = left + (this.canvas.offsetWidth - dim);
     const offsetY = top + (this.canvas.offsetHeight - dim);
 
-    this.raycaster.setFromCamera(
+    this.raycaster.fromCamera(
       Vec2.new(
         ((event.clientX - offsetX) / (right - offsetX)) * 2 - 1,
         -((event.clientY - offsetY) / (bottom - offsetY)) * 2 + 1,

@@ -1,6 +1,10 @@
 import { Mat4 } from '../math/Mat4.js';
 import { Entity } from '../core/Entity.js';
-import { Vec3 } from '../math/Vec3.js';
+import type { Vec3 } from '../math/Vec3.js';
+import type { PerspectiveCamera } from '@modules/renderer/engine/cameras/PerspectiveCamera.js';
+import type { OrthographicCamera } from '@modules/renderer/engine/cameras/OrthographicCamera.js';
+
+export type ICamera = PerspectiveCamera | OrthographicCamera;
 
 export class Camera extends Entity {
   declare isCamera: true;
@@ -49,9 +53,9 @@ export class Camera extends Entity {
   }
 
   clone(): this {
-    //@ts-expect-error
     return new this.constructor().copy(this);
   }
 }
+
 Camera.prototype.isCamera = true;
 Camera.prototype.type = 'Camera';

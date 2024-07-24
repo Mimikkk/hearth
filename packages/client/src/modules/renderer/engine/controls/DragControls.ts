@@ -87,7 +87,7 @@ export class DragControls {
 
       updatePointer(event);
 
-      _raycaster.setFromCamera(_pointer, camera);
+      _raycaster.fromCamera(_pointer, camera);
 
       if (_selected) {
         if (scope.mode === 'translate') {
@@ -109,7 +109,7 @@ export class DragControls {
         if (event.pointerType === 'mouse' || event.pointerType === 'pen') {
           _intersections.length = 0;
 
-          _raycaster.setFromCamera(_pointer, camera);
+          _raycaster.fromCamera(_pointer, camera);
           _raycaster.intersects(objects, scope.recursive, _intersections);
 
           if (_intersections.length > 0) {
@@ -154,7 +154,7 @@ export class DragControls {
 
       _intersections.length = 0;
 
-      _raycaster.setFromCamera(_pointer, camera);
+      _raycaster.fromCamera(_pointer, camera);
       _raycaster.intersects(objects, scope.recursive, _intersections);
 
       if (_intersections.length > 0) {

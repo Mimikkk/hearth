@@ -250,7 +250,7 @@ export class LineSegments2 extends Mesh {
       );
     }
 
-    const threshold = raycaster.params.Line2?.threshold ?? 0;
+    const threshold = 0;
 
     _ray = raycaster.ray;
 
