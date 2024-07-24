@@ -377,10 +377,11 @@ export class NodeBuilder {
   getTypeFromAttribute(attribute: AttributeType): TypeName {
     let dataAttribute = attribute;
 
+    if (attribute.isInterleavedBufferAttribute) dataAttribute = attribute.data;
+
     const array = dataAttribute.array;
     const itemSize = attribute.stride;
 
-    console.log(dataAttribute, array);
     let arrayType = this.getTypeFromArray(array);
     return this.getTypeFromLength(itemSize, arrayType);
   }

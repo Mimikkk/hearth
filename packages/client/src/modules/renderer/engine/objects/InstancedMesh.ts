@@ -98,7 +98,7 @@ export class InstancedMesh extends Mesh {
   copy(source: this, recursive?: boolean): this {
     super.copy(source, recursive);
 
-    this.instanceMatrix.from(source.instanceMatrix);
+    this.instanceMatrix.copy(source.instanceMatrix);
 
     if (source.instanceColor !== null)
       this.instanceColor = source.instanceColor.clone() as InstancedBufferAttribute<Float32Array>;

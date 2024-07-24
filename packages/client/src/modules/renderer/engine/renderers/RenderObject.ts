@@ -123,7 +123,7 @@ export default class RenderObject {
 
       attributes.push(attribute);
 
-      const bufferAttribute = attribute.isInterleavedBufferAttribute ? attribute.array : attribute;
+      const bufferAttribute = attribute.isInterleavedBufferAttribute ? attribute.data : attribute;
       vertexBuffers.add(bufferAttribute);
     }
 
