@@ -61,9 +61,9 @@ import StructTypeNode from '@modules/renderer/engine/nodes/core/StructTypeNode.j
 import { ShaderNode } from 'three/examples/jsm/nodes/shadernode/ShaderNode.js';
 import { AttributeType } from '@modules/renderer/engine/core/types.js';
 import ConstNode from '@modules/renderer/engine/nodes/core/ConstNode.js';
-import NodeFunction from '@modules/renderer/engine/renderers/nodes/NodeFunction.js';
+import { WgslFn } from '@modules/renderer/engine/renderers/nodes/WgslFn.js';
 
-type ParseFn = (source: string) => NodeFunction;
+type ParseFn = (source: string) => WgslFn;
 
 export class NodeBuilder {
   material: Material | null;
@@ -123,7 +123,7 @@ export class NodeBuilder {
   ) {
     this.material = object?.material ?? null;
     this.geometry = object?.geometry ?? null;
-    this.parseFn = (source: string) => new NodeFunction(source);
+    this.parseFn = (source: string) => new WgslFn(source);
 
     this.nodes = [];
     this.updateNodes = [];

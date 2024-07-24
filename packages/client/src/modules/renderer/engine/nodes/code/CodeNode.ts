@@ -53,4 +53,3 @@ export const code = nodeProxy(CodeNode);
 
 export const js = (src: string, includes: any[]) => code(src, includes, 'js');
 export const wgsl = (src: string, includes: any[]) => code(src, includes, 'wgsl');
-export const glsl = (src: string, includes: any[]) => code(src, includes, 'glsl');

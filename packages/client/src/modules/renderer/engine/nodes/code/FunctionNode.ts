@@ -3,6 +3,7 @@ import { nodeObject } from '../shadernode/ShaderNodes.js';
 import { NodeBuilder } from '@modules/renderer/engine/renderers/nodes/NodeBuilder.js';
 
 import { TypeName } from '@modules/renderer/engine/renderers/nodes/NodeBuilder.types.js';
+import { WgslFn } from '@modules/renderer/engine/renderers/nodes/WgslFn.js';
 
 class FunctionNode extends CodeNode {
   static type = 'FunctionNode';
@@ -19,10 +20,10 @@ class FunctionNode extends CodeNode {
   }
 
   getInputs(builder: NodeBuilder) {
-    return this.getNodeFunction(builder).inputs;
+    return this.getNodeFunction(builder).arguments;
   }
 
-  getNodeFunction(builder: NodeBuilder) {
+  getNodeFunction(builder: NodeBuilder): WgslFn {
     const data = builder.getDataFromNode(this);
 
     let fn = data.nodeFunction;
@@ -50,9 +51,9 @@ class FunctionNode extends CodeNode {
       nodeCode.name = name;
     }
 
-    const propertyName = builder.getPropertyName(nodeCode);
+    const fn = builder.getPropertyName(nodeCode);
 
-    let code = this.getNodeFunction(builder).getCode(propertyName);
+    let code = this.getNodeFunction(builder).named(fn);
 
     const keywords = this.keywords;
     const keywordsProperties = Object.keys(keywords);
@@ -69,9 +70,9 @@ class FunctionNode extends CodeNode {
     nodeCode.code = code + '\n';
 
     if (output === 'property') {
-      return propertyName;
+      return fn;
     } else {
-      return builder.format(`${propertyName}()`, type, output);
+      return builder.format(`${fn}()`, type, output);
     }
   }
 }
@@ -82,12 +83,7 @@ const nativeFn = (code: string, includes: CodeNodeInclude[] = []) => {
   for (let i = 0; i < includes.length; i++) {
     const include = includes[i];
 
-    // TSL Function: glslFn, wgslFn
-
-    if (typeof include === 'function') {
-      //@ts-expect-error
-      includes[i] = include.functionNode;
-    }
+    if (typeof include === 'function') includes[i] = include.functionNode;
   }
 
   const functionNode = nodeObject(new FunctionNode(code, includes));

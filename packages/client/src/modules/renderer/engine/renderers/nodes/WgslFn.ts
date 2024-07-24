@@ -1,14 +1,13 @@
-import NodeFunctionInput from '../../nodes/core/NodeFunctionInput.js';
 import { TypeName } from '@modules/renderer/engine/renderers/nodes/NodeBuilder.types.js';
 
 const declarationRegexp = /^[fn]*\s*([a-z_0-9]+)?\s*\(([\s\S]*?)\)\s*[\->]*\s*([a-z_0-9]+)?/i;
 const propertiesRegexp = /[a-z_0-9]+|<(.*?)>+/gi;
 
-const parse = (
+const parseWgsl = (
   source: string,
 ): {
-  type: string;
-  inputs: NodeFunctionInput[];
+  type: TypeName;
+  inputs: Argument[];
   name: string;
   inputsCode: string;
   blockCode: string;
@@ -17,10 +16,9 @@ const parse = (
 
   const declaration = source.match(declarationRegexp);
 
-  if (!(declaration !== null && declaration.length === 4)) {
-    throw new Error('FunctionNode: Function is not a WGSL code.');
+  if (declaration?.length !== 4) {
+    throw new Error('Function is not supported wgsl code.');
   }
-  // tokenizer
 
   const inputsCode = declaration[2];
   const propsMatches = [];
@@ -31,66 +29,55 @@ const parse = (
     propsMatches.push(nameMatch);
   }
 
-  // parser
-
   const inputs = [];
 
   let i = 0;
-
   while (i < propsMatches.length) {
-    // default
-
     const name = propsMatches[i++][0];
-    let type = propsMatches[i++][0];
-
-    if (type === 'f32') type = 'f32';
-
+    const type = propsMatches[i++][0] as TypeName;
     if (i < propsMatches.length && propsMatches[i][0].startsWith('<')) i++;
 
-    // add input
-
-    inputs.push(new NodeFunctionInput(type, name));
+    inputs.push({ type, name });
   }
 
-  //
-
   const blockCode = source.substring(declaration[0].length);
-
   const name = declaration[1] !== undefined ? declaration[1] : '';
-  const type = declaration[3] || 'void';
+  const type = (declaration[3] || 'void') as TypeName;
 
   return {
     type,
-    inputs,
     name,
+    inputs,
     inputsCode,
     blockCode,
   };
 };
 
-export class NodeFunction {
+export class WgslFn {
   declare inputsCode: string;
   declare blockCode: string;
   type: TypeName;
-  inputs: NodeFunctionInput[];
+  arguments: Argument[];
   name: string;
 
   constructor(source: string) {
-    const { type, inputs, name, inputsCode, blockCode } = parse(source);
-
-    this.type = type;
-    this.inputs = inputs;
-    this.name = name;
+    const { type, inputs, name, inputsCode, blockCode } = parseWgsl(source);
 
     this.inputsCode = inputsCode;
     this.blockCode = blockCode;
+    this.arguments = inputs;
+    this.type = type;
+    this.name = name;
   }
 
-  getCode(name: string) {
+  named(name: string): string {
     const type = this.type !== 'void' ? '-> ' + this.type : '';
 
-    return `fn ${name} ( ${this.inputsCode.trim()} ) ${type}` + this.blockCode;
+    return `fn ${name}(${this.inputsCode.trim()}) ${type} ${this.blockCode}`;
   }
 }
 
-export default NodeFunction;
+export interface Argument {
+  type: TypeName;
+  name: string;
+}

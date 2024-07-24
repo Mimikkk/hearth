@@ -19,7 +19,6 @@ export { default as NodeAttribute } from './core/NodeAttribute.js';
 export { default as NodeCache } from './core/NodeCache.js';
 export { default as NodeCode } from './core/NodeCode.js';
 export { default as NodeFrame } from './core/NodeFrame.js';
-export { default as NodeFunctionInput } from './core/NodeFunctionInput.js';
 export { default as NodeKeywords } from './core/NodeKeywords.js';
 export { default as NodeUniform } from './core/NodeUniform.js';
 export { default as NodeVar } from './core/NodeVar.js';
@@ -371,7 +370,7 @@ export { default as PassNode, pass, depthPass } from './display/PassNode.js';
 
 // code
 export { default as ExpressionNode, expression } from './code/ExpressionNode.js';
-export { default as CodeNode, code, js, wgsl, glsl } from './code/CodeNode.js';
+export { default as CodeNode, code, js, wgsl } from './code/CodeNode.js';
 export { default as FunctionCallNode, call } from './code/FunctionCallNode.js';
 export { default as FunctionNode, wgslFn } from './code/FunctionNode.js';
 export { default as ScriptableNode, scriptable, global } from './code/ScriptableNode.js';
