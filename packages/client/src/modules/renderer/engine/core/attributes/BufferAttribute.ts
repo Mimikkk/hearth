@@ -25,6 +25,7 @@ export class BufferAttribute<T extends TypedArray = any> {
     offset: number = 0,
     public step: GPUVertexStepModeType = GPUVertexStepModeType.Vertex,
     public bind?: GPUBufferBindingTypeType,
+    public interleaved: boolean = false,
   ) {
     this.name = '';
 
@@ -45,6 +46,10 @@ export class BufferAttribute<T extends TypedArray = any> {
 
   get isStorageInstancedBufferAttribute(): boolean {
     return this.bind === GPUBufferBindingTypeType.Storage;
+  }
+
+  get isInterleavedBufferAttribute(): boolean {
+    return this.interleaved;
   }
 
   set needsUpdate(value: boolean) {

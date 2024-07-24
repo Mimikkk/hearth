@@ -1,13 +1,19 @@
 import { TypedArray } from '../../math/MathUtils.js';
 import { Buffer } from '@modules/renderer/engine/core/buffers/Buffer.js';
 import { BufferAttribute } from '@modules/renderer/engine/core/attributes/BufferAttribute.js';
+import { GPUBufferBindingTypeType, GPUVertexStepModeType } from '@modules/renderer/engine/renderers/utils/constants.js';
 
 export class InterleavedBufferAttribute<T extends TypedArray = any> extends BufferAttribute<T> {
-  declare isInterleavedBufferAttribute: true;
   data: Buffer<T>;
 
-  constructor(buffer: Buffer, itemSize: number, offset: number) {
-    super(buffer.array, itemSize, offset);
+  constructor(
+    buffer: Buffer,
+    itemSize: number,
+    offset: number,
+    step?: GPUVertexStepModeType,
+    bind?: GPUBufferBindingTypeType,
+  ) {
+    super(buffer.array, itemSize, offset, step, bind, true);
     this.data = buffer;
 
     return new Proxy(this, {
@@ -18,8 +24,6 @@ export class InterleavedBufferAttribute<T extends TypedArray = any> extends Buff
     });
   }
 }
-
-InterleavedBufferAttribute.prototype.isInterleavedBufferAttribute = true;
 
 const thrown = new Set<string>();
 const traceOnce = (message: string, ...args: any[]) => {

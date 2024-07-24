@@ -1,12 +1,13 @@
 import Binding from './Binding.js';
 import { getFloatLength } from './BufferUtils.js';
+import { TypedArray } from '@modules/renderer/engine/math/MathUtils.js';
 
 export class NodeBuffer extends Binding {
   declare isBuffer: true;
   declare bytesPerElement: number;
-  _buffer: Float32Array | null = null;
+  _buffer: TypedArray;
 
-  constructor(name: string, buffer: Float32Array) {
+  constructor(name: string, buffer: TypedArray) {
     super(name);
 
     this._buffer = buffer;

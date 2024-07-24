@@ -1,4 +1,4 @@
-import { InterleavedBufferAttribute } from '../../engine.js';
+import { BufferAttribute, InterleavedBufferAttribute } from '../../engine.js';
 import { GPUVertexStepModeType } from './constants.js';
 import { Backend } from '@modules/renderer/engine/renderers/Backend.js';
 import RenderObject from '@modules/renderer/engine/renderers/RenderObject.js';
@@ -64,7 +64,7 @@ export class BackendAttributes {
     const vertexBuffers = new Map();
 
     for (let slot = 0; slot < attributes.length; slot++) {
-      const geometryAttribute = attributes[slot];
+      const geometryAttribute: BufferAttribute = attributes[slot];
       const bytesPerElement = geometryAttribute.array.BYTES_PER_ELEMENT;
       const bufferAttribute = this._getBufferAttribute(geometryAttribute);
 
@@ -75,7 +75,7 @@ export class BackendAttributes {
 
         if (geometryAttribute.isInterleavedBufferAttribute === true) {
           arrayStride = geometryAttribute.data.stride * bytesPerElement;
-          stepMode = geometryAttribute.data.step;
+          stepMode = geometryAttribute.step;
         } else {
           arrayStride = geometryAttribute.stride * bytesPerElement;
           stepMode = geometryAttribute.isInstancedBufferAttribute
@@ -93,8 +93,7 @@ export class BackendAttributes {
       }
 
       const format = this._getVertexFormat(geometryAttribute);
-      const offset =
-        geometryAttribute.isInterleavedBufferAttribute === true ? geometryAttribute.offset * bytesPerElement : 0;
+      const offset = geometryAttribute.isInterleavedBufferAttribute ? geometryAttribute.offset * bytesPerElement : 0;
 
       vertexBufferLayout.attributes.push({
         shaderLocation: slot,
