@@ -20,7 +20,6 @@ export class Stats {
 
   compute: {
     calls: number;
-    computeCalls: number;
     timestamp: number;
   };
 
