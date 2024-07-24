@@ -3,6 +3,7 @@ import { TypedArray } from '../../math/MathUtils.js';
 import { Buffer } from '@modules/renderer/engine/core/buffers/Buffer.js';
 import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
 import { Mat3 } from '@modules/renderer/engine/math/Mat3.js';
+import { Const } from '@modules/renderer/engine/math/types.js';
 
 const _vector = Vec3.new();
 
@@ -29,7 +30,7 @@ export class InterleavedBufferAttribute<T extends TypedArray = any> {
     return this.data.array;
   }
 
-  applyMat4(m: Mat4): this {
+  applyMat4(m: Const<Mat4>): this {
     for (let i = 0, l = this.data.count; i < l; i++) {
       _vector.fromAttribute(this, i);
 
@@ -41,7 +42,7 @@ export class InterleavedBufferAttribute<T extends TypedArray = any> {
     return this;
   }
 
-  applyNormalMatrix(m: Mat3): this {
+  applyNMat3(m: Const<Mat3>): this {
     for (let i = 0, l = this.count; i < l; i++) {
       _vector.fromAttribute(this, i);
 

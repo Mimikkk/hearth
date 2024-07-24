@@ -130,7 +130,7 @@ export class Geometry<
     if (normal !== undefined) {
       const normalMatrix = new Mat3().fromNMat4(matrix);
 
-      normal.applyNormalMatrix(normalMatrix);
+      normal.applyNMat3(normalMatrix);
 
       normal.needsUpdate = true;
     }

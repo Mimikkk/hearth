@@ -4,29 +4,41 @@ import { TypedArray, TypedArrayConstructor } from '../../math/MathUtils.js';
 import { BufferUsage } from '../../constants.js';
 import { Mat3 } from '@modules/renderer/engine/math/Mat3.js';
 import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
+import { Buffer } from '../buffers/Buffer.js';
+import { Const } from '@modules/renderer/engine/math/types.js';
 
 export class BufferAttribute<T extends TypedArray = any> {
   declare isBufferAttribute: true;
+  source: Buffer<T>;
   name: string;
   array: T;
+
   stride: number;
-  count: number;
+  offset: number;
 
   usage: BufferUsage;
   version: number;
 
-  constructor(array: T, stride: number) {
-    this.isBufferAttribute = true;
-
+  constructor(array: T, stride: number, offset: number = 0) {
     this.name = '';
 
     this.array = array;
     this.stride = stride;
-    this.count = array.length / stride;
+
+    this.offset = offset;
+    this.source = new Buffer(array, stride);
 
     this.usage = BufferUsage.StaticDraw;
 
     this.version = 0;
+  }
+
+  set count(count: number) {
+    this.source.count = count;
+  }
+
+  get count(): number {
+    return this.source.count;
   }
 
   set needsUpdate(value: boolean) {
@@ -48,7 +60,7 @@ export class BufferAttribute<T extends TypedArray = any> {
     return this;
   }
 
-  applyMat3(m: Mat3): this {
+  applyMat3(m: Const<Mat3>): this {
     if (this.stride === 2) {
       for (let i = 0, l = this.count; i < l; i++) {
         _Vec2.fromAttribute(this, i);
@@ -68,7 +80,7 @@ export class BufferAttribute<T extends TypedArray = any> {
     return this;
   }
 
-  applyMat4(m: Mat4): this {
+  applyMat4(m: Const<Mat4>): this {
     for (let i = 0, l = this.count; i < l; i++) {
       _vec3.fromAttribute(this, i);
 
@@ -80,7 +92,7 @@ export class BufferAttribute<T extends TypedArray = any> {
     return this;
   }
 
-  applyNormalMatrix(m: Mat3): this {
+  applyNMat3(m: Const<Mat3>): this {
     for (let i = 0, l = this.count; i < l; i++) {
       _vec3.fromAttribute(this, i);
 
@@ -112,91 +124,73 @@ export class BufferAttribute<T extends TypedArray = any> {
   }
 
   getComponent(index: number, component: number): number {
-    let value = this.array[index * this.stride + component];
-
-    return value;
+    return this.array[index * this.source.stride + this.offset + component];
   }
 
   setComponent(index: number, component: number, value: number): this {
-    this.array[index * this.stride + component] = value;
+    this.source.array[index * this.source.stride + this.offset + component] = value;
+    return this;
+  }
 
+  setX(index: number, x: number): this {
+    this.source.array[index * this.source.stride + this.offset] = x;
     return this;
   }
 
   getX(index: number): number {
-    let x = this.array[index * this.stride];
-
-    return x;
+    return this.source.array[index * this.source.stride + this.offset];
   }
 
-  setX(index: number, x: number): this {
-    this.array[index * this.stride] = x;
-
+  setY(index: number, y: number): this {
+    this.source.array[index * this.source.stride + this.offset + 1] = y;
     return this;
   }
 
   getY(index: number): number {
-    let y = this.array[index * this.stride + 1];
-
-    return y;
+    return this.source.array[index * this.source.stride + this.offset + 1];
   }
 
-  setY(index: number, y: number): this {
-    this.array[index * this.stride + 1] = y;
-
+  setZ(index: number, z: number): this {
+    this.source.array[index * this.source.stride + this.offset + 2] = z;
     return this;
   }
 
   getZ(index: number): number {
-    let z = this.array[index * this.stride + 2];
-
-    return z;
+    return this.source.array[index * this.source.stride + this.offset + 2];
   }
 
-  setZ(index: number, z: number): this {
-    this.array[index * this.stride + 2] = z;
-
+  setW(index: number, w: number): this {
+    this.source.array[index * this.source.stride + this.offset + 3] = w;
     return this;
   }
 
   getW(index: number): number {
-    let w = this.array[index * this.stride + 3];
-
-    return w;
-  }
-
-  setW(index: number, w: number): this {
-    this.array[index * this.stride + 3] = w;
-
-    return this;
+    return this.source.array[index * this.source.stride + this.offset + 3];
   }
 
   setXY(index: number, x: number, y: number): this {
-    index *= this.stride;
-
-    this.array[index + 0] = x;
-    this.array[index + 1] = y;
+    index = index * this.source.stride + this.offset;
+    this.source.array[index + 0] = x;
+    this.source.array[index + 1] = y;
 
     return this;
   }
 
   setXYZ(index: number, x: number, y: number, z: number): this {
-    index *= this.stride;
-
-    this.array[index + 0] = x;
-    this.array[index + 1] = y;
-    this.array[index + 2] = z;
+    index = index * this.source.stride + this.offset;
+    this.source.array[index + 0] = x;
+    this.source.array[index + 1] = y;
+    this.source.array[index + 2] = z;
 
     return this;
   }
 
   setXYZW(index: number, x: number, y: number, z: number, w: number): this {
-    index *= this.stride;
-
-    this.array[index + 0] = x;
-    this.array[index + 1] = y;
-    this.array[index + 2] = z;
-    this.array[index + 3] = w;
+    index = index * this.source.stride + this.offset;
+    this.source.array[index + 0] = x;
+    this.source.array[index + 1] = y;
+    this.source.array[index + 2] = z;
+    this.source.array[index + 3] = w;
 
     return this;
   }
