@@ -33,7 +33,8 @@ export class BackendAttributes {
         }
       }
 
-      const size = array.byteLength + ((4 - (array.byteLength % 4)) % 4); // ensure 4 byte alignment, see #20441
+      // ensure 4 byte alignment, see #20441
+      const size = array.byteLength + ((4 - (array.byteLength % 4)) % 4);
 
       buffer = device.createBuffer({
         label: bufferAttribute.name,
@@ -77,8 +78,8 @@ export class BackendAttributes {
         let arrayStride, stepMode;
 
         if (geometryAttribute.isInterleavedBufferAttribute === true) {
-          arrayStride = geometryAttribute.data.stride * bytesPerElement;
-          stepMode = geometryAttribute.data.isInstancedInterleavedBuffer
+          arrayStride = geometryAttribute.source.stride * bytesPerElement;
+          stepMode = geometryAttribute.source.isInstancedInterleavedBuffer
             ? GPUVertexStepModeType.Instance
             : GPUVertexStepModeType.Vertex;
         } else {
@@ -202,7 +203,6 @@ export class BackendAttributes {
   }
 
   _getBufferAttribute(attribute: AttributeType): AttributeType {
-    if (isInterleavedBufferAttribute(attribute)) attribute = attribute.data as unknown as AttributeType;
     return attribute;
   }
 }
@@ -210,5 +210,6 @@ export class BackendAttributes {
 const isInterleavedBufferAttribute = (item: any): item is InterleavedBufferAttribute =>
   item.isInterleavedBufferAttribute;
 const isStorageBufferAttribute = (item: any): item is StorageBufferAttribute => item.isStorageBufferAttribute;
+
 const isStorageInstancedBufferAttribute = (item: any): item is InstancedBufferAttribute =>
   item.isStorageInstancedBufferAttribute;

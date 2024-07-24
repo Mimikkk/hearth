@@ -1,32 +1,42 @@
 import { Vec3 } from '../../math/Vec3.js';
 import { Vec2 } from '../../math/Vec2.js';
-import { TypedArray, TypedArrayConstructor } from '../../math/MathUtils.js';
+import { TypedArray } from '../../math/MathUtils.js';
 import { BufferUsage } from '../../constants.js';
 import { Mat3 } from '@modules/renderer/engine/math/Mat3.js';
 import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
+import { Buffer } from '../buffers/Buffer.js';
 
 export class BufferAttribute<T extends TypedArray = any> {
   declare isBufferAttribute: true;
-  name: string;
-  array: T;
-  stride: number;
-  count: number;
+  name: string = '';
+  usage: BufferUsage = BufferUsage.StaticDraw;
+  version: number = 0;
 
-  usage: BufferUsage;
-  version: number;
+  constructor(
+    public source: Buffer<T>,
+    public stride: number,
+    public offset: number = 0,
+  ) {
+    if (!_sources.includes(source)) {
+      _sources.push(source);
+      console.log({ source, _sources });
+    }
 
-  constructor(array: T, stride: number) {
-    this.isBufferAttribute = true;
+    if (ArrayBuffer.isView(source)) {
+      this.source = new Buffer(source as T, stride);
+    }
+  }
 
-    this.name = '';
+  get count(): number {
+    return this.source.count;
+  }
 
-    this.array = array;
-    this.stride = stride;
-    this.count = array.length / stride;
+  set count(count: number) {
+    this.source.count = count;
+  }
 
-    this.usage = BufferUsage.StaticDraw;
-
-    this.version = 0;
+  get array(): T {
+    return this.source.array;
   }
 
   set needsUpdate(value: boolean) {
@@ -38,14 +48,17 @@ export class BufferAttribute<T extends TypedArray = any> {
     return this;
   }
 
-  copy(source: BufferAttribute<T>): this {
-    this.name = source.name;
-    this.array = new (source.array.constructor as TypedArrayConstructor)(source.array) as T;
+  from(source: BufferAttribute<T>): this {
+    this.source = source.source;
     this.stride = source.stride;
-    this.count = source.count;
     this.usage = source.usage;
+    this.name = source.name;
 
     return this;
+  }
+
+  clone(into = new BufferAttribute(this.source, this.stride, this.offset)): BufferAttribute<T> {
+    return into.from(this);
   }
 
   applyMat3(m: Mat3): this {
@@ -105,74 +118,72 @@ export class BufferAttribute<T extends TypedArray = any> {
   }
 
   set(value: number[], offset: number = 0): this {
-    // Matching BufferAttribute constructor, do not normalize the array.
     this.array.set(value, offset);
-
     return this;
   }
 
   getComponent(index: number, component: number): number {
-    let value = this.array[index * this.stride + component];
+    let value = this.array[index * this.source.stride + this.offset + component];
 
     return value;
   }
 
   setComponent(index: number, component: number, value: number): this {
-    this.array[index * this.stride + component] = value;
+    this.array[index * this.source.stride + this.offset + component] = value;
 
     return this;
   }
 
   getX(index: number): number {
-    let x = this.array[index * this.stride];
+    let x = this.array[index * this.source.stride + this.offset];
 
     return x;
   }
 
   setX(index: number, x: number): this {
-    this.array[index * this.stride] = x;
+    this.array[index * this.source.stride + this.offset] = x;
 
     return this;
   }
 
   getY(index: number): number {
-    let y = this.array[index * this.stride + 1];
+    let y = this.array[index * this.source.stride + this.offset + 1];
 
     return y;
   }
 
   setY(index: number, y: number): this {
-    this.array[index * this.stride + 1] = y;
+    this.array[index * this.source.stride + this.offset + 1] = y;
 
     return this;
   }
 
   getZ(index: number): number {
-    let z = this.array[index * this.stride + 2];
+    let z = this.array[index * this.source.stride + this.offset + 2];
 
     return z;
   }
 
   setZ(index: number, z: number): this {
-    this.array[index * this.stride + 2] = z;
+    this.array[index * this.source.stride + this.offset + 2] = z;
 
     return this;
   }
 
   getW(index: number): number {
-    let w = this.array[index * this.stride + 3];
+    let w = this.array[index * this.source.stride + this.offset + 3];
 
     return w;
   }
 
   setW(index: number, w: number): this {
-    this.array[index * this.stride + 3] = w;
+    this.array[index * this.source.stride + this.offset + 3] = w;
 
     return this;
   }
 
   setXY(index: number, x: number, y: number): this {
-    index *= this.stride;
+    index = index * this.source.stride + this.offset;
 
     this.array[index + 0] = x;
     this.array[index + 1] = y;
@@ -181,7 +192,7 @@ export class BufferAttribute<T extends TypedArray = any> {
   }
 
   setXYZ(index: number, x: number, y: number, z: number): this {
-    index *= this.stride;
+    index = index * this.source.stride + this.offset;
 
     this.array[index + 0] = x;
     this.array[index + 1] = y;
@@ -191,7 +202,7 @@ export class BufferAttribute<T extends TypedArray = any> {
   }
 
   setXYZW(index: number, x: number, y: number, z: number, w: number): this {
-    index *= this.stride;
+    index = index * this.source.stride + this.offset;
 
     this.array[index + 0] = x;
     this.array[index + 1] = y;
@@ -200,12 +211,10 @@ export class BufferAttribute<T extends TypedArray = any> {
 
     return this;
   }
-
-  clone(): BufferAttribute<T> {
-    return new BufferAttribute(this.array, this.stride).copy(this);
-  }
 }
+
 BufferAttribute.prototype.isBufferAttribute = true;
 
 const _Vec2 = Vec2.new();
 const _vec3 = Vec3.new();
+const _sources = [];

@@ -22,7 +22,11 @@ export class WeakMemo<Key extends WeakKey, Value> {
   }
 
   set(key: Key, value: Value): this {
-    this.#map.set(key, value);
+    try {
+      this.#map.set(key, value);
+    } catch (error) {
+      console.log('error', { error, key, value });
+    }
     return this;
   }
 

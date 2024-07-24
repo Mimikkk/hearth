@@ -81,7 +81,7 @@ export const parseBufferGeometry = (json: JsonContent): Geometry => {
     let bufferAttribute;
 
     if (attribute.isInterleavedBufferAttribute) {
-      const interleavedBuffer = getInterleavedBuffer(json.data, attribute.data);
+      const interleavedBuffer = getInterleavedBuffer(json.data, attribute.array);
       bufferAttribute = new InterleavedBufferAttribute(interleavedBuffer, attribute.stride, attribute.offset);
     } else {
       const typedArray = createTypedArray(attribute.type, attribute.array);
@@ -108,7 +108,7 @@ export const parseBufferGeometry = (json: JsonContent): Geometry => {
         let bufferAttribute;
 
         if (attribute.isInterleavedBufferAttribute) {
-          const interleavedBuffer = getInterleavedBuffer(json.data, attribute.data);
+          const interleavedBuffer = getInterleavedBuffer(json.data, attribute.array);
           bufferAttribute = new InterleavedBufferAttribute(interleavedBuffer, attribute.stride, attribute.offset);
         } else {
           const typedArray = createTypedArray(attribute.type, attribute.array);
