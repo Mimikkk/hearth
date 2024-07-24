@@ -40,7 +40,7 @@ import {
 } from 'ktx-parse';
 import { ZSTDDecoder } from 'zstddec';
 import { FileLoader, ResponseType } from '@modules/renderer/engine/loaders/files/FileLoader/FileLoader.js';
-import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
+import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 import LoadWorker from './KTX2Loader.worker.ts?worker';
 import type { TranscoderResult, WorkerConfig } from './KTX2Loader.worker.js';
 import { classLoader } from '@modules/renderer/engine/loaders/types.js';

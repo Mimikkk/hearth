@@ -1,5 +1,5 @@
 import { AmmoPhysics } from '@modules/renderer/engine/physics/AmmoPhysics.js';
-import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
+import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { PerspectiveCamera } from '@modules/renderer/engine/cameras/PerspectiveCamera.js';
 import { Scene } from '@modules/renderer/engine/scenes/Scene.js';

@@ -14,7 +14,7 @@ import {
 
 import { GUI } from 'lil-gui';
 
-import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
+import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 import StorageInstancedBufferAttribute from '@modules/renderer/engine/core/attributes/StorageInstancedBufferAttribute.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 

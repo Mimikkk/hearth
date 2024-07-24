@@ -20,10 +20,10 @@ import {
 
 import { TeapotGeometry } from '@modules/renderer/engine/geometries/TeapotGeometry.js';
 
-import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
+import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 import StorageInstancedBufferAttribute from '@modules/renderer/engine/core/attributes/StorageInstancedBufferAttribute.js';
 
-import PostProcessing from '@modules/renderer/engine/renderers/common/PostProcessing.js';
+import PostProcessing from '@modules/renderer/engine/renderers/PostProcessing.js';
 
 import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';

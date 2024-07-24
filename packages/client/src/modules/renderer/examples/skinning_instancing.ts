@@ -11,8 +11,8 @@ import {
 
 import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/GLTFLoader.js';
 
-import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
-import PostProcessing from '@modules/renderer/engine/renderers/common/PostProcessing.js';
+import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
+import PostProcessing from '@modules/renderer/engine/renderers/PostProcessing.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, renderer;

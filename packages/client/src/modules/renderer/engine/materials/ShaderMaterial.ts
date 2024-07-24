@@ -1,5 +1,5 @@
 import { Material, MaterialParameters } from './Material.js';
-import { cloneUniforms } from '../renderers/shaders/UniformsUtils.js';
+import { cloneUniforms } from '../renderers/UniformsUtils.js';
 import { UniformGroup } from '../core/UniformGroup.js';
 
 export interface IUniform<TValue = any> {

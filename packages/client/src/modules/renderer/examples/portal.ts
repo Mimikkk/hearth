@@ -15,7 +15,7 @@ import {
 
 import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/GLTFLoader.js';
 
-import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
+import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 
 import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
 import { Side } from '@modules/renderer/engine/engine.js';

@@ -2,9 +2,9 @@ import * as Engine from '@modules/renderer/engine/engine.js';
 
 import { MeshBasicNodeMaterial, normalWorld, pmremTexture, uniform } from '@modules/renderer/engine/nodes/Nodes.js';
 
-import PMREMGenerator from '@modules/renderer/engine/renderers/common/extras/PMREMGenerator.js';
+import PMREMGenerator from '@modules/renderer/engine/renderers/extras/PMREMGenerator.js';
 
-import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
+import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 
 import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
 

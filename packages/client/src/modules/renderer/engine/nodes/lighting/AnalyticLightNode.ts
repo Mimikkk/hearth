@@ -9,9 +9,9 @@ import { normalWorld } from '../accessors/NormalNode.js';
 import { Color, DepthComparison, DepthTexture, Filter, Light, RenderTarget } from '@modules/renderer/engine/engine.js';
 import UniformNode from 'three/examples/jsm/nodes/core/UniformNode.js';
 import TextureNode from 'three/examples/jsm/nodes/accessors/TextureNode.js';
-import { NodeBuilder } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.js';
+import { NodeBuilder } from '@modules/renderer/engine/renderers/nodes/NodeBuilder.js';
 import { NodeFrame } from '@modules/renderer/engine/nodes/core/NodeFrame.js';
-import { TypeName } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.types.js';
+import { TypeName } from '@modules/renderer/engine/renderers/nodes/NodeBuilder.types.js';
 
 let overrideMaterial: any = null;
 

@@ -1,6 +1,6 @@
 import Node from './Node.js';
 import { addNodeElement, nodeProxy } from '../shadernode/ShaderNodes.js';
-import { ShaderStage } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.types.js';
+import { ShaderStage } from '@modules/renderer/engine/renderers/nodes/NodeBuilder.types.js';
 
 class VaryingNode extends Node {
   static type = 'VaryingNode';

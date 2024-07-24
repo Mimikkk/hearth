@@ -16,7 +16,7 @@ import { Capsule } from '@modules/renderer/engine/math/Capsule.js';
 import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/GLTFLoader.js';
 import { OctreeHelper } from '@modules/renderer/engine/helpers/OctreeHelper.js';
 import { ToneMapping } from '@modules/renderer/engine/constants.js';
-import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
+import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 import { Euler } from '@modules/renderer/engine/math/Euler.js';
 import { UI } from '@mimi/ui';
 

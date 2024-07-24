@@ -1,8 +1,8 @@
 import { Entity } from '../core/Entity.js';
 import { PerspectiveCamera } from './PerspectiveCamera.js';
-import { CubeRenderTarget } from '../renderers/common/CubeRenderTarget.js';
+import { CubeRenderTarget } from '../renderers/CubeRenderTarget.js';
 import { Scene } from '@modules/renderer/engine/scenes/Scene.js';
-import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
+import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 import { Camera } from '@modules/renderer/engine/cameras/Camera.js';
 
 const fov = -90; // negative fov is not an error

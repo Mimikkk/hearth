@@ -2,8 +2,8 @@ import * as Engine from '@modules/renderer/engine/engine.js';
 
 import { GUI } from 'lil-gui';
 
-import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
-import PostProcessing from '@modules/renderer/engine/renderers/common/PostProcessing.js';
+import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
+import PostProcessing from '@modules/renderer/engine/renderers/PostProcessing.js';
 import { pass } from '@modules/renderer/engine/nodes/Nodes.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 

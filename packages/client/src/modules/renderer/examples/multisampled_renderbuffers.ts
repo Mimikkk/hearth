@@ -3,7 +3,7 @@ import { texture, MeshBasicNodeMaterial, MeshPhongNodeMaterial } from '@modules/
 
 import { GUI } from 'lil-gui';
 
-import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
+import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 
 import { QuadMesh } from '@modules/renderer/engine/objects/QuadMesh.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';

@@ -4,7 +4,7 @@ import { PerspectiveCamera, Scene } from '@modules/renderer/engine/engine.js';
 import { FontLoader } from '@modules/renderer/engine/loaders/fonts/FontLoader/FontLoader.js';
 import { TextGeometry } from '@modules/renderer/engine/geometries/TextGeometry.js';
 
-import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
+import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 import Stats from 'stats-js';
 import { ColorRepresentation } from '@modules/renderer/engine/math/Color.js';
 import { clamp } from 'lodash-es';

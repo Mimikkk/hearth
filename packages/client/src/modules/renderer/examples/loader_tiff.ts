@@ -4,7 +4,7 @@ import { PlaneGeometry } from '@modules/renderer/engine/geometries/PlaneGeometry
 import { MeshBasicMaterial } from '@modules/renderer/engine/materials/MeshBasicMaterial.js';
 import { Mesh } from '@modules/renderer/engine/objects/Mesh.js';
 import { ColorSpace } from '../engine/constants.js';
-import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
+import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 import { TiffLoader } from '@modules/renderer/engine/loaders/textures/TIFFLoader/TIFFLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 import { DataTexture } from '@modules/renderer/engine/textures/DataTexture.js';

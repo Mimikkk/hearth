@@ -1,4 +1,4 @@
-import Buffer from '../../renderers/common/Buffer.js';
+import Buffer from '../../renderers/Buffer.js';
 import { BufferAttribute } from '@modules/renderer/engine/core/attributes/BufferAttribute.js';
 
 class StorageBuffer extends Buffer {

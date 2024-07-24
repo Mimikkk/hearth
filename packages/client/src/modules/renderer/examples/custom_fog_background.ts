@@ -1,7 +1,7 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
 
-import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
-import PostProcessing from '@modules/renderer/engine/renderers/common/PostProcessing.js';
+import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
+import PostProcessing from '@modules/renderer/engine/renderers/PostProcessing.js';
 
 import { color, pass, rangeFog } from '@modules/renderer/engine/nodes/Nodes.js';
 

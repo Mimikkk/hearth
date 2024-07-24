@@ -1,6 +1,6 @@
 import Node from '../core/Node.js';
 import { nodeProxy } from '../shadernode/ShaderNodes.js';
-import { NodeBuilder } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.js';
+import { NodeBuilder } from '@modules/renderer/engine/renderers/nodes/NodeBuilder.js';
 
 export interface CodeNodeInclude {
   build(builder: NodeBuilder): void;

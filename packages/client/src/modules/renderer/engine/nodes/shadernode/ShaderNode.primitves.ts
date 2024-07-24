@@ -10,7 +10,7 @@ import { ShaderNodeObjects } from './ShaderNodeObjects.js';
 import { ShaderNodeArray } from './ShaderNodeArray.js';
 import { ShaderNodeProxy } from './ShaderNodeProxy.js';
 import { ShaderNodeImmutable } from './ShaderNodeImmutable.js';
-import { TypeName } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.types.js';
+import { TypeName } from '@modules/renderer/engine/renderers/nodes/NodeBuilder.types.js';
 
 const createConvertType = (type: TypeName, cacheMap: Map<any, any> = null) => {
   return (...params) => {

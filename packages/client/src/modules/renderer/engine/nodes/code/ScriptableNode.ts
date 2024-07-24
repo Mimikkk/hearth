@@ -2,7 +2,7 @@ import Node from '../core/Node.js';
 import { scriptableValue } from './ScriptableValueNode.js';
 import { addNodeElement, f32, nodeProxy } from '../shadernode/ShaderNodes.js';
 import CodeNode from '@modules/renderer/engine/nodes/code/CodeNode.js';
-import { NodeBuilder } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.js';
+import { NodeBuilder } from '@modules/renderer/engine/renderers/nodes/NodeBuilder.js';
 
 import { TypeName } from '@modules/renderer/engine/nodes/core/constants.js';
 

@@ -10,7 +10,7 @@ import { MeshPhongMaterial } from '../engine/materials/MeshPhongMaterial';
 import { STLLoader } from '@modules/renderer/engine/loaders/objects/STLLoader/STLLoader.js';
 import { HemisphereLight } from '../engine/lights/HemisphereLight';
 import { DirectionalLight } from '../engine/lights/DirectionalLight';
-import { Renderer } from '../engine/renderers/webgpu/Renderer.js';
+import { Renderer } from '../engine/renderers/Renderer.js';
 
 let container, stats;
 

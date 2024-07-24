@@ -1,9 +1,9 @@
 import { NodeUpdateType } from './constants.js';
 import { getCacheKey, getNodeChildren } from './NodeUtils.js';
-import { NodeBuilder } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.js';
+import { NodeBuilder } from '@modules/renderer/engine/renderers/nodes/NodeBuilder.js';
 
 import { NodeFrame } from '@modules/renderer/engine/nodes/core/NodeFrame.js';
-import { BuildStage, TypeName } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.types.js';
+import { BuildStage, TypeName } from '@modules/renderer/engine/renderers/nodes/NodeBuilder.types.js';
 import { v4 } from 'uuid';
 
 let _nodeId = 0;

@@ -1,7 +1,7 @@
 import TempNode from '../core/TempNode.js';
 import { addNodeElement, nodeArray, nodeObject, nodeObjects } from '../shadernode/ShaderNodes.js';
 import FunctionNode from './FunctionNode.js';
-import { NodeBuilder } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.js';
+import { NodeBuilder } from '@modules/renderer/engine/renderers/nodes/NodeBuilder.js';
 
 import { TypeName } from '@modules/renderer/engine/nodes/core/constants.js';
 

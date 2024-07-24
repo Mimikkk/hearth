@@ -1,9 +1,9 @@
 import Node from './Node.js';
 import { cond } from '../math/CondNode.js';
 import { nodeProxy, NodeStack, ShaderNode } from '../shadernode/ShaderNodes.js';
-import { NodeBuilder } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.js';
+import { NodeBuilder } from '@modules/renderer/engine/renderers/nodes/NodeBuilder.js';
 import CondNode from 'three/examples/jsm/nodes/math/CondNode.js';
-import { TypeName } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.types.js';
+import { TypeName } from '@modules/renderer/engine/renderers/nodes/NodeBuilder.types.js';
 
 class StackNode extends Node {
   static type = 'StackNode';

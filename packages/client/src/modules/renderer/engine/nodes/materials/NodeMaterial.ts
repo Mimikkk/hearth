@@ -28,7 +28,7 @@ import { cameraLogDepth } from '../accessors/CameraNode.js';
 import { clipping, clippingAlpha } from '../accessors/ClippingNode.js';
 import { faceDirection } from '../display/FrontFacingNode.js';
 import { NodeMaterials } from '@modules/renderer/engine/nodes/materials/NodeMaterialMap.js';
-import { ShaderStage } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.types.js';
+import { ShaderStage } from '@modules/renderer/engine/renderers/nodes/NodeBuilder.types.js';
 
 export class NodeMaterial extends ShaderMaterial {
   static type = 'NodeMaterial';

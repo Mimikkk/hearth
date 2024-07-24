@@ -8,7 +8,7 @@ import { HemisphereLight } from '../engine/lights/HemisphereLight.js';
 import { SpotLight } from '../engine/lights/SpotLight.js';
 import { MeshStandardMaterial } from '../engine/materials/MeshStandardMaterial.js';
 import { DRACOLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/DRACOLoader.js';
-import { Renderer } from '../engine/renderers/webgpu/Renderer.js';
+import { Renderer } from '../engine/renderers/Renderer.js';
 import { Color } from '@modules/renderer/engine/math/Color.js';
 import { FileLoader } from '@modules/renderer/engine/loaders/files/FileLoader/FileLoader.js';
 

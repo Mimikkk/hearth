@@ -12,7 +12,7 @@ import type { Camera } from '../cameras/Camera.js';
 import type { Material } from '../materials/Material.js';
 import type { Group } from '../objects/Group.js';
 import { Box3 } from '@modules/renderer/engine/math/Box3.js';
-import { Renderer } from '../renderers/webgpu/Renderer.js';
+import { Renderer } from '../renderers/Renderer.js';
 import { Sphere } from '@modules/renderer/engine/math/Sphere.js';
 import { v4 } from 'uuid';
 

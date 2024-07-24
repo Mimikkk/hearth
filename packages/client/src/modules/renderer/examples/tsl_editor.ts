@@ -1,12 +1,12 @@
 import * as Nodes from '@modules/renderer/engine/nodes/Nodes.js';
-import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
+import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 import initialCode from './tsl_editor.code.ts?raw';
 import { GUI } from 'lil-gui';
 import * as monaco from 'monaco-editor';
 import { Color, ColorSpace, Mesh, PerspectiveCamera, PlaneGeometry, Scene } from '@modules/renderer/engine/engine.js';
 import './tsl_editor.css';
 import './utilities/monaco-vite.js';
-import { NodeBuilder } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.js';
+import { NodeBuilder } from '@modules/renderer/engine/renderers/nodes/NodeBuilder.js';
 import { resolveScript } from '@modules/renderer/examples/utilities/resolveScript.js';
 
 const createContainers = () => {

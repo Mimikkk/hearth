@@ -11,7 +11,7 @@ import { Vec3 } from '../math/Vec3.js';
 import { Material } from '@modules/renderer/engine/materials/Material.js';
 import { Camera } from '@modules/renderer/engine/cameras/Camera.js';
 import { Intersection, Raycaster } from '@modules/renderer/engine/core/Raycaster.js';
-import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
+import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 import { Scene } from '@modules/renderer/engine/scenes/Scene.js';
 import { Group } from '@modules/renderer/engine/objects/Group.js';
 

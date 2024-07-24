@@ -25,7 +25,7 @@ import {
   wgslFn,
 } from '@modules/renderer/engine/nodes/Nodes.js';
 
-import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
+import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 
 import { TeapotGeometry } from '@modules/renderer/engine/geometries/TeapotGeometry.js';
 

@@ -1,7 +1,7 @@
 import Node from '../core/Node.js';
 import { nodeProxy } from '../shadernode/ShaderNodes.js';
-import { NodeBuilder } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.js';
-import { TypeName } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.types.js';
+import { NodeBuilder } from '@modules/renderer/engine/renderers/nodes/NodeBuilder.js';
+import { TypeName } from '@modules/renderer/engine/renderers/nodes/NodeBuilder.types.js';
 
 class ExpressionNode extends Node {
   static type = 'ExpressionNode';

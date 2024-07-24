@@ -9,8 +9,8 @@ import {
 
 import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
 
-import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
-import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
+import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
+import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 import { Camera, Scene } from '@modules/renderer/engine/engine.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
