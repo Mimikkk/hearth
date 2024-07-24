@@ -1,5 +1,5 @@
-import { Path } from '../math/curves/Path.js';
 import { LatheGeometry } from './LatheGeometry.js';
+import { Path } from '@modules/renderer/engine/math/curves/Path.js';
 
 export class CapsuleGeometry extends LatheGeometry {
   declare type: string | 'CapsuleGeometry';

@@ -1,9 +1,9 @@
-import { Vec2 } from '../math/Vec2.js';
-import { Vec3 } from '../math/Vec3.js';
+import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
+import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { Mat4 } from '../math/Mat4.js';
 import { Triangle } from '../math/Triangle.js';
 import { Entity } from '../core/Entity.js';
-import { Geometry } from '../core/Geometry.js';
+import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
 import { Buffer } from '../core/buffers/Buffer.js';
 import { InterleavedBufferAttribute } from '../core/attributes/InterleavedBufferAttribute.js';
 import { SpriteMaterial } from '@modules/renderer/engine/objects/materials/SpriteMaterial.js';

@@ -1,5 +1,5 @@
-import { Geometry } from '../core/Geometry.js';
-import { BufferAttribute } from '../core/attributes/BufferAttribute.js';
+import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
+import { BufferAttribute } from '@modules/renderer/engine/core/attributes/BufferAttribute.js';
 
 export class PlaneGeometry extends Geometry {
   declare type: string | 'PlaneGeometry';

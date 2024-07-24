@@ -12,7 +12,7 @@ import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 
 import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
 
-import { TeapotGeometry } from '@modules/renderer/engine/geometries/TeapotGeometry.js';
+import { TeapotGeometry } from '@modules/renderer/engine/objects/geometries/TeapotGeometry.js';
 
 import Stats from 'stats-js';
 import { CubeTextureLoader } from '@modules/renderer/engine/loaders/textures/CubeTextureLoader/CubeTextureLoader.js';

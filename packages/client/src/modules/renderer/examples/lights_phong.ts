@@ -14,7 +14,7 @@ import {
 import Stats from 'stats-js';
 
 import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
-import { TeapotGeometry } from '@modules/renderer/engine/geometries/TeapotGeometry.js';
+import { TeapotGeometry } from '@modules/renderer/engine/objects/geometries/TeapotGeometry.js';
 
 import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';

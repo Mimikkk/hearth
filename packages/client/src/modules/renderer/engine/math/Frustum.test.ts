@@ -7,7 +7,7 @@ import { Box3 } from '@modules/renderer/engine/math/Box3.js';
 import { Sphere } from './Sphere.js';
 import { Sprite } from '@modules/renderer/engine/objects/Sprite.js';
 import { Mesh } from '@modules/renderer/engine/objects/Mesh.js';
-import { BoxGeometry } from '@modules/renderer/engine/geometries/BoxGeometry.js';
+import { BoxGeometry } from '@modules/renderer/engine/objects/geometries/BoxGeometry.js';
 
 describe('Math - Frustum', () => {
   it('Instancing', () => {

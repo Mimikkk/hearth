@@ -1,5 +1,5 @@
 import { Mesh } from '../engine.js';
-import { InstancedPointsGeometry } from '@modules/renderer/engine/geometries/InstancedPointsGeometry.js';
+import { InstancedPointsGeometry } from '@modules/renderer/engine/objects/geometries/InstancedPointsGeometry.js';
 import { InstancedPointsNodeMaterial } from '@modules/renderer/engine/nodes/materials/InstancedPointsNodeMaterial.js';
 
 export class InstancedPoints extends Mesh {

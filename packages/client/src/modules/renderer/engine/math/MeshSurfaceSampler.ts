@@ -3,7 +3,7 @@ import { Vec3 } from './Vec3.js';
 import { Vec2 } from './Vec2.js';
 import type { Mesh } from '../objects/Mesh.js';
 import type { Material } from '@modules/renderer/engine/objects/materials/Material.js';
-import type { BufferAttribute } from '../core/attributes/BufferAttribute.js';
+import type { BufferAttribute } from '@modules/renderer/engine/core/attributes/BufferAttribute.js';
 import type { Color } from './Color.js';
 import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
 

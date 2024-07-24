@@ -6,7 +6,7 @@ import { Fog } from '@modules/renderer/engine/objects/scenes/Fog.js';
 import { PerspectiveCamera } from '@modules/renderer/engine/objects/cameras/PerspectiveCamera.js';
 import { HemisphereLight } from '@modules/renderer/engine/objects/lights/HemisphereLight.js';
 import { DirectionalLight } from '@modules/renderer/engine/objects/lights/DirectionalLight.js';
-import { IcosahedronGeometry } from '@modules/renderer/engine/geometries/IcosahedronGeometry.js';
+import { IcosahedronGeometry } from '@modules/renderer/engine/objects/geometries/IcosahedronGeometry.js';
 import { MeshLambertMaterial } from '@modules/renderer/engine/objects/materials/MeshLambertMaterial.js';
 import { Mesh } from '@modules/renderer/engine/objects/Mesh.js';
 import { Sphere } from '@modules/renderer/engine/math/Sphere.js';

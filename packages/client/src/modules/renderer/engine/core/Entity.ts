@@ -1,5 +1,5 @@
 import { Quaternion } from '../math/Quaternion.js';
-import { Vec3 } from '../math/Vec3.js';
+import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { Mat4 } from '../math/Mat4.js';
 import { Euler } from '../math/Euler.js';
 import { RaycastLayers } from './RaycastLayers.js';

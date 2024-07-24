@@ -1,4 +1,8 @@
-import { Box3, BufferAttribute, Geometry, InstancedBufferAttribute, Mat4, Sphere, Vec3 } from '../engine.js';
+import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
+import { BufferAttribute } from '@modules/renderer/engine/core/attributes/BufferAttribute.js';
+import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
+import { InstancedBufferAttribute } from '@modules/renderer/engine/core/attributes/InstancedBufferAttribute.js';
+import { Box3, Sphere, Vec3 } from '@modules/renderer/engine/engine.js';
 
 export class InstancedPointsGeometry extends Geometry {
   declare isInstancedPointsGeometry: true;

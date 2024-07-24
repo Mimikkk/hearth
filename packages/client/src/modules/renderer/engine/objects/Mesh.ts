@@ -1,12 +1,12 @@
-import { Vec3 } from '../math/Vec3.js';
-import { Vec2 } from '../math/Vec2.js';
+import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
+import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 import { Sphere } from '../math/Sphere.js';
 import { Ray } from '../math/Ray.js';
 import { Mat4 } from '../math/Mat4.js';
 import { Entity } from '../core/Entity.js';
 import { Triangle } from '../math/Triangle.js';
 import { Side } from '../constants.js';
-import { Geometry } from '../core/Geometry.js';
+import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
 import { Material } from '@modules/renderer/engine/objects/materials/Material.js';
 import { Intersection, Raycaster } from '../core/Raycaster.js';
 import { BufferAttribute } from '@modules/renderer/engine/core/attributes/BufferAttribute.js';

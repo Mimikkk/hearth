@@ -1,5 +1,5 @@
-import { BufferAttribute } from '../core/attributes/BufferAttribute.js';
-import { Geometry } from '../core/Geometry.js';
+import { BufferAttribute } from '@modules/renderer/engine/core/attributes/BufferAttribute.js';
+import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
 import { DataTexture } from '@modules/renderer/engine/objects/textures/DataTexture.js';
 import { TextureDataType, TextureFormat } from '../constants.js';
 import { Mat4 } from '../math/Mat4.js';
@@ -7,7 +7,7 @@ import { Mesh } from './Mesh.js';
 import { Box3 } from '../math/Box3.js';
 import { Sphere } from '../math/Sphere.js';
 import { Frustum } from '../math/Frustum.js';
-import { Vec3 } from '../math/Vec3.js';
+import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { Material } from '@modules/renderer/engine/objects/materials/Material.js';
 import { Camera } from '@modules/renderer/engine/objects/cameras/Camera.js';
 import { Intersection, Raycaster } from '@modules/renderer/engine/core/Raycaster.js';

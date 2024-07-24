@@ -1,7 +1,7 @@
-import { Geometry } from '../core/Geometry.js';
-import { BufferAttribute } from '../core/attributes/BufferAttribute.js';
-import { Vec3 } from '../math/Vec3.js';
-import { Vec2 } from '../math/Vec2.js';
+import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
+import { BufferAttribute } from '@modules/renderer/engine/core/attributes/BufferAttribute.js';
+import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
+import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 
 export class PolyhedronGeometry extends Geometry {
   declare type: string | 'PolyhedronGeometry';

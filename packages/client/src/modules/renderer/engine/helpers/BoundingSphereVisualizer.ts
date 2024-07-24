@@ -1,5 +1,5 @@
 import { Entity } from '@modules/renderer/engine/core/Entity.js';
-import { SphereGeometry } from '@modules/renderer/engine/geometries/SphereGeometry.js';
+import { SphereGeometry } from '@modules/renderer/engine/objects/geometries/SphereGeometry.js';
 import { Random } from '@modules/renderer/engine/math/random.js';
 import { Mesh } from '@modules/renderer/engine/objects/Mesh.js';
 import {

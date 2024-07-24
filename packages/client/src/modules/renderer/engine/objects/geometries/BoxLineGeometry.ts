@@ -1,4 +1,5 @@
-import { BufferAttribute, Geometry } from '../engine.js';
+import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
+import { BufferAttribute } from '@modules/renderer/engine/core/attributes/BufferAttribute.js';
 
 export class BoxLineGeometry extends Geometry {
   constructor(

@@ -1,4 +1,5 @@
-import { BoxGeometry, Vec3 } from '../engine.js';
+import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
+import { BoxGeometry } from '@modules/renderer/engine/objects/geometries/BoxGeometry.js';
 
 const _tempNormal = Vec3.new();
 

@@ -1,8 +1,8 @@
-import { BufferAttribute } from '../core/attributes/BufferAttribute.js';
-import { Geometry } from '../core/Geometry.js';
-import { Vec3 } from '../math/Vec3.js';
-import { Vec2 } from '../math/Vec2.js';
-import * as MathUtils from '../math/MathUtils.js';
+import { BufferAttribute } from '@modules/renderer/engine/core/attributes/BufferAttribute.js';
+import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
+import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
+import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
+import { clamp } from '@modules/renderer/engine/math/MathUtils.js';
 
 export class LatheGeometry extends Geometry {
   declare type: string | 'LatheGeometry';
@@ -32,7 +32,7 @@ export class LatheGeometry extends Geometry {
 
     // clamp phiLength so it's in range of [ 0, 2PI ]
 
-    phiLength = MathUtils.clamp(phiLength, 0, Math.PI * 2);
+    phiLength = clamp(phiLength, 0, Math.PI * 2);
 
     // buffers
 

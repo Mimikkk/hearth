@@ -1,5 +1,8 @@
-import { ExtrudeGeometry, ExtrudeGeometryOptions } from '../engine.js';
-import { FontManager } from '@modules/renderer/engine/loaders/fonts/FontLoader/FontLoader.js';
+import { FontManager } from '@modules/renderer/engine/loaders/fonts/FontManager.js';
+import {
+  ExtrudeGeometry,
+  ExtrudeGeometryOptions,
+} from '@modules/renderer/engine/objects/geometries/ExtrudeGeometry.js';
 
 export interface TextGeometryParameters extends ExtrudeGeometryOptions {
   font: FontManager;

@@ -1,6 +1,6 @@
-import { Curve, Vec3 } from '../engine.js';
-
 import { ParametricGeometry } from './ParametricGeometry.js';
+import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
+import { Curve } from '@modules/renderer/engine/math/curves/Curve.js';
 
 /**
  * Experimenting of primitive geometry creation using Surface Parametric equations

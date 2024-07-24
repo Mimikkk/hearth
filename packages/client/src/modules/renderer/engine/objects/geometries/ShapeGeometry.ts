@@ -1,8 +1,8 @@
-import { Geometry } from '../core/Geometry.js';
-import { BufferAttribute } from '../core/attributes/BufferAttribute.js';
-import { Shape } from '../math/curves/Shape.js';
-import { ShapeUtils } from '../utils/ShapeUtils.js';
-import { Vec2 } from '../math/Vec2.js';
+import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
+import { BufferAttribute } from '@modules/renderer/engine/core/attributes/BufferAttribute.js';
+import { Shape } from '@modules/renderer/engine/math/curves/Shape.js';
+import { ShapeUtils } from '@modules/renderer/engine/utils/ShapeUtils.js';
+import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 
 export class ShapeGeometry extends Geometry {
   declare type: string | 'ShapeGeometry';

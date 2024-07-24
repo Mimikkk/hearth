@@ -1,4 +1,4 @@
-import { Vec3 } from '../math/Vec3.js';
+import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { Quaternion } from '../math/Quaternion.js';
 import { Audio } from './Audio.js';
 

@@ -1,4 +1,4 @@
-import { Vec3 } from '../math/Vec3.js';
+import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { Entity } from '../core/Entity.js';
 import { Intersection, Raycaster } from '../core/Raycaster.js';
 import { PerspectiveCamera } from '@modules/renderer/engine/objects/cameras/PerspectiveCamera.js';

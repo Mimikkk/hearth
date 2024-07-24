@@ -27,7 +27,7 @@ export { CubeTexture } from '@modules/renderer/engine/objects/textures/CubeTextu
 export { CanvasTexture } from '@modules/renderer/engine/objects/textures/CanvasTexture.js';
 export { DepthTexture } from '@modules/renderer/engine/objects/textures/DepthTexture.js';
 export { Texture } from '@modules/renderer/engine/objects/textures/Texture.js';
-export * from './geometries/Geometries.js';
+export * from './objects/geometries/Geometries.js';
 export * from '@modules/renderer/engine/objects/materials/Materials.js';
 export { LoaderUtils } from './loaders/LoaderUtils.js';
 export { SpotLight } from '@modules/renderer/engine/objects/lights/SpotLight.js';

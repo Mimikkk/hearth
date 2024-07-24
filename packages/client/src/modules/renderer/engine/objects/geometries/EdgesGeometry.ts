@@ -1,8 +1,8 @@
-import { Geometry } from '../core/Geometry.js';
-import { BufferAttribute } from '../core/attributes/BufferAttribute.js';
-import * as MathUtils from '../math/MathUtils.js';
-import { Triangle } from '../math/Triangle.js';
-import { Vec3 } from '../math/Vec3.js';
+import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
+import { BufferAttribute } from '@modules/renderer/engine/core/attributes/BufferAttribute.js';
+import * as MathUtils from '@modules/renderer/engine/math/MathUtils.js';
+import { Triangle } from '@modules/renderer/engine/math/Triangle.js';
+import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 
 const _v0 = Vec3.new();
 const _v1 = Vec3.new();

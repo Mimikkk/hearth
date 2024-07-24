@@ -1,5 +1,5 @@
-import { Vec3 } from '../math/Vec3.js';
-import { Vec2 } from '../math/Vec2.js';
+import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
+import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 import { Box3 } from '../math/Box3.js';
 import { BufferAttribute } from './attributes/BufferAttribute.js';
 import { Sphere } from '../math/Sphere.js';

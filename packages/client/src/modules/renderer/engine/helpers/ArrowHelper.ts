@@ -1,12 +1,12 @@
-import { BufferAttribute } from '../core/attributes/BufferAttribute.js';
-import { Geometry } from '../core/Geometry.js';
+import { BufferAttribute } from '@modules/renderer/engine/core/attributes/BufferAttribute.js';
+import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
 import { Entity } from '../core/Entity.js';
-import { CylinderGeometry } from '../geometries/CylinderGeometry.js';
+import { CylinderGeometry } from '../objects/geometries/CylinderGeometry.js';
 import { MeshBasicMaterial } from '@modules/renderer/engine/objects/materials/MeshBasicMaterial.js';
 import { LineBasicMaterial } from '@modules/renderer/engine/objects/materials/LineBasicMaterial.js';
 import { Mesh } from '../objects/Mesh.js';
 import { Line } from '../objects/Line.js';
-import { Vec3 } from '../math/Vec3.js';
+import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { Color } from '@modules/renderer/engine/math/Color.js';
 
 const _axis = Vec3.new();

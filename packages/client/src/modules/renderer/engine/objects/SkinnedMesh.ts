@@ -2,7 +2,7 @@ import { Mesh } from './Mesh.js';
 import { Box3 } from '../math/Box3.js';
 import { Mat4 } from '../math/Mat4.js';
 import { Sphere } from '../math/Sphere.js';
-import { Vec3 } from '../math/Vec3.js';
+import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { Vec4 } from '../math/Vec4.js';
 import { Ray } from '../math/Ray.js';
 import { BindMode } from '../constants.js';

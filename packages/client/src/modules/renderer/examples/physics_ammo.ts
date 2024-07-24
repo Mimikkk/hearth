@@ -7,7 +7,7 @@ import { Color } from '@modules/renderer/engine/math/Color.js';
 import { HemisphereLight } from '@modules/renderer/engine/objects/lights/HemisphereLight.js';
 import { DirectionalLight } from '@modules/renderer/engine/objects/lights/DirectionalLight.js';
 import { Mesh } from '@modules/renderer/engine/objects/Mesh.js';
-import { BoxGeometry } from '@modules/renderer/engine/geometries/BoxGeometry.js';
+import { BoxGeometry } from '@modules/renderer/engine/objects/geometries/BoxGeometry.js';
 import { ShadowMaterial } from '@modules/renderer/engine/objects/materials/ShadowMaterial.js';
 import { MeshLambertMaterial } from '@modules/renderer/engine/objects/materials/MeshLambertMaterial.js';
 import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
@@ -15,7 +15,7 @@ import { InstancedMesh } from '@modules/renderer/engine/objects/InstancedMesh.js
 import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
 import { BufferUsage } from '@modules/renderer/engine/constants.js';
 import Stats from 'stats-js';
-import { IcosahedronGeometry } from '@modules/renderer/engine/geometries/IcosahedronGeometry.js';
+import { IcosahedronGeometry } from '@modules/renderer/engine/objects/geometries/IcosahedronGeometry.js';
 
 const physics = await AmmoPhysics();
 const position = Vec3.new();

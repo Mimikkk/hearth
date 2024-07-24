@@ -4,7 +4,7 @@ import { Scene } from '@modules/renderer/engine/objects/scenes/Scene.js';
 import { ColorMap } from '@modules/renderer/engine/math/Color.js';
 import { AmbientLight } from '@modules/renderer/engine/objects/lights/AmbientLight.js';
 import { SpotLight } from '@modules/renderer/engine/objects/lights/SpotLight.js';
-import { BoxGeometry } from '@modules/renderer/engine/geometries/BoxGeometry.js';
+import { BoxGeometry } from '@modules/renderer/engine/objects/geometries/BoxGeometry.js';
 import { Mesh } from '@modules/renderer/engine/objects/Mesh.js';
 import { MeshLambertMaterial } from '@modules/renderer/engine/objects/materials/MeshLambertMaterial.js';
 import { SelectionControls } from '@modules/renderer/engine/objects/controls/SelectionControls.js';
