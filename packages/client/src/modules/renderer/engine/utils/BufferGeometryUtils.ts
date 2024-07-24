@@ -20,8 +20,8 @@ export function mergeAttributes<T extends TypedArray>(attributes: AttributeType<
       const tupleOffset = offset / itemSize;
       for (let j = 0, l = attribute.count; j < l; j++) {
         for (let c = 0; c < itemSize; c++) {
-          const value = attribute.getComponent(j, c);
-          result.setComponent(j + tupleOffset, c, value);
+          const value = attribute.getN(j, c);
+          result.setN(j + tupleOffset, c, value);
         }
       }
     } else {

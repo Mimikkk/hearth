@@ -714,14 +714,12 @@ export class Geometry<
     this.name = source.name;
     const index = source.index;
     if (index !== null) {
-      //@ts-expect-error
       this.setIndex(index.clone(data));
     }
 
     const attributes = source.attributes;
     for (const name in attributes) {
       const attribute = attributes[name];
-      //@ts-expect-error
       this.setAttribute(name, attribute.clone(data));
     }
 

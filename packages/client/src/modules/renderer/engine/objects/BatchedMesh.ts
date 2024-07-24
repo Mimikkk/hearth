@@ -77,7 +77,7 @@ function copyAttributeData(src: BufferAttribute<any>, target: BufferAttribute<an
     const vertexCount = src.count;
     for (let i = 0; i < vertexCount; i++) {
       for (let c = 0; c < itemSize; c++) {
-        target.setComponent(i + targetOffset, c, src.getComponent(i, c));
+        target.setN(i + targetOffset, c, src.getN(i, c));
       }
     }
   } else {
@@ -429,7 +429,7 @@ export class BatchedMesh extends Mesh {
       for (let i = srcAttribute.count, l = vertexCount; i < l; i++) {
         const index = vertexStart + i;
         for (let c = 0; c < itemSize; c++) {
-          dstAttribute.setComponent(index, c, 0);
+          dstAttribute.setN(index, c, 0);
         }
       }
 
