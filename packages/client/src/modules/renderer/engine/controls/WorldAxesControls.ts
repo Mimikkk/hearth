@@ -69,7 +69,7 @@ export class WorldAxesControls extends Entity {
   geometry: BoxGeometry = new BoxGeometry(0.8, 0.05, 0.05).translate(0.4, 0, 0);
   axisLines: [posX: Sprite, posY: Sprite, posZ: Sprite, negX: Sprite, negY: Sprite, negZ: Sprite];
   axisMeshes: [xAxis: Mesh, yAxis: Mesh, zAxis: Mesh];
-  raycaster: Raycaster = new Raycaster();
+  raycaster: Raycaster = Raycaster.new();
   dummy: Entity = new Entity();
   orthoCamera: OrthographicCamera;
   q1: Quaternion = Quaternion.new();

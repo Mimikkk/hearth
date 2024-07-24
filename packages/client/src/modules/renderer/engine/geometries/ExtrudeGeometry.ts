@@ -25,7 +25,7 @@ import { BufferAttribute } from '../core/attributes/BufferAttribute.js';
 import { Vec2 } from '../math/Vec2.js';
 import { Vec3 } from '../math/Vec3.js';
 import { Shape } from '../extras/core/Shape.js';
-import { ShapeUtils } from '../extras/ShapeUtils.js';
+import { ShapeUtils } from '../utils/ShapeUtils.js';
 import { Curve } from '@modules/renderer/engine/extras/core/Curve.js';
 
 export interface UVGenerator {

@@ -18,7 +18,7 @@ export class Raycaster {
   ) {}
 
   static new(camera?: ICamera): Raycaster {
-    return new Raycaster(camera!);
+    return Raycaster.new(camera!);
   }
 
   static fromCamera(camera: ICamera, at: Const<Vec2>, into: Raycaster = Raycaster.new()): Raycaster {

@@ -7,7 +7,7 @@ import { Entity } from '../core/Entity.js';
 import { Camera } from '../cameras/Camera.js';
 
 const _plane = new Plane();
-const _raycaster = new Raycaster();
+const _raycaster = Raycaster.new();
 
 const _pointer = Vec2.new();
 const _offset = Vec3.new();

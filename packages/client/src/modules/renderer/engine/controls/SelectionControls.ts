@@ -7,32 +7,9 @@ import { Frustum } from '../math/Frustum.js';
 import type { Entity } from '../core/Entity.js';
 import { PerspectiveCamera } from '@modules/renderer/engine/cameras/PerspectiveCamera.js';
 import { OrthographicCamera } from '@modules/renderer/engine/cameras/OrthographicCamera.js';
+import { Const } from '@modules/renderer/engine/math/types.js';
 
-const _frustum = new Frustum();
-const _center = Vec3.new();
-
-const _tmpPoint = Vec3.new();
-
-const _vecNear = Vec3.new();
-const _vecTopLeft = Vec3.new();
-const _vecTopRight = Vec3.new();
-const _vecDownRight = Vec3.new();
-const _vecDownLeft = Vec3.new();
-
-const _vecFarTopLeft = Vec3.new();
-const _vecFarTopRight = Vec3.new();
-const _vecFarDownRight = Vec3.new();
-const _vecFarDownLeft = Vec3.new();
-
-const _vectemp1 = Vec3.new();
-const _vectemp2 = Vec3.new();
-const _vectemp3 = Vec3.new();
-
-const _matrix = new Mat4();
-const _quaternion = Quaternion.new().asIdentity();
-const _scale = Vec3.new();
-
-export class SelectionControl {
+export class SelectionControls {
   start: Vec3 = Vec3.new();
   end: Vec3 = Vec3.new();
   collection: Mesh[] = [];
@@ -49,63 +26,41 @@ export class SelectionControl {
     this.instances = {};
   }
 
-  select(startPoint?: Vec3, endPoint?: Vec3): Mesh[] {
-    this.start = startPoint || this.start;
-    this.end = endPoint || this.end;
+  select(start?: Const<Vec3>, end?: Const<Vec3>): Mesh[] {
+    if (start) this.start.from(start);
+    if (end) this.end.from(end);
     this.collection = [];
 
-    this.updateFrustum(this.start, this.end);
-    this.searchChildInFrustum(_frustum, this.scene);
+    this.update(this.start, this.end);
+    this.search(_frustum, this.scene);
 
     return this.collection;
   }
 
-  updateFrustum(startPoint: Vec3, endPoint: Vec3): void {
-    startPoint = startPoint || this.start;
-    endPoint = endPoint || this.end;
-
-    if (startPoint.x === endPoint.x) {
-      endPoint.x += Number.EPSILON;
-    }
-
-    if (startPoint.y === endPoint.y) {
-      endPoint.y += Number.EPSILON;
-    }
+  update(start: Vec3 = this.start, end: Vec3 = this.end): void {
+    if (start.x === end.x) end.x += Number.EPSILON;
+    if (start.y === end.y) end.y += Number.EPSILON;
 
     this.camera.updateProjectionMatrix();
     this.camera.updateMatrixWorld();
 
     if (PerspectiveCamera.is(this.camera)) {
-      _tmpPoint.from(startPoint);
-      _tmpPoint.x = Math.min(startPoint.x, endPoint.x);
-      _tmpPoint.y = Math.max(startPoint.y, endPoint.y);
-      endPoint.x = Math.max(startPoint.x, endPoint.x);
-      endPoint.y = Math.min(startPoint.y, endPoint.y);
+      _tmpPoint.from(start);
+      _tmpPoint.x = Math.min(start.x, end.x);
+      _tmpPoint.y = Math.max(start.y, end.y);
+
+      end.x = Math.max(start.x, end.x);
+      end.y = Math.min(start.y, end.y);
 
       _vecNear.fromMat4Position(this.camera.matrixWorld);
-      _vecTopLeft.from(_tmpPoint);
-      _vecTopRight.set(endPoint.x, _tmpPoint.y, 0);
-      _vecDownRight.from(endPoint);
-      _vecDownLeft.set(_tmpPoint.x, endPoint.y, 0);
 
-      _vecTopLeft.unproject(this.camera);
-      _vecTopRight.unproject(this.camera);
-      _vecDownRight.unproject(this.camera);
-      _vecDownLeft.unproject(this.camera);
-
-      _vectemp1.from(_vecTopLeft).sub(_vecNear);
-      _vectemp2.from(_vecTopRight).sub(_vecNear);
-      _vectemp3.from(_vecDownRight).sub(_vecNear);
-      _vectemp1.normalize();
-      _vectemp2.normalize();
-      _vectemp3.normalize();
-
-      _vectemp1.scale(this.deep);
-      _vectemp2.scale(this.deep);
-      _vectemp3.scale(this.deep);
-      _vectemp1.add(_vecNear);
-      _vectemp2.add(_vecNear);
-      _vectemp3.add(_vecNear);
+      _vecTopLeft.from(_tmpPoint).unproject(this.camera);
+      _vecTopRight.set(end.x, _tmpPoint.y, 0).unproject(this.camera);
+      _vecDownRight.from(end).unproject(this.camera);
+      _vecDownLeft.set(_tmpPoint.x, end.y, 0).unproject(this.camera);
+      _vectemp1.from(_vecTopLeft).sub(_vecNear).normalize().scale(this.deep).add(_vecNear);
+      _vectemp2.from(_vecTopRight).sub(_vecNear).normalize().scale(this.deep).add(_vecNear);
+      _vectemp3.from(_vecDownRight).sub(_vecNear).normalize().scale(this.deep).add(_vecNear);
 
       const planes = _frustum.planes;
       planes[0].fromCoplanar(_vecNear, _vecTopLeft, _vecTopRight);
@@ -115,10 +70,10 @@ export class SelectionControl {
       planes[4].fromCoplanar(_vecTopRight, _vecDownRight, _vecDownLeft);
       planes[5].fromCoplanar(_vectemp3, _vectemp2, _vectemp1).negate();
     } else if (OrthographicCamera.is(this.camera)) {
-      const left = Math.min(startPoint.x, endPoint.x);
-      const top = Math.max(startPoint.y, endPoint.y);
-      const right = Math.max(startPoint.x, endPoint.x);
-      const down = Math.min(startPoint.y, endPoint.y);
+      const left = Math.min(start.x, end.x);
+      const top = Math.max(start.y, end.y);
+      const right = Math.max(start.x, end.x);
+      const down = Math.min(start.y, end.y);
 
       _vecTopLeft.set(left, top, -1);
       _vecTopRight.set(right, top, -1);
@@ -150,7 +105,7 @@ export class SelectionControl {
     }
   }
 
-  searchChildInFrustum(frustum: Frustum, object: Entity): void {
+  search(frustum: Frustum, object: Entity): void {
     if (object.isMesh || object.isLine || object.isPoints) {
       if (object.isInstancedMesh) {
         this.instances[object.uuid] = [];
@@ -166,21 +121,35 @@ export class SelectionControl {
         }
       } else {
         if (object.geometry.boundingSphere === null) object.geometry.computeBoundingSphere();
+        _center.from(object.geometry!.boundingSphere!.center).applyMat4(object.matrixWorld);
 
-        _center.from(object.geometry!.boundingSphere!.center);
-
-        _center.applyMat4(object.matrixWorld);
-
-        if (frustum.contains(_center)) {
-          this.collection.push(object);
-        }
+        if (frustum.contains(_center)) this.collection.push(object);
       }
     }
 
     if (object.children.length > 0) {
       for (let x = 0; x < object.children.length; x++) {
-        this.searchChildInFrustum(frustum, object.children[x]);
+        this.search(frustum, object.children[x]);
       }
     }
   }
 }
+
+const _frustum = Frustum.new();
+const _center = Vec3.new();
+const _tmpPoint = Vec3.new();
+const _vecNear = Vec3.new();
+const _vecTopLeft = Vec3.new();
+const _vecTopRight = Vec3.new();
+const _vecDownRight = Vec3.new();
+const _vecDownLeft = Vec3.new();
+const _vecFarTopLeft = Vec3.new();
+const _vecFarTopRight = Vec3.new();
+const _vecFarDownRight = Vec3.new();
+const _vecFarDownLeft = Vec3.new();
+const _vectemp1 = Vec3.new();
+const _vectemp2 = Vec3.new();
+const _vectemp3 = Vec3.new();
+const _matrix = new Mat4();
+const _quaternion = Quaternion.new().asIdentity();
+const _scale = Vec3.new();

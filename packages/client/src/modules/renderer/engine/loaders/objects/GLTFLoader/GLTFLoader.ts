@@ -49,7 +49,7 @@ import {
   VectorKeyframeTrack,
   Wrapping,
 } from '@modules/renderer/engine/engine.js';
-import { toTrianglesDrawMode } from '../../../utils/BufferGeometryUtils.js';
+import { toTrianglesDrawMode } from '../../../utils/GeometryUtils.js';
 import { FileLoader, ResponseType } from '@modules/renderer/engine/loaders/files/FileLoader/FileLoader.js';
 import { ImageBitmapLoader } from '@modules/renderer/engine/loaders/textures/ImageBitmapLoader/ImageBitmapLoader.js';
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';

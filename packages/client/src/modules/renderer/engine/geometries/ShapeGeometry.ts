@@ -1,7 +1,7 @@
 import { Geometry } from '../core/Geometry.js';
 import { BufferAttribute } from '../core/attributes/BufferAttribute.js';
 import { Shape } from '../extras/core/Shape.js';
-import { ShapeUtils } from '../extras/ShapeUtils.js';
+import { ShapeUtils } from '../utils/ShapeUtils.js';
 import { Vec2 } from '../math/Vec2.js';
 
 export class ShapeGeometry extends Geometry {

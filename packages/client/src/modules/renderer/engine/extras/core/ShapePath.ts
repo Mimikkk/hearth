@@ -1,7 +1,7 @@
 import { Color } from '../../math/Color.js';
 import { Path } from './Path.js';
 import { Shape } from './Shape.js';
-import { ShapeUtils } from '../ShapeUtils.js';
+import { ShapeUtils } from '../../utils/ShapeUtils.js';
 import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 
 export class ShapePath {

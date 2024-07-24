@@ -48,7 +48,7 @@ const useDragControls = () => {
   const controls = new DragControls([...objects], camera, renderer.parameters.canvas);
 
   // const mouse = Vec2.new();
-  // const raycaster = new Raycaster();
+  // const raycaster = Raycaster.new();
 
   // renderer.parameters.canvas.addEventListener('click', event => {
   //   if (!state.drag.selection) return;

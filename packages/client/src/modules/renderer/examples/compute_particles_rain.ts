@@ -26,7 +26,7 @@ import Stats from 'stats-js';
 
 import { GUI } from 'lil-gui';
 
-import * as BufferGeometryUtils from '@modules/renderer/engine/utils/BufferGeometryUtils.js';
+import * as GeometryUtils from '@modules/renderer/engine/utils/GeometryUtils.js';
 import { BufferGeometryLoader } from '@modules/renderer/engine/loaders/geometries/BufferGeometryLoader/BufferGeometryLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
@@ -240,7 +240,7 @@ async function init() {
 
   const zRippleGeometry = new Engine.PlaneGeometry(1, 2);
 
-  const rippleGeometry = BufferGeometryUtils.mergeGeometries([surfaceRippleGeometry, xRippleGeometry, zRippleGeometry]);
+  const rippleGeometry = GeometryUtils.mergeGeometries([surfaceRippleGeometry, xRippleGeometry, zRippleGeometry]);
 
   const rippleParticles = new Engine.Mesh(rippleGeometry, rippleMaterial);
   rippleParticles.isInstancedMesh = true;

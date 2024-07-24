@@ -1,4 +1,4 @@
-import { triangulate } from './Earcut.js';
+import { triangulate } from './ShapeUtils.earcut.js';
 import type { Vec2 } from '../math/Vec2.js';
 
 export class ShapeUtils {

@@ -7,8 +7,8 @@ import { SpotLight } from '@modules/renderer/engine/lights/SpotLight.js';
 import { BoxGeometry } from '@modules/renderer/engine/geometries/BoxGeometry.js';
 import { Mesh } from '@modules/renderer/engine/objects/Mesh.js';
 import { MeshLambertMaterial } from '@modules/renderer/engine/materials/MeshLambertMaterial.js';
-import { SelectionControl } from '@modules/renderer/engine/interactive/SelectionControl.js';
-import { SelectionVisualizer } from '@modules/renderer/engine/interactive/SelectionVisualizer.js';
+import { SelectionControls } from '@modules/renderer/engine/controls/SelectionControls.js';
+import { SelectionVisualizer } from '@modules/renderer/engine/helpers/SelectionVisualizer.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 import { useStats } from '@modules/renderer/examples/utilities/useStats.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
@@ -79,7 +79,7 @@ const renderer = await Renderer.create({
 });
 useWindowResizer(renderer, camera);
 
-const selection = new SelectionControl(camera, scene);
+const selection = new SelectionControls(camera, scene);
 const visualizer = new SelectionVisualizer(renderer);
 const updateVec = (vec3: Vec3, event: PointerEvent) => {
   vec3.set((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1, 0.5);

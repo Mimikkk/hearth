@@ -8,7 +8,7 @@ import {
   TextureFormat,
   Wrapping,
 } from '../constants.js';
-import { DataUtils } from '../extras/DataUtils.js';
+import { DataUtils } from '../utils/DataUtils.js';
 
 export class RectAreaLightUniformsLib {
   static init() {

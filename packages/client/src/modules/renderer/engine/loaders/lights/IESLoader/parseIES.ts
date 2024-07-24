@@ -4,7 +4,7 @@ import {
   TextureDataType,
   TextureFormat,
 } from '@modules/renderer/engine/constants.js';
-import { DataUtils } from '@modules/renderer/engine/extras/DataUtils.js';
+import { DataUtils } from '@modules/renderer/engine/utils/DataUtils.js';
 import { DataTexture } from '@modules/renderer/engine/textures/DataTexture.js';
 import { lerp } from '../../../math/MathUtils.js';
 

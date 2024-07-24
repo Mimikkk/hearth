@@ -24,7 +24,7 @@ import {
 } from '../engine.js';
 import { Intersection } from '@modules/renderer/engine/core/Raycaster.js';
 
-const _raycaster = new Raycaster();
+const _raycaster = Raycaster.new();
 
 const _tempVector = Vec3.new();
 const _tempVec2 = Vec3.new();
