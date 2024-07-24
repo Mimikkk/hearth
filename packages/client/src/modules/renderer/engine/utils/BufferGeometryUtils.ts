@@ -3,7 +3,7 @@ import { AttributeType } from '@modules/renderer/engine/core/types.js';
 import { ArrayConstructorMap, TypedArray } from '@modules/renderer/engine/math/MathUtils.js';
 
 export function mergeAttributes<T extends TypedArray>(attributes: AttributeType<T>[]): BufferAttribute<T> {
-  let itemSize: number = attributes[0].itemSize;
+  let itemSize: number = attributes[0].stride;
 
   let length = 0;
   for (const { count } of attributes) {

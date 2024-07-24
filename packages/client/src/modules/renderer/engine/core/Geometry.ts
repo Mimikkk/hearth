@@ -614,7 +614,7 @@ export class Geometry<
   toNonIndexed(): this {
     function convertBufferAttribute(attribute: any, indices: any) {
       const array = attribute.array;
-      const itemSize = attribute.itemSize;
+      const itemSize = attribute.stride;
 
       const array2 = new array.constructor(indices.length * itemSize);
 

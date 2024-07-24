@@ -103,7 +103,7 @@ function getEntry(geometry) {
           buffer[offset + stride + 8] = morphVec4.x;
           buffer[offset + stride + 9] = morphVec4.y;
           buffer[offset + stride + 10] = morphVec4.z;
-          buffer[offset + stride + 11] = morphColor.itemSize === 4 ? morphVec4.w : 1;
+          buffer[offset + stride + 11] = morphColor.stride === 4 ? morphVec4.w : 1;
         }
       }
     }

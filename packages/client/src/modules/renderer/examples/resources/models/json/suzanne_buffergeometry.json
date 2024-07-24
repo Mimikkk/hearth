@@ -8,7 +8,7 @@
   "data": {
     "attributes": {
       "position": {
-        "itemSize": 3,
+        "stride": 3,
         "type": "Float32Array",
         "array": [
           0.46875,
@@ -1530,7 +1530,7 @@
       }
     },
     "index": {
-      "itemSize": 1,
+      "stride": 1,
       "type": "Uint16Array",
       "array": [
         0,

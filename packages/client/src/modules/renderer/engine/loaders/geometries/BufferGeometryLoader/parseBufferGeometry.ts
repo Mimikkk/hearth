@@ -82,11 +82,11 @@ export const parseBufferGeometry = (json: JsonContent): Geometry => {
 
     if (attribute.isInterleavedBufferAttribute) {
       const interleavedBuffer = getInterleavedBuffer(json.data, attribute.data);
-      bufferAttribute = new InterleavedBufferAttribute(interleavedBuffer, attribute.itemSize, attribute.offset);
+      bufferAttribute = new InterleavedBufferAttribute(interleavedBuffer, attribute.stride, attribute.offset);
     } else {
       const typedArray = createTypedArray(attribute.type, attribute.array);
       const bufferAttributeConstr = attribute.isInstancedBufferAttribute ? InstancedBufferAttribute : BufferAttribute;
-      bufferAttribute = new bufferAttributeConstr(typedArray, attribute.itemSize);
+      bufferAttribute = new bufferAttributeConstr(typedArray, attribute.stride);
     }
 
     if (attribute.name !== undefined) bufferAttribute.name = attribute.name;
@@ -109,10 +109,10 @@ export const parseBufferGeometry = (json: JsonContent): Geometry => {
 
         if (attribute.isInterleavedBufferAttribute) {
           const interleavedBuffer = getInterleavedBuffer(json.data, attribute.data);
-          bufferAttribute = new InterleavedBufferAttribute(interleavedBuffer, attribute.itemSize, attribute.offset);
+          bufferAttribute = new InterleavedBufferAttribute(interleavedBuffer, attribute.stride, attribute.offset);
         } else {
           const typedArray = createTypedArray(attribute.type, attribute.array);
-          bufferAttribute = new BufferAttribute(typedArray, attribute.itemSize);
+          bufferAttribute = new BufferAttribute(typedArray, attribute.stride);
         }
 
         if (attribute.name !== undefined) bufferAttribute.name = attribute.name;

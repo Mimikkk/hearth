@@ -380,7 +380,7 @@ export class NodeBuilder {
     if (attribute.isInterleavedBufferAttribute) dataAttribute = attribute.data;
 
     const array = dataAttribute.array;
-    const itemSize = attribute.itemSize;
+    const itemSize = attribute.stride;
 
     let arrayType = this.getTypeFromArray(array);
     return this.getTypeFromLength(itemSize, arrayType);

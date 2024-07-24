@@ -23,9 +23,9 @@ export class BackendAttributes {
 
       if (
         (isStorageBufferAttribute(bufferAttribute) || isStorageInstancedBufferAttribute(bufferAttribute)) &&
-        bufferAttribute.itemSize === 3
+        bufferAttribute.stride === 3
       ) {
-        bufferAttribute.itemSize = 4;
+        bufferAttribute.stride = 4;
         array = new array.constructor(bufferAttribute.count * 4);
 
         for (let i = 0; i < bufferAttribute.count; i++) {
@@ -82,7 +82,7 @@ export class BackendAttributes {
             ? GPUVertexStepModeType.Instance
             : GPUVertexStepModeType.Vertex;
         } else {
-          arrayStride = geometryAttribute.itemSize * bytesPerElement;
+          arrayStride = geometryAttribute.stride * bytesPerElement;
           stepMode = geometryAttribute.isInstancedBufferAttribute
             ? GPUVertexStepModeType.Instance
             : GPUVertexStepModeType.Vertex;
@@ -155,12 +155,12 @@ export class BackendAttributes {
   }
 
   _getVertexFormat(attribute: AttributeType): GPUVertexFormat {
-    const { itemSize } = attribute;
+    const { stride } = attribute;
     const ArrayType = attribute.array.constructor;
 
     let format;
 
-    if (itemSize == 1) {
+    if (stride == 1) {
       if (ArrayType === Int32Array) {
         format = 'sint32';
       } else if (ArrayType === Uint32Array) {
@@ -190,7 +190,7 @@ export class BackendAttributes {
       const prefix = options[0];
 
       if (prefix) {
-        const bytesPerUnit = ArrayType.BYTES_PER_ELEMENT * itemSize;
+        const bytesPerUnit = ArrayType.BYTES_PER_ELEMENT * stride;
         const paddedBytesPerUnit = Math.floor((bytesPerUnit + 3) / 4) * 4;
         const paddedItemSize = paddedBytesPerUnit / ArrayType.BYTES_PER_ELEMENT;
 

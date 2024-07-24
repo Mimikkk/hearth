@@ -9,20 +9,20 @@ export class BufferAttribute<T extends TypedArray = any> {
   declare isBufferAttribute: true;
   name: string;
   array: T;
-  itemSize: number;
+  stride: number;
   count: number;
 
   usage: BufferUsage;
   version: number;
 
-  constructor(array: T, itemSize: number) {
+  constructor(array: T, stride: number) {
     this.isBufferAttribute = true;
 
     this.name = '';
 
     this.array = array;
-    this.itemSize = itemSize;
-    this.count = array !== undefined ? array.length / itemSize : 0;
+    this.stride = stride;
+    this.count = array.length / stride;
 
     this.usage = BufferUsage.StaticDraw;
 
@@ -41,7 +41,7 @@ export class BufferAttribute<T extends TypedArray = any> {
   copy(source: BufferAttribute<T>): this {
     this.name = source.name;
     this.array = new (source.array.constructor as TypedArrayConstructor)(source.array) as T;
-    this.itemSize = source.itemSize;
+    this.stride = source.stride;
     this.count = source.count;
     this.usage = source.usage;
 
@@ -49,14 +49,14 @@ export class BufferAttribute<T extends TypedArray = any> {
   }
 
   applyMat3(m: Mat3): this {
-    if (this.itemSize === 2) {
+    if (this.stride === 2) {
       for (let i = 0, l = this.count; i < l; i++) {
         _Vec2.fromAttribute(this, i);
         _Vec2.applyMat3(m);
 
         this.setXY(i, _Vec2.x, _Vec2.y);
       }
-    } else if (this.itemSize === 3) {
+    } else if (this.stride === 3) {
       for (let i = 0, l = this.count; i < l; i++) {
         _vec3.fromAttribute(this, i);
         _vec3.applyMat3(m);
@@ -112,67 +112,67 @@ export class BufferAttribute<T extends TypedArray = any> {
   }
 
   getComponent(index: number, component: number): number {
-    let value = this.array[index * this.itemSize + component];
+    let value = this.array[index * this.stride + component];
 
     return value;
   }
 
   setComponent(index: number, component: number, value: number): this {
-    this.array[index * this.itemSize + component] = value;
+    this.array[index * this.stride + component] = value;
 
     return this;
   }
 
   getX(index: number): number {
-    let x = this.array[index * this.itemSize];
+    let x = this.array[index * this.stride];
 
     return x;
   }
 
   setX(index: number, x: number): this {
-    this.array[index * this.itemSize] = x;
+    this.array[index * this.stride] = x;
 
     return this;
   }
 
   getY(index: number): number {
-    let y = this.array[index * this.itemSize + 1];
+    let y = this.array[index * this.stride + 1];
 
     return y;
   }
 
   setY(index: number, y: number): this {
-    this.array[index * this.itemSize + 1] = y;
+    this.array[index * this.stride + 1] = y;
 
     return this;
   }
 
   getZ(index: number): number {
-    let z = this.array[index * this.itemSize + 2];
+    let z = this.array[index * this.stride + 2];
 
     return z;
   }
 
   setZ(index: number, z: number): this {
-    this.array[index * this.itemSize + 2] = z;
+    this.array[index * this.stride + 2] = z;
 
     return this;
   }
 
   getW(index: number): number {
-    let w = this.array[index * this.itemSize + 3];
+    let w = this.array[index * this.stride + 3];
 
     return w;
   }
 
   setW(index: number, w: number): this {
-    this.array[index * this.itemSize + 3] = w;
+    this.array[index * this.stride + 3] = w;
 
     return this;
   }
 
   setXY(index: number, x: number, y: number): this {
-    index *= this.itemSize;
+    index *= this.stride;
 
     this.array[index + 0] = x;
     this.array[index + 1] = y;
@@ -181,7 +181,7 @@ export class BufferAttribute<T extends TypedArray = any> {
   }
 
   setXYZ(index: number, x: number, y: number, z: number): this {
-    index *= this.itemSize;
+    index *= this.stride;
 
     this.array[index + 0] = x;
     this.array[index + 1] = y;
@@ -191,7 +191,7 @@ export class BufferAttribute<T extends TypedArray = any> {
   }
 
   setXYZW(index: number, x: number, y: number, z: number, w: number): this {
-    index *= this.itemSize;
+    index *= this.stride;
 
     this.array[index + 0] = x;
     this.array[index + 1] = y;
@@ -202,7 +202,7 @@ export class BufferAttribute<T extends TypedArray = any> {
   }
 
   clone(): BufferAttribute<T> {
-    return new BufferAttribute(this.array, this.itemSize).copy(this);
+    return new BufferAttribute(this.array, this.stride).copy(this);
   }
 }
 BufferAttribute.prototype.isBufferAttribute = true;

@@ -1291,7 +1291,7 @@ class GLTFMeshGpuInstancing implements Plugin {
         for (const attributeName in attributes) {
           if (attributeName === '_COLOR_0') {
             const attr = attributes[attributeName];
-            instancedMesh.instanceColor = new InstancedBufferAttribute(attr.array, attr.itemSize);
+            instancedMesh.instanceColor = new InstancedBufferAttribute(attr.array, attr.stride);
           } else if (attributeName !== 'TRANSLATION' && attributeName !== 'ROTATION' && attributeName !== 'SCALE') {
             mesh.geometry.setAttribute(attributeName, attributes[attributeName]);
           }
@@ -2362,7 +2362,7 @@ class Parser {
 
         if (bufferView !== null) {
           // Avoid modifying the original ArrayBuffer, if the bufferView wasn't initialized with zeroes.
-          bufferAttribute = new BufferAttribute(bufferAttribute.array.slice(), bufferAttribute.itemSize);
+          bufferAttribute = new BufferAttribute(bufferAttribute.array.slice(), bufferAttribute.stride);
         }
 
         for (let i = 0, il = sparseIndices.length; i < il; i++) {
@@ -3374,7 +3374,7 @@ class Parser {
         break;
 
       default:
-        switch (outputAccessor.itemSize) {
+        switch (outputAccessor.stride) {
           case 1:
             TypedKeyframeTrack = NumberKeyframeTrack;
             break;

@@ -69,7 +69,7 @@ const _mesh = new Mesh(null!, null!);
 const _batchIntersects: Intersection[] = [];
 
 function copyAttributeData(src: BufferAttribute<any>, target: BufferAttribute<any>, targetOffset: number) {
-  const itemSize = target.itemSize;
+  const itemSize = target.stride;
   //@ts-expect-error
   if (src.isInterleavedBufferAttribute || src.array.constructor !== target.array.constructor) {
     // use the component getters and setters if the array data cannot
@@ -188,7 +188,7 @@ export class BatchedMesh extends Mesh {
     if (this._geometryInitialized === false) {
       for (const attributeName in reference.attributes) {
         const srcAttribute = reference.getAttribute(attributeName);
-        const { array, itemSize } = srcAttribute;
+        const { array, stride } = srcAttribute;
 
         const dstArray = new array.constructor(maxVertexCount * itemSize);
         const dstAttribute = new srcAttribute.constructor(dstArray, itemSize);
@@ -236,7 +236,7 @@ export class BatchedMesh extends Mesh {
 
       const srcAttribute = geometry.getAttribute(attributeName);
       const dstAttribute = batchGeometry.getAttribute(attributeName);
-      if (srcAttribute.itemSize !== dstAttribute.itemSize) {
+      if (srcAttribute.stride !== dstAttribute.stride) {
         throw new Error('BatchedMesh: All attributes must have a consistent itemSize.');
       }
     }
@@ -425,7 +425,7 @@ export class BatchedMesh extends Mesh {
       copyAttributeData(srcAttribute, dstAttribute, vertexStart);
 
       // fill the rest in with zeroes
-      const itemSize = srcAttribute.itemSize;
+      const itemSize = srcAttribute.stride;
       for (let i = srcAttribute.count, l = vertexCount; i < l; i++) {
         const index = vertexStart + i;
         for (let c = 0; c < itemSize; c++) {

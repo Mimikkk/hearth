@@ -151,7 +151,7 @@ class DRACOLoader {
       const result = geometryData.attributes[i];
       const name = result.name;
       const array = result.array;
-      const itemSize = result.itemSize;
+      const itemSize = result.stride;
 
       const attribute = new BufferAttribute(array, itemSize);
 

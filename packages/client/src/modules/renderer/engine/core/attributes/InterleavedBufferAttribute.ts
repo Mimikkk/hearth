@@ -11,13 +11,13 @@ export class InterleavedBufferAttribute<T extends TypedArray = any> {
   declare isInterleavedBufferAttribute: true;
   name: string;
   data: Buffer<T>;
-  itemSize: number;
+  stride: number;
   offset: number;
 
   constructor(interleavedBuffer: Buffer, itemSize: number, offset: number) {
     this.name = '';
     this.data = interleavedBuffer;
-    this.itemSize = itemSize;
+    this.stride = itemSize;
     this.offset = offset;
   }
 
