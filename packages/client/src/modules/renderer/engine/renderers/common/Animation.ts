@@ -11,7 +11,7 @@ export class Animation {
     const update = (time: number, frame?: number) => {
       this.requestId = self.requestAnimationFrame(update);
 
-      if (this.renderer.info.autoReset) this.renderer.info.reset();
+      if (this.renderer.info.useAutoTick) this.renderer.info.tick();
 
       this.renderer.nodes.nodeFrame.update();
 

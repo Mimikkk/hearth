@@ -209,10 +209,10 @@ export class Renderer {
 
     this.context = context;
     this._activeRenderObjectFn = this._renderObjectFn || this.renderObject;
-    this.info.calls++;
-    this.info.render.calls++;
+    this.info.passes++;
+    this.info.render.passes++;
 
-    nodeFrame.renderId = this.info.calls;
+    nodeFrame.renderId = this.info.passes;
     if (scene.matrixWorldAutoUpdate) scene.updateMatrixWorld();
 
     if (camera.parent === null && camera.matrixWorldAutoUpdate) camera.updateMatrixWorld();
@@ -312,9 +312,9 @@ export class Renderer {
     const frame = this.nodes.nodeFrame;
 
     const previousRenderId = frame.renderId;
-    this.info.calls++;
-    this.info.compute.calls++;
-    frame.renderId = this.info.calls;
+    this.info.passes++;
+    this.info.compute.passes++;
+    frame.renderId = this.info.passes;
 
     const backend = this.backend;
     const pipelines = this.pipelines;

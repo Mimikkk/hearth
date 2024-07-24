@@ -6,12 +6,12 @@ import { Points } from '@modules/renderer/engine/objects/Points.js';
 import { Line } from '@modules/renderer/engine/objects/Line.js';
 
 export class Stats {
-  autoReset: boolean;
+  useAutoTick: boolean;
   frame: number;
-  calls: number;
+  passes: number;
   render: {
+    passes: number;
     calls: number;
-    draws: number;
     triangles: number;
     points: number;
     lines: number;
@@ -19,6 +19,7 @@ export class Stats {
   };
 
   compute: {
+    passes: number;
     calls: number;
     timestamp: number;
   };
@@ -29,14 +30,14 @@ export class Stats {
   };
 
   constructor() {
-    this.autoReset = true;
+    this.useAutoTick = true;
 
     this.frame = 0;
-    this.calls = 0;
+    this.passes = 0;
 
     this.render = {
+      passes: 0,
       calls: 0,
-      draws: 0,
       triangles: 0,
       points: 0,
       lines: 0,
@@ -44,6 +45,7 @@ export class Stats {
     };
 
     this.compute = {
+      passes: 0,
       calls: 0,
       timestamp: 0,
     };
@@ -55,7 +57,7 @@ export class Stats {
   }
 
   update(object: Entity, count: number, instanceCount: number = 1) {
-    this.render.draws++;
+    this.render.calls++;
 
     if (object instanceof Mesh || object instanceof Sprite) {
       this.render.triangles += instanceCount * (count / 3);
@@ -74,27 +76,28 @@ export class Stats {
     this[type].timestamp += time;
   }
 
-  reset() {
-    this.render.draws = 0;
+  tick() {
+    this.render.calls = 0;
     this.render.triangles = 0;
     this.render.points = 0;
     this.render.lines = 0;
-
     this.render.timestamp = 0;
+
+    this.compute.calls = 0;
     this.compute.timestamp = 0;
   }
 
   dispose() {
-    this.reset();
+    this.tick();
 
-    this.calls = 0;
-
-    this.render.calls = 0;
-    this.compute.calls = 0;
+    this.passes = 0;
+    this.render.passes = 0;
+    this.compute.passes = 0;
 
     this.render.timestamp = 0;
     this.compute.timestamp = 0;
-    this.memory.geometries = 0;
+
     this.memory.textures = 0;
+    this.memory.geometries = 0;
   }
 }

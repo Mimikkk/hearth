@@ -90,7 +90,7 @@ export class Geometries extends DataMap<any, any> {
   }
 
   updateAttribute(attribute: AttributeType, type: AttributeLocation) {
-    const callId = this.renderer.info.render.calls;
+    const callId = this.renderer.info.render.passes;
 
     if (this.attributeCall.get(attribute) !== callId) {
       this.renderer.attributes.update(attribute, type);
