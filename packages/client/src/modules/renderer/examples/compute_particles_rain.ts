@@ -19,7 +19,7 @@ import {
 } from '@modules/renderer/engine/nodes/Nodes.js';
 
 import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
-import StorageInstancedBufferAttribute from '@modules/renderer/engine/renderers/common/StorageInstancedBufferAttribute.js';
+import StorageInstancedBufferAttribute from '@modules/renderer/engine/core/attributes/StorageInstancedBufferAttribute.js';
 
 import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
 import Stats from 'stats-js';

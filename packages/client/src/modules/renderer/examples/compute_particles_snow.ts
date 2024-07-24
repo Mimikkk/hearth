@@ -21,7 +21,7 @@ import {
 import { TeapotGeometry } from '@modules/renderer/engine/geometries/TeapotGeometry.js';
 
 import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
-import StorageInstancedBufferAttribute from '@modules/renderer/engine/renderers/common/StorageInstancedBufferAttribute.js';
+import StorageInstancedBufferAttribute from '@modules/renderer/engine/core/attributes/StorageInstancedBufferAttribute.js';
 
 import PostProcessing from '@modules/renderer/engine/renderers/common/PostProcessing.js';
 

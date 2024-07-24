@@ -9,7 +9,7 @@ import { Backend } from '@modules/renderer/engine/renderers/webgpu/Backend.js';
 import Binding from '@modules/renderer/engine/renderers/common/Binding.js';
 import UniformBuffer from '@modules/renderer/engine/renderers/common/UniformBuffer.js';
 import { SampledCubeTexture, SampledTexture } from '@modules/renderer/engine/renderers/common/SampledTexture.js';
-import StorageBuffer from '@modules/renderer/engine/renderers/common/StorageBuffer.js';
+import StorageBuffer from '@modules/renderer/engine/core/buffers/StorageBuffer.js';
 import Sampler from '@modules/renderer/engine/renderers/common/Sampler.js';
 
 export class BackendBindings {

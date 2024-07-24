@@ -1,4 +1,4 @@
-import StorageBuffer from '../StorageBuffer.js';
+import StorageBuffer from '../../../core/buffers/StorageBuffer.js';
 import NodeUniform from '@modules/renderer/engine/nodes/core/NodeUniform.js';
 
 let _id = 0;

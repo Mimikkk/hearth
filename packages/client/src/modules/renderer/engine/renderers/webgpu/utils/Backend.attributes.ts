@@ -2,7 +2,7 @@ import { InstancedBufferAttribute, InterleavedBufferAttribute } from '../../../e
 import { GPUVertexStepModeType } from './constants.js';
 import { Backend } from '@modules/renderer/engine/renderers/webgpu/Backend.js';
 import RenderObject from '@modules/renderer/engine/renderers/common/RenderObject.js';
-import StorageBufferAttribute from '@modules/renderer/engine/renderers/common/StorageBufferAttribute.js';
+import StorageBufferAttribute from '@modules/renderer/engine/core/attributes/StorageBufferAttribute.js';
 import { AttributeType } from '@modules/renderer/engine/core/types.js';
 
 export class BackendAttributes {

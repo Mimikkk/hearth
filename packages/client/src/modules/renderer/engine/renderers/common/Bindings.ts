@@ -7,7 +7,7 @@ import { SampledTexture } from '@modules/renderer/engine/renderers/common/Sample
 import NodeUniformsGroup from '@modules/renderer/engine/renderers/common/nodes/NodeUniformsGroup.js';
 import UniformBuffer from '@modules/renderer/engine/renderers/common/UniformBuffer.js';
 import StorageTexture from '@modules/renderer/engine/renderers/common/StorageTexture.js';
-import StorageBuffer from '@modules/renderer/engine/renderers/common/StorageBuffer.js';
+import StorageBuffer from '@modules/renderer/engine/core/buffers/StorageBuffer.js';
 import { ComputeNode } from '@modules/renderer/engine/nodes/Nodes.js';
 
 class Bindings extends DataMap<any, any> {
