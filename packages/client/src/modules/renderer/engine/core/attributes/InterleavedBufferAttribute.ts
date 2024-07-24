@@ -3,7 +3,7 @@ import { BufferAttribute } from './BufferAttribute.js';
 import { denormalize, normalize, TypedArray } from '../../math/MathUtils.js';
 import { InterleavedBuffer } from '@modules/renderer/engine/core/buffers/InterleavedBuffer.js';
 import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
-import { Matrix, Mat3 } from '@modules/renderer/engine/math/Mat3.js';
+import { Mat3 } from '@modules/renderer/engine/math/Mat3.js';
 
 const _vector = Vec3.new();
 

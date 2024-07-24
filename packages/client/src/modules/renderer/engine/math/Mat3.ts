@@ -4,24 +4,6 @@ import { Vec2 } from './Vec2.js';
 import { Const } from '@modules/renderer/engine/math/types.js';
 import { NumberArray } from '@modules/renderer/engine/math/MathUtils.js';
 
-export interface Matrix {
-  elements: number[];
-
-  identity(): Matrix;
-
-  copy(m: this): this;
-
-  scale(s: number): Matrix;
-
-  determinant(): number;
-
-  transpose(): Matrix;
-
-  invert(): Matrix;
-
-  clone(): Matrix;
-}
-
 export class Mat3 {
   declare ['constructor']: typeof Mat3;
   declare isMat3: true;
