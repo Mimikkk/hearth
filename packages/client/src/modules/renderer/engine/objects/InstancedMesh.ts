@@ -1,4 +1,3 @@
-import { InstancedBufferAttribute } from '../core/attributes/InstancedBufferAttribute.js';
 import { Mesh } from './Mesh.js';
 import { Box3 } from '../math/Box3.js';
 import { Mat4 } from '../math/Mat4.js';
@@ -9,6 +8,7 @@ import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
 import { Material } from '@modules/renderer/engine/objects/materials/Material.js';
 import { Intersection, Raycaster } from '@modules/renderer/engine/core/Raycaster.js';
 import { Color } from '@modules/renderer/engine/math/Color.js';
+import { BufferAttribute } from '@modules/renderer/engine/core/attributes/BufferAttribute.js';
 
 const _instanceLocalMatrix = new Mat4();
 const _instanceWorldMatrix = new Mat4();
@@ -22,8 +22,8 @@ const _sphere = new Sphere();
 
 export class InstancedMesh extends Mesh {
   declare isInstancedMesh: true;
-  instanceMatrix: InstancedBufferAttribute<Float32Array>;
-  instanceColor: InstancedBufferAttribute<Float32Array> | null;
+  instanceMatrix: BufferAttribute;
+  instanceColor: BufferAttribute | null;
   morphTexture: DataTexture | null;
   count: number;
   boundingBox: Box3 | null;
@@ -32,7 +32,7 @@ export class InstancedMesh extends Mesh {
   constructor(geometry: Geometry, material: Material, count: number) {
     super(geometry, material);
 
-    this.instanceMatrix = new InstancedBufferAttribute(new Float32Array(count * 16), 16, false, 1);
+    this.instanceMatrix = new BufferAttribute(new Float32Array(count * 16), 16, 0, 'instance');
     this.instanceColor = null;
     this.morphTexture = null;
     this.count = count;
@@ -100,8 +100,7 @@ export class InstancedMesh extends Mesh {
 
     this.instanceMatrix.copy(source.instanceMatrix);
 
-    if (source.instanceColor !== null)
-      this.instanceColor = source.instanceColor.clone() as InstancedBufferAttribute<Float32Array>;
+    if (source.instanceColor !== null) this.instanceColor = source.instanceColor.clone();
 
     this.count = source.count;
 
@@ -181,10 +180,10 @@ export class InstancedMesh extends Mesh {
 
   setColorAt(index: number, color: Color) {
     if (this.instanceColor === null) {
-      this.instanceColor = new InstancedBufferAttribute(new Float32Array(this.instanceMatrix.count * 3), 3, false, 1);
+      this.instanceColor = new BufferAttribute(new Float32Array(this.instanceMatrix.count * 3), 3, 0, 'instance');
     }
 
-    color.intoArray(this.instanceColor.array as never, index * 3);
+    color.intoArray(this.instanceColor.array, index * 3);
   }
 
   setMatrixAt(index: number, matrix: Mat4) {

@@ -18,7 +18,12 @@ export class BufferAttribute<T extends TypedArray = any> {
 
   usage: BufferUsage = BufferUsage.StaticDraw;
 
-  constructor(source: T, stride: number, offset: number = 0) {
+  constructor(
+    source: T,
+    stride: number,
+    offset: number = 0,
+    public step: GPUVertexStepMode = 'vertex',
+  ) {
     this.name = '';
 
     this.array = source;
@@ -30,6 +35,10 @@ export class BufferAttribute<T extends TypedArray = any> {
     this.usage = BufferUsage.StaticDraw;
 
     this.version = 0;
+  }
+
+  get isInstancedBufferAttribute(): boolean {
+    return this.step === 'instance';
   }
 
   set needsUpdate(value: boolean) {

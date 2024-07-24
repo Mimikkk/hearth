@@ -2,7 +2,6 @@ import { Sphere } from '../../../math/Sphere.js';
 import { Vec3 } from '../../../math/Vec3.js';
 import { BufferAttribute } from '../../../core/attributes/BufferAttribute.js';
 import { Geometry } from '../../../core/Geometry.js';
-import { InstancedBufferAttribute } from '../../../core/attributes/InstancedBufferAttribute.js';
 import { InterleavedBufferAttribute } from '../../../core/attributes/InterleavedBufferAttribute.js';
 import { Buffer } from '../../../core/buffers/Buffer.js';
 import { createTypedArray } from '@modules/renderer/engine/math/MathUtils.js';
@@ -85,8 +84,12 @@ export const parseBufferGeometry = (json: JsonContent): Geometry => {
       bufferAttribute = new InterleavedBufferAttribute(interleavedBuffer, attribute.stride, attribute.offset);
     } else {
       const typedArray = createTypedArray(attribute.type, attribute.array);
-      const bufferAttributeConstr = attribute.isInstancedBufferAttribute ? InstancedBufferAttribute : BufferAttribute;
-      bufferAttribute = new bufferAttributeConstr(typedArray, attribute.stride);
+      bufferAttribute = new BufferAttribute(
+        typedArray,
+        attribute.stride,
+        0,
+        attribute.isInstancedBufferAttribute ? 'instance' : 'vertex',
+      );
     }
 
     if (attribute.name !== undefined) bufferAttribute.name = attribute.name;

@@ -66,7 +66,6 @@ export { UniformGroup } from './core/UniformGroup.js';
 export { Geometry } from './core/Geometry.js';
 export { InterleavedBufferAttribute } from './core/attributes/InterleavedBufferAttribute.js';
 export { Buffer } from './core/buffers/Buffer.js';
-export { InstancedBufferAttribute } from './core/attributes/InstancedBufferAttribute.js';
 export * from './core/attributes/BufferAttribute.js';
 export { Entity } from './core/Entity.js';
 export { Raycaster } from './core/Raycaster.js';

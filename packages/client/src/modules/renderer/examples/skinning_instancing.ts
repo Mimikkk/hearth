@@ -78,7 +78,7 @@ async function init() {
         child.material.colorNode = mix(color(0xffffff), randomColors, oscNode);
 
         child.isInstancedMesh = true;
-        child.instanceMatrix = new Engine.InstancedBufferAttribute(new Float32Array(instanceCount * 16), 16);
+        child.instanceMatrix = new Engine.BufferAttribute(new Float32Array(instanceCount * 16), 16, 0, 'instance');
         child.count = instanceCount;
 
         for (let i = 0; i < instanceCount; i++) {

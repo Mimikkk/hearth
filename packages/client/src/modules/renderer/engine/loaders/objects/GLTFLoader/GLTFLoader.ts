@@ -13,7 +13,6 @@ import {
   Filter,
   Geometry,
   Group,
-  InstancedBufferAttribute,
   InstancedMesh,
   InterleavedBufferAttribute,
   Interpolant,
@@ -1291,7 +1290,7 @@ class GLTFMeshGpuInstancing implements Plugin {
         for (const attributeName in attributes) {
           if (attributeName === '_COLOR_0') {
             const attr = attributes[attributeName];
-            instancedMesh.instanceColor = new InstancedBufferAttribute(attr.array, attr.stride);
+            instancedMesh.instanceColor = new BufferAttribute(attr.array, attr.stride, 0, 'instance');
           } else if (attributeName !== 'TRANSLATION' && attributeName !== 'ROTATION' && attributeName !== 'SCALE') {
             mesh.geometry.setAttribute(attributeName, attributes[attributeName]);
           }

@@ -1,7 +1,6 @@
 import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
 import { BufferAttribute } from '@modules/renderer/engine/core/attributes/BufferAttribute.js';
 import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
-import { InstancedBufferAttribute } from '@modules/renderer/engine/core/attributes/InstancedBufferAttribute.js';
 import { Box3, Sphere, Vec3 } from '@modules/renderer/engine/engine.js';
 
 export class InstancedPointsGeometry extends Geometry {
@@ -41,9 +40,7 @@ export class InstancedPointsGeometry extends Geometry {
   }
 
   setPositions(array: Float32Array | number[]): this {
-    const points = array instanceof Float32Array ? array : new Float32Array(array);
-
-    this.setAttribute('instancePosition', new InstancedBufferAttribute(points, 3));
+    this.setAttribute('instancePosition', new BufferAttribute(new Float32Array(array), 3, 0, 'instance'));
 
     this.computeBoundingBox();
     this.computeBoundingSphere();
@@ -53,16 +50,7 @@ export class InstancedPointsGeometry extends Geometry {
   }
 
   setColors(array: Float32Array | number[]): this {
-    let colors;
-
-    if (array instanceof Float32Array) {
-      colors = array;
-    } else if (Array.isArray(array)) {
-      colors = new Float32Array(array);
-    }
-
-    //@ts-expect-error
-    this.setAttribute('instanceColor', new InstancedBufferAttribute(colors, 3)); // rgb
+    this.setAttribute('instanceColor', new BufferAttribute(new Float32Array(array), 3, 0, 'instance'));
 
     return this;
   }

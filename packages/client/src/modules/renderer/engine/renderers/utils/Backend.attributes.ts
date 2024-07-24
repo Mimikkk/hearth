@@ -1,9 +1,10 @@
-import { InstancedBufferAttribute, InterleavedBufferAttribute } from '../../engine.js';
+import { BufferAttribute, InterleavedBufferAttribute } from '../../engine.js';
 import { GPUVertexStepModeType } from './constants.js';
 import { Backend } from '@modules/renderer/engine/renderers/Backend.js';
 import RenderObject from '@modules/renderer/engine/renderers/RenderObject.js';
 import StorageBufferAttribute from '@modules/renderer/engine/core/attributes/StorageBufferAttribute.js';
 import { AttributeType } from '@modules/renderer/engine/core/types.js';
+import { StorageInstancedBufferAttribute } from '@modules/renderer/engine/core/attributes/StorageInstancedBufferAttribute.js';
 
 export class BackendAttributes {
   constructor(public backend: Backend) {}
@@ -33,7 +34,8 @@ export class BackendAttributes {
         }
       }
 
-      const size = array.byteLength + ((4 - (array.byteLength % 4)) % 4); // ensure 4 byte alignment, see #20441
+      // ensure 4 byte alignment, see #20441
+      const size = array.byteLength + ((4 - (array.byteLength % 4)) % 4);
 
       buffer = device.createBuffer({
         label: bufferAttribute.name,
@@ -208,5 +210,5 @@ export class BackendAttributes {
 const isInterleavedBufferAttribute = (item: any): item is InterleavedBufferAttribute =>
   item.isInterleavedBufferAttribute;
 const isStorageBufferAttribute = (item: any): item is StorageBufferAttribute => item.isStorageBufferAttribute;
-const isStorageInstancedBufferAttribute = (item: any): item is InstancedBufferAttribute =>
+const isStorageInstancedBufferAttribute = (item: any): item is StorageInstancedBufferAttribute =>
   item.isStorageInstancedBufferAttribute;
