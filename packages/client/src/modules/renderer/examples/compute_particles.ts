@@ -53,7 +53,8 @@ async function init() {
 
   //
 
-  const createBuffer = () => storage(new StorageInstancedBufferAttribute(particleCount, 3), 'vec3', particleCount);
+  const createBuffer = () =>
+    storage(new StorageInstancedBufferAttribute(Float32Array(particleCount * 3), 3), 'vec3', particleCount);
 
   const positionBuffer = createBuffer();
   const velocityBuffer = createBuffer();

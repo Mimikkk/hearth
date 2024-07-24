@@ -39,8 +39,14 @@ async function init() {
 
   // create buffers
 
-  const particleBuffer = new StorageInstancedBufferAttribute(particleNum, particleSize);
-  const velocityBuffer = new StorageInstancedBufferAttribute(particleNum, particleSize);
+  const particleBuffer = new StorageInstancedBufferAttribute(
+    new Float32Array(particleNum * particleSize),
+    particleSize,
+  );
+  const velocityBuffer = new StorageInstancedBufferAttribute(
+    new Float32Array(particleNum * particleSize),
+    particleSize,
+  );
 
   const particleBufferNode = storage(particleBuffer, 'vec2', particleNum);
   const velocityBufferNode = storage(velocityBuffer, 'vec2', particleNum);

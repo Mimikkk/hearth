@@ -87,7 +87,14 @@ async function init() {
   //
 
   const createBuffer = (type = 'vec3') =>
-    storage(new StorageInstancedBufferAttribute(maxParticleCount, type === 'vec4' ? 4 : 3), type, maxParticleCount);
+    storage(
+      new StorageInstancedBufferAttribute(
+        new Float32Array(maxParticleCount * (type === 'vec4' ? 4 : 3)),
+        type === 'vec4' ? 4 : 3,
+      ),
+      type,
+      maxParticleCount,
+    );
 
   const positionBuffer = createBuffer();
   const scaleBuffer = createBuffer();
