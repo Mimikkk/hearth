@@ -1,7 +1,7 @@
 import { Vec3 } from '../../math/Vec3.js';
 import { Vec2 } from '../../math/Vec2.js';
 import { TypedArray, TypedArrayConstructor } from '../../math/MathUtils.js';
-import { BufferUsage, TextureDataType } from '../../constants.js';
+import { BufferUsage } from '../../constants.js';
 import { Mat3 } from '@modules/renderer/engine/math/Mat3.js';
 import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
 
@@ -11,10 +11,8 @@ export class BufferAttribute<T extends TypedArray = any> {
   array: T;
   itemSize: number;
   count: number;
-  normalized: boolean;
+
   usage: BufferUsage;
-  updateRanges: { start: number; count: number }[];
-  gpuType: TextureDataType;
   version: number;
 
   constructor(array: T, itemSize: number) {
@@ -27,8 +25,6 @@ export class BufferAttribute<T extends TypedArray = any> {
     this.count = array !== undefined ? array.length / itemSize : 0;
 
     this.usage = BufferUsage.StaticDraw;
-    this.updateRanges = [];
-    this.gpuType = TextureDataType.Float;
 
     this.version = 0;
   }
@@ -47,9 +43,7 @@ export class BufferAttribute<T extends TypedArray = any> {
     this.array = new (source.array.constructor as TypedArrayConstructor)(source.array) as T;
     this.itemSize = source.itemSize;
     this.count = source.count;
-
     this.usage = source.usage;
-    this.gpuType = source.gpuType;
 
     return this;
   }
