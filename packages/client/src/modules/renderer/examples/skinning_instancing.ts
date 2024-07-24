@@ -14,6 +14,7 @@ import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/
 import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 import PostProcessing from '@modules/renderer/engine/renderers/PostProcessing.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
+import { GPUVertexStepModeType } from '@modules/renderer/engine/renderers/utils/constants.js';
 
 let camera, scene, renderer;
 let postProcessing;
@@ -78,7 +79,12 @@ async function init() {
         child.material.colorNode = mix(color(0xffffff), randomColors, oscNode);
 
         child.isInstancedMesh = true;
-        child.instanceMatrix = new Engine.BufferAttribute(new Float32Array(instanceCount * 16), 16, 0, 'instance');
+        child.instanceMatrix = new Engine.BufferAttribute(
+          new Float32Array(instanceCount * 16),
+          16,
+          0,
+          GPUVertexStepModeType.Instance,
+        );
         child.count = instanceCount;
 
         for (let i = 0; i < instanceCount; i++) {

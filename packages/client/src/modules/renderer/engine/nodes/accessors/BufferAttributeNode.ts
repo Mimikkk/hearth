@@ -3,6 +3,7 @@ import { varying } from '../core/VaryingNode.js';
 import { addNodeElement, nodeObject } from '../shadernode/ShaderNodes.js';
 import { Buffer, BufferUsage, InterleavedBufferAttribute } from '@modules/renderer/engine/engine.js';
 import { ShaderStage } from '@modules/renderer/engine/renderers/nodes/NodeBuilder.types.js';
+import { GPUVertexStepModeType } from '@modules/renderer/engine/renderers/utils/constants.js';
 
 class BufferAttributeNode extends InputNode {
   static type = 'BufferAttributeNode';
@@ -49,7 +50,7 @@ class BufferAttributeNode extends InputNode {
     const bufferAttribute = new InterleavedBufferAttribute(buffer, itemSize, offset);
 
     this.attribute = bufferAttribute;
-    this.attribute.isInstancedBufferAttribute = this.step === 'instance';
+    this.attribute.step = GPUVertexStepModeType.Instance;
   }
 
   generate(builder) {

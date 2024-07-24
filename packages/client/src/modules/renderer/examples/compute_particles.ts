@@ -1,4 +1,5 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
+import { BufferAttribute } from '@modules/renderer/engine/engine.js';
 import {
   f32,
   instanceIndex,
@@ -12,7 +13,6 @@ import {
 } from '@modules/renderer/engine/nodes/Nodes.js';
 
 import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
-import StorageInstancedBufferAttribute from '@modules/renderer/engine/core/attributes/StorageInstancedBufferAttribute.js';
 
 import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
 import Stats from 'stats-js';
@@ -20,6 +20,7 @@ import Stats from 'stats-js';
 import { GUI } from 'lil-gui';
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
+import { GPUBufferBindingTypeType, GPUVertexStepModeType } from '@modules/renderer/engine/renderers/utils/constants.js';
 
 const particleCount = 1000000;
 
@@ -54,7 +55,17 @@ async function init() {
   //
 
   const createBuffer = () =>
-    storage(new StorageInstancedBufferAttribute(new Float32Array(particleCount * 3), 3), 'vec3', particleCount);
+    storage(
+      new BufferAttribute(
+        new Float32Array(particleCount * 3),
+        3,
+        0,
+        GPUVertexStepModeType.Instance,
+        GPUBufferBindingTypeType.Storage,
+      ),
+      'vec3',
+      particleCount,
+    );
 
   const positionBuffer = createBuffer();
   const velocityBuffer = createBuffer();

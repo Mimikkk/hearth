@@ -1,4 +1,5 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
+import { BufferAttribute } from '@modules/renderer/engine/engine.js';
 import {
   color,
   instanceIndex,
@@ -21,13 +22,13 @@ import {
 import { TeapotGeometry } from '@modules/renderer/engine/objects/geometries/TeapotGeometry.js';
 
 import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
-import StorageInstancedBufferAttribute from '@modules/renderer/engine/core/attributes/StorageInstancedBufferAttribute.js';
 
 import PostProcessing from '@modules/renderer/engine/renderers/PostProcessing.js';
 
 import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 import { WorldAxesControls } from '@modules/renderer/engine/objects/controls/WorldAxesControls.js';
+import { GPUBufferBindingTypeType, GPUVertexStepModeType } from '@modules/renderer/engine/renderers/utils/constants.js';
 
 const maxParticleCount = 100000;
 
@@ -88,9 +89,12 @@ async function init() {
 
   const createBuffer = (type = 'vec3') =>
     storage(
-      new StorageInstancedBufferAttribute(
+      new BufferAttribute(
         new Float32Array(maxParticleCount * (type === 'vec4' ? 4 : 3)),
         type === 'vec4' ? 4 : 3,
+        0,
+        GPUVertexStepModeType.Instance,
+        GPUBufferBindingTypeType.Storage,
       ),
       type,
       maxParticleCount,

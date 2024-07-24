@@ -1290,7 +1290,12 @@ class GLTFMeshGpuInstancing implements Plugin {
         for (const attributeName in attributes) {
           if (attributeName === '_COLOR_0') {
             const attr = attributes[attributeName];
-            instancedMesh.instanceColor = new BufferAttribute(attr.array, attr.stride, 0, 'instance');
+            instancedMesh.instanceColor = new BufferAttribute(
+              attr.array,
+              attr.stride,
+              0,
+              GPUVertexStepModeType.Instance,
+            );
           } else if (attributeName !== 'TRANSLATION' && attributeName !== 'ROTATION' && attributeName !== 'SCALE') {
             mesh.geometry.setAttribute(attributeName, attributes[attributeName]);
           }

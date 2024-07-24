@@ -12,6 +12,7 @@ import {
   Vec3,
   WireframeGeometry,
 } from '../../engine.js';
+import { GPUVertexStepModeType } from '@modules/renderer/engine/renderers/utils/constants.js';
 
 const _box = Box3.new();
 const _vector = Vec3.new();
@@ -53,7 +54,7 @@ export class LineSegmentsGeometry extends Geometry {
   }
 
   setPositions(array: Float32Array): this {
-    const instanceBuffer = new Buffer(array, 6, 'instance');
+    const instanceBuffer = new Buffer(array, 6, GPUVertexStepModeType.Instance);
 
     this.setAttribute('instanceStart', new InterleavedBufferAttribute(instanceBuffer, 3, 0)); // xyz
     this.setAttribute('instanceEnd', new InterleavedBufferAttribute(instanceBuffer, 3, 3)); // xyz
@@ -66,7 +67,7 @@ export class LineSegmentsGeometry extends Geometry {
   }
 
   setColors(array: Float32Array): this {
-    const instanceColorBuffer = new Buffer(array, 6, 'instance');
+    const instanceColorBuffer = new Buffer(array, 6, GPUVertexStepModeType.Instance);
 
     this.setAttribute('instanceColorStart', new InterleavedBufferAttribute(instanceColorBuffer, 3, 0)); // rgb
     this.setAttribute('instanceColorEnd', new InterleavedBufferAttribute(instanceColorBuffer, 3, 3)); // rgb

@@ -1,22 +1,23 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
+import { BufferAttribute } from '@modules/renderer/engine/engine.js';
 import {
-  tslFn,
-  uniform,
-  storage,
   attribute,
-  f32,
-  vec2,
-  vec3,
   color,
+  f32,
   instanceIndex,
   PointsNodeMaterial,
+  storage,
+  tslFn,
+  uniform,
+  vec2,
+  vec3,
 } from '@modules/renderer/engine/nodes/Nodes.js';
 
 import { GUI } from 'lil-gui';
 
 import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
-import StorageInstancedBufferAttribute from '@modules/renderer/engine/core/attributes/StorageInstancedBufferAttribute.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
+import { GPUBufferBindingTypeType, GPUVertexStepModeType } from '@modules/renderer/engine/renderers/utils/constants.js';
 
 let camera, scene, renderer;
 let computeNode;
@@ -39,13 +40,19 @@ async function init() {
 
   // create buffers
 
-  const particleBuffer = new StorageInstancedBufferAttribute(
+  const particleBuffer = new BufferAttribute(
     new Float32Array(particleNum * particleSize),
     particleSize,
+    0,
+    GPUVertexStepModeType.Instance,
+    GPUBufferBindingTypeType.Storage,
   );
-  const velocityBuffer = new StorageInstancedBufferAttribute(
+  const velocityBuffer = new BufferAttribute(
     new Float32Array(particleNum * particleSize),
     particleSize,
+    0,
+    GPUVertexStepModeType.Instance,
+    GPUBufferBindingTypeType.Storage,
   );
 
   const particleBufferNode = storage(particleBuffer, 'vec2', particleNum);

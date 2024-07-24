@@ -5,6 +5,7 @@ import { Geometry } from '../../../core/Geometry.js';
 import { InterleavedBufferAttribute } from '../../../core/attributes/InterleavedBufferAttribute.js';
 import { Buffer } from '../../../core/buffers/Buffer.js';
 import { createTypedArray } from '@modules/renderer/engine/math/MathUtils.js';
+import { GPUVertexStepModeType } from '@modules/renderer/engine/renderers/utils/constants.js';
 
 export interface JsonContent {
   interleavedBuffers: Record<string, any>;
@@ -88,7 +89,7 @@ export const parseBufferGeometry = (json: JsonContent): Geometry => {
         typedArray,
         attribute.stride,
         0,
-        attribute.isInstancedBufferAttribute ? 'instance' : 'vertex',
+        attribute.isInstancedBufferAttribute ? GPUVertexStepModeType.Instance : 'vertex',
       );
     }
 

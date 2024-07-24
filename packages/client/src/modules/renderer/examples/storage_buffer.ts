@@ -1,4 +1,5 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
+import { BufferAttribute } from '@modules/renderer/engine/engine.js';
 import {
   f32,
   instanceIndex,
@@ -12,8 +13,8 @@ import {
 } from '@modules/renderer/engine/nodes/Nodes.js';
 
 import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
-import StorageInstancedBufferAttribute from '@modules/renderer/engine/core/attributes/StorageInstancedBufferAttribute.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
+import { GPUBufferBindingTypeType, GPUVertexStepModeType } from '@modules/renderer/engine/renderers/utils/constants.js';
 
 // WebGPU Backend
 init();
@@ -44,7 +45,13 @@ async function init() {
     const typeSize = i + 1;
     const array = new Array(size * typeSize).fill(0);
 
-    const arrayBuffer = new StorageInstancedBufferAttribute(new Float32Array(array), typeSize);
+    const arrayBuffer = new BufferAttribute(
+      new Float32Array(array),
+      typeSize,
+      0,
+      GPUVertexStepModeType.Instance,
+      GPUBufferBindingTypeType.Storage,
+    );
 
     arrayBufferNodes.push(storageObject(arrayBuffer, type[i], size));
   }

@@ -6,6 +6,7 @@ import { Mat3 } from '@modules/renderer/engine/math/Mat3.js';
 import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
 import { Buffer } from '../buffers/Buffer.js';
 import { Const } from '@modules/renderer/engine/math/types.js';
+import { GPUBufferBindingTypeType, GPUVertexStepModeType } from '@modules/renderer/engine/renderers/utils/constants.js';
 
 export class BufferAttribute<T extends TypedArray = any> {
   declare isBufferAttribute: true;
@@ -22,7 +23,8 @@ export class BufferAttribute<T extends TypedArray = any> {
     source: T,
     stride: number,
     offset: number = 0,
-    public step: GPUVertexStepMode = 'vertex',
+    public step: GPUVertexStepModeType = GPUVertexStepModeType.Vertex,
+    public bind?: GPUBufferBindingTypeType,
   ) {
     this.name = '';
 
@@ -38,7 +40,11 @@ export class BufferAttribute<T extends TypedArray = any> {
   }
 
   get isInstancedBufferAttribute(): boolean {
-    return this.step === 'instance';
+    return this.step === GPUVertexStepModeType.Instance;
+  }
+
+  get isStorageInstancedBufferAttribute(): boolean {
+    return this.bind === GPUBufferBindingTypeType.Storage;
   }
 
   set needsUpdate(value: boolean) {

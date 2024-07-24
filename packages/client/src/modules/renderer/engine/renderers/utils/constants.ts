@@ -303,7 +303,9 @@ export enum GPUTextureAspectType {
 }
 
 export enum GPUVertexStepModeType {
+  /** The address is advanced by stride for each vertex, and reset between instances. */
   Vertex = 'vertex',
+  /** The address is advanced by stride for each instance. */
   Instance = 'instance',
 }
 

@@ -1,4 +1,5 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
+import { BufferAttribute } from '@modules/renderer/engine/engine.js';
 import {
   cameraProjectionMatrix,
   cameraViewMatrix,
@@ -19,7 +20,6 @@ import {
 } from '@modules/renderer/engine/nodes/Nodes.js';
 
 import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
-import StorageInstancedBufferAttribute from '@modules/renderer/engine/core/attributes/StorageInstancedBufferAttribute.js';
 
 import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
 import Stats from 'stats-js';
@@ -29,6 +29,7 @@ import { GUI } from 'lil-gui';
 import * as GeometryUtils from '@modules/renderer/engine/utils/GeometryUtils.js';
 import { BufferGeometryLoader } from '@modules/renderer/engine/loaders/geometries/BufferGeometryLoader/BufferGeometryLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
+import { GPUBufferBindingTypeType, GPUVertexStepModeType } from '@modules/renderer/engine/renderers/utils/constants.js';
 
 const maxParticleCount = 50000;
 const instanceCount = maxParticleCount / 2;
@@ -87,7 +88,17 @@ async function init() {
   //
 
   const createBuffer = (type = 'vec3') =>
-    storage(new StorageInstancedBufferAttribute(new Float32Array(maxParticleCount * 3), 3), type, maxParticleCount);
+    storage(
+      new BufferAttribute(
+        new Float32Array(maxParticleCount * 3),
+        3,
+        0,
+        GPUVertexStepModeType.Instance,
+        GPUBufferBindingTypeType.Storage,
+      ),
+      type,
+      maxParticleCount,
+    );
 
   const positionBuffer = createBuffer();
   const velocityBuffer = createBuffer();

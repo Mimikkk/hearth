@@ -2,6 +2,7 @@ import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
 import { BufferAttribute } from '@modules/renderer/engine/core/attributes/BufferAttribute.js';
 import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
 import { Box3, Sphere, Vec3 } from '@modules/renderer/engine/engine.js';
+import { GPUVertexStepModeType } from '@modules/renderer/engine/renderers/utils/constants.js';
 
 export class InstancedPointsGeometry extends Geometry {
   declare isInstancedPointsGeometry: true;
@@ -40,7 +41,10 @@ export class InstancedPointsGeometry extends Geometry {
   }
 
   setPositions(array: Float32Array | number[]): this {
-    this.setAttribute('instancePosition', new BufferAttribute(new Float32Array(array), 3, 0, 'instance'));
+    this.setAttribute(
+      'instancePosition',
+      new BufferAttribute(new Float32Array(array), 3, 0, GPUVertexStepModeType.Instance),
+    );
 
     this.computeBoundingBox();
     this.computeBoundingSphere();
@@ -50,7 +54,10 @@ export class InstancedPointsGeometry extends Geometry {
   }
 
   setColors(array: Float32Array | number[]): this {
-    this.setAttribute('instanceColor', new BufferAttribute(new Float32Array(array), 3, 0, 'instance'));
+    this.setAttribute(
+      'instanceColor',
+      new BufferAttribute(new Float32Array(array), 3, 0, GPUVertexStepModeType.Instance),
+    );
 
     return this;
   }

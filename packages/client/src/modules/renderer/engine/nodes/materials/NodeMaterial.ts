@@ -180,7 +180,7 @@ export class NodeMaterial extends ShaderMaterial {
 
     if (
       object.instanceMatrix &&
-      object.instanceMatrix.isInstancedBufferAttribute === true &&
+      object.instanceMatrix.isInstancedBufferAttribute &&
       builder.isAvailable('instance') === true
     ) {
       instance(object).append();
