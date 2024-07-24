@@ -2,7 +2,7 @@ import * as Engine from '@modules/renderer/engine/engine.js';
 
 import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 
-import { IESSpotLight } from '@modules/renderer/engine/lights/IESSpotLight.js';
+import { IESSpotLight } from '@modules/renderer/engine/objects/lights/IESSpotLight.js';
 
 import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
 

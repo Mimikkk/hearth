@@ -2,10 +2,10 @@ import { Vec3 } from '../math/Vec3.js';
 import { Color } from '../math/Color.js';
 import { Entity } from '../core/Entity.js';
 import { Mesh } from '../objects/Mesh.js';
-import { MeshBasicMaterial } from '../materials/MeshBasicMaterial.js';
+import { MeshBasicMaterial } from '@modules/renderer/engine/objects/materials/MeshBasicMaterial.js';
 import { OctahedronGeometry } from '../geometries/OctahedronGeometry.js';
 import { BufferAttribute } from '../core/attributes/BufferAttribute.js';
-import { HemisphereLight } from '@modules/renderer/engine/lights/HemisphereLight.js';
+import { HemisphereLight } from '@modules/renderer/engine/objects/lights/HemisphereLight.js';
 
 const _vector = Vec3.new();
 const _color1 = Color.new();

@@ -1,7 +1,7 @@
 import { PerspectiveCamera } from '@modules/renderer/engine/cameras/PerspectiveCamera.js';
 import { Scene } from '@modules/renderer/engine/scenes/Scene.js';
 import { PlaneGeometry } from '@modules/renderer/engine/geometries/PlaneGeometry.js';
-import { MeshBasicMaterial } from '@modules/renderer/engine/materials/MeshBasicMaterial.js';
+import { MeshBasicMaterial } from '@modules/renderer/engine/objects/materials/MeshBasicMaterial.js';
 import { Mesh } from '@modules/renderer/engine/objects/Mesh.js';
 import { ColorSpace } from '../engine/constants.js';
 import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';

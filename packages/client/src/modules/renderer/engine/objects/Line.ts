@@ -3,13 +3,13 @@ import { Ray } from '../math/Ray.js';
 import { Mat4 } from '../math/Mat4.js';
 import { Entity } from '../core/Entity.js';
 import { Vec3 } from '../math/Vec3.js';
-import { LineBasicMaterial } from '../materials/LineBasicMaterial.js';
+import { LineBasicMaterial } from '@modules/renderer/engine/objects/materials/LineBasicMaterial.js';
 import { BufferAttribute } from '../core/attributes/BufferAttribute.js';
-import { Material } from '@modules/renderer/engine/materials/Material.js';
+import { Material } from '@modules/renderer/engine/objects/materials/Material.js';
 import { Intersection, Raycaster } from '@modules/renderer/engine/core/Raycaster.js';
 import { LineSegments } from '@modules/renderer/engine/objects/LineSegments.js';
 import { Line3 } from '@modules/renderer/engine/math/Line3.js';
-import { LineGeometry } from '@modules/renderer/engine/lines/LineGeometry.js';
+import { LineGeometry } from '@modules/renderer/engine/objects/lines/LineGeometry.js';
 
 const _start = Vec3.new();
 const _end = Vec3.new();

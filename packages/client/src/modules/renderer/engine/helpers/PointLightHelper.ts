@@ -1,7 +1,7 @@
 import { Mesh } from '../objects/Mesh.js';
-import { MeshBasicMaterial } from '../materials/MeshBasicMaterial.js';
+import { MeshBasicMaterial } from '@modules/renderer/engine/objects/materials/MeshBasicMaterial.js';
 import { SphereGeometry } from '../geometries/SphereGeometry.js';
-import { PointLight } from '@modules/renderer/engine/lights/PointLight.js';
+import { PointLight } from '@modules/renderer/engine/objects/lights/PointLight.js';
 import { Color } from '@modules/renderer/engine/math/Color.js';
 
 export class PointLightHelper extends Mesh {

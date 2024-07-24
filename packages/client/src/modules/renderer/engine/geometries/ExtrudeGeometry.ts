@@ -24,9 +24,9 @@ import { Geometry } from '../core/Geometry.js';
 import { BufferAttribute } from '../core/attributes/BufferAttribute.js';
 import { Vec2 } from '../math/Vec2.js';
 import { Vec3 } from '../math/Vec3.js';
-import { Shape } from '../extras/core/Shape.js';
+import { Shape } from '../objects/lines/Shape.js';
 import { ShapeUtils } from '../utils/ShapeUtils.js';
-import { Curve } from '@modules/renderer/engine/extras/core/Curve.js';
+import { Curve } from '@modules/renderer/engine/objects/lines/Curve.js';
 
 export interface UVGenerator {
   generateTopUV(geometry: ExtrudeGeometry, vertices: number[], indexA: number, indexB: number, indexC: number): Vec2[];

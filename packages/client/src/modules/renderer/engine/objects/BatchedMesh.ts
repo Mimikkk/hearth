@@ -8,7 +8,7 @@ import { Box3 } from '../math/Box3.js';
 import { Sphere } from '../math/Sphere.js';
 import { Frustum } from '../math/Frustum.js';
 import { Vec3 } from '../math/Vec3.js';
-import { Material } from '@modules/renderer/engine/materials/Material.js';
+import { Material } from '@modules/renderer/engine/objects/materials/Material.js';
 import { Camera } from '@modules/renderer/engine/cameras/Camera.js';
 import { Intersection, Raycaster } from '@modules/renderer/engine/core/Raycaster.js';
 import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';

@@ -1,6 +1,6 @@
 import { classLoader } from '@modules/renderer/engine/loaders/types.js';
 import { Side, Wrapping } from '@modules/renderer/engine/constants.js';
-import { MeshPhongMaterial } from '@modules/renderer/engine/materials/MeshPhongMaterial.js';
+import { MeshPhongMaterial } from '@modules/renderer/engine/objects/materials/MeshPhongMaterial.js';
 import { MaterialDefinitionRecord } from '@modules/renderer/engine/loaders/objects/OBJLoader/MTLLoader/parseMTL.js';
 import { parseDefinition } from '@modules/renderer/engine/loaders/objects/OBJLoader/MTLLoader/parseDefinition.js';
 import { convertDefinitions } from '@modules/renderer/engine/loaders/objects/OBJLoader/MTLLoader/convertDefinitions.js';

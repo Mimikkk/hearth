@@ -2,7 +2,7 @@ import { Camera } from '../cameras/Camera.js';
 import { Vec3 } from '../math/Vec3.js';
 import { LineSegments } from '../objects/LineSegments.js';
 import { Color } from '../math/Color.js';
-import { LineBasicMaterial } from '../materials/LineBasicMaterial.js';
+import { LineBasicMaterial } from '@modules/renderer/engine/objects/materials/LineBasicMaterial.js';
 import { Geometry } from '../core/Geometry.js';
 import { BufferAttribute } from '../core/attributes/BufferAttribute.js';
 import { PerspectiveCamera } from '@modules/renderer/engine/cameras/PerspectiveCamera.js';

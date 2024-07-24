@@ -1,10 +1,10 @@
 import { Vec3 } from '../math/Vec3.js';
 import { Entity } from '../core/Entity.js';
 import { LineSegments } from '../objects/LineSegments.js';
-import { LineBasicMaterial } from '../materials/LineBasicMaterial.js';
+import { LineBasicMaterial } from '@modules/renderer/engine/objects/materials/LineBasicMaterial.js';
 import { BufferAttribute } from '../core/attributes/BufferAttribute.js';
 import { Geometry } from '../core/Geometry.js';
-import { SpotLight } from '@modules/renderer/engine/lights/SpotLight.js';
+import { SpotLight } from '@modules/renderer/engine/objects/lights/SpotLight.js';
 import { Color } from '@modules/renderer/engine/math/Color.js';
 
 const _vector = Vec3.new();

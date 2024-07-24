@@ -1,9 +1,9 @@
 import { LightsNode } from '../nodes/Nodes.js';
-import { Light } from '@modules/renderer/engine/lights/Light.js';
+import { Light } from '@modules/renderer/engine/objects/lights/Light.js';
 import { Entity } from '@modules/renderer/engine/core/Entity.js';
 import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
 import { Group } from '@modules/renderer/engine/objects/Group.js';
-import { Material } from '@modules/renderer/engine/materials/Material.js';
+import { Material } from '@modules/renderer/engine/objects/materials/Material.js';
 
 export type SortFn = (a: RenderItem, b: RenderItem) => number;
 

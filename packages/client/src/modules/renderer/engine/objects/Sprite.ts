@@ -6,7 +6,7 @@ import { Entity } from '../core/Entity.js';
 import { Geometry } from '../core/Geometry.js';
 import { Buffer } from '../core/buffers/Buffer.js';
 import { InterleavedBufferAttribute } from '../core/attributes/InterleavedBufferAttribute.js';
-import { SpriteMaterial } from '../materials/SpriteMaterial.js';
+import { SpriteMaterial } from '@modules/renderer/engine/objects/materials/SpriteMaterial.js';
 import { Intersection, Raycaster } from '../core/Raycaster.js';
 import { PerspectiveCamera } from '../cameras/PerspectiveCamera.js';
 

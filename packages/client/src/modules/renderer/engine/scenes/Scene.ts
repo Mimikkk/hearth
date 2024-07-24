@@ -1,7 +1,7 @@
 import { Entity } from '../core/Entity.js';
 import { Euler } from '../math/Euler.js';
 import type { Fog } from './Fog.js';
-import type { Material } from '../materials/Material.js';
+import type { Material } from '@modules/renderer/engine/objects/materials/Material.js';
 import type { Color } from '../math/Color.js';
 import type { Texture } from '../textures/Texture.js';
 import type { CubeTexture } from '../textures/CubeTexture.js';

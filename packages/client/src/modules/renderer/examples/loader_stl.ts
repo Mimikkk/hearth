@@ -6,10 +6,10 @@ import { Color } from '../engine/math/Color';
 import { Fog } from '../engine/scenes/Fog';
 import { Mesh } from '../engine/objects/Mesh';
 import { PlaneGeometry } from '../engine/geometries/PlaneGeometry';
-import { MeshPhongMaterial } from '../engine/materials/MeshPhongMaterial';
+import { MeshPhongMaterial } from '@modules/renderer/engine/objects/materials/MeshPhongMaterial';
 import { STLLoader } from '@modules/renderer/engine/loaders/objects/STLLoader/STLLoader.js';
-import { HemisphereLight } from '../engine/lights/HemisphereLight';
-import { DirectionalLight } from '../engine/lights/DirectionalLight';
+import { HemisphereLight } from '@modules/renderer/engine/objects/lights/HemisphereLight';
+import { DirectionalLight } from '@modules/renderer/engine/objects/lights/DirectionalLight';
 import { Renderer } from '../engine/renderers/Renderer.js';
 
 let container, stats;

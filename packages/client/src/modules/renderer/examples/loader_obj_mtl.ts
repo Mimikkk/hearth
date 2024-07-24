@@ -4,8 +4,8 @@ import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 import { MTLLoader } from '@modules/renderer/engine/loaders/objects/OBJLoader/MTLLoader/MTLLoader.js';
 import { OBJLoader } from '@modules/renderer/engine/loaders/objects/OBJLoader/OBJLoader.js';
 import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
-import { AmbientLight } from '@modules/renderer/engine/lights/AmbientLight.js';
-import { PointLight } from '@modules/renderer/engine/lights/PointLight.js';
+import { AmbientLight } from '@modules/renderer/engine/objects/lights/AmbientLight.js';
+import { PointLight } from '@modules/renderer/engine/objects/lights/PointLight.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera!: PerspectiveCamera;

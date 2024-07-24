@@ -2,7 +2,7 @@ import Node from '../core/Node.js';
 import AnalyticLightNode from './AnalyticLightNode.js';
 import { nodeObject, nodeProxy, vec3 } from '../shadernode/ShaderNodes.js';
 import { LightNodeMap } from '@modules/renderer/engine/nodes/lighting/LightsNodeMap.js';
-import { Light } from '@modules/renderer/engine/lights/Light.js';
+import { Light } from '@modules/renderer/engine/objects/lights/Light.js';
 import LightNode from '@modules/renderer/engine/nodes/lighting/LightNode.js';
 import OperatorNode from '@modules/renderer/engine/nodes/math/OperatorNode.js';
 import { TypeName } from '@modules/renderer/engine/renderers/nodes/NodeBuilder.types.js';

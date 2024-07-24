@@ -5,7 +5,7 @@ import { Mesh } from '@modules/renderer/engine/objects/Mesh.js';
 import {
   MeshLambertMaterial,
   MeshLambertMaterialParameters,
-} from '@modules/renderer/engine/materials/MeshLambertMaterial.js';
+} from '@modules/renderer/engine/objects/materials/MeshLambertMaterial.js';
 import { Sphere } from '@modules/renderer/engine/math/Sphere.js';
 
 export class BoundingSphereVisualizer {

@@ -1,5 +1,5 @@
 import { ColorSpace, Side, Wrapping } from '@modules/renderer/engine/constants.js';
-import { MeshPhongMaterial } from '@modules/renderer/engine/materials/MeshPhongMaterial.js';
+import { MeshPhongMaterial } from '@modules/renderer/engine/objects/materials/MeshPhongMaterial.js';
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { Color } from '@modules/renderer/engine/math/Color.js';
 import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';

@@ -1,7 +1,7 @@
 import { Line } from '../objects/Line.js';
 import { Mesh } from '../objects/Mesh.js';
-import { LineBasicMaterial } from '../materials/LineBasicMaterial.js';
-import { MeshBasicMaterial } from '../materials/MeshBasicMaterial.js';
+import { LineBasicMaterial } from '@modules/renderer/engine/objects/materials/LineBasicMaterial.js';
+import { MeshBasicMaterial } from '@modules/renderer/engine/objects/materials/MeshBasicMaterial.js';
 import { BufferAttribute } from '../core/attributes/BufferAttribute.js';
 import { Geometry } from '../core/Geometry.js';
 import { Plane } from '@modules/renderer/engine/math/Plane.js';

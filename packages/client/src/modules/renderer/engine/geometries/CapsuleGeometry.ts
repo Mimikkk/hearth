@@ -1,4 +1,4 @@
-import { Path } from '../extras/core/Path.js';
+import { Path } from '../objects/lines/Path.js';
 import { LatheGeometry } from './LatheGeometry.js';
 
 export class CapsuleGeometry extends LatheGeometry {

@@ -3,8 +3,8 @@ import { Entity } from '../core/Entity.js';
 import { Line } from '../objects/Line.js';
 import { BufferAttribute } from '../core/attributes/BufferAttribute.js';
 import { Geometry } from '../core/Geometry.js';
-import { LineBasicMaterial } from '../materials/LineBasicMaterial.js';
-import { DirectionalLight } from '@modules/renderer/engine/lights/DirectionalLight.js';
+import { LineBasicMaterial } from '@modules/renderer/engine/objects/materials/LineBasicMaterial.js';
+import { DirectionalLight } from '@modules/renderer/engine/objects/lights/DirectionalLight.js';
 import { Color } from '@modules/renderer/engine/math/Color.js';
 
 const _v1 = Vec3.new();

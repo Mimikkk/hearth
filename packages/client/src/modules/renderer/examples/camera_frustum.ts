@@ -18,7 +18,7 @@ import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindow
 import { f32 } from 'three/examples/jsm/nodes/shadernode/ShaderNode.js';
 import { UI } from '@mimi/ui';
 import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
-import { SpriteMaterialBuilder } from '@modules/renderer/engine/materials/SpriteMaterialBuilder.js';
+import { SpriteMaterialBuilder } from '@modules/renderer/engine/objects/materials/SpriteMaterialBuilder.js';
 
 const createCamera = () => {
   const perspectiveCamera = new PerspectiveCamera(80, window.innerWidth / window.innerHeight, 0.1, 100);

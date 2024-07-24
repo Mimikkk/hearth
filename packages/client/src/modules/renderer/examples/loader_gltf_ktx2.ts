@@ -10,7 +10,7 @@ import { ToneMapping } from '@modules/renderer/engine/constants.js';
 import { PerspectiveCamera } from '@modules/renderer/engine/cameras/PerspectiveCamera.js';
 import { Scene } from '@modules/renderer/engine/scenes/Scene.js';
 import { Color } from '@modules/renderer/engine/math/Color.js';
-import { PointLight } from '@modules/renderer/engine/lights/PointLight.js';
+import { PointLight } from '@modules/renderer/engine/objects/lights/PointLight.js';
 
 init();
 

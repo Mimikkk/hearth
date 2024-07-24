@@ -2,7 +2,7 @@ import { NodeUpdateType } from './constants.js';
 import { Scene } from '@modules/renderer/engine/scenes/Scene.js';
 import { Entity } from '@modules/renderer/engine/core/Entity.js';
 import { Camera } from '@modules/renderer/engine/cameras/Camera.js';
-import { Material } from '@modules/renderer/engine/materials/Material.js';
+import { Material } from '@modules/renderer/engine/objects/materials/Material.js';
 import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 import { Node } from '../core/Node.js';
 import { Clock } from '@modules/renderer/engine/core/Clock.js';

@@ -12,8 +12,8 @@ import {
   LineBasicNodeMaterial,
   LineDashedNodeMaterial,
 } from '@modules/renderer/engine/nodes/Nodes.js';
-import { Line2 } from '@modules/renderer/engine/lines/Line2.js';
-import { LineGeometry } from '@modules/renderer/engine/lines/LineGeometry.js';
+import { Line2 } from '@modules/renderer/engine/objects/lines/Line2.js';
+import { LineGeometry } from '@modules/renderer/engine/objects/lines/LineGeometry.js';
 import * as GeometryUtils from '@modules/renderer/engine/utils/GeometryUtils.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 import { BufferAttribute, Color } from '@modules/renderer/engine/engine.js';

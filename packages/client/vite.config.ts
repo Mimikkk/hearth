@@ -13,7 +13,7 @@ export default defineConfig({
   plugins: [solid(), svgr(), arraybuffer()],
   server: {
     port: 8080,
-    open: true,
+    open: false,
   },
   build: {
     outDir: '../build',
