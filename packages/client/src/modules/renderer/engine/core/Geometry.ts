@@ -1,12 +1,11 @@
 import { Vec3 } from '../math/Vec3.js';
 import { Vec2 } from '../math/Vec2.js';
 import { Box3 } from '../math/Box3.js';
-import { BufferAttribute, Float32BufferAttribute, Uint32BufferAttribute } from './attributes/BufferAttribute.js';
+import { BufferAttribute, Float32BufferAttribute } from './attributes/BufferAttribute.js';
 import { Sphere } from '../math/Sphere.js';
 import { Entity } from './Entity.js';
 import { Mat4 } from '../math/Mat4.js';
 import { Mat3 } from '../math/Mat3.js';
-import { TypedArray } from '../math/MathUtils.js';
 import { Quaternion } from '@modules/renderer/engine/math/Quaternion.js';
 import { AttributeType } from '@modules/renderer/engine/core/types.js';
 import { v4 } from 'uuid';
@@ -14,7 +13,6 @@ import { v4 } from 'uuid';
 export class Geometry<
   AttributeMap extends AttributeRecord = AttributeRecord,
   MorphAttributeMap extends AttributeRecord = AttributeRecord,
-  IndexT extends TypedArray = Uint32Array,
 > {
   declare isGeometry: true;
   declare type: 'Geometry';
@@ -22,7 +20,7 @@ export class Geometry<
   uuid: string;
   name: string;
   instanceCount: number;
-  index: BufferAttribute<IndexT> | null;
+  index: BufferAttribute<Uint32Array> | null;
   attributes: AttributeMap;
   morphAttributes: MorphAttributeMap;
   morphTargetsRelative: boolean;
@@ -63,13 +61,13 @@ export class Geometry<
     return value?.isGeometry === true;
   }
 
-  getIndex(): BufferAttribute<IndexT> | null {
+  getIndex(): BufferAttribute<Uint32Array> | null {
     return this.index;
   }
 
-  setIndex(index: BufferAttribute<IndexT> | number[] | null): this {
+  setIndex(index: BufferAttribute<Uint32Array> | number[] | null): this {
     if (Array.isArray(index)) {
-      this.index = new Uint32BufferAttribute(index, 1) as BufferAttribute<IndexT>;
+      this.index = new BufferAttribute(new Uint32Array(index), 1) as BufferAttribute<Uint32Array>;
     } else {
       this.index = index;
     }
@@ -698,11 +696,11 @@ export class Geometry<
     return geometry2 as this;
   }
 
-  clone(): Geometry<AttributeMap, MorphAttributeMap, IndexT> {
-    return new this.constructor().copy(this) as Geometry<AttributeMap, MorphAttributeMap, IndexT>;
+  clone(): Geometry<AttributeMap, MorphAttributeMap> {
+    return new this.constructor().copy(this) as Geometry<AttributeMap, MorphAttributeMap>;
   }
 
-  copy(source: Geometry<AttributeMap, MorphAttributeMap, IndexT>): this {
+  copy(source: Geometry<AttributeMap, MorphAttributeMap>): this {
     // reset
 
     this.index = null;

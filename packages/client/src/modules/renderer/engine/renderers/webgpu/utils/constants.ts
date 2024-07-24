@@ -302,7 +302,7 @@ export enum GPUTextureAspectType {
   DepthOnly = 'depth-only',
 }
 
-export enum GPUInputStepModeType {
+export enum GPUVertexStepModeType {
   Vertex = 'vertex',
   Instance = 'instance',
 }

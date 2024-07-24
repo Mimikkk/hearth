@@ -1,7 +1,7 @@
 import InputNode from '../core/InputNode.js';
 import { varying } from '../core/VaryingNode.js';
 import { addNodeElement, nodeObject } from '../shadernode/ShaderNodes.js';
-import { BufferUsage, InterleavedBuffer, InterleavedBufferAttribute } from '@modules/renderer/engine/engine.js';
+import { BufferUsage, Buffer, InterleavedBufferAttribute } from '@modules/renderer/engine/engine.js';
 import { ShaderStage } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.types.js';
 
 class BufferAttributeNode extends InputNode {
@@ -45,13 +45,11 @@ class BufferAttributeNode extends InputNode {
     const stride = this.bufferStride || itemSize;
     const offset = this.bufferOffset;
 
-    const buffer = array.isInterleavedBuffer === true ? array : new InterleavedBuffer(array, stride);
+    const buffer = array.isInterleavedBuffer === true ? array : new Buffer(array, stride);
     const bufferAttribute = new InterleavedBufferAttribute(buffer, itemSize, offset);
 
-    buffer.setUsage(this.usage);
-
     this.attribute = bufferAttribute;
-    this.attribute.isInstancedBufferAttribute = this.instanced; // @TODO: Add a possible: InstancedInterleavedBufferAttribute
+    this.attribute.isInstancedBufferAttribute = this.instanced;
   }
 
   generate(builder) {

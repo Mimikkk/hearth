@@ -1,5 +1,5 @@
-import { Float16BufferAttribute, InstancedBufferAttribute, InterleavedBufferAttribute } from '../../../engine.js';
-import { GPUInputStepModeType } from './constants.js';
+import { InstancedBufferAttribute, InterleavedBufferAttribute } from '../../../engine.js';
+import { GPUVertexStepModeType } from './constants.js';
 import { Backend } from '@modules/renderer/engine/renderers/webgpu/Backend.js';
 import RenderObject from '@modules/renderer/engine/renderers/common/RenderObject.js';
 import StorageBufferAttribute from '@modules/renderer/engine/renderers/common/StorageBufferAttribute.js';
@@ -59,26 +59,7 @@ export class BackendAttributes {
     const buffer = backend.memo.get(bufferAttribute).buffer;
 
     const array = bufferAttribute.array;
-    const updateRanges = bufferAttribute.updateRanges;
-
-    if (updateRanges.length === 0) {
-      // Not using update ranges
-
-      device.queue.writeBuffer(buffer, 0, array, 0);
-    } else {
-      for (let i = 0, l = updateRanges.length; i < l; i++) {
-        const range = updateRanges[i];
-        device.queue.writeBuffer(
-          buffer,
-          0,
-          array,
-          range.start * array.BYTES_PER_ELEMENT,
-          range.count * array.BYTES_PER_ELEMENT,
-        );
-      }
-
-      bufferAttribute.clearUpdateRanges();
-    }
+    device.queue.writeBuffer(buffer, 0, array, 0);
   }
 
   createShaderVertexBuffers(renderObject: RenderObject): AttributeType[] {
@@ -98,13 +79,13 @@ export class BackendAttributes {
         if (geometryAttribute.isInterleavedBufferAttribute === true) {
           arrayStride = geometryAttribute.data.stride * bytesPerElement;
           stepMode = geometryAttribute.data.isInstancedInterleavedBuffer
-            ? GPUInputStepModeType.Instance
-            : GPUInputStepModeType.Vertex;
+            ? GPUVertexStepModeType.Instance
+            : GPUVertexStepModeType.Vertex;
         } else {
           arrayStride = geometryAttribute.itemSize * bytesPerElement;
           stepMode = geometryAttribute.isInstancedBufferAttribute
-            ? GPUInputStepModeType.Instance
-            : GPUInputStepModeType.Vertex;
+            ? GPUVertexStepModeType.Instance
+            : GPUVertexStepModeType.Vertex;
         }
 
         vertexBufferLayout = {
@@ -191,9 +172,7 @@ export class BackendAttributes {
     } else {
       let options!: string[];
 
-      if (AttributeType === Float16BufferAttribute) {
-        options = ['float16'];
-      } else if (ArrayType == Int8Array) {
+      if (ArrayType == Int8Array) {
         options = ['sint8', 'snorm8'];
       } else if (ArrayType == Uint8Array) {
         options = ['uint8', 'unorm8'];

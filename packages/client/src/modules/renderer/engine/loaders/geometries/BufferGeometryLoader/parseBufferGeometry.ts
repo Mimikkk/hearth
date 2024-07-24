@@ -4,7 +4,7 @@ import { BufferAttribute } from '../../../core/attributes/BufferAttribute.js';
 import { Geometry } from '../../../core/Geometry.js';
 import { InstancedBufferAttribute } from '../../../core/attributes/InstancedBufferAttribute.js';
 import { InterleavedBufferAttribute } from '../../../core/attributes/InterleavedBufferAttribute.js';
-import { InterleavedBuffer } from '../../../core/buffers/InterleavedBuffer.js';
+import { Buffer } from '../../../core/buffers/Buffer.js';
 import { createTypedArray } from '../../../utils.js';
 
 export interface JsonContent {
@@ -45,8 +45,7 @@ export const parseBufferGeometry = (json: JsonContent): Geometry => {
     const buffer = getArrayBuffer(json, interleavedBuffer.buffer);
 
     const array = createTypedArray(interleavedBuffer.type, buffer);
-    const ib = new InterleavedBuffer(array, interleavedBuffer.stride);
-    ib.uuid = interleavedBuffer.uuid;
+    const ib = new Buffer(array, interleavedBuffer.stride);
 
     interleavedBufferMap[uuid] = ib;
 

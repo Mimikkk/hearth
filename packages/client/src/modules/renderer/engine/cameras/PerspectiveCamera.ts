@@ -72,14 +72,6 @@ export class PerspectiveCamera extends Camera {
     return this;
   }
 
-  /**
-   * Sets the FOV by focal length in respect to the current .filmGauge.
-   *
-   * The default film gauge is 35, so that the focal length can be specified for
-   * a 35mm (full frame) camera.
-   *
-   * Values for focal length and film gauge must have the same unit.
-   */
   setFocalLength(focalLength: number): this {
     /** see {@link http://www.bobatkins.com/photography/technical/field_of_view.html} */
     const vExtentSlope = (0.5 * this.getFilmHeight()) / focalLength;

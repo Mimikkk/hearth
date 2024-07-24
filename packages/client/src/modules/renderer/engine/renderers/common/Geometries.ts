@@ -1,6 +1,11 @@
 import DataMap from './DataMap.js';
 import { AttributeLocation } from './Constants.js';
-import { Uint16BufferAttribute, Uint32BufferAttribute, WireframeGeometry } from '@modules/renderer/engine/engine.js';
+import {
+  BufferAttribute,
+  Uint16BufferAttribute,
+  Uint32BufferAttribute,
+  WireframeGeometry,
+} from '@modules/renderer/engine/engine.js';
 import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 import RenderObject from '@modules/renderer/engine/renderers/common/RenderObject.js';
 import { AttributeType } from '@modules/renderer/engine/core/types.js';
@@ -9,7 +14,7 @@ function getWireframeVersion(geometry: WireframeGeometry): number {
   return geometry.index !== null ? geometry.index.version : geometry.attributes.position.version;
 }
 
-function getWireframeIndex(geometry: WireframeGeometry): Uint16BufferAttribute | Uint32BufferAttribute {
+function getWireframeIndex(geometry: WireframeGeometry): BufferAttribute<Uint32Array> {
   const indices = [];
 
   const geometryIndex = geometry.index;
@@ -37,7 +42,7 @@ function getWireframeIndex(geometry: WireframeGeometry): Uint16BufferAttribute |
     }
   }
 
-  const attribute = new Uint32BufferAttribute(indices, 1);
+  const attribute = new BufferAttribute(new Uint32Array(indices), 1);
   attribute.version = getWireframeVersion(geometry);
 
   return attribute;

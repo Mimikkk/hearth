@@ -1,7 +1,7 @@
-import { InterleavedBuffer } from './InterleavedBuffer.js';
+import { Buffer } from './Buffer.js';
 import { TypedArray } from '../../math/MathUtils.js';
 
-export class InstancedInterleavedBuffer<T extends TypedArray> extends InterleavedBuffer<T> {
+export class InstancedInterleavedBuffer<T extends TypedArray> extends Buffer<T> {
   declare isInstancedInterleavedBuffer: true;
 }
 

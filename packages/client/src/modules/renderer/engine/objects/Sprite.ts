@@ -4,7 +4,7 @@ import { Mat4 } from '../math/Mat4.js';
 import { Triangle } from '../math/Triangle.js';
 import { Entity } from '../core/Entity.js';
 import { Geometry } from '../core/Geometry.js';
-import { InterleavedBuffer } from '../core/buffers/InterleavedBuffer.js';
+import { Buffer } from '../core/buffers/Buffer.js';
 import { InterleavedBufferAttribute } from '../core/attributes/InterleavedBufferAttribute.js';
 import { SpriteMaterial } from '../materials/SpriteMaterial.js';
 import { Intersection, Raycaster } from '../core/Raycaster.js';
@@ -50,7 +50,7 @@ export class Sprite extends Entity {
         -0.5, -0.5, 0, 0, 0, 0.5, -0.5, 0, 1, 0, 0.5, 0.5, 0, 1, 1, -0.5, 0.5, 0, 0, 1,
       ]);
 
-      const interleavedBuffer = new InterleavedBuffer(float32Array, 5);
+      const interleavedBuffer = new Buffer(float32Array, 5);
 
       _geometry.setIndex([0, 1, 2, 0, 2, 3]);
       _geometry.setAttribute('position', new InterleavedBufferAttribute(interleavedBuffer, 3, 0, false));

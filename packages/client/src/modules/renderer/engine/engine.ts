@@ -66,7 +66,7 @@ export { UniformGroup } from './core/UniformGroup.js';
 export { Geometry } from './core/Geometry.js';
 export { InterleavedBufferAttribute } from './core/attributes/InterleavedBufferAttribute.js';
 export { InstancedInterleavedBuffer } from './core/buffers/InstancedInterleavedBuffer.js';
-export { InterleavedBuffer } from './core/buffers/InterleavedBuffer.js';
+export { Buffer } from './core/buffers/Buffer.js';
 export { InstancedBufferAttribute } from './core/attributes/InstancedBufferAttribute.js';
 export * from './core/attributes/BufferAttribute.js';
 export { Entity } from './core/Entity.js';

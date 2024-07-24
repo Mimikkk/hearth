@@ -1,7 +1,7 @@
 import { Vec3 } from '../../math/Vec3.js';
 import { BufferAttribute } from './BufferAttribute.js';
 import { denormalize, normalize, TypedArray } from '../../math/MathUtils.js';
-import { InterleavedBuffer } from '@modules/renderer/engine/core/buffers/InterleavedBuffer.js';
+import { Buffer } from '@modules/renderer/engine/core/buffers/Buffer.js';
 import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
 import { Mat3 } from '@modules/renderer/engine/math/Mat3.js';
 
@@ -11,12 +11,12 @@ export class InterleavedBufferAttribute<T extends TypedArray = any> {
   declare ['constructor']: typeof InterleavedBufferAttribute;
   declare isInterleavedBufferAttribute: true;
   name: string;
-  data: InterleavedBuffer<T>;
+  data: Buffer<T>;
   itemSize: number;
   offset: number;
   normalized: boolean;
 
-  constructor(interleavedBuffer: InterleavedBuffer, itemSize: number, offset: number, normalized: boolean = false) {
+  constructor(interleavedBuffer: Buffer, itemSize: number, offset: number, normalized: boolean = false) {
     this.name = '';
     this.data = interleavedBuffer;
     this.itemSize = itemSize;
@@ -30,10 +30,6 @@ export class InterleavedBufferAttribute<T extends TypedArray = any> {
 
   get array(): TypedArray {
     return this.data.array;
-  }
-
-  set needsUpdate(value: boolean) {
-    this.data.needsUpdate = value;
   }
 
   applyMat4(m: Mat4): this {
@@ -198,41 +194,6 @@ export class InterleavedBufferAttribute<T extends TypedArray = any> {
     this.data.array[index + 3] = w;
 
     return this;
-  }
-
-  clone(data?: InterleavedBufferAttribute): this {
-    if (data === undefined) {
-      console.info(
-        'engine.InterleavedBufferAttribute.clone(): Cloning an interleaved buffer attribute will de-interleave buffer data.',
-      );
-
-      const array = [];
-
-      for (let i = 0; i < this.count; i++) {
-        const index = i * this.data.stride + this.offset;
-
-        for (let j = 0; j < this.itemSize; j++) {
-          array.push(this.data.array[index + j]);
-        }
-      }
-
-      return new BufferAttribute(new this.array.constructor(array), this.itemSize, this.normalized);
-    } else {
-      if (data.interleavedBuffers === undefined) {
-        data.interleavedBuffers = {};
-      }
-
-      if (data.interleavedBuffers[this.data.uuid] === undefined) {
-        data.interleavedBuffers[this.data.uuid] = this.data.clone(data);
-      }
-
-      return new InterleavedBufferAttribute(
-        data.interleavedBuffers[this.data.uuid],
-        this.itemSize,
-        this.offset,
-        this.normalized,
-      );
-    }
   }
 }
 InterleavedBufferAttribute.prototype.isInterleavedBufferAttribute = true;

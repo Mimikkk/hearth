@@ -13,7 +13,7 @@ import {
   Group,
   InstancedBufferAttribute,
   InstancedMesh,
-  InterleavedBuffer,
+  Buffer,
   InterleavedBufferAttribute,
   Interpolant,
   InterpolationMode,
@@ -2335,7 +2335,7 @@ class Parser {
           array = new TypedArray(bufferView, ibSlice * byteStride, (accessorDef.count * byteStride) / elementBytes);
 
           // Integer parameters to IB/IBA are in array elements, not bytes.
-          ib = new InterleavedBuffer(array, byteStride / elementBytes);
+          ib = new Buffer(array, byteStride / elementBytes);
 
           parser.cache.add(ibCacheKey, ib);
         }

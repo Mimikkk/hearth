@@ -1,8 +1,6 @@
 import {
   Geometry,
   Color,
-  ColorSpace,
-  Float16BufferAttribute,
   Material,
   Entity,
   RenderTarget,
@@ -387,10 +385,7 @@ export class NodeBuilder {
 
     let arrayType;
 
-    if (!(attribute instanceof Float16BufferAttribute) && normalized !== true) {
-      arrayType = this.getTypeFromArray(array);
-    }
-
+    if (!normalized) arrayType = this.getTypeFromArray(array);
     return this.getTypeFromLength(itemSize, arrayType);
   }
 
