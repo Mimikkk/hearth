@@ -78,9 +78,7 @@ export class BackendAttributes {
 
         if (geometryAttribute.isInterleavedBufferAttribute === true) {
           arrayStride = geometryAttribute.data.stride * bytesPerElement;
-          stepMode = geometryAttribute.data.isInstancedInterleavedBuffer
-            ? GPUVertexStepModeType.Instance
-            : GPUVertexStepModeType.Vertex;
+          stepMode = geometryAttribute.data.step;
         } else {
           arrayStride = geometryAttribute.stride * bytesPerElement;
           stepMode = geometryAttribute.isInstancedBufferAttribute

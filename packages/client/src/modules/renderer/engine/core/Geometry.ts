@@ -81,7 +81,6 @@ export class Geometry<
 
   setAttribute<K extends keyof AttributeMap>(name: K, attribute: AttributeMap[K]): this {
     this.attributes[name] = attribute;
-
     return this;
   }
 

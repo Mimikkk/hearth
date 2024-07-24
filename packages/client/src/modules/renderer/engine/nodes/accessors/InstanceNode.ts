@@ -3,7 +3,7 @@ import { instancedBufferAttribute, instancedDynamicBufferAttribute } from './Buf
 import { normalLocal } from './NormalNode.js';
 import { positionLocal } from './PositionNode.js';
 import { mat3, mat4, nodeProxy, vec3 } from '../shadernode/ShaderNodes.js';
-import { BufferUsage, InstancedInterleavedBuffer } from '@modules/renderer/engine/engine.js';
+import { BufferUsage, Buffer } from '@modules/renderer/engine/engine.js';
 
 class InstanceNode extends Node {
   static type = 'InstanceNode';
@@ -22,7 +22,7 @@ class InstanceNode extends Node {
     if (instanceMatrixNode === null) {
       const instanceMesh = this.instanceMesh;
       const instanceAttribute = instanceMesh.instanceMatrix;
-      const buffer = new InstancedInterleavedBuffer(instanceAttribute.array, 16, 1);
+      const buffer = new Buffer(instanceAttribute.array, 16, 'instance');
 
       const bufferFn =
         instanceAttribute.usage === BufferUsage.DynamicDraw

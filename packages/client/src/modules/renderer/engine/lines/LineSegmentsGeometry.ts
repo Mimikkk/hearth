@@ -1,9 +1,9 @@
 import {
   Box3,
+  Buffer,
   BufferAttribute,
   EdgesGeometry,
   Geometry,
-  InstancedInterleavedBuffer,
   InterleavedBufferAttribute,
   LineSegments,
   Mat4,
@@ -53,7 +53,7 @@ export class LineSegmentsGeometry extends Geometry {
   }
 
   setPositions(array: Float32Array): this {
-    const instanceBuffer = new InstancedInterleavedBuffer(array, 6, 1); // xyz, xyz
+    const instanceBuffer = new Buffer(array, 6, 'instance');
 
     this.setAttribute('instanceStart', new InterleavedBufferAttribute(instanceBuffer, 3, 0)); // xyz
     this.setAttribute('instanceEnd', new InterleavedBufferAttribute(instanceBuffer, 3, 3)); // xyz
@@ -66,7 +66,7 @@ export class LineSegmentsGeometry extends Geometry {
   }
 
   setColors(array: Float32Array): this {
-    const instanceColorBuffer = new InstancedInterleavedBuffer(array, 6, 1);
+    const instanceColorBuffer = new Buffer(array, 6, 'instance');
 
     this.setAttribute('instanceColorStart', new InterleavedBufferAttribute(instanceColorBuffer, 3, 0)); // rgb
     this.setAttribute('instanceColorEnd', new InterleavedBufferAttribute(instanceColorBuffer, 3, 3)); // rgb

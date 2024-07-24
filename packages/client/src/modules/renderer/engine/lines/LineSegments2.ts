@@ -1,7 +1,7 @@
 import {
   Box3,
+  Buffer,
   Camera,
-  InstancedInterleavedBuffer,
   InterleavedBufferAttribute,
   Line3,
   LineSegments,
@@ -232,7 +232,7 @@ export class LineSegments2 extends Mesh {
       lineDistances[j + 1] = lineDistances[j] + _start.distanceTo(_end);
     }
 
-    const instanceDistanceBuffer = new InstancedInterleavedBuffer(lineDistances, 2, 1); // d0, d1
+    const instanceDistanceBuffer = new Buffer(lineDistances, 2, 'instance');
 
     geometry.setAttribute('instanceDistanceStart', new InterleavedBufferAttribute(instanceDistanceBuffer, 1, 0)); // d0
     geometry.setAttribute('instanceDistanceEnd', new InterleavedBufferAttribute(instanceDistanceBuffer, 1, 1)); // d1

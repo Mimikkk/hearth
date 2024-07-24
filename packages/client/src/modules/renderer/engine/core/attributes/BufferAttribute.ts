@@ -12,12 +12,11 @@ export class BufferAttribute<T extends TypedArray = any> {
   source: Buffer<T>;
   name: string;
   array: T;
-
   stride: number;
   offset: number;
   version: number;
 
-  usage: BufferUsage;
+  usage: BufferUsage = BufferUsage.StaticDraw;
 
   constructor(source: T, stride: number, offset: number = 0) {
     this.name = '';
