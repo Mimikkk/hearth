@@ -1,7 +1,7 @@
 import Binding from './Binding.js';
 import { getFloatLength } from './BufferUtils.js';
 
-export class Buffer extends Binding {
+export class NodeBuffer extends Binding {
   declare isBuffer: true;
   declare bytesPerElement: number;
   _buffer: Float32Array | null = null;
@@ -25,7 +25,7 @@ export class Buffer extends Binding {
   }
 }
 
-Buffer.prototype.isBuffer = true;
-Buffer.prototype.bytesPerElement = Float32Array.BYTES_PER_ELEMENT;
+NodeBuffer.prototype.isBuffer = true;
+NodeBuffer.prototype.bytesPerElement = Float32Array.BYTES_PER_ELEMENT;
 
-export default Buffer;
+export default NodeBuffer;
