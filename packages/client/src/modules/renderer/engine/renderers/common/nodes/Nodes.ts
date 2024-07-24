@@ -4,11 +4,11 @@ import NodeBuilderState from './NodeBuilderState.js';
 import {
   Camera,
   CubeTexture,
+  Entity,
   Fog,
   FogExp2,
   Mapping,
   Material,
-  Entity,
   Scene,
   Texture,
   ToneMapping,

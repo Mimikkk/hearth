@@ -15,4 +15,5 @@ export class FramebufferTexture extends Texture {
     this.needsUpdate = true;
   }
 }
+
 FramebufferTexture.prototype.isFramebufferTexture = true;

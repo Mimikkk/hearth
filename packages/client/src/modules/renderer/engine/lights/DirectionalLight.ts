@@ -28,5 +28,6 @@ export class DirectionalLight extends Light<DirectionalLightShadow> {
     return this;
   }
 }
+
 DirectionalLight.prototype.isDirectionalLight = true;
 DirectionalLight.prototype.type = 'DirectionalLight';

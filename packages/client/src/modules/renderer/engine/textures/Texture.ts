@@ -243,4 +243,5 @@ export class Texture {
     }
   }
 }
+
 Texture.prototype.isTexture = true;

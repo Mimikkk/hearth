@@ -2,7 +2,7 @@ import { Vec3 } from '../math/Vec3.js';
 import { Entity } from '../core/Entity.js';
 import { LineSegments } from '../objects/LineSegments.js';
 import { LineBasicMaterial } from '../materials/LineBasicMaterial.js';
-import { Float32BufferAttribute } from '../core/attributes/BufferAttribute.js';
+import { BufferAttribute } from '../core/attributes/BufferAttribute.js';
 import { Geometry } from '../core/Geometry.js';
 import { SpotLight } from '@modules/renderer/engine/lights/SpotLight.js';
 import { Color } from '@modules/renderer/engine/math/Color.js';
@@ -35,7 +35,7 @@ export class SpotLightHelper extends Entity {
       positions.push(Math.cos(p1), Math.sin(p1), 1, Math.cos(p2), Math.sin(p2), 1);
     }
 
-    geometry.setAttribute('position', new Float32BufferAttribute(positions, 3));
+    geometry.setAttribute('position', new BufferAttribute(new Float32Array(positions), 3));
 
     const material = new LineBasicMaterial({ fog: false, toneMapped: false });
 
@@ -76,4 +76,5 @@ export class SpotLightHelper extends Entity {
     }
   }
 }
+
 SpotLightHelper.prototype.type = 'SpotLightHelper';

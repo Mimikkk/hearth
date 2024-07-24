@@ -147,6 +147,7 @@ export class Line3 {
     return into.from(this.start).add(this.end).scale(0.5);
   }
 }
+
 Line3.prototype.isLine3 = true;
 
 const _vec1 = Vec3.new();

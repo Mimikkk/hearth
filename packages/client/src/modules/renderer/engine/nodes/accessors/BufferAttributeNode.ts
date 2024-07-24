@@ -1,7 +1,7 @@
 import InputNode from '../core/InputNode.js';
 import { varying } from '../core/VaryingNode.js';
 import { addNodeElement, nodeObject } from '../shadernode/ShaderNodes.js';
-import { BufferUsage, Buffer, InterleavedBufferAttribute } from '@modules/renderer/engine/engine.js';
+import { Buffer, BufferUsage, InterleavedBufferAttribute } from '@modules/renderer/engine/engine.js';
 import { ShaderStage } from '@modules/renderer/engine/renderers/webgpu/nodes/NodeBuilder.types.js';
 
 class BufferAttributeNode extends InputNode {

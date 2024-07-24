@@ -67,5 +67,6 @@ export class MeshDepthMaterial extends Material {
     return this;
   }
 }
+
 MeshDepthMaterial.prototype.isMeshDepthMaterial = true;
 MeshDepthMaterial.prototype.type = 'MeshDepthMaterial';

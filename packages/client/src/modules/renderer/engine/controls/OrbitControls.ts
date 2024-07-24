@@ -693,6 +693,7 @@ export class OrbitControls {
         scope.update();
       }
     }
+
     //
     // event handlers - FSM: listen for events and reset state
     //

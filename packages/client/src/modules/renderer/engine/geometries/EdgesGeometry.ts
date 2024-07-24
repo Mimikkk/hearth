@@ -1,5 +1,5 @@
 import { Geometry } from '../core/Geometry.js';
-import { Float32BufferAttribute } from '../core/attributes/BufferAttribute.js';
+import { BufferAttribute } from '../core/attributes/BufferAttribute.js';
 import * as MathUtils from '../math/MathUtils.js';
 import { Triangle } from '../math/Triangle.js';
 import { Vec3 } from '../math/Vec3.js';
@@ -110,7 +110,7 @@ export class EdgesGeometry extends Geometry {
         }
       }
 
-      this.setAttribute('position', new Float32BufferAttribute(vertices, 3));
+      this.setAttribute('position', new BufferAttribute(new Float32Array(vertices), 3));
     }
   }
 

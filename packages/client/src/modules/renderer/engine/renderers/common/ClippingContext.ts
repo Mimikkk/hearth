@@ -1,4 +1,4 @@
-import { Camera, Material, Mat3, Mat4, Plane, Vec4 } from '@modules/renderer/engine/engine.js';
+import { Camera, Mat3, Mat4, Material, Plane, Vec4 } from '@modules/renderer/engine/engine.js';
 import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 
 const _plane = new Plane();

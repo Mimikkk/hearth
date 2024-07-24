@@ -26,6 +26,7 @@ export class Color {
   g: number = 0;
   b: number = 0;
   a: number = 1;
+
   constructor();
   constructor(r: ColorRepresentation);
   constructor(r: number, g: number, b: number);
@@ -33,6 +34,7 @@ export class Color {
   constructor(r?: number | ColorRepresentation, g?: number, b?: number, a: number = 1) {
     if (r) this.set(r as number, g!, b!, a);
   }
+
   static is(value: any): value is Color {
     return value?.isColor === true;
   }

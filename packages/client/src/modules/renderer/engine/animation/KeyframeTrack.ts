@@ -3,7 +3,7 @@ import { CubicInterpolant } from '../math/interpolants/CubicInterpolant.js';
 import { LinearInterpolant } from '../math/interpolants/LinearInterpolant.js';
 import { DiscreteInterpolant } from '../math/interpolants/DiscreteInterpolant.js';
 import * as AnimationUtils from './AnimationUtils.js';
-import { NumberArrayConstructor, TypedArray, TypedArrayConstructor } from '../math/MathUtils.js';
+import { NumberArrayConstructor, TypedArray } from '../math/MathUtils.js';
 import { Interpolant } from '../math/Interpolant.js';
 
 export class KeyframeTrack<T extends TypedArray = Float32Array, V extends TypedArray = Float32Array> {

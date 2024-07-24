@@ -17,4 +17,5 @@ export class FogExp2 {
     return new FogExp2(this.color, this.density);
   }
 }
+
 FogExp2.prototype.isFogExp2 = true;

@@ -71,6 +71,7 @@ function lineToLineClosestPoints(line1: Line3, line2: Line3, target1: Vec3, targ
     target2.from(s).scale(t2).add(line2.start);
   }
 }
+
 export class Octree {
   bounds: Box3;
   subTrees: Octree[];

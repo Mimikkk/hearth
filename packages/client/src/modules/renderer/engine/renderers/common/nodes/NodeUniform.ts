@@ -1,11 +1,11 @@
 import {
+  ColorUniform,
   FloatUniform,
+  Mat3Uniform,
+  Mat4Uniform,
   Vec2Uniform,
   Vec3Uniform,
   Vec4Uniform,
-  ColorUniform,
-  Mat3Uniform,
-  Mat4Uniform,
 } from '../Uniform.js';
 
 import NodeUniform from '@modules/renderer/engine/nodes/core/NodeUniform.js';

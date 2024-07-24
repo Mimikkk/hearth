@@ -61,4 +61,5 @@ export class Scene extends Entity {
     return this;
   }
 }
+
 Scene.prototype.isScene = true;

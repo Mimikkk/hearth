@@ -1,4 +1,4 @@
-import { Geometry, Float32BufferAttribute, Vec3 } from '../engine.js';
+import { BufferAttribute, Geometry, Vec3 } from '../engine.js';
 import { ConvexHull } from '../math/ConvexHull.js';
 
 export class ConvexGeometry extends Geometry {
@@ -34,7 +34,7 @@ export class ConvexGeometry extends Geometry {
 
     // build geometry
 
-    this.setAttribute('position', new Float32BufferAttribute(vertices, 3));
-    this.setAttribute('normal', new Float32BufferAttribute(normals, 3));
+    this.setAttribute('position', new BufferAttribute(new Float32Array(vertices), 3));
+    this.setAttribute('normal', new BufferAttribute(new Float32Array(normals), 3));
   }
 }

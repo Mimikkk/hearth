@@ -60,6 +60,8 @@ export { default as VaryingNode, varying } from './core/VaryingNode.js';
 export { default as OutputStructNode, outputStruct } from './core/OutputStructNode.js';
 
 import * as NodeUtils from './core/NodeUtils.js';
+import './shadernode/ShaderNode.map.initialize.js';
+import './lighting/LightsNodeMap.initialize.js';
 
 export { NodeUtils };
 
@@ -186,7 +188,6 @@ export { default as ReflectorNode, reflector } from './utils/ReflectorNode.js';
 
 // shadernode
 export * from './shadernode/ShaderNodes.js';
-import './shadernode/ShaderNode.map.initialize.js';
 
 // accessors
 export { TBNViewMatrix, parallaxDirection, parallaxUV } from './accessors/AccessorsUtils.js';
@@ -401,7 +402,6 @@ export { default as HemisphereLightNode } from './lighting/HemisphereLightNode.j
 export { default as EnvironmentNode } from './lighting/EnvironmentNode.js';
 export { default as AONode } from './lighting/AONode.js';
 export { default as AnalyticLightNode } from './lighting/AnalyticLightNode.js';
-import './lighting/LightsNodeMap.initialize.js';
 
 // pmrem
 export { default as PMREMNode, pmremTexture } from './pmrem/PMREMNode.js';

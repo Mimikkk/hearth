@@ -13,6 +13,7 @@ export class OrthographicCamera extends Camera {
     width: number;
     height: number;
   } | null;
+
   constructor(
     public left: number = -1,
     public right: number = 1,
@@ -118,5 +119,6 @@ export class OrthographicCamera extends Camera {
     return this;
   }
 }
+
 OrthographicCamera.prototype.isOrthographicCamera = true;
 OrthographicCamera.prototype.type = 'OrthographicCamera';

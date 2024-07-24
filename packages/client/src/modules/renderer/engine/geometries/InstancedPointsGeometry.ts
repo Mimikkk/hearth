@@ -1,4 +1,4 @@
-import { Box3, Float32BufferAttribute, Geometry, InstancedBufferAttribute, Mat4, Sphere, Vec3 } from '../engine.js';
+import { Box3, BufferAttribute, Geometry, InstancedBufferAttribute, Mat4, Sphere, Vec3 } from '../engine.js';
 
 export class InstancedPointsGeometry extends Geometry {
   declare isInstancedPointsGeometry: true;
@@ -12,8 +12,8 @@ export class InstancedPointsGeometry extends Geometry {
     const index = [0, 2, 1, 2, 3, 1];
 
     this.setIndex(index);
-    this.setAttribute('position', new Float32BufferAttribute(positions, 3));
-    this.setAttribute('uv', new Float32BufferAttribute(uvs, 2));
+    this.setAttribute('position', new BufferAttribute(new Float32Array(positions), 3));
+    this.setAttribute('uv', new BufferAttribute(new Float32Array(uvs), 2));
   }
 
   applyMat4(matrix: Mat4): this {

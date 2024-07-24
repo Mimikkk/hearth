@@ -36,5 +36,6 @@ export class ShadowMaterial extends Material {
     return this;
   }
 }
+
 ShadowMaterial.prototype.isShadowMaterial = true;
 ShadowMaterial.prototype.type = 'ShadowMaterial';

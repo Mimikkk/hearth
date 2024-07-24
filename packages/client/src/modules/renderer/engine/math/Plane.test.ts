@@ -1,10 +1,11 @@
 import { Plane } from './Plane.js';
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { Sphere } from '@modules/renderer/engine/math/Sphere.js';
 import { Line3 } from '@modules/renderer/engine/math/Line3.js';
 import { Box3 } from '@modules/renderer/engine/math/Box3.js';
 import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
+
 const expectCloseTo = (a: Plane, b: Plane, epsilon: number = Number.EPSILON) => {
   expect(a.normal.x).toBeCloseTo(b.normal.x, epsilon);
   expect(a.normal.y).toBeCloseTo(b.normal.y, epsilon);

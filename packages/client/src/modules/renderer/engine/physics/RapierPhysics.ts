@@ -6,6 +6,7 @@ import { Quaternion } from '@modules/renderer/engine/math/Quaternion.js';
 import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
 import { Clock } from '@modules/renderer/engine/core/Clock.js';
 import { Scene } from '@modules/renderer/engine/scenes/Scene.js';
+
 type Vector = { x: number; y: number; z: number };
 
 export interface RapierPhysicsObject {

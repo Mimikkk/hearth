@@ -11,6 +11,7 @@ export class Capsule {
     public end: Vec3 = Vec3.new(0, 1, 0),
     public radius: number = 1,
   ) {}
+
   static new(start: Vec3 = Vec3.new(), end: Vec3 = Vec3.new(), radius: number = 0): Capsule {
     return new Capsule(start, end, radius);
   }
@@ -114,4 +115,5 @@ export class Capsule {
     );
   }
 }
+
 Capsule.prototype.isCapsule = true;

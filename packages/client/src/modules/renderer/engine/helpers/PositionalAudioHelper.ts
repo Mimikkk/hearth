@@ -1,4 +1,4 @@
-import { BufferAttribute, Geometry, Line, LineBasicMaterial, Material, PositionalAudio } from '../engine.js';
+import { BufferAttribute, Geometry, Line, LineBasicMaterial, PositionalAudio } from '../engine.js';
 import { degreeToRadian } from '../math/MathUtils.js';
 
 export class PositionalAudioHelper extends Line {

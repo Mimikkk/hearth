@@ -1,10 +1,9 @@
 import { Geometry } from '../core/Geometry.js';
-import { Float32BufferAttribute } from '../core/attributes/BufferAttribute.js';
-import * as Curves from '../extras/curves/Curves.js';
+import { BufferAttribute } from '../core/attributes/BufferAttribute.js';
+import { QuadraticBezierCurve3 } from '../extras/curves/Curves.js';
 import { Vec2 } from '../math/Vec2.js';
 import { Vec3 } from '../math/Vec3.js';
 import { Curve } from '@modules/renderer/engine/extras/core/Curve.js';
-import { QuadraticBezierCurve3 } from '../extras/curves/Curves.js';
 
 export class TubeGeometry extends Geometry {
   declare type: string | 'TubeGeometry';
@@ -68,9 +67,9 @@ export class TubeGeometry extends Geometry {
     // build geometry
 
     this.setIndex(indices);
-    this.setAttribute('position', new Float32BufferAttribute(vertices, 3));
-    this.setAttribute('normal', new Float32BufferAttribute(normals, 3));
-    this.setAttribute('uv', new Float32BufferAttribute(uvs, 2));
+    this.setAttribute('position', new BufferAttribute(new Float32Array(vertices), 3));
+    this.setAttribute('normal', new BufferAttribute(new Float32Array(normals), 3));
+    this.setAttribute('uv', new BufferAttribute(new Float32Array(uvs), 2));
 
     // functions
 

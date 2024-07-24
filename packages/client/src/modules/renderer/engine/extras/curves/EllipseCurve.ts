@@ -82,5 +82,6 @@ export class EllipseCurve extends Curve<Vec2> {
     return this;
   }
 }
+
 EllipseCurve.prototype.isEllipseCurve = true;
 EllipseCurve.prototype.type = 'EllipseCurve';

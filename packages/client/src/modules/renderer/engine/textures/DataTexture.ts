@@ -35,4 +35,5 @@ export class DataTexture extends Texture {
     this.unpackAlignment = 1;
   }
 }
+
 DataTexture.prototype.isDataTexture = true;

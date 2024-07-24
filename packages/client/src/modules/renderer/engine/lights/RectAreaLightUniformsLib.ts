@@ -1,7 +1,6 @@
 import { DataTexture } from '../textures/DataTexture.js';
 import { UniformsLib } from '../renderers/shaders/UniformsLib.js';
 import {
-  ColorSpace,
   MagnificationTextureFilter,
   Mapping,
   MinificationTextureFilter,

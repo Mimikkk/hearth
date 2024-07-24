@@ -95,6 +95,7 @@ export class PointLightShadow extends LightShadow<PerspectiveCamera> {
     return this;
   }
 }
+
 PointLightShadow.prototype.isPointLightShadow = true;
 
 const _update = Vec3.new();

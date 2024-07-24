@@ -1,16 +1,16 @@
 import {
   BoxGeometry,
-  Geometry,
+  BufferAttribute,
   Camera,
   CylinderGeometry,
+  Entity,
   Euler,
-  Float32BufferAttribute,
+  Geometry,
   Line,
   LineBasicMaterial,
   Mat4,
   Mesh,
   MeshBasicMaterial,
-  Entity,
   OctahedronGeometry,
   OrthographicCamera,
   PerspectiveCamera,
@@ -488,7 +488,9 @@ export class TransformControls extends Entity {
     this.eventDispatcher.dispatch(_changeEvent, this);
     this.eventDispatcher.dispatch(_objectChangeEvent, this);
   }
+
   eye: Vec3;
+
   pointerUp(pointer: PointerEvent) {
     if (pointer !== null && pointer.button !== 0) return;
 
@@ -500,6 +502,7 @@ export class TransformControls extends Entity {
     this.dragging = false;
     this.axis = null;
   }
+
   rotationAxis: Vec3;
   rotationAngle: number;
 
@@ -769,7 +772,7 @@ export class TransformControlsGizmo extends Entity {
     scaleHandleGeometry.translate(0, 0.04, 0);
 
     const lineGeometry = new Geometry();
-    lineGeometry.setAttribute('position', new Float32BufferAttribute([0, 0, 0, 1, 0, 0], 3));
+    lineGeometry.setAttribute('position', new BufferAttribute(new Float32Array([0, 0, 0, 1, 0, 0]), 3));
 
     const lineGeometry2 = new CylinderGeometry(0.0075, 0.0075, 0.5, 3);
     lineGeometry2.translate(0, 0.25, 0);
@@ -786,7 +789,7 @@ export class TransformControlsGizmo extends Entity {
     function TranslateHelperGeometry() {
       const geometry = new Geometry();
 
-      geometry.setAttribute('position', new Float32BufferAttribute([0, 0, 0, 1, 1, 1], 3));
+      geometry.setAttribute('position', new BufferAttribute(new Float32Array([0, 0, 0, 1, 1, 1]), 3));
 
       return geometry;
     }
@@ -1240,10 +1243,13 @@ export class TransformControlsGizmo extends Entity {
 
     return super.updateMatrixWorld(force);
   }
+
   enabled: boolean;
 }
+
 TransformControlsGizmo.prototype.isTransformControlsGizmo = true;
 TransformControlsGizmo.prototype.type = 'TransformControlsGizmo';
+
 //
 
 export class TransformControlsPlane extends Mesh {
@@ -1337,5 +1343,6 @@ export class TransformControlsPlane extends Mesh {
     return super.updateMatrixWorld(force);
   }
 }
+
 TransformControlsPlane.prototype.isTransformControlsPlane = true;
 TransformControlsPlane.prototype.type = 'TransformControlsPlane';

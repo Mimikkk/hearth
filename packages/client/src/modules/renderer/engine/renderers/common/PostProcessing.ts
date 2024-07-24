@@ -1,4 +1,4 @@
-import { vec4, NodeMaterial } from '../../nodes/Nodes.js';
+import { NodeMaterial, vec4 } from '../../nodes/Nodes.js';
 import { QuadMesh } from '../../objects/QuadMesh.js';
 import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 

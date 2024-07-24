@@ -1,5 +1,5 @@
 import { Geometry } from '../core/Geometry.js';
-import { Float32BufferAttribute } from '../core/attributes/BufferAttribute.js';
+import { BufferAttribute } from '../core/attributes/BufferAttribute.js';
 import { Shape } from '../extras/core/Shape.js';
 import { ShapeUtils } from '../extras/ShapeUtils.js';
 import { Vec2 } from '../math/Vec2.js';
@@ -54,9 +54,9 @@ export class ShapeGeometry extends Geometry {
     // build geometry
 
     this.setIndex(indices);
-    this.setAttribute('position', new Float32BufferAttribute(vertices, 3));
-    this.setAttribute('normal', new Float32BufferAttribute(normals, 3));
-    this.setAttribute('uv', new Float32BufferAttribute(uvs, 2));
+    this.setAttribute('position', new BufferAttribute(new Float32Array(vertices), 3));
+    this.setAttribute('normal', new BufferAttribute(new Float32Array(normals), 3));
+    this.setAttribute('uv', new BufferAttribute(new Float32Array(uvs), 2));
 
     // helper functions
 

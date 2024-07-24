@@ -1,4 +1,4 @@
-import { BufferAttribute, Geometry, Color, Float32BufferAttribute, Vec3 } from '@modules/renderer/engine/engine.js';
+import { BufferAttribute, Color, Geometry, Vec3 } from '@modules/renderer/engine/engine.js';
 
 function isBinary(data: ArrayBuffer) {
   const reader = new DataView(data);
@@ -212,8 +212,8 @@ function parseASCII(text: string) {
     groupCount++;
   }
 
-  geometry.setAttribute('position', new Float32BufferAttribute(vertices, 3));
-  geometry.setAttribute('normal', new Float32BufferAttribute(normals, 3));
+  geometry.setAttribute('position', new BufferAttribute(new Float32Array(vertices), 3));
+  geometry.setAttribute('normal', new BufferAttribute(new Float32Array(normals), 3));
 
   return geometry;
 }

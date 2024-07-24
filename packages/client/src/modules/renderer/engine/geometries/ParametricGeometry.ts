@@ -1,4 +1,4 @@
-import { Geometry, Float32BufferAttribute, Vec3 } from '../engine.js';
+import { BufferAttribute, Geometry, Vec3 } from '../engine.js';
 
 export class ParametricGeometry extends Geometry {
   declare type: string | 'ParametricGeometry';
@@ -106,9 +106,9 @@ export class ParametricGeometry extends Geometry {
     // build geometry
 
     this.setIndex(indices);
-    this.setAttribute('position', new Float32BufferAttribute(vertices, 3));
-    this.setAttribute('normal', new Float32BufferAttribute(normals, 3));
-    this.setAttribute('uv', new Float32BufferAttribute(uvs, 2));
+    this.setAttribute('position', new BufferAttribute(new Float32Array(vertices), 3));
+    this.setAttribute('normal', new BufferAttribute(new Float32Array(normals), 3));
+    this.setAttribute('uv', new BufferAttribute(new Float32Array(uvs), 2));
   }
 
   copy(source: this): this {

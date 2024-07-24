@@ -3,9 +3,9 @@ import { nodeObject, vec2 } from '../shadernode/ShaderNodes.js';
 import { NodeUpdateType } from '../core/constants.js';
 import { viewportTopLeft } from '../display/ViewportNode.js';
 import {
+  Entity,
   Filter,
   Mat4,
-  Entity,
   Plane,
   RenderTarget,
   TextureDataType,

@@ -1,6 +1,6 @@
 import {
+  BufferAttribute,
   Geometry,
-  Float32BufferAttribute,
   Line,
   LineBasicMaterial,
   Mesh,
@@ -22,7 +22,7 @@ export class RectAreaLightHelper extends Line {
     const positions = [1, 1, 0, -1, 1, 0, -1, -1, 0, 1, -1, 0, 1, 1, 0];
 
     const geometry = new Geometry();
-    geometry.setAttribute('position', new Float32BufferAttribute(positions, 3));
+    geometry.setAttribute('position', new BufferAttribute(new Float32Array(positions), 3));
     geometry.computeBoundingSphere();
 
     const material = new LineBasicMaterial({ fog: false });
@@ -38,7 +38,7 @@ export class RectAreaLightHelper extends Line {
     const positions2 = [1, 1, 0, -1, 1, 0, -1, -1, 0, 1, 1, 0, -1, -1, 0, 1, -1, 0];
 
     const geometry2 = new Geometry();
-    geometry2.setAttribute('position', new Float32BufferAttribute(positions2, 3));
+    geometry2.setAttribute('position', new BufferAttribute(new Float32Array(positions2), 3));
     geometry2.computeBoundingSphere();
 
     this.add(new Mesh(geometry2, new MeshBasicMaterial({ side: Side.Back, fog: false })));

@@ -10,6 +10,7 @@ export interface AmmoPhysicsObject {
   addMesh: (mesh: Mesh, mass?: number) => void;
   setMeshPosition: (mesh: Mesh, position: Vec3, index?: number) => void;
 }
+
 export async function AmmoPhysics(): Promise<AmmoPhysicsObject> {
   // eslint-disable-line no-undef
   const AmmoLib = await Ammo();

@@ -1,5 +1,5 @@
 import { Ray } from './Ray.js';
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { Sphere } from '@modules/renderer/engine/math/Sphere.js';
 import { Line3 } from '@modules/renderer/engine/math/Line3.js';

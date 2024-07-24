@@ -2,7 +2,6 @@ import DataMap from './DataMap.js';
 
 import {
   DepthTexture,
-  Filter,
   Mapping,
   MinificationTextureFilter,
   RenderTarget,

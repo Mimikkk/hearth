@@ -16,7 +16,7 @@ import { Line2 } from '@modules/renderer/engine/lines/Line2.js';
 import { LineGeometry } from '@modules/renderer/engine/lines/LineGeometry.js';
 import * as GeometryUtils from '@modules/renderer/engine/utils/GeometryUtils.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import { Color } from '@modules/renderer/engine/engine.js';
+import { BufferAttribute, Color } from '@modules/renderer/engine/engine.js';
 
 let line, renderer, scene, camera, camera2, controls, backgroundNode;
 let line1;
@@ -94,8 +94,8 @@ async function init() {
   scene.add(line);
 
   const geo = new Engine.Geometry();
-  geo.setAttribute('position', new Engine.Float32BufferAttribute(positions, 3));
-  geo.setAttribute('color', new Engine.Float32BufferAttribute(colors, 3));
+  geo.setAttribute('position', new BufferAttribute(new Float32Array(positions), 3));
+  geo.setAttribute('color', new BufferAttribute(new Float32Array(colors), 3));
 
   matLineBasic = new LineBasicNodeMaterial({ vertexColors: true });
   matLineDashed = new LineDashedNodeMaterial({ vertexColors: true, scale: 2, dashSize: 1, gapSize: 1 });

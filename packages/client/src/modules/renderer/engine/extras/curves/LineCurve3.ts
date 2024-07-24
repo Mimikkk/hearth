@@ -47,5 +47,6 @@ export class LineCurve3 extends Curve<Vec3> {
     return this;
   }
 }
+
 LineCurve3.prototype.isLineCurve3 = true;
 LineCurve3.prototype.type = 'LineCurve3';

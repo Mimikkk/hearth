@@ -26,5 +26,6 @@ export class Light<S extends LightShadow | undefined = any> extends Entity {
     return this;
   }
 }
+
 Light.prototype.isLight = true;
 Light.prototype.type = 'Light';

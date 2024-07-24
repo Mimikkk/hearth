@@ -39,5 +39,6 @@ export class PointLight extends Light<PointLightShadow> {
     return this;
   }
 }
+
 PointLight.prototype.isPointLight = true;
 PointLight.prototype.type = 'PointLight';

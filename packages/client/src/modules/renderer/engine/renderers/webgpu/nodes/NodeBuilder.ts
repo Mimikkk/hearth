@@ -1,8 +1,8 @@
 import {
-  Geometry,
   Color,
-  Material,
   Entity,
+  Geometry,
+  Material,
   RenderTarget,
   Revision,
   Scene,

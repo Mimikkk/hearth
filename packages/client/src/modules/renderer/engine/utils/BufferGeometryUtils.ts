@@ -1,4 +1,4 @@
-import { BufferAttribute, Geometry, DrawMode } from '../engine.js';
+import { BufferAttribute, DrawMode, Geometry } from '../engine.js';
 import { AttributeType } from '@modules/renderer/engine/core/types.js';
 import { ArrayConstructorMap, TypedArray } from '@modules/renderer/engine/math/MathUtils.js';
 

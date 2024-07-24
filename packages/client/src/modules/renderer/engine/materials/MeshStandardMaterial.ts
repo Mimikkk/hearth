@@ -189,5 +189,6 @@ export class MeshStandardMaterial extends Material {
     return this;
   }
 }
+
 MeshStandardMaterial.prototype.isMeshStandardMaterial = true;
 MeshStandardMaterial.prototype.type = 'MeshStandardMaterial';

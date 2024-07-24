@@ -19,4 +19,5 @@ export class DataArrayTexture extends Texture {
     this.unpackAlignment = 1;
   }
 }
+
 DataArrayTexture.prototype.isDataArrayTexture = true;

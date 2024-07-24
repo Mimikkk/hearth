@@ -1,11 +1,6 @@
 import DataMap from './DataMap.js';
 import { AttributeLocation } from './Constants.js';
-import {
-  BufferAttribute,
-  Uint16BufferAttribute,
-  Uint32BufferAttribute,
-  WireframeGeometry,
-} from '@modules/renderer/engine/engine.js';
+import { BufferAttribute, WireframeGeometry } from '@modules/renderer/engine/engine.js';
 import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 import RenderObject from '@modules/renderer/engine/renderers/common/RenderObject.js';
 import { AttributeType } from '@modules/renderer/engine/core/types.js';

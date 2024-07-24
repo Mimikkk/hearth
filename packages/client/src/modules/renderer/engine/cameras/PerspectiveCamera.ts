@@ -180,5 +180,6 @@ export class PerspectiveCamera extends Camera {
     return this;
   }
 }
+
 PerspectiveCamera.prototype.isPerspectiveCamera = true;
 PerspectiveCamera.prototype.type = 'PerspectiveCamera';

@@ -55,4 +55,5 @@ export class VideoTexture extends Texture {
     }
   }
 }
+
 VideoTexture.prototype.isVideoTexture = true;

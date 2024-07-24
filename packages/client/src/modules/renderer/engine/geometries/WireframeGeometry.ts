@@ -1,5 +1,5 @@
 import { Geometry } from '../core/Geometry.js';
-import { Float32BufferAttribute } from '../core/attributes/BufferAttribute.js';
+import { BufferAttribute } from '../core/attributes/BufferAttribute.js';
 import { Vec3 } from '../math/Vec3.js';
 
 export class WireframeGeometry extends Geometry {
@@ -88,7 +88,7 @@ export class WireframeGeometry extends Geometry {
 
       // build geometry
 
-      this.setAttribute('position', new Float32BufferAttribute(vertices, 3));
+      this.setAttribute('position', new BufferAttribute(new Float32Array(vertices), 3));
     }
   }
 
@@ -100,6 +100,7 @@ export class WireframeGeometry extends Geometry {
     return this;
   }
 }
+
 WireframeGeometry.prototype.type = 'WireframeGeometry';
 
 function isUniqueEdge(start: Vec3, end: Vec3, edges: Set<string>) {

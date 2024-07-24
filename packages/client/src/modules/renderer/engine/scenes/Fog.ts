@@ -18,4 +18,5 @@ export class Fog {
     return new Fog(this.color, this.near, this.far);
   }
 }
+
 Fog.prototype.isFog = true;

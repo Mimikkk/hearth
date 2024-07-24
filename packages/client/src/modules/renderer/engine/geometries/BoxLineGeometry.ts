@@ -1,4 +1,4 @@
-import { Geometry, Float32BufferAttribute } from '../engine.js';
+import { BufferAttribute, Geometry } from '../engine.js';
 
 export class BoxLineGeometry extends Geometry {
   constructor(
@@ -56,6 +56,6 @@ export class BoxLineGeometry extends Geometry {
       z += segmentDepth;
     }
 
-    this.setAttribute('position', new Float32BufferAttribute(vertices, 3));
+    this.setAttribute('position', new BufferAttribute(new Float32Array(vertices), 3));
   }
 }

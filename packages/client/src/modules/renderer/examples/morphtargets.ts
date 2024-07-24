@@ -5,6 +5,7 @@ import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.j
 
 import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
+import { BufferAttribute } from '@modules/renderer/engine/engine.js';
 
 let container, camera, scene, renderer, mesh;
 
@@ -87,10 +88,10 @@ function createGeometry() {
   }
 
   // add the spherical positions as the first morph target
-  geometry.morphAttributes.position[0] = new Engine.Float32BufferAttribute(spherePositions, 3);
+  geometry.morphAttributes.position[0] = new BufferAttribute(new Float32Array(spherePositions), 3);
 
   // add the twisted positions as the second morph target
-  geometry.morphAttributes.position[1] = new Engine.Float32BufferAttribute(twistPositions, 3);
+  geometry.morphAttributes.position[1] = new BufferAttribute(new Float32Array(twistPositions), 3);
 
   return geometry;
 }

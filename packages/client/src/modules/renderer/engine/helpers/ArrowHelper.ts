@@ -1,4 +1,4 @@
-import { Float32BufferAttribute } from '../core/attributes/BufferAttribute.js';
+import { BufferAttribute } from '../core/attributes/BufferAttribute.js';
 import { Geometry } from '../core/Geometry.js';
 import { Entity } from '../core/Entity.js';
 import { CylinderGeometry } from '../geometries/CylinderGeometry.js';
@@ -32,7 +32,7 @@ export class ArrowHelper extends Entity {
 
     if (_lineGeometry === undefined) {
       _lineGeometry = new Geometry();
-      _lineGeometry.setAttribute('position', new Float32BufferAttribute([0, 0, 0, 0, 1, 0], 3));
+      _lineGeometry.setAttribute('position', new BufferAttribute(new Float32Array([0, 0, 0, 0, 1, 0]), 3));
 
       _coneGeometry = new CylinderGeometry(0, 0.5, 1, 5, 1);
       _coneGeometry.translate(0, -0.5, 0);

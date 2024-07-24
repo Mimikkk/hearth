@@ -36,5 +36,6 @@ export class QuadraticBezierCurve extends Curve<Vec2> {
     return this;
   }
 }
+
 QuadraticBezierCurve.prototype.isQuadraticBezierCurve = true;
 QuadraticBezierCurve.prototype.type = 'QuadraticBezierCurve';

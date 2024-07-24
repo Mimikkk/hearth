@@ -159,4 +159,5 @@ export class CurvePath<T extends Vec2 | Vec3> extends Curve<T> {
     return this;
   }
 }
+
 CurvePath.prototype.type = 'CurvePath';

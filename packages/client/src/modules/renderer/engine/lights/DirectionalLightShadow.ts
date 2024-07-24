@@ -8,4 +8,5 @@ export class DirectionalLightShadow extends LightShadow<OrthographicCamera> {
     super(new OrthographicCamera(-5, 5, 5, -5, 0.5, 500));
   }
 }
+
 DirectionalLightShadow.prototype.isDirectionalLightShadow = true;

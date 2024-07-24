@@ -1,6 +1,4 @@
 import ClippingContext from './ClippingContext.js';
-import Nodes from '@modules/renderer/engine/renderers/common/nodes/Nodes.js';
-import Geometries from '@modules/renderer/engine/renderers/common/Geometries.js';
 import { Renderer } from '@modules/renderer/engine/renderers/webgpu/Renderer.js';
 import { Entity } from '@modules/renderer/engine/core/Entity.js';
 import { Material } from '@modules/renderer/engine/materials/Material.js';

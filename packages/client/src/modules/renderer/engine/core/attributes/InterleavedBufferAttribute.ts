@@ -1,5 +1,4 @@
 import { Vec3 } from '../../math/Vec3.js';
-import { BufferAttribute } from './BufferAttribute.js';
 import { denormalize, normalize, TypedArray } from '../../math/MathUtils.js';
 import { Buffer } from '@modules/renderer/engine/core/buffers/Buffer.js';
 import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
@@ -196,4 +195,5 @@ export class InterleavedBufferAttribute<T extends TypedArray = any> {
     return this;
   }
 }
+
 InterleavedBufferAttribute.prototype.isInterleavedBufferAttribute = true;

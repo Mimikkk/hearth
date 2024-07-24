@@ -1,7 +1,7 @@
 import { Vec3 } from '../math/Vec3.js';
 import { Vec2 } from '../math/Vec2.js';
 import { Box3 } from '../math/Box3.js';
-import { BufferAttribute, Float32BufferAttribute } from './attributes/BufferAttribute.js';
+import { BufferAttribute } from './attributes/BufferAttribute.js';
 import { Sphere } from '../math/Sphere.js';
 import { Entity } from './Entity.js';
 import { Mat4 } from '../math/Mat4.js';
@@ -238,7 +238,7 @@ export class Geometry<
       position.push(point.x, point.y, point.z);
     }
 
-    this.setAttribute('position', new Float32BufferAttribute(position, 3) as never);
+    this.setAttribute('position', new BufferAttribute(new Float32Array(position), 3) as never);
 
     return this;
   }
@@ -398,8 +398,7 @@ export class Geometry<
     const uvAttribute = attributes.uv;
 
     if (this.hasAttribute('tangent') === false) {
-      // @ts-expect-error
-      this.setAttribute('tangent', new BufferAttribute(new Float32Array(4 * positionAttribute.count), 4));
+      this.setAttribute('tangent', new BufferAttribute(new Float32Array(new Array(4 * positionAttribute.count)), 4));
     }
 
     const tangentAttribute = this.attributes.tangent;
@@ -666,7 +665,7 @@ export class Geometry<
 
     for (const name in morphAttributes) {
       const morphArray = [];
-      const morphAttribute = morphAttributes[name]; // morphAttribute: array of Float32BufferAttributes
+      const morphAttribute = morphAttributes[name];
 
       //@ts-expect-error
       for (let i = 0, il = morphAttribute.length; i < il; i++) {
@@ -730,7 +729,7 @@ export class Geometry<
     const morphAttributes = source.morphAttributes;
     for (const name in morphAttributes) {
       const array = [];
-      const morphAttribute = morphAttributes[name]; // morphAttribute: array of Float32BufferAttributes
+      const morphAttribute = morphAttributes[name];
 
       //@ts-expect-error
       for (let i = 0, l = morphAttribute.length; i < l; i++) {

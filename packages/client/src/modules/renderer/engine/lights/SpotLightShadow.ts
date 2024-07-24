@@ -38,4 +38,5 @@ export class SpotLightShadow extends LightShadow<PerspectiveCamera> {
     return this;
   }
 }
+
 SpotLightShadow.prototype.isSpotLightShadow = true;

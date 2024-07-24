@@ -61,4 +61,5 @@ export class UniformGroup<A> {
     return new this.constructor().copy(this);
   }
 }
+
 UniformGroup.prototype.isUniformsGroup = true;

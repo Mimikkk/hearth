@@ -40,5 +40,6 @@ export class CubicBezierCurve3 extends Curve<Vec3> {
     return this;
   }
 }
+
 CubicBezierCurve3.prototype.isCubicBezierCurve3 = true;
 CubicBezierCurve3.prototype.type = 'CubicBezierCurve3';

@@ -48,4 +48,5 @@ export class CompressedTexture extends Texture {
     this.generateMipmaps = false;
   }
 }
+
 CompressedTexture.prototype.isCompressedTexture = true;

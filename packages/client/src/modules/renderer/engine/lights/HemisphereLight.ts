@@ -24,5 +24,6 @@ export class HemisphereLight extends Light<undefined> {
     return this;
   }
 }
+
 HemisphereLight.prototype.isHemisphereLight = true;
 HemisphereLight.prototype.type = 'HemisphereLight';

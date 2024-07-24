@@ -619,6 +619,7 @@ export class Entity {
     return this;
   }
 }
+
 Entity.prototype.isEntity = true;
 
 const _euler = new Euler();

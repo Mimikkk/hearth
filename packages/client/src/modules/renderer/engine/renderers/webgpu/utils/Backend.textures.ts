@@ -19,7 +19,6 @@ import {
   Filter,
   FramebufferTexture,
   MagnificationTextureFilter,
-  Mapping,
   MinificationTextureFilter,
   Texture,
   TextureDataType,

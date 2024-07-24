@@ -1,4 +1,4 @@
-import { BufferAttribute, Geometry, BufferUsage, Color, Material, Mesh, Sphere, Vec3 } from '../engine.js';
+import { BufferAttribute, BufferUsage, Color, Geometry, Material, Mesh, Sphere, Vec3 } from '../engine.js';
 
 /**
  * Port of http://webglsamples.org/blob/blob.html

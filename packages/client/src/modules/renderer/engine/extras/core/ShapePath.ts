@@ -224,4 +224,5 @@ export class ShapePath {
     return shapes;
   }
 }
+
 ShapePath.prototype.type = 'ShapePath';

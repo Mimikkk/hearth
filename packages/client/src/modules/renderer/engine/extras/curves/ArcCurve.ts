@@ -8,5 +8,6 @@ export class ArcCurve extends EllipseCurve {
     super(aX, aY, aRadius, aRadius, aStartAngle, aEndAngle, aClockwise);
   }
 }
+
 ArcCurve.prototype.isArcCurve = true;
 ArcCurve.prototype.type = 'ArcCurve';

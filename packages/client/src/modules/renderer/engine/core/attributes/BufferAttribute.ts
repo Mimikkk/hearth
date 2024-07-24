@@ -2,7 +2,6 @@ import { Vec3 } from '../../math/Vec3.js';
 import { Vec2 } from '../../math/Vec2.js';
 import { denormalize, normalize, TypedArray, TypedArrayConstructor } from '../../math/MathUtils.js';
 import { BufferUsage, TextureDataType } from '../../constants.js';
-import { fromHalfFloat, toHalfFloat } from '../../extras/DataUtils.js';
 import { Mat3 } from '@modules/renderer/engine/math/Mat3.js';
 import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
 
@@ -256,22 +255,5 @@ export class BufferAttribute<T extends TypedArray = any> {
     return new this.constructor(this.array, this.itemSize).copy(this);
   }
 }
+
 BufferAttribute.prototype.isBufferAttribute = true;
-
-export class Uint16BufferAttribute extends BufferAttribute<Uint16Array> {
-  constructor(array: number[], itemSize: number, normalized?: boolean) {
-    super(new Uint16Array(array), itemSize, normalized);
-  }
-}
-
-export class Uint32BufferAttribute extends BufferAttribute<Uint32Array> {
-  constructor(array: number[], itemSize: number, normalized?: boolean) {
-    super(new Uint32Array(array), itemSize, normalized);
-  }
-}
-
-export class Float32BufferAttribute extends BufferAttribute<Float32Array> {
-  constructor(array: number[], itemSize: number, normalized?: boolean) {
-    super(new Float32Array(array), itemSize, normalized);
-  }
-}

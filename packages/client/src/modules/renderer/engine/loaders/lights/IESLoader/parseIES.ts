@@ -7,10 +7,9 @@ import {
 import { DataUtils } from '@modules/renderer/engine/extras/DataUtils.js';
 import { DataTexture } from '@modules/renderer/engine/textures/DataTexture.js';
 import { lerp } from '../../../math/MathUtils.js';
-import { classLoader } from '@modules/renderer/engine/loaders/types.js';
-import { FileLoader, ResponseType } from '@modules/renderer/engine/loaders/files/FileLoader/FileLoader.js';
 
 export type SupportedType = TextureDataType.Float | TextureDataType.HalfFloat | TextureDataType.UnsignedByte;
+
 export interface SupportedMap {
   [TextureDataType.UnsignedByte]: Uint8Array;
   [TextureDataType.HalfFloat]: Uint16Array;

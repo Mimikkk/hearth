@@ -1,4 +1,4 @@
-import { Geometry, Euler, Float32BufferAttribute, Mat4, Mesh, Vec3 } from '../engine.js';
+import { BufferAttribute, Euler, Geometry, Mat4, Mesh, Vec3 } from '../engine.js';
 
 /**
  * You can use this geometry to create a decal mesh, that serves different kinds of purposes.
@@ -44,9 +44,9 @@ export class DecalGeometry extends Geometry {
 
     // build geometry
 
-    this.setAttribute('position', new Float32BufferAttribute(vertices, 3));
-    this.setAttribute('normal', new Float32BufferAttribute(normals, 3));
-    this.setAttribute('uv', new Float32BufferAttribute(uvs, 2));
+    this.setAttribute('position', new BufferAttribute(new Float32Array(vertices), 3));
+    this.setAttribute('normal', new BufferAttribute(new Float32Array(normals), 3));
+    this.setAttribute('uv', new BufferAttribute(new Float32Array(uvs), 2));
 
     function generate() {
       let decalVertices: DecalVertex[] = [];

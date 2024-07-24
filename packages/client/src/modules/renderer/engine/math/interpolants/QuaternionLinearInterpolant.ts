@@ -1,5 +1,5 @@
 import { Interpolant } from '../Interpolant.js';
-import { Quaternion, QuaternionArray } from '../Quaternion.js';
+import { QuaternionArray } from '../Quaternion.js';
 import type { TypedArray } from '../MathUtils.js';
 
 export class QuaternionLinearInterpolant<T extends TypedArray, V extends TypedArray> extends Interpolant<T, V> {

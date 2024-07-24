@@ -10,4 +10,5 @@ export class CompressedCubeTexture extends CompressedTexture {
     this.image = images;
   }
 }
+
 CompressedCubeTexture.prototype.isCubeTexture = true;

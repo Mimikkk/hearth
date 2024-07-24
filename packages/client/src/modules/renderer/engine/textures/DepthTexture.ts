@@ -57,4 +57,5 @@ export class DepthTexture extends Texture {
     return this;
   }
 }
+
 DepthTexture.prototype.isDepthTexture = true;

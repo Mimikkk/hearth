@@ -20,4 +20,5 @@ export class OctahedronGeometry extends PolyhedronGeometry {
     };
   }
 }
+
 OctahedronGeometry.prototype.type = 'OctahedronGeometry';

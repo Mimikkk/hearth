@@ -1,5 +1,5 @@
 import { Geometry } from '../core/Geometry.js';
-import { Float32BufferAttribute } from '../core/attributes/BufferAttribute.js';
+import { BufferAttribute } from '../core/attributes/BufferAttribute.js';
 import { Vec3 } from '../math/Vec3.js';
 
 export class TorusGeometry extends Geometry {
@@ -91,9 +91,9 @@ export class TorusGeometry extends Geometry {
     // build geometry
 
     this.setIndex(indices);
-    this.setAttribute('position', new Float32BufferAttribute(vertices, 3));
-    this.setAttribute('normal', new Float32BufferAttribute(normals, 3));
-    this.setAttribute('uv', new Float32BufferAttribute(uvs, 2));
+    this.setAttribute('position', new BufferAttribute(new Float32Array(vertices), 3));
+    this.setAttribute('normal', new BufferAttribute(new Float32Array(normals), 3));
+    this.setAttribute('uv', new BufferAttribute(new Float32Array(uvs), 2));
   }
 
   copy(source: this): this {
@@ -104,4 +104,5 @@ export class TorusGeometry extends Geometry {
     return this;
   }
 }
+
 TorusGeometry.prototype.type = 'TorusGeometry';

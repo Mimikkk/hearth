@@ -4,7 +4,7 @@ import { LineSegments } from '../objects/LineSegments.js';
 import { Color } from '../math/Color.js';
 import { LineBasicMaterial } from '../materials/LineBasicMaterial.js';
 import { Geometry } from '../core/Geometry.js';
-import { Float32BufferAttribute } from '../core/attributes/BufferAttribute.js';
+import { BufferAttribute } from '../core/attributes/BufferAttribute.js';
 import { PerspectiveCamera } from '@modules/renderer/engine/cameras/PerspectiveCamera.js';
 import { OrthographicCamera } from '@modules/renderer/engine/cameras/OrthographicCamera.js';
 
@@ -94,8 +94,8 @@ export class CameraHelper extends LineSegments {
       pointMap[id].push(vertices.length / 3 - 1);
     }
 
-    geometry.setAttribute('position', new Float32BufferAttribute(vertices, 3));
-    geometry.setAttribute('color', new Float32BufferAttribute(colors, 3));
+    geometry.setAttribute('position', new BufferAttribute(new Float32Array(vertices), 3));
+    geometry.setAttribute('color', new BufferAttribute(new Float32Array(colors), 3));
 
     super(geometry, material);
 

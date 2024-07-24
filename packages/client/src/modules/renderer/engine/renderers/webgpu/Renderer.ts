@@ -20,14 +20,14 @@ import ClippingContext from '@modules/renderer/engine/renderers/common/ClippingC
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 import {
-  Geometry,
   Color,
+  Entity,
   FramebufferTexture,
   Frustum,
+  Geometry,
   Group,
   Mat4,
   Material,
-  Entity,
   Plane,
   RenderTarget,
   Texture,

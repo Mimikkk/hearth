@@ -1,6 +1,6 @@
 import { Line } from './Line.js';
 import { Vec3 } from '../math/Vec3.js';
-import { Float32BufferAttribute } from '../core/attributes/BufferAttribute.js';
+import { BufferAttribute } from '../core/attributes/BufferAttribute.js';
 
 const _start = Vec3.new();
 const _end = Vec3.new();
@@ -26,7 +26,7 @@ export class LineSegments extends Line {
         lineDistances[i + 1] = lineDistances[i] + _start.distanceTo(_end);
       }
 
-      geometry.setAttribute('lineDistance', new Float32BufferAttribute(lineDistances, 1));
+      geometry.setAttribute('lineDistance', new BufferAttribute(new Float32Array(lineDistances), 1));
     } else {
       throw Error(
         'engine.LineSegments.computeLineDistances(): Computation only possible with non-indexed BufferGeometry.',

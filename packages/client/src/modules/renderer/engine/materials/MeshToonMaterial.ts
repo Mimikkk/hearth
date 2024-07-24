@@ -106,6 +106,7 @@ export class MeshToonMaterial extends Material {
   setValues(parameters: MeshToonMaterialParameters): void {
     super.setValues(parameters);
   }
+
   copy(source: this): this {
     super.copy(source);
 
@@ -147,5 +148,6 @@ export class MeshToonMaterial extends Material {
     return this;
   }
 }
+
 MeshToonMaterial.prototype.isMeshToonMaterial = true;
 MeshToonMaterial.prototype.type = 'MeshToonMaterial';

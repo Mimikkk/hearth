@@ -1,7 +1,8 @@
 import {
   Box3,
+  BufferAttribute,
   EdgesGeometry,
-  Float32BufferAttribute,
+  Geometry,
   InstancedInterleavedBuffer,
   InterleavedBufferAttribute,
   LineSegments,
@@ -10,7 +11,6 @@ import {
   Sphere,
   Vec3,
   WireframeGeometry,
-  Geometry,
 } from '../engine.js';
 
 const _box = Box3.new();
@@ -25,8 +25,8 @@ export class LineSegmentsGeometry extends Geometry {
     const index = [0, 2, 1, 2, 3, 1, 2, 4, 3, 4, 5, 3, 4, 6, 5, 6, 7, 5];
 
     this.setIndex(index);
-    this.setAttribute('position', new Float32BufferAttribute(positions, 3));
-    this.setAttribute('uv', new Float32BufferAttribute(uvs, 2));
+    this.setAttribute('position', new BufferAttribute(new Float32Array(positions), 3));
+    this.setAttribute('uv', new BufferAttribute(new Float32Array(uvs), 2));
   }
 
   applyMat4(matrix: Mat4): this {

@@ -33,5 +33,6 @@ export class RectAreaLight extends Light<undefined> {
     return this;
   }
 }
+
 RectAreaLight.prototype.isRectAreaLight = true;
 RectAreaLight.prototype.type = 'RectAreaLight';
