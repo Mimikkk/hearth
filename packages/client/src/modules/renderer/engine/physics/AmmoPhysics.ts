@@ -17,7 +17,7 @@ export interface AmmoPhysicsObject {
 }
 
 export async function AmmoPhysics(): Promise<AmmoPhysicsObject> {
-  const AmmoLib = await Ammo();
+  const AmmoLib = await Ammo.bind(window)();
 
   const frameRate = 60;
 

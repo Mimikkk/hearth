@@ -15,6 +15,7 @@ import { InstancedMesh } from '@modules/renderer/engine/objects/InstancedMesh.js
 import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
 import { BufferUsage } from '@modules/renderer/engine/constants.js';
 import Stats from 'stats-js';
+import { IcosahedronGeometry } from '@modules/renderer/engine/geometries/IcosahedronGeometry.js';
 
 const physics = await AmmoPhysics();
 const position = Vec3.new();
@@ -66,28 +67,26 @@ for (let i = 0; i < boxes.count; i++) {
   boxes.setColorAt(i, color.setHex(0xffffff * Math.random()));
 }
 
-// // Spheres
-//
-// const geometrySphere = new IcosahedronGeometry(0.05, 4);
-// const spheres = new InstancedMesh(geometrySphere, material, 2);
-// spheres.instanceMatrix.setUsage(BufferUsage.DynamicDraw); // will be updated every frame
-// spheres.castShadow = true;
-// spheres.receiveShadow = true;
-// spheres.userData.physics = { mass: 1 };
-// scene.add(spheres);
-//
-// for (let i = 0; i < spheres.count; i++) {
-//   matrix.setPosition(Math.random() - 0.5, Math.random() * 2, Math.random() - 0.5);
-//   spheres.setMatrixAt(i, matrix);
-//   spheres.setColorAt(i, color.setHex(0xffffff * Math.random()));
-// }
+// Spheres
+
+const geometrySphere = new IcosahedronGeometry(0.05, 4);
+const spheres = new InstancedMesh(geometrySphere, material, 2);
+spheres.instanceMatrix.setUsage(BufferUsage.DynamicDraw); // will be updated every frame
+spheres.castShadow = true;
+spheres.receiveShadow = true;
+spheres.userData.physics = { mass: 1 };
+scene.add(spheres);
+
+for (let i = 0; i < spheres.count; i++) {
+  matrix.setPosition(Math.random() - 0.5, Math.random() * 2, Math.random() - 0.5);
+  spheres.setMatrixAt(i, matrix);
+  spheres.setColorAt(i, color.setHex(0xffffff * Math.random()));
+}
 
 physics.addScene(scene);
 
-//
-
 const renderer = await Renderer.create({ antialias: true, alpha: true });
-renderer.updateSize(window.innerWidth, window.innerHeight);
+renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.animation.loop = animate;
 document.body.appendChild(renderer.parameters.canvas);
 
