@@ -49,7 +49,7 @@ class BufferAttributeNode extends InputNode {
     const bufferAttribute = new InterleavedBufferAttribute(buffer, itemSize, offset);
 
     this.attribute = bufferAttribute;
-    this.attribute.isInstancedBufferAttribute = this.instanced;
+    this.attribute.isInstancedBufferAttribute = this.step === 'instance';
   }
 
   generate(builder) {

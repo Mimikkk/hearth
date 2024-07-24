@@ -200,7 +200,7 @@ export class BackendAttributes {
   }
 
   _getBufferAttribute(attribute: AttributeType): AttributeType {
-    if (isInterleavedBufferAttribute(attribute)) attribute = attribute.data as unknown as AttributeType;
+    if (isInterleavedBufferAttribute(attribute)) attribute = attribute as unknown as AttributeType;
     return attribute;
   }
 }

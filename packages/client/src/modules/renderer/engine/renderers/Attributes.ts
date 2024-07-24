@@ -44,7 +44,7 @@ export class Attributes extends DataMap<AttributeType, any> {
   }
 
   _getBufferAttribute(attribute: AttributeType): AttributeType {
-    if (attribute instanceof InterleavedBufferAttribute) attribute = attribute.data as unknown as AttributeType;
+    if (attribute instanceof InterleavedBufferAttribute) attribute = attribute;
     return attribute;
   }
 }

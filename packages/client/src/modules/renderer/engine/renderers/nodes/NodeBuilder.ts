@@ -377,7 +377,7 @@ export class NodeBuilder {
   getTypeFromAttribute(attribute: AttributeType): TypeName {
     let dataAttribute = attribute;
 
-    if (attribute.isInterleavedBufferAttribute) dataAttribute = attribute.data;
+    if (attribute.isInterleavedBufferAttribute) dataAttribute = attribute;
 
     const array = dataAttribute.array;
     const itemSize = attribute.stride;
