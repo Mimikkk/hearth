@@ -5,9 +5,6 @@ import { BufferUsage, TextureDataType } from '../../constants.js';
 import { Mat3 } from '@modules/renderer/engine/math/Mat3.js';
 import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
 
-const _vector = Vec3.new();
-const _Vec2 = Vec2.new();
-
 export class BufferAttribute<T extends TypedArray = any> {
   declare isBufferAttribute: true;
   name: string;
@@ -67,10 +64,10 @@ export class BufferAttribute<T extends TypedArray = any> {
       }
     } else if (this.itemSize === 3) {
       for (let i = 0, l = this.count; i < l; i++) {
-        _vector.fromAttribute(this, i);
-        _vector.applyMat3(m);
+        _vec3.fromAttribute(this, i);
+        _vec3.applyMat3(m);
 
-        this.setXYZ(i, _vector.x, _vector.y, _vector.z);
+        this.setXYZ(i, _vec3.x, _vec3.y, _vec3.z);
       }
     }
 
@@ -79,11 +76,11 @@ export class BufferAttribute<T extends TypedArray = any> {
 
   applyMat4(m: Mat4): this {
     for (let i = 0, l = this.count; i < l; i++) {
-      _vector.fromAttribute(this, i);
+      _vec3.fromAttribute(this, i);
 
-      _vector.applyMat4(m);
+      _vec3.applyMat4(m);
 
-      this.setXYZ(i, _vector.x, _vector.y, _vector.z);
+      this.setXYZ(i, _vec3.x, _vec3.y, _vec3.z);
     }
 
     return this;
@@ -91,11 +88,11 @@ export class BufferAttribute<T extends TypedArray = any> {
 
   applyNormalMatrix(m: Mat3): this {
     for (let i = 0, l = this.count; i < l; i++) {
-      _vector.fromAttribute(this, i);
+      _vec3.fromAttribute(this, i);
 
-      _vector.applyNMat3(m);
+      _vec3.applyNMat3(m);
 
-      this.setXYZ(i, _vector.x, _vector.y, _vector.z);
+      this.setXYZ(i, _vec3.x, _vec3.y, _vec3.z);
     }
 
     return this;
@@ -103,11 +100,11 @@ export class BufferAttribute<T extends TypedArray = any> {
 
   transformDirection(m: Mat4): this {
     for (let i = 0, l = this.count; i < l; i++) {
-      _vector.fromAttribute(this, i);
+      _vec3.fromAttribute(this, i);
 
-      _vector.transformDirection(m);
+      _vec3.transformDirection(m);
 
-      this.setXYZ(i, _vector.x, _vector.y, _vector.z);
+      this.setXYZ(i, _vec3.x, _vec3.y, _vec3.z);
     }
 
     return this;
@@ -214,5 +211,7 @@ export class BufferAttribute<T extends TypedArray = any> {
     return new BufferAttribute(this.array, this.itemSize).copy(this);
   }
 }
-
 BufferAttribute.prototype.isBufferAttribute = true;
+
+const _Vec2 = Vec2.new();
+const _vec3 = Vec3.new();
