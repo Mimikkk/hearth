@@ -1,7 +1,7 @@
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
-import { PerspectiveCamera } from '@modules/renderer/engine/cameras/PerspectiveCamera.js';
-import { Scene } from '@modules/renderer/engine/scenes/Scene.js';
+import { PerspectiveCamera } from '@modules/renderer/engine/objects/cameras/PerspectiveCamera.js';
+import { Scene } from '@modules/renderer/engine/objects/scenes/Scene.js';
 import { normalWorld } from '@modules/renderer/engine/nodes/accessors/NormalNode.js';
 import { color } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.js';
 import {
@@ -14,7 +14,7 @@ import {
   SphereGeometry,
   SpotLight,
 } from '@modules/renderer/engine/engine.js';
-import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
+import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
 
 const container = document.createElement('div');
 document.body.appendChild(container);

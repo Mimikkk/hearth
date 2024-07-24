@@ -3,7 +3,12 @@ import { Entity } from '../core/Entity.js';
 import { Vec3 } from '../math/Vec3.js';
 import Ammo from 'ammojs3';
 import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
-import { Scene } from '@modules/renderer/engine/scenes/Scene.js';
+import { Scene } from '@modules/renderer/engine/objects/scenes/Scene.js';
+import { InstancedMesh } from '@modules/renderer/engine/objects/InstancedMesh.js';
+import { NumberArray } from '@modules/renderer/engine/math/MathUtils.js';
+import { BoxGeometry } from '@modules/renderer/engine/geometries/BoxGeometry.js';
+import { SphereGeometry } from '@modules/renderer/engine/geometries/SphereGeometry.js';
+import { IcosahedronGeometry } from '@modules/renderer/engine/geometries/IcosahedronGeometry.js';
 
 export interface AmmoPhysicsObject {
   addScene: (scene: Entity) => void;
@@ -12,7 +17,6 @@ export interface AmmoPhysicsObject {
 }
 
 export async function AmmoPhysics(): Promise<AmmoPhysicsObject> {
-  // eslint-disable-line no-undef
   const AmmoLib = await Ammo();
 
   const frameRate = 60;
@@ -22,27 +26,22 @@ export async function AmmoPhysics(): Promise<AmmoPhysicsObject> {
   const broadphase = new AmmoLib.btDbvtBroadphase();
   const solver = new AmmoLib.btSequentialImpulseConstraintSolver();
   const world = new AmmoLib.btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfiguration);
-  world.setGravity(new AmmoLib.btVec3(0, -9.8, 0));
+  world.setGravity(new AmmoLib.btVector3(0, -9.8, 0));
 
   const worldTransform = new AmmoLib.btTransform();
 
-  //
-
   function getShape(geometry: Geometry) {
     const parameters = geometry.parameters!;
-
-    // TODO change type to is*
-
-    if (geometry.type === 'BoxGeometry') {
+    if (BoxGeometry.is(geometry)) {
       const sx = parameters.width !== undefined ? parameters.width / 2 : 0.5;
       const sy = parameters.height !== undefined ? parameters.height / 2 : 0.5;
       const sz = parameters.depth !== undefined ? parameters.depth / 2 : 0.5;
 
-      const shape = new AmmoLib.btBoxShape(new AmmoLib.btVec3(sx, sy, sz));
+      const shape = new AmmoLib.btBoxShape(new AmmoLib.btVector3(sx, sy, sz));
       shape.setMargin(0.05);
 
       return shape;
-    } else if (geometry.type === 'SphereGeometry' || geometry.type === 'IcosahedronGeometry') {
+    } else if (SphereGeometry.is(geometry) || IcosahedronGeometry.is(geometry)) {
       const radius = parameters.radius !== undefined ? parameters.radius : 1;
 
       const shape = new AmmoLib.btSphereShape(radius);
@@ -58,51 +57,41 @@ export async function AmmoPhysics(): Promise<AmmoPhysicsObject> {
   const meshMap = new WeakMap();
 
   function addScene(scene: Scene) {
-    scene.traverse(function (child) {
-      //@ts-expect-error
-      if (child.isMesh) {
-        const physics = child.userData.physics;
-
-        if (physics) {
-          //@ts-expect-error
-          addMesh(child, physics.mass);
-        }
-      }
+    scene.traverse(child => {
+      if (!Mesh.is(child)) return;
+      const physics = child.userData.physics;
+      if (physics) addMesh(child, physics.mass);
     });
   }
 
   function addMesh(mesh: Mesh, mass: number = 0) {
     const shape = getShape(mesh.geometry);
 
-    if (shape !== null) {
-      //@ts-expect-error
-      if (mesh.isInstancedMesh) {
-        handleInstancedMesh(mesh, mass, shape);
-      } else if (mesh.isMesh) {
-        handleMesh(mesh, mass, shape);
-      }
+    if (shape === null) return;
+    if (InstancedMesh.is(mesh)) {
+      handleInstancedMesh(mesh, mass, shape);
+    } else if (Mesh.is(mesh)) {
+      handleMesh(mesh, mass, shape);
     }
   }
 
-  //@ts-expect-error
   function handleMesh(mesh: Mesh, mass: number, shape: Ammo.btCollisionShape) {
     const position = mesh.position;
     const quaternion = mesh.quaternion;
 
     const transform = new AmmoLib.btTransform();
     transform.setIdentity();
-    transform.setOrigin(new AmmoLib.btVec3(position.x, position.y, position.z));
+    transform.setOrigin(new AmmoLib.btVector3(position.x, position.y, position.z));
     transform.setRotation(new AmmoLib.btQuaternion(quaternion.x, quaternion.y, quaternion.z, quaternion.w));
 
     const motionState = new AmmoLib.btDefaultMotionState(transform);
 
-    const localInertia = new AmmoLib.btVec3(0, 0, 0);
+    const localInertia = new AmmoLib.btVector3(0, 0, 0);
     shape.calculateLocalInertia(mass, localInertia);
 
     const rbInfo = new AmmoLib.btRigidBodyConstructionInfo(mass, motionState, shape, localInertia);
 
     const body = new AmmoLib.btRigidBody(rbInfo);
-    // body.setFriction( 4 );
     world.addRigidBody(body);
 
     if (mass > 0) {
@@ -111,23 +100,20 @@ export async function AmmoPhysics(): Promise<AmmoPhysicsObject> {
     }
   }
 
-  //@ts-expect-error
-  function handleInstancedMesh(mesh: Mesh, mass: number, shape: Ammo.btCollisionShape) {
-    //@ts-expect-error
+  function handleInstancedMesh(mesh: InstancedMesh, mass: number, shape: Ammo.btCollisionShape) {
     const array = mesh.instanceMatrix.array;
 
     const bodies = [];
 
-    //@ts-expect-error
     for (let i = 0; i < mesh.count; i++) {
       const index = i * 16;
 
       const transform = new AmmoLib.btTransform();
-      transform.setFromOpenGLMatrix(array.slice(index, index + 16));
+      transform.setFromOpenGLMatrix(array.slice(index, index + 16) as unknown as readonly number[]);
 
       const motionState = new AmmoLib.btDefaultMotionState(transform);
 
-      const localInertia = new AmmoLib.btVec3(0, 0, 0);
+      const localInertia = new AmmoLib.btVector3(0, 0, 0);
       shape.calculateLocalInertia(mass, localInertia);
 
       const rbInfo = new AmmoLib.btRigidBodyConstructionInfo(mass, motionState, shape, localInertia);
@@ -153,20 +139,20 @@ export async function AmmoPhysics(): Promise<AmmoPhysicsObject> {
       const bodies = meshMap.get(mesh);
       const body = bodies[index];
 
-      body.setAngularVelocity(new AmmoLib.btVec3(0, 0, 0));
-      body.setLinearVelocity(new AmmoLib.btVec3(0, 0, 0));
+      body.setAngularVelocity(new AmmoLib.btVector3(0, 0, 0));
+      body.setLinearVelocity(new AmmoLib.btVector3(0, 0, 0));
 
       worldTransform.setIdentity();
-      worldTransform.setOrigin(new AmmoLib.btVec3(position.x, position.y, position.z));
+      worldTransform.setOrigin(new AmmoLib.btVector3(position.x, position.y, position.z));
       body.setWorldTransform(worldTransform);
     } else if (mesh.isMesh) {
       const body = meshMap.get(mesh);
 
-      body.setAngularVelocity(new AmmoLib.btVec3(0, 0, 0));
-      body.setLinearVelocity(new AmmoLib.btVec3(0, 0, 0));
+      body.setAngularVelocity(new AmmoLib.btVector3(0, 0, 0));
+      body.setLinearVelocity(new AmmoLib.btVector3(0, 0, 0));
 
       worldTransform.setIdentity();
-      worldTransform.setOrigin(new AmmoLib.btVec3(position.x, position.y, position.z));
+      worldTransform.setOrigin(new AmmoLib.btVector3(position.x, position.y, position.z));
       body.setWorldTransform(worldTransform);
     }
   }
@@ -188,9 +174,7 @@ export async function AmmoPhysics(): Promise<AmmoPhysicsObject> {
       for (let i = 0, l = meshes.length; i < l; i++) {
         const mesh = meshes[i];
 
-        //@ts-expect-error
-        if (mesh.isInstancedMesh) {
-          //@ts-expect-error
+        if (InstancedMesh.is(mesh)) {
           const array = mesh.instanceMatrix.array;
           const bodies = meshMap.get(mesh);
 
@@ -206,9 +190,7 @@ export async function AmmoPhysics(): Promise<AmmoPhysicsObject> {
             compose(position, quaternion, array, j * 16);
           }
 
-          //@ts-expect-error
           mesh.instanceMatrix.needsUpdate = true;
-          //@ts-expect-error
           mesh.computeBoundingSphere();
         } else if (mesh.isMesh) {
           const body = meshMap.get(mesh);
@@ -227,19 +209,12 @@ export async function AmmoPhysics(): Promise<AmmoPhysicsObject> {
     lastTime = time;
   }
 
-  // animate
-
   setInterval(step, 1000 / frameRate);
 
-  return {
-    addScene: addScene,
-    addMesh: addMesh,
-    setMeshPosition: setMeshPosition,
-    // addCompoundMesh
-  };
+  return { addScene, addMesh, setMeshPosition };
 }
 
-function compose(position: Ammo.btVec3, quaternion: Ammo.btQuaternion, array: number[], index: number) {
+function compose(position: Ammo.btVector3, quaternion: Ammo.btQuaternion, array: NumberArray, index: number) {
   const x = quaternion.x(),
     y = quaternion.y(),
     z = quaternion.z(),

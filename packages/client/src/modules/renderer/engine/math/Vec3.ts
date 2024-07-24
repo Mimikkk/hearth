@@ -6,7 +6,7 @@ import type { Mat3 } from '@modules/renderer/engine/math/Mat3.js';
 import type { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
 import type { Cylindrical } from '@modules/renderer/engine/math/Cylindrical.js';
 import type { Spherical } from '@modules/renderer/engine/math/Spherical.js';
-import type { Camera } from '@modules/renderer/engine/cameras/Camera.js';
+import type { Camera } from '@modules/renderer/engine/objects/cameras/Camera.js';
 import type { Const } from '@modules/renderer/engine/math/types.js';
 import type { AttributeType } from '@modules/renderer/engine/core/types.js';
 

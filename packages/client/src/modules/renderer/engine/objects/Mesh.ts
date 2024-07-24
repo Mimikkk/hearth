@@ -11,29 +11,6 @@ import { Material } from '@modules/renderer/engine/objects/materials/Material.js
 import { Intersection, Raycaster } from '../core/Raycaster.js';
 import { BufferAttribute } from '@modules/renderer/engine/core/attributes/BufferAttribute.js';
 
-const _inverseMatrix = new Mat4();
-const _ray = new Ray();
-const _sphere = new Sphere();
-const _sphereHitAt = Vec3.new();
-
-const _vA = Vec3.new();
-const _vB = Vec3.new();
-const _vC = Vec3.new();
-
-const _tempA = Vec3.new();
-const _morphA = Vec3.new();
-
-const _uvA = Vec2.new();
-const _uvB = Vec2.new();
-const _uvC = Vec2.new();
-
-const _normalA = Vec3.new();
-const _normalB = Vec3.new();
-const _normalC = Vec3.new();
-
-const _intersectionPoint = Vec3.new();
-const _intersectionPointWorld = Vec3.new();
-
 export class Mesh extends Entity {
   declare isMesh: true;
   declare type: string | 'Mesh';
@@ -50,6 +27,10 @@ export class Mesh extends Entity {
     this.material = material;
 
     this.updateMorphTargets();
+  }
+
+  static is(value: any): value is Mesh {
+    return value?.isMesh === true;
   }
 
   copy(source: this, recursive?: boolean): this {
@@ -294,6 +275,27 @@ export class Mesh extends Entity {
 Mesh.prototype.isMesh = true;
 Mesh.prototype.type = 'Mesh';
 
+const _inverseMatrix = new Mat4();
+const _ray = new Ray();
+const _sphere = new Sphere();
+const _sphereHitAt = Vec3.new();
+const _vA = Vec3.new();
+const _vB = Vec3.new();
+const _vC = Vec3.new();
+const _tempA = Vec3.new();
+const _morphA = Vec3.new();
+const _uvA = Vec2.new();
+const _uvB = Vec2.new();
+const _uvC = Vec2.new();
+const _normalA = Vec3.new();
+const _normalB = Vec3.new();
+const _normalC = Vec3.new();
+const _intersectionPoint = Vec3.new();
+const _intersectionPointWorld = Vec3.new();
+const _triangle = new Triangle();
+const _triangle1 = new Triangle();
+const _triangle2 = new Triangle();
+
 function checkIntersection(
   object: Mesh,
   material: Material,
@@ -396,7 +398,3 @@ function checkGeometryIntersection(
 
   return intersection;
 }
-
-const _triangle = new Triangle();
-const _triangle1 = new Triangle();
-const _triangle2 = new Triangle();

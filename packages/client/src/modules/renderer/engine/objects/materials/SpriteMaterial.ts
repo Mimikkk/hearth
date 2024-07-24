@@ -1,6 +1,6 @@
 import { Material, MaterialParameters } from './Material.js';
 import { Color, ColorRepresentation } from '../../math/Color.js';
-import { Texture } from '@modules/renderer/engine/textures/Texture.js';
+import { Texture } from '@modules/renderer/engine/objects/textures/Texture.js';
 
 export interface SpriteMaterialParameters extends MaterialParameters {
   color?: ColorRepresentation | undefined;

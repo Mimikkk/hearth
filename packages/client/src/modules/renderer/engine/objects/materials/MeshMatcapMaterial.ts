@@ -2,7 +2,7 @@ import { NormalMapType } from '../../constants.js';
 import { Material, MaterialParameters } from './Material.js';
 import { Vec2 } from '../../math/Vec2.js';
 import { Color, ColorRepresentation } from '../../math/Color.js';
-import { Texture } from '../../textures/Texture.js';
+import { Texture } from '@modules/renderer/engine/objects/textures/Texture.js';
 
 export interface MeshMatcapMaterialParameters extends MaterialParameters {
   color?: ColorRepresentation | undefined;

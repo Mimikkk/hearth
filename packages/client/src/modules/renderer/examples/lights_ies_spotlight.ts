@@ -4,7 +4,7 @@ import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 
 import { IESSpotLight } from '@modules/renderer/engine/objects/lights/IESSpotLight.js';
 
-import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
+import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
 
 import { IESLoader } from '@modules/renderer/engine/loaders/lights/IESLoader/IESLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';

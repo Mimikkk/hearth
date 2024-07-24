@@ -1,9 +1,9 @@
 import Stats from 'stats-js';
-import { PerspectiveCamera } from '../engine/cameras/PerspectiveCamera.js';
+import { PerspectiveCamera } from '@modules/renderer/engine/objects/cameras/PerspectiveCamera.js';
 import { Vec3 } from '../engine/math/Vec3.js';
-import { Scene } from '../engine/scenes/Scene';
+import { Scene } from '@modules/renderer/engine/objects/scenes/Scene';
 import { Color } from '../engine/math/Color';
-import { Fog } from '../engine/scenes/Fog';
+import { Fog } from '@modules/renderer/engine/objects/scenes/Fog';
 import { Mesh } from '../engine/objects/Mesh';
 import { PlaneGeometry } from '../engine/geometries/PlaneGeometry';
 import { MeshPhongMaterial } from '@modules/renderer/engine/objects/materials/MeshPhongMaterial';

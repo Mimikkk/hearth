@@ -3,8 +3,8 @@ import RenderObject from './RenderObject.js';
 import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 import RenderContext from '@modules/renderer/engine/renderers/RenderContext.js';
 import LightsNode from '@modules/renderer/engine/nodes/lighting/LightsNode.js';
-import { Camera } from '@modules/renderer/engine/cameras/Camera.js';
-import { Scene } from '@modules/renderer/engine/scenes/Scene.js';
+import { Camera } from '@modules/renderer/engine/objects/cameras/Camera.js';
+import { Scene } from '@modules/renderer/engine/objects/scenes/Scene.js';
 import { Material } from '@modules/renderer/engine/objects/materials/Material.js';
 import { Entity } from '@modules/renderer/engine/core/Entity.js';
 

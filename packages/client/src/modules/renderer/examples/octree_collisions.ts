@@ -1,9 +1,9 @@
 import Stats from 'stats-js';
 import { Clock } from '@modules/renderer/engine/core/Clock.js';
-import { Scene } from '@modules/renderer/engine/scenes/Scene.js';
+import { Scene } from '@modules/renderer/engine/objects/scenes/Scene.js';
 import { Color } from '@modules/renderer/engine/math/Color.js';
-import { Fog } from '@modules/renderer/engine/scenes/Fog.js';
-import { PerspectiveCamera } from '@modules/renderer/engine/cameras/PerspectiveCamera.js';
+import { Fog } from '@modules/renderer/engine/objects/scenes/Fog.js';
+import { PerspectiveCamera } from '@modules/renderer/engine/objects/cameras/PerspectiveCamera.js';
 import { HemisphereLight } from '@modules/renderer/engine/objects/lights/HemisphereLight.js';
 import { DirectionalLight } from '@modules/renderer/engine/objects/lights/DirectionalLight.js';
 import { IcosahedronGeometry } from '@modules/renderer/engine/geometries/IcosahedronGeometry.js';

@@ -1,9 +1,5 @@
 import { BufferAttribute, BufferUsage, Color, Geometry, Material, Mesh, Sphere, Vec3 } from '../engine.js';
 
-/**
- * Port of http://webglsamples.org/blob/blob.html
- */
-
 export class MarchingCubes extends Mesh {
   declare isMarchingCubes: true;
   enableUvs: boolean;
@@ -772,15 +768,7 @@ export class MarchingCubes extends Mesh {
   }
 }
 
-/////////////////////////////////////
-// Marching cubes lookup tables
-/////////////////////////////////////
-
-// These tables are straight from Paul Bourke's page:
-// http://paulbourke.net/geometry/polygonise/
-// who in turn got them from Cory Gene Bloyd.
-
-export const edgeTable = new Int32Array([
+const edgeTable = new Int32Array([
   0x0, 0x109, 0x203, 0x30a, 0x406, 0x50f, 0x605, 0x70c, 0x80c, 0x905, 0xa0f, 0xb06, 0xc0a, 0xd03, 0xe09, 0xf00, 0x190,
   0x99, 0x393, 0x29a, 0x596, 0x49f, 0x795, 0x69c, 0x99c, 0x895, 0xb9f, 0xa96, 0xd9a, 0xc93, 0xf99, 0xe90, 0x230, 0x339,
   0x33, 0x13a, 0x636, 0x73f, 0x435, 0x53c, 0xa3c, 0xb35, 0x83f, 0x936, 0xe3a, 0xf33, 0xc39, 0xd30, 0x3a0, 0x2a9, 0x1a3,
@@ -798,8 +786,7 @@ export const edgeTable = new Int32Array([
   0x99, 0x190, 0xf00, 0xe09, 0xd03, 0xc0a, 0xb06, 0xa0f, 0x905, 0x80c, 0x70c, 0x605, 0x50f, 0x406, 0x30a, 0x203, 0x109,
   0x0,
 ]);
-
-export const triTable = new Int32Array([
+const triTable = new Int32Array([
   -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 8, 3, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
   -1, -1, 0, 1, 9, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 8, 3, 9, 8, 1, -1, -1, -1, -1, -1, -1, -1, -1,
   -1, -1, 1, 2, 10, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 8, 3, 1, 2, 10, -1, -1, -1, -1, -1, -1, -1,

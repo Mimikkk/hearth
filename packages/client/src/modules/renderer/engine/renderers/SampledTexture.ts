@@ -1,6 +1,6 @@
 import Binding from './Binding.js';
-import { Texture } from '@modules/renderer/engine/textures/Texture.js';
-import { VideoTexture } from '@modules/renderer/engine/textures/VideoTexture.js';
+import { Texture } from '@modules/renderer/engine/objects/textures/Texture.js';
+import { VideoTexture } from '@modules/renderer/engine/objects/textures/VideoTexture.js';
 
 let id = 0;
 

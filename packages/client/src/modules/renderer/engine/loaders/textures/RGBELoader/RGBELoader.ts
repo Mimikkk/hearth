@@ -1,5 +1,5 @@
 import { TextureDataType } from '../../../constants.js';
-import { DataTexture } from '@modules/renderer/engine/textures/DataTexture.js';
+import { DataTexture } from '@modules/renderer/engine/objects/textures/DataTexture.js';
 import { FileLoader, ResponseType } from '@modules/renderer/engine/loaders/files/FileLoader/FileLoader.js';
 import { classLoader } from '@modules/renderer/engine/loaders/types.js';
 import { parseRGBE } from '@modules/renderer/engine/loaders/textures/RGBELoader/parseRGBE.js';

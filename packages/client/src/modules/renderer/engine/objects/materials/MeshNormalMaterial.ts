@@ -1,7 +1,7 @@
 import { NormalMapType } from '../../constants.js';
 import { Material, MaterialParameters } from './Material.js';
 import { Vec2 } from '../../math/Vec2.js';
-import { Texture } from '@modules/renderer/engine/textures/Texture.js';
+import { Texture } from '@modules/renderer/engine/objects/textures/Texture.js';
 
 export interface MeshNormalMaterialParameters extends MaterialParameters {
   bumpMap?: Texture | null | undefined;

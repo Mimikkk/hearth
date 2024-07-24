@@ -5,7 +5,7 @@ import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
 import { Quaternion } from '@modules/renderer/engine/math/Quaternion.js';
 import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
 import { Clock } from '@modules/renderer/engine/core/Clock.js';
-import { Scene } from '@modules/renderer/engine/scenes/Scene.js';
+import { Scene } from '@modules/renderer/engine/objects/scenes/Scene.js';
 
 type Vector = { x: number; y: number; z: number };
 

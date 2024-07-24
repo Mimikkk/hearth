@@ -3,7 +3,7 @@ import { Vec2 } from '../../math/Vec2.js';
 import { Vec3 } from '../../math/Vec3.js';
 import { Vec4 } from '../../math/Vec4.js';
 import { Frustum } from '../../math/Frustum.js';
-import { Camera } from '../../cameras/Camera.js';
+import { Camera } from '@modules/renderer/engine/objects/cameras/Camera.js';
 import { Light } from './Light.js';
 import { RenderTarget } from '@modules/renderer/engine/renderers/RenderTarget.js';
 

@@ -2,7 +2,7 @@ import { Material, MaterialParameters } from './Material.js';
 import { Operation } from '../../constants.js';
 import { Color, ColorRepresentation } from '../../math/Color.js';
 import { Euler } from '../../math/Euler.js';
-import { Texture } from '../../textures/Texture.js';
+import { Texture } from '@modules/renderer/engine/objects/textures/Texture.js';
 
 export interface MeshBasicMaterialParameters extends MaterialParameters {
   color?: ColorRepresentation | undefined;

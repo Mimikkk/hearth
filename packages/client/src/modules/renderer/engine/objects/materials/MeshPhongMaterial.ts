@@ -3,7 +3,7 @@ import { Material, MaterialParameters } from './Material.js';
 import { Vec2 } from '../../math/Vec2.js';
 import { Color, ColorRepresentation } from '../../math/Color.js';
 import { Euler } from '../../math/Euler.js';
-import { Texture } from '../../textures/Texture.js';
+import { Texture } from '@modules/renderer/engine/objects/textures/Texture.js';
 
 export interface MeshPhongMaterialParameters extends MaterialParameters {
   /** geometry color in hexadecimal. Default is 0xffffff. */

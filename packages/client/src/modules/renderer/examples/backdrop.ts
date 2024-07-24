@@ -14,7 +14,7 @@ import {
 } from '@modules/renderer/engine/nodes/Nodes.js';
 import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/GLTFLoader.js';
 import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
-import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
+import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
 import {
   AnimationMixer,
   Clock,

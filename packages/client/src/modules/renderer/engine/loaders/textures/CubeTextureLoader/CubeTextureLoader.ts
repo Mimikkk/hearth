@@ -1,5 +1,5 @@
 import { ImageLoader } from '../ImageLoader/ImageLoader.js';
-import { CubeTexture } from '../../../textures/CubeTexture.js';
+import { CubeTexture } from '@modules/renderer/engine/objects/textures/CubeTexture.js';
 import { classLoader } from '@modules/renderer/engine/loaders/types.js';
 import { parseCubeTexture } from '@modules/renderer/engine/loaders/textures/CubeTextureLoader/parseCubeTexture.js';
 

@@ -1,6 +1,6 @@
 import { LightShadow } from './LightShadow.js';
 import * as MathUtils from '../../math/MathUtils.js';
-import { PerspectiveCamera } from '../../cameras/PerspectiveCamera.js';
+import { PerspectiveCamera } from '@modules/renderer/engine/objects/cameras/PerspectiveCamera.js';
 import { SpotLight } from '@modules/renderer/engine/objects/lights/SpotLight.js';
 
 export class SpotLightShadow extends LightShadow<PerspectiveCamera> {

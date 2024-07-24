@@ -3,7 +3,7 @@ import { Mesh } from './Mesh.js';
 import { Box3 } from '../math/Box3.js';
 import { Mat4 } from '../math/Mat4.js';
 import { Sphere } from '../math/Sphere.js';
-import { DataTexture } from '../textures/DataTexture.js';
+import { DataTexture } from '@modules/renderer/engine/objects/textures/DataTexture.js';
 import { TextureDataType, TextureFormat } from '../constants.js';
 import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
 import { Material } from '@modules/renderer/engine/objects/materials/Material.js';

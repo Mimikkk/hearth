@@ -1,5 +1,5 @@
 import { TextureDataType } from '@modules/renderer/engine/constants.js';
-import { DataTexture } from '@modules/renderer/engine/textures/DataTexture.js';
+import { DataTexture } from '@modules/renderer/engine/objects/textures/DataTexture.js';
 import { classLoader } from '@modules/renderer/engine/loaders/types.js';
 import { FileLoader, ResponseType } from '@modules/renderer/engine/loaders/files/FileLoader/FileLoader.js';
 import { parseIES, SupportedType } from './parseIES.js';

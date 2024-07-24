@@ -2,13 +2,13 @@ import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/
 import { KTX2Loader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/KTX2Loader.js';
 import { MeshoptDecoder } from 'meshoptimizer';
 
-import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
+import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
 
 import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 import { ToneMapping } from '@modules/renderer/engine/constants.js';
-import { PerspectiveCamera } from '@modules/renderer/engine/cameras/PerspectiveCamera.js';
-import { Scene } from '@modules/renderer/engine/scenes/Scene.js';
+import { PerspectiveCamera } from '@modules/renderer/engine/objects/cameras/PerspectiveCamera.js';
+import { Scene } from '@modules/renderer/engine/objects/scenes/Scene.js';
 import { Color } from '@modules/renderer/engine/math/Color.js';
 import { PointLight } from '@modules/renderer/engine/objects/lights/PointLight.js';
 

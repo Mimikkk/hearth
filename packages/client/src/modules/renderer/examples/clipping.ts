@@ -7,7 +7,7 @@ import Stats from 'stats-js';
 
 import { GUI } from 'lil-gui';
 
-import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
+import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
 import { Side } from '@modules/renderer/engine/engine.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 

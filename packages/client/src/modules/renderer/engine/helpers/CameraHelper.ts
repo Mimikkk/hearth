@@ -1,12 +1,12 @@
-import { Camera } from '../cameras/Camera.js';
+import { Camera } from '@modules/renderer/engine/objects/cameras/Camera.js';
 import { Vec3 } from '../math/Vec3.js';
 import { LineSegments } from '../objects/LineSegments.js';
 import { Color } from '../math/Color.js';
 import { LineBasicMaterial } from '@modules/renderer/engine/objects/materials/LineBasicMaterial.js';
 import { Geometry } from '../core/Geometry.js';
 import { BufferAttribute } from '../core/attributes/BufferAttribute.js';
-import { PerspectiveCamera } from '@modules/renderer/engine/cameras/PerspectiveCamera.js';
-import { OrthographicCamera } from '@modules/renderer/engine/cameras/OrthographicCamera.js';
+import { PerspectiveCamera } from '@modules/renderer/engine/objects/cameras/PerspectiveCamera.js';
+import { OrthographicCamera } from '@modules/renderer/engine/objects/cameras/OrthographicCamera.js';
 
 const _vector = Vec3.new();
 const _camera = new Camera();

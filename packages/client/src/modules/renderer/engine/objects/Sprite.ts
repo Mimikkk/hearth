@@ -8,7 +8,7 @@ import { Buffer } from '../core/buffers/Buffer.js';
 import { InterleavedBufferAttribute } from '../core/attributes/InterleavedBufferAttribute.js';
 import { SpriteMaterial } from '@modules/renderer/engine/objects/materials/SpriteMaterial.js';
 import { Intersection, Raycaster } from '../core/Raycaster.js';
-import { PerspectiveCamera } from '../cameras/PerspectiveCamera.js';
+import { PerspectiveCamera } from '@modules/renderer/engine/objects/cameras/PerspectiveCamera.js';
 
 const _intersectPoint = Vec3.new();
 const _worldScale = Vec3.new();

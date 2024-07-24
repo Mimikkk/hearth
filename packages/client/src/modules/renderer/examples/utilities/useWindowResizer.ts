@@ -1,5 +1,5 @@
 import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
-import { PerspectiveCamera } from '@modules/renderer/engine/cameras/PerspectiveCamera.js';
+import { PerspectiveCamera } from '@modules/renderer/engine/objects/cameras/PerspectiveCamera.js';
 
 type ResizeFn = (renderer: Renderer, camera: PerspectiveCamera) => void;
 const updateSize: ResizeFn = (renderer, camera) => {

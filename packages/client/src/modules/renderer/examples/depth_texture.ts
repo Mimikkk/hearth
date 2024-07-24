@@ -5,7 +5,7 @@ import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 
 import { QuadMesh } from '@modules/renderer/engine/objects/QuadMesh.js';
 
-import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
+import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
 import { TextureDataType } from '@modules/renderer/engine/engine.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 

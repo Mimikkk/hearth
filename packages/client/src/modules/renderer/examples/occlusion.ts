@@ -7,7 +7,7 @@ import {
   uniform,
 } from '@modules/renderer/engine/nodes/Nodes.js';
 
-import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
+import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
 
 import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';

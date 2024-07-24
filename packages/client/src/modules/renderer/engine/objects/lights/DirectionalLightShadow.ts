@@ -1,5 +1,5 @@
 import { LightShadow } from './LightShadow.js';
-import { OrthographicCamera } from '../../cameras/OrthographicCamera.js';
+import { OrthographicCamera } from '@modules/renderer/engine/objects/cameras/OrthographicCamera.js';
 
 export class DirectionalLightShadow extends LightShadow<OrthographicCamera> {
   declare isDirectionalLightShadow: true;

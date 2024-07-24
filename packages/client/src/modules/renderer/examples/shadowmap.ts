@@ -2,7 +2,7 @@ import * as Engine from '@modules/renderer/engine/engine.js';
 
 import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 
-import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
+import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
 import { MeshPhongNodeMaterial, tslFn, vec4, vertexIndex } from '@modules/renderer/engine/nodes/Nodes.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 

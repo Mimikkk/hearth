@@ -21,7 +21,7 @@ import {
 import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 import StorageInstancedBufferAttribute from '@modules/renderer/engine/core/attributes/StorageInstancedBufferAttribute.js';
 
-import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
+import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
 import Stats from 'stats-js';
 
 import { GUI } from 'lil-gui';

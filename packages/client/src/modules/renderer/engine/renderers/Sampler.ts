@@ -1,5 +1,5 @@
 import Binding from './Binding.js';
-import { Texture } from '@modules/renderer/engine/textures/Texture.js';
+import { Texture } from '@modules/renderer/engine/objects/textures/Texture.js';
 
 export class Sampler extends Binding {
   declare isSampler: true;

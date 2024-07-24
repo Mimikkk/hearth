@@ -1,8 +1,8 @@
 import { AmmoPhysics } from '@modules/renderer/engine/physics/AmmoPhysics.js';
 import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
-import { PerspectiveCamera } from '@modules/renderer/engine/cameras/PerspectiveCamera.js';
-import { Scene } from '@modules/renderer/engine/scenes/Scene.js';
+import { PerspectiveCamera } from '@modules/renderer/engine/objects/cameras/PerspectiveCamera.js';
+import { Scene } from '@modules/renderer/engine/objects/scenes/Scene.js';
 import { Color } from '@modules/renderer/engine/math/Color.js';
 import { HemisphereLight } from '@modules/renderer/engine/objects/lights/HemisphereLight.js';
 import { DirectionalLight } from '@modules/renderer/engine/objects/lights/DirectionalLight.js';
@@ -12,7 +12,7 @@ import { ShadowMaterial } from '@modules/renderer/engine/objects/materials/Shado
 import { MeshLambertMaterial } from '@modules/renderer/engine/objects/materials/MeshLambertMaterial.js';
 import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
 import { InstancedMesh } from '@modules/renderer/engine/objects/InstancedMesh.js';
-import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
+import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
 import { BufferUsage } from '@modules/renderer/engine/constants.js';
 import Stats from 'stats-js';
 

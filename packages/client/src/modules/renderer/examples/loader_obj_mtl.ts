@@ -1,9 +1,9 @@
-import { Scene } from '@modules/renderer/engine/scenes/Scene.js';
-import { PerspectiveCamera } from '@modules/renderer/engine/cameras/PerspectiveCamera.js';
+import { Scene } from '@modules/renderer/engine/objects/scenes/Scene.js';
+import { PerspectiveCamera } from '@modules/renderer/engine/objects/cameras/PerspectiveCamera.js';
 import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 import { MTLLoader } from '@modules/renderer/engine/loaders/objects/OBJLoader/MTLLoader/MTLLoader.js';
 import { OBJLoader } from '@modules/renderer/engine/loaders/objects/OBJLoader/OBJLoader.js';
-import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
+import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
 import { AmbientLight } from '@modules/renderer/engine/objects/lights/AmbientLight.js';
 import { PointLight } from '@modules/renderer/engine/objects/lights/PointLight.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';

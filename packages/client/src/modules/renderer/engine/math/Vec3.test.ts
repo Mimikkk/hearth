@@ -9,7 +9,7 @@ import { Color } from './Color.js';
 import { Mat4 } from './Mat4.js';
 import { Mat3 } from './Mat3.js';
 import { Quaternion } from './Quaternion.js';
-import { PerspectiveCamera } from '../cameras/PerspectiveCamera.js';
+import { PerspectiveCamera } from '@modules/renderer/engine/objects/cameras/PerspectiveCamera.js';
 
 const vec3 = Vec3.new;
 const vec2 = Vec2.new;

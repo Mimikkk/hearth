@@ -1,6 +1,6 @@
 import { Material, type MaterialParameters } from './Material.js';
 import { Color, type ColorRepresentation } from '../../math/Color.js';
-import type { Texture } from '../../textures/Texture.js';
+import type { Texture } from '@modules/renderer/engine/objects/textures/Texture.js';
 
 export interface LineBasicMaterialParameters extends MaterialParameters {
   color?: ColorRepresentation | undefined;

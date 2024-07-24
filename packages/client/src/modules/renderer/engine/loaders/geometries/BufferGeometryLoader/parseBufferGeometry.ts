@@ -5,7 +5,7 @@ import { Geometry } from '../../../core/Geometry.js';
 import { InstancedBufferAttribute } from '../../../core/attributes/InstancedBufferAttribute.js';
 import { InterleavedBufferAttribute } from '../../../core/attributes/InterleavedBufferAttribute.js';
 import { Buffer } from '../../../core/buffers/Buffer.js';
-import { createTypedArray } from '../../../utils.js';
+import { createTypedArray } from '@modules/renderer/engine/math/MathUtils.js';
 
 export interface JsonContent {
   interleavedBuffers: Record<string, any>;

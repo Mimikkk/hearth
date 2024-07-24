@@ -1,5 +1,5 @@
 import { ColorRepresentation } from '../../math/Color.js';
-import { Texture } from '../../textures/Texture.js';
+import { Texture } from '@modules/renderer/engine/objects/textures/Texture.js';
 import { SpotLight } from './SpotLight.js';
 
 export class IESSpotLight extends SpotLight {

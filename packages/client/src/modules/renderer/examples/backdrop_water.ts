@@ -26,7 +26,7 @@ import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/
 import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 import PostProcessing from '@modules/renderer/engine/renderers/PostProcessing.js';
 
-import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
+import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
 
 import { GUI } from 'lil-gui';
 

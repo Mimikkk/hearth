@@ -1,4 +1,4 @@
-import { Texture } from '../textures/Texture.js';
+import { Texture } from '@modules/renderer/engine/objects/textures/Texture.js';
 import {
   ColorSpace,
   Filter,
@@ -10,7 +10,7 @@ import {
   Wrapping,
 } from '../constants.js';
 import { Vec4 } from '../math/Vec4.js';
-import { Source } from '../textures/Source.js';
+import { Source } from '@modules/renderer/engine/objects/textures/Source.js';
 
 export class RenderTarget {
   declare ['constructor']: typeof RenderTarget;

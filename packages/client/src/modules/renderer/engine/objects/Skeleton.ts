@@ -1,7 +1,7 @@
 import { TextureDataType, TextureFormat } from '../constants.js';
 import { Bone } from './Bone.js';
 import { Mat4 } from '../math/Mat4.js';
-import { DataTexture } from '../textures/DataTexture.js';
+import { DataTexture } from '@modules/renderer/engine/objects/textures/DataTexture.js';
 import { v4 } from 'uuid';
 
 const _offsetMatrix = new Mat4();

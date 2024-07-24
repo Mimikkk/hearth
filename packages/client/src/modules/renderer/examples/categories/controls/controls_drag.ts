@@ -1,7 +1,7 @@
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
-import { PerspectiveCamera } from '@modules/renderer/engine/cameras/PerspectiveCamera.js';
-import { Scene } from '@modules/renderer/engine/scenes/Scene.js';
+import { PerspectiveCamera } from '@modules/renderer/engine/objects/cameras/PerspectiveCamera.js';
+import { Scene } from '@modules/renderer/engine/objects/scenes/Scene.js';
 import {
   BoxGeometry,
   Geometry,
@@ -11,7 +11,7 @@ import {
   Entity,
   SpotLight,
 } from '@modules/renderer/engine/engine.js';
-import { DragControls } from '@modules/renderer/engine/controls/DragControls.js';
+import { DragControls } from '@modules/renderer/engine/objects/controls/DragControls.js';
 import { UI } from '@mimi/ui';
 import { ColorMap } from '@modules/renderer/engine/math/Color.js';
 import { Random } from '@modules/renderer/engine/math/random.js';

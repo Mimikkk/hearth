@@ -1,9 +1,9 @@
 import { Geometry } from '../core/Geometry.js';
 import { BufferAttribute } from '../core/attributes/BufferAttribute.js';
-import { QuadraticBezierCurve3 } from '@modules/renderer/engine/objects/lines/curves/Curves.js';
+import { QuadraticBezierCurve3 } from '@modules/renderer/engine/math/curves/curves/Curves.js';
 import { Vec2 } from '../math/Vec2.js';
 import { Vec3 } from '../math/Vec3.js';
-import { Curve } from '@modules/renderer/engine/objects/lines/Curve.js';
+import { Curve } from '@modules/renderer/engine/math/curves/Curve.js';
 
 export class TubeGeometry extends Geometry {
   declare type: string | 'TubeGeometry';

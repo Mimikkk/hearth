@@ -5,7 +5,7 @@ import {
   TextureFormat,
 } from '@modules/renderer/engine/constants.js';
 import { DataUtils } from '@modules/renderer/engine/utils/DataUtils.js';
-import { DataTexture } from '@modules/renderer/engine/textures/DataTexture.js';
+import { DataTexture } from '@modules/renderer/engine/objects/textures/DataTexture.js';
 import { lerp } from '../../../math/MathUtils.js';
 
 export type SupportedType = TextureDataType.Float | TextureDataType.HalfFloat | TextureDataType.UnsignedByte;

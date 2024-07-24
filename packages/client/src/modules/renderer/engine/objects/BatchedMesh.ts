@@ -1,6 +1,6 @@
 import { BufferAttribute } from '../core/attributes/BufferAttribute.js';
 import { Geometry } from '../core/Geometry.js';
-import { DataTexture } from '../textures/DataTexture.js';
+import { DataTexture } from '@modules/renderer/engine/objects/textures/DataTexture.js';
 import { TextureDataType, TextureFormat } from '../constants.js';
 import { Mat4 } from '../math/Mat4.js';
 import { Mesh } from './Mesh.js';
@@ -9,10 +9,10 @@ import { Sphere } from '../math/Sphere.js';
 import { Frustum } from '../math/Frustum.js';
 import { Vec3 } from '../math/Vec3.js';
 import { Material } from '@modules/renderer/engine/objects/materials/Material.js';
-import { Camera } from '@modules/renderer/engine/cameras/Camera.js';
+import { Camera } from '@modules/renderer/engine/objects/cameras/Camera.js';
 import { Intersection, Raycaster } from '@modules/renderer/engine/core/Raycaster.js';
 import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
-import { Scene } from '@modules/renderer/engine/scenes/Scene.js';
+import { Scene } from '@modules/renderer/engine/objects/scenes/Scene.js';
 import { Group } from '@modules/renderer/engine/objects/Group.js';
 
 const sortAsc = (a: { z: number }, b: { z: number }): number => a.z - b.z;

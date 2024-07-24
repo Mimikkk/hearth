@@ -2,7 +2,7 @@ import { Light } from './Light.js';
 import { SpotLightShadow } from './SpotLightShadow.js';
 import { Entity } from '../../core/Entity.js';
 import { ColorRepresentation } from '../../math/Color.js';
-import { Texture } from '../../textures/Texture.js';
+import { Texture } from '@modules/renderer/engine/objects/textures/Texture.js';
 
 export class SpotLight extends Light<SpotLightShadow> {
   declare isSpotLight: true;

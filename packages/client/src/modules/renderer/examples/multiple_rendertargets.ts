@@ -1,6 +1,6 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
 
-import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
+import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
 //import { GUI } from 'lil-gui';
 
 import {

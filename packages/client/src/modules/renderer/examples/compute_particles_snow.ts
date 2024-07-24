@@ -25,9 +25,9 @@ import StorageInstancedBufferAttribute from '@modules/renderer/engine/core/attri
 
 import PostProcessing from '@modules/renderer/engine/renderers/PostProcessing.js';
 
-import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
+import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import { WorldAxesControls } from '@modules/renderer/engine/controls/WorldAxesControls.js';
+import { WorldAxesControls } from '@modules/renderer/engine/objects/controls/WorldAxesControls.js';
 
 const maxParticleCount = 100000;
 

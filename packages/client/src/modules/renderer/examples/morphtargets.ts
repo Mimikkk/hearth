@@ -1,7 +1,7 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
 
 import { GUI } from 'lil-gui';
-import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
+import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
 
 import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';

@@ -2,7 +2,7 @@ import { Vec2 } from '../../math/Vec2.js';
 import { MeshStandardMaterial, MeshStandardMaterialParameters } from './MeshStandardMaterial.js';
 import { Color, ColorRepresentation } from '../../math/Color.js';
 import * as MathUtils from '../../math/MathUtils.js';
-import { Texture } from '../../textures/Texture.js';
+import { Texture } from '@modules/renderer/engine/objects/textures/Texture.js';
 
 export interface MeshPhysicalMaterialParameters extends MeshStandardMaterialParameters {
   clearcoat?: number | undefined;

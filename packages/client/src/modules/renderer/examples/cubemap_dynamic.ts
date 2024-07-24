@@ -3,7 +3,7 @@ import * as Nodes from '@modules/renderer/engine/nodes/Nodes.js';
 
 import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 
-import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
+import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
 
 import { GUI } from 'lil-gui';
 import Stats from 'stats-js';

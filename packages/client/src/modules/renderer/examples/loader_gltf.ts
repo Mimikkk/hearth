@@ -1,10 +1,10 @@
 import { Clock, Mapping, PerspectiveCamera, Scene, ToneMapping } from '@modules/renderer/engine/engine.js';
 import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 import { RGBELoader } from '@modules/renderer/engine/loaders/textures/RGBELoader/RGBELoader.js';
-import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
+import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
 import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/GLTFLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import { WorldAxesControls } from '@modules/renderer/engine/controls/WorldAxesControls.js';
+import { WorldAxesControls } from '@modules/renderer/engine/objects/controls/WorldAxesControls.js';
 
 let camera!: PerspectiveCamera;
 let scene!: Scene;

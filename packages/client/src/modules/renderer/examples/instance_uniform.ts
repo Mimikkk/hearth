@@ -10,7 +10,7 @@ import {
 
 import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 
-import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
+import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
 
 import { TeapotGeometry } from '@modules/renderer/engine/geometries/TeapotGeometry.js';
 

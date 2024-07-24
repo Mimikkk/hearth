@@ -6,7 +6,7 @@ import PMREMGenerator from '@modules/renderer/engine/renderers/extras/PMREMGener
 
 import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 
-import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
+import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
 
 import { GUI } from 'lil-gui';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';

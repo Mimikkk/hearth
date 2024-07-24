@@ -1,5 +1,5 @@
 import { Material, MaterialParameters } from './Material.js';
-import { Texture } from '../../textures/Texture.js';
+import { Texture } from '@modules/renderer/engine/objects/textures/Texture.js';
 import { Vec3 } from '../../math/Vec3.js';
 
 export interface MeshDistanceMaterialParameters extends MaterialParameters {

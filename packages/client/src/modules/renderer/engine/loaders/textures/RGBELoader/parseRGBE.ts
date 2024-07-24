@@ -6,7 +6,7 @@ import {
   Wrapping,
 } from '../../../constants.js';
 import { DataUtils } from '@modules/renderer/engine/utils/DataUtils.js';
-import { DataTexture } from '@modules/renderer/engine/textures/DataTexture.js';
+import { DataTexture } from '@modules/renderer/engine/objects/textures/DataTexture.js';
 import { NumberArray } from '@modules/renderer/engine/math/MathUtils.js';
 
 export type SupportedType = TextureDataType.Float | TextureDataType.HalfFloat;

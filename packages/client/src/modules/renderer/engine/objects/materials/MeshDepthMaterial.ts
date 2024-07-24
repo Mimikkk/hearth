@@ -1,6 +1,6 @@
 import { Material, MaterialParameters } from './Material.js';
 import { DepthPackingStrategy } from '../../constants.js';
-import { Texture } from '../../textures/Texture.js';
+import { Texture } from '@modules/renderer/engine/objects/textures/Texture.js';
 
 export interface MeshDepthMaterialParameters extends MaterialParameters {
   map?: Texture | null | undefined;

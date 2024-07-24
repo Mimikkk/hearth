@@ -5,7 +5,7 @@ import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 import Stats from 'stats-js';
 
 import { GUI } from 'lil-gui';
-import { OrbitControls } from '@modules/renderer/engine/controls/OrbitControls.js';
+import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
 
 import { InstancedPoints } from '@modules/renderer/engine/objects/InstancedPoints.js';
 import { InstancedPointsGeometry } from '@modules/renderer/engine/geometries/InstancedPointsGeometry.js';

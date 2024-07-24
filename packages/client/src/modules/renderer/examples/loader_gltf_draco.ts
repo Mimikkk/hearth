@@ -1,6 +1,6 @@
-import { PerspectiveCamera } from '../engine/cameras/PerspectiveCamera.js';
-import { Scene } from '../engine/scenes/Scene.js';
-import { Fog } from '../engine/scenes/Fog.js';
+import { PerspectiveCamera } from '@modules/renderer/engine/objects/cameras/PerspectiveCamera.js';
+import { Scene } from '@modules/renderer/engine/objects/scenes/Scene.js';
+import { Fog } from '@modules/renderer/engine/objects/scenes/Fog.js';
 import { Mesh } from '../engine/objects/Mesh.js';
 import { PlaneGeometry } from '../engine/geometries/PlaneGeometry.js';
 import { MeshPhongMaterial } from '@modules/renderer/engine/objects/materials/MeshPhongMaterial.js';

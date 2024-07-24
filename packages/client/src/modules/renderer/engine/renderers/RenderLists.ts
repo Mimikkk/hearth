@@ -1,7 +1,7 @@
 import ChainMap from './ChainMap.js';
 import RenderList from './RenderList.js';
-import { Scene } from '@modules/renderer/engine/scenes/Scene.js';
-import { Camera } from '@modules/renderer/engine/cameras/Camera.js';
+import { Scene } from '@modules/renderer/engine/objects/scenes/Scene.js';
+import { Camera } from '@modules/renderer/engine/objects/cameras/Camera.js';
 
 class RenderLists {
   lists: ChainMap<any, any>;

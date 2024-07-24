@@ -1,8 +1,8 @@
 import { Vec3 } from '../math/Vec3.js';
 import { Entity } from '../core/Entity.js';
 import { Intersection, Raycaster } from '../core/Raycaster.js';
-import { PerspectiveCamera } from '../cameras/PerspectiveCamera.js';
-import { OrthographicCamera } from '../cameras/OrthographicCamera.js';
+import { PerspectiveCamera } from '@modules/renderer/engine/objects/cameras/PerspectiveCamera.js';
+import { OrthographicCamera } from '@modules/renderer/engine/objects/cameras/OrthographicCamera.js';
 
 const _v1 = Vec3.new();
 const _v2 = Vec3.new();

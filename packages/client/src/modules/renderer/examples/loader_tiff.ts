@@ -1,5 +1,5 @@
-import { PerspectiveCamera } from '@modules/renderer/engine/cameras/PerspectiveCamera.js';
-import { Scene } from '@modules/renderer/engine/scenes/Scene.js';
+import { PerspectiveCamera } from '@modules/renderer/engine/objects/cameras/PerspectiveCamera.js';
+import { Scene } from '@modules/renderer/engine/objects/scenes/Scene.js';
 import { PlaneGeometry } from '@modules/renderer/engine/geometries/PlaneGeometry.js';
 import { MeshBasicMaterial } from '@modules/renderer/engine/objects/materials/MeshBasicMaterial.js';
 import { Mesh } from '@modules/renderer/engine/objects/Mesh.js';
@@ -7,7 +7,7 @@ import { ColorSpace } from '../engine/constants.js';
 import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 import { TiffLoader } from '@modules/renderer/engine/loaders/textures/TIFFLoader/TIFFLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import { DataTexture } from '@modules/renderer/engine/textures/DataTexture.js';
+import { DataTexture } from '@modules/renderer/engine/objects/textures/DataTexture.js';
 
 const geometry = new PlaneGeometry();
 const createMesh = (map: DataTexture, [x, y, z]: [x: number, y: number, z: number]) => {
