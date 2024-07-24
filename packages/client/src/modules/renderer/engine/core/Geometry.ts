@@ -615,7 +615,6 @@ export class Geometry<
     function convertBufferAttribute(attribute: any, indices: any) {
       const array = attribute.array;
       const itemSize = attribute.itemSize;
-      const normalized = attribute.normalized;
 
       const array2 = new array.constructor(indices.length * itemSize);
 
@@ -634,7 +633,7 @@ export class Geometry<
         }
       }
 
-      return new BufferAttribute(array2, itemSize, normalized);
+      return new BufferAttribute(array2, itemSize);
     }
 
     //

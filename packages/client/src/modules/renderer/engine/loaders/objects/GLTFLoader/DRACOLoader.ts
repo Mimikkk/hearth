@@ -157,8 +157,6 @@ class DRACOLoader {
 
       if (name === 'color') {
         this._assignVertexColorSpace(attribute, result.vertexColorSpace);
-
-        attribute.normalized = array instanceof Float32Array === false;
       }
 
       geometry.setAttribute(name, attribute);

@@ -1291,7 +1291,7 @@ class GLTFMeshGpuInstancing implements Plugin {
         for (const attributeName in attributes) {
           if (attributeName === '_COLOR_0') {
             const attr = attributes[attributeName];
-            instancedMesh.instanceColor = new InstancedBufferAttribute(attr.array, attr.itemSize, attr.normalized);
+            instancedMesh.instanceColor = new InstancedBufferAttribute(attr.array, attr.itemSize);
           } else if (attributeName !== 'TRANSLATION' && attributeName !== 'ROTATION' && attributeName !== 'SCALE') {
             mesh.geometry.setAttribute(attributeName, attributes[attributeName]);
           }
@@ -1414,7 +1414,6 @@ class GLTFDracoMeshCompressionExtension implements Plugin {
         const componentType = WEBGL_COMPONENT_TYPES[accessorDef.componentType];
 
         attributeTypeMap[threeAttributeName] = componentType.name;
-        attributeNormalizedMap[threeAttributeName] = accessorDef.normalized === true;
       }
     }
 
@@ -1425,9 +1424,6 @@ class GLTFDracoMeshCompressionExtension implements Plugin {
           function (geometry) {
             for (const attributeName in geometry.attributes) {
               const attribute = geometry.attributes[attributeName];
-              const normalized = attributeNormalizedMap[attributeName];
-
-              if (normalized !== undefined) attribute.normalized = normalized;
             }
 
             resolve(geometry);
@@ -2281,10 +2277,9 @@ class Parser {
     if (accessorDef.bufferView === undefined && accessorDef.sparse === undefined) {
       const itemSize = WEBGL_TYPE_SIZES[accessorDef.type];
       const TypedArray = WEBGL_COMPONENT_TYPES[accessorDef.componentType];
-      const normalized = accessorDef.normalized === true;
 
       const array = new TypedArray(accessorDef.count * itemSize);
-      return Promise.resolve(new BufferAttribute(array, itemSize, normalized));
+      return Promise.resolve(new BufferAttribute(array, itemSize));
     }
 
     const pendingBufferViews = [];
@@ -2312,7 +2307,6 @@ class Parser {
       const byteOffset = accessorDef.byteOffset || 0;
       const byteStride =
         accessorDef.bufferView !== undefined ? json.bufferViews[accessorDef.bufferView].byteStride : undefined;
-      const normalized = accessorDef.normalized === true;
       let array, bufferAttribute;
 
       // The buffer is not interleaved if the stride is the item size in bytes.
@@ -2340,12 +2334,7 @@ class Parser {
           parser.cache.add(ibCacheKey, ib);
         }
 
-        bufferAttribute = new InterleavedBufferAttribute(
-          ib,
-          itemSize,
-          (byteOffset % byteStride) / elementBytes,
-          normalized,
-        );
+        bufferAttribute = new InterleavedBufferAttribute(ib, itemSize, (byteOffset % byteStride) / elementBytes);
       } else {
         if (bufferView === null) {
           array = new TypedArray(accessorDef.count * itemSize);
@@ -2353,7 +2342,7 @@ class Parser {
           array = new TypedArray(bufferView, byteOffset, accessorDef.count * itemSize);
         }
 
-        bufferAttribute = new BufferAttribute(array, itemSize, normalized);
+        bufferAttribute = new BufferAttribute(array, itemSize);
       }
 
       // https://github.com/KhronosGroup/glTF/blob/master/specification/2.0/README.md#sparse-accessors
@@ -2373,11 +2362,7 @@ class Parser {
 
         if (bufferView !== null) {
           // Avoid modifying the original ArrayBuffer, if the bufferView wasn't initialized with zeroes.
-          bufferAttribute = new BufferAttribute(
-            bufferAttribute.array.slice(),
-            bufferAttribute.itemSize,
-            bufferAttribute.normalized,
-          );
+          bufferAttribute = new BufferAttribute(bufferAttribute.array.slice(), bufferAttribute.itemSize);
         }
 
         for (let i = 0, il = sparseIndices.length; i < il; i++) {
@@ -3429,17 +3414,6 @@ class Parser {
 
   _getArrayFromAccessor(accessor) {
     let outputArray = accessor.array;
-
-    if (accessor.normalized) {
-      const scale = getNormalizedComponentScale(outputArray.constructor);
-      const scaled = new Float32Array(outputArray.length);
-
-      for (let j = 0, jl = outputArray.length; j < jl; j++) {
-        scaled[j] = outputArray[j] * scale;
-      }
-
-      outputArray = scaled;
-    }
 
     return outputArray;
   }

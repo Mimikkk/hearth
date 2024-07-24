@@ -4,7 +4,6 @@ import { ArrayConstructorMap, TypedArray } from '@modules/renderer/engine/math/M
 
 export function mergeAttributes<T extends TypedArray>(attributes: AttributeType<T>[]): BufferAttribute<T> {
   let itemSize: number = attributes[0].itemSize;
-  let normalized: boolean = attributes[0].normalized;
 
   let length = 0;
   for (const { count } of attributes) {
@@ -12,7 +11,7 @@ export function mergeAttributes<T extends TypedArray>(attributes: AttributeType<
   }
 
   const array = new (attributes[0].array.constructor as ArrayConstructorMap<T>)(length) as T;
-  const result = new BufferAttribute<T>(array as T, itemSize, normalized);
+  const result = new BufferAttribute<T>(array as T, itemSize);
   let offset = 0;
 
   for (let i = 0; i < attributes.length; ++i) {

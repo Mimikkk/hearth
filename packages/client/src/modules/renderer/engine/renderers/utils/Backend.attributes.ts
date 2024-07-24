@@ -155,9 +155,8 @@ export class BackendAttributes {
   }
 
   _getVertexFormat(attribute: AttributeType): GPUVertexFormat {
-    const { itemSize, normalized } = attribute;
+    const { itemSize } = attribute;
     const ArrayType = attribute.array.constructor;
-    const AttributeType = attribute.constructor;
 
     let format;
 
@@ -173,22 +172,22 @@ export class BackendAttributes {
       let options!: string[];
 
       if (ArrayType == Int8Array) {
-        options = ['sint8', 'snorm8'];
+        options = ['sint8'];
       } else if (ArrayType == Uint8Array) {
-        options = ['uint8', 'unorm8'];
+        options = ['uint8'];
       } else if (ArrayType == Int16Array) {
-        options = ['sint16', 'snorm16'];
+        options = ['sint16'];
       } else if (ArrayType == Uint16Array) {
-        options = ['uint16', 'unorm16'];
+        options = ['uint16'];
       } else if (ArrayType == Int32Array) {
-        options = ['sint32', 'snorm32'];
+        options = ['sint32'];
       } else if (ArrayType == Uint32Array) {
-        options = ['uint32', 'unorm32'];
+        options = ['uint32'];
       } else if (ArrayType == Float32Array) {
         options = ['float32'];
       }
 
-      const prefix = options[normalized ? 1 : 0];
+      const prefix = options[0];
 
       if (prefix) {
         const bytesPerUnit = ArrayType.BYTES_PER_ELEMENT * itemSize;

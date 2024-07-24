@@ -381,11 +381,8 @@ export class NodeBuilder {
 
     const array = dataAttribute.array;
     const itemSize = attribute.itemSize;
-    const normalized = attribute.normalized;
 
-    let arrayType;
-
-    if (!normalized) arrayType = this.getTypeFromArray(array);
+    let arrayType = this.getTypeFromArray(array);
     return this.getTypeFromLength(itemSize, arrayType);
   }
 

@@ -188,13 +188,10 @@ export class BatchedMesh extends Mesh {
     if (this._geometryInitialized === false) {
       for (const attributeName in reference.attributes) {
         const srcAttribute = reference.getAttribute(attributeName);
-        const { array, itemSize, normalized } = srcAttribute;
+        const { array, itemSize } = srcAttribute;
 
-        //@ts-expect-error
         const dstArray = new array.constructor(maxVertexCount * itemSize);
-        //@ts-expect-error
-        const dstAttribute = new srcAttribute.constructor(dstArray, itemSize, normalized);
-        //@ts-expect-error
+        const dstAttribute = new srcAttribute.constructor(dstArray, itemSize);
         dstAttribute.setUsage(srcAttribute.usage);
 
         geometry.setAttribute(attributeName, dstAttribute);
@@ -207,7 +204,6 @@ export class BatchedMesh extends Mesh {
       }
 
       const idArray = maxGeometryCount > 65536 ? new Uint32Array(maxVertexCount) : new Uint16Array(maxVertexCount);
-      //@ts-expect-error
       geometry.setAttribute(ID_ATTR_NAME, new BufferAttribute(idArray, 1));
 
       this._geometryInitialized = true;
@@ -240,8 +236,8 @@ export class BatchedMesh extends Mesh {
 
       const srcAttribute = geometry.getAttribute(attributeName);
       const dstAttribute = batchGeometry.getAttribute(attributeName);
-      if (srcAttribute.itemSize !== dstAttribute.itemSize || srcAttribute.normalized !== dstAttribute.normalized) {
-        throw new Error('BatchedMesh: All attributes must have a consistent itemSize and normalized value.');
+      if (srcAttribute.itemSize !== dstAttribute.itemSize) {
+        throw new Error('BatchedMesh: All attributes must have a consistent itemSize.');
       }
     }
   }
