@@ -1,6 +1,6 @@
 import { Vec3 } from '../../math/Vec3.js';
 import { Vec2 } from '../../math/Vec2.js';
-import { NumberArray, TypedArray, TypedArrayConstructor } from '../../math/MathUtils.js';
+import { NumberArray, TypedArray } from '../../math/MathUtils.js';
 import { BufferUsage } from '../../constants.js';
 import { Mat3 } from '@modules/renderer/engine/math/Mat3.js';
 import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
@@ -15,6 +15,7 @@ export class BufferAttribute<T extends TypedArray = any> {
 
   stride: number;
   offset: number;
+  version: number;
 
   usage: BufferUsage;
 
@@ -30,6 +31,10 @@ export class BufferAttribute<T extends TypedArray = any> {
     this.usage = BufferUsage.StaticDraw;
 
     this.version = 0;
+  }
+
+  set needsUpdate(value: boolean) {
+    if (value) ++this.version;
   }
 
   set count(count: number) {
@@ -191,6 +196,7 @@ export class BufferAttribute<T extends TypedArray = any> {
     return new BufferAttribute(this.array, this.stride).copy(this);
   }
 }
+
 BufferAttribute.prototype.isBufferAttribute = true;
 
 const _Vec2 = Vec2.new();
