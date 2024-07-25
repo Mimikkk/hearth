@@ -1,4 +1,4 @@
-import { BufferAttribute, InterleavedBufferAttribute } from '../../engine.js';
+import { BufferAttribute } from '../../engine.js';
 import { GPUVertexStepModeType } from './constants.js';
 import { Backend } from '@modules/renderer/engine/renderers/Backend.js';
 import RenderObject from '@modules/renderer/engine/renderers/RenderObject.js';
@@ -148,49 +148,44 @@ export class BackendAttributes {
   }
 
   _getVertexFormat(attribute: AttributeType): GPUVertexFormat {
-    const { stride } = attribute;
+    const { span } = attribute;
     const ArrayType = attribute.array.constructor;
 
-    let format;
-
-    if (stride == 1) {
+    if (span == 1) {
       if (ArrayType === Int32Array) {
-        format = 'sint32';
+        return 'sint32';
       } else if (ArrayType === Uint32Array) {
-        format = 'uint32';
+        return 'uint32';
       } else if (ArrayType === Float32Array) {
-        format = 'float32';
+        return 'float32';
       }
     } else {
-      let options!: string[];
-
+      let prefix: 'sint8' | 'uint8' | 'sint16' | 'uint16' | 'sint32' | 'uint32' | 'float32' | undefined;
       if (ArrayType == Int8Array) {
-        options = ['sint8'];
+        prefix = 'sint8';
       } else if (ArrayType == Uint8Array) {
-        options = ['uint8'];
+        prefix = 'uint8';
       } else if (ArrayType == Int16Array) {
-        options = ['sint16'];
+        prefix = 'sint16';
       } else if (ArrayType == Uint16Array) {
-        options = ['uint16'];
+        prefix = 'uint16';
       } else if (ArrayType == Int32Array) {
-        options = ['sint32'];
+        prefix = 'sint32';
       } else if (ArrayType == Uint32Array) {
-        options = ['uint32'];
+        prefix = 'uint32';
       } else if (ArrayType == Float32Array) {
-        options = ['float32'];
+        prefix = 'float32';
       }
 
-      const prefix = options[0];
-
       if (prefix) {
-        const bytesPerUnit = ArrayType.BYTES_PER_ELEMENT * stride;
-        const paddedBytesPerUnit = Math.floor((bytesPerUnit + 3) / 4) * 4;
-        const paddedItemSize = paddedBytesPerUnit / ArrayType.BYTES_PER_ELEMENT;
-
-        format = `${prefix}x${paddedItemSize}`;
+        const perVertex = ArrayType.BYTES_PER_ELEMENT * span;
+        // to align to 2 | 4 bytes.
+        const bytes = Math.floor((perVertex + 3) / 4) * 4;
+        const size = (bytes / ArrayType.BYTES_PER_ELEMENT) as 2 | 4;
+        return `${prefix}x${size}`;
       }
     }
 
-    return format;
+    throw new Error('Unsupported attribute type.');
   }
 }

@@ -71,8 +71,6 @@ const _batchIntersects: Intersection[] = [];
 function copyAttributeData(src: BufferAttribute<any>, target: BufferAttribute<any>, targetOffset: number) {
   const itemSize = target.stride;
   if (src.isInterleavedBufferAttribute || src.array.constructor !== target.array.constructor) {
-    // use the component getters and setters if the array data cannot
-    // be copied directly
     const vertexCount = src.count;
     for (let i = 0; i < vertexCount; i++) {
       for (let c = 0; c < itemSize; c++) {
@@ -80,7 +78,6 @@ function copyAttributeData(src: BufferAttribute<any>, target: BufferAttribute<an
       }
     }
   } else {
-    // faster copy approach using typed array set function
     target.array.set(src.array, targetOffset * itemSize);
   }
 
