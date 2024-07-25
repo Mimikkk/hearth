@@ -22,7 +22,6 @@ export class BufferAttribute<T extends TypedArray = any> {
     public offset: number = 0,
     public step: GPUVertexStepModeType = GPUVertexStepModeType.Vertex,
     public bind?: GPUBufferBindingTypeType,
-    public interleaved: boolean = false,
   ) {
     if (source instanceof Buffer) {
       this.source = source;
@@ -56,7 +55,7 @@ export class BufferAttribute<T extends TypedArray = any> {
   }
 
   get isInterleavedBufferAttribute(): boolean {
-    return this.interleaved;
+    return this.source.stride !== this.span;
   }
 
   set needsUpdate(value: boolean) {

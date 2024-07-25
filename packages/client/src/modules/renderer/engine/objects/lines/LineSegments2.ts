@@ -1,8 +1,8 @@
 import {
   Box3,
   Buffer,
+  BufferAttribute,
   Camera,
-  InterleavedBufferAttribute,
   Line3,
   LineSegments,
   Mat4,
@@ -233,10 +233,16 @@ export class LineSegments2 extends Mesh {
       lineDistances[j + 1] = lineDistances[j] + _start.distanceTo(_end);
     }
 
-    const instanceDistanceBuffer = new Buffer(lineDistances, 2, GPUVertexStepModeType.Instance);
+    const instanceDistanceBuffer = new Buffer(lineDistances, 2);
 
-    geometry.setAttribute('instanceDistanceStart', new InterleavedBufferAttribute(instanceDistanceBuffer, 1, 0)); // d0
-    geometry.setAttribute('instanceDistanceEnd', new InterleavedBufferAttribute(instanceDistanceBuffer, 1, 1)); // d1
+    geometry.setAttribute(
+      'instanceDistanceStart',
+      new BufferAttribute(instanceDistanceBuffer, 1, 0, GPUVertexStepModeType.Instance),
+    ); // d0
+    geometry.setAttribute(
+      'instanceDistanceEnd',
+      new BufferAttribute(instanceDistanceBuffer, 1, 1, GPUVertexStepModeType.Instance),
+    ); // d1
 
     return this;
   }

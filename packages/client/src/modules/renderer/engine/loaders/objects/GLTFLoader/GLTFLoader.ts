@@ -14,7 +14,6 @@ import {
   Geometry,
   Group,
   InstancedMesh,
-  InterleavedBufferAttribute,
   Interpolant,
   InterpolationMode,
   Line,
@@ -56,6 +55,7 @@ import { KTX2Loader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/
 import { MeshoptDecoder } from 'meshoptimizer';
 import { DRACOLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/DRACOLoader.js';
 import { classLoader } from '@modules/renderer/engine/loaders/types.js';
+import { GPUVertexStepModeType } from '@modules/renderer/engine/renderers/utils/constants.js';
 
 export type PluginFn = (parser: Parser) => Plugin;
 
@@ -2270,7 +2270,7 @@ class Parser {
   /**
    * Specification: https://github.com/KhronosGroup/glTF/blob/master/specification/2.0/README.md#accessors
    * @param {number} accessorIndex
-   * @return {Promise<BufferAttribute|InterleavedBufferAttribute>}
+   * @return {Promise<BufferAttribute>}
    */
   loadAccessor(accessorIndex) {
     const parser = this;
@@ -2338,7 +2338,14 @@ class Parser {
           parser.cache.add(ibCacheKey, ib);
         }
 
-        bufferAttribute = new InterleavedBufferAttribute(ib, itemSize, (byteOffset % byteStride) / elementBytes);
+        bufferAttribute = new BufferAttribute(
+          ib,
+          itemSize,
+          (byteOffset % byteStride) / elementBytes,
+          GPUVertexStepModeType.Vertex,
+          undefined,
+          true,
+        );
       } else {
         if (bufferView === null) {
           array = new TypedArray(accessorDef.count * itemSize);

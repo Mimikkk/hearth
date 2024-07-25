@@ -2,7 +2,6 @@ import { Sphere } from '../../../math/Sphere.js';
 import { Vec3 } from '../../../math/Vec3.js';
 import { BufferAttribute } from '../../../core/attributes/BufferAttribute.js';
 import { Geometry } from '../../../core/Geometry.js';
-import { InterleavedBufferAttribute } from '../../../core/attributes/InterleavedBufferAttribute.js';
 import { Buffer } from '../../../core/buffers/Buffer.js';
 import { createTypedArray } from '@modules/renderer/engine/math/MathUtils.js';
 import { GPUVertexStepModeType } from '@modules/renderer/engine/renderers/utils/constants.js';
@@ -81,15 +80,22 @@ export const parseBufferGeometry = (json: JsonContent): Geometry => {
     let bufferAttribute;
 
     if (attribute.isInterleavedBufferAttribute) {
-      const interleavedBuffer = getInterleavedBuffer(json.data, attribute.source.array);
-      bufferAttribute = new InterleavedBufferAttribute(interleavedBuffer, attribute.stride, attribute.offset);
+      const interleavedBuffer = getInterleavedBuffer(json.data, attribute.array);
+      bufferAttribute = new BufferAttribute(
+        interleavedBuffer,
+        attribute.stride,
+        attribute.offset,
+        GPUVertexStepModeType.Vertex,
+        undefined,
+        true,
+      );
     } else {
-      const typedArray = createTypedArray(attribute.type, attribute.source.array);
+      const typedArray = createTypedArray(attribute.type, attribute.array);
       bufferAttribute = new BufferAttribute(
         typedArray,
         attribute.stride,
         0,
-        attribute.isInstancedBufferAttribute ? GPUVertexStepModeType.Instance : 'vertex',
+        attribute.isInstancedBufferAttribute ? GPUVertexStepModeType.Instance : GPUVertexStepModeType.Vertex,
       );
     }
 
@@ -113,7 +119,14 @@ export const parseBufferGeometry = (json: JsonContent): Geometry => {
 
         if (attribute.isInterleavedBufferAttribute) {
           const interleavedBuffer = getInterleavedBuffer(json.data, attribute.data);
-          bufferAttribute = new InterleavedBufferAttribute(interleavedBuffer, attribute.stride, attribute.offset);
+          bufferAttribute = new BufferAttribute(
+            interleavedBuffer,
+            attribute.stride,
+            attribute.offset,
+            GPUVertexStepModeType.Vertex,
+            undefined,
+            true,
+          );
         } else {
           const typedArray = createTypedArray(attribute.type, attribute.array);
           bufferAttribute = new BufferAttribute(typedArray, attribute.stride);

@@ -4,7 +4,6 @@ import {
   BufferAttribute,
   EdgesGeometry,
   Geometry,
-  InterleavedBufferAttribute,
   LineSegments,
   Mat4,
   Mesh,
@@ -54,10 +53,10 @@ export class LineSegmentsGeometry extends Geometry {
   }
 
   setPositions(array: Float32Array): this {
-    const instanceBuffer = new Buffer(array, 6, GPUVertexStepModeType.Instance);
+    const instanceBuffer = new Buffer(array, 6);
 
-    this.setAttribute('instanceStart', new InterleavedBufferAttribute(instanceBuffer, 3, 0)); // xyz
-    this.setAttribute('instanceEnd', new InterleavedBufferAttribute(instanceBuffer, 3, 3)); // xyz
+    this.setAttribute('instanceStart', new BufferAttribute(instanceBuffer, 3, 0, GPUVertexStepModeType.Instance));
+    this.setAttribute('instanceEnd', new BufferAttribute(instanceBuffer, 3, 3, GPUVertexStepModeType.Instance));
     this.instanceCount = this.attributes.instanceStart.count;
 
     this.computeBoundingBox();
@@ -67,10 +66,16 @@ export class LineSegmentsGeometry extends Geometry {
   }
 
   setColors(array: Float32Array): this {
-    const instanceColorBuffer = new Buffer(array, 6, GPUVertexStepModeType.Instance);
+    const instanceColorBuffer = new Buffer(array, 6);
 
-    this.setAttribute('instanceColorStart', new InterleavedBufferAttribute(instanceColorBuffer, 3, 0)); // rgb
-    this.setAttribute('instanceColorEnd', new InterleavedBufferAttribute(instanceColorBuffer, 3, 3)); // rgb
+    this.setAttribute(
+      'instanceColorStart',
+      new BufferAttribute(instanceColorBuffer, 3, 0, GPUVertexStepModeType.Instance),
+    );
+    this.setAttribute(
+      'instanceColorEnd',
+      new BufferAttribute(instanceColorBuffer, 3, 3, GPUVertexStepModeType.Instance),
+    );
 
     return this;
   }

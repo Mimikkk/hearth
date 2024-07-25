@@ -1,6 +1,6 @@
 import DataMap from './DataMap.js';
 import { AttributeLocation } from './Constants.js';
-import { BufferUsage, InterleavedBufferAttribute } from '@modules/renderer/engine/engine.js';
+import { BufferUsage } from '@modules/renderer/engine/engine.js';
 import type { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 import { AttributeType } from '@modules/renderer/engine/core/types.js';
 

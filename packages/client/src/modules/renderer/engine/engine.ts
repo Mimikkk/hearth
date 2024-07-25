@@ -64,7 +64,6 @@ export { RenderTarget } from './renderers/RenderTarget.js';
 export { Uniform } from './core/Uniform.js';
 export { UniformGroup } from './core/UniformGroup.js';
 export { Geometry } from './core/Geometry.js';
-export { InterleavedBufferAttribute } from './core/attributes/InterleavedBufferAttribute.js';
 export { Buffer } from './core/buffers/Buffer.js';
 export * from './core/attributes/BufferAttribute.js';
 export { Entity } from './core/Entity.js';

@@ -194,9 +194,7 @@ export class Material {
     this._alphaTest = value;
   }
 
-  onBuild(shaderobject: any, renderer: Renderer) {
-    console.log({ shaderobject });
-  }
+  onBuild(shaderobject: any, renderer: Renderer) {}
 
   onBeforeRender(renderer: Renderer, scene: Scene, camera: Camera, geometry: Geometry, object: Entity, group: Group) {}
 
