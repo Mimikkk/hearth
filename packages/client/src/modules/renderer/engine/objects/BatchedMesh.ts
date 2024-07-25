@@ -70,7 +70,6 @@ const _batchIntersects: Intersection[] = [];
 
 function copyAttributeData(src: BufferAttribute<any>, target: BufferAttribute<any>, targetOffset: number) {
   const itemSize = target.stride;
-  //@ts-expect-error
   if (src.isInterleavedBufferAttribute || src.array.constructor !== target.array.constructor) {
     // use the component getters and setters if the array data cannot
     // be copied directly

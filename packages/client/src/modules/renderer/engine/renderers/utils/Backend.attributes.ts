@@ -8,7 +8,7 @@ export class BackendAttributes {
   constructor(public backend: Backend) {}
 
   createAttribute(attribute: AttributeType, usage: GPUBufferUsageFlags): void {
-    const bufferAttribute = this._getBufferAttribute(attribute);
+    const bufferAttribute = attribute;
 
     const backend = this.backend;
     const bufferData = backend.memo.get(bufferAttribute);
@@ -29,7 +29,6 @@ export class BackendAttributes {
         }
       }
 
-      // ensure 4 byte alignment, see #20441
       const size = array.byteLength + ((4 - (array.byteLength % 4)) % 4);
 
       buffer = device.createBuffer({
@@ -48,7 +47,7 @@ export class BackendAttributes {
   }
 
   updateAttribute(attribute: AttributeType): void {
-    const bufferAttribute = this._getBufferAttribute(attribute);
+    const bufferAttribute = attribute;
 
     const backend = this.backend;
     const device = backend.device;
@@ -66,7 +65,7 @@ export class BackendAttributes {
     for (let slot = 0; slot < attributes.length; slot++) {
       const geometryAttribute: BufferAttribute = attributes[slot];
       const bytesPerElement = geometryAttribute.array.BYTES_PER_ELEMENT;
-      const bufferAttribute = this._getBufferAttribute(geometryAttribute);
+      const bufferAttribute = geometryAttribute;
 
       let vertexBufferLayout = vertexBuffers.get(bufferAttribute);
 
@@ -106,7 +105,7 @@ export class BackendAttributes {
   }
 
   destroyAttribute(attribute: AttributeType): void {
-    this.backend.memo.get(this._getBufferAttribute(attribute)).buffer.destroy();
+    this.backend.memo.get(attribute).buffer.destroy();
     this.backend.memo.delete(attribute);
   }
 
@@ -114,7 +113,7 @@ export class BackendAttributes {
     const backend = this.backend;
     const device = backend.device;
 
-    const data = backend.memo.get(this._getBufferAttribute(attribute));
+    const data = backend.memo.get(attribute);
 
     const bufferGPU = data.buffer;
     const size = bufferGPU.size;
@@ -194,12 +193,4 @@ export class BackendAttributes {
 
     return format;
   }
-
-  _getBufferAttribute(attribute: AttributeType): AttributeType {
-    if (isInterleavedBufferAttribute(attribute)) attribute = attribute as unknown as AttributeType;
-    return attribute;
-  }
 }
-
-const isInterleavedBufferAttribute = (item: any): item is InterleavedBufferAttribute =>
-  item.isInterleavedBufferAttribute;

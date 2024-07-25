@@ -31,9 +31,9 @@ export class Attributes extends DataMap<AttributeType, any> {
         this.renderer.backend.createStorageAttribute(attribute);
       }
 
-      data.version = this._getBufferAttribute(attribute).version;
+      data.version = attribute.version;
     } else {
-      const buffer = this._getBufferAttribute(attribute);
+      const buffer = attribute;
 
       if (data.version < buffer.version || buffer.usage === BufferUsage.DynamicDraw) {
         this.renderer.backend.updateAttribute(attribute);
@@ -41,11 +41,6 @@ export class Attributes extends DataMap<AttributeType, any> {
         data.version = buffer.version;
       }
     }
-  }
-
-  _getBufferAttribute(attribute: AttributeType): AttributeType {
-    if (attribute instanceof InterleavedBufferAttribute) attribute = attribute;
-    return attribute;
   }
 }
 

@@ -7,18 +7,21 @@ export class InterleavedBufferAttribute<T extends TypedArray = any> extends Buff
   data: Buffer<T>;
 
   constructor(
-    buffer: Buffer,
-    itemSize: number,
+    buffer: Buffer<T>,
+    span: number,
     offset: number,
     step?: GPUVertexStepModeType,
     bind?: GPUBufferBindingTypeType,
   ) {
-    super(buffer.array, itemSize, offset, step, bind, true);
+    console.log({ span, buffer });
+    super(buffer.array, span, offset, step, bind, true);
     this.data = buffer;
 
     return new Proxy(this, {
       get: (target, prop) => {
-        if (prop === 'data') traceOnce(prop, target, prop);
+        if (prop === 'data') {
+          traceOnce(prop, target, prop);
+        }
         return target[prop];
       },
     });
@@ -32,3 +35,106 @@ const traceOnce = (message: string, ...args: any[]) => {
 
   console.trace({ message, ...args });
 };
+//{
+//     "vertex": {
+//         "module": {},
+//         "entryPoint": "main",
+//         "buffers": [
+//             {
+//                 "arrayStride": 12,
+//                 "attributes": [
+//                     {
+//                         "shaderLocation": 0,
+//                         "offset": 0,
+//                         "format": "float32x3"
+//                     }
+//                 ],
+//                 "stepMode": "vertex"
+//             },
+//             {
+//                 "arrayStride": 12,
+//                 "attributes": [
+//                     {
+//                         "shaderLocation": 1,
+//                         "offset": 0,
+//                         "format": "float32x3"
+//                     }
+//                 ],
+//                 "stepMode": "vertex"
+//             },
+//             {
+//                 "arrayStride": 64,
+//                 "attributes": [
+//                     {
+//                         "shaderLocation": 2,
+//                         "offset": 0,
+//                         "format": "float32x16"
+//                     }
+//                 ],
+//                 "stepMode": "instance"
+//             },
+//             {
+//                 "arrayStride": 64,
+//                 "attributes": [
+//                     {
+//                         "shaderLocation": 3,
+//                         "offset": 16,
+//                         "format": "float32x16"
+//                     }
+//                 ],
+//                 "stepMode": "instance"
+//             },
+//             {
+//                 "arrayStride": 64,
+//                 "attributes": [
+//                     {
+//                         "shaderLocation": 4,
+//                         "offset": 32,
+//                         "format": "float32x16"
+//                     }
+//                 ],
+//                 "stepMode": "instance"
+//             },
+//             {
+//                 "arrayStride": 64,
+//                 "attributes": [
+//                     {
+//                         "shaderLocation": 5,
+//                         "offset": 48,
+//                         "format": "float32x16"
+//                     }
+//                 ],
+//                 "stepMode": "instance"
+//             }
+//         ]
+//     },
+//     "fragment": {
+//         "module": {},
+//         "entryPoint": "main",
+//         "targets": [
+//             {
+//                 "format": "bgra8unorm",
+//                 "writeMask": 15
+//             }
+//         ]
+//     },
+//     "primitive": {
+//         "topology": "triangle-list",
+//         "frontFace": "ccw",
+//         "cullMode": "back"
+//     },
+//     "depthStencil": {
+//         "format": "depth24plus",
+//         "depthWriteEnabled": true,
+//         "depthCompare": "less-equal",
+//         "stencilFront": {},
+//         "stencilBack": {},
+//         "stencilReadMask": 255,
+//         "stencilWriteMask": 255
+//     },
+//     "multisample": {
+//         "count": 4,
+//         "alphaToCoverageEnabled": false
+//     },
+//     "layout": {}
+// }

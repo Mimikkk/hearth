@@ -50,11 +50,11 @@ export class Sprite extends Entity {
         -0.5, -0.5, 0, 0, 0, 0.5, -0.5, 0, 1, 0, 0.5, 0.5, 0, 1, 1, -0.5, 0.5, 0, 0, 1,
       ]);
 
-      const interleavedBuffer = new Buffer(float32Array, 5);
+      const buffer = new Buffer(float32Array, 5);
 
       _geometry.setIndex([0, 1, 2, 0, 2, 3]);
-      _geometry.setAttribute('position', new InterleavedBufferAttribute(interleavedBuffer, 3, 0));
-      _geometry.setAttribute('uv', new InterleavedBufferAttribute(interleavedBuffer, 2, 3));
+      _geometry.setAttribute('position', new InterleavedBufferAttribute(buffer, 3, 0));
+      _geometry.setAttribute('uv', new InterleavedBufferAttribute(buffer, 2, 3));
     }
 
     this.geometry = _geometry;
