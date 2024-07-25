@@ -10,10 +10,7 @@ import { Quaternion } from '@modules/renderer/engine/math/Quaternion.js';
 import { AttributeType } from '@modules/renderer/engine/core/types.js';
 import { v4 } from 'uuid';
 
-export class Geometry<
-  AttributeMap extends AttributeRecord = AttributeRecord,
-  MorphAttributeMap extends AttributeRecord = AttributeRecord,
-> {
+export class Geometry {
   declare isGeometry: true;
   declare type: 'Geometry';
   id: number;
@@ -21,8 +18,8 @@ export class Geometry<
   name: string;
   instanceCount: number;
   index: BufferAttribute<Uint32Array> | null;
-  attributes: AttributeMap;
-  morphAttributes: MorphAttributeMap;
+  attributes: AttributeRecord;
+  morphAttributes: AttributeRecord;
   morphTargetsRelative: boolean;
   groups: { start: number; count: number; materialIndex?: number }[];
   boundingBox: Box3 | null;
@@ -40,9 +37,8 @@ export class Geometry<
     this.type = 'Geometry';
 
     this.index = null;
-    this.attributes = {} as AttributeMap;
-
-    this.morphAttributes = {} as MorphAttributeMap;
+    this.attributes = {};
+    this.morphAttributes = {};
     this.morphTargetsRelative = false;
 
     this.groups = [];
@@ -75,22 +71,22 @@ export class Geometry<
     return this;
   }
 
-  getAttribute<K extends keyof AttributeMap>(name: K): AttributeMap[K] {
+  getAttribute(name: string): BufferAttribute {
     return this.attributes[name];
   }
 
-  setAttribute<K extends keyof AttributeMap>(name: K, attribute: AttributeMap[K]): this {
+  setAttribute(name: string, attribute: BufferAttribute): this {
     this.attributes[name] = attribute;
     return this;
   }
 
-  deleteAttribute(name: keyof AttributeMap): this {
+  deleteAttribute(name: string): this {
     delete this.attributes[name];
 
     return this;
   }
 
-  hasAttribute(name: keyof AttributeMap): boolean {
+  hasAttribute(name: string): boolean {
     return this.attributes[name] !== undefined;
   }
 
@@ -693,16 +689,16 @@ export class Geometry<
     return geometry2 as this;
   }
 
-  clone(): Geometry<AttributeMap, MorphAttributeMap> {
-    return new this.constructor().copy(this) as Geometry<AttributeMap, MorphAttributeMap>;
+  clone(): Geometry {
+    return new this.constructor().copy(this) as Geometry;
   }
 
-  copy(source: Geometry<AttributeMap, MorphAttributeMap>): this {
+  copy(source: Geometry): this {
     // reset
 
     this.index = null;
-    this.attributes = {} as AttributeMap;
-    this.morphAttributes = {} as MorphAttributeMap;
+    this.attributes = {};
+    this.morphAttributes = {};
     this.groups = [];
     this.boundingBox = null;
     this.boundingSphere = null;
