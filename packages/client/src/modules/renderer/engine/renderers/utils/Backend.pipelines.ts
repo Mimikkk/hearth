@@ -134,7 +134,6 @@ class BackendPipelines {
       }),
     };
 
-    console.log(pipelineDescriptor);
     pipelineData.pipeline = device.createRenderPipeline(pipelineDescriptor);
   }
 

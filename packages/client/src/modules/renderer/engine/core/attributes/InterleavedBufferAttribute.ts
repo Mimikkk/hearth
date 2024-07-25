@@ -4,8 +4,6 @@ import { BufferAttribute } from '@modules/renderer/engine/core/attributes/Buffer
 import { GPUBufferBindingTypeType, GPUVertexStepModeType } from '@modules/renderer/engine/renderers/utils/constants.js';
 
 export class InterleavedBufferAttribute<T extends TypedArray = any> extends BufferAttribute<T> {
-  data: Buffer<T>;
-
   constructor(
     buffer: Buffer<T>,
     span: number,
@@ -13,25 +11,6 @@ export class InterleavedBufferAttribute<T extends TypedArray = any> extends Buff
     step?: GPUVertexStepModeType,
     bind?: GPUBufferBindingTypeType,
   ) {
-    console.log({ span, buffer });
-    super(buffer.array, span, offset, step, bind, true);
-    this.data = buffer;
-
-    return new Proxy(this, {
-      get: (target, prop) => {
-        if (prop === 'data') {
-          traceOnce(prop, target, prop);
-        }
-        return target[prop];
-      },
-    });
+    super(buffer, span, offset, step, bind, true);
   }
 }
-
-const thrown = new Set<string>();
-const traceOnce = (message: string, ...args: any[]) => {
-  if (thrown.has(message)) return;
-  thrown.add(message);
-
-  console.trace({ message, ...args });
-};

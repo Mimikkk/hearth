@@ -70,22 +70,10 @@ export class BackendAttributes {
       let vertexBufferLayout = vertexBuffers.get(bufferAttribute);
 
       if (vertexBufferLayout === undefined) {
-        let arrayStride, stepMode;
-
-        if (geometryAttribute.isInterleavedBufferAttribute === true) {
-          arrayStride = geometryAttribute.data.stride * bytesPerElement;
-          stepMode = geometryAttribute.step;
-        } else {
-          arrayStride = geometryAttribute.stride * bytesPerElement;
-          stepMode = geometryAttribute.isInstancedBufferAttribute
-            ? GPUVertexStepModeType.Instance
-            : GPUVertexStepModeType.Vertex;
-        }
-
         vertexBufferLayout = {
-          arrayStride,
+          arrayStride: geometryAttribute.source.stride * bytesPerElement,
           attributes: [],
-          stepMode,
+          stepMode: geometryAttribute.step,
         };
 
         vertexBuffers.set(bufferAttribute, vertexBufferLayout);

@@ -622,7 +622,7 @@ export class Geometry<
 
       for (let i = 0, l = indices.length; i < l; i++) {
         if (attribute.isInterleavedBufferAttribute) {
-          index = indices[i] * attribute.data.stride + attribute.offset;
+          index = indices[i] * attribute.source.stride + attribute.offset;
         } else {
           index = indices[i] * itemSize;
         }
