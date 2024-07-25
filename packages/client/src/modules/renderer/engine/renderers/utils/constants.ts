@@ -302,7 +302,7 @@ export enum GPUTextureAspectType {
   DepthOnly = 'depth-only',
 }
 
-export enum GPUVertexStepModeType {
+export enum BufferStep {
   /** The address is advanced by stride for each vertex, and reset between instances. */
   Vertex = 'vertex',
   /** The address is advanced by stride for each instance. */

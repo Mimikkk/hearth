@@ -28,7 +28,7 @@ import PostProcessing from '@modules/renderer/engine/renderers/PostProcessing.js
 import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 import { WorldAxesControls } from '@modules/renderer/engine/objects/controls/WorldAxesControls.js';
-import { GPUBufferBindingTypeType, GPUVertexStepModeType } from '@modules/renderer/engine/renderers/utils/constants.js';
+import { GPUBufferBindingTypeType, BufferStep } from '@modules/renderer/engine/renderers/utils/constants.js';
 
 const maxParticleCount = 100000;
 
@@ -93,7 +93,7 @@ async function init() {
         new Float32Array(maxParticleCount * (type === 'vec4' ? 4 : 3)),
         type === 'vec4' ? 4 : 3,
         0,
-        GPUVertexStepModeType.Instance,
+        BufferStep.Instance,
         GPUBufferBindingTypeType.Storage,
       ),
       type,

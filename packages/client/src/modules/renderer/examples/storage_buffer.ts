@@ -14,7 +14,7 @@ import {
 
 import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import { GPUBufferBindingTypeType, GPUVertexStepModeType } from '@modules/renderer/engine/renderers/utils/constants.js';
+import { GPUBufferBindingTypeType, BufferStep } from '@modules/renderer/engine/renderers/utils/constants.js';
 
 // WebGPU Backend
 init();
@@ -49,7 +49,7 @@ async function init() {
       new Float32Array(array),
       typeSize,
       0,
-      GPUVertexStepModeType.Instance,
+      BufferStep.Instance,
       GPUBufferBindingTypeType.Storage,
     );
 

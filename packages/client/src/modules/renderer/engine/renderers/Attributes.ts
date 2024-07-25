@@ -1,6 +1,6 @@
 import DataMap from './DataMap.js';
 import { AttributeLocation } from './Constants.js';
-import { BufferUsage } from '@modules/renderer/engine/engine.js';
+import { BufferUse } from '@modules/renderer/engine/engine.js';
 import type { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 import { AttributeType } from '@modules/renderer/engine/core/types.js';
 
@@ -35,7 +35,7 @@ export class Attributes extends DataMap<AttributeType, any> {
     } else {
       const buffer = attribute;
 
-      if (data.version < buffer.version || buffer.usage === BufferUsage.DynamicDraw) {
+      if (data.version < buffer.version || buffer.usage === BufferUse.DynamicDraw) {
         this.renderer.backend.updateAttribute(attribute);
 
         data.version = buffer.version;

@@ -16,7 +16,7 @@ import { GUI } from 'lil-gui';
 
 import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import { GPUBufferBindingTypeType, GPUVertexStepModeType } from '@modules/renderer/engine/renderers/utils/constants.js';
+import { GPUBufferBindingTypeType, BufferStep } from '@modules/renderer/engine/renderers/utils/constants.js';
 
 let camera, scene, renderer;
 let computeNode;
@@ -84,20 +84,14 @@ async function init() {
 
   // create webgpu buffers
 
-  waveGPUBuffer = new BufferAttribute(
-    waveBuffer,
-    1,
-    0,
-    GPUVertexStepModeType.Instance,
-    GPUBufferBindingTypeType.Storage,
-  );
+  waveGPUBuffer = new BufferAttribute(waveBuffer, 1, 0, BufferStep.Instance, GPUBufferBindingTypeType.Storage);
 
   const waveStorageNode = storage(waveGPUBuffer, 'f32', waveBuffer.length);
 
   // read-only buffer
 
   const waveNode = storageObject(
-    new BufferAttribute(waveBuffer, 1, 0, GPUVertexStepModeType.Instance, GPUBufferBindingTypeType.ReadOnlyStorage),
+    new BufferAttribute(waveBuffer, 1, 0, BufferStep.Instance, GPUBufferBindingTypeType.ReadOnlyStorage),
     'f32',
     waveBuffer.length,
   );

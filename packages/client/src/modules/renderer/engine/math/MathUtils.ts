@@ -70,7 +70,7 @@ export type ArrayConstructorMap<T extends NumberArray> = [T] extends [number[]]
 export type ArrayMap<T extends NumberArrayConstructor> = T extends ArrayConstructor
   ? number[]
   : T extends Float64ArrayConstructor
-    ? Float32Array
+    ? Float64Array
     : T extends Float32ArrayConstructor
       ? Float32Array
       : T extends Uint32ArrayConstructor

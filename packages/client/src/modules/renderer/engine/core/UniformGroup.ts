@@ -1,4 +1,4 @@
-import { BufferUsage } from '../constants.js';
+import { BufferUse } from '../constants.js';
 import type { Uniform } from './Uniform.js';
 
 let _id = 0;
@@ -8,11 +8,11 @@ export class UniformGroup<A> {
   declare isUniformsGroup: true;
   id: number;
   name: string;
-  usage: BufferUsage;
+  usage: BufferUse;
   uniforms: (Uniform<A> | Uniform<A>[])[];
 
   constructor() {
-    this.usage = BufferUsage.StaticDraw;
+    this.usage = BufferUse.StaticDraw;
     this.uniforms = [];
     this.id = _id++;
   }
@@ -33,7 +33,7 @@ export class UniformGroup<A> {
     return this;
   }
 
-  setUsage(value: BufferUsage): this {
+  setUsage(value: BufferUse): this {
     this.usage = value;
     return this;
   }

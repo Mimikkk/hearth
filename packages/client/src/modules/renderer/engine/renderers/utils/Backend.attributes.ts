@@ -1,5 +1,5 @@
 import { BufferAttribute } from '../../engine.js';
-import { GPUVertexStepModeType } from './constants.js';
+import { BufferStep } from './constants.js';
 import { Backend } from '@modules/renderer/engine/renderers/Backend.js';
 import RenderObject from '@modules/renderer/engine/renderers/RenderObject.js';
 import { AttributeType } from '@modules/renderer/engine/core/types.js';

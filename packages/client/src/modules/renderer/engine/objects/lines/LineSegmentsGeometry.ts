@@ -11,7 +11,7 @@ import {
   Vec3,
   WireframeGeometry,
 } from '../../engine.js';
-import { GPUVertexStepModeType } from '@modules/renderer/engine/renderers/utils/constants.js';
+import { BufferStep } from '@modules/renderer/engine/renderers/utils/constants.js';
 
 const _box = Box3.new();
 const _vector = Vec3.new();
@@ -55,8 +55,8 @@ export class LineSegmentsGeometry extends Geometry {
   setPositions(array: Float32Array): this {
     const instanceBuffer = new Buffer(array, 6);
 
-    this.setAttribute('instanceStart', new BufferAttribute(instanceBuffer, 3, 0, GPUVertexStepModeType.Instance));
-    this.setAttribute('instanceEnd', new BufferAttribute(instanceBuffer, 3, 3, GPUVertexStepModeType.Instance));
+    this.setAttribute('instanceStart', new BufferAttribute(instanceBuffer, 3, 0, BufferStep.Instance));
+    this.setAttribute('instanceEnd', new BufferAttribute(instanceBuffer, 3, 3, BufferStep.Instance));
     this.instanceCount = this.attributes.instanceStart.count;
 
     this.computeBoundingBox();
@@ -68,14 +68,8 @@ export class LineSegmentsGeometry extends Geometry {
   setColors(array: Float32Array): this {
     const instanceColorBuffer = new Buffer(array, 6);
 
-    this.setAttribute(
-      'instanceColorStart',
-      new BufferAttribute(instanceColorBuffer, 3, 0, GPUVertexStepModeType.Instance),
-    );
-    this.setAttribute(
-      'instanceColorEnd',
-      new BufferAttribute(instanceColorBuffer, 3, 3, GPUVertexStepModeType.Instance),
-    );
+    this.setAttribute('instanceColorStart', new BufferAttribute(instanceColorBuffer, 3, 0, BufferStep.Instance));
+    this.setAttribute('instanceColorEnd', new BufferAttribute(instanceColorBuffer, 3, 3, BufferStep.Instance));
 
     return this;
   }

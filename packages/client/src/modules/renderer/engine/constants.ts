@@ -291,9 +291,9 @@ export enum DepthComparison {
   Always = 519,
 }
 
-export enum BufferUsage {
-  StaticDraw = 35044,
-  DynamicDraw = 35048,
+export enum BufferUse {
+  StaticDraw = 0,
+  DynamicDraw = 1,
 }
 
 export type PixelFormat =

@@ -9,7 +9,7 @@ import { Material } from '@modules/renderer/engine/objects/materials/Material.js
 import { Intersection, Raycaster } from '@modules/renderer/engine/core/Raycaster.js';
 import { Color } from '@modules/renderer/engine/math/Color.js';
 import { BufferAttribute } from '@modules/renderer/engine/core/attributes/BufferAttribute.js';
-import { GPUVertexStepModeType } from '@modules/renderer/engine/renderers/utils/constants.js';
+import { BufferStep } from '@modules/renderer/engine/renderers/utils/constants.js';
 
 const _instanceLocalMatrix = new Mat4();
 const _instanceWorldMatrix = new Mat4();
@@ -33,7 +33,7 @@ export class InstancedMesh extends Mesh {
   constructor(geometry: Geometry, material: Material, count: number) {
     super(geometry, material);
 
-    this.instanceMatrix = new BufferAttribute(new Float32Array(count * 16), 16, 0, GPUVertexStepModeType.Instance);
+    this.instanceMatrix = new BufferAttribute(new Float32Array(count * 16), 16, 0, BufferStep.Instance);
     this.instanceColor = null;
     this.morphTexture = null;
     this.count = count;
@@ -185,7 +185,7 @@ export class InstancedMesh extends Mesh {
         new Float32Array(this.instanceMatrix.count * 3),
         3,
         0,
-        GPUVertexStepModeType.Instance,
+        BufferStep.Instance,
       );
     }
 

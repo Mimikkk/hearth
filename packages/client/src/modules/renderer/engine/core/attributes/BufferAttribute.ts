@@ -1,12 +1,12 @@
 import { Vec3 } from '../../math/Vec3.js';
 import { Vec2 } from '../../math/Vec2.js';
 import { NumberArray, TypedArray } from '../../math/MathUtils.js';
-import { BufferUsage } from '../../constants.js';
+import { BufferUse } from '../../constants.js';
 import { Mat3 } from '@modules/renderer/engine/math/Mat3.js';
 import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
 import { Buffer } from '../buffers/Buffer.js';
 import { Const } from '@modules/renderer/engine/math/types.js';
-import { GPUBufferBindingTypeType, GPUVertexStepModeType } from '@modules/renderer/engine/renderers/utils/constants.js';
+import { GPUBufferBindingTypeType, BufferStep } from '@modules/renderer/engine/renderers/utils/constants.js';
 
 export class BufferAttribute<T extends TypedArray = any> {
   declare isBufferAttribute: true;
@@ -14,13 +14,11 @@ export class BufferAttribute<T extends TypedArray = any> {
   name: string;
   version: number;
 
-  usage: BufferUsage = BufferUsage.StaticDraw;
-
   constructor(
     source: T | Buffer<T>,
     public span: number,
     public offset: number = 0,
-    public step: GPUVertexStepModeType = GPUVertexStepModeType.Vertex,
+    public step: BufferStep = BufferStep.Vertex,
     public bind?: GPUBufferBindingTypeType,
   ) {
     if (source instanceof Buffer) {
@@ -30,8 +28,21 @@ export class BufferAttribute<T extends TypedArray = any> {
     }
 
     this.name = '';
-    this.usage = BufferUsage.StaticDraw;
+    this.usage = BufferUse.StaticDraw;
     this.version = 0;
+  }
+
+  set usage(value: BufferUse) {
+    this.source.use = value;
+  }
+
+  get usage(): BufferUse {
+    return this.source.use;
+  }
+
+  setUsage(value: BufferUse) {
+    this.source.use = value;
+    return this;
   }
 
   get array(): T {
@@ -47,7 +58,7 @@ export class BufferAttribute<T extends TypedArray = any> {
   }
 
   get isInstancedBufferAttribute(): boolean {
-    return this.step === GPUVertexStepModeType.Instance;
+    return this.step === BufferStep.Instance;
   }
 
   get isStorageInstancedBufferAttribute(): boolean {
@@ -68,11 +79,6 @@ export class BufferAttribute<T extends TypedArray = any> {
 
   get count(): number {
     return this.source.count;
-  }
-
-  setUsage(value: BufferUsage) {
-    this.usage = value;
-    return this;
   }
 
   applyMat3(m: Const<Mat3>): this {

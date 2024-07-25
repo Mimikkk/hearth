@@ -3,8 +3,8 @@ import { instancedBufferAttribute, instancedDynamicBufferAttribute } from './Buf
 import { normalLocal } from './NormalNode.js';
 import { positionLocal } from './PositionNode.js';
 import { mat3, mat4, nodeProxy, vec3 } from '../shadernode/ShaderNodes.js';
-import { BufferUsage, Buffer } from '@modules/renderer/engine/engine.js';
-import { GPUVertexStepModeType } from '@modules/renderer/engine/renderers/utils/constants.js';
+import { Buffer, BufferUse } from '@modules/renderer/engine/engine.js';
+import { BufferStep } from '@modules/renderer/engine/renderers/utils/constants.js';
 
 class InstanceNode extends Node {
   static type = 'InstanceNode';
@@ -23,12 +23,10 @@ class InstanceNode extends Node {
     if (instanceMatrixNode === null) {
       const instanceMesh = this.instanceMesh;
       const instanceAttribute = instanceMesh.instanceMatrix;
-      const buffer = new Buffer(instanceAttribute.array, 16, GPUVertexStepModeType.Instance);
+      const buffer = new Buffer(instanceAttribute.array, 16, BufferStep.Instance);
 
       const bufferFn =
-        instanceAttribute.usage === BufferUsage.DynamicDraw
-          ? instancedDynamicBufferAttribute
-          : instancedBufferAttribute;
+        instanceAttribute.usage === BufferUse.DynamicDraw ? instancedDynamicBufferAttribute : instancedBufferAttribute;
 
       const instanceBuffers = [
         // F.Signature -> bufferAttribute( array, type, stride, offset )

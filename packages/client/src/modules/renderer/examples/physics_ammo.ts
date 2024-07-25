@@ -13,7 +13,7 @@ import { MeshLambertMaterial } from '@modules/renderer/engine/objects/materials/
 import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
 import { InstancedMesh } from '@modules/renderer/engine/objects/InstancedMesh.js';
 import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
-import { BufferUsage } from '@modules/renderer/engine/constants.js';
+import { BufferUse } from '@modules/renderer/engine/constants.js';
 import Stats from 'stats-js';
 import { IcosahedronGeometry } from '@modules/renderer/engine/objects/geometries/IcosahedronGeometry.js';
 
@@ -55,7 +55,7 @@ const color = Color.new();
 
 const geometryBox = new BoxGeometry(0.075, 0.075, 0.075);
 const boxes = new InstancedMesh(geometryBox, material, 2);
-boxes.instanceMatrix.setUsage(BufferUsage.DynamicDraw); // will be updated every frame
+boxes.instanceMatrix.setUsage(BufferUse.DynamicDraw); // will be updated every frame
 // boxes.castShadow = false;
 // boxes.receiveShadow = false;
 boxes.userData.physics = { mass: 1 };
@@ -71,7 +71,7 @@ for (let i = 0; i < boxes.count; i++) {
 
 const geometrySphere = new IcosahedronGeometry(0.05, 4);
 const spheres = new InstancedMesh(geometrySphere, material, 2);
-spheres.instanceMatrix.setUsage(BufferUsage.DynamicDraw); // will be updated every frame
+spheres.instanceMatrix.setUsage(BufferUse.DynamicDraw); // will be updated every frame
 spheres.castShadow = true;
 spheres.receiveShadow = true;
 spheres.userData.physics = { mass: 1 };

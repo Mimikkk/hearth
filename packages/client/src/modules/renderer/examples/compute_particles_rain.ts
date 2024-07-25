@@ -29,7 +29,7 @@ import { GUI } from 'lil-gui';
 import * as GeometryUtils from '@modules/renderer/engine/utils/GeometryUtils.js';
 import { BufferGeometryLoader } from '@modules/renderer/engine/loaders/geometries/BufferGeometryLoader/BufferGeometryLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import { GPUBufferBindingTypeType, GPUVertexStepModeType } from '@modules/renderer/engine/renderers/utils/constants.js';
+import { GPUBufferBindingTypeType, BufferStep } from '@modules/renderer/engine/renderers/utils/constants.js';
 
 const maxParticleCount = 50000;
 const instanceCount = maxParticleCount / 2;
@@ -93,7 +93,7 @@ async function init() {
         new Float32Array(maxParticleCount * 3),
         3,
         0,
-        GPUVertexStepModeType.Instance,
+        BufferStep.Instance,
         GPUBufferBindingTypeType.Storage,
       ),
       type,

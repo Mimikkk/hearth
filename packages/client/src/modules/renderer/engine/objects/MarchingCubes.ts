@@ -1,4 +1,4 @@
-import { BufferAttribute, BufferUsage, Color, Geometry, Material, Mesh, Sphere, Vec3 } from '../engine.js';
+import { BufferAttribute, BufferUse, Color, Geometry, Material, Mesh, Sphere, Vec3 } from '../engine.js';
 
 export class MarchingCubes extends Mesh {
   declare isMarchingCubes: true;
@@ -96,25 +96,25 @@ export class MarchingCubes extends Mesh {
 
       this.positionArray = new Float32Array(maxVertexCount * 3);
       const positionAttribute = new BufferAttribute(this.positionArray, 3);
-      positionAttribute.setUsage(BufferUsage.DynamicDraw);
+      positionAttribute.setUsage(BufferUse.DynamicDraw);
       geometry.setAttribute('position', positionAttribute);
 
       this.normalArray = new Float32Array(maxVertexCount * 3);
       const normalAttribute = new BufferAttribute(this.normalArray, 3);
-      normalAttribute.setUsage(BufferUsage.DynamicDraw);
+      normalAttribute.setUsage(BufferUse.DynamicDraw);
       geometry.setAttribute('normal', normalAttribute);
 
       if (this.enableUvs) {
         this.uvArray = new Float32Array(maxVertexCount * 2);
         const uvAttribute = new BufferAttribute(this.uvArray, 2);
-        uvAttribute.setUsage(BufferUsage.DynamicDraw);
+        uvAttribute.setUsage(BufferUse.DynamicDraw);
         geometry.setAttribute('uv', uvAttribute);
       }
 
       if (this.enableColors) {
         this.colorArray = new Float32Array(maxVertexCount * 3);
         const colorAttribute = new BufferAttribute(this.colorArray, 3);
-        colorAttribute.setUsage(BufferUsage.DynamicDraw);
+        colorAttribute.setUsage(BufferUse.DynamicDraw);
         geometry.setAttribute('color', colorAttribute);
       }
 

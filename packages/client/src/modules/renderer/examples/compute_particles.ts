@@ -20,7 +20,7 @@ import Stats from 'stats-js';
 import { GUI } from 'lil-gui';
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import { GPUBufferBindingTypeType, GPUVertexStepModeType } from '@modules/renderer/engine/renderers/utils/constants.js';
+import { GPUBufferBindingTypeType, BufferStep } from '@modules/renderer/engine/renderers/utils/constants.js';
 
 const particleCount = 1000000;
 
@@ -60,7 +60,7 @@ async function init() {
         new Float32Array(particleCount * 3),
         3,
         0,
-        GPUVertexStepModeType.Instance,
+        BufferStep.Instance,
         GPUBufferBindingTypeType.Storage,
       ),
       'vec3',

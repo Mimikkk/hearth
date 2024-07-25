@@ -55,7 +55,7 @@ import { KTX2Loader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/
 import { MeshoptDecoder } from 'meshoptimizer';
 import { DRACOLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/DRACOLoader.js';
 import { classLoader } from '@modules/renderer/engine/loaders/types.js';
-import { GPUVertexStepModeType } from '@modules/renderer/engine/renderers/utils/constants.js';
+import { BufferStep } from '@modules/renderer/engine/renderers/utils/constants.js';
 
 export type PluginFn = (parser: Parser) => Plugin;
 
@@ -1290,12 +1290,7 @@ class GLTFMeshGpuInstancing implements Plugin {
         for (const attributeName in attributes) {
           if (attributeName === '_COLOR_0') {
             const attr = attributes[attributeName];
-            instancedMesh.instanceColor = new BufferAttribute(
-              attr.array,
-              attr.stride,
-              0,
-              GPUVertexStepModeType.Instance,
-            );
+            instancedMesh.instanceColor = new BufferAttribute(attr.array, attr.stride, 0, BufferStep.Instance);
           } else if (attributeName !== 'TRANSLATION' && attributeName !== 'ROTATION' && attributeName !== 'SCALE') {
             mesh.geometry.setAttribute(attributeName, attributes[attributeName]);
           }
@@ -2342,7 +2337,7 @@ class Parser {
           ib,
           itemSize,
           (byteOffset % byteStride) / elementBytes,
-          GPUVertexStepModeType.Vertex,
+          BufferStep.Vertex,
           undefined,
           true,
         );

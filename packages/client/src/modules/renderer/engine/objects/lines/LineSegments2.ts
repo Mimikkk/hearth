@@ -17,7 +17,7 @@ import {
 import { LineSegmentsGeometry } from './LineSegmentsGeometry.js';
 import { LineMaterial } from './LineMaterial.js';
 import { Intersection } from '@modules/renderer/engine/core/Raycaster.js';
-import { GPUVertexStepModeType } from '@modules/renderer/engine/renderers/utils/constants.js';
+import { BufferStep } from '@modules/renderer/engine/renderers/utils/constants.js';
 
 const _start = Vec3.new();
 const _end = Vec3.new();
@@ -237,11 +237,11 @@ export class LineSegments2 extends Mesh {
 
     geometry.setAttribute(
       'instanceDistanceStart',
-      new BufferAttribute(instanceDistanceBuffer, 1, 0, GPUVertexStepModeType.Instance),
+      new BufferAttribute(instanceDistanceBuffer, 1, 0, BufferStep.Instance),
     ); // d0
     geometry.setAttribute(
       'instanceDistanceEnd',
-      new BufferAttribute(instanceDistanceBuffer, 1, 1, GPUVertexStepModeType.Instance),
+      new BufferAttribute(instanceDistanceBuffer, 1, 1, BufferStep.Instance),
     ); // d1
 
     return this;

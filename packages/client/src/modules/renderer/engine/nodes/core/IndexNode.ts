@@ -2,7 +2,7 @@ import Node from './Node.js';
 import { varying } from './VaryingNode.js';
 import { nodeImmutable } from '../shadernode/ShaderNodes.js';
 import { ShaderStage } from '@modules/renderer/engine/renderers/nodes/NodeBuilder.types.js';
-import { GPUVertexStepModeType } from '@modules/renderer/engine/renderers/utils/constants.js';
+import { BufferStep } from '@modules/renderer/engine/renderers/utils/constants.js';
 
 class IndexNode extends Node {
   static type = 'IndexNode';
@@ -43,8 +43,8 @@ class IndexNode extends Node {
   }
 }
 
-IndexNode.VERTEX = GPUVertexStepModeType.Vertex;
-IndexNode.INSTANCE = GPUVertexStepModeType.Instance;
+IndexNode.VERTEX = BufferStep.Vertex;
+IndexNode.INSTANCE = BufferStep.Instance;
 
 export default IndexNode;
 

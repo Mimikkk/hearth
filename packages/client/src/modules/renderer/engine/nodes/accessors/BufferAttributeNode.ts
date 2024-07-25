@@ -1,9 +1,9 @@
 import InputNode from '../core/InputNode.js';
 import { varying } from '../core/VaryingNode.js';
 import { addNodeElement, nodeObject } from '../shadernode/ShaderNodes.js';
-import { Buffer, BufferAttribute, BufferUsage } from '@modules/renderer/engine/engine.js';
+import { Buffer, BufferAttribute, BufferUse } from '@modules/renderer/engine/engine.js';
 import { ShaderStage } from '@modules/renderer/engine/renderers/nodes/NodeBuilder.types.js';
-import { GPUVertexStepModeType } from '@modules/renderer/engine/renderers/utils/constants.js';
+import { BufferStep } from '@modules/renderer/engine/renderers/utils/constants.js';
 
 class BufferAttributeNode extends InputNode {
   static type = 'BufferAttributeNode';
@@ -17,7 +17,7 @@ class BufferAttributeNode extends InputNode {
     this.bufferStride = bufferStride;
     this.bufferOffset = bufferOffset;
 
-    this.usage = BufferUsage.StaticDraw;
+    this.usage = BufferUse.StaticDraw;
     this.instanced = false;
 
     this.attribute = null;
@@ -47,17 +47,10 @@ class BufferAttributeNode extends InputNode {
     const offset = this.bufferOffset;
 
     const buffer = array.isInterleavedBuffer === true ? array : new Buffer(array, stride);
-    const bufferAttribute = new BufferAttribute(
-      buffer,
-      itemSize,
-      offset,
-      GPUVertexStepModeType.Vertex,
-      undefined,
-      true,
-    );
+    const bufferAttribute = new BufferAttribute(buffer, itemSize, offset, BufferStep.Vertex, undefined, true);
 
     this.attribute = bufferAttribute;
-    this.attribute.step = GPUVertexStepModeType.Instance;
+    this.attribute.step = BufferStep.Instance;
   }
 
   generate(builder) {
@@ -103,7 +96,7 @@ export default BufferAttributeNode;
 export const bufferAttribute = (array, type, stride, offset) =>
   nodeObject(new BufferAttributeNode(array, type, stride, offset));
 export const dynamicBufferAttribute = (array, type, stride, offset) =>
-  bufferAttribute(array, type, stride, offset).setUsage(BufferUsage.DynamicDraw);
+  bufferAttribute(array, type, stride, offset).setUsage(BufferUse.DynamicDraw);
 
 export const instancedBufferAttribute = (array, type, stride, offset) =>
   bufferAttribute(array, type, stride, offset).setInstanced(true);
