@@ -4,6 +4,7 @@ import { tslFn } from '@modules/renderer/engine/nodes/shadernode/tslFn.js';
 import { handlers } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.handlers.js';
 import { WeakMemo } from '@modules/renderer/engine/renderers/WeakMemo.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
+import { Node } from '@modules/renderer/engine/nodes/core/Node.js';
 
 const memo = WeakMemo.as<Node, Node>((object, memo) => {
   const node = new Proxy(object, handlers);
@@ -11,7 +12,7 @@ const memo = WeakMemo.as<Node, Node>((object, memo) => {
   return node;
 });
 
-export const createShaderNodeObject = (object: Node, fallback: TypeName): Node => {
+export const createShaderNodeObject = (object: Node, fallback?: TypeName): Node => {
   const type = getValueType(object);
 
   if (type === 'node') return memo.get(object);

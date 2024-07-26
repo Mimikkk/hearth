@@ -1,24 +1,28 @@
 import TempNode from '../core/TempNode.js';
 import { div, mul, sub } from './OperatorNode.js';
 import { addNodeElement, f32, nodeObject, nodeProxy, vec3, vec4 } from '../shadernode/ShaderNodes.js';
+import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
+import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
+import { Node } from '../core/Node.js';
 
 class MathNode extends TempNode {
   static type = 'MathNode';
+  declare method: UnaryVariant | BinaryVariant | TernaryVariant;
 
-  constructor(method, aNode, bNode = null, cNode = null) {
+  constructor(
+    public aNode: Node,
+    public bNode: Node | null = null,
+    public cNode: Node | null = null,
+  ) {
     super();
-
-    this.method = method;
-
-    this.aNode = aNode;
-    this.bNode = bNode;
-    this.cNode = cNode;
   }
 
-  getInputType(builder) {
-    const aType = this.aNode.getNodeType(builder);
-    const bType = this.bNode ? this.bNode.getNodeType(builder) : null;
-    const cType = this.cNode ? this.cNode.getNodeType(builder) : null;
+  getInputType(builder: NodeBuilder): TypeName {
+    const { aNode, bNode, cNode } = this;
+
+    const aType = aNode.getNodeType(builder);
+    const bType = bNode?.getNodeType(builder) ?? null;
+    const cType = cNode?.getNodeType(builder) ?? null;
 
     const aLen = builder.isMatrix(aType) ? 0 : builder.getTypeLength(aType);
     const bLen = builder.isMatrix(bType) ? 0 : builder.getTypeLength(bType);
@@ -35,7 +39,7 @@ class MathNode extends TempNode {
     return aType;
   }
 
-  getNodeType(builder) {
+  getNodeType(builder: NodeBuilder): TypeName {
     const method = this.method;
 
     if (method === MathNode.LENGTH || method === MathNode.DISTANCE || method === MathNode.DOT) {
@@ -53,7 +57,7 @@ class MathNode extends TempNode {
     }
   }
 
-  generate(builder, output) {
+  generate(builder: NodeBuilder, output: TypeName): string | null {
     const method = this.method;
 
     const type = this.getNodeType(builder);
@@ -123,6 +127,65 @@ class MathNode extends TempNode {
   }
 }
 
+enum UnaryVariant {
+  All = 'all',
+  Any = 'any',
+  Equals = 'equals',
+  Radians = 'radians',
+  Degrees = 'degrees',
+  Exp = 'exp',
+  Exp2 = 'exp2',
+  Log = 'log',
+  Log2 = 'log2',
+  Sqrt = 'sqrt',
+  InverseSqrt = 'inverseSqrt',
+  Floor = 'floor',
+  Ceil = 'ceil',
+  Normalize = 'normalize',
+  Fract = 'fract',
+  Sin = 'sin',
+  Cos = 'cos',
+  Tan = 'tan',
+  Asin = 'asin',
+  Acos = 'acos',
+  Atan = 'atan',
+  Abs = 'abs',
+  Sign = 'sign',
+  Length = 'length',
+  Negate = 'negate',
+  OneMinus = 'oneMinus',
+  Dpdx = 'dpdx',
+  Dpdy = 'dpdy',
+  Round = 'round',
+  Reciprocal = 'reciprocal',
+  Trunc = 'trunc',
+  Fwidth = 'fwidth',
+  Bitcast = 'bitcast',
+}
+
+enum BinaryVariant {
+  Atan2 = 'atan2',
+  Min = 'min',
+  Max = 'max',
+  Mod = 'mod',
+  Step = 'step',
+  Reflect = 'reflect',
+  Distance = 'distance',
+  Difference = 'difference',
+  Dot = 'dot',
+  Cross = 'cross',
+  Pow = 'pow',
+  TransformDirection = 'transformDirection',
+}
+
+enum TernaryVariant {
+  Mix = 'mix',
+  Clamp = 'clamp',
+  Refract = 'refract',
+  Smoothstep = 'smoothstep',
+  FaceForward = 'faceforward',
+}
+
 // 1 input
 
 MathNode.ALL = 'all';
@@ -190,66 +253,292 @@ export const INFINITY = f32(1e6);
 export const PI = f32(Math.PI);
 export const PI2 = f32(Math.PI * 2);
 
-export const all = nodeProxy(MathNode, MathNode.ALL);
-export const any = nodeProxy(MathNode, MathNode.ANY);
-export const equals = nodeProxy(MathNode, MathNode.EQUALS);
+export const all = nodeProxy(
+  class extends MathNode {
+    method = UnaryVariant.All;
+  },
+);
+export const any = nodeProxy(
+  class extends MathNode {
+    method = UnaryVariant.Any;
+  },
+);
+export const equals = nodeProxy(
+  class extends MathNode {
+    method = UnaryVariant.Equals;
+  },
+);
+export const radians = nodeProxy(
+  class extends MathNode {
+    method = UnaryVariant.Radians;
+  },
+);
+export const degrees = nodeProxy(
+  class extends MathNode {
+    method = UnaryVariant.Degrees;
+  },
+);
+export const exp = nodeProxy(
+  class extends MathNode {
+    method = UnaryVariant.Exp;
+  },
+);
+export const exp2 = nodeProxy(
+  class extends MathNode {
+    method = UnaryVariant.Exp2;
+  },
+);
+export const log = nodeProxy(
+  class extends MathNode {
+    method = UnaryVariant.Log;
+  },
+);
+export const log2 = nodeProxy(
+  class extends MathNode {
+    method = UnaryVariant.Log2;
+  },
+);
+export const sqrt = nodeProxy(
+  class extends MathNode {
+    method = UnaryVariant.Sqrt;
+  },
+);
+export const inverseSqrt = nodeProxy(
+  class extends MathNode {
+    method = UnaryVariant.InverseSqrt;
+  },
+);
+export const floor = nodeProxy(
+  class extends MathNode {
+    method = UnaryVariant.Floor;
+  },
+);
+export const ceil = nodeProxy(
+  class extends MathNode {
+    method = UnaryVariant.Ceil;
+  },
+);
+export const normalize = nodeProxy(
+  class extends MathNode {
+    method = UnaryVariant.Normalize;
+  },
+);
+export const fract = nodeProxy(
+  class extends MathNode {
+    method = UnaryVariant.Fract;
+  },
+);
+export const sin = nodeProxy(
+  class extends MathNode {
+    method = UnaryVariant.Sin;
+  },
+);
+export const cos = nodeProxy(
+  class extends MathNode {
+    method = UnaryVariant.Cos;
+  },
+);
+export const tan = nodeProxy(
+  class extends MathNode {
+    method = UnaryVariant.Tan;
+  },
+);
+export const asin = nodeProxy(
+  class extends MathNode {
+    method = UnaryVariant.Asin;
+  },
+);
+export const acos = nodeProxy(
+  class extends MathNode {
+    method = UnaryVariant.Acos;
+  },
+);
+export const atan = nodeProxy(
+  class extends MathNode {
+    method = UnaryVariant.Atan;
+  },
+);
+export const abs = nodeProxy(
+  class extends MathNode {
+    method = UnaryVariant.Abs;
+  },
+);
+export const sign = nodeProxy(
+  class extends MathNode {
+    method = UnaryVariant.Sign;
+  },
+);
+export const length = nodeProxy(
+  class extends MathNode {
+    method = UnaryVariant.Length;
+  },
+);
+export const negate = nodeProxy(
+  class extends MathNode {
+    method = UnaryVariant.Negate;
+  },
+);
+export const oneMinus = nodeProxy(
+  class extends MathNode {
+    method = UnaryVariant.OneMinus;
+  },
+);
+export const dpdx = nodeProxy(
+  class extends MathNode {
+    method = UnaryVariant.Dpdx;
+  },
+);
+export const dpdy = nodeProxy(
+  class extends MathNode {
+    method = UnaryVariant.Dpdy;
+  },
+);
+export const round = nodeProxy(
+  class extends MathNode {
+    method = UnaryVariant.Round;
+  },
+);
+export const reciprocal = nodeProxy(
+  class extends MathNode {
+    method = UnaryVariant.Reciprocal;
+  },
+);
+export const trunc = nodeProxy(
+  class extends MathNode {
+    method = UnaryVariant.Trunc;
+  },
+);
+export const fwidth = nodeProxy(
+  class extends MathNode {
+    method = UnaryVariant.Fwidth;
+  },
+);
+export const bitcast = nodeProxy(
+  class extends MathNode {
+    method = UnaryVariant.Bitcast;
+  },
+);
 
-export const radians = nodeProxy(MathNode, MathNode.RADIANS);
-export const degrees = nodeProxy(MathNode, MathNode.DEGREES);
-export const exp = nodeProxy(MathNode, MathNode.EXP);
-export const exp2 = nodeProxy(MathNode, MathNode.EXP2);
-export const log = nodeProxy(MathNode, MathNode.LOG);
-export const log2 = nodeProxy(MathNode, MathNode.LOG2);
-export const sqrt = nodeProxy(MathNode, MathNode.SQRT);
-export const inverseSqrt = nodeProxy(MathNode, MathNode.INVERSE_SQRT);
-export const floor = nodeProxy(MathNode, MathNode.FLOOR);
-export const ceil = nodeProxy(MathNode, MathNode.CEIL);
-export const normalize = nodeProxy(MathNode, MathNode.NORMALIZE);
-export const fract = nodeProxy(MathNode, MathNode.FRACT);
-export const sin = nodeProxy(MathNode, MathNode.SIN);
-export const cos = nodeProxy(MathNode, MathNode.COS);
-export const tan = nodeProxy(MathNode, MathNode.TAN);
-export const asin = nodeProxy(MathNode, MathNode.ASIN);
-export const acos = nodeProxy(MathNode, MathNode.ACOS);
-export const atan = nodeProxy(MathNode, MathNode.ATAN);
-export const abs = nodeProxy(MathNode, MathNode.ABS);
-export const sign = nodeProxy(MathNode, MathNode.SIGN);
-export const length = nodeProxy(MathNode, MathNode.LENGTH);
-export const negate = nodeProxy(MathNode, MathNode.NEGATE);
-export const oneMinus = nodeProxy(MathNode, MathNode.ONE_MINUS);
-export const dpdx = nodeProxy(MathNode, MathNode.dpdx);
-export const dpdy = nodeProxy(MathNode, MathNode.dpdy);
-export const round = nodeProxy(MathNode, MathNode.ROUND);
-export const reciprocal = nodeProxy(MathNode, MathNode.RECIPROCAL);
-export const trunc = nodeProxy(MathNode, MathNode.TRUNC);
-export const fwidth = nodeProxy(MathNode, MathNode.FWIDTH);
-export const bitcast = nodeProxy(MathNode, MathNode.BITCAST);
+export const atan2 = nodeProxy(
+  class extends MathNode {
+    method = BinaryVariant.Atan2;
+  },
+);
+export const min = nodeProxy(
+  class extends MathNode {
+    method = BinaryVariant.Min;
+  },
+);
+export const max = nodeProxy(
+  class extends MathNode {
+    method = BinaryVariant.Max;
+  },
+);
+export const mod = nodeProxy(
+  class extends MathNode {
+    method = BinaryVariant.Mod;
+  },
+);
+export const step = nodeProxy(
+  class extends MathNode {
+    method = BinaryVariant.Step;
+  },
+);
+export const reflect = nodeProxy(
+  class extends MathNode {
+    method = BinaryVariant.Reflect;
+  },
+);
+export const distance = nodeProxy(
+  class extends MathNode {
+    method = BinaryVariant.Distance;
+  },
+);
+export const difference = nodeProxy(
+  class extends MathNode {
+    method = BinaryVariant.Difference;
+  },
+);
+export const dot = nodeProxy(
+  class extends MathNode {
+    method = BinaryVariant.Dot;
+  },
+);
+export const cross = nodeProxy(
+  class extends MathNode {
+    method = BinaryVariant.Cross;
+  },
+);
+export const pow = nodeProxy(
+  class extends MathNode {
+    method = BinaryVariant.Pow;
+  },
+);
+export const pow2 = nodeProxy(
+  class extends MathNode {
+    method = BinaryVariant.Pow;
 
-export const atan2 = nodeProxy(MathNode, MathNode.ATAN2);
-export const min = nodeProxy(MathNode, MathNode.MIN);
-export const max = nodeProxy(MathNode, MathNode.MAX);
-export const mod = nodeProxy(MathNode, MathNode.MOD);
-export const step = nodeProxy(MathNode, MathNode.STEP);
-export const reflect = nodeProxy(MathNode, MathNode.REFLECT);
-export const distance = nodeProxy(MathNode, MathNode.DISTANCE);
-export const difference = nodeProxy(MathNode, MathNode.DIFFERENCE);
-export const dot = nodeProxy(MathNode, MathNode.DOT);
-export const cross = nodeProxy(MathNode, MathNode.CROSS);
-export const pow = nodeProxy(MathNode, MathNode.POW);
-export const pow2 = nodeProxy(MathNode, MathNode.POW, 2);
-export const pow3 = nodeProxy(MathNode, MathNode.POW, 3);
-export const pow4 = nodeProxy(MathNode, MathNode.POW, 4);
-export const transformDirection = nodeProxy(MathNode, MathNode.TRANSFORM_DIRECTION);
+    constructor(aNode: Node) {
+      super(aNode);
+      this.bNode = f32(2);
+    }
+  },
+);
+export const pow3 = nodeProxy(
+  class extends MathNode {
+    method = BinaryVariant.Pow;
+
+    constructor(aNode: Node) {
+      super(aNode);
+      this.bNode = f32(3);
+    }
+  },
+);
+export const pow4 = nodeProxy(
+  class extends MathNode {
+    method = BinaryVariant.Pow;
+
+    constructor(aNode: Node) {
+      super(aNode);
+      this.bNode = f32(4);
+    }
+  },
+);
+export const transformDirection = nodeProxy(
+  class extends MathNode {
+    method = BinaryVariant.TransformDirection;
+  },
+);
 
 export const cbrt = a => mul(sign(a), pow(abs(a), 1.0 / 3.0));
 export const lengthSq = a => dot(a, a);
-export const mix = nodeProxy(MathNode, MathNode.MIX);
-export const clamp = (value, low = 0, high = 1) =>
-  nodeObject(new MathNode(MathNode.CLAMP, nodeObject(value), nodeObject(low), nodeObject(high)));
+export const mix = nodeProxy(
+  class extends MathNode {
+    method = TernaryVariant.Mix;
+  },
+);
+export const clamp = (value, low = 0, high = 1) => {
+  const math = new MathNode(nodeObject(value), nodeObject(low), nodeObject(high));
+  math.method = TernaryVariant.Clamp;
+  return nodeObject(math);
+};
+
 export const saturate = value => clamp(value);
-export const refract = nodeProxy(MathNode, MathNode.REFRACT);
-export const smoothstep = nodeProxy(MathNode, MathNode.SMOOTHSTEP);
-export const faceForward = nodeProxy(MathNode, MathNode.FACEFORWARD);
+export const refract = nodeProxy(
+  class extends MathNode {
+    method = TernaryVariant.Refract;
+  },
+);
+export const smoothstep = nodeProxy(
+  class extends MathNode {
+    method = TernaryVariant.Smoothstep;
+  },
+);
+export const faceForward = nodeProxy(
+  class extends MathNode {
+    method = TernaryVariant.FaceForward;
+  },
+);
 
 export const mixElement = (t, e1, e2) => mix(e1, e2, t);
 export const smoothstepElement = (x, low, high) => smoothstep(low, high, x);
