@@ -5,7 +5,7 @@ import ConvertNode from '@modules/renderer/engine/nodes/utils/ConvertNode.js';
 import JoinNode from '@modules/renderer/engine/nodes/utils/JoinNode.js';
 import ArrayElementNode from '@modules/renderer/engine/nodes/utils/ArrayElementNode.js';
 import SplitNode from '@modules/renderer/engine/nodes/utils/SplitNode.js';
-import { asNode, asNodes } from './CreateShaderNodeObject.js';
+import { asNode, asNodes } from './ShaderNode.asNode.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { Node } from '@modules/renderer/engine/nodes/core/Node.js';
 
@@ -67,8 +67,6 @@ export const imat4 = createConvertType(TypeName.imat4);
 export const umat4 = createConvertType(TypeName.umat4);
 export const bmat4 = createConvertType(TypeName.bmat4);
 
-export { asNode, asNodes };
-
 export const proxyNode =
   <T extends new (...params: Node[]) => any>(NodeClass: T) =>
   (...params: any[]): InstanceType<T> =>
@@ -80,3 +78,5 @@ export const fixedNode = <T extends new (...params: Node[]) => any>(NodeClass: T
 export const element = proxyNode(ArrayElementNode);
 export const convert = (node, types) => asNode(new ConvertNode(asNode(node), types));
 export const split = (node, channels) => asNode(new SplitNode(asNode(node), channels));
+
+export { asNode, asNodes };

@@ -1,5 +1,5 @@
 import Node from '../core/Node.js';
-import { asNode } from '@modules/renderer/engine/nodes/shadernode/CreateShaderNodeObject.js';
+import { asNode } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.asNode.js';
 import { handlers } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.handlers.js';
 
 const functionMapByBuilder = new WeakMap();

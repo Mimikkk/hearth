@@ -1,6 +1,6 @@
 import { NodeElements } from './ShaderNode.map.js';
 import { parseSwizzle } from './utils.js';
-import { asNode, asNodes } from './CreateShaderNodeObject.js';
+import { asNode, asNodes } from './ShaderNode.asNode.js';
 import SplitNode from '@modules/renderer/engine/nodes/utils/SplitNode.js';
 import ArrayElementNode from '@modules/renderer/engine/nodes/utils/ArrayElementNode.js';
 import ConstNode from '@modules/renderer/engine/nodes/core/ConstNode.js';
