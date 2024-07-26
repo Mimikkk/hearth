@@ -386,7 +386,7 @@ export class NodeBuilder {
     return this.getTypeFromLength(itemSize, arrayType);
   }
 
-  getTypeLength(type: TypeName): TypeName {
+  getTypeLength(type: TypeName): number {
     const vecType = this.getVectorType(type);
     const vecNum = /vec([2-4])/.exec(vecType);
 
