@@ -11,15 +11,15 @@ import { Entity } from '@modules/renderer/engine/core/Entity.js';
 export class ModelNode extends Node {
   static type = 'ModelNode';
   declare scope: NodeVariant;
-  declare object3d: Entity;
-  declare _uniformNode: UniformNode<any>;
+  declare entity: Entity;
+  declare uniform: UniformNode<any>;
 
   constructor() {
     super();
 
-    this.object3d = null!;
+    this.entity = null!;
     this.updateType = NodeUpdateType.Object;
-    this._uniformNode = new UniformNode(null);
+    this.uniform = new UniformNode(null);
   }
 
   getNodeType(): TypeName {
@@ -35,8 +35,8 @@ export class ModelNode extends Node {
   }
 
   update({ object, camera }: NodeFrame): void {
-    this.object3d = object;
-    const uniform = this._uniformNode;
+    this.entity = object;
+    const uniform = this.uniform;
 
     switch (this.scope) {
       case NodeVariant.ViewMatrix:
@@ -69,8 +69,8 @@ export class ModelNode extends Node {
   }
 
   generate(builder: NodeBuilder): string | null {
-    this._uniformNode.nodeType = this.getNodeType();
-    return this._uniformNode.build(builder);
+    this.uniform.nodeType = this.getNodeType();
+    return this.uniform.build(builder);
   }
 }
 

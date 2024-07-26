@@ -2,22 +2,20 @@ import Node from '../core/Node.js';
 import { NodeUpdateType } from '../core/constants.js';
 import UniformNode from '../core/UniformNode.js';
 import { nodeProxy } from '../shadernode/ShaderNodes.js';
-
 import { Entity, Vec3 } from '@modules/renderer/engine/engine.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import NodeFrame from '@modules/renderer/engine/nodes/core/NodeFrame.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
-class EntityNode extends Node {
+export class EntityNode extends Node {
   static type = 'EntityNode';
   scope: NodeVariant;
   object3d: any;
   _uniformNode: UniformNode<any>;
 
-  constructor(scope: NodeVariant, object3d: Entity) {
+  constructor(object3d: Entity) {
     super();
 
-    this.scope = scope;
     this.object3d = object3d;
     this.updateType = NodeUpdateType.Object;
     this._uniformNode = new UniformNode(null);
@@ -25,10 +23,10 @@ class EntityNode extends Node {
 
   getNodeType(): TypeName {
     switch (this.scope) {
-      case EntityNode.WORLD_MATRIX:
-      case EntityNode.VIEW_MATRIX:
+      case NodeVariant.WorldMatrix:
+      case NodeVariant.ViewMatrix:
         return TypeName.mat4;
-      case EntityNode.NORMAL_MATRIX:
+      case NodeVariant.NormalMatrix:
         return TypeName.mat3;
       default:
         return TypeName.vec3;
@@ -40,28 +38,28 @@ class EntityNode extends Node {
     const uniform = this._uniformNode;
 
     switch (this.scope) {
-      case EntityNode.VIEW_MATRIX:
+      case NodeVariant.ViewMatrix:
         uniform.value = object.modelViewMatrix;
         break;
-      case EntityNode.NORMAL_MATRIX:
+      case NodeVariant.NormalMatrix:
         uniform.value = object.normalMatrix;
         break;
-      case EntityNode.WORLD_MATRIX:
+      case NodeVariant.WorldMatrix:
         uniform.value = object.matrixWorld;
         break;
-      case EntityNode.POSITION:
+      case NodeVariant.Position:
         uniform.value = uniform.value || Vec3.new();
         uniform.value.fromMat4Position(object.matrixWorld);
         break;
-      case EntityNode.SCALE:
+      case NodeVariant.Scale:
         uniform.value = uniform.value || Vec3.new();
         uniform.value.fromMat4Scale(object.matrixWorld);
         break;
-      case EntityNode.DIRECTION:
+      case NodeVariant.Direction:
         uniform.value = uniform.value || Vec3.new();
         object.getWorldDirection(uniform.value);
         break;
-      case EntityNode.VIEW_POSITION:
+      case NodeVariant.ViewPosition:
         const camera = frame.camera;
         uniform.value = uniform.value || Vec3.new();
         uniform.value.fromMat4Position(object.matrixWorld);
@@ -76,6 +74,8 @@ class EntityNode extends Node {
   }
 }
 
+export default EntityNode;
+
 enum NodeVariant {
   NormalMatrix = 'normalMatrix',
   ViewPosition = 'viewPosition',
@@ -83,22 +83,41 @@ enum NodeVariant {
   ViewMatrix = 'viewMatrix',
   Position = 'position',
   Scale = 'scale',
+  Direction = 'direction',
 }
 
-EntityNode.VIEW_MATRIX = 'viewMatrix';
-EntityNode.NORMAL_MATRIX = 'normalMatrix';
-EntityNode.WORLD_MATRIX = 'worldMatrix';
-EntityNode.POSITION = 'position';
-EntityNode.SCALE = 'scale';
-EntityNode.VIEW_POSITION = 'viewPosition';
-EntityNode.DIRECTION = 'direction';
-
-export default EntityNode;
-
-export const objectDirection = nodeProxy(EntityNode, EntityNode.DIRECTION);
-export const objectViewMatrix = nodeProxy(EntityNode, EntityNode.VIEW_MATRIX);
-export const objectNormalMatrix = nodeProxy(EntityNode, EntityNode.NORMAL_MATRIX);
-export const objectWorldMatrix = nodeProxy(EntityNode, EntityNode.WORLD_MATRIX);
-export const objectPosition = nodeProxy(EntityNode, EntityNode.POSITION);
-export const objectScale = nodeProxy(EntityNode, EntityNode.SCALE);
-export const objectViewPosition = nodeProxy(EntityNode, EntityNode.VIEW_POSITION);
+export const objectDirection = nodeProxy(
+  class extends EntityNode {
+    scope = NodeVariant.Direction;
+  },
+);
+export const objectViewMatrix = nodeProxy(
+  class extends EntityNode {
+    scope = NodeVariant.ViewMatrix;
+  },
+);
+export const objectNormalMatrix = nodeProxy(
+  class extends EntityNode {
+    scope = NodeVariant.NormalMatrix;
+  },
+);
+export const objectWorldMatrix = nodeProxy(
+  class extends EntityNode {
+    scope = NodeVariant.WorldMatrix;
+  },
+);
+export const objectPosition = nodeProxy(
+  class extends EntityNode {
+    scope = NodeVariant.Position;
+  },
+);
+export const objectScale = nodeProxy(
+  class extends EntityNode {
+    scope = NodeVariant.Scale;
+  },
+);
+export const objectViewPosition = nodeProxy(
+  class extends EntityNode {
+    scope = NodeVariant.ViewPosition;
+  },
+);

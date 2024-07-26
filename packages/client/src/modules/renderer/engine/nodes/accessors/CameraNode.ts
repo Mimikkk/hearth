@@ -1,86 +1,176 @@
-import EntityNode from './EntityNode.js';
 import { NodeUpdateType } from '../core/constants.js';
-//import { sharedUniformGroup } from '../core/UniformGroupNode.js';
 import { nodeImmutable } from '../shadernode/ShaderNodes.js';
+import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
+import NodeFrame from '@modules/renderer/engine/nodes/core/NodeFrame.js';
+import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
+import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
+import Node from '@modules/renderer/engine/nodes/core/Node.js';
+import UniformNode from '@modules/renderer/engine/nodes/core/UniformNode.js';
+import { ICamera } from '@modules/renderer/engine/objects/cameras/Camera.js';
 
-//const cameraGroup = sharedUniformGroup( 'camera' );
-
-class CameraNode extends EntityNode {
+class CameraNode extends Node {
   static type = 'CameraNode';
+  scope: NodeVariant;
+  camera: ICamera;
+  uniform: UniformNode<any>;
 
-  constructor(scope = CameraNode.POSITION) {
-    super(scope);
+  constructor(camera: ICamera) {
+    super();
 
+    this.camera = camera;
+    this.uniform = new UniformNode(null);
     this.updateType = NodeUpdateType.Render;
-
-    //this._uniformNode.groupNode = cameraGroup;
   }
 
-  getNodeType(builder) {
-    const scope = this.scope;
-
-    if (scope === CameraNode.PROJECTION_MATRIX || scope === CameraNode.PROJECTION_MATRIX_INVERSE) {
-      return 'mat4';
-    } else if (scope === CameraNode.NEAR || scope === CameraNode.FAR || scope === CameraNode.LOG_DEPTH) {
-      return 'f32';
-    }
-
-    return super.getNodeType(builder);
-  }
-
-  update(frame) {
-    const camera = frame.camera;
-    const uniformNode = this._uniformNode;
-    const scope = this.scope;
-
-    //cameraGroup.needsUpdate = true;
-
-    if (scope === CameraNode.VIEW_MATRIX) {
-      uniformNode.value = camera.matrixWorldInverse;
-    } else if (scope === CameraNode.PROJECTION_MATRIX) {
-      uniformNode.value = camera.projectionMatrix;
-    } else if (scope === CameraNode.PROJECTION_MATRIX_INVERSE) {
-      uniformNode.value = camera.projectionMatrixInverse;
-    } else if (scope === CameraNode.NEAR) {
-      uniformNode.value = camera.near;
-    } else if (scope === CameraNode.FAR) {
-      uniformNode.value = camera.far;
-    } else if (scope === CameraNode.LOG_DEPTH) {
-      uniformNode.value = 2.0 / (Math.log(camera.far + 1.0) / Math.LN2);
-    } else {
-      this.object3d = camera;
-
-      super.update(frame);
+  getNodeType(): TypeName {
+    switch (this.scope) {
+      case NodeVariant.ProjectionMatrixInverse:
+      case NodeVariant.ProjectionMatrix:
+      case NodeVariant.WorldMatrix:
+      case NodeVariant.ViewMatrix:
+        return TypeName.mat4;
+      case NodeVariant.NormalMatrix:
+        return TypeName.mat3;
+      case NodeVariant.Far:
+      case NodeVariant.Near:
+      case NodeVariant.LogDepth:
+        return TypeName.f32;
+      default:
+        return TypeName.vec3;
     }
   }
 
-  generate(builder) {
-    const scope = this.scope;
+  update(frame: NodeFrame): void {
+    const camera = frame.camera as ICamera;
+    const uniform = this.uniform;
 
-    if (scope === CameraNode.PROJECTION_MATRIX || scope === CameraNode.PROJECTION_MATRIX_INVERSE) {
-      this._uniformNode.nodeType = 'mat4';
-    } else if (scope === CameraNode.NEAR || scope === CameraNode.FAR || scope === CameraNode.LOG_DEPTH) {
-      this._uniformNode.nodeType = 'f32';
+    this.camera = camera;
+    const object = this.camera;
+    switch (this.scope) {
+      case NodeVariant.ViewMatrix:
+        uniform.value = camera.matrixWorldInverse;
+        break;
+      case NodeVariant.ProjectionMatrix:
+        uniform.value = camera.projectionMatrix;
+        break;
+      case NodeVariant.ProjectionMatrixInverse:
+        uniform.value = camera.projectionMatrixInverse;
+        break;
+      case NodeVariant.Near:
+        uniform.value = camera.near;
+        break;
+      case NodeVariant.Far:
+        uniform.value = camera.far;
+        break;
+      case NodeVariant.LogDepth:
+        uniform.value = 2.0 / (Math.log(camera.far + 1.0) / Math.LN2);
+        break;
+      case NodeVariant.WorldMatrix:
+        uniform.value = object.matrixWorld;
+        break;
+      case NodeVariant.NormalMatrix:
+        uniform.value = object.normalMatrix;
+        break;
+      case NodeVariant.Position:
+        uniform.value = uniform.value || Vec3.new();
+        uniform.value.fromMat4Position(object.matrixWorld);
+        break;
+      case NodeVariant.Scale:
+        uniform.value = uniform.value || Vec3.new();
+        uniform.value.fromMat4Scale(object.matrixWorld);
+        break;
+      case NodeVariant.Direction:
+        uniform.value = uniform.value || Vec3.new();
+        object.getWorldDirection(uniform.value);
+        break;
+      case NodeVariant.ViewPosition:
+        uniform.value = uniform.value || Vec3.new();
+        uniform.value.fromMat4Position(object.matrixWorld);
+        uniform.value.applyMat4(camera.matrixWorldInverse);
+        break;
     }
+  }
 
-    return super.generate(builder);
+  generate(builder: NodeBuilder): string | null {
+    this.uniform.nodeType = this.getNodeType();
+    return this.uniform.build(builder);
   }
 }
 
-CameraNode.PROJECTION_MATRIX = 'projectionMatrix';
-CameraNode.PROJECTION_MATRIX_INVERSE = 'projectionMatrixInverse';
-CameraNode.NEAR = 'near';
-CameraNode.FAR = 'far';
-CameraNode.LOG_DEPTH = 'logDepth';
+enum NodeVariant {
+  ProjectionMatrixInverse = 'projectionMatrixInverse',
+  ProjectionMatrix = 'projectionMatrix',
+  NormalMatrix = 'normalMatrix',
+  WorldMatrix = 'worldMatrix',
+  ViewPosition = 'viewPosition',
+  ViewMatrix = 'viewMatrix',
+  Direction = 'direction',
+  Position = 'position',
+  LogDepth = 'logDepth',
+  Scale = 'scale',
+  Near = 'near',
+  Far = 'far',
+}
 
 export default CameraNode;
 
-export const cameraProjectionMatrix = nodeImmutable(CameraNode, CameraNode.PROJECTION_MATRIX);
-export const cameraProjectionMatrixInverse = nodeImmutable(CameraNode, CameraNode.PROJECTION_MATRIX_INVERSE);
-export const cameraNear = nodeImmutable(CameraNode, CameraNode.NEAR);
-export const cameraFar = nodeImmutable(CameraNode, CameraNode.FAR);
-export const cameraLogDepth = nodeImmutable(CameraNode, CameraNode.LOG_DEPTH);
-export const cameraViewMatrix = nodeImmutable(CameraNode, CameraNode.VIEW_MATRIX);
-export const cameraNormalMatrix = nodeImmutable(CameraNode, CameraNode.NORMAL_MATRIX);
-export const cameraWorldMatrix = nodeImmutable(CameraNode, CameraNode.WORLD_MATRIX);
-export const cameraPosition = nodeImmutable(CameraNode, CameraNode.POSITION);
+export const cameraProjectionMatrix = nodeImmutable(
+  class extends CameraNode {
+    scope = NodeVariant.ProjectionMatrix;
+  },
+);
+export const cameraProjectionMatrixInverse = nodeImmutable(
+  class extends CameraNode {
+    scope = NodeVariant.ProjectionMatrixInverse;
+  },
+);
+export const cameraNear = nodeImmutable(
+  class extends CameraNode {
+    scope = NodeVariant.Near;
+  },
+);
+export const cameraFar = nodeImmutable(
+  class extends CameraNode {
+    scope = NodeVariant.Far;
+  },
+);
+export const cameraLogDepth = nodeImmutable(
+  class extends CameraNode {
+    scope = NodeVariant.LogDepth;
+  },
+);
+export const cameraViewMatrix = nodeImmutable(
+  class extends CameraNode {
+    scope = NodeVariant.ViewMatrix;
+  },
+);
+export const cameraNormalMatrix = nodeImmutable(
+  class extends CameraNode {
+    scope = NodeVariant.NormalMatrix;
+  },
+);
+export const cameraWorldMatrix = nodeImmutable(
+  class extends CameraNode {
+    scope = NodeVariant.WorldMatrix;
+  },
+);
+export const cameraPosition = nodeImmutable(
+  class extends CameraNode {
+    scope = NodeVariant.Position;
+  },
+);
+export const cameraDirection = nodeImmutable(
+  class extends CameraNode {
+    scope = NodeVariant.Direction;
+  },
+);
+export const cameraViewPosition = nodeImmutable(
+  class extends CameraNode {
+    scope = NodeVariant.ViewPosition;
+  },
+);
+export const cameraScale = nodeImmutable(
+  class extends CameraNode {
+    scope = NodeVariant.Scale;
+  },
+);
