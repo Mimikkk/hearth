@@ -1,4 +1,3 @@
-import Stats from 'stats-js';
 import { Clock } from '@modules/renderer/engine/core/Clock.js';
 import { Scene } from '@modules/renderer/engine/objects/scenes/Scene.js';
 import { Color } from '@modules/renderer/engine/math/Color.js';
@@ -99,11 +98,6 @@ const renderer = await Renderer.create({ antialias: true });
 renderer.animation.loop = animate;
 renderer.parameters.toneMapping = ToneMapping.ACESFilmic;
 container.appendChild(renderer.parameters.canvas);
-
-const stats = new Stats();
-stats.domElement.style.position = 'absolute';
-stats.domElement.style.top = '0px';
-container.appendChild(stats.domElement);
 
 document.addEventListener('keydown', event => {
   keyStates[event.code] = true;

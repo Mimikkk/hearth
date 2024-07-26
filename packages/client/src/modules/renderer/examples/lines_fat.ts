@@ -2,8 +2,6 @@ import * as Engine from '@modules/renderer/engine/engine.js';
 
 import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 
-import Stats from 'stats-js';
-
 import { GUI } from 'lil-gui';
 import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
 import {
@@ -21,7 +19,6 @@ import { BufferAttribute, Color } from '@modules/renderer/engine/engine.js';
 let line, renderer, scene, camera, camera2, controls, backgroundNode;
 let line1;
 let matLine, matLineBasic, matLineDashed;
-let stats;
 let gui;
 
 // viewport
@@ -120,15 +117,10 @@ async function init() {
     camera2.updateProjectionMatrix();
   });
 
-  stats = new Stats();
-  document.body.appendChild(stats.dom);
-
   initGui();
 }
 
 function animate() {
-  stats.update();
-
   // main scene
 
   renderer._clearColor = Color.new(0x000000);

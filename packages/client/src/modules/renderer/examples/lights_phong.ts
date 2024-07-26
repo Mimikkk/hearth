@@ -11,8 +11,6 @@ import {
   uv,
 } from '@modules/renderer/engine/nodes/Nodes.js';
 
-import Stats from 'stats-js';
-
 import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
 import { TeapotGeometry } from '@modules/renderer/engine/objects/geometries/TeapotGeometry.js';
 
@@ -20,7 +18,7 @@ import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
-let camera, scene, renderer, light1, light2, light3, light4, stats, controls;
+let camera, scene, renderer, light1, light2, light3, light4, controls;
 
 init();
 
@@ -119,9 +117,6 @@ async function init() {
 
   // stats
 
-  stats = new Stats();
-  document.body.appendChild(stats.dom);
-
   useWindowResizer(renderer, camera);
 }
 
@@ -146,6 +141,4 @@ function animate() {
   light4.position.z = Math.sin(lightTime * 0.5) * 3;
 
   renderer.render(scene, camera);
-
-  stats.update();
 }

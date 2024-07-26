@@ -22,7 +22,6 @@ import {
 import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 
 import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
-import Stats from 'stats-js';
 
 import { GUI } from 'lil-gui';
 
@@ -35,7 +34,7 @@ const maxParticleCount = 50000;
 const instanceCount = maxParticleCount / 2;
 
 let camera, scene, renderer;
-let controls, stats;
+let controls;
 let computeParticles;
 let monkey;
 let clock;
@@ -303,8 +302,6 @@ async function init() {
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.animation.loop = animate;
   document.body.appendChild(renderer.parameters.canvas);
-  stats = new Stats();
-  document.body.appendChild(stats.dom);
 
   //
 
@@ -338,8 +335,6 @@ async function init() {
 }
 
 function animate() {
-  stats.update();
-
   const delta = clock.tick();
 
   if (monkey) {

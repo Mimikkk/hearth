@@ -17,7 +17,6 @@ import PostProcessing from '@modules/renderer/engine/renderers/PostProcessing.js
 
 import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
 
-import Stats from 'stats-js';
 import { ColorSpace } from '@modules/renderer/engine/engine.js';
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
@@ -26,7 +25,6 @@ let camera, scene, renderer;
 let model, mixer, clock;
 let postProcessing;
 let controls;
-let stats;
 
 init();
 
@@ -114,9 +112,6 @@ async function init() {
   renderer.animation.loop = animate;
   document.body.appendChild(renderer.parameters.canvas);
 
-  stats = new Stats();
-  document.body.appendChild(stats.dom);
-
   controls = new OrbitControls(camera, renderer.parameters.canvas);
   controls.minDistance = 1;
   controls.maxDistance = 10;
@@ -146,8 +141,6 @@ async function init() {
 }
 
 function animate() {
-  stats.update();
-
   controls.update();
 
   const delta = clock.tick();

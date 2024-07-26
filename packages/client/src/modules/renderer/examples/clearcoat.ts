@@ -2,8 +2,6 @@ import * as Engine from '@modules/renderer/engine/engine.js';
 
 import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 
-import Stats from 'stats-js';
-
 import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
 import { HDRCubeTextureLoader } from '@modules/renderer/engine/loaders/textures/HDRCubeTextureLoader/HDRCubeTextureLoader.js';
 
@@ -11,7 +9,7 @@ import { FlakesTexture } from '@modules/renderer/engine/objects/textures/FlakesT
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
-let container, stats;
+let container;
 
 let camera, scene, renderer;
 
@@ -168,9 +166,6 @@ async function init() {
 
   //
 
-  stats = new Stats();
-  container.appendChild(stats.dom);
-
   // EVENTS
 
   const controls = new OrbitControls(camera, renderer.parameters.canvas);
@@ -182,8 +177,6 @@ async function init() {
 
 function animate() {
   render();
-
-  stats.update();
 }
 
 function render() {

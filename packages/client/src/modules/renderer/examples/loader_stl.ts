@@ -1,4 +1,3 @@
-import Stats from 'stats-js';
 import { PerspectiveCamera } from '@modules/renderer/engine/objects/cameras/PerspectiveCamera.js';
 import { Vec3 } from '../engine/math/Vec3.js';
 import { Scene } from '@modules/renderer/engine/objects/scenes/Scene';
@@ -12,7 +11,7 @@ import { HemisphereLight } from '@modules/renderer/engine/objects/lights/Hemisph
 import { DirectionalLight } from '@modules/renderer/engine/objects/lights/DirectionalLight';
 import { Renderer } from '../engine/renderers/Renderer.js';
 
-let container, stats;
+let container;
 
 let camera, cameraTarget, scene, renderer;
 
@@ -124,9 +123,6 @@ async function init() {
 
   // stats
 
-  stats = new Stats();
-  container.appendChild(stats.dom);
-
   //
 
   window.addEventListener('resize', onWindowResize);
@@ -160,7 +156,6 @@ function onWindowResize() {
 
 function animate() {
   render();
-  stats?.update();
 }
 
 function render() {

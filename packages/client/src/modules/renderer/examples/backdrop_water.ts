@@ -30,7 +30,6 @@ import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitCo
 
 import { GUI } from 'lil-gui';
 
-import Stats from 'stats-js';
 import {
   AnimationMixer,
   BoxGeometry,
@@ -45,7 +44,6 @@ import {
   Mesh,
   PerspectiveCamera,
   Scene,
-  TextureLoader,
   Vec3,
   Wrapping,
 } from '@modules/renderer/engine/engine.js';
@@ -57,7 +55,6 @@ import { TextureLoader } from '@modules/renderer/engine/loaders/textures/Texture
 // let model, floor, floorPosition;
 // let postProcessing;
 // let controls;
-// let stats;
 
 const camera = new PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.25, 30);
 camera.position.set(3, 2, 4);
@@ -200,8 +197,6 @@ renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.animation.loop = animate;
 document.body.appendChild(renderer.parameters.canvas);
-const stats = new Stats();
-document.body.appendChild(stats.dom);
 
 const controls = new OrbitControls(camera, renderer.parameters.canvas);
 controls.minDistance = 1;
@@ -244,8 +239,6 @@ postProcessing.outputNode = waterMask.cond(
 useWindowResizer(renderer, camera);
 
 function animate() {
-  stats.update();
-
   controls.update();
 
   const delta = clock.tick();

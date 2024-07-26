@@ -577,15 +577,18 @@ export class Renderer {
     group: Group,
     lightsNode: LightsNode,
   ): void {
+    let overridePositionNode;
+    let overrideFragmentNode;
     object.onBeforeRender(this, scene, camera, geometry, material, group);
+
     material.onBeforeRender(this, scene, camera, geometry, material, group);
 
-    let overridePositionNode: PositionNode | undefined;
-    let overrideFragmentNode: ToneMappingNode | undefined;
-    if (scene.overrideMaterial) {
+    //
+
+    if (scene.overrideMaterial !== null) {
       const overrideMaterial = scene.overrideMaterial;
 
-      if (Node.is(material.positionNode)) {
+      if (material.positionNode && material.positionNode.isNode) {
         overridePositionNode = overrideMaterial.positionNode;
 
         overrideMaterial.positionNode = material.positionNode;
@@ -594,7 +597,7 @@ export class Renderer {
       if (overrideMaterial.isShadowNodeMaterial) {
         overrideMaterial.side = material.shadowSide === null ? material.side : material.shadowSide;
 
-        if (Node.is(material.shadowNode)) {
+        if (material.shadowNode && material.shadowNode.isNode) {
           overrideFragmentNode = overrideMaterial.fragmentNode;
           overrideMaterial.fragmentNode = material.shadowNode;
         }
@@ -619,23 +622,31 @@ export class Renderer {
       material = overrideMaterial;
     }
 
-    if (material.transparent && material.side === Side.Double) {
+    //
+
+    if (material.transparent === true && material.side === Side.Double) {
       material.side = Side.Back;
-      this._handleObjectFn(object, material, scene, camera, lightsNode, 'backSide');
+      this._handleObjectFn(object, material, scene, camera, lightsNode, 'backSide'); // create backSide pass id
+
       material.side = Side.Front;
-      this._handleObjectFn(object, material, scene, camera, lightsNode, 'default');
+      this._handleObjectFn(object, material, scene, camera, lightsNode); // use default pass id
 
       material.side = Side.Double;
     } else {
-      this._handleObjectFn(object, material, scene, camera, lightsNode, 'default');
+      this._handleObjectFn(object, material, scene, camera, lightsNode);
     }
 
-    if (scene.overrideMaterial) {
-      if (overridePositionNode) scene.overrideMaterial.positionNode = overridePositionNode;
-      if (overrideFragmentNode) scene.overrideMaterial.fragmentNode = overrideFragmentNode;
+    //
+
+    if (overridePositionNode !== undefined) {
+      scene.overrideMaterial.positionNode = overridePositionNode;
     }
 
-    object.onAfterRender(this, scene, camera, geometry, material, group);
+    if (overrideFragmentNode !== undefined) {
+      scene.overrideMaterial.fragmentNode = overrideFragmentNode;
+    }
+
+    //
   }
 
   _compileObject(

@@ -17,7 +17,6 @@ import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindow
 
 let renderer, scene, camera, camera2, controls, backgroundNode;
 let material;
-let stats;
 let gui;
 
 // viewport
@@ -101,16 +100,10 @@ async function init() {
     camera2.updateProjectionMatrix();
   });
 
-  stats = new Stats();
-  stats.init(renderer);
-  document.body.appendChild(stats.dom);
-
   initGui();
 }
 
 function animate() {
-  stats.update();
-
   // main scene
   renderer.viewport.set(0, 0, window.innerWidth, window.innerHeight);
 

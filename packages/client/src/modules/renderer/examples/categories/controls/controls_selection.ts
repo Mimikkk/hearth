@@ -10,7 +10,6 @@ import { MeshLambertMaterial } from '@modules/renderer/engine/objects/materials/
 import { SelectionControls } from '@modules/renderer/engine/objects/controls/SelectionControls.js';
 import { SelectionVisualizer } from '@modules/renderer/engine/helpers/SelectionVisualizer.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import { useStats } from '@modules/renderer/examples/utilities/useStats.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { Fog } from '@modules/renderer/engine/objects/scenes/Fog.js';
 import { normalWorld } from '@modules/renderer/engine/nodes/accessors/NormalNode.js';
@@ -18,6 +17,7 @@ import { color } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.prim
 import { Group } from '@modules/renderer/engine/objects/Group.js';
 import { UI } from '@mimi/ui';
 import { Random } from '@modules/renderer/engine/math/random.js';
+import { Stats } from '@modules/renderer/examples/ui/stats.js';
 
 const createCamera = () => {
   const camera = new PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 500);
@@ -69,7 +69,6 @@ const light = createLight();
 const boxes = createBoxes();
 scene.add(light, camera, boxes);
 
-const stats = useStats();
 const renderer = await Renderer.create({
   animate() {
     ui.update();
@@ -77,6 +76,7 @@ const renderer = await Renderer.create({
     renderer.render(scene, camera);
   },
 });
+const stats = Stats.use(renderer);
 useWindowResizer(renderer, camera);
 
 const selection = new SelectionControls(camera, scene);

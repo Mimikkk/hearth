@@ -14,7 +14,6 @@ import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
 import { InstancedMesh } from '@modules/renderer/engine/objects/InstancedMesh.js';
 import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
 import { BufferUse } from '@modules/renderer/engine/constants.js';
-import Stats from 'stats-js';
 import { IcosahedronGeometry } from '@modules/renderer/engine/objects/geometries/IcosahedronGeometry.js';
 
 const physics = await AmmoPhysics();
@@ -90,9 +89,6 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.animation.loop = animate;
 document.body.appendChild(renderer.parameters.canvas);
 
-const stats = new Stats();
-document.body.appendChild(stats.dom);
-
 //
 
 const controls = new OrbitControls(camera, renderer.parameters.canvas);
@@ -115,6 +111,4 @@ setInterval(() => {
 
 function animate() {
   renderer.render(scene, camera);
-
-  stats.update();
 }

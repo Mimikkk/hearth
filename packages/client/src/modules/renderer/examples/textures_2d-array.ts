@@ -3,12 +3,11 @@ import { MeshBasicNodeMaterial, oscTriangle, texture, timerLocal, uv } from '@mo
 
 import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 
-import Stats from 'stats-js';
 import { unzipSync } from 'fflate';
 import { FileLoader, ResponseType } from '@modules/renderer/engine/loaders/files/FileLoader/FileLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
-let camera, scene, mesh, renderer, stats;
+let camera, scene, mesh, renderer;
 
 const planeWidth = 50;
 const planeHeight = 50;
@@ -57,15 +56,11 @@ async function init() {
   renderer.animation.loop = animate;
   container.appendChild(renderer.parameters.canvas);
 
-  stats = new Stats();
-  container.appendChild(stats.dom);
-
   useWindowResizer(renderer, camera);
 }
 
 function animate() {
   render();
-  stats.update();
 }
 
 function render() {

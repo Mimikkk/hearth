@@ -29,11 +29,8 @@ import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 
 import { TeapotGeometry } from '@modules/renderer/engine/objects/geometries/TeapotGeometry.js';
 
-import Stats from 'stats-js';
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-
-let stats;
 
 let camera, scene, renderer;
 
@@ -356,9 +353,6 @@ async function init() {
 
   //
 
-  stats = new Stats();
-  container.appendChild(stats.dom);
-
   //
 
   useWindowResizer(renderer, camera);
@@ -397,6 +391,4 @@ function animate() {
   }
 
   renderer.render(scene, camera);
-
-  stats.update();
 }

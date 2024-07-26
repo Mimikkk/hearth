@@ -6,12 +6,11 @@ import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
 
 import { GUI } from 'lil-gui';
-import Stats from 'stats-js';
 import { RGBMLoader } from '@modules/renderer/engine/loaders/textures/RGBMLoader/RGBMLoader.js';
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
-let camera, scene, renderer, stats;
+let camera, scene, renderer;
 let cube, sphere, torus, material;
 
 let cubeCamera, cubeRenderTarget;
@@ -27,9 +26,6 @@ async function init() {
   renderer.animation.loop = animation;
   renderer.parameters.toneMapping = Engine.ToneMapping.ACESFilmic;
   document.body.appendChild(renderer.parameters.canvas);
-
-  stats = new Stats();
-  document.body.appendChild(stats.dom);
 
   camera = new Engine.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 1000);
   camera.position.z = 75;
@@ -125,6 +121,4 @@ function animation(msTime) {
   controls.update();
 
   renderer.render(scene, camera);
-
-  stats.update();
 }

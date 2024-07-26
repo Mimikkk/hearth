@@ -8,8 +8,6 @@ import {
   texture,
 } from '@modules/renderer/engine/nodes/Nodes.js';
 
-import Stats from 'stats-js';
-
 import { GUI } from 'lil-gui';
 
 import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
@@ -19,7 +17,7 @@ import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
-let camera, scene, renderer, light1, light2, light3, light4, stats, controls;
+let camera, scene, renderer, light1, light2, light3, light4, controls;
 
 init();
 
@@ -118,9 +116,6 @@ async function init() {
 
   //stats
 
-  stats = new Stats();
-  document.body.appendChild(stats.dom);
-
   useWindowResizer(renderer, camera);
   //gui
 
@@ -158,6 +153,4 @@ function animate() {
    if ( time > 3.5 && light4.parent === null ) scene.add( light4 );
    */
   renderer.render(scene, camera);
-
-  stats.update();
 }

@@ -1,14 +1,13 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
 import { mix, normalWorld, oscSine, range, timerLocal } from '@modules/renderer/engine/nodes/Nodes.js';
 
-import Stats from 'stats-js';
 import { GUI } from 'lil-gui';
 
 import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 import { BufferGeometryLoader } from '@modules/renderer/engine/loaders/geometries/BufferGeometryLoader/BufferGeometryLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
-let camera, scene, renderer, stats;
+let camera, scene, renderer;
 
 let mesh;
 const amount = parseInt(window.location.search.slice(1)) || 10;
@@ -56,12 +55,6 @@ async function init() {
   document.body.appendChild(renderer.parameters.canvas);
 
   //
-
-  stats = new Stats();
-  document.body.appendChild(stats.dom);
-
-  //
-
   useWindowResizer(renderer, camera);
 }
 
@@ -69,8 +62,6 @@ async function init() {
 
 function animate() {
   render();
-
-  stats.update();
 }
 
 async function render() {

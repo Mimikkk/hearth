@@ -35,7 +35,7 @@ const maxParticleCount = 100000;
 
 let camera, scene, renderer;
 let viewHelper!: WorldAxesControls;
-let controls, stats;
+let controls;
 let computeParticles;
 let postProcessing;
 
@@ -302,39 +302,36 @@ async function init() {
   renderer.parameters.toneMapping = Engine.ToneMapping.ACESFilmic;
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.animation.loop = animate;
+  renderer.animation.loop = async () => {
+    stats?.update();
+    controls?.update();
+
+    // position
+
+    scene.overrideMaterial = collisionPosMaterial;
+    renderer.updateRenderTarget(collisionPosRT);
+    await renderer.render(scene, collisionCamera);
+
+    // compute
+
+    await renderer.compute(computeParticles);
+
+    // result
+
+    scene.overrideMaterial = null;
+    renderer.updateRenderTarget(null);
+
+    await postProcessing.render();
+  };
   document.body.appendChild(renderer.parameters.canvas);
 
   postProcessing = new PostProcessing(renderer);
   postProcessing.outputNode = totalPass;
 
-  stats = new Stats(renderer);
-
+  const stats = Stats.use(renderer);
   await renderer.compute(computeInit);
 
   //
 
   useWindowResizer(renderer, camera);
-}
-
-async function animate() {
-  stats?.update();
-  controls?.update();
-
-  // position
-
-  scene.overrideMaterial = collisionPosMaterial;
-  renderer.updateRenderTarget(collisionPosRT);
-  await renderer.render(scene, collisionCamera);
-
-  // compute
-
-  await renderer.compute(computeParticles);
-
-  // result
-
-  scene.overrideMaterial = null;
-  renderer.updateRenderTarget(null);
-
-  await postProcessing.render();
 }

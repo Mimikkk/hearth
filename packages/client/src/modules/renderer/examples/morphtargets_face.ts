@@ -2,8 +2,6 @@ import * as Engine from '@modules/renderer/engine/engine.js';
 
 import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 
-import Stats from 'stats-js';
-
 import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
 
 import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/GLTFLoader.js';
@@ -82,9 +80,7 @@ async function init() {
   controls.maxPolarAngle = Math.PI / 1.8;
   controls.target.set(0, 0.15, -0.2);
 
-  const stats = new Stats();
-  container.appendChild(stats.dom);
-
+  const
   function animate() {
     const delta = clock.tick();
 

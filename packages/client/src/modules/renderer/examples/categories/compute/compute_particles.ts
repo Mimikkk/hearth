@@ -15,7 +15,6 @@ import {
 import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 
 import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
-import Stats from 'stats-js';
 
 import { GUI } from 'lil-gui';
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
@@ -32,7 +31,7 @@ const size = uniform(0.12);
 const clickPosition = uniform(new Engine.Vec3());
 
 let camera, scene, renderer: Renderer;
-let controls, stats;
+let controls;
 let computeParticles;
 
 const timestamps = document.getElementById('timestamps');
@@ -156,9 +155,6 @@ async function init() {
   renderer.animation.loop = animate;
   document.body.appendChild(renderer.parameters.canvas);
 
-  stats = new Stats();
-  document.body.appendChild(stats.dom);
-
   //
 
   renderer.compute(computeInit);
@@ -228,8 +224,6 @@ async function init() {
 }
 
 async function animate() {
-  stats.update();
-
   await renderer.compute(computeParticles);
 
   await renderer.render(scene, camera);

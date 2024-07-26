@@ -5,7 +5,6 @@ import { FontLoader } from '@modules/renderer/engine/loaders/fonts/FontLoader/Fo
 import { TextGeometry } from '@modules/renderer/engine/objects/geometries/TextGeometry.js';
 
 import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
-import Stats from 'stats-js';
 import { ColorRepresentation } from '@modules/renderer/engine/math/Color.js';
 import { clamp } from 'lodash-es';
 import { FontManager } from '@modules/renderer/engine/loaders/fonts/FontManager.js';
@@ -22,7 +21,6 @@ const zoom = {
 
 let container!: HTMLDivElement;
 let border!: HTMLDivElement;
-let stats!: Stats;
 let scene!: Scene;
 let normal!: HTMLDivElement;
 let logarithmic!: HTMLDivElement;
@@ -236,8 +234,6 @@ const animate = () => {
 
   objects.normal.renderer.render(scene, objects.normal.camera);
   objects.logarithmic.renderer.render(scene, objects.logarithmic.camera);
-
-  stats.update();
 };
 
 const init = async () => {
@@ -253,10 +249,6 @@ const init = async () => {
   ]);
   scene = createScene(FontManager.create(font));
   objects = createViews(normalView, logarithmicView);
-
-  stats = new Stats();
-
-  container.appendChild(stats.dom);
 
   createBorderEvents(border);
   window.addEventListener('mousemove', onMove);

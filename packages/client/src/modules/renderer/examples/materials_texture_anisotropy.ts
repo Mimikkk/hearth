@@ -1,11 +1,10 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
 
-import Stats from 'stats-js';
 import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
-let container, stats;
+let container;
 
 let camera, scene1, scene2, renderer;
 
@@ -100,11 +99,6 @@ async function init() {
   scene1.add(mesh1);
   scene2.add(mesh2);
 
-  // STATS1
-
-  stats = new Stats();
-  container.appendChild(stats.dom);
-
   document.addEventListener('mousemove', onDocumentMouseMove);
 
   useWindowResizer(renderer, camera);
@@ -120,7 +114,6 @@ function onDocumentMouseMove(event) {
 
 function animate() {
   render();
-  stats.update();
 }
 
 function render() {

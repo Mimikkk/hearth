@@ -3,15 +3,13 @@ import { MeshPhongNodeMaterial } from '@modules/renderer/engine/nodes/Nodes.js';
 
 import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 
-import Stats from 'stats-js';
-
 import { GUI } from 'lil-gui';
 
 import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
 import { Side } from '@modules/renderer/engine/engine.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
-let camera, scene, renderer, startTime, object, stats;
+let camera, scene, renderer, startTime, object;
 
 init();
 
@@ -90,9 +88,6 @@ async function init() {
   scene.add(ground);
 
   // Stats
-
-  stats = new Stats();
-  document.body.appendChild(stats.dom);
 
   // Renderer
 
@@ -199,7 +194,5 @@ function animate(currentTime) {
   object.setRotationY(time * 0.2);
   object.scale.setScalar(Math.cos(time) * 0.125 + 0.875);
 
-  stats.begin();
   renderer.render(scene, camera);
-  stats.end();
 }

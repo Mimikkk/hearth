@@ -14,7 +14,6 @@ import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitCo
 
 import { TeapotGeometry } from '@modules/renderer/engine/objects/geometries/TeapotGeometry.js';
 
-import Stats from 'stats-js';
 import { CubeTextureLoader } from '@modules/renderer/engine/loaders/textures/CubeTextureLoader/CubeTextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
@@ -39,8 +38,6 @@ class InstanceUniformNode extends Node {
     return this.uniformNode;
   }
 }
-
-let stats;
 
 let camera, scene, renderer;
 let controls;
@@ -108,9 +105,6 @@ async function init() {
 
   //
 
-  stats = new Stats();
-  container.appendChild(stats.dom);
-
   //
 
   useWindowResizer(renderer, camera);
@@ -142,6 +136,4 @@ function animate() {
   }
 
   renderer.render(scene, camera);
-
-  stats.update();
 }
