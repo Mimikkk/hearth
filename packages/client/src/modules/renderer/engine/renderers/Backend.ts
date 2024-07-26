@@ -6,13 +6,13 @@ import {
   GPULoadOpType,
   GPUStoreOpType,
   GPUTextureViewDimensionType,
-} from './utils/constants.js';
+} from './constants.js';
 
-import { BackendUtilities } from './utils/Backend.utilities.js';
-import { BackendAttributes } from './utils/Backend.attributes.js';
-import { BackendBindings } from './utils/Backend.bindings.js';
-import BackendPipelines from './utils/Backend.pipelines.js';
-import { BackendTextures } from './utils/Backend.textures.js';
+import { BackendUtilities } from './Backend.utilities.js';
+import { BackendAttributes } from './Backend.attributes.js';
+import { BackendBindings } from './Backend.bindings.js';
+import BackendPipelines from './Backend.pipelines.js';
+import { BackendTextures } from './Backend.textures.js';
 import type { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 import RenderContext from '@modules/renderer/engine/renderers/RenderContext.js';
 import ComputeNode from '@modules/renderer/engine/nodes/gpgpu/ComputeNode.js';
@@ -20,10 +20,10 @@ import ComputePipeline from '@modules/renderer/engine/renderers/ComputePipeline.
 import Binding from '@modules/renderer/engine/renderers/Binding.js';
 import RenderObject from '@modules/renderer/engine/renderers/RenderObject.js';
 import ProgrammableStage from '@modules/renderer/engine/renderers/ProgrammableStage.js';
-import { ResourceManager } from './utils/ResourceManager.js';
-import { NodeBuilder } from '@modules/renderer/engine/renderers/nodes/NodeBuilder.js';
+import { ResourceManager } from './ResourceManager.js';
+import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { AttributeType } from '../core/types.ts';
-import { WeakMemo } from '@modules/renderer/engine/renderers/utils/WeakMemo.js';
+import { WeakMemo } from '@modules/renderer/engine/renderers/WeakMemo.js';
 
 export class Backend {
   renderer: Renderer;

@@ -1,4 +1,4 @@
-import { STD140ChunkBytes } from './Constants.js';
+import { STD140ChunkBytes } from './constants.js';
 
 export function getFloatLength(floatLength: number): number {
   // ensure chunk size alignment (STD140 layout)

@@ -1,4 +1,4 @@
-import { TypeName } from '@modules/renderer/engine/renderers/nodes/NodeBuilder.types.js';
+import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 const declarationRegexp = /^[fn]*\s*([a-z_0-9]+)?\s*\(([\s\S]*?)\)\s*[\->]*\s*([a-z_0-9]+)?/i;
 const propertiesRegexp = /[a-z_0-9]+|<(.*?)>+/gi;

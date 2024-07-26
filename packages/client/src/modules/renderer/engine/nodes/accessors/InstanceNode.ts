@@ -4,7 +4,7 @@ import { normalLocal } from './NormalNode.js';
 import { positionLocal } from './PositionNode.js';
 import { mat3, mat4, nodeProxy, vec3 } from '../shadernode/ShaderNodes.js';
 import { Buffer, BufferUse } from '@modules/renderer/engine/engine.js';
-import { BufferStep } from '@modules/renderer/engine/renderers/utils/constants.js';
+import { BufferStep } from '@modules/renderer/engine/renderers/constants.js';
 
 class InstanceNode extends Node {
   static type = 'InstanceNode';

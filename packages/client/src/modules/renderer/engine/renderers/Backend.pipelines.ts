@@ -22,7 +22,7 @@ import {
   Side,
   StencilFunction,
   StencilOperation,
-} from '../../engine.js';
+} from '../engine.js';
 import type { Backend } from '@modules/renderer/engine/renderers/Backend.js';
 import RenderObject from '@modules/renderer/engine/renderers/RenderObject.js';
 import ComputePipeline from '@modules/renderer/engine/renderers/ComputePipeline.js';

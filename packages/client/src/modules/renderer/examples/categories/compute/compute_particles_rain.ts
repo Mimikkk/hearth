@@ -28,7 +28,7 @@ import { GUI } from 'lil-gui';
 import * as GeometryUtils from '@modules/renderer/engine/utils/GeometryUtils.js';
 import { BufferGeometryLoader } from '@modules/renderer/engine/loaders/geometries/BufferGeometryLoader/BufferGeometryLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import { GPUBufferBindingTypeType, BufferStep } from '@modules/renderer/engine/renderers/utils/constants.js';
+import { GPUBufferBindingTypeType, BufferStep } from '@modules/renderer/engine/renderers/constants.js';
 
 const maxParticleCount = 50000;
 const instanceCount = maxParticleCount / 2;

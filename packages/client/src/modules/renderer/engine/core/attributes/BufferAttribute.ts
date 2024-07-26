@@ -6,7 +6,7 @@ import { Mat3 } from '@modules/renderer/engine/math/Mat3.js';
 import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
 import { Buffer } from '../buffers/Buffer.js';
 import { Const } from '@modules/renderer/engine/math/types.js';
-import { GPUBufferBindingTypeType, BufferStep } from '@modules/renderer/engine/renderers/utils/constants.js';
+import { GPUBufferBindingTypeType, BufferStep } from '@modules/renderer/engine/renderers/constants.js';
 
 export class BufferAttribute<T extends TypedArray = any> {
   declare isBufferAttribute: true;

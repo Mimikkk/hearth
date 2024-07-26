@@ -1,5 +1,5 @@
 import DataMap from './DataMap.js';
-import { AttributeLocation } from './Constants.js';
+import { AttributeLocation } from './constants.js';
 import { BufferAttribute, WireframeGeometry } from '@modules/renderer/engine/engine.js';
 import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 import RenderObject from '@modules/renderer/engine/renderers/RenderObject.js';

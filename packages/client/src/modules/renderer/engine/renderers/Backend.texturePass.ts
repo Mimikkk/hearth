@@ -7,8 +7,8 @@ import {
 } from './constants.js';
 
 import { Backend } from '@modules/renderer/engine/renderers/Backend.js';
-import { MipmapShader } from '@modules/renderer/engine/renderers/utils/shaders/MipmapShader.js';
-import { Memo } from '@modules/renderer/engine/renderers/utils/Memo.js';
+import { MipmapShader } from '@modules/renderer/engine/renderers/MipmapShader.js';
+import { Memo } from '@modules/renderer/engine/renderers/Memo.js';
 
 const encodePass = (
   device: GPUDevice,

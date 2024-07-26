@@ -6,7 +6,7 @@ import * as monaco from 'monaco-editor';
 import { Color, ColorSpace, Mesh, PerspectiveCamera, PlaneGeometry, Scene } from '@modules/renderer/engine/engine.js';
 import './tsl_editor.css';
 import './utilities/monaco-vite.js';
-import { NodeBuilder } from '@modules/renderer/engine/renderers/nodes/NodeBuilder.js';
+import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { resolveScript } from '@modules/renderer/examples/utilities/resolveScript.js';
 
 const createContainers = () => {

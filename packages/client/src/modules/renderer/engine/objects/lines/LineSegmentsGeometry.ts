@@ -11,7 +11,7 @@ import {
   Vec3,
   WireframeGeometry,
 } from '../../engine.js';
-import { BufferStep } from '@modules/renderer/engine/renderers/utils/constants.js';
+import { BufferStep } from '@modules/renderer/engine/renderers/constants.js';
 
 const _box = Box3.new();
 const _vector = Vec3.new();

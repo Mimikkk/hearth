@@ -2,7 +2,7 @@ import InputNode from './InputNode.js';
 import { Node } from '../core/Node.js';
 import { objectGroup } from './UniformGroupNode.js';
 import { nodeObject } from '../shadernode/ShaderNodes.js';
-import { TypeName } from '@modules/renderer/engine/renderers/nodes/NodeBuilder.types.js';
+import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { UniformGroupNode } from '@modules/renderer/engine/nodes/Nodes.js';
 import NodeBuilder from 'three/examples/jsm/nodes/core/NodeBuilder.js';
 

@@ -14,7 +14,7 @@ import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/
 import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 import PostProcessing from '@modules/renderer/engine/renderers/PostProcessing.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import { BufferStep } from '@modules/renderer/engine/renderers/utils/constants.js';
+import { BufferStep } from '@modules/renderer/engine/renderers/constants.js';
 
 let camera, scene, renderer;
 let postProcessing;

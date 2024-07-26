@@ -5,7 +5,7 @@ import { FrameStats } from '@modules/renderer/engine/renderers/FrameStats.js';
 import { Vec4 } from '@modules/renderer/engine/math/Vec4.js';
 import Attributes from '@modules/renderer/engine/renderers/Attributes.js';
 import Geometries from '@modules/renderer/engine/renderers/Geometries.js';
-import Nodes from '@modules/renderer/engine/renderers/nodes/Nodes.js';
+import Nodes from '@modules/renderer/engine/nodes/builder/Nodes.js';
 import { Animation, AnimationLoopFn } from '@modules/renderer/engine/renderers/Animation.js';
 import Bindings from '@modules/renderer/engine/renderers/Bindings.js';
 import RenderObjects from '@modules/renderer/engine/renderers/RenderObjects.js';
@@ -32,7 +32,7 @@ import {
   RenderTarget,
   Texture,
 } from '@modules/renderer/engine/engine.js';
-import { GPUFeature, GPUTextureFormatType } from '@modules/renderer/engine/renderers/utils/constants.js';
+import { GPUFeature, GPUTextureFormatType } from '@modules/renderer/engine/renderers/constants.js';
 import { RenderItem, RenderList, SortFn } from '@modules/renderer/engine/renderers/RenderList.js';
 import { AttributeType } from '@modules/renderer/engine/core/types.js';
 import ComputeNode from '@modules/renderer/engine/nodes/gpgpu/ComputeNode.js';

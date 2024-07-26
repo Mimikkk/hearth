@@ -25,7 +25,7 @@ import {
   stack,
   UniformNode,
 } from '@modules/renderer/engine/nodes/Nodes.js';
-import { getFormat } from '../utils/Backend.textures.js';
+import { getFormat } from '../../renderers/Backend.textures.js';
 import ChainMap from '@modules/renderer/engine/renderers/ChainMap.js';
 import NodeKeywords from '@modules/renderer/engine/nodes/core/NodeKeywords.js';
 import NodeCache from '@modules/renderer/engine/nodes/core/NodeCache.js';
@@ -44,9 +44,9 @@ import {
   Vec2NodeUniform,
   Vec3NodeUniform,
   Vec4NodeUniform,
-} from '@modules/renderer/engine/renderers/nodes/NodeUniform.js';
+} from '@modules/renderer/engine/nodes/builder/NodeUniform.js';
 import { NodeMaterials } from '@modules/renderer/engine/nodes/materials/NodeMaterialMap.js';
-import { FeatureMap, FeatureName } from '@modules/renderer/engine/renderers/nodes/NodeBuilder.features.ts';
+import { FeatureMap, FeatureName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.features.ts';
 import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 import StackNode from '@modules/renderer/engine/nodes/core/StackNode.js';
 import EnvironmentNode from '@modules/renderer/engine/nodes/lighting/EnvironmentNode.js';
@@ -56,12 +56,12 @@ import { Node } from '@modules/renderer/engine/nodes/core/Node.js';
 import ClippingContext from '@modules/renderer/engine/renderers/ClippingContext.js';
 import { TypedArray, TypedArrayConstructor } from '@modules/renderer/engine/math/MathUtils.js';
 import { BuildStage, BuiltinType, ShaderStage, TypeMap, TypeName } from './NodeBuilder.types.js';
-import { PolyfillMap, PolyfillName } from '@modules/renderer/engine/renderers/nodes/NodeBuilder.polyfills.js';
+import { PolyfillMap, PolyfillName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.polyfills.js';
 import StructTypeNode from '@modules/renderer/engine/nodes/core/StructTypeNode.js';
 import { ShaderNode } from 'three/examples/jsm/nodes/shadernode/ShaderNode.js';
 import { AttributeType } from '@modules/renderer/engine/core/types.js';
 import ConstNode from '@modules/renderer/engine/nodes/core/ConstNode.js';
-import { WgslFn } from '@modules/renderer/engine/renderers/nodes/WgslFn.js';
+import { WgslFn } from '@modules/renderer/engine/nodes/builder/WgslFn.js';
 
 type ParseFn = (source: string) => WgslFn;
 

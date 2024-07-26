@@ -4,7 +4,7 @@ import { modelViewMatrix } from './ModelNode.js';
 import { positionLocal } from './PositionNode.js';
 import { nodeProxy } from '../shadernode/ShaderNodes.js';
 import { varying } from '../core/VaryingNode.js';
-import { ShaderStage } from '@modules/renderer/engine/renderers/nodes/NodeBuilder.types.js';
+import { ShaderStage } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 class ModelViewProjectionNode extends TempNode {
   static type = 'ModelViewProjectionNode';

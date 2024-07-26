@@ -1,5 +1,5 @@
 import ConstNode from '@modules/renderer/engine/nodes/core/ConstNode.js';
-import { TypeName } from '@modules/renderer/engine/renderers/nodes/NodeBuilder.types.js';
+import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 export const NodeElements = new Map();
 

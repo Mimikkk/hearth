@@ -5,8 +5,8 @@ import { LightNodeMap } from '@modules/renderer/engine/nodes/lighting/LightsNode
 import { Light } from '@modules/renderer/engine/objects/lights/Light.js';
 import LightNode from '@modules/renderer/engine/nodes/lighting/LightNode.js';
 import OperatorNode from '@modules/renderer/engine/nodes/math/OperatorNode.js';
-import { TypeName } from '@modules/renderer/engine/renderers/nodes/NodeBuilder.types.js';
-import { NodeBuilder } from '@modules/renderer/engine/renderers/nodes/NodeBuilder.js';
+import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
+import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import BypassNode from '@modules/renderer/engine/nodes/core/BypassNode.js';
 
 export class LightsNode extends Node {

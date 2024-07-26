@@ -1,4 +1,4 @@
-import { ShaderStage } from '@modules/renderer/engine/renderers/nodes/NodeBuilder.types.js';
+import { ShaderStage } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 let _id = 0;
 

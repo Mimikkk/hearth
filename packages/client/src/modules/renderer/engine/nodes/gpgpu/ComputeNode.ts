@@ -2,8 +2,8 @@ import Node from '../core/Node.js';
 import { NodeUpdateType } from '../core/constants.js';
 import { addNodeElement, nodeObject } from '../shadernode/ShaderNodes.js';
 import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
-import { NodeBuilder } from '@modules/renderer/engine/renderers/nodes/NodeBuilder.js';
-import { ShaderStage } from '@modules/renderer/engine/renderers/nodes/NodeBuilder.types.js';
+import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
+import { ShaderStage } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 class ComputeNode extends Node {
   static type = 'ComputeNode';

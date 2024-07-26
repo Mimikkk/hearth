@@ -1,6 +1,6 @@
 import type { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 import type { FrameStats } from '@modules/renderer/engine/renderers/FrameStats.js';
-import { GPUFeature } from '@modules/renderer/engine/renderers/utils/constants.js';
+import { GPUFeature } from '@modules/renderer/engine/renderers/constants.js';
 
 class Panel {
   canvas: HTMLCanvasElement;

@@ -1,5 +1,5 @@
 import { Color, Mat3, Mat4, Vec2, Vec3, Vec4 } from '@modules/renderer/engine/engine.js';
-import { TypeName } from '@modules/renderer/engine/renderers/nodes/NodeBuilder.types.js';
+import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 export function getCacheKey(object, force = false) {
   let cacheKey = '{';

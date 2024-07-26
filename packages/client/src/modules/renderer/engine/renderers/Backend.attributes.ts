@@ -1,4 +1,4 @@
-import { BufferAttribute } from '../../engine.js';
+import { BufferAttribute } from '../engine.js';
 import { BufferStep } from './constants.js';
 import { Backend } from '@modules/renderer/engine/renderers/Backend.js';
 import RenderObject from '@modules/renderer/engine/renderers/RenderObject.js';

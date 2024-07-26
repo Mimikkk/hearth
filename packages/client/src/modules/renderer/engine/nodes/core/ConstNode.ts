@@ -1,6 +1,6 @@
 import InputNode from './InputNode.js';
-import { NodeBuilder } from '@modules/renderer/engine/renderers/nodes/NodeBuilder.js';
-import { TypeName } from '@modules/renderer/engine/renderers/nodes/NodeBuilder.types.js';
+import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
+import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 export class ConstNode<T = any> extends InputNode {
   declare isConstNode: boolean;

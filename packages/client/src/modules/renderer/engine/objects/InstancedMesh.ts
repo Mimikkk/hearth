@@ -9,7 +9,7 @@ import { Material } from '@modules/renderer/engine/objects/materials/Material.js
 import { Intersection, Raycaster } from '@modules/renderer/engine/core/Raycaster.js';
 import { Color } from '@modules/renderer/engine/math/Color.js';
 import { BufferAttribute } from '@modules/renderer/engine/core/attributes/BufferAttribute.js';
-import { BufferStep } from '@modules/renderer/engine/renderers/utils/constants.js';
+import { BufferStep } from '@modules/renderer/engine/renderers/constants.js';
 
 const _instanceLocalMatrix = new Mat4();
 const _instanceWorldMatrix = new Mat4();

@@ -1,5 +1,5 @@
 import UniformBuffer from './UniformBuffer.js';
-import { STD140ChunkBytes } from './Constants.js';
+import { STD140ChunkBytes } from './constants.js';
 import {
   ColorNodeUniform,
   FloatNodeUniform,
@@ -9,7 +9,7 @@ import {
   Vec2NodeUniform,
   Vec3NodeUniform,
   Vec4NodeUniform,
-} from '@modules/renderer/engine/renderers/nodes/NodeUniform.js';
+} from '@modules/renderer/engine/nodes/builder/NodeUniform.js';
 
 class UniformsGroup extends UniformBuffer {
   declare isUniformsGroup: true;

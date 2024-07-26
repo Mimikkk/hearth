@@ -1,9 +1,9 @@
 import CodeNode, { CodeNodeInclude } from './CodeNode.js';
 import { nodeObject } from '../shadernode/ShaderNodes.js';
-import { NodeBuilder } from '@modules/renderer/engine/renderers/nodes/NodeBuilder.js';
+import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 
-import { TypeName } from '@modules/renderer/engine/renderers/nodes/NodeBuilder.types.js';
-import { WgslFn } from '@modules/renderer/engine/renderers/nodes/WgslFn.js';
+import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
+import { WgslFn } from '@modules/renderer/engine/nodes/builder/WgslFn.js';
 
 class FunctionNode extends CodeNode {
   static type = 'FunctionNode';

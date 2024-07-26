@@ -1,8 +1,8 @@
 import Node from './Node.js';
 import { varying } from './VaryingNode.js';
 import { nodeImmutable } from '../shadernode/ShaderNodes.js';
-import { ShaderStage } from '@modules/renderer/engine/renderers/nodes/NodeBuilder.types.js';
-import { BufferStep } from '@modules/renderer/engine/renderers/utils/constants.js';
+import { ShaderStage } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
+import { BufferStep } from '@modules/renderer/engine/renderers/constants.js';
 
 class IndexNode extends Node {
   static type = 'IndexNode';

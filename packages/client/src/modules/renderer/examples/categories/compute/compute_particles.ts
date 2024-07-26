@@ -19,7 +19,7 @@ import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitCo
 import { GUI } from 'lil-gui';
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import { GPUBufferBindingTypeType, BufferStep } from '@modules/renderer/engine/renderers/utils/constants.js';
+import { GPUBufferBindingTypeType, BufferStep } from '@modules/renderer/engine/renderers/constants.js';
 
 const particleCount = 1000000;
 

@@ -9,7 +9,7 @@ import { ShaderNodeObject } from './ShaderNodeObject.js';
 import { createShaderNodeObjects } from './createShaderNodeObjects.js';
 import { createShaderNodeArray } from './createShaderNodeArray.js';
 import { ShaderNodeProxy } from './ShaderNodeProxy.js';
-import { TypeName } from '@modules/renderer/engine/renderers/nodes/NodeBuilder.types.js';
+import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 const createConvertType = (type: TypeName, cacheMap: Map<any, any> = null) => {
   return (...params) => {

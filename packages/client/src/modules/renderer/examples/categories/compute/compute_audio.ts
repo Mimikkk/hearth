@@ -16,7 +16,7 @@ import { GUI } from 'lil-gui';
 
 import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import { GPUBufferBindingTypeType, BufferStep } from '@modules/renderer/engine/renderers/utils/constants.js';
+import { GPUBufferBindingTypeType, BufferStep } from '@modules/renderer/engine/renderers/constants.js';
 
 let camera, scene, renderer;
 let computeNode;

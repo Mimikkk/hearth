@@ -1,8 +1,8 @@
 import Node from './Node.js';
 import NodeCache from './NodeCache.js';
 import { addNodeElement, nodeProxy } from '../shadernode/ShaderNodes.js';
-import { NodeBuilder } from '@modules/renderer/engine/renderers/nodes/NodeBuilder.js';
-import { TypeName } from '@modules/renderer/engine/renderers/nodes/NodeBuilder.types.js';
+import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
+import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 class CacheNode extends Node {
   static type = 'CacheNode';

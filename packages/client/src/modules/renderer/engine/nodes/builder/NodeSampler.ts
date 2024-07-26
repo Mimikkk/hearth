@@ -1,4 +1,4 @@
-import Sampler from '../Sampler.js';
+import Sampler from '../../renderers/Sampler.js';
 import TextureNode from '@modules/renderer/engine/nodes/accessors/TextureNode.js';
 
 class NodeSampler extends Sampler {

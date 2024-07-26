@@ -8,7 +8,7 @@ import { Buffer } from '../core/buffers/Buffer.js';
 import { SpriteMaterial } from '@modules/renderer/engine/objects/materials/SpriteMaterial.js';
 import { Intersection, Raycaster } from '../core/Raycaster.js';
 import { PerspectiveCamera } from '@modules/renderer/engine/objects/cameras/PerspectiveCamera.js';
-import { BufferStep } from '@modules/renderer/engine/renderers/utils/constants.js';
+import { BufferStep } from '@modules/renderer/engine/renderers/constants.js';
 import { BufferAttribute } from '@modules/renderer/engine/core/attributes/BufferAttribute.js';
 
 const _intersectPoint = Vec3.new();

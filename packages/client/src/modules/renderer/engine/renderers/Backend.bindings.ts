@@ -4,7 +4,7 @@ import {
   GPUTextureSampleTypeType,
   GPUTextureViewDimensionType,
 } from './constants.js';
-import { DataArrayTexture, DataTexture, DepthTexture, TextureDataType, VideoTexture } from '../../engine.js';
+import { DataArrayTexture, DataTexture, DepthTexture, TextureDataType, VideoTexture } from '../engine.js';
 import { Backend } from '@modules/renderer/engine/renderers/Backend.js';
 import Binding from '@modules/renderer/engine/renderers/Binding.js';
 import UniformBuffer from '@modules/renderer/engine/renderers/UniformBuffer.js';

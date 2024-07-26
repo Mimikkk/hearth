@@ -55,7 +55,7 @@ import { KTX2Loader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/
 import { MeshoptDecoder } from 'meshoptimizer';
 import { DRACOLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/DRACOLoader.js';
 import { classLoader } from '@modules/renderer/engine/loaders/types.js';
-import { BufferStep } from '@modules/renderer/engine/renderers/utils/constants.js';
+import { BufferStep } from '@modules/renderer/engine/renderers/constants.js';
 
 export type PluginFn = (parser: Parser) => Plugin;
 

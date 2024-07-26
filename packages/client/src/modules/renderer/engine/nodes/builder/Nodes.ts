@@ -1,5 +1,5 @@
-import DataMap from '../DataMap.js';
-import ChainMap from '../ChainMap.js';
+import DataMap from '../../renderers/DataMap.js';
+import ChainMap from '../../renderers/ChainMap.js';
 import NodeBuilderState from './NodeBuilderState.js';
 import {
   Camera,
@@ -28,11 +28,11 @@ import {
   texture,
   toneMapping,
   viewportBottomLeft,
-} from '../../nodes/Nodes.js';
+} from '../Nodes.js';
 import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
-import NodeUniformsGroup from '@modules/renderer/engine/renderers/nodes/NodeUniformsGroup.js';
+import NodeUniformsGroup from '@modules/renderer/engine/nodes/builder/NodeUniformsGroup.js';
 import RenderObject from '@modules/renderer/engine/renderers/RenderObject.js';
-import { NodeBuilder } from '@modules/renderer/engine/renderers/nodes/NodeBuilder.js';
+import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 
 import { types } from 'sass';
 import Color = types.Color;

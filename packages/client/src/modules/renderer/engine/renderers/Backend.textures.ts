@@ -25,7 +25,7 @@ import {
   TextureFormat,
   VideoTexture,
   Wrapping,
-} from '../../engine.js';
+} from '../engine.js';
 
 import { BackendTexturePass } from './Backend.texturePass.js';
 import { Backend } from '@modules/renderer/engine/renderers/Backend.js';

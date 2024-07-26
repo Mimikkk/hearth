@@ -1,7 +1,7 @@
 import { boolMap, floatMap } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.map.js';
 import ConstNode from '@modules/renderer/engine/nodes/core/ConstNode.js';
 import Node from '@modules/renderer/engine/nodes/core/Node.js';
-import { TypeName } from '@modules/renderer/engine/renderers/nodes/NodeBuilder.types.js';
+import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 const rs = /[rs]/g;
 const gt = /[gt]/g;

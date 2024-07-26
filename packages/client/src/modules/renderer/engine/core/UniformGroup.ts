@@ -3,7 +3,6 @@ import type { Uniform } from './Uniform.js';
 let _id = 0;
 
 export class UniformGroup<A> {
-  declare ['constructor']: typeof UniformGroup<A>;
   declare isUniformsGroup: true;
   id: number;
   name: string;

@@ -1,4 +1,4 @@
-import { SampledTexture } from '../SampledTexture.js';
+import { SampledTexture } from '../../renderers/SampledTexture.js';
 import TextureNode from '@modules/renderer/engine/nodes/accessors/TextureNode.js';
 
 export class NodeSampledTexture extends SampledTexture {

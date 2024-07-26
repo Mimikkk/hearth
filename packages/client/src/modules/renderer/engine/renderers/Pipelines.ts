@@ -7,7 +7,7 @@ import ComputeNode from '@modules/renderer/engine/nodes/gpgpu/ComputeNode.js';
 import Binding from '@modules/renderer/engine/renderers/Binding.js';
 import RenderObject from '@modules/renderer/engine/renderers/RenderObject.js';
 import Pipeline from '@modules/renderer/engine/renderers/Pipeline.js';
-import { ShaderStage } from '@modules/renderer/engine/renderers/nodes/NodeBuilder.types.js';
+import { ShaderStage } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 class Pipelines extends DataMap<any, any> {
   caches: Map<any, any>;

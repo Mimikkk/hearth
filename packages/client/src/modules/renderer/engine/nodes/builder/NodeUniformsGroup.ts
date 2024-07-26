@@ -1,6 +1,6 @@
-import UniformsGroup from '../UniformsGroup.js';
+import UniformsGroup from '../../renderers/UniformsGroup.js';
 import UniformGroupNode from '@modules/renderer/engine/nodes/core/UniformGroupNode.js';
-import { ValueNodeUniform } from '@modules/renderer/engine/renderers/nodes/NodeUniform.js';
+import { ValueNodeUniform } from '@modules/renderer/engine/nodes/builder/NodeUniform.js';
 
 let id = 0;
 

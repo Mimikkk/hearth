@@ -1,13 +1,13 @@
-import UniformBuffer from '../UniformBuffer.js';
+import StorageBuffer from '../core/StorageBuffer.js';
 import NodeUniform from '@modules/renderer/engine/nodes/core/NodeUniform.js';
 
 let _id = 0;
 
-class NodeUniformBuffer extends UniformBuffer {
+export class NodeStorageBuffer extends StorageBuffer {
   nodeUniform: NodeUniform;
 
   constructor(nodeUniform: NodeUniform) {
-    super('UniformBuffer_' + _id++, nodeUniform ? nodeUniform.value : null);
+    super('StorageBuffer_' + _id++, nodeUniform ? nodeUniform.value : null);
 
     this.nodeUniform = nodeUniform;
   }
@@ -17,4 +17,4 @@ class NodeUniformBuffer extends UniformBuffer {
   }
 }
 
-export default NodeUniformBuffer;
+export default NodeStorageBuffer;

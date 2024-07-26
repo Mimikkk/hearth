@@ -1,7 +1,7 @@
-import { Backend } from '../../Backend.js';
-import { GPUFilterModeType } from '../constants.js';
-import mipmapSource from './mipmap.wgsl?raw';
-import { ShaderStage } from '@modules/renderer/engine/renderers/nodes/NodeBuilder.types.js';
+import { Backend } from './Backend.js';
+import { GPUFilterModeType } from './constants.js';
+import mipmapSource from './shaders/mipmap.wgsl?raw';
+import { ShaderStage } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 const names = {
   linear: 'mipmap-linear',
