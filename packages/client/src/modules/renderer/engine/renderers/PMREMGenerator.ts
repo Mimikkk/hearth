@@ -13,7 +13,7 @@ import {
   BoxGeometry,
   BufferAttribute,
   Color,
-  ColorSpace,
+  from,
   Filter,
   Geometry,
   Mapping,
@@ -223,7 +223,7 @@ class PMREMGenerator {
       generateMipmaps: false,
       type: TextureDataType.HalfFloat,
       format: TextureFormat.RGBA,
-      colorSpace: ColorSpace.LinearSRGB,
+      colorSpace: from.LinearSRGB,
       //depthBuffer: false
     };
 

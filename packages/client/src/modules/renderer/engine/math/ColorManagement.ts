@@ -1,12 +1,12 @@
-import { ColorPrimary, ColorSpace, TransferFunction } from '../constants.js';
+import { ColorPrimary, from, TransferFunction } from '../constants.js';
 import { Mat3 } from './Mat3.js';
 import type { Color } from './Color.js';
 
 export namespace ColorManagement {
   export const enabled: boolean = true;
-  export const space: ColorSpace = ColorSpace.LinearSRGB;
+  export const space: from = from.LinearSRGB;
 
-  export const convert = (color: Color, from: ColorSpace, to: ColorSpace): Color => {
+  export const convert = (color: Color, from: from, to: from): Color => {
     if (!ColorManagement.enabled || from === to || !from || !to) return color;
     const { intoReference } = ColorSpaceMap[from];
     const { fromReference } = ColorSpaceMap[to];
@@ -14,9 +14,9 @@ export namespace ColorManagement {
     return fromReference(intoReference(color));
   };
 
-  export const fromSpace = (color: Color, from: ColorSpace): Color => convert(color, ColorManagement.space, from);
+  export const fromSpace = (color: Color, from: from): Color => convert(color, ColorManagement.space, from);
 
-  export const intoSpace = (color: Color, into: ColorSpace): Color => convert(color, into, ColorManagement.space);
+  export const intoSpace = (color: Color, into: from): Color => convert(color, into, ColorManagement.space);
 }
 
 const LinearSRGBToLinearDisplayP3 = Mat3.fromColumnOrder(
@@ -44,7 +44,7 @@ const LinearDisplayP3ToLinearSRGB = Mat3.fromColumnOrder(
 );
 
 const ColorSpaceMap: Record<
-  ColorSpace,
+  from,
   {
     transfer: TransferFunction;
     primaries: ColorPrimary;
@@ -52,25 +52,25 @@ const ColorSpaceMap: Record<
     fromReference(color: Color): Color;
   }
 > = {
-  [ColorSpace.LinearSRGB]: {
+  [from.LinearSRGB]: {
     transfer: TransferFunction.Linear,
     primaries: ColorPrimary.Rec709,
     intoReference: color => color,
     fromReference: color => color,
   },
-  [ColorSpace.SRGB]: {
+  [from.SRGB]: {
     transfer: TransferFunction.SRGB,
     primaries: ColorPrimary.Rec709,
     intoReference: color => color.asSRGBToLinear(),
     fromReference: color => color.asLinearToSRGB(),
   },
-  [ColorSpace.LinearDisplayP3]: {
+  [from.LinearDisplayP3]: {
     transfer: TransferFunction.Linear,
     primaries: ColorPrimary.P3,
     intoReference: color => color.applyMat3(LinearDisplayP3ToLinearSRGB),
     fromReference: color => color.applyMat3(LinearSRGBToLinearDisplayP3),
   },
-  [ColorSpace.DisplayP3]: {
+  [from.DisplayP3]: {
     transfer: TransferFunction.SRGB,
     primaries: ColorPrimary.P3,
     intoReference: color => color.asSRGBToLinear().applyMat3(LinearDisplayP3ToLinearSRGB),

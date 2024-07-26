@@ -1,7 +1,7 @@
 import { FileLoader, ResponseType } from '@modules/renderer/engine/loaders/files/FileLoader/FileLoader.js';
 import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
 import { BufferAttribute } from '@modules/renderer/engine/core/attributes/BufferAttribute.js';
-import { ColorSpace } from '@modules/renderer/engine/constants.js';
+import { from } from '@modules/renderer/engine/constants.js';
 import { Color } from '@modules/renderer/engine/math/Color.js';
 
 const _taskCache = new WeakMap();
@@ -61,10 +61,10 @@ class DRACOLoader {
   }
 
   parse(buffer: ArrayBuffer) {
-    return this.decodeDracoFile(buffer, null, null, ColorSpace.SRGB);
+    return this.decodeDracoFile(buffer, null, null, from.SRGB);
   }
 
-  decodeDracoFile(buffer, attributeIDs, attributeTypes, vertexColorSpace = ColorSpace.LinearSRGB) {
+  decodeDracoFile(buffer, attributeIDs, attributeTypes, vertexColorSpace = from.LinearSRGB) {
     const taskConfig = {
       attributeIDs: attributeIDs || this.defaultAttributeIDs,
       attributeTypes: attributeTypes || this.defaultAttributeTypes,
@@ -171,7 +171,7 @@ class DRACOLoader {
     // file is passed into .load() or .parse(). GLTFLoader uses internal APIs
     // to decode geometry, and vertex colors are already Linear-sRGB in there.
 
-    if (inputColorSpace !== ColorSpace.SRGB) return;
+    if (inputColorSpace !== from.SRGB) return;
 
     const _color = Color.new();
 

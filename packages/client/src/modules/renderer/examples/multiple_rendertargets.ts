@@ -115,7 +115,7 @@ async function init() {
   const loader = new TextureLoader();
 
   const diffuse = await loader.loadAsync('resources/textures/hardwood2_diffuse.jpg', render);
-  diffuse.colorSpace = Engine.ColorSpace.SRGB;
+  diffuse.colorSpace = Engine.from.SRGB;
   diffuse.wrapS = Engine.Wrapping.Repeat;
   diffuse.wrapT = Engine.Wrapping.Repeat;
 

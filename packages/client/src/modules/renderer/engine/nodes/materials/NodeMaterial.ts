@@ -1,4 +1,4 @@
-import { ColorSpace, ShaderMaterial } from '@modules/renderer/engine/engine.js';
+import { from, ShaderMaterial } from '@modules/renderer/engine/engine.js';
 import { getCacheKey } from '../core/NodeUtils.js';
 import { attribute } from '../core/AttributeNode.js';
 import { diffuseColor, output } from '../core/PropertyNode.js';
@@ -340,7 +340,7 @@ export class NodeMaterial extends ShaderMaterial {
     if (this.colorSpaced === true) {
       const outputColorSpace = renderer.currentColorSpace;
 
-      if (outputColorSpace !== ColorSpace.LinearSRGB && outputColorSpace !== null) {
+      if (outputColorSpace !== from.LinearSRGB && outputColorSpace !== null) {
         outputNode = outputNode.linearToColorSpace(outputColorSpace);
       }
     }

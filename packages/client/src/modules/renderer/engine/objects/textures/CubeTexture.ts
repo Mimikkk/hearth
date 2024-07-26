@@ -1,6 +1,6 @@
 import { Texture } from './Texture.js';
 import {
-  ColorSpace,
+  from,
   CubeMapping,
   DepthTextureFormat,
   MagnificationTextureFilter,
@@ -24,7 +24,7 @@ export class CubeTexture extends Texture {
     format: DepthTextureFormat | null,
     type: TextureDataType,
     anisotropy: number,
-    colorSpace: ColorSpace,
+    colorSpace: from,
   ) {
     images = images ?? [];
     mapping = mapping ?? CubeMapping.Reflection;

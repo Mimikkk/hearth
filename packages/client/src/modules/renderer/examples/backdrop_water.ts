@@ -34,7 +34,7 @@ import {
   AnimationMixer,
   BoxGeometry,
   Clock,
-  ColorSpace,
+  from,
   CylinderGeometry,
   DirectionalLight,
   Fog,

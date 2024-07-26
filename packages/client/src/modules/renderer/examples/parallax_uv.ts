@@ -43,7 +43,7 @@ async function init() {
   const loader = new TextureLoader();
 
   const topTexture = await loader.loadAsync('resources/textures/ambientcg/Ice002_1K-JPG_Color.jpg');
-  topTexture.colorSpace = Engine.ColorSpace.SRGB;
+  topTexture.colorSpace = Engine.from.SRGB;
 
   const roughnessTexture = await loader.loadAsync('resources/textures/ambientcg/Ice002_1K-JPG_Roughness.jpg');
   roughnessTexture.colorSpace = null;
@@ -57,7 +57,7 @@ async function init() {
   //
 
   const bottomTexture = await loader.loadAsync('resources/textures/ambientcg/Ice003_1K-JPG_Color.jpg');
-  bottomTexture.colorSpace = Engine.ColorSpace.SRGB;
+  bottomTexture.colorSpace = Engine.from.SRGB;
   bottomTexture.wrapS = Engine.Wrapping.Repeat;
   bottomTexture.wrapT = Engine.Wrapping.Repeat;
 

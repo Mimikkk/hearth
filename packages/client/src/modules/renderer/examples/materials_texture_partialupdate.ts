@@ -1,7 +1,7 @@
 import {
   Clock,
   Color,
-  ColorSpace,
+  from,
   DataTexture,
   Mesh,
   MeshBasicMaterial,
@@ -26,7 +26,7 @@ const scene = new Scene();
 const clock = new Clock();
 
 const diffuseMap = await TextureLoader.loadAsync('resources/textures/carbon/Carbon.png');
-diffuseMap.colorSpace = ColorSpace.SRGB;
+diffuseMap.colorSpace = from.SRGB;
 diffuseMap.minFilter = MinificationTextureFilter.Linear;
 diffuseMap.generateMipmaps = false;
 

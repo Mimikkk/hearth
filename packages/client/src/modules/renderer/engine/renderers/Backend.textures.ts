@@ -7,7 +7,7 @@ import {
 } from './constants.js';
 
 import {
-  ColorSpace,
+  from,
   CompressedPixelFormat,
   CompressedTexture,
   CubeTexture,
@@ -766,105 +766,97 @@ export function getFormat(texture: Texture, device: GPUDevice | null = null) {
     switch (format as unknown as CompressedPixelFormat) {
       case CompressedPixelFormat.RGBA_S3TC_DXT1:
         formatGPU =
-          colorSpace === ColorSpace.SRGB ? GPUTextureFormatType.BC1RGBAUnormSRGB : GPUTextureFormatType.BC1RGBAUnorm;
+          colorSpace === from.SRGB ? GPUTextureFormatType.BC1RGBAUnormSRGB : GPUTextureFormatType.BC1RGBAUnorm;
         break;
 
       case CompressedPixelFormat.RGBA_S3TC_DXT3:
         formatGPU =
-          colorSpace === ColorSpace.SRGB ? GPUTextureFormatType.BC2RGBAUnormSRGB : GPUTextureFormatType.BC2RGBAUnorm;
+          colorSpace === from.SRGB ? GPUTextureFormatType.BC2RGBAUnormSRGB : GPUTextureFormatType.BC2RGBAUnorm;
         break;
 
       case CompressedPixelFormat.RGBA_S3TC_DXT5:
         formatGPU =
-          colorSpace === ColorSpace.SRGB ? GPUTextureFormatType.BC3RGBAUnormSRGB : GPUTextureFormatType.BC3RGBAUnorm;
+          colorSpace === from.SRGB ? GPUTextureFormatType.BC3RGBAUnormSRGB : GPUTextureFormatType.BC3RGBAUnorm;
         break;
 
       case CompressedPixelFormat.RGB_ETC2:
         formatGPU =
-          colorSpace === ColorSpace.SRGB ? GPUTextureFormatType.ETC2RGB8UnormSRGB : GPUTextureFormatType.ETC2RGB8Unorm;
+          colorSpace === from.SRGB ? GPUTextureFormatType.ETC2RGB8UnormSRGB : GPUTextureFormatType.ETC2RGB8Unorm;
         break;
 
       case CompressedPixelFormat.RGBA_ETC2_EAC:
         formatGPU =
-          colorSpace === ColorSpace.SRGB
-            ? GPUTextureFormatType.ETC2RGBA8UnormSRGB
-            : GPUTextureFormatType.ETC2RGBA8Unorm;
+          colorSpace === from.SRGB ? GPUTextureFormatType.ETC2RGBA8UnormSRGB : GPUTextureFormatType.ETC2RGBA8Unorm;
         break;
 
       case CompressedPixelFormat.RGBA_ASTC_4x4:
         formatGPU =
-          colorSpace === ColorSpace.SRGB ? GPUTextureFormatType.ASTC4x4UnormSRGB : GPUTextureFormatType.ASTC4x4Unorm;
+          colorSpace === from.SRGB ? GPUTextureFormatType.ASTC4x4UnormSRGB : GPUTextureFormatType.ASTC4x4Unorm;
         break;
 
       case CompressedPixelFormat.RGBA_ASTC_5x4:
         formatGPU =
-          colorSpace === ColorSpace.SRGB ? GPUTextureFormatType.ASTC5x4UnormSRGB : GPUTextureFormatType.ASTC5x4Unorm;
+          colorSpace === from.SRGB ? GPUTextureFormatType.ASTC5x4UnormSRGB : GPUTextureFormatType.ASTC5x4Unorm;
         break;
 
       case CompressedPixelFormat.RGBA_ASTC_5x5:
         formatGPU =
-          colorSpace === ColorSpace.SRGB ? GPUTextureFormatType.ASTC5x5UnormSRGB : GPUTextureFormatType.ASTC5x5Unorm;
+          colorSpace === from.SRGB ? GPUTextureFormatType.ASTC5x5UnormSRGB : GPUTextureFormatType.ASTC5x5Unorm;
         break;
 
       case CompressedPixelFormat.RGBA_ASTC_6x5:
         formatGPU =
-          colorSpace === ColorSpace.SRGB ? GPUTextureFormatType.ASTC6x5UnormSRGB : GPUTextureFormatType.ASTC6x5Unorm;
+          colorSpace === from.SRGB ? GPUTextureFormatType.ASTC6x5UnormSRGB : GPUTextureFormatType.ASTC6x5Unorm;
         break;
 
       case CompressedPixelFormat.RGBA_ASTC_6x6:
         formatGPU =
-          colorSpace === ColorSpace.SRGB ? GPUTextureFormatType.ASTC6x6UnormSRGB : GPUTextureFormatType.ASTC6x6Unorm;
+          colorSpace === from.SRGB ? GPUTextureFormatType.ASTC6x6UnormSRGB : GPUTextureFormatType.ASTC6x6Unorm;
         break;
 
       case CompressedPixelFormat.RGBA_ASTC_8x5:
         formatGPU =
-          colorSpace === ColorSpace.SRGB ? GPUTextureFormatType.ASTC8x5UnormSRGB : GPUTextureFormatType.ASTC8x5Unorm;
+          colorSpace === from.SRGB ? GPUTextureFormatType.ASTC8x5UnormSRGB : GPUTextureFormatType.ASTC8x5Unorm;
         break;
 
       case CompressedPixelFormat.RGBA_ASTC_8x6:
         formatGPU =
-          colorSpace === ColorSpace.SRGB ? GPUTextureFormatType.ASTC8x6UnormSRGB : GPUTextureFormatType.ASTC8x6Unorm;
+          colorSpace === from.SRGB ? GPUTextureFormatType.ASTC8x6UnormSRGB : GPUTextureFormatType.ASTC8x6Unorm;
         break;
 
       case CompressedPixelFormat.RGBA_ASTC_8x8:
         formatGPU =
-          colorSpace === ColorSpace.SRGB ? GPUTextureFormatType.ASTC8x8UnormSRGB : GPUTextureFormatType.ASTC8x8Unorm;
+          colorSpace === from.SRGB ? GPUTextureFormatType.ASTC8x8UnormSRGB : GPUTextureFormatType.ASTC8x8Unorm;
         break;
 
       case CompressedPixelFormat.RGBA_ASTC_10x5:
         formatGPU =
-          colorSpace === ColorSpace.SRGB ? GPUTextureFormatType.ASTC10x5UnormSRGB : GPUTextureFormatType.ASTC10x5Unorm;
+          colorSpace === from.SRGB ? GPUTextureFormatType.ASTC10x5UnormSRGB : GPUTextureFormatType.ASTC10x5Unorm;
         break;
 
       case CompressedPixelFormat.RGBA_ASTC_10x6:
         formatGPU =
-          colorSpace === ColorSpace.SRGB ? GPUTextureFormatType.ASTC10x6UnormSRGB : GPUTextureFormatType.ASTC10x6Unorm;
+          colorSpace === from.SRGB ? GPUTextureFormatType.ASTC10x6UnormSRGB : GPUTextureFormatType.ASTC10x6Unorm;
         break;
 
       case CompressedPixelFormat.RGBA_ASTC_10x8:
         formatGPU =
-          colorSpace === ColorSpace.SRGB ? GPUTextureFormatType.ASTC10x8UnormSRGB : GPUTextureFormatType.ASTC10x8Unorm;
+          colorSpace === from.SRGB ? GPUTextureFormatType.ASTC10x8UnormSRGB : GPUTextureFormatType.ASTC10x8Unorm;
         break;
 
       case CompressedPixelFormat.RGBA_ASTC_10x10:
         formatGPU =
-          colorSpace === ColorSpace.SRGB
-            ? GPUTextureFormatType.ASTC10x10UnormSRGB
-            : GPUTextureFormatType.ASTC10x10Unorm;
+          colorSpace === from.SRGB ? GPUTextureFormatType.ASTC10x10UnormSRGB : GPUTextureFormatType.ASTC10x10Unorm;
         break;
 
       case CompressedPixelFormat.RGBA_ASTC_12x10:
         formatGPU =
-          colorSpace === ColorSpace.SRGB
-            ? GPUTextureFormatType.ASTC12x10UnormSRGB
-            : GPUTextureFormatType.ASTC12x10Unorm;
+          colorSpace === from.SRGB ? GPUTextureFormatType.ASTC12x10UnormSRGB : GPUTextureFormatType.ASTC12x10Unorm;
         break;
 
       case CompressedPixelFormat.RGBA_ASTC_12x12:
         formatGPU =
-          colorSpace === ColorSpace.SRGB
-            ? GPUTextureFormatType.ASTC12x12UnormSRGB
-            : GPUTextureFormatType.ASTC12x12Unorm;
+          colorSpace === from.SRGB ? GPUTextureFormatType.ASTC12x12UnormSRGB : GPUTextureFormatType.ASTC12x12Unorm;
         break;
 
       default:
@@ -876,7 +868,7 @@ export function getFormat(texture: Texture, device: GPUDevice | null = null) {
         switch (type) {
           case TextureDataType.UnsignedByte:
             formatGPU =
-              colorSpace === ColorSpace.SRGB ? GPUTextureFormatType.RGBA8UnormSRGB : GPUTextureFormatType.RGBA8Unorm;
+              colorSpace === from.SRGB ? GPUTextureFormatType.RGBA8UnormSRGB : GPUTextureFormatType.RGBA8Unorm;
             break;
 
           case TextureDataType.HalfFloat:

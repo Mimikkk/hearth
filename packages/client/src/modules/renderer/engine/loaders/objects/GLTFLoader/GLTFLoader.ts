@@ -7,7 +7,7 @@ import {
   Camera,
   Color,
   ColorManagement,
-  ColorSpace,
+  from,
   DirectionalLight,
   Entity,
   Filter,
@@ -333,7 +333,7 @@ class GLTFLightsExtension implements Plugin {
     const color = Color.new(0xffffff);
 
     if (lightDef.color !== undefined)
-      color.setRGB(lightDef.color[0], lightDef.color[1], lightDef.color[2], ColorSpace.LinearSRGB);
+      color.setRGB(lightDef.color[0], lightDef.color[1], lightDef.color[2], from.LinearSRGB);
 
     const range = lightDef.range !== undefined ? lightDef.range : 0;
 
@@ -434,12 +434,12 @@ class GLTFMaterialsUnlitExtension implements Plugin {
       if (Array.isArray(metallicRoughness.baseColorFactor)) {
         const array = metallicRoughness.baseColorFactor;
 
-        materialParams.color.setRGB(array[0], array[1], array[2], ColorSpace.LinearSRGB);
+        materialParams.color.setRGB(array[0], array[1], array[2], from.LinearSRGB);
         materialParams.opacity = array[3];
       }
 
       if (metallicRoughness.baseColorTexture !== undefined) {
-        pending.push(parser.assignTexture(materialParams, 'map', metallicRoughness.baseColorTexture, ColorSpace.SRGB));
+        pending.push(parser.assignTexture(materialParams, 'map', metallicRoughness.baseColorTexture, from.SRGB));
       }
     }
 
@@ -678,7 +678,7 @@ class GLTFMaterialsSheenExtension implements Plugin {
 
     if (extension.sheenColorFactor !== undefined) {
       const colorFactor = extension.sheenColorFactor;
-      materialParams.sheenColor.setRGB(colorFactor[0], colorFactor[1], colorFactor[2], ColorSpace.LinearSRGB);
+      materialParams.sheenColor.setRGB(colorFactor[0], colorFactor[1], colorFactor[2], from.LinearSRGB);
     }
 
     if (extension.sheenRoughnessFactor !== undefined) {
@@ -686,7 +686,7 @@ class GLTFMaterialsSheenExtension implements Plugin {
     }
 
     if (extension.sheenColorTexture !== undefined) {
-      pending.push(parser.assignTexture(materialParams, 'sheenColorMap', extension.sheenColorTexture, ColorSpace.SRGB));
+      pending.push(parser.assignTexture(materialParams, 'sheenColorMap', extension.sheenColorTexture, from.SRGB));
     }
 
     if (extension.sheenRoughnessTexture !== undefined) {
@@ -783,12 +783,7 @@ class GLTFMaterialsVolumeExtension implements Plugin {
     materialParams.attenuationDistance = extension.attenuationDistance || Infinity;
 
     const colorArray = extension.attenuationColor || [1, 1, 1];
-    materialParams.attenuationColor = Color.new().setRGB(
-      colorArray[0],
-      colorArray[1],
-      colorArray[2],
-      ColorSpace.LinearSRGB,
-    );
+    materialParams.attenuationColor = Color.new().setRGB(colorArray[0], colorArray[1], colorArray[2], from.LinearSRGB);
 
     return Promise.all(pending);
   }
@@ -869,17 +864,10 @@ class GLTFMaterialsSpecularExtension implements Plugin {
     }
 
     const colorArray = extension.specularColorFactor || [1, 1, 1];
-    materialParams.specularColor = Color.new().setRGB(
-      colorArray[0],
-      colorArray[1],
-      colorArray[2],
-      ColorSpace.LinearSRGB,
-    );
+    materialParams.specularColor = Color.new().setRGB(colorArray[0], colorArray[1], colorArray[2], from.LinearSRGB);
 
     if (extension.specularColorTexture !== undefined) {
-      pending.push(
-        parser.assignTexture(materialParams, 'specularColorMap', extension.specularColorTexture, ColorSpace.SRGB),
-      );
+      pending.push(parser.assignTexture(materialParams, 'specularColorMap', extension.specularColorTexture, from.SRGB));
     }
 
     return Promise.all(pending);
@@ -1429,7 +1417,7 @@ class GLTFDracoMeshCompressionExtension implements Plugin {
           },
           threeAttributeMap,
           attributeTypeMap,
-          ColorSpace.LinearSRGB,
+          from.LinearSRGB,
           reject,
         );
       });
@@ -2670,12 +2658,12 @@ class Parser {
       if (Array.isArray(metallicRoughness.baseColorFactor)) {
         const array = metallicRoughness.baseColorFactor;
 
-        materialParams.color.setRGB(array[0], array[1], array[2], ColorSpace.LinearSRGB);
+        materialParams.color.setRGB(array[0], array[1], array[2], from.LinearSRGB);
         materialParams.opacity = array[3];
       }
 
       if (metallicRoughness.baseColorTexture !== undefined) {
-        pending.push(parser.assignTexture(materialParams, 'map', metallicRoughness.baseColorTexture, ColorSpace.SRGB));
+        pending.push(parser.assignTexture(materialParams, 'map', metallicRoughness.baseColorTexture, from.SRGB));
       }
 
       materialParams.metalness =
@@ -2746,12 +2734,12 @@ class Parser {
         emissiveFactor[0],
         emissiveFactor[1],
         emissiveFactor[2],
-        ColorSpace.LinearSRGB,
+        from.LinearSRGB,
       );
     }
 
     if (materialDef.emissiveTexture !== undefined && materialType !== MeshBasicMaterial) {
-      pending.push(parser.assignTexture(materialParams, 'emissiveMap', materialDef.emissiveTexture, ColorSpace.SRGB));
+      pending.push(parser.assignTexture(materialParams, 'emissiveMap', materialDef.emissiveTexture, from.SRGB));
     }
 
     return Promise.all(pending).then(function () {
@@ -3562,7 +3550,7 @@ function addPrimitiveAttributes(geometry, primitiveDef, parser) {
     pending.push(accessor);
   }
 
-  if (ColorManagement.space !== ColorSpace.LinearSRGB && 'COLOR_0' in attributes) {
+  if (ColorManagement.space !== from.LinearSRGB && 'COLOR_0' in attributes) {
     console.warn(
       `THREE.GLTFLoader: Converting vertex colors from "srgb-linear" to "${ColorManagement.space}" not supported.`,
     );

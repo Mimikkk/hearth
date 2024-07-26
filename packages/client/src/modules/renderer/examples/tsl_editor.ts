@@ -3,7 +3,7 @@ import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 import initialCode from './tsl_editor.code.ts?raw';
 import { GUI } from 'lil-gui';
 import * as monaco from 'monaco-editor';
-import { Color, ColorSpace, Mesh, PerspectiveCamera, PlaneGeometry, Scene } from '@modules/renderer/engine/engine.js';
+import { Color, from, Mesh, PerspectiveCamera, PlaneGeometry, Scene } from '@modules/renderer/engine/engine.js';
 import './tsl_editor.css';
 import './utilities/monaco-vite.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
@@ -44,18 +44,18 @@ scene.add(mesh);
 
 const options: {
   stage: 'vertex' | 'fragment';
-  colorSpace: ColorSpace;
+  colorSpace: from;
   preview: boolean;
 } = {
   stage: 'fragment',
-  colorSpace: ColorSpace.SRGB,
+  colorSpace: from.SRGB,
   preview: true,
 };
 
 let builder: NodeBuilder | null = null;
 
 const renderer = await Renderer.create();
-renderer.outputColorSpace = ColorSpace.LinearSRGB;
+renderer.outputColorSpace = from.LinearSRGB;
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.animation.loop = () => renderer.render(scene, camera);
 renderer.setSize(renderable.clientWidth, renderable.clientHeight);
@@ -98,7 +98,7 @@ refreshEditorView();
 // gui
 const gui = new GUI();
 gui.add(options, 'stage', ['vertex', 'fragment']).onChange(refreshResultView);
-gui.add(options, 'colorSpace', [ColorSpace.LinearSRGB, ColorSpace.SRGB]).onChange(async (value: ColorSpace) => {
+gui.add(options, 'colorSpace', [from.LinearSRGB, from.SRGB]).onChange(async (value: from) => {
   renderer.outputColorSpace = value;
   await refreshEditorView();
 });

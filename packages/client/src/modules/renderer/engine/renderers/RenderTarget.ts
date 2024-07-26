@@ -1,6 +1,6 @@
 import { Texture } from '@modules/renderer/engine/objects/textures/Texture.js';
 import {
-  ColorSpace,
+  from,
   Filter,
   MagnificationTextureFilter,
   Mapping,
@@ -158,7 +158,7 @@ export namespace RenderTarget {
     format: TextureFormat;
     type: TextureDataType;
     anisotropy: number;
-    colorSpace: ColorSpace | null;
+    colorSpace: from | null;
   }
 
   export interface Options extends Partial<Configuration> {}

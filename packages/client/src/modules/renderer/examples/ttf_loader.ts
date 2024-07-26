@@ -54,7 +54,7 @@ async function init() {
 
   const dirLight2 = new Engine.DirectionalLight(0xffffff, 2);
   dirLight2.position.set(0, hover, 10).normalize();
-  dirLight2.color.setHSL(Math.random(), 1, 0.5, Engine.ColorSpace.SRGB);
+  dirLight2.color.setHSL(Math.random(), 1, 0.5, Engine.from.SRGB);
   scene.add(dirLight2);
 
   material = new Engine.MeshPhongMaterial({ color: 0xffffff, flatShading: true });

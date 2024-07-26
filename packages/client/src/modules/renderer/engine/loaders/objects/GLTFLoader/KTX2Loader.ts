@@ -1,5 +1,5 @@
 import {
-  ColorSpace,
+  from,
   CompressedArrayTexture,
   CompressedCubeTexture,
   CompressedPixelFormat,
@@ -256,9 +256,9 @@ function parseColorSpace(container: KTX2Container) {
   const dfd = container.dataFormatDescriptor[0];
 
   if (dfd.colorPrimaries === KHR_DF_PRIMARIES_BT709) {
-    return dfd.transferFunction === KHR_DF_TRANSFER_SRGB ? ColorSpace.SRGB : ColorSpace.LinearSRGB;
+    return dfd.transferFunction === KHR_DF_TRANSFER_SRGB ? from.SRGB : from.LinearSRGB;
   } else if (dfd.colorPrimaries === KHR_DF_PRIMARIES_DISPLAYP3) {
-    return dfd.transferFunction === KHR_DF_TRANSFER_SRGB ? ColorSpace.DisplayP3 : ColorSpace.LinearDisplayP3;
+    return dfd.transferFunction === KHR_DF_TRANSFER_SRGB ? from.DisplayP3 : from.LinearDisplayP3;
   } else if (dfd.colorPrimaries === KHR_DF_PRIMARIES_UNSPECIFIED) {
     return null;
   } else {

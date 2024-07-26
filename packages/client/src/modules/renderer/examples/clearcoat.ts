@@ -45,7 +45,7 @@ async function init() {
       const textureLoader = new TextureLoader();
 
       const diffuse = await textureLoader.loadAsync('resources/textures/carbon/Carbon.png');
-      diffuse.colorSpace = Engine.ColorSpace.SRGB;
+      diffuse.colorSpace = Engine.from.SRGB;
       diffuse.wrapS = Engine.Wrapping.Repeat;
       diffuse.wrapT = Engine.Wrapping.Repeat;
       diffuse.repeat.x = 10;
