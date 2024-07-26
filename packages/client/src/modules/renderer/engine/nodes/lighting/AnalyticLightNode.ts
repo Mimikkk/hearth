@@ -27,7 +27,7 @@ export class AnalyticLightNode extends LightingNode {
 
   constructor(public light: Light) {
     super();
-    this.updateType = NodeUpdateType.FRAME;
+    this.updateType = NodeUpdateType.Frame;
     this.light = light;
 
     this.rtt = null!;
@@ -103,7 +103,7 @@ export class AnalyticLightNode extends LightingNode {
       this.colorNode = this.colorNode.mul(frustumTest.mix(1, shadowNode.mix(shadowColor.a.mix(1, shadowColor), 1)));
       this.shadowNode = shadowNode;
 
-      this.updateBeforeType = NodeUpdateType.RENDER;
+      this.updateBeforeType = NodeUpdateType.Render;
     }
   }
 

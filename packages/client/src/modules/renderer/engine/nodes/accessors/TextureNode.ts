@@ -22,7 +22,7 @@ class TextureNode extends UniformNode {
 
     this.sampler = true;
     this.updateMatrix = false;
-    this.updateType = NodeUpdateType.NONE;
+    this.updateType = NodeUpdateType.None;
 
     this.setUpdateMatrix(uvNode === null);
   }
@@ -57,7 +57,7 @@ class TextureNode extends UniformNode {
 
   setUpdateMatrix(value) {
     this.updateMatrix = value;
-    this.updateType = value ? NodeUpdateType.FRAME : NodeUpdateType.NONE;
+    this.updateType = value ? NodeUpdateType.Frame : NodeUpdateType.None;
 
     return this;
   }

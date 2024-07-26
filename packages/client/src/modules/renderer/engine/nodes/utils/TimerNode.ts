@@ -12,7 +12,7 @@ export class TimerNode extends UniformNode<number> {
     value: number = 0,
   ) {
     super(value);
-    this.updateType = NodeUpdateType.FRAME;
+    this.updateType = NodeUpdateType.Frame;
   }
 
   update(frame: NodeFrame): void {

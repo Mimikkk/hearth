@@ -56,7 +56,7 @@ export class NodeFrame {
     const type = node.getUpdateBeforeType();
     const reference = node.updateReference(this);
 
-    if (type === NodeUpdateType.FRAME) {
+    if (type === NodeUpdateType.Frame) {
       const { frameMap } = this.map(reference, this.updateBeforeMap);
 
       if (frameMap.get(node) !== this.frameId) {
@@ -64,7 +64,7 @@ export class NodeFrame {
           frameMap.set(node, this.frameId);
         }
       }
-    } else if (type === NodeUpdateType.RENDER) {
+    } else if (type === NodeUpdateType.Render) {
       const { renderMap } = this.map(reference, this.updateBeforeMap);
 
       if (renderMap.get(node) !== this.renderId) {
@@ -72,7 +72,7 @@ export class NodeFrame {
           renderMap.set(node, this.renderId);
         }
       }
-    } else if (type === NodeUpdateType.OBJECT) {
+    } else if (type === NodeUpdateType.Object) {
       node.updateBefore(this);
     }
   }
@@ -81,7 +81,7 @@ export class NodeFrame {
     const updateType = node.getUpdateType();
     const reference = node.updateReference(this);
 
-    if (updateType === NodeUpdateType.FRAME) {
+    if (updateType === NodeUpdateType.Frame) {
       const { frameMap } = this.map(reference, this.updateMap);
 
       if (frameMap.get(node) !== this.frameId) {
@@ -89,7 +89,7 @@ export class NodeFrame {
           frameMap.set(node, this.frameId);
         }
       }
-    } else if (updateType === NodeUpdateType.RENDER) {
+    } else if (updateType === NodeUpdateType.Render) {
       const { renderMap } = this.map(reference, this.updateMap);
 
       if (renderMap.get(node) !== this.renderId) {
@@ -97,7 +97,7 @@ export class NodeFrame {
           renderMap.set(node, this.renderId);
         }
       }
-    } else if (updateType === NodeUpdateType.OBJECT) {
+    } else if (updateType === NodeUpdateType.Object) {
       node.update(this);
     }
   }

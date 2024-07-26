@@ -257,7 +257,7 @@ export { default as RendererReferenceNode, rendererReference } from './accessors
 export { default as MorphNode, morphReference } from './accessors/MorphNode.js';
 export { default as TextureBicubicNode, textureBicubic } from './accessors/TextureBicubicNode.js';
 export {
-  default as ModelNode,
+  ModelNode,
   modelDirection,
   modelViewMatrix,
   modelNormalMatrix,

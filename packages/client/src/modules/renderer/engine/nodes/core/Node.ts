@@ -24,8 +24,8 @@ export class Node {
   constructor(nodeType: TypeName | null = null) {
     this.nodeType = nodeType;
 
-    this.updateType = NodeUpdateType.NONE;
-    this.updateBeforeType = NodeUpdateType.NONE;
+    this.updateType = NodeUpdateType.None;
+    this.updateBeforeType = NodeUpdateType.None;
 
     this.uuid = v4();
 

@@ -54,7 +54,7 @@ class PMREMNode extends TempNode {
     this._height = uniform(0);
     this._maxMip = uniform(0);
 
-    this.updateBeforeType = NodeUpdateType.RENDER;
+    this.updateBeforeType = NodeUpdateType.Render;
   }
 
   set value(value) {

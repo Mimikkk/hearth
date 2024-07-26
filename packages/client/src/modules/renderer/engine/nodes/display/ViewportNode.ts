@@ -23,10 +23,10 @@ class ViewportNode extends Node {
   }
 
   getUpdateType() {
-    let updateType = NodeUpdateType.NONE;
+    let updateType = NodeUpdateType.None;
 
     if (this.scope === ViewportNode.RESOLUTION || this.scope === ViewportNode.VIEWPORT) {
-      updateType = NodeUpdateType.FRAME;
+      updateType = NodeUpdateType.Frame;
     }
 
     this.updateType = updateType;

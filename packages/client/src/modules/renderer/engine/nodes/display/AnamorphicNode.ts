@@ -29,7 +29,7 @@ class AnamorphicNode extends TempNode {
 
     this._textureNode = texturePass(this, this.target.texture);
 
-    this.updateBeforeType = NodeUpdateType.RENDER;
+    this.updateBeforeType = NodeUpdateType.Render;
   }
 
   getTextureNode() {

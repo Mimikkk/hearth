@@ -10,83 +10,79 @@ import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.typ
 
 class EntityNode extends Node {
   static type = 'EntityNode';
-  scope: string;
+  scope: NodeVariant;
   object3d: any;
   _uniformNode: UniformNode<any>;
 
-  constructor(scope, object3d: Entity) {
+  constructor(scope: NodeVariant, object3d: Entity) {
     super();
 
     this.scope = scope;
     this.object3d = object3d;
-
-    this.updateType = NodeUpdateType.OBJECT;
-
+    this.updateType = NodeUpdateType.Object;
     this._uniformNode = new UniformNode(null);
   }
 
   getNodeType(): TypeName {
-    const scope = this.scope;
-
-    if (scope === EntityNode.WORLD_MATRIX || scope === EntityNode.VIEW_MATRIX) {
-      return TypeName.mat4;
+    switch (this.scope) {
+      case EntityNode.WORLD_MATRIX:
+      case EntityNode.VIEW_MATRIX:
+        return TypeName.mat4;
+      case EntityNode.NORMAL_MATRIX:
+        return TypeName.mat3;
+      default:
+        return TypeName.vec3;
     }
-    if (scope === EntityNode.NORMAL_MATRIX) {
-      return TypeName.mat3;
-    }
-    return TypeName.vec3;
   }
 
   update(frame: NodeFrame): void {
     const object = this.object3d;
-    const uniformNode = this._uniformNode;
-    const scope = this.scope;
+    const uniform = this._uniformNode;
 
-    if (scope === EntityNode.VIEW_MATRIX) {
-      uniformNode.value = object.modelViewMatrix;
-    } else if (scope === EntityNode.NORMAL_MATRIX) {
-      uniformNode.value = object.normalMatrix;
-    } else if (scope === EntityNode.WORLD_MATRIX) {
-      uniformNode.value = object.matrixWorld;
-    } else if (scope === EntityNode.POSITION) {
-      uniformNode.value = uniformNode.value || Vec3.new();
-
-      uniformNode.value.fromMat4Position(object.matrixWorld);
-    } else if (scope === EntityNode.SCALE) {
-      uniformNode.value = uniformNode.value || Vec3.new();
-
-      uniformNode.value.fromMat4Scale(object.matrixWorld);
-    } else if (scope === EntityNode.DIRECTION) {
-      uniformNode.value = uniformNode.value || Vec3.new();
-
-      object.getWorldDirection(uniformNode.value);
-    } else if (scope === EntityNode.VIEW_POSITION) {
-      const camera = frame.camera;
-
-      uniformNode.value = uniformNode.value || Vec3.new();
-      uniformNode.value.fromMat4Position(object.matrixWorld);
-      uniformNode.value.applyMat4(camera.matrixWorldInverse);
+    switch (this.scope) {
+      case EntityNode.VIEW_MATRIX:
+        uniform.value = object.modelViewMatrix;
+        break;
+      case EntityNode.NORMAL_MATRIX:
+        uniform.value = object.normalMatrix;
+        break;
+      case EntityNode.WORLD_MATRIX:
+        uniform.value = object.matrixWorld;
+        break;
+      case EntityNode.POSITION:
+        uniform.value = uniform.value || Vec3.new();
+        uniform.value.fromMat4Position(object.matrixWorld);
+        break;
+      case EntityNode.SCALE:
+        uniform.value = uniform.value || Vec3.new();
+        uniform.value.fromMat4Scale(object.matrixWorld);
+        break;
+      case EntityNode.DIRECTION:
+        uniform.value = uniform.value || Vec3.new();
+        object.getWorldDirection(uniform.value);
+        break;
+      case EntityNode.VIEW_POSITION:
+        const camera = frame.camera;
+        uniform.value = uniform.value || Vec3.new();
+        uniform.value.fromMat4Position(object.matrixWorld);
+        uniform.value.applyMat4(camera.matrixWorldInverse);
+        break;
     }
   }
 
   generate(builder: NodeBuilder): string | null {
-    const scope = this.scope;
-
-    if (scope === EntityNode.WORLD_MATRIX || scope === EntityNode.VIEW_MATRIX) {
-      this._uniformNode.nodeType = 'mat4';
-    } else if (scope === EntityNode.NORMAL_MATRIX) {
-      this._uniformNode.nodeType = 'mat3';
-    } else if (
-      scope === EntityNode.POSITION ||
-      scope === EntityNode.VIEW_POSITION ||
-      scope === EntityNode.DIRECTION ||
-      scope === EntityNode.SCALE
-    ) {
-      this._uniformNode.nodeType = 'vec3';
-    }
-
+    this._uniformNode.nodeType = this.getNodeType();
     return this._uniformNode.build(builder);
   }
+}
+
+enum NodeVariant {
+  NormalMatrix = 'normalMatrix',
+  ViewPosition = 'viewPosition',
+  WorldMatrix = 'worldMatrix',
+  ViewMatrix = 'viewMatrix',
+  Position = 'position',
+  Scale = 'scale',
 }
 
 EntityNode.VIEW_MATRIX = 'viewMatrix';

@@ -53,7 +53,7 @@ class PassNode extends TempNode {
 
     this.renderTarget = renderTarget;
 
-    this.updateBeforeType = NodeUpdateType.FRAME;
+    this.updateBeforeType = NodeUpdateType.Frame;
 
     this._textureNode = nodeObject(new PassTextureNode(this, renderTarget.texture));
     this._depthTextureNode = nodeObject(new PassTextureNode(this, depthTexture));

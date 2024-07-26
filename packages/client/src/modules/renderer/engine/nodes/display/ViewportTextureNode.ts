@@ -23,7 +23,7 @@ class ViewportTextureNode extends TextureNode {
 
     this.generateMipmaps = false;
     this.isOutputTextureNode = true;
-    this.updateBeforeType = NodeUpdateType.FRAME;
+    this.updateBeforeType = NodeUpdateType.Frame;
   }
 
   updateBefore(frame: NodeFrame): void {
