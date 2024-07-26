@@ -1,33 +1,22 @@
-import Node from '../core/Node.js';
+import { Node } from '../core/Node.js';
 import { nodeProxy } from '../shadernode/ShaderNodes.js';
 import { objectPosition } from '../accessors/EntityNode.js';
 import { cameraViewMatrix } from '../accessors/CameraNode.js';
+import type { Light } from '@modules/renderer/engine/objects/lights/Light.js';
 
-class LightNode extends Node {
+export class LightNode extends Node {
   static type = 'LightNode';
 
-  constructor(scope = LightNode.TARGET_DIRECTION, light = null) {
+  constructor(public light: Light) {
     super();
-
-    this.scope = scope;
-    this.light = light;
   }
 
-  setup() {
-    const { scope, light } = this;
-
-    let output = null;
-
-    if (scope === LightNode.TARGET_DIRECTION) {
-      output = cameraViewMatrix.transformDirection(objectPosition(light).sub(objectPosition(light.target)));
-    }
-
-    return output;
+  setup(): Node {
+    const { light } = this;
+    return cameraViewMatrix.transformDirection(objectPosition(light).sub(objectPosition(light.target)));
   }
 }
 
-LightNode.TARGET_DIRECTION = 'targetDirection';
-
 export default LightNode;
 
-export const lightTargetDirection = nodeProxy(LightNode, LightNode.TARGET_DIRECTION);
+export const lightTargetDirection = nodeProxy(LightNode);
