@@ -1,7 +1,7 @@
 import { Backend } from '@modules/renderer/engine/renderers/Backend.js';
 import { ColorSpace, Side, ToneMapping } from '@modules/renderer/engine/constants.js';
 import ToneMappingNode from '@modules/renderer/engine/nodes/display/ToneMappingNode.js';
-import { Stats } from '@modules/renderer/engine/renderers/Stats.js';
+import { FrameStats } from '@modules/renderer/engine/renderers/FrameStats.js';
 import { Vec4 } from '@modules/renderer/engine/math/Vec4.js';
 import Attributes from '@modules/renderer/engine/renderers/Attributes.js';
 import Geometries from '@modules/renderer/engine/renderers/Geometries.js';
@@ -32,7 +32,7 @@ import {
   RenderTarget,
   Texture,
 } from '@modules/renderer/engine/engine.js';
-import { GPUFeatureNameType, GPUTextureFormatType } from '@modules/renderer/engine/renderers/utils/constants.js';
+import { GPUFeature, GPUTextureFormatType } from '@modules/renderer/engine/renderers/utils/constants.js';
 import { RenderItem, RenderList, SortFn } from '@modules/renderer/engine/renderers/RenderList.js';
 import { AttributeType } from '@modules/renderer/engine/core/types.js';
 import ComputeNode from '@modules/renderer/engine/nodes/gpgpu/ComputeNode.js';
@@ -43,7 +43,7 @@ import { Node } from '@modules/renderer/engine/nodes/core/Node.js';
 
 export class Renderer {
   backend: Backend;
-  info: Stats;
+  info: FrameStats;
 
   _pixelRatio: number;
   _width: number;
@@ -134,7 +134,7 @@ export class Renderer {
     this.useScissor = false;
 
     this.backend = new Backend(this);
-    this.info = new Stats();
+    this.info = new FrameStats();
     this.nodes = new Nodes(this);
     this.animation = new Animation(this);
     this.attributes = new Attributes(this);
@@ -171,7 +171,7 @@ export class Renderer {
     if (adapter === null) throw Error('WebGPUBackend: Unable to create WebGPU adapter.');
 
     const device = await adapter.requestDevice({
-      requiredFeatures: Object.values(GPUFeatureNameType).filter(name => adapter.features.has(name)),
+      requiredFeatures: Object.values(GPUFeature).filter(name => adapter.features.has(name)),
       requiredLimits: renderer.parameters.requiredLimits,
     });
 

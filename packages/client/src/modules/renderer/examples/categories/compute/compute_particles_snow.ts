@@ -28,7 +28,8 @@ import PostProcessing from '@modules/renderer/engine/renderers/PostProcessing.js
 import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 import { WorldAxesControls } from '@modules/renderer/engine/objects/controls/WorldAxesControls.js';
-import { GPUBufferBindingTypeType, BufferStep } from '@modules/renderer/engine/renderers/utils/constants.js';
+import { BufferStep, GPUBufferBindingTypeType } from '@modules/renderer/engine/renderers/utils/constants.js';
+import { Stats } from '../../ui/stats.js';
 
 const maxParticleCount = 100000;
 
@@ -307,6 +308,8 @@ async function init() {
   postProcessing = new PostProcessing(renderer);
   postProcessing.outputNode = totalPass;
 
+  stats = new Stats(renderer);
+
   await renderer.compute(computeInit);
 
   //
@@ -315,6 +318,7 @@ async function init() {
 }
 
 async function animate() {
+  stats?.update();
   controls?.update();
 
   // position

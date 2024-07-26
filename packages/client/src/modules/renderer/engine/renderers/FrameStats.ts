@@ -5,23 +5,27 @@ import { Sprite } from '@modules/renderer/engine/objects/Sprite.js';
 import { Points } from '@modules/renderer/engine/objects/Points.js';
 import { Line } from '@modules/renderer/engine/objects/Line.js';
 
-export class Stats {
+export class FrameStats {
   useAutoTick: boolean;
   frame: number;
   passes: number;
   render: {
     passes: number;
+    previousCalls: number;
     calls: number;
     triangles: number;
     points: number;
     lines: number;
-    timestamp: number;
+    timestampTime: number;
+    timestampCalls: number;
   };
 
   compute: {
     passes: number;
+    previousCalls: number;
     calls: number;
-    timestamp: number;
+    timestampTime: number;
+    timestampCalls: number;
   };
 
   memory: {
@@ -37,17 +41,21 @@ export class Stats {
 
     this.render = {
       passes: 0,
+      previousCalls: 0,
       calls: 0,
       triangles: 0,
       points: 0,
       lines: 0,
-      timestamp: 0,
+      timestampTime: 0,
+      timestampCalls: 0,
     };
 
     this.compute = {
       passes: 0,
+      previousCalls: 0,
       calls: 0,
-      timestamp: 0,
+      timestampTime: 0,
+      timestampCalls: 0,
     };
 
     this.memory = {
@@ -73,18 +81,24 @@ export class Stats {
   }
 
   stamp(type: 'render' | 'compute', time: number) {
-    this[type].timestamp += time;
+    if (this[type].timestampCalls === 0) this[type].timestampTime = 0;
+
+    this[type].timestampTime += time;
+    this[type].timestampCalls++;
+
+    if (this[type].timestampCalls < this[type].previousCalls) return;
+    this[type].timestampCalls = 0;
   }
 
   tick() {
+    this.render.previousCalls = this.render.calls;
     this.render.calls = 0;
     this.render.triangles = 0;
     this.render.points = 0;
     this.render.lines = 0;
-    this.render.timestamp = 0;
 
+    this.compute.previousCalls = this.compute.calls;
     this.compute.calls = 0;
-    this.compute.timestamp = 0;
   }
 
   dispose() {
@@ -94,8 +108,8 @@ export class Stats {
     this.render.passes = 0;
     this.compute.passes = 0;
 
-    this.render.timestamp = 0;
-    this.compute.timestamp = 0;
+    this.render.timestampTime = 0;
+    this.compute.timestampTime = 0;
 
     this.memory.textures = 0;
     this.memory.geometries = 0;

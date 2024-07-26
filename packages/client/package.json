@@ -12,7 +12,7 @@
     "zstddec": "^0.1.0",
     "zustand": "^4.5.1",
     "typescript": "5.5.3",
-    "stats-js": "^1.0.1",
+    "stats-gl": "^2.2.8",
     "utif": "^3.1.0",
     "fflate": "^0.8.2",
     "meshoptimizer": "^0.20.0",

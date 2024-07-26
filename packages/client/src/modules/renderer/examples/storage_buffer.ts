@@ -144,8 +144,8 @@ async function init() {
     const renderCalls = renderer.info?.render?.calls.toFixed(0);
     dashboard.computeCalls.innerHTML = computeCalls ?? 'N/A';
     dashboard.renderCalls.innerHTML = renderCalls ?? 'N/A';
-    const computeMs = renderer.info?.compute?.timestamp.toFixed(6);
-    const renderMs = renderer.info?.render?.timestamp.toFixed(6);
+    const computeMs = renderer.info?.compute?.timestampTime.toFixed(6);
+    const renderMs = renderer.info?.render?.timestampTime.toFixed(6);
     dashboard.computeMs.innerHTML = computeMs ?? 'N/A';
     dashboard.renderMs.innerHTML = renderMs ?? 'N/A';
 

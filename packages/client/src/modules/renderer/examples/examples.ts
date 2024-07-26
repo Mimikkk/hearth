@@ -1,15 +1,15 @@
 export const Example = {
   Compute: {
-    Audio: 'compute_audio',
+    Audio: 'categories/compute/compute_audio',
     Particles: {
-      Particle: 'compute_particles',
-      Rain: 'compute_particles_rain',
-      Snow: 'compute_particles_snow',
+      Particle: 'categories/compute/compute_particles',
+      Rain: 'categories/compute/compute_particles_rain',
+      Snow: 'categories/compute/compute_particles_snow',
     },
-    Points: 'compute_points',
+    Points: 'categories/compute/compute_points',
     Textures: {
-      Texture: 'compute_texture',
-      PingPong: 'compute_texture_pingpong',
+      Texture: 'categories/compute/compute_texture',
+      PingPong: 'categories/compute/compute_texture_pingpong',
     },
   },
   Backdrop: 'backdrop',

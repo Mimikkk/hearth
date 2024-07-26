@@ -95,9 +95,9 @@ importers:
       solid-icons:
         specifier: ^1.1.0
         version: 1.1.0(solid-js@1.8.15)
-      stats-js:
-        specifier: ^1.0.1
-        version: 1.0.1
+      stats-gl:
+        specifier: ^2.2.8
+        version: 2.2.8
       three:
         specifier: ^0.166.1
         version: 0.166.1
@@ -237,11 +237,11 @@ packages:
     resolution: {integrity: sha512-lFMjJTrFL3j7L9yBxwYfCq2k6qqwHyzuUl/XBnif78PWTJYyL/dfowQHWE3sp6U6ZzqWiiIZnpTMO96zhkjwtg==}
     engines: {node: '>=6.0.0'}
 
-  '@ark/schema@0.2.0':
-    resolution: {integrity: sha512-IkNWCSHdjaoemMXpps4uFHEAQzwJPbTAS8K2vcQpk90sa+eNBuPSVyB/81/Qyl1VYW0iX3ceGC5NL/OznQv1jg==}
+  '@ark/schema@0.2.1':
+    resolution: {integrity: sha512-1ZEpMV3dmK+UmgsNXS7BkdUkdoyzz7Y3cuku9gLdntGAz4WqJWhoHwUtjvY/xcfqPfRuJhG8m//xaMJjLlLAEQ==}
 
-  '@ark/util@0.1.0':
-    resolution: {integrity: sha512-qCLYICQoCy3kEKDVwirQp8qvxhY7NJd8BhhoHaj1l3wCFAk9NUbcDsxAkPStZEMdPI/d7NcbGJe8SWZuRG2twQ==}
+  '@ark/util@0.1.1':
+    resolution: {integrity: sha512-dmMJ5gC14NaBtsFqL8hbmWRBPz9yfZooXiMMHhyfZrxFaDuFtpN3gBxB/xA9eEK21A03x7cu7fG2wpByxi8Xvw==}
 
   '@arktype/attest@0.6.2':
     resolution: {integrity: sha512-wMHBB9RTH61+MLJbFqsdhSaUrCYR9b0abEUuttLbzmRpqK3XkgJPBMH1NvL1JR1pHm9aFoyFxfrl32jg3nO28A==}
@@ -744,6 +744,9 @@ packages:
   '@tanstack/virtual-core@3.1.2':
     resolution: {integrity: sha512-DATZJs8iejkIUqXZe6ruDAnjFo78BKnIIgqQZrc7CmEFqfLEN/TPD91n4hRfo6hpRB6xC00bwKxv7vdjFNEmOg==}
 
+  '@tweenjs/tween.js@23.1.3':
+    resolution: {integrity: sha512-vJmvvwFxYuGnF2axRtPYocag6Clbb5YS7kLL+SO/TeVFzHqDIWrNKYtcsPMibjDx9O+bu+psAy9NKfWklassUA==}
+
   '@types/argparse@1.0.38':
     resolution: {integrity: sha512-ebDJ9b0e702Yr7pWgB0jzm+CX4Srzz8RcXtLJDJB+BSccqMa36uyH/zUsSYao5+BD1ytv3k3rPYCq4mAE1hsXA==}
 
@@ -782,6 +785,9 @@ packages:
 
   '@types/three@0.161.2':
     resolution: {integrity: sha512-DazpZ+cIfBzbW/p0zm6G8CS03HBMd748A3R1ZOXHpqaXZLv2I5zNgQUrRG//UfJ6zYFp2cUoCQaOLaz8ubH07w==}
+
+  '@types/three@0.163.0':
+    resolution: {integrity: sha512-uIdDhsXRpQiBUkflBS/i1l3JX14fW6Ot9csed60nfbZNXHDTRsnV2xnTVwXcgbvTiboAR4IW+t+lTL5f1rqIqA==}
 
   '@types/upng-js@2.1.5':
     resolution: {integrity: sha512-CzXg1lcCcWzrmYmke9BLbBPzb2DpdC1bXuXf0BtK3Bygvsozslei8S1bheDI1QUfZzZpMeQI5fywfnMj4CxocQ==}
@@ -926,8 +932,8 @@ packages:
   argparse@2.0.1:
     resolution: {integrity: sha512-8+9WqebbFzpX9OR+Wa6O29asIogeRMzcGtAINdpMHHyAg10f05aSFVBbcEqGf/PXw1EjAZ+q2/bEBg3DvurK3Q==}
 
-  arktype@2.0.0-beta.0:
-    resolution: {integrity: sha512-fE3ssMiXjr/bLqFPzlDhRlXngdyHQreu7p7i8+dtcY1CA+f8WrVUcue6JxywhnqEJXPG4HOcIwQcC+q4VfeUMQ==}
+  arktype@2.0.0-beta.1:
+    resolution: {integrity: sha512-ztMquaiJR7HPks6ojXYwVw5qvXyt81v6vD++E5JQSFGD/556I1StFYYmicJS1jm5oiECCLAscYQFX6V3tsoHow==}
 
   assertion-error@1.1.0:
     resolution: {integrity: sha512-jgsaNduz+ndvGyFt3uSuWqvy4lCnIJiovtouQN5JZHOKCS2QuhEdbcQHFhVksz2N2U9hXJo8odG7ETyWlEeuDw==}
@@ -2025,8 +2031,8 @@ packages:
   stackback@0.0.2:
     resolution: {integrity: sha512-1XMJE5fQo1jGH6Y/7ebnwPOBEkIEnT4QF32d5R1+VXdXveM0IBMJt8zfaxX1P3QhVwrYe+576+jkANtSS2mBbw==}
 
-  stats-js@1.0.1:
-    resolution: {integrity: sha512-EAwEFghGNv8mlYC4CZzI5kWghsnP8uBKXw6VLRHtXkOk5xySfUKLTqTkjgJFfDluIkf/O7eZwi5MXP50VeTbUg==}
+  stats-gl@2.2.8:
+    resolution: {integrity: sha512-94G5nZvduDmzxBS7K0lYnynYwreZpkknD8g5dZmU6mpwIhy3caCrjAm11Qm1cbyx7mqix7Fp00RkbsonzKWnoQ==}
 
   std-env@3.7.0:
     resolution: {integrity: sha512-JPbdCEQLj1w5GilpiHAx3qJvFndqybBysA3qUOnznweH4QbNYUsW/ea8QzSrnh0vNsezMMw5bcVool8lM0gwzg==}
@@ -2485,11 +2491,11 @@ snapshots:
       '@jridgewell/gen-mapping': 0.3.3
       '@jridgewell/trace-mapping': 0.3.18
 
-  '@ark/schema@0.2.0':
+  '@ark/schema@0.2.1':
     dependencies:
-      '@ark/util': 0.1.0
+      '@ark/util': 0.1.1
 
-  '@ark/util@0.1.0': {}
+  '@ark/util@0.1.1': {}
 
   '@arktype/attest@0.6.2(typescript@5.5.3)':
     dependencies:
@@ -2497,7 +2503,7 @@ snapshots:
       '@arktype/util': 0.0.20
       '@typescript/analyze-trace': 0.10.1
       '@typescript/vfs': 1.5.0
-      arktype: 2.0.0-beta.0
+      arktype: 2.0.0-beta.1
       typescript: 5.5.3
     transitivePeerDependencies:
       - supports-color
@@ -2976,6 +2982,8 @@ snapshots:
 
   '@tanstack/virtual-core@3.1.2': {}
 
+  '@tweenjs/tween.js@23.1.3': {}
+
   '@types/argparse@1.0.38': {}
 
   '@types/babel__core@7.20.5':
@@ -3022,6 +3030,14 @@ snapshots:
       '@types/stats.js': 0.17.3
       '@types/webxr': 0.5.3
       fflate: 0.6.10
+      meshoptimizer: 0.18.1
+
+  '@types/three@0.163.0':
+    dependencies:
+      '@tweenjs/tween.js': 23.1.3
+      '@types/stats.js': 0.17.3
+      '@types/webxr': 0.5.3
+      fflate: 0.8.2
       meshoptimizer: 0.18.1
 
   '@types/upng-js@2.1.5': {}
@@ -3199,10 +3215,10 @@ snapshots:
 
   argparse@2.0.1: {}
 
-  arktype@2.0.0-beta.0:
+  arktype@2.0.0-beta.1:
     dependencies:
-      '@ark/schema': 0.2.0
-      '@ark/util': 0.1.0
+      '@ark/schema': 0.2.1
+      '@ark/util': 0.1.1
 
   assertion-error@1.1.0: {}
 
@@ -4305,7 +4321,9 @@ snapshots:
 
   stackback@0.0.2: {}
 
-  stats-js@1.0.1: {}
+  stats-gl@2.2.8:
+    dependencies:
+      '@types/three': 0.163.0
 
   std-env@3.7.0: {}
 

@@ -18,6 +18,7 @@ import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitCo
 import { Blending } from '@modules/renderer/engine/engine.js';
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
+import { UI } from '@mimi/ui';
 
 let camera, scene, renderer;
 let controls;
@@ -108,8 +109,6 @@ async function init() {
   renderer.animation.loop = render;
   document.body.appendChild(renderer.parameters.canvas);
 
-  //
-
   controls = new OrbitControls(camera, renderer.parameters.canvas);
   controls.maxDistance = 2700;
   controls.target.set(0, 500, 0);
@@ -121,9 +120,7 @@ async function init() {
 
   // gui
 
-  const gui = new GUI();
-
-  gui.add(timer, 'scale', 0, 1, 0.01).name('speed');
+  UI.create('Controls', timer).number('scale', 'Animation speed', 0.2, 1, 0.01);
 }
 
 function render() {

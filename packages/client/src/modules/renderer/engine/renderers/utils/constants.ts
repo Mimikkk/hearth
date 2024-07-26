@@ -309,7 +309,7 @@ export enum BufferStep {
   Instance = 'instance',
 }
 
-export enum GPUFeatureNameType {
+export enum GPUFeature {
   DepthClipControl = 'depth-clip-control',
   Depth32FloatStencil8 = 'depth32float-stencil8',
   TextureCompressionBC = 'texture-compression-bc',

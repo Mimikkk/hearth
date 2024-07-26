@@ -2,7 +2,7 @@ import * as Engine from '@modules/renderer/engine/engine.js';
 
 import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 
-import Stats from 'stats-js';
+import Stats from 'stats-gl';
 
 import { GUI } from 'lil-gui';
 import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
@@ -102,6 +102,7 @@ async function init() {
   });
 
   stats = new Stats();
+  stats.init(renderer);
   document.body.appendChild(stats.dom);
 
   initGui();

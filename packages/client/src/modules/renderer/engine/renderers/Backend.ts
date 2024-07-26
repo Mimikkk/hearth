@@ -1,7 +1,7 @@
 import { Color, Entity, RenderTarget, Scene, Texture } from '../engine.js';
 
 import {
-  GPUFeatureNameType,
+  GPUFeature,
   GPUIndexFormatType,
   GPULoadOpType,
   GPUStoreOpType,
@@ -837,7 +837,7 @@ export class Backend {
   }
 
   initTimestampBuffer(context: RenderContext, descriptor: GPURenderPassDescriptor): void {
-    if (!this.hasFeature(GPUFeatureNameType.TimestampQuery) || !this.renderer.parameters.useTimestamp) return;
+    if (!this.hasFeature(GPUFeature.TimestampQuery) || !this.renderer.parameters.useTimestamp) return;
 
     const data = this.memo.get(context);
     if (data.timeStampQuerySet) return;
@@ -850,50 +850,60 @@ export class Backend {
       // Write timestamp in index 1 when pass ends.
       endOfPassWriteIndex: 1,
     };
+
     data.timeStampQuerySet = timeStampQuerySet;
   }
 
   prepareTimestamp(context: RenderContext, encoder: GPUCommandEncoder) {
-    if (!this.hasFeature(GPUFeatureNameType.TimestampQuery) || !this.renderer.parameters.useTimestamp) return;
+    if (!this.hasFeature(GPUFeature.TimestampQuery) || !this.renderer.parameters.useTimestamp) return;
 
     const data = this.memo.get(context);
 
     const size = 2 * BigInt64Array.BYTES_PER_ELEMENT;
-    const resolveBuffer = this.device.createBuffer({
-      size,
-      usage: GPUBufferUsage.QUERY_RESOLVE | GPUBufferUsage.COPY_SRC,
-    });
-    const resultBuffer = this.device.createBuffer({
-      size,
-      usage: GPUBufferUsage.COPY_DST | GPUBufferUsage.MAP_READ,
-    });
+
+    if (data.currentTimestampQueryBuffers === undefined) {
+      data.currentTimestampQueryBuffers = {
+        resolveBuffer: this.device.createBuffer({
+          label: 'timestamp resolve buffer',
+          size: size,
+          usage: GPUBufferUsage.QUERY_RESOLVE | GPUBufferUsage.COPY_SRC,
+        }),
+        resultBuffer: this.device.createBuffer({
+          label: 'timestamp result buffer',
+          size: size,
+          usage: GPUBufferUsage.COPY_DST | GPUBufferUsage.MAP_READ,
+        }),
+        isMappingPending: false,
+      };
+    }
+
+    const { resolveBuffer, resultBuffer, isMappingPending } = data.currentTimestampQueryBuffers;
+
+    if (isMappingPending === true) return;
 
     encoder.resolveQuerySet(data.timeStampQuerySet, 0, 2, resolveBuffer, 0);
     encoder.copyBufferToBuffer(resolveBuffer, 0, resultBuffer, 0, size);
-
-    data.currentTimestampQueryBuffer = resultBuffer;
   }
 
-  async resolveTimestamp(renderContext: RenderContext, type: 'render' | 'compute' = 'render') {
-    if (!this.hasFeature(GPUFeatureNameType.TimestampQuery) || !this.renderer.parameters.useTimestamp) return;
+  async resolveTimestamp(context: RenderContext, type: 'render' | 'compute') {
+    if (!this.hasFeature(GPUFeature.TimestampQuery) || !this.renderer.parameters.useTimestamp) return;
 
-    const renderContextData = this.memo.get(renderContext);
-    const { currentTimestampQueryBuffer } = renderContextData;
+    const data = this.memo.get(context);
 
-    if (currentTimestampQueryBuffer === undefined) return;
+    if (data.currentTimestampQueryBuffers === undefined) return;
 
-    const buffer = currentTimestampQueryBuffer;
+    const { resultBuffer, isMappingPending } = data.currentTimestampQueryBuffers;
+    if (isMappingPending === true) return;
 
-    try {
-      await buffer.mapAsync(GPUMapMode.READ);
-      const times = new BigUint64Array(buffer.getMappedRange());
-      const duration = Number(times[1] - times[0]) / 1000000;
-      this.renderer.info.stamp(type, duration);
-    } catch (error) {
-      console.error(`Error mapping buffer: ${error}`);
-    } finally {
-      buffer.unmap();
-    }
+    data.currentTimestampQueryBuffers.isMappingPending = true;
+
+    await resultBuffer.mapAsync(GPUMapMode.READ);
+    const times = new BigUint64Array(resultBuffer.getMappedRange());
+    const duration = Number(times[1] - times[0]) / 1000000;
+
+    this.renderer.info.stamp(type, duration);
+    resultBuffer.unmap();
+    data.currentTimestampQueryBuffers.isMappingPending = false;
   }
 
   createNodeBuilder(object: Entity, renderer: Renderer, scene: Scene | null = null) {

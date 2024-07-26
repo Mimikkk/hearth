@@ -1,6 +1,6 @@
 import {
   GPUAddressModeType,
-  GPUFeatureNameType,
+  GPUFeature,
   GPUFilterModeType,
   GPUTextureDimensionType,
   GPUTextureFormatType,
@@ -960,7 +960,7 @@ export function getFormat(texture: Texture, device: GPUDevice | null = null) {
             break;
 
           case TextureDataType.Float:
-            if (device && device.features.has(GPUFeatureNameType.Depth32FloatStencil8) === false) {
+            if (device && device.features.has(GPUFeature.Depth32FloatStencil8) === false) {
               console.error(
                 'WebGPURenderer: Depth textures with TextureFormat.DepthStencil + FloatType can only be used with the "depth32float-stencil8" GPU feature.',
               );
