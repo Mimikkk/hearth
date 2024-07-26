@@ -1,6 +1,6 @@
 import { TempNode } from '../core/TempNode.js';
 import { div, mul, sub } from './OperatorNode.js';
-import { addNodeElement, f32, nodeObject, nodeProxy, vec3, vec4 } from '../shadernode/ShaderNodes.js';
+import { addNodeElement, f32, asNode, nodeProxy, vec3, vec4 } from '../shadernode/ShaderNodes.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { Node } from '../core/Node.js';
@@ -531,9 +531,9 @@ export const mix = nodeProxy(
   },
 );
 export const clamp = (value: number, low: number = 0, high: number = 1): Node => {
-  const math = new TernaryNode(nodeObject(value), nodeObject(low), nodeObject(high));
+  const math = new TernaryNode(asNode(value), asNode(low), asNode(high));
   math.method = TernaryVariant.Clamp;
-  return nodeObject(math);
+  return asNode(math);
 };
 export const saturate = (value: number) => clamp(value);
 

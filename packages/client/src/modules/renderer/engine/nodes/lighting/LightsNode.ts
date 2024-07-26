@@ -1,6 +1,6 @@
 import Node from '../core/Node.js';
 import AnalyticLightNode from './AnalyticLightNode.js';
-import { nodeObject, nodeProxy, vec3 } from '../shadernode/ShaderNodes.js';
+import { asNode, nodeProxy, vec3 } from '../shadernode/ShaderNodes.js';
 import { LightNodeMap } from '@modules/renderer/engine/nodes/lighting/LightsNodeMap.js';
 import { Light } from '@modules/renderer/engine/objects/lights/Light.js';
 import LightNode from '@modules/renderer/engine/nodes/lighting/LightNode.js';
@@ -110,7 +110,7 @@ export class LightsNode extends Node {
       if (node === null) {
         const Light = LightNodeMap.get(light.constructor) ?? AnalyticLightNode;
 
-        node = nodeObject(new Light(light));
+        node = asNode(new Light(light));
       }
 
       this.lightNodes.push(node!);
@@ -123,5 +123,5 @@ export class LightsNode extends Node {
 export default LightsNode;
 
 const byId = (a: Light, b: Light) => a.id - b.id;
-export const lights = (lights: Light[] = []) => nodeObject(LightsNode.fromLights(lights));
+export const lights = (lights: Light[] = []) => asNode(LightsNode.fromLights(lights));
 export const lightsNode = nodeProxy(LightsNode);

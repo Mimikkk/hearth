@@ -1,6 +1,6 @@
 import Node from '../core/Node.js';
 import { timerLocal } from './TimerNode.js';
-import { nodeObject, nodeProxy } from '../shadernode/ShaderNodes.js';
+import { asNode, nodeProxy } from '../shadernode/ShaderNodes.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
@@ -17,7 +17,7 @@ class OscNode extends Node {
   }
 
   setup(): Node {
-    const time = nodeObject(this.timeNode);
+    const time = asNode(this.timeNode);
 
     switch (this.method) {
       case NodeVariant.Sine:

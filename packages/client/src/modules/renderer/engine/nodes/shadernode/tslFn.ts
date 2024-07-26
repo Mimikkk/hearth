@@ -1,5 +1,5 @@
 import { ShaderNode } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.js';
-import { createShaderNodeObjects } from '@modules/renderer/engine/nodes/shadernode/CreateShaderNodeObject.js';
+import { asNodes } from '@modules/renderer/engine/nodes/shadernode/CreateShaderNodeObject.js';
 import { Node } from '@modules/renderer/engine/nodes/core/Node.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
@@ -24,7 +24,8 @@ export const tslFn = (jsFn: Function): TslFn => {
   const node = new ShaderNode(jsFn);
 
   const fn = (...params) => {
-    createShaderNodeObjects(params);
+    asNodes(params);
+
     return node.call(Node.is(params[0]) ? [...params] : params[0]);
   };
   fn.shaderNode = node;

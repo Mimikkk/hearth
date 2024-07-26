@@ -1,4 +1,4 @@
-import { nodeObject } from '../shadernode/ShaderNodes.js';
+import { asNode } from '../shadernode/ShaderNodes.js';
 import { NodeUpdateType } from '../core/constants.js';
 import { getValueType } from '../core/NodeUtils.js';
 import ArrayElementNode from '../utils/ArrayElementNode.js';
@@ -96,10 +96,10 @@ class UniformsNode extends BufferNode {
   }
 
   element(indexNode) {
-    return nodeObject(new UniformsElementNode(this, nodeObject(indexNode)));
+    return asNode(new UniformsElementNode(this, asNode(indexNode)));
   }
 }
 
 export default UniformsNode;
 
-export const uniforms = (values, nodeType) => nodeObject(new UniformsNode(values, nodeType));
+export const uniforms = (values, nodeType) => asNode(new UniformsNode(values, nodeType));

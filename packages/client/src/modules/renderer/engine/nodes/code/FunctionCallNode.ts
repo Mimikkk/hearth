@@ -1,8 +1,10 @@
 import TempNode from '../core/TempNode.js';
-import { addNodeElement, nodeArray, nodeObject, nodeObjects } from '../shadernode/ShaderNodes.js';
+import { addNodeElement, asNode } from '../shadernode/ShaderNodes.js';
 import FunctionNode from './FunctionNode.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
+import Node from '@modules/renderer/engine/nodes/core/Node.js';
+import { asNodes } from '@modules/renderer/engine/nodes/shadernode/CreateShaderNodeObject.js';
 
 class FunctionCallNode extends TempNode {
   static type = 'FunctionCallNode';
@@ -53,10 +55,9 @@ class FunctionCallNode extends TempNode {
 
 export default FunctionCallNode;
 
-export const call = (func: any, ...params: any) => {
-  params = params.length > 1 || (params[0] && params[0].isNode === true) ? nodeArray(params) : nodeObjects(params[0]);
-
-  return nodeObject(new FunctionCallNode(nodeObject(func), params));
+export const call = (fn: any, ...parameters: any) => {
+  parameters = parameters.length > 1 || asNodes(Node.is(parameters[0]) ? parameters : parameters[0]);
+  return asNode(new FunctionCallNode(asNode(fn), parameters));
 };
 
 addNodeElement('call', call);

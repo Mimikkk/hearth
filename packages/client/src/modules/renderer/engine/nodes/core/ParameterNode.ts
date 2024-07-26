@@ -1,4 +1,4 @@
-import { nodeObject } from '../shadernode/ShaderNodes.js';
+import { asNode } from '../shadernode/ShaderNodes.js';
 import PropertyNode from './PropertyNode.js';
 
 class ParameterNode extends PropertyNode {
@@ -21,4 +21,4 @@ class ParameterNode extends PropertyNode {
 
 export default ParameterNode;
 
-export const parameter = (type, name) => nodeObject(new ParameterNode(type, name));
+export const parameter = (type, name) => asNode(new ParameterNode(type, name));

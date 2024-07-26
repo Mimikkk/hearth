@@ -1,5 +1,5 @@
 import Node from './Node.js';
-import { nodeImmutable, nodeObject } from '../shadernode/ShaderNodes.js';
+import { nodeImmutable, asNode } from '../shadernode/ShaderNodes.js';
 
 class PropertyNode extends Node {
   static type = 'PropertyNode';
@@ -37,8 +37,8 @@ class PropertyNode extends Node {
 
 export default PropertyNode;
 
-export const property = (type, name) => nodeObject(new PropertyNode(type, name));
-export const varyingProperty = (type, name) => nodeObject(new PropertyNode(type, name, true));
+export const property = (type, name) => asNode(new PropertyNode(type, name));
+export const varyingProperty = (type, name) => asNode(new PropertyNode(type, name, true));
 
 export const diffuseColor = nodeImmutable(PropertyNode, 'vec4', 'DiffuseColor');
 export const roughness = nodeImmutable(PropertyNode, 'f32', 'Roughness');

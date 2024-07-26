@@ -1,6 +1,6 @@
 import BufferNode from './BufferNode.js';
 import { bufferAttribute } from './BufferAttributeNode.js';
-import { nodeObject } from '../shadernode/ShaderNodes.js';
+import { asNode } from '../shadernode/ShaderNodes.js';
 import { varying } from '../core/VaryingNode.js';
 import { storageElement } from '../utils/StorageArrayElementNode.js';
 
@@ -52,6 +52,6 @@ class StorageBufferNode extends BufferNode {
 
 export default StorageBufferNode;
 
-export const storage = (value, type, count) => nodeObject(new StorageBufferNode(value, type, count));
+export const storage = (value, type, count) => asNode(new StorageBufferNode(value, type, count));
 export const storageObject = (value, type, count) =>
-  nodeObject(new StorageBufferNode(value, type, count).setBufferObject(true));
+  asNode(new StorageBufferNode(value, type, count).setBufferObject(true));

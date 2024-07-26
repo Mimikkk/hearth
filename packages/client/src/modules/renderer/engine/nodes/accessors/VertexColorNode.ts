@@ -1,5 +1,5 @@
 import AttributeNode from '../core/AttributeNode.js';
-import { nodeObject } from '../shadernode/ShaderNodes.js';
+import { asNode } from '../shadernode/ShaderNodes.js';
 import { Vec4 } from '@modules/renderer/engine/engine.js';
 
 class VertexColorNode extends AttributeNode {
@@ -38,4 +38,4 @@ class VertexColorNode extends AttributeNode {
 
 export default VertexColorNode;
 
-export const vertexColor = (...params) => nodeObject(new VertexColorNode(...params));
+export const vertexColor = (...params) => asNode(new VertexColorNode(...params));

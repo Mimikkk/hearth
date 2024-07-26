@@ -1,6 +1,6 @@
 import Node from './Node.js';
 import { varying } from './VaryingNode.js';
-import { nodeObject } from '../shadernode/ShaderNodes.js';
+import { asNode } from '../shadernode/ShaderNodes.js';
 import { ShaderStage } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 class AttributeNode extends Node {
@@ -76,4 +76,4 @@ class AttributeNode extends Node {
 
 export default AttributeNode;
 
-export const attribute = (name, nodeType) => nodeObject(new AttributeNode(name, nodeType));
+export const attribute = (name, nodeType) => asNode(new AttributeNode(name, nodeType));

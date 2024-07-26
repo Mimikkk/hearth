@@ -4,7 +4,7 @@ import { textureSize } from './TextureSizeNode.js';
 import { colorSpaceToLinear } from '../display/ColorSpaceNode.js';
 import { expression } from '../code/ExpressionNode.js';
 import { maxMipLevel } from '../utils/MaxMipLevelNode.js';
-import { addNodeElement, nodeObject, nodeProxy, vec3 } from '../shadernode/ShaderNodes.js';
+import { addNodeElement, asNode, nodeProxy, vec3 } from '../shadernode/ShaderNodes.js';
 import { NodeUpdateType } from '../core/constants.js';
 
 class TextureNode extends UniformNode {
@@ -199,14 +199,14 @@ class TextureNode extends UniformNode {
     const textureNode = this.clone();
     textureNode.uvNode = uvNode;
 
-    return nodeObject(textureNode);
+    return asNode(textureNode);
   }
 
   blur(levelNode) {
     const textureNode = this.clone();
     textureNode.levelNode = levelNode.mul(maxMipLevel(textureNode));
 
-    return nodeObject(textureNode);
+    return asNode(textureNode);
   }
 
   level(levelNode) {
@@ -222,16 +222,16 @@ class TextureNode extends UniformNode {
 
   compare(compareNode) {
     const textureNode = this.clone();
-    textureNode.compareNode = nodeObject(compareNode);
+    textureNode.compareNode = asNode(compareNode);
 
-    return nodeObject(textureNode);
+    return asNode(textureNode);
   }
 
   depth(depthNode) {
     const textureNode = this.clone();
-    textureNode.depthNode = nodeObject(depthNode);
+    textureNode.depthNode = asNode(depthNode);
 
-    return nodeObject(textureNode);
+    return asNode(textureNode);
   }
 
   // --

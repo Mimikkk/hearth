@@ -1,5 +1,5 @@
 import UniformNode from '../core/UniformNode.js';
-import { nodeObject } from '../shadernode/ShaderNodes.js';
+import { asNode } from '../shadernode/ShaderNodes.js';
 
 class BufferNode extends UniformNode {
   static type = 'BufferNode';
@@ -20,4 +20,4 @@ class BufferNode extends UniformNode {
 
 export default BufferNode;
 
-export const buffer = (value, type, count) => nodeObject(new BufferNode(value, type, count));
+export const buffer = (value, type, count) => asNode(new BufferNode(value, type, count));

@@ -1,5 +1,5 @@
 import TempNode from '../core/TempNode.js';
-import { addNodeElement, f32, nodeObject, tslFn, vec2, vec3, vec4 } from '../shadernode/ShaderNodes.js';
+import { addNodeElement, f32, asNode, tslFn, vec2, vec3, vec4 } from '../shadernode/ShaderNodes.js';
 import { loop } from '../utils/LoopNode.js';
 import { uniform } from '../core/UniformNode.js';
 import { NodeUpdateType } from '../core/constants.js';
@@ -123,7 +123,7 @@ class AnamorphicNode extends TempNode {
 }
 
 export const anamorphic = (node, threshold = 0.9, scale = 3, samples = 32) =>
-  nodeObject(new AnamorphicNode(nodeObject(node), nodeObject(threshold), nodeObject(scale), samples));
+  asNode(new AnamorphicNode(asNode(node), asNode(threshold), asNode(scale), samples));
 
 addNodeElement('anamorphic', anamorphic);
 

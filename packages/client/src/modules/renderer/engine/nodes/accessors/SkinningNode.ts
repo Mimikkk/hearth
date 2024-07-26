@@ -1,6 +1,6 @@
 import Node from '../core/Node.js';
 import { NodeUpdateType } from '../core/constants.js';
-import { nodeObject } from '../shadernode/ShaderNodes.js';
+import { asNode } from '../shadernode/ShaderNodes.js';
 import { attribute } from '../core/AttributeNode.js';
 import { reference, referenceBuffer } from './ReferenceNode.js';
 import { add } from '../math/OperatorNode.js';
@@ -102,5 +102,5 @@ class SkinningNode extends Node {
 
 export default SkinningNode;
 
-export const skinning = skinnedMesh => nodeObject(new SkinningNode(skinnedMesh));
-export const skinningReference = skinnedMesh => nodeObject(new SkinningNode(skinnedMesh, true));
+export const skinning = skinnedMesh => asNode(new SkinningNode(skinnedMesh));
+export const skinningReference = skinnedMesh => asNode(new SkinningNode(skinnedMesh, true));

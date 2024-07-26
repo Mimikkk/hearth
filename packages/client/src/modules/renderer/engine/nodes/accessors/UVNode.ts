@@ -1,5 +1,5 @@
 import AttributeNode from '../core/AttributeNode.js';
-import { nodeObject } from '../shadernode/ShaderNodes.js';
+import { asNode } from '../shadernode/ShaderNodes.js';
 
 class UVNode extends AttributeNode {
   static type = 'UVNode';
@@ -21,4 +21,4 @@ class UVNode extends AttributeNode {
 
 export default UVNode;
 
-export const uv = (...params) => nodeObject(new UVNode(...params));
+export const uv = (...params) => asNode(new UVNode(...params));

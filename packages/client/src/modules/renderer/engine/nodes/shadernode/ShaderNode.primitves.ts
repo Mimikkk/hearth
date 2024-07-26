@@ -5,7 +5,7 @@ import ConvertNode from '@modules/renderer/engine/nodes/utils/ConvertNode.js';
 import JoinNode from '@modules/renderer/engine/nodes/utils/JoinNode.js';
 import ArrayElementNode from '@modules/renderer/engine/nodes/utils/ArrayElementNode.js';
 import SplitNode from '@modules/renderer/engine/nodes/utils/SplitNode.js';
-import { createShaderNodeArray, createShaderNodeObject, createShaderNodeObjects } from './CreateShaderNodeObject.js';
+import { asNode, asNodes } from './CreateShaderNodeObject.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 const createConvertType = (type: TypeName, cacheMap: Map<any, any> = null) => {
@@ -18,21 +18,21 @@ const createConvertType = (type: TypeName, cacheMap: Map<any, any> = null) => {
     }
 
     if (params.length === 1 && cacheMap !== null && cacheMap.has(params[0])) {
-      return nodeObject(cacheMap.get(params[0]));
+      return asNode(cacheMap.get(params[0]));
     }
 
     if (params.length === 1) {
       const node = getConstNode(params[0], type);
 
       try {
-        if (node.getNodeType() === type) return nodeObject(node);
+        if (node.getNodeType() === type) return asNode(node);
       } catch {}
 
-      return nodeObject(new ConvertNode(node, type));
+      return asNode(new ConvertNode(node, type));
     }
 
     const nodes = params.map(param => getConstNode(param));
-    return nodeObject(new JoinNode(nodes, type));
+    return asNode(new JoinNode(nodes, type));
   };
 };
 
@@ -66,17 +66,15 @@ export const imat4 = createConvertType(TypeName.imat4);
 export const umat4 = createConvertType(TypeName.umat4);
 export const bmat4 = createConvertType(TypeName.bmat4);
 
-export const nodeObject = createShaderNodeObject;
-export const nodeObjects = createShaderNodeObjects;
-export const nodeArray = createShaderNodeArray;
+export { asNode, asNodes };
 
 export const nodeProxy =
   <T extends abstract new (...params: any) => any>(NodeClass: T) =>
   (...params) =>
-    createShaderNodeObject(new NodeClass(...createShaderNodeArray(params)));
-export const nodeImmutable = (NodeClass, ...params) =>
-  createShaderNodeObject(new NodeClass(...createShaderNodeArray(params)));
+    asNode(new NodeClass(...asNodes(params)));
+
+export const nodeImmutable = (NodeClass, ...params) => asNode(new NodeClass(...asNodes(params)));
 
 export const element = nodeProxy(ArrayElementNode);
-export const convert = (node, types) => createShaderNodeObject(new ConvertNode(createShaderNodeObject(node), types));
-export const split = (node, channels) => createShaderNodeObject(new SplitNode(createShaderNodeObject(node), channels));
+export const convert = (node, types) => asNode(new ConvertNode(asNode(node), types));
+export const split = (node, channels) => asNode(new SplitNode(asNode(node), channels));

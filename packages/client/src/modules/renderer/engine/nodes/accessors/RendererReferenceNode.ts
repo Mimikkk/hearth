@@ -1,5 +1,5 @@
 import ReferenceNode from './ReferenceNode.js';
-import { nodeObject } from '../shadernode/ShaderNodes.js';
+import { asNode } from '../shadernode/ShaderNodes.js';
 
 class RendererReferenceNode extends ReferenceNode {
   static type = 'RendererReferenceNode';
@@ -19,4 +19,4 @@ class RendererReferenceNode extends ReferenceNode {
 
 export default RendererReferenceNode;
 
-export const rendererReference = (name, type, renderer) => nodeObject(new RendererReferenceNode(name, type, renderer));
+export const rendererReference = (name, type, renderer) => asNode(new RendererReferenceNode(name, type, renderer));

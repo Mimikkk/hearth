@@ -1,5 +1,5 @@
 import Node from '../core/Node.js';
-import { nodeObject, tslFn } from '../shadernode/ShaderNodes.js';
+import { asNode, tslFn } from '../shadernode/ShaderNodes.js';
 import { positionView } from './PositionNode.js';
 import { diffuseColor, property } from '../core/PropertyNode.js';
 import { loop } from '../utils/LoopNode.js';
@@ -110,6 +110,6 @@ ClippingNode.DEFAULT = 'default';
 
 export default ClippingNode;
 
-export const clipping = () => nodeObject(new ClippingNode());
+export const clipping = () => asNode(new ClippingNode());
 
-export const clippingAlpha = () => nodeObject(new ClippingNode(ClippingNode.ALPHA_TO_COVERAGE));
+export const clippingAlpha = () => asNode(new ClippingNode(ClippingNode.ALPHA_TO_COVERAGE));

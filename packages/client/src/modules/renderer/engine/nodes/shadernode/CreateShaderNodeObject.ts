@@ -12,23 +12,18 @@ const memo = WeakMemo.as<Node, Node>((object, memo) => {
   return node;
 });
 
-export const createShaderNodeObject = (object: Node, fallback?: TypeName): Node => {
+export const asNode = (object: Node, fallback?: TypeName): Node => {
   const type = getValueType(object);
 
   if (type === 'node') return memo.get(object);
   if ((!fallback && (type === 'f32' || type === 'bool')) || (type && type !== 'shader' && type !== 'string'))
-    return createShaderNodeObject(getConstNode(object, fallback));
+    return asNode(getConstNode(object, fallback));
   if (type === 'shader') return tslFn(object);
 
   return object;
 };
 
-export const createShaderNodeArray = (array, altType = null) => {
-  for (let i = 0, it = array.length; i < it; ++i) array[i] = createShaderNodeObject(array[i], altType);
+export const asNodes = (array: any[], fallbackType?: TypeName): Node[] => {
+  for (let i = 0, it = array.length; i < it; ++i) array[i] = asNode(array[i], fallbackType);
   return array;
-};
-
-export const createShaderNodeObjects = (objects, altType = null) => {
-  for (const name in objects) objects[name] = createShaderNodeObject(objects[name], altType);
-  return objects;
 };

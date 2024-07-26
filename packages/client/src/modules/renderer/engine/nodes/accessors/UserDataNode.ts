@@ -1,5 +1,5 @@
 import ReferenceNode from './ReferenceNode.js';
-import { nodeObject } from '../shadernode/ShaderNodes.js';
+import { asNode } from '../shadernode/ShaderNodes.js';
 
 class UserDataNode extends ReferenceNode {
   static type = 'UserDataNode';
@@ -19,4 +19,4 @@ class UserDataNode extends ReferenceNode {
 
 export default UserDataNode;
 
-export const userData = (name, inputType, userData) => nodeObject(new UserDataNode(name, inputType, userData));
+export const userData = (name, inputType, userData) => asNode(new UserDataNode(name, inputType, userData));

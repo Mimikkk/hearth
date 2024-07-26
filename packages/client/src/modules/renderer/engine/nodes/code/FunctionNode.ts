@@ -1,5 +1,5 @@
 import CodeNode, { CodeNodeInclude } from './CodeNode.js';
-import { nodeObject } from '../shadernode/ShaderNodes.js';
+import { asNode } from '../shadernode/ShaderNodes.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
@@ -86,7 +86,7 @@ const nativeFn = (code: string, includes: CodeNodeInclude[] = []) => {
     if (typeof include === 'function') includes[i] = include.functionNode;
   }
 
-  const functionNode = nodeObject(new FunctionNode(code, includes));
+  const functionNode = asNode(new FunctionNode(code, includes));
 
   const fn = (...params: any) => functionNode.call(...params);
   fn.functionNode = functionNode;

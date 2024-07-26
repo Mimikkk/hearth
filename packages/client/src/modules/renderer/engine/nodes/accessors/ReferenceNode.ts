@@ -3,7 +3,7 @@ import { NodeUpdateType } from '../core/constants.js';
 import { uniform } from '../core/UniformNode.js';
 import { texture } from './TextureNode.js';
 import { buffer } from './BufferNode.js';
-import { nodeObject } from '../shadernode/ShaderNodes.js';
+import { asNode } from '../shadernode/ShaderNodes.js';
 import { uniforms } from './UniformsNode.js';
 import ArrayElementNode from '../utils/ArrayElementNode.js';
 
@@ -48,7 +48,7 @@ class ReferenceNode extends Node {
   }
 
   element(indexNode) {
-    return nodeObject(new ReferenceElementNode(this, nodeObject(indexNode)));
+    return asNode(new ReferenceElementNode(this, asNode(indexNode)));
   }
 
   setNodeType(uniformType) {
@@ -114,5 +114,5 @@ class ReferenceNode extends Node {
 
 export default ReferenceNode;
 
-export const reference = (name, type, object) => nodeObject(new ReferenceNode(name, type, object));
-export const referenceBuffer = (name, type, count, object) => nodeObject(new ReferenceNode(name, type, object, count));
+export const reference = (name, type, object) => asNode(new ReferenceNode(name, type, object));
+export const referenceBuffer = (name, type, count, object) => asNode(new ReferenceNode(name, type, object, count));

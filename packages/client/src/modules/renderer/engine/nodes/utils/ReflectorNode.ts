@@ -1,5 +1,5 @@
 import TextureNode from '../accessors/TextureNode.js';
-import { nodeObject, vec2 } from '../shadernode/ShaderNodes.js';
+import { asNode, vec2 } from '../shadernode/ShaderNodes.js';
 import { NodeUpdateType } from '../core/constants.js';
 import { viewportTopLeft } from '../display/ViewportNode.js';
 import {
@@ -207,6 +207,6 @@ class ReflectorNode extends TextureNode {
   }
 }
 
-export const reflector = parameters => nodeObject(new ReflectorNode(parameters));
+export const reflector = parameters => asNode(new ReflectorNode(parameters));
 
 export default ReflectorNode;

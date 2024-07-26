@@ -3,7 +3,7 @@ import {
   MeshStandardNodeMaterial,
   NodeUpdateType,
   Node,
-  nodeObject,
+  asNode,
   uniform,
   cubeTexture,
 } from '@modules/renderer/engine/nodes/Nodes.js';
@@ -74,7 +74,7 @@ async function init() {
 
   // Materials
 
-  const instanceUniform = nodeObject(new InstanceUniformNode());
+  const instanceUniform = asNode(new InstanceUniformNode());
   const cubeTextureNode = cubeTexture(cTexture);
 
   const material = new MeshStandardNodeMaterial();

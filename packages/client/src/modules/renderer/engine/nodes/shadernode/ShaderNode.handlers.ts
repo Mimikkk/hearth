@@ -1,6 +1,6 @@
 import { NodeElements } from './ShaderNode.map.js';
 import { parseSwizzle } from './utils.js';
-import { createShaderNodeObject, createShaderNodeObjects } from './CreateShaderNodeObject.js';
+import { asNode, asNodes } from './CreateShaderNodeObject.js';
 import SplitNode from '@modules/renderer/engine/nodes/utils/SplitNode.js';
 import ArrayElementNode from '@modules/renderer/engine/nodes/utils/ArrayElementNode.js';
 import ConstNode from '@modules/renderer/engine/nodes/core/ConstNode.js';
@@ -11,7 +11,7 @@ export const handlers = {
   setup(NodeClosure, params) {
     const inputs = params.shift();
 
-    return NodeClosure(createShaderNodeObjects(inputs), ...params);
+    return NodeClosure(asNodes(inputs), ...params);
   },
 
   get(node, prop, nodeObj) {
@@ -41,7 +41,7 @@ export const handlers = {
 
         prop = parseSwizzle(prop);
 
-        return createShaderNodeObject(new SplitNode(nodeObj, prop));
+        return asNode(new SplitNode(nodeObj, prop));
       } else if (/^set[XYZWRGBASTPQ]{1,4}$/.test(prop) === true) {
         // set properties ( swizzle )
 
@@ -51,7 +51,7 @@ export const handlers = {
 
         prop = prop.split('').sort().join('');
 
-        return value => createShaderNodeObject(new SetNode(node, prop, value));
+        return value => asNode(new SetNode(node, prop, value));
       } else if (prop === 'width' || prop === 'height' || prop === 'depth') {
         // accessing property
 
@@ -59,11 +59,11 @@ export const handlers = {
         else if (prop === 'height') prop = 'y';
         else if (prop === 'depth') prop = 'z';
 
-        return createShaderNodeObject(new SplitNode(node, prop));
+        return asNode(new SplitNode(node, prop));
       } else if (/^\d+$/.test(prop) === true) {
         // accessing array
 
-        return createShaderNodeObject(new ArrayElementNode(nodeObj, new ConstNode(Number(prop), 'u32')));
+        return asNode(new ArrayElementNode(nodeObj, new ConstNode(Number(prop), 'u32')));
       }
     }
 

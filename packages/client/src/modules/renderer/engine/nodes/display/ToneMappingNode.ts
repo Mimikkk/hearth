@@ -1,5 +1,5 @@
 import TempNode from '../core/TempNode.js';
-import { addNodeElement, f32, mat3, nodeObject, tslFn, vec3 } from '../shadernode/ShaderNodes.js';
+import { addNodeElement, f32, mat3, asNode, tslFn, vec3 } from '../shadernode/ShaderNodes.js';
 import { rendererReference } from '../accessors/RendererReferenceNode.js';
 import { clamp, log2, max, pow } from '../math/MathNode.js';
 import { mul } from '../math/OperatorNode.js';
@@ -168,7 +168,7 @@ class ToneMappingNode extends TempNode {
 export default ToneMappingNode;
 
 export const toneMapping = (mapping, exposure, color) =>
-  nodeObject(new ToneMappingNode(mapping, nodeObject(exposure), nodeObject(color)));
+  asNode(new ToneMappingNode(mapping, asNode(exposure), asNode(color)));
 export const toneMappingExposure = rendererReference('parameters.toneMappingExposure', 'f32');
 
 addNodeElement('toneMapping', (color, mapping, exposure) => toneMapping(mapping, exposure, color));

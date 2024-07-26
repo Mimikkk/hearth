@@ -1,6 +1,6 @@
 import Node from '../core/Node.js';
 import { NodeUpdateType } from '../core/constants.js';
-import { addNodeElement, nodeObject } from '../shadernode/ShaderNodes.js';
+import { addNodeElement, asNode } from '../shadernode/ShaderNodes.js';
 import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { ShaderStage } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
@@ -68,6 +68,6 @@ class ComputeNode extends Node {
 export default ComputeNode;
 
 export const compute = (node: any, count: number, workgroupSize: number[] = [64]) =>
-  nodeObject(new ComputeNode(nodeObject(node), count, workgroupSize));
+  asNode(new ComputeNode(asNode(node), count, workgroupSize));
 
 addNodeElement('compute', compute);

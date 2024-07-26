@@ -1,11 +1,5 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
-import {
-  MeshPhongNodeMaterial,
-  Node,
-  nodeObject,
-  NodeUpdateType,
-  uniform,
-} from '@modules/renderer/engine/nodes/Nodes.js';
+import { MeshPhongNodeMaterial, Node, asNode, NodeUpdateType, uniform } from '@modules/renderer/engine/nodes/Nodes.js';
 
 import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
 
@@ -66,7 +60,7 @@ async function init() {
   const plane = new Engine.Mesh(planeGeometry, new MeshPhongNodeMaterial({ color: 0x00ff00 }));
   const sphere = new Engine.Mesh(sphereGeometry, new MeshPhongNodeMaterial({ color: 0xffff00 }));
 
-  const instanceUniform = nodeObject(new OcclusionNode(sphere, new Engine.Color(0x00ff00), new Engine.Color(0x0000ff)));
+  const instanceUniform = asNode(new OcclusionNode(sphere, new Engine.Color(0x00ff00), new Engine.Color(0x0000ff)));
 
   plane.material.colorNode = instanceUniform;
 
