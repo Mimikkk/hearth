@@ -495,8 +495,7 @@ export const pow2 = nodeProxy(
     method = BinaryVariant.Pow;
 
     constructor(aNode: Node) {
-      super(aNode);
-      this.bNode = f32(2);
+      super(aNode, f32(2));
     }
   },
 );
@@ -505,8 +504,7 @@ export const pow3 = nodeProxy(
     method = BinaryVariant.Pow;
 
     constructor(aNode: Node) {
-      super(aNode);
-      this.bNode = f32(3);
+      super(aNode, f32(3));
     }
   },
 );
@@ -515,8 +513,7 @@ export const pow4 = nodeProxy(
     method = BinaryVariant.Pow;
 
     constructor(aNode: Node) {
-      super(aNode);
-      this.bNode = f32(4);
+      super(aNode, f32(4));
     }
   },
 );
