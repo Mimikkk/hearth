@@ -16,7 +16,8 @@
     "jsxImportSource": "solid-js",
     "lib": [
       "DOM",
-      "ESNext"
+      "ESNext",
+      "es2015.proxy"
     ],
     "types": [
       "vite/client"
