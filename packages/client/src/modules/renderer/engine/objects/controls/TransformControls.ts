@@ -921,7 +921,7 @@ export class TransformControlsGizmo extends Entity {
       Z: [[new Line(lineGeometry, matHelper.clone()), [0, 0, -1e3], [0, -Math.PI / 2, 0], [1e6, 1, 1], 'helper']],
     };
 
-    // Creates an Object3D with gizmos described in custom hierarchy definition.
+    // Creates an Entity with gizmos described in custom hierarchy definition.
 
     function setupGizmo(gizmoMap: any) {
       const gizmo = new Entity();

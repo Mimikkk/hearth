@@ -487,7 +487,7 @@ export class PropertyBinding {
       this.resolvedProperty = nodeProperty;
       this.propertyIndex = propertyIndex;
     } else if (nodeProperty.fromArray !== undefined && nodeProperty.intoArray !== undefined) {
-      // must use copy for Object3D.Euler/Quaternion
+      // must use copy for Entity.Euler/Quaternion
 
       bindingType = this.BindingType.HasFromToArray;
 

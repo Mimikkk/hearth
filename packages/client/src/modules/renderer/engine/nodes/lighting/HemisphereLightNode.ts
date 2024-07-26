@@ -2,7 +2,7 @@ import AnalyticLightNode from './AnalyticLightNode.js';
 import { uniform } from '../core/UniformNode.js';
 import { mix } from '@modules/renderer/engine/nodes/math/MathNode.js';
 import { normalView } from '../accessors/NormalNode.js';
-import { objectPosition } from '../accessors/Object3DNode.js';
+import { objectPosition } from '../accessors/EntityNode.js';
 
 import { Color, HemisphereLight } from '@modules/renderer/engine/engine.js';
 import PositionNode from '@modules/renderer/engine/nodes/accessors/PositionNode.js';

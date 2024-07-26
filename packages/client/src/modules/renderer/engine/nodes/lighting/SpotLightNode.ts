@@ -3,7 +3,7 @@ import { lightTargetDirection } from './LightNode.js';
 import { getDistanceAttenuation } from './LightUtils.js';
 import { uniform } from '../core/UniformNode.js';
 import { smoothstep } from '@modules/renderer/engine/nodes/math/MathNode.js';
-import { objectViewPosition } from '../accessors/Object3DNode.js';
+import { objectViewPosition } from '../accessors/EntityNode.js';
 import { positionView } from '../accessors/PositionNode.js';
 
 class SpotLightNode extends AnalyticLightNode {

@@ -276,7 +276,7 @@ async function init() {
 							{ name: 'Vec3', inputType: 'Vec3' },
 							{ name: 'message', inputType: 'string' },
 							{ name: 'binary', inputType: 'ArrayBuffer' },
-							{ name: 'object3d', inputType: 'Object3D' },
+							{ name: 'object3d', inputType: 'Entity' },
 							{ name: 'execFrom', inputType: 'string' }
 						]
 					};

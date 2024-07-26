@@ -1,7 +1,7 @@
-import Object3DNode from './Object3DNode.js';
+import EntityNode from './EntityNode.js';
 import { nodeImmutable } from '../shadernode/ShaderNodes.js';
 
-class ModelNode extends Object3DNode {
+class ModelNode extends EntityNode {
   static type = 'ModelNode';
 
   constructor(scope = ModelNode.VIEW_MATRIX) {

@@ -278,7 +278,7 @@ export {
   transformedClearcoatNormalView,
 } from './accessors/NormalNode.js';
 export {
-  default as Object3DNode,
+  default as EntityNode,
   objectDirection,
   objectViewMatrix,
   objectNormalMatrix,
@@ -286,7 +286,7 @@ export {
   objectPosition,
   objectScale,
   objectViewPosition,
-} from './accessors/Object3DNode.js';
+} from './accessors/EntityNode.js';
 export { default as PointUVNode, pointUV } from './accessors/PointUVNode.js';
 export {
   default as PositionNode,

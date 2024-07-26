@@ -40,7 +40,7 @@ export class Entity {
   id: number;
   uuid: string;
   name: string;
-  type: string | 'Object3D';
+  type: string | 'Entity';
   parent: Entity | null;
   children: Entity[];
   up: Vec3;
@@ -69,7 +69,7 @@ export class Entity {
     this.uuid = v4();
 
     this.name = '';
-    this.type = 'Object3D';
+    this.type = 'Entity';
 
     this.parent = null;
     this.children = [];
@@ -325,7 +325,7 @@ export class Entity {
     }
 
     if (object === this) {
-      console.error("engine.Object3D.add: object can't be added as a child of itself.", object);
+      console.error("engine.Entity.add: object can't be added as a child of itself.", object);
       return this;
     }
 
@@ -334,7 +334,7 @@ export class Entity {
       object.parent = this!;
       this.children.push(object);
     } else {
-      console.error('engine.Object3D.add: object not an instance of engine.Object3D.', object);
+      console.error('engine.Entity.add: object not an instance of engine.Entity.', object);
     }
 
     return this;

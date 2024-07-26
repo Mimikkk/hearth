@@ -8,8 +8,8 @@ import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.
 import NodeFrame from '@modules/renderer/engine/nodes/core/NodeFrame.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
-class Object3DNode extends Node {
-  static type = 'Object3DNode';
+class EntityNode extends Node {
+  static type = 'EntityNode';
   scope: string;
   object3d: any;
   _uniformNode: UniformNode<any>;
@@ -28,10 +28,10 @@ class Object3DNode extends Node {
   getNodeType(): TypeName {
     const scope = this.scope;
 
-    if (scope === Object3DNode.WORLD_MATRIX || scope === Object3DNode.VIEW_MATRIX) {
+    if (scope === EntityNode.WORLD_MATRIX || scope === EntityNode.VIEW_MATRIX) {
       return TypeName.mat4;
     }
-    if (scope === Object3DNode.NORMAL_MATRIX) {
+    if (scope === EntityNode.NORMAL_MATRIX) {
       return TypeName.mat3;
     }
     return TypeName.vec3;
@@ -42,25 +42,25 @@ class Object3DNode extends Node {
     const uniformNode = this._uniformNode;
     const scope = this.scope;
 
-    if (scope === Object3DNode.VIEW_MATRIX) {
+    if (scope === EntityNode.VIEW_MATRIX) {
       uniformNode.value = object.modelViewMatrix;
-    } else if (scope === Object3DNode.NORMAL_MATRIX) {
+    } else if (scope === EntityNode.NORMAL_MATRIX) {
       uniformNode.value = object.normalMatrix;
-    } else if (scope === Object3DNode.WORLD_MATRIX) {
+    } else if (scope === EntityNode.WORLD_MATRIX) {
       uniformNode.value = object.matrixWorld;
-    } else if (scope === Object3DNode.POSITION) {
+    } else if (scope === EntityNode.POSITION) {
       uniformNode.value = uniformNode.value || Vec3.new();
 
       uniformNode.value.fromMat4Position(object.matrixWorld);
-    } else if (scope === Object3DNode.SCALE) {
+    } else if (scope === EntityNode.SCALE) {
       uniformNode.value = uniformNode.value || Vec3.new();
 
       uniformNode.value.fromMat4Scale(object.matrixWorld);
-    } else if (scope === Object3DNode.DIRECTION) {
+    } else if (scope === EntityNode.DIRECTION) {
       uniformNode.value = uniformNode.value || Vec3.new();
 
       object.getWorldDirection(uniformNode.value);
-    } else if (scope === Object3DNode.VIEW_POSITION) {
+    } else if (scope === EntityNode.VIEW_POSITION) {
       const camera = frame.camera;
 
       uniformNode.value = uniformNode.value || Vec3.new();
@@ -72,15 +72,15 @@ class Object3DNode extends Node {
   generate(builder: NodeBuilder): string | null {
     const scope = this.scope;
 
-    if (scope === Object3DNode.WORLD_MATRIX || scope === Object3DNode.VIEW_MATRIX) {
+    if (scope === EntityNode.WORLD_MATRIX || scope === EntityNode.VIEW_MATRIX) {
       this._uniformNode.nodeType = 'mat4';
-    } else if (scope === Object3DNode.NORMAL_MATRIX) {
+    } else if (scope === EntityNode.NORMAL_MATRIX) {
       this._uniformNode.nodeType = 'mat3';
     } else if (
-      scope === Object3DNode.POSITION ||
-      scope === Object3DNode.VIEW_POSITION ||
-      scope === Object3DNode.DIRECTION ||
-      scope === Object3DNode.SCALE
+      scope === EntityNode.POSITION ||
+      scope === EntityNode.VIEW_POSITION ||
+      scope === EntityNode.DIRECTION ||
+      scope === EntityNode.SCALE
     ) {
       this._uniformNode.nodeType = 'vec3';
     }
@@ -89,20 +89,20 @@ class Object3DNode extends Node {
   }
 }
 
-Object3DNode.VIEW_MATRIX = 'viewMatrix';
-Object3DNode.NORMAL_MATRIX = 'normalMatrix';
-Object3DNode.WORLD_MATRIX = 'worldMatrix';
-Object3DNode.POSITION = 'position';
-Object3DNode.SCALE = 'scale';
-Object3DNode.VIEW_POSITION = 'viewPosition';
-Object3DNode.DIRECTION = 'direction';
+EntityNode.VIEW_MATRIX = 'viewMatrix';
+EntityNode.NORMAL_MATRIX = 'normalMatrix';
+EntityNode.WORLD_MATRIX = 'worldMatrix';
+EntityNode.POSITION = 'position';
+EntityNode.SCALE = 'scale';
+EntityNode.VIEW_POSITION = 'viewPosition';
+EntityNode.DIRECTION = 'direction';
 
-export default Object3DNode;
+export default EntityNode;
 
-export const objectDirection = nodeProxy(Object3DNode, Object3DNode.DIRECTION);
-export const objectViewMatrix = nodeProxy(Object3DNode, Object3DNode.VIEW_MATRIX);
-export const objectNormalMatrix = nodeProxy(Object3DNode, Object3DNode.NORMAL_MATRIX);
-export const objectWorldMatrix = nodeProxy(Object3DNode, Object3DNode.WORLD_MATRIX);
-export const objectPosition = nodeProxy(Object3DNode, Object3DNode.POSITION);
-export const objectScale = nodeProxy(Object3DNode, Object3DNode.SCALE);
-export const objectViewPosition = nodeProxy(Object3DNode, Object3DNode.VIEW_POSITION);
+export const objectDirection = nodeProxy(EntityNode, EntityNode.DIRECTION);
+export const objectViewMatrix = nodeProxy(EntityNode, EntityNode.VIEW_MATRIX);
+export const objectNormalMatrix = nodeProxy(EntityNode, EntityNode.NORMAL_MATRIX);
+export const objectWorldMatrix = nodeProxy(EntityNode, EntityNode.WORLD_MATRIX);
+export const objectPosition = nodeProxy(EntityNode, EntityNode.POSITION);
+export const objectScale = nodeProxy(EntityNode, EntityNode.SCALE);
+export const objectViewPosition = nodeProxy(EntityNode, EntityNode.VIEW_POSITION);

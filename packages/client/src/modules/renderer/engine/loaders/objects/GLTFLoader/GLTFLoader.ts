@@ -300,7 +300,7 @@ class GLTFLightsExtension implements Plugin {
     this.parser = parser;
     this.name = EXTENSIONS.KHR_LIGHTS_PUNCTUAL;
 
-    // Object3D instance caches
+    // Entity instance caches
     this.cache = { refs: {}, uses: {} };
   }
 
@@ -1901,7 +1901,7 @@ class Parser {
     // Node cache
     this.nodeCache = {};
 
-    // Object3D instance caches
+    // Entity instance caches
     this.meshCache = { refs: {}, uses: {} };
     this.cameraCache = { refs: {}, uses: {} };
     this.lightCache = { refs: {}, uses: {} };
@@ -2010,7 +2010,7 @@ class Parser {
     const meshDefs = this.json.meshes || [];
 
     // Nothing in the node definition indicates whether it is a Bone or an
-    // Object3D. Use the skins' joint references to mark bones.
+    // Entity. Use the skins' joint references to mark bones.
     for (let skinIndex = 0, skinLength = skinDefs.length; skinIndex < skinLength; skinIndex++) {
       const joints = skinDefs[skinIndex].joints;
 
@@ -2042,7 +2042,7 @@ class Parser {
   }
 
   /**
-   * Counts references to shared node / Object3D resources. These resources
+   * Counts references to shared node / Entity resources. These resources
    * can be reused, or "instantiated", at multiple nodes in the scene
    * hierarchy. Mesh, Camera, and Light instances are instantiated and must
    * be marked. Non-scenegraph resources (like Materials, Geometries, and
@@ -2769,7 +2769,7 @@ class Parser {
     });
   }
 
-  /** When Object3D instances are targeted by animation, they need unique names. */
+  /** When Entity instances are targeted by animation, they need unique names. */
   createUniqueName(originalName) {
     const sanitizedName = PropertyBinding.sanitizeNodeName(originalName || '');
 

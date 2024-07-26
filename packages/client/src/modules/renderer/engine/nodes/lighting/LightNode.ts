@@ -1,6 +1,6 @@
 import Node from '../core/Node.js';
 import { nodeProxy } from '../shadernode/ShaderNodes.js';
-import { objectPosition } from '../accessors/Object3DNode.js';
+import { objectPosition } from '../accessors/EntityNode.js';
 import { cameraViewMatrix } from '../accessors/CameraNode.js';
 
 class LightNode extends Node {
