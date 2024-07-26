@@ -1,54 +1,68 @@
 import Node from '../core/Node.js';
 import { timerLocal } from './TimerNode.js';
 import { nodeObject, nodeProxy } from '../shadernode/ShaderNodes.js';
+import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
+import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 class OscNode extends Node {
   static type = 'OscNode';
+  method: NodeVariant;
 
-  constructor(method = OscNode.SINE, timeNode = timerLocal()) {
+  constructor(public timeNode: Node = timerLocal()) {
     super();
-
-    this.method = method;
-    this.timeNode = timeNode;
   }
 
-  getNodeType(builder) {
+  getNodeType(builder: NodeBuilder): TypeName {
     return this.timeNode.getNodeType(builder);
   }
 
-  setup() {
-    const method = this.method;
-    const timeNode = nodeObject(this.timeNode);
+  setup(): Node {
+    const time = nodeObject(this.timeNode);
 
-    let outputNode = null;
-
-    if (method === OscNode.SINE) {
-      outputNode = timeNode
-        .add(0.75)
-        .mul(Math.PI * 2)
-        .sin()
-        .mul(0.5)
-        .add(0.5);
-    } else if (method === OscNode.SQUARE) {
-      outputNode = timeNode.fract().round();
-    } else if (method === OscNode.TRIANGLE) {
-      outputNode = timeNode.add(0.5).fract().mul(2).sub(1).abs();
-    } else if (method === OscNode.SAWTOOTH) {
-      outputNode = timeNode.fract();
+    switch (this.method) {
+      case NodeVariant.Sine:
+        return time
+          .add(0.75)
+          .mul(Math.PI * 2)
+          .sin()
+          .mul(0.5)
+          .add(0.5);
+      case NodeVariant.Square:
+        return time.fract().round();
+      case NodeVariant.Triangle:
+        return time.add(0.5).fract().mul(2).sub(1).abs();
+      case NodeVariant.Sawtooth:
+        return time.fract();
     }
-
-    return outputNode;
   }
 }
 
-OscNode.SINE = 'sine';
-OscNode.SQUARE = 'square';
-OscNode.TRIANGLE = 'triangle';
-OscNode.SAWTOOTH = 'sawtooth';
+enum NodeVariant {
+  Sine = 'sine',
+  Square = 'square',
+  Triangle = 'triangle',
+  Sawtooth = 'sawtooth',
+}
 
 export default OscNode;
 
-export const oscSine = nodeProxy(OscNode, OscNode.SINE);
-export const oscSquare = nodeProxy(OscNode, OscNode.SQUARE);
-export const oscTriangle = nodeProxy(OscNode, OscNode.TRIANGLE);
-export const oscSawtooth = nodeProxy(OscNode, OscNode.SAWTOOTH);
+export const oscSine = nodeProxy(
+  class extends OscNode {
+    method = NodeVariant.Sine;
+  },
+);
+export const oscSquare = nodeProxy(
+  class extends OscNode {
+    method = NodeVariant.Square;
+  },
+);
+export const oscTriangle = nodeProxy(
+  class extends OscNode {
+    method = NodeVariant.Triangle;
+  },
+);
+export const oscSawtooth = nodeProxy(
+  class extends OscNode {
+    method = NodeVariant.Sawtooth;
+  },
+);

@@ -158,7 +158,7 @@ export class NodeMaterial extends ShaderMaterial {
     }
 
     if (depthNode !== null) {
-      depthPixel.assign(depthNode).append();
+      depthPixel(depthNode).append();
     }
   }
 
