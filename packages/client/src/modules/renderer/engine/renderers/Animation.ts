@@ -20,7 +20,6 @@ export class Animation {
 
       if (this.loop !== null) this.loop(time, frame);
     };
-
     update(0);
   }
 

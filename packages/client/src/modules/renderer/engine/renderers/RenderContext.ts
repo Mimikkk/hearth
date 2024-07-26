@@ -7,26 +7,23 @@ export class RenderContext {
   declare isRenderContext: true;
   id: number;
 
+  useColor: boolean;
   useClearColor: boolean;
-  clearColorValue: Color;
+  clearColor: Color;
 
   useDepth: boolean;
-  depthClearValue: number;
-
   useClearDepth: boolean;
-  clearDepthValue: number;
-
-  useClearStencil: boolean;
-  stencilClearValue: number;
+  clearDepth: number;
 
   useStencil: boolean;
-  clearStencilValue: number;
+  useClearStencil: boolean;
+  clearStencil: number;
 
   useViewport: boolean;
-  viewportValue: Vec4;
+  viewport: Vec4;
 
   useScissor: boolean;
-  scissorValue: Vec4;
+  scissor: Vec4;
 
   textures: Texture[] | null;
   depthTexture: DepthTexture | null;
@@ -46,26 +43,29 @@ export class RenderContext {
   constructor() {
     this.id = id++;
 
+    this.useColor = true;
     this.useClearColor = true;
-    this.clearColorValue = { r: 0, g: 0, b: 0, a: 1 };
+    this.clearColor = Color.new(0, 0, 0, 1);
 
     this.useDepth = true;
     this.useClearDepth = true;
-    this.clearDepthValue = 1;
+    this.clearDepth = 1;
 
     this.useStencil = false;
     this.useClearStencil = true;
-    this.clearStencilValue = 1;
+    this.clearStencil = 1;
 
     this.useViewport = false;
-    this.viewportValue = Vec4.new();
+    this.viewport = Vec4.new();
 
     this.useScissor = false;
-    this.scissorValue = Vec4.new();
+    this.scissor = Vec4.new();
 
     this.textures = null;
     this.depthTexture = null;
+
     this.activeCubeFace = 0;
+    this.activeMipmapLevel = 0;
     this.sampleCount = 1;
 
     this.width = 0;

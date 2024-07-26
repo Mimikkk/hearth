@@ -246,7 +246,12 @@ export class Backend {
         const colorAttachment = colorAttachments[i];
 
         if (renderContext.useClearColor) {
-          colorAttachment.clearValue = renderContext.clearColorValue;
+          colorAttachment.clearValue = {
+            r: renderContext.clearColor.r,
+            g: renderContext.clearColor.g,
+            b: renderContext.clearColor.b,
+            a: renderContext.clearColor.a,
+          };
           colorAttachment.loadOp = GPULoadOpType.Clear;
           colorAttachment.storeOp = GPUStoreOpType.Store;
         } else {
@@ -258,7 +263,12 @@ export class Backend {
       const colorAttachment = descriptor.colorAttachments[0];
 
       if (renderContext.useClearColor) {
-        colorAttachment.clearValue = renderContext.clearColorValue;
+        colorAttachment.clearValue = {
+          r: renderContext.clearColor.r,
+          g: renderContext.clearColor.g,
+          b: renderContext.clearColor.b,
+          a: renderContext.clearColor.a,
+        };
         colorAttachment.loadOp = GPULoadOpType.Clear;
         colorAttachment.storeOp = GPUStoreOpType.Store;
       } else {
@@ -271,7 +281,7 @@ export class Backend {
 
     if (renderContext.useDepth) {
       if (renderContext.useClearDepth) {
-        depthStencilAttachment.depthClearValue = renderContext.clearDepthValue;
+        depthStencilAttachment.depthClearValue = renderContext.clearDepth;
         depthStencilAttachment.depthLoadOp = GPULoadOpType.Clear;
         depthStencilAttachment.depthStoreOp = GPUStoreOpType.Store;
       } else {
@@ -282,7 +292,7 @@ export class Backend {
 
     if (renderContext.useStencil) {
       if (renderContext.useClearStencil) {
-        depthStencilAttachment.stencilClearValue = renderContext.clearStencilValue;
+        depthStencilAttachment.stencilClearValue = renderContext.clearStencil;
         depthStencilAttachment.stencilLoadOp = GPULoadOpType.Clear;
         depthStencilAttachment.stencilStoreOp = GPUStoreOpType.Store;
       } else {
@@ -310,7 +320,7 @@ export class Backend {
     }
 
     if (renderContext.useScissor) {
-      const { x, y, width, height } = renderContext.scissorValue;
+      const { x, y, width, height } = renderContext.scissor;
 
       currentPass.setScissorRect(x, renderContext.height - height - y, width, height);
     }
@@ -424,7 +434,7 @@ export class Backend {
 
   updateViewport(renderContext: RenderContext) {
     const { currentPass } = this.memo.get(renderContext);
-    const { x, y, width, height, minDepth, maxDepth } = renderContext.viewportValue;
+    const { x, y, width, height, minDepth, maxDepth } = renderContext.viewport;
 
     currentPass.setViewport(x, renderContext.height - height - y, width, height, minDepth, maxDepth);
   }
@@ -509,7 +519,7 @@ export class Backend {
     if (supportsDepth) {
       if (depth) {
         depthStencilAttachment.depthLoadOp = GPULoadOpType.Clear;
-        depthStencilAttachment.depthClearValue = renderer._clearDepth;
+        depthStencilAttachment.depthClearValue = renderer.clearDepth;
         depthStencilAttachment.depthStoreOp = GPUStoreOpType.Store;
       } else {
         depthStencilAttachment.depthLoadOp = GPULoadOpType.Load;
@@ -522,7 +532,7 @@ export class Backend {
     if (supportsStencil) {
       if (stencil) {
         depthStencilAttachment.stencilLoadOp = GPULoadOpType.Clear;
-        depthStencilAttachment.stencilClearValue = renderer._clearStencil;
+        depthStencilAttachment.stencilClearValue = renderer.clearStencil;
         depthStencilAttachment.stencilStoreOp = GPUStoreOpType.Store;
       } else {
         depthStencilAttachment.stencilLoadOp = GPULoadOpType.Load;
