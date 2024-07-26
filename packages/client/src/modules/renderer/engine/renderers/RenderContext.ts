@@ -7,7 +7,6 @@ export class RenderContext {
   declare isRenderContext: true;
   id: number;
 
-  useColor: boolean;
   useClearColor: boolean;
   clearColor: Color;
 
@@ -43,7 +42,6 @@ export class RenderContext {
   constructor() {
     this.id = id++;
 
-    this.useColor = true;
     this.useClearColor = true;
     this.clearColor = Color.new(0, 0, 0, 1);
 
