@@ -1,42 +1,48 @@
 import TempNode from '../core/TempNode.js';
 import { addNodeElement, nodeProxy } from '../shadernode/ShaderNodes.js';
+import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
+import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
+import { Node } from '../core/Node.js';
 
-class PackingNode extends TempNode {
+export class PackingNode extends TempNode {
   static type = 'PackingNode';
+  scope: NodeVariant;
 
-  constructor(scope, node) {
+  constructor(public node: Node) {
     super();
-
-    this.scope = scope;
-    this.node = node;
   }
 
-  getNodeType(builder) {
+  getNodeType(builder: NodeBuilder): TypeName {
     return this.node.getNodeType(builder);
   }
 
-  setup() {
-    const { scope, node } = this;
-
-    let result = null;
-
-    if (scope === PackingNode.DIRECTION_TO_COLOR) {
-      result = node.mul(0.5).add(0.5);
-    } else if (scope === PackingNode.COLOR_TO_DIRECTION) {
-      result = node.mul(2.0).sub(1);
+  setup(): Node {
+    switch (this.scope) {
+      case NodeVariant.DirectionToColor:
+        return this.node.mul(0.5).add(0.5);
+      case NodeVariant.ColorToDirection:
+        return this.node.mul(2.0).sub(1);
     }
-
-    return result;
   }
 }
 
-PackingNode.DIRECTION_TO_COLOR = 'directionToColor';
-PackingNode.COLOR_TO_DIRECTION = 'colorToDirection';
-
 export default PackingNode;
 
-export const directionToColor = nodeProxy(PackingNode, PackingNode.DIRECTION_TO_COLOR);
-export const colorToDirection = nodeProxy(PackingNode, PackingNode.COLOR_TO_DIRECTION);
+enum NodeVariant {
+  DirectionToColor = 'directionToColor',
+  ColorToDirection = 'colorToDirection',
+}
+
+export const directionToColor = nodeProxy(
+  class extends PackingNode {
+    scope = NodeVariant.DirectionToColor;
+  },
+);
+export const colorToDirection = nodeProxy(
+  class extends PackingNode {
+    scope = NodeVariant.ColorToDirection;
+  },
+);
 
 addNodeElement('directionToColor', directionToColor);
 addNodeElement('colorToDirection', colorToDirection);
