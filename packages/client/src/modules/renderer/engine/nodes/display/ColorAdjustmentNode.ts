@@ -2,12 +2,53 @@ import TempNode from '../core/TempNode.js';
 import { dot, mix } from '../math/MathNode.js';
 import { add } from '../math/OperatorNode.js';
 import { addNodeElement, f32, nodeProxy, tslFn, vec3 } from '../shadernode/ShaderNodes.js';
+import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
-const saturationNode = tslFn(({ color, adjustment }) => {
+export class ColorAdjustmentNode extends TempNode {
+  static type = 'ColorAdjustmentNode';
+  method: NodeVariant;
+  colorNode: Node;
+  adjustmentNode: Node;
+
+  constructor(colorNode: Node, adjustmentNode = f32(1)) {
+    super(TypeName.vec3);
+
+    this.colorNode = colorNode;
+    this.adjustmentNode = adjustmentNode;
+  }
+
+  setup() {
+    const { colorNode: color, adjustmentNode: adjustment } = this;
+    const params = { color, adjustment };
+
+    switch (this.method) {
+      case NodeVariant.Saturation:
+        return calculateSaturation(params);
+      case NodeVariant.Vibrance:
+        return calculateVibrance(params);
+      case NodeVariant.Hue:
+        return calculateHue(params);
+    }
+  }
+}
+
+enum NodeVariant {
+  Saturation = 'saturation',
+  Vibrance = 'vibrance',
+  Hue = 'hue',
+}
+
+export default ColorAdjustmentNode;
+
+const calculateSaturation = tslFn(({ color, adjustment }) => {
   return adjustment.mix(luminance(color.rgb), color.rgb);
 });
-
-const vibranceNode = tslFn(({ color, adjustment }) => {
+export const saturation = nodeProxy(
+  class extends ColorAdjustmentNode {
+    method = NodeVariant.Saturation;
+  },
+);
+const calculateVibrance = tslFn(({ color, adjustment }) => {
   const average = add(color.r, color.g, color.b).div(3.0);
 
   const mx = color.r.max(color.g.max(color.b));
@@ -15,10 +56,14 @@ const vibranceNode = tslFn(({ color, adjustment }) => {
 
   return mix(color.rgb, mx, amt);
 });
+export const vibrance = nodeProxy(
+  class extends ColorAdjustmentNode {
+    method = NodeVariant.Vibrance;
+  },
+);
 
-const hueNode = tslFn(({ color, adjustment }) => {
-  const k = vec3(0.57735, 0.57735, 0.57735);
-
+const k = vec3(0.57735, 0.57735, 0.57735);
+const calculateHue = tslFn(({ color, adjustment }) => {
   const cosAngle = adjustment.cos();
 
   return vec3(
@@ -30,53 +75,14 @@ const hueNode = tslFn(({ color, adjustment }) => {
     ),
   );
 });
-
-class ColorAdjustmentNode extends TempNode {
-  static type = 'ColorAdjustmentNode';
-
-  constructor(method, colorNode, adjustmentNode = f32(1)) {
-    super('vec3');
-
-    this.method = method;
-
-    this.colorNode = colorNode;
-    this.adjustmentNode = adjustmentNode;
-  }
-
-  setup() {
-    const { method, colorNode, adjustmentNode } = this;
-
-    const callParams = { color: colorNode, adjustment: adjustmentNode };
-
-    let outputNode = null;
-
-    if (method === ColorAdjustmentNode.SATURATION) {
-      outputNode = saturationNode(callParams);
-    } else if (method === ColorAdjustmentNode.VIBRANCE) {
-      outputNode = vibranceNode(callParams);
-    } else if (method === ColorAdjustmentNode.HUE) {
-      outputNode = hueNode(callParams);
-    } else {
-      console.error(`${this.type}: Method "${this.method}" not supported!`);
-    }
-
-    return outputNode;
-  }
-}
-
-ColorAdjustmentNode.SATURATION = 'saturation';
-ColorAdjustmentNode.VIBRANCE = 'vibrance';
-ColorAdjustmentNode.HUE = 'hue';
-
-export default ColorAdjustmentNode;
-
-export const saturation = nodeProxy(ColorAdjustmentNode, ColorAdjustmentNode.SATURATION);
-export const vibrance = nodeProxy(ColorAdjustmentNode, ColorAdjustmentNode.VIBRANCE);
-export const hue = nodeProxy(ColorAdjustmentNode, ColorAdjustmentNode.HUE);
+export const hue = nodeProxy(
+  class extends ColorAdjustmentNode {
+    method = NodeVariant.Hue;
+  },
+);
 
 export const lumaCoeffs = vec3(0.2125, 0.7154, 0.0721);
 export const luminance = (color, luma = lumaCoeffs) => dot(color, luma);
-
 export const threshold = (color, threshold) => mix(vec3(0.0), color, luminance(color).sub(threshold).max(0));
 
 addNodeElement('saturation', saturation);
