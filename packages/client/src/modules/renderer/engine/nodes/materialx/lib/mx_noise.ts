@@ -1,6 +1,3 @@
-// engine.js Transpiler
-// https://raw.githubusercontent.com/AcademySoftwareFoundation/MaterialX/main/libraries/stdlib/genglsl/lib/mx_noise.glsl
-
 import { bool, f32, i32, NodeStack, tslFn, u32, uvec3, vec2, vec3, vec4 } from '../../shadernode/ShaderNodes.js';
 import { cond } from '@modules/renderer/engine/nodes/math/CondNode.js';
 import { mul, sub } from '@modules/renderer/engine/nodes/math/OperatorNode.js';
