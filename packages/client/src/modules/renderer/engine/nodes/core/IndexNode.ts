@@ -1,6 +1,6 @@
 import Node from './Node.js';
 import { varying } from './VaryingNode.js';
-import { nodeImmutable } from '../shadernode/ShaderNodes.js';
+import { fixedNode } from '../shadernode/ShaderNodes.js';
 import { ShaderStage } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { BufferStep } from '@modules/renderer/engine/renderers/constants.js';
 
@@ -48,5 +48,5 @@ IndexNode.INSTANCE = BufferStep.Instance;
 
 export default IndexNode;
 
-export const vertexIndex = nodeImmutable(IndexNode, IndexNode.VERTEX);
-export const instanceIndex = nodeImmutable(IndexNode, IndexNode.INSTANCE);
+export const vertexIndex = fixedNode(IndexNode, IndexNode.VERTEX);
+export const instanceIndex = fixedNode(IndexNode, IndexNode.INSTANCE);

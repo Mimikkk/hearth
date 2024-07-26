@@ -1,6 +1,6 @@
 import Node from './Node.js';
 import NodeCache from './NodeCache.js';
-import { addNodeElement, nodeProxy } from '../shadernode/ShaderNodes.js';
+import { addNodeElement, proxyNode } from '../shadernode/ShaderNodes.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
@@ -33,7 +33,7 @@ class CacheNode extends Node {
 
 export default CacheNode;
 
-export const cache = nodeProxy(CacheNode);
+export const cache = proxyNode(CacheNode);
 export const globalCache = <T extends Node>(node: T) => cache(node, null);
 
 addNodeElement('cache', cache);

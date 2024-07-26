@@ -1,4 +1,4 @@
-import { nodeImmutable } from '../shadernode/ShaderNodes.js';
+import { fixedNode } from '../shadernode/ShaderNodes.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import UniformNode from '@modules/renderer/engine/nodes/core/UniformNode.js';
@@ -84,39 +84,39 @@ enum NodeVariant {
   Direction = 'direction',
 }
 
-export const modelDirection = nodeImmutable(
+export const modelDirection = fixedNode(
   class extends ModelNode {
     scope = NodeVariant.Direction;
   },
 );
-export const modelViewMatrix = nodeImmutable(
+export const modelViewMatrix = fixedNode(
   class extends ModelNode {
     scope = NodeVariant.ViewMatrix;
   },
 )
   .label('modelViewMatrix')
   .temp('ModelViewMatrix');
-export const modelNormalMatrix = nodeImmutable(
+export const modelNormalMatrix = fixedNode(
   class extends ModelNode {
     scope = NodeVariant.NormalMatrix;
   },
 );
-export const modelWorldMatrix = nodeImmutable(
+export const modelWorldMatrix = fixedNode(
   class extends ModelNode {
     scope = NodeVariant.WorldMatrix;
   },
 );
-export const modelPosition = nodeImmutable(
+export const modelPosition = fixedNode(
   class extends ModelNode {
     scope = NodeVariant.Position;
   },
 );
-export const modelScale = nodeImmutable(
+export const modelScale = fixedNode(
   class extends ModelNode {
     scope = NodeVariant.Scale;
   },
 );
-export const modelViewPosition = nodeImmutable(
+export const modelViewPosition = fixedNode(
   class extends ModelNode {
     scope = NodeVariant.ViewPosition;
   },

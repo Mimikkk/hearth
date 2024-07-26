@@ -1,6 +1,6 @@
 import TempNode from '../core/TempNode.js';
 import { mix } from '../math/MathNode.js';
-import { addNodeElement, asNode, nodeProxy, tslFn, vec4 } from '../shadernode/ShaderNodes.js';
+import { addNodeElement, asNode, proxyNode, tslFn, vec4 } from '../shadernode/ShaderNodes.js';
 import { ColorSpace } from '@modules/renderer/engine/engine.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { Node } from '../core/Node.js';
@@ -89,12 +89,12 @@ export const colorSpaceToLinear = (node: Node, colorSpace: ColorSpace) => {
   return asNode(spaceNode);
 };
 
-export const linearTosRGB = nodeProxy(
+export const linearTosRGB = proxyNode(
   class extends ColorSpaceNode {
     method = NodeVariant.LinearTosRGB;
   },
 );
-export const sRGBToLinear = nodeProxy(
+export const sRGBToLinear = proxyNode(
   class extends ColorSpaceNode {
     method = NodeVariant.sRGBToLinear;
   },

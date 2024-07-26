@@ -1,5 +1,5 @@
 import TempNode from '../core/TempNode.js';
-import { addNodeElement, nodeProxy } from '../shadernode/ShaderNodes.js';
+import { addNodeElement, proxyNode } from '../shadernode/ShaderNodes.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { Node } from '../core/Node.js';
@@ -33,12 +33,12 @@ enum NodeVariant {
   ColorToDirection = 'colorToDirection',
 }
 
-export const directionToColor = nodeProxy(
+export const directionToColor = proxyNode(
   class extends PackingNode {
     scope = NodeVariant.DirectionToColor;
   },
 );
-export const colorToDirection = nodeProxy(
+export const colorToDirection = proxyNode(
   class extends PackingNode {
     scope = NodeVariant.ColorToDirection;
   },

@@ -1,5 +1,5 @@
 import TempNode from '../core/TempNode.js';
-import { addNodeElement, nodeProxy } from '../shadernode/ShaderNodes.js';
+import { addNodeElement, proxyNode } from '../shadernode/ShaderNodes.js';
 import { Node } from '../core/Node.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
@@ -180,102 +180,102 @@ enum Operator {
 
 export default OperatorNode;
 
-export const add = nodeProxy(
+export const add = proxyNode(
   class extends OperatorNode {
     op = Operator.Add;
   },
 );
-export const sub = nodeProxy(
+export const sub = proxyNode(
   class extends OperatorNode {
     op = Operator.Sub;
   },
 );
-export const mul = nodeProxy(
+export const mul = proxyNode(
   class extends OperatorNode {
     op = Operator.Mul;
   },
 );
-export const div = nodeProxy(
+export const div = proxyNode(
   class extends OperatorNode {
     op = Operator.Div;
   },
 );
-export const remainder = nodeProxy(
+export const remainder = proxyNode(
   class extends OperatorNode {
     op = Operator.Remainder;
   },
 );
-export const equal = nodeProxy(
+export const equal = proxyNode(
   class extends OperatorNode {
     op = Operator.eq;
   },
 );
-export const notEqual = nodeProxy(
+export const notEqual = proxyNode(
   class extends OperatorNode {
     op = Operator.neq;
   },
 );
-export const lessThan = nodeProxy(
+export const lessThan = proxyNode(
   class extends OperatorNode {
     op = Operator.lt;
   },
 );
-export const greaterThan = nodeProxy(
+export const greaterThan = proxyNode(
   class extends OperatorNode {
     op = Operator.gt;
   },
 );
-export const lessThanEqual = nodeProxy(
+export const lessThanEqual = proxyNode(
   class extends OperatorNode {
     op = Operator.lte;
   },
 );
-export const greaterThanEqual = nodeProxy(
+export const greaterThanEqual = proxyNode(
   class extends OperatorNode {
     op = Operator.gte;
   },
 );
-export const and = nodeProxy(
+export const and = proxyNode(
   class extends OperatorNode {
     op = Operator.And;
   },
 );
-export const or = nodeProxy(
+export const or = proxyNode(
   class extends OperatorNode {
     op = Operator.Or;
   },
 );
-export const not = nodeProxy(
+export const not = proxyNode(
   class extends OperatorNode {
     op = Operator.Not;
   },
 );
-export const bitAnd = nodeProxy(
+export const bitAnd = proxyNode(
   class extends OperatorNode {
     op = Operator.BinAnd;
   },
 );
-export const bitNot = nodeProxy(
+export const bitNot = proxyNode(
   class extends OperatorNode {
     op = Operator.BitNot;
   },
 );
-export const bitOr = nodeProxy(
+export const bitOr = proxyNode(
   class extends OperatorNode {
     op = Operator.BinOr;
   },
 );
-export const bitXor = nodeProxy(
+export const bitXor = proxyNode(
   class extends OperatorNode {
     op = Operator.BinXor;
   },
 );
-export const shiftLeft = nodeProxy(
+export const shiftLeft = proxyNode(
   class extends OperatorNode {
     op = Operator.ShiftLeft;
   },
 );
-export const shiftRight = nodeProxy(
+export const shiftRight = proxyNode(
   class extends OperatorNode {
     op = Operator.ShiftRight;
   },

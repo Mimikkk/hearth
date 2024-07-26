@@ -1,5 +1,5 @@
 import TempNode from '../core/TempNode.js';
-import { addNodeElement, nodeProxy } from '../shadernode/ShaderNodes.js';
+import { addNodeElement, proxyNode } from '../shadernode/ShaderNodes.js';
 
 class PosterizeNode extends TempNode {
   static type = 'PosterizeNode';
@@ -20,6 +20,6 @@ class PosterizeNode extends TempNode {
 
 export default PosterizeNode;
 
-export const posterize = nodeProxy(PosterizeNode);
+export const posterize = proxyNode(PosterizeNode);
 
 addNodeElement('posterize', posterize);

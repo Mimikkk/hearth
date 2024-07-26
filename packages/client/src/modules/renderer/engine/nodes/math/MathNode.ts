@@ -1,6 +1,6 @@
 import { TempNode } from '../core/TempNode.js';
 import { div, mul, sub } from './OperatorNode.js';
-import { addNodeElement, f32, asNode, nodeProxy, vec3, vec4 } from '../shadernode/ShaderNodes.js';
+import { addNodeElement, f32, asNode, proxyNode, vec3, vec4 } from '../shadernode/ShaderNodes.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { Node } from '../core/Node.js';
@@ -269,228 +269,228 @@ export const INFINITY = f32(1e6);
 export const PI = f32(Math.PI);
 export const PI2 = f32(Math.PI * 2);
 
-export const all = nodeProxy(
+export const all = proxyNode(
   class extends UnaryNode {
     method = UnaryVariant.All;
   },
 );
-export const any = nodeProxy(
+export const any = proxyNode(
   class extends UnaryNode {
     method = UnaryVariant.Any;
   },
 );
-export const equals = nodeProxy(
+export const equals = proxyNode(
   class extends UnaryNode {
     method = UnaryVariant.Equals;
   },
 );
-export const radians = nodeProxy(
+export const radians = proxyNode(
   class extends UnaryNode {
     method = UnaryVariant.Radians;
   },
 );
-export const degrees = nodeProxy(
+export const degrees = proxyNode(
   class extends UnaryNode {
     method = UnaryVariant.Degrees;
   },
 );
-export const exp = nodeProxy(
+export const exp = proxyNode(
   class extends UnaryNode {
     method = UnaryVariant.Exp;
   },
 );
-export const exp2 = nodeProxy(
+export const exp2 = proxyNode(
   class extends UnaryNode {
     method = UnaryVariant.Exp2;
   },
 );
-export const log = nodeProxy(
+export const log = proxyNode(
   class extends UnaryNode {
     method = UnaryVariant.Log;
   },
 );
-export const log2 = nodeProxy(
+export const log2 = proxyNode(
   class extends UnaryNode {
     method = UnaryVariant.Log2;
   },
 );
-export const sqrt = nodeProxy(
+export const sqrt = proxyNode(
   class extends UnaryNode {
     method = UnaryVariant.Sqrt;
   },
 );
-export const inverseSqrt = nodeProxy(
+export const inverseSqrt = proxyNode(
   class extends UnaryNode {
     method = UnaryVariant.InverseSqrt;
   },
 );
-export const floor = nodeProxy(
+export const floor = proxyNode(
   class extends UnaryNode {
     method = UnaryVariant.Floor;
   },
 );
-export const ceil = nodeProxy(
+export const ceil = proxyNode(
   class extends UnaryNode {
     method = UnaryVariant.Ceil;
   },
 );
-export const normalize = nodeProxy(
+export const normalize = proxyNode(
   class extends UnaryNode {
     method = UnaryVariant.Normalize;
   },
 );
-export const fract = nodeProxy(
+export const fract = proxyNode(
   class extends UnaryNode {
     method = UnaryVariant.Fract;
   },
 );
-export const sin = nodeProxy(
+export const sin = proxyNode(
   class extends UnaryNode {
     method = UnaryVariant.Sin;
   },
 );
-export const cos = nodeProxy(
+export const cos = proxyNode(
   class extends UnaryNode {
     method = UnaryVariant.Cos;
   },
 );
-export const tan = nodeProxy(
+export const tan = proxyNode(
   class extends UnaryNode {
     method = UnaryVariant.Tan;
   },
 );
-export const asin = nodeProxy(
+export const asin = proxyNode(
   class extends UnaryNode {
     method = UnaryVariant.Asin;
   },
 );
-export const acos = nodeProxy(
+export const acos = proxyNode(
   class extends UnaryNode {
     method = UnaryVariant.Acos;
   },
 );
-export const atan = nodeProxy(
+export const atan = proxyNode(
   class extends UnaryNode {
     method = UnaryVariant.Atan;
   },
 );
-export const abs = nodeProxy(
+export const abs = proxyNode(
   class extends UnaryNode {
     method = UnaryVariant.Abs;
   },
 );
-export const sign = nodeProxy(
+export const sign = proxyNode(
   class extends UnaryNode {
     method = UnaryVariant.Sign;
   },
 );
-export const length = nodeProxy(
+export const length = proxyNode(
   class extends UnaryNode {
     method = UnaryVariant.Length;
   },
 );
-export const negate = nodeProxy(
+export const negate = proxyNode(
   class extends UnaryNode {
     method = UnaryVariant.Negate;
   },
 );
-export const oneMinus = nodeProxy(
+export const oneMinus = proxyNode(
   class extends UnaryNode {
     method = UnaryVariant.OneMinus;
   },
 );
-export const dpdx = nodeProxy(
+export const dpdx = proxyNode(
   class extends UnaryNode {
     method = UnaryVariant.Dpdx;
   },
 );
-export const dpdy = nodeProxy(
+export const dpdy = proxyNode(
   class extends UnaryNode {
     method = UnaryVariant.Dpdy;
   },
 );
-export const round = nodeProxy(
+export const round = proxyNode(
   class extends UnaryNode {
     method = UnaryVariant.Round;
   },
 );
-export const reciprocal = nodeProxy(
+export const reciprocal = proxyNode(
   class extends UnaryNode {
     method = UnaryVariant.Reciprocal;
   },
 );
-export const trunc = nodeProxy(
+export const trunc = proxyNode(
   class extends UnaryNode {
     method = UnaryVariant.Trunc;
   },
 );
-export const fwidth = nodeProxy(
+export const fwidth = proxyNode(
   class extends UnaryNode {
     method = UnaryVariant.Fwidth;
   },
 );
-export const bitcast = nodeProxy(
+export const bitcast = proxyNode(
   class extends UnaryNode {
     method = UnaryVariant.Bitcast;
   },
 );
 
-export const atan2 = nodeProxy(
+export const atan2 = proxyNode(
   class extends BinaryNode {
     method = BinaryVariant.Atan2;
   },
 );
-export const min = nodeProxy(
+export const min = proxyNode(
   class extends BinaryNode {
     method = BinaryVariant.Min;
   },
 );
-export const max = nodeProxy(
+export const max = proxyNode(
   class extends BinaryNode {
     method = BinaryVariant.Max;
   },
 );
-export const mod = nodeProxy(
+export const mod = proxyNode(
   class extends BinaryNode {
     method = BinaryVariant.Mod;
   },
 );
-export const step = nodeProxy(
+export const step = proxyNode(
   class extends BinaryNode {
     method = BinaryVariant.Step;
   },
 );
-export const reflect = nodeProxy(
+export const reflect = proxyNode(
   class extends BinaryNode {
     method = BinaryVariant.Reflect;
   },
 );
-export const distance = nodeProxy(
+export const distance = proxyNode(
   class extends BinaryNode {
     method = BinaryVariant.Distance;
   },
 );
-export const difference = nodeProxy(
+export const difference = proxyNode(
   class extends BinaryNode {
     method = BinaryVariant.Difference;
   },
 );
-export const dot = nodeProxy(
+export const dot = proxyNode(
   class extends BinaryNode {
     method = BinaryVariant.Dot;
   },
 );
-export const cross = nodeProxy(
+export const cross = proxyNode(
   class extends BinaryNode {
     method = BinaryVariant.Cross;
   },
 );
-export const pow = nodeProxy(
+export const pow = proxyNode(
   class extends BinaryNode {
     method = BinaryVariant.Pow;
   },
 );
-export const pow2 = nodeProxy(
+export const pow2 = proxyNode(
   class extends BinaryNode {
     method = BinaryVariant.Pow;
 
@@ -499,7 +499,7 @@ export const pow2 = nodeProxy(
     }
   },
 );
-export const pow3 = nodeProxy(
+export const pow3 = proxyNode(
   class extends BinaryNode {
     method = BinaryVariant.Pow;
 
@@ -508,7 +508,8 @@ export const pow3 = nodeProxy(
     }
   },
 );
-export const pow4 = nodeProxy(
+
+export const pow4 = proxyNode(
   class extends BinaryNode {
     method = BinaryVariant.Pow;
 
@@ -517,7 +518,7 @@ export const pow4 = nodeProxy(
     }
   },
 );
-export const transformDirection = nodeProxy(
+export const transformDirection = proxyNode(
   class extends BinaryNode {
     method = BinaryVariant.TransformDirection;
   },
@@ -525,7 +526,7 @@ export const transformDirection = nodeProxy(
 
 export const cbrt = (a: Node) => mul(sign(a), pow(abs(a), 1.0 / 3.0));
 export const lengthSq = (a: Node) => dot(a, a);
-export const mix = nodeProxy(
+export const mix = proxyNode(
   class extends TernaryNode {
     method = TernaryVariant.Mix;
   },
@@ -537,17 +538,17 @@ export const clamp = (value: number, low: number = 0, high: number = 1): Node =>
 };
 export const saturate = (value: number) => clamp(value);
 
-export const refract = nodeProxy(
+export const refract = proxyNode(
   class extends TernaryNode {
     method = TernaryVariant.Refract;
   },
 );
-export const smoothstep = nodeProxy(
+export const smoothstep = proxyNode(
   class extends TernaryNode {
     method = TernaryVariant.Smoothstep;
   },
 );
-export const faceForward = nodeProxy(
+export const faceForward = proxyNode(
   class extends TernaryNode {
     method = TernaryVariant.FaceForward;
   },

@@ -1,7 +1,7 @@
 import TempNode from '../core/TempNode.js';
 import { dot, mix } from '../math/MathNode.js';
 import { add } from '../math/OperatorNode.js';
-import { addNodeElement, f32, nodeProxy, tslFn, vec3 } from '../shadernode/ShaderNodes.js';
+import { addNodeElement, f32, proxyNode, tslFn, vec3 } from '../shadernode/ShaderNodes.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 export class ColorAdjustmentNode extends TempNode {
@@ -43,7 +43,7 @@ export default ColorAdjustmentNode;
 const calculateSaturation = tslFn(({ color, adjustment }) => {
   return adjustment.mix(luminance(color.rgb), color.rgb);
 });
-export const saturation = nodeProxy(
+export const saturation = proxyNode(
   class extends ColorAdjustmentNode {
     method = NodeVariant.Saturation;
   },
@@ -56,7 +56,7 @@ const calculateVibrance = tslFn(({ color, adjustment }) => {
 
   return mix(color.rgb, mx, amt);
 });
-export const vibrance = nodeProxy(
+export const vibrance = proxyNode(
   class extends ColorAdjustmentNode {
     method = NodeVariant.Vibrance;
   },
@@ -75,7 +75,7 @@ const calculateHue = tslFn(({ color, adjustment }) => {
     ),
   );
 });
-export const hue = nodeProxy(
+export const hue = proxyNode(
   class extends ColorAdjustmentNode {
     method = NodeVariant.Hue;
   },

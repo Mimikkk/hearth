@@ -1,5 +1,5 @@
 import Node from '../core/Node.js';
-import { addNodeElement, nodeProxy } from '../shadernode/ShaderNodes.js';
+import { addNodeElement, proxyNode } from '../shadernode/ShaderNodes.js';
 
 class TextureSizeNode extends Node {
   static type = 'TextureSizeNode';
@@ -27,6 +27,6 @@ class TextureSizeNode extends Node {
 
 export default TextureSizeNode;
 
-export const textureSize = nodeProxy(TextureSizeNode);
+export const textureSize = proxyNode(TextureSizeNode);
 
 addNodeElement('textureSize', textureSize);

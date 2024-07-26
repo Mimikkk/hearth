@@ -1,6 +1,6 @@
 import Node from './Node.js';
 import { cond } from '../math/CondNode.js';
-import { nodeProxy, NodeStack, ShaderNode } from '../shadernode/ShaderNodes.js';
+import { proxyNode, NodeStack, ShaderNode } from '../shadernode/ShaderNodes.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import CondNode from 'three/examples/jsm/nodes/math/CondNode.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
@@ -73,4 +73,4 @@ StackNode.prototype.isStackNode = true;
 
 export default StackNode;
 
-export const stack = nodeProxy(StackNode);
+export const stack = proxyNode(StackNode);

@@ -1,5 +1,5 @@
 import Node from '../core/Node.js';
-import { nodeProxy } from '../shadernode/ShaderNodes.js';
+import { proxyNode } from '../shadernode/ShaderNodes.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 
 export interface CodeNodeInclude {
@@ -49,7 +49,7 @@ CodeNode.prototype.isCodeNode = true;
 
 export default CodeNode;
 
-export const code = nodeProxy(CodeNode);
+export const code = proxyNode(CodeNode);
 
 export const js = (src: string, includes: any[]) => code(src, includes, 'js');
 export const wgsl = (src: string, includes: any[]) => code(src, includes, 'wgsl');

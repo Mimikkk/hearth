@@ -7,9 +7,11 @@ import ArrayElementNode from '@modules/renderer/engine/nodes/utils/ArrayElementN
 import SplitNode from '@modules/renderer/engine/nodes/utils/SplitNode.js';
 import { asNode, asNodes } from './CreateShaderNodeObject.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
+import { Node } from '@modules/renderer/engine/nodes/core/Node.js';
 
-const createConvertType = (type: TypeName, cacheMap: Map<any, any> = null) => {
-  return (...params) => {
+const createConvertType =
+  (type: TypeName, cacheMap: Map<any, any> = null) =>
+  (...params) => {
     if (
       params.length === 0 ||
       (!['bool', 'f32', 'i32', 'u32'].includes(type) && params.every(param => typeof param !== 'object'))
@@ -34,7 +36,6 @@ const createConvertType = (type: TypeName, cacheMap: Map<any, any> = null) => {
     const nodes = params.map(param => getConstNode(param));
     return asNode(new JoinNode(nodes, type));
   };
-};
 
 export const color = createConvertType(TypeName.color);
 export const f32 = createConvertType(TypeName.f32, floatMap);
@@ -68,13 +69,14 @@ export const bmat4 = createConvertType(TypeName.bmat4);
 
 export { asNode, asNodes };
 
-export const nodeProxy =
-  <T extends abstract new (...params: any) => any>(NodeClass: T) =>
-  (...params) =>
-    asNode(new NodeClass(...asNodes(params)));
+export const proxyNode =
+  <T extends new (...params: Node[]) => any>(NodeClass: T) =>
+  (...params: any[]): InstanceType<T> =>
+    asNode(new NodeClass(...asNodes(params))) as InstanceType<T>;
 
-export const nodeImmutable = (NodeClass, ...params) => asNode(new NodeClass(...asNodes(params)));
+export const fixedNode = <T extends new (...params: Node[]) => any>(NodeClass: T, ...params: Node[]): InstanceType<T> =>
+  asNode(new NodeClass(...asNodes(params))) as InstanceType<T>;
 
-export const element = nodeProxy(ArrayElementNode);
+export const element = proxyNode(ArrayElementNode);
 export const convert = (node, types) => asNode(new ConvertNode(asNode(node), types));
 export const split = (node, channels) => asNode(new SplitNode(asNode(node), channels));

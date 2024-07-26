@@ -1,6 +1,6 @@
 import TempNode from '../core/TempNode.js';
 import { EPSILON } from '../math/MathNode.js';
-import { addNodeElement, nodeProxy, tslFn, vec3 } from '../shadernode/ShaderNodes.js';
+import { addNodeElement, proxyNode, tslFn, vec3 } from '../shadernode/ShaderNodes.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 export class BlendModeNode extends TempNode {
@@ -45,22 +45,22 @@ interface Params {
   blend: Node;
 }
 
-export const burn = nodeProxy(
+export const burn = proxyNode(
   class extends BlendModeNode {
     mode = NodeVariant.Burn;
   },
 );
-export const dodge = nodeProxy(
+export const dodge = proxyNode(
   class extends BlendModeNode {
     mode = NodeVariant.Dodge;
   },
 );
-export const overlay = nodeProxy(
+export const overlay = proxyNode(
   class extends BlendModeNode {
     mode = NodeVariant.Overlay;
   },
 );
-export const screen = nodeProxy(
+export const screen = proxyNode(
   class extends BlendModeNode {
     mode = NodeVariant.Screen;
   },

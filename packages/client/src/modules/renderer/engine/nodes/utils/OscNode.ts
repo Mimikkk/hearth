@@ -1,6 +1,6 @@
 import Node from '../core/Node.js';
 import { timerLocal } from './TimerNode.js';
-import { asNode, nodeProxy } from '../shadernode/ShaderNodes.js';
+import { asNode, proxyNode } from '../shadernode/ShaderNodes.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
@@ -46,22 +46,22 @@ enum NodeVariant {
 
 export default OscNode;
 
-export const oscSine = nodeProxy(
+export const oscSine = proxyNode(
   class extends OscNode {
     method = NodeVariant.Sine;
   },
 );
-export const oscSquare = nodeProxy(
+export const oscSquare = proxyNode(
   class extends OscNode {
     method = NodeVariant.Square;
   },
 );
-export const oscTriangle = nodeProxy(
+export const oscTriangle = proxyNode(
   class extends OscNode {
     method = NodeVariant.Triangle;
   },
 );
-export const oscSawtooth = nodeProxy(
+export const oscSawtooth = proxyNode(
   class extends OscNode {
     method = NodeVariant.Sawtooth;
   },

@@ -1,6 +1,6 @@
 import TextureNode from '../accessors/TextureNode.js';
 import { NodeUpdateType } from '../core/constants.js';
-import { addNodeElement, nodeProxy } from '../shadernode/ShaderNodes.js';
+import { addNodeElement, proxyNode } from '../shadernode/ShaderNodes.js';
 import { viewportTopLeft } from './ViewportNode.js';
 import { FramebufferTexture, MinificationTextureFilter, Vec2 } from '@modules/renderer/engine/engine.js';
 import NodeFrame from '@modules/renderer/engine/nodes/core/NodeFrame.js';
@@ -52,8 +52,8 @@ class ViewportTextureNode extends TextureNode {
 
 export default ViewportTextureNode;
 
-export const viewportTexture = nodeProxy(ViewportTextureNode);
-export const viewportMipTexture = nodeProxy(ViewportTextureNode);
+export const viewportTexture = proxyNode(ViewportTextureNode);
+export const viewportMipTexture = proxyNode(ViewportTextureNode);
 viewportMipTexture.generateMipmaps = true;
 
 addNodeElement('viewportTexture', viewportTexture);

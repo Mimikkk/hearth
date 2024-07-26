@@ -1,5 +1,5 @@
 import Node from '../core/Node.js';
-import { nodeImmutable } from '../shadernode/ShaderNodes.js';
+import { fixedNode } from '../shadernode/ShaderNodes.js';
 import { reference } from './ReferenceNode.js';
 
 class SceneNode extends Node {
@@ -35,5 +35,5 @@ SceneNode.BACKGROUND_INTENSITY = 'backgroundIntensity';
 
 export default SceneNode;
 
-export const backgroundBlurriness = nodeImmutable(SceneNode, SceneNode.BACKGROUND_BLURRINESS);
-export const backgroundIntensity = nodeImmutable(SceneNode, SceneNode.BACKGROUND_INTENSITY);
+export const backgroundBlurriness = fixedNode(SceneNode, SceneNode.BACKGROUND_BLURRINESS);
+export const backgroundIntensity = fixedNode(SceneNode, SceneNode.BACKGROUND_INTENSITY);

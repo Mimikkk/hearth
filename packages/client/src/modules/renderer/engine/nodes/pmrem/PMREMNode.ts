@@ -3,7 +3,7 @@ import { texture } from '../accessors/TextureNode.js';
 import { textureCubeUV } from './PMREMUtils.js';
 import { uniform } from '../core/UniformNode.js';
 import { NodeUpdateType } from '../core/constants.js';
-import { nodeProxy } from '../shadernode/ShaderNodes.js';
+import { proxyNode } from '../shadernode/ShaderNodes.js';
 import PMREMGenerator from '@modules/renderer/engine/renderers/PMREMGenerator.js';
 
 let _generator = null;
@@ -124,6 +124,6 @@ class PMREMNode extends TempNode {
   }
 }
 
-export const pmremTexture = nodeProxy(PMREMNode);
+export const pmremTexture = proxyNode(PMREMNode);
 
 export default PMREMNode;

@@ -4,7 +4,7 @@ import { normalize } from '../math/MathNode.js';
 import { cameraViewMatrix } from './CameraNode.js';
 import { normalGeometry, normalLocal, normalView, normalWorld, transformedNormalView } from './NormalNode.js';
 import { tangentGeometry, tangentLocal, tangentView, tangentWorld, transformedTangentView } from './TangentNode.js';
-import { nodeImmutable } from '../shadernode/ShaderNodes.js';
+import { fixedNode } from '../shadernode/ShaderNodes.js';
 
 class BitangentNode extends Node {
   static type = 'BitangentNode';
@@ -49,10 +49,10 @@ BitangentNode.WORLD = 'world';
 
 export default BitangentNode;
 
-export const bitangentGeometry = nodeImmutable(BitangentNode, BitangentNode.GEOMETRY);
-export const bitangentLocal = nodeImmutable(BitangentNode, BitangentNode.LOCAL);
-export const bitangentView = nodeImmutable(BitangentNode, BitangentNode.VIEW);
-export const bitangentWorld = nodeImmutable(BitangentNode, BitangentNode.WORLD);
+export const bitangentGeometry = fixedNode(BitangentNode, BitangentNode.GEOMETRY);
+export const bitangentLocal = fixedNode(BitangentNode, BitangentNode.LOCAL);
+export const bitangentView = fixedNode(BitangentNode, BitangentNode.VIEW);
+export const bitangentWorld = fixedNode(BitangentNode, BitangentNode.WORLD);
 export const transformedBitangentView = normalize(
   transformedNormalView.cross(transformedTangentView).mul(tangentGeometry.w),
 );

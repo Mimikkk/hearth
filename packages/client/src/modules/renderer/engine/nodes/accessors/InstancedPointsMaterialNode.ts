@@ -1,5 +1,5 @@
 import MaterialNode from './MaterialNode.js';
-import { nodeImmutable } from '../shadernode/ShaderNodes.js';
+import { fixedNode } from '../shadernode/ShaderNodes.js';
 
 class InstancedPointsMaterialNode extends MaterialNode {
   static type = 'InstancedPointsMaterialNode';
@@ -13,4 +13,4 @@ InstancedPointsMaterialNode.POINT_WIDTH = 'pointWidth';
 
 export default InstancedPointsMaterialNode;
 
-export const materialPointWidth = nodeImmutable(InstancedPointsMaterialNode, InstancedPointsMaterialNode.POINT_WIDTH);
+export const materialPointWidth = fixedNode(InstancedPointsMaterialNode, InstancedPointsMaterialNode.POINT_WIDTH);

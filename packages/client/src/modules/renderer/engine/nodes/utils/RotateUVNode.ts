@@ -1,5 +1,5 @@
 import TempNode from '../core/TempNode.js';
-import { addNodeElement, nodeProxy, vec2 } from '../shadernode/ShaderNodes.js';
+import { addNodeElement, proxyNode, vec2 } from '../shadernode/ShaderNodes.js';
 
 class RotateUVNode extends TempNode {
   static type = 'RotateUVNode';
@@ -23,6 +23,6 @@ class RotateUVNode extends TempNode {
 
 export default RotateUVNode;
 
-export const rotateUV = nodeProxy(RotateUVNode);
+export const rotateUV = proxyNode(RotateUVNode);
 
 addNodeElement('rotateUV', rotateUV);

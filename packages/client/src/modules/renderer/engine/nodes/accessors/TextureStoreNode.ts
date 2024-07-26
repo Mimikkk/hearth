@@ -1,5 +1,5 @@
 import TextureNode from './TextureNode.js';
-import { nodeProxy } from '../shadernode/ShaderNodes.js';
+import { proxyNode } from '../shadernode/ShaderNodes.js';
 
 class TextureStoreNode extends TextureNode {
   static type = 'TextureStoreNode';
@@ -52,7 +52,7 @@ class TextureStoreNode extends TextureNode {
 
 export default TextureStoreNode;
 
-const textureStoreBase = nodeProxy(TextureStoreNode);
+const textureStoreBase = proxyNode(TextureStoreNode);
 
 export const textureStore = (value, uvNode, storeNode) => {
   const node = textureStoreBase(value, uvNode, storeNode);

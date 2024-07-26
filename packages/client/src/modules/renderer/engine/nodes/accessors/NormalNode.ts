@@ -5,7 +5,7 @@ import { property } from '../core/PropertyNode.js';
 import { normalize } from '../math/MathNode.js';
 import { cameraViewMatrix } from './CameraNode.js';
 import { modelNormalMatrix } from './ModelNode.js';
-import { nodeImmutable } from '../shadernode/ShaderNodes.js';
+import { fixedNode } from '../shadernode/ShaderNodes.js';
 
 class NormalNode extends Node {
   static type = 'NormalNode';
@@ -53,10 +53,10 @@ NormalNode.WORLD = 'world';
 
 export default NormalNode;
 
-export const normalGeometry = nodeImmutable(NormalNode, NormalNode.GEOMETRY);
-export const normalLocal = nodeImmutable(NormalNode, NormalNode.LOCAL).temp('Normal');
-export const normalView = nodeImmutable(NormalNode, NormalNode.VIEW);
-export const normalWorld = nodeImmutable(NormalNode, NormalNode.WORLD);
+export const normalGeometry = fixedNode(NormalNode, NormalNode.GEOMETRY);
+export const normalLocal = fixedNode(NormalNode, NormalNode.LOCAL).temp('Normal');
+export const normalView = fixedNode(NormalNode, NormalNode.VIEW);
+export const normalWorld = fixedNode(NormalNode, NormalNode.WORLD);
 export const transformedNormalView = property('vec3', 'TransformedNormalView');
 export const transformedNormalWorld = transformedNormalView.transformDirection(cameraViewMatrix).normalize();
 export const transformedClearcoatNormalView = property('vec3', 'TransformedClearcoatNormalView');

@@ -2,7 +2,7 @@ import Node from '../core/Node.js';
 import { instancedBufferAttribute, instancedDynamicBufferAttribute } from './BufferAttributeNode.js';
 import { normalLocal } from './NormalNode.js';
 import { positionLocal } from './PositionNode.js';
-import { mat3, mat4, nodeProxy, vec3 } from '../shadernode/ShaderNodes.js';
+import { mat3, mat4, proxyNode, vec3 } from '../shadernode/ShaderNodes.js';
 import { Buffer, BufferUse } from '@modules/renderer/engine/engine.js';
 import { BufferStep } from '@modules/renderer/engine/renderers/constants.js';
 
@@ -62,4 +62,4 @@ class InstanceNode extends Node {
 
 export default InstanceNode;
 
-export const instance = nodeProxy(InstanceNode);
+export const instance = proxyNode(InstanceNode);

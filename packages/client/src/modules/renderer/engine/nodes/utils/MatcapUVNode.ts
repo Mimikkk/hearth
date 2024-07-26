@@ -1,7 +1,7 @@
 import TempNode from '../core/TempNode.js';
 import { transformedNormalView } from '../accessors/NormalNode.js';
 import { positionViewDirection } from '../accessors/PositionNode.js';
-import { nodeImmutable, vec2, vec3 } from '../shadernode/ShaderNodes.js';
+import { fixedNode, vec2, vec3 } from '../shadernode/ShaderNodes.js';
 
 class MatcapUVNode extends TempNode {
   static type = 'MatcapUVNode';
@@ -20,4 +20,4 @@ class MatcapUVNode extends TempNode {
 
 export default MatcapUVNode;
 
-export const matcapUV = nodeImmutable(MatcapUVNode);
+export const matcapUV = fixedNode(MatcapUVNode);

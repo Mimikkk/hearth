@@ -5,7 +5,7 @@ import { varying } from '../core/VaryingNode.js';
 import { normalize } from '../math/MathNode.js';
 import { cameraViewMatrix } from './CameraNode.js';
 import { modelViewMatrix } from './ModelNode.js';
-import { nodeImmutable, vec4 } from '../shadernode/ShaderNodes.js';
+import { fixedNode, vec4 } from '../shadernode/ShaderNodes.js';
 
 class TangentNode extends Node {
   static type = 'TangentNode';
@@ -62,9 +62,9 @@ TangentNode.WORLD = 'world';
 
 export default TangentNode;
 
-export const tangentGeometry = nodeImmutable(TangentNode, TangentNode.GEOMETRY);
-export const tangentLocal = nodeImmutable(TangentNode, TangentNode.LOCAL);
-export const tangentView = nodeImmutable(TangentNode, TangentNode.VIEW);
-export const tangentWorld = nodeImmutable(TangentNode, TangentNode.WORLD);
+export const tangentGeometry = fixedNode(TangentNode, TangentNode.GEOMETRY);
+export const tangentLocal = fixedNode(TangentNode, TangentNode.LOCAL);
+export const tangentView = fixedNode(TangentNode, TangentNode.VIEW);
+export const tangentWorld = fixedNode(TangentNode, TangentNode.WORLD);
 export const transformedTangentView = temp(tangentView, 'TransformedTangentView');
 export const transformedTangentWorld = normalize(transformedTangentView.transformDirection(cameraViewMatrix));

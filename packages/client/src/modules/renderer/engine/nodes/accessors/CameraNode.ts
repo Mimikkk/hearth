@@ -1,5 +1,5 @@
 import { NodeUpdateType } from '../core/constants.js';
-import { nodeImmutable } from '../shadernode/ShaderNodes.js';
+import { fixedNode } from '../shadernode/ShaderNodes.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import NodeFrame from '@modules/renderer/engine/nodes/core/NodeFrame.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
@@ -114,62 +114,62 @@ enum NodeVariant {
 
 export default CameraNode;
 
-export const cameraProjectionMatrix = nodeImmutable(
+export const cameraProjectionMatrix = fixedNode(
   class extends CameraNode {
     scope = NodeVariant.ProjectionMatrix;
   },
 );
-export const cameraProjectionMatrixInverse = nodeImmutable(
+export const cameraProjectionMatrixInverse = fixedNode(
   class extends CameraNode {
     scope = NodeVariant.ProjectionMatrixInverse;
   },
 );
-export const cameraNear = nodeImmutable(
+export const cameraNear = fixedNode(
   class extends CameraNode {
     scope = NodeVariant.Near;
   },
 );
-export const cameraFar = nodeImmutable(
+export const cameraFar = fixedNode(
   class extends CameraNode {
     scope = NodeVariant.Far;
   },
 );
-export const cameraLogDepth = nodeImmutable(
+export const cameraLogDepth = fixedNode(
   class extends CameraNode {
     scope = NodeVariant.LogDepth;
   },
 );
-export const cameraViewMatrix = nodeImmutable(
+export const cameraViewMatrix = fixedNode(
   class extends CameraNode {
     scope = NodeVariant.ViewMatrix;
   },
 );
-export const cameraNormalMatrix = nodeImmutable(
+export const cameraNormalMatrix = fixedNode(
   class extends CameraNode {
     scope = NodeVariant.NormalMatrix;
   },
 );
-export const cameraWorldMatrix = nodeImmutable(
+export const cameraWorldMatrix = fixedNode(
   class extends CameraNode {
     scope = NodeVariant.WorldMatrix;
   },
 );
-export const cameraPosition = nodeImmutable(
+export const cameraPosition = fixedNode(
   class extends CameraNode {
     scope = NodeVariant.Position;
   },
 );
-export const cameraDirection = nodeImmutable(
+export const cameraDirection = fixedNode(
   class extends CameraNode {
     scope = NodeVariant.Direction;
   },
 );
-export const cameraViewPosition = nodeImmutable(
+export const cameraViewPosition = fixedNode(
   class extends CameraNode {
     scope = NodeVariant.ViewPosition;
   },
 );
-export const cameraScale = nodeImmutable(
+export const cameraScale = fixedNode(
   class extends CameraNode {
     scope = NodeVariant.Scale;
   },

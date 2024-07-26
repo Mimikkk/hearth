@@ -7,7 +7,7 @@ import { positionView } from '../accessors/PositionNode.js';
 import { TBNViewMatrix } from '../accessors/AccessorsUtils.js';
 import { uv } from '../accessors/UVNode.js';
 import { faceDirection } from './FrontFacingNode.js';
-import { addNodeElement, nodeProxy, tslFn, vec3 } from '../shadernode/ShaderNodes.js';
+import { addNodeElement, proxyNode, tslFn, vec3 } from '../shadernode/ShaderNodes.js';
 
 import { NormalMapType } from '@modules/renderer/engine/engine.js';
 
@@ -82,6 +82,6 @@ class NormalMapNode extends TempNode {
 
 export default NormalMapNode;
 
-export const normalMap = nodeProxy(NormalMapNode);
+export const normalMap = proxyNode(NormalMapNode);
 
 addNodeElement('normalMap', normalMap);

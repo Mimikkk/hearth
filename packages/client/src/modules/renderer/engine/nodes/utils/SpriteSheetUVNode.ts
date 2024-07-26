@@ -1,6 +1,6 @@
 import Node from '../core/Node.js';
 import { uv } from '../accessors/UVNode.js';
-import { f32, nodeProxy, vec2 } from '../shadernode/ShaderNodes.js';
+import { f32, proxyNode, vec2 } from '../shadernode/ShaderNodes.js';
 
 class SpriteSheetUVNode extends Node {
   static type = 'SpriteSheetUVNode';
@@ -32,4 +32,4 @@ class SpriteSheetUVNode extends Node {
 
 export default SpriteSheetUVNode;
 
-export const spritesheetUV = nodeProxy(SpriteSheetUVNode);
+export const spritesheetUV = proxyNode(SpriteSheetUVNode);

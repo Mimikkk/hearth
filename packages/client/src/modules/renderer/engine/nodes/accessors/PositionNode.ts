@@ -3,7 +3,7 @@ import { attribute } from '../core/AttributeNode.js';
 import { varying } from '../core/VaryingNode.js';
 import { normalize } from '../math/MathNode.js';
 import { modelViewMatrix, modelWorldMatrix } from './ModelNode.js';
-import { nodeImmutable } from '../shadernode/ShaderNodes.js';
+import { fixedNode } from '../shadernode/ShaderNodes.js';
 
 class PositionNode extends Node {
   static type = 'PositionNode';
@@ -58,9 +58,9 @@ PositionNode.VIEW_DIRECTION = 'viewDirection';
 
 export default PositionNode;
 
-export const positionGeometry = nodeImmutable(PositionNode, PositionNode.GEOMETRY);
-export const positionLocal = nodeImmutable(PositionNode, PositionNode.LOCAL).temp('Position');
-export const positionWorld = nodeImmutable(PositionNode, PositionNode.WORLD);
-export const positionWorldDirection = nodeImmutable(PositionNode, PositionNode.WORLD_DIRECTION);
-export const positionView = nodeImmutable(PositionNode, PositionNode.VIEW);
-export const positionViewDirection = nodeImmutable(PositionNode, PositionNode.VIEW_DIRECTION);
+export const positionGeometry = fixedNode(PositionNode, PositionNode.GEOMETRY);
+export const positionLocal = fixedNode(PositionNode, PositionNode.LOCAL).temp('Position');
+export const positionWorld = fixedNode(PositionNode, PositionNode.WORLD);
+export const positionWorldDirection = fixedNode(PositionNode, PositionNode.WORLD_DIRECTION);
+export const positionView = fixedNode(PositionNode, PositionNode.VIEW);
+export const positionViewDirection = fixedNode(PositionNode, PositionNode.VIEW_DIRECTION);

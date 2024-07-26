@@ -1,5 +1,5 @@
 import Node from './Node.js';
-import { addNodeElement, nodeProxy } from '../shadernode/ShaderNodes.js';
+import { addNodeElement, proxyNode } from '../shadernode/ShaderNodes.js';
 import { ShaderStage } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 class VaryingNode extends Node {
@@ -48,6 +48,6 @@ class VaryingNode extends Node {
 
 export default VaryingNode;
 
-export const varying = nodeProxy(VaryingNode);
+export const varying = proxyNode(VaryingNode);
 
 addNodeElement('varying', varying);

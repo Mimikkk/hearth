@@ -1,5 +1,5 @@
 import Node from '../core/Node.js';
-import { addNodeElement, nodeProxy } from '../shadernode/ShaderNodes.js';
+import { addNodeElement, proxyNode } from '../shadernode/ShaderNodes.js';
 
 class HashNode extends Node {
   static type = 'HashNode';
@@ -23,6 +23,6 @@ class HashNode extends Node {
 
 export default HashNode;
 
-export const hash = nodeProxy(HashNode);
+export const hash = proxyNode(HashNode);
 
 addNodeElement('hash', hash);

@@ -1,5 +1,5 @@
 import ViewportTextureNode from './ViewportTextureNode.js';
-import { addNodeElement, nodeProxy } from '../shadernode/ShaderNodes.js';
+import { addNodeElement, proxyNode } from '../shadernode/ShaderNodes.js';
 import { viewportTopLeft } from './ViewportNode.js';
 import { FramebufferTexture } from '@modules/renderer/engine/engine.js';
 
@@ -19,6 +19,6 @@ class ViewportSharedTextureNode extends ViewportTextureNode {
 
 export default ViewportSharedTextureNode;
 
-export const viewportSharedTexture = nodeProxy(ViewportSharedTextureNode);
+export const viewportSharedTexture = proxyNode(ViewportSharedTextureNode);
 
 addNodeElement('viewportSharedTexture', viewportSharedTexture);

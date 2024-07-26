@@ -1,6 +1,6 @@
 import CondNode from '../math/CondNode.js';
 import { expression } from '../code/ExpressionNode.js';
-import { addNodeElement, nodeProxy } from '../shadernode/ShaderNodes.js';
+import { addNodeElement, proxyNode } from '../shadernode/ShaderNodes.js';
 
 let discardExpression;
 
@@ -16,7 +16,7 @@ class DiscardNode extends CondNode {
 
 export default DiscardNode;
 
-export const inlineDiscard = nodeProxy(DiscardNode);
+export const inlineDiscard = proxyNode(DiscardNode);
 export const discard = condNode => inlineDiscard(condNode).append();
 
 addNodeElement('discard', discard); // @TODO: Check... this cause a little confusing using in chaining
