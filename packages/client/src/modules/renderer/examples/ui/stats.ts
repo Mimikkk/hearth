@@ -3,12 +3,8 @@ import { GPUFeature } from '@modules/renderer/engine/renderers/utils/constants.j
 import { FrameStats } from '@modules/renderer/engine/renderers/FrameStats.js';
 
 export class Panel {
-  name: string;
   canvas: HTMLCanvasElement;
   context: CanvasRenderingContext2D;
-
-  foreground: string;
-  background: string;
 
   pixelRatio: number;
   width: number;
@@ -16,15 +12,20 @@ export class Panel {
 
   textX: number;
   textY: number;
+
   graphX: number;
   graphY: number;
   graphWidth: number;
   graphHeight: number;
 
-  constructor(name: string, fg: string, bg: string) {
+  constructor(
+    public name: string,
+    public foreground: string,
+    public background: string,
+  ) {
     this.name = name;
-    this.foreground = fg;
-    this.background = bg;
+    this.foreground = foreground;
+    this.background = background;
     this.pixelRatio = Math.round(window.devicePixelRatio || 1);
 
     this.width = 90 * this.pixelRatio;
@@ -37,13 +38,13 @@ export class Panel {
     this.graphHeight = 30 * this.pixelRatio;
 
     this.canvas = document.createElement('canvas');
+
     this.canvas.width = 90 * this.pixelRatio;
     this.canvas.height = 48 * this.pixelRatio;
     this.canvas.style.width = '90px';
     this.canvas.style.position = 'absolute';
     this.canvas.style.height = '48px';
     this.canvas.style.cssText = 'width:90px;height:48px';
-
     this.context = this.canvas.getContext('2d')!;
     this.context.font = 'bold ' + 9 * this.pixelRatio + 'px Helvetica,Arial,sans-serif';
     this.context.textBaseline = 'top';
@@ -60,7 +61,16 @@ export class Panel {
     this.context.fillRect(this.graphX, this.graphY, this.graphWidth, this.graphHeight);
   }
 
-  update(value: number, valueGraph: number, maxValue: number, maxGraph: number, decimals = 0) {
+  static new(name: string, foreground: string, background: string): Panel {
+    return new Panel(name, foreground, background);
+  }
+
+  attach(container: HTMLElement): this {
+    container.appendChild(this.canvas);
+    return this;
+  }
+
+  update(value: number, valueGraph: number, maxValue: number, maxGraph: number, decimals = 0): this {
     let min = Math.min(0, value);
     let max = Math.max(maxValue, value);
     maxGraph = Math.max(maxGraph, valueGraph);
@@ -103,6 +113,16 @@ export class Panel {
       this.pixelRatio,
       (1 - valueGraph / maxGraph) * this.graphHeight,
     );
+
+    return this;
+  }
+
+  resize(offset: number): this {
+    this.canvas.style.position = 'absolute';
+    this.canvas.style.display = 'block';
+    this.canvas.style.left = '0px';
+    this.canvas.style.top = (offset * this.height) / this.pixelRatio + 'px';
+    return this;
   }
 }
 
@@ -111,76 +131,74 @@ export interface StatsOptions {
   samplesLog?: number;
   samplesGraph?: number;
   precision?: number;
-  autoInsert?: boolean;
+  insert?: boolean;
 }
 
 export class Stats {
-  totalCpuDuration: number = 0;
-  totalFps: number = 0;
+  totalCpuMs: number = 0;
 
   beginTime: number;
   prevTime: number;
-  prevCpuTime: number;
+  prevStatTime: number;
   frames: number;
 
   info: FrameStats;
   dom: HTMLDivElement;
 
-  averageCpu: Stat;
-  averageGpu: Stat;
-  averageGpuCompute: Stat;
+  cpuMsStat: Stat;
+  gpuRenderStat: Stat;
+  gpuComputeStat: Stat;
 
-  isRunningCPUProfiling: boolean;
+  isProfiling: boolean;
 
-  fpsPanel: Panel;
-  msPanel: Panel;
-  gpuPanel: Panel | null;
-  gpuPanelCompute: Panel | null;
+  fps: Panel;
+  cpuMs: Panel;
+  gpuRender: Panel | null;
+  gpuCompute: Panel | null;
 
   logsPerSecond: number;
   precision: number;
 
   constructor(
     renderer: Renderer,
-    { autoInsert = true, logsPerSecond = 20, samplesLog = 100, samplesGraph = 10, precision = 2 }: StatsOptions = {},
+    { insert = true, logsPerSecond = 20, samplesLog = 100, samplesGraph = 10, precision = 2 }: StatsOptions = {},
   ) {
     this.dom = document.createElement('div');
     this.dom.style.cssText = 'position:fixed;top:0;left:0;opacity:0.9;z-index:10000;';
 
-    this.isRunningCPUProfiling = false;
+    this.isProfiling = false;
 
     this.beginTime = performance.now();
     this.prevTime = this.beginTime;
-    this.prevCpuTime = this.beginTime;
+    this.prevStatTime = this.beginTime;
 
     this.frames = 0;
 
-    this.averageCpu = Stat.new(samplesLog, samplesGraph);
-    this.averageGpu = Stat.new(samplesLog, samplesGraph);
-    this.averageGpuCompute = Stat.new(samplesLog, samplesGraph);
+    this.cpuMsStat = Stat.new(samplesLog, samplesGraph);
+    this.gpuRenderStat = Stat.new(samplesLog, samplesGraph);
+    this.gpuComputeStat = Stat.new(samplesLog, samplesGraph);
 
-    this.fpsPanel = this.addPanel(new Panel('FPS', '#0ff', '#002'), 0);
-    this.msPanel = this.addPanel(new Panel('CPU', '#0f0', '#020'), 1);
-    this.gpuPanel = null;
-    this.gpuPanelCompute = null;
+    this.fps = this.createPanel('FPS', '#0ff', '#002', 0);
+    this.cpuMs = this.createPanel('CPU', '#0f0', '#020', 1);
+    this.gpuRender = null;
+    this.gpuCompute = null;
 
     this.precision = precision;
     this.logsPerSecond = logsPerSecond;
 
     if (renderer.backend.hasFeature(GPUFeature.TimestampQuery)) {
       renderer.parameters.useTimestamp = true;
-      this.gpuPanel = this.addPanel(new Panel('GPU', '#ff0', '#220'), 2);
-      this.gpuPanelCompute = this.addPanel(new Panel('CPT', '#e1e1e1', '#212121'), 3);
+      this.gpuRender = this.createPanel('GPU', '#ff0', '#220', 2);
+      this.gpuCompute = this.createPanel('CPT', '#e1e1e1', '#212121', 3);
       this.info = renderer.info;
     }
 
-    if (autoInsert) document.body.appendChild(this.dom);
+    if (insert) document.body.appendChild(this.dom);
     window.addEventListener('resize', () => {
-      this.resizePanel(this.fpsPanel, 0);
-      this.resizePanel(this.msPanel, 1);
-
-      if (this.gpuPanel) this.resizePanel(this.gpuPanel, 2);
-      if (this.gpuPanelCompute) this.resizePanel(this.gpuPanelCompute, 3);
+      this.fps.resize(0);
+      this.cpuMs.resize(1);
+      if (this.gpuRender) this.gpuRender.resize(2);
+      if (this.gpuCompute) this.gpuCompute.resize(3);
     });
   }
 
@@ -188,39 +206,25 @@ export class Stats {
     return new Stats(renderer, options);
   }
 
-  resizePanel(panel: Panel, offset: number) {
-    panel.canvas.style.position = 'absolute';
-    panel.canvas.style.display = 'block';
-    panel.canvas.style.left = '0px';
-    panel.canvas.style.top = (offset * panel.height) / panel.pixelRatio + 'px';
-  }
-
-  addPanel(panel: Panel, offset: number) {
-    if (panel.canvas) {
-      this.dom.appendChild(panel.canvas);
-      this.resizePanel(panel, offset);
-    }
-
-    return panel;
+  createPanel(name: string, foreground: string, background: string, offset: number): Panel {
+    return Panel.new(name, foreground, background).attach(this.dom).resize(offset);
   }
 
   tick() {
     this.frames++;
     const time = performance.now();
 
-    if (time >= this.prevCpuTime + 1000 / this.logsPerSecond) {
-      this.updatePanel(this.msPanel, this.averageCpu);
-      this.updatePanel(this.gpuPanel, this.averageGpu);
-
-      if (this.gpuPanelCompute) this.updatePanel(this.gpuPanelCompute, this.averageGpuCompute);
-
-      this.prevCpuTime = time;
+    if (time >= this.prevStatTime + 1000 / this.logsPerSecond) {
+      this.updatePanel(this.cpuMs, this.cpuMsStat);
+      if (this.gpuRender) this.updatePanel(this.gpuRender, this.gpuRenderStat);
+      if (this.gpuCompute) this.updatePanel(this.gpuCompute, this.gpuComputeStat);
+      this.prevStatTime = time;
     }
 
     if (time >= this.prevTime + 1000) {
       const fps = (this.frames * 1000) / (time - this.prevTime);
 
-      this.fpsPanel.update(fps, fps, 100, 100, 0);
+      this.fps.update(fps, fps, 100, 100, 0);
 
       this.prevTime = time;
       this.frames = 0;
@@ -230,64 +234,41 @@ export class Stats {
   }
 
   update() {
-    this.averageGpuCompute.add(this.info.compute.timestampTime);
+    this.gpuComputeStat.add(this.info.compute.timestampTime);
 
     this.endProfiling('cpu-started', 'cpu-finished', 'cpu-duration');
-    this.averageCpu.add(this.totalCpuDuration);
-    this.averageGpu.add(this.info.render.timestampTime);
+    this.cpuMsStat.add(this.totalCpuMs);
+    this.gpuRenderStat.add(this.info.render.timestampTime);
 
-    if (this.totalCpuDuration === 0) this.beginProfiling('cpu-started');
-    this.totalCpuDuration = 0;
-    this.totalFps = 0;
+    if (this.totalCpuMs === 0) this.beginProfiling('cpu-started');
+    this.totalCpuMs = 0;
 
     this.beginTime = this.tick();
   }
 
   beginProfiling(marker: string) {
     window.performance.mark(marker);
-    this.isRunningCPUProfiling = true;
+    this.isProfiling = true;
   }
 
-  endProfiling(startMarker: string | PerformanceMeasureOptions | undefined, endMarker: string, measureName: string) {
-    if (!this.isRunningCPUProfiling) return;
+  endProfiling(start: string, end: string, name: string) {
+    if (!this.isProfiling) return;
 
-    window.performance.mark(endMarker);
-    const { duration } = performance.measure(measureName, startMarker, endMarker);
-    this.totalCpuDuration += duration;
-    this.isRunningCPUProfiling = false;
+    window.performance.mark(end);
+    const { duration } = performance.measure(name, start, end);
+    this.totalCpuMs += duration;
+    this.isProfiling = false;
   }
 
-  updatePanel(panel: Panel | null, averages: Stat) {
-    if (averages.logs.values.length <= 0) return;
-
-    let sumLog = 0;
-    let max = 0.01;
-    for (let i = 0; i < averages.logs.values.length; i++) {
-      sumLog += averages.logs.values[i];
-
-      if (averages.logs.values[i] > max) max = averages.logs.values[i];
-    }
-    let sumGraph = 0;
-    let maxGraph = 0.01;
-    for (let i = 0; i < averages.graph.values.length; i++) {
-      sumGraph += averages.graph.values[i];
-
-      if (averages.graph.values[i] > maxGraph) maxGraph = averages.graph.values[i];
-    }
-    panel?.update(
-      sumLog / Math.min(averages.logs.values.length, averages.logs.max),
-      sumGraph / Math.min(averages.graph.values.length, averages.graph.max),
-      max,
-      maxGraph,
-      this.precision,
-    );
+  updatePanel(panel: Panel, { logs, graph }: Stat) {
+    panel.update(logs.average, graph.average, logs.max, graph.max, this.precision);
   }
 }
 
 export class RollingStat {
   constructor(
     public values: number[],
-    public max: number,
+    public size: number,
   ) {}
 
   static new(max: number) {
@@ -296,8 +277,29 @@ export class RollingStat {
 
   add(value: number): this {
     this.values.push(value);
-    if (this.values.length > this.max) this.values.shift();
+    if (this.values.length > this.size) this.values.shift();
     return this;
+  }
+
+  get length() {
+    return this.values.length;
+  }
+
+  get sum(): number {
+    let sum = 0;
+    for (let i = 0; i < this.values.length; i++) sum += this.values[i];
+    return sum;
+  }
+
+  get max(): number {
+    return Math.max(...this.values);
+    let max = this.values[0];
+    for (let i = 1; i < this.values.length; i++) if (this.values[i] > max) max = this.values[i];
+    return max;
+  }
+
+  get average(): number {
+    return this.sum / this.values.length;
   }
 }
 
