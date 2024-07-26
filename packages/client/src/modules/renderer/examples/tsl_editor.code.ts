@@ -1,13 +1,13 @@
 // Simple uv.x animation
 import { oscSine, texture, timerLocal, uniform, uv, vec2, vec4 } from '@modules/renderer/engine/nodes/Nodes.js';
-import { from, Wrapping } from '@modules/renderer/engine/constants.js';
+import { ColorSpace, Wrapping } from '@modules/renderer/engine/constants.js';
 import { Color } from '@modules/renderer/engine/math/Color.js';
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 
 const samplerTexture = await new TextureLoader().loadAsync('resources/textures/uv_grid_opengl.jpg');
 samplerTexture.wrapS = Wrapping.Repeat;
 samplerTexture.wrapT = Wrapping.Repeat;
-samplerTexture.colorSpace = from.SRGB;
+samplerTexture.colorSpace = ColorSpace.SRGB;
 
 // .5 is speed
 const timer = timerLocal(0.5);

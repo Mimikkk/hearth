@@ -1,6 +1,6 @@
 import { clamp, euclideanMod, NumberArray } from './MathUtils.js';
 import { ColorManagement, LinearToSRGB, SRGBToLinear } from './ColorManagement.js';
-import { from } from '../constants.js';
+import { ColorSpace } from '../constants.js';
 import type { Mat3 } from '@modules/renderer/engine/math/Mat3.js';
 import { Const } from '@modules/renderer/engine/math/types.js';
 import { AttributeType } from '@modules/renderer/engine/core/types.js';
@@ -102,12 +102,12 @@ export class Color {
     this.g = ((hex >> 8) & 255) / 255;
     this.b = (hex & 255) / 255;
 
-    ColorManagement.intoSpace(this, from.SRGB);
+    ColorManagement.intoSpace(this, ColorSpace.SRGB);
 
     return this;
   }
 
-  setRGB(r: number, g: number, b: number, space: from = ColorManagement.space): this {
+  setRGB(r: number, g: number, b: number, space: ColorSpace = ColorManagement.space): this {
     this.r = r;
     this.g = g;
     this.b = b;
@@ -117,7 +117,7 @@ export class Color {
     return this;
   }
 
-  setHSL(h: number, s: number, l: number, space: from = ColorManagement.space): this {
+  setHSL(h: number, s: number, l: number, space: ColorSpace = ColorManagement.space): this {
     h = euclideanMod(h, 1);
     s = clamp(s, 0, 1);
     l = clamp(l, 0, 1);
@@ -148,7 +148,7 @@ export class Color {
     return this.set(LinearToSRGB(color.r), LinearToSRGB(color.g), LinearToSRGB(color.b));
   }
 
-  getRGB(into: Color, space: from = ColorManagement.space): Color {
+  getRGB(into: Color, space: ColorSpace = ColorManagement.space): Color {
     const _color = ColorManagement.fromSpace(Color.new().from(this), space);
     into.r = _color.r;
     into.g = _color.g;

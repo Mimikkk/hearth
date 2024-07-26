@@ -66,7 +66,7 @@ async function init() {
     spline.getPoint(t, point);
     positions.push(point.x, point.y, point.z);
 
-    lineColor.setHSL(t, 1.0, 0.5, Engine.from.SRGB);
+    lineColor.setHSL(t, 1.0, 0.5, Engine.ColorSpace.SRGB);
     colors.push(lineColor.r, lineColor.g, lineColor.b);
   }
 

@@ -1,4 +1,4 @@
-import { AmbientLight, from, PerspectiveCamera, PointLight, Scene } from '@modules/renderer/engine/engine.js';
+import { AmbientLight, ColorSpace, PerspectiveCamera, PointLight, Scene } from '@modules/renderer/engine/engine.js';
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { OBJLoader } from '@modules/renderer/engine/loaders/objects/OBJLoader/OBJLoader.js';
 import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
@@ -30,7 +30,7 @@ async function init() {
 
   const textureLoader = new TextureLoader();
   const texture = await textureLoader.loadAsync('resources/textures/uv_grid_opengl.jpg');
-  texture.colorSpace = from.SRGB;
+  texture.colorSpace = ColorSpace.SRGB;
 
   // model
 

@@ -1,5 +1,5 @@
 import {
-  from,
+  ColorSpace,
   MagnificationTextureFilter,
   Mapping,
   MinificationTextureFilter,
@@ -45,7 +45,7 @@ export class Texture {
   premultiplyAlpha: boolean;
   flipY: boolean;
   unpackAlignment: number;
-  colorSpace?: from | null;
+  colorSpace?: ColorSpace | null;
   version: number;
   onUpdate: any;
   isRenderTargetTexture: boolean;
@@ -62,7 +62,7 @@ export class Texture {
     format: TextureFormat = TextureFormat.RGBA,
     type: TextureDataType = TextureDataType.UnsignedByte,
     anisotropy: number = 1,
-    colorSpace: from | null = null,
+    colorSpace: ColorSpace | null = null,
   ) {
     this.id = ++_textureId;
 

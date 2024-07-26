@@ -1,4 +1,4 @@
-import { from, Side, Wrapping } from '@modules/renderer/engine/constants.js';
+import { ColorSpace, Side, Wrapping } from '@modules/renderer/engine/constants.js';
 import { MeshPhongMaterial } from '@modules/renderer/engine/objects/materials/MeshPhongMaterial.js';
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { Color } from '@modules/renderer/engine/math/Color.js';
@@ -61,7 +61,7 @@ const loadMap = async (
   texture.offset.from(textureParams.offset);
   texture.wrapS = wrap;
   texture.wrapT = wrap;
-  if (useColorspace) texture.colorSpace = from.SRGB;
+  if (useColorspace) texture.colorSpace = ColorSpace.SRGB;
 
   return texture;
 };

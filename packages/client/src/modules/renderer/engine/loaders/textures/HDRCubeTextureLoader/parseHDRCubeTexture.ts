@@ -1,5 +1,5 @@
 import {
-  from,
+  ColorSpace,
   CubeTexture,
   DataTexture,
   MagnificationTextureFilter,
@@ -26,7 +26,7 @@ export const parseHDRCubeTexture = (buffers: ArrayBuffer[], type: SupportedType)
   //@ts-expect-error - improve texture handling
   const texture = new CubeTexture();
   texture.type = type;
-  texture.colorSpace = from.LinearSRGB;
+  texture.colorSpace = ColorSpace.LinearSRGB;
   texture.minFilter = MinificationTextureFilter.Linear;
   texture.magFilter = MagnificationTextureFilter.Linear;
   texture.generateMipmaps = false;

@@ -241,7 +241,7 @@ export enum NormalMapType {
   ObjectSpace = 1,
 }
 
-export enum from {
+export enum ColorSpace {
   SRGB = 'srgb',
   LinearSRGB = 'srgb-linear',
   DisplayP3 = 'display-p3',

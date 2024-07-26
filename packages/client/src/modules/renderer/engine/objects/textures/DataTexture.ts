@@ -1,6 +1,6 @@
 import { Texture } from './Texture.js';
 import {
-  from,
+  ColorSpace,
   MagnificationTextureFilter,
   Mapping,
   MinificationTextureFilter,
@@ -24,7 +24,7 @@ export class DataTexture extends Texture {
     magFilter = MagnificationTextureFilter.Nearest,
     minFilter = MinificationTextureFilter.Nearest,
     anisotropy: number,
-    colorSpace: from,
+    colorSpace: ColorSpace,
   ) {
     super(null as never, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy, colorSpace);
 

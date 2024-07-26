@@ -61,7 +61,7 @@ async function init() {
   floorNormal.wrapT = Engine.Wrapping.Repeat;
 
   const decalDiffuse = await textureLoader.loadAsync('resources/textures/decal/decal-diffuse.png');
-  decalDiffuse.colorSpace = Engine.from.SRGB;
+  decalDiffuse.colorSpace = Engine.ColorSpace.SRGB;
 
   const decalNormal = await textureLoader.loadAsync('resources/textures/decal/decal-normal.jpg');
 

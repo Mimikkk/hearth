@@ -1,6 +1,6 @@
 import { Texture } from './Texture.js';
 import {
-  from,
+  ColorSpace,
   CompressedPixelFormat,
   MagnificationTextureFilter,
   Mapping,
@@ -25,7 +25,7 @@ export class CompressedTexture extends Texture {
     magFilter?: MagnificationTextureFilter,
     minFilter?: MinificationTextureFilter,
     anisotropy?: number,
-    colorSpace?: from,
+    colorSpace?: ColorSpace,
   ) {
     super(
       null as never,

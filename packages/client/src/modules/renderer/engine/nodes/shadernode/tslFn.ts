@@ -15,7 +15,7 @@ interface Layout {
 }
 
 interface TslFn {
-  (params: Record<string, Node>): Node;
+  (params: Node | Node[]): Node;
   shaderNode: ShaderNode;
   setLayout: (layout: Layout) => Function;
 }
@@ -24,11 +24,20 @@ export const tslFn = (jsFn: Function): TslFn => {
   const node = new ShaderNode(jsFn);
 
   const fn = (...params) => {
+    let inputs;
+
     createShaderNodeObjects(params);
-    return node.call(Node.is(params[0]) ? [...params] : params[0]);
+
+    if (Node.is(params[0])) {
+      inputs = [...params];
+    } else {
+      inputs = params[0];
+    }
+
+    return node.call(inputs);
   };
   fn.shaderNode = node;
-  fn.setLayout = (layout: Layout) => {
+  fn.setLayout = layout => {
     node.setLayout(layout);
     return fn;
   };

@@ -17,7 +17,7 @@ import PostProcessing from '@modules/renderer/engine/renderers/PostProcessing.js
 
 import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
 
-import { from } from '@modules/renderer/engine/engine.js';
+import { ColorSpace } from '@modules/renderer/engine/engine.js';
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
@@ -81,7 +81,7 @@ async function init() {
   const floorColor = await textureLoader.loadAsync('resources/textures/floors/FloorsCheckerboard_S_Diffuse.jpg');
   floorColor.wrapS = Engine.Wrapping.Repeat;
   floorColor.wrapT = Engine.Wrapping.Repeat;
-  floorColor.colorSpace = Engine.from.SRGB;
+  floorColor.colorSpace = Engine.ColorSpace.SRGB;
 
   const floorNormal = await textureLoader.loadAsync('resources/textures/floors/FloorsCheckerboard_S_Normal.jpg');
   floorNormal.wrapS = Engine.Wrapping.Repeat;

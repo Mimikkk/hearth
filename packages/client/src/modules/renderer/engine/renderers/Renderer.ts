@@ -1,5 +1,5 @@
 import { Backend } from '@modules/renderer/engine/renderers/Backend.js';
-import { from, Side, ToneMapping } from '@modules/renderer/engine/constants.js';
+import { ColorSpace, Side, ToneMapping } from '@modules/renderer/engine/constants.js';
 import ToneMappingNode from '@modules/renderer/engine/nodes/display/ToneMappingNode.js';
 import { FrameStats } from '@modules/renderer/engine/renderers/FrameStats.js';
 import { Vec4 } from '@modules/renderer/engine/math/Vec4.js';
@@ -104,7 +104,7 @@ export class Renderer {
       useDepth: options?.useDepth ?? true,
       localClippingEnabled: options?.localClippingEnabled ?? false,
       logarithmicDepthBuffer: options?.logarithmicDepthBuffer ?? false,
-      outputColorSpace: options?.outputColorSpace ?? from.SRGB,
+      outputColorSpace: options?.outputColorSpace ?? ColorSpace.SRGB,
       outputEncoding: options?.outputEncoding ?? 'sRGB',
       powerPreference: options?.powerPreference ?? 'high-performance',
       useSort: options?.useSort ?? true,
@@ -701,7 +701,7 @@ export namespace Renderer {
     clippingPlanes?: Plane[];
     localClippingEnabled?: boolean;
     logarithmicDepthBuffer?: boolean;
-    outputColorSpace?: from;
+    outputColorSpace?: ColorSpace;
     outputEncoding?: string;
     powerPreference?: GPUPowerPreference;
 
@@ -731,7 +731,7 @@ export namespace Renderer {
     context: GPUCanvasContext;
     localClippingEnabled: boolean;
     logarithmicDepthBuffer: boolean;
-    outputColorSpace: from;
+    outputColorSpace: ColorSpace;
     outputEncoding: string;
     powerPreference: GPUPowerPreference;
 

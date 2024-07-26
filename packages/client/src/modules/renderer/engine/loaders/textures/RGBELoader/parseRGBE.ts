@@ -1,5 +1,5 @@
 import {
-  from,
+  ColorSpace,
   MagnificationTextureFilter,
   MinificationTextureFilter,
   TextureDataType,
@@ -57,7 +57,7 @@ const createDataTexture = (result: ParseResult): DataTexture => {
   texture.minFilter = MinificationTextureFilter.Linear;
   texture.magFilter = MagnificationTextureFilter.Linear;
   texture.anisotropy = 1;
-  texture.colorSpace = from.LinearSRGB;
+  texture.colorSpace = ColorSpace.LinearSRGB;
   texture.generateMipmaps = false;
   texture.flipY = true;
   texture.image.width = result.width;

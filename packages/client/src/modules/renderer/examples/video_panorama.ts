@@ -1,7 +1,7 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
 
 import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
-import { from } from '@modules/renderer/engine/engine.js';
+import { ColorSpace } from '@modules/renderer/engine/engine.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, renderer;
@@ -35,7 +35,7 @@ async function init() {
   video.play();
 
   const texture = new Engine.VideoTexture(video);
-  texture.colorSpace = Engine.from.SRGB;
+  texture.colorSpace = Engine.ColorSpace.SRGB;
   const material = new Engine.MeshBasicMaterial({ map: texture });
 
   const mesh = new Engine.Mesh(geometry, material);
