@@ -1428,7 +1428,7 @@ ${flow.code}
     return code;
   }
 
-  codeMethod(method: PolyfillName | string, output: TypeName): string {
+  codeMethod(method: PolyfillName | string, output?: TypeName): string {
     if (method in PolyfillMap) this.polyfill(method as PolyfillName);
 
     if (output) {
