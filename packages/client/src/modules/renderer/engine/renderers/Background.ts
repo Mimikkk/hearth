@@ -3,7 +3,7 @@ import { Camera, Color, Mesh, Scene, Side, SphereGeometry } from '@modules/rende
 import {
   backgroundBlurriness,
   backgroundIntensity,
-  context as contextN,
+  context,
   modelViewProjection,
   NodeMaterial,
   normalWorld,
@@ -47,7 +47,7 @@ class Background extends DataMap<any, any> {
       let backgroundMesh = sceneData.backgroundMesh;
 
       if (backgroundMesh === undefined) {
-        const backgroundMeshNode = contextN(vec4(backgroundNode).mul(backgroundIntensity), {
+        const backgroundMeshNode = context(vec4(backgroundNode).mul(backgroundIntensity), {
           getUV: () => normalWorld,
           getTextureLevel: () => backgroundBlurriness,
         });

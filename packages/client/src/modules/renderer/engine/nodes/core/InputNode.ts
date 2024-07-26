@@ -20,8 +20,8 @@ class InputNode<T = any> extends Node {
     return node?.isInputNode === true;
   }
 
-  getNodeType(builder: NodeBuilder): TypeName {
-    if (this.nodeType === null) return getValueType(this.value)!;
+  getNodeType(builder: NodeBuilder): TypeName | null {
+    if (this.nodeType === null) return getValueType(this.value);
     return this.nodeType;
   }
 

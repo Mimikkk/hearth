@@ -6,17 +6,17 @@ export class ConstNode<T = any> extends InputNode {
   declare isConstNode: boolean;
   static type = 'ConstNode';
 
-  constructor(value: T, nodeType?: TypeName) {
+  constructor(value: T, nodeType: TypeName | null = null) {
     super(value, nodeType);
 
     this.isConstNode = true;
   }
 
-  generateConst(builder: NodeBuilder): string {
-    return builder.codeConst(this.getNodeType(builder), this.value);
+  generateConst(builder: NodeBuilder) {
+    return builder.generateConst(this.getNodeType(builder), this.value);
   }
 
-  generate(builder: NodeBuilder, output: TypeName): string {
+  generate(builder, output) {
     const type = this.getNodeType(builder);
 
     return builder.format(this.generateConst(builder), type, output);

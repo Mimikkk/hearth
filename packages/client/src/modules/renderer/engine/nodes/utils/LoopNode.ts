@@ -9,6 +9,7 @@ class LoopNode extends Node {
 
   constructor(params = []) {
     super();
+
     this.params = params;
   }
 

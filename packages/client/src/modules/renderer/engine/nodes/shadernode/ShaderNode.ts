@@ -1,5 +1,5 @@
 import Node from '../core/Node.js';
-import { asNode } from '@modules/renderer/engine/nodes/shadernode/asNode.js';
+import { ShaderNodeObject } from '@modules/renderer/engine/nodes/shadernode/ShaderNodeObject.js';
 import { handlers } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.handlers.js';
 
 const functionMapByBuilder = new WeakMap();
@@ -33,7 +33,7 @@ class ShaderCallNodeImpl extends Node {
       let functionNode = functionNodesCacheMap.get(shaderNode);
 
       if (functionNode === undefined) {
-        functionNode = asNode(builder.buildFunctionNode(shaderNode));
+        functionNode = ShaderNodeObject(builder.buildFunctionNode(shaderNode));
 
         functionNodesCacheMap.set(shaderNode, functionNode);
       }
@@ -42,14 +42,14 @@ class ShaderCallNodeImpl extends Node {
         builder.currentFunctionNode.includes.push(functionNode);
       }
 
-      return asNode(functionNode.call(inputNodes));
+      return ShaderNodeObject(functionNode.call(inputNodes));
     }
 
     const jsFunc = shaderNode.jsFunc;
     const outputNode =
       inputNodes !== null ? jsFunc(inputNodes, builder.stack, builder) : jsFunc(builder.stack, builder);
 
-    return asNode(outputNode);
+    return ShaderNodeObject(outputNode);
   }
 
   setup(builder) {
@@ -93,10 +93,10 @@ class ShaderNodeImpl extends Node {
 
   call(inputs = null) {
     for (const name in inputs) {
-      inputs[name] = asNode(inputs[name]);
+      inputs[name] = ShaderNodeObject(inputs[name]);
     }
 
-    return asNode(new ShaderCallNodeImpl(this, inputs));
+    return ShaderNodeObject(new ShaderCallNodeImpl(this, inputs));
   }
 
   setup() {
