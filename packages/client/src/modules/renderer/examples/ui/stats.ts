@@ -2,7 +2,7 @@ import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 import { GPUFeature } from '@modules/renderer/engine/renderers/utils/constants.js';
 import { FrameStats } from '@modules/renderer/engine/renderers/FrameStats.js';
 
-export class Panel {
+class Panel {
   canvas: HTMLCanvasElement;
   context: CanvasRenderingContext2D;
 
@@ -126,7 +126,60 @@ export class Panel {
   }
 }
 
-export interface StatsOptions {
+export class RollingStat {
+  constructor(
+    public values: number[],
+    public size: number,
+  ) {}
+
+  static new(max: number) {
+    return new RollingStat([], max);
+  }
+
+  add(value: number): this {
+    this.values.push(value);
+    if (this.values.length > this.size) this.values.shift();
+    return this;
+  }
+
+  get length() {
+    return this.values.length;
+  }
+
+  get sum(): number {
+    let sum = 0;
+    for (let i = 0; i < this.values.length; i++) sum += this.values[i];
+    return sum;
+  }
+
+  get max(): number {
+    let max = this.values[0];
+    for (let i = 1; i < this.values.length; i++) if (this.values[i] > max) max = this.values[i];
+    return max;
+  }
+
+  get average(): number {
+    return this.sum / this.values.length;
+  }
+}
+
+export class Stat {
+  constructor(
+    public logs: RollingStat,
+    public graph: RollingStat,
+  ) {}
+
+  static new(maxLogs: number, maxGraph: number) {
+    return new Stat(RollingStat.new(maxLogs), RollingStat.new(maxGraph));
+  }
+
+  add(value: number) {
+    this.logs.add(value);
+    this.graph.add(value);
+  }
+}
+
+export interface Options {
   logsPerSecond?: number;
   samplesLog?: number;
   samplesGraph?: number;
@@ -161,7 +214,7 @@ export class Stats {
 
   constructor(
     renderer: Renderer,
-    { insert = true, logsPerSecond = 20, samplesLog = 100, samplesGraph = 10, precision = 2 }: StatsOptions = {},
+    { insert = true, logsPerSecond = 20, samplesLog = 100, samplesGraph = 10, precision = 2 }: Options = {},
   ) {
     this.dom = document.createElement('div');
     this.dom.style.cssText = 'position:fixed;top:0;left:0;opacity:0.9;z-index:10000;';
@@ -202,7 +255,7 @@ export class Stats {
     });
   }
 
-  static use(renderer: Renderer, options?: StatsOptions) {
+  static use(renderer: Renderer, options?: Options) {
     return new Stats(renderer, options);
   }
 
@@ -262,59 +315,5 @@ export class Stats {
 
   updatePanel(panel: Panel, { logs, graph }: Stat) {
     panel.update(logs.average, graph.average, logs.max, graph.max, this.precision);
-  }
-}
-
-export class RollingStat {
-  constructor(
-    public values: number[],
-    public size: number,
-  ) {}
-
-  static new(max: number) {
-    return new RollingStat([], max);
-  }
-
-  add(value: number): this {
-    this.values.push(value);
-    if (this.values.length > this.size) this.values.shift();
-    return this;
-  }
-
-  get length() {
-    return this.values.length;
-  }
-
-  get sum(): number {
-    let sum = 0;
-    for (let i = 0; i < this.values.length; i++) sum += this.values[i];
-    return sum;
-  }
-
-  get max(): number {
-    return Math.max(...this.values);
-    let max = this.values[0];
-    for (let i = 1; i < this.values.length; i++) if (this.values[i] > max) max = this.values[i];
-    return max;
-  }
-
-  get average(): number {
-    return this.sum / this.values.length;
-  }
-}
-
-export class Stat {
-  constructor(
-    public logs: RollingStat,
-    public graph: RollingStat,
-  ) {}
-
-  static new(maxLogs: number, maxGraph: number) {
-    return new Stat(RollingStat.new(maxLogs), RollingStat.new(maxGraph));
-  }
-
-  add(value: number) {
-    this.logs.add(value);
-    this.graph.add(value);
   }
 }
