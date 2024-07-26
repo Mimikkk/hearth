@@ -53,7 +53,8 @@ class ViewportTextureNode extends TextureNode {
 export default ViewportTextureNode;
 
 export const viewportTexture = nodeProxy(ViewportTextureNode);
-export const viewportMipTexture = nodeProxy(ViewportTextureNode, 123, null, { generateMipmaps: true });
+export const viewportMipTexture = nodeProxy(ViewportTextureNode);
+viewportMipTexture.generateMipmaps = true;
 
 addNodeElement('viewportTexture', viewportTexture);
 addNodeElement('viewportMipTexture', viewportMipTexture);

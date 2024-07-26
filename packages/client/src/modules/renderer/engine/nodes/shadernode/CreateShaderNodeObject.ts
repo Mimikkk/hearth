@@ -5,7 +5,7 @@ import { handlers } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.h
 
 const cache = new WeakMap();
 
-export const ShaderNodeObject = (object, altType = null) => {
+export const createShaderNodeObject = (object, altType = null) => {
   const type = getValueType(object);
 
   if (type === 'node') {
@@ -22,9 +22,19 @@ export const ShaderNodeObject = (object, altType = null) => {
   }
 
   if ((altType === null && (type === 'f32' || type === 'boolean')) || (type && type !== 'shader' && type !== 'string'))
-    return ShaderNodeObject(getConstNode(object, altType));
+    return createShaderNodeObject(getConstNode(object, altType));
 
   if (type === 'shader') return tslFn(object);
 
   return object;
+};
+
+export const createShaderNodeArray = (array, altType = null) => {
+  for (let i = 0, it = array.length; i < it; ++i) array[i] = createShaderNodeObject(array[i], altType);
+  return array;
+};
+
+export const createShaderNodeObjects = (objects, altType = null) => {
+  for (const name in objects) objects[name] = createShaderNodeObject(objects[name], altType);
+  return objects;
 };

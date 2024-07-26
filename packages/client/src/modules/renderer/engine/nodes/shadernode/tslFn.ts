@@ -1,5 +1,5 @@
 import { ShaderNode } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.js';
-import { ShaderNodeObject } from '@modules/renderer/engine/nodes/shadernode/ShaderNodeObject.js';
+import { createShaderNodeObject } from '@modules/renderer/engine/nodes/shadernode/CreateShaderNodeObject.js';
 
 export const tslFn = jsFn => {
   const node = new ShaderNode(jsFn);
@@ -8,7 +8,7 @@ export const tslFn = jsFn => {
     let inputs;
 
     for (const name in params) {
-      params[name] = ShaderNodeObject(params[name]);
+      params[name] = createShaderNodeObject(params[name]);
     }
 
     if (params[0] && params[0].isNode) {

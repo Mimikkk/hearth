@@ -29,7 +29,9 @@ class RemapNode extends Node {
 
 export default RemapNode;
 
-export const remap = nodeProxy(RemapNode, null, null, { doClamp: false });
+export const remap = nodeProxy(RemapNode);
+remap.doClamp = false;
+
 export const remapClamp = nodeProxy(RemapNode);
 
 addNodeElement('remap', remap);
