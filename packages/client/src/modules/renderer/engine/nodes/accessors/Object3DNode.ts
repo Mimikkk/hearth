@@ -3,12 +3,18 @@ import { NodeUpdateType } from '../core/constants.js';
 import UniformNode from '../core/UniformNode.js';
 import { nodeProxy } from '../shadernode/ShaderNodes.js';
 
-import { Vec3 } from '@modules/renderer/engine/engine.js';
+import { Entity, Vec3 } from '@modules/renderer/engine/engine.js';
+import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
+import NodeFrame from '@modules/renderer/engine/nodes/core/NodeFrame.js';
+import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 class Object3DNode extends Node {
   static type = 'Object3DNode';
+  scope: string;
+  object3d: any;
+  _uniformNode: UniformNode<any>;
 
-  constructor(scope = Object3DNode.VIEW_MATRIX, object3d = null) {
+  constructor(scope, object3d: Entity) {
     super();
 
     this.scope = scope;
@@ -19,24 +25,19 @@ class Object3DNode extends Node {
     this._uniformNode = new UniformNode(null);
   }
 
-  getNodeType() {
+  getNodeType(): TypeName {
     const scope = this.scope;
 
     if (scope === Object3DNode.WORLD_MATRIX || scope === Object3DNode.VIEW_MATRIX) {
-      return 'mat4';
-    } else if (scope === Object3DNode.NORMAL_MATRIX) {
-      return 'mat3';
-    } else if (
-      scope === Object3DNode.POSITION ||
-      scope === Object3DNode.VIEW_POSITION ||
-      scope === Object3DNode.DIRECTION ||
-      scope === Object3DNode.SCALE
-    ) {
-      return 'vec3';
+      return TypeName.mat4;
     }
+    if (scope === Object3DNode.NORMAL_MATRIX) {
+      return TypeName.mat3;
+    }
+    return TypeName.vec3;
   }
 
-  update(frame) {
+  update(frame: NodeFrame): void {
     const object = this.object3d;
     const uniformNode = this._uniformNode;
     const scope = this.scope;
@@ -64,12 +65,11 @@ class Object3DNode extends Node {
 
       uniformNode.value = uniformNode.value || Vec3.new();
       uniformNode.value.fromMat4Position(object.matrixWorld);
-
       uniformNode.value.applyMat4(camera.matrixWorldInverse);
     }
   }
 
-  generate(builder) {
+  generate(builder: NodeBuilder): string | null {
     const scope = this.scope;
 
     if (scope === Object3DNode.WORLD_MATRIX || scope === Object3DNode.VIEW_MATRIX) {

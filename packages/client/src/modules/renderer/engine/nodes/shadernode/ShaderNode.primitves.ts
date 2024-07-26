@@ -6,7 +6,6 @@ import JoinNode from '@modules/renderer/engine/nodes/utils/JoinNode.js';
 import ArrayElementNode from '@modules/renderer/engine/nodes/utils/ArrayElementNode.js';
 import SplitNode from '@modules/renderer/engine/nodes/utils/SplitNode.js';
 import { createShaderNodeArray, createShaderNodeObject, createShaderNodeObjects } from './CreateShaderNodeObject.js';
-import { createShaderNodeProxy } from './CreateShaderNodeProxy.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 const createConvertType = (type: TypeName, cacheMap: Map<any, any> = null) => {
@@ -67,12 +66,17 @@ export const imat4 = createConvertType(TypeName.imat4);
 export const umat4 = createConvertType(TypeName.umat4);
 export const bmat4 = createConvertType(TypeName.bmat4);
 
-export const nodeObject = (val, altType = null) => createShaderNodeObject(val, altType);
-export const nodeObjects = (val, altType = null) => createShaderNodeObjects(val, altType);
-export const nodeArray = (val, altType = null) => createShaderNodeArray(val, altType);
+export const nodeObject = createShaderNodeObject;
+export const nodeObjects = createShaderNodeObjects;
+export const nodeArray = createShaderNodeArray;
 
-export const nodeProxy = <T>(NodeClass: T, scope = null, factor = null): InstanceType<T> =>
-  createShaderNodeProxy(NodeClass, scope, factor);
+export const nodeProxy = <T extends abstract new (...params: any) => any>(NodeClass: T, scope?: any, factor?: any) => {
+  if (!scope) return (...params) => createShaderNodeObject(new NodeClass(...createShaderNodeArray(params)));
+  if (!factor) return (...params) => createShaderNodeObject(new NodeClass(scope, ...createShaderNodeArray(params)));
+
+  factor = createShaderNodeObject(factor);
+  return (...params) => createShaderNodeObject(new NodeClass(scope, ...createShaderNodeArray(params), factor));
+};
 export const nodeImmutable = (NodeClass, ...params) =>
   createShaderNodeObject(new NodeClass(...createShaderNodeArray(params)));
 
