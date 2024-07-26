@@ -20,7 +20,7 @@ class Background extends DataMap<any, any> {
     super();
   }
 
-  update(scene: Scene, renderList: RenderList, context: RenderContext) {
+  update(scene: Scene, renderList: RenderList, renderContext: RenderContext) {
     const renderer = this.renderer;
     const background = this.renderer.nodes.getBackgroundNode(scene) || scene.background;
 
@@ -92,22 +92,23 @@ class Background extends DataMap<any, any> {
     if (renderer.parameters.autoClear || forceClear) {
       _clearColor.scale(_clearColor.a);
 
-      const color = context.clearColor;
-      color.r = _clearColor.r;
-      color.g = _clearColor.g;
-      color.b = _clearColor.b;
-      color.a = _clearColor.a;
+      const clearColorValue = renderContext.clearColorValue;
 
-      context.clearDepth = renderer.clearDepth;
-      context.clearStencil = renderer.clearStencil;
+      clearColorValue.r = _clearColor.r;
+      clearColorValue.g = _clearColor.g;
+      clearColorValue.b = _clearColor.b;
+      clearColorValue.a = _clearColor.a;
 
-      context.useClearColor = renderer.parameters.autoClearColor;
-      context.useClearDepth = renderer.parameters.autoClearDepth;
-      context.useClearStencil = renderer.parameters.autoClearStencil;
+      renderContext.depthClearValue = renderer._clearDepth;
+      renderContext.stencilClearValue = renderer._clearStencil;
+
+      renderContext.useClearColor = renderer.parameters.autoClearColor;
+      renderContext.useClearDepth = renderer.parameters.autoClearDepth;
+      renderContext.useClearStencil = renderer.parameters.autoClearStencil;
     } else {
-      context.useClearColor = false;
-      context.useClearDepth = false;
-      context.useClearStencil = false;
+      renderContext.useClearColor = false;
+      renderContext.useClearDepth = false;
+      renderContext.useClearStencil = false;
     }
   }
 }

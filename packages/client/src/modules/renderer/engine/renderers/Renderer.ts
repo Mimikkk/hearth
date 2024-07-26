@@ -38,6 +38,8 @@ import { AttributeType } from '@modules/renderer/engine/core/types.js';
 import ComputeNode from '@modules/renderer/engine/nodes/gpgpu/ComputeNode.js';
 import RenderContext from '@modules/renderer/engine/renderers/RenderContext.js';
 import LightsNode from '@modules/renderer/engine/nodes/lighting/LightsNode.js';
+import PositionNode from '@modules/renderer/engine/nodes/accessors/PositionNode.js';
+import { Node } from '@modules/renderer/engine/nodes/core/Node.js';
 
 export class Renderer {
   backend: Backend;
@@ -74,8 +76,8 @@ export class Renderer {
   transparentSort: SortFn = sortPainterDesc;
 
   _clearColor: Color;
-  clearDepth: number;
-  clearStencil: number;
+  _clearDepth: number;
+  _clearStencil: number;
 
   _activeRenderObjectFn: RenderFn;
   _renderObjectFn: RenderFn;
@@ -125,7 +127,7 @@ export class Renderer {
     this.size = RenderSize.fromCanvas(this.parameters.canvas);
 
     // transform into a class
-    this.viewport = Vec4.new(0, 0, this._width, this._height);
+    this.viewport = Vec4.new(0, 0, this.size.width, this._height);
     // transform into a class
     this.scissor = Vec4.new(0, 0, this._width, this._height);
 
@@ -148,8 +150,8 @@ export class Renderer {
 
     // transform into a class
     this._clearColor = Color.new(0, 0, 0, this.parameters.alpha ? 0 : 1);
-    this.clearDepth = 1;
-    this.clearStencil = 0;
+    this._clearDepth = 1;
+    this._clearStencil = 0;
 
     // move into rendertarget
     this.target = null;
@@ -218,7 +220,7 @@ export class Renderer {
     let scissor = this.scissor;
     let pixelRatio = this._pixelRatio;
 
-    if (target) {
+    if (target !== null) {
       viewport = target.viewport;
       scissor = target.scissor;
       pixelRatio = 1;
@@ -228,18 +230,17 @@ export class Renderer {
 
     _screen.set(0, 0, _drawSize.width, _drawSize.height);
 
-    context.viewport.from(viewport).scale(pixelRatio).floor();
-    context.viewport.width >>= activeMipmapLevel;
-    context.viewport.height >>= activeMipmapLevel;
-    context.viewport.minDepth = 0;
-    context.viewport.maxDepth = 1;
+    context.viewportValue.from(viewport).scale(pixelRatio).floor();
+    context.viewportValue.width >>= activeMipmapLevel;
+    context.viewportValue.height >>= activeMipmapLevel;
+    context.viewportValue.minDepth = 0;
+    context.viewportValue.maxDepth = 1;
+    context.useViewport = context.viewportValue.equals(_screen) === false;
 
-    context.useViewport = context.viewport.equals(_screen) === false;
-
-    context.scissor.from(scissor).scale(pixelRatio).floor();
-    context.useScissor = this.useScissor && context.scissor.equals(_screen) === false;
-    context.scissor.width >>= activeMipmapLevel;
-    context.scissor.height >>= activeMipmapLevel;
+    context.scissorValue.from(scissor).scale(pixelRatio).floor();
+    context.useScissor = this.useScissor && context.scissorValue.equals(_screen) === false;
+    context.scissorValue.width >>= activeMipmapLevel;
+    context.scissorValue.height >>= activeMipmapLevel;
 
     if (!context.clippingContext) context.clippingContext = new ClippingContext();
     context.clippingContext.updateGlobal(this, camera);
@@ -749,6 +750,13 @@ export namespace Renderer {
 type Options = Renderer.Options;
 type Configuration = Renderer.Configuration;
 
+const _scene = new Scene();
+const _drawSize = Vec2.new();
+const _screen = Vec4.new();
+const _frustum = new Frustum();
+const _projection = new Mat4();
+const _vec3 = Vec3.new();
+
 class RenderSize {
   constructor(
     public width: number,
@@ -775,20 +783,13 @@ class RenderSize {
 
 class Viewport {}
 
-const _scene = new Scene();
-const _drawSize = Vec2.new();
-const _screen = Vec4.new();
-const _frustum = new Frustum();
-const _projection = new Mat4();
-const _vec3 = Vec3.new();
-
 type RenderFn = (
   object: Entity,
   material: Material,
   scene: Scene,
   camera: Camera,
   lightsNode: LightsNode,
-  passId?: string,
+  passId: string,
 ) => void;
 
 const sortPainterAsc: SortFn = (a, b) => {
