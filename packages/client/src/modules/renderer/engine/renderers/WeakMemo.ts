@@ -1,4 +1,4 @@
-type CreateFn<Key extends WeakKey, Value> = (key: Key) => Value;
+type CreateFn<Key extends WeakKey, Value> = (key: Key, map: WeakMemo<Key, Value>) => Value;
 
 export class WeakMemo<Key extends WeakKey, Value> {
   readonly #create: CreateFn<Key, Value>;
@@ -16,7 +16,7 @@ export class WeakMemo<Key extends WeakKey, Value> {
     let value = this.#map.get(key);
     if (value) return value;
 
-    value = this.#create(key);
+    value = this.#create(key, this);
     this.set(key, value);
     return value;
   }

@@ -1,7 +1,7 @@
-import { createShaderNodeObjects } from './createShaderNodeObjects.js';
+import { createShaderNodeObjects } from './asNode.js';
 import { NodeElements } from './ShaderNode.map.js';
 import { parseSwizzle } from './utils.js';
-import { ShaderNodeObject } from './ShaderNodeObject.js';
+import { asNode } from './asNode.js';
 import SplitNode from '@modules/renderer/engine/nodes/utils/SplitNode.js';
 import ArrayElementNode from '@modules/renderer/engine/nodes/utils/ArrayElementNode.js';
 import ConstNode from '@modules/renderer/engine/nodes/core/ConstNode.js';
@@ -42,7 +42,7 @@ export const handlers = {
 
         prop = parseSwizzle(prop);
 
-        return ShaderNodeObject(new SplitNode(nodeObj, prop));
+        return asNode(new SplitNode(nodeObj, prop));
       } else if (/^set[XYZWRGBASTPQ]{1,4}$/.test(prop) === true) {
         // set properties ( swizzle )
 
@@ -52,7 +52,7 @@ export const handlers = {
 
         prop = prop.split('').sort().join('');
 
-        return value => ShaderNodeObject(new SetNode(node, prop, value));
+        return value => asNode(new SetNode(node, prop, value));
       } else if (prop === 'width' || prop === 'height' || prop === 'depth') {
         // accessing property
 
@@ -60,11 +60,11 @@ export const handlers = {
         else if (prop === 'height') prop = 'y';
         else if (prop === 'depth') prop = 'z';
 
-        return ShaderNodeObject(new SplitNode(node, prop));
+        return asNode(new SplitNode(node, prop));
       } else if (/^\d+$/.test(prop) === true) {
         // accessing array
 
-        return ShaderNodeObject(new ArrayElementNode(nodeObj, new ConstNode(Number(prop), 'u32')));
+        return asNode(new ArrayElementNode(nodeObj, new ConstNode(Number(prop), 'u32')));
       }
     }
 

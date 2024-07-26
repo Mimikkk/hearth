@@ -5,9 +5,7 @@ import ConvertNode from '@modules/renderer/engine/nodes/utils/ConvertNode.js';
 import JoinNode from '@modules/renderer/engine/nodes/utils/JoinNode.js';
 import ArrayElementNode from '@modules/renderer/engine/nodes/utils/ArrayElementNode.js';
 import SplitNode from '@modules/renderer/engine/nodes/utils/SplitNode.js';
-import { ShaderNodeObject } from './ShaderNodeObject.js';
-import { createShaderNodeObjects } from './createShaderNodeObjects.js';
-import { createShaderNodeArray } from './createShaderNodeArray.js';
+import { asNode, createShaderNodeObjects, createShaderNodeArray } from './asNode.js';
 import { ShaderNodeProxy } from './ShaderNodeProxy.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
@@ -69,15 +67,14 @@ export const imat4 = createConvertType(TypeName.imat4);
 export const umat4 = createConvertType(TypeName.umat4);
 export const bmat4 = createConvertType(TypeName.bmat4);
 
-export const nodeObject = (val, altType = null) => ShaderNodeObject(val, altType);
+export const nodeObject = (val, altType = null) => asNode(val, altType);
 export const nodeObjects = (val, altType = null) => createShaderNodeObjects(val, altType);
 export const nodeArray = (val, altType = null) => createShaderNodeArray(val, altType);
 
 export const nodeProxy = <T>(NodeClass: T, scope = null, factor = null, settings = null): InstanceType<T> =>
   new ShaderNodeProxy(NodeClass, scope, factor, settings);
-export const nodeImmutable = (NodeClass, ...params) =>
-  ShaderNodeObject(new NodeClass(...createShaderNodeArray(params)));
+export const nodeImmutable = (NodeClass, ...params) => asNode(new NodeClass(...createShaderNodeArray(params)));
 
 export const element = nodeProxy(ArrayElementNode);
-export const convert = (node, types) => ShaderNodeObject(new ConvertNode(ShaderNodeObject(node), types));
-export const split = (node, channels) => ShaderNodeObject(new SplitNode(ShaderNodeObject(node), channels));
+export const convert = (node, types) => asNode(new ConvertNode(asNode(node), types));
+export const split = (node, channels) => asNode(new SplitNode(asNode(node), channels));

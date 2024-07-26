@@ -268,7 +268,7 @@ export class NodeBuilder {
     return node;
   }
 
-  generateConst(type: TypeName, value: any = null): ConstNode {
+  codeConst(type: TypeName, value: any = null): string {
     if (value === null) {
       if (type === 'f32' || type === 'i32' || type === 'u32') value = 0;
       else if (type === 'bool') value = false;
@@ -289,7 +289,7 @@ export class NodeBuilder {
 
     const componentType = this.getComponentType(type);
 
-    const generateConst = value => this.generateConst(componentType, value);
+    const generateConst = value => this.codeConst(componentType, value);
 
     if (typeLength === 2) {
       return `${this.getType(type)}(${generateConst(value.x)}, ${generateConst(value.y)})`;

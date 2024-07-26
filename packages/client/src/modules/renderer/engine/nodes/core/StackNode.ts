@@ -32,7 +32,6 @@ class StackNode extends Node {
   }
 
   if(boolNode: OperatorNode, method: Function) {
-    console.log({ boolNode, method });
     const methodNode = new ShaderNode(method);
     this._currentCond = cond(boolNode, methodNode);
 
