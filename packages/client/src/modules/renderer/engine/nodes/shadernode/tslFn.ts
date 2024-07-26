@@ -1,17 +1,19 @@
 import { ShaderNode } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.js';
-import { createShaderNodeObject } from '@modules/renderer/engine/nodes/shadernode/CreateShaderNodeObject.js';
+import {
+  createShaderNodeObject,
+  createShaderNodeObjects,
+} from '@modules/renderer/engine/nodes/shadernode/CreateShaderNodeObject.js';
+import Node from '@modules/renderer/engine/nodes/core/Node.js';
 
-export const tslFn = jsFn => {
+export const tslFn = (jsFn: Function): Function & { shaderNode: ShaderNode } => {
   const node = new ShaderNode(jsFn);
 
   const fn = (...params) => {
     let inputs;
 
-    for (const name in params) {
-      params[name] = createShaderNodeObject(params[name]);
-    }
+    createShaderNodeObjects(params);
 
-    if (params[0] && params[0].isNode) {
+    if (Node.is(params[0])) {
       inputs = [...params];
     } else {
       inputs = params[0];

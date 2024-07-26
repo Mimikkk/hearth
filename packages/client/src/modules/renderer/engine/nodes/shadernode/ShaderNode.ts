@@ -107,7 +107,7 @@ class ShaderNodeImpl extends Node {
 export class ShaderNode {
   static type = 'ShaderNode';
 
-  constructor(jsFn) {
+  constructor(jsFn: Function) {
     return new Proxy(new ShaderNodeImpl(jsFn), handlers);
   }
 }
