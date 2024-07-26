@@ -3,8 +3,7 @@ import { scriptableValue } from './ScriptableValueNode.js';
 import { addNodeElement, f32, nodeProxy } from '../shadernode/ShaderNodes.js';
 import CodeNode from '@modules/renderer/engine/nodes/code/CodeNode.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
-
-import { TypeName } from '@modules/renderer/engine/nodes/core/constants.js';
+import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 class Resources extends Map {
   get<Fn extends (...args: any) => any>(

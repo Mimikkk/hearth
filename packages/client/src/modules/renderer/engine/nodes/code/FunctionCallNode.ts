@@ -2,8 +2,7 @@ import TempNode from '../core/TempNode.js';
 import { addNodeElement, nodeArray, nodeObject, nodeObjects } from '../shadernode/ShaderNodes.js';
 import FunctionNode from './FunctionNode.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
-
-import { TypeName } from '@modules/renderer/engine/nodes/core/constants.js';
+import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 class FunctionCallNode extends TempNode {
   static type = 'FunctionCallNode';
