@@ -5,136 +5,7 @@ import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { Node } from '../core/Node.js';
 
-export class MathNode extends TempNode {
-  static type = 'MathNode';
-  declare method: UnaryVariant | BinaryVariant | TernaryVariant;
-
-  constructor(
-    public aNode: Node,
-    public bNode: Node | null = null,
-    public cNode: Node | null = null,
-  ) {
-    super();
-  }
-
-  getInputType(builder: NodeBuilder): TypeName {
-    const { aNode, bNode, cNode } = this;
-
-    const aType = aNode.getNodeType(builder);
-    const bType = bNode?.getNodeType(builder) ?? null;
-    const cType = cNode?.getNodeType(builder) ?? null;
-
-    const aLen = builder.isMatrix(aType) ? 0 : builder.getTypeLength(aType);
-    const bLen = builder.isMatrix(bType) ? 0 : builder.getTypeLength(bType);
-    const cLen = builder.isMatrix(cType) ? 0 : builder.getTypeLength(cType);
-
-    if (aLen > bLen && aLen > cLen) {
-      return aType;
-    } else if (bLen > cLen) {
-      return bType;
-    } else if (cLen > aLen) {
-      return cType;
-    }
-
-    return aType;
-  }
-
-  getNodeType(builder: NodeBuilder): TypeName {
-    switch (this.method) {
-      case UnaryVariant.Length:
-      case BinaryVariant.Distance:
-      case BinaryVariant.Dot:
-        return TypeName.f32;
-      case BinaryVariant.Cross:
-        return TypeName.vec3;
-      case UnaryVariant.All:
-        return TypeName.bool;
-      case UnaryVariant.Equals:
-        return builder.changeComponentType(this.aNode.getNodeType(builder), TypeName.bool);
-      case BinaryVariant.Mod:
-        return this.aNode.getNodeType(builder);
-      default:
-        return this.getInputType(builder);
-    }
-  }
-
-  generate(builder: NodeBuilder, output: TypeName): string | null {
-    const method = this.method;
-
-    const type = this.getNodeType(builder);
-    const inputType = this.getInputType(builder);
-
-    const a = this.aNode;
-    const b = this.bNode;
-    const c = this.cNode;
-
-    switch (this.method) {
-      case BinaryVariant.TransformDirection: {
-        let tA = a;
-        let tB = b;
-
-        if (builder.isMatrix(tA.getNodeType(builder))) {
-          tB = vec4(vec3(tB), 0.0);
-        } else {
-          tA = vec4(vec3(tA), 0.0);
-        }
-
-        const mulNode = mul(tA, tB).xyz;
-
-        return normalize(mulNode).build(builder, output);
-      }
-      case UnaryVariant.Negate:
-        return builder.format('( - ' + a.build(builder, inputType) + ' )', type, output);
-      case UnaryVariant.OneMinus:
-        return sub(1.0, a).build(builder, output);
-      case UnaryVariant.Reciprocal:
-        return div(1.0, a).build(builder, output);
-      case BinaryVariant.Difference:
-        return abs(sub(a, b)).build(builder, output);
-      default: {
-        const params = [];
-
-        switch (this.method) {
-          case BinaryVariant.Cross:
-          case BinaryVariant.Mod:
-            params.push(a.build(builder, type), b!.build(builder, type));
-            break;
-          case BinaryVariant.Step:
-            params.push(
-              a.build(builder, builder.getTypeLength(a.getNodeType(builder)) === 1 ? 'f32' : inputType),
-              b.build(builder, inputType),
-            );
-            break;
-          case BinaryVariant.Mod:
-            params.push(
-              a.build(builder, inputType),
-              b.build(builder, builder.getTypeLength(b!.getNodeType(builder)) === 1 ? 'f32' : inputType),
-            );
-            break;
-          case TernaryVariant.Refract:
-            params.push(a.build(builder, inputType), b!.build(builder, inputType), c!.build(builder, 'f32'));
-            break;
-          case TernaryVariant.Mix:
-            params.push(
-              a.build(builder, inputType),
-              b!.build(builder, inputType),
-              c!.build(builder, builder.getTypeLength(c!.getNodeType(builder)) === 1 ? 'f32' : inputType),
-            );
-            break;
-          default:
-            params.push(a.build(builder, inputType));
-            if (b) params.push(b.build(builder, inputType));
-            if (c) params.push(c.build(builder, inputType));
-        }
-
-        return builder.format(`${builder.codeMethod(method, type)}( ${params.join(', ')} )`, type, output);
-      }
-    }
-  }
-}
-
 export class UnaryNode extends TempNode {
-  static type = 'MathNode';
   declare method: UnaryVariant | BinaryVariant | TernaryVariant;
 
   constructor(public aNode: Node) {
@@ -258,7 +129,6 @@ export class UnaryNode extends TempNode {
 }
 
 export class BinaryNode extends TempNode {
-  static type = 'MathNode';
   declare method: UnaryVariant | BinaryVariant | TernaryVariant;
 
   constructor(
@@ -385,7 +255,6 @@ export class BinaryNode extends TempNode {
 }
 
 export class TernaryNode extends TempNode {
-  static type = 'MathNode';
   declare method: UnaryVariant | BinaryVariant | TernaryVariant;
 
   constructor(
@@ -570,8 +439,6 @@ enum TernaryVariant {
   Smoothstep = 'smoothstep',
   FaceForward = 'faceforward',
 }
-
-export default MathNode;
 
 export const EPSILON = f32(1e-6);
 export const INFINITY = f32(1e6);

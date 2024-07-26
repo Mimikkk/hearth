@@ -66,7 +66,6 @@ export { NodeUtils };
 
 // math
 export {
-  default as MathNode,
   PI,
   PI2,
   EPSILON,
