@@ -21,16 +21,10 @@ export const ShaderNodeObject = (object, altType = null) => {
     return node;
   }
 
-  if (
-    (altType === null && (type === 'f32' || type === 'boolean')) ||
-    (type && type !== 'shader' && type !== 'string')
-  ) {
+  if ((altType === null && (type === 'f32' || type === 'boolean')) || (type && type !== 'shader' && type !== 'string'))
     return ShaderNodeObject(getConstNode(object, altType));
-  }
 
-  if (type === 'shader') {
-    return tslFn(object);
-  }
+  if (type === 'shader') return tslFn(object);
 
   return object;
 };

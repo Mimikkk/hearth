@@ -1,4 +1,4 @@
-import { ShaderNodeObjects } from './ShaderNodeObjects.js';
+import { createShaderNodeObjects } from './createShaderNodeObjects.js';
 import { NodeElements } from './ShaderNode.map.js';
 import { parseSwizzle } from './utils.js';
 import { ShaderNodeObject } from './ShaderNodeObject.js';
@@ -12,7 +12,7 @@ export const handlers = {
   setup(NodeClosure, params) {
     const inputs = params.shift();
 
-    return NodeClosure(new ShaderNodeObjects(inputs), ...params);
+    return NodeClosure(createShaderNodeObjects(inputs), ...params);
   },
 
   get(node, prop, nodeObj) {
