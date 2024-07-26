@@ -1,4 +1,4 @@
-import { BufferAttribute, Entity, Geometry, LineBasicMaterial, LineSegments, Mat3, Vec3 } from '../engine.js';
+import { BufferAttribute, Entity, Geometry, LineBasicMaterial, LineSegments, Mat3, Vec3 } from '../../engine.js';
 import { ColorRepresentation } from '@modules/renderer/engine/math/Color.js';
 
 const _v1 = Vec3.new();

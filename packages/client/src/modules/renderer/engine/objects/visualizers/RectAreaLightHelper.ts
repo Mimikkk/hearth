@@ -7,7 +7,7 @@ import {
   MeshBasicMaterial,
   RectAreaLight,
   Side,
-} from '../engine.js';
+} from '../../engine.js';
 
 /**
  *  This helper must be added as a child of the light

@@ -13,7 +13,7 @@ import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { Octree } from '@modules/renderer/engine/math/Octree.js';
 import { Capsule } from '@modules/renderer/engine/math/Capsule.js';
 import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/GLTFLoader.js';
-import { OctreeHelper } from '@modules/renderer/engine/helpers/OctreeHelper.js';
+import { OctreeHelper } from '@modules/renderer/engine/objects/visualizers/OctreeHelper.js';
 import { ToneMapping } from '@modules/renderer/engine/constants.js';
 import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 import { Euler } from '@modules/renderer/engine/math/Euler.js';

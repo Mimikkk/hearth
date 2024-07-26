@@ -1,4 +1,4 @@
-import { BufferAttribute, Geometry, LineBasicMaterial, LineSegments } from '../engine.js';
+import { BufferAttribute, Geometry, LineBasicMaterial, LineSegments } from '../../engine.js';
 import { Octree } from '@modules/renderer/engine/math/Octree.js';
 import { ColorRepresentation } from '@modules/renderer/engine/math/Color.js';
 

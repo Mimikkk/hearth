@@ -1,6 +1,6 @@
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
-import { Entity } from '../core/Entity.js';
-import { LineSegments } from '../objects/LineSegments.js';
+import { Entity } from '../../core/Entity.js';
+import { LineSegments } from '../LineSegments.js';
 import { LineBasicMaterial } from '@modules/renderer/engine/objects/materials/LineBasicMaterial.js';
 import { BufferAttribute } from '@modules/renderer/engine/core/attributes/BufferAttribute.js';
 import { Geometry } from '@modules/renderer/engine/core/Geometry.js';

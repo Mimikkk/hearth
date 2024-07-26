@@ -8,7 +8,7 @@ import { BoxGeometry } from '@modules/renderer/engine/objects/geometries/BoxGeom
 import { Mesh } from '@modules/renderer/engine/objects/Mesh.js';
 import { MeshLambertMaterial } from '@modules/renderer/engine/objects/materials/MeshLambertMaterial.js';
 import { SelectionControls } from '@modules/renderer/engine/objects/controls/SelectionControls.js';
-import { SelectionVisualizer } from '@modules/renderer/engine/helpers/SelectionVisualizer.js';
+import { SelectionVisualizer } from '@modules/renderer/engine/objects/visualizers/SelectionVisualizer.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { Fog } from '@modules/renderer/engine/objects/scenes/Fog.js';

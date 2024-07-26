@@ -1,6 +1,6 @@
-import { Mesh } from '../objects/Mesh.js';
+import { Mesh } from '../Mesh.js';
 import { MeshBasicMaterial } from '@modules/renderer/engine/objects/materials/MeshBasicMaterial.js';
-import { SphereGeometry } from '../objects/geometries/SphereGeometry.js';
+import { SphereGeometry } from '../geometries/SphereGeometry.js';
 import { PointLight } from '@modules/renderer/engine/objects/lights/PointLight.js';
 import { Color } from '@modules/renderer/engine/math/Color.js';
 

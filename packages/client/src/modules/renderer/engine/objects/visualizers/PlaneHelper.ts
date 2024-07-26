@@ -1,5 +1,5 @@
-import { Line } from '../objects/Line.js';
-import { Mesh } from '../objects/Mesh.js';
+import { Line } from '../Line.js';
+import { Mesh } from '../Mesh.js';
 import { LineBasicMaterial } from '@modules/renderer/engine/objects/materials/LineBasicMaterial.js';
 import { MeshBasicMaterial } from '@modules/renderer/engine/objects/materials/MeshBasicMaterial.js';
 import { BufferAttribute } from '@modules/renderer/engine/core/attributes/BufferAttribute.js';
