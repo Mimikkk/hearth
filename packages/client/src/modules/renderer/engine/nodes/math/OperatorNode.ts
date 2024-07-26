@@ -280,25 +280,6 @@ export const shiftRight = nodeProxy(
     op = Operator.ShiftRight;
   },
 );
-// export const sub = nodeProxy(OperatorNode, '-');
-// export const mul = nodeProxy(OperatorNode, '*');
-// export const div = nodeProxy(OperatorNode, '/');
-// export const remainder = nodeProxy(OperatorNode, '%');
-// export const equal = nodeProxy(OperatorNode, '==');
-// export const notEqual = nodeProxy(OperatorNode, '!=');
-// export const lessThan = nodeProxy(OperatorNode, '<');
-// export const greaterThan = nodeProxy(OperatorNode, '>');
-// export const lessThanEqual = nodeProxy(OperatorNode, '<=');
-// export const greaterThanEqual = nodeProxy(OperatorNode, '>=');
-// export const and = nodeProxy(OperatorNode, '&&');
-// export const or = nodeProxy(OperatorNode, '||');
-// export const not = nodeProxy(OperatorNode, '!');
-// export const bitAnd = nodeProxy(OperatorNode, '&');
-// export const bitNot = nodeProxy(OperatorNode, '~');
-// export const bitOr = nodeProxy(OperatorNode, '|');
-// export const bitXor = nodeProxy(OperatorNode, '^');
-// export const shiftLeft = nodeProxy(OperatorNode, '<<');
-// export const shiftRight = nodeProxy(OperatorNode, '>>');
 
 addNodeElement('add', add);
 addNodeElement('sub', sub);

@@ -70,13 +70,10 @@ export const nodeObject = createShaderNodeObject;
 export const nodeObjects = createShaderNodeObjects;
 export const nodeArray = createShaderNodeArray;
 
-export const nodeProxy = <T extends abstract new (...params: any) => any>(NodeClass: T, scope?: any, factor?: any) => {
-  if (!scope) return (...params) => createShaderNodeObject(new NodeClass(...createShaderNodeArray(params)));
-  if (!factor) return (...params) => createShaderNodeObject(new NodeClass(scope, ...createShaderNodeArray(params)));
-
-  factor = createShaderNodeObject(factor);
-  return (...params) => createShaderNodeObject(new NodeClass(scope, ...createShaderNodeArray(params), factor));
-};
+export const nodeProxy =
+  <T extends abstract new (...params: any) => any>(NodeClass: T) =>
+  (...params) =>
+    createShaderNodeObject(new NodeClass(...createShaderNodeArray(params)));
 export const nodeImmutable = (NodeClass, ...params) =>
   createShaderNodeObject(new NodeClass(...createShaderNodeArray(params)));
 
