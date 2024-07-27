@@ -1,11 +1,10 @@
-import * as Nodes from '@modules/renderer/engine/nodes/Nodes.js';
-import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
-import initialCode from './tsl_editor.code.ts?raw';
+import { NodeMaterial, vec4 } from '@modules/renderer/engine/nodes/Nodes.js';
 import { GUI } from 'lil-gui';
-import * as monaco from 'monaco-editor';
+import initialCode from './tsl_editor.code.ts?raw';
+import monaco from './utilities/monaco-vite.js';
 import { Color, ColorSpace, Mesh, PerspectiveCamera, PlaneGeometry, Scene } from '@modules/renderer/engine/engine.js';
+import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 import './tsl_editor.css';
-import './utilities/monaco-vite.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { resolveScript } from '@modules/renderer/examples/utilities/resolveScript.js';
 
@@ -34,13 +33,11 @@ camera.lookAt(0, 0, 0);
 const scene = new Scene();
 scene.background = Color.new(0x222222);
 
-const material = new Nodes.NodeMaterial();
-material.fragmentNode = Nodes.vec4(0, 0, 0, 1);
+const material = new NodeMaterial();
+material.fragmentNode = vec4(0, 0, 0, 1);
 
 const mesh = new Mesh(new PlaneGeometry(1, 1), material);
 scene.add(mesh);
-
-// editor
 
 const options: {
   stage: 'vertex' | 'fragment';
@@ -52,30 +49,29 @@ const options: {
   preview: true,
 };
 
-let builder: NodeBuilder | null = null;
-
-const renderer = await Renderer.as();
-renderer.outputColorSpace = ColorSpace.LinearSRGB;
-renderer.setPixelRatio(window.devicePixelRatio);
-renderer.animation.loop = () => renderer.render(scene, camera);
+const renderer = await Renderer.as({
+  async animate() {
+    await renderer.render(scene, camera);
+  },
+  autoinsert: false,
+});
 renderer.setSize(renderable.clientWidth, renderable.clientHeight);
 renderable.appendChild(renderer.parameters.canvas);
 
+let builder: NodeBuilder | null = null;
+
 const refreshEditorView = async () => {
   const code = editorView.getValue();
-  mesh.material.fragmentNode = await resolveScript(code);
-  mesh.material.needsUpdate = true;
+  material.fragmentNode = await resolveScript(code);
+  material.needsUpdate = true;
 
-  builder = new NodeBuilder(mesh, renderer).build();
+  builder = new NodeBuilder(mesh, renderer, scene).build();
 
   refreshResultView();
 };
 const refreshResultView = () => {
   if (!builder) return;
-
-  const code = (builder as unknown as Record<string, string>)[options.stage + 'Shader'];
-
-  resultView.setValue(code);
+  resultView.setValue(builder.fragmentShader);
 };
 
 const editorView = monaco.editor.create(source, {
@@ -98,10 +94,4 @@ refreshEditorView();
 // gui
 const gui = new GUI();
 gui.add(options, 'stage', ['vertex', 'fragment']).onChange(refreshResultView);
-gui.add(options, 'colorSpace', [ColorSpace.LinearSRGB, ColorSpace.SRGB]).onChange(async (value: ColorSpace) => {
-  renderer.outputColorSpace = value;
-  await refreshEditorView();
-});
-gui.add(options, 'preview').onChange((value: boolean) => {
-  renderable.style.setProperty('display', value ? '' : 'none');
-});
+gui.add(options, 'preview').onChange((value: boolean) => renderable.style.setProperty('display', value ? '' : 'none'));

@@ -22,7 +22,7 @@ import RenderObject from '@modules/renderer/engine/renderers/RenderObject.js';
 import ProgrammableStage from '@modules/renderer/engine/renderers/ProgrammableStage.js';
 import { ResourceManager } from './ResourceManager.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
-import { AttributeType } from '../core/types.ts';
+import { AttributeType } from '../core/types.js';
 import { WeakMemo } from '@modules/renderer/engine/renderers/WeakMemo.js';
 
 export class Backend {

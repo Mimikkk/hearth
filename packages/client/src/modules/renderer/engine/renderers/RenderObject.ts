@@ -92,6 +92,8 @@ export default class RenderObject {
     return this._nodeBuilderState || (this._nodeBuilderState = this.renderer.nodes.getForRender(this));
   }
 
+  onDispose?(): void;
+
   getBindings() {
     return this.bindings || (this.bindings = this.getNodeBuilderState().createBindings());
   }
@@ -178,11 +180,14 @@ export default class RenderObject {
   }
 
   getNodesCacheKey(): string {
-    // Environment Nodes Cache Key
     return this.renderer.nodes.getCacheKey(this.scene, this.lightsNode);
   }
 
   getCacheKey(): string {
     return this.getMaterialCacheKey() + ',' + this.getNodesCacheKey();
+  }
+
+  dispose() {
+    this.onDispose?.();
   }
 }

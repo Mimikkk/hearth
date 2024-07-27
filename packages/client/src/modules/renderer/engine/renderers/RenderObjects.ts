@@ -30,7 +30,7 @@ class RenderObjects {
     let renderObject = chainMap.get(chainArray);
 
     if (renderObject === undefined) {
-      renderObject = this.createRenderObject(object, material, scene, camera, lightsNode, renderContext, passId);
+      renderObject = this.createRenderObject(object, material, scene, camera, lightsNode, renderContext);
 
       chainMap.set(chainArray, renderObject);
     } else {
@@ -38,7 +38,7 @@ class RenderObjects {
 
       if (renderObject.version !== material.version || renderObject.needsUpdate) {
         if (renderObject.initialCacheKey !== renderObject.getCacheKey()) {
-          renderObject.dispose?.();
+          renderObject.dispose();
 
           renderObject = this.get(object, material, scene, camera, lightsNode, renderContext, passId);
         } else {
@@ -67,7 +67,19 @@ class RenderObjects {
     renderContext: RenderContext,
     passId: string,
   ) {
-    return new RenderObject(this.renderer, object, material, scene, camera, lightsNode, renderContext);
+    const map = this.getChainMap(passId);
+
+    const item = new RenderObject(this.renderer, object, material, scene, camera, lightsNode, renderContext);
+
+    item.onDispose = () => {
+      this.renderer.pipelines.delete(item);
+      this.renderer.bindings.delete(item);
+      this.renderer.nodes.delete(item);
+
+      map.delete(item.getChainArray());
+    };
+
+    return item;
   }
 }
 

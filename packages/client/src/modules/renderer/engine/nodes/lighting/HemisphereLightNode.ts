@@ -7,7 +7,7 @@ import { objectPosition } from '../accessors/EntityNode.js';
 import { Color, HemisphereLight } from '@modules/renderer/engine/engine.js';
 import PositionNode from '@modules/renderer/engine/nodes/accessors/PositionNode.js';
 import UniformNode from 'three/examples/jsm/nodes/core/UniformNode.js';
-import { NodeBuilder } from '../builder/NodeBuilder.ts';
+import { NodeBuilder } from '../builder/NodeBuilder.js';
 import { NodeFrame } from '@modules/renderer/engine/nodes/core/NodeFrame.js';
 
 export class HemisphereLightNode extends AnalyticLightNode {
