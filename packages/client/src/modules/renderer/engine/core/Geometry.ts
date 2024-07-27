@@ -9,6 +9,7 @@ import { Mat3 } from '../math/Mat3.js';
 import { Quaternion } from '@modules/renderer/engine/math/Quaternion.js';
 import { AttributeType } from '@modules/renderer/engine/core/types.js';
 import { v4 } from 'uuid';
+import { AnimationClip } from '@modules/renderer/engine/animation/AnimationClip.js';
 
 export class Geometry {
   declare isGeometry: true;
@@ -26,6 +27,7 @@ export class Geometry {
   boundingSphere: Sphere | null;
   drawRange: { start: number; count: number };
   userData: Record<string, any>;
+  animations: AnimationClip[];
   parameters?: Record<string, any>;
 
   constructor() {

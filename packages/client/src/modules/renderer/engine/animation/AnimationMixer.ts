@@ -4,6 +4,7 @@ import { PropertyBinding } from './PropertyBinding.js';
 import { PropertyMixer } from './PropertyMixer.js';
 import { AnimationClip } from './AnimationClip.js';
 import { AnimationBlendMode } from '../constants.js';
+import { Interpolant } from '@modules/renderer/engine/math/interpolants/Interpolant.js';
 
 export class AnimationMixer {
   activeIndex: number;
@@ -300,7 +301,7 @@ export class AnimationMixer {
     actions[prevIndex] = lastActiveAction;
   }
 
-  _addInactiveBinding(binding, rootUuid: string, trackName: string) {
+  _addInactiveBinding(binding: PropertyBinding, rootUuid: string, trackName: string) {
     const bindingsByRoot = this.bindingsByRootAndName,
       bindings = this.bindings;
 
@@ -317,7 +318,7 @@ export class AnimationMixer {
     bindings.push(binding);
   }
 
-  _removeInactiveBinding(binding) {
+  _removeInactiveBinding(binding: PropertyBinding) {
     const bindings = this.bindings,
       propBinding = binding.binding,
       rootUuid = propBinding.rootNode.uuid,
@@ -338,7 +339,7 @@ export class AnimationMixer {
     }
   }
 
-  _lendBinding(binding) {
+  _lendBinding(binding: PropertyBinding) {
     const bindings = this.bindings,
       prevIndex = binding.activeIndex,
       lastActiveIndex = this._nActiveBindings++,
@@ -351,7 +352,7 @@ export class AnimationMixer {
     bindings[prevIndex] = firstInactiveBinding;
   }
 
-  _takeBackBinding(binding) {
+  _takeBackBinding(binding: PropertyBinding) {
     const bindings = this.bindings,
       prevIndex = binding.activeIndex,
       firstInactiveIndex = --this._nActiveBindings,
@@ -385,7 +386,7 @@ export class AnimationMixer {
     return interpolant;
   }
 
-  _takeBackControlInterpolant(interpolant) {
+  _takeBackControlInterpolant(interpolant: Interpolant) {
     const interpolants = this._controlInterpolants,
       prevIndex = interpolant.__cacheIndex,
       firstInactiveIndex = --this._nActiveControlInterpolants,
@@ -399,19 +400,15 @@ export class AnimationMixer {
   }
 
   clipAction(clip: AnimationClip, blendMode: AnimationBlendMode) {
-    const root = this.root,
-      rootUuid = root.uuid;
-
-    let clipObject = typeof clip === 'string' ? AnimationClip.findByName(root, clip) : clip;
-
-    const clipUuid = clipObject !== null ? clipObject.uuid : clip;
+    const rootUuid = this.root.uuid;
+    const clipUuid = clip.uuid;
 
     const actionsForClip = this._actionsByClip[clipUuid];
     let prototypeAction = null;
 
     if (blendMode === undefined) {
-      if (clipObject !== null) {
-        blendMode = clipObject.blendMode;
+      if (clip !== null) {
+        blendMode = clip.blendMode;
       } else {
         blendMode = AnimationBlendMode.Normal;
       }
@@ -429,49 +426,17 @@ export class AnimationMixer {
       prototypeAction = actionsForClip.knownActions[0];
 
       // also, take the clip from the prototype action
-      if (clipObject === null) clipObject = prototypeAction.clip;
+      if (clip === null) clip = prototypeAction.clip;
     }
-
-    // clip must be known when specified via string
-    if (clipObject === null) return null;
-
-    // allocate all resources required to run it
-    const newAction = new AnimationAction(this, clipObject, blendMode);
+    const newAction = new AnimationAction(this, clip, blendMode);
 
     this._bindAction(newAction, prototypeAction);
-
-    // and make the action known to the memory manager
     this._addInactiveAction(newAction, clipUuid, rootUuid);
 
     return newAction;
   }
 
-  existingAction(clip: AnimationClip) {
-    const root = this.root,
-      rootUuid = root.uuid,
-      clipObject = typeof clip === 'string' ? AnimationClip.findByName(root, clip) : clip,
-      clipUuid = clipObject ? clipObject.uuid : clip,
-      actionsForClip = this._actionsByClip[clipUuid];
-
-    if (actionsForClip !== undefined) {
-      return actionsForClip.actionByRoot[rootUuid] || null;
-    }
-
-    return null;
-  }
-
-  stopAllAction() {
-    const actions = this._actions,
-      nActions = this._nActiveActions;
-
-    for (let i = nActions - 1; i >= 0; --i) {
-      actions[i].stop();
-    }
-
-    return this;
-  }
-
-  update(deltaTime) {
+  update(deltaTime: number) {
     deltaTime *= this.timeScale;
 
     const actions = this._actions,
@@ -500,7 +465,7 @@ export class AnimationMixer {
     return this;
   }
 
-  setTime(timeInSeconds) {
+  setTime(timeInSeconds: number) {
     this.time = 0; // Zero out time attribute for AnimationMixer object;
     for (let i = 0; i < this._actions.length; i++) {
       this._actions[i].time = 0; // Zero out time attribute for all associated AnimationAction objects.

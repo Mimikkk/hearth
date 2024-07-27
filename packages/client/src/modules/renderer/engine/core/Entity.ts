@@ -104,6 +104,10 @@ export class Entity {
     this.userData = {};
   }
 
+  static is(object: any): object is Entity {
+    return object.isEntity;
+  }
+
   onBeforeShadow(
     renderer: Renderer,
     scene: Scene,
