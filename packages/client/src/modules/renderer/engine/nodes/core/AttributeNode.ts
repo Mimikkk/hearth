@@ -4,7 +4,7 @@ import { asNode } from '../shadernode/ShaderNodes.js';
 import { ShaderStage, TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 
-class AttributeNode extends Node {
+export class AttributeNode extends Node {
   constructor(
     public name: string,
     type: TypeName,

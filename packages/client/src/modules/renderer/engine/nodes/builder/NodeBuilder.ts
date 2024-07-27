@@ -60,7 +60,6 @@ import { PolyfillMap, PolyfillName } from '@modules/renderer/engine/nodes/builde
 import StructTypeNode from '@modules/renderer/engine/nodes/core/StructTypeNode.js';
 import { ShaderNode } from 'three/examples/jsm/nodes/shadernode/ShaderNode.js';
 import { AttributeType } from '@modules/renderer/engine/core/types.js';
-import ConstNode from '@modules/renderer/engine/nodes/core/ConstNode.js';
 import { WgslFn } from '@modules/renderer/engine/nodes/builder/WgslFn.js';
 
 type ParseFn = (source: string) => WgslFn;
@@ -269,7 +268,7 @@ export class NodeBuilder {
     return node;
   }
 
-  generateConst(type: TypeName, value: any = null): ConstNode {
+  generateConst(type: TypeName, value: any = null): string {
     if (value === null) {
       if (type === 'f32' || type === 'i32' || type === 'u32') value = 0;
       else if (type === 'bool') value = false;
