@@ -1,7 +1,6 @@
 import TempNode from '../core/TempNode.js';
 import { uv } from '../accessors/UVNode.js';
 import { addNodeElement, proxyNode, tslFn } from '../shadernode/ShaderNodes.js';
-import { UVNode } from '@modules/renderer/engine/nodes/Nodes.js';
 
 const checkerShaderNode = tslFn(inputs => {
   const uv = inputs.uv.mul(2.0);
@@ -16,7 +15,7 @@ const checkerShaderNode = tslFn(inputs => {
 class CheckerNode extends TempNode {
   static type = 'CheckerNode';
 
-  constructor(uvNode: UVNode = uv()) {
+  constructor(uvNode = uv()) {
     super('f32');
 
     this.uvNode = uvNode;
