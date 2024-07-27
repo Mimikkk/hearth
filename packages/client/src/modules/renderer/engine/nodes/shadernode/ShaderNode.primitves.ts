@@ -8,15 +8,14 @@ import SplitNode from '@modules/renderer/engine/nodes/utils/SplitNode.js';
 import { asNode, asNodes } from './ShaderNode.asNode.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { Node } from '@modules/renderer/engine/nodes/core/Node.js';
-import { XYZW } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.handlers.js';
-
-const isPrimitive = (type: TypeName) =>
-  type === TypeName.bool || type === TypeName.f32 || type === TypeName.i32 || type === TypeName.u32;
 
 const createConvertType =
   (type: TypeName, cacheMap: Map<any, any> = null) =>
   (...params) => {
-    if (params.length === 0 || (!isPrimitive(type) && params.every(param => typeof param !== 'object'))) {
+    if (
+      params.length === 0 ||
+      (!['bool', 'f32', 'i32', 'u32'].includes(type) && params.every(param => typeof param !== 'object'))
+    ) {
       params = [getValueFromType(type, ...params)];
     }
 
@@ -77,7 +76,7 @@ export const fixedNode = <T extends new (...params: Node[]) => any>(NodeClass: T
   asNode(new NodeClass(...asNodes(params))) as InstanceType<T>;
 
 export const element = proxyNode(ArrayElementNode);
-export const convert = (node: Node, type: TypeName) => asNode(new ConvertNode(asNode(node), type));
-export const split = (node: Node, channel: XYZW) => asNode(new SplitNode(asNode(node), channel));
+export const convert = (node, types) => asNode(new ConvertNode(asNode(node), types));
+export const split = (node, channels) => asNode(new SplitNode(asNode(node), channels));
 
 export { asNode, asNodes };
