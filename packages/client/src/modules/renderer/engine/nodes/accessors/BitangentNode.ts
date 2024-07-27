@@ -5,54 +5,72 @@ import { cameraViewMatrix } from './CameraNode.js';
 import { normalGeometry, normalLocal, normalView, normalWorld, transformedNormalView } from './NormalNode.js';
 import { tangentGeometry, tangentLocal, tangentView, tangentWorld, transformedTangentView } from './TangentNode.js';
 import { fixedNode } from '../shadernode/ShaderNodes.js';
+import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
+import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 
 class BitangentNode extends Node {
   static type = 'BitangentNode';
+  scope: NodeVariant;
 
-  constructor(scope = BitangentNode.LOCAL) {
-    super('vec3');
-
-    this.scope = scope;
+  constructor() {
+    super(TypeName.vec3);
   }
 
-  getHash(/*builder*/) {
+  getHash() {
     return `bitangent-${this.scope}`;
   }
 
-  generate(builder) {
-    const scope = this.scope;
-
-    let crossNormalTangent;
-
-    if (scope === BitangentNode.GEOMETRY) {
-      crossNormalTangent = normalGeometry.cross(tangentGeometry);
-    } else if (scope === BitangentNode.LOCAL) {
-      crossNormalTangent = normalLocal.cross(tangentLocal);
-    } else if (scope === BitangentNode.VIEW) {
-      crossNormalTangent = normalView.cross(tangentView);
-    } else if (scope === BitangentNode.WORLD) {
-      crossNormalTangent = normalWorld.cross(tangentWorld);
+  #crossNormalTangent() {
+    switch (this.scope) {
+      case NodeVariant.Geometry:
+        return tangentGeometry.cross(normalGeometry);
+      case NodeVariant.Local:
+        return tangentLocal.cross(normalLocal);
+      case NodeVariant.View:
+        return tangentView.cross(normalView);
+      case NodeVariant.World:
+        return tangentWorld.cross(normalWorld);
     }
+  }
 
-    const vertexNode = crossNormalTangent.mul(tangentGeometry.w).xyz;
-
+  generate(builder: NodeBuilder): string {
+    const vertexNode = this.#crossNormalTangent().mul(tangentGeometry.w).xyz;
     const outputNode = normalize(varying(vertexNode));
 
     return outputNode.build(builder, this.getNodeType(builder));
   }
 }
 
-BitangentNode.GEOMETRY = 'geometry';
-BitangentNode.LOCAL = 'local';
-BitangentNode.VIEW = 'view';
-BitangentNode.WORLD = 'world';
+enum NodeVariant {
+  Geometry = 'geometry',
+  Local = 'local',
+  View = 'view',
+  World = 'world',
+}
 
 export default BitangentNode;
 
-export const bitangentGeometry = fixedNode(BitangentNode, BitangentNode.GEOMETRY);
-export const bitangentLocal = fixedNode(BitangentNode, BitangentNode.LOCAL);
-export const bitangentView = fixedNode(BitangentNode, BitangentNode.VIEW);
-export const bitangentWorld = fixedNode(BitangentNode, BitangentNode.WORLD);
+export const bitangentGeometry = fixedNode(
+  class extends BitangentNode {
+    scope = NodeVariant.Geometry;
+  },
+);
+export const bitangentLocal = fixedNode(
+  class extends BitangentNode {
+    scope = NodeVariant.Local;
+  },
+);
+export const bitangentView = fixedNode(
+  class extends BitangentNode {
+    scope = NodeVariant.View;
+  },
+);
+export const bitangentWorld = fixedNode(
+  class extends BitangentNode {
+    scope = NodeVariant.World;
+  },
+);
+
 export const transformedBitangentView = normalize(
   transformedNormalView.cross(transformedTangentView).mul(tangentGeometry.w),
 );

@@ -18,7 +18,7 @@ export class TempNode extends Node {
     return builder.getDataFromNode(this).usageCount > 1;
   }
 
-  build(builder: NodeBuilder, output: TypeName) {
+  build(builder: NodeBuilder, output: TypeName): string {
     const buildStage = builder.buildStage;
 
     if (buildStage === BuildStage.Generate) {
