@@ -69,8 +69,8 @@ export const parseBufferGeometry = (json: JsonContent): Geometry => {
   const index = json.data.index;
 
   if (index !== undefined) {
-    const typedArray = createTypedArray(index.type, index.array);
-    geometry.setIndex(new BufferAttribute(typedArray, 1));
+    const typedArray = createTypedArray(index.type, index.array) as Uint32Array;
+    geometry.index = new BufferAttribute(Buffer.new(typedArray, 1), 1);
   }
 
   const attributes = json.data.attributes;
