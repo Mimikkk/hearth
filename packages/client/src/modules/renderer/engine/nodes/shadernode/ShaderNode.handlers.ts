@@ -1,5 +1,4 @@
 import { NodeElements } from './ShaderNode.map.js';
-import { parseSwizzle } from './utils.js';
 import { asNode } from './ShaderNode.asNode.js';
 import SplitNode from '@modules/renderer/engine/nodes/utils/SplitNode.js';
 import ArrayElementNode from '@modules/renderer/engine/nodes/utils/ArrayElementNode.js';
@@ -36,7 +35,6 @@ export const handlers: ProxyHandler<Node> = {
 
     // accessing properties ( swizzle )
     if (swizzleRe.test(key)) {
-      console.log('swizzle', key);
       key = parseSwizzle(key);
 
       return asNode(new SplitNode(proxy, key));
@@ -44,9 +42,7 @@ export const handlers: ProxyHandler<Node> = {
 
     // set properties ( swizzle )
     if (setSwizzleRe.test(key)) {
-      console.log('swizzle2', key);
       key = parseSwizzle(key.slice(3).toLowerCase());
-      key = key.split('').sort().join('');
       return value => asNode(new SetNode(node, key, value));
     }
 
@@ -76,12 +72,41 @@ export const handlers: ProxyHandler<Node> = {
 };
 
 const isStackNode = (value: any): value is StackNode => value.isStackNode === true;
-const setSwizzleRe = /^set[XYZWRGBASTPQ]{1,4}$/;
-const swizzleRe = /^[xyzwrgbastpq]{1,4}$/;
+const setSwizzleRe = /^set[XYZWRGBA]{1,4}$/;
+const swizzleRe = /^[xyzwrgba]{1,4}$/;
 const arrayRe = /^\d+$/;
 
-type SwizzleCharacter = 'x' | 'y' | 'z' | 'w' | 'r' | 'g' | 'b' | 'a' | 's' | 't' | 'p' | 'q';
-type Swizzle1 = SwizzleCharacter;
-type Swizzle2 = `${SwizzleCharacter}${SwizzleCharacter}`;
-type Swizzle3 = `${SwizzleCharacter}${SwizzleCharacter}${SwizzleCharacter}`;
-type Swizzle4 = `${SwizzleCharacter}${SwizzleCharacter}${SwizzleCharacter}${SwizzleCharacter}`;
+export type XYZW = 'x' | 'xy' | 'xyz' | 'xyzw' | 'y' | 'yz' | 'yzw' | 'z' | 'zw' | 'w';
+export type RGBA = 'r' | 'rg' | 'rgb' | 'rgba' | 'g' | 'gb' | 'gba' | 'b' | 'ba' | 'a';
+export type Swizzle = XYZW | RGBA;
+
+const parseSwizzle = (str: string): XYZW => {
+  if (!str) throw new Error(`Invalid swizzle ${str}.`);
+  let hasX = false;
+  let hasY = false;
+  let hasZ = false;
+  let hasW = false;
+
+  for (let character of str) {
+    switch (character) {
+      case 'x':
+      case 'r':
+        hasX = true;
+        break;
+      case 'y':
+      case 'g':
+        hasY = true;
+        break;
+      case 'z':
+      case 'b':
+        hasZ = true;
+        break;
+      case 'w':
+      case 'a':
+        hasW = true;
+        break;
+    }
+  }
+
+  return ((hasX ? 'x' : '') + (hasY ? 'y' : '') + (hasZ ? 'z' : '') + (hasW ? 'w' : '')) as XYZW;
+};
