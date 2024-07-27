@@ -24,8 +24,6 @@ export class AnimationObjectGroup {
     this.isAnimationObjectGroup = true;
 
     this.uuid = v4();
-
-    // cached objects followed by the active ones
     this.objects = bindings;
 
     this.nCachedObjects_ = 0;
@@ -38,10 +36,8 @@ export class AnimationObjectGroup {
     }
 
     this._paths = [];
-    // inside: { we don't care, here }
     this._parsedPaths = [];
     this.bindings = [];
-    // inside: indices in these arrays
     this.bindingsIndicesByPath = {};
 
     const scope = this;
@@ -59,6 +55,10 @@ export class AnimationObjectGroup {
         return scope.bindings.length;
       },
     };
+  }
+
+  static is(item: any): item is AnimationObjectGroup {
+    return item?.isAnimationObjectGroup === true;
   }
 
   add() {

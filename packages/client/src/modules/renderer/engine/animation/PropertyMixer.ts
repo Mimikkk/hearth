@@ -1,6 +1,6 @@
 import { QuaternionArray } from '../math/Quaternion.js';
-import type { PropertyBinding } from './PropertyBinding.js';
-import { NumberArray } from '@modules/renderer/engine/math/MathUtils.js';
+import type { IPropertyBinding } from './PropertyBinding.js';
+import type { NumberArray } from '@modules/renderer/engine/math/MathUtils.js';
 
 export class PropertyMixer {
   cumulativeWeight: number;
@@ -8,45 +8,39 @@ export class PropertyMixer {
   useCount: number;
   referenceCount: number;
   buffer: NumberArray;
-  valueSize: number;
+  stride: number;
   _workIndex: number;
   _origIndex: number;
   _addIndex: number;
-  _setIdentity: () => void;
-  _mixBufferRegion: (buffer: NumberArray, dstOffset: number, srcOffset: number, t: number, stride: number) => void;
-  _mixBufferRegionAdditive: (
-    buffer: NumberArray,
-    dstOffset: number,
-    srcOffset: number,
-    t: number,
-    stride: number,
-  ) => void;
-  binding: PropertyBinding;
+  binding: IPropertyBinding;
+  mix: (buffer: NumberArray, to: number, from: number, at: number, stride: number) => void;
+  clear: () => void;
+  mixAdditive: (buffer: NumberArray, to: number, from: number, at: number, stride: number) => void;
 
-  constructor(binding: PropertyBinding, type: 'quaternion' | 'string' | 'bool' | 'vector', span: number) {
+  constructor(binding: IPropertyBinding, type: 'quaternion' | 'string' | 'bool' | 'vector', stride: number) {
     this.binding = binding;
-    this.valueSize = span;
+    this.stride = stride;
 
     switch (type) {
       case 'quaternion':
-        this._mixBufferRegion = this._slerp;
-        this._mixBufferRegionAdditive = this._slerpAdditive;
-        this._setIdentity = this._setAdditiveIdentityQuaternion;
-        this.buffer = new Float64Array(span * 6);
+        this.mix = this.#slerp;
+        this.mixAdditive = this.#slerpAdditive;
+        this.clear = this.#clearQuaternion;
+        this.buffer = new Float64Array(stride * 6);
         this._workIndex = 5;
         break;
       case 'string':
       case 'bool':
-        this._mixBufferRegion = this._select;
-        this._mixBufferRegionAdditive = this._select;
-        this._setIdentity = this._setAdditiveIdentityOther;
-        this.buffer = new Array(span * 5);
+        this.mix = this.#select;
+        this.mixAdditive = this.#select;
+        this.clear = this.#clearOther;
+        this.buffer = new Array(stride * 5);
         break;
       default:
-        this._mixBufferRegion = this._lerp;
-        this._mixBufferRegionAdditive = this._lerpAdditive;
-        this._setIdentity = this._setAdditiveIdentityNumeric;
-        this.buffer = new Float64Array(span * 5);
+        this.mix = this.#lerp;
+        this.mixAdditive = this.#lerpAdditive;
+        this.clear = this.#clearNumeric;
+        this.buffer = new Float64Array(stride * 5);
     }
     this._origIndex = 3;
     this._addIndex = 4;
@@ -56,46 +50,8 @@ export class PropertyMixer {
     this.referenceCount = 0;
   }
 
-  accumulate(accuIndex: number, weight: number): this {
-    const buffer = this.buffer;
-    const stride = this.valueSize;
-    const offset = accuIndex * stride + stride;
-
-    let currentWeight = this.cumulativeWeight;
-
-    if (currentWeight === 0) {
-      for (let i = 0; i !== stride; ++i) {
-        buffer[offset + i] = buffer[i];
-      }
-
-      currentWeight = weight;
-    } else {
-      currentWeight += weight;
-      const mix = weight / currentWeight;
-      this._mixBufferRegion(buffer, offset, 0, mix, stride);
-    }
-
-    this.cumulativeWeight = currentWeight;
-
-    return this;
-  }
-
-  accumulateAdditive(weight: number): this {
-    const buffer = this.buffer;
-    const stride = this.valueSize;
-    const offset = stride * this._addIndex;
-
-    if (this.cumulativeWeightAdditive === 0) {
-      this._setIdentity();
-    }
-
-    this._mixBufferRegionAdditive(buffer, offset, 0, weight, stride);
-    this.cumulativeWeightAdditive += weight;
-    return this;
-  }
-
   apply(index: number): this {
-    const stride = this.valueSize;
+    const stride = this.stride;
     const buffer = this.buffer;
     const offset = index * stride + stride;
     const weight = this.cumulativeWeight;
@@ -108,11 +64,11 @@ export class PropertyMixer {
     if (weight < 1) {
       const originalValueOffset = stride * this._origIndex;
 
-      this._mixBufferRegion(buffer, offset, originalValueOffset, 1 - weight, stride);
+      this.mix(buffer, offset, originalValueOffset, 1 - weight, stride);
     }
 
     if (weightAdditive > 0) {
-      this._mixBufferRegionAdditive(buffer, offset, this._addIndex * stride, 1, stride);
+      this.mixAdditive(buffer, offset, this._addIndex * stride, 1, stride);
     }
 
     for (let i = stride, e = stride + stride; i !== e; ++i) {
@@ -128,7 +84,7 @@ export class PropertyMixer {
     const binding = this.binding;
 
     const buffer = this.buffer,
-      stride = this.valueSize,
+      stride = this.stride,
       originalValueOffset = stride * this._origIndex;
 
     binding.getValue(buffer, originalValueOffset);
@@ -137,7 +93,7 @@ export class PropertyMixer {
       buffer[i] = buffer[originalValueOffset + (i % stride)];
     }
 
-    this._setIdentity();
+    this.clear();
 
     this.cumulativeWeight = 0;
     this.cumulativeWeightAdditive = 0;
@@ -145,52 +101,89 @@ export class PropertyMixer {
   }
 
   load(): this {
-    const originalValueOffset = this.valueSize * 3;
+    const originalValueOffset = this.stride * 3;
     this.binding.setValue(this.buffer, originalValueOffset);
     return this;
   }
 
-  _setAdditiveIdentityNumeric(): void {
-    const startIndex = this._addIndex * this.valueSize;
-    const endIndex = startIndex + this.valueSize;
+  accumulate(index: number, weight: number): this {
+    const buffer = this.buffer;
+    const stride = this.stride;
+    const offset = index * stride + stride;
+
+    let currentWeight = this.cumulativeWeight;
+    if (currentWeight === 0) {
+      for (let i = 0; i !== stride; ++i) {
+        buffer[offset + i] = buffer[i];
+      }
+
+      currentWeight = weight;
+    } else {
+      currentWeight += weight;
+      const mix = weight / currentWeight;
+      this.mix(buffer, offset, 0, mix, stride);
+    }
+
+    this.cumulativeWeight = currentWeight;
+
+    return this;
+  }
+
+  accumulateAdditive(weight: number): this {
+    const buffer = this.buffer;
+    const stride = this.stride;
+    const offset = stride * this._addIndex;
+
+    if (this.cumulativeWeightAdditive === 0) {
+      this.clear();
+    }
+
+    this.mixAdditive(buffer, offset, 0, weight, stride);
+    this.cumulativeWeightAdditive += weight;
+    return this;
+  }
+
+  #clearQuaternion(): void {
+    this.#clearNumeric();
+    this.buffer[this._addIndex * this.stride + 3] = 1;
+  }
+
+  #clearNumeric(): void {
+    const startIndex = this._addIndex * this.stride;
+    const endIndex = startIndex + this.stride;
 
     for (let i = startIndex; i < endIndex; i++) {
       this.buffer[i] = 0;
     }
   }
 
-  _setAdditiveIdentityQuaternion(): void {
-    this._setAdditiveIdentityNumeric();
-    this.buffer[this._addIndex * this.valueSize + 3] = 1;
-  }
+  #clearOther(): void {
+    const startIndex = this._origIndex * this.stride;
+    const targetIndex = this._addIndex * this.stride;
 
-  _setAdditiveIdentityOther(): void {
-    const startIndex = this._origIndex * this.valueSize;
-    const targetIndex = this._addIndex * this.valueSize;
-
-    for (let i = 0; i < this.valueSize; i++) {
+    for (let i = 0; i < this.stride; i++) {
       this.buffer[targetIndex + i] = this.buffer[startIndex + i];
     }
   }
 
-  _select(buffer: NumberArray, to: number, from: number, at: number, stride: number): void {
+  #select(buffer: NumberArray, to: number, from: number, at: number, stride: number): void {
     if (at < 0.5) return;
     for (let i = 0; i !== stride; ++i) {
       buffer[to + i] = buffer[from + i];
     }
   }
 
-  _slerp(buffer: NumberArray, from: number, to: number, at: number, stride: number): void {
+  #slerp(buffer: NumberArray, from: number, to: number, at: number, stride: number): void {
     QuaternionArray.slerp(buffer, from, buffer, from, buffer, to, at);
   }
 
-  _slerpAdditive(buffer: NumberArray, to: number, from: number, at: number, stride: number): void {
+  #slerpAdditive(buffer: NumberArray, to: number, from: number, at: number, stride: number): void {
     const offset = this._workIndex * stride;
     QuaternionArray.multiply(buffer, offset, buffer, to, buffer, from);
     QuaternionArray.slerp(buffer, to, buffer, to, buffer, offset, at);
   }
 
-  _lerp(buffer: NumberArray, to: number, from: number, at: number, stride: number): void {
+  #lerp(buffer: NumberArray, to: number, from: number, at: number, stride: number): void {
     const s = 1 - at;
 
     for (let i = 0; i !== stride; ++i) {
@@ -200,7 +193,7 @@ export class PropertyMixer {
     }
   }
 
-  _lerpAdditive(buffer: NumberArray, to: number, from: number, at: number, stride: number): void {
+  #lerpAdditive(buffer: NumberArray, to: number, from: number, at: number, stride: number): void {
     for (let i = 0; i !== stride; ++i) {
       const j = to + i;
 

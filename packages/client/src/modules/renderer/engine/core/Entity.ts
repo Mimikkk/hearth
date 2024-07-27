@@ -11,16 +11,16 @@ import type { Geometry } from './Geometry.js';
 import type { Camera } from '@modules/renderer/engine/objects/cameras/Camera.js';
 import type { Material } from '@modules/renderer/engine/objects/materials/Material.js';
 import type { Group } from '../objects/Group.js';
-import { Box3 } from '@modules/renderer/engine/math/Box3.js';
-import { Renderer } from '../renderers/Renderer.js';
-import { Sphere } from '@modules/renderer/engine/math/Sphere.js';
+import type { Box3 } from '@modules/renderer/engine/math/Box3.js';
+import type { Renderer } from '../renderers/Renderer.js';
+import type { Sphere } from '@modules/renderer/engine/math/Sphere.js';
 import { v4 } from 'uuid';
+import type { Skeleton } from '@modules/renderer/engine/objects/Skeleton.js';
 
 const isCamera = (object: any): object is Camera => object.isCamera;
 const isLight = (object: any): object is Light => object.isLight;
 
 export class Entity {
-  declare ['constructor']: typeof Entity;
   declare isEntity: true;
   static Up: Vec3 = Vec3.new(0, 1, 0);
   static UseLocalAutoUpdate: boolean = true;
@@ -34,6 +34,7 @@ export class Entity {
   computeBoundingBox(): void {}
 
   declare material: Material | null;
+  declare skeleton: Skeleton | null;
   declare workgroupSize?: [number, number, number] | [number, number] | [number];
   occlusionTest: boolean;
   boundingBox: Box3 | null;

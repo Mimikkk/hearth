@@ -76,7 +76,7 @@ export class AnimationMixer {
     this.timeScale = 1.0;
   }
 
-  _bindAction(action: AnimationAction, prototypeAction: AnimationAction) {
+  _bindAction(action: AnimationAction) {
     const root = this.root,
       tracks = action.clip.tracks,
       nTracks = tracks.length,
@@ -105,8 +105,6 @@ export class AnimationMixer {
         binding = bindings[i];
 
         if (binding !== undefined) {
-          // existing binding, make sure the cache knows
-
           if (binding.activeIndex === null) {
             ++binding.referenceCount;
             this._addInactiveBinding(binding, rootUuid, trackName);
@@ -115,13 +113,7 @@ export class AnimationMixer {
           continue;
         }
 
-        const path = prototypeAction && prototypeAction.bindings[i].binding.parsedPath;
-
-        binding = new PropertyMixer(
-          PropertyBinding.create(root, trackName, path),
-          track.ValueTypeName,
-          track.getValueSize(),
-        );
+        binding = new PropertyMixer(PropertyBinding.new(root, trackName), track.ValueTypeName, track.getValueSize());
 
         ++binding.referenceCount;
         this._addInactiveBinding(binding, rootUuid, trackName);
@@ -139,12 +131,10 @@ export class AnimationMixer {
         // this action has been forgotten by the cache, but the user
         // appears to be still using it -> rebind
 
-        const rootUuid = this.root.uuid,
-          clipUuid = action.clip.uuid,
-          actionsForClip = this._actionsByClip[clipUuid];
+        const rootUuid = this.root.uuid;
+        const clipUuid = action.clip.uuid;
 
-        this._bindAction(action, actionsForClip && actionsForClip.knownActions[0]);
-
+        this._bindAction(action);
         this._addInactiveAction(action, clipUuid, rootUuid);
       }
 
@@ -404,7 +394,6 @@ export class AnimationMixer {
     const clipUuid = clip.uuid;
 
     const actionsForClip = this._actionsByClip[clipUuid];
-    let prototypeAction = null;
 
     if (blendMode === undefined) {
       if (clip !== null) {
@@ -416,21 +405,13 @@ export class AnimationMixer {
 
     if (actionsForClip !== undefined) {
       const existingAction = actionsForClip.actionByRoot[rootUuid];
-
       if (existingAction !== undefined && existingAction.blendMode === blendMode) {
         return existingAction;
       }
-
-      // we know the clip, so we don't have to parse all
-      // the bindings again but can just copy
-      prototypeAction = actionsForClip.knownActions[0];
-
-      // also, take the clip from the prototype action
-      if (clip === null) clip = prototypeAction.clip;
     }
     const newAction = new AnimationAction(this, clip, blendMode);
 
-    this._bindAction(newAction, prototypeAction);
+    this._bindAction(newAction);
     this._addInactiveAction(newAction, clipUuid, rootUuid);
 
     return newAction;

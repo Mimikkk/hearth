@@ -2696,7 +2696,7 @@ class Parser {
 
   /** When Entity instances are targeted by animation, they need unique names. */
   createUniqueName(originalName) {
-    const sanitizedName = PropertyBinding.sanitizeNodeName(originalName || '');
+    const sanitizedName = PropertyBinding.sanitize(originalName || '');
 
     if (sanitizedName in this.nodeNamesUsed) {
       return sanitizedName + '_' + ++this.nodeNamesUsed[sanitizedName];
