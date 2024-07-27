@@ -1,3 +1,5 @@
+@import '../../../styles/styles.scss';
+
 body {
     background-color: #000;
     color: #fff;
@@ -6,55 +8,25 @@ body {
     line-height: 24px;
     margin: 0;
     overscroll-behavior: none;
-}
-a {
-    color: #ff0;
-    text-decoration: none;
-}
-
-a:hover {
-    text-decoration: underline;
-}
-
-button {
-    cursor: pointer;
-    text-transform: uppercase;
+    @apply relative;
 }
 
 #info {
-    box-sizing: border-box;
-    padding: 10px;
-    pointer-events: none;
-    position: absolute;
-    text-align: center;
-    top: 0px;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    -webkit-user-select: none;
-    user-select: none;
-    width: 100%;
-    z-index: 1; /* TODO Solve this in HTML */
+    @apply bg-accent-dark text-primary-white border border-accent-dark;
+    @apply bg-opacity-50;
+    @apply absolute bottom-1 right-10;
+    @apply pointer-events-none select-none;
+    @apply px-2 py-1 rounded-sm;
 }
 
-a,
-button,
-input,
-select {
-    pointer-events: auto;
-}
 
-.lil-gui {
-    z-index: 2 !important; /* TODO Solve this in HTML */
+.lil-gui.root {
+    @apply top-0 right-0;
 }
 
 @media all and (max-width: 640px) {
     .lil-gui.root {
-        bottom: 0;
-        left: 0;
-        max-height: 50%;
-        max-width: 80%;
-        right: auto;
-        top: auto;
+        @apply bottom-0 left-0 right-auto top-auto;
     }
 }
 
