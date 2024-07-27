@@ -70,6 +70,7 @@ const refreshEditorView = async () => {
 };
 const refreshResultView = () => {
   if (!builder) return;
+  console.log('refresh', builder.fragmentShader);
   resultView.setValue(builder.fragmentShader);
 };
 
@@ -90,7 +91,6 @@ const resultView = monaco.editor.create(result, {
 editorView.getModel()?.onDidChangeContent(refreshEditorView);
 refreshEditorView();
 
-// gui
 const gui = new GUI();
 gui.add(options, 'stage', ['vertex', 'fragment']).onChange(refreshResultView);
 gui.add(options, 'preview').onChange((value: boolean) => renderable.style.setProperty('display', value ? '' : 'none'));
