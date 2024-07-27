@@ -156,7 +156,7 @@ export class AnimationMixer {
 
         if (binding.useCount++ === 0) {
           this._lendBinding(binding);
-          binding.saveOriginalState();
+          binding.save();
         }
       }
 
@@ -173,7 +173,7 @@ export class AnimationMixer {
         const binding = bindings[i];
 
         if (--binding.useCount === 0) {
-          binding.restoreOriginalState();
+          binding.load();
           this._takeBackBinding(binding);
         }
       }
