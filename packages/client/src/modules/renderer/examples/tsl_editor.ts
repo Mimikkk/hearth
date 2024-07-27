@@ -7,7 +7,6 @@ import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 import './tsl_editor.css';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { resolveScript } from '@modules/renderer/examples/utilities/resolveScript.js';
-
 const createContainers = () => {
   const container = document.createElement('div');
   container.id = 'container';

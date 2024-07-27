@@ -1,3 +1,15 @@
+window.addEventListener('unhandledrejection', e => {
+  if (e.reason.stack.includes('_EditorSimpleWorker.loadForeignModule')) {
+    e.preventDefault();
+  }
+});
+
+window.addEventListener('error', e => {
+  if (e.message.includes('_EditorSimpleWorker.loadForeignModule')) {
+    e.preventDefault();
+  }
+});
+
 import 'monaco-editor/esm/vs/basic-languages/css/css.contribution.js';
 import 'monaco-editor/esm/vs/basic-languages/xml/xml.contribution.js';
 import 'monaco-editor/esm/vs/basic-languages/typescript/typescript.contribution.js';
