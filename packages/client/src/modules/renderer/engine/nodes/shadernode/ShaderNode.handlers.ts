@@ -15,7 +15,7 @@ export const handlers: ProxyHandler<Node> = {
 
     if (!isStackNode(node) && key === 'assign') {
       return (...params) => {
-        NodeStack.get().assign(proxy, ...params);
+        NodeStack.get()!.assign(proxy, ...params);
         return proxy;
       };
     }
@@ -24,9 +24,6 @@ export const handlers: ProxyHandler<Node> = {
     if (item) {
       return isStackNode(node) ? (...params) => proxy.add(item(...params)) : (...params) => item(proxy, ...params);
     }
-
-    // to remove
-    if (key === 'self') return node;
 
     if (key.endsWith('Assign')) {
       const assignAs = NodeElements.get(key.slice(0, key.length - 6));
@@ -39,6 +36,7 @@ export const handlers: ProxyHandler<Node> = {
 
     // accessing properties ( swizzle )
     if (swizzleRe.test(key)) {
+      console.log('swizzle', key);
       key = parseSwizzle(key);
 
       return asNode(new SplitNode(proxy, key));
@@ -46,25 +44,19 @@ export const handlers: ProxyHandler<Node> = {
 
     // set properties ( swizzle )
     if (setSwizzleRe.test(key)) {
+      console.log('swizzle2', key);
       key = parseSwizzle(key.slice(3).toLowerCase());
-
-      // sort to xyzw sequence
       key = key.split('').sort().join('');
-
       return value => asNode(new SetNode(node, key, value));
     }
 
     // TODO - remove accessing property
     if (key === 'width' || key === 'height' || key === 'depth') {
-      if (key === 'width') key = 'x';
-      else if (key === 'height') key = 'y';
-      else if (key === 'depth') key = 'z';
-
-      return asNode(new SplitNode(node, key));
+      throw Error('Invalid use removed!');
     }
 
     // accessing array
-    if (/^\d+$/.test(key)) {
+    if (arrayRe.test(key)) {
       return asNode(new ArrayElementNode(proxy, new ConstNode(Number(key), TypeName.u32)));
     }
 
@@ -74,7 +66,7 @@ export const handlers: ProxyHandler<Node> = {
   set(node, key, value, proxy) {
     if (typeof key !== 'string' || key in node) return Reflect.set(node, key, value, proxy);
 
-    if (key !== 'width' && key !== 'height' && key !== 'depth' && !numberRe.test(key) && !swizzleRe.test(key)) {
+    if (key !== 'width' && key !== 'height' && key !== 'depth' && !arrayRe.test(key) && !swizzleRe.test(key)) {
       return Reflect.set(node, key, value, proxy);
     }
 
@@ -86,4 +78,10 @@ export const handlers: ProxyHandler<Node> = {
 const isStackNode = (value: any): value is StackNode => value.isStackNode === true;
 const setSwizzleRe = /^set[XYZWRGBASTPQ]{1,4}$/;
 const swizzleRe = /^[xyzwrgbastpq]{1,4}$/;
-const numberRe = /^\d+$/;
+const arrayRe = /^\d+$/;
+
+type SwizzleCharacter = 'x' | 'y' | 'z' | 'w' | 'r' | 'g' | 'b' | 'a' | 's' | 't' | 'p' | 'q';
+type Swizzle1 = SwizzleCharacter;
+type Swizzle2 = `${SwizzleCharacter}${SwizzleCharacter}`;
+type Swizzle3 = `${SwizzleCharacter}${SwizzleCharacter}${SwizzleCharacter}`;
+type Swizzle4 = `${SwizzleCharacter}${SwizzleCharacter}${SwizzleCharacter}${SwizzleCharacter}`;

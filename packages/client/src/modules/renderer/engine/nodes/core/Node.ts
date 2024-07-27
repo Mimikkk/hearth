@@ -51,10 +51,8 @@ export class Node {
     return (this.constructor as unknown as { type: string }).type;
   }
 
-  declare self: this;
-
   getSelf(): this {
-    return this.self || this;
+    return this;
   }
 
   updateReference(state: NodeFrame | NodeBuilder): this {
