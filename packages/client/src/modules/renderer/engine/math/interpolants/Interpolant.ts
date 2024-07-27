@@ -1,6 +1,6 @@
 import { createTypedArrayAs, TypedArray } from '../MathUtils.js';
 
-export abstract class Interpolant<T extends TypedArray, V extends TypedArray> {
+export abstract class Interpolant<T extends TypedArray = any, V extends TypedArray = any> {
   _activeIndex: number = 0;
 
   protected constructor(

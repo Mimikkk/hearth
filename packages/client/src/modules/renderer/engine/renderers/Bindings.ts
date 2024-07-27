@@ -52,11 +52,11 @@ class Bindings extends DataMap<any, any> {
   }
 
   updateForCompute(computeNode: ComputeNode): void {
-    this._update(this.getForCompute(computeNode));
+    this.update(this.getForCompute(computeNode));
   }
 
   updateForRender(renderObject: RenderObject): void {
-    this._update(this.getForRender(renderObject));
+    this.update(this.getForRender(renderObject));
   }
 
   _init(bindings: Binding[]): void {
@@ -71,7 +71,7 @@ class Bindings extends DataMap<any, any> {
     }
   }
 
-  _update(bindings: Binding[]): void {
+  update(bindings: Binding[]): void {
     let needsBindingsUpdate = false;
 
     // iterate over all bindings and check if buffer updates or a new binding group is required
