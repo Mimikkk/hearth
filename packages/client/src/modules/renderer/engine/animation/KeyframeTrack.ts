@@ -68,11 +68,10 @@ export class KeyframeTrack<T extends TypedArray = Float32Array, V extends TypedA
       const message = 'unsupported interpolation for ' + this.ValueTypeName + ' keyframe track named ' + this.name;
 
       if (this.createInterpolant === undefined) {
-        // fall back to default, unless the default itself is messed up
         if (interpolation !== this.DefaultInterpolation) {
           this.setInterpolation(this.DefaultInterpolation);
         } else {
-          throw new Error(message); // fatal, in this case
+          throw new Error(message);
         }
       }
 
@@ -102,7 +101,6 @@ export class KeyframeTrack<T extends TypedArray = Float32Array, V extends TypedA
     return this.values.length / this.times.length;
   }
 
-  // move all keyframes either forwards or backwards in time
   shift(timeOffset: number): this {
     if (timeOffset !== 0.0) {
       const times = this.times;
@@ -115,7 +113,6 @@ export class KeyframeTrack<T extends TypedArray = Float32Array, V extends TypedA
     return this;
   }
 
-  // scale all keyframe times by a factor (useful for frame <-> seconds conversions)
   scale(timeScale: number): this {
     if (timeScale !== 1.0) {
       const times = this.times;
@@ -128,8 +125,6 @@ export class KeyframeTrack<T extends TypedArray = Float32Array, V extends TypedA
     return this;
   }
 
-  // removes keyframes before and after animation without changing any values within the range [startTime, endTime].
-  // IMPORTANT: We do not shift around keys to the start of the track time, because for interpolated keys this will change their values
   trim(startTime: number, endTime: number): this {
     const times = this.times,
       nKeys = times.length;
@@ -145,10 +140,9 @@ export class KeyframeTrack<T extends TypedArray = Float32Array, V extends TypedA
       --to;
     }
 
-    ++to; // inclusive -> exclusive bound
+    ++to;
 
     if (from !== 0 || to !== nKeys) {
-      // empty tracks are forbidden, so keep at least one keyframe
       if (from >= to) {
         to = Math.max(to, 1);
         from = to - 1;
@@ -162,7 +156,6 @@ export class KeyframeTrack<T extends TypedArray = Float32Array, V extends TypedA
     return this;
   }
 
-  // ensure we do not get a GarbageInGarbageOut situation, make sure tracks are at least minimally viable
   validate(): boolean {
     let valid = true;
 
@@ -218,10 +211,7 @@ export class KeyframeTrack<T extends TypedArray = Float32Array, V extends TypedA
     return valid;
   }
 
-  // removes equivalent sequential keys as common in morph target sequences
-  // (0,0,0,0,1,1,1,0,0,0,0,0,0,0) --> (0,0,1,1,0,0)
   optimize(): this {
-    // times or values may be shared with other tracks, so overwriting is unsafe
     const times = this.times.slice(),
       values = this.values.slice(),
       stride = this.getValueSize(),
@@ -236,12 +226,8 @@ export class KeyframeTrack<T extends TypedArray = Float32Array, V extends TypedA
       const time = times[i];
       const timeNext = times[i + 1];
 
-      // remove adjacent keyframes scheduled at the same time
-
       if (time !== timeNext && (i !== 1 || time !== times[0])) {
         if (!smoothInterpolation) {
-          // remove unnecessary keyframes same as their neighbors
-
           const offset = i * stride,
             offsetP = offset - stride,
             offsetN = offset + stride;
@@ -259,8 +245,6 @@ export class KeyframeTrack<T extends TypedArray = Float32Array, V extends TypedA
         }
       }
 
-      // in-place compaction
-
       if (keep) {
         if (i !== writeIndex) {
           times[writeIndex] = times[i];
@@ -276,8 +260,6 @@ export class KeyframeTrack<T extends TypedArray = Float32Array, V extends TypedA
         ++writeIndex;
       }
     }
-
-    // flush last keyframe (compaction looks ahead)
 
     if (lastIndex > 0) {
       times[writeIndex] = times[lastIndex];

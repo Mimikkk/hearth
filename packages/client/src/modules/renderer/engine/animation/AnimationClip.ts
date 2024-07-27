@@ -22,7 +22,6 @@ export class AnimationClip {
 
     this.uuid = v4();
 
-    // this means it should figure out its duration by scanning the tracks
     if (this.duration < 0) this.resetDuration();
   }
 

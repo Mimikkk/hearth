@@ -344,14 +344,14 @@ export class PropertyBindingGroup implements IPropertyBinding {
     public group: AnimationObjectGroup,
     path: string,
   ) {
-    this.bindings = group.subscribe_(path, PropertyBinding.parse(path));
+    this.bindings = group.subscribe(path, PropertyBinding.parse(path));
     this.parsedPath = this.bindings[0].parsedPath;
   }
 
   getValue(array: NumberArray, offset: number): void {
     this.bind();
 
-    const firstValidIndex = this.group.nCachedObjects_;
+    const firstValidIndex = this.group.cacheSize;
     const binding = this.bindings[firstValidIndex];
 
     if (binding) binding.getValue(array, offset);
@@ -360,7 +360,7 @@ export class PropertyBindingGroup implements IPropertyBinding {
   setValue(array: NumberArray, offset: number): void {
     const bindings = this.bindings;
 
-    for (let i = this.group.nCachedObjects_, n = bindings.length; i !== n; ++i) {
+    for (let i = this.group.cacheSize, n = bindings.length; i !== n; ++i) {
       bindings[i].setValue(array, offset);
     }
   }
@@ -368,14 +368,14 @@ export class PropertyBindingGroup implements IPropertyBinding {
   bind(): void {
     const bindings = this.bindings;
 
-    for (let i = this.group.nCachedObjects_, n = bindings.length; i !== n; ++i) {
+    for (let i = this.group.cacheSize, n = bindings.length; i !== n; ++i) {
       bindings[i].bind();
     }
   }
 
   unbind(): void {
     const bindings = this.bindings;
-    for (let i = this.group.nCachedObjects_, n = bindings.length; i !== n; ++i) {
+    for (let i = this.group.cacheSize, n = bindings.length; i !== n; ++i) {
       bindings[i].unbind();
     }
   }

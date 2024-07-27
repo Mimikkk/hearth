@@ -128,9 +128,6 @@ export class AnimationMixer {
   _activateAction(action: AnimationAction) {
     if (!this._isActiveAction(action)) {
       if (action.activeIndex === null) {
-        // this action has been forgotten by the cache, but the user
-        // appears to be still using it -> rebind
-
         const rootUuid = this.root.uuid;
         const clipUuid = action.clip.uuid;
 
@@ -140,7 +137,6 @@ export class AnimationMixer {
 
       const bindings = action.bindings;
 
-      // increment reference counts / sort out state
       for (let i = 0, n = bindings.length; i !== n; ++i) {
         const binding = bindings[i];
 
@@ -158,7 +154,6 @@ export class AnimationMixer {
     if (this._isActiveAction(action)) {
       const bindings = action.bindings;
 
-      // decrement reference counts / sort out state
       for (let i = 0, n = bindings.length; i !== n; ++i) {
         const binding = bindings[i];
 
@@ -254,12 +249,6 @@ export class AnimationMixer {
   }
 
   _lendAction(action: AnimationAction) {
-    // [ active actions |  inactive actions  ]
-    // [  active actions >| inactive actions ]
-    //                 s        a
-    //                  <-swap->
-    //                 a        s
-
     const actions = this._actions,
       prevIndex = action.activeIndex,
       lastActiveIndex = this._nActiveActions++,
@@ -273,12 +262,6 @@ export class AnimationMixer {
   }
 
   _takeBackAction(action: AnimationAction) {
-    // [  active actions  | inactive actions ]
-    // [ active actions |< inactive actions  ]
-    //        a        s
-    //         <-swap->
-    //        s        a
-
     const actions = this._actions,
       prevIndex = action.activeIndex,
       firstInactiveIndex = --this._nActiveActions,
@@ -426,15 +409,11 @@ export class AnimationMixer {
       timeDirection = Math.sign(deltaTime),
       accuIndex = (this.activeIndex ^= 1);
 
-    // run active actions
-
     for (let i = 0; i !== nActions; ++i) {
       const action = actions[i];
 
       action.update(time, deltaTime, timeDirection, accuIndex);
     }
-
-    // update scene graph
 
     const bindings = this.bindings,
       nBindings = this._nActiveBindings;
@@ -447,12 +426,12 @@ export class AnimationMixer {
   }
 
   setTime(timeInSeconds: number) {
-    this.time = 0; // Zero out time attribute for AnimationMixer object;
+    this.time = 0;
     for (let i = 0; i < this._actions.length; i++) {
-      this._actions[i].time = 0; // Zero out time attribute for all associated AnimationAction objects.
+      this._actions[i].time = 0;
     }
 
-    return this.update(timeInSeconds); // Update used to set exact time. Returns "this" AnimationMixer object.
+    return this.update(timeInSeconds);
   }
 }
 
