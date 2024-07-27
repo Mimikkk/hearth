@@ -42,7 +42,7 @@ export class PropertyMixer {
         this._setIdentity = this._setAdditiveIdentityOther;
         this.buffer = new Array(span * 5);
         break;
-      default:
+      case 'number':
         this._mixBufferRegion = this._lerp;
         this._mixBufferRegionAdditive = this._lerpAdditive;
         this._setIdentity = this._setAdditiveIdentityNumeric;
