@@ -1,14 +1,13 @@
-import UniformNode from '../core/UniformNode.js';
+import { UniformNode } from '../core/UniformNode.js';
 import { asNode } from '../shadernode/ShaderNodes.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
-class BufferNode extends UniformNode<Buffer | number[] | null> {
+export class BufferNode<T> extends UniformNode<T> {
   constructor(
-    value: Buffer | number[] | null,
+    value: T,
     public bufferType: TypeName,
     public bufferCount: number = 0,
   ) {
-    console.log({ value });
     super(value, bufferType);
   }
 
@@ -19,5 +18,4 @@ class BufferNode extends UniformNode<Buffer | number[] | null> {
 
 export default BufferNode;
 
-export const buffer = (value: Buffer | number[] | null, type: TypeName, count: number) =>
-  asNode(new BufferNode(value, type, count));
+export const buffer = <T>(value: T, type: TypeName, count: number) => asNode(new BufferNode(value, type, count));

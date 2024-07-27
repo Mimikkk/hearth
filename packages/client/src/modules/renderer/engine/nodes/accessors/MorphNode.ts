@@ -1,4 +1,4 @@
-import Node from '../core/Node.js';
+import { Node } from '../core/Node.js';
 import { NodeUpdateType } from '../core/constants.js';
 import { i32, ivec2, proxyNode, tslFn } from '../shadernode/ShaderNodes.js';
 import { uniform } from '../core/UniformNode.js';

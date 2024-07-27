@@ -1,4 +1,4 @@
-import Node from './Node.js';
+import { Node } from './Node.js';
 import { BuildStage, TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 

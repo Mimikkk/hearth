@@ -1,4 +1,4 @@
-import Node from './Node.js';
+import { Node } from './Node.js';
 import StructTypeNode from './StructTypeNode.js';
 import { proxyNode } from '../shadernode/ShaderNodes.js';
 

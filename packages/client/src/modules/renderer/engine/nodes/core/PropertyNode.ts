@@ -1,4 +1,4 @@
-import Node from './Node.js';
+import { Node } from './Node.js';
 import { fixedNode, asNode } from '../shadernode/ShaderNodes.js';
 
 class PropertyNode extends Node {

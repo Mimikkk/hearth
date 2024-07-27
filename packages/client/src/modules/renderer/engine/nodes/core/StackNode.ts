@@ -1,4 +1,4 @@
-import Node from './Node.js';
+import { Node } from './Node.js';
 import { cond } from '../math/CondNode.js';
 import { proxyNode, NodeStack, ShaderNode } from '../shadernode/ShaderNodes.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';

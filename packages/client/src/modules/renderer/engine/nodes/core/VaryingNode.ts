@@ -1,4 +1,4 @@
-import Node from './Node.js';
+import { Node } from './Node.js';
 import { addNodeElement, proxyNode } from '../shadernode/ShaderNodes.js';
 import { ShaderStage } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 

@@ -1,4 +1,4 @@
-import UniformNode, { uniform } from '../core/UniformNode.js';
+import { UniformNode, uniform } from '../core/UniformNode.js';
 import { uv } from './UVNode.js';
 import { textureSize } from './TextureSizeNode.js';
 import { colorSpaceToLinear } from '../display/ColorSpaceNode.js';
@@ -7,7 +7,7 @@ import { maxMipLevel } from '../utils/MaxMipLevelNode.js';
 import { addNodeElement, asNode, proxyNode, vec3 } from '../shadernode/ShaderNodes.js';
 import { NodeUpdateType } from '../core/constants.js';
 
-class TextureNode extends UniformNode {
+export class TextureNode extends UniformNode {
   static type = 'TextureNode';
 
   constructor(value, uvNode = null, levelNode = null) {

@@ -1,6 +1,6 @@
 import FogNode from './FogNode.js';
 import { smoothstep } from '../math/MathNode.js';
-import Node from '../core/Node.js';
+import { Node } from '../core/Node.js';
 import { addNodeElement, proxyNode } from '../shadernode/ShaderNodes.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 

@@ -4,8 +4,8 @@ import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.
 import UniformNode from '@modules/renderer/engine/nodes/core/UniformNode.js';
 import { NodeUpdateType } from '@modules/renderer/engine/nodes/core/constants.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
-import Node from '@modules/renderer/engine/nodes/core/Node.js';
-import NodeFrame from '@modules/renderer/engine/nodes/core/NodeFrame.js';
+import { Node } from '@modules/renderer/engine/nodes/core/Node.js';
+import { NodeFrame } from '@modules/renderer/engine/nodes/core/NodeFrame.js';
 import { Entity } from '@modules/renderer/engine/core/Entity.js';
 
 export class ModelNode extends Node {

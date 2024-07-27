@@ -1,4 +1,4 @@
-import Node from '../core/Node.js';
+import { Node } from '../core/Node.js';
 import { scriptableValue } from './ScriptableValueNode.js';
 import { addNodeElement, f32, proxyNode } from '../shadernode/ShaderNodes.js';
 import CodeNode from '@modules/renderer/engine/nodes/code/CodeNode.js';

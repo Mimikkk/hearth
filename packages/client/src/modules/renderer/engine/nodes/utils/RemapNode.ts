@@ -1,4 +1,4 @@
-import Node from '../core/Node.js';
+import { Node } from '../core/Node.js';
 import { addNodeElement, f32, proxyNode } from '../shadernode/ShaderNodes.js';
 
 class RemapNode extends Node {

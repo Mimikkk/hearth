@@ -3,7 +3,7 @@ import { addNodeElement, asNode } from '../shadernode/ShaderNodes.js';
 import FunctionNode from './FunctionNode.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
-import Node from '@modules/renderer/engine/nodes/core/Node.js';
+import { Node } from '@modules/renderer/engine/nodes/core/Node.js';
 import { asNodes } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.asNode.js';
 
 class FunctionCallNode extends TempNode {

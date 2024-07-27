@@ -1,4 +1,4 @@
-import Node from '../core/Node.js';
+import { Node } from '../core/Node.js';
 import { add } from '../math/OperatorNode.js';
 import { normalLocal } from '../accessors/NormalNode.js';
 import { positionLocal } from '../accessors/PositionNode.js';

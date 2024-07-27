@@ -1,23 +1,21 @@
 import { NodeUpdateType } from '../core/constants.js';
 import { fixedNode } from '../shadernode/ShaderNodes.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
-import NodeFrame from '@modules/renderer/engine/nodes/core/NodeFrame.js';
+import { NodeFrame } from '@modules/renderer/engine/nodes/core/NodeFrame.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
-import Node from '@modules/renderer/engine/nodes/core/Node.js';
-import UniformNode from '@modules/renderer/engine/nodes/core/UniformNode.js';
-import { ICamera } from '@modules/renderer/engine/objects/cameras/Camera.js';
+import { Node } from '@modules/renderer/engine/nodes/core/Node.js';
+import { UniformNode } from '@modules/renderer/engine/nodes/core/UniformNode.js';
+import type { ICamera } from '@modules/renderer/engine/objects/cameras/Camera.js';
 
-class CameraNode extends Node {
+export class CameraNode extends Node {
   static type = 'CameraNode';
   scope: NodeVariant;
-  camera: ICamera;
   uniform: UniformNode<any>;
 
-  constructor(camera: ICamera) {
+  constructor(public camera: ICamera) {
     super();
 
-    this.camera = camera;
     this.uniform = new UniformNode(null);
     this.updateType = NodeUpdateType.Render;
   }

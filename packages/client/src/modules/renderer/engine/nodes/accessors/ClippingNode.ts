@@ -1,47 +1,43 @@
-import Node from '../core/Node.js';
+import { Node } from '../core/Node.js';
 import { asNode, tslFn } from '../shadernode/ShaderNodes.js';
 import { positionView } from './PositionNode.js';
 import { diffuseColor, property } from '../core/PropertyNode.js';
 import { loop } from '../utils/LoopNode.js';
 import { smoothstep } from '../math/MathNode.js';
 import { uniforms } from './UniformsNode.js';
+import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
+import { Vec4 } from '@modules/renderer/engine/math/Vec4.js';
 
-class ClippingNode extends Node {
-  constructor(scope = ClippingNode.DEFAULT) {
+export class ClippingNode extends Node {
+  constructor(public scope: NodeVariant) {
     super();
-
-    this.scope = scope;
   }
 
-  setup(builder) {
+  setup(builder: NodeBuilder) {
     super.setup(builder);
 
-    const clippingContext = builder.clippingContext;
+    const clippingContext = builder.clippingContext!;
     const { localClipIntersection, localClippingCount, globalClippingCount } = clippingContext;
 
     const numClippingPlanes = globalClippingCount + localClippingCount;
     const numUnionClippingPlanes = localClipIntersection ? numClippingPlanes - localClippingCount : numClippingPlanes;
 
-    if (this.scope === ClippingNode.ALPHA_TO_COVERAGE) {
-      return this.setupAlphaToCoverage(clippingContext.planes, numClippingPlanes, numUnionClippingPlanes);
+    if (this.scope === NodeVariant.Alpha) {
+      return this.#setupAlpha(clippingContext.planes, numClippingPlanes, numUnionClippingPlanes);
     } else {
-      return this.setupDefault(clippingContext.planes, numClippingPlanes, numUnionClippingPlanes);
+      return this.#setupDistance(clippingContext.planes, numClippingPlanes, numUnionClippingPlanes);
     }
   }
 
-  setupAlphaToCoverage(planes, numClippingPlanes, numUnionClippingPlanes) {
+  #setupAlpha(planes: Vec4[], numClippingPlanes: number, numUnionClippingPlanes: number): Node {
     return tslFn(() => {
       const clippingPlanes = uniforms(planes);
-
       const distanceToPlane = property('f32', 'distanceToPlane');
       const distanceGradient = property('f32', 'distanceToGradient');
-
       const clipOpacity = property('f32', 'clipOpacity');
-
       clipOpacity.assign(1);
 
       let plane;
-
       loop(numUnionClippingPlanes, ({ i }) => {
         plane = clippingPlanes.element(i);
 
@@ -73,12 +69,11 @@ class ClippingNode extends Node {
       }
 
       diffuseColor.a.mulAssign(clipOpacity);
-
       diffuseColor.a.equal(0.0).discard();
     })();
   }
 
-  setupDefault(planes, numClippingPlanes, numUnionClippingPlanes) {
+  #setupDistance(planes: Vec4[], numClippingPlanes: number, numUnionClippingPlanes: number): Node {
     return tslFn(() => {
       const clippingPlanes = uniforms(planes);
 
@@ -88,7 +83,6 @@ class ClippingNode extends Node {
         plane = clippingPlanes.element(i);
         positionView.dot(plane.xyz).greaterThan(plane.w).discard();
       });
-
       if (numUnionClippingPlanes < numClippingPlanes) {
         const clipped = property('bool', 'clipped');
 
@@ -105,11 +99,10 @@ class ClippingNode extends Node {
   }
 }
 
-ClippingNode.ALPHA_TO_COVERAGE = 'alphaToCoverage';
-ClippingNode.DEFAULT = 'default';
+enum NodeVariant {
+  Distance = 'distance',
+  Alpha = 'alpha',
+}
 
-export default ClippingNode;
-
-export const clipping = () => asNode(new ClippingNode());
-
-export const clippingAlpha = () => asNode(new ClippingNode(ClippingNode.ALPHA_TO_COVERAGE));
+export const clipping = () => asNode(new ClippingNode(NodeVariant.Distance));
+export const clippingAlpha = () => asNode(new ClippingNode(NodeVariant.Alpha));

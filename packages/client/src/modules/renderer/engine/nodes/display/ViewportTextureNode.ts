@@ -3,7 +3,7 @@ import { NodeUpdateType } from '../core/constants.js';
 import { addNodeElement, proxyNode } from '../shadernode/ShaderNodes.js';
 import { viewportTopLeft } from './ViewportNode.js';
 import { FramebufferTexture, MinificationTextureFilter, Vec2 } from '@modules/renderer/engine/engine.js';
-import NodeFrame from '@modules/renderer/engine/nodes/core/NodeFrame.js';
+import { NodeFrame } from '@modules/renderer/engine/nodes/core/NodeFrame.js';
 
 const _size = Vec2.new();
 

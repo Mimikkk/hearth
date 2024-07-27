@@ -72,7 +72,7 @@ export const proxyNode =
   (...params: any[]): InstanceType<T> =>
     asNode(new NodeClass(...asNodes(params))) as InstanceType<T>;
 
-export const fixedNode = <T extends new (...params: Node[]) => any>(NodeClass: T, ...params: Node[]): InstanceType<T> =>
+export const fixedNode = <T extends new (...params: any) => any>(NodeClass: T, ...params: Node[]): InstanceType<T> =>
   asNode(new NodeClass(...asNodes(params))) as InstanceType<T>;
 
 export const element = proxyNode(ArrayElementNode);

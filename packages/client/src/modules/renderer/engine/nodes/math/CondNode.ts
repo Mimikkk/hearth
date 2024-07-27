@@ -1,4 +1,4 @@
-import Node from '../core/Node.js';
+import { Node } from '../core/Node.js';
 import { property } from '../core/PropertyNode.js';
 import { context as contextNode } from '../core/ContextNode.js';
 import { addNodeElement, proxyNode } from '../shadernode/ShaderNodes.js';

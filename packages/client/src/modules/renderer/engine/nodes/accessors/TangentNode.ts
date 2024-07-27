@@ -1,4 +1,4 @@
-import Node from '../core/Node.js';
+import { Node } from '../core/Node.js';
 import { attribute } from '../core/AttributeNode.js';
 import { temp } from '../core/VarNode.js';
 import { varying } from '../core/VaryingNode.js';
