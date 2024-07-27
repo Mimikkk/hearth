@@ -107,6 +107,7 @@ export class NodeBuilder {
     keywords: NodeKeywords;
     material: Material | null;
     vertex?: Node;
+    label?: string;
   };
   cache: NodeCache;
   globalCache: NodeCache;
@@ -307,7 +308,7 @@ export class NodeBuilder {
   }
 
   hasGeometryAttribute(name: string): boolean {
-    return this.geometry && this.geometry.getAttribute(name) !== undefined;
+    return this.geometry?.getAttribute(name) !== undefined;
   }
 
   getAttribute(name: string, type: TypeName): NodeAttribute {

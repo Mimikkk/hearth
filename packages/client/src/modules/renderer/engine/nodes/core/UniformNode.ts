@@ -1,10 +1,10 @@
-import InputNode from './InputNode.js';
+import { InputNode } from './InputNode.js';
 import { Node } from '../core/Node.js';
 import { objectGroup } from './UniformGroupNode.js';
 import { asNode } from '../shadernode/ShaderNodes.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { UniformGroupNode } from '@modules/renderer/engine/nodes/Nodes.js';
-import NodeBuilder from 'three/examples/jsm/nodes/core/NodeBuilder.js';
+import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 
 export const getConstNodeType = (value?: any | null) =>
   value !== undefined && value !== null
@@ -13,13 +13,10 @@ export const getConstNodeType = (value?: any | null) =>
 
 export class UniformNode<T> extends InputNode<T> {
   static type = 'UniformNode';
-  declare isUniformNode: true;
   groupNode: UniformGroupNode;
 
   constructor(value: T, type: TypeName | null = null) {
     super(value, type);
-
-    this.isUniformNode = true;
     this.groupNode = objectGroup;
   }
 
@@ -27,16 +24,14 @@ export class UniformNode<T> extends InputNode<T> {
     return this.getHash(builder);
   }
 
-  generate(builder: NodeBuilder, output: any) {
+  generate(builder: NodeBuilder, output: TypeName): string {
     const type = this.getNodeType(builder);
 
     const hash = this.getUniformHash(builder);
 
     let sharedNode = builder.hashNodes[hash];
-
     if (sharedNode === undefined) {
       builder.hashNodes[hash] = this;
-
       sharedNode = this;
     }
 
@@ -48,21 +43,19 @@ export class UniformNode<T> extends InputNode<T> {
       builder.shaderStage,
       builder.context.label,
     );
-    const propertyName = builder.getPropertyName(nodeUniform);
 
+    const propertyName = builder.getPropertyName(nodeUniform);
     if (builder.context.label !== undefined) delete builder.context.label;
 
     return builder.format(propertyName, type, output);
   }
 }
 
-UniformNode.prototype.isUniformNode = true;
-
 export default UniformNode;
 
 export const uniform = <T>(v: Node | T, maybeType?: TypeName): UniformNode<T> => {
   const type = getConstNodeType(maybeType ?? v);
-  const value = Node.is(v) ? v.node?.value ?? v.value : v;
+  const value = Node.is(v) ? (v.node?.value ?? v.value) : v;
 
   return asNode(new UniformNode(value, type));
 };

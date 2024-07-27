@@ -8,7 +8,7 @@ import { fixedNode } from '../shadernode/ShaderNodes.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 
-class BitangentNode extends Node {
+export class BitangentNode extends Node {
   static type = 'BitangentNode';
   scope: NodeVariant;
 

@@ -117,7 +117,7 @@ export class Node {
     return nodeFromHash || this;
   }
 
-  setup(builder: NodeBuilder): Node | null {
+  setup(builder: NodeBuilder): Node | null | void {
     const nodeProperties = builder.getNodeProperties(this);
 
     for (const childNode of this.getChildren()) {

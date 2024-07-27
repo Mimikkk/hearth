@@ -1,4 +1,4 @@
-import Node from '../core/Node.js';
+import { Node } from '../core/Node.js';
 import { NodeUpdateType } from '../core/constants.js';
 import { asNode } from '../shadernode/ShaderNodes.js';
 import { attribute } from '../core/AttributeNode.js';
@@ -9,50 +9,56 @@ import { positionLocal } from './PositionNode.js';
 import { tangentLocal } from './TangentNode.js';
 import { uniform } from '../core/UniformNode.js';
 import { buffer } from './BufferNode.js';
+import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
+import { SkinnedMesh } from '@modules/renderer/engine/objects/SkinnedMesh.js';
+import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
+import NodeFrame from '@modules/renderer/engine/nodes/core/NodeFrame.js';
+import { AttributeNode } from '@modules/renderer/engine/nodes/Nodes.js';
 
-class SkinningNode extends Node {
+export class SkinningNode extends Node {
   static type = 'SkinningNode';
+  skinIndexNode: AttributeNode;
+  skinWeightNode: AttributeNode;
+  bindMatrixNode: Node;
+  bindMatrixInverseNode: Node;
+  boneMatricesNode: Node;
 
-  constructor(skinnedMesh, useReference = false) {
-    super('void');
-
-    this.skinnedMesh = skinnedMesh;
-    this.useReference = useReference;
+  constructor(
+    public skinnedMesh: SkinnedMesh,
+    public useReference: boolean,
+  ) {
+    super(TypeName.void);
 
     this.updateType = NodeUpdateType.Object;
-
-    //
-
     this.skinIndexNode = attribute('skinIndex', 'uvec4');
     this.skinWeightNode = attribute('skinWeight', 'vec4');
 
-    let bindMatrixNode, bindMatrixInverseNode, boneMatricesNode;
-
     if (useReference) {
-      bindMatrixNode = reference('bindMatrix', 'mat4');
-      bindMatrixInverseNode = reference('bindMatrixInverse', 'mat4');
-      boneMatricesNode = referenceBuffer('skeleton.boneMatrices', 'mat4', skinnedMesh.skeleton.bones.length);
+      this.bindMatrixNode = reference('bindMatrix', TypeName.mat4);
+      this.bindMatrixInverseNode = reference('bindMatrixInverse', TypeName.mat4);
+      this.boneMatricesNode = referenceBuffer(
+        'skeleton.boneMatrices',
+        TypeName.mat4,
+        skinnedMesh.skeleton.bones.length,
+      );
     } else {
-      bindMatrixNode = uniform(skinnedMesh.bindMatrix, 'mat4');
-      bindMatrixInverseNode = uniform(skinnedMesh.bindMatrixInverse, 'mat4');
-      boneMatricesNode = buffer(skinnedMesh.skeleton.boneMatrices, 'mat4', skinnedMesh.skeleton.bones.length);
+      this.bindMatrixNode = uniform(skinnedMesh.bindMatrix, TypeName.mat4);
+      this.bindMatrixInverseNode = uniform(skinnedMesh.bindMatrixInverse, TypeName.mat4);
+      this.boneMatricesNode = buffer(
+        skinnedMesh.skeleton.boneMatrices,
+        TypeName.mat4,
+        skinnedMesh.skeleton.bones.length,
+      );
     }
-
-    this.bindMatrixNode = bindMatrixNode;
-    this.bindMatrixInverseNode = bindMatrixInverseNode;
-    this.boneMatricesNode = boneMatricesNode;
   }
 
-  setup(builder) {
+  setup(builder: NodeBuilder): void {
     const { skinIndexNode, skinWeightNode, bindMatrixNode, bindMatrixInverseNode, boneMatricesNode } = this;
 
     const boneMatX = boneMatricesNode.element(skinIndexNode.x);
     const boneMatY = boneMatricesNode.element(skinIndexNode.y);
     const boneMatZ = boneMatricesNode.element(skinIndexNode.z);
     const boneMatW = boneMatricesNode.element(skinIndexNode.w);
-
-    // POSITION
-
     const skinVertex = bindMatrixNode.mul(positionLocal);
 
     const skinned = add(
@@ -63,9 +69,6 @@ class SkinningNode extends Node {
     );
 
     const skinPosition = bindMatrixInverseNode.mul(skinned).xyz;
-
-    // NORMAL
-
     let skinMatrix = add(
       skinWeightNode.x.mul(boneMatX),
       skinWeightNode.y.mul(boneMatY),
@@ -77,30 +80,25 @@ class SkinningNode extends Node {
 
     const skinNormal = skinMatrix.transformDirection(normalLocal).xyz;
 
-    // ASSIGNS
-
     positionLocal.assign(skinPosition);
     normalLocal.assign(skinNormal);
 
-    if (builder.hasGeometryAttribute('tangent')) {
-      tangentLocal.assign(skinNormal);
-    }
+    if (builder.hasGeometryAttribute('tangent')) tangentLocal.assign(skinNormal);
   }
 
-  generate(builder, output) {
-    if (output !== 'void') {
-      return positionLocal.build(builder, output);
-    }
+  generate(builder: NodeBuilder, output: TypeName): string | null {
+    if (output !== TypeName.void) return positionLocal.build(builder, output);
+    return null;
   }
 
-  update(frame) {
+  update(frame: NodeFrame): void {
     const object = this.useReference ? frame.object : this.skinnedMesh;
 
-    object.skeleton.update();
+    object.skeleton!.update();
   }
 }
 
 export default SkinningNode;
 
-export const skinning = skinnedMesh => asNode(new SkinningNode(skinnedMesh));
-export const skinningReference = skinnedMesh => asNode(new SkinningNode(skinnedMesh, true));
+export const skinning = (skinnedMesh: SkinnedMesh) => asNode(new SkinningNode(skinnedMesh, false));
+export const skinningReference = (skinnedMesh: SkinnedMesh) => asNode(new SkinningNode(skinnedMesh, true));

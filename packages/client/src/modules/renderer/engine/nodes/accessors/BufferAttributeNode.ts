@@ -4,8 +4,9 @@ import { addNodeElement, asNode } from '../shadernode/ShaderNodes.js';
 import { Buffer, BufferAttribute, BufferUse } from '@modules/renderer/engine/engine.js';
 import { ShaderStage } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { BufferStep } from '@modules/renderer/engine/renderers/constants.js';
+import BufferNode from '@modules/renderer/engine/nodes/accessors/BufferNode.js';
 
-class BufferAttributeNode extends InputNode {
+export class BufferAttributeNode extends InputNode {
   static type = 'BufferAttributeNode';
 
   constructor(value, bufferType = null, bufferStride = 0, bufferOffset = 0) {
@@ -95,12 +96,14 @@ export default BufferAttributeNode;
 
 export const bufferAttribute = (array, type, stride, offset) =>
   asNode(new BufferAttributeNode(array, type, stride, offset));
+
 export const dynamicBufferAttribute = (array, type, stride, offset) =>
   bufferAttribute(array, type, stride, offset).setUsage(BufferUse.DynamicDraw);
 
 export const instancedBufferAttribute = (array, type, stride, offset) =>
   bufferAttribute(array, type, stride, offset).setInstanced(true);
+
 export const instancedDynamicBufferAttribute = (array, type, stride, offset) =>
   dynamicBufferAttribute(array, type, stride, offset).setInstanced(true);
 
-addNodeElement('toAttribute', bufferNode => bufferAttribute(bufferNode.value));
+addNodeElement('toAttribute', (bufferNode: BufferNode) => bufferAttribute(bufferNode.value));
