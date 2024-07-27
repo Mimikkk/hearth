@@ -1,6 +1,7 @@
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { Quaternion } from '../math/Quaternion.js';
 import { Audio } from './Audio.js';
+import { AudioListener } from '@modules/renderer/engine/audio/AudioListener.js';
 
 const _position = Vec3.new();
 const _quaternion = Quaternion.new();
@@ -18,20 +19,20 @@ export class PositionalAudio extends Audio<PannerNode> {
     this.panner.connect(this.gain);
   }
 
-  connect() {
-    super.connect();
-
-    this.panner.connect(this.gain);
-  }
-
-  disconnect() {
-    super.disconnect();
-
-    this.panner.disconnect(this.gain);
-  }
-
-  getOutput(): PannerNode {
+  override getOutput(): PannerNode {
     return this.panner;
+  }
+
+  override connect(): this {
+    super.connect();
+    this.panner.connect(this.gain);
+    return this;
+  }
+
+  override disconnect(): this {
+    super.disconnect();
+    this.panner.disconnect(this.gain);
+    return this;
   }
 
   getRefDistance(): number {
@@ -82,7 +83,7 @@ export class PositionalAudio extends Audio<PannerNode> {
     return this;
   }
 
-  updateMatrixWorld(force?: boolean): this {
+  override updateMatrixWorld(force?: boolean): this {
     super.updateMatrixWorld(force);
 
     if (this.hasPlaybackControl === true && this.isPlaying === false) return this;

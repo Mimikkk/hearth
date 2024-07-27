@@ -78,7 +78,7 @@ export class AudioListener extends Entity {
     const listener = this.context.listener;
     const up = this.up;
 
-    this.timeDelta = this._clock.delta();
+    this.timeDelta = this._clock.delta;
 
     this.matrixWorld.decompose(_position, _quaternion, _scale);
 

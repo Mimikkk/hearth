@@ -1,10 +1,13 @@
 import { Entity } from '../core/Entity.js';
 import type { AudioListener } from './AudioListener.js';
 
-class Audio extends Entity {
+export abstract class Audio<T extends AudioNode = any> extends Entity {
+  type: 'Audio' = 'Audio';
   listener: AudioListener;
   context: AudioContext;
+
   gain: GainNode;
+
   autoplay: boolean;
   buffer: AudioBuffer | null;
   detune: number;
@@ -26,16 +29,12 @@ class Audio extends Entity {
   constructor(listener: AudioListener) {
     super();
 
-    this.type = 'Audio';
-
     this.listener = listener;
     this.context = listener.context;
-
     this.gain = this.context.createGain();
     this.gain.connect(listener.getInput());
 
     this.autoplay = false;
-
     this.buffer = null;
     this.detune = 0;
     this.loop = false;
@@ -52,13 +51,10 @@ class Audio extends Entity {
     this._startedAt = 0;
     this._progress = 0;
     this._connected = false;
-
     this.filters = [];
   }
 
-  getOutput(): GainNode {
-    return this.gain;
-  }
+  abstract getOutput(): T;
 
   setNodeSource(audioNode: AudioScheduledSourceNode): this {
     this.hasPlaybackControl = false;
@@ -332,5 +328,3 @@ class Audio extends Entity {
     return this;
   }
 }
-
-export { Audio };
