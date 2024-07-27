@@ -1,8 +1,8 @@
 import { Sphere } from '../../../math/Sphere.js';
 import { Vec3 } from '../../../math/Vec3.js';
-import { BufferAttribute } from '../../../core/attributes/BufferAttribute.js';
+import { BufferAttribute } from '../../../core/BufferAttribute.js';
 import { Geometry } from '../../../core/Geometry.js';
-import { Buffer } from '../../../core/buffers/Buffer.js';
+import { Buffer } from '../../../core/Buffer.js';
 import { createTypedArray } from '@modules/renderer/engine/math/MathUtils.js';
 import { BufferStep } from '@modules/renderer/engine/renderers/constants.js';
 

@@ -1,5 +1,5 @@
 import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
-import { BufferAttribute } from '@modules/renderer/engine/core/attributes/BufferAttribute.js';
+import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
 import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
 import { Box3, Sphere, Vec3 } from '@modules/renderer/engine/engine.js';
 import { BufferStep } from '@modules/renderer/engine/renderers/constants.js';

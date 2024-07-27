@@ -4,7 +4,7 @@ import { Entity } from '../../core/Entity.js';
 import { Mesh } from '../Mesh.js';
 import { MeshBasicMaterial } from '@modules/renderer/engine/objects/materials/MeshBasicMaterial.js';
 import { OctahedronGeometry } from '../geometries/OctahedronGeometry.js';
-import { BufferAttribute } from '@modules/renderer/engine/core/attributes/BufferAttribute.js';
+import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
 import { HemisphereLight } from '@modules/renderer/engine/objects/lights/HemisphereLight.js';
 
 const _vector = Vec3.new();

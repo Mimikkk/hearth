@@ -9,7 +9,7 @@ import { Side } from '../constants.js';
 import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
 import { Material } from '@modules/renderer/engine/objects/materials/Material.js';
 import { Intersection, Raycaster } from '../core/Raycaster.js';
-import { BufferAttribute } from '@modules/renderer/engine/core/attributes/BufferAttribute.js';
+import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
 
 export class Mesh extends Entity {
   declare isMesh: true;

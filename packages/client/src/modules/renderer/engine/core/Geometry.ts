@@ -1,7 +1,7 @@
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 import { Box3 } from '../math/Box3.js';
-import { BufferAttribute } from './attributes/BufferAttribute.js';
+import { BufferAttribute } from './BufferAttribute.js';
 import { Sphere } from '../math/Sphere.js';
 import { Entity } from './Entity.js';
 import { Mat4 } from '../math/Mat4.js';

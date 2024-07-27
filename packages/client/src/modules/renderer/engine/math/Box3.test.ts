@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { Box3 } from './Box3.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
-import { BufferAttribute } from '@modules/renderer/engine/core/attributes/BufferAttribute.js';
+import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
 import { Mesh } from '@modules/renderer/engine/objects/Mesh.js';
 import { BoxGeometry } from '@modules/renderer/engine/objects/geometries/BoxGeometry.js';
 import { SphereGeometry } from '@modules/renderer/engine/objects/geometries/SphereGeometry.js';

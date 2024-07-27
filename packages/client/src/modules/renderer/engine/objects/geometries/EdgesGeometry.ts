@@ -1,5 +1,5 @@
 import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
-import { BufferAttribute } from '@modules/renderer/engine/core/attributes/BufferAttribute.js';
+import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
 import * as MathUtils from '@modules/renderer/engine/math/MathUtils.js';
 import { Triangle } from '@modules/renderer/engine/math/Triangle.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';

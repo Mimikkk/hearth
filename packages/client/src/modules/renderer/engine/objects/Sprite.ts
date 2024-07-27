@@ -4,12 +4,12 @@ import { Mat4 } from '../math/Mat4.js';
 import { Triangle } from '../math/Triangle.js';
 import { Entity } from '../core/Entity.js';
 import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
-import { Buffer } from '../core/buffers/Buffer.js';
+import { Buffer } from '../core/Buffer.js';
 import { SpriteMaterial } from '@modules/renderer/engine/objects/materials/SpriteMaterial.js';
 import { Intersection, Raycaster } from '../core/Raycaster.js';
 import { PerspectiveCamera } from '@modules/renderer/engine/objects/cameras/PerspectiveCamera.js';
 import { BufferStep } from '@modules/renderer/engine/renderers/constants.js';
-import { BufferAttribute } from '@modules/renderer/engine/core/attributes/BufferAttribute.js';
+import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
 
 const _intersectPoint = Vec3.new();
 const _worldScale = Vec3.new();

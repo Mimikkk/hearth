@@ -4,7 +4,7 @@ import { LineBasicMaterial } from '@modules/renderer/engine/objects/materials/Li
 import { Color } from '../../math/Color.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
-import { BufferAttribute } from '@modules/renderer/engine/core/attributes/BufferAttribute.js';
+import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
 import { Entity } from '@modules/renderer/engine/core/Entity.js';
 import { Bone } from '@modules/renderer/engine/objects/Bone.js';
 

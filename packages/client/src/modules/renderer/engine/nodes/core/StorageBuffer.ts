@@ -1,5 +1,5 @@
 import NodeBuffer from '../../renderers/NodeBuffer.js';
-import { BufferAttribute } from '@modules/renderer/engine/core/attributes/BufferAttribute.js';
+import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
 import { TypedArray } from '@modules/renderer/engine/math/MathUtils.js';
 
 class StorageBuffer<T extends TypedArray> extends NodeBuffer {

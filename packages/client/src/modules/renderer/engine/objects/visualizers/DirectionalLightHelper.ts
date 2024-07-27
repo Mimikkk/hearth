@@ -1,7 +1,7 @@
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { Entity } from '../../core/Entity.js';
 import { Line } from '../Line.js';
-import { BufferAttribute } from '@modules/renderer/engine/core/attributes/BufferAttribute.js';
+import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
 import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
 import { LineBasicMaterial } from '@modules/renderer/engine/objects/materials/LineBasicMaterial.js';
 import { DirectionalLight } from '@modules/renderer/engine/objects/lights/DirectionalLight.js';

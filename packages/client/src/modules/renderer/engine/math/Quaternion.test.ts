@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { Quaternion, QuaternionArray } from './Quaternion.js';
 import { Euler } from './Euler.js';
-import { BufferAttribute } from '@modules/renderer/engine/core/attributes/BufferAttribute.js';
+import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
 import { Vec3 } from './Vec3.js';
 import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
 

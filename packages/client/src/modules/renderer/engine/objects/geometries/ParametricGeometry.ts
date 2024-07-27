@@ -1,6 +1,6 @@
 import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
-import { BufferAttribute } from '@modules/renderer/engine/core/attributes/BufferAttribute.js';
+import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
 
 export class ParametricGeometry extends Geometry {
   declare type: string | 'ParametricGeometry';

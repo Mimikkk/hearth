@@ -1,7 +1,7 @@
 import { Box3 } from '../../math/Box3.js';
 import { LineSegments } from '../LineSegments.js';
 import { LineBasicMaterial } from '@modules/renderer/engine/objects/materials/LineBasicMaterial.js';
-import { BufferAttribute } from '@modules/renderer/engine/core/attributes/BufferAttribute.js';
+import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
 import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
 import { Entity } from '@modules/renderer/engine/core/Entity.js';
 

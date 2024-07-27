@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { Vec2 } from './Vec2.js';
 import { Mat3 } from '@modules/renderer/engine/math/Mat3.js';
-import { BufferAttribute } from '@modules/renderer/engine/core/attributes/BufferAttribute.js';
+import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
 
 describe('Math - Vec2', () => {
   it('Instancing', () => {

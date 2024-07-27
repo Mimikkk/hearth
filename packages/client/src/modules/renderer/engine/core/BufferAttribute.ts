@@ -1,10 +1,10 @@
-import { Vec3 } from '../../math/Vec3.js';
-import { Vec2 } from '../../math/Vec2.js';
-import { NumberArray, TypedArray } from '../../math/MathUtils.js';
-import { BufferUse } from '../../constants.js';
+import { Vec3 } from '../math/Vec3.js';
+import { Vec2 } from '../math/Vec2.js';
+import { NumberArray, TypedArray } from '../math/MathUtils.js';
+import { BufferUse } from '../constants.js';
 import { Mat3 } from '@modules/renderer/engine/math/Mat3.js';
 import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
-import { Buffer } from '../buffers/Buffer.js';
+import { Buffer } from './Buffer.js';
 import { Const } from '@modules/renderer/engine/math/types.js';
 import { GPUBufferBindingTypeType, BufferStep } from '@modules/renderer/engine/renderers/constants.js';
 

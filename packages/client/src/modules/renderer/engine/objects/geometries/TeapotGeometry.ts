@@ -2,7 +2,7 @@ import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
 import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { Vec4 } from '@modules/renderer/engine/math/Vec4.js';
-import { BufferAttribute } from '@modules/renderer/engine/core/attributes/BufferAttribute.js';
+import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
 
 export class TeapotGeometry extends Geometry {
   constructor(

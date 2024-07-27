@@ -1,4 +1,4 @@
-import { BufferAttribute } from '@modules/renderer/engine/core/attributes/BufferAttribute.js';
+import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
 import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
 import { Entity } from '../../core/Entity.js';
 import { CylinderGeometry } from '../geometries/CylinderGeometry.js';

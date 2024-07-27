@@ -4,7 +4,7 @@ import { LineSegments } from '../LineSegments.js';
 import { Color } from '../../math/Color.js';
 import { LineBasicMaterial } from '@modules/renderer/engine/objects/materials/LineBasicMaterial.js';
 import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
-import { BufferAttribute } from '@modules/renderer/engine/core/attributes/BufferAttribute.js';
+import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
 import { PerspectiveCamera } from '@modules/renderer/engine/objects/cameras/PerspectiveCamera.js';
 import { OrthographicCamera } from '@modules/renderer/engine/objects/cameras/OrthographicCamera.js';
 
