@@ -1,32 +1,3 @@
-// Characters [].:/ are reserved for track binding syntax.
-const _RESERVED_CHARS_RE = '\\[\\]\\.:\\/';
-const _reservedRe = new RegExp('[' + _RESERVED_CHARS_RE + ']', 'g');
-
-// Attempts to allow node names from any language. ES5's `\w` regexp matches
-// only latin characters, and the unicode \p{L} is not yet supported. So
-// instead, we exclude reserved characters and match everything else.
-const _wordChar = '[^' + _RESERVED_CHARS_RE + ']';
-const _wordCharOrDot = '[^' + _RESERVED_CHARS_RE.replace('\\.', '') + ']';
-
-// Parent directories, delimited by '/' or ':'. Currently unused, but must
-// be matched to parse the rest of the track name.
-const _directoryRe = /((?:WC+[\/:])*)/.source.replace('WC', _wordChar);
-
-// Target node. May contain word characters (a-zA-Z0-9_) and '.' or '-'.
-const _nodeRe = /(WCOD+)?/.source.replace('WCOD', _wordCharOrDot);
-
-// Object on target node, and accessor. May not contain reserved
-// characters. Accessor may contain any character except closing bracket.
-const _objectRe = /(?:\.(WC+)(?:\[(.+)\])?)?/.source.replace('WC', _wordChar);
-
-// Property and accessor. May not contain reserved characters. Accessor may
-// contain any non-bracket characters.
-const _propertyRe = /\.(WC+)(?:\[(.+)\])?/.source.replace('WC', _wordChar);
-
-const _trackRe = new RegExp('' + '^' + _directoryRe + _nodeRe + _objectRe + _propertyRe + '$');
-
-const _supportedObjectNames = ['material', 'materials', 'bones', 'map'];
-
 class Composite {
   constructor(targetGroup, path, optionalParsedPath) {
     const parsedPath = optionalParsedPath || PropertyBinding.parseTrackName(path);
@@ -71,6 +42,8 @@ class Composite {
 }
 
 export class PropertyBinding {
+  static Composite = Composite;
+
   constructor(rootNode, path, parsedPath) {
     this.path = path;
     this.parsedPath = parsedPath || PropertyBinding.parseTrackName(path);
@@ -100,11 +73,11 @@ export class PropertyBinding {
    * @return {string}
    */
   static sanitizeNodeName(name) {
-    return name.replace(/\s/g, '_').replace(_reservedRe, '');
+    return name.replace(/\s/g, '_').replace(ReservedRe, '');
   }
 
   static parseTrackName(trackName) {
-    const matches = _trackRe.exec(trackName);
+    const matches = TrackRe.exec(trackName);
 
     if (matches === null) {
       throw new Error('PropertyBinding: Cannot parse trackName: ' + trackName);
@@ -128,7 +101,7 @@ export class PropertyBinding {
       // is no way to parse 'foo.bar.baz': 'baz' must be a property, but
       // 'bar' could be the objectName, or part of a nodeName (which can
       // include '.' characters).
-      if (_supportedObjectNames.indexOf(objectName) !== -1) {
+      if (SupportedObjectNames.indexOf(objectName) !== -1) {
         results.nodeName = results.nodeName.substring(0, lastDot);
         results.objectName = objectName;
       }
@@ -437,22 +410,22 @@ export class PropertyBinding {
     }
 
     // determine versioning scheme
-    let versioning = this.Versioning.None;
+    let versioning = Version.None;
 
     this.targetObject = targetObject;
 
     if (targetObject.needsUpdate !== undefined) {
       // material
 
-      versioning = this.Versioning.NeedsUpdate;
+      versioning = Version.NeedsUpdate;
     } else if (targetObject.matrixWorldNeedsUpdate !== undefined) {
       // node transform
 
-      versioning = this.Versioning.MatrixWorldNeedsUpdate;
+      versioning = Version.MatrixWorldNeedsUpdate;
     }
 
     // determine how the property gets bound
-    let bindingType = this.BindingType.Direct;
+    let bindingType = BindType.Direct;
 
     if (propertyIndex !== undefined) {
       // access a sub element of the property array (only primitives are supported right now)
@@ -482,18 +455,18 @@ export class PropertyBinding {
         }
       }
 
-      bindingType = this.BindingType.ArrayElement;
+      bindingType = BindType.ArrayElement;
 
       this.resolvedProperty = nodeProperty;
       this.propertyIndex = propertyIndex;
     } else if (nodeProperty.fromArray !== undefined && nodeProperty.intoArray !== undefined) {
       // must use copy for Entity.Euler/Quaternion
 
-      bindingType = this.BindingType.HasFromToArray;
+      bindingType = BindType.HasFromToArray;
 
       this.resolvedProperty = nodeProperty;
     } else if (Array.isArray(nodeProperty)) {
-      bindingType = this.BindingType.EntireArray;
+      bindingType = BindType.EntireArray;
 
       this.resolvedProperty = nodeProperty;
     } else {
@@ -501,8 +474,8 @@ export class PropertyBinding {
     }
 
     // select getter / setter
-    this.getValue = this.GetterByBindingType[bindingType];
-    this.setValue = this.SetterByBindingTypeAndVersioning[bindingType][versioning];
+    this.getValue = GetterByBindingType[bindingType];
+    this.setValue = SetterByBindingTypeAndVersioning[bindingType][versioning];
   }
 
   unbind() {
@@ -515,52 +488,57 @@ export class PropertyBinding {
   }
 }
 
-PropertyBinding.Composite = Composite;
+const ReservedCharactersRe = '\\[\\]\\.:\\/';
 
-PropertyBinding.prototype.BindingType = {
-  Direct: 0,
-  EntireArray: 1,
-  ArrayElement: 2,
-  HasFromToArray: 3,
+const ReservedRe = new RegExp(`[${ReservedCharactersRe}]`, 'g');
+const WordChar = `[^${ReservedCharactersRe}]`;
+const WordCharOrDot = `[^${ReservedCharactersRe.replace('\\.', '')}]`;
+const DirectoryRe = /((?:WC+[\/:])*)/.source.replace('WC', WordChar);
+const NodeRe = /(WCOD+)?/.source.replace('WCOD', WordCharOrDot);
+const ObjectRe = /(?:\.(WC+)(?:\[(.+)])?)?/.source.replace('WC', WordChar);
+const PropertyRe = /\.(WC+)(?:\[(.+)])?/.source.replace('WC', WordChar);
+const TrackRe = new RegExp('' + '^' + DirectoryRe + NodeRe + ObjectRe + PropertyRe + '$');
+
+const SupportedObjectNames = ['material', 'materials', 'bones', 'map'];
+
+enum BindType {
+  Direct = 0,
+  EntireArray = 1,
+  ArrayElement = 2,
+  HasFromToArray = 3,
+}
+
+enum Version {
+  None = 0,
+  NeedsUpdate = 1,
+  MatrixWorldNeedsUpdate = 2,
+}
+
+const GetterByBindingType = {
+  [BindType.Direct]: PropertyBinding.prototype._getValue_direct,
+  [BindType.EntireArray]: PropertyBinding.prototype._getValue_array,
+  [BindType.ArrayElement]: PropertyBinding.prototype._getValue_arrayElement,
+  [BindType.HasFromToArray]: PropertyBinding.prototype._getValue_toArray,
 };
-
-PropertyBinding.prototype.Versioning = {
-  None: 0,
-  NeedsUpdate: 1,
-  MatrixWorldNeedsUpdate: 2,
+const SetterByBindingTypeAndVersioning = {
+  [BindType.Direct]: {
+    [Version.None]: PropertyBinding.prototype._setValue_direct,
+    [Version.NeedsUpdate]: PropertyBinding.prototype._setValue_direct_setNeedsUpdate,
+    [Version.MatrixWorldNeedsUpdate]: PropertyBinding.prototype._setValue_direct_setMatrixWorldNeedsUpdate,
+  },
+  [BindType.EntireArray]: {
+    [Version.None]: PropertyBinding.prototype._setValue_array,
+    [Version.NeedsUpdate]: PropertyBinding.prototype._setValue_array_setNeedsUpdate,
+    [Version.MatrixWorldNeedsUpdate]: PropertyBinding.prototype._setValue_array_setMatrixWorldNeedsUpdate,
+  },
+  [BindType.ArrayElement]: {
+    [Version.None]: PropertyBinding.prototype._setValue_arrayElement,
+    [Version.NeedsUpdate]: PropertyBinding.prototype._setValue_arrayElement_setNeedsUpdate,
+    [Version.MatrixWorldNeedsUpdate]: PropertyBinding.prototype._setValue_arrayElement_setMatrixWorldNeedsUpdate,
+  },
+  [BindType.HasFromToArray]: {
+    [Version.None]: PropertyBinding.prototype._setValue_fromArray,
+    [Version.NeedsUpdate]: PropertyBinding.prototype._setValue_fromArray_setNeedsUpdate,
+    [Version.MatrixWorldNeedsUpdate]: PropertyBinding.prototype._setValue_fromArray_setMatrixWorldNeedsUpdate,
+  },
 };
-
-PropertyBinding.prototype.GetterByBindingType = [
-  PropertyBinding.prototype._getValue_direct,
-  PropertyBinding.prototype._getValue_array,
-  PropertyBinding.prototype._getValue_arrayElement,
-  PropertyBinding.prototype._getValue_toArray,
-];
-
-PropertyBinding.prototype.SetterByBindingTypeAndVersioning = [
-  [
-    // Direct
-    PropertyBinding.prototype._setValue_direct,
-    PropertyBinding.prototype._setValue_direct_setNeedsUpdate,
-    PropertyBinding.prototype._setValue_direct_setMatrixWorldNeedsUpdate,
-  ],
-  [
-    // EntireArray
-
-    PropertyBinding.prototype._setValue_array,
-    PropertyBinding.prototype._setValue_array_setNeedsUpdate,
-    PropertyBinding.prototype._setValue_array_setMatrixWorldNeedsUpdate,
-  ],
-  [
-    // ArrayElement
-    PropertyBinding.prototype._setValue_arrayElement,
-    PropertyBinding.prototype._setValue_arrayElement_setNeedsUpdate,
-    PropertyBinding.prototype._setValue_arrayElement_setMatrixWorldNeedsUpdate,
-  ],
-  [
-    // HasToFromArray
-    PropertyBinding.prototype._setValue_fromArray,
-    PropertyBinding.prototype._setValue_fromArray_setNeedsUpdate,
-    PropertyBinding.prototype._setValue_fromArray_setMatrixWorldNeedsUpdate,
-  ],
-];
