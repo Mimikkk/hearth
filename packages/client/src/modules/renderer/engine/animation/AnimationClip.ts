@@ -68,12 +68,11 @@ export class AnimationClip {
   }
 
   clone(): AnimationClip {
-    const tracks = [];
-
-    for (let i = 0; i < this.tracks.length; i++) {
-      tracks.push(this.tracks[i].clone());
-    }
-
-    return new AnimationClip(this.name, this.duration, tracks, this.blendMode);
+    return new AnimationClip(
+      this.name,
+      this.duration,
+      this.tracks.map(track => track.clone()),
+      this.blendMode,
+    );
   }
 }
