@@ -3,15 +3,16 @@
 body {
     background-color: #000;
     color: #fff;
-    font-family: Monospace;
-    font-size: 13px;
-    line-height: 24px;
-    margin: 0;
-    overscroll-behavior: none;
     @apply relative;
+    font-size: 14px;
 }
 
 #info {
+    .webgpu {
+        color: #0076cc;
+        @apply font-bold;
+    }
+
     @apply bg-accent-dark text-primary-white border border-accent-dark;
     @apply bg-opacity-50;
     @apply absolute bottom-1 right-10;
