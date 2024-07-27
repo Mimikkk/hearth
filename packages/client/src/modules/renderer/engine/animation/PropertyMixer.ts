@@ -23,7 +23,7 @@ export class PropertyMixer {
   ) => void;
   binding: PropertyBinding;
 
-  constructor(binding: PropertyBinding, type: 'quaternion' | 'string' | 'bool' | 'number', span: number) {
+  constructor(binding: PropertyBinding, type: 'quaternion' | 'string' | 'bool' | 'vector', span: number) {
     this.binding = binding;
     this.valueSize = span;
 
@@ -42,7 +42,7 @@ export class PropertyMixer {
         this._setIdentity = this._setAdditiveIdentityOther;
         this.buffer = new Array(span * 5);
         break;
-      case 'number':
+      default:
         this._mixBufferRegion = this._lerp;
         this._mixBufferRegionAdditive = this._lerpAdditive;
         this._setIdentity = this._setAdditiveIdentityNumeric;
