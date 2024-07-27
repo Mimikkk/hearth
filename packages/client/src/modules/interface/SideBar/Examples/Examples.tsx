@@ -3,7 +3,6 @@ import { createEffect, createMemo, createSignal, onCleanup, Show } from 'solid-j
 import { Search } from '@logic/Search/Search.js';
 import { createQueryable } from '@logic/createQueryable.js';
 import { ExampleNs } from '@modules/managment/exampleNs.js';
-import { PreviewButton } from '@modules/interface/SideBar/Examples/PreviewButton.js';
 import { CollapseButton } from '@modules/interface/SideBar/Examples/CollapseButton.js';
 import { Accordion, AccordionItem } from '@shared/components/control/Accordion/Accordion.jsx';
 import { Path } from 'a-path';
@@ -13,14 +12,6 @@ import { createEffectListener } from '@logic/createListener.js';
 import { ExampleName } from '@modules/renderer/examples/examples.js';
 import { Shortcut } from '@components/forms/Shortcut/Shortcut.js';
 import { ButtonIcon } from '@components/buttons/ButtonIcon/ButtonIcon.js';
-
-const FocusShortcut = () => (
-  <Shortcut class="absolute right-0 pr-1 opacity-50">
-    <Shortcut.Key border>ctrl</Shortcut.Key>
-    <Shortcut.Key border>alt</Shortcut.Key>
-    <Shortcut.Key>f</Shortcut.Key>
-  </Shortcut>
-);
 
 const flatBy = <T extends Record<string, any>>(items: T[], key: Path.Of<T, T[] | undefined>): T[] => {
   const results = [];
@@ -55,28 +46,6 @@ const findNested = (items: AccordionItem[], filtered: Set<AccordionItem>) => {
   return visible;
 };
 
-const cleanupSearch = () =>
-  Search.clears([
-    ExampleNs.Search.SelectedId,
-    ExampleNs.Search.CollapseId,
-    ExampleNs.Search.PreviewId,
-    ExampleNs.Search.QueryId,
-  ]);
-
-const createSideBarSearch = () => {
-  const [results, get, set] = createQueryable(SideBarItems, {
-    initialQuery: Search.get(ExampleNs.Search.QueryId) ?? '',
-    keys: ['title'],
-    recursiveBy: 'children',
-    threshold: 0.2,
-  });
-
-  const filtered = createMemo(() => findNested(SideBarItems, new Set(flatBy(results(), 'children'))));
-  const isFiltered = createMemo(() => filtered().length !== SideBarItems.length);
-
-  return [filtered, isFiltered, get, set] as const;
-};
-
 const CollapsedItems = flatBy(SideBarItems, 'children')
   .filter(x => !x.children)
   .sort((a, b) => a.title.localeCompare(b.title));
@@ -84,6 +53,33 @@ const CollapsedItems = flatBy(SideBarItems, 'children')
 const GoldenItems = flatBy(SideBarItems, 'children')
   .filter(x => !x.children)
   .filter(x => x.masterdisk);
+
+const FocusShortcut = () => (
+  <Shortcut class="absolute right-0 pr-1 opacity-50">
+    <Shortcut.Key border>ctrl</Shortcut.Key>
+    <Shortcut.Key border>alt</Shortcut.Key>
+    <Shortcut.Key>f</Shortcut.Key>
+  </Shortcut>
+);
+
+const cleanupSearch = () =>
+  Search.clears([ExampleNs.Search.SelectedId, ExampleNs.Search.CollapseId, ExampleNs.Search.QueryId]);
+
+const createSideBarSearch = () => {
+  const { isCollapsed } = useContent();
+  const Items = createMemo(() => (isCollapsed() ? CollapsedItems : SideBarItems));
+  const [results, get, set] = createQueryable(Items(), {
+    initialQuery: Search.get(ExampleNs.Search.QueryId) ?? '',
+    keys: ['title'],
+    recursiveBy: 'children',
+    threshold: 0.2,
+  });
+
+  const filtered = createMemo(() => findNested(Items(), new Set(flatBy(results(), 'children'))));
+  const isFiltered = createMemo(() => filtered().length !== Items().length);
+
+  return [filtered, isFiltered, get, set] as const;
+};
 
 export const Examples = () => {
   onCleanup(cleanupSearch);
@@ -149,7 +145,6 @@ export const Examples = () => {
             </span>
           </span>
           <CollapseButton />
-          <PreviewButton />
         </div>
       </div>
       <Accordion

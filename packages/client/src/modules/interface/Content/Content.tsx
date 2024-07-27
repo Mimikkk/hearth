@@ -1,14 +1,14 @@
 import { ButtonIcon } from '@components/buttons/ButtonIcon/ButtonIcon.js';
 import cx from 'clsx';
-import { SearchStorage } from '@logic/SearchStorage/SearchStorage.js';
 import { Canvas } from '@modules/interface/Content/Canvas.js';
+import { useContent } from '@modules/managment/useContent.js';
 
 interface ContentProps {
   class?: string;
 }
 
 const ShowCodeButton = () => {
-  const [showCode, , toggleCode] = SearchStorage.bool('code', 'show-code', false);
+  const { showCode, toggleCode } = useContent();
 
   return (
     <div class="absolute right-2 bottom-1.5">
