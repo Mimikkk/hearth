@@ -102,7 +102,7 @@ const sphere2 = BoundingSphereVisualizer.attach(box2);
 
 scene.add(camera, reference, box1, box2);
 
-const renderer = await Renderer.create({
+const renderer = await Renderer.as({
   animate() {
     renderer.render(scene, camera);
   },

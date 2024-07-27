@@ -54,7 +54,7 @@ const options: {
 
 let builder: NodeBuilder | null = null;
 
-const renderer = await Renderer.create();
+const renderer = await Renderer.as();
 renderer.outputColorSpace = ColorSpace.LinearSRGB;
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.animation.loop = () => renderer.render(scene, camera);

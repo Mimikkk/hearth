@@ -27,7 +27,7 @@ async function init() {
   const scene = new Engine.Scene();
   scene.add(new Engine.HemisphereLight(0xffffff, 0x443333, 2));
 
-  const renderer = await Renderer.create();
+  const renderer = await Renderer.as();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.parameters.toneMapping = Engine.ToneMapping.ACESFilmic;

@@ -263,7 +263,7 @@ async function init() {
 
   scene.backgroundNode = viewportTopLeft.distance(0.5).mul(2).mix(color(0x0f4140), color(0x060a0d));
 
-  renderer = await Renderer.create();
+  renderer = await Renderer.as();
   //
 
   viewHelper = new WorldAxesControls(camera, renderer.parameters.canvas);

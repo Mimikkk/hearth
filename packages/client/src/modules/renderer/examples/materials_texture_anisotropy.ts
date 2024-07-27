@@ -20,7 +20,7 @@ async function init() {
   container = document.createElement('div');
   document.body.appendChild(container);
 
-  renderer = await Renderer.create();
+  renderer = await Renderer.as();
 
   // RENDERER
 

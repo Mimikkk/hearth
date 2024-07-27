@@ -68,7 +68,7 @@ const createCameraView = async (container: HTMLDivElement, type: 'logarithmic' |
 
   const camera = new Engine.PerspectiveCamera(50, (screensplit * width) / height, Near, Far);
 
-  const renderer = await Renderer.create({ logarithmicDepthBuffer: type === 'logarithmic' });
+  const renderer = await Renderer.as({ logarithmicDepthBuffer: type === 'logarithmic' });
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(width / 2, height);
 

@@ -33,7 +33,7 @@ diffuseMap.generateMipmaps = false;
 const mesh = new Mesh(new PlaneGeometry(2, 2), new MeshBasicMaterial({ map: diffuseMap }));
 scene.add(mesh);
 
-const renderer = await Renderer.create({
+const renderer = await Renderer.as({
   async animate() {
     clock.tick();
 

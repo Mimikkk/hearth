@@ -94,7 +94,7 @@ const vector1 = Vec3.new();
 const vec2 = Vec3.new();
 const vec3 = Vec3.new();
 
-const renderer = await Renderer.create({ antialias: true });
+const renderer = await Renderer.as({ antialias: true });
 renderer.animation.loop = animate;
 renderer.parameters.toneMapping = ToneMapping.ACESFilmic;
 container.appendChild(renderer.parameters.canvas);

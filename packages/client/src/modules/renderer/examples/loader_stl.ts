@@ -112,7 +112,7 @@ async function init() {
   addShadowedLight(0.5, 1, -1, 0xffd500, 3);
   // renderer
 
-  renderer = await Renderer.create();
+  renderer = await Renderer.as();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.animation.loop = animate;

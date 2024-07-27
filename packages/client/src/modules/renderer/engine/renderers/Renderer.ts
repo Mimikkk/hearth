@@ -163,7 +163,7 @@ export class Renderer {
     this._handleObjectFn = this._compileObject;
   }
 
-  static async create(parameters?: Options): Promise<Renderer> {
+  static async as(parameters?: Options): Promise<Renderer> {
     const renderer = new Renderer(parameters);
     const backend = renderer.backend;
 

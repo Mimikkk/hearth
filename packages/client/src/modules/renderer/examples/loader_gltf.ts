@@ -25,7 +25,7 @@ async function init() {
 
   scene = new Scene();
 
-  renderer = await Renderer.create({
+  renderer = await Renderer.as({
     autoClear: false,
   });
 

@@ -136,7 +136,7 @@ async function init() {
   const plane = new Engine.Mesh(new Engine.PlaneGeometry(1, 1), material);
   scene.add(plane);
 
-  renderer = await Renderer.create();
+  renderer = await Renderer.as();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.animation.loop = render;

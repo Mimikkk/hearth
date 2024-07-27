@@ -139,7 +139,7 @@ async function init() {
 
   // renderer and controls
 
-  renderer = await Renderer.create();
+  renderer = await Renderer.as();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.parameters.toneMappingNode = toneMapping(Engine.ToneMapping.Linear, 1);

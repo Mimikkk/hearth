@@ -41,7 +41,7 @@ async function init() {
 
   //
 
-  renderer = await Renderer.create();
+  renderer = await Renderer.as();
   renderer.setPixelRatio(dpr);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.animation.loop = animate;

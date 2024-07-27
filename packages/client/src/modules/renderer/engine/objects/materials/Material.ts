@@ -71,6 +71,7 @@ export interface MaterialParameters {
 export class Material {
   declare isMaterial: true;
   declare type: string | 'Material';
+
   id: number;
   uuid: string;
   name: string;
@@ -115,9 +116,6 @@ export class Material {
   userData: Record<string, any>;
   version: number;
   _alphaTest: number;
-
-  declare positionNode?: Node;
-  declare fragmentNode?: Node;
 
   constructor(parameters: MaterialParameters) {
     this.id = _materialId++;
@@ -198,7 +196,7 @@ export class Material {
 
   onBeforeRender(renderer: Renderer, scene: Scene, camera: Camera, geometry: Geometry, object: Entity, group: Group) {}
 
-  onBeforeCompile(/* shaderobject, renderer */) {}
+  onBeforeCompile(shaderobject: Entity, renderer: Renderer) {}
 
   customProgramCacheKey() {
     return this.onBeforeCompile.toString();

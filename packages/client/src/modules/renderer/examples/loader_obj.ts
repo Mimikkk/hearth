@@ -53,7 +53,7 @@ async function init() {
   scene.add(object);
   //
 
-  renderer = await Renderer.create();
+  renderer = await Renderer.as();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.parameters.canvas);

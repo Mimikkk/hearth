@@ -124,7 +124,7 @@ async function init() {
   const plane = new Engine.Mesh(new Engine.PlaneGeometry(1, 1), material);
   scene.add(plane);
 
-  const renderer = await Renderer.create({ trackTimestamp: true });
+  const renderer = await Renderer.as({ trackTimestamp: true });
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
 

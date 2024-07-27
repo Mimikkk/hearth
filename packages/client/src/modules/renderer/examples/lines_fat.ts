@@ -30,7 +30,7 @@ init();
 async function init() {
   const points = GeometryUtils.generateHilbert(new Engine.Vec3(0, 0, 0), 20.0, 1, 0, 1, 2, 3, 4, 5, 6, 7);
 
-  renderer = await Renderer.create();
+  renderer = await Renderer.as();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer._clearColor = Color.new(0x000000);
   renderer.setSize(window.innerWidth, window.innerHeight);

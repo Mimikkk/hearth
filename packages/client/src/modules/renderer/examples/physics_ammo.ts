@@ -84,7 +84,7 @@ for (let i = 0; i < spheres.count; i++) {
 
 physics.addScene(scene);
 
-const renderer = await Renderer.create({ antialias: true, alpha: true });
+const renderer = await Renderer.as({ antialias: true, alpha: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.animation.loop = animate;
 document.body.appendChild(renderer.parameters.canvas);

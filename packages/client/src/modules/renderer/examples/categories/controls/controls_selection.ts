@@ -69,7 +69,7 @@ const light = createLight();
 const boxes = createBoxes();
 scene.add(light, camera, boxes);
 
-const renderer = await Renderer.create({
+const renderer = await Renderer.as({
   animate() {
     ui.update();
     stats.update();

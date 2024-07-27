@@ -16,6 +16,7 @@ import type { Renderer } from '../renderers/Renderer.js';
 import type { Sphere } from '@modules/renderer/engine/math/Sphere.js';
 import { v4 } from 'uuid';
 import type { Skeleton } from '@modules/renderer/engine/objects/Skeleton.js';
+import { AnimationClip } from '@modules/renderer/engine/animation/AnimationClip.js';
 
 const isCamera = (object: any): object is Camera => object.isCamera;
 const isLight = (object: any): object is Light => object.isLight;
@@ -61,7 +62,7 @@ export class Entity {
   receiveShadow: boolean;
   frustumCulled: boolean;
   renderOrder: number;
-  animations: any[];
+  animations: AnimationClip[];
   userData: Record<string, any>;
   count: number = 1;
 
@@ -329,18 +330,10 @@ export class Entity {
       return this;
     }
 
-    if (object === this) {
-      console.error("engine.Entity.add: object can't be added as a child of itself.", object);
-      return this;
-    }
-
-    if (object && object.isEntity) {
-      object.removeFromParent();
-      object.parent = this!;
-      this.children.push(object);
-    } else {
-      console.error('engine.Entity.add: object not an instance of engine.Entity.', object);
-    }
+    if (object === this) return this;
+    object.removeFromParent();
+    object.parent = this!;
+    this.children.push(object);
 
     return this;
   }

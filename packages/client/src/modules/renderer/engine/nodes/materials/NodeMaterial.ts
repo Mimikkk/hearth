@@ -31,12 +31,29 @@ import { NodeMaterials } from '@modules/renderer/engine/nodes/materials/NodeMate
 import { ShaderStage } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 export class NodeMaterial extends ShaderMaterial {
+  declare isNodeMaterial: true;
   static type = 'NodeMaterial';
+  colorNode?: Node | null;
+  normalNode?: Node | null;
+  opacityNode?: Node | null;
+  backdropNode?: Node | null;
+  backdropAlphaNode?: Node | null;
+  alphaTestNode?: Node | null;
+  positionNode?: Node | null;
+  depthNode?: Node | null;
+  shadowNode?: Node | null;
+  outputNode?: Node | null;
+  fragmentNode?: Node | null;
+  vertexNode?: Node | null;
+  lightsNode?: Node | null;
+  envNode?: Node | null;
+  fog: boolean;
+  lights: boolean;
+  normals: boolean;
+  colorSpaced: boolean;
 
   constructor() {
     super();
-
-    this.isNodeMaterial = true;
 
     this.type = this.constructor.type;
 
@@ -422,3 +439,5 @@ export class NodeMaterial extends ShaderMaterial {
     return nodeMaterial;
   }
 }
+
+NodeMaterial.prototype.isNodeMaterial = true;

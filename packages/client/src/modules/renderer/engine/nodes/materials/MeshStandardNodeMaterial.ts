@@ -5,54 +5,45 @@ import { materialMetalness, materialRoughness } from '../accessors/MaterialNode.
 import getRoughness from '../functions/material/getRoughness.js';
 import PhysicalLightingModel from '../functions/PhysicalLightingModel.js';
 import { f32, vec3, vec4 } from '../shadernode/ShaderNodes.js';
+import { Node } from '../core/Node.js';
 
 import { MeshStandardMaterial } from '@modules/renderer/engine/engine.js';
 
-const defaultValues = new MeshStandardMaterial();
+const _defaults = new MeshStandardMaterial();
 
 export class MeshStandardNodeMaterial extends NodeMaterial {
   static type = 'MeshStandardNodeMaterial';
+  emissiveNode: Node | null;
+  metalnessNode: Node | null;
+  roughnessNode: Node | null;
 
   constructor(parameters) {
     super();
 
-    this.isMeshStandardNodeMaterial = true;
-
     this.emissiveNode = null;
-
     this.metalnessNode = null;
     this.roughnessNode = null;
 
-    this.setDefaultValues(defaultValues);
+    this.setDefaultValues(_defaults);
 
     this.setValues(parameters);
   }
 
-  setupLightingModel(/*builder*/) {
+  setupLightingModel() {
     return new PhysicalLightingModel();
   }
 
   setupVariants() {
-    // METALNESS
-
     const metalnessNode = this.metalnessNode ? f32(this.metalnessNode) : materialMetalness;
-
     metalness.assign(metalnessNode);
-
-    // ROUGHNESS
 
     let roughnessNode = this.roughnessNode ? f32(this.roughnessNode) : materialRoughness;
     roughnessNode = getRoughness({ roughness: roughnessNode });
 
     roughness.assign(roughnessNode);
 
-    // SPECULAR COLOR
-
     const specularColorNode = mix(vec3(0.04), diffuseColor.rgb, metalnessNode);
-
     specularColor.assign(specularColorNode);
-
-    // DIFFUSE COLOR
 
     diffuseColor.assign(vec4(diffuseColor.rgb.mul(metalnessNode.oneMinus()), diffuseColor.a));
   }

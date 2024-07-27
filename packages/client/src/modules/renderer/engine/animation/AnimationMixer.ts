@@ -305,32 +305,22 @@ export class AnimationMixer {
     interpolants[prevIndex] = lastActiveInterpolant;
   }
 
-  clipAction(clip: AnimationClip, blendMode: AnimationBlendMode) {
+  clipAction(clip: AnimationClip, blend: AnimationBlendMode = clip.blendMode) {
     const rootUuid = this.root.uuid;
     const clipUuid = clip.uuid;
 
     const actions = this.actionsByClip[clipUuid];
 
-    if (blendMode === undefined) {
-      if (clip !== null) {
-        blendMode = clip.blendMode;
-      } else {
-        blendMode = AnimationBlendMode.Normal;
-      }
+    if (actions) {
+      const current = actions.actionByRoot[rootUuid];
+      if (current?.blendMode === blend) return current;
     }
+    const next = new AnimationAction(this, clip, blend);
 
-    if (actions !== undefined) {
-      const existingAction = actions.actionByRoot[rootUuid];
-      if (existingAction !== undefined && existingAction.blendMode === blendMode) {
-        return existingAction;
-      }
-    }
-    const newAction = new AnimationAction(this, clip, blendMode);
+    this._bindAction(next);
+    this._addInactiveAction(next, clipUuid, rootUuid);
 
-    this._bindAction(newAction);
-    this._addInactiveAction(newAction, clipUuid, rootUuid);
-
-    return newAction;
+    return next;
   }
 
   update(deltaTime: number) {
