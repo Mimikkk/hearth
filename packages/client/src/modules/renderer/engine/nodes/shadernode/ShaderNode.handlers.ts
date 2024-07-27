@@ -1,7 +1,7 @@
 import { NodeElements } from './ShaderNode.map.js';
 import { parseSwizzle } from './utils.js';
 import { asNode } from './ShaderNode.asNode.js';
-import SplitNode from '@modules/renderer/engine/nodes/utils/SplitNode.js';
+import { SplitNode, swizzle } from '@modules/renderer/engine/nodes/utils/SplitNode.js';
 import ArrayElementNode from '@modules/renderer/engine/nodes/utils/ArrayElementNode.js';
 import ConstNode from '@modules/renderer/engine/nodes/core/ConstNode.js';
 import SetNode from '@modules/renderer/engine/nodes/utils/SetNode.js';
@@ -36,7 +36,7 @@ export const handlers: ProxyHandler<Node> = {
 
     // accessing properties ( swizzle )
     if (swizzleRe.test(key)) {
-      console.log('swizzle', key);
+      console.log('swizzle1', key);
       key = parseSwizzle(key);
 
       return asNode(new SplitNode(proxy, key));
@@ -44,9 +44,9 @@ export const handlers: ProxyHandler<Node> = {
 
     // set properties ( swizzle )
     if (setSwizzleRe.test(key)) {
-      console.log('swizzle2', key);
       key = parseSwizzle(key.slice(3).toLowerCase());
       key = key.split('').sort().join('');
+
       return value => asNode(new SetNode(node, key, value));
     }
 
@@ -57,7 +57,7 @@ export const handlers: ProxyHandler<Node> = {
 
     // accessing array
     if (arrayRe.test(key)) {
-      return asNode(new ArrayElementNode(proxy, new ConstNode(Number(key), TypeName.u32)));
+      return asNode(new ArrayElementNode(proxy, new ConstNode(+key, TypeName.u32)));
     }
 
     Reflect.get(node, key, proxy);
@@ -67,7 +67,7 @@ export const handlers: ProxyHandler<Node> = {
     if (typeof key !== 'string' || key in node) return Reflect.set(node, key, value, proxy);
 
     if (key !== 'width' && key !== 'height' && key !== 'depth' && !arrayRe.test(key) && !swizzleRe.test(key)) {
-      return Reflect.set(node, key, value, proxy);
+      throw Error('Invalid use removed!');
     }
 
     proxy[key].assign(value);
@@ -76,12 +76,10 @@ export const handlers: ProxyHandler<Node> = {
 };
 
 const isStackNode = (value: any): value is StackNode => value.isStackNode === true;
-const setSwizzleRe = /^set[XYZWRGBASTPQ]{1,4}$/;
-const swizzleRe = /^[xyzwrgbastpq]{1,4}$/;
+const setSwizzleRe = /^set[XYZWRGBA]{1,4}$/;
+const swizzleRe = /^[xyzwrgba]{1,4}$/;
 const arrayRe = /^\d+$/;
 
-type SwizzleCharacter = 'x' | 'y' | 'z' | 'w' | 'r' | 'g' | 'b' | 'a' | 's' | 't' | 'p' | 'q';
-type Swizzle1 = SwizzleCharacter;
-type Swizzle2 = `${SwizzleCharacter}${SwizzleCharacter}`;
-type Swizzle3 = `${SwizzleCharacter}${SwizzleCharacter}${SwizzleCharacter}`;
-type Swizzle4 = `${SwizzleCharacter}${SwizzleCharacter}${SwizzleCharacter}${SwizzleCharacter}`;
+type NodeExtensions = {
+  [key in swizzle]: SplitNode;
+};
