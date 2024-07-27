@@ -14,7 +14,7 @@ export class AudioListener extends Entity {
   gain: GainNode;
   filter: AudioNode | null;
   timeDelta: number;
-  _clock: Clock;
+  clock: Clock;
 
   constructor() {
     super();
@@ -25,7 +25,7 @@ export class AudioListener extends Entity {
 
     this.filter = null;
     this.timeDelta = 0;
-    this._clock = new Clock();
+    this.clock = new Clock();
   }
 
   getInput() {
@@ -68,7 +68,6 @@ export class AudioListener extends Entity {
 
   setMasterVolume(value: number): this {
     this.gain.gain.setTargetAtTime(value, this.context.currentTime, 0.01);
-
     return this;
   }
 
@@ -78,7 +77,7 @@ export class AudioListener extends Entity {
     const listener = this.context.listener;
     const up = this.up;
 
-    this.timeDelta = this._clock.delta;
+    this.timeDelta = this.clock.delta;
 
     this.matrixWorld.decompose(_position, _quaternion, _scale);
 
