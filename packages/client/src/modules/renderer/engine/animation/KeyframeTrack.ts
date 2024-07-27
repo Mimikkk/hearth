@@ -11,7 +11,7 @@ export class KeyframeTrack<T extends TypedArray = Float32Array, V extends TypedA
   declare DefaultInterpolation: InterpolationMode;
   declare TimeBufferType: NumberArrayConstructor;
   declare ValueBufferType: NumberArrayConstructor;
-  declare ValueTypeName: string;
+  declare ValueTypeName: 'quaternion' | 'string' | 'bool' | 'vector';
   times: T;
   values: V;
   createInterpolant: (result: V) => Interpolant<T, V>;

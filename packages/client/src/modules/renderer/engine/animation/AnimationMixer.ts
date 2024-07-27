@@ -5,6 +5,7 @@ import { PropertyMixer } from './PropertyMixer.js';
 import { AnimationClip } from './AnimationClip.js';
 import { AnimationBlendMode } from '../constants.js';
 import { Interpolant } from '@modules/renderer/engine/math/interpolants/Interpolant.js';
+import { Entity } from '@modules/renderer/engine/core/Entity.js';
 
 export class AnimationMixer {
   activeIndex: number;
@@ -12,7 +13,7 @@ export class AnimationMixer {
   timeScale: number;
   _actions: AnimationAction[];
   _nActiveActions: number;
-  _actionsByClip: Record<string, any>;
+  actionsByClip: Record<string, any>;
   bindings: PropertyMixer[];
   _nActiveBindings: number;
   bindingsByRootAndName: Record<string, any>;
@@ -33,10 +34,10 @@ export class AnimationMixer {
     };
   };
 
-  constructor(public root: any) {
+  constructor(public root: Entity) {
     this._actions = [];
     this._nActiveActions = 0;
-    this._actionsByClip = {};
+    this.actionsByClip = {};
     this.bindings = [];
     this._nActiveBindings = 0;
     this.bindingsByRootAndName = {};
@@ -174,7 +175,7 @@ export class AnimationMixer {
 
   _addInactiveAction(action: AnimationAction, clipUuid: string, rootUuid: string) {
     const actions = this._actions,
-      actionsByClip = this._actionsByClip;
+      actionsByClip = this.actionsByClip;
 
     let actionsForClip = actionsByClip[clipUuid];
 
@@ -198,54 +199,6 @@ export class AnimationMixer {
     actions.push(action);
 
     actionsForClip.actionByRoot[rootUuid] = action;
-  }
-
-  _removeInactiveAction(action: AnimationAction) {
-    const actions = this._actions,
-      lastInactiveAction = actions[actions.length - 1],
-      cacheIndex = action.activeIndex;
-
-    lastInactiveAction.activeIndex = cacheIndex;
-    actions[cacheIndex] = lastInactiveAction;
-    actions.pop();
-
-    action.activeIndex = null;
-
-    const clipUuid = action.clip.uuid,
-      actionsByClip = this._actionsByClip,
-      actionsForClip = actionsByClip[clipUuid],
-      knownActionsForClip = actionsForClip.knownActions,
-      lastKnownAction = knownActionsForClip[knownActionsForClip.length - 1],
-      byClipCacheIndex = action.clipActiveIndex;
-
-    lastKnownAction.clipActiveIndex = byClipCacheIndex;
-    knownActionsForClip[byClipCacheIndex] = lastKnownAction;
-    knownActionsForClip.pop();
-
-    action.clipActiveIndex = null;
-
-    const actionByRoot = actionsForClip.actionByRoot,
-      rootUuid = this.root.uuid;
-
-    delete actionByRoot[rootUuid];
-
-    if (knownActionsForClip.length === 0) {
-      delete actionsByClip[clipUuid];
-    }
-
-    this._removeInactiveBindingsForAction(action);
-  }
-
-  _removeInactiveBindingsForAction(action: AnimationAction) {
-    const bindings = action.bindings;
-
-    for (let i = 0, n = bindings.length; i !== n; ++i) {
-      const binding = bindings[i];
-
-      if (--binding.referenceCount === 0) {
-        this._removeInactiveBinding(binding);
-      }
-    }
   }
 
   _lendAction(action: AnimationAction) {
@@ -274,7 +227,7 @@ export class AnimationMixer {
     actions[prevIndex] = lastActiveAction;
   }
 
-  _addInactiveBinding(binding: PropertyBinding, rootUuid: string, trackName: string) {
+  _addInactiveBinding(binding: PropertyMixer, rootUuid: string, trackName: string) {
     const bindingsByRoot = this.bindingsByRootAndName,
       bindings = this.bindings;
 
@@ -291,28 +244,7 @@ export class AnimationMixer {
     bindings.push(binding);
   }
 
-  _removeInactiveBinding(binding: PropertyBinding) {
-    const bindings = this.bindings,
-      propBinding = binding.binding,
-      rootUuid = propBinding.rootNode.uuid,
-      trackName = propBinding.path,
-      bindingsByRoot = this.bindingsByRootAndName,
-      bindingByName = bindingsByRoot[rootUuid],
-      lastInactiveBinding = bindings[bindings.length - 1],
-      cacheIndex = binding.activeIndex;
-
-    lastInactiveBinding.activeIndex = cacheIndex;
-    bindings[cacheIndex] = lastInactiveBinding;
-    bindings.pop();
-
-    delete bindingByName[trackName];
-
-    if (Object.keys(bindingByName).length === 0) {
-      delete bindingsByRoot[rootUuid];
-    }
-  }
-
-  _lendBinding(binding: PropertyBinding) {
+  _lendBinding(binding: PropertyMixer) {
     const bindings = this.bindings,
       prevIndex = binding.activeIndex,
       lastActiveIndex = this._nActiveBindings++,
@@ -325,7 +257,7 @@ export class AnimationMixer {
     bindings[prevIndex] = firstInactiveBinding;
   }
 
-  _takeBackBinding(binding: PropertyBinding) {
+  _takeBackBinding(binding: PropertyMixer) {
     const bindings = this.bindings,
       prevIndex = binding.activeIndex,
       firstInactiveIndex = --this._nActiveBindings,
@@ -376,7 +308,7 @@ export class AnimationMixer {
     const rootUuid = this.root.uuid;
     const clipUuid = clip.uuid;
 
-    const actionsForClip = this._actionsByClip[clipUuid];
+    const actions = this.actionsByClip[clipUuid];
 
     if (blendMode === undefined) {
       if (clip !== null) {
@@ -386,8 +318,8 @@ export class AnimationMixer {
       }
     }
 
-    if (actionsForClip !== undefined) {
-      const existingAction = actionsForClip.actionByRoot[rootUuid];
+    if (actions !== undefined) {
+      const existingAction = actions.actionByRoot[rootUuid];
       if (existingAction !== undefined && existingAction.blendMode === blendMode) {
         return existingAction;
       }
@@ -403,11 +335,11 @@ export class AnimationMixer {
   update(deltaTime: number) {
     deltaTime *= this.timeScale;
 
-    const actions = this._actions,
-      nActions = this._nActiveActions,
-      time = (this.time += deltaTime),
-      timeDirection = Math.sign(deltaTime),
-      accuIndex = (this.activeIndex ^= 1);
+    const actions = this._actions;
+    const nActions = this._nActiveActions;
+    const time = (this.time += deltaTime);
+    const timeDirection = Math.sign(deltaTime);
+    const accuIndex = (this.activeIndex ^= 1);
 
     for (let i = 0; i !== nActions; ++i) {
       const action = actions[i];
@@ -425,13 +357,11 @@ export class AnimationMixer {
     return this;
   }
 
-  setTime(timeInSeconds: number) {
+  setTime(timeSec: number) {
     this.time = 0;
-    for (let i = 0; i < this._actions.length; i++) {
-      this._actions[i].time = 0;
-    }
+    for (let i = 0; i < this._actions.length; i++) this._actions[i].time = 0;
 
-    return this.update(timeInSeconds);
+    return this.update(timeSec);
   }
 }
 

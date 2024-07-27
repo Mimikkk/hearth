@@ -31,7 +31,7 @@ export class PropertyBinding implements IPropertyBinding {
     public path: string,
   ) {
     this.parsedPath = PropertyBinding.parse(path);
-    this.node = PropertyBinding.find(rootNode, this.parsedPath.nodeName);
+    this.node = PropertyBinding.find(rootNode, this.parsedPath.nodeName)!;
     this.getValue = this.#getValue_unbound;
     this.setValue = this.#setValue_unbound;
   }

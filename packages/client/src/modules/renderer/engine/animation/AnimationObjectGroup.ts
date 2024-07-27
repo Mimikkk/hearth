@@ -168,21 +168,21 @@ export class AnimationObjectGroup {
       objects = this.objects,
       nObjects = objects.length,
       nCachedObjects = this.cacheSize,
-      bindingsForPath = new Array(nObjects);
+      binds = new Array(nObjects);
 
     index = bindings.length;
 
     indicesByPath[path] = index;
 
     paths.push(path);
-    bindings.push(bindingsForPath);
+    bindings.push(binds);
 
     for (let i = nCachedObjects, n = objects.length; i !== n; ++i) {
       const object = objects[i];
-      bindingsForPath[i] = new PropertyBinding(object, path);
+      binds[i] = new PropertyBinding(object, path);
     }
 
-    return bindingsForPath;
+    return binds;
   }
 
   unsubscribe(path: string) {
