@@ -1,24 +1,13 @@
 import AttributeNode from '../core/AttributeNode.js';
 import { asNode } from '../shadernode/ShaderNodes.js';
+import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
-class UVNode extends AttributeNode {
-  static type = 'UVNode';
-
-  constructor(index = 0) {
-    super(null, 'vec2');
-
-    this.isUVNode = true;
-
-    this.index = index;
-  }
-
-  getAttributeName(/*builder*/) {
-    const index = this.index;
-
-    return 'uv' + (index > 0 ? index : '');
+export class UVNode extends AttributeNode {
+  constructor(public index: number) {
+    super(index > 0 ? 'uv' + index : 'uv', TypeName.vec2);
   }
 }
 
 export default UVNode;
 
-export const uv = (...params) => asNode(new UVNode(...params));
+export const uv = (index: number = 0) => asNode(new UVNode(index));
