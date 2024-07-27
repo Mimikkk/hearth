@@ -2,7 +2,7 @@ import Node from '../core/Node.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
-class ArrayElementNode extends Node {
+export class ArrayElementNode extends Node {
   static type = 'ArrayElementNode';
 
   constructor(
