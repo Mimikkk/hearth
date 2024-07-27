@@ -63,7 +63,7 @@ export const SideBarItems: AccordionItem[] = [
     title: 'Environment',
     icon: 'IoEarth',
     children: [
-      { id: Example.Backdrop, title: 'Backdrop' },
+      { id: Example.Backdrop, title: 'Backdrop', masterdisk: true },
       { id: Example.BackdropArea, title: 'Backdrop Area' },
       { id: Example.BackdropWater, title: 'Backdrop Water' },
       { id: Example.CustomFog, title: 'Custom Fog' },
