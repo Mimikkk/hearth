@@ -8,6 +8,7 @@ import { Interpolant } from '@modules/renderer/engine/math/interpolants/Interpol
 import { Entity } from '@modules/renderer/engine/core/Entity.js';
 
 export class AnimationMixer {
+  indices = new WeakMap<object, number>();
   activeIndex: number;
   time: number;
   timeScale: number;
@@ -202,10 +203,10 @@ export class AnimationMixer {
   }
 
   _lendAction(action: AnimationAction) {
-    const actions = this._actions,
-      prevIndex = action.activeIndex,
-      lastActiveIndex = this._nActiveActions++,
-      firstInactiveAction = actions[lastActiveIndex];
+    const actions = this._actions;
+    const prevIndex = action.activeIndex!;
+    const lastActiveIndex = this._nActiveActions++;
+    const firstInactiveAction = actions[lastActiveIndex];
 
     action.activeIndex = lastActiveIndex;
     actions[lastActiveIndex] = action;
@@ -215,10 +216,10 @@ export class AnimationMixer {
   }
 
   _takeBackAction(action: AnimationAction) {
-    const actions = this._actions,
-      prevIndex = action.activeIndex,
-      firstInactiveIndex = --this._nActiveActions,
-      lastActiveAction = actions[firstInactiveIndex];
+    const actions = this._actions;
+    const prevIndex = action.activeIndex!;
+    const firstInactiveIndex = --this._nActiveActions;
+    const lastActiveAction = actions[firstInactiveIndex];
 
     action.activeIndex = firstInactiveIndex;
     actions[firstInactiveIndex] = action;
@@ -240,33 +241,33 @@ export class AnimationMixer {
 
     bindingByName[trackName] = binding;
 
-    binding.activeIndex = bindings.length;
+    this.indices.set(binding, bindings.length);
     bindings.push(binding);
   }
 
   _lendBinding(binding: PropertyMixer) {
-    const bindings = this.bindings,
-      prevIndex = binding.activeIndex,
-      lastActiveIndex = this._nActiveBindings++,
-      firstInactiveBinding = bindings[lastActiveIndex];
+    const bindings = this.bindings;
+    const prevIndex = this.indices.get(binding)!;
+    const lastActiveIndex = this._nActiveBindings++;
+    const firstInactiveBinding = bindings[lastActiveIndex];
 
-    binding.activeIndex = lastActiveIndex;
+    this.indices.set(binding, lastActiveIndex);
     bindings[lastActiveIndex] = binding;
 
-    firstInactiveBinding.activeIndex = prevIndex;
+    this.indices.set(firstInactiveBinding, prevIndex);
     bindings[prevIndex] = firstInactiveBinding;
   }
 
   _takeBackBinding(binding: PropertyMixer) {
-    const bindings = this.bindings,
-      prevIndex = binding.activeIndex,
-      firstInactiveIndex = --this._nActiveBindings,
-      lastActiveBinding = bindings[firstInactiveIndex];
+    const bindings = this.bindings;
+    const prevIndex = this.indices.get(binding)!;
+    const firstInactiveIndex = --this._nActiveBindings;
+    const lastActiveBinding = bindings[firstInactiveIndex];
 
-    binding.activeIndex = firstInactiveIndex;
+    this.indices.set(binding, firstInactiveIndex);
     bindings[firstInactiveIndex] = binding;
 
-    lastActiveBinding.activeIndex = prevIndex;
+    this.indices.set(lastActiveBinding, prevIndex);
     bindings[prevIndex] = lastActiveBinding;
   }
 
@@ -284,7 +285,7 @@ export class AnimationMixer {
         _controlInterpolantsResultBuffer,
       );
 
-      interpolant.__cacheIndex = lastActiveIndex;
+      this.indices.set(interpolant, lastActiveIndex);
       interpolants[lastActiveIndex] = interpolant;
     }
 
@@ -292,15 +293,15 @@ export class AnimationMixer {
   }
 
   _takeBackControlInterpolant(interpolant: Interpolant) {
-    const interpolants = this._controlInterpolants,
-      prevIndex = interpolant.__cacheIndex,
-      firstInactiveIndex = --this._nActiveControlInterpolants,
-      lastActiveInterpolant = interpolants[firstInactiveIndex];
+    const interpolants = this._controlInterpolants;
+    const prevIndex = this.indices.get(interpolant)!;
+    const firstInactiveIndex = --this._nActiveControlInterpolants;
+    const lastActiveInterpolant = interpolants[firstInactiveIndex];
 
-    interpolant.__cacheIndex = firstInactiveIndex;
+    this.indices.set(interpolant, firstInactiveIndex);
     interpolants[firstInactiveIndex] = interpolant;
 
-    lastActiveInterpolant.__cacheIndex = prevIndex;
+    this.indices.set(lastActiveInterpolant, prevIndex);
     interpolants[prevIndex] = lastActiveInterpolant;
   }
 
