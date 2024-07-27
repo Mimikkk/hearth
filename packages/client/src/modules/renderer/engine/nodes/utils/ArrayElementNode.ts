@@ -1,26 +1,26 @@
 import Node from '../core/Node.js';
+import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
+import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 class ArrayElementNode extends Node {
   static type = 'ArrayElementNode';
 
-  constructor(node, indexNode) {
+  constructor(
+    public array: Node,
+    public index: Node,
+  ) {
     super();
-
-    this.node = node;
-    this.indexNode = indexNode;
-
-    this.isArrayElementNode = true;
   }
 
-  getNodeType(builder) {
-    return this.node.getNodeType(builder);
+  getNodeType(builder: NodeBuilder): TypeName {
+    return this.array.getNodeType(builder);
   }
 
-  generate(builder) {
-    const nodeSnippet = this.node.build(builder);
-    const indexSnippet = this.indexNode.build(builder, 'u32');
+  generate(builder: NodeBuilder): string {
+    const array = this.array.build(builder);
+    const index = this.index.build(builder, TypeName.u32);
 
-    return `${nodeSnippet}[ ${indexSnippet} ]`;
+    return `${array}[${index}]`;
   }
 }
 

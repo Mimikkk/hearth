@@ -12,7 +12,7 @@ class UniformsElementNode extends ArrayElementNode {
   }
 
   getNodeType(builder) {
-    return this.node.getElementType(builder);
+    return this.array.getElementType(builder);
   }
 
   generate(builder) {

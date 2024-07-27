@@ -6,7 +6,7 @@ import CondNode from 'three/examples/jsm/nodes/math/CondNode.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { OperatorNode } from '@modules/renderer/engine/nodes/Nodes.js';
 
-class StackNode extends Node {
+export class StackNode extends Node {
   static type = 'StackNode';
   outputNode: Node | null;
   nodes: Node[];

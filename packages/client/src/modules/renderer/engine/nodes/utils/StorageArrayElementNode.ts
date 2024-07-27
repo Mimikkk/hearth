@@ -11,17 +11,17 @@ class StorageArrayElementNode extends ArrayElementNode {
   }
 
   set storageBufferNode(value) {
-    this.node = value;
+    this.array = value;
   }
 
   get storageBufferNode() {
-    return this.node;
+    return this.array;
   }
 
   setup(builder) {
     if (builder.isAvailable('storageBuffer') === false) {
-      if (!this.node.instanceIndex && this.node.bufferObject === true) {
-        builder.setupPBO(this.node);
+      if (!this.array.instanceIndex && this.array.bufferObject === true) {
+        builder.setupPBO(this.array);
       }
     }
 
@@ -36,12 +36,12 @@ class StorageArrayElementNode extends ArrayElementNode {
     //
 
     if (builder.isAvailable('storageBuffer') === false) {
-      const { node } = this;
+      const { array } = this;
 
-      if (!node.instanceIndex && this.node.bufferObject === true && isAssignContext !== true) {
+      if (!array.instanceIndex && this.array.bufferObject === true && isAssignContext !== true) {
         snippet = builder.generatePBO(this);
       } else {
-        snippet = node.build(builder);
+        snippet = array.build(builder);
       }
     } else {
       snippet = super.generate(builder);

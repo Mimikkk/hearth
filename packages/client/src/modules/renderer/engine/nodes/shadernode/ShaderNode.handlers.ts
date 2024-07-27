@@ -1,92 +1,89 @@
 import { NodeElements } from './ShaderNode.map.js';
 import { parseSwizzle } from './utils.js';
-import { asNode, asNodes } from './ShaderNode.asNode.js';
+import { asNode } from './ShaderNode.asNode.js';
 import SplitNode from '@modules/renderer/engine/nodes/utils/SplitNode.js';
 import ArrayElementNode from '@modules/renderer/engine/nodes/utils/ArrayElementNode.js';
 import ConstNode from '@modules/renderer/engine/nodes/core/ConstNode.js';
 import SetNode from '@modules/renderer/engine/nodes/utils/SetNode.js';
 import { NodeStack } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.stack.js';
+import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
+import type { StackNode } from '@modules/renderer/engine/nodes/core/StackNode.js';
 
-export const handlers = {
-  setup(NodeClosure, params) {
-    const inputs = params.shift();
+export const handlers: ProxyHandler<Node> = {
+  get(node, key, proxy) {
+    if (typeof key !== 'string' || key in node) return Reflect.get(node, key, proxy);
 
-    return NodeClosure(asNodes(inputs), ...params);
-  },
+    if (!isStackNode(node) && key === 'assign') {
+      return (...params) => {
+        NodeStack.get().assign(proxy, ...params);
+        return proxy;
+      };
+    }
 
-  get(node, prop, nodeObj) {
-    if (typeof prop === 'string' && node[prop] === undefined) {
-      if (node.isStackNode !== true && prop === 'assign') {
-        return (...params) => {
-          NodeStack.get().assign(nodeObj, ...params);
+    const item = NodeElements.get(key);
+    if (item) {
+      return isStackNode(node) ? (...params) => proxy.add(item(...params)) : (...params) => item(proxy, ...params);
+    }
 
-          return nodeObj;
-        };
-      } else if (NodeElements.has(prop)) {
-        const nodeElement = NodeElements.get(prop);
+    // to remove
+    if (key === 'self') return node;
 
-        return node.isStackNode
-          ? (...params) => nodeObj.add(nodeElement(...params))
-          : (...params) => nodeElement(nodeObj, ...params);
-      } else if (prop === 'self') {
-        return node;
-      } else if (prop.endsWith('Assign') && NodeElements.has(prop.slice(0, prop.length - 'Assign'.length))) {
-        const nodeElement = NodeElements.get(prop.slice(0, prop.length - 'Assign'.length));
-
-        return node.isStackNode
-          ? (...params) => nodeObj.assign(params[0], nodeElement(...params))
-          : (...params) => nodeObj.assign(nodeElement(nodeObj, ...params));
-      } else if (/^[xyzwrgbastpq]{1,4}$/.test(prop) === true) {
-        // accessing properties ( swizzle )
-
-        prop = parseSwizzle(prop);
-
-        return asNode(new SplitNode(nodeObj, prop));
-      } else if (/^set[XYZWRGBASTPQ]{1,4}$/.test(prop) === true) {
-        // set properties ( swizzle )
-
-        prop = parseSwizzle(prop.slice(3).toLowerCase());
-
-        // sort to xyzw sequence
-
-        prop = prop.split('').sort().join('');
-
-        return value => asNode(new SetNode(node, prop, value));
-      } else if (prop === 'width' || prop === 'height' || prop === 'depth') {
-        // accessing property
-
-        if (prop === 'width') prop = 'x';
-        else if (prop === 'height') prop = 'y';
-        else if (prop === 'depth') prop = 'z';
-
-        return asNode(new SplitNode(node, prop));
-      } else if (/^\d+$/.test(prop) === true) {
-        // accessing array
-
-        return asNode(new ArrayElementNode(nodeObj, new ConstNode(Number(prop), 'u32')));
+    if (key.endsWith('Assign')) {
+      const assignAs = NodeElements.get(key.slice(0, key.length - 6));
+      if (assignAs) {
+        return isStackNode(node)
+          ? (...params) => proxy.assign(params[0], assignAs(...params))
+          : (...params) => proxy.assign(assignAs(proxy, ...params));
       }
     }
 
-    return Reflect.get(node, prop, nodeObj);
-  },
+    // accessing properties ( swizzle )
+    if (swizzleRe.test(key)) {
+      key = parseSwizzle(key);
 
-  set(node, prop, value, nodeObj) {
-    if (typeof prop === 'string' && node[prop] === undefined) {
-      // setting properties
-
-      if (
-        /^[xyzwrgbastpq]{1,4}$/.test(prop) === true ||
-        prop === 'width' ||
-        prop === 'height' ||
-        prop === 'depth' ||
-        /^\d+$/.test(prop) === true
-      ) {
-        nodeObj[prop].assign(value);
-
-        return true;
-      }
+      return asNode(new SplitNode(proxy, key));
     }
 
-    return Reflect.set(node, prop, value, nodeObj);
+    // set properties ( swizzle )
+    if (setSwizzleRe.test(key)) {
+      key = parseSwizzle(key.slice(3).toLowerCase());
+
+      // sort to xyzw sequence
+      key = key.split('').sort().join('');
+
+      return value => asNode(new SetNode(node, key, value));
+    }
+
+    // TODO - remove accessing property
+    if (key === 'width' || key === 'height' || key === 'depth') {
+      if (key === 'width') key = 'x';
+      else if (key === 'height') key = 'y';
+      else if (key === 'depth') key = 'z';
+
+      return asNode(new SplitNode(node, key));
+    }
+
+    // accessing array
+    if (/^\d+$/.test(key)) {
+      return asNode(new ArrayElementNode(proxy, new ConstNode(Number(key), TypeName.u32)));
+    }
+
+    Reflect.get(node, key, proxy);
+  },
+
+  set(node, key, value, proxy) {
+    if (typeof key !== 'string' || key in node) return Reflect.set(node, key, value, proxy);
+
+    if (key !== 'width' && key !== 'height' && key !== 'depth' && !numberRe.test(key) && !swizzleRe.test(key)) {
+      return Reflect.set(node, key, value, proxy);
+    }
+
+    proxy[key].assign(value);
+    return true;
   },
 };
+
+const isStackNode = (value: any): value is StackNode => value.isStackNode === true;
+const setSwizzleRe = /^set[XYZWRGBASTPQ]{1,4}$/;
+const swizzleRe = /^[xyzwrgbastpq]{1,4}$/;
+const numberRe = /^\d+$/;
