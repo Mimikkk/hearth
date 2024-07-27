@@ -5,7 +5,6 @@ import { Const } from '@modules/renderer/engine/math/types.js';
 import { NumberArray } from '@modules/renderer/engine/math/MathUtils.js';
 
 export class Mat3 {
-  declare ['constructor']: typeof Mat3;
   declare isMat3: true;
 
   constructor(public elements: number[] = [1, 0, 0, 0, 1, 0, 0, 0, 1]) {}

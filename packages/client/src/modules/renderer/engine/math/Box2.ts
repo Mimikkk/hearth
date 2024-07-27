@@ -4,7 +4,6 @@ import { NumberArray } from '@modules/renderer/engine/math/MathUtils.js';
 
 export class Box2 {
   declare isBox2: true;
-  declare ['constructor']: typeof Box2;
 
   constructor(
     public min: Vec2 = Vec2.new(+Infinity, +Infinity),

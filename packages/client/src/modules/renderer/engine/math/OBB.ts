@@ -53,8 +53,6 @@ const localRay = new Ray();
 // OBB
 
 export class OBB {
-  declare ['constructor']: typeof OBB;
-
   constructor(
     public center: Vec3,
     public halfSize: Vec3,

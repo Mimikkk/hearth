@@ -7,7 +7,6 @@ import { NumberArrayConstructor, TypedArray } from '../math/MathUtils.js';
 import { Interpolant } from '../math/interpolants/Interpolant.js';
 
 export class KeyframeTrack<T extends TypedArray = Float32Array, V extends TypedArray = Float32Array> {
-  declare ['constructor']: typeof KeyframeTrack;
   declare DefaultInterpolation: InterpolationMode;
   declare TimeBufferType: NumberArrayConstructor;
   declare ValueBufferType: NumberArrayConstructor;

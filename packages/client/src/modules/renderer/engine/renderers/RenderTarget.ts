@@ -13,7 +13,6 @@ import { Vec4 } from '../math/Vec4.js';
 import { Source } from '@modules/renderer/engine/objects/textures/Source.js';
 
 export class RenderTarget {
-  declare ['constructor']: typeof RenderTarget;
   declare isRenderTarget: true;
 
   depth: number;

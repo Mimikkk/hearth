@@ -9,7 +9,6 @@ import {
 } from '../../constants.js';
 
 export class VideoTexture extends Texture {
-  declare ['constructor']: typeof VideoTexture;
   declare isVideoTexture: true;
 
   constructor(

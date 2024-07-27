@@ -17,7 +17,6 @@ import { v4 } from 'uuid';
 let _textureId = 0;
 
 export class Texture {
-  declare ['constructor']: typeof Texture;
   declare isTexture: true;
   id: number;
   uuid: string;

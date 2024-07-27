@@ -12,7 +12,6 @@ const _lightPositionWorld = Vec3.new();
 const _lookTarget = Vec3.new();
 
 export class LightShadow<C extends Camera = Camera> {
-  declare ['constructor']: typeof LightShadow;
   bias: number;
   normalBias: number;
   radius: number;
