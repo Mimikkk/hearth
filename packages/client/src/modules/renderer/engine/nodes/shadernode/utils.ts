@@ -3,14 +3,6 @@ import ConstNode from '@modules/renderer/engine/nodes/core/ConstNode.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { Node } from '@modules/renderer/engine/nodes/core/Node.js';
 
-const rs = /[rs]/g;
-const gt = /[gt]/g;
-const bp = /[bp]/g;
-const aq = /[aq]/g;
-
-export const parseSwizzle = (props: string): string =>
-  props.replace(rs, 'x').replace(gt, 'y').replace(bp, 'z').replace(aq, 'w');
-
 type ValueByType<T> = T extends Node ? Node : T extends number ? ConstNode<number> : ConstNode<boolean>;
 
 export const getConstNode = <T>(value: T, type?: TypeName): ConstNode<ValueByType<T>> => {

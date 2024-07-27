@@ -1,7 +1,6 @@
 import { NodeElements } from './ShaderNode.map.js';
-import { parseSwizzle } from './utils.js';
 import { asNode } from './ShaderNode.asNode.js';
-import { SplitNode, swizzle } from '@modules/renderer/engine/nodes/utils/SplitNode.js';
+import { SplitNode } from '@modules/renderer/engine/nodes/utils/SplitNode.js';
 import ArrayElementNode from '@modules/renderer/engine/nodes/utils/ArrayElementNode.js';
 import ConstNode from '@modules/renderer/engine/nodes/core/ConstNode.js';
 import SetNode from '@modules/renderer/engine/nodes/utils/SetNode.js';
@@ -34,18 +33,12 @@ export const handlers: ProxyHandler<Node> = {
       }
     }
 
-    // accessing properties ( swizzle )
     if (swizzleRe.test(key)) {
-      console.log('swizzle1', key);
-      key = parseSwizzle(key);
-
-      return asNode(new SplitNode(proxy, key));
+      return asNode(new SplitNode(proxy, parseSwizzle(key)));
     }
 
-    // set properties ( swizzle )
     if (setSwizzleRe.test(key)) {
-      key = parseSwizzle(key.slice(3).toLowerCase());
-      key = key.split('').sort().join('');
+      key = parseSwizzle(key.toLowerCase());
 
       return value => asNode(new SetNode(node, key, value));
     }
@@ -80,6 +73,26 @@ const setSwizzleRe = /^set[XYZWRGBA]{1,4}$/;
 const swizzleRe = /^[xyzwrgba]{1,4}$/;
 const arrayRe = /^\d+$/;
 
+export type XYZW = 'x' | 'xy' | 'xyz' | 'xyzw' | 'y' | 'yz' | 'yzw' | 'z' | 'zw' | 'w';
+export type RGBA = 'r' | 'rg' | 'rgb' | 'rgba' | 'g' | 'gb' | 'gba' | 'b' | 'ba' | 'a';
+export type Swizzle = XYZW | RGBA;
+const parseSwizzle = (str: string): XYZW => {
+  if (!str) throw new Error(`Invalid swizzle ${str}.`);
+  let hasX = false;
+  let hasY = false;
+  let hasZ = false;
+  let hasW = false;
+
+  for (let character of str) {
+    if (character === 'x' || character === 'r') hasX = true;
+    else if (character === 'y' || character === 'g') hasY = true;
+    else if (character === 'z' || character === 'b') hasZ = true;
+    else if (character === 'w' || character === 'a') hasW = true;
+  }
+
+  return ((hasX ? 'x' : '') + (hasY ? 'y' : '') + (hasZ ? 'z' : '') + (hasW ? 'w' : '')) as XYZW;
+};
+
 type NodeExtensions = {
-  [key in swizzle]: SplitNode;
+  [key in Swizzle]: SplitNode;
 };

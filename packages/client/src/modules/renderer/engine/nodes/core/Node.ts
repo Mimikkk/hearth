@@ -163,7 +163,7 @@ export class Node {
     console.warn('Abstract function.');
   }
 
-  build(builder: NodeBuilder, output: string | null = null): string | null {
+  build(builder: NodeBuilder, output: string | null = null): string {
     const refNode = this.getShared(builder);
 
     if (this !== refNode) {
