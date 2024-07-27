@@ -15,10 +15,13 @@ const memo = WeakMemo.as<Node, Node>((object, memo) => {
 export const asNode = (object: Node, fallback?: TypeName): Node => {
   const type = getValueType(object);
 
-  if (type === 'node') return memo.get(object);
-  if ((!fallback && (type === 'f32' || type === 'bool')) || (type && type !== 'shader' && type !== 'string'))
+  if (type === TypeName.node) return memo.get(object);
+  if (
+    (!fallback && (type === TypeName.f32 || type === TypeName.bool)) ||
+    (type && type !== TypeName.shader && type !== TypeName.string)
+  )
     return asNode(getConstNode(object, fallback));
-  if (type === 'shader') return tslFn(object);
+  if (type === TypeName.shader) return tslFn(object);
 
   return object;
 };

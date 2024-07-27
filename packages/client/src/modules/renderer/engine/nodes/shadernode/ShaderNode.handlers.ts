@@ -8,7 +8,7 @@ import { NodeStack } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import type { StackNode } from '@modules/renderer/engine/nodes/core/StackNode.js';
 
-export const handlers: ProxyHandler<Node> = {
+export const handlers: ProxyHandler<any> = {
   get(node, key, proxy) {
     if (typeof key !== 'string' || key in node) return Reflect.get(node, key, proxy);
 
@@ -93,6 +93,6 @@ const parseSwizzle = (str: string): XYZW => {
   return ((hasX ? 'x' : '') + (hasY ? 'y' : '') + (hasZ ? 'z' : '') + (hasW ? 'w' : '')) as XYZW;
 };
 
-type NodeExtensions = {
+export type NodeExtensions = {
   [key in Swizzle]: SplitNode;
 };

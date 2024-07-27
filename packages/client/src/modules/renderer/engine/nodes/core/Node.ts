@@ -5,10 +5,13 @@ import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.
 import { NodeFrame } from '@modules/renderer/engine/nodes/core/NodeFrame.js';
 import { BuildStage, TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { v4 } from 'uuid';
+import { NodeExtensions } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.handlers.js';
+import { fixedNode } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.primitves.js';
+import { SplitNode } from '../Nodes.ts';
 
 let _nodeId = 0;
 
-export class Node {
+export class Node implements NodeExtensions {
   declare static type: any;
   declare isNode: true;
   name?: string;
@@ -236,6 +239,32 @@ export class Node {
 
     return result;
   }
+
+  declare x: SplitNode;
+  declare xy: SplitNode;
+  declare xyz: SplitNode;
+  declare xyzw: SplitNode;
+  declare y: SplitNode;
+  declare yz: SplitNode;
+  declare yzw: SplitNode;
+  declare z: SplitNode;
+  declare zw: SplitNode;
+  declare w: SplitNode;
+  declare r: SplitNode;
+  declare rg: SplitNode;
+  declare rgb: SplitNode;
+  declare rgba: SplitNode;
+  declare g: SplitNode;
+  declare gb: SplitNode;
+  declare gba: SplitNode;
+  declare b: SplitNode;
+  declare ba: SplitNode;
+  declare a: SplitNode;
 }
+
+// export type Node = Node & NodeExtensions;
+
+const x = fixedNode(Node);
+x.xyzw;
 
 export default Node;
