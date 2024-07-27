@@ -14,7 +14,7 @@ body {
     }
 
     @apply bg-accent-dark text-primary-white border border-accent-dark;
-    @apply bg-opacity-50;
+    @apply bg-opacity-75;
     @apply absolute bottom-1 right-10;
     @apply pointer-events-none select-none;
     @apply px-2 py-1 rounded-sm;
