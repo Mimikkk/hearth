@@ -84,24 +84,16 @@ export class AudioListener extends Entity {
 
     _orientation.set(0, 0, -1).applyQuaternion(_quaternion);
 
-    if (listener.positionX) {
-      // code path for Chrome (see #14393)
-
-      const endTime = this.context.currentTime + this.timeDelta;
-
-      listener.positionX.linearRampToValueAtTime(_position.x, endTime);
-      listener.positionY.linearRampToValueAtTime(_position.y, endTime);
-      listener.positionZ.linearRampToValueAtTime(_position.z, endTime);
-      listener.forwardX.linearRampToValueAtTime(_orientation.x, endTime);
-      listener.forwardY.linearRampToValueAtTime(_orientation.y, endTime);
-      listener.forwardZ.linearRampToValueAtTime(_orientation.z, endTime);
-      listener.upX.linearRampToValueAtTime(up.x, endTime);
-      listener.upY.linearRampToValueAtTime(up.y, endTime);
-      listener.upZ.linearRampToValueAtTime(up.z, endTime);
-    } else {
-      listener.setPosition(_position.x, _position.y, _position.z);
-      listener.setOrientation(_orientation.x, _orientation.y, _orientation.z, up.x, up.y, up.z);
-    }
+    const endTime = this.context.currentTime + this.timeDelta;
+    listener.positionX.linearRampToValueAtTime(_position.x, endTime);
+    listener.positionY.linearRampToValueAtTime(_position.y, endTime);
+    listener.positionZ.linearRampToValueAtTime(_position.z, endTime);
+    listener.forwardX.linearRampToValueAtTime(_orientation.x, endTime);
+    listener.forwardY.linearRampToValueAtTime(_orientation.y, endTime);
+    listener.forwardZ.linearRampToValueAtTime(_orientation.z, endTime);
+    listener.upX.linearRampToValueAtTime(up.x, endTime);
+    listener.upY.linearRampToValueAtTime(up.y, endTime);
+    listener.upZ.linearRampToValueAtTime(up.z, endTime);
 
     return this;
   }
