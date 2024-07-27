@@ -3,7 +3,7 @@ import { createTypedArrayAs, TypedArray } from '../MathUtils.js';
 export abstract class Interpolant<T extends TypedArray = any, V extends TypedArray = any> {
   _activeIndex: number = 0;
 
-  protected constructor(
+  constructor(
     public parameterPositions: T,
     public sampleValues: V,
     public valueSize: number,

@@ -5,13 +5,13 @@ import { v4 } from 'uuid';
 export class AnimationObjectGroup {
   declare isAnimationObjectGroup: true;
   uuid: string;
-  _objects: any[];
+  objects: any[];
   nCachedObjects_: number;
   _indicesByUuid: { [key: string]: number };
   _paths: string[];
   _parsedPaths: any[];
-  _bindings: PropertyBinding[][];
-  _bindingsIndicesByPath: Record<string, number>;
+  bindings: PropertyBinding[][];
+  bindingsIndicesByPath: Record<string, number>;
   stats: {
     objects: {
       total: number;
@@ -171,80 +171,6 @@ export class AnimationObjectGroup {
           bindingsForPath[lastCachedIndex] = binding;
         }
       }
-    } // for arguments
-
-    this.nCachedObjects_ = nCachedObjects;
-  }
-
-  // remove & forget
-  uncache() {
-    const objects = this.objects,
-      indicesByUUID = this._indicesByUuid,
-      bindings = this.bindings,
-      nBindings = bindings.length;
-
-    let nCachedObjects = this.nCachedObjects_,
-      nObjects = objects.length;
-
-    for (let i = 0, n = arguments.length; i !== n; ++i) {
-      const object = arguments[i],
-        uuid = object.uuid,
-        index = indicesByUUID[uuid];
-
-      if (index !== undefined) {
-        delete indicesByUUID[uuid];
-
-        if (index < nCachedObjects) {
-          // object is cached, shrink the CACHED region
-
-          const firstActiveIndex = --nCachedObjects,
-            lastCachedObject = objects[firstActiveIndex],
-            lastIndex = --nObjects,
-            lastObject = objects[lastIndex];
-
-          // last cached object takes this object's place
-          indicesByUUID[lastCachedObject.uuid] = index;
-          objects[index] = lastCachedObject;
-
-          // last object goes to the activated slot and pop
-          indicesByUUID[lastObject.uuid] = firstActiveIndex;
-          objects[firstActiveIndex] = lastObject;
-          objects.pop();
-
-          // accounting is done, now do the same for all bindings
-
-          for (let j = 0, m = nBindings; j !== m; ++j) {
-            const bindingsForPath = bindings[j],
-              lastCached = bindingsForPath[firstActiveIndex],
-              last = bindingsForPath[lastIndex];
-
-            bindingsForPath[index] = lastCached;
-            bindingsForPath[firstActiveIndex] = last;
-            bindingsForPath.pop();
-          }
-        } else {
-          // object is active, just swap with the last and pop
-
-          const lastIndex = --nObjects,
-            lastObject = objects[lastIndex];
-
-          if (lastIndex > 0) {
-            indicesByUUID[lastObject.uuid] = index;
-          }
-
-          objects[index] = lastObject;
-          objects.pop();
-
-          // accounting is done, now do the same for all bindings
-
-          for (let j = 0, m = nBindings; j !== m; ++j) {
-            const bindingsForPath = bindings[j];
-
-            bindingsForPath[index] = bindingsForPath[lastIndex];
-            bindingsForPath.pop();
-          }
-        } // cached or active
-      } // if object is known
     } // for arguments
 
     this.nCachedObjects_ = nCachedObjects;
