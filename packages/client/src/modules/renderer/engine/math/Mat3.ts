@@ -161,7 +161,7 @@ export class Mat3 {
     return into.from(this);
   }
 
-  extractBasis(xAxis: Vec3, yAxis: Vec3, zAxis: Vec3): this {
+  intoBasis(xAxis: Vec3, yAxis: Vec3, zAxis: Vec3): this {
     xAxis.fromMat3Column(this, 0);
     yAxis.fromMat3Column(this, 1);
     zAxis.fromMat3Column(this, 2);
@@ -237,6 +237,27 @@ export class Mat3 {
     te[8] *= scalar;
 
     return this;
+  }
+
+  div(matrix: Const<Mat3>): this {
+    const me = matrix.elements;
+    const te = this.elements;
+
+    te[0] /= me[0];
+    te[3] /= me[3];
+    te[6] /= me[6];
+    te[1] /= me[1];
+    te[4] /= me[4];
+    te[7] /= me[7];
+    te[2] /= me[2];
+    te[5] /= me[5];
+    te[8] /= me[8];
+
+    return this;
+  }
+
+  divScalar(scalar: number): this {
+    return this.mulScalar(1 / scalar);
   }
 
   determinant(): number {

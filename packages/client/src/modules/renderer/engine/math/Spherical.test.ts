@@ -5,7 +5,7 @@ import { Spherical } from './Spherical.js';
 describe('Math - Spherical', () => {
   it('Instancing', () => {
     const spherical = Spherical.empty();
-    expect(spherical).toEqual({ radius: 0, phi: 0, theta: 0 });
+    expect(spherical).toEqual({ radius: 1, phi: 0, theta: 0 });
 
     const radius = 10.0;
     const phi = Math.acos(-0.5);

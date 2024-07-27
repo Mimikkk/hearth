@@ -20,11 +20,11 @@ export class Mesh extends Entity {
   morphTargetInfluences: number[];
   morphTargetDictionary: Record<string, number>;
 
-  constructor(geometry: Geometry = new Geometry(), material: Material) {
+  constructor(geometry: Geometry = new Geometry(), material?: Material) {
     super();
 
     this.geometry = geometry;
-    this.material = material;
+    this.material = material!;
 
     this.updateMorphTargets();
   }

@@ -216,9 +216,9 @@ describe('Math - Vec3', () => {
     const b = vec3(-2, -3, -4);
     const c = vec3();
 
-    expect(c.lerp(a, b, 0)).toEqual(a);
-    expect(c.lerp(a, b, 0.5)).toEqual(vec3(0, 0, 0));
-    expect(c.lerp(a, b, 1)).toEqual(b);
+    expect(c.asLerp(a, b, 0)).toEqual(a);
+    expect(c.asLerp(a, b, 0.5)).toEqual(vec3(0, 0, 0));
+    expect(c.asLerp(a, b, 1)).toEqual(b);
   });
 
   it('fromArray/intoArray', () => {
@@ -236,7 +236,7 @@ describe('Math - Vec3', () => {
     expect(a.fromAttribute(attribute, 0)).toEqual(vec3(1, 2, 3));
     expect(a.fromAttribute(attribute, 1)).toEqual(vec3(4, 5, 6));
     expect(a.fromAttribute(attribute, 2)).toEqual(vec3(7, 8, 9));
-    a.fillAttribute(attribute, 0);
+    a.intoAttribute(attribute, 0);
   });
 
   it('fromSpherical/intoSpherical', () => {

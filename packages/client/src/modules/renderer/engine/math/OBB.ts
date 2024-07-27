@@ -93,7 +93,7 @@ export class OBB {
     const halfSize = this.halfSize;
 
     v1.asSub(point, this.center);
-    this.rotation.extractBasis(xAxis, yAxis, zAxis);
+    this.rotation.intoBasis(xAxis, yAxis, zAxis);
 
     // start at the center position of the OBB
 
@@ -115,7 +115,7 @@ export class OBB {
 
   containsPoint(point: Vec3): boolean {
     v1.asSub(point, this.center);
-    this.rotation.extractBasis(xAxis, yAxis, zAxis);
+    this.rotation.intoBasis(xAxis, yAxis, zAxis);
 
     // project v1 onto each axis and check if these points lie inside the OBB
 
@@ -152,13 +152,13 @@ export class OBB {
     a.e[0] = this.halfSize.x;
     a.e[1] = this.halfSize.y;
     a.e[2] = this.halfSize.z;
-    this.rotation.extractBasis(a.u[0], a.u[1], a.u[2]);
+    this.rotation.intoBasis(a.u[0], a.u[1], a.u[2]);
 
     b.c = obb.center;
     b.e[0] = obb.halfSize.x;
     b.e[1] = obb.halfSize.y;
     b.e[2] = obb.halfSize.z;
-    obb.rotation.extractBasis(b.u[0], b.u[1], b.u[2]);
+    obb.rotation.intoBasis(b.u[0], b.u[1], b.u[2]);
 
     // compute rotation matrix expressing b in a's coordinate frame
 
@@ -270,7 +270,7 @@ export class OBB {
    * by Christer Ericson (chapter 5.2.3)
    */
   intersectsPlane(plane: Plane): boolean {
-    this.rotation.extractBasis(xAxis, yAxis, zAxis);
+    this.rotation.intoBasis(xAxis, yAxis, zAxis);
 
     // compute the projection interval radius of this OBB onto L(t) = this->center + t * p.normal;
 

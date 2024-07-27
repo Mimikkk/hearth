@@ -285,7 +285,7 @@ export class Mat4 {
     return this;
   }
 
-  extractBasis(xAxis: Vec3, yAxis: Vec3, zAxis: Vec3): this {
+  intoBasis(xAxis: Vec3, yAxis: Vec3, zAxis: Vec3): this {
     xAxis.fromMat4Column(this, 0);
     yAxis.fromMat4Column(this, 1);
     zAxis.fromMat4Column(this, 2);
@@ -558,6 +558,29 @@ export class Mat4 {
     return this;
   }
 
+  mulScalar(scalar: number): this {
+    const te = this.elements;
+
+    te[0] *= scalar;
+    te[4] *= scalar;
+    te[8] *= scalar;
+    te[12] *= scalar;
+    te[1] *= scalar;
+    te[5] *= scalar;
+    te[9] *= scalar;
+    te[13] *= scalar;
+    te[2] *= scalar;
+    te[6] *= scalar;
+    te[10] *= scalar;
+    te[14] *= scalar;
+    te[3] *= scalar;
+    te[7] *= scalar;
+    te[11] *= scalar;
+    te[15] *= scalar;
+
+    return this;
+  }
+
   determinant(): number {
     const te = this.elements;
 
@@ -725,7 +748,7 @@ export class Mat4 {
     return this;
   }
 
-  getMaxScaleOnAxis(): number {
+  maxScaleOnAxis(): number {
     const te = this.elements;
 
     const scaleXSq = te[0] * te[0] + te[1] * te[1] + te[2] * te[2];

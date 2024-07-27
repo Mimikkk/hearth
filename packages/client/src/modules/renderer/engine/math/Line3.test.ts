@@ -81,7 +81,7 @@ describe('Math - Line3', () => {
   it('applyMat4', () => {
     const line = Line3.fromParams(0, 0, 0, 2, 2, 2);
     const vec4 = Vec4.new(2, 2, 2, 1);
-    const mat4 = new Mat4().asTranslation(2, 3, 4);
+    const mat4 = new Mat4().asTranslation(Vec3.new(2, 3, 4));
     const vec3 = Vec3.new(2, 3, 4);
     const expected = Line3.new();
 

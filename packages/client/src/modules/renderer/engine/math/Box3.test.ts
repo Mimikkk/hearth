@@ -129,8 +129,8 @@ describe('Math - Box3', () => {
 
   it('fromObject/precise', () => {
     const box = Box3.fromParams(0, 0, 0, 1, 1, 1);
-    const object = new Mesh(new SphereGeometry({ radius: 1, widthSegments: 32, heightSegments: 32 }));
-    const child = new Mesh(new SphereGeometry({ radius: 2, widthSegments: 32, heightSegments: 32 }));
+    const object = new Mesh(new SphereGeometry(1, 32, 32));
+    const child = new Mesh(new SphereGeometry(2, 32, 32));
     object.add(child);
 
     const c = Box3.fromParams(0, 0, 0, 1, 1, 1);
@@ -417,7 +417,7 @@ describe('Math - Box3', () => {
     const c = Box3.fromParams(-1, -1, -1, 1, 1, 1);
     const d = Box3.fromParams(-1, -1, -1, 0, 0, 0);
 
-    const m = new Mat4().asTranslation(1, -2, 1);
+    const m = new Mat4().asTranslation(Vec3.new(1, -2, 1));
     const t1 = vec3(1, -2, 1);
 
     closeToBox(a.clone().applyMat4(m), a.translate(t1));

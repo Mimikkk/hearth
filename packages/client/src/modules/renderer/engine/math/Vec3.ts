@@ -142,18 +142,18 @@ export class Vec3 {
     return this;
   }
 
-  asAdd(a: Const<Vec3>, b: Const<Vec3>): this {
-    this.x = a.x + b.x;
-    this.y = a.y + b.y;
-    this.z = a.z + b.z;
-
-    return this;
-  }
-
   addScaled(vector: Const<Vec3>, scale: number): this {
     this.x += vector.x * scale;
     this.y += vector.y * scale;
     this.z += vector.z * scale;
+
+    return this;
+  }
+
+  asAdd(a: Const<Vec3>, b: Const<Vec3>): this {
+    this.x = a.x + b.x;
+    this.y = a.y + b.y;
+    this.z = a.z + b.z;
 
     return this;
   }
@@ -170,6 +170,14 @@ export class Vec3 {
     this.x -= scalar;
     this.y -= scalar;
     this.z -= scalar;
+
+    return this;
+  }
+
+  subScaled(vector: Const<Vec3>, scale: number): this {
+    this.x -= vector.x * scale;
+    this.y -= vector.y * scale;
+    this.z -= vector.z * scale;
 
     return this;
   }

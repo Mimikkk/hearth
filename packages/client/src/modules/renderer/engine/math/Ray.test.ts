@@ -113,10 +113,10 @@ describe('Math - Ray', () => {
     expectCloseTo(ray, Ray.fromParams(2, 0, 0, 1, 0, 0));
   });
 
-  it('closestAt', () => {
+  it('closestTo', () => {
     const ray = Ray.fromParams(0, 0, 0, 1, 0, 0);
     const point = Vec3.new(1, 1, 0);
-    const closest = ray.closestAt(point);
+    const closest = ray.closestTo(point);
     expectVecCloseTo(closest, Vec3.new(1, 0, 0));
   });
 

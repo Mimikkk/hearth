@@ -1,4 +1,4 @@
-import { color, MeshStandardNodeMaterial, normalWorld } from '@modules/renderer/engine/nodes/Nodes.js';
+import { color, f32, MeshStandardNodeMaterial, normalWorld } from '@modules/renderer/engine/nodes/Nodes.js';
 import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 import {
   Camera,
@@ -15,7 +15,6 @@ import {
   Sprite,
 } from '@modules/renderer/engine/engine.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import { f32 } from 'three/examples/jsm/nodes/shadernode/ShaderNode.js';
 import { UI } from '@mimi/ui';
 import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
 import { SpriteMaterialBuilder } from '@modules/renderer/engine/objects/materials/SpriteMaterialBuilder.js';

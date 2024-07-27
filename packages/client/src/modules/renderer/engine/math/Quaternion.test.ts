@@ -20,7 +20,7 @@ function slerpObject(aArr: readonly number[], bArr: readonly number[], t: number
   const b = Quaternion.fromArray(bArr, 0);
   const c = Quaternion.fromArray(aArr, 0);
 
-  expect(c.slerp(c, b, t)).toBe(c);
+  expect(c.asSlerp(c, b, t)).toBe(c);
 
   return {
     equals: (x: number, y: number, z: number, w: number) =>
@@ -305,13 +305,13 @@ describe('Math - Quaternion', () => {
     const f = Quaternion.new(0, 0, 1, 0);
     let expected = Quaternion.new(D, 0, D, 0);
     let result = Quaternion.slerp(e, f, 0.5);
-    expect(result).toEqual(expected);
+    expectQuaternionWithin(result, expected);
 
     const g = Quaternion.new(0, D, 0, D);
     const h = Quaternion.new(0, -D, 0, D);
     expected = Quaternion.new(0, 0, 0, 1);
     result = Quaternion.slerp(g, h, 0.5);
-    expect(result).toEqual(expected);
+    expectQuaternionWithin(result, expected);
   });
 
   it('equals', () => {

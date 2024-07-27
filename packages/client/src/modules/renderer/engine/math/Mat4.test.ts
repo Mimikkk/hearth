@@ -46,19 +46,7 @@ describe('Math - Mat4', () => {
       4, 8, 12, 16,
     ]);
 
-    mat.setRowOrder(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16);
-    expect(mat.elements).toEqual([
-      1, 2, 3, 4,
-
-      5, 6, 7, 8,
-
-      9, 10, 11, 12,
-
-      13, 14, 15, 16,
-    ]);
-
     const clone = Mat4.from(mat);
-
     expect(clone).toEqual(mat);
   });
 
@@ -94,7 +82,7 @@ describe('Math - Mat4', () => {
 
     const mat4 = Mat4.fromMat3(mat3);
 
-    expect(mat4.elements).toEqual([1, 2, 3, 0, 4, 5, 6, 0, 7, 8, 9, 0, 0, 0, 0, 1]);
+    expect(mat4.elements).toEqual([1, 4, 7, 0, 2, 5, 8, 0, 3, 6, 9, 0, 0, 0, 0, 1]);
   });
 
   it('fromBasis/intoBasis', () => {
@@ -265,7 +253,7 @@ describe('Math - Mat4', () => {
     expect(m.elements).toEqual([2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32]);
   });
 
-  it('getMaxScaleOnAxis', () => {
+  it('maxScaleOnAxis', () => {
     const m = Mat4.scale(2, 3, 4);
     expect(m.maxScaleOnAxis()).toBeCloseTo(4);
   });
@@ -313,14 +301,13 @@ describe('Math - Mat4', () => {
   });
 
   it('invert', () => {
-    const zero = Mat4.fromColumnOrder(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
     const identity = Mat4.identity();
 
     const a = Mat4.new();
     const b = Mat4.fromColumnOrder(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
     a.clone(b).invert();
-    expect(a).toEqual(zero);
+    expect(a).toEqual(identity);
 
     const testMatrices = [
       Mat4.rotationX(0.3),

@@ -160,7 +160,7 @@ describe('Math - Mat3', () => {
     const a = Mat3.fromRowOrder(1, 2, 3, 4, 5, 6, 7, 8, 9);
     a.mulScalar(2);
 
-    expect(a.elements).toEqual([2, 8, 14, 4, 10, 16, 6, 12, 18]);
+    expect(a.elements).toEqual([2, 4, 6, 8, 10, 12, 14, 16, 18]);
   });
 
   it('determinant', () => {
@@ -180,12 +180,12 @@ describe('Math - Mat3', () => {
     const a = Mat3.fromRowOrder(2, 4, 6, 8, 10, 12, 14, 16, 18);
     a.divScalar(2);
 
-    expect(a.elements).toEqual([1, 4, 7, 2, 5, 8, 3, 6, 9]);
+    expect(a.elements).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9]);
   });
 
   it('scale', () => {
     const a = Mat3.identity();
-    a.mulScalar(Vec2.new(2, 3));
+    a.scale(Vec2.new(2, 3));
 
     expect(a.elements).toEqual([2, 0, 0, 0, 3, 0, 0, 0, 1]);
   });

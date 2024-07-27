@@ -268,9 +268,9 @@ describe('Math - Vec2', () => {
     const b = Vec2.new(0, 3);
     const c = Vec2.new();
 
-    expect(c.lerp(a, b, 0)).toEqual(a);
-    expect(c.lerp(a, b, 0.5)).toEqual(Vec2.new(1, 1.5));
-    expect(c.lerp(a, b, 1)).toEqual(b);
+    expect(c.asLerp(a, b, 0)).toEqual(a);
+    expect(c.asLerp(a, b, 0.5)).toEqual(Vec2.new(1, 1.5));
+    expect(c.asLerp(a, b, 1)).toEqual(b);
   });
 
   it('applyMat3', () => {
