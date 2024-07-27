@@ -4,7 +4,7 @@ import { LinearInterpolant } from '../math/interpolants/LinearInterpolant.js';
 import { DiscreteInterpolant } from '../math/interpolants/DiscreteInterpolant.js';
 import * as AnimationUtils from './AnimationUtils.js';
 import { NumberArrayConstructor, TypedArray } from '../math/MathUtils.js';
-import { Interpolant } from '../math/Interpolant.js';
+import { Interpolant } from '../math/interpolants/Interpolant.js';
 
 export class KeyframeTrack<T extends TypedArray = Float32Array, V extends TypedArray = Float32Array> {
   declare ['constructor']: typeof KeyframeTrack;

@@ -301,7 +301,7 @@ export class AnimationAction {
       switch (this.blendMode) {
         case AnimationBlendMode.Additive:
           for (let j = 0, m = interpolants.length; j !== m; ++j) {
-            interpolants[j].evaluate(clipTime);
+            interpolants[j].interpolateAt(clipTime);
             propertyMixers[j].accumulateAdditive(weight);
           }
 
@@ -310,7 +310,7 @@ export class AnimationAction {
         case AnimationBlendMode.Normal:
         default:
           for (let j = 0, m = interpolants.length; j !== m; ++j) {
-            interpolants[j].evaluate(clipTime);
+            interpolants[j].interpolateAt(clipTime);
             propertyMixers[j].accumulate(accuIndex, weight);
           }
       }
@@ -325,7 +325,7 @@ export class AnimationAction {
       const interpolant = this._weightInterpolant;
 
       if (interpolant !== null) {
-        const interpolantValue = interpolant.evaluate(time)[0];
+        const interpolantValue = interpolant.interpolateAt(time)[0];
 
         weight *= interpolantValue;
 
@@ -353,7 +353,7 @@ export class AnimationAction {
       const interpolant = this._timeScaleInterpolant;
 
       if (interpolant !== null) {
-        const interpolantValue = interpolant.evaluate(time)[0];
+        const interpolantValue = interpolant.interpolateAt(time)[0];
 
         timeScale *= interpolantValue;
 

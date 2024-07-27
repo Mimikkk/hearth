@@ -1,5 +1,5 @@
 import { InterpolationEndingMode } from '../../constants.js';
-import { Interpolant } from '../Interpolant.js';
+import { Interpolant } from './Interpolant.js';
 import type { TypedArray } from '../MathUtils.js';
 
 export class CubicInterpolant<T extends TypedArray, V extends TypedArray> extends Interpolant<T, V> {
@@ -11,75 +11,18 @@ export class CubicInterpolant<T extends TypedArray, V extends TypedArray> extend
   _weightNext: number = -0;
   _offsetNext: number = -0;
 
-  constructor(parameterPositions: T, sampleValues: V, valueSize: number, resultBuffer?: V) {
-    super(parameterPositions, sampleValues, valueSize, resultBuffer);
-  }
-
-  override intervalChanged_(i1: number, t0: number, t1: number): void {
-    const pp = this.parameterPositions;
-    let iPrev = i1 - 2;
-    let iNext = i1 + 1;
-    let tPrev = pp[iPrev];
-    let tNext = pp[iNext];
-
-    if (tPrev === undefined) {
-      switch (this.endingStart) {
-        case InterpolationEndingMode.ZeroSlope:
-          iPrev = i1;
-          tPrev = 2 * t0 - t1;
-          break;
-        case InterpolationEndingMode.WrapAround:
-          iPrev = pp.length - 2;
-          tPrev = t0 + pp[iPrev] - pp[iPrev + 1];
-          break;
-        case InterpolationEndingMode.ZeroCurvature:
-          iPrev = i1;
-          tPrev = t1;
-          break;
-        default:
-          throw new Error('Unsupported interpolation ending mode.');
-      }
-    }
-
-    if (tNext === undefined) {
-      switch (this.endingEnd) {
-        case InterpolationEndingMode.ZeroSlope:
-          iNext = i1;
-          tNext = 2 * t1 - t0;
-          break;
-        case InterpolationEndingMode.WrapAround:
-          iNext = 1;
-          tNext = t1 + pp[1] - pp[0];
-          break;
-        case InterpolationEndingMode.ZeroCurvature:
-          iNext = i1 - 1;
-          tNext = t0;
-          break;
-        default:
-          throw new Error('Unsupported interpolation ending mode.');
-      }
-    }
-
-    const halfDt = (t1 - t0) * 0.5;
-    const stride = this.valueSize;
-
-    this._weightPrev = halfDt / (t0 - tPrev);
-    this._weightNext = halfDt / (tNext - t1);
-    this._offsetPrev = iPrev * stride;
-    this._offsetNext = iNext * stride;
-  }
-
-  override interpolate_(i1: number, t0: number, t: number, t1: number): V {
+  override interpolate(index: number, previousAt: number, at: number, currentAt: number): V {
     const result = this.resultBuffer;
     const values = this.sampleValues;
     const stride = this.valueSize;
-    const o1 = i1 * stride;
+    const o1 = index * stride;
     const o0 = o1 - stride;
+
     const oP = this._offsetPrev;
     const oN = this._offsetNext;
     const wP = this._weightPrev;
     const wN = this._weightNext;
-    const p = (t - t0) / (t1 - t0);
+    const p = (at - previousAt) / (currentAt - previousAt);
     const pp = p * p;
     const ppp = pp * p;
 
@@ -93,5 +36,59 @@ export class CubicInterpolant<T extends TypedArray, V extends TypedArray> extend
     }
 
     return result;
+  }
+
+  onIntervalChange(index: number, previousAt: number, currentAt: number): void {
+    const pp = this.parameterPositions;
+    let iPrev = index - 2;
+    let iNext = index + 1;
+    let tPrev = pp[iPrev];
+    let tNext = pp[iNext];
+
+    if (tPrev === undefined) {
+      switch (this.endingStart) {
+        case InterpolationEndingMode.ZeroSlope:
+          iPrev = index;
+          tPrev = 2 * previousAt - currentAt;
+          break;
+        case InterpolationEndingMode.WrapAround:
+          iPrev = pp.length - 2;
+          tPrev = previousAt + pp[iPrev] - pp[iPrev + 1];
+          break;
+        case InterpolationEndingMode.ZeroCurvature:
+          iPrev = index;
+          tPrev = currentAt;
+          break;
+        default:
+          throw new Error('Unsupported interpolation ending mode.');
+      }
+    }
+
+    if (tNext === undefined) {
+      switch (this.endingEnd) {
+        case InterpolationEndingMode.ZeroSlope:
+          iNext = index;
+          tNext = 2 * currentAt - previousAt;
+          break;
+        case InterpolationEndingMode.WrapAround:
+          iNext = 1;
+          tNext = currentAt + pp[1] - pp[0];
+          break;
+        case InterpolationEndingMode.ZeroCurvature:
+          iNext = index - 1;
+          tNext = previousAt;
+          break;
+        default:
+          throw new Error('Unsupported interpolation ending mode.');
+      }
+    }
+
+    const halfDt = (currentAt - previousAt) * 0.5;
+    const stride = this.valueSize;
+
+    this._weightPrev = halfDt / (previousAt - tPrev);
+    this._weightNext = halfDt / (tNext - currentAt);
+    this._offsetPrev = iPrev * stride;
+    this._offsetNext = iNext * stride;
   }
 }

@@ -212,7 +212,7 @@ export function makeClipAdditive(
       const interpolant = referenceTrack.createInterpolant();
       const startIndex = referenceOffset;
       const endIndex = referenceValueSize - referenceOffset;
-      interpolant.evaluate(referenceTime);
+      interpolant.interpolateAt(referenceTime);
       referenceValue = interpolant.resultBuffer.slice(startIndex, endIndex);
     }
 

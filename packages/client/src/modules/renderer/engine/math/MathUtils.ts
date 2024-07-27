@@ -102,5 +102,8 @@ const TypedArrayMap = {
 };
 
 type Map = typeof TypedArrayMap;
-export const createTypedArray = <K extends keyof Map>(type: K, elements: NumberArray): ArrayMap<Map[K]> =>
-  new TypedArrayMap[type](elements) as ArrayMap<Map[K]>;
+export const createTypedArray = <K extends keyof Map>(type: K, elements: NumberArray | number): ArrayMap<Map[K]> =>
+  new TypedArrayMap[type](elements as number) as ArrayMap<Map[K]>;
+
+export const createTypedArrayAs = <T extends TypedArray>(array: T, elements: NumberArray | number): T =>
+  createTypedArray(array.constructor as any, elements) as T;

@@ -1504,7 +1504,7 @@ class GLTFCubicSplineInterpolant extends Interpolant {
     super(parameterPositions, sampleValues, sampleSize, resultBuffer);
   }
 
-  copySampleValue_(index) {
+  copySampleValue(index) {
     // Copies a sample value to the result buffer. See description of glTF
     // CUBICSPLINE values layout in interpolate_() function below.
 
@@ -1520,7 +1520,7 @@ class GLTFCubicSplineInterpolant extends Interpolant {
     return result;
   }
 
-  interpolate_(i1, t0, t, t1) {
+  interpolate(i1, t0, t, t1) {
     const result = this.resultBuffer;
     const values = this.sampleValues;
     const stride = this.valueSize;
@@ -1560,8 +1560,8 @@ class GLTFCubicSplineInterpolant extends Interpolant {
 const _q = Quaternion.new();
 
 class GLTFCubicSplineQuaternionInterpolant extends GLTFCubicSplineInterpolant {
-  interpolate_(i1, t0, t, t1) {
-    const result = super.interpolate_(i1, t0, t, t1);
+  interpolate(i1, t0, t, t1) {
+    const result = super.interpolate(i1, t0, t, t1);
 
     _q.fromArray(result).normalize().intoArray(result);
 
