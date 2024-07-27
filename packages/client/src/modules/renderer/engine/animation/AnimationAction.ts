@@ -93,9 +93,9 @@ export class AnimationAction {
     this.paused = false;
     this.enabled = true;
 
-    this.time = 0; // restart clip
-    this.activeLoopCount = -1; // forget previous loops
-    this.startTime = null; // forget scheduling
+    this.time = 0;
+    this.activeLoopCount = -1;
+    this.startTime = null;
 
     return this.stopFading().stopWarping();
   }
@@ -130,7 +130,6 @@ export class AnimationAction {
   setEffectiveWeight(weight: number): this {
     this.weight = weight;
 
-    // note: same logic as when updated at runtime
     this.effectiveWeight = this.enabled ? weight : 0;
 
     return this.stopFading();
@@ -238,8 +237,6 @@ export class AnimationAction {
 
   update(time: number, deltaTime: number, timeDirection: number, accuIndex: number) {
     if (!this.enabled) {
-      // call ._updateWeight() to update .effectiveWeight
-
       this._updateWeight(time);
       return;
     }
@@ -251,7 +248,7 @@ export class AnimationAction {
       if (timeRunning < 0 || timeDirection === 0) {
         deltaTime = 0;
       } else {
-        this.startTime = null; // unschedule
+        this.startTime = null;
         deltaTime = timeDirection * timeRunning;
       }
     }
@@ -283,7 +280,7 @@ export class AnimationAction {
     }
   }
 
-  _updateWeight(time: number) {
+  _updateWeight(time: number): number {
     let weight = 0;
 
     if (this.enabled) {
@@ -299,7 +296,6 @@ export class AnimationAction {
           this.stopFading();
 
           if (interpolantValue === 0) {
-            // faded out, disable
             this.enabled = false;
           }
         }
@@ -310,7 +306,7 @@ export class AnimationAction {
     return weight;
   }
 
-  _updateTimeScale(time: number) {
+  _updateTimeScale(time: number): number {
     let timeScale = 0;
 
     if (!this.paused) {
@@ -327,10 +323,8 @@ export class AnimationAction {
           this.stopWarping();
 
           if (timeScale === 0) {
-            // motion has halted, pause
             this.paused = true;
           } else {
-            // warp done - apply final time scale
             this.timeScale = timeScale;
           }
         }
@@ -341,7 +335,7 @@ export class AnimationAction {
     return timeScale;
   }
 
-  _updateTime(deltaTime: number) {
+  _updateTime(deltaTime: number): number {
     const duration = this.clip.duration;
     const loop = this.loop;
 
@@ -358,10 +352,8 @@ export class AnimationAction {
 
     if (loop === AnimationActionLoopStyle.Once) {
       if (loopCount === -1) {
-        // just started
-
         this.activeLoopCount = 0;
-        this._setEndings(true, true, false);
+        this._updateEndings(true, true, false);
       }
 
       handle_stop: {
@@ -381,28 +373,18 @@ export class AnimationAction {
         this.time = time;
       }
     } else {
-      // repetitive Repeat or PingPong
-
       if (loopCount === -1) {
-        // just started
-
         if (deltaTime >= 0) {
           loopCount = 0;
 
-          this._setEndings(true, this.repetitions === 0, pingPong);
+          this._updateEndings(true, this.repetitions === 0, pingPong);
         } else {
-          // when looping in reverse direction, the initial
-          // transition through zero counts as a repetition,
-          // so leave loopCount at -1
-
-          this._setEndings(this.repetitions === 0, true, pingPong);
+          this._updateEndings(this.repetitions === 0, true, pingPong);
         }
       }
 
       if (time >= duration || time < 0) {
-        // wrap around
-
-        const loopDelta = Math.floor(time / duration); // signed
+        const loopDelta = Math.floor(time / duration);
         time -= duration * loopDelta;
 
         loopCount += Math.abs(loopDelta);
@@ -410,8 +392,6 @@ export class AnimationAction {
         const pending = this.repetitions - loopCount;
 
         if (pending <= 0) {
-          // have to stop (switch state, clamp time, fire event)
-
           if (this.clampWhenFinished) this.paused = true;
           else this.enabled = false;
 
@@ -419,15 +399,11 @@ export class AnimationAction {
 
           this.time = time;
         } else {
-          // keep running
-
           if (pending === 1) {
-            // entering the last round
-
             const atStart = deltaTime < 0;
-            this._setEndings(atStart, !atStart, pingPong);
+            this._updateEndings(atStart, !atStart, pingPong);
           } else {
-            this._setEndings(false, false, pingPong);
+            this._updateEndings(false, false, pingPong);
           }
 
           this.activeLoopCount = loopCount;
@@ -439,8 +415,6 @@ export class AnimationAction {
       }
 
       if (pingPong && (loopCount & 1) === 1) {
-        // invert time for the "pong round"
-
         return duration - time;
       }
     }
@@ -448,7 +422,7 @@ export class AnimationAction {
     return time;
   }
 
-  _setEndings(atStart: boolean, atEnd: boolean, pingPong: boolean) {
+  _updateEndings(atStart: boolean, atEnd: boolean, pingPong: boolean): void {
     const settings = this.settings;
 
     if (pingPong) {
@@ -473,7 +447,7 @@ export class AnimationAction {
     }
   }
 
-  _scheduleFading(duration: number, weightNow: number, weightThen: number) {
+  _scheduleFading(duration: number, weightNow: number, weightThen: number): this {
     const mixer = this.mixer;
     const now = mixer.time;
     let interpolant = this.weightInterpolant;

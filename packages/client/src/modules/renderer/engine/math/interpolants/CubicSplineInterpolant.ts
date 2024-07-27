@@ -1,7 +1,7 @@
 import { Interpolant } from './Interpolant.js';
 import type { TypedArray } from '../MathUtils.js';
 
-export class CubicSplineInterpolant<T extends TypedArray, V extends TypedArray> extends Interpolant<T, V> {
+export class CubicSplineInterpolant<T extends TypedArray = any, V extends TypedArray = any> extends Interpolant<T, V> {
   override copySampleValue(index: number): V {
     const result = this.resultBuffer;
     const values = this.sampleValues;

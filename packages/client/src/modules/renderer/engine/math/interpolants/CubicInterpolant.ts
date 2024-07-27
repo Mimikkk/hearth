@@ -2,7 +2,7 @@ import { InterpolationEndingMode } from '../../constants.js';
 import { Interpolant } from './Interpolant.js';
 import type { TypedArray } from '../MathUtils.js';
 
-export class CubicInterpolant<T extends TypedArray, V extends TypedArray> extends Interpolant<T, V> {
+export class CubicInterpolant<T extends TypedArray = any, V extends TypedArray = any> extends Interpolant<T, V> {
   endingStart: InterpolationEndingMode = InterpolationEndingMode.ZeroCurvature;
   endingEnd: InterpolationEndingMode = InterpolationEndingMode.ZeroCurvature;
 

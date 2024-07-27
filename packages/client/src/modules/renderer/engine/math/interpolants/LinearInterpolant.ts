@@ -1,7 +1,7 @@
 import { Interpolant } from './Interpolant.js';
 import type { TypedArray } from '../MathUtils.js';
 
-export class LinearInterpolant<T extends TypedArray, V extends TypedArray> extends Interpolant<T, V> {
+export class LinearInterpolant<T extends TypedArray = any, V extends TypedArray = any> extends Interpolant<T, V> {
   override interpolate(index: number, previousAt: number, targetAt: number, currentAt: number): V {
     const { resultBuffer: result, sampleValues: values, valueSize: stride } = this;
 

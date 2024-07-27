@@ -3,8 +3,8 @@ import type { TypedArray } from '@modules/renderer/engine/math/MathUtils.js';
 import { CubicSplineInterpolant } from '@modules/renderer/engine/math/interpolants/CubicSplineInterpolant.js';
 
 export class CubicSplineQuaternionInterpolant<
-  T extends TypedArray,
-  V extends TypedArray,
+  T extends TypedArray = any,
+  V extends TypedArray = any,
 > extends CubicSplineInterpolant<T, V> {
   override interpolate(index: number, previousAt: number, at: number, currentAt: number): V {
     const result = super.interpolate(index, previousAt, at, currentAt);
