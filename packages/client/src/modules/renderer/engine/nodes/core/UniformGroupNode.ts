@@ -1,26 +1,24 @@
 import { Node } from './Node.js';
+import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
-class UniformGroupNode extends Node {
+export class UniformGroupNode extends Node {
   static type = 'UniformGroupNode';
 
-  constructor(name, shared = false) {
-    super('string');
-
-    this.name = name;
+  constructor(
+    public name: string,
+    public shared: boolean = false,
+  ) {
+    super(TypeName.string);
     this.version = 0;
-
-    this.shared = shared;
-
-    this.isUniformGroup = true;
   }
 
-  set needsUpdate(value) {
-    if (value === true) this.version++;
+  set needsUpdate(value: boolean) {
+    if (value) this.version++;
   }
 }
 
-export const uniformGroup = name => new UniformGroupNode(name);
-export const sharedUniformGroup = name => new UniformGroupNode(name, true);
+export const uniformGroup = (name: string) => new UniformGroupNode(name, false);
+export const sharedUniformGroup = (name: string) => new UniformGroupNode(name, true);
 
 export const frameGroup = sharedUniformGroup('frame');
 export const renderGroup = sharedUniformGroup('render');
