@@ -26,7 +26,7 @@ class IndexNode extends Node {
     } else if (scope === IndexNode.INSTANCE) {
       propertyName = builder.UseInstanceIndex();
     } else {
-      throw new Error('engine.IndexNode: Unknown scope: ' + scope);
+      throw new Error('IndexNode: Unknown scope: ' + scope);
     }
 
     let output;

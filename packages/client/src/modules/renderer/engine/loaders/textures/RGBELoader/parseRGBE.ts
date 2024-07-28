@@ -77,14 +77,14 @@ export const parseRGBE = (buffer: ArrayBuffer, type: SupportedType): DataTexture
   const rgbe_error = (rgbe_error_code: number, msg?: string) => {
     switch (rgbe_error_code) {
       case rgbe_read_error:
-        throw new Error('engine.RGBELoader: Read Error: ' + (msg || ''));
+        throw new Error('RGBELoader: Read Error: ' + (msg || ''));
       case rgbe_write_error:
-        throw new Error('engine.RGBELoader: Write Error: ' + (msg || ''));
+        throw new Error('RGBELoader: Write Error: ' + (msg || ''));
       case rgbe_format_error:
-        throw new Error('engine.RGBELoader: Bad File Format: ' + (msg || ''));
+        throw new Error('RGBELoader: Bad File Format: ' + (msg || ''));
       default:
       case rgbe_memory_error:
-        throw new Error('engine.RGBELoader: Memory Error: ' + (msg || ''));
+        throw new Error('RGBELoader: Memory Error: ' + (msg || ''));
     }
   };
   const RGBE_VALID_PROGRAMTYPE = 1;

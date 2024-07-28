@@ -80,7 +80,7 @@ export class HearthBackground extends DataMap<any, any> {
 
       renderList.unshift(backgroundMesh, backgroundMesh.geometry, backgroundMesh.material, 0, 0, null);
     } else {
-      console.error('engine.Hearth: Unsupported background configuration.', background);
+      console.error('Hearth: Unsupported background configuration.', background);
     }
 
     if (hearth.parameters.autoClear || forceClear) {

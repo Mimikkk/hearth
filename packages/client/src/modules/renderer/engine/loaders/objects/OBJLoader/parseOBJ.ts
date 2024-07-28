@@ -43,8 +43,6 @@ class ParserState {
   materialLibraries = [];
 
   startObject(name: string, fromDeclaration: boolean) {
-
-
     if (this.object && this.object.fromDeclaration === false) {
       this.object.name = name;
       this.object.fromDeclaration = fromDeclaration !== false;
@@ -74,8 +72,6 @@ class ParserState {
 
       startMaterial(name: string, libraries: string[]) {
         const previous = this._finalize(false);
-
-
 
         if (previous && (previous.inherited || previous.groupCount <= 0)) {
           this.materials.splice(previous.index, 1);
@@ -128,7 +124,6 @@ class ParserState {
           lastMultiMaterial.inherited = false;
         }
 
-
         if (end && this.materials.length > 1) {
           for (let mi = this.materials.length - 1; mi >= 0; mi--) {
             if (this.materials[mi].groupCount <= 0) {
@@ -136,7 +131,6 @@ class ParserState {
             }
           }
         }
-
 
         if (end && this.materials.length === 0) {
           this.materials.push({
@@ -148,12 +142,6 @@ class ParserState {
         return lastMultiMaterial;
       },
     };
-
-
-
-
-
-
 
     if (previousMaterial && previousMaterial.name && typeof previousMaterial.clone === 'function') {
       const declared = previousMaterial.clone(0);
@@ -279,8 +267,6 @@ class ParserState {
     this.addVertex(ia, ib, ic);
     this.addColor(ia, ib, ic);
 
-
-
     if (na !== undefined && na !== '') {
       const nLen = this.normals.length;
 
@@ -293,8 +279,6 @@ class ParserState {
       this.addFaceNormal(ia, ib, ic);
     }
 
-
-
     if (ua !== undefined && ua !== '') {
       const uvLen = this.uvs.length;
 
@@ -306,8 +290,6 @@ class ParserState {
 
       this.object.geometry.hasUVIndices = true;
     } else {
-
-
       this.addDefaultUV();
     }
   }
@@ -364,12 +346,10 @@ export async function parseOBJ(text: string, materialCreator?: MTLMaterialCreato
   const state = new ParserState();
 
   if (text.indexOf('\r\n') !== -1) {
-
     text = text.replace(/\r\n/g, '\n');
   }
 
   if (text.indexOf('\\\n') !== -1) {
-
     text = text.replace(/\\\n/g, '');
   }
 
@@ -395,8 +375,6 @@ export async function parseOBJ(text: string, materialCreator?: MTLMaterialCreato
 
             state.colors.push(_color.r, _color.g, _color.b);
           } else {
-
-
             state.colors.push(undefined, undefined, undefined);
           }
 
@@ -413,8 +391,6 @@ export async function parseOBJ(text: string, materialCreator?: MTLMaterialCreato
       const vertexData = lineData.split(DelimiterRe);
       const faceVertices = [];
 
-
-
       for (let j = 0, jl = vertexData.length; j < jl; j++) {
         const vertex = vertexData[j];
 
@@ -423,8 +399,6 @@ export async function parseOBJ(text: string, materialCreator?: MTLMaterialCreato
           faceVertices.push(vertexParts);
         }
       }
-
-
 
       const v1 = faceVertices[0];
 
@@ -457,41 +431,17 @@ export async function parseOBJ(text: string, materialCreator?: MTLMaterialCreato
 
       state.addPointGeometry(pointData);
     } else if ((result = ObjectRe.exec(line)) !== null) {
-
-
-
-
-
-
       const name = (' ' + result[0].slice(1).trim()).slice(1);
 
       state.startObject(name);
     } else if (MaterialUseRe.test(line)) {
-
-
       state.object.startMaterial(line.substring(7).trim(), state.materialLibraries);
     } else if (MaterialLibRe.test(line)) {
-
-
       state.materialLibraries.push(line.substring(7).trim());
     } else if (MapUseRe.test(line)) {
-
-
-
-      console.warn(
-        'engine.OBJLoader: Rendering identifier "usemap" not supported. Textures must be defined in MTL files.',
-      );
+      console.warn('OBJLoader: Rendering identifier "usemap" not supported. Textures must be defined in MTL files.');
     } else if (lineFirstChar === 's') {
       result = line.split(' ');
-
-
-
-
-
-
-
-
-
 
       /*
        * http://paulbourke.net/dataformats/obj/
@@ -506,17 +456,15 @@ export async function parseOBJ(text: string, materialCreator?: MTLMaterialCreato
         const value = result[1].trim().toLowerCase();
         state.object.smooth = value !== '0' && value !== 'off';
       } else {
-
         state.object.smooth = true;
       }
 
       const material = state.object.currentMaterial();
       if (material) material.smooth = state.object.smooth;
     } else {
-
       if (line === '\0') continue;
 
-      console.warn('engine.OBJLoader: Unexpected line: "' + line + '"');
+      console.warn('OBJLoader: Unexpected line: "' + line + '"');
     }
   }
 
@@ -534,7 +482,6 @@ export async function parseOBJ(text: string, materialCreator?: MTLMaterialCreato
       const isLine = geometry.type === 'Line';
       const isPoints = geometry.type === 'Poi.js';
       let hasVertexColors = false;
-
 
       if (geometry.vertices.length === 0) continue;
 
@@ -555,8 +502,6 @@ export async function parseOBJ(text: string, materialCreator?: MTLMaterialCreato
         buffergeometry.setAttribute('uv', new Attribute(new Float32Array(geometry.uvs), 2));
       }
 
-
-
       const createdMaterials = [];
 
       for (let mi = 0, miLen = materials.length; mi < miLen; mi++) {
@@ -566,7 +511,6 @@ export async function parseOBJ(text: string, materialCreator?: MTLMaterialCreato
 
         if (materialCreator) {
           material = await materialCreator.loadAsync(sourceMaterial.name);
-
 
           if (isLine && material && !(material instanceof LineBasicMaterial)) {
             const materialLine = new LineBasicMaterial();
@@ -601,8 +545,6 @@ export async function parseOBJ(text: string, materialCreator?: MTLMaterialCreato
         createdMaterials.push(material);
       }
 
-
-
       let mesh;
 
       if (createdMaterials.length > 1) {
@@ -633,8 +575,6 @@ export async function parseOBJ(text: string, materialCreator?: MTLMaterialCreato
       container.add(mesh);
     }
   } else {
-
-
     if (state.vertices.length > 0) {
       const material = new PointsMaterial({ size: 1, sizeAttenuation: false });
 

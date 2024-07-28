@@ -21,9 +21,9 @@ export class KeyframeTrack<T extends TypedArray = Float32Array, V extends TypedA
     values: V,
     interpolation?: InterpolationMode,
   ) {
-    if (name === undefined) throw new Error('engine.KeyframeTrack: track name is undefined');
+    if (name === undefined) throw new Error('KeyframeTrack: track name is undefined');
     if (times === undefined || times.length === 0)
-      throw new Error('engine.KeyframeTrack: no keyframes in track named ' + name);
+      throw new Error('KeyframeTrack: no keyframes in track named ' + name);
 
     this.times = AnimationUtils.convertArray(times, this.TimeBufferType);
     this.values = AnimationUtils.convertArray(values, this.ValueBufferType);
@@ -74,7 +74,7 @@ export class KeyframeTrack<T extends TypedArray = Float32Array, V extends TypedA
         }
       }
 
-      console.warn('engine.KeyframeTrack:', message);
+      console.warn('KeyframeTrack:', message);
       return this;
     }
 
@@ -92,7 +92,7 @@ export class KeyframeTrack<T extends TypedArray = Float32Array, V extends TypedA
       case this.InterpolantFactoryMethodSmooth:
         return InterpolationMode.Smooth;
       default:
-        throw new Error('engine.KeyframeTrack: Unknown interpolation.');
+        throw new Error('KeyframeTrack: Unknown interpolation.');
     }
   }
 
@@ -160,7 +160,7 @@ export class KeyframeTrack<T extends TypedArray = Float32Array, V extends TypedA
 
     const valueSize = this.getValueSize();
     if (valueSize - Math.floor(valueSize) !== 0) {
-      console.error('engine.KeyframeTrack: Invalid value size in track.', this);
+      console.error('KeyframeTrack: Invalid value size in track.', this);
       valid = false;
     }
 
@@ -169,7 +169,7 @@ export class KeyframeTrack<T extends TypedArray = Float32Array, V extends TypedA
       nKeys = times.length;
 
     if (nKeys === 0) {
-      console.error('engine.KeyframeTrack: Track is empty.', this);
+      console.error('KeyframeTrack: Track is empty.', this);
       valid = false;
     }
 
@@ -179,13 +179,13 @@ export class KeyframeTrack<T extends TypedArray = Float32Array, V extends TypedA
       const currTime = times[i];
 
       if (typeof currTime === 'number' && isNaN(currTime)) {
-        console.error('engine.KeyframeTrack: Time is not a valid number.', this, i, currTime);
+        console.error('KeyframeTrack: Time is not a valid number.', this, i, currTime);
         valid = false;
         break;
       }
 
       if (prevTime !== null && prevTime > currTime) {
-        console.error('engine.KeyframeTrack: Out of order keys.', this, i, currTime, prevTime);
+        console.error('KeyframeTrack: Out of order keys.', this, i, currTime, prevTime);
         valid = false;
         break;
       }
@@ -199,7 +199,7 @@ export class KeyframeTrack<T extends TypedArray = Float32Array, V extends TypedA
           const value = values[i];
 
           if (isNaN(value)) {
-            console.error('engine.KeyframeTrack: Value is not a valid number.', this, i, value);
+            console.error('KeyframeTrack: Value is not a valid number.', this, i, value);
             valid = false;
             break;
           }

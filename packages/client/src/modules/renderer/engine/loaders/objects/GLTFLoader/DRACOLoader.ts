@@ -230,7 +230,7 @@ class DRACOLoader {
               break;
 
             default:
-              console.error('engine.DRACOLoader: Unexpected message, "' + message.type + '"');
+              console.error('DRACOLoader: Unexpected message, "' + message.type + '"');
           }
         };
 
@@ -339,11 +339,11 @@ function DRACOWorker() {
       dracoGeometry = new draco.PointCloud();
       decodingStatus = decoder.DecodeArrayToPointCloud(array, array.byteLength, dracoGeometry);
     } else {
-      throw new Error('engine.DRACOLoader: Unexpected geometry type.');
+      throw new Error('DRACOLoader: Unexpected geometry type.');
     }
 
     if (!decodingStatus.ok() || dracoGeometry.ptr === 0) {
-      throw new Error('engine.DRACOLoader: Decoding failed: ' + decodingStatus.error_msg());
+      throw new Error('DRACOLoader: Decoding failed: ' + decodingStatus.error_msg());
     }
 
     const geometry = { index: null, attributes: [] };

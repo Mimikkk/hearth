@@ -97,8 +97,6 @@ export class LineSegmentsGeometry extends Geometry {
 
     this.setPositions(geometry.attributes.position.array as Float32Array);
 
-
-
     return this;
   }
 
@@ -149,7 +147,7 @@ export class LineSegmentsGeometry extends Geometry {
 
       if (isNaN(this.boundingSphere.radius)) {
         console.error(
-          'engine.LineSegmentsGeometry.computeBoundingSphere(): Computed radius is NaN. The instanced position data is likely to have NaN values.',
+          'LineSegmentsGeometry.computeBoundingSphere(): Computed radius is NaN. The instanced position data is likely to have NaN values.',
           this,
         );
       }

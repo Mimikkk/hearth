@@ -32,15 +32,11 @@ export class Skeleton {
 
     this.boneMatrices = new Float32Array(bones.length * 16);
 
-
-
     if (boneInverses.length === 0) {
       this.calculateInverses();
     } else {
-
-
       if (bones.length !== boneInverses.length) {
-        console.warn('engine.Skeleton: Number of inverse bone matrices does not match amount of bones.');
+        console.warn('Skeleton: Number of inverse bone matrices does not match amount of bones.');
 
         this.boneInverses = [];
 
@@ -66,8 +62,6 @@ export class Skeleton {
   }
 
   pose() {
-
-
     for (let i = 0, il = this.bones.length; i < il; i++) {
       const bone = this.bones[i];
 
@@ -75,8 +69,6 @@ export class Skeleton {
         bone.matrixWorld.from(this.boneInverses[i]).invert();
       }
     }
-
-
 
     const isBone = (bone: any): bone is Bone => bone instanceof Bone;
 
@@ -102,11 +94,7 @@ export class Skeleton {
     const boneMatrices = this.boneMatrices;
     const boneTexture = this.boneTexture;
 
-
-
     for (let i = 0, il = bones.length; i < il; i++) {
-
-
       const matrix = bones[i] ? bones[i].matrixWorld : _identityMatrix;
 
       _offsetMatrix.asMul(matrix, boneInverses[i]);
@@ -123,13 +111,6 @@ export class Skeleton {
   }
 
   computeBoneTexture(): this {
-
-
-
-
-
-
-
     let size = Math.sqrt(this.bones.length * 4);
     size = Math.ceil(size / 4) * 4;
     size = Math.max(size, 4);

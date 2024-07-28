@@ -267,7 +267,7 @@ export class Geometry {
 
     if (isNaN(this.boundingBox.min.x) || isNaN(this.boundingBox.min.y) || isNaN(this.boundingBox.min.z)) {
       console.error(
-        'engine.BufferGeometry.computeBoundingBox(): Computed min/max have NaN values. The "position" attribute is likely to have NaN values.',
+        'BufferGeometry.computeBoundingBox(): Computed min/max have NaN values. The "position" attribute is likely to have NaN values.',
         this,
       );
     }
@@ -342,7 +342,7 @@ export class Geometry {
 
       if (isNaN(this.boundingSphere.radius)) {
         console.error(
-          'engine.BufferGeometry.computeBoundingSphere(): Computed radius is NaN. The "position" attribute is likely to have NaN values.',
+          'BufferGeometry.computeBoundingSphere(): Computed radius is NaN. The "position" attribute is likely to have NaN values.',
           this,
         );
       }
@@ -362,7 +362,7 @@ export class Geometry {
       attributes.uv === undefined
     ) {
       console.error(
-        'engine.BufferGeometry: .computeTangents() failed. Missing required attributes (index, position, normal or uv)',
+        'BufferGeometry: .computeTangents() failed. Missing required attributes (index, position, normal or uv)',
       );
       return this;
     }
@@ -599,7 +599,7 @@ export class Geometry {
     }
 
     if (this.index === null) {
-      console.warn('engine.BufferGeometry.toNonIndexed(): BufferGeometry is already non-indexed.');
+      console.warn('BufferGeometry.toNonIndexed(): BufferGeometry is already non-indexed.');
       return this;
     }
 

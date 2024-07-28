@@ -691,7 +691,7 @@ export class MarchingCubes extends Mesh {
 
       if (this.count / 3 > maxPolyCount)
         console.warn(
-          'engine.MarchingCubes: Geometry buffers too small for rendering. Please create an instance with a higher poly count.',
+          'MarchingCubes: Geometry buffers too small for rendering. Please create an instance with a higher poly count.',
         );
     };
 

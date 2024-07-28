@@ -165,7 +165,7 @@ async function createRawTexture(container: KTX2Container) {
   const { vkFormat } = container;
 
   if (FORMAT_MAP[vkFormat as keyof typeof FORMAT_MAP] === undefined) {
-    throw new Error('engine.KTX2Loader: Unsupported vkFormat.');
+    throw new Error('KTX2Loader: Unsupported vkFormat.');
   }
 
   if (container.supercompressionScheme === KHR_SUPERCOMPRESSION_ZSTD) {
@@ -226,7 +226,7 @@ async function createRawTexture(container: KTX2Container) {
         ? new DataTexture(mipmaps[0].data, container.pixelWidth, container.pixelHeight)
         : new Data3DTexture(mipmaps[0].data, container.pixelWidth, container.pixelHeight, container.pixelDepth);
   } else {
-    if (container.pixelDepth > 0) throw new Error('engine.KTX2Loader: Unsupported pixelDepth.');
+    if (container.pixelDepth > 0) throw new Error('KTX2Loader: Unsupported pixelDepth.');
 
     texture = new CompressedTexture(mipmaps, container.pixelWidth, container.pixelHeight);
   }

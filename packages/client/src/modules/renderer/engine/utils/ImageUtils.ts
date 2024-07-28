@@ -72,7 +72,7 @@ export class ImageUtils {
 
       return { data: data, width: image.width, height: image.height };
     } else {
-      throw Error('engine.ImageUtils.sRGBToLinear(): Unsupported image type. No color space conversion applied.');
+      throw Error('ImageUtils.sRGBToLinear(): Unsupported image type. No color space conversion applied.');
     }
   }
 }

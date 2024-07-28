@@ -23,7 +23,7 @@ class SceneNode extends Node {
     } else if (scope === SceneNode.BACKGROUND_INTENSITY) {
       output = reference('backgroundIntensity', 'f32', scene);
     } else {
-      console.error('engine.SceneNode: Unknown scope:', scope);
+      console.error('SceneNode: Unknown scope:', scope);
     }
 
     return output;

@@ -111,7 +111,7 @@ export class AnimationObjectGroup {
         }
       } else if (objects[index] !== knownObject) {
         console.error(
-          'engine.AnimationObjectGroup: Different objects with the same UUID ' +
+          'AnimationObjectGroup: Different objects with the same UUID ' +
             'detected. Clean the caches or recreate your infrastructure when reloading scenes.',
         );
       }

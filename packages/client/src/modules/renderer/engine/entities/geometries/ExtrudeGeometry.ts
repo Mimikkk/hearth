@@ -167,7 +167,7 @@ export class ExtrudeGeometry extends Geometry {
       }
 
       function scalePt2(pt: Vec2, vec: Vec2, size: number): Vec2 {
-        if (!vec) console.error('engine.ExtrudeGeometry: vec does not exist');
+        if (!vec) console.error('ExtrudeGeometry: vec does not exist');
 
         return pt.clone().addScaled(vec, size);
       }

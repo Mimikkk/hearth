@@ -66,7 +66,7 @@ export class Sprite extends Entity {
 
   raycast(raycaster: Raycaster, intersects: Intersection[]): void {
     if (raycaster.camera === null) {
-      throw Error('engine.Sprite: "Raycaster.camera" needs to be set in order to raycast against sprites.');
+      throw Error('Sprite: "Raycaster.camera" needs to be set in order to raycast against sprites.');
     }
 
     _worldScale.fromMat4Scale(this.matrixWorld);
@@ -98,7 +98,6 @@ export class Sprite extends Entity {
     _uvA.set(0, 0);
     _uvB.set(1, 0);
     _uvC.set(1, 1);
-
 
     _triangle.set(_vA, _vB, _vC);
     let intersect = raycaster.ray.intersectTriangle(_triangle, false, _intersectPoint);
@@ -157,9 +156,7 @@ function transformVertex(
   sin?: number,
   cos?: number,
 ) {
-
   _alignedPosition.asSub(vertexPosition, center).addScalar(0.5).mul(scale);
-
 
   if (sin !== undefined && cos !== undefined) {
     _rotatedPosition.x = cos * _alignedPosition.x - sin * _alignedPosition.y;
@@ -171,7 +168,6 @@ function transformVertex(
   vertexPosition.from(mvPosition);
   vertexPosition.x += _rotatedPosition.x;
   vertexPosition.y += _rotatedPosition.y;
-
 
   vertexPosition.applyMat4(_viewWorldMatrix);
 }

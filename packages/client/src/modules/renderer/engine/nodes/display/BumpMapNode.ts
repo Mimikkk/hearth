@@ -5,11 +5,6 @@ import { positionView } from '../accessors/PositionNode.js';
 import { faceDirection } from './FrontFacingNode.js';
 import { addNodeCommand, f32, proxyNode, tslFn, vec2 } from '../shadernode/ShaderNodes.js';
 
-
-
-
-
-
 const dHdxy_fwd = tslFn(({ textureNode, bumpScale }) => {
   let texNode = textureNode;
 
@@ -20,12 +15,11 @@ const dHdxy_fwd = tslFn(({ textureNode, bumpScale }) => {
   }
 
   if (texNode.isTextureNode !== true) {
-    throw new Error('engine.TSL: dHdxy_fwd() requires a TextureNode.');
+    throw new Error('TSL: dHdxy_fwd() requires a TextureNode.');
   }
 
   const Hll = f32(textureNode);
   const uvNode = texNode.uvNode || uv();
-
 
   const sampleTexture = uv => textureNode.cache().context({ getUV: () => uv, forceUVContext: true });
 
@@ -37,7 +31,6 @@ const dHdxy_fwd = tslFn(({ textureNode, bumpScale }) => {
 
 const perturbNormalArb = tslFn(inputs => {
   const { surf_pos, surf_norm, dHdxy } = inputs;
-
 
   const vSigmaX = surf_pos.dpdx().normalize();
   const vSigmaY = surf_pos.dpdy().negate().normalize();

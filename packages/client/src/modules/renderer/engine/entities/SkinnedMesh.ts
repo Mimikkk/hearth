@@ -87,8 +87,6 @@ export class SkinnedMesh extends Mesh {
 
     if (material === undefined) return;
 
-
-
     if (this.boundingSphere === null) this.computeBoundingSphere();
 
     _sphere.from(this.boundingSphere!);
@@ -96,18 +94,12 @@ export class SkinnedMesh extends Mesh {
 
     if (raycaster.ray.intersectsSphere(_sphere) === false) return;
 
-
-
     _inverseMatrix.from(matrixWorld).invert();
     _ray.from(raycaster.ray).applyMat4(_inverseMatrix);
-
-
 
     if (this.boundingBox !== null) {
       if (_ray.intersectsBox(this.boundingBox) === false) return;
     }
-
-
 
     this._computeIntersections(raycaster, intersects, _ray);
   }
@@ -167,7 +159,7 @@ export class SkinnedMesh extends Mesh {
     } else if (this.bindMode === BindMode.Detached) {
       this.bindMatrixInverse.from(this.bindMatrix).invert();
     } else {
-      console.warn('engine.SkinnedMesh: Unrecognized bindMode: ' + this.bindMode);
+      console.warn('SkinnedMesh: Unrecognized bindMode: ' + this.bindMode);
     }
 
     return this;

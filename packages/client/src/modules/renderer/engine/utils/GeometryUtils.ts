@@ -53,7 +53,7 @@ export function mergeGeometries(geometries: Geometry[], useGroups?: boolean): Ge
     for (const name in geometry.attributes) {
       if (!attributesUsed.has(name)) {
         console.error(
-          'engine.GeometryUtils: .mergeGeometries() failed with geometry at index ' +
+          'GeometryUtils: .mergeGeometries() failed with geometry at index ' +
             i +
             '. All geometries must have compatible attributes; make sure "' +
             name +
@@ -72,7 +72,7 @@ export function mergeGeometries(geometries: Geometry[], useGroups?: boolean): Ge
     for (const name in geometry.morphAttributes) {
       if (!morphAttributesUsed.has(name)) {
         console.error(
-          'engine.GeometryUtils: .mergeGeometries() failed with geometry at index ' +
+          'GeometryUtils: .mergeGeometries() failed with geometry at index ' +
             i +
             '.  .morphAttributes must be consistent throughout all geometries.',
         );
@@ -141,7 +141,7 @@ export function mergeGeometries(geometries: Geometry[], useGroups?: boolean): Ge
 
       if (!mergedMorphAttribute) {
         console.error(
-          'engine.GeometryUtils: .mergeGeometries() failed while trying to merge the ' + name + ' morphAttribute.',
+          'GeometryUtils: .mergeGeometries() failed while trying to merge the ' + name + ' morphAttribute.',
         );
         return null;
       }

@@ -12,8 +12,6 @@ export class LineSegments extends Line {
   computeLineDistances() {
     const geometry = this.geometry;
 
-
-
     if (geometry.index === null) {
       const positionAttribute = geometry.attributes.position;
       const lineDistances: number[] = [];
@@ -28,9 +26,7 @@ export class LineSegments extends Line {
 
       geometry.setAttribute('lineDistance', new Attribute(new Float32Array(lineDistances), 1));
     } else {
-      throw Error(
-        'engine.LineSegments.computeLineDistances(): Computation only possible with non-indexed BufferGeometry.',
-      );
+      throw Error('LineSegments.computeLineDistances(): Computation only possible with non-indexed BufferGeometry.');
     }
 
     return this;

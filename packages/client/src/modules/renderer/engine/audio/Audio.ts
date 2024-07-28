@@ -94,12 +94,12 @@ export abstract class Audio<T extends AudioNode = any> extends Entity {
 
   play(delay: number = 0): this {
     if (this.isPlaying === true) {
-      console.warn('engine.Audio: Audio is already playing.');
+      console.warn('Audio: Audio is already playing.');
       return this;
     }
 
     if (this.hasPlaybackControl === false) {
-      console.warn('engine.Audio: this Audio has no playback control.');
+      console.warn('Audio: this Audio has no playback control.');
       return this;
     }
 
@@ -125,18 +125,14 @@ export abstract class Audio<T extends AudioNode = any> extends Entity {
 
   pause(): this {
     if (this.hasPlaybackControl === false) {
-      console.warn('engine.Audio: this Audio has no playback control.');
+      console.warn('Audio: this Audio has no playback control.');
       return this;
     }
 
     if (this.isPlaying === true) {
-
-
       this._progress += Math.max(this.context.currentTime - this._startedAt, 0) * this.playbackRate;
 
       if (this.loop === true) {
-
-
         this._progress = this._progress % (this.duration || this.buffer!.duration);
       }
 
@@ -153,7 +149,7 @@ export abstract class Audio<T extends AudioNode = any> extends Entity {
 
   stop(): this {
     if (this.hasPlaybackControl === false) {
-      console.warn('engine.Audio: this Audio has no playback control.');
+      console.warn('Audio: this Audio has no playback control.');
       return this;
     }
 
@@ -259,7 +255,7 @@ export abstract class Audio<T extends AudioNode = any> extends Entity {
 
   setPlaybackRate(value: number): this {
     if (this.hasPlaybackControl === false) {
-      console.warn('engine.Audio: this Audio has no playback control.');
+      console.warn('Audio: this Audio has no playback control.');
       return this;
     }
 
@@ -283,7 +279,7 @@ export abstract class Audio<T extends AudioNode = any> extends Entity {
 
   getLoop(): boolean {
     if (this.hasPlaybackControl === false) {
-      console.warn('engine.Audio: this Audio has no playback control.');
+      console.warn('Audio: this Audio has no playback control.');
       return false;
     }
 
@@ -292,7 +288,7 @@ export abstract class Audio<T extends AudioNode = any> extends Entity {
 
   setLoop(value: boolean): this {
     if (this.hasPlaybackControl === false) {
-      console.warn('engine.Audio: this Audio has no playback control.');
+      console.warn('Audio: this Audio has no playback control.');
       return this;
     }
 
