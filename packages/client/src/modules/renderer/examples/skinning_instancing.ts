@@ -12,7 +12,7 @@ import {
 import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/GLTFLoader.js';
 
 import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
-import PostProcessing from '@modules/renderer/engine/renderers/PostProcessing.js';
+import Postprocess from '@modules/renderer/engine/renderers/Postprocess.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 import { BufferStep } from '@modules/renderer/engine/renderers/constants.js';
 import { Attribute, Buffer } from '@modules/renderer/engine/engine.js';
@@ -116,7 +116,7 @@ async function init() {
   const scenePassColorBlurred = scenePassColor.gaussianBlur();
   scenePassColorBlurred.directionNode = scenePassDepth;
 
-  postProcessing = new PostProcessing(renderer);
+  postProcessing = new Postprocess(renderer);
   postProcessing.outputNode = scenePassColorBlurred;
 
   // events

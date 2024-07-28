@@ -5,13 +5,13 @@ import { FrameStats } from '@modules/renderer/engine/renderers/FrameStats.js';
 import { Vec4 } from '@modules/renderer/engine/math/Vec4.js';
 import Attributes from '@modules/renderer/engine/renderers/Attributes.js';
 import Geometries from '@modules/renderer/engine/renderers/Geometries.js';
-import Nodes from '@modules/renderer/engine/nodes/builder/Nodes.js';
+import Nodes from '@modules/renderer/engine/renderers/Nodes.js';
 import { Animation, AnimationLoopFn } from '@modules/renderer/engine/renderers/Animation.js';
 import Bindings from '@modules/renderer/engine/renderers/Bindings.js';
-import RenderObjects from '@modules/renderer/engine/renderers/RenderObjects.js';
+import RendererRenderObjects from '@modules/renderer/engine/renderers/Renderer.RenderObjects.js';
 import Pipelines from '@modules/renderer/engine/renderers/Pipelines.js';
 import RenderLists from '@modules/renderer/engine/renderers/RenderLists.js';
-import RenderContexts from '@modules/renderer/engine/renderers/RenderContexts.js';
+import { RenderContexts } from '@modules/renderer/engine/renderers/Renderer.RenderContexts.js';
 import Textures from '@modules/renderer/engine/renderers/Textures.js';
 import Background from '@modules/renderer/engine/renderers/Background.js';
 import { Scene } from '@modules/renderer/engine/objects/scenes/Scene.js';
@@ -36,7 +36,7 @@ import {
 import { GPUFeature, GPUTextureFormatType } from '@modules/renderer/engine/renderers/constants.js';
 import { RenderItem, RenderList, SortFn } from '@modules/renderer/engine/renderers/RenderList.js';
 import ComputeNode from '@modules/renderer/engine/nodes/gpgpu/ComputeNode.js';
-import RenderContext from '@modules/renderer/engine/renderers/RenderContext.js';
+import RenderContext from '@modules/renderer/engine/renderers/core/RenderContext.js';
 import LightsNode from '@modules/renderer/engine/nodes/lighting/LightsNode.js';
 
 export class Renderer {
@@ -57,7 +57,7 @@ export class Renderer {
   nodes: Nodes;
   animation: Animation;
   bindings: Bindings;
-  objects: RenderObjects;
+  objects: RendererRenderObjects;
   pipelines: Pipelines;
 
   renderLists: RenderLists;
@@ -122,10 +122,8 @@ export class Renderer {
     this._pixelRatio = window.devicePixelRatio;
     this._width = this.parameters.canvas.width;
     this._height = this.parameters.canvas.height;
-    this.size = RenderSize.fromCanvas(this.parameters.canvas);
-
     // transform into a class
-    this.viewport = Vec4.new(0, 0, this.size.width, this._height);
+    this.viewport = Vec4.new(0, 0, this._width, this._height);
     // transform into a class
     this.scissor = Vec4.new(0, 0, this._width, this._height);
 
@@ -141,7 +139,7 @@ export class Renderer {
     this.textures = new Textures(this);
     this.pipelines = new Pipelines(this);
     this.bindings = new Bindings(this);
-    this.objects = new RenderObjects(this);
+    this.objects = new RendererRenderObjects(this);
     this.renderLists = new RenderLists();
     this.renderContexts = new RenderContexts();
     this.context = null;
@@ -751,35 +749,9 @@ type Configuration = Renderer.Configuration;
 const _scene = new Scene();
 const _drawSize = Vec2.new();
 const _screen = Vec4.new();
-const _frustum = new Frustum();
-const _projection = new Mat4();
+const _frustum = Frustum.new();
+const _projection = Mat4.new();
 const _vec3 = Vec3.new();
-
-class RenderSize {
-  constructor(
-    public width: number,
-    public height: number,
-    public pixelRatio: number,
-  ) {}
-
-  static new(width: number, height: number, pixelRatio: number = window.devicePixelRatio): RenderSize {
-    return new RenderSize(width, height, pixelRatio);
-  }
-
-  static fromCanvas(canvas: HTMLCanvasElement): RenderSize {
-    return new RenderSize(canvas.width, canvas.height, window.devicePixelRatio);
-  }
-
-  set(width: number, height: number, pixelRatio: number): this {
-    this.width = width;
-    this.height = height;
-    this.pixelRatio = pixelRatio;
-
-    return this;
-  }
-}
-
-class Viewport {}
 
 type RenderFn = (
   object: Entity,

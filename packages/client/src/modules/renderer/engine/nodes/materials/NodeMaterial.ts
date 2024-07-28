@@ -29,6 +29,7 @@ import { clipping, clippingAlpha } from '../accessors/ClippingNode.js';
 import { faceDirection } from '../display/FrontFacingNode.js';
 import { NodeMaterials } from '@modules/renderer/engine/nodes/materials/NodeMaterialMap.js';
 import { ShaderStage } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
+import { Node } from '@modules/renderer/engine/nodes/core/Node.js';
 
 export class NodeMaterial extends ShaderMaterial {
   declare isNodeMaterial: true;

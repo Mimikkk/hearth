@@ -3,7 +3,7 @@ import { cubeTexture, pass, uniform, viewportTopLeft } from '@modules/renderer/e
 
 import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 
-import PostProcessing from '@modules/renderer/engine/renderers/PostProcessing.js';
+import Postprocess from '@modules/renderer/engine/renderers/Postprocess.js';
 
 import { RGBMLoader } from '@modules/renderer/engine/loaders/textures/RGBMLoader/RGBMLoader.js';
 
@@ -71,7 +71,7 @@ async function init() {
   const anamorphicPass = scenePass.getTextureNode().anamorphic(threshold, scaleNode, samples);
   anamorphicPass.resolution = new Engine.Vec2(0.2, 0.2); // 1 = full resolution
 
-  postProcessing = new PostProcessing(renderer);
+  postProcessing = new Postprocess(renderer);
   postProcessing.outputNode = scenePass.add(anamorphicPass.mul(intensity));
   //postProcessing.outputNode = scenePass.add( anamorphicPass.getTextureNode().gaussianBlur() );
 

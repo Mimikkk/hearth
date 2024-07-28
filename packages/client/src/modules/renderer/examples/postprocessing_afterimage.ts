@@ -3,7 +3,7 @@ import * as Engine from '@modules/renderer/engine/engine.js';
 import { GUI } from 'lil-gui';
 
 import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
-import PostProcessing from '@modules/renderer/engine/renderers/PostProcessing.js';
+import Postprocess from '@modules/renderer/engine/renderers/Postprocess.js';
 import { pass } from '@modules/renderer/engine/nodes/Nodes.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
@@ -37,7 +37,7 @@ async function init() {
 
   // postprocessing
 
-  postProcessing = new PostProcessing(renderer);
+  postProcessing = new Postprocess(renderer);
 
   const scenePass = pass(scene, camera);
   const scenePassColor = scenePass.getTextureNode();

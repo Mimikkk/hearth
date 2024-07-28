@@ -13,7 +13,7 @@ import {
 import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/GLTFLoader.js';
 
 import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
-import PostProcessing from '@modules/renderer/engine/renderers/PostProcessing.js';
+import Postprocess from '@modules/renderer/engine/renderers/Postprocess.js';
 
 import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
 
@@ -132,7 +132,7 @@ async function init() {
 
   const vignet = viewportTopLeft.distance(0.5).mul(1.35).clamp().oneMinus();
 
-  postProcessing = new PostProcessing(renderer);
+  postProcessing = new Postprocess(renderer);
   postProcessing.outputNode = scenePassColorBlurred.mul(vignet);
 
   //

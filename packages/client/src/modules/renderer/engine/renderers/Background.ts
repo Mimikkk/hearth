@@ -10,7 +10,7 @@ import {
   vec4,
 } from '../nodes/Nodes.js';
 import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
-import RenderContext from '@modules/renderer/engine/renderers/RenderContext.js';
+import RenderContext from '@modules/renderer/engine/renderers/core/RenderContext.js';
 import RenderList from '@modules/renderer/engine/renderers/RenderList.js';
 
 const _clearColor = Color.new(0, 0, 0, 1);

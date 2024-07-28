@@ -1,11 +1,11 @@
 import ChainMap from './ChainMap.js';
-import RenderContext from './RenderContext.js';
+import RenderContext from './core/RenderContext.js';
 import { Scene } from '@modules/renderer/engine/objects/scenes/Scene.js';
 import { Camera } from '@modules/renderer/engine/objects/cameras/Camera.js';
 import { RenderTarget } from '@modules/renderer/engine/renderers/RenderTarget.js';
 import { Entity } from '@modules/renderer/engine/core/Entity.js';
 
-class RenderContexts {
+export class RenderContexts {
   chainMaps: Map<string, ChainMap<Entity, RenderContext>> = new Map();
 
   constructor() {}
@@ -48,5 +48,3 @@ class RenderContexts {
     this.chainMaps.clear();
   }
 }
-
-export default RenderContexts;

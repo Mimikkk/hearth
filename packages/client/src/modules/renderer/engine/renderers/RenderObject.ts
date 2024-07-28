@@ -5,7 +5,7 @@ import { Material } from '@modules/renderer/engine/objects/materials/Material.js
 import { Scene } from '@modules/renderer/engine/objects/scenes/Scene.js';
 import { Camera } from '@modules/renderer/engine/objects/cameras/Camera.js';
 import LightsNode from '@modules/renderer/engine/nodes/lighting/LightsNode.js';
-import RenderContext from '@modules/renderer/engine/renderers/RenderContext.js';
+import RenderContext from '@modules/renderer/engine/renderers/core/RenderContext.js';
 
 let id = 0;
 

@@ -1,5 +1,5 @@
 import { GPUPrimitiveTopologyType, GPUTextureFormatType } from './constants.js';
-import RenderContext from '@modules/renderer/engine/renderers/RenderContext.js';
+import RenderContext from '@modules/renderer/engine/renderers/core/RenderContext.js';
 import { Entity } from '@modules/renderer/engine/core/Entity.js';
 import { Material } from '@modules/renderer/engine/objects/materials/Material.js';
 import { Texture } from '@modules/renderer/engine/objects/textures/Texture.js';

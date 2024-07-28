@@ -24,7 +24,7 @@ import {
 import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/GLTFLoader.js';
 
 import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
-import PostProcessing from '@modules/renderer/engine/renderers/PostProcessing.js';
+import Postprocess from '@modules/renderer/engine/renderers/Postprocess.js';
 
 import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
 
@@ -228,7 +228,7 @@ scenePassColorBlurred.directionNode = waterMask.cond(scenePassDepth, scenePass.g
 
 const vignet = viewportTopLeft.distance(0.5).mul(1.35).clamp().oneMinus();
 
-const postProcessing = new PostProcessing(renderer);
+const postProcessing = new Postprocess(renderer);
 postProcessing.outputNode = waterMask.cond(
   scenePassColorBlurred,
   scenePassColorBlurred.mul(color(0x74ccf4)).mul(vignet),

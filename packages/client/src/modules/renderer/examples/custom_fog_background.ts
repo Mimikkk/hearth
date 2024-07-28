@@ -1,7 +1,7 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
 
 import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
-import PostProcessing from '@modules/renderer/engine/renderers/PostProcessing.js';
+import Postprocess from '@modules/renderer/engine/renderers/Postprocess.js';
 
 import { color, pass, rangeFog } from '@modules/renderer/engine/nodes/Nodes.js';
 
@@ -49,7 +49,7 @@ async function init() {
   // mix fog from fog factor and background color
   const compose = fogFactor.mix(scenePassTM, backgroundColor);
 
-  postProcessing = new PostProcessing(renderer);
+  postProcessing = new Postprocess(renderer);
   postProcessing.outputNode = compose;
 
   //

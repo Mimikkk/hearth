@@ -14,7 +14,7 @@ import { BackendBindings } from './bindings/Backend.bindings.js';
 import BackendPipelines from './Backend.pipelines.js';
 import { BackendTextures } from './Backend.textures.js';
 import type { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
-import RenderContext from '@modules/renderer/engine/renderers/RenderContext.js';
+import RenderContext from '@modules/renderer/engine/renderers/core/RenderContext.js';
 import ComputeNode from '@modules/renderer/engine/nodes/gpgpu/ComputeNode.js';
 import ComputePipeline from '@modules/renderer/engine/renderers/ComputePipeline.js';
 import Binding from '@modules/renderer/engine/renderers/bindings/Binding.js';

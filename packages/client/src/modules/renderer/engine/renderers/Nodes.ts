@@ -1,6 +1,6 @@
-import DataMap from '../../renderers/DataMap.js';
-import ChainMap from '../../renderers/ChainMap.js';
-import NodeBuilderState from './NodeBuilderState.js';
+import DataMap from './DataMap.js';
+import ChainMap from './ChainMap.js';
+import NodeBuilderState from '../nodes/builder/NodeBuilderState.js';
 import {
   Camera,
   Color,
@@ -29,7 +29,7 @@ import {
   texture,
   toneMapping,
   viewportBottomLeft,
-} from '../Nodes.js';
+} from '../nodes/Nodes.js';
 import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 import RenderObject from '@modules/renderer/engine/renderers/RenderObject.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';

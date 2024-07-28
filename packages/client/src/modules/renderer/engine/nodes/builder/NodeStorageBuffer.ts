@@ -37,9 +37,10 @@ export class NodeSampler extends BindingSampler {
 }
 
 export class NodeSampledTexture extends BindingSampledTexture {
-  textureNode: TextureNode;
-
-  constructor(name: string, textureNode: TextureNode) {
+  constructor(
+    name: string,
+    public textureNode: TextureNode,
+  ) {
     super(name, textureNode ? textureNode.value : null);
 
     this.textureNode = textureNode;
