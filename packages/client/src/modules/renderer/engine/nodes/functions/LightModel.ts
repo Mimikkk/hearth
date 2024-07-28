@@ -36,7 +36,7 @@ export interface Parameters {
   outgoingLight: Node;
 }
 
-export abstract class LightingModel {
+export abstract class LightModel {
   start(parameters: Parameters, stack: StackNode, builder: NodeBuilder): void {}
 
   finish(parameters: Parameters, stack: StackNode, builder: NodeBuilder): void {}

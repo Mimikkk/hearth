@@ -1,5 +1,5 @@
 import { NodeMaterial } from './NodeMaterial.js';
-import PhongLightingModel from '../functions/PhongLightingModel.js';
+import PhongLightModel from '../functions/PhongLightModel.js';
 
 import { MeshLambertMaterial } from '@modules/renderer/engine/engine.js';
 
@@ -21,6 +21,6 @@ export class MeshLambertNodeMaterial extends NodeMaterial {
   }
 
   setupLightingModel() {
-    return new PhongLightingModel(false);
+    return new PhongLightModel(false);
   }
 }

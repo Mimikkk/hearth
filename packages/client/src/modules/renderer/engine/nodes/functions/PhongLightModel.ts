@@ -1,4 +1,4 @@
-import { LightingModel } from '../core/LightingModel.js';
+import { LightModel } from './LightModel.js';
 import F_Schlick from './BSDF/F_Schlick.js';
 import BRDF_Lambert from './BSDF/BRDF_Lambert.js';
 import { diffuseColor, shininess, specularColor } from '../core/PropertyNode.js';
@@ -29,7 +29,7 @@ const BRDF_BlinnPhong = tslFn(({ lightDirection }) => {
   return F.mul(G).mul(D);
 });
 
-class PhongLightingModel extends LightingModel {
+class PhongLightModel extends LightModel {
   constructor(specular = true) {
     super();
 
@@ -54,4 +54,4 @@ class PhongLightingModel extends LightingModel {
   }
 }
 
-export default PhongLightingModel;
+export default PhongLightModel;

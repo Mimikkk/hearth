@@ -19,7 +19,7 @@ import {
   materialSheenRoughness,
 } from '../accessors/MaterialNode.js';
 import { f32, vec3 } from '../shadernode/ShaderNodes.js';
-import PhysicalLightingModel from '../functions/PhysicalLightingModel.js';
+import PhysicalLightModel from '../functions/PhysicalLightModel.js';
 import { MeshStandardNodeMaterial } from './MeshStandardNodeMaterial.js';
 
 import { MeshPhysicalMaterial } from '@modules/renderer/engine/engine.js';
@@ -71,7 +71,7 @@ export class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
   }
 
   setupLightingModel() {
-    return new PhysicalLightingModel(this.useClearcoat, this.useSheen, this.useIridescence);
+    return new PhysicalLightModel(this.useClearcoat, this.useSheen, this.useIridescence);
   }
 
   setupVariants(builder) {

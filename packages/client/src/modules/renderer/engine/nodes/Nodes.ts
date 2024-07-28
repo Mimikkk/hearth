@@ -7,7 +7,7 @@ export { default as CacheNode, cache } from './core/CacheNode.js';
 export { default as ConstNode } from './core/ConstNode.js';
 export { default as ContextNode, context, label } from './core/ContextNode.js';
 export { default as IndexNode, vertexIndex, instanceIndex } from './core/IndexNode.js';
-export { LightingModel } from './core/LightingModel.js';
+export { LightModel } from './functions/LightModel.js';
 export { default as Node } from './core/Node.js';
 export { default as VarNode, temp } from './core/VarNode.js';
 export { default as NodeAttribute } from './core/NodeAttribute.js';
@@ -407,6 +407,6 @@ export { getDistanceAttenuation } from './lighting/LightUtils.js';
 export { default as getGeometryRoughness } from './functions/material/getGeometryRoughness.js';
 export { default as getRoughness } from './functions/material/getRoughness.js';
 
-export { default as PhongLightingModel } from './functions/PhongLightingModel.js';
-export { default as PhysicalLightingModel } from './functions/PhysicalLightingModel.js';
+export { default as PhongLightingModel } from './functions/PhongLightModel.js';
+export { default as PhysicalLightingModel } from './functions/PhysicalLightModel.js';
 export { NodeCommands } from './shadernode/ShaderNode.map.js';

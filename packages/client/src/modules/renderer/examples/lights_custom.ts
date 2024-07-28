@@ -12,9 +12,9 @@ import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 import { Random } from '@modules/renderer/engine/math/random.js';
-import { LightingModel } from '@modules/renderer/engine/nodes/core/LightingModel.js';
+import { LightModel } from '@modules/renderer/engine/nodes/functions/LightModel.js';
 
-class CustomLightingModel extends LightingModel {
+class CustomLightingModel extends LightModel {
   direct({ lightColor, reflectedLight }, stack) {
     reflectedLight.directDiffuse.addAssign(lightColor);
   }

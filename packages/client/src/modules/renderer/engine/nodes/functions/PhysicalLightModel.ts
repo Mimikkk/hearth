@@ -5,7 +5,7 @@ import EnvironmentBRDF from './BSDF/EnvironmentBRDF.js';
 import F_Schlick from './BSDF/F_Schlick.js';
 import Schlick_to_F0 from './BSDF/Schlick_to_F0.js';
 import BRDF_Sheen from './BSDF/BRDF_Sheen.js';
-import { LightingModel } from '../core/LightingModel.js';
+import { LightModel } from './LightModel.js';
 import {
   clearcoat,
   clearcoatRoughness,
@@ -151,7 +151,7 @@ const IBLSheenBRDF = tslFn(({ normal, viewDir, roughness }) => {
 const clearcoatF0 = vec3(0.04);
 const clearcoatF90 = vec3(1);
 
-export class PhysicalLightingModel extends LightingModel {
+export class PhysicalLightModel extends LightModel {
   constructor(clearcoat = false, sheen = false, iridescence = false) {
     super();
 
@@ -350,4 +350,4 @@ export class PhysicalLightingModel extends LightingModel {
   }
 }
 
-export default PhysicalLightingModel;
+export default PhysicalLightModel;

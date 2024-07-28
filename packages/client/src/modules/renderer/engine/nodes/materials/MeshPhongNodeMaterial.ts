@@ -2,7 +2,7 @@ import { NodeMaterial } from './NodeMaterial.js';
 import { shininess, specularColor } from '../core/PropertyNode.js';
 import { materialShininess, materialSpecularColor } from '../accessors/MaterialNode.js';
 import { f32 } from '../shadernode/ShaderNodes.js';
-import PhongLightingModel from '../functions/PhongLightingModel.js';
+import PhongLightModel from '../functions/PhongLightModel.js';
 
 import { MeshPhongMaterial } from '@modules/renderer/engine/engine.js';
 
@@ -27,7 +27,7 @@ export class MeshPhongNodeMaterial extends NodeMaterial {
   }
 
   setupLightingModel() {
-    return new PhongLightingModel();
+    return new PhongLightModel();
   }
 
   setupVariants() {
