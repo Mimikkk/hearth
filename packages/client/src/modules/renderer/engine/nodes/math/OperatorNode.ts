@@ -60,15 +60,15 @@ class OperatorNode extends TempNode {
           : TypeName.bool;
       }
       default: {
-        if (typeA === TypeName.f32 && builder.isMatrix(typeB)) {
+        if (typeA === TypeName.f32 && TypeName.isMat(typeB)) {
           return typeB;
         }
 
-        if (builder.isMatrix(typeA) && builder.isVector(typeB)) {
+        if (TypeName.isMat(typeA) && TypeName.isVec(typeB)) {
           return builder.getVectorFromMatrix(typeA);
         }
 
-        if (builder.isVector(typeA) && builder.isMatrix(typeB)) {
+        if (TypeName.isVec(typeA) && TypeName.isMat(typeB)) {
           return builder.getVectorFromMatrix(typeB);
         }
 
@@ -96,7 +96,7 @@ class OperatorNode extends TempNode {
       typeB = bNode?.getNodeType(builder);
 
       if (op === '<' || op === '>' || op === '<=' || op === '>=' || op === '==') {
-        if (builder.isVector(typeA)) {
+        if (TypeName.isVec(typeA)) {
           typeB = typeA;
         } else {
           typeA = TypeName.f32;
@@ -105,9 +105,9 @@ class OperatorNode extends TempNode {
       } else if (op === '>>' || op === '<<') {
         typeA = type;
         typeB = builder.changeComponentType(typeB, TypeName.u32);
-      } else if (builder.isMatrix(typeA) && builder.isVector(typeB)) {
+      } else if (TypeName.isMat(typeA) && TypeName.isVec(typeB)) {
         typeB = builder.getVectorFromMatrix(typeA);
-      } else if (builder.isVector(typeA) && builder.isMatrix(typeB)) {
+      } else if (TypeName.isVec(typeA) && TypeName.isMat(typeB)) {
         typeA = builder.getVectorFromMatrix(typeB);
       } else {
         typeA = typeB = type;

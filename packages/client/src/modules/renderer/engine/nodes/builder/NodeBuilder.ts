@@ -330,14 +330,6 @@ export class NodeBuilder {
     return attribute;
   }
 
-  isVector(type: TypeName): boolean {
-    return /vec\d/.test(type);
-  }
-
-  isMatrix(type: TypeName): boolean {
-    return /mat\d/.test(type);
-  }
-
   getVectorType(type: TypeName): TypeName {
     if (TypeName.convertibleToVec(type)) return TypeName.vec(type);
     return type;
@@ -674,16 +666,16 @@ export class NodeBuilder {
     return new (NodeMaterials.get(type))();
   }
 
-  format(snippet: string, fromType: TypeName, toType: TypeName): string {
-    fromType = this.getVectorType(fromType);
-    toType = this.getVectorType(toType);
+  format(snippet: string, from: TypeName, to: TypeName): string {
+    from = this.getVectorType(from);
+    to = this.getVectorType(to);
 
-    if (fromType === toType || toType === null || this.isReference(toType)) {
+    if (from === to || to === null || this.isReference(to)) {
       return snippet;
     }
 
-    const fromTypeLength = this.getTypeLength(fromType);
-    const toTypeLength = this.getTypeLength(toType);
+    const fromTypeLength = this.getTypeLength(from);
+    const toTypeLength = this.getTypeLength(to);
 
     if (fromTypeLength > 4) {
       return snippet;
@@ -694,30 +686,30 @@ export class NodeBuilder {
     }
 
     if (fromTypeLength === toTypeLength) {
-      return `${this.getType(toType)}(${snippet})`;
+      return `${this.getType(to)}(${snippet})`;
     }
 
     if (fromTypeLength > toTypeLength) {
       return this.format(
         `${snippet}.${'xyz'.slice(0, toTypeLength)}`,
-        TypeName.ofSize(toTypeLength, TypeName.component(fromType)),
-        toType,
+        TypeName.ofSize(toTypeLength, TypeName.component(from)),
+        to,
       );
     }
 
     if (toTypeLength === 4 && fromTypeLength > 1) {
-      return `${this.getType(toType)}(${this.format(snippet, fromType, 'vec3')}, 1.0)`;
+      return `${this.getType(to)}(${this.format(snippet, from, 'vec3')}, 1.0)`;
     }
 
     if (fromTypeLength === 2) {
-      return `${this.getType(toType)}(${this.format(snippet, fromType, 'vec2')}, 0.0)`;
+      return `${this.getType(to)}(${this.format(snippet, from, 'vec2')}, 0.0)`;
     }
 
-    if (fromTypeLength === 1 && toTypeLength > 1 && fromType[0] !== toType[0]) {
-      snippet = `${this.getType(TypeName.component(toType))}(${snippet})`;
+    if (fromTypeLength === 1 && toTypeLength > 1 && from[0] !== to[0]) {
+      snippet = `${this.getType(TypeName.component(to))}(${snippet})`;
     }
 
-    return `${this.getType(toType)}(${snippet})`;
+    return `${this.getType(to)}(${snippet})`;
   }
 
   needsColorSpaceToLinear(texture: Texture): boolean {
@@ -925,7 +917,7 @@ export class NodeBuilder {
         }
 
         texture.store = node.isStoreTextureNode === true;
-        texture.setVisibility(GpuShaderStage[shaderStage]);
+        texture.setVisibility(StageMap[shaderStage]);
 
         if (
           shaderStage === ShaderStage.Fragment &&
@@ -933,7 +925,7 @@ export class NodeBuilder {
           texture.store === false
         ) {
           const sampler = new NodeSampler(`${uniformNode.name}_sampler`, uniformNode.node);
-          sampler.setVisibility(GpuShaderStage[shaderStage]);
+          sampler.setVisibility(StageMap[shaderStage]);
 
           bindings.push(sampler, texture);
 
@@ -946,7 +938,7 @@ export class NodeBuilder {
       } else if (type === 'buffer' || type === 'storageBuffer') {
         const bufferClass = type === 'storageBuffer' ? NodeStorageBuffer : NodeUniformBuffer;
         const buffer = new bufferClass(node);
-        buffer.setVisibility(GpuShaderStage[shaderStage]);
+        buffer.setVisibility(StageMap[shaderStage]);
 
         bindings.push(buffer);
 
@@ -961,7 +953,7 @@ export class NodeBuilder {
 
         if (uniformsGroup === undefined) {
           uniformsGroup = new NodeUniformsGroup(groupName, group);
-          uniformsGroup.setVisibility(GpuShaderStage[shaderStage]);
+          uniformsGroup.setVisibility(StageMap[shaderStage]);
 
           uniformsStage[groupName] = uniformsGroup;
 
@@ -1527,16 +1519,7 @@ namespace Inbuilt {
 const formatAsFloat = (value: number): string => value + (value % 1 ? '' : '.0');
 
 const UniformsGroup = new ChainMap();
-const TypeByArray = new Map<TypedArrayConstructor, TypeName>([
-  [Int8Array, TypeName.i32],
-  [Int16Array, TypeName.i32],
-  [Int32Array, TypeName.i32],
-  [Uint8Array, TypeName.u32],
-  [Uint16Array, TypeName.u32],
-  [Uint32Array, TypeName.u32],
-  [Float32Array, TypeName.f32],
-]);
-const GpuShaderStage: Record<ShaderStage, number> = {
+const StageMap: Record<ShaderStage, number> = {
   vertex: GPUShaderStage.VERTEX,
   fragment: GPUShaderStage.FRAGMENT,
   compute: GPUShaderStage.COMPUTE,

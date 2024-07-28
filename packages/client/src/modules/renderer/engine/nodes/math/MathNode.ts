@@ -69,8 +69,8 @@ export class BinaryNode extends TempNode {
     const aType = aNode.getNodeType(builder);
     const bType = bNode.getNodeType(builder);
 
-    const aLen = builder.isMatrix(aType) ? 0 : builder.getTypeLength(aType);
-    const bLen = builder.isMatrix(bType) ? 0 : builder.getTypeLength(bType);
+    const aLen = TypeName.isMat(aType) ? 0 : builder.getTypeLength(aType);
+    const bLen = TypeName.isMat(bType) ? 0 : builder.getTypeLength(bType);
 
     return aLen > bLen ? aType : bType;
   }
@@ -100,7 +100,7 @@ export class BinaryNode extends TempNode {
         let tA = a;
         let tB = b;
 
-        if (builder.isMatrix(tA.getNodeType(builder))) {
+        if (TypeName.isMat(tA.getNodeType(builder))) {
           tB = vec4(vec3(tB), 0.0);
         } else {
           tA = vec4(vec3(tA), 0.0);
@@ -152,9 +152,9 @@ export class TernaryNode extends TempNode {
     const bType = bNode?.getNodeType(builder) ?? null;
     const cType = cNode?.getNodeType(builder) ?? null;
 
-    const aLen = builder.isMatrix(aType) ? 0 : builder.getTypeLength(aType);
-    const bLen = builder.isMatrix(bType) ? 0 : builder.getTypeLength(bType);
-    const cLen = builder.isMatrix(cType) ? 0 : builder.getTypeLength(cType);
+    const aLen = TypeName.isMat(aType) ? 0 : builder.getTypeLength(aType);
+    const bLen = TypeName.isMat(bType) ? 0 : builder.getTypeLength(bType);
+    const cLen = TypeName.isMat(cType) ? 0 : builder.getTypeLength(cType);
 
     if (aLen > bLen && aLen > cLen) {
       return aType;
