@@ -13,7 +13,7 @@ export class VertexColorNode extends AttributeNode {
     const hasAttribute = builder.hasGeometryAttribute(this.name);
     if (hasAttribute) return super.generate(builder);
 
-    return builder.generateConst(TypeName.vec4, Vec4.new(1, 1, 1, 1));
+    return builder.codeConst(TypeName.vec4, Vec4.new(1, 1, 1, 1));
   }
 }
 

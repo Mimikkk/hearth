@@ -57,7 +57,7 @@ export class AttributeNode extends Node {
       }
     } else {
       console.warn(`AttributeNode: Vertex attribute "${name}" not found on geometry.`);
-      return builder.generateConst(type);
+      return builder.codeConst(type);
     }
   }
 }

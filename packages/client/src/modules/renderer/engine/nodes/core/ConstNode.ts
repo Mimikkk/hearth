@@ -13,7 +13,7 @@ export class ConstNode<T = any> extends InputNode {
   }
 
   generateConst(builder: NodeBuilder) {
-    return builder.generateConst(this.getNodeType(builder), this.value);
+    return builder.codeConst(this.getNodeType(builder), this.value);
   }
 
   generate(builder, output) {
