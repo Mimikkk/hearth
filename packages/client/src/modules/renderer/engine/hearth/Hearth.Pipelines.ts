@@ -35,16 +35,11 @@ export class HearthPipelines extends DataMap<any, any> {
         previousPipeline.computeProgram.usedTimes--;
       }
 
-
-
       const nodeBuilderState = this.renderer.nodes.getForCompute(computeNode);
-
-
 
       let stageCompute = this.programs.compute.get(nodeBuilderState.computeShader!);
 
-      if (stageComp
-        ute === undefined) {
+      if (stageCompute === undefined) {
         if (previousPipeline && previousPipeline.computeProgram.usedTimes === 0)
           this._releaseProgram(previousPipeline.computeProgram);
 
@@ -58,8 +53,6 @@ export class HearthPipelines extends DataMap<any, any> {
         this.renderer.backend.createProgram(stageCompute);
       }
 
-
-
       const cacheKey = this._getComputeCacheKey(computeNode, stageCompute);
 
       let pipeline = this.caches.get(cacheKey);
@@ -70,12 +63,9 @@ export class HearthPipelines extends DataMap<any, any> {
         pipeline = this._getComputePipeline(computeNode, stageCompute, cacheKey, bindings);
       }
 
-
-
       pipeline.usedTimes++;
       stageCompute.usedTimes++;
 
-      
       data.version = computeNode.version;
       data.pipeline = pipeline;
     }
@@ -95,11 +85,7 @@ export class HearthPipelines extends DataMap<any, any> {
         previousPipeline.fragmentProgram.usedTimes--;
       }
 
-
-
       const nodeBuilderState = renderObject.getNodeBuilderState();
-
-
 
       let stageVertex = this.programs.vertex.get(nodeBuilderState.vertexShader);
 
@@ -125,8 +111,6 @@ export class HearthPipelines extends DataMap<any, any> {
         this.renderer.backend.createProgram(stageFragment);
       }
 
-
-
       const cacheKey = this._getRenderCacheKey(renderObject, stageVertex, stageFragment);
 
       let pipeline = this.caches.get(cacheKey);
@@ -139,13 +123,10 @@ export class HearthPipelines extends DataMap<any, any> {
         renderObject.pipeline = pipeline;
       }
 
-
-
       pipeline.usedTimes++;
       stageVertex.usedTimes++;
       stageFragment.usedTimes++;
 
-      
       data.pipeline = pipeline;
     }
 
@@ -159,8 +140,6 @@ export class HearthPipelines extends DataMap<any, any> {
       pipeline.usedTimes--;
 
       if (pipeline.usedTimes === 0) this._releasePipeline(pipeline);
-
-
 
       if (pipeline.isComputePipeline) {
         pipeline.computeProgram.usedTimes--;
@@ -199,8 +178,6 @@ export class HearthPipelines extends DataMap<any, any> {
     cacheKey: string,
     bindings: Binding[],
   ): ComputePipeline {
-
-
     cacheKey = cacheKey || this._getComputeCacheKey(computeNode, stageCompute);
 
     let pipeline = this.caches.get(cacheKey);

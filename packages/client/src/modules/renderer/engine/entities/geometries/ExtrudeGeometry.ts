@@ -113,7 +113,6 @@ export class ExtrudeGeometry extends Geometry {
 
       const uvgen = options.UVGenerator !== undefined ? options.UVGenerator : WorldUVGenerator;
 
-      
       let extrudePts,
         extrudeByPath = false;
       let splineTube, binormal, normal, position2;
@@ -177,7 +176,6 @@ export class ExtrudeGeometry extends Geometry {
         flen = faces.length;
 
       function getBevelVec(inPt: Vec2, inPrev: Vec2, inNext: Vec2): Vec2 {
-        
         let v_trans_x, v_trans_y, shrink_by;
 
         const v_prev_x = inPt.x - inPrev.x,
@@ -364,7 +362,6 @@ export class ExtrudeGeometry extends Geometry {
 
       buildSideFaces();
 
-      /
       function buildLidFaces() {
         const start = verticesArray.length / 3;
 
