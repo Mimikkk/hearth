@@ -290,14 +290,6 @@ export class NodeBuilder {
     return attribute;
   }
 
-  getType(type: TypeName): string {
-    let t = TypeMap[type];
-    onAdd(type);
-    if (t) return t;
-
-    return type;
-  }
-
   getStructTypeFromNode(node: Node, shaderStage: ShaderStage = this.shaderStage): StructTypeNode {
     const nodeData = this.getDataFromNode(node, shaderStage);
 
@@ -1047,11 +1039,12 @@ export class NodeBuilder {
     const parameters = [];
 
     for (const input of layout.inputs) {
-      parameters.push(`${input.name}: ${this.getType(input.type)}`);
+      console.log({ t: input.type });
+      parameters.push(`${input.name}: ${TypeName.repr(input.type)}`);
     }
 
     return `
-    fn ${layout.name}(${parameters.join(', ')}) -> ${this.getType(layout.type)} {
+    fn ${layout.name}(${parameters.join(', ')}) -> ${TypeName.repr(layout.type)} {
       ${flow.vars}
       ${flow.code}
         return ${flow.result};
@@ -1088,7 +1081,7 @@ export class NodeBuilder {
     for (let index = 0, length = attributes.length; index < length; index++) {
       const attribute = attributes[index];
       const name = attribute.name;
-      const type = this.getType(attribute.type);
+      const type = TypeName.repr(attribute.type);
 
       snippets.push(`@location(${index}) ${name}: ${type}`);
     }
@@ -1129,7 +1122,7 @@ export class NodeBuilder {
   }
 
   codeVariable(type: TypeName, name: string): string {
-    return `var ${name}: ${this.getType(type)}`;
+    return `var ${name}: ${TypeName.repr(type)}`;
   }
 
   codeVariables(shaderStage: ShaderStage): string {
@@ -1166,7 +1159,7 @@ export class NodeBuilder {
             attributesSnippet += ' @interpolate(flat)';
           }
 
-          snippets.push(`${attributesSnippet} ${varying.name}: ${this.getType(varying.type)}`);
+          snippets.push(`${attributesSnippet} ${varying.name}: ${TypeName.repr(varying.type)}`);
         } else if (shaderStage === ShaderStage.Vertex && vars.includes(varying) === false) {
           vars.push(varying);
         }
@@ -1231,7 +1224,7 @@ export class NodeBuilder {
         bindingSnippets.push(`@binding(${index++}) @group(0) var ${uniform.name}: ${textureType};`);
       } else if (uniform.type === 'buffer' || uniform.type === 'storageBuffer') {
         const bufferNode = uniform.node;
-        const bufferType = this.getType(bufferNode.bufferType);
+        const bufferType = TypeName.repr(bufferNode.bufferType);
         const bufferCount = bufferNode.bufferCount;
 
         bufferSnippets.push(
@@ -1243,7 +1236,7 @@ export class NodeBuilder {
           }),
         );
       } else {
-        const vectorType = this.getType(TypeName.coerce(uniform.type));
+        const vectorType = TypeName.repr(TypeName.coerce(uniform.type));
         const groupName = uniform.groupNode.name;
 
         const group =

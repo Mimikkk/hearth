@@ -334,54 +334,54 @@ export namespace TypeName {
       case TypeName.bool:
         return type;
       case TypeName.vec2:
-        return 'vec2f';
+        return 'vec2<f32>';
       case TypeName.ivec2:
-        return 'vec2i';
+        return 'vec2<i32>';
       case TypeName.uvec2:
-        return 'vec2u';
+        return 'vec2<u32>';
       case TypeName.bvec2:
-        return 'vec2b';
+        return 'vec2<bool>';
       case TypeName.color:
       case TypeName.vec3:
-        return 'vec3f';
+        return 'vec3<f32>';
       case TypeName.ivec3:
-        return 'vec3i';
+        return 'vec3<i32>';
       case TypeName.uvec3:
-        return 'vec3u';
+        return 'vec3<u32>';
       case TypeName.bvec3:
-        return 'vec3b';
+        return 'vec3<bool>';
       case TypeName.vec4:
-        return 'vec4f';
+        return 'vec4<f32>';
       case TypeName.ivec4:
-        return 'vec4i';
+        return 'vec4<i32>';
       case TypeName.uvec4:
-        return 'vec4u';
+        return 'vec4<u32>';
       case TypeName.bvec4:
-        return 'vec4b';
+        return 'vec4<bool>';
       case TypeName.mat2:
-        return 'mat2x2f';
+        return 'mat2x2<f32>';
       case TypeName.imat2:
-        return 'mat2x2i';
+        return 'mat2x2<i32>';
       case TypeName.umat2:
-        return 'mat2x2u';
+        return 'mat2x2<u32>';
       case TypeName.bmat2:
-        return 'mat2x2b';
+        return 'mat2x2<bool>';
       case TypeName.mat3:
-        return 'mat3x3f';
+        return 'mat3x3<f32>';
       case TypeName.imat3:
-        return 'mat3x3i';
+        return 'mat3x3<i32>';
       case TypeName.umat3:
-        return 'mat3x3u';
+        return 'mat3x3<u32>';
       case TypeName.bmat3:
-        return 'mat3x3b';
+        return 'mat3x3<bool>';
       case TypeName.mat4:
-        return 'mat4x4f';
+        return 'mat4x4<f32>';
       case TypeName.imat4:
-        return 'mat4x4i';
+        return 'mat4x4<i32>';
       case TypeName.umat4:
-        return 'mat4x4u';
+        return 'mat4x4<u32>';
       case TypeName.bmat4:
-        return 'mat4x4b';
+        return 'mat4x4<bool>';
       case TypeName.sampler:
       case TypeName.texture:
       case TypeName.cubeTexture:
