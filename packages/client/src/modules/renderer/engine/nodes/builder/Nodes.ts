@@ -3,6 +3,7 @@ import ChainMap from '../../renderers/ChainMap.js';
 import NodeBuilderState from './NodeBuilderState.js';
 import {
   Camera,
+  Color,
   CubeTexture,
   Entity,
   Fog,
@@ -30,12 +31,9 @@ import {
   viewportBottomLeft,
 } from '../Nodes.js';
 import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
-import NodeUniformsGroup from '@modules/renderer/engine/nodes/builder/NodeUniformsGroup.js';
 import RenderObject from '@modules/renderer/engine/renderers/RenderObject.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
-
-import { types } from 'sass';
-import Color = types.Color;
+import { NodeUniformsGroup } from '@modules/renderer/engine/nodes/builder/NodeStorageBuffer.js';
 
 export class Nodes extends DataMap<any, any> {
   nodeFrame: NodeFrame;

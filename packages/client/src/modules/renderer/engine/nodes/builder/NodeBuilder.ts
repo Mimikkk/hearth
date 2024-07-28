@@ -12,11 +12,14 @@ import {
   Vec3,
   Vec4,
 } from '../../engine.js';
-import NodeUniformsGroup from './NodeUniformsGroup.js';
-import NodeSampler from './NodeSampler.js';
-import { NodeSampledCubeTexture, NodeSampledTexture } from './NodeSampledTexture.js';
-import NodeUniformBuffer from './NodeUniformBuffer.js';
-import NodeStorageBuffer from './NodeStorageBuffer.js';
+import {
+  NodeSampledCubeTexture,
+  NodeSampledTexture,
+  NodeSampler,
+  NodeStorageBuffer,
+  NodeUniformBuffer,
+  NodeUniformsGroup,
+} from './NodeStorageBuffer.js';
 import {
   LightsNode,
   NodeMaterial,
@@ -47,7 +50,7 @@ import FogNode from '@modules/renderer/engine/nodes/fog/FogNode.js';
 import ToneMappingNode from '@modules/renderer/engine/nodes/display/ToneMappingNode.js';
 import { Node } from '@modules/renderer/engine/nodes/core/Node.js';
 import ClippingContext from '@modules/renderer/engine/renderers/ClippingContext.js';
-import { BuildStage, BuiltinType, ShaderStage, TypeMap, TypeName } from './NodeBuilder.types.js';
+import { BuildStage, BuiltinType, ShaderStage, TypeName } from './NodeBuilder.types.js';
 import { PolyfillMap, PolyfillName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.polyfills.js';
 import StructTypeNode from '@modules/renderer/engine/nodes/core/StructTypeNode.js';
 import { WgslFn } from '@modules/renderer/engine/nodes/builder/WgslFn.js';

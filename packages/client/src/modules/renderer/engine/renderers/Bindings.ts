@@ -4,11 +4,11 @@ import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 import RenderObject from '@modules/renderer/engine/renderers/RenderObject.js';
 import Binding from '@modules/renderer/engine/renderers/bindings/Binding.js';
 import { BindingSampledTexture } from '@modules/renderer/engine/renderers/bindings/BindingSampledTexture.js';
-import NodeUniformsGroup from '@modules/renderer/engine/nodes/builder/NodeUniformsGroup.js';
 import BindingUniformBuffer from '@modules/renderer/engine/renderers/bindings/BindingUniformBuffer.js';
 import StorageTexture from '@modules/renderer/engine/objects/textures/StorageTexture.js';
 import BindingStorageBuffer from '@modules/renderer/engine/renderers/bindings/BindingStorageBuffer.js';
 import { ComputeNode } from '@modules/renderer/engine/nodes/Nodes.js';
+import { NodeUniformsGroup } from '@modules/renderer/engine/nodes/builder/NodeStorageBuffer.js';
 
 class Bindings extends DataMap<any, any> {
   constructor(public renderer: Renderer) {
