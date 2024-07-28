@@ -1,15 +1,14 @@
 import DataMap from './DataMap.js';
 import { AttributeLocation } from './constants.js';
-import { BufferUse } from '@modules/renderer/engine/engine.js';
+import { BufferAttribute, BufferUse } from '@modules/renderer/engine/engine.js';
 import type { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
-import { AttributeType } from '@modules/renderer/engine/core/types.js';
 
-export class Attributes extends DataMap<AttributeType, any> {
+export class Attributes extends DataMap<BufferAttribute, any> {
   constructor(public renderer: Renderer) {
     super();
   }
 
-  delete(attribute: AttributeType) {
+  delete(attribute: BufferAttribute) {
     const data = super.delete(attribute);
 
     if (data !== undefined) {
@@ -19,7 +18,7 @@ export class Attributes extends DataMap<AttributeType, any> {
     return data;
   }
 
-  update(attribute: AttributeType, type: AttributeLocation) {
+  update(attribute: BufferAttribute, type: AttributeLocation) {
     const data = this.get(attribute);
 
     if (data.version === undefined) {

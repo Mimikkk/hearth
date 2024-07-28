@@ -1,9 +1,7 @@
-import { BufferAttribute, DrawMode, Geometry } from '../engine.js';
-import { AttributeType } from '@modules/renderer/engine/core/types.js';
+import { BufferAttribute, DrawMode, Geometry, Vec3 } from '../engine.js';
 import { ArrayConstructorMap, TypedArray } from '@modules/renderer/engine/math/MathUtils.js';
-import { Vec3 } from '../engine.js';
 
-export function mergeAttributes<T extends TypedArray>(attributes: AttributeType<T>[]): BufferAttribute<T> {
+export function mergeAttributes<T extends TypedArray>(attributes: BufferAttribute<T>[]): BufferAttribute<T> {
   let itemSize: number = attributes[0].stride;
 
   let length = 0;

@@ -3,7 +3,6 @@ import { AttributeLocation } from './constants.js';
 import { BufferAttribute, WireframeGeometry } from '@modules/renderer/engine/engine.js';
 import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 import RenderObject from '@modules/renderer/engine/renderers/RenderObject.js';
-import { AttributeType } from '@modules/renderer/engine/core/types.js';
 
 function getWireframeVersion(geometry: WireframeGeometry): number {
   return geometry.index !== null ? geometry.index.version : geometry.attributes.position.version;
@@ -89,7 +88,7 @@ export class Geometries extends DataMap<any, any> {
     }
   }
 
-  updateAttribute(attribute: AttributeType, type: AttributeLocation) {
+  updateAttribute(attribute: BufferAttribute, type: AttributeLocation) {
     const callId = this.renderer.info.render.passes;
 
     if (this.attributeCall.get(attribute) !== callId) {

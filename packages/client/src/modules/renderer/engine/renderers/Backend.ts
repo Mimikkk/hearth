@@ -1,4 +1,4 @@
-import { Color, Entity, RenderTarget, Scene, Texture } from '../engine.js';
+import { BufferAttribute, Color, Entity, RenderTarget, Scene, Texture } from '../engine.js';
 
 import {
   GPUFeature,
@@ -22,7 +22,6 @@ import RenderObject from '@modules/renderer/engine/renderers/RenderObject.js';
 import ProgrammableStage from '@modules/renderer/engine/renderers/ProgrammableStage.js';
 import { ResourceManager } from './ResourceManager.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
-import { AttributeType } from '../core/types.js';
 import { WeakMemo } from '@modules/renderer/engine/renderers/WeakMemo.js';
 
 export class Backend {
@@ -74,7 +73,7 @@ export class Backend {
     this.resolveBufferMap = new Map();
   }
 
-  async getArrayBuffer(attribute: AttributeType) {
+  async getArrayBuffer(attribute: BufferAttribute) {
     return await this.attributes.getArrayBuffer(attribute);
   }
 
@@ -943,32 +942,32 @@ export class Backend {
     this.bindings.updateBinding(binding);
   }
 
-  createIndexAttribute(attribute: AttributeType) {
+  createIndexAttribute(attribute: BufferAttribute) {
     this.attributes.createAttribute(
       attribute,
       GPUBufferUsage.INDEX | GPUBufferUsage.COPY_SRC | GPUBufferUsage.COPY_DST,
     );
   }
 
-  createAttribute(attribute: AttributeType) {
+  createAttribute(attribute: BufferAttribute) {
     this.attributes.createAttribute(
       attribute,
       GPUBufferUsage.VERTEX | GPUBufferUsage.COPY_SRC | GPUBufferUsage.COPY_DST,
     );
   }
 
-  createStorageAttribute(attribute: AttributeType) {
+  createStorageAttribute(attribute: BufferAttribute) {
     this.attributes.createAttribute(
       attribute,
       GPUBufferUsage.STORAGE | GPUBufferUsage.VERTEX | GPUBufferUsage.COPY_SRC | GPUBufferUsage.COPY_DST,
     );
   }
 
-  updateAttribute(attribute: AttributeType) {
+  updateAttribute(attribute: BufferAttribute) {
     this.attributes.updateAttribute(attribute);
   }
 
-  destroyAttribute(attribute: AttributeType) {
+  destroyAttribute(attribute: BufferAttribute) {
     this.attributes.destroyAttribute(attribute);
   }
 

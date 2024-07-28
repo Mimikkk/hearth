@@ -3,8 +3,8 @@ import { Box3 } from '@modules/renderer/engine/math/Box3.js';
 import { Plane } from '@modules/renderer/engine/math/Plane.js';
 import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 import { Vec4 } from '@modules/renderer/engine/math/Vec4.js';
-import { AttributeType } from '../core/types.js';
 import { Const } from '@modules/renderer/engine/math/types.js';
+import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
 
 export class Triangle {
   declare isTriangle: true;
@@ -127,7 +127,7 @@ export class Triangle {
   }
 
   static fromAttribute(
-    attribute: Const<AttributeType>,
+    attribute: Const<BufferAttribute>,
     i0: number = 0,
     i1: number = 1,
     i2: number = 2,
@@ -151,7 +151,7 @@ export class Triangle {
     return this.set(coords[i0], coords[i1], coords[i2]);
   }
 
-  fromAttribute(attribute: Const<AttributeType>, i0: number, i1: number, i2: number): this {
+  fromAttribute(attribute: Const<BufferAttribute>, i0: number, i1: number, i2: number): this {
     this.a.fromAttribute(attribute, i0);
     this.b.fromAttribute(attribute, i1);
     this.c.fromAttribute(attribute, i2);

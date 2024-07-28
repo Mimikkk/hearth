@@ -20,6 +20,7 @@ import ClippingContext from '@modules/renderer/engine/renderers/ClippingContext.
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 import {
+  BufferAttribute,
   Color,
   Entity,
   FramebufferTexture,
@@ -34,12 +35,9 @@ import {
 } from '@modules/renderer/engine/engine.js';
 import { GPUFeature, GPUTextureFormatType } from '@modules/renderer/engine/renderers/constants.js';
 import { RenderItem, RenderList, SortFn } from '@modules/renderer/engine/renderers/RenderList.js';
-import { AttributeType } from '@modules/renderer/engine/core/types.js';
 import ComputeNode from '@modules/renderer/engine/nodes/gpgpu/ComputeNode.js';
 import RenderContext from '@modules/renderer/engine/renderers/RenderContext.js';
 import LightsNode from '@modules/renderer/engine/nodes/lighting/LightsNode.js';
-import PositionNode from '@modules/renderer/engine/nodes/accessors/PositionNode.js';
-import { Node } from '@modules/renderer/engine/nodes/core/Node.js';
 
 export class Renderer {
   backend: Backend;
@@ -93,7 +91,7 @@ export class Renderer {
     return {
       alpha: options?.alpha ?? true,
       antialias,
-      sampleCount: antialias ? options?.sampleCount ?? 4 : 1,
+      sampleCount: antialias ? (options?.sampleCount ?? 4) : 1,
       autoClear: options?.autoClear ?? true,
       autoClearColor: options?.autoClearColor ?? true,
       autoClearDepth: options?.autoClearDepth ?? true,
@@ -416,7 +414,7 @@ export class Renderer {
     return this.backend.getMaxAnisotropy();
   }
 
-  async getArrayBuffer(attribute: AttributeType) {
+  async getArrayBuffer(attribute: BufferAttribute) {
     return await this.backend.getArrayBuffer(attribute);
   }
 

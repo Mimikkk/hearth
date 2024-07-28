@@ -7,7 +7,6 @@ import { Entity } from './Entity.js';
 import { Mat4 } from '../math/Mat4.js';
 import { Mat3 } from '../math/Mat3.js';
 import { Quaternion } from '@modules/renderer/engine/math/Quaternion.js';
-import { AttributeType } from '@modules/renderer/engine/core/types.js';
 import { v4 } from 'uuid';
 import { AnimationClip } from '@modules/renderer/engine/animation/AnimationClip.js';
 
@@ -764,7 +763,7 @@ export class Geometry {
 Geometry.prototype.isGeometry = true;
 Geometry.prototype.type = 'Geometry';
 
-type AttributeRecord = Record<string, AttributeType>;
+type AttributeRecord = Record<string, BufferAttribute>;
 
 let _id = 0;
 const _m1 = new Mat4();

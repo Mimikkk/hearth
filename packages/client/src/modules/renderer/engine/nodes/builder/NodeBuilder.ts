@@ -1,4 +1,5 @@
 import {
+  BufferAttribute,
   Color,
   Entity,
   Geometry,
@@ -22,6 +23,7 @@ import {
   NodeMaterial,
   NodeStack,
   NodeUpdateType,
+  ShaderNode,
   stack,
   UniformNode,
 } from '@modules/renderer/engine/nodes/Nodes.js';
@@ -58,8 +60,6 @@ import { TypedArray, TypedArrayConstructor } from '@modules/renderer/engine/math
 import { BuildStage, BuiltinType, ShaderStage, TypeMap, TypeName } from './NodeBuilder.types.js';
 import { PolyfillMap, PolyfillName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.polyfills.js';
 import StructTypeNode from '@modules/renderer/engine/nodes/core/StructTypeNode.js';
-import { ShaderNode } from 'three/examples/jsm/nodes/shadernode/ShaderNode.js';
-import { AttributeType } from '@modules/renderer/engine/core/types.js';
 import { WgslFn } from '@modules/renderer/engine/nodes/builder/WgslFn.js';
 
 type ParseFn = (source: string) => WgslFn;
@@ -339,46 +339,24 @@ export class NodeBuilder {
   }
 
   getComponentType(type: TypeName): TypeName {
-    type = this.getVectorType(type);
-
-    if (TypeName.isComponent(type)) return type;
-
-    const componentType = /(b|i|u|)(vec|mat)([2-4])/.exec(type);
-
-    if (!componentType) throw new Error('format error');
-
-    if (componentType[1] === 'b') return TypeName.bool;
-    if (componentType[1] === 'i') return TypeName.i32;
-    if (componentType[1] === 'u') return TypeName.u32;
-    return TypeName.f32;
+    return TypeName.component(type);
   }
 
   getVectorType(type: TypeName): TypeName {
-    if (type === 'color') return 'vec3';
-    if (type === 'texture' || type === 'cubeTexture' || type === 'storageTexture') return 'vec4';
-
+    if (TypeName.convertibleToVec(type)) return TypeName.vec(type);
     return type;
   }
 
-  getTypeFromLength(length: number, componentType: string = 'f32'): TypeName {
-    if (length === 1) return componentType;
-
-    const baseType = TypeByLength.get(length);
-    const prefix = componentType === 'f32' ? '' : componentType[0];
-
-    return prefix + baseType;
+  getTypeFromLength(length: number, component: TypeName = TypeName.f32): TypeName {
+    return TypeName.ofSize(length, component);
   }
 
   getTypeFromArray(array: TypedArray): TypeName {
-    return TypeByArray.get(array.constructor as TypedArrayConstructor);
+    return TypeName.ofArray(array);
   }
 
-  getTypeFromAttribute(attribute: AttributeType): TypeName {
-    let dataAttribute = attribute;
-
-    if (attribute.isInterleavedBufferAttribute) dataAttribute = attribute;
-
-    const array = dataAttribute.array;
+  getTypeFromAttribute(attribute: BufferAttribute): TypeName {
+    const array = attribute.array;
     const itemSize = attribute.stride;
 
     let arrayType = this.getTypeFromArray(array);
@@ -1577,13 +1555,6 @@ namespace Inbuilt {
 const formatAsFloat = (value: number): string => value + (value % 1 ? '' : '.0');
 
 const UniformsGroup = new ChainMap();
-const TypeByLength = new Map<number, TypeName>([
-  [2, TypeName.vec2],
-  [3, TypeName.vec3],
-  [4, TypeName.vec4],
-  [9, TypeName.mat3],
-  [16, TypeName.mat4],
-]);
 const TypeByArray = new Map<TypedArrayConstructor, TypeName>([
   [Int8Array, TypeName.i32],
   [Int16Array, TypeName.i32],

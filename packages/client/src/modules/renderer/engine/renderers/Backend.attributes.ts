@@ -1,13 +1,11 @@
 import { BufferAttribute } from '../engine.js';
-import { BufferStep } from './constants.js';
 import { Backend } from '@modules/renderer/engine/renderers/Backend.js';
 import RenderObject from '@modules/renderer/engine/renderers/RenderObject.js';
-import { AttributeType } from '@modules/renderer/engine/core/types.js';
 
 export class BackendAttributes {
   constructor(public backend: Backend) {}
 
-  createAttribute(attribute: AttributeType, usage: GPUBufferUsageFlags): void {
+  createAttribute(attribute: BufferAttribute, usage: GPUBufferUsageFlags): void {
     const bufferAttribute = attribute;
 
     const backend = this.backend;
@@ -46,7 +44,7 @@ export class BackendAttributes {
     }
   }
 
-  updateAttribute(attribute: AttributeType): void {
+  updateAttribute(attribute: BufferAttribute): void {
     const bufferAttribute = attribute;
 
     const backend = this.backend;
@@ -58,7 +56,7 @@ export class BackendAttributes {
     device.queue.writeBuffer(buffer, 0, array, 0);
   }
 
-  createShaderVertexBuffers(renderObject: RenderObject): AttributeType[] {
+  createShaderVertexBuffers(renderObject: RenderObject): BufferAttribute[] {
     const attributes = renderObject.getAttributes();
     const vertexBuffers = new Map();
 
@@ -92,12 +90,12 @@ export class BackendAttributes {
     return Array.from(vertexBuffers.values());
   }
 
-  destroyAttribute(attribute: AttributeType): void {
+  destroyAttribute(attribute: BufferAttribute): void {
     this.backend.memo.get(attribute).buffer.destroy();
     this.backend.memo.delete(attribute);
   }
 
-  async getArrayBuffer(attribute: AttributeType): Promise<ArrayBuffer> {
+  async getArrayBuffer(attribute: BufferAttribute): Promise<ArrayBuffer> {
     const backend = this.backend;
     const device = backend.device;
 
@@ -135,7 +133,7 @@ export class BackendAttributes {
     return readBufferGPU.getMappedRange();
   }
 
-  _getVertexFormat(attribute: AttributeType): GPUVertexFormat {
+  _getVertexFormat(attribute: BufferAttribute): GPUVertexFormat {
     const { span } = attribute;
     const ArrayType = attribute.array.constructor;
 
