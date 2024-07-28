@@ -16,8 +16,9 @@ export class JoinNode extends TempNode {
       return builder.getVectorType(this.nodeType);
     }
 
-    return builder.getTypeFromLength(
+    return TypeName.ofSize(
       this.nodes.reduce((count, cur) => count + builder.getTypeLength(cur.getNodeType(builder)), 0),
+      TypeName.f32,
     );
   }
 

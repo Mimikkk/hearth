@@ -1,5 +1,6 @@
 import TempNode from '../core/TempNode.js';
 import { vectorComponents } from '../core/constants.js';
+import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 class SetNode extends TempNode {
   static type = 'SetNode';
@@ -20,7 +21,7 @@ class SetNode extends TempNode {
     const { sourceNode, components, targetNode } = this;
 
     const sourceType = this.getNodeType(builder);
-    const targetType = builder.getTypeFromLength(components.length);
+    const targetType = TypeName.ofSize(components.length, TypeName.f32);
 
     const targetSnippet = targetNode.build(builder, targetType);
     const sourceSnippet = sourceNode.build(builder, sourceType);

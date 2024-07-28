@@ -347,49 +347,29 @@ export class NodeBuilder {
     return type;
   }
 
-  getTypeFromLength(length: number, component: TypeName = TypeName.f32): TypeName {
-    return TypeName.ofSize(length, component);
-  }
-
-  getTypeFromArray(array: TypedArray): TypeName {
-    return TypeName.ofArray(array);
-  }
-
   getTypeFromAttribute(attribute: BufferAttribute): TypeName {
-    const array = attribute.array;
-    const itemSize = attribute.stride;
-
-    let arrayType = this.getTypeFromArray(array);
-    return this.getTypeFromLength(itemSize, arrayType);
+    return TypeName.ofAttribute(attribute);
   }
 
   getTypeLength(type: TypeName): number {
-    const vecType = this.getVectorType(type);
-    const vecNum = /vec([2-4])/.exec(vecType);
-
-    if (vecNum !== null) return Number(vecNum[1]);
-    if (vecType === 'f32' || vecType === 'bool' || vecType === 'i32' || vecType === 'u32') return 1;
-    if (/mat2/.test(type) === true) return 4;
-    if (/mat3/.test(type) === true) return 9;
-    if (/mat4/.test(type) === true) return 16;
-
+    // TODO - remove null and voids
+    if (type && type !== TypeName.void) return TypeName.size(type);
     return 0;
   }
 
   getVectorFromMatrix(type: TypeName): TypeName {
-    return type.replace('mat', 'vec');
+    return TypeName.matAsVec(type);
   }
 
-  changeComponentType(type: TypeName, newComponentType: TypeName): TypeName {
-    return this.getTypeFromLength(this.getTypeLength(type), newComponentType);
+  changeComponentType(type: TypeName, component: TypeName): TypeName {
+    return TypeName.withComponent(type, component);
   }
 
   getIntegerType(type: TypeName) {
-    const componentType = this.getComponentType(type);
+    const component = TypeName.component(type);
+    if (component === TypeName.i32 || component === TypeName.f32) return type;
 
-    if (componentType === 'i32' || componentType === 'u32') return type;
-
-    return this.changeComponentType(type, 'i32');
+    return TypeName.withComponent(type, TypeName.i32);
   }
 
   addStack(): void {
@@ -728,7 +708,7 @@ export class NodeBuilder {
     if (fromTypeLength > toTypeLength) {
       return this.format(
         `${snippet}.${'xyz'.slice(0, toTypeLength)}`,
-        this.getTypeFromLength(toTypeLength, this.getComponentType(fromType)),
+        TypeName.ofSize(toTypeLength, this.getComponentType(fromType)),
         toType,
       );
     }

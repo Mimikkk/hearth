@@ -4,8 +4,10 @@ import { buffer } from '../accessors/BufferNode.js';
 import { instanceIndex } from '../core/IndexNode.js';
 import { f32, proxyNode } from '../shadernode/ShaderNodes.js';
 
-import { Vec4 } from '@modules/renderer/engine/engine.js';
+import { InstancedMesh, Vec4 } from '@modules/renderer/engine/engine.js';
 import { lerp } from '../../math/MathUtils.js';
+import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
+import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 let min = null;
 let max = null;
@@ -20,15 +22,17 @@ class RangeNode extends Node {
     this.maxNode = maxNode;
   }
 
-  getVectorLength(builder) {
+  getVectorLength(builder: NodeBuilder): number {
     const minLength = builder.getTypeLength(getValueType(this.minNode.value));
     const maxLength = builder.getTypeLength(getValueType(this.maxNode.value));
 
     return minLength > maxLength ? minLength : maxLength;
   }
 
-  getNodeType(builder) {
-    return builder.object.isInstancedMesh === true ? builder.getTypeFromLength(this.getVectorLength(builder)) : 'f32';
+  getNodeType(builder: NodeBuilder) {
+    return InstancedMesh.is(builder.object)
+      ? TypeName.ofSize(this.getVectorLength(builder), TypeName.f32)
+      : TypeName.f32;
   }
 
   setup(builder) {

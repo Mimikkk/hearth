@@ -1,4 +1,5 @@
 import { TypedArray } from '@modules/renderer/engine/math/MathUtils.js';
+import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
 
 export enum ShaderStage {
   Vertex = 'vertex',
@@ -275,6 +276,14 @@ export namespace TypeName {
         throw new Error(`Cannot create type from array: ${array.constructor}.`);
     }
   };
+
+  export const vecAsMat = (type: TypeName): TypeName => type.replace('vec', 'mat') as TypeName;
+
+  export const matAsVec = (type: TypeName): TypeName => type.replace('mat', 'vec') as TypeName;
+
+  export const ofAttribute = ({ span, array }: BufferAttribute): TypeName => ofSize(span, ofArray(array));
+
+  export const withComponent = (type: TypeName, component: TypeName): TypeName => ofSize(size(type), component);
 
   export const isComponent = (type: TypeName): boolean =>
     type === TypeName.f32 || type === TypeName.i32 || type === TypeName.u32 || type === TypeName.bool;

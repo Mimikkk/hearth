@@ -1,5 +1,6 @@
 import { Node } from '../core/Node.js';
 import { vectorComponents } from '../core/constants.js';
+import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 const stringVectorComponents = vectorComponents.join('');
 
@@ -30,7 +31,7 @@ class SplitNode extends Node {
   }
 
   getNodeType(builder) {
-    return builder.getTypeFromLength(this.components.length, this.getComponentType(builder));
+    return TypeName.ofSize(this.components.length, this.getComponentType(builder));
   }
 
   generate(builder, output) {
@@ -47,7 +48,7 @@ class SplitNode extends Node {
       if (componentsLength >= nodeTypeLength) {
         // needed expand the input node
 
-        type = builder.getTypeFromLength(this.getVectorLength(), this.getComponentType(builder));
+        type = TypeName.ofSize(this.getVectorLength(), this.getComponentType(builder));
       }
 
       const nodeSnippet = node.build(builder, type);
