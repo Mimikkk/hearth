@@ -1,15 +1,17 @@
-import TempNode from '../core/TempNode.js';
+import { TempNode } from '../core/TempNode.js';
+import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
+import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
+import { Node } from '../core/Node.js';
 
-class JoinNode extends TempNode {
-  static type = 'JoinNode';
-
-  constructor(nodes = [], nodeType = null) {
-    super(nodeType);
-
-    this.nodes = nodes;
+export class JoinNode extends TempNode {
+  constructor(
+    public nodes: Node[] = [],
+    type: TypeName,
+  ) {
+    super(type);
   }
 
-  getNodeType(builder) {
+  getNodeType(builder: NodeBuilder): TypeName {
     if (this.nodeType !== null) {
       return builder.getVectorType(this.nodeType);
     }
@@ -19,7 +21,7 @@ class JoinNode extends TempNode {
     );
   }
 
-  generate(builder, output) {
+  generate(builder: NodeBuilder, output: TypeName): string {
     const type = this.getNodeType(builder);
     const nodes = this.nodes;
 
@@ -39,7 +41,7 @@ class JoinNode extends TempNode {
       snippetValues.push(inputSnippet);
     }
 
-    const snippet = `${builder.getType(type)}( ${snippetValues.join(', ')} )`;
+    const snippet = `${builder.getType(type)}(${snippetValues.join(', ')})`;
 
     return builder.format(snippet, type, output);
   }

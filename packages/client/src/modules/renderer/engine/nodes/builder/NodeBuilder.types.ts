@@ -89,14 +89,24 @@ export enum TypeName {
   umat4 = 'umat4',
   bmat4 = 'bmat4',
   void = 'void',
-  int = 'int',
   property = 'property',
   sampler = 'sampler',
   texture = 'texture',
   cubeTexture = 'cubeTexture',
-
+  // node types
   node = 'node',
   string = 'string',
   shader = 'shader',
   buffer = 'buffer',
+}
+
+export namespace TypeName {
+  export const component = (type: TypeName): TypeName => {
+    if (isComponent(type)) return type;
+  };
+
+  export const isComponent = (type: TypeName): boolean =>
+    type === TypeName.f32 || type === TypeName.i32 || type === TypeName.u32 || type === TypeName.bool;
+  export const isVec = (type: TypeName): boolean => type.includes('vec');
+  export const isMat = (type: TypeName): boolean => type.includes('mat');
 }

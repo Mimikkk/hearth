@@ -338,20 +338,19 @@ export class NodeBuilder {
     return /mat\d/.test(type);
   }
 
-  getComponentType(type: TypeName): TypeName | null {
+  getComponentType(type: TypeName): TypeName {
     type = this.getVectorType(type);
 
-    if (type === 'f32' || type === 'bool' || type === 'i32' || type === 'u32') return type;
+    if (TypeName.isComponent(type)) return type;
 
     const componentType = /(b|i|u|)(vec|mat)([2-4])/.exec(type);
 
-    if (componentType === null) return null;
+    if (!componentType) throw new Error('format error');
 
-    if (componentType[1] === 'b') return 'bool';
-    if (componentType[1] === 'i') return 'i32';
-    if (componentType[1] === 'u') return 'u32';
-
-    return 'f32';
+    if (componentType[1] === 'b') return TypeName.bool;
+    if (componentType[1] === 'i') return TypeName.i32;
+    if (componentType[1] === 'u') return TypeName.u32;
+    return TypeName.f32;
   }
 
   getVectorType(type: TypeName): TypeName {

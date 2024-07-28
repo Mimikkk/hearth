@@ -1,6 +1,6 @@
 import { boolMap, floatMap, sintMap, uintMap } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.map.js';
 import { getValueFromType } from '@modules/renderer/engine/nodes/core/NodeUtils.js';
-import { getConstNode } from '@modules/renderer/engine/nodes/shadernode/utils.js';
+import { asConstNode } from '@modules/renderer/engine/nodes/shadernode/utils.js';
 import ConvertNode from '@modules/renderer/engine/nodes/utils/ConvertNode.js';
 import JoinNode from '@modules/renderer/engine/nodes/utils/JoinNode.js';
 import ArrayElementNode from '@modules/renderer/engine/nodes/utils/ArrayElementNode.js';
@@ -9,39 +9,43 @@ import { asNode, asNodes } from './ShaderNode.asNode.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { Node } from '@modules/renderer/engine/nodes/core/Node.js';
 
-const createConvertType =
-  (type: TypeName, cacheMap: Map<any, any> = null) =>
-  (...params) => {
-    if (
-      params.length === 0 ||
-      (!['bool', 'f32', 'i32', 'u32'].includes(type) && params.every(param => typeof param !== 'object'))
-    ) {
+const components = [TypeName.bool, TypeName.f32, TypeName.i32, TypeName.u32];
+const createConvertType = (type: TypeName, cacheMap: Map<any, any>) => {
+  const isComponent = components.includes(type);
+
+  return (...params) => {
+    if (params.length === 0 || (!isComponent && params.every(param => typeof param !== 'object'))) {
       params = [getValueFromType(type, ...params)];
     }
 
-    if (params.length === 1 && cacheMap !== null && cacheMap.has(params[0])) {
-      return asNode(cacheMap.get(params[0]));
-    }
+    // use cache if has cacheMap
+    let cached = cacheMap?.get(params[0]);
+    if (params.length === 1 && cached) return asNode(cached);
 
     if (params.length === 1) {
-      const node = getConstNode(params[0], type);
+      const node = asConstNode(params[0], type);
 
+      // if can get node type without builder then return node
       try {
         if (node.getNodeType() === type) return asNode(node);
       } catch {}
 
+      // otherwise convert node to target type
       return asNode(new ConvertNode(node, type));
     }
 
-    const nodes = params.map(param => getConstNode(param));
+    const nodes = params.map(param => asConstNode(param));
     return asNode(new JoinNode(nodes, type));
   };
+};
 
 export const color = createConvertType(TypeName.color);
+
 export const f32 = createConvertType(TypeName.f32, floatMap);
 export const i32 = createConvertType(TypeName.i32, sintMap);
 export const u32 = createConvertType(TypeName.u32, uintMap);
 export const bool = createConvertType(TypeName.bool, boolMap);
+
 export const vec2 = createConvertType(TypeName.vec2);
 export const ivec2 = createConvertType(TypeName.ivec2);
 export const uvec2 = createConvertType(TypeName.uvec2);
