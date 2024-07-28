@@ -96,25 +96,25 @@ export class MarchingCubes extends Mesh {
 
       this.positionArray = new Float32Array(maxVertexCount * 3);
       const positionAttribute = new BufferAttribute(this.positionArray, 3);
-      positionAttribute.setUsage(BufferUse.DynamicDraw);
+      positionAttribute.usage = BufferUse.DynamicDraw;
       geometry.setAttribute('position', positionAttribute);
 
       this.normalArray = new Float32Array(maxVertexCount * 3);
       const normalAttribute = new BufferAttribute(this.normalArray, 3);
-      normalAttribute.setUsage(BufferUse.DynamicDraw);
+      normalAttribute.usage = BufferUse.DynamicDraw;
       geometry.setAttribute('normal', normalAttribute);
 
       if (this.enableUvs) {
         this.uvArray = new Float32Array(maxVertexCount * 2);
         const uvAttribute = new BufferAttribute(this.uvArray, 2);
-        uvAttribute.setUsage(BufferUse.DynamicDraw);
+        uvAttribute.usage = BufferUse.DynamicDraw;
         geometry.setAttribute('uv', uvAttribute);
       }
 
       if (this.enableColors) {
         this.colorArray = new Float32Array(maxVertexCount * 3);
         const colorAttribute = new BufferAttribute(this.colorArray, 3);
-        colorAttribute.setUsage(BufferUse.DynamicDraw);
+        colorAttribute.usage = BufferUse.DynamicDraw;
         geometry.setAttribute('color', colorAttribute);
       }
 

@@ -54,7 +54,7 @@ const color = Color.new();
 
 const geometryBox = new BoxGeometry(0.075, 0.075, 0.075);
 const boxes = new InstancedMesh(geometryBox, material, 2);
-boxes.instanceMatrix.setUsage(BufferUse.DynamicDraw); // will be updated every frame
+boxes.instanceMatrix.usage = BufferUse.DynamicDraw;
 // boxes.castShadow = false;
 // boxes.receiveShadow = false;
 boxes.userData.physics = { mass: 1 };
@@ -70,7 +70,8 @@ for (let i = 0; i < boxes.count; i++) {
 
 const geometrySphere = new IcosahedronGeometry(0.05, 4);
 const spheres = new InstancedMesh(geometrySphere, material, 2);
-spheres.instanceMatrix.setUsage(BufferUse.DynamicDraw); // will be updated every frame
+spheres.instanceMatrix.usage = BufferUse.DynamicDraw;
+
 spheres.castShadow = true;
 spheres.receiveShadow = true;
 spheres.userData.physics = { mass: 1 };

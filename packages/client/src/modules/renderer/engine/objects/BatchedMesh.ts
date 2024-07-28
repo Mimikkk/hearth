@@ -188,7 +188,7 @@ export class BatchedMesh extends Mesh {
 
         const dstArray = new array.constructor(maxVertexCount * itemSize);
         const dstAttribute = new srcAttribute.constructor(dstArray, itemSize);
-        dstAttribute.setUsage(srcAttribute.usage);
+        dstAttribute.usage = srcAttribute.usage;
 
         geometry.setAttribute(attributeName, dstAttribute);
       }

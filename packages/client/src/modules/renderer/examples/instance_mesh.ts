@@ -36,7 +36,7 @@ async function init() {
     geometry.scale(0.5, 0.5, 0.5);
 
     mesh = new Engine.InstancedMesh(geometry, material, count);
-    mesh.instanceMatrix.setUsage(Engine.BufferUse.DynamicDraw);
+    mesh.instanceMatrix.usage = Engine.BufferUse.DynamicDraw;
 
     scene.add(mesh);
 

@@ -100,7 +100,7 @@ export const parseBufferGeometry = (json: JsonContent): Geometry => {
     }
 
     if (attribute.name !== undefined) bufferAttribute.name = attribute.name;
-    if (attribute.usage !== undefined) bufferAttribute.setUsage(attribute.usage);
+    if (attribute.usage !== undefined) bufferAttribute.usage = attribute.usage;
 
     geometry.setAttribute(key, bufferAttribute);
   }

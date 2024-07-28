@@ -18,7 +18,9 @@ export class BufferAttribute<T extends TypedArray = any> {
     source: T | Buffer<T>,
     public span: number,
     public offset: number = 0,
+    // move into source
     public step: BufferStep = BufferStep.Vertex,
+    // move into source
     public bind?: GPUBufferBindingTypeType,
   ) {
     if (source instanceof Buffer) {
@@ -32,17 +34,13 @@ export class BufferAttribute<T extends TypedArray = any> {
     this.version = 0;
   }
 
+  // move into source
   set usage(value: BufferUse) {
     this.source.use = value;
   }
 
   get usage(): BufferUse {
     return this.source.use;
-  }
-
-  setUsage(value: BufferUse) {
-    this.source.use = value;
-    return this;
   }
 
   get array(): T {
