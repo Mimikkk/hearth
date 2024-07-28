@@ -101,12 +101,26 @@ export enum TypeName {
   umat4 = 'umat4',
   bmat4 = 'bmat4',
 
-  property = 'property',
   sampler = 'sampler',
+  comparison = 'sampler_comparison',
+  depth1 = 'texture_depth_1d',
+  depth2 = 'texture_depth_2d',
+  depth3 = 'texture_depth_3d',
+  depth2a = 'texture_depth_2d_array',
+  depth2m = 'texture_multisampled_2d',
+  depthC = 'texture_depth_cube',
+  depthCa = 'texture_depth_cube_array',
+  storage1 = 'texture_storage_1d',
+  storage2 = 'texture_storage_2d',
+  storage3 = 'texture_storage_3d',
+  storage2a = 'texture_storage_2d_array',
+
+  //
+  // special type
+  property = 'property',
   texture = 'texture',
   cubeTexture = 'cubeTexture',
   storageTexture = 'storageTexture',
-  // special type
   void = 'void',
   // node types
   node = 'node',
