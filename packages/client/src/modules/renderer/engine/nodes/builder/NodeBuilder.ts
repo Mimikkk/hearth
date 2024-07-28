@@ -266,8 +266,8 @@ export class NodeBuilder {
     return node;
   }
 
-  codeConst(type: TypeName, value: any = null): string {
-    if (value === null) {
+  codeConst(type: TypeName, value: any): string {
+    if (value === null || value === undefined) {
       if (type === 'f32' || type === 'i32' || type === 'u32') value = 0;
       else if (type === 'bool') value = false;
       else if (type === 'color') value = Color.new();
@@ -276,29 +276,33 @@ export class NodeBuilder {
       else if (type === 'vec4') value = Vec4.new();
     }
 
-    if (type === 'f32') return formatAsFloat(value);
-    if (type === 'i32') return `${Math.round(value)}`;
-    if (type === 'u32') return value >= 0 ? `${Math.round(value)}u` : '0u';
-    if (type === 'bool') return value ? 'true' : 'false';
-    if (type === 'color')
-      return `${this.getType('vec3')}(${formatAsFloat(value.r)}, ${formatAsFloat(value.g)}, ${formatAsFloat(value.b)})`;
+    if (type === TypeName.f32) return asF32(value);
+    if (type === TypeName.i32) return `${Math.round(value)}`;
+    if (type === TypeName.u32) return value >= 0 ? `${Math.round(value)}u` : '0u';
+    if (type === TypeName.bool) return value ? 'true' : 'false';
 
-    const typeLength = TypeName.size(type);
+    if (type === TypeName.color) {
+      return `vec3f(${asF32(value.r)}, ${asF32(value.g)}, ${asF32(value.b)})`;
+    }
 
-    const componentType = TypeName.component(type);
+    const size = TypeName.size(type);
 
-    const generateConst = value => this.codeConst(componentType, value);
+    const component = TypeName.component(type);
+    const code = (value: number) => this.codeConst(component, value);
 
-    if (typeLength === 2) {
-      return `${this.getType(type)}(${generateConst(value.x)}, ${generateConst(value.y)})`;
-    } else if (typeLength === 3) {
-      return `${this.getType(type)}(${generateConst(value.x)}, ${generateConst(value.y)}, ${generateConst(value.z)})`;
-    } else if (typeLength === 4) {
-      return `${this.getType(type)}(${generateConst(value.x)}, ${generateConst(value.y)}, ${generateConst(value.z)}, ${generateConst(value.w)})`;
-    } else if (typeLength > 4 && value && (value.isMat3 || value.isMat4)) {
-      return `${this.getType(type)}(${value.elements.map(generateConst).join(', ')})`;
-    } else if (typeLength > 4) {
-      return `${this.getType(type)}()`;
+    const name = this.getType(type);
+    switch (size) {
+      case 2:
+        return `${name}(${code(value.x)}, ${code(value.y)})`;
+      case 3:
+        return `${name}(${code(value.x)}, ${code(value.y)}, ${code(value.z)})`;
+      case 4:
+        return `${name}(${code(value.x)}, ${code(value.y)}, ${code(value.z)}, ${code(value.w)})`;
+      case 9:
+      case 16:
+        return `${name}(${value.elements.map(code).join(', ')})`;
+      default:
+        return `${name}()`;
     }
 
     throw new Error(`NodeBuilder: Type '${type}' not found in generate constant attempt.`);
@@ -1491,7 +1495,7 @@ namespace Inbuilt {
   }
 }
 
-const formatAsFloat = (value: number): string => value + (value % 1 ? '' : '.0');
+const asF32 = (value: number): string => value + (value % 1 ? '' : '.0');
 
 const UniformsGroup = new ChainMap();
 const StageMap: Record<ShaderStage, number> = {

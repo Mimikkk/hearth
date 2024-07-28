@@ -149,8 +149,8 @@ export class TernaryNode extends TempNode {
     const { aNode, bNode, cNode } = this;
 
     const aType = aNode.getNodeType(builder);
-    const bType = bNode?.getNodeType(builder) ?? null;
-    const cType = cNode?.getNodeType(builder) ?? null;
+    const bType = bNode.getNodeType(builder);
+    const cType = cNode.getNodeType(builder);
 
     const aLen = TypeName.isMat(aType) ? 0 : TypeName.size(aType);
     const bLen = TypeName.isMat(bType) ? 0 : TypeName.size(bType);
@@ -186,19 +186,19 @@ export class TernaryNode extends TempNode {
 
     switch (this.method) {
       case TernaryVariant.Refract:
-        paramA = a.build(builder, inputType)!;
-        paramB = b.build(builder, inputType)!;
-        paramC = c.build(builder, TypeName.f32)!;
+        paramA = a.build(builder, inputType);
+        paramB = b.build(builder, inputType);
+        paramC = c.build(builder, TypeName.f32);
         break;
       case TernaryVariant.Mix:
-        paramA = a.build(builder, inputType)!;
-        paramB = b.build(builder, inputType)!;
-        paramC = c.build(builder, TypeName.size(c!.getNodeType(builder)) === 1 ? TypeName.f32 : inputType)!;
+        paramA = a.build(builder, inputType);
+        paramB = b.build(builder, inputType);
+        paramC = c.build(builder, TypeName.size(c.getNodeType(builder)) === 1 ? TypeName.f32 : inputType)!;
         break;
       default:
-        paramA = a.build(builder, inputType)!;
-        paramB = b.build(builder, inputType)!;
-        paramC = c.build(builder, inputType)!;
+        paramA = a.build(builder, inputType);
+        paramB = b.build(builder, inputType);
+        paramC = c.build(builder, inputType);
     }
 
     return builder.format(`${builder.codeMethod(method, type)}(${paramA}, ${paramB}, ${paramC})`, type, output);

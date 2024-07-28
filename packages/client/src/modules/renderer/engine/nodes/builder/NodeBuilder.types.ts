@@ -163,6 +163,7 @@ export namespace TypeName {
   export const size = (type: TypeName): number => {
     switch (type) {
       case null:
+      case undefined:
       case TypeName.void:
         return 0;
       case TypeName.bool:
