@@ -670,7 +670,7 @@ export class Hearth {
   }
 }
 
-export namespace Renderer {
+export namespace Hearth {
   export interface Options {
     alpha?: boolean;
     antialias?: boolean;

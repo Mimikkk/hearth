@@ -43,19 +43,13 @@ class BackendPipelines {
     const pipelineData = backend.memo.get(pipeline);
     const bindingsData = backend.memo.get(renderObject.getBindings());
 
-    
-
     const vertexBuffers = backend.attributes.layouts(renderObject);
-
-    
 
     let blending;
 
     if (material.transparent === true && material.blending !== Blending.None) {
       blending = this._getBlending(material);
     }
-
-    
 
     let stencilFront = {};
 
@@ -103,7 +97,6 @@ class BackendPipelines {
     let sampleCount = utils.getSampleCount(renderObject.context);
 
     if (sampleCount > 1) {
-      
       sampleCount = Math.pow(2, Math.floor(Math.log2(sampleCount)));
 
       if (sampleCount === 2) {
@@ -120,7 +113,7 @@ class BackendPipelines {
         depthWriteEnabled: material.depthWrite,
         depthCompare: depthCompare,
         stencilFront: stencilFront,
-        
+
         stencilBack: {},
         stencilReadMask: material.stencilFuncMask,
         stencilWriteMask: material.stencilWriteMask,
@@ -274,7 +267,7 @@ class BackendPipelines {
     if (color !== undefined && alpha !== undefined) {
       return { color, alpha };
     } else {
-      console.error('Renderer: Invalid blending: ', blending);
+      console.error('Hearth: Invalid blending: ', blending);
     }
   }
 
@@ -337,7 +330,7 @@ class BackendPipelines {
         break;
 
       default:
-        console.error('Renderer: Blend factor not supported.', blend);
+        console.error('Hearth: Blend factor not supported.', blend);
     }
 
     return blendFactor;
@@ -382,7 +375,7 @@ class BackendPipelines {
         break;
 
       default:
-        console.error('Renderer: Invalid stencil function.', stencilFunc);
+        console.error('Hearth: Invalid stencil function.', stencilFunc);
     }
 
     return stencilCompare;
@@ -425,7 +418,7 @@ class BackendPipelines {
         break;
 
       default:
-        console.error('Renderer: Invalid stencil operation.', stencilOperation);
+        console.error('Hearth: Invalid stencil operation.', stencilOperation);
     }
 
     return stencilOperation;
