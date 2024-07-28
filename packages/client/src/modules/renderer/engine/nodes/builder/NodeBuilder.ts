@@ -328,11 +328,6 @@ export class NodeBuilder {
     return attribute;
   }
 
-  getVectorType(type: TypeName): TypeName {
-    if (TypeName.convertibleToVec(type)) return TypeName.vec(type);
-    return type;
-  }
-
   getTypeLength(type: TypeName): number {
     // TODO - remove null and voids
     if (type && type !== TypeName.void) return TypeName.size(type);
@@ -340,6 +335,7 @@ export class NodeBuilder {
   }
 
   getType(type: TypeName): string {
+    onAdd(type);
     // return TypeName.repr(type);
     return TypeMap[type] || type;
   }
@@ -655,8 +651,8 @@ export class NodeBuilder {
   }
 
   format(snippet: string, from: TypeName, to: TypeName): string {
-    from = this.getVectorType(from);
-    to = this.getVectorType(to);
+    from = TypeName.coerce(from);
+    to = TypeName.coerce(to);
 
     if (from === to || to === null || this.isReference(to)) {
       return snippet;
@@ -1247,7 +1243,7 @@ export class NodeBuilder {
           }),
         );
       } else {
-        const vectorType = this.getType(this.getVectorType(uniform.type));
+        const vectorType = this.getType(TypeName.coerce(uniform.type));
         const groupName = uniform.groupNode.name;
 
         const group =
@@ -1508,4 +1504,12 @@ const StageMap: Record<ShaderStage, number> = {
   vertex: GPUShaderStage.VERTEX,
   fragment: GPUShaderStage.FRAGMENT,
   compute: GPUShaderStage.COMPUTE,
+};
+
+const types = new Set();
+const onAdd = value => {
+  if (!types.has(value)) {
+    types.add(value);
+    console.log({ types });
+  }
 };

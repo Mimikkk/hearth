@@ -212,6 +212,8 @@ export namespace TypeName {
     type === TypeName.storageTexture;
 
   export const vec = (type: TypeName): TypeName => {
+    if (isVec(type)) return type;
+
     switch (type) {
       case TypeName.color:
         return TypeName.vec3;
@@ -221,6 +223,18 @@ export namespace TypeName {
         return TypeName.vec4;
       default:
         throw new Error(`Cannot convert type to vec: ${type}.`);
+    }
+  };
+
+  export const coerce = (type: TypeName): TypeName => {
+    switch (type) {
+      case TypeName.color:
+      case TypeName.texture:
+      case TypeName.cubeTexture:
+      case TypeName.storageTexture:
+        return vec(type);
+      default:
+        return type;
     }
   };
 

@@ -5,21 +5,21 @@ import { Node } from '../core/Node.js';
 
 export class JoinNode extends TempNode {
   constructor(
-    public nodes: Node[] = [],
+    public nodes: Node[],
     type: TypeName,
   ) {
     super(type);
   }
 
   getNodeType(builder: NodeBuilder): TypeName {
-    if (this.nodeType !== null) {
-      return builder.getVectorType(this.nodeType);
+    if (this.nodeType) return TypeName.coerce(this.nodeType);
+
+    let size = 0;
+    for (const node of this.nodes) {
+      size += TypeName.size(node.getNodeType(builder));
     }
 
-    return TypeName.ofSize(
-      this.nodes.reduce((count, cur) => count + builder.getTypeLength(cur.getNodeType(builder)), 0),
-      TypeName.f32,
-    );
+    return TypeName.ofSize(size, TypeName.f32);
   }
 
   generate(builder: NodeBuilder, output: TypeName): string {

@@ -1,10 +1,11 @@
 import { Node } from './Node.js';
 import { addNodeElement, proxyNode } from '../shadernode/ShaderNodes.js';
+import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 class VarNode extends Node {
   static type = 'VarNode';
 
-  constructor(node, name = null) {
+  constructor(node: Node, name: string = null) {
     super();
 
     this.node = node;
@@ -28,7 +29,9 @@ class VarNode extends Node {
   generate(builder) {
     const { node, name } = this;
 
-    const nodeVar = builder.getVarFromNode(this, name, builder.getVectorType(this.getNodeType(builder)));
+    const type = TypeName.coerce(this.getNodeType(builder));
+
+    const nodeVar = builder.getVarFromNode(this, name, type);
 
     const propertyName = builder.getPropertyName(nodeVar);
 
