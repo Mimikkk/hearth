@@ -5,7 +5,7 @@ export class Binding {
   declare buffer: TypedArray;
   visibility: number = 0;
 
-  constructor(public name: string = '') {}
+  constructor(public name: string) {}
 
   setVisibility(visibility: number) {
     this.visibility |= visibility;

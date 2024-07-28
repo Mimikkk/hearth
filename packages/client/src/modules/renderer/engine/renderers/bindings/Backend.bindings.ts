@@ -100,83 +100,67 @@ export class BackendBindings {
     device.queue.writeBuffer(into, 0, from, 0);
   }
 
-  createGroup(bindings: Binding[], layoutGPU: GPUBindGroupLayout): GPUBindGroup {
+  createGroup(bindings: Binding[], layout: GPUBindGroupLayout): GPUBindGroup {
     const backend = this.backend;
     const device = backend.device;
 
-    let bindingPoint = 0;
-    const entriesGPU = [];
+    const entries = [];
+    for (let i = 0; i < bindings.length; ++i) {
+      const binding = bindings[i];
 
-    for (const binding of bindings) {
       if (isUniformBuffer(binding)) {
-        const bindingData = backend.memo.get(binding);
+        const memo = backend.memo.get<{ buffer?: GPUBuffer }>(binding);
 
-        if (bindingData.buffer === undefined) {
-          const byteLength = binding.byteLength;
-
-          const usage = GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST;
-
-          const bufferGPU = device.createBuffer({
+        if (memo.buffer === undefined) {
+          memo.buffer = device.createBuffer({
             label: 'bindingBuffer_' + binding.name,
-            size: byteLength,
-            usage: usage,
+            size: binding.byteLength,
+            usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
           });
-
-          bindingData.buffer = bufferGPU;
         }
 
-        entriesGPU.push({ binding: bindingPoint, resource: { buffer: bindingData.buffer } });
+        entries.push({ binding: i, resource: { buffer: memo.buffer } });
       } else if (isStorageBuffer(binding)) {
-        const bindingData = backend.memo.get(binding);
+        const memo = backend.memo.get<{ buffer?: GPUBuffer }>(binding);
 
-        if (bindingData.buffer === undefined) {
-          const attribute = binding.attribute;
-
-          bindingData.buffer = backend.memo.get(attribute).buffer;
+        if (memo.buffer === undefined) {
+          memo.buffer = backend.memo.get(binding.attribute).buffer;
         }
 
-        entriesGPU.push({ binding: bindingPoint, resource: { buffer: bindingData.buffer } });
+        entries.push({ binding: i, resource: { buffer: memo.buffer } });
       } else if (isSampler(binding)) {
-        const textureGPU = backend.memo.get(binding.texture);
+        const { sampler: resource } = backend.memo.get(binding.texture);
 
-        entriesGPU.push({ binding: bindingPoint, resource: textureGPU.sampler });
+        entries.push({ binding: i, resource });
       } else if (isSampledTexture(binding)) {
-        const textureData = backend.memo.get(binding.texture);
+        const data = backend.memo.get<{
+          texture: GPUTexture;
+          mipLevelCount: number;
+          externalTexture?: VideoFrame;
+        }>(binding.texture);
 
-        let dimensionViewGPU;
-
+        let view;
         if (isSampledCubeTexture(binding)) {
-          dimensionViewGPU = GPUTextureViewDimensionType.Cube;
+          view = GPUTextureViewDimensionType.Cube;
         } else if (isDataArrayTexture(binding.texture)) {
-          dimensionViewGPU = GPUTextureViewDimensionType.TwoDArray;
+          view = GPUTextureViewDimensionType.TwoDArray;
         } else {
-          dimensionViewGPU = GPUTextureViewDimensionType.TwoD;
+          view = GPUTextureViewDimensionType.TwoD;
         }
 
-        let resourceGPU;
+        let resource = data.externalTexture
+          ? device.importExternalTexture({ source: data.externalTexture })
+          : data.texture.createView({
+              aspect: GPUTextureAspectType.All,
+              dimension: view,
+              mipLevelCount: binding.store ? 1 : data.mipLevelCount,
+            });
 
-        if (textureData.externalTexture !== undefined) {
-          resourceGPU = device.importExternalTexture({ source: textureData.externalTexture });
-        } else {
-          const aspectGPU = GPUTextureAspectType.All;
-
-          resourceGPU = textureData.texture.createView({
-            aspect: aspectGPU,
-            dimension: dimensionViewGPU,
-            mipLevelCount: binding.store ? 1 : textureData.mipLevelCount,
-          });
-        }
-
-        entriesGPU.push({ binding: bindingPoint, resource: resourceGPU });
+        entries.push({ binding: i, resource });
       }
-
-      bindingPoint++;
     }
 
-    return device.createBindGroup({
-      layout: layoutGPU,
-      entries: entriesGPU,
-    });
+    return device.createBindGroup({ layout, entries });
   }
 }
 
