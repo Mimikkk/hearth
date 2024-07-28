@@ -68,7 +68,7 @@ export class AnalyticLightNode extends LightingNode {
       depthTexture.magFilter = Filter.Nearest;
       depthTexture.image.width = shadow.mapSize.width;
       depthTexture.image.height = shadow.mapSize.height;
-      depthTexture.compareFunction = DepthComparison.Less;
+      depthTexture.compare = DepthComparison.Less;
 
       rtt.depthTexture = depthTexture;
 

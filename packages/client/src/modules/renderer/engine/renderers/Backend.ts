@@ -10,14 +10,14 @@ import {
 
 import { BackendUtilities } from './Backend.utilities.js';
 import { BackendAttributes } from './Backend.attributes.js';
-import { BackendBindings } from './Backend.bindings.js';
+import { BackendBindings } from './bindings/Backend.bindings.js';
 import BackendPipelines from './Backend.pipelines.js';
 import { BackendTextures } from './Backend.textures.js';
 import type { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 import RenderContext from '@modules/renderer/engine/renderers/RenderContext.js';
 import ComputeNode from '@modules/renderer/engine/nodes/gpgpu/ComputeNode.js';
 import ComputePipeline from '@modules/renderer/engine/renderers/ComputePipeline.js';
-import Binding from '@modules/renderer/engine/renderers/Binding.js';
+import Binding from '@modules/renderer/engine/renderers/bindings/Binding.js';
 import RenderObject from '@modules/renderer/engine/renderers/RenderObject.js';
 import ProgrammableStage from '@modules/renderer/engine/renderers/ProgrammableStage.js';
 import { ResourceManager } from './ResourceManager.js';

@@ -1,6 +1,6 @@
-import NodeBuffer from './NodeBuffer.js';
+import BindingBuffer from './BindingBuffer.js';
 
-export class UniformBuffer extends NodeBuffer {
+export class UniformBuffer extends BindingBuffer {
   declare isUniformBuffer: true;
 }
 

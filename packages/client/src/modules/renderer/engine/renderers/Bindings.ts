@@ -2,11 +2,11 @@ import DataMap from './DataMap.js';
 import { AttributeLocation } from './constants.js';
 import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 import RenderObject from '@modules/renderer/engine/renderers/RenderObject.js';
-import Binding from '@modules/renderer/engine/renderers/Binding.js';
-import { SampledTexture } from '@modules/renderer/engine/renderers/SampledTexture.js';
+import Binding from '@modules/renderer/engine/renderers/bindings/Binding.js';
+import { SampledTexture } from '@modules/renderer/engine/renderers/bindings/SampledTexture.js';
 import NodeUniformsGroup from '@modules/renderer/engine/nodes/builder/NodeUniformsGroup.js';
-import UniformBuffer from '@modules/renderer/engine/renderers/UniformBuffer.js';
-import StorageTexture from '@modules/renderer/engine/renderers/StorageTexture.js';
+import UniformBuffer from '@modules/renderer/engine/renderers/bindings/UniformBuffer.js';
+import StorageTexture from '@modules/renderer/engine/objects/textures/StorageTexture.js';
 import StorageBuffer from '@modules/renderer/engine/nodes/core/StorageBuffer.js';
 import { ComputeNode } from '@modules/renderer/engine/nodes/Nodes.js';
 

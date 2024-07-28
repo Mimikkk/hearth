@@ -3,14 +3,14 @@ import {
   GPUTextureAspectType,
   GPUTextureSampleTypeType,
   GPUTextureViewDimensionType,
-} from './constants.js';
-import { DataArrayTexture, DataTexture, DepthTexture, TextureDataType, VideoTexture } from '../engine.js';
+} from '../constants.js';
+import { DataArrayTexture, DataTexture, DepthTexture, TextureDataType, VideoTexture } from '../../engine.js';
 import { Backend } from '@modules/renderer/engine/renderers/Backend.js';
-import Binding from '@modules/renderer/engine/renderers/Binding.js';
-import UniformBuffer from '@modules/renderer/engine/renderers/UniformBuffer.js';
-import { SampledCubeTexture, SampledTexture } from '@modules/renderer/engine/renderers/SampledTexture.js';
+import Binding from '@modules/renderer/engine/renderers/bindings/Binding.js';
+import UniformBuffer from '@modules/renderer/engine/renderers/bindings/UniformBuffer.js';
+import { SampledCubeTexture, SampledTexture } from '@modules/renderer/engine/renderers/bindings/SampledTexture.js';
 import StorageBuffer from '@modules/renderer/engine/nodes/core/StorageBuffer.js';
-import Sampler from '@modules/renderer/engine/renderers/Sampler.js';
+import Sampler from '@modules/renderer/engine/renderers/bindings/Sampler.js';
 
 export class BackendBindings {
   constructor(public backend: Backend) {}
@@ -20,11 +20,10 @@ export class BackendBindings {
 
     const entries = [];
 
-    let index = 0;
-
-    for (const binding of bindings) {
-      const bindingGPU: GPUBindGroupLayoutEntry = {
-        binding: index++,
+    for (let i = 0; i < bindings.length; ++i) {
+      const binding = bindings[i];
+      const entry: GPUBindGroupLayoutEntry = {
+        binding: i,
         visibility: binding.visibility,
       };
 
@@ -35,31 +34,27 @@ export class BackendBindings {
           buffer.type = GPUBufferBindingTypeType.Storage;
         }
 
-        bindingGPU.buffer = buffer;
+        entry.buffer = buffer;
       } else if (isSampler(binding)) {
         const sampler: GPUSamplerBindingLayout = {};
 
-        if (isDepthTexture(binding.texture)) {
-          if (binding.texture.compareFunction !== null) {
-            sampler.type = 'comparison';
-          }
+        if (isDepthTexture(binding.texture) && binding.texture.compare) {
+          sampler.type = 'comparison';
         }
 
-        bindingGPU.sampler = sampler;
+        entry.sampler = sampler;
       } else if (isSampledTexture(binding) && isVideoTexture(binding.texture)) {
-        bindingGPU.externalTexture = {} satisfies GPUExternalTextureBindingLayout;
+        entry.externalTexture = {} satisfies GPUExternalTextureBindingLayout;
       } else if (isSampledTexture(binding) && binding.store) {
         const format = this.backend.memo.get(binding.texture).texture.format;
 
-        bindingGPU.storageTexture = { format } satisfies GPUStorageTextureBindingLayout;
+        entry.storageTexture = { format } satisfies GPUStorageTextureBindingLayout;
       } else if (isSampledTexture(binding)) {
         const texture: GPUTextureBindingLayout = {};
 
         if (isDepthTexture(binding.texture)) {
           texture.sampleType = GPUTextureSampleTypeType.Depth;
         } else if (isDataTexture(binding.texture) && binding.texture.type === TextureDataType.Float) {
-          // @TODO: Add support for this soon: backend.hasFeature( 'float32-filterable' )
-
           texture.sampleType = GPUTextureSampleTypeType.UnfilterableFloat;
         }
 
@@ -69,12 +64,12 @@ export class BackendBindings {
           texture.viewDimension = GPUTextureViewDimensionType.TwoDArray;
         }
 
-        bindingGPU.texture = texture;
+        entry.texture = texture;
       } else {
-        console.error(`WebGPUBindingUtils: Unsupported binding "${binding}".`);
+        throw new Error(`Bindings: Unsupported binding ${binding}.`);
       }
 
-      entries.push(bindingGPU);
+      entries.push(entry);
     }
 
     return device.createBindGroupLayout({ entries });
@@ -185,7 +180,7 @@ export class BackendBindings {
 }
 
 const isUniformBuffer = (item: any): item is UniformBuffer => item.isUniformBuffer;
-const isStorageBuffer = (item: any): item is StorageBuffer => item.isStorageBuffer;
+const isStorageBuffer = (item: any): item is StorageBuffer<any> => item.isStorageBuffer;
 const isSampler = (item: any): item is Sampler => item.isSampler;
 const isDepthTexture = (item: any): item is DepthTexture => item.isDepthTexture;
 const isSampledTexture = (item: any): item is SampledTexture => item.isSampledTexture;

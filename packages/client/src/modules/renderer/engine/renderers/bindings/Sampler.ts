@@ -4,13 +4,12 @@ import { Texture } from '@modules/renderer/engine/objects/textures/Texture.js';
 export class Sampler extends Binding {
   declare isSampler: true;
 
-  texture: Texture;
   version: number;
-
-  constructor(name: string, texture: Texture) {
+  constructor(
+    name: string,
+    public texture: Texture,
+  ) {
     super(name);
-
-    this.texture = texture;
     this.version = texture ? texture.version : 0;
   }
 }

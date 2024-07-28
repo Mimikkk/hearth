@@ -1,4 +1,4 @@
-import UniformBuffer from '../../renderers/UniformBuffer.js';
+import UniformBuffer from '../../renderers/bindings/UniformBuffer.js';
 import NodeUniform from '@modules/renderer/engine/nodes/core/NodeUniform.js';
 
 let _id = 0;

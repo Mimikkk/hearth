@@ -11,7 +11,7 @@ import {
 
 export class DepthTexture extends Texture {
   declare isDepthTexture: true;
-  compareFunction: DepthComparison | null;
+  compare: DepthComparison | null;
 
   constructor(
     width: number,
@@ -46,13 +46,13 @@ export class DepthTexture extends Texture {
     this.flipY = false;
     this.generateMipmaps = false;
 
-    this.compareFunction = null;
+    this.compare = null;
   }
 
   copy(source: this): this {
     super.copy(source);
 
-    this.compareFunction = source.compareFunction;
+    this.compare = source.compare;
 
     return this;
   }

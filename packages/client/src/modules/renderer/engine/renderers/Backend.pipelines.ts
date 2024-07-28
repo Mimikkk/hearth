@@ -26,7 +26,7 @@ import {
 import type { Backend } from '@modules/renderer/engine/renderers/Backend.js';
 import RenderObject from '@modules/renderer/engine/renderers/RenderObject.js';
 import ComputePipeline from '@modules/renderer/engine/renderers/ComputePipeline.js';
-import Binding from '@modules/renderer/engine/renderers/Binding.js';
+import Binding from '@modules/renderer/engine/renderers/bindings/Binding.js';
 import { TypedArray } from '@modules/renderer/engine/math/MathUtils.js';
 
 class BackendPipelines {

@@ -29,7 +29,7 @@ import {
 
 import { BackendTexturePass } from './Backend.texturePass.js';
 import { Backend } from '@modules/renderer/engine/renderers/Backend.js';
-import StorageTexture from '@modules/renderer/engine/renderers/StorageTexture.js';
+import StorageTexture from '@modules/renderer/engine/objects/textures/StorageTexture.js';
 import { TypedArrayConstructor } from '@modules/renderer/engine/math/MathUtils.js';
 
 const _compareToWebGPU = {
@@ -80,8 +80,8 @@ export class BackendTextures {
       maxAnisotropy: texture.anisotropy,
     };
 
-    if (isDepthTexture(texture) && texture.compareFunction !== null) {
-      samplerDescriptorGPU.compare = _compareToWebGPU[texture.compareFunction];
+    if (isDepthTexture(texture) && texture.compare !== null) {
+      samplerDescriptorGPU.compare = _compareToWebGPU[texture.compare];
     }
 
     textureGPU.sampler = device.createSampler(samplerDescriptorGPU);

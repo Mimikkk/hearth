@@ -1,5 +1,5 @@
 import UniformBuffer from './UniformBuffer.js';
-import { STD140ChunkBytes } from './constants.js';
+import { STD140ChunkBytes } from '../constants.js';
 import {
   ColorNodeUniform,
   FloatNodeUniform,

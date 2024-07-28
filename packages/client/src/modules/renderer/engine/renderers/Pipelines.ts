@@ -4,7 +4,7 @@ import ComputePipeline from './ComputePipeline.js';
 import ProgrammableStage from './ProgrammableStage.js';
 import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 import ComputeNode from '@modules/renderer/engine/nodes/gpgpu/ComputeNode.js';
-import Binding from '@modules/renderer/engine/renderers/Binding.js';
+import Binding from '@modules/renderer/engine/renderers/bindings/Binding.js';
 import RenderObject from '@modules/renderer/engine/renderers/RenderObject.js';
 import Pipeline from '@modules/renderer/engine/renderers/Pipeline.js';
 import { ShaderStage } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
