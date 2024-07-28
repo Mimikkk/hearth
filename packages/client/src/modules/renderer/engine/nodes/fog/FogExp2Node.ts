@@ -1,6 +1,6 @@
 import FogNode from './FogNode.js';
 import { Node } from '../core/Node.js';
-import { addNodeElement, proxyNode } from '../shadernode/ShaderNodes.js';
+import { addNodeCommand, proxyNode } from '../shadernode/ShaderNodes.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 
 class FogExp2Node extends FogNode {
@@ -28,4 +28,4 @@ export default FogExp2Node;
 
 export const densityFog = proxyNode(FogExp2Node);
 
-addNodeElement('densityFog', densityFog);
+addNodeCommand('densityFog', densityFog);

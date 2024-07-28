@@ -1,5 +1,5 @@
 import { add, div, mul, sub } from './OperatorNode.js';
-import { addNodeElement } from '../shadernode/ShaderNodes.js';
+import { addNodeCommand } from '../shadernode/ShaderNodes.js';
 import { PI, pow, sin } from './MathNode.js';
 
 // remapping functions https://iquilezles.org/articles/functions/
@@ -9,7 +9,7 @@ export const gain = (x, k) =>
 export const pcurve = (x, a, b) => pow(div(pow(x, a), add(pow(x, a), pow(sub(1.0, x), b))), 1.0 / a);
 export const sinc = (x, k) => sin(PI.mul(k.mul(x).sub(1.0))).div(PI.mul(k.mul(x).sub(1.0)));
 
-addNodeElement('parabola', parabola);
-addNodeElement('gain', gain);
-addNodeElement('pcurve', pcurve);
-addNodeElement('sinc', sinc);
+addNodeCommand('parabola', parabola);
+addNodeCommand('gain', gain);
+addNodeCommand('pcurve', pcurve);
+addNodeCommand('sinc', sinc);

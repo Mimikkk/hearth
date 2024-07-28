@@ -1,6 +1,6 @@
 import InputNode from '../core/InputNode.js';
 import { varying } from '../core/VaryingNode.js';
-import { addNodeElement, asNode } from '../shadernode/ShaderNodes.js';
+import { addNodeCommand, asNode } from '../shadernode/ShaderNodes.js';
 import { Buffer, BufferAttribute, BufferUse } from '@modules/renderer/engine/engine.js';
 import { ShaderStage, TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { BufferStep } from '@modules/renderer/engine/renderers/constants.js';
@@ -106,4 +106,4 @@ export const instancedBufferAttribute = (array, type, stride, offset) =>
 export const instancedDynamicBufferAttribute = (array, type, stride, offset) =>
   dynamicBufferAttribute(array, type, stride, offset).setInstanced(true);
 
-addNodeElement('toAttribute', (bufferNode: BufferNode) => bufferAttribute(bufferNode.value));
+addNodeCommand('toAttribute', (bufferNode: BufferNode) => bufferAttribute(bufferNode.value));

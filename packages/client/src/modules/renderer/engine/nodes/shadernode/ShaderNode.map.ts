@@ -1,7 +1,7 @@
 import ConstNode from '@modules/renderer/engine/nodes/core/ConstNode.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
-export const NodeElements = new Map();
+export const NodeCommands = new Map();
 
 const createEntryByType =
   (type: TypeName) =>

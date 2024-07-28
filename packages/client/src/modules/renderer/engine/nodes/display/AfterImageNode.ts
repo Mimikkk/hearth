@@ -1,5 +1,5 @@
 import TempNode from '../core/TempNode.js';
-import { addNodeElement, f32, asNode, tslFn, vec4 } from '../shadernode/ShaderNodes.js';
+import { addNodeCommand, f32, asNode, tslFn, vec4 } from '../shadernode/ShaderNodes.js';
 import { NodeUpdateType } from '../core/constants.js';
 import { uv } from '../accessors/UVNode.js';
 import { texture } from '../accessors/TextureNode.js';
@@ -136,6 +136,6 @@ class AfterImageNode extends TempNode {
 
 export const afterImage = (node: Node, damp: number) => asNode(new AfterImageNode(asNode(node), damp));
 
-addNodeElement('afterImage', afterImage);
+addNodeCommand('afterImage', afterImage);
 
 export default AfterImageNode;

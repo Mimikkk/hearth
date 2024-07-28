@@ -1,5 +1,5 @@
 import TempNode from '../core/TempNode.js';
-import { addNodeElement, proxyNode } from '../shadernode/ShaderNodes.js';
+import { addNodeCommand, proxyNode } from '../shadernode/ShaderNodes.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { Node } from '../core/Node.js';
@@ -44,5 +44,5 @@ export const colorToDirection = proxyNode(
   },
 );
 
-addNodeElement('directionToColor', directionToColor);
-addNodeElement('colorToDirection', colorToDirection);
+addNodeCommand('directionToColor', directionToColor);
+addNodeCommand('colorToDirection', colorToDirection);

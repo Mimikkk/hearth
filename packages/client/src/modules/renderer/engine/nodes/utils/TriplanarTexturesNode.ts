@@ -3,7 +3,7 @@ import { add } from '../math/OperatorNode.js';
 import { normalLocal } from '../accessors/NormalNode.js';
 import { positionLocal } from '../accessors/PositionNode.js';
 import { texture } from '../accessors/TextureNode.js';
-import { addNodeElement, f32, proxyNode, vec3 } from '../shadernode/ShaderNodes.js';
+import { addNodeCommand, f32, proxyNode, vec3 } from '../shadernode/ShaderNodes.js';
 
 class TriplanarTexturesNode extends Node {
   static type = 'TriplanarTexturesNode';
@@ -60,4 +60,4 @@ export default TriplanarTexturesNode;
 export const triplanarTextures = proxyNode(TriplanarTexturesNode);
 export const triplanarTexture = (...params) => triplanarTextures(...params);
 
-addNodeElement('triplanarTexture', triplanarTexture);
+addNodeCommand('triplanarTexture', triplanarTexture);

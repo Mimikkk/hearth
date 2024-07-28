@@ -1,5 +1,5 @@
 import { Node } from '../core/Node.js';
-import { addNodeElement, f32, proxyNode } from '../shadernode/ShaderNodes.js';
+import { addNodeCommand, f32, proxyNode } from '../shadernode/ShaderNodes.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
@@ -76,4 +76,4 @@ export default ScriptableValueNode;
 
 export const scriptableValue = proxyNode(ScriptableValueNode);
 
-addNodeElement('scriptableValue', scriptableValue);
+addNodeCommand('scriptableValue', scriptableValue);

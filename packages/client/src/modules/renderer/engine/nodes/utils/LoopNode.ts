@@ -2,7 +2,7 @@ import { Node } from '../core/Node.js';
 import { expression } from '../code/ExpressionNode.js';
 import { bypass } from '../core/BypassNode.js';
 import { context } from '../core/ContextNode.js';
-import { addNodeElement, asNodes, asNode } from '../shadernode/ShaderNodes.js';
+import { addNodeCommand, asNodes, asNode } from '../shadernode/ShaderNodes.js';
 
 class LoopNode extends Node {
   static type = 'LoopNode';
@@ -158,4 +158,4 @@ export const loop = (...params) => asNode(new LoopNode(asNodes(params, 'i32'))).
 export const Continue = () => expression('continue').append();
 export const Break = () => expression('break').append();
 
-addNodeElement('loop', (returns, ...params) => bypass(returns, loop(...params)));
+addNodeCommand('loop', (returns, ...params) => bypass(returns, loop(...params)));

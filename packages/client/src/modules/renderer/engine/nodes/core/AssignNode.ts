@@ -1,5 +1,5 @@
 import TempNode from '../core/TempNode.js';
-import { addNodeElement, proxyNode } from '../shadernode/ShaderNodes.js';
+import { addNodeCommand, proxyNode } from '../shadernode/ShaderNodes.js';
 import { vectorComponents } from './constants.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
@@ -95,4 +95,4 @@ export default AssignNode;
 
 export const assign = proxyNode(AssignNode);
 
-addNodeElement('assign', assign);
+addNodeCommand('assign', assign);

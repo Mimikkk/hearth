@@ -1,7 +1,7 @@
 import './ShaderNode.map.initialize.js';
-import { NodeElements } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.map.js';
+import { NodeCommands } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.map.js';
 
-export const addNodeElement = (name: string, nodeElement: Node) => NodeElements.set(name, nodeElement);
+export const addNodeCommand = (name: string, nodeElement: Node) => NodeCommands.set(name, nodeElement);
 
 export * from './ShaderNode.primitves.js';
 export * from './ShaderNode.stack.js';

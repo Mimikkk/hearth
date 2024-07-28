@@ -1,5 +1,5 @@
 import TempNode from '../core/TempNode.js';
-import { addNodeElement, asNode } from '../shadernode/ShaderNodes.js';
+import { addNodeCommand, asNode } from '../shadernode/ShaderNodes.js';
 import FunctionNode from './FunctionNode.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
@@ -60,4 +60,4 @@ export const call = (fn: any, ...parameters: any) => {
   return asNode(new FunctionCallNode(asNode(fn), parameters));
 };
 
-addNodeElement('call', call);
+addNodeCommand('call', call);

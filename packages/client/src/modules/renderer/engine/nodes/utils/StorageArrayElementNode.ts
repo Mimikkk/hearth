@@ -1,4 +1,4 @@
-import { addNodeElement, proxyNode } from '../shadernode/ShaderNodes.js';
+import { addNodeCommand, proxyNode } from '../shadernode/ShaderNodes.js';
 import ArrayElementNode from './ArrayElementNode.js';
 
 class StorageArrayElementNode extends ArrayElementNode {
@@ -61,4 +61,4 @@ export default StorageArrayElementNode;
 
 export const storageElement = proxyNode(StorageArrayElementNode);
 
-addNodeElement('storageElement', storageElement);
+addNodeCommand('storageElement', storageElement);

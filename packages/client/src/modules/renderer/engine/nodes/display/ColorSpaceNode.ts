@@ -1,6 +1,6 @@
 import TempNode from '../core/TempNode.js';
 import { mix } from '../math/MathNode.js';
-import { addNodeElement, asNode, proxyNode, tslFn, vec4 } from '../shadernode/ShaderNodes.js';
+import { addNodeCommand, asNode, proxyNode, tslFn, vec4 } from '../shadernode/ShaderNodes.js';
 import { ColorSpace } from '@modules/renderer/engine/engine.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { Node } from '../core/Node.js';
@@ -100,7 +100,7 @@ export const sRGBToLinear = proxyNode(
   },
 );
 
-addNodeElement('linearTosRGB', linearTosRGB);
-addNodeElement('sRGBToLinear', sRGBToLinear);
-addNodeElement('linearToColorSpace', linearToColorSpace);
-addNodeElement('colorSpaceToLinear', colorSpaceToLinear);
+addNodeCommand('linearTosRGB', linearTosRGB);
+addNodeCommand('sRGBToLinear', sRGBToLinear);
+addNodeCommand('linearToColorSpace', linearToColorSpace);
+addNodeCommand('colorSpaceToLinear', colorSpaceToLinear);

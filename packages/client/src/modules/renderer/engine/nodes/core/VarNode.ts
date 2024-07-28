@@ -1,5 +1,5 @@
 import { Node } from './Node.js';
-import { addNodeElement, proxyNode } from '../shadernode/ShaderNodes.js';
+import { addNodeCommand, proxyNode } from '../shadernode/ShaderNodes.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 class VarNode extends Node {
@@ -47,5 +47,5 @@ export default VarNode;
 
 export const temp = proxyNode(VarNode);
 
-addNodeElement('temp', temp);
-addNodeElement('toVar', (...params) => temp(...params).append());
+addNodeCommand('temp', temp);
+addNodeCommand('toVar', (...params) => temp(...params).append());

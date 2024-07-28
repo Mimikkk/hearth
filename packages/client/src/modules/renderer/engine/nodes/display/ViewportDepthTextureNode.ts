@@ -1,5 +1,5 @@
 import ViewportTextureNode from './ViewportTextureNode.js';
-import { addNodeElement, proxyNode } from '../shadernode/ShaderNodes.js';
+import { addNodeCommand, proxyNode } from '../shadernode/ShaderNodes.js';
 import { viewportTopLeft } from './ViewportNode.js';
 import { DepthTexture } from '@modules/renderer/engine/engine.js';
 
@@ -21,4 +21,4 @@ export default ViewportDepthTextureNode;
 
 export const viewportDepthTexture = proxyNode(ViewportDepthTextureNode);
 
-addNodeElement('viewportDepthTexture', viewportDepthTexture);
+addNodeCommand('viewportDepthTexture', viewportDepthTexture);

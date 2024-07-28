@@ -1,6 +1,6 @@
 import TempNode from '../core/TempNode.js';
 import { EPSILON } from '../math/MathNode.js';
-import { addNodeElement, proxyNode, tslFn, vec3 } from '../shadernode/ShaderNodes.js';
+import { addNodeCommand, proxyNode, tslFn, vec3 } from '../shadernode/ShaderNodes.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 export class BlendModeNode extends TempNode {
@@ -117,7 +117,7 @@ export const calcOverlay = tslFn(({ base, blend }: Params) => {
   ],
 });
 
-addNodeElement('burn', burn);
-addNodeElement('dodge', dodge);
-addNodeElement('overlay', overlay);
-addNodeElement('screen', screen);
+addNodeCommand('burn', burn);
+addNodeCommand('dodge', dodge);
+addNodeCommand('overlay', overlay);
+addNodeCommand('screen', screen);

@@ -430,3 +430,4 @@ export { default as getRoughness } from './functions/material/getRoughness.js';
 
 export { default as PhongLightingModel } from './functions/PhongLightingModel.js';
 export { default as PhysicalLightingModel } from './functions/PhysicalLightingModel.js';
+export { NodeCommands } from './shadernode/ShaderNode.map.js';

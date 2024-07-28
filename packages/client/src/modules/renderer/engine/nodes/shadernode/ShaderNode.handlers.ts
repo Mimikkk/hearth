@@ -1,4 +1,4 @@
-import { NodeElements } from './ShaderNode.map.js';
+import { NodeCommands } from './ShaderNode.map.js';
 import { asNode } from './ShaderNode.asNode.js';
 import SplitNode from '@modules/renderer/engine/nodes/utils/SplitNode.js';
 import ArrayElementNode from '@modules/renderer/engine/nodes/utils/ArrayElementNode.js';
@@ -19,13 +19,13 @@ export const handlers: ProxyHandler<Node> = {
       };
     }
 
-    const item = NodeElements.get(key);
+    const item = NodeCommands.get(key);
     if (item) {
       return isStackNode(node) ? (...params) => proxy.add(item(...params)) : (...params) => item(proxy, ...params);
     }
 
     if (key.endsWith('Assign')) {
-      const assignAs = NodeElements.get(key.slice(0, key.length - 6));
+      const assignAs = NodeCommands.get(key.slice(0, key.length - 6));
       if (assignAs) {
         return isStackNode(node)
           ? (...params) => proxy.assign(params[0], assignAs(...params))

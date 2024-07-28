@@ -1,5 +1,5 @@
 import { Node } from './Node.js';
-import { addNodeElement, proxyNode } from '../shadernode/ShaderNodes.js';
+import { addNodeCommand, proxyNode } from '../shadernode/ShaderNodes.js';
 
 class BypassNode extends Node {
   static type = 'BypassNode';
@@ -32,4 +32,4 @@ export default BypassNode;
 
 export const bypass = proxyNode(BypassNode);
 
-addNodeElement('bypass', bypass);
+addNodeCommand('bypass', bypass);
