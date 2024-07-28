@@ -1,23 +1,26 @@
 import TempNode from '../core/TempNode.js';
 import { vectorComponents } from '../core/constants.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
+import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
+import { XYZW } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.handlers.js';
+import { Node } from '../core/Node.js';
 
 class SetNode extends TempNode {
   static type = 'SetNode';
 
-  constructor(sourceNode, components, targetNode) {
+  constructor(
+    public sourceNode: Node,
+    public components: XYZW,
+    public targetNode: Node,
+  ) {
     super();
-
-    this.sourceNode = sourceNode;
-    this.components = components;
-    this.targetNode = targetNode;
   }
 
-  getNodeType(builder) {
+  getNodeType(builder: NodeBuilder) {
     return this.sourceNode.getNodeType(builder);
   }
 
-  generate(builder) {
+  generate(builder: NodeBuilder) {
     const { sourceNode, components, targetNode } = this;
 
     const sourceType = this.getNodeType(builder);
@@ -27,21 +30,21 @@ class SetNode extends TempNode {
     const sourceSnippet = sourceNode.build(builder, sourceType);
 
     const length = builder.getTypeLength(sourceType);
-    const snippetValues = [];
+    const parameters = [];
 
     for (let i = 0; i < length; i++) {
       const component = vectorComponents[i];
 
       if (component === components[0]) {
-        snippetValues.push(targetSnippet);
+        parameters.push(targetSnippet);
 
         i += components.length - 1;
       } else {
-        snippetValues.push(sourceSnippet + '.' + component);
+        parameters.push(sourceSnippet + '.' + component);
       }
     }
 
-    return `${builder.getType(sourceType)}( ${snippetValues.join(', ')} )`;
+    return `${builder.getType(sourceType)}(${parameters.join(', ')})`;
   }
 }
 
