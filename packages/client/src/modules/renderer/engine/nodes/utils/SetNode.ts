@@ -44,7 +44,7 @@ class SetNode extends TempNode {
       }
     }
 
-    return `${builder.getType(sourceType)}(${parameters.join(', ')})`;
+    return `${TypeName.repr(sourceType)}(${parameters.join(', ')})`;
   }
 }
 

@@ -42,7 +42,7 @@ export class JoinNode extends TempNode {
       snippetValues.push(inputSnippet);
     }
 
-    const snippet = `${builder.getType(type)}(${snippetValues.join(', ')})`;
+    const snippet = `${TypeName.repr(type)}(${snippetValues.join(', ')})`;
 
     return builder.format(snippet, type, output);
   }
