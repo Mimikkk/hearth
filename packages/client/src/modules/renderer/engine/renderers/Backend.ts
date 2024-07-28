@@ -931,15 +931,15 @@ export class Backend {
   }
 
   createBindings(bindings: Binding[]) {
-    this.bindings.createBindings(bindings);
+    this.bindings.create(bindings);
   }
 
   updateBindings(bindings: Binding[]) {
-    this.bindings.createBindings(bindings);
+    this.bindings.create(bindings);
   }
 
   updateBinding(binding: Binding) {
-    this.bindings.updateBinding(binding);
+    this.bindings.update(binding);
   }
 
   createIndexAttribute(attribute: Attribute) {

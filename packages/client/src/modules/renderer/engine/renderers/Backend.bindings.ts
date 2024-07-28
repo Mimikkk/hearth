@@ -15,9 +15,8 @@ import Sampler from '@modules/renderer/engine/renderers/Sampler.js';
 export class BackendBindings {
   constructor(public backend: Backend) {}
 
-  createBindingsLayout(bindings: Binding[]) {
-    const backend = this.backend;
-    const device = backend.device;
+  layout(bindings: Binding[]): GPUBindGroupLayout {
+    const device = this.backend.device;
 
     const entries = [];
 
@@ -81,21 +80,21 @@ export class BackendBindings {
     return device.createBindGroupLayout({ entries });
   }
 
-  createBindings(bindings: Binding[]) {
+  create(bindings: Binding[]) {
     const backend = this.backend;
     const bindingsData = backend.memo.get(bindings);
 
     // setup (static) binding layout and (dynamic) binding group
 
-    const bindLayoutGPU = this.createBindingsLayout(bindings);
-    const bindGroupGPU = this.createBindGroup(bindings, bindLayoutGPU);
+    const bindLayoutGPU = this.layout(bindings);
+    const bindGroupGPU = this.createGroup(bindings, bindLayoutGPU);
 
     bindingsData.layout = bindLayoutGPU;
     bindingsData.group = bindGroupGPU;
     bindingsData.bindings = bindings;
   }
 
-  updateBinding(binding: Binding) {
+  update(binding: Binding) {
     const backend = this.backend;
     const device = backend.device;
 
@@ -105,7 +104,7 @@ export class BackendBindings {
     device.queue.writeBuffer(bufferGPU, 0, buffer, 0);
   }
 
-  createBindGroup(bindings: Binding[], layoutGPU: GPUBindGroupLayout) {
+  createGroup(bindings: Binding[], layoutGPU: GPUBindGroupLayout): GPUBindGroup {
     const backend = this.backend;
     const device = backend.device;
 
