@@ -266,47 +266,6 @@ export class NodeBuilder {
     return node;
   }
 
-  codeConst(type: TypeName, value: any): string {
-    if (value === null || value === undefined) {
-      if (type === 'f32' || type === 'i32' || type === 'u32') value = 0;
-      else if (type === 'bool') value = false;
-      else if (type === 'color') value = Color.new();
-      else if (type === 'vec2') value = Vec2.new();
-      else if (type === 'vec3') value = Vec3.new();
-      else if (type === 'vec4') value = Vec4.new();
-    }
-
-    if (type === TypeName.f32) return asF32(value);
-    if (type === TypeName.i32) return `${Math.round(value)}`;
-    if (type === TypeName.u32) return value >= 0 ? `${Math.round(value)}u` : '0u';
-    if (type === TypeName.bool) return value ? 'true' : 'false';
-
-    if (type === TypeName.color) {
-      return `vec3f(${asF32(value.r)}, ${asF32(value.g)}, ${asF32(value.b)})`;
-    }
-
-    const size = TypeName.size(type);
-    const component = TypeName.component(type);
-    const code = (value: number) => this.codeConst(component, value);
-
-    const name = TypeName.repr(type);
-    switch (size) {
-      case 2:
-        return `${name}(${code(value.x)}, ${code(value.y)})`;
-      case 3:
-        return `${name}(${code(value.x)}, ${code(value.y)}, ${code(value.z)})`;
-      case 4:
-        return `${name}(${code(value.x)}, ${code(value.y)}, ${code(value.z)}, ${code(value.w)})`;
-      case 9:
-      case 16:
-        return `${name}(${value.elements.map(code).join(', ')})`;
-      default:
-        return `${name}()`;
-    }
-
-    throw new Error(`NodeBuilder: Type '${type}' not found in generate constant attempt.`);
-  }
-
   hasGeometryAttribute(name: string): boolean {
     return this.geometry?.getAttribute(name) !== undefined;
   }
@@ -451,39 +410,6 @@ export class NodeBuilder {
     }
 
     return nodeVarying;
-  }
-
-  getCodeFromNode(node: Node, type: TypeName, shaderStage: ShaderStage = this.shaderStage) {
-    const nodeData = this.getDataFromNode(node);
-
-    let nodeCode = nodeData.code;
-
-    if (nodeCode === undefined) {
-      const codes = this.codes[shaderStage] || (this.codes[shaderStage] = []);
-      const index = codes.length;
-
-      nodeCode = new NodeCode('nodeCode' + index, type);
-
-      codes.push(nodeCode);
-
-      nodeData.code = nodeCode;
-    }
-
-    return nodeCode;
-  }
-
-  addLineFlowCode(code) {
-    if (code === '') return this;
-
-    code = '\t' + code;
-
-    if (!/;\s*$/.test(code)) {
-      code = code + ';\n';
-    }
-
-    this.flow.code += code;
-
-    return this;
   }
 
   generate(node: Node): void {
@@ -700,132 +626,8 @@ export class NodeBuilder {
     return texture.isVideoTexture === true && texture.colorSpace !== null;
   }
 
-  codeTextureSample(
-    texture: Texture,
-    textureProperty: string,
-    uvSnippet: string,
-    depthSnippet: string,
-    shaderStage: ShaderStage = this.shaderStage,
-  ): string {
-    if (shaderStage === ShaderStage.Fragment) {
-      if (depthSnippet) {
-        return `textureSample(${textureProperty}, ${textureProperty}_sampler, ${uvSnippet}, ${depthSnippet})`;
-      } else {
-        return `textureSample(${textureProperty}, ${textureProperty}_sampler, ${uvSnippet})`;
-      }
-    } else {
-      return this.codeTextureLod(texture, textureProperty, uvSnippet);
-    }
-  }
-
-  codeVideoSample(textureProperty: string, uvSnippet: string, shaderStage: ShaderStage = this.shaderStage): string {
-    if (shaderStage === ShaderStage.Fragment) {
-      return `textureSampleBaseClampToEdge(${textureProperty}, ${textureProperty}_sampler, vec2<f32>(${uvSnippet}.x, 1.0 - ${uvSnippet}.y))`;
-    } else {
-      console.error(`WebGPURenderer: engine.VideoTexture does not support ${shaderStage} shader.`);
-    }
-  }
-
-  codeTextureSampleLevel(
-    texture: Texture,
-    textureProperty: string,
-    uvSnippet: string,
-    levelSnippet: string,
-    depthSnippet: string,
-    shaderStage: ShaderStage = this.shaderStage,
-  ) {
-    if (shaderStage === ShaderStage.Fragment && !this.isUnfilterable(texture)) {
-      return `textureSampleLevel(${textureProperty}, ${textureProperty}_sampler, ${uvSnippet}, ${levelSnippet})`;
-    }
-    return this.codeTextureLod(texture, textureProperty, uvSnippet, levelSnippet);
-  }
-
-  codeTextureLod(texture: Texture, textureProperty: string, uvSnippet: string, levelSnippet: string = '0'): string {
-    this.polyfill('repeatWrapping');
-
-    const dimension = `textureDimensions(${textureProperty}, 0)`;
-
-    return `textureLoad(${textureProperty}, repeatWrapping(${uvSnippet}, ${dimension}), i32(${levelSnippet}))`;
-  }
-
-  codeTextureLoad(
-    texture: Texture,
-    textureProperty: string,
-    uvIndexSnippet: string,
-    depthSnippet: string,
-    levelSnippet: string = '0u',
-  ): string {
-    if (depthSnippet) {
-      return `textureLoad(${textureProperty}, ${uvIndexSnippet}, ${depthSnippet}, ${levelSnippet})`;
-    } else {
-      return `textureLoad(${textureProperty}, ${uvIndexSnippet}, ${levelSnippet})`;
-    }
-  }
-
-  codeTextureStore(texture: Texture, textureProperty: string, uvIndexSnippet: string, valueSnippet: string): string {
-    return `textureStore(${textureProperty}, ${uvIndexSnippet}, ${valueSnippet})`;
-  }
-
   isUnfilterable(texture: Texture): boolean {
     return texture.isDataTexture === true && texture.type === TextureDataType.Float;
-  }
-
-  codeTexture(
-    texture: Texture,
-    textureProperty: string,
-    uvSnippet: string,
-    depthSnippet: string,
-    shaderStage: ShaderStage = this.shaderStage,
-  ): string {
-    if (texture.isVideoTexture === true) {
-      return this.codeVideoSample(textureProperty, uvSnippet, shaderStage);
-    } else if (this.isUnfilterable(texture)) {
-      return this.codeTextureLod(texture, textureProperty, uvSnippet, '0', depthSnippet, shaderStage);
-    } else {
-      return this.codeTextureSample(texture, textureProperty, uvSnippet, depthSnippet, shaderStage);
-    }
-
-    return '';
-  }
-
-  codeTextureCompare(
-    texture: Texture,
-    textureProperty: string,
-    uvSnippet: string,
-    compareSnippet: string,
-    depthSnippet: string,
-    shaderStage: ShaderStage = this.shaderStage,
-  ): string {
-    if (shaderStage === ShaderStage.Fragment) {
-      return `textureSampleCompare(${textureProperty}, ${textureProperty}_sampler, ${uvSnippet}, ${compareSnippet})`;
-    }
-    return '';
-  }
-
-  codeTextureLevel(
-    texture: Texture,
-    textureProperty: string,
-    uvSnippet: string,
-    levelSnippet: string,
-    depthSnippet: string,
-    shaderStage: ShaderStage = this.shaderStage,
-  ): string {
-    let snippet = null;
-
-    if (texture.isVideoTexture === true) {
-      snippet = this.codeVideoSample(textureProperty, uvSnippet, shaderStage);
-    } else {
-      snippet = this.codeTextureSampleLevel(
-        texture,
-        textureProperty,
-        uvSnippet,
-        levelSnippet,
-        depthSnippet,
-        shaderStage,
-      );
-    }
-
-    return snippet;
   }
 
   getPropertyName(node: Node, shaderStage: ShaderStage = this.shaderStage): string {
@@ -994,6 +796,39 @@ export class NodeBuilder {
     return 'output.' + this.useBuiltin('frag_depth', 'depth', 'f32', BuiltinType.Output);
   }
 
+  getCodeFromNode(node: Node, type: TypeName, shaderStage: ShaderStage = this.shaderStage) {
+    const nodeData = this.getDataFromNode(node);
+
+    let nodeCode = nodeData.code;
+
+    if (nodeCode === undefined) {
+      const codes = this.codes[shaderStage] || (this.codes[shaderStage] = []);
+      const index = codes.length;
+
+      nodeCode = new NodeCode('nodeCode' + index, type);
+
+      codes.push(nodeCode);
+
+      nodeData.code = nodeCode;
+    }
+
+    return nodeCode;
+  }
+
+  addLineFlowCode(code) {
+    if (code === '') return this;
+
+    code = '\t' + code;
+
+    if (!/;\s*$/.test(code)) {
+      code = code + ';\n';
+    }
+
+    this.flow.code += code;
+
+    return this;
+  }
+
   code(): void {
     if (this.isCompute) {
       this.computeShader = Snippet.compute({
@@ -1024,6 +859,171 @@ export class NodeBuilder {
         code: this.codeVertex(),
       });
     }
+  }
+
+  codeConst(type: TypeName, value: any): string {
+    if (value === null || value === undefined) {
+      if (type === 'f32' || type === 'i32' || type === 'u32') value = 0;
+      else if (type === 'bool') value = false;
+      else if (type === 'color') value = Color.new();
+      else if (type === 'vec2') value = Vec2.new();
+      else if (type === 'vec3') value = Vec3.new();
+      else if (type === 'vec4') value = Vec4.new();
+    }
+
+    if (type === TypeName.f32) return asF32(value);
+    if (type === TypeName.i32) return `${Math.round(value)}`;
+    if (type === TypeName.u32) return value >= 0 ? `${Math.round(value)}u` : '0u';
+    if (type === TypeName.bool) return value ? 'true' : 'false';
+
+    if (type === TypeName.color) {
+      return `vec3f(${asF32(value.r)}, ${asF32(value.g)}, ${asF32(value.b)})`;
+    }
+
+    const size = TypeName.size(type);
+    const component = TypeName.component(type);
+    const code = (value: number) => this.codeConst(component, value);
+
+    const name = TypeName.repr(type);
+    switch (size) {
+      case 2:
+        return `${name}(${code(value.x)}, ${code(value.y)})`;
+      case 3:
+        return `${name}(${code(value.x)}, ${code(value.y)}, ${code(value.z)})`;
+      case 4:
+        return `${name}(${code(value.x)}, ${code(value.y)}, ${code(value.z)}, ${code(value.w)})`;
+      case 9:
+      case 16:
+        return `${name}(${value.elements.map(code).join(', ')})`;
+      default:
+        return `${name}()`;
+    }
+
+    throw new Error(`NodeBuilder: Type '${type}' not found in generate constant attempt.`);
+  }
+
+  codeTextureStore(texture: Texture, textureProperty: string, uvIndexSnippet: string, valueSnippet: string): string {
+    return `textureStore(${textureProperty}, ${uvIndexSnippet}, ${valueSnippet})`;
+  }
+
+  codeTextureSample(
+    texture: Texture,
+    textureProperty: string,
+    uvSnippet: string,
+    depthSnippet: string,
+    shaderStage: ShaderStage = this.shaderStage,
+  ): string {
+    if (shaderStage === ShaderStage.Fragment) {
+      if (depthSnippet) {
+        return `textureSample(${textureProperty}, ${textureProperty}_sampler, ${uvSnippet}, ${depthSnippet})`;
+      } else {
+        return `textureSample(${textureProperty}, ${textureProperty}_sampler, ${uvSnippet})`;
+      }
+    } else {
+      return this.codeTextureLod(texture, textureProperty, uvSnippet);
+    }
+  }
+
+  codeVideoSample(textureProperty: string, uvSnippet: string, shaderStage: ShaderStage = this.shaderStage): string {
+    if (shaderStage === ShaderStage.Fragment) {
+      return `textureSampleBaseClampToEdge(${textureProperty}, ${textureProperty}_sampler, vec2<f32>(${uvSnippet}.x, 1.0 - ${uvSnippet}.y))`;
+    } else {
+      console.error(`WebGPURenderer: engine.VideoTexture does not support ${shaderStage} shader.`);
+    }
+  }
+
+  codeTextureSampleLevel(
+    texture: Texture,
+    textureProperty: string,
+    uvSnippet: string,
+    levelSnippet: string,
+    depthSnippet: string,
+    shaderStage: ShaderStage = this.shaderStage,
+  ) {
+    if (shaderStage === ShaderStage.Fragment && !this.isUnfilterable(texture)) {
+      return `textureSampleLevel(${textureProperty}, ${textureProperty}_sampler, ${uvSnippet}, ${levelSnippet})`;
+    }
+    return this.codeTextureLod(texture, textureProperty, uvSnippet, levelSnippet);
+  }
+
+  codeTextureLod(texture: Texture, textureProperty: string, uvSnippet: string, levelSnippet: string = '0'): string {
+    this.polyfill('repeatWrapping');
+
+    const dimension = `textureDimensions(${textureProperty}, 0)`;
+
+    return `textureLoad(${textureProperty}, repeatWrapping(${uvSnippet}, ${dimension}), i32(${levelSnippet}))`;
+  }
+
+  codeTextureLoad(
+    texture: Texture,
+    textureProperty: string,
+    uvIndexSnippet: string,
+    depthSnippet: string,
+    levelSnippet: string = '0u',
+  ): string {
+    if (depthSnippet) {
+      return `textureLoad(${textureProperty}, ${uvIndexSnippet}, ${depthSnippet}, ${levelSnippet})`;
+    } else {
+      return `textureLoad(${textureProperty}, ${uvIndexSnippet}, ${levelSnippet})`;
+    }
+  }
+
+  codeTexture(
+    texture: Texture,
+    textureProperty: string,
+    uvSnippet: string,
+    depthSnippet: string,
+    shaderStage: ShaderStage = this.shaderStage,
+  ): string {
+    if (texture.isVideoTexture === true) {
+      return this.codeVideoSample(textureProperty, uvSnippet, shaderStage);
+    } else if (this.isUnfilterable(texture)) {
+      return this.codeTextureLod(texture, textureProperty, uvSnippet, '0', depthSnippet, shaderStage);
+    } else {
+      return this.codeTextureSample(texture, textureProperty, uvSnippet, depthSnippet, shaderStage);
+    }
+
+    return '';
+  }
+
+  codeTextureCompare(
+    texture: Texture,
+    textureProperty: string,
+    uvSnippet: string,
+    compareSnippet: string,
+    depthSnippet: string,
+    shaderStage: ShaderStage = this.shaderStage,
+  ): string {
+    if (shaderStage === ShaderStage.Fragment) {
+      return `textureSampleCompare(${textureProperty}, ${textureProperty}_sampler, ${uvSnippet}, ${compareSnippet})`;
+    }
+    return '';
+  }
+
+  codeTextureLevel(
+    texture: Texture,
+    textureProperty: string,
+    uvSnippet: string,
+    levelSnippet: string,
+    depthSnippet: string,
+    shaderStage: ShaderStage = this.shaderStage,
+  ): string {
+    let snippet = null;
+
+    if (texture.isVideoTexture === true) {
+      snippet = this.codeVideoSample(textureProperty, uvSnippet, shaderStage);
+    } else {
+      snippet = this.codeTextureSampleLevel(
+        texture,
+        textureProperty,
+        uvSnippet,
+        levelSnippet,
+        depthSnippet,
+        shaderStage,
+      );
+    }
+
+    return snippet;
   }
 
   codeFunctions(shaderStage: ShaderStage): string {
