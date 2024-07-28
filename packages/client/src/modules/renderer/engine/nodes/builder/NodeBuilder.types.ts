@@ -123,6 +123,9 @@ export namespace TypeName {
       case TypeName.u32:
       case TypeName.bool:
         return type;
+      case TypeName.mat2:
+      case TypeName.mat3:
+      case TypeName.mat4:
       case TypeName.vec2:
       case TypeName.vec3:
       case TypeName.vec4:
@@ -131,14 +134,23 @@ export namespace TypeName {
       case TypeName.cubeTexture:
       case TypeName.storageTexture:
         return TypeName.f32;
+      case TypeName.imat2:
+      case TypeName.imat3:
+      case TypeName.imat4:
       case TypeName.ivec2:
       case TypeName.ivec3:
       case TypeName.ivec4:
         return TypeName.i32;
+      case TypeName.umat2:
+      case TypeName.umat3:
+      case TypeName.umat4:
       case TypeName.uvec2:
       case TypeName.uvec3:
       case TypeName.uvec4:
         return TypeName.u32;
+      case TypeName.bmat2:
+      case TypeName.bmat3:
+      case TypeName.bmat4:
       case TypeName.bvec2:
       case TypeName.bvec3:
       case TypeName.bvec4:
