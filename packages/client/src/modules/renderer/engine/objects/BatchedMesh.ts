@@ -70,7 +70,7 @@ const _batchIntersects: Intersection[] = [];
 
 function copyAttributeData(src: BufferAttribute<any>, target: BufferAttribute<any>, targetOffset: number) {
   const itemSize = target.stride;
-  if (src.isInterleavedBufferAttribute || src.array.constructor !== target.array.constructor) {
+  if (src.interleaved || src.array.constructor !== target.array.constructor) {
     const vertexCount = src.count;
     for (let i = 0; i < vertexCount; i++) {
       for (let c = 0; c < itemSize; c++) {

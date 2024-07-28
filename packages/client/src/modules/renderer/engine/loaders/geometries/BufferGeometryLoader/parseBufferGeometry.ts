@@ -95,7 +95,7 @@ export const parseBufferGeometry = (json: JsonContent): Geometry => {
         typedArray,
         attribute.stride,
         0,
-        attribute.isInstancedBufferAttribute ? BufferStep.Instance : BufferStep.Vertex,
+        attribute.instanced ? BufferStep.Instance : BufferStep.Vertex,
       );
     }
 

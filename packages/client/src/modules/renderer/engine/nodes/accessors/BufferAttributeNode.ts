@@ -26,7 +26,7 @@ export class BufferAttributeNode extends InputNode {
     if (value && value.isBufferAttribute === true) {
       this.attribute = value;
       this.usage = value.usage;
-      this.instanced = value.isInstancedBufferAttribute;
+      this.instanced = value.instanced;
     }
   }
 

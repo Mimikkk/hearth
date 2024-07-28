@@ -195,11 +195,7 @@ export class NodeMaterial extends ShaderMaterial {
       skinningReference(object).append();
     }
 
-    if (
-      object.instanceMatrix &&
-      object.instanceMatrix.isInstancedBufferAttribute &&
-      builder.isAvailable('instance') === true
-    ) {
+    if (object.instanceMatrix && object.instanceMatrix.instanced && builder.isAvailable('instance') === true) {
       instance(object).append();
     }
 

@@ -15,7 +15,7 @@ export function mergeAttributes<T extends TypedArray>(attributes: BufferAttribut
 
   for (let i = 0; i < attributes.length; ++i) {
     const attribute = attributes[i];
-    if (attribute.isInterleavedBufferAttribute) {
+    if (attribute.interleaved) {
       const tupleOffset = offset / itemSize;
       for (let j = 0, l = attribute.count; j < l; j++) {
         for (let c = 0; c < itemSize; c++) {

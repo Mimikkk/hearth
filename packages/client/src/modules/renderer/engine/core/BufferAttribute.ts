@@ -57,15 +57,15 @@ export class BufferAttribute<T extends TypedArray = any> {
     return this.source.stride;
   }
 
-  get isInstancedBufferAttribute(): boolean {
+  get instanced(): boolean {
     return this.step === BufferStep.Instance;
   }
 
-  get isStorageInstancedBufferAttribute(): boolean {
+  get storage(): boolean {
     return this.bind === GPUBufferBindingTypeType.Storage;
   }
 
-  get isInterleavedBufferAttribute(): boolean {
+  get interleaved(): boolean {
     return this.source.stride !== this.span;
   }
 
@@ -81,16 +81,16 @@ export class BufferAttribute<T extends TypedArray = any> {
     return this.source.count;
   }
 
-  applyMat3(m: Const<Mat3>): this {
+  applyMat3(mat: Const<Mat3>): this {
     if (this.span === 2) {
       for (let i = 0, it = this.count; i < it; i++) {
-        _Vec2.fromAttribute(this, i).applyMat3(m);
+        _Vec2.fromAttribute(this, i).applyMat3(mat);
 
         this.setXY(i, _Vec2.x, _Vec2.y);
       }
     } else if (this.span === 3) {
       for (let i = 0, it = this.count; i < it; i++) {
-        _vec3.fromAttribute(this, i).applyMat3(m);
+        _vec3.fromAttribute(this, i).applyMat3(mat);
 
         this.setXYZ(i, _vec3.x, _vec3.y, _vec3.z);
       }
@@ -99,11 +99,11 @@ export class BufferAttribute<T extends TypedArray = any> {
     return this;
   }
 
-  applyMat4(m: Const<Mat4>): this {
+  applyMat4(mat: Const<Mat4>): this {
     for (let i = 0, it = this.count; i < it; i++) {
       _vec3.fromAttribute(this, i);
 
-      _vec3.applyMat4(m);
+      _vec3.applyMat4(mat);
 
       this.setXYZ(i, _vec3.x, _vec3.y, _vec3.z);
     }
@@ -111,9 +111,9 @@ export class BufferAttribute<T extends TypedArray = any> {
     return this;
   }
 
-  applyNMat3(m: Const<Mat3>): this {
+  applyNMat3(mat: Const<Mat3>): this {
     for (let i = 0, it = this.count; i < it; i++) {
-      _vec3.fromAttribute(this, i).applyNMat3(m);
+      _vec3.fromAttribute(this, i).applyNMat3(mat);
 
       this.setXYZ(i, _vec3.x, _vec3.y, _vec3.z);
     }
@@ -121,11 +121,11 @@ export class BufferAttribute<T extends TypedArray = any> {
     return this;
   }
 
-  transformDirection(m: Const<Mat4>): this {
+  transformDirection(mat: Const<Mat4>): this {
     for (let i = 0, l = this.count; i < l; i++) {
       _vec3.fromAttribute(this, i);
 
-      _vec3.transformDirection(m);
+      _vec3.transformDirection(mat);
 
       this.setXYZ(i, _vec3.x, _vec3.y, _vec3.z);
     }
@@ -133,8 +133,8 @@ export class BufferAttribute<T extends TypedArray = any> {
     return this;
   }
 
-  set(value: Const<NumberArray>, offset: number = 0): this {
-    this.source.array.set(value, offset);
+  set(values: Const<NumberArray>, offset: number = 0): this {
+    this.source.array.set(values, offset);
     return this;
   }
 

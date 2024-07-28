@@ -18,7 +18,7 @@ export class BackendAttributes {
 
       let array = bufferAttribute.array;
 
-      if (bufferAttribute.isStorageInstancedBufferAttribute && bufferAttribute.stride === 3) {
+      if (bufferAttribute.storage && bufferAttribute.stride === 3) {
         bufferAttribute.stride = 4;
         array = new array.constructor(bufferAttribute.count * 4);
 
@@ -78,7 +78,7 @@ export class BackendAttributes {
       }
 
       const format = this._getVertexFormat(geometryAttribute);
-      const offset = geometryAttribute.isInterleavedBufferAttribute ? geometryAttribute.offset * bytesPerElement : 0;
+      const offset = geometryAttribute.interleaved ? geometryAttribute.offset * bytesPerElement : 0;
 
       vertexBufferLayout.attributes.push({
         shaderLocation: slot,
