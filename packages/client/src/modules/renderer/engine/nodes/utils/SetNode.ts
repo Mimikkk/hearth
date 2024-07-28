@@ -29,7 +29,7 @@ class SetNode extends TempNode {
     const targetSnippet = targetNode.build(builder, targetType);
     const sourceSnippet = sourceNode.build(builder, sourceType);
 
-    const length = builder.getTypeLength(sourceType);
+    const length = TypeName.size(sourceType);
     const parameters = [];
 
     for (let i = 0; i < length; i++) {

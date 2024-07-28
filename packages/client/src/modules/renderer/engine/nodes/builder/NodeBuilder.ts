@@ -283,7 +283,7 @@ export class NodeBuilder {
     if (type === 'color')
       return `${this.getType('vec3')}(${formatAsFloat(value.r)}, ${formatAsFloat(value.g)}, ${formatAsFloat(value.b)})`;
 
-    const typeLength = this.getTypeLength(type);
+    const typeLength = TypeName.size(type);
 
     const componentType = TypeName.component(type);
 
@@ -326,12 +326,6 @@ export class NodeBuilder {
     attributes.push(attribute);
 
     return attribute;
-  }
-
-  getTypeLength(type: TypeName): number {
-    // TODO - remove null and voids
-    if (type && type !== TypeName.void) return TypeName.size(type);
-    return 0;
   }
 
   getType(type: TypeName): string {
@@ -658,8 +652,8 @@ export class NodeBuilder {
       return snippet;
     }
 
-    const fromTypeLength = this.getTypeLength(from);
-    const toTypeLength = this.getTypeLength(to);
+    const fromTypeLength = TypeName.size(from);
+    const toTypeLength = TypeName.size(to);
 
     if (fromTypeLength > 4) {
       return snippet;

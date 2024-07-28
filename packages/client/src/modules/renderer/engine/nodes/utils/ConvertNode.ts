@@ -1,4 +1,5 @@
 import { Node } from '../core/Node.js';
+import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 class ConvertNode extends Node {
   static type = 'ConvertNode';
@@ -16,7 +17,7 @@ class ConvertNode extends Node {
     let convertTo = null;
 
     for (const overloadingType of this.convertTo.split('|')) {
-      if (convertTo === null || builder.getTypeLength(requestType) === builder.getTypeLength(overloadingType)) {
+      if (convertTo === null || TypeName.size(requestType) === TypeName.size(overloadingType)) {
         convertTo = overloadingType;
       }
     }

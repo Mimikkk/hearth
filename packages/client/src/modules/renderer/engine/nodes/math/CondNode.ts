@@ -2,6 +2,7 @@ import { Node } from '../core/Node.js';
 import { property } from '../core/PropertyNode.js';
 import { context as contextNode } from '../core/ContextNode.js';
 import { addNodeElement, proxyNode } from '../shadernode/ShaderNodes.js';
+import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 class CondNode extends Node {
   static type = 'CondNode';
@@ -20,7 +21,7 @@ class CondNode extends Node {
     if (this.elseNode !== null) {
       const elseType = this.elseNode.getNodeType(builder);
 
-      if (builder.getTypeLength(elseType) > builder.getTypeLength(ifType)) {
+      if (TypeName.size(elseType) > TypeName.size(ifType)) {
         return elseType;
       }
     }

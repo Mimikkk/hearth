@@ -36,7 +36,7 @@ class SplitNode extends Node {
 
   generate(builder, output) {
     const node = this.node;
-    const nodeTypeLength = builder.getTypeLength(node.getNodeType(builder));
+    const nodeTypeLength = TypeName.size(node.getNodeType(builder));
 
     let snippet = null;
 

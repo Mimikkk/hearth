@@ -1,6 +1,7 @@
 import TempNode from '../core/TempNode.js';
 import { addNodeElement, proxyNode } from '../shadernode/ShaderNodes.js';
 import { vectorComponents } from './constants.js';
+import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 class AssignNode extends TempNode {
   static type = 'AssignNode';
@@ -24,7 +25,7 @@ class AssignNode extends TempNode {
     const { targetNode } = this;
 
     if (builder.isAvailable('swizzleAssign') === false && targetNode.isSplitNode && targetNode.components.length > 1) {
-      const targetLength = builder.getTypeLength(targetNode.node.getNodeType(builder));
+      const targetLength = TypeName.size(targetNode.node.getNodeType(builder));
       const assignDiferentVector = vectorComponents.join('').slice(0, targetLength) !== targetNode.components;
 
       return assignDiferentVector;

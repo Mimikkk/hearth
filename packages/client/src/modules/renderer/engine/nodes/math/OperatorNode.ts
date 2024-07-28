@@ -51,23 +51,15 @@ class OperatorNode extends TempNode {
       case Operator.gt:
       case Operator.lte:
       case Operator.gte: {
-        const len = output
-          ? builder.getTypeLength(output)
-          : Math.max(builder.getTypeLength(typeA), builder.getTypeLength(typeB));
+        const len = output ? TypeName.size(output) : Math.max(TypeName.size(typeA), TypeName.size(typeB));
 
         return TypeName.ofSize(len, TypeName.bool);
       }
       default: {
         if (typeA === TypeName.f32 && TypeName.isMat(typeB)) return typeB;
-
         if (TypeName.isMat(typeA) && TypeName.isVec(typeB)) return TypeName.matAsVec(typeA);
-
         if (TypeName.isVec(typeA) && TypeName.isMat(typeB)) return TypeName.matAsVec(typeB);
-
-        if (builder.getTypeLength(typeB) > builder.getTypeLength(typeA)) {
-          return typeB;
-        }
-
+        if (TypeName.size(typeB) > TypeName.size(typeA)) return typeB;
         return typeA;
       }
     }
@@ -112,7 +104,7 @@ class OperatorNode extends TempNode {
     const a = aNode.build(builder, typeA);
     const b = bNode.build(builder, typeB);
 
-    const outputLength = builder.getTypeLength(output);
+    const outputLength = TypeName.size(output);
 
     if (output !== TypeName.void) {
       // Polyfills for missing for bvec2/3/4

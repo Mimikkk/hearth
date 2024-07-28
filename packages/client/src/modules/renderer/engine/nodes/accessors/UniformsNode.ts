@@ -3,6 +3,7 @@ import { NodeUpdateType } from '../core/constants.js';
 import { getValueType } from '../core/NodeUtils.js';
 import ArrayElementNode from '../utils/ArrayElementNode.js';
 import BufferNode from './BufferNode.js';
+import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 class UniformsElementNode extends ArrayElementNode {
   constructor(arrayBuffer, indexNode) {
@@ -87,7 +88,7 @@ class UniformsNode extends BufferNode {
     const length = this.array.length;
 
     this._elementType = this.elementType === null ? getValueType(this.array[0]) : this.elementType;
-    this._elementLength = builder.getTypeLength(this._elementType);
+    this._elementLength = TypeName.size(this._elementType);
 
     this.value = new Float32Array(length * 4);
     this.bufferCount = length;

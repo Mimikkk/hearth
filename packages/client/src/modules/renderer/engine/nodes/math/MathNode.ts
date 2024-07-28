@@ -69,8 +69,8 @@ export class BinaryNode extends TempNode {
     const aType = aNode.getNodeType(builder);
     const bType = bNode.getNodeType(builder);
 
-    const aLen = TypeName.isMat(aType) ? 0 : builder.getTypeLength(aType);
-    const bLen = TypeName.isMat(bType) ? 0 : builder.getTypeLength(bType);
+    const aLen = TypeName.isMat(aType) ? 0 : TypeName.size(aType);
+    const bLen = TypeName.isMat(bType) ? 0 : TypeName.size(bType);
 
     return aLen > bLen ? aType : bType;
   }
@@ -120,7 +120,7 @@ export class BinaryNode extends TempNode {
             paramB = b.build(builder, type)!;
             break;
           case BinaryVariant.Step:
-            paramA = a.build(builder, builder.getTypeLength(a.getNodeType(builder)) === 1 ? TypeName.f32 : inputType)!;
+            paramA = a.build(builder, TypeName.size(a.getNodeType(builder)) === 1 ? TypeName.f32 : inputType)!;
             paramB = b.build(builder, inputType)!;
             break;
           default:
@@ -152,9 +152,9 @@ export class TernaryNode extends TempNode {
     const bType = bNode?.getNodeType(builder) ?? null;
     const cType = cNode?.getNodeType(builder) ?? null;
 
-    const aLen = TypeName.isMat(aType) ? 0 : builder.getTypeLength(aType);
-    const bLen = TypeName.isMat(bType) ? 0 : builder.getTypeLength(bType);
-    const cLen = TypeName.isMat(cType) ? 0 : builder.getTypeLength(cType);
+    const aLen = TypeName.isMat(aType) ? 0 : TypeName.size(aType);
+    const bLen = TypeName.isMat(bType) ? 0 : TypeName.size(bType);
+    const cLen = TypeName.isMat(cType) ? 0 : TypeName.size(cType);
 
     if (aLen > bLen && aLen > cLen) {
       return aType;
@@ -193,7 +193,7 @@ export class TernaryNode extends TempNode {
       case TernaryVariant.Mix:
         paramA = a.build(builder, inputType)!;
         paramB = b.build(builder, inputType)!;
-        paramC = c.build(builder, builder.getTypeLength(c!.getNodeType(builder)) === 1 ? TypeName.f32 : inputType)!;
+        paramC = c.build(builder, TypeName.size(c!.getNodeType(builder)) === 1 ? TypeName.f32 : inputType)!;
         break;
       default:
         paramA = a.build(builder, inputType)!;

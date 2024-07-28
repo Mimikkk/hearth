@@ -43,7 +43,7 @@ export class BufferAttributeNode extends InputNode {
 
     const type = this.getNodeType(builder);
     const array = this.value;
-    const itemSize = builder.getTypeLength(type);
+    const itemSize = TypeName.size(type);
     const stride = this.bufferStride || itemSize;
     const offset = this.bufferOffset;
 

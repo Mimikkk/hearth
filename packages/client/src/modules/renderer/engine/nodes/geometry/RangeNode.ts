@@ -23,8 +23,8 @@ class RangeNode extends Node {
   }
 
   getVectorLength(builder: NodeBuilder): number {
-    const minLength = builder.getTypeLength(getValueType(this.minNode.value));
-    const maxLength = builder.getTypeLength(getValueType(this.maxNode.value));
+    const minLength = TypeName.size(getValueType(this.minNode.value));
+    const maxLength = TypeName.size(getValueType(this.maxNode.value));
 
     return minLength > maxLength ? minLength : maxLength;
   }
@@ -44,8 +44,8 @@ class RangeNode extends Node {
       const minValue = this.minNode.value;
       const maxValue = this.maxNode.value;
 
-      const minLength = builder.getTypeLength(getValueType(minValue));
-      const maxLength = builder.getTypeLength(getValueType(maxValue));
+      const minLength = TypeName.size(getValueType(minValue));
+      const maxLength = TypeName.size(getValueType(maxValue));
 
       min = min || Vec4.new();
       max = max || Vec4.new();
