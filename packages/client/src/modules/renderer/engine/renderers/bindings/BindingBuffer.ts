@@ -5,12 +5,15 @@ import { TypedArray } from '@modules/renderer/engine/math/MathUtils.js';
 export class BindingBuffer extends Binding {
   declare isBuffer: true;
   declare bytesPerElement: number;
-  _buffer: TypedArray;
 
   constructor(name: string, buffer: TypedArray) {
     super(name);
 
     this._buffer = buffer;
+  }
+
+  static is(value: any): value is BindingBuffer {
+    return value?.isBuffer === true;
   }
 
   get byteLength() {

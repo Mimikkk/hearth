@@ -1,4 +1,4 @@
-import UniformBuffer from './UniformBuffer.js';
+import BindingUniformBuffer from './BindingUniformBuffer.js';
 import { STD140ChunkBytes } from '../constants.js';
 import {
   ColorNodeUniform,
@@ -11,7 +11,7 @@ import {
   Vec4NodeUniform,
 } from '@modules/renderer/engine/nodes/builder/NodeUniform.js';
 
-class UniformsGroup extends UniformBuffer {
+class BindingUniformsGroup extends BindingUniformBuffer {
   // the order of uniforms in this array must match the order of uniforms in the shader
   uniforms: ValueNodeUniform[] = [];
   bytesPerElement: number = Float32Array.BYTES_PER_ELEMENT;
@@ -254,4 +254,4 @@ function arraysEqual(a: ArrayLike<number>, b: ArrayLike<number>, offset: number)
   return true;
 }
 
-export default UniformsGroup;
+export default BindingUniformsGroup;

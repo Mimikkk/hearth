@@ -4,7 +4,7 @@ import { VideoTexture } from '@modules/renderer/engine/objects/textures/VideoTex
 
 let id = 0;
 
-export class SampledTexture extends Binding {
+export class BindingSampledTexture extends Binding {
   declare isSampledTexture: true;
   texture: Texture;
   version: number;
@@ -41,9 +41,9 @@ export class SampledTexture extends Binding {
   }
 }
 
-SampledTexture.prototype.isSampledTexture = true;
+BindingSampledTexture.prototype.isSampledTexture = true;
 
-export class SampledArrayTexture extends SampledTexture {
+export class BindingSampledArrayTexture extends BindingSampledTexture {
   declare isSampledArrayTexture: true;
 
   constructor(name: string, texture: Texture) {
@@ -51,9 +51,9 @@ export class SampledArrayTexture extends SampledTexture {
   }
 }
 
-SampledArrayTexture.prototype.isSampledArrayTexture = true;
+BindingSampledArrayTexture.prototype.isSampledArrayTexture = true;
 
-export class Sampled3DTexture extends SampledTexture {
+export class Sampled3DTexture extends BindingSampledTexture {
   declare isSampled3DTexture: true;
 
   constructor(name: string, texture: Texture) {
@@ -63,7 +63,7 @@ export class Sampled3DTexture extends SampledTexture {
 
 Sampled3DTexture.prototype.isSampled3DTexture = true;
 
-export class SampledCubeTexture extends SampledTexture {
+export class BindingSampledCubeTexture extends BindingSampledTexture {
   declare isSampledCubeTexture: true;
 
   constructor(name: string, texture: Texture) {
@@ -71,4 +71,4 @@ export class SampledCubeTexture extends SampledTexture {
   }
 }
 
-SampledCubeTexture.prototype.isSampledCubeTexture = true;
+BindingSampledCubeTexture.prototype.isSampledCubeTexture = true;

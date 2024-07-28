@@ -7,19 +7,33 @@ import {
 import { DataArrayTexture, DataTexture, DepthTexture, TextureDataType, VideoTexture } from '../../engine.js';
 import { Backend } from '@modules/renderer/engine/renderers/Backend.js';
 import Binding from '@modules/renderer/engine/renderers/bindings/Binding.js';
-import UniformBuffer from '@modules/renderer/engine/renderers/bindings/UniformBuffer.js';
-import { SampledCubeTexture, SampledTexture } from '@modules/renderer/engine/renderers/bindings/SampledTexture.js';
-import StorageBuffer from '@modules/renderer/engine/nodes/core/StorageBuffer.js';
-import Sampler from '@modules/renderer/engine/renderers/bindings/Sampler.js';
+import BindingUniformBuffer from '@modules/renderer/engine/renderers/bindings/BindingUniformBuffer.js';
+import {
+  BindingSampledCubeTexture,
+  BindingSampledTexture,
+} from '@modules/renderer/engine/renderers/bindings/BindingSampledTexture.js';
+import BindingStorageBuffer from '@modules/renderer/engine/renderers/bindings/BindingStorageBuffer.js';
+import BindingSampler from '@modules/renderer/engine/renderers/bindings/BindingSampler.js';
+import BindingBuffer from '@modules/renderer/engine/renderers/bindings/BindingBuffer.js';
 
 export class BackendBindings {
   constructor(public backend: Backend) {}
+
+  create(bindings: Binding[]) {
+    const data = this.backend.memo.get(bindings);
+
+    const layout = this.layout(bindings);
+    const group = this.createGroup(bindings, layout);
+
+    data.layout = layout;
+    data.group = group;
+    data.bindings = bindings;
+  }
 
   layout(bindings: Binding[]): GPUBindGroupLayout {
     const device = this.backend.device;
 
     const entries = [];
-
     for (let i = 0; i < bindings.length; ++i) {
       const binding = bindings[i];
       const entry: GPUBindGroupLayoutEntry = {
@@ -27,10 +41,12 @@ export class BackendBindings {
         visibility: binding.visibility,
       };
 
-      if (isUniformBuffer(binding) || isStorageBuffer(binding)) {
-        const buffer: GPUBufferBindingLayout = {};
+      if (BindingBuffer.is(binding)) {
+        const buffer: GPUBufferBindingLayout = {
+          type: 'uniform',
+        };
 
-        if (isStorageBuffer(binding)) {
+        if (BindingStorageBuffer.is(binding)) {
           buffer.type = GPUBufferBindingTypeType.Storage;
         }
 
@@ -75,28 +91,13 @@ export class BackendBindings {
     return device.createBindGroupLayout({ entries });
   }
 
-  create(bindings: Binding[]) {
-    const backend = this.backend;
-    const bindingsData = backend.memo.get(bindings);
+  update(binding: Binding): void {
+    const { device, memo } = this.backend;
 
-    // setup (static) binding layout and (dynamic) binding group
+    const from = binding.buffer;
+    const into = memo.get(binding).buffer as GPUBuffer;
 
-    const bindLayoutGPU = this.layout(bindings);
-    const bindGroupGPU = this.createGroup(bindings, bindLayoutGPU);
-
-    bindingsData.layout = bindLayoutGPU;
-    bindingsData.group = bindGroupGPU;
-    bindingsData.bindings = bindings;
-  }
-
-  update(binding: Binding) {
-    const backend = this.backend;
-    const device = backend.device;
-
-    const buffer = binding.buffer;
-    const bufferGPU = backend.memo.get(binding).buffer;
-
-    device.queue.writeBuffer(bufferGPU, 0, buffer, 0);
+    device.queue.writeBuffer(into, 0, from, 0);
   }
 
   createGroup(bindings: Binding[], layoutGPU: GPUBindGroupLayout): GPUBindGroup {
@@ -179,12 +180,12 @@ export class BackendBindings {
   }
 }
 
-const isUniformBuffer = (item: any): item is UniformBuffer => item.isUniformBuffer;
-const isStorageBuffer = (item: any): item is StorageBuffer<any> => item.isStorageBuffer;
-const isSampler = (item: any): item is Sampler => item.isSampler;
+const isUniformBuffer = (item: any): item is BindingUniformBuffer => item.isUniformBuffer;
+const isStorageBuffer = (item: any): item is BindingStorageBuffer<any> => item.isStorageBuffer;
+const isSampler = (item: any): item is BindingSampler => item.isSampler;
 const isDepthTexture = (item: any): item is DepthTexture => item.isDepthTexture;
-const isSampledTexture = (item: any): item is SampledTexture => item.isSampledTexture;
+const isSampledTexture = (item: any): item is BindingSampledTexture => item.isSampledTexture;
 const isVideoTexture = (item: any): item is VideoTexture => item.isVideoTexture;
-const isSampledCubeTexture = (item: any): item is SampledCubeTexture => item.isSampledCubeTexture;
+const isSampledCubeTexture = (item: any): item is BindingSampledCubeTexture => item.isSampledCubeTexture;
 const isDataTexture = (item: any): item is DataTexture => item.isDataTexture;
 const isDataArrayTexture = (item: any): item is DataArrayTexture => item.isDataArrayTexture;

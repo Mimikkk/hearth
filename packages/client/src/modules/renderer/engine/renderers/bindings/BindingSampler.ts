@@ -1,7 +1,7 @@
 import Binding from './Binding.js';
 import { Texture } from '@modules/renderer/engine/objects/textures/Texture.js';
 
-export class Sampler extends Binding {
+export class BindingSampler extends Binding {
   declare isSampler: true;
 
   version: number;
@@ -14,6 +14,6 @@ export class Sampler extends Binding {
   }
 }
 
-Sampler.prototype.isSampler = true;
+BindingSampler.prototype.isSampler = true;
 
-export default Sampler;
+export default BindingSampler;

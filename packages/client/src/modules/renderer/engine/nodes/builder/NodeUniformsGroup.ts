@@ -1,10 +1,10 @@
-import UniformsGroup from '../../renderers/bindings/UniformsGroup.js';
+import BindingUniformsGroup from '../../renderers/bindings/BindingUniformsGroup.js';
 import UniformGroupNode from '@modules/renderer/engine/nodes/core/UniformGroupNode.js';
 import { ValueNodeUniform } from '@modules/renderer/engine/nodes/builder/NodeUniform.js';
 
 let id = 0;
 
-export class NodeUniformsGroup extends UniformsGroup {
+export class NodeUniformsGroup extends BindingUniformsGroup {
   declare isNodeUniformsGroup: true;
   id: number;
 

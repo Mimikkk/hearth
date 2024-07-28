@@ -1,9 +1,9 @@
-import UniformBuffer from '../../renderers/bindings/UniformBuffer.js';
+import BindingUniformBuffer from '../../renderers/bindings/BindingUniformBuffer.js';
 import NodeUniform from '@modules/renderer/engine/nodes/core/NodeUniform.js';
 
 let _id = 0;
 
-class NodeUniformBuffer extends UniformBuffer {
+class NodeUniformBuffer extends BindingUniformBuffer {
   nodeUniform: NodeUniform;
 
   constructor(nodeUniform: NodeUniform) {

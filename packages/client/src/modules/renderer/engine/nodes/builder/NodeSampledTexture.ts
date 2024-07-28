@@ -1,7 +1,7 @@
-import { SampledTexture } from '../../renderers/bindings/SampledTexture.js';
+import { BindingSampledTexture } from '../../renderers/bindings/BindingSampledTexture.js';
 import TextureNode from '@modules/renderer/engine/nodes/accessors/TextureNode.js';
 
-export class NodeSampledTexture extends SampledTexture {
+export class NodeSampledTexture extends BindingSampledTexture {
   textureNode: TextureNode;
 
   constructor(name: string, textureNode: TextureNode) {

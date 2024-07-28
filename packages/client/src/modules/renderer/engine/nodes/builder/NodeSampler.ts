@@ -1,7 +1,7 @@
-import Sampler from '../../renderers/bindings/Sampler.js';
+import BindingSampler from '../../renderers/bindings/BindingSampler.js';
 import TextureNode from '@modules/renderer/engine/nodes/accessors/TextureNode.js';
 
-class NodeSampler extends Sampler {
+class NodeSampler extends BindingSampler {
   textureNode: TextureNode;
 
   constructor(name: string, textureNode: TextureNode) {

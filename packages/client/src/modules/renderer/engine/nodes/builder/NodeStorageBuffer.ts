@@ -1,9 +1,9 @@
-import StorageBuffer from '../core/StorageBuffer.js';
+import BindingStorageBuffer from '../../renderers/bindings/BindingStorageBuffer.js';
 import NodeUniform from '@modules/renderer/engine/nodes/core/NodeUniform.js';
 
 let _id = 0;
 
-export class NodeStorageBuffer extends StorageBuffer {
+export class NodeStorageBuffer extends BindingStorageBuffer {
   nodeUniform: NodeUniform;
 
   constructor(nodeUniform: NodeUniform) {

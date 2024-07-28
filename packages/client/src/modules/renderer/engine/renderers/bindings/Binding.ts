@@ -10,7 +10,6 @@ export class Binding {
   }
 
   clone(): this {
-    //@ts-expect-error
     return Object.assign(new this.constructor(), this);
   }
 }

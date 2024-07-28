@@ -3,11 +3,11 @@ import { AttributeLocation } from './constants.js';
 import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 import RenderObject from '@modules/renderer/engine/renderers/RenderObject.js';
 import Binding from '@modules/renderer/engine/renderers/bindings/Binding.js';
-import { SampledTexture } from '@modules/renderer/engine/renderers/bindings/SampledTexture.js';
+import { BindingSampledTexture } from '@modules/renderer/engine/renderers/bindings/BindingSampledTexture.js';
 import NodeUniformsGroup from '@modules/renderer/engine/nodes/builder/NodeUniformsGroup.js';
-import UniformBuffer from '@modules/renderer/engine/renderers/bindings/UniformBuffer.js';
+import BindingUniformBuffer from '@modules/renderer/engine/renderers/bindings/BindingUniformBuffer.js';
 import StorageTexture from '@modules/renderer/engine/objects/textures/StorageTexture.js';
-import StorageBuffer from '@modules/renderer/engine/nodes/core/StorageBuffer.js';
+import BindingStorageBuffer from '@modules/renderer/engine/renderers/bindings/BindingStorageBuffer.js';
 import { ComputeNode } from '@modules/renderer/engine/nodes/Nodes.js';
 
 class Bindings extends DataMap<any, any> {
@@ -61,9 +61,9 @@ class Bindings extends DataMap<any, any> {
 
   _init(bindings: Binding[]): void {
     for (const binding of bindings) {
-      if (binding instanceof SampledTexture) {
+      if (binding instanceof BindingSampledTexture) {
         this.renderer.textures.updateTexture(binding.texture);
-      } else if (binding instanceof StorageBuffer) {
+      } else if (binding instanceof BindingStorageBuffer) {
         const attribute = binding.attribute;
 
         this.renderer.attributes.update(attribute, AttributeLocation.Storage);
@@ -83,13 +83,13 @@ class Bindings extends DataMap<any, any> {
         if (!updated) continue;
       }
 
-      if (binding instanceof UniformBuffer) {
+      if (binding instanceof BindingUniformBuffer) {
         const updated = binding.update();
 
         if (updated) {
           this.renderer.backend.updateBinding(binding);
         }
-      } else if (binding instanceof SampledTexture) {
+      } else if (binding instanceof BindingSampledTexture) {
         const texture = binding.texture;
 
         if (binding.needsBindingsUpdate) needsBindingsUpdate = true;
