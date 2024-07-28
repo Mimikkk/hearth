@@ -1,177 +1,98 @@
 import { Attribute } from '../engine.js';
 import { Backend } from '@modules/renderer/engine/renderers/Backend.js';
 import RenderObject from '@modules/renderer/engine/renderers/RenderObject.js';
+import { Memo } from '@modules/renderer/engine/renderers/Memo.js';
 
 export class BackendAttributes {
   constructor(public backend: Backend) {}
 
-  createAttribute(attribute: Attribute, usage: GPUBufferUsageFlags): void {
-    const bufferAttribute = attribute;
+  async read(attribute: Attribute): Promise<ArrayBuffer> {
+    const { memo, device } = this.backend;
 
-    const backend = this.backend;
-    const data = backend.memo.get(bufferAttribute);
+    const data = memo.get(attribute);
 
-    let buffer = data.buffer;
+    const from: GPUBuffer = data.buffer;
+    const size = from.size;
 
-    if (buffer === undefined) {
-      const device = backend.device;
-
-      let array = bufferAttribute.array;
-
-      if (bufferAttribute.storage && bufferAttribute.stride === 3) {
-        bufferAttribute.stride = 4;
-        array = new array.constructor(bufferAttribute.count * 4);
-
-        for (let i = 0; i < bufferAttribute.count; i++) {
-          array.set(bufferAttribute.array.subarray(i * 3, i * 3 + 3), i * 4);
-        }
-      }
-
-      const size = array.byteLength + ((4 - (array.byteLength % 4)) % 4);
-
-      buffer = device.createBuffer({
-        label: bufferAttribute.name,
-        size: size,
-        usage: usage,
-        mappedAtCreation: true,
-      });
-
-      new array.constructor(buffer.getMappedRange()).set(array);
-
-      buffer.unmap();
-
-      data.buffer = buffer;
-    }
-  }
-
-  updateAttribute(attribute: Attribute): void {
-    const bufferAttribute = attribute;
-
-    const backend = this.backend;
-    const device = backend.device;
-
-    const buffer = backend.memo.get(bufferAttribute).buffer;
-
-    const array = bufferAttribute.array;
-    device.queue.writeBuffer(buffer, 0, array, 0);
-  }
-
-  createShaderVertexBuffers(renderObject: RenderObject): Attribute[] {
-    const attributes = renderObject.getAttributes();
-    const vertexBuffers = new Map();
-
-    for (let slot = 0; slot < attributes.length; slot++) {
-      const geometryAttribute: Attribute = attributes[slot];
-      const bytesPerElement = geometryAttribute.array.BYTES_PER_ELEMENT;
-      const bufferAttribute = geometryAttribute;
-
-      let vertexBufferLayout = vertexBuffers.get(bufferAttribute);
-
-      if (vertexBufferLayout === undefined) {
-        vertexBufferLayout = {
-          arrayStride: geometryAttribute.source.stride * bytesPerElement,
-          attributes: [],
-          stepMode: geometryAttribute.step,
-        };
-
-        vertexBuffers.set(bufferAttribute, vertexBufferLayout);
-      }
-
-      const format = this._getVertexFormat(geometryAttribute);
-      const offset = geometryAttribute.interleaved ? geometryAttribute.offset * bytesPerElement : 0;
-
-      vertexBufferLayout.attributes.push({
-        shaderLocation: slot,
-        offset,
-        format,
-      });
-    }
-
-    return Array.from(vertexBuffers.values());
-  }
-
-  destroyAttribute(attribute: Attribute): void {
-    this.backend.memo.get(attribute).buffer.destroy();
-    this.backend.memo.delete(attribute);
-  }
-
-  async getArrayBuffer(attribute: Attribute): Promise<ArrayBuffer> {
-    const backend = this.backend;
-    const device = backend.device;
-
-    const data = backend.memo.get(attribute);
-
-    const bufferGPU = data.buffer;
-    const size = bufferGPU.size;
-
-    let readBufferGPU = data.readBuffer;
-    let needsUnmap = true;
-
-    if (readBufferGPU === undefined) {
-      readBufferGPU = device.createBuffer({
+    let into: GPUBuffer = data.readBuffer;
+    let unmap = true;
+    if (into === undefined) {
+      into = device.createBuffer({
         label: attribute.name,
         size,
         usage: GPUBufferUsage.COPY_DST | GPUBufferUsage.MAP_READ,
       });
 
-      needsUnmap = false;
-
-      data.readBuffer = readBufferGPU;
+      unmap = false;
+      data.readBuffer = into;
     }
 
-    const cmdEncoder = device.createCommandEncoder({});
+    const command = device.createCommandEncoder();
 
-    cmdEncoder.copyBufferToBuffer(bufferGPU, 0, readBufferGPU, 0, size);
+    command.copyBufferToBuffer(from, 0, into, 0, size);
 
-    if (needsUnmap) readBufferGPU.unmap();
+    if (unmap) into.unmap();
 
-    const gpuCommands = cmdEncoder.finish();
-    device.queue.submit([gpuCommands]);
+    device.queue.submit([command.finish()]);
 
-    await readBufferGPU.mapAsync(GPUMapMode.READ);
-
-    return readBufferGPU.getMappedRange();
+    await into.mapAsync(GPUMapMode.READ);
+    return into.getMappedRange();
   }
 
-  _getVertexFormat(attribute: Attribute): GPUVertexFormat {
-    const { span } = attribute;
-    const ArrayType = attribute.array.constructor;
+  create(attribute: Attribute, usage: GPUBufferUsageFlags): void {
+    const backend = this.backend;
 
-    if (span == 1) {
-      if (ArrayType === Int32Array) {
-        return 'sint32';
-      } else if (ArrayType === Uint32Array) {
-        return 'uint32';
-      } else if (ArrayType === Float32Array) {
-        return 'float32';
-      }
-    } else {
-      let prefix: 'sint8' | 'uint8' | 'sint16' | 'uint16' | 'sint32' | 'uint32' | 'float32' | undefined;
-      if (ArrayType == Int8Array) {
-        prefix = 'sint8';
-      } else if (ArrayType == Uint8Array) {
-        prefix = 'uint8';
-      } else if (ArrayType == Int16Array) {
-        prefix = 'sint16';
-      } else if (ArrayType == Uint16Array) {
-        prefix = 'uint16';
-      } else if (ArrayType == Int32Array) {
-        prefix = 'sint32';
-      } else if (ArrayType == Uint32Array) {
-        prefix = 'uint32';
-      } else if (ArrayType == Float32Array) {
-        prefix = 'float32';
-      }
+    const memo = backend.memo.get(attribute);
+    if (memo.buffer) return;
 
-      if (prefix) {
-        const perVertex = ArrayType.BYTES_PER_ELEMENT * span;
-        // to align to 2 | 4 bytes.
-        const bytes = Math.floor((perVertex + 3) / 4) * 4;
-        const size = (bytes / ArrayType.BYTES_PER_ELEMENT) as 2 | 4;
-        return `${prefix}x${size}`;
-      }
+    const device = backend.device;
+    let array = attribute.array;
+    if (attribute.storage && attribute.stride === 3) {
+      attribute.stride = 4;
+      array = new array.constructor(attribute.count * 4);
+
+      for (let i = 0; i < attribute.count; i++) array.set(attribute.array.subarray(i * 3, i * 3 + 3), i * 4);
+    }
+    // ensure 4 byte alignment
+    const size = array.byteLength + ((4 - (array.byteLength % 4)) % 4);
+
+    const buffer = device.createBuffer({ label: attribute.name, size: size, usage: usage, mappedAtCreation: true });
+    new array.constructor(buffer.getMappedRange()).set(array);
+    buffer.unmap();
+
+    memo.buffer = buffer;
+  }
+
+  update(attribute: Attribute): void {
+    const { device, memo } = this.backend;
+    const { buffer } = memo.get(attribute);
+
+    device.queue.writeBuffer(buffer, 0, attribute.array, 0);
+  }
+
+  delete(attribute: Attribute): void {
+    this.backend.memo.get(attribute).buffer.destroy();
+    this.backend.memo.delete(attribute);
+  }
+
+  layouts(object: RenderObject): GPUVertexBufferLayout[] {
+    const attributes = object.getAttributes();
+    const buffers = Memo.as<Attribute, GPUVertexBufferLayout>(attribute => ({
+      arrayStride: attribute.source.stride * attribute.source.elementByteSize,
+      stepMode: attribute.step,
+      attributes: [],
+    }));
+
+    for (let slot = 0; slot < attributes.length; ++slot) {
+      const attribute = attributes[slot];
+
+      (buffers.get(attribute).attributes as GPUVertexAttribute[]).push({
+        shaderLocation: slot,
+        offset: attribute.offset * attribute.source.elementByteSize,
+        format: attribute.format,
+      });
     }
 
-    throw new Error('Unsupported attribute type.');
+    return Array.from(buffers.values());
   }
 }

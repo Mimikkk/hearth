@@ -45,7 +45,7 @@ class BackendPipelines {
 
     // vertex buffers
 
-    const vertexBuffers = backend.attributes.createShaderVertexBuffers(renderObject);
+    const vertexBuffers = backend.attributes.layouts(renderObject);
 
     // blending
 

@@ -12,13 +12,13 @@ export class WeakMemo<Key extends WeakKey, Value> {
     return new WeakMemo(create);
   }
 
-  get(key: Key): Value {
+  get<V = Value>(key: Key): V {
     let value = this.#map.get(key);
-    if (value) return value;
+    if (value) return value as V;
 
     value = this.#create(key, this);
     this.set(key, value);
-    return value;
+    return value as never as V;
   }
 
   set(key: Key, value: Value): this {

@@ -74,7 +74,7 @@ export class Backend {
   }
 
   async getArrayBuffer(attribute: Attribute) {
-    return await this.attributes.getArrayBuffer(attribute);
+    return await this.attributes.read(attribute);
   }
 
   _getDefaultRenderPassDescriptor() {
@@ -943,32 +943,26 @@ export class Backend {
   }
 
   createIndexAttribute(attribute: Attribute) {
-    this.attributes.createAttribute(
-      attribute,
-      GPUBufferUsage.INDEX | GPUBufferUsage.COPY_SRC | GPUBufferUsage.COPY_DST,
-    );
+    this.attributes.create(attribute, GPUBufferUsage.INDEX | GPUBufferUsage.COPY_SRC | GPUBufferUsage.COPY_DST);
   }
 
   createAttribute(attribute: Attribute) {
-    this.attributes.createAttribute(
-      attribute,
-      GPUBufferUsage.VERTEX | GPUBufferUsage.COPY_SRC | GPUBufferUsage.COPY_DST,
-    );
+    this.attributes.create(attribute, GPUBufferUsage.VERTEX | GPUBufferUsage.COPY_SRC | GPUBufferUsage.COPY_DST);
   }
 
   createStorageAttribute(attribute: Attribute) {
-    this.attributes.createAttribute(
+    this.attributes.create(
       attribute,
       GPUBufferUsage.STORAGE | GPUBufferUsage.VERTEX | GPUBufferUsage.COPY_SRC | GPUBufferUsage.COPY_DST,
     );
   }
 
   updateAttribute(attribute: Attribute) {
-    this.attributes.updateAttribute(attribute);
+    this.attributes.update(attribute);
   }
 
   destroyAttribute(attribute: Attribute) {
-    this.attributes.destroyAttribute(attribute);
+    this.attributes.delete(attribute);
   }
 
   updateSize() {
