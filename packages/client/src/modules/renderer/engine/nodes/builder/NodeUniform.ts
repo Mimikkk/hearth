@@ -6,7 +6,7 @@ import {
   Vec2Uniform,
   Vec3Uniform,
   Vec4Uniform,
-} from '../../renderers/Uniform.js';
+} from '../../renderers/bindings/BindingUniform.js';
 
 import NodeUniform from '@modules/renderer/engine/nodes/core/NodeUniform.js';
 

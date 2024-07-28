@@ -1,11 +1,8 @@
 import { Color, Mat3, Mat4, Vec2, Vec3, Vec4 } from '@modules/renderer/engine/engine.js';
 
-export abstract class Uniform<T> {
-  // STD140 layout
+export abstract class BindingUniform<T> {
   abstract boundary: number;
-  // size in bytes
   abstract itemSize: number;
-  // offset within UniformsGroup
   offset: number = 0;
 
   constructor(
@@ -22,7 +19,7 @@ export abstract class Uniform<T> {
   }
 }
 
-export class FloatUniform extends Uniform<number> {
+export class FloatUniform extends BindingUniform<number> {
   declare isFloatUniform: true;
   boundary: number = 4;
   itemSize: number = 1;
@@ -34,7 +31,7 @@ export class FloatUniform extends Uniform<number> {
 
 FloatUniform.prototype.isFloatUniform = true;
 
-export class Vec2Uniform extends Uniform<Vec2> {
+export class Vec2Uniform extends BindingUniform<Vec2> {
   declare isVec2Uniform: true;
   boundary: number = 8;
   itemSize: number = 2;
@@ -46,7 +43,7 @@ export class Vec2Uniform extends Uniform<Vec2> {
 
 Vec2Uniform.prototype.isVec2Uniform = true;
 
-export class Vec3Uniform extends Uniform<Vec3> {
+export class Vec3Uniform extends BindingUniform<Vec3> {
   declare isVec3Uniform: true;
   boundary: number = 16;
   itemSize: number = 3;
@@ -58,7 +55,7 @@ export class Vec3Uniform extends Uniform<Vec3> {
 
 Vec3Uniform.prototype.isVec3Uniform = true;
 
-export class Vec4Uniform extends Uniform<Vec4> {
+export class Vec4Uniform extends BindingUniform<Vec4> {
   declare isVec4Uniform: true;
   boundary: number = 16;
   itemSize: number = 4;
@@ -70,7 +67,7 @@ export class Vec4Uniform extends Uniform<Vec4> {
 
 Vec4Uniform.prototype.isVec4Uniform = true;
 
-export class ColorUniform extends Uniform<Color> {
+export class ColorUniform extends BindingUniform<Color> {
   declare isColorUniform: true;
   boundary: number = 16;
   itemSize: number = 3;
@@ -82,7 +79,7 @@ export class ColorUniform extends Uniform<Color> {
 
 ColorUniform.prototype.isColorUniform = true;
 
-export class Mat3Uniform extends Uniform<Mat3> {
+export class Mat3Uniform extends BindingUniform<Mat3> {
   declare isMat3Uniform: true;
   boundary: number = 48;
   itemSize: number = 12;
@@ -94,7 +91,7 @@ export class Mat3Uniform extends Uniform<Mat3> {
 
 Mat3Uniform.prototype.isMat3Uniform = true;
 
-export class Mat4Uniform extends Uniform<Mat4> {
+export class Mat4Uniform extends BindingUniform<Mat4> {
   declare isMat4Uniform: true;
   boundary: number = 64;
   itemSize: number = 16;
