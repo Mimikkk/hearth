@@ -289,11 +289,11 @@ export namespace TypeName {
     }
   };
 
+  export const ofAttribute = ({ span, array }: BufferAttribute): TypeName => ofSize(span, ofArray(array));
+
   export const vecAsMat = (type: TypeName): TypeName => type.replace('vec', 'mat') as TypeName;
 
   export const matAsVec = (type: TypeName): TypeName => type.replace('mat', 'vec') as TypeName;
-
-  export const ofAttribute = ({ span, array }: BufferAttribute): TypeName => ofSize(span, ofArray(array));
 
   export const withComponent = (type: TypeName, component: TypeName): TypeName => ofSize(size(type), component);
 

@@ -1,5 +1,4 @@
 import {
-  BufferAttribute,
   Color,
   Entity,
   Geometry,
@@ -56,7 +55,6 @@ import FogNode from '@modules/renderer/engine/nodes/fog/FogNode.js';
 import ToneMappingNode from '@modules/renderer/engine/nodes/display/ToneMappingNode.js';
 import { Node } from '@modules/renderer/engine/nodes/core/Node.js';
 import ClippingContext from '@modules/renderer/engine/renderers/ClippingContext.js';
-import { TypedArray, TypedArrayConstructor } from '@modules/renderer/engine/math/MathUtils.js';
 import { BuildStage, BuiltinType, ShaderStage, TypeMap, TypeName } from './NodeBuilder.types.js';
 import { PolyfillMap, PolyfillName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.polyfills.js';
 import StructTypeNode from '@modules/renderer/engine/nodes/core/StructTypeNode.js';
@@ -356,6 +354,21 @@ export class NodeBuilder {
     return TypeName.withComponent(type, TypeName.i32);
   }
 
+  getStructTypeFromNode(node: Node, shaderStage: ShaderStage = this.shaderStage): StructTypeNode {
+    const nodeData = this.getDataFromNode(node, shaderStage);
+
+    if (nodeData.structType === undefined) {
+      const index = this.structs.index++;
+
+      node.name = `StructType${index}`;
+      this.structs[shaderStage].push(node);
+
+      nodeData.structType = node;
+    }
+
+    return node;
+  }
+
   addStack(): StackNode {
     this.stack = stack(this.stack);
 
@@ -412,21 +425,6 @@ export class NodeBuilder {
     }
 
     return bufferAttribute;
-  }
-
-  getStructTypeFromNode(node: Node, shaderStage: ShaderStage = this.shaderStage): StructTypeNode {
-    const nodeData = this.getDataFromNode(node, shaderStage);
-
-    if (nodeData.structType === undefined) {
-      const index = this.structs.index++;
-
-      node.name = `StructType${index}`;
-      this.structs[shaderStage].push(node);
-
-      nodeData.structType = node;
-    }
-
-    return node;
   }
 
   getVarFromNode(node: Node, name = null, type = node.getNodeType(this), shaderStage = this.shaderStage): NodeVar {
@@ -514,7 +512,7 @@ export class NodeBuilder {
 
     this.currentFunctionNode = fn;
 
-    fn.code = this.buildFunctionCode(shaderNode);
+    fn.code = this.codeFunction(shaderNode);
 
     this.currentFunctionNode = previous;
 
@@ -716,18 +714,8 @@ export class NodeBuilder {
     return texture.isVideoTexture === true && texture.colorSpace !== null;
   }
 
-  codeFunctions(shaderStage: ShaderStage): string {
-    const codes = this.codes[shaderStage];
-
-    let code = '';
-
-    if (codes !== undefined) {
-      for (const nodeCode of codes) {
-        code += nodeCode.code + '\n';
-      }
-    }
-
-    return code;
+  getType(type: TypeName): string {
+    return TypeMap[type] || type;
   }
 
   codeTextureSample(
@@ -990,23 +978,6 @@ export class NodeBuilder {
     );
   }
 
-  buildFunctionCode(shaderNode: ShaderNode): string {
-    const layout = shaderNode.layout;
-    const flow = this.flowShaderNode(shaderNode);
-
-    const parameters = [];
-
-    for (const input of layout.inputs) {
-      parameters.push(`${input.name}: ${this.getType(input.type)}`);
-    }
-
-    return `fn ${layout.name}(${parameters.join(', ')}) -> ${this.getType(layout.type)} {
-${flow.vars}
-${flow.code}
-	return ${flow.result};
-}`;
-  }
-
   useBuiltin(name: string, property: string, type: TypeName, builtin: BuiltinType): string {
     const map = this.builtins[builtin];
 
@@ -1039,6 +1010,70 @@ ${flow.code}
 
   useFragDepth(): string {
     return 'output.' + this.useBuiltin('frag_depth', 'depth', 'f32', BuiltinType.Output);
+  }
+
+  code(): void {
+    if (this.isCompute) {
+      this.computeShader = Snippet.compute({
+        parameters: this.codeParameters(ShaderStage.Compute),
+        uniforms: this.codeUniforms(ShaderStage.Compute),
+        structures: this.codeStructures(ShaderStage.Compute),
+        variables: this.codeVariables(ShaderStage.Compute),
+        functions: this.codeFunctions(ShaderStage.Compute),
+        size: this.codeComputeSize(),
+        code: this.codeCompute(),
+      });
+    } else {
+      this.fragmentShader = Snippet.fragment({
+        parameters: this.codeVaryings(ShaderStage.Fragment),
+        uniforms: this.codeUniforms(ShaderStage.Fragment),
+        structures: this.codeStructures(ShaderStage.Fragment),
+        variables: this.codeVariables(ShaderStage.Fragment),
+        functions: this.codeFunctions(ShaderStage.Fragment),
+        code: this.codeFragment(),
+        return: this.codeFragmentReturn(),
+      });
+      this.vertexShader = Snippet.vertex({
+        parameters: this.codeParameters(ShaderStage.Vertex),
+        uniforms: this.codeUniforms(ShaderStage.Vertex),
+        varyings: this.codeVaryings(ShaderStage.Vertex),
+        functions: this.codeFunctions(ShaderStage.Vertex),
+        variables: this.codeVariables(ShaderStage.Vertex),
+        code: this.codeVertex(),
+      });
+    }
+  }
+
+  codeFunctions(shaderStage: ShaderStage): string {
+    const codes = this.codes[shaderStage];
+
+    let code = '';
+
+    if (codes !== undefined) {
+      for (const nodeCode of codes) {
+        code += nodeCode.code + '\n';
+      }
+    }
+
+    return code;
+  }
+
+  codeFunction(shaderNode: ShaderNode): string {
+    const flow = this.flowShaderNode(shaderNode);
+    const layout = shaderNode.layout;
+
+    const parameters = [];
+
+    for (const input of layout.inputs) {
+      parameters.push(`${input.name}: ${this.getType(input.type)}`);
+    }
+
+    return `
+    fn ${layout.name}(${parameters.join(', ')}) -> ${this.getType(layout.type)} {
+      ${flow.vars}
+      ${flow.code}
+        return ${flow.result};
+    }`;
   }
 
   codeBuiltins(shaderStage: BuiltinType): string {
@@ -1077,38 +1112,6 @@ ${flow.code}
     }
 
     return snippets.join(',\n\t');
-  }
-
-  code(): void {
-    if (this.isCompute) {
-      this.computeShader = Snippet.compute({
-        parameters: this.codeParameters(ShaderStage.Compute),
-        uniforms: this.codeUniforms(ShaderStage.Compute),
-        structures: this.codeStructures(ShaderStage.Compute),
-        variables: this.codeVariables(ShaderStage.Compute),
-        functions: this.codeFunctions(ShaderStage.Compute),
-        size: this.codeComputeSize(),
-        code: this.codeCompute(),
-      });
-    } else {
-      this.fragmentShader = Snippet.fragment({
-        parameters: this.codeVaryings(ShaderStage.Fragment),
-        uniforms: this.codeUniforms(ShaderStage.Fragment),
-        structures: this.codeStructures(ShaderStage.Fragment),
-        variables: this.codeVariables(ShaderStage.Fragment),
-        functions: this.codeFunctions(ShaderStage.Fragment),
-        code: this.codeFragment(),
-        return: this.codeFragmentReturn(),
-      });
-      this.vertexShader = Snippet.vertex({
-        parameters: this.codeParameters(ShaderStage.Vertex),
-        uniforms: this.codeUniforms(ShaderStage.Vertex),
-        varyings: this.codeVaryings(ShaderStage.Vertex),
-        functions: this.codeFunctions(ShaderStage.Vertex),
-        variables: this.codeVariables(ShaderStage.Vertex),
-        code: this.codeVertex(),
-      });
-    }
   }
 
   codeStructures(stage: ShaderStage): string {
@@ -1382,10 +1385,6 @@ ${flow.code}
     }
 
     return method;
-  }
-
-  getType(type: TypeName): string {
-    return TypeMap[type] || type;
   }
 
   isAvailable(name: FeatureName): boolean {
