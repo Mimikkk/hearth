@@ -1,6 +1,8 @@
+import { TypedArray } from '@modules/renderer/engine/math/MathUtils.js';
+
 export class Binding {
   declare shared: boolean;
-  declare buffer: SharedArrayBuffer | BufferSource;
+  declare buffer: TypedArray;
   visibility: number = 0;
 
   constructor(public name: string = '') {}

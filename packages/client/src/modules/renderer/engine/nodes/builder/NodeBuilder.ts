@@ -726,7 +726,7 @@ export class NodeBuilder {
 
         uniformGPU = this.getNodeUniform(uniformNode, type);
 
-        uniformsGroup.addUniform(uniformGPU);
+        uniformsGroup.add(uniformGPU);
       }
 
       nodeData.uniformGPU = uniformGPU;

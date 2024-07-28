@@ -1,6 +1,9 @@
 import Binding from './Binding.js';
-import { getFloatLength } from '../BufferUtils.js';
 import { TypedArray } from '@modules/renderer/engine/math/MathUtils.js';
+import { STD140ChunkBytes } from '@modules/renderer/engine/renderers/constants.js';
+
+export const ensureSize = (size: number): number =>
+  size + ((STD140ChunkBytes - (size % STD140ChunkBytes)) % STD140ChunkBytes);
 
 export class BindingBuffer extends Binding {
   declare isBuffer: true;
@@ -9,7 +12,7 @@ export class BindingBuffer extends Binding {
   constructor(name: string, buffer: TypedArray) {
     super(name);
 
-    this._buffer = buffer;
+    this.buffer = buffer;
   }
 
   static is(value: any): value is BindingBuffer {
@@ -17,11 +20,7 @@ export class BindingBuffer extends Binding {
   }
 
   get byteLength() {
-    return getFloatLength(this._buffer!.byteLength);
-  }
-
-  get buffer() {
-    return this._buffer;
+    return ensureSize(this.buffer.byteLength);
   }
 
   update() {

@@ -12,70 +12,41 @@ import {
 } from '@modules/renderer/engine/nodes/builder/NodeUniform.js';
 
 class BindingUniformsGroup extends BindingUniformBuffer {
-  // the order of uniforms in this array must match the order of uniforms in the shader
   uniforms: ValueNodeUniform[] = [];
   bytesPerElement: number = Float32Array.BYTES_PER_ELEMENT;
-  _buffer: Float32Array | null = null;
 
   constructor(name: string) {
-    super(name, null!);
+    super(name, new Float32Array(new ArrayBuffer(0)));
   }
 
-  addUniform(uniform: ValueNodeUniform): this {
+  add(uniform: ValueNodeUniform): this {
     this.uniforms.push(uniform);
-
+    this.buffer = new Float32Array(new ArrayBuffer(this.byteLength));
     return this;
   }
 
-  removeUniform(uniform: ValueNodeUniform): this {
+  remove(uniform: ValueNodeUniform): this {
     const index = this.uniforms.indexOf(uniform);
-
     if (index !== -1) {
+      this.buffer = new Float32Array(new ArrayBuffer(this.byteLength));
       this.uniforms.splice(index, 1);
     }
-
     return this;
-  }
-
-  get buffer(): Float32Array {
-    let buffer = this._buffer;
-
-    if (buffer === null) {
-      const byteLength = this.byteLength;
-
-      buffer = new Float32Array(new ArrayBuffer(byteLength));
-
-      this._buffer = buffer;
-    }
-
-    return buffer;
   }
 
   get byteLength(): number {
-    // global buffer offset in bytes
     let offset = 0;
 
-    for (let i = 0, l = this.uniforms.length; i < l; i++) {
+    for (let i = 0, it = this.uniforms.length; i < it; ++i) {
       const uniform = this.uniforms[i];
 
       const { boundary, itemSize } = uniform;
 
-      // offset within a single chunk in bytes
-
       const chunkOffset = offset % STD140ChunkBytes;
       const remainingSizeInChunk = STD140ChunkBytes - chunkOffset;
 
-      // conformance tests
-
-      if (chunkOffset !== 0 && remainingSizeInChunk - boundary < 0) {
-        // check for chunk overflow
-
-        offset += STD140ChunkBytes - chunkOffset;
-      } else if (chunkOffset % boundary !== 0) {
-        // check for correct alignment
-
-        offset += chunkOffset % boundary;
-      }
+      if (chunkOffset && remainingSizeInChunk - boundary < 0) offset += STD140ChunkBytes - chunkOffset;
+      else if (chunkOffset % boundary !== 0) offset += chunkOffset % boundary;
 
       uniform.offset = offset / this.bytesPerElement;
 
@@ -88,11 +59,7 @@ class BindingUniformsGroup extends BindingUniformBuffer {
   update() {
     let updated = false;
 
-    for (const uniform of this.uniforms) {
-      if (this.updateByType(uniform) === true) {
-        updated = true;
-      }
-    }
+    for (const uniform of this.uniforms) if (this.updateByType(uniform)) updated = true;
 
     return updated;
   }
@@ -237,7 +204,7 @@ class BindingUniformsGroup extends BindingUniformBuffer {
     const e = uniform.getValue().elements;
     const offset = uniform.offset;
 
-    if (arraysEqual(a, e, offset) === false) {
+    if (!arraysEqual(a, e, offset)) {
       a.set(e, offset);
       updated = true;
     }
@@ -247,10 +214,7 @@ class BindingUniformsGroup extends BindingUniformBuffer {
 }
 
 function arraysEqual(a: ArrayLike<number>, b: ArrayLike<number>, offset: number) {
-  for (let i = 0, l = b.length; i < l; i++) {
-    if (a[offset + i] !== b[i]) return false;
-  }
-
+  for (let i = 0, l = b.length; i < l; i++) if (a[offset + i] !== b[i]) return false;
   return true;
 }
 

@@ -7,13 +7,9 @@ export class NodeStorageBuffer extends BindingStorageBuffer {
   nodeUniform: NodeUniform;
 
   constructor(nodeUniform: NodeUniform) {
-    super('StorageBuffer_' + _id++, nodeUniform ? nodeUniform.value : null);
+    super('StorageBuffer_' + _id++, nodeUniform.value);
 
     this.nodeUniform = nodeUniform;
-  }
-
-  get buffer() {
-    return this.nodeUniform.value;
   }
 }
 
