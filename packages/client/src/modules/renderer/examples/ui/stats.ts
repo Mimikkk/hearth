@@ -1,5 +1,5 @@
-import type { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
-import type { FrameStats } from '@modules/renderer/engine/renderers/FrameStats.js';
+import type { Forge } from '@modules/renderer/engine/renderers/Forge.js';
+import type { ForgeFrameStats } from '@modules/renderer/engine/renderers/Forge.FrameStats.js';
 import { GPUFeature } from '@modules/renderer/engine/renderers/constants.js';
 
 class Panel {
@@ -195,7 +195,7 @@ export class Stats {
   prevStatTime: number;
   frames: number;
 
-  info: FrameStats;
+  info: ForgeFrameStats;
   dom: HTMLDivElement;
 
   cpuMsStat: Stat;
@@ -213,7 +213,7 @@ export class Stats {
   precision: number;
 
   constructor(
-    renderer: Renderer,
+    renderer: Forge,
     { insert = true, logsPerSecond = 20, samplesLog = 100, samplesGraph = 10, precision = 2 }: Options = {},
   ) {
     this.dom = document.createElement('div');
@@ -255,7 +255,7 @@ export class Stats {
     });
   }
 
-  static use(renderer: Renderer, options?: Options) {
+  static use(renderer: Forge, options?: Options) {
     return new Stats(renderer, options);
   }
 

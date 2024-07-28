@@ -1,7 +1,7 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
 import { cubeTexture, pass, uniform, viewportTopLeft } from '@modules/renderer/engine/nodes/Nodes.js';
 
-import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
+import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
 
 import Postprocess from '@modules/renderer/engine/renderers/Postprocess.js';
 
@@ -46,7 +46,7 @@ async function init() {
     scene.add(gltf.scene);
   });
 
-  renderer = await Renderer.as();
+  renderer = await Forge.as();
 
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);

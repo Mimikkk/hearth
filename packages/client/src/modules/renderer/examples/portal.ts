@@ -15,7 +15,7 @@ import {
 
 import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/GLTFLoader.js';
 
-import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
+import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
 
 import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
 import { Side } from '@modules/renderer/engine/engine.js';
@@ -119,7 +119,7 @@ async function init() {
     scenePortal.add(modelPortal);
   });
 
-  renderer = await Renderer.as();
+  renderer = await Forge.as();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.animation.loop = animate;

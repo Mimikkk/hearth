@@ -1,5 +1,5 @@
 import { color, f32, MeshStandardNodeMaterial, normalWorld } from '@modules/renderer/engine/nodes/Nodes.js';
-import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
+import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
 import {
   Camera,
   CameraVisualizer,
@@ -38,7 +38,7 @@ const createScene = () => {
 };
 const createLight = () => new SpotLight(0xffffff, 10);
 const createRenderer = async (onAnimate: () => void) => {
-  const renderer = await Renderer.as();
+  const renderer = await Forge.as();
   renderer.animation.loop = onAnimate;
   document.body.append(renderer.parameters.canvas);
 

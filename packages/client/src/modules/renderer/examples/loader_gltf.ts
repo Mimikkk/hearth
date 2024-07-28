@@ -1,5 +1,5 @@
 import { Clock, Mapping, PerspectiveCamera, Scene, ToneMapping } from '@modules/renderer/engine/engine.js';
-import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
+import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
 import { RGBELoader } from '@modules/renderer/engine/loaders/textures/RGBELoader/RGBELoader.js';
 import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
 import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/GLTFLoader.js';
@@ -8,7 +8,7 @@ import { WorldAxesControls } from '@modules/renderer/engine/objects/controls/Wor
 
 let camera!: PerspectiveCamera;
 let scene!: Scene;
-let renderer!: Renderer;
+let renderer!: Forge;
 let viewHelper!: WorldAxesControls;
 
 const clock = new Clock();
@@ -25,7 +25,7 @@ async function init() {
 
   scene = new Scene();
 
-  renderer = await Renderer.as({
+  renderer = await Forge.as({
     autoClear: false,
   });
 

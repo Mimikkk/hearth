@@ -9,7 +9,7 @@ import { MeshPhongMaterial } from '@modules/renderer/engine/objects/materials/Me
 import { STLLoader } from '@modules/renderer/engine/loaders/objects/STLLoader/STLLoader.js';
 import { HemisphereLight } from '@modules/renderer/engine/objects/lights/HemisphereLight';
 import { DirectionalLight } from '@modules/renderer/engine/objects/lights/DirectionalLight';
-import { Renderer } from '../engine/renderers/Renderer.js';
+import { Forge } from '../engine/renderers/Forge.js';
 
 let container;
 
@@ -112,7 +112,7 @@ async function init() {
   addShadowedLight(0.5, 1, -1, 0xffd500, 3);
   // renderer
 
-  renderer = await Renderer.as();
+  renderer = await Forge.as();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.animation.loop = animate;

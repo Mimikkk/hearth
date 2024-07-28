@@ -14,7 +14,7 @@ import {
 import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
 import { TeapotGeometry } from '@modules/renderer/engine/objects/geometries/TeapotGeometry.js';
 
-import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
+import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
@@ -103,7 +103,7 @@ async function init() {
 
   // renderer
 
-  renderer = await Renderer.as();
+  renderer = await Forge.as();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.animation.loop = animate;

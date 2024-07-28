@@ -3,12 +3,12 @@ import { MeshPhongNodeMaterial, Node, asNode, NodeUpdateType, uniform } from '@m
 
 import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
 
-import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
-import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
+import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
+import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
 import { Camera, Scene } from '@modules/renderer/engine/engine.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
-let camera: Camera, scene: Scene, renderer: Renderer, controls: OrbitControls;
+let camera: Camera, scene: Scene, renderer: Forge, controls: OrbitControls;
 
 class OcclusionNode extends Node {
   constructor(testObject: Engine.Entity, normalColor: Engine.Color, occludedColor: Engine.Color) {
@@ -72,7 +72,7 @@ async function init() {
 
   // renderer
 
-  renderer = await Renderer.as();
+  renderer = await Forge.as();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
 

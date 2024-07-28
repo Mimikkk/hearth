@@ -4,7 +4,7 @@ import { MeshoptDecoder } from 'meshoptimizer';
 
 import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
 
-import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
+import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 import { ToneMapping } from '@modules/renderer/engine/constants.js';
 import { PerspectiveCamera } from '@modules/renderer/engine/objects/cameras/PerspectiveCamera.js';
@@ -30,7 +30,7 @@ async function init() {
 
   //renderer
 
-  const renderer = await Renderer.as();
+  const renderer = await Forge.as();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.animation.loop = () => renderer.render(scene, camera);

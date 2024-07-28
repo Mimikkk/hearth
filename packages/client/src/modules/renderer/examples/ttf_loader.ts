@@ -1,6 +1,6 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
 import { TTFLoader } from '@modules/renderer/engine/loaders/fonts/TTFLoader/TTFLoader.js';
-import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
+import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
 import { TextGeometry } from '@modules/renderer/engine/objects/geometries/TextGeometry.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 import { FontManager } from '@modules/renderer/engine/loaders/fonts/FontManager.js';
@@ -81,7 +81,7 @@ async function init() {
 
   // RENDERER
 
-  renderer = await Renderer.as();
+  renderer = await Forge.as();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.animation.loop = render;

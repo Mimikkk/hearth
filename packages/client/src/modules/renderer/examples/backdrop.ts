@@ -14,7 +14,7 @@ import {
   viewportTopLeft,
 } from '@modules/renderer/engine/nodes/Nodes.js';
 import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/GLTFLoader.js';
-import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
+import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
 import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
 import {
   AnimationClip,
@@ -111,7 +111,7 @@ scene.add(portals);
 camera.add(light);
 scene.add(camera);
 
-const renderer = await Renderer.as({
+const renderer = await Forge.as({
   toneMappingNode: toneMapping(ToneMapping.Linear, 0.15),
   async animate() {
     const delta = clock.tick();

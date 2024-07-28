@@ -14,7 +14,7 @@ import {
 
 import { GUI } from 'lil-gui';
 
-import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
+import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 import { GPUBufferBindingTypeType, BufferStep } from '@modules/renderer/engine/renderers/constants.js';
 
@@ -162,7 +162,7 @@ async function init() {
 
   // renderer
 
-  renderer = await Renderer.as();
+  renderer = await Forge.as();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.animation.loop = render;

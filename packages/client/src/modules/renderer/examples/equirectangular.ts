@@ -1,7 +1,7 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
 import { texture, equirectUV } from '@modules/renderer/engine/nodes/Nodes.js';
 
-import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
+import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
 
 import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
@@ -24,7 +24,7 @@ async function init() {
   scene = new Engine.Scene();
   scene.backgroundNode = texture(equirectTexture, equirectUV(), 0);
 
-  renderer = await Renderer.as();
+  renderer = await Forge.as();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.animation.loop = render;

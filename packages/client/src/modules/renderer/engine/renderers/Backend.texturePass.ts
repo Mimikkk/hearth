@@ -7,7 +7,7 @@ import {
 } from './constants.js';
 
 import { Backend } from '@modules/renderer/engine/renderers/Backend.js';
-import { MipmapShader } from '@modules/renderer/engine/renderers/MipmapShader.js';
+import { TexturePassMipmapShader } from '@modules/renderer/engine/renderers/TexturePass.MipmapShader.js';
 import { Memo } from '@modules/renderer/engine/renderers/Memo.js';
 
 const encodePass = (
@@ -143,10 +143,10 @@ export class BackendTexturePass {
       bindGroupLayouts.remove(`${label}-bind-group`);
     },
   );
-  mipmap: MipmapShader;
+  mipmap: TexturePassMipmapShader;
 
   constructor(public backend: Backend) {
-    this.mipmap = new MipmapShader(backend);
+    this.mipmap = new TexturePassMipmapShader(backend);
   }
 
   flipY(texture: GPUTexture, descriptor: GPUTextureDescriptor, layer: number): void {

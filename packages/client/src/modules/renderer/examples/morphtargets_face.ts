@@ -1,6 +1,6 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
 
-import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
+import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
 
 import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
 
@@ -27,7 +27,7 @@ async function init() {
   const scene = new Engine.Scene();
   scene.add(new Engine.HemisphereLight(0xffffff, 0x443333, 2));
 
-  const renderer = await Renderer.as();
+  const renderer = await Forge.as();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.parameters.toneMapping = Engine.ToneMapping.ACESFilmic;

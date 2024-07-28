@@ -1,12 +1,12 @@
-import type { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
+import type { Forge } from '@modules/renderer/engine/renderers/Forge.js';
 
 export type AnimationLoopFn = (time: number, frame?: number) => void;
 
-export class Animation {
+export class ForgeAnimation {
   loop: AnimationLoopFn | null = null;
   requestId: number | null = null;
 
-  constructor(public renderer: Renderer) {
+  constructor(public renderer: Forge) {
     this.loop = null;
 
     const update = (time: number, frame?: number) => {

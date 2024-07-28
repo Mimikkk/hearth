@@ -1,6 +1,6 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
 
-import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
+import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
 
 import Stats from 'stats-gl';
 
@@ -26,7 +26,7 @@ let insetHeight;
 init();
 
 async function init() {
-  renderer = await Renderer.as();
+  renderer = await Forge.as();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.animation.loop = animate;

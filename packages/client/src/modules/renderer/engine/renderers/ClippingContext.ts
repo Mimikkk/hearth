@@ -1,5 +1,5 @@
 import { Camera, Mat3, Mat4, Material, Plane, Vec4 } from '@modules/renderer/engine/engine.js';
-import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
+import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
 
 const _plane = new Plane();
 const _viewNormalMatrix = new Mat3();
@@ -47,7 +47,7 @@ export class ClippingContext {
     }
   }
 
-  updateGlobal(renderer: Renderer, camera: Camera) {
+  updateGlobal(renderer: Forge, camera: Camera) {
     const rendererClippingPlanes = renderer.parameters.clippingPlanes;
     this.viewMatrix = camera.matrixWorldInverse;
 

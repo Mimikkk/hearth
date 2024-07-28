@@ -1,10 +1,10 @@
-import type { Renderer } from '../../renderers/Renderer.js';
+import type { Forge } from '../../renderers/Forge.js';
 import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 import { Box2 } from '@modules/renderer/engine/math/Box2.js';
 
 export class SelectionVisualizer {
   element: HTMLDivElement;
-  renderer: Renderer;
+  renderer: Forge;
   start: Vec2;
   box: Box2;
   topLeft: Vec2;
@@ -15,7 +15,7 @@ export class SelectionVisualizer {
   onPointerMove: (event: PointerEvent) => void;
   onPointerUp: (event: PointerEvent) => void;
 
-  constructor(renderer: Renderer) {
+  constructor(renderer: Forge) {
     this.element = document.createElement('div');
     this.element.style.border = '1px solid #55aaff';
     this.element.style.borderRadius = '0.125rem';

@@ -1,7 +1,7 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
 import { f32, mix, oscSine, pmremTexture, timerLocal, toneMapping } from '@modules/renderer/engine/nodes/Nodes.js';
 
-import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
+import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
 
 import { RGBMLoader } from '@modules/renderer/engine/loaders/textures/RGBMLoader/RGBMLoader.js';
 
@@ -57,7 +57,7 @@ async function init() {
     scene.add(gltf.scene);
   });
 
-  renderer = await Renderer.as();
+  renderer = await Forge.as();
 
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);

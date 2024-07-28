@@ -1,7 +1,7 @@
 import { Backend } from '@modules/renderer/engine/renderers/Backend.js';
 import { ResourceMap } from '@modules/renderer/engine/renderers/ResourceMap.js';
 
-export class ResourceManager {
+export class BackendResourceManager {
   shaders: ResourceMap<GPUShaderModule, GPUShaderModuleDescriptor>;
   textures: ResourceMap<GPUTexture, GPUTextureDescriptor>;
   samplers: ResourceMap<GPUSampler, GPUSamplerDescriptor>;

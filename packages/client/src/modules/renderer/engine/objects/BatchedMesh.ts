@@ -11,7 +11,7 @@ import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { Material } from '@modules/renderer/engine/objects/materials/Material.js';
 import { Camera } from '@modules/renderer/engine/objects/cameras/Camera.js';
 import { Intersection, Raycaster } from '@modules/renderer/engine/core/Raycaster.js';
-import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
+import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
 import { Scene } from '@modules/renderer/engine/objects/scenes/Scene.js';
 import { Group } from '@modules/renderer/engine/objects/Group.js';
 
@@ -714,7 +714,7 @@ export class BatchedMesh extends Mesh {
   }
 
   onBeforeRender(
-    renderer: Renderer,
+    renderer: Forge,
     scene: Scene,
     camera: Camera,
     geometry: Geometry,
@@ -815,7 +815,7 @@ export class BatchedMesh extends Mesh {
   }
 
   onBeforeShadow(
-    renderer: Renderer,
+    renderer: Forge,
     scene: Scene,
     shadowCamera: Camera,
     geometry: Geometry,

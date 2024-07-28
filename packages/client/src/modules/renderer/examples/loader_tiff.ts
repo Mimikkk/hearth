@@ -4,7 +4,7 @@ import { PlaneGeometry } from '@modules/renderer/engine/objects/geometries/Plane
 import { MeshBasicMaterial } from '@modules/renderer/engine/objects/materials/MeshBasicMaterial.js';
 import { Mesh } from '@modules/renderer/engine/objects/Mesh.js';
 import { ColorSpace } from '../engine/constants.js';
-import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
+import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
 import { TiffLoader } from '@modules/renderer/engine/loaders/textures/TIFFLoader/TIFFLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 import { DataTexture } from '@modules/renderer/engine/objects/textures/DataTexture.js';
@@ -22,7 +22,7 @@ async function init() {
   const camera = new PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.01, 10);
   camera.position.set(0, 0, 4);
 
-  const renderer = await Renderer.as();
+  const renderer = await Forge.as();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.parameters.canvas);

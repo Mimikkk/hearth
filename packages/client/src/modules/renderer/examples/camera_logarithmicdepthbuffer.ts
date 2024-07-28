@@ -4,7 +4,7 @@ import { PerspectiveCamera, Scene } from '@modules/renderer/engine/engine.js';
 import { FontLoader } from '@modules/renderer/engine/loaders/fonts/FontLoader/FontLoader.js';
 import { TextGeometry } from '@modules/renderer/engine/objects/geometries/TextGeometry.js';
 
-import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
+import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
 import { ColorRepresentation } from '@modules/renderer/engine/math/Color.js';
 import { clamp } from 'lodash-es';
 import { FontManager } from '@modules/renderer/engine/loaders/fonts/FontManager.js';
@@ -55,7 +55,7 @@ interface Views {
 
 interface CameraView {
   container: HTMLDivElement;
-  renderer: Renderer;
+  renderer: Forge;
   camera: PerspectiveCamera;
 }
 
@@ -68,7 +68,7 @@ const createCameraView = async (container: HTMLDivElement, type: 'logarithmic' |
 
   const camera = new Engine.PerspectiveCamera(50, (screensplit * width) / height, Near, Far);
 
-  const renderer = await Renderer.as({ logarithmicDepthBuffer: type === 'logarithmic' });
+  const renderer = await Forge.as({ logarithmicDepthBuffer: type === 'logarithmic' });
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(width / 2, height);
 

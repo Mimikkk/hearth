@@ -30,18 +30,18 @@ import {
   toneMapping,
   viewportBottomLeft,
 } from '../nodes/Nodes.js';
-import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
+import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
 import RenderObject from '@modules/renderer/engine/renderers/RenderObject.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { NodeUniformsGroup } from '@modules/renderer/engine/nodes/builder/NodeStorageBuffer.js';
 
-export class Nodes extends DataMap<any, any> {
+export class ForgeNodes extends DataMap<any, any> {
   nodeFrame: NodeFrame;
   nodeBuilderCache: Map<string, NodeBuilderState>;
   callHashCache: ChainMap<any, any>;
   groupsData: ChainMap<any, any>;
 
-  constructor(public renderer: Renderer) {
+  constructor(public renderer: Forge) {
     super();
 
     this.nodeFrame = new NodeFrame();
@@ -352,7 +352,7 @@ export class Nodes extends DataMap<any, any> {
   }
 
   getNodeFrame(
-    renderer: Renderer,
+    renderer: Forge,
     scene: Scene | null = null,
     object: Entity | null = null,
     camera: Camera | null = null,
@@ -422,5 +422,3 @@ const isCubeTexture = (item: any): item is Texture => {
 };
 const isTexture = (item: any): item is CubeTexture => item.isTexture;
 const isColor = (item: any): item is Color => item.isColor;
-
-export default Nodes;

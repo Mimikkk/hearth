@@ -1,8 +1,8 @@
 import { Entity } from '../../core/Entity.js';
 import { PerspectiveCamera } from './PerspectiveCamera.js';
-import { CubeRenderTarget } from '../../renderers/CubeRenderTarget.js';
+import { CubeRenderTarget } from '../../renderers/core/CubeRenderTarget.js';
 import { Scene } from '@modules/renderer/engine/objects/scenes/Scene.js';
-import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
+import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
 import { Camera } from '@modules/renderer/engine/objects/cameras/Camera.js';
 
 const fov = -90; // negative fov is not an error
@@ -63,7 +63,7 @@ export class CubeCamera extends Entity {
     cameraNZ.updateMatrixWorld();
   }
 
-  update(renderer: Renderer, scene: Scene): void {
+  update(renderer: Forge, scene: Scene): void {
     if (this.parent === null) this.updateMatrixWorld();
 
     const { renderTarget, activeMipmapLevel } = this;

@@ -11,7 +11,7 @@ import {
 } from '../../constants.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { Plane } from '@modules/renderer/engine/math/Plane.js';
-import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
+import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
 import { Scene } from '@modules/renderer/engine/objects/scenes/Scene.js';
 import { Camera } from '@modules/renderer/engine/objects/cameras/Camera.js';
 import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
@@ -192,11 +192,11 @@ export class Material {
     this._alphaTest = value;
   }
 
-  onBuild(shaderobject: any, renderer: Renderer) {}
+  onBuild(shaderobject: any, renderer: Forge) {}
 
-  onBeforeRender(renderer: Renderer, scene: Scene, camera: Camera, geometry: Geometry, object: Entity, group: Group) {}
+  onBeforeRender(renderer: Forge, scene: Scene, camera: Camera, geometry: Geometry, object: Entity, group: Group) {}
 
-  onBeforeCompile(shaderobject: Entity, renderer: Renderer) {}
+  onBeforeCompile(shaderobject: Entity, renderer: Forge) {}
 
   customProgramCacheKey() {
     return this.onBeforeCompile.toString();

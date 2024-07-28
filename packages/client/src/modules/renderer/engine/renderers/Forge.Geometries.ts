@@ -1,7 +1,7 @@
 import DataMap from './DataMap.js';
 import { AttributeLocation } from './constants.js';
 import { Attribute, WireframeGeometry } from '@modules/renderer/engine/engine.js';
-import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
+import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
 import RenderObject from '@modules/renderer/engine/renderers/RenderObject.js';
 
 function getWireframeVersion(geometry: WireframeGeometry): number {
@@ -42,11 +42,11 @@ function getWireframeIndex(geometry: WireframeGeometry): Attribute<Uint32Array> 
   return attribute;
 }
 
-export class Geometries extends DataMap<any, any> {
+export class ForgeGeometries extends DataMap<any, any> {
   wireframes: WeakMap<any, any>;
   attributeCall: WeakMap<any, any>;
 
-  constructor(public renderer: Renderer) {
+  constructor(public renderer: Forge) {
     super();
 
     this.wireframes = new WeakMap();
@@ -126,5 +126,3 @@ export class Geometries extends DataMap<any, any> {
     return index;
   }
 }
-
-export default Geometries;

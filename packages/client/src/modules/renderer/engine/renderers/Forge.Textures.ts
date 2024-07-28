@@ -10,12 +10,12 @@ import {
   TextureFormat,
   Vec3,
 } from '@modules/renderer/engine/engine.js';
-import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
+import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
 
 const _size = Vec3.new();
 
-class Textures extends DataMap<any, any> {
-  constructor(public renderer: Renderer) {
+export class ForgeTextures extends DataMap<any, any> {
+  constructor(public renderer: Forge) {
     super();
   }
 
@@ -244,5 +244,3 @@ class Textures extends DataMap<any, any> {
     this.delete(texture);
   }
 }
-
-export default Textures;

@@ -15,7 +15,7 @@ import { Capsule } from '@modules/renderer/engine/math/Capsule.js';
 import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/GLTFLoader.js';
 import { OctreeHelper } from '@modules/renderer/engine/objects/visualizers/OctreeHelper.js';
 import { ToneMapping } from '@modules/renderer/engine/constants.js';
-import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
+import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
 import { Euler } from '@modules/renderer/engine/math/Euler.js';
 import { UI } from '@mimi/ui';
 
@@ -94,7 +94,7 @@ const vector1 = Vec3.new();
 const vec2 = Vec3.new();
 const vec3 = Vec3.new();
 
-const renderer = await Renderer.as({ antialias: true });
+const renderer = await Forge.as({ antialias: true });
 renderer.animation.loop = animate;
 renderer.parameters.toneMapping = ToneMapping.ACESFilmic;
 container.appendChild(renderer.parameters.canvas);

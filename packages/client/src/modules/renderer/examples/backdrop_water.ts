@@ -23,7 +23,7 @@ import {
 
 import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/GLTFLoader.js';
 
-import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
+import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
 import Postprocess from '@modules/renderer/engine/renderers/Postprocess.js';
 
 import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
@@ -192,7 +192,7 @@ floor.material.colorNode = colorNode;
 
 // renderer
 
-const renderer = await Renderer.as();
+const renderer = await Forge.as();
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.animation.loop = animate;

@@ -1,6 +1,6 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
 
-import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
+import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
 import Postprocess from '@modules/renderer/engine/renderers/Postprocess.js';
 
 import { color, pass, rangeFog } from '@modules/renderer/engine/nodes/Nodes.js';
@@ -26,7 +26,7 @@ async function init() {
 
   scene = new Engine.Scene();
 
-  renderer = await Renderer.as();
+  renderer = await Forge.as();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.parameters.toneMapping = ToneMapping.ACESFilmic;

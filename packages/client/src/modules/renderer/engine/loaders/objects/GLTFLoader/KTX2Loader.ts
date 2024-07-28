@@ -40,7 +40,7 @@ import {
 } from 'ktx-parse';
 import { ZSTDDecoder } from 'zstddec';
 import { FileLoader, ResponseType } from '@modules/renderer/engine/loaders/files/FileLoader/FileLoader.js';
-import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
+import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
 import LoadWorker from './KTX2Loader.worker.ts?worker';
 import type { TranscoderResult, WorkerConfig } from './KTX2Loader.worker.js';
 import { classLoader } from '@modules/renderer/engine/loaders/types.js';
@@ -86,7 +86,7 @@ export class KTX2Loader extends classLoader<{
     }, this.configuration.workerPoolSize);
   }
 
-  async detectSupportAsync(renderer: Renderer) {
+  async detectSupportAsync(renderer: Forge) {
     this.workerConfig = {
       astcSupported: await renderer.backend.hasFeature('texture-compression-astc'),
       etc1Supported: await renderer.backend.hasFeature('texture-compression-etc1'),

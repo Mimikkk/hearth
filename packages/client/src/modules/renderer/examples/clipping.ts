@@ -1,7 +1,7 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
 import { MeshPhongNodeMaterial } from '@modules/renderer/engine/nodes/Nodes.js';
 
-import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
+import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
 
 import { GUI } from 'lil-gui';
 
@@ -91,7 +91,7 @@ async function init() {
 
   // Renderer
 
-  renderer = await Renderer.as();
+  renderer = await Forge.as();
 
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);

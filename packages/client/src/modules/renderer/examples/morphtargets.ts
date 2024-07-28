@@ -3,7 +3,7 @@ import * as Engine from '@modules/renderer/engine/engine.js';
 import { GUI } from 'lil-gui';
 import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
 
-import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
+import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 import { Attribute } from '@modules/renderer/engine/engine.js';
 
@@ -38,7 +38,7 @@ async function init() {
 
   initGUI();
 
-  renderer = await Renderer.as();
+  renderer = await Forge.as();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.animation.loop = function () {

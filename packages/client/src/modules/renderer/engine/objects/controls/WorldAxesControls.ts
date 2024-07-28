@@ -16,7 +16,7 @@ import {
   Vec3,
   Vec4,
 } from '../../engine.js';
-import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
+import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
 
 const turnRate = 2 * Math.PI;
 const dim = 128;
@@ -169,7 +169,7 @@ export class WorldAxesControls extends Entity {
     return null;
   }
 
-  render(renderer: Renderer): void {
+  render(renderer: Forge): void {
     const {
       quaternion,
       point,

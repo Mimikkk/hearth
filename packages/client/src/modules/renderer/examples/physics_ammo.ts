@@ -1,5 +1,5 @@
 import { AmmoPhysics } from '@modules/renderer/engine/physics/AmmoPhysics.js';
-import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
+import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { PerspectiveCamera } from '@modules/renderer/engine/objects/cameras/PerspectiveCamera.js';
 import { Scene } from '@modules/renderer/engine/objects/scenes/Scene.js';
@@ -85,7 +85,7 @@ for (let i = 0; i < spheres.count; i++) {
 
 physics.addScene(scene);
 
-const renderer = await Renderer.as({ antialias: true, alpha: true });
+const renderer = await Forge.as({ antialias: true, alpha: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.animation.loop = animate;
 document.body.appendChild(renderer.parameters.canvas);

@@ -1,4 +1,4 @@
-export { CubeRenderTarget } from './renderers/CubeRenderTarget.js';
+export { CubeRenderTarget } from './renderers/core/CubeRenderTarget.js';
 export { FogExp2 } from '@modules/renderer/engine/objects/scenes/FogExp2.js';
 export { Fog } from '@modules/renderer/engine/objects/scenes/Fog.js';
 export { Scene } from '@modules/renderer/engine/objects/scenes/Scene.js';

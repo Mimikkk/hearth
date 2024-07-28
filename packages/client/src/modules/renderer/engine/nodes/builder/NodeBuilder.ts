@@ -43,7 +43,7 @@ import ParameterNode from '@modules/renderer/engine/nodes/core/ParameterNode.js'
 
 import { NodeMaterials } from '@modules/renderer/engine/nodes/materials/NodeMaterialMap.js';
 import { FeatureMap, FeatureName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.features.js';
-import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
+import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
 import StackNode from '@modules/renderer/engine/nodes/core/StackNode.js';
 import EnvironmentNode from '@modules/renderer/engine/nodes/lighting/EnvironmentNode.js';
 import FogNode from '@modules/renderer/engine/nodes/fog/FogNode.js';
@@ -112,7 +112,7 @@ export class NodeBuilder {
 
   constructor(
     public object: Entity,
-    public renderer: Renderer,
+    public renderer: Forge,
     public scene: Scene,
   ) {
     this.material = object?.material ?? null;

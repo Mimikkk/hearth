@@ -1,5 +1,5 @@
 import ClippingContext from './ClippingContext.js';
-import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
+import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
 import { Entity } from '@modules/renderer/engine/core/Entity.js';
 import { Material } from '@modules/renderer/engine/objects/materials/Material.js';
 import { Scene } from '@modules/renderer/engine/objects/scenes/Scene.js';
@@ -26,7 +26,7 @@ export default class RenderObject {
   isRenderObject: boolean;
 
   constructor(
-    public renderer: Renderer,
+    public renderer: Forge,
     public object: Entity,
     public material: Material,
     public scene: Scene,

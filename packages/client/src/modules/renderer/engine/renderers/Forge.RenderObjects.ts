@@ -1,6 +1,6 @@
 import ChainMap from './ChainMap.js';
 import RenderObject from './RenderObject.js';
-import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
+import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
 import RenderContext from '@modules/renderer/engine/renderers/core/RenderContext.js';
 import LightsNode from '@modules/renderer/engine/nodes/lighting/LightsNode.js';
 import { Camera } from '@modules/renderer/engine/objects/cameras/Camera.js';
@@ -8,10 +8,10 @@ import { Scene } from '@modules/renderer/engine/objects/scenes/Scene.js';
 import { Material } from '@modules/renderer/engine/objects/materials/Material.js';
 import { Entity } from '@modules/renderer/engine/core/Entity.js';
 
-class RendererRenderObjects {
+export class ForgeRenderObjects {
   chainMaps: Record<string, ChainMap<any, any>>;
 
-  constructor(public renderer: Renderer) {
+  constructor(public renderer: Forge) {
     this.chainMaps = {};
   }
 
@@ -82,5 +82,3 @@ class RendererRenderObjects {
     return item;
   }
 }
-
-export default RendererRenderObjects;

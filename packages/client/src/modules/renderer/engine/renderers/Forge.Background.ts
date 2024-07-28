@@ -9,14 +9,14 @@ import {
   normalWorld,
   vec4,
 } from '../nodes/Nodes.js';
-import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
+import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
 import RenderContext from '@modules/renderer/engine/renderers/core/RenderContext.js';
 import RenderList from '@modules/renderer/engine/renderers/RenderList.js';
 
 const _clearColor = Color.new(0, 0, 0, 1);
 
-class Background extends DataMap<any, any> {
-  constructor(public renderer: Renderer) {
+export class ForgeBackground extends DataMap<any, any> {
+  constructor(public renderer: Forge) {
     super();
   }
 
@@ -67,7 +67,7 @@ class Background extends DataMap<any, any> {
         sceneData.backgroundMesh = backgroundMesh = new Mesh(new SphereGeometry(1, 32, 32), nodeMaterial);
         backgroundMesh.frustumCulled = false;
 
-        backgroundMesh.onBeforeRender = function (renderer: Renderer, scene: Scene, camera: Camera) {
+        backgroundMesh.onBeforeRender = function (renderer: Forge, scene: Scene, camera: Camera) {
           this.matrixWorld.fromMat4Position(camera.matrixWorld);
         };
       }
@@ -112,5 +112,3 @@ class Background extends DataMap<any, any> {
     }
   }
 }
-
-export default Background;

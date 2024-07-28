@@ -8,7 +8,7 @@ import { HemisphereLight } from '@modules/renderer/engine/objects/lights/Hemisph
 import { SpotLight } from '@modules/renderer/engine/objects/lights/SpotLight.js';
 import { MeshStandardMaterial } from '@modules/renderer/engine/objects/materials/MeshStandardMaterial.js';
 import { DRACOLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/DRACOLoader.js';
-import { Renderer } from '../engine/renderers/Renderer.js';
+import { Forge } from '../engine/renderers/Forge.js';
 import { Color } from '@modules/renderer/engine/math/Color.js';
 import { FileLoader } from '@modules/renderer/engine/loaders/files/FileLoader/FileLoader.js';
 
@@ -62,7 +62,7 @@ async function init() {
   });
 
   // renderer
-  renderer = await Renderer.as();
+  renderer = await Forge.as();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.animation.loop = animate;

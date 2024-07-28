@@ -1,4 +1,4 @@
-import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
+import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
 import { PerspectiveCamera } from '@modules/renderer/engine/objects/cameras/PerspectiveCamera.js';
 import { Scene } from '@modules/renderer/engine/objects/scenes/Scene.js';
 import { ColorMap } from '@modules/renderer/engine/math/Color.js';
@@ -69,7 +69,7 @@ const light = createLight();
 const boxes = createBoxes();
 scene.add(light, camera, boxes);
 
-const renderer = await Renderer.as({
+const renderer = await Forge.as({
   animate() {
     ui.update();
     stats.update();

@@ -1,5 +1,5 @@
 import { Attribute, Geometry, Material, Mesh, OrthographicCamera } from '../engine.js';
-import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
+import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
 
 const _camera = new OrthographicCamera(-1, 1, 1, -1, 0, 1);
 
@@ -25,7 +25,7 @@ export class QuadMesh extends Mesh {
     this.camera = _camera;
   }
 
-  render(renderer: Renderer): void {
+  render(renderer: Forge): void {
     renderer.render(this, _camera);
   }
 }

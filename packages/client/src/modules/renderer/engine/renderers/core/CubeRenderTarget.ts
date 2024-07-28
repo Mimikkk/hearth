@@ -1,6 +1,6 @@
 import { CubeTexture } from '@modules/renderer/engine/objects/textures/CubeTexture.js';
-import { RenderTarget } from './RenderTarget.js';
-import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
+import { RenderTarget } from '../RenderTarget.js';
+import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
 import { CubeMapping, DepthTextureFormat } from '@modules/renderer/engine/constants.js';
 
 export class CubeRenderTarget extends RenderTarget {
@@ -29,7 +29,7 @@ export class CubeRenderTarget extends RenderTarget {
     this.texture.minFilter = minFilter;
   }
 
-  clear(renderer: Renderer, color: boolean, depth: boolean, stencil: boolean): void {
+  clear(renderer: Forge, color: boolean, depth: boolean, stencil: boolean): void {
     const currentRenderTarget = renderer.target;
 
     for (let i = 0; i < 6; i++) {

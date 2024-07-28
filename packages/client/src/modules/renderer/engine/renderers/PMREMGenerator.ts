@@ -28,7 +28,7 @@ import {
   ToneMapping,
   Vec3,
 } from '@modules/renderer/engine/engine.js';
-import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
+import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
 
 const LOD_MIN = 4;
 
@@ -91,7 +91,7 @@ const outputDirection = vec3(direction.x, direction.y.negate(), direction.z);
  */
 
 class PMREMGenerator {
-  constructor(public _renderer: Renderer) {
+  constructor(public _renderer: Forge) {
     this._pingPongRenderTarget = null;
 
     this._lodMax = 0;

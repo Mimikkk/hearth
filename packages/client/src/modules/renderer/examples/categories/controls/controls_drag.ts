@@ -1,5 +1,5 @@
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
+import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
 import { PerspectiveCamera } from '@modules/renderer/engine/objects/cameras/PerspectiveCamera.js';
 import { Scene } from '@modules/renderer/engine/objects/scenes/Scene.js';
 import {
@@ -102,7 +102,7 @@ const sphere2 = BoundingSphereVisualizer.attach(box2);
 
 scene.add(camera, reference, box1, box2);
 
-const renderer = await Renderer.as({
+const renderer = await Forge.as({
   animate() {
     renderer.render(scene, camera);
   },

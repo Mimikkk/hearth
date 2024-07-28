@@ -2,18 +2,18 @@ import DataMap from './DataMap.js';
 import RenderPipeline from './RenderPipeline.js';
 import ComputePipeline from './ComputePipeline.js';
 import ProgrammableStage from './ProgrammableStage.js';
-import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
+import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
 import ComputeNode from '@modules/renderer/engine/nodes/gpgpu/ComputeNode.js';
 import Binding from '@modules/renderer/engine/renderers/bindings/Binding.js';
 import RenderObject from '@modules/renderer/engine/renderers/RenderObject.js';
 import Pipeline from '@modules/renderer/engine/renderers/Pipeline.js';
 import { ShaderStage } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
-class Pipelines extends DataMap<any, any> {
+export class ForgePipelines extends DataMap<any, any> {
   caches: Map<any, any>;
   programs: Record<ShaderStage, Map<string, ProgrammableStage>>;
 
-  constructor(public renderer: Renderer) {
+  constructor(public renderer: Forge) {
     super();
 
     this.caches = new Map();
@@ -272,5 +272,3 @@ class Pipelines extends DataMap<any, any> {
     return data.pipeline === undefined || this.renderer.backend.needsRenderUpdate(renderObject);
   }
 }
-
-export default Pipelines;

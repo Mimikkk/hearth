@@ -12,7 +12,7 @@ import {
   vec3,
 } from '@modules/renderer/engine/nodes/Nodes.js';
 
-import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
+import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
 
 import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
 
@@ -30,7 +30,7 @@ const size = uniform(0.12);
 
 const clickPosition = uniform(new Engine.Vec3());
 
-let camera, scene, renderer: Renderer;
+let camera, scene, renderer: Forge;
 let controls;
 let computeParticles;
 
@@ -143,7 +143,7 @@ async function init() {
 
   //
 
-  renderer = await Renderer.as({ trackTimestamp: true });
+  renderer = await Forge.as({ trackTimestamp: true });
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.animation.loop = animate;

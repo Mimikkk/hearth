@@ -1,6 +1,6 @@
 import { Scene } from '@modules/renderer/engine/objects/scenes/Scene.js';
 import { PerspectiveCamera } from '@modules/renderer/engine/objects/cameras/PerspectiveCamera.js';
-import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
+import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
 import { MTLLoader } from '@modules/renderer/engine/loaders/objects/OBJLoader/MTLLoader/MTLLoader.js';
 import { OBJLoader } from '@modules/renderer/engine/loaders/objects/OBJLoader/OBJLoader.js';
 import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
@@ -10,7 +10,7 @@ import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindow
 
 let camera!: PerspectiveCamera;
 let scene!: Scene;
-let renderer!: Renderer;
+let renderer!: Forge;
 
 init();
 
@@ -49,7 +49,7 @@ async function init() {
 
   //
 
-  renderer = await Renderer.as();
+  renderer = await Forge.as();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.animation.loop = animate;

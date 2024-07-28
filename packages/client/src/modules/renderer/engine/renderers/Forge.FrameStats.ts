@@ -5,7 +5,7 @@ import { Sprite } from '@modules/renderer/engine/objects/Sprite.js';
 import { Points } from '@modules/renderer/engine/objects/Points.js';
 import { Line } from '@modules/renderer/engine/objects/Line.js';
 
-export class FrameStats {
+export class ForgeFrameStats {
   useAutoTick: boolean;
   frame: number;
   passes: number;

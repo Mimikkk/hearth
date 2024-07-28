@@ -1,5 +1,5 @@
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
+import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
 import { PerspectiveCamera } from '@modules/renderer/engine/objects/cameras/PerspectiveCamera.js';
 import { Scene } from '@modules/renderer/engine/objects/scenes/Scene.js';
 import { normalWorld } from '@modules/renderer/engine/nodes/accessors/NormalNode.js';
@@ -32,7 +32,7 @@ const createScene = () => {
   return scene;
 };
 const createRenderer = async (onAnimate: () => void) => {
-  const renderer = await Renderer.as();
+  const renderer = await Forge.as();
   renderer.animation.loop = onAnimate;
   document.body.appendChild(renderer.parameters.canvas);
 

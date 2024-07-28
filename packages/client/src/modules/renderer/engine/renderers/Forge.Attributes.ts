@@ -1,10 +1,10 @@
 import DataMap from './DataMap.js';
 import { AttributeLocation } from './constants.js';
 import { Attribute, BufferUse } from '@modules/renderer/engine/engine.js';
-import type { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
+import type { Forge } from '@modules/renderer/engine/renderers/Forge.js';
 
-export class Attributes extends DataMap<Attribute, any> {
-  constructor(public renderer: Renderer) {
+export class ForgeAttributes extends DataMap<Attribute, any> {
+  constructor(public renderer: Forge) {
     super();
   }
 
@@ -42,5 +42,3 @@ export class Attributes extends DataMap<Attribute, any> {
     }
   }
 }
-
-export default Attributes;

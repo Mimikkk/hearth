@@ -1,6 +1,6 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
 
-import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
+import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
 
 import { GUI } from 'lil-gui';
 import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
@@ -30,7 +30,7 @@ init();
 async function init() {
   const points = GeometryUtils.generateHilbert(new Engine.Vec3(0, 0, 0), 20.0, 1, 0, 1, 2, 3, 4, 5, 6, 7);
 
-  renderer = await Renderer.as();
+  renderer = await Forge.as();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer._clearColor = Color.new(0x000000);
   renderer.setSize(window.innerWidth, window.innerHeight);

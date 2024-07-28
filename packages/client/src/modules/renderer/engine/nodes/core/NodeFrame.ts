@@ -3,7 +3,7 @@ import { Scene } from '@modules/renderer/engine/objects/scenes/Scene.js';
 import { Entity } from '@modules/renderer/engine/core/Entity.js';
 import { Camera } from '@modules/renderer/engine/objects/cameras/Camera.js';
 import { Material } from '@modules/renderer/engine/objects/materials/Material.js';
-import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
+import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
 import { Node } from '../core/Node.js';
 import { Clock } from '@modules/renderer/engine/core/Clock.js';
 
@@ -16,7 +16,7 @@ export class NodeFrame {
   startTime: number;
   updateMap: WeakMap<Node, ReferenceMap>;
   updateBeforeMap: WeakMap<Node, ReferenceMap>;
-  renderer: Renderer;
+  renderer: Forge;
   material: Material;
   camera: Camera;
   object: Entity;

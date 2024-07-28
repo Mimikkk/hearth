@@ -3,7 +3,7 @@ import RenderList from './RenderList.js';
 import { Scene } from '@modules/renderer/engine/objects/scenes/Scene.js';
 import { Camera } from '@modules/renderer/engine/objects/cameras/Camera.js';
 
-class RenderLists {
+export class ForgeRenderLists {
   lists: ChainMap<any, any>;
 
   constructor() {
@@ -27,5 +27,3 @@ class RenderLists {
     this.lists = new ChainMap();
   }
 }
-
-export default RenderLists;

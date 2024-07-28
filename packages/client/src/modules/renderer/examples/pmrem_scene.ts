@@ -4,7 +4,7 @@ import { MeshBasicNodeMaterial, normalWorld, pmremTexture, uniform } from '@modu
 
 import PMREMGenerator from '@modules/renderer/engine/renderers/PMREMGenerator.js';
 
-import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
+import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
 
 import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
 
@@ -24,7 +24,7 @@ async function init() {
 
   scene = new Engine.Scene();
 
-  renderer = await Renderer.as();
+  renderer = await Forge.as();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   container.appendChild(renderer.parameters.canvas);

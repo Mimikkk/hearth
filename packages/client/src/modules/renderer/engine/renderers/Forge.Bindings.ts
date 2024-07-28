@@ -1,6 +1,6 @@
 import DataMap from './DataMap.js';
 import { AttributeLocation } from './constants.js';
-import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
+import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
 import RenderObject from '@modules/renderer/engine/renderers/RenderObject.js';
 import Binding from '@modules/renderer/engine/renderers/bindings/Binding.js';
 import { BindingSampledTexture } from '@modules/renderer/engine/renderers/bindings/BindingSampledTexture.js';
@@ -10,8 +10,8 @@ import BindingStorageBuffer from '@modules/renderer/engine/renderers/bindings/Bi
 import { ComputeNode } from '@modules/renderer/engine/nodes/Nodes.js';
 import { NodeUniformsGroup } from '@modules/renderer/engine/nodes/builder/NodeStorageBuffer.js';
 
-class Bindings extends DataMap<any, any> {
-  constructor(public renderer: Renderer) {
+export class ForgeBindings extends DataMap<any, any> {
+  constructor(public renderer: Forge) {
     super();
   }
 
@@ -123,5 +123,3 @@ class Bindings extends DataMap<any, any> {
     }
   }
 }
-
-export default Bindings;

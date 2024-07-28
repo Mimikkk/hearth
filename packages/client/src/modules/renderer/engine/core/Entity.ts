@@ -12,7 +12,7 @@ import type { Camera } from '@modules/renderer/engine/objects/cameras/Camera.js'
 import type { Material } from '@modules/renderer/engine/objects/materials/Material.js';
 import type { Group } from '../objects/Group.js';
 import type { Box3 } from '@modules/renderer/engine/math/Box3.js';
-import type { Renderer } from '../renderers/Renderer.js';
+import type { Forge } from '../renderers/Forge.js';
 import type { Sphere } from '@modules/renderer/engine/math/Sphere.js';
 import { v4 } from 'uuid';
 import type { Skeleton } from '@modules/renderer/engine/objects/Skeleton.js';
@@ -111,7 +111,7 @@ export class Entity {
   }
 
   onBeforeShadow(
-    renderer: Renderer,
+    renderer: Forge,
     scene: Scene,
     shadowCamera: Camera,
     geometry: Geometry,
@@ -120,7 +120,7 @@ export class Entity {
   ): void {}
 
   onAfterShadow(
-    renderer: Renderer,
+    renderer: Forge,
     scene: Scene,
     shadowCamera: Camera,
     geometry: Geometry,
@@ -129,7 +129,7 @@ export class Entity {
   ): void {}
 
   onBeforeRender(
-    renderer: Renderer,
+    renderer: Forge,
     scene: Scene,
     camera: Camera,
     geometry: Geometry,
@@ -138,7 +138,7 @@ export class Entity {
   ): void {}
 
   onAfterRender(
-    renderer: Renderer,
+    renderer: Forge,
     scene: Scene,
     camera: Camera,
     geometry: Geometry,

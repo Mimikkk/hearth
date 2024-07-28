@@ -25,7 +25,7 @@ import {
   wgslFn,
 } from '@modules/renderer/engine/nodes/Nodes.js';
 
-import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
+import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
 
 import { TeapotGeometry } from '@modules/renderer/engine/objects/geometries/TeapotGeometry.js';
 
@@ -345,7 +345,7 @@ async function init() {
 
   //
 
-  renderer = await Renderer.as();
+  renderer = await Forge.as();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.animation.loop = animate;

@@ -21,7 +21,7 @@ import {
 
 import { TeapotGeometry } from '@modules/renderer/engine/objects/geometries/TeapotGeometry.js';
 
-import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
+import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
 
 import Postprocess from '@modules/renderer/engine/renderers/Postprocess.js';
 
@@ -263,7 +263,7 @@ async function init() {
 
   scene.backgroundNode = viewportTopLeft.distance(0.5).mul(2).mix(color(0x0f4140), color(0x060a0d));
 
-  renderer = await Renderer.as();
+  renderer = await Forge.as();
   //
 
   viewHelper = new WorldAxesControls(camera, renderer.parameters.canvas);

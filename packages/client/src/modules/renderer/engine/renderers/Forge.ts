@@ -1,19 +1,11 @@
 import { Backend } from '@modules/renderer/engine/renderers/Backend.js';
 import { ColorSpace, Side, ToneMapping } from '@modules/renderer/engine/constants.js';
 import ToneMappingNode from '@modules/renderer/engine/nodes/display/ToneMappingNode.js';
-import { FrameStats } from '@modules/renderer/engine/renderers/FrameStats.js';
+import { ForgeFrameStats } from '@modules/renderer/engine/renderers/Forge.FrameStats.js';
 import { Vec4 } from '@modules/renderer/engine/math/Vec4.js';
-import Attributes from '@modules/renderer/engine/renderers/Attributes.js';
-import Geometries from '@modules/renderer/engine/renderers/Geometries.js';
-import Nodes from '@modules/renderer/engine/renderers/Nodes.js';
-import { Animation, AnimationLoopFn } from '@modules/renderer/engine/renderers/Animation.js';
-import Bindings from '@modules/renderer/engine/renderers/Bindings.js';
-import RendererRenderObjects from '@modules/renderer/engine/renderers/Renderer.RenderObjects.js';
-import Pipelines from '@modules/renderer/engine/renderers/Pipelines.js';
-import RenderLists from '@modules/renderer/engine/renderers/RenderLists.js';
-import { RenderContexts } from '@modules/renderer/engine/renderers/Renderer.RenderContexts.js';
-import Textures from '@modules/renderer/engine/renderers/Textures.js';
-import Background from '@modules/renderer/engine/renderers/Background.js';
+import { ForgeAnimation, AnimationLoopFn } from '@modules/renderer/engine/renderers/Forge.Animation.js';
+import { ForgeRenderContexts } from '@modules/renderer/engine/renderers/Forge.RenderContexts.js';
+import { ForgeBackground } from '@modules/renderer/engine/renderers/Forge.Background.js';
 import { Scene } from '@modules/renderer/engine/objects/scenes/Scene.js';
 import { Camera } from '@modules/renderer/engine/objects/cameras/Camera.js';
 import ClippingContext from '@modules/renderer/engine/renderers/ClippingContext.js';
@@ -38,10 +30,18 @@ import { RenderItem, RenderList, SortFn } from '@modules/renderer/engine/rendere
 import ComputeNode from '@modules/renderer/engine/nodes/gpgpu/ComputeNode.js';
 import RenderContext from '@modules/renderer/engine/renderers/core/RenderContext.js';
 import LightsNode from '@modules/renderer/engine/nodes/lighting/LightsNode.js';
+import { ForgeRenderLists } from '@modules/renderer/engine/renderers/Forge.RenderLists.js';
+import { ForgeRenderObjects } from '@modules/renderer/engine/renderers/Forge.RenderObjects.js';
+import { ForgeAttributes } from '@modules/renderer/engine/renderers/Forge.Attributes.js';
+import { ForgeGeometries } from '@modules/renderer/engine/renderers/Forge.Geometries.js';
+import { ForgeNodes } from '@modules/renderer/engine/renderers/Forge.Nodes.js';
+import { ForgeBindings } from '@modules/renderer/engine/renderers/Forge.Bindings.js';
+import { ForgePipelines } from '@modules/renderer/engine/renderers/Forge.Pipelines.js';
+import { ForgeTextures } from '@modules/renderer/engine/renderers/Forge.Textures.js';
 
-export class Renderer {
+export class Forge {
   backend: Backend;
-  info: FrameStats;
+  info: ForgeFrameStats;
 
   _pixelRatio: number;
   _width: number;
@@ -52,18 +52,18 @@ export class Renderer {
 
   useScissor: boolean;
 
-  attributes: Attributes;
-  geometries: Geometries;
-  nodes: Nodes;
-  animation: Animation;
-  bindings: Bindings;
-  objects: RendererRenderObjects;
-  pipelines: Pipelines;
+  attributes: ForgeAttributes;
+  geometries: ForgeGeometries;
+  nodes: ForgeNodes;
+  animation: ForgeAnimation;
+  bindings: ForgeBindings;
+  objects: ForgeRenderObjects;
+  pipelines: ForgePipelines;
 
-  renderLists: RenderLists;
-  renderContexts: RenderContexts;
-  textures: Textures;
-  background: Background;
+  renderLists: ForgeRenderLists;
+  renderContexts: ForgeRenderContexts;
+  textures: ForgeTextures;
+  background: ForgeBackground;
 
   context: RenderContext | null;
   target: RenderTarget | null;
@@ -116,7 +116,7 @@ export class Renderer {
   }
 
   private constructor(parameters?: Options) {
-    this.parameters = Renderer.configure(parameters);
+    this.parameters = Forge.configure(parameters);
 
     // transform into a class
     this._pixelRatio = window.devicePixelRatio;
@@ -130,18 +130,18 @@ export class Renderer {
     this.useScissor = false;
 
     this.backend = new Backend(this);
-    this.info = new FrameStats();
-    this.nodes = new Nodes(this);
-    this.animation = new Animation(this);
-    this.attributes = new Attributes(this);
-    this.background = new Background(this);
-    this.geometries = new Geometries(this);
-    this.textures = new Textures(this);
-    this.pipelines = new Pipelines(this);
-    this.bindings = new Bindings(this);
-    this.objects = new RendererRenderObjects(this);
-    this.renderLists = new RenderLists();
-    this.renderContexts = new RenderContexts();
+    this.info = new ForgeFrameStats();
+    this.nodes = new ForgeNodes(this);
+    this.animation = new ForgeAnimation(this);
+    this.attributes = new ForgeAttributes(this);
+    this.background = new ForgeBackground(this);
+    this.geometries = new ForgeGeometries(this);
+    this.textures = new ForgeTextures(this);
+    this.pipelines = new ForgePipelines(this);
+    this.bindings = new ForgeBindings(this);
+    this.objects = new ForgeRenderObjects(this);
+    this.renderLists = new ForgeRenderLists();
+    this.renderContexts = new ForgeRenderContexts();
     this.context = null;
 
     // transform into a class
@@ -159,8 +159,8 @@ export class Renderer {
     this._handleObjectFn = this._compileObject;
   }
 
-  static async as(parameters?: Options): Promise<Renderer> {
-    const renderer = new Renderer(parameters);
+  static async as(parameters?: Options): Promise<Forge> {
+    const renderer = new Forge(parameters);
     const backend = renderer.backend;
 
     const adapter = await navigator.gpu.requestAdapter({ powerPreference: renderer.parameters.powerPreference });
@@ -743,8 +743,8 @@ export namespace Renderer {
   }
 }
 
-type Options = Renderer.Options;
-type Configuration = Renderer.Configuration;
+type Options = Forge.Options;
+type Configuration = Forge.Configuration;
 
 const _scene = new Scene();
 const _drawSize = Vec2.new();

@@ -5,7 +5,7 @@ import { Camera } from '@modules/renderer/engine/objects/cameras/Camera.js';
 import { RenderTarget } from '@modules/renderer/engine/renderers/RenderTarget.js';
 import { Entity } from '@modules/renderer/engine/core/Entity.js';
 
-export class RenderContexts {
+export class ForgeRenderContexts {
   chainMaps: Map<string, ChainMap<Entity, RenderContext>> = new Map();
 
   constructor() {}

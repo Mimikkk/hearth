@@ -13,19 +13,19 @@ import { BackendAttributes } from './Backend.attributes.js';
 import { BackendBindings } from './bindings/Backend.bindings.js';
 import BackendPipelines from './Backend.pipelines.js';
 import { BackendTextures } from './Backend.textures.js';
-import type { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
+import type { Forge } from '@modules/renderer/engine/renderers/Forge.js';
 import RenderContext from '@modules/renderer/engine/renderers/core/RenderContext.js';
 import ComputeNode from '@modules/renderer/engine/nodes/gpgpu/ComputeNode.js';
 import ComputePipeline from '@modules/renderer/engine/renderers/ComputePipeline.js';
 import Binding from '@modules/renderer/engine/renderers/bindings/Binding.js';
 import RenderObject from '@modules/renderer/engine/renderers/RenderObject.js';
 import ProgrammableStage from '@modules/renderer/engine/renderers/ProgrammableStage.js';
-import { ResourceManager } from './ResourceManager.js';
+import { BackendResourceManager } from './Backend.ResourceManager.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { WeakMemo } from '@modules/renderer/engine/renderers/WeakMemo.js';
 
 export class Backend {
-  renderer: Renderer;
+  renderer: Forge;
   memo: WeakMemo<any, any> = new WeakMemo(() => ({}));
 
   getInstanceCount({ object, geometry }: RenderObject) {
@@ -54,9 +54,9 @@ export class Backend {
   pipelines: BackendPipelines;
   textures: BackendTextures;
   resolveBufferMap: Map<number, GPUBuffer>;
-  resources: ResourceManager;
+  resources: BackendResourceManager;
 
-  constructor(renderer: Renderer) {
+  constructor(renderer: Forge) {
     this.renderer = renderer;
 
     this.adapter = null!;
@@ -64,7 +64,7 @@ export class Backend {
     this.colorBuffer = null;
     this.renderPassDescriptor = null;
 
-    this.resources = new ResourceManager(this);
+    this.resources = new BackendResourceManager(this);
     this.utilities = new BackendUtilities(this);
     this.attributes = new BackendAttributes(this);
     this.bindings = new BackendBindings(this);
@@ -905,7 +905,7 @@ export class Backend {
     data.currentTimestampQueryBuffers.isMappingPending = false;
   }
 
-  createNodeBuilder(object: Entity, renderer: Renderer, scene: Scene | null = null) {
+  createNodeBuilder(object: Entity, renderer: Forge, scene: Scene | null = null) {
     return new NodeBuilder(object, renderer, scene);
   }
 

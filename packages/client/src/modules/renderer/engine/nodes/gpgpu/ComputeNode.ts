@@ -1,7 +1,7 @@
 import { Node } from '../core/Node.js';
 import { NodeUpdateType } from '../core/constants.js';
 import { addNodeCommand, asNode } from '../shadernode/ShaderNodes.js';
-import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
+import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { ShaderStage } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
@@ -47,7 +47,7 @@ class ComputeNode extends Node {
 
   onInit() {}
 
-  updateBefore(x: { renderer: Renderer }) {
+  updateBefore(x: { renderer: Forge }) {
     const { renderer } = x;
     renderer.compute(this);
   }
