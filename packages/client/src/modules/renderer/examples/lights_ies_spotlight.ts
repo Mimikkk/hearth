@@ -1,10 +1,10 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
 
-import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 
-import { IESSpotLight } from '@modules/renderer/engine/objects/lights/IESSpotLight.js';
+import { IESSpotLight } from '@modules/renderer/engine/entities/lights/IESSpotLight.js';
 
-import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
+import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
 
 import { IESLoader } from '@modules/renderer/engine/loaders/lights/IESLoader/IESLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
@@ -82,7 +82,7 @@ async function init() {
 
   //
 
-  renderer = await Forge.as();
+  renderer = await Hearth.as();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.animation.loop = render;

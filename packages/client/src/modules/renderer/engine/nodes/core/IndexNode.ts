@@ -2,7 +2,7 @@ import { Node } from './Node.js';
 import { varying } from './VaryingNode.js';
 import { fixedNode } from '../shadernode/ShaderNodes.js';
 import { ShaderStage } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
-import { BufferStep } from '@modules/renderer/engine/renderers/constants.js';
+import { BufferStep } from '@modules/renderer/engine/hearth/constants.js';
 
 class IndexNode extends Node {
   static type = 'IndexNode';

@@ -7,7 +7,7 @@ import { texturePass } from './PassNode.js';
 import { uniform } from '../core/UniformNode.js';
 import { RenderTarget } from '@modules/renderer/engine/engine.js';
 import { max, sign } from '../math/MathNode.js';
-import { QuadMesh } from '../../objects/QuadMesh.js';
+import { QuadMesh } from '@modules/renderer/engine/entities/QuadMesh.js';
 import { TextureNode } from '@modules/renderer/engine/nodes/Nodes.js';
 import { NodeMaterial } from '@modules/renderer/engine/nodes/materials/NodeMaterial.js';
 import { NodeFrame } from '@modules/renderer/engine/nodes/core/NodeFrame.js';
@@ -67,16 +67,16 @@ class AfterImageNode extends TempNode {
 
     this.textureNodeOld.value = this._oldRT.texture;
 
-    // comp
+
     renderer.target = this._compRT;
     quadMeshComp.render(renderer);
 
-    // Swap the textures
+
     const temp = this._oldRT;
     this._oldRT = this._compRT;
     this._compRT = temp;
 
-    // set size before swapping fails
+
     this.setSize(map.image.width, map.image.height);
 
     renderer.updateRenderTarget(currentRenderTarget);

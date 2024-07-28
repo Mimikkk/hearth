@@ -1,21 +1,21 @@
 import { Clock } from '@modules/renderer/engine/core/Clock.js';
-import { Scene } from '@modules/renderer/engine/objects/scenes/Scene.js';
+import { Scene } from '@modules/renderer/engine/entities/scenes/Scene.js';
 import { Color } from '@modules/renderer/engine/math/Color.js';
-import { Fog } from '@modules/renderer/engine/objects/scenes/Fog.js';
-import { PerspectiveCamera } from '@modules/renderer/engine/objects/cameras/PerspectiveCamera.js';
-import { HemisphereLight } from '@modules/renderer/engine/objects/lights/HemisphereLight.js';
-import { DirectionalLight } from '@modules/renderer/engine/objects/lights/DirectionalLight.js';
-import { IcosahedronGeometry } from '@modules/renderer/engine/objects/geometries/IcosahedronGeometry.js';
-import { MeshLambertMaterial } from '@modules/renderer/engine/objects/materials/MeshLambertMaterial.js';
-import { Mesh } from '@modules/renderer/engine/objects/Mesh.js';
+import { Fog } from '@modules/renderer/engine/entities/scenes/Fog.js';
+import { PerspectiveCamera } from '@modules/renderer/engine/entities/cameras/PerspectiveCamera.js';
+import { HemisphereLight } from '@modules/renderer/engine/entities/lights/HemisphereLight.js';
+import { DirectionalLight } from '@modules/renderer/engine/entities/lights/DirectionalLight.js';
+import { IcosahedronGeometry } from '@modules/renderer/engine/entities/geometries/IcosahedronGeometry.js';
+import { MeshLambertMaterial } from '@modules/renderer/engine/entities/materials/MeshLambertMaterial.js';
+import { Mesh } from '@modules/renderer/engine/entities/Mesh.js';
 import { Sphere } from '@modules/renderer/engine/math/Sphere.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { Octree } from '@modules/renderer/engine/math/Octree.js';
 import { Capsule } from '@modules/renderer/engine/math/Capsule.js';
 import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/GLTFLoader.js';
-import { OctreeHelper } from '@modules/renderer/engine/objects/visualizers/OctreeHelper.js';
+import { OctreeHelper } from '@modules/renderer/engine/entities/visualizers/OctreeHelper.js';
 import { ToneMapping } from '@modules/renderer/engine/constants.js';
-import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { Euler } from '@modules/renderer/engine/math/Euler.js';
 import { UI } from '@mimi/ui';
 
@@ -94,7 +94,7 @@ const vector1 = Vec3.new();
 const vec2 = Vec3.new();
 const vec3 = Vec3.new();
 
-const renderer = await Forge.as({ antialias: true });
+const renderer = await Hearth.as({ antialias: true });
 renderer.animation.loop = animate;
 renderer.parameters.toneMapping = ToneMapping.ACESFilmic;
 container.appendChild(renderer.parameters.canvas);
@@ -143,7 +143,7 @@ function throwBall() {
 
   sphere.collider.center.from(playerCollider.end).addScaled(playerDirection, playerCollider.radius * 1.5);
 
-  // throw the ball with more force if we hold the button longer, and if we move forward
+
 
   const impulse = 15 + 30 * (1 - Math.exp((mouseTime - performance.now()) * 0.001));
 
@@ -178,7 +178,7 @@ function updatePlayer(deltaTime: number) {
   if (!playerOnFloor) {
     playerVelocity.y -= GRAVITY * deltaTime;
 
-    // small air resistance
+
     damping *= 0.1;
   }
 
@@ -200,7 +200,7 @@ function playerSphereCollision(sphere: { collider: Sphere; velocity: Vec3 }) {
   const r = playerCollider.radius + sphere.collider.radius;
   const r2 = r * r;
 
-  // approximation: player = 3 spheres
+
 
   for (const point of [playerCollider.start, playerCollider.end, center]) {
     const d2 = point.distanceSqTo(sphere_center);
@@ -293,7 +293,7 @@ function getSideVector() {
 }
 
 function controls(deltaTime: number) {
-  // gives a bit of air control
+
   const speedDelta = deltaTime * (playerOnFloor ? 25 : 8);
 
   if (keyStates['KeyW']) {

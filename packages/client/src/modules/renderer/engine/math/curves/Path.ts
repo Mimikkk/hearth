@@ -30,7 +30,7 @@ export class Path extends CurvePath<Vec2> {
   }
 
   moveTo(x: number, y: number): this {
-    this.currentPoint.set(x, y); // TODO consider referencing vectors instead of copying?
+    this.currentPoint.set(x, y);
 
     return this;
   }
@@ -123,7 +123,7 @@ export class Path extends CurvePath<Vec2> {
     const curve = new EllipseCurve(aX, aY, xRadius, yRadius, aStartAngle, aEndAngle, aClockwise, aRotation);
 
     if (this.curves.length > 0) {
-      // if a previous curve is present, attempt to join
+
       const firstPoint = curve.getPoint(0, Vec2.new());
 
       if (!firstPoint.equals(this.currentPoint)) {

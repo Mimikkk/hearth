@@ -1505,7 +1505,7 @@ export async function makeBasis(Module = {}) {
         dtorStack +
         ', arg' +
         i +
-        '); // ' +
+        '); 
         argTypes[i + 2].name +
         '\n';
       args1.push('argType' + i);
@@ -1522,7 +1522,7 @@ export async function makeBasis(Module = {}) {
       for (var i = isClassMethodFunc ? 1 : 2; i < argTypes.length; ++i) {
         var paramName = i === 1 ? 'thisWired' : 'arg' + (i - 2) + 'Wired';
         if (argTypes[i].destructorFunction !== null) {
-          invokerFnBody += paramName + '_dtor(' + paramName + '); // ' + argTypes[i].name + '\n';
+          invokerFnBody += paramName + '_dtor(' + paramName + '); 
           args1.push(paramName + '_dtor');
           args2.push(argTypes[i].destructorFunction);
         }

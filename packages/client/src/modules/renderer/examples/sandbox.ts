@@ -18,7 +18,7 @@ import {
 
 import { KTX2Loader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/KTX2Loader.js';
 
-import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { TextureFormat } from '@modules/renderer/engine/engine.js';
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
@@ -39,13 +39,13 @@ async function init() {
 
   //
 
-  renderer = await Forge.as();
+  renderer = await Hearth.as();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.animation.loop = animate;
   document.body.appendChild(renderer.parameters.canvas);
 
-  // textures
+
 
   const textureLoader = new TextureLoader();
   const uvTexture = await textureLoader.loadAsync('resources/textures/uv_grid_opengl.jpg');
@@ -61,12 +61,12 @@ async function init() {
 
   const ktxTexture = await ktxLoader.loadAsync('resources/textures/compressed/sample_uastc_zstd.ktx2');
 
-  // box mesh
+
 
   const geometryBox = new Engine.BoxGeometry();
   const materialBox = new MeshBasicNodeMaterial();
 
-  // birection speed
+
   const timerScaleNode = timerLocal().mul(vec2(-0.5, 0.1));
   const animateUV = uv().add(timerScaleNode);
 
@@ -74,7 +74,7 @@ async function init() {
 
   materialBox.colorNode = mix(textureNode, checker(animateUV), 0.5);
 
-  // test uv 2
+
   //geometryBox.setAttribute( 'uv1', geometryBox.getAttribute( 'uv' ) );
   //materialBox.colorNode = texture( uvTexture, uv( 1 ) );
 
@@ -82,7 +82,7 @@ async function init() {
   box.position.set(0, 1, 0);
   scene.add(box);
 
-  // displace example
+
 
   const geometrySphere = new Engine.SphereGeometry(0.5, 64, 64);
   const materialSphere = new MeshBasicNodeMaterial();
@@ -98,7 +98,7 @@ async function init() {
   sphere.position.set(-2, -1, 0);
   scene.add(sphere);
 
-  // data texture
+
 
   const geometryPlane = new Engine.PlaneGeometry();
   const materialPlane = new MeshBasicNodeMaterial();
@@ -109,7 +109,7 @@ async function init() {
   plane.position.set(0, -1, 0);
   scene.add(plane);
 
-  // compressed texture
+
 
   const materialCompressed = new MeshBasicNodeMaterial();
   materialCompressed.colorNode = texture(ktxTexture);
@@ -122,7 +122,7 @@ async function init() {
   planeCompressed.position.set(-2, 1, 0);
   scene.add(planeCompressed);
 
-  // points
+
 
   const points = [];
 
@@ -140,7 +140,7 @@ async function init() {
   pointCloud.position.set(2, -1, 0);
   scene.add(pointCloud);
 
-  // lines
+
 
   const geometryLine = new Engine.Geometry().setFromPoints([
     new Engine.Vec3(-0.5, -0.5, 0),

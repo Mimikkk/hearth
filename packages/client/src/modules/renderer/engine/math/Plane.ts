@@ -92,7 +92,7 @@ export class Plane {
   }
 
   normalize(): this {
-    // Note: will lead to a divide by zero if the plane is invalid.
+
 
     const inverseNormalLength = 1.0 / this.normal.length();
     this.normal.scale(inverseNormalLength);

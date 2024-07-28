@@ -1,5 +1,5 @@
 import { color, f32, MeshStandardNodeMaterial, normalWorld } from '@modules/renderer/engine/nodes/Nodes.js';
-import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import {
   Camera,
   CameraVisualizer,
@@ -16,8 +16,8 @@ import {
 } from '@modules/renderer/engine/engine.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 import { UI } from '@mimi/ui';
-import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
-import { SpriteMaterialBuilder } from '@modules/renderer/engine/objects/materials/SpriteMaterialBuilder.js';
+import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
+import { SpriteMaterialBuilder } from '@modules/renderer/engine/entities/materials/SpriteMaterialBuilder.js';
 
 const createCamera = () => {
   const perspectiveCamera = new PerspectiveCamera(80, window.innerWidth / window.innerHeight, 0.1, 100);
@@ -38,7 +38,7 @@ const createScene = () => {
 };
 const createLight = () => new SpotLight(0xffffff, 10);
 const createRenderer = async (onAnimate: () => void) => {
-  const renderer = await Forge.as();
+  const renderer = await Hearth.as();
   renderer.animation.loop = onAnimate;
   document.body.append(renderer.parameters.canvas);
 

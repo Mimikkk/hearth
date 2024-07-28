@@ -94,7 +94,7 @@ export class PositionalAudio extends Audio<PannerNode> {
 
     const panner = this.panner;
     if (panner.positionX) {
-      // code path for Chrome and Firefox (see #14393)
+
       const endTime = this.context.currentTime + this.listener.timeDelta;
 
       panner.positionX.linearRampToValueAtTime(_position.x, endTime);

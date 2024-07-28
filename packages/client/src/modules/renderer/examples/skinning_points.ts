@@ -3,7 +3,7 @@ import { PointsNodeMaterial, skinning, uniform } from '@modules/renderer/engine/
 
 import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/GLTFLoader.js';
 
-import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, renderer;
@@ -47,7 +47,7 @@ async function init() {
 
   //renderer
 
-  renderer = await Forge.as();
+  renderer = await Hearth.as();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.animation.loop = animate;

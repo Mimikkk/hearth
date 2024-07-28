@@ -1,9 +1,9 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
 import { MeshBasicNodeMaterial, texture, uniform } from '@modules/renderer/engine/nodes/Nodes.js';
 
-import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 
-import { QuadMesh } from '@modules/renderer/engine/objects/QuadMesh.js';
+import { QuadMesh } from '@modules/renderer/engine/entities/QuadMesh.js';
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
@@ -25,7 +25,7 @@ async function init() {
   scene = new Engine.Scene();
   scene.background = new Engine.Color(0x0066ff);
 
-  // textured mesh
+  
 
   const loader = new TextureLoader();
   const uvTexture = await loader.loadAsync('resources/textures/uv_grid_opengl.jpg');
@@ -41,7 +41,7 @@ async function init() {
 
   //
 
-  renderer = await Forge.as();
+  renderer = await Hearth.as();
   renderer.setPixelRatio(dpr);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.animation.loop = animate;
@@ -56,9 +56,9 @@ async function init() {
     renderTarget.setSize(window.innerWidth * dpr, window.innerHeight * dpr);
   });
 
-  // FX
+  
 
-  // modulate the final color based on the mouse position
+  
 
   const screenFXNode = uniform(mouse);
 

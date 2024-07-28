@@ -1,11 +1,11 @@
 import { Ray } from '../math/Ray.js';
 import { RaycastLayers } from './RaycastLayers.js';
 import type { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
-import type { ICamera } from '@modules/renderer/engine/objects/cameras/Camera.js';
+import type { ICamera } from '@modules/renderer/engine/entities/cameras/Camera.js';
 import type { Entity } from './Entity.js';
 import type { Face } from '../math/ConvexHull.js';
 import type { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
-import { PerspectiveCamera } from '@modules/renderer/engine/objects/cameras/PerspectiveCamera.js';
+import { PerspectiveCamera } from '@modules/renderer/engine/entities/cameras/PerspectiveCamera.js';
 import type { Const } from '@modules/renderer/engine/math/types.js';
 
 export class Raycaster {

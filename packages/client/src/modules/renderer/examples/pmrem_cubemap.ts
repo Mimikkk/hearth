@@ -10,11 +10,11 @@ import {
   uniform,
 } from '@modules/renderer/engine/nodes/Nodes.js';
 
-import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 
 import { RGBMLoader } from '@modules/renderer/engine/loaders/textures/RGBMLoader/RGBMLoader.js';
 
-import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
+import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
 
 import { GUI } from 'lil-gui';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
@@ -32,7 +32,7 @@ async function init() {
 
   scene = new Engine.Scene();
 
-  renderer = await Forge.as();
+  renderer = await Hearth.as();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.parameters.toneMapping = Engine.ToneMapping.ACESFilmic;
@@ -42,7 +42,7 @@ async function init() {
   container.appendChild(renderer.parameters.canvas);
 
   const controls = new OrbitControls(camera, renderer.parameters.canvas);
-  controls.onChange = render; // use if there is no animation loop
+  controls.onChange = render;
   controls.minDistance = 2;
   controls.maxDistance = 10;
   controls.update();
@@ -68,7 +68,7 @@ async function init() {
         new Engine.Mesh(new Engine.SphereGeometry(0.5, 64, 64), new MeshBasicNodeMaterial({ colorNode: pmremNode })),
       );
 
-      // gui
+
 
       const gui = new GUI();
       gui

@@ -4,7 +4,7 @@ import { Attribute } from '../../../core/Attribute.js';
 import { Geometry } from '../../../core/Geometry.js';
 import { Buffer } from '../../../core/Buffer.js';
 import { createTypedArray } from '@modules/renderer/engine/math/MathUtils.js';
-import { BufferStep } from '@modules/renderer/engine/renderers/constants.js';
+import { BufferStep } from '@modules/renderer/engine/hearth/constants.js';
 
 export interface JsonContent {
   interleavedBuffers: Record<string, any>;

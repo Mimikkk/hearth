@@ -64,7 +64,7 @@ class ShaderCallNodeImpl extends Node {
     const { outputNode } = builder.getNodeProperties(this);
 
     if (outputNode === null) {
-      // TSL: It's recommended to use `tslFn` in setup() pass.
+      
 
       return this.call(builder).build(builder, output);
     }

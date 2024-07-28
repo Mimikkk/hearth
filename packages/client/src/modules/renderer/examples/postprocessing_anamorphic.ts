@@ -1,13 +1,13 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
 import { cubeTexture, pass, uniform, viewportTopLeft } from '@modules/renderer/engine/nodes/Nodes.js';
 
-import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 
-import Postprocess from '@modules/renderer/engine/renderers/Postprocess.js';
+import Postprocess from '@modules/renderer/engine/hearth/Postprocess.js';
 
 import { RGBMLoader } from '@modules/renderer/engine/loaders/textures/RGBMLoader/RGBMLoader.js';
 
-import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
+import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
 import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/GLTFLoader.js';
 
 import { GUI } from 'lil-gui';
@@ -46,7 +46,7 @@ async function init() {
     scene.add(gltf.scene);
   });
 
-  renderer = await Forge.as();
+  renderer = await Hearth.as();
 
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
@@ -59,7 +59,7 @@ async function init() {
   controls.minDistance = 2;
   controls.maxDistance = 10;
 
-  // post-processing
+  
 
   const scenePass = pass(scene, camera);
 
@@ -69,13 +69,13 @@ async function init() {
   const samples = 64;
 
   const anamorphicPass = scenePass.getTextureNode().anamorphic(threshold, scaleNode, samples);
-  anamorphicPass.resolution = new Engine.Vec2(0.2, 0.2); // 1 = full resolution
+  anamorphicPass.resolution = new Engine.Vec2(0.2, 0.2); 
 
   postProcessing = new Postprocess(renderer);
   postProcessing.outputNode = scenePass.add(anamorphicPass.mul(intensity));
   //postProcessing.outputNode = scenePass.add( anamorphicPass.getTextureNode().gaussianBlur() );
 
-  // gui
+  
 
   const gui = new GUI();
   gui.add(intensity, 'value', 0, 4, 0.1).name('intensity');

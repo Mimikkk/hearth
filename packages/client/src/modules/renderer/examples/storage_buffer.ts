@@ -12,11 +12,11 @@ import {
   vec3,
 } from '@modules/renderer/engine/nodes/Nodes.js';
 
-import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import { GPUBufferBindingTypeType, BufferStep } from '@modules/renderer/engine/renderers/constants.js';
+import { GPUBufferBindingTypeType, BufferStep } from '@modules/renderer/engine/hearth/constants.js';
 
-// WebGPU Backend
+
 init();
 
 const dashboard = {
@@ -33,9 +33,9 @@ async function init() {
 
   const scene = new Engine.Scene();
 
-  // texture
 
-  const size = 1024; // non power of two buffer size is not well supported in WebGPU
+
+  const size = 1024;
 
   const type = ['f32', 'vec2', 'vec3', 'vec4'];
 
@@ -63,7 +63,7 @@ async function init() {
     }
   });
 
-  // compute
+
 
   const computeInit = computeInitOrder().compute(size);
 
@@ -111,14 +111,14 @@ async function init() {
     return color;
   })();
 
-  // TODO: Add toAttribute() test
+
 
   //
 
   const plane = new Engine.Mesh(new Engine.PlaneGeometry(1, 1), material);
   scene.add(plane);
 
-  const renderer = await Forge.as({ trackTimestamp: true });
+  const renderer = await Hearth.as({ trackTimestamp: true });
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
 
@@ -127,7 +127,7 @@ async function init() {
 
   scene.background = new Engine.Color(0x313131);
 
-  // Init Positions
+
   renderer.compute(computeInit);
 
   const stepAnimation = async () => {

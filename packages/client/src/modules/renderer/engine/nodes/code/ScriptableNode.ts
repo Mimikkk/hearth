@@ -237,7 +237,7 @@ class ScriptableNode extends Node {
         this._local.clear();
       }
 
-      // default output
+
       this._output.outputType = layout.outputType || null;
 
       if (Array.isArray(layout.elements)) {

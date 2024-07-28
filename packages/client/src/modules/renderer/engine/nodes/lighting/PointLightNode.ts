@@ -28,7 +28,7 @@ class PointLightNode extends AnalyticLightNode {
 
     const lightingModel = builder.context.lightingModel;
 
-    const lVector = objectViewPosition(light).sub(positionView); // @TODO: Add it into LightNode
+    const lVector = objectViewPosition(light).sub(positionView);
 
     const lightDirection = lVector.normalize();
     const lightDistance = lVector.length();

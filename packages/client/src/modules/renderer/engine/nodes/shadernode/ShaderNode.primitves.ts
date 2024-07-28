@@ -18,19 +18,19 @@ const createConvertType = (type: TypeName, cacheMap: Map<any, any>) => {
       params = [getValueFromType(type, ...params)];
     }
 
-    // use cache if has cacheMap
+    
     let cached = cacheMap?.get(params[0]);
     if (params.length === 1 && cached) return asNode(cached);
 
     if (params.length === 1) {
       const node = asConstNode(params[0], type);
 
-      // if can get node type without builder then return node
+      
       try {
         if (node.getNodeType() === type) return asNode(node);
       } catch {}
 
-      // otherwise convert node to target type
+      
       return asNode(new ConvertNode(node, type));
     }
 

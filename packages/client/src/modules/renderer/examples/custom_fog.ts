@@ -11,9 +11,9 @@ import {
   triNoise3D,
 } from '@modules/renderer/engine/nodes/Nodes.js';
 
-import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 
-import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
+import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, renderer;
@@ -27,7 +27,7 @@ async function init() {
 
   scene = new Engine.Scene();
 
-  // custom fog
+
 
   const skyColor = color(0xf0f5f5);
   const groundColor = color(0xd0dee7);
@@ -45,12 +45,12 @@ async function init() {
 
   const fogNoise = fogNoiseA.add(fogNoiseB).mul(groundColor);
 
-  // apply custom fog
+
 
   scene.fogNode = fog(fogNoiseDistance.oneMinus().mix(groundColor, fogNoise), groundFogArea);
   scene.backgroundNode = normalWorld.y.max(0).mix(groundColor, skyColor);
 
-  // builds
+
 
   const buildWindows = positionWorld.y
     .mul(10)
@@ -88,11 +88,11 @@ async function init() {
     buildMesh.setMatrixAt(i, dummy.matrix);
   }
 
-  // lights
+
 
   scene.add(new Engine.HemisphereLight(skyColor.value, groundColor.value, 0.5));
 
-  // geometry
+
 
   const planeGeometry = new Engine.PlaneGeometry(200, 200);
   const planeMaterial = new Engine.MeshPhongMaterial({
@@ -106,15 +106,15 @@ async function init() {
   ground.receiveShadow = true;
   scene.add(ground);
 
-  // renderer
 
-  renderer = await Forge.as();
+
+  renderer = await Hearth.as();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.animation.loop = animate;
   document.body.appendChild(renderer.parameters.canvas);
 
-  // controls
+
 
   controls = new OrbitControls(camera, renderer.parameters.canvas);
   controls.target.set(0, 2, 0);

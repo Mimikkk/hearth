@@ -11,10 +11,10 @@ import {
 
 import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/GLTFLoader.js';
 
-import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
-import Postprocess from '@modules/renderer/engine/renderers/Postprocess.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
+import Postprocess from '@modules/renderer/engine/hearth/Postprocess.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import { BufferStep } from '@modules/renderer/engine/renderers/constants.js';
+import { BufferStep } from '@modules/renderer/engine/hearth/constants.js';
 import { Attribute, Buffer } from '@modules/renderer/engine/engine.js';
 
 let camera, scene, renderer;
@@ -33,7 +33,7 @@ async function init() {
 
   clock = new Engine.Clock();
 
-  // lights
+
 
   const centerLight = new Engine.PointLight(0xff9900, 1, 100);
   centerLight.position.y = 4.5;
@@ -68,10 +68,10 @@ async function init() {
       if (child.isMesh) {
         const oscNode = oscSine(timerLocal(0.1));
 
-        // random colors between instances from 0x000000 to 0xFFFFFF
+
         const randomColors = range(new Engine.Color(0x000000), new Engine.Color(0xffffff));
 
-        // random [ 0, 1 ] values between instances
+
         const randomMetalness = range(0, 1);
 
         child.material = new MeshStandardNodeMaterial();
@@ -99,15 +99,15 @@ async function init() {
     scene.add(object);
   });
 
-  // renderer
 
-  renderer = await Forge.as();
+
+  renderer = await Hearth.as();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.animation.loop = animate;
   document.body.appendChild(renderer.parameters.canvas);
 
-  // post processing ( just for WebGPUBackend for now )
+
 
   const scenePass = pass(scene, camera);
   const scenePassColor = scenePass.getTextureNode();
@@ -119,7 +119,7 @@ async function init() {
   postProcessing = new Postprocess(renderer);
   postProcessing.outputNode = scenePassColorBlurred;
 
-  // events
+
 
   useWindowResizer(renderer, camera);
 }

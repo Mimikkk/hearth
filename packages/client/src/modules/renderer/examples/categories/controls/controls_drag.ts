@@ -1,7 +1,7 @@
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
-import { PerspectiveCamera } from '@modules/renderer/engine/objects/cameras/PerspectiveCamera.js';
-import { Scene } from '@modules/renderer/engine/objects/scenes/Scene.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
+import { PerspectiveCamera } from '@modules/renderer/engine/entities/cameras/PerspectiveCamera.js';
+import { Scene } from '@modules/renderer/engine/entities/scenes/Scene.js';
 import {
   BoxGeometry,
   Geometry,
@@ -11,13 +11,13 @@ import {
   Entity,
   SpotLight,
 } from '@modules/renderer/engine/engine.js';
-import { DragControls } from '@modules/renderer/engine/objects/controls/DragControls.js';
+import { DragControls } from '@modules/renderer/engine/entities/controls/DragControls.js';
 import { UI } from '@mimi/ui';
 import { ColorMap } from '@modules/renderer/engine/math/Color.js';
 import { Random } from '@modules/renderer/engine/math/random.js';
 import { normalWorld } from '@modules/renderer/engine/nodes/accessors/NormalNode.js';
 import { color } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.primitves.js';
-import { BoundingSphereVisualizer } from '@modules/renderer/engine/objects/visualizers/BoundingSphereVisualizer.js';
+import { BoundingSphereVisualizer } from '@modules/renderer/engine/entities/visualizers/BoundingSphereVisualizer.js';
 import { Intersection } from '@modules/renderer/engine/core/Raycaster.js';
 
 const createCamera = () => {
@@ -47,42 +47,42 @@ const useDragControls = () => {
   const objects: Entity[] = [box1, box2];
   const controls = new DragControls([...objects], camera, renderer.parameters.canvas);
 
-  // const mouse = Vec2.new();
-  // const raycaster = Raycaster.new();
+  
+  
 
-  // renderer.parameters.canvas.addEventListener('click', event => {
-  //   if (!state.drag.selection) return;
+  
+  
   //
-  //   const draggableObjects = controls.getObjects();
-  //   draggableObjects.length = 0;
+  
+  
   //
-  //   mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-  //   mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+  
+  
   //
-  //   raycaster.fromCamera(mouse, camera);
+  
   //
-  //   const intersections = raycaster.intersects(objects, true);
+  
   //
-  //   // if (intersections.length > 0) {
-  //   //   const object = intersections[0].object;
-  //   //
-  //   //   if (group.children.includes(object)) {
-  //   //     object.material.emissive.set(0x000000);
-  //   //     scene.attach(object);
-  //   //   } else {
-  //   //     object.material.emissive.set(0xaaaaaa);
-  //   //     group.attach(object);
-  //   //   }
-  //   //
-  //   //   controls.configuration.transformGroup = true;
-  //   //   draggableObjects.push(group);
-  //   // }
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   //
-  //   // if (group.children.length === 0) {
-  //   //   controls.configuration.transformGroup = false;
-  //   //   draggableObjects.push(...objects);
-  //   // }
-  // });
+  
+  
+  
+  
+  
 
   return controls;
 };
@@ -102,7 +102,7 @@ const sphere2 = BoundingSphereVisualizer.attach(box2);
 
 scene.add(camera, reference, box1, box2);
 
-const renderer = await Forge.as({
+const renderer = await Hearth.as({
   animate() {
     renderer.render(scene, camera);
   },

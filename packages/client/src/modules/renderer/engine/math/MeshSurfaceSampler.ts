@@ -1,8 +1,8 @@
 import { Triangle } from './Triangle.js';
 import { Vec3 } from './Vec3.js';
 import { Vec2 } from './Vec2.js';
-import type { Mesh } from '../objects/Mesh.js';
-import type { Material } from '@modules/renderer/engine/objects/materials/Material.js';
+import type { Mesh } from '@modules/renderer/engine/entities/Mesh.js';
+import type { Material } from '@modules/renderer/engine/entities/materials/Material.js';
 import type { Attribute } from '@modules/renderer/engine/core/Attribute.js';
 import type { Color } from './Color.js';
 import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
@@ -53,7 +53,7 @@ export class MeshSurfaceSampler<TGeometry extends Geometry, TMaterial extends Ma
     const totalFaces = indexAttribute ? indexAttribute.count / 3 : positionAttribute.count / 3;
     const faceWeights = new Float32Array(totalFaces);
 
-    // Accumulate weights for each mesh face.
+    
 
     for (let i = 0; i < totalFaces; i++) {
       let faceWeight = 1;
@@ -80,8 +80,8 @@ export class MeshSurfaceSampler<TGeometry extends Geometry, TMaterial extends Ma
       faceWeights[i] = faceWeight;
     }
 
-    // Store cumulative total face weights in an array, where weight index
-    // corresponds to face index.
+    
+    
 
     const distribution = new Float32Array(totalFaces);
     let cumulativeTotal = 0;
@@ -144,7 +144,7 @@ export class MeshSurfaceSampler<TGeometry extends Geometry, TMaterial extends Ma
       v = 1 - v;
     }
 
-    // get the vertex attribute indices
+    
     const indexAttribute = this.indexAttribute;
     let i0 = faceIndex * 3;
     let i1 = faceIndex * 3 + 1;

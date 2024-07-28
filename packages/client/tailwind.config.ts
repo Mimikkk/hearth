@@ -1,4 +1,5 @@
 import { Config } from 'tailwindcss';
+import nesting from '@tailwindcss/nesting';
 
 const colors = {
   text: {
@@ -86,6 +87,7 @@ const colors = {
 export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   darkMode: 'class',
+  plugins: [nesting],
   theme: {
     colors,
     fontSize: {

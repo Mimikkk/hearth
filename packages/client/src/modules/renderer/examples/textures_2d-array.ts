@@ -1,7 +1,7 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
 import { MeshBasicNodeMaterial, oscTriangle, texture, timerLocal, uv } from '@modules/renderer/engine/nodes/Nodes.js';
 
-import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 
 import { unzipSync } from 'fflate';
 import { FileLoader, ResponseType } from '@modules/renderer/engine/loaders/files/FileLoader/FileLoader.js';
@@ -33,14 +33,14 @@ async function init() {
       map.needsUpdate = true;
 
       let coord = uv();
-      coord = coord.setY(coord.y.oneMinus()); // flip y
+      coord = coord.setY(coord.y.oneMinus());
 
-      let oscLayers = oscTriangle(timerLocal(0.5)); // [ /\/ ] triangle osc animation
-      oscLayers = oscLayers.add(1).mul(0.5); // convert osc range of [ -1, 1 ] to [ 0, 1 ]
-      oscLayers = oscLayers.mul(map.image.depth); // scale osc range to texture depth
+      let oscLayers = oscTriangle(timerLocal(0.5));
+      oscLayers = oscLayers.add(1).mul(0.5);
+      oscLayers = oscLayers.mul(map.image.depth);
 
       const material = new MeshBasicNodeMaterial();
-      material.colorNode = texture(map, coord).depth(oscLayers).r.remap(0, 1, -0.1, 1.8); // remap to make it more visible
+      material.colorNode = texture(map, coord).depth(oscLayers).r.remap(0, 1, -0.1, 1.8);
 
       const geometry = new Engine.PlaneGeometry(planeWidth, planeHeight);
 
@@ -50,7 +50,7 @@ async function init() {
     },
   );
 
-  renderer = await Forge.as();
+  renderer = await Hearth.as();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.animation.loop = animate;

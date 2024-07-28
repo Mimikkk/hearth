@@ -1,11 +1,11 @@
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { Entity } from '@modules/renderer/engine/core/Entity.js';
-import { Mesh } from '@modules/renderer/engine/objects/Mesh.js';
+import { Mesh } from '@modules/renderer/engine/entities/Mesh.js';
 import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
 import { Quaternion } from '@modules/renderer/engine/math/Quaternion.js';
 import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
 import { Clock } from '@modules/renderer/engine/core/Clock.js';
-import { Scene } from '@modules/renderer/engine/objects/scenes/Scene.js';
+import { Scene } from '@modules/renderer/engine/entities/scenes/Scene.js';
 
 type Vector = { x: number; y: number; z: number };
 
@@ -29,7 +29,7 @@ let RAPIER = null;
 function getCollider(geometry: Geometry) {
   const parameters = geometry.parameters!;
 
-  // TODO change type to is*
+  
 
   if (geometry.type === 'BoxGeometry') {
     const sx = parameters.width !== undefined ? parameters.width / 2 : 0.5;
@@ -54,7 +54,7 @@ export async function RapierPhysics(): Promise<RapierPhysicsObject> {
     await RAPIER.init();
   }
 
-  // Docs: https://rapier.rs/docs/api/javascript/JavaScript3D/
+  
 
   const gravity = Vec3.new(0.0, -9.81, 0.0);
   //@ts-expect-error
@@ -193,7 +193,7 @@ export async function RapierPhysics(): Promise<RapierPhysicsObject> {
     }
   }
 
-  // animate
+  
 
   setInterval(step, 1000 / frameRate);
 

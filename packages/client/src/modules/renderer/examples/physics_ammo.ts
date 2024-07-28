@@ -1,20 +1,20 @@
 import { AmmoPhysics } from '@modules/renderer/engine/physics/AmmoPhysics.js';
-import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
-import { PerspectiveCamera } from '@modules/renderer/engine/objects/cameras/PerspectiveCamera.js';
-import { Scene } from '@modules/renderer/engine/objects/scenes/Scene.js';
+import { PerspectiveCamera } from '@modules/renderer/engine/entities/cameras/PerspectiveCamera.js';
+import { Scene } from '@modules/renderer/engine/entities/scenes/Scene.js';
 import { Color } from '@modules/renderer/engine/math/Color.js';
-import { HemisphereLight } from '@modules/renderer/engine/objects/lights/HemisphereLight.js';
-import { DirectionalLight } from '@modules/renderer/engine/objects/lights/DirectionalLight.js';
-import { Mesh } from '@modules/renderer/engine/objects/Mesh.js';
-import { BoxGeometry } from '@modules/renderer/engine/objects/geometries/BoxGeometry.js';
-import { ShadowMaterial } from '@modules/renderer/engine/objects/materials/ShadowMaterial.js';
-import { MeshLambertMaterial } from '@modules/renderer/engine/objects/materials/MeshLambertMaterial.js';
+import { HemisphereLight } from '@modules/renderer/engine/entities/lights/HemisphereLight.js';
+import { DirectionalLight } from '@modules/renderer/engine/entities/lights/DirectionalLight.js';
+import { Mesh } from '@modules/renderer/engine/entities/Mesh.js';
+import { BoxGeometry } from '@modules/renderer/engine/entities/geometries/BoxGeometry.js';
+import { ShadowMaterial } from '@modules/renderer/engine/entities/materials/ShadowMaterial.js';
+import { MeshLambertMaterial } from '@modules/renderer/engine/entities/materials/MeshLambertMaterial.js';
 import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
-import { InstancedMesh } from '@modules/renderer/engine/objects/InstancedMesh.js';
-import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
+import { InstancedMesh } from '@modules/renderer/engine/entities/InstancedMesh.js';
+import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
 import { BufferUse } from '@modules/renderer/engine/constants.js';
-import { IcosahedronGeometry } from '@modules/renderer/engine/objects/geometries/IcosahedronGeometry.js';
+import { IcosahedronGeometry } from '@modules/renderer/engine/entities/geometries/IcosahedronGeometry.js';
 
 const physics = await AmmoPhysics();
 const position = Vec3.new();
@@ -50,13 +50,13 @@ const material = new MeshLambertMaterial();
 const matrix = new Mat4();
 const color = Color.new();
 
-// Boxes
+
 
 const geometryBox = new BoxGeometry(0.075, 0.075, 0.075);
 const boxes = new InstancedMesh(geometryBox, material, 2);
 boxes.instanceMatrix.usage = BufferUse.DynamicDraw;
-// boxes.castShadow = false;
-// boxes.receiveShadow = false;
+
+
 boxes.userData.physics = { mass: 1 };
 scene.add(boxes);
 
@@ -66,7 +66,7 @@ for (let i = 0; i < boxes.count; i++) {
   boxes.setColorAt(i, color.setHex(0xffffff * Math.random()));
 }
 
-// Spheres
+
 
 const geometrySphere = new IcosahedronGeometry(0.05, 4);
 const spheres = new InstancedMesh(geometrySphere, material, 2);
@@ -85,7 +85,7 @@ for (let i = 0; i < spheres.count; i++) {
 
 physics.addScene(scene);
 
-const renderer = await Forge.as({ antialias: true, alpha: true });
+const renderer = await Hearth.as({ antialias: true, alpha: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.animation.loop = animate;
 document.body.appendChild(renderer.parameters.canvas);
@@ -104,10 +104,10 @@ setInterval(() => {
 
   //
 
-  // index = Math.floor(Math.random() * spheres.count);
 
-  // position.set(0, Math.random() + 1, 0);
-  // physics.setMeshPosition(spheres, position, index);
+
+
+
 }, 1000 / 60);
 
 function animate() {

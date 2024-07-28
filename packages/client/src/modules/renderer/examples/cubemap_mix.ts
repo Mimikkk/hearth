@@ -1,11 +1,11 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
 import { f32, mix, oscSine, pmremTexture, timerLocal, toneMapping } from '@modules/renderer/engine/nodes/Nodes.js';
 
-import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 
 import { RGBMLoader } from '@modules/renderer/engine/loaders/textures/RGBMLoader/RGBMLoader.js';
 
-import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
+import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
 import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/GLTFLoader.js';
 import { CubeTextureLoader } from '@modules/renderer/engine/loaders/textures/CubeTextureLoader/CubeTextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
@@ -57,7 +57,7 @@ async function init() {
     scene.add(gltf.scene);
   });
 
-  renderer = await Forge.as();
+  renderer = await Hearth.as();
 
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);

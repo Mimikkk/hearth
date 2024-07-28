@@ -2,9 +2,9 @@ import * as Engine from '@modules/renderer/engine/engine.js';
 import { PerspectiveCamera, Scene } from '@modules/renderer/engine/engine.js';
 
 import { FontLoader } from '@modules/renderer/engine/loaders/fonts/FontLoader/FontLoader.js';
-import { TextGeometry } from '@modules/renderer/engine/objects/geometries/TextGeometry.js';
+import { TextGeometry } from '@modules/renderer/engine/entities/geometries/TextGeometry.js';
 
-import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { ColorRepresentation } from '@modules/renderer/engine/math/Color.js';
 import { clamp } from 'lodash-es';
 import { FontManager } from '@modules/renderer/engine/loaders/fonts/FontManager.js';
@@ -27,8 +27,8 @@ let logarithmic!: HTMLDivElement;
 
 let objects!: Views;
 
-// Generate a number of text labels, from 1µm in size up to 100,000,000 light years
-// Try to use some descriptive real-world examples of objects at each scale
+
+
 
 const descriptors = [
   { size: 0.01, scale: 0.0001, label: 'microscopic (1µm)' },
@@ -55,7 +55,7 @@ interface Views {
 
 interface CameraView {
   container: HTMLDivElement;
-  renderer: Forge;
+  renderer: Hearth;
   camera: PerspectiveCamera;
 }
 
@@ -68,7 +68,7 @@ const createCameraView = async (container: HTMLDivElement, type: 'logarithmic' |
 
   const camera = new Engine.PerspectiveCamera(50, (screensplit * width) / height, Near, Far);
 
-  const renderer = await Forge.as({ logarithmicDepthBuffer: type === 'logarithmic' });
+  const renderer = await Hearth.as({ logarithmicDepthBuffer: type === 'logarithmic' });
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(width / 2, height);
 
@@ -128,7 +128,7 @@ const createBorderEvents = (border: HTMLDivElement) => {
   };
 
   function onUp() {
-    // activate draggable window resizing bar
+
     window.addEventListener('pointermove', onBorderPointerMove);
     window.addEventListener('pointerup', onBorderPointerUp);
   }
@@ -170,7 +170,7 @@ const createScene = (font: FontManager): Scene => {
 
     labelgeo.computeBoundingSphere();
 
-    // center text
+
     labelgeo.translate(-labelgeo.boundingSphere!.radius, 0, 0);
 
     materialargs.color = new Engine.Color().setHSL(Math.random(), 0.5, 0.5);
@@ -200,11 +200,11 @@ const recalculateZoom = () => {
   const min = descriptors[0].size ** 2;
   const max = descriptors[descriptors.length - 1].size ** 2 * 100;
 
-  // Zoom out faster the further out you go
+
   const value = clamp(Math.pow(Math.E, position), min, max);
   position = Math.log(value);
 
-  // Slow down quickly at the zoom limits
+
   let damp = Math.abs(zoom.speed) > zoom.minSpeed ? 0.95 : 1.0;
   if ((value == min && zoom.speed < 0) || (value == max && zoom.speed > 0)) damp = 0.85;
 
@@ -223,11 +223,11 @@ const animate = () => {
   objects.normal.camera.position.z = Math.cos(0.5 * Math.PI * (mouse[0] - 0.5)) * zoom;
   objects.normal.camera.lookAt(scene.position);
 
-  // Clone camera settings across both scenes
+
   objects.logarithmic.camera.position.from(objects.normal.camera.position);
   objects.logarithmic.camera.quaternion.from(objects.normal.camera.quaternion);
 
-  // Update renderer sizes if the split has changed
+
   if (screensplit_right != 1 - screensplit) {
     updateRenderers();
   }

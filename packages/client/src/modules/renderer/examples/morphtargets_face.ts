@@ -1,8 +1,8 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
 
-import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 
-import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
+import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
 
 import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/GLTFLoader.js';
 import { KTX2Loader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/KTX2Loader.js';
@@ -27,7 +27,7 @@ async function init() {
   const scene = new Engine.Scene();
   scene.add(new Engine.HemisphereLight(0xffffff, 0x443333, 2));
 
-  const renderer = await Forge.as();
+  const renderer = await Hearth.as();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.parameters.toneMapping = Engine.ToneMapping.ACESFilmic;
@@ -50,14 +50,14 @@ async function init() {
 
         mixer.clipAction(gltf.animations[0]).play();
 
-        // GUI
+        
 
         const head = mesh.getObjectByName('mesh_2');
         const influences = head.morphTargetInfluences;
 
         //head.morphTargetInfluences = null;
 
-        // WebGPURenderer: Unsupported texture format. 33776
+        
         head.material.map = null;
 
         const gui = new GUI();

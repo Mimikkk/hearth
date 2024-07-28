@@ -6,7 +6,7 @@ import type { Mat3 } from '@modules/renderer/engine/math/Mat3.js';
 import type { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
 import type { Cylindrical } from '@modules/renderer/engine/math/Cylindrical.js';
 import type { Spherical } from '@modules/renderer/engine/math/Spherical.js';
-import type { Camera } from '@modules/renderer/engine/objects/cameras/Camera.js';
+import type { Camera } from '@modules/renderer/engine/entities/cameras/Camera.js';
 import type { Const } from '@modules/renderer/engine/math/types.js';
 import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
 
@@ -255,7 +255,7 @@ export class Vec3 {
   }
 
   applyQuaternion(quaternion: Const<Quaternion>): this {
-    // quaternion q is assumed to have unit length
+
 
     const vx = this.x,
       vy = this.y,
@@ -265,12 +265,12 @@ export class Vec3 {
       qz = quaternion.z,
       qw = quaternion.w;
 
-    // t = 2 * cross( q.xyz, v );
+
     const tx = 2 * (qy * vz - qz * vy);
     const ty = 2 * (qz * vx - qx * vz);
     const tz = 2 * (qx * vy - qy * vx);
 
-    // v + q.w * t + cross( q.xyz, t );
+
     this.x = vx + qw * tx + qy * tz - qz * ty;
     this.y = vy + qw * ty + qz * tx - qx * tz;
     this.z = vz + qw * tz + qx * ty - qy * tx;
@@ -287,8 +287,8 @@ export class Vec3 {
   }
 
   transformDirection(affine: Const<Mat4>): this {
-    // input: engine.Mat4 affine matrix
-    // vector interpreted as a direction
+
+
 
     const x = this.x,
       y = this.y,
@@ -476,7 +476,7 @@ export class Vec3 {
 
     const theta = this.dot(vector) / denominator;
 
-    // clamp, to handle numerical problems
+
 
     return Math.acos(clamp(theta, -1, 1));
   }

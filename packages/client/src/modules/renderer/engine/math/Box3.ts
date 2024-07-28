@@ -4,7 +4,7 @@ import type { Triangle } from './Triangle.js';
 import type { Plane } from './Plane.js';
 import { Sphere } from './Sphere.js';
 import type { Mat4 } from './Mat4.js';
-import { Mesh } from '@modules/renderer/engine/objects/Mesh.js';
+import { Mesh } from '@modules/renderer/engine/entities/Mesh.js';
 import { Const } from '@modules/renderer/engine/math/types.js';
 import { NumberArray } from '@modules/renderer/engine/math/MathUtils.js';
 import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
@@ -157,7 +157,7 @@ export class Box3 {
   }
 
   isEmpty(): boolean {
-    // this is a more robust check for empty than ( volume <= 0 ) because volume can get positive with two negative axes
+
 
     return this.max.x < this.min.x || this.max.y < this.min.y || this.max.z < this.min.z;
   }
@@ -264,7 +264,7 @@ export class Box3 {
   }
 
   intersectsBox(box: Const<Box3>): boolean {
-    // using 6 splitting planes to rule out intersections.
+
     return (
       box.max.x >= this.min.x &&
       box.min.x <= this.max.x &&
@@ -276,17 +276,17 @@ export class Box3 {
   }
 
   intersectsSphere(sphere: Const<Sphere>): boolean {
-    // Find the point on the AABB closest to the sphere center.
+
     const _vector = Vec3.new();
     this.clamp(sphere.center, _vector);
 
-    // If that point is inside the sphere, the AABB and sphere intersect.
+
     return _vector.distanceSqTo(sphere.center) <= sphere.radius * sphere.radius;
   }
 
   intersectsPlane(plane: Const<Plane>): boolean {
-    // We compute the minimum and maximum dot product values. If those values
-    // are on the same side (back or front) of the plane, then there is no intersection.
+
+
 
     let min: number;
     let max: number;
@@ -323,19 +323,19 @@ export class Box3 {
     const _center = this.center(_v9);
     const _extents = _v7.from(this.max).sub(_center);
 
-    // translate triangle to aabb origin
+
     _v0.from(triangle.a).sub(_center);
     _v1.from(triangle.b).sub(_center);
     _v2.from(triangle.c).sub(_center);
 
-    // compute edge vectors for triangle
+
     _v3.from(_v1).sub(_v0);
     _v4.from(_v2).sub(_v1);
     _v5.from(_v0).sub(_v2);
 
-    // test against axes that are given by cross product combinations of the edges of the triangle and the edges of the aabb
-    // make an axis testing of each of the 3 sides of the aabb against each of the 3 sides of the triangle = 9 axis of separation
-    // axis_ij = u_i x f_j (u0, u1, u2 = face normals of aabb = x,y,z axes vectors since aabb is axis aligned)
+
+
+
     if (!validAxis(_axis.set(0, -_v3.z, _v3.y), _v0, _v1, _v2, _extents)) return false;
     if (!validAxis(_axis.set(0, -_v4.z, _v4.y), _v0, _v1, _v2, _extents)) return false;
     if (!validAxis(_axis.set(0, -_v5.z, _v5.y), _v0, _v1, _v2, _extents)) return false;
@@ -421,7 +421,7 @@ function validAxis(
   v2: Const<Vec3>,
   extents: Const<Vec3>,
 ): boolean {
-  // project the aabb onto the separating axis
+
   const r = extents.x * Math.abs(axis.x) + extents.y * Math.abs(axis.y) + extents.z * Math.abs(axis.z);
 
   const p0 = v0.dot(axis);

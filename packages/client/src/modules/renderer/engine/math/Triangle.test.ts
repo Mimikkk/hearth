@@ -225,11 +225,11 @@ describe('Math - Triangle', () => {
     const triangle = Triangle.new(Vec3.new(-1, 0, 0), Vec3.new(1, 0, 0), Vec3.new(0, 1, 0));
     const point = Vec3.empty();
 
-    // point lies inside the triangle
+
     triangle.closestTo(Vec3.new(0, 0.5, 0), point);
     expect(point).toEqual(Vec3.new(0, 0.5, 0));
 
-    // point lies on a vertex
+
     triangle.closestTo(triangle.a, point);
     expect(point).toEqual(triangle.a);
 
@@ -239,11 +239,11 @@ describe('Math - Triangle', () => {
     triangle.closestTo(triangle.c, point);
     expect(point).toEqual(triangle.c);
 
-    // point lies on an edge
+
     triangle.closestTo(Vec3.new(0, 0, 0), point);
     expect(point).toEqual(Vec3.new(0, 0, 0));
 
-    // point lies outside the triangle
+
     triangle.closestTo(Vec3.new(-2, 0, 0), point);
     expect(point).toEqual(Vec3.new(-1, 0, 0));
 

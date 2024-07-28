@@ -3,7 +3,7 @@ import { GUI } from 'lil-gui';
 import initialCode from './tsl_editor.code.ts?raw';
 import monaco from './utilities/monaco-vite.js';
 import { Color, ColorSpace, Mesh, PerspectiveCamera, PlaneGeometry, Scene } from '@modules/renderer/engine/engine.js';
-import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import './tsl_editor.css';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { resolveScript } from '@modules/renderer/examples/utilities/resolveScript.js';
@@ -48,7 +48,7 @@ const options: {
   preview: true,
 };
 
-const renderer = await Forge.as({
+const renderer = await Hearth.as({
   async animate() {
     await renderer.render(scene, camera);
   },

@@ -126,7 +126,7 @@ class ReflectorNode extends TextureNode {
 
     _view.asSub(_reflectorWorldPosition, _cameraWorldPosition);
 
-    // Avoid rendering when reflector is facing away
+    
 
     if (_view.dot(_normal) > 0) return;
 
@@ -157,8 +157,8 @@ class ReflectorNode extends TextureNode {
     virtualCamera.updateMatrixWorld();
     virtualCamera.projectionMatrix.from(camera.projectionMatrix);
 
-    // Now update projection matrix with new clip plane, implementing code from: http://www.terathon.com/code/oblique.html
-    // Paper explaining this technique: http://www.terathon.com/lengyel/Lengyel-Oblique.pdf
+    
+    
     _reflectorPlane.fromNormalAndCoplanar(_normal, _reflectorWorldPosition);
     _reflectorPlane.applyMat4(virtualCamera.matrixWorldInverse);
 
@@ -176,12 +176,12 @@ class ReflectorNode extends TextureNode {
     _q.z = -1.0;
     _q.w = (1.0 + projectionMatrix.elements[10]) / projectionMatrix.elements[14];
 
-    // Calculate the scaled plane vector
+    
     clipPlane.mulScalar(1.0 / clipPlane.dot(_q));
 
     const clipBias = 0;
 
-    // Replacing the third row of the projection matrix
+    
     projectionMatrix.elements[2] = clipPlane.x;
     projectionMatrix.elements[6] = clipPlane.y;
     projectionMatrix.elements[10] = clipPlane.z - clipBias;

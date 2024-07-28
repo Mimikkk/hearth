@@ -7,7 +7,7 @@ import { Box3 } from './Box3.js';
 import { Triangle } from './Triangle.js';
 import { Ray } from './Ray.js';
 import { Entity } from '@modules/renderer/engine/core/Entity.js';
-import { Mesh } from '@modules/renderer/engine/objects/Mesh.js';
+import { Mesh } from '@modules/renderer/engine/entities/Mesh.js';
 
 interface Intersection {
   normal: Vec3;
@@ -100,7 +100,7 @@ export class Octree {
   calcBox(): this {
     this.box = this.bounds.clone();
 
-    // offset small amount to account for regular grid
+    
     this.box.min.x -= 0.01;
     this.box.min.y -= 0.01;
     this.box.min.z -= 0.01;

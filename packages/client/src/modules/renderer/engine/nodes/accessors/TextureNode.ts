@@ -234,7 +234,7 @@ export class TextureNode extends UniformNode {
     return asNode(textureNode);
   }
 
-  // --
+
 
   update() {
     const texture = this.value;

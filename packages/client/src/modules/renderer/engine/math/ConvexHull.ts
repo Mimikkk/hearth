@@ -24,25 +24,25 @@ export class ConvexHull {
 
   constructor() {
     this.tolerance = -1;
-    // the generated faces of the convex hull
+
     this.faces = [];
-    // this array holds the faces that are generated within a single iteration
+
     this.newFaces = [];
 
-    // the vertex lists work as follows:
+
     //
-    // let 'a' and 'b' be 'Face' instances
-    // let 'v' be points wrapped as instance of 'Vertex'
+
+
     //
-    //     [v, v, ..., v, v, v, ...]
-    //      ^             ^
-    //      |             |
-    //  a.outside     b.outside
+
+
+
+
     //
     this.assigned = new VertexList();
     this.unassigned = new VertexList();
 
-    // vertices of the hull (internal representation of given geometry data)
+
     this.vertices = [];
   }
 
@@ -90,7 +90,7 @@ export class ConvexHull {
     for (let i = 0, l = faces.length; i < l; i++) {
       const face = faces[i];
 
-      // compute signed distance and check on what half space the point lies
+
 
       if (face.distanceToPoint(point) > this.tolerance) return false;
     }
@@ -99,7 +99,7 @@ export class ConvexHull {
   }
 
   intersectRay(ray: Ray, target: Vec3): Vec3 | null {
-    // based on "Fast Ray-Convex Polyhedron Intersection" by Eric Haines, GRAPHICS GEMS II
+
 
     const faces = this.faces;
 
@@ -109,47 +109,47 @@ export class ConvexHull {
     for (let i = 0, l = faces.length; i < l; i++) {
       const face = faces[i];
 
-      // interpret faces as planes for the further computation
+
 
       const vN = face.distanceToPoint(ray.origin);
       const vD = face.normal.dot(ray.direction);
 
-      // if the origin is on the positive side of a plane (so the plane can "see" the origin) and
-      // the ray is turned away or parallel to the plane, there is no intersection
+
+
 
       if (vN > 0 && vD >= 0) return null;
 
-      // compute the distance from the ray’s origin to the intersection with the plane
+
 
       const t = vD !== 0 ? -vN / vD : 0;
 
-      // only proceed if the distance is positive. a negative distance means the intersection point
-      // lies "behind" the origin
+
+
 
       if (t <= 0) continue;
 
-      // now categorized plane as front-facing or back-facing
+
 
       if (vD > 0) {
-        // plane faces away from the ray, so this plane is a back-face
+
 
         tFar = Math.min(t, tFar);
       } else {
-        // front-face
+
 
         tNear = Math.max(t, tNear);
       }
 
       if (tNear > tFar) {
-        // if tNear ever is greater than tFar, the ray must miss the convex hull
+
 
         return null;
       }
     }
 
-    // evaluate intersection point
 
-    // always try tNear first since its the closer intersection point
+
+
 
     if (tNear !== -Infinity) {
       ray.at(tNear, target);
@@ -171,7 +171,7 @@ export class ConvexHull {
     return this;
   }
 
-  // Adds a vertex to the 'assigned' list of vertices and assigns it to the given face
+
 
   addVertexToFace(vertex: VertexNode, face: Face): this {
     vertex.face = face;
@@ -187,18 +187,18 @@ export class ConvexHull {
     return this;
   }
 
-  // Removes a vertex from the 'assigned' list of vertices and from the given face
+
 
   removeVertexFromFace(vertex: VertexNode, face: Face): this {
     if (vertex === face.outside) {
-      // fix face.outside link
+
 
       if (vertex.next !== null && vertex.next.face === face) {
-        // face has at least 2 outside vertices, move the 'outside' reference
+
 
         face.outside = vertex.next;
       } else {
-        // vertex was the only outside vertex that face had
+
 
         face.outside = null;
       }
@@ -209,11 +209,11 @@ export class ConvexHull {
     return this;
   }
 
-  // Removes all the visible vertices that a given face is able to see which are stored in the 'assigned' vertex list
+
 
   removeAllVerticesFromFace(face: Face): VertexNode | undefined {
     if (face.outside !== null) {
-      // reference to the first and last vertex of this face
+
 
       const start = face.outside;
       let end = face.outside;
@@ -224,7 +224,7 @@ export class ConvexHull {
 
       this.assigned.removeSubList(start, end);
 
-      // fix references
+
 
       start.prev = end.next = null;
       face.outside = null;
@@ -233,30 +233,30 @@ export class ConvexHull {
     }
   }
 
-  // Removes all the visible vertices that 'face' is able to see
+
 
   deleteFaceVertices(face: Face, absorbingFace?: Face): this {
     const faceVertices = this.removeAllVerticesFromFace(face);
 
     if (faceVertices !== undefined) {
       if (absorbingFace === undefined) {
-        // mark the vertices to be reassigned to some other face
+
 
         this.unassigned.appendChain(faceVertices);
       } else {
-        // if there's an absorbing face try to assign as many vertices as possible to it
+
 
         let vertex = faceVertices;
 
         do {
-          // we need to buffer the subsequent vertex at this point because the 'vertex.next' reference
-          // will be changed by upcoming method calls
+
+
 
           const nextVertex = vertex.next;
 
           const distance = absorbingFace.distanceToPoint(vertex.point);
 
-          // check if 'vertex' is able to see 'absorbingFace'
+
 
           if (distance > this.tolerance) {
             this.addVertexToFace(vertex, absorbingFace);
@@ -264,7 +264,7 @@ export class ConvexHull {
             this.unassigned.append(vertex);
           }
 
-          // now assign next vertex
+
 
           vertex = nextVertex!;
         } while (vertex !== null);
@@ -274,14 +274,14 @@ export class ConvexHull {
     return this;
   }
 
-  // Reassigns as many vertices as possible from the unassigned list to the new faces
+
 
   resolveUnassignedPoints(newFaces: Face[]): this {
     if (this.unassigned.isEmpty() === false) {
       let vertex = this.unassigned.first()!;
 
       do {
-        // buffer 'next' reference, see .deleteFaceVertices()
+
 
         const nextVertex = vertex.next;
 
@@ -304,7 +304,7 @@ export class ConvexHull {
           }
         }
 
-        // 'maxFace' can be null e.g. if there are identical vertices
+
 
         if (maxFace !== null) {
           this.addVertexToFace(vertex, maxFace);
@@ -317,7 +317,7 @@ export class ConvexHull {
     return this;
   }
 
-  // Computes the extremes of a simplex which will be the initial hull
+
 
   computeExtremes(): { min: VertexNode[]; max: VertexNode[] } {
     const min = Vec3.new();
@@ -326,7 +326,7 @@ export class ConvexHull {
     const minVertices = [];
     const maxVertices = [];
 
-    // initially assume that the first vertex is the min/max
+
 
     for (let i = 0; i < 3; i++) {
       minVertices[i] = maxVertices[i] = this.vertices[0];
@@ -335,7 +335,7 @@ export class ConvexHull {
     min.from(this.vertices[0].point);
     max.from(this.vertices[0].point);
 
-    // compute the min/max vertex on all six directions
+
 
     for (let i = 0, l = this.vertices.length; i < l; i++) {
       const vertex = this.vertices[i];
@@ -368,7 +368,7 @@ export class ConvexHull {
       }
     }
 
-    // use min/max vectors to compute an optimal epsilon
+
 
     this.tolerance =
       3 *
@@ -380,8 +380,8 @@ export class ConvexHull {
     return { min: minVertices, max: maxVertices };
   }
 
-  // Computes the initial simplex assigning to its faces all the points
-  // that are candidates to form part of the hull
+
+
 
   computeInitialHull(): this {
     const vertices = this.vertices;
@@ -389,10 +389,10 @@ export class ConvexHull {
     const min = extremes.min;
     const max = extremes.max;
 
-    // 1. Find the two vertices 'v0' and 'v1' with the greatest 1d separation
-    // (max.x - min.x)
-    // (max.y - min.y)
-    // (max.z - min.z)
+
+
+
+
 
     let maxDistance = 0;
 
@@ -415,7 +415,7 @@ export class ConvexHull {
     let v2!: VertexNode;
     let v3!: VertexNode;
 
-    // 2. The next vertex 'v2' is the one farthest to the line formed by 'v0' and 'v1'
+
 
     maxDistance = 0;
     _line3.set(v0.point, v1.point);
@@ -435,7 +435,7 @@ export class ConvexHull {
       }
     }
 
-    // 3. The next vertex 'v3' is the one farthest to the plane 'v0', 'v1', 'v2'
+
 
     maxDistance = -1;
     _plane.fromCoplanar(v0.point, v1.point, v2.point);
@@ -456,50 +456,50 @@ export class ConvexHull {
     const faces = [];
 
     if (_plane.distanceTo(v3.point) < 0) {
-      // the face is not able to see the point so 'plane.normal' is pointing outside the tetrahedron
+
 
       faces.push(Face.create(v0, v1, v2), Face.create(v3, v1, v0), Face.create(v3, v2, v1), Face.create(v3, v0, v2));
 
-      // set the twin edge
+
 
       for (let i = 0; i < 3; i++) {
         const j = (i + 1) % 3;
 
-        // join face[ i ] i > 0, with the first face
+
 
         faces[i + 1].getEdge(2).setTwin(faces[0].getEdge(j));
 
-        // join face[ i ] with face[ i + 1 ], 1 <= i <= 3
+
 
         faces[i + 1].getEdge(1).setTwin(faces[j + 1].getEdge(0));
       }
     } else {
-      // the face is able to see the point so 'plane.normal' is pointing inside the tetrahedron
+
 
       faces.push(Face.create(v0, v2, v1), Face.create(v3, v0, v1), Face.create(v3, v1, v2), Face.create(v3, v2, v0));
 
-      // set the twin edge
+
 
       for (let i = 0; i < 3; i++) {
         const j = (i + 1) % 3;
 
-        // join face[ i ] i > 0, with the first face
+
 
         faces[i + 1].getEdge(2).setTwin(faces[0].getEdge((3 - i) % 3));
 
-        // join face[ i ] with face[ i + 1 ]
+
 
         faces[i + 1].getEdge(0).setTwin(faces[j + 1].getEdge(1));
       }
     }
 
-    // the initial hull is the tetrahedron
+
 
     for (let i = 0; i < 4; i++) {
       this.faces.push(faces[i]);
     }
 
-    // initial assignment of vertices to the faces of the tetrahedron
+
 
     for (let i = 0, l = vertices.length; i < l; i++) {
       const vertex = vertices[i];
@@ -526,7 +526,7 @@ export class ConvexHull {
     return this;
   }
 
-  // Removes inactive faces
+
 
   reindexFaces() {
     const activeFaces = [];
@@ -544,21 +544,21 @@ export class ConvexHull {
     return this;
   }
 
-  // Finds the next vertex to create faces with the current hull
+
 
   nextVertexToAdd() {
-    // if the 'assigned' list of vertices is empty, no vertices are left. return with 'undefined'
+
 
     if (this.assigned.isEmpty() === false) {
       let eyeVertex,
         maxDistance = 0;
 
-      // grap the first available face and start with the first visible vertex of that face
+
 
       const eyeFace = this.assigned.first()!.face!;
       let vertex = eyeFace.outside!;
 
-      // now calculate the farthest vertex that face can see
+
 
       do {
         const distance = eyeFace.distanceToPoint(vertex.point);
@@ -575,12 +575,12 @@ export class ConvexHull {
     }
   }
 
-  // Computes a chain of half edges in CCW order called the 'horizon'.
-  // For an edge to be part of the horizon it must join a face that can see
-  // 'eyePoint' and a face that cannot see 'eyePoint'.
+
+
+
 
   computeHorizon(eyePoint: Vec3, crossEdge: HalfEdge | null, face: Face, horizon: HalfEdge[]): this {
-    // moves face's vertices to the 'unassigned' vertex list
+
 
     this.deleteFaceVertices(face);
 
@@ -591,8 +591,8 @@ export class ConvexHull {
     if (crossEdge === null) {
       edge = crossEdge = face.getEdge(0);
     } else {
-      // start from the next edge since 'crossEdge' was already analyzed
-      // (actually 'crossEdge.twin' was the edge who called this method recursively)
+
+
 
       edge = crossEdge.next!;
     }
@@ -603,11 +603,11 @@ export class ConvexHull {
 
       if (oppositeFace.mark === Visible) {
         if (oppositeFace.distanceToPoint(eyePoint) > this.tolerance) {
-          // the opposite face can see the vertex, so proceed with next edge
+
 
           this.computeHorizon(eyePoint, twinEdge, oppositeFace, horizon);
         } else {
-          // the opposite face can't see the vertex, so this edge is part of the horizon
+
 
           horizon.push(edge);
         }
@@ -619,24 +619,24 @@ export class ConvexHull {
     return this;
   }
 
-  // Creates a face with the vertices 'eyeVertex.point', 'horizonEdge.tail' and 'horizonEdge.head' in CCW order
+
 
   addAdjoiningFace(eyeVertex: VertexNode, horizonEdge: HalfEdge): HalfEdge {
-    // all the half edges are created in ccw order thus the face is always pointing outside the hull
+
 
     const face = Face.create(eyeVertex, horizonEdge.tail()!, horizonEdge.head());
 
     this.faces.push(face);
 
-    // join face.getEdge( - 1 ) with the horizon's opposite edge face.getEdge( - 1 ) = face.getEdge( 2 )
+
 
     face.getEdge(-1).setTwin(horizonEdge.twin!);
 
-    return face.getEdge(0); // the half edge whose vertex is the eyeVertex
+    return face.getEdge(0);
   }
 
-  //  Adds 'horizon.length' faces to the hull, each face will be linked with the
-  //  horizon opposite face and the face on the left/right
+
+
 
   addNewFaces(eyeVertex: VertexNode, horizon: HalfEdge[]): this {
     this.newFaces = [];
@@ -647,14 +647,14 @@ export class ConvexHull {
     for (let i = 0; i < horizon.length; i++) {
       const horizonEdge = horizon[i];
 
-      // returns the right side edge
+
 
       const sideEdge = this.addAdjoiningFace(eyeVertex, horizonEdge);
 
       if (firstSideEdge === null) {
         firstSideEdge = sideEdge;
       } else {
-        // joins face.getEdge( 1 ) with previousFace.getEdge( 0 )
+
 
         sideEdge.next!.setTwin(previousSideEdge!);
       }
@@ -663,21 +663,21 @@ export class ConvexHull {
       previousSideEdge = sideEdge;
     }
 
-    // perform final join of new faces
+
 
     firstSideEdge!.next!.setTwin(previousSideEdge!);
 
     return this;
   }
 
-  // Adds a vertex to the hull
+
 
   addVertexToHull(eyeVertex: VertexNode): this {
     const horizon: HalfEdge[] = [];
 
     this.unassigned.clear();
 
-    // remove 'eyeVertex' from 'eyeVertex.face' so that it can't be added to the 'unassigned' vertex list
+
 
     this.removeVertexFromFace(eyeVertex, eyeVertex.face!);
 
@@ -685,7 +685,7 @@ export class ConvexHull {
 
     this.addNewFaces(eyeVertex, horizon);
 
-    // reassign 'unassigned' vertices to the new faces
+
 
     this.resolveUnassignedPoints(this.newFaces);
 
@@ -705,7 +705,7 @@ export class ConvexHull {
 
     this.computeInitialHull();
 
-    // add all available vertices gradually to the hull
+
 
     while ((vertex = this.nextVertexToAdd()) !== undefined) {
       this.addVertexToHull(vertex);
@@ -734,9 +734,9 @@ export class Face {
     this.midpoint = Vec3.new();
     this.area = 0;
 
-    // signed distance from face to the origin
+
     this.constant = 0;
-    // reference to a vertex in a vertex list this face can see
+
     this.outside = null;
     this.mark = Visible;
     this.edge = null;
@@ -749,13 +749,13 @@ export class Face {
     const e1 = new HalfEdge(b, face);
     const e2 = new HalfEdge(c, face);
 
-    // join edges
+
 
     e0.next = e2.prev = e1;
     e1.next = e0.prev = e2;
     e2.next = e1.prev = e0;
 
-    // main half edge reference
+
 
     face.edge = e0;
 
@@ -913,7 +913,7 @@ export class VertexList {
     }
 
     vertex.prev = this.tail;
-    // the tail has no subsequent vertex
+
     vertex.next = null;
 
     this.tail = vertex;

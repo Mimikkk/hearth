@@ -10,7 +10,7 @@ import { tangentLocal } from './TangentNode.js';
 import { uniform } from '../core/UniformNode.js';
 import { buffer } from './BufferNode.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
-import { SkinnedMesh } from '@modules/renderer/engine/objects/SkinnedMesh.js';
+import { SkinnedMesh } from '@modules/renderer/engine/entities/SkinnedMesh.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { NodeFrame } from '@modules/renderer/engine/nodes/core/NodeFrame.js';
 import { AttributeNode } from '@modules/renderer/engine/nodes/Nodes.js';

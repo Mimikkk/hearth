@@ -107,7 +107,7 @@ class OperatorNode extends TempNode {
     const outputLength = TypeName.size(output);
 
     if (output !== TypeName.void) {
-      // Polyfills for missing for bvec2/3/4
+
       if (op === Operator.lt && outputLength > 1) {
         return builder.format(`${builder.codeMethod('lessThan')}(${a}, ${b})`, type, output);
       }

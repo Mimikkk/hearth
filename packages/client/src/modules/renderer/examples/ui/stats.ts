@@ -1,6 +1,6 @@
-import type { Forge } from '@modules/renderer/engine/renderers/Forge.js';
-import type { ForgeFrameStats } from '@modules/renderer/engine/renderers/Forge.FrameStats.js';
-import { GPUFeature } from '@modules/renderer/engine/renderers/constants.js';
+import type { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
+import type { HearthFrameStats } from '@modules/renderer/engine/hearth/Hearth.FrameStats.js';
+import { GPUFeature } from '@modules/renderer/engine/hearth/constants.js';
 
 class Panel {
   canvas: HTMLCanvasElement;
@@ -195,7 +195,7 @@ export class Stats {
   prevStatTime: number;
   frames: number;
 
-  info: ForgeFrameStats;
+  info: HearthFrameStats;
   dom: HTMLDivElement;
 
   cpuMsStat: Stat;
@@ -213,7 +213,7 @@ export class Stats {
   precision: number;
 
   constructor(
-    renderer: Forge,
+    renderer: Hearth,
     { insert = true, logsPerSecond = 20, samplesLog = 100, samplesGraph = 10, precision = 2 }: Options = {},
   ) {
     this.dom = document.createElement('div');
@@ -255,7 +255,7 @@ export class Stats {
     });
   }
 
-  static use(renderer: Forge, options?: Options) {
+  static use(renderer: Hearth, options?: Options) {
     return new Stats(renderer, options);
   }
 

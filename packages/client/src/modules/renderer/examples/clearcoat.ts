@@ -1,11 +1,11 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
 
-import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 
-import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
+import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
 import { HDRCubeTextureLoader } from '@modules/renderer/engine/loaders/textures/HDRCubeTextureLoader/HDRCubeTextureLoader.js';
 
-import { FlakesTexture } from '@modules/renderer/engine/objects/textures/FlakesTexture.js';
+import { FlakesTexture } from '@modules/renderer/engine/entities/textures/FlakesTexture.js';
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
@@ -72,7 +72,7 @@ async function init() {
         'resources/textures/pbr/Scratched_gold/Scratched_gold_01_1K_Normal.png',
       );
 
-      // car paint
+      
 
       let material = new Engine.MeshPhysicalMaterial({
         clearcoat: 1.0,
@@ -88,7 +88,7 @@ async function init() {
       mesh.position.y = 1;
       group.add(mesh);
 
-      // fibers
+      
 
       material = new Engine.MeshPhysicalMaterial({
         roughness: 0.5,
@@ -102,7 +102,7 @@ async function init() {
       mesh.position.y = 1;
       group.add(mesh);
 
-      // golf
+      
 
       material = new Engine.MeshPhysicalMaterial({
         metalness: 0.0,
@@ -111,7 +111,7 @@ async function init() {
         normalMap: normalMap4,
         clearcoatNormalMap: clearcoatNormalMap,
 
-        // y scale is negated to compensate for normal map handedness.
+        
         clearcoatNormalScale: new Engine.Vec2(2.0, -2.0),
       });
       mesh = new Engine.Mesh(geometry, material);
@@ -119,7 +119,7 @@ async function init() {
       mesh.position.y = -1;
       group.add(mesh);
 
-      // clearcoat + normalmap
+      
 
       material = new Engine.MeshPhysicalMaterial({
         clearcoat: 1.0,
@@ -129,7 +129,7 @@ async function init() {
         normalScale: new Engine.Vec2(0.15, 0.15),
         clearcoatNormalMap: clearcoatNormalMap,
 
-        // y scale is negated to compensate for normal map handedness.
+        
         clearcoatNormalScale: new Engine.Vec2(2.0, -2.0),
       });
       mesh = new Engine.Mesh(geometry, material);
@@ -143,7 +143,7 @@ async function init() {
       scene.environment = texture;
     });
 
-  // LIGHTS
+  
 
   particleLight = new Engine.Mesh(
     new Engine.SphereGeometry(0.05, 8, 8),
@@ -153,7 +153,7 @@ async function init() {
 
   particleLight.add(new Engine.PointLight(0xffffff, 30));
 
-  renderer = await Forge.as();
+  renderer = await Hearth.as();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.animation.loop = animate;
@@ -166,7 +166,7 @@ async function init() {
 
   //
 
-  // EVENTS
+  
 
   const controls = new OrbitControls(camera, renderer.parameters.canvas);
   controls.minDistance = 3;

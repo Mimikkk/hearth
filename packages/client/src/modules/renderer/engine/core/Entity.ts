@@ -5,17 +5,17 @@ import { Euler } from '../math/Euler.js';
 import { RaycastLayers } from './RaycastLayers.js';
 import { Mat3 } from '../math/Mat3.js';
 import type { Intersection, Raycaster } from './Raycaster.js';
-import type { Light } from '@modules/renderer/engine/objects/lights/Light.js';
-import type { Scene } from '@modules/renderer/engine/objects/scenes/Scene.js';
+import type { Light } from '@modules/renderer/engine/entities/lights/Light.js';
+import type { Scene } from '@modules/renderer/engine/entities/scenes/Scene.js';
 import type { Geometry } from './Geometry.js';
-import type { Camera } from '@modules/renderer/engine/objects/cameras/Camera.js';
-import type { Material } from '@modules/renderer/engine/objects/materials/Material.js';
-import type { Group } from '../objects/Group.js';
+import type { Camera } from '@modules/renderer/engine/entities/cameras/Camera.js';
+import type { Material } from '@modules/renderer/engine/entities/materials/Material.js';
+import type { Group } from '@modules/renderer/engine/entities/Group.js';
 import type { Box3 } from '@modules/renderer/engine/math/Box3.js';
-import type { Forge } from '../renderers/Forge.js';
+import type { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import type { Sphere } from '@modules/renderer/engine/math/Sphere.js';
 import { v4 } from 'uuid';
-import type { Skeleton } from '@modules/renderer/engine/objects/Skeleton.js';
+import type { Skeleton } from '@modules/renderer/engine/entities/Skeleton.js';
 import { AnimationClip } from '@modules/renderer/engine/animation/AnimationClip.js';
 
 const isCamera = (object: any): object is Camera => object.isCamera;
@@ -89,7 +89,7 @@ export class Entity {
 
     this.matrixAutoUpdate = Entity.UseLocalAutoUpdate;
 
-    this.matrixWorldAutoUpdate = Entity.UseWorldAutoUpdate; // checked by the renderer
+    this.matrixWorldAutoUpdate = Entity.UseWorldAutoUpdate;
     this.matrixWorldNeedsUpdate = false;
 
     this.layers = RaycastLayers.new();
@@ -111,7 +111,7 @@ export class Entity {
   }
 
   onBeforeShadow(
-    renderer: Forge,
+    renderer: Hearth,
     scene: Scene,
     shadowCamera: Camera,
     geometry: Geometry,
@@ -120,7 +120,7 @@ export class Entity {
   ): void {}
 
   onAfterShadow(
-    renderer: Forge,
+    renderer: Hearth,
     scene: Scene,
     shadowCamera: Camera,
     geometry: Geometry,
@@ -129,7 +129,7 @@ export class Entity {
   ): void {}
 
   onBeforeRender(
-    renderer: Forge,
+    renderer: Hearth,
     scene: Scene,
     camera: Camera,
     geometry: Geometry,
@@ -138,7 +138,7 @@ export class Entity {
   ): void {}
 
   onAfterRender(
-    renderer: Forge,
+    renderer: Hearth,
     scene: Scene,
     camera: Camera,
     geometry: Geometry,
@@ -210,15 +210,15 @@ export class Entity {
   }
 
   getRotationZ(): number {
-    // get form quaternion
+
     const { x, y, z, w } = this.quaternion;
 
     return Math.atan2(2 * (x * y - z * w), 1 - 2 * (x * x + y * y));
   }
 
   rotateOnAxis(axis: Vec3, angle: number): this {
-    // rotate object on axis in object space
-    // axis is assumed to be normalized
+
+
 
     _q1.fromAxisAngle(axis, angle);
 
@@ -228,9 +228,9 @@ export class Entity {
   }
 
   rotateOnWorldAxis(axis: Vec3, angle: number): this {
-    // rotate object on axis in world space
-    // axis is assumed to be normalized
-    // method assumes no rotated parent
+
+
+
 
     _q1.fromAxisAngle(axis, angle);
 
@@ -252,8 +252,8 @@ export class Entity {
   }
 
   translateOnAxis(axis: Vec3, distance: number): this {
-    // translate object by distance along axis in object space
-    // axis is assumed to be normalized
+
+
 
     _v1.from(axis).applyQuaternion(this.quaternion);
 
@@ -289,7 +289,7 @@ export class Entity {
   lookAt(x: Vec3): this;
   lookAt(x: number, y: number, z: number): this;
   lookAt(x: number | Vec3, y?: number, z?: number): this {
-    // This method does not support objects having non-uniformly-scaled parent(s)
+
 
     if (x instanceof Vec3) {
       _target.from(x);
@@ -374,9 +374,9 @@ export class Entity {
   }
 
   attach(object: Entity): this {
-    // adds object as a child of this, while maintaining the object's world transform
 
-    // Note: This method does not support scene graphs having non-uniformly-scaled nodes(s)
+
+
 
     this.updateWorldMatrix(true, false);
 
@@ -424,7 +424,7 @@ export class Entity {
   }
 
   getObjectsByProperty(name: string, value: any, result: Entity[] = []): Entity[] {
-    // @ts-expect-error
+
     if (this[name] === value) result.push(this);
 
     const children = this.children;
@@ -528,7 +528,7 @@ export class Entity {
       force = true;
     }
 
-    // update children
+
 
     const children = this.children;
 
@@ -557,7 +557,7 @@ export class Entity {
       this.matrixWorld.asMul(this.parent.matrixWorld, this.matrix);
     }
 
-    // update children
+
 
     if (updateChildren === true) {
       const children = this.children;

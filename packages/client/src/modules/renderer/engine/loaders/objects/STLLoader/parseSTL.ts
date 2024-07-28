@@ -10,20 +10,20 @@ function isBinary(data: ArrayBuffer) {
     return true;
   }
 
-  // An ASCII STL data must begin with 'solid ' as the first six bytes.
-  // However, ASCII STLs lacking the SPACE after the 'd' are known to be
-  // plentiful.  So, check the first 5 bytes for 'solid'.
 
-  // Several encodings, such as UTF-8, precede the text with up to 5 bytes:
-  // https://en.wikipedia.org/wiki/Byte_order_mark#Byte_order_marks_by_encoding
-  // Search for "solid" to start anywhere after those prefixes.
 
-  // US-ASCII ordinal values for 's', 'o', 'l', 'i', 'd'
+
+
+
+
+
+
+
 
   const solid = [115, 111, 108, 105, 100];
 
   for (let off = 0; off < 5; off++) {
-    // If "solid" text is matched to the current offset, declare it to be an ASCII STL.
+
     if (matchDataViewAt(solid, reader, off)) return false;
   }
 
@@ -51,8 +51,8 @@ function parseBinary(buffer: ArrayBuffer) {
   let defaultB!: number;
   let alpha!: number;
 
-  // process STL header
-  // check for default color in header ("COLOR=rgba" sequence).
+
+
 
   for (let index = 0; index < 80 - 10; index++) {
     if (
@@ -89,7 +89,7 @@ function parseBinary(buffer: ArrayBuffer) {
       const packedColor = reader.getUint16(start + 48, true);
 
       if ((packedColor & 0x8000) === 0) {
-        // facet has its own unique color
+
 
         r = (packedColor & 0x1f) / 31;
         g = ((packedColor >> 5) & 0x1f) / 31;
@@ -188,13 +188,13 @@ function parseASCII(text: string) {
         endVertex++;
       }
 
-      // every face have to own ONE valid normal
+
 
       if (normalCountPerFace !== 1) {
         console.error("STLLoader: Something isn't right with the normal of face number " + faceCounter);
       }
 
-      // each face have to own THREE valid vertices
+
 
       if (vertexCountPerFace !== 3) {
         console.error("STLLoader: Something isn't right with the vertices of face number " + faceCounter);

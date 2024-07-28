@@ -1,11 +1,11 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
 import { MeshBasicNodeMaterial, texture } from '@modules/renderer/engine/nodes/Nodes.js';
 
-import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 
-import { QuadMesh } from '@modules/renderer/engine/objects/QuadMesh.js';
+import { QuadMesh } from '@modules/renderer/engine/entities/QuadMesh.js';
 
-import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
+import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
 import { TextureDataType } from '@modules/renderer/engine/engine.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
@@ -45,7 +45,7 @@ async function init() {
 
   //
 
-  renderer = await Forge.as();
+  renderer = await Hearth.as();
   renderer.setPixelRatio(dpr);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.animation.loop = animate;
@@ -65,7 +65,7 @@ async function init() {
     renderTarget.setSize(window.innerWidth * dpr, window.innerHeight * dpr);
   });
 
-  // FX
+
 
   const materialFX = new MeshBasicNodeMaterial();
   materialFX.colorNode = texture(depthTexture);

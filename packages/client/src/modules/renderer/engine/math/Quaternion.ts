@@ -185,7 +185,7 @@ export class Quaternion {
       z = this.z,
       w = this.w;
 
-    // http://www.euclideanspace.com/maths/algebra/realNormedAlgebra/quaternions/slerp/
+    
 
     let cosHalfTheta = w * to.w + x * to.x + y * to.y + z * to.z;
 
@@ -218,7 +218,7 @@ export class Quaternion {
       this.y = s * y + step * this.y;
       this.z = s * z + step * this.z;
 
-      this.normalize(); // normalize calls _onChangeCallback()
+      this.normalize(); 
 
       return this;
     }
@@ -374,7 +374,7 @@ export class Quaternion {
   }
 
   asMul(a: Const<Quaternion>, b: Const<Quaternion>): this {
-    // from http://www.euclideanspace.com/maths/algebra/realNormedAlgebra/quaternions/code/index.htm
+    
 
     const qax = a.x,
       qay = a.y,
@@ -420,7 +420,7 @@ export namespace QuaternionArray {
     srcOffset1: number,
     t: number,
   ): T {
-    // fuzz-free, array-based Quaternion SLERP operation
+    
 
     let x0 = src0[srcOffset0];
     let y0 = src0[srcOffset0 + 1];
@@ -454,7 +454,7 @@ export namespace QuaternionArray {
         dir = cos >= 0 ? 1 : -1,
         sqrSin = 1 - cos * cos;
 
-      // Skip the Slerp for tiny steps to avoid numeric problems:
+      
       if (sqrSin > Number.EPSILON) {
         const sin = Math.sqrt(sqrSin),
           len = Math.atan2(sin, cos * dir);
@@ -470,7 +470,7 @@ export namespace QuaternionArray {
       z0 = z0 * s + z1 * tDir;
       w0 = w0 * s + w1 * tDir;
 
-      // Normalize in case we just did a lerp:
+      
       if (s === 1 - t) {
         const f = 1 / Math.sqrt(x0 * x0 + y0 * y0 + z0 * z0 + w0 * w0);
 

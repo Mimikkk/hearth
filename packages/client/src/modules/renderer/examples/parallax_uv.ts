@@ -2,9 +2,9 @@ import * as Engine from '@modules/renderer/engine/engine.js';
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { MeshStandardNodeMaterial, parallaxUV, texture, uv } from '@modules/renderer/engine/nodes/Nodes.js';
 
-import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 
-import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
+import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
 import { CubeTextureLoader } from '@modules/renderer/engine/loaders/textures/CubeTextureLoader/CubeTextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
@@ -15,16 +15,16 @@ let controls;
 init();
 
 async function init() {
-  // scene
+  
 
   scene = new Engine.Scene();
 
-  // camera
+  
 
   camera = new Engine.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 50);
   camera.position.set(10, 14, 10);
 
-  // environment
+  
 
   const environmentTexture = new CubeTextureLoader().loadAsync([
     'resources/textures/cube/Park2/posx.jpg',
@@ -38,7 +38,7 @@ async function init() {
   scene.environment = environmentTexture;
   scene.background = environmentTexture;
 
-  // textures
+  
 
   const loader = new TextureLoader();
 
@@ -61,7 +61,7 @@ async function init() {
   bottomTexture.wrapS = Engine.Wrapping.Repeat;
   bottomTexture.wrapT = Engine.Wrapping.Repeat;
 
-  // paralax effect
+  
 
   const parallaxScale = 0.3;
   const offsetUV = texture(displaceTexture).mul(parallaxScale);
@@ -71,10 +71,10 @@ async function init() {
 
   const iceNode = texture(topTexture).overlay(parallaxResult);
 
-  // material
+  
 
   const material = new MeshStandardNodeMaterial();
-  material.colorNode = iceNode.mul(5); // increase the color intensity to 5 ( contrast )
+  material.colorNode = iceNode.mul(5); 
   material.roughnessNode = texture(roughnessTexture);
   material.normalMap = normalTexture;
   material.metalness = 0;
@@ -85,9 +85,9 @@ async function init() {
   ground.rotateX(-Math.PI / 2);
   scene.add(ground);
 
-  // renderer
+  
 
-  renderer = await Forge.as();
+  renderer = await Hearth.as();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.animation.loop = animate;
@@ -95,7 +95,7 @@ async function init() {
   renderer.parameters.toneMappingExposure = 6;
   document.body.appendChild(renderer.parameters.canvas);
 
-  // controls
+  
 
   controls = new OrbitControls(camera, renderer.parameters.canvas);
   controls.target.set(0, 0, 0);

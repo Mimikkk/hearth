@@ -11,8 +11,8 @@ import { addNodeCommand, proxyNode, tslFn, vec3 } from '../shadernode/ShaderNode
 
 import { NormalMapType } from '@modules/renderer/engine/engine.js';
 
-// Normal Mapping Without Precomputed Tangents
-// http://www.thetenthplanet.de/archives/1180
+
+
 
 const perturbNormal2Arb = tslFn(inputs => {
   const { eye_pos, surf_norm, mapN, uv } = inputs;
@@ -22,7 +22,7 @@ const perturbNormal2Arb = tslFn(inputs => {
   const st0 = uv.dpdx();
   const st1 = uv.dpdy().negate();
 
-  const N = surf_norm; // normalized
+  const N = surf_norm; 
 
   const q1perp = q1.cross(N);
   const q0perp = N.cross(q0);

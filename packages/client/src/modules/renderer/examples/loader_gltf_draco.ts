@@ -1,14 +1,14 @@
-import { PerspectiveCamera } from '@modules/renderer/engine/objects/cameras/PerspectiveCamera.js';
-import { Scene } from '@modules/renderer/engine/objects/scenes/Scene.js';
-import { Fog } from '@modules/renderer/engine/objects/scenes/Fog.js';
-import { Mesh } from '../engine/objects/Mesh.js';
+import { PerspectiveCamera } from '@modules/renderer/engine/entities/cameras/PerspectiveCamera.js';
+import { Scene } from '@modules/renderer/engine/entities/scenes/Scene.js';
+import { Fog } from '@modules/renderer/engine/entities/scenes/Fog.js';
+import { Mesh } from '@modules/renderer/engine/entities/Mesh.js';
 import { PlaneGeometry } from '../engine/geometries/PlaneGeometry.js';
-import { MeshPhongMaterial } from '@modules/renderer/engine/objects/materials/MeshPhongMaterial.js';
-import { HemisphereLight } from '@modules/renderer/engine/objects/lights/HemisphereLight.js';
-import { SpotLight } from '@modules/renderer/engine/objects/lights/SpotLight.js';
-import { MeshStandardMaterial } from '@modules/renderer/engine/objects/materials/MeshStandardMaterial.js';
+import { MeshPhongMaterial } from '@modules/renderer/engine/entities/materials/MeshPhongMaterial.js';
+import { HemisphereLight } from '@modules/renderer/engine/entities/lights/HemisphereLight.js';
+import { SpotLight } from '@modules/renderer/engine/entities/lights/SpotLight.js';
+import { MeshStandardMaterial } from '@modules/renderer/engine/entities/materials/MeshStandardMaterial.js';
 import { DRACOLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/DRACOLoader.js';
-import { Forge } from '../engine/renderers/Forge.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { Color } from '@modules/renderer/engine/math/Color.js';
 import { FileLoader } from '@modules/renderer/engine/loaders/files/FileLoader/FileLoader.js';
 
@@ -16,7 +16,7 @@ let camera, scene, renderer;
 
 const container = document.querySelector('#container');
 
-// Configure and create Draco decoder.
+
 const dracoLoader = new DRACOLoader();
 
 init();
@@ -29,14 +29,14 @@ async function init() {
   scene.background = Color.new(0x443333);
   scene.fog = new Fog(0x443333, 1, 4);
 
-  // Ground
+
   const plane = new Mesh(new PlaneGeometry(8, 8), new MeshPhongMaterial({ color: 0xcbcbcb, specular: 0x101010 }));
   plane.setRotationX(-Math.PI / 2);
   plane.position.y = 0.03;
   plane.receiveShadow = true;
   scene.add(plane);
 
-  // Lights
+
   const hemiLight = new HemisphereLight(0x8d7c7c, 0x494966, 3);
   scene.add(hemiLight);
 
@@ -57,12 +57,12 @@ async function init() {
     mesh.receiveShadow = true;
     scene.add(mesh);
 
-    // Release decoder resources.
+
     dracoLoader.dispose();
   });
 
-  // renderer
-  renderer = await Forge.as();
+
+  renderer = await Hearth.as();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.animation.loop = animate;

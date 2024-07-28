@@ -1,8 +1,8 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
 
-import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 
-import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
+import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
 import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/GLTFLoader.js';
 import { RGBELoader } from '@modules/renderer/engine/loaders/textures/RGBELoader/RGBELoader.js';
 
@@ -21,7 +21,7 @@ async function init() {
   camera.position.set(-0.75, 0.7, 1.25);
 
   scene = new Engine.Scene();
-  // model
+
 
   new GLTFLoader().loadAsync('resources/models/gltf/SheenChair.glb').then(gltf => {
     scene.add(gltf.scene);
@@ -34,7 +34,7 @@ async function init() {
     gui.open();
   });
 
-  renderer = await Forge.as();
+  renderer = await Hearth.as();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.animation.loop = animate;
@@ -48,7 +48,7 @@ async function init() {
     texture.mapping = Engine.Mapping.EquirectangularReflection;
 
     scene.background = texture;
-    //scene.backgroundBlurriness = 1; // @TODO: Needs PMREM
+    //scene.backgroundBlurriness = 1;
     scene.environment = texture;
   });
 
@@ -65,7 +65,7 @@ async function init() {
 //
 
 function animate() {
-  controls.update(); // required if damping enabled
+  controls.update();
 
   render();
 }

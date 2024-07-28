@@ -5,10 +5,10 @@ import { positionView } from '../accessors/PositionNode.js';
 import { faceDirection } from './FrontFacingNode.js';
 import { addNodeCommand, f32, proxyNode, tslFn, vec2 } from '../shadernode/ShaderNodes.js';
 
-// Bump Mapping Unparametrized Surfaces on the GPU by Morten S. Mikkelsen
-// https://mmikk.github.io/papers3d/mm_sfgrad_bump.pdf
 
-// Evaluate the derivative of the height w.r.t. screen-space using forward differencing (listing 2)
+
+
+
 
 const dHdxy_fwd = tslFn(({ textureNode, bumpScale }) => {
   let texNode = textureNode;
@@ -26,7 +26,7 @@ const dHdxy_fwd = tslFn(({ textureNode, bumpScale }) => {
   const Hll = f32(textureNode);
   const uvNode = texNode.uvNode || uv();
 
-  // It's used to preserve the same TextureNode instance
+
   const sampleTexture = uv => textureNode.cache().context({ getUV: () => uv, forceUVContext: true });
 
   return vec2(
@@ -38,10 +38,10 @@ const dHdxy_fwd = tslFn(({ textureNode, bumpScale }) => {
 const perturbNormalArb = tslFn(inputs => {
   const { surf_pos, surf_norm, dHdxy } = inputs;
 
-  // normalize is done to ensure that the bump map looks the same regardless of the texture's scale
+
   const vSigmaX = surf_pos.dpdx().normalize();
   const vSigmaY = surf_pos.dpdy().negate().normalize();
-  const vN = surf_norm; // normalized
+  const vN = surf_norm;
 
   const R1 = vSigmaY.cross(vN);
   const R2 = vN.cross(vSigmaX);

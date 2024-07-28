@@ -8,9 +8,9 @@ import {
   toneMapping,
 } from '@modules/renderer/engine/nodes/Nodes.js';
 
-import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 
-import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
+import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 import { Random } from '@modules/renderer/engine/math/random.js';
 
@@ -33,14 +33,14 @@ async function init() {
   scene = new Engine.Scene();
   scene.background = new Engine.Color(0x222222);
 
-  // lights
+
 
   const sphereGeometry = new Engine.SphereGeometry(0.02, 16, 8);
 
   const addLight = (hexColor, intensity = 2, distance = 1) => {
     const material = new MeshStandardNodeMaterial();
     material.colorNode = color(hexColor);
-    material.lightsNode = lights(); // ignore scene lights
+    material.lightsNode = lights();
 
     const mesh = new Engine.Mesh(sphereGeometry, material);
 
@@ -60,7 +60,7 @@ async function init() {
 
   const allLightsNode = lights([light1, light2, light3]);
 
-  // points
+
 
   const points = [];
 
@@ -72,7 +72,7 @@ async function init() {
   const geometryPoints = new Engine.Geometry().setFromPoints(points);
   const materialPoints = new PointsNodeMaterial();
 
-  // custom lighting model
+
 
   const lightingModel = new CustomLightingModel();
   const lightingModelContext = allLightsNode.context({ lightingModel });
@@ -86,14 +86,14 @@ async function init() {
 
   //
 
-  renderer = await Forge.as();
+  renderer = await Hearth.as();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.animation.loop = animate;
   renderer.parameters.toneMappingNode = toneMapping(Engine.ToneMapping.Linear, 1);
   document.body.appendChild(renderer.parameters.canvas);
 
-  // controls
+
 
   const controls = new OrbitControls(camera, renderer.parameters.canvas);
   controls.minDistance = 0;

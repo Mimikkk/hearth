@@ -19,7 +19,7 @@ export const AvailableIconsTab = () => {
       ([ref, active]) => {
         if (!ref || !active) return;
         setQuery('');
-        // @ts-expect-error
+
         ref.focus();
       },
     ),

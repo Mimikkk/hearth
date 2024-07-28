@@ -10,8 +10,8 @@ import {
   vec4,
 } from '@modules/renderer/engine/nodes/Nodes.js';
 
-import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
-import StorageTexture from '@modules/renderer/engine/objects/textures/StorageTexture.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
+import StorageTexture from '@modules/renderer/engine/entities/textures/StorageTexture.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, renderer;
@@ -26,21 +26,21 @@ async function init() {
 
   scene = new Engine.Scene();
 
-  // texture
+
 
   const width = 512,
     height = 512;
 
   const storageTexture = new StorageTexture(width, height);
 
-  // create function
+
 
   const computeTexture = tslFn(({ storageTexture }) => {
     const posX = instanceIndex.remainder(width);
     const posY = instanceIndex.div(width);
     const indexUV = uvec2(posX, posY);
 
-    // https://www.shadertoy.com/view/Xst3zN
+
 
     const x = f32(posX).div(50.0);
     const y = f32(posY).div(50.0);
@@ -58,7 +58,7 @@ async function init() {
     textureStore(storageTexture, indexUV, vec4(r, g, b, 1));
   });
 
-  // compute
+
 
   const computeNode = computeTexture({ storageTexture }).compute(width * height);
 
@@ -68,12 +68,12 @@ async function init() {
   const plane = new Engine.Mesh(new Engine.PlaneGeometry(1, 1), material);
   scene.add(plane);
 
-  renderer = await Forge.as();
+  renderer = await Hearth.as();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.parameters.canvas);
 
-  // compute texture
+
   renderer.compute(computeNode);
   useWindowResizer(renderer, camera, () => {
     renderer.setSize(window.innerWidth, window.innerHeight);

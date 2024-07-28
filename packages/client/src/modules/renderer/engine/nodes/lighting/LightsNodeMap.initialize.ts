@@ -1,15 +1,15 @@
 import SpotLightNode from '@modules/renderer/engine/nodes/lighting/SpotLightNode.js';
-import { AmbientLight } from '@modules/renderer/engine/objects/lights/AmbientLight.js';
-import { DirectionalLight } from '@modules/renderer/engine/objects/lights/DirectionalLight.js';
-import { HemisphereLight } from '@modules/renderer/engine/objects/lights/HemisphereLight.js';
-import { PointLight } from '@modules/renderer/engine/objects/lights/PointLight.js';
-import { SpotLight } from '@modules/renderer/engine/objects/lights/SpotLight.js';
+import { AmbientLight } from '@modules/renderer/engine/entities/lights/AmbientLight.js';
+import { DirectionalLight } from '@modules/renderer/engine/entities/lights/DirectionalLight.js';
+import { HemisphereLight } from '@modules/renderer/engine/entities/lights/HemisphereLight.js';
+import { PointLight } from '@modules/renderer/engine/entities/lights/PointLight.js';
+import { SpotLight } from '@modules/renderer/engine/entities/lights/SpotLight.js';
 import PointLightNode from '@modules/renderer/engine/nodes/lighting/PointLightNode.js';
 import AmbientLightNode from '@modules/renderer/engine/nodes/lighting/AmbientLightNode.js';
 import DirectionalLightNode from '@modules/renderer/engine/nodes/lighting/DirectionalLightNode.js';
 import { LightNodeMap } from '@modules/renderer/engine/nodes/lighting/LightsNodeMap.js';
 import HemisphereLightNode from '@modules/renderer/engine/nodes/lighting/HemisphereLightNode.js';
-import { IESSpotLight } from '@modules/renderer/engine/objects/lights/IESSpotLight.js';
+import { IESSpotLight } from '@modules/renderer/engine/entities/lights/IESSpotLight.js';
 import IESSpotLightNode from '@modules/renderer/engine/nodes/lighting/IESSpotLightNode.js';
 
 LightNodeMap.set(AmbientLight, AmbientLightNode);

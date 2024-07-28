@@ -124,7 +124,7 @@ export class Node {
       nodeProperties['_node' + childNode.id] = childNode;
     }
 
-    // return a outputNode if exists
+
     return null;
   }
 

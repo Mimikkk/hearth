@@ -1,11 +1,11 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
 import { MeshPhongNodeMaterial } from '@modules/renderer/engine/nodes/Nodes.js';
 
-import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 
 import { GUI } from 'lil-gui';
 
-import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
+import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
 import { Side } from '@modules/renderer/engine/engine.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
@@ -20,7 +20,7 @@ async function init() {
 
   scene = new Engine.Scene();
 
-  // Lights
+
 
   scene.add(new Engine.AmbientLight(0xcccccc));
 
@@ -52,20 +52,20 @@ async function init() {
   dirLight.shadow.mapSize.height = 1024;
   scene.add(dirLight);
 
-  // ***** Clipping planes: *****
+
 
   const localPlane = new Engine.Plane(new Engine.Vec3(0, -1, 0), 0.8);
   const localPlane2 = new Engine.Plane(new Engine.Vec3(0, 0, -1), 0.1);
   const globalPlane = new Engine.Plane(new Engine.Vec3(-1, 0, 0), 0.1);
 
-  // Geometry
+
 
   const material = new MeshPhongNodeMaterial({
     color: 0x80ee10,
     shininess: 0,
     side: Engine.Side.Double,
 
-    // ***** Clipping setup (material): *****
+
     clippingPlanes: [localPlane, localPlane2],
     clipShadows: true,
     alphaToCoverage: true,
@@ -83,34 +83,34 @@ async function init() {
     new MeshPhongNodeMaterial({ color: 0xa0adaf, shininess: 150 }),
   );
 
-  ground.setRotationX(-Math.PI / 2); // rotates X/Y to X/Z
+  ground.setRotationX(-Math.PI / 2);
   ground.receiveShadow = true;
   scene.add(ground);
 
-  // Stats
 
-  // Renderer
 
-  renderer = await Forge.as();
+
+
+  renderer = await Hearth.as();
 
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.animation.loop = animate;
   document.body.appendChild(renderer.parameters.canvas);
 
-  // ***** Clipping setup (renderer): *****
+
   const globalPlanes = [globalPlane];
   const Empty = Object.freeze([]);
 
-  renderer.parameters.clippingPlanes = Empty; // GUI sets it to globalPlanes
+  renderer.parameters.clippingPlanes = Empty;
   renderer.parameters.localClippingEnabled = true;
 
-  // Controls
+
   const controls = new OrbitControls(camera, renderer.parameters.canvas);
   controls.target.set(0, 1, 0);
   controls.update();
 
-  // GUI
+
 
   const gui = new GUI(),
     props = {
@@ -180,7 +180,7 @@ async function init() {
   folderGlobal.add(propsGlobal, 'Enabled');
   folderGlobal.add(propsGlobal, 'Plane', -0.4, 3);
 
-  // Start
+
 
   useWindowResizer(renderer, camera);
   startTime = Date.now();

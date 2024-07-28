@@ -1,13 +1,13 @@
-import BindingStorageBuffer from '../../renderers/bindings/BindingStorageBuffer.js';
+import BindingStorageBuffer from '@modules/renderer/engine/hearth/bindings/BindingStorageBuffer.js';
 import Uniform from '@modules/renderer/engine/nodes/core/Uniform.js';
 import { Buffer } from '@modules/renderer/engine/core/Buffer.js';
-import BindingUniformBuffer from '@modules/renderer/engine/renderers/bindings/BindingUniformBuffer.js';
-import BindingSampler from '@modules/renderer/engine/renderers/bindings/BindingSampler.js';
+import BindingUniformBuffer from '@modules/renderer/engine/hearth/bindings/BindingUniformBuffer.js';
+import BindingSampler from '@modules/renderer/engine/hearth/bindings/BindingSampler.js';
 import TextureNode from '@modules/renderer/engine/nodes/accessors/TextureNode.js';
-import { BindingSampledTexture } from '@modules/renderer/engine/renderers/bindings/BindingSampledTexture.js';
-import BindingUniformsGroup from '@modules/renderer/engine/renderers/bindings/BindingUniformsGroup.js';
+import { BindingSampledTexture } from '@modules/renderer/engine/hearth/bindings/BindingSampledTexture.js';
+import BindingUniformsGroup from '@modules/renderer/engine/hearth/bindings/BindingUniformsGroup.js';
 import UniformGroupNode from '@modules/renderer/engine/nodes/core/UniformGroupNode.js';
-import { BindingUniform } from '@modules/renderer/engine/renderers/bindings/BindingUniform.js';
+import { BindingUniform } from '@modules/renderer/engine/hearth/bindings/BindingUniform.js';
 
 let _storageId = 0;
 

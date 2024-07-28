@@ -41,7 +41,7 @@ class EnvironmentNode extends LightingNode {
 
     //
 
-    const intensity = reference('envMapIntensity', 'f32', builder.material); // @TODO: Add materialEnvIntensity in MaterialNode
+    const intensity = reference('envMapIntensity', 'f32', builder.material);
 
     const radiance = context(envNode, createRadianceContext(roughness, transformedNormalView)).mul(intensity);
     const irradiance = context(envNode, createIrradianceContext(transformedNormalWorld)).mul(Math.PI).mul(intensity);

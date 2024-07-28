@@ -19,7 +19,7 @@ export function getCacheKey(object, force = false) {
 
 export function* getNodeChildren(node) {
   for (const property in node) {
-    // Ignore private properties.
+    
     if (property.startsWith('_') === true) continue;
 
     const object = node[property];

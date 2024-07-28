@@ -1,14 +1,14 @@
-import { Mesh } from '../objects/Mesh.js';
+import { Mesh } from '@modules/renderer/engine/entities/Mesh.js';
 import { Entity } from '../core/Entity.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import Ammo from 'ammojs3';
 import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
-import { Scene } from '@modules/renderer/engine/objects/scenes/Scene.js';
-import { InstancedMesh } from '@modules/renderer/engine/objects/InstancedMesh.js';
+import { Scene } from '@modules/renderer/engine/entities/scenes/Scene.js';
+import { InstancedMesh } from '@modules/renderer/engine/entities/InstancedMesh.js';
 import { NumberArray } from '@modules/renderer/engine/math/MathUtils.js';
-import { BoxGeometry } from '@modules/renderer/engine/objects/geometries/BoxGeometry.js';
-import { SphereGeometry } from '@modules/renderer/engine/objects/geometries/SphereGeometry.js';
-import { IcosahedronGeometry } from '@modules/renderer/engine/objects/geometries/IcosahedronGeometry.js';
+import { BoxGeometry } from '@modules/renderer/engine/entities/geometries/BoxGeometry.js';
+import { SphereGeometry } from '@modules/renderer/engine/entities/geometries/SphereGeometry.js';
+import { IcosahedronGeometry } from '@modules/renderer/engine/entities/geometries/IcosahedronGeometry.js';
 
 export interface AmmoPhysicsObject {
   addScene: (scene: Entity) => void;

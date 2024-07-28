@@ -4,7 +4,7 @@ import { textureCubeUV } from './PMREMUtils.js';
 import { uniform } from '../core/UniformNode.js';
 import { NodeUpdateType } from '../core/constants.js';
 import { proxyNode } from '../shadernode/ShaderNodes.js';
-import PMREMGenerator from '@modules/renderer/engine/renderers/PMREMGenerator.js';
+import PMREMGenerator from '@modules/renderer/engine/hearth/PMREMGenerator.js';
 
 let _generator = null;
 

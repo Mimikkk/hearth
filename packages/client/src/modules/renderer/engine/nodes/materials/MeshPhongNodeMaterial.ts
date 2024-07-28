@@ -31,13 +31,13 @@ export class MeshPhongNodeMaterial extends NodeMaterial {
   }
 
   setupVariants() {
-    // SHININESS
 
-    const shininessNode = (this.shininessNode ? f32(this.shininessNode) : materialShininess).max(1e-4); // to prevent pow( 0.0, 0.0 )
+
+    const shininessNode = (this.shininessNode ? f32(this.shininessNode) : materialShininess).max(1e-4);
 
     shininess.assign(shininessNode);
 
-    // SPECULAR COLOR
+
 
     const specularNode = this.specularNode || materialSpecularColor;
 

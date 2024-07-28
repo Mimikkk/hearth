@@ -2,8 +2,8 @@ import * as Engine from '@modules/renderer/engine/engine.js';
 
 import { GUI } from 'lil-gui';
 
-import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
-import Postprocess from '@modules/renderer/engine/renderers/Postprocess.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
+import Postprocess from '@modules/renderer/engine/hearth/Postprocess.js';
 import { pass } from '@modules/renderer/engine/nodes/Nodes.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
@@ -18,7 +18,7 @@ init();
 createGUI();
 
 async function init() {
-  renderer = await Forge.as();
+  renderer = await Hearth.as();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.animation.loop = animate;
@@ -35,7 +35,7 @@ async function init() {
   mesh = new Engine.Mesh(geometry, material);
   scene.add(mesh);
 
-  // postprocessing
+
 
   postProcessing = new Postprocess(renderer);
 

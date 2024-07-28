@@ -231,7 +231,7 @@ export class Color {
     this.g = array[offset + 1];
     this.b = array[offset + 2];
 
-    // thinkthrough
+
     return this.set(array[offset], array[offset + 1], array[offset + 2]);
   }
 

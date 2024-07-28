@@ -29,8 +29,8 @@ function getEntry(geometry) {
   const hasMorphNormals = geometry.morphAttributes.normal !== undefined;
   const hasMorphColors = geometry.morphAttributes.color !== undefined;
 
-  // instead of using attributes, the WebGL 2 code path encodes morph targets
-  // into an array of data textures. Each layer represents a single morph target.
+
+
 
   const morphAttribute =
     geometry.morphAttributes.position || geometry.morphAttributes.normal || geometry.morphAttributes.color;
@@ -52,7 +52,7 @@ function getEntry(geometry) {
     let width = geometry.attributes.position.count * vertexDataCount;
     let height = 1;
 
-    const maxTextureSize = 4096; // @TODO: Use 'capabilities.maxTextureSize'
+    const maxTextureSize = 4096;
 
     if (width > maxTextureSize) {
       height = Math.ceil(width / maxTextureSize);
@@ -65,7 +65,7 @@ function getEntry(geometry) {
     bufferTexture.type = TextureDataType.Float;
     bufferTexture.needsUpdate = true;
 
-    // fill buffer
+
 
     const vertexDataStride = vertexDataCount * 4;
 
@@ -143,7 +143,7 @@ class MorphNode extends Node {
       geometry.morphAttributes.position || geometry.morphAttributes.normal || geometry.morphAttributes.color;
     const morphTargetsCount = morphAttribute !== undefined ? morphAttribute.length : 0;
 
-    // nodes
+
 
     const { texture: bufferMap, stride, size } = getEntry(geometry);
 

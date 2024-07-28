@@ -1,5 +1,5 @@
-// engine.js Transpiler
-// https://raw.githubusercontent.com/AcademySoftwareFoundation/MaterialX/main/libraries/stdlib/genglsl/lib/mx_noise.glsl
+
+
 
 import { bool, f32, i32, NodeStack, tslFn, u32, uvec3, vec2, vec3, vec4 } from '../../shadernode/ShaderNodes.js';
 import { cond } from '@modules/renderer/engine/nodes/math/CondNode.js';
@@ -926,7 +926,7 @@ const mx_worley_noise_vec3_1 = tslFn(([p_immutable, jitter_immutable, metric_imm
 
 export const mx_worley_noise_vec3 = overloadingFn([mx_worley_noise_vec3_0, mx_worley_noise_vec3_1]);
 
-// layouts
+
 
 mx_select.setLayout({
   name: 'mx_select',

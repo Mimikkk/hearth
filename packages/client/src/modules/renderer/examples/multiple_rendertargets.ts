@@ -1,6 +1,6 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
 
-import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
+import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
 //import { GUI } from 'lil-gui';
 
 import {
@@ -18,9 +18,9 @@ import {
   vec2,
   vec4,
 } from '@modules/renderer/engine/nodes/Nodes.js';
-import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 
-import { QuadMesh } from '@modules/renderer/engine/objects/QuadMesh.js';
+import { QuadMesh } from '@modules/renderer/engine/entities/QuadMesh.js';
 import { Filter } from '@modules/renderer/engine/engine.js';
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
@@ -85,13 +85,13 @@ class ReadGBufferMaterial extends NodeMaterial {
 init();
 
 async function init() {
-  renderer = await Forge.as();
+  renderer = await Hearth.as();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.animation.loop = render;
   document.body.appendChild(renderer.parameters.canvas);
 
-  // Create a multi render target with Float buffers
+  
 
   renderTarget = new Engine.RenderTarget(
     window.innerWidth * window.devicePixelRatio,
@@ -99,12 +99,12 @@ async function init() {
     { count: 2, minFilter: Engine.Filter.Nearest, magFilter: Engine.Filter.Nearest },
   );
 
-  // Name our G-Buffer attachments for debugging
+  
 
   renderTarget.textures[0].name = 'diffuse';
   renderTarget.textures[1].name = 'normal';
 
-  // Scene setup
+  
 
   scene = new Engine.Scene();
   scene.background = new Engine.Color(0x222222);
@@ -123,11 +123,11 @@ async function init() {
 
   scene.add(torus);
 
-  // PostProcessing setup
+  
 
   quadMesh = new QuadMesh(new ReadGBufferMaterial(renderTarget.textures[0], renderTarget.textures[1]));
 
-  // Controls
+  
 
   new OrbitControls(camera, renderer.parameters.canvas);
 
@@ -144,7 +144,7 @@ async function init() {
 function render(time) {
   /*
 
-   // Feature not yet working
+   
 
    renderTarget.samples = parameters.samples;
 
@@ -162,11 +162,11 @@ function render(time) {
 
   torus.setRotationY((time / 1000) * 0.4);
 
-  // render scene into target
+  
   renderer.updateRenderTarget(renderTarget);
   renderer.render(scene, camera);
 
-  // render post FX
+  
   renderer.updateRenderTarget(null);
   quadMesh.render(renderer);
 }

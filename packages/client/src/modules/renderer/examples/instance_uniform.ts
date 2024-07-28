@@ -8,11 +8,11 @@ import {
   cubeTexture,
 } from '@modules/renderer/engine/nodes/Nodes.js';
 
-import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 
-import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
+import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
 
-import { TeapotGeometry } from '@modules/renderer/engine/objects/geometries/TeapotGeometry.js';
+import { TeapotGeometry } from '@modules/renderer/engine/entities/geometries/TeapotGeometry.js';
 
 import { CubeTextureLoader } from '@modules/renderer/engine/loaders/textures/CubeTextureLoader/CubeTextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
@@ -55,13 +55,13 @@ async function init() {
 
   scene = new Engine.Scene();
 
-  // Grid
+
 
   const helper = new Engine.GridHelper(1000, 40, 0x303030, 0x303030);
   helper.position.y = -75;
   scene.add(helper);
 
-  // CubeMap
+
 
   const cTexture = await new CubeTextureLoader().loadAsync([
     'resources/textures/cube/SwedishRoyalCastle/px.jpg',
@@ -72,7 +72,7 @@ async function init() {
     'resources/textures/cube/SwedishRoyalCastle/nz.jpg',
   ]);
 
-  // Materials
+
 
   const instanceUniform = asNode(new InstanceUniformNode());
   const cubeTextureNode = cubeTexture(cTexture);
@@ -81,7 +81,7 @@ async function init() {
   material.colorNode = instanceUniform.add(cubeTextureNode);
   material.emissiveNode = instanceUniform.mul(cubeTextureNode);
 
-  // Geometry
+
 
   const geometry = new TeapotGeometry(50, 18);
 
@@ -91,7 +91,7 @@ async function init() {
 
   //
 
-  renderer = await Forge.as();
+  renderer = await Hearth.as();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.animation.loop = animate;

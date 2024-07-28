@@ -29,8 +29,8 @@ import {
   stack,
   UniformNode,
 } from '@modules/renderer/engine/nodes/Nodes.js';
-import { getFormat } from '../../renderers/Backend.textures.js';
-import ChainMap from '@modules/renderer/engine/renderers/ChainMap.js';
+import { getFormat } from '@modules/renderer/engine/hearth/Backend.textures.js';
+import ChainMap from '@modules/renderer/engine/hearth/ChainMap.js';
 import NodeKeywords from '@modules/renderer/engine/nodes/core/NodeKeywords.js';
 import NodeCache from '@modules/renderer/engine/nodes/core/NodeCache.js';
 import NodeAttribute from '@modules/renderer/engine/nodes/core/NodeAttribute.js';
@@ -43,18 +43,18 @@ import ParameterNode from '@modules/renderer/engine/nodes/core/ParameterNode.js'
 
 import { NodeMaterials } from '@modules/renderer/engine/nodes/materials/NodeMaterialMap.js';
 import { FeatureMap, FeatureName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.features.js';
-import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import StackNode from '@modules/renderer/engine/nodes/core/StackNode.js';
 import EnvironmentNode from '@modules/renderer/engine/nodes/lighting/EnvironmentNode.js';
 import FogNode from '@modules/renderer/engine/nodes/fog/FogNode.js';
 import ToneMappingNode from '@modules/renderer/engine/nodes/display/ToneMappingNode.js';
 import { Node } from '@modules/renderer/engine/nodes/core/Node.js';
-import ClippingContext from '@modules/renderer/engine/renderers/ClippingContext.js';
+import ClippingContext from '@modules/renderer/engine/hearth/ClippingContext.js';
 import { BuildStage, BuiltinType, ShaderStage, TypeName } from './NodeBuilder.types.js';
 import { PolyfillMap, PolyfillName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.polyfills.js';
 import StructTypeNode from '@modules/renderer/engine/nodes/core/StructTypeNode.js';
 import { WgslFn } from '@modules/renderer/engine/nodes/builder/WgslFn.js';
-import { BindingUniform } from '@modules/renderer/engine/renderers/bindings/BindingUniform.js';
+import { BindingUniform } from '@modules/renderer/engine/hearth/bindings/BindingUniform.js';
 
 type ParseFn = (source: string) => WgslFn;
 
@@ -112,7 +112,7 @@ export class NodeBuilder {
 
   constructor(
     public object: Entity,
-    public renderer: Forge,
+    public renderer: Hearth,
     public scene: Scene,
   ) {
     this.material = object?.material ?? null;
@@ -189,7 +189,6 @@ export class NodeBuilder {
 
     for (const binding of bindings) {
       if (binding.shared === true) {
-        // nodes is the chainmap key
         const nodes = binding.getNodes();
 
         let sharedBinding = UniformsGroup.get(nodes);
@@ -269,15 +268,11 @@ export class NodeBuilder {
   getAttribute(name: string, type: TypeName): NodeAttribute {
     const attributes = this.attributes;
 
-    // find attribute
-
     for (const attribute of attributes) {
       if (attribute.name === name) {
         return attribute;
       }
     }
-
-    // create a new if no exist
 
     const attribute = new NodeAttribute(name, type);
 

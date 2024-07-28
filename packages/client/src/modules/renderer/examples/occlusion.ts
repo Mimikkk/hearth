@@ -1,14 +1,14 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
 import { MeshPhongNodeMaterial, Node, asNode, NodeUpdateType, uniform } from '@modules/renderer/engine/nodes/Nodes.js';
 
-import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
+import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
 
-import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
-import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { Camera, Scene } from '@modules/renderer/engine/engine.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
-let camera: Camera, scene: Scene, renderer: Forge, controls: OrbitControls;
+let camera: Camera, scene: Scene, renderer: Hearth, controls: OrbitControls;
 
 class OcclusionNode extends Node {
   constructor(testObject: Engine.Entity, normalColor: Engine.Color, occludedColor: Engine.Color) {
@@ -42,7 +42,7 @@ async function init() {
 
   scene = new Engine.Scene();
 
-  // lights
+
 
   const ambientLight = new Engine.AmbientLight(0xb0b0b0);
 
@@ -52,7 +52,7 @@ async function init() {
   scene.add(ambientLight);
   scene.add(light);
 
-  // models
+
 
   const planeGeometry = new Engine.PlaneGeometry(2, 2);
   const sphereGeometry = new Engine.SphereGeometry(0.5);
@@ -70,20 +70,20 @@ async function init() {
   scene.add(plane);
   scene.add(sphere);
 
-  // renderer
 
-  renderer = await Forge.as();
+
+  renderer = await Hearth.as();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
 
-  // ensure shaders/pipelines are all complete before rendering
+
 
   await renderer.compile(scene, camera);
 
   renderer.animation.loop = render;
   document.body.appendChild(renderer.parameters.canvas);
 
-  // controls
+
 
   controls = new OrbitControls(camera, renderer.parameters.canvas);
   controls.minDistance = 3;

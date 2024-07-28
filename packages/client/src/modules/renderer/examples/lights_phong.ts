@@ -11,10 +11,10 @@ import {
   uv,
 } from '@modules/renderer/engine/nodes/Nodes.js';
 
-import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
-import { TeapotGeometry } from '@modules/renderer/engine/objects/geometries/TeapotGeometry.js';
+import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
+import { TeapotGeometry } from '@modules/renderer/engine/entities/geometries/TeapotGeometry.js';
 
-import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
@@ -31,7 +31,7 @@ async function init() {
 
   const sphereGeometry = new Engine.SphereGeometry(0.1, 16, 8);
 
-  // textures
+
 
   const textureLoader = new TextureLoader();
 
@@ -43,7 +43,7 @@ async function init() {
   alphaTexture.wrapS = Engine.Wrapping.Repeat;
   alphaTexture.wrapT = Engine.Wrapping.Repeat;
 
-  // lights
+
 
   const addLight = (hexColor, power = 1700, distance = 100) => {
     const material = new MeshPhongNodeMaterial();
@@ -66,12 +66,12 @@ async function init() {
   light3 = addLight(0x80ff80);
   light4 = addLight(0xffaa00);
 
-  // light nodes ( selective lights )
+
 
   const blueLightsNode = lights([light1]);
   const whiteLightsNode = lights([light2]);
 
-  // models
+
 
   const geometryTeapot = new TeapotGeometry(0.8, 18);
 
@@ -101,21 +101,21 @@ async function init() {
   centerObject.position.y = -1;
   rightObject.position.y = -1;
 
-  // renderer
 
-  renderer = await Forge.as();
+
+  renderer = await Hearth.as();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.animation.loop = animate;
   document.body.appendChild(renderer.parameters.canvas);
 
-  // controls
+
 
   controls = new OrbitControls(camera, renderer.parameters.canvas);
   controls.minDistance = 3;
   controls.maxDistance = 25;
 
-  // stats
+
 
   useWindowResizer(renderer, camera);
 }

@@ -33,25 +33,25 @@ export const handlers: ProxyHandler<Node> = {
       }
     }
 
-    // accessing properties ( swizzle )
+    
     if (swizzleRe.test(key)) {
       key = parseSwizzle(key);
 
       return asNode(new SplitNode(proxy, key));
     }
 
-    // set properties ( swizzle )
+    
     if (setSwizzleRe.test(key)) {
       key = parseSwizzle(key.slice(3).toLowerCase());
       return value => asNode(new SetNode(node, key, value));
     }
 
-    // TODO - remove accessing property
+    
     if (key === 'width' || key === 'height' || key === 'depth') {
       throw Error('Invalid use removed!');
     }
 
-    // accessing array
+    
     if (arrayRe.test(key)) {
       return asNode(new ArrayElementNode(proxy, new ConstNode(Number(key), TypeName.u32)));
     }

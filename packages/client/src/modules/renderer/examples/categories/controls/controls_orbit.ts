@@ -1,7 +1,7 @@
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
-import { PerspectiveCamera } from '@modules/renderer/engine/objects/cameras/PerspectiveCamera.js';
-import { Scene } from '@modules/renderer/engine/objects/scenes/Scene.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
+import { PerspectiveCamera } from '@modules/renderer/engine/entities/cameras/PerspectiveCamera.js';
+import { Scene } from '@modules/renderer/engine/entities/scenes/Scene.js';
 import { normalWorld } from '@modules/renderer/engine/nodes/accessors/NormalNode.js';
 import { color } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.primitves.js';
 import {
@@ -13,7 +13,7 @@ import {
   SphereGeometry,
   SpotLight,
 } from '@modules/renderer/engine/engine.js';
-import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
+import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
 import { UI } from '@mimi/ui';
 import { ColorMap } from '@modules/renderer/engine/math/Color.js';
 import { Random } from '@modules/renderer/engine/math/random.js';
@@ -61,7 +61,7 @@ const scene = createScene();
 
 scene.add(camera, reference, sphere);
 
-const renderer = await Forge.as({
+const renderer = await Hearth.as({
   animate() {
     controls.update();
     renderer.render(scene, camera);

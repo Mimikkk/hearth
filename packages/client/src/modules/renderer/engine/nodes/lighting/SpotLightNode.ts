@@ -44,7 +44,7 @@ class SpotLightNode extends AnalyticLightNode {
 
     const { colorNode, cutoffDistanceNode, decayExponentNode, light } = this;
 
-    const lVector = objectViewPosition(light).sub(positionView); // @TODO: Add it into LightNode
+    const lVector = objectViewPosition(light).sub(positionView); 
 
     const lightDirection = lVector.normalize();
     const angleCos = lightDirection.dot(lightTargetDirection(light));

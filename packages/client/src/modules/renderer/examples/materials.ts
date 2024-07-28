@@ -25,9 +25,9 @@ import {
   wgslFn,
 } from '@modules/renderer/engine/nodes/Nodes.js';
 
-import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 
-import { TeapotGeometry } from '@modules/renderer/engine/objects/geometries/TeapotGeometry.js';
+import { TeapotGeometry } from '@modules/renderer/engine/entities/geometries/TeapotGeometry.js';
 
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
@@ -48,13 +48,13 @@ async function init() {
 
   scene = new Engine.Scene();
 
-  // Grid
+
 
   const helper = new Engine.GridHelper(1000, 40, 0x303030, 0x303030);
   helper.position.y = -75;
   scene.add(helper);
 
-  // Materials
+
 
   const textureLoader = new TextureLoader();
 
@@ -72,51 +72,51 @@ async function init() {
   //	BASIC
   //
 
-  // PositionLocal
+
   material = new MeshBasicNodeMaterial();
   material.colorNode = positionLocal;
   materials.push(material);
 
-  // PositionWorld
+
   material = new MeshBasicNodeMaterial();
   material.colorNode = positionWorld;
   materials.push(material);
 
-  // NormalLocal
+
   material = new MeshBasicNodeMaterial();
   material.colorNode = normalLocal;
   materials.push(material);
 
-  // NormalWorld
+
   material = new MeshBasicNodeMaterial();
   material.colorNode = normalWorld;
   materials.push(material);
 
-  // NormalView
+
   material = new MeshBasicNodeMaterial();
   material.colorNode = normalView;
   materials.push(material);
 
-  // Texture
+
   material = new MeshBasicNodeMaterial();
   material.colorNode = texture(uvTexture);
   materials.push(material);
 
-  // Opacity
+
   material = new MeshBasicNodeMaterial();
   material.colorNode = color(0x0099ff);
   material.opacityNode = texture(uvTexture);
   material.transparent = true;
   materials.push(material);
 
-  // AlphaTest
+
   material = new MeshBasicNodeMaterial();
   material.colorNode = texture(uvTexture);
   material.opacityNode = texture(opacityTexture);
   material.alphaTestNode = 0.5;
   materials.push(material);
 
-  // Normal
+
   material = new Engine.MeshNormalMaterial();
   material.opacity = 0.5;
   material.transparent = true;
@@ -126,7 +126,7 @@ async function init() {
   //	ADVANCED
   //
 
-  // Custom ShaderNode ( desaturate filter )
+
 
   const desaturateShaderNode = tslFn(input => {
     return vec3(0.299, 0.587, 0.114).dot(input.color.xyz);
@@ -136,7 +136,7 @@ async function init() {
   material.colorNode = desaturateShaderNode({ color: texture(uvTexture) });
   materials.push(material);
 
-  // Custom ShaderNode(no inputs) > Approach 2
+
 
   const desaturateNoInputsShaderNode = tslFn(() => {
     return vec3(0.299, 0.587, 0.114).dot(texture(uvTexture).xyz);
@@ -146,7 +146,7 @@ async function init() {
   material.colorNode = desaturateNoInputsShaderNode();
   materials.push(material);
 
-  // Custom WGSL ( desaturate filter )
+
 
   const desaturateWGSLFn = wgslFn(`
 					fn desaturate( color:vec3<f32> ) -> vec3<f32> {
@@ -158,7 +158,7 @@ async function init() {
 					}
 				`);
 
-  // include example
+
 
   const someWGSLFn = wgslFn(
     `
@@ -175,7 +175,7 @@ async function init() {
   material.colorNode = someWGSLFn({ color: texture(uvTexture) });
   materials.push(material);
 
-  // Custom WGSL ( get texture from keywords )
+
 
   const getWGSLTextureSample = wgslFn(`
 					fn getWGSLTextureSample( tex: texture_2d<f32>, tex_sampler: sampler, uv:vec2<f32> ) -> vec4<f32> {
@@ -192,24 +192,24 @@ async function init() {
   material.colorNode = getWGSLTextureSample({ tex: textureNode, tex_sampler: textureNode, uv: uv() });
   materials.push(material);
 
-  // Triplanar Texture Mapping
+
   material = new MeshBasicNodeMaterial();
   material.colorNode = triplanarTexture(texture(uvTexture), null, null, f32(0.01));
   materials.push(material);
 
-  // Screen Projection Texture
+
   material = new MeshBasicNodeMaterial();
   material.colorNode = texture(uvTexture, viewportBottomLeft);
   materials.push(material);
 
-  // Loop
+
   material = new MeshBasicNodeMaterial();
   materials.push(material);
 
   const loopCount = 10;
   material.colorNode = loop(loopCount, ({ i }, stack) => {
     const output = vec4().temp();
-    const scale = oscSine().mul(0.09); // just a value to test
+    const scale = oscSine().mul(0.09);
 
     const scaleI = scale.mul(i);
     const scaleINeg = scaleI.negate();
@@ -227,7 +227,7 @@ async function init() {
     return output.div(loopCount * 4);
   });
 
-  // Scriptable
+
 
   global.set('ENGINE', Engine);
   global.set('TSL', Nodes);
@@ -246,7 +246,7 @@ async function init() {
 
 							local.set( 'result', f32( 1.0 ) );
 
-							refresh(); // refresh the node
+							refresh(); 
 
 						}, 1000 );
 
@@ -302,7 +302,7 @@ async function init() {
 
 							//console.info( 'message', parameters.get( 'message' ).value );
 							//console.info( 'binary', parameters.get( 'binary' ) );
-							//console.info( 'object3d', parameters.get( 'object3d' ) ); // unserializable yet
+							//console.info( 'object3d', parameters.get( 'object3d' ) ); 
 
 							//console.info( global.get( 'renderer' ) );
 
@@ -334,7 +334,7 @@ async function init() {
   scriptableNode.setLocal('material', material);
 
   //
-  // Geometry
+
   //
 
   const geometry = new TeapotGeometry(50, 18);
@@ -345,7 +345,7 @@ async function init() {
 
   //
 
-  renderer = await Forge.as();
+  renderer = await Hearth.as();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.animation.loop = animate;

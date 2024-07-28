@@ -19,16 +19,16 @@ import {
   vec2,
 } from '@modules/renderer/engine/nodes/Nodes.js';
 
-import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 
-import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
+import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
 
 import { GUI } from 'lil-gui';
 
 import * as GeometryUtils from '@modules/renderer/engine/utils/GeometryUtils.js';
 import { BufferGeometryLoader } from '@modules/renderer/engine/loaders/geometries/BufferGeometryLoader/BufferGeometryLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import { GPUBufferBindingTypeType, BufferStep } from '@modules/renderer/engine/renderers/constants.js';
+import { GPUBufferBindingTypeType, BufferStep } from '@modules/renderer/engine/hearth/constants.js';
 
 const maxParticleCount = 50000;
 const instanceCount = maxParticleCount / 2;
@@ -104,7 +104,7 @@ async function init() {
   const ripplePositionBuffer = createBuffer();
   const rippleTimeBuffer = createBuffer();
 
-  // compute
+
 
   const timer = timerLocal();
 
@@ -150,7 +150,7 @@ async function init() {
 
     const floorPosition = collisionArea.y.add(surfaceOffset);
 
-    // floor
+
 
     const ripplePivotOffsetY = -0.9;
 
@@ -160,11 +160,11 @@ async function init() {
       ripplePosition.xz = position.xz;
       ripplePosition.y = floorPosition;
 
-      // reset hit time: x = time
+
 
       rippleTime.x = 1;
 
-      // next drops will not fall in the same place
+
 
       position.x = instanceIndex.add(timer).hash().mul(100).add(-50);
       position.z = instanceIndex.add(timer.add(randUint())).hash().mul(100).add(-50);
@@ -181,7 +181,7 @@ async function init() {
 
   computeParticles = computeUpdate().compute(maxParticleCount);
 
-  // rain
+
 
   const billboarding = tslFn(() => {
     const particlePosition = positionBuffer.toAttribute();
@@ -220,7 +220,7 @@ async function init() {
   rainParticles.count = instanceCount;
   scene.add(rainParticles);
 
-  // ripple
+
 
   const rippleTime = rippleTimeBuffer.element(instanceIndex).x;
 
@@ -240,7 +240,7 @@ async function init() {
   rippleMaterial.depthTest = true;
   rippleMaterial.transparent = true;
 
-  // ripple geometry
+
 
   const surfaceRippleGeometry = new Engine.PlaneGeometry(2.5, 2.5);
   surfaceRippleGeometry.rotateX(-Math.PI / 2);
@@ -257,7 +257,7 @@ async function init() {
   rippleParticles.count = instanceCount;
   scene.add(rippleParticles);
 
-  // floor geometry
+
 
   const floorGeometry = new Engine.PlaneGeometry(1000, 1000);
   floorGeometry.rotateX(-Math.PI / 2);
@@ -286,7 +286,7 @@ async function init() {
     monkey.scale.setScalar(5);
     monkey.setRotationY(Math.PI / 2);
     monkey.position.y = 4.5;
-    monkey.layers.enable(1); // add to collision layer
+    monkey.layers.enable(1);
 
     scene.add(monkey);
   });
@@ -297,7 +297,7 @@ async function init() {
 
   //
 
-  renderer = await Forge.as();
+  renderer = await Hearth.as();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.animation.loop = animate;
@@ -318,11 +318,11 @@ async function init() {
 
   useWindowResizer(renderer, camera);
 
-  // gui
+
 
   const gui = new GUI();
 
-  // use lerp to smooth the movement
+
   collisionBoxPosUI = new Engine.Vec3().from(collisionBox.position);
   collisionBoxPos = new Engine.Vec3();
 
@@ -345,17 +345,17 @@ function animate() {
 
   collisionBox.position.lerp(collisionBoxPos, 10 * delta);
 
-  // position
+
 
   scene.overrideMaterial = collisionPosMaterial;
   renderer.updateRenderTarget(collisionPosRT);
   renderer.render(scene, collisionCamera);
 
-  // compute
+
 
   renderer.compute(computeParticles);
 
-  // result
+
 
   scene.overrideMaterial = null;
   renderer.updateRenderTarget(null);

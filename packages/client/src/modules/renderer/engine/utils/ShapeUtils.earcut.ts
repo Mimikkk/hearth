@@ -112,16 +112,16 @@ const isIntersecting = (p1: Vertex, q1: Vertex, p2: Vertex, q2: Vertex): boolean
   const o3 = sign(calculateArea(p2, q2, p1));
   const o4 = sign(calculateArea(p2, q2, q1));
 
-  // general case
+
   if (o1 !== o2 && o3 !== o4) return true;
 
-  // p1, q1 and p2 are collinear and p2 lies on p1q1
+
   if (o1 === 0 && isOnSegment(p1, p2, q1)) return true;
-  // p1, q1 and q2 are collinear and q2 lies on p1q1
+
   if (o2 === 0 && isOnSegment(p1, q2, q1)) return true;
-  // p2, q2 and p1 are collinear and p1 lies on p2q2
+
   if (o3 === 0 && isOnSegment(p2, p1, q2)) return true;
-  // p2, q2 and q1 are collinear and q1 lies on p2q2
+
   return o4 === 0 && isOnSegment(p2, q1, q2);
 };
 const isIntersectingPolygon = (a: Vertex, b: Vertex): boolean => {
@@ -210,7 +210,7 @@ const findHoleBridge = (hole: Vertex, outer: Vertex): Vertex | null => {
 
         middle = point.x < point.next!.x ? point : point.next;
 
-        // hole touches outer segment; pick leftmost endpoint
+
         if (x === holeX) return middle;
       }
     }
@@ -280,27 +280,27 @@ namespace Earcut {
   ): void => {
     if (!ear) return;
 
-    // interlink polygon nodes in z-order
+
     if (!pass && invSize) indexCurve(ear, minX, minY, invSize);
 
     let stop = ear;
     let prev;
     let next;
 
-    // iterate through ears, slicing them one by one
+
     while (ear.prev !== ear.next) {
       prev = ear.prev!;
       next = ear.next!;
 
       if (invSize ? isEarHashed(ear, minX, minY, invSize) : isEar(ear)) {
-        // cut off the triangle
+
         triangles.push((prev.i / dim) | 0);
         triangles.push((ear.i / dim) | 0);
         triangles.push((next.i / dim) | 0);
 
         disposeNode(ear);
 
-        // skipping the next vertex leads to less sliver triangles
+
         ear = next.next!;
         stop = next.next!;
 
@@ -309,18 +309,18 @@ namespace Earcut {
 
       ear = next;
 
-      // if we looped through the whole remaining polygon and can't find any more ears
+
       if (ear === stop) {
-        // try filtering points and slicing again
+
         if (pass === 0) {
           run(filterPoints(ear), triangles, dim, minX, minY, invSize, 1);
 
-          // if this didn't work, try curing all small self-intersections locally
+
         } else if (pass === 1) {
           ear = cureLocalIntersections(filterPoints(ear), triangles, dim);
           run(ear, triangles, dim, minX, minY, invSize, 2);
 
-          // as a last resort, try splitting the remaining polygon into two
+
         } else if (pass === 2) {
           split(ear, triangles, dim, minX, minY, invSize);
         }
@@ -338,21 +338,21 @@ namespace Earcut {
     minY: number,
     invSize: number,
   ): void => {
-    // look for a valid diagonal that divides the polygon into two
+
     let a = start;
 
     do {
       let b = a.next!.next!;
       while (b !== a.prev) {
         if (a.i !== b.i && isValidDiagonal(a, b)) {
-          // split the polygon in two by the diagonal
+
           let c = splitPolygon(a, b);
 
-          // filter colinear points around the cuts
+
           a = filterPoints(a, a.next!);
           c = filterPoints(c, c.next!);
 
-          // run earcut on each half
+
           Earcut.run(a, triangles, dim, minX, minY, invSize, 0);
           Earcut.run(c, triangles, dim, minX, minY, invSize, 0);
           return;
@@ -367,7 +367,7 @@ namespace Earcut {
 }
 
 const calculateZOrder = (x: number, y: number, minX: number, minY: number, invSize: number): number => {
-  // coords are transformed into non-negative 15-bit integer range
+
   x = ((x - minX) * invSize) | 0;
   y = ((y - minY) * invSize) | 0;
 
@@ -409,9 +409,9 @@ const isValidDiagonal = (a: Vertex, b: Vertex): boolean =>
     ((isLocallyInside(a, b) &&
       isLocallyInside(b, a) &&
       isMiddleInside(a, b) &&
-      // does not create opposite-facing sectors
+
       (calculateArea(a.prev!, a, b.prev!) || calculateArea(a, b.prev!, b))) ||
-      // special zero-length case
+
       (equals(a, b) && calculateArea(a.prev!, a, a.next!) > 0 && calculateArea(b.prev!, b, b.next!) > 0))
   );
 
@@ -480,10 +480,10 @@ const isEar = (ear: Vertex): boolean => {
   const b = ear;
   const c = ear.next!;
 
-  // reflex, can't be an ear
+
   if (calculateArea(a, b, c) >= 0) return false;
 
-  // now make sure we don't have other points inside the potential ear
+
   const ax = a.x;
   const bx = b.x;
   const cx = c.x;
@@ -491,7 +491,7 @@ const isEar = (ear: Vertex): boolean => {
   const by = b.y;
   const cy = c.y;
 
-  // triangle bbox; min & max are calculated like this for speed
+
   const x0 = ax < bx ? (ax < cx ? ax : cx) : bx < cx ? bx : cx;
   const y0 = ay < by ? (ay < cy ? ay : cy) : by < cy ? by : cy;
   const x1 = ax > bx ? (ax > cx ? ax : cx) : bx > cx ? bx : cx;
@@ -519,10 +519,10 @@ const isEarHashed = (ear: Vertex, minX: number, minY: number, invSize: number): 
   const b = ear;
   const c = ear.next!;
 
-  // reflex, can't be an ear
+
   if (calculateArea(a, b, c) >= 0) return false;
 
-  // now make sure we don't have other points inside the potential ear
+
   const ax = a.x;
   const bx = b.x;
   const cx = c.x;
@@ -530,13 +530,13 @@ const isEarHashed = (ear: Vertex, minX: number, minY: number, invSize: number): 
   const by = b.y;
   const cy = c.y;
 
-  // triangle bbox; min & max are calculated like this for speed
+
   const x0 = ax < bx ? (ax < cx ? ax : cx) : bx < cx ? bx : cx;
   const y0 = ay < by ? (ay < cy ? ay : cy) : by < cy ? by : cy;
   const x1 = ax > bx ? (ax > cx ? ax : cx) : bx > cx ? bx : cx;
   const y1 = ay > by ? (ay > cy ? ay : cy) : by > cy ? by : cy;
 
-  // z-order range for the current triangle bbox;
+
   const minZ = calculateZOrder(x0, y0, minX, minY, invSize);
   const maxZ = calculateZOrder(x1, y1, minX, minY, invSize);
 
@@ -570,7 +570,7 @@ const isEarHashed = (ear: Vertex, minX: number, minY: number, invSize: number): 
     node = node.nextZ!;
   }
 
-  // look for remaining points in decreasing z-order
+
   while (point && point.z >= minZ) {
     if (
       point.x >= x0 &&
@@ -586,7 +586,7 @@ const isEarHashed = (ear: Vertex, minX: number, minY: number, invSize: number): 
     point = point.prevZ!;
   }
 
-  // look for remaining points in increasing z-order
+
   while (node && node.z <= maxZ) {
     if (
       node.x >= x0 &&
@@ -617,7 +617,7 @@ const cureLocalIntersections = (start: Vertex, triangles: number[], dim: number)
       triangles.push((p.i / dim) | 0);
       triangles.push((b.i / dim) | 0);
 
-      // remove two nodes involved
+
       disposeNode(p);
       disposeNode(p.next!);
 
@@ -683,7 +683,7 @@ export const triangulate = (data: number[], holeIndices?: number[], dim: number 
       if (y > maxY) maxY = y;
     }
 
-    // minX, minY and invSize are later used to transform coords into integers for z-order calculation
+
     invSize = Math.max(maxX - minX, maxY - minY);
     invSize = invSize !== 0 ? 32767 / invSize : 0;
   }

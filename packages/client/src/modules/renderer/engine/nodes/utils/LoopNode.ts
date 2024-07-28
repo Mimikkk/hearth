@@ -48,7 +48,7 @@ class LoopNode extends Node {
   }
 
   setup(builder) {
-    // setup properties
+    
 
     this.getProperties(builder);
   }

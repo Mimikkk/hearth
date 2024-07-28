@@ -15,7 +15,7 @@ export class CurvePath<T extends Vec2 | Vec3> extends Curve<T> {
   }
 
   closePath(): this {
-    // Add a line curve if start and end of lines are not connected
+
     const startPoint = this.curves[0].getPoint(0);
     const endPoint = this.curves[this.curves.length - 1].getPoint(1);
 
@@ -34,7 +34,7 @@ export class CurvePath<T extends Vec2 | Vec3> extends Curve<T> {
     const curveLengths = this.getCurveLengths();
     let i = 0;
 
-    // To think about boundaries points.
+
 
     while (i < curveLengths.length) {
       if (curveLengths[i] >= d) {
@@ -58,7 +58,7 @@ export class CurvePath<T extends Vec2 | Vec3> extends Curve<T> {
     return lens[lens.length - 1];
   }
 
-  // cacheLengths must be recalculated.
+
   updateArcLengths(): number[] {
     return this.getCurveLengths();
   }

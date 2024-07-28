@@ -23,10 +23,10 @@ import {
 
 import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/GLTFLoader.js';
 
-import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
-import Postprocess from '@modules/renderer/engine/renderers/Postprocess.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
+import Postprocess from '@modules/renderer/engine/hearth/Postprocess.js';
 
-import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
+import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
 
 import { GUI } from 'lil-gui';
 
@@ -50,11 +50,11 @@ import {
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 
-// let camera, scene, renderer;
-// let mixer, objects, clock;
-// let model, floor, floorPosition;
-// let postProcessing;
-// let controls;
+
+
+
+
+
 
 const camera = new PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.25, 30);
 camera.position.set(3, 2, 4);
@@ -86,7 +86,7 @@ scene.add(waterAmbientLight);
 
 const clock = new Clock();
 
-// animated model
+
 
 let model: Group;
 let mixer: AnimationMixer;
@@ -103,7 +103,7 @@ loader.loadAsync('resources/models/gltf/Michelle.glb').then(gltf => {
   scene.add(model);
 });
 
-// objects
+
 
 const iceDiffuse = await new TextureLoader().loadAsync('resources/textures/water/water.jpg');
 iceDiffuse.wrapS = Wrapping.Repeat;
@@ -135,7 +135,7 @@ objects.position.set((column - 1) * scale * -0.5, -1, (count / column) * scale *
 
 scene.add(objects);
 
-// water
+
 
 const timer = timerLocal(1);
 const floorUV = positionWorld.xzy;
@@ -172,13 +172,13 @@ const water = new Mesh(new BoxGeometry(50, 0.001, 50), waterMaterial);
 water.position.set(0, 0, 0);
 scene.add(water);
 
-// floor
+
 
 const floor = new Mesh(new CylinderGeometry(1.1, 1.1, 10), new MeshStandardNodeMaterial({ colorNode: iceColorNode }));
 floor.position.set(0, -5, 0);
 scene.add(floor);
 
-// caustics
+
 
 const waterPosY = positionWorld.y.sub(water.position.y);
 
@@ -190,9 +190,9 @@ const colorNode = transition.mix(material.colorNode, material.colorNode.add(wate
 //material.colorNode = colorNode;
 floor.material.colorNode = colorNode;
 
-// renderer
 
-const renderer = await Forge.as();
+
+const renderer = await Hearth.as();
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.animation.loop = animate;
@@ -207,7 +207,7 @@ controls.autoRotateSpeed = 1;
 controls.target.set(0, 0.2, 0);
 controls.update();
 
-// gui
+
 
 const gui = new GUI();
 
@@ -215,7 +215,7 @@ const floorPosition = Vec3.new(0, 0.2, 0);
 
 gui.add(floorPosition, 'y', -1, 1, 0.001).name('position');
 
-// post processing
+
 
 const scenePass = pass(scene, camera);
 const scenePassColor = scenePass.getTextureNode();

@@ -78,18 +78,18 @@ class DRACOLoader {
   decodeGeometry(buffer, taskConfig) {
     const taskKey = JSON.stringify(taskConfig);
 
-    // Check for an existing task using this buffer. A transferred buffer cannot be transferred
-    // again from this thread.
+    
+    
     if (_taskCache.has(buffer)) {
       const cachedTask = _taskCache.get(buffer);
 
       if (cachedTask.key === taskKey) {
         return cachedTask.promise;
       } else if (buffer.byteLength === 0) {
-        // Technically, it would be possible to wait for the previous task to complete,
-        // transfer the buffer back, and decode again with the second configuration. That
-        // is complex, and I don't know of any reason to decode a Draco buffer twice in
-        // different ways, so this is left unimplemented.
+        
+        
+        
+        
         throw new Error(
           'THREE.DRACOLoader: Unable to re-decode a buffer with different ' +
             'settings. Buffer has already been transferred.',
@@ -103,8 +103,8 @@ class DRACOLoader {
     const taskID = this.workerNextTaskID++;
     const taskCost = buffer.byteLength;
 
-    // Obtain a worker and assign a task, and construct a geometry instance
-    // when the task completes.
+    
+    
     const geometryPending = this._getWorker(taskID, taskCost)
       .then(_worker => {
         worker = _worker;
@@ -114,24 +114,24 @@ class DRACOLoader {
 
           worker.postMessage({ type: 'decode', id: taskID, taskConfig, buffer }, [buffer]);
 
-          // this.debug();
+          
         });
       })
       .then(message => this._createGeometry(message.geometry));
 
-    // Remove task from the task list.
-    // Note: replaced '.finally()' with '.catch().then()' block - iOS 11 support (#19416)
+    
+    
     geometryPending
       .catch(() => true)
       .then(() => {
         if (worker && taskID) {
           this._releaseTask(worker, taskID);
 
-          // this.debug();
+          
         }
       });
 
-    // Cache the task result.
+    
     _taskCache.set(buffer, {
       key: taskKey,
       promise: geometryPending,
@@ -166,10 +166,10 @@ class DRACOLoader {
   }
 
   _assignVertexColorSpace(attribute, inputColorSpace) {
-    // While .drc files do not specify colorspace, the only 'official' tooling
-    // is PLY and OBJ converters, which use sRGB. We'll assume sRGB when a .drc
-    // file is passed into .load() or .parse(). GLTFLoader uses internal APIs
-    // to decode geometry, and vertex colors are already Linear-sRGB in there.
+    
+    
+    
+    
 
     if (inputColorSpace !== ColorSpace.SRGB) return;
 
@@ -312,11 +312,11 @@ function DRACOWorker() {
         decoderConfig = message.decoderConfig;
         decoderPending = new Promise(function (resolve /*, reject*/) {
           decoderConfig.onModuleLoaded = function (draco) {
-            // Module is Promise-like. Wrap before resolving to avoid loop.
+            
             resolve({ draco: draco });
           };
 
-          DracoDecoderModule(decoderConfig); // eslint-disable-line no-undef
+          DracoDecoderModule(decoderConfig); 
         });
         break;
 
@@ -373,17 +373,17 @@ function DRACOWorker() {
 
     const geometry = { index: null, attributes: [] };
 
-    // Gather all vertex attributes.
+    
     for (const attributeName in attributeIDs) {
       const attributeType = self[attributeTypes[attributeName]];
 
       let attribute;
       let attributeID;
 
-      // A Draco file may be created with default vertex attributes, whose attribute IDs
-      // are mapped 1:1 from their semantic name (POSITION, NORMAL, ...). Alternatively,
-      // a Draco file may contain a custom set of attributes, identified by known unique
-      // IDs. glTF files always do the latter, and `.drc` files typically do the former.
+      
+      
+      
+      
       if (taskConfig.useUniqueIDs) {
         attributeID = attributeIDs[attributeName];
         attribute = decoder.GetAttributeByUniqueId(dracoGeometry, attributeID);
@@ -404,7 +404,7 @@ function DRACOWorker() {
       geometry.attributes.push(attributeResult);
     }
 
-    // Add index.
+    
     if (geometryType === draco.TRIANGULAR_MESH) {
       geometry.index = decodeIndex(draco, decoder, dracoGeometry);
     }

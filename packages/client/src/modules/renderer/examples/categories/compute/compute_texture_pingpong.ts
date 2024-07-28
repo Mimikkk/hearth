@@ -1,8 +1,8 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
 import { texture, textureStore, wgslFn, code, instanceIndex, uniform } from '@modules/renderer/engine/nodes/Nodes.js';
 
-import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
-import StorageTexture from '@modules/renderer/engine/objects/textures/StorageTexture.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
+import StorageTexture from '@modules/renderer/engine/entities/textures/StorageTexture.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, renderer;
@@ -24,7 +24,7 @@ async function init() {
 
   scene = new Engine.Scene();
 
-  // texture
+
 
   const hdr = true;
   const width = 512,
@@ -40,7 +40,7 @@ async function init() {
 
   const wgslFormat = hdr ? 'rgba16float' : 'rgba8unorm';
 
-  // compute init
+
 
   const rand2 = code(`
 					fn rand2( n: vec2f ) -> f32 {
@@ -97,7 +97,7 @@ async function init() {
     seed,
   }).compute(width * height);
 
-  // compute loop
+
 
   const computePingPongWGSL = wgslFn(
     `
@@ -136,7 +136,7 @@ async function init() {
   const plane = new Engine.Mesh(new Engine.PlaneGeometry(1, 1), material);
   scene.add(plane);
 
-  renderer = await Forge.as();
+  renderer = await Hearth.as();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.animation.loop = render;
@@ -164,7 +164,7 @@ function render() {
   const time = performance.now();
   const seconds = Math.floor(time / 1000);
 
-  // reset every second
+
 
   if (phase && seconds !== lastUpdate) {
     seed.value.set(Math.random(), Math.random());
@@ -174,7 +174,7 @@ function render() {
     lastUpdate = seconds;
   }
 
-  // compute step
+
 
   renderer.compute(phase ? computeToPong : computeToPing);
 
@@ -182,9 +182,9 @@ function render() {
 
   phase = !phase;
 
-  // render step
 
-  // update material texture node
+
+
 
   renderer.render(scene, camera);
 }

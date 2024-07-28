@@ -15,14 +15,14 @@ import {
 
 import { GUI } from 'lil-gui';
 
-import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import { GPUBufferBindingTypeType, BufferStep } from '@modules/renderer/engine/renderers/constants.js';
+import { GPUBufferBindingTypeType, BufferStep } from '@modules/renderer/engine/hearth/constants.js';
 
 let camera, scene, renderer;
 let computeNode;
 
-const pointerVector = new Engine.Vec2(-10.0, -10.0); // Out of bounds first
+const pointerVector = new Engine.Vec2(-10.0, -10.0);
 const scaleVector = new Engine.Vec2(1, 1);
 
 init();
@@ -33,12 +33,12 @@ async function init() {
 
   scene = new Engine.Scene();
 
-  // initialize particles
+
 
   const particleNum = 300000;
-  const particleSize = 2; // vec2
+  const particleSize = 2;
 
-  // create buffers
+
 
   const particleBuffer = new Attribute(
     new Float32Array(particleNum * particleSize),
@@ -58,7 +58,7 @@ async function init() {
   const particleBufferNode = storage(particleBuffer, 'vec2', particleNum);
   const velocityBufferNode = storage(velocityBuffer, 'vec2', particleNum);
 
-  // create function
+
 
   const computeShaderFn = tslFn(() => {
     const particle = particleBufferNode.element(instanceIndex);
@@ -80,7 +80,7 @@ async function init() {
     particle.assign(distanceFromPointer.lessThanEqual(pointerSize).cond(vec3(), position));
   });
 
-  // compute
+
 
   computeNode = computeShaderFn().compute(particleNum);
   computeNode.onInit = ({ renderer }) => {
@@ -101,14 +101,14 @@ async function init() {
     renderer.compute(precomputeShaderNode().compute(particleNum));
   };
 
-  // use a compute shader to animate the point cloud's vertex data.
+
 
   const particleNode = attribute('particle', 'vec2');
 
   const pointsGeometry = new Engine.Geometry();
-  pointsGeometry.setAttribute('position', new Engine.Attribute(new Float32Array(3), 3)); // single vertex ( not triangle )
-  pointsGeometry.setAttribute('particle', particleBuffer); // dummy the position points as instances
-  pointsGeometry.drawRange.count = 1; // force render points as instances ( not triangle )
+  pointsGeometry.setAttribute('position', new Engine.Attribute(new Float32Array(3), 3));
+  pointsGeometry.setAttribute('particle', particleBuffer);
+  pointsGeometry.drawRange.count = 1;
 
   const pointsMaterial = new PointsNodeMaterial();
   pointsMaterial.colorNode = particleNode.add(color(0xffffff));
@@ -119,7 +119,7 @@ async function init() {
   mesh.count = particleNum;
   scene.add(mesh);
 
-  renderer = await Forge.as();
+  renderer = await Hearth.as();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.animation.loop = animate;
@@ -128,7 +128,7 @@ async function init() {
   useWindowResizer(renderer, camera);
   window.addEventListener('mousemove', onMouseMove);
 
-  // gui
+
 
   const gui = new GUI();
 

@@ -57,7 +57,7 @@ export class AnalyticLightNode extends LightingNode {
       if (overrideMaterial === null) {
         overrideMaterial = builder.createNodeMaterial();
         overrideMaterial.fragmentNode = vec4(0, 0, 0, 1);
-        overrideMaterial.isShadowNodeMaterial = true; // Use to avoid other overrideMaterial override material.fragmentNode unintentionally when using material.shadowNode
+        overrideMaterial.isShadowNodeMaterial = true; 
       }
 
       const shadow = this.light.shadow;

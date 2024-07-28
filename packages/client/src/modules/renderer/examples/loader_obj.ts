@@ -1,13 +1,13 @@
 import { AmbientLight, ColorSpace, PerspectiveCamera, PointLight, Scene } from '@modules/renderer/engine/engine.js';
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { OBJLoader } from '@modules/renderer/engine/loaders/objects/OBJLoader/OBJLoader.js';
-import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
-import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
+import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera!: PerspectiveCamera;
 let scene!: Scene;
-let renderer!: Forge;
+let renderer!: Hearth;
 
 init();
 
@@ -15,7 +15,7 @@ async function init() {
   camera = new PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 20);
   camera.position.z = 2.5;
 
-  // scene
+
 
   scene = new Scene();
 
@@ -26,13 +26,13 @@ async function init() {
   camera.add(pointLight);
   scene.add(camera);
 
-  // texture
+
 
   const textureLoader = new TextureLoader();
   const texture = await textureLoader.loadAsync('resources/textures/uv_grid_opengl.jpg');
   texture.colorSpace = ColorSpace.SRGB;
 
-  // model
+
 
   function onProgress(xhr) {
     if (xhr.lengthComputable) {
@@ -53,7 +53,7 @@ async function init() {
   scene.add(object);
   //
 
-  renderer = await Forge.as();
+  renderer = await Hearth.as();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.parameters.canvas);

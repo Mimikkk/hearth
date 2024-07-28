@@ -130,12 +130,12 @@ export abstract class Audio<T extends AudioNode = any> extends Entity {
     }
 
     if (this.isPlaying === true) {
-      // update current progress
+
 
       this._progress += Math.max(this.context.currentTime - this._startedAt, 0) * this.playbackRate;
 
       if (this.loop === true) {
-        // ensure _progress does not exceed duration with looped audios
+
 
         this._progress = this._progress % (this.duration || this.buffer!.duration);
       }

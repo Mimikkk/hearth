@@ -100,7 +100,7 @@ export class Ray {
   distanceSqTo(coord: Const<Vec3>): number {
     const directionDistance = _distance1.asSub(coord, this.origin).dot(this.direction);
 
-    // point behind the ray
+
 
     if (directionDistance < 0) {
       return this.origin.distanceSqTo(coord);
@@ -127,7 +127,7 @@ export class Ray {
     let s0, s1, sqrDist, extDet;
 
     if (det > 0) {
-      // The ray and segment are not parallel.
+
 
       s0 = a01 * b1 - b0;
       s1 = a01 * b0 - b1;
@@ -136,22 +136,22 @@ export class Ray {
       if (s0 >= 0) {
         if (s1 >= -extDet) {
           if (s1 <= extDet) {
-            // region 0
-            // Minimum at interior points of ray and segment.
+
+
 
             const invDet = 1 / det;
             s0 *= invDet;
             s1 *= invDet;
             sqrDist = s0 * (s0 + a01 * s1 + 2 * b0) + s1 * (a01 * s0 + s1 + 2 * b1) + c;
           } else {
-            // region 1
+
 
             s1 = segExtent;
             s0 = Math.max(0, -(a01 * s1 + b0));
             sqrDist = -s0 * s0 + s1 * (s1 + 2 * b1) + c;
           }
         } else {
-          // region 5
+
 
           s1 = -segExtent;
           s0 = Math.max(0, -(a01 * s1 + b0));
@@ -159,19 +159,19 @@ export class Ray {
         }
       } else {
         if (s1 <= -extDet) {
-          // region 4
+
 
           s0 = Math.max(0, -(-a01 * segExtent + b0));
           s1 = s0 > 0 ? -segExtent : Math.min(Math.max(-segExtent, -b1), segExtent);
           sqrDist = -s0 * s0 + s1 * (s1 + 2 * b1) + c;
         } else if (s1 <= extDet) {
-          // region 3
+
 
           s0 = 0;
           s1 = Math.min(Math.max(-segExtent, -b1), segExtent);
           sqrDist = s1 * (s1 + 2 * b1) + c;
         } else {
-          // region 2
+
 
           s0 = Math.max(0, -(a01 * segExtent + b0));
           s1 = s0 > 0 ? segExtent : Math.min(Math.max(-segExtent, -b1), segExtent);
@@ -179,7 +179,7 @@ export class Ray {
         }
       }
     } else {
-      // Ray and segment are parallel.
+
 
       s1 = a01 > 0 ? -segExtent : segExtent;
       s0 = Math.max(0, -(a01 * s1 + b0));
@@ -201,19 +201,19 @@ export class Ray {
     const denominator = plane.normal.dot(this.direction);
 
     if (denominator === 0) {
-      // line is coplanar, return origin
+
       if (plane.distanceTo(this.origin) === 0) {
         return 0;
       }
 
-      // Null is preferable to undefined since undefined means.... it is undefined
+
 
       return null;
     }
 
     const t = -(this.origin.dot(plane.normal) + plane.constant) / denominator;
 
-    // Return if the ray never intersects the plane
+
 
     return t >= 0 ? t : null;
   }
@@ -223,7 +223,7 @@ export class Ray {
   }
 
   intersectsPlane(plane: Const<Plane>) {
-    // check if the ray lies on the plane first
+
 
     const distToPoint = plane.distanceTo(this.origin);
 
@@ -237,7 +237,7 @@ export class Ray {
       return true;
     }
 
-    // ray origin is behind the plane (and is pointing behind it)
+
 
     return false;
   }
@@ -323,19 +323,19 @@ export class Ray {
     backfaceCulling: boolean,
     into: Const<Vec3> = Vec3.new(),
   ): Vec3 | null {
-    // Compute the offset origin, edges, and normal.
 
-    // from https://github.com/pmjoniak/GeometricTools/blob/master/GTEngine/Include/Mathematics/GteIntrRay3Triangle3.h
+
+
 
     const _edge1 = _triangle0.asSub(b, a);
     const _edge2 = _triangle1.asSub(c, a);
     const _normal = _triangle2.asCross(_edge1, _edge2);
 
-    // Solve Q + t*D = b1*E1 + b2*E2 (Q = kDiff, D = ray direction,
-    // E1 = kEdge1, E2 = kEdge2, N = Cross(E1,E2)) by
-    //   |Dot(D,N)|*b1 = sign(Dot(D,N))*Dot(D,Cross(Q,E2))
-    //   |Dot(D,N)|*b2 = sign(Dot(D,N))*Dot(D,Cross(E1,Q))
-    //   |Dot(D,N)|*t = -sign(Dot(D,N))*Dot(Q,N)
+
+
+
+
+
     let DdN = this.direction.dot(_normal);
     let sign;
 
@@ -352,32 +352,32 @@ export class Ray {
     const _diff = _triangle3.asSub(this.origin, a);
     const DdQxE2 = sign * this.direction.dot(_edge2.asCross(_diff, _edge2));
 
-    // b1 < 0, no intersection
+
     if (DdQxE2 < 0) {
       return null;
     }
 
     const DdE1xQ = sign * this.direction.dot(_edge1.cross(_diff));
 
-    // b2 < 0, no intersection
+
     if (DdE1xQ < 0) {
       return null;
     }
 
-    // b1+b2 > 1, no intersection
+
     if (DdQxE2 + DdE1xQ > DdN) {
       return null;
     }
 
-    // Line intersects triangle, check if ray does.
+
     const QdN = -sign * _diff.dot(_normal);
 
-    // t < 0, no intersection
+
     if (QdN < 0) {
       return null;
     }
 
-    // Ray intersects triangle.
+
     return this.at(QdN / DdN, into);
   }
 

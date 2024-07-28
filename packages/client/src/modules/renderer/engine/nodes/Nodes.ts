@@ -1,10 +1,10 @@
-// @TODO: We can simplify "export { default as SomeNode, other, exports } from '...'" to just "export * from '...'" if we will use only named exports
-// this will also solve issues like "import TempNode from '../core/Node.ts'"
 
-// constants
+
+
+
 export * from './core/constants.js';
 
-// core
+
 export { default as AssignNode, assign } from './core/AssignNode.js';
 export { default as AttributeNode, attribute } from './core/AttributeNode.js';
 export { default as BypassNode, bypass } from './core/BypassNode.js';
@@ -64,7 +64,7 @@ import './lighting/LightsNodeMap.initialize.js';
 
 export { NodeUtils };
 
-// math
+
 export {
   PI,
   PI2,
@@ -153,11 +153,11 @@ export {
 export { default as CondNode, cond } from './math/CondNode.js';
 export { default as HashNode, hash } from './math/HashNode.js';
 
-// math utils
+
 export { parabola, gain, pcurve, sinc } from './math/MathUtils.js';
 export { triNoise3D } from './math/TriNoise3D.js';
 
-// utils
+
 export { default as ArrayElementNode } from './utils/ArrayElementNode.js';
 export { default as ConvertNode } from './utils/ConvertNode.js';
 export { default as DiscardNode, discard } from './utils/DiscardNode.js';
@@ -184,10 +184,10 @@ export {
 } from './utils/TriplanarTexturesNode.js';
 export { default as ReflectorNode, reflector } from './utils/ReflectorNode.js';
 
-// shadernode
+
 export * from './shadernode/ShaderNodes.js';
 
-// accessors
+
 export { TBNViewMatrix, parallaxDirection, parallaxUV } from './accessors/AccessorsUtils.js';
 export { default as UniformsNode, uniforms } from './accessors/UniformsNode.js';
 export {
@@ -315,7 +315,7 @@ export { default as TextureStoreNode, textureStore } from './accessors/TextureSt
 export { default as UVNode, uv } from './accessors/UVNode.js';
 export { default as UserDataNode, userData } from './accessors/UserDataNode.js';
 
-// display
+
 export { default as BlendModeNode, burn, dodge, overlay, screen } from './display/BlendModeNode.js';
 export { default as BumpMapNode, bumpMap } from './display/BumpMapNode.js';
 export {
@@ -367,7 +367,7 @@ export { default as AnamorphicNode, anamorphic } from './display/AnamorphicNode.
 
 export { default as PassNode, pass, depthPass } from './display/PassNode.js';
 
-// code
+
 export { default as ExpressionNode, expression } from './code/ExpressionNode.js';
 export { default as CodeNode, code, js, wgsl } from './code/CodeNode.js';
 export { default as FunctionCallNode, call } from './code/FunctionCallNode.js';
@@ -375,18 +375,18 @@ export { default as FunctionNode, wgslFn } from './code/FunctionNode.js';
 export { default as ScriptableNode, scriptable, global } from './code/ScriptableNode.js';
 export { default as ScriptableValueNode, scriptableValue } from './code/ScriptableValueNode.js';
 
-// fog
+
 export { default as FogNode, fog } from './fog/FogNode.js';
 export { default as FogRangeNode, rangeFog } from './fog/FogRangeNode.js';
 export { default as FogExp2Node, densityFog } from './fog/FogExp2Node.js';
 
-// geometry
+
 export { default as RangeNode, range } from './geometry/RangeNode.js';
 
-// gpgpu
+
 export { default as ComputeNode, compute } from './gpgpu/ComputeNode.js';
 
-// lighting
+
 export { default as LightNode, lightTargetDirection } from './lighting/LightNode.js';
 export { default as PointLightNode } from './lighting/PointLightNode.js';
 export { default as DirectionalLightNode } from './lighting/DirectionalLightNode.js';
@@ -401,20 +401,20 @@ export { default as EnvironmentNode } from './lighting/EnvironmentNode.js';
 export { default as AONode } from './lighting/AONode.js';
 export { default as AnalyticLightNode } from './lighting/AnalyticLightNode.js';
 
-// pmrem
+
 export { default as PMREMNode, pmremTexture } from './pmrem/PMREMNode.js';
 export * as PMREMUtils from './pmrem/PMREMUtils.js';
 
-// procedural
+
 export { default as CheckerNode, checker } from './procedural/CheckerNode.js';
 
-// materials
+
 export * from './materials/Materials.js';
 
-// materialX
+
 export * from './materialx/MaterialXNodes.js';
 
-// functions
+
 export { default as BRDF_GGX } from './functions/BSDF/BRDF_GGX.js';
 export { default as BRDF_Lambert } from './functions/BSDF/BRDF_Lambert.js';
 export { default as D_GGX } from './functions/BSDF/D_GGX.js';

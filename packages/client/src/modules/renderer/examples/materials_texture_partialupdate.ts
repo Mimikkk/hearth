@@ -11,7 +11,7 @@ import {
   Scene,
   Vec2,
 } from '@modules/renderer/engine/engine.js';
-import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 import { Random } from '@modules/renderer/engine/math/random.js';
@@ -33,7 +33,7 @@ diffuseMap.generateMipmaps = false;
 const mesh = new Mesh(new PlaneGeometry(2, 2), new MeshBasicMaterial({ map: diffuseMap }));
 scene.add(mesh);
 
-const renderer = await Forge.as({
+const renderer = await Hearth.as({
   async animate() {
     clock.tick();
 

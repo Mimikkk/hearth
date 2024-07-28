@@ -3,8 +3,8 @@ import { add, div, mul } from '../math/OperatorNode.js';
 import { ceil, floor, fract, pow } from '../math/MathNode.js';
 import { addNodeCommand, f32, i32, proxyNode, vec2, vec4 } from '../shadernode/ShaderNodes.js';
 
-// Mipped Bicubic Texture Filtering by N8
-// https://www.shadertoy.com/view/Dl2SDW
+
+
 
 const bC = 1.0 / 6.0;
 
@@ -20,7 +20,7 @@ const g0 = a => w0(a).add(w1(a));
 
 const g1 = a => w2(a).add(w3(a));
 
-// h0 and h1 are the two offset functions
+
 const h0 = a => add(-1.0, w1(a).div(w0(a).add(w1(a))));
 
 const h1 = a => add(1.0, w3(a).div(w2(a).add(w3(a))));

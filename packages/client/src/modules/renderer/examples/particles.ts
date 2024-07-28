@@ -12,9 +12,9 @@ import {
 
 import { GUI } from 'lil-gui';
 
-import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 
-import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
+import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
 import { Blending } from '@modules/renderer/engine/engine.js';
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
@@ -34,12 +34,12 @@ async function init() {
   scene = new Engine.Scene();
   //scene.fogNode = rangeFog( color( 0x0000ff ), 1500, 2100 );
 
-  // textures
+
 
   const textureLoader = new TextureLoader();
   const map = await textureLoader.loadAsync('resources/textures/opengameart/smoke1.png');
 
-  // create nodes
+
 
   const lifeRange = range(0.1, 1);
   const offsetRange = range(new Engine.Vec3(-2, 3, -2), new Engine.Vec3(2, 5, 2));
@@ -60,7 +60,7 @@ async function init() {
 
   const smokeColor = mix(color(0x2c1501), color(0x222222), positionLocal.y.mul(3).clamp());
 
-  // create particles
+
 
   const smokeNodeMaterial = new SpriteNodeMaterial();
   smokeNodeMaterial.colorNode = mix(color(0xf27d0c), smokeColor, life.mul(2.5).min(1)).mul(fakeLightEffect);
@@ -103,7 +103,7 @@ async function init() {
 
   //
 
-  renderer = await Forge.as();
+  renderer = await Hearth.as();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.animation.loop = render;
@@ -118,7 +118,7 @@ async function init() {
 
   useWindowResizer(renderer, camera);
 
-  // gui
+
 
   UI.create('Controls', timer).number('scale', 'Animation speed', 0.2, 1, 0.01);
 }

@@ -43,7 +43,7 @@ const ui = UI
   });
 
 document.addEventListener('resize', () => {
-    // exposed update method to update the UI based on external changes
+    
     ui.update();
 });
 ;

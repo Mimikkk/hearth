@@ -12,10 +12,10 @@ import {
 
 import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/GLTFLoader.js';
 
-import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
-import Postprocess from '@modules/renderer/engine/renderers/Postprocess.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
+import Postprocess from '@modules/renderer/engine/hearth/Postprocess.js';
 
-import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
+import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
 
 import { ColorSpace } from '@modules/renderer/engine/engine.js';
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
@@ -59,7 +59,7 @@ async function init() {
 
   clock = new Engine.Clock();
 
-  // animated model
+  
 
   const loader = new GLTFLoader();
   loader.loadAsync('resources/models/gltf/Michelle.glb').then(function (gltf) {
@@ -74,7 +74,7 @@ async function init() {
     scene.add(model);
   });
 
-  // textures
+  
 
   const textureLoader = new TextureLoader();
 
@@ -87,12 +87,12 @@ async function init() {
   floorNormal.wrapS = Engine.Wrapping.Repeat;
   floorNormal.wrapT = Engine.Wrapping.Repeat;
 
-  // floor
+  
 
   const floorUV = uv().mul(15);
   const floorNormalOffset = texture(floorNormal, floorUV).xy.mul(2).sub(1).mul(0.02);
 
-  const reflection = reflector({ resolution: 0.5 }); // 0.5 is half of the rendering view
+  const reflection = reflector({ resolution: 0.5 }); 
   reflection.target.rotateX(-Math.PI / 2);
   reflection.uvNode = reflection.uvNode.add(floorNormalOffset);
   scene.add(reflection.target);
@@ -104,9 +104,9 @@ async function init() {
   floor.position.set(0, 0, 0);
   scene.add(floor);
 
-  // renderer
+  
 
-  renderer = await Forge.as();
+  renderer = await Hearth.as();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.animation.loop = animate;
@@ -121,7 +121,7 @@ async function init() {
   controls.target.set(0, 0.5, 0);
   controls.update();
 
-  // post-processing
+  
 
   const scenePass = pass(scene, camera);
   const scenePassColor = scenePass.getTextureNode();

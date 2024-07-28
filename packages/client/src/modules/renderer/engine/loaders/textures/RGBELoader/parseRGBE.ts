@@ -6,7 +6,7 @@ import {
   Wrapping,
 } from '../../../constants.js';
 import { DataUtils } from '@modules/renderer/engine/utils/DataUtils.js';
-import { DataTexture } from '@modules/renderer/engine/objects/textures/DataTexture.js';
+import { DataTexture } from '@modules/renderer/engine/entities/textures/DataTexture.js';
 import { NumberArray } from '@modules/renderer/engine/math/MathUtils.js';
 
 export type SupportedType = TextureDataType.Float | TextureDataType.HalfFloat;
@@ -35,7 +35,7 @@ const RGBEByteToRGBHalf = (
   const e = sourceArray[sourceOffset + 3];
   const scale = Math.pow(2.0, e - 128.0) / 255.0;
 
-  // clamping to 65504, the maximum representable value in float16
+
   destArray[destOffset] = DataUtils.toHalfFloat(Math.min(sourceArray[sourceOffset] * scale, 65504));
   destArray[destOffset + 1] = DataUtils.toHalfFloat(Math.min(sourceArray[sourceOffset + 1] * scale, 65504));
   destArray[destOffset + 2] = DataUtils.toHalfFloat(Math.min(sourceArray[sourceOffset + 2] * scale, 65504));
@@ -121,13 +121,13 @@ export const parseRGBE = (buffer: ArrayBuffer, type: SupportedType): DataTexture
     }
   };
   const RGBE_ReadHeader = (buffer: Uint8Array) => {
-    // regexes to parse header info fields
+
     const magic_token_re = /^#\?(\S+)/;
     const gamma_re = /^\s*GAMMA\s*=\s*(\d+(\.\d+)?)\s*$/;
     const exposure_re = /^\s*EXPOSURE\s*=\s*(\d+(\.\d+)?)\s*$/;
     const format_re = /^\s*FORMAT=(\S+)\s*$/;
     const dimensions_re = /^\s*-Y\s+(\d+)\s+\+X\s+(\d+)\s*$/;
-    // RGBE format header struct
+
     const header = {
       valid: 0 /* indicate which fields are valid */,
 
@@ -170,7 +170,7 @@ export const parseRGBE = (buffer: ArrayBuffer, type: SupportedType): DataTexture
 
       if ('#' === line.charAt(0)) {
         header.comments += line + '\n';
-        continue; // comment line
+        continue;
       }
 
       if ((match = line.match(gamma_re))) {
@@ -209,15 +209,15 @@ export const parseRGBE = (buffer: ArrayBuffer, type: SupportedType): DataTexture
     const scanline_width = w;
 
     if (
-      // run length encoding is not allowed so read flat
+
       scanline_width < 8 ||
       scanline_width > 0x7fff ||
-      // this file is not run length encoded
+
       2 !== buffer[0] ||
       2 !== buffer[1] ||
       buffer[2] & 0x80
     ) {
-      // return the flat buffer
+
       return new Uint8Array(buffer);
     }
 
@@ -239,7 +239,7 @@ export const parseRGBE = (buffer: ArrayBuffer, type: SupportedType): DataTexture
     const scanline_buffer = new Uint8Array(ptr_end);
     let num_scanlines = h;
 
-    // read in each successive scanline
+
     while (num_scanlines > 0 && pos < buffer.byteLength) {
       if (pos + 4 > buffer.byteLength) {
         rgbe_error(rgbe_read_error);
@@ -267,14 +267,14 @@ export const parseRGBE = (buffer: ArrayBuffer, type: SupportedType): DataTexture
         }
 
         if (isEncodedRun) {
-          // a (encoded) run of the same value
+
           const byteValue = buffer[pos++];
           for (let i = 0; i < count; i++) {
             scanline_buffer[ptr++] = byteValue;
           }
           //ptr += count;
         } else {
-          // a literal-run
+
           scanline_buffer.set(buffer.subarray(pos, pos + count), ptr);
           ptr += count;
           pos += count;

@@ -19,4 +19,4 @@ export default DiscardNode;
 export const inlineDiscard = proxyNode(DiscardNode);
 export const discard = condNode => inlineDiscard(condNode).append();
 
-addNodeCommand('discard', discard); // @TODO: Check... this cause a little confusing using in chaining
+addNodeCommand('discard', discard);

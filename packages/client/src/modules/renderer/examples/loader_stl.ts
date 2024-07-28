@@ -1,15 +1,15 @@
-import { PerspectiveCamera } from '@modules/renderer/engine/objects/cameras/PerspectiveCamera.js';
+import { PerspectiveCamera } from '@modules/renderer/engine/entities/cameras/PerspectiveCamera.js';
 import { Vec3 } from '../engine/math/Vec3.js';
-import { Scene } from '@modules/renderer/engine/objects/scenes/Scene';
+import { Scene } from '@modules/renderer/engine/entities/scenes/Scene';
 import { Color } from '../engine/math/Color';
-import { Fog } from '@modules/renderer/engine/objects/scenes/Fog';
-import { Mesh } from '../engine/objects/Mesh';
+import { Fog } from '@modules/renderer/engine/entities/scenes/Fog';
+import { Mesh } from '@modules/renderer/engine/entities/Mesh';
 import { PlaneGeometry } from '../engine/geometries/PlaneGeometry';
-import { MeshPhongMaterial } from '@modules/renderer/engine/objects/materials/MeshPhongMaterial';
+import { MeshPhongMaterial } from '@modules/renderer/engine/entities/materials/MeshPhongMaterial';
 import { STLLoader } from '@modules/renderer/engine/loaders/objects/STLLoader/STLLoader.js';
-import { HemisphereLight } from '@modules/renderer/engine/objects/lights/HemisphereLight';
-import { DirectionalLight } from '@modules/renderer/engine/objects/lights/DirectionalLight';
-import { Forge } from '../engine/renderers/Forge.js';
+import { HemisphereLight } from '@modules/renderer/engine/entities/lights/HemisphereLight';
+import { DirectionalLight } from '@modules/renderer/engine/entities/lights/DirectionalLight';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 
 let container;
 
@@ -30,7 +30,7 @@ async function init() {
   scene.background = Color.new(0x72645b);
   scene.fog = new Fog(0x72645b, 2, 15);
 
-  // Ground
+
 
   const plane = new Mesh(new PlaneGeometry(40, 40), new MeshPhongMaterial({ color: 0xcbcbcb, specular: 0x474747 }));
   plane.setRotationX(-Math.PI / 2);
@@ -39,7 +39,7 @@ async function init() {
 
   plane.receiveShadow = true;
 
-  // ASCII file
+
   const loader = new STLLoader();
   loader.loadAsync('resources/models/stl/ascii/slotted_disk.stl').then(function (geometry) {
     const material = new MeshPhongMaterial({ color: 0xff9c7c, specular: 0x494949, shininess: 200 });
@@ -55,7 +55,7 @@ async function init() {
     scene.add(mesh);
   });
 
-  // Binary files
+
   const material = new MeshPhongMaterial({ color: 0xd5d5d5, specular: 0x494949, shininess: 200 });
 
   loader.loadAsync('resources/models/stl/binary/pr2_head_pan.stl').then(function (geometry) {
@@ -84,7 +84,7 @@ async function init() {
     scene.add(mesh);
   });
 
-  // Colored binary STL
+
   loader.loadAsync('resources/models/stl/binary/colored.stl').then(function (geometry) {
     let meshMaterial = material;
 
@@ -104,24 +104,24 @@ async function init() {
     scene.add(mesh);
   });
 
-  // Lights
+
 
   scene.add(new HemisphereLight(0x8d7c7c, 0x494966, 3));
 
   addShadowedLight(1, 1, 1, 0xffffff, 3.5);
   addShadowedLight(0.5, 1, -1, 0xffd500, 3);
-  // renderer
 
-  renderer = await Forge.as();
+
+  renderer = await Hearth.as();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.animation.loop = animate;
 
-  // renderer.shadowMap.enabled = true;
+
 
   container.appendChild(renderer.parameters.canvas);
 
-  // stats
+
 
   //
 

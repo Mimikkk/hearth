@@ -3,7 +3,7 @@ import { varying } from '../core/VaryingNode.js';
 import { property } from '../core/PropertyNode.js';
 import { attribute } from '../core/AttributeNode.js';
 import { cameraProjectionMatrix } from '../accessors/CameraNode.js';
-import { materialColor, materialPointWidth } from '../accessors/MaterialNode.js'; // or should this be a property, instead?
+import { materialColor, materialPointWidth } from '../accessors/MaterialNode.js'; 
 import { modelViewMatrix } from '../accessors/ModelNode.js';
 import { positionGeometry } from '../accessors/PositionNode.js';
 import { smoothstep } from '@modules/renderer/engine/nodes/math/MathNode.js';
@@ -46,27 +46,27 @@ export class InstancedPointsNodeMaterial extends NodeMaterial {
 
     this.vertexNode = tslFn(() => {
       //vUv = uv;
-      varying(vec2(), 'vUv').assign(uv()); // @TODO: Analyze other way to do this
+      varying(vec2(), 'vUv').assign(uv()); 
 
       const instancePosition = attribute('instancePosition');
 
-      // camera space
+      
       const mvPos = property('vec4', 'mvPos');
       mvPos.assign(modelViewMatrix.mul(vec4(instancePosition, 1.0)));
 
       const aspect = viewport.z.div(viewport.w);
 
-      // clip space
+      
       const clipPos = cameraProjectionMatrix.mul(mvPos);
 
-      // offset in ndc space
+      
       const offset = property('vec2', 'offset');
       offset.assign(positionGeometry.xy);
       offset.assign(offset.mul(materialPointWidth));
       offset.assign(offset.div(viewport.z));
       offset.y.assign(offset.y.mul(aspect));
 
-      // back to clip space
+      
       offset.assign(offset.mul(clipPos.w));
 
       //clipPos.xy += offset;
@@ -74,13 +74,13 @@ export class InstancedPointsNodeMaterial extends NodeMaterial {
 
       return clipPos;
 
-      //vec4 mvPosition = mvPos; // this was used for somethihng...
+      //vec4 mvPosition = mvPos; 
     })();
 
     this.fragmentNode = tslFn(() => {
       const vUv = varying(vec2(), 'vUv');
 
-      // force assignment into correct place in flow
+      
       const alpha = property('f32', 'alpha');
       alpha.assign(1);
 
@@ -90,7 +90,7 @@ export class InstancedPointsNodeMaterial extends NodeMaterial {
       const len2 = a.mul(a).add(b.mul(b));
 
       if (useAlphaToCoverage) {
-        // force assignment out of following 'if' statement - to avoid uniform control flow errors
+        
         const dlen = property('f32', 'dlen');
         dlen.assign(len2.fwidth());
 

@@ -61,8 +61,8 @@ export class Line2NodeMaterial extends NodeMaterial {
     const useWorldUnits = this.worldUnits;
 
     const trimSegment = tslFn(({ start, end }) => {
-      const a = cameraProjectionMatrix.element(2).element(2); // 3nd entry in 3th column
-      const b = cameraProjectionMatrix.element(3).element(2); // 3nd entry in 4th column
+      const a = cameraProjectionMatrix.element(2).element(2);
+      const b = cameraProjectionMatrix.element(3).element(2);
       const nearEstimate = b.mul(-0.5).div(a);
 
       const alpha = nearEstimate.sub(start.z).div(end.z.sub(start.z));
@@ -76,12 +76,12 @@ export class Line2NodeMaterial extends NodeMaterial {
       const instanceStart = attribute('instanceStart');
       const instanceEnd = attribute('instanceEnd');
 
-      // camera space
+
 
       const start = property('vec4', 'start');
       const end = property('vec4', 'end');
 
-      start.assign(modelViewMatrix.mul(vec4(instanceStart, 1.0))); // force assignment into correct place in flow
+      start.assign(modelViewMatrix.mul(vec4(instanceStart, 1.0)));
       end.assign(modelViewMatrix.mul(vec4(instanceEnd, 1.0)));
 
       if (useWorldUnits) {
@@ -91,12 +91,12 @@ export class Line2NodeMaterial extends NodeMaterial {
 
       const aspect = viewport.z.div(viewport.w);
 
-      // special case for perspective projection, and segments that terminate either in, or behind, the camera plane
-      // clearly the gpu firmware has a way of addressing this issue when projecting into ndc space
-      // but we need to perform ndc-space calculations in the shader, so we must address this issue directly
-      // perhaps there is a more elegant solution -- WestLangley
 
-      const perspective = cameraProjectionMatrix.element(2).element(3).equal(-1.0); // 4th entry in the 3rd column
+
+
+
+
+      const perspective = cameraProjectionMatrix.element(2).element(3).equal(-1.0);
 
       NodeStack.if(perspective, () => {
         NodeStack.if(start.z.lessThan(0.0).and(end.z.greaterThan(0.0)), () => {
@@ -106,25 +106,25 @@ export class Line2NodeMaterial extends NodeMaterial {
         });
       });
 
-      // clip space
+
       const clipStart = cameraProjectionMatrix.mul(start);
       const clipEnd = cameraProjectionMatrix.mul(end);
 
-      // ndc space
+
       const ndcStart = clipStart.xyz.div(clipStart.w);
       const ndcEnd = clipEnd.xyz.div(clipEnd.w);
 
-      // direction
+
       const dir = ndcEnd.xy.sub(ndcStart.xy).temp();
 
-      // account for clip-space aspect ratio
+
       dir.x.assign(dir.x.mul(aspect));
       dir.assign(dir.normalize());
 
       const clip = temp(vec4());
 
       if (useWorldUnits) {
-        // get the offset direction as perpendicular to the view vector
+
 
         const worldDir = end.xyz.sub(start.xyz).normalize();
         const tmpFwd = mix(start.xyz, end.xyz, 0.5).normalize();
@@ -135,32 +135,32 @@ export class Line2NodeMaterial extends NodeMaterial {
 
         worldPos.assign(positionGeometry.y.lessThan(0.5).cond(start, end));
 
-        // height offset
+
         const hw = materialLineWidth.mul(0.5);
         worldPos.addAssign(vec4(positionGeometry.x.lessThan(0.0).cond(worldUp.mul(hw), worldUp.mul(hw).negate()), 0));
 
-        // don't extend the line if we're rendering dashes because we
-        // won't be rendering the endcaps
+
+
         if (!useDash) {
-          // cap extension
+
           worldPos.addAssign(
             vec4(positionGeometry.y.lessThan(0.5).cond(worldDir.mul(hw).negate(), worldDir.mul(hw)), 0),
           );
 
-          // add width to the box
+
           worldPos.addAssign(vec4(worldFwd.mul(hw), 0));
 
-          // endcaps
+
           NodeStack.if(positionGeometry.y.greaterThan(1.0).or(positionGeometry.y.lessThan(0.0)), () => {
             worldPos.subAssign(vec4(worldFwd.mul(2.0).mul(hw), 0));
           });
         }
 
-        // project the worldpos
+
         clip.assign(cameraProjectionMatrix.mul(worldPos));
 
-        // shift the depth of the projected points so the line
-        // segments overlap neatly
+
+
         const clipPose = temp(vec3());
 
         clipPose.assign(positionGeometry.y.lessThan(0.5).cond(ndcStart, ndcEnd));
@@ -170,30 +170,30 @@ export class Line2NodeMaterial extends NodeMaterial {
 
         offset.assign(vec2(dir.y, dir.x.negate()));
 
-        // undo aspect ratio adjustment
+
         dir.x.assign(dir.x.div(aspect));
         offset.x.assign(offset.x.div(aspect));
 
-        // sign flip
+
         offset.assign(positionGeometry.x.lessThan(0.0).cond(offset.negate(), offset));
 
-        // endcaps
+
         NodeStack.if(positionGeometry.y.lessThan(0.0), () => {
           offset.assign(offset.sub(dir));
         }).elseif(positionGeometry.y.greaterThan(1.0), () => {
           offset.assign(offset.add(dir));
         });
 
-        // adjust for linewidth
+
         offset.assign(offset.mul(materialLineWidth));
 
-        // adjust for clip-space to screen-space conversion // maybe resolution should be based on viewport ...
+
         offset.assign(offset.div(viewport.w));
 
-        // select end
+
         clip.assign(positionGeometry.y.lessThan(0.5).cond(clipStart, clipEnd));
 
-        // back to clip space
+
         offset.assign(offset.mul(clip.w));
 
         clip.assign(clip.add(vec4(offset, 0, 0)));
@@ -245,11 +245,11 @@ export class Line2NodeMaterial extends NodeMaterial {
         const vLineDistance = varying(lineDistance.add(materialLineDashOffset));
         const vLineDistanceOffset = offsetNode ? vLineDistance.add(offsetNode) : vLineDistance;
 
-        vUv.y.lessThan(-1.0).or(vUv.y.greaterThan(1.0)).discard(); // discard endcaps
-        vLineDistanceOffset.mod(dashSize.add(gapSize)).greaterThan(dashSize).discard(); // todo - FIX
+        vUv.y.lessThan(-1.0).or(vUv.y.greaterThan(1.0)).discard();
+        vLineDistanceOffset.mod(dashSize.add(gapSize)).greaterThan(dashSize).discard();
       }
 
-      // force assignment into correct place in flow
+
       const alpha = property('f32', 'alpha');
       alpha.assign(1);
 
@@ -257,7 +257,7 @@ export class Line2NodeMaterial extends NodeMaterial {
         const worldStart = varyingProperty('vec3', 'worldStart');
         const worldEnd = varyingProperty('vec3', 'worldEnd');
 
-        // Find the closest points on the view ray and the line segment
+
         const rayEnd = varyingProperty('vec4', 'worldPos').xyz.normalize().mul(1e5);
         const lineDir = worldEnd.sub(worldStart);
         const params = closestLineToLine({ p1: worldStart, p2: worldEnd, p3: vec3(0.0, 0.0, 0.0), p4: rayEnd });
@@ -277,7 +277,7 @@ export class Line2NodeMaterial extends NodeMaterial {
           }
         }
       } else {
-        // round endcaps
+
 
         if (useAlphaToCoverage) {
           const a = vUv.x;
@@ -285,7 +285,7 @@ export class Line2NodeMaterial extends NodeMaterial {
 
           const len2 = a.mul(a).add(b.mul(b));
 
-          // force assignment out of following 'if' statement - to avoid uniform control flow errors
+
           const dlen = property('f32', 'dlen');
           dlen.assign(len2.fwidth());
 

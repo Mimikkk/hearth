@@ -4,7 +4,7 @@ import { normalLocal } from './NormalNode.js';
 import { positionLocal } from './PositionNode.js';
 import { mat3, mat4, proxyNode, vec3 } from '../shadernode/ShaderNodes.js';
 import { Buffer, BufferUse } from '@modules/renderer/engine/engine.js';
-import { BufferStep } from '@modules/renderer/engine/renderers/constants.js';
+import { BufferStep } from '@modules/renderer/engine/hearth/constants.js';
 
 class InstanceNode extends Node {
   static type = 'InstanceNode';
@@ -29,7 +29,7 @@ class InstanceNode extends Node {
         instanceAttribute.usage === BufferUse.DynamicDraw ? instancedDynamicBufferAttribute : instancedBufferAttribute;
 
       const instanceBuffers = [
-        // F.Signature -> bufferAttribute( array, type, stride, offset )
+        
         bufferFn(buffer, 'vec4', 16, 0),
         bufferFn(buffer, 'vec4', 16, 4),
         bufferFn(buffer, 'vec4', 16, 8),
@@ -41,11 +41,11 @@ class InstanceNode extends Node {
       this.instanceMatrixNode = instanceMatrixNode;
     }
 
-    // POSITION
+    
 
     const instancePosition = instanceMatrixNode.mul(positionLocal).xyz;
 
-    // NORMAL
+    
 
     const m = mat3(instanceMatrixNode[0].xyz, instanceMatrixNode[1].xyz, instanceMatrixNode[2].xyz);
 
@@ -53,7 +53,7 @@ class InstanceNode extends Node {
 
     const instanceNormal = m.mul(transformedNormal).xyz;
 
-    // ASSIGNS
+    
 
     positionLocal.assign(instancePosition);
     normalLocal.assign(instanceNormal);

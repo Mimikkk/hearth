@@ -46,7 +46,7 @@ class SplitNode extends Node {
       const componentsLength = this.getVectorLength();
 
       if (componentsLength >= nodeTypeLength) {
-        // needed expand the input node
+
 
         type = TypeName.ofSize(this.getVectorLength(), this.getComponentType(builder));
       }
@@ -57,14 +57,14 @@ class SplitNode extends Node {
         this.components.length === nodeTypeLength &&
         this.components === stringVectorComponents.slice(0, this.components.length)
       ) {
-        // unnecessary swizzle
+
 
         snippet = builder.format(nodeSnippet, type, output);
       } else {
         snippet = builder.format(`${nodeSnippet}.${this.components}`, this.getNodeType(builder), output);
       }
     } else {
-      // ignore .components if .node returns f32/integer
+
 
       snippet = node.build(builder, output);
     }

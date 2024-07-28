@@ -1,7 +1,7 @@
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
-import { PerspectiveCamera } from '@modules/renderer/engine/objects/cameras/PerspectiveCamera.js';
-import { Scene } from '@modules/renderer/engine/objects/scenes/Scene.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
+import { PerspectiveCamera } from '@modules/renderer/engine/entities/cameras/PerspectiveCamera.js';
+import { Scene } from '@modules/renderer/engine/entities/scenes/Scene.js';
 import { normalWorld } from '@modules/renderer/engine/nodes/accessors/NormalNode.js';
 import { color } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.js';
 import {
@@ -14,7 +14,7 @@ import {
   SphereGeometry,
   SpotLight,
 } from '@modules/renderer/engine/engine.js';
-import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
+import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
 
 const container = document.createElement('div');
 document.body.appendChild(container);
@@ -32,7 +32,7 @@ const createScene = () => {
   return scene;
 };
 const createRenderer = async (onAnimate: () => void) => {
-  const renderer = await Forge.as();
+  const renderer = await Hearth.as();
   renderer.animation.loop = onAnimate;
   document.body.appendChild(renderer.parameters.canvas);
 

@@ -67,7 +67,7 @@ export abstract class Curve<T extends Vec2 | Vec3> {
     let i = 0;
     const il = arcLengths.length;
 
-    let targetArcLength; // The targeted u distance value to get
+    let targetArcLength;
 
     if (distance) {
       targetArcLength = distance;
@@ -75,14 +75,14 @@ export abstract class Curve<T extends Vec2 | Vec3> {
       targetArcLength = u * arcLengths[il - 1];
     }
 
-    // binary search for the index with largest value smaller than target u distance
+
 
     let low = 0,
       high = il - 1,
       comparison;
 
     while (low <= high) {
-      i = Math.floor(low + (high - low) / 2); // less likely to overflow, though probably not issue here, JS doesn't really have integers, all numbers are floats
+      i = Math.floor(low + (high - low) / 2);
 
       comparison = arcLengths[i] - targetArcLength;
 
@@ -94,7 +94,7 @@ export abstract class Curve<T extends Vec2 | Vec3> {
         high = i;
         break;
 
-        // DONE
+
       }
     }
 
@@ -104,18 +104,18 @@ export abstract class Curve<T extends Vec2 | Vec3> {
       return i / (il - 1);
     }
 
-    // we could get finer grain at lengths, or use simple interpolation between two points
+
 
     const lengthBefore = arcLengths[i];
     const lengthAfter = arcLengths[i + 1];
 
     const segmentLength = lengthAfter - lengthBefore;
 
-    // determine where we are between the 'before' and 'after' points
+
 
     const segmentFraction = (targetArcLength - lengthBefore) / segmentLength;
 
-    // add that fractional amount to t
+
 
     const t = (i + segmentFraction) / (il - 1);
 

@@ -37,7 +37,7 @@ class NormalNode extends Node {
       const vertexNode = modelNormalMatrix.mul(normalLocal);
       outputNode = normalize(varying(vertexNode));
     } else if (scope === NormalNode.WORLD) {
-      // To use inverseTransformDirection only inverse the param order like this: cameraViewMatrix.transformDirection( normalView )
+
       const vertexNode = normalView.transformDirection(cameraViewMatrix);
       outputNode = normalize(varying(vertexNode));
     }

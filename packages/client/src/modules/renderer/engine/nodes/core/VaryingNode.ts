@@ -23,7 +23,7 @@ class VaryingNode extends Node {
   }
 
   getNodeType(builder) {
-    // VaryingNode is auto type
+
 
     return this.node.getNodeType(builder);
   }
@@ -34,12 +34,12 @@ class VaryingNode extends Node {
 
     const nodeVarying = builder.getVaryingFromNode(this, name, type);
 
-    // this property can be used to check if the varying can be optimized for a var
+
     nodeVarying.needsInterpolation || (nodeVarying.needsInterpolation = builder.shaderStage === ShaderStage.Fragment);
 
     const propertyName = builder.getPropertyName(nodeVarying, ShaderStage.Vertex);
 
-    // force node run in vertex stage
+
     builder.flowNodeFromShaderStage(ShaderStage.Vertex, node, type, propertyName);
 
     return builder.getPropertyName(nodeVarying);

@@ -25,7 +25,7 @@ export class LineCurve3 extends Curve<Vec3> {
     return point;
   }
 
-  // Line curve is linear, so we can overwrite default getPointAt
+  
   getPointAt(u: number, optionalTarget: Vec3 = Vec3.new()) {
     return this.getPoint(u, optionalTarget);
   }

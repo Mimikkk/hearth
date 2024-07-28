@@ -68,7 +68,7 @@ class MaterialNode extends Node {
         node = f32(1);
       }
     } else if (scope === MaterialNode.ROUGHNESS) {
-      // TODO: cleanup similar branches
+      
 
       const roughnessNode = this.getFloat(scope);
 
@@ -124,7 +124,7 @@ class MaterialNode extends Node {
         node = normalView;
       }
     } else if (scope === MaterialNode.SHEEN) {
-      const sheenNode = this.getColor('sheenColor').mul(this.getFloat('sheen')); // Move this mul() to CPU
+      const sheenNode = this.getColor('sheenColor').mul(this.getFloat('sheen')); 
 
       if (material.sheenColorMap && material.sheenColorMap.isTexture === true) {
         node = sheenNode.mul(this.getTexture('sheenColor').rgb);

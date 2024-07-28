@@ -40,7 +40,7 @@ export class Triangle {
 
     const denom = dot00 * dot11 - dot01 * dot01;
 
-    // collinear or singular triangle
+
     if (denom === 0) {
       target.set(0, 0, 0);
       return null;
@@ -50,7 +50,7 @@ export class Triangle {
     const u = (dot11 * dot02 - dot01 * dot12) * invDenom;
     const v = (dot00 * dot12 - dot01 * dot02) * invDenom;
 
-    // barycentric coordinates must always sum to 1
+
     return target.set(1 - u - v, v, u);
   }
 

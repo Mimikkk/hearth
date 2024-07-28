@@ -3,7 +3,7 @@ import { mix, normalWorld, oscSine, range, timerLocal } from '@modules/renderer/
 
 import { GUI } from 'lil-gui';
 
-import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { BufferGeometryLoader } from '@modules/renderer/engine/loaders/geometries/BufferGeometryLoader/BufferGeometryLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
@@ -25,7 +25,7 @@ async function init() {
 
   const material = new Engine.MeshBasicMaterial();
 
-  // random colors between instances from 0x000000 to 0xFFFFFF
+
   const randomColors = range(new Engine.Color(0x000000), new Engine.Color(0xffffff));
 
   material.colorNode = mix(normalWorld, randomColors, oscSine(timerLocal(0.1)));
@@ -48,7 +48,7 @@ async function init() {
 
   //
 
-  renderer = await Forge.as();
+  renderer = await Hearth.as();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.animation.loop = animate;

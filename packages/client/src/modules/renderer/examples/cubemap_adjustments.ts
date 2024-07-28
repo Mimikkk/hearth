@@ -12,11 +12,11 @@ import {
   uniform,
 } from '@modules/renderer/engine/nodes/Nodes.js';
 
-import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 
 import { RGBMLoader } from '@modules/renderer/engine/loaders/textures/RGBMLoader/RGBMLoader.js';
 
-import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
+import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
 import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/GLTFLoader.js';
 
 import { GUI } from 'lil-gui';
@@ -38,7 +38,7 @@ async function init() {
 
   scene = new Engine.Scene();
 
-  // cube textures
+
 
   const cube1Texture = await new RGBMLoader({ maxRange: 16 }).loadAsync([
     'resources/textures/cube/pisaRGBM16/px.png',
@@ -64,7 +64,7 @@ async function init() {
   cube2Texture.generateMipmaps = true;
   cube2Texture.minFilter = Engine.MinificationTextureFilter.LinearMipmapLinear;
 
-  // nodes and environment
+
 
   const adjustments = {
     mix: 0,
@@ -107,7 +107,7 @@ async function init() {
     getTextureLevel: () => blurNode,
   });
 
-  // scene objects
+
 
   const loader = new GLTFLoader();
   loader.loadAsync('resources/models/gltf/DamagedHelmet/glTF/DamagedHelmet.gltf').then(function (gltf) {
@@ -137,9 +137,9 @@ async function init() {
   scene.add(sphereLeftView);
   scene.add(sphereRightView);
 
-  // renderer and controls
 
-  renderer = await Forge.as();
+
+  renderer = await Hearth.as();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.parameters.toneMappingNode = toneMapping(Engine.ToneMapping.Linear, 1);
@@ -152,7 +152,7 @@ async function init() {
 
   useWindowResizer(renderer, camera);
 
-  // gui
+
 
   const gui = new GUI();
 

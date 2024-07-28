@@ -62,13 +62,13 @@ export const TypeMap = {
 };
 
 export enum TypeName {
-  // components
+
   f32 = 'f32',
   i32 = 'i32',
   u32 = 'u32',
   bool = 'bool',
 
-  // alias to vec3 - to remove
+
   color = 'color',
 
   vec2 = 'vec2',
@@ -116,13 +116,13 @@ export enum TypeName {
   storage2a = 'texture_storage_2d_array',
 
   //
-  // special type
+
   property = 'property',
   texture = 'texture',
   cubeTexture = 'cubeTexture',
   storageTexture = 'storageTexture',
   void = 'void',
-  // node types
+
   node = 'node',
   string = 'string',
   shader = 'shader',
@@ -400,7 +400,7 @@ export namespace TypeName {
       case TypeName.texture:
       case TypeName.cubeTexture:
       case TypeName.storageTexture:
-      // TODO: add support for these
+
       case TypeName.void:
       case TypeName.node:
       case TypeName.string:

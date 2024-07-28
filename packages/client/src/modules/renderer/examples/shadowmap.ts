@@ -1,8 +1,8 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
 
-import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 
-import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
+import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
 import { MeshPhongNodeMaterial, tslFn, vec4, vertexIndex } from '@modules/renderer/engine/nodes/Nodes.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
@@ -20,7 +20,7 @@ async function init() {
   scene.background = new Engine.Color(0x222244);
   scene.fog = new Engine.Fog(0x222244, 50, 100);
 
-  // lights
+
 
   scene.add(new Engine.AmbientLight(0x444444, 2));
 
@@ -55,7 +55,7 @@ async function init() {
   dirGroup.add(dirLight);
   scene.add(dirGroup);
 
-  // geometry
+
 
   const geometry = new Engine.TorusKnotGeometry(25, 8, 75, 80);
   const material = new MeshPhongNodeMaterial({
@@ -123,16 +123,16 @@ async function init() {
   ground.receiveShadow = true;
   scene.add(ground);
 
-  // renderer
 
-  renderer = await Forge.as();
+
+  renderer = await Hearth.as();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.animation.loop = animate;
   renderer.parameters.toneMapping = Engine.ToneMapping.ACESFilmic;
   document.body.appendChild(renderer.parameters.canvas);
 
-  // Mouse control
+
   const controls = new OrbitControls(camera, renderer.parameters.canvas);
   controls.target.set(0, 2, 0);
   controls.minDistance = 7;

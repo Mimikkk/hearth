@@ -1,17 +1,17 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
 
-import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 
 import { GUI } from 'lil-gui';
-import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
+import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
 import {
   color,
   Line2NodeMaterial,
   LineBasicNodeMaterial,
   LineDashedNodeMaterial,
 } from '@modules/renderer/engine/nodes/Nodes.js';
-import { Line2 } from '@modules/renderer/engine/objects/lines/Line2.js';
-import { LineGeometry } from '@modules/renderer/engine/objects/lines/LineGeometry.js';
+import { Line2 } from '@modules/renderer/engine/entities/lines/Line2.js';
+import { LineGeometry } from '@modules/renderer/engine/entities/lines/LineGeometry.js';
 import * as GeometryUtils from '@modules/renderer/engine/utils/GeometryUtils.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 import { Attribute, Color } from '@modules/renderer/engine/engine.js';
@@ -21,7 +21,7 @@ let line1;
 let matLine, matLineBasic, matLineDashed;
 let gui;
 
-// viewport
+
 let insetWidth;
 let insetHeight;
 
@@ -30,7 +30,7 @@ init();
 async function init() {
   const points = GeometryUtils.generateHilbert(new Engine.Vec3(0, 0, 0), 20.0, 1, 0, 1, 2, 3, 4, 5, 6, 7);
 
-  renderer = await Forge.as();
+  renderer = await Hearth.as();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer._clearColor = Color.new(0x000000);
   renderer.setSize(window.innerWidth, window.innerHeight);
@@ -70,7 +70,7 @@ async function init() {
     colors.push(lineColor.r, lineColor.g, lineColor.b);
   }
 
-  // Line2 ( LineGeometry, LineMaterial )
+
 
   const geometry = new LineGeometry();
   geometry.setPositions(positions);
@@ -79,7 +79,7 @@ async function init() {
 
   matLine = new Line2NodeMaterial({
     color: 0xffffff,
-    linewidth: 5, // in world units with size attenuation, pixels otherwise
+    linewidth: 5,
     vertexColors: true,
     dashed: false,
     alphaToCoverage: true,
@@ -110,7 +110,7 @@ async function init() {
 
     renderer.setSize(window.innerWidth, window.innerHeight);
 
-    insetWidth = window.innerHeight / 4; // square
+    insetWidth = window.innerHeight / 4;
     insetHeight = window.innerHeight / 4;
 
     camera2.aspect = insetWidth / insetHeight;
@@ -121,7 +121,7 @@ async function init() {
 }
 
 function animate() {
-  // main scene
+
 
   renderer._clearColor = Color.new(0x000000);
 
@@ -134,9 +134,9 @@ function animate() {
   scene.backgroundNode = null;
   renderer.render(scene, camera);
 
-  // inset scene
 
-  renderer.clear(false, true, false); // important!
+
+  renderer.clear(false, true, false);
 
   renderer.useScissor = true;
 

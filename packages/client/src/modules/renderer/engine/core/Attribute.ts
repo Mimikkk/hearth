@@ -6,7 +6,7 @@ import { Mat3 } from '@modules/renderer/engine/math/Mat3.js';
 import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
 import { Buffer } from './Buffer.js';
 import { Const } from '@modules/renderer/engine/math/types.js';
-import { BufferStep, GPUBufferBindingTypeType } from '@modules/renderer/engine/renderers/constants.js';
+import { BufferStep, GPUBufferBindingTypeType } from '@modules/renderer/engine/hearth/constants.js';
 
 export class Attribute<T extends TypedArray = any> {
   declare isBufferAttribute: true;
@@ -18,9 +18,9 @@ export class Attribute<T extends TypedArray = any> {
     source: T | Buffer<T>,
     public span: number,
     public offset: number = 0,
-    // move into source
+
     public step: BufferStep = BufferStep.Vertex,
-    // move into source
+
     public bind?: GPUBufferBindingTypeType,
   ) {
     if (source instanceof Buffer) {
@@ -34,7 +34,7 @@ export class Attribute<T extends TypedArray = any> {
     this.version = 0;
   }
 
-  // move into source
+
   set usage(value: BufferUse) {
     this.source.use = value;
   }

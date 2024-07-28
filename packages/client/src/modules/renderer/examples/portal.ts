@@ -15,9 +15,9 @@ import {
 
 import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/GLTFLoader.js';
 
-import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 
-import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
+import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
 import { Side } from '@modules/renderer/engine/engine.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
@@ -49,7 +49,7 @@ async function init() {
 
   clock = new Engine.Clock();
 
-  // lights
+
 
   const light = new Engine.PointLight(0xffffff, 1);
   light.position.set(0, 1, 5);
@@ -59,7 +59,7 @@ async function init() {
   sceneMain.add(light);
   scenePortal.add(light.clone());
 
-  // portal
+
 
   const geometry = new Engine.PlaneGeometry(1.7, 2);
 
@@ -73,8 +73,8 @@ async function init() {
   plane.position.set(0, 1, 0.8);
   sceneMain.add(plane);
 
-  // renderer
-  // models
+
+
 
   const loader = new GLTFLoader();
   await loader.loadAsync('resources/models/gltf/Xbot.glb').then(function (gltf) {
@@ -113,13 +113,13 @@ async function init() {
     const modelMain = createModel();
     const modelPortal = createModel(colorNode);
 
-    // model portal
+
 
     sceneMain.add(modelMain);
     scenePortal.add(modelPortal);
   });
 
-  renderer = await Forge.as();
+  renderer = await Hearth.as();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.animation.loop = animate;

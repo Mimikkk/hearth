@@ -1,9 +1,9 @@
 import { tslFn, vec2, vec4 } from '../../shadernode/ShaderNodes.js';
 
-// Analytical approximation of the DFG LUT, one half of the
-// split-sum approximation used in indirect specular lighting.
-// via 'environmentBRDF' from "Physically Based Shading on Mobile"
-// https://www.unrealengine.com/blog/physically-based-shading-on-mobile
+
+
+
+
 const DFGApprox = tslFn(({ roughness, dotNV }) => {
   const c0 = vec4(-1, -0.0275, -0.572, 0.022);
 

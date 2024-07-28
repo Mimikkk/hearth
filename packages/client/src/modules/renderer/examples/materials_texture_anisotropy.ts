@@ -1,6 +1,6 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
 
-import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
@@ -20,9 +20,9 @@ async function init() {
   container = document.createElement('div');
   document.body.appendChild(container);
 
-  renderer = await Forge.as();
+  renderer = await Hearth.as();
 
-  // RENDERER
+
 
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -54,7 +54,7 @@ async function init() {
   light2.position.set(1, 1, 1);
   scene2.add(light2);
 
-  // GROUND
+
 
   const textureLoader = new TextureLoader();
 

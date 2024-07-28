@@ -9,7 +9,7 @@ const generateTables = (): {
   exponentTable: Uint32Array;
   offsetTable: Uint32Array;
 } => {
-  // float32 to float16 helpers
+
 
   const buffer = new ArrayBuffer(4);
   const floatView = new Float32Array(buffer);
@@ -21,7 +21,7 @@ const generateTables = (): {
   for (let i = 0; i < 256; ++i) {
     const e = i - 127;
 
-    // very small number (0, -0)
+
 
     if (e < -27) {
       baseTable[i] = 0x0000;
@@ -29,28 +29,28 @@ const generateTables = (): {
       shiftTable[i] = 24;
       shiftTable[i | 0x100] = 24;
 
-      // small number (denorm)
+
     } else if (e < -14) {
       baseTable[i] = 0x0400 >> (-e - 14);
       baseTable[i | 0x100] = (0x0400 >> (-e - 14)) | 0x8000;
       shiftTable[i] = -e - 1;
       shiftTable[i | 0x100] = -e - 1;
 
-      // normal number
+
     } else if (e <= 15) {
       baseTable[i] = (e + 15) << 10;
       baseTable[i | 0x100] = ((e + 15) << 10) | 0x8000;
       shiftTable[i] = 13;
       shiftTable[i | 0x100] = 13;
 
-      // large number (Infinity, -Infinity)
+
     } else if (e < 128) {
       baseTable[i] = 0x7c00;
       baseTable[i | 0x100] = 0xfc00;
       shiftTable[i] = 24;
       shiftTable[i | 0x100] = 24;
 
-      // stay (NaN, Infinity, -Infinity)
+
     } else {
       baseTable[i] = 0x7c00;
       baseTable[i | 0x100] = 0xfc00;
@@ -59,24 +59,24 @@ const generateTables = (): {
     }
   }
 
-  // float16 to float32 helpers
+
 
   const mantissaTable = new Uint32Array(2048);
   const exponentTable = new Uint32Array(64);
   const offsetTable = new Uint32Array(64);
 
   for (let i = 1; i < 1024; ++i) {
-    let m = i << 13; // zero pad mantissa bits
-    let e = 0; // zero exponent
+    let m = i << 13;
+    let e = 0;
 
-    // normalized
+
     while ((m & 0x00800000) === 0) {
       m <<= 1;
-      e -= 0x00800000; // decrement exponent
+      e -= 0x00800000;
     }
 
-    m &= ~0x00800000; // clear leading 1 bit
-    e += 0x38800000; // adjust bias
+    m &= ~0x00800000;
+    e += 0x38800000;
 
     mantissaTable[i] = m | e;
   }

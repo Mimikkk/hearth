@@ -1,6 +1,6 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
 
-import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { ColorSpace } from '@modules/renderer/engine/engine.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
@@ -28,7 +28,7 @@ async function init() {
   scene = new Engine.Scene();
 
   const geometry = new Engine.SphereGeometry(5, 60, 40);
-  // invert the geometry on the x-axis so that all of the faces point inward
+
   geometry.scale(-1, 1, 1);
 
   const video = document.getElementById('video');
@@ -41,7 +41,7 @@ async function init() {
   const mesh = new Engine.Mesh(geometry, material);
   scene.add(mesh);
 
-  renderer = await Forge.as();
+  renderer = await Hearth.as();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.animation.loop = animate;

@@ -7,7 +7,7 @@ import { threshold } from './ColorAdjustmentNode.js';
 import { uv } from '../accessors/UVNode.js';
 import { texturePass } from './PassNode.js';
 import { RenderTarget, Vec2 } from '@modules/renderer/engine/engine.js';
-import { QuadMesh } from '../../objects/QuadMesh.js';
+import { QuadMesh } from '@modules/renderer/engine/entities/QuadMesh.js';
 
 const quadMesh = new QuadMesh();
 
@@ -60,13 +60,13 @@ class AnamorphicNode extends TempNode {
 
     this.setSize(map.image.width, map.image.height);
 
-    // render
+
 
     renderer.updateRenderTarget(this.target);
 
     quadMesh.render(renderer);
 
-    // restore
+
 
     renderer.updateRenderTarget(currentRenderTarget);
     textureNode.value = currentTexture;

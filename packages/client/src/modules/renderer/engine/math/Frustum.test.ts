@@ -5,9 +5,9 @@ import { Vec3 } from './Vec3.js';
 import { Mat4 } from './Mat4.js';
 import { Box3 } from '@modules/renderer/engine/math/Box3.js';
 import { Sphere } from './Sphere.js';
-import { Sprite } from '@modules/renderer/engine/objects/Sprite.js';
-import { Mesh } from '@modules/renderer/engine/objects/Mesh.js';
-import { BoxGeometry } from '@modules/renderer/engine/objects/geometries/BoxGeometry.js';
+import { Sprite } from '@modules/renderer/engine/entities/Sprite.js';
+import { Mesh } from '@modules/renderer/engine/entities/Mesh.js';
+import { BoxGeometry } from '@modules/renderer/engine/entities/geometries/BoxGeometry.js';
 
 describe('Math - Frustum', () => {
   it('Instancing', () => {
@@ -76,7 +76,7 @@ describe('Math - Frustum', () => {
       }
     }
 
-    // orthographic
+
     expect(frustum.contains(Vec3.new(-0.1, 0, minDepth))).toBe(false);
     expect(frustum.contains(Vec3.new(0, -0.1, minDepth))).toBe(false);
     expect(frustum.contains(Vec3.new(1.1, 0, minDepth))).toBe(false);
@@ -104,11 +104,11 @@ describe('Math - Frustum', () => {
     expect(frustum.contains(Vec3.new(-0.1, 0, minDepth))).toBe(false);
     expect(frustum.contains(Vec3.new(0, -0.1, minDepth))).toBe(false);
 
-    // not orthographic
+
     expect(frustum.contains(Vec3.new(1.1, 0, minDepth))).toBe(true);
     expect(frustum.contains(Vec3.new(0, 1.1, minDepth))).toBe(true);
 
-    // but within bounds
+
     expect(frustum.contains(Vec3.new(20, 0, minDepth))).toBe(false);
     expect(frustum.contains(Vec3.new(0, 20, minDepth))).toBe(false);
   });

@@ -5,7 +5,7 @@ import {
   TextureFormat,
 } from '@modules/renderer/engine/constants.js';
 import { DataUtils } from '@modules/renderer/engine/utils/DataUtils.js';
-import { DataTexture } from '@modules/renderer/engine/objects/textures/DataTexture.js';
+import { DataTexture } from '@modules/renderer/engine/entities/textures/DataTexture.js';
 import { lerp } from '../../../math/MathUtils.js';
 
 export type SupportedType = TextureDataType.Float | TextureDataType.HalfFloat | TextureDataType.UnsignedByte;
@@ -41,7 +41,7 @@ const readIes = <ST extends SupportedType>(iesLamp: IESLamp, type: SupportedType
     let endPhi = 0;
 
     for (let i = 0; i < iesLamp.numHorAngles - 1; ++i) {
-      // numHorAngles = horAngles.length-1 because of extra padding, so this wont cause an out of bounds error
+
 
       if (theta < iesLamp.horAngles[i + 1] || i == iesLamp.numHorAngles - 2) {
         thetaIndex = i;
@@ -66,7 +66,7 @@ const readIes = <ST extends SupportedType>(iesLamp: IESLamp, type: SupportedType
     const deltaPhi = endPhi - startPhi;
 
     if (deltaPhi === 0)
-      // Outside range
+
       return 0;
 
     const t1 = deltaTheta === 0 ? 0 : (theta - startTheta) / deltaTheta;
@@ -93,7 +93,7 @@ const readIes = <ST extends SupportedType>(iesLamp: IESLamp, type: SupportedType
     const phi = Math.floor(i / width);
 
     if (endTheta - startTheta !== 0 && (theta < startTheta || theta >= endTheta)) {
-      // Handle symmetry for hor angles
+
 
       theta %= endTheta * 2;
 
@@ -158,11 +158,11 @@ class IESLamp {
     _self.tiltData.mulFactors = [];
 
     function textToArray(text: string) {
-      // remove leading or trailing spaces
+
       text = text.replace(/^\s+|\s+$/g, '');
-      // replace commas with spaces
+
       text = text.replace(/,/g, ' ');
-      // replace white space/tabs etc by single whitespace
+
       text = text.replace(/\s\s+/g, ' ');
 
       return text.split(' ');

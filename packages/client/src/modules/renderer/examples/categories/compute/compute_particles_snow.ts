@@ -19,16 +19,16 @@ import {
   viewportTopLeft,
 } from '@modules/renderer/engine/nodes/Nodes.js';
 
-import { TeapotGeometry } from '@modules/renderer/engine/objects/geometries/TeapotGeometry.js';
+import { TeapotGeometry } from '@modules/renderer/engine/entities/geometries/TeapotGeometry.js';
 
-import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 
-import Postprocess from '@modules/renderer/engine/renderers/Postprocess.js';
+import Postprocess from '@modules/renderer/engine/hearth/Postprocess.js';
 
-import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
+import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import { WorldAxesControls } from '@modules/renderer/engine/objects/controls/WorldAxesControls.js';
-import { BufferStep, GPUBufferBindingTypeType } from '@modules/renderer/engine/renderers/constants.js';
+import { WorldAxesControls } from '@modules/renderer/engine/entities/controls/WorldAxesControls.js';
+import { BufferStep, GPUBufferBindingTypeType } from '@modules/renderer/engine/hearth/constants.js';
 import { Stats } from '../../ui/stats.js';
 
 const maxParticleCount = 100000;
@@ -106,7 +106,7 @@ async function init() {
   const staticPositionBuffer = createBuffer();
   const dataBuffer = createBuffer('vec4');
 
-  // compute
+
 
   const timer = timerLocal();
 
@@ -166,7 +166,7 @@ async function init() {
 
   computeParticles = computeUpdate().compute(maxParticleCount);
 
-  // rain
+
 
   const geometry = new Engine.SphereGeometry(surfaceOffset, 5, 5);
 
@@ -198,7 +198,7 @@ async function init() {
   scene.add(dynamicParticles);
   scene.add(staticParticles);
 
-  // floor geometry
+
 
   const floorGeometry = new Engine.PlaneGeometry(100, 100);
   floorGeometry.rotateX(-Math.PI / 2);
@@ -217,7 +217,7 @@ async function init() {
 
   scene.add(plane);
 
-  // tree
+
 
   function tree(count = 8) {
     const coneMaterial = new MeshStandardNodeMaterial({
@@ -263,7 +263,7 @@ async function init() {
 
   scene.backgroundNode = viewportTopLeft.distance(0.5).mul(2).mix(color(0x0f4140), color(0x060a0d));
 
-  renderer = await Forge.as();
+  renderer = await Hearth.as();
   //
 
   viewHelper = new WorldAxesControls(camera, renderer.parameters.canvas);
@@ -276,7 +276,7 @@ async function init() {
   controls.autoRotateSpeed = -0.7;
   controls.update();
 
-  // post processing
+
 
   const scenePass = pass(scene, camera);
   const scenePassColor = scenePass.getTextureNode();
@@ -290,7 +290,7 @@ async function init() {
   scenePassColorBlurred.resolution = new Engine.Vec2(0.5, 0.5);
   scenePassColorBlurred.directionNode = vec2(1);
 
-  // compose
+
 
   let totalPass = scenePass;
   totalPass = totalPass.add(scenePassColorBlurred.mul(0.1));
@@ -306,17 +306,17 @@ async function init() {
     stats?.update();
     controls?.update();
 
-    // position
+
 
     scene.overrideMaterial = collisionPosMaterial;
     renderer.updateRenderTarget(collisionPosRT);
     await renderer.render(scene, collisionCamera);
 
-    // compute
+
 
     await renderer.compute(computeParticles);
 
-    // result
+
 
     scene.overrideMaterial = null;
     renderer.updateRenderTarget(null);

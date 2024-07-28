@@ -1,14 +1,14 @@
 import { Clock, Mapping, PerspectiveCamera, Scene, ToneMapping } from '@modules/renderer/engine/engine.js';
-import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { RGBELoader } from '@modules/renderer/engine/loaders/textures/RGBELoader/RGBELoader.js';
-import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
+import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
 import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/GLTFLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import { WorldAxesControls } from '@modules/renderer/engine/objects/controls/WorldAxesControls.js';
+import { WorldAxesControls } from '@modules/renderer/engine/entities/controls/WorldAxesControls.js';
 
 let camera!: PerspectiveCamera;
 let scene!: Scene;
-let renderer!: Forge;
+let renderer!: Hearth;
 let viewHelper!: WorldAxesControls;
 
 const clock = new Clock();
@@ -25,7 +25,7 @@ async function init() {
 
   scene = new Scene();
 
-  renderer = await Forge.as({
+  renderer = await Hearth.as({
     autoClear: false,
   });
 

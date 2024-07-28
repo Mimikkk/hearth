@@ -2,15 +2,15 @@ import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/
 import { KTX2Loader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/KTX2Loader.js';
 import { MeshoptDecoder } from 'meshoptimizer';
 
-import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
+import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
 
-import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 import { ToneMapping } from '@modules/renderer/engine/constants.js';
-import { PerspectiveCamera } from '@modules/renderer/engine/objects/cameras/PerspectiveCamera.js';
-import { Scene } from '@modules/renderer/engine/objects/scenes/Scene.js';
+import { PerspectiveCamera } from '@modules/renderer/engine/entities/cameras/PerspectiveCamera.js';
+import { Scene } from '@modules/renderer/engine/entities/scenes/Scene.js';
 import { Color } from '@modules/renderer/engine/math/Color.js';
-import { PointLight } from '@modules/renderer/engine/objects/lights/PointLight.js';
+import { PointLight } from '@modules/renderer/engine/entities/lights/PointLight.js';
 
 init();
 
@@ -30,7 +30,7 @@ async function init() {
 
   //renderer
 
-  const renderer = await Forge.as();
+  const renderer = await Hearth.as();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.animation.loop = () => renderer.render(scene, camera);

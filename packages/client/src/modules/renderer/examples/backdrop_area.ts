@@ -16,9 +16,9 @@ import { GUI } from 'lil-gui';
 
 import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/GLTFLoader.js';
 
-import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 
-import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
+import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
 import {
   AnimationMixer,
   BoxGeometry,
@@ -41,7 +41,7 @@ camera.lookAt(0, 1, 0);
 
 const clock = new Clock();
 
-// modelwe
+
 
 let mixer: AnimationMixer;
 const loader = new GLTFLoader();
@@ -55,7 +55,7 @@ loader.loadAsync('resources/models/gltf/Michelle.glb').then(function (gltf) {
   scene.add(object);
 });
 
-// volume
+
 
 const depthDistance = depthTexture().distance(depth);
 const depthAlphaNode = depthDistance.oneMinus().smoothstep(0.9, 2).mul(20).saturate();
@@ -84,7 +84,7 @@ depthMaterial.transparent = true;
 depthMaterial.side = Side.Double;
 
 const bicubicMaterial = new MeshBasicNodeMaterial();
-bicubicMaterial.backdropNode = viewportMipTexture().bicubic(5); // @TODO: Move to alpha value [ 0, 1 ]
+bicubicMaterial.backdropNode = viewportMipTexture().bicubic(5); 
 bicubicMaterial.backdropAlphaNode = checker(uv().mul(3).mul(modelScale.xy));
 bicubicMaterial.opacityNode = bicubicMaterial.backdropAlphaNode;
 bicubicMaterial.transparent = true;
@@ -94,7 +94,7 @@ const pixelMaterial = new MeshBasicNodeMaterial();
 pixelMaterial.backdropNode = viewportSharedTexture(viewportTopLeft.mul(100).floor().div(100));
 pixelMaterial.transparent = true;
 
-// box / floor
+
 
 const box = new Mesh(new BoxGeometry(2, 2, 2), volumeMaterial);
 box.position.set(0, 1, 0);
@@ -104,9 +104,9 @@ const floor = new Mesh(new BoxGeometry(1.99, 0.01, 1.99), new MeshBasicNodeMater
 floor.position.set(0, 0, 0);
 scene.add(floor);
 
-// renderer
 
-const renderer = await Forge.as();
+
+const renderer = await Hearth.as();
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.animation.loop = animate;
@@ -119,7 +119,7 @@ controls.update();
 
 useWindowResizer(renderer, camera);
 
-// gui
+
 
 const materials = {
   blurred: blurredBlur,

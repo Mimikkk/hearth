@@ -3,9 +3,9 @@ import { texture, MeshBasicNodeMaterial, MeshPhongNodeMaterial } from '@modules/
 
 import { GUI } from 'lil-gui';
 
-import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 
-import { QuadMesh } from '@modules/renderer/engine/objects/QuadMesh.js';
+import { QuadMesh } from '@modules/renderer/engine/entities/QuadMesh.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, renderer;
@@ -25,18 +25,18 @@ const params = {
 const mat4 = new Engine.Mat4();
 
 const count = 50;
-const fullRadius = 20; // Radius of the sphere
-const halfRadius = 10; // Radius of the sphere
+const fullRadius = 20;
+const halfRadius = 10;
 const positions = new Array(count).fill().map((_, i) => {
   const radius = i % 2 === 0 ? fullRadius : halfRadius;
 
-  const phi = Math.acos(2 * Math.random() - 1) - Math.PI / 2; // phi: latitude, range -π/2 to π/2
-  const theta = 2 * Math.PI * Math.random(); // theta: longitude, range 0 to 2π
+  const phi = Math.acos(2 * Math.random() - 1) - Math.PI / 2;
+  const theta = 2 * Math.PI * Math.random();
 
   return new Engine.Vec3(
-    radius * Math.cos(phi) * Math.cos(theta), // x
-    radius * Math.sin(phi), // y
-    radius * Math.cos(phi) * Math.sin(theta), // z
+    radius * Math.cos(phi) * Math.cos(theta),
+    radius * Math.sin(phi),
+    radius * Math.cos(phi) * Math.sin(theta),
   );
 });
 
@@ -56,7 +56,7 @@ async function init() {
   scene = new Engine.Scene();
   scene.background = new Engine.Color(0x111111);
 
-  // textured mesh
+
 
   const geometryBox = new Engine.BoxGeometry(7, 7, 7, 12, 12, 12);
   const materialBox = new MeshPhongNodeMaterial();
@@ -78,7 +78,7 @@ async function init() {
 
   //
 
-  renderer = await Forge.as();
+  renderer = await Hearth.as();
   renderer.setPixelRatio(dpr);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.animation.loop = animate;

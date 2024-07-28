@@ -1,7 +1,7 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
 import { color, rangeFog, SpriteNodeMaterial, texture, userData, uv } from '@modules/renderer/engine/nodes/Nodes.js';
 
-import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
@@ -26,7 +26,7 @@ async function init() {
   scene = new Engine.Scene();
   scene.fogNode = rangeFog(color(0x0000ff), 1500, 2100);
 
-  // create sprites
+
 
   const amount = 200;
   const radius = 500;
@@ -44,7 +44,7 @@ async function init() {
   const material = new SpriteNodeMaterial();
   material.colorNode = textureNode.mul(uv()).mul(2);
   material.opacityNode = textureNode.a;
-  material.rotationNode = userData('rotation', 'f32'); // get value of: sprite.userData.rotation
+  material.rotationNode = userData('rotation', 'f32');
   material.transparent = true;
 
   for (let a = 0; a < amount; a++) {
@@ -58,7 +58,7 @@ async function init() {
     sprite.position.normalize();
     sprite.position.scale(radius);
 
-    // individual rotation per sprite
+
     sprite.userData.rotation = 0;
 
     group.add(sprite);
@@ -68,7 +68,7 @@ async function init() {
 
   //
 
-  renderer = await Forge.as();
+  renderer = await Hearth.as();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.animation.loop = render;

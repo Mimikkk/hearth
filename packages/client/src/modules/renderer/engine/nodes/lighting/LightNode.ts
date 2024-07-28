@@ -2,7 +2,7 @@ import { Node } from '../core/Node.js';
 import { proxyNode } from '../shadernode/ShaderNodes.js';
 import { objectPosition } from '../accessors/EntityNode.js';
 import { cameraViewMatrix } from '../accessors/CameraNode.js';
-import type { Light } from '@modules/renderer/engine/objects/lights/Light.js';
+import type { Light } from '@modules/renderer/engine/entities/lights/Light.js';
 
 export class LightNode extends Node {
   static type = 'LightNode';

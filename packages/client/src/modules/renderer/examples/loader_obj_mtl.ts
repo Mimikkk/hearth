@@ -1,16 +1,16 @@
-import { Scene } from '@modules/renderer/engine/objects/scenes/Scene.js';
-import { PerspectiveCamera } from '@modules/renderer/engine/objects/cameras/PerspectiveCamera.js';
-import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
+import { Scene } from '@modules/renderer/engine/entities/scenes/Scene.js';
+import { PerspectiveCamera } from '@modules/renderer/engine/entities/cameras/PerspectiveCamera.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { MTLLoader } from '@modules/renderer/engine/loaders/objects/OBJLoader/MTLLoader/MTLLoader.js';
 import { OBJLoader } from '@modules/renderer/engine/loaders/objects/OBJLoader/OBJLoader.js';
-import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
-import { AmbientLight } from '@modules/renderer/engine/objects/lights/AmbientLight.js';
-import { PointLight } from '@modules/renderer/engine/objects/lights/PointLight.js';
+import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
+import { AmbientLight } from '@modules/renderer/engine/entities/lights/AmbientLight.js';
+import { PointLight } from '@modules/renderer/engine/entities/lights/PointLight.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera!: PerspectiveCamera;
 let scene!: Scene;
-let renderer!: Forge;
+let renderer!: Hearth;
 
 init();
 
@@ -18,7 +18,7 @@ async function init() {
   camera = new PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 20);
   camera.position.z = 2.5;
 
-  // scene
+
 
   scene = new Scene();
 
@@ -29,7 +29,7 @@ async function init() {
   camera.add(pointLight);
   scene.add(camera);
 
-  // model
+
 
   const onProgress = xhr => {
     if (xhr.lengthComputable) {
@@ -49,7 +49,7 @@ async function init() {
 
   //
 
-  renderer = await Forge.as();
+  renderer = await Hearth.as();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.animation.loop = animate;

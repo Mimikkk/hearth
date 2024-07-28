@@ -31,18 +31,18 @@ class TriplanarTexturesNode extends Node {
   setup() {
     const { textureXNode, textureYNode, textureZNode, scaleNode, positionNode, normalNode } = this;
 
-    // Ref: https://github.com/keijiro/StandardTriplanar
+    
 
-    // Blending factor of triplanar mapping
+    
     let bf = normalNode.abs().normalize();
     bf = bf.div(bf.dot(vec3(1.0)));
 
-    // Triplanar mapping
+    
     const tx = positionNode.yz.mul(scaleNode);
     const ty = positionNode.zx.mul(scaleNode);
     const tz = positionNode.xy.mul(scaleNode);
 
-    // Base color
+    
     const textureX = textureXNode.value;
     const textureY = textureYNode !== null ? textureYNode.value : textureX;
     const textureZ = textureZNode !== null ? textureZNode.value : textureX;

@@ -1,0 +1,124 @@
+import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
+import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
+import * as MathUtils from '@modules/renderer/engine/math/MathUtils.js';
+import { Triangle } from '@modules/renderer/engine/math/Triangle.js';
+import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
+
+const _v0 = Vec3.new();
+const _v1 = Vec3.new();
+const _normal = Vec3.new();
+const _triangle = new Triangle();
+
+export class EdgesGeometry extends Geometry {
+  constructor(geometry: Geometry | null = null, thresholdAngle: number = 1) {
+    super();
+
+    this.type = 'EdgesGeometry';
+
+    this.parameters = {
+      geometry: geometry,
+      thresholdAngle: thresholdAngle,
+    };
+
+    if (geometry !== null) {
+      const precisionPoints = 4;
+      const precision = Math.pow(10, precisionPoints);
+      const thresholdDot = Math.cos(MathUtils.DegreeToRadian * thresholdAngle);
+
+      const indexAttr = geometry.getIndex();
+      const positionAttr = geometry.attributes.position;
+      const indexCount = indexAttr ? indexAttr.count : positionAttr.count;
+
+      const indexArr = [0, 0, 0];
+      const vertKeys = ['a', 'b', 'c'];
+      const hashes = new Array(3);
+
+      const edgeData: Record<string, { index0: number; index1: number; normal: Vec3 | null }> = {};
+      const vertices: number[] = [];
+      for (let i = 0; i < indexCount; i += 3) {
+        if (indexAttr) {
+          indexArr[0] = indexAttr.getX(i);
+          indexArr[1] = indexAttr.getX(i + 1);
+          indexArr[2] = indexAttr.getX(i + 2);
+        } else {
+          indexArr[0] = i;
+          indexArr[1] = i + 1;
+          indexArr[2] = i + 2;
+        }
+
+        const { a, b, c } = _triangle;
+        a.fromAttribute(positionAttr, indexArr[0]);
+        b.fromAttribute(positionAttr, indexArr[1]);
+        c.fromAttribute(positionAttr, indexArr[2]);
+        _triangle.normal(_normal);
+
+
+        hashes[0] = `${Math.round(a.x * precision)},${Math.round(a.y * precision)},${Math.round(a.z * precision)}`;
+        hashes[1] = `${Math.round(b.x * precision)},${Math.round(b.y * precision)},${Math.round(b.z * precision)}`;
+        hashes[2] = `${Math.round(c.x * precision)},${Math.round(c.y * precision)},${Math.round(c.z * precision)}`;
+
+
+        if (hashes[0] === hashes[1] || hashes[1] === hashes[2] || hashes[2] === hashes[0]) {
+          continue;
+        }
+
+
+        for (let j = 0; j < 3; j++) {
+
+          const jNext = (j + 1) % 3;
+          const vecHash0 = hashes[j];
+          const vecHash1 = hashes[jNext];
+          //@ts-expect-error
+          const v0 = _triangle[vertKeys[j]];
+          //@ts-expect-error
+          const v1 = _triangle[vertKeys[jNext]];
+
+          const hash = `${vecHash0}_${vecHash1}`;
+          const reverseHash = `${vecHash1}_${vecHash0}`;
+
+          if (reverseHash in edgeData && edgeData[reverseHash]) {
+
+
+            //@ts-expect-error
+            if (_normal.dot(edgeData[reverseHash].normal) <= thresholdDot) {
+              vertices.push(v0.x, v0.y, v0.z);
+              vertices.push(v1.x, v1.y, v1.z);
+            }
+
+            //@ts-expect-error
+            edgeData[reverseHash] = null;
+          } else if (!(hash in edgeData)) {
+
+            edgeData[hash] = {
+              index0: indexArr[j],
+              index1: indexArr[jNext],
+              normal: _normal.clone(),
+            };
+          }
+        }
+      }
+
+
+      for (const key in edgeData) {
+        if (edgeData[key]) {
+          const { index0, index1 } = edgeData[key];
+          _v0.fromAttribute(positionAttr, index0);
+          _v1.fromAttribute(positionAttr, index1);
+
+          vertices.push(_v0.x, _v0.y, _v0.z);
+          vertices.push(_v1.x, _v1.y, _v1.z);
+        }
+      }
+
+      this.setAttribute('position', new Attribute(new Float32Array(vertices), 3));
+    }
+  }
+
+  copy(source: this): this {
+    super.copy(source);
+
+    this.parameters = Object.assign({}, source.parameters);
+
+    return this;
+  }
+}

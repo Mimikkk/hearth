@@ -159,7 +159,7 @@ export class Geometry {
   }
 
   rotateX(angle: number): this {
-    // rotate geometry around world x-axis
+    
 
     _m1.asRotationX(angle);
 
@@ -169,7 +169,7 @@ export class Geometry {
   }
 
   rotateY(angle: number): this {
-    // rotate geometry around world y-axis
+    
 
     _m1.asRotationY(angle);
 
@@ -179,7 +179,7 @@ export class Geometry {
   }
 
   rotateZ(angle: number): this {
-    // rotate geometry around world z-axis
+    
 
     _m1.asRotationZ(angle);
 
@@ -197,7 +197,7 @@ export class Geometry {
   }
 
   scale(x: number, y: number, z: number): this {
-    // scale geometry
+    
 
     _m1.asScale(x, y, z);
 
@@ -250,7 +250,7 @@ export class Geometry {
     if (position !== undefined) {
       this.boundingBox.fromAttribute(position);
 
-      // process morph attributes if present
+      
 
       if (morphAttributesPosition) {
         //@ts-expect-error
@@ -294,13 +294,13 @@ export class Geometry {
     const morphAttributesPosition = this.morphAttributes.position;
 
     if (position) {
-      // first, find the center of the bounding sphere
+      
 
       const center = this.boundingSphere.center;
 
       _box.fromAttribute(position);
 
-      // process morph attributes if present
+      
 
       if (morphAttributesPosition) {
         //@ts-expect-error
@@ -324,8 +324,8 @@ export class Geometry {
 
       _box.center(center);
 
-      // second, try to find a boundingSphere with a radius smaller than the
-      // boundingSphere of the boundingBox: sqrt(3) smaller in the best case
+      
+      
 
       let maxRadiusSq = 0;
 
@@ -335,7 +335,7 @@ export class Geometry {
         maxRadiusSq = Math.max(maxRadiusSq, center.distanceSqTo(_vector));
       }
 
-      // process morph attributes if present
+      
 
       if (morphAttributesPosition) {
         //@ts-expect-error
@@ -374,8 +374,8 @@ export class Geometry {
     const index = this.index;
     const attributes = this.attributes;
 
-    // based on http://www.terathon.com/code/tangent.html
-    // (per vertex tangents)
+    
+    
 
     if (
       index === null ||
@@ -433,7 +433,7 @@ export class Geometry {
 
       const r = 1.0 / (uvB.x * uvC.y - uvC.x * uvB.y);
 
-      // silently ignore degenerate uv triangles having coincident or colinear vertices
+      
 
       if (!isFinite(r)) return this;
       sdir.from(vB).scale(uvC.y).addScaled(vC, -uvB.y).scale(r);
@@ -481,12 +481,12 @@ export class Geometry {
 
       const t = tan1[v];
 
-      // Gram-Schmidt orthogonalize
+      
 
       tmp.from(t);
       tmp.sub(n.scale(n.dot(t))).normalize();
 
-      // Calculate handedness
+      
 
       tmp2.asCross(n2, t);
       const test = tmp2.dot(tan2[v]);
@@ -523,7 +523,7 @@ export class Geometry {
         normalAttribute = new Attribute(new Float32Array(positionAttribute.count * 3), 3);
         this.setAttribute('normal', normalAttribute);
       } else {
-        // reset existing normals to zero
+        
 
         for (let i = 0, il = normalAttribute.count; i < il; i++) {
           normalAttribute.setXYZ(i, 0, 0, 0);
@@ -539,7 +539,7 @@ export class Geometry {
       const cb = Vec3.new();
       const ab = Vec3.new();
 
-      // indexed elements
+      
 
       if (index) {
         for (let i = 0, il = index.count; i < il; i += 3) {
@@ -568,7 +568,7 @@ export class Geometry {
           normalAttribute.setXYZ(vC, nC.x, nC.y, nC.z);
         }
       } else {
-        // non-indexed elements (unconnected triangle soup)
+        
 
         for (let i = 0, il = positionAttribute.count; i < il; i += 3) {
           pA.fromAttribute(positionAttribute, i + 0);
@@ -644,7 +644,7 @@ export class Geometry {
     const indices = this.index.array;
     const attributes = this.attributes;
 
-    // attributes
+    
 
     for (const name in attributes) {
       const attribute = attributes[name];
@@ -654,7 +654,7 @@ export class Geometry {
       geometry2.setAttribute(name, newAttribute);
     }
 
-    // morph attributes
+    
 
     const morphAttributes = this.morphAttributes;
 
@@ -678,7 +678,7 @@ export class Geometry {
 
     geometry2.morphTargetsRelative = this.morphTargetsRelative;
 
-    // groups
+    
 
     const groups = this.groups;
 
@@ -695,7 +695,7 @@ export class Geometry {
   }
 
   copy(source: Geometry): this {
-    // reset
+    
 
     this.index = null;
     this.attributes = {};

@@ -132,23 +132,23 @@ describe('Math - Ray', () => {
   it('intersectsPlane', () => {
     const a = Ray.fromParams(1, 1, 1, 0, 0, 1);
 
-    // parallel plane in front of the ray
+
     const b = Plane.fromNormalAndCoplanar(Vec3.new(0, 0, 1), Vec3.new(1, 1, 2));
     expect(a.intersectsPlane(b)).toBe(true);
 
-    // parallel plane coincident with origin
+
     const c = Plane.fromNormalAndCoplanar(Vec3.new(0, 0, 1), Vec3.new(1, 1, 1));
     expect(a.intersectsPlane(c)).toBe(true);
 
-    // parallel plane behind the ray
+
     const d = Plane.fromNormalAndCoplanar(Vec3.new(0, 0, 1), Vec3.new(1, 1, 0));
     expect(a.intersectsPlane(d)).toBe(false);
 
-    // perpendical ray that overlaps exactly
+
     const e = Plane.fromNormalAndCoplanar(Vec3.new(1, 0, 0), Vec3.new(1, 1, 1));
     expect(a.intersectsPlane(e)).toBe(true);
 
-    // perpendical ray that doesn't overlap
+
     const f = Plane.fromNormalAndCoplanar(Vec3.new(1, 0, 0), Vec3.new(0, 0, 0));
     expect(a.intersectsPlane(f)).toBe(false);
   });

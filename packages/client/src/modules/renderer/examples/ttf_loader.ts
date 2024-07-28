@@ -1,7 +1,7 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
 import { TTFLoader } from '@modules/renderer/engine/loaders/fonts/TTFLoader/TTFLoader.js';
-import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
-import { TextGeometry } from '@modules/renderer/engine/objects/geometries/TextGeometry.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
+import { TextGeometry } from '@modules/renderer/engine/entities/geometries/TextGeometry.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 import { FontManager } from '@modules/renderer/engine/loaders/fonts/FontManager.js';
 
@@ -31,7 +31,7 @@ let windowHalfX = window.innerWidth / 2;
 init();
 
 async function init() {
-  // CAMERA
+
 
   const width = window.innerWidth;
   const height = window.innerHeight;
@@ -40,13 +40,13 @@ async function init() {
 
   cameraTarget = new Engine.Vec3(0, 150, 0);
 
-  // SCENE
+
 
   scene = new Engine.Scene();
   scene.background = new Engine.Color(0x000000);
   scene.fog = new Engine.Fog(0x000000, 250, 1400);
 
-  // LIGHTS
+
 
   const dirLight1 = new Engine.DirectionalLight(0xffffff, 0.4);
   dirLight1.position.set(0, 0, 1).normalize();
@@ -79,15 +79,15 @@ async function init() {
   plane.setRotationX(-Math.PI / 2);
   scene.add(plane);
 
-  // RENDERER
 
-  renderer = await Forge.as();
+
+  renderer = await Hearth.as();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.animation.loop = render;
   document.body.appendChild(renderer.parameters.canvas);
 
-  // EVENTS
+
 
   document.body.style.touchAction = 'none';
   document.body.addEventListener('pointerdown', onPointerDown);
@@ -106,7 +106,7 @@ function onDocumentKeyDown(event) {
 
   const keyCode = event.keyCode;
 
-  // backspace
+
 
   if (keyCode === 8) {
     event.preventDefault();
@@ -121,7 +121,7 @@ function onDocumentKeyDown(event) {
 function onDocumentKeyPress(event) {
   const keyCode = event.which;
 
-  // backspace
+
 
   if (keyCode === 8) {
     event.preventDefault();

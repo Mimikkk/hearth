@@ -1,4 +1,4 @@
-import { CubeTexture } from '@modules/renderer/engine/objects/textures/CubeTexture.js';
+import { CubeTexture } from '@modules/renderer/engine/entities/textures/CubeTexture.js';
 import { ColorSpace } from '../../../constants.js';
 
 export const parseCubeTexture = (images: HTMLImageElement[]): CubeTexture => {

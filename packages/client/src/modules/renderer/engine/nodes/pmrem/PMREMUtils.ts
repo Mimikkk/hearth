@@ -4,7 +4,7 @@ import { mul } from '../math/OperatorNode.js';
 import { cond } from '../math/CondNode.js';
 import { Break, loop } from '../utils/LoopNode.js';
 
-// These defines must match with PMREMGenerator
+
 
 const cubeUV_r0 = f32(1.0);
 const cubeUV_m0 = f32(-2.0);
@@ -20,9 +20,9 @@ const cubeUV_m6 = f32(4.0);
 const cubeUV_minMipLevel = f32(4.0);
 const cubeUV_minTileSize = f32(16.0);
 
-// These shader functions convert between the UV coordinates of a single face of
-// a cubemap, the 0-5 integer index of a cube face, and the direction vector for
-// sampling a textureCube (not generally normalized ).
+
+
+
 
 const getFace = tslFn(([direction]) => {
   const absDirection = vec3(abs(direction)).toVar();
@@ -49,27 +49,27 @@ const getFace = tslFn(([direction]) => {
   inputs: [{ name: 'direction', type: 'vec3' }],
 });
 
-// RH coordinate system; PMREM face-indexing convention
+
 const getUV = tslFn(([direction, face]) => {
   const uv = vec2().toVar();
 
   NodeStack.if(face.equal(0.0), () => {
-    uv.assign(vec2(direction.z, direction.y).div(abs(direction.x))); // pos x
+    uv.assign(vec2(direction.z, direction.y).div(abs(direction.x)));
   })
     .elseif(face.equal(1.0), () => {
-      uv.assign(vec2(direction.x.negate(), direction.z.negate()).div(abs(direction.y))); // pos y
+      uv.assign(vec2(direction.x.negate(), direction.z.negate()).div(abs(direction.y)));
     })
     .elseif(face.equal(2.0), () => {
-      uv.assign(vec2(direction.x.negate(), direction.y).div(abs(direction.z))); // pos z
+      uv.assign(vec2(direction.x.negate(), direction.y).div(abs(direction.z)));
     })
     .elseif(face.equal(3.0), () => {
-      uv.assign(vec2(direction.z.negate(), direction.y).div(abs(direction.x))); // neg x
+      uv.assign(vec2(direction.z.negate(), direction.y).div(abs(direction.x)));
     })
     .elseif(face.equal(4.0), () => {
-      uv.assign(vec2(direction.x.negate(), direction.z).div(abs(direction.y))); // neg y
+      uv.assign(vec2(direction.x.negate(), direction.z).div(abs(direction.y)));
     })
     .else(() => {
-      uv.assign(vec2(direction.x, direction.y).div(abs(direction.z))); // neg z
+      uv.assign(vec2(direction.x, direction.y).div(abs(direction.z)));
     });
 
   return mul(0.5, uv.add(1.0));
@@ -98,7 +98,7 @@ const roughnessToMip = tslFn(([roughness]) => {
       mip.assign(cubeUV_r5.sub(roughness).mul(cubeUV_m6.sub(cubeUV_m5)).div(cubeUV_r5.sub(cubeUV_r6)).add(cubeUV_m5));
     })
     .else(() => {
-      mip.assign(f32(-2.0).mul(log2(mul(1.16, roughness)))); // 1.16 = 1.79^0.25
+      mip.assign(f32(-2.0).mul(log2(mul(1.16, roughness))));
     });
 
   return mip;
@@ -108,32 +108,32 @@ const roughnessToMip = tslFn(([roughness]) => {
   inputs: [{ name: 'roughness', type: 'f32' }],
 });
 
-// RH coordinate system; PMREM face-indexing convention
+
 export const getDirection = tslFn(([uv_immutable, face]) => {
   const uv = uv_immutable.toVar();
   uv.assign(mul(2.0, uv).sub(1.0));
   const direction = vec3(uv, 1.0).toVar();
 
   NodeStack.if(face.equal(0.0), () => {
-    direction.assign(direction.zyx); // ( 1, v, u ) pos x
+    direction.assign(direction.zyx);
   })
     .elseif(face.equal(1.0), () => {
       direction.assign(direction.xzy);
-      direction.xz.mulAssign(-1.0); // ( -u, 1, -v ) pos y
+      direction.xz.mulAssign(-1.0);
     })
     .elseif(face.equal(2.0), () => {
-      direction.x.mulAssign(-1.0); // ( -u, v, 1 ) pos z
+      direction.x.mulAssign(-1.0);
     })
     .elseif(face.equal(3.0), () => {
       direction.assign(direction.zyx);
-      direction.xz.mulAssign(-1.0); // ( -1, v, -u ) neg x
+      direction.xz.mulAssign(-1.0);
     })
     .elseif(face.equal(4.0), () => {
       direction.assign(direction.xzy);
-      direction.xy.mulAssign(-1.0); // ( -u, -1, v ) neg y
+      direction.xy.mulAssign(-1.0);
     })
     .elseif(face.equal(5.0), () => {
-      direction.z.mulAssign(-1.0); // ( u, v, -1 ) neg zS
+      direction.z.mulAssign(-1.0);
     });
 
   return direction;
@@ -201,7 +201,7 @@ const getSample = tslFn(
   ({ envMap, mipInt, outputDirection, theta, axis, CUBEUV_TEXEL_WIDTH, CUBEUV_TEXEL_HEIGHT, CUBEUV_MAX_MIP }) => {
     const cosTheta = cos(theta);
 
-    // Rodrigues' axis-angle rotation
+
     const sampleDirection = outputDirection
       .mul(cosTheta)
       .add(axis.cross(outputDirection).mul(sin(theta)))

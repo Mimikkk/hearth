@@ -1,8 +1,8 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
 
-import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 
-import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
+import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
 import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/GLTFLoader.js';
 import { RGBELoader } from '@modules/renderer/engine/loaders/textures/RGBELoader/RGBELoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
@@ -12,7 +12,7 @@ let renderer, scene, camera, controls;
 init();
 
 async function init() {
-  renderer = await Forge.as();
+  renderer = await Hearth.as();
   renderer.animation.loop = render;
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
@@ -37,14 +37,14 @@ async function init() {
     gltfLoader.loadAsync('resources/models/gltf/IridescenceLamp.glb'),
   ]);
 
-  // environment
+
 
   texture.mapping = Engine.Mapping.EquirectangularReflection;
 
   scene.background = texture;
   scene.environment = texture;
 
-  // model
+
 
   scene.add(gltf.scene);
 

@@ -55,7 +55,7 @@ export class EllipseCurve extends Curve<Vec2> {
       const tx = x - this.aX;
       const ty = y - this.aY;
 
-      // Rotate the point about the center of the ellipse.
+
       x = tx * cos - ty * sin + this.aX;
       y = tx * sin + ty * cos + this.aY;
     }

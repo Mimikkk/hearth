@@ -1,9 +1,9 @@
 import { NodeUpdateType } from './constants.js';
-import { Scene } from '@modules/renderer/engine/objects/scenes/Scene.js';
+import { Scene } from '@modules/renderer/engine/entities/scenes/Scene.js';
 import { Entity } from '@modules/renderer/engine/core/Entity.js';
-import { Camera } from '@modules/renderer/engine/objects/cameras/Camera.js';
-import { Material } from '@modules/renderer/engine/objects/materials/Material.js';
-import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
+import { Camera } from '@modules/renderer/engine/entities/cameras/Camera.js';
+import { Material } from '@modules/renderer/engine/entities/materials/Material.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { Node } from '../core/Node.js';
 import { Clock } from '@modules/renderer/engine/core/Clock.js';
 
@@ -16,7 +16,7 @@ export class NodeFrame {
   startTime: number;
   updateMap: WeakMap<Node, ReferenceMap>;
   updateBeforeMap: WeakMap<Node, ReferenceMap>;
-  renderer: Forge;
+  renderer: Hearth;
   material: Material;
   camera: Camera;
   object: Entity;

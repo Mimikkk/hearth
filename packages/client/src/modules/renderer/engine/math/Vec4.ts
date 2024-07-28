@@ -242,11 +242,11 @@ export class Vec4 {
   }
 
   asAxisAngleFromRotation(matrix: Const<Mat4>): this {
-    // variables for result
+
     let angle, x, y, z;
-    // margin to allow for rounding errors
+
     const epsilon1 = 0.01;
-    // margin to distinguish between 0 and 180 degrees
+
     const epsilon2 = 0.1;
     const te = matrix.elements;
     const m11 = te[0];
@@ -260,9 +260,9 @@ export class Vec4 {
     const m33 = te[10];
 
     if (Math.abs(m12 - m21) < epsilon1 && Math.abs(m13 - m31) < epsilon1 && Math.abs(m23 - m32) < epsilon1) {
-      // singularity found
-      // first check for identity matrix which must have +1 for all terms
-      // in leading diagonal and zero in other terms
+
+
+
 
       if (
         Math.abs(m12 + m21) < epsilon2 &&
@@ -273,7 +273,7 @@ export class Vec4 {
         return this.set(1, 0, 0, 0);
       }
 
-      // otherwise this singularity is angle = 180
+
       angle = Math.PI;
       const xx = (m11 + 1) / 2;
       const yy = (m22 + 1) / 2;
@@ -283,7 +283,7 @@ export class Vec4 {
       const yz = (m23 + m32) / 4;
 
       if (xx > yy && xx > zz) {
-        // m11 is the largest diagonal term
+
         if (xx < epsilon1) {
           x = 0;
           y = Math.SQRT1_2;
@@ -294,7 +294,7 @@ export class Vec4 {
           z = xz / x;
         }
       } else if (yy > zz) {
-        // m22 is the largest diagonal term
+
         if (yy < epsilon1) {
           x = Math.SQRT1_2;
           y = 0;
@@ -305,7 +305,7 @@ export class Vec4 {
           z = yz / y;
         }
       } else {
-        // m33 is the largest diagonal term so base result on this
+
         if (zz < epsilon1) {
           x = Math.SQRT1_2;
           y = Math.SQRT1_2;
@@ -320,8 +320,8 @@ export class Vec4 {
       return this.set(x, y, z, angle);
     }
 
-    // as we have reached here there are no singularities so we can handle normally
-    let s = Math.sqrt((m32 - m23) * (m32 - m23) + (m13 - m31) * (m13 - m31) + (m21 - m12) * (m21 - m12)); // used to normalize
+
+    let s = Math.sqrt((m32 - m23) * (m32 - m23) + (m13 - m31) * (m13 - m31) + (m21 - m12) * (m21 - m12));
 
     if (Math.abs(s) < 0.001) s = 1;
     return this.set((m32 - m23) / s, (m13 - m31) / s, (m21 - m12) / s, Math.acos((m11 + m22 + m33 - 1) / 2));

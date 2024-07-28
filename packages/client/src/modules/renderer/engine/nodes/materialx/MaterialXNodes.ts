@@ -20,7 +20,7 @@ export const mx_noise_vec2 = (texcoord = uv(), amplitude = 1, pivot = 0) =>
 export const mx_noise_vec3 = (texcoord = uv(), amplitude = 1, pivot = 0) =>
   worley_noise_vec3(texcoord.convert('vec2|vec3')).mul(amplitude).add(pivot);
 export const mx_noise_vec4 = (texcoord = uv(), amplitude = 1, pivot = 0) => {
-  texcoord = texcoord.convert('vec2|vec3'); // overloading type
+  texcoord = texcoord.convert('vec2|vec3');
 
   const noise_vec4 = vec4(perlin_noise_vec3(texcoord), mx_perlin_noise_float(texcoord.add(vec2(19, 73))));
 

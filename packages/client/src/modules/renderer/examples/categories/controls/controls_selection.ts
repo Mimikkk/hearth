@@ -1,20 +1,20 @@
-import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
-import { PerspectiveCamera } from '@modules/renderer/engine/objects/cameras/PerspectiveCamera.js';
-import { Scene } from '@modules/renderer/engine/objects/scenes/Scene.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
+import { PerspectiveCamera } from '@modules/renderer/engine/entities/cameras/PerspectiveCamera.js';
+import { Scene } from '@modules/renderer/engine/entities/scenes/Scene.js';
 import { ColorMap } from '@modules/renderer/engine/math/Color.js';
-import { AmbientLight } from '@modules/renderer/engine/objects/lights/AmbientLight.js';
-import { SpotLight } from '@modules/renderer/engine/objects/lights/SpotLight.js';
-import { BoxGeometry } from '@modules/renderer/engine/objects/geometries/BoxGeometry.js';
-import { Mesh } from '@modules/renderer/engine/objects/Mesh.js';
-import { MeshLambertMaterial } from '@modules/renderer/engine/objects/materials/MeshLambertMaterial.js';
-import { SelectionControls } from '@modules/renderer/engine/objects/controls/SelectionControls.js';
-import { SelectionVisualizer } from '@modules/renderer/engine/objects/visualizers/SelectionVisualizer.js';
+import { AmbientLight } from '@modules/renderer/engine/entities/lights/AmbientLight.js';
+import { SpotLight } from '@modules/renderer/engine/entities/lights/SpotLight.js';
+import { BoxGeometry } from '@modules/renderer/engine/entities/geometries/BoxGeometry.js';
+import { Mesh } from '@modules/renderer/engine/entities/Mesh.js';
+import { MeshLambertMaterial } from '@modules/renderer/engine/entities/materials/MeshLambertMaterial.js';
+import { SelectionControls } from '@modules/renderer/engine/entities/controls/SelectionControls.js';
+import { SelectionVisualizer } from '@modules/renderer/engine/entities/visualizers/SelectionVisualizer.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
-import { Fog } from '@modules/renderer/engine/objects/scenes/Fog.js';
+import { Fog } from '@modules/renderer/engine/entities/scenes/Fog.js';
 import { normalWorld } from '@modules/renderer/engine/nodes/accessors/NormalNode.js';
 import { color } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.primitves.js';
-import { Group } from '@modules/renderer/engine/objects/Group.js';
+import { Group } from '@modules/renderer/engine/entities/Group.js';
 import { UI } from '@mimi/ui';
 import { Random } from '@modules/renderer/engine/math/random.js';
 import { Stats } from '@modules/renderer/examples/ui/stats.js';
@@ -69,7 +69,7 @@ const light = createLight();
 const boxes = createBoxes();
 scene.add(light, camera, boxes);
 
-const renderer = await Forge.as({
+const renderer = await Hearth.as({
   animate() {
     ui.update();
     stats.update();

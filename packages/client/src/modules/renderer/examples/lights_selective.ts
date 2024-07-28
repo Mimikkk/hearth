@@ -10,10 +10,10 @@ import {
 
 import { GUI } from 'lil-gui';
 
-import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
-import { TeapotGeometry } from '@modules/renderer/engine/objects/geometries/TeapotGeometry.js';
+import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
+import { TeapotGeometry } from '@modules/renderer/engine/entities/geometries/TeapotGeometry.js';
 
-import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
@@ -102,7 +102,7 @@ async function init() {
 
   //renderer
 
-  renderer = await Forge.as();
+  renderer = await Hearth.as();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.animation.loop = animate;

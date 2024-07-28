@@ -1,9 +1,9 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
 import { texture, equirectUV } from '@modules/renderer/engine/nodes/Nodes.js';
 
-import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 
-import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
+import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
@@ -24,7 +24,7 @@ async function init() {
   scene = new Engine.Scene();
   scene.backgroundNode = texture(equirectTexture, equirectUV(), 0);
 
-  renderer = await Forge.as();
+  renderer = await Hearth.as();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.animation.loop = render;
@@ -32,7 +32,7 @@ async function init() {
 
   controls = new OrbitControls(camera, renderer.parameters.canvas);
   controls.autoRotate = true;
-  controls.rotateSpeed = -0.125; // negative, to track mouse pointer
+  controls.rotateSpeed = -0.125;
   controls.autoRotateSpeed = 1.0;
 
   useWindowResizer(renderer, camera);

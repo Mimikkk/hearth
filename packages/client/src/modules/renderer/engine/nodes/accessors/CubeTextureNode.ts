@@ -4,7 +4,7 @@ import { addNodeCommand, proxyNode, vec3 } from '../shadernode/ShaderNodes.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { UVNode } from '@modules/renderer/engine/nodes/accessors/UVNode.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
-import { CubeTexture } from '@modules/renderer/engine/objects/textures/CubeTexture.js';
+import { CubeTexture } from '@modules/renderer/engine/entities/textures/CubeTexture.js';
 import { Node } from '@modules/renderer/engine/nodes/core/Node.js';
 
 export class CubeTextureNode extends TextureNode {

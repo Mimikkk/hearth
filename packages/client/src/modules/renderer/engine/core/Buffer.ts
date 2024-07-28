@@ -1,5 +1,5 @@
 import type { ArrayMap, TypedArray, TypedArrayConstructor } from '../math/MathUtils.js';
-import { BufferStep } from '@modules/renderer/engine/renderers/constants.js';
+import { BufferStep } from '@modules/renderer/engine/hearth/constants.js';
 import { BufferUse } from '@modules/renderer/engine/constants.js';
 
 export class Buffer<T extends TypedArray = any> {

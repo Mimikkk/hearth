@@ -1,14 +1,14 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
 
-import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 
 import Stats from 'stats-gl';
 
 import { GUI } from 'lil-gui';
-import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
+import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
 
-import { InstancedPoints } from '@modules/renderer/engine/objects/InstancedPoints.js';
-import { InstancedPointsGeometry } from '@modules/renderer/engine/objects/geometries/InstancedPointsGeometry.js';
+import { InstancedPoints } from '@modules/renderer/engine/entities/InstancedPoints.js';
+import { InstancedPointsGeometry } from '@modules/renderer/engine/entities/geometries/InstancedPointsGeometry.js';
 
 import { color, InstancedPointsNodeMaterial } from '@modules/renderer/engine/nodes/Nodes.js';
 
@@ -19,14 +19,14 @@ let renderer, scene, camera, camera2, controls, backgroundNode;
 let material;
 let gui;
 
-// viewport
+
 let insetWidth;
 let insetHeight;
 
 init();
 
 async function init() {
-  renderer = await Forge.as();
+  renderer = await Hearth.as();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.animation.loop = animate;
@@ -67,7 +67,7 @@ async function init() {
     colors.push(pointColor.r, pointColor.g, pointColor.b);
   }
 
-  // Instanced Points
+  
 
   const geometry = new InstancedPointsGeometry();
   geometry.setPositions(positions);
@@ -75,7 +75,7 @@ async function init() {
 
   material = new InstancedPointsNodeMaterial({
     color: 0xffffff,
-    pointWidth: 10, // in pixel units
+    pointWidth: 10, 
 
     vertexColors: true,
     alphaToCoverage: true,
@@ -104,7 +104,7 @@ async function init() {
 }
 
 function animate() {
-  // main scene
+  
   renderer.viewport.set(0, 0, window.innerWidth, window.innerHeight);
 
   controls.update();
@@ -115,7 +115,7 @@ function animate() {
 
   renderer.render(scene, camera);
 
-  // inset scene
+  
 
   renderer.clear(false, true, false);
 

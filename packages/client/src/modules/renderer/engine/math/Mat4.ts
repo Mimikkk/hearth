@@ -253,7 +253,7 @@ export class Mat4 {
   }
 
   fromMat4Rotation(mat: Const<Mat4>): this {
-    // this method does not support reflection matrices
+
 
     const te = this.elements;
     const me = mat.elements;
@@ -431,12 +431,12 @@ export class Mat4 {
       te[10] = bd * f + ac;
     }
 
-    // bottom row
+
     te[3] = 0;
     te[7] = 0;
     te[11] = 0;
 
-    // last column
+
     te[12] = 0;
     te[13] = 0;
     te[14] = 0;
@@ -460,7 +460,7 @@ export class Mat4 {
     const x = _lookAt1.asCross(up, z);
 
     if (x.lengthSq() === 0) {
-      // up and z are parallel
+
 
       if (Math.abs(up.z) === 1) {
         z.x += 0.0001;
@@ -653,7 +653,7 @@ export class Mat4 {
   }
 
   invert(): this {
-    // based on http://www.euclideanspace.com/maths/algebra/matrix/functions/inverse/fourD/index.htm
+
     const te = this.elements,
       n11 = te[0],
       n21 = te[1],
@@ -790,7 +790,7 @@ export class Mat4 {
   }
 
   asRotationAxis(axis: Const<Vec3>, angle: number): this {
-    // Based on http://www.gamedev.net/reference/articles/article1199.asp
+
 
     const c = Math.cos(angle);
     const s = Math.sin(angle);
@@ -889,7 +889,7 @@ export class Mat4 {
     const sy = _decompose0.set(te[4], te[5], te[6]).length();
     const sz = _decompose0.set(te[8], te[9], te[10]).length();
 
-    // if determine is negative, we need to invert one scale
+
     const det = this.determinant();
     if (det < 0) sx = -sx;
 
@@ -897,7 +897,7 @@ export class Mat4 {
     position.y = te[13];
     position.z = te[14];
 
-    // scale the rotation part
+
     const _m1 = new Mat4().from(this);
 
     const invSX = 1 / sx;

@@ -12,14 +12,14 @@ import {
   vec3,
 } from '@modules/renderer/engine/nodes/Nodes.js';
 
-import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 
-import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
+import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
 
 import { GUI } from 'lil-gui';
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import { GPUBufferBindingTypeType, BufferStep } from '@modules/renderer/engine/renderers/constants.js';
+import { GPUBufferBindingTypeType, BufferStep } from '@modules/renderer/engine/hearth/constants.js';
 
 const particleCount = 1000000;
 
@@ -30,7 +30,7 @@ const size = uniform(0.12);
 
 const clickPosition = uniform(new Engine.Vec3());
 
-let camera, scene, renderer: Forge;
+let camera, scene, renderer: Hearth;
 let controls;
 let computeParticles;
 
@@ -46,7 +46,7 @@ async function init() {
 
   scene = new Engine.Scene();
 
-  // textures
+  
 
   const textureLoader = new TextureLoader();
   const map = await textureLoader.loadAsync('resources/textures/sprite.png');
@@ -64,7 +64,7 @@ async function init() {
   const velocityBuffer = createBuffer();
   const colorBuffer = createBuffer();
 
-  // compute
+  
 
   const computeInit = tslFn(() => {
     const position = positionBuffer.element(instanceIndex);
@@ -75,7 +75,7 @@ async function init() {
     const randZ = instanceIndex.add(3).hash();
 
     position.x = randX.mul(100).add(-50);
-    position.y = 0; // randY.mul( 10 );
+    position.y = 0; 
     position.z = randZ.mul(100).add(-50);
 
     color.assign(vec3(randX, randY, randZ));
@@ -92,13 +92,13 @@ async function init() {
 
     velocity.mulAssign(friction);
 
-    // floor
+    
 
     NodeStack.if(position.y.lessThan(0), () => {
       position.y = 0;
       velocity.y = velocity.y.negate().mul(bounce);
 
-      // floor friction
+      
 
       velocity.x = velocity.x.mul(0.9);
       velocity.z = velocity.z.mul(0.9);
@@ -107,11 +107,11 @@ async function init() {
 
   computeParticles = computeUpdate().compute(particleCount);
 
-  // create nodes
+  
 
   const textureNode = texture(map);
 
-  // create particles
+  
 
   const particleMaterial = new SpriteNodeMaterial();
   particleMaterial.colorNode = textureNode.mul(colorBuffer.element(instanceIndex));
@@ -143,7 +143,7 @@ async function init() {
 
   //
 
-  renderer = await Forge.as({ trackTimestamp: true });
+  renderer = await Hearth.as({ trackTimestamp: true });
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.animation.loop = animate;
@@ -153,7 +153,7 @@ async function init() {
 
   renderer.compute(computeInit);
 
-  // click event
+  
 
   const computeHit = tslFn(() => {
     const position = positionBuffer.element(instanceIndex);
@@ -181,18 +181,18 @@ async function init() {
     if (intersects.length > 0) {
       const { point } = intersects[0];
 
-      // move to uniform
+      
 
       clickPosition.value.from(point);
       clickPosition.value.y = -1;
 
-      // compute
+      
 
       renderer.compute(computeHit);
     }
   }
 
-  // events
+  
 
   renderer.parameters.canvas.addEventListener('pointermove', onMove);
   //
@@ -207,7 +207,7 @@ async function init() {
 
   useWindowResizer(renderer, camera);
 
-  // gui
+  
 
   const gui = new GUI();
 
@@ -222,7 +222,7 @@ async function animate() {
 
   await renderer.render(scene, camera);
 
-  // throttle the logging
+  
 
   if (renderer.backend.hasFeature('timestamp-query')) {
     if (renderer.info.render.passes % 5 === 0) {

@@ -3,7 +3,7 @@ import { Sphere } from './Sphere.js';
 import { Plane } from './Plane.js';
 import type { Mat4 } from './Mat4.js';
 import type { Box3 } from './Box3.js';
-import type { Sprite } from '../objects/Sprite.js';
+import type { Sprite } from '@modules/renderer/engine/entities/Sprite.js';
 import type { Entity } from '../core/Entity.js';
 import { Const } from '@modules/renderer/engine/math/types.js';
 

@@ -14,8 +14,8 @@ import {
   viewportTopLeft,
 } from '@modules/renderer/engine/nodes/Nodes.js';
 import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/GLTFLoader.js';
-import { Forge } from '@modules/renderer/engine/renderers/Forge.js';
-import { OrbitControls } from '@modules/renderer/engine/objects/controls/OrbitControls.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
+import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
 import {
   AnimationClip,
   AnimationMixer,
@@ -33,7 +33,7 @@ import {
 import { degreeToRadian } from '@modules/renderer/engine/math/MathUtils.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 import { Random } from '@modules/renderer/engine/math/random.js';
-import { ICamera } from '@modules/renderer/engine/objects/cameras/Camera.js';
+import { ICamera } from '@modules/renderer/engine/entities/cameras/Camera.js';
 
 const createCamera = () => {
   const camera = new PerspectiveCamera();
@@ -111,7 +111,7 @@ scene.add(portals);
 camera.add(light);
 scene.add(camera);
 
-const renderer = await Forge.as({
+const renderer = await Hearth.as({
   toneMappingNode: toneMapping(ToneMapping.Linear, 0.15),
   async animate() {
     const delta = clock.tick();

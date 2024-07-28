@@ -3,7 +3,7 @@ import { varying } from '../core/VaryingNode.js';
 import { addNodeCommand, asNode } from '../shadernode/ShaderNodes.js';
 import { Buffer, Attribute, BufferUse } from '@modules/renderer/engine/engine.js';
 import { ShaderStage, TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
-import { BufferStep } from '@modules/renderer/engine/renderers/constants.js';
+import { BufferStep } from '@modules/renderer/engine/hearth/constants.js';
 import BufferNode from '@modules/renderer/engine/nodes/accessors/BufferNode.js';
 
 export class BufferAttributeNode extends InputNode {

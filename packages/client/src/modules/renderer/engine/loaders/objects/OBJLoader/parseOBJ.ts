@@ -13,13 +13,13 @@ import {
   Vec3,
 } from '@modules/renderer/engine/engine.js';
 import { MTLMaterialCreator } from '@modules/renderer/engine/loaders/objects/OBJLoader/MTLLoader/MTLMaterialCreator.js';
-// o object_name | g group_name
+
 const ObjectRe = /^[og]\s*(.+)?/;
-// mtllib file_reference
+
 const MaterialLibRe = /^mtllib /;
-// usemtl material_name
+
 const MaterialUseRe = /^usemtl /;
-// usemap map_name
+
 const MapUseRe = /^usemap /;
 const DelimiterRe = /\s+/;
 
@@ -43,8 +43,8 @@ class ParserState {
   materialLibraries = [];
 
   startObject(name: string, fromDeclaration: boolean) {
-    // If the current object (initial from reset) is not from a g/o declaration in the parsed
-    // file. We need to use it for the first parsed g/o to keep things in sync.
+
+
     if (this.object && this.object.fromDeclaration === false) {
       this.object.name = name;
       this.object.fromDeclaration = fromDeclaration !== false;
@@ -75,8 +75,8 @@ class ParserState {
       startMaterial(name: string, libraries: string[]) {
         const previous = this._finalize(false);
 
-        // New usemtl declaration overwrites an inherited material, except if faces were declared
-        // after the material, then it must be preserved for proper MultiMaterial continuation.
+
+
         if (previous && (previous.inherited || previous.groupCount <= 0)) {
           this.materials.splice(previous.index, 1);
         }
@@ -128,7 +128,7 @@ class ParserState {
           lastMultiMaterial.inherited = false;
         }
 
-        // Ignore objects tail materials if no face declarations followed them before a new o/g started.
+
         if (end && this.materials.length > 1) {
           for (let mi = this.materials.length - 1; mi >= 0; mi--) {
             if (this.materials[mi].groupCount <= 0) {
@@ -137,7 +137,7 @@ class ParserState {
           }
         }
 
-        // Guarantee at least one empty material, this makes the creation later more straight forward.
+
         if (end && this.materials.length === 0) {
           this.materials.push({
             name: '',
@@ -149,11 +149,11 @@ class ParserState {
       },
     };
 
-    // Inherit previous objects material.
-    // Spec tells us that a declared material must be set to all objects until a new material is declared.
-    // If a usemtl declaration is encountered while this new object is being parsed, it will
-    // overwrite the inherited material. Exception being that there was already face declarations
-    // to the inherited material, then it will be preserved for proper MultiMaterial continuation.
+
+
+
+
+
 
     if (previousMaterial && previousMaterial.name && typeof previousMaterial.clone === 'function') {
       const declared = previousMaterial.clone(0);
@@ -279,7 +279,7 @@ class ParserState {
     this.addVertex(ia, ib, ic);
     this.addColor(ia, ib, ic);
 
-    // normals
+
 
     if (na !== undefined && na !== '') {
       const nLen = this.normals.length;
@@ -293,7 +293,7 @@ class ParserState {
       this.addFaceNormal(ia, ib, ic);
     }
 
-    // uvs
+
 
     if (ua !== undefined && ua !== '') {
       const uvLen = this.uvs.length;
@@ -306,7 +306,7 @@ class ParserState {
 
       this.object.geometry.hasUVIndices = true;
     } else {
-      // add placeholder values (for inconsistent face definitions)
+
 
       this.addDefaultUV();
     }
@@ -364,12 +364,12 @@ export async function parseOBJ(text: string, materialCreator?: MTLMaterialCreato
   const state = new ParserState();
 
   if (text.indexOf('\r\n') !== -1) {
-    // This is faster than String.split with regex that splits on both
+
     text = text.replace(/\r\n/g, '\n');
   }
 
   if (text.indexOf('\\\n') !== -1) {
-    // join lines separated by a line continuation character (\)
+
     text = text.replace(/\\\n/g, '');
   }
 
@@ -395,7 +395,7 @@ export async function parseOBJ(text: string, materialCreator?: MTLMaterialCreato
 
             state.colors.push(_color.r, _color.g, _color.b);
           } else {
-            // if no colors are defined, add placeholders so color and vertex indices match
+
 
             state.colors.push(undefined, undefined, undefined);
           }
@@ -413,7 +413,7 @@ export async function parseOBJ(text: string, materialCreator?: MTLMaterialCreato
       const vertexData = lineData.split(DelimiterRe);
       const faceVertices = [];
 
-      // Parse the face vertex data into an easy to work with format
+
 
       for (let j = 0, jl = vertexData.length; j < jl; j++) {
         const vertex = vertexData[j];
@@ -424,7 +424,7 @@ export async function parseOBJ(text: string, materialCreator?: MTLMaterialCreato
         }
       }
 
-      // Draw an edge between the first vertex and all subsequent vertices to form an n-gon
+
 
       const v1 = faceVertices[0];
 
@@ -457,26 +457,26 @@ export async function parseOBJ(text: string, materialCreator?: MTLMaterialCreato
 
       state.addPointGeometry(pointData);
     } else if ((result = ObjectRe.exec(line)) !== null) {
-      // o object_name
-      // or
-      // g group_name
 
-      // WORKAROUND: https://bugs.chromium.org/p/v8/issues/detail?id=2869
-      // let name = result[ 0 ].slice( 1 ).trim();
+
+
+
+
+
       const name = (' ' + result[0].slice(1).trim()).slice(1);
 
       state.startObject(name);
     } else if (MaterialUseRe.test(line)) {
-      // material
+
 
       state.object.startMaterial(line.substring(7).trim(), state.materialLibraries);
     } else if (MaterialLibRe.test(line)) {
-      // mtl file
+
 
       state.materialLibraries.push(line.substring(7).trim());
     } else if (MapUseRe.test(line)) {
-      // the line is parsed but ignored since the loader assumes textures are defined MTL files
-      // (according to https://www.okino.com/conv/imp_wave.htm, 'usemap' is the old-style Wavefront texture reference method)
+
+
 
       console.warn(
         'engine.OBJLoader: Rendering identifier "usemap" not supported. Textures must be defined in MTL files.',
@@ -484,14 +484,14 @@ export async function parseOBJ(text: string, materialCreator?: MTLMaterialCreato
     } else if (lineFirstChar === 's') {
       result = line.split(' ');
 
-      // smooth shading
 
-      // @todo Handle files that have varying smooth values for a set of faces inside one geometry,
-      // but does not define a usemtl for each face set.
-      // This should be detected and a dummy material created (later MultiMaterial and geometry groups).
-      // This requires some care to not create extra material on each smooth value for "normal" obj files.
-      // where explicit usemtl defines geometry groups.
-      // Example asset: examples/models/obj/cerberus/Cerberus.obj
+
+
+
+
+
+
+
 
       /*
        * http://paulbourke.net/dataformats/obj/
@@ -506,14 +506,14 @@ export async function parseOBJ(text: string, materialCreator?: MTLMaterialCreato
         const value = result[1].trim().toLowerCase();
         state.object.smooth = value !== '0' && value !== 'off';
       } else {
-        // ZBrush can produce "s" lines #11707
+
         state.object.smooth = true;
       }
 
       const material = state.object.currentMaterial();
       if (material) material.smooth = state.object.smooth;
     } else {
-      // Handle null terminated files without exception
+
       if (line === '\0') continue;
 
       console.warn('engine.OBJLoader: Unexpected line: "' + line + '"');
@@ -535,7 +535,7 @@ export async function parseOBJ(text: string, materialCreator?: MTLMaterialCreato
       const isPoints = geometry.type === 'Poi.js';
       let hasVertexColors = false;
 
-      // Skip o/g line declarations that did not follow with any faces
+
       if (geometry.vertices.length === 0) continue;
 
       const buffergeometry = new Geometry();
@@ -555,7 +555,7 @@ export async function parseOBJ(text: string, materialCreator?: MTLMaterialCreato
         buffergeometry.setAttribute('uv', new Attribute(new Float32Array(geometry.uvs), 2));
       }
 
-      // Create materials
+
 
       const createdMaterials = [];
 
@@ -567,7 +567,7 @@ export async function parseOBJ(text: string, materialCreator?: MTLMaterialCreato
         if (materialCreator) {
           material = await materialCreator.loadAsync(sourceMaterial.name);
 
-          // mtl etc. loaders probably can't create line materials correctly, copy properties to a line material.
+
           if (isLine && material && !(material instanceof LineBasicMaterial)) {
             const materialLine = new LineBasicMaterial();
             Material.prototype.copy.call(materialLine, material);
@@ -601,7 +601,7 @@ export async function parseOBJ(text: string, materialCreator?: MTLMaterialCreato
         createdMaterials.push(material);
       }
 
-      // Create mesh
+
 
       let mesh;
 
@@ -633,7 +633,7 @@ export async function parseOBJ(text: string, materialCreator?: MTLMaterialCreato
       container.add(mesh);
     }
   } else {
-    // if there is only the default parser state object with no geometry data, interpret data as point cloud
+
 
     if (state.vertices.length > 0) {
       const material = new PointsMaterial({ size: 1, sizeAttenuation: false });

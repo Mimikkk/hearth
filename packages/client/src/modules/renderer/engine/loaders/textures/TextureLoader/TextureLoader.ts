@@ -1,9 +1,9 @@
 import { ImageLoader } from '../ImageLoader/ImageLoader.js';
-import { Texture } from '@modules/renderer/engine/objects/textures/Texture.js';
+import { Texture } from '@modules/renderer/engine/entities/textures/Texture.js';
 import { classLoader } from '@modules/renderer/engine/loaders/types.js';
 
 const createTexture = (image: HTMLImageElement) => {
-  // @ts-expect-error
+
   const texture = new Texture();
   texture.image = image;
   texture.needsUpdate = true;
