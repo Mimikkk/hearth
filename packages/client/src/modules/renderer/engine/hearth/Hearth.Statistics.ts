@@ -5,7 +5,7 @@ import { Sprite } from '@modules/renderer/engine/entities/Sprite.js';
 import { Points } from '@modules/renderer/engine/entities/Points.js';
 import { Line } from '@modules/renderer/engine/entities/Line.js';
 
-export class HearthFrameStats {
+export class HearthStatistics {
   useAutoTick: boolean;
   frame: number;
   passes: number;

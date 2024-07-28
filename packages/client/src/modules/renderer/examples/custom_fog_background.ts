@@ -1,7 +1,7 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
 
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
-import Postprocess from '@modules/renderer/engine/hearth/Postprocess.js';
+import { HearthPostprocess } from '@modules/renderer/engine/hearth/Hearth.Postprocess.js';
 
 import { color, pass, rangeFog } from '@modules/renderer/engine/nodes/Nodes.js';
 
@@ -43,7 +43,7 @@ async function init() {
 
   const compose = fogFactor.mix(scenePassTM, backgroundColor);
 
-  postProcessing = new Postprocess(hearth);
+  postProcessing = new HearthPostprocess(hearth);
   postProcessing.outputNode = compose;
 
   RGBELoader.loadAsync('resources/textures/equirectangular/royal_esplanade_1k.hdr').then(texture => {

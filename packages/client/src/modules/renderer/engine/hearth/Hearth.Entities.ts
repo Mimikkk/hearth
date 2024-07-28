@@ -8,7 +8,7 @@ import { Scene } from '@modules/renderer/engine/entities/scenes/Scene.js';
 import { Material } from '@modules/renderer/engine/entities/materials/Material.js';
 import { Entity } from '@modules/renderer/engine/core/Entity.js';
 
-export class HearthRenderObjects {
+export class HearthEntities {
   chainMaps: Record<string, ChainMap<any, any>>;
 
   constructor(public hearth: Hearth) {

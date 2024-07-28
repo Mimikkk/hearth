@@ -24,7 +24,7 @@ import {
 import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/GLTFLoader.js';
 
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
-import Postprocess from '@modules/renderer/engine/hearth/Postprocess.js';
+import { HearthPostprocess } from '@modules/renderer/engine/hearth/Hearth.Postprocess.js';
 
 import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
 
@@ -206,7 +206,7 @@ scenePassColorBlurred.directionNode = waterMask.cond(scenePassDepth, scenePass.g
 
 const vignet = viewportTopLeft.distance(0.5).mul(1.35).clamp().oneMinus();
 
-const postProcessing = new Postprocess(hearth);
+const postProcessing = new HearthPostprocess(hearth);
 postProcessing.outputNode = waterMask.cond(
   scenePassColorBlurred,
   scenePassColorBlurred.mul(color(0x74ccf4)).mul(vignet),

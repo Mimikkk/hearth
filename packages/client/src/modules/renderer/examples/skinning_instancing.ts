@@ -12,7 +12,7 @@ import {
 import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/GLTFLoader.js';
 
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
-import Postprocess from '@modules/renderer/engine/hearth/Postprocess.js';
+import { HearthPostprocess } from '@modules/renderer/engine/hearth/Hearth.Postprocess.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 import { BufferStep } from '@modules/renderer/engine/hearth/constants.js';
 import { Attribute, Buffer } from '@modules/renderer/engine/engine.js';
@@ -108,7 +108,7 @@ async function init() {
   const scenePassColorBlurred = scenePassColor.gaussianBlur();
   scenePassColorBlurred.directionNode = scenePassDepth;
 
-  postProcessing = new Postprocess(hearth);
+  postProcessing = new HearthPostprocess(hearth);
   postProcessing.outputNode = scenePassColorBlurred;
 
   useWindowResizer(hearth, camera);

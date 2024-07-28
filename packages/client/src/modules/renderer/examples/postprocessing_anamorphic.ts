@@ -3,7 +3,7 @@ import { cubeTexture, pass, uniform, viewportTopLeft } from '@modules/renderer/e
 
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 
-import Postprocess from '@modules/renderer/engine/hearth/Postprocess.js';
+import { HearthPostprocess } from '@modules/renderer/engine/hearth/Hearth.Postprocess.js';
 
 import { RGBMLoader } from '@modules/renderer/engine/loaders/textures/RGBMLoader/RGBMLoader.js';
 
@@ -69,7 +69,7 @@ async function init() {
   const anamorphicPass = scenePass.getTextureNode().anamorphic(threshold, scaleNode, samples);
   anamorphicPass.resolution = new Engine.Vec2(0.2, 0.2);
 
-  postProcessing = new Postprocess(hearth);
+  postProcessing = new HearthPostprocess(hearth);
   postProcessing.outputNode = scenePass.add(anamorphicPass.mul(intensity));
   //postProcessing.outputNode = scenePass.add( anamorphicPass.getTextureNode().gaussianBlur() );
 

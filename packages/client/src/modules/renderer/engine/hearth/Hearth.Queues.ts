@@ -3,7 +3,7 @@ import RenderList from './RenderList.js';
 import { Scene } from '@modules/renderer/engine/entities/scenes/Scene.js';
 import { Camera } from '@modules/renderer/engine/entities/cameras/Camera.js';
 
-export class HearthRenderLists {
+export class HearthQueues {
   lists: ChainMap<any, any>;
 
   constructor() {

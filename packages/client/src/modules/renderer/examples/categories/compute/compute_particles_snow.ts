@@ -23,7 +23,7 @@ import { TeapotGeometry } from '@modules/renderer/engine/entities/geometries/Tea
 
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 
-import Postprocess from '@modules/renderer/engine/hearth/Postprocess.js';
+import { HearthPostprocess } from '@modules/renderer/engine/hearth/Hearth.Postprocess.js';
 
 import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
@@ -296,7 +296,7 @@ async function init() {
   };
   document.body.appendChild(hearth.parameters.canvas);
 
-  postProcessing = new Postprocess(hearth);
+  postProcessing = new HearthPostprocess(hearth);
   postProcessing.outputNode = totalPass;
 
   const stats = Stats.use(hearth);

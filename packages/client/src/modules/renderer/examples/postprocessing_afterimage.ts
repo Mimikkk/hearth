@@ -3,7 +3,7 @@ import * as Engine from '@modules/renderer/engine/engine.js';
 import { GUI } from 'lil-gui';
 
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
-import Postprocess from '@modules/renderer/engine/hearth/Postprocess.js';
+import { HearthPostprocess } from '@modules/renderer/engine/hearth/Hearth.Postprocess.js';
 import { pass } from '@modules/renderer/engine/nodes/Nodes.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
@@ -35,7 +35,7 @@ async function init() {
   mesh = new Engine.Mesh(geometry, material);
   scene.add(mesh);
 
-  postProcessing = new Postprocess(hearth);
+  postProcessing = new HearthPostprocess(hearth);
 
   const scenePass = pass(scene, camera);
   const scenePassColor = scenePass.getTextureNode();

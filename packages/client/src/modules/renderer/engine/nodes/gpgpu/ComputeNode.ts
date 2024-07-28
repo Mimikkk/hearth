@@ -5,7 +5,7 @@ import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { ShaderStage } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
-class ComputeNode extends Node {
+export class ComputeNode extends Node {
   static type = 'ComputeNode';
   declare id: number;
   declare isComputeNode: boolean;

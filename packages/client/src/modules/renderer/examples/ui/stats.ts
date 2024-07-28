@@ -1,5 +1,5 @@
 import type { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
-import type { HearthFrameStats } from '@modules/renderer/engine/hearth/Hearth.FrameStats.js';
+import type { HearthStatistics } from '@modules/renderer/engine/hearth/Hearth.Statistics.js';
 import { GPUFeature } from '@modules/renderer/engine/hearth/constants.js';
 
 class Panel {
@@ -195,7 +195,7 @@ export class Stats {
   prevStatTime: number;
   frames: number;
 
-  info: HearthFrameStats;
+  info: HearthStatistics;
   dom: HTMLDivElement;
 
   cpuMsStat: Stat;
