@@ -286,11 +286,10 @@ export class NodeBuilder {
     }
 
     const size = TypeName.size(type);
-
     const component = TypeName.component(type);
     const code = (value: number) => this.codeConst(component, value);
 
-    const name = this.getType(type);
+    const name = TypeName.repr(type);
     switch (size) {
       case 2:
         return `${name}(${code(value.x)}, ${code(value.y)})`;
@@ -333,9 +332,11 @@ export class NodeBuilder {
   }
 
   getType(type: TypeName): string {
+    let t = TypeMap[type];
     onAdd(type);
-    // return TypeName.repr(type);
-    return TypeMap[type] || type;
+    if (t) return t;
+
+    return type;
   }
 
   getStructTypeFromNode(node: Node, shaderStage: ShaderStage = this.shaderStage): StructTypeNode {
@@ -652,46 +653,47 @@ export class NodeBuilder {
     from = TypeName.coerce(from);
     to = TypeName.coerce(to);
 
-    if (from === to || to === null || this.isReference(to)) {
-      return snippet;
+    if (from === to || to === null || this.isReference(to)) return snippet;
+
+    const sizeFrom = TypeName.size(from);
+    const sizeTo = TypeName.size(to);
+
+    if (sizeFrom > 4) return snippet;
+    if (sizeTo > 4 || sizeTo === 0) return snippet;
+    if (sizeFrom === sizeTo) return `${TypeName.repr(to)}(${snippet})`;
+
+    if (sizeFrom > sizeTo) {
+      const sized = TypeName.ofSize(sizeTo, TypeName.component(from));
+
+      switch (sizeTo) {
+        case 0:
+          return this.format(snippet, sized, to);
+        case 1:
+          return this.format(`${snippet}.x`, sized, to);
+        case 2:
+          return this.format(`${snippet}.xy`, sized, to);
+        case 3:
+          return this.format(`${snippet}.xyz`, sized, to);
+        case 4:
+          return this.format(`${snippet}.xyzw`, sized, to);
+        default:
+          throw new Error(`NodeBuilder: Invalid length ${sizeTo}`);
+      }
     }
 
-    const fromTypeLength = TypeName.size(from);
-    const toTypeLength = TypeName.size(to);
-
-    if (fromTypeLength > 4) {
-      return snippet;
+    if (sizeTo === 4 && sizeFrom > 1) {
+      return `${TypeName.repr(to)}(${this.format(snippet, from, TypeName.vec3)}, 1.0)`;
     }
 
-    if (toTypeLength > 4 || toTypeLength === 0) {
-      return snippet;
+    if (sizeFrom === 2) {
+      return `${TypeName.repr(to)}(${this.format(snippet, from, TypeName.vec2)}, 0.0)`;
     }
 
-    if (fromTypeLength === toTypeLength) {
-      return `${this.getType(to)}(${snippet})`;
+    if (sizeFrom === 1 && sizeTo > 1 && from !== TypeName.component(to)) {
+      snippet = `${TypeName.repr(TypeName.component(to))}(${snippet})`;
     }
 
-    if (fromTypeLength > toTypeLength) {
-      return this.format(
-        `${snippet}.${'xyz'.slice(0, toTypeLength)}`,
-        TypeName.ofSize(toTypeLength, TypeName.component(from)),
-        to,
-      );
-    }
-
-    if (toTypeLength === 4 && fromTypeLength > 1) {
-      return `${this.getType(to)}(${this.format(snippet, from, 'vec3')}, 1.0)`;
-    }
-
-    if (fromTypeLength === 2) {
-      return `${this.getType(to)}(${this.format(snippet, from, 'vec2')}, 0.0)`;
-    }
-
-    if (fromTypeLength === 1 && toTypeLength > 1 && from[0] !== to[0]) {
-      snippet = `${this.getType(TypeName.component(to))}(${snippet})`;
-    }
-
-    return `${this.getType(to)}(${snippet})`;
+    return `${TypeName.repr(to)}(${snippet})`;
   }
 
   needsColorSpaceToLinear(texture: Texture): boolean {
