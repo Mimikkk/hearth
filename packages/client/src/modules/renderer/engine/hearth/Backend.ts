@@ -8,21 +8,21 @@ import {
   GPUTextureViewDimensionType,
 } from './constants.js';
 
-import { BackendUtilities } from './Backend.utilities.js';
-import { BackendAttributes } from './Backend.attributes.js';
-import { BackendBindings } from './bindings/Backend.bindings.js';
-import BackendPipelines from './Backend.pipelines.js';
-import { BackendTextures } from './Backend.textures.js';
+import { BackendUtilities } from './Backend.Utilities.js';
+import { BackendAttributes } from './Backend.Attributes.js';
+import { BackendBindings } from './Backend.Bindings.js';
+import BackendPipelines from './Backend.Pipelines.js';
+import { BackendTextures } from './Backend.Textures.js';
 import type { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import RenderContext from '@modules/renderer/engine/hearth/core/RenderContext.js';
 import ComputeNode from '@modules/renderer/engine/nodes/gpgpu/ComputeNode.js';
-import ComputePipeline from '@modules/renderer/engine/hearth/ComputePipeline.js';
+import ComputePipeline from '@modules/renderer/engine/hearth/core/ComputePipeline.js';
 import Binding from '@modules/renderer/engine/hearth/bindings/Binding.js';
-import RenderObject from '@modules/renderer/engine/hearth/RenderObject.js';
-import ProgrammableStage from '@modules/renderer/engine/hearth/ProgrammableStage.js';
-import { BackendResourceManager } from './Backend.ResourceManager.js';
+import RenderObject from '@modules/renderer/engine/hearth/core/RenderObject.js';
+import ProgrammableStage from '@modules/renderer/engine/hearth/core/ProgrammableStage.js';
+import { BackendResources } from './Backend.Resources.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
-import { WeakMemo } from '@modules/renderer/engine/hearth/WeakMemo.js';
+import { WeakMemo } from '@modules/renderer/engine/hearth/memo/WeakMemo.js';
 
 export class Backend {
   hearth: Hearth;
@@ -54,7 +54,7 @@ export class Backend {
   pipelines: BackendPipelines;
   textures: BackendTextures;
   resolveBufferMap: Map<number, GPUBuffer>;
-  resources: BackendResourceManager;
+  resources: BackendResources;
 
   constructor(hearth: Hearth) {
     this.hearth = hearth;
@@ -64,7 +64,7 @@ export class Backend {
     this.colorBuffer = null;
     this.renderPassDescriptor = null;
 
-    this.resources = new BackendResourceManager(this);
+    this.resources = new BackendResources(this);
     this.utilities = new BackendUtilities(this);
     this.attributes = new BackendAttributes(this);
     this.bindings = new BackendBindings(this);

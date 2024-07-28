@@ -9,7 +9,7 @@ const names = {
   shader: 'mipmap',
 };
 
-export class TexturePassMipmapShader {
+export class BackendTexturePassMipmapShader {
   samplerLinear: GPUSampler;
   samplerNearest: GPUSampler;
   shader: GPUShaderModule;

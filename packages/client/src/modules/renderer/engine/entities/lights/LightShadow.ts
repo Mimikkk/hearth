@@ -5,7 +5,7 @@ import { Vec4 } from '../../math/Vec4.js';
 import { Frustum } from '../../math/Frustum.js';
 import { Camera } from '@modules/renderer/engine/entities/cameras/Camera.js';
 import { Light } from './Light.js';
-import { RenderTarget } from '@modules/renderer/engine/hearth/RenderTarget.js';
+import { RenderTarget } from '@modules/renderer/engine/hearth/core/RenderTarget.js';
 
 const _projScreenMatrix = new Mat4();
 const _lightPositionWorld = Vec3.new();

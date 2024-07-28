@@ -1,7 +1,7 @@
 import { Backend } from '@modules/renderer/engine/hearth/Backend.js';
-import { ResourceMap } from '@modules/renderer/engine/hearth/ResourceMap.js';
+import { ResourceMap } from '@modules/renderer/engine/hearth/memo/ResourceMap.js';
 
-export class BackendResourceManager {
+export class BackendResources {
   shaders: ResourceMap<GPUShaderModule, GPUShaderModuleDescriptor>;
   textures: ResourceMap<GPUTexture, GPUTextureDescriptor>;
   samplers: ResourceMap<GPUSampler, GPUSamplerDescriptor>;

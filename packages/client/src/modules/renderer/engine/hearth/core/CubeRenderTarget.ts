@@ -1,5 +1,5 @@
 import { CubeTexture } from '@modules/renderer/engine/entities/textures/CubeTexture.js';
-import { RenderTarget } from '../RenderTarget.js';
+import { RenderTarget } from './RenderTarget.js';
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { CubeMapping, DepthTextureFormat } from '@modules/renderer/engine/constants.js';
 

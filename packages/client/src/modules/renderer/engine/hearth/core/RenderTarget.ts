@@ -8,8 +8,8 @@ import {
   TextureDataType,
   TextureFormat,
   Wrapping,
-} from '../constants.js';
-import { Vec4 } from '../math/Vec4.js';
+} from '../../constants.js';
+import { Vec4 } from '../../math/Vec4.js';
 import { Source } from '@modules/renderer/engine/entities/textures/Source.js';
 
 export class RenderTarget {
@@ -122,8 +122,6 @@ export class RenderTarget {
       this.textures[i] = source.textures[i].clone();
       this.textures[i].isRenderTargetTexture = true;
     }
-
-
 
     const image = Object.assign({}, source.texture.image);
     this.texture.source = new Source(image);

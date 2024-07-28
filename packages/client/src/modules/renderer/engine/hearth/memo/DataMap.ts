@@ -1,3 +1,4 @@
+/** @deprecated - remove inherited pattern */
 export class DataMap<K extends WeakKey, V extends {}> {
   data: WeakMap<K, V> = new WeakMap();
 

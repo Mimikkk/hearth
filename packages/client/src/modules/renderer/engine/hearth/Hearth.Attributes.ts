@@ -1,4 +1,4 @@
-import DataMap from './DataMap.js';
+import DataMap from './memo/DataMap.js';
 import { AttributeLocation } from './constants.js';
 import { Attribute, BufferUse } from '@modules/renderer/engine/engine.js';
 import type { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';

@@ -1,5 +1,5 @@
-import ChainMap from './ChainMap.js';
-import RenderObject from './RenderObject.js';
+import ChainMap from './memo/ChainMap.js';
+import RenderObject from './core/RenderObject.js';
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import RenderContext from '@modules/renderer/engine/hearth/core/RenderContext.js';
 import LightsNode from '@modules/renderer/engine/nodes/lighting/LightsNode.js';

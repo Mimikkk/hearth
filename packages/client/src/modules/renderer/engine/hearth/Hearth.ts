@@ -8,7 +8,7 @@ import { HearthContexts } from '@modules/renderer/engine/hearth/Hearth.Contexts.
 import { HearthBackground } from '@modules/renderer/engine/hearth/Hearth.Background.js';
 import { Scene } from '@modules/renderer/engine/entities/scenes/Scene.js';
 import { Camera } from '@modules/renderer/engine/entities/cameras/Camera.js';
-import ClippingContext from '@modules/renderer/engine/hearth/ClippingContext.js';
+import ClippingContext from '@modules/renderer/engine/hearth/core/ClippingContext.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 import {
@@ -26,7 +26,7 @@ import {
   Texture,
 } from '@modules/renderer/engine/engine.js';
 import { GPUFeature, GPUTextureFormatType } from '@modules/renderer/engine/hearth/constants.js';
-import { RenderItem, RenderList, SortFn } from '@modules/renderer/engine/hearth/RenderList.js';
+import { RenderItem, RenderList, SortFn } from '@modules/renderer/engine/hearth/core/RenderList.js';
 import { ComputeNode } from '@modules/renderer/engine/nodes/gpgpu/ComputeNode.js';
 import { RenderContext } from '@modules/renderer/engine/hearth/core/RenderContext.js';
 import { LightsNode } from '@modules/renderer/engine/nodes/lighting/LightsNode.js';

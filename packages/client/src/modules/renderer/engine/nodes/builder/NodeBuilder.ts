@@ -29,8 +29,8 @@ import {
   stack,
   UniformNode,
 } from '@modules/renderer/engine/nodes/Nodes.js';
-import { getFormat } from '@modules/renderer/engine/hearth/Backend.textures.js';
-import ChainMap from '@modules/renderer/engine/hearth/ChainMap.js';
+import { getFormat } from '@modules/renderer/engine/hearth/Backend.Textures.js';
+import ChainMap from '@modules/renderer/engine/hearth/memo/ChainMap.js';
 import NodeKeywords from '@modules/renderer/engine/nodes/core/NodeKeywords.js';
 import NodeCache from '@modules/renderer/engine/nodes/core/NodeCache.js';
 import NodeAttribute from '@modules/renderer/engine/nodes/core/NodeAttribute.js';
@@ -49,7 +49,7 @@ import EnvironmentNode from '@modules/renderer/engine/nodes/lighting/Environment
 import FogNode from '@modules/renderer/engine/nodes/fog/FogNode.js';
 import ToneMappingNode from '@modules/renderer/engine/nodes/display/ToneMappingNode.js';
 import { Node } from '@modules/renderer/engine/nodes/core/Node.js';
-import ClippingContext from '@modules/renderer/engine/hearth/ClippingContext.js';
+import ClippingContext from '@modules/renderer/engine/hearth/core/ClippingContext.js';
 import { BuildStage, BuiltinType, ShaderStage, TypeName } from './NodeBuilder.types.js';
 import { PolyfillMap, PolyfillName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.polyfills.js';
 import StructTypeNode from '@modules/renderer/engine/nodes/core/StructTypeNode.js';

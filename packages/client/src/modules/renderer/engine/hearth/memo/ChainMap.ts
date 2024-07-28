@@ -1,5 +1,6 @@
 export type WeakChain<K extends WeakKey, V> = WeakMap<K, WeakChain<K, V> | V>;
 
+/** @deprecated To remove, why */
 export default class ChainMap<K extends WeakKey, V extends {}> {
   weakMap: WeakChain<K, V>;
 

@@ -1,5 +1,5 @@
 import Pipeline from './Pipeline.js';
-import ProgrammableStage from '@modules/renderer/engine/hearth/ProgrammableStage.js';
+import ProgrammableStage from '@modules/renderer/engine/hearth/core/ProgrammableStage.js';
 
 export class ComputePipeline extends Pipeline {
   declare isComputePipeline: true;

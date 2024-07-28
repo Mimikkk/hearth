@@ -2,7 +2,7 @@ import { getValueType } from '@modules/renderer/engine/nodes/core/NodeUtils.js';
 import { asConstNode } from '@modules/renderer/engine/nodes/shadernode/utils.js';
 import { tslFn } from '@modules/renderer/engine/nodes/shadernode/tslFn.js';
 import { handlers } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.handlers.js';
-import { WeakMemo } from '@modules/renderer/engine/hearth/WeakMemo.js';
+import { WeakMemo } from '@modules/renderer/engine/hearth/memo/WeakMemo.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { Node } from '@modules/renderer/engine/nodes/core/Node.js';
 

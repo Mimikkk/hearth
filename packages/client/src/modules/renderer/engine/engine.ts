@@ -60,7 +60,7 @@ export { AnimationObjectGroup } from './animation/AnimationObjectGroup.js';
 export { AnimationMixer } from './animation/AnimationMixer.js';
 export { AnimationClip } from './animation/AnimationClip.js';
 export { AnimationAction } from './animation/AnimationAction.js';
-export { RenderTarget } from '@modules/renderer/engine/hearth/RenderTarget.js';
+export { RenderTarget } from '@modules/renderer/engine/hearth/core/RenderTarget.js';
 export { Geometry } from './core/Geometry.js';
 export { Buffer } from './core/Buffer.js';
 export * from './core/Attribute.js';

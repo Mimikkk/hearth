@@ -1,8 +1,8 @@
-import DataMap from './DataMap.js';
+import DataMap from './memo/DataMap.js';
 import { AttributeLocation } from './constants.js';
 import { Attribute, WireframeGeometry } from '@modules/renderer/engine/engine.js';
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
-import RenderObject from '@modules/renderer/engine/hearth/RenderObject.js';
+import RenderObject from '@modules/renderer/engine/hearth/core/RenderObject.js';
 
 function getWireframeVersion(geometry: WireframeGeometry): number {
   return geometry.index !== null ? geometry.index.version : geometry.attributes.position.version;

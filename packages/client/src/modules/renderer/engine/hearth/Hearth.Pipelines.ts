@@ -1,12 +1,12 @@
-import DataMap from './DataMap.js';
-import RenderPipeline from './RenderPipeline.js';
-import ComputePipeline from './ComputePipeline.js';
-import ProgrammableStage from './ProgrammableStage.js';
+import DataMap from './memo/DataMap.js';
+import RenderPipeline from './core/RenderPipeline.js';
+import ComputePipeline from './core/ComputePipeline.js';
+import ProgrammableStage from './core/ProgrammableStage.js';
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import ComputeNode from '@modules/renderer/engine/nodes/gpgpu/ComputeNode.js';
 import Binding from '@modules/renderer/engine/hearth/bindings/Binding.js';
-import RenderObject from '@modules/renderer/engine/hearth/RenderObject.js';
-import Pipeline from '@modules/renderer/engine/hearth/Pipeline.js';
+import RenderObject from '@modules/renderer/engine/hearth/core/RenderObject.js';
+import Pipeline from '@modules/renderer/engine/hearth/core/Pipeline.js';
 import { ShaderStage } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 export class HearthPipelines extends DataMap<any, any> {

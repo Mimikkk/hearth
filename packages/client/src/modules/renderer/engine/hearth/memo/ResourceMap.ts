@@ -20,6 +20,7 @@ class ResourceUniqueError extends Error {
   }
 }
 
+/** @deprecated to replace with WeakMemo, storing values within maps block garbage collection. */
 export class ResourceMap<Value, Descriptor, Key extends string = string> {
   readonly create: CreateFn<Key, Value, Label<Key, Descriptor>>;
   readonly #dispose?: DisposeFn<Value>;

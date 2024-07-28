@@ -1,5 +1,5 @@
-import ChainMap from './ChainMap.js';
-import RenderList from './RenderList.js';
+import ChainMap from './memo/ChainMap.js';
+import RenderList from './core/RenderList.js';
 import { Scene } from '@modules/renderer/engine/entities/scenes/Scene.js';
 import { Camera } from '@modules/renderer/engine/entities/cameras/Camera.js';
 

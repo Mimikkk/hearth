@@ -24,8 +24,8 @@ import {
   StencilOperation,
 } from '../engine.js';
 import type { Backend } from '@modules/renderer/engine/hearth/Backend.js';
-import RenderObject from '@modules/renderer/engine/hearth/RenderObject.js';
-import ComputePipeline from '@modules/renderer/engine/hearth/ComputePipeline.js';
+import RenderObject from '@modules/renderer/engine/hearth/core/RenderObject.js';
+import ComputePipeline from '@modules/renderer/engine/hearth/core/ComputePipeline.js';
 import Binding from '@modules/renderer/engine/hearth/bindings/Binding.js';
 import { TypedArray } from '@modules/renderer/engine/math/MathUtils.js';
 

@@ -27,7 +27,7 @@ import {
   Wrapping,
 } from '../engine.js';
 
-import { BackendTexturePass } from './Backend.texturePass.js';
+import { BackendTexturePass } from './Backend.TexturePass.js';
 import { Backend } from '@modules/renderer/engine/hearth/Backend.js';
 import StorageTexture from '@modules/renderer/engine/entities/textures/StorageTexture.js';
 import { TypedArrayConstructor } from '@modules/renderer/engine/math/MathUtils.js';

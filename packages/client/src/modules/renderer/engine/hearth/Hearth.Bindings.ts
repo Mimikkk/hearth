@@ -1,7 +1,7 @@
-import DataMap from './DataMap.js';
+import DataMap from './memo/DataMap.js';
 import { AttributeLocation } from './constants.js';
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
-import RenderObject from '@modules/renderer/engine/hearth/RenderObject.js';
+import RenderObject from '@modules/renderer/engine/hearth/core/RenderObject.js';
 import Binding from '@modules/renderer/engine/hearth/bindings/Binding.js';
 import { BindingSampledTexture } from '@modules/renderer/engine/hearth/bindings/BindingSampledTexture.js';
 import BindingUniformBuffer from '@modules/renderer/engine/hearth/bindings/BindingUniformBuffer.js';

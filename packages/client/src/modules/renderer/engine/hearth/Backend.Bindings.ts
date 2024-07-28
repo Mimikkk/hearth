@@ -3,8 +3,8 @@ import {
   GPUTextureAspectType,
   GPUTextureSampleTypeType,
   GPUTextureViewDimensionType,
-} from '../constants.js';
-import { DataArrayTexture, DataTexture, DepthTexture, TextureDataType, VideoTexture } from '../../engine.js';
+} from './constants.js';
+import { DataArrayTexture, DataTexture, DepthTexture, TextureDataType, VideoTexture } from '../engine.js';
 import { Backend } from '@modules/renderer/engine/hearth/Backend.js';
 import Binding from '@modules/renderer/engine/hearth/bindings/Binding.js';
 import BindingUniformBuffer from '@modules/renderer/engine/hearth/bindings/BindingUniformBuffer.js';

@@ -7,8 +7,8 @@ import {
 } from './constants.js';
 
 import { Backend } from '@modules/renderer/engine/hearth/Backend.js';
-import { TexturePassMipmapShader } from '@modules/renderer/engine/hearth/TexturePass.MipmapShader.js';
-import { Memo } from '@modules/renderer/engine/hearth/Memo.js';
+import { BackendTexturePassMipmapShader } from '@modules/renderer/engine/hearth/Backend.TexturePass.MipmapShader.js';
+import { Memo } from '@modules/renderer/engine/hearth/memo/Memo.js';
 
 const encodePass = (
   device: GPUDevice,
@@ -143,10 +143,10 @@ export class BackendTexturePass {
       bindGroupLayouts.remove(`${label}-bind-group`);
     },
   );
-  mipmap: TexturePassMipmapShader;
+  mipmap: BackendTexturePassMipmapShader;
 
   constructor(public backend: Backend) {
-    this.mipmap = new TexturePassMipmapShader(backend);
+    this.mipmap = new BackendTexturePassMipmapShader(backend);
   }
 
   flipY(texture: GPUTexture, descriptor: GPUTextureDescriptor, layer: number): void {

@@ -1,4 +1,4 @@
-import DataMap from './DataMap.js';
+import DataMap from './memo/DataMap.js';
 
 import {
   DepthTexture,

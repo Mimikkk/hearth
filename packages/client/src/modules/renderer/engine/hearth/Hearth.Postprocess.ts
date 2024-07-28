@@ -1,6 +1,5 @@
 import { QuadMesh } from '@modules/renderer/engine/entities/QuadMesh.js';
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
-import { vec4 } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.primitves.js';
 import { NodeMaterial } from '@modules/renderer/engine/nodes/materials/NodeMaterial.js';
 import { Node } from '@modules/renderer/engine/nodes/core/Node.js';
 

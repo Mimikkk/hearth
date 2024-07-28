@@ -1,4 +1,4 @@
-import { LightsNode } from '../nodes/Nodes.js';
+import { LightsNode } from '../../nodes/Nodes.js';
 import { Light } from '@modules/renderer/engine/entities/lights/Light.js';
 import { Entity } from '@modules/renderer/engine/core/Entity.js';
 import { Geometry } from '@modules/renderer/engine/core/Geometry.js';

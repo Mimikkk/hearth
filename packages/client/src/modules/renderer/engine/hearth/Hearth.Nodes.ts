@@ -1,5 +1,5 @@
-import DataMap from './DataMap.js';
-import ChainMap from './ChainMap.js';
+import DataMap from './memo/DataMap.js';
+import ChainMap from './memo/ChainMap.js';
 import NodeBuilderState from '../nodes/builder/NodeBuilderState.js';
 import {
   Camera,
@@ -31,7 +31,7 @@ import {
   viewportBottomLeft,
 } from '../nodes/Nodes.js';
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
-import RenderObject from '@modules/renderer/engine/hearth/RenderObject.js';
+import RenderObject from '@modules/renderer/engine/hearth/core/RenderObject.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { NodeUniformsGroup } from '@modules/renderer/engine/nodes/builder/NodeStorageBuffer.js';
 

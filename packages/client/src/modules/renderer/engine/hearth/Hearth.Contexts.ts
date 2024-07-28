@@ -1,8 +1,8 @@
-import ChainMap from './ChainMap.js';
+import ChainMap from './memo/ChainMap.js';
 import RenderContext from './core/RenderContext.js';
 import { Scene } from '@modules/renderer/engine/entities/scenes/Scene.js';
 import { Camera } from '@modules/renderer/engine/entities/cameras/Camera.js';
-import { RenderTarget } from '@modules/renderer/engine/hearth/RenderTarget.js';
+import { RenderTarget } from '@modules/renderer/engine/hearth/core/RenderTarget.js';
 import { Entity } from '@modules/renderer/engine/core/Entity.js';
 
 export class HearthContexts {

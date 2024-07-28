@@ -1,7 +1,7 @@
 import { Attribute } from '../engine.js';
 import { Backend } from '@modules/renderer/engine/hearth/Backend.js';
-import RenderObject from '@modules/renderer/engine/hearth/RenderObject.js';
-import { Memo } from '@modules/renderer/engine/hearth/Memo.js';
+import RenderObject from '@modules/renderer/engine/hearth/core/RenderObject.js';
+import { Memo } from '@modules/renderer/engine/hearth/memo/Memo.js';
 
 export class BackendAttributes {
   constructor(public backend: Backend) {}

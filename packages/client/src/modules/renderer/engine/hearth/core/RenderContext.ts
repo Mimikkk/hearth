@@ -1,5 +1,5 @@
 import { Color, DepthTexture, RenderTarget, Texture, Vec4 } from '@modules/renderer/engine/engine.js';
-import ClippingContext from '@modules/renderer/engine/hearth/ClippingContext.js';
+import ClippingContext from '@modules/renderer/engine/hearth/core/ClippingContext.js';
 
 let id = 0;
 
