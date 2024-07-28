@@ -70,7 +70,6 @@ const refreshEditorView = async () => {
 };
 const refreshResultView = () => {
   if (!builder) return;
-  console.log('refresh', builder.fragmentShader);
   resultView.setValue(builder.fragmentShader);
 };
 

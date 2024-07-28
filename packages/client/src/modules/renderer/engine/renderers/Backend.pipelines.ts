@@ -274,7 +274,7 @@ class BackendPipelines {
     if (color !== undefined && alpha !== undefined) {
       return { color, alpha };
     } else {
-      console.error('engine.WebGPURenderer: Invalid blending: ', blending);
+      console.error('Renderer: Invalid blending: ', blending);
     }
   }
 
@@ -337,7 +337,7 @@ class BackendPipelines {
         break;
 
       default:
-        console.error('engine.WebGPURenderer: Blend factor not supported.', blend);
+        console.error('Renderer: Blend factor not supported.', blend);
     }
 
     return blendFactor;
@@ -382,7 +382,7 @@ class BackendPipelines {
         break;
 
       default:
-        console.error('engine.WebGPURenderer: Invalid stencil function.', stencilFunc);
+        console.error('Renderer: Invalid stencil function.', stencilFunc);
     }
 
     return stencilCompare;
@@ -425,7 +425,7 @@ class BackendPipelines {
         break;
 
       default:
-        console.error('engine.WebGPURenderer: Invalid stencil operation.', stencilOperation);
+        console.error('Renderer: Invalid stencil operation.', stencilOperation);
     }
 
     return stencilOperation;
@@ -456,7 +456,7 @@ class BackendPipelines {
         break;
 
       default:
-        console.error('engine.WebGPUPipelineUtils: Blend equation not supported.', blendEquation);
+        console.error('PipelineUtils: Blend equation not supported.', blendEquation);
     }
 
     return blendOperation;
@@ -490,7 +490,7 @@ class BackendPipelines {
         break;
 
       default:
-        console.error('engine.WebGPUPipelineUtils: Unknown material.side value.', material.side);
+        console.error('PipelineUtils: Unknown material.side value.', material.side);
         break;
     }
 
@@ -543,7 +543,7 @@ class BackendPipelines {
           break;
 
         default:
-          console.error('engine.WebGPUPipelineUtils: Invalid depth function.', depthFunc);
+          console.error('PipelineUtils: Invalid depth function.', depthFunc);
       }
     }
 

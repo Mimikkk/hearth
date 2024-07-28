@@ -551,7 +551,7 @@ export class NodeBuilder {
     return this;
   }
 
-  getNodeUniform(uniformNode: NodeUniform, type: TypeName) {
+  getNodeUniform<T>(uniformNode: NodeUniform<T>, type: TypeName) {
     if (type === 'f32') return new FloatNodeUniform(uniformNode);
     if (type === 'vec2') return new Vec2NodeUniform(uniformNode);
     if (type === 'vec3') return new Vec3NodeUniform(uniformNode);
@@ -663,6 +663,7 @@ export class NodeBuilder {
     };
 
     const uniformNode = getUniformFromNode(node, type, shaderStage, name);
+    console.log({ uniformNode });
 
     const nodeData = this.getDataFromNode(node, shaderStage, this.globalCache);
 
@@ -1039,7 +1040,6 @@ export class NodeBuilder {
     const parameters = [];
 
     for (const input of layout.inputs) {
-      console.log({ t: input.type });
       parameters.push(`${input.name}: ${TypeName.repr(input.type)}`);
     }
 
@@ -1497,12 +1497,4 @@ const StageMap: Record<ShaderStage, number> = {
   vertex: GPUShaderStage.VERTEX,
   fragment: GPUShaderStage.FRAGMENT,
   compute: GPUShaderStage.COMPUTE,
-};
-
-const types = new Set();
-const onAdd = value => {
-  if (!types.has(value)) {
-    types.add(value);
-    console.log({ types });
-  }
 };

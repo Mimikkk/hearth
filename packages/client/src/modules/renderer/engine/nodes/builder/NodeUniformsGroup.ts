@@ -1,6 +1,7 @@
 import BindingUniformsGroup from '../../renderers/bindings/BindingUniformsGroup.js';
 import UniformGroupNode from '@modules/renderer/engine/nodes/core/UniformGroupNode.js';
 import { ValueNodeUniform } from '@modules/renderer/engine/nodes/builder/NodeUniform.js';
+import { BindingUniform } from '@modules/renderer/engine/renderers/bindings/BindingUniform.js';
 
 let id = 0;
 
@@ -20,11 +21,11 @@ export class NodeUniformsGroup extends BindingUniformsGroup {
     return this.groupNode.shared;
   }
 
-  getNodes(): ValueNodeUniform[] {
+  getNodes(): BindingUniform[] {
     const nodes = [];
 
     for (const uniform of this.uniforms) {
-      const node = uniform.nodeUniform.node;
+      const node = uniform.uniform.node;
 
       if (!node) throw new Error('NodeUniformsGroup: Uniform has no node.');
 

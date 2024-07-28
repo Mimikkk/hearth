@@ -1,6 +1,6 @@
 import { Color, Mat3, Mat4, Vec2, Vec3, Vec4 } from '@modules/renderer/engine/engine.js';
 
-export abstract class BindingUniform<T> {
+export abstract class BindingUniform<T = any> {
   abstract boundary: number;
   abstract itemSize: number;
   offset: number = 0;

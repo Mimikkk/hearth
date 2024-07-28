@@ -1,18 +1,20 @@
-export class NodeUniform {
-  constructor(name, type, node, needsUpdate = undefined) {
-    this.isNodeUniform = true;
+import UniformNode from '@modules/renderer/engine/nodes/core/UniformNode.js';
 
-    this.name = name;
-    this.type = type;
-    this.node = node.getSelf();
-    this.needsUpdate = needsUpdate;
-  }
+export class NodeUniform<T> {
+  declare isNodeUniform: true;
+
+  constructor(
+    public name: string,
+    public type: any,
+    public node: UniformNode<T>,
+    public needsUpdate?: boolean,
+  ) {}
 
   get value() {
     return this.node.value;
   }
 
-  set value(val) {
+  set value(val: T) {
     this.node.value = val;
   }
 
@@ -24,5 +26,7 @@ export class NodeUniform {
     return this.node.groupNode;
   }
 }
+
+NodeUniform.prototype.isNodeUniform = true;
 
 export default NodeUniform;

@@ -10,6 +10,12 @@ import {
   Vec3NodeUniform,
   Vec4NodeUniform,
 } from '@modules/renderer/engine/nodes/builder/NodeUniform.js';
+import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
+import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
+import { Vec4 } from '@modules/renderer/engine/math/Vec4.js';
+import { Color } from '@modules/renderer/engine/math/Color.js';
+import { Mat3 } from '@modules/renderer/engine/math/Mat3.js';
+import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
 
 class BindingUniformsGroup extends BindingUniformBuffer {
   uniforms: ValueNodeUniform[] = [];
@@ -73,7 +79,7 @@ class BindingUniformsGroup extends BindingUniformBuffer {
     if (uniform instanceof Mat3NodeUniform) return this.updateMat3(uniform);
     if (uniform instanceof Mat4NodeUniform) return this.updateMat4(uniform);
 
-    console.error('engine.WebGPUUniformsGroup: Unsupported uniform type.', uniform);
+    console.error('UniformsGroup: Unsupported uniform type.', uniform);
   }
 
   updateNumber(uniform: FloatNodeUniform): boolean {

@@ -76,7 +76,7 @@ export class FrameStats {
     } else if (object instanceof Line) {
       this.render.lines += instanceCount * (count - 1);
     } else {
-      console.error('engine.WebGPUInfo: Unknown object type.');
+      console.error('Info: Unknown object type.');
     }
   }
 

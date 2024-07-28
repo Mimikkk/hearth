@@ -5,6 +5,7 @@ import { asNode } from '../shadernode/ShaderNodes.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { UniformGroupNode } from '@modules/renderer/engine/nodes/Nodes.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
+import NodeUniform from '@modules/renderer/engine/nodes/core/NodeUniform.js';
 
 export const getConstNodeType = (value?: any | null) =>
   value !== undefined && value !== null
@@ -15,7 +16,7 @@ export class UniformNode<T> extends InputNode<T> {
   static type = 'UniformNode';
   groupNode: UniformGroupNode;
 
-  constructor(value: T, type: TypeName | null = null) {
+  constructor(value: T, type: TypeName) {
     super(value, type);
     this.groupNode = objectGroup;
   }
@@ -45,7 +46,7 @@ export class UniformNode<T> extends InputNode<T> {
     );
 
     const propertyName = builder.getPropertyName(nodeUniform);
-    if (builder.context.label !== undefined) delete builder.context.label;
+    if (builder.context.label) delete builder.context.label;
 
     return builder.format(propertyName, type, output);
   }
@@ -53,7 +54,7 @@ export class UniformNode<T> extends InputNode<T> {
 
 export default UniformNode;
 
-export const uniform = <T>(v: Node | T, maybeType?: TypeName): UniformNode<T> => {
+export const uniform = <T>(v: NodeUniform<T> | T, maybeType?: TypeName): UniformNode<T> => {
   const type = getConstNodeType(maybeType ?? v);
   const value = Node.is(v) ? (v.node?.value ?? v.value) : v;
 
