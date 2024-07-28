@@ -1,21 +1,25 @@
 import UniformNode from '@modules/renderer/engine/nodes/core/UniformNode.js';
+import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
-export class NodeUniform<T> {
+export class Uniform<T> {
   declare isNodeUniform: true;
 
   constructor(
     public name: string,
-    public type: any,
+    public type: TypeName,
     public node: UniformNode<T>,
-    public needsUpdate?: boolean,
   ) {}
+
+  static is(value: any): value is Uniform<any> {
+    return value?.isNodeUniform;
+  }
 
   get value() {
     return this.node.value;
   }
 
-  set value(val: T) {
-    this.node.value = val;
+  set value(value: T) {
+    this.node.value = value;
   }
 
   get id() {
@@ -27,6 +31,6 @@ export class NodeUniform<T> {
   }
 }
 
-NodeUniform.prototype.isNodeUniform = true;
+Uniform.prototype.isNodeUniform = true;
 
-export default NodeUniform;
+export default Uniform;

@@ -1,12 +1,12 @@
 import BindingStorageBuffer from '../../renderers/bindings/BindingStorageBuffer.js';
-import NodeUniform from '@modules/renderer/engine/nodes/core/NodeUniform.js';
+import Uniform from '@modules/renderer/engine/nodes/core/Uniform.js';
 
 let _id = 0;
 
 export class NodeStorageBuffer extends BindingStorageBuffer {
-  nodeUniform: NodeUniform;
+  nodeUniform: Uniform;
 
-  constructor(nodeUniform: NodeUniform) {
+  constructor(nodeUniform: Uniform) {
     super('StorageBuffer_' + _id++, nodeUniform.value);
 
     this.nodeUniform = nodeUniform;

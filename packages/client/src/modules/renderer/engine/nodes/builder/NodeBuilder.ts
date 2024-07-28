@@ -31,21 +31,13 @@ import ChainMap from '@modules/renderer/engine/renderers/ChainMap.js';
 import NodeKeywords from '@modules/renderer/engine/nodes/core/NodeKeywords.js';
 import NodeCache from '@modules/renderer/engine/nodes/core/NodeCache.js';
 import NodeAttribute from '@modules/renderer/engine/nodes/core/NodeAttribute.js';
-import NodeUniform from '@modules/renderer/engine/nodes/core/NodeUniform.js';
+import Uniform from '@modules/renderer/engine/nodes/core/Uniform.js';
 import NodeVar from '@modules/renderer/engine/nodes/core/NodeVar.js';
 import NodeVarying from '@modules/renderer/engine/nodes/core/NodeVarying.js';
 import NodeCode from '@modules/renderer/engine/nodes/core/NodeCode.js';
 import FunctionNode from '@modules/renderer/engine/nodes/code/FunctionNode.js';
 import ParameterNode from '@modules/renderer/engine/nodes/core/ParameterNode.js';
-import {
-  ColorNodeUniform,
-  FloatNodeUniform,
-  Mat3NodeUniform,
-  Mat4NodeUniform,
-  Vec2NodeUniform,
-  Vec3NodeUniform,
-  Vec4NodeUniform,
-} from '@modules/renderer/engine/nodes/builder/NodeUniform.js';
+
 import { NodeMaterials } from '@modules/renderer/engine/nodes/materials/NodeMaterialMap.js';
 import { FeatureMap, FeatureName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.features.js';
 import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
@@ -59,6 +51,7 @@ import { BuildStage, BuiltinType, ShaderStage, TypeMap, TypeName } from './NodeB
 import { PolyfillMap, PolyfillName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.polyfills.js';
 import StructTypeNode from '@modules/renderer/engine/nodes/core/StructTypeNode.js';
 import { WgslFn } from '@modules/renderer/engine/nodes/builder/WgslFn.js';
+import { BindingUniform } from '@modules/renderer/engine/renderers/bindings/BindingUniform.js';
 
 type ParseFn = (source: string) => WgslFn;
 
@@ -551,16 +544,15 @@ export class NodeBuilder {
     return this;
   }
 
-  getNodeUniform<T>(uniformNode: NodeUniform<T>, type: TypeName) {
-    if (type === 'f32') return new FloatNodeUniform(uniformNode);
-    if (type === 'vec2') return new Vec2NodeUniform(uniformNode);
-    if (type === 'vec3') return new Vec3NodeUniform(uniformNode);
-    if (type === 'vec4') return new Vec4NodeUniform(uniformNode);
-    if (type === 'color') return new ColorNodeUniform(uniformNode);
-    if (type === 'mat3') return new Mat3NodeUniform(uniformNode);
-    if (type === 'mat4') return new Mat4NodeUniform(uniformNode);
-
-    throw new Error(`Uniform "${type}" not declared.`);
+  createBindingUniform<T>(uniform: Uniform<T>) {
+    if (uniform.type === TypeName.f32) return new BindingUniform(uniform, 4, 1);
+    if (uniform.type === TypeName.vec2) return new BindingUniform(uniform, 8, 2);
+    if (uniform.type === TypeName.vec3) return new BindingUniform(uniform, 16, 3);
+    if (uniform.type === TypeName.vec4) return new BindingUniform(uniform, 16, 4);
+    if (uniform.type === TypeName.color) return new BindingUniform(uniform, 16, 3);
+    if (uniform.type === TypeName.mat3) return new BindingUniform(uniform, 48, 12);
+    if (uniform.type === TypeName.mat4) return new BindingUniform(uniform, 64, 16);
+    throw new Error(`Uniform "${uniform.type}" not declared.`);
   }
 
   createNodeMaterial(type: string = 'NodeMaterial'): NodeMaterial {
@@ -627,7 +619,7 @@ export class NodeBuilder {
       if (shaderStage === ShaderStage.Vertex) {
         return `vertex.${node.name}`;
       }
-    } else if (node.isNodeUniform === true) {
+    } else if (Uniform.is(node)) {
       const name = node.name;
       const type = node.type;
 
@@ -644,31 +636,28 @@ export class NodeBuilder {
   }
 
   getUniformFromNode(node: Node, type: TypeName, shaderStage: ShaderStage, name: string | null = null): UniformNode {
-    const getUniformFromNode = (node, type, shaderStage = this.shaderStage, name = null) => {
-      const nodeData = this.getDataFromNode(node, shaderStage, this.globalCache);
+    const getUniformFromNode = (node: Node, type: TypeName, shaderStage: ShaderStage, name: string) => {
+      const data = this.getDataFromNode(node, shaderStage, this.globalCache);
 
-      let nodeUniform = nodeData.uniform;
-
-      if (nodeUniform === undefined) {
+      let uniform = data.uniform;
+      if (uniform === undefined) {
         const index = this.uniforms.index++;
 
-        nodeUniform = new NodeUniform(name || 'nodeUniform' + index, type, node);
+        uniform = new Uniform(name || 'nodeUniform' + index, type, node);
 
-        this.uniforms[shaderStage].push(nodeUniform);
-
-        nodeData.uniform = nodeUniform;
+        this.uniforms[shaderStage].push(uniform);
+        data.uniform = uniform;
       }
 
-      return nodeUniform;
+      return uniform;
     };
 
     const uniformNode = getUniformFromNode(node, type, shaderStage, name);
-    console.log({ uniformNode });
 
-    const nodeData = this.getDataFromNode(node, shaderStage, this.globalCache);
+    const nodeData = this.getDataFromNode(node, shaderStage, this.globalCache, null);
 
     if (nodeData.uniformGPU === undefined) {
-      let uniformGPU;
+      let uniform;
 
       const bindings = this.bindings[shaderStage];
 
@@ -694,11 +683,11 @@ export class NodeBuilder {
 
           bindings.push(sampler, texture);
 
-          uniformGPU = [sampler, texture];
+          uniform = [sampler, texture];
         } else {
           bindings.push(texture);
 
-          uniformGPU = [texture];
+          uniform = [texture];
         }
       } else if (type === 'buffer' || type === 'storageBuffer') {
         const bufferClass = type === 'storageBuffer' ? NodeStorageBuffer : NodeUniformBuffer;
@@ -707,7 +696,7 @@ export class NodeBuilder {
 
         bindings.push(buffer);
 
-        uniformGPU = buffer;
+        uniform = buffer;
       } else {
         const group = node.groupNode;
         const groupName = group.name;
@@ -725,12 +714,12 @@ export class NodeBuilder {
           bindings.push(uniformsGroup);
         }
 
-        uniformGPU = this.getNodeUniform(uniformNode, type);
+        uniform = this.createBindingUniform(uniformNode);
 
-        uniformsGroup.add(uniformGPU);
+        uniformsGroup.add(uniform);
       }
 
-      nodeData.uniformGPU = uniformGPU;
+      nodeData.uniformGPU = uniform;
 
       if (shaderStage === ShaderStage.Vertex) {
         this.bindingsOffset[ShaderStage.Fragment] = bindings.length;

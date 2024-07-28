@@ -20,7 +20,7 @@ export { default as NodeCache } from './core/NodeCache.js';
 export { default as NodeCode } from './core/NodeCode.js';
 export { default as NodeFrame } from './core/NodeFrame.js';
 export { default as NodeKeywords } from './core/NodeKeywords.js';
-export { default as NodeUniform } from './core/NodeUniform.js';
+export { default as NodeUniform } from './core/Uniform.js';
 export { default as NodeVar } from './core/NodeVar.js';
 export { default as NodeVarying } from './core/NodeVarying.js';
 export { default as ParameterNode, parameter } from './core/ParameterNode.js';

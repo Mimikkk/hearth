@@ -61,26 +61,26 @@ class BindingUniformsGroup extends BindingUniformBuffer {
     return updated;
   }
 
-  updateByType(uniform: BindingUniform) {
-    const val = uniform.getValue();
+  updateByType(binding: BindingUniform) {
+    const val = binding.uniform.value;
 
-    if (typeof val === 'number') return this.updateNumber(uniform);
-    if (Vec2.is(val)) return this.updateVec2(uniform);
-    if (Vec3.is(val)) return this.updateVec3(uniform);
-    if (Vec4.is(val)) return this.updateVec4(uniform);
-    if (Color.is(val)) return this.updateColor(uniform);
-    if (Mat3.is(val)) return this.updateMat3(uniform);
-    if (Mat4.is(val)) return this.updateMat4(uniform);
+    if (typeof val === 'number') return this.updateNumber(binding);
+    if (Vec2.is(val)) return this.updateVec2(binding);
+    if (Vec3.is(val)) return this.updateVec3(binding);
+    if (Vec4.is(val)) return this.updateVec4(binding);
+    if (Color.is(val)) return this.updateColor(binding);
+    if (Mat3.is(val)) return this.updateMat3(binding);
+    if (Mat4.is(val)) return this.updateMat4(binding);
 
-    console.error('UniformsGroup: Unsupported uniform type.', uniform);
+    console.error('UniformsGroup: Unsupported uniform type.', binding);
   }
 
-  updateNumber(uniform: BindingUniform<number>): boolean {
+  updateNumber(binding: BindingUniform<number>): boolean {
     let updated = false;
 
     const a = this.buffer;
-    const v = uniform.getValue();
-    const offset = uniform.offset;
+    const v = binding.uniform.value;
+    const offset = binding.offset;
 
     if (a[offset] !== v) {
       a[offset] = v;
@@ -90,12 +90,12 @@ class BindingUniformsGroup extends BindingUniformBuffer {
     return updated;
   }
 
-  updateVec2(uniform: BindingUniform<Vec2>): boolean {
+  updateVec2(binding: BindingUniform<Vec2>): boolean {
     let updated = false;
 
     const a = this.buffer;
-    const v = uniform.getValue();
-    const offset = uniform.offset;
+    const v = binding.uniform.value;
+    const offset = binding.offset;
 
     if (a[offset + 0] !== v.x || a[offset + 1] !== v.y) {
       a[offset + 0] = v.x;
@@ -107,12 +107,12 @@ class BindingUniformsGroup extends BindingUniformBuffer {
     return updated;
   }
 
-  updateVec3(uniform: BindingUniform<Vec3>): boolean {
+  updateVec3(binding: BindingUniform<Vec3>): boolean {
     let updated = false;
 
     const a = this.buffer;
-    const v = uniform.getValue();
-    const offset = uniform.offset;
+    const v = binding.uniform.value;
+    const offset = binding.offset;
 
     if (a[offset + 0] !== v.x || a[offset + 1] !== v.y || a[offset + 2] !== v.z) {
       a[offset + 0] = v.x;
@@ -125,12 +125,12 @@ class BindingUniformsGroup extends BindingUniformBuffer {
     return updated;
   }
 
-  updateVec4(uniform: BindingUniform<Vec4>): boolean {
+  updateVec4(binding: BindingUniform<Vec4>): boolean {
     let updated = false;
 
     const a = this.buffer;
-    const v = uniform.getValue();
-    const offset = uniform.offset;
+    const v = binding.uniform.value;
+    const offset = binding.offset;
 
     if (a[offset + 0] !== v.x || a[offset + 1] !== v.y || a[offset + 2] !== v.z || a[offset + 4] !== v.w) {
       a[offset + 0] = v.x;
@@ -144,12 +144,12 @@ class BindingUniformsGroup extends BindingUniformBuffer {
     return updated;
   }
 
-  updateColor(uniform: BindingUniform<Color>): boolean {
+  updateColor(binding: BindingUniform<Color>): boolean {
     let updated = false;
 
     const a = this.buffer;
-    const c = uniform.getValue();
-    const offset = uniform.offset;
+    const c = binding.uniform.value;
+    const offset = binding.offset;
 
     if (a[offset + 0] !== c.r || a[offset + 1] !== c.g || a[offset + 2] !== c.b) {
       a[offset + 0] = c.r;
@@ -162,12 +162,12 @@ class BindingUniformsGroup extends BindingUniformBuffer {
     return updated;
   }
 
-  updateMat3(uniform: BindingUniform<Mat3>): boolean {
+  updateMat3(binding: BindingUniform<Mat3>): boolean {
     let updated = false;
 
     const a = this.buffer;
-    const e = uniform.getValue().elements;
-    const offset = uniform.offset;
+    const e = binding.uniform.value.elements;
+    const offset = binding.offset;
 
     if (
       a[offset + 0] !== e[0] ||
@@ -196,12 +196,12 @@ class BindingUniformsGroup extends BindingUniformBuffer {
     return updated;
   }
 
-  updateMat4(uniform: BindingUniform<Mat4>): boolean {
+  updateMat4(binding: BindingUniform<Mat4>): boolean {
     let updated = false;
 
     const a = this.buffer;
-    const e = uniform.getValue().elements;
-    const offset = uniform.offset;
+    const e = binding.uniform.value.elements;
+    const offset = binding.offset;
 
     if (!arraysEqual(a, e, offset)) {
       a.set(e, offset);
