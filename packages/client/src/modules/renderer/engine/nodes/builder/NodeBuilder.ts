@@ -364,7 +364,7 @@ export class NodeBuilder {
     return TypeName.withComponent(type, TypeName.i32);
   }
 
-  addStack(): void {
+  addStack(): StackNode {
     this.stack = stack(this.stack);
 
     this.stacks.push(NodeStack.get() || this.stack);
@@ -373,11 +373,11 @@ export class NodeBuilder {
     return this.stack;
   }
 
-  removeStack(): void {
+  removeStack(): StackNode {
     const lastStack = this.stack;
-    this.stack = lastStack.parent;
+    this.stack = lastStack.parent!;
 
-    NodeStack.set(this.stacks.pop());
+    NodeStack.set(this.stacks.pop()!);
 
     return lastStack;
   }

@@ -13,7 +13,7 @@ export class StackNode extends Node {
   _currentCond: CondNode | null;
   declare isStackNode: boolean;
 
-  constructor(public parent: Node | null = null) {
+  constructor(public parent: StackNode | null = null) {
     super();
 
     this.nodes = [];
