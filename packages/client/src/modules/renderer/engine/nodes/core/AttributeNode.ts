@@ -28,7 +28,7 @@ export class AttributeNode extends Node {
 
       if (builder.hasGeometryAttribute(name)) {
         const attribute = builder.geometry!.getAttribute(name);
-        type = builder.getTypeFromAttribute(attribute);
+        type = TypeName.ofAttribute(attribute);
       } else {
         type = TypeName.vec3;
       }
@@ -44,7 +44,7 @@ export class AttributeNode extends Node {
 
     if (hasAttribute) {
       const attribute = builder.geometry!.getAttribute(name);
-      const attributeType = builder.getTypeFromAttribute(attribute);
+      const attributeType = TypeName.ofAttribute(attribute);
 
       const nodeAttribute = builder.getAttribute(name, attributeType);
 

@@ -2,7 +2,7 @@ import InputNode from '../core/InputNode.js';
 import { varying } from '../core/VaryingNode.js';
 import { addNodeElement, asNode } from '../shadernode/ShaderNodes.js';
 import { Buffer, BufferAttribute, BufferUse } from '@modules/renderer/engine/engine.js';
-import { ShaderStage } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
+import { ShaderStage, TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { BufferStep } from '@modules/renderer/engine/renderers/constants.js';
 import BufferNode from '@modules/renderer/engine/nodes/accessors/BufferNode.js';
 
@@ -32,7 +32,7 @@ export class BufferAttributeNode extends InputNode {
 
   getNodeType(builder) {
     if (this.bufferType === null) {
-      this.bufferType = builder.getTypeFromAttribute(this.attribute);
+      this.bufferType = TypeName.ofAttribute(this.attribute);
     }
 
     return this.bufferType;

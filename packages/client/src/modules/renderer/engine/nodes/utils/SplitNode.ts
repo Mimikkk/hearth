@@ -27,7 +27,7 @@ class SplitNode extends Node {
   }
 
   getComponentType(builder) {
-    return builder.getComponentType(this.node.getNodeType(builder));
+    return TypeName.component(this.node.getNodeType(builder));
   }
 
   getNodeType(builder) {

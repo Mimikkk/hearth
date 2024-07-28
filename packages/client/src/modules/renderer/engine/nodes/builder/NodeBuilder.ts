@@ -287,7 +287,7 @@ export class NodeBuilder {
 
     const typeLength = this.getTypeLength(type);
 
-    const componentType = this.getComponentType(type);
+    const componentType = TypeName.component(type);
 
     const generateConst = value => this.generateConst(componentType, value);
 
@@ -338,17 +338,9 @@ export class NodeBuilder {
     return /mat\d/.test(type);
   }
 
-  getComponentType(type: TypeName): TypeName {
-    return TypeName.component(type);
-  }
-
   getVectorType(type: TypeName): TypeName {
     if (TypeName.convertibleToVec(type)) return TypeName.vec(type);
     return type;
-  }
-
-  getTypeFromAttribute(attribute: BufferAttribute): TypeName {
-    return TypeName.ofAttribute(attribute);
   }
 
   getTypeLength(type: TypeName): number {
@@ -708,7 +700,7 @@ export class NodeBuilder {
     if (fromTypeLength > toTypeLength) {
       return this.format(
         `${snippet}.${'xyz'.slice(0, toTypeLength)}`,
-        TypeName.ofSize(toTypeLength, this.getComponentType(fromType)),
+        TypeName.ofSize(toTypeLength, TypeName.component(fromType)),
         toType,
       );
     }
@@ -722,7 +714,7 @@ export class NodeBuilder {
     }
 
     if (fromTypeLength === 1 && toTypeLength > 1 && fromType[0] !== toType[0]) {
-      snippet = `${this.getType(this.getComponentType(toType))}(${snippet})`;
+      snippet = `${this.getType(TypeName.component(toType))}(${snippet})`;
     }
 
     return `${this.getType(toType)}(${snippet})`;
