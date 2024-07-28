@@ -94,10 +94,10 @@ const vector1 = Vec3.new();
 const vec2 = Vec3.new();
 const vec3 = Vec3.new();
 
-const renderer = await Hearth.as({ antialias: true });
-renderer.animation.loop = animate;
-renderer.parameters.toneMapping = ToneMapping.ACESFilmic;
-container.appendChild(renderer.parameters.canvas);
+const hearth = await Hearth.as({ antialias: true });
+hearth.animation.loop = animate;
+hearth.parameters.toneMapping = ToneMapping.ACESFilmic;
+container.appendChild(hearth.parameters.canvas);
 
 document.addEventListener('keydown', event => {
   keyStates[event.code] = true;
@@ -133,7 +133,7 @@ function onWindowResize() {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
 
-  renderer.setSize(window.innerWidth, window.innerHeight);
+  hearth.setSize(window.innerWidth, window.innerHeight);
 }
 
 function throwBall() {
@@ -142,8 +142,6 @@ function throwBall() {
   camera.getWorldDirection(playerDirection);
 
   sphere.collider.center.from(playerCollider.end).addScaled(playerDirection, playerCollider.radius * 1.5);
-
-
 
   const impulse = 15 + 30 * (1 - Math.exp((mouseTime - performance.now()) * 0.001));
 
@@ -178,7 +176,6 @@ function updatePlayer(deltaTime: number) {
   if (!playerOnFloor) {
     playerVelocity.y -= GRAVITY * deltaTime;
 
-
     damping *= 0.1;
   }
 
@@ -199,8 +196,6 @@ function playerSphereCollision(sphere: { collider: Sphere; velocity: Vec3 }) {
 
   const r = playerCollider.radius + sphere.collider.radius;
   const r2 = r * r;
-
-
 
   for (const point of [playerCollider.start, playerCollider.end, center]) {
     const d2 = point.distanceSqTo(sphere_center);
@@ -293,7 +288,6 @@ function getSideVector() {
 }
 
 function controls(deltaTime: number) {
-
   const speedDelta = deltaTime * (playerOnFloor ? 25 : 8);
 
   if (keyStates['KeyW']) {
@@ -367,5 +361,5 @@ function animate() {
     teleportPlayerIfOob();
   }
 
-  renderer.render(scene, camera);
+  hearth.render(scene, camera);
 }

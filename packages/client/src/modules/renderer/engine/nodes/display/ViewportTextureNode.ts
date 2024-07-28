@@ -27,8 +27,8 @@ class ViewportTextureNode extends TextureNode {
   }
 
   updateBefore(frame: NodeFrame): void {
-    const renderer = frame.renderer;
-    renderer.getDrawSize(_size);
+    const hearth = frame.hearth;
+    hearth.getDrawSize(_size);
     ``;
     const framebufferTexture = this.value;
     if (framebufferTexture.image.width !== _size.width || framebufferTexture.image.height !== _size.height) {
@@ -40,7 +40,7 @@ class ViewportTextureNode extends TextureNode {
     const currentGenerateMipmaps = framebufferTexture.generateMipmaps;
     framebufferTexture.generateMipmaps = this.generateMipmaps;
 
-    renderer.readFramebuffer(framebufferTexture);
+    hearth.readFramebuffer(framebufferTexture);
 
     framebufferTexture.generateMipmaps = currentGenerateMipmaps;
   }

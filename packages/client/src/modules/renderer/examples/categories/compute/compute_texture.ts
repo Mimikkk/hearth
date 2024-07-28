@@ -14,7 +14,7 @@ import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import StorageTexture from '@modules/renderer/engine/entities/textures/StorageTexture.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
-let camera, scene, renderer;
+let camera, scene, hearth;
 
 await init();
 render();
@@ -26,21 +26,15 @@ async function init() {
 
   scene = new Engine.Scene();
 
-
-
   const width = 512,
     height = 512;
 
   const storageTexture = new StorageTexture(width, height);
 
-
-
   const computeTexture = tslFn(({ storageTexture }) => {
     const posX = instanceIndex.remainder(width);
     const posY = instanceIndex.div(width);
     const indexUV = uvec2(posX, posY);
-
-
 
     const x = f32(posX).div(50.0);
     const y = f32(posY).div(50.0);
@@ -58,8 +52,6 @@ async function init() {
     textureStore(storageTexture, indexUV, vec4(r, g, b, 1));
   });
 
-
-
   const computeNode = computeTexture({ storageTexture }).compute(width * height);
 
   const material = new MeshBasicNodeMaterial({ color: 0x00ff00 });
@@ -68,15 +60,14 @@ async function init() {
   const plane = new Engine.Mesh(new Engine.PlaneGeometry(1, 1), material);
   scene.add(plane);
 
-  renderer = await Hearth.as();
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  document.body.appendChild(renderer.parameters.canvas);
+  hearth = await Hearth.as();
+  hearth.setPixelRatio(window.devicePixelRatio);
+  hearth.setSize(window.innerWidth, window.innerHeight);
+  document.body.appendChild(hearth.parameters.canvas);
 
-
-  renderer.compute(computeNode);
-  useWindowResizer(renderer, camera, () => {
-    renderer.setSize(window.innerWidth, window.innerHeight);
+  hearth.compute(computeNode);
+  useWindowResizer(hearth, camera, () => {
+    hearth.setSize(window.innerWidth, window.innerHeight);
 
     const aspect = window.innerWidth / window.innerHeight;
 
@@ -92,5 +83,5 @@ async function init() {
 }
 
 function render() {
-  renderer.render(scene, camera);
+  hearth.render(scene, camera);
 }

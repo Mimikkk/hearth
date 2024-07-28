@@ -16,21 +16,21 @@ import RenderList from '@modules/renderer/engine/hearth/RenderList.js';
 const _clearColor = Color.new(0, 0, 0, 1);
 
 export class HearthBackground extends DataMap<any, any> {
-  constructor(public renderer: Hearth) {
+  constructor(public hearth: Hearth) {
     super();
   }
 
   update(scene: Scene, renderList: RenderList, renderContext: RenderContext) {
-    const renderer = this.renderer;
-    const background = this.renderer.nodes.getBackgroundNode(scene) || scene.background;
+    const hearth = this.hearth;
+    const background = this.hearth.nodes.getBackgroundNode(scene) || scene.background;
 
     let forceClear = false;
 
     if (background === null) {
-      renderer._clearColor.getRGB(_clearColor, this.renderer.currentColorSpace);
-      _clearColor.a = renderer._clearColor.a;
+      hearth._clearColor.getRGB(_clearColor, this.hearth.currentColorSpace);
+      _clearColor.a = hearth._clearColor.a;
     } else if (background.isColor === true) {
-      background.getRGB(_clearColor, this.renderer.currentColorSpace);
+      background.getRGB(_clearColor, this.hearth.currentColorSpace);
       _clearColor.a = 1;
 
       forceClear = true;
@@ -38,7 +38,7 @@ export class HearthBackground extends DataMap<any, any> {
       const sceneData = this.get(scene);
       const backgroundNode = background;
 
-      _clearColor.from(renderer._clearColor);
+      _clearColor.from(hearth._clearColor);
 
       let backgroundMesh = sceneData.backgroundMesh;
 
@@ -63,7 +63,7 @@ export class HearthBackground extends DataMap<any, any> {
         sceneData.backgroundMesh = backgroundMesh = new Mesh(new SphereGeometry(1, 32, 32), nodeMaterial);
         backgroundMesh.frustumCulled = false;
 
-        backgroundMesh.onBeforeRender = function (renderer: Hearth, scene: Scene, camera: Camera) {
+        backgroundMesh.onBeforeRender = function (hearth: Hearth, scene: Scene, camera: Camera) {
           this.matrixWorld.fromMat4Position(camera.matrixWorld);
         };
       }
@@ -83,7 +83,7 @@ export class HearthBackground extends DataMap<any, any> {
       console.error('engine.Renderer: Unsupported background configuration.', background);
     }
 
-    if (renderer.parameters.autoClear || forceClear) {
+    if (hearth.parameters.autoClear || forceClear) {
       _clearColor.scale(_clearColor.a);
 
       const clearColorValue = renderContext.clearColorValue;
@@ -93,12 +93,12 @@ export class HearthBackground extends DataMap<any, any> {
       clearColorValue.b = _clearColor.b;
       clearColorValue.a = _clearColor.a;
 
-      renderContext.depthClearValue = renderer._clearDepth;
-      renderContext.stencilClearValue = renderer._clearStencil;
+      renderContext.depthClearValue = hearth._clearDepth;
+      renderContext.stencilClearValue = hearth._clearStencil;
 
-      renderContext.useClearColor = renderer.parameters.autoClearColor;
-      renderContext.useClearDepth = renderer.parameters.autoClearDepth;
-      renderContext.useClearStencil = renderer.parameters.autoClearStencil;
+      renderContext.useClearColor = hearth.parameters.autoClearColor;
+      renderContext.useClearDepth = hearth.parameters.autoClearDepth;
+      renderContext.useClearStencil = hearth.parameters.autoClearStencil;
     } else {
       renderContext.useClearColor = false;
       renderContext.useClearDepth = false;

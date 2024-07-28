@@ -11,7 +11,7 @@ import { ComputeNode } from '@modules/renderer/engine/nodes/Nodes.js';
 import { NodeUniformsGroup } from '@modules/renderer/engine/nodes/builder/NodeStorageBuffer.js';
 
 export class HearthBindings extends DataMap<any, any> {
-  constructor(public renderer: Hearth) {
+  constructor(public hearth: Hearth) {
     super();
   }
 
@@ -21,13 +21,11 @@ export class HearthBindings extends DataMap<any, any> {
     const data = this.get(renderObject);
 
     if (data.bindings !== bindings) {
-
-
       data.bindings = bindings;
 
       this._init(bindings);
 
-      this.renderer.backend.createBindings(bindings);
+      this.hearth.backend.createBindings(bindings);
     }
 
     return data.bindings;
@@ -37,7 +35,7 @@ export class HearthBindings extends DataMap<any, any> {
     const data = this.get(computeNode);
 
     if (data.bindings === undefined) {
-      const nodeBuilderState = this.renderer.nodes.getForCompute(computeNode);
+      const nodeBuilderState = this.hearth.nodes.getForCompute(computeNode);
 
       const bindings = nodeBuilderState.bindings;
 
@@ -45,7 +43,7 @@ export class HearthBindings extends DataMap<any, any> {
 
       this._init(bindings);
 
-      this.renderer.backend.createBindings(bindings);
+      this.hearth.backend.createBindings(bindings);
     }
 
     return data.bindings;
@@ -62,11 +60,11 @@ export class HearthBindings extends DataMap<any, any> {
   _init(bindings: Binding[]): void {
     for (const binding of bindings) {
       if (binding instanceof BindingSampledTexture) {
-        this.renderer.textures.updateTexture(binding.texture);
+        this.hearth.textures.updateTexture(binding.texture);
       } else if (binding instanceof BindingStorageBuffer) {
         const attribute = binding.attribute;
 
-        this.renderer.attributes.update(attribute, AttributeLocation.Storage);
+        this.hearth.attributes.update(attribute, AttributeLocation.Storage);
       }
     }
   }
@@ -74,11 +72,9 @@ export class HearthBindings extends DataMap<any, any> {
   update(bindings: Binding[]): void {
     let needsBindingsUpdate = false;
 
-
-
     for (const binding of bindings) {
       if (binding instanceof NodeUniformsGroup) {
-        const updated = this.renderer.nodes.updateGroup(binding);
+        const updated = this.hearth.nodes.updateGroup(binding);
 
         if (!updated) continue;
       }
@@ -87,7 +83,7 @@ export class HearthBindings extends DataMap<any, any> {
         const updated = binding.update();
 
         if (updated) {
-          this.renderer.backend.updateBinding(binding);
+          this.hearth.backend.updateBinding(binding);
         }
       } else if (binding instanceof BindingSampledTexture) {
         const texture = binding.texture;
@@ -97,7 +93,7 @@ export class HearthBindings extends DataMap<any, any> {
         const updated = binding.update();
 
         if (updated) {
-          this.renderer.textures.updateTexture(binding.texture);
+          this.hearth.textures.updateTexture(binding.texture);
         }
 
         if (texture instanceof StorageTexture) {
@@ -107,10 +103,10 @@ export class HearthBindings extends DataMap<any, any> {
             textureData.needsMipmap = true;
           } else if (
             texture.generateMipmaps === true &&
-            this.renderer.textures.needsMipmaps(texture) &&
+            this.hearth.textures.needsMipmaps(texture) &&
             textureData.needsMipmap === true
           ) {
-            this.renderer.backend.generateMipmaps(texture);
+            this.hearth.backend.generateMipmaps(texture);
 
             textureData.needsMipmap = false;
           }
@@ -119,7 +115,7 @@ export class HearthBindings extends DataMap<any, any> {
     }
 
     if (needsBindingsUpdate === true) {
-      this.renderer.backend.updateBindings(bindings);
+      this.hearth.backend.updateBindings(bindings);
     }
   }
 }

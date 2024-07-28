@@ -112,7 +112,7 @@ export class AnalyticLightNode extends LightingNode {
 
   updateShadow(frame: NodeFrame): void {
     const { rtt, light } = this;
-    const { renderer, scene } = frame;
+    const { hearth, scene } = frame;
 
     const currentOverrideMaterial = scene.overrideMaterial;
 
@@ -122,22 +122,22 @@ export class AnalyticLightNode extends LightingNode {
 
     light.shadow.updateMatrices(light);
 
-    const currentRenderTarget = renderer.target;
-    const currentRenderObjectFunction = renderer._renderObjectFn;
+    const currentRenderTarget = hearth.target;
+    const currentRenderObjectFunction = hearth._renderObjectFn;
 
-    renderer._renderObjectFn = (object, ...params) => {
+    hearth._renderObjectFn = (object, ...params) => {
       if (object.castShadow === true) {
-        renderer.renderObject(object, ...params);
+        hearth.renderObject(object, ...params);
       }
     };
 
-    renderer.updateRenderTarget(rtt);
+    hearth.updateRenderTarget(rtt);
 
-    renderer.render(scene, light.shadow.camera);
+    hearth.render(scene, light.shadow.camera);
 
-    renderer.updateRenderTarget(currentRenderTarget);
+    hearth.updateRenderTarget(currentRenderTarget);
 
-    renderer._renderObjectFn = currentRenderObjectFunction;
+    hearth._renderObjectFn = currentRenderObjectFunction;
 
     scene.overrideMaterial = currentOverrideMaterial;
   }

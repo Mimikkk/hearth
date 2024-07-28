@@ -47,9 +47,9 @@ class ComputeNode extends Node {
 
   onInit() {}
 
-  updateBefore(x: { renderer: Hearth }) {
-    const { renderer } = x;
-    renderer.compute(this);
+  updateBefore(x: { hearth: Hearth }) {
+    const { hearth } = x;
+    hearth.compute(this);
   }
 
   generate(builder: NodeBuilder) {

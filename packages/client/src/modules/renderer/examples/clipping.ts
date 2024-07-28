@@ -9,7 +9,7 @@ import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitC
 import { Side } from '@modules/renderer/engine/engine.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
-let camera, scene, renderer, startTime, object;
+let camera, scene, hearth, startTime, object;
 
 init();
 
@@ -19,8 +19,6 @@ async function init() {
   camera.position.set(0, 1.3, 3);
 
   scene = new Engine.Scene();
-
-
 
   scene.add(new Engine.AmbientLight(0xcccccc));
 
@@ -52,19 +50,14 @@ async function init() {
   dirLight.shadow.mapSize.height = 1024;
   scene.add(dirLight);
 
-
-
   const localPlane = new Engine.Plane(new Engine.Vec3(0, -1, 0), 0.8);
   const localPlane2 = new Engine.Plane(new Engine.Vec3(0, 0, -1), 0.1);
   const globalPlane = new Engine.Plane(new Engine.Vec3(-1, 0, 0), 0.1);
-
-
 
   const material = new MeshPhongNodeMaterial({
     color: 0x80ee10,
     shininess: 0,
     side: Engine.Side.Double,
-
 
     clippingPlanes: [localPlane, localPlane2],
     clipShadows: true,
@@ -87,30 +80,22 @@ async function init() {
   ground.receiveShadow = true;
   scene.add(ground);
 
+  hearth = await Hearth.as();
 
-
-
-
-  renderer = await Hearth.as();
-
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.animation.loop = animate;
-  document.body.appendChild(renderer.parameters.canvas);
-
+  hearth.setPixelRatio(window.devicePixelRatio);
+  hearth.setSize(window.innerWidth, window.innerHeight);
+  hearth.animation.loop = animate;
+  document.body.appendChild(hearth.parameters.canvas);
 
   const globalPlanes = [globalPlane];
   const Empty = Object.freeze([]);
 
-  renderer.parameters.clippingPlanes = Empty;
-  renderer.parameters.localClippingEnabled = true;
+  hearth.parameters.clippingPlanes = Empty;
+  hearth.parameters.localClippingEnabled = true;
 
-
-  const controls = new OrbitControls(camera, renderer.parameters.canvas);
+  const controls = new OrbitControls(camera, hearth.parameters.canvas);
   controls.target.set(0, 1, 0);
   controls.update();
-
-
 
   const gui = new GUI(),
     props = {
@@ -119,10 +104,10 @@ async function init() {
     folderLocal = gui.addFolder('Local Clipping'),
     propsLocal = {
       get Enabled() {
-        return renderer.localClippingEnabled;
+        return hearth.localClippingEnabled;
       },
       set Enabled(v) {
-        renderer.localClippingEnabled = v;
+        hearth.localClippingEnabled = v;
       },
 
       get Shadows() {
@@ -150,10 +135,10 @@ async function init() {
     folderGlobal = gui.addFolder('Global Clipping'),
     propsGlobal = {
       get Enabled() {
-        return renderer.clippingPlanes !== Empty;
+        return hearth.clippingPlanes !== Empty;
       },
       set Enabled(v) {
-        renderer.clippingPlanes = v ? globalPlanes : Empty;
+        hearth.clippingPlanes = v ? globalPlanes : Empty;
       },
 
       get Plane() {
@@ -180,9 +165,7 @@ async function init() {
   folderGlobal.add(propsGlobal, 'Enabled');
   folderGlobal.add(propsGlobal, 'Plane', -0.4, 3);
 
-
-
-  useWindowResizer(renderer, camera);
+  useWindowResizer(hearth, camera);
   startTime = Date.now();
 }
 
@@ -194,5 +177,5 @@ function animate(currentTime) {
   object.setRotationY(time * 0.2);
   object.scale.setScalar(Math.cos(time) * 0.125 + 0.875);
 
-  renderer.render(scene, camera);
+  hearth.render(scene, camera);
 }

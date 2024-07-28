@@ -28,23 +28,23 @@ async function init() {
   camera.add(light);
   scene.add(camera);
 
-  //renderer
+  //hearth
 
-  const renderer = await Hearth.as();
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.animation.loop = () => renderer.render(scene, camera);
-  renderer.parameters.toneMapping = ToneMapping.Reinhard;
-  renderer.parameters.toneMappingExposure = 1;
-  document.body.appendChild(renderer.parameters.canvas);
+  const hearth = await Hearth.as();
+  hearth.setPixelRatio(window.devicePixelRatio);
+  hearth.setSize(window.innerWidth, window.innerHeight);
+  hearth.animation.loop = () => hearth.render(scene, camera);
+  hearth.parameters.toneMapping = ToneMapping.Reinhard;
+  hearth.parameters.toneMappingExposure = 1;
+  document.body.appendChild(hearth.parameters.canvas);
 
-  const controls = new OrbitControls(camera, renderer.parameters.canvas);
+  const controls = new OrbitControls(camera, hearth.parameters.canvas);
   controls.minDistance = 3;
   controls.maxDistance = 6;
   controls.update();
 
   const ktx2Loader = await new KTX2Loader();
-  await ktx2Loader.detectSupportAsync(renderer);
+  await ktx2Loader.detectSupportAsync(hearth);
 
   const loader = new GLTFLoader();
   loader.setKTX2Loader(ktx2Loader);
@@ -57,5 +57,5 @@ async function init() {
     scene.add(gltfScene);
   });
 
-  useWindowResizer(renderer, camera);
+  useWindowResizer(hearth, camera);
 }

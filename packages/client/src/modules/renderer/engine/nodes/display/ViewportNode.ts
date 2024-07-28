@@ -34,11 +34,11 @@ class ViewportNode extends Node {
     return updateType;
   }
 
-  update({ renderer }) {
+  update({ hearth }) {
     if (this.scope === ViewportNode.VIEWPORT) {
-      viewportResult.from(renderer.viewport);
+      viewportResult.from(hearth.viewport);
     } else {
-      renderer.getDrawSize(resolution);
+      hearth.getDrawSize(resolution);
     }
   }
 

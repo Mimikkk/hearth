@@ -112,7 +112,7 @@ export class NodeBuilder {
 
   constructor(
     public object: Entity,
-    public renderer: Hearth,
+    public hearth: Hearth,
     public scene: Scene,
   ) {
     this.material = object?.material ?? null;

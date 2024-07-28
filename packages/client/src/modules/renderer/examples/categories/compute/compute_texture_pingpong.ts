@@ -5,7 +5,7 @@ import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import StorageTexture from '@modules/renderer/engine/entities/textures/StorageTexture.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
-let camera, scene, renderer;
+let camera, scene, hearth;
 let computeInitNode, computeToPing, computeToPong;
 let pingTexture, pongTexture;
 let material;
@@ -126,14 +126,14 @@ async function init() {
   const plane = new Engine.Mesh(new Engine.PlaneGeometry(1, 1), material);
   scene.add(plane);
 
-  renderer = await Hearth.as();
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.animation.loop = render;
-  document.body.appendChild(renderer.parameters.canvas);
+  hearth = await Hearth.as();
+  hearth.setPixelRatio(window.devicePixelRatio);
+  hearth.setSize(window.innerWidth, window.innerHeight);
+  hearth.animation.loop = render;
+  document.body.appendChild(hearth.parameters.canvas);
 
-  useWindowResizer(renderer, camera, () => {
-    renderer.setSize(window.innerWidth, window.innerHeight);
+  useWindowResizer(hearth, camera, () => {
+    hearth.setSize(window.innerWidth, window.innerHeight);
 
     const aspect = window.innerWidth / window.innerHeight;
 
@@ -147,7 +147,7 @@ async function init() {
     render();
   });
 
-  renderer.compute(computeInitNode);
+  hearth.compute(computeInitNode);
 }
 
 function render() {
@@ -157,16 +157,16 @@ function render() {
   if (phase && seconds !== lastUpdate) {
     seed.value.set(Math.random(), Math.random());
 
-    renderer.compute(computeInitNode);
+    hearth.compute(computeInitNode);
 
     lastUpdate = seconds;
   }
 
-  renderer.compute(phase ? computeToPong : computeToPing);
+  hearth.compute(phase ? computeToPong : computeToPing);
 
   material.map = phase ? pongTexture : pingTexture;
 
   phase = !phase;
 
-  renderer.render(scene, camera);
+  hearth.render(scene, camera);
 }

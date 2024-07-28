@@ -6,7 +6,7 @@ import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitC
 import { MeshPhongNodeMaterial, tslFn, vec4, vertexIndex } from '@modules/renderer/engine/nodes/Nodes.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
-let camera, scene, renderer, clock;
+let camera, scene, hearth, clock;
 let dirLight, spotLight;
 let torusKnot, dirGroup;
 
@@ -19,8 +19,6 @@ async function init() {
   scene = new Engine.Scene();
   scene.background = new Engine.Color(0x222244);
   scene.fog = new Engine.Fog(0x222244, 50, 100);
-
-
 
   scene.add(new Engine.AmbientLight(0x444444, 2));
 
@@ -54,8 +52,6 @@ async function init() {
   dirGroup = new Engine.Group();
   dirGroup.add(dirLight);
   scene.add(dirGroup);
-
-
 
   const geometry = new Engine.TorusKnotGeometry(25, 8, 75, 80);
   const material = new MeshPhongNodeMaterial({
@@ -123,17 +119,14 @@ async function init() {
   ground.receiveShadow = true;
   scene.add(ground);
 
+  hearth = await Hearth.as();
+  hearth.setPixelRatio(window.devicePixelRatio);
+  hearth.setSize(window.innerWidth, window.innerHeight);
+  hearth.animation.loop = animate;
+  hearth.parameters.toneMapping = Engine.ToneMapping.ACESFilmic;
+  document.body.appendChild(hearth.parameters.canvas);
 
-
-  renderer = await Hearth.as();
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.animation.loop = animate;
-  renderer.parameters.toneMapping = Engine.ToneMapping.ACESFilmic;
-  document.body.appendChild(renderer.parameters.canvas);
-
-
-  const controls = new OrbitControls(camera, renderer.parameters.canvas);
+  const controls = new OrbitControls(camera, hearth.parameters.canvas);
   controls.target.set(0, 2, 0);
   controls.minDistance = 7;
   controls.maxDistance = 40;
@@ -141,7 +134,7 @@ async function init() {
 
   clock = new Engine.Clock();
 
-  useWindowResizer(renderer, camera);
+  useWindowResizer(hearth, camera);
 }
 
 function animate(time) {
@@ -154,5 +147,5 @@ function animate(time) {
   dirGroup.rotateY(0.7 * delta);
   dirLight.position.z = 17 + Math.sin(time * 0.001) * 5;
 
-  renderer.render(scene, camera);
+  hearth.render(scene, camera);
 }

@@ -213,7 +213,7 @@ export class Stats {
   precision: number;
 
   constructor(
-    renderer: Hearth,
+    hearth: Hearth,
     { insert = true, logsPerSecond = 20, samplesLog = 100, samplesGraph = 10, precision = 2 }: Options = {},
   ) {
     this.dom = document.createElement('div');
@@ -239,11 +239,11 @@ export class Stats {
     this.precision = precision;
     this.logsPerSecond = logsPerSecond;
 
-    if (renderer.backend.hasFeature(GPUFeature.TimestampQuery)) {
-      renderer.parameters.useTimestamp = true;
+    if (hearth.backend.hasFeature(GPUFeature.TimestampQuery)) {
+      hearth.parameters.useTimestamp = true;
       this.gpuRender = this.createPanel('GPU', '#ff0', '#220', 2);
       this.gpuCompute = this.createPanel('CPT', '#e1e1e1', '#212121', 3);
-      this.info = renderer.info;
+      this.info = hearth.info;
     }
 
     if (insert) document.body.appendChild(this.dom);
@@ -255,8 +255,8 @@ export class Stats {
     });
   }
 
-  static use(renderer: Hearth, options?: Options) {
-    return new Stats(renderer, options);
+  static use(hearth: Hearth, options?: Options) {
+    return new Stats(hearth, options);
   }
 
   createPanel(name: string, foreground: string, background: string, offset: number): Panel {

@@ -20,7 +20,7 @@ import { TextureLoader } from '@modules/renderer/engine/loaders/textures/Texture
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 import { UI } from '@mimi/ui';
 
-let camera, scene, renderer;
+let camera, scene, hearth;
 let controls;
 
 init();
@@ -91,22 +91,22 @@ async function init() {
   helper.position.y = -75;
   scene.add(helper);
 
-  renderer = await Hearth.as();
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.animation.loop = render;
-  document.body.appendChild(renderer.parameters.canvas);
+  hearth = await Hearth.as();
+  hearth.setPixelRatio(window.devicePixelRatio);
+  hearth.setSize(window.innerWidth, window.innerHeight);
+  hearth.animation.loop = render;
+  document.body.appendChild(hearth.parameters.canvas);
 
-  controls = new OrbitControls(camera, renderer.parameters.canvas);
+  controls = new OrbitControls(camera, hearth.parameters.canvas);
   controls.maxDistance = 2700;
   controls.target.set(0, 500, 0);
   controls.update();
 
-  useWindowResizer(renderer, camera);
+  useWindowResizer(hearth, camera);
 
   UI.create('Controls', timer).number('scale', 'Animation speed', 0.2, 1, 0.01);
 }
 
 function render() {
-  renderer.render(scene, camera);
+  hearth.render(scene, camera);
 }

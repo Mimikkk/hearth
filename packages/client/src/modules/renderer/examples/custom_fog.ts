@@ -16,7 +16,7 @@ import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
-let camera, scene, renderer;
+let camera, scene, hearth;
 let controls;
 
 init();
@@ -26,8 +26,6 @@ async function init() {
   camera.position.set(30, 15, 30);
 
   scene = new Engine.Scene();
-
-
 
   const skyColor = color(0xf0f5f5);
   const groundColor = color(0xd0dee7);
@@ -45,12 +43,8 @@ async function init() {
 
   const fogNoise = fogNoiseA.add(fogNoiseB).mul(groundColor);
 
-
-
   scene.fogNode = fog(fogNoiseDistance.oneMinus().mix(groundColor, fogNoise), groundFogArea);
   scene.backgroundNode = normalWorld.y.max(0).mix(groundColor, skyColor);
-
-
 
   const buildWindows = positionWorld.y
     .mul(10)
@@ -88,11 +82,7 @@ async function init() {
     buildMesh.setMatrixAt(i, dummy.matrix);
   }
 
-
-
   scene.add(new Engine.HemisphereLight(skyColor.value, groundColor.value, 0.5));
-
-
 
   const planeGeometry = new Engine.PlaneGeometry(200, 200);
   const planeMaterial = new Engine.MeshPhongMaterial({
@@ -106,17 +96,13 @@ async function init() {
   ground.receiveShadow = true;
   scene.add(ground);
 
+  hearth = await Hearth.as();
+  hearth.setPixelRatio(window.devicePixelRatio);
+  hearth.setSize(window.innerWidth, window.innerHeight);
+  hearth.animation.loop = animate;
+  document.body.appendChild(hearth.parameters.canvas);
 
-
-  renderer = await Hearth.as();
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.animation.loop = animate;
-  document.body.appendChild(renderer.parameters.canvas);
-
-
-
-  controls = new OrbitControls(camera, renderer.parameters.canvas);
+  controls = new OrbitControls(camera, hearth.parameters.canvas);
   controls.target.set(0, 2, 0);
   controls.minDistance = 7;
   controls.maxDistance = 100;
@@ -125,11 +111,11 @@ async function init() {
   controls.autoRotateSpeed = 0.1;
   controls.update();
 
-  useWindowResizer(renderer, camera);
+  useWindowResizer(hearth, camera);
 }
 
 function animate() {
   controls.update();
 
-  renderer.render(scene, camera);
+  hearth.render(scene, camera);
 }

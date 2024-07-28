@@ -15,7 +15,7 @@ import { color, InstancedPointsNodeMaterial } from '@modules/renderer/engine/nod
 import * as GeometryUtils from '@modules/renderer/engine/utils/GeometryUtils.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
-let renderer, scene, camera, camera2, controls, backgroundNode;
+let hearth, scene, camera, camera2, controls, backgroundNode;
 let material;
 let gui;
 
@@ -25,11 +25,11 @@ let insetHeight;
 init();
 
 async function init() {
-  renderer = await Hearth.as();
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.animation.loop = animate;
-  document.body.appendChild(renderer.parameters.canvas);
+  hearth = await Hearth.as();
+  hearth.setPixelRatio(window.devicePixelRatio);
+  hearth.setSize(window.innerWidth, window.innerHeight);
+  hearth.animation.loop = animate;
+  document.body.appendChild(hearth.parameters.canvas);
 
   scene = new Engine.Scene();
 
@@ -39,7 +39,7 @@ async function init() {
   camera2 = new Engine.PerspectiveCamera(40, 1, 1, 1000);
   camera2.position.from(camera.position);
 
-  controls = new OrbitControls(camera, renderer.parameters.canvas);
+  controls = new OrbitControls(camera, hearth.parameters.canvas);
   controls.enableDamping = true;
   controls.minDistance = 10;
   controls.maxDistance = 500;
@@ -82,11 +82,11 @@ async function init() {
   instancedPoints.scale.set(1, 1, 1);
   scene.add(instancedPoints);
 
-  useWindowResizer(renderer, camera, () => {
+  useWindowResizer(hearth, camera, () => {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
 
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    hearth.setSize(window.innerWidth, window.innerHeight);
 
     insetWidth = window.innerHeight / 4;
     insetHeight = window.innerHeight / 4;
@@ -99,34 +99,34 @@ async function init() {
 }
 
 function animate() {
-  renderer.viewport.set(0, 0, window.innerWidth, window.innerHeight);
+  hearth.viewport.set(0, 0, window.innerWidth, window.innerHeight);
 
   controls.update();
 
-  renderer.parameters.autoClear = true;
+  hearth.parameters.autoClear = true;
 
   scene.backgroundNode = null;
 
-  renderer.render(scene, camera);
+  hearth.render(scene, camera);
 
-  renderer.clear(false, true, false);
+  hearth.clear(false, true, false);
 
-  renderer.useScissor = true;
+  hearth.useScissor = true;
 
-  renderer.scissor.set(20, 20, insetWidth, insetHeight);
-  renderer.viewport.set(20, 20, insetWidth, insetHeight);
+  hearth.scissor.set(20, 20, insetWidth, insetHeight);
+  hearth.viewport.set(20, 20, insetWidth, insetHeight);
 
   camera2.position.from(camera.position);
 
   camera2.quaternion.from(camera.quaternion);
 
-  renderer.parameters.autoClear = false;
+  hearth.parameters.autoClear = false;
 
   scene.backgroundNode = backgroundNode;
 
-  renderer.render(scene, camera2);
+  hearth.render(scene, camera2);
 
-  renderer.useScissor = false;
+  hearth.useScissor = false;
 }
 
 function initGui() {

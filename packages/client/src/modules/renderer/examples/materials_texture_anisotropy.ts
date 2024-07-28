@@ -6,7 +6,7 @@ import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindow
 
 let container;
 
-let camera, scene1, scene2, renderer;
+let camera, scene1, scene2, hearth;
 
 let mouseX = 0,
   mouseY = 0;
@@ -20,15 +20,15 @@ async function init() {
   container = document.createElement('div');
   document.body.appendChild(container);
 
-  renderer = await Hearth.as();
+  hearth = await Hearth.as();
 
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
-  renderer.animation.loop = animate;
-  renderer.parameters.autoClear = false;
+  hearth.setPixelRatio(window.devicePixelRatio);
+  hearth.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+  hearth.animation.loop = animate;
+  hearth.parameters.autoClear = false;
 
-  renderer.parameters.canvas.style.position = 'relative';
-  container.appendChild(renderer.parameters.canvas);
+  hearth.parameters.canvas.style.position = 'relative';
+  container.appendChild(hearth.parameters.canvas);
 
   camera = new Engine.PerspectiveCamera(35, SCREEN_WIDTH / SCREEN_HEIGHT, 1, 25000);
   camera.position.z = 1500;
@@ -52,13 +52,13 @@ async function init() {
 
   const textureLoader = new TextureLoader();
 
-  const maxAnisotropy = renderer.getMaxAnisotropy();
+  const maxAnisotropy = hearth.getMaxAnisotropy();
 
   const texture1 = await textureLoader.loadAsync('resources/textures/crate.gif');
   const material1 = new Engine.MeshPhongMaterial({ color: 0xffffff, map: texture1 });
 
   texture1.colorSpace = Engine.ColorSpace.SRGB;
-  texture1.anisotropy = renderer.getMaxAnisotropy();
+  texture1.anisotropy = hearth.getMaxAnisotropy();
   texture1.wrapS = texture1.wrapT = Engine.Wrapping.Repeat;
   texture1.repeat.set(512, 512);
 
@@ -93,7 +93,7 @@ async function init() {
 
   document.addEventListener('mousemove', onDocumentMouseMove);
 
-  useWindowResizer(renderer, camera);
+  useWindowResizer(hearth, camera);
 }
 
 function onDocumentMouseMove(event) {
@@ -120,17 +120,17 @@ function render() {
   );
 
   camera.lookAt(scene1.position);
-  renderer.clear();
+  hearth.clear();
 
-  renderer.useScissor = true;
+  hearth.useScissor = true;
 
-  renderer.scissor.set(0, 0, SCREEN_WIDTH / 2 - 2, SCREEN_HEIGHT);
-  renderer.render(scene1, camera);
+  hearth.scissor.set(0, 0, SCREEN_WIDTH / 2 - 2, SCREEN_HEIGHT);
+  hearth.render(scene1, camera);
 
-  renderer.useScissor = true;
+  hearth.useScissor = true;
 
-  renderer.scissor.set(SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2 - 2, SCREEN_HEIGHT);
-  renderer.render(scene2, camera);
+  hearth.scissor.set(SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2 - 2, SCREEN_HEIGHT);
+  hearth.render(scene2, camera);
 
-  renderer.useScissor = false;
+  hearth.useScissor = false;
 }

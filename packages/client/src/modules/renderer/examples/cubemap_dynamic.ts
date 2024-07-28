@@ -10,7 +10,7 @@ import { RGBMLoader } from '@modules/renderer/engine/loaders/textures/RGBMLoader
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
-let camera, scene, renderer;
+let camera, scene, hearth;
 let cube, sphere, torus, material;
 
 let cubeCamera, cubeRenderTarget;
@@ -20,12 +20,12 @@ let controls;
 init();
 
 async function init() {
-  renderer = await Hearth.as();
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.animation.loop = animation;
-  renderer.parameters.toneMapping = Engine.ToneMapping.ACESFilmic;
-  document.body.appendChild(renderer.parameters.canvas);
+  hearth = await Hearth.as();
+  hearth.setPixelRatio(window.devicePixelRatio);
+  hearth.setSize(window.innerWidth, window.innerHeight);
+  hearth.animation.loop = animation;
+  hearth.parameters.toneMapping = Engine.ToneMapping.ACESFilmic;
+  document.body.appendChild(hearth.parameters.canvas);
 
   camera = new Engine.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 1000);
   camera.position.z = 75;
@@ -67,7 +67,7 @@ async function init() {
   const gui = new GUI();
   gui.add(material, 'roughness', 0, 1);
   gui.add(material, 'metalness', 0, 1);
-  gui.add(renderer.parameters, 'toneMappingExposure', 0, 2).name('exposure');
+  gui.add(hearth.parameters, 'toneMappingExposure', 0, 2).name('exposure');
 
   sphere = new Engine.Mesh(new Engine.IcosahedronGeometry(15, 8), material);
   scene.add(sphere);
@@ -84,8 +84,8 @@ async function init() {
   torus = new Engine.Mesh(new Engine.TorusKnotGeometry(8, 3, 128, 16), material2);
   scene.add(torus);
 
-  useWindowResizer(renderer, camera);
-  controls = new OrbitControls(camera, renderer.parameters.canvas);
+  useWindowResizer(hearth, camera);
+  controls = new OrbitControls(camera, hearth.parameters.canvas);
   controls.autoRotate = true;
 }
 
@@ -108,11 +108,11 @@ function animation(msTime) {
 
   material.visible = false;
 
-  cubeCamera.update(renderer, scene);
+  cubeCamera.update(hearth, scene);
 
   material.visible = true;
 
   controls.update();
 
-  renderer.render(scene, camera);
+  hearth.render(scene, camera);
 }

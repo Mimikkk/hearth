@@ -10,7 +10,7 @@ import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindow
 
 let camera!: PerspectiveCamera;
 let scene!: Scene;
-let renderer!: Hearth;
+let hearth!: Hearth;
 
 init();
 
@@ -43,19 +43,19 @@ async function init() {
   object.scale.setScalar(0.01);
   scene.add(object);
 
-  renderer = await Hearth.as();
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.animation.loop = animate;
-  document.body.appendChild(renderer.parameters.canvas);
+  hearth = await Hearth.as();
+  hearth.setPixelRatio(window.devicePixelRatio);
+  hearth.setSize(window.innerWidth, window.innerHeight);
+  hearth.animation.loop = animate;
+  document.body.appendChild(hearth.parameters.canvas);
 
-  const controls = new OrbitControls(camera, renderer.parameters.canvas);
+  const controls = new OrbitControls(camera, hearth.parameters.canvas);
   controls.minDistance = 2;
   controls.maxDistance = 5;
 
-  useWindowResizer(renderer, camera);
+  useWindowResizer(hearth, camera);
 }
 
 function animate() {
-  renderer.render(scene, camera);
+  hearth.render(scene, camera);
 }

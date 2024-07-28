@@ -21,7 +21,7 @@ import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitC
 import { Side } from '@modules/renderer/engine/engine.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
-let camera, sceneMain, scenePortal, renderer;
+let camera, sceneMain, scenePortal, hearth;
 let clock;
 
 const mixers = [];
@@ -106,18 +106,18 @@ async function init() {
     scenePortal.add(modelPortal);
   });
 
-  renderer = await Hearth.as();
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.animation.loop = animate;
-  renderer.parameters.toneMappingNode = toneMapping(Engine.ToneMapping.Linear, 0.15);
-  document.body.appendChild(renderer.parameters.canvas);
+  hearth = await Hearth.as();
+  hearth.setPixelRatio(window.devicePixelRatio);
+  hearth.setSize(window.innerWidth, window.innerHeight);
+  hearth.animation.loop = animate;
+  hearth.parameters.toneMappingNode = toneMapping(Engine.ToneMapping.Linear, 0.15);
+  document.body.appendChild(hearth.parameters.canvas);
 
-  const controls = new OrbitControls(camera, renderer.parameters.canvas);
+  const controls = new OrbitControls(camera, hearth.parameters.canvas);
   controls.target.set(0, 1, 0);
   controls.update();
 
-  useWindowResizer(renderer, camera);
+  useWindowResizer(hearth, camera);
 }
 
 function animate() {
@@ -127,5 +127,5 @@ function animate() {
     mixer.update(delta);
   }
 
-  renderer.render(sceneMain, camera);
+  hearth.render(sceneMain, camera);
 }

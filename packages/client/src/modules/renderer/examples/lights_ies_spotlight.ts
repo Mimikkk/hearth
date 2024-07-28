@@ -9,7 +9,7 @@ import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitC
 import { IESLoader } from '@modules/renderer/engine/loaders/lights/IESLoader/IESLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
-let renderer, scene, camera;
+let hearth, scene, camera;
 let lights;
 
 async function init() {
@@ -64,21 +64,21 @@ async function init() {
   mesh.setRotationX(-Math.PI * 0.5);
   scene.add(mesh);
 
-  renderer = await Hearth.as();
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.animation.loop = render;
-  document.body.appendChild(renderer.parameters.canvas);
+  hearth = await Hearth.as();
+  hearth.setPixelRatio(window.devicePixelRatio);
+  hearth.setSize(window.innerWidth, window.innerHeight);
+  hearth.animation.loop = render;
+  document.body.appendChild(hearth.parameters.canvas);
 
   camera = new Engine.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.1, 100);
   camera.position.set(16, 4, 1);
 
-  const controls = new OrbitControls(camera, renderer.parameters.canvas);
+  const controls = new OrbitControls(camera, hearth.parameters.canvas);
   controls.minDistance = 2;
   controls.maxDistance = 50;
   controls.enablePan = false;
 
-  useWindowResizer(renderer, camera);
+  useWindowResizer(hearth, camera);
 }
 
 function render(time) {
@@ -88,7 +88,7 @@ function render(time) {
     lights[i].position.y = Math.sin(time + i) + 0.97;
   }
 
-  renderer.render(scene, camera);
+  hearth.render(scene, camera);
 }
 
 init();

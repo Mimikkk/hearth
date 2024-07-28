@@ -50,16 +50,16 @@ class ReflectorNode extends TextureNode {
     this.renderTargets = new WeakMap();
   }
 
-  _updateResolution(renderTarget, renderer) {
+  _updateResolution(renderTarget, hearth) {
     const resolution = this.resolution;
 
-    renderer.getDrawSize(_size);
+    hearth.getDrawSize(_size);
 
     renderTarget.setSize(Math.round(_size.width * resolution), Math.round(_size.height * resolution));
   }
 
   setup(builder) {
-    this._updateResolution(_defaultRT, builder.renderer);
+    this._updateResolution(_defaultRT, builder.hearth);
 
     return super.setup(builder);
   }
@@ -102,15 +102,15 @@ class ReflectorNode extends TextureNode {
 
     _inReflector = true;
 
-    const { scene, camera, renderer, material } = frame;
+    const { scene, camera, hearth, material } = frame;
     const { target } = this;
 
     const virtualCamera = this.getVirtualCamera(camera);
     const renderTarget = this.getRenderTarget(virtualCamera);
 
-    renderer.getDrawSize(_size);
+    hearth.getDrawSize(_size);
 
-    this._updateResolution(renderTarget, renderer);
+    this._updateResolution(renderTarget, hearth);
 
     _reflectorWorldPosition.fromMat4Position(target.matrixWorld);
     _cameraWorldPosition.fromMat4Position(camera.matrixWorld);
@@ -179,13 +179,13 @@ class ReflectorNode extends TextureNode {
 
     material.visible = false;
 
-    const currentRenderTarget = renderer.target;
+    const currentRenderTarget = hearth.target;
 
-    renderer.updateRenderTarget(renderTarget);
+    hearth.updateRenderTarget(renderTarget);
 
-    renderer.render(scene, virtualCamera);
+    hearth.render(scene, virtualCamera);
 
-    renderer.updateRenderTarget(currentRenderTarget);
+    hearth.updateRenderTarget(currentRenderTarget);
 
     material.visible = true;
 

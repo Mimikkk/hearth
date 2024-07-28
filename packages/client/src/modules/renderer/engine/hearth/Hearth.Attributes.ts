@@ -4,7 +4,7 @@ import { Attribute, BufferUse } from '@modules/renderer/engine/engine.js';
 import type { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 
 export class HearthAttributes extends DataMap<Attribute, any> {
-  constructor(public renderer: Hearth) {
+  constructor(public hearth: Hearth) {
     super();
   }
 
@@ -12,7 +12,7 @@ export class HearthAttributes extends DataMap<Attribute, any> {
     const data = super.delete(attribute);
 
     if (data !== undefined) {
-      this.renderer.backend.destroyAttribute(attribute);
+      this.hearth.backend.destroyAttribute(attribute);
     }
 
     return data;
@@ -23,11 +23,11 @@ export class HearthAttributes extends DataMap<Attribute, any> {
 
     if (data.version === undefined) {
       if (type === AttributeLocation.Vertex) {
-        this.renderer.backend.createAttribute(attribute);
+        this.hearth.backend.createAttribute(attribute);
       } else if (type === AttributeLocation.Index) {
-        this.renderer.backend.createIndexAttribute(attribute);
+        this.hearth.backend.createIndexAttribute(attribute);
       } else if (type === AttributeLocation.Storage) {
-        this.renderer.backend.createStorageAttribute(attribute);
+        this.hearth.backend.createStorageAttribute(attribute);
       }
 
       data.version = attribute.version;
@@ -35,7 +35,7 @@ export class HearthAttributes extends DataMap<Attribute, any> {
       const buffer = attribute;
 
       if (data.version < buffer.version || buffer.usage === BufferUse.DynamicDraw) {
-        this.renderer.backend.updateAttribute(attribute);
+        this.hearth.backend.updateAttribute(attribute);
 
         data.version = buffer.version;
       }

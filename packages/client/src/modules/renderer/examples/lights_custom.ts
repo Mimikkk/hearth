@@ -20,7 +20,7 @@ class CustomLightingModel extends LightModel {
   }
 }
 
-let camera, scene, renderer;
+let camera, scene, hearth;
 
 let light1, light2, light3;
 
@@ -76,18 +76,18 @@ async function init() {
   const pointCloud = new Engine.Points(geometryPoints, materialPoints);
   scene.add(pointCloud);
 
-  renderer = await Hearth.as();
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.animation.loop = animate;
-  renderer.parameters.toneMappingNode = toneMapping(Engine.ToneMapping.Linear, 1);
-  document.body.appendChild(renderer.parameters.canvas);
+  hearth = await Hearth.as();
+  hearth.setPixelRatio(window.devicePixelRatio);
+  hearth.setSize(window.innerWidth, window.innerHeight);
+  hearth.animation.loop = animate;
+  hearth.parameters.toneMappingNode = toneMapping(Engine.ToneMapping.Linear, 1);
+  document.body.appendChild(hearth.parameters.canvas);
 
-  const controls = new OrbitControls(camera, renderer.parameters.canvas);
+  const controls = new OrbitControls(camera, hearth.parameters.canvas);
   controls.minDistance = 0;
   controls.maxDistance = 4;
 
-  useWindowResizer(renderer, camera);
+  useWindowResizer(hearth, camera);
 }
 
 function animate() {
@@ -106,5 +106,5 @@ function animate() {
   light3.position.y = Math.cos(time * 0.3) * scale;
   light3.position.z = Math.sin(time * 0.5) * scale;
 
-  renderer.render(scene, camera);
+  hearth.render(scene, camera);
 }

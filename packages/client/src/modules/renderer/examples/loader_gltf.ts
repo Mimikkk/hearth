@@ -8,7 +8,7 @@ import { WorldAxesControls } from '@modules/renderer/engine/entities/controls/Wo
 
 let camera!: PerspectiveCamera;
 let scene!: Scene;
-let renderer!: Hearth;
+let hearth!: Hearth;
 let viewHelper!: WorldAxesControls;
 
 const clock = new Clock();
@@ -25,16 +25,16 @@ async function init() {
 
   scene = new Scene();
 
-  renderer = await Hearth.as({
+  hearth = await Hearth.as({
     autoClear: false,
   });
 
-  viewHelper = new WorldAxesControls(camera, renderer.parameters.canvas);
-  renderer.animation.loop = animate;
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.parameters.toneMapping = ToneMapping.ACESFilmic;
-  container.appendChild(renderer.parameters.canvas);
+  viewHelper = new WorldAxesControls(camera, hearth.parameters.canvas);
+  hearth.animation.loop = animate;
+  hearth.setPixelRatio(window.devicePixelRatio);
+  hearth.setSize(window.innerWidth, window.innerHeight);
+  hearth.parameters.toneMapping = ToneMapping.ACESFilmic;
+  container.appendChild(hearth.parameters.canvas);
 
   RGBELoader.loadAsync('resources/textures/equirectangular/royal_esplanade_1k.hdr').then(texture => {
     texture.mapping = Mapping.EquirectangularReflection;
@@ -49,13 +49,13 @@ async function init() {
     });
   });
 
-  const controls = new OrbitControls(camera, renderer.parameters.canvas);
+  const controls = new OrbitControls(camera, hearth.parameters.canvas);
   controls.minDistance = 2;
   controls.maxDistance = 10;
   controls.target.set(0, 0, -0.2);
   controls.update();
 
-  useWindowResizer(renderer, camera);
+  useWindowResizer(hearth, camera);
 }
 
 async function animate() {
@@ -65,8 +65,8 @@ async function animate() {
 }
 
 function render() {
-  renderer.clear();
+  hearth.clear();
 
-  renderer.render(scene, camera);
-  viewHelper.render(renderer);
+  hearth.render(scene, camera);
+  viewHelper.render(hearth);
 }

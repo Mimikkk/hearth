@@ -4,14 +4,14 @@ import { asNode } from '../shadernode/ShaderNodes.js';
 class RendererReferenceNode extends ReferenceNode {
   static type = 'RendererReferenceNode';
 
-  constructor(property, inputType, renderer = null) {
-    super(property, inputType, renderer);
+  constructor(property, inputType, hearth = null) {
+    super(property, inputType, hearth);
 
-    this.renderer = renderer;
+    this.hearth = hearth;
   }
 
   updateReference(state) {
-    this.reference = this.renderer !== null ? this.renderer : state.renderer;
+    this.reference = this.hearth !== null ? this.hearth : state.hearth;
 
     return this.reference;
   }
@@ -19,4 +19,4 @@ class RendererReferenceNode extends ReferenceNode {
 
 export default RendererReferenceNode;
 
-export const rendererReference = (name, type, renderer) => asNode(new RendererReferenceNode(name, type, renderer));
+export const rendererReference = (name, type, hearth) => asNode(new RendererReferenceNode(name, type, hearth));

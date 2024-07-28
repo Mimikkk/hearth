@@ -5,7 +5,7 @@ import { TextGeometry } from '@modules/renderer/engine/entities/geometries/TextG
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 import { FontManager } from '@modules/renderer/engine/loaders/fonts/FontManager.js';
 
-let camera, cameraTarget, scene, renderer;
+let camera, cameraTarget, scene, hearth;
 let group, textMesh1, textMesh2, textGeo, material;
 let firstLetter = true;
 
@@ -73,11 +73,11 @@ async function init() {
   plane.setRotationX(-Math.PI / 2);
   scene.add(plane);
 
-  renderer = await Hearth.as();
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.animation.loop = render;
-  document.body.appendChild(renderer.parameters.canvas);
+  hearth = await Hearth.as();
+  hearth.setPixelRatio(window.devicePixelRatio);
+  hearth.setSize(window.innerWidth, window.innerHeight);
+  hearth.animation.loop = render;
+  document.body.appendChild(hearth.parameters.canvas);
 
   document.body.style.touchAction = 'none';
   document.body.addEventListener('pointerdown', onPointerDown);
@@ -85,7 +85,7 @@ async function init() {
   document.addEventListener('keypress', onDocumentKeyPress);
   document.addEventListener('keydown', onDocumentKeyDown);
 
-  useWindowResizer(renderer, camera);
+  useWindowResizer(hearth, camera);
 }
 
 function onDocumentKeyDown(event) {
@@ -201,5 +201,5 @@ function render() {
 
   camera.lookAt(cameraTarget);
 
-  renderer.render(scene, camera);
+  hearth.render(scene, camera);
 }

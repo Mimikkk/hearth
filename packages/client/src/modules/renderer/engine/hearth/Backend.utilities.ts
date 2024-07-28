@@ -28,7 +28,7 @@ export class BackendUtilities {
   getCurrentColorSpace(renderContext: RenderContext) {
     return renderContext.textures
       ? renderContext.textures[0].colorSpace
-      : this.backend.renderer.parameters.outputColorSpace;
+      : this.backend.hearth.parameters.outputColorSpace;
   }
 
   getPrimitiveTopology(object: Entity, material: Material) {
@@ -41,7 +41,7 @@ export class BackendUtilities {
 
   getSampleCount(context: RenderContext): number {
     if (context.textures) return context.sampleCount;
-    return this.backend.renderer.parameters.sampleCount;
+    return this.backend.hearth.parameters.sampleCount;
   }
 }
 

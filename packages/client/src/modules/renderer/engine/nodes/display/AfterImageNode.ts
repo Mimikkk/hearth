@@ -52,7 +52,7 @@ class AfterImageNode extends TempNode {
   }
 
   updateBefore(frame: NodeFrame) {
-    const { renderer } = frame;
+    const { hearth } = frame;
 
     const textureNode = this.textureNode;
     const map = textureNode.value;
@@ -62,13 +62,13 @@ class AfterImageNode extends TempNode {
     this._compRT.texture.type = textureType;
     this._oldRT.texture.type = textureType;
 
-    const currentRenderTarget = renderer.target;
+    const currentRenderTarget = hearth.target;
     const currentTexture = textureNode.value;
 
     this.textureNodeOld.value = this._oldRT.texture;
 
-    renderer.target = this._compRT;
-    quadMeshComp.render(renderer);
+    hearth.target = this._compRT;
+    quadMeshComp.render(hearth);
 
     const temp = this._oldRT;
     this._oldRT = this._compRT;
@@ -76,7 +76,7 @@ class AfterImageNode extends TempNode {
 
     this.setSize(map.image.width, map.image.height);
 
-    renderer.updateRenderTarget(currentRenderTarget);
+    hearth.updateRenderTarget(currentRenderTarget);
     textureNode.value = currentTexture;
   }
 

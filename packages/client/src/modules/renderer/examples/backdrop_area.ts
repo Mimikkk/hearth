@@ -41,8 +41,6 @@ camera.lookAt(0, 1, 0);
 
 const clock = new Clock();
 
-
-
 let mixer: AnimationMixer;
 const loader = new GLTFLoader();
 loader.loadAsync('resources/models/gltf/Michelle.glb').then(function (gltf) {
@@ -54,8 +52,6 @@ loader.loadAsync('resources/models/gltf/Michelle.glb').then(function (gltf) {
 
   scene.add(object);
 });
-
-
 
 const depthDistance = depthTexture().distance(depth);
 const depthAlphaNode = depthDistance.oneMinus().smoothstep(0.9, 2).mul(20).saturate();
@@ -84,7 +80,7 @@ depthMaterial.transparent = true;
 depthMaterial.side = Side.Double;
 
 const bicubicMaterial = new MeshBasicNodeMaterial();
-bicubicMaterial.backdropNode = viewportMipTexture().bicubic(5); 
+bicubicMaterial.backdropNode = viewportMipTexture().bicubic(5);
 bicubicMaterial.backdropAlphaNode = checker(uv().mul(3).mul(modelScale.xy));
 bicubicMaterial.opacityNode = bicubicMaterial.backdropAlphaNode;
 bicubicMaterial.transparent = true;
@@ -94,8 +90,6 @@ const pixelMaterial = new MeshBasicNodeMaterial();
 pixelMaterial.backdropNode = viewportSharedTexture(viewportTopLeft.mul(100).floor().div(100));
 pixelMaterial.transparent = true;
 
-
-
 const box = new Mesh(new BoxGeometry(2, 2, 2), volumeMaterial);
 box.position.set(0, 1, 0);
 scene.add(box);
@@ -104,22 +98,18 @@ const floor = new Mesh(new BoxGeometry(1.99, 0.01, 1.99), new MeshBasicNodeMater
 floor.position.set(0, 0, 0);
 scene.add(floor);
 
+const hearth = await Hearth.as();
+hearth.setPixelRatio(window.devicePixelRatio);
+hearth.setSize(window.innerWidth, window.innerHeight);
+hearth.animation.loop = animate;
+hearth.parameters.toneMappingNode = toneMapping(ToneMapping.Linear, 0.15);
+document.body.appendChild(hearth.parameters.canvas);
 
-
-const renderer = await Hearth.as();
-renderer.setPixelRatio(window.devicePixelRatio);
-renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.animation.loop = animate;
-renderer.parameters.toneMappingNode = toneMapping(ToneMapping.Linear, 0.15);
-document.body.appendChild(renderer.parameters.canvas);
-
-const controls = new OrbitControls(camera, renderer.parameters.canvas);
+const controls = new OrbitControls(camera, hearth.parameters.canvas);
 controls.target.set(0, 1, 0);
 controls.update();
 
-useWindowResizer(renderer, camera);
-
-
+useWindowResizer(hearth, camera);
 
 const materials = {
   blurred: blurredBlur,
@@ -145,5 +135,5 @@ function animate() {
 
   if (mixer) mixer.update(delta);
 
-  renderer.render(scene, camera);
+  hearth.render(scene, camera);
 }

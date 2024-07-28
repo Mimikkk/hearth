@@ -139,20 +139,12 @@ export class BatchedMesh extends Mesh {
     this._multiDrawCount = 0;
     this._visibilityChanged = true;
 
-
     this._matricesTexture = null!;
 
     this._initMatricesTexture();
   }
 
   _initMatricesTexture() {
-
-
-
-
-
-
-
     let size = Math.sqrt(this._maxGeometryCount * 4);
     size = Math.ceil(size / 4) * 4;
     size = Math.max(size, 4);
@@ -206,13 +198,10 @@ export class BatchedMesh extends Mesh {
     }
   }
 
-
   _validateGeometry(geometry: Geometry) {
-
     if (geometry.getAttribute(ID_ATTR_NAME)) {
       throw new Error(`BatchedMesh: Geometry cannot use attribute "${ID_ATTR_NAME}"`);
     }
-
 
     const batchGeometry = this.geometry;
     if (Boolean(geometry.getIndex()) !== Boolean(batchGeometry.getIndex())) {
@@ -286,11 +275,9 @@ export class BatchedMesh extends Mesh {
 
     this._validateGeometry(geometry);
 
-
     if (this._geometryCount >= this._maxGeometryCount) {
       throw new Error('BatchedMesh: Maximum geometry count reached.');
     }
-
 
     const reservedRange = {
       vertexStart: -1,
@@ -347,18 +334,14 @@ export class BatchedMesh extends Mesh {
     const matricesTexture = this._matricesTexture;
     const matricesArray = this._matricesTexture.image.data;
 
-
     visibility.push(true);
     active.push(true);
-
 
     const geometryId = this._geometryCount;
     this._geometryCount++;
 
-
     _identityMatrix.intoArray(matricesArray, geometryId * 16);
     matricesTexture.needsUpdate = true;
-
 
     reservedRanges.push(reservedRange);
     drawRanges.push({
@@ -373,14 +356,12 @@ export class BatchedMesh extends Mesh {
       sphere: new Sphere(),
     });
 
-
     const idAttribute = this.geometry.getAttribute(ID_ATTR_NAME);
     for (let i = 0; i < reservedRange.vertexCount; i++) {
       idAttribute.setX(reservedRange.vertexStart + i, geometryId);
     }
 
     idAttribute.needsUpdate = true;
-
 
     this.setGeometryAt(geometryId, geometry);
 
@@ -406,7 +387,6 @@ export class BatchedMesh extends Mesh {
       throw new Error('BatchedMesh: Reserved space not large enough for provided geometry.');
     }
 
-
     const vertexStart = reservedRange.vertexStart;
     const vertexCount = reservedRange.vertexCount;
     for (const attributeName in batchGeometry.attributes) {
@@ -414,12 +394,10 @@ export class BatchedMesh extends Mesh {
         continue;
       }
 
-
       const srcAttribute = geometry.getAttribute(attributeName);
       const dstAttribute = batchGeometry.getAttribute(attributeName);
       //@ts-expect-error
       copyAttributeData(srcAttribute, dstAttribute, vertexStart);
-
 
       const itemSize = srcAttribute.stride;
       for (let i = srcAttribute.count, l = vertexCount; i < l; i++) {
@@ -432,15 +410,12 @@ export class BatchedMesh extends Mesh {
       dstAttribute.needsUpdate = true;
     }
 
-
     if (hasIndex) {
       const indexStart = reservedRange.indexStart;
-
 
       for (let i = 0; i < srcIndex.count; i++) {
         dstIndex!.setX(indexStart + i, vertexStart + srcIndex.getX(i));
       }
-
 
       for (let i = srcIndex.count, l = reservedRange.indexCount; i < l; i++) {
         dstIndex!.setX(indexStart + i, vertexStart);
@@ -448,7 +423,6 @@ export class BatchedMesh extends Mesh {
 
       dstIndex!.needsUpdate = true;
     }
-
 
     const bound = this._bounds[id];
     if (geometry.boundingBox !== null) {
@@ -465,7 +439,6 @@ export class BatchedMesh extends Mesh {
       bound.sphereInitialized = false;
     }
 
-
     const drawRange = this._drawRanges[id];
     const posAttr = geometry.attributes.position;
     drawRange.count = hasIndex ? srcIndex.count : posAttr.count;
@@ -475,8 +448,6 @@ export class BatchedMesh extends Mesh {
   }
 
   deleteGeometry(geometryId: number) {
-
-
     const active = this._active;
     if (geometryId >= active.length || active[geometryId] === false) {
       return this;
@@ -488,13 +459,11 @@ export class BatchedMesh extends Mesh {
     return this;
   }
 
-
   getBoundingBoxAt(id: number, target: Box3): Box3 | null {
     const active = this._active;
     if (active[id] === false) {
       return null;
     }
-
 
     const bound = this._bounds[id];
     const box = bound.box;
@@ -521,13 +490,11 @@ export class BatchedMesh extends Mesh {
     return target;
   }
 
-
   getBoundingSphereAt(id: number, target: Sphere): Sphere | null {
     const active = this._active;
     if (active[id] === false) {
       return null;
     }
-
 
     const bound = this._bounds[id];
     const sphere = bound.sphere;
@@ -562,9 +529,6 @@ export class BatchedMesh extends Mesh {
   }
 
   setMatrixAt(geometryId: number, matrix: Mat4): this {
-
-
-
     const active = this._active;
     const matricesTexture = this._matricesTexture;
     const matricesArray = this._matricesTexture.image.data;
@@ -595,8 +559,6 @@ export class BatchedMesh extends Mesh {
     const active = this._active;
     const geometryCount = this._geometryCount;
 
-
-
     if (geometryId >= geometryCount || active[geometryId] === false || visibility[geometryId] === value) {
       return this;
     }
@@ -612,7 +574,6 @@ export class BatchedMesh extends Mesh {
     const active = this._active;
     const geometryCount = this._geometryCount;
 
-
     if (geometryId >= geometryCount || active[geometryId] === false) {
       return false;
     }
@@ -627,7 +588,6 @@ export class BatchedMesh extends Mesh {
     const geometryCount = this._geometryCount;
     const matrixWorld = this.matrixWorld;
     const batchGeometry = this.geometry;
-
 
     _mesh.material = this.material;
     _mesh.geometry.index = batchGeometry.index;
@@ -648,12 +608,10 @@ export class BatchedMesh extends Mesh {
       const drawRange = drawRanges[i];
       _mesh.geometry.setDrawRange(drawRange.start, drawRange.count);
 
-
       this.getMatrixAt(i, _mesh.matrixWorld)!.premul(matrixWorld);
       this.getBoundingBoxAt(i, _mesh.geometry.boundingBox);
       this.getBoundingSphereAt(i, _mesh.geometry.boundingSphere);
       _mesh.raycast(raycaster, _batchIntersects);
-
 
       for (let j = 0, l = _batchIntersects.length; j < l; j++) {
         const intersect = _batchIntersects[j];
@@ -713,21 +671,10 @@ export class BatchedMesh extends Mesh {
     return this;
   }
 
-  onBeforeRender(
-    renderer: Hearth,
-    scene: Scene,
-    camera: Camera,
-    geometry: Geometry,
-    material: Material,
-    group: Group,
-  ) {
-
-
+  onBeforeRender(hearth: Hearth, scene: Scene, camera: Camera, geometry: Geometry, material: Material, group: Group) {
     if (!this._visibilityChanged && !this.perObjectFrustumCulled && !this.sortObjects) {
       return;
     }
-
-
 
     const index = geometry.getIndex();
     const bytesPerElement = index === null ? 1 : index.array.BYTES_PER_ELEMENT;
@@ -739,7 +686,6 @@ export class BatchedMesh extends Mesh {
     const drawRanges = this._drawRanges;
     const perObjectFrustumCulled = this.perObjectFrustumCulled;
 
-
     if (perObjectFrustumCulled) {
       _projScreenMatrix.asMul(camera.projectionMatrix, camera.matrixWorldInverse).mul(this.matrixWorld);
       _frustum.fromProjection(_projScreenMatrix);
@@ -747,16 +693,13 @@ export class BatchedMesh extends Mesh {
 
     let count = 0;
     if (this.sortObjects) {
-
       _invMatrixWorld.from(this.matrixWorld).invert();
       _vector.fromMat4Position(camera.matrixWorld).applyMat4(_invMatrixWorld);
 
       for (let i = 0, l = visibility.length; i < l; i++) {
         if (visibility[i] && active[i]) {
-
           this.getMatrixAt(i, _matrix);
           this.getBoundingSphereAt(i, _sphere)!.applyMat4(_matrix);
-
 
           let culled = false;
           if (perObjectFrustumCulled) {
@@ -764,13 +707,11 @@ export class BatchedMesh extends Mesh {
           }
 
           if (!culled) {
-
             const z = _vector.distanceTo(_sphere.center);
             _renderList.push(drawRanges[i], z);
           }
         }
       }
-
 
       const list = _renderList.list;
       const customSort = this.customSort;
@@ -791,10 +732,8 @@ export class BatchedMesh extends Mesh {
     } else {
       for (let i = 0, l = visibility.length; i < l; i++) {
         if (visibility[i] && active[i]) {
-
           let culled = false;
           if (perObjectFrustumCulled) {
-
             this.getMatrixAt(i, _matrix);
             this.getBoundingSphereAt(i, _sphere)!.applyMat4(_matrix);
             culled = !_frustum.intersectsSphere(_sphere);
@@ -815,13 +754,13 @@ export class BatchedMesh extends Mesh {
   }
 
   onBeforeShadow(
-    renderer: Hearth,
+    hearth: Hearth,
     scene: Scene,
     shadowCamera: Camera,
     geometry: Geometry,
     depthMaterial: Material,
     group: Group,
   ) {
-    this.onBeforeRender(renderer, scene, shadowCamera, geometry, depthMaterial, group);
+    this.onBeforeRender(hearth, scene, shadowCamera, geometry, depthMaterial, group);
   }
 }

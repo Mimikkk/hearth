@@ -33,7 +33,7 @@ import { GPUBufferBindingTypeType, BufferStep } from '@modules/renderer/engine/h
 const maxParticleCount = 50000;
 const instanceCount = maxParticleCount / 2;
 
-let camera, scene, renderer;
+let camera, scene, hearth;
 let controls;
 let computeParticles;
 let monkey;
@@ -265,20 +265,20 @@ async function init() {
 
   clock = new Engine.Clock();
 
-  renderer = await Hearth.as();
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.animation.loop = animate;
-  document.body.appendChild(renderer.parameters.canvas);
+  hearth = await Hearth.as();
+  hearth.setPixelRatio(window.devicePixelRatio);
+  hearth.setSize(window.innerWidth, window.innerHeight);
+  hearth.animation.loop = animate;
+  document.body.appendChild(hearth.parameters.canvas);
 
-  renderer.compute(computeInit);
+  hearth.compute(computeInit);
 
-  controls = new OrbitControls(camera, renderer.parameters.canvas);
+  controls = new OrbitControls(camera, hearth.parameters.canvas);
   controls.minDistance = 5;
   controls.maxDistance = 50;
   controls.update();
 
-  useWindowResizer(renderer, camera);
+  useWindowResizer(hearth, camera);
 
   const gui = new GUI();
 
@@ -305,12 +305,12 @@ function animate() {
   collisionBox.position.lerp(collisionBoxPos, 10 * delta);
 
   scene.overrideMaterial = collisionPosMaterial;
-  renderer.updateRenderTarget(collisionPosRT);
-  renderer.render(scene, collisionCamera);
+  hearth.updateRenderTarget(collisionPosRT);
+  hearth.render(scene, collisionCamera);
 
-  renderer.compute(computeParticles);
+  hearth.compute(computeParticles);
 
   scene.overrideMaterial = null;
-  renderer.updateRenderTarget(null);
-  renderer.render(scene, camera);
+  hearth.updateRenderTarget(null);
+  hearth.render(scene, camera);
 }

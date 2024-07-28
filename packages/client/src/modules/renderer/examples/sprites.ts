@@ -5,7 +5,7 @@ import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
-let camera, scene, renderer;
+let camera, scene, hearth;
 
 let map;
 
@@ -63,13 +63,13 @@ async function init() {
 
   scene.add(group);
 
-  renderer = await Hearth.as();
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.animation.loop = render;
-  document.body.appendChild(renderer.parameters.canvas);
+  hearth = await Hearth.as();
+  hearth.setPixelRatio(window.devicePixelRatio);
+  hearth.setSize(window.innerWidth, window.innerHeight);
+  hearth.animation.loop = render;
+  document.body.appendChild(hearth.parameters.canvas);
 
-  useWindowResizer(renderer, camera);
+  useWindowResizer(hearth, camera);
   render();
 }
 
@@ -88,5 +88,5 @@ function render() {
   group.setRotationY(time * 0.75);
   group.setRotationZ(time * 1.0);
 
-  renderer.render(scene, camera);
+  hearth.render(scene, camera);
 }

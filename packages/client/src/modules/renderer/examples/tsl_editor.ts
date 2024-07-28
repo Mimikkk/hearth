@@ -48,14 +48,14 @@ const options: {
   preview: true,
 };
 
-const renderer = await Hearth.as({
+const hearth = await Hearth.as({
   async animate() {
-    await renderer.render(scene, camera);
+    await hearth.render(scene, camera);
   },
   autoinsert: false,
 });
-renderer.setSize(renderable.clientWidth, renderable.clientHeight);
-renderable.appendChild(renderer.parameters.canvas);
+hearth.setSize(renderable.clientWidth, renderable.clientHeight);
+renderable.appendChild(hearth.parameters.canvas);
 
 let builder: NodeBuilder | null = null;
 
@@ -64,7 +64,7 @@ const refreshEditorView = async () => {
   material.fragmentNode = await resolveScript(code);
   material.needsUpdate = true;
 
-  builder = new NodeBuilder(mesh, renderer, scene).build();
+  builder = new NodeBuilder(mesh, hearth, scene).build();
 
   refreshResultView();
 };

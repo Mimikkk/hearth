@@ -11,7 +11,7 @@ import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitC
 import { GUI } from 'lil-gui';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
-let camera, scene, renderer;
+let camera, scene, hearth;
 
 init();
 
@@ -24,14 +24,14 @@ async function init() {
 
   scene = new Engine.Scene();
 
-  renderer = await Hearth.as();
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  container.appendChild(renderer.parameters.canvas);
+  hearth = await Hearth.as();
+  hearth.setPixelRatio(window.devicePixelRatio);
+  hearth.setSize(window.innerWidth, window.innerHeight);
+  container.appendChild(hearth.parameters.canvas);
 
-  await renderer.init();
+  await hearth.init();
 
-  const controls = new OrbitControls(camera, renderer.parameters.canvas);
+  const controls = new OrbitControls(camera, hearth.parameters.canvas);
   controls.onChange = render;
   controls.minDistance = 2;
   controls.maxDistance = 10;
@@ -67,7 +67,7 @@ async function init() {
 
   //while ( scene.children.length > 0 ) scene.remove( scene.children[ 0 ] );
 
-  const sceneRT = new PMREMGenerator(renderer).fromScene(scene);
+  const sceneRT = new PMREMGenerator(hearth).fromScene(scene);
 
   scene.background = null;
   scene.backgroundNode = null;
@@ -87,9 +87,9 @@ async function init() {
 
   render();
 
-  useWindowResizer(renderer, camera);
+  useWindowResizer(hearth, camera);
 }
 
 function render() {
-  renderer.render(scene, camera);
+  hearth.render(scene, camera);
 }

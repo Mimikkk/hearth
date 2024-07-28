@@ -18,7 +18,7 @@ import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 import { GPUBufferBindingTypeType, BufferStep } from '@modules/renderer/engine/hearth/constants.js';
 
-let camera, scene, renderer;
+let camera, scene, hearth;
 let computeNode;
 let waveBuffer, sampleRate;
 let waveGPUBuffer;
@@ -31,13 +31,9 @@ init();
 async function playAudioBuffer() {
   if (currentAudio) currentAudio.stop();
 
+  await hearth.compute(computeNode);
 
-
-  await renderer.compute(computeNode);
-
-  const waveArray = new Float32Array(await renderer.getArrayBuffer(waveGPUBuffer));
-
-
+  const waveArray = new Float32Array(await hearth.getArrayBuffer(waveGPUBuffer));
 
   const audioOutputContext = new AudioContext({ sampleRate });
   const audioOutputBuffer = audioOutputContext.createBuffer(1, waveArray.length, sampleRate);
@@ -51,8 +47,6 @@ async function playAudioBuffer() {
 
   currentAudio = source;
 
-
-
   currentAnalyser = audioOutputContext.createAnalyser();
   currentAnalyser.fftSize = 2048;
 
@@ -60,16 +54,6 @@ async function playAudioBuffer() {
 }
 
 async function init() {
-
-
-
-
-
-
-
-
-
-
   const soundBuffer = await fetch('sounds/webgpu-audio-processing.mp3').then(res => res.arrayBuffer());
   const audioContext = new AudioContext();
 
@@ -77,18 +61,13 @@ async function init() {
 
   waveBuffer = audioBuffer.getChannelData(0);
 
-
   waveBuffer = new Float32Array([...waveBuffer, ...new Float32Array(200000)]);
 
   sampleRate = audioBuffer.sampleRate / audioBuffer.numberOfChannels;
 
-
-
   waveGPUBuffer = new Attribute(waveBuffer, 1, 0, BufferStep.Instance, GPUBufferBindingTypeType.Storage);
 
   const waveStorageNode = storage(waveGPUBuffer, 'f32', waveBuffer.length);
-
-
 
   const waveNode = storageObject(
     new Attribute(waveBuffer, 1, 0, BufferStep.Instance, GPUBufferBindingTypeType.ReadOnlyStorage),
@@ -96,24 +75,16 @@ async function init() {
     waveBuffer.length,
   );
 
-
-
   const pitch = uniform(1.5);
   const delayVolume = uniform(0.2);
   const delayOffset = uniform(0.55);
 
-
-
   const computeShaderFn = tslFn(() => {
     const index = f32(instanceIndex);
-
-
 
     const time = index.mul(pitch);
 
     let wave = waveNode.element(time);
-
-
 
     for (let i = 1; i < 7; i++) {
       const waveOffset = waveNode.element(index.sub(delayOffset.mul(sampleRate).mul(i)).mul(pitch));
@@ -122,18 +93,12 @@ async function init() {
       wave = wave.add(waveOffsetVolume);
     }
 
-
-
     const waveStorageElementNode = waveStorageNode.element(instanceIndex);
 
     waveStorageElementNode.assign(wave);
   });
 
-
-
   computeNode = computeShaderFn().compute(waveBuffer.length);
-
-
 
   const gui = new GUI();
 
@@ -141,32 +106,24 @@ async function init() {
   gui.add(delayVolume, 'value', 0, 1, 0.01).name('delayVolume');
   gui.add(delayOffset, 'value', 0.1, 1, 0.01).name('delayOffset');
 
-
-
   const container = document.createElement('div');
   document.body.appendChild(container);
 
   camera = new Engine.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.01, 30);
-
-
 
   analyserTexture = new Engine.DataTexture(analyserBuffer, analyserBuffer.length, 1, Engine.TextureFormat.Red);
 
   const spectrum = texture(analyserTexture, viewportTopLeft.x).x.mul(viewportTopLeft.y);
   const backgroundNode = color(0x0000ff).mul(spectrum);
 
-
-
   scene = new Engine.Scene();
   scene.backgroundNode = backgroundNode;
 
-
-
-  renderer = await Hearth.as();
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.animation.loop = render;
-  container.appendChild(renderer.parameters.canvas);
+  hearth = await Hearth.as();
+  hearth.setPixelRatio(window.devicePixelRatio);
+  hearth.setSize(window.innerWidth, window.innerHeight);
+  hearth.animation.loop = render;
+  container.appendChild(hearth.parameters.canvas);
 
   document.onclick = () => {
     const overlay = document.getElementById('overlay');
@@ -174,7 +131,7 @@ async function init() {
 
     playAudioBuffer();
   };
-  useWindowResizer(renderer, camera);
+  useWindowResizer(hearth, camera);
 }
 
 function render() {
@@ -184,5 +141,5 @@ function render() {
     analyserTexture.needsUpdate = true;
   }
 
-  renderer.render(scene, camera);
+  hearth.render(scene, camera);
 }

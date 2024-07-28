@@ -39,7 +39,7 @@ class InstanceUniformNode extends Node {
   }
 }
 
-let camera, scene, renderer;
+let camera, scene, hearth;
 let controls;
 
 const objects = [];
@@ -81,17 +81,17 @@ async function init() {
     addMesh(geometry, material);
   }
 
-  renderer = await Hearth.as();
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.animation.loop = animate;
-  container.appendChild(renderer.parameters.canvas);
+  hearth = await Hearth.as();
+  hearth.setPixelRatio(window.devicePixelRatio);
+  hearth.setSize(window.innerWidth, window.innerHeight);
+  hearth.animation.loop = animate;
+  container.appendChild(hearth.parameters.canvas);
 
-  controls = new OrbitControls(camera, renderer.parameters.canvas);
+  controls = new OrbitControls(camera, hearth.parameters.canvas);
   controls.minDistance = 400;
   controls.maxDistance = 2000;
 
-  useWindowResizer(renderer, camera);
+  useWindowResizer(hearth, camera);
 }
 
 function addMesh(geometry, material) {
@@ -119,5 +119,5 @@ function animate() {
     object.rotateY(0.005);
   }
 
-  renderer.render(scene, camera);
+  hearth.render(scene, camera);
 }

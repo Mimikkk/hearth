@@ -111,7 +111,7 @@ scene.add(portals);
 camera.add(light);
 scene.add(camera);
 
-const renderer = await Hearth.as({
+const hearth = await Hearth.as({
   toneMappingNode: toneMapping(ToneMapping.Linear, 0.15),
   async animate() {
     const delta = clock.tick();
@@ -120,8 +120,8 @@ const renderer = await Hearth.as({
     if (mixer) mixer.update(delta);
     portals.rotateY(delta * 0.5);
 
-    await renderer.render(scene, camera);
+    await hearth.render(scene, camera);
   },
 });
-const controls = useOrbitControls(camera, renderer.parameters.canvas);
-useWindowResizer(renderer, camera);
+const controls = useOrbitControls(camera, hearth.parameters.canvas);
+useWindowResizer(hearth, camera);

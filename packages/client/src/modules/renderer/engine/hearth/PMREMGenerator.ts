@@ -244,14 +244,14 @@ class PMREMGenerator {
     const upSign = [-1, 1, -1, -1, -1, -1];
     const forwardSign = [1, 1, 1, -1, -1, -1];
 
-    const renderer = this._renderer;
+    const hearth = this._renderer;
 
-    const originalAutoClear = renderer.parameters.autoClear;
-    const toneMapping = renderer.parameters.toneMapping;
-    _clearColor.from(renderer._clearColor);
+    const originalAutoClear = hearth.parameters.autoClear;
+    const toneMapping = hearth.parameters.toneMapping;
+    _clearColor.from(hearth._clearColor);
 
-    renderer.parameters.toneMapping = ToneMapping.None;
-    renderer.parameters.autoClear = false;
+    hearth.parameters.toneMapping = ToneMapping.None;
+    hearth.parameters.autoClear = false;
 
     const backgroundMaterial = new MeshBasicMaterial({
       name: 'PMREM.Background',
@@ -276,12 +276,12 @@ class PMREMGenerator {
       useSolidColor = true;
     }
 
-    renderer.updateRenderTarget(cubeUVRenderTarget);
+    hearth.updateRenderTarget(cubeUVRenderTarget);
 
-    renderer.clear();
+    hearth.clear();
 
     if (useSolidColor) {
-      renderer.render(backgroundBox, cubeCamera);
+      hearth.render(backgroundBox, cubeCamera);
     }
 
     for (let i = 0; i < 6; i++) {
@@ -302,16 +302,16 @@ class PMREMGenerator {
 
       _setViewport(cubeUVRenderTarget, col * size, i > 2 ? size : 0, size, size);
 
-      renderer.render(scene, cubeCamera);
+      hearth.render(scene, cubeCamera);
     }
 
-    renderer.parameters.toneMapping = toneMapping;
-    renderer.parameters.autoClear = originalAutoClear;
+    hearth.parameters.toneMapping = toneMapping;
+    hearth.parameters.autoClear = originalAutoClear;
     scene.background = background;
   }
 
   _textureToCubeUV(texture, cubeUVRenderTarget) {
-    const renderer = this._renderer;
+    const hearth = this._renderer;
 
     const isCubeTexture = texture.mapping === Mapping.CubeReflection || texture.mapping === Mapping.CubeRefraction;
 
@@ -334,14 +334,14 @@ class PMREMGenerator {
 
     _setViewport(cubeUVRenderTarget, 0, 0, 3 * size, 2 * size);
 
-    renderer.updateRenderTarget(cubeUVRenderTarget);
-    renderer.render(mesh, _flatCamera);
+    hearth.updateRenderTarget(cubeUVRenderTarget);
+    hearth.render(mesh, _flatCamera);
   }
 
   _applyPMREM(cubeUVRenderTarget) {
-    const renderer = this._renderer;
-    const autoClear = renderer.parameters.autoClear;
-    renderer.parameters.autoClear = false;
+    const hearth = this._renderer;
+    const autoClear = hearth.parameters.autoClear;
+    hearth.parameters.autoClear = false;
 
     for (let i = 1; i < this._lodPlanes.length; i++) {
       const sigma = Math.sqrt(this._sigmas[i] * this._sigmas[i] - this._sigmas[i - 1] * this._sigmas[i - 1]);
@@ -351,7 +351,7 @@ class PMREMGenerator {
       this._blur(cubeUVRenderTarget, i - 1, i, sigma, poleAxis);
     }
 
-    renderer.parameters.autoClear = autoClear;
+    hearth.parameters.autoClear = autoClear;
   }
 
   /**
@@ -370,7 +370,7 @@ class PMREMGenerator {
   }
 
   _halfBlur(targetIn, targetOut, lodIn, lodOut, sigmaRadians, direction, poleAxis) {
-    const renderer = this._renderer;
+    const hearth = this._renderer;
     const blurMaterial = this._blurMaterial;
 
     if (direction !== 'latitudinal' && direction !== 'longitudinal') {
@@ -430,8 +430,8 @@ class PMREMGenerator {
     const y = 4 * (this._cubeSize - outputSize);
 
     _setViewport(targetOut, x, y, 3 * outputSize, 2 * outputSize);
-    renderer.updateRenderTarget(targetOut);
-    renderer.render(blurMesh, _flatCamera);
+    hearth.updateRenderTarget(targetOut);
+    hearth.render(blurMesh, _flatCamera);
   }
 }
 

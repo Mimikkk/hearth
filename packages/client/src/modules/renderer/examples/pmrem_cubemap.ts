@@ -19,7 +19,7 @@ import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitC
 import { GUI } from 'lil-gui';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
-let camera, scene, renderer;
+let camera, scene, hearth;
 
 init();
 
@@ -32,16 +32,16 @@ async function init() {
 
   scene = new Engine.Scene();
 
-  renderer = await Hearth.as();
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.parameters.toneMapping = Engine.ToneMapping.ACESFilmic;
+  hearth = await Hearth.as();
+  hearth.setPixelRatio(window.devicePixelRatio);
+  hearth.setSize(window.innerWidth, window.innerHeight);
+  hearth.parameters.toneMapping = Engine.ToneMapping.ACESFilmic;
 
-  await renderer.init();
+  await hearth.init();
 
-  container.appendChild(renderer.parameters.canvas);
+  container.appendChild(hearth.parameters.canvas);
 
-  const controls = new OrbitControls(camera, renderer.parameters.canvas);
+  const controls = new OrbitControls(camera, hearth.parameters.canvas);
   controls.onChange = render;
   controls.minDistance = 2;
   controls.maxDistance = 10;
@@ -77,9 +77,9 @@ async function init() {
       render();
     });
 
-  useWindowResizer(renderer, camera);
+  useWindowResizer(hearth, camera);
 }
 
 function render() {
-  renderer.render(scene, camera);
+  hearth.render(scene, camera);
 }

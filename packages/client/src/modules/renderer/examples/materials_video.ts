@@ -5,7 +5,7 @@ import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindow
 
 let container;
 
-let camera, scene, renderer;
+let camera, scene, hearth;
 
 let video, texture, material, mesh;
 
@@ -40,11 +40,11 @@ async function init() {
   light.position.set(0.5, 1, 1).normalize();
   scene.add(light);
 
-  renderer = await Hearth.as();
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.animation.loop = render;
-  container.appendChild(renderer.parameters.canvas);
+  hearth = await Hearth.as();
+  hearth.setPixelRatio(window.devicePixelRatio);
+  hearth.setSize(window.innerWidth, window.innerHeight);
+  hearth.animation.loop = render;
+  container.appendChild(hearth.parameters.canvas);
 
   video = document.getElementById('video');
   video.play();
@@ -105,7 +105,7 @@ async function init() {
 
   document.addEventListener('mousemove', onDocumentMouseMove);
 
-  useWindowResizer(renderer, camera);
+  useWindowResizer(hearth, camera);
 }
 
 function change_uvs(geometry, unitx, unity, offsetx, offsety) {
@@ -164,5 +164,5 @@ function render() {
 
   counter++;
 
-  renderer.render(scene, camera);
+  hearth.render(scene, camera);
 }

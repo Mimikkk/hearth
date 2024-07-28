@@ -27,15 +27,15 @@ async function init() {
   const scene = new Engine.Scene();
   scene.add(new Engine.HemisphereLight(0xffffff, 0x443333, 2));
 
-  const renderer = await Hearth.as();
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.parameters.toneMapping = Engine.ToneMapping.ACESFilmic;
-  renderer.animation.loop = animate;
+  const hearth = await Hearth.as();
+  hearth.setPixelRatio(window.devicePixelRatio);
+  hearth.setSize(window.innerWidth, window.innerHeight);
+  hearth.parameters.toneMapping = Engine.ToneMapping.ACESFilmic;
+  hearth.animation.loop = animate;
 
-  container.appendChild(renderer.parameters.canvas);
+  container.appendChild(hearth.parameters.canvas);
 
-  const ktx2Loader = await new KTX2Loader().detectSupportAsync(renderer);
+  const ktx2Loader = await new KTX2Loader().detectSupportAsync(hearth);
 
   new GLTFLoader()
     .setKTX2Loader(ktx2Loader)
@@ -71,7 +71,7 @@ async function init() {
 
   scene.background = new Engine.Color(0x666666);
 
-  const controls = new OrbitControls(camera, renderer.parameters.canvas);
+  const controls = new OrbitControls(camera, hearth.parameters.canvas);
   controls.enableDamping = true;
   controls.minDistance = 2.5;
   controls.maxDistance = 5;
@@ -88,12 +88,12 @@ async function init() {
       mixer.update(delta);
     }
 
-    renderer.render(scene, camera);
+    hearth.render(scene, camera);
 
     controls?.update();
 
     stats.update();
   }
 
-  useWindowResizer(renderer, camera);
+  useWindowResizer(hearth, camera);
 }

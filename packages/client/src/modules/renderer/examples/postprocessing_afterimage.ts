@@ -7,7 +7,7 @@ import Postprocess from '@modules/renderer/engine/hearth/Postprocess.js';
 import { pass } from '@modules/renderer/engine/nodes/Nodes.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
-let camera, scene, renderer;
+let camera, scene, hearth;
 let mesh, postProcessing, combinedPass;
 
 const params = {
@@ -18,11 +18,11 @@ init();
 createGUI();
 
 async function init() {
-  renderer = await Hearth.as();
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.animation.loop = animate;
-  document.body.appendChild(renderer.parameters.canvas);
+  hearth = await Hearth.as();
+  hearth.setPixelRatio(window.devicePixelRatio);
+  hearth.setSize(window.innerWidth, window.innerHeight);
+  hearth.animation.loop = animate;
+  document.body.appendChild(hearth.parameters.canvas);
 
   camera = new Engine.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 1000);
   camera.position.z = 400;
@@ -35,9 +35,7 @@ async function init() {
   mesh = new Engine.Mesh(geometry, material);
   scene.add(mesh);
 
-
-
-  postProcessing = new Postprocess(renderer);
+  postProcessing = new Postprocess(hearth);
 
   const scenePass = pass(scene, camera);
   const scenePassColor = scenePass.getTextureNode();
@@ -47,7 +45,7 @@ async function init() {
 
   postProcessing.outputNode = combinedPass;
 
-  useWindowResizer(renderer, camera);
+  useWindowResizer(hearth, camera);
 }
 
 function createGUI() {

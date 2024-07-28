@@ -38,11 +38,11 @@ const createScene = () => {
 };
 const createLight = () => new SpotLight(0xffffff, 10);
 const createRenderer = async (onAnimate: () => void) => {
-  const renderer = await Hearth.as();
-  renderer.animation.loop = onAnimate;
-  document.body.append(renderer.parameters.canvas);
+  const hearth = await Hearth.as();
+  hearth.animation.loop = onAnimate;
+  document.body.append(hearth.parameters.canvas);
 
-  return renderer;
+  return hearth;
 };
 const useOrbitControls = (canvas: HTMLCanvasElement) => {
   const controls = new OrbitControls(state.camera, canvas);
@@ -102,23 +102,23 @@ const frustumVisualizer = new CameraVisualizer(frustumCamera);
 perspectiveCamera.add(light);
 scene.add(frustumVisualizer, frustumCamera, perspectiveCamera, sprites, spheres, points);
 
-const renderer = await createRenderer(() => {
+const hearth = await createRenderer(() => {
   spheres.rotateZ(clock.tick());
 
   controls.update();
-  renderer.render(scene, state.camera);
+  hearth.render(scene, state.camera);
 });
 
-const controls = useOrbitControls(renderer.parameters.canvas);
-useWindowResizer.updateSize(renderer, state.camera);
-useWindowResizer(renderer, state.camera);
+const controls = useOrbitControls(hearth.parameters.canvas);
+useWindowResizer.updateSize(hearth, state.camera);
+useWindowResizer(hearth, state.camera);
 
 UI.create<{ camera: Camera }>('Controls', state)
   .action('Switch camera', s => {
     s.camera = s.camera === perspectiveCamera ? frustumCamera : perspectiveCamera;
     controls.enabled = s.camera === perspectiveCamera;
 
-    useWindowResizer.updateSize(renderer, s.camera);
+    useWindowResizer.updateSize(hearth, s.camera);
   })
   .action('Reset camera position', () => {
     perspectiveCamera.position.set(0, 0, 3);

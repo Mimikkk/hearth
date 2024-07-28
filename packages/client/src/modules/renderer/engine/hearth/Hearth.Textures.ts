@@ -15,7 +15,7 @@ import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 const _size = Vec3.new();
 
 export class HearthTextures extends DataMap<any, any> {
-  constructor(public renderer: Hearth) {
+  constructor(public hearth: Hearth) {
     super();
   }
 
@@ -92,7 +92,7 @@ export class HearthTextures extends DataMap<any, any> {
     if (textureData.initialized === true && textureData.version === texture.version) return;
 
     const isRenderTarget = texture.isRenderTargetTexture || texture.isDepthTexture || texture.isFramebufferTexture;
-    const backend = this.renderer.backend;
+    const backend = this.hearth.backend;
 
     if (isRenderTarget && textureData.initialized === true) {
       backend.destroySampler(texture);
@@ -100,8 +100,8 @@ export class HearthTextures extends DataMap<any, any> {
     }
 
     if (texture.isFramebufferTexture) {
-      const renderer = this.renderer;
-      const renderTarget = renderer.target;
+      const hearth = this.hearth;
+      const renderTarget = hearth.target;
 
       if (renderTarget) {
         texture.type = renderTarget.texture.type;
@@ -166,7 +166,7 @@ export class HearthTextures extends DataMap<any, any> {
     if (textureData.initialized !== true) {
       textureData.initialized = true;
 
-      this.renderer.info.memory.textures++;
+      this.hearth.info.memory.textures++;
     }
 
     textureData.version = texture.version;
@@ -222,8 +222,8 @@ export class HearthTextures extends DataMap<any, any> {
   }
 
   _destroyTexture(texture: Texture): void {
-    this.renderer.backend.destroySampler(texture);
-    this.renderer.backend.destroyTexture(texture);
+    this.hearth.backend.destroySampler(texture);
+    this.hearth.backend.destroyTexture(texture);
 
     this.delete(texture);
   }

@@ -76,12 +76,12 @@ for (let i = 0; i < spheres.count; i++) {
 
 physics.addScene(scene);
 
-const renderer = await Hearth.as({ antialias: true, alpha: true });
-renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.animation.loop = animate;
-document.body.appendChild(renderer.parameters.canvas);
+const hearth = await Hearth.as({ antialias: true, alpha: true });
+hearth.setSize(window.innerWidth, window.innerHeight);
+hearth.animation.loop = animate;
+document.body.appendChild(hearth.parameters.canvas);
 
-const controls = new OrbitControls(camera, renderer.parameters.canvas);
+const controls = new OrbitControls(camera, hearth.parameters.canvas);
 controls.target.y = 0.5;
 controls.update();
 
@@ -93,5 +93,5 @@ setInterval(() => {
 }, 1000 / 60);
 
 function animate() {
-  renderer.render(scene, camera);
+  hearth.render(scene, camera);
 }

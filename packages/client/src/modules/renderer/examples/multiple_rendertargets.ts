@@ -25,7 +25,7 @@ import { Filter } from '@modules/renderer/engine/engine.js';
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
-let camera, scene, renderer, torus;
+let camera, scene, hearth, torus;
 let quadMesh, renderTarget;
 
 /*
@@ -85,13 +85,11 @@ class ReadGBufferMaterial extends NodeMaterial {
 init();
 
 async function init() {
-  renderer = await Hearth.as();
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.animation.loop = render;
-  document.body.appendChild(renderer.parameters.canvas);
-
-  
+  hearth = await Hearth.as();
+  hearth.setPixelRatio(window.devicePixelRatio);
+  hearth.setSize(window.innerWidth, window.innerHeight);
+  hearth.animation.loop = render;
+  document.body.appendChild(hearth.parameters.canvas);
 
   renderTarget = new Engine.RenderTarget(
     window.innerWidth * window.devicePixelRatio,
@@ -99,12 +97,8 @@ async function init() {
     { count: 2, minFilter: Engine.Filter.Nearest, magFilter: Engine.Filter.Nearest },
   );
 
-  
-
   renderTarget.textures[0].name = 'diffuse';
   renderTarget.textures[1].name = 'normal';
-
-  
 
   scene = new Engine.Scene();
   scene.background = new Engine.Color(0x222222);
@@ -123,20 +117,16 @@ async function init() {
 
   scene.add(torus);
 
-  
-
   quadMesh = new QuadMesh(new ReadGBufferMaterial(renderTarget.textures[0], renderTarget.textures[1]));
 
-  
+  new OrbitControls(camera, hearth.parameters.canvas);
 
-  new OrbitControls(camera, renderer.parameters.canvas);
-
-  useWindowResizer(renderer, camera, () => {
+  useWindowResizer(hearth, camera, () => {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    hearth.setSize(window.innerWidth, window.innerHeight);
 
-    const dpr = renderer._pixelRatio;
+    const dpr = hearth._pixelRatio;
     renderTarget.setSize(window.innerWidth * dpr, window.innerHeight * dpr);
   });
 }
@@ -162,11 +152,9 @@ function render(time) {
 
   torus.setRotationY((time / 1000) * 0.4);
 
-  
-  renderer.updateRenderTarget(renderTarget);
-  renderer.render(scene, camera);
+  hearth.updateRenderTarget(renderTarget);
+  hearth.render(scene, camera);
 
-  
-  renderer.updateRenderTarget(null);
-  quadMesh.render(renderer);
+  hearth.updateRenderTarget(null);
+  quadMesh.render(hearth);
 }

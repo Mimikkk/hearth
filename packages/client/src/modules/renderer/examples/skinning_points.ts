@@ -6,7 +6,7 @@ import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
-let camera, scene, renderer;
+let camera, scene, hearth;
 
 let mixer, clock;
 
@@ -45,15 +45,15 @@ async function init() {
     scene.add(object);
   });
 
-  //renderer
+  //hearth
 
-  renderer = await Hearth.as();
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.animation.loop = animate;
-  document.body.appendChild(renderer.parameters.canvas);
+  hearth = await Hearth.as();
+  hearth.setPixelRatio(window.devicePixelRatio);
+  hearth.setSize(window.innerWidth, window.innerHeight);
+  hearth.animation.loop = animate;
+  document.body.appendChild(hearth.parameters.canvas);
 
-  useWindowResizer(renderer, camera);
+  useWindowResizer(hearth, camera);
 }
 
 function animate() {
@@ -61,5 +61,5 @@ function animate() {
 
   if (mixer) mixer.update(delta);
 
-  renderer.render(scene, camera);
+  hearth.render(scene, camera);
 }

@@ -7,7 +7,7 @@ import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 import { Attribute } from '@modules/renderer/engine/engine.js';
 
-let container, camera, scene, renderer, mesh;
+let container, camera, scene, hearth, mesh;
 
 init();
 
@@ -38,34 +38,29 @@ async function init() {
 
   initGUI();
 
-  renderer = await Hearth.as();
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.animation.loop = function () {
-    renderer.render(scene, camera);
+  hearth = await Hearth.as();
+  hearth.setPixelRatio(window.devicePixelRatio);
+  hearth.setSize(window.innerWidth, window.innerHeight);
+  hearth.animation.loop = function () {
+    hearth.render(scene, camera);
   };
-  container.appendChild(renderer.parameters.canvas);
+  container.appendChild(hearth.parameters.canvas);
 
-  const controls = new OrbitControls(camera, renderer.parameters.canvas);
+  const controls = new OrbitControls(camera, hearth.parameters.canvas);
   controls.enableZoom = false;
 
-  useWindowResizer(renderer, camera);
+  useWindowResizer(hearth, camera);
 }
 
 function createGeometry() {
   const geometry = new Engine.BoxGeometry(2, 2, 2, 32, 32, 32);
 
-  
-  
   geometry.morphAttributes.position = [];
 
-  
   const positionAttribute = geometry.attributes.position;
 
-  
   const spherePositions = [];
 
-  
   const twistPositions = [];
   const direction = new Engine.Vec3(1, 0, 0);
   const vertex = new Engine.Vec3();
@@ -81,23 +76,19 @@ function createGeometry() {
       z * Math.sqrt(1 - (x * x) / 2 - (y * y) / 2 + (x * x * y * y) / 3),
     );
 
-    
     vertex.set(x * 2, y, z);
 
     vertex.applyAxisAngle(direction, (Math.PI * x) / 2).intoArray(twistPositions, twistPositions.length);
   }
 
-  
   geometry.morphAttributes.position[0] = new Attribute(new Float32Array(spherePositions), 3);
 
-  
   geometry.morphAttributes.position[1] = new Attribute(new Float32Array(twistPositions), 3);
 
   return geometry;
 }
 
 function initGUI() {
-  
   const params = {
     Spherify: 0,
     Twist: 0,

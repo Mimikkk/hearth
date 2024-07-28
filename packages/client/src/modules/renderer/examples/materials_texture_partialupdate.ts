@@ -33,21 +33,21 @@ diffuseMap.generateMipmaps = false;
 const mesh = new Mesh(new PlaneGeometry(2, 2), new MeshBasicMaterial({ map: diffuseMap }));
 scene.add(mesh);
 
-const renderer = await Hearth.as({
+const hearth = await Hearth.as({
   async animate() {
     clock.tick();
 
-    await renderer.render(scene, camera);
+    await hearth.render(scene, camera);
 
     const { total } = clock;
     if (total - last <= 0.5) return;
     randomizePosition(position);
     regenerateDataTexture(texture);
-    renderer.patchTextureAt(diffuseMap, texture, position);
+    hearth.patchTextureAt(diffuseMap, texture, position);
   },
 });
 
-useWindowResizer(renderer, camera);
+useWindowResizer(hearth, camera);
 
 const position = Vec2.new();
 

@@ -47,8 +47,8 @@ export class ClippingContext {
     }
   }
 
-  updateGlobal(renderer: Hearth, camera: Camera) {
-    const rendererClippingPlanes = renderer.parameters.clippingPlanes;
+  updateGlobal(hearth: Hearth, camera: Camera) {
+    const rendererClippingPlanes = hearth.parameters.clippingPlanes;
     this.viewMatrix = camera.matrixWorldInverse;
 
     _viewNormalMatrix.fromNMat4(this.viewMatrix!);
@@ -78,8 +78,8 @@ export class ClippingContext {
       update = true;
     }
 
-    if (renderer.parameters.localClippingEnabled !== this.localClippingEnabled) {
-      this.localClippingEnabled = renderer.parameters.localClippingEnabled;
+    if (hearth.parameters.localClippingEnabled !== this.localClippingEnabled) {
+      this.localClippingEnabled = hearth.parameters.localClippingEnabled;
       update = true;
     }
 

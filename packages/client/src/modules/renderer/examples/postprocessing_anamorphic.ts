@@ -13,7 +13,7 @@ import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/
 import { GUI } from 'lil-gui';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
-let camera, scene, renderer;
+let camera, scene, hearth;
 let postProcessing;
 
 init();
@@ -46,20 +46,18 @@ async function init() {
     scene.add(gltf.scene);
   });
 
-  renderer = await Hearth.as();
+  hearth = await Hearth.as();
 
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.parameters.toneMapping = Engine.ToneMapping.Linear;
-  renderer.parameters.toneMappingExposure = 1;
-  renderer.animation.loop = render;
-  container.appendChild(renderer.parameters.canvas);
+  hearth.setPixelRatio(window.devicePixelRatio);
+  hearth.setSize(window.innerWidth, window.innerHeight);
+  hearth.parameters.toneMapping = Engine.ToneMapping.Linear;
+  hearth.parameters.toneMappingExposure = 1;
+  hearth.animation.loop = render;
+  container.appendChild(hearth.parameters.canvas);
 
-  const controls = new OrbitControls(camera, renderer.parameters.canvas);
+  const controls = new OrbitControls(camera, hearth.parameters.canvas);
   controls.minDistance = 2;
   controls.maxDistance = 10;
-
-  
 
   const scenePass = pass(scene, camera);
 
@@ -69,13 +67,11 @@ async function init() {
   const samples = 64;
 
   const anamorphicPass = scenePass.getTextureNode().anamorphic(threshold, scaleNode, samples);
-  anamorphicPass.resolution = new Engine.Vec2(0.2, 0.2); 
+  anamorphicPass.resolution = new Engine.Vec2(0.2, 0.2);
 
-  postProcessing = new Postprocess(renderer);
+  postProcessing = new Postprocess(hearth);
   postProcessing.outputNode = scenePass.add(anamorphicPass.mul(intensity));
   //postProcessing.outputNode = scenePass.add( anamorphicPass.getTextureNode().gaussianBlur() );
-
-  
 
   const gui = new GUI();
   gui.add(intensity, 'value', 0, 4, 0.1).name('intensity');
@@ -86,7 +82,7 @@ async function init() {
     .name('resolution')
     .onChange(v => (anamorphicPass.resolution.y = v));
 
-  useWindowResizer(renderer, camera);
+  useWindowResizer(hearth, camera);
 }
 
 function render() {

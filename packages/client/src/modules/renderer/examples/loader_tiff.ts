@@ -22,10 +22,10 @@ async function init() {
   const camera = new PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.01, 10);
   camera.position.set(0, 0, 4);
 
-  const renderer = await Hearth.as();
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  document.body.appendChild(renderer.parameters.canvas);
+  const hearth = await Hearth.as();
+  hearth.setPixelRatio(window.devicePixelRatio);
+  hearth.setSize(window.innerWidth, window.innerHeight);
+  document.body.appendChild(hearth.parameters.canvas);
   const [uncompressed, lzw, jpeg] = await TiffLoader.loadAsyncMultiple([
     'resources/textures/tiff/crate_uncompressed.tif',
     'resources/textures/tiff/crate_lzw.tif',
@@ -39,12 +39,12 @@ async function init() {
   const scene = new Scene();
   scene.add(mesh1, mesh2, mesh3);
 
-  useWindowResizer(renderer, camera, () => {
-    useWindowResizer.updateSize(renderer, camera);
-    renderer.render(scene, camera);
+  useWindowResizer(hearth, camera, () => {
+    useWindowResizer.updateSize(hearth, camera);
+    hearth.render(scene, camera);
   });
 
-  await renderer.render(scene, camera);
+  await hearth.render(scene, camera);
 }
 
 init();

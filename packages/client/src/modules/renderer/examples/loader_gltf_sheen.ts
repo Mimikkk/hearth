@@ -9,7 +9,7 @@ import { RGBELoader } from '@modules/renderer/engine/loaders/textures/RGBELoader
 import { GUI } from 'lil-gui';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
-let camera, scene, renderer, controls;
+let camera, scene, hearth, controls;
 
 init();
 
@@ -33,13 +33,13 @@ async function init() {
     gui.open();
   });
 
-  renderer = await Hearth.as();
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.animation.loop = animate;
-  renderer.parameters.toneMapping = Engine.ToneMapping.ACESFilmic;
-  renderer.parameters.toneMappingExposure = 1;
-  container.appendChild(renderer.parameters.canvas);
+  hearth = await Hearth.as();
+  hearth.setPixelRatio(window.devicePixelRatio);
+  hearth.setSize(window.innerWidth, window.innerHeight);
+  hearth.animation.loop = animate;
+  hearth.parameters.toneMapping = Engine.ToneMapping.ACESFilmic;
+  hearth.parameters.toneMappingExposure = 1;
+  container.appendChild(hearth.parameters.canvas);
 
   scene.background = new Engine.Color(0xaaaaaa);
 
@@ -51,14 +51,14 @@ async function init() {
     scene.environment = texture;
   });
 
-  controls = new OrbitControls(camera, renderer.parameters.canvas);
+  controls = new OrbitControls(camera, hearth.parameters.canvas);
   controls.enableDamping = true;
   controls.minDistance = 1;
   controls.maxDistance = 10;
   controls.target.set(0, 0.35, 0);
   controls.update();
 
-  useWindowResizer(renderer, camera);
+  useWindowResizer(hearth, camera);
 }
 
 function animate() {
@@ -68,5 +68,5 @@ function animate() {
 }
 
 function render() {
-  renderer.render(scene, camera);
+  hearth.render(scene, camera);
 }

@@ -32,7 +32,7 @@ import { TeapotGeometry } from '@modules/renderer/engine/entities/geometries/Tea
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
-let camera, scene, renderer;
+let camera, scene, hearth;
 
 const objects = [],
   materials = [];
@@ -272,7 +272,7 @@ async function init() {
 							//console.info( 'binary', parameters.get( 'binary' ) );
 							//console.info( 'object3d', parameters.get( 'object3d' ) ); 
 
-							//console.info( global.get( 'renderer' ) );
+							//console.info( global.get( 'hearth' ) );
 
 						}
 
@@ -307,13 +307,13 @@ async function init() {
     addMesh(geometry, materials[i]);
   }
 
-  renderer = await Hearth.as();
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.animation.loop = animate;
-  container.appendChild(renderer.parameters.canvas);
+  hearth = await Hearth.as();
+  hearth.setPixelRatio(window.devicePixelRatio);
+  hearth.setSize(window.innerWidth, window.innerHeight);
+  hearth.animation.loop = animate;
+  container.appendChild(hearth.parameters.canvas);
 
-  useWindowResizer(renderer, camera);
+  useWindowResizer(hearth, camera);
 }
 
 function addMesh(geometry, material) {
@@ -346,5 +346,5 @@ function animate() {
     object.rotateY(0.005);
   }
 
-  renderer.render(scene, camera);
+  hearth.render(scene, camera);
 }

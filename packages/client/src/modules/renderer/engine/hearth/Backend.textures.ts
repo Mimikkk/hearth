@@ -230,11 +230,11 @@ export class BackendTextures {
   getColorBuffer() {
     if (this.colorBuffer) this.colorBuffer.destroy();
 
-    const { width, height } = this.backend.renderer.getDrawSize();
+    const { width, height } = this.backend.hearth.getDrawSize();
     this.colorBuffer = this.backend.device.createTexture({
       label: 'colorBuffer',
       size: { width, height, depthOrArrayLayers: 1 },
-      sampleCount: this.backend.renderer.parameters.sampleCount,
+      sampleCount: this.backend.hearth.parameters.sampleCount,
       format: GPUTextureFormatType.BGRA8Unorm,
       usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.COPY_SRC,
     });
@@ -244,7 +244,7 @@ export class BackendTextures {
 
   getDepthBuffer(depth: boolean = true, stencil: boolean = false) {
     const backend = this.backend;
-    const { width, height } = backend.renderer.getDrawSize();
+    const { width, height } = backend.hearth.getDrawSize();
 
     const depthTexture = this.depthTexture;
     const depthTextureGPU = backend.memo.get(depthTexture).texture;
@@ -279,7 +279,7 @@ export class BackendTextures {
     depthTexture.image.width = width;
     depthTexture.image.height = height;
 
-    this.createTexture(depthTexture, { sampleCount: backend.renderer.parameters.sampleCount, width, height });
+    this.createTexture(depthTexture, { sampleCount: backend.hearth.parameters.sampleCount, width, height });
 
     return backend.memo.get(depthTexture).texture;
   }

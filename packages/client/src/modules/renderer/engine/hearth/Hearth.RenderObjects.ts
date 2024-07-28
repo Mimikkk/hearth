@@ -11,7 +11,7 @@ import { Entity } from '@modules/renderer/engine/core/Entity.js';
 export class HearthRenderObjects {
   chainMaps: Record<string, ChainMap<any, any>>;
 
-  constructor(public renderer: Hearth) {
+  constructor(public hearth: Hearth) {
     this.chainMaps = {};
   }
 
@@ -69,12 +69,12 @@ export class HearthRenderObjects {
   ) {
     const map = this.getChainMap(passId);
 
-    const item = new RenderObject(this.renderer, object, material, scene, camera, lightsNode, renderContext);
+    const item = new RenderObject(this.hearth, object, material, scene, camera, lightsNode, renderContext);
 
     item.onDispose = () => {
-      this.renderer.pipelines.delete(item);
-      this.renderer.bindings.delete(item);
-      this.renderer.nodes.delete(item);
+      this.hearth.pipelines.delete(item);
+      this.hearth.bindings.delete(item);
+      this.hearth.nodes.delete(item);
 
       map.delete(item.getChainArray());
     };

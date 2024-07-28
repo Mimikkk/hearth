@@ -13,7 +13,7 @@ export class HearthPipelines extends DataMap<any, any> {
   caches: Map<any, any>;
   programs: Record<ShaderStage, Map<string, ProgrammableStage>>;
 
-  constructor(public renderer: Hearth) {
+  constructor(public hearth: Hearth) {
     super();
 
     this.caches = new Map();
@@ -35,7 +35,7 @@ export class HearthPipelines extends DataMap<any, any> {
         previousPipeline.computeProgram.usedTimes--;
       }
 
-      const nodeBuilderState = this.renderer.nodes.getForCompute(computeNode);
+      const nodeBuilderState = this.hearth.nodes.getForCompute(computeNode);
 
       let stageCompute = this.programs.compute.get(nodeBuilderState.computeShader!);
 
@@ -50,7 +50,7 @@ export class HearthPipelines extends DataMap<any, any> {
         );
         this.programs.compute.set(nodeBuilderState.computeShader!, stageCompute);
 
-        this.renderer.backend.createProgram(stageCompute);
+        this.hearth.backend.createProgram(stageCompute);
       }
 
       const cacheKey = this._getComputeCacheKey(computeNode, stageCompute);
@@ -96,7 +96,7 @@ export class HearthPipelines extends DataMap<any, any> {
         stageVertex = new ProgrammableStage(nodeBuilderState.vertexShader, ShaderStage.Vertex);
         this.programs.vertex.set(nodeBuilderState.vertexShader, stageVertex);
 
-        this.renderer.backend.createProgram(stageVertex);
+        this.hearth.backend.createProgram(stageVertex);
       }
 
       let stageFragment = this.programs.fragment.get(nodeBuilderState.fragmentShader);
@@ -108,7 +108,7 @@ export class HearthPipelines extends DataMap<any, any> {
         stageFragment = new ProgrammableStage(nodeBuilderState.fragmentShader, ShaderStage.Fragment);
         this.programs.fragment.set(nodeBuilderState.fragmentShader, stageFragment);
 
-        this.renderer.backend.createProgram(stageFragment);
+        this.hearth.backend.createProgram(stageFragment);
       }
 
       const cacheKey = this._getRenderCacheKey(renderObject, stageVertex, stageFragment);
@@ -187,7 +187,7 @@ export class HearthPipelines extends DataMap<any, any> {
 
       this.caches.set(cacheKey, pipeline);
 
-      this.renderer.backend.createComputePipeline(pipeline, bindings);
+      this.hearth.backend.createComputePipeline(pipeline, bindings);
     }
 
     return pipeline;
@@ -210,7 +210,7 @@ export class HearthPipelines extends DataMap<any, any> {
 
       renderObject.pipeline = pipeline;
 
-      this.renderer.backend.createRenderPipeline(renderObject);
+      this.hearth.backend.createRenderPipeline(renderObject);
     }
 
     return pipeline;
@@ -225,7 +225,7 @@ export class HearthPipelines extends DataMap<any, any> {
     stageVertex: ProgrammableStage,
     stageFragment: ProgrammableStage,
   ): string {
-    return stageVertex.id + ',' + stageFragment.id + ',' + this.renderer.backend.getRenderCacheKey(renderObject);
+    return stageVertex.id + ',' + stageFragment.id + ',' + this.hearth.backend.getRenderCacheKey(renderObject);
   }
 
   _releasePipeline(pipeline: Pipeline) {
@@ -245,6 +245,6 @@ export class HearthPipelines extends DataMap<any, any> {
   _needsRenderUpdate(renderObject: RenderObject): boolean {
     const data = this.get(renderObject);
 
-    return data.pipeline === undefined || this.renderer.backend.needsRenderUpdate(renderObject);
+    return data.pipeline === undefined || this.hearth.backend.needsRenderUpdate(renderObject);
   }
 }

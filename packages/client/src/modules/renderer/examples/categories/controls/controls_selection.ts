@@ -69,29 +69,29 @@ const light = createLight();
 const boxes = createBoxes();
 scene.add(light, camera, boxes);
 
-const renderer = await Hearth.as({
+const hearth = await Hearth.as({
   animate() {
     ui.update();
     stats.update();
-    renderer.render(scene, camera);
+    hearth.render(scene, camera);
   },
 });
-const stats = Stats.use(renderer);
-useWindowResizer(renderer, camera);
+const stats = Stats.use(hearth);
+useWindowResizer(hearth, camera);
 
 const selection = new SelectionControls(camera, scene);
-const visualizer = new SelectionVisualizer(renderer);
+const visualizer = new SelectionVisualizer(hearth);
 const updateVec = (vec3: Vec3, event: PointerEvent) => {
   vec3.set((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1, 0.5);
 };
-renderer.parameters.canvas.addEventListener('pointerdown', event => {
+hearth.parameters.canvas.addEventListener('pointerdown', event => {
   for (const object of selection.collection) {
     (object.material as MeshLambertMaterial).emissive.set(0x000000);
   }
 
   updateVec(selection.start, event);
 });
-renderer.parameters.canvas.addEventListener('pointermove', event => {
+hearth.parameters.canvas.addEventListener('pointermove', event => {
   if (!visualizer.isDown) return;
   for (const object of selection.collection) {
     (object.material as MeshLambertMaterial).emissive.set(0x000000);
@@ -103,7 +103,7 @@ renderer.parameters.canvas.addEventListener('pointermove', event => {
     (object.material as MeshLambertMaterial).emissive.set(0xff0000);
   }
 });
-renderer.parameters.canvas.addEventListener('pointerup', event => {
+hearth.parameters.canvas.addEventListener('pointerup', event => {
   updateVec(selection.end, event);
 
   for (const object of selection.select()) {

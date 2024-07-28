@@ -17,7 +17,7 @@ import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
-let camera, scene, renderer, light1, light2, light3, light4, controls;
+let camera, scene, hearth, light1, light2, light3, light4, controls;
 
 init();
 
@@ -100,23 +100,23 @@ async function init() {
   centerObject.position.y = -1;
   rightObject.position.y = -1;
 
-  //renderer
+  //hearth
 
-  renderer = await Hearth.as();
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.animation.loop = animate;
-  document.body.appendChild(renderer.parameters.canvas);
+  hearth = await Hearth.as();
+  hearth.setPixelRatio(window.devicePixelRatio);
+  hearth.setSize(window.innerWidth, window.innerHeight);
+  hearth.animation.loop = animate;
+  document.body.appendChild(hearth.parameters.canvas);
 
   //controls
 
-  controls = new OrbitControls(camera, renderer.parameters.canvas);
+  controls = new OrbitControls(camera, hearth.parameters.canvas);
   controls.minDistance = 3;
   controls.maxDistance = 25;
 
   //stats
 
-  useWindowResizer(renderer, camera);
+  useWindowResizer(hearth, camera);
   //gui
 
   const gui = new GUI();
@@ -152,5 +152,5 @@ function animate() {
    if ( time > 3.0 && light3.parent === null ) scene.add( light3 );
    if ( time > 3.5 && light4.parent === null ) scene.add( light4 );
    */
-  renderer.render(scene, camera);
+  hearth.render(scene, camera);
 }

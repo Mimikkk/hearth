@@ -192,11 +192,11 @@ export class Material {
     this._alphaTest = value;
   }
 
-  onBuild(shaderobject: any, renderer: Hearth) {}
+  onBuild(shaderobject: any, hearth: Hearth) {}
 
-  onBeforeRender(renderer: Hearth, scene: Scene, camera: Camera, geometry: Geometry, object: Entity, group: Group) {}
+  onBeforeRender(hearth: Hearth, scene: Scene, camera: Camera, geometry: Geometry, object: Entity, group: Group) {}
 
-  onBeforeCompile(shaderobject: Entity, renderer: Hearth) {}
+  onBeforeCompile(shaderobject: Entity, hearth: Hearth) {}
 
   customProgramCacheKey() {
     return this.onBeforeCompile.toString();

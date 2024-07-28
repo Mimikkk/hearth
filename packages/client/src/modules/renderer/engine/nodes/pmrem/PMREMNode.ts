@@ -95,7 +95,7 @@ class PMREMNode extends TempNode {
 
   setup(builder) {
     if (_generator === null) {
-      _generator = new PMREMGenerator(builder.renderer);
+      _generator = new PMREMGenerator(builder.hearth);
     }
 
     this.updateBefore(builder);

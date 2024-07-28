@@ -19,7 +19,7 @@ import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitC
 import { GUI } from 'lil-gui';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
-let camera, scene, renderer;
+let camera, scene, hearth;
 
 init();
 
@@ -32,17 +32,17 @@ async function init() {
 
   scene = new Engine.Scene();
 
-  renderer = await Hearth.as();
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.parameters.toneMapping = Engine.ToneMapping.ACESFilmic;
+  hearth = await Hearth.as();
+  hearth.setPixelRatio(window.devicePixelRatio);
+  hearth.setSize(window.innerWidth, window.innerHeight);
+  hearth.parameters.toneMapping = Engine.ToneMapping.ACESFilmic;
 
-  await renderer.init();
+  await hearth.init();
 
-  container.appendChild(renderer.parameters.canvas);
+  container.appendChild(hearth.parameters.canvas);
 
-  const controls = new OrbitControls(camera, renderer.parameters.canvas);
-  controls.onChange = render; 
+  const controls = new OrbitControls(camera, hearth.parameters.canvas);
+  controls.onChange = render;
   controls.minDistance = 2;
   controls.maxDistance = 10;
   controls.update();
@@ -61,8 +61,6 @@ async function init() {
       new Engine.Mesh(new Engine.SphereGeometry(0.5, 64, 64), new MeshBasicNodeMaterial({ colorNode: pmremNode })),
     );
 
-    
-
     const gui = new GUI();
     gui
       .add(pmremRoughness, 'value', 0, 1, 0.001)
@@ -72,9 +70,9 @@ async function init() {
     render();
   });
 
-  useWindowResizer(renderer, camera);
+  useWindowResizer(hearth, camera);
 }
 
 function render() {
-  renderer.render(scene, camera);
+  hearth.render(scene, camera);
 }

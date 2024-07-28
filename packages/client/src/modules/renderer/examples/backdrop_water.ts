@@ -174,13 +174,13 @@ const colorNode = transition.mix(material.colorNode, material.colorNode.add(wate
 //material.colorNode = colorNode;
 floor.material.colorNode = colorNode;
 
-const renderer = await Hearth.as();
-renderer.setPixelRatio(window.devicePixelRatio);
-renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.animation.loop = animate;
-document.body.appendChild(renderer.parameters.canvas);
+const hearth = await Hearth.as();
+hearth.setPixelRatio(window.devicePixelRatio);
+hearth.setSize(window.innerWidth, window.innerHeight);
+hearth.animation.loop = animate;
+document.body.appendChild(hearth.parameters.canvas);
 
-const controls = new OrbitControls(camera, renderer.parameters.canvas);
+const controls = new OrbitControls(camera, hearth.parameters.canvas);
 controls.minDistance = 1;
 controls.maxDistance = 10;
 controls.maxPolarAngle = Math.PI * 0.9;
@@ -206,13 +206,13 @@ scenePassColorBlurred.directionNode = waterMask.cond(scenePassDepth, scenePass.g
 
 const vignet = viewportTopLeft.distance(0.5).mul(1.35).clamp().oneMinus();
 
-const postProcessing = new Postprocess(renderer);
+const postProcessing = new Postprocess(hearth);
 postProcessing.outputNode = waterMask.cond(
   scenePassColorBlurred,
   scenePassColorBlurred.mul(color(0x74ccf4)).mul(vignet),
 );
 
-useWindowResizer(renderer, camera);
+useWindowResizer(hearth, camera);
 
 function animate() {
   controls.update();

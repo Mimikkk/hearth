@@ -152,11 +152,11 @@ export class NodeMaterial extends ShaderMaterial {
   }
 
   setupDepth(builder) {
-    const { renderer } = builder;
+    const { hearth } = builder;
 
     let depthNode = this.depthNode;
 
-    if (depthNode === null && renderer.parameters.logarithmicDepthBuffer) {
+    if (depthNode === null && hearth.parameters.logarithmicDepthBuffer) {
       const fragDepth = modelViewProjection().w.add(1);
 
       depthNode = fragDepth.log2().mul(cameraLogDepth).mul(0.5);
@@ -296,7 +296,7 @@ export class NodeMaterial extends ShaderMaterial {
   }
 
   setupOutput(builder, outputNode) {
-    const renderer = builder.renderer;
+    const hearth = builder.hearth;
 
     if (this.fog === true) {
       const fogNode = builder.fogNode;
@@ -311,7 +311,7 @@ export class NodeMaterial extends ShaderMaterial {
     }
 
     if (this.colorSpaced === true) {
-      const outputColorSpace = renderer.currentColorSpace;
+      const outputColorSpace = hearth.currentColorSpace;
 
       if (outputColorSpace !== ColorSpace.LinearSRGB && outputColorSpace !== null) {
         outputNode = outputNode.linearToColorSpace(outputColorSpace);

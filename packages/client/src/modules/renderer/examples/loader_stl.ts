@@ -13,7 +13,7 @@ import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 
 let container;
 
-let camera, cameraTarget, scene, renderer;
+let camera, cameraTarget, scene, hearth;
 
 init();
 
@@ -104,12 +104,12 @@ async function init() {
   addShadowedLight(1, 1, 1, 0xffffff, 3.5);
   addShadowedLight(0.5, 1, -1, 0xffd500, 3);
 
-  renderer = await Hearth.as();
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.animation.loop = animate;
+  hearth = await Hearth.as();
+  hearth.setPixelRatio(window.devicePixelRatio);
+  hearth.setSize(window.innerWidth, window.innerHeight);
+  hearth.animation.loop = animate;
 
-  container.appendChild(renderer.parameters.canvas);
+  container.appendChild(hearth.parameters.canvas);
 
   window.addEventListener('resize', onWindowResize);
 }
@@ -137,7 +137,7 @@ function onWindowResize() {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
 
-  renderer.setSize(window.innerWidth, window.innerHeight);
+  hearth.setSize(window.innerWidth, window.innerHeight);
 }
 
 function animate() {
@@ -152,5 +152,5 @@ function render() {
 
   camera.lookAt(cameraTarget);
 
-  renderer.render(scene, camera);
+  hearth.render(scene, camera);
 }

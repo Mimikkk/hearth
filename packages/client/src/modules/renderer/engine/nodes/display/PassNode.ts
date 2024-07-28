@@ -105,31 +105,31 @@ class PassNode extends TempNode {
   }
 
   updateBefore(frame) {
-    const { renderer } = frame;
+    const { hearth } = frame;
     const { scene, camera } = this;
 
-    this._pixelRatio = renderer._pixelRatio;
+    this._pixelRatio = hearth._pixelRatio;
 
-    const size = renderer.getSize(Vec2.new());
+    const size = hearth.getSize(Vec2.new());
 
     this.setSize(size.width, size.height);
 
-    const currentToneMapping = renderer.parameters.toneMapping;
-    const currentToneMappingNode = renderer.parameters.toneMappingNode;
-    const currentRenderTarget = renderer.target;
+    const currentToneMapping = hearth.parameters.toneMapping;
+    const currentToneMappingNode = hearth.parameters.toneMappingNode;
+    const currentRenderTarget = hearth.target;
 
     this._cameraNear.value = camera.near;
     this._cameraFar.value = camera.far;
 
-    renderer.parameters.toneMapping = ToneMapping.None;
-    renderer.parameters.toneMappingNode = null;
-    renderer.updateRenderTarget(this.renderTarget);
+    hearth.parameters.toneMapping = ToneMapping.None;
+    hearth.parameters.toneMappingNode = null;
+    hearth.updateRenderTarget(this.renderTarget);
 
-    renderer.render(scene, camera);
+    hearth.render(scene, camera);
 
-    renderer.parameters.toneMapping = currentToneMapping;
-    renderer.parameters.toneMappingNode = currentToneMappingNode;
-    renderer.updateRenderTarget(currentRenderTarget);
+    hearth.parameters.toneMapping = currentToneMapping;
+    hearth.parameters.toneMappingNode = currentToneMappingNode;
+    hearth.updateRenderTarget(currentRenderTarget);
   }
 
   setSize(width, height) {

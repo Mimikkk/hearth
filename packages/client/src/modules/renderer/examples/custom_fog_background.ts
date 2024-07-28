@@ -12,7 +12,7 @@ import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 import { ToneMapping } from '@modules/renderer/engine/engine.js';
 
-let camera, scene, renderer;
+let camera, scene, hearth;
 let postProcessing;
 
 init();
@@ -26,11 +26,11 @@ async function init() {
 
   scene = new Engine.Scene();
 
-  renderer = await Hearth.as();
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.parameters.toneMapping = ToneMapping.ACESFilmic;
-  container.appendChild(renderer.parameters.canvas);
+  hearth = await Hearth.as();
+  hearth.setPixelRatio(window.devicePixelRatio);
+  hearth.setSize(window.innerWidth, window.innerHeight);
+  hearth.parameters.toneMapping = ToneMapping.ACESFilmic;
+  container.appendChild(hearth.parameters.canvas);
 
   const scenePass = pass(scene, camera);
   const scenePassViewZ = scenePass.getViewZNode();
@@ -43,7 +43,7 @@ async function init() {
 
   const compose = fogFactor.mix(scenePassTM, backgroundColor);
 
-  postProcessing = new Postprocess(renderer);
+  postProcessing = new Postprocess(hearth);
   postProcessing.outputNode = compose;
 
   RGBELoader.loadAsync('resources/textures/equirectangular/royal_esplanade_1k.hdr').then(texture => {
@@ -59,14 +59,14 @@ async function init() {
     });
   });
 
-  const controls = new OrbitControls(camera, renderer.parameters.canvas);
+  const controls = new OrbitControls(camera, hearth.parameters.canvas);
   controls.minDistance = 2;
   controls.maxDistance = 5;
   controls.target.set(0, -0.1, -0.2);
   controls.update();
   controls.onChange = render;
 
-  useWindowResizer(renderer, camera);
+  useWindowResizer(hearth, camera);
 }
 
 function render() {

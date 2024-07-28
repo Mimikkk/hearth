@@ -23,7 +23,7 @@ import { GUI } from 'lil-gui';
 import { CubeTextureLoader } from '@modules/renderer/engine/loaders/textures/CubeTextureLoader/CubeTextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
-let camera, scene, renderer;
+let camera, scene, hearth;
 
 init();
 
@@ -131,18 +131,18 @@ async function init() {
   scene.add(sphereLeftView);
   scene.add(sphereRightView);
 
-  renderer = await Hearth.as();
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.parameters.toneMappingNode = toneMapping(Engine.ToneMapping.Linear, 1);
-  renderer.animation.loop = render;
-  container.appendChild(renderer.parameters.canvas);
+  hearth = await Hearth.as();
+  hearth.setPixelRatio(window.devicePixelRatio);
+  hearth.setSize(window.innerWidth, window.innerHeight);
+  hearth.parameters.toneMappingNode = toneMapping(Engine.ToneMapping.Linear, 1);
+  hearth.animation.loop = render;
+  container.appendChild(hearth.parameters.canvas);
 
-  const controls = new OrbitControls(camera, renderer.parameters.canvas);
+  const controls = new OrbitControls(camera, hearth.parameters.canvas);
   controls.minDistance = 2;
   controls.maxDistance = 10;
 
-  useWindowResizer(renderer, camera);
+  useWindowResizer(hearth, camera);
 
   const gui = new GUI();
 
@@ -163,5 +163,5 @@ async function init() {
 }
 
 function render() {
-  renderer.render(scene, camera);
+  hearth.render(scene, camera);
 }

@@ -26,7 +26,7 @@ export default class RenderObject {
   isRenderObject: boolean;
 
   constructor(
-    public renderer: Hearth,
+    public hearth: Hearth,
     public object: Entity,
     public material: Material,
     public scene: Scene,
@@ -35,7 +35,7 @@ export default class RenderObject {
     public renderContext: RenderContext,
   ) {
     this.id = id++;
-    this.renderer = renderer;
+    this.hearth = hearth;
     this.object = object;
     this.material = material;
     this.scene = scene;
@@ -89,7 +89,7 @@ export default class RenderObject {
   }
 
   getNodeBuilderState() {
-    return this._nodeBuilderState || (this._nodeBuilderState = this.renderer.nodes.getForRender(this));
+    return this._nodeBuilderState || (this._nodeBuilderState = this.hearth.nodes.getForRender(this));
   }
 
   onDispose?(): void;
@@ -99,7 +99,7 @@ export default class RenderObject {
   }
 
   getIndex() {
-    return this.renderer.geometries.getIndex(this);
+    return this.hearth.geometries.getIndex(this);
   }
 
   getChainArray() {
@@ -179,7 +179,7 @@ export default class RenderObject {
   }
 
   getNodesCacheKey(): string {
-    return this.renderer.nodes.getCacheKey(this.scene, this.lightsNode);
+    return this.hearth.nodes.getCacheKey(this.scene, this.lightsNode);
   }
 
   getCacheKey(): string {

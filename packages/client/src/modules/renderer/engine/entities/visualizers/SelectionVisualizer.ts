@@ -4,7 +4,7 @@ import { Box2 } from '@modules/renderer/engine/math/Box2.js';
 
 export class SelectionVisualizer {
   element: HTMLDivElement;
-  renderer: Hearth;
+  hearth: Hearth;
   start: Vec2;
   box: Box2;
   topLeft: Vec2;
@@ -15,7 +15,7 @@ export class SelectionVisualizer {
   onPointerMove: (event: PointerEvent) => void;
   onPointerUp: (event: PointerEvent) => void;
 
-  constructor(renderer: Hearth) {
+  constructor(hearth: Hearth) {
     this.element = document.createElement('div');
     this.element.style.border = '1px solid #55aaff';
     this.element.style.borderRadius = '0.125rem';
@@ -23,7 +23,7 @@ export class SelectionVisualizer {
     this.element.style.position = 'fixed';
     this.element.style.pointerEvents = 'none';
 
-    this.renderer = renderer;
+    this.hearth = hearth;
     this.start = Vec2.new();
 
     this.box = Box2.new();
@@ -51,20 +51,20 @@ export class SelectionVisualizer {
       this.onSelectOver(event);
     };
 
-    this.renderer.parameters.canvas.addEventListener('pointerdown', this.onPointerDown);
-    this.renderer.parameters.canvas.addEventListener('pointermove', this.onPointerMove);
-    this.renderer.parameters.canvas.addEventListener('pointerup', this.onPointerUp);
+    this.hearth.parameters.canvas.addEventListener('pointerdown', this.onPointerDown);
+    this.hearth.parameters.canvas.addEventListener('pointermove', this.onPointerMove);
+    this.hearth.parameters.canvas.addEventListener('pointerup', this.onPointerUp);
   }
 
   dispose() {
-    this.renderer.parameters.canvas.removeEventListener('pointerdown', this.onPointerDown);
-    this.renderer.parameters.canvas.removeEventListener('pointermove', this.onPointerMove);
-    this.renderer.parameters.canvas.removeEventListener('pointerup', this.onPointerUp);
+    this.hearth.parameters.canvas.removeEventListener('pointerdown', this.onPointerDown);
+    this.hearth.parameters.canvas.removeEventListener('pointermove', this.onPointerMove);
+    this.hearth.parameters.canvas.removeEventListener('pointerup', this.onPointerUp);
   }
 
   onSelectStart(event: PointerEvent) {
     this.element.style.display = 'none';
-    this.renderer.parameters.canvas.parentElement?.appendChild(this.element);
+    this.hearth.parameters.canvas.parentElement?.appendChild(this.element);
 
     this.element.style.left = event.clientX + 'px';
     this.element.style.top = event.clientY + 'px';

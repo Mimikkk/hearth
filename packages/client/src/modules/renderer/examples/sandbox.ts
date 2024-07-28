@@ -24,7 +24,7 @@ import { TextureLoader } from '@modules/renderer/engine/loaders/textures/Texture
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 import { Random } from '@modules/renderer/engine/math/random.js';
 
-let camera, scene, renderer;
+let camera, scene, hearth;
 
 let box;
 
@@ -37,11 +37,11 @@ async function init() {
   scene = new Engine.Scene();
   scene.background = new Engine.Color(0x222222);
 
-  renderer = await Hearth.as();
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.animation.loop = animate;
-  document.body.appendChild(renderer.parameters.canvas);
+  hearth = await Hearth.as();
+  hearth.setPixelRatio(window.devicePixelRatio);
+  hearth.setSize(window.innerWidth, window.innerHeight);
+  hearth.animation.loop = animate;
+  document.body.appendChild(hearth.parameters.canvas);
 
   const textureLoader = new TextureLoader();
   const uvTexture = await textureLoader.loadAsync('resources/textures/uv_grid_opengl.jpg');
@@ -53,7 +53,7 @@ async function init() {
   textureDisplace.wrapS = Engine.Wrapping.Repeat;
   textureDisplace.wrapT = Engine.Wrapping.Repeat;
 
-  const ktxLoader = await new KTX2Loader().detectSupportAsync(renderer);
+  const ktxLoader = await new KTX2Loader().detectSupportAsync(hearth);
 
   const ktxTexture = await ktxLoader.loadAsync('resources/textures/compressed/sample_uastc_zstd.ktx2');
 
@@ -141,7 +141,7 @@ async function init() {
   line.position.set(2, 1, 0);
   scene.add(line);
 
-  useWindowResizer(renderer, camera);
+  useWindowResizer(hearth, camera);
 }
 
 function animate() {
@@ -150,7 +150,7 @@ function animate() {
     box.rotateY(0.02);
   }
 
-  renderer.render(scene, camera);
+  hearth.render(scene, camera);
 }
 
 function createDataTexture() {

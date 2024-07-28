@@ -46,25 +46,25 @@ class AnamorphicNode extends TempNode {
   }
 
   updateBefore(frame) {
-    const { renderer } = frame;
+    const { hearth } = frame;
 
     const textureNode = this.textureNode;
     const map = textureNode.value;
 
     this.target.texture.type = map.type;
 
-    const currentRenderTarget = renderer.target;
+    const currentRenderTarget = hearth.target;
     const currentTexture = textureNode.value;
 
     quadMesh.material = this._material;
 
     this.setSize(map.image.width, map.image.height);
 
-    renderer.updateRenderTarget(this.target);
+    hearth.updateRenderTarget(this.target);
 
-    quadMesh.render(renderer);
+    quadMesh.render(hearth);
 
-    renderer.updateRenderTarget(currentRenderTarget);
+    hearth.updateRenderTarget(currentRenderTarget);
     textureNode.value = currentTexture;
   }
 

@@ -46,7 +46,7 @@ export class HearthGeometries extends DataMap<any, any> {
   wireframes: WeakMap<any, any>;
   attributeCall: WeakMap<any, any>;
 
-  constructor(public renderer: Hearth) {
+  constructor(public hearth: Hearth) {
     super();
 
     this.wireframes = new WeakMap();
@@ -71,7 +71,7 @@ export class HearthGeometries extends DataMap<any, any> {
 
     geometryData.initialized = true;
 
-    this.renderer.info.memory.geometries++;
+    this.hearth.info.memory.geometries++;
   }
 
   updateAttributes(renderObject: RenderObject) {
@@ -89,10 +89,10 @@ export class HearthGeometries extends DataMap<any, any> {
   }
 
   updateAttribute(attribute: Attribute, type: AttributeLocation) {
-    const callId = this.renderer.info.render.passes;
+    const callId = this.hearth.info.render.passes;
 
     if (this.attributeCall.get(attribute) !== callId) {
-      this.renderer.attributes.update(attribute, type);
+      this.hearth.attributes.update(attribute, type);
 
       this.attributeCall.set(attribute, callId);
     }
@@ -113,7 +113,7 @@ export class HearthGeometries extends DataMap<any, any> {
 
         wireframes.set(geometry, wireframeAttribute);
       } else if (wireframeAttribute.version !== getWireframeVersion(geometry)) {
-        this.renderer.attributes.delete(wireframeAttribute);
+        this.hearth.attributes.delete(wireframeAttribute);
 
         wireframeAttribute = getWireframeIndex(geometry);
 

@@ -169,7 +169,7 @@ export class WorldAxesControls extends Entity {
     return null;
   }
 
-  render(renderer: Hearth): void {
+  render(hearth: Hearth): void {
     const {
       quaternion,
       point,
@@ -204,11 +204,11 @@ export class WorldAxesControls extends Entity {
       negZ.material.opacity = 1;
     }
 
-    renderer.clear(false, true, false);
-    this.viewport.from(renderer.viewport);
-    renderer.viewport.set(this.canvas.offsetWidth - dim, 0, dim, dim);
-    renderer.render(this, this.orthoCamera);
-    renderer.viewport.set(this.viewport.x, this.viewport.y, this.viewport.z, this.viewport.w);
+    hearth.clear(false, true, false);
+    this.viewport.from(hearth.viewport);
+    hearth.viewport.set(this.canvas.offsetWidth - dim, 0, dim, dim);
+    hearth.render(this, this.orthoCamera);
+    hearth.viewport.set(this.viewport.x, this.viewport.y, this.viewport.z, this.viewport.w);
   }
 
   handleClick(event: MouseEvent): void {

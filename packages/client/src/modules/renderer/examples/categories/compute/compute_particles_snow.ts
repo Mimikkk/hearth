@@ -33,7 +33,7 @@ import { Stats } from '../../ui/stats.js';
 
 const maxParticleCount = 100000;
 
-let camera, scene, renderer;
+let camera, scene, hearth;
 let viewHelper!: WorldAxesControls;
 let controls;
 let computeParticles;
@@ -247,10 +247,10 @@ async function init() {
 
   scene.backgroundNode = viewportTopLeft.distance(0.5).mul(2).mix(color(0x0f4140), color(0x060a0d));
 
-  renderer = await Hearth.as();
+  hearth = await Hearth.as();
 
-  viewHelper = new WorldAxesControls(camera, renderer.parameters.canvas);
-  controls = new OrbitControls(camera, renderer.parameters.canvas);
+  viewHelper = new WorldAxesControls(camera, hearth.parameters.canvas);
+  controls = new OrbitControls(camera, hearth.parameters.canvas);
   controls.target.set(0, 10, 0);
   controls.minDistance = 25;
   controls.maxDistance = 35;
@@ -276,31 +276,31 @@ async function init() {
   totalPass = totalPass.mul(vignet);
   totalPass = totalPass.add(teapotTreePass.mul(10).add(teapotTreePassBlurred));
 
-  renderer.parameters.toneMapping = Engine.ToneMapping.ACESFilmic;
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.animation.loop = async () => {
+  hearth.parameters.toneMapping = Engine.ToneMapping.ACESFilmic;
+  hearth.setPixelRatio(window.devicePixelRatio);
+  hearth.setSize(window.innerWidth, window.innerHeight);
+  hearth.animation.loop = async () => {
     stats?.update();
     controls?.update();
 
     scene.overrideMaterial = collisionPosMaterial;
-    renderer.updateRenderTarget(collisionPosRT);
-    await renderer.render(scene, collisionCamera);
+    hearth.updateRenderTarget(collisionPosRT);
+    await hearth.render(scene, collisionCamera);
 
-    await renderer.compute(computeParticles);
+    await hearth.compute(computeParticles);
 
     scene.overrideMaterial = null;
-    renderer.updateRenderTarget(null);
+    hearth.updateRenderTarget(null);
 
     await postProcessing.render();
   };
-  document.body.appendChild(renderer.parameters.canvas);
+  document.body.appendChild(hearth.parameters.canvas);
 
-  postProcessing = new Postprocess(renderer);
+  postProcessing = new Postprocess(hearth);
   postProcessing.outputNode = totalPass;
 
-  const stats = Stats.use(renderer);
-  await renderer.compute(computeInit);
+  const stats = Stats.use(hearth);
+  await hearth.compute(computeInit);
 
-  useWindowResizer(renderer, camera);
+  useWindowResizer(hearth, camera);
 }

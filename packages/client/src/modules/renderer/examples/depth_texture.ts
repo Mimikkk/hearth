@@ -9,7 +9,7 @@ import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitC
 import { TextureDataType } from '@modules/renderer/engine/engine.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
-let camera, scene, controls, renderer;
+let camera, scene, controls, hearth;
 
 let quad, renderTarget;
 
@@ -41,11 +41,11 @@ async function init() {
     scene.add(mesh);
   }
 
-  renderer = await Hearth.as();
-  renderer.setPixelRatio(dpr);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.animation.loop = animate;
-  document.body.appendChild(renderer.parameters.canvas);
+  hearth = await Hearth.as();
+  hearth.setPixelRatio(dpr);
+  hearth.setSize(window.innerWidth, window.innerHeight);
+  hearth.animation.loop = animate;
+  document.body.appendChild(hearth.parameters.canvas);
 
   const depthTexture = new Engine.DepthTexture();
   depthTexture.type = Engine.TextureDataType.Float;
@@ -53,11 +53,11 @@ async function init() {
   renderTarget = new Engine.RenderTarget(window.innerWidth * dpr, window.innerHeight * dpr);
   renderTarget.depthTexture = depthTexture;
 
-  useWindowResizer(renderer, camera, () => {
+  useWindowResizer(hearth, camera, () => {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
 
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    hearth.setSize(window.innerWidth, window.innerHeight);
     renderTarget.setSize(window.innerWidth * dpr, window.innerHeight * dpr);
   });
 
@@ -66,14 +66,14 @@ async function init() {
 
   quad = new QuadMesh(materialFX);
 
-  controls = new OrbitControls(camera, renderer.parameters.canvas);
+  controls = new OrbitControls(camera, hearth.parameters.canvas);
   controls.enableDamping = true;
 }
 
 function animate() {
-  renderer.updateRenderTarget(renderTarget);
-  renderer.render(scene, camera);
+  hearth.updateRenderTarget(renderTarget);
+  hearth.render(scene, camera);
 
-  renderer.updateRenderTarget(null);
-  quad.render(renderer);
+  hearth.updateRenderTarget(null);
+  quad.render(hearth);
 }

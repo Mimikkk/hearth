@@ -157,35 +157,35 @@ export class Hearth {
   }
 
   static async as(parameters?: Options): Promise<Hearth> {
-    const renderer = new Hearth(parameters);
-    const backend = renderer.backend;
+    const hearth = new Hearth(parameters);
+    const backend = hearth.backend;
 
-    const adapter = await navigator.gpu.requestAdapter({ powerPreference: renderer.parameters.powerPreference });
+    const adapter = await navigator.gpu.requestAdapter({ powerPreference: hearth.parameters.powerPreference });
     if (adapter === null) throw Error('WebGPUBackend: Unable to create WebGPU adapter.');
 
     const device = await adapter.requestDevice({
       requiredFeatures: Object.values(GPUFeature).filter(name => adapter.features.has(name)),
-      requiredLimits: renderer.parameters.requiredLimits,
+      requiredLimits: hearth.parameters.requiredLimits,
     });
 
     backend.device = device;
     backend.adapter = adapter;
     backend.colorBuffer = backend.textures.getColorBuffer();
 
-    renderer.parameters.context.configure({
+    hearth.parameters.context.configure({
       device,
       format: GPUTextureFormatType.BGRA8Unorm,
       usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.COPY_SRC,
-      alphaMode: renderer.parameters.alpha ? 'premultiplied' : 'opaque',
+      alphaMode: hearth.parameters.alpha ? 'premultiplied' : 'opaque',
     });
 
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    hearth.setSize(window.innerWidth, window.innerHeight);
     if (parameters?.autoinsert === undefined || parameters.autoinsert) {
-      document.body.appendChild(renderer.parameters.canvas);
+      document.body.appendChild(hearth.parameters.canvas);
     }
-    if (parameters?.animate) renderer.animation.loop = parameters.animate;
+    if (parameters?.animate) hearth.animation.loop = parameters.animate;
 
-    return renderer;
+    return hearth;
   }
 
   async render(scene: Entity, camera: Camera): Promise<RenderContext> {
@@ -317,7 +317,7 @@ export class Hearth {
 
     const computes = Array.isArray(computeNodes) ? computeNodes : [computeNodes];
     for (const computeNode of computes) {
-      if (!pipelines.has(computeNode)) computeNode.onInit({ renderer: this });
+      if (!pipelines.has(computeNode)) computeNode.onInit({ hearth: this });
 
       nodes.updateForCompute(computeNode);
       bindings.updateForCompute(computeNode);

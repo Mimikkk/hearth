@@ -32,11 +32,11 @@ const createScene = () => {
   return scene;
 };
 const createRenderer = async (onAnimate: () => void) => {
-  const renderer = await Hearth.as();
-  renderer.animation.loop = onAnimate;
-  document.body.appendChild(renderer.parameters.canvas);
+  const hearth = await Hearth.as();
+  hearth.animation.loop = onAnimate;
+  document.body.appendChild(hearth.parameters.canvas);
 
-  return renderer;
+  return hearth;
 };
 
 const createSphere = (geometry: Geometry, x: number, y: number, z: number) => {
@@ -54,7 +54,7 @@ const useVisualizer = (scene: Scene, of: Entity) => {
   scene.add(visualizer);
 };
 const useOrbitControls = () => {
-  const controls = new OrbitControls(camera, renderer.parameters.canvas);
+  const controls = new OrbitControls(camera, hearth.parameters.canvas);
   controls.minDistance = 1;
   controls.maxDistance = 10;
   controls.maxPolarAngle = Math.PI * 0.9;
@@ -78,11 +78,11 @@ scene.add(camera, reference, sphere);
 useVisualizer(scene, reference);
 useVisualizer(scene, sphere);
 
-const renderer = await createRenderer(() => {
+const hearth = await createRenderer(() => {
   orbitControls.update();
-  renderer.render(scene, camera);
+  hearth.render(scene, camera);
 });
 
-useWindowResizer(renderer, camera);
+useWindowResizer(hearth, camera);
 
 const orbitControls = useOrbitControls();

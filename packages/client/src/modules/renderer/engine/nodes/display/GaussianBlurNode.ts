@@ -45,12 +45,12 @@ class GaussianBlurNode extends TempNode {
   }
 
   updateBefore(frame) {
-    const { renderer } = frame;
+    const { hearth } = frame;
 
     const textureNode = this.textureNode;
     const map = textureNode.value;
 
-    const currentRenderTarget = renderer.target;
+    const currentRenderTarget = hearth.target;
     const currentTexture = textureNode.value;
 
     quadMesh1.material = this._material;
@@ -63,20 +63,20 @@ class GaussianBlurNode extends TempNode {
     this._horizontalRT.texture.type = textureType;
     this._verticalRT.texture.type = textureType;
 
-    renderer.updateRenderTarget(this._horizontalRT);
+    hearth.updateRenderTarget(this._horizontalRT);
 
     this._passDirection.value.set(1, 0);
 
-    quadMesh1.render(renderer);
+    quadMesh1.render(hearth);
 
     textureNode.value = this._horizontalRT.texture;
-    renderer.updateRenderTarget(this._verticalRT);
+    hearth.updateRenderTarget(this._verticalRT);
 
     this._passDirection.value.set(0, 1);
 
-    quadMesh2.render(renderer);
+    quadMesh2.render(hearth);
 
-    renderer.updateRenderTarget(currentRenderTarget);
+    hearth.updateRenderTarget(currentRenderTarget);
     textureNode.value = currentTexture;
   }
 

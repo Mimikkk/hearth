@@ -61,15 +61,15 @@ const scene = createScene();
 
 scene.add(camera, reference, sphere);
 
-const renderer = await Hearth.as({
+const hearth = await Hearth.as({
   animate() {
     controls.update();
-    renderer.render(scene, camera);
+    hearth.render(scene, camera);
   },
 });
-useWindowResizer(renderer, camera);
+useWindowResizer(hearth, camera);
 
-const controls = useOrbitControls(camera, renderer.parameters.canvas);
+const controls = useOrbitControls(camera, hearth.parameters.canvas);
 
 UI.create('Orbit controls')
   .text('Move:', 'Right Click  + Drag')

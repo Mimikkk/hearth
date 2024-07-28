@@ -8,7 +8,7 @@ import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { QuadMesh } from '@modules/renderer/engine/entities/QuadMesh.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
-let camera, scene, renderer;
+let camera, scene, hearth;
 const mouse = new Engine.Vec2();
 
 let quadMesh, renderTarget;
@@ -72,11 +72,11 @@ async function init() {
 
   scene.add(box, box2);
 
-  renderer = await Hearth.as();
-  renderer.setPixelRatio(dpr);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.animation.loop = animate;
-  document.body.appendChild(renderer.parameters.canvas);
+  hearth = await Hearth.as();
+  hearth.setPixelRatio(dpr);
+  hearth.setSize(window.innerWidth, window.innerHeight);
+  hearth.animation.loop = animate;
+  document.body.appendChild(hearth.parameters.canvas);
 
   renderTarget = new Engine.RenderTarget(window.innerWidth * dpr, window.innerHeight * dpr, {
     samples: params.samples,
@@ -84,10 +84,10 @@ async function init() {
   });
 
   window.addEventListener('mousemove', onWindowMouseMove);
-  useWindowResizer(renderer, camera, () => {
+  useWindowResizer(hearth, camera, () => {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    hearth.setSize(window.innerWidth, window.innerHeight);
     renderTarget.setSize(window.innerWidth * dpr, window.innerHeight * dpr);
   });
 
@@ -112,9 +112,9 @@ function animate() {
 
   renderTarget.samples = params.samples;
 
-  renderer.updateRenderTarget(renderTarget);
-  renderer.render(scene, camera);
+  hearth.updateRenderTarget(renderTarget);
+  hearth.render(scene, camera);
 
-  renderer.updateRenderTarget(null);
-  quadMesh.render(renderer);
+  hearth.updateRenderTarget(null);
+  quadMesh.render(hearth);
 }

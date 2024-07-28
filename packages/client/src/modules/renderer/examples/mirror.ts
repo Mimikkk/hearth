@@ -7,7 +7,7 @@ import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitC
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
-let camera, scene, renderer;
+let camera, scene, hearth;
 
 let cameraControls;
 
@@ -134,19 +134,19 @@ async function init() {
   blueLight.position.set(0, 50, 550);
   scene.add(blueLight);
 
-  renderer = await Hearth.as();
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.animation.loop = animate;
-  document.body.appendChild(renderer.parameters.canvas);
+  hearth = await Hearth.as();
+  hearth.setPixelRatio(window.devicePixelRatio);
+  hearth.setSize(window.innerWidth, window.innerHeight);
+  hearth.animation.loop = animate;
+  document.body.appendChild(hearth.parameters.canvas);
 
-  cameraControls = new OrbitControls(camera, renderer.parameters.canvas);
+  cameraControls = new OrbitControls(camera, hearth.parameters.canvas);
   cameraControls.target.set(0, 40, 0);
   cameraControls.maxDistance = 400;
   cameraControls.minDistance = 10;
   cameraControls.update();
 
-  useWindowResizer(renderer, camera);
+  useWindowResizer(hearth, camera);
 }
 
 function animate() {
@@ -162,5 +162,5 @@ function animate() {
   smallSphere.setRotationY(Math.PI / 2 - timer * 0.1);
   smallSphere.setRotationZ(timer * 0.8);
 
-  renderer.render(scene, camera);
+  hearth.render(scene, camera);
 }

@@ -18,7 +18,7 @@ import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
-let camera, scene, renderer, light1, light2, light3, light4, controls;
+let camera, scene, hearth, light1, light2, light3, light4, controls;
 
 init();
 
@@ -31,8 +31,6 @@ async function init() {
 
   const sphereGeometry = new Engine.SphereGeometry(0.1, 16, 8);
 
-
-
   const textureLoader = new TextureLoader();
 
   const normalMapTexture = await textureLoader.loadAsync('resources/textures/water/Water_1_M_Normal.jpg');
@@ -42,8 +40,6 @@ async function init() {
   const alphaTexture = await textureLoader.loadAsync('resources/textures/roughness_map.jpg');
   alphaTexture.wrapS = Engine.Wrapping.Repeat;
   alphaTexture.wrapT = Engine.Wrapping.Repeat;
-
-
 
   const addLight = (hexColor, power = 1700, distance = 100) => {
     const material = new MeshPhongNodeMaterial();
@@ -66,12 +62,8 @@ async function init() {
   light3 = addLight(0x80ff80);
   light4 = addLight(0xffaa00);
 
-
-
   const blueLightsNode = lights([light1]);
   const whiteLightsNode = lights([light2]);
-
-
 
   const geometryTeapot = new TeapotGeometry(0.8, 18);
 
@@ -101,23 +93,17 @@ async function init() {
   centerObject.position.y = -1;
   rightObject.position.y = -1;
 
+  hearth = await Hearth.as();
+  hearth.setPixelRatio(window.devicePixelRatio);
+  hearth.setSize(window.innerWidth, window.innerHeight);
+  hearth.animation.loop = animate;
+  document.body.appendChild(hearth.parameters.canvas);
 
-
-  renderer = await Hearth.as();
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.animation.loop = animate;
-  document.body.appendChild(renderer.parameters.canvas);
-
-
-
-  controls = new OrbitControls(camera, renderer.parameters.canvas);
+  controls = new OrbitControls(camera, hearth.parameters.canvas);
   controls.minDistance = 3;
   controls.maxDistance = 25;
 
-
-
-  useWindowResizer(renderer, camera);
+  useWindowResizer(hearth, camera);
 }
 
 function animate() {
@@ -140,5 +126,5 @@ function animate() {
   light4.position.y = Math.cos(lightTime * 0.7) * 4;
   light4.position.z = Math.sin(lightTime * 0.5) * 3;
 
-  renderer.render(scene, camera);
+  hearth.render(scene, camera);
 }

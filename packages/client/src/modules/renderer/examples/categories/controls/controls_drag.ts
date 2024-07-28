@@ -45,7 +45,7 @@ const createBox = (geometry: Geometry, x: number, y: number, z: number) => {
 
 const useDragControls = () => {
   const objects: Entity[] = [box1, box2];
-  const controls = new DragControls([...objects], camera, renderer.parameters.canvas);
+  const controls = new DragControls([...objects], camera, hearth.parameters.canvas);
 
   return controls;
 };
@@ -65,14 +65,14 @@ const sphere2 = BoundingSphereVisualizer.attach(box2);
 
 scene.add(camera, reference, box1, box2);
 
-const renderer = await Hearth.as({
+const hearth = await Hearth.as({
   animate() {
-    renderer.render(scene, camera);
+    hearth.render(scene, camera);
   },
 });
 const dragControls = useDragControls();
 
-useWindowResizer(renderer, camera);
+useWindowResizer(hearth, camera);
 
 interface State {
   drag: {

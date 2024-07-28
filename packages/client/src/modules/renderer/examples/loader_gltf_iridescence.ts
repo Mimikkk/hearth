@@ -7,24 +7,24 @@ import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/
 import { RGBELoader } from '@modules/renderer/engine/loaders/textures/RGBELoader/RGBELoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
-let renderer, scene, camera, controls;
+let hearth, scene, camera, controls;
 
 init();
 
 async function init() {
-  renderer = await Hearth.as();
-  renderer.animation.loop = render;
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.parameters.toneMapping = Engine.ToneMapping.ACESFilmic;
-  document.body.appendChild(renderer.parameters.canvas);
+  hearth = await Hearth.as();
+  hearth.animation.loop = render;
+  hearth.setPixelRatio(window.devicePixelRatio);
+  hearth.setSize(window.innerWidth, window.innerHeight);
+  hearth.parameters.toneMapping = Engine.ToneMapping.ACESFilmic;
+  document.body.appendChild(hearth.parameters.canvas);
 
   scene = new Engine.Scene();
 
   camera = new Engine.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.05, 20);
   camera.position.set(0.35, 0.05, 0.35);
 
-  controls = new OrbitControls(camera, renderer.parameters.canvas);
+  controls = new OrbitControls(camera, hearth.parameters.canvas);
   controls.autoRotate = true;
   controls.autoRotateSpeed = -0.5;
   controls.target.set(0, 0.2, 0);
@@ -37,23 +37,19 @@ async function init() {
     gltfLoader.loadAsync('resources/models/gltf/IridescenceLamp.glb'),
   ]);
 
-
-
   texture.mapping = Engine.Mapping.EquirectangularReflection;
 
   scene.background = texture;
   scene.environment = texture;
 
-
-
   scene.add(gltf.scene);
 
   render();
 
-  useWindowResizer(renderer, camera);
+  useWindowResizer(hearth, camera);
 }
 
 function render() {
   controls.update();
-  renderer.render(scene, camera);
+  hearth.render(scene, camera);
 }

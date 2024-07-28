@@ -30,7 +30,7 @@ const size = uniform(0.12);
 
 const clickPosition = uniform(new Engine.Vec3());
 
-let camera, scene, renderer: Hearth;
+let camera, scene, hearth: Hearth;
 let controls;
 let computeParticles;
 
@@ -123,13 +123,13 @@ async function init() {
   const raycaster = new Engine.Raycaster();
   const pointer = new Engine.Vec2();
 
-  renderer = await Hearth.as({ trackTimestamp: true });
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.animation.loop = animate;
-  document.body.appendChild(renderer.parameters.canvas);
+  hearth = await Hearth.as({ trackTimestamp: true });
+  hearth.setPixelRatio(window.devicePixelRatio);
+  hearth.setSize(window.innerWidth, window.innerHeight);
+  hearth.animation.loop = animate;
+  document.body.appendChild(hearth.parameters.canvas);
 
-  renderer.compute(computeInit);
+  hearth.compute(computeInit);
 
   const computeHit = tslFn(() => {
     const position = positionBuffer.element(instanceIndex);
@@ -158,19 +158,19 @@ async function init() {
       clickPosition.value.from(point);
       clickPosition.value.y = -1;
 
-      renderer.compute(computeHit);
+      hearth.compute(computeHit);
     }
   }
 
-  renderer.parameters.canvas.addEventListener('pointermove', onMove);
+  hearth.parameters.canvas.addEventListener('pointermove', onMove);
 
-  controls = new OrbitControls(camera, renderer.parameters.canvas);
+  controls = new OrbitControls(camera, hearth.parameters.canvas);
   controls.minDistance = 5;
   controls.maxDistance = 200;
   controls.target.set(0, 0, 0);
   controls.update();
 
-  useWindowResizer(renderer, camera);
+  useWindowResizer(hearth, camera);
 
   const gui = new GUI();
 
@@ -181,15 +181,15 @@ async function init() {
 }
 
 async function animate() {
-  await renderer.compute(computeParticles);
+  await hearth.compute(computeParticles);
 
-  await renderer.render(scene, camera);
+  await hearth.render(scene, camera);
 
-  if (renderer.backend.hasFeature('timestamp-query')) {
-    if (renderer.info.render.passes % 5 === 0) {
+  if (hearth.backend.hasFeature('timestamp-query')) {
+    if (hearth.info.render.passes % 5 === 0) {
       timestamps.innerHTML = `
-							Compute ${renderer.info.compute.calls} pass in ${renderer.info.compute.timestampTime.toFixed(6)}ms<br>
-							Draw ${renderer.info.render.calls} pass in ${renderer.info.render.timestampTime.toFixed(6)}ms`;
+							Compute ${hearth.info.compute.calls} pass in ${hearth.info.compute.timestampTime.toFixed(6)}ms<br>
+							Draw ${hearth.info.render.calls} pass in ${hearth.info.render.timestampTime.toFixed(6)}ms`;
     }
   } else {
     timestamps.innerHTML = 'Timestamp queries not supported';

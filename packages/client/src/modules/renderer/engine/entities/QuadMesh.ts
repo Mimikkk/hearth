@@ -25,7 +25,7 @@ export class QuadMesh extends Mesh {
     this.camera = _camera;
   }
 
-  render(renderer: Hearth): void {
-    renderer.render(this, _camera);
+  render(hearth: Hearth): void {
+    hearth.render(this, _camera);
   }
 }

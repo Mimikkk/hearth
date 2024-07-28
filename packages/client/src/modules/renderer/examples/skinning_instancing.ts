@@ -17,7 +17,7 @@ import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindow
 import { BufferStep } from '@modules/renderer/engine/hearth/constants.js';
 import { Attribute, Buffer } from '@modules/renderer/engine/engine.js';
 
-let camera, scene, renderer;
+let camera, scene, hearth;
 let postProcessing;
 
 let mixer, clock;
@@ -32,8 +32,6 @@ async function init() {
   camera.lookAt(0, 1, 0);
 
   clock = new Engine.Clock();
-
-
 
   const centerLight = new Engine.PointLight(0xff9900, 1, 100);
   centerLight.position.y = 4.5;
@@ -68,9 +66,7 @@ async function init() {
       if (child.isMesh) {
         const oscNode = oscSine(timerLocal(0.1));
 
-
         const randomColors = range(new Engine.Color(0x000000), new Engine.Color(0xffffff));
-
 
         const randomMetalness = range(0, 1);
 
@@ -99,15 +95,11 @@ async function init() {
     scene.add(object);
   });
 
-
-
-  renderer = await Hearth.as();
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.animation.loop = animate;
-  document.body.appendChild(renderer.parameters.canvas);
-
-
+  hearth = await Hearth.as();
+  hearth.setPixelRatio(window.devicePixelRatio);
+  hearth.setSize(window.innerWidth, window.innerHeight);
+  hearth.animation.loop = animate;
+  document.body.appendChild(hearth.parameters.canvas);
 
   const scenePass = pass(scene, camera);
   const scenePassColor = scenePass.getTextureNode();
@@ -116,12 +108,10 @@ async function init() {
   const scenePassColorBlurred = scenePassColor.gaussianBlur();
   scenePassColorBlurred.directionNode = scenePassDepth;
 
-  postProcessing = new Postprocess(renderer);
+  postProcessing = new Postprocess(hearth);
   postProcessing.outputNode = scenePassColorBlurred;
 
-
-
-  useWindowResizer(renderer, camera);
+  useWindowResizer(hearth, camera);
 }
 
 function animate() {

@@ -27,9 +27,6 @@ let logarithmic!: HTMLDivElement;
 
 let objects!: Views;
 
-
-
-
 const descriptors = [
   { size: 0.01, scale: 0.0001, label: 'microscopic (1µm)' },
   { size: 0.01, scale: 0.1, label: 'minuscule (1mm)' },
@@ -55,7 +52,7 @@ interface Views {
 
 interface CameraView {
   container: HTMLDivElement;
-  renderer: Hearth;
+  hearth: Hearth;
   camera: PerspectiveCamera;
 }
 
@@ -68,16 +65,16 @@ const createCameraView = async (container: HTMLDivElement, type: 'logarithmic' |
 
   const camera = new Engine.PerspectiveCamera(50, (screensplit * width) / height, Near, Far);
 
-  const renderer = await Hearth.as({ logarithmicDepthBuffer: type === 'logarithmic' });
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(width / 2, height);
+  const hearth = await Hearth.as({ logarithmicDepthBuffer: type === 'logarithmic' });
+  hearth.setPixelRatio(window.devicePixelRatio);
+  hearth.setSize(width / 2, height);
 
-  renderer.parameters.canvas.style.position = 'relative';
-  renderer.parameters.canvas.id = `renderer_${type}`;
-  container.appendChild(renderer.parameters.canvas);
-  await renderer.init();
+  hearth.parameters.canvas.style.position = 'relative';
+  hearth.parameters.canvas.id = `renderer_${type}`;
+  container.appendChild(hearth.parameters.canvas);
+  await hearth.init();
 
-  return { container, renderer, camera } as const;
+  return { container, hearth, camera } as const;
 };
 
 const updateRenderers = () => {
@@ -85,13 +82,13 @@ const updateRenderers = () => {
 
   screensplit_right = 1 - screensplit;
 
-  objects.normal.renderer.setSize(screensplit * width, height);
+  objects.normal.hearth.setSize(screensplit * width, height);
   objects.normal.camera.aspect = (screensplit * width) / height;
   objects.normal.camera.updateProjectionMatrix();
   objects.normal.camera.setViewOffset(width, height, 0, 0, width * screensplit, height);
   objects.normal.container.style.width = screensplit * 100 + '%';
 
-  objects.logarithmic.renderer.setSize(screensplit_right * width, height);
+  objects.logarithmic.hearth.setSize(screensplit_right * width, height);
   objects.logarithmic.camera.aspect = (screensplit_right * width) / height;
   objects.logarithmic.camera.updateProjectionMatrix();
   objects.logarithmic.camera.setViewOffset(width, height, width * screensplit, 0, width * screensplit_right, height);
@@ -128,7 +125,6 @@ const createBorderEvents = (border: HTMLDivElement) => {
   };
 
   function onUp() {
-
     window.addEventListener('pointermove', onBorderPointerMove);
     window.addEventListener('pointerup', onBorderPointerUp);
   }
@@ -170,7 +166,6 @@ const createScene = (font: FontManager): Scene => {
 
     labelgeo.computeBoundingSphere();
 
-
     labelgeo.translate(-labelgeo.boundingSphere!.radius, 0, 0);
 
     materialargs.color = new Engine.Color().setHSL(Math.random(), 0.5, 0.5);
@@ -200,10 +195,8 @@ const recalculateZoom = () => {
   const min = descriptors[0].size ** 2;
   const max = descriptors[descriptors.length - 1].size ** 2 * 100;
 
-
   const value = clamp(Math.pow(Math.E, position), min, max);
   position = Math.log(value);
-
 
   let damp = Math.abs(zoom.speed) > zoom.minSpeed ? 0.95 : 1.0;
   if ((value == min && zoom.speed < 0) || (value == max && zoom.speed > 0)) damp = 0.85;
@@ -223,17 +216,15 @@ const animate = () => {
   objects.normal.camera.position.z = Math.cos(0.5 * Math.PI * (mouse[0] - 0.5)) * zoom;
   objects.normal.camera.lookAt(scene.position);
 
-
   objects.logarithmic.camera.position.from(objects.normal.camera.position);
   objects.logarithmic.camera.quaternion.from(objects.normal.camera.quaternion);
-
 
   if (screensplit_right != 1 - screensplit) {
     updateRenderers();
   }
 
-  objects.normal.renderer.render(scene, objects.normal.camera);
-  objects.logarithmic.renderer.render(scene, objects.logarithmic.camera);
+  objects.normal.hearth.render(scene, objects.normal.camera);
+  objects.logarithmic.hearth.render(scene, objects.logarithmic.camera);
 };
 
 const init = async () => {

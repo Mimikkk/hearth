@@ -21,7 +21,7 @@ import { ColorSpace } from '@modules/renderer/engine/engine.js';
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
-let camera, scene, renderer;
+let camera, scene, hearth;
 let model, mixer, clock;
 let postProcessing;
 let controls;
@@ -98,13 +98,13 @@ async function init() {
   floor.position.set(0, 0, 0);
   scene.add(floor);
 
-  renderer = await Hearth.as();
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.animation.loop = animate;
-  document.body.appendChild(renderer.parameters.canvas);
+  hearth = await Hearth.as();
+  hearth.setPixelRatio(window.devicePixelRatio);
+  hearth.setSize(window.innerWidth, window.innerHeight);
+  hearth.animation.loop = animate;
+  document.body.appendChild(hearth.parameters.canvas);
 
-  controls = new OrbitControls(camera, renderer.parameters.canvas);
+  controls = new OrbitControls(camera, hearth.parameters.canvas);
   controls.minDistance = 1;
   controls.maxDistance = 10;
   controls.maxPolarAngle = Math.PI / 2;
@@ -122,10 +122,10 @@ async function init() {
 
   const vignet = viewportTopLeft.distance(0.5).mul(1.35).clamp().oneMinus();
 
-  postProcessing = new Postprocess(renderer);
+  postProcessing = new Postprocess(hearth);
   postProcessing.outputNode = scenePassColorBlurred.mul(vignet);
 
-  useWindowResizer(renderer, camera);
+  useWindowResizer(hearth, camera);
 }
 
 function animate() {

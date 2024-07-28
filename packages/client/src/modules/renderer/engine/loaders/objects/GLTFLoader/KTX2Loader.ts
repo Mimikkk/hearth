@@ -86,14 +86,14 @@ export class KTX2Loader extends classLoader<{
     }, this.configuration.workerPoolSize);
   }
 
-  async detectSupportAsync(renderer: Hearth) {
+  async detectSupportAsync(hearth: Hearth) {
     this.workerConfig = {
-      astcSupported: await renderer.backend.hasFeature('texture-compression-astc'),
-      etc1Supported: await renderer.backend.hasFeature('texture-compression-etc1'),
-      etc2Supported: await renderer.backend.hasFeature('texture-compression-etc2'),
-      dxtSupported: await renderer.backend.hasFeature('texture-compression-bc'),
-      bptcSupported: await renderer.backend.hasFeature('texture-compression-bptc'),
-      pvrtcSupported: await renderer.backend.hasFeature('texture-compression-pvrtc'),
+      astcSupported: await hearth.backend.hasFeature('texture-compression-astc'),
+      etc1Supported: await hearth.backend.hasFeature('texture-compression-etc1'),
+      etc2Supported: await hearth.backend.hasFeature('texture-compression-etc2'),
+      dxtSupported: await hearth.backend.hasFeature('texture-compression-bc'),
+      bptcSupported: await hearth.backend.hasFeature('texture-compression-bptc'),
+      pvrtcSupported: await hearth.backend.hasFeature('texture-compression-pvrtc'),
     };
     return this;
   }

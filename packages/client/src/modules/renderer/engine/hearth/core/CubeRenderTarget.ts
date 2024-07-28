@@ -29,15 +29,15 @@ export class CubeRenderTarget extends RenderTarget {
     this.texture.minFilter = minFilter;
   }
 
-  clear(renderer: Hearth, color: boolean, depth: boolean, stencil: boolean): void {
-    const currentRenderTarget = renderer.target;
+  clear(hearth: Hearth, color: boolean, depth: boolean, stencil: boolean): void {
+    const currentRenderTarget = hearth.target;
 
     for (let i = 0; i < 6; i++) {
-      renderer.updateRenderTarget(this, i);
+      hearth.updateRenderTarget(this, i);
 
-      renderer.clear(color, depth, stencil);
+      hearth.clear(color, depth, stencil);
     }
 
-    renderer.updateRenderTarget(currentRenderTarget);
+    hearth.updateRenderTarget(currentRenderTarget);
   }
 }

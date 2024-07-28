@@ -4,7 +4,7 @@ import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { ColorSpace } from '@modules/renderer/engine/engine.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
-let camera, scene, renderer;
+let camera, scene, hearth;
 
 let isUserInteracting = false,
   lon = 0,
@@ -41,17 +41,17 @@ async function init() {
   const mesh = new Engine.Mesh(geometry, material);
   scene.add(mesh);
 
-  renderer = await Hearth.as();
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.animation.loop = animate;
-  container.appendChild(renderer.parameters.canvas);
+  hearth = await Hearth.as();
+  hearth.setPixelRatio(window.devicePixelRatio);
+  hearth.setSize(window.innerWidth, window.innerHeight);
+  hearth.animation.loop = animate;
+  container.appendChild(hearth.parameters.canvas);
 
   document.addEventListener('pointerdown', onPointerDown);
   document.addEventListener('pointermove', onPointerMove);
   document.addEventListener('pointerup', onPointerUp);
 
-  useWindowResizer(renderer, camera);
+  useWindowResizer(hearth, camera);
 }
 
 function onPointerDown(event) {
@@ -90,5 +90,5 @@ function update() {
 
   camera.lookAt(0, 0, 0);
 
-  renderer.render(scene, camera);
+  hearth.render(scene, camera);
 }

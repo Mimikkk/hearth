@@ -41,7 +41,7 @@ export class HearthNodes extends DataMap<any, any> {
   callHashCache: ChainMap<any, any>;
   groupsData: ChainMap<any, any>;
 
-  constructor(public renderer: Hearth) {
+  constructor(public hearth: Hearth) {
     super();
 
     this.nodeFrame = new NodeFrame();
@@ -54,11 +54,7 @@ export class HearthNodes extends DataMap<any, any> {
     const groupNode = nodeUniformsGroup.groupNode;
     const name = groupNode.name;
 
-    
-
     if (name === objectGroup.name) return true;
-
-    
 
     if (name === renderGroup.name) {
       const uniformsGroupData = this.get(nodeUniformsGroup);
@@ -73,8 +69,6 @@ export class HearthNodes extends DataMap<any, any> {
       return false;
     }
 
-    
-
     if (name === frameGroup.name) {
       const uniformsGroupData = this.get(nodeUniformsGroup);
       const frameId = this.nodeFrame.frameId;
@@ -87,8 +81,6 @@ export class HearthNodes extends DataMap<any, any> {
 
       return false;
     }
-
-    
 
     const groupChain = [groupNode, nodeUniformsGroup];
 
@@ -121,11 +113,7 @@ export class HearthNodes extends DataMap<any, any> {
       nodeBuilderState = nodeBuilderCache.get(cacheKey);
 
       if (nodeBuilderState === undefined) {
-        const nodeBuilder = this.renderer.backend.createNodeBuilder(
-          renderObject.object,
-          this.renderer,
-          renderObject.scene,
-        );
+        const nodeBuilder = this.hearth.backend.createNodeBuilder(renderObject.object, this.hearth, renderObject.scene);
         nodeBuilder.material = renderObject.material;
         nodeBuilder.context.material = renderObject.material;
         nodeBuilder.lightsNode = renderObject.lightsNode;
@@ -167,7 +155,7 @@ export class HearthNodes extends DataMap<any, any> {
     let nodeBuilderState = computeData.nodeBuilderState;
 
     if (nodeBuilderState === undefined) {
-      const nodeBuilder = this.renderer.backend.createNodeBuilder(computeNode, this.renderer);
+      const nodeBuilder = this.hearth.backend.createNodeBuilder(computeNode, this.hearth);
       nodeBuilder.build();
 
       nodeBuilderState = this._createNodeBuilderState(nodeBuilder);
@@ -205,12 +193,12 @@ export class HearthNodes extends DataMap<any, any> {
   getToneMappingNode() {
     if (this.isToneMappingState === false) return null;
 
-    return this.renderer.parameters.toneMappingNode || this.get(this.renderer).toneMappingNode || null;
+    return this.hearth.parameters.toneMappingNode || this.get(this.hearth).toneMappingNode || null;
   }
 
   getCacheKey(scene: Scene, lightsNode) {
     const chain = [scene, lightsNode];
-    const callId = this.renderer.info.passes;
+    const callId = this.hearth.info.passes;
 
     let cacheKeyData = this.callHashCache.get(chain);
 
@@ -245,16 +233,16 @@ export class HearthNodes extends DataMap<any, any> {
   }
 
   get isToneMappingState() {
-    const renderer = this.renderer;
-    const renderTarget = renderer.target;
+    const hearth = this.hearth;
+    const renderTarget = hearth.target;
 
     return !(renderTarget && renderTarget.isCubeRenderTarget);
   }
 
   updateToneMapping() {
-    const renderer = this.renderer;
-    const rendererData = this.get(renderer);
-    const rendererToneMapping = renderer.parameters.toneMapping;
+    const hearth = this.hearth;
+    const rendererData = this.get(hearth);
+    const rendererToneMapping = hearth.parameters.toneMapping;
 
     if (this.isToneMappingState && rendererToneMapping !== ToneMapping.None) {
       if (rendererData.toneMapping !== rendererToneMapping) {
@@ -266,7 +254,6 @@ export class HearthNodes extends DataMap<any, any> {
         rendererData.toneMapping = rendererToneMapping;
       }
     } else {
-      
       delete rendererData.toneMappingNode;
       delete rendererData.toneMapping;
     }
@@ -352,14 +339,14 @@ export class HearthNodes extends DataMap<any, any> {
   }
 
   getNodeFrame(
-    renderer: Hearth,
+    hearth: Hearth,
     scene: Scene | null = null,
     object: Entity | null = null,
     camera: Camera | null = null,
     material: Material | null = null,
   ) {
     const nodeFrame = this.nodeFrame;
-    nodeFrame.renderer = renderer;
+    nodeFrame.hearth = hearth;
     nodeFrame.scene = scene;
     nodeFrame.object = object;
     nodeFrame.camera = camera;
@@ -370,7 +357,7 @@ export class HearthNodes extends DataMap<any, any> {
 
   getNodeFrameForRender(renderObject: RenderObject) {
     return this.getNodeFrame(
-      renderObject.renderer,
+      renderObject.hearth,
       renderObject.scene,
       renderObject.object,
       renderObject.camera,
@@ -388,7 +375,7 @@ export class HearthNodes extends DataMap<any, any> {
   }
 
   updateForCompute(computeNode: ComputeNode) {
-    const nodeFrame = this.getNodeFrame(this.renderer);
+    const nodeFrame = this.getNodeFrame(this.hearth);
     const nodeBuilder = this.getForCompute(computeNode);
 
     for (const node of nodeBuilder.updateNodes) {

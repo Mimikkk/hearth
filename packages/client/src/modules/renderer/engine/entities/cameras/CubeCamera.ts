@@ -63,43 +63,43 @@ export class CubeCamera extends Entity {
     cameraNZ.updateMatrixWorld();
   }
 
-  update(renderer: Hearth, scene: Scene): void {
+  update(hearth: Hearth, scene: Scene): void {
     if (this.parent === null) this.updateMatrixWorld();
 
     const { renderTarget, activeMipmapLevel } = this;
 
     const [cameraPX, cameraNX, cameraPY, cameraNY, cameraPZ, cameraNZ] = this.children as Camera[];
 
-    const currentRenderTarget = renderer.target;
-    const currentActiveCubeFace = renderer._activeCubeFace;
-    const currentActiveMipmapLevel = renderer._activeMipmapLevel;
+    const currentRenderTarget = hearth.target;
+    const currentActiveCubeFace = hearth._activeCubeFace;
+    const currentActiveMipmapLevel = hearth._activeMipmapLevel;
 
     const generateMipmaps = renderTarget.texture.generateMipmaps;
 
     renderTarget.texture.generateMipmaps = false;
 
-    renderer.updateRenderTarget(renderTarget, 0, activeMipmapLevel);
-    renderer.render(scene, cameraPX);
+    hearth.updateRenderTarget(renderTarget, 0, activeMipmapLevel);
+    hearth.render(scene, cameraPX);
 
-    renderer.updateRenderTarget(renderTarget, 1, activeMipmapLevel);
-    renderer.render(scene, cameraNX);
+    hearth.updateRenderTarget(renderTarget, 1, activeMipmapLevel);
+    hearth.render(scene, cameraNX);
 
-    renderer.updateRenderTarget(renderTarget, 2, activeMipmapLevel);
-    renderer.render(scene, cameraPY);
+    hearth.updateRenderTarget(renderTarget, 2, activeMipmapLevel);
+    hearth.render(scene, cameraPY);
 
-    renderer.updateRenderTarget(renderTarget, 3, activeMipmapLevel);
-    renderer.render(scene, cameraNY);
+    hearth.updateRenderTarget(renderTarget, 3, activeMipmapLevel);
+    hearth.render(scene, cameraNY);
 
-    renderer.updateRenderTarget(renderTarget, 4, activeMipmapLevel);
-    renderer.render(scene, cameraPZ);
+    hearth.updateRenderTarget(renderTarget, 4, activeMipmapLevel);
+    hearth.render(scene, cameraPZ);
 
     renderTarget.texture.generateMipmaps = generateMipmaps;
 
-    renderer.updateRenderTarget(renderTarget, 5, activeMipmapLevel);
+    hearth.updateRenderTarget(renderTarget, 5, activeMipmapLevel);
 
-    renderer.render(scene, cameraNZ);
+    hearth.render(scene, cameraNZ);
 
-    renderer.updateRenderTarget(currentRenderTarget, currentActiveCubeFace, currentActiveMipmapLevel);
+    hearth.updateRenderTarget(currentRenderTarget, currentActiveCubeFace, currentActiveMipmapLevel);
 
     renderTarget.texture.needsPMREMUpdate = true;
   }

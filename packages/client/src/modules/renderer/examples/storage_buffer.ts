@@ -109,27 +109,27 @@ async function init() {
   const plane = new Engine.Mesh(new Engine.PlaneGeometry(1, 1), material);
   scene.add(plane);
 
-  const renderer = await Hearth.as({ trackTimestamp: true });
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
+  const hearth = await Hearth.as({ trackTimestamp: true });
+  hearth.setPixelRatio(window.devicePixelRatio);
+  hearth.setSize(window.innerWidth, window.innerHeight);
 
-  document.body.appendChild(renderer.parameters.canvas);
-  renderer.parameters.canvas.style.height = '100%';
+  document.body.appendChild(hearth.parameters.canvas);
+  hearth.parameters.canvas.style.height = '100%';
 
   scene.background = new Engine.Color(0x313131);
 
-  renderer.compute(computeInit);
+  hearth.compute(computeInit);
 
   const stepAnimation = async () => {
-    await renderer.compute(compute);
-    await renderer.render(scene, camera);
+    await hearth.compute(compute);
+    await hearth.render(scene, camera);
 
-    const computeCalls = renderer.info?.compute?.calls.toFixed(0);
-    const renderCalls = renderer.info?.render?.calls.toFixed(0);
+    const computeCalls = hearth.info?.compute?.calls.toFixed(0);
+    const renderCalls = hearth.info?.render?.calls.toFixed(0);
     dashboard.computeCalls.innerHTML = computeCalls ?? 'N/A';
     dashboard.renderCalls.innerHTML = renderCalls ?? 'N/A';
-    const computeMs = renderer.info?.compute?.timestampTime.toFixed(6);
-    const renderMs = renderer.info?.render?.timestampTime.toFixed(6);
+    const computeMs = hearth.info?.compute?.timestampTime.toFixed(6);
+    const renderMs = hearth.info?.render?.timestampTime.toFixed(6);
     dashboard.computeMs.innerHTML = computeMs ?? 'N/A';
     dashboard.renderMs.innerHTML = renderMs ?? 'N/A';
 
@@ -138,5 +138,5 @@ async function init() {
 
   stepAnimation();
 
-  useWindowResizer(renderer, camera);
+  useWindowResizer(hearth, camera);
 }

@@ -111,7 +111,7 @@ export class Entity {
   }
 
   onBeforeShadow(
-    renderer: Hearth,
+    hearth: Hearth,
     scene: Scene,
     shadowCamera: Camera,
     geometry: Geometry,
@@ -120,7 +120,7 @@ export class Entity {
   ): void {}
 
   onAfterShadow(
-    renderer: Hearth,
+    hearth: Hearth,
     scene: Scene,
     shadowCamera: Camera,
     geometry: Geometry,
@@ -129,7 +129,7 @@ export class Entity {
   ): void {}
 
   onBeforeRender(
-    renderer: Hearth,
+    hearth: Hearth,
     scene: Scene,
     camera: Camera,
     geometry: Geometry,
@@ -138,7 +138,7 @@ export class Entity {
   ): void {}
 
   onAfterRender(
-    renderer: Hearth,
+    hearth: Hearth,
     scene: Scene,
     camera: Camera,
     geometry: Geometry,
@@ -210,16 +210,12 @@ export class Entity {
   }
 
   getRotationZ(): number {
-
     const { x, y, z, w } = this.quaternion;
 
     return Math.atan2(2 * (x * y - z * w), 1 - 2 * (x * x + y * y));
   }
 
   rotateOnAxis(axis: Vec3, angle: number): this {
-
-
-
     _q1.fromAxisAngle(axis, angle);
 
     this.quaternion.mul(_q1);
@@ -228,10 +224,6 @@ export class Entity {
   }
 
   rotateOnWorldAxis(axis: Vec3, angle: number): this {
-
-
-
-
     _q1.fromAxisAngle(axis, angle);
 
     this.quaternion.premul(_q1);
@@ -252,9 +244,6 @@ export class Entity {
   }
 
   translateOnAxis(axis: Vec3, distance: number): this {
-
-
-
     _v1.from(axis).applyQuaternion(this.quaternion);
 
     this.position.add(_v1.scale(distance));
@@ -289,8 +278,6 @@ export class Entity {
   lookAt(x: Vec3): this;
   lookAt(x: number, y: number, z: number): this;
   lookAt(x: number | Vec3, y?: number, z?: number): this {
-
-
     if (x instanceof Vec3) {
       _target.from(x);
     } else {
@@ -374,10 +361,6 @@ export class Entity {
   }
 
   attach(object: Entity): this {
-
-
-
-
     this.updateWorldMatrix(true, false);
 
     _m1.from(this.matrixWorld).invert();
@@ -424,7 +407,6 @@ export class Entity {
   }
 
   getObjectsByProperty(name: string, value: any, result: Entity[] = []): Entity[] {
-
     if (this[name] === value) result.push(this);
 
     const children = this.children;
@@ -528,8 +510,6 @@ export class Entity {
       force = true;
     }
 
-
-
     const children = this.children;
 
     for (let i = 0, l = children.length; i < l; i++) {
@@ -556,8 +536,6 @@ export class Entity {
     } else {
       this.matrixWorld.asMul(this.parent.matrixWorld, this.matrix);
     }
-
-
 
     if (updateChildren === true) {
       const children = this.children;

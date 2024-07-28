@@ -8,7 +8,7 @@ import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitC
 import { CubeTextureLoader } from '@modules/renderer/engine/loaders/textures/CubeTextureLoader/CubeTextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
-let camera, scene, renderer;
+let camera, scene, hearth;
 
 let controls;
 
@@ -71,15 +71,15 @@ async function init() {
   ground.rotateX(-Math.PI / 2);
   scene.add(ground);
 
-  renderer = await Hearth.as();
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.animation.loop = animate;
-  renderer.parameters.toneMapping = Engine.ToneMapping.Reinhard;
-  renderer.parameters.toneMappingExposure = 6;
-  document.body.appendChild(renderer.parameters.canvas);
+  hearth = await Hearth.as();
+  hearth.setPixelRatio(window.devicePixelRatio);
+  hearth.setSize(window.innerWidth, window.innerHeight);
+  hearth.animation.loop = animate;
+  hearth.parameters.toneMapping = Engine.ToneMapping.Reinhard;
+  hearth.parameters.toneMappingExposure = 6;
+  document.body.appendChild(hearth.parameters.canvas);
 
-  controls = new OrbitControls(camera, renderer.parameters.canvas);
+  controls = new OrbitControls(camera, hearth.parameters.canvas);
   controls.target.set(0, 0, 0);
   controls.maxDistance = 40;
   controls.minDistance = 10;
@@ -87,11 +87,11 @@ async function init() {
   controls.autoRotateSpeed = -1;
   controls.update();
 
-  useWindowResizer(renderer, camera);
+  useWindowResizer(hearth, camera);
 }
 
 function animate() {
   controls.update();
 
-  renderer.render(scene, camera);
+  hearth.render(scene, camera);
 }

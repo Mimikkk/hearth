@@ -11,7 +11,7 @@ import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindow
 
 let container;
 
-let camera, scene, renderer;
+let camera, scene, hearth;
 
 let particleLight;
 let group;
@@ -139,20 +139,20 @@ async function init() {
 
   particleLight.add(new Engine.PointLight(0xffffff, 30));
 
-  renderer = await Hearth.as();
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.animation.loop = animate;
-  container.appendChild(renderer.parameters.canvas);
+  hearth = await Hearth.as();
+  hearth.setPixelRatio(window.devicePixelRatio);
+  hearth.setSize(window.innerWidth, window.innerHeight);
+  hearth.animation.loop = animate;
+  container.appendChild(hearth.parameters.canvas);
 
-  renderer.parameters.toneMapping = Engine.ToneMapping.ACESFilmic;
-  renderer.parameters.toneMappingExposure = 1.25;
+  hearth.parameters.toneMapping = Engine.ToneMapping.ACESFilmic;
+  hearth.parameters.toneMappingExposure = 1.25;
 
-  const controls = new OrbitControls(camera, renderer.parameters.canvas);
+  const controls = new OrbitControls(camera, hearth.parameters.canvas);
   controls.minDistance = 3;
   controls.maxDistance = 30;
 
-  useWindowResizer(renderer, camera);
+  useWindowResizer(hearth, camera);
 }
 
 function animate() {
@@ -171,5 +171,5 @@ function render() {
     child.rotateY(0.005);
   }
 
-  renderer.render(scene, camera);
+  hearth.render(scene, camera);
 }

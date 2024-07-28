@@ -16,7 +16,7 @@ export class NodeFrame {
   startTime: number;
   updateMap: WeakMap<Node, ReferenceMap>;
   updateBeforeMap: WeakMap<Node, ReferenceMap>;
-  renderer: Hearth;
+  hearth: Hearth;
   material: Material;
   camera: Camera;
   object: Entity;
@@ -34,7 +34,7 @@ export class NodeFrame {
     this.updateBeforeMap = new WeakMap();
 
     this.startTime = null!;
-    this.renderer = null!;
+    this.hearth = null!;
     this.material = null!;
     this.camera = null!;
     this.object = null!;

@@ -8,7 +8,7 @@ import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { Camera, Scene } from '@modules/renderer/engine/engine.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
-let camera: Camera, scene: Scene, renderer: Hearth, controls: OrbitControls;
+let camera: Camera, scene: Scene, hearth: Hearth, controls: OrbitControls;
 
 class OcclusionNode extends Node {
   constructor(testObject: Engine.Entity, normalColor: Engine.Color, occludedColor: Engine.Color) {
@@ -24,7 +24,7 @@ class OcclusionNode extends Node {
   }
 
   async update(frame) {
-    const isOccluded = frame.renderer.isOccluded(this.testObject);
+    const isOccluded = frame.hearth.isOccluded(this.testObject);
 
     this.uniformNode.value.copy(isOccluded ? this.occludedColor : this.normalColor);
   }
@@ -66,22 +66,22 @@ async function init() {
   scene.add(plane);
   scene.add(sphere);
 
-  renderer = await Hearth.as();
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
+  hearth = await Hearth.as();
+  hearth.setPixelRatio(window.devicePixelRatio);
+  hearth.setSize(window.innerWidth, window.innerHeight);
 
-  await renderer.compile(scene, camera);
+  await hearth.compile(scene, camera);
 
-  renderer.animation.loop = render;
-  document.body.appendChild(renderer.parameters.canvas);
+  hearth.animation.loop = render;
+  document.body.appendChild(hearth.parameters.canvas);
 
-  controls = new OrbitControls(camera, renderer.parameters.canvas);
+  controls = new OrbitControls(camera, hearth.parameters.canvas);
   controls.minDistance = 3;
   controls.maxDistance = 25;
 
-  useWindowResizer(renderer, camera);
+  useWindowResizer(hearth, camera);
 }
 
 function render() {
-  renderer.render(scene, camera);
+  hearth.render(scene, camera);
 }

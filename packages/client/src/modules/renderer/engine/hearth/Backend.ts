@@ -25,7 +25,7 @@ import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.
 import { WeakMemo } from '@modules/renderer/engine/hearth/WeakMemo.js';
 
 export class Backend {
-  renderer: Hearth;
+  hearth: Hearth;
   memo: WeakMemo<any, any> = new WeakMemo(() => ({}));
 
   getInstanceCount({ object, geometry }: RenderObject) {
@@ -33,13 +33,13 @@ export class Backend {
   }
 
   getClearColor() {
-    const renderer = this.renderer;
+    const hearth = this.hearth;
 
     const color = Color.new();
 
-    color.from(renderer._clearColor);
+    color.from(hearth._clearColor);
 
-    color.getRGB(color, this.renderer.currentColorSpace);
+    color.getRGB(color, this.hearth.currentColorSpace);
 
     return color;
   }
@@ -56,8 +56,8 @@ export class Backend {
   resolveBufferMap: Map<number, GPUBuffer>;
   resources: BackendResourceManager;
 
-  constructor(renderer: Hearth) {
-    this.renderer = renderer;
+  constructor(hearth: Hearth) {
+    this.hearth = hearth;
 
     this.adapter = null!;
     this.device = null!;
@@ -80,10 +80,10 @@ export class Backend {
   _getDefaultRenderPassDescriptor() {
     let descriptor = this.renderPassDescriptor;
 
-    const antialias = this.renderer.parameters.antialias;
+    const antialias = this.hearth.parameters.antialias;
 
     if (descriptor === null) {
-      const renderer = this.renderer;
+      const hearth = this.hearth;
 
       descriptor = {
         colorAttachments: [
@@ -92,7 +92,7 @@ export class Backend {
           },
         ],
         depthStencilAttachment: {
-          view: this.textures.getDepthBuffer(renderer.parameters.useDepth, renderer.parameters.useStencil).createView(),
+          view: this.textures.getDepthBuffer(hearth.parameters.useDepth, hearth.parameters.useStencil).createView(),
         },
       };
 
@@ -110,9 +110,9 @@ export class Backend {
     const colorAttachment = descriptor.colorAttachments[0];
 
     if (antialias === true) {
-      colorAttachment.resolveTarget = this.renderer.parameters.context.getCurrentTexture().createView();
+      colorAttachment.resolveTarget = this.hearth.parameters.context.getCurrentTexture().createView();
     } else {
-      colorAttachment.view = this.renderer.parameters.context.getCurrentTexture().createView();
+      colorAttachment.view = this.hearth.parameters.context.getCurrentTexture().createView();
     }
 
     return descriptor;
@@ -406,7 +406,7 @@ export class Backend {
 
   clear(color: boolean, depth: boolean, stencil: boolean, renderTargetData: RenderTarget | null = null) {
     const device = this.device;
-    const renderer = this.renderer;
+    const hearth = this.hearth;
 
     let colorAttachments = [];
 
@@ -423,8 +423,8 @@ export class Backend {
     }
 
     if (renderTargetData === null) {
-      supportsDepth = renderer.parameters.useDepth;
-      supportsStencil = renderer.parameters.useStencil;
+      supportsDepth = hearth.parameters.useDepth;
+      supportsStencil = hearth.parameters.useStencil;
 
       const descriptor = this._getDefaultRenderPassDescriptor();
 
@@ -482,7 +482,7 @@ export class Backend {
     if (supportsDepth) {
       if (depth) {
         depthStencilAttachment.depthLoadOp = GPULoadOpType.Clear;
-        depthStencilAttachment.depthClearValue = renderer._clearDepth;
+        depthStencilAttachment.depthClearValue = hearth._clearDepth;
         depthStencilAttachment.depthStoreOp = GPUStoreOpType.Store;
       } else {
         depthStencilAttachment.depthLoadOp = GPULoadOpType.Load;
@@ -493,7 +493,7 @@ export class Backend {
     if (supportsStencil) {
       if (stencil) {
         depthStencilAttachment.stencilLoadOp = GPULoadOpType.Clear;
-        depthStencilAttachment.stencilClearValue = renderer._clearStencil;
+        depthStencilAttachment.stencilClearValue = hearth._clearStencil;
         depthStencilAttachment.stencilStoreOp = GPUStoreOpType.Store;
       } else {
         depthStencilAttachment.stencilLoadOp = GPULoadOpType.Load;
@@ -547,7 +547,7 @@ export class Backend {
   }
 
   draw(renderObject: RenderObject) {
-    const info = this.renderer.info;
+    const info = this.hearth.info;
     const { object, geometry, context, pipeline } = renderObject;
 
     const bindingsData = this.memo.get(renderObject.getBindings());
@@ -788,7 +788,7 @@ export class Backend {
   }
 
   initTimestampBuffer(context: RenderContext, descriptor: GPURenderPassDescriptor): void {
-    if (!this.hasFeature(GPUFeature.TimestampQuery) || !this.renderer.parameters.useTimestamp) return;
+    if (!this.hasFeature(GPUFeature.TimestampQuery) || !this.hearth.parameters.useTimestamp) return;
 
     const data = this.memo.get(context);
     if (data.timeStampQuerySet) return;
@@ -806,7 +806,7 @@ export class Backend {
   }
 
   prepareTimestamp(context: RenderContext, encoder: GPUCommandEncoder) {
-    if (!this.hasFeature(GPUFeature.TimestampQuery) || !this.renderer.parameters.useTimestamp) return;
+    if (!this.hasFeature(GPUFeature.TimestampQuery) || !this.hearth.parameters.useTimestamp) return;
 
     const data = this.memo.get(context);
 
@@ -837,7 +837,7 @@ export class Backend {
   }
 
   async resolveTimestamp(context: RenderContext, type: 'render' | 'compute') {
-    if (!this.hasFeature(GPUFeature.TimestampQuery) || !this.renderer.parameters.useTimestamp) return;
+    if (!this.hasFeature(GPUFeature.TimestampQuery) || !this.hearth.parameters.useTimestamp) return;
 
     const data = this.memo.get(context);
 
@@ -852,13 +852,13 @@ export class Backend {
     const times = new BigUint64Array(resultBuffer.getMappedRange());
     const duration = Number(times[1] - times[0]) / 1000000;
 
-    this.renderer.info.stamp(type, duration);
+    this.hearth.info.stamp(type, duration);
     resultBuffer.unmap();
     data.currentTimestampQueryBuffers.isMappingPending = false;
   }
 
-  createNodeBuilder(object: Entity, renderer: Hearth, scene: Scene | null = null) {
-    return new NodeBuilder(object, renderer, scene);
+  createNodeBuilder(object: Entity, hearth: Hearth, scene: Scene | null = null) {
+    return new NodeBuilder(object, hearth, scene);
   }
 
   createProgram(program: ProgrammableStage) {
@@ -953,7 +953,7 @@ export class Backend {
   }
 
   readFramebuffer(into: Texture): void {
-    const context = this.renderer.context!;
+    const context = this.hearth.context!;
     const data = this.memo.get(context);
 
     const { encoder, descriptor } = data;
@@ -970,7 +970,7 @@ export class Backend {
       if (into.isDepthTexture) {
         sourceGPU = this.textures.getDepthBuffer(context.useDepth, context.useStencil);
       } else {
-        sourceGPU = this.renderer.parameters.context.getCurrentTexture();
+        sourceGPU = this.hearth.parameters.context.getCurrentTexture();
       }
     }
 

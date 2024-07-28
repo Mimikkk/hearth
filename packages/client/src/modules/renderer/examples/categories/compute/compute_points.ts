@@ -19,7 +19,7 @@ import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 import { GPUBufferBindingTypeType, BufferStep } from '@modules/renderer/engine/hearth/constants.js';
 
-let camera, scene, renderer;
+let camera, scene, hearth;
 let computeNode;
 
 const pointerVector = new Engine.Vec2(-10.0, -10.0);
@@ -33,12 +33,8 @@ async function init() {
 
   scene = new Engine.Scene();
 
-
-
   const particleNum = 300000;
   const particleSize = 2;
-
-
 
   const particleBuffer = new Attribute(
     new Float32Array(particleNum * particleSize),
@@ -57,8 +53,6 @@ async function init() {
 
   const particleBufferNode = storage(particleBuffer, 'vec2', particleNum);
   const velocityBufferNode = storage(velocityBuffer, 'vec2', particleNum);
-
-
 
   const computeShaderFn = tslFn(() => {
     const particle = particleBufferNode.element(instanceIndex);
@@ -80,10 +74,8 @@ async function init() {
     particle.assign(distanceFromPointer.lessThanEqual(pointerSize).cond(vec3(), position));
   });
 
-
-
   computeNode = computeShaderFn().compute(particleNum);
-  computeNode.onInit = ({ renderer }) => {
+  computeNode.onInit = ({ hearth }) => {
     const precomputeShaderNode = tslFn(() => {
       const particleIndex = f32(instanceIndex);
 
@@ -98,10 +90,8 @@ async function init() {
       velocity.xy = vec2(velX, velY);
     });
 
-    renderer.compute(precomputeShaderNode().compute(particleNum));
+    hearth.compute(precomputeShaderNode().compute(particleNum));
   };
-
-
 
   const particleNode = attribute('particle', 'vec2');
 
@@ -119,16 +109,14 @@ async function init() {
   mesh.count = particleNum;
   scene.add(mesh);
 
-  renderer = await Hearth.as();
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.animation.loop = animate;
-  document.body.appendChild(renderer.parameters.canvas);
+  hearth = await Hearth.as();
+  hearth.setPixelRatio(window.devicePixelRatio);
+  hearth.setSize(window.innerWidth, window.innerHeight);
+  hearth.animation.loop = animate;
+  document.body.appendChild(hearth.parameters.canvas);
 
-  useWindowResizer(renderer, camera);
+  useWindowResizer(hearth, camera);
   window.addEventListener('mousemove', onMouseMove);
-
-
 
   const gui = new GUI();
 
@@ -147,6 +135,6 @@ function onMouseMove(event) {
 }
 
 function animate() {
-  renderer.compute(computeNode);
-  renderer.render(scene, camera);
+  hearth.compute(computeNode);
+  hearth.render(scene, camera);
 }
