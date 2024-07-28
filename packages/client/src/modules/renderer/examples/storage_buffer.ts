@@ -1,5 +1,5 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
-import { Attribute } from '@modules/renderer/engine/engine.js';
+import { Attribute, Buffer } from '@modules/renderer/engine/engine.js';
 import {
   f32,
   instanceIndex,
@@ -43,15 +43,9 @@ async function init() {
 
   for (let i = 0; i < type.length; i++) {
     const typeSize = i + 1;
-    const array = new Array(size * typeSize).fill(0);
 
-    const arrayBuffer = new Attribute(
-      new Float32Array(array),
-      typeSize,
-      0,
-      BufferStep.Instance,
-      GPUBufferBindingTypeType.Storage,
-    );
+    const buffer = Buffer.f32(size * typeSize, typeSize, BufferStep.Instance);
+    const arrayBuffer = new Attribute(buffer, typeSize, 0, undefined, GPUBufferBindingTypeType.Storage);
 
     arrayBufferNodes.push(storageObject(arrayBuffer, type[i], size));
   }

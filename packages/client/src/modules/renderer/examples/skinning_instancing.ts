@@ -15,6 +15,7 @@ import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 import PostProcessing from '@modules/renderer/engine/renderers/PostProcessing.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 import { BufferStep } from '@modules/renderer/engine/renderers/constants.js';
+import { Attribute, Buffer } from '@modules/renderer/engine/engine.js';
 
 let camera, scene, renderer;
 let postProcessing;
@@ -79,7 +80,9 @@ async function init() {
         child.material.colorNode = mix(color(0xffffff), randomColors, oscNode);
 
         child.isInstancedMesh = true;
-        child.instanceMatrix = new Engine.Attribute(new Float32Array(instanceCount * 16), 16, 0, BufferStep.Instance);
+
+        const buffer = Buffer.f32(instanceCount * 16, 16, BufferStep.Instance);
+        child.instanceMatrix = Attribute.use(buffer);
         child.count = instanceCount;
 
         for (let i = 0; i < instanceCount; i++) {

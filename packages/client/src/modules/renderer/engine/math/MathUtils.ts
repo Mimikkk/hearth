@@ -47,7 +47,7 @@ export type NumberArrayConstructor = ArrayConstructor | TypedArrayConstructor;
 
 export type ArrayConstructorMap<T extends NumberArray> = [T] extends [number[]]
   ? ArrayConstructor
-  : [T] extends [Float32Array]
+  : [T] extends [Float64Array]
     ? Float64ArrayConstructor
     : [T] extends [Float32Array]
       ? Float32ArrayConstructor
@@ -67,7 +67,7 @@ export type ArrayConstructorMap<T extends NumberArray> = [T] extends [number[]]
                     ? Uint8ClampedArrayConstructor
                     : never;
 
-export type ArrayMap<T extends NumberArrayConstructor> = T extends ArrayConstructor
+export type ArrayMap<T> = T extends ArrayConstructor
   ? number[]
   : T extends Float64ArrayConstructor
     ? Float64Array

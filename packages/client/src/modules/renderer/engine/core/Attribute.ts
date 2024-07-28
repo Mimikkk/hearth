@@ -6,7 +6,7 @@ import { Mat3 } from '@modules/renderer/engine/math/Mat3.js';
 import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
 import { Buffer } from './Buffer.js';
 import { Const } from '@modules/renderer/engine/math/types.js';
-import { GPUBufferBindingTypeType, BufferStep } from '@modules/renderer/engine/renderers/constants.js';
+import { BufferStep, GPUBufferBindingTypeType } from '@modules/renderer/engine/renderers/constants.js';
 
 export class Attribute<T extends TypedArray = any> {
   declare isBufferAttribute: true;
@@ -56,7 +56,7 @@ export class Attribute<T extends TypedArray = any> {
   }
 
   get instanced(): boolean {
-    return this.step === BufferStep.Instance;
+    return this.source.step === BufferStep.Instance;
   }
 
   get storage(): boolean {
@@ -77,6 +77,14 @@ export class Attribute<T extends TypedArray = any> {
 
   get count(): number {
     return this.source.count;
+  }
+
+  static use<T extends TypedArray = any>(
+    buffer: Buffer<T>,
+    span: number = buffer.stride,
+    offset: number = 0,
+  ): Attribute<T> {
+    return new Attribute(buffer, span, offset);
   }
 
   applyMat3(mat: Const<Mat3>): this {
@@ -218,6 +226,57 @@ export class Attribute<T extends TypedArray = any> {
 
   clone(): Attribute<T> {
     return new Attribute(this.array, this.stride).copy(this);
+  }
+
+  get format(): GPUVertexFormat {
+    const { span } = this;
+    const { type, elementByteSize } = this.source;
+
+    if (span == 1) {
+      switch (type) {
+        case Int32Array:
+          return 'sint32';
+        case Uint32Array:
+          return 'uint32';
+        case Float32Array:
+          return 'float32';
+      }
+    } else {
+      let prefix: 'sint8' | 'uint8' | 'sint16' | 'uint16' | 'sint32' | 'uint32' | 'float32' | undefined;
+
+      switch (type) {
+        case Int8Array:
+          prefix = 'sint8';
+          break;
+        case Uint8Array:
+          prefix = 'uint8';
+          break;
+        case Int16Array:
+          prefix = 'sint16';
+          break;
+        case Uint16Array:
+          prefix = 'uint16';
+          break;
+        case Int32Array:
+          prefix = 'sint32';
+          break;
+        case Uint32Array:
+          prefix = 'uint32';
+          break;
+        case Float32Array:
+          prefix = 'float32';
+          break;
+      }
+
+      if (prefix) {
+        const perVertex = elementByteSize * span;
+        const bytes = ~~((perVertex + 3) / 4) * 4;
+        const size = (bytes / elementByteSize) as 2 | 4;
+        return `${prefix}x${size}`;
+      }
+    }
+
+    throw new Error('Unsupported attribute type.');
   }
 }
 

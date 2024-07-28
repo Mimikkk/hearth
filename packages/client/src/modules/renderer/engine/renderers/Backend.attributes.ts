@@ -9,9 +9,9 @@ export class BackendAttributes {
     const bufferAttribute = attribute;
 
     const backend = this.backend;
-    const bufferData = backend.memo.get(bufferAttribute);
+    const data = backend.memo.get(bufferAttribute);
 
-    let buffer = bufferData.buffer;
+    let buffer = data.buffer;
 
     if (buffer === undefined) {
       const device = backend.device;
@@ -40,7 +40,7 @@ export class BackendAttributes {
 
       buffer.unmap();
 
-      bufferData.buffer = buffer;
+      data.buffer = buffer;
     }
   }
 

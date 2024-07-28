@@ -111,7 +111,7 @@ class BackendPipelines {
       }
     }
 
-    const pipelineDescriptor = {
+    const pipelineDescriptor: GPURenderPipelineDescriptor = {
       vertex: Object.assign({}, vertexModule, { buffers: vertexBuffers }),
       fragment: Object.assign({}, fragmentModule, { targets }),
       primitive: primitiveState,

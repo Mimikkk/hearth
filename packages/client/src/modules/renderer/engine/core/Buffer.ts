@@ -50,6 +50,14 @@ export class Buffer<T extends TypedArray = any> {
   static i8(array: TypedArray | number, stride: number, step?: BufferStep, use?: BufferUse): Buffer<Int8Array> {
     return new Buffer(as(array, Int8Array), stride, step, use);
   }
+
+  get type(): TypedArrayConstructor {
+    return this.array.constructor as never;
+  }
+
+  get elementByteSize(): number {
+    return this.array.BYTES_PER_ELEMENT;
+  }
 }
 
 const as = <C extends TypedArrayConstructor>(array: TypedArray | number, Type: C): ArrayMap<C> =>

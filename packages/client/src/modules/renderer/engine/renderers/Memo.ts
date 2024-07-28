@@ -1,7 +1,7 @@
 type CreateFn<Key, Value> = (key: Key) => Value;
 type DisposeFn<Value, Key> = (value: Value, key: Key) => void;
 
-export class Memo<Key extends PropertyKey, Value> {
+export class Memo<Key, Value> {
   readonly #create: CreateFn<Key, Value>;
   readonly #dispose?: DisposeFn<Value, Key>;
   #map = new Map<Key, Value>();
@@ -11,10 +11,7 @@ export class Memo<Key extends PropertyKey, Value> {
     this.#dispose = dispose;
   }
 
-  static as<Key extends PropertyKey, Value>(
-    create: CreateFn<Key, Value>,
-    dispose?: DisposeFn<Value, Key>,
-  ): Memo<Key, Value> {
+  static as<Key, Value>(create: CreateFn<Key, Value>, dispose?: DisposeFn<Value, Key>): Memo<Key, Value> {
     return new Memo(create, dispose);
   }
 
@@ -46,5 +43,17 @@ export class Memo<Key extends PropertyKey, Value> {
 
     this.#map.clear();
     return this;
+  }
+
+  values(): IterableIterator<Value> {
+    return this.#map.values();
+  }
+
+  keys(): IterableIterator<Key> {
+    return this.#map.keys();
+  }
+
+  entries(): IterableIterator<[Key, Value]> {
+    return this.#map.entries();
   }
 }
