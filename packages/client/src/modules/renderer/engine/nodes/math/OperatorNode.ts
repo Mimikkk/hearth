@@ -36,12 +36,12 @@ class OperatorNode extends TempNode {
       case Operator.Remainder:
         return typeA;
       case Operator.BitNot:
-      case Operator.BinAnd:
-      case Operator.BinOr:
-      case Operator.BinXor:
-      case Operator.ShiftLeft:
-      case Operator.ShiftRight:
-        return builder.getIntegerType(typeA);
+      case Operator.BitAnd:
+      case Operator.BitOr:
+      case Operator.BitXor:
+      case Operator.BitShiftLeft:
+      case Operator.BitShiftRight:
+        return TypeName.int(typeA);
       case Operator.Not:
       case Operator.eq:
       case Operator.And:
@@ -51,26 +51,18 @@ class OperatorNode extends TempNode {
       case Operator.gt:
       case Operator.lte:
       case Operator.gte: {
-        const typeLength = output
+        const len = output
           ? builder.getTypeLength(output)
           : Math.max(builder.getTypeLength(typeA), builder.getTypeLength(typeB));
 
-        return typeLength > 1
-          ? (`bvec${typeLength}` as TypeName.bvec2 | TypeName.bvec3 | TypeName.bvec4)
-          : TypeName.bool;
+        return TypeName.ofSize(len, TypeName.bool);
       }
       default: {
-        if (typeA === TypeName.f32 && TypeName.isMat(typeB)) {
-          return typeB;
-        }
+        if (typeA === TypeName.f32 && TypeName.isMat(typeB)) return typeB;
 
-        if (TypeName.isMat(typeA) && TypeName.isVec(typeB)) {
-          return builder.getVectorFromMatrix(typeA);
-        }
+        if (TypeName.isMat(typeA) && TypeName.isVec(typeB)) return TypeName.matAsVec(typeA);
 
-        if (TypeName.isVec(typeA) && TypeName.isMat(typeB)) {
-          return builder.getVectorFromMatrix(typeB);
-        }
+        if (TypeName.isVec(typeA) && TypeName.isMat(typeB)) return TypeName.matAsVec(typeB);
 
         if (builder.getTypeLength(typeB) > builder.getTypeLength(typeA)) {
           return typeB;
@@ -104,11 +96,11 @@ class OperatorNode extends TempNode {
         }
       } else if (op === '>>' || op === '<<') {
         typeA = type;
-        typeB = builder.changeComponentType(typeB, TypeName.u32);
+        typeB = TypeName.withComponent(typeB, TypeName.u32);
       } else if (TypeName.isMat(typeA) && TypeName.isVec(typeB)) {
-        typeB = builder.getVectorFromMatrix(typeA);
+        typeB = TypeName.matAsVec(typeA);
       } else if (TypeName.isVec(typeA) && TypeName.isMat(typeB)) {
-        typeA = builder.getVectorFromMatrix(typeB);
+        typeA = TypeName.matAsVec(typeB);
       } else {
         typeA = typeB = type;
       }
@@ -171,11 +163,11 @@ enum Operator {
 
   And = '&&',
   Or = '||',
-  BinAnd = '&',
-  BinOr = '|',
-  BinXor = '^',
-  ShiftLeft = '<<',
-  ShiftRight = '>>',
+  BitAnd = '&',
+  BitOr = '|',
+  BitXor = '^',
+  BitShiftLeft = '<<',
+  BitShiftRight = '>>',
 }
 
 export default OperatorNode;
@@ -252,7 +244,7 @@ export const not = proxyNode(
 );
 export const bitAnd = proxyNode(
   class extends OperatorNode {
-    op = Operator.BinAnd;
+    op = Operator.BitAnd;
   },
 );
 export const bitNot = proxyNode(
@@ -262,22 +254,22 @@ export const bitNot = proxyNode(
 );
 export const bitOr = proxyNode(
   class extends OperatorNode {
-    op = Operator.BinOr;
+    op = Operator.BitOr;
   },
 );
 export const bitXor = proxyNode(
   class extends OperatorNode {
-    op = Operator.BinXor;
+    op = Operator.BitXor;
   },
 );
 export const shiftLeft = proxyNode(
   class extends OperatorNode {
-    op = Operator.ShiftLeft;
+    op = Operator.BitShiftLeft;
   },
 );
 export const shiftRight = proxyNode(
   class extends OperatorNode {
-    op = Operator.ShiftRight;
+    op = Operator.BitShiftRight;
   },
 );
 

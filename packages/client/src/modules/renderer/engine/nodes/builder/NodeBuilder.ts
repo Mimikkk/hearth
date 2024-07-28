@@ -339,19 +339,8 @@ export class NodeBuilder {
     return 0;
   }
 
-  getVectorFromMatrix(type: TypeName): TypeName {
-    return TypeName.matAsVec(type);
-  }
-
-  changeComponentType(type: TypeName, component: TypeName): TypeName {
-    return TypeName.withComponent(type, component);
-  }
-
-  getIntegerType(type: TypeName) {
-    const component = TypeName.component(type);
-    if (component === TypeName.i32 || component === TypeName.f32) return type;
-
-    return TypeName.withComponent(type, TypeName.i32);
+  getType(type: TypeName): string {
+    return TypeMap[type] || type;
   }
 
   getStructTypeFromNode(node: Node, shaderStage: ShaderStage = this.shaderStage): StructTypeNode {
@@ -712,10 +701,6 @@ export class NodeBuilder {
 
   needsColorSpaceToLinear(texture: Texture): boolean {
     return texture.isVideoTexture === true && texture.colorSpace !== null;
-  }
-
-  getType(type: TypeName): string {
-    return TypeMap[type] || type;
   }
 
   codeTextureSample(

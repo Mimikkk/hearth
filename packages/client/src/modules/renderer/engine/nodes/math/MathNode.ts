@@ -23,7 +23,7 @@ export class UnaryNode extends TempNode {
       case UnaryVariant.All:
         return TypeName.bool;
       case UnaryVariant.Equals:
-        return builder.changeComponentType(this.value.getNodeType(builder), TypeName.bool);
+        return TypeName.withComponent(this.value.getNodeType(builder), TypeName.bool);
       default:
         return this.getInputType(builder);
     }
