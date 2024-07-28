@@ -1,37 +1,28 @@
 import BindingUniformBuffer from './BindingUniformBuffer.js';
 import { STD140ChunkBytes } from '../constants.js';
-import {
-  ColorNodeUniform,
-  FloatNodeUniform,
-  Mat3NodeUniform,
-  Mat4NodeUniform,
-  ValueNodeUniform,
-  Vec2NodeUniform,
-  Vec3NodeUniform,
-  Vec4NodeUniform,
-} from '@modules/renderer/engine/nodes/builder/NodeUniform.js';
 import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { Vec4 } from '@modules/renderer/engine/math/Vec4.js';
 import { Color } from '@modules/renderer/engine/math/Color.js';
 import { Mat3 } from '@modules/renderer/engine/math/Mat3.js';
 import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
+import { BindingUniform } from '@modules/renderer/engine/renderers/bindings/BindingUniform.js';
 
 class BindingUniformsGroup extends BindingUniformBuffer {
-  uniforms: ValueNodeUniform[] = [];
+  uniforms: BindingUniform[] = [];
   bytesPerElement: number = Float32Array.BYTES_PER_ELEMENT;
 
   constructor(name: string) {
     super(name, new Float32Array(new ArrayBuffer(0)));
   }
 
-  add(uniform: ValueNodeUniform): this {
+  add(uniform: BindingUniform): this {
     this.uniforms.push(uniform);
     this.buffer = new Float32Array(new ArrayBuffer(this.byteLength));
     return this;
   }
 
-  remove(uniform: ValueNodeUniform): this {
+  remove(uniform: BindingUniform): this {
     const index = this.uniforms.indexOf(uniform);
     if (index !== -1) {
       this.buffer = new Float32Array(new ArrayBuffer(this.byteLength));
@@ -70,19 +61,21 @@ class BindingUniformsGroup extends BindingUniformBuffer {
     return updated;
   }
 
-  updateByType(uniform: ValueNodeUniform) {
-    if (uniform instanceof FloatNodeUniform) return this.updateNumber(uniform);
-    if (uniform instanceof Vec2NodeUniform) return this.updateVec2(uniform);
-    if (uniform instanceof Vec3NodeUniform) return this.updateVec3(uniform);
-    if (uniform instanceof Vec4NodeUniform) return this.updateVec4(uniform);
-    if (uniform instanceof ColorNodeUniform) return this.updateColor(uniform);
-    if (uniform instanceof Mat3NodeUniform) return this.updateMat3(uniform);
-    if (uniform instanceof Mat4NodeUniform) return this.updateMat4(uniform);
+  updateByType(uniform: BindingUniform) {
+    const val = uniform.getValue();
+
+    if (typeof val === 'number') return this.updateNumber(uniform);
+    if (Vec2.is(val)) return this.updateVec2(uniform);
+    if (Vec3.is(val)) return this.updateVec3(uniform);
+    if (Vec4.is(val)) return this.updateVec4(uniform);
+    if (Color.is(val)) return this.updateColor(uniform);
+    if (Mat3.is(val)) return this.updateMat3(uniform);
+    if (Mat4.is(val)) return this.updateMat4(uniform);
 
     console.error('UniformsGroup: Unsupported uniform type.', uniform);
   }
 
-  updateNumber(uniform: FloatNodeUniform): boolean {
+  updateNumber(uniform: BindingUniform<number>): boolean {
     let updated = false;
 
     const a = this.buffer;
@@ -97,7 +90,7 @@ class BindingUniformsGroup extends BindingUniformBuffer {
     return updated;
   }
 
-  updateVec2(uniform: Vec2NodeUniform): boolean {
+  updateVec2(uniform: BindingUniform<Vec2>): boolean {
     let updated = false;
 
     const a = this.buffer;
@@ -114,7 +107,7 @@ class BindingUniformsGroup extends BindingUniformBuffer {
     return updated;
   }
 
-  updateVec3(uniform: Vec3NodeUniform): boolean {
+  updateVec3(uniform: BindingUniform<Vec3>): boolean {
     let updated = false;
 
     const a = this.buffer;
@@ -132,7 +125,7 @@ class BindingUniformsGroup extends BindingUniformBuffer {
     return updated;
   }
 
-  updateVec4(uniform: Vec4NodeUniform): boolean {
+  updateVec4(uniform: BindingUniform<Vec4>): boolean {
     let updated = false;
 
     const a = this.buffer;
@@ -151,7 +144,7 @@ class BindingUniformsGroup extends BindingUniformBuffer {
     return updated;
   }
 
-  updateColor(uniform: ColorNodeUniform): boolean {
+  updateColor(uniform: BindingUniform<Color>): boolean {
     let updated = false;
 
     const a = this.buffer;
@@ -169,7 +162,7 @@ class BindingUniformsGroup extends BindingUniformBuffer {
     return updated;
   }
 
-  updateMat3(uniform: Mat3NodeUniform): boolean {
+  updateMat3(uniform: BindingUniform<Mat3>): boolean {
     let updated = false;
 
     const a = this.buffer;
@@ -203,7 +196,7 @@ class BindingUniformsGroup extends BindingUniformBuffer {
     return updated;
   }
 
-  updateMat4(uniform: Mat4NodeUniform): boolean {
+  updateMat4(uniform: BindingUniform<Mat4>): boolean {
     let updated = false;
 
     const a = this.buffer;
