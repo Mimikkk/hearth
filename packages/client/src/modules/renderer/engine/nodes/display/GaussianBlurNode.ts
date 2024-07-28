@@ -8,9 +8,6 @@ import { uniform } from '../core/UniformNode.js';
 import { RenderTarget, Vec2 } from '@modules/renderer/engine/engine.js';
 import { QuadMesh } from '@modules/renderer/engine/entities/QuadMesh.js';
 
-
-
-
 const quadMesh1 = new QuadMesh();
 const quadMesh2 = new QuadMesh();
 
@@ -66,15 +63,11 @@ class GaussianBlurNode extends TempNode {
     this._horizontalRT.texture.type = textureType;
     this._verticalRT.texture.type = textureType;
 
-
-
     renderer.updateRenderTarget(this._horizontalRT);
 
     this._passDirection.value.set(1, 0);
 
     quadMesh1.render(renderer);
-
-
 
     textureNode.value = this._horizontalRT.texture;
     renderer.updateRenderTarget(this._verticalRT);
@@ -82,8 +75,6 @@ class GaussianBlurNode extends TempNode {
     this._passDirection.value.set(0, 1);
 
     quadMesh2.render(renderer);
-
-
 
     renderer.updateRenderTarget(currentRenderTarget);
     textureNode.value = currentTexture;
@@ -101,8 +92,6 @@ class GaussianBlurNode extends TempNode {
 
       return vec4();
     }
-
-    //
 
     const uvNode = textureNode.uvNode || uv();
 
@@ -134,17 +123,11 @@ class GaussianBlurNode extends TempNode {
       return diffuseSum.div(weightSum);
     });
 
-    //
-
     const material = this._material || (this._material = builder.createNodeMaterial());
     material.fragmentNode = blur();
 
-    //
-
     const properties = builder.getNodeProperties(this);
     properties.textureNode = textureNode;
-
-    //
 
     return this._textureNode;
   }

@@ -29,7 +29,7 @@ class OcclusionNode extends Node {
     this.uniformNode.value.copy(isOccluded ? this.occludedColor : this.normalColor);
   }
 
-  setup(/* builder */) {
+  setup() {
     return this.uniformNode;
   }
 }
@@ -42,8 +42,6 @@ async function init() {
 
   scene = new Engine.Scene();
 
-
-
   const ambientLight = new Engine.AmbientLight(0xb0b0b0);
 
   const light = new Engine.DirectionalLight(0xffffff, 1.0);
@@ -51,8 +49,6 @@ async function init() {
 
   scene.add(ambientLight);
   scene.add(light);
-
-
 
   const planeGeometry = new Engine.PlaneGeometry(2, 2);
   const sphereGeometry = new Engine.SphereGeometry(0.5);
@@ -70,20 +66,14 @@ async function init() {
   scene.add(plane);
   scene.add(sphere);
 
-
-
   renderer = await Hearth.as();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
-
-
 
   await renderer.compile(scene, camera);
 
   renderer.animation.loop = render;
   document.body.appendChild(renderer.parameters.canvas);
-
-
 
   controls = new OrbitControls(camera, renderer.parameters.canvas);
   controls.minDistance = 3;

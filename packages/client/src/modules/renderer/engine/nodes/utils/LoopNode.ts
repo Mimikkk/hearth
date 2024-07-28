@@ -22,8 +22,6 @@ class LoopNode extends Node {
 
     if (properties.stackNode !== undefined) return properties;
 
-    //
-
     const inputs = {};
 
     for (let i = 0, l = this.params.length - 1; i < l; i++) {
@@ -48,8 +46,6 @@ class LoopNode extends Node {
   }
 
   setup(builder) {
-    
-
     this.getProperties(builder);
   }
 
@@ -110,8 +106,6 @@ class LoopNode extends Node {
       }
 
       const internalParam = { start, end, condition };
-
-      //
 
       const startSnippet = internalParam.start;
       const endSnippet = internalParam.end;

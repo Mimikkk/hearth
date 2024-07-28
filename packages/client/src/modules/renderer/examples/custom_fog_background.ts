@@ -32,34 +32,24 @@ async function init() {
   renderer.parameters.toneMapping = ToneMapping.ACESFilmic;
   container.appendChild(renderer.parameters.canvas);
 
-
-
-
   const scenePass = pass(scene, camera);
   const scenePassViewZ = scenePass.getViewZNode();
-
 
   const backgroundColor = color(0x0066ff);
 
   const fogFactor = rangeFog(null, 2.7, 4).context({ getViewZ: () => scenePassViewZ });
 
-
   const scenePassTM = scenePass.toneMapping(Engine.ToneMapping.ACESFilmic);
-
 
   const compose = fogFactor.mix(scenePassTM, backgroundColor);
 
   postProcessing = new Postprocess(renderer);
   postProcessing.outputNode = compose;
 
-  //
-
   RGBELoader.loadAsync('resources/textures/equirectangular/royal_esplanade_1k.hdr').then(texture => {
     texture.mapping = Engine.Mapping.EquirectangularReflection;
 
     scene.environment = texture;
-
-
 
     const loader = new GLTFLoader();
     loader.loadAsync('resources/models/gltf/DamagedHelmet/glTF/DamagedHelmet.gltf').then(function (gltf) {
@@ -68,8 +58,6 @@ async function init() {
       render();
     });
   });
-
-  //
 
   const controls = new OrbitControls(camera, renderer.parameters.canvas);
   controls.minDistance = 2;
@@ -80,8 +68,6 @@ async function init() {
 
   useWindowResizer(renderer, camera);
 }
-
-//
 
 function render() {
   postProcessing.render();

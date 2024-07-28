@@ -26,8 +26,6 @@ async function init() {
   scene = new Engine.Scene();
   scene.fogNode = rangeFog(color(0x0000ff), 1500, 2100);
 
-
-
   const amount = 200;
   const radius = 500;
 
@@ -58,15 +56,12 @@ async function init() {
     sprite.position.normalize();
     sprite.position.scale(radius);
 
-
     sprite.userData.rotation = 0;
 
     group.add(sprite);
   }
 
   scene.add(group);
-
-  //
 
   renderer = await Hearth.as();
   renderer.setPixelRatio(window.devicePixelRatio);

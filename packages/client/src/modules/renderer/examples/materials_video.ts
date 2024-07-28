@@ -54,8 +54,6 @@ async function init() {
 
   texture = new Engine.VideoTexture(video);
 
-  //
-
   let i, j, ox, oy, geometry;
 
   const ux = 1 / xgrid;
@@ -107,8 +105,6 @@ async function init() {
 
   document.addEventListener('mousemove', onDocumentMouseMove);
 
-  //
-
   useWindowResizer(renderer, camera);
 }
 
@@ -125,8 +121,6 @@ function onDocumentMouseMove(event) {
   mouseX = event.clientX - window.innerWidth / 2;
   mouseY = (event.clientY - window.innerHeight / 2) * 0.3;
 }
-
-//
 
 let h,
   counter = 1;

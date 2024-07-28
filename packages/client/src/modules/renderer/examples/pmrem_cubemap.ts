@@ -68,8 +68,6 @@ async function init() {
         new Engine.Mesh(new Engine.SphereGeometry(0.5, 64, 64), new MeshBasicNodeMaterial({ colorNode: pmremNode })),
       );
 
-
-
       const gui = new GUI();
       gui
         .add(pmremRoughness, 'value', 0, 1, 0.001)
@@ -81,8 +79,6 @@ async function init() {
 
   useWindowResizer(renderer, camera);
 }
-
-//
 
 function render() {
   renderer.render(scene, camera);

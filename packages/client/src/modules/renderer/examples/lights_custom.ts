@@ -1,7 +1,6 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
 import {
   color,
-  LightingModel,
   lights,
   MeshStandardNodeMaterial,
   PointsNodeMaterial,
@@ -13,6 +12,7 @@ import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 import { Random } from '@modules/renderer/engine/math/random.js';
+import { LightingModel } from '@modules/renderer/engine/nodes/core/LightingModel.js';
 
 class CustomLightingModel extends LightingModel {
   direct({ lightColor, reflectedLight }, stack) {
@@ -32,8 +32,6 @@ async function init() {
 
   scene = new Engine.Scene();
   scene.background = new Engine.Color(0x222222);
-
-
 
   const sphereGeometry = new Engine.SphereGeometry(0.02, 16, 8);
 
@@ -60,8 +58,6 @@ async function init() {
 
   const allLightsNode = lights([light1, light2, light3]);
 
-
-
   const points = [];
 
   for (let i = 0; i < 3000; i++) {
@@ -72,19 +68,13 @@ async function init() {
   const geometryPoints = new Engine.Geometry().setFromPoints(points);
   const materialPoints = new PointsNodeMaterial();
 
-
-
   const lightingModel = new CustomLightingModel();
   const lightingModelContext = allLightsNode.context({ lightingModel });
 
   materialPoints.lightsNode = lightingModelContext;
 
-  //
-
   const pointCloud = new Engine.Points(geometryPoints, materialPoints);
   scene.add(pointCloud);
-
-  //
 
   renderer = await Hearth.as();
   renderer.setPixelRatio(window.devicePixelRatio);
@@ -92,8 +82,6 @@ async function init() {
   renderer.animation.loop = animate;
   renderer.parameters.toneMappingNode = toneMapping(Engine.ToneMapping.Linear, 1);
   document.body.appendChild(renderer.parameters.canvas);
-
-
 
   const controls = new OrbitControls(camera, renderer.parameters.canvas);
   controls.minDistance = 0;

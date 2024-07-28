@@ -5,7 +5,7 @@ import EnvironmentBRDF from './BSDF/EnvironmentBRDF.js';
 import F_Schlick from './BSDF/F_Schlick.js';
 import Schlick_to_F0 from './BSDF/Schlick_to_F0.js';
 import BRDF_Sheen from './BSDF/BRDF_Sheen.js';
-import LightingModel from '../core/LightingModel.js';
+import { LightingModel } from '../core/LightingModel.js';
 import {
   clearcoat,
   clearcoatRoughness,
@@ -24,11 +24,6 @@ import { f32, mat3, tslFn, vec3 } from '../shadernode/ShaderNodes.js';
 import { cond } from '@modules/renderer/engine/nodes/math/CondNode.js';
 import { mix, smoothstep } from '@modules/renderer/engine/nodes/math/MathNode.js';
 
-//
-
-//
-
-
 const XYZ_TO_REC709 = mat3(
   3.2404542,
   -0.969266,
@@ -41,20 +36,14 @@ const XYZ_TO_REC709 = mat3(
   1.0572252,
 );
 
-
-
 const Fresnel0ToIor = fresnel0 => {
   const sqrtF0 = fresnel0.sqrt();
   return vec3(1.0).add(sqrtF0).div(vec3(1.0).sub(sqrtF0));
 };
 
-
 const IorToFresnel0 = (transmittedIor, incidentIor) => {
   return transmittedIor.sub(incidentIor).div(transmittedIor.add(incidentIor)).pow2();
 };
-
-
-
 
 const evalSensitivity = (OPD, shift) => {
   const phase = OPD.mul(2.0 * Math.PI * 1.0e-9);
@@ -78,11 +67,9 @@ const evalSensitivity = (OPD, shift) => {
 };
 
 const evalIridescence = tslFn(({ outsideIOR, eta2, cosTheta1, thinFilmThickness, baseF0 }) => {
-
   const iridescenceIOR = mix(outsideIOR, eta2, smoothstep(0.0, 0.03, thinFilmThickness));
 
   const sinTheta2Sq = outsideIOR.div(iridescenceIOR).pow2().mul(f32(1).sub(cosTheta1.pow2()));
-
 
   const cosTheta2Sq = f32(1).sub(sinTheta2Sq);
   /*if ( cosTheta2Sq < 0.0 ) {
@@ -93,14 +80,12 @@ const evalIridescence = tslFn(({ outsideIOR, eta2, cosTheta1, thinFilmThickness,
 
   const cosTheta2 = cosTheta2Sq.sqrt();
 
-
   const R0 = IorToFresnel0(iridescenceIOR, outsideIOR);
   const R12 = F_Schlick({ f0: R0, f90: 1.0, dotVH: cosTheta1 });
   //const R21 = R12;
   const T121 = R12.oneMinus();
   const phi12 = iridescenceIOR.lessThan(outsideIOR).cond(Math.PI, 0.0);
   const phi21 = f32(Math.PI).sub(phi12);
-
 
   const baseIOR = Fresnel0ToIor(baseF0.clamp(0.0, 0.9999));
   const R1 = IorToFresnel0(baseIOR, iridescenceIOR.vec3());
@@ -111,19 +96,15 @@ const evalIridescence = tslFn(({ outsideIOR, eta2, cosTheta1, thinFilmThickness,
     baseIOR.z.lessThan(iridescenceIOR).cond(Math.PI, 0.0),
   );
 
-
   const OPD = iridescenceIOR.mul(thinFilmThickness, cosTheta2, 2.0);
   const phi = vec3(phi21).add(phi23);
-
 
   const R123 = R12.mul(R23).clamp(1e-5, 0.9999);
   const r123 = R123.sqrt();
   const Rs = T121.pow2().mul(R23).div(vec3(1.0).sub(R123));
 
-
   const C0 = R12.add(Rs);
   let I = C0;
-
 
   let Cm = Rs.sub(T121);
   for (let m = 1; m <= 2; ++m) {
@@ -131,7 +112,6 @@ const evalIridescence = tslFn(({ outsideIOR, eta2, cosTheta1, thinFilmThickness,
     const Sm = evalSensitivity(f32(m).mul(OPD), f32(m).mul(phi)).mul(2.0);
     I = I.add(Cm.mul(Sm));
   }
-
 
   return I.max(vec3(0.0));
 }).setLayout({
@@ -145,13 +125,6 @@ const evalIridescence = tslFn(({ outsideIOR, eta2, cosTheta1, thinFilmThickness,
     { name: 'baseF0', type: 'vec3' },
   ],
 });
-
-//
-//	Sheen
-//
-
-
-
 
 const IBLSheenBRDF = tslFn(({ normal, viewDir, roughness }) => {
   const dotNV = normal.dot(viewDir).saturate();
@@ -178,9 +151,7 @@ const IBLSheenBRDF = tslFn(({ normal, viewDir, roughness }) => {
 const clearcoatF0 = vec3(0.04);
 const clearcoatF90 = vec3(1);
 
-//
-
-class PhysicalLightingModel extends LightingModel {
+export class PhysicalLightingModel extends LightingModel {
   constructor(clearcoat = false, sheen = false, iridescence = false) {
     super();
 
@@ -197,7 +168,7 @@ class PhysicalLightingModel extends LightingModel {
     this.iridescenceF0 = null;
   }
 
-  start(/*context*/) {
+  start() {
     if (this.clearcoat === true) {
       this.clearcoatRadiance = vec3().temp('clearcoatRadiance');
       this.clearcoatSpecularDirect = vec3().temp('clearcoatSpecularDirect');
@@ -223,10 +194,6 @@ class PhysicalLightingModel extends LightingModel {
       this.iridescenceF0 = Schlick_to_F0({ f: this.iridescenceFresnel, f90: 1.0, dotVH: dotNVi });
     }
   }
-
-
-
-
 
   computeMultiscattering(singleScatter, multiScatter, specularF90 = f32(1)) {
     const dotNV = transformedNormalView.dot(positionViewDirection).clamp();
@@ -318,8 +285,6 @@ class PhysicalLightingModel extends LightingModel {
 
       this.clearcoatSpecularIndirect.addAssign(this.clearcoatRadiance.mul(clearcoatEnv));
     }
-
-
 
     const singleScattering = vec3().temp('singleScattering');
     const multiScattering = vec3().temp('multiScattering');

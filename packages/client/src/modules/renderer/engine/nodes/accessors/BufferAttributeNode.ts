@@ -75,7 +75,7 @@ export class BufferAttributeNode extends InputNode {
     return output;
   }
 
-  getInputType(/*builder*/) {
+  getInputType() {
     return 'bufferAttribute';
   }
 

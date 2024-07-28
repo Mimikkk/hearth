@@ -31,8 +31,6 @@ export class PlaneGeometry extends Geometry {
     const segment_width = width / gridX;
     const segment_height = height / gridY;
 
-    //
-
     const indices = [];
     const vertices = [];
     const normals = [];

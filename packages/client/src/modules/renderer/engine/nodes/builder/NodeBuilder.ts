@@ -432,8 +432,6 @@ export class NodeBuilder {
       }
     }
 
-    //
-
     shaderNode.layout = null;
 
     const callNode = shaderNode.call(inputs);

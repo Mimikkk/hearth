@@ -168,16 +168,12 @@ async function createRawTexture(container: KTX2Container) {
     throw new Error('engine.KTX2Loader: Unsupported vkFormat.');
   }
 
-  //
-
   if (container.supercompressionScheme === KHR_SUPERCOMPRESSION_ZSTD) {
     if (!_zstd) {
       _zstd = new ZSTDDecoder();
       await _zstd.init();
     }
   }
-
-  //
 
   const mipmaps = [];
 
@@ -227,27 +223,21 @@ async function createRawTexture(container: KTX2Container) {
   if (UNCOMPRESSED_FORMATS.has(FORMAT_MAP[vkFormat as keyof typeof FORMAT_MAP] as TextureFormat)) {
     texture =
       container.pixelDepth === 0
-        ? /*@ts-expect-error*/
-          new DataTexture(mipmaps[0].data, container.pixelWidth, container.pixelHeight)
+        ? new DataTexture(mipmaps[0].data, container.pixelWidth, container.pixelHeight)
         : new Data3DTexture(mipmaps[0].data, container.pixelWidth, container.pixelHeight, container.pixelDepth);
   } else {
     if (container.pixelDepth > 0) throw new Error('engine.KTX2Loader: Unsupported pixelDepth.');
 
-    /*@ts-expect-error*/
     texture = new CompressedTexture(mipmaps, container.pixelWidth, container.pixelHeight);
   }
 
-  /*@ts-expect-error*/
   texture.mipmaps = mipmaps;
 
-  /*@ts-expect-error*/
   texture.type = TYPE_MAP[vkFormat];
-  /*@ts-expect-error*/
+
   texture.format = FORMAT_MAP[vkFormat];
   texture.colorSpace = parseColorSpace(container);
   texture.needsUpdate = true;
-
-  //
 
   return Promise.resolve(texture);
 }

@@ -60,13 +60,9 @@ class AnamorphicNode extends TempNode {
 
     this.setSize(map.image.width, map.image.height);
 
-
-
     renderer.updateRenderTarget(this.target);
 
     quadMesh.render(renderer);
-
-
 
     renderer.updateRenderTarget(currentRenderTarget);
     textureNode.value = currentTexture;
@@ -80,8 +76,6 @@ class AnamorphicNode extends TempNode {
 
       return vec4();
     }
-
-    //
 
     const uvNode = textureNode.uvNode || uv();
 
@@ -106,17 +100,11 @@ class AnamorphicNode extends TempNode {
       return total.mul(this.colorNode);
     });
 
-    //
-
     const material = this._material || (this._material = builder.createNodeMaterial());
     material.fragmentNode = anamorph();
 
-    //
-
     const properties = builder.getNodeProperties(this);
     properties.textureNode = textureNode;
-
-    //
 
     return this._textureNode;
   }

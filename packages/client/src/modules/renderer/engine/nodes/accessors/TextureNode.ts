@@ -27,17 +27,17 @@ export class TextureNode extends UniformNode {
     this.setUpdateMatrix(uvNode === null);
   }
 
-  getUniformHash(/*builder*/) {
+  getUniformHash() {
     return this.value.uuid;
   }
 
-  getNodeType(/*builder*/) {
+  getNodeType() {
     if (this.value.isDepthTexture === true) return 'f32';
 
     return 'vec4';
   }
 
-  getInputType(/*builder*/) {
+  getInputType() {
     return 'texture';
   }
 
@@ -45,7 +45,7 @@ export class TextureNode extends UniformNode {
     return uv(this.value.channel);
   }
 
-  updateReference(/*state*/) {
+  updateReference() {
     return this.value;
   }
 
@@ -69,8 +69,6 @@ export class TextureNode extends UniformNode {
   setup(builder) {
     const properties = builder.getNodeProperties(this);
 
-    //
-
     let uvNode = this.uvNode;
 
     if ((uvNode === null || builder.context.forceUVContext === true) && builder.context.getUV) {
@@ -85,15 +83,11 @@ export class TextureNode extends UniformNode {
 
     uvNode = this.setupUV(builder, uvNode);
 
-    //
-
     let levelNode = this.levelNode;
 
     if (levelNode === null && builder.context.getTextureLevel) {
       levelNode = builder.context.getTextureLevel(this);
     }
-
-    //
 
     properties.uvNode = uvNode;
     properties.levelNode = levelNode;
@@ -233,8 +227,6 @@ export class TextureNode extends UniformNode {
 
     return asNode(textureNode);
   }
-
-
 
   update() {
     const texture = this.value;

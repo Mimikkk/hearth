@@ -25,8 +25,6 @@ async function init() {
   scene.background = new Engine.Color(0x222222);
   scene.overrideMaterial = new MeshBasicNodeMaterial();
 
-  //
-
   const geometry = new Engine.TorusKnotGeometry(1, 0.3, 128, 64);
 
   const count = 50;
@@ -42,8 +40,6 @@ async function init() {
     mesh.setRotation(Math.random(), Math.random(), Math.random());
     scene.add(mesh);
   }
-
-  //
 
   renderer = await Hearth.as();
   renderer.setPixelRatio(dpr);
@@ -65,14 +61,10 @@ async function init() {
     renderTarget.setSize(window.innerWidth * dpr, window.innerHeight * dpr);
   });
 
-
-
   const materialFX = new MeshBasicNodeMaterial();
   materialFX.colorNode = texture(depthTexture);
 
   quad = new QuadMesh(materialFX);
-
-  //
 
   controls = new OrbitControls(camera, renderer.parameters.canvas);
   controls.enableDamping = true;

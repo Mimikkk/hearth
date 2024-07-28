@@ -25,7 +25,6 @@ async function init() {
 
   const material = new Engine.MeshBasicMaterial();
 
-
   const randomColors = range(new Engine.Color(0x000000), new Engine.Color(0xffffff));
 
   material.colorNode = mix(normalWorld, randomColors, oscSine(timerLocal(0.1)));
@@ -40,13 +39,9 @@ async function init() {
 
     scene.add(mesh);
 
-    //
-
     const gui = new GUI();
     gui.add(mesh, 'count', 0, count);
   });
-
-  //
 
   renderer = await Hearth.as();
   renderer.setPixelRatio(window.devicePixelRatio);
@@ -54,11 +49,8 @@ async function init() {
   renderer.animation.loop = animate;
   document.body.appendChild(renderer.parameters.canvas);
 
-  //
   useWindowResizer(renderer, camera);
 }
-
-//
 
 function animate() {
   render();

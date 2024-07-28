@@ -29,19 +29,8 @@ export class ConvexHull {
 
     this.newFaces = [];
 
-
-    //
-
-
-    //
-
-
-
-
-    //
     this.assigned = new VertexList();
     this.unassigned = new VertexList();
-
 
     this.vertices = [];
   }
@@ -90,8 +79,6 @@ export class ConvexHull {
     for (let i = 0, l = faces.length; i < l; i++) {
       const face = faces[i];
 
-
-
       if (face.distanceToPoint(point) > this.tolerance) return false;
     }
 
@@ -99,8 +86,6 @@ export class ConvexHull {
   }
 
   intersectRay(ray: Ray, target: Vec3): Vec3 | null {
-
-
     const faces = this.faces;
 
     let tNear = -Infinity;
@@ -109,47 +94,25 @@ export class ConvexHull {
     for (let i = 0, l = faces.length; i < l; i++) {
       const face = faces[i];
 
-
-
       const vN = face.distanceToPoint(ray.origin);
       const vD = face.normal.dot(ray.direction);
 
-
-
-
       if (vN > 0 && vD >= 0) return null;
-
-
 
       const t = vD !== 0 ? -vN / vD : 0;
 
-
-
-
       if (t <= 0) continue;
 
-
-
       if (vD > 0) {
-
-
         tFar = Math.min(t, tFar);
       } else {
-
-
         tNear = Math.max(t, tNear);
       }
 
       if (tNear > tFar) {
-
-
         return null;
       }
     }
-
-
-
-
 
     if (tNear !== -Infinity) {
       ray.at(tNear, target);
@@ -171,8 +134,6 @@ export class ConvexHull {
     return this;
   }
 
-
-
   addVertexToFace(vertex: VertexNode, face: Face): this {
     vertex.face = face;
 
@@ -187,19 +148,11 @@ export class ConvexHull {
     return this;
   }
 
-
-
   removeVertexFromFace(vertex: VertexNode, face: Face): this {
     if (vertex === face.outside) {
-
-
       if (vertex.next !== null && vertex.next.face === face) {
-
-
         face.outside = vertex.next;
       } else {
-
-
         face.outside = null;
       }
     }
@@ -209,12 +162,8 @@ export class ConvexHull {
     return this;
   }
 
-
-
   removeAllVerticesFromFace(face: Face): VertexNode | undefined {
     if (face.outside !== null) {
-
-
       const start = face.outside;
       let end = face.outside;
 
@@ -224,8 +173,6 @@ export class ConvexHull {
 
       this.assigned.removeSubList(start, end);
 
-
-
       start.prev = end.next = null;
       face.outside = null;
 
@@ -233,38 +180,25 @@ export class ConvexHull {
     }
   }
 
-
-
   deleteFaceVertices(face: Face, absorbingFace?: Face): this {
     const faceVertices = this.removeAllVerticesFromFace(face);
 
     if (faceVertices !== undefined) {
       if (absorbingFace === undefined) {
-
-
         this.unassigned.appendChain(faceVertices);
       } else {
-
-
         let vertex = faceVertices;
 
         do {
-
-
-
           const nextVertex = vertex.next;
 
           const distance = absorbingFace.distanceToPoint(vertex.point);
-
-
 
           if (distance > this.tolerance) {
             this.addVertexToFace(vertex, absorbingFace);
           } else {
             this.unassigned.append(vertex);
           }
-
-
 
           vertex = nextVertex!;
         } while (vertex !== null);
@@ -274,15 +208,11 @@ export class ConvexHull {
     return this;
   }
 
-
-
   resolveUnassignedPoints(newFaces: Face[]): this {
     if (this.unassigned.isEmpty() === false) {
       let vertex = this.unassigned.first()!;
 
       do {
-
-
         const nextVertex = vertex.next;
 
         let maxDistance = this.tolerance;
@@ -304,8 +234,6 @@ export class ConvexHull {
           }
         }
 
-
-
         if (maxFace !== null) {
           this.addVertexToFace(vertex, maxFace);
         }
@@ -317,8 +245,6 @@ export class ConvexHull {
     return this;
   }
 
-
-
   computeExtremes(): { min: VertexNode[]; max: VertexNode[] } {
     const min = Vec3.new();
     const max = Vec3.new();
@@ -326,16 +252,12 @@ export class ConvexHull {
     const minVertices = [];
     const maxVertices = [];
 
-
-
     for (let i = 0; i < 3; i++) {
       minVertices[i] = maxVertices[i] = this.vertices[0];
     }
 
     min.from(this.vertices[0].point);
     max.from(this.vertices[0].point);
-
-
 
     for (let i = 0, l = this.vertices.length; i < l; i++) {
       const vertex = this.vertices[i];
@@ -368,8 +290,6 @@ export class ConvexHull {
       }
     }
 
-
-
     this.tolerance =
       3 *
       Number.EPSILON *
@@ -380,19 +300,11 @@ export class ConvexHull {
     return { min: minVertices, max: maxVertices };
   }
 
-
-
-
   computeInitialHull(): this {
     const vertices = this.vertices;
     const extremes = this.computeExtremes();
     const min = extremes.min;
     const max = extremes.max;
-
-
-
-
-
 
     let maxDistance = 0;
 
@@ -415,8 +327,6 @@ export class ConvexHull {
     let v2!: VertexNode;
     let v3!: VertexNode;
 
-
-
     maxDistance = 0;
     _line3.set(v0.point, v1.point);
 
@@ -434,8 +344,6 @@ export class ConvexHull {
         }
       }
     }
-
-
 
     maxDistance = -1;
     _plane.fromCoplanar(v0.point, v1.point, v2.point);
@@ -456,50 +364,30 @@ export class ConvexHull {
     const faces = [];
 
     if (_plane.distanceTo(v3.point) < 0) {
-
-
       faces.push(Face.create(v0, v1, v2), Face.create(v3, v1, v0), Face.create(v3, v2, v1), Face.create(v3, v0, v2));
-
-
 
       for (let i = 0; i < 3; i++) {
         const j = (i + 1) % 3;
 
-
-
         faces[i + 1].getEdge(2).setTwin(faces[0].getEdge(j));
-
-
 
         faces[i + 1].getEdge(1).setTwin(faces[j + 1].getEdge(0));
       }
     } else {
-
-
       faces.push(Face.create(v0, v2, v1), Face.create(v3, v0, v1), Face.create(v3, v1, v2), Face.create(v3, v2, v0));
-
-
 
       for (let i = 0; i < 3; i++) {
         const j = (i + 1) % 3;
 
-
-
         faces[i + 1].getEdge(2).setTwin(faces[0].getEdge((3 - i) % 3));
-
-
 
         faces[i + 1].getEdge(0).setTwin(faces[j + 1].getEdge(1));
       }
     }
 
-
-
     for (let i = 0; i < 4; i++) {
       this.faces.push(faces[i]);
     }
-
-
 
     for (let i = 0, l = vertices.length; i < l; i++) {
       const vertex = vertices[i];
@@ -526,8 +414,6 @@ export class ConvexHull {
     return this;
   }
 
-
-
   reindexFaces() {
     const activeFaces = [];
 
@@ -544,21 +430,13 @@ export class ConvexHull {
     return this;
   }
 
-
-
   nextVertexToAdd() {
-
-
     if (this.assigned.isEmpty() === false) {
       let eyeVertex,
         maxDistance = 0;
 
-
-
       const eyeFace = this.assigned.first()!.face!;
       let vertex = eyeFace.outside!;
-
-
 
       do {
         const distance = eyeFace.distanceToPoint(vertex.point);
@@ -575,13 +453,7 @@ export class ConvexHull {
     }
   }
 
-
-
-
-
   computeHorizon(eyePoint: Vec3, crossEdge: HalfEdge | null, face: Face, horizon: HalfEdge[]): this {
-
-
     this.deleteFaceVertices(face);
 
     face.mark = Deleted;
@@ -591,9 +463,6 @@ export class ConvexHull {
     if (crossEdge === null) {
       edge = crossEdge = face.getEdge(0);
     } else {
-
-
-
       edge = crossEdge.next!;
     }
 
@@ -603,12 +472,8 @@ export class ConvexHull {
 
       if (oppositeFace.mark === Visible) {
         if (oppositeFace.distanceToPoint(eyePoint) > this.tolerance) {
-
-
           this.computeHorizon(eyePoint, twinEdge, oppositeFace, horizon);
         } else {
-
-
           horizon.push(edge);
         }
       }
@@ -619,24 +484,15 @@ export class ConvexHull {
     return this;
   }
 
-
-
   addAdjoiningFace(eyeVertex: VertexNode, horizonEdge: HalfEdge): HalfEdge {
-
-
     const face = Face.create(eyeVertex, horizonEdge.tail()!, horizonEdge.head());
 
     this.faces.push(face);
-
-
 
     face.getEdge(-1).setTwin(horizonEdge.twin!);
 
     return face.getEdge(0);
   }
-
-
-
 
   addNewFaces(eyeVertex: VertexNode, horizon: HalfEdge[]): this {
     this.newFaces = [];
@@ -647,15 +503,11 @@ export class ConvexHull {
     for (let i = 0; i < horizon.length; i++) {
       const horizonEdge = horizon[i];
 
-
-
       const sideEdge = this.addAdjoiningFace(eyeVertex, horizonEdge);
 
       if (firstSideEdge === null) {
         firstSideEdge = sideEdge;
       } else {
-
-
         sideEdge.next!.setTwin(previousSideEdge!);
       }
 
@@ -663,29 +515,21 @@ export class ConvexHull {
       previousSideEdge = sideEdge;
     }
 
-
-
     firstSideEdge!.next!.setTwin(previousSideEdge!);
 
     return this;
   }
-
-
 
   addVertexToHull(eyeVertex: VertexNode): this {
     const horizon: HalfEdge[] = [];
 
     this.unassigned.clear();
 
-
-
     this.removeVertexFromFace(eyeVertex, eyeVertex.face!);
 
     this.computeHorizon(eyeVertex.point, null, eyeVertex.face!, horizon);
 
     this.addNewFaces(eyeVertex, horizon);
-
-
 
     this.resolveUnassignedPoints(this.newFaces);
 
@@ -704,8 +548,6 @@ export class ConvexHull {
     let vertex;
 
     this.computeInitialHull();
-
-
 
     while ((vertex = this.nextVertexToAdd()) !== undefined) {
       this.addVertexToHull(vertex);
@@ -734,7 +576,6 @@ export class Face {
     this.midpoint = Vec3.new();
     this.area = 0;
 
-
     this.constant = 0;
 
     this.outside = null;
@@ -749,13 +590,9 @@ export class Face {
     const e1 = new HalfEdge(b, face);
     const e2 = new HalfEdge(c, face);
 
-
-
     e0.next = e2.prev = e1;
     e1.next = e0.prev = e2;
     e2.next = e1.prev = e0;
-
-
 
     face.edge = e0;
 

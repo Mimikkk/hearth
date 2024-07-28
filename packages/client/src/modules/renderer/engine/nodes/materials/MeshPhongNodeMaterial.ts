@@ -26,18 +26,14 @@ export class MeshPhongNodeMaterial extends NodeMaterial {
     this.setValues(parameters);
   }
 
-  setupLightingModel(/*builder*/) {
+  setupLightingModel() {
     return new PhongLightingModel();
   }
 
   setupVariants() {
-
-
     const shininessNode = (this.shininessNode ? f32(this.shininessNode) : materialShininess).max(1e-4);
 
     shininess.assign(shininessNode);
-
-
 
     const specularNode = this.specularNode || materialSpecularColor;
 

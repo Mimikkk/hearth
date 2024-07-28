@@ -45,8 +45,6 @@ export class Line extends Entity {
   computeLineDistances() {
     const geometry = this.geometry;
 
-
-
     if (geometry.index === null) {
       const positionAttribute = geometry.attributes.position;
       const lineDistances = [0];
@@ -73,8 +71,6 @@ export class Line extends Entity {
     const threshold = 1;
     const drawRange = geometry.drawRange;
 
-
-
     if (geometry.boundingSphere === null) geometry.computeBoundingSphere();
 
     _sphere.from(geometry.boundingSphere!);
@@ -82,8 +78,6 @@ export class Line extends Entity {
     _sphere.radius += threshold;
 
     if (raycaster.ray.intersectsSphere(_sphere) === false) return;
-
-    //
 
     _inverseMatrix.from(matrixWorld).invert();
     _ray.from(raycaster.ray).applyMat4(_inverseMatrix);
@@ -128,7 +122,6 @@ export class Line extends Entity {
         intersects.push({
           distance: distance,
 
-
           point: interSegment.clone().applyMat4(this.matrixWorld),
           index: i,
           object: this,
@@ -155,7 +148,6 @@ export class Line extends Entity {
 
         intersects.push({
           distance: distance,
-
 
           point: interSegment.clone().applyMat4(this.matrixWorld),
           index: i,

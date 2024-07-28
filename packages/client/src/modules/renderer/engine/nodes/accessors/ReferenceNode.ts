@@ -95,7 +95,7 @@ class ReferenceNode extends Node {
     return this.node;
   }
 
-  update(/*frame*/) {
+  update() {
     this.updateValue();
   }
 

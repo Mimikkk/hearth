@@ -16,18 +16,12 @@ let sphereGroup, smallSphere;
 init();
 
 async function init() {
-
   scene = new Engine.Scene();
-
 
   camera = new Engine.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 500);
   camera.position.set(0, 75, 160);
 
-  //
-
   let geometry, material;
-
-  //
 
   sphereGroup = new Engine.Entity();
   scene.add(sphereGroup);
@@ -52,8 +46,6 @@ async function init() {
   smallSphere = new Engine.Mesh(geometry, material);
   scene.add(smallSphere);
 
-
-
   const textureLoader = new TextureLoader();
 
   const floorNormal = await textureLoader.loadAsync('resources/textures/floors/FloorsCheckerboard_S_Normal.jpg');
@@ -64,8 +56,6 @@ async function init() {
   decalDiffuse.colorSpace = Engine.ColorSpace.SRGB;
 
   const decalNormal = await textureLoader.loadAsync('resources/textures/decal/decal-normal.jpg');
-
-
 
   const groundReflector = reflector();
   const verticalReflector = reflector();
@@ -82,11 +72,7 @@ async function init() {
   const groundNode = texture(decalDiffuse).a.mix(color(0xffffff), groundReflector);
   const verticalNode = color(0x0000ff).mul(0.1).add(verticalReflector);
 
-
-
   const planeGeo = new Engine.PlaneGeometry(100.1, 100.1);
-
-  //
 
   const planeBottom = new Engine.Mesh(
     planeGeo,
@@ -108,8 +94,6 @@ async function init() {
   planeBack.position.y = 50;
   planeBack.add(verticalReflector.target);
   scene.add(planeBack);
-
-  //
 
   const planeTop = new Engine.Mesh(planeGeo, new Engine.MeshPhongMaterial({ color: 0xffffff }));
   planeTop.position.y = 100;
@@ -134,8 +118,6 @@ async function init() {
   planeLeft.rotateY(Math.PI / 2);
   scene.add(planeLeft);
 
-
-
   const mainLight = new Engine.PointLight(0xe7e7e7, 2.5, 250, 0);
   mainLight.position.y = 60;
   scene.add(mainLight);
@@ -152,15 +134,11 @@ async function init() {
   blueLight.position.set(0, 50, 550);
   scene.add(blueLight);
 
-
-
   renderer = await Hearth.as();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.animation.loop = animate;
   document.body.appendChild(renderer.parameters.canvas);
-
-
 
   cameraControls = new OrbitControls(camera, renderer.parameters.canvas);
   cameraControls.target.set(0, 40, 0);

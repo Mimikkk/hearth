@@ -22,7 +22,6 @@ async function init() {
 
   scene = new Engine.Scene();
 
-
   new GLTFLoader().loadAsync('resources/models/gltf/SheenChair.glb').then(gltf => {
     scene.add(gltf.scene);
 
@@ -61,8 +60,6 @@ async function init() {
 
   useWindowResizer(renderer, camera);
 }
-
-//
 
 function animate() {
   controls.update();

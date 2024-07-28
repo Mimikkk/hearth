@@ -16,7 +16,6 @@ import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 import { GPUBufferBindingTypeType, BufferStep } from '@modules/renderer/engine/hearth/constants.js';
 
-
 init();
 
 const dashboard = {
@@ -32,8 +31,6 @@ async function init() {
   camera.position.z = 1;
 
   const scene = new Engine.Scene();
-
-
 
   const size = 1024;
 
@@ -62,8 +59,6 @@ async function init() {
       arrayBufferNodes[i].element(instanceIndex).assign(invertIndex);
     }
   });
-
-
 
   const computeInit = computeInitOrder().compute(size);
 
@@ -111,10 +106,6 @@ async function init() {
     return color;
   })();
 
-
-
-  //
-
   const plane = new Engine.Mesh(new Engine.PlaneGeometry(1, 1), material);
   scene.add(plane);
 
@@ -126,7 +117,6 @@ async function init() {
   renderer.parameters.canvas.style.height = '100%';
 
   scene.background = new Engine.Color(0x313131);
-
 
   renderer.compute(computeInit);
 

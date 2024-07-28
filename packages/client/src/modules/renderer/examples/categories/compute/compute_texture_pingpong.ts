@@ -24,8 +24,6 @@ async function init() {
 
   scene = new Engine.Scene();
 
-
-
   const hdr = true;
   const width = 512,
     height = 512;
@@ -39,8 +37,6 @@ async function init() {
   }
 
   const wgslFormat = hdr ? 'rgba16float' : 'rgba8unorm';
-
-
 
   const rand2 = code(`
 					fn rand2( n: vec2f ) -> f32 {
@@ -97,8 +93,6 @@ async function init() {
     seed,
   }).compute(width * height);
 
-
-
   const computePingPongWGSL = wgslFn(
     `
 					fn computePingPongWGSL( readTex: texture_2d<f32>, writeTex: texture_storage_2d<${wgslFormat}, write>, index: u32 ) -> void {
@@ -116,8 +110,6 @@ async function init() {
     [rand2],
   );
 
-  //
-
   computeToPong = computePingPongWGSL({
     readTex: texture(pingTexture),
     writeTex: textureStore(pongTexture),
@@ -128,8 +120,6 @@ async function init() {
     writeTex: textureStore(pingTexture),
     index: instanceIndex,
   }).compute(width * height);
-
-  //
 
   material = new Engine.MeshBasicMaterial({ color: 0xffffff, map: pongTexture });
 
@@ -164,8 +154,6 @@ function render() {
   const time = performance.now();
   const seconds = Math.floor(time / 1000);
 
-
-
   if (phase && seconds !== lastUpdate) {
     seed.value.set(Math.random(), Math.random());
 
@@ -174,17 +162,11 @@ function render() {
     lastUpdate = seconds;
   }
 
-
-
   renderer.compute(phase ? computeToPong : computeToPing);
 
   material.map = phase ? pongTexture : pingTexture;
 
   phase = !phase;
-
-
-
-
 
   renderer.render(scene, camera);
 }

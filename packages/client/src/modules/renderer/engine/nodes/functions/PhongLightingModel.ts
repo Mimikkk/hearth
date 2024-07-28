@@ -1,4 +1,4 @@
-import LightingModel from '../core/LightingModel.js';
+import { LightingModel } from '../core/LightingModel.js';
 import F_Schlick from './BSDF/F_Schlick.js';
 import BRDF_Lambert from './BSDF/BRDF_Lambert.js';
 import { diffuseColor, shininess, specularColor } from '../core/PropertyNode.js';

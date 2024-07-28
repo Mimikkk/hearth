@@ -3,7 +3,6 @@ type DisposeFn<Value> = (value: Value, label: string) => void;
 
 export type LabelLess<T> = Omit<T, 'label'>;
 export type Label<Key extends string, T> = LabelLess<T> & {
-  /** Identifiers must be unique. */
   label: Key;
 };
 

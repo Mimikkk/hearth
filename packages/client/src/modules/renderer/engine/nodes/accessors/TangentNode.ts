@@ -16,7 +16,7 @@ class TangentNode extends Node {
     this.scope = scope;
   }
 
-  getHash(/*builder*/) {
+  getHash() {
     return `tangent-${this.scope}`;
   }
 

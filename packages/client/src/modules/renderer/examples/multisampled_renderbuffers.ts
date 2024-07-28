@@ -56,15 +56,11 @@ async function init() {
   scene = new Engine.Scene();
   scene.background = new Engine.Color(0x111111);
 
-
-
   const geometryBox = new Engine.BoxGeometry(7, 7, 7, 12, 12, 12);
   const materialBox = new MeshPhongNodeMaterial();
   const materialBoxInner = new MeshPhongNodeMaterial({ color: 0xff0000 });
 
   materialBox.wireframe = true;
-
-  //
 
   box = new Engine.InstancedMesh(geometryBox, materialBox, count);
   box2 = new Engine.InstancedMesh(geometryBox, materialBoxInner, count);
@@ -75,8 +71,6 @@ async function init() {
   }
 
   scene.add(box, box2);
-
-  //
 
   renderer = await Hearth.as();
   renderer.setPixelRatio(dpr);

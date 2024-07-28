@@ -300,7 +300,6 @@ describe('Math - Quaternion', () => {
     expect(d).toEqual(b);
 
     const D = Math.SQRT1_2;
-    //
     const e = Quaternion.new(1, 0, 0, 0);
     const f = Quaternion.new(0, 0, 1, 0);
     let expected = Quaternion.new(D, 0, D, 0);

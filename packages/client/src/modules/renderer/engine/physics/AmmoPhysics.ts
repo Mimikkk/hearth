@@ -131,8 +131,6 @@ export async function AmmoPhysics(): Promise<AmmoPhysicsObject> {
     }
   }
 
-  //
-
   function setMeshPosition(mesh: Mesh, position: Vec3, index: number = 0) {
     //@ts-expect-error
     if (mesh.isInstancedMesh) {
@@ -157,8 +155,6 @@ export async function AmmoPhysics(): Promise<AmmoPhysicsObject> {
     }
   }
 
-  //
-
   let lastTime = 0;
 
   function step() {
@@ -168,8 +164,6 @@ export async function AmmoPhysics(): Promise<AmmoPhysicsObject> {
       const delta = (time - lastTime) / 1000;
 
       world.stepSimulation(delta, 10);
-
-      //
 
       for (let i = 0, l = meshes.length; i < l; i++) {
         const mesh = meshes[i];

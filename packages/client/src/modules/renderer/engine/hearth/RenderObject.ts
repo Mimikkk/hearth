@@ -154,12 +154,11 @@ export default class RenderObject {
       if (value !== null) {
         const type = typeof value;
 
-        if (type === 'number')
-          value = value !== 0 ? '1' : '0';
+        if (type === 'number') value = value !== 0 ? '1' : '0';
         else if (type === 'object') value = '{}';
       }
 
-      cacheKey += /*property + ':' +*/ value + ',';
+      cacheKey += value + ',';
     }
 
     cacheKey += this.clippingContextVersion + ',';

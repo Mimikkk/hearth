@@ -10,9 +10,7 @@ class HashNode extends Node {
     this.seedNode = seedNode;
   }
 
-  setup(/*builder*/) {
-
-
+  setup() {
     const state = this.seedNode.u32().mul(747796405).add(2891336453);
     const word = state.shiftRight(state.shiftRight(28).add(4)).bitXor(state).mul(277803737);
     const result = word.shiftRight(22).bitXor(word);

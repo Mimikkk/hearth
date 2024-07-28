@@ -7,7 +7,7 @@ class LightingNode extends Node {
     super('vec3');
   }
 
-  generate(/*builder*/) {
+  generate() {
     console.warn('Abstract function.');
   }
 }

@@ -30,15 +30,12 @@ async function init() {
   scene.background = Color.new(0x72645b);
   scene.fog = new Fog(0x72645b, 2, 15);
 
-
-
   const plane = new Mesh(new PlaneGeometry(40, 40), new MeshPhongMaterial({ color: 0xcbcbcb, specular: 0x474747 }));
   plane.setRotationX(-Math.PI / 2);
   plane.position.y = -0.5;
   scene.add(plane);
 
   plane.receiveShadow = true;
-
 
   const loader = new STLLoader();
   loader.loadAsync('resources/models/stl/ascii/slotted_disk.stl').then(function (geometry) {
@@ -54,7 +51,6 @@ async function init() {
 
     scene.add(mesh);
   });
-
 
   const material = new MeshPhongMaterial({ color: 0xd5d5d5, specular: 0x494949, shininess: 200 });
 
@@ -84,7 +80,6 @@ async function init() {
     scene.add(mesh);
   });
 
-
   loader.loadAsync('resources/models/stl/binary/colored.stl').then(function (geometry) {
     let meshMaterial = material;
 
@@ -104,26 +99,17 @@ async function init() {
     scene.add(mesh);
   });
 
-
-
   scene.add(new HemisphereLight(0x8d7c7c, 0x494966, 3));
 
   addShadowedLight(1, 1, 1, 0xffffff, 3.5);
   addShadowedLight(0.5, 1, -1, 0xffd500, 3);
-
 
   renderer = await Hearth.as();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.animation.loop = animate;
 
-
-
   container.appendChild(renderer.parameters.canvas);
-
-
-
-  //
 
   window.addEventListener('resize', onWindowResize);
 }

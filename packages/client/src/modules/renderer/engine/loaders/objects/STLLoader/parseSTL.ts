@@ -10,20 +10,9 @@ function isBinary(data: ArrayBuffer) {
     return true;
   }
 
-
-
-
-
-
-
-
-
-
-
   const solid = [115, 111, 108, 105, 100];
 
   for (let off = 0; off < 5; off++) {
-
     if (matchDataViewAt(solid, reader, off)) return false;
   }
 
@@ -51,14 +40,11 @@ function parseBinary(buffer: ArrayBuffer) {
   let defaultB!: number;
   let alpha!: number;
 
-
-
-
   for (let index = 0; index < 80 - 10; index++) {
     if (
-      reader.getUint32(index, false) == 0x434f4c4f /*COLO*/ &&
-      reader.getUint8(index + 4) == 0x52 /*'R'*/ &&
-      reader.getUint8(index + 5) == 0x3d /*'='*/
+      reader.getUint32(index, false) == 0x434f4c4f &&
+      reader.getUint8(index + 4) == 0x52 &&
+      reader.getUint8(index + 5) == 0x3d
     ) {
       colors = new Float32Array(faces * 3 * 3);
 
@@ -89,8 +75,6 @@ function parseBinary(buffer: ArrayBuffer) {
       const packedColor = reader.getUint16(start + 48, true);
 
       if ((packedColor & 0x8000) === 0) {
-
-
         r = (packedColor & 0x1f) / 31;
         g = ((packedColor >> 5) & 0x1f) / 31;
         b = ((packedColor >> 10) & 0x1f) / 31;
@@ -188,13 +172,9 @@ function parseASCII(text: string) {
         endVertex++;
       }
 
-
-
       if (normalCountPerFace !== 1) {
         console.error("STLLoader: Something isn't right with the normal of face number " + faceCounter);
       }
-
-
 
       if (vertexCountPerFace !== 3) {
         console.error("STLLoader: Something isn't right with the vertices of face number " + faceCounter);

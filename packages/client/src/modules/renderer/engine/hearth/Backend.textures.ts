@@ -129,7 +129,6 @@ export class BackendTextures {
     let sampleCount = options.sampleCount !== undefined ? options.sampleCount : 1;
 
     if (sampleCount > 1) {
-
       sampleCount = Math.pow(2, Math.floor(Math.log2(sampleCount)));
 
       if (sampleCount === 2) {
@@ -162,8 +161,6 @@ export class BackendTextures {
       format: format,
       usage: usage,
     };
-
-
 
     if (isVideoTexture(texture)) {
       const video = texture.source.data;
@@ -300,9 +297,7 @@ export class BackendTextures {
 
     const { textureDescriptorGPU } = textureData;
 
-    if (texture.isRenderTargetTexture || textureDescriptorGPU === undefined /* unsupported texture format */) return;
-
-
+    if (texture.isRenderTargetTexture || textureDescriptorGPU === undefined) return;
 
     if (isDataTexture(texture) || isData3DTexture(texture)) {
       this._copyBufferToTexture(options.image, textureData.texture, textureDescriptorGPU, 0, texture.flipY);
@@ -321,8 +316,6 @@ export class BackendTextures {
     } else {
       this._copyImageToTexture(options.image, textureData.texture, textureDescriptorGPU, 0, texture.flipY);
     }
-
-    //
 
     textureData.version = texture.version;
 
@@ -483,9 +476,6 @@ export class BackendTextures {
     flipY: boolean,
     depth: number = 0,
   ) {
-
-
-
     const device = this.backend.device;
 
     const data = image.data;
@@ -521,8 +511,6 @@ export class BackendTextures {
     textureGPU: GPUTexture,
     textureDescriptorGPU: GPUTextureDescriptor,
   ) {
-
-
     const device = this.backend.device;
 
     const blockData = this._getBlockData(textureDescriptorGPU.format);
@@ -555,8 +543,6 @@ export class BackendTextures {
   }
 
   _getBlockData(format: GPUTextureFormat): { byteLength: number; width: number; height: number } {
-
-
     if (format === GPUTextureFormatType.BC1RGBAUnorm || format === GPUTextureFormatType.BC1RGBAUnormSRGB)
       return { byteLength: 8, width: 4, height: 4 };
     if (format === GPUTextureFormatType.BC2RGBAUnorm || format === GPUTextureFormatType.BC2RGBAUnormSRGB)
@@ -630,7 +616,6 @@ export class BackendTextures {
   }
 
   _getBytesPerTexel(format: GPUTextureFormat): 1 | 2 | 4 | 8 | 16 {
-
     if (
       format === GPUTextureFormatType.R8Unorm ||
       format === GPUTextureFormatType.R8Snorm ||
@@ -638,7 +623,6 @@ export class BackendTextures {
       format === GPUTextureFormatType.R8Sint
     )
       return 1;
-
 
     if (
       format === GPUTextureFormatType.R16Uint ||
@@ -650,7 +634,6 @@ export class BackendTextures {
       format === GPUTextureFormatType.RG8Sint
     )
       return 2;
-
 
     if (
       format === GPUTextureFormatType.R32Uint ||
@@ -666,7 +649,6 @@ export class BackendTextures {
       format === GPUTextureFormatType.RGBA8Sint ||
       format === GPUTextureFormatType.BGRA8Unorm ||
       format === GPUTextureFormatType.BGRA8UnormSRGB ||
-
       format === GPUTextureFormatType.RGB9E5UFloat ||
       format === GPUTextureFormatType.RGB10A2Unorm ||
       //@ts-expect-error
@@ -678,7 +660,6 @@ export class BackendTextures {
     )
       return 4;
 
-
     if (
       format === GPUTextureFormatType.RG32Uint ||
       format === GPUTextureFormatType.RG32Sint ||
@@ -688,7 +669,6 @@ export class BackendTextures {
       format === GPUTextureFormatType.RGBA16Float
     )
       return 8;
-
 
     if (
       format === GPUTextureFormatType.RGBA32Uint ||

@@ -50,12 +50,6 @@ import {
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 
-
-
-
-
-
-
 const camera = new PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.25, 30);
 camera.position.set(3, 2, 4);
 
@@ -86,8 +80,6 @@ scene.add(waterAmbientLight);
 
 const clock = new Clock();
 
-
-
 let model: Group;
 let mixer: AnimationMixer;
 const loader = new GLTFLoader();
@@ -102,8 +94,6 @@ loader.loadAsync('resources/models/gltf/Michelle.glb').then(gltf => {
 
   scene.add(model);
 });
-
-
 
 const iceDiffuse = await new TextureLoader().loadAsync('resources/textures/water/water.jpg');
 iceDiffuse.wrapS = Wrapping.Repeat;
@@ -134,8 +124,6 @@ for (let i = 0; i < count; i++) {
 objects.position.set((column - 1) * scale * -0.5, -1, (count / column) * scale * -0.5);
 
 scene.add(objects);
-
-
 
 const timer = timerLocal(1);
 const floorUV = positionWorld.xzy;
@@ -172,13 +160,9 @@ const water = new Mesh(new BoxGeometry(50, 0.001, 50), waterMaterial);
 water.position.set(0, 0, 0);
 scene.add(water);
 
-
-
 const floor = new Mesh(new CylinderGeometry(1.1, 1.1, 10), new MeshStandardNodeMaterial({ colorNode: iceColorNode }));
 floor.position.set(0, -5, 0);
 scene.add(floor);
-
-
 
 const waterPosY = positionWorld.y.sub(water.position.y);
 
@@ -189,8 +173,6 @@ const colorNode = transition.mix(material.colorNode, material.colorNode.add(wate
 
 //material.colorNode = colorNode;
 floor.material.colorNode = colorNode;
-
-
 
 const renderer = await Hearth.as();
 renderer.setPixelRatio(window.devicePixelRatio);
@@ -207,15 +189,11 @@ controls.autoRotateSpeed = 1;
 controls.target.set(0, 0.2, 0);
 controls.update();
 
-
-
 const gui = new GUI();
 
 const floorPosition = Vec3.new(0, 0.2, 0);
 
 gui.add(floorPosition, 'y', -1, 1, 0.001).name('position');
-
-
 
 const scenePass = pass(scene, camera);
 const scenePassColor = scenePass.getTextureNode();
@@ -233,8 +211,6 @@ postProcessing.outputNode = waterMask.cond(
   scenePassColorBlurred,
   scenePassColorBlurred.mul(color(0x74ccf4)).mul(vignet),
 );
-
-//
 
 useWindowResizer(renderer, camera);
 

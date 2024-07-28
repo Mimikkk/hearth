@@ -39,8 +39,6 @@ class EnvironmentNode extends LightingNode {
       envNode = cacheEnvNode;
     }
 
-    //
-
     const intensity = reference('envMapIntensity', 'f32', builder.material);
 
     const radiance = context(envNode, createRadianceContext(roughness, transformedNormalView)).mul(intensity);
@@ -48,13 +46,9 @@ class EnvironmentNode extends LightingNode {
 
     const isolateRadiance = cache(radiance);
 
-    //
-
     builder.context.radiance.addAssign(isolateRadiance);
 
     builder.context.iblIrradiance.addAssign(irradiance);
-
-    //
 
     const clearcoatRadiance = builder.context.lightingModel.clearcoatRadiance;
 

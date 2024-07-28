@@ -22,30 +22,16 @@ export class PointLightShadow extends LightShadow<PerspectiveCamera> {
     this.viewportCount = 6;
 
     this.viewports = [
-      
-      
-      //
-      
-      
-      //
-      
-      
-      
-      
-      
-      
-
-      
       Vec4.new(2, 1, 1, 1),
-      
+
       Vec4.new(0, 1, 1, 1),
-      
+
       Vec4.new(3, 1, 1, 1),
-      
+
       Vec4.new(1, 1, 1, 1),
-      
+
       Vec4.new(3, 0, 1, 1),
-      
+
       Vec4.new(1, 0, 1, 1),
     ];
 

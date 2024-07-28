@@ -70,8 +70,6 @@ async function init() {
   scene.add(dirLight);
   scene.add(new Engine.AmbientLight(0x111111));
 
-  //
-
   collisionCamera = new Engine.OrthographicCamera(-50, 50, 50, -50, 0.1, 50);
   collisionCamera.position.y = 50;
   collisionCamera.lookAt(0, 0, 0);
@@ -83,8 +81,6 @@ async function init() {
 
   collisionPosMaterial = new MeshBasicNodeMaterial();
   collisionPosMaterial.colorNode = positionWorld;
-
-  //
 
   const createBuffer = (type = 'vec3') =>
     storage(
@@ -103,8 +99,6 @@ async function init() {
   const velocityBuffer = createBuffer();
   const ripplePositionBuffer = createBuffer();
   const rippleTimeBuffer = createBuffer();
-
-
 
   const timer = timerLocal();
 
@@ -128,8 +122,6 @@ async function init() {
     rippleTime.x = 1000;
   })().compute(maxParticleCount);
 
-  //
-
   const computeUpdate = tslFn(() => {
     const getCoord = pos => pos.add(50).div(100);
 
@@ -142,15 +134,11 @@ async function init() {
 
     rippleTime.x = rippleTime.x.add(timerDelta().mul(4));
 
-    //
-
     const collisionArea = texture(collisionPosRT.texture, getCoord(position.xz));
 
     const surfaceOffset = 0.05;
 
     const floorPosition = collisionArea.y.add(surfaceOffset);
-
-
 
     const ripplePivotOffsetY = -0.9;
 
@@ -160,11 +148,7 @@ async function init() {
       ripplePosition.xz = position.xz;
       ripplePosition.y = floorPosition;
 
-
-
       rippleTime.x = 1;
-
-
 
       position.x = instanceIndex.add(timer).hash().mul(100).add(-50);
       position.z = instanceIndex.add(timer.add(randUint())).hash().mul(100).add(-50);
@@ -180,8 +164,6 @@ async function init() {
   });
 
   computeParticles = computeUpdate().compute(maxParticleCount);
-
-
 
   const billboarding = tslFn(() => {
     const particlePosition = positionBuffer.toAttribute();
@@ -220,8 +202,6 @@ async function init() {
   rainParticles.count = instanceCount;
   scene.add(rainParticles);
 
-
-
   const rippleTime = rippleTimeBuffer.element(instanceIndex).x;
 
   const rippleEffect = tslFn(() => {
@@ -240,8 +220,6 @@ async function init() {
   rippleMaterial.depthTest = true;
   rippleMaterial.transparent = true;
 
-
-
   const surfaceRippleGeometry = new Engine.PlaneGeometry(2.5, 2.5);
   surfaceRippleGeometry.rotateX(-Math.PI / 2);
 
@@ -257,15 +235,11 @@ async function init() {
   rippleParticles.count = instanceCount;
   scene.add(rippleParticles);
 
-
-
   const floorGeometry = new Engine.PlaneGeometry(1000, 1000);
   floorGeometry.rotateX(-Math.PI / 2);
 
   const plane = new Engine.Mesh(floorGeometry, new Engine.MeshBasicMaterial({ color: 0x050505 }));
   scene.add(plane);
-
-  //
 
   collisionBox = new Engine.Mesh(new Engine.BoxGeometry(30, 1, 15), new Engine.MeshStandardMaterial());
   collisionBox.material.color.set(0x333333);
@@ -274,8 +248,6 @@ async function init() {
   collisionBox.layers.enable(1);
   collisionBox.castShadow = true;
   scene.add(collisionBox);
-
-  //
 
   const loader = new BufferGeometryLoader();
   loader.loadAsync('../../resources/models/json/suzanne_buffergeometry.json').then(function (geometry) {
@@ -291,11 +263,7 @@ async function init() {
     scene.add(monkey);
   });
 
-  //
-
   clock = new Engine.Clock();
-
-  //
 
   renderer = await Hearth.as();
   renderer.setPixelRatio(window.devicePixelRatio);
@@ -303,25 +271,16 @@ async function init() {
   renderer.animation.loop = animate;
   document.body.appendChild(renderer.parameters.canvas);
 
-  //
-
   renderer.compute(computeInit);
-
-  //
 
   controls = new OrbitControls(camera, renderer.parameters.canvas);
   controls.minDistance = 5;
   controls.maxDistance = 50;
   controls.update();
 
-  //
-
   useWindowResizer(renderer, camera);
 
-
-
   const gui = new GUI();
-
 
   collisionBoxPosUI = new Engine.Vec3().from(collisionBox.position);
   collisionBoxPos = new Engine.Vec3();
@@ -345,17 +304,11 @@ function animate() {
 
   collisionBox.position.lerp(collisionBoxPos, 10 * delta);
 
-
-
   scene.overrideMaterial = collisionPosMaterial;
   renderer.updateRenderTarget(collisionPosRT);
   renderer.render(scene, collisionCamera);
 
-
-
   renderer.compute(computeParticles);
-
-
 
   scene.overrideMaterial = null;
   renderer.updateRenderTarget(null);

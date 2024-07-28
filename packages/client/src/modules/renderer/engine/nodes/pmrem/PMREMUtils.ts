@@ -4,8 +4,6 @@ import { mul } from '../math/OperatorNode.js';
 import { cond } from '../math/CondNode.js';
 import { Break, loop } from '../utils/LoopNode.js';
 
-
-
 const cubeUV_r0 = f32(1.0);
 const cubeUV_m0 = f32(-2.0);
 const cubeUV_r1 = f32(0.8);
@@ -19,10 +17,6 @@ const cubeUV_m6 = f32(4.0);
 
 const cubeUV_minMipLevel = f32(4.0);
 const cubeUV_minTileSize = f32(16.0);
-
-
-
-
 
 const getFace = tslFn(([direction]) => {
   const absDirection = vec3(abs(direction)).toVar();
@@ -48,7 +42,6 @@ const getFace = tslFn(([direction]) => {
   type: 'f32',
   inputs: [{ name: 'direction', type: 'vec3' }],
 });
-
 
 const getUV = tslFn(([direction, face]) => {
   const uv = vec2().toVar();
@@ -108,7 +101,6 @@ const roughnessToMip = tslFn(([roughness]) => {
   inputs: [{ name: 'roughness', type: 'f32' }],
 });
 
-
 export const getDirection = tslFn(([uv_immutable, face]) => {
   const uv = uv_immutable.toVar();
   uv.assign(mul(2.0, uv).sub(1.0));
@@ -145,8 +137,6 @@ export const getDirection = tslFn(([uv_immutable, face]) => {
     { name: 'face', type: 'f32' },
   ],
 });
-
-//
 
 export const textureCubeUV = tslFn(
   ([envMap, sampleDir_immutable, roughness_immutable, CUBEUV_TEXEL_WIDTH, CUBEUV_TEXEL_HEIGHT, CUBEUV_MAX_MIP]) => {
@@ -200,7 +190,6 @@ const bilinearCubeUV = tslFn(
 const getSample = tslFn(
   ({ envMap, mipInt, outputDirection, theta, axis, CUBEUV_TEXEL_WIDTH, CUBEUV_TEXEL_HEIGHT, CUBEUV_MAX_MIP }) => {
     const cosTheta = cos(theta);
-
 
     const sampleDirection = outputDirection
       .mul(cosTheta)

@@ -78,18 +78,12 @@ class DRACOLoader {
   decodeGeometry(buffer, taskConfig) {
     const taskKey = JSON.stringify(taskConfig);
 
-    
-    
     if (_taskCache.has(buffer)) {
       const cachedTask = _taskCache.get(buffer);
 
       if (cachedTask.key === taskKey) {
         return cachedTask.promise;
       } else if (buffer.byteLength === 0) {
-        
-        
-        
-        
         throw new Error(
           'THREE.DRACOLoader: Unable to re-decode a buffer with different ' +
             'settings. Buffer has already been transferred.',
@@ -97,14 +91,10 @@ class DRACOLoader {
       }
     }
 
-    //
-
     let worker;
     const taskID = this.workerNextTaskID++;
     const taskCost = buffer.byteLength;
 
-    
-    
     const geometryPending = this._getWorker(taskID, taskCost)
       .then(_worker => {
         worker = _worker;
@@ -113,25 +103,18 @@ class DRACOLoader {
           worker._callbacks[taskID] = { resolve, reject };
 
           worker.postMessage({ type: 'decode', id: taskID, taskConfig, buffer }, [buffer]);
-
-          
         });
       })
       .then(message => this._createGeometry(message.geometry));
 
-    
-    
     geometryPending
       .catch(() => true)
       .then(() => {
         if (worker && taskID) {
           this._releaseTask(worker, taskID);
-
-          
         }
       });
 
-    
     _taskCache.set(buffer, {
       key: taskKey,
       promise: geometryPending,
@@ -166,11 +149,6 @@ class DRACOLoader {
   }
 
   _assignVertexColorSpace(attribute, inputColorSpace) {
-    
-    
-    
-    
-
     if (inputColorSpace !== ColorSpace.SRGB) return;
 
     const _color = Color.new();
@@ -298,8 +276,6 @@ class DRACOLoader {
   }
 }
 
-/* WEB WORKER */
-
 function DRACOWorker() {
   let decoderConfig;
   let decoderPending;
@@ -310,13 +286,12 @@ function DRACOWorker() {
     switch (message.type) {
       case 'init':
         decoderConfig = message.decoderConfig;
-        decoderPending = new Promise(function (resolve /*, reject*/) {
+        decoderPending = new Promise(function (resolve) {
           decoderConfig.onModuleLoaded = function (draco) {
-            
             resolve({ draco: draco });
           };
 
-          DracoDecoderModule(decoderConfig); 
+          DracoDecoderModule(decoderConfig);
         });
         break;
 
@@ -373,17 +348,12 @@ function DRACOWorker() {
 
     const geometry = { index: null, attributes: [] };
 
-    
     for (const attributeName in attributeIDs) {
       const attributeType = self[attributeTypes[attributeName]];
 
       let attribute;
       let attributeID;
 
-      
-      
-      
-      
       if (taskConfig.useUniqueIDs) {
         attributeID = attributeIDs[attributeName];
         attribute = decoder.GetAttributeByUniqueId(dracoGeometry, attributeID);
@@ -404,7 +374,6 @@ function DRACOWorker() {
       geometry.attributes.push(attributeResult);
     }
 
-    
     if (geometryType === draco.TRIANGULAR_MESH) {
       geometry.index = decodeIndex(draco, decoder, dracoGeometry);
     }

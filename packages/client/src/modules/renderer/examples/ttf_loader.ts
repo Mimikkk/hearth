@@ -31,8 +31,6 @@ let windowHalfX = window.innerWidth / 2;
 init();
 
 async function init() {
-
-
   const width = window.innerWidth;
   const height = window.innerHeight;
   camera = new Engine.PerspectiveCamera(60, width / height, 1, 2100);
@@ -40,13 +38,9 @@ async function init() {
 
   cameraTarget = new Engine.Vec3(0, 150, 0);
 
-
-
   scene = new Engine.Scene();
   scene.background = new Engine.Color(0x000000);
   scene.fog = new Engine.Fog(0x000000, 250, 1400);
-
-
 
   const dirLight1 = new Engine.DirectionalLight(0xffffff, 0.4);
   dirLight1.position.set(0, 0, 1).normalize();
@@ -79,15 +73,11 @@ async function init() {
   plane.setRotationX(-Math.PI / 2);
   scene.add(plane);
 
-
-
   renderer = await Hearth.as();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.animation.loop = render;
   document.body.appendChild(renderer.parameters.canvas);
-
-
 
   document.body.style.touchAction = 'none';
   document.body.addEventListener('pointerdown', onPointerDown);
@@ -106,8 +96,6 @@ function onDocumentKeyDown(event) {
 
   const keyCode = event.keyCode;
 
-
-
   if (keyCode === 8) {
     event.preventDefault();
 
@@ -120,8 +108,6 @@ function onDocumentKeyDown(event) {
 
 function onDocumentKeyPress(event) {
   const keyCode = event.which;
-
-
 
   if (keyCode === 8) {
     event.preventDefault();
@@ -209,8 +195,6 @@ function onPointerUp() {
   document.removeEventListener('pointermove', onPointerMove);
   document.removeEventListener('pointerup', onPointerUp);
 }
-
-//
 
 function render() {
   group.rotateY((targetRotation - group.getRotationY()) * 0.05);

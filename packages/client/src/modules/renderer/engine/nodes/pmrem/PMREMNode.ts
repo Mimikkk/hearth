@@ -98,11 +98,7 @@ class PMREMNode extends TempNode {
       _generator = new PMREMGenerator(builder.renderer);
     }
 
-    //
-
     this.updateBefore(builder);
-
-    //
 
     let uvNode = this.uvNode;
 
@@ -110,15 +106,11 @@ class PMREMNode extends TempNode {
       uvNode = builder.context.getUV(this);
     }
 
-    //
-
     let levelNode = this.levelNode;
 
     if (levelNode === null && builder.context.getTextureLevel) {
       levelNode = builder.context.getTextureLevel(this);
     }
-
-    //
 
     return textureCubeUV(this._texture, uvNode, levelNode, this._width, this._height, this._maxMip);
   }

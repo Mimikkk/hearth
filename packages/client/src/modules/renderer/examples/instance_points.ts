@@ -19,7 +19,6 @@ let renderer, scene, camera, camera2, controls, backgroundNode;
 let material;
 let gui;
 
-
 let insetWidth;
 let insetHeight;
 
@@ -67,15 +66,13 @@ async function init() {
     colors.push(pointColor.r, pointColor.g, pointColor.b);
   }
 
-  
-
   const geometry = new InstancedPointsGeometry();
   geometry.setPositions(positions);
   geometry.setColors(colors);
 
   material = new InstancedPointsNodeMaterial({
     color: 0xffffff,
-    pointWidth: 10, 
+    pointWidth: 10,
 
     vertexColors: true,
     alphaToCoverage: true,
@@ -84,8 +81,6 @@ async function init() {
   const instancedPoints = new InstancedPoints(geometry, material);
   instancedPoints.scale.set(1, 1, 1);
   scene.add(instancedPoints);
-
-  //
 
   useWindowResizer(renderer, camera, () => {
     camera.aspect = window.innerWidth / window.innerHeight;
@@ -104,7 +99,6 @@ async function init() {
 }
 
 function animate() {
-  
   renderer.viewport.set(0, 0, window.innerWidth, window.innerHeight);
 
   controls.update();
@@ -114,8 +108,6 @@ function animate() {
   scene.backgroundNode = null;
 
   renderer.render(scene, camera);
-
-  
 
   renderer.clear(false, true, false);
 
@@ -136,8 +128,6 @@ function animate() {
 
   renderer.useScissor = false;
 }
-
-//
 
 function initGui() {
   gui = new GUI();

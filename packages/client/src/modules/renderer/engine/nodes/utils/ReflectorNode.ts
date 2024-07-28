@@ -39,8 +39,6 @@ class ReflectorNode extends TextureNode {
 
     const { target = new Entity(), resolution = 1, generateMipmaps = false, bounces = true } = parameters;
 
-    //
-
     this.target = target;
     this.resolution = resolution;
     this.generateMipmaps = generateMipmaps;
@@ -114,8 +112,6 @@ class ReflectorNode extends TextureNode {
 
     this._updateResolution(renderTarget, renderer);
 
-    //
-
     _reflectorWorldPosition.fromMat4Position(target.matrixWorld);
     _cameraWorldPosition.fromMat4Position(camera.matrixWorld);
 
@@ -125,8 +121,6 @@ class ReflectorNode extends TextureNode {
     _normal.applyMat4(_rotationMatrix);
 
     _view.asSub(_reflectorWorldPosition, _cameraWorldPosition);
-
-    
 
     if (_view.dot(_normal) > 0) return;
 
@@ -143,8 +137,6 @@ class ReflectorNode extends TextureNode {
     _target.reflect(_normal).negate();
     _target.add(_reflectorWorldPosition);
 
-    //
-
     virtualCamera.position.from(_view);
     virtualCamera.up.set(0, 1, 0);
     virtualCamera.up.applyMat4(_rotationMatrix);
@@ -157,8 +149,6 @@ class ReflectorNode extends TextureNode {
     virtualCamera.updateMatrixWorld();
     virtualCamera.projectionMatrix.from(camera.projectionMatrix);
 
-    
-    
     _reflectorPlane.fromNormalAndCoplanar(_normal, _reflectorWorldPosition);
     _reflectorPlane.applyMat4(virtualCamera.matrixWorldInverse);
 
@@ -176,18 +166,14 @@ class ReflectorNode extends TextureNode {
     _q.z = -1.0;
     _q.w = (1.0 + projectionMatrix.elements[10]) / projectionMatrix.elements[14];
 
-    
     clipPlane.mulScalar(1.0 / clipPlane.dot(_q));
 
     const clipBias = 0;
 
-    
     projectionMatrix.elements[2] = clipPlane.x;
     projectionMatrix.elements[6] = clipPlane.y;
     projectionMatrix.elements[10] = clipPlane.z - clipBias;
     projectionMatrix.elements[14] = clipPlane.w;
-
-    //
 
     this.value = renderTarget.texture;
 

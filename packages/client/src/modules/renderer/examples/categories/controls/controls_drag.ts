@@ -47,43 +47,6 @@ const useDragControls = () => {
   const objects: Entity[] = [box1, box2];
   const controls = new DragControls([...objects], camera, renderer.parameters.canvas);
 
-  
-  
-
-  
-  
-  //
-  
-  
-  //
-  
-  
-  //
-  
-  //
-  
-  //
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  //
-  
-  
-  
-  
-  
-
   return controls;
 };
 

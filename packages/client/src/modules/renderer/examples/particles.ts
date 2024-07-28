@@ -34,12 +34,8 @@ async function init() {
   scene = new Engine.Scene();
   //scene.fogNode = rangeFog( color( 0x0000ff ), 1500, 2100 );
 
-
-
   const textureLoader = new TextureLoader();
   const map = await textureLoader.loadAsync('resources/textures/opengameart/smoke1.png');
-
-
 
   const lifeRange = range(0.1, 1);
   const offsetRange = range(new Engine.Vec3(-2, 3, -2), new Engine.Vec3(2, 5, 2));
@@ -60,8 +56,6 @@ async function init() {
 
   const smokeColor = mix(color(0x2c1501), color(0x222222), positionLocal.y.mul(3).clamp());
 
-
-
   const smokeNodeMaterial = new SpriteNodeMaterial();
   smokeNodeMaterial.colorNode = mix(color(0xf27d0c), smokeColor, life.mul(2.5).min(1)).mul(fakeLightEffect);
   smokeNodeMaterial.opacityNode = opacityNode;
@@ -75,8 +69,6 @@ async function init() {
   smokeInstancedSprite.isInstancedMesh = true;
   smokeInstancedSprite.count = 2000;
   scene.add(smokeInstancedSprite);
-
-  //
 
   const fireNodeMaterial = new SpriteNodeMaterial();
   fireNodeMaterial.colorNode = mix(color(0xb72f17), color(0xb72f17), life);
@@ -95,13 +87,9 @@ async function init() {
   fireInstancedSprite.renderOrder = 1;
   scene.add(fireInstancedSprite);
 
-  //
-
   const helper = new Engine.GridHelper(3000, 40, 0x303030, 0x303030);
   helper.position.y = -75;
   scene.add(helper);
-
-  //
 
   renderer = await Hearth.as();
   renderer.setPixelRatio(window.devicePixelRatio);
@@ -114,11 +102,7 @@ async function init() {
   controls.target.set(0, 500, 0);
   controls.update();
 
-  //
-
   useWindowResizer(renderer, camera);
-
-
 
   UI.create('Controls', timer).number('scale', 'Animation speed', 0.2, 1, 0.01);
 }

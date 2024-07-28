@@ -71,8 +71,6 @@ async function init() {
 
   scene.add(new Engine.HemisphereLight(0x0f3c37, 0x080d10, 100));
 
-  //
-
   collisionCamera = new Engine.OrthographicCamera(-50, 50, 50, -50, 0.1, 50);
   collisionCamera.position.y = 50;
   collisionCamera.lookAt(0, 0, 0);
@@ -85,8 +83,6 @@ async function init() {
   collisionPosMaterial.fog = false;
   collisionPosMaterial.toneMapped = false;
   collisionPosMaterial.colorNode = positionWorld.y;
-
-  //
 
   const createBuffer = (type = 'vec3') =>
     storage(
@@ -105,8 +101,6 @@ async function init() {
   const scaleBuffer = createBuffer();
   const staticPositionBuffer = createBuffer();
   const dataBuffer = createBuffer('vec4');
-
-
 
   const timer = timerLocal();
 
@@ -136,8 +130,6 @@ async function init() {
     particleData.w = randX;
   })().compute(maxParticleCount);
 
-  //
-
   const surfaceOffset = 0.2;
   const speed = 0.4;
 
@@ -165,8 +157,6 @@ async function init() {
   });
 
   computeParticles = computeUpdate().compute(maxParticleCount);
-
-
 
   const geometry = new Engine.SphereGeometry(surfaceOffset, 5, 5);
 
@@ -198,8 +188,6 @@ async function init() {
   scene.add(dynamicParticles);
   scene.add(staticParticles);
 
-
-
   const floorGeometry = new Engine.PlaneGeometry(100, 100);
   floorGeometry.rotateX(-Math.PI / 2);
 
@@ -216,8 +204,6 @@ async function init() {
   plane.material.opacityNode = positionLocal.xz.mul(0.05).distance(0).saturate().oneMinus();
 
   scene.add(plane);
-
-
 
   function tree(count = 8) {
     const coneMaterial = new MeshStandardNodeMaterial({
@@ -259,12 +245,9 @@ async function init() {
   scene.add(tree());
   scene.add(teapotTree);
 
-  //
-
   scene.backgroundNode = viewportTopLeft.distance(0.5).mul(2).mix(color(0x0f4140), color(0x060a0d));
 
   renderer = await Hearth.as();
-  //
 
   viewHelper = new WorldAxesControls(camera, renderer.parameters.canvas);
   controls = new OrbitControls(camera, renderer.parameters.canvas);
@@ -275,8 +258,6 @@ async function init() {
   controls.autoRotate = true;
   controls.autoRotateSpeed = -0.7;
   controls.update();
-
-
 
   const scenePass = pass(scene, camera);
   const scenePassColor = scenePass.getTextureNode();
@@ -290,14 +271,10 @@ async function init() {
   scenePassColorBlurred.resolution = new Engine.Vec2(0.5, 0.5);
   scenePassColorBlurred.directionNode = vec2(1);
 
-
-
   let totalPass = scenePass;
   totalPass = totalPass.add(scenePassColorBlurred.mul(0.1));
   totalPass = totalPass.mul(vignet);
   totalPass = totalPass.add(teapotTreePass.mul(10).add(teapotTreePassBlurred));
-
-  //
 
   renderer.parameters.toneMapping = Engine.ToneMapping.ACESFilmic;
   renderer.setPixelRatio(window.devicePixelRatio);
@@ -306,17 +283,11 @@ async function init() {
     stats?.update();
     controls?.update();
 
-
-
     scene.overrideMaterial = collisionPosMaterial;
     renderer.updateRenderTarget(collisionPosRT);
     await renderer.render(scene, collisionCamera);
 
-
-
     await renderer.compute(computeParticles);
-
-
 
     scene.overrideMaterial = null;
     renderer.updateRenderTarget(null);
@@ -330,8 +301,6 @@ async function init() {
 
   const stats = Stats.use(renderer);
   await renderer.compute(computeInit);
-
-  //
 
   useWindowResizer(renderer, camera);
 }

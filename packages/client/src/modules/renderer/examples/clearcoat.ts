@@ -72,8 +72,6 @@ async function init() {
         'resources/textures/pbr/Scratched_gold/Scratched_gold_01_1K_Normal.png',
       );
 
-      
-
       let material = new Engine.MeshPhysicalMaterial({
         clearcoat: 1.0,
         clearcoatRoughness: 0.1,
@@ -88,8 +86,6 @@ async function init() {
       mesh.position.y = 1;
       group.add(mesh);
 
-      
-
       material = new Engine.MeshPhysicalMaterial({
         roughness: 0.5,
         clearcoat: 1.0,
@@ -102,8 +98,6 @@ async function init() {
       mesh.position.y = 1;
       group.add(mesh);
 
-      
-
       material = new Engine.MeshPhysicalMaterial({
         metalness: 0.0,
         roughness: 0.1,
@@ -111,15 +105,12 @@ async function init() {
         normalMap: normalMap4,
         clearcoatNormalMap: clearcoatNormalMap,
 
-        
         clearcoatNormalScale: new Engine.Vec2(2.0, -2.0),
       });
       mesh = new Engine.Mesh(geometry, material);
       mesh.position.x = -1;
       mesh.position.y = -1;
       group.add(mesh);
-
-      
 
       material = new Engine.MeshPhysicalMaterial({
         clearcoat: 1.0,
@@ -129,7 +120,6 @@ async function init() {
         normalScale: new Engine.Vec2(0.15, 0.15),
         clearcoatNormalMap: clearcoatNormalMap,
 
-        
         clearcoatNormalScale: new Engine.Vec2(2.0, -2.0),
       });
       mesh = new Engine.Mesh(geometry, material);
@@ -137,13 +127,9 @@ async function init() {
       mesh.position.y = -1;
       group.add(mesh);
 
-      //
-
       scene.background = texture;
       scene.environment = texture;
     });
-
-  
 
   particleLight = new Engine.Mesh(
     new Engine.SphereGeometry(0.05, 8, 8),
@@ -159,14 +145,8 @@ async function init() {
   renderer.animation.loop = animate;
   container.appendChild(renderer.parameters.canvas);
 
-  //
-
   renderer.parameters.toneMapping = Engine.ToneMapping.ACESFilmic;
   renderer.parameters.toneMappingExposure = 1.25;
-
-  //
-
-  
 
   const controls = new OrbitControls(camera, renderer.parameters.canvas);
   controls.minDistance = 3;

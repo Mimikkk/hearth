@@ -52,23 +52,15 @@ export class LightsNode extends Node {
 
       const stack = builder.addStack();
 
-      //
-
       lightingModel.start(context, stack, builder);
-
-      
 
       for (const lightNode of lightNodes) {
         lightNode.build(builder);
       }
 
-      //
-
       lightingModel.indirectDiffuse(context, stack, builder);
       lightingModel.indirectSpecular(context, stack, builder);
       lightingModel.ambientOcclusion(context, stack, builder);
-
-      //
 
       const { backdrop, backdropAlpha } = context;
       const { directDiffuse, directSpecular, indirectDiffuse, indirectSpecular } = context.reflectedLight;

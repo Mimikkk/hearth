@@ -1,9 +1,4 @@
-
-
-
-
 export * from './core/constants.js';
-
 
 export { default as AssignNode, assign } from './core/AssignNode.js';
 export { default as AttributeNode, attribute } from './core/AttributeNode.js';
@@ -12,7 +7,7 @@ export { default as CacheNode, cache } from './core/CacheNode.js';
 export { default as ConstNode } from './core/ConstNode.js';
 export { default as ContextNode, context, label } from './core/ContextNode.js';
 export { default as IndexNode, vertexIndex, instanceIndex } from './core/IndexNode.js';
-export { default as LightingModel } from './core/LightingModel.js';
+export { LightingModel } from './core/LightingModel.js';
 export { default as Node } from './core/Node.js';
 export { default as VarNode, temp } from './core/VarNode.js';
 export { default as NodeAttribute } from './core/NodeAttribute.js';
@@ -63,7 +58,6 @@ import './shadernode/ShaderNode.map.initialize.js';
 import './lighting/LightsNodeMap.initialize.js';
 
 export { NodeUtils };
-
 
 export {
   PI,
@@ -153,10 +147,8 @@ export {
 export { default as CondNode, cond } from './math/CondNode.js';
 export { default as HashNode, hash } from './math/HashNode.js';
 
-
 export { parabola, gain, pcurve, sinc } from './math/MathUtils.js';
 export { triNoise3D } from './math/TriNoise3D.js';
-
 
 export { default as ArrayElementNode } from './utils/ArrayElementNode.js';
 export { default as ConvertNode } from './utils/ConvertNode.js';
@@ -184,9 +176,7 @@ export {
 } from './utils/TriplanarTexturesNode.js';
 export { default as ReflectorNode, reflector } from './utils/ReflectorNode.js';
 
-
 export * from './shadernode/ShaderNodes.js';
-
 
 export { TBNViewMatrix, parallaxDirection, parallaxUV } from './accessors/AccessorsUtils.js';
 export { default as UniformsNode, uniforms } from './accessors/UniformsNode.js';
@@ -310,11 +300,10 @@ export {
   transformedTangentView,
   transformedTangentWorld,
 } from './accessors/TangentNode.js';
-export { default as TextureNode, texture, textureLoad, /*textureLevel,*/ sampler } from './accessors/TextureNode.js';
+export { default as TextureNode, texture, textureLoad, sampler } from './accessors/TextureNode.js';
 export { default as TextureStoreNode, textureStore } from './accessors/TextureStoreNode.js';
 export { default as UVNode, uv } from './accessors/UVNode.js';
 export { default as UserDataNode, userData } from './accessors/UserDataNode.js';
-
 
 export { default as BlendModeNode, burn, dodge, overlay, screen } from './display/BlendModeNode.js';
 export { default as BumpMapNode, bumpMap } from './display/BumpMapNode.js';
@@ -367,7 +356,6 @@ export { default as AnamorphicNode, anamorphic } from './display/AnamorphicNode.
 
 export { default as PassNode, pass, depthPass } from './display/PassNode.js';
 
-
 export { default as ExpressionNode, expression } from './code/ExpressionNode.js';
 export { default as CodeNode, code, js, wgsl } from './code/CodeNode.js';
 export { default as FunctionCallNode, call } from './code/FunctionCallNode.js';
@@ -375,17 +363,13 @@ export { default as FunctionNode, wgslFn } from './code/FunctionNode.js';
 export { default as ScriptableNode, scriptable, global } from './code/ScriptableNode.js';
 export { default as ScriptableValueNode, scriptableValue } from './code/ScriptableValueNode.js';
 
-
 export { default as FogNode, fog } from './fog/FogNode.js';
 export { default as FogRangeNode, rangeFog } from './fog/FogRangeNode.js';
 export { default as FogExp2Node, densityFog } from './fog/FogExp2Node.js';
 
-
 export { default as RangeNode, range } from './geometry/RangeNode.js';
 
-
 export { default as ComputeNode, compute } from './gpgpu/ComputeNode.js';
-
 
 export { default as LightNode, lightTargetDirection } from './lighting/LightNode.js';
 export { default as PointLightNode } from './lighting/PointLightNode.js';
@@ -394,26 +378,21 @@ export { default as SpotLightNode } from './lighting/SpotLightNode.js';
 export { default as IESSpotLightNode } from './lighting/IESSpotLightNode.js';
 export { default as AmbientLightNode } from './lighting/AmbientLightNode.js';
 export { default as LightsNode, lights, lightsNode } from './lighting/LightsNode.js';
-export { default as LightingNode /* @TODO: lighting (abstract), light */ } from './lighting/LightingNode.js';
+export { default as LightingNode } from './lighting/LightingNode.js';
 export { default as LightingContextNode, lightingContext } from './lighting/LightingContextNode.js';
 export { default as HemisphereLightNode } from './lighting/HemisphereLightNode.js';
 export { default as EnvironmentNode } from './lighting/EnvironmentNode.js';
 export { default as AONode } from './lighting/AONode.js';
 export { default as AnalyticLightNode } from './lighting/AnalyticLightNode.js';
 
-
 export { default as PMREMNode, pmremTexture } from './pmrem/PMREMNode.js';
 export * as PMREMUtils from './pmrem/PMREMUtils.js';
 
-
 export { default as CheckerNode, checker } from './procedural/CheckerNode.js';
-
 
 export * from './materials/Materials.js';
 
-
 export * from './materialx/MaterialXNodes.js';
-
 
 export { default as BRDF_GGX } from './functions/BSDF/BRDF_GGX.js';
 export { default as BRDF_Lambert } from './functions/BSDF/BRDF_Lambert.js';

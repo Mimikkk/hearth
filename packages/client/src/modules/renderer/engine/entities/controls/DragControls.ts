@@ -46,8 +46,6 @@ export class DragControls {
 
     this.rotateSpeed = 1;
 
-    //
-
     const scope = this;
 
     function activate() {
@@ -104,8 +102,6 @@ export class DragControls {
 
         _previousPointer.from(_pointer);
       } else {
-
-
         if (event.pointerType === 'mouse' || event.pointerType === 'pen') {
           _intersections.length = 0;
 
@@ -159,8 +155,6 @@ export class DragControls {
 
       if (_intersections.length > 0) {
         if (scope.transformGroup === true) {
-
-
           _selected = findGroup(_intersections[0].object);
         } else {
           _selected = _intersections[0].object;
@@ -179,7 +173,6 @@ export class DragControls {
             //@ts-expect-error
             _offset.from(_intersection).sub(_worldPosition.fromMat4Position(_selected.matrixWorld));
           } else if (scope.mode === 'rotate') {
-
             _up.set(0, 1, 0).applyQuaternion(camera.quaternion).normalize();
             _right.set(1, 0, 0).applyQuaternion(camera.quaternion).normalize();
           }
@@ -222,8 +215,6 @@ export class DragControls {
     }
 
     activate();
-
-
 
     this.enabled = true;
     this.recursive = true;

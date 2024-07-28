@@ -20,7 +20,7 @@ export class MeshLambertNodeMaterial extends NodeMaterial {
     this.setValues(parameters);
   }
 
-  setupLightingModel(/*builder*/) {
+  setupLightingModel() {
     return new PhongLightingModel(false);
   }
 }

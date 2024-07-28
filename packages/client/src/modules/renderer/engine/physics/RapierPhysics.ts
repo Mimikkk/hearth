@@ -29,8 +29,6 @@ let RAPIER = null;
 function getCollider(geometry: Geometry) {
   const parameters = geometry.parameters!;
 
-  
-
   if (geometry.type === 'BoxGeometry') {
     const sx = parameters.width !== undefined ? parameters.width / 2 : 0.5;
     const sy = parameters.height !== undefined ? parameters.height / 2 : 0.5;
@@ -53,8 +51,6 @@ export async function RapierPhysics(): Promise<RapierPhysicsObject> {
     RAPIER = await import(RAPIER_PATH);
     await RAPIER.init();
   }
-
-  
 
   const gravity = Vec3.new(0.0, -9.81, 0.0);
   //@ts-expect-error
@@ -152,15 +148,11 @@ export async function RapierPhysics(): Promise<RapierPhysicsObject> {
     body.setLinvel(velocity);
   }
 
-  //
-
   const clock = new Clock();
 
   function step() {
     world.timestep = clock.tick();
     world.step();
-
-    //
 
     for (let i = 0, l = meshes.length; i < l; i++) {
       const mesh = meshes[i];
@@ -192,8 +184,6 @@ export async function RapierPhysics(): Promise<RapierPhysicsObject> {
       }
     }
   }
-
-  
 
   setInterval(step, 1000 / frameRate);
 

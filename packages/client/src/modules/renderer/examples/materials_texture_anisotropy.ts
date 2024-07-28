@@ -22,8 +22,6 @@ async function init() {
 
   renderer = await Hearth.as();
 
-
-
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
   renderer.animation.loop = animate;
@@ -31,8 +29,6 @@ async function init() {
 
   renderer.parameters.canvas.style.position = 'relative';
   container.appendChild(renderer.parameters.canvas);
-
-  //
 
   camera = new Engine.PerspectiveCamera(35, SCREEN_WIDTH / SCREEN_HEIGHT, 1, 25000);
   camera.position.z = 1500;
@@ -53,8 +49,6 @@ async function init() {
   const light2 = new Engine.DirectionalLight(0xffffff, 6);
   light2.position.set(1, 1, 1);
   scene2.add(light2);
-
-
 
   const textureLoader = new TextureLoader();
 
@@ -83,8 +77,6 @@ async function init() {
     document.getElementById('val_left').innerHTML = 'not supported';
     document.getElementById('val_right').innerHTML = 'not supported';
   }
-
-  //
 
   const geometry = new Engine.PlaneGeometry(100, 100);
 

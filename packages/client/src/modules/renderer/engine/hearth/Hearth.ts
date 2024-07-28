@@ -118,13 +118,12 @@ export class Hearth {
   private constructor(parameters?: Options) {
     this.parameters = Hearth.configure(parameters);
 
-    
     this._pixelRatio = window.devicePixelRatio;
     this._width = this.parameters.canvas.width;
     this._height = this.parameters.canvas.height;
-    
+
     this.viewport = Vec4.new(0, 0, this._width, this._height);
-    
+
     this.scissor = Vec4.new(0, 0, this._width, this._height);
 
     this.useScissor = false;
@@ -144,12 +143,10 @@ export class Hearth {
     this.renderContexts = new HearthRenderContexts();
     this.context = null;
 
-    
     this._clearColor = Color.new(0, 0, 0, this.parameters.alpha ? 0 : 1);
     this._clearDepth = 1;
     this._clearStencil = 0;
 
-    
     this.target = null;
     this._activeCubeFace = 0;
     this._activeMipmapLevel = 0;
@@ -338,8 +335,6 @@ export class Hearth {
   }
 
   async compile(scene: Scene, camera: Camera, targetScene: Scene | null = null): Promise<void> {
-    
-
     const nodeFrame = this.nodes.nodeFrame;
 
     const previousRenderId = nodeFrame.renderId;
@@ -371,7 +366,6 @@ export class Hearth {
 
     this._projectObject(scene, camera, 0, renderList);
 
-    
     if (targetScene !== scene) {
       targetScene.traverseVisible(object => {
         if (object.isLight && object.layers.test(camera.layers)) {
@@ -579,8 +573,6 @@ export class Hearth {
 
     material.onBeforeRender(this, scene, camera, geometry, material, group);
 
-    //
-
     if (scene.overrideMaterial !== null) {
       const overrideMaterial = scene.overrideMaterial;
 
@@ -618,21 +610,17 @@ export class Hearth {
       material = overrideMaterial;
     }
 
-    //
-
     if (material.transparent === true && material.side === Side.Double) {
       material.side = Side.Back;
-      this._handleObjectFn(object, material, scene, camera, lightsNode, 'backSide'); 
+      this._handleObjectFn(object, material, scene, camera, lightsNode, 'backSide');
 
       material.side = Side.Front;
-      this._handleObjectFn(object, material, scene, camera, lightsNode); 
+      this._handleObjectFn(object, material, scene, camera, lightsNode);
 
       material.side = Side.Double;
     } else {
       this._handleObjectFn(object, material, scene, camera, lightsNode);
     }
-
-    //
 
     if (overridePositionNode !== undefined) {
       scene.overrideMaterial.positionNode = overridePositionNode;
@@ -641,8 +629,6 @@ export class Hearth {
     if (overrideFragmentNode !== undefined) {
       scene.overrideMaterial.fragmentNode = overrideFragmentNode;
     }
-
-    //
   }
 
   _compileObject(

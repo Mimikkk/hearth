@@ -34,7 +34,7 @@ class InstanceUniformNode extends Node {
     this.uniformNode.value.copy(meshColor);
   }
 
-  setup(/*builder*/) {
+  setup() {
     return this.uniformNode;
   }
 }
@@ -55,13 +55,9 @@ async function init() {
 
   scene = new Engine.Scene();
 
-
-
   const helper = new Engine.GridHelper(1000, 40, 0x303030, 0x303030);
   helper.position.y = -75;
   scene.add(helper);
-
-
 
   const cTexture = await new CubeTextureLoader().loadAsync([
     'resources/textures/cube/SwedishRoyalCastle/px.jpg',
@@ -72,8 +68,6 @@ async function init() {
     'resources/textures/cube/SwedishRoyalCastle/nz.jpg',
   ]);
 
-
-
   const instanceUniform = asNode(new InstanceUniformNode());
   const cubeTextureNode = cubeTexture(cTexture);
 
@@ -81,15 +75,11 @@ async function init() {
   material.colorNode = instanceUniform.add(cubeTextureNode);
   material.emissiveNode = instanceUniform.mul(cubeTextureNode);
 
-
-
   const geometry = new TeapotGeometry(50, 18);
 
   for (let i = 0, l = 12; i < l; i++) {
     addMesh(geometry, material);
   }
-
-  //
 
   renderer = await Hearth.as();
   renderer.setPixelRatio(window.devicePixelRatio);
@@ -97,15 +87,9 @@ async function init() {
   renderer.animation.loop = animate;
   container.appendChild(renderer.parameters.canvas);
 
-  //
-
   controls = new OrbitControls(camera, renderer.parameters.canvas);
   controls.minDistance = 400;
   controls.maxDistance = 2000;
-
-  //
-
-  //
 
   useWindowResizer(renderer, camera);
 }

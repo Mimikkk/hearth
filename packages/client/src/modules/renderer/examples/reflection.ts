@@ -59,8 +59,6 @@ async function init() {
 
   clock = new Engine.Clock();
 
-  
-
   const loader = new GLTFLoader();
   loader.loadAsync('resources/models/gltf/Michelle.glb').then(function (gltf) {
     model = gltf.scene;
@@ -74,8 +72,6 @@ async function init() {
     scene.add(model);
   });
 
-  
-
   const textureLoader = new TextureLoader();
 
   const floorColor = await textureLoader.loadAsync('resources/textures/floors/FloorsCheckerboard_S_Diffuse.jpg');
@@ -87,12 +83,10 @@ async function init() {
   floorNormal.wrapS = Engine.Wrapping.Repeat;
   floorNormal.wrapT = Engine.Wrapping.Repeat;
 
-  
-
   const floorUV = uv().mul(15);
   const floorNormalOffset = texture(floorNormal, floorUV).xy.mul(2).sub(1).mul(0.02);
 
-  const reflection = reflector({ resolution: 0.5 }); 
+  const reflection = reflector({ resolution: 0.5 });
   reflection.target.rotateX(-Math.PI / 2);
   reflection.uvNode = reflection.uvNode.add(floorNormalOffset);
   scene.add(reflection.target);
@@ -103,8 +97,6 @@ async function init() {
   const floor = new Engine.Mesh(new Engine.BoxGeometry(50, 0.001, 50), floorMaterial);
   floor.position.set(0, 0, 0);
   scene.add(floor);
-
-  
 
   renderer = await Hearth.as();
   renderer.setPixelRatio(window.devicePixelRatio);
@@ -121,8 +113,6 @@ async function init() {
   controls.target.set(0, 0.5, 0);
   controls.update();
 
-  
-
   const scenePass = pass(scene, camera);
   const scenePassColor = scenePass.getTextureNode();
   const scenePassDepth = scenePass.getDepthNode().remapClamp(0.3, 0.5);
@@ -134,8 +124,6 @@ async function init() {
 
   postProcessing = new Postprocess(renderer);
   postProcessing.outputNode = scenePassColorBlurred.mul(vignet);
-
-  //
 
   useWindowResizer(renderer, camera);
 }

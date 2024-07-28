@@ -46,12 +46,8 @@ async function init() {
 
   scene = new Engine.Scene();
 
-  
-
   const textureLoader = new TextureLoader();
   const map = await textureLoader.loadAsync('resources/textures/sprite.png');
-
-  //
 
   const createBuffer = () =>
     storage(
@@ -64,8 +60,6 @@ async function init() {
   const velocityBuffer = createBuffer();
   const colorBuffer = createBuffer();
 
-  
-
   const computeInit = tslFn(() => {
     const position = positionBuffer.element(instanceIndex);
     const color = colorBuffer.element(instanceIndex);
@@ -75,13 +69,11 @@ async function init() {
     const randZ = instanceIndex.add(3).hash();
 
     position.x = randX.mul(100).add(-50);
-    position.y = 0; 
+    position.y = 0;
     position.z = randZ.mul(100).add(-50);
 
     color.assign(vec3(randX, randY, randZ));
   })().compute(particleCount);
-
-  //
 
   const computeUpdate = tslFn(() => {
     const position = positionBuffer.element(instanceIndex);
@@ -92,13 +84,9 @@ async function init() {
 
     velocity.mulAssign(friction);
 
-    
-
     NodeStack.if(position.y.lessThan(0), () => {
       position.y = 0;
       velocity.y = velocity.y.negate().mul(bounce);
-
-      
 
       velocity.x = velocity.x.mul(0.9);
       velocity.z = velocity.z.mul(0.9);
@@ -107,11 +95,7 @@ async function init() {
 
   computeParticles = computeUpdate().compute(particleCount);
 
-  
-
   const textureNode = texture(map);
-
-  
 
   const particleMaterial = new SpriteNodeMaterial();
   particleMaterial.colorNode = textureNode.mul(colorBuffer.element(instanceIndex));
@@ -127,8 +111,6 @@ async function init() {
   particles.frustumCulled = false;
   scene.add(particles);
 
-  //
-
   const helper = new Engine.GridHelper(60, 40, 0x303030, 0x303030);
   scene.add(helper);
 
@@ -141,19 +123,13 @@ async function init() {
   const raycaster = new Engine.Raycaster();
   const pointer = new Engine.Vec2();
 
-  //
-
   renderer = await Hearth.as({ trackTimestamp: true });
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.animation.loop = animate;
   document.body.appendChild(renderer.parameters.canvas);
 
-  //
-
   renderer.compute(computeInit);
-
-  
 
   const computeHit = tslFn(() => {
     const position = positionBuffer.element(instanceIndex);
@@ -169,8 +145,6 @@ async function init() {
     velocity.assign(velocity.add(direction.mul(relativePower)));
   })().compute(particleCount);
 
-  //
-
   function onMove(event) {
     pointer.set((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1);
 
@@ -181,21 +155,14 @@ async function init() {
     if (intersects.length > 0) {
       const { point } = intersects[0];
 
-      
-
       clickPosition.value.from(point);
       clickPosition.value.y = -1;
-
-      
 
       renderer.compute(computeHit);
     }
   }
 
-  
-
   renderer.parameters.canvas.addEventListener('pointermove', onMove);
-  //
 
   controls = new OrbitControls(camera, renderer.parameters.canvas);
   controls.minDistance = 5;
@@ -203,11 +170,7 @@ async function init() {
   controls.target.set(0, 0, 0);
   controls.update();
 
-  //
-
   useWindowResizer(renderer, camera);
-
-  
 
   const gui = new GUI();
 
@@ -221,8 +184,6 @@ async function animate() {
   await renderer.compute(computeParticles);
 
   await renderer.render(scene, camera);
-
-  
 
   if (renderer.backend.hasFeature('timestamp-query')) {
     if (renderer.info.render.passes % 5 === 0) {

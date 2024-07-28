@@ -17,7 +17,7 @@ class InstanceNode extends Node {
     this.instanceMatrixNode = null;
   }
 
-  setup(/*builder*/) {
+  setup() {
     let instanceMatrixNode = this.instanceMatrixNode;
 
     if (instanceMatrixNode === null) {
@@ -29,7 +29,6 @@ class InstanceNode extends Node {
         instanceAttribute.usage === BufferUse.DynamicDraw ? instancedDynamicBufferAttribute : instancedBufferAttribute;
 
       const instanceBuffers = [
-        
         bufferFn(buffer, 'vec4', 16, 0),
         bufferFn(buffer, 'vec4', 16, 4),
         bufferFn(buffer, 'vec4', 16, 8),
@@ -41,19 +40,13 @@ class InstanceNode extends Node {
       this.instanceMatrixNode = instanceMatrixNode;
     }
 
-    
-
     const instancePosition = instanceMatrixNode.mul(positionLocal).xyz;
-
-    
 
     const m = mat3(instanceMatrixNode[0].xyz, instanceMatrixNode[1].xyz, instanceMatrixNode[2].xyz);
 
     const transformedNormal = normalLocal.div(vec3(m[0].dot(m[0]), m[1].dot(m[1]), m[2].dot(m[2])));
 
     const instanceNormal = m.mul(transformedNormal).xyz;
-
-    
 
     positionLocal.assign(instancePosition);
     normalLocal.assign(instanceNormal);

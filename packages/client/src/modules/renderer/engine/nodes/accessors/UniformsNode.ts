@@ -49,7 +49,7 @@ class UniformsNode extends BufferNode {
     return this._elementLength;
   }
 
-  update(/*frame*/) {
+  update() {
     const { array, value } = this;
 
     const elementLength = this.getElementLength();

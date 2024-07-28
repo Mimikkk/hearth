@@ -37,8 +37,6 @@ export class VertexNormalsHelper extends LineSegments {
 
     const position = this.geometry.attributes.position;
 
-    //
-
     const objGeometry = this.object.geometry;
 
     if (objGeometry) {
@@ -47,8 +45,6 @@ export class VertexNormalsHelper extends LineSegments {
       const objNorm = objGeometry.attributes.normal;
 
       let idx = 0;
-
-
 
       for (let j = 0, jl = objPos.count; j < jl; j++) {
         _v1.fromAttribute(objPos, j).applyMat4(matrixWorld);

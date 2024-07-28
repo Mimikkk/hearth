@@ -55,7 +55,7 @@ export class MeshSSSNodeMaterial extends MeshPhysicalNodeMaterial {
     return this.thicknessColorNode !== null;
   }
 
-  setupLightingModel(/*builder*/) {
+  setupLightingModel() {
     return new SSSLightingModel(this.useClearcoat, this.useSheen, this.useIridescence, this.useSSS);
   }
 

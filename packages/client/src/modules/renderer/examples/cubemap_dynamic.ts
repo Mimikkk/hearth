@@ -50,8 +50,6 @@ async function init() {
   scene.background = texture;
   scene.environment = texture;
 
-  //
-
   cubeRenderTarget = new Engine.CubeRenderTarget(256);
   cubeRenderTarget.texture.type = Engine.TextureDataType.HalfFloat;
   cubeRenderTarget.texture.minFilter = Engine.MinificationTextureFilter.LinearMipmapLinear;
@@ -59,8 +57,6 @@ async function init() {
   cubeRenderTarget.texture.generateMipmaps = true;
 
   cubeCamera = new Engine.CubeCamera(1, 1000, cubeRenderTarget);
-
-  //
 
   material = new Nodes.MeshStandardNodeMaterial({
     envMap: cubeRenderTarget.texture,
@@ -87,8 +83,6 @@ async function init() {
 
   torus = new Engine.Mesh(new Engine.TorusKnotGeometry(8, 3, 128, 16), material2);
   scene.add(torus);
-
-  //
 
   useWindowResizer(renderer, camera);
   controls = new OrbitControls(camera, renderer.parameters.canvas);

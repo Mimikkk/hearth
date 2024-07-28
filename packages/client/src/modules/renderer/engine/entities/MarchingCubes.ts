@@ -51,8 +51,6 @@ export class MarchingCubes extends Mesh {
 
     const scope = this;
 
-
-
     const vlist = new Float32Array(12 * 3);
     const nlist = new Float32Array(12 * 3);
     const clist = new Float32Array(12 * 3);
@@ -60,25 +58,15 @@ export class MarchingCubes extends Mesh {
     this.enableUvs = enableUvs;
     this.enableColors = enableColors;
 
-
-
-
-
     this.init = function (resolution) {
       this.resolution = resolution;
 
-
-
       this.isolation = 80.0;
-
-
 
       this.size = resolution;
       this.size2 = this.size * this.size;
       this.size3 = this.size2 * this.size;
       this.halfsize = this.size / 2.0;
-
-
 
       this.delta = 2.0 / this.size;
       this.yd = this.size;
@@ -87,8 +75,6 @@ export class MarchingCubes extends Mesh {
       this.field = new Float32Array(this.size3);
       this.normal_cache = new Float32Array(this.size3 * 3);
       this.palette = new Float32Array(this.size3 * 3);
-
-      //
 
       this.count = 0;
 
@@ -121,10 +107,8 @@ export class MarchingCubes extends Mesh {
       geometry.boundingSphere = new Sphere(Vec3.new(), 1);
     };
 
-    ///////////////////////
-
-    ///////////////////////
-
+    /////////////////////
+    /////////////////////
     function lerp(a: number, b: number, t: number) {
       return a + (b - a) * t;
     }
@@ -227,11 +211,7 @@ export class MarchingCubes extends Mesh {
       }
     }
 
-
-
-
     function polygonize(fx: number, fy: number, fz: number, q: number, isol: number) {
-
       const q1 = q + 1,
         qy = q + scope.yd,
         qz = q + scope.zd,
@@ -259,8 +239,6 @@ export class MarchingCubes extends Mesh {
       if (field6 < isol) cubeindex |= 128;
       if (field7 < isol) cubeindex |= 64;
 
-
-
       const bits = edgeTable[cubeindex];
       if (bits === 0) return 0;
 
@@ -268,8 +246,6 @@ export class MarchingCubes extends Mesh {
         fx2 = fx + d,
         fy2 = fy + d,
         fz2 = fz + d;
-
-
 
       if (bits & 1) {
         compNorm(q);
@@ -295,8 +271,6 @@ export class MarchingCubes extends Mesh {
         VIntY(q * 3, 9, isol, fx, fy, fz, field0, field2, q, qy);
       }
 
-
-
       if (bits & 16) {
         compNorm(qz);
         compNorm(q1z);
@@ -320,7 +294,6 @@ export class MarchingCubes extends Mesh {
         compNorm(qyz);
         VIntY(qz * 3, 21, isol, fx, fy, fz2, field4, field6, qz, qyz);
       }
-
 
       if (bits & 256) {
         compNorm(q);
@@ -354,8 +327,6 @@ export class MarchingCubes extends Mesh {
         numtris = 0,
         i = 0;
 
-
-
       while (triTable[cubeindex + i] != -1) {
         o1 = cubeindex + i;
         o2 = o1 + 1;
@@ -380,8 +351,6 @@ export class MarchingCubes extends Mesh {
     ) {
       const c = scope.count * 3;
 
-
-
       scope.positionArray[c + 0] = pos[o1];
       scope.positionArray[c + 1] = pos[o1 + 1];
       scope.positionArray[c + 2] = pos[o1 + 2];
@@ -393,8 +362,6 @@ export class MarchingCubes extends Mesh {
       scope.positionArray[c + 6] = pos[o3];
       scope.positionArray[c + 7] = pos[o3 + 1];
       scope.positionArray[c + 8] = pos[o3 + 2];
-
-
 
       //@ts-expect-error
       if (scope.material.flatShading === true) {
@@ -427,8 +394,6 @@ export class MarchingCubes extends Mesh {
         scope.normalArray[c + 8] = norm[o3 + 2];
       }
 
-
-
       if (scope.enableUvs) {
         const d = scope.count * 2;
 
@@ -441,8 +406,6 @@ export class MarchingCubes extends Mesh {
         scope.uvArray[d + 4] = pos[o3 + 0];
         scope.uvArray[d + 5] = pos[o3 + 2];
       }
-
-
 
       if (scope.enableColors) {
         scope.colorArray[c + 0] = colors[o1 + 0];
@@ -461,12 +424,8 @@ export class MarchingCubes extends Mesh {
       scope.count += 3;
     }
 
-    /////////////////////////////////////
-
-    /////////////////////////////////////
-
-
-
+    ///////////////////////////////////
+    ///////////////////////////////////
 
     this.addBall = function (ballx, bally, ballz, strength, subtract, colors) {
       const sign = Math.sign(strength);
@@ -491,13 +450,6 @@ export class MarchingCubes extends Mesh {
         }
       }
 
-
-
-
-
-
-
-
       const radius = this.size * Math.sqrt(strength / subtract),
         zs = ballz * this.size,
         ys = bally * this.size,
@@ -515,9 +467,6 @@ export class MarchingCubes extends Mesh {
       if (min_x < 1) min_x = 1;
       let max_x = Math.floor(xs + radius);
       if (max_x > this.size - 1) max_x = this.size - 1;
-
-
-
 
       let x, y, z, y_offset, z_offset, fx, fy, fz, fz2, fy2, val;
 
@@ -537,8 +486,6 @@ export class MarchingCubes extends Mesh {
             if (val > 0.0) {
               this.field[y_offset + x] += val * sign;
 
-
-
               const ratio = Math.sqrt((x - xs) * (x - xs) + (y - ys) * (y - ys) + (z - zs) * (z - zs)) / radius;
               const contrib = 1 - ratio * ratio * ratio * (ratio * (ratio * 6 - 15) + 10);
               this.palette[(y_offset + x) * 3 + 0] += ballColor.r * contrib;
@@ -551,7 +498,6 @@ export class MarchingCubes extends Mesh {
     };
 
     this.addPlaneX = function (strength, subtract) {
-
       const size = this.size,
         yd = this.yd,
         zd = this.zd,
@@ -586,7 +532,6 @@ export class MarchingCubes extends Mesh {
     };
 
     this.addPlaneY = function (strength, subtract) {
-
       const size = this.size,
         yd = this.yd,
         zd = this.zd,
@@ -622,8 +567,6 @@ export class MarchingCubes extends Mesh {
     };
 
     this.addPlaneZ = function (strength, subtract) {
-
-
       const size = this.size,
         yd = this.yd,
         zd = this.zd,
@@ -657,10 +600,8 @@ export class MarchingCubes extends Mesh {
       }
     };
 
-    /////////////////////////////////////
-
-    /////////////////////////////////////
-
+    ///////////////////////////////////
+    ///////////////////////////////////
     this.setCell = function (x, y, z, value) {
       const index = this.size2 * z + this.size * y + x;
       this.field[index] = value;
@@ -711,8 +652,6 @@ export class MarchingCubes extends Mesh {
     };
 
     this.reset = function () {
-
-
       for (let i = 0; i < this.size3; i++) {
         this.normal_cache[i * 3] = 0.0;
         this.field[i] = 0.0;
@@ -722,8 +661,6 @@ export class MarchingCubes extends Mesh {
 
     this.update = function () {
       this.count = 0;
-
-
 
       const smin2 = this.size - 2;
 
@@ -744,19 +681,13 @@ export class MarchingCubes extends Mesh {
         }
       }
 
-
-
       this.geometry.setDrawRange(0, this.count);
-
-
 
       geometry.attributes.position.needsUpdate = true;
       geometry.attributes.normal.needsUpdate = true;
 
       if (this.enableUvs) geometry.attributes.uv.needsUpdate = true;
       if (this.enableColors) geometry.attributes.color.needsUpdate = true;
-
-
 
       if (this.count / 3 > maxPolyCount)
         console.warn(

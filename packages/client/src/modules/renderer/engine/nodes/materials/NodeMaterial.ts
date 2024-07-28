@@ -94,15 +94,11 @@ export class NodeMaterial extends ShaderMaterial {
   }
 
   setup(builder) {
-
-
     builder.addStack();
 
     builder.stack.outputNode = this.vertexNode || this.setupPosition(builder);
 
     builder.addFlow(ShaderStage.Vertex, builder.removeStack());
-
-
 
     builder.addStack();
 
@@ -122,17 +118,11 @@ export class NodeMaterial extends ShaderMaterial {
 
       if (clippingNode !== null) builder.stack.add(clippingNode);
 
-
-
       const basicOutput = vec4(outgoingLightNode, diffuseColor.a).max(0);
 
       resultNode = this.setupOutput(builder, basicOutput);
 
-
-
       output.assign(resultNode);
-
-      //
 
       if (this.outputNode !== null) resultNode = this.outputNode;
     } else {
@@ -152,7 +142,6 @@ export class NodeMaterial extends ShaderMaterial {
 
     if (globalClippingCount || localClippingCount) {
       if (this.alphaToCoverage) {
-
         result = clippingAlpha();
       } else {
         builder.stack.add(clipping());
@@ -164,8 +153,6 @@ export class NodeMaterial extends ShaderMaterial {
 
   setupDepth(builder) {
     const { renderer } = builder;
-
-
 
     let depthNode = this.depthNode;
 
@@ -185,8 +172,6 @@ export class NodeMaterial extends ShaderMaterial {
     const geometry = object.geometry;
 
     builder.addStack();
-
-
 
     if (geometry.morphAttributes.position || geometry.morphAttributes.normal || geometry.morphAttributes.color) {
       morphReference(object).append();
@@ -215,22 +200,14 @@ export class NodeMaterial extends ShaderMaterial {
   setupDiffuseColor({ geometry }) {
     let colorNode = this.colorNode ? vec4(this.colorNode) : materialColor;
 
-
-
     if (this.vertexColors === true && geometry.hasAttribute('color')) {
       colorNode = vec4(colorNode.xyz.mul(attribute('color', 'vec3')), colorNode.a);
     }
 
-
-
     diffuseColor.assign(colorNode);
-
-
 
     const opacityNode = this.opacityNode ? f32(this.opacityNode) : materialOpacity;
     diffuseColor.a.assign(diffuseColor.a.mul(opacityNode));
-
-
 
     if (this.alphaTestNode !== null || this.alphaTest > 0) {
       const alphaTestNode = this.alphaTestNode !== null ? f32(this.alphaTestNode) : materialAlphaTest;
@@ -239,13 +216,9 @@ export class NodeMaterial extends ShaderMaterial {
     }
   }
 
-  setupVariants(/*builder*/) {
-
-  }
+  setupVariants() {}
 
   setupNormal() {
-
-
     if (this.flatShading === true) {
       const normalNode = positionView.dpdx().cross(positionView.dpdy().negate()).normalize();
 
@@ -274,8 +247,6 @@ export class NodeMaterial extends ShaderMaterial {
   setupLights(builder) {
     const envNode = this.getEnvNode(builder);
 
-    //
-
     const materialLightsNode = [];
 
     if (envNode) {
@@ -295,15 +266,11 @@ export class NodeMaterial extends ShaderMaterial {
     return lightsN;
   }
 
-  setupLightingModel(/*builder*/) {
-
-  }
+  setupLightingModel() {}
 
   setupLighting(builder) {
     const { material } = builder;
     const { backdropNode, backdropAlphaNode, emissiveNode } = this;
-
-
 
     const lights = this.lights === true || this.lightsNode !== null;
 
@@ -321,8 +288,6 @@ export class NodeMaterial extends ShaderMaterial {
       );
     }
 
-
-
     if ((emissiveNode && emissiveNode.isNode === true) || (material.emissive && material.emissive.isColor === true)) {
       outgoingLightNode = outgoingLightNode.add(vec3(emissiveNode ? emissiveNode : materialEmissive));
     }
@@ -333,23 +298,17 @@ export class NodeMaterial extends ShaderMaterial {
   setupOutput(builder, outputNode) {
     const renderer = builder.renderer;
 
-
-
     if (this.fog === true) {
       const fogNode = builder.fogNode;
 
       if (fogNode) outputNode = vec4(fogNode.mix(outputNode.rgb, fogNode.colorNode), outputNode.a);
     }
 
-
-
     const toneMappingNode = builder.toneMappingNode;
 
     if (this.toneMapped === true && toneMappingNode) {
       outputNode = vec4(toneMappingNode.context({ color: outputNode.rgb }), outputNode.a);
     }
-
-
 
     if (this.colorSpaced === true) {
       const outputColorSpace = renderer.currentColorSpace;
@@ -363,9 +322,6 @@ export class NodeMaterial extends ShaderMaterial {
   }
 
   setDefaultValues(material) {
-
-
-
     for (const property in material) {
       const value = material[property];
 
@@ -416,8 +372,6 @@ export class NodeMaterial extends ShaderMaterial {
 
   static fromMaterial(material) {
     if (material.isNodeMaterial === true) {
-
-
       return material;
     }
 

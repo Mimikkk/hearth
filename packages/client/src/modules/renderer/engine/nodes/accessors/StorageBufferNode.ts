@@ -18,7 +18,7 @@ class StorageBufferNode extends BufferNode {
     this._varying = null;
   }
 
-  getInputType(/*builder*/) {
+  getInputType() {
     return 'storageBuffer';
   }
 

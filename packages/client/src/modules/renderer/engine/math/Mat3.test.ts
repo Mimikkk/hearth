@@ -31,7 +31,6 @@ describe('Math - Mat3', () => {
 
     expect(array2).toEqual(array);
   });
-  //
   it('fromMat4', () => {
     const mat4 = Mat4.fromColumnOrder(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16);
     const mat3 = Mat3.fromMat4(mat4);

@@ -11,7 +11,7 @@ class ReflectVectorNode extends Node {
     super('vec3');
   }
 
-  getHash(/*builder*/) {
+  getHash() {
     return 'reflectVector';
   }
 

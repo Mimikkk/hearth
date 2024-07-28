@@ -4,7 +4,7 @@ import { fixedNode } from '../shadernode/ShaderNodes.js';
 class InstancedPointsMaterialNode extends MaterialNode {
   static type = 'InstancedPointsMaterialNode';
 
-  setup(/*builder*/) {
+  setup() {
     return this.getFloat(this.scope);
   }
 }

@@ -70,14 +70,12 @@ export class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
     return this.sheen > 0 || this.sheenNode !== null;
   }
 
-  setupLightingModel(/*builder*/) {
+  setupLightingModel() {
     return new PhysicalLightingModel(this.useClearcoat, this.useSheen, this.useIridescence);
   }
 
   setupVariants(builder) {
     super.setupVariants(builder);
-
-
 
     if (this.useClearcoat) {
       const clearcoatNode = this.clearcoatNode ? f32(this.clearcoatNode) : materialClearcoat;
@@ -89,8 +87,6 @@ export class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
       clearcoatRoughness.assign(clearcoatRoughnessNode);
     }
 
-
-
     if (this.useSheen) {
       const sheenNode = this.sheenNode ? vec3(this.sheenNode) : materialSheen;
       const sheenRoughnessNode = this.sheenRoughnessNode ? f32(this.sheenRoughnessNode) : materialSheenRoughness;
@@ -98,8 +94,6 @@ export class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
       sheen.assign(sheenNode);
       sheenRoughness.assign(sheenRoughnessNode);
     }
-
-
 
     if (this.useIridescence) {
       const iridescenceNode = this.iridescenceNode ? f32(this.iridescenceNode) : materialIridescence;
@@ -116,8 +110,6 @@ export class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
 
   setupNormal(builder) {
     super.setupNormal(builder);
-
-
 
     const clearcoatNormalNode = this.clearcoatNormalNode ? vec3(this.clearcoatNormalNode) : materialClearcoatNormal;
 

@@ -73,7 +73,6 @@ export class PerspectiveCamera extends Camera {
   }
 
   setFocalLength(focalLength: number): this {
-    /** see {@link http://www.bobatkins.com/photography/technical/field_of_view.html} */
     const vExtentSlope = (0.5 * this.getFilmHeight()) / focalLength;
 
     this.fov = MathUtils.RadianToDegree * 2 * Math.atan(vExtentSlope);
@@ -92,12 +91,10 @@ export class PerspectiveCamera extends Camera {
   }
 
   getFilmWidth(): number {
-    
     return this.filmGaugeMM * Math.min(this.aspect, 1);
   }
 
   getFilmHeight(): number {
-    
     return this.filmGaugeMM / Math.max(this.aspect, 1);
   }
 

@@ -44,8 +44,6 @@ export class Points extends Entity {
     const threshold = 1;
     const drawRange = geometry.drawRange;
 
-
-
     if (geometry.boundingSphere === null) geometry.computeBoundingSphere();
 
     _sphere.from(geometry.boundingSphere!);
@@ -53,8 +51,6 @@ export class Points extends Entity {
     _sphere.radius += threshold;
 
     if (raycaster.ray.intersectsSphere(_sphere) === false) return;
-
-    //
 
     _inverseMatrix.from(matrixWorld).invert();
     _ray.from(raycaster.ray).applyMat4(_inverseMatrix);

@@ -215,8 +215,6 @@ class ScriptableNode extends Node {
     if (this.needsUpdate) this.dispose();
     if (this._object !== null) return this._object;
 
-    //
-
     const refresh = () => this.refresh();
     const setOutput = (id: any, value: any) => this.setOutput(id, value);
 
@@ -236,7 +234,6 @@ class ScriptableNode extends Node {
       if (layout.cache === false) {
         this._local.clear();
       }
-
 
       this._output.outputType = layout.outputType || null;
 
@@ -284,8 +281,6 @@ class ScriptableNode extends Node {
     if (this.needsUpdate) this.dispose();
     if (this._method !== null) return this._method;
 
-    //
-
     const parametersProps = ['parameters', 'local', 'global', 'refresh', 'setOutput', 'ENGINE', 'TSL'];
     const interfaceProps = ['layout', 'init', 'main', 'dispose'];
 
@@ -294,8 +289,6 @@ class ScriptableNode extends Node {
     const returns = '\nreturn { ...output, ' + properties + ' };';
 
     const code = declarations + this.codeNode.code + returns;
-
-    //
 
     this._method = new Function(...parametersProps, code);
 

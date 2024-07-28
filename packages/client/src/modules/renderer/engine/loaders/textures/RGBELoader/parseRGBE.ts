@@ -35,7 +35,6 @@ const RGBEByteToRGBHalf = (
   const e = sourceArray[sourceOffset + 3];
   const scale = Math.pow(2.0, e - 128.0) / 255.0;
 
-
   destArray[destOffset] = DataUtils.toHalfFloat(Math.min(sourceArray[sourceOffset] * scale, 65504));
   destArray[destOffset + 1] = DataUtils.toHalfFloat(Math.min(sourceArray[sourceOffset + 1] * scale, 65504));
   destArray[destOffset + 2] = DataUtils.toHalfFloat(Math.min(sourceArray[sourceOffset + 2] * scale, 65504));
@@ -121,7 +120,6 @@ export const parseRGBE = (buffer: ArrayBuffer, type: SupportedType): DataTexture
     }
   };
   const RGBE_ReadHeader = (buffer: Uint8Array) => {
-
     const magic_token_re = /^#\?(\S+)/;
     const gamma_re = /^\s*GAMMA\s*=\s*(\d+(\.\d+)?)\s*$/;
     const exposure_re = /^\s*EXPOSURE\s*=\s*(\d+(\.\d+)?)\s*$/;
@@ -129,22 +127,22 @@ export const parseRGBE = (buffer: ArrayBuffer, type: SupportedType): DataTexture
     const dimensions_re = /^\s*-Y\s+(\d+)\s+\+X\s+(\d+)\s*$/;
 
     const header = {
-      valid: 0 /* indicate which fields are valid */,
+      valid: 0,
 
-      string: '' /* the actual header string */,
+      string: '',
 
-      comments: '' /* comments found in header */,
+      comments: '',
 
-      programtype: 'RGBE' /* listed at beginning of file to identify it after "#?". defaults to "RGBE" */,
+      programtype: 'RGBE',
 
-      format: '' /* RGBE format, default 32-bit_rle_rgbe */,
+      format: '',
 
-      gamma: 1.0 /* image has already been gamma corrected with given gamma. defaults to 1.0 (no correction) */,
+      gamma: 1.0,
 
-      exposure: 1.0 /* a value of 1.0 in an image corresponds to <exposure> watts/steradian/m^2. defaults to 1.0 */,
+      exposure: 1.0,
 
       width: 0,
-      height: 0 /* image dimensions, width/height */,
+      height: 0,
     };
 
     let line!: undefined | string;
@@ -154,7 +152,6 @@ export const parseRGBE = (buffer: ArrayBuffer, type: SupportedType): DataTexture
       rgbe_error(rgbe_read_error, 'no header found');
     }
 
-    /* if you want to require the magic token then uncomment the next line */
     if (!(match = line?.match(magic_token_re))) {
       rgbe_error(rgbe_format_error, 'bad initial token');
     }
@@ -208,16 +205,7 @@ export const parseRGBE = (buffer: ArrayBuffer, type: SupportedType): DataTexture
   const RGBE_ReadPixels_RLE = (buffer: Uint8Array, w: number, h: number) => {
     const scanline_width = w;
 
-    if (
-
-      scanline_width < 8 ||
-      scanline_width > 0x7fff ||
-
-      2 !== buffer[0] ||
-      2 !== buffer[1] ||
-      buffer[2] & 0x80
-    ) {
-
+    if (scanline_width < 8 || scanline_width > 0x7fff || 2 !== buffer[0] || 2 !== buffer[1] || buffer[2] & 0x80) {
       return new Uint8Array(buffer);
     }
 
@@ -238,7 +226,6 @@ export const parseRGBE = (buffer: ArrayBuffer, type: SupportedType): DataTexture
     const rgbeStart = new Uint8Array(4);
     const scanline_buffer = new Uint8Array(ptr_end);
     let num_scanlines = h;
-
 
     while (num_scanlines > 0 && pos < buffer.byteLength) {
       if (pos + 4 > buffer.byteLength) {
@@ -267,14 +254,12 @@ export const parseRGBE = (buffer: ArrayBuffer, type: SupportedType): DataTexture
         }
 
         if (isEncodedRun) {
-
           const byteValue = buffer[pos++];
           for (let i = 0; i < count; i++) {
             scanline_buffer[ptr++] = byteValue;
           }
           //ptr += count;
         } else {
-
           scanline_buffer.set(buffer.subarray(pos, pos + count), ptr);
           ptr += count;
           pos += count;

@@ -12,7 +12,7 @@ class TextureStoreNode extends TextureNode {
     this.isStoreTextureNode = true;
   }
 
-  getInputType(/*builder*/) {
+  getInputType() {
     return 'storageTexture';
   }
 

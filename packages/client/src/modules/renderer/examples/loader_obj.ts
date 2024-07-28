@@ -15,8 +15,6 @@ async function init() {
   camera = new PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 20);
   camera.position.z = 2.5;
 
-
-
   scene = new Scene();
 
   const ambientLight = new AmbientLight(0xffffff);
@@ -26,13 +24,9 @@ async function init() {
   camera.add(pointLight);
   scene.add(camera);
 
-
-
   const textureLoader = new TextureLoader();
   const texture = await textureLoader.loadAsync('resources/textures/uv_grid_opengl.jpg');
   texture.colorSpace = ColorSpace.SRGB;
-
-
 
   function onProgress(xhr) {
     if (xhr.lengthComputable) {
@@ -51,14 +45,11 @@ async function init() {
   object.position.y = -0.95;
   object.scale.setScalar(0.01);
   scene.add(object);
-  //
 
   renderer = await Hearth.as();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.parameters.canvas);
-
-  //
 
   const controls = new OrbitControls(camera, renderer.parameters.canvas);
   controls.minDistance = 2;

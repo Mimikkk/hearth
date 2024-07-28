@@ -33,8 +33,6 @@ class StorageArrayElementNode extends ArrayElementNode {
 
     const isAssignContext = builder.context.assign;
 
-    //
-
     if (builder.isAvailable('storageBuffer') === false) {
       const { array } = this;
 

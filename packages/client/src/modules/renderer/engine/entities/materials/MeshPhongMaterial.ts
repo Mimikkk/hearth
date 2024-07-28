@@ -6,7 +6,6 @@ import { Euler } from '../../math/Euler.js';
 import { Texture } from '@modules/renderer/engine/entities/textures/Texture.js';
 
 export interface MeshPhongMaterialParameters extends MaterialParameters {
-  /** geometry color in hexadecimal. Default is 0xffffff. */
   color?: ColorRepresentation | undefined;
   specular?: ColorRepresentation | undefined;
   shininess?: number | undefined;

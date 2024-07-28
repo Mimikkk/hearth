@@ -17,7 +17,7 @@ class PropertyNode extends Node {
     return this.name || super.getHash(builder);
   }
 
-  isGlobal(/*builder*/) {
+  isGlobal() {
     return true;
   }
 

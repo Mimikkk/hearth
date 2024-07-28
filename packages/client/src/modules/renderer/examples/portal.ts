@@ -29,8 +29,6 @@ const mixers = [];
 init();
 
 async function init() {
-  //
-
   sceneMain = new Engine.Scene();
   sceneMain.background = new Engine.Color(0x222222);
   sceneMain.backgroundNode = normalWorld.y.mix(color(0x0066ff), color(0xff0066));
@@ -40,16 +38,12 @@ async function init() {
     color(0x0066ff),
   );
 
-  //
-
   camera = new Engine.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.01, 30);
   camera.position.set(2.5, 1, 3);
   camera.position.scale(0.8);
   camera.lookAt(0, 1, 0);
 
   clock = new Engine.Clock();
-
-
 
   const light = new Engine.PointLight(0xffffff, 1);
   light.position.set(0, 1, 5);
@@ -58,8 +52,6 @@ async function init() {
   sceneMain.add(new Engine.HemisphereLight(0xff0066, 0x0066ff, 7));
   sceneMain.add(light);
   scenePortal.add(light.clone());
-
-
 
   const geometry = new Engine.PlaneGeometry(1.7, 2);
 
@@ -72,9 +64,6 @@ async function init() {
   const plane = new Engine.Mesh(geometry, material);
   plane.position.set(0, 1, 0.8);
   sceneMain.add(plane);
-
-
-
 
   const loader = new GLTFLoader();
   await loader.loadAsync('resources/models/gltf/Xbot.glb').then(function (gltf) {
@@ -113,8 +102,6 @@ async function init() {
     const modelMain = createModel();
     const modelPortal = createModel(colorNode);
 
-
-
     sceneMain.add(modelMain);
     scenePortal.add(modelPortal);
   });
@@ -125,8 +112,6 @@ async function init() {
   renderer.animation.loop = animate;
   renderer.parameters.toneMappingNode = toneMapping(Engine.ToneMapping.Linear, 0.15);
   document.body.appendChild(renderer.parameters.canvas);
-
-  //
 
   const controls = new OrbitControls(camera, renderer.parameters.canvas);
   controls.target.set(0, 1, 0);

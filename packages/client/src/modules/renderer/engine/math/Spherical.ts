@@ -43,8 +43,6 @@ export class Spherical {
     return into.from(this);
   }
 
-  //
-
   clear(): this {
     return this.set(0, 0, 0);
   }

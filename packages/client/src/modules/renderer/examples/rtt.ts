@@ -25,8 +25,6 @@ async function init() {
   scene = new Engine.Scene();
   scene.background = new Engine.Color(0x0066ff);
 
-  
-
   const loader = new TextureLoader();
   const uvTexture = await loader.loadAsync('resources/textures/uv_grid_opengl.jpg');
 
@@ -34,12 +32,8 @@ async function init() {
   const materialBox = new MeshBasicNodeMaterial();
   materialBox.colorNode = texture(uvTexture);
 
-  //
-
   box = new Engine.Mesh(geometryBox, materialBox);
   scene.add(box);
-
-  //
 
   renderer = await Hearth.as();
   renderer.setPixelRatio(dpr);
@@ -55,10 +49,6 @@ async function init() {
     useWindowResizer.updateSize(renderer, camera);
     renderTarget.setSize(window.innerWidth * dpr, window.innerHeight * dpr);
   });
-
-  
-
-  
 
   const screenFXNode = uniform(mouse);
 

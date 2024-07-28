@@ -37,15 +37,11 @@ async function init() {
   scene = new Engine.Scene();
   scene.background = new Engine.Color(0x222222);
 
-  //
-
   renderer = await Hearth.as();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.animation.loop = animate;
   document.body.appendChild(renderer.parameters.canvas);
-
-
 
   const textureLoader = new TextureLoader();
   const uvTexture = await textureLoader.loadAsync('resources/textures/uv_grid_opengl.jpg');
@@ -61,11 +57,8 @@ async function init() {
 
   const ktxTexture = await ktxLoader.loadAsync('resources/textures/compressed/sample_uastc_zstd.ktx2');
 
-
-
   const geometryBox = new Engine.BoxGeometry();
   const materialBox = new MeshBasicNodeMaterial();
-
 
   const timerScaleNode = timerLocal().mul(vec2(-0.5, 0.1));
   const animateUV = uv().add(timerScaleNode);
@@ -74,15 +67,12 @@ async function init() {
 
   materialBox.colorNode = mix(textureNode, checker(animateUV), 0.5);
 
-
   //geometryBox.setAttribute( 'uv1', geometryBox.getAttribute( 'uv' ) );
   //materialBox.colorNode = texture( uvTexture, uv( 1 ) );
 
   box = new Engine.Mesh(geometryBox, materialBox);
   box.position.set(0, 1, 0);
   scene.add(box);
-
-
 
   const geometrySphere = new Engine.SphereGeometry(0.5, 64, 64);
   const materialSphere = new MeshBasicNodeMaterial();
@@ -98,8 +88,6 @@ async function init() {
   sphere.position.set(-2, -1, 0);
   scene.add(sphere);
 
-
-
   const geometryPlane = new Engine.PlaneGeometry();
   const materialPlane = new MeshBasicNodeMaterial();
   materialPlane.colorNode = texture(createDataTexture()).add(color(0x0000ff));
@@ -108,8 +96,6 @@ async function init() {
   const plane = new Engine.Mesh(geometryPlane, materialPlane);
   plane.position.set(0, -1, 0);
   scene.add(plane);
-
-
 
   const materialCompressed = new MeshBasicNodeMaterial();
   materialCompressed.colorNode = texture(ktxTexture);
@@ -121,8 +107,6 @@ async function init() {
   const planeCompressed = new Engine.Mesh(geo, materialCompressed);
   planeCompressed.position.set(-2, 1, 0);
   scene.add(planeCompressed);
-
-
 
   const points = [];
 
@@ -139,8 +123,6 @@ async function init() {
   const pointCloud = new Engine.Points(geometryPoints, materialPoints);
   pointCloud.position.set(2, -1, 0);
   scene.add(pointCloud);
-
-
 
   const geometryLine = new Engine.Geometry().setFromPoints([
     new Engine.Vec3(-0.5, -0.5, 0),
@@ -198,7 +180,6 @@ function createDataTexture() {
   return texture;
 }
 
-/** Correct UVs to be compatible with `flipY=false` textures. */
 function flipY(geometry) {
   const uv = geometry.attributes.uv;
 

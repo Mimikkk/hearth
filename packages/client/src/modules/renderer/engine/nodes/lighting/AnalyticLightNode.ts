@@ -57,7 +57,7 @@ export class AnalyticLightNode extends LightingNode {
       if (overrideMaterial === null) {
         overrideMaterial = builder.createNodeMaterial();
         overrideMaterial.fragmentNode = vec4(0, 0, 0, 1);
-        overrideMaterial.isShadowNodeMaterial = true; 
+        overrideMaterial.isShadowNodeMaterial = true;
       }
 
       const shadow = this.light.shadow;
@@ -73,8 +73,6 @@ export class AnalyticLightNode extends LightingNode {
       rtt.depthTexture = depthTexture;
 
       shadow.camera.updateProjectionMatrix();
-
-      //
 
       const bias = reference('bias', TypeName.f32, shadow);
       const normalBias = reference('normalBias', TypeName.f32, shadow);

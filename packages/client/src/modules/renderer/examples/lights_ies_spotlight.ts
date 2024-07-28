@@ -13,11 +13,7 @@ let renderer, scene, camera;
 let lights;
 
 async function init() {
-  //
-
   scene = new Engine.Scene();
-
-  //
 
   const [iesTexture1, iesTexture2, iesTexture3, iesTexture4] = await IESLoader.loadAsyncMultiple([
     'resources/ies/007cfb11e343e2f42e3b476be4ab684e.ies',
@@ -25,8 +21,6 @@ async function init() {
     'resources/ies/02a7562c650498ebb301153dbbf59207.ies',
     'resources/ies/1a936937a49c63374e6d4fbed9252b29.ies',
   ]);
-
-  //
 
   const spotLight = new IESSpotLight(0xff0000, 500);
   spotLight.position.set(6.5, 1.5, 6.5);
@@ -36,8 +30,6 @@ async function init() {
   spotLight.iesMap = iesTexture1;
   scene.add(spotLight);
 
-  //
-
   const spotLight2 = new IESSpotLight(0x00ff00, 500);
   spotLight2.position.set(6.5, 1.5, -6.5);
   spotLight2.angle = Math.PI / 8;
@@ -45,8 +37,6 @@ async function init() {
   spotLight2.distance = 20;
   spotLight2.iesMap = iesTexture2;
   scene.add(spotLight2);
-
-  //
 
   const spotLight3 = new IESSpotLight(0x0000ff, 500);
   spotLight3.position.set(-6.5, 1.5, -6.5);
@@ -56,8 +46,6 @@ async function init() {
   spotLight3.iesMap = iesTexture3;
   scene.add(spotLight3);
 
-  //
-
   const spotLight4 = new IESSpotLight(0xffffff, 500);
   spotLight4.position.set(-6.5, 1.5, 6.5);
   spotLight4.angle = Math.PI / 8;
@@ -66,21 +54,15 @@ async function init() {
   spotLight4.iesMap = iesTexture4;
   scene.add(spotLight4);
 
-  //
-
   lights = [spotLight, spotLight2, spotLight3, spotLight4];
 
-  //
-
-  const material = new Engine.MeshPhongMaterial({ color: 0x808080 /*, dithering: true*/ });
+  const material = new Engine.MeshPhongMaterial({ color: 0x808080 });
 
   const geometry = new Engine.PlaneGeometry(200, 200);
 
   const mesh = new Engine.Mesh(geometry, material);
   mesh.setRotationX(-Math.PI * 0.5);
   scene.add(mesh);
-
-  //
 
   renderer = await Hearth.as();
   renderer.setPixelRatio(window.devicePixelRatio);

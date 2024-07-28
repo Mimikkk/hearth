@@ -21,7 +21,6 @@ let line1;
 let matLine, matLineBasic, matLineDashed;
 let gui;
 
-
 let insetWidth;
 let insetHeight;
 
@@ -70,8 +69,6 @@ async function init() {
     colors.push(lineColor.r, lineColor.g, lineColor.b);
   }
 
-
-
   const geometry = new LineGeometry();
   geometry.setPositions(positions);
   geometry.setColors(colors);
@@ -102,8 +99,6 @@ async function init() {
   line1.visible = false;
   scene.add(line1);
 
-  //
-
   useWindowResizer(renderer, camera, () => {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
@@ -121,8 +116,6 @@ async function init() {
 }
 
 function animate() {
-
-
   renderer._clearColor = Color.new(0x000000);
 
   renderer.viewport.set(0, 0, window.innerWidth, window.innerHeight);
@@ -133,8 +126,6 @@ function animate() {
 
   scene.backgroundNode = null;
   renderer.render(scene, camera);
-
-
 
   renderer.clear(false, true, false);
 
@@ -153,8 +144,6 @@ function animate() {
 
   renderer.useScissor = false;
 }
-
-//
 
 function initGui() {
   gui = new GUI();

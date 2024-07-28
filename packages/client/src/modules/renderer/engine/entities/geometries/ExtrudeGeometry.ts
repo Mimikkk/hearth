@@ -91,19 +91,13 @@ export class ExtrudeGeometry extends Geometry {
       addShape(shape);
     }
 
-
-
     this.setAttribute('position', new Attribute(new Float32Array(verticesArray), 3));
     this.setAttribute('uv', new Attribute(new Float32Array(uvArray), 2));
 
     this.computeVertexNormals();
 
-
-
     function addShape(shape: Shape) {
       const placeholder: number[] = [];
-
-
 
       const curveSegments = options.curveSegments !== undefined ? options.curveSegments : 12;
       const steps = options.steps !== undefined ? options.steps : 1;
@@ -119,8 +113,7 @@ export class ExtrudeGeometry extends Geometry {
 
       const uvgen = options.UVGenerator !== undefined ? options.UVGenerator : WorldUVGenerator;
 
-      //
-
+      
       let extrudePts,
         extrudeByPath = false;
       let splineTube, binormal, normal, position2;
@@ -131,20 +124,12 @@ export class ExtrudeGeometry extends Geometry {
         extrudeByPath = true;
         bevelEnabled = false;
 
-
-
-
-
         splineTube = extrudePath.computeFrenetFrames(steps, false);
-
-
 
         binormal = Vec3.new();
         normal = Vec3.new();
         position2 = Vec3.new();
       }
-
-
 
       if (!bevelEnabled) {
         bevelSegments = 0;
@@ -152,8 +137,6 @@ export class ExtrudeGeometry extends Geometry {
         bevelSize = 0;
         bevelOffset = 0;
       }
-
-
 
       const shapePoints = shape.extractPoints(curveSegments);
 
@@ -165,8 +148,6 @@ export class ExtrudeGeometry extends Geometry {
       if (reverse) {
         vertices = vertices.reverse();
 
-
-
         for (let h = 0, hl = holes.length; h < hl; h++) {
           const ahole = holes[h];
 
@@ -177,8 +158,6 @@ export class ExtrudeGeometry extends Geometry {
       }
 
       const faces = ShapeUtils.triangulateShape(vertices, holes);
-
-      /* Vertices */
 
       const contour = vertices;
 
@@ -197,20 +176,9 @@ export class ExtrudeGeometry extends Geometry {
       const vlen = vertices.length,
         flen = faces.length;
 
-
-
       function getBevelVec(inPt: Vec2, inPrev: Vec2, inNext: Vec2): Vec2 {
-
-
-
-        //
-
-
-
+        
         let v_trans_x, v_trans_y, shrink_by;
-
-
-
 
         const v_prev_x = inPt.x - inPrev.x,
           v_prev_y = inPt.y - inPrev.y;
@@ -219,18 +187,11 @@ export class ExtrudeGeometry extends Geometry {
 
         const v_prev_lensq = v_prev_x * v_prev_x + v_prev_y * v_prev_y;
 
-
         const collinear0 = v_prev_x * v_next_y - v_prev_y * v_next_x;
 
         if (Math.abs(collinear0) > Number.EPSILON) {
-
-
-
-
           const v_prev_len = Math.sqrt(v_prev_lensq);
           const v_next_len = Math.sqrt(v_next_x * v_next_x + v_next_y * v_next_y);
-
-
 
           const ptPrevShift_x = inPrev.x - v_prev_y / v_prev_len;
           const ptPrevShift_y = inPrev.y + v_prev_x / v_prev_len;
@@ -238,18 +199,12 @@ export class ExtrudeGeometry extends Geometry {
           const ptNextShift_x = inNext.x - v_next_y / v_next_len;
           const ptNextShift_y = inNext.y + v_next_x / v_next_len;
 
-
-
           const sf =
             ((ptNextShift_x - ptPrevShift_x) * v_next_y - (ptNextShift_y - ptPrevShift_y) * v_next_x) /
             (v_prev_x * v_next_y - v_prev_y * v_next_x);
 
-
-
           v_trans_x = ptPrevShift_x + v_prev_x * sf - inPt.x;
           v_trans_y = ptPrevShift_y + v_prev_y * sf - inPt.y;
-
-
 
           const v_trans_lensq = v_trans_x * v_trans_x + v_trans_y * v_trans_y;
           if (v_trans_lensq <= 2) {
@@ -258,8 +213,6 @@ export class ExtrudeGeometry extends Geometry {
             shrink_by = Math.sqrt(v_trans_lensq / 2);
           }
         } else {
-
-
           let direction_eq = false;
 
           if (v_prev_x > Number.EPSILON) {
@@ -279,12 +232,10 @@ export class ExtrudeGeometry extends Geometry {
           }
 
           if (direction_eq) {
-
             v_trans_x = -v_prev_y;
             v_trans_y = v_prev_x;
             shrink_by = Math.sqrt(v_prev_lensq);
           } else {
-
             v_trans_x = v_prev_x;
             v_trans_y = v_prev_y;
             shrink_by = Math.sqrt(v_prev_lensq / 2);
@@ -299,9 +250,6 @@ export class ExtrudeGeometry extends Geometry {
       for (let i = 0, il = contour.length, j = il - 1, k = i + 1; i < il; i++, j++, k++) {
         if (j === il) j = 0;
         if (k === il) k = 0;
-
-
-
 
         contourMovements[i] = getBevelVec(contour[i], contour[j], contour[k]);
       }
@@ -319,15 +267,12 @@ export class ExtrudeGeometry extends Geometry {
           if (j === il) j = 0;
           if (k === il) k = 0;
 
-
           oneHoleMovements[i] = getBevelVec(ahole[i], ahole[j], ahole[k]);
         }
 
         holesMovements.push(oneHoleMovements);
         verticesMovements = verticesMovements.concat(oneHoleMovements);
       }
-
-
 
       for (let b = 0; b < bevelSegments; b++) {
         //for ( b = bevelSegments; b > 0; b -- ) {
@@ -336,15 +281,11 @@ export class ExtrudeGeometry extends Geometry {
         const z = bevelThickness * Math.cos((t * Math.PI) / 2);
         const bs = bevelSize * Math.sin((t * Math.PI) / 2) + bevelOffset;
 
-
-
         for (let i = 0, il = contour.length; i < il; i++) {
           const vert = scalePt2(contour[i], contourMovements[i], bs);
 
           v(vert.x, vert.y, -z);
         }
-
-
 
         for (let h = 0, hl = holes.length; h < hl; h++) {
           const ahole = holes[h];
@@ -360,16 +301,12 @@ export class ExtrudeGeometry extends Geometry {
 
       const bs = bevelSize + bevelOffset;
 
-
-
       for (let i = 0; i < vlen; i++) {
         const vert = bevelEnabled ? scalePt2(vertices[i], verticesMovements[i], bs) : vertices[i];
 
         if (!extrudeByPath) {
           v(vert.x, vert.y, 0);
         } else {
-
-
           normal!.copy(splineTube!.normals[0]).scale(vert.x);
           binormal!.copy(splineTube!.binormals[0]).scale(vert.y);
 
@@ -379,9 +316,6 @@ export class ExtrudeGeometry extends Geometry {
         }
       }
 
-
-
-
       for (let s = 1; s <= steps; s++) {
         for (let i = 0; i < vlen; i++) {
           const vert = bevelEnabled ? scalePt2(vertices[i], verticesMovements[i], bs) : vertices[i];
@@ -389,8 +323,6 @@ export class ExtrudeGeometry extends Geometry {
           if (!extrudeByPath) {
             v(vert.x, vert.y, (depth / steps) * s);
           } else {
-
-
             normal!.copy(splineTube!.normals[s]).scale(vert.x);
             binormal!.copy(splineTube!.binormals[s]).scale(vert.y);
 
@@ -401,22 +333,16 @@ export class ExtrudeGeometry extends Geometry {
         }
       }
 
-
-
       //for ( b = 1; b <= bevelSegments; b ++ ) {
       for (let b = bevelSegments - 1; b >= 0; b--) {
         const t = b / bevelSegments;
         const z = bevelThickness * Math.cos((t * Math.PI) / 2);
         const bs = bevelSize * Math.sin((t * Math.PI) / 2) + bevelOffset;
 
-
-
         for (let i = 0, il = contour.length; i < il; i++) {
           const vert = scalePt2(contour[i], contourMovements[i], bs);
           v(vert.x, vert.y, depth + z);
         }
-
-
 
         for (let h = 0, hl = holes.length; h < hl; h++) {
           const ahole = holes[h];
@@ -434,26 +360,17 @@ export class ExtrudeGeometry extends Geometry {
         }
       }
 
-      /* Faces */
-
-
-
       buildLidFaces();
-
-
 
       buildSideFaces();
 
-      ///
-
+      /
       function buildLidFaces() {
         const start = verticesArray.length / 3;
 
         if (bevelEnabled) {
           let layer = 0;
           let offset = vlen * layer;
-
-
 
           for (let i = 0; i < flen; i++) {
             const face = faces[i];
@@ -463,21 +380,15 @@ export class ExtrudeGeometry extends Geometry {
           layer = steps + bevelSegments * 2;
           offset = vlen * layer;
 
-
-
           for (let i = 0; i < flen; i++) {
             const face = faces[i];
             f3(face[0] + offset, face[1] + offset, face[2] + offset);
           }
         } else {
-
-
           for (let i = 0; i < flen; i++) {
             const face = faces[i];
             f3(face[2], face[1], face[0]);
           }
-
-
 
           for (let i = 0; i < flen; i++) {
             const face = faces[i];
@@ -487,8 +398,6 @@ export class ExtrudeGeometry extends Geometry {
 
         scope.addGroup(start, verticesArray.length / 3 - start, 0);
       }
-
-
 
       function buildSideFaces() {
         const start = verticesArray.length / 3;

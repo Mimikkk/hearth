@@ -67,15 +67,12 @@ class AfterImageNode extends TempNode {
 
     this.textureNodeOld.value = this._oldRT.texture;
 
-
     renderer.target = this._compRT;
     quadMeshComp.render(renderer);
-
 
     const temp = this._oldRT;
     this._oldRT = this._compRT;
     this._compRT = temp;
-
 
     this.setSize(map.image.width, map.image.height);
 
@@ -92,8 +89,6 @@ class AfterImageNode extends TempNode {
 
       return vec4();
     }
-
-    //
 
     const uvNode = textureNode.uvNode || uv();
 
@@ -116,19 +111,13 @@ class AfterImageNode extends TempNode {
       return max(texelNew, texelOld);
     });
 
-    //
-
     const materialComposed = this._materialComposed || (this._materialComposed = builder.createNodeMaterial());
     materialComposed.fragmentNode = afterImg();
 
     quadMeshComp.material = materialComposed;
 
-    //
-
     const properties = builder.getNodeProperties(this);
     properties.textureNode = textureNode;
-
-    //
 
     return this._textureNode;
   }

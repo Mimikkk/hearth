@@ -33,8 +33,6 @@ export class RectAreaLightHelper extends Line {
     this.color = color;
     this.type = 'RectAreaLightHelper';
 
-    //
-
     const positions2 = [1, 1, 0, -1, 1, 0, -1, -1, 0, 1, 1, 0, -1, -1, 0, 1, -1, 0];
 
     const geometry2 = new Geometry();
@@ -53,7 +51,6 @@ export class RectAreaLightHelper extends Line {
     } else {
       (this.material as MeshBasicMaterial).color.from(this.light.color).scale(this.light.intensity);
 
-      
       const c = (this.material as MeshBasicMaterial).color;
       const max = Math.max(c.r, c.g, c.b);
       if (max > 1) c.scale(1 / max);
@@ -61,7 +58,6 @@ export class RectAreaLightHelper extends Line {
       ((this.children[0] as Mesh).material as MeshBasicMaterial).color.from((this.material as MeshBasicMaterial).color);
     }
 
-    
     this.matrixWorld
       .fromMat4Rotation(this.light.matrixWorld)
       .mulVec(this.scale)

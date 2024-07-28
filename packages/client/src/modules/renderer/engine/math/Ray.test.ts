@@ -132,22 +132,17 @@ describe('Math - Ray', () => {
   it('intersectsPlane', () => {
     const a = Ray.fromParams(1, 1, 1, 0, 0, 1);
 
-
     const b = Plane.fromNormalAndCoplanar(Vec3.new(0, 0, 1), Vec3.new(1, 1, 2));
     expect(a.intersectsPlane(b)).toBe(true);
-
 
     const c = Plane.fromNormalAndCoplanar(Vec3.new(0, 0, 1), Vec3.new(1, 1, 1));
     expect(a.intersectsPlane(c)).toBe(true);
 
-
     const d = Plane.fromNormalAndCoplanar(Vec3.new(0, 0, 1), Vec3.new(1, 1, 0));
     expect(a.intersectsPlane(d)).toBe(false);
 
-
     const e = Plane.fromNormalAndCoplanar(Vec3.new(1, 0, 0), Vec3.new(1, 1, 1));
     expect(a.intersectsPlane(e)).toBe(true);
-
 
     const f = Plane.fromNormalAndCoplanar(Vec3.new(1, 0, 0), Vec3.new(0, 0, 0));
     expect(a.intersectsPlane(f)).toBe(false);
@@ -166,7 +161,6 @@ describe('Math - Ray', () => {
     const ray = Ray.fromParams(0, 0, -5, 0, 0, 1);
     const plane = Plane.fromParams(0, 0, 1, 0);
     expect(ray.distanceToPlane(plane)).toBe(5);
-    //
     const behindPlane = Plane.fromParams(0, 0, -1, 5);
     expect(ray.distanceToPlane(behindPlane)).toBe(10);
 

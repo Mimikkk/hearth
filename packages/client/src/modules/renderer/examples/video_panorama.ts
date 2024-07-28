@@ -51,8 +51,6 @@ async function init() {
   document.addEventListener('pointermove', onPointerMove);
   document.addEventListener('pointerup', onPointerUp);
 
-  //
-
   useWindowResizer(renderer, camera);
 }
 

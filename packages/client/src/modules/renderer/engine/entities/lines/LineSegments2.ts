@@ -37,16 +37,11 @@ const _clipToWorldVector = Vec4.new();
 
 let _ray: Ray, _lineWidth: number;
 
-
-
 function getWorldSpaceHalfWidth(
   camera: Camera,
   distance: number,
   resolution: { width: number; height: number },
 ): number {
-
-
-
   _clipToWorldVector.set(0, 0, -distance, 1.0).applyMat4(camera.projectionMatrix);
   _clipToWorldVector.mulScalar(1.0 / _clipToWorldVector.w);
   _clipToWorldVector.x = _lineWidth / resolution.width;
@@ -102,19 +97,12 @@ function raycastScreenSpace(lineSegments: LineSegments, camera: Camera, intersec
 
   const near = -camera.near;
 
-  //
-
-
-
-
   _ray.at(1, _ssOrigin);
-
 
   _ssOrigin.w = 1;
   _ssOrigin.applyMat4(camera.matrixWorldInverse);
   _ssOrigin.applyMat4(projectionMatrix);
   _ssOrigin.mulScalar(1 / _ssOrigin.w);
-
 
   _ssOrigin.x *= resolution.x / 2;
   _ssOrigin.y *= resolution.y / 2;
@@ -131,16 +119,13 @@ function raycastScreenSpace(lineSegments: LineSegments, camera: Camera, intersec
     _start4.w = 1;
     _end4.w = 1;
 
-
     _start4.applyMat4(_mvMatrix);
     _end4.applyMat4(_mvMatrix);
-
 
     const isBehindCameraNear = _start4.z > near && _end4.z > near;
     if (isBehindCameraNear) {
       continue;
     }
-
 
     if (_start4.z > near) {
       const deltaDist = _start4.z - _end4.z;
@@ -152,14 +137,11 @@ function raycastScreenSpace(lineSegments: LineSegments, camera: Camera, intersec
       _end4.lerp(_start4, t);
     }
 
-
     _start4.applyMat4(projectionMatrix);
     _end4.applyMat4(projectionMatrix);
 
-
     _start4.mulScalar(1 / _start4.w);
     _end4.mulScalar(1 / _end4.w);
-
 
     _start4.x *= resolution.x / 2;
     _start4.y *= resolution.y / 2;
@@ -167,17 +149,14 @@ function raycastScreenSpace(lineSegments: LineSegments, camera: Camera, intersec
     _end4.x *= resolution.x / 2;
     _end4.y *= resolution.y / 2;
 
-
     _line.start.from(_start4);
     _line.start.z = 0;
 
     _line.end.from(_end4);
     _line.end.z = 0;
 
-
     const param = _line.closestAt(_ssOrigin3);
     _line.at(param, _closestPoint);
-
 
     const zPos = MathUtils.lerp(_start4.z, _end4.z, param);
     const isInClipSpace = zPos >= -1 && zPos <= 1;
@@ -215,8 +194,6 @@ export class LineSegments2 extends Mesh {
   ) {
     super(geometry, material);
   }
-
-
 
   computeLineDistances(): this {
     const geometry = this.geometry;
@@ -261,13 +238,11 @@ export class LineSegments2 extends Mesh {
 
     _lineWidth = material.linewidth + threshold;
 
-
     if (geometry.boundingSphere === null) {
       geometry.computeBoundingSphere();
     }
 
     _sphere.from(geometry.boundingSphere).applyMat4(matrixWorld);
-
 
     let sphereMargin;
     if (worldUnits) {
@@ -283,13 +258,11 @@ export class LineSegments2 extends Mesh {
       return;
     }
 
-
     if (geometry.boundingBox === null) {
       geometry.computeBoundingBox();
     }
 
     _box.from(geometry.boundingBox).applyMat4(matrixWorld);
-
 
     let boxMargin;
     if (worldUnits) {

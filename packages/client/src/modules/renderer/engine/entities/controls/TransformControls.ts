@@ -88,7 +88,6 @@ export class TransformControls extends Entity {
 
     const scope = this;
 
-
     function defineProperty(propName: string, defaultValue: any) {
       let propValue = defaultValue;
 
@@ -117,10 +116,6 @@ export class TransformControls extends Entity {
       _gizmo[propName] = defaultValue;
     }
 
-
-
-
-
     defineProperty('camera', object);
     defineProperty('object', undefined);
     defineProperty('enabled', true);
@@ -136,8 +131,6 @@ export class TransformControls extends Entity {
     defineProperty('showY', true);
     defineProperty('showZ', true);
 
-
-
     const worldPosition = Vec3.new();
     const worldPositionStart = Vec3.new();
     const worldQuaternion = Quaternion.new();
@@ -149,8 +142,6 @@ export class TransformControls extends Entity {
     const rotationAxis = Vec3.new();
     const rotationAngle = 0;
     const eye = Vec3.new();
-
-
 
     defineProperty('worldPosition', worldPosition);
     defineProperty('worldPositionStart', worldPositionStart);
@@ -216,7 +207,6 @@ export class TransformControls extends Entity {
   _onPointerHover: (event: PointerEvent) => void;
   _onPointerMove: (event: PointerEvent) => void;
   _onPointerUp: (event: PointerEvent) => void;
-
 
   updateMatrixWorld() {
     if (this.object !== undefined) {
@@ -321,8 +311,6 @@ export class TransformControls extends Entity {
     this.pointEnd!.from(planeIntersect.point).sub(this.worldPositionStart!);
 
     if (mode === 'translate') {
-
-
       this._offset.from(this.pointEnd!).sub(this.pointStart!);
 
       if (space === 'local' && axis !== 'XYZ') {
@@ -340,8 +328,6 @@ export class TransformControls extends Entity {
       }
 
       object.position.from(this._offset).add(this._positionStart);
-
-
 
       if (this.translationSnap) {
         if (space === 'local') {
@@ -413,8 +399,6 @@ export class TransformControls extends Entity {
         }
       }
 
-
-
       object.scale.from(this._scaleStart).mul(_tempVec2);
 
       if (this.scaleSnap) {
@@ -451,7 +435,6 @@ export class TransformControls extends Entity {
 
         _tempVector.cross(this.eye);
 
-
         if (_tempVector.length() === 0) {
           _inPlaneRotation = true;
         } else {
@@ -469,11 +452,8 @@ export class TransformControls extends Entity {
         this.rotationAngle *= this._endNorm.cross(this._startNorm).dot(this.eye) < 0 ? 1 : -1;
       }
 
-
-
       if (this.rotationSnap)
         this.rotationAngle = Math.round(this.rotationAngle / this.rotationSnap) * this.rotationSnap;
-
 
       if (space === 'local' && axis !== 'E' && axis !== 'XYZE') {
         object.quaternion.from(this._quaternionStart);
@@ -513,14 +493,12 @@ export class TransformControls extends Entity {
     this.domElement.removeEventListener('pointerup', this._onPointerUp);
   }
 
-
   attach(object: Entity) {
     this.object = object;
     this.visible = true;
 
     return this;
   }
-
 
   detach() {
     this.object = undefined;
@@ -552,8 +530,6 @@ export class TransformControls extends Entity {
     return _raycaster;
   }
 
-
-
   getMode() {
     return this.mode;
   }
@@ -582,8 +558,6 @@ export class TransformControls extends Entity {
     this.space = space;
   }
 }
-
-
 
 function getPointer(event: PointerEvent) {
   if (this.domElement.ownerDocument.pointerLockElement) {
@@ -655,10 +629,6 @@ function intersectObjectWithRay(object: Entity, raycaster: Raycaster, includeInv
   return false;
 }
 
-//
-
-
-
 const _tempEuler = new Euler();
 const _alignVector = Vec3.new(0, 1, 0);
 const _zeroVector = Vec3.new(0, 0, 0);
@@ -703,8 +673,6 @@ export class TransformControlsGizmo extends Entity {
 
     this.type = 'TransformControlsGizmo';
 
-
-
     const gizmoMaterial = new MeshBasicMaterial({
       depthTest: false,
       depthWrite: false,
@@ -720,8 +688,6 @@ export class TransformControlsGizmo extends Entity {
       toneMapped: false,
       transparent: true,
     });
-
-
 
     const matInvisible = gizmoMaterial.clone();
     matInvisible.opacity = 0.15;
@@ -763,8 +729,6 @@ export class TransformControlsGizmo extends Entity {
     const matGray = gizmoMaterial.clone();
     matGray.color.setHex(0x787878);
 
-
-
     const arrowGeometry = new CylinderGeometry(0, 0.04, 0.1, 12);
     arrowGeometry.translate(0, 0.05, 0);
 
@@ -784,8 +748,6 @@ export class TransformControlsGizmo extends Entity {
       return geometry;
     }
 
-
-
     function TranslateHelperGeometry() {
       const geometry = new Geometry();
 
@@ -793,8 +755,6 @@ export class TransformControlsGizmo extends Entity {
 
       return geometry;
     }
-
-
 
     const gizmoTranslate = {
       X: [
@@ -921,8 +881,6 @@ export class TransformControlsGizmo extends Entity {
       Z: [[new Line(lineGeometry, matHelper.clone()), [0, 0, -1e3], [0, -Math.PI / 2, 0], [1e6, 1, 1], 'helper']],
     };
 
-
-
     function setupGizmo(gizmoMap: any) {
       const gizmo = new Entity();
 
@@ -933,7 +891,6 @@ export class TransformControlsGizmo extends Entity {
           const rotation = gizmoMap[name][i][2];
           const scale = gizmoMap[name][i][3];
           const tag = gizmoMap[name][i][4];
-
 
           object.name = name;
           object.tag = tag;
@@ -968,8 +925,6 @@ export class TransformControlsGizmo extends Entity {
       return gizmo;
     }
 
-
-
     this.gizmo = {} as any;
     this.picker = {} as any;
     this.helper = {} as any;
@@ -984,14 +939,10 @@ export class TransformControlsGizmo extends Entity {
     this.add((this.helper['rotate'] = setupGizmo(helperRotate)));
     this.add((this.helper['scale'] = setupGizmo(helperScale)));
 
-
-
     this.picker['translate'].visible = false;
     this.picker['rotate'].visible = false;
     this.picker['scale'].visible = false;
   }
-
-
 
   mode: 'translate' | 'rotate' | 'scale' = 'translate';
   space: 'world' | 'local' = 'world';
@@ -1014,8 +965,6 @@ export class TransformControlsGizmo extends Entity {
 
     const quaternion = space === 'local' ? this.worldQuaternion : _identityQuaternion;
 
-
-
     this.gizmo['translate'].visible = this.mode === 'translate';
     this.gizmo['rotate'].visible = this.mode === 'rotate';
     this.gizmo['scale'].visible = this.mode === 'scale';
@@ -1031,8 +980,6 @@ export class TransformControlsGizmo extends Entity {
 
     for (let i = 0; i < handles.length; i++) {
       const handle = handles[i];
-
-
 
       handle.visible = true;
       handle.setRotation(0, 0, 0);
@@ -1051,8 +998,6 @@ export class TransformControlsGizmo extends Entity {
       }
 
       handle.scale.set(1, 1, 1).scale((factor * this.size) / 4);
-
-
 
       if (handle.tag === 'helper') {
         handle.visible = false;
@@ -1128,17 +1073,12 @@ export class TransformControlsGizmo extends Entity {
           }
         }
 
-
         continue;
       }
-
-
 
       handle.quaternion.copy(quaternion);
 
       if (this.mode === 'translate' || this.mode === 'scale') {
-
-
         const AXIS_HIDE_THRESHOLD = 0.99;
         const PLANE_HIDE_THRESHOLD = 0.2;
 
@@ -1184,8 +1124,6 @@ export class TransformControlsGizmo extends Entity {
           }
         }
       } else if (this.mode === 'rotate') {
-
-
         _tempQuaternion2.from(quaternion);
         _alignVector.from(this.eye).applyQuaternion(_tempQuaternion.from(quaternion).invert());
 
@@ -1212,13 +1150,10 @@ export class TransformControlsGizmo extends Entity {
         }
       }
 
-
       handle.visible = handle.visible && (handle.name.indexOf('X') === -1 || this.showX);
       handle.visible = handle.visible && (handle.name.indexOf('Y') === -1 || this.showY);
       handle.visible = handle.visible && (handle.name.indexOf('Z') === -1 || this.showZ);
       handle.visible = handle.visible && (handle.name.indexOf('E') === -1 || (this.showX && this.showY && this.showZ));
-
-
 
       handle.material._color = handle.material._color || handle.material.color.clone();
       handle.material._opacity = handle.material._opacity || handle.material.opacity;
@@ -1249,8 +1184,6 @@ export class TransformControlsGizmo extends Entity {
 
 TransformControlsGizmo.prototype.isTransformControlsGizmo = true;
 TransformControlsGizmo.prototype.type = 'TransformControlsGizmo';
-
-//
 
 export class TransformControlsPlane extends Mesh {
   declare type: 'TransformControlsPlane';
@@ -1287,8 +1220,6 @@ export class TransformControlsPlane extends Mesh {
     _v1.from(_unitX).applyQuaternion(space === 'local' ? this.worldQuaternion : _identityQuaternion);
     _v2.from(_unitY).applyQuaternion(space === 'local' ? this.worldQuaternion : _identityQuaternion);
     _v3.from(_unitZ).applyQuaternion(space === 'local' ? this.worldQuaternion : _identityQuaternion);
-
-
 
     _alignVector.from(_v2);
 
@@ -1327,12 +1258,10 @@ export class TransformControlsPlane extends Mesh {
         break;
       case 'rotate':
       default:
-
         _dirVector.set(0, 0, 0);
     }
 
     if (_dirVector.length() === 0) {
-
       this.quaternion.from(this.cameraQuaternion);
     } else {
       _tempMatrix.lookAt(_tempVector.set(0, 0, 0), _dirVector, _alignVector);

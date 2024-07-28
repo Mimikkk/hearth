@@ -70,51 +70,35 @@ export class OrbitControls {
   ) {
     this.domElement.style.touchAction = 'none';
 
-
     this.enabled = true;
-
 
     this.target = Vec3.new();
 
-
     this.cursor = Vec3.new();
-
 
     this.minDistance = 0;
     this.maxDistance = Infinity;
 
-
     this.minZoom = 0;
     this.maxZoom = Infinity;
-
 
     this.minTargetRadius = 0;
     this.maxTargetRadius = Infinity;
 
-
-
     this.minPolarAngle = 0;
     this.maxPolarAngle = Math.PI;
-
-
 
     this.minAzimuthAngle = -Infinity;
     this.maxAzimuthAngle = Infinity;
 
-
-
     this.enableDamping = false;
     this.dampingFactor = 0.05;
-
-
 
     this.enableZoom = true;
     this.zoomSpeed = 1.0;
 
-
     this.enableRotate = true;
     this.rotateSpeed = 1.0;
-
 
     this.enablePan = true;
     this.panSpeed = 1.0;
@@ -122,28 +106,18 @@ export class OrbitControls {
     this.keyPanSpeed = 7.0;
     this.zoomToCursor = false;
 
-
-
     this.autoRotate = false;
     this.autoRotateSpeed = 2.0;
 
-
     this.keys = { LEFT: 'ArrowLeft', UP: 'ArrowUp', RIGHT: 'ArrowRight', BOTTOM: 'ArrowDown' };
 
-
     this.mouseButtons = { LEFT: Mouse.Rotate, MIDDLE: Mouse.Dolly, RIGHT: Mouse.Pan };
-
 
     this.target0 = this.target.clone();
     this.position0 = this.object.position.clone();
     this.zoom0 = this.object.zoom;
 
-
     this._domElementKeyEvents = null;
-
-    //
-
-    //
 
     this.getPolarAngle = function () {
       return spherical.phi;
@@ -186,10 +160,8 @@ export class OrbitControls {
       state = STATE.NONE;
     };
 
-
     this.update = (function () {
       const offset = Vec3.new();
-
 
       const quat = Quaternion.fromUnit(object.up, Vec3.new(0, 1, 0));
       const quatInverse = quat.clone().invert();
@@ -205,9 +177,7 @@ export class OrbitControls {
 
         offset.from(position).sub(scope.target);
 
-
         offset.applyQuaternion(quat);
-
 
         spherical.fromCoord(offset);
 
@@ -222,8 +192,6 @@ export class OrbitControls {
           spherical.theta += sphericalDelta.theta;
           spherical.phi += sphericalDelta.phi;
         }
-
-
 
         let min = scope.minAzimuthAngle;
         let max = scope.maxAzimuthAngle;
@@ -243,12 +211,9 @@ export class OrbitControls {
           }
         }
 
-
         spherical.phi = Math.max(scope.minPolarAngle, Math.min(scope.maxPolarAngle, spherical.phi));
 
         spherical.asClamp();
-
-
 
         if (scope.enableDamping === true) {
           scope.target.addScaled(panOffset, scope.dampingFactor);
@@ -256,13 +221,11 @@ export class OrbitControls {
           scope.target.add(panOffset);
         }
 
-
         scope.target.sub(scope.cursor);
         scope.target.clampLength(scope.minTargetRadius, scope.maxTargetRadius);
         scope.target.add(scope.cursor);
 
         let zoomChanged = false;
-
 
         if ((scope.zoomToCursor && performCursorZoom) || scope.object instanceof OrthographicCamera) {
           spherical.radius = clampDistance(spherical.radius);
@@ -273,7 +236,6 @@ export class OrbitControls {
         }
 
         offset.fromSpherical(spherical);
-
 
         offset.applyQuaternion(quatInverse);
 
@@ -292,12 +254,9 @@ export class OrbitControls {
           panOffset.set(0, 0, 0);
         }
 
-
         if (scope.zoomToCursor && performCursorZoom) {
           let newRadius = null;
           if (scope.object instanceof PerspectiveCamera) {
-
-
             const prevRadius = offset.length();
             newRadius = clampDistance(prevRadius * scale);
 
@@ -307,7 +266,6 @@ export class OrbitControls {
 
             zoomChanged = !!radiusDelta;
           } else if (scope.object instanceof OrthographicCamera) {
-
             const mouseBefore = Vec3.new(mouse.x, mouse.y, 0);
             mouseBefore.unproject(scope.object);
 
@@ -326,21 +284,16 @@ export class OrbitControls {
             newRadius = offset.length();
           }
 
-
           if (newRadius !== null) {
             if (this.screenSpacePanning) {
-
               scope.target
                 .set(0, 0, -1)
                 .transformDirection(scope.object.matrix)
                 .scale(newRadius)
                 .add(scope.object.position);
             } else {
-
               _ray.origin.from(scope.object.position);
               _ray.direction.set(0, 0, -1).transformDirection(scope.object.matrix);
-
-
 
               if (Math.abs(scope.object.up.dot(_ray.direction)) < TILT_LIMIT) {
                 object.lookAt(scope.target);
@@ -362,10 +315,6 @@ export class OrbitControls {
 
         scale = 1;
         performCursorZoom = false;
-
-
-
-
 
         if (
           zoomChanged ||
@@ -406,10 +355,6 @@ export class OrbitControls {
       }
     };
 
-    //
-
-    //
-
     const scope = this;
 
     const STATE = {
@@ -422,7 +367,6 @@ export class OrbitControls {
     let state = STATE.NONE;
 
     const EPS = 0.000001;
-
 
     const spherical = new Spherical();
     const sphericalDelta = new Spherical();
@@ -500,7 +444,6 @@ export class OrbitControls {
       };
     })();
 
-
     const pan = (function () {
       const offset = Vec3.new();
 
@@ -508,19 +451,15 @@ export class OrbitControls {
         const element = scope.domElement;
 
         if (scope.object instanceof PerspectiveCamera) {
-
           const position = scope.object.position;
           offset.from(position).sub(scope.target);
           let targetDistance = offset.length();
 
-
           targetDistance *= Math.tan(((scope.object.fov / 2) * Math.PI) / 180.0);
-
 
           panLeft((2 * deltaX * targetDistance) / element.clientHeight, scope.object.matrix);
           panUp((2 * deltaY * targetDistance) / element.clientHeight, scope.object.matrix);
         } else if (scope.object.isOrthographicCamera) {
-
           panLeft(
             (deltaX * (scope.object.right - scope.object.left)) / scope.object.zoom / element.clientWidth,
             scope.object.matrix,
@@ -530,7 +469,6 @@ export class OrbitControls {
             scope.object.matrix,
           );
         } else {
-
           console.warn('WARNING: OrbitControls.js encountered an unknown camera type - pan disabled.');
           scope.enablePan = false;
         }
@@ -567,10 +505,6 @@ export class OrbitControls {
     function clampDistance(dist: number) {
       return Math.max(scope.minDistance, Math.min(scope.maxDistance, dist));
     }
-
-    //
-
-    //
 
     function handleMouseDownRotate(event: MouseEvent) {
       rotateStart.set(event.clientX, event.clientY);
@@ -687,16 +621,11 @@ export class OrbitControls {
       }
 
       if (needsUpdate) {
-
         event.preventDefault();
 
         scope.update();
       }
     }
-
-    //
-
-    //
 
     function onPointerDown(event: PointerEvent) {
       if (scope.enabled === false) return;
@@ -708,11 +637,7 @@ export class OrbitControls {
         scope.domElement.addEventListener('pointerup', onPointerUp);
       }
 
-      //
-
       if (isTrackingPointer(event)) return;
-
-      //
 
       addPointer(event);
 
@@ -862,7 +787,6 @@ export class OrbitControls {
     function customWheelEvent(event: WheelEvent): WheelEvent {
       const mode = event.deltaMode;
 
-
       const newEvent = {
         clientX: event.clientX,
         clientY: event.clientY,
@@ -878,7 +802,6 @@ export class OrbitControls {
           newEvent.deltaY *= 100;
           break;
       }
-
 
       if (event.ctrlKey && !controlActive) {
         newEvent.deltaY *= 10;
@@ -961,8 +884,6 @@ export class OrbitControls {
       return pointerPositions[pointerId];
     }
 
-    //
-
     scope.domElement.addEventListener('contextmenu', onContextMenu);
 
     scope.domElement.addEventListener('pointerdown', onPointerDown);
@@ -972,8 +893,6 @@ export class OrbitControls {
     const document = scope.domElement.getRootNode();
 
     document.addEventListener('keydown', interceptControlDown, { passive: true, capture: true });
-
-
 
     this.update();
   }

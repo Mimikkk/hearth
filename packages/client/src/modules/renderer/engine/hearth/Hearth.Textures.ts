@@ -70,8 +70,6 @@ export class HearthTextures extends DataMap<any, any> {
       renderTargetData.sampleCount = sampleCount;
     }
 
-    //
-
     const options = { sampleCount };
 
     for (let i = 0; i < textures.length; i++) {
@@ -83,8 +81,6 @@ export class HearthTextures extends DataMap<any, any> {
     }
 
     this.updateTexture(depthTexture, options);
-
-    
 
     if (renderTargetData.initialized !== true) {
       renderTargetData.initialized = true;
@@ -103,8 +99,6 @@ export class HearthTextures extends DataMap<any, any> {
       backend.destroyTexture(texture);
     }
 
-    //
-
     if (texture.isFramebufferTexture) {
       const renderer = this.renderer;
       const renderTarget = renderer.target;
@@ -116,8 +110,6 @@ export class HearthTextures extends DataMap<any, any> {
       }
     }
 
-    //
-
     const { x: width, y: height, z: depth } = this.getSize(texture);
 
     options.width = width;
@@ -125,8 +117,6 @@ export class HearthTextures extends DataMap<any, any> {
     options.depth = depth;
     options.needsMipmaps = this.needsMipmaps(texture);
     options.levels = options.needsMipmaps ? this.getMipLevels(texture, width, height) : 1;
-
-    //
 
     if (isRenderTarget || texture.isStorageTexture === true) {
       backend.createSampler(texture);
@@ -167,8 +157,6 @@ export class HearthTextures extends DataMap<any, any> {
           if (options.needsMipmaps && texture.mipmaps.length === 0) backend.generateMipmaps(texture);
         }
       } else {
-        
-
         backend.createDefaultTexture(texture);
 
         textureData.isDefaultTexture = true;
@@ -178,12 +166,8 @@ export class HearthTextures extends DataMap<any, any> {
     if (textureData.initialized !== true) {
       textureData.initialized = true;
 
-      //
-
       this.renderer.info.memory.textures++;
     }
-
-    //
 
     textureData.version = texture.version;
   }

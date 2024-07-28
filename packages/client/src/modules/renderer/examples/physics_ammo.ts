@@ -19,8 +19,6 @@ import { IcosahedronGeometry } from '@modules/renderer/engine/entities/geometrie
 const physics = await AmmoPhysics();
 const position = Vec3.new();
 
-//
-
 const camera = new PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 100);
 camera.position.set(-1, 1.5, 2);
 camera.lookAt(0, 0.5, 0);
@@ -43,19 +41,14 @@ floor.receiveShadow = false;
 floor.userData.physics = { mass: 0 };
 scene.add(floor);
 
-//
-
 const material = new MeshLambertMaterial();
 
 const matrix = new Mat4();
 const color = Color.new();
 
-
-
 const geometryBox = new BoxGeometry(0.075, 0.075, 0.075);
 const boxes = new InstancedMesh(geometryBox, material, 2);
 boxes.instanceMatrix.usage = BufferUse.DynamicDraw;
-
 
 boxes.userData.physics = { mass: 1 };
 scene.add(boxes);
@@ -65,8 +58,6 @@ for (let i = 0; i < boxes.count; i++) {
   boxes.setMatrixAt(i, matrix);
   boxes.setColorAt(i, color.setHex(0xffffff * Math.random()));
 }
-
-
 
 const geometrySphere = new IcosahedronGeometry(0.05, 4);
 const spheres = new InstancedMesh(geometrySphere, material, 2);
@@ -90,8 +81,6 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.animation.loop = animate;
 document.body.appendChild(renderer.parameters.canvas);
 
-//
-
 const controls = new OrbitControls(camera, renderer.parameters.canvas);
 controls.target.y = 0.5;
 controls.update();
@@ -101,13 +90,6 @@ setInterval(() => {
 
   position.set(0, Math.random() + 1, 0);
   physics.setMeshPosition(boxes, position, index);
-
-  //
-
-
-
-
-
 }, 1000 / 60);
 
 function animate() {

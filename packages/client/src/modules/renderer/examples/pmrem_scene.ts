@@ -37,8 +37,6 @@ async function init() {
   controls.maxDistance = 10;
   controls.update();
 
-  //
-
   scene.background = new Engine.Color(0x006699);
 
   let model;
@@ -74,16 +72,12 @@ async function init() {
   scene.background = null;
   scene.backgroundNode = null;
 
-  //
-
   const pmremRoughness = uniform(0.5);
   const pmremNode = pmremTexture(sceneRT.texture, normalWorld, pmremRoughness);
 
   scene.add(
     new Engine.Mesh(new Engine.SphereGeometry(0.5, 64, 64), new MeshBasicNodeMaterial({ colorNode: pmremNode })),
   );
-
-
 
   const gui = new GUI();
   gui

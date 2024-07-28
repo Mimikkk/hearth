@@ -15,16 +15,10 @@ let controls;
 init();
 
 async function init() {
-  
-
   scene = new Engine.Scene();
-
-  
 
   camera = new Engine.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 50);
   camera.position.set(10, 14, 10);
-
-  
 
   const environmentTexture = new CubeTextureLoader().loadAsync([
     'resources/textures/cube/Park2/posx.jpg',
@@ -37,8 +31,6 @@ async function init() {
 
   scene.environment = environmentTexture;
   scene.background = environmentTexture;
-
-  
 
   const loader = new TextureLoader();
 
@@ -54,14 +46,10 @@ async function init() {
   const displaceTexture = await loader.loadAsync('resources/textures/ambientcg/Ice002_1K-JPG_Displacement.jpg');
   displaceTexture.colorSpace = null;
 
-  //
-
   const bottomTexture = await loader.loadAsync('resources/textures/ambientcg/Ice003_1K-JPG_Color.jpg');
   bottomTexture.colorSpace = Engine.ColorSpace.SRGB;
   bottomTexture.wrapS = Engine.Wrapping.Repeat;
   bottomTexture.wrapT = Engine.Wrapping.Repeat;
-
-  
 
   const parallaxScale = 0.3;
   const offsetUV = texture(displaceTexture).mul(parallaxScale);
@@ -71,10 +59,8 @@ async function init() {
 
   const iceNode = texture(topTexture).overlay(parallaxResult);
 
-  
-
   const material = new MeshStandardNodeMaterial();
-  material.colorNode = iceNode.mul(5); 
+  material.colorNode = iceNode.mul(5);
   material.roughnessNode = texture(roughnessTexture);
   material.normalMap = normalTexture;
   material.metalness = 0;
@@ -85,8 +71,6 @@ async function init() {
   ground.rotateX(-Math.PI / 2);
   scene.add(ground);
 
-  
-
   renderer = await Hearth.as();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
@@ -94,8 +78,6 @@ async function init() {
   renderer.parameters.toneMapping = Engine.ToneMapping.Reinhard;
   renderer.parameters.toneMappingExposure = 6;
   document.body.appendChild(renderer.parameters.canvas);
-
-  
 
   controls = new OrbitControls(camera, renderer.parameters.canvas);
   controls.target.set(0, 0, 0);

@@ -48,8 +48,6 @@ class AssignNode extends TempNode {
 
     const nodeData = builder.getDataFromNode(this);
 
-    //
-
     let snippet;
 
     if (nodeData.initialized === true) {

@@ -13,25 +13,20 @@ function getUv(
 ) {
   const totArcLength = (2 * Math.PI * radius) / 4;
 
-  
   const centerLength = Math.max(sideLength - 2 * radius, 0);
   const halfArc = Math.PI / 4;
 
-  
   _tempNormal.from(normal);
   _tempNormal[projectionAxis] = 0;
   _tempNormal.normalize();
 
-  
   const arcUvRatio = (0.5 * totArcLength) / (totArcLength + centerLength);
 
-  
   const arcAngleRatio = 1.0 - _tempNormal.angleTo(faceDirVector) / halfArc;
 
   if (Math.sign(_tempNormal[uvAxis]) === 1) {
     return arcAngleRatio * arcUvRatio;
   } else {
-    
     const lenUv = centerLength / (totArcLength + centerLength);
     return lenUv + arcUvRatio + arcUvRatio * (1.0 - arcAngleRatio);
   }
@@ -39,15 +34,12 @@ function getUv(
 
 export class RoundedBoxGeometry extends BoxGeometry {
   constructor(width: number = 1, height: number = 1, depth: number = 1, segments: number = 2, radius: number = 0.1) {
-    
     segments = segments * 2 + 1;
 
-    
     radius = Math.min(width / 2, height / 2, depth / 2, radius);
 
     super(1, 1, 1, segments, segments, segments);
 
-    
     if (segments === 1) return;
 
     const geometry2 = this.toNonIndexed();
@@ -56,8 +48,6 @@ export class RoundedBoxGeometry extends BoxGeometry {
     this.attributes.position = geometry2.attributes.position;
     this.attributes.normal = geometry2.attributes.normal;
     this.attributes.uv = geometry2.attributes.uv;
-
-    //
 
     const position = Vec3.new();
     const normal = Vec3.new();
@@ -91,43 +81,37 @@ export class RoundedBoxGeometry extends BoxGeometry {
       const side = Math.floor(i / faceTris);
 
       switch (side) {
-        case 0: 
-          
+        case 0:
           faceDirVector.set(1, 0, 0);
           uvs[j + 0] = getUv(faceDirVector, normal, 'z', 'y', radius, depth);
           uvs[j + 1] = 1.0 - getUv(faceDirVector, normal, 'y', 'z', radius, height);
           break;
 
-        case 1: 
-          
+        case 1:
           faceDirVector.set(-1, 0, 0);
           uvs[j + 0] = 1.0 - getUv(faceDirVector, normal, 'z', 'y', radius, depth);
           uvs[j + 1] = 1.0 - getUv(faceDirVector, normal, 'y', 'z', radius, height);
           break;
 
-        case 2: 
-          
+        case 2:
           faceDirVector.set(0, 1, 0);
           uvs[j + 0] = 1.0 - getUv(faceDirVector, normal, 'x', 'z', radius, width);
           uvs[j + 1] = getUv(faceDirVector, normal, 'z', 'x', radius, depth);
           break;
 
-        case 3: 
-          
+        case 3:
           faceDirVector.set(0, -1, 0);
           uvs[j + 0] = 1.0 - getUv(faceDirVector, normal, 'x', 'z', radius, width);
           uvs[j + 1] = 1.0 - getUv(faceDirVector, normal, 'z', 'x', radius, depth);
           break;
 
-        case 4: 
-          
+        case 4:
           faceDirVector.set(0, 0, 1);
           uvs[j + 0] = 1.0 - getUv(faceDirVector, normal, 'x', 'y', radius, width);
           uvs[j + 1] = 1.0 - getUv(faceDirVector, normal, 'y', 'x', radius, height);
           break;
 
-        case 5: 
-          
+        case 5:
           faceDirVector.set(0, 0, -1);
           uvs[j + 0] = getUv(faceDirVector, normal, 'x', 'y', radius, width);
           uvs[j + 1] = 1.0 - getUv(faceDirVector, normal, 'y', 'x', radius, height);

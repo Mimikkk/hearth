@@ -38,8 +38,6 @@ async function init() {
 
   scene = new Engine.Scene();
 
-
-
   const cube1Texture = await new RGBMLoader({ maxRange: 16 }).loadAsync([
     'resources/textures/cube/pisaRGBM16/px.png',
     'resources/textures/cube/pisaRGBM16/nx.png',
@@ -63,8 +61,6 @@ async function init() {
 
   cube2Texture.generateMipmaps = true;
   cube2Texture.minFilter = Engine.MinificationTextureFilter.LinearMipmapLinear;
-
-
 
   const adjustments = {
     mix: 0,
@@ -107,8 +103,6 @@ async function init() {
     getTextureLevel: () => blurNode,
   });
 
-
-
   const loader = new GLTFLoader();
   loader.loadAsync('resources/models/gltf/DamagedHelmet/glTF/DamagedHelmet.gltf').then(function (gltf) {
     scene.add(gltf.scene);
@@ -137,8 +131,6 @@ async function init() {
   scene.add(sphereLeftView);
   scene.add(sphereRightView);
 
-
-
   renderer = await Hearth.as();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
@@ -151,8 +143,6 @@ async function init() {
   controls.maxDistance = 10;
 
   useWindowResizer(renderer, camera);
-
-
 
   const gui = new GUI();
 
@@ -171,8 +161,6 @@ async function init() {
   gui.add(adjustments, 'hue', 0, Math.PI * 2, 0.01);
   gui.add(adjustments, 'saturation', 0, 2, 0.01);
 }
-
-//
 
 function render() {
   renderer.render(scene, camera);

@@ -20,7 +20,7 @@ class NormalNode extends Node {
     return true;
   }
 
-  getHash(/*builder*/) {
+  getHash() {
     return `normal-${this.scope}`;
   }
 
@@ -37,7 +37,6 @@ class NormalNode extends Node {
       const vertexNode = modelNormalMatrix.mul(normalLocal);
       outputNode = normalize(varying(vertexNode));
     } else if (scope === NormalNode.WORLD) {
-
       const vertexNode = normalView.transformDirection(cameraViewMatrix);
       outputNode = normalize(varying(vertexNode));
     }

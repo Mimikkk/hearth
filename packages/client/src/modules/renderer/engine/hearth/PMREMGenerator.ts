@@ -32,13 +32,7 @@ import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 
 const LOD_MIN = 4;
 
-
-
-
-
 const EXTRA_LOD_SIGMA = [0.125, 0.215, 0.35, 0.446, 0.526, 0.582];
-
-
 
 const MAX_SAMPLES = 20;
 
@@ -48,11 +42,8 @@ let _oldTarget = null;
 let _oldActiveCubeFace = 0;
 let _oldActiveMipmapLevel = 0;
 
-
 const PHI = (1 + Math.sqrt(5)) / 2;
 const INV_PHI = 1 / PHI;
-
-
 
 const _axisDirections = [
   Vec3.new(1, 1, 1),
@@ -66,9 +57,6 @@ const _axisDirections = [
   Vec3.new(PHI, INV_PHI, 0),
   Vec3.new(-PHI, INV_PHI, 0),
 ];
-
-//
-
 
 const _faceLib = [3, 1, 5, 0, 4, 2];
 
@@ -196,8 +184,6 @@ class PMREMGenerator {
     if (texture.mapping === Mapping.CubeReflection || texture.mapping === Mapping.CubeRefraction) {
       this._setSize(texture.image.length === 0 ? 16 : texture.image[0].width || texture.image[0].image.width);
     } else {
-
-
       this._setSize(texture.image.width / 4);
     }
 
@@ -254,7 +240,6 @@ class PMREMGenerator {
     const fov = 90;
     const aspect = 1;
     const cubeCamera = new PerspectiveCamera(fov, aspect, near, far);
-
 
     const upSign = [-1, 1, -1, -1, -1, -1];
     const forwardSign = [1, 1, 1, -1, -1, -1];
@@ -391,7 +376,6 @@ class PMREMGenerator {
     if (direction !== 'latitudinal' && direction !== 'longitudinal') {
       console.error('blur direction must be either latitudinal or longitudinal!');
     }
-
 
     const STANDARD_DEVIATIONS = 3;
 

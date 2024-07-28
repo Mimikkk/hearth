@@ -207,13 +207,9 @@ export class Backend {
       if (renderContextData.currentOcclusionQuerySet) renderContextData.currentOcclusionQuerySet.destroy();
       if (renderContextData.currentOcclusionQueryBuffer) renderContextData.currentOcclusionQueryBuffer.destroy();
 
-
-
       renderContextData.currentOcclusionQuerySet = renderContextData.occlusionQuerySet;
       renderContextData.currentOcclusionQueryBuffer = renderContextData.occlusionQueryBuffer;
       renderContextData.currentOcclusionQueryObjects = renderContextData.occlusionQueryObjects;
-
-      //
 
       occlusionQuerySet = device.createQuerySet({ type: 'occlusion', count: occlusionQueryCount });
 
@@ -266,8 +262,6 @@ export class Backend {
       }
     }
 
-    //
-
     if (renderContext.useDepth) {
       if (renderContext.useClearDepth) {
         depthStencilAttachment.depthClearValue = renderContext.clearDepthValue;
@@ -290,19 +284,13 @@ export class Backend {
       }
     }
 
-    //
-
     const encoder = device.createCommandEncoder({ label: 'renderContext_' + renderContext.id });
     const currentPass = encoder.beginRenderPass(descriptor);
-
-    //
 
     renderContextData.descriptor = descriptor;
     renderContextData.encoder = encoder;
     renderContextData.currentPass = currentPass;
     renderContextData.currentSets = { attributes: {} };
-
-    //
 
     if (renderContext.useViewport) {
       this.updateViewport(renderContext);
@@ -326,10 +314,7 @@ export class Backend {
     renderContextData.currentPass.end();
 
     if (occlusionQueryCount > 0) {
-
       const bufferSize = occlusionQueryCount * 8;
-
-      //
 
       let queryResolveBuffer = this.resolveBufferMap.get(bufferSize);
 
@@ -342,13 +327,10 @@ export class Backend {
         this.resolveBufferMap.set(bufferSize, queryResolveBuffer);
       }
 
-      //
-
       const readBuffer = this.device.createBuffer({
         size: bufferSize,
         usage: GPUBufferUsage.COPY_DST | GPUBufferUsage.MAP_READ,
       });
-
 
       renderContextData.encoder.resolveQuerySet(
         renderContextData.occlusionQuerySet,
@@ -361,16 +343,12 @@ export class Backend {
 
       renderContextData.occlusionQueryBuffer = readBuffer;
 
-      //
-
       this.resolveOccludedAsync(renderContext);
     }
 
     this.prepareTimestamp(renderContext, renderContextData.encoder);
 
     this.device.queue.submit([renderContextData.encoder.finish()]);
-
-    //
 
     if (renderContext.textures !== null) {
       const textures = renderContext.textures;
@@ -393,8 +371,6 @@ export class Backend {
 
   async resolveOccludedAsync(renderContext: RenderContext) {
     const renderContextData = this.memo.get(renderContext);
-
-
 
     const { currentOcclusionQueryBuffer, currentOcclusionQueryObjects } = renderContextData;
 
@@ -503,8 +479,6 @@ export class Backend {
       }
     }
 
-    //
-
     if (supportsDepth) {
       if (depth) {
         depthStencilAttachment.depthLoadOp = GPULoadOpType.Clear;
@@ -516,8 +490,6 @@ export class Backend {
       }
     }
 
-    //
-
     if (supportsStencil) {
       if (stencil) {
         depthStencilAttachment.stencilLoadOp = GPULoadOpType.Clear;
@@ -528,8 +500,6 @@ export class Backend {
         depthStencilAttachment.stencilStoreOp = GPUStoreOpType.Store;
       }
     }
-
-    //
 
     const encoder = device.createCommandEncoder({});
     const currentPass = encoder.beginRenderPass({
@@ -557,12 +527,8 @@ export class Backend {
   compute(computeGroup: ComputeNode, computeNode: ComputeNode, bindings: Binding[], pipeline: ComputePipeline) {
     const { passEncoderGPU } = this.memo.get(computeGroup);
 
-
-
     const pipelineGPU = this.memo.get(pipeline).pipeline;
     passEncoderGPU.setPipeline(pipelineGPU);
-
-
 
     const bindGroupGPU = this.memo.get(bindings).group;
     passEncoderGPU.setBindGroup(0, bindGroupGPU);
@@ -589,8 +555,6 @@ export class Backend {
     const pipelineGPU = this.memo.get(pipeline).pipeline;
     const currentSets = contextData.currentSets;
 
-
-
     const passEncoderGPU = contextData.currentPass;
 
     if (currentSets.pipeline !== pipelineGPU) {
@@ -599,18 +563,12 @@ export class Backend {
       currentSets.pipeline = pipelineGPU;
     }
 
-
-
     const bindGroupGPU = bindingsData.group;
     passEncoderGPU.setBindGroup(0, bindGroupGPU);
-
-
 
     const index = renderObject.getIndex();
 
     const hasIndex = index !== null;
-
-
 
     if (hasIndex === true) {
       if (currentSets.index !== index) {
@@ -622,8 +580,6 @@ export class Backend {
         currentSets.index = index;
       }
     }
-
-
 
     const vertexBuffers = renderObject.getVertexBuffers();
 
@@ -637,8 +593,6 @@ export class Backend {
         currentSets.attributes[i] = vertexBuffer;
       }
     }
-
-
 
     if (contextData.occlusionQuerySet !== undefined) {
       const lastObject = contextData.lastOcclusionObject;
@@ -657,8 +611,6 @@ export class Backend {
         contextData.lastOcclusionObject = object;
       }
     }
-
-
 
     const drawRange = geometry.drawRange;
     const firstVertex = drawRange.start;

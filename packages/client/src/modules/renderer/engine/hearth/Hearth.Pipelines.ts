@@ -43,7 +43,8 @@ export class HearthPipelines extends DataMap<any, any> {
 
       let stageCompute = this.programs.compute.get(nodeBuilderState.computeShader!);
 
-      if (stageCompute === undefined) {
+      if (stageComp
+        ute === undefined) {
         if (previousPipeline && previousPipeline.computeProgram.usedTimes === 0)
           this._releaseProgram(previousPipeline.computeProgram);
 
@@ -74,8 +75,7 @@ export class HearthPipelines extends DataMap<any, any> {
       pipeline.usedTimes++;
       stageCompute.usedTimes++;
 
-      //
-
+      
       data.version = computeNode.version;
       data.pipeline = pipeline;
     }
@@ -145,8 +145,7 @@ export class HearthPipelines extends DataMap<any, any> {
       stageVertex.usedTimes++;
       stageFragment.usedTimes++;
 
-      //
-
+      
       data.pipeline = pipeline;
     }
 

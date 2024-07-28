@@ -62,12 +62,10 @@ export const TypeMap = {
 };
 
 export enum TypeName {
-
   f32 = 'f32',
   i32 = 'i32',
   u32 = 'u32',
   bool = 'bool',
-
 
   color = 'color',
 
@@ -114,8 +112,6 @@ export enum TypeName {
   storage2 = 'texture_storage_2d',
   storage3 = 'texture_storage_3d',
   storage2a = 'texture_storage_2d_array',
-
-  //
 
   property = 'property',
   texture = 'texture',

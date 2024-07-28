@@ -54,8 +54,6 @@ export class PositionalAudioHelper extends Line {
 
     geometry.clearGroups();
 
-    //
-
     function generateSegment(from: number, to: number, divisions: number, materialIndex: number) {
       const step = (to - from) / divisions;
 
@@ -83,13 +81,9 @@ export class PositionalAudioHelper extends Line {
       count = 0;
     }
 
-    //
-
     generateSegment(-halfConeOuterAngle, -halfConeInnerAngle, divisionsOuterAngle, 0);
     generateSegment(-halfConeInnerAngle, halfConeInnerAngle, divisionsInnerAngle, 1);
     generateSegment(halfConeInnerAngle, halfConeOuterAngle, divisionsOuterAngle, 0);
-
-    //
 
     positionAttribute.needsUpdate = true;
 

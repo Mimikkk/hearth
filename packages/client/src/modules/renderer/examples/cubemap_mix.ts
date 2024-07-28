@@ -72,8 +72,6 @@ async function init() {
   useWindowResizer(renderer, camera);
 }
 
-//
-
 function render() {
   renderer.render(scene, camera);
 }
