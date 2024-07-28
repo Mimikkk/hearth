@@ -304,7 +304,7 @@ export namespace TypeName {
   export const isVec = (type: TypeName): boolean => type.includes('vec');
   export const isMat = (type: TypeName): boolean => type.includes('mat');
   export const isInt = (type: TypeName): boolean => {
-    const _c = component(type);
-    return _c === TypeName.i32 || _c === TypeName.u32;
+    const c = component(type);
+    return c === TypeName.i32 || c === TypeName.u32;
   };
 }
