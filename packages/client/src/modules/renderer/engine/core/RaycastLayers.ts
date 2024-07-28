@@ -1,7 +1,9 @@
 export class RaycastLayers {
-  mask: number = 1;
+  constructor(public mask: number = 1) {}
 
-  constructor() {}
+  static new(): RaycastLayers {
+    return new RaycastLayers();
+  }
 
   set(channel: number): this {
     this.mask = ((1 << channel) | 0) >>> 0;

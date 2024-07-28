@@ -12,7 +12,6 @@ import {
 } from '@modules/renderer/engine/nodes/builder/NodeUniform.js';
 
 class UniformsGroup extends UniformBuffer {
-  declare isUniformsGroup: true;
   // the order of uniforms in this array must match the order of uniforms in the shader
   uniforms: ValueNodeUniform[] = [];
   bytesPerElement: number = Float32Array.BYTES_PER_ELEMENT;
@@ -246,8 +245,6 @@ class UniformsGroup extends UniformBuffer {
     return updated;
   }
 }
-
-UniformsGroup.prototype.isUniformsGroup = true;
 
 function arraysEqual(a: ArrayLike<number>, b: ArrayLike<number>, offset: number) {
   for (let i = 0, l = b.length; i < l; i++) {

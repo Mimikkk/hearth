@@ -1,6 +1,5 @@
 import { Material, MaterialParameters } from './Material.js';
 import { cloneUniforms } from '../../renderers/UniformsUtils.js';
-import { UniformGroup } from '../../core/UniformGroup.js';
 
 export interface IUniform<TValue = any> {
   value: TValue;
@@ -8,7 +7,6 @@ export interface IUniform<TValue = any> {
 
 export interface ShaderMaterialParameters extends MaterialParameters {
   uniforms?: { [uniform: string]: IUniform } | undefined;
-  uniformsGroups?: UniformGroup<any>[] | undefined;
   vertexShader?: string | undefined;
   fragmentShader?: string | undefined;
   linewidth?: number | undefined;

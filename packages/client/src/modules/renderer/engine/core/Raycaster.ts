@@ -14,7 +14,7 @@ export class Raycaster {
     public ray: Ray = new Ray(),
     public near: number = 0,
     public far: number = Infinity,
-    public layers: RaycastLayers = new RaycastLayers(),
+    public layers: RaycastLayers = RaycastLayers.new(),
   ) {}
 
   static new(camera?: ICamera): Raycaster {

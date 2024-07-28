@@ -92,7 +92,7 @@ export class Entity {
     this.matrixWorldAutoUpdate = Entity.UseWorldAutoUpdate; // checked by the renderer
     this.matrixWorldNeedsUpdate = false;
 
-    this.layers = new RaycastLayers();
+    this.layers = RaycastLayers.new();
     this.visible = true;
 
     this.castShadow = false;

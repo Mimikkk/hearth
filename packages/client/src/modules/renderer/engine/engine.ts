@@ -61,8 +61,6 @@ export { AnimationMixer } from './animation/AnimationMixer.js';
 export { AnimationClip } from './animation/AnimationClip.js';
 export { AnimationAction } from './animation/AnimationAction.js';
 export { RenderTarget } from './renderers/RenderTarget.js';
-export { Uniform } from './core/Uniform.js';
-export { UniformGroup } from './core/UniformGroup.js';
 export { Geometry } from './core/Geometry.js';
 export { Buffer } from './core/Buffer.js';
 export * from './core/BufferAttribute.js';
