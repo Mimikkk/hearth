@@ -1,4 +1,4 @@
-import { BufferAttribute, Geometry, Material, Mesh, OrthographicCamera } from '../engine.js';
+import { Attribute, Geometry, Material, Mesh, OrthographicCamera } from '../engine.js';
 import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 
 // Helper for passes that need to fill the viewport with a single quad.
@@ -13,8 +13,8 @@ export class QuadGeometry extends Geometry {
 
     const uv = flipY === false ? [0, -1, 0, 1, 2, 1] : [0, 2, 0, 0, 2, 0];
 
-    this.setAttribute('position', new BufferAttribute(new Float32Array([-1, 3, 0, -1, -1, 0, 3, -1, 0]), 3));
-    this.setAttribute('uv', new BufferAttribute(new Float32Array(uv), 2));
+    this.setAttribute('position', new Attribute(new Float32Array([-1, 3, 0, -1, -1, 0, 3, -1, 0]), 3));
+    this.setAttribute('uv', new Attribute(new Float32Array(uv), 2));
   }
 }
 

@@ -1,7 +1,7 @@
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 import { Box3 } from '../math/Box3.js';
-import { BufferAttribute } from './BufferAttribute.js';
+import { Attribute } from './Attribute.js';
 import { Sphere } from '../math/Sphere.js';
 import { Entity } from './Entity.js';
 import { Mat4 } from '../math/Mat4.js';
@@ -17,7 +17,7 @@ export class Geometry {
   uuid: string;
   name: string;
   instanceCount: number;
-  index: BufferAttribute<Uint32Array> | null;
+  index: Attribute<Uint32Array> | null;
   attributes: AttributeRecord;
   morphAttributes: AttributeRecord;
   morphTargetsRelative: boolean;
@@ -58,13 +58,13 @@ export class Geometry {
     return value?.isGeometry === true;
   }
 
-  getIndex(): BufferAttribute<Uint32Array> | null {
+  getIndex(): Attribute<Uint32Array> | null {
     return this.index;
   }
 
-  setIndex(index: BufferAttribute<Uint32Array> | number[] | null): this {
+  setIndex(index: Attribute<Uint32Array> | number[] | null): this {
     if (Array.isArray(index)) {
-      this.index = new BufferAttribute(new Uint32Array(index), 1) as BufferAttribute<Uint32Array>;
+      this.index = new Attribute(new Uint32Array(index), 1) as Attribute<Uint32Array>;
     } else {
       this.index = index;
     }
@@ -72,11 +72,11 @@ export class Geometry {
     return this;
   }
 
-  getAttribute(name: string): BufferAttribute {
+  getAttribute(name: string): Attribute {
     return this.attributes[name];
   }
 
-  setAttribute(name: string, attribute: BufferAttribute): this {
+  setAttribute(name: string, attribute: Attribute): this {
     this.attributes[name] = attribute;
     return this;
   }
@@ -234,7 +234,7 @@ export class Geometry {
       position.push(point.x, point.y, point.z);
     }
 
-    this.setAttribute('position', new BufferAttribute(new Float32Array(position), 3) as never);
+    this.setAttribute('position', new Attribute(new Float32Array(position), 3) as never);
 
     return this;
   }
@@ -244,7 +244,7 @@ export class Geometry {
       this.boundingBox = Box3.new();
     }
 
-    const position = this.attributes.position as BufferAttribute<Float32Array>;
+    const position = this.attributes.position as Attribute<Float32Array>;
     const morphAttributesPosition = this.morphAttributes.position;
 
     if (position !== undefined) {
@@ -290,7 +290,7 @@ export class Geometry {
       this.boundingSphere = new Sphere();
     }
 
-    const position = this.attributes.position as BufferAttribute<Float32Array>;
+    const position = this.attributes.position as Attribute<Float32Array>;
     const morphAttributesPosition = this.morphAttributes.position;
 
     if (position) {
@@ -394,7 +394,7 @@ export class Geometry {
     const uvAttribute = attributes.uv;
 
     if (this.hasAttribute('tangent') === false) {
-      this.setAttribute('tangent', new BufferAttribute(new Float32Array(new Array(4 * positionAttribute.count)), 4));
+      this.setAttribute('tangent', new Attribute(new Float32Array(new Array(4 * positionAttribute.count)), 4));
     }
 
     const tangentAttribute = this.attributes.tangent;
@@ -520,7 +520,7 @@ export class Geometry {
       let normalAttribute = this.attributes.normal;
 
       if (normalAttribute === undefined) {
-        normalAttribute = new BufferAttribute(new Float32Array(positionAttribute.count * 3), 3);
+        normalAttribute = new Attribute(new Float32Array(positionAttribute.count * 3), 3);
         this.setAttribute('normal', normalAttribute);
       } else {
         // reset existing normals to zero
@@ -629,7 +629,7 @@ export class Geometry {
         }
       }
 
-      return new BufferAttribute(array2, itemSize);
+      return new Attribute(array2, itemSize);
     }
 
     //
@@ -763,7 +763,7 @@ export class Geometry {
 Geometry.prototype.isGeometry = true;
 Geometry.prototype.type = 'Geometry';
 
-type AttributeRecord = Record<string, BufferAttribute>;
+type AttributeRecord = Record<string, Attribute>;
 
 let _id = 0;
 const _m1 = new Mat4();

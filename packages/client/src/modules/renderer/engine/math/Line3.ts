@@ -2,7 +2,7 @@ import { Vec3 } from './Vec3.js';
 import { Mat4 } from './Mat4.js';
 import { Const } from './types.js';
 import { clamp } from './MathUtils.js';
-import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
+import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
 
 export class Line3 {
   declare isLine3: true;
@@ -49,7 +49,7 @@ export class Line3 {
   }
 
   static fromAttribute(
-    attribute: Const<BufferAttribute>,
+    attribute: Const<Attribute>,
     i0: number = 0,
     i1: number = 1,
     into: Line3 = Line3.empty(),
@@ -83,7 +83,7 @@ export class Line3 {
     return this;
   }
 
-  fromAttribute(attribute: Const<BufferAttribute>, i0: number = 0, i1: number = 1): this {
+  fromAttribute(attribute: Const<Attribute>, i0: number = 0, i1: number = 1): this {
     this.start.fromAttribute(attribute, i0);
     this.end.fromAttribute(attribute, i1);
     return this;

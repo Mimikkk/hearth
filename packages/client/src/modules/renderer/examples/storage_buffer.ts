@@ -1,5 +1,5 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
-import { BufferAttribute } from '@modules/renderer/engine/engine.js';
+import { Attribute } from '@modules/renderer/engine/engine.js';
 import {
   f32,
   instanceIndex,
@@ -45,7 +45,7 @@ async function init() {
     const typeSize = i + 1;
     const array = new Array(size * typeSize).fill(0);
 
-    const arrayBuffer = new BufferAttribute(
+    const arrayBuffer = new Attribute(
       new Float32Array(array),
       typeSize,
       0,

@@ -1,6 +1,6 @@
 import { LineSegments } from '../LineSegments.js';
 import { LineBasicMaterial } from '@modules/renderer/engine/objects/materials/LineBasicMaterial.js';
-import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
+import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
 import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
 import { Box3 } from '@modules/renderer/engine/math/Box3.js';
 import { ColorRepresentation } from '@modules/renderer/engine/math/Color.js';
@@ -16,9 +16,9 @@ export class Box3Helper extends LineSegments {
 
     const geometry = new Geometry();
 
-    geometry.setIndex(new BufferAttribute(indices, 1));
+    geometry.setIndex(new Attribute(indices, 1));
 
-    geometry.setAttribute('position', new BufferAttribute(new Float32Array(positions), 3));
+    geometry.setAttribute('position', new Attribute(new Float32Array(positions), 3));
 
     super(geometry, new LineBasicMaterial({ color: color, toneMapped: false }));
 

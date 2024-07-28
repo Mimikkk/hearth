@@ -1,7 +1,7 @@
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { Entity } from '../../core/Entity.js';
 import { Line } from '../Line.js';
-import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
+import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
 import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
 import { LineBasicMaterial } from '@modules/renderer/engine/objects/materials/LineBasicMaterial.js';
 import { DirectionalLight } from '@modules/renderer/engine/objects/lights/DirectionalLight.js';
@@ -31,7 +31,7 @@ export class DirectionalLightHelper extends Entity {
     let geometry = new Geometry();
     geometry.setAttribute(
       'position',
-      new BufferAttribute(
+      new Attribute(
         new Float32Array([-size, size, 0, size, size, 0, size, -size, 0, -size, -size, 0, -size, size, 0]),
         3,
       ),
@@ -43,7 +43,7 @@ export class DirectionalLightHelper extends Entity {
     this.add(this.lightPlane);
 
     geometry = new Geometry();
-    geometry.setAttribute('position', new BufferAttribute(new Float32Array([0, 0, 0, 0, 0, 1]), 3));
+    geometry.setAttribute('position', new Attribute(new Float32Array([0, 0, 0, 0, 0, 1]), 3));
 
     this.targetLine = new Line(geometry, material);
     this.add(this.targetLine);

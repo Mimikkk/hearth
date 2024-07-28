@@ -1,4 +1,4 @@
-import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
+import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
 import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
 import { DataTexture } from '@modules/renderer/engine/objects/textures/DataTexture.js';
 import { TextureDataType, TextureFormat } from '../constants.js';
@@ -68,7 +68,7 @@ const _renderList = new MultiDrawRenderList();
 const _mesh = new Mesh(null!, null!);
 const _batchIntersects: Intersection[] = [];
 
-function copyAttributeData(src: BufferAttribute<any>, target: BufferAttribute<any>, targetOffset: number) {
+function copyAttributeData(src: Attribute<any>, target: Attribute<any>, targetOffset: number) {
   const itemSize = target.stride;
   if (src.interleaved || src.array.constructor !== target.array.constructor) {
     const vertexCount = src.count;
@@ -196,11 +196,11 @@ export class BatchedMesh extends Mesh {
       if (reference.getIndex() !== null) {
         const indexArray = maxVertexCount > 65536 ? new Uint32Array(maxIndexCount) : new Uint16Array(maxIndexCount);
 
-        geometry.setIndex(new BufferAttribute(indexArray, 1));
+        geometry.setIndex(new Attribute(indexArray, 1));
       }
 
       const idArray = maxGeometryCount > 65536 ? new Uint32Array(maxVertexCount) : new Uint16Array(maxVertexCount);
-      geometry.setAttribute(ID_ATTR_NAME, new BufferAttribute(idArray, 1));
+      geometry.setAttribute(ID_ATTR_NAME, new Attribute(idArray, 1));
 
       this._geometryInitialized = true;
     }

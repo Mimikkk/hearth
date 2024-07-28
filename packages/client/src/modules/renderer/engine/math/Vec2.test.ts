@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { Vec2 } from './Vec2.js';
 import { Mat3 } from '@modules/renderer/engine/math/Mat3.js';
-import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
+import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
 
 describe('Math - Vec2', () => {
   it('Instancing', () => {
@@ -295,7 +295,7 @@ describe('Math - Vec2', () => {
 
   it('fromAttribute', () => {
     const a = Vec2.new();
-    const attribute = new BufferAttribute(new Float32Array([1, 2, 3, 4]), 2);
+    const attribute = new Attribute(new Float32Array([1, 2, 3, 4]), 2);
 
     a.fromAttribute(attribute, 0);
     expect(a).toEqual({ x: 1, y: 2 });

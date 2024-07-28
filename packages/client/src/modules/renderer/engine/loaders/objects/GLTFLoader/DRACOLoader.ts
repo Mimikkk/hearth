@@ -1,6 +1,6 @@
 import { FileLoader, ResponseType } from '@modules/renderer/engine/loaders/files/FileLoader/FileLoader.js';
 import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
-import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
+import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
 import { ColorSpace } from '@modules/renderer/engine/constants.js';
 import { Color } from '@modules/renderer/engine/math/Color.js';
 
@@ -144,7 +144,7 @@ class DRACOLoader {
     const geometry = new Geometry();
 
     if (geometryData.index) {
-      geometry.setIndex(new BufferAttribute(geometryData.index.array, 1));
+      geometry.setIndex(new Attribute(geometryData.index.array, 1));
     }
 
     for (let i = 0; i < geometryData.attributes.length; i++) {
@@ -153,7 +153,7 @@ class DRACOLoader {
       const array = result.array;
       const itemSize = result.stride;
 
-      const attribute = new BufferAttribute(array, itemSize);
+      const attribute = new Attribute(array, itemSize);
 
       if (name === 'color') {
         this._assignVertexColorSpace(attribute, result.vertexColorSpace);

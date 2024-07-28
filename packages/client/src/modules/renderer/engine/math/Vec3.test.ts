@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { Vec3 } from './Vec3.js';
 import { Vec2 } from './Vec2.js';
-import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
+import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
 import { Spherical } from '@modules/renderer/engine/math/Spherical.js';
 import { Euler } from './Euler.js';
 import { Cylindrical } from '@modules/renderer/engine/math/Cylindrical.js';
@@ -230,7 +230,7 @@ describe('Math - Vec3', () => {
   });
 
   it('fromAttribute/fillAttribute', () => {
-    const attribute = new BufferAttribute(new Float32Array([1, 2, 3, 4, 5, 6, 7, 8, 9]), 3);
+    const attribute = new Attribute(new Float32Array([1, 2, 3, 4, 5, 6, 7, 8, 9]), 3);
 
     const a = vec3();
     expect(a.fromAttribute(attribute, 0)).toEqual(vec3(1, 2, 3));

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { Quaternion, QuaternionArray } from './Quaternion.js';
 import { Euler } from './Euler.js';
-import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
+import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
 import { Vec3 } from './Vec3.js';
 import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
 
@@ -343,7 +343,7 @@ describe('Math - Quaternion', () => {
   });
 
   it('fromAttribute', () => {
-    const attribute = new BufferAttribute(new Float64Array([0, 0, 0, 1, 0.7, 0, 0, 0.7, 0, 0.7, 0, 0.7]), 4);
+    const attribute = new Attribute(new Float64Array([0, 0, 0, 1, 0.7, 0, 0, 0.7, 0, 0.7, 0, 0.7]), 4);
 
     const a = Quaternion.fromAttribute(attribute, 0);
     expectQuaternionWithin(a, Quaternion.identity());

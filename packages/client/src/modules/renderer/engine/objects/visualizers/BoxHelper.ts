@@ -1,7 +1,7 @@
 import { Box3 } from '../../math/Box3.js';
 import { LineSegments } from '../LineSegments.js';
 import { LineBasicMaterial } from '@modules/renderer/engine/objects/materials/LineBasicMaterial.js';
-import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
+import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
 import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
 import { Entity } from '@modules/renderer/engine/core/Entity.js';
 
@@ -16,8 +16,8 @@ export class BoxHelper extends LineSegments {
     const positions = new Float32Array(8 * 3);
 
     const geometry = new Geometry();
-    geometry.setIndex(new BufferAttribute(indices, 1));
-    geometry.setAttribute('position', new BufferAttribute(positions, 3));
+    geometry.setIndex(new Attribute(indices, 1));
+    geometry.setAttribute('position', new Attribute(positions, 3));
 
     super(geometry, new LineBasicMaterial({ color: color, toneMapped: false }));
 

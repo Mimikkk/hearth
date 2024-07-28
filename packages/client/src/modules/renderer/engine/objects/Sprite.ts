@@ -9,7 +9,7 @@ import { SpriteMaterial } from '@modules/renderer/engine/objects/materials/Sprit
 import { Intersection, Raycaster } from '../core/Raycaster.js';
 import { PerspectiveCamera } from '@modules/renderer/engine/objects/cameras/PerspectiveCamera.js';
 import { BufferStep } from '@modules/renderer/engine/renderers/constants.js';
-import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
+import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
 
 const _intersectPoint = Vec3.new();
 const _worldScale = Vec3.new();
@@ -54,8 +54,8 @@ export class Sprite extends Entity {
       const buffer = new Buffer(float32Array, 5);
 
       _geometry.setIndex([0, 1, 2, 0, 2, 3]);
-      _geometry.setAttribute('position', new BufferAttribute(buffer, 3, 0, BufferStep.Vertex, undefined));
-      _geometry.setAttribute('uv', new BufferAttribute(buffer, 2, 3, BufferStep.Vertex, undefined));
+      _geometry.setAttribute('position', new Attribute(buffer, 3, 0, BufferStep.Vertex, undefined));
+      _geometry.setAttribute('uv', new Attribute(buffer, 2, 3, BufferStep.Vertex, undefined));
     }
 
     this.geometry = _geometry;

@@ -1,5 +1,5 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
-import { BufferAttribute } from '@modules/renderer/engine/engine.js';
+import { Attribute } from '@modules/renderer/engine/engine.js';
 import {
   color,
   f32,
@@ -84,14 +84,14 @@ async function init() {
 
   // create webgpu buffers
 
-  waveGPUBuffer = new BufferAttribute(waveBuffer, 1, 0, BufferStep.Instance, GPUBufferBindingTypeType.Storage);
+  waveGPUBuffer = new Attribute(waveBuffer, 1, 0, BufferStep.Instance, GPUBufferBindingTypeType.Storage);
 
   const waveStorageNode = storage(waveGPUBuffer, 'f32', waveBuffer.length);
 
   // read-only buffer
 
   const waveNode = storageObject(
-    new BufferAttribute(waveBuffer, 1, 0, BufferStep.Instance, GPUBufferBindingTypeType.ReadOnlyStorage),
+    new Attribute(waveBuffer, 1, 0, BufferStep.Instance, GPUBufferBindingTypeType.ReadOnlyStorage),
     'f32',
     waveBuffer.length,
   );

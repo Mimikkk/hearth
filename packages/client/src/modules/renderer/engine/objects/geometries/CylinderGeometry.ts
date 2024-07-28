@@ -1,5 +1,5 @@
 import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
-import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
+import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 
@@ -70,9 +70,9 @@ export class CylinderGeometry extends Geometry {
     // build geometry
 
     this.setIndex(indices);
-    this.setAttribute('position', new BufferAttribute(new Float32Array(vertices), 3));
-    this.setAttribute('normal', new BufferAttribute(new Float32Array(normals), 3));
-    this.setAttribute('uv', new BufferAttribute(new Float32Array(uvs), 2));
+    this.setAttribute('position', new Attribute(new Float32Array(vertices), 3));
+    this.setAttribute('normal', new Attribute(new Float32Array(normals), 3));
+    this.setAttribute('uv', new Attribute(new Float32Array(uvs), 2));
 
     function generateTorso() {
       const normal = Vec3.new();

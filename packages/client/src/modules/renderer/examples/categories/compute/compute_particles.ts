@@ -1,5 +1,5 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
-import { BufferAttribute } from '@modules/renderer/engine/engine.js';
+import { Attribute } from '@modules/renderer/engine/engine.js';
 import {
   f32,
   instanceIndex,
@@ -55,13 +55,7 @@ async function init() {
 
   const createBuffer = () =>
     storage(
-      new BufferAttribute(
-        new Float32Array(particleCount * 3),
-        3,
-        0,
-        BufferStep.Instance,
-        GPUBufferBindingTypeType.Storage,
-      ),
+      new Attribute(new Float32Array(particleCount * 3), 3, 0, BufferStep.Instance, GPUBufferBindingTypeType.Storage),
       'vec3',
       particleCount,
     );

@@ -20,7 +20,7 @@ import ClippingContext from '@modules/renderer/engine/renderers/ClippingContext.
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 import {
-  BufferAttribute,
+  Attribute,
   Color,
   Entity,
   FramebufferTexture,
@@ -414,7 +414,7 @@ export class Renderer {
     return this.backend.getMaxAnisotropy();
   }
 
-  async getArrayBuffer(attribute: BufferAttribute) {
+  async getArrayBuffer(attribute: Attribute) {
     return await this.backend.getArrayBuffer(attribute);
   }
 

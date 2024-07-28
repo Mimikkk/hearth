@@ -1,5 +1,5 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
-import { BufferAttribute } from '@modules/renderer/engine/engine.js';
+import { Attribute } from '@modules/renderer/engine/engine.js';
 import {
   cameraProjectionMatrix,
   cameraViewMatrix,
@@ -88,7 +88,7 @@ async function init() {
 
   const createBuffer = (type = 'vec3') =>
     storage(
-      new BufferAttribute(
+      new Attribute(
         new Float32Array(maxParticleCount * 3),
         3,
         0,

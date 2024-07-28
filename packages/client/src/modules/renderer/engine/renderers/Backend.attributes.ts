@@ -1,11 +1,11 @@
-import { BufferAttribute } from '../engine.js';
+import { Attribute } from '../engine.js';
 import { Backend } from '@modules/renderer/engine/renderers/Backend.js';
 import RenderObject from '@modules/renderer/engine/renderers/RenderObject.js';
 
 export class BackendAttributes {
   constructor(public backend: Backend) {}
 
-  createAttribute(attribute: BufferAttribute, usage: GPUBufferUsageFlags): void {
+  createAttribute(attribute: Attribute, usage: GPUBufferUsageFlags): void {
     const bufferAttribute = attribute;
 
     const backend = this.backend;
@@ -44,7 +44,7 @@ export class BackendAttributes {
     }
   }
 
-  updateAttribute(attribute: BufferAttribute): void {
+  updateAttribute(attribute: Attribute): void {
     const bufferAttribute = attribute;
 
     const backend = this.backend;
@@ -56,12 +56,12 @@ export class BackendAttributes {
     device.queue.writeBuffer(buffer, 0, array, 0);
   }
 
-  createShaderVertexBuffers(renderObject: RenderObject): BufferAttribute[] {
+  createShaderVertexBuffers(renderObject: RenderObject): Attribute[] {
     const attributes = renderObject.getAttributes();
     const vertexBuffers = new Map();
 
     for (let slot = 0; slot < attributes.length; slot++) {
-      const geometryAttribute: BufferAttribute = attributes[slot];
+      const geometryAttribute: Attribute = attributes[slot];
       const bytesPerElement = geometryAttribute.array.BYTES_PER_ELEMENT;
       const bufferAttribute = geometryAttribute;
 
@@ -90,12 +90,12 @@ export class BackendAttributes {
     return Array.from(vertexBuffers.values());
   }
 
-  destroyAttribute(attribute: BufferAttribute): void {
+  destroyAttribute(attribute: Attribute): void {
     this.backend.memo.get(attribute).buffer.destroy();
     this.backend.memo.delete(attribute);
   }
 
-  async getArrayBuffer(attribute: BufferAttribute): Promise<ArrayBuffer> {
+  async getArrayBuffer(attribute: Attribute): Promise<ArrayBuffer> {
     const backend = this.backend;
     const device = backend.device;
 
@@ -133,7 +133,7 @@ export class BackendAttributes {
     return readBufferGPU.getMappedRange();
   }
 
-  _getVertexFormat(attribute: BufferAttribute): GPUVertexFormat {
+  _getVertexFormat(attribute: Attribute): GPUVertexFormat {
     const { span } = attribute;
     const ArrayType = attribute.array.constructor;
 

@@ -1,6 +1,6 @@
 import { LineSegments } from '../LineSegments.js';
 import { LineBasicMaterial } from '@modules/renderer/engine/objects/materials/LineBasicMaterial.js';
-import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
+import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
 import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
 import { Color } from '../../math/Color.js';
 
@@ -11,8 +11,8 @@ class AxesHelper extends LineSegments {
     const colors = [1, 0, 0, 1, 0.6, 0, 0, 1, 0, 0.6, 1, 0, 0, 0, 1, 0, 0.6, 1];
 
     const geometry = new Geometry();
-    geometry.setAttribute('position', new BufferAttribute(new Float32Array(vertices), 3));
-    geometry.setAttribute('color', new BufferAttribute(new Float32Array(colors), 3));
+    geometry.setAttribute('position', new Attribute(new Float32Array(vertices), 3));
+    geometry.setAttribute('color', new Attribute(new Float32Array(colors), 3));
 
     const material = new LineBasicMaterial({ vertexColors: true, toneMapped: false });
 

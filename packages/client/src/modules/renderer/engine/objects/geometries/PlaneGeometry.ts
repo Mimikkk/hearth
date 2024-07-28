@@ -1,5 +1,5 @@
 import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
-import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
+import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
 
 export class PlaneGeometry extends Geometry {
   declare parameters: {
@@ -66,9 +66,9 @@ export class PlaneGeometry extends Geometry {
     }
 
     this.setIndex(indices);
-    this.setAttribute('position', new BufferAttribute(new Float32Array(vertices), 3));
-    this.setAttribute('normal', new BufferAttribute(new Float32Array(normals), 3));
-    this.setAttribute('uv', new BufferAttribute(new Float32Array(uvs), 2));
+    this.setAttribute('position', new Attribute(new Float32Array(vertices), 3));
+    this.setAttribute('normal', new Attribute(new Float32Array(normals), 3));
+    this.setAttribute('uv', new Attribute(new Float32Array(uvs), 2));
   }
 
   copy(source: this): this {

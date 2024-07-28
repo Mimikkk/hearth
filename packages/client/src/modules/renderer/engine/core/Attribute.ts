@@ -8,7 +8,7 @@ import { Buffer } from './Buffer.js';
 import { Const } from '@modules/renderer/engine/math/types.js';
 import { GPUBufferBindingTypeType, BufferStep } from '@modules/renderer/engine/renderers/constants.js';
 
-export class BufferAttribute<T extends TypedArray = any> {
+export class Attribute<T extends TypedArray = any> {
   declare isBufferAttribute: true;
   source: Buffer<T>;
   name: string;
@@ -208,7 +208,7 @@ export class BufferAttribute<T extends TypedArray = any> {
     return this;
   }
 
-  copy(source: BufferAttribute<T>): this {
+  copy(source: Attribute<T>): this {
     this.source = source.source;
     this.usage = source.usage;
     this.name = source.name;
@@ -216,12 +216,12 @@ export class BufferAttribute<T extends TypedArray = any> {
     return this;
   }
 
-  clone(): BufferAttribute<T> {
-    return new BufferAttribute(this.array, this.stride).copy(this);
+  clone(): Attribute<T> {
+    return new Attribute(this.array, this.stride).copy(this);
   }
 }
 
-BufferAttribute.prototype.isBufferAttribute = true;
+Attribute.prototype.isBufferAttribute = true;
 
 const _Vec2 = Vec2.new();
 const _vec3 = Vec3.new();

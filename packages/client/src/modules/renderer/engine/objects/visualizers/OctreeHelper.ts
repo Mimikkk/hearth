@@ -1,4 +1,4 @@
-import { BufferAttribute, Geometry, LineBasicMaterial, LineSegments } from '../../engine.js';
+import { Attribute, Geometry, LineBasicMaterial, LineSegments } from '../../engine.js';
 import { Octree } from '@modules/renderer/engine/math/Octree.js';
 import { ColorRepresentation } from '@modules/renderer/engine/math/Color.js';
 
@@ -58,7 +58,7 @@ export class OctreeHelper extends LineSegments {
     traverse(this.octree.subTrees);
 
     this.geometry = new Geometry();
-    this.geometry.setAttribute('position', new BufferAttribute(new Float32Array(vertices), 3));
+    this.geometry.setAttribute('position', new Attribute(new Float32Array(vertices), 3));
   }
 }
 

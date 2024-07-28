@@ -1,7 +1,7 @@
 import InputNode from '../core/InputNode.js';
 import { varying } from '../core/VaryingNode.js';
 import { addNodeCommand, asNode } from '../shadernode/ShaderNodes.js';
-import { Buffer, BufferAttribute, BufferUse } from '@modules/renderer/engine/engine.js';
+import { Buffer, Attribute, BufferUse } from '@modules/renderer/engine/engine.js';
 import { ShaderStage, TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { BufferStep } from '@modules/renderer/engine/renderers/constants.js';
 import BufferNode from '@modules/renderer/engine/nodes/accessors/BufferNode.js';
@@ -48,7 +48,7 @@ export class BufferAttributeNode extends InputNode {
     const offset = this.bufferOffset;
 
     const buffer = array.isInterleavedBuffer === true ? array : new Buffer(array, stride);
-    const bufferAttribute = new BufferAttribute(buffer, itemSize, offset, BufferStep.Vertex, undefined, true);
+    const bufferAttribute = new Attribute(buffer, itemSize, offset, BufferStep.Vertex, undefined, true);
 
     this.attribute = bufferAttribute;
     this.attribute.step = BufferStep.Instance;

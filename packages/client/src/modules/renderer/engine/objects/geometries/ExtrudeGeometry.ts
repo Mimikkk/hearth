@@ -21,7 +21,7 @@
  */
 
 import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
-import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
+import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
 import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { Shape } from '@modules/renderer/engine/math/curves/Shape.js';
@@ -93,8 +93,8 @@ export class ExtrudeGeometry extends Geometry {
 
     // build geometry
 
-    this.setAttribute('position', new BufferAttribute(new Float32Array(verticesArray), 3));
-    this.setAttribute('uv', new BufferAttribute(new Float32Array(uvArray), 2));
+    this.setAttribute('position', new Attribute(new Float32Array(verticesArray), 3));
+    this.setAttribute('uv', new Attribute(new Float32Array(uvArray), 2));
 
     this.computeVertexNormals();
 

@@ -1,7 +1,7 @@
 import {
   Box3,
   Buffer,
-  BufferAttribute,
+  Attribute,
   EdgesGeometry,
   Geometry,
   LineSegments,
@@ -25,8 +25,8 @@ export class LineSegmentsGeometry extends Geometry {
     const index = [0, 2, 1, 2, 3, 1, 2, 4, 3, 4, 5, 3, 4, 6, 5, 6, 7, 5];
 
     this.setIndex(index);
-    this.setAttribute('position', new BufferAttribute(new Float32Array(positions), 3));
-    this.setAttribute('uv', new BufferAttribute(new Float32Array(uvs), 2));
+    this.setAttribute('position', new Attribute(new Float32Array(positions), 3));
+    this.setAttribute('uv', new Attribute(new Float32Array(uvs), 2));
   }
 
   applyMat4(matrix: Mat4): this {
@@ -55,8 +55,8 @@ export class LineSegmentsGeometry extends Geometry {
   setPositions(array: Float32Array): this {
     const instanceBuffer = new Buffer(array, 6);
 
-    this.setAttribute('instanceStart', new BufferAttribute(instanceBuffer, 3, 0, BufferStep.Instance));
-    this.setAttribute('instanceEnd', new BufferAttribute(instanceBuffer, 3, 3, BufferStep.Instance));
+    this.setAttribute('instanceStart', new Attribute(instanceBuffer, 3, 0, BufferStep.Instance));
+    this.setAttribute('instanceEnd', new Attribute(instanceBuffer, 3, 3, BufferStep.Instance));
     this.instanceCount = this.attributes.instanceStart.count;
 
     this.computeBoundingBox();
@@ -68,8 +68,8 @@ export class LineSegmentsGeometry extends Geometry {
   setColors(array: Float32Array): this {
     const instanceColorBuffer = new Buffer(array, 6);
 
-    this.setAttribute('instanceColorStart', new BufferAttribute(instanceColorBuffer, 3, 0, BufferStep.Instance));
-    this.setAttribute('instanceColorEnd', new BufferAttribute(instanceColorBuffer, 3, 3, BufferStep.Instance));
+    this.setAttribute('instanceColorStart', new Attribute(instanceColorBuffer, 3, 0, BufferStep.Instance));
+    this.setAttribute('instanceColorEnd', new Attribute(instanceColorBuffer, 3, 3, BufferStep.Instance));
 
     return this;
   }

@@ -1,5 +1,5 @@
 import {
-  BufferAttribute,
+  Attribute,
   Color,
   Geometry,
   Group,
@@ -540,19 +540,19 @@ export async function parseOBJ(text: string, materialCreator?: MTLMaterialCreato
 
       const buffergeometry = new Geometry();
 
-      buffergeometry.setAttribute('position', new BufferAttribute(new Float32Array(geometry.vertices), 3));
+      buffergeometry.setAttribute('position', new Attribute(new Float32Array(geometry.vertices), 3));
 
       if (geometry.normals.length > 0) {
-        buffergeometry.setAttribute('normal', new BufferAttribute(new Float32Array(geometry.normals), 3));
+        buffergeometry.setAttribute('normal', new Attribute(new Float32Array(geometry.normals), 3));
       }
 
       if (geometry.colors.length > 0) {
         hasVertexColors = true;
-        buffergeometry.setAttribute('color', new BufferAttribute(new Float32Array(geometry.colors), 3));
+        buffergeometry.setAttribute('color', new Attribute(new Float32Array(geometry.colors), 3));
       }
 
       if (geometry.hasUVIndices === true) {
-        buffergeometry.setAttribute('uv', new BufferAttribute(new Float32Array(geometry.uvs), 2));
+        buffergeometry.setAttribute('uv', new Attribute(new Float32Array(geometry.uvs), 2));
       }
 
       // Create materials
@@ -640,10 +640,10 @@ export async function parseOBJ(text: string, materialCreator?: MTLMaterialCreato
 
       const buffergeometry = new Geometry();
 
-      buffergeometry.setAttribute('position', new BufferAttribute(new Float32Array(state.vertices), 3));
+      buffergeometry.setAttribute('position', new Attribute(new Float32Array(state.vertices), 3));
 
       if (state.colors.length > 0 && state.colors[0] !== undefined) {
-        buffergeometry.setAttribute('color', new BufferAttribute(new Float32Array(state.colors), 3));
+        buffergeometry.setAttribute('color', new Attribute(new Float32Array(state.colors), 3));
         material.vertexColors = true;
       }
 

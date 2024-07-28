@@ -1,4 +1,4 @@
-import { BufferAttribute, Color, Entity, RenderTarget, Scene, Texture } from '../engine.js';
+import { Attribute, Color, Entity, RenderTarget, Scene, Texture } from '../engine.js';
 
 import {
   GPUFeature,
@@ -73,7 +73,7 @@ export class Backend {
     this.resolveBufferMap = new Map();
   }
 
-  async getArrayBuffer(attribute: BufferAttribute) {
+  async getArrayBuffer(attribute: Attribute) {
     return await this.attributes.getArrayBuffer(attribute);
   }
 
@@ -942,32 +942,32 @@ export class Backend {
     this.bindings.updateBinding(binding);
   }
 
-  createIndexAttribute(attribute: BufferAttribute) {
+  createIndexAttribute(attribute: Attribute) {
     this.attributes.createAttribute(
       attribute,
       GPUBufferUsage.INDEX | GPUBufferUsage.COPY_SRC | GPUBufferUsage.COPY_DST,
     );
   }
 
-  createAttribute(attribute: BufferAttribute) {
+  createAttribute(attribute: Attribute) {
     this.attributes.createAttribute(
       attribute,
       GPUBufferUsage.VERTEX | GPUBufferUsage.COPY_SRC | GPUBufferUsage.COPY_DST,
     );
   }
 
-  createStorageAttribute(attribute: BufferAttribute) {
+  createStorageAttribute(attribute: Attribute) {
     this.attributes.createAttribute(
       attribute,
       GPUBufferUsage.STORAGE | GPUBufferUsage.VERTEX | GPUBufferUsage.COPY_SRC | GPUBufferUsage.COPY_DST,
     );
   }
 
-  updateAttribute(attribute: BufferAttribute) {
+  updateAttribute(attribute: Attribute) {
     this.attributes.updateAttribute(attribute);
   }
 
-  destroyAttribute(attribute: BufferAttribute) {
+  destroyAttribute(attribute: Attribute) {
     this.attributes.destroyAttribute(attribute);
   }
 

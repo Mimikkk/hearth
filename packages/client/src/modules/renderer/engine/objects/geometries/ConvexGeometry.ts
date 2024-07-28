@@ -1,7 +1,7 @@
 import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { ConvexHull } from '@modules/renderer/engine/math/ConvexHull.js';
-import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
+import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
 
 export class ConvexGeometry extends Geometry {
   constructor(points: Vec3[] = []) {
@@ -36,7 +36,7 @@ export class ConvexGeometry extends Geometry {
 
     // build geometry
 
-    this.setAttribute('position', new BufferAttribute(new Float32Array(vertices), 3));
-    this.setAttribute('normal', new BufferAttribute(new Float32Array(normals), 3));
+    this.setAttribute('position', new Attribute(new Float32Array(vertices), 3));
+    this.setAttribute('normal', new Attribute(new Float32Array(normals), 3));
   }
 }

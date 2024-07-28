@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { Box3 } from './Box3.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
-import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
+import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
 import { Mesh } from '@modules/renderer/engine/objects/Mesh.js';
 import { BoxGeometry } from '@modules/renderer/engine/objects/geometries/BoxGeometry.js';
 import { SphereGeometry } from '@modules/renderer/engine/objects/geometries/SphereGeometry.js';
@@ -75,8 +75,8 @@ describe('Math - Box3', () => {
 
   it('fromAttribute', () => {
     const box = Box3.fromParams(0, 0, 0, 1, 1, 1);
-    const bigger = new BufferAttribute(new Float32Array([-2, -2, -2, 2, 2, 2, 1.5, 1.5, 1.5, 0, 0, 0]), 3);
-    const smaller = new BufferAttribute(new Float32Array([-0.5, -0.5, -0.5, 0.5, 0.5, 0.5, 0, 0, 0]), 3);
+    const bigger = new Attribute(new Float32Array([-2, -2, -2, 2, 2, 2, 1.5, 1.5, 1.5, 0, 0, 0]), 3);
+    const smaller = new Attribute(new Float32Array([-0.5, -0.5, -0.5, 0.5, 0.5, 0.5, 0, 0, 0]), 3);
 
     expect(box.fromAttribute(bigger)).toBe(box);
     expect(box).toEqual({ min: vec3(-2, -2, -2), max: vec3(2, 2, 2) });

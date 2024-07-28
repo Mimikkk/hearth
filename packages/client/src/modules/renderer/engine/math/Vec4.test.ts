@@ -4,7 +4,7 @@ import { Vec2 } from './Vec2.js';
 import { Mat4 } from './Mat4.js';
 import { Quaternion } from './Quaternion.js';
 import { Euler } from './Euler.js';
-import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
+import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
 
 const expectCloseTo = (a: Vec4, b: Vec4) => {
   expect(a.x).toBeCloseTo(b.x);
@@ -257,7 +257,7 @@ describe('Math - Vec4', () => {
 
   it('fromAttribute/intoAttribute', () => {
     const a = Vec4.new();
-    const attr = new BufferAttribute(new Float32Array([1, 2, 3, 4, 5, 6, 7, 8]), 4);
+    const attr = new Attribute(new Float32Array([1, 2, 3, 4, 5, 6, 7, 8]), 4);
 
     a.fromAttribute(attr, 0);
     expect(a).toEqual(Vec4.new(1, 2, 3, 4));

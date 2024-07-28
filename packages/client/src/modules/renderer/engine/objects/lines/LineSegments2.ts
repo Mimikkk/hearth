@@ -1,7 +1,7 @@
 import {
   Box3,
   Buffer,
-  BufferAttribute,
+  Attribute,
   Camera,
   Line3,
   LineSegments,
@@ -235,14 +235,8 @@ export class LineSegments2 extends Mesh {
 
     const instanceDistanceBuffer = new Buffer(lineDistances, 2);
 
-    geometry.setAttribute(
-      'instanceDistanceStart',
-      new BufferAttribute(instanceDistanceBuffer, 1, 0, BufferStep.Instance),
-    ); // d0
-    geometry.setAttribute(
-      'instanceDistanceEnd',
-      new BufferAttribute(instanceDistanceBuffer, 1, 1, BufferStep.Instance),
-    ); // d1
+    geometry.setAttribute('instanceDistanceStart', new Attribute(instanceDistanceBuffer, 1, 0, BufferStep.Instance)); // d0
+    geometry.setAttribute('instanceDistanceEnd', new Attribute(instanceDistanceBuffer, 1, 1, BufferStep.Instance)); // d1
 
     return this;
   }

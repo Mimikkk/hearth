@@ -9,7 +9,7 @@ import { Side } from '../constants.js';
 import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
 import { Material } from '@modules/renderer/engine/objects/materials/Material.js';
 import { Intersection, Raycaster } from '../core/Raycaster.js';
-import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
+import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
 
 export class Mesh extends Entity {
   declare isMesh: true;
@@ -156,9 +156,9 @@ export class Mesh extends Entity {
 
     const index = geometry.index;
     const position = geometry.attributes.position;
-    const uv = geometry.attributes.uv as BufferAttribute<Float32Array>;
-    const uv1 = geometry.attributes.uv1 as BufferAttribute<Float32Array>;
-    const normal = geometry.attributes.normal as BufferAttribute<Float32Array>;
+    const uv = geometry.attributes.uv as Attribute<Float32Array>;
+    const uv1 = geometry.attributes.uv1 as Attribute<Float32Array>;
+    const normal = geometry.attributes.normal as Attribute<Float32Array>;
     const groups = geometry.groups;
     const drawRange = geometry.drawRange;
 
@@ -337,9 +337,9 @@ function checkGeometryIntersection(
   material: Material,
   raycaster: Raycaster,
   ray: Ray,
-  uv: BufferAttribute<Float32Array>,
-  uv1: BufferAttribute<Float32Array>,
-  normal: BufferAttribute<Float32Array>,
+  uv: Attribute<Float32Array>,
+  uv1: Attribute<Float32Array>,
+  normal: Attribute<Float32Array>,
   a: number,
   b: number,
   c: number,

@@ -1,6 +1,6 @@
 import DataMap from './DataMap.js';
 import { AttributeLocation } from './constants.js';
-import { BufferAttribute, WireframeGeometry } from '@modules/renderer/engine/engine.js';
+import { Attribute, WireframeGeometry } from '@modules/renderer/engine/engine.js';
 import { Renderer } from '@modules/renderer/engine/renderers/Renderer.js';
 import RenderObject from '@modules/renderer/engine/renderers/RenderObject.js';
 
@@ -8,7 +8,7 @@ function getWireframeVersion(geometry: WireframeGeometry): number {
   return geometry.index !== null ? geometry.index.version : geometry.attributes.position.version;
 }
 
-function getWireframeIndex(geometry: WireframeGeometry): BufferAttribute<Uint32Array> {
+function getWireframeIndex(geometry: WireframeGeometry): Attribute<Uint32Array> {
   const indices = [];
 
   const geometryIndex = geometry.index;
@@ -36,7 +36,7 @@ function getWireframeIndex(geometry: WireframeGeometry): BufferAttribute<Uint32A
     }
   }
 
-  const attribute = new BufferAttribute(new Uint32Array(indices), 1);
+  const attribute = new Attribute(new Uint32Array(indices), 1);
   attribute.version = getWireframeVersion(geometry);
 
   return attribute;
@@ -88,7 +88,7 @@ export class Geometries extends DataMap<any, any> {
     }
   }
 
-  updateAttribute(attribute: BufferAttribute, type: AttributeLocation) {
+  updateAttribute(attribute: Attribute, type: AttributeLocation) {
     const callId = this.renderer.info.render.passes;
 
     if (this.attributeCall.get(attribute) !== callId) {

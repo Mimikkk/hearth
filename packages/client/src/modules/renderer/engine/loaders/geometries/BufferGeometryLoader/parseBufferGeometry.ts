@@ -1,6 +1,6 @@
 import { Sphere } from '../../../math/Sphere.js';
 import { Vec3 } from '../../../math/Vec3.js';
-import { BufferAttribute } from '../../../core/BufferAttribute.js';
+import { Attribute } from '../../../core/Attribute.js';
 import { Geometry } from '../../../core/Geometry.js';
 import { Buffer } from '../../../core/Buffer.js';
 import { createTypedArray } from '@modules/renderer/engine/math/MathUtils.js';
@@ -70,7 +70,7 @@ export const parseBufferGeometry = (json: JsonContent): Geometry => {
 
   if (index !== undefined) {
     const typedArray = createTypedArray(index.type, index.array) as Uint32Array;
-    geometry.index = new BufferAttribute(Buffer.new(typedArray, 1), 1);
+    geometry.index = new Attribute(Buffer.new(typedArray, 1), 1);
   }
 
   const attributes = json.data.attributes;
@@ -81,7 +81,7 @@ export const parseBufferGeometry = (json: JsonContent): Geometry => {
 
     if (attribute.isInterleavedBufferAttribute) {
       const interleavedBuffer = getInterleavedBuffer(json.data, attribute.array);
-      bufferAttribute = new BufferAttribute(
+      bufferAttribute = new Attribute(
         interleavedBuffer,
         attribute.stride,
         attribute.offset,
@@ -91,7 +91,7 @@ export const parseBufferGeometry = (json: JsonContent): Geometry => {
       );
     } else {
       const typedArray = createTypedArray(attribute.type, attribute.array);
-      bufferAttribute = new BufferAttribute(
+      bufferAttribute = new Attribute(
         typedArray,
         attribute.stride,
         0,
@@ -119,7 +119,7 @@ export const parseBufferGeometry = (json: JsonContent): Geometry => {
 
         if (attribute.isInterleavedBufferAttribute) {
           const interleavedBuffer = getInterleavedBuffer(json.data, attribute.data);
-          bufferAttribute = new BufferAttribute(
+          bufferAttribute = new Attribute(
             interleavedBuffer,
             attribute.stride,
             attribute.offset,
@@ -129,7 +129,7 @@ export const parseBufferGeometry = (json: JsonContent): Geometry => {
           );
         } else {
           const typedArray = createTypedArray(attribute.type, attribute.array);
-          bufferAttribute = new BufferAttribute(typedArray, attribute.stride);
+          bufferAttribute = new Attribute(typedArray, attribute.stride);
         }
 
         if (attribute.name !== undefined) bufferAttribute.name = attribute.name;

@@ -4,7 +4,7 @@ import { Mat4 } from '../math/Mat4.js';
 import { Entity } from '../core/Entity.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { LineBasicMaterial } from '@modules/renderer/engine/objects/materials/LineBasicMaterial.js';
-import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
+import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
 import { Material } from '@modules/renderer/engine/objects/materials/Material.js';
 import { Intersection, Raycaster } from '@modules/renderer/engine/core/Raycaster.js';
 import { LineSegments } from '@modules/renderer/engine/objects/LineSegments.js';
@@ -59,7 +59,7 @@ export class Line extends Entity {
         lineDistances[i] += _start.distanceTo(_end);
       }
 
-      geometry.setAttribute('lineDistance', new BufferAttribute(new Float32Array(lineDistances), 1));
+      geometry.setAttribute('lineDistance', new Attribute(new Float32Array(lineDistances), 1));
     } else {
       throw Error('engine.Line.computeLineDistances(): Computation only possible with non-indexed BufferGeometry.');
     }

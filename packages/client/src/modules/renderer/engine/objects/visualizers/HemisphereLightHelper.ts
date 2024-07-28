@@ -4,7 +4,7 @@ import { Entity } from '../../core/Entity.js';
 import { Mesh } from '../Mesh.js';
 import { MeshBasicMaterial } from '@modules/renderer/engine/objects/materials/MeshBasicMaterial.js';
 import { OctahedronGeometry } from '../geometries/OctahedronGeometry.js';
-import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
+import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
 import { HemisphereLight } from '@modules/renderer/engine/objects/lights/HemisphereLight.js';
 
 const _vector = Vec3.new();
@@ -34,7 +34,7 @@ export class HemisphereLightHelper extends Entity {
     const position = geometry.attributes.position;
     const colors = new Float32Array(position.count * 3);
 
-    geometry.setAttribute('color', new BufferAttribute(colors, 3));
+    geometry.setAttribute('color', new Attribute(colors, 3));
 
     this.add(new Mesh(geometry, this.material));
 

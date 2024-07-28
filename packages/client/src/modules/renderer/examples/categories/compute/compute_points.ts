@@ -1,5 +1,5 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
-import { BufferAttribute } from '@modules/renderer/engine/engine.js';
+import { Attribute } from '@modules/renderer/engine/engine.js';
 import {
   attribute,
   color,
@@ -40,14 +40,14 @@ async function init() {
 
   // create buffers
 
-  const particleBuffer = new BufferAttribute(
+  const particleBuffer = new Attribute(
     new Float32Array(particleNum * particleSize),
     particleSize,
     0,
     BufferStep.Instance,
     GPUBufferBindingTypeType.Storage,
   );
-  const velocityBuffer = new BufferAttribute(
+  const velocityBuffer = new Attribute(
     new Float32Array(particleNum * particleSize),
     particleSize,
     0,
@@ -106,7 +106,7 @@ async function init() {
   const particleNode = attribute('particle', 'vec2');
 
   const pointsGeometry = new Engine.Geometry();
-  pointsGeometry.setAttribute('position', new Engine.BufferAttribute(new Float32Array(3), 3)); // single vertex ( not triangle )
+  pointsGeometry.setAttribute('position', new Engine.Attribute(new Float32Array(3), 3)); // single vertex ( not triangle )
   pointsGeometry.setAttribute('particle', particleBuffer); // dummy the position points as instances
   pointsGeometry.drawRange.count = 1; // force render points as instances ( not triangle )
 

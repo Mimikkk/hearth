@@ -1,5 +1,5 @@
 import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
-import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
+import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 
 export class WireframeGeometry extends Geometry {
@@ -88,7 +88,7 @@ export class WireframeGeometry extends Geometry {
 
       // build geometry
 
-      this.setAttribute('position', new BufferAttribute(new Float32Array(vertices), 3));
+      this.setAttribute('position', new Attribute(new Float32Array(vertices), 3));
     }
   }
 

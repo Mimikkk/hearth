@@ -7,7 +7,7 @@ import type { Mat4 } from './Mat4.js';
 import { Mesh } from '@modules/renderer/engine/objects/Mesh.js';
 import { Const } from '@modules/renderer/engine/math/types.js';
 import { NumberArray } from '@modules/renderer/engine/math/MathUtils.js';
-import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
+import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
 
 export class Box3 {
   declare isBox3: true;
@@ -64,7 +64,7 @@ export class Box3 {
     return into.fromCoords(coords);
   }
 
-  static fromAttribute(attribute: BufferAttribute, into: Box3 = Box3.new()): Box3 {
+  static fromAttribute(attribute: Attribute, into: Box3 = Box3.new()): Box3 {
     return into.fromAttribute(attribute);
   }
 
@@ -110,7 +110,7 @@ export class Box3 {
     return this;
   }
 
-  fromAttribute(attribute: BufferAttribute): this {
+  fromAttribute(attribute: Attribute): this {
     this.clear();
 
     for (let i = 0, il = attribute.count; i < il; i++) {

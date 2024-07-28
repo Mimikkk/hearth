@@ -1,5 +1,5 @@
 import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
-import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
+import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
 import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
 import { Box3, Sphere, Vec3 } from '@modules/renderer/engine/engine.js';
 import { BufferStep } from '@modules/renderer/engine/renderers/constants.js';
@@ -16,8 +16,8 @@ export class InstancedPointsGeometry extends Geometry {
     const index = [0, 2, 1, 2, 3, 1];
 
     this.setIndex(index);
-    this.setAttribute('position', new BufferAttribute(new Float32Array(positions), 3));
-    this.setAttribute('uv', new BufferAttribute(new Float32Array(uvs), 2));
+    this.setAttribute('position', new Attribute(new Float32Array(positions), 3));
+    this.setAttribute('uv', new Attribute(new Float32Array(uvs), 2));
   }
 
   applyMat4(matrix: Mat4): this {
@@ -41,7 +41,7 @@ export class InstancedPointsGeometry extends Geometry {
   }
 
   setPositions(array: Float32Array | number[]): this {
-    this.setAttribute('instancePosition', new BufferAttribute(new Float32Array(array), 3, 0, BufferStep.Instance));
+    this.setAttribute('instancePosition', new Attribute(new Float32Array(array), 3, 0, BufferStep.Instance));
 
     this.computeBoundingBox();
     this.computeBoundingSphere();
@@ -51,7 +51,7 @@ export class InstancedPointsGeometry extends Geometry {
   }
 
   setColors(array: Float32Array | number[]): this {
-    this.setAttribute('instanceColor', new BufferAttribute(new Float32Array(array), 3, 0, BufferStep.Instance));
+    this.setAttribute('instanceColor', new Attribute(new Float32Array(array), 3, 0, BufferStep.Instance));
 
     return this;
   }

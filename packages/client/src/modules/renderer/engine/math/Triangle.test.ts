@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { Triangle } from './Triangle.js';
 import { Vec3 } from './Vec3.js';
-import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
+import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
 import { Plane } from './Plane.js';
 import { Box3 } from '@modules/renderer/engine/math/Box3.js';
 
@@ -44,7 +44,7 @@ describe('Math - Triangle', () => {
   });
 
   it('fromAttributeAndIndices', () => {
-    const attribute = new BufferAttribute(new Float32Array([1, 1, 1, -1, -1, -1, 2, 2, 2]), 3);
+    const attribute = new Attribute(new Float32Array([1, 1, 1, -1, -1, -1, 2, 2, 2]), 3);
 
     const triangle = Triangle.fromAttribute(attribute, 1, 0, 2);
 

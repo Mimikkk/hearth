@@ -3,7 +3,7 @@ import {
   Bone,
   Box3,
   Buffer,
-  BufferAttribute,
+  Attribute,
   Camera,
   Color,
   ColorManagement,
@@ -1291,7 +1291,7 @@ class GLTFMeshGpuInstancing implements Plugin {
         for (const attributeName in attributes) {
           if (attributeName === '_COLOR_0') {
             const attr = attributes[attributeName];
-            instancedMesh.instanceColor = new BufferAttribute(attr.array, attr.stride, 0, BufferStep.Instance);
+            instancedMesh.instanceColor = new Attribute(attr.array, attr.stride, 0, BufferStep.Instance);
           } else if (attributeName !== 'TRANSLATION' && attributeName !== 'ROTATION' && attributeName !== 'SCALE') {
             mesh.geometry.setAttribute(attributeName, attributes[attributeName]);
           }
@@ -2190,7 +2190,7 @@ class Parser {
   /**
    * Specification: https://github.com/KhronosGroup/glTF/blob/master/specification/2.0/README.md#accessors
    * @param {number} accessorIndex
-   * @return {Promise<BufferAttribute>}
+   * @return {Promise<Attribute>}
    */
   loadAccessor(accessorIndex) {
     const parser = this;
@@ -2203,7 +2203,7 @@ class Parser {
       const TypedArray = WEBGL_COMPONENT_TYPES[accessorDef.componentType];
 
       const array = new TypedArray(accessorDef.count * itemSize);
-      return Promise.resolve(new BufferAttribute(array, itemSize));
+      return Promise.resolve(new Attribute(array, itemSize));
     }
 
     const pendingBufferViews = [];
@@ -2258,7 +2258,7 @@ class Parser {
           parser.cache.add(ibCacheKey, ib);
         }
 
-        bufferAttribute = new BufferAttribute(
+        bufferAttribute = new Attribute(
           ib,
           itemSize,
           (byteOffset % byteStride) / elementBytes,
@@ -2273,7 +2273,7 @@ class Parser {
           array = new TypedArray(bufferView, byteOffset, accessorDef.count * itemSize);
         }
 
-        bufferAttribute = new BufferAttribute(array, itemSize);
+        bufferAttribute = new Attribute(array, itemSize);
       }
 
       // https://github.com/KhronosGroup/glTF/blob/master/specification/2.0/README.md#sparse-accessors
@@ -2293,7 +2293,7 @@ class Parser {
 
         if (bufferView !== null) {
           // Avoid modifying the original ArrayBuffer, if the bufferView wasn't initialized with zeroes.
-          bufferAttribute = new BufferAttribute(bufferAttribute.array.slice(), bufferAttribute.stride);
+          bufferAttribute = new Attribute(bufferAttribute.array.slice(), bufferAttribute.stride);
         }
 
         for (let i = 0, il = sparseIndices.length; i < il; i++) {

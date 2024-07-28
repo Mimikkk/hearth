@@ -1,12 +1,12 @@
 import NodeBuffer from '../../renderers/NodeBuffer.js';
-import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
+import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
 import { TypedArray } from '@modules/renderer/engine/math/MathUtils.js';
 
 class StorageBuffer<T extends TypedArray> extends NodeBuffer {
   declare isStorageBuffer: boolean;
-  attribute: BufferAttribute<T>;
+  attribute: Attribute<T>;
 
-  constructor(name: string, attribute: BufferAttribute<T>) {
+  constructor(name: string, attribute: Attribute<T>) {
     super(name, attribute ? attribute.array : null);
 
     this.attribute = attribute;

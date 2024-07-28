@@ -1,4 +1,4 @@
-import { BufferAttribute, Geometry, Line, LineBasicMaterial, PositionalAudio } from '../../engine.js';
+import { Attribute, Geometry, Line, LineBasicMaterial, PositionalAudio } from '../../engine.js';
 import { degreeToRadian } from '../../math/MathUtils.js';
 
 export class PositionalAudioHelper extends Line {
@@ -17,7 +17,7 @@ export class PositionalAudioHelper extends Line {
     const geometry = new Geometry();
     const divisions = divisionsInnerAngle + divisionsOuterAngle * 2;
     const positions = new Float32Array((divisions * 3 + 3) * 3);
-    geometry.setAttribute('position', new BufferAttribute(positions, 3));
+    geometry.setAttribute('position', new Attribute(positions, 3));
 
     const materialInnerAngle = new LineBasicMaterial({ color: 0x00ff00 });
     const materialOuterAngle = new LineBasicMaterial({ color: 0xffff00 });

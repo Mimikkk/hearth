@@ -11,7 +11,7 @@ import { attribute } from '../nodes/core/AttributeNode.js';
 import {
   Blending,
   BoxGeometry,
-  BufferAttribute,
+  Attribute,
   Color,
   ColorSpace,
   Filter,
@@ -501,9 +501,9 @@ function _createPlanes(lodMax) {
     }
 
     const planes = new Geometry();
-    planes.setAttribute('position', new BufferAttribute(position, positionSize));
-    planes.setAttribute('uv', new BufferAttribute(uv, uvSize));
-    planes.setAttribute('faceIndex', new BufferAttribute(faceIndex, faceIndexSize));
+    planes.setAttribute('position', new Attribute(position, positionSize));
+    planes.setAttribute('uv', new Attribute(uv, uvSize));
+    planes.setAttribute('faceIndex', new Attribute(faceIndex, faceIndexSize));
     lodPlanes.push(planes);
 
     if (lod > LOD_MIN) {

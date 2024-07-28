@@ -63,7 +63,7 @@ export { AnimationAction } from './animation/AnimationAction.js';
 export { RenderTarget } from './renderers/RenderTarget.js';
 export { Geometry } from './core/Geometry.js';
 export { Buffer } from './core/Buffer.js';
-export * from './core/BufferAttribute.js';
+export * from './core/Attribute.js';
 export { Entity } from './core/Entity.js';
 export { Raycaster } from './core/Raycaster.js';
 export { RaycastLayers } from './core/RaycastLayers.js';

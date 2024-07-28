@@ -1,6 +1,6 @@
 import {
   BoxGeometry,
-  BufferAttribute,
+  Attribute,
   Camera,
   CylinderGeometry,
   Entity,
@@ -772,7 +772,7 @@ export class TransformControlsGizmo extends Entity {
     scaleHandleGeometry.translate(0, 0.04, 0);
 
     const lineGeometry = new Geometry();
-    lineGeometry.setAttribute('position', new BufferAttribute(new Float32Array([0, 0, 0, 1, 0, 0]), 3));
+    lineGeometry.setAttribute('position', new Attribute(new Float32Array([0, 0, 0, 1, 0, 0]), 3));
 
     const lineGeometry2 = new CylinderGeometry(0.0075, 0.0075, 0.5, 3);
     lineGeometry2.translate(0, 0.25, 0);
@@ -789,7 +789,7 @@ export class TransformControlsGizmo extends Entity {
     function TranslateHelperGeometry() {
       const geometry = new Geometry();
 
-      geometry.setAttribute('position', new BufferAttribute(new Float32Array([0, 0, 0, 1, 1, 1]), 3));
+      geometry.setAttribute('position', new Attribute(new Float32Array([0, 0, 0, 1, 1, 1]), 3));
 
       return geometry;
     }

@@ -1,5 +1,5 @@
 import { TypedArray } from '@modules/renderer/engine/math/MathUtils.js';
-import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
+import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
 
 export enum ShaderStage {
   Vertex = 'vertex',
@@ -321,7 +321,7 @@ export namespace TypeName {
     }
   };
 
-  export const ofAttribute = ({ span, array }: BufferAttribute): TypeName => ofSize(span, ofArray(array));
+  export const ofAttribute = ({ span, array }: Attribute): TypeName => ofSize(span, ofArray(array));
 
   export const vecAsMat = (type: TypeName): TypeName => type.replace('vec', 'mat') as TypeName;
 

@@ -3,7 +3,7 @@ import { Vec3 } from './Vec3.js';
 import { Vec2 } from './Vec2.js';
 import type { Mesh } from '../objects/Mesh.js';
 import type { Material } from '@modules/renderer/engine/objects/materials/Material.js';
-import type { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
+import type { Attribute } from '@modules/renderer/engine/core/Attribute.js';
 import type { Color } from './Color.js';
 import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
 
@@ -16,23 +16,23 @@ const _uvc = Vec2.new();
 export class MeshSurfaceSampler<TGeometry extends Geometry, TMaterial extends Material | Material[]> {
   geometry: Geometry;
   randomFunction: () => number;
-  indexAttribute: BufferAttribute<Uint32Array | Uint16Array>;
-  positionAttribute: BufferAttribute<Float32Array>;
-  normalAttribute: BufferAttribute<Float32Array>;
-  colorAttribute: BufferAttribute<Float32Array>;
-  uvAttribute: BufferAttribute<Float32Array>;
-  weightAttribute: BufferAttribute<Float32Array>;
+  indexAttribute: Attribute<Uint32Array | Uint16Array>;
+  positionAttribute: Attribute<Float32Array>;
+  normalAttribute: Attribute<Float32Array>;
+  colorAttribute: Attribute<Float32Array>;
+  uvAttribute: Attribute<Float32Array>;
+  weightAttribute: Attribute<Float32Array>;
   distribution: Float32Array;
 
   constructor(mesh: Mesh) {
     this.geometry = mesh.geometry as never;
     this.randomFunction = Math.random;
 
-    this.indexAttribute = this.geometry.index! as never as BufferAttribute<Uint32Array | Uint16Array>;
-    this.positionAttribute = this.geometry.attributes.position! as never as BufferAttribute<Float32Array>;
-    this.normalAttribute = this.geometry.attributes.normal! as never as BufferAttribute<Float32Array>;
-    this.colorAttribute = this.geometry.attributes.color! as never as BufferAttribute<Float32Array>;
-    this.uvAttribute = this.geometry.attributes.uv! as never as BufferAttribute<Float32Array>;
+    this.indexAttribute = this.geometry.index! as never as Attribute<Uint32Array | Uint16Array>;
+    this.positionAttribute = this.geometry.attributes.position! as never as Attribute<Float32Array>;
+    this.normalAttribute = this.geometry.attributes.normal! as never as Attribute<Float32Array>;
+    this.colorAttribute = this.geometry.attributes.color! as never as Attribute<Float32Array>;
+    this.uvAttribute = this.geometry.attributes.uv! as never as Attribute<Float32Array>;
 
     this.weightAttribute = null!;
     this.distribution = null!;

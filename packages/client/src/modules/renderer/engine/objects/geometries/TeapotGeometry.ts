@@ -2,7 +2,7 @@ import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
 import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { Vec4 } from '@modules/renderer/engine/math/Vec4.js';
-import { BufferAttribute } from '@modules/renderer/engine/core/BufferAttribute.js';
+import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
 
 export class TeapotGeometry extends Geometry {
   constructor(
@@ -344,10 +344,10 @@ export class TeapotGeometry extends Geometry {
       }
     }
 
-    this.setIndex(new BufferAttribute(indices, 1));
-    this.setAttribute('position', new BufferAttribute(vertices, 3));
-    this.setAttribute('normal', new BufferAttribute(normals, 3));
-    this.setAttribute('uv', new BufferAttribute(uvs, 2));
+    this.setIndex(new Attribute(indices, 1));
+    this.setAttribute('position', new Attribute(vertices, 3));
+    this.setAttribute('normal', new Attribute(normals, 3));
+    this.setAttribute('uv', new Attribute(uvs, 2));
 
     this.computeBoundingSphere();
   }
