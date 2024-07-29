@@ -38,7 +38,6 @@ export class Backend {
   memo: WeakMemo<any, any> = new WeakMemo(() => ({}));
   adapter: GPUAdapter = null!;
   device: GPUDevice = null!;
-  colorBuffer: GPUTexture | null = null;
   renderPassDescriptor: GPURenderPassDescriptor | null = null;
   resolveBufferMap: Map<number, GPUBuffer> = new Map();
 
@@ -72,7 +71,7 @@ export class Backend {
       const colorAttachment = descriptor.colorAttachments[0];
 
       if (antialias === true) {
-        colorAttachment.view = this.colorBuffer.createView();
+        colorAttachment.view = this.hearth.colorBuffer.createView();
       } else {
         colorAttachment.resolveTarget = undefined;
       }
@@ -891,7 +890,7 @@ export class Backend {
   }
 
   updateSize() {
-    this.colorBuffer = this.hearth.textures.getColorBuffer();
+    this.hearth.colorBuffer = this.hearth.textures.getColorBuffer();
     this.renderPassDescriptor = null;
   }
 

@@ -42,6 +42,7 @@ import { HearthPostprocess } from '@modules/renderer/engine/hearth/Hearth.Postpr
 import { Node } from '@modules/renderer/engine/nodes/core/Node.js';
 import { HearthResources } from '@modules/renderer/engine/hearth/Hearth.Resources.js';
 import { HearthUtilities } from '@modules/renderer/engine/hearth/Hearth.Utilities.js';
+import { WeakMemo } from '@modules/renderer/engine/hearth/memo/WeakMemo.js';
 
 export class Hearth {
   backend: Backend;
@@ -78,6 +79,11 @@ export class Hearth {
   // utilities: BackendUtilities;
   // resolveBufferMap: Map<number, GPUBuffer>;
   // resources: BackendResources;
+
+  memo: WeakMemo<any, any> = new WeakMemo(() => ({}));
+  device: GPUDevice;
+  adapter: GPUAdapter;
+  colorBuffer: GPUTexture;
 
   context: RenderContext | null;
   target: RenderTarget | null;
@@ -184,9 +190,11 @@ export class Hearth {
       requiredLimits: hearth.parameters.requiredLimits,
     });
 
+    hearth.device = device;
+    hearth.adapter = adapter;
     backend.device = device;
     backend.adapter = adapter;
-    backend.colorBuffer = backend.hearth.textures.getColorBuffer();
+    hearth.colorBuffer = backend.hearth.textures.getColorBuffer();
 
     hearth.parameters.context.configure({
       device,
