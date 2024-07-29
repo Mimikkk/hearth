@@ -19,9 +19,6 @@ import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.
 import { WeakMemo } from '@modules/renderer/engine/hearth/memo/WeakMemo.js';
 
 export class Backend {
-  hearth: Hearth;
-  memo: WeakMemo<any, any> = new WeakMemo(() => ({}));
-
   getInstanceCount({ object, geometry }: RenderObject) {
     return Math.max(geometry.instanceCount, object.count, 1);
   }
@@ -38,6 +35,7 @@ export class Backend {
     return color;
   }
 
+  memo: WeakMemo<any, any> = new WeakMemo(() => ({}));
   adapter: GPUAdapter = null!;
   device: GPUDevice = null!;
   colorBuffer: GPUTexture | null = null;
