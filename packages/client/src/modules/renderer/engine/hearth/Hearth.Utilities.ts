@@ -17,7 +17,7 @@ export class HearthUtilities {
   }
 
   getTextureFormatGPU(texture: Texture) {
-    return this.hearth.backend.memo.get(texture).texture.format;
+    return this.hearth.memo.get(texture).texture.format;
   }
 
   getCurrentColorFormat(renderContext: RenderContext) {

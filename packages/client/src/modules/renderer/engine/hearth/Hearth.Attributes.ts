@@ -45,7 +45,7 @@ export class HearthAttributes extends DataMap<Attribute, any> {
   }
 
   async read(attribute: Attribute): Promise<ArrayBuffer> {
-    const { memo, device } = this.hearth.backend;
+    const { memo, device } = this.hearth;
 
     const data = memo.get(attribute);
 
@@ -78,12 +78,11 @@ export class HearthAttributes extends DataMap<Attribute, any> {
   }
 
   create(attribute: Attribute, usage: GPUBufferUsageFlags): void {
-    const backend = this.hearth.backend;
+    const { memo, device } = this.hearth;
 
-    const memo = backend.memo.get(attribute);
-    if (memo.buffer) return;
+    const data = memo.get(attribute);
+    if (data.buffer) return;
 
-    const device = backend.device;
     let array = attribute.array;
     if (attribute.storage && attribute.stride === 3) {
       attribute.stride = 4;
@@ -98,19 +97,19 @@ export class HearthAttributes extends DataMap<Attribute, any> {
     new array.constructor(buffer.getMappedRange()).set(array);
     buffer.unmap();
 
-    memo.buffer = buffer;
+    data.buffer = buffer;
   }
 
   updateAttr(attribute: Attribute): void {
-    const { device, memo } = this.hearth.backend;
+    const { device, memo } = this.hearth;
     const { buffer } = memo.get(attribute);
 
     device.queue.writeBuffer(buffer, 0, attribute.array, 0);
   }
 
   deleteAttr(attribute: Attribute): void {
-    this.hearth.backend.memo.get(attribute).buffer.destroy();
-    this.hearth.backend.memo.delete(attribute);
+    this.hearth.memo.get(attribute).buffer.destroy();
+    this.hearth.memo.delete(attribute);
   }
 
   layouts(object: RenderObject): GPUVertexBufferLayout[] {

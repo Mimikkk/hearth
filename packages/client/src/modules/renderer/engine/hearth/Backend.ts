@@ -35,7 +35,6 @@ export class Backend {
     return color;
   }
 
-  memo: WeakMemo<any, any> = new WeakMemo(() => ({}));
   adapter: GPUAdapter = null!;
   device: GPUDevice = null!;
   renderPassDescriptor: GPURenderPassDescriptor | null = null;
@@ -92,7 +91,7 @@ export class Backend {
 
   _getRenderPassDescriptor(renderContext: RenderContext) {
     const renderTarget = renderContext.renderTarget;
-    const renderTargetData = this.memo.get(renderTarget);
+    const renderTargetData = this.hearth.memo.get(renderTarget);
 
     let descriptors = renderTargetData.descriptors;
 
@@ -118,7 +117,7 @@ export class Backend {
       const colorAttachments = [];
 
       for (let i = 0; i < textures.length; i++) {
-        const textureData = this.memo.get(textures[i]);
+        const textureData = this.hearth.memo.get(textures[i]);
 
         const textureView = textureData.texture.createView({
           baseMipLevel: renderContext.activeMipmapLevel,
@@ -145,7 +144,7 @@ export class Backend {
         });
       }
 
-      const depthTextureData = this.memo.get(renderContext.depthTexture);
+      const depthTextureData = this.hearth.memo.get(renderContext.depthTexture);
 
       const depthStencilAttachment = {
         view: depthTextureData.texture.createView(),
@@ -168,7 +167,7 @@ export class Backend {
   }
 
   beginRender(renderContext: RenderContext) {
-    const renderContextData = this.memo.get(renderContext);
+    const renderContextData = this.hearth.memo.get(renderContext);
 
     const device = this.device;
     const occlusionQueryCount = renderContext.occlusionQueryCount;
@@ -276,7 +275,7 @@ export class Backend {
   }
 
   finishRender(renderContext: RenderContext) {
-    const renderContextData = this.memo.get(renderContext);
+    const renderContextData = this.hearth.memo.get(renderContext);
     const occlusionQueryCount = renderContext.occlusionQueryCount;
 
     if (occlusionQueryCount > renderContextData.occlusionQueryIndex) {
@@ -336,13 +335,13 @@ export class Backend {
   }
 
   isOccluded(renderContext: RenderContext, object: Entity) {
-    const renderContextData = this.memo.get(renderContext);
+    const renderContextData = this.hearth.memo.get(renderContext);
 
     return renderContextData.occluded && renderContextData.occluded.has(object);
   }
 
   async resolveOccludedAsync(renderContext: RenderContext) {
-    const renderContextData = this.memo.get(renderContext);
+    const renderContextData = this.hearth.memo.get(renderContext);
 
     const { currentOcclusionQueryBuffer, currentOcclusionQueryObjects } = renderContextData;
 
@@ -370,7 +369,7 @@ export class Backend {
   }
 
   updateViewport(renderContext: RenderContext) {
-    const { currentPass } = this.memo.get(renderContext);
+    const { currentPass } = this.hearth.memo.get(renderContext);
     const { x, y, width, height, minDepth, maxDepth } = renderContext.viewportValue;
 
     currentPass.setViewport(x, renderContext.height - height - y, width, height, minDepth, maxDepth);
@@ -419,7 +418,7 @@ export class Backend {
 
       if (color) {
         for (const texture of renderTargetData.textures) {
-          const textureData = this.memo.get(texture);
+          const textureData = this.hearth.memo.get(texture);
           const textureView = textureData.texture.createView();
 
           let view, resolveTarget;
@@ -443,7 +442,7 @@ export class Backend {
       }
 
       if (supportsDepth || supportsStencil) {
-        const depthTextureData = this.memo.get(renderTargetData.depthTexture);
+        const depthTextureData = this.hearth.memo.get(renderTargetData.depthTexture);
 
         depthStencilAttachment = {
           view: depthTextureData.texture.createView(),
@@ -485,7 +484,7 @@ export class Backend {
   }
 
   beginCompute(computeGroup: ComputeNode) {
-    const groupGPU = this.memo.get(computeGroup);
+    const groupGPU = this.hearth.memo.get(computeGroup);
 
     const descriptor = {};
 
@@ -497,19 +496,19 @@ export class Backend {
   }
 
   compute(computeGroup: ComputeNode, computeNode: ComputeNode, bindings: Binding[], pipeline: ComputePipeline) {
-    const { passEncoderGPU } = this.memo.get(computeGroup);
+    const { passEncoderGPU } = this.hearth.memo.get(computeGroup);
 
-    const pipelineGPU = this.memo.get(pipeline).pipeline;
+    const pipelineGPU = this.hearth.memo.get(pipeline).pipeline;
     passEncoderGPU.setPipeline(pipelineGPU);
 
-    const bindGroupGPU = this.memo.get(bindings).group;
+    const bindGroupGPU = this.hearth.memo.get(bindings).group;
     passEncoderGPU.setBindGroup(0, bindGroupGPU);
 
     passEncoderGPU.dispatchWorkgroups(computeNode.dispatchCount);
   }
 
   finishCompute(computeGroup: ComputeNode) {
-    const groupData = this.memo.get(computeGroup);
+    const groupData = this.hearth.memo.get(computeGroup);
 
     groupData.passEncoderGPU.end();
 
@@ -522,9 +521,9 @@ export class Backend {
     const info = this.hearth.info;
     const { object, geometry, context, pipeline } = renderObject;
 
-    const bindingsData = this.memo.get(renderObject.getBindings());
-    const contextData = this.memo.get(context);
-    const pipelineGPU = this.memo.get(pipeline).pipeline;
+    const bindingsData = this.hearth.memo.get(renderObject.getBindings());
+    const contextData = this.hearth.memo.get(context);
+    const pipelineGPU = this.hearth.memo.get(pipeline).pipeline;
     const currentSets = contextData.currentSets;
 
     const passEncoderGPU = contextData.currentPass;
@@ -544,7 +543,7 @@ export class Backend {
 
     if (hasIndex === true) {
       if (currentSets.index !== index) {
-        const buffer = this.memo.get(index).buffer;
+        const buffer = this.hearth.memo.get(index).buffer;
         const indexFormat = index.array instanceof Uint16Array ? GPUIndexFormatType.Uint16 : GPUIndexFormatType.Uint32;
 
         passEncoderGPU.setIndexBuffer(buffer, indexFormat);
@@ -559,7 +558,7 @@ export class Backend {
       const vertexBuffer = vertexBuffers[i];
 
       if (currentSets.attributes[i] !== vertexBuffer) {
-        const buffer = this.memo.get(vertexBuffer).buffer;
+        const buffer = this.hearth.memo.get(vertexBuffer).buffer;
         passEncoderGPU.setVertexBuffer(i, buffer);
 
         currentSets.attributes[i] = vertexBuffer;
@@ -607,7 +606,7 @@ export class Backend {
   }
 
   needsRenderUpdate(renderObject: RenderObject) {
-    const data = this.memo.get(renderObject);
+    const data = this.hearth.memo.get(renderObject);
 
     const { object, material } = renderObject;
 
@@ -762,7 +761,7 @@ export class Backend {
   initTimestampBuffer(context: RenderContext, descriptor: GPURenderPassDescriptor): void {
     if (!this.hasFeature(GPUFeature.TimestampQuery) || !this.hearth.parameters.useTimestamp) return;
 
-    const data = this.memo.get(context);
+    const data = this.hearth.memo.get(context);
     if (data.timeStampQuerySet) return;
 
     const timeStampQuerySet = this.device.createQuerySet({ type: 'timestamp', count: 2 });
@@ -780,7 +779,7 @@ export class Backend {
   prepareTimestamp(context: RenderContext, encoder: GPUCommandEncoder) {
     if (!this.hasFeature(GPUFeature.TimestampQuery) || !this.hearth.parameters.useTimestamp) return;
 
-    const data = this.memo.get(context);
+    const data = this.hearth.memo.get(context);
 
     const size = 2 * BigInt64Array.BYTES_PER_ELEMENT;
 
@@ -811,7 +810,7 @@ export class Backend {
   async resolveTimestamp(context: RenderContext, type: 'render' | 'compute') {
     if (!this.hasFeature(GPUFeature.TimestampQuery) || !this.hearth.parameters.useTimestamp) return;
 
-    const data = this.memo.get(context);
+    const data = this.hearth.memo.get(context);
 
     if (data.currentTimestampQueryBuffers === undefined) return;
 
@@ -834,7 +833,7 @@ export class Backend {
   }
 
   createProgram(program: ProgrammableStage) {
-    const programGPU = this.memo.get(program);
+    const programGPU = this.hearth.memo.get(program);
 
     programGPU.module = {
       module: this.device.createShaderModule({ code: program.code, label: program.stage }),
@@ -843,7 +842,7 @@ export class Backend {
   }
 
   destroyProgram(program: ProgrammableStage) {
-    this.memo.delete(program);
+    this.hearth.memo.delete(program);
   }
 
   createRenderPipeline(renderObject: RenderObject) {
@@ -909,12 +908,12 @@ export class Backend {
 
     encoder.copyTextureToTexture(
       {
-        texture: this.memo.get(patch).texture,
+        texture: this.hearth.memo.get(patch).texture,
         mipLevel: at.level ?? 0,
         origin: { x: 0, y: 0, z: 0 },
       },
       {
-        texture: this.memo.get(texture).texture,
+        texture: this.hearth.memo.get(texture).texture,
         mipLevel: at.level ?? 0,
         origin: at,
       },
@@ -926,7 +925,7 @@ export class Backend {
 
   readFramebuffer(into: Texture): void {
     const context = this.hearth.context!;
-    const data = this.memo.get(context);
+    const data = this.hearth.memo.get(context);
 
     const { encoder, descriptor } = data;
 
@@ -934,9 +933,9 @@ export class Backend {
 
     if (context.renderTarget) {
       if (into.isDepthTexture) {
-        sourceGPU = this.memo.get(context.depthTexture).texture;
+        sourceGPU = this.hearth.memo.get(context.depthTexture).texture;
       } else {
-        sourceGPU = this.memo.get(context.textures[0]).texture;
+        sourceGPU = this.hearth.memo.get(context.textures[0]).texture;
       }
     } else {
       if (into.isDepthTexture) {
@@ -946,7 +945,7 @@ export class Backend {
       }
     }
 
-    const destinationGPU = this.memo.get(into).texture;
+    const destinationGPU = this.hearth.memo.get(into).texture;
 
     if (sourceGPU.format !== destinationGPU.format) {
       console.error(

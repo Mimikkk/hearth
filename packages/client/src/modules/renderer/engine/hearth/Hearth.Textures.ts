@@ -265,10 +265,9 @@ export class HearthTextures extends DataMap<any, any> {
   depthTexture: DepthTexture;
 
   createSampler(texture: Texture) {
-    const backend = this.hearth.backend;
-    const device = backend.device;
+    const { device, memo } = this.hearth;
 
-    const textureGPU = backend.memo.get(texture);
+    const textureGPU = memo.get(texture);
 
     const samplerDescriptorGPU: GPUSamplerDescriptor = {
       addressModeU: this._convertAddressMode(texture.wrapS),
@@ -296,7 +295,7 @@ export class HearthTextures extends DataMap<any, any> {
       textureGPU = this._getDefaultTextureGPU();
     }
 
-    this.hearth.backend.memo.get(texture).texture = textureGPU;
+    this.hearth.memo.get(texture).texture = textureGPU;
   }
 
   createTexture(
@@ -310,8 +309,8 @@ export class HearthTextures extends DataMap<any, any> {
       height: number;
     },
   ) {
-    const backend = this.hearth.backend;
-    const textureData = backend.memo.get(texture);
+    const { memo, device } = this.hearth;
+    const textureData = memo.get(texture);
 
     if (textureData.initialized) {
       throw new Error('WebGPUTextureUtils: Texture already initialized.');
@@ -324,7 +323,7 @@ export class HearthTextures extends DataMap<any, any> {
     const { width, height, depth, levels } = options;
 
     const dimension = this._getDimension(texture);
-    const format = (texture.internalFormat || getFormat(texture, backend.device)) as GPUTextureFormat;
+    const format = (texture.internalFormat || getFormat(texture, device)) as GPUTextureFormat;
 
     let sampleCount = options.sampleCount !== undefined ? options.sampleCount : 1;
 
@@ -379,7 +378,7 @@ export class HearthTextures extends DataMap<any, any> {
         return this.createDefaultTexture(texture);
       }
 
-      textureData.texture = backend.device.createTexture(textureDescriptorGPU);
+      textureData.texture = device.createTexture(textureDescriptorGPU);
     }
 
     if (isRenderTargetTexture(texture) && sampleCount > 1) {
@@ -389,7 +388,7 @@ export class HearthTextures extends DataMap<any, any> {
         sampleCount: sampleCount,
       };
 
-      textureData.msaaTexture = backend.device.createTexture(msaaTextureDescriptorGPU);
+      textureData.msaaTexture = device.createTexture(msaaTextureDescriptorGPU);
     }
 
     textureData.initialized = true;
@@ -398,25 +397,24 @@ export class HearthTextures extends DataMap<any, any> {
   }
 
   destroyTexture(texture: Texture) {
-    const backend = this.hearth.backend;
-    const textureData = backend.memo.get(texture);
+    const { memo } = this.hearth;
+    const textureData = memo.get(texture);
 
     textureData.texture.destroy();
 
     if (textureData.msaaTexture !== undefined) textureData.msaaTexture.destroy();
 
-    backend.memo.delete(texture);
+    memo.delete(texture);
   }
 
   destroySampler(texture: Texture) {
-    const backend = this.hearth.backend;
-    const textureData = backend.memo.get(texture);
+    const textureData = this.hearth.memo.get(texture);
 
     delete textureData.sampler;
   }
 
   generateMipmaps(texture: Texture) {
-    const textureData = this.hearth.backend.memo.get(texture);
+    const textureData = this.hearth.memo.get(texture);
 
     if (isCubeTexture(texture)) {
       for (let i = 0; i < 6; i++) {
@@ -443,11 +441,11 @@ export class HearthTextures extends DataMap<any, any> {
   }
 
   getDepthBuffer(depth: boolean = true, stencil: boolean = false) {
-    const backend = this.hearth.backend;
-    const { width, height } = backend.hearth.getDrawSize();
+    const { memo } = this.hearth;
+    const { width, height } = this.hearth.getDrawSize();
 
     const depthTexture = this.depthTexture;
-    const depthTextureGPU = backend.memo.get(depthTexture).texture;
+    const depthTextureGPU = memo.get(depthTexture).texture;
 
     let format!: TextureFormat;
     let type!: TextureDataType;
@@ -479,9 +477,9 @@ export class HearthTextures extends DataMap<any, any> {
     depthTexture.image.width = width;
     depthTexture.image.height = height;
 
-    this.createTexture(depthTexture, { sampleCount: backend.hearth.parameters.sampleCount, width, height });
+    this.createTexture(depthTexture, { sampleCount: this.hearth.parameters.sampleCount, width, height });
 
-    return backend.memo.get(depthTexture).texture;
+    return memo.get(depthTexture).texture;
   }
 
   updateTextureTex(
@@ -493,7 +491,7 @@ export class HearthTextures extends DataMap<any, any> {
         }
       | any,
   ) {
-    const textureData = this.hearth.backend.memo.get(texture);
+    const textureData = this.hearth.memo.get(texture);
 
     const { textureDescriptorGPU } = textureData;
 
@@ -525,7 +523,7 @@ export class HearthTextures extends DataMap<any, any> {
   async copyTextureToBuffer(texture: Texture, x: number, y: number, width: number, height: number) {
     const device = this.hearth.backend.device;
 
-    const textureData = this.hearth.backend.memo.get(texture);
+    const textureData = this.hearth.memo.get(texture);
     const textureGPU = textureData.texture;
     const format = textureData.textureDescriptorGPU.format;
     const bytesPerTexel = this._getBytesPerTexel(format);
@@ -580,7 +578,7 @@ export class HearthTextures extends DataMap<any, any> {
       this.defaultTexture = defaultTexture = texture;
     }
 
-    return this.hearth.backend.memo.get(defaultTexture).texture;
+    return this.hearth.memo.get(defaultTexture).texture;
   }
 
   _getDefaultCubeTextureGPU() {
@@ -597,7 +595,7 @@ export class HearthTextures extends DataMap<any, any> {
       this.defaultCubeTexture = defaultCubeTexture = texture;
     }
 
-    return this.hearth.backend.memo.get(defaultCubeTexture).texture;
+    return this.hearth.memo.get(defaultCubeTexture).texture;
   }
 
   _copyCubeMapToTexture(
@@ -945,6 +943,7 @@ const _compareToWebGPU = {
   [DepthComparison.NotEqual]: 'not-equal',
 } as const;
 const _flipMap = [0, 1, 3, 2, 4, 5] as const;
+
 export function getFormat(texture: Texture, device: GPUDevice | null = null) {
   const format = texture.format;
   const type = texture.type;

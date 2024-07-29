@@ -277,14 +277,12 @@ export class HearthPipelines extends DataMap<any, any> {
     const { object, material, geometry, pipeline } = renderObject;
     const { vertexProgram, fragmentProgram } = pipeline;
 
-    const backend = this.hearth.backend;
-    const device = backend.device;
-    const utils = this.hearth.utilities;
+    const { device, memo, utilities: utils, attributes } = this.hearth;
 
-    const pipelineData = backend.memo.get(pipeline);
-    const bindingsData = backend.memo.get(renderObject.getBindings());
+    const pipelineData = memo.get(pipeline);
+    const bindingsData = memo.get(renderObject.getBindings());
 
-    const vertexBuffers = backend.hearth.attributes.layouts(renderObject);
+    const vertexBuffers = attributes.layouts(renderObject);
 
     let blending;
 
@@ -329,8 +327,8 @@ export class HearthPipelines extends DataMap<any, any> {
       });
     }
 
-    const vertexModule = backend.memo.get(vertexProgram).module;
-    const fragmentModule = backend.memo.get(fragmentProgram).module;
+    const vertexModule = memo.get(vertexProgram).module;
+    const fragmentModule = memo.get(fragmentProgram).module;
 
     const primitiveState = this._getPrimitiveState(object, geometry, material);
     const depthCompare = this._getDepthCompare(material);
@@ -372,13 +370,11 @@ export class HearthPipelines extends DataMap<any, any> {
   }
 
   createComputePipeline(pipeline: ComputePipeline, bindings: Binding[]) {
-    const backend = this.hearth.backend;
-    const device = backend.device;
+    const { device, memo } = this.hearth;
 
-    const computeProgram = backend.memo.get(pipeline.computeProgram).module;
-
-    const pipelineGPU = backend.memo.get(pipeline);
-    const bindingsData = backend.memo.get(bindings);
+    const computeProgram = memo.get(pipeline.computeProgram).module;
+    const pipelineGPU = memo.get(pipeline);
+    const bindingsData = memo.get(bindings);
 
     pipelineGPU.pipeline = device.createComputePipeline({
       compute: computeProgram,

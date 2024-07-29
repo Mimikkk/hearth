@@ -137,7 +137,7 @@ export class HearthBindings extends DataMap<any, any> {
   }
 
   create(bindings: Binding[]) {
-    const data = this.hearth.backend.memo.get(bindings);
+    const data = this.hearth.memo.get(bindings);
 
     const layout = this.layout(bindings);
     const group = this.createGroup(bindings, layout);
@@ -179,7 +179,7 @@ export class HearthBindings extends DataMap<any, any> {
       } else if (isSampledTexture(binding) && isVideoTexture(binding.texture)) {
         entry.externalTexture = {} satisfies GPUExternalTextureBindingLayout;
       } else if (isSampledTexture(binding) && binding.store) {
-        const format = this.hearth.backend.memo.get(binding.texture).texture.format;
+        const format = this.hearth.memo.get(binding.texture).texture.format;
 
         entry.storageTexture = { format } satisfies GPUStorageTextureBindingLayout;
       } else if (isSampledTexture(binding)) {
@@ -209,7 +209,7 @@ export class HearthBindings extends DataMap<any, any> {
   }
 
   updateBinding(binding: Binding): void {
-    const { device, memo } = this.hearth.backend;
+    const { device, memo } = this.hearth;
 
     const from = binding.buffer;
     const into = memo.get(binding).buffer as GPUBuffer;
@@ -218,39 +218,38 @@ export class HearthBindings extends DataMap<any, any> {
   }
 
   createGroup(bindings: Binding[], layout: GPUBindGroupLayout): GPUBindGroup {
-    const backend = this.hearth.backend;
-    const device = backend.device;
+    const { memo, device } = this.hearth;
 
     const entries = [];
     for (let i = 0; i < bindings.length; ++i) {
       const binding = bindings[i];
 
       if (isUniformBuffer(binding)) {
-        const memo = backend.memo.get<{ buffer?: GPUBuffer }>(binding);
+        const data = memo.get<{ buffer?: GPUBuffer }>(binding);
 
-        if (memo.buffer === undefined) {
-          memo.buffer = device.createBuffer({
+        if (data.buffer === undefined) {
+          data.buffer = device.createBuffer({
             label: 'bindingBuffer_' + binding.name,
             size: binding.byteLength,
             usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
           });
         }
 
-        entries.push({ binding: i, resource: { buffer: memo.buffer } });
+        entries.push({ binding: i, resource: { buffer: data.buffer } });
       } else if (isStorageBuffer(binding)) {
-        const memo = backend.memo.get<{ buffer?: GPUBuffer }>(binding);
+        const data = memo.get<{ buffer?: GPUBuffer }>(binding);
 
-        if (memo.buffer === undefined) {
-          memo.buffer = backend.memo.get(binding.attribute).buffer;
+        if (data.buffer === undefined) {
+          data.buffer = memo.get(binding.attribute).buffer;
         }
 
-        entries.push({ binding: i, resource: { buffer: memo.buffer } });
+        entries.push({ binding: i, resource: { buffer: data.buffer } });
       } else if (isSampler(binding)) {
-        const { sampler: resource } = backend.memo.get(binding.texture);
+        const { sampler: resource } = memo.get(binding.texture);
 
         entries.push({ binding: i, resource });
       } else if (isSampledTexture(binding)) {
-        const data = backend.memo.get<{
+        const data = memo.get<{
           texture: GPUTexture;
           mipLevelCount: number;
           externalTexture?: VideoFrame;
