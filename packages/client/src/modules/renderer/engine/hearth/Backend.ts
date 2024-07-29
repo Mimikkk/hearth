@@ -38,22 +38,13 @@ export class Backend {
     return color;
   }
 
-  adapter: GPUAdapter;
-  device: GPUDevice;
-  colorBuffer: GPUTexture | null;
-  renderPassDescriptor: GPURenderPassDescriptor | null;
-  resolveBufferMap: Map<number, GPUBuffer>;
+  adapter: GPUAdapter = null!;
+  device: GPUDevice = null!;
+  colorBuffer: GPUTexture | null = null;
+  renderPassDescriptor: GPURenderPassDescriptor | null = null;
+  resolveBufferMap: Map<number, GPUBuffer> = new Map();
 
-  constructor(hearth: Hearth) {
-    this.hearth = hearth;
-
-    this.adapter = null!;
-    this.device = null!;
-    this.colorBuffer = null;
-    this.renderPassDescriptor = null;
-
-    this.resolveBufferMap = new Map();
-  }
+  constructor(public hearth: Hearth) {}
 
   async getArrayBuffer(attribute: Attribute) {
     return await this.hearth.attributes.read(attribute);
