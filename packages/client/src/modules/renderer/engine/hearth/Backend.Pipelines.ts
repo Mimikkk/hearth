@@ -43,7 +43,7 @@ class BackendPipelines {
     const pipelineData = backend.memo.get(pipeline);
     const bindingsData = backend.memo.get(renderObject.getBindings());
 
-    const vertexBuffers = backend.attributes.layouts(renderObject);
+    const vertexBuffers = backend.hearth.attributes.layouts(renderObject);
 
     let blending;
 

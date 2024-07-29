@@ -9,8 +9,6 @@ import {
 } from './constants.js';
 
 import { BackendUtilities } from './Backend.Utilities.js';
-import { BackendAttributes } from './Backend.Attributes.js';
-import { BackendBindings } from './Backend.Bindings.js';
 import BackendPipelines from './Backend.Pipelines.js';
 import { BackendTextures } from './Backend.Textures.js';
 import type { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
@@ -23,7 +21,6 @@ import ProgrammableStage from '@modules/renderer/engine/hearth/core/Programmable
 import { BackendResources } from './Backend.Resources.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { WeakMemo } from '@modules/renderer/engine/hearth/memo/WeakMemo.js';
-import { HearthBindings } from '@modules/renderer/engine/hearth/Hearth.Bindings.js';
 
 export class Backend {
   hearth: Hearth;
@@ -50,7 +47,6 @@ export class Backend {
   colorBuffer: GPUTexture | null;
   renderPassDescriptor: GPURenderPassDescriptor | null;
   utilities: BackendUtilities;
-  attributes: BackendAttributes;
   pipelines: BackendPipelines;
   textures: BackendTextures;
   resolveBufferMap: Map<number, GPUBuffer>;
@@ -66,14 +62,13 @@ export class Backend {
 
     this.resources = new BackendResources(this);
     this.utilities = new BackendUtilities(this);
-    this.attributes = new BackendAttributes(this);
     this.pipelines = new BackendPipelines(this);
     this.textures = new BackendTextures(this);
     this.resolveBufferMap = new Map();
   }
 
   async getArrayBuffer(attribute: Attribute) {
-    return await this.attributes.read(attribute);
+    return await this.hearth.attributes.read(attribute);
   }
 
   _getDefaultRenderPassDescriptor() {
@@ -894,26 +889,26 @@ export class Backend {
   }
 
   createIndexAttribute(attribute: Attribute) {
-    this.attributes.create(attribute, GPUBufferUsage.INDEX | GPUBufferUsage.COPY_SRC | GPUBufferUsage.COPY_DST);
+    this.hearth.attributes.create(attribute, GPUBufferUsage.INDEX | GPUBufferUsage.COPY_SRC | GPUBufferUsage.COPY_DST);
   }
 
   createAttribute(attribute: Attribute) {
-    this.attributes.create(attribute, GPUBufferUsage.VERTEX | GPUBufferUsage.COPY_SRC | GPUBufferUsage.COPY_DST);
+    this.hearth.attributes.create(attribute, GPUBufferUsage.VERTEX | GPUBufferUsage.COPY_SRC | GPUBufferUsage.COPY_DST);
   }
 
   createStorageAttribute(attribute: Attribute) {
-    this.attributes.create(
+    this.hearth.attributes.create(
       attribute,
       GPUBufferUsage.STORAGE | GPUBufferUsage.VERTEX | GPUBufferUsage.COPY_SRC | GPUBufferUsage.COPY_DST,
     );
   }
 
   updateAttribute(attribute: Attribute) {
-    this.attributes.update(attribute);
+    this.hearth.attributes.updateAttr(attribute);
   }
 
   destroyAttribute(attribute: Attribute) {
-    this.attributes.delete(attribute);
+    this.hearth.attributes.deleteAttr(attribute);
   }
 
   updateSize() {
