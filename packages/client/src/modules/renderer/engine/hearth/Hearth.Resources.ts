@@ -1,7 +1,8 @@
 import { Backend } from '@modules/renderer/engine/hearth/Backend.js';
 import { ResourceMap } from '@modules/renderer/engine/hearth/memo/ResourceMap.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 
-export class BackendResources {
+export class HearthResources {
   shaders: ResourceMap<GPUShaderModule, GPUShaderModuleDescriptor>;
   textures: ResourceMap<GPUTexture, GPUTextureDescriptor>;
   samplers: ResourceMap<GPUSampler, GPUSamplerDescriptor>;
@@ -21,36 +22,36 @@ export class BackendResources {
     layouts: ResourceMap<GPUPipelineLayout, GPUPipelineLayoutDescriptor>;
   };
 
-  constructor(backend: Backend) {
+  constructor(hearth: Hearth) {
     this.textures = ResourceMap.as(
-      descriptor => backend.device.createTexture(descriptor),
+      descriptor => hearth.backend.device.createTexture(descriptor),
       texture => texture.destroy(),
     );
-    this.samplers = ResourceMap.as(descriptor => backend.device.createSampler(descriptor));
+    this.samplers = ResourceMap.as(descriptor => hearth.backend.device.createSampler(descriptor));
     this.buffers = ResourceMap.as(
-      descriptor => backend.device.createBuffer(descriptor),
+      descriptor => hearth.backend.device.createBuffer(descriptor),
       buffer => buffer.destroy(),
     );
-    this.bindGroups = ResourceMap.as(descriptor => backend.device.createBindGroup(descriptor));
-    this.bindGroupLayouts = ResourceMap.as(descriptor => backend.device.createBindGroupLayout(descriptor));
-    this.commandEncoders = ResourceMap.as(descriptor => backend.device.createCommandEncoder(descriptor));
+    this.bindGroups = ResourceMap.as(descriptor => hearth.backend.device.createBindGroup(descriptor));
+    this.bindGroupLayouts = ResourceMap.as(descriptor => hearth.backend.device.createBindGroupLayout(descriptor));
+    this.commandEncoders = ResourceMap.as(descriptor => hearth.backend.device.createCommandEncoder(descriptor));
 
     this.querySets = ResourceMap.as(
-      descriptor => backend.device.createQuerySet(descriptor),
+      descriptor => hearth.backend.device.createQuerySet(descriptor),
       set => set.destroy(),
     );
 
-    this.shaders = ResourceMap.as(descriptor => backend.device.createShaderModule(descriptor));
+    this.shaders = ResourceMap.as(descriptor => hearth.backend.device.createShaderModule(descriptor));
 
     this.compute = {
-      layouts: ResourceMap.as(descriptor => backend.device.createPipelineLayout(descriptor)),
-      pipelines: ResourceMap.as(descriptor => backend.device.createComputePipeline(descriptor)),
+      layouts: ResourceMap.as(descriptor => hearth.backend.device.createPipelineLayout(descriptor)),
+      pipelines: ResourceMap.as(descriptor => hearth.backend.device.createComputePipeline(descriptor)),
     };
 
     this.render = {
-      bundleEncoders: ResourceMap.as(descriptor => backend.device.createRenderBundleEncoder(descriptor)),
-      pipelines: ResourceMap.as(descriptor => backend.device.createRenderPipeline(descriptor)),
-      layouts: ResourceMap.as(descriptor => backend.device.createPipelineLayout(descriptor)),
+      bundleEncoders: ResourceMap.as(descriptor => hearth.backend.device.createRenderBundleEncoder(descriptor)),
+      pipelines: ResourceMap.as(descriptor => hearth.backend.device.createRenderPipeline(descriptor)),
+      layouts: ResourceMap.as(descriptor => hearth.backend.device.createPipelineLayout(descriptor)),
     };
   }
 }

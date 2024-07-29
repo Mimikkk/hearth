@@ -42,6 +42,7 @@ import { HearthPostprocess } from '@modules/renderer/engine/hearth/Hearth.Postpr
 import { Node } from '@modules/renderer/engine/nodes/core/Node.js';
 import BackendPipelines from '@modules/renderer/engine/hearth/Backend.Pipelines.js';
 import { BackendTextures } from '@modules/renderer/engine/hearth/Backend.Textures.js';
+import { HearthResources } from '@modules/renderer/engine/hearth/Hearth.Resources.js';
 
 export class Hearth {
   backend: Backend;
@@ -57,14 +58,13 @@ export class Hearth {
   useScissor: boolean;
 
   attributes: HearthAttributes;
-  // attributes: BackendAttributes;
   geometries: HearthGeometries;
   nodes: HearthNodes;
   animation: HearthAnimation;
   bindings: HearthBindings;
   objects: HearthEntities;
-  pipelines: BackendPipelines;
   pipelines: HearthPipelines;
+  resources: HearthResources;
 
   renderLists: HearthQueues;
   renderContexts: HearthContexts;
@@ -152,6 +152,7 @@ export class Hearth {
     this.geometries = new HearthGeometries(this);
     this.textures = new HearthTextures(this);
     this.pipelines = new HearthPipelines(this);
+    this.resources = new HearthResources(this);
     this.bindings = new HearthBindings(this);
     this.objects = new HearthEntities(this);
     this.renderLists = new HearthQueues();

@@ -15,7 +15,7 @@ export class BackendTexturePassMipmapShader {
   shader: GPUShaderModule;
 
   constructor(public backend: Backend) {
-    const { samplers, shaders } = this.backend.resources;
+    const { samplers, shaders } = this.backend.hearth.resources;
 
     this.samplerLinear = samplers.get(names.linear, () => ({ minFilter: GPUFilterModeType.Linear }));
     this.samplerNearest = samplers.get(names.nearest, () => ({ minFilter: GPUFilterModeType.Nearest }));
@@ -38,7 +38,7 @@ export class BackendTexturePassMipmapShader {
   }
 
   dispose(): void {
-    const { samplers, shaders } = this.backend.resources;
+    const { samplers, shaders } = this.backend.hearth.resources;
 
     samplers.delete(names.linear);
     samplers.delete(names.nearest);

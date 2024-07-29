@@ -17,7 +17,7 @@ import ComputePipeline from '@modules/renderer/engine/hearth/core/ComputePipelin
 import Binding from '@modules/renderer/engine/hearth/bindings/Binding.js';
 import RenderObject from '@modules/renderer/engine/hearth/core/RenderObject.js';
 import ProgrammableStage from '@modules/renderer/engine/hearth/core/ProgrammableStage.js';
-import { BackendResources } from './Backend.Resources.js';
+import { HearthResources } from './Hearth.Resources.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { WeakMemo } from '@modules/renderer/engine/hearth/memo/WeakMemo.js';
 
@@ -48,7 +48,6 @@ export class Backend {
   utilities: BackendUtilities;
   textures: BackendTextures;
   resolveBufferMap: Map<number, GPUBuffer>;
-  resources: BackendResources;
 
   constructor(hearth: Hearth) {
     this.hearth = hearth;
@@ -58,7 +57,6 @@ export class Backend {
     this.colorBuffer = null;
     this.renderPassDescriptor = null;
 
-    this.resources = new BackendResources(this);
     this.utilities = new BackendUtilities(this);
     this.textures = new BackendTextures(this);
     this.resolveBufferMap = new Map();
