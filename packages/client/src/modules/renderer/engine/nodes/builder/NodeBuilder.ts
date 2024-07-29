@@ -29,7 +29,7 @@ import {
   stack,
   UniformNode,
 } from '@modules/renderer/engine/nodes/Nodes.js';
-import { getFormat } from '@modules/renderer/engine/hearth/Backend.Textures.js';
+import { getFormat } from '@modules/renderer/engine/hearth/Hearth.Textures.js';
 import ChainMap from '@modules/renderer/engine/hearth/memo/ChainMap.js';
 import NodeKeywords from '@modules/renderer/engine/nodes/core/NodeKeywords.js';
 import NodeCache from '@modules/renderer/engine/nodes/core/NodeCache.js';

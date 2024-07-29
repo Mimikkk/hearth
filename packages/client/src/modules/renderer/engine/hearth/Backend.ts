@@ -8,7 +8,6 @@ import {
   GPUTextureViewDimensionType,
 } from './constants.js';
 
-import { BackendTextures } from './Backend.Textures.js';
 import type { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import RenderContext from '@modules/renderer/engine/hearth/core/RenderContext.js';
 import ComputeNode from '@modules/renderer/engine/nodes/gpgpu/ComputeNode.js';
@@ -43,7 +42,6 @@ export class Backend {
   device: GPUDevice;
   colorBuffer: GPUTexture | null;
   renderPassDescriptor: GPURenderPassDescriptor | null;
-  textures: BackendTextures;
   resolveBufferMap: Map<number, GPUBuffer>;
 
   constructor(hearth: Hearth) {
@@ -54,7 +52,6 @@ export class Backend {
     this.colorBuffer = null;
     this.renderPassDescriptor = null;
 
-    this.textures = new BackendTextures(this);
     this.resolveBufferMap = new Map();
   }
 
@@ -77,7 +74,9 @@ export class Backend {
           },
         ],
         depthStencilAttachment: {
-          view: this.textures.getDepthBuffer(hearth.parameters.useDepth, hearth.parameters.useStencil).createView(),
+          view: this.hearth.textures
+            .getDepthBuffer(hearth.parameters.useDepth, hearth.parameters.useStencil)
+            .createView(),
         },
       };
 
@@ -342,7 +341,7 @@ export class Backend {
         const texture = textures[i];
 
         if (texture.generateMipmaps === true) {
-          this.textures.generateMipmaps(texture);
+          this.hearth.textures.generateMipmaps(texture);
         }
       }
     }
@@ -741,35 +740,35 @@ export class Backend {
   }
 
   createSampler(texture: Texture) {
-    this.textures.createSampler(texture);
+    this.hearth.textures.createSampler(texture);
   }
 
   destroySampler(texture: Texture) {
-    this.textures.destroySampler(texture);
+    this.hearth.textures.destroySampler(texture);
   }
 
   createDefaultTexture(texture: Texture) {
-    this.textures.createDefaultTexture(texture);
+    this.hearth.textures.createDefaultTexture(texture);
   }
 
   createTexture(texture: Texture, options) {
-    this.textures.createTexture(texture, options);
+    this.hearth.textures.createTexture(texture, options);
   }
 
   updateTexture(texture: Texture, options) {
-    this.textures.updateTexture(texture, options);
+    this.hearth.textures.updateTextureTex(texture, options);
   }
 
   generateMipmaps(texture: Texture) {
-    this.textures.generateMipmaps(texture);
+    this.hearth.textures.generateMipmaps(texture);
   }
 
   destroyTexture(texture: Texture) {
-    this.textures.destroyTexture(texture);
+    this.hearth.textures.destroyTexture(texture);
   }
 
   copyTextureToBuffer(texture: Texture, x: number, y: number, width: number, height: number) {
-    return this.textures.copyTextureToBuffer(texture, x, y, width, height);
+    return this.hearth.textures.copyTextureToBuffer(texture, x, y, width, height);
   }
 
   initTimestampBuffer(context: RenderContext, descriptor: GPURenderPassDescriptor): void {
@@ -903,7 +902,7 @@ export class Backend {
   }
 
   updateSize() {
-    this.colorBuffer = this.textures.getColorBuffer();
+    this.colorBuffer = this.hearth.textures.getColorBuffer();
     this.renderPassDescriptor = null;
   }
 
@@ -953,7 +952,7 @@ export class Backend {
       }
     } else {
       if (into.isDepthTexture) {
-        sourceGPU = this.textures.getDepthBuffer(context.useDepth, context.useStencil);
+        sourceGPU = this.hearth.textures.getDepthBuffer(context.useDepth, context.useStencil);
       } else {
         sourceGPU = this.hearth.parameters.context.getCurrentTexture();
       }
@@ -984,7 +983,7 @@ export class Backend {
       [into.image.width, into.image.height],
     );
 
-    if (into.generateMipmaps) this.textures.generateMipmaps(into);
+    if (into.generateMipmaps) this.hearth.textures.generateMipmaps(into);
 
     descriptor.colorAttachments[0].loadOp = GPULoadOpType.Load;
     if (context.useDepth) descriptor.depthStencilAttachment.depthLoadOp = GPULoadOpType.Load;

@@ -40,8 +40,6 @@ import { HearthPipelines } from '@modules/renderer/engine/hearth/Hearth.Pipeline
 import { HearthTextures } from '@modules/renderer/engine/hearth/Hearth.Textures.js';
 import { HearthPostprocess } from '@modules/renderer/engine/hearth/Hearth.Postprocess.js';
 import { Node } from '@modules/renderer/engine/nodes/core/Node.js';
-import BackendPipelines from '@modules/renderer/engine/hearth/Backend.Pipelines.js';
-import { BackendTextures } from '@modules/renderer/engine/hearth/Backend.Textures.js';
 import { HearthResources } from '@modules/renderer/engine/hearth/Hearth.Resources.js';
 import { HearthUtilities } from '@modules/renderer/engine/hearth/Hearth.Utilities.js';
 
@@ -69,7 +67,6 @@ export class Hearth {
 
   renderLists: HearthQueues;
   renderContexts: HearthContexts;
-  textures: BackendTextures;
   textures: HearthTextures;
   background: HearthBackground;
   utilities: HearthUtilities;
@@ -189,7 +186,7 @@ export class Hearth {
 
     backend.device = device;
     backend.adapter = adapter;
-    backend.colorBuffer = backend.textures.getColorBuffer();
+    backend.colorBuffer = backend.hearth.textures.getColorBuffer();
 
     hearth.parameters.context.configure({
       device,
