@@ -19,6 +19,8 @@ import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.
 import { WeakMemo } from '@modules/renderer/engine/hearth/memo/WeakMemo.js';
 
 export class Backend {
+  constructor(public hearth: Hearth) {}
+
   getInstanceCount({ object, geometry }: RenderObject) {
     return Math.max(geometry.instanceCount, object.count, 1);
   }
@@ -35,17 +37,12 @@ export class Backend {
     return color;
   }
 
-  renderPassDescriptor: GPURenderPassDescriptor | null = null;
-  resolveBufferMap: Map<number, GPUBuffer> = new Map();
-
-  constructor(public hearth: Hearth) {}
-
   async getArrayBuffer(attribute: Attribute) {
     return await this.hearth.attributes.read(attribute);
   }
 
   _getDefaultRenderPassDescriptor() {
-    let descriptor = this.renderPassDescriptor;
+    let descriptor = this.hearth.renderPassDescriptor;
 
     const antialias = this.hearth.parameters.antialias;
 
@@ -73,7 +70,7 @@ export class Backend {
         colorAttachment.resolveTarget = undefined;
       }
 
-      this.renderPassDescriptor = descriptor;
+      this.hearth.renderPassDescriptor = descriptor;
     }
 
     const colorAttachment = descriptor.colorAttachments[0];
@@ -285,7 +282,7 @@ export class Backend {
     if (occlusionQueryCount > 0) {
       const bufferSize = occlusionQueryCount * 8;
 
-      let queryResolveBuffer = this.resolveBufferMap.get(bufferSize);
+      let queryResolveBuffer = this.hearth.resolveBufferMap.get(bufferSize);
 
       if (queryResolveBuffer === undefined) {
         queryResolveBuffer = this.hearth.device.createBuffer({
@@ -293,7 +290,7 @@ export class Backend {
           usage: GPUBufferUsage.QUERY_RESOLVE | GPUBufferUsage.COPY_SRC,
         });
 
-        this.resolveBufferMap.set(bufferSize, queryResolveBuffer);
+        this.hearth.resolveBufferMap.set(bufferSize, queryResolveBuffer);
       }
 
       const readBuffer = this.hearth.device.createBuffer({
@@ -888,7 +885,7 @@ export class Backend {
 
   updateSize() {
     this.hearth.colorBuffer = this.hearth.textures.getColorBuffer();
-    this.renderPassDescriptor = null;
+    this.hearth.renderPassDescriptor = null;
   }
 
   getMaxAnisotropy() {

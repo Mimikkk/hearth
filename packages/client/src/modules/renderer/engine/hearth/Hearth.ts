@@ -72,6 +72,9 @@ export class Hearth {
   background: HearthBackground;
   utilities: HearthUtilities;
 
+  renderPassDescriptor: GPURenderPassDescriptor | null = null;
+  resolveBufferMap: Map<number, GPUBuffer> = new Map();
+
   // adapter: GPUAdapter;
   // device: GPUDevice;
   // colorBuffer: GPUTexture | null;
