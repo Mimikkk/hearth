@@ -43,6 +43,7 @@ import { Node } from '@modules/renderer/engine/nodes/core/Node.js';
 import BackendPipelines from '@modules/renderer/engine/hearth/Backend.Pipelines.js';
 import { BackendTextures } from '@modules/renderer/engine/hearth/Backend.Textures.js';
 import { HearthResources } from '@modules/renderer/engine/hearth/Hearth.Resources.js';
+import { HearthUtilities } from '@modules/renderer/engine/hearth/Hearth.Utilities.js';
 
 export class Hearth {
   backend: Backend;
@@ -71,6 +72,7 @@ export class Hearth {
   textures: BackendTextures;
   textures: HearthTextures;
   background: HearthBackground;
+  utilities: HearthUtilities;
 
   // adapter: GPUAdapter;
   // device: GPUDevice;
@@ -151,6 +153,7 @@ export class Hearth {
     this.background = new HearthBackground(this);
     this.geometries = new HearthGeometries(this);
     this.textures = new HearthTextures(this);
+    this.utilities = new HearthUtilities(this);
     this.pipelines = new HearthPipelines(this);
     this.resources = new HearthResources(this);
     this.bindings = new HearthBindings(this);

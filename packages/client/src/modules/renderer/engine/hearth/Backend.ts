@@ -8,7 +8,6 @@ import {
   GPUTextureViewDimensionType,
 } from './constants.js';
 
-import { BackendUtilities } from './Backend.Utilities.js';
 import { BackendTextures } from './Backend.Textures.js';
 import type { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import RenderContext from '@modules/renderer/engine/hearth/core/RenderContext.js';
@@ -17,7 +16,6 @@ import ComputePipeline from '@modules/renderer/engine/hearth/core/ComputePipelin
 import Binding from '@modules/renderer/engine/hearth/bindings/Binding.js';
 import RenderObject from '@modules/renderer/engine/hearth/core/RenderObject.js';
 import ProgrammableStage from '@modules/renderer/engine/hearth/core/ProgrammableStage.js';
-import { HearthResources } from './Hearth.Resources.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { WeakMemo } from '@modules/renderer/engine/hearth/memo/WeakMemo.js';
 
@@ -45,7 +43,6 @@ export class Backend {
   device: GPUDevice;
   colorBuffer: GPUTexture | null;
   renderPassDescriptor: GPURenderPassDescriptor | null;
-  utilities: BackendUtilities;
   textures: BackendTextures;
   resolveBufferMap: Map<number, GPUBuffer>;
 
@@ -57,7 +54,6 @@ export class Backend {
     this.colorBuffer = null;
     this.renderPassDescriptor = null;
 
-    this.utilities = new BackendUtilities(this);
     this.textures = new BackendTextures(this);
     this.resolveBufferMap = new Map();
   }
@@ -628,7 +624,7 @@ export class Backend {
 
     const { object, material } = renderObject;
 
-    const utils = this.utilities;
+    const utils = this.hearth.utilities;
 
     const sampleCount = utils.getSampleCount(renderObject.context);
     const colorSpace = utils.getCurrentColorSpace(renderObject.context);
@@ -710,7 +706,7 @@ export class Backend {
   getRenderCacheKey(renderObject: RenderObject) {
     const { object, material } = renderObject;
 
-    const utils = this.utilities;
+    const utils = this.hearth.utilities;
     const renderContext = renderObject.context;
 
     return [

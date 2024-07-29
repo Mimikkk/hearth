@@ -279,7 +279,7 @@ export class HearthPipelines extends DataMap<any, any> {
 
     const backend = this.hearth.backend;
     const device = backend.device;
-    const utils = backend.utilities;
+    const utils = this.hearth.utilities;
 
     const pipelineData = backend.memo.get(pipeline);
     const bindingsData = backend.memo.get(renderObject.getBindings());
@@ -698,7 +698,7 @@ export class HearthPipelines extends DataMap<any, any> {
 
   _getPrimitiveState(object: Entity, geometry: Geometry, material: Material): GPUPrimitiveState {
     const descriptor: GPUPrimitiveState = {};
-    const utils = this.hearth.backend.utilities;
+    const utils = this.hearth.utilities;
 
     descriptor.topology = utils.getPrimitiveTopology(object, material);
 

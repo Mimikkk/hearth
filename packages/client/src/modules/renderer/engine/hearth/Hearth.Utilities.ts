@@ -4,9 +4,10 @@ import { Entity } from '@modules/renderer/engine/core/Entity.js';
 import { Material } from '@modules/renderer/engine/entities/materials/Material.js';
 import { Texture } from '@modules/renderer/engine/entities/textures/Texture.js';
 import type { Backend } from '@modules/renderer/engine/hearth/Backend.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 
-export class BackendUtilities {
-  constructor(public backend: Backend) {}
+export class HearthUtilities {
+  constructor(public hearth: Hearth) {}
 
   getCurrentDepthStencilFormat(renderContext: RenderContext) {
     if (renderContext.depthTexture) return this.getTextureFormatGPU(renderContext.depthTexture);
@@ -16,7 +17,7 @@ export class BackendUtilities {
   }
 
   getTextureFormatGPU(texture: Texture) {
-    return this.backend.memo.get(texture).texture.format;
+    return this.hearth.backend.memo.get(texture).texture.format;
   }
 
   getCurrentColorFormat(renderContext: RenderContext) {
@@ -28,7 +29,7 @@ export class BackendUtilities {
   getCurrentColorSpace(renderContext: RenderContext) {
     return renderContext.textures
       ? renderContext.textures[0].colorSpace
-      : this.backend.hearth.parameters.outputColorSpace;
+      : this.hearth.backend.hearth.parameters.outputColorSpace;
   }
 
   getPrimitiveTopology(object: Entity, material: Material) {
@@ -41,7 +42,7 @@ export class BackendUtilities {
 
   getSampleCount(context: RenderContext): number {
     if (context.textures) return context.sampleCount;
-    return this.backend.hearth.parameters.sampleCount;
+    return this.hearth.backend.hearth.parameters.sampleCount;
   }
 }
 
