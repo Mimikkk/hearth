@@ -5,10 +5,9 @@ import {
   GPUStoreOpType,
   GPUTextureViewDimensionType,
 } from './constants.js';
-
-import { Backend } from '@modules/renderer/engine/hearth/Backend.js';
 import { HearthTexturesTexturePassMipmapShader } from '@modules/renderer/engine/hearth/Hearth.Textures.TexturePass.MipmapShader.js';
 import { Memo } from '@modules/renderer/engine/hearth/memo/Memo.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 
 const encodePass = (
   device: GPUDevice,
@@ -56,7 +55,7 @@ const flipYLabel = (format: GPUTextureFormat) => `${mipmapLabel(format)}-flip_y`
 export class BackendTexturesTexturePass {
   transferPipelines = new Memo(
     (format: GPUTextureFormat) => {
-      const { render, bindGroupLayouts } = this.backend.hearth.resources;
+      const { render, bindGroupLayouts } = this.hearth.backend.hearth.resources;
       const label = mipmapLabel(format);
 
       return render.pipelines.get(transferLabel(format), () => ({
@@ -91,7 +90,7 @@ export class BackendTexturesTexturePass {
       }));
     },
     (pipeline, format) => {
-      const { render, bindGroupLayouts } = this.backend.hearth.resources;
+      const { render, bindGroupLayouts } = this.hearth.backend.hearth.resources;
       const label = mipmapLabel(format);
 
       render.pipelines.delete(pipeline.label);
@@ -101,7 +100,7 @@ export class BackendTexturesTexturePass {
   );
   flipYPipelines = new Memo(
     (format: GPUTextureFormat) => {
-      const { render, bindGroupLayouts } = this.backend.hearth.resources;
+      const { render, bindGroupLayouts } = this.hearth.backend.hearth.resources;
       const label = mipmapLabel(format);
 
       return render.pipelines.get(flipYLabel(format), () => ({
@@ -135,7 +134,7 @@ export class BackendTexturesTexturePass {
       }));
     },
     (pipeline, format) => {
-      const { render, bindGroupLayouts } = this.backend.hearth.resources;
+      const { render, bindGroupLayouts } = this.hearth.backend.hearth.resources;
       const label = mipmapLabel(format);
 
       render.pipelines.delete(pipeline.label);
@@ -145,8 +144,8 @@ export class BackendTexturesTexturePass {
   );
   mipmap: HearthTexturesTexturePassMipmapShader;
 
-  constructor(public backend: Backend) {
-    this.mipmap = new HearthTexturesTexturePassMipmapShader(backend.hearth);
+  constructor(public hearth: Hearth) {
+    this.mipmap = new HearthTexturesTexturePassMipmapShader(hearth);
   }
 
   flipY(texture: GPUTexture, descriptor: GPUTextureDescriptor, layer: number): void {
@@ -156,7 +155,7 @@ export class BackendTexturesTexturePass {
     const transferPipeline = this.transferPipelines.get(format);
     const flipYPipeline = this.flipYPipelines.get(format);
 
-    const temporaryTexture = this.backend.hearth.resources.textures.set({
+    const temporaryTexture = this.hearth.backend.hearth.resources.textures.set({
       label: 'mipmap-temporary-texture',
       size: { width, height, depthOrArrayLayers: 1 },
       format,
@@ -174,10 +173,10 @@ export class BackendTexturesTexturePass {
       dimension: GPUTextureViewDimensionType.TwoD,
       baseArrayLayer: 0,
     });
-    const commandEncoder = this.backend.device.createCommandEncoder();
+    const commandEncoder = this.hearth.backend.device.createCommandEncoder();
 
     encodePass(
-      this.backend.device,
+      this.hearth.backend.device,
       this.mipmap.samplerNearest,
       commandEncoder,
       transferPipeline,
@@ -185,7 +184,7 @@ export class BackendTexturesTexturePass {
       destinationView,
     );
     encodePass(
-      this.backend.device,
+      this.hearth.backend.device,
       this.mipmap.samplerNearest,
       commandEncoder,
       flipYPipeline,
@@ -193,13 +192,13 @@ export class BackendTexturesTexturePass {
       sourceView,
     );
 
-    this.backend.device.queue.submit([commandEncoder.finish()]);
-    this.backend.hearth.resources.textures.delete('mipmap-temporary-texture');
+    this.hearth.backend.device.queue.submit([commandEncoder.finish()]);
+    this.hearth.backend.hearth.resources.textures.delete('mipmap-temporary-texture');
   }
 
   generateMipmaps(texture: GPUTexture, descriptor: GPUTextureDescriptor, layer: number): void {
     const pipeline = this.transferPipelines.get(descriptor.format);
-    const { commandEncoders, bindGroups } = this.backend.hearth.resources;
+    const { commandEncoders, bindGroups } = this.hearth.backend.hearth.resources;
 
     const commandEncoder = commandEncoders.create({ label: 'mipmap-encoder' }, 'mipmap-encoder');
     const bindGroupLayout = pipeline.getBindGroupLayout(0);
@@ -256,7 +255,7 @@ export class BackendTexturesTexturePass {
       source = destination;
     }
 
-    this.backend.device.queue.submit([commandEncoder.finish()]);
+    this.hearth.backend.device.queue.submit([commandEncoder.finish()]);
   }
 
   dispose() {

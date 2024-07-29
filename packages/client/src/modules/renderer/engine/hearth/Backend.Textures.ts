@@ -454,7 +454,7 @@ export class BackendTextures {
     let passUtils = this._passUtils;
 
     if (passUtils === null) {
-      this._passUtils = passUtils = new BackendTexturesTexturePass(this.backend);
+      this._passUtils = passUtils = new BackendTexturesTexturePass(this.backend.hearth);
     }
 
     return passUtils;
