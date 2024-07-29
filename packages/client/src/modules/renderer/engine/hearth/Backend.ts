@@ -35,8 +35,6 @@ export class Backend {
     return color;
   }
 
-  adapter: GPUAdapter = null!;
-  device: GPUDevice = null!;
   renderPassDescriptor: GPURenderPassDescriptor | null = null;
   resolveBufferMap: Map<number, GPUBuffer> = new Map();
 
@@ -169,7 +167,7 @@ export class Backend {
   beginRender(renderContext: RenderContext) {
     const renderContextData = this.hearth.memo.get(renderContext);
 
-    const device = this.device;
+    const device = this.hearth.device;
     const occlusionQueryCount = renderContext.occlusionQueryCount;
 
     let occlusionQuerySet;
@@ -290,7 +288,7 @@ export class Backend {
       let queryResolveBuffer = this.resolveBufferMap.get(bufferSize);
 
       if (queryResolveBuffer === undefined) {
-        queryResolveBuffer = this.device.createBuffer({
+        queryResolveBuffer = this.hearth.device.createBuffer({
           size: bufferSize,
           usage: GPUBufferUsage.QUERY_RESOLVE | GPUBufferUsage.COPY_SRC,
         });
@@ -298,7 +296,7 @@ export class Backend {
         this.resolveBufferMap.set(bufferSize, queryResolveBuffer);
       }
 
-      const readBuffer = this.device.createBuffer({
+      const readBuffer = this.hearth.device.createBuffer({
         size: bufferSize,
         usage: GPUBufferUsage.COPY_DST | GPUBufferUsage.MAP_READ,
       });
@@ -319,7 +317,7 @@ export class Backend {
 
     this.prepareTimestamp(renderContext, renderContextData.encoder);
 
-    this.device.queue.submit([renderContextData.encoder.finish()]);
+    this.hearth.device.queue.submit([renderContextData.encoder.finish()]);
 
     if (renderContext.textures !== null) {
       const textures = renderContext.textures;
@@ -376,7 +374,7 @@ export class Backend {
   }
 
   clear(color: boolean, depth: boolean, stencil: boolean, renderTargetData: RenderTarget | null = null) {
-    const device = this.device;
+    const device = this.hearth.device;
     const hearth = this.hearth;
 
     let colorAttachments = [];
@@ -490,7 +488,7 @@ export class Backend {
 
     this.initTimestampBuffer(computeGroup, descriptor);
 
-    groupGPU.cmdEncoderGPU = this.device.createCommandEncoder();
+    groupGPU.cmdEncoderGPU = this.hearth.device.createCommandEncoder();
 
     groupGPU.passEncoderGPU = groupGPU.cmdEncoderGPU.beginComputePass(descriptor);
   }
@@ -514,7 +512,7 @@ export class Backend {
 
     this.prepareTimestamp(computeGroup, groupData.cmdEncoderGPU);
 
-    this.device.queue.submit([groupData.cmdEncoderGPU.finish()]);
+    this.hearth.device.queue.submit([groupData.cmdEncoderGPU.finish()]);
   }
 
   draw(renderObject: RenderObject) {
@@ -764,7 +762,7 @@ export class Backend {
     const data = this.hearth.memo.get(context);
     if (data.timeStampQuerySet) return;
 
-    const timeStampQuerySet = this.device.createQuerySet({ type: 'timestamp', count: 2 });
+    const timeStampQuerySet = this.hearth.device.createQuerySet({ type: 'timestamp', count: 2 });
     descriptor.timestampWrites = {
       querySet: timeStampQuerySet,
 
@@ -785,12 +783,12 @@ export class Backend {
 
     if (data.currentTimestampQueryBuffers === undefined) {
       data.currentTimestampQueryBuffers = {
-        resolveBuffer: this.device.createBuffer({
+        resolveBuffer: this.hearth.device.createBuffer({
           label: 'timestamp resolve buffer',
           size: size,
           usage: GPUBufferUsage.QUERY_RESOLVE | GPUBufferUsage.COPY_SRC,
         }),
-        resultBuffer: this.device.createBuffer({
+        resultBuffer: this.hearth.device.createBuffer({
           label: 'timestamp result buffer',
           size: size,
           usage: GPUBufferUsage.COPY_DST | GPUBufferUsage.MAP_READ,
@@ -836,7 +834,7 @@ export class Backend {
     const programGPU = this.hearth.memo.get(program);
 
     programGPU.module = {
-      module: this.device.createShaderModule({ code: program.code, label: program.stage }),
+      module: this.hearth.device.createShaderModule({ code: program.code, label: program.stage }),
       entryPoint: 'main',
     };
   }
@@ -898,11 +896,11 @@ export class Backend {
   }
 
   hasFeature(name: string) {
-    return this.adapter.features.has(name);
+    return this.hearth.adapter.features.has(name);
   }
 
   patchTextureAt(texture: Texture, patch: Texture, at: { x: number; y: number; z?: number; level?: number }) {
-    const encoder = this.device.createCommandEncoder({
+    const encoder = this.hearth.device.createCommandEncoder({
       label: 'copyTextureToTexture_' + patch.id + '_' + texture.id,
     });
 
@@ -920,7 +918,7 @@ export class Backend {
       [patch.image.width, patch.image.height],
     );
 
-    this.device.queue.submit([encoder.finish()]);
+    this.hearth.device.queue.submit([encoder.finish()]);
   }
 
   readFramebuffer(into: Texture): void {

@@ -429,7 +429,7 @@ export class HearthTextures extends DataMap<any, any> {
     if (this.colorBuffer) this.colorBuffer.destroy();
 
     const { width, height } = this.hearth.backend.hearth.getDrawSize();
-    this.colorBuffer = this.hearth.backend.device.createTexture({
+    this.colorBuffer = this.hearth.device.createTexture({
       label: 'colorBuffer',
       size: { width, height, depthOrArrayLayers: 1 },
       sampleCount: this.hearth.backend.hearth.parameters.sampleCount,
@@ -521,7 +521,7 @@ export class HearthTextures extends DataMap<any, any> {
   }
 
   async copyTextureToBuffer(texture: Texture, x: number, y: number, width: number, height: number) {
-    const device = this.hearth.backend.device;
+    const device = this.hearth.device;
 
     const textureData = this.hearth.memo.get(texture);
     const textureGPU = textureData.texture;
@@ -625,7 +625,7 @@ export class HearthTextures extends DataMap<any, any> {
     originDepth: number,
     flipY: boolean,
   ) {
-    const device = this.hearth.backend.device;
+    const device = this.hearth.device;
 
     device.queue.copyExternalImageToTexture(
       {
@@ -674,7 +674,7 @@ export class HearthTextures extends DataMap<any, any> {
     flipY: boolean,
     depth: number = 0,
   ) {
-    const device = this.hearth.backend.device;
+    const device = this.hearth.device;
 
     const data = image.data;
 
@@ -709,7 +709,7 @@ export class HearthTextures extends DataMap<any, any> {
     textureGPU: GPUTexture,
     textureDescriptorGPU: GPUTextureDescriptor,
   ) {
-    const device = this.hearth.backend.device;
+    const device = this.hearth.device;
 
     const blockData = this._getBlockData(textureDescriptorGPU.format);
 

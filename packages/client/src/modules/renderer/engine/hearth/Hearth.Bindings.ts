@@ -148,7 +148,7 @@ export class HearthBindings extends DataMap<any, any> {
   }
 
   layout(bindings: Binding[]): GPUBindGroupLayout {
-    const device = this.hearth.backend.device;
+    const device = this.hearth.device;
 
     const entries = [];
     for (let i = 0; i < bindings.length; ++i) {

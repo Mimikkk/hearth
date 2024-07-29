@@ -173,10 +173,10 @@ export class HearthTexturesTexturePass {
       dimension: GPUTextureViewDimensionType.TwoD,
       baseArrayLayer: 0,
     });
-    const commandEncoder = this.hearth.backend.device.createCommandEncoder();
+    const commandEncoder = this.hearth.device.createCommandEncoder();
 
     encodePass(
-      this.hearth.backend.device,
+      this.hearth.device,
       this.mipmap.samplerNearest,
       commandEncoder,
       transferPipeline,
@@ -184,7 +184,7 @@ export class HearthTexturesTexturePass {
       destinationView,
     );
     encodePass(
-      this.hearth.backend.device,
+      this.hearth.device,
       this.mipmap.samplerNearest,
       commandEncoder,
       flipYPipeline,
@@ -192,7 +192,7 @@ export class HearthTexturesTexturePass {
       sourceView,
     );
 
-    this.hearth.backend.device.queue.submit([commandEncoder.finish()]);
+    this.hearth.device.queue.submit([commandEncoder.finish()]);
     this.hearth.backend.hearth.resources.textures.delete('mipmap-temporary-texture');
   }
 
@@ -255,7 +255,7 @@ export class HearthTexturesTexturePass {
       source = destination;
     }
 
-    this.hearth.backend.device.queue.submit([commandEncoder.finish()]);
+    this.hearth.device.queue.submit([commandEncoder.finish()]);
   }
 
   dispose() {
