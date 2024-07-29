@@ -1,5 +1,3 @@
-import type { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
-import type { StackNode } from '@modules/renderer/engine/nodes/core/StackNode.js';
 import type { Node } from '@modules/renderer/engine/nodes/core/Node.js';
 
 export interface ReflectedLight {
@@ -37,15 +35,15 @@ export interface Parameters {
 }
 
 export abstract class LightModel {
-  start(parameters: Parameters, stack: StackNode, builder: NodeBuilder): void {}
+  start(/*input, stack, builder*/) {}
 
-  finish(parameters: Parameters, stack: StackNode, builder: NodeBuilder): void {}
+  finish(/*input, stack, builder*/) {}
 
-  direct(parameters: DirectLight, stack: StackNode, builder: NodeBuilder): void {}
+  direct(/*input, stack, builder*/) {}
 
-  directRectArea(parameters: RectLight, stack: StackNode, builder: NodeBuilder): void {}
+  indirectDiffuse(/*input, stack, builder*/) {}
 
-  indirect(parameters: Parameters, stack: StackNode, builder: NodeBuilder): void {}
+  indirectSpecular(/*input, stack, builder*/) {}
 
-  ambientOcclusion(parameters: Parameters, stack: StackNode, builder: NodeBuilder): void {}
+  ambientOcclusion(/*input, stack, builder*/) {}
 }
