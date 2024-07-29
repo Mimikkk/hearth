@@ -52,7 +52,7 @@ const mipmapLabel = (format: GPUTextureFormat) => `mipmap-${format}`;
 const transferLabel = (format: GPUTextureFormat) => `${mipmapLabel(format)}-transfer`;
 const flipYLabel = (format: GPUTextureFormat) => `${mipmapLabel(format)}-flip_y`;
 
-export class BackendTexturesTexturePass {
+export class HearthTexturesTexturePass {
   transferPipelines = new Memo(
     (format: GPUTextureFormat) => {
       const { render, bindGroupLayouts } = this.hearth.backend.hearth.resources;
