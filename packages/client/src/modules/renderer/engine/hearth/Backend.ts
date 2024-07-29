@@ -9,7 +9,6 @@ import {
 } from './constants.js';
 
 import { BackendUtilities } from './Backend.Utilities.js';
-import BackendPipelines from './Backend.Pipelines.js';
 import { BackendTextures } from './Backend.Textures.js';
 import type { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import RenderContext from '@modules/renderer/engine/hearth/core/RenderContext.js';
@@ -47,7 +46,6 @@ export class Backend {
   colorBuffer: GPUTexture | null;
   renderPassDescriptor: GPURenderPassDescriptor | null;
   utilities: BackendUtilities;
-  pipelines: BackendPipelines;
   textures: BackendTextures;
   resolveBufferMap: Map<number, GPUBuffer>;
   resources: BackendResources;
@@ -62,7 +60,6 @@ export class Backend {
 
     this.resources = new BackendResources(this);
     this.utilities = new BackendUtilities(this);
-    this.pipelines = new BackendPipelines(this);
     this.textures = new BackendTextures(this);
     this.resolveBufferMap = new Map();
   }
@@ -869,11 +866,11 @@ export class Backend {
   }
 
   createRenderPipeline(renderObject: RenderObject) {
-    this.pipelines.createRenderPipeline(renderObject);
+    this.hearth.pipelines.createRenderPipeline(renderObject);
   }
 
   createComputePipeline(computePipeline: ComputePipeline, bindings: Binding[]) {
-    this.pipelines.createComputePipeline(computePipeline, bindings);
+    this.hearth.pipelines.createComputePipeline(computePipeline, bindings);
   }
 
   createBindings(bindings: Binding[]) {
