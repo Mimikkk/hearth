@@ -7,7 +7,7 @@ import {
 } from './constants.js';
 
 import { Backend } from '@modules/renderer/engine/hearth/Backend.js';
-import { BackendTexturePassMipmapShader } from '@modules/renderer/engine/hearth/Backend.TexturePass.MipmapShader.js';
+import { HearthTexturesTexturePassMipmapShader } from '@modules/renderer/engine/hearth/Hearth.Textures.TexturePass.MipmapShader.js';
 import { Memo } from '@modules/renderer/engine/hearth/memo/Memo.js';
 
 const encodePass = (
@@ -53,7 +53,7 @@ const mipmapLabel = (format: GPUTextureFormat) => `mipmap-${format}`;
 const transferLabel = (format: GPUTextureFormat) => `${mipmapLabel(format)}-transfer`;
 const flipYLabel = (format: GPUTextureFormat) => `${mipmapLabel(format)}-flip_y`;
 
-export class BackendTexturePass {
+export class BackendTexturesTexturePass {
   transferPipelines = new Memo(
     (format: GPUTextureFormat) => {
       const { render, bindGroupLayouts } = this.backend.hearth.resources;
@@ -143,10 +143,10 @@ export class BackendTexturePass {
       bindGroupLayouts.remove(`${label}-bind-group`);
     },
   );
-  mipmap: BackendTexturePassMipmapShader;
+  mipmap: HearthTexturesTexturePassMipmapShader;
 
   constructor(public backend: Backend) {
-    this.mipmap = new BackendTexturePassMipmapShader(backend);
+    this.mipmap = new HearthTexturesTexturePassMipmapShader(backend.hearth);
   }
 
   flipY(texture: GPUTexture, descriptor: GPUTextureDescriptor, layer: number): void {

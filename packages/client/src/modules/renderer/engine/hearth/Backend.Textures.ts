@@ -27,7 +27,7 @@ import {
   Wrapping,
 } from '../engine.js';
 
-import { BackendTexturePass } from './Backend.TexturePass.js';
+import { BackendTexturesTexturePass } from './Backend.Textures.TexturePass.js';
 import { Backend } from '@modules/renderer/engine/hearth/Backend.js';
 import StorageTexture from '@modules/renderer/engine/entities/textures/StorageTexture.js';
 import { TypedArrayConstructor } from '@modules/renderer/engine/math/MathUtils.js';
@@ -46,7 +46,7 @@ const _compareToWebGPU = {
 const _flipMap = [0, 1, 3, 2, 4, 5] as const;
 
 export class BackendTextures {
-  _passUtils: BackendTexturePass | null;
+  _passUtils: BackendTexturesTexturePass | null;
   defaultTexture: Texture | null;
   defaultCubeTexture: CubeTexture | null;
   colorBuffer: GPUTexture | null;
@@ -454,7 +454,7 @@ export class BackendTextures {
     let passUtils = this._passUtils;
 
     if (passUtils === null) {
-      this._passUtils = passUtils = new BackendTexturePass(this.backend);
+      this._passUtils = passUtils = new BackendTexturesTexturePass(this.backend);
     }
 
     return passUtils;

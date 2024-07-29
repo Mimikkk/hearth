@@ -1,7 +1,7 @@
-import { Backend } from './Backend.js';
 import { GPUFilterModeType } from './constants.js';
 import mipmapSource from './shaders/mipmap.wgsl?raw';
 import { ShaderStage } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 
 const names = {
   linear: 'mipmap-linear',
@@ -9,13 +9,13 @@ const names = {
   shader: 'mipmap',
 };
 
-export class BackendTexturePassMipmapShader {
+export class HearthTexturesTexturePassMipmapShader {
   samplerLinear: GPUSampler;
   samplerNearest: GPUSampler;
   shader: GPUShaderModule;
 
-  constructor(public backend: Backend) {
-    const { samplers, shaders } = this.backend.hearth.resources;
+  constructor(public hearth: Hearth) {
+    const { samplers, shaders } = this.hearth.resources;
 
     this.samplerLinear = samplers.get(names.linear, () => ({ minFilter: GPUFilterModeType.Linear }));
     this.samplerNearest = samplers.get(names.nearest, () => ({ minFilter: GPUFilterModeType.Nearest }));
@@ -38,7 +38,7 @@ export class BackendTexturePassMipmapShader {
   }
 
   dispose(): void {
-    const { samplers, shaders } = this.backend.hearth.resources;
+    const { samplers, shaders } = this.hearth.resources;
 
     samplers.delete(names.linear);
     samplers.delete(names.nearest);
