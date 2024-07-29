@@ -40,6 +40,12 @@ import { HearthPipelines } from '@modules/renderer/engine/hearth/Hearth.Pipeline
 import { HearthTextures } from '@modules/renderer/engine/hearth/Hearth.Textures.js';
 import { HearthPostprocess } from '@modules/renderer/engine/hearth/Hearth.Postprocess.js';
 import { Node } from '@modules/renderer/engine/nodes/core/Node.js';
+import { BackendUtilities } from '@modules/renderer/engine/hearth/Backend.Utilities.js';
+import { BackendAttributes } from '@modules/renderer/engine/hearth/Backend.Attributes.js';
+import { BackendBindings } from '@modules/renderer/engine/hearth/Backend.Bindings.js';
+import BackendPipelines from '@modules/renderer/engine/hearth/Backend.Pipelines.js';
+import { BackendTextures } from '@modules/renderer/engine/hearth/Backend.Textures.js';
+import { BackendResources } from '@modules/renderer/engine/hearth/Backend.Resources.js';
 
 export class Hearth {
   backend: Backend;
@@ -55,17 +61,28 @@ export class Hearth {
   useScissor: boolean;
 
   attributes: HearthAttributes;
+  // attributes: BackendAttributes;
   geometries: HearthGeometries;
   nodes: HearthNodes;
   animation: HearthAnimation;
   bindings: HearthBindings;
   objects: HearthEntities;
+  pipelines: BackendPipelines;
   pipelines: HearthPipelines;
 
   renderLists: HearthQueues;
   renderContexts: HearthContexts;
+  textures: BackendTextures;
   textures: HearthTextures;
   background: HearthBackground;
+
+  // adapter: GPUAdapter;
+  // device: GPUDevice;
+  // colorBuffer: GPUTexture | null;
+  // renderPassDescriptor: GPURenderPassDescriptor | null;
+  // utilities: BackendUtilities;
+  // resolveBufferMap: Map<number, GPUBuffer>;
+  // resources: BackendResources;
 
   context: RenderContext | null;
   target: RenderTarget | null;

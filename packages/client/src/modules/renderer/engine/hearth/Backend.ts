@@ -23,6 +23,7 @@ import ProgrammableStage from '@modules/renderer/engine/hearth/core/Programmable
 import { BackendResources } from './Backend.Resources.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { WeakMemo } from '@modules/renderer/engine/hearth/memo/WeakMemo.js';
+import { HearthBindings } from '@modules/renderer/engine/hearth/Hearth.Bindings.js';
 
 export class Backend {
   hearth: Hearth;
@@ -50,7 +51,6 @@ export class Backend {
   renderPassDescriptor: GPURenderPassDescriptor | null;
   utilities: BackendUtilities;
   attributes: BackendAttributes;
-  bindings: BackendBindings;
   pipelines: BackendPipelines;
   textures: BackendTextures;
   resolveBufferMap: Map<number, GPUBuffer>;
@@ -67,7 +67,6 @@ export class Backend {
     this.resources = new BackendResources(this);
     this.utilities = new BackendUtilities(this);
     this.attributes = new BackendAttributes(this);
-    this.bindings = new BackendBindings(this);
     this.pipelines = new BackendPipelines(this);
     this.textures = new BackendTextures(this);
     this.resolveBufferMap = new Map();
@@ -883,15 +882,15 @@ export class Backend {
   }
 
   createBindings(bindings: Binding[]) {
-    this.bindings.create(bindings);
+    this.hearth.bindings.create(bindings);
   }
 
   updateBindings(bindings: Binding[]) {
-    this.bindings.create(bindings);
+    this.hearth.bindings.create(bindings);
   }
 
   updateBinding(binding: Binding) {
-    this.bindings.update(binding);
+    this.hearth.bindings.updateBinding(binding);
   }
 
   createIndexAttribute(attribute: Attribute) {
