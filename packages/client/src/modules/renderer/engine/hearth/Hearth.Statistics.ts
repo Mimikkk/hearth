@@ -19,7 +19,6 @@ export class HearthStatistics {
     timestampTime: number;
     timestampCalls: number;
   };
-
   compute: {
     passes: number;
     previousCalls: number;
@@ -27,7 +26,6 @@ export class HearthStatistics {
     timestampTime: number;
     timestampCalls: number;
   };
-
   memory: {
     geometries: number;
     textures: number;
