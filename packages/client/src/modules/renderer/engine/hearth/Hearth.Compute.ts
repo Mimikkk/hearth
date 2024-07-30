@@ -16,7 +16,7 @@ export class HearthCompute extends HearthComponent {
 
     const descriptor = {} as GPUComputePassDescriptor;
 
-    this.hearth.timestamp.attach(computes, descriptor);
+    this.hearth.timestamp.meter(computes, descriptor);
 
     const encoder = this.hearth.device.createCommandEncoder();
     const pass = encoder.beginComputePass(descriptor);

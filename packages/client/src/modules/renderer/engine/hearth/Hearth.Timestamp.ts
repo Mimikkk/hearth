@@ -2,7 +2,7 @@ import { HearthComponent } from '@modules/renderer/engine/hearth/Hearth.Componen
 import { GPUFeature } from '@modules/renderer/engine/hearth/constants.js';
 
 export class HearthTimestamp extends HearthComponent {
-  attach(key: object, to: GPURenderPassDescriptor | GPUComputePassDescriptor): void {
+  meter(key: object, to: GPURenderPassDescriptor | GPUComputePassDescriptor): void {
     if (!this.allowed) return;
 
     if (this.queries.has(key)) return;
