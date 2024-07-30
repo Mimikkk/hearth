@@ -14,6 +14,7 @@ import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 import {
   Attribute,
   Color,
+  DepthTexture,
   Entity,
   FramebufferTexture,
   Frustum,
@@ -25,7 +26,13 @@ import {
   RenderTarget,
   Texture,
 } from '@modules/renderer/engine/engine.js';
-import { GPUFeature, GPUTextureFormatType } from '@modules/renderer/engine/hearth/constants.js';
+import {
+  GPUFeature,
+  GPULoadOpType,
+  GPUStoreOpType,
+  GPUTextureFormatType,
+  GPUTextureViewDimensionType,
+} from '@modules/renderer/engine/hearth/constants.js';
 import { RenderItem, RenderList, SortFn } from '@modules/renderer/engine/hearth/core/RenderList.js';
 import { ComputeNode } from '@modules/renderer/engine/nodes/gpgpu/ComputeNode.js';
 import { RenderContext } from '@modules/renderer/engine/hearth/core/RenderContext.js';
@@ -43,6 +50,11 @@ import { Node } from '@modules/renderer/engine/nodes/core/Node.js';
 import { HearthResources } from '@modules/renderer/engine/hearth/Hearth.Resources.js';
 import { HearthUtilities } from '@modules/renderer/engine/hearth/Hearth.Utilities.js';
 import { WeakMemo } from '@modules/renderer/engine/hearth/memo/WeakMemo.js';
+import RenderObject from '@modules/renderer/engine/hearth/core/RenderObject.js';
+import ComputePipeline from '@modules/renderer/engine/hearth/core/ComputePipeline.js';
+import Binding from '@modules/renderer/engine/hearth/bindings/Binding.js';
+import ProgrammableStage from '@modules/renderer/engine/hearth/core/ProgrammableStage.js';
+import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 
 export class Hearth {
   backend: Backend;
@@ -74,14 +86,6 @@ export class Hearth {
 
   renderPassDescriptor: GPURenderPassDescriptor | null = null;
   resolveBufferMap: Map<number, GPUBuffer> = new Map();
-
-  // adapter: GPUAdapter;
-  // device: GPUDevice;
-  // colorBuffer: GPUTexture | null;
-  // renderPassDescriptor: GPURenderPassDescriptor | null;
-  // utilities: BackendUtilities;
-  // resolveBufferMap: Map<number, GPUBuffer>;
-  // resources: BackendResources;
 
   memo: WeakMemo<any, any> = new WeakMemo(() => ({}));
   device: GPUDevice;
@@ -195,8 +199,6 @@ export class Hearth {
 
     hearth.device = device;
     hearth.adapter = adapter;
-    backend.device = device;
-    backend.adapter = adapter;
     hearth.colorBuffer = backend.hearth.textures.getColorBuffer();
 
     hearth.parameters.context.configure({
@@ -323,7 +325,7 @@ export class Hearth {
     this._activeRenderObjectFn = previousRenderObjectFunction;
 
     sceneRef.onAfterRender(this, scene, camera, target);
-    this.backend.resolveTimestamp(context, 'render');
+    this.resolveTimestamp(context, 'render');
 
     return context;
   }
@@ -357,7 +359,7 @@ export class Hearth {
 
     backend.finishCompute(computeNodes);
 
-    await this.backend.resolveTimestamp(computeNodes, 'compute');
+    await this.resolveTimestamp(computeNodes, 'compute');
     frame.renderId = previousRenderId;
   }
 
@@ -429,14 +431,6 @@ export class Hearth {
     this._handleObjectFn = this._compileObject;
   }
 
-  getMaxAnisotropy(): number {
-    return this.backend.getMaxAnisotropy();
-  }
-
-  async getArrayBuffer(attribute: Attribute) {
-    return await this.backend.getArrayBuffer(attribute);
-  }
-
   getDrawSize(into: Vec2 = Vec2.new()): Vec2 {
     return into.set(this._width * this._pixelRatio, this._height * this._pixelRatio).floor();
   }
@@ -461,26 +455,7 @@ export class Hearth {
     this.parameters.canvas.style.height = height + 'px';
 
     this.viewport.set(0, 0, width, height);
-    this.backend.updateSize();
-  }
-
-  isOccluded(object: Entity): boolean {
-    const renderContext = this.context;
-
-    return renderContext && this.backend.isOccluded(renderContext, object);
-  }
-
-  clear(color: boolean = true, depth: boolean = true, stencil: boolean = true) {
-    const target = this.target;
-
-    let data = null;
-    if (target) {
-      this.textures.updateRenderTarget(target);
-
-      data = this.textures.get(target);
-    }
-
-    this.backend.clear(color, depth, stencil, data);
+    this.updateSize();
   }
 
   get currentColorSpace() {
@@ -499,19 +474,6 @@ export class Hearth {
     this.target = renderTarget;
     this._activeCubeFace = activeCubeFace;
     this._activeMipmapLevel = activeMipmapLevel;
-  }
-
-  readFramebuffer(texture: FramebufferTexture): void {
-    this.textures.updateTexture(texture);
-
-    this.backend.readFramebuffer(texture);
-  }
-
-  patchTextureAt(texture: Texture, patch: Texture, at: { x: number; y: number; z?: number; level?: number }): void {
-    this.textures.updateTexture(patch);
-    this.textures.updateTexture(texture);
-
-    this.backend.patchTextureAt(texture, patch, at);
   }
 
   _projectObject(object: Entity, camera: Camera, groupOrder: number, renderList: RenderList): void {
@@ -698,6 +660,677 @@ export class Hearth {
 
   postprocess(into: Node) {
     return new HearthPostprocess(this, into).render();
+  }
+
+  createRenderPipeline(renderObject: RenderObject) {
+    this.pipelines.createRenderPipeline(renderObject);
+  }
+
+  createComputePipeline(computePipeline: ComputePipeline, bindings: Binding[]) {
+    this.pipelines.createComputePipeline(computePipeline, bindings);
+  }
+
+  createBindings(bindings: Binding[]) {
+    this.bindings.create(bindings);
+  }
+
+  updateBindings(bindings: Binding[]) {
+    this.bindings.create(bindings);
+  }
+
+  updateBinding(binding: Binding) {
+    this.bindings.updateBinding(binding);
+  }
+
+  createProgram(program: ProgrammableStage) {
+    const programGPU = this.memo.get(program);
+
+    programGPU.module = {
+      module: this.device.createShaderModule({ code: program.code, label: program.stage }),
+      entryPoint: 'main',
+    };
+  }
+
+  destroyProgram(program: ProgrammableStage) {
+    this.memo.delete(program);
+  }
+
+  hasFeature(name: string) {
+    return this.adapter.features.has(name);
+  }
+
+  patchTextureAt(texture: Texture, patch: Texture, at: { x: number; y: number; z?: number; level?: number }) {
+    this.textures.updateTexture(patch);
+    this.textures.updateTexture(texture);
+
+    const encoder = this.device.createCommandEncoder({
+      label: 'copyTextureToTexture_' + patch.id + '_' + texture.id,
+    });
+
+    encoder.copyTextureToTexture(
+      {
+        texture: this.memo.get(patch).texture,
+        mipLevel: at.level ?? 0,
+        origin: { x: 0, y: 0, z: 0 },
+      },
+      {
+        texture: this.memo.get(texture).texture,
+        mipLevel: at.level ?? 0,
+        origin: at,
+      },
+      [patch.image.width, patch.image.height],
+    );
+
+    this.device.queue.submit([encoder.finish()]);
+  }
+
+  readFramebuffer(into: Texture): void {
+    this.textures.updateTexture(into);
+
+    const context = this.context!;
+    const data = this.memo.get(context);
+
+    const { encoder, descriptor } = data;
+
+    let sourceGPU = null;
+
+    if (context.renderTarget) {
+      if (DepthTexture.is(into)) {
+        sourceGPU = this.memo.get(context.depthTexture).texture;
+      } else {
+        sourceGPU = this.memo.get(context.textures[0]).texture;
+      }
+    } else {
+      if (DepthTexture.is(into)) {
+        sourceGPU = this.textures.getDepthBuffer(context.useDepth, context.useStencil);
+      } else {
+        sourceGPU = this.parameters.context.getCurrentTexture();
+      }
+    }
+
+    const destinationGPU = this.memo.get(into).texture;
+
+    if (sourceGPU.format !== destinationGPU.format) {
+      console.error(
+        'WebGPUBackend: readFramebuffer: Source and destination formats do not match.',
+        sourceGPU.format,
+        destinationGPU.format,
+      );
+
+      return;
+    }
+
+    data.currentPass.end();
+
+    encoder.copyTextureToTexture(
+      {
+        texture: sourceGPU,
+        origin: { x: 0, y: 0, z: 0 },
+      },
+      {
+        texture: destinationGPU,
+      },
+      [into.image.width, into.image.height],
+    );
+
+    if (into.generateMipmaps) this.textures.generateMipmaps(into);
+
+    descriptor.colorAttachments[0].loadOp = GPULoadOpType.Load;
+    if (context.useDepth) descriptor.depthStencilAttachment.depthLoadOp = GPULoadOpType.Load;
+    if (context.useStencil) descriptor.depthStencilAttachment.stencilLoadOp = GPULoadOpType.Load;
+
+    data.currentPass = encoder.beginRenderPass(descriptor);
+    data.currentSets = { attributes: {} };
+  }
+
+  getMaxAnisotropy() {
+    return 16;
+  }
+
+  updateSize() {
+    this.colorBuffer = this.textures.getColorBuffer();
+    this.renderPassDescriptor = null;
+  }
+
+  createIndexAttribute(attribute: Attribute) {
+    this.attributes.create(attribute, GPUBufferUsage.INDEX | GPUBufferUsage.COPY_SRC | GPUBufferUsage.COPY_DST);
+  }
+
+  createAttribute(attribute: Attribute) {
+    this.attributes.create(attribute, GPUBufferUsage.VERTEX | GPUBufferUsage.COPY_SRC | GPUBufferUsage.COPY_DST);
+  }
+
+  createStorageAttribute(attribute: Attribute) {
+    this.attributes.create(
+      attribute,
+      GPUBufferUsage.STORAGE | GPUBufferUsage.VERTEX | GPUBufferUsage.COPY_SRC | GPUBufferUsage.COPY_DST,
+    );
+  }
+
+  updateAttribute(attribute: Attribute) {
+    this.attributes.updateAttr(attribute);
+  }
+
+  destroyAttribute(attribute: Attribute) {
+    this.attributes.deleteAttr(attribute);
+  }
+
+  createNodeBuilder(object: Entity, hearth: Hearth, scene: Scene | null = null) {
+    return new NodeBuilder(object, hearth, scene);
+  }
+
+  initTimestampBuffer(context: RenderContext, descriptor: GPURenderPassDescriptor): void {
+    if (!this.hasFeature(GPUFeature.TimestampQuery) || !this.parameters.useTimestamp) return;
+
+    const data = this.memo.get(context);
+    if (data.timeStampQuerySet) return;
+
+    const timeStampQuerySet = this.device.createQuerySet({ type: 'timestamp', count: 2 });
+    descriptor.timestampWrites = {
+      querySet: timeStampQuerySet,
+
+      beginningOfPassWriteIndex: 0,
+
+      endOfPassWriteIndex: 1,
+    };
+
+    data.timeStampQuerySet = timeStampQuerySet;
+  }
+
+  prepareTimestamp(context: RenderContext, encoder: GPUCommandEncoder) {
+    if (!this.hasFeature(GPUFeature.TimestampQuery) || !this.parameters.useTimestamp) return;
+
+    const data = this.memo.get(context);
+
+    const size = 2 * BigInt64Array.BYTES_PER_ELEMENT;
+
+    if (data.currentTimestampQueryBuffers === undefined) {
+      data.currentTimestampQueryBuffers = {
+        resolveBuffer: this.device.createBuffer({
+          label: 'timestamp resolve buffer',
+          size: size,
+          usage: GPUBufferUsage.QUERY_RESOLVE | GPUBufferUsage.COPY_SRC,
+        }),
+        resultBuffer: this.device.createBuffer({
+          label: 'timestamp result buffer',
+          size: size,
+          usage: GPUBufferUsage.COPY_DST | GPUBufferUsage.MAP_READ,
+        }),
+        isMappingPending: false,
+      };
+    }
+
+    const { resolveBuffer, resultBuffer, isMappingPending } = data.currentTimestampQueryBuffers;
+
+    if (isMappingPending === true) return;
+
+    encoder.resolveQuerySet(data.timeStampQuerySet, 0, 2, resolveBuffer, 0);
+    encoder.copyBufferToBuffer(resolveBuffer, 0, resultBuffer, 0, size);
+  }
+
+  async resolveTimestamp(context: RenderContext, type: 'render' | 'compute') {
+    if (!this.hasFeature(GPUFeature.TimestampQuery) || !this.parameters.useTimestamp) return;
+
+    const data = this.memo.get(context);
+
+    if (data.currentTimestampQueryBuffers === undefined) return;
+
+    const { resultBuffer, isMappingPending } = data.currentTimestampQueryBuffers;
+    if (isMappingPending === true) return;
+
+    data.currentTimestampQueryBuffers.isMappingPending = true;
+
+    await resultBuffer.mapAsync(GPUMapMode.READ);
+    const times = new BigUint64Array(resultBuffer.getMappedRange());
+    const duration = Number(times[1] - times[0]) / 1000000;
+
+    this.info.stamp(type, duration);
+    resultBuffer.unmap();
+    data.currentTimestampQueryBuffers.isMappingPending = false;
+  }
+
+  copyTextureToBuffer(texture: Texture, x: number, y: number, width: number, height: number) {
+    return this.textures.copyTextureToBuffer(texture, x, y, width, height);
+  }
+
+  createSampler(texture: Texture) {
+    this.textures.createSampler(texture);
+  }
+
+  destroySampler(texture: Texture) {
+    this.textures.destroySampler(texture);
+  }
+
+  createDefaultTexture(texture: Texture) {
+    this.textures.createDefaultTexture(texture);
+  }
+
+  createTexture(texture: Texture, options) {
+    this.textures.createTexture(texture, options);
+  }
+
+  updateTexture(texture: Texture, options) {
+    this.textures.updateTextureTex(texture, options);
+  }
+
+  generateMipmaps(texture: Texture) {
+    this.textures.generateMipmaps(texture);
+  }
+
+  destroyTexture(texture: Texture) {
+    this.textures.destroyTexture(texture);
+  }
+
+  getInstanceCount({ object, geometry }: RenderObject) {
+    return Math.max(geometry.instanceCount, object.count, 1);
+  }
+
+  getClearColor() {
+    const color = Color.from(this._clearColor);
+    color.getRGB(color, this.currentColorSpace);
+    return color;
+  }
+
+  needsRenderUpdate(renderObject: RenderObject) {
+    const data = this.memo.get(renderObject);
+
+    const { object, material } = renderObject;
+
+    const utils = this.utilities;
+
+    const sampleCount = utils.getSampleCount(renderObject.context);
+    const colorSpace = utils.getCurrentColorSpace(renderObject.context);
+    const colorFormat = utils.getCurrentColorFormat(renderObject.context);
+    const depthStencilFormat = utils.getCurrentDepthStencilFormat(renderObject.context);
+    const primitiveTopology = utils.getPrimitiveTopology(object, material);
+
+    let needsUpdate = false;
+
+    if (
+      data.material !== material ||
+      data.materialVersion !== material.version ||
+      data.transparent !== material.transparent ||
+      data.blending !== material.blending ||
+      data.premultipliedAlpha !== material.premultipliedAlpha ||
+      data.blendSrc !== material.blendSrc ||
+      data.blendDst !== material.blendDst ||
+      data.blendEquation !== material.blendEquation ||
+      data.blendSrcAlpha !== material.blendSrcAlpha ||
+      data.blendDstAlpha !== material.blendDstAlpha ||
+      data.blendEquationAlpha !== material.blendEquationAlpha ||
+      data.colorWrite !== material.colorWrite ||
+      data.depthWrite !== material.depthWrite ||
+      data.depthTest !== material.depthTest ||
+      data.depthFunc !== material.depthFunc ||
+      data.stencilWrite !== material.stencilWrite ||
+      data.stencilFunc !== material.stencilFunc ||
+      data.stencilFail !== material.stencilFail ||
+      data.stencilZFail !== material.stencilZFail ||
+      data.stencilZPass !== material.stencilZPass ||
+      data.stencilFuncMask !== material.stencilFuncMask ||
+      data.stencilWriteMask !== material.stencilWriteMask ||
+      data.side !== material.side ||
+      data.alphaToCoverage !== material.alphaToCoverage ||
+      data.sampleCount !== sampleCount ||
+      data.colorSpace !== colorSpace ||
+      data.colorFormat !== colorFormat ||
+      data.depthStencilFormat !== depthStencilFormat ||
+      data.primitiveTopology !== primitiveTopology ||
+      data.clippingContextVersion !== renderObject.clippingContextVersion
+    ) {
+      data.material = material;
+      data.materialVersion = material.version;
+      data.transparent = material.transparent;
+      data.blending = material.blending;
+      data.premultipliedAlpha = material.premultipliedAlpha;
+      data.blendSrc = material.blendSrc;
+      data.blendDst = material.blendDst;
+      data.blendEquation = material.blendEquation;
+      data.blendSrcAlpha = material.blendSrcAlpha;
+      data.blendDstAlpha = material.blendDstAlpha;
+      data.blendEquationAlpha = material.blendEquationAlpha;
+      data.colorWrite = material.colorWrite;
+      data.depthWrite = material.depthWrite;
+      data.depthTest = material.depthTest;
+      data.depthFunc = material.depthFunc;
+      data.stencilWrite = material.stencilWrite;
+      data.stencilFunc = material.stencilFunc;
+      data.stencilFail = material.stencilFail;
+      data.stencilZFail = material.stencilZFail;
+      data.stencilZPass = material.stencilZPass;
+      data.stencilFuncMask = material.stencilFuncMask;
+      data.stencilWriteMask = material.stencilWriteMask;
+      data.side = material.side;
+      data.alphaToCoverage = material.alphaToCoverage;
+      data.sampleCount = sampleCount;
+      data.colorSpace = colorSpace;
+      data.colorFormat = colorFormat;
+      data.depthStencilFormat = depthStencilFormat;
+      data.primitiveTopology = primitiveTopology;
+      data.clippingContextVersion = renderObject.clippingContextVersion;
+
+      needsUpdate = true;
+    }
+
+    return needsUpdate;
+  }
+
+  getRenderCacheKey(renderObject: RenderObject) {
+    const { object, material } = renderObject;
+
+    const utils = this.utilities;
+    const renderContext = renderObject.context;
+
+    return [
+      material.transparent,
+      material.blending,
+      material.premultipliedAlpha,
+      material.blendSrc,
+      material.blendDst,
+      material.blendEquation,
+      material.blendSrcAlpha,
+      material.blendDstAlpha,
+      material.blendEquationAlpha,
+      material.colorWrite,
+      material.depthWrite,
+      material.depthTest,
+      material.depthFunc,
+      material.stencilWrite,
+      material.stencilFunc,
+      material.stencilFail,
+      material.stencilZFail,
+      material.stencilZPass,
+      material.stencilFuncMask,
+      material.stencilWriteMask,
+      material.side,
+      utils.getSampleCount(renderContext),
+      utils.getCurrentColorSpace(renderContext),
+      utils.getCurrentColorFormat(renderContext),
+      utils.getCurrentDepthStencilFormat(renderContext),
+      utils.getPrimitiveTopology(object, material),
+      renderObject.clippingContextVersion,
+    ].join();
+  }
+
+  isOccluded(object: Entity) {
+    const renderContext = this.context;
+    if (renderContext) return false;
+
+    const renderContextData = this.memo.get(renderContext);
+
+    return renderContextData.occluded && renderContextData.occluded.has(object);
+  }
+
+  _getDefaultRenderPassDescriptor() {
+    let descriptor = this.renderPassDescriptor;
+
+    const antialias = this.parameters.antialias;
+
+    if (descriptor === null) {
+      descriptor = {
+        colorAttachments: [
+          {
+            view: null,
+          },
+        ],
+        depthStencilAttachment: {
+          view: this.textures.getDepthBuffer(this.parameters.useDepth, this.parameters.useStencil).createView(),
+        },
+      };
+
+      const colorAttachment = descriptor.colorAttachments[0];
+
+      if (antialias === true) {
+        colorAttachment.view = this.colorBuffer.createView();
+      } else {
+        colorAttachment.resolveTarget = undefined;
+      }
+
+      this.renderPassDescriptor = descriptor;
+    }
+
+    const colorAttachment = descriptor.colorAttachments[0];
+
+    if (antialias === true) {
+      colorAttachment.resolveTarget = this.parameters.context.getCurrentTexture().createView();
+    } else {
+      colorAttachment.view = this.parameters.context.getCurrentTexture().createView();
+    }
+
+    return descriptor;
+  }
+
+  _getRenderPassDescriptor(renderContext: RenderContext) {
+    const renderTarget = renderContext.renderTarget;
+    const renderTargetData = this.memo.get(renderTarget);
+
+    let descriptors = renderTargetData.descriptors;
+
+    if (descriptors === undefined) {
+      descriptors = [];
+
+      renderTargetData.descriptors = descriptors;
+    }
+
+    if (
+      renderTargetData.width !== renderTarget.width ||
+      renderTargetData.height !== renderTarget.height ||
+      renderTargetData.activeMipmapLevel !== renderTarget.activeMipmapLevel ||
+      renderTargetData.samples !== renderTarget.samples
+    ) {
+      descriptors.length = 0;
+    }
+
+    let descriptor = descriptors[renderContext.activeCubeFace];
+
+    if (descriptor === undefined) {
+      const textures = renderContext.textures;
+      const colorAttachments = [];
+
+      for (let i = 0; i < textures.length; i++) {
+        const textureData = this.memo.get(textures[i]);
+
+        const textureView = textureData.texture.createView({
+          baseMipLevel: renderContext.activeMipmapLevel,
+          mipLevelCount: 1,
+          baseArrayLayer: renderContext.activeCubeFace,
+          dimension: GPUTextureViewDimensionType.TwoD,
+        });
+
+        let view, resolveTarget;
+
+        if (textureData.msaaTexture !== undefined) {
+          view = textureData.msaaTexture.createView();
+          resolveTarget = textureView;
+        } else {
+          view = textureView;
+          resolveTarget = undefined;
+        }
+
+        colorAttachments.push({
+          view,
+          resolveTarget,
+          loadOp: GPULoadOpType.Load,
+          storeOp: GPUStoreOpType.Store,
+        });
+      }
+
+      const depthTextureData = this.memo.get(renderContext.depthTexture);
+
+      const depthStencilAttachment = {
+        view: depthTextureData.texture.createView(),
+      };
+
+      descriptor = {
+        colorAttachments,
+        depthStencilAttachment,
+      };
+
+      descriptors[renderContext.activeCubeFace] = descriptor;
+
+      renderTargetData.width = renderTarget.width;
+      renderTargetData.height = renderTarget.height;
+      renderTargetData.samples = renderTarget.samples;
+      renderTargetData.activeMipmapLevel = renderTarget.activeMipmapLevel;
+    }
+
+    return descriptor;
+  }
+
+  updateViewport(renderContext: RenderContext) {
+    const { currentPass } = this.memo.get(renderContext);
+    const { x, y, width, height, minDepth, maxDepth } = renderContext.viewportValue;
+
+    currentPass.setViewport(x, renderContext.height - height - y, width, height, minDepth, maxDepth);
+  }
+
+  clear(color: boolean = true, depth: boolean = true, stencil: boolean = true) {
+    const target = this.target;
+
+    let renderTargetData = null;
+    if (target) {
+      this.textures.updateRenderTarget(target);
+
+      renderTargetData = this.textures.get(target);
+    }
+
+    const device = this.device;
+    const hearth = this;
+
+    let colorAttachments = [];
+
+    let depthStencilAttachment;
+    let clearValue;
+
+    let supportsDepth;
+    let supportsStencil;
+
+    if (color) {
+      const clearColor = this.getClearColor();
+
+      clearValue = { r: clearColor.r, g: clearColor.g, b: clearColor.b, a: clearColor.a };
+    }
+
+    if (renderTargetData === null) {
+      supportsDepth = hearth.parameters.useDepth;
+      supportsStencil = hearth.parameters.useStencil;
+
+      const descriptor = this._getDefaultRenderPassDescriptor();
+
+      if (color) {
+        colorAttachments = descriptor.colorAttachments;
+
+        const colorAttachment = colorAttachments[0];
+
+        colorAttachment.clearValue = clearValue;
+        colorAttachment.loadOp = GPULoadOpType.Clear;
+        colorAttachment.storeOp = GPUStoreOpType.Store;
+      }
+
+      if (supportsDepth || supportsStencil) {
+        depthStencilAttachment = descriptor.depthStencilAttachment;
+      }
+    } else {
+      supportsDepth = renderTargetData.depth;
+      supportsStencil = renderTargetData.stencil;
+
+      if (color) {
+        for (const texture of renderTargetData.textures) {
+          const textureData = this.memo.get(texture);
+          const textureView = textureData.texture.createView();
+
+          let view, resolveTarget;
+
+          if (textureData.msaaTexture !== undefined) {
+            view = textureData.msaaTexture.createView();
+            resolveTarget = textureView;
+          } else {
+            view = textureView;
+            resolveTarget = undefined;
+          }
+
+          colorAttachments.push({
+            view,
+            resolveTarget,
+            clearValue,
+            loadOp: GPULoadOpType.Clear,
+            storeOp: GPUStoreOpType.Store,
+          });
+        }
+      }
+
+      if (supportsDepth || supportsStencil) {
+        const depthTextureData = this.memo.get(renderTargetData.depthTexture);
+
+        depthStencilAttachment = {
+          view: depthTextureData.texture.createView(),
+        };
+      }
+    }
+
+    if (supportsDepth) {
+      if (depth) {
+        depthStencilAttachment.depthLoadOp = GPULoadOpType.Clear;
+        depthStencilAttachment.depthClearValue = hearth._clearDepth;
+        depthStencilAttachment.depthStoreOp = GPUStoreOpType.Store;
+      } else {
+        depthStencilAttachment.depthLoadOp = GPULoadOpType.Load;
+        depthStencilAttachment.depthStoreOp = GPUStoreOpType.Store;
+      }
+    }
+
+    if (supportsStencil) {
+      if (stencil) {
+        depthStencilAttachment.stencilLoadOp = GPULoadOpType.Clear;
+        depthStencilAttachment.stencilClearValue = hearth._clearStencil;
+        depthStencilAttachment.stencilStoreOp = GPUStoreOpType.Store;
+      } else {
+        depthStencilAttachment.stencilLoadOp = GPULoadOpType.Load;
+        depthStencilAttachment.stencilStoreOp = GPUStoreOpType.Store;
+      }
+    }
+
+    const encoder = device.createCommandEncoder({});
+    const currentPass = encoder.beginRenderPass({
+      colorAttachments,
+      depthStencilAttachment,
+    });
+
+    currentPass.end();
+
+    device.queue.submit([encoder.finish()]);
+  }
+
+  async getArrayBuffer(attribute: Attribute) {
+    return await this.attributes.read(attribute);
+  }
+
+  async resolveOccludedAsync(renderContext: RenderContext) {
+    const renderContextData = this.memo.get(renderContext);
+
+    const { currentOcclusionQueryBuffer, currentOcclusionQueryObjects } = renderContextData;
+
+    if (currentOcclusionQueryBuffer && currentOcclusionQueryObjects) {
+      const occluded = new WeakSet();
+
+      renderContextData.currentOcclusionQueryObjects = null;
+      renderContextData.currentOcclusionQueryBuffer = null;
+
+      await currentOcclusionQueryBuffer.mapAsync(GPUMapMode.READ);
+
+      const buffer = currentOcclusionQueryBuffer.getMappedRange();
+      const results = new BigUint64Array(buffer);
+
+      for (let i = 0; i < currentOcclusionQueryObjects.length; i++) {
+        if (results[i] !== 0n) {
+          occluded.add(currentOcclusionQueryObjects[i]);
+        }
+      }
+
+      currentOcclusionQueryBuffer.destroy();
+
+      renderContextData.occluded = occluded;
+    }
   }
 }
 

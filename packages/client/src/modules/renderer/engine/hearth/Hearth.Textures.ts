@@ -125,8 +125,8 @@ export class HearthTextures extends DataMap<any, any> {
     const backend = this.hearth.backend;
 
     if (isRenderTarget && textureData.initialized === true) {
-      backend.destroySampler(texture);
-      backend.destroyTexture(texture);
+      this.hearth.destroySampler(texture);
+      this.hearth.destroyTexture(texture);
     }
 
     if (texture.isFramebufferTexture) {
@@ -149,12 +149,12 @@ export class HearthTextures extends DataMap<any, any> {
     options.levels = options.needsMipmaps ? this.getMipLevels(texture, width, height) : 1;
 
     if (isRenderTarget || texture.isStorageTexture === true) {
-      backend.createSampler(texture);
-      backend.createTexture(texture, options);
+      this.hearth.createSampler(texture);
+      this.hearth.createTexture(texture, options);
     } else {
       const needsCreate = textureData.initialized !== true;
 
-      if (needsCreate) backend.createSampler(texture);
+      if (needsCreate) this.hearth.createSampler(texture);
 
       if (texture.version > 0) {
         const image = texture.image;
@@ -177,17 +177,17 @@ export class HearthTextures extends DataMap<any, any> {
           }
 
           if (textureData.isDefaultTexture === undefined || textureData.isDefaultTexture === true) {
-            backend.createTexture(texture, options);
+            this.hearth.createTexture(texture, options);
 
             textureData.isDefaultTexture = false;
           }
 
-          if (texture.source.dataReady === true) backend.updateTexture(texture, options);
+          if (texture.source.dataReady === true) this.hearth.updateTexture(texture, options);
 
-          if (options.needsMipmaps && texture.mipmaps.length === 0) backend.generateMipmaps(texture);
+          if (options.needsMipmaps && texture.mipmaps.length === 0) this.hearth.generateMipmaps(texture);
         }
       } else {
-        backend.createDefaultTexture(texture);
+        this.hearth.createDefaultTexture(texture);
 
         textureData.isDefaultTexture = true;
       }
@@ -252,8 +252,8 @@ export class HearthTextures extends DataMap<any, any> {
   }
 
   _destroyTexture(texture: Texture): void {
-    this.hearth.backend.destroySampler(texture);
-    this.hearth.backend.destroyTexture(texture);
+    this.hearth.destroySampler(texture);
+    this.hearth.destroyTexture(texture);
 
     this.delete(texture);
   }
@@ -428,7 +428,7 @@ export class HearthTextures extends DataMap<any, any> {
   getColorBuffer() {
     if (this.colorBuffer) this.colorBuffer.destroy();
 
-    const { width, height } = this.hearth.backend.hearth.getDrawSize();
+    const { width, height } = this.hearth.getDrawSize();
     this.colorBuffer = this.hearth.device.createTexture({
       label: 'colorBuffer',
       size: { width, height, depthOrArrayLayers: 1 },
@@ -652,7 +652,7 @@ export class HearthTextures extends DataMap<any, any> {
     let passUtils = this._passUtils;
 
     if (passUtils === null) {
-      this._passUtils = passUtils = new HearthTexturesTexturePass(this.hearth.backend.hearth);
+      this._passUtils = passUtils = new HearthTexturesTexturePass(this.hearth);
     }
 
     return passUtils;

@@ -113,7 +113,7 @@ export class HearthNodes extends DataMap<any, any> {
       nodeBuilderState = nodeBuilderCache.get(cacheKey);
 
       if (nodeBuilderState === undefined) {
-        const nodeBuilder = this.hearth.backend.createNodeBuilder(renderObject.object, this.hearth, renderObject.scene);
+        const nodeBuilder = this.hearth.createNodeBuilder(renderObject.object, this.hearth, renderObject.scene);
         nodeBuilder.material = renderObject.material;
         nodeBuilder.context.material = renderObject.material;
         nodeBuilder.lightsNode = renderObject.lightsNode;
@@ -155,7 +155,7 @@ export class HearthNodes extends DataMap<any, any> {
     let nodeBuilderState = computeData.nodeBuilderState;
 
     if (nodeBuilderState === undefined) {
-      const nodeBuilder = this.hearth.backend.createNodeBuilder(computeNode, this.hearth);
+      const nodeBuilder = this.hearth.createNodeBuilder(computeNode, this.hearth);
       nodeBuilder.build();
 
       nodeBuilderState = this._createNodeBuilderState(nodeBuilder);

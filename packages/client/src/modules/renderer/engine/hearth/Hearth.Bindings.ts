@@ -42,7 +42,7 @@ export class HearthBindings extends DataMap<any, any> {
 
       this._init(bindings);
 
-      this.hearth.backend.createBindings(bindings);
+      this.hearth.createBindings(bindings);
     }
 
     return data.bindings;
@@ -60,7 +60,7 @@ export class HearthBindings extends DataMap<any, any> {
 
       this._init(bindings);
 
-      this.hearth.backend.createBindings(bindings);
+      this.hearth.createBindings(bindings);
     }
 
     return data.bindings;
@@ -100,7 +100,7 @@ export class HearthBindings extends DataMap<any, any> {
         const updated = binding.update();
 
         if (updated) {
-          this.hearth.backend.updateBinding(binding);
+          this.hearth.updateBinding(binding);
         }
       } else if (binding instanceof BindingSampledTexture) {
         const texture = binding.texture;
@@ -123,7 +123,7 @@ export class HearthBindings extends DataMap<any, any> {
             this.hearth.textures.needsMipmaps(texture) &&
             textureData.needsMipmap === true
           ) {
-            this.hearth.backend.generateMipmaps(texture);
+            this.hearth.generateMipmaps(texture);
 
             textureData.needsMipmap = false;
           }
@@ -132,7 +132,7 @@ export class HearthBindings extends DataMap<any, any> {
     }
 
     if (needsBindingsUpdate === true) {
-      this.hearth.backend.updateBindings(bindings);
+      this.hearth.updateBindings(bindings);
     }
   }
 

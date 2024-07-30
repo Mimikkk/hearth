@@ -185,7 +185,7 @@ async function animate() {
 
   await hearth.render(scene, camera);
 
-  if (hearth.backend.hasFeature('timestamp-query')) {
+  if (hearth.hasFeature('timestamp-query')) {
     if (hearth.info.render.passes % 5 === 0) {
       timestamps.innerHTML = `
 							Compute ${hearth.info.compute.calls} pass in ${hearth.info.compute.timestampTime.toFixed(6)}ms<br>

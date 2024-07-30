@@ -239,7 +239,7 @@ export class Stats {
     this.precision = precision;
     this.logsPerSecond = logsPerSecond;
 
-    if (hearth.backend.hasFeature(GPUFeature.TimestampQuery)) {
+    if (hearth.hasFeature(GPUFeature.TimestampQuery)) {
       hearth.parameters.useTimestamp = true;
       this.gpuRender = this.createPanel('GPU', '#ff0', '#220', 2);
       this.gpuCompute = this.createPanel('CPT', '#e1e1e1', '#212121', 3);

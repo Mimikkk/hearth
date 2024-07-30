@@ -14,7 +14,7 @@ export class HearthAttributes extends DataMap<Attribute, any> {
     const data = super.delete(attribute);
 
     if (data !== undefined) {
-      this.hearth.backend.destroyAttribute(attribute);
+      this.hearth.destroyAttribute(attribute);
     }
 
     return data;
@@ -25,11 +25,11 @@ export class HearthAttributes extends DataMap<Attribute, any> {
 
     if (data.version === undefined) {
       if (type === AttributeLocation.Vertex) {
-        this.hearth.backend.createAttribute(attribute);
+        this.hearth.createAttribute(attribute);
       } else if (type === AttributeLocation.Index) {
-        this.hearth.backend.createIndexAttribute(attribute);
+        this.hearth.createIndexAttribute(attribute);
       } else if (type === AttributeLocation.Storage) {
-        this.hearth.backend.createStorageAttribute(attribute);
+        this.hearth.createStorageAttribute(attribute);
       }
 
       data.version = attribute.version;
@@ -37,7 +37,7 @@ export class HearthAttributes extends DataMap<Attribute, any> {
       const buffer = attribute;
 
       if (data.version < buffer.version || buffer.usage === BufferUse.DynamicDraw) {
-        this.hearth.backend.updateAttribute(attribute);
+        this.hearth.updateAttribute(attribute);
 
         data.version = buffer.version;
       }

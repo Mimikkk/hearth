@@ -49,6 +49,10 @@ export class DepthTexture extends Texture {
     this.compare = null;
   }
 
+  static is(value: any): value is DepthTexture {
+    return value.isDepthTexture;
+  }
+
   copy(source: this): this {
     super.copy(source);
 
