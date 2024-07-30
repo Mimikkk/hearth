@@ -807,12 +807,12 @@ export class Hearth {
   }
 
   isOccluded(object: Entity) {
-    const renderContext = this.context;
-    if (renderContext) return false;
+    const context = this.context;
+    if (!context) return false;
 
-    const renderContextData = this.memo.get(renderContext);
+    const data = this.memo.get(context);
 
-    return renderContextData.occluded && renderContextData.occluded.has(object);
+    return data.occluded && data.occluded.has(object);
   }
 
   clear(color: boolean = true, depth: boolean = true, stencil: boolean = true) {

@@ -1,12 +1,12 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
-import { MeshPhongNodeMaterial, Node, asNode, NodeUpdateType, uniform } from '@modules/renderer/engine/nodes/Nodes.js';
+import { Camera, Scene } from '@modules/renderer/engine/engine.js';
+import { asNode, MeshPhongNodeMaterial, Node, NodeUpdateType, uniform } from '@modules/renderer/engine/nodes/Nodes.js';
 
 import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
 
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
-import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
-import { Camera, Scene } from '@modules/renderer/engine/engine.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
+import NodeFrame from '@modules/renderer/engine/nodes/core/NodeFrame.js';
 
 let camera: Camera, scene: Scene, hearth: Hearth, controls: OrbitControls;
 
@@ -23,10 +23,9 @@ class OcclusionNode extends Node {
     this.occludedColor = occludedColor;
   }
 
-  async update(frame) {
+  async update(frame: NodeFrame): void {
     const isOccluded = frame.hearth.isOccluded(this.testObject);
-
-    this.uniformNode.value.copy(isOccluded ? this.occludedColor : this.normalColor);
+    this.uniformNode.value.from(isOccluded ? this.occludedColor : this.normalColor);
   }
 
   setup() {
