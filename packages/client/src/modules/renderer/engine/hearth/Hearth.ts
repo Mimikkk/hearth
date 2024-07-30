@@ -55,6 +55,7 @@ import Binding from '@modules/renderer/engine/hearth/bindings/Binding.js';
 import ProgrammableStage from '@modules/renderer/engine/hearth/core/ProgrammableStage.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { HearthCompute } from '@modules/renderer/engine/hearth/Hearth.Compute.js';
+import { HearthTimestamp } from '@modules/renderer/engine/hearth/Hearth.Timestamp.js';
 
 export class Hearth {
   info: HearthStatistics;
@@ -77,6 +78,7 @@ export class Hearth {
   pipelines: HearthPipelines;
   resources: HearthResources;
   computer: HearthCompute;
+  timestamp: HearthTimestamp;
 
   renderLists: HearthQueues;
   renderContexts: HearthContexts;
@@ -168,6 +170,7 @@ export class Hearth {
     this.bindings = new HearthBindings(this);
     this.objects = new HearthEntities(this);
     this.computer = new HearthCompute(this);
+    this.timestamp = new HearthTimestamp(this);
     this.renderLists = new HearthQueues();
     this.renderContexts = new HearthContexts();
     this.context = null;
