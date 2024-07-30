@@ -28,6 +28,7 @@ import {
 } from '@modules/renderer/engine/engine.js';
 import {
   GPUFeature,
+  GPUIndexFormatType,
   GPULoadOpType,
   GPUStoreOpType,
   GPUTextureFormatType,
@@ -57,7 +58,6 @@ import ProgrammableStage from '@modules/renderer/engine/hearth/core/Programmable
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 
 export class Hearth {
-  backend: Backend;
   info: HearthStatistics;
 
   _pixelRatio: number;
@@ -155,7 +155,6 @@ export class Hearth {
 
     this.useScissor = false;
 
-    this.backend = new Backend(this);
     this.info = new HearthStatistics();
     this.nodes = new HearthNodes(this);
     this.animation = new HearthAnimation(this);
@@ -187,10 +186,9 @@ export class Hearth {
 
   static async as(parameters?: Options): Promise<Hearth> {
     const hearth = new Hearth(parameters);
-    const backend = hearth.backend;
 
     const adapter = await navigator.gpu.requestAdapter({ powerPreference: hearth.parameters.powerPreference });
-    if (adapter === null) throw Error('WebGPUBackend: Unable to create WebGPU adapter.');
+    if (adapter === null) throw Error('Hearth: Unable to create WebGPU adapter.');
 
     const device = await adapter.requestDevice({
       requiredFeatures: Object.values(GPUFeature).filter(name => adapter.features.has(name)),
@@ -199,7 +197,7 @@ export class Hearth {
 
     hearth.device = device;
     hearth.adapter = adapter;
-    hearth.colorBuffer = backend.hearth.textures.getColorBuffer();
+    hearth.colorBuffer = hearth.textures.getColorBuffer();
 
     hearth.parameters.context.configure({
       device,
@@ -309,7 +307,7 @@ export class Hearth {
 
     this.nodes.updateScene(sceneRef);
     this.background.update(sceneRef, renderList, context);
-    this.backend.beginRender(context);
+    this.beginRender(context);
 
     const opaque = renderList.opaque;
     const transparent = renderList.transparent;
@@ -318,14 +316,14 @@ export class Hearth {
     if (opaque.length > 0) this._renderObjects(opaque, camera, sceneRef, lightsNode);
     if (transparent.length > 0) this._renderObjects(transparent, camera, sceneRef, lightsNode);
 
-    this.backend.finishRender(context);
+    this.finishRender(context);
 
     nodeFrame.renderId = previousRenderId;
     this.context = previousRenderContext;
     this._activeRenderObjectFn = previousRenderObjectFunction;
 
     sceneRef.onAfterRender(this, scene, camera, target);
-    this.resolveTimestamp(context, 'render');
+    await this.resolveTimestamp(context, 'render');
 
     return context;
   }
@@ -338,11 +336,10 @@ export class Hearth {
     this.info.compute.passes++;
     frame.renderId = this.info.passes;
 
-    const backend = this.backend;
     const pipelines = this.pipelines;
     const bindings = this.bindings;
     const nodes = this.nodes;
-    backend.beginCompute(computeNodes);
+    this.beginCompute(computeNodes);
 
     const computes = Array.isArray(computeNodes) ? computeNodes : [computeNodes];
     for (const computeNode of computes) {
@@ -354,10 +351,10 @@ export class Hearth {
       const computeBindings = bindings.getForCompute(computeNode);
       const computePipeline = pipelines.getForCompute(computeNode, computeBindings);
 
-      backend.compute(computeNodes, computeNode, computeBindings, computePipeline);
+      this.computeR(computeNodes, computeNode, computeBindings, computePipeline);
     }
 
-    backend.finishCompute(computeNodes);
+    this.finishCompute(computeNodes);
 
     await this.resolveTimestamp(computeNodes, 'compute');
     frame.renderId = previousRenderId;
@@ -638,7 +635,7 @@ export class Hearth {
     this.geometries.updateForRender(renderable);
     this.bindings.updateForRender(renderable);
     this.pipelines.updateForRender(renderable);
-    this.backend.draw(renderable);
+    this.draw(renderable);
   }
 
   _createObject(
@@ -752,7 +749,7 @@ export class Hearth {
 
     if (sourceGPU.format !== destinationGPU.format) {
       console.error(
-        'WebGPUBackend: readFramebuffer: Source and destination formats do not match.',
+        'Hearth: readFramebuffer: Source and destination formats do not match.',
         sourceGPU.format,
         destinationGPU.format,
       );
@@ -1330,6 +1327,296 @@ export class Hearth {
       currentOcclusionQueryBuffer.destroy();
 
       renderContextData.occluded = occluded;
+    }
+  }
+
+  beginRender(renderContext: RenderContext) {
+    const renderContextData = this.memo.get(renderContext);
+
+    const device = this.device;
+    const occlusionQueryCount = renderContext.occlusionQueryCount;
+
+    let occlusionQuerySet;
+
+    if (occlusionQueryCount > 0) {
+      if (renderContextData.currentOcclusionQuerySet) renderContextData.currentOcclusionQuerySet.destroy();
+      if (renderContextData.currentOcclusionQueryBuffer) renderContextData.currentOcclusionQueryBuffer.destroy();
+
+      renderContextData.currentOcclusionQuerySet = renderContextData.occlusionQuerySet;
+      renderContextData.currentOcclusionQueryBuffer = renderContextData.occlusionQueryBuffer;
+      renderContextData.currentOcclusionQueryObjects = renderContextData.occlusionQueryObjects;
+
+      occlusionQuerySet = device.createQuerySet({ type: 'occlusion', count: occlusionQueryCount });
+
+      renderContextData.occlusionQuerySet = occlusionQuerySet;
+      renderContextData.occlusionQueryIndex = 0;
+      renderContextData.occlusionQueryObjects = new Array(occlusionQueryCount);
+
+      renderContextData.lastOcclusionObject = null;
+    }
+
+    let descriptor;
+
+    if (renderContext.textures === null) {
+      descriptor = this._getDefaultRenderPassDescriptor();
+    } else {
+      descriptor = this._getRenderPassDescriptor(renderContext);
+    }
+
+    this.initTimestampBuffer(renderContext, descriptor);
+
+    descriptor.occlusionQuerySet = occlusionQuerySet;
+
+    const depthStencilAttachment = descriptor.depthStencilAttachment;
+
+    if (renderContext.textures !== null) {
+      const colorAttachments = descriptor.colorAttachments;
+
+      for (let i = 0; i < colorAttachments.length; i++) {
+        const colorAttachment = colorAttachments[i];
+
+        if (renderContext.useClearColor) {
+          colorAttachment.clearValue = renderContext.clearColorValue;
+          colorAttachment.loadOp = GPULoadOpType.Clear;
+          colorAttachment.storeOp = GPUStoreOpType.Store;
+        } else {
+          colorAttachment.loadOp = GPULoadOpType.Load;
+          colorAttachment.storeOp = GPUStoreOpType.Store;
+        }
+      }
+    } else {
+      const colorAttachment = descriptor.colorAttachments[0];
+
+      if (renderContext.useClearColor) {
+        colorAttachment.clearValue = renderContext.clearColorValue;
+        colorAttachment.loadOp = GPULoadOpType.Clear;
+        colorAttachment.storeOp = GPUStoreOpType.Store;
+      } else {
+        colorAttachment.loadOp = GPULoadOpType.Load;
+        colorAttachment.storeOp = GPUStoreOpType.Store;
+      }
+    }
+
+    if (renderContext.useDepth) {
+      if (renderContext.useClearDepth) {
+        depthStencilAttachment.depthClearValue = renderContext.clearDepthValue;
+        depthStencilAttachment.depthLoadOp = GPULoadOpType.Clear;
+        depthStencilAttachment.depthStoreOp = GPUStoreOpType.Store;
+      } else {
+        depthStencilAttachment.depthLoadOp = GPULoadOpType.Load;
+        depthStencilAttachment.depthStoreOp = GPUStoreOpType.Store;
+      }
+    }
+
+    if (renderContext.useStencil) {
+      if (renderContext.useClearStencil) {
+        depthStencilAttachment.stencilClearValue = renderContext.clearStencilValue;
+        depthStencilAttachment.stencilLoadOp = GPULoadOpType.Clear;
+        depthStencilAttachment.stencilStoreOp = GPUStoreOpType.Store;
+      } else {
+        depthStencilAttachment.stencilLoadOp = GPULoadOpType.Load;
+        depthStencilAttachment.stencilStoreOp = GPUStoreOpType.Store;
+      }
+    }
+
+    const encoder = device.createCommandEncoder({ label: 'renderContext_' + renderContext.id });
+    const currentPass = encoder.beginRenderPass(descriptor);
+
+    renderContextData.descriptor = descriptor;
+    renderContextData.encoder = encoder;
+    renderContextData.currentPass = currentPass;
+    renderContextData.currentSets = { attributes: {} };
+
+    if (renderContext.useViewport) {
+      this.updateViewport(renderContext);
+    }
+
+    if (renderContext.useScissor) {
+      const { x, y, width, height } = renderContext.scissorValue;
+
+      currentPass.setScissorRect(x, renderContext.height - height - y, width, height);
+    }
+  }
+
+  async finishRender(renderContext: RenderContext) {
+    const renderContextData = this.memo.get(renderContext);
+    const occlusionQueryCount = renderContext.occlusionQueryCount;
+
+    if (occlusionQueryCount > renderContextData.occlusionQueryIndex) {
+      renderContextData.currentPass.endOcclusionQuery();
+    }
+
+    renderContextData.currentPass.end();
+
+    if (occlusionQueryCount > 0) {
+      const bufferSize = occlusionQueryCount * 8;
+
+      let queryResolveBuffer = this.resolveBufferMap.get(bufferSize);
+
+      if (queryResolveBuffer === undefined) {
+        queryResolveBuffer = this.device.createBuffer({
+          size: bufferSize,
+          usage: GPUBufferUsage.QUERY_RESOLVE | GPUBufferUsage.COPY_SRC,
+        });
+
+        this.resolveBufferMap.set(bufferSize, queryResolveBuffer);
+      }
+
+      const readBuffer = this.device.createBuffer({
+        size: bufferSize,
+        usage: GPUBufferUsage.COPY_DST | GPUBufferUsage.MAP_READ,
+      });
+
+      renderContextData.encoder.resolveQuerySet(
+        renderContextData.occlusionQuerySet,
+        0,
+        occlusionQueryCount,
+        queryResolveBuffer,
+        0,
+      );
+      renderContextData.encoder.copyBufferToBuffer(queryResolveBuffer, 0, readBuffer, 0, bufferSize);
+
+      renderContextData.occlusionQueryBuffer = readBuffer;
+
+      await this.resolveOccludedAsync(renderContext);
+    }
+
+    this.prepareTimestamp(renderContext, renderContextData.encoder);
+
+    this.device.queue.submit([renderContextData.encoder.finish()]);
+
+    if (renderContext.textures !== null) {
+      const textures = renderContext.textures;
+
+      for (let i = 0; i < textures.length; i++) {
+        const texture = textures[i];
+
+        if (texture.generateMipmaps === true) {
+          this.textures.generateMipmaps(texture);
+        }
+      }
+    }
+  }
+
+  beginCompute(computeGroup: ComputeNode) {
+    const groupGPU = this.memo.get(computeGroup);
+
+    const descriptor = {};
+
+    this.initTimestampBuffer(computeGroup, descriptor);
+
+    groupGPU.cmdEncoderGPU = this.device.createCommandEncoder();
+
+    groupGPU.passEncoderGPU = groupGPU.cmdEncoderGPU.beginComputePass(descriptor);
+  }
+
+  computeR(computeGroup: ComputeNode, computeNode: ComputeNode, bindings: Binding[], pipeline: ComputePipeline) {
+    const { passEncoderGPU } = this.memo.get(computeGroup);
+
+    const pipelineGPU = this.memo.get(pipeline).pipeline;
+    passEncoderGPU.setPipeline(pipelineGPU);
+
+    const bindGroupGPU = this.memo.get(bindings).group;
+    passEncoderGPU.setBindGroup(0, bindGroupGPU);
+
+    passEncoderGPU.dispatchWorkgroups(computeNode.dispatchCount);
+  }
+
+  finishCompute(computeGroup: ComputeNode) {
+    const groupData = this.memo.get(computeGroup);
+
+    groupData.passEncoderGPU.end();
+
+    this.prepareTimestamp(computeGroup, groupData.cmdEncoderGPU);
+
+    this.device.queue.submit([groupData.cmdEncoderGPU.finish()]);
+  }
+
+  draw(renderObject: RenderObject) {
+    const info = this.info;
+    const { object, geometry, context, pipeline } = renderObject;
+
+    const bindingsData = this.memo.get(renderObject.getBindings());
+    const contextData = this.memo.get(context);
+    const pipelineGPU = this.memo.get(pipeline).pipeline;
+    const currentSets = contextData.currentSets;
+
+    const passEncoderGPU = contextData.currentPass;
+
+    if (currentSets.pipeline !== pipelineGPU) {
+      passEncoderGPU.setPipeline(pipelineGPU);
+
+      currentSets.pipeline = pipelineGPU;
+    }
+
+    const bindGroupGPU = bindingsData.group;
+    passEncoderGPU.setBindGroup(0, bindGroupGPU);
+
+    const index = renderObject.getIndex();
+
+    const hasIndex = index !== null;
+
+    if (hasIndex === true) {
+      if (currentSets.index !== index) {
+        const buffer = this.memo.get(index).buffer;
+        const indexFormat = index.array instanceof Uint16Array ? GPUIndexFormatType.Uint16 : GPUIndexFormatType.Uint32;
+
+        passEncoderGPU.setIndexBuffer(buffer, indexFormat);
+
+        currentSets.index = index;
+      }
+    }
+
+    const vertexBuffers = renderObject.getVertexBuffers();
+
+    for (let i = 0, l = vertexBuffers.length; i < l; i++) {
+      const vertexBuffer = vertexBuffers[i];
+
+      if (currentSets.attributes[i] !== vertexBuffer) {
+        const buffer = this.memo.get(vertexBuffer).buffer;
+        passEncoderGPU.setVertexBuffer(i, buffer);
+
+        currentSets.attributes[i] = vertexBuffer;
+      }
+    }
+
+    if (contextData.occlusionQuerySet !== undefined) {
+      const lastObject = contextData.lastOcclusionObject;
+
+      if (lastObject !== object) {
+        if (lastObject !== null && lastObject.occlusionTest === true) {
+          passEncoderGPU.endOcclusionQuery();
+          contextData.occlusionQueryIndex++;
+        }
+
+        if (object.occlusionTest === true) {
+          passEncoderGPU.beginOcclusionQuery(contextData.occlusionQueryIndex);
+          contextData.occlusionQueryObjects[contextData.occlusionQueryIndex] = object;
+        }
+
+        contextData.lastOcclusionObject = object;
+      }
+    }
+
+    const drawRange = geometry.drawRange;
+    const firstVertex = drawRange.start;
+
+    const instanceCount = this.getInstanceCount(renderObject);
+    if (instanceCount === 0) return;
+
+    if (hasIndex === true) {
+      const indexCount = drawRange.count !== Infinity ? drawRange.count : index.count;
+
+      passEncoderGPU.drawIndexed(indexCount, instanceCount, firstVertex, 0, 0);
+
+      info.update(object, indexCount, instanceCount);
+    } else {
+      const positionAttribute = geometry.attributes.position;
+      const vertexCount = drawRange.count !== Infinity ? drawRange.count : positionAttribute.count;
+
+      passEncoderGPU.draw(vertexCount, instanceCount, firstVertex, 0);
+
+      info.update(object, vertexCount, instanceCount);
     }
   }
 }

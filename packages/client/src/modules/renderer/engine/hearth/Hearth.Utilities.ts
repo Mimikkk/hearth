@@ -27,9 +27,7 @@ export class HearthUtilities {
   }
 
   getCurrentColorSpace(renderContext: RenderContext) {
-    return renderContext.textures
-      ? renderContext.textures[0].colorSpace
-      : this.hearth.backend.hearth.parameters.outputColorSpace;
+    return renderContext.textures ? renderContext.textures[0].colorSpace : this.hearth.parameters.outputColorSpace;
   }
 
   getPrimitiveTopology(object: Entity, material: Material) {
@@ -42,7 +40,7 @@ export class HearthUtilities {
 
   getSampleCount(context: RenderContext): number {
     if (context.textures) return context.sampleCount;
-    return this.hearth.backend.hearth.parameters.sampleCount;
+    return this.hearth.parameters.sampleCount;
   }
 }
 

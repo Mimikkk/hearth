@@ -55,7 +55,7 @@ const flipYLabel = (format: GPUTextureFormat) => `${mipmapLabel(format)}-flip_y`
 export class HearthTexturesTexturePass {
   transferPipelines = new Memo(
     (format: GPUTextureFormat) => {
-      const { render, bindGroupLayouts } = this.hearth.backend.hearth.resources;
+      const { render, bindGroupLayouts } = this.hearth.resources;
       const label = mipmapLabel(format);
 
       return render.pipelines.get(transferLabel(format), () => ({
@@ -90,7 +90,7 @@ export class HearthTexturesTexturePass {
       }));
     },
     (pipeline, format) => {
-      const { render, bindGroupLayouts } = this.hearth.backend.hearth.resources;
+      const { render, bindGroupLayouts } = this.hearth.resources;
       const label = mipmapLabel(format);
 
       render.pipelines.delete(pipeline.label);
@@ -100,7 +100,7 @@ export class HearthTexturesTexturePass {
   );
   flipYPipelines = new Memo(
     (format: GPUTextureFormat) => {
-      const { render, bindGroupLayouts } = this.hearth.backend.hearth.resources;
+      const { render, bindGroupLayouts } = this.hearth.resources;
       const label = mipmapLabel(format);
 
       return render.pipelines.get(flipYLabel(format), () => ({
@@ -134,7 +134,7 @@ export class HearthTexturesTexturePass {
       }));
     },
     (pipeline, format) => {
-      const { render, bindGroupLayouts } = this.hearth.backend.hearth.resources;
+      const { render, bindGroupLayouts } = this.hearth.resources;
       const label = mipmapLabel(format);
 
       render.pipelines.delete(pipeline.label);
@@ -155,7 +155,7 @@ export class HearthTexturesTexturePass {
     const transferPipeline = this.transferPipelines.get(format);
     const flipYPipeline = this.flipYPipelines.get(format);
 
-    const temporaryTexture = this.hearth.backend.hearth.resources.textures.set({
+    const temporaryTexture = this.hearth.resources.textures.set({
       label: 'mipmap-temporary-texture',
       size: { width, height, depthOrArrayLayers: 1 },
       format,
@@ -193,12 +193,12 @@ export class HearthTexturesTexturePass {
     );
 
     this.hearth.device.queue.submit([commandEncoder.finish()]);
-    this.hearth.backend.hearth.resources.textures.delete('mipmap-temporary-texture');
+    this.hearth.resources.textures.delete('mipmap-temporary-texture');
   }
 
   generateMipmaps(texture: GPUTexture, descriptor: GPUTextureDescriptor, layer: number): void {
     const pipeline = this.transferPipelines.get(descriptor.format);
-    const { commandEncoders, bindGroups } = this.hearth.backend.hearth.resources;
+    const { commandEncoders, bindGroups } = this.hearth.resources;
 
     const commandEncoder = commandEncoders.create({ label: 'mipmap-encoder' }, 'mipmap-encoder');
     const bindGroupLayout = pipeline.getBindGroupLayout(0);

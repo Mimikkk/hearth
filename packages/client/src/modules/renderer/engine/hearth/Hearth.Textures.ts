@@ -122,7 +122,6 @@ export class HearthTextures extends DataMap<any, any> {
     if (textureData.initialized === true && textureData.version === texture.version) return;
 
     const isRenderTarget = texture.isRenderTargetTexture || texture.isDepthTexture || texture.isFramebufferTexture;
-    const backend = this.hearth.backend;
 
     if (isRenderTarget && textureData.initialized === true) {
       this.hearth.destroySampler(texture);
@@ -432,7 +431,7 @@ export class HearthTextures extends DataMap<any, any> {
     this.colorBuffer = this.hearth.device.createTexture({
       label: 'colorBuffer',
       size: { width, height, depthOrArrayLayers: 1 },
-      sampleCount: this.hearth.backend.hearth.parameters.sampleCount,
+      sampleCount: this.hearth.parameters.sampleCount,
       format: GPUTextureFormatType.BGRA8Unorm,
       usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.COPY_SRC,
     });
