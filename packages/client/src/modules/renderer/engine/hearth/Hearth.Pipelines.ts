@@ -250,7 +250,44 @@ export class HearthPipelines extends DataMap<any, any> {
     stageVertex: ProgrammableStage,
     stageFragment: ProgrammableStage,
   ): string {
-    return stageVertex.id + ',' + stageFragment.id + ',' + this.hearth.getRenderCacheKey(renderObject);
+    return stageVertex.id + ',' + stageFragment.id + ',' + this.getRenderCacheKey(renderObject);
+  }
+
+  getRenderCacheKey(renderObject: RenderObject) {
+    const { object, material } = renderObject;
+
+    const utils = this.hearth.utilities;
+    const renderContext = renderObject.context;
+
+    return [
+      material.transparent,
+      material.blending,
+      material.premultipliedAlpha,
+      material.blendSrc,
+      material.blendDst,
+      material.blendEquation,
+      material.blendSrcAlpha,
+      material.blendDstAlpha,
+      material.blendEquationAlpha,
+      material.colorWrite,
+      material.depthWrite,
+      material.depthTest,
+      material.depthFunc,
+      material.stencilWrite,
+      material.stencilFunc,
+      material.stencilFail,
+      material.stencilZFail,
+      material.stencilZPass,
+      material.stencilFuncMask,
+      material.stencilWriteMask,
+      material.side,
+      utils.getSampleCount(renderContext),
+      utils.getCurrentColorSpace(renderContext),
+      utils.getCurrentColorFormat(renderContext),
+      utils.getCurrentDepthStencilFormat(renderContext),
+      utils.getPrimitiveTopology(object, material),
+      renderObject.clippingContextVersion,
+    ].join();
   }
 
   _releasePipeline(pipeline: Pipeline) {

@@ -68,6 +68,7 @@ export class Hearth {
   viewport: Vec4;
   scissor: Vec4;
 
+  useViewport: boolean;
   useScissor: boolean;
 
   attributes: HearthAttributes;
@@ -158,6 +159,7 @@ export class Hearth {
 
     this.scissor = Vec4.new(0, 0, this._width, this._height);
 
+    this.useViewport = true;
     this.useScissor = false;
 
     this.stats = new HearthStatistics();
@@ -723,12 +725,6 @@ export class Hearth {
     return Math.max(geometry.instanceCount, object.count, 1);
   }
 
-  getClearColor() {
-    const color = Color.from(this._clearColor);
-    color.getRGB(color, this.currentColorSpace);
-    return color;
-  }
-
   needsRenderUpdate(renderObject: RenderObject) {
     const data = this.memo.get(renderObject);
 
@@ -811,43 +807,6 @@ export class Hearth {
     }
 
     return needsUpdate;
-  }
-
-  getRenderCacheKey(renderObject: RenderObject) {
-    const { object, material } = renderObject;
-
-    const utils = this.utilities;
-    const renderContext = renderObject.context;
-
-    return [
-      material.transparent,
-      material.blending,
-      material.premultipliedAlpha,
-      material.blendSrc,
-      material.blendDst,
-      material.blendEquation,
-      material.blendSrcAlpha,
-      material.blendDstAlpha,
-      material.blendEquationAlpha,
-      material.colorWrite,
-      material.depthWrite,
-      material.depthTest,
-      material.depthFunc,
-      material.stencilWrite,
-      material.stencilFunc,
-      material.stencilFail,
-      material.stencilZFail,
-      material.stencilZPass,
-      material.stencilFuncMask,
-      material.stencilWriteMask,
-      material.side,
-      utils.getSampleCount(renderContext),
-      utils.getCurrentColorSpace(renderContext),
-      utils.getCurrentColorFormat(renderContext),
-      utils.getCurrentDepthStencilFormat(renderContext),
-      utils.getPrimitiveTopology(object, material),
-      renderObject.clippingContextVersion,
-    ].join();
   }
 
   isOccluded(object: Entity) {

@@ -22,10 +22,10 @@ export class RenderContext {
   useStencil: boolean;
   clearStencilValue: number;
 
-  useViewport: boolean;
+  useUpdateViewport: boolean;
   viewportValue: Vec4;
 
-  useScissor: boolean;
+  useUpdateScissor: boolean;
   scissorValue: Vec4;
 
   textures: Texture[] | null;
@@ -57,10 +57,10 @@ export class RenderContext {
     this.useClearStencil = true;
     this.clearStencilValue = 1;
 
-    this.useViewport = false;
+    this.useUpdateViewport = false;
     this.viewportValue = Vec4.new();
 
-    this.useScissor = false;
+    this.useUpdateScissor = false;
     this.scissorValue = Vec4.new();
 
     this.textures = null;

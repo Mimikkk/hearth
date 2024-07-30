@@ -54,7 +54,7 @@ export class Entity {
   matrix: Mat4;
   matrixWorld: Mat4;
   matrixAutoUpdate: boolean;
-  matrixWorldAutoUpdate: boolean;
+  useWorldAutoUpdate: boolean;
   matrixWorldNeedsUpdate: boolean;
   layers: RaycastLayers;
   visible: boolean;
@@ -89,7 +89,7 @@ export class Entity {
 
     this.matrixAutoUpdate = Entity.UseLocalAutoUpdate;
 
-    this.matrixWorldAutoUpdate = Entity.UseWorldAutoUpdate;
+    this.useWorldAutoUpdate = Entity.UseWorldAutoUpdate;
     this.matrixWorldNeedsUpdate = false;
 
     this.layers = RaycastLayers.new();
@@ -515,7 +515,7 @@ export class Entity {
     for (let i = 0, l = children.length; i < l; i++) {
       const child = children[i];
 
-      if (child.matrixWorldAutoUpdate === true || force === true) {
+      if (child.useWorldAutoUpdate === true || force === true) {
         child.updateMatrixWorld(force);
       }
     }
@@ -525,7 +525,7 @@ export class Entity {
   updateWorldMatrix(updateParents: boolean, updateChildren: boolean): this {
     const parent = this.parent;
 
-    if (updateParents === true && parent !== null && parent.matrixWorldAutoUpdate === true) {
+    if (updateParents === true && parent !== null && parent.useWorldAutoUpdate === true) {
       parent.updateWorldMatrix(true, false);
     }
 
@@ -543,7 +543,7 @@ export class Entity {
       for (let i = 0, l = children.length; i < l; i++) {
         const child = children[i];
 
-        if (child.matrixWorldAutoUpdate === true) {
+        if (child.useWorldAutoUpdate === true) {
           child.updateWorldMatrix(false, true);
         }
       }
@@ -569,7 +569,7 @@ export class Entity {
 
     this.matrixAutoUpdate = source.matrixAutoUpdate;
 
-    this.matrixWorldAutoUpdate = source.matrixWorldAutoUpdate;
+    this.useWorldAutoUpdate = source.useWorldAutoUpdate;
     this.matrixWorldNeedsUpdate = source.matrixWorldNeedsUpdate;
 
     this.layers.mask = source.layers.mask;

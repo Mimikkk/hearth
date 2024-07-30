@@ -15,6 +15,7 @@ import {
   GPUTextureViewDimensionType,
 } from '@modules/renderer/engine/hearth/constants.js';
 import RenderList from '@modules/renderer/engine/hearth/core/RenderList.js';
+import { Color } from '@modules/renderer/engine/math/Color.js';
 
 export class HearthRenderer extends HearthComponent {
   async run(scene: Entity, camera: Camera): Promise<RenderContext> {
@@ -35,14 +36,14 @@ export class HearthRenderer extends HearthComponent {
     this.hearth.stats.render.passes++;
     nodeFrame.renderId = this.hearth.stats.passes;
 
-    if (scene.matrixWorldAutoUpdate) scene.updateMatrixWorld();
+    if (scene.useWorldAutoUpdate) scene.updateMatrixWorld();
+    if (camera.parent === null && camera.useWorldAutoUpdate) camera.updateMatrixWorld();
 
-    if (camera.parent === null && camera.matrixWorldAutoUpdate) camera.updateMatrixWorld();
     let viewport = this.hearth.viewport;
     let scissor = this.hearth.scissor;
     let pixelRatio = this.hearth._pixelRatio;
 
-    if (target !== null) {
+    if (target) {
       viewport = target.viewport;
       scissor = target.scissor;
       pixelRatio = 1;
@@ -57,16 +58,18 @@ export class HearthRenderer extends HearthComponent {
     context.viewportValue.height >>= activeMipmapLevel;
     context.viewportValue.minDepth = 0;
     context.viewportValue.maxDepth = 1;
-    context.useViewport = context.viewportValue.equals(_screen) === false;
+    context.useUpdateViewport = this.hearth.useScissor && !context.viewportValue.equals(_screen);
 
     context.scissorValue.from(scissor).scale(pixelRatio).floor();
-    context.useScissor = this.hearth.useScissor && context.scissorValue.equals(_screen) === false;
     context.scissorValue.width >>= activeMipmapLevel;
     context.scissorValue.height >>= activeMipmapLevel;
+    context.useUpdateScissor = this.hearth.useScissor && !context.scissorValue.equals(_screen);
 
     if (!context.clippingContext) context.clippingContext = new ClippingContext();
+
     context.clippingContext.updateGlobal(this.hearth, camera);
     sceneRef.onBeforeRender(this.hearth, scene, camera, target);
+
     _projection.asMul(camera.projectionMatrix, camera.matrixWorldInverse);
     _frustum.fromProjection(_projection);
 
@@ -80,11 +83,11 @@ export class HearthRenderer extends HearthComponent {
     if (this.hearth.parameters.useSort) {
       renderList.sort(this.hearth.opaqueSort, this.hearth.transparentSort);
     }
-    if (target !== null) {
+
+    if (target) {
       this.hearth.textures.updateRenderTarget(target, activeMipmapLevel);
 
       const data = this.hearth.textures.get(target);
-
       context.textures = data.textures;
       context.depthTexture = data.depthTexture;
       context.width = data.width;
@@ -106,15 +109,14 @@ export class HearthRenderer extends HearthComponent {
     context.activeCubeFace = activeCubeFace;
     context.activeMipmapLevel = activeMipmapLevel;
     context.occlusionQueryCount = renderList.occlusionQueryCount;
-    const renderContext = context;
 
     this.hearth.nodes.updateScene(sceneRef);
     this.hearth.background.update(sceneRef, renderList, context);
 
-    const renderContextData = this.hearth.memo.get(renderContext);
+    const renderContextData = this.hearth.memo.get(context);
 
     const device = this.hearth.device;
-    const occlusionQueryCount = renderContext.occlusionQueryCount;
+    const occlusionQueryCount = context.occlusionQueryCount;
 
     let occlusionQuerySet;
 
@@ -137,26 +139,26 @@ export class HearthRenderer extends HearthComponent {
 
     let descriptor;
 
-    if (renderContext.textures === null) {
+    if (context.textures === null) {
       descriptor = this._getDefaultRenderPassDescriptor();
     } else {
-      descriptor = this._getRenderPassDescriptor(renderContext);
+      descriptor = this._getRenderPassDescriptor(context);
     }
 
-    this.hearth.timestamp.meter(renderContext, descriptor);
+    this.hearth.timestamp.meter(context, descriptor);
 
     descriptor.occlusionQuerySet = occlusionQuerySet;
 
     const depthStencilAttachment = descriptor.depthStencilAttachment;
 
-    if (renderContext.textures !== null) {
+    if (context.textures !== null) {
       const colorAttachments = descriptor.colorAttachments;
 
       for (let i = 0; i < colorAttachments.length; i++) {
         const colorAttachment = colorAttachments[i];
 
-        if (renderContext.useClearColor) {
-          colorAttachment.clearValue = renderContext.clearColorValue;
+        if (context.useClearColor) {
+          colorAttachment.clearValue = context.clearColorValue;
           colorAttachment.loadOp = GPULoadOpType.Clear;
           colorAttachment.storeOp = GPUStoreOpType.Store;
         } else {
@@ -167,8 +169,8 @@ export class HearthRenderer extends HearthComponent {
     } else {
       const colorAttachment = descriptor.colorAttachments[0];
 
-      if (renderContext.useClearColor) {
-        colorAttachment.clearValue = renderContext.clearColorValue;
+      if (context.useClearColor) {
+        colorAttachment.clearValue = context.clearColorValue;
         colorAttachment.loadOp = GPULoadOpType.Clear;
         colorAttachment.storeOp = GPUStoreOpType.Store;
       } else {
@@ -177,9 +179,9 @@ export class HearthRenderer extends HearthComponent {
       }
     }
 
-    if (renderContext.useDepth) {
-      if (renderContext.useClearDepth) {
-        depthStencilAttachment.depthClearValue = renderContext.clearDepthValue;
+    if (context.useDepth) {
+      if (context.useClearDepth) {
+        depthStencilAttachment.depthClearValue = context.clearDepthValue;
         depthStencilAttachment.depthLoadOp = GPULoadOpType.Clear;
         depthStencilAttachment.depthStoreOp = GPUStoreOpType.Store;
       } else {
@@ -187,10 +189,9 @@ export class HearthRenderer extends HearthComponent {
         depthStencilAttachment.depthStoreOp = GPUStoreOpType.Store;
       }
     }
-
-    if (renderContext.useStencil) {
-      if (renderContext.useClearStencil) {
-        depthStencilAttachment.stencilClearValue = renderContext.clearStencilValue;
+    if (context.useStencil) {
+      if (context.useClearStencil) {
+        depthStencilAttachment.stencilClearValue = context.clearStencilValue;
         depthStencilAttachment.stencilLoadOp = GPULoadOpType.Clear;
         depthStencilAttachment.stencilStoreOp = GPUStoreOpType.Store;
       } else {
@@ -199,7 +200,7 @@ export class HearthRenderer extends HearthComponent {
       }
     }
 
-    const encoder = device.createCommandEncoder({ label: 'renderContext_' + renderContext.id });
+    const encoder = device.createCommandEncoder({ label: 'renderContext_' + context.id });
     const currentPass = encoder.beginRenderPass(descriptor);
 
     renderContextData.descriptor = descriptor;
@@ -207,14 +208,13 @@ export class HearthRenderer extends HearthComponent {
     renderContextData.currentPass = currentPass;
     renderContextData.currentSets = { attributes: {} };
 
-    if (renderContext.useViewport) {
-      this.updateViewport(renderContext);
+    if (context.useUpdateViewport) {
+      this.updateViewport(context);
     }
+    if (context.useUpdateScissor) {
+      const { x, y, width, height } = context.scissorValue;
 
-    if (renderContext.useScissor) {
-      const { x, y, width, height } = renderContext.scissorValue;
-
-      currentPass.setScissorRect(x, renderContext.height - height - y, width, height);
+      currentPass.setScissorRect(x, context.height - height - y, width, height);
     }
 
     const opaque = renderList.opaque;
@@ -282,19 +282,13 @@ export class HearthRenderer extends HearthComponent {
       }
     }
 
-    this.hearth.timestamp.encode(renderContext, renderContextData.encoder);
-
+    this.hearth.timestamp.encode(context, renderContextData.encoder);
     this.hearth.device.queue.submit([renderContextData.encoder.finish()]);
 
-    if (renderContext.textures !== null) {
-      const textures = renderContext.textures;
-
-      for (let i = 0; i < textures.length; i++) {
-        const texture = textures[i];
-
-        if (texture.generateMipmaps) {
-          this.hearth.textures.generateMipmaps(texture);
-        }
+    if (context.textures) {
+      for (const texture of context.textures) {
+        if (!texture.generateMipmaps) continue;
+        this.hearth.textures.generateMipmaps(texture);
       }
     }
 
@@ -398,7 +392,7 @@ export class HearthRenderer extends HearthComponent {
     let supportsStencil;
 
     if (color) {
-      const clearColor = this.hearth.getClearColor();
+      const clearColor = this.getClearColor();
 
       clearValue = { r: clearColor.r, g: clearColor.g, b: clearColor.b, a: clearColor.a };
     }
@@ -610,6 +604,12 @@ export class HearthRenderer extends HearthComponent {
 
     return descriptor;
   }
+
+  getClearColor() {
+    const color = Color.from(this.hearth._clearColor);
+    color.getRGB(color, this.hearth.currentColorSpace);
+    return color;
+  }
 }
 
 const _scene = new Scene();
@@ -618,3 +618,18 @@ const _screen = Vec4.new();
 const _frustum = Frustum.new();
 const _projection = Mat4.new();
 const _vec3 = Vec3.new();
+
+class RenderViewport {
+  constructor(width: number, height: number, minDepth: number, maxDepth: number) {}
+
+  update() {
+    context.viewportValue.from(viewport).scale(pixelRatio).floor();
+    context.viewportValue.width >>= activeMipmapLevel;
+    context.viewportValue.height >>= activeMipmapLevel;
+    context.viewportValue.minDepth = 0;
+    context.viewportValue.maxDepth = 1;
+    context.useViewport = !context.viewportValue.equals(_screen);
+  }
+}
+
+class RenderScissor {}
