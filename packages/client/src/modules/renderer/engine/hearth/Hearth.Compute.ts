@@ -12,38 +12,43 @@ export class HearthCompute extends HearthComponent {
 
     frame.renderId = this.hearth.stats.compute.passes;
 
-    const computes = Array.isArray(compute) ? compute : [compute];
-
     const descriptor = {} as GPUComputePassDescriptor;
 
-    this.hearth.timestamp.meter(computes, descriptor);
+    this.hearth.timestamp.meter(compute, descriptor);
 
     const encoder = this.hearth.device.createCommandEncoder();
+
+    this.hearth.timestamp.encode(compute, encoder);
     const pass = encoder.beginComputePass(descriptor);
 
-    for (const node of computes) {
-      if (!this.hearth.pipelines.has(node)) node.onInit({ hearth: this.hearth });
-
-      this.hearth.nodes.updateForCompute(node);
-      this.hearth.bindings.updateForCompute(node);
-
-      const bindings = this.hearth.bindings.getForCompute(node);
-      const pipeline = this.hearth.pipelines.getForCompute(node, bindings);
-
-      const pipelineGPU = this.hearth.memo.get(pipeline).pipeline;
-      const bindGroupGPU = this.hearth.memo.get(bindings).group;
-
-      pass.setPipeline(pipelineGPU);
-      pass.setBindGroup(0, bindGroupGPU);
-      pass.dispatchWorkgroups(node.dispatchCount);
+    if (Array.isArray(compute)) {
+      for (const node of compute) this.#encodePass(node, pass);
+    } else {
+      this.#encodePass(compute, pass);
     }
 
     pass.end();
 
-    this.hearth.timestamp.encode(computes, encoder);
     this.hearth.device.queue.submit([encoder.finish()]);
-    await this.hearth.timestamp.resolve(computes, 'compute');
+    await this.hearth.timestamp.resolve(compute, 'compute');
 
     frame.renderId = previousRenderId;
+  }
+
+  #encodePass(node: ComputeNode, pass: GPUComputePassEncoder): void {
+    if (!this.hearth.pipelines.has(node)) node.onInit({ hearth: this.hearth });
+
+    this.hearth.nodes.updateForCompute(node);
+    this.hearth.bindings.updateForCompute(node);
+
+    const bindings = this.hearth.bindings.getForCompute(node);
+    const pipeline = this.hearth.pipelines.getForCompute(node, bindings);
+
+    const pipelineGPU = this.hearth.memo.get(pipeline).pipeline;
+    const bindGroupGPU = this.hearth.memo.get(bindings).group;
+
+    pass.setPipeline(pipelineGPU);
+    pass.setBindGroup(0, bindGroupGPU);
+    pass.dispatchWorkgroups(node.dispatchCount);
   }
 }

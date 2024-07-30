@@ -2,6 +2,9 @@ import { HearthComponent } from '@modules/renderer/engine/hearth/Hearth.Componen
 import { GPUFeature } from '@modules/renderer/engine/hearth/constants.js';
 
 export class HearthTimestamp extends HearthComponent {
+  buffers = new WeakMap<object, TimestampBuffers>();
+  queries = new WeakMap<object, TimestampQuery>();
+
   meter(key: object, to: GPURenderPassDescriptor | GPUComputePassDescriptor): void {
     if (!this.allowed) return;
 
@@ -12,25 +15,24 @@ export class HearthTimestamp extends HearthComponent {
     to.timestampWrites = { querySet: query.set, beginningOfPassWriteIndex: 0, endOfPassWriteIndex: 1 };
   }
 
-  encode(key: object, encoder: GPUCommandEncoder) {
+  encode(key: object, encoder: GPUCommandEncoder): void {
     if (!this.allowed) return;
 
     const query = this.queries.get(key);
     if (!query) return;
 
-    const size = 2 * BigInt64Array.BYTES_PER_ELEMENT;
-
     let buffers = this.buffers.get(key);
-
     if (!buffers) {
       buffers = TimestampBuffers.fromDevice(this.hearth.device);
       this.buffers.set(key, buffers);
     }
 
-    const { resolve, times } = buffers;
+    const { resolve, pending } = buffers;
 
-    encoder.resolveQuerySet(query.set, 0, 2, resolve, 0);
-    encoder.copyBufferToBuffer(resolve, 0, times, 0, size);
+    if (pending) return;
+
+    query.encodeTransfer(encoder, resolve);
+    buffers.encodeTransfer(encoder);
   }
 
   async resolve(key: object, type: 'render' | 'compute') {
@@ -39,29 +41,26 @@ export class HearthTimestamp extends HearthComponent {
     const buffers = this.buffers.get(key);
     if (!buffers) return;
 
-    const { times } = buffers;
+    if (buffers.pending) return;
 
-    await times.mapAsync(GPUMapMode.READ);
+    buffers.pending = true;
 
-    const [start, end] = new BigUint64Array(times.getMappedRange());
-    const duration = Number(end - start) / 1000000;
-
+    const duration = await buffers.delta();
     this.hearth.stats.stamp(type, duration);
-    times.unmap();
+
+    buffers.pending = false;
   }
 
   get allowed() {
     return this.hearth.hasFeature(GPUFeature.TimestampQuery) && this.hearth.parameters.useTimestamp;
   }
-
-  buffers = new WeakMap<object, TimestampBuffers>();
-  queries = new WeakMap<object, TimestampQuery>();
 }
 
 class TimestampBuffers {
   constructor(
     public resolve: GPUBuffer,
     public times: GPUBuffer,
+    public pending: boolean = false,
   ) {}
 
   static fromDevice(device: GPUDevice) {
@@ -78,6 +77,18 @@ class TimestampBuffers {
       }),
     );
   }
+
+  async delta() {
+    await this.times.mapAsync(GPUMapMode.READ);
+    const [start, end] = new BigUint64Array(this.times.getMappedRange());
+    this.times.unmap();
+
+    return Number(end - start) / 1000000;
+  }
+
+  encodeTransfer(encoder: GPUCommandEncoder) {
+    encoder.copyBufferToBuffer(this.resolve, 0, this.times, 0, 2 * BigInt64Array.BYTES_PER_ELEMENT);
+  }
 }
 
 class TimestampQuery {
@@ -85,5 +96,9 @@ class TimestampQuery {
 
   static fromDevice(device: GPUDevice) {
     return new TimestampQuery(device.createQuerySet({ type: 'timestamp', count: 2 }));
+  }
+
+  encodeTransfer(encoder: GPUCommandEncoder, into: GPUBuffer): void {
+    encoder.resolveQuerySet(this.set, 0, 2, into, 0);
   }
 }

@@ -332,8 +332,8 @@ export class Hearth {
     return context;
   }
 
-  async compute(computeNodes: ComputeNode | ComputeNode[]): Promise<void> {
-    return this.computer.run(computeNodes);
+  async compute(nodes: ComputeNode | ComputeNode[]): Promise<void> {
+    return this.computer.run(nodes);
   }
 
   async compile(scene: Scene, camera: Camera, targetScene: Scene | null = null): Promise<void> {
