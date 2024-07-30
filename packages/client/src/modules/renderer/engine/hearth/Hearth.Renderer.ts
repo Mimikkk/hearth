@@ -103,32 +103,15 @@ export class HearthRenderer extends HearthComponent {
     const device = this.hearth.device;
     const occlusionQueryCount = context.occlusionQueryCount;
 
-    let occlusionQuerySet;
-    if (occlusionQueryCount > 0) {
-      if (data.currentOcclusionQuerySet) data.currentOcclusionQuerySet.destroy();
-      if (data.currentOcclusionQueryBuffer) data.currentOcclusionQueryBuffer.destroy();
-
-      data.currentOcclusionQuerySet = data.occlusionQuerySet;
-      data.currentOcclusionQueryBuffer = data.occlusionQueryBuffer;
-      data.currentOcclusionQueryObjects = data.occlusionQueryObjects;
-      occlusionQuerySet = device.createQuerySet({ type: 'occlusion', count: occlusionQueryCount });
-
-      data.occlusionQuerySet = occlusionQuerySet;
-      data.occlusionQueryIndex = 0;
-      data.occlusionQueryObjects = new Array(occlusionQueryCount);
-      data.lastOcclusionObject = null;
-    }
-
-    let descriptor;
-
-    if (context.textures === null) {
-      descriptor = this._getDefaultRenderPassDescriptor();
-    } else {
+    let descriptor: GPURenderPassDescriptor;
+    if (context.textures) {
       descriptor = this._getRenderPassDescriptor(context);
+    } else {
+      descriptor = this._getDefaultRenderPassDescriptor();
     }
 
     this.hearth.timestamp.meter(context, descriptor);
-    descriptor.occlusionQuerySet = occlusionQuerySet;
+    this.hearth.occlusion.meter(context, descriptor);
 
     const depthStencilAttachment = descriptor.depthStencilAttachment;
 
@@ -205,42 +188,12 @@ export class HearthRenderer extends HearthComponent {
     if (opaque.length > 0) this.hearth._renderObjects(opaque, camera, sceneRef, lightsNode);
     if (transparent.length > 0) this.hearth._renderObjects(transparent, camera, sceneRef, lightsNode);
 
-    if (occlusionQueryCount > data.occlusionQueryIndex) {
-      data.currentPass.endOcclusionQuery();
-    }
-
+    this.hearth.occlusion.end(context);
     data.currentPass.end();
 
-    if (occlusionQueryCount > 0) {
-      const bufferSize = occlusionQueryCount * 8;
-
-      let queryResolveBuffer = this.hearth.resolveBufferMap.get(bufferSize);
-
-      if (queryResolveBuffer === undefined) {
-        queryResolveBuffer = this.hearth.device.createBuffer({
-          size: bufferSize,
-          usage: GPUBufferUsage.QUERY_RESOLVE | GPUBufferUsage.COPY_SRC,
-        });
-
-        this.hearth.resolveBufferMap.set(bufferSize, queryResolveBuffer);
-      }
-
-      const readBuffer = this.hearth.device.createBuffer({
-        size: bufferSize,
-        usage: GPUBufferUsage.COPY_DST | GPUBufferUsage.MAP_READ,
-      });
-
-      data.encoder.resolveQuerySet(data.occlusionQuerySet, 0, occlusionQueryCount, queryResolveBuffer, 0);
-      data.encoder.copyBufferToBuffer(queryResolveBuffer, 0, readBuffer, 0, bufferSize);
-
-      data.occlusionQueryBuffer = readBuffer;
-
-      this.resolveOccludedAsync(context);
-    }
-
+    this.hearth.occlusion.encode(context, data.encoder);
     this.hearth.timestamp.encode(context, data.encoder);
     this.hearth.device.queue.submit([data.encoder.finish()]);
-    await this.hearth.device.queue.onSubmittedWorkDone();
 
     if (context.textures) {
       for (const texture of context.textures) {
@@ -254,6 +207,7 @@ export class HearthRenderer extends HearthComponent {
     this.hearth._activeRenderObjectFn = previousRenderObjectFunction;
 
     sceneRef.onAfterRender(this.hearth, scene, camera, target);
+    await this.hearth.occlusion.resolve(context);
     await this.hearth.timestamp.resolve(context, 'render');
 
     return context;
@@ -444,7 +398,7 @@ export class HearthRenderer extends HearthComponent {
     device.queue.submit([encoder.finish()]);
   }
 
-  _getDefaultRenderPassDescriptor() {
+  _getDefaultRenderPassDescriptor(): GPURenderPassDescriptor {
     let descriptor = this.hearth.renderPassDescriptor;
 
     const antialias = this.hearth.parameters.antialias;
@@ -485,8 +439,8 @@ export class HearthRenderer extends HearthComponent {
     return descriptor;
   }
 
-  _getRenderPassDescriptor(renderContext: RenderContext) {
-    const renderTarget = renderContext.renderTarget;
+  _getRenderPassDescriptor(context: RenderContext): GPURenderPassDescriptor {
+    const renderTarget = context.renderTarget;
     const renderTargetData = this.hearth.memo.get(renderTarget);
 
     let descriptors = renderTargetData.descriptors;
@@ -506,19 +460,19 @@ export class HearthRenderer extends HearthComponent {
       descriptors.length = 0;
     }
 
-    let descriptor = descriptors[renderContext.activeCubeFace];
+    let descriptor = descriptors[context.activeCubeFace];
 
     if (descriptor === undefined) {
-      const textures = renderContext.textures;
+      const textures = context.textures;
       const colorAttachments = [];
 
       for (let i = 0; i < textures.length; i++) {
         const textureData = this.hearth.memo.get(textures[i]);
 
         const textureView = textureData.texture.createView({
-          baseMipLevel: renderContext.activeMipmapLevel,
+          baseMipLevel: context.activeMipmapLevel,
           mipLevelCount: 1,
-          baseArrayLayer: renderContext.activeCubeFace,
+          baseArrayLayer: context.activeCubeFace,
           dimension: GPUTextureViewDimensionType.TwoD,
         });
 
@@ -540,7 +494,7 @@ export class HearthRenderer extends HearthComponent {
         });
       }
 
-      const depthTextureData = this.hearth.memo.get(renderContext.depthTexture);
+      const depthTextureData = this.hearth.memo.get(context.depthTexture);
 
       const depthStencilAttachment = {
         view: depthTextureData.texture.createView(),
@@ -551,7 +505,7 @@ export class HearthRenderer extends HearthComponent {
         depthStencilAttachment,
       };
 
-      descriptors[renderContext.activeCubeFace] = descriptor;
+      descriptors[context.activeCubeFace] = descriptor;
 
       renderTargetData.width = renderTarget.width;
       renderTargetData.height = renderTarget.height;
@@ -598,33 +552,6 @@ export class HearthRenderer extends HearthComponent {
     );
 
     context.useUpdateScissor = this.hearth.useScissor && !context.scissor.equalsVec(_screen);
-  }
-
-  async resolveOccludedAsync(renderContext: RenderContext) {
-    const renderContextData = this.hearth.memo.get(renderContext);
-    const { currentOcclusionQueryBuffer, currentOcclusionQueryObjects } = renderContextData;
-
-    if (currentOcclusionQueryBuffer && currentOcclusionQueryObjects) {
-      const occluded = new WeakSet();
-
-      renderContextData.currentOcclusionQueryObjects = null;
-      renderContextData.currentOcclusionQueryBuffer = null;
-
-      await currentOcclusionQueryBuffer.mapAsync(GPUMapMode.READ);
-
-      const buffer = currentOcclusionQueryBuffer.getMappedRange();
-      const results = new BigUint64Array(buffer);
-
-      for (let i = 0; i < currentOcclusionQueryObjects.length; i++) {
-        if (results[i] !== BigInt(0)) {
-          occluded.add(currentOcclusionQueryObjects[i]);
-        }
-      }
-
-      currentOcclusionQueryBuffer.destroy();
-
-      renderContextData.occluded = occluded;
-    }
   }
 
   opaqueSort: SortFn = sortPainterAsc;

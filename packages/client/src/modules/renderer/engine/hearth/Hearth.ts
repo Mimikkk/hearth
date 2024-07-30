@@ -54,9 +54,10 @@ import ComputePipeline from '@modules/renderer/engine/hearth/core/ComputePipelin
 import Binding from '@modules/renderer/engine/hearth/bindings/Binding.js';
 import ProgrammableStage from '@modules/renderer/engine/hearth/core/ProgrammableStage.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
-import { HearthComputer } from '@modules/renderer/engine/hearth/HearthComputer.js';
+import { HearthComputer } from '@modules/renderer/engine/hearth/Hearth.Computer.js';
 import { HearthTimestamp } from '@modules/renderer/engine/hearth/Hearth.Timestamp.js';
 import { HearthRenderer, RenderFn } from '@modules/renderer/engine/hearth/Hearth.Renderer.js';
+import { HearthOcclusion } from '@modules/renderer/engine/hearth/Hearth.Occlusion.js';
 
 export class Hearth {
   stats: HearthStatistics;
@@ -83,6 +84,7 @@ export class Hearth {
   renderer: HearthRenderer;
   computer: HearthComputer;
   timestamp: HearthTimestamp;
+  occlusion: HearthOcclusion;
 
   renderLists: HearthQueues;
   renderContexts: HearthContexts;
@@ -174,6 +176,7 @@ export class Hearth {
     this.renderer = new HearthRenderer(this);
     this.computer = new HearthComputer(this);
     this.timestamp = new HearthTimestamp(this);
+    this.occlusion = new HearthOcclusion(this);
     this.renderLists = new HearthQueues();
     this.renderContexts = new HearthContexts();
     this.context = null;
@@ -875,12 +878,12 @@ export class Hearth {
       const lastObject = contextData.lastOcclusionObject;
 
       if (lastObject !== object) {
-        if (lastObject !== null && lastObject.occlusionTest === true) {
+        if (lastObject?.occlusionTest) {
           passEncoderGPU.endOcclusionQuery();
           contextData.occlusionQueryIndex++;
         }
 
-        if (object.occlusionTest === true) {
+        if (object.occlusionTest) {
           passEncoderGPU.beginOcclusionQuery(contextData.occlusionQueryIndex);
           contextData.occlusionQueryObjects[contextData.occlusionQueryIndex] = object;
         }
