@@ -195,7 +195,7 @@ export class HearthTextures extends DataMap<any, any> {
     if (textureData.initialized !== true) {
       textureData.initialized = true;
 
-      this.hearth.info.memory.textures++;
+      this.hearth.stats.memory.textures++;
     }
 
     textureData.version = texture.version;

@@ -195,7 +195,7 @@ export class Stats {
   prevStatTime: number;
   frames: number;
 
-  info: HearthStatistics;
+  stats: HearthStatistics;
   dom: HTMLDivElement;
 
   cpuMsStat: Stat;
@@ -243,7 +243,7 @@ export class Stats {
       hearth.parameters.useTimestamp = true;
       this.gpuRender = this.createPanel('GPU', '#ff0', '#220', 2);
       this.gpuCompute = this.createPanel('CPT', '#e1e1e1', '#212121', 3);
-      this.info = hearth.info;
+      this.stats = hearth.stats;
     }
 
     if (insert) document.body.appendChild(this.dom);
@@ -287,11 +287,11 @@ export class Stats {
   }
 
   update() {
-    this.gpuComputeStat.add(this.info.compute.timestampTime);
+    this.gpuComputeStat.add(this.stats.compute.timestampTime);
 
     this.endProfiling('cpu-started', 'cpu-finished', 'cpu-duration');
     this.cpuMsStat.add(this.totalCpuMs);
-    this.gpuRenderStat.add(this.info.render.timestampTime);
+    this.gpuRenderStat.add(this.stats.render.timestampTime);
 
     if (this.totalCpuMs === 0) this.beginProfiling('cpu-started');
     this.totalCpuMs = 0;

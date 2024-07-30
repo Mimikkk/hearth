@@ -186,10 +186,10 @@ async function animate() {
   await hearth.render(scene, camera);
 
   if (hearth.hasFeature('timestamp-query')) {
-    if (hearth.info.render.passes % 5 === 0) {
+    if (hearth.stats.render.passes % 5 === 0) {
       timestamps.innerHTML = `
-							Compute ${hearth.info.compute.calls} pass in ${hearth.info.compute.timestampTime.toFixed(6)}ms<br>
-							Draw ${hearth.info.render.calls} pass in ${hearth.info.render.timestampTime.toFixed(6)}ms`;
+							Compute ${hearth.stats.compute.calls} pass in ${hearth.stats.compute.timestampTime.toFixed(6)}ms<br>
+							Draw ${hearth.stats.render.calls} pass in ${hearth.stats.render.timestampTime.toFixed(6)}ms`;
     }
   } else {
     timestamps.innerHTML = 'Timestamp queries not supported';

@@ -124,12 +124,12 @@ async function init() {
     await hearth.compute(compute);
     await hearth.render(scene, camera);
 
-    const computeCalls = hearth.info?.compute?.calls.toFixed(0);
-    const renderCalls = hearth.info?.render?.calls.toFixed(0);
+    const computeCalls = hearth.stats?.compute?.calls.toFixed(0);
+    const renderCalls = hearth.stats?.render?.calls.toFixed(0);
     dashboard.computeCalls.innerHTML = computeCalls ?? 'N/A';
     dashboard.renderCalls.innerHTML = renderCalls ?? 'N/A';
-    const computeMs = hearth.info?.compute?.timestampTime.toFixed(6);
-    const renderMs = hearth.info?.render?.timestampTime.toFixed(6);
+    const computeMs = hearth.stats?.compute?.timestampTime.toFixed(6);
+    const renderMs = hearth.stats?.render?.timestampTime.toFixed(6);
     dashboard.computeMs.innerHTML = computeMs ?? 'N/A';
     dashboard.renderMs.innerHTML = renderMs ?? 'N/A';
 

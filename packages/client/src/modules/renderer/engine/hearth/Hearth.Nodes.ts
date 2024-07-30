@@ -198,7 +198,7 @@ export class HearthNodes extends DataMap<any, any> {
 
   getCacheKey(scene: Scene, lightsNode) {
     const chain = [scene, lightsNode];
-    const callId = this.hearth.info.passes;
+    const callId = this.hearth.stats.passes;
 
     let cacheKeyData = this.callHashCache.get(chain);
 

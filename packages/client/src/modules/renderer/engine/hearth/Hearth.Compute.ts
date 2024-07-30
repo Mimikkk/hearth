@@ -6,17 +6,17 @@ export class HearthCompute extends HearthComponent {
     const frame = this.hearth.nodes.nodeFrame;
     const previousRenderId = frame.renderId;
 
-    this.hearth.info.passes++;
-    this.hearth.info.compute.passes++;
-    this.hearth.info.compute.calls++;
+    this.hearth.stats.passes++;
+    this.hearth.stats.compute.passes++;
+    this.hearth.stats.compute.calls++;
 
-    frame.renderId = this.hearth.info.compute.passes;
+    frame.renderId = this.hearth.stats.compute.passes;
 
     const computes = Array.isArray(compute) ? compute : [compute];
 
     const descriptor = {} as GPUComputePassDescriptor;
 
-    this.hearth.timestamp.use(computes, descriptor);
+    this.hearth.timestamp.attach(computes, descriptor);
 
     const encoder = this.hearth.device.createCommandEncoder();
     const pass = encoder.beginComputePass(descriptor);
@@ -40,7 +40,7 @@ export class HearthCompute extends HearthComponent {
 
     pass.end();
 
-    this.hearth.timestamp.prepare(computes, encoder);
+    this.hearth.timestamp.encode(computes, encoder);
     this.hearth.device.queue.submit([encoder.finish()]);
     await this.hearth.timestamp.resolve(computes, 'compute');
 

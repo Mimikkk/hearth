@@ -25,9 +25,9 @@ export class HearthRenderer extends HearthComponent {
 
     this.hearth.context = context;
     this.hearth._activeRenderObjectFn = this.hearth._renderObjectFn || this.hearth.renderObject;
-    this.hearth.info.passes++;
-    this.hearth.info.render.passes++;
-    nodeFrame.renderId = this.hearth.info.passes;
+    this.hearth.stats.passes++;
+    this.hearth.stats.render.passes++;
+    nodeFrame.renderId = this.hearth.stats.passes;
 
     if (scene.matrixWorldAutoUpdate) scene.updateMatrixWorld();
 

@@ -12,11 +12,11 @@ export class HearthAnimation {
     const update = (time: number, frame?: number) => {
       this.requestId = self.requestAnimationFrame(update);
 
-      if (this.hearth.info.useAutoTick) this.hearth.info.tick();
+      if (this.hearth.stats.useAutoTick) this.hearth.stats.tick();
 
       this.hearth.nodes.nodeFrame.update();
 
-      this.hearth.info.frame = this.hearth.nodes.nodeFrame.frameId;
+      this.hearth.stats.frame = this.hearth.nodes.nodeFrame.frameId;
 
       if (this.loop !== null) this.loop(time, frame);
     };

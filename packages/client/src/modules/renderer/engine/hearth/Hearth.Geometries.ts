@@ -71,7 +71,7 @@ export class HearthGeometries extends DataMap<any, any> {
 
     geometryData.initialized = true;
 
-    this.hearth.info.memory.geometries++;
+    this.hearth.stats.memory.geometries++;
   }
 
   updateAttributes(renderObject: RenderObject) {
@@ -89,7 +89,7 @@ export class HearthGeometries extends DataMap<any, any> {
   }
 
   updateAttribute(attribute: Attribute, type: AttributeLocation) {
-    const callId = this.hearth.info.render.passes;
+    const callId = this.hearth.stats.render.passes;
 
     if (this.attributeCall.get(attribute) !== callId) {
       this.hearth.attributes.update(attribute, type);

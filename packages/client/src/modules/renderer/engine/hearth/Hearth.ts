@@ -58,7 +58,7 @@ import { HearthCompute } from '@modules/renderer/engine/hearth/Hearth.Compute.js
 import { HearthTimestamp } from '@modules/renderer/engine/hearth/Hearth.Timestamp.js';
 
 export class Hearth {
-  info: HearthStatistics;
+  stats: HearthStatistics;
 
   _pixelRatio: number;
   _width: number;
@@ -157,7 +157,7 @@ export class Hearth {
 
     this.useScissor = false;
 
-    this.info = new HearthStatistics();
+    this.stats = new HearthStatistics();
     this.nodes = new HearthNodes(this);
     this.animation = new HearthAnimation(this);
     this.attributes = new HearthAttributes(this);
@@ -233,10 +233,10 @@ export class Hearth {
 
     this.context = context;
     this._activeRenderObjectFn = this._renderObjectFn || this.renderObject;
-    this.info.passes++;
-    this.info.render.passes++;
+    this.stats.passes++;
+    this.stats.render.passes++;
 
-    nodeFrame.renderId = this.info.passes;
+    nodeFrame.renderId = this.stats.passes;
     if (scene.matrixWorldAutoUpdate) scene.updateMatrixWorld();
 
     if (camera.parent === null && camera.matrixWorldAutoUpdate) camera.updateMatrixWorld();
@@ -857,7 +857,7 @@ export class Hearth {
     const times = new BigUint64Array(resultBuffer.getMappedRange());
     const duration = Number(times[1] - times[0]) / 1000000;
 
-    this.info.stamp(type, duration);
+    this.stats.stamp(type, duration);
     resultBuffer.unmap();
     data.currentTimestampQueryBuffers.isMappingPending = false;
   }
@@ -1475,7 +1475,7 @@ export class Hearth {
   }
 
   draw(renderObject: RenderObject) {
-    const info = this.info;
+    const info = this.stats;
     const { object, geometry, context, pipeline } = renderObject;
 
     const bindingsData = this.memo.get(renderObject.getBindings());
