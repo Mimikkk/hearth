@@ -49,7 +49,7 @@ export class HearthTextures extends DataMap<any, any> {
     this.depthTexture.name = 'depthBuffer';
   }
 
-  updateRenderTarget(renderTarget: RenderTarget, activeMipmapLevel: number = 0) {
+  updateRenderTarget(renderTarget: RenderTarget, activeMipmapLevel: number = this.hearth.activeMipmapLevel) {
     const renderTargetData = this.get(renderTarget);
 
     const sampleCount = renderTarget.samples === 0 ? 1 : renderTarget.samples;

@@ -71,8 +71,8 @@ export class CubeCamera extends Entity {
     const [cameraPX, cameraNX, cameraPY, cameraNY, cameraPZ, cameraNZ] = this.children as Camera[];
 
     const currentRenderTarget = hearth.target;
-    const currentActiveCubeFace = hearth._activeCubeFace;
-    const currentActiveMipmapLevel = hearth._activeMipmapLevel;
+    const currentActiveCubeFace = hearth.activeCubeFace;
+    const currentActiveMipmapLevel = hearth.activeMipmapLevel;
 
     const generateMipmaps = renderTarget.texture.generateMipmaps;
 

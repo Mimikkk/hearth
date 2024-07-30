@@ -1,5 +1,6 @@
 import { Color, DepthTexture, RenderTarget, Texture, Vec4 } from '@modules/renderer/engine/engine.js';
 import ClippingContext from '@modules/renderer/engine/hearth/core/ClippingContext.js';
+import { Const } from '@modules/renderer/engine/math/types.js';
 
 let id = 0;
 
@@ -23,10 +24,10 @@ export class RenderContext {
   clearStencilValue: number;
 
   useUpdateViewport: boolean;
-  viewport: Vec4;
+  viewport: RenderViewport;
 
   useUpdateScissor: boolean;
-  scissor: Vec4;
+  scissor: RenderScissor;
 
   textures: Texture[] | null;
   depthTexture: DepthTexture | null;
@@ -58,10 +59,11 @@ export class RenderContext {
     this.clearStencilValue = 1;
 
     this.useUpdateViewport = false;
-    this.viewport = Vec4.new();
+    this.viewport = RenderViewport.new();
 
     this.useUpdateScissor = false;
-    this.scissor = Vec4.new();
+    this.scissor = RenderScissor.new();
+    this.clip = new ClippingContext();
 
     this.textures = null;
     this.depthTexture = null;
@@ -76,3 +78,64 @@ export class RenderContext {
 export default RenderContext;
 
 RenderContext.prototype.isRenderContext = true;
+
+class RenderViewport {
+  constructor(
+    public x: number,
+    public y: number,
+    public width: number,
+    public height: number,
+    public minDepth: number = 0,
+    public maxDepth: number = 1,
+  ) {}
+
+  static new() {
+    return new RenderViewport(0, 0, 0, 0);
+  }
+
+  set(
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+    minDepth: number = this.minDepth,
+    maxDepth: number = this.maxDepth,
+  ): this {
+    this.x = x;
+    this.y = y;
+    this.width = width;
+    this.height = height;
+    this.minDepth = minDepth;
+    this.maxDepth = maxDepth;
+    return this;
+  }
+
+  equalsVec({ x, y, z: width, w: height }: Const<Vec4>): boolean {
+    return this.x === x && this.y === y && this.width === width && this.height === height;
+  }
+}
+
+class RenderScissor {
+  constructor(
+    public x: number,
+    public y: number,
+    public width: number,
+    public height: number,
+  ) {}
+
+  static new() {
+    return new RenderScissor(0, 0, 0, 0);
+  }
+
+  set(x: number, y: number, width: number, height: number): this {
+    this.x = x;
+    this.y = y;
+    this.width = width;
+    this.height = height;
+    return this;
+  }
+
+  equalsVec({ x, y, z: width, w: height }: Const<Vec4>): boolean {
+    return this.x === x && this.y === y && this.width === width && this.height === height;
+  }
+}

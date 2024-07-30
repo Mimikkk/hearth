@@ -2,7 +2,6 @@ import { HearthComponent } from '@modules/renderer/engine/hearth/Hearth.Componen
 import { Entity } from '@modules/renderer/engine/core/Entity.js';
 import { Camera } from '@modules/renderer/engine/entities/cameras/Camera.js';
 import { Scene } from '@modules/renderer/engine/entities/scenes/Scene.js';
-import ClippingContext from '@modules/renderer/engine/hearth/core/ClippingContext.js';
 import RenderContext from './core/RenderContext.ts';
 import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 import { Vec4 } from '@modules/renderer/engine/math/Vec4.js';
@@ -14,8 +13,10 @@ import {
   GPUStoreOpType,
   GPUTextureViewDimensionType,
 } from '@modules/renderer/engine/hearth/constants.js';
-import RenderList from '@modules/renderer/engine/hearth/core/RenderList.js';
+import RenderList, { SortFn } from '@modules/renderer/engine/hearth/core/RenderList.js';
 import { Color } from '@modules/renderer/engine/math/Color.js';
+import { Material } from '@modules/renderer/engine/entities/materials/Material.js';
+import LightsNode from '../nodes/lighting/LightsNode.ts';
 
 export class HearthRenderer extends HearthComponent {
   async run(scene: Entity, camera: Camera): Promise<RenderContext> {
@@ -27,8 +28,6 @@ export class HearthRenderer extends HearthComponent {
 
     const target = this.hearth.target;
     const context = this.hearth.renderContexts.get(scene, camera, target);
-    const activeCubeFace = this.hearth._activeCubeFace;
-    const activeMipmapLevel = this.hearth._activeMipmapLevel;
 
     this.hearth.context = context;
     this.hearth._activeRenderObjectFn = this.hearth._renderObjectFn || this.hearth.renderObject;
@@ -49,69 +48,55 @@ export class HearthRenderer extends HearthComponent {
       pixelRatio = 1;
     }
 
-    this.hearth.getDrawSize(_drawSize);
-
-    _screen.set(0, 0, _drawSize.width, _drawSize.height);
-
-    context.viewport.from(viewport).scale(pixelRatio).floor();
-    context.viewport.width >>= activeMipmapLevel;
-    context.viewport.height >>= activeMipmapLevel;
-    context.viewport.minDepth = 0;
-    context.viewport.maxDepth = 1;
-    context.useUpdateViewport = this.hearth.useScissor && !context.viewport.equals(_screen);
-
-    context.scissor.from(scissor).scale(pixelRatio).floor();
-    context.scissor.width >>= activeMipmapLevel;
-    context.scissor.height >>= activeMipmapLevel;
-    context.useUpdateScissor = this.hearth.useScissor && !context.scissor.equals(_screen);
-
-    if (!context.clip) context.clip = new ClippingContext();
-
+    this.updateScreen();
+    this.updateViewport(context, viewport, pixelRatio);
+    this.updateScissor(context, scissor, pixelRatio);
     context.clip.updateGlobal(this.hearth, camera);
+
     sceneRef.onBeforeRender(this.hearth, scene, camera, target);
 
     _projection.asMul(camera.projectionMatrix, camera.matrixWorldInverse);
     _frustum.fromProjection(_projection);
 
-    const renderList = this.hearth.renderLists.get(scene, camera);
-    renderList.begin();
+    const list = this.hearth.renderLists.get(scene, camera);
 
-    this._projectObject(scene, camera, 0, renderList);
-
-    renderList.finish();
+    list.begin();
+    this._projectObject(scene, camera, 0, list);
+    list.finish();
 
     if (this.hearth.parameters.useSort) {
-      renderList.sort(this.hearth.opaqueSort, this.hearth.transparentSort);
+      list.sort(this.opaqueSort, this.transparentSort);
     }
 
+    const activeMipmapLevel = this.hearth.activeMipmapLevel;
     if (target) {
-      this.hearth.textures.updateRenderTarget(target, activeMipmapLevel);
+      this.hearth.textures.updateRenderTarget(target);
 
       const data = this.hearth.textures.get(target);
       context.textures = data.textures;
       context.depthTexture = data.depthTexture;
-      context.width = data.width;
-      context.height = data.height;
+
+      context.width = data.width >> activeMipmapLevel;
+      context.height = data.height >> activeMipmapLevel;
       context.renderTarget = target;
       context.useDepth = target.depthBuffer;
       context.useStencil = target.stencilBuffer;
     } else {
       context.textures = null;
       context.depthTexture = null;
-      context.width = this.hearth.parameters.canvas.width;
-      context.height = this.hearth.parameters.canvas.height;
+
+      context.width = this.hearth.parameters.canvas.width >> activeMipmapLevel;
+      context.height = this.hearth.parameters.canvas.height >> activeMipmapLevel;
       context.useDepth = this.hearth.parameters.useDepth;
       context.useStencil = this.hearth.parameters.useStencil;
     }
 
-    context.width >>= activeMipmapLevel;
-    context.height >>= activeMipmapLevel;
-    context.activeCubeFace = activeCubeFace;
+    context.activeCubeFace = this.hearth.activeCubeFace;
     context.activeMipmapLevel = activeMipmapLevel;
-    context.occlusionQueryCount = renderList.occlusionQueryCount;
+    context.occlusionQueryCount = list.occlusionQueryCount;
 
     this.hearth.nodes.updateScene(sceneRef);
-    this.hearth.background.update(sceneRef, renderList, context);
+    this.hearth.background.update(sceneRef, list, context);
 
     const renderContextData = this.hearth.memo.get(context);
 
@@ -209,7 +194,7 @@ export class HearthRenderer extends HearthComponent {
     renderContextData.currentSets = { attributes: {} };
 
     if (context.useUpdateViewport) {
-      this.updateViewport(context);
+      this.passViewport(context);
     }
     if (context.useUpdateScissor) {
       const { x, y, width, height } = context.scissor;
@@ -217,9 +202,9 @@ export class HearthRenderer extends HearthComponent {
       currentPass.setScissorRect(x, context.height - height - y, width, height);
     }
 
-    const opaque = renderList.opaque;
-    const transparent = renderList.transparent;
-    const lightsNode = renderList.lightsNode;
+    const opaque = list.opaque;
+    const transparent = list.transparent;
+    const lightsNode = list.lightsNode;
 
     if (opaque.length > 0) this.hearth._renderObjects(opaque, camera, sceneRef, lightsNode);
     if (transparent.length > 0) this.hearth._renderObjects(transparent, camera, sceneRef, lightsNode);
@@ -363,7 +348,7 @@ export class HearthRenderer extends HearthComponent {
     }
   }
 
-  updateViewport(renderContext: RenderContext) {
+  passViewport(renderContext: RenderContext) {
     const { currentPass } = this.hearth.memo.get(renderContext);
     const { x, y, width, height, minDepth, maxDepth } = renderContext.viewport;
 
@@ -605,12 +590,54 @@ export class HearthRenderer extends HearthComponent {
     return descriptor;
   }
 
-  getClearColor() {
+  getClearColor(): Color {
     const color = Color.from(this.hearth._clearColor);
     color.getRGB(color, this.hearth.currentColorSpace);
     return color;
   }
+
+  updateScreen(): void {
+    const drawSize = this.hearth.getDrawSize(_drawSize);
+    _screen.set(0, 0, drawSize.x, drawSize.y);
+  }
+
+  updateViewport(context: RenderContext, { x, y, z: width, w: height }: Vec4, pixelRatio: number): void {
+    const activeMipmapLevel = this.hearth.activeMipmapLevel;
+
+    context.viewport.set(
+      ~~(x * pixelRatio),
+      ~~(y * pixelRatio),
+      ~~(width * pixelRatio) >> activeMipmapLevel,
+      ~~(height * pixelRatio) >> activeMipmapLevel,
+      0,
+      1,
+    );
+    context.useUpdateViewport = this.hearth.useScissor && !context.viewport.equalsVec(_screen);
+  }
+
+  updateScissor(context: RenderContext, { x, y, z: width, w: height }: Vec4, pixelRatio: number): void {
+    const activeMipmapLevel = this.hearth.activeMipmapLevel;
+
+    context.scissor.set(
+      ~~(x * pixelRatio),
+      ~~(y * pixelRatio),
+      ~~(width * pixelRatio) >> activeMipmapLevel,
+      ~~(height * pixelRatio) >> activeMipmapLevel,
+    );
+
+    context.useUpdateScissor = this.hearth.useScissor && !context.scissor.equalsVec(_screen);
+  }
+
+  opaqueSort: SortFn = sortPainterAsc;
+  transparentSort: SortFn = sortPainterDesc;
 }
+
+const maxlog = (max: number) => {
+  return (...params: any) => {
+    if (--max > 0) console.log(params);
+  };
+};
+const log = maxlog(10);
 
 const _scene = new Scene();
 const _drawSize = Vec2.new();
@@ -618,18 +645,23 @@ const _screen = Vec4.new();
 const _frustum = Frustum.new();
 const _projection = Mat4.new();
 const _vec3 = Vec3.new();
+const _vec4 = Vec4.new();
 
-class RenderViewport {
-  constructor(width: number, height: number, minDepth: number, maxDepth: number) {}
+const sortPainterAsc: SortFn = (a, b) => {
+  if (a.groupOrder !== b.groupOrder) return a.groupOrder - b.groupOrder;
+  if (a.renderOrder !== b.renderOrder) return a.renderOrder - b.renderOrder;
+  if (a.material.id !== b.material.id) return a.material.id - b.material.id;
+  if (a.z !== b.z) return a.z - b.z;
+  return a.id - b.id;
+};
 
-  update() {
-    context.viewportValue.from(viewport).scale(pixelRatio).floor();
-    context.viewportValue.width >>= activeMipmapLevel;
-    context.viewportValue.height >>= activeMipmapLevel;
-    context.viewportValue.minDepth = 0;
-    context.viewportValue.maxDepth = 1;
-    context.useViewport = !context.viewportValue.equals(_screen);
-  }
-}
+const sortPainterDesc: SortFn = (a, b) => sortPainterAsc(b, a);
 
-class RenderScissor {}
+export type RenderFn = (
+  object: Entity,
+  material: Material,
+  scene: Scene,
+  camera: Camera,
+  lightsNode: LightsNode,
+  passId: string,
+) => void;

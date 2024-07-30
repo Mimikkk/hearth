@@ -56,7 +56,7 @@ import ProgrammableStage from '@modules/renderer/engine/hearth/core/Programmable
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { HearthComputer } from '@modules/renderer/engine/hearth/HearthComputer.js';
 import { HearthTimestamp } from '@modules/renderer/engine/hearth/Hearth.Timestamp.js';
-import { HearthRenderer } from '@modules/renderer/engine/hearth/Hearth.Renderer.js';
+import { HearthRenderer, RenderFn } from '@modules/renderer/engine/hearth/Hearth.Renderer.js';
 
 export class Hearth {
   stats: HearthStatistics;
@@ -100,11 +100,8 @@ export class Hearth {
 
   context: RenderContext | null;
   target: RenderTarget | null;
-  _activeCubeFace: number;
-  _activeMipmapLevel: number;
-
-  opaqueSort: SortFn = sortPainterAsc;
-  transparentSort: SortFn = sortPainterDesc;
+  activeCubeFace: number;
+  activeMipmapLevel: number;
 
   _clearColor: Color;
   _clearDepth: number;
@@ -186,8 +183,8 @@ export class Hearth {
     this._clearStencil = 0;
 
     this.target = null;
-    this._activeCubeFace = 0;
-    this._activeMipmapLevel = 0;
+    this.activeCubeFace = 0;
+    this.activeMipmapLevel = 0;
 
     this._renderObjectFn = null;
     this._activeRenderObjectFn = this.renderObject;
@@ -245,7 +242,7 @@ export class Hearth {
 
     const renderTarget = this.target;
     const renderContext = this.renderContexts.get(targetScene, camera, renderTarget);
-    const activeMipmapLevel = this._activeMipmapLevel;
+    const activeMipmapLevel = this.activeMipmapLevel;
 
     this.context = renderContext;
     this._activeRenderObjectFn = this.renderObject;
@@ -342,8 +339,8 @@ export class Hearth {
 
   updateRenderTarget(renderTarget: RenderTarget | null, activeCubeFace: number = 0, activeMipmapLevel: number = 0) {
     this.target = renderTarget;
-    this._activeCubeFace = activeCubeFace;
-    this._activeMipmapLevel = activeMipmapLevel;
+    this.activeCubeFace = activeCubeFace;
+    this.activeMipmapLevel = activeMipmapLevel;
   }
 
   _projectObject(object: Entity, camera: Camera, groupOrder: number, renderList: RenderList): void {
@@ -983,28 +980,3 @@ const _screen = Vec4.new();
 const _frustum = Frustum.new();
 const _projection = Mat4.new();
 const _vec3 = Vec3.new();
-
-type RenderFn = (
-  object: Entity,
-  material: Material,
-  scene: Scene,
-  camera: Camera,
-  lightsNode: LightsNode,
-  passId: string,
-) => void;
-
-const sortPainterAsc: SortFn = (a, b) => {
-  if (a.groupOrder !== b.groupOrder) {
-    return a.groupOrder - b.groupOrder;
-  } else if (a.renderOrder !== b.renderOrder) {
-    return a.renderOrder - b.renderOrder;
-  } else if (a.material.id !== b.material.id) {
-    return a.material.id - b.material.id;
-  } else if (a.z !== b.z) {
-    return a.z - b.z;
-  } else {
-    return a.id - b.id;
-  }
-};
-
-const sortPainterDesc: SortFn = (a, b) => sortPainterAsc(b, a);
