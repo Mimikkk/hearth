@@ -1,7 +1,7 @@
 import { HearthComponent } from '@modules/renderer/engine/hearth/Hearth.Component.js';
 import ComputeNode from '@modules/renderer/engine/nodes/gpgpu/ComputeNode.js';
 
-export class HearthCompute extends HearthComponent {
+export class HearthComputer extends HearthComponent {
   async run(compute: ComputeNode | ComputeNode[]): Promise<void> {
     const frame = this.hearth.nodes.nodeFrame;
     const previousRenderId = frame.renderId;

@@ -130,4 +130,3 @@ const _drawSize = Vec2.new();
 const _screen = Vec4.new();
 const _frustum = Frustum.new();
 const _projection = Mat4.new();
-const _vec3 = Vec3.new();

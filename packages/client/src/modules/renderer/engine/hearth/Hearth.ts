@@ -54,8 +54,9 @@ import ComputePipeline from '@modules/renderer/engine/hearth/core/ComputePipelin
 import Binding from '@modules/renderer/engine/hearth/bindings/Binding.js';
 import ProgrammableStage from '@modules/renderer/engine/hearth/core/ProgrammableStage.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
-import { HearthCompute } from '@modules/renderer/engine/hearth/Hearth.Compute.js';
+import { HearthComputer } from '@modules/renderer/engine/hearth/HearthComputer.js';
 import { HearthTimestamp } from '@modules/renderer/engine/hearth/Hearth.Timestamp.js';
+import { HearthRenderer } from '@modules/renderer/engine/hearth/Hearth.Renderer.js';
 
 export class Hearth {
   stats: HearthStatistics;
@@ -77,7 +78,9 @@ export class Hearth {
   objects: HearthEntities;
   pipelines: HearthPipelines;
   resources: HearthResources;
-  computer: HearthCompute;
+
+  renderer: HearthRenderer;
+  computer: HearthComputer;
   timestamp: HearthTimestamp;
 
   renderLists: HearthQueues;
@@ -169,7 +172,8 @@ export class Hearth {
     this.resources = new HearthResources(this);
     this.bindings = new HearthBindings(this);
     this.objects = new HearthEntities(this);
-    this.computer = new HearthCompute(this);
+    this.renderer = new HearthRenderer(this);
+    this.computer = new HearthComputer(this);
     this.timestamp = new HearthTimestamp(this);
     this.renderLists = new HearthQueues();
     this.renderContexts = new HearthContexts();
@@ -220,116 +224,7 @@ export class Hearth {
   }
 
   async render(scene: Entity, camera: Camera): Promise<RenderContext> {
-    const nodeFrame = this.nodes.nodeFrame;
-    const previousRenderId = nodeFrame.renderId;
-    const previousRenderContext = this.context;
-    const previousRenderObjectFunction = this._activeRenderObjectFn;
-    const sceneRef = Scene.is(scene) ? scene : _scene;
-
-    const target = this.target;
-    const context = this.renderContexts.get(scene, camera, target);
-    const activeCubeFace = this._activeCubeFace;
-    const activeMipmapLevel = this._activeMipmapLevel;
-
-    this.context = context;
-    this._activeRenderObjectFn = this._renderObjectFn || this.renderObject;
-    this.stats.passes++;
-    this.stats.render.passes++;
-
-    nodeFrame.renderId = this.stats.passes;
-    if (scene.matrixWorldAutoUpdate) scene.updateMatrixWorld();
-
-    if (camera.parent === null && camera.matrixWorldAutoUpdate) camera.updateMatrixWorld();
-    let viewport = this.viewport;
-    let scissor = this.scissor;
-    let pixelRatio = this._pixelRatio;
-
-    if (target !== null) {
-      viewport = target.viewport;
-      scissor = target.scissor;
-      pixelRatio = 1;
-    }
-
-    this.getDrawSize(_drawSize);
-
-    _screen.set(0, 0, _drawSize.width, _drawSize.height);
-
-    context.viewportValue.from(viewport).scale(pixelRatio).floor();
-    context.viewportValue.width >>= activeMipmapLevel;
-    context.viewportValue.height >>= activeMipmapLevel;
-    context.viewportValue.minDepth = 0;
-    context.viewportValue.maxDepth = 1;
-    context.useViewport = context.viewportValue.equals(_screen) === false;
-
-    context.scissorValue.from(scissor).scale(pixelRatio).floor();
-    context.useScissor = this.useScissor && context.scissorValue.equals(_screen) === false;
-    context.scissorValue.width >>= activeMipmapLevel;
-    context.scissorValue.height >>= activeMipmapLevel;
-
-    if (!context.clippingContext) context.clippingContext = new ClippingContext();
-    context.clippingContext.updateGlobal(this, camera);
-    sceneRef.onBeforeRender(this, scene, camera, target);
-    _projection.asMul(camera.projectionMatrix, camera.matrixWorldInverse);
-    _frustum.fromProjection(_projection);
-
-    const renderList = this.renderLists.get(scene, camera);
-    renderList.begin();
-
-    this._projectObject(scene, camera, 0, renderList);
-
-    renderList.finish();
-
-    if (this.parameters.useSort) {
-      renderList.sort(this.opaqueSort, this.transparentSort);
-    }
-    if (target !== null) {
-      this.textures.updateRenderTarget(target, activeMipmapLevel);
-
-      const data = this.textures.get(target);
-
-      context.textures = data.textures;
-      context.depthTexture = data.depthTexture;
-      context.width = data.width;
-      context.height = data.height;
-      context.renderTarget = target;
-      context.useDepth = target.depthBuffer;
-      context.useStencil = target.stencilBuffer;
-    } else {
-      context.textures = null;
-      context.depthTexture = null;
-      context.width = this.parameters.canvas.width;
-      context.height = this.parameters.canvas.height;
-      context.useDepth = this.parameters.useDepth;
-      context.useStencil = this.parameters.useStencil;
-    }
-
-    context.width >>= activeMipmapLevel;
-    context.height >>= activeMipmapLevel;
-    context.activeCubeFace = activeCubeFace;
-    context.activeMipmapLevel = activeMipmapLevel;
-    context.occlusionQueryCount = renderList.occlusionQueryCount;
-
-    this.nodes.updateScene(sceneRef);
-    this.background.update(sceneRef, renderList, context);
-    this.beginRender(context);
-
-    const opaque = renderList.opaque;
-    const transparent = renderList.transparent;
-    const lightsNode = renderList.lightsNode;
-
-    if (opaque.length > 0) this._renderObjects(opaque, camera, sceneRef, lightsNode);
-    if (transparent.length > 0) this._renderObjects(transparent, camera, sceneRef, lightsNode);
-
-    this.finishRender(context);
-
-    nodeFrame.renderId = previousRenderId;
-    this.context = previousRenderContext;
-    this._activeRenderObjectFn = previousRenderObjectFunction;
-
-    sceneRef.onAfterRender(this, scene, camera, target);
-    await this.resolveTimestamp(context, 'render');
-
-    return context;
+    return this.renderer.run(scene, camera);
   }
 
   async compute(nodes: ComputeNode | ComputeNode[]): Promise<void> {
@@ -790,76 +685,6 @@ export class Hearth {
 
   createNodeBuilder(object: Entity, hearth: Hearth, scene: Scene | null = null) {
     return new NodeBuilder(object, hearth, scene);
-  }
-
-  initTimestampBuffer(context: any, descriptor: GPURenderPassDescriptor | GPUComputePassDescriptor): void {
-    if (!this.hasFeature(GPUFeature.TimestampQuery) || !this.parameters.useTimestamp) return;
-
-    const data = this.memo.get(context);
-    if (data.timeStampQuerySet) return;
-
-    const timeStampQuerySet = this.device.createQuerySet({ type: 'timestamp', count: 2 });
-    descriptor.timestampWrites = {
-      querySet: timeStampQuerySet,
-
-      beginningOfPassWriteIndex: 0,
-
-      endOfPassWriteIndex: 1,
-    };
-
-    data.timeStampQuerySet = timeStampQuerySet;
-  }
-
-  prepareTimestamp(context: any, encoder: GPUCommandEncoder) {
-    if (!this.hasFeature(GPUFeature.TimestampQuery) || !this.parameters.useTimestamp) return;
-
-    const data = this.memo.get(context);
-
-    const size = 2 * BigInt64Array.BYTES_PER_ELEMENT;
-
-    if (data.currentTimestampQueryBuffers === undefined) {
-      data.currentTimestampQueryBuffers = {
-        resolveBuffer: this.device.createBuffer({
-          label: 'timestamp resolve buffer',
-          size: size,
-          usage: GPUBufferUsage.QUERY_RESOLVE | GPUBufferUsage.COPY_SRC,
-        }),
-        resultBuffer: this.device.createBuffer({
-          label: 'timestamp result buffer',
-          size: size,
-          usage: GPUBufferUsage.COPY_DST | GPUBufferUsage.MAP_READ,
-        }),
-        isMappingPending: false,
-      };
-    }
-
-    const { resolveBuffer, resultBuffer, isMappingPending } = data.currentTimestampQueryBuffers;
-
-    if (isMappingPending === true) return;
-
-    encoder.resolveQuerySet(data.timeStampQuerySet, 0, 2, resolveBuffer, 0);
-    encoder.copyBufferToBuffer(resolveBuffer, 0, resultBuffer, 0, size);
-  }
-
-  async resolveTimestamp(context: any, type: 'render' | 'compute') {
-    if (!this.hasFeature(GPUFeature.TimestampQuery) || !this.parameters.useTimestamp) return;
-
-    const data = this.memo.get(context);
-
-    if (data.currentTimestampQueryBuffers === undefined) return;
-
-    const { resultBuffer, isMappingPending } = data.currentTimestampQueryBuffers;
-    if (isMappingPending === true) return;
-
-    data.currentTimestampQueryBuffers.isMappingPending = true;
-
-    await resultBuffer.mapAsync(GPUMapMode.READ);
-    const times = new BigUint64Array(resultBuffer.getMappedRange());
-    const duration = Number(times[1] - times[0]) / 1000000;
-
-    this.stats.stamp(type, duration);
-    resultBuffer.unmap();
-    data.currentTimestampQueryBuffers.isMappingPending = false;
   }
 
   copyTextureToBuffer(texture: Texture, x: number, y: number, width: number, height: number) {
@@ -1339,7 +1164,7 @@ export class Hearth {
       descriptor = this._getRenderPassDescriptor(renderContext);
     }
 
-    this.initTimestampBuffer(renderContext, descriptor);
+    this.timestamp.meter(renderContext, descriptor);
 
     descriptor.occlusionQuerySet = occlusionQuerySet;
 
@@ -1457,7 +1282,7 @@ export class Hearth {
       await this.resolveOccludedAsync(renderContext);
     }
 
-    this.prepareTimestamp(renderContext, renderContextData.encoder);
+    this.timestamp.encode(renderContext, renderContextData.encoder);
 
     this.device.queue.submit([renderContextData.encoder.finish()]);
 
