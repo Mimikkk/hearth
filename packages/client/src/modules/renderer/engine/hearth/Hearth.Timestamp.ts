@@ -2,77 +2,88 @@ import { HearthComponent } from '@modules/renderer/engine/hearth/Hearth.Componen
 import { GPUFeature } from '@modules/renderer/engine/hearth/constants.js';
 
 export class HearthTimestamp extends HearthComponent {
-  buffers = new WeakMap<object, TimestampBuffers>();
-  sets = new WeakMap<object, GPUQuerySet>();
+  attach(key: object, to: GPURenderPassDescriptor | GPUComputePassDescriptor): void {
+    if (!this.allowed) return;
 
-  use(key: object, descriptor: GPURenderPassDescriptor | GPUComputePassDescriptor): void {
-    if (this.#enabled) return;
+    if (this.queries.has(key)) return;
+    const query = TimestampQuery.fromDevice(this.hearth.device);
+    this.queries.set(key, query);
 
-    if (this.sets.has(key)) return;
-
-    const querySet = this.#createQuerySet();
-
-    descriptor.timestampWrites = { querySet, beginningOfPassWriteIndex: 0, endOfPassWriteIndex: 1 };
-
-    this.sets.set(key, querySet);
+    to.timestampWrites = { querySet: query.set, beginningOfPassWriteIndex: 0, endOfPassWriteIndex: 1 };
   }
 
-  prepare(key: object, encoder: GPUCommandEncoder) {
-    if (this.#enabled) return;
+  encode(key: object, encoder: GPUCommandEncoder) {
+    if (!this.allowed) return;
 
-    const set = this.sets.get(key);
-    if (!set) return;
+    const query = this.queries.get(key);
+    if (!query) return;
 
     const size = 2 * BigInt64Array.BYTES_PER_ELEMENT;
+
     let buffers = this.buffers.get(key);
-    if (!buffers) buffers = this.#createBuffers();
 
-    const { query, times } = buffers;
+    if (!buffers) {
+      buffers = TimestampBuffers.fromDevice(this.hearth.device);
+      this.buffers.set(key, buffers);
+    }
 
-    encoder.resolveQuerySet(set, 0, 2, query, 0);
-    encoder.copyBufferToBuffer(query, 0, times, 0, size);
+    const { resolve, times } = buffers;
+
+    encoder.resolveQuerySet(query.set, 0, 2, resolve, 0);
+    encoder.copyBufferToBuffer(resolve, 0, times, 0, size);
   }
 
   async resolve(key: object, type: 'render' | 'compute') {
-    if (this.#enabled) return;
+    if (!this.allowed) return;
 
     const buffers = this.buffers.get(key);
     if (!buffers) return;
 
     const { times } = buffers;
+
     await times.mapAsync(GPUMapMode.READ);
+
     const [start, end] = new BigUint64Array(times.getMappedRange());
     const duration = Number(end - start) / 1000000;
 
-    this.hearth.info.stamp(type, duration);
+    this.hearth.stats.stamp(type, duration);
     times.unmap();
   }
 
-  #createQuerySet(): GPUQuerySet {
-    return this.hearth.device.createQuerySet({ type: 'timestamp', count: 2 });
+  get allowed() {
+    return this.hearth.hasFeature(GPUFeature.TimestampQuery) && this.hearth.parameters.useTimestamp;
   }
 
-  #createBuffers(): TimestampBuffers {
-    return {
-      query: this.hearth.device.createBuffer({
-        label: 'timestamp resolve buffer',
+  buffers = new WeakMap<object, TimestampBuffers>();
+  queries = new WeakMap<object, TimestampQuery>();
+}
+
+class TimestampBuffers {
+  constructor(
+    public resolve: GPUBuffer,
+    public times: GPUBuffer,
+  ) {}
+
+  static fromDevice(device: GPUDevice) {
+    return new TimestampBuffers(
+      device.createBuffer({
+        label: 'timestamp: resolve query buffer',
         size: 2 * BigInt64Array.BYTES_PER_ELEMENT,
         usage: GPUBufferUsage.QUERY_RESOLVE | GPUBufferUsage.COPY_SRC,
       }),
-      times: this.hearth.device.createBuffer({
-        label: 'timestamp result buffer',
+      device.createBuffer({
+        label: 'timestamp: time buffer',
         size: 2 * BigInt64Array.BYTES_PER_ELEMENT,
         usage: GPUBufferUsage.COPY_DST | GPUBufferUsage.MAP_READ,
       }),
-    };
-  }
-
-  get #enabled() {
-    return this.hearth.hasFeature(GPUFeature.TimestampQuery) && this.hearth.parameters.useTimestamp;
+    );
   }
 }
 
-interface TimestampBuffers {
-  query: GPUBuffer;
-  times: GPUBuffer;
+class TimestampQuery {
+  constructor(public set: GPUQuerySet) {}
+
+  static fromDevice(device: GPUDevice) {
+    return new TimestampQuery(device.createQuerySet({ type: 'timestamp', count: 2 }));
+  }
 }
