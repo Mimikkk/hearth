@@ -55,7 +55,6 @@ import Binding from '@modules/renderer/engine/hearth/bindings/Binding.js';
 import ProgrammableStage from '@modules/renderer/engine/hearth/core/ProgrammableStage.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { HearthCompute } from '@modules/renderer/engine/hearth/Hearth.Compute.js';
-import { HearthTimestamp } from '@modules/renderer/engine/hearth/Hearth.Timestamp.js';
 
 export class Hearth {
   info: HearthStatistics;
@@ -69,7 +68,6 @@ export class Hearth {
 
   useScissor: boolean;
 
-  timestamp: HearthTimestamp;
   attributes: HearthAttributes;
   geometries: HearthGeometries;
   nodes: HearthNodes;
@@ -170,7 +168,6 @@ export class Hearth {
     this.bindings = new HearthBindings(this);
     this.objects = new HearthEntities(this);
     this.computer = new HearthCompute(this);
-    this.timestamp = new HearthTimestamp(this);
     this.renderLists = new HearthQueues();
     this.renderContexts = new HearthContexts();
     this.context = null;
@@ -327,7 +324,7 @@ export class Hearth {
     this._activeRenderObjectFn = previousRenderObjectFunction;
 
     sceneRef.onAfterRender(this, scene, camera, target);
-    await this.timestamp.resolve(context, 'render');
+    await this.resolveTimestamp(context, 'render');
 
     return context;
   }
@@ -790,6 +787,76 @@ export class Hearth {
 
   createNodeBuilder(object: Entity, hearth: Hearth, scene: Scene | null = null) {
     return new NodeBuilder(object, hearth, scene);
+  }
+
+  initTimestampBuffer(context: any, descriptor: GPURenderPassDescriptor | GPUComputePassDescriptor): void {
+    if (!this.hasFeature(GPUFeature.TimestampQuery) || !this.parameters.useTimestamp) return;
+
+    const data = this.memo.get(context);
+    if (data.timeStampQuerySet) return;
+
+    const timeStampQuerySet = this.device.createQuerySet({ type: 'timestamp', count: 2 });
+    descriptor.timestampWrites = {
+      querySet: timeStampQuerySet,
+
+      beginningOfPassWriteIndex: 0,
+
+      endOfPassWriteIndex: 1,
+    };
+
+    data.timeStampQuerySet = timeStampQuerySet;
+  }
+
+  prepareTimestamp(context: any, encoder: GPUCommandEncoder) {
+    if (!this.hasFeature(GPUFeature.TimestampQuery) || !this.parameters.useTimestamp) return;
+
+    const data = this.memo.get(context);
+
+    const size = 2 * BigInt64Array.BYTES_PER_ELEMENT;
+
+    if (data.currentTimestampQueryBuffers === undefined) {
+      data.currentTimestampQueryBuffers = {
+        resolveBuffer: this.device.createBuffer({
+          label: 'timestamp resolve buffer',
+          size: size,
+          usage: GPUBufferUsage.QUERY_RESOLVE | GPUBufferUsage.COPY_SRC,
+        }),
+        resultBuffer: this.device.createBuffer({
+          label: 'timestamp result buffer',
+          size: size,
+          usage: GPUBufferUsage.COPY_DST | GPUBufferUsage.MAP_READ,
+        }),
+        isMappingPending: false,
+      };
+    }
+
+    const { resolveBuffer, resultBuffer, isMappingPending } = data.currentTimestampQueryBuffers;
+
+    if (isMappingPending === true) return;
+
+    encoder.resolveQuerySet(data.timeStampQuerySet, 0, 2, resolveBuffer, 0);
+    encoder.copyBufferToBuffer(resolveBuffer, 0, resultBuffer, 0, size);
+  }
+
+  async resolveTimestamp(context: any, type: 'render' | 'compute') {
+    if (!this.hasFeature(GPUFeature.TimestampQuery) || !this.parameters.useTimestamp) return;
+
+    const data = this.memo.get(context);
+
+    if (data.currentTimestampQueryBuffers === undefined) return;
+
+    const { resultBuffer, isMappingPending } = data.currentTimestampQueryBuffers;
+    if (isMappingPending === true) return;
+
+    data.currentTimestampQueryBuffers.isMappingPending = true;
+
+    await resultBuffer.mapAsync(GPUMapMode.READ);
+    const times = new BigUint64Array(resultBuffer.getMappedRange());
+    const duration = Number(times[1] - times[0]) / 1000000;
+
+    this.info.stamp(type, duration);
+    resultBuffer.unmap();
+    data.currentTimestampQueryBuffers.isMappingPending = false;
   }
 
   copyTextureToBuffer(texture: Texture, x: number, y: number, width: number, height: number) {
@@ -1269,7 +1336,7 @@ export class Hearth {
       descriptor = this._getRenderPassDescriptor(renderContext);
     }
 
-    this.timestamp.use(renderContext, descriptor);
+    this.initTimestampBuffer(renderContext, descriptor);
 
     descriptor.occlusionQuerySet = occlusionQuerySet;
 
@@ -1387,7 +1454,7 @@ export class Hearth {
       await this.resolveOccludedAsync(renderContext);
     }
 
-    this.timestamp.prepare(renderContext, renderContextData.encoder);
+    this.prepareTimestamp(renderContext, renderContextData.encoder);
 
     this.device.queue.submit([renderContextData.encoder.finish()]);
 
