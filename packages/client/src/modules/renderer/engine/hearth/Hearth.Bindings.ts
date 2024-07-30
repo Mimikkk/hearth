@@ -18,7 +18,6 @@ import StorageTexture from '@modules/renderer/engine/entities/textures/StorageTe
 import BindingStorageBuffer from '@modules/renderer/engine/hearth/bindings/BindingStorageBuffer.js';
 import { ComputeNode } from '@modules/renderer/engine/nodes/Nodes.js';
 import { NodeUniformsGroup } from '@modules/renderer/engine/nodes/builder/NodeStorageBuffer.js';
-import { Backend } from '@modules/renderer/engine/hearth/Backend.js';
 import BindingBuffer from '@modules/renderer/engine/hearth/bindings/BindingBuffer.js';
 import { TextureDataType } from '@modules/renderer/engine/constants.js';
 import BindingSampler from '@modules/renderer/engine/hearth/bindings/BindingSampler.js';

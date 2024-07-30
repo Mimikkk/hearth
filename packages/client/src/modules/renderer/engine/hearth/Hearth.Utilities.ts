@@ -3,7 +3,6 @@ import RenderContext from '@modules/renderer/engine/hearth/core/RenderContext.js
 import { Entity } from '@modules/renderer/engine/core/Entity.js';
 import { Material } from '@modules/renderer/engine/entities/materials/Material.js';
 import { Texture } from '@modules/renderer/engine/entities/textures/Texture.js';
-import type { Backend } from '@modules/renderer/engine/hearth/Backend.js';
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 
 export class HearthUtilities {

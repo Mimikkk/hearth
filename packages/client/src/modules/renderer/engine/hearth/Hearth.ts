@@ -1,4 +1,3 @@
-import { Backend } from '@modules/renderer/engine/hearth/Backend.js';
 import { ColorSpace, Side, ToneMapping } from '@modules/renderer/engine/constants.js';
 import ToneMappingNode from '@modules/renderer/engine/nodes/display/ToneMappingNode.js';
 import { HearthStatistics } from '@modules/renderer/engine/hearth/Hearth.Statistics.js';
@@ -16,7 +15,6 @@ import {
   Color,
   DepthTexture,
   Entity,
-  FramebufferTexture,
   Frustum,
   Geometry,
   Group,

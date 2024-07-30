@@ -1,4 +1,3 @@
-import { Backend } from '@modules/renderer/engine/hearth/Backend.js';
 import { ResourceMap } from '@modules/renderer/engine/hearth/memo/ResourceMap.js';
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 
