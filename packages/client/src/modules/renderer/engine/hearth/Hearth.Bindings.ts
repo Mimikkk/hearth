@@ -144,6 +144,8 @@ export class HearthBindings extends DataMap<any, any> {
     data.layout = layout;
     data.group = group;
     data.bindings = bindings;
+
+    return data;
   }
 
   layout(bindings: Binding[]): GPUBindGroupLayout {

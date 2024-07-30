@@ -54,6 +54,7 @@ import ComputePipeline from '@modules/renderer/engine/hearth/core/ComputePipelin
 import Binding from '@modules/renderer/engine/hearth/bindings/Binding.js';
 import ProgrammableStage from '@modules/renderer/engine/hearth/core/ProgrammableStage.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
+import { HearthCompute } from '@modules/renderer/engine/hearth/Hearth.Compute.js';
 
 export class Hearth {
   info: HearthStatistics;
@@ -75,6 +76,7 @@ export class Hearth {
   objects: HearthEntities;
   pipelines: HearthPipelines;
   resources: HearthResources;
+  computer: HearthCompute;
 
   renderLists: HearthQueues;
   renderContexts: HearthContexts;
@@ -165,6 +167,7 @@ export class Hearth {
     this.resources = new HearthResources(this);
     this.bindings = new HearthBindings(this);
     this.objects = new HearthEntities(this);
+    this.computer = new HearthCompute(this);
     this.renderLists = new HearthQueues();
     this.renderContexts = new HearthContexts();
     this.context = null;
@@ -327,35 +330,7 @@ export class Hearth {
   }
 
   async compute(computeNodes: ComputeNode | ComputeNode[]): Promise<void> {
-    const frame = this.nodes.nodeFrame;
-
-    const previousRenderId = frame.renderId;
-    this.info.passes++;
-    this.info.compute.passes++;
-    frame.renderId = this.info.passes;
-
-    const pipelines = this.pipelines;
-    const bindings = this.bindings;
-    const nodes = this.nodes;
-    this.beginCompute(computeNodes);
-
-    const computes = Array.isArray(computeNodes) ? computeNodes : [computeNodes];
-    for (const computeNode of computes) {
-      if (!pipelines.has(computeNode)) computeNode.onInit({ hearth: this });
-
-      nodes.updateForCompute(computeNode);
-      bindings.updateForCompute(computeNode);
-
-      const computeBindings = bindings.getForCompute(computeNode);
-      const computePipeline = pipelines.getForCompute(computeNode, computeBindings);
-
-      this.computeR(computeNodes, computeNode, computeBindings, computePipeline);
-    }
-
-    this.finishCompute(computeNodes);
-
-    await this.resolveTimestamp(computeNodes, 'compute');
-    frame.renderId = previousRenderId;
+    return this.computer.run(computeNodes);
   }
 
   async compile(scene: Scene, camera: Camera, targetScene: Scene | null = null): Promise<void> {
@@ -814,7 +789,7 @@ export class Hearth {
     return new NodeBuilder(object, hearth, scene);
   }
 
-  initTimestampBuffer(context: RenderContext, descriptor: GPURenderPassDescriptor): void {
+  initTimestampBuffer(context: any, descriptor: GPURenderPassDescriptor | GPUComputePassDescriptor): void {
     if (!this.hasFeature(GPUFeature.TimestampQuery) || !this.parameters.useTimestamp) return;
 
     const data = this.memo.get(context);
@@ -832,7 +807,7 @@ export class Hearth {
     data.timeStampQuerySet = timeStampQuerySet;
   }
 
-  prepareTimestamp(context: RenderContext, encoder: GPUCommandEncoder) {
+  prepareTimestamp(context: any, encoder: GPUCommandEncoder) {
     if (!this.hasFeature(GPUFeature.TimestampQuery) || !this.parameters.useTimestamp) return;
 
     const data = this.memo.get(context);
@@ -863,7 +838,7 @@ export class Hearth {
     encoder.copyBufferToBuffer(resolveBuffer, 0, resultBuffer, 0, size);
   }
 
-  async resolveTimestamp(context: RenderContext, type: 'render' | 'compute') {
+  async resolveTimestamp(context: any, type: 'render' | 'compute') {
     if (!this.hasFeature(GPUFeature.TimestampQuery) || !this.parameters.useTimestamp) return;
 
     const data = this.memo.get(context);
@@ -1494,40 +1469,6 @@ export class Hearth {
         }
       }
     }
-  }
-
-  beginCompute(computeGroup: ComputeNode) {
-    const groupGPU = this.memo.get(computeGroup);
-
-    const descriptor = {};
-
-    this.initTimestampBuffer(computeGroup, descriptor);
-
-    groupGPU.cmdEncoderGPU = this.device.createCommandEncoder();
-
-    groupGPU.passEncoderGPU = groupGPU.cmdEncoderGPU.beginComputePass(descriptor);
-  }
-
-  computeR(computeGroup: ComputeNode, computeNode: ComputeNode, bindings: Binding[], pipeline: ComputePipeline) {
-    const { passEncoderGPU } = this.memo.get(computeGroup);
-
-    const pipelineGPU = this.memo.get(pipeline).pipeline;
-    passEncoderGPU.setPipeline(pipelineGPU);
-
-    const bindGroupGPU = this.memo.get(bindings).group;
-    passEncoderGPU.setBindGroup(0, bindGroupGPU);
-
-    passEncoderGPU.dispatchWorkgroups(computeNode.dispatchCount);
-  }
-
-  finishCompute(computeGroup: ComputeNode) {
-    const groupData = this.memo.get(computeGroup);
-
-    groupData.passEncoderGPU.end();
-
-    this.prepareTimestamp(computeGroup, groupData.cmdEncoderGPU);
-
-    this.device.queue.submit([groupData.cmdEncoderGPU.finish()]);
   }
 
   draw(renderObject: RenderObject) {

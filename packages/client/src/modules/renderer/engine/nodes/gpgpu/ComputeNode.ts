@@ -45,11 +45,10 @@ export class ComputeNode extends Node {
     this.dispatchCount = Math.ceil(count / size);
   }
 
-  onInit() {}
+  onInit(params: { hearth: Hearth }) {}
 
-  updateBefore(x: { hearth: Hearth }) {
-    const { hearth } = x;
-    hearth.compute(this);
+  updateBefore(params: { hearth: Hearth }) {
+    params.hearth.compute(this);
   }
 
   generate(builder: NodeBuilder) {
