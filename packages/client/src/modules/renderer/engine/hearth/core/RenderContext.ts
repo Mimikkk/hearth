@@ -23,10 +23,10 @@ export class RenderContext {
   clearStencilValue: number;
 
   useUpdateViewport: boolean;
-  viewportValue: Vec4;
+  viewport: Vec4;
 
   useUpdateScissor: boolean;
-  scissorValue: Vec4;
+  scissor: Vec4;
 
   textures: Texture[] | null;
   depthTexture: DepthTexture | null;
@@ -36,7 +36,7 @@ export class RenderContext {
 
   sampleCount: number;
 
-  clippingContext: ClippingContext;
+  clip: ClippingContext;
 
   renderTarget: RenderTarget;
   activeCubeFace: number;
@@ -58,10 +58,10 @@ export class RenderContext {
     this.clearStencilValue = 1;
 
     this.useUpdateViewport = false;
-    this.viewportValue = Vec4.new();
+    this.viewport = Vec4.new();
 
     this.useUpdateScissor = false;
-    this.scissorValue = Vec4.new();
+    this.scissor = Vec4.new();
 
     this.textures = null;
     this.depthTexture = null;

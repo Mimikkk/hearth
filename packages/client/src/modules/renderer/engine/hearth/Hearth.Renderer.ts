@@ -53,21 +53,21 @@ export class HearthRenderer extends HearthComponent {
 
     _screen.set(0, 0, _drawSize.width, _drawSize.height);
 
-    context.viewportValue.from(viewport).scale(pixelRatio).floor();
-    context.viewportValue.width >>= activeMipmapLevel;
-    context.viewportValue.height >>= activeMipmapLevel;
-    context.viewportValue.minDepth = 0;
-    context.viewportValue.maxDepth = 1;
-    context.useUpdateViewport = this.hearth.useScissor && !context.viewportValue.equals(_screen);
+    context.viewport.from(viewport).scale(pixelRatio).floor();
+    context.viewport.width >>= activeMipmapLevel;
+    context.viewport.height >>= activeMipmapLevel;
+    context.viewport.minDepth = 0;
+    context.viewport.maxDepth = 1;
+    context.useUpdateViewport = this.hearth.useScissor && !context.viewport.equals(_screen);
 
-    context.scissorValue.from(scissor).scale(pixelRatio).floor();
-    context.scissorValue.width >>= activeMipmapLevel;
-    context.scissorValue.height >>= activeMipmapLevel;
-    context.useUpdateScissor = this.hearth.useScissor && !context.scissorValue.equals(_screen);
+    context.scissor.from(scissor).scale(pixelRatio).floor();
+    context.scissor.width >>= activeMipmapLevel;
+    context.scissor.height >>= activeMipmapLevel;
+    context.useUpdateScissor = this.hearth.useScissor && !context.scissor.equals(_screen);
 
-    if (!context.clippingContext) context.clippingContext = new ClippingContext();
+    if (!context.clip) context.clip = new ClippingContext();
 
-    context.clippingContext.updateGlobal(this.hearth, camera);
+    context.clip.updateGlobal(this.hearth, camera);
     sceneRef.onBeforeRender(this.hearth, scene, camera, target);
 
     _projection.asMul(camera.projectionMatrix, camera.matrixWorldInverse);
@@ -212,7 +212,7 @@ export class HearthRenderer extends HearthComponent {
       this.updateViewport(context);
     }
     if (context.useUpdateScissor) {
-      const { x, y, width, height } = context.scissorValue;
+      const { x, y, width, height } = context.scissor;
 
       currentPass.setScissorRect(x, context.height - height - y, width, height);
     }
@@ -365,7 +365,7 @@ export class HearthRenderer extends HearthComponent {
 
   updateViewport(renderContext: RenderContext) {
     const { currentPass } = this.hearth.memo.get(renderContext);
-    const { x, y, width, height, minDepth, maxDepth } = renderContext.viewportValue;
+    const { x, y, width, height, minDepth, maxDepth } = renderContext.viewport;
 
     currentPass.setViewport(x, renderContext.height - height - y, width, height, minDepth, maxDepth);
   }

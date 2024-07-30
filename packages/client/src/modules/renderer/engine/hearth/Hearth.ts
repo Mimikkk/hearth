@@ -257,8 +257,8 @@ export class Hearth {
     renderContext.useDepth = this.parameters.useDepth;
     renderContext.useStencil = this.parameters.useStencil;
 
-    if (!renderContext.clippingContext) renderContext.clippingContext = new ClippingContext();
-    renderContext.clippingContext.updateGlobal(this, camera);
+    if (!renderContext.clip) renderContext.clip = new ClippingContext();
+    renderContext.clip.updateGlobal(this, camera);
     sceneRef.onBeforeRender(this, scene, camera, renderTarget);
     const renderList = this.renderLists.get(scene, camera);
     renderList.begin();
