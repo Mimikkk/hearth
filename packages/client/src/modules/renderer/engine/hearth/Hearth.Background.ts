@@ -11,7 +11,7 @@ import {
 } from '../nodes/Nodes.js';
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import RenderContext from '@modules/renderer/engine/hearth/core/RenderContext.js';
-import RenderList from '@modules/renderer/engine/hearth/core/RenderList.js';
+import RenderQueue from '@modules/renderer/engine/hearth/core/RenderQueue.js';
 
 const _clearColor = Color.new(0, 0, 0, 1);
 
@@ -20,7 +20,7 @@ export class HearthBackground extends DataMap<any, any> {
     super();
   }
 
-  update(scene: Scene, renderList: RenderList, renderContext: RenderContext) {
+  update(scene: Scene, renderList: RenderQueue, renderContext: RenderContext) {
     const hearth = this.hearth;
     const background = this.hearth.nodes.getBackgroundNode(scene) || scene.background;
 
@@ -86,15 +86,15 @@ export class HearthBackground extends DataMap<any, any> {
     if (hearth.parameters.autoClear || forceClear) {
       _clearColor.scale(_clearColor.a);
 
-      const clearColorValue = renderContext.clearColorValue;
+      const clearColorValue = renderContext.clearColor;
 
       clearColorValue.r = _clearColor.r;
       clearColorValue.g = _clearColor.g;
       clearColorValue.b = _clearColor.b;
       clearColorValue.a = _clearColor.a;
 
-      renderContext.depthClearValue = hearth._clearDepth;
-      renderContext.stencilClearValue = hearth._clearStencil;
+      renderContext.depthClear = hearth._clearDepth;
+      renderContext.stencilClear = hearth._clearStencil;
 
       renderContext.useClearColor = hearth.parameters.autoClearColor;
       renderContext.useClearDepth = hearth.parameters.autoClearDepth;

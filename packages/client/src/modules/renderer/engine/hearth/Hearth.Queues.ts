@@ -1,5 +1,5 @@
 import ChainMap from './memo/ChainMap.js';
-import RenderList from './core/RenderList.js';
+import RenderQueue from './core/RenderQueue.js';
 import { Scene } from '@modules/renderer/engine/entities/scenes/Scene.js';
 import { Camera } from '@modules/renderer/engine/entities/cameras/Camera.js';
 
@@ -16,7 +16,7 @@ export class HearthQueues {
 
     let list = lists.get(keys);
     if (list === undefined) {
-      list = new RenderList();
+      list = new RenderQueue();
       lists.set(keys, list);
     }
 

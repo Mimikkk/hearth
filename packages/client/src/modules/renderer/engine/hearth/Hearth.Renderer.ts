@@ -13,7 +13,7 @@ import {
   GPUStoreOpType,
   GPUTextureViewDimensionType,
 } from '@modules/renderer/engine/hearth/constants.js';
-import RenderList, { SortFn } from '@modules/renderer/engine/hearth/core/RenderList.js';
+import RenderQueue, { SortFn } from '@modules/renderer/engine/hearth/core/RenderQueue.js';
 import { Color } from '@modules/renderer/engine/math/Color.js';
 import { Material } from '@modules/renderer/engine/entities/materials/Material.js';
 import LightsNode from '../nodes/lighting/LightsNode.ts';
@@ -78,7 +78,7 @@ export class HearthRenderer extends HearthComponent {
 
       context.width = data.width >> activeMipmapLevel;
       context.height = data.height >> activeMipmapLevel;
-      context.renderTarget = target;
+      context.target = target;
       context.useDepth = target.depthBuffer;
       context.useStencil = target.stencilBuffer;
     } else {
@@ -122,7 +122,7 @@ export class HearthRenderer extends HearthComponent {
         const colorAttachment = colorAttachments[i];
 
         if (context.useClearColor) {
-          colorAttachment.clearValue = context.clearColorValue;
+          colorAttachment.clearValue = context.clearColor;
           colorAttachment.loadOp = GPULoadOpType.Clear;
           colorAttachment.storeOp = GPUStoreOpType.Store;
         } else {
@@ -134,7 +134,7 @@ export class HearthRenderer extends HearthComponent {
       const colorAttachment = descriptor.colorAttachments[0];
 
       if (context.useClearColor) {
-        colorAttachment.clearValue = context.clearColorValue;
+        colorAttachment.clearValue = context.clearColor;
         colorAttachment.loadOp = GPULoadOpType.Clear;
         colorAttachment.storeOp = GPUStoreOpType.Store;
       } else {
@@ -145,7 +145,7 @@ export class HearthRenderer extends HearthComponent {
 
     if (context.useDepth) {
       if (context.useClearDepth) {
-        depthStencilAttachment.depthClearValue = context.clearDepthValue;
+        depthStencilAttachment.depthClearValue = context.clearDepth;
         depthStencilAttachment.depthLoadOp = GPULoadOpType.Clear;
         depthStencilAttachment.depthStoreOp = GPUStoreOpType.Store;
       } else {
@@ -155,7 +155,7 @@ export class HearthRenderer extends HearthComponent {
     }
     if (context.useStencil) {
       if (context.useClearStencil) {
-        depthStencilAttachment.stencilClearValue = context.clearStencilValue;
+        depthStencilAttachment.stencilClearValue = context.clearStencil;
         depthStencilAttachment.stencilLoadOp = GPULoadOpType.Clear;
         depthStencilAttachment.stencilStoreOp = GPUStoreOpType.Store;
       } else {
@@ -213,7 +213,7 @@ export class HearthRenderer extends HearthComponent {
     return context;
   }
 
-  _projectObject(object: Entity, camera: Camera, groupOrder: number, renderList: RenderList): void {
+  _projectObject(object: Entity, camera: Camera, groupOrder: number, renderList: RenderQueue): void {
     if (object.visible === false) return;
 
     const visible = object.layers.test(camera.layers);
@@ -440,8 +440,8 @@ export class HearthRenderer extends HearthComponent {
   }
 
   _getRenderPassDescriptor(context: RenderContext): GPURenderPassDescriptor {
-    const renderTarget = context.renderTarget;
-    const renderTargetData = this.hearth.memo.get(renderTarget);
+    const tareget = context.target;
+    const renderTargetData = this.hearth.memo.get(tareget);
 
     let descriptors = renderTargetData.descriptors;
 
@@ -452,10 +452,10 @@ export class HearthRenderer extends HearthComponent {
     }
 
     if (
-      renderTargetData.width !== renderTarget.width ||
-      renderTargetData.height !== renderTarget.height ||
-      renderTargetData.activeMipmapLevel !== renderTarget.activeMipmapLevel ||
-      renderTargetData.samples !== renderTarget.samples
+      renderTargetData.width !== tareget.width ||
+      renderTargetData.height !== tareget.height ||
+      renderTargetData.activeMipmapLevel !== tareget.activeMipmapLevel ||
+      renderTargetData.samples !== tareget.samples
     ) {
       descriptors.length = 0;
     }
@@ -507,10 +507,10 @@ export class HearthRenderer extends HearthComponent {
 
       descriptors[context.activeCubeFace] = descriptor;
 
-      renderTargetData.width = renderTarget.width;
-      renderTargetData.height = renderTarget.height;
-      renderTargetData.samples = renderTarget.samples;
-      renderTargetData.activeMipmapLevel = renderTarget.activeMipmapLevel;
+      renderTargetData.width = tareget.width;
+      renderTargetData.height = tareget.height;
+      renderTargetData.samples = tareget.samples;
+      renderTargetData.activeMipmapLevel = tareget.activeMipmapLevel;
     }
 
     return descriptor;

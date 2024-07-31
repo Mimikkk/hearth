@@ -30,7 +30,7 @@ import {
   GPULoadOpType,
   GPUTextureFormatType,
 } from '@modules/renderer/engine/hearth/constants.js';
-import { RenderItem, RenderList } from '@modules/renderer/engine/hearth/core/RenderList.js';
+import { RenderItem, RenderQueue } from '@modules/renderer/engine/hearth/core/RenderQueue.js';
 import { ComputeNode } from '@modules/renderer/engine/nodes/gpgpu/ComputeNode.js';
 import { RenderContext } from '@modules/renderer/engine/hearth/core/RenderContext.js';
 import { LightsNode } from '@modules/renderer/engine/nodes/lighting/LightsNode.js';
@@ -344,7 +344,7 @@ export class Hearth {
     this.activeMipmapLevel = activeMipmapLevel;
   }
 
-  _projectObject(object: Entity, camera: Camera, groupOrder: number, renderList: RenderList): void {
+  _projectObject(object: Entity, camera: Camera, groupOrder: number, renderList: RenderQueue): void {
     if (object.visible === false) return;
 
     const visible = object.layers.test(camera.layers);
@@ -602,7 +602,7 @@ export class Hearth {
 
     let sourceGPU = null;
 
-    if (context.renderTarget) {
+    if (context.target) {
       if (DepthTexture.is(into)) {
         sourceGPU = this.memo.get(context.depthTexture).texture;
       } else {

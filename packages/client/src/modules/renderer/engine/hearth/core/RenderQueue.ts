@@ -18,14 +18,14 @@ export interface RenderItem {
   group: Group | null;
 }
 
-export class RenderList {
+export class RenderQueue {
   renderItems: RenderItem[];
   renderItemsIndex: number;
   lightsNode: LightsNode;
-  lightsArray: Light[];
+  lights: Light[];
+
   opaque: RenderItem[];
   transparent: RenderItem[];
-  occlusionQueryCount: number;
 
   constructor() {
     this.renderItems = [];
@@ -35,17 +35,14 @@ export class RenderList {
     this.transparent = [];
 
     this.lightsNode = new LightsNode([]);
-    this.lightsArray = [];
-
-    this.occlusionQueryCount = 0;
+    this.lights = [];
   }
 
   begin() {
     this.renderItemsIndex = 0;
     this.opaque.length = 0;
     this.transparent.length = 0;
-    this.lightsArray.length = 0;
-    this.occlusionQueryCount = 0;
+    this.lights.length = 0;
 
     return this;
   }
@@ -102,7 +99,7 @@ export class RenderList {
   }
 
   pushLight(light: Light) {
-    this.lightsArray.push(light);
+    this.lights.push(light);
   }
 
   sort(sortOpaque: SortFn, sortTransparent: SortFn) {
@@ -111,7 +108,7 @@ export class RenderList {
   }
 
   finish() {
-    this.lightsNode.fromLights(this.lightsArray);
+    this.lightsNode.fromLights(this.lights);
 
     for (let i = this.renderItemsIndex, il = this.renderItems.length; i < il; i++) {
       this.renderItems[i].clear();
@@ -173,4 +170,4 @@ export class RenderItem {
   }
 }
 
-export default RenderList;
+export default RenderQueue;

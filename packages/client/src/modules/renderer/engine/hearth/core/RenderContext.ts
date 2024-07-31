@@ -9,19 +9,19 @@ export class RenderContext {
   id: number;
 
   useClearColor: boolean;
-  clearColorValue: Color;
+  clearColor: Color;
 
   useDepth: boolean;
-  depthClearValue: number;
+  depthClear: number;
 
   useClearDepth: boolean;
-  clearDepthValue: number;
+  clearDepth: number;
 
   useClearStencil: boolean;
-  stencilClearValue: number;
+  stencilClear: number;
 
   useStencil: boolean;
-  clearStencilValue: number;
+  clearStencil: number;
 
   useUpdateViewport: boolean;
   viewport: RenderViewport;
@@ -38,8 +38,7 @@ export class RenderContext {
   sampleCount: number;
 
   clip: ClippingContext;
-
-  renderTarget: RenderTarget;
+  target: RenderTarget;
   activeCubeFace: number;
   activeMipmapLevel: number;
   occlusionQueryCount: number;
@@ -48,15 +47,15 @@ export class RenderContext {
     this.id = id++;
 
     this.useClearColor = true;
-    this.clearColorValue = { r: 0, g: 0, b: 0, a: 1 };
+    this.clearColor = { r: 0, g: 0, b: 0, a: 1 };
 
     this.useDepth = true;
     this.useClearDepth = true;
-    this.clearDepthValue = 1;
+    this.clearDepth = 1;
 
     this.useStencil = false;
     this.useClearStencil = true;
-    this.clearStencilValue = 1;
+    this.clearStencil = 1;
 
     this.useUpdateViewport = false;
     this.viewport = RenderViewport.new();
