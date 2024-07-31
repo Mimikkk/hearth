@@ -20,15 +20,15 @@ export class HearthOcclusion extends HearthComponent {
     const count = this.#sizes.get(key) ?? 0;
     if (count <= 0) return;
 
-    const first = this.#firstpass.get(key);
-    if (first?.set) first.set.destroy();
-    if (first?.buffer) first.buffer.destroy();
-
     const second = this.#secondpass.get(key);
-    if (second) this.#firstpass.set(key, OcclusionQuery.from(second));
+    if (second?.set) second.set.destroy();
+    if (second?.buffer) second.buffer.destroy();
+
+    const first = this.#firstpass.get(key);
+    if (first) this.#secondpass.set(key, OcclusionQuery.from(first));
 
     const query = OcclusionQuery.fromDevice(this.hearth.device, count);
-    this.#secondpass.set(key, query);
+    this.#firstpass.set(key, query);
 
     this.#indices.set(key, 0);
     this.#active.delete(key);
@@ -37,8 +37,8 @@ export class HearthOcclusion extends HearthComponent {
   }
 
   encodeTest(key: WeakKey, against: Entity, encoder: GPURenderPassEncoder): void {
-    const second = this.#secondpass.get(key);
-    if (!second) return;
+    const first = this.#firstpass.get(key);
+    if (!first) return;
 
     const active = this.#active.get(key);
     if (active === against) return;
@@ -54,7 +54,7 @@ export class HearthOcclusion extends HearthComponent {
 
       encoder.beginOcclusionQuery(index);
 
-      second.objects[index] = against;
+      first.objects[index] = against;
     }
 
     this.#active.set(key, against);
@@ -79,18 +79,18 @@ export class HearthOcclusion extends HearthComponent {
       this.#buffers.set(size, resolve);
     }
 
-    const second = this.#secondpass.get(key)!;
-    second.encodeResolve(encoder, resolve);
+    const first = this.#firstpass.get(key)!;
+    first.encodeResolve(encoder, resolve);
 
-    const occlusions = second.initializeOcclusionsBuffer(this.hearth.device, size);
+    const occlusions = first.initializeOcclusionsBuffer(this.hearth.device, size);
     resolve.encodeTransfer(encoder, occlusions);
   }
 
   async resolve(key: WeakKey): Promise<void> {
-    const first = this.#firstpass.get(key);
-    if (!first) return;
+    const second = this.#secondpass.get(key);
+    if (!second) return;
 
-    this.occluded.set(key, await first.read());
+    this.occluded.set(key, await second.read());
   }
 }
 
