@@ -94,7 +94,7 @@ export class HearthRenderer extends HearthComponent {
     context.activeCubeFace = this.hearth.activeCubeFace;
     context.activeMipmapLevel = activeMipmapLevel;
 
-    this.hearth.occlusion.sizes.set(context, list.occlusionQueryCount);
+    this.hearth.occlusion.#sizes.set(context, list.occlusionQueryCount);
 
     this.hearth.nodes.updateScene(sceneRef);
     this.hearth.background.update(sceneRef, list, context);

@@ -2,20 +2,20 @@ import { HearthComponent } from '@modules/renderer/engine/hearth/Hearth.Componen
 import { GPUFeature } from '@modules/renderer/engine/hearth/constants.js';
 
 export class HearthTimestamp extends HearthComponent {
-  #buffers = new WeakMap<object, TimestampBuffers>();
-  #queries = new WeakMap<object, TimestampQuery>();
+  #buffers = new WeakMap<WeakKey, TimestampBuffers>();
+  #queries = new WeakMap<WeakKey, TimestampQuery>();
 
-  attach(key: object, to: GPURenderPassDescriptor | GPUComputePassDescriptor): void {
+  attach(key: WeakKey, into: GPURenderPassDescriptor | GPUComputePassDescriptor): void {
     if (!this.allowed) return;
 
     if (this.#queries.has(key)) return;
     const query = TimestampQuery.fromDevice(this.hearth.device);
     this.#queries.set(key, query);
 
-    to.timestampWrites = { querySet: query.set, beginningOfPassWriteIndex: 0, endOfPassWriteIndex: 1 };
+    into.timestampWrites = { querySet: query.set, beginningOfPassWriteIndex: 0, endOfPassWriteIndex: 1 };
   }
 
-  encodeTransfer(key: object, encoder: GPUCommandEncoder): void {
+  encodeTransfer(key: WeakKey, encoder: GPUCommandEncoder): void {
     if (!this.allowed) return;
 
     const query = this.#queries.get(key);
@@ -35,7 +35,7 @@ export class HearthTimestamp extends HearthComponent {
     buffers.encodeTransfer(encoder);
   }
 
-  async resolve(key: object, type: 'render' | 'compute') {
+  async resolve(key: WeakKey, type: 'render' | 'compute') {
     if (!this.allowed) return;
 
     const buffers = this.#buffers.get(key);

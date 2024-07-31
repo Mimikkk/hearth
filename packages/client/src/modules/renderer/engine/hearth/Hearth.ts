@@ -28,11 +28,9 @@ import {
   GPUFeature,
   GPUIndexFormatType,
   GPULoadOpType,
-  GPUStoreOpType,
   GPUTextureFormatType,
-  GPUTextureViewDimensionType,
 } from '@modules/renderer/engine/hearth/constants.js';
-import { RenderItem, RenderList, SortFn } from '@modules/renderer/engine/hearth/core/RenderList.js';
+import { RenderItem, RenderList } from '@modules/renderer/engine/hearth/core/RenderList.js';
 import { ComputeNode } from '@modules/renderer/engine/nodes/gpgpu/ComputeNode.js';
 import { RenderContext } from '@modules/renderer/engine/hearth/core/RenderContext.js';
 import { LightsNode } from '@modules/renderer/engine/nodes/lighting/LightsNode.js';
@@ -832,16 +830,16 @@ export class Hearth {
     const pipelineGPU = this.memo.get(pipeline).pipeline;
     const currentSets = contextData.currentSets;
 
-    const passEncoderGPU = contextData.pass;
+    const pass = contextData.pass;
 
     if (currentSets.pipeline !== pipelineGPU) {
-      passEncoderGPU.setPipeline(pipelineGPU);
+      pass.setPipeline(pipelineGPU);
 
       currentSets.pipeline = pipelineGPU;
     }
 
     const bindGroupGPU = bindingsData.group;
-    passEncoderGPU.setBindGroup(0, bindGroupGPU);
+    pass.setBindGroup(0, bindGroupGPU);
 
     const index = renderObject.getIndex();
 
@@ -852,7 +850,7 @@ export class Hearth {
         const buffer = this.memo.get(index).buffer;
         const indexFormat = index.array instanceof Uint16Array ? GPUIndexFormatType.Uint16 : GPUIndexFormatType.Uint32;
 
-        passEncoderGPU.setIndexBuffer(buffer, indexFormat);
+        pass.setIndexBuffer(buffer, indexFormat);
 
         currentSets.index = index;
       }
@@ -865,13 +863,13 @@ export class Hearth {
 
       if (currentSets.attributes[i] !== vertexBuffer) {
         const buffer = this.memo.get(vertexBuffer).buffer;
-        passEncoderGPU.setVertexBuffer(i, buffer);
+        pass.setVertexBuffer(i, buffer);
 
         currentSets.attributes[i] = vertexBuffer;
       }
     }
 
-    this.occlusion.encodeTest(context, object, passEncoderGPU);
+    this.occlusion.encodeTest(context, object, pass);
 
     const drawRange = geometry.drawRange;
     const firstVertex = drawRange.start;
@@ -882,14 +880,14 @@ export class Hearth {
     if (hasIndex === true) {
       const indexCount = drawRange.count !== Infinity ? drawRange.count : index.count;
 
-      passEncoderGPU.drawIndexed(indexCount, instanceCount, firstVertex, 0, 0);
+      pass.drawIndexed(indexCount, instanceCount, firstVertex, 0, 0);
 
       info.update(object, indexCount, instanceCount);
     } else {
       const positionAttribute = geometry.attributes.position;
       const vertexCount = drawRange.count !== Infinity ? drawRange.count : positionAttribute.count;
 
-      passEncoderGPU.draw(vertexCount, instanceCount, firstVertex, 0);
+      pass.draw(vertexCount, instanceCount, firstVertex, 0);
 
       info.update(object, vertexCount, instanceCount);
     }
