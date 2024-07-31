@@ -14,11 +14,11 @@ export class HearthComputer extends HearthComponent {
 
     const descriptor = {} as GPUComputePassDescriptor;
 
-    this.hearth.timestamp.meter(compute, descriptor);
+    this.hearth.timestamp.attach(compute, descriptor);
 
     const encoder = this.hearth.device.createCommandEncoder();
 
-    this.hearth.timestamp.encode(compute, encoder);
+    this.hearth.timestamp.encodeTransfer(compute, encoder);
     const pass = encoder.beginComputePass(descriptor);
 
     if (Array.isArray(compute)) {

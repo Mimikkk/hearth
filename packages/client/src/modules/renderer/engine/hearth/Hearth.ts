@@ -630,7 +630,7 @@ export class Hearth {
       return;
     }
 
-    data.currentPass.end();
+    data.pass.end();
 
     encoder.copyTextureToTexture(
       {
@@ -649,7 +649,7 @@ export class Hearth {
     if (context.useDepth) descriptor.depthStencilAttachment.depthLoadOp = GPULoadOpType.Load;
     if (context.useStencil) descriptor.depthStencilAttachment.stencilLoadOp = GPULoadOpType.Load;
 
-    data.currentPass = encoder.beginRenderPass(descriptor);
+    data.pass = encoder.beginRenderPass(descriptor);
     data.currentSets = { attributes: {} };
   }
 
@@ -832,7 +832,7 @@ export class Hearth {
     const pipelineGPU = this.memo.get(pipeline).pipeline;
     const currentSets = contextData.currentSets;
 
-    const passEncoderGPU = contextData.currentPass;
+    const passEncoderGPU = contextData.pass;
 
     if (currentSets.pipeline !== pipelineGPU) {
       passEncoderGPU.setPipeline(pipelineGPU);
@@ -871,7 +871,7 @@ export class Hearth {
       }
     }
 
-    this.occlusion.test(context, object, passEncoderGPU);
+    this.occlusion.encodeTest(context, object, passEncoderGPU);
 
     const drawRange = geometry.drawRange;
     const firstVertex = drawRange.start;

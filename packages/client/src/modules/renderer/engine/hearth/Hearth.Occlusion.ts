@@ -3,116 +3,152 @@ import RenderContext from '@modules/renderer/engine/hearth/core/RenderContext.js
 import { Entity } from '@modules/renderer/engine/core/Entity.js';
 
 export class HearthOcclusion extends HearthComponent {
-  resolves = new Map<number, ResolveBuffer>();
-  sizes = new WeakMap<object, number>();
-  counts = new WeakMap<object, number>();
+  occluded: WeakMap<WeakKey, WeakSet<Entity>> = new WeakMap();
 
-  first = new WeakMap<
-    object,
-    {
-      set?: GPUQuerySet;
-      buffer?: GPUBuffer;
-      objects?: Entity[];
-    }
-  >();
+  buffers = new Map<number, ResolveBuffer>();
+  sizes = new WeakMap<WeakKey, number>();
+  indices = new WeakMap<WeakKey, number>();
+  active = new WeakMap<WeakKey, Entity | null>();
+  firstpass = new WeakMap<WeakKey, OcclusionQuery>();
+  secondpass = new WeakMap<WeakKey, OcclusionQuery>();
 
-  second = new WeakMap<
-    object,
-    {
-      set?: GPUQuerySet;
-      buffer?: GPUBuffer;
-      objects?: Entity[];
-    }
-  >();
-
-  active = new WeakMap<object, Entity | null>();
-
-  meter(context: RenderContext, into: GPURenderPassDescriptor): void {
-    const count = this.sizes.get(context) ?? 0;
+  attach(key: WeakKey, into: GPURenderPassDescriptor): void {
+    const count = this.sizes.get(key) ?? 0;
     if (count <= 0) return;
 
-    const first = this.first.get(context);
+    const first = this.firstpass.get(key);
     if (first?.set) first.set.destroy();
     if (first?.buffer) first.buffer.destroy();
 
-    const second = this.second.get(context);
-    if (second) this.first.set(context, { set: second.set, buffer: second.buffer, objects: second.objects });
+    const second = this.secondpass.get(key);
+    if (second) this.firstpass.set(key, OcclusionQuery.from(second));
 
-    const set = this.hearth.device.createQuerySet({ type: 'occlusion', count: count });
+    const query = OcclusionQuery.fromDevice(this.hearth.device, count);
+    this.secondpass.set(key, query);
 
-    this.second.set(context, { set, buffer: undefined, objects: new Array(count) });
-    this.counts.set(context, 0);
-    this.active.delete(context);
+    this.indices.set(key, 0);
+    this.active.delete(key);
 
-    into.occlusionQuerySet = set;
+    into.occlusionQuerySet = query.set;
   }
 
-  test(context: RenderContext, entity: Entity, encoder: GPURenderPassEncoder): void {
-    const seco = this.second.get(context);
-    if (seco?.set === undefined) return;
+  encodeTest(key: WeakKey, against: Entity, encoder: GPURenderPassEncoder): void {
+    const second = this.secondpass.get(key);
+    if (!second) return;
 
-    const active = this.active.get(context);
-    if (active === entity) return;
+    const active = this.active.get(key);
+    if (active === against) return;
 
     if (active?.useOcclusion) {
       encoder.endOcclusionQuery();
 
-      this.counts.set(context, this.counts.get(context)! + 1);
+      this.indices.set(key, this.indices.get(key)! + 1);
     }
 
-    if (entity.useOcclusion) {
-      const index = this.counts.get(context)!;
+    if (against.useOcclusion) {
+      const index = this.indices.get(key)!;
 
       encoder.beginOcclusionQuery(index);
 
-      seco.objects![index] = entity;
+      second.objects[index] = against;
     }
-    this.active.set(context, entity);
+
+    this.active.set(key, against);
   }
 
-  end(context: RenderContext): void {
-    const data = this.hearth.memo.get(context);
+  encodeEnd(key: WeakKey, encoder: GPURenderPassEncoder): void {
+    const count = this.sizes.get(key)!;
+    const index = this.indices.get(key)!;
+    if (count <= index) return;
 
-    const count = this.sizes.get(context) ?? 0;
-    const index = this.counts.get(context)!;
-    if (count > index) data.currentPass.endOcclusionQuery();
+    encoder.endOcclusionQuery();
   }
 
-  encode(context: RenderContext, encoder: GPUCommandEncoder): void {
-    const count = this.sizes.get(context) ?? 0;
+  encodeTransfer(key: WeakKey, encoder: GPUCommandEncoder): void {
+    const count = this.sizes.get(key) ?? 0;
 
     if (count <= 0) return;
 
     const size = count * 8;
-    let resolve = this.resolves.get(size);
-    if (resolve === undefined) {
+
+    let resolve = this.buffers.get(size);
+    if (!resolve) {
       resolve = ResolveBuffer.fromDevice(this.hearth.device, size);
-      this.resolves.set(size, resolve);
+      this.buffers.set(size, resolve);
     }
 
-    const sizes = this.hearth.device.createBuffer({
-      size: size,
+    const second = this.secondpass.get(key)!;
+    second.encodeResolve(encoder, resolve);
+
+    const occlusions = second.initializeOcclusionsBuffer(this.hearth.device, size);
+    resolve.encodeTransfer(encoder, occlusions);
+  }
+
+  async resolve(key: WeakKey): Promise<void> {
+    const first = this.firstpass.get(key);
+    if (!first) return;
+
+    this.occluded.set(key, await first.read());
+  }
+}
+
+class ResolveBuffer {
+  constructor(public resolve: GPUBuffer) {}
+
+  static fromDevice(device: GPUDevice, size: number): ResolveBuffer {
+    return new ResolveBuffer(
+      device.createBuffer({
+        label: 'occlusion: resolve buffer',
+        size,
+        usage: GPUBufferUsage.QUERY_RESOLVE | GPUBufferUsage.COPY_SRC,
+      }),
+    );
+  }
+
+  encodeTransfer(encoder: GPUCommandEncoder, into: GPUBuffer): void {
+    encoder.copyBufferToBuffer(this.resolve, 0, into, 0, this.resolve.size);
+  }
+}
+
+class OcclusionQuery {
+  constructor(
+    public set: GPUQuerySet,
+    public objects: Entity[],
+    public buffer?: GPUBuffer,
+  ) {}
+
+  static fromDevice(device: GPUDevice, count: number): OcclusionQuery {
+    return new OcclusionQuery(
+      device.createQuerySet({
+        label: 'occlusion: query set',
+        type: 'occlusion',
+        count,
+      }),
+      new Array(count),
+    );
+  }
+
+  static from({ set, objects, buffer }: OcclusionQuery): OcclusionQuery {
+    return new OcclusionQuery(set, objects, buffer);
+  }
+
+  initializeOcclusionsBuffer(device: GPUDevice, size: number): GPUBuffer {
+    const buffer = device.createBuffer({
+      label: 'occlusion: occlusions buffer',
+      size,
       usage: GPUBufferUsage.COPY_DST | GPUBufferUsage.MAP_READ,
     });
 
-    const second = this.second.get(context);
+    this.buffer = buffer;
 
-    second!.buffer = sizes;
-    encoder.resolveQuerySet(second!.set!, 0, count, resolve.buffer, 0);
-    encoder.copyBufferToBuffer(resolve.buffer, 0, sizes, 0, size);
+    return buffer;
   }
 
-  occluded: WeakMap<object, WeakSet<Entity>> = new WeakMap();
-
-  async resolve(context: RenderContext): Promise<void> {
-    const first = this.first.get(context);
-    if (!first) return;
-
-    const { buffer, objects } = first;
-    if (!buffer || !objects) return;
-
-    first.objects = undefined;
-    first.buffer = undefined;
+  async read(): Promise<WeakSet<Entity>> {
+    const { buffer, objects } = this;
+    if (!buffer || !objects) throw new Error('Occlusions buffer not initialized.');
+    this.buffer = undefined;
+    this.objects = undefined;
 
     await buffer.mapAsync(GPUMapMode.READ);
     const range = buffer.getMappedRange();
@@ -122,39 +158,10 @@ export class HearthOcclusion extends HearthComponent {
     for (let i = 0; i < objects.length; ++i) if (results[i] !== BigInt(0)) occluded.add(objects[i]);
     buffer.destroy();
 
-    this.occluded.set(context, occluded);
-  }
-}
-
-class ResolveBuffer {
-  constructor(public buffer: GPUBuffer) {}
-
-  static fromDevice(device: GPUDevice, size: number) {
-    return new ResolveBuffer(
-      device.createBuffer({
-        label: 'occlusion: resolve buffer',
-        size,
-        usage: GPUBufferUsage.QUERY_RESOLVE | GPUBufferUsage.COPY_SRC,
-      }),
-    );
-  }
-}
-
-class OcclusionQuerySet {
-  constructor(
-    public set: GPUQuerySet,
-    public buffer?: GPUBuffer,
-  ) {}
-
-  static fromDevice(device: GPUDevice, count: number) {
-    return new OcclusionQuerySet(
-      device.createQuerySet({
-        label: 'occlusion: query buffer',
-        type: 'occlusion',
-        count,
-      }),
-    );
+    return occluded;
   }
 
-  destroy() {}
+  encodeResolve(encoder: GPUCommandEncoder, into: ResolveBuffer): void {
+    encoder.resolveQuerySet(this.set, 0, this.objects.length, into.resolve, 0);
+  }
 }

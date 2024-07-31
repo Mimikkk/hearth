@@ -110,8 +110,8 @@ export class HearthRenderer extends HearthComponent {
       descriptor = this._getDefaultRenderPassDescriptor();
     }
 
-    this.hearth.timestamp.meter(context, descriptor);
-    this.hearth.occlusion.meter(context, descriptor);
+    this.hearth.timestamp.attach(context, descriptor);
+    this.hearth.occlusion.attach(context, descriptor);
 
     const depthStencilAttachment = descriptor.depthStencilAttachment;
 
@@ -165,11 +165,11 @@ export class HearthRenderer extends HearthComponent {
     }
 
     const encoder = device.createCommandEncoder({ label: 'renderContext_' + context.id });
-    const currentPass = encoder.beginRenderPass(descriptor);
+    const pass = encoder.beginRenderPass(descriptor);
 
     data.descriptor = descriptor;
     data.encoder = encoder;
-    data.currentPass = currentPass;
+    data.pass = pass;
     data.currentSets = { attributes: {} };
 
     if (context.useUpdateViewport) {
@@ -178,7 +178,7 @@ export class HearthRenderer extends HearthComponent {
     if (context.useUpdateScissor) {
       const { x, y, width, height } = context.scissor;
 
-      currentPass.setScissorRect(x, context.height - height - y, width, height);
+      pass.setScissorRect(x, context.height - height - y, width, height);
     }
 
     const opaque = list.opaque;
@@ -188,11 +188,11 @@ export class HearthRenderer extends HearthComponent {
     if (opaque.length > 0) this.hearth._renderObjects(opaque, camera, sceneRef, lightsNode);
     if (transparent.length > 0) this.hearth._renderObjects(transparent, camera, sceneRef, lightsNode);
 
-    this.hearth.occlusion.end(context);
-    data.currentPass.end();
+    this.hearth.occlusion.encodeEnd(context, data.pass);
+    data.pass.end();
 
-    this.hearth.occlusion.encode(context, data.encoder);
-    this.hearth.timestamp.encode(context, data.encoder);
+    this.hearth.occlusion.encodeTransfer(context, data.encoder);
+    this.hearth.timestamp.encodeTransfer(context, data.encoder);
     this.hearth.device.queue.submit([data.encoder.finish()]);
 
     if (context.textures) {
@@ -275,10 +275,10 @@ export class HearthRenderer extends HearthComponent {
   }
 
   passViewport(renderContext: RenderContext) {
-    const { currentPass } = this.hearth.memo.get(renderContext);
+    const { pass } = this.hearth.memo.get(renderContext);
     const { x, y, width, height, minDepth, maxDepth } = renderContext.viewport;
 
-    currentPass.setViewport(x, renderContext.height - height - y, width, height, minDepth, maxDepth);
+    pass.setViewport(x, renderContext.height - height - y, width, height, minDepth, maxDepth);
   }
 
   clear(color: boolean = true, depth: boolean = true, stencil: boolean = true) {
@@ -388,12 +388,12 @@ export class HearthRenderer extends HearthComponent {
     }
 
     const encoder = device.createCommandEncoder({});
-    const currentPass = encoder.beginRenderPass({
+    const pass = encoder.beginRenderPass({
       colorAttachments,
       depthStencilAttachment,
     });
 
-    currentPass.end();
+    pass.end();
 
     device.queue.submit([encoder.finish()]);
   }
