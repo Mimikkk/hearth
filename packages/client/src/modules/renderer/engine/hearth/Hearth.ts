@@ -810,12 +810,9 @@ export class Hearth {
   }
 
   isOccluded(object: Entity) {
-    const context = this.context;
-    if (!context) return false;
+    if (!this.context) return false;
 
-    const data = this.memo.get(context);
-
-    return data.occluded && data.occluded.has(object);
+    return !!this.occlusion.occluded.get(this.context)?.has(object);
   }
 
   clear(color: boolean = true, depth: boolean = true, stencil: boolean = true) {
@@ -874,23 +871,7 @@ export class Hearth {
       }
     }
 
-    if (contextData.occlusionQuerySet !== undefined) {
-      const lastObject = contextData.lastOcclusionObject;
-
-      if (lastObject !== object) {
-        if (lastObject?.occlusionTest) {
-          passEncoderGPU.endOcclusionQuery();
-          contextData.occlusionQueryIndex++;
-        }
-
-        if (object.occlusionTest) {
-          passEncoderGPU.beginOcclusionQuery(contextData.occlusionQueryIndex);
-          contextData.occlusionQueryObjects[contextData.occlusionQueryIndex] = object;
-        }
-
-        contextData.lastOcclusionObject = object;
-      }
-    }
+    this.occlusion.test(context, object, passEncoderGPU);
 
     const drawRange = geometry.drawRange;
     const firstVertex = drawRange.start;

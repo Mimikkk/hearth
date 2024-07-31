@@ -1,86 +1,123 @@
 import { HearthComponent } from '@modules/renderer/engine/hearth/Hearth.Component.js';
 import RenderContext from '@modules/renderer/engine/hearth/core/RenderContext.js';
-import { WeakMemo } from '@modules/renderer/engine/hearth/memo/WeakMemo.js';
+import { Entity } from '@modules/renderer/engine/core/Entity.js';
 
 export class HearthOcclusion extends HearthComponent {
   resolves = new Map<number, ResolveBuffer>();
+  first = new WeakMap<
+    object,
+    {
+      set?: GPUQuerySet;
+      buffer?: GPUBuffer;
+      objects?: Entity[];
+    }
+  >();
+  second = new WeakMap<
+    object,
+    {
+      set?: GPUQuerySet;
+      buffer?: GPUBuffer;
+      objects?: Entity[];
+    }
+  >();
 
-  meter(context: RenderContext, into: GPURenderPassDescriptor) {
+  meter(context: RenderContext, into: GPURenderPassDescriptor): void {
     const count = context.occlusionQueryCount;
     if (count <= 0) return;
 
     const data = this.hearth.memo.get(context);
 
-    let set;
-    if (data.currentOcclusionQuerySet) data.currentOcclusionQuerySet.destroy();
-    if (data.currentOcclusionQueryBuffer) data.currentOcclusionQueryBuffer.destroy();
+    if (data.firstOcclusionQuerySet) data.firstOcclusionQuerySet.destroy();
+    if (data.firstOcclusionQueryBuffer) data.firstOcclusionQueryBuffer.destroy();
 
-    data.currentOcclusionQuerySet = data.occlusionQuerySet;
-    data.currentOcclusionQueryBuffer = data.occlusionQueryBuffer;
-    data.currentOcclusionQueryObjects = data.occlusionQueryObjects;
-    set = this.hearth.device.createQuerySet({ type: 'occlusion', count: count });
+    data.firstOcclusionQuerySet = data.secondOcclusionQuerySet;
+    data.firstOcclusionQueryBuffer = data.secondOcclusionQueryBuffer;
+    data.firstOcclusionQueryObjects = data.secondOcclusionQueryObjects;
 
-    data.occlusionQuerySet = set;
+    const set = this.hearth.device.createQuerySet({ type: 'occlusion', count: count });
+
+    data.secondOcclusionQuerySet = set;
+    data.secondOcclusionQueryObjects = new Array(count);
+
     data.occlusionQueryIndex = 0;
-    data.occlusionQueryObjects = new Array(count);
-    data.lastOcclusionObject = null;
+    data.occlusionObject = null;
 
     into.occlusionQuerySet = set;
   }
 
-  end(context: RenderContext) {
+  test(context: RenderContext, object: Entity, encoder: GPURenderPassEncoder): void {
+    const data = this.hearth.memo.get(context);
+
+    if (data.secondOcclusionQuerySet !== undefined) {
+      const second = data.occlusionObject;
+
+      if (second !== object) {
+        if (second?.occlusionTest) {
+          encoder.endOcclusionQuery();
+          data.occlusionQueryIndex++;
+        }
+
+        if (object.occlusionTest) {
+          encoder.beginOcclusionQuery(data.occlusionQueryIndex);
+          data.secondOcclusionQueryObjects[data.occlusionQueryIndex] = object;
+        }
+
+        data.occlusionObject = object;
+      }
+    }
+  }
+
+  end(context: RenderContext): void {
     const count = context.occlusionQueryCount;
     const data = this.hearth.memo.get(context);
 
     if (count > data.occlusionQueryIndex) data.currentPass.endOcclusionQuery();
   }
 
-  encode(context: RenderContext, encoder: GPUCommandEncoder) {
+  encode(context: RenderContext, encoder: GPUCommandEncoder): void {
     const count = context.occlusionQueryCount;
     if (count <= 0) return;
     const data = this.hearth.memo.get(context);
 
-    const bufferSize = count * 8;
-
-    let resolve = this.resolves.get(bufferSize);
-
+    const size = count * 8;
+    let resolve = this.resolves.get(size);
     if (resolve === undefined) {
-      resolve = ResolveBuffer.fromDevice(this.hearth.device, bufferSize);
-
-      this.resolves.set(bufferSize, resolve);
+      resolve = ResolveBuffer.fromDevice(this.hearth.device, size);
+      this.resolves.set(size, resolve);
     }
 
     const read = this.hearth.device.createBuffer({
-      size: bufferSize,
+      size: size,
       usage: GPUBufferUsage.COPY_DST | GPUBufferUsage.MAP_READ,
     });
+    data.secondOcclusionQueryBuffer = read;
 
-    encoder.resolveQuerySet(data.occlusionQuerySet, 0, count, resolve.buffer, 0);
-    encoder.copyBufferToBuffer(resolve.buffer, 0, read, 0, bufferSize);
-
-    data.occlusionQueryBuffer = read;
+    encoder.resolveQuerySet(data.secondOcclusionQuerySet, 0, count, resolve.buffer, 0);
+    encoder.copyBufferToBuffer(resolve.buffer, 0, read, 0, size);
   }
 
-  async resolve(context: RenderContext) {
+  occluded: WeakMap<object, WeakSet<Entity>> = new WeakMap();
+
+  async resolve(context: RenderContext): Promise<void> {
     const data = this.hearth.memo.get(context);
 
-    const { currentOcclusionQueryBuffer, currentOcclusionQueryObjects } = data;
-    if (!currentOcclusionQueryBuffer || !currentOcclusionQueryObjects) return;
+    const { firstOcclusionQueryBuffer: buffer, firstOcclusionQueryObjects: objects } = data;
+    if (!buffer || !objects) return;
+
+    data.firstOcclusionQueryObjects = null;
+    data.firstOcclusionQueryBuffer = null;
+
+    await buffer.mapAsync(GPUMapMode.READ);
+    const range = buffer.getMappedRange();
 
     const occluded = new WeakSet();
-    data.currentOcclusionQueryObjects = null;
-    data.currentOcclusionQueryBuffer = null;
-
-    await currentOcclusionQueryBuffer.mapAsync(GPUMapMode.READ);
-    const buffer = currentOcclusionQueryBuffer.getMappedRange();
-
-    const results = new BigUint64Array(buffer);
-    for (let i = 0; i < currentOcclusionQueryObjects.length; i++) {
-      if (results[i] !== BigInt(0)) occluded.add(currentOcclusionQueryObjects[i]);
+    const results = new BigUint64Array(range);
+    for (let i = 0; i < objects.length; ++i) {
+      if (results[i] !== BigInt(0)) occluded.add(objects[i]);
     }
-    currentOcclusionQueryBuffer.destroy();
+    buffer.destroy();
 
-    data.occluded = occluded;
+    this.occluded.set(context, occluded);
   }
 }
 
@@ -90,6 +127,7 @@ class ResolveBuffer {
   static fromDevice(device: GPUDevice, size: number) {
     return new ResolveBuffer(
       device.createBuffer({
+        label: 'occlusion: resolve buffer',
         size,
         usage: GPUBufferUsage.QUERY_RESOLVE | GPUBufferUsage.COPY_SRC,
       }),
@@ -97,37 +135,21 @@ class ResolveBuffer {
   }
 }
 
-class OcclusionBuffers {
+class OcclusionQuerySet {
   constructor(
-    public resolve: GPUBuffer,
-    public times: GPUBuffer,
-    public pending: boolean = false,
+    public set: GPUQuerySet,
+    public buffer?: GPUBuffer,
   ) {}
 
-  static fromDevice(device: GPUDevice) {
-    return new OcclusionBuffers(
-      device.createBuffer({
-        label: 'timestamp: resolve query buffer',
-        size: 2 * BigInt64Array.BYTES_PER_ELEMENT,
-        usage: GPUBufferUsage.QUERY_RESOLVE | GPUBufferUsage.COPY_SRC,
-      }),
-      device.createBuffer({
-        label: 'timestamp: time buffer',
-        size: 2 * BigInt64Array.BYTES_PER_ELEMENT,
-        usage: GPUBufferUsage.COPY_DST | GPUBufferUsage.MAP_READ,
+  static fromDevice(device: GPUDevice, count: number) {
+    return new OcclusionQuerySet(
+      device.createQuerySet({
+        label: 'occlusion: query buffer',
+        type: 'occlusion',
+        count,
       }),
     );
   }
-}
 
-class OcclusionQuery {
-  constructor(public set: GPUQuerySet) {}
-
-  static fromDevice(device: GPUDevice) {
-    return new OcclusionQuery(device.createQuerySet({ type: 'timestamp', count: 2 }));
-  }
-
-  encodeTransfer(encoder: GPUCommandEncoder, into: GPUBuffer): void {
-    encoder.resolveQuerySet(this.set, 0, 2, into, 0);
-  }
+  destroy() {}
 }
