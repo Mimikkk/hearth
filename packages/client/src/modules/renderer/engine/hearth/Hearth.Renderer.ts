@@ -93,7 +93,8 @@ export class HearthRenderer extends HearthComponent {
 
     context.activeCubeFace = this.hearth.activeCubeFace;
     context.activeMipmapLevel = activeMipmapLevel;
-    context.occlusionQueryCount = list.occlusionQueryCount;
+
+    this.hearth.occlusion.sizes.set(context, list.occlusionQueryCount);
 
     this.hearth.nodes.updateScene(sceneRef);
     this.hearth.background.update(sceneRef, list, context);
@@ -101,7 +102,6 @@ export class HearthRenderer extends HearthComponent {
     const data = this.hearth.memo.get(context);
 
     const device = this.hearth.device;
-    const occlusionQueryCount = context.occlusionQueryCount;
 
     let descriptor: GPURenderPassDescriptor;
     if (context.textures) {

@@ -83,7 +83,7 @@ export class RenderList {
   ) {
     const renderItem = this.next(object, geometry, material, groupOrder, z, group);
 
-    if (object.occlusionTest === true) this.occlusionQueryCount++;
+    if (object.useOcclusion === true) this.occlusionQueryCount++;
 
     (material.transparent === true ? this.transparent : this.opaque).push(renderItem);
   }

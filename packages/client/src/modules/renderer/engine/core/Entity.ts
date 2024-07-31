@@ -37,7 +37,7 @@ export class Entity {
   declare material: Material | null;
   declare skeleton: Skeleton | null;
   declare workgroupSize?: [number, number, number] | [number, number] | [number];
-  occlusionTest: boolean;
+  useOcclusion: boolean;
   boundingBox: Box3 | null;
   id: number;
   uuid: string;

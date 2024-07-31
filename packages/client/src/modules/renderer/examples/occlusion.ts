@@ -60,7 +60,7 @@ async function init() {
   plane.material.colorNode = instanceUniform;
 
   sphere.position.z = -1;
-  sphere.occlusionTest = true;
+  sphere.useOcclusion = true;
 
   scene.add(plane);
   scene.add(sphere);
