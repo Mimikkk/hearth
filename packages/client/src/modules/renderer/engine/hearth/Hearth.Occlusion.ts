@@ -12,6 +12,10 @@ export class HearthOcclusion extends HearthComponent {
   #firstpass = new WeakMap<WeakKey, OcclusionQuery>();
   #secondpass = new WeakMap<WeakKey, OcclusionQuery>();
 
+  setSize(key: WeakKey, size: number): void {
+    this.#sizes.set(key, size);
+  }
+
   attach(key: WeakKey, into: GPURenderPassDescriptor): void {
     const count = this.#sizes.get(key) ?? 0;
     if (count <= 0) return;
