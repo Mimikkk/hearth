@@ -90,9 +90,6 @@ export class Hearth {
   background: HearthBackground;
   utilities: HearthUtilities;
 
-  renderPassDescriptor: GPURenderPassDescriptor | null = null;
-  resolveBufferMap: Map<number, GPUBuffer> = new Map();
-
   memo: WeakMemo<any, any> = new WeakMemo(() => ({}));
   device: GPUDevice;
   adapter: GPUAdapter;
@@ -657,7 +654,7 @@ export class Hearth {
 
   updateSize() {
     this.colorBuffer = this.textures.getColorBuffer();
-    this.renderPassDescriptor = null;
+    this.renderer.renderPassDescriptor = null;
   }
 
   createIndexAttribute(attribute: Attribute) {
@@ -957,8 +954,6 @@ type Options = Hearth.Options;
 type Configuration = Hearth.Configuration;
 
 const _scene = new Scene();
-const _drawSize = Vec2.new();
-const _screen = Vec4.new();
 const _frustum = Frustum.new();
 const _projection = Mat4.new();
 const _vec3 = Vec3.new();

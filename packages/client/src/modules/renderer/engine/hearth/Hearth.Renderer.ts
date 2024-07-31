@@ -19,6 +19,8 @@ import { Material } from '@modules/renderer/engine/entities/materials/Material.j
 import LightsNode from '../nodes/lighting/LightsNode.ts';
 
 export class HearthRenderer extends HearthComponent {
+  renderPassDescriptor: GPURenderPassDescriptor | null = null;
+
   async run(scene: Entity, camera: Camera): Promise<RenderContext> {
     const nodeFrame = this.hearth.nodes.nodeFrame;
     const previousRenderId = nodeFrame.renderId;
@@ -399,7 +401,7 @@ export class HearthRenderer extends HearthComponent {
   }
 
   _getDefaultRenderPassDescriptor(): GPURenderPassDescriptor {
-    let descriptor = this.hearth.renderPassDescriptor;
+    let descriptor = this.renderPassDescriptor;
 
     const antialias = this.hearth.parameters.antialias;
 
@@ -425,7 +427,7 @@ export class HearthRenderer extends HearthComponent {
         colorAttachment.resolveTarget = undefined;
       }
 
-      this.hearth.renderPassDescriptor = descriptor;
+      this.renderPassDescriptor = descriptor;
     }
 
     const colorAttachment = descriptor.colorAttachments[0];
