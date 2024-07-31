@@ -30,7 +30,7 @@ import {
   GPULoadOpType,
   GPUTextureFormatType,
 } from '@modules/renderer/engine/hearth/constants.js';
-import { RenderItem, RenderQueue } from '@modules/renderer/engine/hearth/core/RenderQueue.js';
+import { Renderable, RenderQueue } from '@modules/renderer/engine/hearth/core/RenderQueue.js';
 import { ComputeNode } from '@modules/renderer/engine/nodes/gpgpu/ComputeNode.js';
 import { RenderContext } from '@modules/renderer/engine/hearth/core/RenderContext.js';
 import { LightsNode } from '@modules/renderer/engine/nodes/lighting/LightsNode.js';
@@ -266,7 +266,7 @@ export class Hearth {
     if (targetScene !== scene) {
       targetScene.traverseVisible(object => {
         if (object.isLight && object.layers.test(camera.layers)) {
-          renderList.pushLight(object);
+          renderList.lights.push(object);
         }
       });
     }
@@ -355,7 +355,7 @@ export class Hearth {
       } else if (object.isLOD) {
         if (object.autoUpdate === true) object.update(camera);
       } else if (object.isLight) {
-        renderList.pushLight(object);
+        renderList.lights.push(object);
       } else if (object.isSprite) {
         if (!object.frustumCulled || _frustum.intersectsSprite(object)) {
           if (this.parameters.useSort) {
@@ -405,7 +405,7 @@ export class Hearth {
     }
   }
 
-  _renderObjects(renderable: RenderItem[], camera: Camera, scene: Scene, lightsNode: LightsNode): void {
+  _renderObjects(renderable: Renderable[], camera: Camera, scene: Scene, lightsNode: LightsNode): void {
     for (let i = 0, il = renderable.length; i < il; i++) {
       const renderItem = renderable[i];
 

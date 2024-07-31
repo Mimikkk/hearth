@@ -224,7 +224,7 @@ export class HearthRenderer extends HearthComponent {
       } else if (object.isLOD) {
         if (object.autoUpdate === true) object.update(camera);
       } else if (object.isLight) {
-        renderList.pushLight(object);
+        renderList.lights.push(object);
       } else if (object.isSprite) {
         if (!object.frustumCulled || _frustum.intersectsSprite(object)) {
           if (this.parameters.useSort) {

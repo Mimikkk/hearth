@@ -101,7 +101,6 @@ export class LightsNode extends Node {
 
       if (node === null) {
         const Light = LightNodeMap.get(light.constructor) ?? AnalyticLightNode;
-
         node = asNode(new Light(light));
       }
 

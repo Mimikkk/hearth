@@ -1,48 +1,29 @@
-import { LightsNode } from '../../nodes/Nodes.js';
-import { Light } from '@modules/renderer/engine/entities/lights/Light.js';
-import { Entity } from '@modules/renderer/engine/core/Entity.js';
-import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
-import { Group } from '@modules/renderer/engine/entities/Group.js';
-import { Material } from '@modules/renderer/engine/entities/materials/Material.js';
+import type { Light } from '@modules/renderer/engine/entities/lights/Light.js';
+import type { Entity } from '@modules/renderer/engine/core/Entity.js';
+import type { Geometry } from '@modules/renderer/engine/core/Geometry.js';
+import type { Group } from '@modules/renderer/engine/entities/Group.js';
+import type { Material } from '@modules/renderer/engine/entities/materials/Material.js';
+import { LightsNode } from '@modules/renderer/engine/nodes/lighting/LightsNode.js';
 
-export type SortFn = (a: RenderItem, b: RenderItem) => number;
-
-export interface RenderItem {
-  id: number;
-  object: Entity;
-  geometry: Geometry | null;
-  material: Material;
-  groupOrder: number;
-  renderOrder: number;
-  z: number;
-  group: Group | null;
-}
+export type SortFn = (a: Renderable, b: Renderable) => number;
 
 export class RenderQueue {
-  renderItems: RenderItem[];
-  renderItemsIndex: number;
-  lightsNode: LightsNode;
-  lights: Light[];
-
-  opaque: RenderItem[];
-  transparent: RenderItem[];
-
-  constructor() {
-    this.renderItems = [];
-    this.renderItemsIndex = 0;
-
-    this.opaque = [];
-    this.transparent = [];
-
-    this.lightsNode = new LightsNode([]);
-    this.lights = [];
-  }
+  constructor(
+    public items: Renderable[] = [],
+    public index: number = 0,
+    public occlusionQueryCount: number = 0,
+    public opaque: Renderable[] = [],
+    public lights: Light[] = [],
+    public transparent: Renderable[] = [],
+    public lightsNode: LightsNode = new LightsNode([]),
+  ) {}
 
   begin() {
-    this.renderItemsIndex = 0;
+    this.index = 0;
     this.opaque.length = 0;
     this.transparent.length = 0;
     this.lights.length = 0;
+    this.occlusionQueryCount = 0;
 
     return this;
   }
@@ -55,17 +36,17 @@ export class RenderQueue {
     z: number,
     group: Group | null,
   ) {
-    let item = this.renderItems[this.renderItemsIndex];
+    let item = this.items[this.index];
 
     if (item === undefined) {
-      item = RenderItem.new(object, geometry, material, groupOrder, z, group);
+      item = Renderable.new(object, geometry, material, groupOrder, z, group);
 
-      this.renderItems[this.renderItemsIndex] = item;
+      this.items[this.index] = item;
     } else {
       item.set(object, geometry, material, groupOrder, z, group);
     }
 
-    this.renderItemsIndex++;
+    this.index++;
 
     return item;
   }
@@ -78,11 +59,11 @@ export class RenderQueue {
     z: number,
     group: Group | null,
   ) {
-    const renderItem = this.next(object, geometry, material, groupOrder, z, group);
+    const renderable = this.next(object, geometry, material, groupOrder, z, group);
 
-    if (object.useOcclusion === true) this.occlusionQueryCount++;
+    if (object.useOcclusion) this.occlusionQueryCount++;
 
-    (material.transparent === true ? this.transparent : this.opaque).push(renderItem);
+    (material.transparent ? this.transparent : this.opaque).push(renderable);
   }
 
   unshift(
@@ -93,13 +74,9 @@ export class RenderQueue {
     z: number,
     group: Group | null,
   ) {
-    const renderItem = this.next(object, geometry, material, groupOrder, z, group);
+    const renderable = this.next(object, geometry, material, groupOrder, z, group);
 
-    (material.transparent === true ? this.transparent : this.opaque).unshift(renderItem);
-  }
-
-  pushLight(light: Light) {
-    this.lights.push(light);
+    (material.transparent ? this.transparent : this.opaque).unshift(renderable);
   }
 
   sort(sortOpaque: SortFn, sortTransparent: SortFn) {
@@ -110,13 +87,13 @@ export class RenderQueue {
   finish() {
     this.lightsNode.fromLights(this.lights);
 
-    for (let i = this.renderItemsIndex, il = this.renderItems.length; i < il; i++) {
-      this.renderItems[i].clear();
+    for (let i = this.index, it = this.items.length; i < it; ++i) {
+      this.items[i].clear();
     }
   }
 }
 
-export class RenderItem {
+export class Renderable {
   constructor(
     public object: Entity,
     public geometry: Geometry | null,
@@ -136,7 +113,7 @@ export class RenderItem {
     z: number,
     group: Group | null,
   ) {
-    return new RenderItem(object, geometry, material, groupOrder, z, group);
+    return new Renderable(object, geometry, material, groupOrder, z, group);
   }
 
   set(
