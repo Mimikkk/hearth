@@ -3,11 +3,11 @@ import RenderContext from '@modules/renderer/engine/hearth/core/RenderContext.js
 import { WeakMemo } from '@modules/renderer/engine/hearth/memo/WeakMemo.js';
 
 export class HearthOcclusion extends HearthComponent {
-  map: WeakMap<object, {}>;
+  resolves = new Map<number, ResolveBuffer>();
 
   meter(context: RenderContext, into: GPURenderPassDescriptor) {
-    const occlusionQueryCount = context.occlusionQueryCount;
-    if (occlusionQueryCount <= 0) return;
+    const count = context.occlusionQueryCount;
+    if (count <= 0) return;
 
     const data = this.hearth.memo.get(context);
 
@@ -18,50 +18,47 @@ export class HearthOcclusion extends HearthComponent {
     data.currentOcclusionQuerySet = data.occlusionQuerySet;
     data.currentOcclusionQueryBuffer = data.occlusionQueryBuffer;
     data.currentOcclusionQueryObjects = data.occlusionQueryObjects;
-    set = this.hearth.device.createQuerySet({ type: 'occlusion', count: occlusionQueryCount });
+    set = this.hearth.device.createQuerySet({ type: 'occlusion', count: count });
 
     data.occlusionQuerySet = set;
     data.occlusionQueryIndex = 0;
-    data.occlusionQueryObjects = new Array(occlusionQueryCount);
+    data.occlusionQueryObjects = new Array(count);
     data.lastOcclusionObject = null;
 
     into.occlusionQuerySet = set;
   }
 
   end(context: RenderContext) {
-    const occlusionQueryCount = context.occlusionQueryCount;
+    const count = context.occlusionQueryCount;
     const data = this.hearth.memo.get(context);
 
-    if (occlusionQueryCount > data.occlusionQueryIndex) data.currentPass.endOcclusionQuery();
+    if (count > data.occlusionQueryIndex) data.currentPass.endOcclusionQuery();
   }
 
   encode(context: RenderContext, encoder: GPUCommandEncoder) {
-    const occlusionQueryCount = context.occlusionQueryCount;
-    if (occlusionQueryCount <= 0) return;
+    const count = context.occlusionQueryCount;
+    if (count <= 0) return;
     const data = this.hearth.memo.get(context);
 
-    const bufferSize = occlusionQueryCount * 8;
+    const bufferSize = count * 8;
 
-    let queryResolveBuffer = this.hearth.resolveBufferMap.get(bufferSize);
+    let resolve = this.resolves.get(bufferSize);
 
-    if (queryResolveBuffer === undefined) {
-      queryResolveBuffer = this.hearth.device.createBuffer({
-        size: bufferSize,
-        usage: GPUBufferUsage.QUERY_RESOLVE | GPUBufferUsage.COPY_SRC,
-      });
+    if (resolve === undefined) {
+      resolve = ResolveBuffer.fromDevice(this.hearth.device, bufferSize);
 
-      this.hearth.resolveBufferMap.set(bufferSize, queryResolveBuffer);
+      this.resolves.set(bufferSize, resolve);
     }
 
-    const readBuffer = this.hearth.device.createBuffer({
+    const read = this.hearth.device.createBuffer({
       size: bufferSize,
       usage: GPUBufferUsage.COPY_DST | GPUBufferUsage.MAP_READ,
     });
 
-    encoder.resolveQuerySet(data.occlusionQuerySet, 0, occlusionQueryCount, queryResolveBuffer, 0);
-    encoder.copyBufferToBuffer(queryResolveBuffer, 0, readBuffer, 0, bufferSize);
+    encoder.resolveQuerySet(data.occlusionQuerySet, 0, count, resolve.buffer, 0);
+    encoder.copyBufferToBuffer(resolve.buffer, 0, read, 0, bufferSize);
 
-    data.occlusionQueryBuffer = readBuffer;
+    data.occlusionQueryBuffer = read;
   }
 
   async resolve(context: RenderContext) {
@@ -83,8 +80,20 @@ export class HearthOcclusion extends HearthComponent {
     }
     currentOcclusionQueryBuffer.destroy();
 
-    // return occluded;
     data.occluded = occluded;
+  }
+}
+
+class ResolveBuffer {
+  constructor(public buffer: GPUBuffer) {}
+
+  static fromDevice(device: GPUDevice, size: number) {
+    return new ResolveBuffer(
+      device.createBuffer({
+        size,
+        usage: GPUBufferUsage.QUERY_RESOLVE | GPUBufferUsage.COPY_SRC,
+      }),
+    );
   }
 }
 
@@ -108,18 +117,6 @@ class OcclusionBuffers {
         usage: GPUBufferUsage.COPY_DST | GPUBufferUsage.MAP_READ,
       }),
     );
-  }
-
-  async delta() {
-    await this.times.mapAsync(GPUMapMode.READ);
-    const [start, end] = new BigUint64Array(this.times.getMappedRange());
-    this.times.unmap();
-
-    return Number(end - start) / 1000000;
-  }
-
-  encodeTransfer(encoder: GPUCommandEncoder) {
-    encoder.copyBufferToBuffer(this.resolve, 0, this.times, 0, 2 * BigInt64Array.BYTES_PER_ELEMENT);
   }
 }
 
