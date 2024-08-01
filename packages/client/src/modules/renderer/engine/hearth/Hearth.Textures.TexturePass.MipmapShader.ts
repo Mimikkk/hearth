@@ -22,14 +22,14 @@ export class HearthTexturesTexturePassMipmapShader {
     this.shader = shaders.get(names.shader, () => ({ code: mipmapSource }));
   }
 
-  vertexState(): GPUVertexState {
+  createVertexState(): GPUVertexState {
     return {
       module: this.shader,
       entryPoint: ShaderStage.Vertex,
     };
   }
 
-  fragmentState(format: GPUTextureFormat, flipY: boolean): GPUFragmentState {
+  createfFragmentState(format: GPUTextureFormat, flipY: boolean): GPUFragmentState {
     return {
       module: this.shader,
       entryPoint: flipY ? 'fragment_flip_y' : 'fragment_noflip_y',

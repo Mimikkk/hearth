@@ -60,8 +60,8 @@ export class HearthTexturesTexturePass {
 
       return render.pipelines.get(transferLabel(format), () => ({
         label,
-        vertex: this.mipmap.vertexState(),
-        fragment: this.mipmap.fragmentState(format, false),
+        vertex: this.mipmap.createVertexState(),
+        fragment: this.mipmap.createfFragmentState(format, false),
         primitive: {
           topology: GPUPrimitiveTopologyType.TriangleStrip,
           stripIndexFormat: GPUIndexFormatType.Uint32,
@@ -104,8 +104,8 @@ export class HearthTexturesTexturePass {
       const label = mipmapLabel(format);
 
       return render.pipelines.get(flipYLabel(format), () => ({
-        vertex: this.mipmap.vertexState(),
-        fragment: this.mipmap.fragmentState(format, true),
+        vertex: this.mipmap.createVertexState(),
+        fragment: this.mipmap.createfFragmentState(format, true),
         primitive: {
           topology: GPUPrimitiveTopologyType.TriangleStrip,
           stripIndexFormat: GPUIndexFormatType.Uint32,
