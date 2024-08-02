@@ -1,4 +1,4 @@
-import type { ArrayMap, TypedArray, TypedArrayConstructor } from '../math/MathUtils.js';
+import type { ArrayMap, NumberArray, TypedArray, TypedArrayConstructor } from '../math/MathUtils.js';
 import { BufferStep } from '@modules/renderer/engine/hearth/constants.js';
 import { BufferUse } from '@modules/renderer/engine/constants.js';
 
@@ -19,35 +19,35 @@ export class Buffer<T extends TypedArray = any> {
     return new Buffer(array, stride, step, use);
   }
 
-  static f64(array: TypedArray | number, stride: number, step?: BufferStep, use?: BufferUse): Buffer<Float64Array> {
+  static f64(array: NumberArray | number, stride: number, step?: BufferStep, use?: BufferUse): Buffer<Float64Array> {
     return new Buffer(as(array, Float64Array), stride, step, use);
   }
 
-  static f32(array: TypedArray | number, stride: number, step?: BufferStep, use?: BufferUse): Buffer<Float32Array> {
+  static f32(array: NumberArray | number, stride: number, step?: BufferStep, use?: BufferUse): Buffer<Float32Array> {
     return new Buffer(as(array, Float32Array), stride, step, use);
   }
 
-  static u32(array: TypedArray | number, stride: number, step?: BufferStep, use?: BufferUse): Buffer<Uint32Array> {
+  static u32(array: NumberArray | number, stride: number, step?: BufferStep, use?: BufferUse): Buffer<Uint32Array> {
     return new Buffer(as(array, Uint32Array), stride, step, use);
   }
 
-  static u16(array: TypedArray | number, stride: number, step?: BufferStep, use?: BufferUse): Buffer<Uint16Array> {
+  static u16(array: NumberArray | number, stride: number, step?: BufferStep, use?: BufferUse): Buffer<Uint16Array> {
     return new Buffer(as(array, Uint16Array), stride, step, use);
   }
 
-  static u8(array: TypedArray | number, stride: number, step?: BufferStep, use?: BufferUse): Buffer<Uint8Array> {
+  static u8(array: NumberArray | number, stride: number, step?: BufferStep, use?: BufferUse): Buffer<Uint8Array> {
     return new Buffer(as(array, Uint8Array), stride, step, use);
   }
 
-  static i32(array: TypedArray | number, stride: number, step?: BufferStep, use?: BufferUse): Buffer<Int32Array> {
+  static i32(array: NumberArray | number, stride: number, step?: BufferStep, use?: BufferUse): Buffer<Int32Array> {
     return new Buffer(as(array, Int32Array), stride, step, use);
   }
 
-  static i16(array: TypedArray | number, stride: number, step?: BufferStep, use?: BufferUse): Buffer<Int16Array> {
+  static i16(array: NumberArray | number, stride: number, step?: BufferStep, use?: BufferUse): Buffer<Int16Array> {
     return new Buffer(as(array, Int16Array), stride, step, use);
   }
 
-  static i8(array: TypedArray | number, stride: number, step?: BufferStep, use?: BufferUse): Buffer<Int8Array> {
+  static i8(array: NumberArray | number, stride: number, step?: BufferStep, use?: BufferUse): Buffer<Int8Array> {
     return new Buffer(as(array, Int8Array), stride, step, use);
   }
 

@@ -229,7 +229,7 @@ export class HearthRenderer extends HearthComponent {
         renderList.lights.push(object);
       } else if (object.isSprite) {
         if (!object.frustumCulled || _frustum.intersectsSprite(object)) {
-          if (this.parameters.useSort) {
+          if (this.hearth.parameters.useSort) {
             _vec3.fromMat4Position(object.matrixWorld).applyMat4(_projection);
           }
 

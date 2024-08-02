@@ -1,28 +1,22 @@
-import { Camera } from '@modules/renderer/engine/entities/cameras/Camera.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
-import { LineSegments } from '../LineSegments.js';
-import { Color } from '../../math/Color.js';
-import { LineBasicMaterial } from '@modules/renderer/engine/entities/materials/LineBasicMaterial.js';
-import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
-import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
+import { Camera } from '@modules/renderer/engine/entities/cameras/Camera.js';
+import { LineSegments } from '@modules/renderer/engine/entities/LineSegments.js';
 import { PerspectiveCamera } from '@modules/renderer/engine/entities/cameras/PerspectiveCamera.js';
 import { OrthographicCamera } from '@modules/renderer/engine/entities/cameras/OrthographicCamera.js';
+import { LineBasicMaterial } from '@modules/renderer/engine/entities/materials/LineBasicMaterial.js';
+import { Color } from '@modules/renderer/engine/math/Color.js';
+import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
+import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
+import { Buffer } from '@modules/renderer/engine/core/Buffer.js';
 
-const _vector = Vec3.new();
+const _vector = new Vec3();
 const _camera = new Camera();
 
-/**
- *  - shows frustum, line of sight and up of the camera
- *  - suitable for fast updates
- *  - based on frustum visualization in lightgl.js shadowmap example
- *    https://github.com/evanw/lightgl.js/blob/master/tests/shadowmap.html
- */
-
-export class CameraHelper extends LineSegments {
-  camera: Camera;
+export class CameraVisualizer extends LineSegments {
+  camera: PerspectiveCamera | OrthographicCamera;
   pointMap: Record<string, number[]>;
 
-  constructor(camera: Camera) {
+  constructor(camera: PerspectiveCamera | OrthographicCamera) {
     const geometry = new Geometry();
     const material = new LineBasicMaterial({ color: 0xffffff, vertexColors: true, toneMapped: false });
 
@@ -31,47 +25,40 @@ export class CameraHelper extends LineSegments {
 
     const pointMap: Record<string, number[]> = {};
 
-
-
+    // near
     addLine('n1', 'n2');
     addLine('n2', 'n4');
     addLine('n4', 'n3');
     addLine('n3', 'n1');
 
-
-
+    // far
     addLine('f1', 'f2');
     addLine('f2', 'f4');
     addLine('f4', 'f3');
     addLine('f3', 'f1');
 
-
-
+    // sides
     addLine('n1', 'f1');
     addLine('n2', 'f2');
     addLine('n3', 'f3');
     addLine('n4', 'f4');
 
-
-
+    // cone
     addLine('p', 'n1');
     addLine('p', 'n2');
     addLine('p', 'n3');
     addLine('p', 'n4');
 
-
-
+    // up
     addLine('u1', 'u2');
     addLine('u2', 'u3');
     addLine('u3', 'u1');
 
-
-
+    // target
     addLine('c', 't');
     addLine('p', 'c');
 
-
-
+    // cross
     addLine('cn1', 'cn2');
     addLine('cn3', 'cn4');
 
@@ -87,22 +74,20 @@ export class CameraHelper extends LineSegments {
       vertices.push(0, 0, 0);
       colors.push(0, 0, 0);
 
-      if (pointMap[id] === undefined) {
-        pointMap[id] = [];
-      }
+      if (pointMap[id] === undefined) pointMap[id] = [];
 
       pointMap[id].push(vertices.length / 3 - 1);
     }
 
-    geometry.setAttribute('position', new Attribute(new Float32Array(vertices), 3));
-    geometry.setAttribute('color', new Attribute(new Float32Array(colors), 3));
+    const posbuf = Buffer.f32(vertices, 3);
+    const colbuf = Buffer.f32(colors, 3);
+    geometry.attributes.position = Attribute.use(colbuf);
+    geometry.attributes.color = Attribute.use(posbuf);
 
     super(geometry, material);
 
-    this.type = 'CameraHelper';
-
     this.camera = camera;
-    (this.camera as PerspectiveCamera | OrthographicCamera)?.updateProjectionMatrix();
+    this.camera.updateProjectionMatrix();
 
     this.matrix = camera.matrixWorld;
     this.matrixAutoUpdate = false;
@@ -111,13 +96,12 @@ export class CameraHelper extends LineSegments {
 
     this.update();
 
-
-
-    const colorFrustum = Color.new(0xffaa00);
-    const colorCone = Color.new(0xff0000);
-    const colorUp = Color.new(0x00aaff);
-    const colorTarget = Color.new(0xffffff);
-    const colorCross = Color.new(0x333333);
+    // colors
+    const colorFrustum = new Color(0xffaa00);
+    const colorCone = new Color(0xff0000);
+    const colorUp = new Color(0x00aaff);
+    const colorTarget = new Color(0xffffff);
+    const colorCross = new Color(0x333333);
 
     this.setColors(colorFrustum, colorCone, colorUp, colorTarget, colorCross);
   }
@@ -127,77 +111,77 @@ export class CameraHelper extends LineSegments {
 
     const colorAttribute = geometry.attributes.color;
 
-
+    // near
 
     colorAttribute.setXYZ(0, frustum.r, frustum.g, frustum.b);
-    colorAttribute.setXYZ(1, frustum.r, frustum.g, frustum.b);
+    colorAttribute.setXYZ(1, frustum.r, frustum.g, frustum.b); // n1, n2
     colorAttribute.setXYZ(2, frustum.r, frustum.g, frustum.b);
-    colorAttribute.setXYZ(3, frustum.r, frustum.g, frustum.b);
+    colorAttribute.setXYZ(3, frustum.r, frustum.g, frustum.b); // n2, n4
     colorAttribute.setXYZ(4, frustum.r, frustum.g, frustum.b);
-    colorAttribute.setXYZ(5, frustum.r, frustum.g, frustum.b);
+    colorAttribute.setXYZ(5, frustum.r, frustum.g, frustum.b); // n4, n3
     colorAttribute.setXYZ(6, frustum.r, frustum.g, frustum.b);
-    colorAttribute.setXYZ(7, frustum.r, frustum.g, frustum.b);
+    colorAttribute.setXYZ(7, frustum.r, frustum.g, frustum.b); // n3, n1
 
-
+    // far
 
     colorAttribute.setXYZ(8, frustum.r, frustum.g, frustum.b);
-    colorAttribute.setXYZ(9, frustum.r, frustum.g, frustum.b);
+    colorAttribute.setXYZ(9, frustum.r, frustum.g, frustum.b); // f1, f2
     colorAttribute.setXYZ(10, frustum.r, frustum.g, frustum.b);
-    colorAttribute.setXYZ(11, frustum.r, frustum.g, frustum.b);
+    colorAttribute.setXYZ(11, frustum.r, frustum.g, frustum.b); // f2, f4
     colorAttribute.setXYZ(12, frustum.r, frustum.g, frustum.b);
-    colorAttribute.setXYZ(13, frustum.r, frustum.g, frustum.b);
+    colorAttribute.setXYZ(13, frustum.r, frustum.g, frustum.b); // f4, f3
     colorAttribute.setXYZ(14, frustum.r, frustum.g, frustum.b);
-    colorAttribute.setXYZ(15, frustum.r, frustum.g, frustum.b);
+    colorAttribute.setXYZ(15, frustum.r, frustum.g, frustum.b); // f3, f1
 
-
+    // sides
 
     colorAttribute.setXYZ(16, frustum.r, frustum.g, frustum.b);
-    colorAttribute.setXYZ(17, frustum.r, frustum.g, frustum.b);
+    colorAttribute.setXYZ(17, frustum.r, frustum.g, frustum.b); // n1, f1
     colorAttribute.setXYZ(18, frustum.r, frustum.g, frustum.b);
-    colorAttribute.setXYZ(19, frustum.r, frustum.g, frustum.b);
+    colorAttribute.setXYZ(19, frustum.r, frustum.g, frustum.b); // n2, f2
     colorAttribute.setXYZ(20, frustum.r, frustum.g, frustum.b);
-    colorAttribute.setXYZ(21, frustum.r, frustum.g, frustum.b);
+    colorAttribute.setXYZ(21, frustum.r, frustum.g, frustum.b); // n3, f3
     colorAttribute.setXYZ(22, frustum.r, frustum.g, frustum.b);
-    colorAttribute.setXYZ(23, frustum.r, frustum.g, frustum.b);
+    colorAttribute.setXYZ(23, frustum.r, frustum.g, frustum.b); // n4, f4
 
-
+    // cone
 
     colorAttribute.setXYZ(24, cone.r, cone.g, cone.b);
-    colorAttribute.setXYZ(25, cone.r, cone.g, cone.b);
+    colorAttribute.setXYZ(25, cone.r, cone.g, cone.b); // p, n1
     colorAttribute.setXYZ(26, cone.r, cone.g, cone.b);
-    colorAttribute.setXYZ(27, cone.r, cone.g, cone.b);
+    colorAttribute.setXYZ(27, cone.r, cone.g, cone.b); // p, n2
     colorAttribute.setXYZ(28, cone.r, cone.g, cone.b);
-    colorAttribute.setXYZ(29, cone.r, cone.g, cone.b);
+    colorAttribute.setXYZ(29, cone.r, cone.g, cone.b); // p, n3
     colorAttribute.setXYZ(30, cone.r, cone.g, cone.b);
-    colorAttribute.setXYZ(31, cone.r, cone.g, cone.b);
+    colorAttribute.setXYZ(31, cone.r, cone.g, cone.b); // p, n4
 
-
+    // up
 
     colorAttribute.setXYZ(32, up.r, up.g, up.b);
-    colorAttribute.setXYZ(33, up.r, up.g, up.b);
+    colorAttribute.setXYZ(33, up.r, up.g, up.b); // u1, u2
     colorAttribute.setXYZ(34, up.r, up.g, up.b);
-    colorAttribute.setXYZ(35, up.r, up.g, up.b);
+    colorAttribute.setXYZ(35, up.r, up.g, up.b); // u2, u3
     colorAttribute.setXYZ(36, up.r, up.g, up.b);
-    colorAttribute.setXYZ(37, up.r, up.g, up.b);
+    colorAttribute.setXYZ(37, up.r, up.g, up.b); // u3, u1
 
-
+    // target
 
     colorAttribute.setXYZ(38, target.r, target.g, target.b);
-    colorAttribute.setXYZ(39, target.r, target.g, target.b);
+    colorAttribute.setXYZ(39, target.r, target.g, target.b); // c, t
     colorAttribute.setXYZ(40, cross.r, cross.g, cross.b);
-    colorAttribute.setXYZ(41, cross.r, cross.g, cross.b);
+    colorAttribute.setXYZ(41, cross.r, cross.g, cross.b); // p, c
 
-
+    // cross
 
     colorAttribute.setXYZ(42, cross.r, cross.g, cross.b);
-    colorAttribute.setXYZ(43, cross.r, cross.g, cross.b);
+    colorAttribute.setXYZ(43, cross.r, cross.g, cross.b); // cn1, cn2
     colorAttribute.setXYZ(44, cross.r, cross.g, cross.b);
-    colorAttribute.setXYZ(45, cross.r, cross.g, cross.b);
+    colorAttribute.setXYZ(45, cross.r, cross.g, cross.b); // cn3, cn4
 
     colorAttribute.setXYZ(46, cross.r, cross.g, cross.b);
-    colorAttribute.setXYZ(47, cross.r, cross.g, cross.b);
+    colorAttribute.setXYZ(47, cross.r, cross.g, cross.b); // cf1, cf2
     colorAttribute.setXYZ(48, cross.r, cross.g, cross.b);
-    colorAttribute.setXYZ(49, cross.r, cross.g, cross.b);
+    colorAttribute.setXYZ(49, cross.r, cross.g, cross.b); // cf3, cf4
 
     colorAttribute.needsUpdate = true;
   }
@@ -206,41 +190,33 @@ export class CameraHelper extends LineSegments {
     const geometry = this.geometry;
     const pointMap = this.pointMap;
 
-    const w = 1,
-      h = 1;
-
-
-
+    const w = 1;
+    const h = 1;
 
     _camera.projectionMatrixInverse.from(this.camera.projectionMatrixInverse);
 
-
-
+    // center / target
     setPoint('c', pointMap, geometry, _camera, 0, 0, -1);
     setPoint('t', pointMap, geometry, _camera, 0, 0, 1);
 
-
-
+    // near
     setPoint('n1', pointMap, geometry, _camera, -w, -h, -1);
     setPoint('n2', pointMap, geometry, _camera, w, -h, -1);
     setPoint('n3', pointMap, geometry, _camera, -w, h, -1);
     setPoint('n4', pointMap, geometry, _camera, w, h, -1);
 
-
-
+    // far
     setPoint('f1', pointMap, geometry, _camera, -w, -h, 1);
     setPoint('f2', pointMap, geometry, _camera, w, -h, 1);
     setPoint('f3', pointMap, geometry, _camera, -w, h, 1);
     setPoint('f4', pointMap, geometry, _camera, w, h, 1);
 
-
-
+    // up
     setPoint('u1', pointMap, geometry, _camera, w * 0.7, h * 1.1, -1);
     setPoint('u2', pointMap, geometry, _camera, -w * 0.7, h * 1.1, -1);
     setPoint('u3', pointMap, geometry, _camera, 0, h * 2, -1);
 
-
-
+    // cross
     setPoint('cf1', pointMap, geometry, _camera, -w, 0, 1);
     setPoint('cf2', pointMap, geometry, _camera, w, 0, 1);
     setPoint('cf3', pointMap, geometry, _camera, 0, -h, 1);

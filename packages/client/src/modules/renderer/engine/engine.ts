@@ -100,7 +100,7 @@ export { HemisphereLightHelper } from '@modules/renderer/engine/entities/visuali
 export { GridHelper } from '@modules/renderer/engine/entities/visualizers/GridHelper.js';
 export { PolarGridHelper } from '@modules/renderer/engine/entities/visualizers/PolarGridHelper.js';
 export { DirectionalLightHelper } from '@modules/renderer/engine/entities/visualizers/DirectionalLightHelper.js';
-export { CameraHelper } from '@modules/renderer/engine/entities/visualizers/CameraHelper.js';
+export { CameraVisualizer } from '@modules/renderer/engine/entities/visualizers/CameraVisualizer.js';
 export { BoxHelper } from '@modules/renderer/engine/entities/visualizers/BoxHelper.js';
 export { Box3Helper } from '@modules/renderer/engine/entities/visualizers/Box3Helper.js';
 export { PlaneHelper } from '@modules/renderer/engine/entities/visualizers/PlaneHelper.js';

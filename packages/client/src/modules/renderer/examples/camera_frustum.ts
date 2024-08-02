@@ -21,7 +21,7 @@ import { SpriteMaterialBuilder } from '@modules/renderer/engine/entities/materia
 
 const createCamera = () => {
   const perspectiveCamera = new PerspectiveCamera(80, window.innerWidth / window.innerHeight, 0.1, 100);
-  perspectiveCamera.setPosition(0, 0, 3);
+  perspectiveCamera.position.set(0, 0, 3);
   perspectiveCamera.lookAt(0, 0, 0);
 
   const frustumCamera = new OrthographicCamera(-1, 1, 1, -1, 1, 6);
@@ -64,7 +64,7 @@ const clock = new Clock();
 const points = new Group();
 const spheres = new Group();
 
-const geometry = new SphereGeometry({ radius: 0.25, widthSegments: 32, heightSegments: 24 });
+const geometry = new SphereGeometry(0.25, 32, 24);
 
 const smb = SpriteMaterialBuilder.create({ height: 256, width: 256 }).addCircle({ radius: 128 }).addText('+');
 
