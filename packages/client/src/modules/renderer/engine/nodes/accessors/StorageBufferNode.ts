@@ -1,57 +1,31 @@
 import BufferNode from './BufferNode.js';
-import { bufferAttribute } from './BufferAttributeNode.js';
 import { asNode } from '../shadernode/ShaderNodes.js';
-import { varying } from '../core/VaryingNode.js';
-import { storageElement } from '../utils/StorageArrayElementNode.js';
+import { StorageArrayElementNode, storageElement } from '../utils/StorageArrayElementNode.js';
+import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
+import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
+import IndexNode from '@modules/renderer/engine/nodes/core/IndexNode.js';
 
-class StorageBufferNode extends BufferNode {
-  static type = 'StorageBufferNode';
+export class StorageBufferNode extends BufferNode {
+  declare isStorageBufferNode: true;
+  bufferObject: boolean = false;
 
-  constructor(value, bufferType, bufferCount = 0) {
-    super(value, bufferType, bufferCount);
-
-    this.isStorageBufferNode = true;
-
-    this.bufferObject = false;
-
-    this._attribute = null;
-    this._varying = null;
+  getInputType(): TypeName {
+    return TypeName.storageBuffer;
   }
 
-  getInputType() {
-    return 'storageBuffer';
-  }
-
-  element(indexNode) {
+  element(indexNode: IndexNode): StorageArrayElementNode {
     return storageElement(this, indexNode);
-  }
-
-  setBufferObject(value) {
-    this.bufferObject = value;
-
-    return this;
-  }
-
-  generate(builder) {
-    if (builder.isAvailable('storageBuffer')) return super.generate(builder);
-
-    const nodeType = this.getNodeType(builder);
-
-    if (this._attribute === null) {
-      this._attribute = bufferAttribute(this.value);
-      this._varying = varying(this._attribute);
-    }
-
-    const output = this._varying.build(builder, nodeType);
-
-    builder.registerTransform(output, this._attribute);
-
-    return output;
   }
 }
 
-export default StorageBufferNode;
+StorageBufferNode.prototype.isStorageBufferNode = true;
 
-export const storage = (value, type, count) => asNode(new StorageBufferNode(value, type, count));
-export const storageObject = (value, type, count) =>
-  asNode(new StorageBufferNode(value, type, count).setBufferObject(true));
+export const storage = (value: Attribute, type: TypeName.vec2, count: number = 0): StorageBufferNode =>
+  asNode(new StorageBufferNode(value, type, count));
+
+export const storageObject = (value: Attribute, type: TypeName.vec2, count: number = 0): StorageBufferNode => {
+  const node = new StorageBufferNode(value, type, count);
+  node.bufferObject = true;
+
+  return asNode(node);
+};

@@ -290,7 +290,7 @@ export { default as ReferenceNode, reference, referenceBuffer } from './accessor
 export { default as ReflectVectorNode, reflectVector } from './accessors/ReflectVectorNode.js';
 export { default as SkinningNode, skinning } from './accessors/SkinningNode.js';
 export { default as SceneNode, backgroundBlurriness, backgroundIntensity } from './accessors/SceneNode.js';
-export { default as StorageBufferNode, storage, storageObject } from './accessors/StorageBufferNode.js';
+export { StorageBufferNode, storage, storageObject } from './accessors/StorageBufferNode.js';
 export {
   default as TangentNode,
   tangentGeometry,

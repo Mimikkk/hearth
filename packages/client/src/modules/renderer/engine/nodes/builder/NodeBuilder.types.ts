@@ -85,6 +85,7 @@ export enum TypeName {
   texture = 'texture',
   cubeTexture = 'cubeTexture',
   storageTexture = 'storageTexture',
+  storageBuffer = 'storageBuffer',
   void = 'void',
 
   node = 'node',

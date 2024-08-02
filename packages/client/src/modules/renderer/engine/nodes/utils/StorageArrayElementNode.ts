@@ -1,57 +1,21 @@
 import { addNodeCommand, proxyNode } from '../shadernode/ShaderNodes.js';
 import ArrayElementNode from './ArrayElementNode.js';
 
-class StorageArrayElementNode extends ArrayElementNode {
+export class StorageArrayElementNode extends ArrayElementNode {
   static type = 'StorageArrayElementNode';
 
-  constructor(storageBufferNode, indexNode) {
-    super(storageBufferNode, indexNode);
-
-    this.isStorageArrayElementNode = true;
-  }
-
-  set storageBufferNode(value) {
-    this.array = value;
-  }
-
-  get storageBufferNode() {
-    return this.array;
-  }
-
-  setup(builder) {
-    if (builder.isAvailable('storageBuffer') === false) {
-      if (!this.array.instanceIndex && this.array.bufferObject === true) {
-        builder.setupPBO(this.array);
-      }
-    }
-
-    return super.setup(builder);
-  }
-
   generate(builder, output) {
-    let snippet;
+    const isAssign = builder.context.assign;
 
-    const isAssignContext = builder.context.assign;
+    let code = super.generate(builder);
 
-    if (builder.isAvailable('storageBuffer') === false) {
-      const { array } = this;
-
-      if (!array.instanceIndex && this.array.bufferObject === true && isAssignContext !== true) {
-        snippet = builder.generatePBO(this);
-      } else {
-        snippet = array.build(builder);
-      }
-    } else {
-      snippet = super.generate(builder);
-    }
-
-    if (isAssignContext !== true) {
+    if (isAssign !== true) {
       const type = this.getNodeType(builder);
 
-      snippet = builder.format(snippet, type, output);
+      code = builder.format(code, type, output);
     }
 
-    return snippet;
+    return code;
   }
 }
 
