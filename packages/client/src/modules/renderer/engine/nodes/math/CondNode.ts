@@ -3,6 +3,7 @@ import { property } from '../core/PropertyNode.js';
 import { context as contextNode } from '../core/ContextNode.js';
 import { addNodeCommand, proxyNode } from '../shadernode/ShaderNodes.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
+import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 
 class CondNode extends Node {
   static type = 'CondNode';
@@ -15,67 +16,59 @@ class CondNode extends Node {
     super();
   }
 
-  getNodeType(builder) {
-    const ifType = this.valid.getNodeType(builder);
+  getNodeType(builder: NodeBuilder): TypeName {
+    const typeA = this.valid.getNodeType(builder);
 
-    if (this.invalid !== null) {
-      const elseType = this.invalid.getNodeType(builder);
+    if (!this.invalid) return typeA;
 
-      if (TypeName.size(elseType) > TypeName.size(ifType)) {
-        return elseType;
-      }
-    }
-
-    return ifType;
+    const typeB = this.invalid.getNodeType(builder);
+    return TypeName.size(typeB) > TypeName.size(typeA) ? typeB : typeA;
   }
 
-  generate(builder, output) {
+  generate(builder: NodeBuilder, output?: TypeName): string {
     const type = this.getNodeType(builder);
     const context = { tempWrite: false };
 
-    const nodeData = builder.getDataFromNode(this);
-
-    if (nodeData.nodeProperty !== undefined) {
-      return nodeData.nodeProperty;
-    }
+    const data = builder.getDataFromNode(this);
+    if (data.nodeProperty) return data.nodeProperty;
 
     const { valid, invalid } = this;
 
-    const needsOutput = output !== 'void';
-    const nodeProperty = needsOutput ? property(type).build(builder) : '';
+    const isExpression = output !== TypeName.void;
+    const nodeProperty = isExpression ? property(type).build(builder) : '';
 
-    nodeData.nodeProperty = nodeProperty;
+    data.nodeProperty = nodeProperty;
 
-    const nodeSnippet = contextNode(this.when).build(builder, 'bool');
+    const nodeSnippet = contextNode(this.when).build(builder, TypeName.bool);
 
     builder.flow.code += `\nif ( ${nodeSnippet} ) {\n`;
 
-    let ifSnippet = contextNode(valid, context).build(builder, type);
+    let ifCode = contextNode(valid, context).build(builder, type);
 
-    if (ifSnippet) {
-      if (needsOutput) {
-        ifSnippet = nodeProperty + ' = ' + ifSnippet + ';';
+    if (ifCode) {
+      if (isExpression) {
+        ifCode = nodeProperty + ' = ' + ifCode + ';';
       } else {
-        ifSnippet = 'return ' + ifSnippet + ';';
+        ifCode = 'return ' + ifCode + ';';
       }
     }
 
-    builder.flow.code += '\t' + ifSnippet + '\n}';
+    builder.flow.code += ifCode + '\n}';
 
     if (invalid !== null) {
       builder.flow.code += ' else {\n';
 
-      let elseSnippet = contextNode(invalid, context).build(builder, type);
+      let elseCode = contextNode(invalid, context).build(builder, type);
 
-      if (elseSnippet) {
-        if (needsOutput) {
-          elseSnippet = nodeProperty + ' = ' + elseSnippet + ';';
+      if (elseCode) {
+        if (isExpression) {
+          elseCode = nodeProperty + ' = ' + elseCode + ';';
         } else {
-          elseSnippet = 'return ' + elseSnippet + ';';
+          elseCode = 'return ' + elseCode + ';';
         }
       }
 
-      builder.flow.code += '\t' + elseSnippet + '\n' + '}\n';
+      builder.flow.code += elseCode + '\n}\n';
     } else {
       builder.flow.code += '\n';
     }
