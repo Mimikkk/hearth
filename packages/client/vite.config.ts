@@ -30,6 +30,9 @@ export default defineConfig({
       },
     },
   },
+  optimizeDeps: {
+    exclude: ['lil-gui', 'upng-js', 'ammojs3', 'meshoptimizer', 'ktx-parse', 'zstddec'],
+  },
   resolve: {
     alias: createAliases(
       ['@', 'src'],

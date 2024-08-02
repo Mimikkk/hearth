@@ -3211,7 +3211,7 @@ class Parser {
     }
 
     const interpolation =
-      sampler.interpolation !== undefined ? INTERPOLATION[sampler.interpolation] : InterpolateLinear;
+      sampler.interpolation !== undefined ? INTERPOLATION[sampler.interpolation] : InterpolationMode.Linear;
 
     const outputArray = this._getArrayFromAccessor(outputAccessor);
 

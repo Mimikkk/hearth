@@ -50,14 +50,11 @@ async function init() {
 
         mixer.clipAction(gltf.animations[0]).play();
 
-        
-
         const head = mesh.getObjectByName('mesh_2');
         const influences = head.morphTargetInfluences;
 
         //head.morphTargetInfluences = null;
 
-        
         head.material.map = null;
 
         const gui = new GUI();
@@ -80,7 +77,6 @@ async function init() {
   controls.maxPolarAngle = Math.PI / 1.8;
   controls.target.set(0, 0.15, -0.2);
 
-  const
   function animate() {
     const delta = clock.tick();
 
@@ -91,8 +87,6 @@ async function init() {
     hearth.render(scene, camera);
 
     controls?.update();
-
-    stats.update();
   }
 
   useWindowResizer(hearth, camera);
