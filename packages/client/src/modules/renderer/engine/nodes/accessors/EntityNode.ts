@@ -1,5 +1,5 @@
 import { Node } from '../core/Node.js';
-import { NodeUpdateType } from '../core/constants.js';
+import { NodeUpdateStage } from '../core/constants.js';
 import UniformNode from '../core/UniformNode.js';
 import { proxyNode } from '../shadernode/ShaderNodes.js';
 import { Entity, Vec3 } from '@modules/renderer/engine/engine.js';
@@ -10,15 +10,14 @@ import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.typ
 export class EntityNode extends Node {
   static type = 'EntityNode';
   scope: NodeVariant;
-  object3d: any;
-  _uniformNode: UniformNode<any>;
+  entity: Entity;
+  uniform: UniformNode;
 
-  constructor(object3d: Entity) {
+  constructor(public entity: Entity) {
     super();
 
-    this.object3d = object3d;
-    this.updateType = NodeUpdateType.Object;
-    this._uniformNode = new UniformNode(null);
+    this.stage = NodeUpdateStage.Object;
+    this.uniform = new UniformNode(null);
   }
 
   getNodeType(): TypeName {
@@ -34,8 +33,8 @@ export class EntityNode extends Node {
   }
 
   update(frame: NodeFrame): void {
-    const object = this.object3d;
-    const uniform = this._uniformNode;
+    const object = this.entity;
+    const uniform = this.uniform;
 
     switch (this.scope) {
       case NodeVariant.ViewMatrix:
@@ -68,9 +67,10 @@ export class EntityNode extends Node {
     }
   }
 
-  generate(builder: NodeBuilder): string | null {
-    this._uniformNode.nodeType = this.getNodeType();
-    return this._uniformNode.build(builder);
+  generate(builder: NodeBuilder): string {
+    this.uniform.nodeType = this.getNodeType();
+
+    return this.uniform.build(builder);
   }
 }
 

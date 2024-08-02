@@ -1,5 +1,5 @@
 import { Node } from '../core/Node.js';
-import { NodeUpdateType } from '../core/constants.js';
+import { NodeUpdateStage } from '../core/constants.js';
 import { i32, ivec2, proxyNode, tslFn } from '../shadernode/ShaderNodes.js';
 import { uniform } from '../core/UniformNode.js';
 import { reference } from './ReferenceNode.js';
@@ -28,9 +28,6 @@ function getEntry(geometry) {
   const hasMorphPosition = geometry.morphAttributes.position !== undefined;
   const hasMorphNormals = geometry.morphAttributes.normal !== undefined;
   const hasMorphColors = geometry.morphAttributes.color !== undefined;
-
-
-
 
   const morphAttribute =
     geometry.morphAttributes.position || geometry.morphAttributes.normal || geometry.morphAttributes.color;
@@ -64,8 +61,6 @@ function getEntry(geometry) {
     const bufferTexture = new DataArrayTexture(buffer, width, height, morphTargetsCount);
     bufferTexture.type = TextureDataType.Float;
     bufferTexture.needsUpdate = true;
-
-
 
     const vertexDataStride = vertexDataCount * 4;
 
@@ -130,7 +125,7 @@ class MorphNode extends Node {
     this.mesh = mesh;
     this.morphBaseInfluence = uniform(1);
 
-    this.updateType = NodeUpdateType.Object;
+    this.stage = NodeUpdateStage.Object;
   }
 
   setup(builder) {
@@ -142,8 +137,6 @@ class MorphNode extends Node {
     const morphAttribute =
       geometry.morphAttributes.position || geometry.morphAttributes.normal || geometry.morphAttributes.color;
     const morphTargetsCount = morphAttribute !== undefined ? morphAttribute.length : 0;
-
-
 
     const { texture: bufferMap, stride, size } = getEntry(geometry);
 

@@ -248,7 +248,7 @@ export class Hearth {
     this._handleObjectFn = this._createObject;
 
     nodeFrame.renderId++;
-    nodeFrame.update();
+    nodeFrame.step();
     renderContext.useDepth = this.parameters.useDepth;
     renderContext.useStencil = this.parameters.useStencil;
 

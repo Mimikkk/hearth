@@ -1,4 +1,4 @@
-import { NodeUpdateType } from './constants.js';
+import { NodeUpdateStage } from './constants.js';
 import { getCacheKey, getNodeChildren } from './NodeUtils.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 
@@ -13,8 +13,8 @@ export class Node {
   declare isNode: true;
   name?: string;
   nodeType: TypeName | null;
-  updateType: NodeUpdateType;
-  updateBeforeType: NodeUpdateType;
+  stage: NodeUpdateStage;
+  updateBeforeType: NodeUpdateStage;
   uuid: string;
   version: number;
   _cacheKey: string | null;
@@ -24,8 +24,8 @@ export class Node {
   constructor(nodeType: TypeName | null = null) {
     this.nodeType = nodeType;
 
-    this.updateType = NodeUpdateType.None;
-    this.updateBeforeType = NodeUpdateType.None;
+    this.stage = NodeUpdateStage.None;
+    this.updateBeforeType = NodeUpdateStage.None;
 
     this.uuid = v4();
 
@@ -92,11 +92,11 @@ export class Node {
     return this.uuid;
   }
 
-  getUpdateType(): NodeUpdateType {
-    return this.updateType;
+  getUpdateType(): NodeUpdateStage {
+    return this.stage;
   }
 
-  getUpdateBeforeType(): NodeUpdateType {
+  getUpdateBeforeType(): NodeUpdateStage {
     return this.updateBeforeType;
   }
 
@@ -123,7 +123,6 @@ export class Node {
     for (const childNode of this.getChildren()) {
       nodeProperties['_node' + childNode.id] = childNode;
     }
-
 
     return null;
   }

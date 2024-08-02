@@ -14,7 +14,7 @@ export class HearthAnimation {
 
       if (this.hearth.stats.useAutoTick) this.hearth.stats.tick();
 
-      this.hearth.nodes.nodeFrame.update();
+      this.hearth.nodes.nodeFrame.step();
 
       this.hearth.stats.frame = this.hearth.nodes.nodeFrame.frameId;
 

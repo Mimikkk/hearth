@@ -12,7 +12,7 @@ export const getConstNodeType = (value?: any | null) =>
     ? value.nodeType || value.convertTo || (typeof value === 'string' ? value : null)
     : null;
 
-export class UniformNode<T> extends InputNode<T> {
+export class UniformNode<T = any> extends InputNode<T> {
   static type = 'UniformNode';
   groupNode: UniformGroupNode;
 

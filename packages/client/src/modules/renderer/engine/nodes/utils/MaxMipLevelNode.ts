@@ -1,5 +1,5 @@
 import UniformNode from '../core/UniformNode.js';
-import { NodeUpdateType } from '../core/constants.js';
+import { NodeUpdateStage } from '../core/constants.js';
 import { proxyNode } from '../shadernode/ShaderNodes.js';
 
 class MaxMipLevelNode extends UniformNode {
@@ -10,7 +10,7 @@ class MaxMipLevelNode extends UniformNode {
 
     this.textureNode = textureNode;
 
-    this.updateType = NodeUpdateType.Frame;
+    this.stage = NodeUpdateStage.Frame;
   }
 
   get texture() {

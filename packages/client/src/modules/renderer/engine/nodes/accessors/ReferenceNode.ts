@@ -1,5 +1,5 @@
 import { Node } from '../core/Node.js';
-import { NodeUpdateType } from '../core/constants.js';
+import { NodeUpdateStage } from '../core/constants.js';
 import { uniform } from '../core/UniformNode.js';
 import { texture } from './TextureNode.js';
 import { buffer } from './BufferNode.js';
@@ -44,7 +44,7 @@ class ReferenceNode extends Node {
     this.reference = null;
     this.node = null;
 
-    this.updateType = NodeUpdateType.Object;
+    this.stage = NodeUpdateStage.Object;
   }
 
   element(indexNode) {

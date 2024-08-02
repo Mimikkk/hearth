@@ -1,5 +1,5 @@
 import LightingNode from './LightingNode.js';
-import { NodeUpdateType } from '../core/constants.js';
+import { NodeUpdateStage } from '../core/constants.js';
 import { uniform } from '../core/UniformNode.js';
 import { vec3, vec4 } from '../shadernode/ShaderNodes.js';
 import { reference } from '../accessors/ReferenceNode.js';
@@ -27,7 +27,7 @@ export class AnalyticLightNode extends LightingNode {
 
   constructor(public light: Light) {
     super();
-    this.updateType = NodeUpdateType.Frame;
+    this.stage = NodeUpdateStage.Frame;
     this.light = light;
 
     this.rtt = null!;
@@ -101,7 +101,7 @@ export class AnalyticLightNode extends LightingNode {
       this.colorNode = this.colorNode.mul(frustumTest.mix(1, shadowNode.mix(shadowColor.a.mix(1, shadowColor), 1)));
       this.shadowNode = shadowNode;
 
-      this.updateBeforeType = NodeUpdateType.Render;
+      this.updateBeforeType = NodeUpdateStage.Render;
     }
   }
 

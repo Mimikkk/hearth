@@ -24,7 +24,7 @@ import {
   LightsNode,
   NodeMaterial,
   NodeStack,
-  NodeUpdateType,
+  NodeUpdateStage,
   ShaderNode,
   stack,
   UniformNode,
@@ -230,14 +230,14 @@ export class NodeBuilder {
 
   buildUpdateNodes(): void {
     for (const node of this.nodes) {
-      const updateType = node.getUpdateType();
+      const stage = node.getUpdateType();
       const updateBeforeType = node.getUpdateBeforeType();
 
-      if (updateType !== NodeUpdateType.None) {
+      if (stage !== NodeUpdateStage.None) {
         this.updateNodes.push(node.getSelf());
       }
 
-      if (updateBeforeType !== NodeUpdateType.None) {
+      if (updateBeforeType !== NodeUpdateStage.None) {
         this.updateBeforeNodes.push(node);
       }
     }

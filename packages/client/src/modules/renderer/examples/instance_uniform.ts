@@ -1,7 +1,7 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
 import {
   MeshStandardNodeMaterial,
-  NodeUpdateType,
+  NodeUpdateStage,
   Node,
   asNode,
   uniform,
@@ -21,7 +21,7 @@ class InstanceUniformNode extends Node {
   constructor() {
     super('vec3');
 
-    this.updateType = NodeUpdateType.Object;
+    this.stage = NodeUpdateStage.Object;
 
     this.uniformNode = uniform(new Engine.Color());
   }

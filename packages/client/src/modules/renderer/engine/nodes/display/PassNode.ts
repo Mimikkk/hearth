@@ -1,6 +1,6 @@
 import TempNode from '../core/TempNode.js';
 import TextureNode from '../accessors/TextureNode.js';
-import { NodeUpdateType } from '../core/constants.js';
+import { NodeUpdateStage } from '../core/constants.js';
 import { asNode } from '../shadernode/ShaderNodes.js';
 import { uniform } from '../core/UniformNode.js';
 import { perspectiveDepthToViewZ, viewZToOrthographicDepth } from './ViewportDepthNode.js';
@@ -53,7 +53,7 @@ class PassNode extends TempNode {
 
     this.renderTarget = renderTarget;
 
-    this.updateBeforeType = NodeUpdateType.Frame;
+    this.updateBeforeType = NodeUpdateStage.Frame;
 
     this._textureNode = asNode(new PassTextureNode(this, renderTarget.texture));
     this._depthTextureNode = asNode(new PassTextureNode(this, depthTexture));

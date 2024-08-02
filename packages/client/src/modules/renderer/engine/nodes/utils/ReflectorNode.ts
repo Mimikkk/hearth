@@ -1,6 +1,6 @@
 import TextureNode from '../accessors/TextureNode.js';
 import { asNode, vec2 } from '../shadernode/ShaderNodes.js';
-import { NodeUpdateType } from '../core/constants.js';
+import { NodeUpdateStage } from '../core/constants.js';
 import { viewportTopLeft } from '../display/ViewportNode.js';
 import {
   Entity,
@@ -44,7 +44,7 @@ class ReflectorNode extends TextureNode {
     this.generateMipmaps = generateMipmaps;
     this.bounces = bounces;
 
-    this.updateBeforeType = bounces ? NodeUpdateType.Render : NodeUpdateType.Frame;
+    this.updateBeforeType = bounces ? NodeUpdateStage.Render : NodeUpdateStage.Frame;
 
     this.virtualCameras = new WeakMap();
     this.renderTargets = new WeakMap();

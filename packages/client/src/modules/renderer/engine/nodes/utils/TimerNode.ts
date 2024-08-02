@@ -1,5 +1,5 @@
 import UniformNode from '../core/UniformNode.js';
-import { NodeUpdateType } from '../core/constants.js';
+import { NodeUpdateStage } from '../core/constants.js';
 import { fixedNode, asNode } from '../shadernode/ShaderNodes.js';
 import { NodeFrame } from '@modules/renderer/engine/nodes/core/NodeFrame.js';
 
@@ -12,7 +12,7 @@ export class TimerNode extends UniformNode<number> {
     value: number = 0,
   ) {
     super(value);
-    this.updateType = NodeUpdateType.Frame;
+    this.stage = NodeUpdateStage.Frame;
   }
 
   update(frame: NodeFrame): void {

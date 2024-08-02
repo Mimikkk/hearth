@@ -1,4 +1,4 @@
-import { NodeUpdateType } from './constants.js';
+import { NodeUpdateStage } from './constants.js';
 import { Scene } from '@modules/renderer/engine/entities/scenes/Scene.js';
 import { Entity } from '@modules/renderer/engine/core/Entity.js';
 import { Camera } from '@modules/renderer/engine/entities/cameras/Camera.js';
@@ -56,7 +56,7 @@ export class NodeFrame {
     const type = node.getUpdateBeforeType();
     const reference = node.updateReference(this);
 
-    if (type === NodeUpdateType.Frame) {
+    if (type === NodeUpdateStage.Frame) {
       const { frameMap } = this.map(reference, this.updateBeforeMap);
 
       if (frameMap.get(node) !== this.frameId) {
@@ -64,7 +64,7 @@ export class NodeFrame {
           frameMap.set(node, this.frameId);
         }
       }
-    } else if (type === NodeUpdateType.Render) {
+    } else if (type === NodeUpdateStage.Render) {
       const { renderMap } = this.map(reference, this.updateBeforeMap);
 
       if (renderMap.get(node) !== this.renderId) {
@@ -72,16 +72,16 @@ export class NodeFrame {
           renderMap.set(node, this.renderId);
         }
       }
-    } else if (type === NodeUpdateType.Object) {
+    } else if (type === NodeUpdateStage.Object) {
       node.updateBefore(this);
     }
   }
 
   updateNode(node: Node): void {
-    const updateType = node.getUpdateType();
+    const stage = node.getUpdateType();
     const reference = node.updateReference(this);
 
-    if (updateType === NodeUpdateType.Frame) {
+    if (stage === NodeUpdateStage.Frame) {
       const { frameMap } = this.map(reference, this.updateMap);
 
       if (frameMap.get(node) !== this.frameId) {
@@ -89,7 +89,7 @@ export class NodeFrame {
           frameMap.set(node, this.frameId);
         }
       }
-    } else if (updateType === NodeUpdateType.Render) {
+    } else if (stage === NodeUpdateStage.Render) {
       const { renderMap } = this.map(reference, this.updateMap);
 
       if (renderMap.get(node) !== this.renderId) {
@@ -97,12 +97,12 @@ export class NodeFrame {
           renderMap.set(node, this.renderId);
         }
       }
-    } else if (updateType === NodeUpdateType.Object) {
+    } else if (stage === NodeUpdateStage.Object) {
       node.update(this);
     }
   }
 
-  update(): void {
+  step(): void {
     ++this.frameId;
 
     this.clock.tick();

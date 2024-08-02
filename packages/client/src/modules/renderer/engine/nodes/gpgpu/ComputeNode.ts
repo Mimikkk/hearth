@@ -1,5 +1,5 @@
 import { Node } from '../core/Node.js';
-import { NodeUpdateType } from '../core/constants.js';
+import { NodeUpdateStage } from '../core/constants.js';
 import { addNodeCommand, asNode } from '../shadernode/ShaderNodes.js';
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
@@ -26,7 +26,7 @@ export class ComputeNode extends Node {
     this.dispatchCount = 0;
 
     this.version = 1;
-    this.updateBeforeType = NodeUpdateType.Object;
+    this.updateBeforeType = NodeUpdateStage.Object;
 
     this.updateDispatchCount();
   }

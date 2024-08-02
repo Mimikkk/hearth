@@ -2,7 +2,7 @@ import { fixedNode } from '../shadernode/ShaderNodes.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import UniformNode from '@modules/renderer/engine/nodes/core/UniformNode.js';
-import { NodeUpdateType } from '@modules/renderer/engine/nodes/core/constants.js';
+import { NodeUpdateStage } from '@modules/renderer/engine/nodes/core/constants.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { Node } from '@modules/renderer/engine/nodes/core/Node.js';
 import { NodeFrame } from '@modules/renderer/engine/nodes/core/NodeFrame.js';
@@ -18,7 +18,7 @@ export class ModelNode extends Node {
     super();
 
     this.entity = null!;
-    this.updateType = NodeUpdateType.Object;
+    this.stage = NodeUpdateStage.Object;
     this.uniform = new UniformNode(null);
   }
 

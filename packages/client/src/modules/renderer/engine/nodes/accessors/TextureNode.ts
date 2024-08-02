@@ -5,7 +5,7 @@ import { colorSpaceToLinear } from '../display/ColorSpaceNode.js';
 import { expression } from '../code/ExpressionNode.js';
 import { maxMipLevel } from '../utils/MaxMipLevelNode.js';
 import { addNodeCommand, asNode, proxyNode, vec3 } from '../shadernode/ShaderNodes.js';
-import { NodeUpdateType } from '../core/constants.js';
+import { NodeUpdateStage } from '../core/constants.js';
 
 export class TextureNode extends UniformNode {
   static type = 'TextureNode';
@@ -22,7 +22,7 @@ export class TextureNode extends UniformNode {
 
     this.sampler = true;
     this.updateMatrix = false;
-    this.updateType = NodeUpdateType.None;
+    this.stage = NodeUpdateStage.None;
 
     this.setUpdateMatrix(uvNode === null);
   }
@@ -57,7 +57,7 @@ export class TextureNode extends UniformNode {
 
   setUpdateMatrix(value) {
     this.updateMatrix = value;
-    this.updateType = value ? NodeUpdateType.Frame : NodeUpdateType.None;
+    this.stage = value ? NodeUpdateStage.Frame : NodeUpdateStage.None;
 
     return this;
   }

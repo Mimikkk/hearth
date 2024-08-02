@@ -31,7 +31,7 @@ export class HemisphereLightNode extends AnalyticLightNode {
     super.update(frame);
     const { light } = this;
 
-    this.lightPositionNode.object3d = light;
+    this.lightPositionNode.entity = light;
     this.groundColorNode.value.from(light.groundColor).scale(light.intensity);
   }
 

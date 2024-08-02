@@ -1,5 +1,5 @@
 import { Node } from '../core/Node.js';
-import { NodeUpdateType } from '../core/constants.js';
+import { NodeUpdateStage } from '../core/constants.js';
 import { asNode } from '../shadernode/ShaderNodes.js';
 import { attribute } from '../core/AttributeNode.js';
 import { reference, referenceBuffer } from './ReferenceNode.js';
@@ -29,7 +29,7 @@ export class SkinningNode extends Node {
   ) {
     super(TypeName.void);
 
-    this.updateType = NodeUpdateType.Object;
+    this.stage = NodeUpdateStage.Object;
     this.skinIndexNode = attribute('skinIndex', 'uvec4');
     this.skinWeightNode = attribute('skinWeight', 'vec4');
 

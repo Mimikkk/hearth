@@ -1,6 +1,6 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
 import { Camera, Scene } from '@modules/renderer/engine/engine.js';
-import { asNode, MeshPhongNodeMaterial, Node, NodeUpdateType, uniform } from '@modules/renderer/engine/nodes/Nodes.js';
+import { asNode, MeshPhongNodeMaterial, Node, NodeUpdateStage, uniform } from '@modules/renderer/engine/nodes/Nodes.js';
 
 import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
 
@@ -14,7 +14,7 @@ class OcclusionNode extends Node {
   constructor(testObject: Engine.Entity, normalColor: Engine.Color, occludedColor: Engine.Color) {
     super('vec3');
 
-    this.updateType = NodeUpdateType.Object;
+    this.stage = NodeUpdateStage.Object;
 
     this.uniformNode = uniform(new Engine.Color());
 

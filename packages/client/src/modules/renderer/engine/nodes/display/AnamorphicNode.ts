@@ -2,7 +2,7 @@ import TempNode from '../core/TempNode.js';
 import { addNodeCommand, f32, asNode, tslFn, vec2, vec3, vec4 } from '../shadernode/ShaderNodes.js';
 import { loop } from '../utils/LoopNode.js';
 import { uniform } from '../core/UniformNode.js';
-import { NodeUpdateType } from '../core/constants.js';
+import { NodeUpdateStage } from '../core/constants.js';
 import { threshold } from './ColorAdjustmentNode.js';
 import { uv } from '../accessors/UVNode.js';
 import { texturePass } from './PassNode.js';
@@ -29,7 +29,7 @@ class AnamorphicNode extends TempNode {
 
     this._textureNode = texturePass(this, this.target.texture);
 
-    this.updateBeforeType = NodeUpdateType.Render;
+    this.updateBeforeType = NodeUpdateStage.Render;
   }
 
   getTextureNode() {

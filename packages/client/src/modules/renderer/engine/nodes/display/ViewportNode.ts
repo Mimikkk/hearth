@@ -1,5 +1,5 @@
 import { Node } from '../core/Node.js';
-import { NodeUpdateType } from '../core/constants.js';
+import { NodeUpdateStage } from '../core/constants.js';
 import { uniform } from '../core/UniformNode.js';
 import { fixedNode, vec2 } from '../shadernode/ShaderNodes.js';
 
@@ -23,15 +23,15 @@ class ViewportNode extends Node {
   }
 
   getUpdateType() {
-    let updateType = NodeUpdateType.None;
+    let stage = NodeUpdateStage.None;
 
     if (this.scope === ViewportNode.RESOLUTION || this.scope === ViewportNode.VIEWPORT) {
-      updateType = NodeUpdateType.Frame;
+      stage = NodeUpdateStage.Frame;
     }
 
-    this.updateType = updateType;
+    this.stage = stage;
 
-    return updateType;
+    return stage;
   }
 
   update({ hearth }) {

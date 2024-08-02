@@ -1,6 +1,6 @@
 import TempNode from '../core/TempNode.js';
 import { addNodeCommand, f32, asNode, tslFn, vec2, vec4 } from '../shadernode/ShaderNodes.js';
-import { NodeUpdateType } from '../core/constants.js';
+import { NodeUpdateStage } from '../core/constants.js';
 import { mul } from '../math/OperatorNode.js';
 import { uv } from '../accessors/UVNode.js';
 import { texturePass } from './PassNode.js';
@@ -30,7 +30,7 @@ class GaussianBlurNode extends TempNode {
 
     this._textureNode = texturePass(this, this._verticalRT.texture);
 
-    this.updateBeforeType = NodeUpdateType.Render;
+    this.updateBeforeType = NodeUpdateStage.Render;
 
     this.resolution = Vec2.new(1, 1);
   }

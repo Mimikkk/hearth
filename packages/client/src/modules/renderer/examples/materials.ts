@@ -244,7 +244,7 @@ async function init() {
 							{ name: 'Vec3', inputType: 'Vec3' },
 							{ name: 'message', inputType: 'string' },
 							{ name: 'binary', inputType: 'ArrayBuffer' },
-							{ name: 'object3d', inputType: 'Entity' },
+							{ name: 'entity', inputType: 'Entity' },
 							{ name: 'execFrom', inputType: 'string' }
 						]
 					};
@@ -270,7 +270,7 @@ async function init() {
 
 							//console.info( 'message', parameters.get( 'message' ).value );
 							//console.info( 'binary', parameters.get( 'binary' ) );
-							//console.info( 'object3d', parameters.get( 'object3d' ) ); 
+							//console.info( 'entity', parameters.get( 'entity' ) ); 
 
 							//console.info( global.get( 'hearth' ) );
 
@@ -291,7 +291,7 @@ async function init() {
   scriptableNode.setParameter('Vec3', vec3(new Engine.Vec3(1, 1, 1)));
   scriptableNode.setParameter('message', string('Hello World!'));
   scriptableNode.setParameter('binary', new ArrayBuffer(4));
-  scriptableNode.setParameter('object3d', new Engine.Group());
+  scriptableNode.setParameter('entity', new Engine.Group());
 
   scriptableNode.call('helloWorld');
 

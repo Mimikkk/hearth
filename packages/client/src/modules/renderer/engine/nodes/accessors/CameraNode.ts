@@ -1,4 +1,4 @@
-import { NodeUpdateType } from '../core/constants.js';
+import { NodeUpdateStage } from '../core/constants.js';
 import { fixedNode } from '../shadernode/ShaderNodes.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { NodeFrame } from '@modules/renderer/engine/nodes/core/NodeFrame.js';
@@ -17,7 +17,7 @@ export class CameraNode extends Node {
     super();
 
     this.uniform = new UniformNode(null);
-    this.updateType = NodeUpdateType.Render;
+    this.stage = NodeUpdateStage.Render;
   }
 
   getNodeType(): TypeName {

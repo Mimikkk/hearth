@@ -1,5 +1,5 @@
 import TextureNode from '../accessors/TextureNode.js';
-import { NodeUpdateType } from '../core/constants.js';
+import { NodeUpdateStage } from '../core/constants.js';
 import { addNodeCommand, proxyNode } from '../shadernode/ShaderNodes.js';
 import { viewportTopLeft } from './ViewportNode.js';
 import { FramebufferTexture, MinificationTextureFilter, Vec2 } from '@modules/renderer/engine/engine.js';
@@ -11,7 +11,7 @@ class ViewportTextureNode extends TextureNode {
   static type = 'ViewportTextureNode';
   generateMipmaps: boolean;
   isOutputTextureNode: boolean;
-  updateBeforeType: NodeUpdateType;
+  updateBeforeType: NodeUpdateStage;
 
   constructor(uvNode = viewportTopLeft, levelNode = null, framebufferTexture: FramebufferTexture | null = null) {
     if (framebufferTexture === null) {
@@ -23,7 +23,7 @@ class ViewportTextureNode extends TextureNode {
 
     this.generateMipmaps = false;
     this.isOutputTextureNode = true;
-    this.updateBeforeType = NodeUpdateType.Frame;
+    this.updateBeforeType = NodeUpdateStage.Frame;
   }
 
   updateBefore(frame: NodeFrame): void {

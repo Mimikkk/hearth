@@ -2,7 +2,7 @@ import TempNode from '../core/TempNode.js';
 import { texture } from '../accessors/TextureNode.js';
 import { textureCubeUV } from './PMREMUtils.js';
 import { uniform } from '../core/UniformNode.js';
-import { NodeUpdateType } from '../core/constants.js';
+import { NodeUpdateStage } from '../core/constants.js';
 import { proxyNode } from '../shadernode/ShaderNodes.js';
 import { PMREMGenerator } from '@modules/renderer/engine/hearth/PMREMGenerator.js';
 
@@ -54,7 +54,7 @@ class PMREMNode extends TempNode {
     this._height = uniform(0);
     this._maxMip = uniform(0);
 
-    this.updateBeforeType = NodeUpdateType.Render;
+    this.updateBeforeType = NodeUpdateStage.Render;
   }
 
   set value(value) {

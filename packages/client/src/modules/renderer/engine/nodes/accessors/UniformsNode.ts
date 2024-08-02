@@ -1,5 +1,5 @@
 import { asNode } from '../shadernode/ShaderNodes.js';
-import { NodeUpdateType } from '../core/constants.js';
+import { NodeUpdateStage } from '../core/constants.js';
 import { getValueType } from '../core/NodeUtils.js';
 import ArrayElementNode from '../utils/ArrayElementNode.js';
 import BufferNode from './BufferNode.js';
@@ -36,7 +36,7 @@ class UniformsNode extends BufferNode {
     this._elementType = null;
     this._elementLength = 0;
 
-    this.updateType = NodeUpdateType.Render;
+    this.stage = NodeUpdateStage.Render;
 
     this.isArrayBufferNode = true;
   }

@@ -1,6 +1,6 @@
 import TempNode from '../core/TempNode.js';
 import { addNodeCommand, f32, asNode, tslFn, vec4 } from '../shadernode/ShaderNodes.js';
-import { NodeUpdateType } from '../core/constants.js';
+import { NodeUpdateStage } from '../core/constants.js';
 import { uv } from '../accessors/UVNode.js';
 import { texture } from '../accessors/TextureNode.js';
 import { texturePass } from './PassNode.js';
@@ -39,7 +39,7 @@ class AfterImageNode extends TempNode {
 
     this._textureNode = texturePass(this, this._compRT.texture);
 
-    this.updateBeforeType = NodeUpdateType.Render;
+    this.updateBeforeType = NodeUpdateStage.Render;
   }
 
   getTextureNode() {
