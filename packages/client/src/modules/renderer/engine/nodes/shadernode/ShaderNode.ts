@@ -3,7 +3,7 @@ import { asNode } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.asN
 import { handlers } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.handlers.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
-import { TslLayout } from '@modules/renderer/engine/nodes/shadernode/tslFn.js';
+import { TslLayout } from '@modules/renderer/engine/nodes/shadernode/tsl.js';
 
 const map = new WeakMap();
 

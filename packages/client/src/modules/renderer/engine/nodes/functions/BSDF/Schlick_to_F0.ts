@@ -1,7 +1,7 @@
-import { tslFn, vec3 } from '../../shadernode/ShaderNodes.js';
+import { tsl, vec3 } from '../../shadernode/ShaderNodes.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
-export const Schlick_to_F0 = tslFn(
+export const Schlick_to_F0 = tsl(
   ({ f, f90, dotVH }) => {
     const x = dotVH.oneMinus().saturate();
     const x2 = x.mul(x);

@@ -1,10 +1,10 @@
 import { transformedNormalView } from '../../accessors/NormalNode.js';
 import { positionViewDirection } from '../../accessors/PositionNode.js';
 import { sheen, sheenRoughness } from '../../core/PropertyNode.js';
-import { f32, tslFn } from '../../shadernode/ShaderNodes.js';
+import { f32, tsl } from '../../shadernode/ShaderNodes.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
-const D_Charlie = tslFn(
+const D_Charlie = tsl(
   ({ roughness, dotNH }) => {
     const alpha = roughness.pow2();
 
@@ -27,7 +27,7 @@ const D_Charlie = tslFn(
   },
 );
 
-const V_Neubelt = tslFn(
+const V_Neubelt = tsl(
   ({ dotNV, dotNL }) => {
     return f32(1.0).div(f32(4.0).mul(dotNL.add(dotNV).sub(dotNL.mul(dotNV))));
   },
@@ -41,7 +41,7 @@ const V_Neubelt = tslFn(
   },
 );
 
-export const BRDF_Sheen = tslFn(({ lightDirection }) => {
+export const BRDF_Sheen = tsl(({ lightDirection }) => {
   const halfDir = lightDirection.add(positionViewDirection).normalize();
 
   const dotNL = transformedNormalView.dot(lightDirection).clamp();

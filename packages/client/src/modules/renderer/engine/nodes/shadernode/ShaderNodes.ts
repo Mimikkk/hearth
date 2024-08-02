@@ -6,4 +6,4 @@ export const addNodeCommand = (name: string, nodeElement: Node) => NodeCommands.
 export * from './ShaderNode.primitves.js';
 export * from './ShaderNode.stack.js';
 export * from './ShaderNode.js';
-export * from './tslFn.js';
+export * from './tsl.js';

@@ -4,9 +4,9 @@ import { D_GGX } from './D_GGX.js';
 import { transformedNormalView } from '../../accessors/NormalNode.js';
 import { positionViewDirection } from '../../accessors/PositionNode.js';
 import { iridescence } from '../../core/PropertyNode.js';
-import { tslFn } from '../../shadernode/ShaderNodes.js';
+import { tsl } from '../../shadernode/ShaderNodes.js';
 
-export const BRDF_GGX = tslFn(inputs => {
+export const BRDF_GGX = tsl(inputs => {
   const { lightDirection, f0, f90, roughness, iridescenceFresnel } = inputs;
 
   const normalView = inputs.normalView || transformedNormalView;

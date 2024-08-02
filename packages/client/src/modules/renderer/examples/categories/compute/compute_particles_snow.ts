@@ -12,7 +12,7 @@ import {
   storage,
   texture,
   timerLocal,
-  tslFn,
+  tsl,
   u32,
   vec2,
   vec3,
@@ -106,7 +106,7 @@ async function init() {
 
   const randUint = () => u32(Math.random() * 0xffffff);
 
-  const computeInit = tslFn(() => {
+  const computeInit = tsl(() => {
     const position = positionBuffer.element(instanceIndex);
     const scale = scaleBuffer.element(instanceIndex);
     const particleData = dataBuffer.element(instanceIndex);
@@ -133,7 +133,7 @@ async function init() {
   const surfaceOffset = 0.2;
   const speed = 0.4;
 
-  const computeUpdate = tslFn(() => {
+  const computeUpdate = tsl(() => {
     const getCoord = pos => pos.add(50).div(100);
 
     const position = positionBuffer.element(instanceIndex);

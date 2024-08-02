@@ -3,7 +3,7 @@ import * as Engine from '@modules/renderer/engine/engine.js';
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 
 import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
-import { MeshPhongNodeMaterial, tslFn, vec4, vertexIndex } from '@modules/renderer/engine/nodes/Nodes.js';
+import { MeshPhongNodeMaterial, tsl, vec4, vertexIndex } from '@modules/renderer/engine/nodes/Nodes.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, hearth, clock;
@@ -67,13 +67,13 @@ async function init() {
 
   const discardNode = vertexIndex.hash().greaterThan(0.5);
 
-  materialCustomShadow.colorNode = tslFn(() => {
+  materialCustomShadow.colorNode = tsl(() => {
     discardNode.discard();
 
     return materialColor;
   })();
 
-  materialCustomShadow.shadowNode = tslFn(() => {
+  materialCustomShadow.shadowNode = tsl(() => {
     discardNode.discard();
 
     return materialColor;

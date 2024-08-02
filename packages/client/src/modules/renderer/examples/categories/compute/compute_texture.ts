@@ -5,7 +5,7 @@ import {
   MeshBasicNodeMaterial,
   texture,
   textureStore,
-  tslFn,
+  tsl,
   uvec2,
   vec4,
 } from '@modules/renderer/engine/nodes/Nodes.js';
@@ -31,7 +31,7 @@ async function init() {
 
   const storageTexture = new StorageTexture(width, height);
 
-  const computeTexture = tslFn(({ storageTexture }) => {
+  const computeTexture = tsl(({ storageTexture }) => {
     const posX = instanceIndex.remainder(width);
     const posY = instanceIndex.div(width);
     const indexUV = uvec2(posX, posY);

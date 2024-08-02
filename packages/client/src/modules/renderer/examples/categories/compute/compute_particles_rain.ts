@@ -13,7 +13,7 @@ import {
   texture,
   timerDelta,
   timerLocal,
-  tslFn,
+  tsl,
   u32,
   uv,
   vec2,
@@ -104,7 +104,7 @@ async function init() {
 
   const randUint = () => u32(Math.random() * 0xffffff);
 
-  const computeInit = tslFn(() => {
+  const computeInit = tsl(() => {
     const position = positionBuffer.element(instanceIndex);
     const velocity = velocityBuffer.element(instanceIndex);
     const rippleTime = rippleTimeBuffer.element(instanceIndex);
@@ -122,7 +122,7 @@ async function init() {
     rippleTime.x = 1000;
   })().compute(maxParticleCount);
 
-  const computeUpdate = tslFn(() => {
+  const computeUpdate = tsl(() => {
     const getCoord = pos => pos.add(50).div(100);
 
     const position = positionBuffer.element(instanceIndex);
@@ -165,7 +165,7 @@ async function init() {
 
   computeParticles = computeUpdate().compute(maxParticleCount);
 
-  const billboarding = tslFn(() => {
+  const billboarding = tsl(() => {
     const particlePosition = positionBuffer.toAttribute();
 
     const worldMatrix = modelWorldMatrix.toVar();
@@ -204,7 +204,7 @@ async function init() {
 
   const rippleTime = rippleTimeBuffer.element(instanceIndex).x;
 
-  const rippleEffect = tslFn(() => {
+  const rippleEffect = tsl(() => {
     const center = uv().add(vec2(-0.5)).length().mul(7);
     const distance = rippleTime.sub(center);
 

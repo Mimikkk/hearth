@@ -3,9 +3,9 @@ import { uv } from '../accessors/UVNode.js';
 import { normalView } from '../accessors/NormalNode.js';
 import { positionView } from '../accessors/PositionNode.js';
 import { faceDirection } from './FrontFacingNode.js';
-import { addNodeCommand, f32, proxyNode, tslFn, vec2 } from '../shadernode/ShaderNodes.js';
+import { addNodeCommand, f32, proxyNode, tsl, vec2 } from '../shadernode/ShaderNodes.js';
 
-const dHdxy_fwd = tslFn(({ textureNode, bumpScale }) => {
+const dHdxy_fwd = tsl(({ textureNode, bumpScale }) => {
   let texNode = textureNode;
 
   if (texNode.isTextureNode !== true) {
@@ -29,7 +29,7 @@ const dHdxy_fwd = tslFn(({ textureNode, bumpScale }) => {
   ).mul(bumpScale);
 });
 
-const perturbNormalArb = tslFn(inputs => {
+const perturbNormalArb = tsl(inputs => {
   const { surf_pos, surf_norm, dHdxy } = inputs;
 
   const vSigmaX = surf_pos.dpdx().normalize();

@@ -16,7 +16,7 @@ import {
   string,
   texture,
   triplanarTexture,
-  tslFn,
+  tsl,
   uv,
   vec2,
   vec3,
@@ -109,7 +109,7 @@ async function init() {
 
   //	ADVANCED
 
-  const desaturateShaderNode = tslFn(input => {
+  const desaturateShaderNode = tsl(input => {
     return vec3(0.299, 0.587, 0.114).dot(input.color.xyz);
   });
 
@@ -117,7 +117,7 @@ async function init() {
   material.colorNode = desaturateShaderNode({ color: texture(uvTexture) });
   materials.push(material);
 
-  const desaturateNoInputsShaderNode = tslFn(() => {
+  const desaturateNoInputsShaderNode = tsl(() => {
     return vec3(0.299, 0.587, 0.114).dot(texture(uvTexture).xyz);
   });
 

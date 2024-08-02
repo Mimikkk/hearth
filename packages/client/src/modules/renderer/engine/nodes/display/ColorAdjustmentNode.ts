@@ -1,7 +1,7 @@
 import TempNode from '../core/TempNode.js';
 import { dot, mix } from '../math/MathNode.js';
 import { add } from '../math/OperatorNode.js';
-import { addNodeCommand, f32, proxyNode, tslFn, vec3 } from '../shadernode/ShaderNodes.js';
+import { addNodeCommand, f32, proxyNode, tsl, vec3 } from '../shadernode/ShaderNodes.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 export class ColorAdjustmentNode extends TempNode {
@@ -40,7 +40,7 @@ enum NodeVariant {
 
 export default ColorAdjustmentNode;
 
-const calculateSaturation = tslFn(({ color, adjustment }) => {
+const calculateSaturation = tsl(({ color, adjustment }) => {
   return adjustment.mix(luminance(color.rgb), color.rgb);
 });
 export const saturation = proxyNode(
@@ -48,7 +48,7 @@ export const saturation = proxyNode(
     method = NodeVariant.Saturation;
   },
 );
-const calculateVibrance = tslFn(({ color, adjustment }) => {
+const calculateVibrance = tsl(({ color, adjustment }) => {
   const average = add(color.r, color.g, color.b).div(3.0);
 
   const mx = color.r.max(color.g.max(color.b));
@@ -63,7 +63,7 @@ export const vibrance = proxyNode(
 );
 
 const k = vec3(0.57735, 0.57735, 0.57735);
-const calculateHue = tslFn(({ color, adjustment }) => {
+const calculateHue = tsl(({ color, adjustment }) => {
   const cosAngle = adjustment.cos();
 
   return vec3(

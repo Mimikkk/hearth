@@ -1,8 +1,8 @@
 import { loop } from '../utils/LoopNode.js';
-import { f32, tslFn, vec3 } from '../shadernode/ShaderNodes.js';
+import { f32, tsl, vec3 } from '../shadernode/ShaderNodes.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
-export const tri = tslFn(
+export const tri = tsl(
   ([x]) => {
     return x.fract().sub(0.5).abs();
   },
@@ -13,7 +13,7 @@ export const tri = tslFn(
   },
 );
 
-export const tri3 = tslFn(
+export const tri3 = tsl(
   ([p]) => {
     return vec3(tri(p.z.add(tri(p.y.mul(1)))), tri(p.z.add(tri(p.x.mul(1)))), tri(p.y.add(tri(p.x.mul(1)))));
   },
@@ -24,7 +24,7 @@ export const tri3 = tslFn(
   },
 );
 
-export const triNoise3D = tslFn(
+export const triNoise3D = tsl(
   ([p_immutable, spd, time]) => {
     const p = vec3(p_immutable).toVar();
     const z = f32(1.4).toVar();

@@ -3,11 +3,11 @@ import { varying } from '../core/VaryingNode.js';
 import { property } from '../core/PropertyNode.js';
 import { attribute } from '../core/AttributeNode.js';
 import { cameraProjectionMatrix } from '../accessors/CameraNode.js';
-import { materialColor, materialPointWidth } from '../accessors/MaterialNode.js'; 
+import { materialColor, materialPointWidth } from '../accessors/MaterialNode.js';
 import { modelViewMatrix } from '../accessors/ModelNode.js';
 import { positionGeometry } from '../accessors/PositionNode.js';
 import { smoothstep } from '@modules/renderer/engine/nodes/math/MathNode.js';
-import { tslFn, vec2, vec4 } from '../shadernode/ShaderNodes.js';
+import { tsl, vec2, vec4 } from '../shadernode/ShaderNodes.js';
 import { uv } from '../accessors/UVNode.js';
 import { viewport } from '../display/ViewportNode.js';
 
@@ -44,29 +44,25 @@ export class InstancedPointsNodeMaterial extends NodeMaterial {
     const useAlphaToCoverage = this.alphaToCoverage;
     const useColor = this.useColor;
 
-    this.vertexNode = tslFn(() => {
+    this.vertexNode = tsl(() => {
       //vUv = uv;
-      varying(vec2(), 'vUv').assign(uv()); 
+      varying(vec2(), 'vUv').assign(uv());
 
       const instancePosition = attribute('instancePosition');
 
-      
       const mvPos = property('vec4', 'mvPos');
       mvPos.assign(modelViewMatrix.mul(vec4(instancePosition, 1.0)));
 
       const aspect = viewport.z.div(viewport.w);
 
-      
       const clipPos = cameraProjectionMatrix.mul(mvPos);
 
-      
       const offset = property('vec2', 'offset');
       offset.assign(positionGeometry.xy);
       offset.assign(offset.mul(materialPointWidth));
       offset.assign(offset.div(viewport.z));
       offset.y.assign(offset.y.mul(aspect));
 
-      
       offset.assign(offset.mul(clipPos.w));
 
       //clipPos.xy += offset;
@@ -74,13 +70,12 @@ export class InstancedPointsNodeMaterial extends NodeMaterial {
 
       return clipPos;
 
-      //vec4 mvPosition = mvPos; 
+      //vec4 mvPosition = mvPos;
     })();
 
-    this.fragmentNode = tslFn(() => {
+    this.fragmentNode = tsl(() => {
       const vUv = varying(vec2(), 'vUv');
 
-      
       const alpha = property('f32', 'alpha');
       alpha.assign(1);
 
@@ -90,7 +85,6 @@ export class InstancedPointsNodeMaterial extends NodeMaterial {
       const len2 = a.mul(a).add(b.mul(b));
 
       if (useAlphaToCoverage) {
-        
         const dlen = property('f32', 'dlen');
         dlen.assign(len2.fwidth());
 

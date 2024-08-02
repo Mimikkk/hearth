@@ -7,14 +7,11 @@ import { positionView } from '../accessors/PositionNode.js';
 import { TBNViewMatrix } from '../accessors/AccessorsUtils.js';
 import { uv } from '../accessors/UVNode.js';
 import { faceDirection } from './FrontFacingNode.js';
-import { addNodeCommand, proxyNode, tslFn, vec3 } from '../shadernode/ShaderNodes.js';
+import { addNodeCommand, proxyNode, tsl, vec3 } from '../shadernode/ShaderNodes.js';
 
 import { NormalMapType } from '@modules/renderer/engine/engine.js';
 
-
-
-
-const perturbNormal2Arb = tslFn(inputs => {
+const perturbNormal2Arb = tsl(inputs => {
   const { eye_pos, surf_norm, mapN, uv } = inputs;
 
   const q0 = eye_pos.dpdx();
@@ -22,7 +19,7 @@ const perturbNormal2Arb = tslFn(inputs => {
   const st0 = uv.dpdx();
   const st1 = uv.dpdy().negate();
 
-  const N = surf_norm; 
+  const N = surf_norm;
 
   const q1perp = q1.cross(N);
   const q0perp = N.cross(q0);

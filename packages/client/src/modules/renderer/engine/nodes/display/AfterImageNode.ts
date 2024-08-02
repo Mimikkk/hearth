@@ -1,5 +1,5 @@
 import TempNode from '../core/TempNode.js';
-import { addNodeCommand, f32, asNode, tslFn, vec4 } from '../shadernode/ShaderNodes.js';
+import { addNodeCommand, f32, asNode, tsl, vec4 } from '../shadernode/ShaderNodes.js';
 import { NodeUpdateStage } from '../core/constants.js';
 import { uv } from '../accessors/UVNode.js';
 import { texture } from '../accessors/TextureNode.js';
@@ -96,14 +96,14 @@ class AfterImageNode extends TempNode {
 
     const sampleTexture = uv => textureNode.cache().context({ getUV: () => uv, forceUVContext: true });
 
-    const when_gt = tslFn(([x_immutable, y_immutable]) => {
+    const when_gt = tsl(([x_immutable, y_immutable]) => {
       const y = f32(y_immutable).toVar();
       const x = vec4(x_immutable).toVar();
 
       return max(sign(x.sub(y)), 0.0);
     });
 
-    const afterImg = tslFn(() => {
+    const afterImg = tsl(() => {
       const texelOld = vec4(textureNodeOld);
       const texelNew = vec4(sampleTexture(uvNode));
 

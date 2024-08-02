@@ -15,7 +15,7 @@ import {
 import { modelViewMatrix } from '../accessors/ModelNode.js';
 import { positionGeometry } from '../accessors/PositionNode.js';
 import { mix, smoothstep } from '@modules/renderer/engine/nodes/math/MathNode.js';
-import { f32, NodeStack, tslFn, vec2, vec3, vec4 } from '../shadernode/ShaderNodes.js';
+import { f32, NodeStack, tsl, vec2, vec3, vec4 } from '../shadernode/ShaderNodes.js';
 import { uv } from '../accessors/UVNode.js';
 import { viewport } from '../display/ViewportNode.js';
 
@@ -60,7 +60,7 @@ export class Line2NodeMaterial extends NodeMaterial {
     const useDash = this.dashed;
     const useWorldUnits = this.worldUnits;
 
-    const trimSegment = tslFn(({ start, end }) => {
+    const trimSegment = tsl(({ start, end }) => {
       const a = cameraProjectionMatrix.element(2).element(2);
       const b = cameraProjectionMatrix.element(3).element(2);
       const nearEstimate = b.mul(-0.5).div(a);
@@ -70,13 +70,11 @@ export class Line2NodeMaterial extends NodeMaterial {
       return vec4(mix(start.xyz, end.xyz, alpha), end.w);
     });
 
-    this.vertexNode = tslFn(() => {
+    this.vertexNode = tsl(() => {
       varyingProperty('vec2', 'vUv').assign(uv());
 
       const instanceStart = attribute('instanceStart');
       const instanceEnd = attribute('instanceEnd');
-
-
 
       const start = property('vec4', 'start');
       const end = property('vec4', 'end');
@@ -91,11 +89,6 @@ export class Line2NodeMaterial extends NodeMaterial {
 
       const aspect = viewport.z.div(viewport.w);
 
-
-
-
-
-
       const perspective = cameraProjectionMatrix.element(2).element(3).equal(-1.0);
 
       NodeStack.if(perspective, () => {
@@ -106,17 +99,13 @@ export class Line2NodeMaterial extends NodeMaterial {
         });
       });
 
-
       const clipStart = cameraProjectionMatrix.mul(start);
       const clipEnd = cameraProjectionMatrix.mul(end);
-
 
       const ndcStart = clipStart.xyz.div(clipStart.w);
       const ndcEnd = clipEnd.xyz.div(clipEnd.w);
 
-
       const dir = ndcEnd.xy.sub(ndcStart.xy).temp();
-
 
       dir.x.assign(dir.x.mul(aspect));
       dir.assign(dir.normalize());
@@ -124,8 +113,6 @@ export class Line2NodeMaterial extends NodeMaterial {
       const clip = temp(vec4());
 
       if (useWorldUnits) {
-
-
         const worldDir = end.xyz.sub(start.xyz).normalize();
         const tmpFwd = mix(start.xyz, end.xyz, 0.5).normalize();
         const worldUp = worldDir.cross(tmpFwd).normalize();
@@ -135,31 +122,22 @@ export class Line2NodeMaterial extends NodeMaterial {
 
         worldPos.assign(positionGeometry.y.lessThan(0.5).cond(start, end));
 
-
         const hw = materialLineWidth.mul(0.5);
         worldPos.addAssign(vec4(positionGeometry.x.lessThan(0.0).cond(worldUp.mul(hw), worldUp.mul(hw).negate()), 0));
 
-
-
         if (!useDash) {
-
           worldPos.addAssign(
             vec4(positionGeometry.y.lessThan(0.5).cond(worldDir.mul(hw).negate(), worldDir.mul(hw)), 0),
           );
 
-
           worldPos.addAssign(vec4(worldFwd.mul(hw), 0));
-
 
           NodeStack.if(positionGeometry.y.greaterThan(1.0).or(positionGeometry.y.lessThan(0.0)), () => {
             worldPos.subAssign(vec4(worldFwd.mul(2.0).mul(hw), 0));
           });
         }
 
-
         clip.assign(cameraProjectionMatrix.mul(worldPos));
-
-
 
         const clipPose = temp(vec3());
 
@@ -170,13 +148,10 @@ export class Line2NodeMaterial extends NodeMaterial {
 
         offset.assign(vec2(dir.y, dir.x.negate()));
 
-
         dir.x.assign(dir.x.div(aspect));
         offset.x.assign(offset.x.div(aspect));
 
-
         offset.assign(positionGeometry.x.lessThan(0.0).cond(offset.negate(), offset));
-
 
         NodeStack.if(positionGeometry.y.lessThan(0.0), () => {
           offset.assign(offset.sub(dir));
@@ -184,15 +159,11 @@ export class Line2NodeMaterial extends NodeMaterial {
           offset.assign(offset.add(dir));
         });
 
-
         offset.assign(offset.mul(materialLineWidth));
-
 
         offset.assign(offset.div(viewport.w));
 
-
         clip.assign(positionGeometry.y.lessThan(0.5).cond(clipStart, clipEnd));
-
 
         offset.assign(offset.mul(clip.w));
 
@@ -202,7 +173,7 @@ export class Line2NodeMaterial extends NodeMaterial {
       return clip;
     })();
 
-    const closestLineToLine = tslFn(({ p1, p2, p3, p4 }) => {
+    const closestLineToLine = tsl(({ p1, p2, p3, p4 }) => {
       const p13 = p1.sub(p3);
       const p43 = p4.sub(p3);
 
@@ -223,7 +194,7 @@ export class Line2NodeMaterial extends NodeMaterial {
       return vec2(mua, mub);
     });
 
-    this.fragmentNode = tslFn(() => {
+    this.fragmentNode = tsl(() => {
       const vUv = varyingProperty('vec2', 'vUv');
 
       if (useDash) {
@@ -249,14 +220,12 @@ export class Line2NodeMaterial extends NodeMaterial {
         vLineDistanceOffset.mod(dashSize.add(gapSize)).greaterThan(dashSize).discard();
       }
 
-
       const alpha = property('f32', 'alpha');
       alpha.assign(1);
 
       if (useWorldUnits) {
         const worldStart = varyingProperty('vec3', 'worldStart');
         const worldEnd = varyingProperty('vec3', 'worldEnd');
-
 
         const rayEnd = varyingProperty('vec4', 'worldPos').xyz.normalize().mul(1e5);
         const lineDir = worldEnd.sub(worldStart);
@@ -277,14 +246,11 @@ export class Line2NodeMaterial extends NodeMaterial {
           }
         }
       } else {
-
-
         if (useAlphaToCoverage) {
           const a = vUv.x;
           const b = vUv.y.greaterThan(0.0).cond(vUv.y.sub(1.0), vUv.y.add(1.0));
 
           const len2 = a.mul(a).add(b.mul(b));
-
 
           const dlen = property('f32', 'dlen');
           dlen.assign(len2.fwidth());
