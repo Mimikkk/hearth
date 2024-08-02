@@ -1,5 +1,5 @@
 import { Node } from '../core/Node.js';
-import { asNode } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.asNode.js';
+import { asNode } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.as.js';
 import { handlers } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.handlers.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';

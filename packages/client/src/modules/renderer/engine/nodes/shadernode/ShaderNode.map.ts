@@ -11,6 +11,8 @@ const createU32 = createEntryByType(TypeName.u32);
 const createI32 = createEntryByType(TypeName.i32);
 const createF32 = createEntryByType(TypeName.f32);
 
+export const addNodeCommand = (name: string, nodeElement: Node) => NodeCommands.set(name, nodeElement);
+
 export const boolMap = new Map([false, true].map(createBool));
 export const uintMap = new Map([0, 1, 2, 3].map(createU32));
 export const sintMap = new Map([0, 1, 2, 3, -1, -2].map(createI32));

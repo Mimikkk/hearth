@@ -5,7 +5,7 @@ import ConvertNode from '@modules/renderer/engine/nodes/utils/ConvertNode.js';
 import JoinNode from '@modules/renderer/engine/nodes/utils/JoinNode.js';
 import ArrayElementNode from '@modules/renderer/engine/nodes/utils/ArrayElementNode.js';
 import SplitNode from '@modules/renderer/engine/nodes/utils/SplitNode.js';
-import { asNode, asNodes } from './ShaderNode.asNode.js';
+import { asNode, asNodes } from './ShaderNode.as.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { Node } from '@modules/renderer/engine/nodes/core/Node.js';
 

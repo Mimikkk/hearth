@@ -1,5 +1,5 @@
 import { NodeCommands } from './ShaderNode.map.js';
-import { asNode } from './ShaderNode.asNode.js';
+import { asNode } from './ShaderNode.as.js';
 import SplitNode from '@modules/renderer/engine/nodes/utils/SplitNode.js';
 import ArrayElementNode from '@modules/renderer/engine/nodes/utils/ArrayElementNode.js';
 import ConstNode from '@modules/renderer/engine/nodes/core/ConstNode.js';
@@ -33,25 +33,21 @@ export const handlers: ProxyHandler<Node> = {
       }
     }
 
-    
     if (swizzleRe.test(key)) {
       key = parseSwizzle(key);
 
       return asNode(new SplitNode(proxy, key));
     }
 
-    
     if (setSwizzleRe.test(key)) {
       key = parseSwizzle(key.slice(3).toLowerCase());
       return value => asNode(new SetNode(node, key, value));
     }
 
-    
     if (key === 'width' || key === 'height' || key === 'depth') {
       throw Error('Invalid use removed!');
     }
 
-    
     if (arrayRe.test(key)) {
       return asNode(new ArrayElementNode(proxy, new ConstNode(Number(key), TypeName.u32)));
     }

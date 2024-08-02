@@ -54,7 +54,7 @@ export { default as VaryingNode, varying } from './core/VaryingNode.js';
 export { default as OutputStructNode, outputStruct } from './core/OutputStructNode.js';
 
 import * as NodeUtils from './core/NodeUtils.js';
-import './shadernode/ShaderNode.map.initialize.js';
+import './shadernode/ShaderNode.commands.js';
 import './lighting/LightsNodeMap.initialize.js';
 
 export { NodeUtils };
