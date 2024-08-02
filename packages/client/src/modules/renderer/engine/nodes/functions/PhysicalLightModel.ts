@@ -1,10 +1,10 @@
-import BRDF_Lambert from './BSDF/BRDF_Lambert.js';
-import BRDF_GGX from './BSDF/BRDF_GGX.js';
-import DFGApprox from './BSDF/DFGApprox.js';
-import EnvironmentBRDF from './BSDF/EnvironmentBRDF.js';
-import F_Schlick from './BSDF/F_Schlick.js';
-import Schlick_to_F0 from './BSDF/Schlick_to_F0.js';
-import BRDF_Sheen from './BSDF/BRDF_Sheen.js';
+import { BRDF_Lambert } from './BSDF/BRDF_Lambert.js';
+import { BRDF_GGX } from './BSDF/BRDF_GGX.js';
+import { DFGApprox } from './BSDF/DFGApprox.js';
+import { EnvironmentBRDF } from './BSDF/EnvironmentBRDF.js';
+import { F_Schlick } from './BSDF/F_Schlick.js';
+import { Schlick_to_F0 } from './BSDF/Schlick_to_F0.js';
+import { BRDF_Sheen } from './BSDF/BRDF_Sheen.js';
 import { LightModel } from './LightModel.js';
 import {
   clearcoat,
@@ -23,6 +23,7 @@ import { positionViewDirection } from '../accessors/PositionNode.js';
 import { f32, mat3, tslFn, vec3 } from '../shadernode/ShaderNodes.js';
 import { cond } from '@modules/renderer/engine/nodes/math/CondNode.js';
 import { mix, smoothstep } from '@modules/renderer/engine/nodes/math/MathNode.js';
+import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 const XYZ_TO_REC709 = mat3(
   3.2404542,
@@ -66,65 +67,68 @@ const evalSensitivity = (OPD, shift) => {
   return rgb;
 };
 
-const evalIridescence = tslFn(({ outsideIOR, eta2, cosTheta1, thinFilmThickness, baseF0 }) => {
-  const iridescenceIOR = mix(outsideIOR, eta2, smoothstep(0.0, 0.03, thinFilmThickness));
+const evalIridescence = tslFn(
+  ({ outsideIOR, eta2, cosTheta1, thinFilmThickness, baseF0 }) => {
+    const iridescenceIOR = mix(outsideIOR, eta2, smoothstep(0.0, 0.03, thinFilmThickness));
 
-  const sinTheta2Sq = outsideIOR.div(iridescenceIOR).pow2().mul(f32(1).sub(cosTheta1.pow2()));
+    const sinTheta2Sq = outsideIOR.div(iridescenceIOR).pow2().mul(f32(1).sub(cosTheta1.pow2()));
 
-  const cosTheta2Sq = f32(1).sub(sinTheta2Sq);
-  /*if ( cosTheta2Sq < 0.0 ) {
+    const cosTheta2Sq = f32(1).sub(sinTheta2Sq);
+    /*if ( cosTheta2Sq < 0.0 ) {
 
       return vec3( 1.0 );
 
   }*/
 
-  const cosTheta2 = cosTheta2Sq.sqrt();
+    const cosTheta2 = cosTheta2Sq.sqrt();
 
-  const R0 = IorToFresnel0(iridescenceIOR, outsideIOR);
-  const R12 = F_Schlick({ f0: R0, f90: 1.0, dotVH: cosTheta1 });
-  //const R21 = R12;
-  const T121 = R12.oneMinus();
-  const phi12 = iridescenceIOR.lessThan(outsideIOR).cond(Math.PI, 0.0);
-  const phi21 = f32(Math.PI).sub(phi12);
+    const R0 = IorToFresnel0(iridescenceIOR, outsideIOR);
+    const R12 = F_Schlick({ f0: R0, f90: 1.0, dotVH: cosTheta1 });
+    //const R21 = R12;
+    const T121 = R12.oneMinus();
+    const phi12 = iridescenceIOR.lessThan(outsideIOR).cond(Math.PI, 0.0);
+    const phi21 = f32(Math.PI).sub(phi12);
 
-  const baseIOR = Fresnel0ToIor(baseF0.clamp(0.0, 0.9999));
-  const R1 = IorToFresnel0(baseIOR, iridescenceIOR.vec3());
-  const R23 = F_Schlick({ f0: R1, f90: 1.0, dotVH: cosTheta2 });
-  const phi23 = vec3(
-    baseIOR.x.lessThan(iridescenceIOR).cond(Math.PI, 0.0),
-    baseIOR.y.lessThan(iridescenceIOR).cond(Math.PI, 0.0),
-    baseIOR.z.lessThan(iridescenceIOR).cond(Math.PI, 0.0),
-  );
+    const baseIOR = Fresnel0ToIor(baseF0.clamp(0.0, 0.9999));
+    const R1 = IorToFresnel0(baseIOR, iridescenceIOR.vec3());
+    const R23 = F_Schlick({ f0: R1, f90: 1.0, dotVH: cosTheta2 });
+    const phi23 = vec3(
+      baseIOR.x.lessThan(iridescenceIOR).cond(Math.PI, 0.0),
+      baseIOR.y.lessThan(iridescenceIOR).cond(Math.PI, 0.0),
+      baseIOR.z.lessThan(iridescenceIOR).cond(Math.PI, 0.0),
+    );
 
-  const OPD = iridescenceIOR.mul(thinFilmThickness, cosTheta2, 2.0);
-  const phi = vec3(phi21).add(phi23);
+    const OPD = iridescenceIOR.mul(thinFilmThickness, cosTheta2, 2.0);
+    const phi = vec3(phi21).add(phi23);
 
-  const R123 = R12.mul(R23).clamp(1e-5, 0.9999);
-  const r123 = R123.sqrt();
-  const Rs = T121.pow2().mul(R23).div(vec3(1.0).sub(R123));
+    const R123 = R12.mul(R23).clamp(1e-5, 0.9999);
+    const r123 = R123.sqrt();
+    const Rs = T121.pow2().mul(R23).div(vec3(1.0).sub(R123));
 
-  const C0 = R12.add(Rs);
-  let I = C0;
+    const C0 = R12.add(Rs);
+    let I = C0;
 
-  let Cm = Rs.sub(T121);
-  for (let m = 1; m <= 2; ++m) {
-    Cm = Cm.mul(r123);
-    const Sm = evalSensitivity(f32(m).mul(OPD), f32(m).mul(phi)).mul(2.0);
-    I = I.add(Cm.mul(Sm));
-  }
+    let Cm = Rs.sub(T121);
+    for (let m = 1; m <= 2; ++m) {
+      Cm = Cm.mul(r123);
+      const Sm = evalSensitivity(f32(m).mul(OPD), f32(m).mul(phi)).mul(2.0);
+      I = I.add(Cm.mul(Sm));
+    }
 
-  return I.max(vec3(0.0));
-}).setLayout({
-  name: 'evalIridescence',
-  type: 'vec3',
-  inputs: [
-    { name: 'outsideIOR', type: 'f32' },
-    { name: 'eta2', type: 'f32' },
-    { name: 'cosTheta1', type: 'f32' },
-    { name: 'thinFilmThickness', type: 'f32' },
-    { name: 'baseF0', type: 'vec3' },
-  ],
-});
+    return I.max(vec3(0.0));
+  },
+  {
+    name: 'evalIridescence',
+    type: TypeName.vec3,
+    inputs: [
+      { name: 'outsideIOR', type: TypeName.f32 },
+      { name: 'eta2', type: TypeName.f32 },
+      { name: 'cosTheta1', type: TypeName.f32 },
+      { name: 'thinFilmThickness', type: TypeName.f32 },
+      { name: 'baseF0', type: TypeName.vec3 },
+    ],
+  },
+);
 
 const IBLSheenBRDF = tslFn(({ normal, viewDir, roughness }) => {
   const dotNV = normal.dot(viewDir).saturate();

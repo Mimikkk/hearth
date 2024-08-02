@@ -1,6 +1,6 @@
 import { LightModel } from './LightModel.js';
-import F_Schlick from './BSDF/F_Schlick.js';
-import BRDF_Lambert from './BSDF/BRDF_Lambert.js';
+import { F_Schlick } from './BSDF/F_Schlick.js';
+import { BRDF_Lambert } from './BSDF/BRDF_Lambert.js';
 import { diffuseColor, shininess, specularColor } from '../core/PropertyNode.js';
 import { transformedNormalView } from '../accessors/NormalNode.js';
 import { materialSpecularStrength } from '../accessors/MaterialNode.js';

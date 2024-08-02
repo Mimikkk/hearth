@@ -1,12 +1,10 @@
-
-
-
 import { bool, f32, i32, NodeStack, tslFn, u32, uvec3, vec2, vec3, vec4 } from '../../shadernode/ShaderNodes.js';
 import { cond } from '@modules/renderer/engine/nodes/math/CondNode.js';
 import { mul, sub } from '@modules/renderer/engine/nodes/math/OperatorNode.js';
 import { abs, dot, floor, max, min, sqrt } from '@modules/renderer/engine/nodes/math/MathNode.js';
 import { overloadingFn } from '../../utils/FunctionOverloadingNode.js';
 import { loop } from '../../utils/LoopNode.js';
+import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 export const mx_select = tslFn(([b_immutable, t_immutable, f_immutable]) => {
   const f = f32(f_immutable).toVar();
@@ -926,461 +924,459 @@ const mx_worley_noise_vec3_1 = tslFn(([p_immutable, jitter_immutable, metric_imm
 
 export const mx_worley_noise_vec3 = overloadingFn([mx_worley_noise_vec3_0, mx_worley_noise_vec3_1]);
 
-
-
 mx_select.setLayout({
   name: 'mx_select',
-  type: 'f32',
+  type: TypeName.f32,
   inputs: [
-    { name: 'b', type: 'bool' },
-    { name: 't', type: 'f32' },
-    { name: 'f', type: 'f32' },
+    { name: 'b', type: TypeName.bool },
+    { name: 't', type: TypeName.f32 },
+    { name: 'f', type: TypeName.f32 },
   ],
 });
 
 mx_negate_if.setLayout({
   name: 'mx_negate_if',
-  type: 'f32',
+  type: TypeName.f32,
   inputs: [
-    { name: 'val', type: 'f32' },
-    { name: 'b', type: 'bool' },
+    { name: 'val', type: TypeName.f32 },
+    { name: 'b', type: TypeName.bool },
   ],
 });
 
 mx_floor.setLayout({
   name: 'mx_floor',
-  type: 'i32',
-  inputs: [{ name: 'x', type: 'f32' }],
+  type: TypeName.i32,
+  inputs: [{ name: 'x', type: TypeName.f32 }],
 });
 
 mx_bilerp_0.setLayout({
   name: 'mx_bilerp_0',
-  type: 'f32',
+  type: TypeName.f32,
   inputs: [
-    { name: 'v0', type: 'f32' },
-    { name: 'v1', type: 'f32' },
-    { name: 'v2', type: 'f32' },
-    { name: 'v3', type: 'f32' },
-    { name: 's', type: 'f32' },
-    { name: 't', type: 'f32' },
+    { name: 'v0', type: TypeName.f32 },
+    { name: 'v1', type: TypeName.f32 },
+    { name: 'v2', type: TypeName.f32 },
+    { name: 'v3', type: TypeName.f32 },
+    { name: 's', type: TypeName.f32 },
+    { name: 't', type: TypeName.f32 },
   ],
 });
 
 mx_bilerp_1.setLayout({
   name: 'mx_bilerp_1',
-  type: 'vec3',
+  type: TypeName.vec3,
   inputs: [
-    { name: 'v0', type: 'vec3' },
-    { name: 'v1', type: 'vec3' },
-    { name: 'v2', type: 'vec3' },
-    { name: 'v3', type: 'vec3' },
-    { name: 's', type: 'f32' },
-    { name: 't', type: 'f32' },
+    { name: 'v0', type: TypeName.vec3 },
+    { name: 'v1', type: TypeName.vec3 },
+    { name: 'v2', type: TypeName.vec3 },
+    { name: 'v3', type: TypeName.vec3 },
+    { name: 's', type: TypeName.f32 },
+    { name: 't', type: TypeName.f32 },
   ],
 });
 
 mx_trilerp_0.setLayout({
   name: 'mx_trilerp_0',
-  type: 'f32',
+  type: TypeName.f32,
   inputs: [
-    { name: 'v0', type: 'f32' },
-    { name: 'v1', type: 'f32' },
-    { name: 'v2', type: 'f32' },
-    { name: 'v3', type: 'f32' },
-    { name: 'v4', type: 'f32' },
-    { name: 'v5', type: 'f32' },
-    { name: 'v6', type: 'f32' },
-    { name: 'v7', type: 'f32' },
-    { name: 's', type: 'f32' },
-    { name: 't', type: 'f32' },
-    { name: 'r', type: 'f32' },
+    { name: 'v0', type: TypeName.f32 },
+    { name: 'v1', type: TypeName.f32 },
+    { name: 'v2', type: TypeName.f32 },
+    { name: 'v3', type: TypeName.f32 },
+    { name: 'v4', type: TypeName.f32 },
+    { name: 'v5', type: TypeName.f32 },
+    { name: 'v6', type: TypeName.f32 },
+    { name: 'v7', type: TypeName.f32 },
+    { name: 's', type: TypeName.f32 },
+    { name: 't', type: TypeName.f32 },
+    { name: 'r', type: TypeName.f32 },
   ],
 });
 
 mx_trilerp_1.setLayout({
   name: 'mx_trilerp_1',
-  type: 'vec3',
+  type: TypeName.vec3,
   inputs: [
-    { name: 'v0', type: 'vec3' },
-    { name: 'v1', type: 'vec3' },
-    { name: 'v2', type: 'vec3' },
-    { name: 'v3', type: 'vec3' },
-    { name: 'v4', type: 'vec3' },
-    { name: 'v5', type: 'vec3' },
-    { name: 'v6', type: 'vec3' },
-    { name: 'v7', type: 'vec3' },
-    { name: 's', type: 'f32' },
-    { name: 't', type: 'f32' },
-    { name: 'r', type: 'f32' },
+    { name: 'v0', type: TypeName.vec3 },
+    { name: 'v1', type: TypeName.vec3 },
+    { name: 'v2', type: TypeName.vec3 },
+    { name: 'v3', type: TypeName.vec3 },
+    { name: 'v4', type: TypeName.vec3 },
+    { name: 'v5', type: TypeName.vec3 },
+    { name: 'v6', type: TypeName.vec3 },
+    { name: 'v7', type: TypeName.vec3 },
+    { name: 's', type: TypeName.f32 },
+    { name: 't', type: TypeName.f32 },
+    { name: 'r', type: TypeName.f32 },
   ],
 });
 
 mx_gradient_float_0.setLayout({
   name: 'mx_gradient_float_0',
-  type: 'f32',
+  type: TypeName.f32,
   inputs: [
-    { name: 'hash', type: 'u32' },
-    { name: 'x', type: 'f32' },
-    { name: 'y', type: 'f32' },
+    { name: 'hash', type: TypeName.u32 },
+    { name: 'x', type: TypeName.f32 },
+    { name: 'y', type: TypeName.f32 },
   ],
 });
 
 mx_gradient_float_1.setLayout({
   name: 'mx_gradient_float_1',
-  type: 'f32',
+  type: TypeName.f32,
   inputs: [
-    { name: 'hash', type: 'u32' },
-    { name: 'x', type: 'f32' },
-    { name: 'y', type: 'f32' },
-    { name: 'z', type: 'f32' },
+    { name: 'hash', type: TypeName.u32 },
+    { name: 'x', type: TypeName.f32 },
+    { name: 'y', type: TypeName.f32 },
+    { name: 'z', type: TypeName.f32 },
   ],
 });
 
 mx_gradient_vec3_0.setLayout({
   name: 'mx_gradient_vec3_0',
-  type: 'vec3',
+  type: TypeName.vec3,
   inputs: [
-    { name: 'hash', type: 'uvec3' },
-    { name: 'x', type: 'f32' },
-    { name: 'y', type: 'f32' },
+    { name: 'hash', type: TypeName.uvec3 },
+    { name: 'x', type: TypeName.f32 },
+    { name: 'y', type: TypeName.f32 },
   ],
 });
 
 mx_gradient_vec3_1.setLayout({
   name: 'mx_gradient_vec3_1',
-  type: 'vec3',
+  type: TypeName.vec3,
   inputs: [
-    { name: 'hash', type: 'uvec3' },
-    { name: 'x', type: 'f32' },
-    { name: 'y', type: 'f32' },
-    { name: 'z', type: 'f32' },
+    { name: 'hash', type: TypeName.uvec3 },
+    { name: 'x', type: TypeName.f32 },
+    { name: 'y', type: TypeName.f32 },
+    { name: 'z', type: TypeName.f32 },
   ],
 });
 
 mx_gradient_scale2d_0.setLayout({
   name: 'mx_gradient_scale2d_0',
-  type: 'f32',
-  inputs: [{ name: 'v', type: 'f32' }],
+  type: TypeName.f32,
+  inputs: [{ name: 'v', type: TypeName.f32 }],
 });
 
 mx_gradient_scale3d_0.setLayout({
   name: 'mx_gradient_scale3d_0',
-  type: 'f32',
-  inputs: [{ name: 'v', type: 'f32' }],
+  type: TypeName.f32,
+  inputs: [{ name: 'v', type: TypeName.f32 }],
 });
 
 mx_gradient_scale2d_1.setLayout({
   name: 'mx_gradient_scale2d_1',
-  type: 'vec3',
-  inputs: [{ name: 'v', type: 'vec3' }],
+  type: TypeName.vec3,
+  inputs: [{ name: 'v', type: TypeName.vec3 }],
 });
 
 mx_gradient_scale3d_1.setLayout({
   name: 'mx_gradient_scale3d_1',
-  type: 'vec3',
-  inputs: [{ name: 'v', type: 'vec3' }],
+  type: TypeName.vec3,
+  inputs: [{ name: 'v', type: TypeName.vec3 }],
 });
 
 mx_rotl32.setLayout({
   name: 'mx_rotl32',
-  type: 'u32',
+  type: TypeName.u32,
   inputs: [
-    { name: 'x', type: 'u32' },
-    { name: 'k', type: 'i32' },
+    { name: 'x', type: TypeName.u32 },
+    { name: 'k', type: TypeName.i32 },
   ],
 });
 
 mx_bjfinal.setLayout({
   name: 'mx_bjfinal',
-  type: 'u32',
+  type: TypeName.u32,
   inputs: [
-    { name: 'a', type: 'u32' },
-    { name: 'b', type: 'u32' },
-    { name: 'c', type: 'u32' },
+    { name: 'a', type: TypeName.u32 },
+    { name: 'b', type: TypeName.u32 },
+    { name: 'c', type: TypeName.u32 },
   ],
 });
 
 mx_bits_to_01.setLayout({
   name: 'mx_bits_to_01',
-  type: 'f32',
-  inputs: [{ name: 'bits', type: 'u32' }],
+  type: TypeName.f32,
+  inputs: [{ name: 'bits', type: TypeName.u32 }],
 });
 
 mx_fade.setLayout({
   name: 'mx_fade',
-  type: 'f32',
-  inputs: [{ name: 't', type: 'f32' }],
+  type: TypeName.f32,
+  inputs: [{ name: 't', type: TypeName.f32 }],
 });
 
 mx_hash_int_0.setLayout({
   name: 'mx_hash_int_0',
-  type: 'u32',
-  inputs: [{ name: 'x', type: 'i32' }],
+  type: TypeName.u32,
+  inputs: [{ name: 'x', type: TypeName.i32 }],
 });
 
 mx_hash_int_1.setLayout({
   name: 'mx_hash_int_1',
-  type: 'u32',
+  type: TypeName.u32,
   inputs: [
-    { name: 'x', type: 'i32' },
-    { name: 'y', type: 'i32' },
+    { name: 'x', type: TypeName.i32 },
+    { name: 'y', type: TypeName.i32 },
   ],
 });
 
 mx_hash_int_2.setLayout({
   name: 'mx_hash_int_2',
-  type: 'u32',
+  type: TypeName.u32,
   inputs: [
-    { name: 'x', type: 'i32' },
-    { name: 'y', type: 'i32' },
-    { name: 'z', type: 'i32' },
+    { name: 'x', type: TypeName.i32 },
+    { name: 'y', type: TypeName.i32 },
+    { name: 'z', type: TypeName.i32 },
   ],
 });
 
 mx_hash_int_3.setLayout({
   name: 'mx_hash_int_3',
-  type: 'u32',
+  type: TypeName.u32,
   inputs: [
-    { name: 'x', type: 'i32' },
-    { name: 'y', type: 'i32' },
-    { name: 'z', type: 'i32' },
-    { name: 'xx', type: 'i32' },
+    { name: 'x', type: TypeName.i32 },
+    { name: 'y', type: TypeName.i32 },
+    { name: 'z', type: TypeName.i32 },
+    { name: 'xx', type: TypeName.i32 },
   ],
 });
 
 mx_hash_int_4.setLayout({
   name: 'mx_hash_int_4',
-  type: 'u32',
+  type: TypeName.u32,
   inputs: [
-    { name: 'x', type: 'i32' },
-    { name: 'y', type: 'i32' },
-    { name: 'z', type: 'i32' },
-    { name: 'xx', type: 'i32' },
-    { name: 'yy', type: 'i32' },
+    { name: 'x', type: TypeName.i32 },
+    { name: 'y', type: TypeName.i32 },
+    { name: 'z', type: TypeName.i32 },
+    { name: 'xx', type: TypeName.i32 },
+    { name: 'yy', type: TypeName.i32 },
   ],
 });
 
 mx_hash_vec3_0.setLayout({
   name: 'mx_hash_vec3_0',
-  type: 'uvec3',
+  type: TypeName.uvec3,
   inputs: [
-    { name: 'x', type: 'i32' },
-    { name: 'y', type: 'i32' },
+    { name: 'x', type: TypeName.i32 },
+    { name: 'y', type: TypeName.i32 },
   ],
 });
 
 mx_hash_vec3_1.setLayout({
   name: 'mx_hash_vec3_1',
-  type: 'uvec3',
+  type: TypeName.uvec3,
   inputs: [
-    { name: 'x', type: 'i32' },
-    { name: 'y', type: 'i32' },
-    { name: 'z', type: 'i32' },
+    { name: 'x', type: TypeName.i32 },
+    { name: 'y', type: TypeName.i32 },
+    { name: 'z', type: TypeName.i32 },
   ],
 });
 
 mx_perlin_noise_float_0.setLayout({
   name: 'mx_perlin_noise_float_0',
-  type: 'f32',
-  inputs: [{ name: 'p', type: 'vec2' }],
+  type: TypeName.f32,
+  inputs: [{ name: 'p', type: TypeName.vec2 }],
 });
 
 mx_perlin_noise_float_1.setLayout({
   name: 'mx_perlin_noise_float_1',
-  type: 'f32',
-  inputs: [{ name: 'p', type: 'vec3' }],
+  type: TypeName.f32,
+  inputs: [{ name: 'p', type: TypeName.vec3 }],
 });
 
 mx_perlin_noise_vec3_0.setLayout({
   name: 'mx_perlin_noise_vec3_0',
-  type: 'vec3',
-  inputs: [{ name: 'p', type: 'vec2' }],
+  type: TypeName.vec3,
+  inputs: [{ name: 'p', type: TypeName.vec2 }],
 });
 
 mx_perlin_noise_vec3_1.setLayout({
   name: 'mx_perlin_noise_vec3_1',
-  type: 'vec3',
-  inputs: [{ name: 'p', type: 'vec3' }],
+  type: TypeName.vec3,
+  inputs: [{ name: 'p', type: TypeName.vec3 }],
 });
 
 mx_cell_noise_float_0.setLayout({
   name: 'mx_cell_noise_float_0',
-  type: 'f32',
-  inputs: [{ name: 'p', type: 'f32' }],
+  type: TypeName.f32,
+  inputs: [{ name: 'p', type: TypeName.f32 }],
 });
 
 mx_cell_noise_float_1.setLayout({
   name: 'mx_cell_noise_float_1',
-  type: 'f32',
-  inputs: [{ name: 'p', type: 'vec2' }],
+  type: TypeName.f32,
+  inputs: [{ name: 'p', type: TypeName.vec2 }],
 });
 
 mx_cell_noise_float_2.setLayout({
   name: 'mx_cell_noise_float_2',
-  type: 'f32',
-  inputs: [{ name: 'p', type: 'vec3' }],
+  type: TypeName.f32,
+  inputs: [{ name: 'p', type: TypeName.vec3 }],
 });
 
 mx_cell_noise_float_3.setLayout({
   name: 'mx_cell_noise_float_3',
-  type: 'f32',
-  inputs: [{ name: 'p', type: 'vec4' }],
+  type: TypeName.f32,
+  inputs: [{ name: 'p', type: TypeName.vec4 }],
 });
 
 mx_cell_noise_vec3_0.setLayout({
   name: 'mx_cell_noise_vec3_0',
-  type: 'vec3',
-  inputs: [{ name: 'p', type: 'f32' }],
+  type: TypeName.vec3,
+  inputs: [{ name: 'p', type: TypeName.f32 }],
 });
 
 mx_cell_noise_vec3_1.setLayout({
   name: 'mx_cell_noise_vec3_1',
-  type: 'vec3',
-  inputs: [{ name: 'p', type: 'vec2' }],
+  type: TypeName.vec3,
+  inputs: [{ name: 'p', type: TypeName.vec2 }],
 });
 
 mx_cell_noise_vec3_2.setLayout({
   name: 'mx_cell_noise_vec3_2',
-  type: 'vec3',
-  inputs: [{ name: 'p', type: 'vec3' }],
+  type: TypeName.vec3,
+  inputs: [{ name: 'p', type: TypeName.vec3 }],
 });
 
 mx_cell_noise_vec3_3.setLayout({
   name: 'mx_cell_noise_vec3_3',
-  type: 'vec3',
-  inputs: [{ name: 'p', type: 'vec4' }],
+  type: TypeName.vec3,
+  inputs: [{ name: 'p', type: TypeName.vec4 }],
 });
 
 mx_fractal_noise_float.setLayout({
   name: 'mx_fractal_noise_float',
-  type: 'f32',
+  type: TypeName.f32,
   inputs: [
-    { name: 'p', type: 'vec3' },
-    { name: 'octaves', type: 'i32' },
-    { name: 'lacunarity', type: 'f32' },
-    { name: 'diminish', type: 'f32' },
+    { name: 'p', type: TypeName.vec3 },
+    { name: 'octaves', type: TypeName.i32 },
+    { name: 'lacunarity', type: TypeName.f32 },
+    { name: 'diminish', type: TypeName.f32 },
   ],
 });
 
 mx_fractal_noise_vec3.setLayout({
   name: 'mx_fractal_noise_vec3',
-  type: 'vec3',
+  type: TypeName.vec3,
   inputs: [
-    { name: 'p', type: 'vec3' },
-    { name: 'octaves', type: 'i32' },
-    { name: 'lacunarity', type: 'f32' },
-    { name: 'diminish', type: 'f32' },
+    { name: 'p', type: TypeName.vec3 },
+    { name: 'octaves', type: TypeName.i32 },
+    { name: 'lacunarity', type: TypeName.f32 },
+    { name: 'diminish', type: TypeName.f32 },
   ],
 });
 
 mx_fractal_noise_vec2.setLayout({
   name: 'mx_fractal_noise_vec2',
-  type: 'vec2',
+  type: TypeName.vec2,
   inputs: [
-    { name: 'p', type: 'vec3' },
-    { name: 'octaves', type: 'i32' },
-    { name: 'lacunarity', type: 'f32' },
-    { name: 'diminish', type: 'f32' },
+    { name: 'p', type: TypeName.vec3 },
+    { name: 'octaves', type: TypeName.i32 },
+    { name: 'lacunarity', type: TypeName.f32 },
+    { name: 'diminish', type: TypeName.f32 },
   ],
 });
 
 mx_fractal_noise_vec4.setLayout({
   name: 'mx_fractal_noise_vec4',
-  type: 'vec4',
+  type: TypeName.vec4,
   inputs: [
-    { name: 'p', type: 'vec3' },
-    { name: 'octaves', type: 'i32' },
-    { name: 'lacunarity', type: 'f32' },
-    { name: 'diminish', type: 'f32' },
+    { name: 'p', type: TypeName.vec3 },
+    { name: 'octaves', type: TypeName.i32 },
+    { name: 'lacunarity', type: TypeName.f32 },
+    { name: 'diminish', type: TypeName.f32 },
   ],
 });
 
 mx_worley_distance_0.setLayout({
   name: 'mx_worley_distance_0',
-  type: 'f32',
+  type: TypeName.f32,
   inputs: [
-    { name: 'p', type: 'vec2' },
-    { name: 'x', type: 'i32' },
-    { name: 'y', type: 'i32' },
-    { name: 'xoff', type: 'i32' },
-    { name: 'yoff', type: 'i32' },
-    { name: 'jitter', type: 'f32' },
-    { name: 'metric', type: 'i32' },
+    { name: 'p', type: TypeName.vec2 },
+    { name: 'x', type: TypeName.i32 },
+    { name: 'y', type: TypeName.i32 },
+    { name: 'xoff', type: TypeName.i32 },
+    { name: 'yoff', type: TypeName.i32 },
+    { name: 'jitter', type: TypeName.f32 },
+    { name: 'metric', type: TypeName.i32 },
   ],
 });
 
 mx_worley_distance_1.setLayout({
   name: 'mx_worley_distance_1',
-  type: 'f32',
+  type: TypeName.f32,
   inputs: [
-    { name: 'p', type: 'vec3' },
-    { name: 'x', type: 'i32' },
-    { name: 'y', type: 'i32' },
-    { name: 'z', type: 'i32' },
-    { name: 'xoff', type: 'i32' },
-    { name: 'yoff', type: 'i32' },
-    { name: 'zoff', type: 'i32' },
-    { name: 'jitter', type: 'f32' },
-    { name: 'metric', type: 'i32' },
+    { name: 'p', type: TypeName.vec3 },
+    { name: 'x', type: TypeName.i32 },
+    { name: 'y', type: TypeName.i32 },
+    { name: 'z', type: TypeName.i32 },
+    { name: 'xoff', type: TypeName.i32 },
+    { name: 'yoff', type: TypeName.i32 },
+    { name: 'zoff', type: TypeName.i32 },
+    { name: 'jitter', type: TypeName.f32 },
+    { name: 'metric', type: TypeName.i32 },
   ],
 });
 
 mx_worley_noise_float_0.setLayout({
   name: 'mx_worley_noise_float_0',
-  type: 'f32',
+  type: TypeName.f32,
   inputs: [
-    { name: 'p', type: 'vec2' },
-    { name: 'jitter', type: 'f32' },
-    { name: 'metric', type: 'i32' },
+    { name: 'p', type: TypeName.vec2 },
+    { name: 'jitter', type: TypeName.f32 },
+    { name: 'metric', type: TypeName.i32 },
   ],
 });
 
 mx_worley_noise_vec2_0.setLayout({
   name: 'mx_worley_noise_vec2_0',
-  type: 'vec2',
+  type: TypeName.vec2,
   inputs: [
-    { name: 'p', type: 'vec2' },
-    { name: 'jitter', type: 'f32' },
-    { name: 'metric', type: 'i32' },
+    { name: 'p', type: TypeName.vec2 },
+    { name: 'jitter', type: TypeName.f32 },
+    { name: 'metric', type: TypeName.i32 },
   ],
 });
 
 mx_worley_noise_vec3_0.setLayout({
   name: 'mx_worley_noise_vec3_0',
-  type: 'vec3',
+  type: TypeName.vec3,
   inputs: [
-    { name: 'p', type: 'vec2' },
-    { name: 'jitter', type: 'f32' },
-    { name: 'metric', type: 'i32' },
+    { name: 'p', type: TypeName.vec2 },
+    { name: 'jitter', type: TypeName.f32 },
+    { name: 'metric', type: TypeName.i32 },
   ],
 });
 
 mx_worley_noise_float_1.setLayout({
   name: 'mx_worley_noise_float_1',
-  type: 'f32',
+  type: TypeName.f32,
   inputs: [
-    { name: 'p', type: 'vec3' },
-    { name: 'jitter', type: 'f32' },
-    { name: 'metric', type: 'i32' },
+    { name: 'p', type: TypeName.vec3 },
+    { name: 'jitter', type: TypeName.f32 },
+    { name: 'metric', type: TypeName.i32 },
   ],
 });
 
 mx_worley_noise_vec2_1.setLayout({
   name: 'mx_worley_noise_vec2_1',
-  type: 'vec2',
+  type: TypeName.vec2,
   inputs: [
-    { name: 'p', type: 'vec3' },
-    { name: 'jitter', type: 'f32' },
-    { name: 'metric', type: 'i32' },
+    { name: 'p', type: TypeName.vec3 },
+    { name: 'jitter', type: TypeName.f32 },
+    { name: 'metric', type: TypeName.i32 },
   ],
 });
 
 mx_worley_noise_vec3_1.setLayout({
   name: 'mx_worley_noise_vec3_1',
-  type: 'vec3',
+  type: TypeName.vec3,
   inputs: [
-    { name: 'p', type: 'vec3' },
-    { name: 'jitter', type: 'f32' },
-    { name: 'metric', type: 'i32' },
+    { name: 'p', type: TypeName.vec3 },
+    { name: 'jitter', type: TypeName.f32 },
+    { name: 'metric', type: TypeName.i32 },
   ],
 });

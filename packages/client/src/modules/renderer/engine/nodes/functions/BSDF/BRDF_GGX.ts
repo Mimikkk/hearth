@@ -1,23 +1,22 @@
-import F_Schlick from './F_Schlick.js';
-import V_GGX_SmithCorrelated from './V_GGX_SmithCorrelated.js';
-import D_GGX from './D_GGX.js';
+import { F_Schlick } from './F_Schlick.js';
+import { V_GGX_SmithCorrelated } from './V_GGX_SmithCorrelated.js';
+import { D_GGX } from './D_GGX.js';
 import { transformedNormalView } from '../../accessors/NormalNode.js';
 import { positionViewDirection } from '../../accessors/PositionNode.js';
 import { iridescence } from '../../core/PropertyNode.js';
 import { tslFn } from '../../shadernode/ShaderNodes.js';
 
-
-const BRDF_GGX = tslFn(inputs => {
+export const BRDF_GGX = tslFn(inputs => {
   const { lightDirection, f0, f90, roughness, iridescenceFresnel } = inputs;
 
   const normalView = inputs.normalView || transformedNormalView;
 
-  const alpha = roughness.pow2(); 
+  const alpha = roughness.pow2();
 
   const halfDir = lightDirection.add(positionViewDirection).normalize();
 
   const dotNL = normalView.dot(lightDirection).clamp();
-  const dotNV = normalView.dot(positionViewDirection).clamp(); 
+  const dotNV = normalView.dot(positionViewDirection).clamp();
   const dotNH = normalView.dot(halfDir).clamp();
   const dotVH = positionViewDirection.dot(halfDir).clamp();
 
@@ -31,6 +30,4 @@ const BRDF_GGX = tslFn(inputs => {
   const D = D_GGX({ alpha, dotNH });
 
   return F.mul(V).mul(D);
-}); 
-
-export default BRDF_GGX;
+});

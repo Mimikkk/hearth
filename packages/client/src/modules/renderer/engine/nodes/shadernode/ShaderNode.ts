@@ -1,58 +1,51 @@
 import { Node } from '../core/Node.js';
 import { asNode } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.asNode.js';
 import { handlers } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.handlers.js';
+import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
+import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
+import { TslLayout } from '@modules/renderer/engine/nodes/shadernode/tslFn.js';
 
-const functionMapByBuilder = new WeakMap();
+const map = new WeakMap();
 
-class ShaderCallNodeImpl extends Node {
-  constructor(shaderNode, inputNodes) {
+export class ShaderCallNode extends Node {
+  constructor(
+    public shader: ShaderNode,
+    public inputs: Record<string, Node> | null = null,
+  ) {
     super();
-
-    this.shaderNode = shaderNode;
-    this.inputNodes = inputNodes;
   }
 
-  getNodeType(builder) {
+  getNodeType(builder: NodeBuilder): TypeName {
     const { outputNode } = builder.getNodeProperties(this);
 
     return outputNode ? outputNode.getNodeType(builder) : super.getNodeType(builder);
   }
 
-  call(builder) {
-    const { shaderNode, inputNodes } = this;
+  call(builder: NodeBuilder): Node {
+    const { shader, inputs } = this;
 
-    if (shaderNode.layout) {
-      let functionNodesCacheMap = functionMapByBuilder.get(builder.constructor);
-
-      if (functionNodesCacheMap === undefined) {
-        functionNodesCacheMap = new WeakMap();
-
-        functionMapByBuilder.set(builder.constructor, functionNodesCacheMap);
-      }
-
-      let functionNode = functionNodesCacheMap.get(shaderNode);
+    if (shader.layout) {
+      let functionNode = map.get(shader);
 
       if (functionNode === undefined) {
-        functionNode = asNode(builder.buildFunctionNode(shaderNode));
-
-        functionNodesCacheMap.set(shaderNode, functionNode);
+        functionNode = asNode(builder.buildFunctionNode(shader));
+        map.set(shader, functionNode);
       }
 
       if (builder.currentFunctionNode !== null) {
         builder.currentFunctionNode.includes.push(functionNode);
       }
 
-      return asNode(functionNode.call(inputNodes));
+      return asNode(functionNode.call(inputs));
     }
 
-    const jsFunc = shaderNode.jsFunc;
-    const outputNode =
-      inputNodes !== null ? jsFunc(inputNodes, builder.stack, builder) : jsFunc(builder.stack, builder);
+    const fn = shader.fn;
+    const output = inputs !== null ? fn(inputs, builder.stack, builder) : fn(builder.stack, builder);
 
-    return asNode(outputNode);
+    return asNode(output);
   }
 
-  setup(builder) {
+  setup(builder: NodeBuilder): Node {
     builder.addStack();
 
     builder.stack.outputNode = this.call(builder);
@@ -60,43 +53,35 @@ class ShaderCallNodeImpl extends Node {
     return builder.removeStack();
   }
 
-  generate(builder, output) {
+  generate(builder: NodeBuilder, output: TypeName): string {
     const { outputNode } = builder.getNodeProperties(this);
 
-    if (outputNode === null) {
-      
-
-      return this.call(builder).build(builder, output);
-    }
-
-    return super.generate(builder, output);
+    if (outputNode) return super.generate(builder, output)!;
+    return this.call(builder).build(builder, output);
   }
 }
 
-class ShaderNodeImpl extends Node {
-  constructor(jsFunc) {
+export class ShaderNode<Fn extends (...params: any) => any = any> extends Node {
+  constructor(
+    public fn: Fn,
+    public layout?: TslLayout,
+  ) {
     super();
-
-    this.jsFunc = jsFunc;
-    this.layout = null;
   }
 
   get isArrayInput() {
-    return /^\((\s+)?\[/.test(this.jsFunc.toString());
+    return /^\((\s+)?\[/.test(this.fn.toString());
   }
 
-  setLayout(layout) {
+  setLayout(layout: TslLayout) {
     this.layout = layout;
-
     return this;
   }
 
-  call(inputs = null) {
-    for (const name in inputs) {
-      inputs[name] = asNode(inputs[name]);
-    }
+  call(inputs?: Parameters<Fn>[0]): Node {
+    for (const name in inputs) inputs[name] = asNode(inputs[name]);
 
-    return asNode(new ShaderCallNodeImpl(this, inputs));
+    return asNode(new ShaderCallNode(this, inputs));
   }
 
   setup() {
@@ -104,10 +89,7 @@ class ShaderNodeImpl extends Node {
   }
 }
 
-export class ShaderNode {
-  static type = 'ShaderNode';
-
-  constructor(jsFn: Function) {
-    return new Proxy(new ShaderNodeImpl(jsFn), handlers);
-  }
-}
+export const createShaderNode = <Fn extends (...params: any) => any = any>(
+  fn: Fn,
+  layout?: TslLayout,
+): ShaderNode<Fn> => new Proxy(new ShaderNode<Fn>(fn, layout), handlers);

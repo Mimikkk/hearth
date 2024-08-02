@@ -395,8 +395,9 @@ export class NodeBuilder {
     return nodeVarying;
   }
 
-  generate(node: Node): void {
+  generate(node: Node): string {
     this.flowsData.set(node, this.flowChildNode(node, node.getNodeType(this)));
+    return '';
   }
 
   buildFunctionNode(shaderNode: ShaderNode): FunctionNode {
@@ -413,12 +414,11 @@ export class NodeBuilder {
     return fn;
   }
 
-  flowShaderNode(shaderNode: ShaderNode): void {
-    const layout = shaderNode.layout;
+  flowShaderNode(node: ShaderNode): void {
+    const layout = node.layout;
 
     let inputs;
-
-    if (shaderNode.isArrayInput) {
+    if (node.isArrayInput) {
       inputs = [];
 
       for (const input of layout.inputs) {
@@ -432,12 +432,12 @@ export class NodeBuilder {
       }
     }
 
-    shaderNode.layout = null;
+    node.layout = null;
 
-    const callNode = shaderNode.call(inputs);
+    const callNode = node.call(inputs);
     const flowData = this.flowStagesNode(callNode, layout.type);
 
-    shaderNode.layout = layout;
+    node.layout = layout;
 
     return flowData;
   }

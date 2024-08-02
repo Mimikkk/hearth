@@ -1,4 +1,12 @@
-import { Attribute, Geometry, OrthographicCamera, Points, Scene, Vec2 } from '@modules/renderer/engine/engine.js';
+import {
+  Attribute,
+  Buffer,
+  Geometry,
+  OrthographicCamera,
+  Points,
+  Scene,
+  Vec2,
+} from '@modules/renderer/engine/engine.js';
 import {
   attribute,
   color,
@@ -19,44 +27,36 @@ import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindow
 import { BufferStep, GPUBufferBindingTypeType } from '@modules/renderer/engine/hearth/constants.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
-let camera, scene, hearth;
-let computeNode;
+const mouse = Vec2.new(-10.0, -10.0);
+const scale = Vec2.new(1, 1);
 
-const pointerVector = new Vec2(-10.0, -10.0);
-const scaleVector = new Vec2(1, 1);
-
-camera = new OrthographicCamera(-1.0, 1.0, 1.0, -1.0, 0, 1);
+const camera = new OrthographicCamera(-1.0, 1.0, 1.0, -1.0, 0, 1);
 camera.position.z = 1;
 
-scene = new Scene();
+const scene = new Scene();
+const count = 300000;
 
-const particleNum = 300000;
-const particleSize = 2;
+const createStorageNode = () => {
+  const buffer = Buffer.f32(count * 2, 2, BufferStep.Instance);
+  const attribute = Attribute.use(buffer, 2, 0, GPUBufferBindingTypeType.Storage);
 
-const particleBuffer = new Attribute(
-  new Float32Array(particleNum * particleSize),
-  particleSize,
-  0,
-  BufferStep.Instance,
-  GPUBufferBindingTypeType.Storage,
-);
-const velocityBuffer = new Attribute(
-  new Float32Array(particleNum * particleSize),
-  particleSize,
-  0,
-  BufferStep.Instance,
-  GPUBufferBindingTypeType.Storage,
-);
+  return storage(attribute, TypeName.vec2, count);
+};
+const createStorageNodes = () => {
+  const particle = createStorageNode();
+  const velocity = createStorageNode();
 
-const particleBufferNode = storage(particleBuffer, TypeName.vec2, particleNum);
-const velocityBufferNode = storage(velocityBuffer, TypeName.vec2, particleNum);
+  return { particle, velocity };
+};
+
+const { particle: particleBufferNode, velocity: velocityBufferNode } = createStorageNodes();
 
 const computeShaderFn = tslFn(() => {
   const particle = particleBufferNode.element(instanceIndex);
   const velocity = velocityBufferNode.element(instanceIndex);
 
-  const pointer = uniform(pointerVector);
-  const limit = uniform(scaleVector);
+  const pointer = uniform(mouse);
+  const limit = uniform(scale);
 
   const position = particle.add(velocity).temp();
 
@@ -71,7 +71,8 @@ const computeShaderFn = tslFn(() => {
   particle.assign(distanceFromPointer.lessThanEqual(pointerSize).cond(vec3(), position));
 });
 
-computeNode = computeShaderFn().compute(particleNum);
+const computeNode = computeShaderFn().compute(count);
+console.log(computeShaderFn());
 computeNode.onInit = ({ hearth }) => {
   const precomputeShaderNode = tslFn(() => {
     const particleIndex = f32(instanceIndex);
@@ -87,46 +88,45 @@ computeNode.onInit = ({ hearth }) => {
     velocity.xy = vec2(velX, velY);
   });
 
-  hearth.compute(precomputeShaderNode().compute(particleNum));
+  hearth.compute(precomputeShaderNode().compute(count));
 };
 
-const particleNode = attribute('particle', TypeName.vec2);
+const particle = attribute('particle', TypeName.vec2);
 
-const pointsGeometry = new Geometry();
-pointsGeometry.setAttribute('position', new Attribute(new Float32Array(3), 3));
-pointsGeometry.setAttribute('particle', particleBuffer);
-pointsGeometry.drawRange.count = 1;
+const geometry = new Geometry();
 
-const pointsMaterial = new PointsNodeMaterial();
-pointsMaterial.colorNode = particleNode.add(color(0xffffff));
-pointsMaterial.positionNode = particleNode;
+geometry.attributes.position = Attribute.use(Buffer.f32(3, 3));
+geometry.attributes.particle = particleBufferNode.value;
+geometry.drawRange.count = 1;
 
-const mesh = new Points(pointsGeometry, pointsMaterial);
-mesh.isInstancedMesh = true;
-mesh.count = particleNum;
+const material = new PointsNodeMaterial();
+material.colorNode = particle.add(color(0xffffff));
+material.positionNode = particle;
+
+const mesh = new Points(geometry, material);
+mesh.count = count;
+
 scene.add(mesh);
 
-hearth = await Hearth.as();
-hearth.setPixelRatio(window.devicePixelRatio);
-hearth.setSize(window.innerWidth, window.innerHeight);
-hearth.animation.loop = function animate() {
-  hearth.compute(computeNode);
-  hearth.render(scene, camera);
-};
-document.body.appendChild(hearth.parameters.canvas);
+const hearth = await Hearth.as({
+  animate() {
+    hearth.compute(computeNode);
+    hearth.render(scene, camera);
+  },
+});
 
 useWindowResizer(hearth, camera);
-window.addEventListener('mousemove', function onMouseMove(event) {
+window.addEventListener('mousemove', event => {
   const x = event.clientX;
   const y = event.clientY;
 
   const width = window.innerWidth;
   const height = window.innerHeight;
 
-  pointerVector.set((x / width - 0.5) * 2.0, (-y / height + 0.5) * 2.0);
+  mouse.set((x / width - 0.5) * 2.0, (-y / height + 0.5) * 2.0);
 });
 
 const gui = new GUI();
 
-gui.add(scaleVector, 'x', 0, 1, 0.01);
-gui.add(scaleVector, 'y', 0, 1, 0.01);
+gui.add(scale, 'x', 0, 1, 0.01);
+gui.add(scale, 'y', 0, 1, 0.01);

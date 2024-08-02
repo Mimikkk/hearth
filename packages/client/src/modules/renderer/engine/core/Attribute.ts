@@ -18,9 +18,7 @@ export class Attribute<T extends TypedArray = any> {
     source: T | Buffer<T>,
     public span: number,
     public offset: number = 0,
-
     public step: BufferStep = BufferStep.Vertex,
-
     public bind?: GPUBufferBindingTypeType,
   ) {
     if (source instanceof Buffer) {
@@ -33,7 +31,6 @@ export class Attribute<T extends TypedArray = any> {
     this.usage = BufferUse.StaticDraw;
     this.version = 0;
   }
-
 
   set usage(value: BufferUse) {
     this.source.use = value;
@@ -83,8 +80,9 @@ export class Attribute<T extends TypedArray = any> {
     buffer: Buffer<T>,
     span: number = buffer.stride,
     offset: number = 0,
+    bind?: GPUBufferBindingTypeType,
   ): Attribute<T> {
-    return new Attribute(buffer, span, offset);
+    return new Attribute(buffer, span, offset, buffer.step, bind);
   }
 
   applyMat3(mat: Const<Mat3>): this {

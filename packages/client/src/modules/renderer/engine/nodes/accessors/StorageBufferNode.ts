@@ -5,9 +5,13 @@ import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.typ
 import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
 import IndexNode from '@modules/renderer/engine/nodes/core/IndexNode.js';
 
-export class StorageBufferNode extends BufferNode {
+export class StorageBufferNode<A extends Attribute> extends BufferNode<A> {
   declare isStorageBufferNode: true;
   bufferObject: boolean = false;
+
+  constructor(value: A, type: TypeName, count: number = 0) {
+    super(value, type, count);
+  }
 
   getInputType(): TypeName {
     return TypeName.storageBuffer;

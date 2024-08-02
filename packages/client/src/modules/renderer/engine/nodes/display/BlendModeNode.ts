@@ -66,56 +66,68 @@ export const screen = proxyNode(
   },
 );
 
-export const calcBurn = tslFn(({ base, blend }: Params) => {
-  const fn = (c: 'x' | 'y' | 'z') =>
-    blend[c].lessThan(EPSILON).cond(blend[c], base[c].oneMinus().div(blend[c]).oneMinus().max(0));
+export const calcBurn = tslFn(
+  ({ base, blend }: Params) => {
+    const fn = (c: 'x' | 'y' | 'z') =>
+      blend[c].lessThan(EPSILON).cond(blend[c], base[c].oneMinus().div(blend[c]).oneMinus().max(0));
 
-  return vec3(fn('x'), fn('y'), fn('z'));
-}).setLayout({
-  name: 'burnColor',
-  type: TypeName.vec3,
-  inputs: [
-    { name: 'base', type: TypeName.vec3 },
-    { name: 'blend', type: TypeName.vec3 },
-  ],
-});
-export const calcDodge = tslFn(({ base, blend }: Params) => {
-  const fn = (c: 'x' | 'y' | 'z') => blend[c].equal(1.0).cond(blend[c], base[c].div(blend[c].oneMinus()).max(0));
+    return vec3(fn('x'), fn('y'), fn('z'));
+  },
+  {
+    name: 'burnColor',
+    type: TypeName.vec3,
+    inputs: [
+      { name: 'base', type: TypeName.vec3 },
+      { name: 'blend', type: TypeName.vec3 },
+    ],
+  },
+);
+export const calcDodge = tslFn(
+  ({ base, blend }: Params) => {
+    const fn = (c: 'x' | 'y' | 'z') => blend[c].equal(1.0).cond(blend[c], base[c].div(blend[c].oneMinus()).max(0));
 
-  return vec3(fn('x'), fn('y'), fn('z'));
-}).setLayout({
-  name: 'dodgeColor',
-  type: TypeName.vec3,
-  inputs: [
-    { name: 'base', type: TypeName.vec3 },
-    { name: 'blend', type: TypeName.vec3 },
-  ],
-});
-export const calcScreen = tslFn(({ base, blend }: Params) => {
-  const fn = (c: 'x' | 'y' | 'z') => base[c].oneMinus().mul(blend[c].oneMinus()).oneMinus();
+    return vec3(fn('x'), fn('y'), fn('z'));
+  },
+  {
+    name: 'dodgeColor',
+    type: TypeName.vec3,
+    inputs: [
+      { name: 'base', type: TypeName.vec3 },
+      { name: 'blend', type: TypeName.vec3 },
+    ],
+  },
+);
+export const calcScreen = tslFn(
+  ({ base, blend }: Params) => {
+    const fn = (c: 'x' | 'y' | 'z') => base[c].oneMinus().mul(blend[c].oneMinus()).oneMinus();
 
-  return vec3(fn('x'), fn('y'), fn('z'));
-}).setLayout({
-  name: 'screenColor',
-  type: TypeName.vec3,
-  inputs: [
-    { name: 'base', type: TypeName.vec3 },
-    { name: 'blend', type: TypeName.vec3 },
-  ],
-});
-export const calcOverlay = tslFn(({ base, blend }: Params) => {
-  const fn = (c: 'x' | 'y' | 'z') =>
-    base[c].lessThan(0.5).cond(base[c].mul(blend[c], 2.0), base[c].oneMinus().mul(blend[c].oneMinus()).oneMinus());
+    return vec3(fn('x'), fn('y'), fn('z'));
+  },
+  {
+    name: 'screenColor',
+    type: TypeName.vec3,
+    inputs: [
+      { name: 'base', type: TypeName.vec3 },
+      { name: 'blend', type: TypeName.vec3 },
+    ],
+  },
+);
+export const calcOverlay = tslFn(
+  ({ base, blend }: Params) => {
+    const fn = (c: 'x' | 'y' | 'z') =>
+      base[c].lessThan(0.5).cond(base[c].mul(blend[c], 2.0), base[c].oneMinus().mul(blend[c].oneMinus()).oneMinus());
 
-  return vec3(fn('x'), fn('y'), fn('z'));
-}).setLayout({
-  name: 'overlayColor',
-  type: TypeName.vec3,
-  inputs: [
-    { name: 'base', type: TypeName.vec3 },
-    { name: 'blend', type: TypeName.vec3 },
-  ],
-});
+    return vec3(fn('x'), fn('y'), fn('z'));
+  },
+  {
+    name: 'overlayColor',
+    type: TypeName.vec3,
+    inputs: [
+      { name: 'base', type: TypeName.vec3 },
+      { name: 'blend', type: TypeName.vec3 },
+    ],
+  },
+);
 
 addNodeCommand('burn', burn);
 addNodeCommand('dodge', dodge);
