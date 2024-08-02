@@ -1,6 +1,6 @@
-import { tsl } from '../shadernode/ShaderNodes.js';
+import { hsl } from '../shadernode/ShaderNodes.js';
 
-export const getDistanceAttenuation = tsl(inputs => {
+export const getDistanceAttenuation = hsl(inputs => {
   const { lightDistance, cutoffDistance, decayExponent } = inputs;
 
   const distanceFalloff = lightDistance.pow(decayExponent).max(0.01).reciprocal();

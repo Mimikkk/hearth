@@ -3,7 +3,7 @@ import { asNode } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.asN
 import { handlers } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.handlers.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
-import { TslLayout } from '@modules/renderer/engine/nodes/shadernode/tsl.js';
+import { HslLayout } from '@modules/renderer/engine/nodes/shadernode/hsl.js';
 
 const map = new WeakMap();
 
@@ -63,7 +63,7 @@ export class ShaderCallNode extends Node {
 export class ShaderNode<Fn extends (...params: any) => any = any> extends Node {
   constructor(
     public fn: Fn,
-    public layout?: TslLayout,
+    public layout?: HslLayout,
   ) {
     super();
   }
@@ -72,7 +72,7 @@ export class ShaderNode<Fn extends (...params: any) => any = any> extends Node {
     return /^\((\s+)?\[/.test(this.fn.toString());
   }
 
-  setLayout(layout: TslLayout) {
+  setLayout(layout: HslLayout) {
     this.layout = layout;
     return this;
   }
@@ -90,5 +90,5 @@ export class ShaderNode<Fn extends (...params: any) => any = any> extends Node {
 
 export const createShaderNode = <Fn extends (...params: any) => any = any>(
   fn: Fn,
-  layout?: TslLayout,
+  layout?: HslLayout,
 ): ShaderNode<Fn> => new Proxy(new ShaderNode<Fn>(fn, layout), handlers);

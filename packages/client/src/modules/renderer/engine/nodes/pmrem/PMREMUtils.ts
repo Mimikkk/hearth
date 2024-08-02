@@ -1,4 +1,4 @@
-import { f32, i32, NodeStack, tsl, vec2, vec3, vec4 } from '../shadernode/ShaderNodes.js';
+import { f32, i32, NodeStack, hsl, vec2, vec3, vec4 } from '../shadernode/ShaderNodes.js';
 import { abs, all, clamp, cos, cross, exp2, floor, fract, log2, max, mix, normalize, sin } from '../math/MathNode.js';
 import { mul } from '../math/OperatorNode.js';
 import { cond } from '../math/CondNode.js';
@@ -18,7 +18,7 @@ const cubeUV_m6 = f32(4.0);
 const cubeUV_minMipLevel = f32(4.0);
 const cubeUV_minTileSize = f32(16.0);
 
-const getFace = tsl(([direction]) => {
+const getFace = hsl(([direction]) => {
   const absDirection = vec3(abs(direction)).toVar();
   const face = f32(-1.0).toVar();
 
@@ -43,7 +43,7 @@ const getFace = tsl(([direction]) => {
   inputs: [{ name: 'direction', type: 'vec3' }],
 });
 
-const getUV = tsl(([direction, face]) => {
+const getUV = hsl(([direction, face]) => {
   const uv = vec2().toVar();
 
   NodeStack.if(face.equal(0.0), () => {
@@ -75,7 +75,7 @@ const getUV = tsl(([direction, face]) => {
   ],
 });
 
-const roughnessToMip = tsl(([roughness]) => {
+const roughnessToMip = hsl(([roughness]) => {
   const mip = f32(0.0).toVar();
 
   NodeStack.if(roughness.greaterThanEqual(cubeUV_r1), () => {
@@ -101,7 +101,7 @@ const roughnessToMip = tsl(([roughness]) => {
   inputs: [{ name: 'roughness', type: 'f32' }],
 });
 
-export const getDirection = tsl(([uv_immutable, face]) => {
+export const getDirection = hsl(([uv_immutable, face]) => {
   const uv = uv_immutable.toVar();
   uv.assign(mul(2.0, uv).sub(1.0));
   const direction = vec3(uv, 1.0).toVar();
@@ -138,7 +138,7 @@ export const getDirection = tsl(([uv_immutable, face]) => {
   ],
 });
 
-export const textureCubeUV = tsl(
+export const textureCubeUV = hsl(
   ([envMap, sampleDir_immutable, roughness_immutable, CUBEUV_TEXEL_WIDTH, CUBEUV_TEXEL_HEIGHT, CUBEUV_MAX_MIP]) => {
     const roughness = f32(roughness_immutable);
     const sampleDir = vec3(sampleDir_immutable);
@@ -162,7 +162,7 @@ export const textureCubeUV = tsl(
   },
 );
 
-const bilinearCubeUV = tsl(
+const bilinearCubeUV = hsl(
   ([envMap, direction_immutable, mipInt_immutable, CUBEUV_TEXEL_WIDTH, CUBEUV_TEXEL_HEIGHT, CUBEUV_MAX_MIP]) => {
     const mipInt = f32(mipInt_immutable).toVar();
     const direction = vec3(direction_immutable);
@@ -187,7 +187,7 @@ const bilinearCubeUV = tsl(
   },
 );
 
-const getSample = tsl(
+const getSample = hsl(
   ({ envMap, mipInt, outputDirection, theta, axis, CUBEUV_TEXEL_WIDTH, CUBEUV_TEXEL_HEIGHT, CUBEUV_MAX_MIP }) => {
     const cosTheta = cos(theta);
 
@@ -200,7 +200,7 @@ const getSample = tsl(
   },
 );
 
-export const blur = tsl(
+export const blur = hsl(
   ({
     n,
     latitudinal,

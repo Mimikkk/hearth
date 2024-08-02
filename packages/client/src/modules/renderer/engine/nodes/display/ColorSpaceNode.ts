@@ -1,6 +1,6 @@
 import TempNode from '../core/TempNode.js';
 import { mix } from '../math/MathNode.js';
-import { addNodeCommand, asNode, proxyNode, tsl, vec4 } from '../shadernode/ShaderNodes.js';
+import { addNodeCommand, asNode, proxyNode, hsl, vec4 } from '../shadernode/ShaderNodes.js';
 import { ColorSpace } from '@modules/renderer/engine/engine.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { Node } from '../core/Node.js';
@@ -39,7 +39,7 @@ interface Params {
   value: Node;
 }
 
-const sRGBToLinearShader = tsl(({ value }: Params) => {
+const sRGBToLinearShader = hsl(({ value }: Params) => {
   const { rgb } = value;
 
   const a = rgb.mul(0.9478672986).add(0.0521327014).pow(2.4);
@@ -50,7 +50,7 @@ const sRGBToLinearShader = tsl(({ value }: Params) => {
 
   return vec4(rgbResult, value.a);
 });
-const LinearTosRGBShader = tsl(({ value }: Params) => {
+const LinearTosRGBShader = hsl(({ value }: Params) => {
   const { rgb } = value;
 
   const a = rgb.pow(0.41666).mul(1.055).sub(0.055);

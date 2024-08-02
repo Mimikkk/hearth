@@ -16,7 +16,7 @@ import {
   string,
   texture,
   triplanarTexture,
-  tsl,
+  hsl,
   uv,
   vec2,
   vec3,
@@ -109,7 +109,7 @@ async function init() {
 
   //	ADVANCED
 
-  const desaturateShaderNode = tsl(input => {
+  const desaturateShaderNode = hsl(input => {
     return vec3(0.299, 0.587, 0.114).dot(input.color.xyz);
   });
 
@@ -117,7 +117,7 @@ async function init() {
   material.colorNode = desaturateShaderNode({ color: texture(uvTexture) });
   materials.push(material);
 
-  const desaturateNoInputsShaderNode = tsl(() => {
+  const desaturateNoInputsShaderNode = hsl(() => {
     return vec3(0.299, 0.587, 0.114).dot(texture(uvTexture).xyz);
   });
 
@@ -198,7 +198,7 @@ async function init() {
   });
 
   global.set('ENGINE', Engine);
-  global.set('TSL', Nodes);
+  global.set('HSL', Nodes);
 
   const asyncNode = js(`
 
@@ -206,7 +206,7 @@ async function init() {
 						outputType: 'node'
 					};
 
-					const { f32 } = TSL;
+					const { f32 } = HSL;
 
 					function init() {
 
@@ -249,7 +249,7 @@ async function init() {
 						]
 					};
 
-					const { saturation, f32, oscSine, mul } = TSL;
+					const { saturation, f32, oscSine, mul } = HSL;
 
 					function helloWorld() {
 

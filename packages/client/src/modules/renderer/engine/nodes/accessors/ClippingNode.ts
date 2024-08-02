@@ -1,5 +1,5 @@
 import { Node } from '../core/Node.js';
-import { asNode, tsl } from '../shadernode/ShaderNodes.js';
+import { asNode, hsl } from '../shadernode/ShaderNodes.js';
 import { positionView } from './PositionNode.js';
 import { diffuseColor, property } from '../core/PropertyNode.js';
 import { loop } from '../utils/LoopNode.js';
@@ -30,7 +30,7 @@ export class ClippingNode extends Node {
   }
 
   #setupAlpha(planes: Vec4[], numClippingPlanes: number, numUnionClippingPlanes: number): Node {
-    return tsl(() => {
+    return hsl(() => {
       const clippingPlanes = uniforms(planes);
       const distanceToPlane = property('f32', 'distanceToPlane');
       const distanceGradient = property('f32', 'distanceToGradient');
@@ -74,7 +74,7 @@ export class ClippingNode extends Node {
   }
 
   #setupDistance(planes: Vec4[], numClippingPlanes: number, numUnionClippingPlanes: number): Node {
-    return tsl(() => {
+    return hsl(() => {
       const clippingPlanes = uniforms(planes);
 
       let plane;

@@ -7,7 +7,7 @@ import { materialColor, materialPointWidth } from '../accessors/MaterialNode.js'
 import { modelViewMatrix } from '../accessors/ModelNode.js';
 import { positionGeometry } from '../accessors/PositionNode.js';
 import { smoothstep } from '@modules/renderer/engine/nodes/math/MathNode.js';
-import { tsl, vec2, vec4 } from '../shadernode/ShaderNodes.js';
+import { hsl, vec2, vec4 } from '../shadernode/ShaderNodes.js';
 import { uv } from '../accessors/UVNode.js';
 import { viewport } from '../display/ViewportNode.js';
 
@@ -44,7 +44,7 @@ export class InstancedPointsNodeMaterial extends NodeMaterial {
     const useAlphaToCoverage = this.alphaToCoverage;
     const useColor = this.useColor;
 
-    this.vertexNode = tsl(() => {
+    this.vertexNode = hsl(() => {
       //vUv = uv;
       varying(vec2(), 'vUv').assign(uv());
 
@@ -73,7 +73,7 @@ export class InstancedPointsNodeMaterial extends NodeMaterial {
       //vec4 mvPosition = mvPos;
     })();
 
-    this.fragmentNode = tsl(() => {
+    this.fragmentNode = hsl(() => {
       const vUv = varying(vec2(), 'vUv');
 
       const alpha = property('f32', 'alpha');

@@ -7,7 +7,7 @@ import {
   storage,
   storageObject,
   texture,
-  tsl,
+  hsl,
   uniform,
   viewportTopLeft,
 } from '@modules/renderer/engine/nodes/Nodes.js';
@@ -79,7 +79,7 @@ async function init() {
   const delayVolume = uniform(0.2);
   const delayOffset = uniform(0.55);
 
-  const computeShaderFn = tsl(() => {
+  const computeShaderFn = hsl(() => {
     const index = f32(instanceIndex);
 
     const time = index.mul(pitch);

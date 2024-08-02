@@ -1,7 +1,7 @@
-import { tsl } from '../../shadernode/ShaderNodes.js';
+import { hsl } from '../../shadernode/ShaderNodes.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
-export const D_GGX = tsl(
+export const D_GGX = hsl(
   ({ alpha, dotNH }) => {
     const a2 = alpha.pow2();
 

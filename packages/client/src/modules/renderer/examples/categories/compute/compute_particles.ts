@@ -7,7 +7,7 @@ import {
   SpriteNodeMaterial,
   storage,
   texture,
-  tsl,
+  hsl,
   uniform,
   vec3,
 } from '@modules/renderer/engine/nodes/Nodes.js';
@@ -60,7 +60,7 @@ async function init() {
   const velocityBuffer = createBuffer();
   const colorBuffer = createBuffer();
 
-  const computeInit = tsl(() => {
+  const computeInit = hsl(() => {
     const position = positionBuffer.element(instanceIndex);
     const color = colorBuffer.element(instanceIndex);
 
@@ -75,7 +75,7 @@ async function init() {
     color.assign(vec3(randX, randY, randZ));
   })().compute(particleCount);
 
-  const computeUpdate = tsl(() => {
+  const computeUpdate = hsl(() => {
     const position = positionBuffer.element(instanceIndex);
     const velocity = velocityBuffer.element(instanceIndex);
 
@@ -131,7 +131,7 @@ async function init() {
 
   hearth.compute(computeInit);
 
-  const computeHit = tsl(() => {
+  const computeHit = hsl(() => {
     const position = positionBuffer.element(instanceIndex);
     const velocity = velocityBuffer.element(instanceIndex);
 

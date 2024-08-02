@@ -1,7 +1,7 @@
 import { DFGApprox } from './DFGApprox.js';
-import { tsl } from '../../shadernode/ShaderNodes.js';
+import { hsl } from '../../shadernode/ShaderNodes.js';
 
-export const EnvironmentBRDF = tsl(inputs => {
+export const EnvironmentBRDF = hsl(inputs => {
   const { dotNV, specularColor, specularF90, roughness } = inputs;
 
   const fab = DFGApprox({ dotNV, roughness });

@@ -1,22 +1,22 @@
 import TempNode from '../core/TempNode.js';
-import { addNodeCommand, f32, mat3, asNode, tsl, vec3 } from '../shadernode/ShaderNodes.js';
+import { addNodeCommand, f32, mat3, asNode, hsl, vec3 } from '../shadernode/ShaderNodes.js';
 import { rendererReference } from '../accessors/RendererReferenceNode.js';
 import { clamp, log2, max, pow } from '../math/MathNode.js';
 import { mul } from '../math/OperatorNode.js';
 
 import { ToneMapping } from '@modules/renderer/engine/engine.js';
 
-const LinearToneMappingNode = tsl(({ color, exposure }) => {
+const LinearToneMappingNode = hsl(({ color, exposure }) => {
   return color.mul(exposure).clamp();
 });
 
-const ReinhardToneMappingNode = tsl(({ color, exposure }) => {
+const ReinhardToneMappingNode = hsl(({ color, exposure }) => {
   color = color.mul(exposure);
 
   return color.div(color.add(1.0)).clamp();
 });
 
-const OptimizedCineonToneMappingNode = tsl(({ color, exposure }) => {
+const OptimizedCineonToneMappingNode = hsl(({ color, exposure }) => {
   color = color.mul(exposure);
   color = color.sub(0.004).max(0.0);
 
@@ -26,14 +26,14 @@ const OptimizedCineonToneMappingNode = tsl(({ color, exposure }) => {
   return a.div(b).pow(2.2);
 });
 
-const RRTAndODTFit = tsl(({ color }) => {
+const RRTAndODTFit = hsl(({ color }) => {
   const a = color.mul(color.add(0.0245786)).sub(0.000090537);
   const b = color.mul(color.add(0.432951).mul(0.983729)).add(0.238081);
 
   return a.div(b);
 });
 
-const ACESFilmicToneMappingNode = tsl(({ color, exposure }) => {
+const ACESFilmicToneMappingNode = hsl(({ color, exposure }) => {
   const ACESInputMat = mat3(0.59719, 0.35458, 0.04823, 0.076, 0.90834, 0.01566, 0.0284, 0.13383, 0.83777);
 
   const ACESOutputMat = mat3(1.60475, -0.53108, -0.07367, -0.10208, 1.10813, -0.00605, -0.00327, -0.07276, 1.07602);
@@ -60,7 +60,7 @@ const LINEAR_SRGB_TO_LINEAR_REC2020 = mat3(
   vec3(0.0433, 0.0113, 0.8956),
 );
 
-const agxDefaultContrastApprox = tsl(([x_immutable]) => {
+const agxDefaultContrastApprox = hsl(([x_immutable]) => {
   const x = vec3(x_immutable).toVar();
   const x2 = vec3(x.mul(x)).toVar();
   const x4 = vec3(x2.mul(x2)).toVar();
@@ -75,7 +75,7 @@ const agxDefaultContrastApprox = tsl(([x_immutable]) => {
     );
 });
 
-const AGXToneMappingNode = tsl(({ color, exposure }) => {
+const AGXToneMappingNode = hsl(({ color, exposure }) => {
   const colortone = vec3(color).toVar();
   const AgXInsetMatrix = mat3(
     vec3(0.856627153315983, 0.137318972929847, 0.11189821299995),

@@ -6,7 +6,7 @@ import {
   MeshBasicNodeMaterial,
   NodeStack,
   storageObject,
-  tsl,
+  hsl,
   u32,
   uv,
   vec3,
@@ -47,13 +47,13 @@ async function init() {
     arrayBufferNodes.push(storageObject(arrayBuffer, type[i], size));
   }
 
-  const computeInitOrder = tsl(() => {
+  const computeInitOrder = hsl(() => {
     for (let i = 0; i < type.length; i++) {
       arrayBufferNodes[i].element(instanceIndex).assign(instanceIndex);
     }
   });
 
-  const computeInvertOrder = tsl(() => {
+  const computeInvertOrder = hsl(() => {
     for (let i = 0; i < type.length; i++) {
       const invertIndex = arrayBufferNodes[i].element(u32(size).sub(instanceIndex));
       arrayBufferNodes[i].element(instanceIndex).assign(invertIndex);
@@ -66,7 +66,7 @@ async function init() {
 
   const material = new MeshBasicNodeMaterial({ color: 0x00ff00 });
 
-  material.colorNode = tsl(() => {
+  material.colorNode = hsl(() => {
     const index = u32(uv().x.mul(size).floor()).toVar();
 
     NodeStack.if(index.greaterThanEqual(size), () => {

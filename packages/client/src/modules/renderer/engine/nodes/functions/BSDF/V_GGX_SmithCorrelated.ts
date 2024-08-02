@@ -1,9 +1,9 @@
 import { div } from '@modules/renderer/engine/nodes/math/OperatorNode.js';
 import { EPSILON } from '@modules/renderer/engine/nodes/math/MathNode.js';
-import { tsl } from '../../shadernode/ShaderNodes.js';
+import { hsl } from '../../shadernode/ShaderNodes.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
-export const V_GGX_SmithCorrelated = tsl(
+export const V_GGX_SmithCorrelated = hsl(
   inputs => {
     const { alpha, dotNL, dotNV } = inputs;
 

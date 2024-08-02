@@ -1,6 +1,6 @@
 import { getValueType } from '@modules/renderer/engine/nodes/core/NodeUtils.js';
 import { asConstNode } from '@modules/renderer/engine/nodes/shadernode/utils.js';
-import { tsl } from '@modules/renderer/engine/nodes/shadernode/tsl.js';
+import { hsl } from '@modules/renderer/engine/nodes/shadernode/hsl.js';
 import { handlers } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.handlers.js';
 import { WeakMemo } from '@modules/renderer/engine/hearth/memo/WeakMemo.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
@@ -18,7 +18,7 @@ export const asNode = (object: Node, fallback?: TypeName): Node => {
   if (type === 'node') return memo.get(object);
   if ((!fallback && (type === 'f32' || type === 'bool')) || (type && type !== 'shader' && type !== 'string'))
     return asNode(asConstNode(object, fallback));
-  if (type === 'shader') return tsl(object);
+  if (type === 'shader') return hsl(object);
 
   return object;
 };

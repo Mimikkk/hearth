@@ -15,7 +15,7 @@ import {
 import { modelViewMatrix } from '../accessors/ModelNode.js';
 import { positionGeometry } from '../accessors/PositionNode.js';
 import { mix, smoothstep } from '@modules/renderer/engine/nodes/math/MathNode.js';
-import { f32, NodeStack, tsl, vec2, vec3, vec4 } from '../shadernode/ShaderNodes.js';
+import { f32, NodeStack, hsl, vec2, vec3, vec4 } from '../shadernode/ShaderNodes.js';
 import { uv } from '../accessors/UVNode.js';
 import { viewport } from '../display/ViewportNode.js';
 
@@ -60,7 +60,7 @@ export class Line2NodeMaterial extends NodeMaterial {
     const useDash = this.dashed;
     const useWorldUnits = this.worldUnits;
 
-    const trimSegment = tsl(({ start, end }) => {
+    const trimSegment = hsl(({ start, end }) => {
       const a = cameraProjectionMatrix.element(2).element(2);
       const b = cameraProjectionMatrix.element(3).element(2);
       const nearEstimate = b.mul(-0.5).div(a);
@@ -70,7 +70,7 @@ export class Line2NodeMaterial extends NodeMaterial {
       return vec4(mix(start.xyz, end.xyz, alpha), end.w);
     });
 
-    this.vertexNode = tsl(() => {
+    this.vertexNode = hsl(() => {
       varyingProperty('vec2', 'vUv').assign(uv());
 
       const instanceStart = attribute('instanceStart');
@@ -173,7 +173,7 @@ export class Line2NodeMaterial extends NodeMaterial {
       return clip;
     })();
 
-    const closestLineToLine = tsl(({ p1, p2, p3, p4 }) => {
+    const closestLineToLine = hsl(({ p1, p2, p3, p4 }) => {
       const p13 = p1.sub(p3);
       const p43 = p4.sub(p3);
 
@@ -194,7 +194,7 @@ export class Line2NodeMaterial extends NodeMaterial {
       return vec2(mua, mub);
     });
 
-    this.fragmentNode = tsl(() => {
+    this.fragmentNode = hsl(() => {
       const vUv = varyingProperty('vec2', 'vUv');
 
       if (useDash) {

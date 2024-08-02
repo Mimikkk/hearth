@@ -7,31 +7,31 @@ import { asNodes } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.as
 import { Node } from '@modules/renderer/engine/nodes/core/Node.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
-export interface TslParameter {
+export interface HslParameter {
   name: string;
   type: TypeName;
 }
 
-export interface TslLayout {
+export interface HslLayout {
   name: string;
   type: TypeName;
-  inputs: TslParameter[];
+  inputs: HslParameter[];
 }
 
-export interface Tsl<Fn extends (...parameters: any) => any = any> {
+export interface Hsl<Fn extends (...parameters: any) => any = any> {
   (...parameters: Parameters<Fn>): ShaderCallNode;
 
   node: ShaderNode;
-  setLayout: (layout: TslLayout) => this;
+  setLayout: (layout: HslLayout) => this;
 }
 
-export const tsl = <Fn extends ((parameters: Node[]) => any) | ((parameters: Record<string, Node>) => any)>(
+export const hsl = <Fn extends ((parameters: Node[]) => any) | ((parameters: Record<string, Node>) => any)>(
   code: Fn,
-  layout: TslLayout,
-): Tsl<Fn> => {
+  layout: HslLayout,
+): Hsl<Fn> => {
   const node = createShaderNode(code, layout);
 
-  const fn: Tsl<Fn> = (...params) => {
+  const fn: Hsl<Fn> = (...params) => {
     asNodes(params);
 
     return node.call(Node.is(params[0]) ? [...params] : params[0]);

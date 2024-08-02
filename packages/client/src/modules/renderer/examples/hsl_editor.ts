@@ -1,10 +1,10 @@
 import { NodeMaterial, vec4 } from '@modules/renderer/engine/nodes/Nodes.js';
 import { GUI } from 'lil-gui';
-import initialCode from './tsl_editor.code.ts?raw';
+import initialCode from './hsl_editor.code.ts?raw';
 import monaco from './utilities/monaco-vite.js';
 import { Color, ColorSpace, Mesh, PerspectiveCamera, PlaneGeometry, Scene } from '@modules/renderer/engine/engine.js';
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
-import './tsl_editor.css';
+import './hsl_editor.css';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { resolveScript } from '@modules/renderer/examples/utilities/resolveScript.js';
 const createContainers = () => {

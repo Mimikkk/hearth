@@ -1,6 +1,6 @@
 import TempNode from '../core/TempNode.js';
 import { EPSILON } from '../math/MathNode.js';
-import { addNodeCommand, proxyNode, tsl, vec3 } from '../shadernode/ShaderNodes.js';
+import { addNodeCommand, proxyNode, hsl, vec3 } from '../shadernode/ShaderNodes.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 export class BlendModeNode extends TempNode {
@@ -66,7 +66,7 @@ export const screen = proxyNode(
   },
 );
 
-export const calcBurn = tsl(
+export const calcBurn = hsl(
   ({ base, blend }: Params) => {
     const fn = (c: 'x' | 'y' | 'z') =>
       blend[c].lessThan(EPSILON).cond(blend[c], base[c].oneMinus().div(blend[c]).oneMinus().max(0));
@@ -82,7 +82,7 @@ export const calcBurn = tsl(
     ],
   },
 );
-export const calcDodge = tsl(
+export const calcDodge = hsl(
   ({ base, blend }: Params) => {
     const fn = (c: 'x' | 'y' | 'z') => blend[c].equal(1.0).cond(blend[c], base[c].div(blend[c].oneMinus()).max(0));
 
@@ -97,7 +97,7 @@ export const calcDodge = tsl(
     ],
   },
 );
-export const calcScreen = tsl(
+export const calcScreen = hsl(
   ({ base, blend }: Params) => {
     const fn = (c: 'x' | 'y' | 'z') => base[c].oneMinus().mul(blend[c].oneMinus()).oneMinus();
 
@@ -112,7 +112,7 @@ export const calcScreen = tsl(
     ],
   },
 );
-export const calcOverlay = tsl(
+export const calcOverlay = hsl(
   ({ base, blend }: Params) => {
     const fn = (c: 'x' | 'y' | 'z') =>
       base[c].lessThan(0.5).cond(base[c].mul(blend[c], 2.0), base[c].oneMinus().mul(blend[c].oneMinus()).oneMinus());

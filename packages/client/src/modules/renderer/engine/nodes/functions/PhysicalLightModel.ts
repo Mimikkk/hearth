@@ -20,7 +20,7 @@ import {
 } from '../core/PropertyNode.js';
 import { transformedClearcoatNormalView, transformedNormalView } from '../accessors/NormalNode.js';
 import { positionViewDirection } from '../accessors/PositionNode.js';
-import { f32, mat3, tsl, vec3 } from '../shadernode/ShaderNodes.js';
+import { f32, mat3, hsl, vec3 } from '../shadernode/ShaderNodes.js';
 import { cond } from '@modules/renderer/engine/nodes/math/CondNode.js';
 import { mix, smoothstep } from '@modules/renderer/engine/nodes/math/MathNode.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
@@ -67,7 +67,7 @@ const evalSensitivity = (OPD, shift) => {
   return rgb;
 };
 
-const evalIridescence = tsl(
+const evalIridescence = hsl(
   ({ outsideIOR, eta2, cosTheta1, thinFilmThickness, baseF0 }) => {
     const iridescenceIOR = mix(outsideIOR, eta2, smoothstep(0.0, 0.03, thinFilmThickness));
 
@@ -130,7 +130,7 @@ const evalIridescence = tsl(
   },
 );
 
-const IBLSheenBRDF = tsl(({ normal, viewDir, roughness }) => {
+const IBLSheenBRDF = hsl(({ normal, viewDir, roughness }) => {
   const dotNV = normal.dot(viewDir).saturate();
 
   const r2 = roughness.pow2();

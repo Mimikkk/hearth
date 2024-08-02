@@ -14,7 +14,7 @@ import {
   instanceIndex,
   PointsNodeMaterial,
   storage,
-  tsl,
+  hsl,
   uniform,
   vec2,
   vec3,
@@ -51,7 +51,7 @@ const createStorageNodes = () => {
 
 const { particle: particleBufferNode, velocity: velocityBufferNode } = createStorageNodes();
 
-const computeShaderFn = tsl(() => {
+const computeShaderFn = hsl(() => {
   const particle = particleBufferNode.element(instanceIndex);
   const velocity = velocityBufferNode.element(instanceIndex);
 
@@ -74,7 +74,7 @@ const computeShaderFn = tsl(() => {
 const computeNode = computeShaderFn().compute(count);
 console.log(computeShaderFn());
 computeNode.onInit = ({ hearth }) => {
-  const precomputeShaderNode = tsl(() => {
+  const precomputeShaderNode = hsl(() => {
     const particleIndex = f32(instanceIndex);
 
     const randomAngle = particleIndex.mul(0.005).mul(Math.PI * 2);

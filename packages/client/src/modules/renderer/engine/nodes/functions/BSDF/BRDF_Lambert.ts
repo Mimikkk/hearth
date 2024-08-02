@@ -1,3 +1,3 @@
-import { tsl } from '../../shadernode/ShaderNodes.js';
+import { hsl } from '../../shadernode/ShaderNodes.js';
 
-export const BRDF_Lambert = tsl(inputs => inputs.diffuseColor.mul(1 / Math.PI));
+export const BRDF_Lambert = hsl(inputs => inputs.diffuseColor.mul(1 / Math.PI));

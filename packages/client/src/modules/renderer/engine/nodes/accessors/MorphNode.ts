@@ -1,6 +1,6 @@
 import { Node } from '../core/Node.js';
 import { NodeUpdateStage } from '../core/constants.js';
-import { i32, ivec2, proxyNode, tsl } from '../shadernode/ShaderNodes.js';
+import { i32, ivec2, proxyNode, hsl } from '../shadernode/ShaderNodes.js';
 import { uniform } from '../core/UniformNode.js';
 import { reference } from './ReferenceNode.js';
 import { positionLocal } from './PositionNode.js';
@@ -13,7 +13,7 @@ import { loop } from '../utils/LoopNode.js';
 const morphTextures = new WeakMap();
 const morphVec4 = Vec4.new();
 
-const getMorph = tsl(({ bufferMap, influence, stride, width, depth, offset }) => {
+const getMorph = hsl(({ bufferMap, influence, stride, width, depth, offset }) => {
   const texelIndex = i32(vertexIndex).mul(stride).add(offset);
 
   const y = texelIndex.div(width);

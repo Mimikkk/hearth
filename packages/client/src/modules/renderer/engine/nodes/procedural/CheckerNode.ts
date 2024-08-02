@@ -1,9 +1,9 @@
 import TempNode from '../core/TempNode.js';
 import { uv } from '../accessors/UVNode.js';
-import { addNodeCommand, proxyNode, tsl } from '../shadernode/ShaderNodes.js';
+import { addNodeCommand, proxyNode, hsl } from '../shadernode/ShaderNodes.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
-const checkerShaderNode = tsl((inputs: { uv: Node }) => {
+const checkerShaderNode = hsl((inputs: { uv: Node }) => {
   const uv = inputs.uv.mul(2.0);
 
   const cx = uv.x.floor();

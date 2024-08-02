@@ -1,5 +1,5 @@
 import { Node } from '../core/Node.js';
-import { proxyNode, ShaderCallNode, Tsl } from '../shadernode/ShaderNodes.js';
+import { proxyNode, ShaderCallNode, Hsl } from '../shadernode/ShaderNodes.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
@@ -7,7 +7,7 @@ export class OverloadShaderNode extends Node {
   call: ShaderCallNode;
 
   constructor(
-    public fns: Tsl[],
+    public fns: Hsl[],
     public parameters: Node[],
   ) {
     for (const fn of fns) {
@@ -36,12 +36,12 @@ export class OverloadShaderNode extends Node {
 const overload = proxyNode(OverloadShaderNode);
 
 export const overloadFn =
-  <Fn extends (...params: any) => any>(shaders: Tsl<Fn>[]) =>
+  <Fn extends (...params: any) => any>(shaders: Hsl<Fn>[]) =>
   (...params: Parameters<Fn>) =>
     overload(shaders, params);
 
-const matchBest = (params: Node[], fns: Tsl[], builder: NodeBuilder): Tsl => {
-  let bestFn!: Tsl;
+const matchBest = (params: Node[], fns: Hsl[], builder: NodeBuilder): Hsl => {
+  let bestFn!: Hsl;
   let bestScore = -1;
 
   for (const fn of fns) {
