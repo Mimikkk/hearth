@@ -2,8 +2,9 @@ import { Node } from '../core/Node.js';
 import { positionView } from '../accessors/PositionNode.js';
 import { addNodeCommand, proxyNode } from '../shadernode/ShaderNodes.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
+import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
-class FogNode extends Node {
+export class FogNode extends Node {
   static type = 'FogNode';
   declare isFogNode: boolean;
 
@@ -11,21 +12,15 @@ class FogNode extends Node {
     public colorNode: Node,
     public factorNode: Node | null = null,
   ) {
-    super('f32');
+    super(TypeName.f32);
 
     this.isFogNode = true;
   }
 
   getViewZNode(builder: NodeBuilder) {
-    let viewZ;
+    const viewZ = builder.context.getViewZ?.(this) ?? positionView.z;
 
-    const getViewZ = builder.context.getViewZ;
-
-    if (getViewZ !== undefined) {
-      viewZ = getViewZ(this);
-    }
-
-    return (viewZ || positionView.z).negate();
+    return viewZ.negate();
   }
 
   setup(): Node | null {

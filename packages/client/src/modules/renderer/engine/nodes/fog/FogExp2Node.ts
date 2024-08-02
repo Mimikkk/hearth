@@ -3,17 +3,12 @@ import { Node } from '../core/Node.js';
 import { addNodeCommand, proxyNode } from '../shadernode/ShaderNodes.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 
-class FogExp2Node extends FogNode {
-  declare isFogExp2Node: true;
-  static type = 'FogExp2Node';
-
+export class FogExp2Node extends FogNode {
   constructor(
     colorNode: Node,
     public densityNode: Node,
   ) {
     super(colorNode);
-
-    this.isFogExp2Node = true;
   }
 
   setup(builder: NodeBuilder): Node | null {
@@ -23,8 +18,6 @@ class FogExp2Node extends FogNode {
     return density.mul(density, viewZ, viewZ).negate().exp().oneMinus();
   }
 }
-
-export default FogExp2Node;
 
 export const densityFog = proxyNode(FogExp2Node);
 

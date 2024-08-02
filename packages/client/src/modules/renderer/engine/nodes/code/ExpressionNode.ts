@@ -13,7 +13,7 @@ class ExpressionNode extends Node {
     super(nodeType);
   }
 
-  generate(builder: NodeBuilder, output: string | null = null) {
+  generate(builder: NodeBuilder, output: string | null = null): string | void {
     const type = this.getNodeType(builder);
     const snippet = this.snippet;
 

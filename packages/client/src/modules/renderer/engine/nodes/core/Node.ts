@@ -149,9 +149,7 @@ export class Node {
   generate(builder: NodeBuilder, output: TypeName | null = null) {
     const { outputNode } = builder.getNodeProperties(this);
 
-    if (outputNode && outputNode.isNode) {
-      return outputNode.build(builder, output);
-    }
+    if (Node.is(outputNode)) return outputNode.build(builder, output);
   }
 
   updateBefore(frame: NodeFrame): boolean | void {

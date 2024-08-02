@@ -1,6 +1,7 @@
 import { Node } from '../core/Node.js';
 import { proxyNode } from '../shadernode/ShaderNodes.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
+import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 export interface CodeNodeInclude {
   build(builder: NodeBuilder): void;
@@ -14,7 +15,7 @@ class CodeNode extends Node {
     public code: string,
     public includes: CodeNodeInclude[] = [],
   ) {
-    super('code');
+    super(TypeName.void);
   }
 
   isGlobal() {

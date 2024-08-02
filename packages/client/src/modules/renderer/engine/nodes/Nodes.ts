@@ -363,9 +363,9 @@ export { default as FunctionNode, wgslFn } from './code/FunctionNode.js';
 export { default as ScriptableNode, scriptable, global } from './code/ScriptableNode.js';
 export { default as ScriptableValueNode, scriptableValue } from './code/ScriptableValueNode.js';
 
-export { default as FogNode, fog } from './fog/FogNode.js';
-export { default as FogRangeNode, rangeFog } from './fog/FogRangeNode.js';
-export { default as FogExp2Node, densityFog } from './fog/FogExp2Node.js';
+export { FogNode, fog } from './fog/FogNode.js';
+export { FogRangeNode, rangeFog } from './fog/FogRangeNode.js';
+export { FogExp2Node, densityFog } from './fog/FogExp2Node.js';
 
 export { default as RangeNode, range } from './geometry/RangeNode.js';
 
