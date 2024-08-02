@@ -144,8 +144,8 @@ export {
   shiftLeft,
   shiftRight,
 } from './math/OperatorNode.js';
-export { default as CondNode, cond } from './math/CondNode.js';
-export { default as HashNode, hash } from './math/HashNode.js';
+export { CondNode, cond } from './math/CondNode.js';
+export { HashNode, hash } from './math/HashNode.js';
 
 export { parabola, gain, pcurve, sinc } from './math/MathUtils.js';
 export { triNoise3D } from './math/TriNoise3D.js';

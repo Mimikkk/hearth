@@ -5,7 +5,7 @@ import { addNodeCommand, proxyNode } from '../shadernode/ShaderNodes.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 
-class CondNode extends Node {
+export class CondNode extends Node {
   static type = 'CondNode';
 
   constructor(
