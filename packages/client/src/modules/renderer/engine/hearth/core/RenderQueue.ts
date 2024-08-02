@@ -146,5 +146,3 @@ export class Renderable {
     this.group = null!;
   }
 }
-
-export default RenderQueue;

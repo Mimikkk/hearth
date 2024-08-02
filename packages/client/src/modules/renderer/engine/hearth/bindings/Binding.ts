@@ -15,5 +15,3 @@ export class Binding {
     return Object.assign(new this.constructor(), this);
   }
 }
-
-export default Binding;

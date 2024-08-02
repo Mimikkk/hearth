@@ -133,5 +133,3 @@ export class ClippingContext {
     if (update) this.version = _clippingContextVersion++;
   }
 }
-
-export default ClippingContext;

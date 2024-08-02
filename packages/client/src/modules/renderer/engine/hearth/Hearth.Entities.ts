@@ -1,8 +1,8 @@
 import ChainMap from './memo/ChainMap.js';
-import RenderObject from './core/RenderObject.js';
+import { RenderObject } from './core/RenderObject.js';
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
-import RenderContext from '@modules/renderer/engine/hearth/core/RenderContext.js';
-import LightsNode from '@modules/renderer/engine/nodes/lighting/LightsNode.js';
+import { RenderContext } from '@modules/renderer/engine/hearth/core/RenderContext.js';
+import { LightsNode } from '@modules/renderer/engine/nodes/lighting/LightsNode.js';
 import { Camera } from '@modules/renderer/engine/entities/cameras/Camera.js';
 import { Scene } from '@modules/renderer/engine/entities/scenes/Scene.js';
 import { Material } from '@modules/renderer/engine/entities/materials/Material.js';

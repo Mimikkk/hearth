@@ -1,7 +1,5 @@
 export class Pipeline {
   usedTimes: number = 0;
 
-  constructor(public cacheKey: string) {}
+  constructor(public key: string) {}
 }
-
-export default Pipeline;

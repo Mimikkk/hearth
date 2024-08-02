@@ -11,7 +11,7 @@ import {
 } from '@modules/renderer/engine/nodes/Nodes.js';
 
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
-import StorageTexture from '@modules/renderer/engine/entities/textures/StorageTexture.js';
+import { StorageTexture } from '@modules/renderer/engine/entities/textures/StorageTexture.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, hearth;

@@ -5,7 +5,7 @@ import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { WgslFn } from '@modules/renderer/engine/nodes/builder/WgslFn.js';
 
-class FunctionNode extends CodeNode {
+export class FunctionNode extends CodeNode {
   static type = 'FunctionNode';
   keywords: Record<string, CodeNode>;
 

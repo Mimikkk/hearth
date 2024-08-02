@@ -1,4 +1,4 @@
-class NodeVar {
+export class NodeVar {
   constructor(name, type) {
     this.isNodeVar = true;
 

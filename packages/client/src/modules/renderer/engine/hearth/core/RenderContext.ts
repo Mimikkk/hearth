@@ -1,5 +1,5 @@
 import { Color, DepthTexture, RenderTarget, Texture, Vec4 } from '@modules/renderer/engine/engine.js';
-import ClippingContext from '@modules/renderer/engine/hearth/core/ClippingContext.js';
+import { ClippingContext } from '@modules/renderer/engine/hearth/core/ClippingContext.js';
 import { Const } from '@modules/renderer/engine/math/types.js';
 
 let id = 0;
@@ -73,8 +73,6 @@ export class RenderContext {
     this.height = 0;
   }
 }
-
-export default RenderContext;
 
 RenderContext.prototype.isRenderContext = true;
 

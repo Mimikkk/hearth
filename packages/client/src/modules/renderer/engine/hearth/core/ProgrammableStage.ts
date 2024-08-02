@@ -14,5 +14,3 @@ export class ProgrammableStage {
     this.id = _id++;
   }
 }
-
-export default ProgrammableStage;

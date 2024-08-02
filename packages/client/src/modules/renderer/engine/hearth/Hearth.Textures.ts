@@ -33,7 +33,7 @@ import {
   GPUTextureFormatType,
 } from '@modules/renderer/engine/hearth/constants.js';
 import { TypedArrayConstructor } from '@modules/renderer/engine/math/MathUtils.js';
-import StorageTexture from '@modules/renderer/engine/entities/textures/StorageTexture.js';
+import { StorageTexture } from '@modules/renderer/engine/entities/textures/StorageTexture.js';
 
 export class HearthTextures extends DataMap<any, any> {
   constructor(public hearth: Hearth) {

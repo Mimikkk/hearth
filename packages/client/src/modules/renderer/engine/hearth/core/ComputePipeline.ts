@@ -1,17 +1,15 @@
-import Pipeline from './Pipeline.js';
-import ProgrammableStage from '@modules/renderer/engine/hearth/core/ProgrammableStage.js';
+import { Pipeline } from './Pipeline.js';
+import { ProgrammableStage } from '@modules/renderer/engine/hearth/core/ProgrammableStage.js';
 
 export class ComputePipeline extends Pipeline {
   declare isComputePipeline: true;
 
   constructor(
-    cacheKey: string,
-    public computeProgram: ProgrammableStage,
+    key: string,
+    public program: ProgrammableStage,
   ) {
-    super(cacheKey);
-
-    this.isComputePipeline = true;
+    super(key);
   }
 }
 
-export default ComputePipeline;
+ComputePipeline.prototype.isComputePipeline = true;

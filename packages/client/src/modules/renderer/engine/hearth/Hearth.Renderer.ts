@@ -2,7 +2,7 @@ import { HearthComponent } from '@modules/renderer/engine/hearth/Hearth.Componen
 import { Entity } from '@modules/renderer/engine/core/Entity.js';
 import { Camera } from '@modules/renderer/engine/entities/cameras/Camera.js';
 import { Scene } from '@modules/renderer/engine/entities/scenes/Scene.js';
-import RenderContext from './core/RenderContext.ts';
+import { RenderContext } from './core/RenderContext.ts';
 import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 import { Vec4 } from '@modules/renderer/engine/math/Vec4.js';
 import { Frustum } from '@modules/renderer/engine/math/Frustum.js';
@@ -13,10 +13,10 @@ import {
   GPUStoreOpType,
   GPUTextureViewDimensionType,
 } from '@modules/renderer/engine/hearth/constants.js';
-import RenderQueue, { SortFn } from '@modules/renderer/engine/hearth/core/RenderQueue.js';
+import { RenderQueue, SortFn } from '@modules/renderer/engine/hearth/core/RenderQueue.js';
 import { Color } from '@modules/renderer/engine/math/Color.js';
 import { Material } from '@modules/renderer/engine/entities/materials/Material.js';
-import LightsNode from '../nodes/lighting/LightsNode.ts';
+import { LightsNode } from '../nodes/lighting/LightsNode.ts';
 
 export class HearthRenderer extends HearthComponent {
   renderPassDescriptor: GPURenderPassDescriptor | null = null;
@@ -286,33 +286,33 @@ export class HearthRenderer extends HearthComponent {
   clear(color: boolean = true, depth: boolean = true, stencil: boolean = true) {
     const target = this.hearth.target;
 
-    let renderTargetData = null;
+    let data = null;
     if (target) {
       this.hearth.textures.updateRenderTarget(target);
 
-      renderTargetData = this.hearth.textures.get(target);
+      data = this.hearth.textures.get(target);
     }
 
     const device = this.hearth.device;
     const hearth = this.hearth;
 
-    let colorAttachments = [];
+    let colorAttachments: GPURenderPassColorAttachment[] = [];
 
-    let depthStencilAttachment;
+    let depthStencilAttachment: GPURenderPassDepthStencilAttachment | undefined = undefined;
+
+    let useDepth: boolean = false;
+    let useStencil: boolean = false;
+
     let clearValue;
-
-    let supportsDepth;
-    let supportsStencil;
-
     if (color) {
-      const clearColor = this.getClearColor();
+      const color = this.getClearColor();
 
-      clearValue = { r: clearColor.r, g: clearColor.g, b: clearColor.b, a: clearColor.a };
+      clearValue = { r: color.r, g: color.g, b: color.b, a: color.a };
     }
 
-    if (renderTargetData === null) {
-      supportsDepth = hearth.parameters.useDepth;
-      supportsStencil = hearth.parameters.useStencil;
+    if (data === null) {
+      useDepth = hearth.parameters.useDepth;
+      useStencil = hearth.parameters.useStencil;
 
       const descriptor = this._getDefaultRenderPassDescriptor();
 
@@ -326,26 +326,26 @@ export class HearthRenderer extends HearthComponent {
         colorAttachment.storeOp = GPUStoreOpType.Store;
       }
 
-      if (supportsDepth || supportsStencil) {
+      if (useDepth || useStencil) {
         depthStencilAttachment = descriptor.depthStencilAttachment;
       }
     } else {
-      supportsDepth = renderTargetData.depth;
-      supportsStencil = renderTargetData.stencil;
+      useDepth = data.depth;
+      useStencil = data.stencil;
 
       if (color) {
-        for (const texture of renderTargetData.textures) {
+        for (const texture of data.textures) {
           const textureData = this.hearth.memo.get(texture);
           const textureView = textureData.texture.createView();
 
           let view, resolveTarget;
 
-          if (textureData.msaaTexture !== undefined) {
+          if (textureData.msaaTexture) {
             view = textureData.msaaTexture.createView();
+
             resolveTarget = textureView;
           } else {
             view = textureView;
-            resolveTarget = undefined;
           }
 
           colorAttachments.push({
@@ -358,8 +358,8 @@ export class HearthRenderer extends HearthComponent {
         }
       }
 
-      if (supportsDepth || supportsStencil) {
-        const depthTextureData = this.hearth.memo.get(renderTargetData.depthTexture);
+      if (useDepth || useStencil) {
+        const depthTextureData = this.hearth.memo.get(data.depthTexture);
 
         depthStencilAttachment = {
           view: depthTextureData.texture.createView(),
@@ -367,7 +367,7 @@ export class HearthRenderer extends HearthComponent {
       }
     }
 
-    if (supportsDepth) {
+    if (useDepth) {
       if (depth) {
         depthStencilAttachment.depthLoadOp = GPULoadOpType.Clear;
         depthStencilAttachment.depthClearValue = hearth._clearDepth;
@@ -377,8 +377,7 @@ export class HearthRenderer extends HearthComponent {
         depthStencilAttachment.depthStoreOp = GPUStoreOpType.Store;
       }
     }
-
-    if (supportsStencil) {
+    if (useStencil) {
       if (stencil) {
         depthStencilAttachment.stencilLoadOp = GPULoadOpType.Clear;
         depthStencilAttachment.stencilClearValue = hearth._clearStencil;
@@ -389,11 +388,8 @@ export class HearthRenderer extends HearthComponent {
       }
     }
 
-    const encoder = device.createCommandEncoder({});
-    const pass = encoder.beginRenderPass({
-      colorAttachments,
-      depthStencilAttachment,
-    });
+    const encoder = device.createCommandEncoder();
+    const pass = encoder.beginRenderPass({ colorAttachments, depthStencilAttachment });
 
     pass.end();
 

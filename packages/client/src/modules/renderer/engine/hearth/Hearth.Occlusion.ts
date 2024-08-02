@@ -1,5 +1,4 @@
 import { HearthComponent } from '@modules/renderer/engine/hearth/Hearth.Component.js';
-import RenderContext from '@modules/renderer/engine/hearth/core/RenderContext.js';
 import { Entity } from '@modules/renderer/engine/core/Entity.js';
 
 export class HearthOcclusion extends HearthComponent {

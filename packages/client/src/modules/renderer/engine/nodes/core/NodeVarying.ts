@@ -1,6 +1,6 @@
-import NodeVar from './NodeVar.js';
+import { NodeVar } from './NodeVar.js';
 
-class NodeVarying extends NodeVar {
+export class NodeVarying extends NodeVar {
   needsInterpolation = false;
   isNodeVarying = true;
 

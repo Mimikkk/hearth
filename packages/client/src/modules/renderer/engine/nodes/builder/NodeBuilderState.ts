@@ -1,4 +1,4 @@
-import Binding from '@modules/renderer/engine/hearth/bindings/Binding.js';
+import { Binding } from '@modules/renderer/engine/hearth/bindings/Binding.js';
 import NodeAttribute from '@modules/renderer/engine/nodes/core/NodeAttribute.js';
 import { Node } from '@modules/renderer/engine/nodes/core/Node.js';
 

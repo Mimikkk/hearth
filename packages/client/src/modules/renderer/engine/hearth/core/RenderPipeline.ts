@@ -1,14 +1,12 @@
-import Pipeline from './Pipeline.js';
-import ProgrammableStage from '@modules/renderer/engine/hearth/core/ProgrammableStage.js';
+import { Pipeline } from './Pipeline.js';
+import { ProgrammableStage } from '@modules/renderer/engine/hearth/core/ProgrammableStage.js';
 
-class RenderPipeline extends Pipeline {
+export class RenderPipeline extends Pipeline {
   constructor(
-    cacheKey: string,
-    public vertexProgram: ProgrammableStage,
-    public fragmentProgram: ProgrammableStage,
+    key: string,
+    public vertex: ProgrammableStage,
+    public fragment: ProgrammableStage,
   ) {
-    super(cacheKey);
+    super(key);
   }
 }
-
-export default RenderPipeline;

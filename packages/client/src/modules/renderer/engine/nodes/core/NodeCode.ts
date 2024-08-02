@@ -1,4 +1,4 @@
-class NodeCode {
+export class NodeCode {
   constructor(name, type, code = '') {
     this.name = name;
     this.type = type;

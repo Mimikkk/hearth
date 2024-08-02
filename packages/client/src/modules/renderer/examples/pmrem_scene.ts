@@ -2,7 +2,7 @@ import * as Engine from '@modules/renderer/engine/engine.js';
 
 import { MeshBasicNodeMaterial, normalWorld, pmremTexture, uniform } from '@modules/renderer/engine/nodes/Nodes.js';
 
-import PMREMGenerator from '@modules/renderer/engine/hearth/PMREMGenerator.js';
+import { PMREMGenerator } from '@modules/renderer/engine/hearth/PMREMGenerator.js';
 
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 

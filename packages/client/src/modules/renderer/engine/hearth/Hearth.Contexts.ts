@@ -1,5 +1,5 @@
 import ChainMap from './memo/ChainMap.js';
-import RenderContext from './core/RenderContext.js';
+import { RenderContext } from './core/RenderContext.js';
 import { Scene } from '@modules/renderer/engine/entities/scenes/Scene.js';
 import { Camera } from '@modules/renderer/engine/entities/cameras/Camera.js';
 import { RenderTarget } from '@modules/renderer/engine/hearth/core/RenderTarget.js';

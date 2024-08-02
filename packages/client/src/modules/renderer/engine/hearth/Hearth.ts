@@ -7,7 +7,7 @@ import { HearthContexts } from '@modules/renderer/engine/hearth/Hearth.Contexts.
 import { HearthBackground } from '@modules/renderer/engine/hearth/Hearth.Background.js';
 import { Scene } from '@modules/renderer/engine/entities/scenes/Scene.js';
 import { Camera } from '@modules/renderer/engine/entities/cameras/Camera.js';
-import ClippingContext from '@modules/renderer/engine/hearth/core/ClippingContext.js';
+import { ClippingContext } from '@modules/renderer/engine/hearth/core/ClippingContext.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 import {
@@ -47,10 +47,10 @@ import { Node } from '@modules/renderer/engine/nodes/core/Node.js';
 import { HearthResources } from '@modules/renderer/engine/hearth/Hearth.Resources.js';
 import { HearthUtilities } from '@modules/renderer/engine/hearth/Hearth.Utilities.js';
 import { WeakMemo } from '@modules/renderer/engine/hearth/memo/WeakMemo.js';
-import RenderObject from '@modules/renderer/engine/hearth/core/RenderObject.js';
-import ComputePipeline from '@modules/renderer/engine/hearth/core/ComputePipeline.js';
-import Binding from '@modules/renderer/engine/hearth/bindings/Binding.js';
-import ProgrammableStage from '@modules/renderer/engine/hearth/core/ProgrammableStage.js';
+import { RenderObject } from '@modules/renderer/engine/hearth/core/RenderObject.js';
+import { ComputePipeline } from '@modules/renderer/engine/hearth/core/ComputePipeline.js';
+import { Binding } from '@modules/renderer/engine/hearth/bindings/Binding.js';
+import { ProgrammableStage } from '@modules/renderer/engine/hearth/core/ProgrammableStage.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { HearthComputer } from '@modules/renderer/engine/hearth/Hearth.Computer.js';
 import { HearthTimestamp } from '@modules/renderer/engine/hearth/Hearth.Timestamp.js';

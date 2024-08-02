@@ -1,5 +1,5 @@
 import ChainMap from './memo/ChainMap.js';
-import RenderQueue from './core/RenderQueue.js';
+import { RenderQueue } from './core/RenderQueue.js';
 import { Scene } from '@modules/renderer/engine/entities/scenes/Scene.js';
 import { Camera } from '@modules/renderer/engine/entities/cameras/Camera.js';
 

@@ -7,20 +7,20 @@ import {
   GPUTextureViewDimensionType,
 } from './constants.js';
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
-import RenderObject from '@modules/renderer/engine/hearth/core/RenderObject.js';
-import Binding from '@modules/renderer/engine/hearth/bindings/Binding.js';
+import { RenderObject } from '@modules/renderer/engine/hearth/core/RenderObject.js';
+import { Binding } from '@modules/renderer/engine/hearth/bindings/Binding.js';
 import {
   BindingSampledCubeTexture,
   BindingSampledTexture,
 } from '@modules/renderer/engine/hearth/bindings/BindingSampledTexture.js';
-import BindingUniformBuffer from '@modules/renderer/engine/hearth/bindings/BindingUniformBuffer.js';
-import StorageTexture from '@modules/renderer/engine/entities/textures/StorageTexture.js';
-import BindingStorageBuffer from '@modules/renderer/engine/hearth/bindings/BindingStorageBuffer.js';
+import { BindingUniformBuffer } from '@modules/renderer/engine/hearth/bindings/BindingUniformBuffer.js';
+import { StorageTexture } from '@modules/renderer/engine/entities/textures/StorageTexture.js';
+import { BindingStorageBuffer } from '@modules/renderer/engine/hearth/bindings/BindingStorageBuffer.js';
 import { ComputeNode } from '@modules/renderer/engine/nodes/Nodes.js';
 import { NodeUniformsGroup } from '@modules/renderer/engine/nodes/builder/NodeStorageBuffer.js';
-import BindingBuffer from '@modules/renderer/engine/hearth/bindings/BindingBuffer.js';
+import { BindingBuffer } from '@modules/renderer/engine/hearth/bindings/BindingBuffer.js';
 import { TextureDataType } from '@modules/renderer/engine/constants.js';
-import BindingSampler from '@modules/renderer/engine/hearth/bindings/BindingSampler.js';
+import { BindingSampler } from '@modules/renderer/engine/hearth/bindings/BindingSampler.js';
 import { DepthTexture } from '@modules/renderer/engine/entities/textures/DepthTexture.js';
 import { VideoTexture } from '@modules/renderer/engine/entities/textures/VideoTexture.js';
 import { DataTexture } from '@modules/renderer/engine/entities/textures/DataTexture.js';

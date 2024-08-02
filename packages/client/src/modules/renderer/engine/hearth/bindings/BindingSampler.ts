@@ -1,4 +1,4 @@
-import Binding from './Binding.js';
+import { Binding } from './Binding.js';
 import { Texture } from '@modules/renderer/engine/entities/textures/Texture.js';
 
 export class BindingSampler extends Binding {
@@ -15,5 +15,3 @@ export class BindingSampler extends Binding {
 }
 
 BindingSampler.prototype.isSampler = true;
-
-export default BindingSampler;

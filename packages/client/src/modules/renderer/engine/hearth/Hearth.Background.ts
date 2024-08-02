@@ -10,8 +10,8 @@ import {
   vec4,
 } from '../nodes/Nodes.js';
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
-import RenderContext from '@modules/renderer/engine/hearth/core/RenderContext.js';
-import RenderQueue from '@modules/renderer/engine/hearth/core/RenderQueue.js';
+import { RenderContext } from '@modules/renderer/engine/hearth/core/RenderContext.js';
+import { RenderQueue } from '@modules/renderer/engine/hearth/core/RenderQueue.js';
 
 const _clearColor = Color.new(0, 0, 0, 1);
 

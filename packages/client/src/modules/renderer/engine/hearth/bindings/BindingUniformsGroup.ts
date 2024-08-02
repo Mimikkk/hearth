@@ -1,4 +1,4 @@
-import BindingUniformBuffer from './BindingUniformBuffer.js';
+import { BindingUniformBuffer } from './BindingUniformBuffer.js';
 import { STD140ChunkBytes } from '../constants.js';
 import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
@@ -8,7 +8,7 @@ import { Mat3 } from '@modules/renderer/engine/math/Mat3.js';
 import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
 import { BindingUniform } from '@modules/renderer/engine/hearth/bindings/BindingUniform.js';
 
-class BindingUniformsGroup extends BindingUniformBuffer {
+export class BindingUniformsGroup extends BindingUniformBuffer {
   uniforms: BindingUniform[] = [];
   bytesPerElement: number = Float32Array.BYTES_PER_ELEMENT;
 
@@ -216,5 +216,3 @@ function arraysEqual(a: ArrayLike<number>, b: ArrayLike<number>, offset: number)
   for (let i = 0, l = b.length; i < l; i++) if (a[offset + i] !== b[i]) return false;
   return true;
 }
-
-export default BindingUniformsGroup;

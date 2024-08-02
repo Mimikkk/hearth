@@ -1,15 +1,15 @@
-import ClippingContext from './ClippingContext.js';
+import { ClippingContext } from './ClippingContext.js';
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { Entity } from '@modules/renderer/engine/core/Entity.js';
 import { Material } from '@modules/renderer/engine/entities/materials/Material.js';
 import { Scene } from '@modules/renderer/engine/entities/scenes/Scene.js';
 import { Camera } from '@modules/renderer/engine/entities/cameras/Camera.js';
-import LightsNode from '@modules/renderer/engine/nodes/lighting/LightsNode.js';
-import RenderContext from '@modules/renderer/engine/hearth/core/RenderContext.js';
+import { LightsNode } from '@modules/renderer/engine/nodes/lighting/LightsNode.js';
+import { RenderContext } from '@modules/renderer/engine/hearth/core/RenderContext.js';
 
 let id = 0;
 
-export default class RenderObject {
+export class RenderObject {
   id: number;
   context: RenderContext;
   geometry: any;
@@ -22,7 +22,6 @@ export default class RenderObject {
   initialNodesCacheKey: string;
   initialCacheKey: string;
   _nodeBuilderState: any;
-  _bindings: any;
   isRenderObject: boolean;
 
   constructor(

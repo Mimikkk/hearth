@@ -1,8 +1,8 @@
-import BindingBuffer from './BindingBuffer.js';
+import { BindingBuffer } from './BindingBuffer.js';
 import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
 import { TypedArray } from '@modules/renderer/engine/math/MathUtils.js';
 
-class BindingStorageBuffer<T extends TypedArray = any> extends BindingBuffer {
+export class BindingStorageBuffer<T extends TypedArray = any> extends BindingBuffer {
   declare isStorageBuffer: boolean;
 
   constructor(
@@ -18,5 +18,3 @@ class BindingStorageBuffer<T extends TypedArray = any> extends BindingBuffer {
 }
 
 BindingStorageBuffer.prototype.isStorageBuffer = true;
-
-export default BindingStorageBuffer;

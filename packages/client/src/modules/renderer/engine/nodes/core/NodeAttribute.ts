@@ -1,4 +1,4 @@
-class NodeAttribute {
+export class NodeAttribute {
   constructor(name, type, node = null) {
     this.isNodeAttribute = true;
 

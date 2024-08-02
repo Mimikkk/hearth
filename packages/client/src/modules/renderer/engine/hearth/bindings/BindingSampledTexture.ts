@@ -1,4 +1,4 @@
-import Binding from './Binding.js';
+import { Binding } from './Binding.js';
 import { Texture } from '@modules/renderer/engine/entities/textures/Texture.js';
 import { VideoTexture } from '@modules/renderer/engine/entities/textures/VideoTexture.js';
 

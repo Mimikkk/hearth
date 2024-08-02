@@ -1,12 +1,12 @@
 import DataMap from './memo/DataMap.js';
-import RenderPipeline from './core/RenderPipeline.js';
-import ComputePipeline from './core/ComputePipeline.js';
-import ProgrammableStage from './core/ProgrammableStage.js';
+import { RenderPipeline } from './core/RenderPipeline.js';
+import { ComputePipeline } from './core/ComputePipeline.js';
+import { ProgrammableStage } from './core/ProgrammableStage.js';
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
-import ComputeNode from '@modules/renderer/engine/nodes/gpgpu/ComputeNode.js';
-import Binding from '@modules/renderer/engine/hearth/bindings/Binding.js';
-import RenderObject from '@modules/renderer/engine/hearth/core/RenderObject.js';
-import Pipeline from '@modules/renderer/engine/hearth/core/Pipeline.js';
+import { ComputeNode } from '@modules/renderer/engine/nodes/gpgpu/ComputeNode.js';
+import { Binding } from '@modules/renderer/engine/hearth/bindings/Binding.js';
+import { RenderObject } from '@modules/renderer/engine/hearth/core/RenderObject.js';
+import { Pipeline } from '@modules/renderer/engine/hearth/core/Pipeline.js';
 import { ShaderStage } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import {
   Blending,
@@ -106,8 +106,8 @@ export class HearthPipelines extends DataMap<any, any> {
 
       if (previousPipeline) {
         previousPipeline.usedTimes--;
-        previousPipeline.vertexProgram.usedTimes--;
-        previousPipeline.fragmentProgram.usedTimes--;
+        previousPipeline.vertex.usedTimes--;
+        previousPipeline.fragment.usedTimes--;
       }
 
       const nodeBuilderState = renderObject.getNodeBuilderState();
@@ -115,8 +115,7 @@ export class HearthPipelines extends DataMap<any, any> {
       let stageVertex = this.programs.vertex.get(nodeBuilderState.vertexShader);
 
       if (stageVertex === undefined) {
-        if (previousPipeline && previousPipeline.vertexProgram.usedTimes === 0)
-          this._releaseProgram(previousPipeline.vertexProgram);
+        if (previousPipeline && previousPipeline.vertex.usedTimes === 0) this._releaseProgram(previousPipeline.vertex);
 
         stageVertex = new ProgrammableStage(nodeBuilderState.vertexShader, ShaderStage.Vertex);
         this.programs.vertex.set(nodeBuilderState.vertexShader, stageVertex);
@@ -127,8 +126,8 @@ export class HearthPipelines extends DataMap<any, any> {
       let stageFragment = this.programs.fragment.get(nodeBuilderState.fragmentShader);
 
       if (stageFragment === undefined) {
-        if (previousPipeline && previousPipeline.fragmentProgram.usedTimes === 0)
-          this._releaseProgram(previousPipeline.fragmentProgram);
+        if (previousPipeline && previousPipeline.fragment.usedTimes === 0)
+          this._releaseProgram(previousPipeline.fragment);
 
         stageFragment = new ProgrammableStage(nodeBuilderState.fragmentShader, ShaderStage.Fragment);
         this.programs.fragment.set(nodeBuilderState.fragmentShader, stageFragment);
@@ -171,11 +170,11 @@ export class HearthPipelines extends DataMap<any, any> {
 
         if (pipeline.computeProgram.usedTimes === 0) this._releaseProgram(pipeline.computeProgram);
       } else {
-        pipeline.fragmentProgram.usedTimes--;
-        pipeline.vertexProgram.usedTimes--;
+        pipeline.fragment.usedTimes--;
+        pipeline.vertex.usedTimes--;
 
-        if (pipeline.vertexProgram.usedTimes === 0) this._releaseProgram(pipeline.vertexProgram);
-        if (pipeline.fragmentProgram.usedTimes === 0) this._releaseProgram(pipeline.fragmentProgram);
+        if (pipeline.vertex.usedTimes === 0) this._releaseProgram(pipeline.vertex);
+        if (pipeline.fragment.usedTimes === 0) this._releaseProgram(pipeline.fragment);
       }
     }
 
@@ -291,7 +290,7 @@ export class HearthPipelines extends DataMap<any, any> {
   }
 
   _releasePipeline(pipeline: Pipeline) {
-    this.caches.delete(pipeline.cacheKey);
+    this.caches.delete(pipeline.key);
   }
 
   _releaseProgram(program: ProgrammableStage) {
@@ -312,7 +311,7 @@ export class HearthPipelines extends DataMap<any, any> {
 
   createRenderPipeline(renderObject: RenderObject) {
     const { object, material, geometry, pipeline } = renderObject;
-    const { vertexProgram, fragmentProgram } = pipeline;
+    const { vertex, fragment } = pipeline;
 
     const { device, memo, utilities: utils, attributes } = this.hearth;
 
@@ -364,8 +363,8 @@ export class HearthPipelines extends DataMap<any, any> {
       });
     }
 
-    const vertexModule = memo.get(vertexProgram).module;
-    const fragmentModule = memo.get(fragmentProgram).module;
+    const vertexModule = memo.get(vertex).module;
+    const fragmentModule = memo.get(fragment).module;
 
     const primitiveState = this._getPrimitiveState(object, geometry, material);
     const depthCompare = this._getDepthCompare(material);
@@ -409,7 +408,7 @@ export class HearthPipelines extends DataMap<any, any> {
   createComputePipeline(pipeline: ComputePipeline, bindings: Binding[]) {
     const { device, memo } = this.hearth;
 
-    const computeProgram = memo.get(pipeline.computeProgram).module;
+    const computeProgram = memo.get(pipeline.program).module;
     const pipelineGPU = memo.get(pipeline);
     const bindingsData = memo.get(bindings);
 

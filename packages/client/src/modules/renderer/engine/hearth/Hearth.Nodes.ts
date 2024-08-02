@@ -31,7 +31,7 @@ import {
   viewportBottomLeft,
 } from '../nodes/Nodes.js';
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
-import RenderObject from '@modules/renderer/engine/hearth/core/RenderObject.js';
+import { RenderObject } from '@modules/renderer/engine/hearth/core/RenderObject.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { NodeUniformsGroup } from '@modules/renderer/engine/nodes/builder/NodeStorageBuffer.js';
 

@@ -1,4 +1,4 @@
-class NodeKeywords {
+export class NodeKeywords {
   constructor() {
     this.keywords = [];
     this.nodes = [];
