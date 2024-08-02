@@ -7,16 +7,16 @@ let discardExpression;
 class DiscardNode extends CondNode {
   static type = 'DiscardNode';
 
-  constructor(condNode) {
+  constructor(condition) {
     discardExpression = discardExpression || expression('discard');
 
-    super(condNode, discardExpression);
+    super(condition, discardExpression);
   }
 }
 
 export default DiscardNode;
 
 export const inlineDiscard = proxyNode(DiscardNode);
-export const discard = condNode => inlineDiscard(condNode).append();
+export const discard = condition => inlineDiscard(condition).append();
 
 addNodeCommand('discard', discard);

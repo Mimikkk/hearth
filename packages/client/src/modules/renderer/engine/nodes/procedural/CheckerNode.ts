@@ -14,8 +14,6 @@ const checkerShaderNode = tslFn((inputs: { uv: Node }) => {
 });
 
 export class CheckerNode extends TempNode {
-  static type = 'CheckerNode';
-
   constructor(public uvNode = uv()) {
     super(TypeName.f32);
   }

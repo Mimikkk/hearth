@@ -2,7 +2,7 @@ import { Node } from './Node.js';
 import { cond } from '../math/CondNode.js';
 import { proxyNode, NodeStack, ShaderNode } from '../shadernode/ShaderNodes.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
-import CondNode from 'three/examples/jsm/nodes/math/CondNode.js';
+import { CondNode } from 'three/examples/jsm/nodes/math/CondNode.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { OperatorNode } from '@modules/renderer/engine/nodes/Nodes.js';
 
@@ -10,7 +10,7 @@ export class StackNode extends Node {
   static type = 'StackNode';
   outputNode: Node | null;
   nodes: Node[];
-  _currentCond: CondNode | null;
+  cond: CondNode | null;
   declare isStackNode: boolean;
 
   constructor(public parent: StackNode | null = null) {
@@ -18,38 +18,37 @@ export class StackNode extends Node {
 
     this.nodes = [];
     this.outputNode = null;
-    this._currentCond = null;
+    this.cond = null;
   }
 
   getNodeType(builder: NodeBuilder): TypeName {
     return this.outputNode ? this.outputNode.getNodeType(builder) : TypeName.void;
   }
 
-  add(node) {
+  add(node: Node): this {
     this.nodes.push(node);
 
     return this;
   }
 
-  if(boolNode: OperatorNode, method: Function) {
-    const methodNode = new ShaderNode(method);
-    this._currentCond = cond(boolNode, methodNode);
+  if(bool: OperatorNode, then: Function) {
+    this.cond = cond(bool, new ShaderNode(then));
 
-    return this.add(this._currentCond);
+    return this.add(this.cond);
   }
 
   elseif(boolNode, method) {
     const methodNode = new ShaderNode(method);
     const ifNode = cond(boolNode, methodNode);
 
-    this._currentCond.elseNode = ifNode;
-    this._currentCond = ifNode;
+    this.cond.invalid = ifNode;
+    this.cond = ifNode;
 
     return this;
   }
 
   else(method) {
-    this._currentCond.elseNode = new ShaderNode(method);
+    this.cond.elseNode = new ShaderNode(method);
 
     return this;
   }
@@ -60,7 +59,7 @@ export class StackNode extends Node {
     NodeStack.set(this);
 
     for (const node of this.nodes) {
-      node.build(builder, 'void');
+      node.build(builder, TypeName.void);
     }
 
     NodeStack.set(previousStack);

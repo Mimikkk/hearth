@@ -7,19 +7,19 @@ import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.typ
 class CondNode extends Node {
   static type = 'CondNode';
 
-  constructor(condNode, ifNode, elseNode = null) {
+  constructor(
+    public when: Node,
+    public valid: Node,
+    public invalid: Node | null = null,
+  ) {
     super();
-
-    this.condNode = condNode;
-    this.ifNode = ifNode;
-    this.elseNode = elseNode;
   }
 
   getNodeType(builder) {
-    const ifType = this.ifNode.getNodeType(builder);
+    const ifType = this.valid.getNodeType(builder);
 
-    if (this.elseNode !== null) {
-      const elseType = this.elseNode.getNodeType(builder);
+    if (this.invalid !== null) {
+      const elseType = this.invalid.getNodeType(builder);
 
       if (TypeName.size(elseType) > TypeName.size(ifType)) {
         return elseType;
@@ -39,18 +39,18 @@ class CondNode extends Node {
       return nodeData.nodeProperty;
     }
 
-    const { ifNode, elseNode } = this;
+    const { valid, invalid } = this;
 
     const needsOutput = output !== 'void';
     const nodeProperty = needsOutput ? property(type).build(builder) : '';
 
     nodeData.nodeProperty = nodeProperty;
 
-    const nodeSnippet = contextNode(this.condNode).build(builder, 'bool');
+    const nodeSnippet = contextNode(this.when).build(builder, 'bool');
 
     builder.flow.code += `\nif ( ${nodeSnippet} ) {\n`;
 
-    let ifSnippet = contextNode(ifNode, context).build(builder, type);
+    let ifSnippet = contextNode(valid, context).build(builder, type);
 
     if (ifSnippet) {
       if (needsOutput) {
@@ -62,10 +62,10 @@ class CondNode extends Node {
 
     builder.flow.code += '\t' + ifSnippet + '\n}';
 
-    if (elseNode !== null) {
+    if (invalid !== null) {
       builder.flow.code += ' else {\n';
 
-      let elseSnippet = contextNode(elseNode, context).build(builder, type);
+      let elseSnippet = contextNode(invalid, context).build(builder, type);
 
       if (elseSnippet) {
         if (needsOutput) {
