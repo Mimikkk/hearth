@@ -10,6 +10,7 @@ import { Intersection, Raycaster } from '@modules/renderer/engine/core/Raycaster
 import { Color } from '@modules/renderer/engine/math/Color.js';
 import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
 import { BufferStep } from '@modules/renderer/engine/hearth/constants.js';
+import { Buffer } from '@modules/renderer/engine/core/Buffer.js';
 
 const _instanceLocalMatrix = new Mat4();
 const _instanceWorldMatrix = new Mat4();
@@ -33,7 +34,8 @@ export class InstancedMesh extends Mesh {
   constructor(geometry: Geometry, material: Material, count: number) {
     super(geometry, material);
 
-    this.instanceMatrix = new Attribute(new Float32Array(count * 16), 16, 0, BufferStep.Instance);
+    const buffer = Buffer.f32(count * 16, 16, BufferStep.Instance);
+    this.instanceMatrix = new Attribute(buffer);
     this.instanceColor = null;
     this.morphTexture = null;
     this.count = count;
@@ -142,8 +144,6 @@ export class InstancedMesh extends Mesh {
 
     if (_mesh.material === undefined) return;
 
-
-
     if (this.boundingSphere === null) this.computeBoundingSphere();
 
     _sphere.from(this.boundingSphere!);
@@ -151,22 +151,14 @@ export class InstancedMesh extends Mesh {
 
     if (raycaster.ray.intersectsSphere(_sphere) === false) return;
 
-
-
     for (let instanceId = 0; instanceId < raycastTimes; instanceId++) {
-
-
       this.getMatrixAt(instanceId, _instanceLocalMatrix);
 
       _instanceWorldMatrix.asMul(matrixWorld, _instanceLocalMatrix);
 
-
-
       _mesh.matrixWorld = _instanceWorldMatrix;
 
       _mesh.raycast(raycaster, _instanceIntersects);
-
-
 
       for (let i = 0, l = _instanceIntersects.length; i < l; i++) {
         const intersect = _instanceIntersects[i];
