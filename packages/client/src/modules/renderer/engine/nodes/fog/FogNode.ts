@@ -5,16 +5,11 @@ import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 export class FogNode extends Node {
-  static type = 'FogNode';
-  declare isFogNode: boolean;
-
   constructor(
     public colorNode: Node,
-    public factorNode: Node | null = null,
+    public factor?: Node,
   ) {
     super(TypeName.f32);
-
-    this.isFogNode = true;
   }
 
   getViewZNode(builder: NodeBuilder) {
@@ -23,8 +18,8 @@ export class FogNode extends Node {
     return viewZ.negate();
   }
 
-  setup(): Node | null {
-    return this.factorNode;
+  setup(): Node | undefined {
+    return this.factor;
   }
 }
 

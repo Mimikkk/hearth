@@ -5,15 +5,15 @@ import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.
 
 export class FogExp2Node extends FogNode {
   constructor(
-    colorNode: Node,
-    public densityNode: Node,
+    color: Node,
+    public density: Node,
   ) {
-    super(colorNode);
+    super(color);
   }
 
   setup(builder: NodeBuilder): Node | null {
     const viewZ = this.getViewZNode(builder);
-    const density = this.densityNode;
+    const density = this.density;
 
     return density.mul(density, viewZ, viewZ).negate().exp().oneMinus();
   }

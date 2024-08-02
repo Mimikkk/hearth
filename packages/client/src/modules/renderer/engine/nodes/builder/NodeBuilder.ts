@@ -97,6 +97,7 @@ export class NodeBuilder {
   stacks: StackNode[];
   currentFunctionNode: FunctionNode | null;
   context: {
+    getViewZ?: (node: Node) => Node;
     keywords: NodeKeywords;
     material: Material | null;
     vertex?: Node;

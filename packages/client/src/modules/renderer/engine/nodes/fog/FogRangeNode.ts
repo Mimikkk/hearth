@@ -6,17 +6,15 @@ import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.
 
 export class FogRangeNode extends FogNode {
   constructor(
-    colorNode: Node,
-    public nearNode: Node,
-    public farNode: Node,
+    color: Node,
+    public near: Node,
+    public far: Node,
   ) {
-    super(colorNode);
+    super(color);
   }
 
   setup(builder: NodeBuilder): Node {
-    const viewZ = this.getViewZNode(builder);
-
-    return smoothstep(this.nearNode, this.farNode, viewZ);
+    return smoothstep(this.near, this.far, this.getViewZNode(builder));
   }
 }
 
