@@ -18,19 +18,16 @@ const createConvertType = (type: TypeName, cacheMap: Map<any, any>) => {
       params = [getValueFromType(type, ...params)];
     }
 
-    
     let cached = cacheMap?.get(params[0]);
     if (params.length === 1 && cached) return asNode(cached);
 
     if (params.length === 1) {
       const node = asConstNode(params[0], type);
 
-      
       try {
         if (node.getNodeType() === type) return asNode(node);
       } catch {}
 
-      
       return asNode(new ConvertNode(node, type));
     }
 
@@ -72,7 +69,7 @@ export const umat4 = createConvertType(TypeName.umat4);
 export const bmat4 = createConvertType(TypeName.bmat4);
 
 export const proxyNode =
-  <T extends new (...params: Node[]) => any>(NodeClass: T) =>
+  <T extends new (...params: any) => any>(NodeClass: T) =>
   (...params: any[]): InstanceType<T> =>
     asNode(new NodeClass(...asNodes(params))) as InstanceType<T>;
 
