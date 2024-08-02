@@ -1,7 +1,7 @@
-import FogNode from './FogNode.js';
+import { FogNode } from './FogNode.js';
 import { smoothstep } from '../math/MathNode.js';
 import { Node } from '../core/Node.js';
-import { addNodeCommand, proxyNode } from '../shadernode/ShaderNodes.js';
+import { proxyNode } from '../shadernode/ShaderNodes.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 
 export class FogRangeNode extends FogNode {
@@ -19,5 +19,3 @@ export class FogRangeNode extends FogNode {
 }
 
 export const rangeFog = proxyNode(FogRangeNode);
-
-addNodeCommand('rangeFog', rangeFog);

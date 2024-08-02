@@ -6,7 +6,7 @@ import type { Color } from '../../math/Color.js';
 import type { Texture } from '@modules/renderer/engine/entities/textures/Texture.js';
 import type { CubeTexture } from '@modules/renderer/engine/entities/textures/CubeTexture.js';
 import { EnvironmentNode } from '@modules/renderer/engine/nodes/Nodes.js';
-import FogNode from '@modules/renderer/engine/nodes/fog/FogNode.js';
+import { FogNode } from '@modules/renderer/engine/nodes/fog/FogNode.js';
 
 export class Scene extends Entity {
   declare isScene: true;
