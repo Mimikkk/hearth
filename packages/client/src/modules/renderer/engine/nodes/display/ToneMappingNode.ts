@@ -114,8 +114,6 @@ const toneMappingLib = {
 };
 
 class ToneMappingNode extends TempNode {
-  static type = 'ToneMappingNode';
-
   constructor(toneMapping = ToneMapping.None, exposureNode = toneMappingExposure, colorNode = null) {
     super('vec3');
 

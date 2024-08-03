@@ -6,8 +6,6 @@ import { DepthTexture } from '@modules/renderer/engine/engine.js';
 let sharedDepthbuffer = null;
 
 class ViewportDepthTextureNode extends ViewportTextureNode {
-  static type = 'ViewportDepthTextureNode';
-
   constructor(uvNode = viewportTopLeft, levelNode = null) {
     if (sharedDepthbuffer === null) {
       sharedDepthbuffer = new DepthTexture();

@@ -8,8 +8,6 @@ import { addNodeCommand, asNode, proxyNode, vec3 } from '../shadernode/ShaderNod
 import { NodeUpdateStage } from '../core/constants.js';
 
 export class TextureNode extends UniformNode {
-  static type = 'TextureNode';
-
   constructor(value, uvNode = null, levelNode = null) {
     super(value);
 

@@ -8,8 +8,6 @@ import { uniforms } from './UniformsNode.js';
 import ArrayElementNode from '../utils/ArrayElementNode.js';
 
 class ReferenceElementNode extends ArrayElementNode {
-  static type = 'ReferenceElementNode';
-
   constructor(referenceNode, indexNode) {
     super(referenceNode, indexNode);
 

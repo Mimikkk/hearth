@@ -8,7 +8,6 @@ export interface CodeNodeInclude {
 }
 
 class CodeNode extends Node {
-  static type = 'CodeNode';
   declare isCodeNode: boolean;
 
   constructor(

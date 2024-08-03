@@ -6,8 +6,6 @@ import { modelViewMatrix, modelWorldMatrix } from './ModelNode.js';
 import { fixedNode } from '../shadernode/ShaderNodes.js';
 
 class PositionNode extends Node {
-  static type = 'PositionNode';
-
   constructor(scope = PositionNode.LOCAL) {
     super('vec3');
 

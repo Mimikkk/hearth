@@ -3,8 +3,6 @@ import { addNodeCommand, proxyNode } from '../shadernode/ShaderNodes.js';
 import { ShaderStage } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 class VaryingNode extends Node {
-  static type = 'VaryingNode';
-
   constructor(node, name = null) {
     super();
 
@@ -23,8 +21,6 @@ class VaryingNode extends Node {
   }
 
   getNodeType(builder) {
-
-
     return this.node.getNodeType(builder);
   }
 
@@ -34,11 +30,9 @@ class VaryingNode extends Node {
 
     const nodeVarying = builder.getVaryingFromNode(this, name, type);
 
-
     nodeVarying.needsInterpolation || (nodeVarying.needsInterpolation = builder.shaderStage === ShaderStage.Fragment);
 
     const propertyName = builder.getPropertyName(nodeVarying, ShaderStage.Vertex);
-
 
     builder.flowNodeFromShaderStage(ShaderStage.Vertex, node, type, propertyName);
 

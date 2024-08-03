@@ -8,8 +8,6 @@ import { modelNormalMatrix } from './ModelNode.js';
 import { fixedNode } from '../shadernode/ShaderNodes.js';
 
 class NormalNode extends Node {
-  static type = 'NormalNode';
-
   constructor(scope = NormalNode.LOCAL) {
     super('vec3');
 

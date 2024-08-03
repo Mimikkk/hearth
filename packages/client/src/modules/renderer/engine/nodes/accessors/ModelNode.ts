@@ -9,7 +9,6 @@ import { NodeFrame } from '@modules/renderer/engine/nodes/core/NodeFrame.js';
 import { Entity } from '@modules/renderer/engine/core/Entity.js';
 
 export class ModelNode extends Node {
-  static type = 'ModelNode';
   declare scope: NodeVariant;
   declare entity: Entity;
   declare uniform: UniformNode<any>;

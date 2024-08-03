@@ -2,8 +2,6 @@ import TextureNode from './TextureNode.js';
 import { proxyNode } from '../shadernode/ShaderNodes.js';
 
 class TextureStoreNode extends TextureNode {
-  static type = 'TextureStoreNode';
-
   constructor(value, uvNode, storeNode = null) {
     super(value, uvNode);
 

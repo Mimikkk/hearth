@@ -9,9 +9,8 @@ import { UniformNode } from '@modules/renderer/engine/nodes/core/UniformNode.js'
 import type { ICamera } from '@modules/renderer/engine/entities/cameras/Camera.js';
 
 export class CameraNode extends Node {
-  static type = 'CameraNode';
   scope: NodeVariant;
-  uniform: UniformNode<any>;
+  uniform: UniformNode;
 
   constructor(public camera: ICamera) {
     super();

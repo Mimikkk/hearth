@@ -16,7 +16,6 @@ import { NodeFrame } from '@modules/renderer/engine/nodes/core/NodeFrame.js';
 import { AttributeNode } from '@modules/renderer/engine/nodes/Nodes.js';
 
 export class SkinningNode extends Node {
-  static type = 'SkinningNode';
   skinIndexNode: AttributeNode;
   skinWeightNode: AttributeNode;
   bindMatrixNode: Node;

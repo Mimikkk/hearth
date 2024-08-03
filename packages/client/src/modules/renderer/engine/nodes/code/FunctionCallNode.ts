@@ -7,8 +7,6 @@ import { Node } from '@modules/renderer/engine/nodes/core/Node.js';
 import { asNodes } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.as.js';
 
 class FunctionCallNode extends TempNode {
-  static type = 'FunctionCallNode';
-
   constructor(
     public functionNode: FunctionNode,
     public parameters: Record<string, any>,

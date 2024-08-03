@@ -2,8 +2,6 @@ import { Node } from '../core/Node.js';
 import { f32, fixedNode } from '../shadernode/ShaderNodes.js';
 
 class FrontFacingNode extends Node {
-  static type = 'FrontFacingNode';
-
   constructor() {
     super('bool');
 

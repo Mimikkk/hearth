@@ -5,7 +5,6 @@ import { addNodeCommand, f32, proxyNode, hsl, vec3 } from '../shadernode/ShaderN
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 export class ColorAdjustmentNode extends TempNode {
-  static type = 'ColorAdjustmentNode';
   method: NodeVariant;
   colorNode: Node;
   adjustmentNode: Node;

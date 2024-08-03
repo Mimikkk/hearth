@@ -47,8 +47,6 @@ const perturbNormalArb = hsl(inputs => {
 });
 
 class BumpMapNode extends TempNode {
-  static type = 'BumpMapNode';
-
   constructor(textureNode, scaleNode = null) {
     super('vec3');
 

@@ -34,8 +34,6 @@ const perturbNormal2Arb = hsl(inputs => {
 });
 
 class NormalMapNode extends TempNode {
-  static type = 'NormalMapNode';
-
   constructor(node, scaleNode = null) {
     super('vec3');
 

@@ -42,7 +42,6 @@ class Params {
 export const global = new Resources();
 
 class ScriptableNode extends Node {
-  static type = 'ScriptableNode';
   declare isScriptableNode: true;
   _local: Resources;
   _output: any;

@@ -8,7 +8,6 @@ import { NodeFrame } from '@modules/renderer/engine/nodes/core/NodeFrame.js';
 const _size = Vec2.new();
 
 class ViewportTextureNode extends TextureNode {
-  static type = 'ViewportTextureNode';
   generateMipmaps: boolean;
   isOutputTextureNode: boolean;
   updateBeforeType: NodeUpdateStage;

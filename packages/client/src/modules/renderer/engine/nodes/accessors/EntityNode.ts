@@ -8,7 +8,6 @@ import { NodeFrame } from '@modules/renderer/engine/nodes/core/NodeFrame.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 export class EntityNode extends Node {
-  static type = 'EntityNode';
   scope: NodeVariant;
   entity: Entity;
   uniform: UniformNode;

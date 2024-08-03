@@ -6,8 +6,6 @@ import { FramebufferTexture } from '@modules/renderer/engine/engine.js';
 let _sharedFramebuffer = null;
 
 class ViewportSharedTextureNode extends ViewportTextureNode {
-  static type = 'ViewportSharedTextureNode';
-
   constructor(uvNode = viewportTopLeft, levelNode = null) {
     if (_sharedFramebuffer === null) {
       _sharedFramebuffer = new FramebufferTexture();

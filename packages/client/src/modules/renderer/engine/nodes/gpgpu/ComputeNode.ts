@@ -6,7 +6,6 @@ import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.
 import { ShaderStage } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 export class ComputeNode extends Node {
-  static type = 'ComputeNode';
   declare id: number;
   declare isComputeNode: boolean;
   computeNode: any;

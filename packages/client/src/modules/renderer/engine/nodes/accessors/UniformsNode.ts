@@ -25,8 +25,6 @@ class UniformsElementNode extends ArrayElementNode {
 }
 
 class UniformsNode extends BufferNode {
-  static type = 'UniformsNode';
-
   constructor(value, elementType = null) {
     super(null, 'vec4');
 

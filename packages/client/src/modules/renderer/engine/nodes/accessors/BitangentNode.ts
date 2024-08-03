@@ -9,7 +9,6 @@ import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.typ
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 
 export class BitangentNode extends Node {
-  static type = 'BitangentNode';
   scope: NodeVariant;
 
   constructor() {

@@ -2,8 +2,6 @@ import ReferenceNode from './ReferenceNode.js';
 import { asNode } from '../shadernode/ShaderNodes.js';
 
 class UserDataNode extends ReferenceNode {
-  static type = 'UserDataNode';
-
   constructor(property, inputType, userData = null) {
     super(property, inputType, userData);
 

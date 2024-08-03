@@ -2,8 +2,6 @@ import TempNode from '../core/TempNode.js';
 import { addNodeCommand, proxyNode } from '../shadernode/ShaderNodes.js';
 
 class PosterizeNode extends TempNode {
-  static type = 'PosterizeNode';
-
   constructor(sourceNode, stepsNode) {
     super();
 

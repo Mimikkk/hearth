@@ -4,8 +4,6 @@ import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 class ExpressionNode extends Node {
-  static type = 'ExpressionNode';
-
   constructor(
     public snippet: string,
     nodeType: TypeName = TypeName.void,

@@ -8,8 +8,6 @@ import { CubeTexture } from '@modules/renderer/engine/entities/textures/CubeText
 import { Node } from '@modules/renderer/engine/nodes/core/Node.js';
 
 export class CubeTextureNode extends TextureNode {
-  static type = 'CubeTextureNode';
-
   constructor(value: CubeTexture | Node, uvNode: Node | null, levelNode: Node | null) {
     super(value, uvNode, levelNode);
   }

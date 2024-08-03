@@ -4,7 +4,6 @@ import { addNodeCommand, proxyNode, hsl, vec3 } from '../shadernode/ShaderNodes.
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 export class BlendModeNode extends TempNode {
-  static type = 'BlendModeNode';
   mode: NodeVariant;
 
   constructor(

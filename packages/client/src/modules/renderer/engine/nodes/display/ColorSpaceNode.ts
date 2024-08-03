@@ -6,7 +6,6 @@ import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.typ
 import { Node } from '../core/Node.js';
 
 export class ColorSpaceNode extends TempNode {
-  static type = 'ColorSpaceNode';
   method: NodeVariant;
 
   constructor(public node: Node) {

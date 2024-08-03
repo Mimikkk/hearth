@@ -3,8 +3,6 @@ import { fixedNode } from '../shadernode/ShaderNodes.js';
 import { reference } from './ReferenceNode.js';
 
 class SceneNode extends Node {
-  static type = 'SceneNode';
-
   constructor(scope = SceneNode.BACKGROUND_BLURRINESS, scene = null) {
     super();
 

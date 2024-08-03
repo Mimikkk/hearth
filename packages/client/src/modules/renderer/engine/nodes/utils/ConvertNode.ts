@@ -1,7 +1,7 @@
 import { Node } from '../core/Node.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
-class ConvertNode extends Node {
+export class ConvertNode extends Node {
   static type = 'ConvertNode';
 
   constructor(node, convertTo) {

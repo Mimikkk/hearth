@@ -7,8 +7,6 @@ import { Buffer, BufferUse } from '@modules/renderer/engine/engine.js';
 import { BufferStep } from '@modules/renderer/engine/hearth/constants.js';
 
 class InstanceNode extends Node {
-  static type = 'InstanceNode';
-
   constructor(instanceMesh) {
     super('void');
 

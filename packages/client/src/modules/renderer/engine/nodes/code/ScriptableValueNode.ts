@@ -4,7 +4,6 @@ import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 class ScriptableValueNode extends Node {
-  static type = 'ScriptableValueNode';
   declare isScriptableValueNode: true;
   inputType: string | null;
   outputType: string | null;

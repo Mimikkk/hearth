@@ -7,8 +7,6 @@ import { f32, fixedNode } from '../shadernode/ShaderNodes.js';
 const _propertyCache = new Map();
 
 class MaterialNode extends Node {
-  static type = 'MaterialNode';
-
   constructor(scope) {
     super();
 
@@ -68,8 +66,6 @@ class MaterialNode extends Node {
         node = f32(1);
       }
     } else if (scope === MaterialNode.ROUGHNESS) {
-      
-
       const roughnessNode = this.getFloat(scope);
 
       if (material.roughnessMap && material.roughnessMap.isTexture === true) {
@@ -124,7 +120,7 @@ class MaterialNode extends Node {
         node = normalView;
       }
     } else if (scope === MaterialNode.SHEEN) {
-      const sheenNode = this.getColor('sheenColor').mul(this.getFloat('sheen')); 
+      const sheenNode = this.getColor('sheenColor').mul(this.getFloat('sheen'));
 
       if (material.sheenColorMap && material.sheenColorMap.isTexture === true) {
         node = sheenNode.mul(this.getTexture('sheenColor').rgb);

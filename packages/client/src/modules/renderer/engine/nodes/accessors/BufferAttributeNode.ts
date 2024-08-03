@@ -7,8 +7,6 @@ import { BufferStep } from '@modules/renderer/engine/hearth/constants.js';
 import BufferNode from '@modules/renderer/engine/nodes/accessors/BufferNode.js';
 
 export class BufferAttributeNode extends InputNode {
-  static type = 'BufferAttributeNode';
-
   constructor(value, bufferType = null, bufferStride = 0, bufferOffset = 0) {
     super(value, bufferType);
 

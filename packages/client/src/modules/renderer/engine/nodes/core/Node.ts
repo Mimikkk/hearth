@@ -9,7 +9,6 @@ import { v4 } from 'uuid';
 let _nodeId = 0;
 
 export class Node {
-  declare static type: any;
   declare isNode: true;
   name?: string;
   nodeType: TypeName | null;

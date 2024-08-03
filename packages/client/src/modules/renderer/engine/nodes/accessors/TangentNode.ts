@@ -8,8 +8,6 @@ import { modelViewMatrix } from './ModelNode.js';
 import { fixedNode, vec4 } from '../shadernode/ShaderNodes.js';
 
 class TangentNode extends Node {
-  static type = 'TangentNode';
-
   constructor(scope = TangentNode.LOCAL) {
     super();
 

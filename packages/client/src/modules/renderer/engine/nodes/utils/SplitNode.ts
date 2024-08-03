@@ -2,9 +2,7 @@ import { Node } from '../core/Node.js';
 import { vectorComponents } from '../core/constants.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
-const stringVectorComponents = vectorComponents.join('');
-
-class SplitNode extends Node {
+export class SplitNode extends Node {
   static type = 'SplitNode';
 
   constructor(node, components = 'x') {
@@ -46,26 +44,17 @@ class SplitNode extends Node {
       const componentsLength = this.getVectorLength();
 
       if (componentsLength >= nodeTypeLength) {
-
-
         type = TypeName.ofSize(this.getVectorLength(), this.getComponentType(builder));
       }
 
       const nodeSnippet = node.build(builder, type);
 
-      if (
-        this.components.length === nodeTypeLength &&
-        this.components === stringVectorComponents.slice(0, this.components.length)
-      ) {
-
-
+      if (this.components.length === nodeTypeLength && this.components === 'xyzw'.slice(0, this.components.length)) {
         snippet = builder.format(nodeSnippet, type, output);
       } else {
         snippet = builder.format(`${nodeSnippet}.${this.components}`, this.getNodeType(builder), output);
       }
     } else {
-
-
       snippet = node.build(builder, output);
     }
 

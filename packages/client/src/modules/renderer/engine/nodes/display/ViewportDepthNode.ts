@@ -8,7 +8,6 @@ import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.typ
 
 export class ViewportDepthNode extends Node {
   declare isViewportDepthNode: true;
-  static type = 'ViewportDepthNode';
   mode: NodeVariant;
 
   constructor(public valueNode: Node) {

@@ -8,8 +8,6 @@ import { Vec2, Vec4 } from '@modules/renderer/engine/engine.js';
 let resolution, viewportResult;
 
 class ViewportNode extends Node {
-  static type = 'ViewportNode';
-
   constructor(scope) {
     super();
 

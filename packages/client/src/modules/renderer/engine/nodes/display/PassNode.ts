@@ -27,8 +27,6 @@ class PassTextureNode extends TextureNode {
 }
 
 class PassNode extends TempNode {
-  static type = 'PassNode';
-
   constructor(scope, scene, camera) {
     super('vec4');
 

@@ -5,8 +5,6 @@ import { positionViewDirection } from './PositionNode.js';
 import { fixedNode } from '../shadernode/ShaderNodes.js';
 
 class ReflectVectorNode extends Node {
-  static type = 'ReflectVectorNode';
-
   constructor() {
     super('vec3');
   }
