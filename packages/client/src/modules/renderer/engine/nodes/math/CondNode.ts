@@ -6,8 +6,6 @@ import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.typ
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 
 export class CondNode extends Node {
-  static type = 'CondNode';
-
   constructor(
     public when: Node,
     public valid: Node,

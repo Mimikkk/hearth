@@ -2,8 +2,6 @@ import { Node } from './Node.js';
 import { addNodeCommand, proxyNode } from '../shadernode/ShaderNodes.js';
 
 class ContextNode extends Node {
-  static type = 'ContextNode';
-
   constructor(node, context = {}) {
     super();
 

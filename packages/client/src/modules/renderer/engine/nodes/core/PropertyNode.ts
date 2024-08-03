@@ -2,8 +2,6 @@ import { Node } from './Node.js';
 import { fixedNode, asNode } from '../shadernode/ShaderNodes.js';
 
 class PropertyNode extends Node {
-  static type = 'PropertyNode';
-
   constructor(nodeType, name = null, varying = false) {
     super(nodeType);
 

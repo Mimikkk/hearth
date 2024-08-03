@@ -2,8 +2,6 @@ import { Node } from '../core/Node.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 export class ConvertNode extends Node {
-  static type = 'ConvertNode';
-
   constructor(node, convertTo) {
     super();
 

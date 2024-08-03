@@ -3,9 +3,6 @@ import { add, div, mul } from '../math/OperatorNode.js';
 import { ceil, floor, fract, pow } from '../math/MathNode.js';
 import { addNodeCommand, f32, i32, proxyNode, vec2, vec4 } from '../shadernode/ShaderNodes.js';
 
-
-
-
 const bC = 1.0 / 6.0;
 
 const w0 = a => mul(bC, mul(a, mul(a, a.negate().add(3.0)).sub(3.0)).add(1.0));
@@ -19,7 +16,6 @@ const w3 = a => mul(bC, pow(a, 3));
 const g0 = a => w0(a).add(w1(a));
 
 const g1 = a => w2(a).add(w3(a));
-
 
 const h0 = a => add(-1.0, w1(a).div(w0(a).add(w1(a))));
 
@@ -62,8 +58,6 @@ const textureBicubicMethod = (textureNode, lodNode) => {
 };
 
 class TextureBicubicNode extends TempNode {
-  static type = 'TextureBicubicNode';
-
   constructor(textureNode, blurNode = f32(3)) {
     super('vec4');
 

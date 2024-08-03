@@ -2,8 +2,6 @@ import { addNodeCommand, proxyNode } from '../shadernode/ShaderNodes.js';
 import ArrayElementNode from './ArrayElementNode.js';
 
 export class StorageArrayElementNode extends ArrayElementNode {
-  static type = 'StorageArrayElementNode';
-
   generate(builder, output) {
     const isAssign = builder.context.assign;
 

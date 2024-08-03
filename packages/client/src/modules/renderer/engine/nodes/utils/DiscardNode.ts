@@ -5,8 +5,6 @@ import { addNodeCommand, proxyNode } from '../shadernode/ShaderNodes.js';
 let discardExpression;
 
 class DiscardNode extends CondNode {
-  static type = 'DiscardNode';
-
   constructor(condition) {
     discardExpression = discardExpression || expression('discard');
 

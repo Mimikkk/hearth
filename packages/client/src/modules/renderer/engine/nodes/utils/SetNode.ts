@@ -6,8 +6,6 @@ import { XYZW } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.handl
 import { Node } from '../core/Node.js';
 
 class SetNode extends TempNode {
-  static type = 'SetNode';
-
   constructor(
     public sourceNode: Node,
     public components: XYZW,

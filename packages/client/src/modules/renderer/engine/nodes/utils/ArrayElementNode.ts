@@ -3,8 +3,6 @@ import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 export class ArrayElementNode extends Node {
-  static type = 'ArrayElementNode';
-
   constructor(
     public array: Node,
     public index: Node,

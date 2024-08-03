@@ -3,8 +3,6 @@ import { NodeUpdateStage } from '../core/constants.js';
 import { proxyNode } from '../shadernode/ShaderNodes.js';
 
 class MaxMipLevelNode extends UniformNode {
-  static type = 'MaxMipLevelNode';
-
   constructor(textureNode) {
     super(0);
 

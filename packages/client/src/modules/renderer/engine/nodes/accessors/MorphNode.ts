@@ -117,8 +117,6 @@ function getEntry(geometry) {
 }
 
 class MorphNode extends Node {
-  static type = 'MorphNode';
-
   constructor(mesh) {
     super('void');
 

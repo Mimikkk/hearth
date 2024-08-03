@@ -2,8 +2,6 @@ import { Node } from '../core/Node.js';
 import { addNodeCommand, f32, proxyNode } from '../shadernode/ShaderNodes.js';
 
 class RemapNode extends Node {
-  static type = 'RemapNode';
-
   constructor(node, inLowNode, inHighNode, outLowNode = f32(0), outHighNode = f32(1)) {
     super();
 

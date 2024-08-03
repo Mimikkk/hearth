@@ -3,8 +3,6 @@ import { addNodeCommand, proxyNode } from '../shadernode/ShaderNodes.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 class VarNode extends Node {
-  static type = 'VarNode';
-
   constructor(node: Node, name: string = null) {
     super();
 

@@ -13,8 +13,6 @@ let min = null;
 let max = null;
 
 class RangeNode extends Node {
-  static type = 'RangeNode';
-
   constructor(minNode = f32(), maxNode = f32()) {
     super();
 

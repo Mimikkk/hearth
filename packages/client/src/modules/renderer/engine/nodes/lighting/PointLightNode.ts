@@ -5,8 +5,6 @@ import { objectViewPosition } from '../accessors/EntityNode.js';
 import { positionView } from '../accessors/PositionNode.js';
 
 class PointLightNode extends AnalyticLightNode {
-  static type = 'PointLightNode';
-
   constructor(light = null) {
     super(light);
 

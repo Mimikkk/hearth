@@ -5,8 +5,6 @@ import { context } from '../core/ContextNode.js';
 import { addNodeCommand, asNodes, asNode } from '../shadernode/ShaderNodes.js';
 
 class LoopNode extends Node {
-  static type = 'LoopNode';
-
   constructor(params = []) {
     super();
 

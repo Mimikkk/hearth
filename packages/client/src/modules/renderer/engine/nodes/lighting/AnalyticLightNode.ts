@@ -17,7 +17,6 @@ let overrideMaterial: any = null;
 
 export class AnalyticLightNode extends LightingNode {
   declare isAnalyticLightNode: true;
-  static type = 'AnalyticLightNode';
 
   rtt: RenderTarget;
   shadowNode: TextureNode;

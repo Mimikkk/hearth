@@ -37,8 +37,6 @@ function _getPMREMFromTexture(texture) {
 }
 
 class PMREMNode extends TempNode {
-  static type = 'PMREMNode';
-
   constructor(value, uvNode = null, levelNode = null) {
     super('vec3');
 

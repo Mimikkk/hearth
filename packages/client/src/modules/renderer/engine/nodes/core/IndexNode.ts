@@ -5,8 +5,6 @@ import { ShaderStage } from '@modules/renderer/engine/nodes/builder/NodeBuilder.
 import { BufferStep } from '@modules/renderer/engine/hearth/constants.js';
 
 class IndexNode extends Node {
-  static type = 'IndexNode';
-
   constructor(scope) {
     super('u32');
 

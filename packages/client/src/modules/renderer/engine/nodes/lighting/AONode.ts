@@ -1,8 +1,6 @@
 import LightingNode from './LightingNode.js';
 
 class AONode extends LightingNode {
-  static type = 'AONode';
-
   constructor(aoNode = null) {
     super();
 

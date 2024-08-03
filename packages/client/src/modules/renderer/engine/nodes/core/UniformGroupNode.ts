@@ -2,8 +2,6 @@ import { Node } from './Node.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 export class UniformGroupNode extends Node {
-  static type = 'UniformGroupNode';
-
   constructor(
     public name: string,
     public shared: boolean = false,

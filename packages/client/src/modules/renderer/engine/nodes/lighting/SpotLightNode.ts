@@ -7,8 +7,6 @@ import { objectViewPosition } from '../accessors/EntityNode.js';
 import { positionView } from '../accessors/PositionNode.js';
 
 class SpotLightNode extends AnalyticLightNode {
-  static type = 'SpotLightNode';
-
   constructor(light = null) {
     super(light);
 
@@ -44,7 +42,7 @@ class SpotLightNode extends AnalyticLightNode {
 
     const { colorNode, cutoffDistanceNode, decayExponentNode, light } = this;
 
-    const lVector = objectViewPosition(light).sub(positionView); 
+    const lVector = objectViewPosition(light).sub(positionView);
 
     const lightDirection = lVector.normalize();
     const angleCos = lightDirection.dot(lightTargetDirection(light));

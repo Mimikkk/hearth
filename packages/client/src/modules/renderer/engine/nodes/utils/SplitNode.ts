@@ -3,8 +3,6 @@ import { vectorComponents } from '../core/constants.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 export class SplitNode extends Node {
-  static type = 'SplitNode';
-
   constructor(node, components = 'x') {
     super();
 

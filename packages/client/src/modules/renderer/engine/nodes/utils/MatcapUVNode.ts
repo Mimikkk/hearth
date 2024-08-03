@@ -4,8 +4,6 @@ import { positionViewDirection } from '../accessors/PositionNode.js';
 import { fixedNode, vec2, vec3 } from '../shadernode/ShaderNodes.js';
 
 class MatcapUVNode extends TempNode {
-  static type = 'MatcapUVNode';
-
   constructor() {
     super('vec2');
   }

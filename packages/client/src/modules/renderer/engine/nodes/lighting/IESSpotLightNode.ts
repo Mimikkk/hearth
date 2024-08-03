@@ -3,8 +3,6 @@ import { texture } from '../accessors/TextureNode.js';
 import { vec2 } from '../shadernode/ShaderNodes.js';
 
 class IESSpotLightNode extends SpotLightNode {
-  static type = 'IESSpotLightNode';
-
   getSpotAttenuation(angleCosine) {
     const iesMap = this.light.iesMap;
 

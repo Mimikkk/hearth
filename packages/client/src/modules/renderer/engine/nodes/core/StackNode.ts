@@ -6,7 +6,6 @@ import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.typ
 import OperatorNode from '@modules/renderer/engine/nodes/math/OperatorNode.js';
 
 export class StackNode extends Node {
-  static type = 'StackNode';
   outputNode: Node | null;
   nodes: Node[];
   cond: CondNode | null;

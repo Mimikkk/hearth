@@ -5,7 +5,6 @@ import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 class OscNode extends Node {
-  static type = 'OscNode';
   method: NodeVariant;
 
   constructor(public timeNode: Node = timerLocal()) {

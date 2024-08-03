@@ -3,8 +3,6 @@ import StructTypeNode from './StructTypeNode.js';
 import { proxyNode } from '../shadernode/ShaderNodes.js';
 
 class OutputStructNode extends Node {
-  static type = 'OutputStructNode';
-
   constructor(...members) {
     super();
 

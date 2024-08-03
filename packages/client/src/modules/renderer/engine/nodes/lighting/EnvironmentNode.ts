@@ -16,8 +16,6 @@ import { pmremTexture } from '@modules/renderer/engine/nodes/pmrem/PMREMNode.js'
 const envNodeCache = new WeakMap();
 
 class EnvironmentNode extends LightingNode {
-  static type = 'EnvironmentNode';
-
   constructor(envNode = null) {
     super();
 

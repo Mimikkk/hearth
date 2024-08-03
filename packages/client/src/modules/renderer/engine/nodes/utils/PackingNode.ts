@@ -5,7 +5,6 @@ import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.typ
 import { Node } from '../core/Node.js';
 
 export class PackingNode extends TempNode {
-  static type = 'PackingNode';
   scope: NodeVariant;
 
   constructor(public node: Node) {

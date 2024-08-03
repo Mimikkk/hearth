@@ -3,8 +3,6 @@ import { positionWorldDirection } from '../accessors/PositionNode.js';
 import { proxyNode, vec2 } from '../shadernode/ShaderNodes.js';
 
 class EquirectUVNode extends TempNode {
-  static type = 'EquirectUVNode';
-
   constructor(dirNode = positionWorldDirection) {
     super('vec2');
 

@@ -4,8 +4,6 @@ import { fixedNode, asNode } from '../shadernode/ShaderNodes.js';
 import { NodeFrame } from '@modules/renderer/engine/nodes/core/NodeFrame.js';
 
 export class TimerNode extends UniformNode<number> {
-  static type = 'TimerNode';
-
   constructor(
     public scope: TimerType,
     public scale: number = 1,

@@ -5,7 +5,6 @@ import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 class CacheNode extends Node {
-  static type = 'CacheNode';
   node: Node;
   cache: NodeCache;
 

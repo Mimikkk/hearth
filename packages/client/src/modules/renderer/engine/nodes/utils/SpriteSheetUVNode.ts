@@ -3,8 +3,6 @@ import { uv } from '../accessors/UVNode.js';
 import { f32, proxyNode, vec2 } from '../shadernode/ShaderNodes.js';
 
 class SpriteSheetUVNode extends Node {
-  static type = 'SpriteSheetUVNode';
-
   constructor(countNode, uvNode = uv(), frameNode = f32(0)) {
     super('vec2');
 

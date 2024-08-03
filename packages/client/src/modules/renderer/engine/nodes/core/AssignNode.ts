@@ -4,8 +4,6 @@ import { vectorComponents } from './constants.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 class AssignNode extends TempNode {
-  static type = 'AssignNode';
-
   constructor(targetNode, sourceNode) {
     super();
 

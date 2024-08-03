@@ -2,8 +2,6 @@ import AnalyticLightNode from './AnalyticLightNode.js';
 import { lightTargetDirection } from './LightNode.js';
 
 class DirectionalLightNode extends AnalyticLightNode {
-  static type = 'DirectionalLightNode';
-
   constructor(light = null) {
     super(light);
   }

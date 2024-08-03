@@ -5,8 +5,6 @@ import { cameraViewMatrix } from '../accessors/CameraNode.js';
 import type { Light } from '@modules/renderer/engine/entities/lights/Light.js';
 
 export class LightNode extends Node {
-  static type = 'LightNode';
-
   constructor(public light: Light) {
     super();
   }

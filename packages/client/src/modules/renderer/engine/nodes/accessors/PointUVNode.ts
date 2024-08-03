@@ -2,8 +2,6 @@ import { Node } from '../core/Node.js';
 import { fixedNode } from '../shadernode/ShaderNodes.js';
 
 class PointUVNode extends Node {
-  static type = 'PointUVNode';
-
   constructor() {
     super('vec2');
 

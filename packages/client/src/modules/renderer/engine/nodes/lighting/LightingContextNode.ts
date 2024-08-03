@@ -2,8 +2,6 @@ import ContextNode from '../core/ContextNode.js';
 import { addNodeCommand, f32, proxyNode, vec3 } from '../shadernode/ShaderNodes.js';
 
 class LightingContextNode extends ContextNode {
-  static type = 'LightingContextNode';
-
   constructor(node, lightingModel = null, backdropNode = null, backdropAlphaNode = null) {
     super(node);
 

@@ -2,8 +2,6 @@ import { Node } from '../core/Node.js';
 import { addNodeCommand, proxyNode } from '../shadernode/ShaderNodes.js';
 
 export class HashNode extends Node {
-  static type = 'HashNode';
-
   constructor(public seed: Node) {
     super();
   }

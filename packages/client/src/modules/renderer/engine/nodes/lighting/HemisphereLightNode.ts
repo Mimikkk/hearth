@@ -11,7 +11,6 @@ import { NodeBuilder } from '../builder/NodeBuilder.js';
 import { NodeFrame } from '@modules/renderer/engine/nodes/core/NodeFrame.js';
 
 export class HemisphereLightNode extends AnalyticLightNode {
-  static type = 'HemisphereLightNode';
   declare isHemisphereLightNode: true;
 
   lightPositionNode: PositionNode;

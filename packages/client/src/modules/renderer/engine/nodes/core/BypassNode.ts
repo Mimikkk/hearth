@@ -2,8 +2,6 @@ import { Node } from './Node.js';
 import { addNodeCommand, proxyNode } from '../shadernode/ShaderNodes.js';
 
 class BypassNode extends Node {
-  static type = 'BypassNode';
-
   constructor(returnNode, callNode) {
     super();
 

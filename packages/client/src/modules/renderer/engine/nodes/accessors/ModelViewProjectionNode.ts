@@ -7,8 +7,6 @@ import { varying } from '../core/VaryingNode.js';
 import { ShaderStage } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 class ModelViewProjectionNode extends TempNode {
-  static type = 'ModelViewProjectionNode';
-
   constructor(positionNode = null) {
     super('vec4');
 

@@ -3,8 +3,6 @@ import { BuildStage, TypeName } from '@modules/renderer/engine/nodes/builder/Nod
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 
 export class TempNode extends Node {
-  static type = 'TempNode';
-
   hasDependencies(builder: NodeBuilder): boolean {
     return builder.getDataFromNode(this).usageCount > 1;
   }

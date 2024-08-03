@@ -6,8 +6,6 @@ import { texture } from '../accessors/TextureNode.js';
 import { addNodeCommand, f32, proxyNode, vec3 } from '../shadernode/ShaderNodes.js';
 
 class TriplanarTexturesNode extends Node {
-  static type = 'TriplanarTexturesNode';
-
   constructor(
     textureXNode,
     textureYNode = null,
@@ -31,18 +29,13 @@ class TriplanarTexturesNode extends Node {
   setup() {
     const { textureXNode, textureYNode, textureZNode, scaleNode, positionNode, normalNode } = this;
 
-    
-
-    
     let bf = normalNode.abs().normalize();
     bf = bf.div(bf.dot(vec3(1.0)));
 
-    
     const tx = positionNode.yz.mul(scaleNode);
     const ty = positionNode.zx.mul(scaleNode);
     const tz = positionNode.xy.mul(scaleNode);
 
-    
     const textureX = textureXNode.value;
     const textureY = textureYNode !== null ? textureYNode.value : textureX;
     const textureZ = textureZNode !== null ? textureZNode.value : textureX;

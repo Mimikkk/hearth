@@ -3,8 +3,6 @@ import { addNodeCommand, mat2, mat4, proxyNode, vec4 } from '../shadernode/Shade
 import { cos, sin } from '../math/MathNode.js';
 
 class RotateNode extends TempNode {
-  static type = 'RotateNode';
-
   constructor(positionNode, rotationNode) {
     super();
 

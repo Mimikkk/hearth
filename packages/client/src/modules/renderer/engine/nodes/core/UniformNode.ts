@@ -13,7 +13,6 @@ export const getConstNodeType = (value?: any | null) =>
     : null;
 
 export class UniformNode<T = any> extends InputNode<T> {
-  static type = 'UniformNode';
   groupNode: UniformGroupNode;
 
   constructor(value: T, type: TypeName) {

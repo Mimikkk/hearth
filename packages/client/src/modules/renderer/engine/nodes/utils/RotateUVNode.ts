@@ -2,8 +2,6 @@ import TempNode from '../core/TempNode.js';
 import { addNodeCommand, proxyNode, vec2 } from '../shadernode/ShaderNodes.js';
 
 class RotateUVNode extends TempNode {
-  static type = 'RotateUVNode';
-
   constructor(uvNode, rotationNode, centerNode = vec2(0.5)) {
     super('vec2');
 
