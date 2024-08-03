@@ -393,7 +393,7 @@ export { default as CheckerNode, checker } from './procedural/CheckerNode.js';
 
 export * from './materials/Materials.js';
 
-export * from './materialx/MaterialXNodes.js';
+export * from './noise/nodes.js';
 
 export { BRDF_GGX } from './functions/BSDF/BRDF_GGX.js';
 export { BRDF_Lambert } from './functions/BSDF/BRDF_Lambert.js';

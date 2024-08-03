@@ -9,7 +9,7 @@ import {
   mx_worley_noise_float as worley_noise_float,
   mx_worley_noise_vec2 as worley_noise_vec2,
   mx_worley_noise_vec3 as worley_noise_vec3,
-} from './lib/mx_noise.js';
+} from './noise.js';
 import { uv } from '../accessors/UVNode.js';
 import { i32, vec2, vec4 } from '../shadernode/ShaderNodes.js';
 
