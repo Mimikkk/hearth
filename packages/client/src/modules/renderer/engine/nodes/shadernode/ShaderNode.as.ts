@@ -27,5 +27,3 @@ export const asNodes = (array: any[], fallbackType?: TypeName): Node[] => {
   for (let i = 0, it = array.length; i < it; ++i) array[i] = asNode(array[i], fallbackType);
   return array;
 };
-
-Node.as = asNode;
