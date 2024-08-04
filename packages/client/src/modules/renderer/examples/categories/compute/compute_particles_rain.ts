@@ -178,9 +178,6 @@ async function init() {
     modelViewMatrix[0][1] = 0;
     modelViewMatrix[0][2] = 0;
 
-    //modelViewMatrix[ 0 ][ 0 ] = modelWorldMatrix[ 0 ].length();
-    //modelViewMatrix[ 1 ][ 1 ] = modelWorldMatrix[ 1 ].length();
-
     modelViewMatrix[2][0] = 0;
     modelViewMatrix[2][1] = 0;
     modelViewMatrix[2][2] = 1;

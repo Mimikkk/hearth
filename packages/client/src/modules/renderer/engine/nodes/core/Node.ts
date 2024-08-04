@@ -2,7 +2,7 @@ import type { SplitNode } from '../utils/SplitNode.ts';
 import { NodeUpdateStage } from './constants.js';
 import { getCacheKey, getNodeChildren } from './NodeUtils.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
-import { implementSwizzle } from './Node.swizzle.js';
+import { implIndexAccess, implSwizzle } from './Node.swizzle.js';
 import { NodeFrame } from '@modules/renderer/engine/nodes/core/NodeFrame.js';
 import { BuildStage, TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { v4 } from 'uuid';
@@ -247,14 +247,6 @@ export class Node {
     stack.add(NodeCommands.get('assign')(this, value));
 
     return this;
-  }
-
-  [index: number]: ArrayElementNode;
-
-  at(index: number): ArrayElementNode {
-    const element = Node.Map.get('element');
-
-    return Node.as(new element(this, new ConstNode(index, TypeName.u32))) as ArrayElementNode;
   }
 
   declare static as: typeof asNode;
@@ -503,8 +495,16 @@ export class Node {
   declare setBGRA: (value: any) => SetNode;
   declare setABGR: (value: any) => SetNode;
   declare setABRG: (value: any) => SetNode;
+
+  [index: number]: ArrayElementNode;
+  at(index: number): ArrayElementNode {
+    const element = Node.Map.get('element');
+
+    return Node.as(new element(this, new ConstNode(index, TypeName.u32))) as ArrayElementNode;
+  }
 }
 
 export default Node;
 
-implementSwizzle();
+// implSwizzle();
+// implIndexAccess();

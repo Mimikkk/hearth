@@ -31,15 +31,13 @@ export class SpriteNodeMaterial extends NodeMaterial {
   }
 
   setupPosition({ object, context }) {
-
-
     const { positionNode, rotationNode, scaleNode } = this;
 
     const vertex = positionLocal;
 
     let mvPosition = modelViewMatrix.mul(vec3(positionNode || 0));
 
-    let scale = vec2(modelWorldMatrix[0].xyz.length(), modelWorldMatrix[1].xyz.length());
+    let scale = vec2(modelWorldMatrix.at(0).xyz.length(), modelWorldMatrix.at(1).xyz.length());
 
     if (scaleNode !== null) {
       scale = scale.mul(scaleNode);
