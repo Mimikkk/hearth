@@ -18,7 +18,7 @@ export class AssignNode extends TempNode {
   }
 
   getNodeType(builder: NodeBuilder, output: TypeName): TypeName {
-    return output !== TypeName.void ? this.from.getNodeType(builder) : TypeName.void;
+    return output !== TypeName.void ? this.from.getNodeType(builder, output) : TypeName.void;
   }
 
   needsSplitAssign(builder: NodeBuilder): boolean {
