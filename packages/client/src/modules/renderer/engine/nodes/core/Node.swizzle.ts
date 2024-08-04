@@ -1,13 +1,13 @@
 import type { SetNode } from '@modules/renderer/engine/nodes/utils/SetNode.js';
 import type { SplitNode } from '@modules/renderer/engine/nodes/utils/SplitNode.js';
 import { Node } from './Node.js';
-import { ArrayElementNode } from '@modules/renderer/engine/nodes/utils/ArrayElementNode.js';
+import type { ArrayElementNode } from '@modules/renderer/engine/nodes/utils/ArrayElementNode.js';
 import { ConstNode } from '@modules/renderer/engine/nodes/core/ConstNode.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 // remove this and implement it directly.
 export const implSwizzle = () => {
-  const swizzle = [
+  const swizzleXyzw = [
     'x',
     'y',
     'z',
@@ -72,6 +72,8 @@ export const implSwizzle = () => {
     'wyzx',
     'wzxy',
     'wzyx',
+  ];
+  const swizzleRgba = [
     'r',
     'g',
     'b',
@@ -132,8 +134,8 @@ export const implSwizzle = () => {
     'abrg',
   ];
 
-  const properties = Object.fromEntries(
-    swizzle.map(key => [
+  const propertiesXyzw = Object.fromEntries(
+    swizzleXyzw.map(key => [
       key,
       {
         get(): SplitNode {
@@ -148,14 +150,40 @@ export const implSwizzle = () => {
     ]),
   );
 
-  Object.defineProperties(Node.prototype, properties);
+  const propertiesRgba = Object.fromEntries(
+    swizzleRgba.map((key, i) => [
+      key,
+      {
+        get(): SplitNode {
+          const split = Node.Map.get('split');
 
-  for (const key of swizzle) {
+          return Node.as(new split(this, swizzleXyzw[i])) as SplitNode;
+        },
+        set(value: any): void {
+          this[swizzleXyzw[i]].assign(value);
+        },
+      },
+    ]),
+  );
+
+  Object.defineProperties(Node.prototype, propertiesXyzw);
+  Object.defineProperties(Node.prototype, propertiesRgba);
+
+  for (const key of swizzleXyzw) {
     //@ts-expect-error
     Node.prototype[`set${key.toUpperCase()}`] = function (value: any): SetNode {
       const set = Node.Map.get('set');
 
       return Node.as(new set(this, key, value)) as SetNode;
+    };
+  }
+
+  for (let i = 0; i < swizzleRgba.length; ++i) {
+    //@ts-expect-error
+    Node.prototype[`set${swizzleRgba[i].toUpperCase()}`] = function (value: any): SetNode {
+      const set = Node.Map.get('set');
+
+      return Node.as(new set(this, swizzleXyzw[i], value)) as SetNode;
     };
   }
 };

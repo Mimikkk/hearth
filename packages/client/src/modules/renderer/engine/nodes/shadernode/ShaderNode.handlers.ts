@@ -6,7 +6,6 @@ export const handlers: ProxyHandler<Node> = {
     if (typeof key !== 'string' || key in node) return Reflect.get(node, key, proxy);
 
     const command = NodeCommands.get(key);
-
     if (command) {
       return isStackNode(node)
         ? (...params) => proxy.add(command(...params))
@@ -14,11 +13,12 @@ export const handlers: ProxyHandler<Node> = {
     }
 
     if (key.endsWith('Assign')) {
-      const assignAs = NodeCommands.get(key.slice(0, key.length - 6));
-      if (assignAs) {
+      const as = NodeCommands.get(key.slice(0, key.length - 6));
+
+      if (as) {
         return isStackNode(node)
-          ? (...params) => proxy.assign(params[0], assignAs(...params))
-          : (...params) => proxy.assign(assignAs(proxy, ...params));
+          ? (...params) => proxy.assign(params[0], as(...params))
+          : (...params) => proxy.assign(as(proxy, ...params));
       }
     }
 

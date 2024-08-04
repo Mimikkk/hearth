@@ -507,7 +507,6 @@ export class Node {
   declare setABGR: (value: any) => SetNode;
   declare setABRG: (value: any) => SetNode;
 }
-const isStackNode = (item: any): item is StackNode => item?.isStackNode === true;
 
 implSwizzle();
 implIndexAccess();
