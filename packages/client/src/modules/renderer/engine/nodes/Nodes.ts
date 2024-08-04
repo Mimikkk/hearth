@@ -370,7 +370,7 @@ export * from './fog/FogExp2Node.js';
 
 export { default as RangeNode, range } from './geometry/RangeNode.js';
 
-export { default as ComputeNode, compute } from './gpgpu/ComputeNode.js';
+export { ComputeNode, compute } from './gpgpu/ComputeNode.js';
 
 export { default as LightNode, lightTargetDirection } from './lighting/LightNode.js';
 export { default as PointLightNode } from './lighting/PointLightNode.js';

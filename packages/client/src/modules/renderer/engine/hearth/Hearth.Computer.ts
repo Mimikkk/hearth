@@ -1,5 +1,5 @@
 import { HearthComponent } from '@modules/renderer/engine/hearth/Hearth.Component.js';
-import ComputeNode from '@modules/renderer/engine/nodes/gpgpu/ComputeNode.js';
+import { ComputeNode } from '@modules/renderer/engine/nodes/gpgpu/ComputeNode.js';
 
 export class HearthComputer extends HearthComponent {
   async run(compute: ComputeNode | ComputeNode[]): Promise<void> {
