@@ -36,7 +36,7 @@ export class HearthComputer extends HearthComponent {
   }
 
   #encodePass(node: ComputeNode, pass: GPUComputePassEncoder): void {
-    if (!this.hearth.pipelines.has(node)) node.onInit({ hearth: this.hearth });
+    if (!this.hearth.pipelines.has(node)) node.onInit(this.hearth);
 
     this.hearth.nodes.updateForCompute(node);
     this.hearth.bindings.updateForCompute(node);

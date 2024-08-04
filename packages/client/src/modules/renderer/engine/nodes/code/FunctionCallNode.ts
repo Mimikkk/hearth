@@ -8,20 +8,20 @@ import { asNodes } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.as
 
 class FunctionCallNode extends TempNode {
   constructor(
-    public functionNode: FunctionNode,
+    public shader: FunctionNode,
     public parameters: Record<string, any>,
   ) {
     super();
   }
 
   getNodeType(builder: NodeBuilder): TypeName {
-    return this.functionNode.getNodeType(builder);
+    return this.shader.getNodeType(builder);
   }
 
   generate(builder: NodeBuilder): string {
     const params = [];
 
-    const functionNode = this.functionNode;
+    const functionNode = this.shader;
 
     const inputs = functionNode.getInputs(builder);
     const parameters = this.parameters;

@@ -10,7 +10,7 @@ const map = new WeakMap();
 export class ShaderCallNode extends Node {
   constructor(
     public shader: ShaderNode,
-    public inputs: Record<string, Node> | null = null,
+    public parameters: Record<string, Node> | null = null,
   ) {
     super();
   }
@@ -22,7 +22,7 @@ export class ShaderCallNode extends Node {
   }
 
   call(builder: NodeBuilder): Node {
-    const { shader, inputs } = this;
+    const { shader, parameters } = this;
 
     if (shader.layout) {
       let fn = map.get(shader);
@@ -35,11 +35,11 @@ export class ShaderCallNode extends Node {
 
       if (builder.currentFunctionNode) builder.currentFunctionNode.includes.push(fn);
 
-      return asNode(fn.call(inputs));
+      return asNode(fn.call(parameters));
     }
 
     const fn = shader.fn;
-    const output = inputs !== null ? fn(inputs, builder.stack, builder) : fn(builder.stack, builder);
+    const output = parameters !== null ? fn(parameters, builder.stack, builder) : fn(builder.stack, builder);
 
     return asNode(output);
   }

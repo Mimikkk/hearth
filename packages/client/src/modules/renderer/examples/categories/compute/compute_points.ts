@@ -73,7 +73,7 @@ const computeShaderFn = hsl(() => {
 
 const computeNode = computeShaderFn().compute(count);
 console.log(computeShaderFn());
-computeNode.onInit = ({ hearth }) => {
+computeNode.onInit = hearth => {
   const precomputeShaderNode = hsl(() => {
     const particleIndex = f32(instanceIndex);
 

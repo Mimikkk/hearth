@@ -1,50 +1,35 @@
 import { Node } from '../core/Node.js';
 import { NodeUpdateStage } from '../core/constants.js';
-import { addNodeCommand, asNode } from '../shadernode/ShaderNodes.js';
+import { addNodeCommand, asNode, ShaderCallNode } from '../shadernode/ShaderNodes.js';
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
-import { ShaderStage } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
+import { ShaderStage, TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
+import FunctionCallNode from '@modules/renderer/engine/nodes/code/FunctionCallNode.js';
 
 export class ComputeNode extends Node {
-  declare id: number;
-  declare isComputeNode: boolean;
-  computeNode: any;
-  count: number;
-  workgroupSize: number[];
   dispatchCount: number;
 
-  constructor(computeNode: any, count: number, workgroupSize: number[] = [64]) {
-    super('void');
-
-    this.isComputeNode = true;
-
-    this.computeNode = computeNode;
-
-    this.count = count;
-    this.workgroupSize = workgroupSize;
-    this.dispatchCount = 0;
+  constructor(
+    public call: ShaderCallNode | FunctionCallNode,
+    public count: number,
+    public size: number[] = [64],
+  ) {
+    super(TypeName.void);
 
     this.version = 1;
     this.updateBeforeType = NodeUpdateStage.Object;
 
-    this.updateDispatchCount();
+    let work = size[0];
+    for (let i = 1; i < size.length; i++) work *= size[i];
+
+    this.dispatchCount = Math.ceil(count / work);
   }
 
   set needsUpdate(value: boolean) {
     if (value === true) this.version++;
   }
 
-  updateDispatchCount() {
-    const { count, workgroupSize } = this;
-
-    let size = workgroupSize[0];
-
-    for (let i = 1; i < workgroupSize.length; i++) size *= workgroupSize[i];
-
-    this.dispatchCount = Math.ceil(count / size);
-  }
-
-  onInit(params: { hearth: Hearth }) {}
+  onInit(hearth: Hearth) {}
 
   updateBefore(params: { hearth: Hearth }) {
     params.hearth.compute(this);
@@ -54,11 +39,9 @@ export class ComputeNode extends Node {
     const { shaderStage } = builder;
 
     if (shaderStage === ShaderStage.Compute) {
-      const snippet = this.computeNode.build(builder, 'void');
+      const code = this.call.build(builder, TypeName.void);
 
-      if (snippet !== '') {
-        builder.addLineFlowCode(snippet);
-      }
+      if (code) builder.addLineFlowCode(code);
     }
   }
 }
