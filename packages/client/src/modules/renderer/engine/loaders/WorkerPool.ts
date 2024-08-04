@@ -14,6 +14,22 @@ export class WorkerPool<
   resolvers: ((message: Signal['message']) => void)[];
   status: number;
 
+  post<S extends Signal>(message: S['message'], transfers?: S['transfers']): Promise<S['response']> {
+    return new Promise(resolve => {
+      const workerId = this.#findIdleWorkerId();
+
+      if (workerId === undefined) {
+        this.queue.push({ resolve, message, transfers });
+        return;
+      }
+
+      this.#initializeWorker(workerId);
+      this.#toggleStatus(workerId);
+      this.resolvers[workerId] = resolve;
+      this.workers[workerId].postMessage(message, transfers!);
+    });
+  }
+
   isWorkerIdle(workerId: number): boolean {
     return !(this.status & (1 << workerId));
   }
@@ -28,11 +44,11 @@ export class WorkerPool<
     this.status = 0;
   }
 
-  _toggleStatus(workerId: number) {
+  #toggleStatus(workerId: number) {
     this.status ^= 1 << workerId;
   }
 
-  _initializeWorker(workerId: number) {
+  #initializeWorker(workerId: number) {
     if (this.workers[workerId]) return;
     const worker = this.createWorker();
 
@@ -46,31 +62,15 @@ export class WorkerPool<
         return;
       }
 
-      this._toggleStatus(workerId);
+      this.#toggleStatus(workerId);
     });
 
     this.workers[workerId] = worker;
   }
 
-  _findIdleWorkerId(): number | undefined {
+  #findIdleWorkerId(): number | undefined {
     for (let id = 0; id < this.maxPoolId; ++id) if (this.isWorkerIdle(id)) return id;
     return undefined;
-  }
-
-  post<S extends Signal>(message: S['message'], transfers?: S['transfers']): Promise<S['response']> {
-    return new Promise(resolve => {
-      const workerId = this._findIdleWorkerId();
-
-      if (workerId === undefined) {
-        this.queue.push({ resolve, message, transfers });
-        return;
-      }
-
-      this._initializeWorker(workerId);
-      this._toggleStatus(workerId);
-      this.resolvers[workerId] = resolve;
-      this.workers[workerId].postMessage(message, transfers!);
-    });
   }
 
   dispose() {

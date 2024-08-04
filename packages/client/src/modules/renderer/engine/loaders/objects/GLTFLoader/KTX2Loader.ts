@@ -11,7 +11,7 @@ import {
   TextureDataType,
   TextureFormat,
 } from '@modules/renderer/engine/engine.js';
-import { WorkerPool } from '../../../utils/WorkerPool.js';
+import { WorkerPool } from '../../WorkerPool.js';
 import {
   KHR_DF_FLAG_ALPHA_PREMULTIPLIED,
   KHR_DF_PRIMARIES_BT709,

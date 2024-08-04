@@ -12,14 +12,14 @@ describe('WorkerPool', () => {
     expect(pool.status).toBe(0);
 
     for (let i = 0; i < 4; ++i) {
-      pool._toggleStatus(i);
+      pool.#toggleStatus(i);
       expect(pool.isWorkerIdle(i)).toBe(false);
-      pool._toggleStatus(i);
+      pool.#toggleStatus(i);
       expect(pool.isWorkerIdle(i)).toBe(true);
 
-      pool._toggleStatus(i);
+      pool.#toggleStatus(i);
       expect(pool.isWorkerIdle(i)).toBe(false);
-      pool._toggleStatus(i);
+      pool.#toggleStatus(i);
       expect(pool.isWorkerIdle(i)).toBe(true);
     }
   });
