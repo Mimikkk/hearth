@@ -40,12 +40,14 @@ export enum TimerType {
   Frame = 'frame',
 }
 
-
-
 export const timerLocal = (timeScale: number, value: number = 0) =>
   asNode(new TimerNode(TimerType.Local, timeScale, value));
 export const timerGlobal = (timeScale: number, value: number = 0) =>
   asNode(new TimerNode(TimerType.Total, timeScale, value));
 export const timerDelta = (timeScale: number, value: number = 0) =>
   asNode(new TimerNode(TimerType.Delta, timeScale, value));
-export const frameId = fixedNode(TimerNode, TimerType.Frame).u32();
+export const frameId = fixedNode(
+  class extends TimerNode {
+    scope = TimerType.Frame;
+  },
+).u32();
