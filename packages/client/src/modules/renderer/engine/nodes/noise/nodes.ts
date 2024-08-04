@@ -30,20 +30,17 @@ export const Noise = {
     vec4: (position = uv(), octaves = 3, lacunarity = 2, diminish = 0.5, amplitude = 1) =>
       fractal_noise_vec4(position, i32(octaves), lacunarity, diminish).mul(amplitude),
   },
-
   perlin: {
     f32: (position = uv(), amplitude: number = 1, pivot: number = 0) =>
       perlin_noise_f32(position).mul(amplitude).add(pivot),
     vec3: (position = uv(), amplitude: number = 1, pivot: number = 0) =>
       perlin_noise_vec3(position).mul(amplitude).add(pivot),
   },
-
   worley: {
     f32: (position = uv(), jitter: number = 1) => worley_noise_f32(position, jitter, i32(1)),
     vec2: (position = uv(), jitter: number = 1) => worley_noise_vec2(position, jitter, i32(1)),
     vec3: (position = uv(), jitter: number = 1) => worley_noise_vec3(position, jitter, i32(1)),
   },
-
   cell: {
     f32: (position = uv()) => cell_noise_f32(position),
     vec3: (position = uv()) => cell_noise_vec3(position),

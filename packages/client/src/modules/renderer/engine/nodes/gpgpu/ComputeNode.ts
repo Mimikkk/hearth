@@ -5,6 +5,7 @@ import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { ShaderStage, TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import FunctionCallNode from '@modules/renderer/engine/nodes/code/FunctionCallNode.js';
+import NodeFrame from '@modules/renderer/engine/nodes/core/NodeFrame.js';
 
 export class ComputeNode extends Node {
   dispatchCount: number;
@@ -31,8 +32,8 @@ export class ComputeNode extends Node {
 
   onInit(hearth: Hearth) {}
 
-  updateBefore(params: { hearth: Hearth }) {
-    params.hearth.compute(this);
+  updateBefore(frame: NodeFrame): void {
+    frame.hearth.compute(this);
   }
 
   generate(builder: NodeBuilder) {
