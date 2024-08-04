@@ -38,14 +38,14 @@ export class StackNode extends Node {
   elseif(bool: OperatorNode, then: Function): this {
     const condition = cond(bool, createShaderNode(then));
 
-    this.cond!.elif = condition;
+    this.cond!.or = condition;
     this.cond = condition;
 
     return this;
   }
 
   else(method: Function): this {
-    this.cond!.elif = createShaderNode(method);
+    this.cond!.or = createShaderNode(method);
 
     return this;
   }
@@ -64,7 +64,5 @@ export class StackNode extends Node {
 }
 
 StackNode.prototype.isStackNode = true;
-
-
 
 export const stack = proxyNode(StackNode);

@@ -1,6 +1,5 @@
 import { Node } from '../core/Node.js';
 import { property } from '../core/PropertyNode.js';
-import { context as contextNode } from '../core/ContextNode.js';
 import { addNodeCommand, proxyNode } from '../shadernode/ShaderNodes.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
@@ -9,7 +8,7 @@ export class CondNode extends Node {
   constructor(
     public when: Node,
     public then: Node,
-    public elif?: Node,
+    public or?: Node,
   ) {
     super();
   }
@@ -17,44 +16,45 @@ export class CondNode extends Node {
   getNodeType(builder: NodeBuilder): TypeName {
     const typeA = this.then.getNodeType(builder);
 
-    if (!this.elif) return typeA;
+    if (!this.or) return typeA;
 
-    const typeB = this.elif.getNodeType(builder);
+    const typeB = this.or.getNodeType(builder);
     return TypeName.size(typeB) > TypeName.size(typeA) ? typeB : typeA;
   }
 
   generate(builder: NodeBuilder, output?: TypeName): string {
     const type = this.getNodeType(builder);
-    const context = { tempWrite: false };
-
     const data = builder.getDataFromNode(this);
-    if (data.property) return data.property;
+    if (data.nodeProperty) return data.nodeProperty;
 
-    const { then, elif } = this;
+    const { when, then, or } = this;
+
     const isExpression = output !== TypeName.void;
-    const prop = isExpression ? property(type).build(builder) : '';
+    const nodeProperty = isExpression ? property(type).build(builder) : '';
 
-    data.property = prop;
+    data.nodeProperty = nodeProperty;
 
-    const condition = contextNode(this.when).build(builder, TypeName.bool);
+    const whenCode = when.build(builder, TypeName.bool);
 
-    let thenCode = contextNode(then, context).build(builder, type);
-    if (thenCode) thenCode = isExpression ? `${prop} = ${thenCode};` : `return ${thenCode};`;
+    builder.flow.code += `\nif (${whenCode}) {\n`;
 
-    let ccc = `\nif (${condition}) {\n` + thenCode + '\n}';
+    let thenCode = then.build(builder, type);
+    if (thenCode) thenCode = isExpression ? `${nodeProperty} = ${thenCode};` : `return ${thenCode};`;
 
-    if (elif) {
-      let elseCode = contextNode(elif, context).build(builder, type);
+    builder.flow.code += thenCode + '\n}';
 
-      elseCode = isExpression ? `${prop} = ${elseCode};` : `return ${elseCode};`;
+    if (or) {
+      builder.flow.code += ' else {\n';
 
-      ccc += ` else {\n ${elseCode} \n}\n`;
+      let orCode = or.build(builder, type);
+      if (orCode) orCode = isExpression ? `${nodeProperty} = ${orCode};` : `return ${orCode};`;
+
+      builder.flow.code += `${orCode}\n}\n`;
     } else {
-      ccc += '\n';
+      builder.flow.code += '\n';
     }
 
-    builder.flow.code += ccc;
-    return builder.format(prop, type, output);
+    return builder.format(nodeProperty, type, output);
   }
 }
 

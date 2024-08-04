@@ -47,7 +47,7 @@ async function init() {
   scene = new Engine.Scene();
 
   const textureLoader = new TextureLoader();
-  const map = await textureLoader.loadAsync('resources/textures/sprite.png');
+  const map = await textureLoader.loadAsync('../../resources/textures/sprite.png');
 
   const createBuffer = () =>
     storage(
