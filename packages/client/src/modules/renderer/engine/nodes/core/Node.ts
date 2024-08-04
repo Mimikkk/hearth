@@ -246,6 +246,12 @@ export class Node {
   //   return this;
   // }
 
+  // at(index: number): ArrayElementNode {
+  //   const element = Node.Map.get('element');
+  //
+  //   return Node.as(new element(this, new ConstNode(index, TypeName.u32))) as ArrayElementNode;
+  // }
+
   [index: number]: ArrayElementNode;
 
   declare static as: typeof asNode;
