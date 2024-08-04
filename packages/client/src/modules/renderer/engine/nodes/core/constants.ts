@@ -4,5 +4,3 @@ export enum NodeUpdateStage {
   Render = 'render',
   Object = 'object',
 }
-
-export const vectorComponents = ['x', 'y', 'z', 'w'] as const;

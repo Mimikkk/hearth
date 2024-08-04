@@ -1,5 +1,4 @@
 import TempNode from '../core/TempNode.js';
-import { vectorComponents } from '../core/constants.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { XYZW } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.handlers.js';
@@ -31,7 +30,7 @@ class SetNode extends TempNode {
     const parameters = [];
 
     for (let i = 0; i < length; i++) {
-      const component = vectorComponents[i];
+      const component = 'xyzw'[i];
 
       if (component === components[0]) {
         parameters.push(targetSnippet);

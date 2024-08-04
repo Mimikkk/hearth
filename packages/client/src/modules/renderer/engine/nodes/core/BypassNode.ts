@@ -1,32 +1,28 @@
 import { Node } from './Node.js';
 import { addNodeCommand, proxyNode } from '../shadernode/ShaderNodes.js';
+import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
+import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 
-class BypassNode extends Node {
-  constructor(returnNode, callNode) {
+export class BypassNode extends Node {
+  constructor(
+    public output: Node,
+    public call: Node,
+  ) {
     super();
-
-    this.isBypassNode = true;
-
-    this.outputNode = returnNode;
-    this.callNode = callNode;
   }
 
-  getNodeType(builder) {
-    return this.outputNode.getNodeType(builder);
+  getNodeType(builder: NodeBuilder): TypeName {
+    return this.output.getNodeType(builder);
   }
 
-  generate(builder) {
-    const snippet = this.callNode.build(builder, 'void');
+  generate(builder: NodeBuilder, output?: TypeName): string {
+    const code = this.call.build(builder, TypeName.void);
 
-    if (snippet !== '') {
-      builder.addLineFlowCode(snippet);
-    }
+    if (code) builder.addLineFlowCode(code);
 
-    return this.outputNode.build(builder);
+    return this.output.build(builder);
   }
 }
-
-export default BypassNode;
 
 export const bypass = proxyNode(BypassNode);
 

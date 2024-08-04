@@ -1,5 +1,4 @@
 import { Node } from '../core/Node.js';
-import { vectorComponents } from '../core/constants.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 export class SplitNode extends Node {
@@ -16,7 +15,7 @@ export class SplitNode extends Node {
     let vectorLength = this.components.length;
 
     for (const c of this.components) {
-      vectorLength = Math.max(vectorComponents.indexOf(c) + 1, vectorLength);
+      vectorLength = Math.max('xyzw'.indexOf(c) + 1, vectorLength);
     }
 
     return vectorLength;
