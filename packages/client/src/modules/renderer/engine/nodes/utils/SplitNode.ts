@@ -1,35 +1,34 @@
 import { Node } from '../core/Node.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
+import { Swizzle } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.handlers.js';
+import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 
 export class SplitNode extends Node {
-  constructor(node, components = 'x') {
+  isSplitNode: true;
+
+  constructor(
+    public node: Node,
+    public components: Swizzle,
+  ) {
     super();
-
-    this.node = node;
-    this.components = components;
-
-    this.isSplitNode = true;
   }
 
-  getVectorLength() {
-    let vectorLength = this.components.length;
+  getVectorLength(): number {
+    let len = this.components.length;
+    for (const c of this.components) len = Math.max('xyzw'.indexOf(c) + 1, len);
 
-    for (const c of this.components) {
-      vectorLength = Math.max('xyzw'.indexOf(c) + 1, vectorLength);
-    }
-
-    return vectorLength;
+    return len;
   }
 
-  getComponentType(builder) {
+  getComponentType(builder: NodeBuilder): TypeName {
     return TypeName.component(this.node.getNodeType(builder));
   }
 
-  getNodeType(builder) {
+  getNodeType(builder: NodeBuilder): TypeName {
     return TypeName.ofSize(this.components.length, this.getComponentType(builder));
   }
 
-  generate(builder, output) {
+  generate(builder: NodeBuilder, output: TypeName): string {
     const node = this.node;
     const nodeTypeLength = TypeName.size(node.getNodeType(builder));
 
@@ -58,3 +57,5 @@ export class SplitNode extends Node {
     return snippet;
   }
 }
+
+SplitNode.prototype.isSplitNode = true;

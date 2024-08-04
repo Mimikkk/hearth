@@ -5,10 +5,16 @@ import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.
 import { NodeFrame } from '@modules/renderer/engine/nodes/core/NodeFrame.js';
 import { BuildStage, TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { v4 } from 'uuid';
+import { NodeStack } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.stack.js';
+import { NodeCommands } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.map.js';
+import { ArrayElementNode } from '@modules/renderer/engine/nodes/utils/ArrayElementNode.js';
+import { asNode } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.as.js';
+import type { NodeMap } from '@modules/renderer/engine/nodes/core/Node.map.js';
 
 let _nodeId = 0;
 
 export class Node {
+  declare static Map: typeof NodeMap;
   declare isNode: true;
   name?: string;
   nodeType: TypeName | null;
@@ -232,6 +238,16 @@ export class Node {
 
     return result;
   }
+
+  assign(to: Node): this {
+    const stack = NodeStack.get()!;
+
+    stack.add(NodeCommands.get('assign')(this, to));
+
+    return this;
+  }
+
+  [index: number]: ArrayElementNode;
 }
 
 export default Node;
