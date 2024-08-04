@@ -485,21 +485,21 @@ export async function parseOBJ(text: string, materialCreator?: MTLMaterialCreato
 
       if (geometry.vertices.length === 0) continue;
 
-      const buffergeometry = new Geometry();
+      const geo = new Geometry();
 
-      buffergeometry.setAttribute('position', new Attribute(new Float32Array(geometry.vertices), 3));
+      geo.setAttribute('position', new Attribute(new Float32Array(geometry.vertices), 3));
 
       if (geometry.normals.length > 0) {
-        buffergeometry.setAttribute('normal', new Attribute(new Float32Array(geometry.normals), 3));
+        geo.setAttribute('normal', new Attribute(new Float32Array(geometry.normals), 3));
       }
 
       if (geometry.colors.length > 0) {
         hasVertexColors = true;
-        buffergeometry.setAttribute('color', new Attribute(new Float32Array(geometry.colors), 3));
+        geo.setAttribute('color', new Attribute(new Float32Array(geometry.colors), 3));
       }
 
       if (geometry.hasUVIndices === true) {
-        buffergeometry.setAttribute('uv', new Attribute(new Float32Array(geometry.uvs), 2));
+        geo.setAttribute('uv', new Attribute(new Float32Array(geometry.uvs), 2));
       }
 
       const createdMaterials = [];
@@ -550,23 +550,23 @@ export async function parseOBJ(text: string, materialCreator?: MTLMaterialCreato
       if (createdMaterials.length > 1) {
         for (let mi = 0, miLen = materials.length; mi < miLen; mi++) {
           const sourceMaterial = materials[mi];
-          buffergeometry.addGroup(sourceMaterial.groupStart, sourceMaterial.groupCount, mi);
+          geo.addGroup(sourceMaterial.groupStart, sourceMaterial.groupCount, mi);
         }
 
         if (isLine) {
-          mesh = new LineSegments(buffergeometry, createdMaterials);
+          mesh = new LineSegments(geo, createdMaterials);
         } else if (isPoints) {
-          mesh = new Points(buffergeometry, createdMaterials);
+          mesh = new Points(geo, createdMaterials);
         } else {
-          mesh = new Mesh(buffergeometry, createdMaterials);
+          mesh = new Mesh(geo, createdMaterials);
         }
       } else {
         if (isLine) {
-          mesh = new LineSegments(buffergeometry, createdMaterials[0]);
+          mesh = new LineSegments(geo, createdMaterials[0]);
         } else if (isPoints) {
-          mesh = new Points(buffergeometry, createdMaterials[0]);
+          mesh = new Points(geo, createdMaterials[0]);
         } else {
-          mesh = new Mesh(buffergeometry, createdMaterials[0]);
+          mesh = new Mesh(geo, createdMaterials[0]);
         }
       }
 
@@ -578,16 +578,16 @@ export async function parseOBJ(text: string, materialCreator?: MTLMaterialCreato
     if (state.vertices.length > 0) {
       const material = new PointsMaterial({ size: 1, sizeAttenuation: false });
 
-      const buffergeometry = new Geometry();
+      const geo = new Geometry();
 
-      buffergeometry.setAttribute('position', new Attribute(new Float32Array(state.vertices), 3));
+      geo.setAttribute('position', new Attribute(new Float32Array(state.vertices), 3));
 
       if (state.colors.length > 0 && state.colors[0] !== undefined) {
-        buffergeometry.setAttribute('color', new Attribute(new Float32Array(state.colors), 3));
+        geo.setAttribute('color', new Attribute(new Float32Array(state.colors), 3));
         material.vertexColors = true;
       }
 
-      const points = new Points(buffergeometry, material);
+      const points = new Points(geo, material);
       container.add(points);
     }
   }

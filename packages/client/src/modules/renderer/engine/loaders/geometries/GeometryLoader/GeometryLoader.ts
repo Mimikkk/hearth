@@ -1,20 +1,20 @@
 import type { Geometry } from '../../../core/Geometry.js';
 import { classLoader } from '@modules/renderer/engine/loaders/types.js';
 import { FileLoader, ResponseType } from '@modules/renderer/engine/loaders/files/FileLoader/FileLoader.js';
-import { parseBufferGeometry } from '@modules/renderer/engine/loaders/geometries/BufferGeometryLoader/parseBufferGeometry.js';
+import { parseGeometry } from '@modules/renderer/engine/loaders/geometries/GeometryLoader/parseGeometry.js';
 
-export class BufferGeometryLoader extends classLoader<{
-  This: BufferGeometryLoader;
+export class GeometryLoader extends classLoader<{
+  This: GeometryLoader;
   Url: string;
   Return: Geometry;
   Options: Options;
   Configuration: Configuration;
 }>(
   options => ({ fileLoader: FileLoader.configureAs(ResponseType.Json, options?.fileLoader) }),
-  async (url, { fileLoader }, handlers) => parseBufferGeometry(await FileLoader.loadAsync(url, fileLoader, handlers)),
+  async (url, { fileLoader }, handlers) => parseGeometry(await FileLoader.loadAsync(url, fileLoader, handlers)),
 ) {}
 
-export namespace BufferGeometryLoader {
+export namespace GeometryLoader {
   export interface Options {
     fileLoader?: Omit<FileLoader.Options, 'responseType'>;
   }
@@ -23,5 +23,5 @@ export namespace BufferGeometryLoader {
     fileLoader: FileLoader.Configuration<ResponseType.Json>;
   };
 }
-type Options = BufferGeometryLoader.Options;
-type Configuration = BufferGeometryLoader.Configuration;
+type Options = GeometryLoader.Options;
+type Configuration = GeometryLoader.Configuration;

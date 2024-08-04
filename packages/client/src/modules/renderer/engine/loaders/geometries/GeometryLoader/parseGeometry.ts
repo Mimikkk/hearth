@@ -31,7 +31,7 @@ export interface JsonContent {
   userData: Record<string, any>;
 }
 
-export const parseBufferGeometry = (json: JsonContent): Geometry => {
+export const parseGeometry = (json: JsonContent): Geometry => {
   const interleavedBufferMap: Record<string, any> = {};
   const arrayBufferMap: Record<string, any> = {};
 

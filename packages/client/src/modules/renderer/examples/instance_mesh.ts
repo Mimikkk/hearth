@@ -4,7 +4,7 @@ import { mix, normalWorld, oscSine, range, timerLocal } from '@modules/renderer/
 import { GUI } from 'lil-gui';
 
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
-import { BufferGeometryLoader } from '@modules/renderer/engine/loaders/geometries/BufferGeometryLoader/BufferGeometryLoader.js';
+import { GeometryLoader } from '@modules/renderer/engine/loaders/geometries/GeometryLoader/GeometryLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, hearth;
@@ -29,7 +29,7 @@ async function init() {
 
   material.colorNode = mix(normalWorld, randomColors, oscSine(timerLocal(0.1)));
 
-  const loader = new BufferGeometryLoader();
+  const loader = new GeometryLoader();
   loader.loadAsync('resources/models/json/suzanne_buffergeometry.json').then(function (geometry) {
     geometry.computeVertexNormals();
     geometry.scale(0.5, 0.5, 0.5);

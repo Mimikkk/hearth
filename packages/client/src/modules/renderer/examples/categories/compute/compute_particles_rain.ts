@@ -26,7 +26,7 @@ import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitC
 import { GUI } from 'lil-gui';
 
 import * as GeometryUtils from '@modules/renderer/engine/utils/GeometryUtils.js';
-import { BufferGeometryLoader } from '@modules/renderer/engine/loaders/geometries/BufferGeometryLoader/BufferGeometryLoader.js';
+import { GeometryLoader } from '@modules/renderer/engine/loaders/geometries/GeometryLoader/GeometryLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 import { GPUBufferBindingTypeType, BufferStep } from '@modules/renderer/engine/hearth/constants.js';
 
@@ -249,7 +249,7 @@ async function init() {
   collisionBox.castShadow = true;
   scene.add(collisionBox);
 
-  const loader = new BufferGeometryLoader();
+  const loader = new GeometryLoader();
   loader.loadAsync('../../resources/models/json/suzanne_buffergeometry.json').then(function (geometry) {
     geometry.computeVertexNormals();
 

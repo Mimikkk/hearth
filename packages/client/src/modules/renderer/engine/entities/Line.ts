@@ -59,7 +59,7 @@ export class Line extends Entity {
 
       geometry.setAttribute('lineDistance', new Attribute(new Float32Array(lineDistances), 1));
     } else {
-      throw Error('Line.computeLineDistances(): Computation only possible with non-indexed BufferGeometry.');
+      throw Error('Line.computeLineDistances(): Computation only possible with non-indexed Geometry.');
     }
 
     return this;

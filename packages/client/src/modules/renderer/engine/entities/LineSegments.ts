@@ -26,7 +26,7 @@ export class LineSegments extends Line {
 
       geometry.setAttribute('lineDistance', new Attribute(new Float32Array(lineDistances), 1));
     } else {
-      throw Error('LineSegments.computeLineDistances(): Computation only possible with non-indexed BufferGeometry.');
+      throw Error('LineSegments.computeLineDistances(): Computation only possible with non-indexed Geometry.');
     }
 
     return this;
