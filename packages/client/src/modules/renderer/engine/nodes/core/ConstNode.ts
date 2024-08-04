@@ -22,3 +22,5 @@ export class ConstNode<T = any> extends InputNode {
 }
 
 ConstNode.prototype.isConstNode = true;
+
+

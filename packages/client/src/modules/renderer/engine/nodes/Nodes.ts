@@ -35,6 +35,7 @@ export * from './math/OperatorNode.js';
 export * from './math/CondNode.js';
 export * from './math/HashNode.js';
 export * from './math/MathUtils.js';
+export * from './math/TriNoise3D.js';
 export * from './utils/ArrayElementNode.js';
 export * from './utils/ConvertNode.js';
 export * from './utils/DiscardNode.js';
