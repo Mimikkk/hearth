@@ -1,6 +1,6 @@
 export * from './core/constants.js';
 
-export { default as AssignNode, assign } from './core/AssignNode.js';
+export { AssignNode, assign } from './core/AssignNode.js';
 export { default as AttributeNode, attribute } from './core/AttributeNode.js';
 export { default as BypassNode, bypass } from './core/BypassNode.js';
 export { default as CacheNode, cache } from './core/CacheNode.js';

@@ -1,30 +1,32 @@
-import TempNode from '../core/TempNode.js';
+import { TempNode } from '../core/TempNode.js';
 import { addNodeCommand, proxyNode } from '../shadernode/ShaderNodes.js';
 import { vectorComponents } from './constants.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
+import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
+import { Node } from '../core/Node.js';
 
-class AssignNode extends TempNode {
-  constructor(targetNode, sourceNode) {
+export class AssignNode extends TempNode {
+  constructor(
+    public from: Node,
+    public to: Node,
+  ) {
     super();
-
-    this.targetNode = targetNode;
-    this.sourceNode = sourceNode;
   }
 
   hasDependencies() {
     return false;
   }
 
-  getNodeType(builder, output) {
-    return output !== 'void' ? this.targetNode.getNodeType(builder) : 'void';
+  getNodeType(builder: NodeBuilder, output: TypeName): TypeName {
+    return output !== TypeName.void ? this.from.getNodeType(builder) : TypeName.void;
   }
 
-  needsSplitAssign(builder) {
-    const { targetNode } = this;
+  needsSplitAssign(builder: NodeBuilder): boolean {
+    const { from } = this;
 
-    if (builder.isAvailable('swizzleAssign') === false && targetNode.isSplitNode && targetNode.components.length > 1) {
-      const targetLength = TypeName.size(targetNode.node.getNodeType(builder));
-      const assignDiferentVector = vectorComponents.join('').slice(0, targetLength) !== targetNode.components;
+    if (builder.isAvailable('swizzleAssign') === false && from.isSplitNode && from.components.length > 1) {
+      const targetLength = TypeName.size(from.node.getNodeType(builder));
+      const assignDiferentVector = vectorComponents.join('').slice(0, targetLength) !== from.components;
 
       return assignDiferentVector;
     }
@@ -32,17 +34,17 @@ class AssignNode extends TempNode {
     return false;
   }
 
-  generate(builder, output) {
-    const { targetNode, sourceNode } = this;
+  generate(builder: NodeBuilder, output: TypeName): string {
+    const { from, to } = this;
 
     const needsSplitAssign = this.needsSplitAssign(builder);
 
-    const targetType = targetNode.getNodeType(builder);
+    const targetType = from.getNodeType(builder);
 
-    const target = targetNode.context({ assign: true }).build(builder);
-    const source = sourceNode.build(builder, targetType);
+    const target = from.context({ assign: true }).build(builder);
+    const source = to.build(builder, targetType);
 
-    const sourceType = sourceNode.getNodeType(builder);
+    const sourceType = to.getNodeType(builder);
 
     const nodeData = builder.getDataFromNode(this);
 
@@ -58,10 +60,10 @@ class AssignNode extends TempNode {
 
       builder.addLineFlowCode(`${sourceProperty} = ${source}`);
 
-      const targetRoot = targetNode.node.context({ assign: true }).build(builder);
+      const targetRoot = from.node.context({ assign: true }).build(builder);
 
-      for (let i = 0; i < targetNode.components.length; i++) {
-        const component = targetNode.components[i];
+      for (let i = 0; i < from.components.length; i++) {
+        const component = from.components[i];
 
         builder.addLineFlowCode(`${targetRoot}.${component} = ${sourceProperty}[ ${i} ]`);
       }
@@ -86,8 +88,6 @@ class AssignNode extends TempNode {
     return builder.format(snippet, targetType, output);
   }
 }
-
-export default AssignNode;
 
 export const assign = proxyNode(AssignNode);
 
