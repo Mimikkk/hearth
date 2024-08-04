@@ -4,7 +4,7 @@ import { Node } from '../core/Node.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 
-class OperatorNode extends TempNode {
+export class OperatorNode extends TempNode {
   op: Operator;
   aNode: Node;
   bNode: Node;

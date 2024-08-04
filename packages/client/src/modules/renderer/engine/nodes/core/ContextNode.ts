@@ -1,49 +1,47 @@
 import { Node } from './Node.js';
 import { addNodeCommand, proxyNode } from '../shadernode/ShaderNodes.js';
+import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
+import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 
-class ContextNode extends Node {
-  constructor(node, context = {}) {
+export class ContextNode extends Node {
+  constructor(
+    public node: Node,
+    public context: object,
+  ) {
     super();
-
-    this.isContextNode = true;
-
-    this.node = node;
-    this.context = context;
   }
 
-  getNodeType(builder) {
+  getNodeType(builder: NodeBuilder): TypeName {
     return this.node.getNodeType(builder);
   }
 
-  setup(builder) {
-    const previousContext = builder.context;
+  setup(builder: NodeBuilder): Node {
+    const context = builder.context;
 
     builder.context = { ...builder.context, ...this.context };
 
     const node = this.node.build(builder);
 
-    builder.context = previousContext;
+    builder.context = context;
 
     return node;
   }
 
-  generate(builder, output) {
-    const previousContext = builder.context;
+  generate(builder: NodeBuilder, output?: TypeName): string {
+    const context = builder.context;
 
     builder.context = { ...builder.context, ...this.context };
 
-    const snippet = this.node.build(builder, output);
+    const code = this.node.build(builder, output);
 
-    builder.context = previousContext;
+    builder.context = context;
 
-    return snippet;
+    return code;
   }
 }
 
-export default ContextNode;
-
 export const context = proxyNode(ContextNode);
-export const label = (node, name) => context(node, { label: name });
+export const label = (node: Node, name: string) => context(node, { label: name });
 
 addNodeCommand('context', context);
 addNodeCommand('label', label);

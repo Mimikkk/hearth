@@ -60,9 +60,9 @@ export class FunctionNode extends CodeNode {
     if (keywordsProperties.length > 0) {
       for (const property of keywordsProperties) {
         const propertyRegExp = new RegExp(`\\b${property}\\b`, 'g');
-        const nodeProperty = keywords[property].build(builder, 'property');
+        const property = keywords[property].build(builder, 'property');
 
-        code = code.replace(propertyRegExp, nodeProperty);
+        code = code.replace(propertyRegExp, property);
       }
     }
 

@@ -1,4 +1,4 @@
-import CondNode from '../math/CondNode.js';
+import { CondNode } from '../math/CondNode.js';
 import { expression } from '../code/ExpressionNode.js';
 import { addNodeCommand, proxyNode } from '../shadernode/ShaderNodes.js';
 

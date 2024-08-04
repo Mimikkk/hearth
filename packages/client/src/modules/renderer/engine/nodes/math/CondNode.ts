@@ -9,7 +9,7 @@ export class CondNode extends Node {
   constructor(
     public when: Node,
     public then: Node,
-    public elif: Node | null = null,
+    public elif?: Node,
   ) {
     super();
   }
@@ -28,54 +28,35 @@ export class CondNode extends Node {
     const context = { tempWrite: false };
 
     const data = builder.getDataFromNode(this);
-    if (data.nodeProperty) return data.nodeProperty;
+    if (data.property) return data.property;
 
     const { then, elif } = this;
-
     const isExpression = output !== TypeName.void;
-    const nodeProperty = isExpression ? property(type).build(builder) : '';
+    const prop = isExpression ? property(type).build(builder) : '';
 
-    data.nodeProperty = nodeProperty;
+    data.property = prop;
 
-    const nodeSnippet = contextNode(this.when).build(builder, TypeName.bool);
+    const condition = contextNode(this.when).build(builder, TypeName.bool);
 
-    builder.flow.code += `\nif ( ${nodeSnippet} ) {\n`;
+    let thenCode = contextNode(then, context).build(builder, type);
+    if (thenCode) thenCode = isExpression ? `${prop} = ${thenCode};` : `return ${thenCode};`;
 
-    let ifCode = contextNode(then, context).build(builder, type);
+    let ccc = `\nif (${condition}) {\n` + thenCode + '\n}';
 
-    if (ifCode) {
-      if (isExpression) {
-        ifCode = nodeProperty + ' = ' + ifCode + ';';
-      } else {
-        ifCode = 'return ' + ifCode + ';';
-      }
-    }
-
-    builder.flow.code += ifCode + '\n}';
-
-    if (elif !== null) {
-      builder.flow.code += ' else {\n';
-
+    if (elif) {
       let elseCode = contextNode(elif, context).build(builder, type);
 
-      if (elseCode) {
-        if (isExpression) {
-          elseCode = nodeProperty + ' = ' + elseCode + ';';
-        } else {
-          elseCode = 'return ' + elseCode + ';';
-        }
-      }
+      elseCode = isExpression ? `${prop} = ${elseCode};` : `return ${elseCode};`;
 
-      builder.flow.code += elseCode + '\n}\n';
+      ccc += ` else {\n ${elseCode} \n}\n`;
     } else {
-      builder.flow.code += '\n';
+      ccc += '\n';
     }
 
-    return builder.format(nodeProperty, type, output);
+    builder.flow.code += ccc;
+    return builder.format(prop, type, output);
   }
 }
-
-export default CondNode;
 
 export const cond = proxyNode(CondNode);
 
