@@ -242,8 +242,6 @@ export class TextureNode extends UniformNode {
   }
 }
 
-export default TextureNode;
-
 export const texture = proxyNode(TextureNode);
 export const textureLoad = (...params) => texture(...params).setSampler(false);
 

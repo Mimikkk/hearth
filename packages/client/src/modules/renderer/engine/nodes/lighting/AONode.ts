@@ -1,6 +1,6 @@
-import LightingNode from './LightingNode.js';
+import { LightingNode } from './LightingNode.js';
 
-class AONode extends LightingNode {
+export class AONode extends LightingNode {
   constructor(aoNode = null) {
     super();
 
@@ -15,4 +15,4 @@ class AONode extends LightingNode {
   }
 }
 
-export default AONode;
+

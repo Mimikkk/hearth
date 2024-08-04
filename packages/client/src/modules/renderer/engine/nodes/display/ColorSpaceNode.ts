@@ -1,4 +1,4 @@
-import TempNode from '../core/TempNode.js';
+import { TempNode } from '../core/TempNode.js';
 import { mix } from '../math/MathNode.js';
 import { addNodeCommand, asNode, proxyNode, hsl, vec4 } from '../shadernode/ShaderNodes.js';
 import { ColorSpace } from '@modules/renderer/engine/engine.js';
@@ -32,7 +32,7 @@ enum NodeVariant {
   sRGBToLinear = 'sRGBToLinear',
 }
 
-export default ColorSpaceNode;
+
 
 interface Params {
   value: Node;

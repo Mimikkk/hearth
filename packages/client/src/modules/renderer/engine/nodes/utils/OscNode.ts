@@ -4,7 +4,7 @@ import { asNode, proxyNode } from '../shadernode/ShaderNodes.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
-class OscNode extends Node {
+export class OscNode extends Node {
   method: NodeVariant;
 
   constructor(public timeNode: Node = timerLocal()) {
@@ -42,8 +42,6 @@ enum NodeVariant {
   Triangle = 'triangle',
   Sawtooth = 'sawtooth',
 }
-
-export default OscNode;
 
 export const oscSine = proxyNode(
   class extends OscNode {

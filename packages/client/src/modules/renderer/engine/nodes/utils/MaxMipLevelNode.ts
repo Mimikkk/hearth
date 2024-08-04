@@ -1,13 +1,12 @@
-import UniformNode from '../core/UniformNode.js';
+import { UniformNode } from '../core/UniformNode.js';
 import { NodeUpdateStage } from '../core/constants.js';
 import { proxyNode } from '../shadernode/ShaderNodes.js';
+import { TextureNode } from '@modules/renderer/engine/nodes/accessors/TextureNode.js';
+import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
-class MaxMipLevelNode extends UniformNode {
-  constructor(textureNode) {
-    super(0);
-
-    this.textureNode = textureNode;
-
+export class MaxMipLevelNode extends UniformNode {
+  constructor(public textureNode: TextureNode) {
+    super(0, TypeName.i32);
     this.stage = NodeUpdateStage.Frame;
   }
 
@@ -27,7 +26,5 @@ class MaxMipLevelNode extends UniformNode {
     }
   }
 }
-
-export default MaxMipLevelNode;
 
 export const maxMipLevel = proxyNode(MaxMipLevelNode);

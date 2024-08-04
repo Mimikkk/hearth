@@ -22,4 +22,4 @@ export const frameGroup = sharedUniformGroup('frame');
 export const renderGroup = sharedUniformGroup('render');
 export const objectGroup = uniformGroup('object');
 
-export default UniformGroupNode;
+

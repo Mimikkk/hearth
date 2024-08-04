@@ -1,4 +1,4 @@
-import TempNode from '../core/TempNode.js';
+import { TempNode } from '../core/TempNode.js';
 import { EPSILON } from '../math/MathNode.js';
 import { addNodeCommand, proxyNode, hsl, vec3 } from '../shadernode/ShaderNodes.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
@@ -30,7 +30,7 @@ export class BlendModeNode extends TempNode {
   }
 }
 
-export default BlendModeNode;
+
 
 enum NodeVariant {
   Burn = 'burn',

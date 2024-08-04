@@ -1,4 +1,4 @@
-import ConstNode from '@modules/renderer/engine/nodes/core/ConstNode.js';
+import { ConstNode } from '@modules/renderer/engine/nodes/core/ConstNode.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 export const NodeCommands = new Map();

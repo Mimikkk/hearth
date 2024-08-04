@@ -1,4 +1,4 @@
-import TempNode from '../core/TempNode.js';
+import { TempNode } from '../core/TempNode.js';
 import { add, div, mul } from '../math/OperatorNode.js';
 import { ceil, floor, fract, pow } from '../math/MathNode.js';
 import { addNodeCommand, f32, i32, proxyNode, vec2, vec4 } from '../shadernode/ShaderNodes.js';
@@ -57,7 +57,7 @@ const textureBicubicMethod = (textureNode, lodNode) => {
   return fract(lodNode).mix(fSample, cSample);
 };
 
-class TextureBicubicNode extends TempNode {
+export class TextureBicubicNode extends TempNode {
   constructor(textureNode, blurNode = f32(3)) {
     super('vec4');
 
@@ -70,7 +70,7 @@ class TextureBicubicNode extends TempNode {
   }
 }
 
-export default TextureBicubicNode;
+
 
 export const textureBicubic = proxyNode(TextureBicubicNode);
 

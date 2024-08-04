@@ -1,4 +1,4 @@
-import PhysicalLightModel from '@modules/renderer/engine/nodes/functions/PhysicalLightModel.js';
+import { PhysicalLightModel } from '@modules/renderer/engine/nodes/functions/PhysicalLightModel.js';
 import { transformedNormalView } from '@modules/renderer/engine/nodes/accessors/NormalNode.js';
 import { f32, vec3 } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.primitves.js';
 import { positionViewDirection } from '@modules/renderer/engine/nodes/accessors/PositionNode.js';

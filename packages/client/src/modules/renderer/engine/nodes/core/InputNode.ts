@@ -23,4 +23,4 @@ export abstract class InputNode<T = any> extends Node {
   abstract generate(builder: NodeBuilder, output: TypeName): string;
 }
 
-export default InputNode;
+

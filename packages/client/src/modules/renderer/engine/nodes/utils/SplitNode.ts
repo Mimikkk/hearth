@@ -58,5 +58,3 @@ export class SplitNode extends Node {
     return snippet;
   }
 }
-
-export default SplitNode;

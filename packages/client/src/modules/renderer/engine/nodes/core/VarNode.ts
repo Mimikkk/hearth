@@ -2,7 +2,7 @@ import { Node } from './Node.js';
 import { addNodeCommand, proxyNode } from '../shadernode/ShaderNodes.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
-class VarNode extends Node {
+export class VarNode extends Node {
   constructor(node: Node, name: string = null) {
     super();
 
@@ -40,8 +40,6 @@ class VarNode extends Node {
     return propertyName;
   }
 }
-
-export default VarNode;
 
 export const temp = proxyNode(VarNode);
 

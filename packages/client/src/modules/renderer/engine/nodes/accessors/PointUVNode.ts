@@ -1,7 +1,7 @@
 import { Node } from '../core/Node.js';
 import { fixedNode } from '../shadernode/ShaderNodes.js';
 
-class PointUVNode extends Node {
+export class PointUVNode extends Node {
   constructor() {
     super('vec2');
 
@@ -13,6 +13,6 @@ class PointUVNode extends Node {
   }
 }
 
-export default PointUVNode;
+
 
 export const pointUV = fixedNode(PointUVNode);

@@ -1,4 +1,4 @@
-import InputNode from './InputNode.js';
+import { InputNode } from './InputNode.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
@@ -23,4 +23,4 @@ export class ConstNode<T = any> extends InputNode {
 
 ConstNode.prototype.isConstNode = true;
 
-export default ConstNode;
+

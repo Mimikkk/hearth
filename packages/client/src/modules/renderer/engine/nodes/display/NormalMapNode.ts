@@ -1,4 +1,4 @@
-import TempNode from '../core/TempNode.js';
+import { TempNode } from '../core/TempNode.js';
 import { add } from '../math/OperatorNode.js';
 
 import { modelNormalMatrix } from '../accessors/ModelNode.js';
@@ -33,7 +33,7 @@ const perturbNormal2Arb = hsl(inputs => {
   return add(T.mul(mapN.x, scale), B.mul(mapN.y, scale), N.mul(mapN.z)).normalize();
 });
 
-class NormalMapNode extends TempNode {
+export class NormalMapNode extends TempNode {
   constructor(node, scaleNode = null) {
     super('vec3');
 
@@ -75,7 +75,7 @@ class NormalMapNode extends TempNode {
   }
 }
 
-export default NormalMapNode;
+
 
 export const normalMap = proxyNode(NormalMapNode);
 

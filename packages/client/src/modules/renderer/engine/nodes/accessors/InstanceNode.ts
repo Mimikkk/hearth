@@ -6,7 +6,7 @@ import { mat3, mat4, proxyNode, vec3 } from '../shadernode/ShaderNodes.js';
 import { Buffer, BufferUse } from '@modules/renderer/engine/engine.js';
 import { BufferStep } from '@modules/renderer/engine/hearth/constants.js';
 
-class InstanceNode extends Node {
+export class InstanceNode extends Node {
   constructor(instanceMesh) {
     super('void');
 
@@ -50,7 +50,5 @@ class InstanceNode extends Node {
     normalLocal.assign(instanceNormal);
   }
 }
-
-export default InstanceNode;
 
 export const instance = proxyNode(InstanceNode);

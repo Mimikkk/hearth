@@ -1,4 +1,4 @@
-import CodeNode, { CodeNodeInclude } from './CodeNode.js';
+import { CodeNode, CodeNodeInclude } from './CodeNode.js';
 import { asNode } from '../shadernode/ShaderNodes.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 
@@ -75,8 +75,6 @@ export class FunctionNode extends CodeNode {
     }
   }
 }
-
-export default FunctionNode;
 
 const nativeFn = (code: string, includes: CodeNodeInclude[] = []) => {
   for (let i = 0; i < includes.length; i++) {

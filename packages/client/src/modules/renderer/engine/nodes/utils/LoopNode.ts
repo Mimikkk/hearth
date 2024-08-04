@@ -2,20 +2,24 @@ import { Node } from '../core/Node.js';
 import { expression } from '../code/ExpressionNode.js';
 import { bypass } from '../core/BypassNode.js';
 import { context } from '../core/ContextNode.js';
-import { addNodeCommand, asNodes, asNode } from '../shadernode/ShaderNodes.js';
+import { addNodeCommand, asNode, asNodes } from '../shadernode/ShaderNodes.js';
+import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
+import { StackNode } from '@modules/renderer/engine/nodes/core/StackNode.js';
+import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
-class LoopNode extends Node {
-  constructor(params = []) {
+export class LoopNode extends Node {
+  constructor(public params: Node[] = []) {
     super();
-
-    this.params = params;
   }
 
-  getVarName(index) {
-    return String.fromCharCode('i'.charCodeAt() + index);
+  getVarName(index: number) {
+    return String.fromCharCode('i'.charCodeAt(0) + index);
   }
 
-  getProperties(builder) {
+  getProperties(builder: NodeBuilder): {
+    stackNode: StackNode;
+    returnsNode: Node;
+  } {
     const properties = builder.getNodeProperties(this);
 
     if (properties.stackNode !== undefined) return properties;
@@ -37,17 +41,17 @@ class LoopNode extends Node {
     return properties;
   }
 
-  getNodeType(builder) {
+  getNodeType(builder: NodeBuilder): TypeName {
     const { returnsNode } = this.getProperties(builder);
 
-    return returnsNode ? returnsNode.getNodeType(builder) : 'void';
+    return returnsNode ? returnsNode.getNodeType(builder) : TypeName.void;
   }
 
-  setup(builder) {
+  setup(builder: NodeBuilder): void {
     this.getProperties(builder);
   }
 
-  generate(builder) {
+  generate(builder: NodeBuilder): string {
     const properties = this.getProperties(builder);
 
     const contextData = { tempWrite: false };
@@ -143,8 +147,6 @@ class LoopNode extends Node {
     return returnsSnippet;
   }
 }
-
-export default LoopNode;
 
 export const loop = (...params) => asNode(new LoopNode(asNodes(params, 'i32'))).append();
 export const Continue = () => expression('continue').append();

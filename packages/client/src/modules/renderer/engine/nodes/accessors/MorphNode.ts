@@ -116,7 +116,7 @@ function getEntry(geometry) {
   return entry;
 }
 
-class MorphNode extends Node {
+export class MorphNode extends Node {
   constructor(mesh) {
     super('void');
 
@@ -185,6 +185,6 @@ class MorphNode extends Node {
   }
 }
 
-export default MorphNode;
+
 
 export const morphReference = proxyNode(MorphNode);

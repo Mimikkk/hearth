@@ -62,6 +62,4 @@ export class AttributeNode extends Node {
   }
 }
 
-export default AttributeNode;
-
 export const attribute = (name: string, nodeType: TypeName) => asNode(new AttributeNode(name, nodeType));

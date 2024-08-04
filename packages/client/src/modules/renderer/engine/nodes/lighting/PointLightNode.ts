@@ -1,10 +1,10 @@
-import AnalyticLightNode from './AnalyticLightNode.js';
+import { AnalyticLightNode } from './AnalyticLightNode.js';
 import { getDistanceAttenuation } from './LightUtils.js';
 import { uniform } from '../core/UniformNode.js';
 import { objectViewPosition } from '../accessors/EntityNode.js';
 import { positionView } from '../accessors/PositionNode.js';
 
-class PointLightNode extends AnalyticLightNode {
+export class PointLightNode extends AnalyticLightNode {
   constructor(light = null) {
     super(light);
 
@@ -53,4 +53,4 @@ class PointLightNode extends AnalyticLightNode {
   }
 }
 
-export default PointLightNode;
+

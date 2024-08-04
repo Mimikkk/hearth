@@ -16,5 +16,3 @@ export class StorageTexture extends Texture {
     this.isStorageTexture = true;
   }
 }
-
-export default StorageTexture;

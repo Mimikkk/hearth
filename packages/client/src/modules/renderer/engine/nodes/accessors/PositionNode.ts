@@ -5,7 +5,7 @@ import { normalize } from '../math/MathNode.js';
 import { modelViewMatrix, modelWorldMatrix } from './ModelNode.js';
 import { fixedNode } from '../shadernode/ShaderNodes.js';
 
-class PositionNode extends Node {
+export class PositionNode extends Node {
   constructor(scope = PositionNode.LOCAL) {
     super('vec3');
 
@@ -53,8 +53,6 @@ PositionNode.WORLD = 'world';
 PositionNode.WORLD_DIRECTION = 'worldDirection';
 PositionNode.VIEW = 'view';
 PositionNode.VIEW_DIRECTION = 'viewDirection';
-
-export default PositionNode;
 
 export const positionGeometry = fixedNode(PositionNode, PositionNode.GEOMETRY);
 export const positionLocal = fixedNode(PositionNode, PositionNode.LOCAL).temp('Position');

@@ -5,9 +5,9 @@ import { texture } from './TextureNode.js';
 import { buffer } from './BufferNode.js';
 import { asNode } from '../shadernode/ShaderNodes.js';
 import { uniforms } from './UniformsNode.js';
-import ArrayElementNode from '../utils/ArrayElementNode.js';
+import { ArrayElementNode } from '../utils/ArrayElementNode.js';
 
-class ReferenceElementNode extends ArrayElementNode {
+export class ReferenceElementNode extends ArrayElementNode {
   constructor(referenceNode, indexNode) {
     super(referenceNode, indexNode);
 
@@ -29,7 +29,7 @@ class ReferenceElementNode extends ArrayElementNode {
   }
 }
 
-class ReferenceNode extends Node {
+export class ReferenceNode extends Node {
   constructor(property, uniformType, object = null, count = null) {
     super();
 
@@ -109,8 +109,6 @@ class ReferenceNode extends Node {
     }
   }
 }
-
-export default ReferenceNode;
 
 export const reference = (name, type, object) => asNode(new ReferenceNode(name, type, object));
 export const referenceBuffer = (name, type, count, object) => asNode(new ReferenceNode(name, type, object, count));

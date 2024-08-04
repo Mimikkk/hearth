@@ -2,7 +2,7 @@ import { Node } from '../core/Node.js';
 import { fixedNode } from '../shadernode/ShaderNodes.js';
 import { reference } from './ReferenceNode.js';
 
-class SceneNode extends Node {
+export class SceneNode extends Node {
   constructor(scope = SceneNode.BACKGROUND_BLURRINESS, scene = null) {
     super();
 
@@ -31,7 +31,7 @@ class SceneNode extends Node {
 SceneNode.BACKGROUND_BLURRINESS = 'backgroundBlurriness';
 SceneNode.BACKGROUND_INTENSITY = 'backgroundIntensity';
 
-export default SceneNode;
+
 
 export const backgroundBlurriness = fixedNode(SceneNode, SceneNode.BACKGROUND_BLURRINESS);
 export const backgroundIntensity = fixedNode(SceneNode, SceneNode.BACKGROUND_INTENSITY);

@@ -1,11 +1,11 @@
 import { asNode } from '../shadernode/ShaderNodes.js';
 import { NodeUpdateStage } from '../core/constants.js';
 import { getValueType } from '../core/NodeUtils.js';
-import ArrayElementNode from '../utils/ArrayElementNode.js';
-import BufferNode from './BufferNode.js';
+import { ArrayElementNode } from '../utils/ArrayElementNode.js';
+import { BufferNode } from './BufferNode.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
-class UniformsElementNode extends ArrayElementNode {
+export class UniformsElementNode extends ArrayElementNode {
   constructor(arrayBuffer, indexNode) {
     super(arrayBuffer, indexNode);
 
@@ -24,7 +24,7 @@ class UniformsElementNode extends ArrayElementNode {
   }
 }
 
-class UniformsNode extends BufferNode {
+export class UniformsNode extends BufferNode {
   constructor(value, elementType = null) {
     super(null, 'vec4');
 
@@ -99,6 +99,6 @@ class UniformsNode extends BufferNode {
   }
 }
 
-export default UniformsNode;
+
 
 export const uniforms = (values, nodeType) => asNode(new UniformsNode(values, nodeType));

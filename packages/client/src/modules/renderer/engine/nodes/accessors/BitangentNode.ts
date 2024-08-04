@@ -47,7 +47,7 @@ enum NodeVariant {
   World = 'world',
 }
 
-export default BitangentNode;
+
 
 export const bitangentGeometry = fixedNode(
   class extends BitangentNode {

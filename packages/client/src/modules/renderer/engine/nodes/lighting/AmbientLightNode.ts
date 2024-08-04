@@ -1,6 +1,6 @@
-import AnalyticLightNode from './AnalyticLightNode.js';
+import { AnalyticLightNode } from './AnalyticLightNode.js';
 
-class AmbientLightNode extends AnalyticLightNode {
+export class AmbientLightNode extends AnalyticLightNode {
   constructor(light = null) {
     super(light);
   }
@@ -10,4 +10,4 @@ class AmbientLightNode extends AnalyticLightNode {
   }
 }
 
-export default AmbientLightNode;
+

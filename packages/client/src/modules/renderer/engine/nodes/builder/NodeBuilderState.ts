@@ -27,5 +27,3 @@ export class NodeBuilderState {
     return bindings;
   }
 }
-
-export default NodeBuilderState;

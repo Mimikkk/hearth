@@ -1,11 +1,12 @@
-import TempNode from '../core/TempNode.js';
+import { TempNode } from '../core/TempNode.js';
 import { transformedNormalView } from '../accessors/NormalNode.js';
 import { positionViewDirection } from '../accessors/PositionNode.js';
 import { fixedNode, vec2, vec3 } from '../shadernode/ShaderNodes.js';
+import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
-class MatcapUVNode extends TempNode {
+export class MatcapUVNode extends TempNode {
   constructor() {
-    super('vec2');
+    super(TypeName.vec2);
   }
 
   setup() {
@@ -15,7 +16,5 @@ class MatcapUVNode extends TempNode {
     return vec2(x.dot(transformedNormalView), y.dot(transformedNormalView)).mul(0.495).add(0.5);
   }
 }
-
-export default MatcapUVNode;
 
 export const matcapUV = fixedNode(MatcapUVNode);

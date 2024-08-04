@@ -1,12 +1,11 @@
-import TempNode from '../core/TempNode.js';
+import { TempNode } from '../core/TempNode.js';
 import { positionWorldDirection } from '../accessors/PositionNode.js';
 import { proxyNode, vec2 } from '../shadernode/ShaderNodes.js';
+import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
-class EquirectUVNode extends TempNode {
-  constructor(dirNode = positionWorldDirection) {
-    super('vec2');
-
-    this.dirNode = dirNode;
+export class EquirectUVNode extends TempNode {
+  constructor(public dirNode = positionWorldDirection) {
+    super(TypeName.vec2);
   }
 
   setup() {
@@ -16,6 +15,7 @@ class EquirectUVNode extends TempNode {
       .atan2(dir.x)
       .mul(1 / (Math.PI * 2))
       .add(0.5);
+
     const v = dir.y
       .clamp(-1.0, 1.0)
       .asin()
@@ -25,7 +25,5 @@ class EquirectUVNode extends TempNode {
     return vec2(u, v);
   }
 }
-
-export default EquirectUVNode;
 
 export const equirectUV = proxyNode(EquirectUVNode);

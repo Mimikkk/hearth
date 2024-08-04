@@ -1,7 +1,7 @@
 import { Node } from './Node.js';
 import { fixedNode, asNode } from '../shadernode/ShaderNodes.js';
 
-class PropertyNode extends Node {
+export class PropertyNode extends Node {
   constructor(nodeType, name = null, varying = false) {
     super(nodeType);
 
@@ -32,8 +32,6 @@ class PropertyNode extends Node {
     return builder.getPropertyName(nodeVar);
   }
 }
-
-export default PropertyNode;
 
 export const property = (type, name) => asNode(new PropertyNode(type, name));
 export const varyingProperty = (type, name) => asNode(new PropertyNode(type, name, true));

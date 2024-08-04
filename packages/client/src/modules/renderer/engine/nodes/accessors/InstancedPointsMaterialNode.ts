@@ -1,7 +1,7 @@
-import MaterialNode from './MaterialNode.js';
+import { MaterialNode } from './MaterialNode.js';
 import { fixedNode } from '../shadernode/ShaderNodes.js';
 
-class InstancedPointsMaterialNode extends MaterialNode {
+export class InstancedPointsMaterialNode extends MaterialNode {
   setup() {
     return this.getFloat(this.scope);
   }
@@ -9,6 +9,6 @@ class InstancedPointsMaterialNode extends MaterialNode {
 
 InstancedPointsMaterialNode.POINT_WIDTH = 'pointWidth';
 
-export default InstancedPointsMaterialNode;
+
 
 export const materialPointWidth = fixedNode(InstancedPointsMaterialNode, InstancedPointsMaterialNode.POINT_WIDTH);

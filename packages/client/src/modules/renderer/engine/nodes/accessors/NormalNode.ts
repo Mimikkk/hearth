@@ -7,7 +7,7 @@ import { cameraViewMatrix } from './CameraNode.js';
 import { modelNormalMatrix } from './ModelNode.js';
 import { fixedNode } from '../shadernode/ShaderNodes.js';
 
-class NormalNode extends Node {
+export class NormalNode extends Node {
   constructor(scope = NormalNode.LOCAL) {
     super('vec3');
 
@@ -47,8 +47,6 @@ NormalNode.GEOMETRY = 'geometry';
 NormalNode.LOCAL = 'local';
 NormalNode.VIEW = 'view';
 NormalNode.WORLD = 'world';
-
-export default NormalNode;
 
 export const normalGeometry = fixedNode(NormalNode, NormalNode.GEOMETRY);
 export const normalLocal = fixedNode(NormalNode, NormalNode.LOCAL).temp('Normal');

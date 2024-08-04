@@ -33,7 +33,7 @@ export class CubeTextureNode extends TextureNode {
   }
 }
 
-export default CubeTextureNode;
+
 
 export const cubeTexture = proxyNode(CubeTextureNode);
 addNodeCommand('cubeTexture', cubeTexture);

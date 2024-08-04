@@ -1,4 +1,4 @@
-import TempNode from '../core/TempNode.js';
+import { TempNode } from '../core/TempNode.js';
 import { dot, mix } from '../math/MathNode.js';
 import { add } from '../math/OperatorNode.js';
 import { addNodeCommand, f32, proxyNode, hsl, vec3 } from '../shadernode/ShaderNodes.js';
@@ -37,7 +37,7 @@ enum NodeVariant {
   Hue = 'hue',
 }
 
-export default ColorAdjustmentNode;
+
 
 const calculateSaturation = hsl(({ color, adjustment }) => {
   return adjustment.mix(luminance(color.rgb), color.rgb);

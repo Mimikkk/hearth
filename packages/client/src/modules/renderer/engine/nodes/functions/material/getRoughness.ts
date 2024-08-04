@@ -1,7 +1,7 @@
-import getGeometryRoughness from './getGeometryRoughness.js';
+import { getGeometryRoughness } from './getGeometryRoughness.js';
 import { hsl } from '../../shadernode/ShaderNodes.js';
 
-const getRoughness = hsl(inputs => {
+export const getRoughness = hsl(inputs => {
   const { roughness } = inputs;
 
   const geometryRoughness = getGeometryRoughness();
@@ -12,5 +12,3 @@ const getRoughness = hsl(inputs => {
 
   return roughnessFactor;
 });
-
-export default getRoughness;

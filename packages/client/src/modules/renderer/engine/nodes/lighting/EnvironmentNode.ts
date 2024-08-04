@@ -1,4 +1,4 @@
-import LightingNode from './LightingNode.js';
+import { LightingNode } from './LightingNode.js';
 import { cache } from '../core/CacheNode.js';
 import { context } from '../core/ContextNode.js';
 import { clearcoatRoughness, roughness } from '../core/PropertyNode.js';
@@ -15,7 +15,7 @@ import { pmremTexture } from '@modules/renderer/engine/nodes/pmrem/PMREMNode.js'
 
 const envNodeCache = new WeakMap();
 
-class EnvironmentNode extends LightingNode {
+export class EnvironmentNode extends LightingNode {
   constructor(envNode = null) {
     super();
 
@@ -92,4 +92,4 @@ const createIrradianceContext = normalWorldNode => {
   };
 };
 
-export default EnvironmentNode;
+

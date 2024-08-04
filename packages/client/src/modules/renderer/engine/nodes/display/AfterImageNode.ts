@@ -1,4 +1,4 @@
-import TempNode from '../core/TempNode.js';
+import { TempNode } from '../core/TempNode.js';
 import { addNodeCommand, f32, asNode, hsl, vec4 } from '../shadernode/ShaderNodes.js';
 import { NodeUpdateStage } from '../core/constants.js';
 import { uv } from '../accessors/UVNode.js';
@@ -15,7 +15,7 @@ import type { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBui
 
 const quadMeshComp = new QuadMesh(null);
 
-class AfterImageNode extends TempNode {
+export class AfterImageNode extends TempNode {
   textureNode: TextureNode;
   textureNodeOld: TextureNode;
   damp: any;
@@ -127,4 +127,4 @@ export const afterImage = (node: Node, damp: number) => asNode(new AfterImageNod
 
 addNodeCommand('afterImage', afterImage);
 
-export default AfterImageNode;
+

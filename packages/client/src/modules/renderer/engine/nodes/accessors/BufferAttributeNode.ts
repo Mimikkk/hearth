@@ -1,10 +1,10 @@
-import InputNode from '../core/InputNode.js';
+import { InputNode } from '../core/InputNode.js';
 import { varying } from '../core/VaryingNode.js';
 import { addNodeCommand, asNode } from '../shadernode/ShaderNodes.js';
 import { Buffer, Attribute, BufferUse } from '@modules/renderer/engine/engine.js';
 import { ShaderStage, TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { BufferStep } from '@modules/renderer/engine/hearth/constants.js';
-import BufferNode from '@modules/renderer/engine/nodes/accessors/BufferNode.js';
+import { BufferNode } from '@modules/renderer/engine/nodes/accessors/BufferNode.js';
 
 export class BufferAttributeNode extends InputNode {
   constructor(value, bufferType = null, bufferStride = 0, bufferOffset = 0) {
@@ -90,7 +90,7 @@ export class BufferAttributeNode extends InputNode {
   }
 }
 
-export default BufferAttributeNode;
+
 
 export const bufferAttribute = (array, type, stride, offset) =>
   asNode(new BufferAttributeNode(array, type, stride, offset));

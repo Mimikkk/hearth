@@ -1,12 +1,12 @@
-import TempNode from '../core/TempNode.js';
+import { TempNode } from '../core/TempNode.js';
 import { addNodeCommand, asNode } from '../shadernode/ShaderNodes.js';
-import FunctionNode from './FunctionNode.js';
+import { FunctionNode } from './FunctionNode.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { Node } from '@modules/renderer/engine/nodes/core/Node.js';
 import { asNodes } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.as.js';
 
-class FunctionCallNode extends TempNode {
+export class FunctionCallNode extends TempNode {
   constructor(
     public shader: FunctionNode,
     public parameters: Record<string, any>,
@@ -50,8 +50,6 @@ class FunctionCallNode extends TempNode {
     return `${functionName}( ${params.join(', ')} )`;
   }
 }
-
-export default FunctionCallNode;
 
 export const call = (fn: any, ...parameters: any) => {
   parameters = parameters.length > 1 || asNodes(Node.is(parameters[0]) ? parameters : parameters[0]);

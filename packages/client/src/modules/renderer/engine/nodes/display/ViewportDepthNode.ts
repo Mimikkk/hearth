@@ -36,7 +36,7 @@ export class ViewportDepthNode extends Node {
 
 ViewportDepthNode.prototype.isViewportDepthNode = true;
 
-export default ViewportDepthNode;
+
 
 enum NodeVariant {
   Depth = 'depth',

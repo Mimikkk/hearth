@@ -1,12 +1,12 @@
-import TempNode from '../core/TempNode.js';
-import TextureNode from '../accessors/TextureNode.js';
+import { TempNode } from '../core/TempNode.js';
+import { TextureNode } from '../accessors/TextureNode.js';
 import { NodeUpdateStage } from '../core/constants.js';
 import { asNode } from '../shadernode/ShaderNodes.js';
 import { uniform } from '../core/UniformNode.js';
 import { perspectiveDepthToViewZ, viewZToOrthographicDepth } from './ViewportDepthNode.js';
 import { DepthTexture, RenderTarget, TextureDataType, ToneMapping, Vec2 } from '@modules/renderer/engine/engine.js';
 
-class PassTextureNode extends TextureNode {
+export class PassTextureNode extends TextureNode {
   constructor(passNode, texture) {
     super(texture);
 
@@ -26,7 +26,7 @@ class PassTextureNode extends TextureNode {
   }
 }
 
-class PassNode extends TempNode {
+export class PassNode extends TempNode {
   constructor(scope, scene, camera) {
     super('vec4');
 
@@ -150,7 +150,7 @@ class PassNode extends TempNode {
 PassNode.COLOR = 'color';
 PassNode.DEPTH = 'depth';
 
-export default PassNode;
+
 
 export const pass = (scene, camera) => asNode(new PassNode(PassNode.COLOR, scene, camera));
 export const texturePass = (pass, texture) => asNode(new PassTextureNode(pass, texture));

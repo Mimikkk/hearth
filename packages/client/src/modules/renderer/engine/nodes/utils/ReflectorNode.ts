@@ -1,4 +1,4 @@
-import TextureNode from '../accessors/TextureNode.js';
+import { TextureNode } from '../accessors/TextureNode.js';
 import { asNode, vec2 } from '../shadernode/ShaderNodes.js';
 import { NodeUpdateStage } from '../core/constants.js';
 import { viewportTopLeft } from '../display/ViewportNode.js';
@@ -33,7 +33,7 @@ const _defaultUV = vec2(viewportTopLeft.x.oneMinus(), viewportTopLeft.y);
 
 let _inReflector = false;
 
-class ReflectorNode extends TextureNode {
+export class ReflectorNode extends TextureNode {
   constructor(parameters = {}) {
     super(_defaultRT.texture, _defaultUV);
 
@@ -194,5 +194,3 @@ class ReflectorNode extends TextureNode {
 }
 
 export const reflector = parameters => asNode(new ReflectorNode(parameters));
-
-export default ReflectorNode;

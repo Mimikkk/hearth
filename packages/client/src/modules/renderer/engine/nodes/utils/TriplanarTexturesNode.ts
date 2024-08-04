@@ -5,7 +5,7 @@ import { positionLocal } from '../accessors/PositionNode.js';
 import { texture } from '../accessors/TextureNode.js';
 import { addNodeCommand, f32, proxyNode, vec3 } from '../shadernode/ShaderNodes.js';
 
-class TriplanarTexturesNode extends Node {
+export class TriplanarTexturesNode extends Node {
   constructor(
     textureXNode,
     textureYNode = null,
@@ -47,8 +47,6 @@ class TriplanarTexturesNode extends Node {
     return add(cx, cy, cz);
   }
 }
-
-export default TriplanarTexturesNode;
 
 export const triplanarTextures = proxyNode(TriplanarTexturesNode);
 export const triplanarTexture = (...params) => triplanarTextures(...params);

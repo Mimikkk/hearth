@@ -4,8 +4,8 @@ import { addNodeCommand, asNode, ShaderCallNode } from '../shadernode/ShaderNode
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { ShaderStage, TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
-import FunctionCallNode from '@modules/renderer/engine/nodes/code/FunctionCallNode.js';
-import NodeFrame from '@modules/renderer/engine/nodes/core/NodeFrame.js';
+import { FunctionCallNode } from '@modules/renderer/engine/nodes/code/FunctionCallNode.js';
+import { NodeFrame } from '@modules/renderer/engine/nodes/core/NodeFrame.js';
 
 export class ComputeNode extends Node {
   dispatchCount: number;

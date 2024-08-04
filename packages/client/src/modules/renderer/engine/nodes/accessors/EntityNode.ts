@@ -1,6 +1,6 @@
 import { Node } from '../core/Node.js';
 import { NodeUpdateStage } from '../core/constants.js';
-import UniformNode from '../core/UniformNode.js';
+import { UniformNode } from '../core/UniformNode.js';
 import { proxyNode } from '../shadernode/ShaderNodes.js';
 import { Entity, Vec3 } from '@modules/renderer/engine/engine.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
@@ -73,7 +73,7 @@ export class EntityNode extends Node {
   }
 }
 
-export default EntityNode;
+
 
 enum NodeVariant {
   NormalMatrix = 'normalMatrix',

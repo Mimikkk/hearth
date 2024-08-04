@@ -7,7 +7,7 @@ import { Vec2, Vec4 } from '@modules/renderer/engine/engine.js';
 
 let resolution, viewportResult;
 
-class ViewportNode extends Node {
+export class ViewportNode extends Node {
   constructor(scope) {
     super();
 
@@ -78,7 +78,7 @@ ViewportNode.BOTTOM_LEFT = 'bottomLeft';
 ViewportNode.TOP_RIGHT = 'topRight';
 ViewportNode.BOTTOM_RIGHT = 'bottomRight';
 
-export default ViewportNode;
+
 
 export const viewportCoordinate = fixedNode(ViewportNode, ViewportNode.COORDINATE);
 export const viewportResolution = fixedNode(ViewportNode, ViewportNode.RESOLUTION);

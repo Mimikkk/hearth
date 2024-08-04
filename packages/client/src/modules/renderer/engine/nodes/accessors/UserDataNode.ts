@@ -1,7 +1,7 @@
-import ReferenceNode from './ReferenceNode.js';
+import { ReferenceNode } from './ReferenceNode.js';
 import { asNode } from '../shadernode/ShaderNodes.js';
 
-class UserDataNode extends ReferenceNode {
+export class UserDataNode extends ReferenceNode {
   constructor(property, inputType, userData = null) {
     super(property, inputType, userData);
 
@@ -15,6 +15,6 @@ class UserDataNode extends ReferenceNode {
   }
 }
 
-export default UserDataNode;
+
 
 export const userData = (name, inputType, userData) => asNode(new UserDataNode(name, inputType, userData));

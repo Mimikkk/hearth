@@ -97,7 +97,7 @@ export class SkinningNode extends Node {
   }
 }
 
-export default SkinningNode;
+
 
 export const skinning = (skinnedMesh: SkinnedMesh) => asNode(new SkinningNode(skinnedMesh, false));
 export const skinningReference = (skinnedMesh: SkinnedMesh) => asNode(new SkinningNode(skinnedMesh, true));

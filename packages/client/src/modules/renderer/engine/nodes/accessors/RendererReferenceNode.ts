@@ -1,7 +1,7 @@
-import ReferenceNode from './ReferenceNode.js';
+import { ReferenceNode } from './ReferenceNode.js';
 import { asNode } from '../shadernode/ShaderNodes.js';
 
-class RendererReferenceNode extends ReferenceNode {
+export class RendererReferenceNode extends ReferenceNode {
   constructor(property, inputType, hearth = null) {
     super(property, inputType, hearth);
 
@@ -15,6 +15,6 @@ class RendererReferenceNode extends ReferenceNode {
   }
 }
 
-export default RendererReferenceNode;
+
 
 export const rendererReference = (name, type, hearth) => asNode(new RendererReferenceNode(name, type, hearth));

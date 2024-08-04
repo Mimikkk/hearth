@@ -4,7 +4,7 @@ import { transformedNormalView } from './NormalNode.js';
 import { positionViewDirection } from './PositionNode.js';
 import { fixedNode } from '../shadernode/ShaderNodes.js';
 
-class ReflectVectorNode extends Node {
+export class ReflectVectorNode extends Node {
   constructor() {
     super('vec3');
   }
@@ -20,6 +20,6 @@ class ReflectVectorNode extends Node {
   }
 }
 
-export default ReflectVectorNode;
+
 
 export const reflectVector = fixedNode(ReflectVectorNode);

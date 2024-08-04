@@ -109,8 +109,6 @@ enum NodeVariant {
   Far = 'far',
 }
 
-export default CameraNode;
-
 export const cameraProjectionMatrix = fixedNode(
   class extends CameraNode {
     scope = NodeVariant.ProjectionMatrix;

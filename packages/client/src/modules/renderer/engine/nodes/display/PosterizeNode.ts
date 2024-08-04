@@ -1,7 +1,7 @@
-import TempNode from '../core/TempNode.js';
+import { TempNode } from '../core/TempNode.js';
 import { addNodeCommand, proxyNode } from '../shadernode/ShaderNodes.js';
 
-class PosterizeNode extends TempNode {
+export class PosterizeNode extends TempNode {
   constructor(sourceNode, stepsNode) {
     super();
 
@@ -16,7 +16,7 @@ class PosterizeNode extends TempNode {
   }
 }
 
-export default PosterizeNode;
+
 
 export const posterize = proxyNode(PosterizeNode);
 

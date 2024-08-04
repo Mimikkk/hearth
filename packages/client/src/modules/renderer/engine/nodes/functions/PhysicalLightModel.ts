@@ -353,5 +353,3 @@ export class PhysicalLightModel extends LightModel {
     }
   }
 }
-
-export default PhysicalLightModel;

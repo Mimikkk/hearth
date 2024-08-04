@@ -1,17 +1,17 @@
 import { Node } from '../core/Node.js';
 import { addNodeCommand, f32, proxyNode } from '../shadernode/ShaderNodes.js';
 
-class RemapNode extends Node {
-  constructor(node, inLowNode, inHighNode, outLowNode = f32(0), outHighNode = f32(1)) {
+export class RemapNode extends Node {
+  doClamp: boolean;
+
+  constructor(
+    public node: Node,
+    public inLowNode: Node,
+    public inHighNode: Node,
+    public outLowNode: Node = f32(0),
+    public outHighNode: Node = f32(1),
+  ) {
     super();
-
-    this.node = node;
-    this.inLowNode = inLowNode;
-    this.inHighNode = inHighNode;
-    this.outLowNode = outLowNode;
-    this.outHighNode = outHighNode;
-
-    this.doClamp = true;
   }
 
   setup() {
@@ -19,18 +19,23 @@ class RemapNode extends Node {
 
     let t = node.sub(inLowNode).div(inHighNode.sub(inLowNode));
 
-    if (doClamp === true) t = t.clamp();
+    if (doClamp) t = t.clamp();
 
     return t.mul(outHighNode.sub(outLowNode)).add(outLowNode);
   }
 }
 
-export default RemapNode;
+export const remap = proxyNode(
+  class extends RemapNode {
+    doClamp = false;
+  },
+);
 
-export const remap = proxyNode(RemapNode);
-remap.doClamp = false;
-
-export const remapClamp = proxyNode(RemapNode);
+export const remapClamp = proxyNode(
+  class extends RemapNode {
+    doClamp = true;
+  },
+);
 
 addNodeCommand('remap', remap);
 addNodeCommand('remapClamp', remapClamp);

@@ -2,7 +2,7 @@ import { Node } from './Node.js';
 import { addNodeCommand, proxyNode } from '../shadernode/ShaderNodes.js';
 import { ShaderStage } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
-class VaryingNode extends Node {
+export class VaryingNode extends Node {
   constructor(node, name = null) {
     super();
 
@@ -39,8 +39,6 @@ class VaryingNode extends Node {
     return builder.getPropertyName(nodeVarying);
   }
 }
-
-export default VaryingNode;
 
 export const varying = proxyNode(VaryingNode);
 

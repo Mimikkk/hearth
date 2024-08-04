@@ -1,7 +1,7 @@
-import AnalyticLightNode from './AnalyticLightNode.js';
+import { AnalyticLightNode } from './AnalyticLightNode.js';
 import { lightTargetDirection } from './LightNode.js';
 
-class DirectionalLightNode extends AnalyticLightNode {
+export class DirectionalLightNode extends AnalyticLightNode {
   constructor(light = null) {
     super(light);
   }
@@ -27,4 +27,4 @@ class DirectionalLightNode extends AnalyticLightNode {
   }
 }
 
-export default DirectionalLightNode;
+

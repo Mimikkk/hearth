@@ -7,7 +7,7 @@ export interface CodeNodeInclude {
   build(builder: NodeBuilder): void;
 }
 
-class CodeNode extends Node {
+export class CodeNode extends Node {
   declare isCodeNode: boolean;
 
   constructor(
@@ -46,8 +46,6 @@ class CodeNode extends Node {
 }
 
 CodeNode.prototype.isCodeNode = true;
-
-export default CodeNode;
 
 export const code = proxyNode(CodeNode);
 

@@ -1,6 +1,6 @@
 import DataMap from './memo/DataMap.js';
 import ChainMap from './memo/ChainMap.js';
-import NodeBuilderState from '../nodes/builder/NodeBuilderState.js';
+import { NodeBuilderState } from '../nodes/builder/NodeBuilderState.js';
 import {
   Camera,
   Color,

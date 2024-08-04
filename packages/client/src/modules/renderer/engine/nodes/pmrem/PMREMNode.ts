@@ -1,4 +1,4 @@
-import TempNode from '../core/TempNode.js';
+import { TempNode } from '../core/TempNode.js';
 import { texture } from '../accessors/TextureNode.js';
 import { textureCubeUV } from './PMREMUtils.js';
 import { uniform } from '../core/UniformNode.js';
@@ -36,7 +36,7 @@ function _getPMREMFromTexture(texture) {
   return cacheTexture.texture;
 }
 
-class PMREMNode extends TempNode {
+export class PMREMNode extends TempNode {
   constructor(value, uvNode = null, levelNode = null) {
     super('vec3');
 
@@ -116,4 +116,4 @@ class PMREMNode extends TempNode {
 
 export const pmremTexture = proxyNode(PMREMNode);
 
-export default PMREMNode;
+

@@ -29,7 +29,7 @@ const BRDF_BlinnPhong = hsl(({ lightDirection }) => {
   return F.mul(G).mul(D);
 });
 
-class PhongLightModel extends LightModel {
+export class PhongLightModel extends LightModel {
   constructor(specular = true) {
     super();
 
@@ -53,5 +53,3 @@ class PhongLightModel extends LightModel {
     reflectedLight.indirectDiffuse.addAssign(irradiance.mul(BRDF_Lambert({ diffuseColor })));
   }
 }
-
-export default PhongLightModel;

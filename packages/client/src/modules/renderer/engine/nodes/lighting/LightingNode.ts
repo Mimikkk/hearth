@@ -1,6 +1,6 @@
 import { Node } from '../core/Node.js';
 
-class LightingNode extends Node {
+export class LightingNode extends Node {
   constructor() {
     super('vec3');
   }
@@ -10,4 +10,4 @@ class LightingNode extends Node {
   }
 }
 
-export default LightingNode;
+

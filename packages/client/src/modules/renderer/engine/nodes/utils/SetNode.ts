@@ -1,10 +1,10 @@
-import TempNode from '../core/TempNode.js';
+import { TempNode } from '../core/TempNode.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { XYZW } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.handlers.js';
 import { Node } from '../core/Node.js';
 
-class SetNode extends TempNode {
+export class SetNode extends TempNode {
   constructor(
     public sourceNode: Node,
     public components: XYZW,
@@ -44,5 +44,3 @@ class SetNode extends TempNode {
     return `${TypeName.repr(sourceType)}(${parameters.join(', ')})`;
   }
 }
-
-export default SetNode;

@@ -1,7 +1,7 @@
 import { ContextNode } from '../core/ContextNode.js';
 import { addNodeCommand, f32, proxyNode, vec3 } from '../shadernode/ShaderNodes.js';
 
-class LightingContextNode extends ContextNode {
+export class LightingContextNode extends ContextNode {
   constructor(node, lightingModel = null, backdropNode = null, backdropAlphaNode = null) {
     super(node);
 
@@ -48,7 +48,7 @@ class LightingContextNode extends ContextNode {
   }
 }
 
-export default LightingContextNode;
+
 
 export const lightingContext = proxyNode(LightingContextNode);
 

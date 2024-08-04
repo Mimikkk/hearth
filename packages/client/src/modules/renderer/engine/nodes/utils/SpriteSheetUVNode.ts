@@ -1,14 +1,15 @@
 import { Node } from '../core/Node.js';
 import { uv } from '../accessors/UVNode.js';
 import { f32, proxyNode, vec2 } from '../shadernode/ShaderNodes.js';
+import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
-class SpriteSheetUVNode extends Node {
-  constructor(countNode, uvNode = uv(), frameNode = f32(0)) {
-    super('vec2');
-
-    this.countNode = countNode;
-    this.uvNode = uvNode;
-    this.frameNode = frameNode;
+export class SpriteSheetUVNode extends Node {
+  constructor(
+    public countNode: Node,
+    public uvNode: Node = uv(),
+    public frameNode: Node = f32(0),
+  ) {
+    super(TypeName.vec2);
   }
 
   setup() {
@@ -27,7 +28,5 @@ class SpriteSheetUVNode extends Node {
     return uvNode.add(uvFrameOffset).mul(scale);
   }
 }
-
-export default SpriteSheetUVNode;
 
 export const spritesheetUV = proxyNode(SpriteSheetUVNode);

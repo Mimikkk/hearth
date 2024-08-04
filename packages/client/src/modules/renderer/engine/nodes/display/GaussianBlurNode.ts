@@ -1,4 +1,4 @@
-import TempNode from '../core/TempNode.js';
+import { TempNode } from '../core/TempNode.js';
 import { addNodeCommand, f32, asNode, hsl, vec2, vec4 } from '../shadernode/ShaderNodes.js';
 import { NodeUpdateStage } from '../core/constants.js';
 import { mul } from '../math/OperatorNode.js';
@@ -11,7 +11,7 @@ import { QuadMesh } from '@modules/renderer/engine/entities/QuadMesh.js';
 const quadMesh1 = new QuadMesh();
 const quadMesh2 = new QuadMesh();
 
-class GaussianBlurNode extends TempNode {
+export class GaussianBlurNode extends TempNode {
   constructor(textureNode, sigma = 2) {
     super('vec4');
 
@@ -147,4 +147,4 @@ export const gaussianBlur = (node, sigma) => asNode(new GaussianBlurNode(asNode(
 
 addNodeCommand('gaussianBlur', gaussianBlur);
 
-export default GaussianBlurNode;
+

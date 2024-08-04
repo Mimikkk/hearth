@@ -1,4 +1,4 @@
-import TextureNode from '../accessors/TextureNode.js';
+import { TextureNode } from '../accessors/TextureNode.js';
 import { NodeUpdateStage } from '../core/constants.js';
 import { addNodeCommand, proxyNode } from '../shadernode/ShaderNodes.js';
 import { viewportTopLeft } from './ViewportNode.js';
@@ -7,7 +7,7 @@ import { NodeFrame } from '@modules/renderer/engine/nodes/core/NodeFrame.js';
 
 const _size = Vec2.new();
 
-class ViewportTextureNode extends TextureNode {
+export class ViewportTextureNode extends TextureNode {
   generateMipmaps: boolean;
   isOutputTextureNode: boolean;
   updateBeforeType: NodeUpdateStage;
@@ -49,7 +49,7 @@ class ViewportTextureNode extends TextureNode {
   }
 }
 
-export default ViewportTextureNode;
+
 
 export const viewportTexture = proxyNode(ViewportTextureNode);
 export const viewportMipTexture = proxyNode(ViewportTextureNode);

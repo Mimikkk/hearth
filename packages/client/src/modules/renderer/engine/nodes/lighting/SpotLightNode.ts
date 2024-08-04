@@ -1,4 +1,4 @@
-import AnalyticLightNode from './AnalyticLightNode.js';
+import { AnalyticLightNode } from './AnalyticLightNode.js';
 import { lightTargetDirection } from './LightNode.js';
 import { getDistanceAttenuation } from './LightUtils.js';
 import { uniform } from '../core/UniformNode.js';
@@ -6,7 +6,7 @@ import { smoothstep } from '@modules/renderer/engine/nodes/math/MathNode.js';
 import { objectViewPosition } from '../accessors/EntityNode.js';
 import { positionView } from '../accessors/PositionNode.js';
 
-class SpotLightNode extends AnalyticLightNode {
+export class SpotLightNode extends AnalyticLightNode {
   constructor(light = null) {
     super(light);
 
@@ -72,4 +72,4 @@ class SpotLightNode extends AnalyticLightNode {
   }
 }
 
-export default SpotLightNode;
+

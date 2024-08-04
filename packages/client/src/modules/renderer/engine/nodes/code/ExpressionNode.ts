@@ -3,7 +3,7 @@ import { proxyNode } from '../shadernode/ShaderNodes.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
-class ExpressionNode extends Node {
+export class ExpressionNode extends Node {
   constructor(
     public snippet: string,
     nodeType: TypeName = TypeName.void,
@@ -22,7 +22,5 @@ class ExpressionNode extends Node {
     }
   }
 }
-
-export default ExpressionNode;
 
 export const expression = proxyNode(ExpressionNode);

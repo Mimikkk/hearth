@@ -1,4 +1,4 @@
-import TempNode from '../core/TempNode.js';
+import { TempNode } from '../core/TempNode.js';
 import { addNodeCommand, proxyNode } from '../shadernode/ShaderNodes.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
@@ -24,8 +24,6 @@ export class PackingNode extends TempNode {
     }
   }
 }
-
-export default PackingNode;
 
 enum NodeVariant {
   DirectionToColor = 'directionToColor',

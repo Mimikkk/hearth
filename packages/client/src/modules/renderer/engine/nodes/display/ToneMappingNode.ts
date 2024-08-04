@@ -1,4 +1,4 @@
-import TempNode from '../core/TempNode.js';
+import { TempNode } from '../core/TempNode.js';
 import { addNodeCommand, f32, mat3, asNode, hsl, vec3 } from '../shadernode/ShaderNodes.js';
 import { rendererReference } from '../accessors/RendererReferenceNode.js';
 import { clamp, log2, max, pow } from '../math/MathNode.js';
@@ -113,7 +113,7 @@ const toneMappingLib = {
   [ToneMapping.AgX]: AGXToneMappingNode,
 };
 
-class ToneMappingNode extends TempNode {
+export class ToneMappingNode extends TempNode {
   constructor(toneMapping = ToneMapping.None, exposureNode = toneMappingExposure, colorNode = null) {
     super('vec3');
 
@@ -153,7 +153,7 @@ class ToneMappingNode extends TempNode {
   }
 }
 
-export default ToneMappingNode;
+
 
 export const toneMapping = (mapping, exposure, color) =>
   asNode(new ToneMappingNode(mapping, asNode(exposure), asNode(color)));

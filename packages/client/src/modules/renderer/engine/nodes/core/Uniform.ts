@@ -1,4 +1,4 @@
-import UniformNode from '@modules/renderer/engine/nodes/core/UniformNode.js';
+import { UniformNode } from '@modules/renderer/engine/nodes/core/UniformNode.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 export class Uniform<T> {

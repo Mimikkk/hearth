@@ -12,7 +12,7 @@ import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.typ
 let min = null;
 let max = null;
 
-class RangeNode extends Node {
+export class RangeNode extends Node {
   constructor(minNode = f32(), maxNode = f32()) {
     super();
 
@@ -85,6 +85,6 @@ class RangeNode extends Node {
   }
 }
 
-export default RangeNode;
+
 
 export const range = proxyNode(RangeNode);

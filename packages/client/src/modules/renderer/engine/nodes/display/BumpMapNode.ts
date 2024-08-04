@@ -1,4 +1,4 @@
-import TempNode from '../core/TempNode.js';
+import { TempNode } from '../core/TempNode.js';
 import { uv } from '../accessors/UVNode.js';
 import { normalView } from '../accessors/NormalNode.js';
 import { positionView } from '../accessors/PositionNode.js';
@@ -46,7 +46,7 @@ const perturbNormalArb = hsl(inputs => {
   return fDet.abs().mul(surf_norm).sub(vGrad).normalize();
 });
 
-class BumpMapNode extends TempNode {
+export class BumpMapNode extends TempNode {
   constructor(textureNode, scaleNode = null) {
     super('vec3');
 
@@ -66,7 +66,7 @@ class BumpMapNode extends TempNode {
   }
 }
 
-export default BumpMapNode;
+
 
 export const bumpMap = proxyNode(BumpMapNode);
 

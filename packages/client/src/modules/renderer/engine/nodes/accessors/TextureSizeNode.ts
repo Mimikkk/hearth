@@ -1,7 +1,7 @@
 import { Node } from '../core/Node.js';
 import { addNodeCommand, proxyNode } from '../shadernode/ShaderNodes.js';
 
-class TextureSizeNode extends Node {
+export class TextureSizeNode extends Node {
   constructor(textureNode, levelNode = null) {
     super('uvec2');
 
@@ -23,7 +23,7 @@ class TextureSizeNode extends Node {
   }
 }
 
-export default TextureSizeNode;
+
 
 export const textureSize = proxyNode(TextureSizeNode);
 

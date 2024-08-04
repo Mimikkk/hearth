@@ -1,4 +1,4 @@
-import TempNode from '../core/TempNode.js';
+import { TempNode } from '../core/TempNode.js';
 import { addNodeCommand, f32, asNode, hsl, vec2, vec3, vec4 } from '../shadernode/ShaderNodes.js';
 import { loop } from '../utils/LoopNode.js';
 import { uniform } from '../core/UniformNode.js';
@@ -11,7 +11,7 @@ import { QuadMesh } from '@modules/renderer/engine/entities/QuadMesh.js';
 
 const quadMesh = new QuadMesh();
 
-class AnamorphicNode extends TempNode {
+export class AnamorphicNode extends TempNode {
   constructor(textureNode, tresholdNode, scaleNode, samples) {
     super('vec4');
 
@@ -115,4 +115,4 @@ export const anamorphic = (node, threshold = 0.9, scale = 3, samples = 32) =>
 
 addNodeCommand('anamorphic', anamorphic);
 
-export default AnamorphicNode;
+

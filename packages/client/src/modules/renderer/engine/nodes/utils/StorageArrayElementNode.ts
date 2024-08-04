@@ -1,8 +1,10 @@
 import { addNodeCommand, proxyNode } from '../shadernode/ShaderNodes.js';
-import ArrayElementNode from './ArrayElementNode.js';
+import { ArrayElementNode } from './ArrayElementNode.js';
+import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
+import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 export class StorageArrayElementNode extends ArrayElementNode {
-  generate(builder, output) {
+  generate(builder: NodeBuilder, output: TypeName): string {
     const isAssign = builder.context.assign;
 
     let code = super.generate(builder);
@@ -16,8 +18,6 @@ export class StorageArrayElementNode extends ArrayElementNode {
     return code;
   }
 }
-
-export default StorageArrayElementNode;
 
 export const storageElement = proxyNode(StorageArrayElementNode);
 

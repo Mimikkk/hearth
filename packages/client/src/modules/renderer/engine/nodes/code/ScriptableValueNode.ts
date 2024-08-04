@@ -3,7 +3,7 @@ import { addNodeCommand, f32, proxyNode } from '../shadernode/ShaderNodes.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
-class ScriptableValueNode extends Node {
+export class ScriptableValueNode extends Node {
   declare isScriptableValueNode: true;
   inputType: string | null;
   outputType: string | null;
@@ -70,8 +70,6 @@ class ScriptableValueNode extends Node {
     return this.value && this.value.isNode ? this.value : f32();
   }
 }
-
-export default ScriptableValueNode;
 
 export const scriptableValue = proxyNode(ScriptableValueNode);
 

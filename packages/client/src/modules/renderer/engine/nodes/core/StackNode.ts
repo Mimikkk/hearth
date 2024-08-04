@@ -65,6 +65,6 @@ export class StackNode extends Node {
 
 StackNode.prototype.isStackNode = true;
 
-export default StackNode;
+
 
 export const stack = proxyNode(StackNode);

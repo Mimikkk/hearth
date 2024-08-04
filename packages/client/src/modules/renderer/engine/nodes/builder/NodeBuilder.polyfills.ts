@@ -1,4 +1,4 @@
-import CodeNode from '@modules/renderer/engine/nodes/code/CodeNode.js';
+import { CodeNode } from '@modules/renderer/engine/nodes/code/CodeNode.js';
 
 export const PolyfillMap = {
   lessThanEqual: new CodeNode(`

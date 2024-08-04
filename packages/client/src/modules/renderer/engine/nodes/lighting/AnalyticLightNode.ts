@@ -1,14 +1,12 @@
-import LightingNode from './LightingNode.js';
+import { LightingNode } from './LightingNode.js';
 import { NodeUpdateStage } from '../core/constants.js';
-import { uniform } from '../core/UniformNode.js';
+import { uniform, UniformNode } from '../core/UniformNode.js';
 import { vec3, vec4 } from '../shadernode/ShaderNodes.js';
 import { reference } from '../accessors/ReferenceNode.js';
-import { texture } from '../accessors/TextureNode.js';
+import { texture, TextureNode } from '../accessors/TextureNode.js';
 import { positionWorld } from '../accessors/PositionNode.js';
 import { normalWorld } from '../accessors/NormalNode.js';
 import { Color, DepthComparison, DepthTexture, Filter, Light, RenderTarget } from '@modules/renderer/engine/engine.js';
-import UniformNode from 'three/examples/jsm/nodes/core/UniformNode.js';
-import TextureNode from 'three/examples/jsm/nodes/accessors/TextureNode.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { NodeFrame } from '@modules/renderer/engine/nodes/core/NodeFrame.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
@@ -160,4 +158,4 @@ export class AnalyticLightNode extends LightingNode {
 
 AnalyticLightNode.prototype.isAnalyticLightNode = true;
 
-export default AnalyticLightNode;
+

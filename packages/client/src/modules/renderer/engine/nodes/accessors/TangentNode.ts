@@ -7,7 +7,7 @@ import { cameraViewMatrix } from './CameraNode.js';
 import { modelViewMatrix } from './ModelNode.js';
 import { fixedNode, vec4 } from '../shadernode/ShaderNodes.js';
 
-class TangentNode extends Node {
+export class TangentNode extends Node {
   constructor(scope = TangentNode.LOCAL) {
     super();
 
@@ -58,7 +58,7 @@ TangentNode.LOCAL = 'local';
 TangentNode.VIEW = 'view';
 TangentNode.WORLD = 'world';
 
-export default TangentNode;
+
 
 export const tangentGeometry = fixedNode(TangentNode, TangentNode.GEOMETRY);
 export const tangentLocal = fixedNode(TangentNode, TangentNode.LOCAL);

@@ -1,9 +1,7 @@
-import ReferenceNode from './ReferenceNode.js';
-//import { renderGroup } from '../core/UniformGroupNode.js';
-//import { NodeUpdateType } from '../core/constants.js';
+import { ReferenceNode } from './ReferenceNode.js';
 import { asNode } from '../shadernode/ShaderNodes.js';
 
-class MaterialReferenceNode extends ReferenceNode {
+export class MaterialReferenceNode extends ReferenceNode {
   constructor(property, inputType, material = null) {
     super(property, inputType, material);
 
@@ -19,6 +17,6 @@ class MaterialReferenceNode extends ReferenceNode {
   }
 }
 
-export default MaterialReferenceNode;
+
 
 export const materialReference = (name, type, material) => asNode(new MaterialReferenceNode(name, type, material));

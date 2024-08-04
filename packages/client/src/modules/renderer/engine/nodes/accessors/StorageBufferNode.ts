@@ -1,9 +1,9 @@
-import BufferNode from './BufferNode.js';
+import { BufferNode } from './BufferNode.js';
 import { asNode } from '../shadernode/ShaderNodes.js';
 import { StorageArrayElementNode, storageElement } from '../utils/StorageArrayElementNode.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
-import IndexNode from '@modules/renderer/engine/nodes/core/IndexNode.js';
+import { IndexNode } from '@modules/renderer/engine/nodes/core/IndexNode.js';
 
 export class StorageBufferNode<A extends Attribute> extends BufferNode<A> {
   declare isStorageBufferNode: true;

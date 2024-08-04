@@ -1,4 +1,4 @@
-import TempNode from '../core/TempNode.js';
+import { TempNode } from '../core/TempNode.js';
 import { addNodeCommand, proxyNode } from '../shadernode/ShaderNodes.js';
 import { Node } from '../core/Node.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
@@ -159,8 +159,6 @@ enum Operator {
   BitShiftLeft = '<<',
   BitShiftRight = '>>',
 }
-
-export default OperatorNode;
 
 export const add = proxyNode(
   class extends OperatorNode {

@@ -17,7 +17,7 @@ import { TeapotGeometry } from '@modules/renderer/engine/entities/geometries/Tea
 import { CubeTextureLoader } from '@modules/renderer/engine/loaders/textures/CubeTextureLoader/CubeTextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
-class InstanceUniformNode extends Node {
+export class InstanceUniformNode extends Node {
   constructor() {
     super('vec3');
 

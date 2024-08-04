@@ -51,8 +51,6 @@ export class UniformNode<T = any> extends InputNode<T> {
   }
 }
 
-export default UniformNode;
-
 export const uniform = <T>(v: Uniform<T> | T, maybeType?: TypeName): UniformNode<T> => {
   const type = getConstNodeType(maybeType ?? v);
   const value = Node.is(v) ? (v.node?.value ?? v.value) : v;

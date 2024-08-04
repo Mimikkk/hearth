@@ -6,7 +6,7 @@ import { f32, fixedNode } from '../shadernode/ShaderNodes.js';
 
 const _propertyCache = new Map();
 
-class MaterialNode extends Node {
+export class MaterialNode extends Node {
   constructor(scope) {
     super();
 
@@ -186,8 +186,6 @@ MaterialNode.LINE_GAP_SIZE = 'gapSize';
 MaterialNode.LINE_WIDTH = 'linewidth';
 MaterialNode.LINE_DASH_OFFSET = 'dashOffset';
 MaterialNode.POINT_WIDTH = 'pointWidth';
-
-export default MaterialNode;
 
 export const materialAlphaTest = fixedNode(MaterialNode, MaterialNode.ALPHA_TEST);
 export const materialColor = fixedNode(MaterialNode, MaterialNode.COLOR);

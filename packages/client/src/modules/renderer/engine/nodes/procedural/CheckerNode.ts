@@ -1,4 +1,4 @@
-import TempNode from '../core/TempNode.js';
+import { TempNode } from '../core/TempNode.js';
 import { uv } from '../accessors/UVNode.js';
 import { addNodeCommand, proxyNode, hsl } from '../shadernode/ShaderNodes.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
@@ -23,7 +23,7 @@ export class CheckerNode extends TempNode {
   }
 }
 
-export default CheckerNode;
+
 
 export const checker = proxyNode(CheckerNode);
 

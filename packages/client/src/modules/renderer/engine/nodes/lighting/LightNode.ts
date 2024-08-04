@@ -15,6 +15,6 @@ export class LightNode extends Node {
   }
 }
 
-export default LightNode;
+
 
 export const lightTargetDirection = proxyNode(LightNode);

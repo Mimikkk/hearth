@@ -1,4 +1,4 @@
-import UniformNode from '../core/UniformNode.js';
+import { UniformNode } from '../core/UniformNode.js';
 import { NodeUpdateStage } from '../core/constants.js';
 import { fixedNode, asNode } from '../shadernode/ShaderNodes.js';
 import { NodeFrame } from '@modules/renderer/engine/nodes/core/NodeFrame.js';
@@ -40,7 +40,7 @@ export enum TimerType {
   Frame = 'frame',
 }
 
-export default TimerNode;
+
 
 export const timerLocal = (timeScale: number, value: number = 0) =>
   asNode(new TimerNode(TimerType.Local, timeScale, value));

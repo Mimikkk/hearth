@@ -10,7 +10,7 @@ import NodeFrame from '@modules/renderer/engine/nodes/core/NodeFrame.js';
 
 let camera: Camera, scene: Scene, hearth: Hearth, controls: OrbitControls;
 
-class OcclusionNode extends Node {
+export class OcclusionNode extends Node {
   constructor(testObject: Engine.Entity, normalColor: Engine.Color, occludedColor: Engine.Color) {
     super('vec3');
 

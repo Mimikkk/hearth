@@ -1,7 +1,7 @@
 import { Node } from '../core/Node.js';
 import { scriptableValue } from './ScriptableValueNode.js';
 import { addNodeCommand, f32, proxyNode } from '../shadernode/ShaderNodes.js';
-import CodeNode from '@modules/renderer/engine/nodes/code/CodeNode.js';
+import { CodeNode } from '@modules/renderer/engine/nodes/code/CodeNode.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
@@ -41,7 +41,7 @@ class Params {
 
 export const global = new Resources();
 
-class ScriptableNode extends Node {
+export class ScriptableNode extends Node {
   declare isScriptableNode: true;
   _local: Resources;
   _output: any;
@@ -331,8 +331,6 @@ class ScriptableNode extends Node {
     this._output.refresh();
   }
 }
-
-export default ScriptableNode;
 
 export const scriptable = proxyNode(ScriptableNode);
 
