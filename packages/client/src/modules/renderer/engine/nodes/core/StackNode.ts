@@ -1,6 +1,6 @@
 import { Node } from './Node.js';
-import { CondNode, cond } from '../math/CondNode.js';
-import { createShaderNode, NodeStack, proxyNode, ShaderNode } from '../shadernode/ShaderNodes.js';
+import { cond, CondNode } from '../math/CondNode.js';
+import { createShaderNode, NodeStack, proxyNode } from '../shadernode/ShaderNodes.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { OperatorNode } from '@modules/renderer/engine/nodes/math/OperatorNode.js';
@@ -60,6 +60,10 @@ export class StackNode extends Node {
     NodeStack.set(stack);
 
     return this.outputNode ? this.outputNode.build(builder, output) : super.build(builder, output);
+  }
+
+  assign(): this {
+    throw new Error('Inheritance is always a mistake.');
   }
 }
 

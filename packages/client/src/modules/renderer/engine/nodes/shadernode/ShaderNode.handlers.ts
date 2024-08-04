@@ -1,21 +1,16 @@
 import { NodeCommands } from './ShaderNode.map.js';
-import { NodeStack } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.stack.js';
 import type { StackNode } from '@modules/renderer/engine/nodes/core/StackNode.js';
 
 export const handlers: ProxyHandler<Node> = {
   get(node, key, proxy) {
     if (typeof key !== 'string' || key in node) return Reflect.get(node, key, proxy);
 
-    if (!isStackNode(node) && key === 'assign') {
-      return (...params) => {
-        NodeStack.get()!.assign(proxy, ...params);
-        return proxy;
-      };
-    }
+    const command = NodeCommands.get(key);
 
-    const item = NodeCommands.get(key);
-    if (item) {
-      return isStackNode(node) ? (...params) => proxy.add(item(...params)) : (...params) => item(proxy, ...params);
+    if (command) {
+      return isStackNode(node)
+        ? (...params) => proxy.add(command(...params))
+        : (...params) => command(proxy, ...params);
     }
 
     if (key.endsWith('Assign')) {

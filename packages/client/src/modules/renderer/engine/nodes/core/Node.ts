@@ -242,15 +242,11 @@ export class Node {
     return result;
   }
 
-  // assign(value: Node): this {
-  //   if (!isStackNode(this)) {
-  //     NodeStack.get()!.assign(this, value);
-  //   } else {
-  //     this.add(value);
-  //   }
-  //
-  //   return this;
-  // }
+  assign(value: Node): this {
+    const assign = Node.Map.get('assign');
+    NodeStack.get()!.add(new assign(this, Node.as(value)));
+    return this;
+  }
 
   at(index: number): ArrayElementNode {
     const element = Node.Map.get('element');
