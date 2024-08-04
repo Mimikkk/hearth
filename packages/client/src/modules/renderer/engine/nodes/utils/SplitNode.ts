@@ -62,3 +62,4 @@ export class SplitNode extends Node {
 }
 
 SplitNode.prototype.isSplitNode = true;
+Node.Map.set('split', SplitNode);
