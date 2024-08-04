@@ -1,14 +1,14 @@
 import {
-  mx_cell_noise_float as cell_noise_float,
-  mx_fractal_noise_float as fractal_noise_float,
-  mx_fractal_noise_vec2 as fractal_noise_vec2,
-  mx_fractal_noise_vec3 as fractal_noise_vec3,
-  mx_fractal_noise_vec4 as fractal_noise_vec4,
-  mx_perlin_noise_float as perlin_noise_float,
-  mx_perlin_noise_vec3 as perlin_noise_vec3,
-  mx_worley_noise_float as worley_noise_float,
-  mx_worley_noise_vec2 as worley_noise_vec2,
-  mx_worley_noise_vec3 as worley_noise_vec3,
+  cell_noise_float,
+  fractal_noise_float,
+  fractal_noise_vec2,
+  fractal_noise_vec3,
+  fractal_noise_vec4,
+  perlin_noise_float,
+  perlin_noise_vec3,
+  worley_noise_float,
+  worley_noise_vec2,
+  worley_noise_vec3,
 } from './noise.js';
 import { uv } from '../accessors/UVNode.js';
 import { i32, vec2, vec4 } from '../shadernode/ShaderNodes.js';
