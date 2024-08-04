@@ -49,8 +49,8 @@ export class AssignNode extends TempNode {
 
     let snippet;
 
-    if (nodeData.initialized) {
-      if (output !== TypeName.void) {
+    if (nodeData.initialized === true) {
+      if (output !== 'void') {
         snippet = target;
       }
     } else if (needsSplitAssign) {
@@ -67,7 +67,7 @@ export class AssignNode extends TempNode {
         builder.addLineFlowCode(`${targetRoot}.${component} = ${sourceProperty}[ ${i} ]`);
       }
 
-      if (output !== TypeName.void) {
+      if (output !== 'void') {
         snippet = target;
       }
     } else {

@@ -1,5 +1,3 @@
-import { NodeCommands } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.map.js';
-
 export * from './core/constants.js';
 export * from './core/AssignNode.js';
 export * from './core/AttributeNode.js';
@@ -148,4 +146,3 @@ export * from './functions/material/getRoughness.js';
 export * from './functions/PhongLightModel.js';
 export * from './functions/PhysicalLightModel.js';
 export * from './shadernode/ShaderNode.map.js';
-console.log({ NodeCommands });
