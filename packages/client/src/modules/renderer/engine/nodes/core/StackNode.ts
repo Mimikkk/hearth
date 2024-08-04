@@ -38,14 +38,14 @@ export class StackNode extends Node {
   elseif(bool: OperatorNode, then: Function): this {
     const condition = cond(bool, createShaderNode(then));
 
-    this.cond!.invalid = condition;
+    this.cond!.elif = condition;
     this.cond = condition;
 
     return this;
   }
 
   else(method: Function): this {
-    this.cond!.invalid = createShaderNode(method);
+    this.cond!.elif = createShaderNode(method);
 
     return this;
   }

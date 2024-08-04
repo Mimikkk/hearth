@@ -8,18 +8,18 @@ import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.
 export class CondNode extends Node {
   constructor(
     public when: Node,
-    public valid: Node,
-    public invalid: Node | null = null,
+    public then: Node,
+    public elif: Node | null = null,
   ) {
     super();
   }
 
   getNodeType(builder: NodeBuilder): TypeName {
-    const typeA = this.valid.getNodeType(builder);
+    const typeA = this.then.getNodeType(builder);
 
-    if (!this.invalid) return typeA;
+    if (!this.elif) return typeA;
 
-    const typeB = this.invalid.getNodeType(builder);
+    const typeB = this.elif.getNodeType(builder);
     return TypeName.size(typeB) > TypeName.size(typeA) ? typeB : typeA;
   }
 
@@ -30,7 +30,7 @@ export class CondNode extends Node {
     const data = builder.getDataFromNode(this);
     if (data.nodeProperty) return data.nodeProperty;
 
-    const { valid, invalid } = this;
+    const { then, elif } = this;
 
     const isExpression = output !== TypeName.void;
     const nodeProperty = isExpression ? property(type).build(builder) : '';
@@ -41,7 +41,7 @@ export class CondNode extends Node {
 
     builder.flow.code += `\nif ( ${nodeSnippet} ) {\n`;
 
-    let ifCode = contextNode(valid, context).build(builder, type);
+    let ifCode = contextNode(then, context).build(builder, type);
 
     if (ifCode) {
       if (isExpression) {
@@ -53,10 +53,10 @@ export class CondNode extends Node {
 
     builder.flow.code += ifCode + '\n}';
 
-    if (invalid !== null) {
+    if (elif !== null) {
       builder.flow.code += ' else {\n';
 
-      let elseCode = contextNode(invalid, context).build(builder, type);
+      let elseCode = contextNode(elif, context).build(builder, type);
 
       if (elseCode) {
         if (isExpression) {
