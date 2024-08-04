@@ -154,7 +154,7 @@ export { default as ArrayElementNode } from './utils/ArrayElementNode.js';
 export { default as ConvertNode } from './utils/ConvertNode.js';
 export { default as DiscardNode, discard } from './utils/DiscardNode.js';
 export { default as EquirectUVNode, equirectUV } from './utils/EquirectUVNode.js';
-export { OverloadShaderNode, overloadFn } from './utils/OverloadShaderNode.js';
+export { OverloadShaderNode, overloadHsl } from './utils/OverloadShaderNode.js';
 export { default as JoinNode } from './utils/JoinNode.js';
 export { default as LoopNode, loop, Continue, Break } from './utils/LoopNode.js';
 export { default as MatcapUVNode, matcapUV } from './utils/MatcapUVNode.js';

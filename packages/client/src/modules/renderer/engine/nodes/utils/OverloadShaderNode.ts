@@ -35,7 +35,7 @@ export class OverloadShaderNode extends Node {
 
 const overload = proxyNode(OverloadShaderNode);
 
-export const overloadFn =
+export const overloadHsl =
   <Fn extends (...params: any) => any>(shaders: Hsl<Fn>[]) =>
   (...params: Parameters<Fn>) =>
     overload(shaders, params);
