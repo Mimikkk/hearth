@@ -2,8 +2,6 @@ import * as Engine from '@modules/renderer/engine/engine.js';
 import {
   color,
   MeshBasicNodeMaterial,
-  mx_fractal_noise_vec3,
-  mx_worley_noise_float,
   normalWorld,
   pass,
   timerLocal,
@@ -11,6 +9,7 @@ import {
   uv,
   vec2,
   viewportTopLeft,
+  Noise,
 } from '@modules/renderer/engine/nodes/Nodes.js';
 
 import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/GLTFLoader.js';
@@ -18,7 +17,6 @@ import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 
 import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
-import { Side } from '@modules/renderer/engine/engine.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, sceneMain, scenePortal, hearth;
@@ -34,9 +32,9 @@ async function init() {
   sceneMain.backgroundNode = normalWorld.y.mix(color(0x0066ff), color(0xff0066));
 
   scenePortal = new Engine.Scene();
-  scenePortal.backgroundNode = mx_worley_noise_float(normalWorld.mul(20).add(vec2(0, timerLocal().oneMinus()))).mul(
-    color(0x0066ff),
-  );
+  scenePortal.backgroundNode = Noise.worley
+    .f32(normalWorld.mul(20).add(vec2(0, timerLocal().oneMinus())))
+    .mul(color(0x0066ff));
 
   camera = new Engine.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.01, 30);
   camera.position.set(2.5, 1, 3);
@@ -97,7 +95,7 @@ async function init() {
       return object;
     };
 
-    const colorNode = mx_fractal_noise_vec3(uv().mul(20).add(timerLocal()));
+    const colorNode = Noise.fractal.vec3(uv().mul(20).add(timerLocal()));
 
     const modelMain = createModel();
     const modelPortal = createModel(colorNode);
