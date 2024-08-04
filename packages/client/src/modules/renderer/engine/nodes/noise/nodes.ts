@@ -9,6 +9,7 @@ import {
   worley_noise_f32,
   worley_noise_vec2,
   worley_noise_vec3,
+  cell_noise_vec3,
 } from './noise.js';
 import { uv } from '../accessors/UVNode.js';
 import { i32 } from '../shadernode/ShaderNodes.js';
@@ -38,5 +39,6 @@ export const Noise = {
 
   cell: {
     f32: (position = uv()) => cell_noise_f32(position),
+    vec3: (position = uv()) => cell_noise_vec3(position),
   },
 };
