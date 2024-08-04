@@ -1,7 +1,6 @@
 import { NodeUpdateStage } from './constants.js';
 import { getCacheKey, getNodeChildren } from './NodeUtils.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
-
 import { NodeFrame } from '@modules/renderer/engine/nodes/core/NodeFrame.js';
 import { BuildStage, TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { v4 } from 'uuid';
@@ -9,11 +8,16 @@ import { SetNode } from '@modules/renderer/engine/nodes/utils/SetNode.js';
 import { SplitNode } from '@modules/renderer/engine/nodes/utils/SplitNode.js';
 import { ArrayElementNode } from '@modules/renderer/engine/nodes/utils/ArrayElementNode.js';
 import { asNode } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.as.js';
+import { ConstNode } from '@modules/renderer/engine/nodes/core/ConstNode.js';
+import { implIndexAccess, implSwizzle } from '@modules/renderer/engine/nodes/core/Node.swizzle.js';
+import { NodeStack } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.stack.js';
+import { NodeCommands } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.map.js';
+import type { StackNode } from '@modules/renderer/engine/nodes/core/StackNode.js';
 
 let _nodeId = 0;
 
 export class Node {
-  static Map = new Map<'split' | 'element' | 'assign', any>();
+  static Map = new Map<'split' | 'element' | 'assign' | 'set', any>();
   declare isNode: true;
   name?: string;
   nodeType: TypeName | null;
@@ -239,18 +243,24 @@ export class Node {
   }
 
   // assign(value: Node): this {
-  //   const stack = NodeStack.get()!;
-  //
-  //   stack.add(NodeCommands.get('assign')(this, value));
+  //   if (!isStackNode(this)) {
+  //     NodeStack.get()!.assign(this, value);
+  //   } else {
+  //     this.add(value);
+  //   }
   //
   //   return this;
   // }
 
-  // at(index: number): ArrayElementNode {
-  //   const element = Node.Map.get('element');
-  //
-  //   return Node.as(new element(this, new ConstNode(index, TypeName.u32))) as ArrayElementNode;
-  // }
+  at(index: number): ArrayElementNode {
+    const element = Node.Map.get('element');
+
+    return Node.as(new element(this, new ConstNode(index, TypeName.u32))) as ArrayElementNode;
+  }
+
+  setAt(index: number, value: any): void {
+    this.at(index).assign(value);
+  }
 
   [index: number]: ArrayElementNode;
 
@@ -501,5 +511,7 @@ export class Node {
   declare setABGR: (value: any) => SetNode;
   declare setABRG: (value: any) => SetNode;
 }
+const isStackNode = (item: any): item is StackNode => item?.isStackNode === true;
 
-export default Node;
+implSwizzle();
+implIndexAccess();
