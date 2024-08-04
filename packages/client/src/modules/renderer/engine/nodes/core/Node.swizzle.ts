@@ -1,12 +1,9 @@
 import type { SetNode } from '@modules/renderer/engine/nodes/utils/SetNode.js';
 import type { SplitNode } from '@modules/renderer/engine/nodes/utils/SplitNode.js';
 import { Node } from './Node.js';
-import { ArrayElementNode } from '@modules/renderer/engine/nodes/utils/ArrayElementNode.js';
-import { ConstNode } from '@modules/renderer/engine/nodes/core/ConstNode.js';
-import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 // remove this and implement it directly.
-export const implSwizzle = () => {
+export const implementSwizzle = () => {
   const swizzle = [
     'x',
     'y',
@@ -158,27 +155,4 @@ export const implSwizzle = () => {
       return Node.as(new set(this, key, value)) as SetNode;
     };
   }
-};
-
-// remove this and implement it directly.
-export const implIndexAccess = () => {
-  const indices = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
-
-  const properties = Object.fromEntries(
-    indices.map(index => [
-      index,
-      {
-        get(): ArrayElementNode {
-          const element = Node.Map.get('element');
-
-          return Node.as(new element(this, new ConstNode(index, TypeName.u32))) as ArrayElementNode;
-        },
-        set(value: any): void {
-          this[+index].assign(value);
-        },
-      },
-    ]),
-  );
-
-  Object.defineProperties(Node.prototype, properties);
 };

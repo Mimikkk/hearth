@@ -40,9 +40,9 @@ export class InstanceNode extends Node {
 
     const instancePosition = instanceMatrixNode.mul(positionLocal).xyz;
 
-    const m = mat3(instanceMatrixNode.at(0).xyz, instanceMatrixNode.at(1).xyz, instanceMatrixNode.at(2).xyz);
+    const m = mat3(instanceMatrixNode[0].xyz, instanceMatrixNode[1].xyz, instanceMatrixNode[2].xyz);
 
-    const transformedNormal = normalLocal.div(vec3(m.at(0).dot(m.at(0)), m.at(1).dot(m.at(1)), m.at(2).dot(m.at(2))));
+    const transformedNormal = normalLocal.div(vec3(m[0].dot(m[0]), m[1].dot(m[1]), m[2].dot(m[2])));
 
     const instanceNormal = m.mul(transformedNormal).xyz;
 
