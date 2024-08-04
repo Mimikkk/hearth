@@ -44,3 +44,5 @@ export class SetNode extends TempNode {
     return `${TypeName.repr(sourceType)}(${parameters.join(', ')})`;
   }
 }
+
+Node.Map.set('set', SetNode);
