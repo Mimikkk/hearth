@@ -25,7 +25,7 @@ export const select = hsl(
   },
 );
 
-export const negate_if = hsl(
+export const negateIf = hsl(
   ([val_i, b_i]) => {
     const b = bool(b_i).toVar();
     const val = f32(val_i).toVar();
@@ -62,7 +62,7 @@ export const floorfrac = hsl(([x_i, i]) => {
   return x.sub(f32(i));
 });
 
-export const mx_bilerp = overloadHsl([
+export const bilerp = overloadHsl([
   hsl(
     ([v0_i, v1_i, v2_i, v3_i, s_i, t_i]) => {
       const t = f32(t_i).toVar();
@@ -119,7 +119,7 @@ export const mx_bilerp = overloadHsl([
   ),
 ]);
 
-export const mx_trilerp = overloadHsl([
+export const trilerp = overloadHsl([
   hsl(
     ([v0_i, v1_i, v2_i, v3_i, v4_i, v5_i, v6_i, v7_i, s_i, t_i, r_i]) => {
       const r = f32(r_i).toVar();
@@ -200,7 +200,7 @@ export const mx_trilerp = overloadHsl([
   ),
 ]);
 
-export const gradient_f32 = overloadHsl([
+export const gradientF32 = overloadHsl([
   hsl(
     ([hash_i, x_i, y_i]) => {
       const y = f32(y_i).toVar();
@@ -210,7 +210,7 @@ export const gradient_f32 = overloadHsl([
       const u = f32(select(h.lessThan(u32(4)), x, y)).toVar();
       const v = f32(mul(2.0, select(h.lessThan(u32(4)), y, x))).toVar();
 
-      return negate_if(u, bool(h.bitAnd(u32(1)))).add(negate_if(v, bool(h.bitAnd(u32(2)))));
+      return negateIf(u, bool(h.bitAnd(u32(1)))).add(negateIf(v, bool(h.bitAnd(u32(2)))));
     },
     {
       name: 'mx_gradient_f32_0',
@@ -232,7 +232,7 @@ export const gradient_f32 = overloadHsl([
       const u = f32(select(h.lessThan(u32(8)), x, y)).toVar();
       const v = f32(select(h.lessThan(u32(4)), y, select(h.equal(u32(12)).or(h.equal(u32(14))), x, z))).toVar();
 
-      return negate_if(u, bool(h.bitAnd(u32(1)))).add(negate_if(v, bool(h.bitAnd(u32(2)))));
+      return negateIf(u, bool(h.bitAnd(u32(1)))).add(negateIf(v, bool(h.bitAnd(u32(2)))));
     },
     {
       name: 'mx_gradient_f32_1',
@@ -247,14 +247,14 @@ export const gradient_f32 = overloadHsl([
   ),
 ]);
 
-export const gradient_vec3 = overloadHsl([
+export const gradientVec3 = overloadHsl([
   hsl(
     ([hash_i, x_i, y_i]) => {
       const y = f32(y_i).toVar();
       const x = f32(x_i).toVar();
       const hash = uvec3(hash_i).toVar();
 
-      return vec3(gradient_f32(hash.x, x, y), gradient_f32(hash.y, x, y), gradient_f32(hash.z, x, y));
+      return vec3(gradientF32(hash.x, x, y), gradientF32(hash.y, x, y), gradientF32(hash.z, x, y));
     },
     {
       name: 'mx_gradient_vec3_0',
@@ -273,7 +273,7 @@ export const gradient_vec3 = overloadHsl([
       const x = f32(x_i).toVar();
       const hash = uvec3(hash_i).toVar();
 
-      return vec3(gradient_f32(hash.x, x, y, z), gradient_f32(hash.y, x, y, z), gradient_f32(hash.z, x, y, z));
+      return vec3(gradientF32(hash.x, x, y, z), gradientF32(hash.y, x, y, z), gradientF32(hash.z, x, y, z));
     },
     {
       name: 'mx_gradient_vec3_1',
@@ -288,7 +288,7 @@ export const gradient_vec3 = overloadHsl([
   ),
 ]);
 
-export const gradient_scale2d = overloadHsl([
+export const gradientScale2d = overloadHsl([
   hsl(
     ([v_i]) => {
       const v = f32(v_i).toVar();
@@ -315,7 +315,7 @@ export const gradient_scale2d = overloadHsl([
   ),
 ]);
 
-export const gradient_scale3d = overloadHsl([
+export const gradientScale3d = overloadHsl([
   hsl(
     ([v_i]) => {
       const v = f32(v_i).toVar();
@@ -424,7 +424,7 @@ export const bjfinal = hsl(
   },
 );
 
-export const bits_to_01 = hsl(
+export const bitsTo01 = hsl(
   ([bits_i]) => {
     const bits = u32(bits_i).toVar();
 
@@ -450,7 +450,7 @@ export const fade = hsl(
   },
 );
 
-export const hash_i32 = overloadHsl([
+export const hashI32 = overloadHsl([
   hsl(
     ([x_i]) => {
       const x = i32(x_i).toVar();
@@ -579,12 +579,12 @@ export const hash_i32 = overloadHsl([
   ),
 ]);
 
-export const hash_vec3 = overloadHsl([
+export const hashVec3 = overloadHsl([
   hsl(
     ([x_i, y_i]) => {
       const y = i32(y_i).toVar();
       const x = i32(x_i).toVar();
-      const h = u32(hash_i32(x, y)).toVar();
+      const h = u32(hashI32(x, y)).toVar();
       const result = uvec3().toVar();
       result.x.assign(h.bitAnd(i32(0xff)));
       result.y.assign(h.shiftRight(i32(8)).bitAnd(i32(0xff)));
@@ -606,7 +606,7 @@ export const hash_vec3 = overloadHsl([
       const z = i32(z_i).toVar();
       const y = i32(y_i).toVar();
       const x = i32(x_i).toVar();
-      const h = u32(hash_i32(x, y, z)).toVar();
+      const h = u32(hashI32(x, y, z)).toVar();
       const result = uvec3().toVar();
       result.x.assign(h.bitAnd(i32(0xff)));
       result.y.assign(h.shiftRight(i32(8)).bitAnd(i32(0xff)));
@@ -626,7 +626,7 @@ export const hash_vec3 = overloadHsl([
   ),
 ]);
 
-export const perlin_noise_f32 = overloadHsl([
+export const perlinF32 = overloadHsl([
   hsl(
     ([p_i]) => {
       const p = vec2(p_i).toVar();
@@ -637,17 +637,17 @@ export const perlin_noise_f32 = overloadHsl([
       const u = f32(fade(fx)).toVar();
       const v = f32(fade(fy)).toVar();
       const result = f32(
-        mx_bilerp(
-          gradient_f32(hash_i32(X, Y), fx, fy),
-          gradient_f32(hash_i32(X.add(i32(1)), Y), fx.sub(1.0), fy),
-          gradient_f32(hash_i32(X, Y.add(i32(1))), fx, fy.sub(1.0)),
-          gradient_f32(hash_i32(X.add(i32(1)), Y.add(i32(1))), fx.sub(1.0), fy.sub(1.0)),
+        bilerp(
+          gradientF32(hashI32(X, Y), fx, fy),
+          gradientF32(hashI32(X.add(i32(1)), Y), fx.sub(1.0), fy),
+          gradientF32(hashI32(X, Y.add(i32(1))), fx, fy.sub(1.0)),
+          gradientF32(hashI32(X.add(i32(1)), Y.add(i32(1))), fx.sub(1.0), fy.sub(1.0)),
           u,
           v,
         ),
       ).toVar();
 
-      return gradient_scale2d(result);
+      return gradientScale2d(result);
     },
     {
       name: 'mx_perlin_noise_f32_0',
@@ -668,22 +668,22 @@ export const perlin_noise_f32 = overloadHsl([
       const v = f32(fade(fy)).toVar();
       const w = f32(fade(fz)).toVar();
       const result = f32(
-        mx_trilerp(
-          gradient_f32(hash_i32(X, Y, Z), fx, fy, fz),
-          gradient_f32(hash_i32(X.add(i32(1)), Y, Z), fx.sub(1.0), fy, fz),
-          gradient_f32(hash_i32(X, Y.add(i32(1)), Z), fx, fy.sub(1.0), fz),
-          gradient_f32(hash_i32(X.add(i32(1)), Y.add(i32(1)), Z), fx.sub(1.0), fy.sub(1.0), fz),
-          gradient_f32(hash_i32(X, Y, Z.add(i32(1))), fx, fy, fz.sub(1.0)),
-          gradient_f32(hash_i32(X.add(i32(1)), Y, Z.add(i32(1))), fx.sub(1.0), fy, fz.sub(1.0)),
-          gradient_f32(hash_i32(X, Y.add(i32(1)), Z.add(i32(1))), fx, fy.sub(1.0), fz.sub(1.0)),
-          gradient_f32(hash_i32(X.add(i32(1)), Y.add(i32(1)), Z.add(i32(1))), fx.sub(1.0), fy.sub(1.0), fz.sub(1.0)),
+        trilerp(
+          gradientF32(hashI32(X, Y, Z), fx, fy, fz),
+          gradientF32(hashI32(X.add(i32(1)), Y, Z), fx.sub(1.0), fy, fz),
+          gradientF32(hashI32(X, Y.add(i32(1)), Z), fx, fy.sub(1.0), fz),
+          gradientF32(hashI32(X.add(i32(1)), Y.add(i32(1)), Z), fx.sub(1.0), fy.sub(1.0), fz),
+          gradientF32(hashI32(X, Y, Z.add(i32(1))), fx, fy, fz.sub(1.0)),
+          gradientF32(hashI32(X.add(i32(1)), Y, Z.add(i32(1))), fx.sub(1.0), fy, fz.sub(1.0)),
+          gradientF32(hashI32(X, Y.add(i32(1)), Z.add(i32(1))), fx, fy.sub(1.0), fz.sub(1.0)),
+          gradientF32(hashI32(X.add(i32(1)), Y.add(i32(1)), Z.add(i32(1))), fx.sub(1.0), fy.sub(1.0), fz.sub(1.0)),
           u,
           v,
           w,
         ),
       ).toVar();
 
-      return gradient_scale3d(result);
+      return gradientScale3d(result);
     },
     {
       name: 'mx_perlin_noise_f32_1',
@@ -693,7 +693,7 @@ export const perlin_noise_f32 = overloadHsl([
   ),
 ]);
 
-export const perlin_noise_vec3 = overloadHsl([
+export const perlinVec3 = overloadHsl([
   hsl(
     ([p_i]) => {
       const p = vec2(p_i).toVar();
@@ -704,17 +704,17 @@ export const perlin_noise_vec3 = overloadHsl([
       const u = f32(fade(fx)).toVar();
       const v = f32(fade(fy)).toVar();
       const result = vec3(
-        mx_bilerp(
-          gradient_vec3(hash_vec3(X, Y), fx, fy),
-          gradient_vec3(hash_vec3(X.add(i32(1)), Y), fx.sub(1.0), fy),
-          gradient_vec3(hash_vec3(X, Y.add(i32(1))), fx, fy.sub(1.0)),
-          gradient_vec3(hash_vec3(X.add(i32(1)), Y.add(i32(1))), fx.sub(1.0), fy.sub(1.0)),
+        bilerp(
+          gradientVec3(hashVec3(X, Y), fx, fy),
+          gradientVec3(hashVec3(X.add(i32(1)), Y), fx.sub(1.0), fy),
+          gradientVec3(hashVec3(X, Y.add(i32(1))), fx, fy.sub(1.0)),
+          gradientVec3(hashVec3(X.add(i32(1)), Y.add(i32(1))), fx.sub(1.0), fy.sub(1.0)),
           u,
           v,
         ),
       ).toVar();
 
-      return gradient_scale2d(result);
+      return gradientScale2d(result);
     },
     {
       name: 'mx_perlin_noise_vec3_0',
@@ -735,22 +735,22 @@ export const perlin_noise_vec3 = overloadHsl([
       const v = f32(fade(fy)).toVar();
       const w = f32(fade(fz)).toVar();
       const result = vec3(
-        mx_trilerp(
-          gradient_vec3(hash_vec3(X, Y, Z), fx, fy, fz),
-          gradient_vec3(hash_vec3(X.add(i32(1)), Y, Z), fx.sub(1.0), fy, fz),
-          gradient_vec3(hash_vec3(X, Y.add(i32(1)), Z), fx, fy.sub(1.0), fz),
-          gradient_vec3(hash_vec3(X.add(i32(1)), Y.add(i32(1)), Z), fx.sub(1.0), fy.sub(1.0), fz),
-          gradient_vec3(hash_vec3(X, Y, Z.add(i32(1))), fx, fy, fz.sub(1.0)),
-          gradient_vec3(hash_vec3(X.add(i32(1)), Y, Z.add(i32(1))), fx.sub(1.0), fy, fz.sub(1.0)),
-          gradient_vec3(hash_vec3(X, Y.add(i32(1)), Z.add(i32(1))), fx, fy.sub(1.0), fz.sub(1.0)),
-          gradient_vec3(hash_vec3(X.add(i32(1)), Y.add(i32(1)), Z.add(i32(1))), fx.sub(1.0), fy.sub(1.0), fz.sub(1.0)),
+        trilerp(
+          gradientVec3(hashVec3(X, Y, Z), fx, fy, fz),
+          gradientVec3(hashVec3(X.add(i32(1)), Y, Z), fx.sub(1.0), fy, fz),
+          gradientVec3(hashVec3(X, Y.add(i32(1)), Z), fx, fy.sub(1.0), fz),
+          gradientVec3(hashVec3(X.add(i32(1)), Y.add(i32(1)), Z), fx.sub(1.0), fy.sub(1.0), fz),
+          gradientVec3(hashVec3(X, Y, Z.add(i32(1))), fx, fy, fz.sub(1.0)),
+          gradientVec3(hashVec3(X.add(i32(1)), Y, Z.add(i32(1))), fx.sub(1.0), fy, fz.sub(1.0)),
+          gradientVec3(hashVec3(X, Y.add(i32(1)), Z.add(i32(1))), fx, fy.sub(1.0), fz.sub(1.0)),
+          gradientVec3(hashVec3(X.add(i32(1)), Y.add(i32(1)), Z.add(i32(1))), fx.sub(1.0), fy.sub(1.0), fz.sub(1.0)),
           u,
           v,
           w,
         ),
       ).toVar();
 
-      return gradient_scale3d(result);
+      return gradientScale3d(result);
     },
     {
       name: 'mx_perlin_noise_vec3_1',
@@ -760,13 +760,13 @@ export const perlin_noise_vec3 = overloadHsl([
   ),
 ]);
 
-export const cell_noise_f32 = overloadHsl([
+export const cellF32 = overloadHsl([
   hsl(
     ([p_i]) => {
       const p = f32(p_i).toVar();
       const ix = i32(floor_(p)).toVar();
 
-      return bits_to_01(hash_i32(ix));
+      return bitsTo01(hashI32(ix));
     },
     {
       name: 'mx_cell_noise_f32_0',
@@ -780,7 +780,7 @@ export const cell_noise_f32 = overloadHsl([
       const ix = i32(floor_(p.x)).toVar();
       const iy = i32(floor_(p.y)).toVar();
 
-      return bits_to_01(hash_i32(ix, iy));
+      return bitsTo01(hashI32(ix, iy));
     },
     {
       name: 'mx_cell_noise_f32_1',
@@ -795,7 +795,7 @@ export const cell_noise_f32 = overloadHsl([
       const iy = i32(floor_(p.y)).toVar();
       const iz = i32(floor_(p.z)).toVar();
 
-      return bits_to_01(hash_i32(ix, iy, iz));
+      return bitsTo01(hashI32(ix, iy, iz));
     },
     {
       name: 'mx_cell_noise_f32_2',
@@ -811,7 +811,7 @@ export const cell_noise_f32 = overloadHsl([
       const iz = i32(floor_(p.z)).toVar();
       const iw = i32(floor_(p.w)).toVar();
 
-      return bits_to_01(hash_i32(ix, iy, iz, iw));
+      return bitsTo01(hashI32(ix, iy, iz, iw));
     },
     {
       name: 'mx_cell_noise_f32_3',
@@ -821,13 +821,13 @@ export const cell_noise_f32 = overloadHsl([
   ),
 ]);
 
-export const cell_noise_vec3 = overloadHsl([
+export const cellVec3 = overloadHsl([
   hsl(
     ([p_i]) => {
       const p = f32(p_i).toVar();
       const ix = i32(floor_(p)).toVar();
 
-      return vec3(bits_to_01(hash_i32(ix, i32(0))), bits_to_01(hash_i32(ix, i32(1))), bits_to_01(hash_i32(ix, i32(2))));
+      return vec3(bitsTo01(hashI32(ix, i32(0))), bitsTo01(hashI32(ix, i32(1))), bitsTo01(hashI32(ix, i32(2))));
     },
     {
       name: 'mx_cell_noise_vec3_0',
@@ -842,9 +842,9 @@ export const cell_noise_vec3 = overloadHsl([
       const iy = i32(floor_(p.y)).toVar();
 
       return vec3(
-        bits_to_01(hash_i32(ix, iy, i32(0))),
-        bits_to_01(hash_i32(ix, iy, i32(1))),
-        bits_to_01(hash_i32(ix, iy, i32(2))),
+        bitsTo01(hashI32(ix, iy, i32(0))),
+        bitsTo01(hashI32(ix, iy, i32(1))),
+        bitsTo01(hashI32(ix, iy, i32(2))),
       );
     },
     {
@@ -861,9 +861,9 @@ export const cell_noise_vec3 = overloadHsl([
       const iz = i32(floor_(p.z)).toVar();
 
       return vec3(
-        bits_to_01(hash_i32(ix, iy, iz, i32(0))),
-        bits_to_01(hash_i32(ix, iy, iz, i32(1))),
-        bits_to_01(hash_i32(ix, iy, iz, i32(2))),
+        bitsTo01(hashI32(ix, iy, iz, i32(0))),
+        bitsTo01(hashI32(ix, iy, iz, i32(1))),
+        bitsTo01(hashI32(ix, iy, iz, i32(2))),
       );
     },
     {
@@ -881,9 +881,9 @@ export const cell_noise_vec3 = overloadHsl([
       const iw = i32(floor_(p.w)).toVar();
 
       return vec3(
-        bits_to_01(hash_i32(ix, iy, iz, iw, i32(0))),
-        bits_to_01(hash_i32(ix, iy, iz, iw, i32(1))),
-        bits_to_01(hash_i32(ix, iy, iz, iw, i32(2))),
+        bitsTo01(hashI32(ix, iy, iz, iw, i32(0))),
+        bitsTo01(hashI32(ix, iy, iz, iw, i32(1))),
+        bitsTo01(hashI32(ix, iy, iz, iw, i32(2))),
       );
     },
     {
@@ -894,7 +894,7 @@ export const cell_noise_vec3 = overloadHsl([
   ),
 ]);
 
-export const fractal_noise_f32 = hsl(
+export const fractalF32 = hsl(
   ([p_i, octaves_i, lacunarity_i, diminish_i]) => {
     const diminish = f32(diminish_i).toVar();
     const lacunarity = f32(lacunarity_i).toVar();
@@ -904,7 +904,7 @@ export const fractal_noise_f32 = hsl(
     const amplitude = f32(1.0).toVar();
 
     loop({ start: i32(0), end: octaves }, ({ i }) => {
-      result.addAssign(amplitude.mul(perlin_noise_f32(p)));
+      result.addAssign(amplitude.mul(perlinF32(p)));
       amplitude.mulAssign(diminish);
       p.mulAssign(lacunarity);
     });
@@ -923,7 +923,7 @@ export const fractal_noise_f32 = hsl(
   },
 );
 
-export const fractal_noise_vec3 = hsl(
+export const fractalVec3 = hsl(
   ([p_i, octaves_i, lacunarity_i, diminish_i]) => {
     const diminish = f32(diminish_i).toVar();
     const lacunarity = f32(lacunarity_i).toVar();
@@ -933,7 +933,7 @@ export const fractal_noise_vec3 = hsl(
     const amplitude = f32(1.0).toVar();
 
     loop({ start: i32(0), end: octaves }, ({ i }) => {
-      result.addAssign(amplitude.mul(perlin_noise_vec3(p)));
+      result.addAssign(amplitude.mul(perlinVec3(p)));
       amplitude.mulAssign(diminish);
       p.mulAssign(lacunarity);
     });
@@ -952,7 +952,7 @@ export const fractal_noise_vec3 = hsl(
   },
 );
 
-export const fractal_noise_vec2 = hsl(
+export const fractalVec2 = hsl(
   ([p_i, octaves_i, lacunarity_i, diminish_i]) => {
     const diminish = f32(diminish_i).toVar();
     const lacunarity = f32(lacunarity_i).toVar();
@@ -960,8 +960,8 @@ export const fractal_noise_vec2 = hsl(
     const p = vec3(p_i).toVar();
 
     return vec2(
-      fractal_noise_f32(p, octaves, lacunarity, diminish),
-      fractal_noise_f32(p.add(vec3(i32(19), i32(193), i32(17))), octaves, lacunarity, diminish),
+      fractalF32(p, octaves, lacunarity, diminish),
+      fractalF32(p.add(vec3(i32(19), i32(193), i32(17))), octaves, lacunarity, diminish),
     );
   },
   {
@@ -976,14 +976,14 @@ export const fractal_noise_vec2 = hsl(
   },
 );
 
-export const fractal_noise_vec4 = hsl(
+export const fractalVec4 = hsl(
   ([p_i, octaves_i, lacunarity_i, diminish_i]) => {
     const diminish = f32(diminish_i).toVar();
     const lacunarity = f32(lacunarity_i).toVar();
     const octaves = i32(octaves_i).toVar();
     const p = vec3(p_i).toVar();
-    const c = vec3(fractal_noise_vec3(p, octaves, lacunarity, diminish)).toVar();
-    const f = f32(fractal_noise_f32(p.add(vec3(i32(19), i32(193), i32(17))), octaves, lacunarity, diminish)).toVar();
+    const c = vec3(fractalVec3(p, octaves, lacunarity, diminish)).toVar();
+    const f = f32(fractalF32(p.add(vec3(i32(19), i32(193), i32(17))), octaves, lacunarity, diminish)).toVar();
 
     return vec4(c, f);
   },
@@ -999,7 +999,7 @@ export const fractal_noise_vec4 = hsl(
   },
 );
 
-export const worley_distance = overloadHsl([
+export const worleyDistance = overloadHsl([
   hsl(
     ([p_i, x_i, y_i, xoff_i, yoff_i, jitter_i, metric_i]) => {
       const metric = i32(metric_i).toVar();
@@ -1009,7 +1009,7 @@ export const worley_distance = overloadHsl([
       const y = i32(y_i).toVar();
       const x = i32(x_i).toVar();
       const p = vec2(p_i).toVar();
-      const tmp = vec3(cell_noise_vec3(vec2(x.add(xoff), y.add(yoff)))).toVar();
+      const tmp = vec3(cellVec3(vec2(x.add(xoff), y.add(yoff)))).toVar();
       const off = vec2(tmp.x, tmp.y).toVar();
       off.subAssign(0.5);
       off.mulAssign(jitter);
@@ -1052,7 +1052,7 @@ export const worley_distance = overloadHsl([
       const y = i32(y_i).toVar();
       const x = i32(x_i).toVar();
       const p = vec3(p_i).toVar();
-      const off = vec3(cell_noise_vec3(vec3(x.add(xoff), y.add(yoff), z.add(zoff)))).toVar();
+      const off = vec3(cellVec3(vec3(x.add(xoff), y.add(yoff), z.add(zoff)))).toVar();
       off.subAssign(0.5);
       off.mulAssign(jitter);
       off.addAssign(0.5);
@@ -1087,7 +1087,7 @@ export const worley_distance = overloadHsl([
   ),
 ]);
 
-export const worley_noise_f32 = overloadHsl([
+export const worleyF32 = overloadHsl([
   hsl(
     ([p_i, jitter_i, metric_i]) => {
       const metric = i32(metric_i).toVar();
@@ -1100,7 +1100,7 @@ export const worley_noise_f32 = overloadHsl([
 
       loop({ start: -1, end: i32(1), name: 'x', condition: '<=' }, ({ x }) => {
         loop({ start: -1, end: i32(1), name: 'y', condition: '<=' }, ({ y }) => {
-          const dist = f32(worley_distance(localpos, x, y, X, Y, jitter, metric)).toVar();
+          const dist = f32(worleyDistance(localpos, x, y, X, Y, jitter, metric)).toVar();
           sqdist.assign(min(sqdist, dist));
         });
       });
@@ -1135,7 +1135,7 @@ export const worley_noise_f32 = overloadHsl([
       loop({ start: -1, end: i32(1), name: 'x', condition: '<=' }, ({ x }) => {
         loop({ start: -1, end: i32(1), name: 'y', condition: '<=' }, ({ y }) => {
           loop({ start: -1, end: i32(1), name: 'z', condition: '<=' }, ({ z }) => {
-            const dist = f32(worley_distance(localpos, x, y, z, X, Y, Z, jitter, metric)).toVar();
+            const dist = f32(worleyDistance(localpos, x, y, z, X, Y, Z, jitter, metric)).toVar();
             sqdist.assign(min(sqdist, dist));
           });
         });
@@ -1159,7 +1159,7 @@ export const worley_noise_f32 = overloadHsl([
   ),
 ]);
 
-export const worley_noise_vec2 = overloadHsl([
+export const worleyVec2 = overloadHsl([
   hsl(
     ([p_i, jitter_i, metric_i]) => {
       const metric = i32(metric_i).toVar();
@@ -1172,7 +1172,7 @@ export const worley_noise_vec2 = overloadHsl([
 
       loop({ start: -1, end: i32(1), name: 'x', condition: '<=' }, ({ x }) => {
         loop({ start: -1, end: i32(1), name: 'y', condition: '<=' }, ({ y }) => {
-          const dist = f32(worley_distance(localpos, x, y, X, Y, jitter, metric)).toVar();
+          const dist = f32(worleyDistance(localpos, x, y, X, Y, jitter, metric)).toVar();
 
           NodeStack.if(dist.lessThan(sqdist.x), () => {
             sqdist.y.assign(sqdist.x);
@@ -1211,7 +1211,7 @@ export const worley_noise_vec2 = overloadHsl([
 
       loop({ start: -1, end: i32(1), name: 'x', condition: '<=' }, ({ x }) => {
         loop({ start: -1, end: i32(1), name: 'y', condition: '<=' }, ({ y }) => {
-          const dist = f32(worley_distance(localpos, x, y, X, Y, jitter, metric)).toVar();
+          const dist = f32(worleyDistance(localpos, x, y, X, Y, jitter, metric)).toVar();
 
           NodeStack.if(dist.lessThan(sqdist.x), () => {
             sqdist.z.assign(sqdist.y);
@@ -1246,7 +1246,7 @@ export const worley_noise_vec2 = overloadHsl([
   ),
 ]);
 
-export const worley_noise_vec3 = overloadHsl([
+export const worleyVec3 = overloadHsl([
   hsl(
     ([p_i, jitter_i, metric_i]) => {
       const metric = i32(metric_i).toVar();
@@ -1259,7 +1259,7 @@ export const worley_noise_vec3 = overloadHsl([
 
       loop({ start: -1, end: i32(1), name: 'x', condition: '<=' }, ({ x }) => {
         loop({ start: -1, end: i32(1), name: 'y', condition: '<=' }, ({ y }) => {
-          const dist = f32(worley_distance(localpos, x, y, X, Y, jitter, metric)).toVar();
+          const dist = f32(worleyDistance(localpos, x, y, X, Y, jitter, metric)).toVar();
 
           NodeStack.if(dist.lessThan(sqdist.x), () => {
             sqdist.z.assign(sqdist.y);
@@ -1306,7 +1306,7 @@ export const worley_noise_vec3 = overloadHsl([
       loop({ start: -1, end: i32(1), name: 'x', condition: '<=' }, ({ x }) => {
         loop({ start: -1, end: i32(1), name: 'y', condition: '<=' }, ({ y }) => {
           loop({ start: -1, end: i32(1), name: 'z', condition: '<=' }, ({ z }) => {
-            const dist = f32(worley_distance(localpos, x, y, z, X, Y, Z, jitter, metric)).toVar();
+            const dist = f32(worleyDistance(localpos, x, y, z, X, Y, Z, jitter, metric)).toVar();
 
             NodeStack.if(dist.lessThan(sqdist.x), () => {
               sqdist.z.assign(sqdist.y);
@@ -1341,3 +1341,57 @@ export const worley_noise_vec3 = overloadHsl([
     },
   ),
 ]);
+
+const tri = hsl(
+  ([x]) => {
+    return x.fract().sub(0.5).abs();
+  },
+  {
+    name: 'tri',
+    type: TypeName.f32,
+    inputs: [{ name: 'x', type: TypeName.f32 }],
+  },
+);
+
+const tri3 = hsl(
+  ([p]) => {
+    return vec3(tri(p.z.add(tri(p.y.mul(1)))), tri(p.z.add(tri(p.x.mul(1)))), tri(p.y.add(tri(p.x.mul(1)))));
+  },
+  {
+    name: 'tri3',
+    type: TypeName.vec3,
+    inputs: [{ name: 'p', type: TypeName.vec3 }],
+  },
+);
+
+export const triF32 = hsl(
+  ([p_immutable, spd, time]) => {
+    const p = vec3(p_immutable).toVar();
+    const z = f32(1.4).toVar();
+    const rz = f32(0.0).toVar();
+    const bp = vec3(p).toVar();
+
+    loop({ start: f32(0.0), end: f32(3.0), type: TypeName.f32, condition: '<=' }, () => {
+      const dg = vec3(tri3(bp.mul(2.0))).toVar();
+      p.addAssign(dg.add(time.mul(f32(0.1).mul(spd))));
+      bp.mulAssign(1.8);
+      z.mulAssign(1.5);
+      p.mulAssign(1.2);
+
+      const t = f32(tri(p.z.add(tri(p.x.add(tri(p.y)))))).toVar();
+      rz.addAssign(t.div(z));
+      bp.addAssign(0.14);
+    });
+
+    return rz;
+  },
+  {
+    name: 'triNoise3D',
+    type: TypeName.f32,
+    inputs: [
+      { name: 'p', type: TypeName.vec3 },
+      { name: 'spd', type: TypeName.f32 },
+      { name: 'time', type: TypeName.f32 },
+    ],
+  },
+);

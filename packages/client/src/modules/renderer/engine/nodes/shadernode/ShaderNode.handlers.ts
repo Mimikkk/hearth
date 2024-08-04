@@ -28,6 +28,7 @@ export const handlers: ProxyHandler<Node> = {
     }
 
     if (indexRe.test(key)) {
+      console.log('here', node, key);
       return asNode(new ArrayElementNode(proxy, new ConstNode(+key, TypeName.u32)));
     }
 

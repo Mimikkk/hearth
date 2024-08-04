@@ -11,11 +11,12 @@ import { NodeCommands } from '@modules/renderer/engine/nodes/shadernode/ShaderNo
 import { ArrayElementNode } from '@modules/renderer/engine/nodes/utils/ArrayElementNode.js';
 import type { asNode } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.as.js';
 import type { SetNode } from '@modules/renderer/engine/nodes/utils/SetNode.js';
+import { ConstNode } from '@modules/renderer/engine/nodes/core/ConstNode.js';
 
 let _nodeId = 0;
 
 export class Node {
-  static Map = new Map<'split' | 'set', any>();
+  static Map = new Map<'split' | 'set' | 'element', any>();
   declare isNode: true;
   name?: string;
   nodeType: TypeName | null;
@@ -249,6 +250,12 @@ export class Node {
   }
 
   [index: number]: ArrayElementNode;
+
+  at(index: number): ArrayElementNode {
+    const element = Node.Map.get('element');
+
+    return Node.as(new element(this, new ConstNode(index, TypeName.u32))) as ArrayElementNode;
+  }
 
   declare static as: typeof asNode;
   declare x: SplitNode;

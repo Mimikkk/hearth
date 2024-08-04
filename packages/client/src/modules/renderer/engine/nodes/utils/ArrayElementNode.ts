@@ -22,4 +22,4 @@ export class ArrayElementNode extends Node {
   }
 }
 
-
+Node.Map.set('element', ArrayElementNode);
