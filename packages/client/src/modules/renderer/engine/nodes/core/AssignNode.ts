@@ -39,12 +39,12 @@ export class AssignNode extends TempNode {
 
     const needsSplitAssign = this.needsSplitAssign(builder);
 
-    const targetType = from.getNodeType(builder);
+    const targetType = from.getNodeType(builder, output);
 
     const target = from.context({ assign: true }).build(builder);
     const source = to.build(builder, targetType);
 
-    const sourceType = to.getNodeType(builder);
+    const sourceType = to.getNodeType(builder, output);
 
     const nodeData = builder.getDataFromNode(this);
 
