@@ -43,8 +43,6 @@ export class VarNode extends Node {
 
 export const temp = proxyNode(VarNode);
 
-implCommand('temp', VarNode);
-
 export class ToVarNode extends VarNode {
   constructor(node: Node, name?: string) {
     super(node, name);
@@ -52,4 +50,5 @@ export class ToVarNode extends VarNode {
   }
 }
 
+implCommand('temp', VarNode);
 implCommand('toVar', ToVarNode);
