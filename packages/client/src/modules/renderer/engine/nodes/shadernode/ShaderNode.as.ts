@@ -16,6 +16,7 @@ export const asNode = (object: Node, fallback?: TypeName): Node => {
   const type = getValueType(object);
 
   if (type === 'node') return memo.get(object);
+
   if ((!fallback && (type === 'f32' || type === 'bool')) || (type && type !== 'shader' && type !== 'string'))
     return asNode(asConstNode(object, fallback));
   if (type === 'shader') return hsl(object);

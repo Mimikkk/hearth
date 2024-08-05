@@ -3,33 +3,54 @@ import { asConstNode } from '@modules/renderer/engine/nodes/shadernode/utils.js'
 import { ConvertNode } from '@modules/renderer/engine/nodes/utils/ConvertNode.js';
 import { JoinNode } from '@modules/renderer/engine/nodes/utils/JoinNode.js';
 import { ArrayElementNode } from '@modules/renderer/engine/nodes/utils/ArrayElementNode.js';
-import { asNode, asNodes, proxyNode, fixedNode } from './ShaderNode.as.js';
+import { asNode, asNodes, fixedNode, proxyNode } from './ShaderNode.as.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
-import { Node } from '@modules/renderer/engine/nodes/core/Node.js';
 import { addNodeCommand } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.map.js';
 import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
 
-const primitive = (type: TypeName) => {
-  const isComponent = TypeName.isComponent(type);
+class PrimitiveFactory {
+  private type: TypeName;
+  private isComponent: boolean;
 
-  return (...params) => {
-    if (params.length === 0 || (!isComponent && params.every(param => typeof param !== 'object'))) {
-      params = [getValueFromType(type, ...params)];
-    }
+  constructor(type: TypeName) {
+    this.type = type;
+    this.isComponent = TypeName.isComponent(type);
+  }
 
-    if (params.length === 1) {
-      const node = asConstNode(params[0], type);
+  create(...params: any[]): Node {
+    if (this.shouldUseDefaultValue(params)) params = [this.getDefaultValue(params)];
+    if (params.length === 1) return this.createSingleParamNode(params[0]);
+    return this.createMultiParamNode(params);
+  }
 
-      try {
-        if (node.getNodeType() === type) return asNode(node);
-      } catch {}
+  private shouldUseDefaultValue(params: any[]): boolean {
+    return params.length === 0 || (!this.isComponent && params.every(param => typeof param !== 'object'));
+  }
 
-      return asNode(new ConvertNode(node, type));
-    }
+  private getDefaultValue(params: any[]): any {
+    return getValueFromType(this.type, ...params);
+  }
 
+  private createSingleParamNode(param: any): Node {
+    const node = asConstNode(param, this.type);
+
+    try {
+      if (node.getNodeType() === this.type) return asNode(node);
+    } catch {}
+
+    return asNode(new ConvertNode(node, this.type));
+  }
+
+  private createMultiParamNode(params: any[]): Node {
     const nodes = params.map(param => asConstNode(param));
-    return asNode(new JoinNode(nodes, type));
-  };
+    return asNode(new JoinNode(nodes, this.type));
+  }
+}
+
+// Usage
+const primitive = (type: TypeName) => {
+  const factory = new PrimitiveFactory(type);
+  return (...params) => factory.create(...params);
 };
 
 export const color = primitive(TypeName.color);
