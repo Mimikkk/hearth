@@ -6,5 +6,3 @@ export class StructTypeNode extends Node {
     super();
   }
 }
-
-

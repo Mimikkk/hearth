@@ -9,5 +9,3 @@ export class LightingNode extends Node {
     console.warn('Abstract function.');
   }
 }
-
-

@@ -150,8 +150,6 @@ export class PassNode extends TempNode {
 PassNode.COLOR = 'color';
 PassNode.DEPTH = 'depth';
 
-
-
 export const pass = (scene, camera) => asNode(new PassNode(PassNode.COLOR, scene, camera));
 export const texturePass = (pass, texture) => asNode(new PassTextureNode(pass, texture));
 export const depthPass = (scene, camera) => asNode(new PassNode(PassNode.DEPTH, scene, camera));

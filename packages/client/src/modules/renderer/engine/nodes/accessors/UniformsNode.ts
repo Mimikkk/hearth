@@ -99,6 +99,4 @@ export class UniformsNode extends BufferNode {
   }
 }
 
-
-
 export const uniforms = (values, nodeType) => asNode(new UniformsNode(values, nodeType));

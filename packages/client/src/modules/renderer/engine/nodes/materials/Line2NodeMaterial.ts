@@ -15,7 +15,7 @@ import {
 import { modelViewMatrix } from '../accessors/ModelNode.js';
 import { positionGeometry } from '../accessors/PositionNode.js';
 import { mix, smoothstep } from '@modules/renderer/engine/nodes/math/MathNode.js';
-import { f32, NodeStack, hsl, vec2, vec3, vec4 } from '../shadernode/ShaderNodes.js';
+import { f32, hsl, NodeStack, vec2, vec3, vec4 } from '../shadernode/ShaderNodes.js';
 import { uv } from '../accessors/UVNode.js';
 import { viewport } from '../display/ViewportNode.js';
 

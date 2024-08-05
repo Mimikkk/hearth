@@ -14,5 +14,3 @@ export class AONode extends LightingNode {
     builder.context.ambientOcclusion.mulAssign(aoNode);
   }
 }
-
-

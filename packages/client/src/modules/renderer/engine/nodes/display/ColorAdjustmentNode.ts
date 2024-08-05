@@ -1,7 +1,7 @@
 import { TempNode } from '../core/TempNode.js';
 import { dot, mix, MixNode } from '../math/MathNode.js';
 import { add } from '../math/OperatorNode.js';
-import { addNodeCommand, asNode, f32, hsl, proxyNode, vec3 } from '../shadernode/ShaderNodes.js';
+import { asNode, f32, hsl, proxyNode, vec3 } from '../shadernode/ShaderNodes.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
 import { nodeProxy } from 'three/src/nodes/shadernode/ShaderNode.js';

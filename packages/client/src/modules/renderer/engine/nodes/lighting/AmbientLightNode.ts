@@ -9,5 +9,3 @@ export class AmbientLightNode extends AnalyticLightNode {
     context.irradiance.addAssign(this.colorNode);
   }
 }
-
-

@@ -111,8 +111,6 @@ export class LightsNode extends Node {
   }
 }
 
-
-
 const byId = (a: Light, b: Light) => a.id - b.id;
 export const lights = (lights: Light[] = []) => asNode(LightsNode.fromLights(lights));
 export const lightsNode = proxyNode(LightsNode);

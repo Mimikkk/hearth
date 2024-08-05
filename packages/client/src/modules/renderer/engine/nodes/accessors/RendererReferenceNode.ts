@@ -15,6 +15,4 @@ export class RendererReferenceNode extends ReferenceNode {
   }
 }
 
-
-
 export const rendererReference = (name, type, hearth) => asNode(new RendererReferenceNode(name, type, hearth));

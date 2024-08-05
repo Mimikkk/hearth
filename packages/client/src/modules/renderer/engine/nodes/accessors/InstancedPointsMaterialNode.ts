@@ -9,6 +9,4 @@ export class InstancedPointsMaterialNode extends MaterialNode {
 
 InstancedPointsMaterialNode.POINT_WIDTH = 'pointWidth';
 
-
-
 export const materialPointWidth = fixedNode(InstancedPointsMaterialNode, InstancedPointsMaterialNode.POINT_WIDTH);

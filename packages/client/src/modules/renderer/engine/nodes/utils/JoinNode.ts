@@ -47,5 +47,3 @@ export class JoinNode extends TempNode {
     return builder.format(snippet, type, output);
   }
 }
-
-

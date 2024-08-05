@@ -17,6 +17,4 @@ export class VertexColorNode extends AttributeNode {
   }
 }
 
-
-
 export const vertexColor = (index: number = 0) => asNode(new VertexColorNode(index));

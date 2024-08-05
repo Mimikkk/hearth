@@ -19,5 +19,3 @@ export class IESSpotLightNode extends SpotLightNode {
     return spotAttenuation;
   }
 }
-
-

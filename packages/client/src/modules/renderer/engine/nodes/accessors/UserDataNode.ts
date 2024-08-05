@@ -15,6 +15,4 @@ export class UserDataNode extends ReferenceNode {
   }
 }
 
-
-
 export const userData = (name, inputType, userData) => asNode(new UserDataNode(name, inputType, userData));

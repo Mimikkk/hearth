@@ -1,5 +1,5 @@
 import { Node } from './Node.js';
-import { fixedNode, asNode } from '../shadernode/ShaderNodes.js';
+import { asNode, fixedNode } from '../shadernode/ShaderNodes.js';
 
 export class PropertyNode extends Node {
   constructor(nodeType, name = null, varying = false) {

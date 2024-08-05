@@ -157,5 +157,3 @@ export class AnalyticLightNode extends LightingNode {
 }
 
 AnalyticLightNode.prototype.isAnalyticLightNode = true;
-
-

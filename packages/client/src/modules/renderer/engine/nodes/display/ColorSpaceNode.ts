@@ -1,6 +1,6 @@
 import { TempNode } from '../core/TempNode.js';
 import { mix } from '../math/MathNode.js';
-import { addNodeCommand, asNode, proxyNode, hsl, vec4 } from '../shadernode/ShaderNodes.js';
+import { addNodeCommand, asNode, hsl, proxyNode, vec4 } from '../shadernode/ShaderNodes.js';
 import { ColorSpace } from '@modules/renderer/engine/engine.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { Node } from '../core/Node.js';

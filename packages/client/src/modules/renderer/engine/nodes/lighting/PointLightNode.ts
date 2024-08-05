@@ -52,5 +52,3 @@ export class PointLightNode extends AnalyticLightNode {
     );
   }
 }
-
-

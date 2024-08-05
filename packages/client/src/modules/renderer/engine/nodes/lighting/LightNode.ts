@@ -15,6 +15,4 @@ export class LightNode extends Node {
   }
 }
 
-
-
 export const lightTargetDirection = proxyNode(LightNode);

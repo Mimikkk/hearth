@@ -47,8 +47,6 @@ enum NodeVariant {
   World = 'world',
 }
 
-
-
 export const bitangentGeometry = fixedNode(
   class extends BitangentNode {
     scope = NodeVariant.Geometry;

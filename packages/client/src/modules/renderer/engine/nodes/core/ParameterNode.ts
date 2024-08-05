@@ -17,6 +17,4 @@ export class ParameterNode extends PropertyNode {
   }
 }
 
-
-
 export const parameter = (type, name) => asNode(new ParameterNode(type, name));

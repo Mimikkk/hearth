@@ -20,6 +20,4 @@ export class ReflectVectorNode extends Node {
   }
 }
 
-
-
 export const reflectVector = fixedNode(ReflectVectorNode);

@@ -48,8 +48,6 @@ export class TextureStoreNode extends TextureNode {
   }
 }
 
-
-
 const textureStoreBase = proxyNode(TextureStoreNode);
 
 export const textureStore = (value, uvNode, storeNode) => {

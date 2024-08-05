@@ -85,6 +85,4 @@ export class RangeNode extends Node {
   }
 }
 
-
-
 export const range = proxyNode(RangeNode);

@@ -24,6 +24,4 @@ export class ModelViewProjectionNode extends TempNode {
   }
 }
 
-
-
 export const modelViewProjection = proxyNode(ModelViewProjectionNode);

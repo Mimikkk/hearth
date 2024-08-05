@@ -31,8 +31,6 @@ export class SpriteNodeMaterial extends NodeMaterial {
   }
 
   setupPosition({ object, context }) {
-
-
     const { positionNode, rotationNode, scaleNode } = this;
 
     const vertex = positionLocal;

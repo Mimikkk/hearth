@@ -17,6 +17,4 @@ export class MaterialReferenceNode extends ReferenceNode {
   }
 }
 
-
-
 export const materialReference = (name, type, material) => asNode(new MaterialReferenceNode(name, type, material));

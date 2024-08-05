@@ -13,7 +13,5 @@ export class FrontFacingNode extends Node {
   }
 }
 
-
-
 export const frontFacing = fixedNode(FrontFacingNode);
 export const faceDirection = f32(frontFacing).mul(2.0).sub(1.0);

@@ -13,6 +13,4 @@ export class PointUVNode extends Node {
   }
 }
 
-
-
 export const pointUV = fixedNode(PointUVNode);

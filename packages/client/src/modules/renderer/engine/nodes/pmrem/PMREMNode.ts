@@ -115,5 +115,3 @@ export class PMREMNode extends TempNode {
 }
 
 export const pmremTexture = proxyNode(PMREMNode);
-
-

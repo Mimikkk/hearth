@@ -73,8 +73,6 @@ export class EntityNode extends Node {
   }
 }
 
-
-
 enum NodeVariant {
   NormalMatrix = 'normalMatrix',
   ViewPosition = 'viewPosition',

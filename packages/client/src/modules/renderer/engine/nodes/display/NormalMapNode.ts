@@ -7,7 +7,7 @@ import { positionView } from '../accessors/PositionNode.js';
 import { TBNViewMatrix } from '../accessors/AccessorsUtils.js';
 import { uv } from '../accessors/UVNode.js';
 import { faceDirection } from './FrontFacingNode.js';
-import { addNodeCommand, proxyNode, hsl, vec3 } from '../shadernode/ShaderNodes.js';
+import { hsl, proxyNode, vec3 } from '../shadernode/ShaderNodes.js';
 
 import { NormalMapType } from '@modules/renderer/engine/engine.js';
 import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';

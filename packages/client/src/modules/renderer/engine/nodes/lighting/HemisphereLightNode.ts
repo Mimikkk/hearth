@@ -46,5 +46,3 @@ export class HemisphereLightNode extends AnalyticLightNode {
 }
 
 HemisphereLightNode.prototype.isHemisphereLightNode = true;
-
-

@@ -1,5 +1,5 @@
 import { Node } from '../core/Node.js';
-import { proxyNode, ShaderCallNode, Hsl } from '../shadernode/ShaderNodes.js';
+import { Hsl, proxyNode, ShaderCallNode } from '../shadernode/ShaderNodes.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 

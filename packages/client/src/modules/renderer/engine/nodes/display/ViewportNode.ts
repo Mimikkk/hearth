@@ -78,8 +78,6 @@ ViewportNode.BOTTOM_LEFT = 'bottomLeft';
 ViewportNode.TOP_RIGHT = 'topRight';
 ViewportNode.BOTTOM_RIGHT = 'bottomRight';
 
-
-
 export const viewportCoordinate = fixedNode(ViewportNode, ViewportNode.COORDINATE);
 export const viewportResolution = fixedNode(ViewportNode, ViewportNode.RESOLUTION);
 export const viewport = fixedNode(ViewportNode, ViewportNode.VIEWPORT);

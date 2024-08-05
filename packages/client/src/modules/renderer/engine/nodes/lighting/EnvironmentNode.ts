@@ -91,5 +91,3 @@ const createIrradianceContext = normalWorldNode => {
     },
   };
 };
-
-

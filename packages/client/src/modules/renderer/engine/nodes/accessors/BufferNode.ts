@@ -16,6 +16,4 @@ export class BufferNode<T> extends UniformNode<T> {
   }
 }
 
-
-
 export const buffer = <T>(value: T, type: TypeName, count: number) => asNode(new BufferNode(value, type, count));

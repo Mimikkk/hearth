@@ -58,8 +58,6 @@ TangentNode.LOCAL = 'local';
 TangentNode.VIEW = 'view';
 TangentNode.WORLD = 'world';
 
-
-
 export const tangentGeometry = fixedNode(TangentNode, TangentNode.GEOMETRY);
 export const tangentLocal = fixedNode(TangentNode, TangentNode.LOCAL);
 export const tangentView = fixedNode(TangentNode, TangentNode.VIEW);
