@@ -32,6 +32,10 @@ export class Attribute<T extends TypedArray = any> {
     this.version = 0;
   }
 
+  static is(value: any): value is Attribute {
+    return value?.isBufferAttribute === true;
+  }
+
   set usage(value: BufferUse) {
     this.source.use = value;
   }

@@ -1,43 +1,47 @@
 import { InputNode } from '../core/InputNode.js';
 import { varying } from '../core/VaryingNode.js';
-import { addNodeCommand, asNode } from '../shadernode/ShaderNodes.js';
-import { Buffer, Attribute, BufferUse } from '@modules/renderer/engine/engine.js';
+import { asNode } from '../shadernode/ShaderNodes.js';
+import { Attribute, Buffer, BufferUse } from '@modules/renderer/engine/engine.js';
 import { ShaderStage, TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { BufferStep } from '@modules/renderer/engine/hearth/constants.js';
 import { BufferNode } from '@modules/renderer/engine/nodes/accessors/BufferNode.js';
+import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
+import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 
-export class BufferAttributeNode extends InputNode {
-  constructor(value, bufferType = null, bufferStride = 0, bufferOffset = 0) {
-    super(value, bufferType);
+export class BufferAttributeNode<T> extends InputNode<T> {
+  isBufferNode: true;
 
-    this.isBufferNode = true;
+  bufferType: TypeName | undefined;
+  bufferStride: number;
+  bufferOffset: number;
+  usage: BufferUse;
+  instanced: boolean;
+  attribute: Attribute;
 
-    this.bufferType = bufferType;
+  constructor(value: T, type: TypeName | undefined = undefined, bufferStride = 0, bufferOffset = 0) {
+    super(value, type);
+
+    this.bufferType = type;
     this.bufferStride = bufferStride;
     this.bufferOffset = bufferOffset;
 
     this.usage = BufferUse.StaticDraw;
     this.instanced = false;
-
     this.attribute = null;
-
-    if (value && value.isBufferAttribute === true) {
+    if (Attribute.is(value)) {
       this.attribute = value;
       this.usage = value.usage;
       this.instanced = value.instanced;
     }
   }
 
-  getNodeType(builder) {
-    if (this.bufferType === null) {
-      this.bufferType = TypeName.ofAttribute(this.attribute);
-    }
-
+  getNodeType(builder: NodeBuilder): TypeName {
+    if (!this.bufferType) this.bufferType = TypeName.ofAttribute(this.attribute);
     return this.bufferType;
   }
 
-  setup(builder) {
-    if (this.attribute !== null) return;
+  setup(builder: NodeBuilder) {
+    if (this.attribute) return;
 
     const type = this.getNodeType(builder);
     const array = this.value;
@@ -46,13 +50,12 @@ export class BufferAttributeNode extends InputNode {
     const offset = this.bufferOffset;
 
     const buffer = array.isInterleavedBuffer === true ? array : new Buffer(array, stride);
-    const bufferAttribute = new Attribute(buffer, itemSize, offset, BufferStep.Vertex, undefined, true);
 
-    this.attribute = bufferAttribute;
+    this.attribute = new Attribute(buffer, itemSize, offset, BufferStep.Vertex);
     this.attribute.step = BufferStep.Instance;
   }
 
-  generate(builder) {
+  generate(builder: NodeBuilder): string {
     const nodeType = this.getNodeType(builder);
 
     const nodeAttribute = builder.getBufferAttributeFromNode(this, nodeType);
@@ -73,24 +76,22 @@ export class BufferAttributeNode extends InputNode {
     return output;
   }
 
-  getInputType() {
-    return 'bufferAttribute';
+  getInputType(): TypeName {
+    return TypeName.attribute;
   }
 
-  setUsage(value) {
+  setUsage(value: BufferUse): this {
     this.usage = value;
-
     return this;
   }
 
-  setInstanced(value) {
+  setInstanced(value: boolean): this {
     this.instanced = value;
-
     return this;
   }
 }
 
-
+BufferAttributeNode.prototype.isBufferNode = true;
 
 export const bufferAttribute = (array, type, stride, offset) =>
   asNode(new BufferAttributeNode(array, type, stride, offset));
@@ -104,4 +105,10 @@ export const instancedBufferAttribute = (array, type, stride, offset) =>
 export const instancedDynamicBufferAttribute = (array, type, stride, offset) =>
   dynamicBufferAttribute(array, type, stride, offset).setInstanced(true);
 
-addNodeCommand('toAttribute', (bufferNode: BufferNode) => bufferAttribute(bufferNode.value));
+export class ToBufferAttributeNode<T> extends BufferAttributeNode<T> {
+  constructor(bufferNode: BufferNode<T>) {
+    super(bufferNode.value);
+  }
+}
+
+implCommand('toAttribute', ToBufferAttributeNode);

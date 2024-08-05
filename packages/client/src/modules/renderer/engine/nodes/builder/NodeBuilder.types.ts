@@ -92,6 +92,7 @@ export enum TypeName {
   string = 'string',
   shader = 'shader',
   buffer = 'buffer',
+  attribute = 'bufferAttribute',
 }
 
 export namespace TypeName {

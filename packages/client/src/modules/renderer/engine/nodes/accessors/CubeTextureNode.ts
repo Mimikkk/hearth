@@ -6,6 +6,7 @@ import { UVNode } from '@modules/renderer/engine/nodes/accessors/UVNode.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { CubeTexture } from '@modules/renderer/engine/entities/textures/CubeTexture.js';
 import { Node } from '@modules/renderer/engine/nodes/core/Node.js';
+import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
 
 export class CubeTextureNode extends TextureNode {
   constructor(value: CubeTexture | Node, uvNode: Node | null, levelNode: Node | null) {
@@ -33,7 +34,6 @@ export class CubeTextureNode extends TextureNode {
   }
 }
 
-
-
 export const cubeTexture = proxyNode(CubeTextureNode);
-addNodeCommand('cubeTexture', cubeTexture);
+
+implCommand('cubeTexture', CubeTextureNode);
