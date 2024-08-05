@@ -1,24 +1,20 @@
 import { InputNode } from './InputNode.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
+import { getValueType } from '@modules/renderer/engine/nodes/core/NodeUtils.js';
 
 export class ConstNode<T = any> extends InputNode {
-  declare isConstNode: boolean;
-  constructor(value: T, type: TypeName | null = null) {
+  constructor(value: T, type: TypeName = getValueType(value)) {
     super(value, type);
-
-    this.isConstNode = true;
   }
 
-  generateConst(builder: NodeBuilder) {
+  generateConst(builder: NodeBuilder): string {
     return builder.codeConst(this.getNodeType(builder), this.value);
   }
 
-  generate(builder, output) {
+  generate(builder: NodeBuilder, output: TypeName): string {
     const type = this.getNodeType(builder);
 
     return builder.format(this.generateConst(builder), type, output);
   }
 }
-
-ConstNode.prototype.isConstNode = true;

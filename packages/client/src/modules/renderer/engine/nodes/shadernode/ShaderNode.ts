@@ -4,7 +4,7 @@ import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { HslLayout } from '@modules/renderer/engine/nodes/shadernode/hsl.js';
 
-const map = new WeakMap();
+const shaders = new WeakMap();
 
 export class ShaderCallNode extends Node {
   constructor(
@@ -24,12 +24,12 @@ export class ShaderCallNode extends Node {
     const { shader, parameters } = this;
 
     if (shader.layout) {
-      let fn = map.get(shader);
+      let fn = shaders.get(shader);
 
       if (!fn) {
         fn = asNode(builder.buildFunctionNode(shader));
 
-        map.set(shader, fn);
+        shaders.set(shader, fn);
       }
 
       if (builder.currentFunctionNode) builder.currentFunctionNode.includes.push(fn);
@@ -86,8 +86,3 @@ export class ShaderNode<Fn extends (...params: any) => any = any> extends Node {
     return this.call();
   }
 }
-
-export const createShaderNode = <Fn extends (...params: any) => any = any>(
-  fn: Fn,
-  layout?: HslLayout,
-): ShaderNode<Fn> => new ShaderNode<Fn>(fn, layout);

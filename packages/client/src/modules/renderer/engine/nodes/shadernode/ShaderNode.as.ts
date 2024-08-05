@@ -4,15 +4,17 @@ import { hsl } from '@modules/renderer/engine/nodes/shadernode/hsl.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { Node } from '@modules/renderer/engine/nodes/core/Node.js';
 
-export const asNode = (object: Node): Node => {
-  const type = getValueType(object);
+type Fo<T> = T extends Function ? T : never;
 
-  if (type === TypeName.node) return object;
-  if (type === TypeName.shader) return hsl(object);
+export const asNode = <T>(item: T): Node => {
+  const type = getValueType(item);
 
-  if (TypeName.isComponent(type) || (type && type !== 'string')) return asConstNode(object);
+  if (type === TypeName.node) return item;
+  if (type === TypeName.shader) return hsl(item);
 
-  return object;
+  if (TypeName.isComponent(type) || (type && type !== 'string')) return asConstNode(item);
+
+  return item;
 };
 
 export const asNodes = (array: any[], fallbackType?: TypeName): Node[] => {

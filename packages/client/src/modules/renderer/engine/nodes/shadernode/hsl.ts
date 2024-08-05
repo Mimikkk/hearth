@@ -1,8 +1,4 @@
-import {
-  createShaderNode,
-  type ShaderCallNode,
-  type ShaderNode,
-} from '@modules/renderer/engine/nodes/shadernode/ShaderNode.js';
+import { type ShaderCallNode, type ShaderNode } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.js';
 import { asNodes } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.as.js';
 import { Node } from '@modules/renderer/engine/nodes/core/Node.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
@@ -29,7 +25,7 @@ export const hsl = <Fn extends ((parameters: Node[]) => any) | ((parameters: Rec
   code: Fn,
   layout: HslLayout,
 ): Hsl<Fn> => {
-  const node = createShaderNode(code, layout);
+  const node = new ShaderNode<Fn>(code, layout);
 
   const fn: Hsl<Fn> = (...params) => {
     asNodes(params);

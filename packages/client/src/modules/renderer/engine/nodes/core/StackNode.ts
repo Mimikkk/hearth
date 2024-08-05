@@ -1,5 +1,5 @@
 import { Node } from './Node.js';
-import { createShaderNode, NodeStack, proxyNode } from '../shadernode/ShaderNodes.js';
+import { NodeStack, proxyNode, ShaderNode } from '../shadernode/ShaderNodes.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { OperatorNode } from '@modules/renderer/engine/nodes/math/OperatorNode.js';
@@ -32,7 +32,7 @@ export class StackNode extends Node {
   if(bool: OperatorNode, then: Function): this {
     const cond = Node.Map.cond;
 
-    this.cond = new cond(bool, createShaderNode(then));
+    this.cond = new cond(bool, new ShaderNode(then));
 
     return this.push(this.cond);
   }
@@ -40,7 +40,7 @@ export class StackNode extends Node {
   elseif(bool: OperatorNode, then: Function): this {
     const cond = Node.Map.cond;
 
-    const condition = new cond(bool, createShaderNode(then));
+    const condition = new cond(bool, new ShaderNode(then));
 
     this.cond!.or = condition;
     this.cond = condition;
@@ -49,7 +49,7 @@ export class StackNode extends Node {
   }
 
   else(method: Function): this {
-    this.cond!.or = createShaderNode(method);
+    this.cond!.or = new ShaderNode(method);
 
     return this;
   }
