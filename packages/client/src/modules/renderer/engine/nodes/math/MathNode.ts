@@ -7,7 +7,6 @@ import { Node } from '../core/Node.js';
 import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
 import { ConstNode } from '@modules/renderer/engine/nodes/core/ConstNode.js';
 import { asConstNode } from '@modules/renderer/engine/nodes/shadernode/utils.js';
-import { nodeProxy } from 'three/src/nodes/shadernode/ShaderNode.js';
 
 export class UnaryNode extends TempNode {
   declare method: UnaryVariant | BinaryVariant | TernaryVariant;
@@ -594,9 +593,9 @@ export const faceForward = proxyNode(FaceForwardNode);
 export const mixElement = proxyNode(MixElementNode);
 export const smoothstepElement = proxyNode(SmoothstepElementNode);
 
-export const clamp = nodeProxy(ClampNode);
-export const saturate = nodeProxy(SaturateNode);
-export const cbrt = nodeProxy(CbrtNode);
+export const clamp = proxyNode(ClampNode);
+export const saturate = proxyNode(SaturateNode);
+export const cbrt = proxyNode(CbrtNode);
 
 implCommand('all', AllNode);
 implCommand('any', AnyNode);

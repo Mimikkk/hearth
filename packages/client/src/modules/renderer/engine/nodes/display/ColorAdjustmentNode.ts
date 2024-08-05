@@ -4,7 +4,6 @@ import { add } from '../math/OperatorNode.js';
 import { asNode, f32, hsl, proxyNode, vec3 } from '../shadernode/ShaderNodes.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
-import { nodeProxy } from 'three/src/nodes/shadernode/ShaderNode.js';
 
 export class ColorAdjustmentNode extends TempNode {
   method: NodeVariant;
@@ -95,6 +94,6 @@ class ThresholdNode extends MixNode {
   }
 }
 
-export const threshold = nodeProxy(ThresholdNode);
+export const threshold = proxyNode(ThresholdNode);
 
 implCommand('threshold', ThresholdNode);

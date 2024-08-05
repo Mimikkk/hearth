@@ -1,5 +1,5 @@
 import { TempNode } from '../core/TempNode.js';
-import { asNode, f32, hsl, vec2, vec3, vec4 } from '../shadernode/ShaderNodes.js';
+import { asNode, f32, hsl, proxyNode, vec2, vec3, vec4 } from '../shadernode/ShaderNodes.js';
 import { loop } from '../utils/LoopNode.js';
 import { uniform } from '../core/UniformNode.js';
 import { NodeUpdateStage } from '../core/constants.js';
@@ -10,7 +10,6 @@ import { RenderTarget, Vec2 } from '@modules/renderer/engine/engine.js';
 import { QuadMesh } from '@modules/renderer/engine/entities/QuadMesh.js';
 import { ConstNode } from '@modules/renderer/engine/nodes/core/ConstNode.js';
 import { asConstNode } from '@modules/renderer/engine/nodes/shadernode/utils.js';
-import { nodeProxy } from 'three/src/nodes/shadernode/ShaderNode.js';
 import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
 
 const quadMesh = new QuadMesh();
@@ -119,6 +118,6 @@ export class AnamorphicNode extends TempNode {
   }
 }
 
-export const anamorphic = nodeProxy(AnamorphicNode);
+export const anamorphic = proxyNode(AnamorphicNode);
 
 implCommand('anamorphic', AnamorphicNode);

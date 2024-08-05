@@ -10,9 +10,8 @@ import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.typ
 import { Node } from '@modules/renderer/engine/nodes/core/Node.js';
 import { ConstNode } from '@modules/renderer/engine/nodes/core/ConstNode.js';
 
-const components = [TypeName.bool, TypeName.f32, TypeName.i32, TypeName.u32];
 const conversion = (type: TypeName, cacheMap?: Map<number | boolean, ConstNode<number>>) => {
-  const isComponent = components.includes(type);
+  const isComponent = TypeName.isComponent(type);
 
   return (...params) => {
     if (params.length === 0 || (!isComponent && params.every(param => typeof param !== 'object'))) {

@@ -1,5 +1,5 @@
 import { TempNode } from '../core/TempNode.js';
-import { f32, hsl, vec2, vec4 } from '../shadernode/ShaderNodes.js';
+import { f32, hsl, proxyNode, vec2, vec4 } from '../shadernode/ShaderNodes.js';
 import { NodeUpdateStage } from '../core/constants.js';
 import { mul } from '../math/OperatorNode.js';
 import { uv } from '../accessors/UVNode.js';
@@ -8,7 +8,6 @@ import { uniform } from '../core/UniformNode.js';
 import { RenderTarget, Vec2 } from '@modules/renderer/engine/engine.js';
 import { QuadMesh } from '@modules/renderer/engine/entities/QuadMesh.js';
 import { ConstNode } from '@modules/renderer/engine/nodes/core/ConstNode.js';
-import { nodeProxy } from 'three/src/nodes/shadernode/ShaderNode.js';
 import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
 
 const quadMesh1 = new QuadMesh();
@@ -146,6 +145,6 @@ export class GaussianBlurNode extends TempNode {
   }
 }
 
-export const gaussianBlur = nodeProxy(GaussianBlurNode);
+export const gaussianBlur = proxyNode(GaussianBlurNode);
 
 implCommand('gaussianBlur', GaussianBlurNode);
