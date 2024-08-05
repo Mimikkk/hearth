@@ -1,21 +1,20 @@
 import { TempNode } from '../core/TempNode.js';
 import { proxyNode } from '../shadernode/ShaderNodes.js';
-import { Node } from '../core/Node.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
-import { ConstNode } from '@modules/renderer/engine/nodes/core/ConstNode.js';
+import { Node } from '@modules/renderer/engine/nodes/core/Node.js';
 
 export class OperatorNode extends TempNode {
   op: Operator;
-  aNode: ConstNode<number>;
-  bNode: ConstNode<number>;
+  aNode: Node;
+  bNode: Node;
 
-  constructor(aNode: ConstNode<number>, bNode: ConstNode<number>, ...params: ConstNode<number>[]) {
+  constructor(aNode: Node, bNode: Node, ...params: Node[]) {
     super();
 
     for (let i = 0; i < params.length; ++i) {
-      bNode = new (this.constructor as new (a: Node, b: Node) => Node)(bNode, params[i]);
+      bNode = new (this.constructor as typeof OperatorNode)(bNode, params[i]);
     }
 
     this.aNode = aNode;
