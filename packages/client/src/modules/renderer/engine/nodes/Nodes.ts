@@ -73,7 +73,6 @@ export * from './accessors/ModelNode.js';
 export * from './accessors/ModelViewProjectionNode.js';
 export * from './accessors/NormalNode.js';
 export * from './accessors/EntityNode.js';
-export * from './accessors/PointUVNode.js';
 export * from './accessors/PositionNode.js';
 export * from './accessors/ReferenceNode.js';
 export * from './accessors/ReflectVectorNode.js';

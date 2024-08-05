@@ -4,8 +4,8 @@ import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.typ
 
 export class ConstNode<T = any> extends InputNode {
   declare isConstNode: boolean;
-  constructor(value: T, nodeType: TypeName | null = null) {
-    super(value, nodeType);
+  constructor(value: T, type: TypeName | null = null) {
+    super(value, type);
 
     this.isConstNode = true;
   }

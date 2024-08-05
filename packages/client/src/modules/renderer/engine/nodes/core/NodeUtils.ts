@@ -1,12 +1,11 @@
 import { Color, Mat3, Mat4, Vec2, Vec3, Vec4 } from '@modules/renderer/engine/engine.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
+import type { Node } from '@modules/renderer/engine/nodes/core/Node.js';
 
-export function getCacheKey(object, force = false) {
+export function getCacheKey(object: Node, force = false) {
   let cacheKey = '{';
 
-  if (object.isNode === true) {
-    cacheKey += object.id;
-  }
+  if (object.isNode) cacheKey += object.id;
 
   for (const { property, childNode } of getNodeChildren(object)) {
     cacheKey += ',' + property.slice(0, -4) + ':' + childNode.getCacheKey(force);
@@ -17,9 +16,9 @@ export function getCacheKey(object, force = false) {
   return cacheKey;
 }
 
-export function* getNodeChildren(node) {
+export function* getNodeChildren(node: Node) {
   for (const property in node) {
-    if (property.startsWith('_') === true) continue;
+    if (property.startsWith('_')) continue;
 
     const object = node[property];
 
@@ -27,17 +26,17 @@ export function* getNodeChildren(node) {
       for (let i = 0; i < object.length; i++) {
         const child = object[i];
 
-        if (child && child.isNode === true) {
+        if (child?.isNode) {
           yield { property, index: i, childNode: child };
         }
       }
-    } else if (object && object.isNode === true) {
+    } else if (object?.isNode) {
       yield { property, childNode: object };
     } else if (typeof object === 'object') {
       for (const subProperty in object) {
         const child = object[subProperty];
 
-        if (child && child.isNode === true) {
+        if (child?.isNode) {
           yield { property, index: subProperty, childNode: child };
         }
       }

@@ -5,12 +5,13 @@ import { JoinNode } from '@modules/renderer/engine/nodes/utils/JoinNode.js';
 import { ArrayElementNode } from '@modules/renderer/engine/nodes/utils/ArrayElementNode.js';
 import { asNode, asNodes, fixedNode, proxyNode } from './ShaderNode.as.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
-import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
+import { implCommand, implPrimitive } from '@modules/renderer/engine/nodes/core/Node.commands.js';
+import type { Node } from '@modules/renderer/engine/nodes/core/Node.js';
 
 const primitive = (type: TypeName) => {
   const isComponent = TypeName.isComponent(type);
 
-  return (...params) => {
+  return (...params: Node[]) => {
     if (params.length === 0 || (!isComponent && params.every(param => typeof param !== 'object')))
       params = [getValueFromType(type, ...params)];
 
@@ -62,35 +63,35 @@ export const bmat4 = primitive(TypeName.bmat4);
 export const element = proxyNode(ArrayElementNode);
 export const convert = proxyNode(ConvertNode);
 
-implCommand('color', color, true);
-implCommand('f32', f32, true);
-implCommand('i32', i32, true);
-implCommand('u32', u32, true);
-implCommand('bool', bool, true);
-implCommand('vec2', vec2, true);
-implCommand('ivec2', ivec2, true);
-implCommand('uvec2', uvec2, true);
-implCommand('bvec2', bvec2, true);
-implCommand('vec3', vec3, true);
-implCommand('ivec3', ivec3, true);
-implCommand('uvec3', uvec3, true);
-implCommand('bvec3', bvec3, true);
-implCommand('vec4', vec4, true);
-implCommand('ivec4', ivec4, true);
-implCommand('uvec4', uvec4, true);
-implCommand('bvec4', bvec4, true);
-implCommand('mat2', mat2, true);
-implCommand('imat2', imat2, true);
-implCommand('umat2', umat2, true);
-implCommand('bmat2', bmat2, true);
-implCommand('mat3', mat3, true);
-implCommand('imat3', imat3, true);
-implCommand('umat3', umat3, true);
-implCommand('bmat3', bmat3, true);
-implCommand('mat4', mat4, true);
-implCommand('imat4', imat4, true);
-implCommand('umat4', umat4, true);
-implCommand('bmat4', bmat4, true);
+implPrimitive('color', color);
+implPrimitive('f32', f32);
+implPrimitive('i32', i32);
+implPrimitive('u32', u32);
+implPrimitive('bool', bool);
+implPrimitive('vec2', vec2);
+implPrimitive('ivec2', ivec2);
+implPrimitive('uvec2', uvec2);
+implPrimitive('bvec2', bvec2);
+implPrimitive('vec3', vec3);
+implPrimitive('ivec3', ivec3);
+implPrimitive('uvec3', uvec3);
+implPrimitive('bvec3', bvec3);
+implPrimitive('vec4', vec4);
+implPrimitive('ivec4', ivec4);
+implPrimitive('uvec4', uvec4);
+implPrimitive('bvec4', bvec4);
+implPrimitive('mat2', mat2);
+implPrimitive('imat2', imat2);
+implPrimitive('umat2', umat2);
+implPrimitive('bmat2', bmat2);
+implPrimitive('mat3', mat3);
+implPrimitive('imat3', imat3);
+implPrimitive('umat3', umat3);
+implPrimitive('bmat3', bmat3);
+implPrimitive('mat4', mat4);
+implPrimitive('imat4', imat4);
+implPrimitive('umat4', umat4);
+implPrimitive('bmat4', bmat4);
 implCommand('element', ArrayElementNode);
 implCommand('convert', ConvertNode);
 
