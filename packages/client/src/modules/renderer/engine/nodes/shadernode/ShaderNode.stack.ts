@@ -13,7 +13,7 @@ export const NodeStack = {
     return _stack!.if(...params);
   },
   append(node) {
-    _stack?.push(node);
+    _stack.push(node);
 
     return node;
   },

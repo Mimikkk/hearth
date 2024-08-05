@@ -10,5 +10,3 @@ export class NodeCache {
     return this;
   }
 }
-
-export default NodeCache;

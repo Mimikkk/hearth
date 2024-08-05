@@ -355,15 +355,20 @@ export class NodeBuilder {
     return bufferAttribute;
   }
 
-  getVarFromNode(node: Node, name = null, type = node.getNodeType(this), shaderStage = this.shaderStage): NodeVar {
-    const nodeData = this.getDataFromNode(node, shaderStage);
+  getVarFromNode(
+    node: Node,
+    name: string | undefined,
+    type: TypeName = node.getNodeType(this),
+    stage = this.shaderStage,
+  ): NodeVar {
+    const nodeData = this.getDataFromNode(node, stage);
 
     let nodeVar = nodeData.variable;
 
     if (nodeVar === undefined) {
-      const vars = this.vars[shaderStage] || (this.vars[shaderStage] = []);
+      const vars = this.vars[stage] || (this.vars[stage] = []);
 
-      if (name === null) name = 'nodeVar' + vars.length;
+      if (!name) name = 'nodeVar' + vars.length;
 
       nodeVar = new NodeVar(name, type);
 
@@ -384,7 +389,7 @@ export class NodeBuilder {
       const varyings = this.varyings;
       const index = varyings.length;
 
-      if (name === null) name = 'nodeVarying' + index;
+      if (!name) name = 'nodeVarying' + index;
 
       nodeVarying = new NodeVarying(name, type);
 
@@ -611,7 +616,7 @@ export class NodeBuilder {
     return texture.isDataTexture === true && texture.type === TextureDataType.Float;
   }
 
-  getPropertyName(node: Node, shaderStage: ShaderStage = this.shaderStage): string {
+  getPropertyName(node: Node | NodeVar, shaderStage: ShaderStage = this.shaderStage): string {
     if (node.isNodeVarying === true && node.needsInterpolation === true) {
       if (shaderStage === ShaderStage.Vertex) {
         return `vertex.${node.name}`;

@@ -253,9 +253,17 @@ export class Node {
     return result;
   }
 
+  append(): this {
+    const stack = NodeStack.get()!;
+    stack?.push(this);
+
+    return this;
+  }
+
   assign(value: Node): this {
     const assign = Node.Map.assign;
-    NodeStack.get()!.push(new assign(this, Node.as(value)));
+    NodeStack.get()!.push(Node.as(new assign(this, Node.as(value))));
+
     return this;
   }
 

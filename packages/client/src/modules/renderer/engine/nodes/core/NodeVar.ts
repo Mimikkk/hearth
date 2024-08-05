@@ -1,10 +1,12 @@
-export class NodeVar {
-  constructor(name, type) {
-    this.isNodeVar = true;
+import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
-    this.name = name;
-    this.type = type;
-  }
+export class NodeVar {
+  declare isNodeVar: true;
+
+  constructor(
+    public name: string,
+    public type: TypeName,
+  ) {}
 }
 
-export default NodeVar;
+NodeVar.prototype.isNodeVar = true;

@@ -1,37 +1,42 @@
 import { Node } from './Node.js';
 import { NodeCache } from './NodeCache.js';
-import { addNodeCommand, proxyNode } from '../shadernode/ShaderNodes.js';
+import { proxyNode } from '../shadernode/ShaderNodes.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
+import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
 
 export class CacheNode extends Node {
-  node: Node;
-  cache: NodeCache;
-
-  constructor(node: Node, cache: NodeCache = new NodeCache()) {
+  constructor(
+    public node: Node,
+    public cache: NodeCache | null = new NodeCache(),
+  ) {
     super();
-
-    this.node = node;
-    this.cache = cache;
   }
 
   getNodeType(builder: NodeBuilder): TypeName {
     return this.node.getNodeType(builder);
   }
 
-  build(builder: NodeBuilder, type?: TypeName) {
-    const previousCache = builder.cache;
+  build(builder: NodeBuilder, type?: TypeName): string {
+    const previous = builder.cache;
 
-    builder.cache = this.cache || builder.globalCache;
-    const data = this.node.build(builder, type);
-    builder.cache = previousCache;
+    builder.cache = this.cache ?? builder.globalCache;
+    const code = this.node.build(builder, type);
+    builder.cache = previous;
 
-    return data;
+    return code;
   }
 }
 
 export const cache = proxyNode(CacheNode);
+
+export class GlobalCacheNode extends CacheNode {
+  constructor(node: Node) {
+    super(node, null);
+  }
+}
+
 export const globalCache = <T extends Node>(node: T) => cache(node, null);
 
-addNodeCommand('cache', cache);
-addNodeCommand('globalCache', globalCache);
+implCommand('cache', CacheNode);
+implCommand('globalCache', GlobalCacheNode);

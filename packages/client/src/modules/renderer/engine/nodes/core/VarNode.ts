@@ -1,47 +1,55 @@
 import { Node } from './Node.js';
-import { addNodeCommand, proxyNode } from '../shadernode/ShaderNodes.js';
+import { proxyNode } from '../shadernode/ShaderNodes.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
+import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
+import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 
 export class VarNode extends Node {
-  constructor(node: Node, name: string = null) {
+  constructor(
+    public node: Node,
+    public name?: string,
+  ) {
     super();
-
-    this.node = node;
-    this.name = name;
-
-    this.isVarNode = true;
   }
 
-  isGlobal() {
+  isGlobal(): boolean {
     return true;
   }
 
-  getHash(builder) {
+  getHash(builder: NodeBuilder): string {
     return this.name || super.getHash(builder);
   }
 
-  getNodeType(builder) {
+  getNodeType(builder: NodeBuilder): TypeName {
     return this.node.getNodeType(builder);
   }
 
-  generate(builder) {
+  generate(builder: NodeBuilder): string {
     const { node, name } = this;
 
     const type = TypeName.coerce(this.getNodeType(builder));
 
     const nodeVar = builder.getVarFromNode(this, name, type);
 
-    const propertyName = builder.getPropertyName(nodeVar);
+    const property = builder.getPropertyName(nodeVar);
 
     const snippet = node.build(builder, nodeVar.type);
 
-    builder.addLineFlowCode(`${propertyName} = ${snippet}`);
+    builder.addLineFlowCode(`${property} = ${snippet}`);
 
-    return propertyName;
+    return property;
   }
 }
 
 export const temp = proxyNode(VarNode);
 
-addNodeCommand('temp', temp);
-addNodeCommand('toVar', (...params) => temp(...params).append());
+implCommand('temp', VarNode);
+
+export class ToVarNode extends VarNode {
+  constructor(node: Node, name?: string) {
+    super(node, name);
+    this.append();
+  }
+}
+
+implCommand('toVar', ToVarNode);
