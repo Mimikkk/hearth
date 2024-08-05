@@ -1,4 +1,4 @@
-import { type ShaderCallNode, type ShaderNode } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.js';
+import { ShaderCallNode, ShaderNode } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.js';
 import { asNodes } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.as.js';
 import { Node } from '@modules/renderer/engine/nodes/core/Node.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';

@@ -1,11 +1,10 @@
+import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
+import { BufferNode } from '@modules/renderer/engine/nodes/accessors/BufferNode.js';
+
 export class NodeAttribute {
-  constructor(name, type, node = null) {
-    this.isNodeAttribute = true;
-
-    this.name = name;
-    this.type = type;
-    this.node = node;
-  }
+  constructor(
+    public name: string,
+    public type: TypeName,
+    public node: BufferNode<any> | null = null,
+  ) {}
 }
-
-export default NodeAttribute;

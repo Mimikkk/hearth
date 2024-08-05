@@ -11,7 +11,6 @@ export * from './functions/LightModel.js';
 export * from './core/Node.js';
 export * from './core/VarNode.js';
 export * from './core/NodeAttribute.js';
-export * from './core/NodeCache.js';
 export * from './core/NodeCode.js';
 export * from './core/NodeFrame.js';
 export * from './core/NodeKeywords.js';

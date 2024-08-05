@@ -32,7 +32,6 @@ import {
 import { getFormat } from '@modules/renderer/engine/hearth/Hearth.Textures.js';
 import ChainMap from '@modules/renderer/engine/hearth/memo/ChainMap.js';
 import { NodeKeywords } from '@modules/renderer/engine/nodes/core/NodeKeywords.js';
-import { NodeCache } from '@modules/renderer/engine/nodes/core/NodeCache.js';
 import { NodeAttribute } from '@modules/renderer/engine/nodes/core/NodeAttribute.js';
 import { Uniform } from '@modules/renderer/engine/nodes/core/Uniform.js';
 import { NodeVar } from '@modules/renderer/engine/nodes/core/NodeVar.js';
@@ -103,8 +102,8 @@ export class NodeBuilder {
     vertex?: Node;
     label?: string;
   };
-  cache: NodeCache;
-  globalCache: NodeCache;
+  cache: WeakMap;
+  globalCache: WeakMap;
   flowsData: WeakMap<Node, any>;
   shaderStage: ShaderStage;
   buildStage: BuildStage;
@@ -160,7 +159,7 @@ export class NodeBuilder {
       material: this.material,
     };
 
-    this.cache = new NodeCache();
+    this.cache = new WeakMap();
     this.globalCache = this.cache;
 
     this.flowsData = new WeakMap();

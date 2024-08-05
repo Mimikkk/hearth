@@ -1,5 +1,4 @@
 import { Node } from './Node.js';
-import { NodeCache } from './NodeCache.js';
 import { proxyNode } from '../shadernode/ShaderNodes.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
@@ -8,7 +7,7 @@ import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.j
 export class CacheNode extends Node {
   constructor(
     public node: Node,
-    public cache: NodeCache | null = new NodeCache(),
+    public cache: WeakMap<any, any> | null = new WeakMap(),
   ) {
     super();
   }
