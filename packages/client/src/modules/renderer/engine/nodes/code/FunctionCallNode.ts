@@ -1,11 +1,10 @@
 import { TempNode } from '../core/TempNode.js';
-import { asNode } from '../shadernode/ShaderNodes.js';
+import { asNode, proxyNode } from '../shadernode/ShaderNodes.js';
 import { FunctionNode } from './FunctionNode.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { Node } from '@modules/renderer/engine/nodes/core/Node.js';
 import { asNodes } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.as.js';
-import { nodeProxy } from 'three/src/nodes/shadernode/ShaderNode.js';
 import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
 
 export class FunctionCallNode extends TempNode {
@@ -60,6 +59,6 @@ class CallCommand extends FunctionCallNode {
   }
 }
 
-export const call = nodeProxy(CallCommand);
+export const call = proxyNode(CallCommand);
 
 implCommand('call', CallCommand);
