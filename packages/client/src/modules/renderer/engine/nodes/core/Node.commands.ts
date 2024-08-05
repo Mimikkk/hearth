@@ -9,22 +9,40 @@ const asNodes = (array: any[], fallbackType?: TypeName): Node[] => {
   return array;
 };
 
-export const implCommand = (name: string, node: any) => {
-  Node.prototype[name] = function (...value: any): Node {
-    return Node.as(new node(Node.as(this), ...asNodes(value)));
-  };
+export const implCommand = (name: string, node: any, cursed?: boolean) => {
+  if (cursed) {
+    Node.prototype[name] = function (...value: any): Node {
+      return Node.as(node(Node.as(this), ...asNodes(value)));
+    };
 
-  StackNode.prototype[name] = function (...value: any): Node {
-    return this.push(Node.as(new node(Node.as(value[0]), ...asNodes(value))));
-  };
+    StackNode.prototype[name] = function (...value: any): Node {
+      return this.push(Node.as(node(Node.as(value[0]), ...asNodes(value))));
+    };
 
-  Node.prototype[`${name}Assign`] = function (...value: any): Node {
-    return this.assign(Node.as(new node(Node.as(this), ...asNodes(value))));
-  };
+    Node.prototype[`${name}Assign`] = function (...value: any): Node {
+      return this.assign(Node.as(node(Node.as(this), ...asNodes(value))));
+    };
 
-  StackNode.prototype[`${name}Assign`] = function (...value: any): Node {
-    return this.push(Node.as(new AssignNode(Node.as(value[0]), node(...asNodes(value)))));
-  };
+    StackNode.prototype[`${name}Assign`] = function (...value: any): Node {
+      return this.push(Node.as(new AssignNode(Node.as(value[0]), node(...asNodes(value)))));
+    };
+  } else {
+    Node.prototype[name] = function (...value: any): Node {
+      return Node.as(new node(Node.as(this), ...asNodes(value)));
+    };
+
+    StackNode.prototype[name] = function (...value: any): Node {
+      return this.push(Node.as(new node(Node.as(value[0]), ...asNodes(value))));
+    };
+
+    Node.prototype[`${name}Assign`] = function (...value: any): Node {
+      return this.assign(Node.as(new node(Node.as(this), ...asNodes(value))));
+    };
+
+    StackNode.prototype[`${name}Assign`] = function (...value: any): Node {
+      return this.push(Node.as(new AssignNode(Node.as(value[0]), node(...asNodes(value)))));
+    };
+  }
 };
 
 export const implCommands = (commands: Map<string, string>) => {
