@@ -2,6 +2,7 @@ import { Node } from './Node.js';
 import { addNodeCommand, proxyNode } from '../shadernode/ShaderNodes.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
+import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
 
 export class ContextNode extends Node {
   constructor(
@@ -43,5 +44,11 @@ export class ContextNode extends Node {
 export const context = proxyNode(ContextNode);
 export const label = (node: Node, name: string) => context(node, { label: name });
 
-addNodeCommand('context', context);
-addNodeCommand('label', label);
+export class LabelNode extends ContextNode {
+  constructor(node: Node, label: string) {
+    super(node, { label });
+  }
+}
+
+implCommand('context', ContextNode);
+implCommand('label', LabelNode);

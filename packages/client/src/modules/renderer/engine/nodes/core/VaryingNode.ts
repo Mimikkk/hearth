@@ -1,6 +1,7 @@
 import { Node } from './Node.js';
-import { addNodeCommand, proxyNode } from '../shadernode/ShaderNodes.js';
+import { proxyNode } from '../shadernode/ShaderNodes.js';
 import { ShaderStage } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
+import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
 
 export class VaryingNode extends Node {
   constructor(node, name = null) {
@@ -42,4 +43,4 @@ export class VaryingNode extends Node {
 
 export const varying = proxyNode(VaryingNode);
 
-addNodeCommand('varying', varying);
+implCommand('varying', VaryingNode);
