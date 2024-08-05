@@ -90,5 +90,4 @@ export class AssignNode extends TempNode {
 
 export const assign = proxyNode(AssignNode);
 
-addNodeCommand('assign', assign);
 Node.Map.set('assign', AssignNode);

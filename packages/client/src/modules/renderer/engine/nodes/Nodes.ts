@@ -30,6 +30,7 @@ export * from './core/OutputStructNode.js';
 export * as NodeUtils from './core/NodeUtils.js';
 import './shadernode/ShaderNode.commands.js';
 import './lighting/LightsNodeMap.initialize.js';
+
 export * from './math/MathNode.js';
 export * from './math/OperatorNode.js';
 export * from './math/CondNode.js';
@@ -111,6 +112,7 @@ export * from './code/FunctionNode.js';
 export * from './code/ScriptableNode.js';
 export * from './code/ScriptableValueNode.js';
 import './Nodes.commands.js';
+
 export * from './fog/FogNode.js';
 export * from './fog/FogRangeNode.js';
 export * from './fog/FogExp2Node.js';
@@ -147,4 +149,7 @@ export * from './functions/material/getRoughness.js';
 export * from './functions/PhongLightModel.js';
 export * from './functions/PhysicalLightModel.js';
 export * from './shadernode/ShaderNode.map.js';
-console.log({ NodeCommands });
+
+import { implCommands } from '@modules/renderer/engine/nodes/core/Node.commands.js';
+
+implCommands(NodeCommands);

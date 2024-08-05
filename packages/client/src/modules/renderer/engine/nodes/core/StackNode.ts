@@ -23,7 +23,7 @@ export class StackNode extends Node {
     return this.outputNode ? this.outputNode.getNodeType(builder) : TypeName.void;
   }
 
-  add(node: Node): this {
+  push(node: Node): this {
     this.nodes.push(node);
 
     return this;
@@ -32,7 +32,7 @@ export class StackNode extends Node {
   if(bool: OperatorNode, then: Function): this {
     this.cond = cond(bool, createShaderNode(then));
 
-    return this.add(this.cond);
+    return this.push(this.cond);
   }
 
   elseif(bool: OperatorNode, then: Function): this {
@@ -68,5 +68,6 @@ export class StackNode extends Node {
 }
 
 StackNode.prototype.isStackNode = true;
+Node.Stack = StackNode;
 
 export const stack = proxyNode(StackNode);

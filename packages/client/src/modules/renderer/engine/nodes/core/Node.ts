@@ -11,12 +11,12 @@ import { asNode } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.as.
 import { ConstNode } from '@modules/renderer/engine/nodes/core/ConstNode.js';
 import { implIndexAccess, implSwizzle } from '@modules/renderer/engine/nodes/core/Node.swizzle.js';
 import { NodeStack } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.stack.js';
-import { NodeCommands } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.map.js';
-import type { StackNode } from '@modules/renderer/engine/nodes/core/StackNode.js';
+import { StackNode } from '@modules/renderer/engine/nodes/core/StackNode.js';
 
 let _nodeId = 0;
 
 export class Node {
+  declare static Stack: new (...params: any) => StackNode;
   static Map = new Map<'split' | 'element' | 'assign' | 'set', any>();
   declare isNode: true;
   name?: string;
@@ -244,7 +244,7 @@ export class Node {
 
   assign(value: Node): this {
     const assign = Node.Map.get('assign');
-    NodeStack.get()!.add(new assign(this, Node.as(value)));
+    NodeStack.get()!.push(new assign(this, Node.as(value)));
     return this;
   }
 
@@ -384,10 +384,10 @@ export class Node {
   declare abgr: SplitNode;
   declare abrg: SplitNode;
 
-  declare setX: (value: any) => SetNode;
-  declare setY: (value: any) => SetNode;
-  declare setZ: (value: any) => SetNode;
-  declare setW: (value: any) => SetNode;
+  declare setX: (value: ConstNode<number>) => SetNode;
+  declare setY: (value: ConstNode<number>) => SetNode;
+  declare setZ: (value: ConstNode<number>) => SetNode;
+  declare setW: (value: ConstNode<number>) => SetNode;
   declare setXY: (value: any) => SetNode;
   declare setYX: (value: any) => SetNode;
   declare setXZ: (value: any) => SetNode;

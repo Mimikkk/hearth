@@ -8,7 +8,7 @@ export const handlers: ProxyHandler<Node> = {
     const command = NodeCommands.get(key);
     if (command) {
       return isStackNode(node)
-        ? (...params) => proxy.add(command(...params))
+        ? (...params) => proxy.push(command(...params))
         : (...params) => command(proxy, ...params);
     }
 
