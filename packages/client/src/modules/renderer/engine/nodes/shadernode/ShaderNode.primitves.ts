@@ -11,7 +11,7 @@ import { Node } from '@modules/renderer/engine/nodes/core/Node.js';
 import { ConstNode } from '@modules/renderer/engine/nodes/core/ConstNode.js';
 
 const components = [TypeName.bool, TypeName.f32, TypeName.i32, TypeName.u32];
-const converted = (type: TypeName, cacheMap?: Map<number | boolean, ConstNode<number>>) => {
+const conversion = (type: TypeName, cacheMap?: Map<number | boolean, ConstNode<number>>) => {
   const isComponent = components.includes(type);
 
   return (...params) => {
@@ -37,37 +37,37 @@ const converted = (type: TypeName, cacheMap?: Map<number | boolean, ConstNode<nu
   };
 };
 
-export const color = converted(TypeName.color);
+export const color = conversion(TypeName.color);
 
-export const f32 = converted(TypeName.f32, floatMap);
-export const i32 = converted(TypeName.i32, sintMap);
-export const u32 = converted(TypeName.u32, uintMap);
-export const bool = converted(TypeName.bool, boolMap);
+export const f32 = conversion(TypeName.f32, floatMap);
+export const i32 = conversion(TypeName.i32, sintMap);
+export const u32 = conversion(TypeName.u32, uintMap);
+export const bool = conversion(TypeName.bool, boolMap);
 
-export const vec2 = converted(TypeName.vec2);
-export const ivec2 = converted(TypeName.ivec2);
-export const uvec2 = converted(TypeName.uvec2);
-export const bvec2 = converted(TypeName.bvec2);
-export const vec3 = converted(TypeName.vec3);
-export const ivec3 = converted(TypeName.ivec3);
-export const uvec3 = converted(TypeName.uvec3);
-export const bvec3 = converted(TypeName.bvec3);
-export const vec4 = converted(TypeName.vec4);
-export const ivec4 = converted(TypeName.ivec4);
-export const uvec4 = converted(TypeName.uvec4);
-export const bvec4 = converted(TypeName.bvec4);
-export const mat2 = converted(TypeName.mat2);
-export const imat2 = converted(TypeName.imat2);
-export const umat2 = converted(TypeName.umat2);
-export const bmat2 = converted(TypeName.bmat2);
-export const mat3 = converted(TypeName.mat3);
-export const imat3 = converted(TypeName.imat3);
-export const umat3 = converted(TypeName.umat3);
-export const bmat3 = converted(TypeName.bmat3);
-export const mat4 = converted(TypeName.mat4);
-export const imat4 = converted(TypeName.imat4);
-export const umat4 = converted(TypeName.umat4);
-export const bmat4 = converted(TypeName.bmat4);
+export const vec2 = conversion(TypeName.vec2);
+export const ivec2 = conversion(TypeName.ivec2);
+export const uvec2 = conversion(TypeName.uvec2);
+export const bvec2 = conversion(TypeName.bvec2);
+export const vec3 = conversion(TypeName.vec3);
+export const ivec3 = conversion(TypeName.ivec3);
+export const uvec3 = conversion(TypeName.uvec3);
+export const bvec3 = conversion(TypeName.bvec3);
+export const vec4 = conversion(TypeName.vec4);
+export const ivec4 = conversion(TypeName.ivec4);
+export const uvec4 = conversion(TypeName.uvec4);
+export const bvec4 = conversion(TypeName.bvec4);
+export const mat2 = conversion(TypeName.mat2);
+export const imat2 = conversion(TypeName.imat2);
+export const umat2 = conversion(TypeName.umat2);
+export const bmat2 = conversion(TypeName.bmat2);
+export const mat3 = conversion(TypeName.mat3);
+export const imat3 = conversion(TypeName.imat3);
+export const umat3 = conversion(TypeName.umat3);
+export const bmat3 = conversion(TypeName.bmat3);
+export const mat4 = conversion(TypeName.mat4);
+export const imat4 = conversion(TypeName.imat4);
+export const umat4 = conversion(TypeName.umat4);
+export const bmat4 = conversion(TypeName.bmat4);
 
 export const proxyNode =
   <T extends new (...params: any) => any>(NodeClass: T) =>

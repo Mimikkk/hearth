@@ -4,6 +4,7 @@ import { addNodeCommand, asNode, proxyNode, hsl, vec4 } from '../shadernode/Shad
 import { ColorSpace } from '@modules/renderer/engine/engine.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { Node } from '../core/Node.js';
+import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
 
 export class ColorSpaceNode extends TempNode {
   method: NodeVariant;
@@ -31,8 +32,6 @@ enum NodeVariant {
   LinearTosRGB = 'LinearTosRGB',
   sRGBToLinear = 'sRGBToLinear',
 }
-
-
 
 interface Params {
   value: Node;
@@ -88,18 +87,18 @@ export const colorSpaceToLinear = (node: Node, colorSpace: ColorSpace) => {
   return asNode(spaceNode);
 };
 
-export const linearTosRGB = proxyNode(
-  class extends ColorSpaceNode {
-    method = NodeVariant.LinearTosRGB;
-  },
-);
-export const sRGBToLinear = proxyNode(
-  class extends ColorSpaceNode {
-    method = NodeVariant.sRGBToLinear;
-  },
-);
+export class LinearToSRGBNode extends ColorSpaceNode {
+  method = NodeVariant.LinearTosRGB;
+}
 
-addNodeCommand('linearTosRGB', linearTosRGB);
-addNodeCommand('sRGBToLinear', sRGBToLinear);
+export class SRGBToLinearNode extends ColorSpaceNode {
+  method = NodeVariant.sRGBToLinear;
+}
+
+export const linearTosRGB = proxyNode(LinearToSRGBNode);
+export const sRGBToLinear = proxyNode(SRGBToLinearNode);
+
+implCommand('linearTosRGB', LinearToSRGBNode);
+implCommand('sRGBToLinear', SRGBToLinearNode);
 addNodeCommand('linearToColorSpace', linearToColorSpace);
 addNodeCommand('colorSpaceToLinear', colorSpaceToLinear);

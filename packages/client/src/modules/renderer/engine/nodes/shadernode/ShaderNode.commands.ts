@@ -32,9 +32,7 @@ import {
   vec4,
 } from './ShaderNode.primitves.js';
 import { addNodeCommand } from './ShaderNode.map.js';
-import { NodeStack } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.stack.js';
 
-addNodeCommand('append', NodeStack.append);
 addNodeCommand('color', color);
 addNodeCommand('f32', f32);
 addNodeCommand('i32', i32);

@@ -10,6 +10,7 @@ import { faceDirection } from './FrontFacingNode.js';
 import { addNodeCommand, proxyNode, hsl, vec3 } from '../shadernode/ShaderNodes.js';
 
 import { NormalMapType } from '@modules/renderer/engine/engine.js';
+import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
 
 const perturbNormal2Arb = hsl(inputs => {
   const { eye_pos, surf_norm, mapN, uv } = inputs;
@@ -75,8 +76,6 @@ export class NormalMapNode extends TempNode {
   }
 }
 
-
-
 export const normalMap = proxyNode(NormalMapNode);
 
-addNodeCommand('normalMap', normalMap);
+implCommand('normalMap', NormalMapNode);

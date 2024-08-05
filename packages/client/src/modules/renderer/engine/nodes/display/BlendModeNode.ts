@@ -1,7 +1,8 @@
 import { TempNode } from '../core/TempNode.js';
 import { EPSILON } from '../math/MathNode.js';
-import { addNodeCommand, proxyNode, hsl, vec3 } from '../shadernode/ShaderNodes.js';
+import { hsl, proxyNode, vec3 } from '../shadernode/ShaderNodes.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
+import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
 
 export class BlendModeNode extends TempNode {
   mode: NodeVariant;
@@ -30,8 +31,6 @@ export class BlendModeNode extends TempNode {
   }
 }
 
-
-
 enum NodeVariant {
   Burn = 'burn',
   Dodge = 'dodge',
@@ -44,26 +43,27 @@ interface Params {
   blend: Node;
 }
 
-export const burn = proxyNode(
-  class extends BlendModeNode {
-    mode = NodeVariant.Burn;
-  },
-);
-export const dodge = proxyNode(
-  class extends BlendModeNode {
-    mode = NodeVariant.Dodge;
-  },
-);
-export const overlay = proxyNode(
-  class extends BlendModeNode {
-    mode = NodeVariant.Overlay;
-  },
-);
-export const screen = proxyNode(
-  class extends BlendModeNode {
-    mode = NodeVariant.Screen;
-  },
-);
+export class BurnBlendModeNode extends BlendModeNode {
+  mode = NodeVariant.Burn;
+}
+
+export class DodgeBlendModeNode extends BlendModeNode {
+  mode = NodeVariant.Dodge;
+}
+
+export class OverlayBlendModeNode extends BlendModeNode {
+  mode = NodeVariant.Overlay;
+}
+
+export class ScreenBlendModeNode extends BlendModeNode {
+  mode = NodeVariant.Screen;
+}
+
+export const burn = proxyNode(BurnBlendModeNode);
+export const dodge = proxyNode(DodgeBlendModeNode);
+export const overlay = proxyNode(OverlayBlendModeNode);
+
+export const screen = proxyNode(ScreenBlendModeNode);
 
 export const calcBurn = hsl(
   ({ base, blend }: Params) => {
@@ -128,7 +128,7 @@ export const calcOverlay = hsl(
   },
 );
 
-addNodeCommand('burn', burn);
-addNodeCommand('dodge', dodge);
-addNodeCommand('overlay', overlay);
-addNodeCommand('screen', screen);
+implCommand('burn', BurnBlendModeNode);
+implCommand('dodge', DodgeBlendModeNode);
+implCommand('overlay', OverlayBlendModeNode);
+implCommand('screen', ScreenBlendModeNode);

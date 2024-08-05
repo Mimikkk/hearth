@@ -1,5 +1,5 @@
 import { TempNode } from '../core/TempNode.js';
-import { addNodeCommand, f32, asNode, hsl, vec2, vec3, vec4 } from '../shadernode/ShaderNodes.js';
+import { addNodeCommand, asNode, f32, hsl, vec2, vec3, vec4 } from '../shadernode/ShaderNodes.js';
 import { loop } from '../utils/LoopNode.js';
 import { uniform } from '../core/UniformNode.js';
 import { NodeUpdateStage } from '../core/constants.js';
@@ -8,18 +8,22 @@ import { uv } from '../accessors/UVNode.js';
 import { texturePass } from './PassNode.js';
 import { RenderTarget, Vec2 } from '@modules/renderer/engine/engine.js';
 import { QuadMesh } from '@modules/renderer/engine/entities/QuadMesh.js';
+import { ConstNode } from '@modules/renderer/engine/nodes/core/ConstNode.js';
+import { asConstNode } from '@modules/renderer/engine/nodes/shadernode/utils.js';
+import { nodeProxy } from 'three/src/nodes/shadernode/ShaderNode.js';
+import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
 
 const quadMesh = new QuadMesh();
 
 export class AnamorphicNode extends TempNode {
-  constructor(textureNode, tresholdNode, scaleNode, samples) {
+  constructor(textureNode, tresholdNode = asConstNode(0.9), scaleNode = asConstNode(3), samples: ConstNode<number>) {
     super('vec4');
 
     this.textureNode = textureNode;
     this.tresholdNode = tresholdNode;
     this.scaleNode = scaleNode;
     this.colorNode = vec3(0.1, 0.0, 1.0);
-    this.samples = samples;
+    this.samples = samples.value ?? 32;
     this.resolution = Vec2.new(1, 1);
 
     this.target = new RenderTarget();
@@ -110,9 +114,6 @@ export class AnamorphicNode extends TempNode {
   }
 }
 
-export const anamorphic = (node, threshold = 0.9, scale = 3, samples = 32) =>
-  asNode(new AnamorphicNode(asNode(node), asNode(threshold), asNode(scale), samples));
+export const anamorphic = nodeProxy(AnamorphicNode);
 
-addNodeCommand('anamorphic', anamorphic);
-
-
+implCommand('anamorphic', AnamorphicNode);

@@ -7,16 +7,19 @@ import { texturePass } from './PassNode.js';
 import { uniform } from '../core/UniformNode.js';
 import { RenderTarget, Vec2 } from '@modules/renderer/engine/engine.js';
 import { QuadMesh } from '@modules/renderer/engine/entities/QuadMesh.js';
+import { ConstNode } from '@modules/renderer/engine/nodes/core/ConstNode.js';
+import { nodeProxy } from 'three/src/nodes/shadernode/ShaderNode.js';
+import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
 
 const quadMesh1 = new QuadMesh();
 const quadMesh2 = new QuadMesh();
 
 export class GaussianBlurNode extends TempNode {
-  constructor(textureNode, sigma = 2) {
+  constructor(textureNode, sigma?: ConstNode<number>) {
     super('vec4');
 
     this.textureNode = textureNode;
-    this.sigma = sigma;
+    this.sigma = sigma.value ?? 2;
 
     this.directionNode = vec2(1);
 
@@ -143,8 +146,6 @@ export class GaussianBlurNode extends TempNode {
   }
 }
 
-export const gaussianBlur = (node, sigma) => asNode(new GaussianBlurNode(asNode(node), sigma));
+export const gaussianBlur = nodeProxy(GaussianBlurNode);
 
-addNodeCommand('gaussianBlur', gaussianBlur);
-
-
+implCommand('gaussianBlur', GaussianBlurNode);

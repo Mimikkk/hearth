@@ -4,11 +4,12 @@ import { addNodeCommand, proxyNode } from '../shadernode/ShaderNodes.js';
 import { viewportTopLeft } from './ViewportNode.js';
 import { FramebufferTexture, MinificationTextureFilter, Vec2 } from '@modules/renderer/engine/engine.js';
 import { NodeFrame } from '@modules/renderer/engine/nodes/core/NodeFrame.js';
+import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
 
 const _size = Vec2.new();
 
 export class ViewportTextureNode extends TextureNode {
-  generateMipmaps: boolean;
+  generateMipmaps: boolean = false;
   isOutputTextureNode: boolean;
   updateBeforeType: NodeUpdateStage;
 
@@ -20,7 +21,6 @@ export class ViewportTextureNode extends TextureNode {
 
     super(framebufferTexture, uvNode, levelNode);
 
-    this.generateMipmaps = false;
     this.isOutputTextureNode = true;
     this.updateBeforeType = NodeUpdateStage.Frame;
   }
@@ -49,11 +49,13 @@ export class ViewportTextureNode extends TextureNode {
   }
 }
 
-
-
 export const viewportTexture = proxyNode(ViewportTextureNode);
-export const viewportMipTexture = proxyNode(ViewportTextureNode);
-viewportMipTexture.generateMipmaps = true;
 
-addNodeCommand('viewportTexture', viewportTexture);
-addNodeCommand('viewportMipTexture', viewportMipTexture);
+export class ViewportMipTextureNode {
+  generateMipmaps = true;
+}
+
+export const viewportMipTexture = proxyNode(ViewportMipTextureNode);
+
+implCommand('viewportTexture', ViewportTextureNode);
+implCommand('viewportMipTexture', ViewportTextureNode);

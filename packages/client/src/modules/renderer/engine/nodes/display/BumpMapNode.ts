@@ -3,7 +3,8 @@ import { uv } from '../accessors/UVNode.js';
 import { normalView } from '../accessors/NormalNode.js';
 import { positionView } from '../accessors/PositionNode.js';
 import { faceDirection } from './FrontFacingNode.js';
-import { addNodeCommand, f32, proxyNode, hsl, vec2 } from '../shadernode/ShaderNodes.js';
+import { f32, hsl, proxyNode, vec2 } from '../shadernode/ShaderNodes.js';
+import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
 
 const dHdxy_fwd = hsl(({ textureNode, bumpScale }) => {
   let texNode = textureNode;
@@ -66,8 +67,6 @@ export class BumpMapNode extends TempNode {
   }
 }
 
-
-
 export const bumpMap = proxyNode(BumpMapNode);
 
-addNodeCommand('bumpMap', bumpMap);
+implCommand('bumpMap', BumpMapNode);

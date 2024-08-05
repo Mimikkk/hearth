@@ -8,10 +8,11 @@ import { uniform } from '../core/UniformNode.js';
 import { RenderTarget } from '@modules/renderer/engine/engine.js';
 import { max, sign } from '../math/MathNode.js';
 import { QuadMesh } from '@modules/renderer/engine/entities/QuadMesh.js';
-import { TextureNode } from '@modules/renderer/engine/nodes/Nodes.js';
+import { ConstNode, TextureNode } from '@modules/renderer/engine/nodes/Nodes.js';
 import { NodeMaterial } from '@modules/renderer/engine/nodes/materials/NodeMaterial.js';
 import { NodeFrame } from '@modules/renderer/engine/nodes/core/NodeFrame.js';
 import type { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
+import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
 
 const quadMeshComp = new QuadMesh(null);
 
@@ -123,8 +124,10 @@ export class AfterImageNode extends TempNode {
   }
 }
 
-export const afterImage = (node: Node, damp: number) => asNode(new AfterImageNode(asNode(node), damp));
+export class NodeAfterImageNode extends AfterImageNode {
+  constructor(texture: TextureNode, damp: ConstNode<number>) {
+    super(texture, damp.value);
+  }
+}
 
-addNodeCommand('afterImage', afterImage);
-
-
+implCommand('afterImage', NodeAfterImageNode);
