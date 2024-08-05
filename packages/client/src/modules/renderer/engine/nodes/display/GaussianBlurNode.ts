@@ -19,7 +19,7 @@ export class GaussianBlurNode extends TempNode {
     super('vec4');
 
     this.textureNode = textureNode;
-    this.sigma = sigma.value ?? 2;
+    this.sigma = sigma?.value ?? 2;
 
     this.directionNode = vec2(1);
 

@@ -1,6 +1,6 @@
 import { TempNode } from '../core/TempNode.js';
 import { div, mul, sub } from './OperatorNode.js';
-import { addNodeCommand, asNode, f32, proxyNode, vec3, vec4 } from '../shadernode/ShaderNodes.js';
+import { addNodeCommand, f32, asNode, proxyNode, vec3, vec4 } from '../shadernode/ShaderNodes.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { Node } from '../core/Node.js';
@@ -527,7 +527,7 @@ export const transformDirection = proxyNode(
 export const cbrt = (a: Node) => mul(sign(a), pow(abs(a), 1.0 / 3.0));
 export const lengthSq = (a: Node) => dot(a, a);
 
-export class MixNode {
+export class MixNode extends TernaryNode {
   method = TernaryVariant.Mix;
 }
 

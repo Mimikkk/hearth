@@ -1,9 +1,10 @@
 import { TempNode } from '../core/TempNode.js';
-import { dot, mix } from '../math/MathNode.js';
+import { dot, mix, MixNode } from '../math/MathNode.js';
 import { add } from '../math/OperatorNode.js';
-import { addNodeCommand, f32, hsl, proxyNode, vec3 } from '../shadernode/ShaderNodes.js';
+import { addNodeCommand, asNode, f32, hsl, proxyNode, vec3 } from '../shadernode/ShaderNodes.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
+import { nodeProxy } from 'three/src/nodes/shadernode/ShaderNode.js';
 
 export class ColorAdjustmentNode extends TempNode {
   method: NodeVariant;
@@ -88,5 +89,12 @@ export const hue = proxyNode(HueAdjustmentNode);
 export const lumaCoeffs = vec3(0.2125, 0.7154, 0.0721);
 export const luminance = (color, luma = lumaCoeffs) => dot(color, luma);
 
-export const threshold = (color, threshold) => mix(vec3(0.0), color, luminance(color).sub(threshold).max(0));
-addNodeCommand('threshold', threshold);
+class ThresholdNode extends MixNode {
+  constructor(color, threshold) {
+    super(vec3(0.0), asNode(color), luminance(color).sub(asNode(threshold)).max(0));
+  }
+}
+
+export const threshold = nodeProxy(ThresholdNode);
+
+implCommand('threshold', ThresholdNode);
