@@ -513,8 +513,8 @@ export class ClampNode extends TernaryNode {
 
   constructor(
     value: ConstNode<number>,
-    min: ConstNode<number> = asNode(asConstNode(0)),
-    max: ConstNode<number> = asNode(asConstNode(1)),
+    min: ConstNode<number> = asConstNode(0),
+    max: ConstNode<number> = asConstNode(1),
   ) {
     super(asNode(value), asNode(min), asNode(max));
   }

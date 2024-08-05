@@ -1,6 +1,5 @@
 import { Node } from '../core/Node.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
-import { XYZW } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.handlers.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 
 export class SplitNode extends Node {
@@ -8,7 +7,7 @@ export class SplitNode extends Node {
 
   constructor(
     public node: Node,
-    public components: XYZW,
+    public components: string,
   ) {
     super();
   }

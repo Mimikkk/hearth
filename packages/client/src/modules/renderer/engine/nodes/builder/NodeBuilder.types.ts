@@ -376,4 +376,7 @@ export namespace TypeName {
         throw new Error(`Cannot represent property type ${type}.`);
     }
   };
+
+  export const ofValue = () => {};
+  export const asValue = () => {};
 }

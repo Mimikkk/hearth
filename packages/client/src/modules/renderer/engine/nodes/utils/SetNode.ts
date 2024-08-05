@@ -1,13 +1,12 @@
 import { TempNode } from '../core/TempNode.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
-import { XYZW } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.handlers.js';
 import { Node } from '../core/Node.js';
 
 export class SetNode extends TempNode {
   constructor(
     public sourceNode: Node,
-    public components: XYZW,
+    public components: string,
     public targetNode: Node,
   ) {
     super();

@@ -1,6 +1,5 @@
 import { Node } from '../core/Node.js';
 import { asNode } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.as.js';
-import { handlers } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.handlers.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { HslLayout } from '@modules/renderer/engine/nodes/shadernode/hsl.js';
@@ -91,4 +90,4 @@ export class ShaderNode<Fn extends (...params: any) => any = any> extends Node {
 export const createShaderNode = <Fn extends (...params: any) => any = any>(
   fn: Fn,
   layout?: HslLayout,
-): ShaderNode<Fn> => new Proxy(new ShaderNode<Fn>(fn, layout), handlers);
+): ShaderNode<Fn> => new ShaderNode<Fn>(fn, layout);

@@ -46,7 +46,7 @@ export function* getNodeChildren(node) {
 }
 
 export function getValueType(value: any): TypeName {
-  if (value === undefined || value === null) return null;
+  if (value === undefined || value === null) return null!;
   if (value.isNode) return TypeName.node;
   const typeOf = typeof value;
   if (typeOf === 'number') return TypeName.f32;
@@ -59,7 +59,6 @@ export function getValueType(value: any): TypeName {
   if (Mat3.is(value)) return TypeName.mat3;
   if (Mat4.is(value)) return TypeName.mat4;
   if (Color.is(value)) return TypeName.color;
-
   return null!;
 }
 
