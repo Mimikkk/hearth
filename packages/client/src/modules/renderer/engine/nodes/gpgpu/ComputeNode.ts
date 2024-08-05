@@ -1,19 +1,21 @@
 import { Node } from '../core/Node.js';
 import { NodeUpdateStage } from '../core/constants.js';
-import { addNodeCommand, asNode, ShaderCallNode } from '../shadernode/ShaderNodes.js';
+import { ShaderCallNode } from '../shadernode/ShaderNodes.js';
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { ShaderStage, TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { FunctionCallNode } from '@modules/renderer/engine/nodes/code/FunctionCallNode.js';
 import { NodeFrame } from '@modules/renderer/engine/nodes/core/NodeFrame.js';
+import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
+import { ConstNode } from '@modules/renderer/engine/nodes/core/ConstNode.js';
 
 export class ComputeNode extends Node {
   dispatchCount: number;
 
   constructor(
     public call: ShaderCallNode | FunctionCallNode,
-    public count: number,
-    public size: number[] = [64],
+    count: ConstNode,
+    size: number[] = [64],
   ) {
     super(TypeName.void);
 
@@ -23,7 +25,7 @@ export class ComputeNode extends Node {
     let work = size[0];
     for (let i = 1; i < size.length; i++) work *= size[i];
 
-    this.dispatchCount = Math.ceil(count / work);
+    this.dispatchCount = Math.ceil(count.value / work);
   }
 
   set needsUpdate(value: boolean) {
@@ -47,7 +49,4 @@ export class ComputeNode extends Node {
   }
 }
 
-export const compute = (node: any, count: number, workgroupSize: number[] = [64]) =>
-  asNode(new ComputeNode(asNode(node), count, workgroupSize));
-
-addNodeCommand('compute', compute);
+implCommand('compute', ComputeNode);

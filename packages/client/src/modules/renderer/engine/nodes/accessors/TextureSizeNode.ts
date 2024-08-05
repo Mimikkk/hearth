@@ -1,17 +1,19 @@
 import { Node } from '../core/Node.js';
-import { addNodeCommand, proxyNode } from '../shadernode/ShaderNodes.js';
+import { proxyNode } from '../shadernode/ShaderNodes.js';
+import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
+import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
+import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
+import { TextureNode } from '@modules/renderer/engine/nodes/accessors/TextureNode.js';
 
 export class TextureSizeNode extends Node {
-  constructor(textureNode, levelNode = null) {
-    super('uvec2');
-
-    this.isTextureSizeNode = true;
-
-    this.textureNode = textureNode;
-    this.levelNode = levelNode;
+  constructor(
+    public textureNode: TextureNode,
+    public levelNode: Node,
+  ) {
+    super(TypeName.uvec2);
   }
 
-  generate(builder, output) {
+  generate(builder: NodeBuilder, output: TypeName): string {
     const textureProperty = this.textureNode.build(builder, 'property');
     const levelNode = this.levelNode.build(builder, 'i32');
 
@@ -23,8 +25,6 @@ export class TextureSizeNode extends Node {
   }
 }
 
-
-
 export const textureSize = proxyNode(TextureSizeNode);
 
-addNodeCommand('textureSize', textureSize);
+implCommand('textureSize', TextureSizeNode);

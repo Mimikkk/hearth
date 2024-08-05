@@ -1,7 +1,8 @@
 import { TempNode } from '../core/TempNode.js';
 import { uv } from '../accessors/UVNode.js';
-import { addNodeCommand, proxyNode, hsl } from '../shadernode/ShaderNodes.js';
+import { hsl, proxyNode } from '../shadernode/ShaderNodes.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
+import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
 
 const checkerShaderNode = hsl((inputs: { uv: Node }) => {
   const uv = inputs.uv.mul(2.0);
@@ -23,8 +24,6 @@ export class CheckerNode extends TempNode {
   }
 }
 
-
-
 export const checker = proxyNode(CheckerNode);
 
-addNodeCommand('checker', checker);
+implCommand('checker', CheckerNode);

@@ -1,24 +1,31 @@
 import { ContextNode } from '../core/ContextNode.js';
-import { addNodeCommand, f32, proxyNode, vec3 } from '../shadernode/ShaderNodes.js';
+import { f32, proxyNode, vec3 } from '../shadernode/ShaderNodes.js';
+import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
+import { LightNode } from '@modules/renderer/engine/nodes/lighting/LightNode.js';
+import { LightModel } from '@modules/renderer/engine/nodes/functions/LightModel.js';
+import { ConstNode } from '@modules/renderer/engine/nodes/core/ConstNode.js';
+import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
 
 export class LightingContextNode extends ContextNode {
-  constructor(node, lightingModel = null, backdropNode = null, backdropAlphaNode = null) {
+  constructor(
+    node: LightNode,
+    public lightingModel: LightModel | null = null,
+    public backdropNode: ConstNode | null = null,
+    public backdropAlphaNode: ConstNode | null = null,
+  ) {
     super(node);
 
-    this.lightingModel = lightingModel;
-    this.backdropNode = backdropNode;
-    this.backdropAlphaNode = backdropAlphaNode;
-
-    this._context = null;
+    console.log(lightingModel, backdropNode, backdropAlphaNode);
+    this.context = this.getContext();
   }
 
   getContext() {
     const { backdropNode, backdropAlphaNode } = this;
 
-    const directDiffuse = vec3().temp('directDiffuse'),
-      directSpecular = vec3().temp('directSpecular'),
-      indirectDiffuse = vec3().temp('indirectDiffuse'),
-      indirectSpecular = vec3().temp('indirectSpecular');
+    const directDiffuse = vec3().temp('directDiffuse');
+    const directSpecular = vec3().temp('directSpecular');
+    const indirectDiffuse = vec3().temp('indirectDiffuse');
+    const indirectSpecular = vec3().temp('indirectSpecular');
 
     const reflectedLight = {
       directDiffuse,
@@ -27,7 +34,7 @@ export class LightingContextNode extends ContextNode {
       indirectSpecular,
     };
 
-    const context = {
+    return {
       radiance: vec3().temp('radiance'),
       irradiance: vec3().temp('irradiance'),
       iblIrradiance: vec3().temp('iblIrradiance'),
@@ -36,20 +43,15 @@ export class LightingContextNode extends ContextNode {
       backdrop: backdropNode,
       backdropAlpha: backdropAlphaNode,
     };
-
-    return context;
   }
 
-  setup(builder) {
-    this.context = this._context || (this._context = this.getContext());
+  setup(builder: NodeBuilder) {
     this.context.lightingModel = this.lightingModel || builder.context.lightingModel;
 
     return super.setup(builder);
   }
 }
 
-
-
 export const lightingContext = proxyNode(LightingContextNode);
 
-addNodeCommand('lightingContext', lightingContext);
+implCommand('lightingContext', LightingContextNode);

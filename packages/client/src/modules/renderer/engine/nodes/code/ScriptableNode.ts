@@ -1,9 +1,10 @@
 import { Node } from '../core/Node.js';
 import { scriptableValue } from './ScriptableValueNode.js';
-import { addNodeCommand, f32, proxyNode } from '../shadernode/ShaderNodes.js';
+import { f32, proxyNode } from '../shadernode/ShaderNodes.js';
 import { CodeNode } from '@modules/renderer/engine/nodes/code/CodeNode.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
+import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
 
 class Resources extends Map {
   get<Fn extends (...args: any) => any>(
@@ -334,4 +335,4 @@ export class ScriptableNode extends Node {
 
 export const scriptable = proxyNode(ScriptableNode);
 
-addNodeCommand('scriptable', scriptable);
+implCommand('scriptable', ScriptableNode);

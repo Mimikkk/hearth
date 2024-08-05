@@ -4,8 +4,9 @@ import { textureSize } from './TextureSizeNode.js';
 import { colorSpaceToLinear } from '../display/ColorSpaceNode.js';
 import { expression } from '../code/ExpressionNode.js';
 import { maxMipLevel } from '../utils/MaxMipLevelNode.js';
-import { addNodeCommand, asNode, proxyNode, vec3 } from '../shadernode/ShaderNodes.js';
+import { asNode, proxyNode, vec3 } from '../shadernode/ShaderNodes.js';
 import { NodeUpdateStage } from '../core/constants.js';
+import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
 
 export class TextureNode extends UniformNode {
   constructor(value, uvNode = null, levelNode = null) {
@@ -249,4 +250,4 @@ export const textureLoad = (...params) => texture(...params).setSampler(false);
 
 export const sampler = aTexture => (aTexture.isNode === true ? aTexture : texture(aTexture)).convert('sampler');
 
-addNodeCommand('texture', texture);
+implCommand('texture', TextureNode);
