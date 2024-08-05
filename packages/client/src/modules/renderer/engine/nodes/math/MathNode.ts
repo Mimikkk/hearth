@@ -1,6 +1,6 @@
 import { TempNode } from '../core/TempNode.js';
 import { div, mul, MulNode, sub } from './OperatorNode.js';
-import { addNodeCommand, asNode, f32, proxyNode, vec3, vec4 } from '../shadernode/ShaderNodes.js';
+import { asNode, f32, proxyNode, vec3, vec4 } from '../shadernode/ShaderNodes.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { Node } from '../core/Node.js';

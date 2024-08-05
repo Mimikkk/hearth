@@ -1,4 +1,3 @@
-export { addNodeCommand } from './ShaderNode.map.js';
 export * from './ShaderNode.primitves.js';
 export * from './ShaderNode.stack.js';
 export * from './ShaderNode.js';

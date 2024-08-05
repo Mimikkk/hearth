@@ -1,10 +1,12 @@
 import { TempNode } from '../core/TempNode.js';
-import { addNodeCommand, asNode } from '../shadernode/ShaderNodes.js';
+import { asNode } from '../shadernode/ShaderNodes.js';
 import { FunctionNode } from './FunctionNode.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { Node } from '@modules/renderer/engine/nodes/core/Node.js';
 import { asNodes } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.as.js';
+import { nodeProxy } from 'three/src/nodes/shadernode/ShaderNode.js';
+import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
 
 export class FunctionCallNode extends TempNode {
   constructor(
@@ -51,9 +53,13 @@ export class FunctionCallNode extends TempNode {
   }
 }
 
-export const call = (fn: any, ...parameters: any) => {
-  parameters = parameters.length > 1 || asNodes(Node.is(parameters[0]) ? parameters : parameters[0]);
-  return asNode(new FunctionCallNode(asNode(fn), parameters));
-};
+class CallCommand extends FunctionCallNode {
+  constructor(fn: any, ...parameters: any) {
+    parameters = parameters.length > 1 || asNodes(Node.is(parameters[0]) ? parameters : parameters[0]);
+    super(asNode(fn), parameters);
+  }
+}
 
-addNodeCommand('call', call);
+export const call = nodeProxy(CallCommand);
+
+implCommand('call', CallCommand);
