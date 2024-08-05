@@ -8,49 +8,26 @@ import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.typ
 import { addNodeCommand } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.map.js';
 import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
 
-class PrimitiveFactory {
-  private type: TypeName;
-  private isComponent: boolean;
-
-  constructor(type: TypeName) {
-    this.type = type;
-    this.isComponent = TypeName.isComponent(type);
-  }
-
-  create(...params: any[]): Node {
-    if (this.shouldUseDefaultValue(params)) params = [this.getDefaultValue(params)];
-    if (params.length === 1) return this.createSingleParamNode(params[0]);
-    return this.createMultiParamNode(params);
-  }
-
-  private shouldUseDefaultValue(params: any[]): boolean {
-    return params.length === 0 || (!this.isComponent && params.every(param => typeof param !== 'object'));
-  }
-
-  private getDefaultValue(params: any[]): any {
-    return getValueFromType(this.type, ...params);
-  }
-
-  private createSingleParamNode(param: any): Node {
-    const node = asConstNode(param, this.type);
-
-    try {
-      if (node.getNodeType() === this.type) return asNode(node);
-    } catch {}
-
-    return asNode(new ConvertNode(node, this.type));
-  }
-
-  private createMultiParamNode(params: any[]): Node {
-    const nodes = params.map(param => asConstNode(param));
-    return asNode(new JoinNode(nodes, this.type));
-  }
-}
-
-// Usage
 const primitive = (type: TypeName) => {
-  const factory = new PrimitiveFactory(type);
-  return (...params) => factory.create(...params);
+  const isComponent = TypeName.isComponent(type);
+
+  return (...params) => {
+    if (params.length === 0 || (!isComponent && params.every(param => typeof param !== 'object')))
+      params = [getValueFromType(type, ...params)];
+
+    if (params.length === 1) {
+      const node = asConstNode(params[0], type);
+
+      try {
+        if (node.getNodeType() === type) return asNode(node);
+      } catch {}
+
+      return asNode(new ConvertNode(node, type));
+    }
+
+    const nodes = params.map(param => asConstNode(param));
+    return asNode(new JoinNode(nodes, type));
+  };
 };
 
 export const color = primitive(TypeName.color);
