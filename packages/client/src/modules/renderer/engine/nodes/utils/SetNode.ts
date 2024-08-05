@@ -45,4 +45,4 @@ export class SetNode extends TempNode {
   }
 }
 
-Node.Map.set('set', SetNode);
+Node.Map.set = SetNode;

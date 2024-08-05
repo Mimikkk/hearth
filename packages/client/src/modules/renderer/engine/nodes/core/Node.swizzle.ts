@@ -139,7 +139,7 @@ export const implSwizzle = () => {
       key,
       {
         get(): SplitNode {
-          const split = Node.Map.get('split');
+          const split = Node.Map.split;
 
           return Node.as(new split(this, key)) as SplitNode;
         },
@@ -155,7 +155,7 @@ export const implSwizzle = () => {
       key,
       {
         get(): SplitNode {
-          const split = Node.Map.get('split');
+          const split = Node.Map.split;
 
           return Node.as(new split(this, swizzleXyzw[i])) as SplitNode;
         },
@@ -172,7 +172,7 @@ export const implSwizzle = () => {
   for (const key of swizzleXyzw) {
     //@ts-expect-error
     Node.prototype[`set${key.toUpperCase()}`] = function (value: any): SetNode {
-      const set = Node.Map.get('set');
+      const set = Node.Map.set;
 
       return Node.as(new set(this, key, value)) as SetNode;
     };
@@ -181,7 +181,7 @@ export const implSwizzle = () => {
   for (let i = 0; i < swizzleRgba.length; ++i) {
     //@ts-expect-error
     Node.prototype[`set${swizzleRgba[i].toUpperCase()}`] = function (value: any): SetNode {
-      const set = Node.Map.get('set');
+      const set = Node.Map.set;
 
       return Node.as(new set(this, swizzleXyzw[i], value)) as SetNode;
     };
@@ -197,7 +197,7 @@ export const implIndexAccess = () => {
       index,
       {
         get(): ArrayElementNode {
-          const element = Node.Map.get('element');
+          const element = Node.Map.element;
 
           return Node.as(new element(this, new ConstNode(index, TypeName.u32))) as ArrayElementNode;
         },
