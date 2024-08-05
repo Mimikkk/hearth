@@ -1,8 +1,9 @@
 import { TempNode } from '../core/TempNode.js';
-import { addNodeCommand, proxyNode } from '../shadernode/ShaderNodes.js';
+import { proxyNode } from '../shadernode/ShaderNodes.js';
 import { Node } from '../core/Node.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
+import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
 
 export class OperatorNode extends TempNode {
   op: Operator;
@@ -64,7 +65,7 @@ export class OperatorNode extends TempNode {
     }
   }
 
-  generate(builder: NodeBuilder, output: TypeName): string | null {
+  generate(builder: NodeBuilder, output: TypeName): string {
     const op = this.op;
 
     const aNode = this.aNode;
@@ -160,124 +161,124 @@ enum Operator {
   BitShiftRight = '>>',
 }
 
-export const add = proxyNode(
-  class extends OperatorNode {
-    op = Operator.Add;
-  },
-);
-export const sub = proxyNode(
-  class extends OperatorNode {
-    op = Operator.Sub;
-  },
-);
-export const mul = proxyNode(
-  class extends OperatorNode {
-    op = Operator.Mul;
-  },
-);
-export const div = proxyNode(
-  class extends OperatorNode {
-    op = Operator.Div;
-  },
-);
-export const remainder = proxyNode(
-  class extends OperatorNode {
-    op = Operator.Remainder;
-  },
-);
-export const equal = proxyNode(
-  class extends OperatorNode {
-    op = Operator.eq;
-  },
-);
-export const notEqual = proxyNode(
-  class extends OperatorNode {
-    op = Operator.neq;
-  },
-);
-export const lessThan = proxyNode(
-  class extends OperatorNode {
-    op = Operator.lt;
-  },
-);
-export const greaterThan = proxyNode(
-  class extends OperatorNode {
-    op = Operator.gt;
-  },
-);
-export const lessThanEqual = proxyNode(
-  class extends OperatorNode {
-    op = Operator.lte;
-  },
-);
-export const greaterThanEqual = proxyNode(
-  class extends OperatorNode {
-    op = Operator.gte;
-  },
-);
-export const and = proxyNode(
-  class extends OperatorNode {
-    op = Operator.And;
-  },
-);
-export const or = proxyNode(
-  class extends OperatorNode {
-    op = Operator.Or;
-  },
-);
-export const not = proxyNode(
-  class extends OperatorNode {
-    op = Operator.Not;
-  },
-);
-export const bitAnd = proxyNode(
-  class extends OperatorNode {
-    op = Operator.BitAnd;
-  },
-);
-export const bitNot = proxyNode(
-  class extends OperatorNode {
-    op = Operator.BitNot;
-  },
-);
-export const bitOr = proxyNode(
-  class extends OperatorNode {
-    op = Operator.BitOr;
-  },
-);
-export const bitXor = proxyNode(
-  class extends OperatorNode {
-    op = Operator.BitXor;
-  },
-);
-export const shiftLeft = proxyNode(
-  class extends OperatorNode {
-    op = Operator.BitShiftLeft;
-  },
-);
-export const shiftRight = proxyNode(
-  class extends OperatorNode {
-    op = Operator.BitShiftRight;
-  },
-);
+export class AddNode extends OperatorNode {
+  op = Operator.Add;
+}
 
-addNodeCommand('add', add);
-addNodeCommand('sub', sub);
-addNodeCommand('mul', mul);
-addNodeCommand('div', div);
-addNodeCommand('remainder', remainder);
-addNodeCommand('equal', equal);
-addNodeCommand('notEqual', notEqual);
-addNodeCommand('lessThan', lessThan);
-addNodeCommand('greaterThan', greaterThan);
-addNodeCommand('lessThanEqual', lessThanEqual);
-addNodeCommand('greaterThanEqual', greaterThanEqual);
-addNodeCommand('and', and);
-addNodeCommand('or', or);
-addNodeCommand('not', not);
-addNodeCommand('bitAnd', bitAnd);
-addNodeCommand('bitNot', bitNot);
-addNodeCommand('bitOr', bitOr);
-addNodeCommand('bitXor', bitXor);
-addNodeCommand('shiftLeft', shiftLeft);
-addNodeCommand('shiftRight', shiftRight);
+export class SubNode extends OperatorNode {
+  op = Operator.Sub;
+}
+
+export class MulNode extends OperatorNode {
+  op = Operator.Mul;
+}
+
+export class DivNode extends OperatorNode {
+  op = Operator.Div;
+}
+
+export class RemainderNode extends OperatorNode {
+  op = Operator.Remainder;
+}
+
+export class EqualNode extends OperatorNode {
+  op = Operator.eq;
+}
+
+export class NotEqualNode extends OperatorNode {
+  op = Operator.neq;
+}
+
+export class LessThanNode extends OperatorNode {
+  op = Operator.lt;
+}
+
+export class GreaterThanNode extends OperatorNode {
+  op = Operator.gt;
+}
+
+export class LessThanEqualNode extends OperatorNode {
+  op = Operator.lte;
+}
+
+export class GreaterThanEqualNode extends OperatorNode {
+  op = Operator.gte;
+}
+
+export class AndNode extends OperatorNode {
+  op = Operator.And;
+}
+
+export class OrNode extends OperatorNode {
+  op = Operator.Or;
+}
+
+export class NotNode extends OperatorNode {
+  op = Operator.Not;
+}
+
+export class BitAndNode extends OperatorNode {
+  op = Operator.BitAnd;
+}
+
+export class BitNotNode extends OperatorNode {
+  op = Operator.BitNot;
+}
+
+export class BitOrNode extends OperatorNode {
+  op = Operator.BitOr;
+}
+
+export class BitXorNode extends OperatorNode {
+  op = Operator.BitXor;
+}
+
+export class ShiftLeftNode extends OperatorNode {
+  op = Operator.BitShiftLeft;
+}
+
+export class ShiftRightNode extends OperatorNode {
+  op = Operator.BitShiftRight;
+}
+
+export const add = proxyNode(AddNode);
+export const sub = proxyNode(SubNode);
+export const mul = proxyNode(MulNode);
+export const div = proxyNode(DivNode);
+export const remainder = proxyNode(RemainderNode);
+export const equal = proxyNode(EqualNode);
+export const notEqual = proxyNode(NotEqualNode);
+export const lessThan = proxyNode(LessThanNode);
+export const greaterThan = proxyNode(GreaterThanNode);
+export const lessThanEqual = proxyNode(LessThanEqualNode);
+export const greaterThanEqual = proxyNode(GreaterThanEqualNode);
+export const and = proxyNode(AndNode);
+export const or = proxyNode(OrNode);
+export const not = proxyNode(NotNode);
+export const bitAnd = proxyNode(BitAndNode);
+export const bitNot = proxyNode(BitNotNode);
+export const bitOr = proxyNode(BitOrNode);
+export const bitXor = proxyNode(BitXorNode);
+export const shiftLeft = proxyNode(ShiftLeftNode);
+export const shiftRight = proxyNode(ShiftRightNode);
+
+implCommand('add', AddNode);
+implCommand('sub', SubNode);
+implCommand('mul', MulNode);
+implCommand('div', DivNode);
+implCommand('remainder', RemainderNode);
+implCommand('equal', EqualNode);
+implCommand('notEqual', NotEqualNode);
+implCommand('lessThan', LessThanNode);
+implCommand('greaterThan', GreaterThanNode);
+implCommand('lessThanEqual', LessThanEqualNode);
+implCommand('greaterThanEqual', GreaterThanEqualNode);
+implCommand('and', AndNode);
+implCommand('or', OrNode);
+implCommand('not', NotNode);
+implCommand('bitAnd', BitAndNode);
+implCommand('bitNot', BitNotNode);
+implCommand('bitOr', BitOrNode);
+implCommand('bitXor', BitXorNode);
+implCommand('shiftLeft', ShiftLeftNode);
+implCommand('shiftRight', ShiftRightNode);
