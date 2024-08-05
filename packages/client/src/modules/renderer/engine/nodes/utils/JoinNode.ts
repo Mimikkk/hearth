@@ -1,11 +1,11 @@
 import { TempNode } from '../core/TempNode.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
-import { Node } from '../core/Node.js';
+import { ConstNode } from '@modules/renderer/engine/nodes/core/ConstNode.js';
 
 export class JoinNode extends TempNode {
   constructor(
-    public nodes: Node[],
+    public nodes: ConstNode<number>[],
     type: TypeName,
   ) {
     super(type);

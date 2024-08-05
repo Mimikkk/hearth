@@ -27,4 +27,13 @@ export const asNodes = (array: any[], fallbackType?: TypeName): Node[] => {
   for (let i = 0, it = array.length; i < it; ++i) array[i] = asNode(array[i], fallbackType);
   return array;
 };
+
+export const proxyNode =
+  <T extends new (...params: any) => any>(NodeClass: T) =>
+  (...params: any[]): InstanceType<T> =>
+    asNode(new NodeClass(...asNodes(params))) as InstanceType<T>;
+
+export const fixedNode = <T extends new (...params: any) => any>(NodeClass: T, ...params: Node[]): InstanceType<T> =>
+  asNode(new NodeClass(...asNodes(params))) as InstanceType<T>;
+
 Node.as = asNode;

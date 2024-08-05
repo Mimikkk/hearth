@@ -28,7 +28,7 @@ export * from './core/UniformNode.js';
 export * from './core/VaryingNode.js';
 export * from './core/OutputStructNode.js';
 export * as NodeUtils from './core/NodeUtils.js';
-import './shadernode/ShaderNode.commands.js';
+import './shadernode/ShaderNode.primitves.js';
 import './lighting/LightsNodeMap.initialize.js';
 
 export * from './math/MathNode.js';
