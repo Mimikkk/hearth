@@ -44,10 +44,3 @@ export const implCommand = (name: string, node: any, cursed?: boolean) => {
     };
   }
 };
-
-export const implCommands = (commands: Map<string, string>) => {
-  console.log('left to go', commands.size);
-  // for (const [name, command] of commands) {
-  //   implCommand(name, command);
-  // }
-};
