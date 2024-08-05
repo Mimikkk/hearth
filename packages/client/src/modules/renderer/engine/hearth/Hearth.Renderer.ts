@@ -556,13 +556,6 @@ export class HearthRenderer extends HearthComponent {
   transparentSort: SortFn = sortPainterDesc;
 }
 
-const maxlog = (max: number) => {
-  return (...params: any) => {
-    if (--max > 0) console.log(params);
-  };
-};
-const log = maxlog(10);
-
 const _scene = new Scene();
 const _drawSize = Vec2.new();
 const _screen = Vec4.new();

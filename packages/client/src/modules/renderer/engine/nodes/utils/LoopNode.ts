@@ -1,11 +1,11 @@
 import { Node } from '../core/Node.js';
 import { expression } from '../code/ExpressionNode.js';
-import { bypass } from '../core/BypassNode.js';
 import { context } from '../core/ContextNode.js';
-import { addNodeCommand, asNode, asNodes } from '../shadernode/ShaderNodes.js';
+import { asNode, asNodes } from '../shadernode/ShaderNodes.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { StackNode } from '@modules/renderer/engine/nodes/core/StackNode.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
+import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
 
 export class LoopNode extends Node {
   constructor(public params: Node[] = []) {
@@ -152,4 +152,10 @@ export const loop = (...params) => asNode(new LoopNode(asNodes(params, 'i32'))).
 export const Continue = () => expression('continue').append();
 export const Break = () => expression('break').append();
 
-addNodeCommand('loop', (returns, ...params) => bypass(returns, loop(...params)));
+export class LoopLoopNode extends LoopNode {
+  constructor(returns, ...params) {
+    super(returns, loop(...params));
+  }
+}
+
+implCommand('loop', LoopLoopNode);

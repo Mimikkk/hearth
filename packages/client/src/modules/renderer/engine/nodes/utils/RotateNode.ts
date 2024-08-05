@@ -1,6 +1,7 @@
 import { TempNode } from '../core/TempNode.js';
-import { addNodeCommand, mat2, mat4, proxyNode, vec4 } from '../shadernode/ShaderNodes.js';
+import { mat2, mat4, vec4 } from '../shadernode/ShaderNodes.js';
 import { cos, sin } from '../math/MathNode.js';
+import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
 
 export class RotateNode extends TempNode {
   constructor(positionNode, rotationNode) {
@@ -52,6 +53,4 @@ export class RotateNode extends TempNode {
   }
 }
 
-export const rotate = proxyNode(RotateNode);
-
-addNodeCommand('rotate', rotate);
+implCommand('rotate', RotateNode);

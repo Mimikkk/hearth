@@ -1,5 +1,6 @@
 import { TempNode } from '../core/TempNode.js';
-import { addNodeCommand, proxyNode, vec2 } from '../shadernode/ShaderNodes.js';
+import { proxyNode, vec2 } from '../shadernode/ShaderNodes.js';
+import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
 
 export class RotateUVNode extends TempNode {
   constructor(uvNode, rotationNode, centerNode = vec2(0.5)) {
@@ -21,4 +22,4 @@ export class RotateUVNode extends TempNode {
 
 export const rotateUV = proxyNode(RotateUVNode);
 
-addNodeCommand('rotateUV', rotateUV);
+implCommand('rotateUV', RotateUVNode);

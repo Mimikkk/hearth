@@ -1,8 +1,9 @@
 import { TempNode } from '../core/TempNode.js';
-import { addNodeCommand, proxyNode } from '../shadernode/ShaderNodes.js';
+import { proxyNode } from '../shadernode/ShaderNodes.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { Node } from '../core/Node.js';
+import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
 
 export class PackingNode extends TempNode {
   scope: NodeVariant;
@@ -30,16 +31,16 @@ enum NodeVariant {
   ColorToDirection = 'colorToDirection',
 }
 
-export const directionToColor = proxyNode(
-  class extends PackingNode {
-    scope = NodeVariant.DirectionToColor;
-  },
-);
-export const colorToDirection = proxyNode(
-  class extends PackingNode {
-    scope = NodeVariant.ColorToDirection;
-  },
-);
+export class DirectionToColorNode extends PackingNode {
+  scope = NodeVariant.DirectionToColor;
+}
 
-addNodeCommand('directionToColor', directionToColor);
-addNodeCommand('colorToDirection', colorToDirection);
+export class ColorToDirectionNode extends PackingNode {
+  scope = NodeVariant.ColorToDirection;
+}
+
+export const directionToColor = proxyNode(DirectionToColorNode);
+export const colorToDirection = proxyNode(ColorToDirectionNode);
+
+implCommand('directionToColor', DirectionToColorNode);
+implCommand('colorToDirection', ColorToDirectionNode);

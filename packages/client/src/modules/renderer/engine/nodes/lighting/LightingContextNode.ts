@@ -15,7 +15,6 @@ export class LightingContextNode extends ContextNode {
   ) {
     super(node);
 
-    console.log(lightingModel, backdropNode, backdropAlphaNode);
     this.context = this.getContext();
   }
 

@@ -1,8 +1,9 @@
 import { Node } from '../core/Node.js';
-import { addNodeCommand, f32, proxyNode } from '../shadernode/ShaderNodes.js';
+import { f32, proxyNode } from '../shadernode/ShaderNodes.js';
+import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
 
 export class RemapNode extends Node {
-  doClamp: boolean;
+  doClamp: boolean = false;
 
   constructor(
     public node: Node,
@@ -25,17 +26,13 @@ export class RemapNode extends Node {
   }
 }
 
-export const remap = proxyNode(
-  class extends RemapNode {
-    doClamp = false;
-  },
-);
+export const remap = proxyNode(RemapNode);
 
-export const remapClamp = proxyNode(
-  class extends RemapNode {
-    doClamp = true;
-  },
-);
+export class RemapClampNode extends RemapNode {
+  doClamp = true;
+}
 
-addNodeCommand('remap', remap);
-addNodeCommand('remapClamp', remapClamp);
+export const remapClamp = proxyNode(RemapClampNode);
+
+implCommand('remap', RemapNode);
+implCommand('remapClamp', RemapClampNode);
