@@ -1,5 +1,6 @@
 import { Node } from '../core/Node.js';
-import { addNodeCommand, proxyNode } from '../shadernode/ShaderNodes.js';
+import { proxyNode } from '../shadernode/ShaderNodes.js';
+import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
 
 export class HashNode extends Node {
   constructor(public seed: Node) {
@@ -17,4 +18,4 @@ export class HashNode extends Node {
 
 export const hash = proxyNode(HashNode);
 
-addNodeCommand('hash', hash);
+implCommand('hash', HashNode);

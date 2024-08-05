@@ -1,6 +1,6 @@
 import { TempNode } from '../core/TempNode.js';
 import { mix } from '../math/MathNode.js';
-import { addNodeCommand, asNode, hsl, proxyNode, vec4 } from '../shadernode/ShaderNodes.js';
+import { hsl, proxyNode, vec4 } from '../shadernode/ShaderNodes.js';
 import { ColorSpace } from '@modules/renderer/engine/engine.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { Node } from '../core/Node.js';
@@ -70,23 +70,6 @@ const getMethod = (source: ColorSpace, to: ColorSpace) => {
   return NodeVariant.LinearToLinear;
 };
 
-export const linearToColorSpace = (node: Node, colorSpace: ColorSpace) => {
-  const method = getMethod(ColorSpace.LinearSRGB, colorSpace);
-
-  const spaceNode = new ColorSpaceNode(asNode(node));
-  spaceNode.method = method;
-
-  return asNode(spaceNode);
-};
-export const colorSpaceToLinear = (node: Node, colorSpace: ColorSpace) => {
-  const method = getMethod(colorSpace, ColorSpace.LinearSRGB);
-
-  const spaceNode = new ColorSpaceNode(asNode(node));
-  spaceNode.method = method;
-
-  return asNode(spaceNode);
-};
-
 export class LinearToSRGBNode extends ColorSpaceNode {
   method = NodeVariant.LinearTosRGB;
 }
@@ -95,10 +78,26 @@ export class SRGBToLinearNode extends ColorSpaceNode {
   method = NodeVariant.sRGBToLinear;
 }
 
+export class LinearToColorSpaceNode extends ColorSpaceNode {
+  constructor(node: Node, colorSpace: ColorSpace) {
+    super(node);
+    this.method = getMethod(ColorSpace.LinearSRGB, colorSpace);
+  }
+}
+
+export class ColorSpaceToLinearNode extends ColorSpaceNode {
+  constructor(node: Node, colorSpace: ColorSpace) {
+    super(node);
+    this.method = getMethod(colorSpace, ColorSpace.LinearSRGB);
+  }
+}
+
 export const linearTosRGB = proxyNode(LinearToSRGBNode);
 export const sRGBToLinear = proxyNode(SRGBToLinearNode);
+export const colorSpaceToLinear = proxyNode(ColorSpaceToLinearNode);
+export const linearToColorSpace = proxyNode(LinearToColorSpaceNode);
 
 implCommand('linearTosRGB', LinearToSRGBNode);
 implCommand('sRGBToLinear', SRGBToLinearNode);
-addNodeCommand('linearToColorSpace', linearToColorSpace);
-addNodeCommand('colorSpaceToLinear', colorSpaceToLinear);
+implCommand('linearToColorSpace', LinearToColorSpaceNode);
+implCommand('colorSpaceToLinear', ColorSpaceToLinearNode);

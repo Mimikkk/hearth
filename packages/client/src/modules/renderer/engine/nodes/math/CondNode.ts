@@ -1,8 +1,9 @@
 import { Node } from '../core/Node.js';
 import { property } from '../core/PropertyNode.js';
-import { addNodeCommand, proxyNode } from '../shadernode/ShaderNodes.js';
+import { proxyNode } from '../shadernode/ShaderNodes.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
+import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
 
 export class CondNode extends Node {
   constructor(
@@ -58,6 +59,8 @@ export class CondNode extends Node {
   }
 }
 
+Node.Map.cond = CondNode;
+
 export const cond = proxyNode(CondNode);
 
-addNodeCommand('cond', cond);
+implCommand('cond', CondNode);

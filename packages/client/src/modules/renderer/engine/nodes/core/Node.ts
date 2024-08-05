@@ -13,6 +13,7 @@ import { implIndexAccess, implSwizzle } from '@modules/renderer/engine/nodes/cor
 import { NodeStack } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.stack.js';
 import { StackNode } from '@modules/renderer/engine/nodes/core/StackNode.js';
 import type { AssignNode } from '@modules/renderer/engine/nodes/core/AssignNode.js';
+import type { CondNode } from '@modules/renderer/engine/nodes/math/CondNode.js';
 
 let _nodeId = 0;
 
@@ -23,11 +24,13 @@ export class Node {
     element: typeof ArrayElementNode;
     assign: typeof AssignNode;
     set: typeof SetNode;
+    cond: typeof CondNode;
   } = {
     assign: null!,
     element: null!,
     split: null!,
     set: null!,
+    cond: null!,
   };
   declare isNode: true;
   name?: string;
@@ -526,8 +529,6 @@ export class Node {
   declare setABGR: (value: any) => SetNode;
   declare setABRG: (value: any) => SetNode;
 }
-
-const x = { Node };
 
 implSwizzle();
 implIndexAccess();

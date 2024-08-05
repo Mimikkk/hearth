@@ -4,6 +4,7 @@ import { addNodeCommand, asNode, f32, proxyNode, vec3, vec4 } from '../shadernod
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { Node } from '../core/Node.js';
+import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
 
 export class UnaryNode extends TempNode {
   declare method: UnaryVariant | BinaryVariant | TernaryVariant;
@@ -51,6 +52,42 @@ export class UnaryNode extends TempNode {
       }
     }
   }
+}
+
+enum UnaryVariant {
+  All = 'all',
+  Any = 'any',
+  Equals = 'equals',
+  Radians = 'radians',
+  Degrees = 'degrees',
+  Exp = 'exp',
+  Exp2 = 'exp2',
+  Log = 'log',
+  Log2 = 'log2',
+  Sqrt = 'sqrt',
+  InverseSqrt = 'inverseSqrt',
+  Floor = 'floor',
+  Ceil = 'ceil',
+  Normalize = 'normalize',
+  Fract = 'fract',
+  Sin = 'sin',
+  Cos = 'cos',
+  Tan = 'tan',
+  Asin = 'asin',
+  Acos = 'acos',
+  Atan = 'atan',
+  Abs = 'abs',
+  Sign = 'sign',
+  Length = 'length',
+  Negate = 'negate',
+  OneMinus = 'oneMinus',
+  Dpdx = 'dpdx',
+  Dpdy = 'dpdy',
+  Round = 'round',
+  Reciprocal = 'reciprocal',
+  Trunc = 'trunc',
+  Fwidth = 'fwidth',
+  Bitcast = 'bitcast',
 }
 
 export class BinaryNode extends TempNode {
@@ -134,6 +171,21 @@ export class BinaryNode extends TempNode {
   }
 }
 
+enum BinaryVariant {
+  Atan2 = 'atan2',
+  Min = 'min',
+  Max = 'max',
+  Mod = 'mod',
+  Step = 'step',
+  Reflect = 'reflect',
+  Distance = 'distance',
+  Difference = 'difference',
+  Dot = 'dot',
+  Cross = 'cross',
+  Pow = 'pow',
+  TransformDirection = 'transformDirection',
+}
+
 export class TernaryNode extends TempNode {
   declare method: UnaryVariant | BinaryVariant | TernaryVariant;
 
@@ -205,57 +257,6 @@ export class TernaryNode extends TempNode {
   }
 }
 
-enum UnaryVariant {
-  All = 'all',
-  Any = 'any',
-  Equals = 'equals',
-  Radians = 'radians',
-  Degrees = 'degrees',
-  Exp = 'exp',
-  Exp2 = 'exp2',
-  Log = 'log',
-  Log2 = 'log2',
-  Sqrt = 'sqrt',
-  InverseSqrt = 'inverseSqrt',
-  Floor = 'floor',
-  Ceil = 'ceil',
-  Normalize = 'normalize',
-  Fract = 'fract',
-  Sin = 'sin',
-  Cos = 'cos',
-  Tan = 'tan',
-  Asin = 'asin',
-  Acos = 'acos',
-  Atan = 'atan',
-  Abs = 'abs',
-  Sign = 'sign',
-  Length = 'length',
-  Negate = 'negate',
-  OneMinus = 'oneMinus',
-  Dpdx = 'dpdx',
-  Dpdy = 'dpdy',
-  Round = 'round',
-  Reciprocal = 'reciprocal',
-  Trunc = 'trunc',
-  Fwidth = 'fwidth',
-  Bitcast = 'bitcast',
-}
-
-enum BinaryVariant {
-  Atan2 = 'atan2',
-  Min = 'min',
-  Max = 'max',
-  Mod = 'mod',
-  Step = 'step',
-  Reflect = 'reflect',
-  Distance = 'distance',
-  Difference = 'difference',
-  Dot = 'dot',
-  Cross = 'cross',
-  Pow = 'pow',
-  TransformDirection = 'transformDirection',
-}
-
 enum TernaryVariant {
   Mix = 'mix',
   Clamp = 'clamp',
@@ -265,271 +266,300 @@ enum TernaryVariant {
 }
 
 export const EPSILON = f32(1e-6);
-export const INFINITY = f32(1e6);
 export const PI = f32(Math.PI);
-export const PI2 = f32(Math.PI * 2);
 
-export const all = proxyNode(
-  class extends UnaryNode {
-    method = UnaryVariant.All;
-  },
-);
-export const any = proxyNode(
-  class extends UnaryNode {
-    method = UnaryVariant.Any;
-  },
-);
-export const equals = proxyNode(
-  class extends UnaryNode {
-    method = UnaryVariant.Equals;
-  },
-);
-export const radians = proxyNode(
-  class extends UnaryNode {
-    method = UnaryVariant.Radians;
-  },
-);
-export const degrees = proxyNode(
-  class extends UnaryNode {
-    method = UnaryVariant.Degrees;
-  },
-);
-export const exp = proxyNode(
-  class extends UnaryNode {
-    method = UnaryVariant.Exp;
-  },
-);
-export const exp2 = proxyNode(
-  class extends UnaryNode {
-    method = UnaryVariant.Exp2;
-  },
-);
-export const log = proxyNode(
-  class extends UnaryNode {
-    method = UnaryVariant.Log;
-  },
-);
-export const log2 = proxyNode(
-  class extends UnaryNode {
-    method = UnaryVariant.Log2;
-  },
-);
-export const sqrt = proxyNode(
-  class extends UnaryNode {
-    method = UnaryVariant.Sqrt;
-  },
-);
-export const inverseSqrt = proxyNode(
-  class extends UnaryNode {
-    method = UnaryVariant.InverseSqrt;
-  },
-);
-export const floor = proxyNode(
-  class extends UnaryNode {
-    method = UnaryVariant.Floor;
-  },
-);
-export const ceil = proxyNode(
-  class extends UnaryNode {
-    method = UnaryVariant.Ceil;
-  },
-);
-export const normalize = proxyNode(
-  class extends UnaryNode {
-    method = UnaryVariant.Normalize;
-  },
-);
-export const fract = proxyNode(
-  class extends UnaryNode {
-    method = UnaryVariant.Fract;
-  },
-);
-export const sin = proxyNode(
-  class extends UnaryNode {
-    method = UnaryVariant.Sin;
-  },
-);
-export const cos = proxyNode(
-  class extends UnaryNode {
-    method = UnaryVariant.Cos;
-  },
-);
-export const tan = proxyNode(
-  class extends UnaryNode {
-    method = UnaryVariant.Tan;
-  },
-);
-export const asin = proxyNode(
-  class extends UnaryNode {
-    method = UnaryVariant.Asin;
-  },
-);
-export const acos = proxyNode(
-  class extends UnaryNode {
-    method = UnaryVariant.Acos;
-  },
-);
-export const atan = proxyNode(
-  class extends UnaryNode {
-    method = UnaryVariant.Atan;
-  },
-);
-export const abs = proxyNode(
-  class extends UnaryNode {
-    method = UnaryVariant.Abs;
-  },
-);
-export const sign = proxyNode(
-  class extends UnaryNode {
-    method = UnaryVariant.Sign;
-  },
-);
-export const length = proxyNode(
-  class extends UnaryNode {
-    method = UnaryVariant.Length;
-  },
-);
-export const negate = proxyNode(
-  class extends UnaryNode {
-    method = UnaryVariant.Negate;
-  },
-);
-export const oneMinus = proxyNode(
-  class extends UnaryNode {
-    method = UnaryVariant.OneMinus;
-  },
-);
-export const dpdx = proxyNode(
-  class extends UnaryNode {
-    method = UnaryVariant.Dpdx;
-  },
-);
-export const dpdy = proxyNode(
-  class extends UnaryNode {
-    method = UnaryVariant.Dpdy;
-  },
-);
-export const round = proxyNode(
-  class extends UnaryNode {
-    method = UnaryVariant.Round;
-  },
-);
-export const reciprocal = proxyNode(
-  class extends UnaryNode {
-    method = UnaryVariant.Reciprocal;
-  },
-);
-export const trunc = proxyNode(
-  class extends UnaryNode {
-    method = UnaryVariant.Trunc;
-  },
-);
-export const fwidth = proxyNode(
-  class extends UnaryNode {
-    method = UnaryVariant.Fwidth;
-  },
-);
-export const bitcast = proxyNode(
-  class extends UnaryNode {
-    method = UnaryVariant.Bitcast;
-  },
-);
+export class AllNode extends UnaryNode {
+  method = UnaryVariant.All;
+}
 
-export const atan2 = proxyNode(
-  class extends BinaryNode {
-    method = BinaryVariant.Atan2;
-  },
-);
-export const min = proxyNode(
-  class extends BinaryNode {
-    method = BinaryVariant.Min;
-  },
-);
-export const max = proxyNode(
-  class extends BinaryNode {
-    method = BinaryVariant.Max;
-  },
-);
-export const mod = proxyNode(
-  class extends BinaryNode {
-    method = BinaryVariant.Mod;
-  },
-);
-export const step = proxyNode(
-  class extends BinaryNode {
-    method = BinaryVariant.Step;
-  },
-);
-export const reflect = proxyNode(
-  class extends BinaryNode {
-    method = BinaryVariant.Reflect;
-  },
-);
-export const distance = proxyNode(
-  class extends BinaryNode {
-    method = BinaryVariant.Distance;
-  },
-);
-export const difference = proxyNode(
-  class extends BinaryNode {
-    method = BinaryVariant.Difference;
-  },
-);
-export const dot = proxyNode(
-  class extends BinaryNode {
-    method = BinaryVariant.Dot;
-  },
-);
-export const cross = proxyNode(
-  class extends BinaryNode {
-    method = BinaryVariant.Cross;
-  },
-);
-export const pow = proxyNode(
-  class extends BinaryNode {
-    method = BinaryVariant.Pow;
-  },
-);
-export const pow2 = proxyNode(
-  class extends BinaryNode {
-    method = BinaryVariant.Pow;
+export class AnyNode extends UnaryNode {
+  method = UnaryVariant.Any;
+}
 
-    constructor(aNode: Node) {
-      super(aNode, f32(2));
-    }
-  },
-);
-export const pow3 = proxyNode(
-  class extends BinaryNode {
-    method = BinaryVariant.Pow;
+export class EqualsNode extends UnaryNode {
+  method = UnaryVariant.Equals;
+}
 
-    constructor(aNode: Node) {
-      super(aNode, f32(3));
-    }
-  },
-);
+export class RadiansNode extends UnaryNode {
+  method = UnaryVariant.Radians;
+}
 
-export const pow4 = proxyNode(
-  class extends BinaryNode {
-    method = BinaryVariant.Pow;
+export class DegreesNode extends UnaryNode {
+  method = UnaryVariant.Degrees;
+}
 
-    constructor(aNode: Node) {
-      super(aNode, f32(4));
-    }
-  },
-);
-export const transformDirection = proxyNode(
-  class extends BinaryNode {
-    method = BinaryVariant.TransformDirection;
-  },
-);
+export class ExpNode extends UnaryNode {
+  method = UnaryVariant.Exp;
+}
 
-export const cbrt = (a: Node) => mul(sign(a), pow(abs(a), 1.0 / 3.0));
-export const lengthSq = (a: Node) => dot(a, a);
+export class Exp2Node extends UnaryNode {
+  method = UnaryVariant.Exp2;
+}
+
+export class LogNode extends UnaryNode {
+  method = UnaryVariant.Log;
+}
+
+export class Log2Node extends UnaryNode {
+  method = UnaryVariant.Log2;
+}
+
+export class SqrtNode extends UnaryNode {
+  method = UnaryVariant.Sqrt;
+}
+
+export class InverseSqrtNode extends UnaryNode {
+  method = UnaryVariant.InverseSqrt;
+}
+
+export class FloorNode extends UnaryNode {
+  method = UnaryVariant.Floor;
+}
+
+export class CeilNode extends UnaryNode {
+  method = UnaryVariant.Ceil;
+}
+
+export class NormalizeNode extends UnaryNode {
+  method = UnaryVariant.Normalize;
+}
+
+export class FractNode extends UnaryNode {
+  method = UnaryVariant.Fract;
+}
+
+export class SinNode extends UnaryNode {
+  method = UnaryVariant.Sin;
+}
+
+export class CosNode extends UnaryNode {
+  method = UnaryVariant.Cos;
+}
+
+export class TanNode extends UnaryNode {
+  method = UnaryVariant.Tan;
+}
+
+export class AsinNode extends UnaryNode {
+  method = UnaryVariant.Asin;
+}
+
+export class AcosNode extends UnaryNode {
+  method = UnaryVariant.Acos;
+}
+
+export class AtanNode extends UnaryNode {
+  method = UnaryVariant.Atan;
+}
+
+export class AbsNode extends UnaryNode {
+  method = UnaryVariant.Abs;
+}
+
+export class SignNode extends UnaryNode {
+  method = UnaryVariant.Sign;
+}
+
+export class LengthNode extends UnaryNode {
+  method = UnaryVariant.Length;
+}
+
+export class NegateNode extends UnaryNode {
+  method = UnaryVariant.Negate;
+}
+
+export class OneMinusNode extends UnaryNode {
+  method = UnaryVariant.OneMinus;
+}
+
+export class DpdxNode extends UnaryNode {
+  method = UnaryVariant.Dpdx;
+}
+
+export class DpdyNode extends UnaryNode {
+  method = UnaryVariant.Dpdy;
+}
+
+export class RoundNode extends UnaryNode {
+  method = UnaryVariant.Round;
+}
+
+export class ReciprocalNode extends UnaryNode {
+  method = UnaryVariant.Reciprocal;
+}
+
+export class TruncNode extends UnaryNode {
+  method = UnaryVariant.Trunc;
+}
+
+export class FwidthNode extends UnaryNode {
+  method = UnaryVariant.Fwidth;
+}
+
+export class BitcastNode extends UnaryNode {
+  method = UnaryVariant.Bitcast;
+}
+
+export class Atan2Node extends BinaryNode {
+  method = BinaryVariant.Atan2;
+}
+
+export class MinNode extends BinaryNode {
+  method = BinaryVariant.Min;
+}
+
+export class MaxNode extends BinaryNode {
+  method = BinaryVariant.Max;
+}
+
+export class ModNode extends BinaryNode {
+  method = BinaryVariant.Mod;
+}
+
+export class StepNode extends BinaryNode {
+  method = BinaryVariant.Step;
+}
+
+export class ReflectNode extends BinaryNode {
+  method = BinaryVariant.Reflect;
+}
+
+export class DistanceNode extends BinaryNode {
+  method = BinaryVariant.Distance;
+}
+
+export class DifferenceNode extends BinaryNode {
+  method = BinaryVariant.Difference;
+}
+
+export class DotNode extends BinaryNode {
+  method = BinaryVariant.Dot;
+}
+
+export class CrossNode extends BinaryNode {
+  method = BinaryVariant.Cross;
+}
+
+export class PowNode extends BinaryNode {
+  method = BinaryVariant.Pow;
+}
+
+export class TransformDirectionNode extends BinaryNode {
+  method = BinaryVariant.TransformDirection;
+}
+
+export class Pow2Node extends BinaryNode {
+  method = BinaryVariant.Pow;
+
+  constructor(aNode: Node) {
+    super(aNode, f32(2));
+  }
+}
+
+export class Pow3Node extends BinaryNode {
+  method = BinaryVariant.Pow;
+
+  constructor(aNode: Node) {
+    super(aNode, f32(3));
+  }
+}
+
+export class Pow4Node extends BinaryNode {
+  method = BinaryVariant.Pow;
+
+  constructor(aNode: Node) {
+    super(aNode, f32(4));
+  }
+}
+
+export class LengthSqNode extends DotNode {
+  constructor(a: Node) {
+    super(a, a);
+  }
+}
 
 export class MixNode extends TernaryNode {
   method = TernaryVariant.Mix;
 }
+
+export class RefractNode extends TernaryNode {
+  method = TernaryVariant.Refract;
+}
+
+export class SmoothstepNode extends TernaryNode {
+  method = TernaryVariant.Smoothstep;
+}
+
+export class FaceForwardNode extends TernaryNode {
+  method = TernaryVariant.FaceForward;
+}
+
+export class MixElementNode extends MixNode {
+  constructor(t: Node, e1: Node, e2: Node) {
+    super(e1, e2, t);
+  }
+}
+
+export class SmoothstepElementNode extends SmoothstepNode {
+  constructor(x: Node, low: Node, high: Node) {
+    super(low, high, x);
+  }
+}
+
+export const all = proxyNode(AllNode);
+export const any = proxyNode(AnyNode);
+export const equals = proxyNode(EqualsNode);
+export const radians = proxyNode(RadiansNode);
+export const degrees = proxyNode(DegreesNode);
+export const exp = proxyNode(ExpNode);
+export const exp2 = proxyNode(Exp2Node);
+export const log = proxyNode(LogNode);
+export const log2 = proxyNode(Log2Node);
+export const sqrt = proxyNode(SqrtNode);
+export const inverseSqrt = proxyNode(InverseSqrtNode);
+export const floor = proxyNode(FloorNode);
+export const ceil = proxyNode(CeilNode);
+export const normalize = proxyNode(NormalizeNode);
+export const fract = proxyNode(FractNode);
+export const sin = proxyNode(SinNode);
+export const cos = proxyNode(CosNode);
+export const tan = proxyNode(TanNode);
+export const asin = proxyNode(AsinNode);
+export const acos = proxyNode(AcosNode);
+export const atan = proxyNode(AtanNode);
+export const abs = proxyNode(AbsNode);
+export const sign = proxyNode(SignNode);
+export const length = proxyNode(LengthNode);
+export const negate = proxyNode(NegateNode);
+export const oneMinus = proxyNode(OneMinusNode);
+export const dpdx = proxyNode(DpdxNode);
+export const dpdy = proxyNode(DpdyNode);
+export const round = proxyNode(RoundNode);
+export const reciprocal = proxyNode(ReciprocalNode);
+export const trunc = proxyNode(TruncNode);
+export const fwidth = proxyNode(FwidthNode);
+export const bitcast = proxyNode(BitcastNode);
+
+export const atan2 = proxyNode(Atan2Node);
+export const min = proxyNode(MinNode);
+export const max = proxyNode(MaxNode);
+export const mod = proxyNode(ModNode);
+export const step = proxyNode(StepNode);
+export const reflect = proxyNode(ReflectNode);
+export const distance = proxyNode(DistanceNode);
+export const difference = proxyNode(DifferenceNode);
+export const dot = proxyNode(DotNode);
+export const cross = proxyNode(CrossNode);
+export const pow = proxyNode(PowNode);
+export const transformDirection = proxyNode(TransformDirectionNode);
+
+export const pow2 = proxyNode(Pow2Node);
+export const pow3 = proxyNode(Pow3Node);
+export const pow4 = proxyNode(Pow4Node);
+
+export const lengthSq = proxyNode(LengthSqNode);
+
+export const cbrt = (a: Node) => mul(sign(a), pow(abs(a), 1.0 / 3.0));
 
 export const mix = proxyNode(MixNode);
 export const clamp = (value: number, low: number = 0, high: number = 1): Node => {
@@ -539,77 +569,69 @@ export const clamp = (value: number, low: number = 0, high: number = 1): Node =>
 };
 export const saturate = (value: number) => clamp(value);
 
-export const refract = proxyNode(
-  class extends TernaryNode {
-    method = TernaryVariant.Refract;
-  },
-);
-export const smoothstep = proxyNode(
-  class extends TernaryNode {
-    method = TernaryVariant.Smoothstep;
-  },
-);
-export const faceForward = proxyNode(
-  class extends TernaryNode {
-    method = TernaryVariant.FaceForward;
-  },
-);
+export const refract = proxyNode(RefractNode);
+export const smoothstep = proxyNode(SmoothstepNode);
+export const faceForward = proxyNode(FaceForwardNode);
+export const mixElement = proxyNode(MixElementNode);
+export const smoothstepElement = proxyNode(SmoothstepElementNode);
 
-export const mixElement = (t: Node, e1: Node, e2: Node): Node => mix(e1, e2, t);
-export const smoothstepElement = (x: Node, low: Node, high: Node): Node => smoothstep(low, high, x);
+implCommand('all', AllNode);
+implCommand('any', AnyNode);
+implCommand('equals', EqualsNode);
+implCommand('radians', RadiansNode);
+implCommand('degrees', DegreesNode);
+implCommand('exp', ExpNode);
+implCommand('exp2', Exp2Node);
+implCommand('log', LogNode);
+implCommand('log2', Log2Node);
+implCommand('sqrt', SqrtNode);
+implCommand('inverseSqrt', InverseSqrtNode);
+implCommand('floor', FloorNode);
+implCommand('ceil', CeilNode);
+implCommand('normalize', NormalizeNode);
+implCommand('fract', FractNode);
+implCommand('sin', SinNode);
+implCommand('cos', CosNode);
+implCommand('tan', TanNode);
+implCommand('asin', AsinNode);
+implCommand('acos', AcosNode);
+implCommand('atan', AtanNode);
+implCommand('abs', AbsNode);
+implCommand('sign', SignNode);
+implCommand('length', LengthNode);
+implCommand('lengthSq', LengthSqNode);
+implCommand('negate', NegateNode);
+implCommand('oneMinus', OneMinusNode);
+implCommand('dpdx', DpdxNode);
+implCommand('dpdy', DpdyNode);
+implCommand('round', RoundNode);
+implCommand('reciprocal', ReciprocalNode);
+implCommand('trunc', TruncNode);
+implCommand('fwidth', FwidthNode);
+implCommand('atan2', Atan2Node);
+implCommand('min', MinNode);
+implCommand('max', MaxNode);
+implCommand('mod', ModNode);
+implCommand('step', StepNode);
+implCommand('reflect', ReflectNode);
+implCommand('distance', DistanceNode);
+implCommand('dot', DotNode);
+implCommand('cross', CrossNode);
+implCommand('pow', PowNode);
+implCommand('pow2', Pow2Node);
+implCommand('pow3', Pow3Node);
+implCommand('pow4', Pow4Node);
+implCommand('transformDirection', TransformDirectionNode);
+implCommand('mix', MixElementNode);
+implCommand('refract', RefractNode);
+implCommand('smoothstep', SmoothstepElementNode);
+implCommand('faceForward', FaceForwardNode);
+implCommand('difference', DifferenceNode);
 
-addNodeCommand('all', all);
-addNodeCommand('any', any);
-addNodeCommand('equals', equals);
-addNodeCommand('radians', radians);
-addNodeCommand('degrees', degrees);
-addNodeCommand('exp', exp);
-addNodeCommand('exp2', exp2);
-addNodeCommand('log', log);
-addNodeCommand('log2', log2);
-addNodeCommand('sqrt', sqrt);
-addNodeCommand('inverseSqrt', inverseSqrt);
-addNodeCommand('floor', floor);
-addNodeCommand('ceil', ceil);
-addNodeCommand('normalize', normalize);
-addNodeCommand('fract', fract);
-addNodeCommand('sin', sin);
-addNodeCommand('cos', cos);
-addNodeCommand('tan', tan);
-addNodeCommand('asin', asin);
-addNodeCommand('acos', acos);
-addNodeCommand('atan', atan);
-addNodeCommand('abs', abs);
-addNodeCommand('sign', sign);
-addNodeCommand('length', length);
-addNodeCommand('lengthSq', lengthSq);
-addNodeCommand('negate', negate);
-addNodeCommand('oneMinus', oneMinus);
-addNodeCommand('dpdx', dpdx);
-addNodeCommand('dpdy', dpdy);
-addNodeCommand('round', round);
-addNodeCommand('reciprocal', reciprocal);
-addNodeCommand('trunc', trunc);
-addNodeCommand('fwidth', fwidth);
-addNodeCommand('atan2', atan2);
-addNodeCommand('min', min);
-addNodeCommand('max', max);
-addNodeCommand('mod', mod);
-addNodeCommand('step', step);
-addNodeCommand('reflect', reflect);
-addNodeCommand('distance', distance);
-addNodeCommand('dot', dot);
-addNodeCommand('cross', cross);
-addNodeCommand('pow', pow);
-addNodeCommand('pow2', pow2);
-addNodeCommand('pow3', pow3);
-addNodeCommand('pow4', pow4);
-addNodeCommand('transformDirection', transformDirection);
-addNodeCommand('mix', mixElement);
+// implCommand('clamp', ClampNode);
+// implCommand('saturate', SaturateNode);
+// implCommand('cbrt', CbrtNode);
+
 addNodeCommand('clamp', clamp);
-addNodeCommand('refract', refract);
-addNodeCommand('smoothstep', smoothstepElement);
-addNodeCommand('faceForward', faceForward);
-addNodeCommand('difference', difference);
 addNodeCommand('saturate', saturate);
 addNodeCommand('cbrt', cbrt);

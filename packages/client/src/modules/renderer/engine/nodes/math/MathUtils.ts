@@ -12,3 +12,5 @@ addNodeCommand('parabola', parabola);
 addNodeCommand('gain', gain);
 addNodeCommand('pcurve', pcurve);
 addNodeCommand('sinc', sinc);
+
+// export class ParabolaNode extends PowNode {}
