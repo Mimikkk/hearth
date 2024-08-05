@@ -110,7 +110,6 @@ export * from './code/FunctionCallNode.js';
 export * from './code/FunctionNode.js';
 export * from './code/ScriptableNode.js';
 export * from './code/ScriptableValueNode.js';
-import './Nodes.commands.js';
 
 export * from './fog/FogNode.js';
 export * from './fog/FogRangeNode.js';

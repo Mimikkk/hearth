@@ -1,10 +1,13 @@
 import { TempNode } from '../core/TempNode.js';
-import { div, mul, sub } from './OperatorNode.js';
+import { div, mul, MulNode, sub } from './OperatorNode.js';
 import { addNodeCommand, asNode, f32, proxyNode, vec3, vec4 } from '../shadernode/ShaderNodes.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { Node } from '../core/Node.js';
 import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
+import { ConstNode } from '@modules/renderer/engine/nodes/core/ConstNode.js';
+import { asConstNode } from '@modules/renderer/engine/nodes/shadernode/utils.js';
+import { nodeProxy } from 'three/src/nodes/shadernode/ShaderNode.js';
 
 export class UnaryNode extends TempNode {
   declare method: UnaryVariant | BinaryVariant | TernaryVariant;
@@ -506,6 +509,30 @@ export class SmoothstepElementNode extends SmoothstepNode {
   }
 }
 
+export class ClampNode extends TernaryNode {
+  method = TernaryVariant.Clamp;
+
+  constructor(
+    value: ConstNode<number>,
+    min: ConstNode<number> = asNode(asConstNode(0)),
+    max: ConstNode<number> = asNode(asConstNode(1)),
+  ) {
+    super(asNode(value), asNode(min), asNode(max));
+  }
+}
+
+export class SaturateNode extends ClampNode {
+  constructor(value: ConstNode<number>) {
+    super(value);
+  }
+}
+
+export class CbrtNode extends MulNode {
+  constructor(a: ConstNode<number>) {
+    super(asNode(new SignNode(a)), pow(abs(a), 1.0 / 3.0));
+  }
+}
+
 export const all = proxyNode(AllNode);
 export const any = proxyNode(AnyNode);
 export const equals = proxyNode(EqualsNode);
@@ -559,21 +586,17 @@ export const pow4 = proxyNode(Pow4Node);
 
 export const lengthSq = proxyNode(LengthSqNode);
 
-export const cbrt = (a: Node) => mul(sign(a), pow(abs(a), 1.0 / 3.0));
-
 export const mix = proxyNode(MixNode);
-export const clamp = (value: number, low: number = 0, high: number = 1): Node => {
-  const math = new TernaryNode(asNode(value), asNode(low), asNode(high));
-  math.method = TernaryVariant.Clamp;
-  return asNode(math);
-};
-export const saturate = (value: number) => clamp(value);
 
 export const refract = proxyNode(RefractNode);
 export const smoothstep = proxyNode(SmoothstepNode);
 export const faceForward = proxyNode(FaceForwardNode);
 export const mixElement = proxyNode(MixElementNode);
 export const smoothstepElement = proxyNode(SmoothstepElementNode);
+
+export const clamp = nodeProxy(ClampNode);
+export const saturate = nodeProxy(SaturateNode);
+export const cbrt = nodeProxy(CbrtNode);
 
 implCommand('all', AllNode);
 implCommand('any', AnyNode);
@@ -627,11 +650,6 @@ implCommand('refract', RefractNode);
 implCommand('smoothstep', SmoothstepElementNode);
 implCommand('faceForward', FaceForwardNode);
 implCommand('difference', DifferenceNode);
-
-// implCommand('clamp', ClampNode);
-// implCommand('saturate', SaturateNode);
-// implCommand('cbrt', CbrtNode);
-
-addNodeCommand('clamp', clamp);
-addNodeCommand('saturate', saturate);
-addNodeCommand('cbrt', cbrt);
+implCommand('clamp', ClampNode);
+implCommand('saturate', SaturateNode);
+implCommand('cbrt', CbrtNode);

@@ -4,13 +4,14 @@ import { Node } from '../core/Node.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
+import { ConstNode } from '@modules/renderer/engine/nodes/core/ConstNode.js';
 
 export class OperatorNode extends TempNode {
   op: Operator;
-  aNode: Node;
-  bNode: Node;
+  aNode: ConstNode<number>;
+  bNode: ConstNode<number>;
 
-  constructor(aNode: Node, bNode: Node, ...params: Node[]) {
+  constructor(aNode: ConstNode<number>, bNode: ConstNode<number>, ...params: ConstNode<number>[]) {
     super();
 
     for (let i = 0; i < params.length; ++i) {
