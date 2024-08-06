@@ -1,5 +1,4 @@
 import { NodeUpdateStage } from '../core/constants.js';
-import { fixedNode } from '../shadernode/ShaderNodes.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { NodeFrame } from '@modules/renderer/engine/nodes/core/NodeFrame.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
@@ -9,10 +8,12 @@ import { UniformNode } from '@modules/renderer/engine/nodes/core/UniformNode.js'
 import type { ICamera } from '@modules/renderer/engine/entities/cameras/Camera.js';
 
 export class CameraNode extends Node {
-  scope: NodeVariant;
   uniform: UniformNode;
 
-  constructor(public camera: ICamera) {
+  constructor(
+    public scope: NodeVariant,
+    public camera?: ICamera,
+  ) {
     super();
 
     this.uniform = new UniformNode(null);
@@ -88,8 +89,9 @@ export class CameraNode extends Node {
     }
   }
 
-  generate(builder: NodeBuilder): string | null {
+  generate(builder: NodeBuilder): string {
     this.uniform.nodeType = this.getNodeType();
+
     return this.uniform.build(builder);
   }
 }
@@ -109,63 +111,15 @@ enum NodeVariant {
   Far = 'far',
 }
 
-export const cameraProjectionMatrix = fixedNode(
-  class extends CameraNode {
-    scope = NodeVariant.ProjectionMatrix;
-  },
-);
-export const cameraProjectionMatrixInverse = fixedNode(
-  class extends CameraNode {
-    scope = NodeVariant.ProjectionMatrixInverse;
-  },
-);
-export const cameraNear = fixedNode(
-  class extends CameraNode {
-    scope = NodeVariant.Near;
-  },
-);
-export const cameraFar = fixedNode(
-  class extends CameraNode {
-    scope = NodeVariant.Far;
-  },
-);
-export const cameraLogDepth = fixedNode(
-  class extends CameraNode {
-    scope = NodeVariant.LogDepth;
-  },
-);
-export const cameraViewMatrix = fixedNode(
-  class extends CameraNode {
-    scope = NodeVariant.ViewMatrix;
-  },
-);
-export const cameraNormalMatrix = fixedNode(
-  class extends CameraNode {
-    scope = NodeVariant.NormalMatrix;
-  },
-);
-export const cameraWorldMatrix = fixedNode(
-  class extends CameraNode {
-    scope = NodeVariant.WorldMatrix;
-  },
-);
-export const cameraPosition = fixedNode(
-  class extends CameraNode {
-    scope = NodeVariant.Position;
-  },
-);
-export const cameraDirection = fixedNode(
-  class extends CameraNode {
-    scope = NodeVariant.Direction;
-  },
-);
-export const cameraViewPosition = fixedNode(
-  class extends CameraNode {
-    scope = NodeVariant.ViewPosition;
-  },
-);
-export const cameraScale = fixedNode(
-  class extends CameraNode {
-    scope = NodeVariant.Scale;
-  },
-);
+export const cameraProjectionMatrix = new CameraNode(NodeVariant.ProjectionMatrix);
+export const cameraProjectionMatrixInverse = new CameraNode(NodeVariant.ProjectionMatrixInverse);
+export const cameraNear = new CameraNode(NodeVariant.Near);
+export const cameraFar = new CameraNode(NodeVariant.Far);
+export const cameraLogDepth = new CameraNode(NodeVariant.LogDepth);
+export const cameraViewMatrix = new CameraNode(NodeVariant.ViewMatrix);
+export const cameraNormalMatrix = new CameraNode(NodeVariant.NormalMatrix);
+export const cameraWorldMatrix = new CameraNode(NodeVariant.WorldMatrix);
+export const cameraPosition = new CameraNode(NodeVariant.Position);
+export const cameraDirection = new CameraNode(NodeVariant.Direction);
+export const cameraViewPosition = new CameraNode(NodeVariant.ViewPosition);
+export const cameraScale = new CameraNode(NodeVariant.Scale);

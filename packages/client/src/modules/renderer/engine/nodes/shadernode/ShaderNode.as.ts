@@ -4,8 +4,6 @@ import { hsl } from '@modules/renderer/engine/nodes/shadernode/hsl.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { Node } from '@modules/renderer/engine/nodes/core/Node.js';
 
-type Fo<T> = T extends Function ? T : never;
-
 export const asNode = <T>(item: T): Node => {
   const type = getValueType(item);
 
@@ -21,9 +19,6 @@ export const asNodes = (array: any[], fallbackType?: TypeName): Node[] => {
   for (let i = 0, it = array.length; i < it; ++i) array[i] = asNode(array[i], fallbackType);
   return array;
 };
-
-export const fixedNode = <T extends new (...params: any) => any>(NodeClass: T, ...params: Node[]): InstanceType<T> =>
-  new NodeClass(...asNodes(params));
 
 export const proxyNode =
   <T extends new (...params: any) => any>(NodeClass: T) =>

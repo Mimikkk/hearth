@@ -2,214 +2,226 @@ import { Node } from '../core/Node.js';
 import { reference } from './ReferenceNode.js';
 import { materialReference } from './MaterialReferenceNode.js';
 import { normalView } from './NormalNode.js';
-import { f32, fixedNode } from '../shadernode/ShaderNodes.js';
+import { f32 } from '../shadernode/ShaderNodes.js';
+import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
+import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
+import { Texture } from '@modules/renderer/engine/entities/textures/Texture.js';
 
-const _propertyCache = new Map();
+const _property = new Map();
 
 export class MaterialNode extends Node {
-  constructor(scope) {
+  constructor(public scope: Variant) {
     super();
-
-    this.scope = scope;
   }
 
-  getCache(property, type) {
-    let node = _propertyCache.get(property);
+  getCache(property: string, type: TypeName) {
+    let node = _property.get(property);
 
     if (node === undefined) {
       node = materialReference(property, type);
 
-      _propertyCache.set(property, node);
+      _property.set(property, node);
     }
 
     return node;
   }
 
-  getFloat(property) {
-    return this.getCache(property, 'f32');
+  getF32(property: string) {
+    return this.getCache(property, TypeName.f32);
   }
 
-  getColor(property) {
-    return this.getCache(property, 'color');
+  getColor(property: string) {
+    return this.getCache(property, TypeName.color);
   }
 
-  getTexture(property) {
-    return this.getCache(property === 'map' ? 'map' : property + 'Map', 'texture');
+  getTexture(property: string) {
+    return this.getCache(property, TypeName.texture);
   }
 
-  setup(builder) {
+  setup(builder: NodeBuilder): Node {
     const material = builder.context.material;
+    if (!material) throw new Error('MaterialNode: Material is not defined');
     const scope = this.scope;
 
-    let node = null;
+    switch (scope) {
+      case Variant.Color: {
+        const color = this.getColor('color');
 
-    if (scope === MaterialNode.COLOR) {
-      const colorNode = this.getColor(scope);
-
-      if (material.map && material.map.isTexture === true) {
-        node = colorNode.mul(this.getTexture('map'));
-      } else {
-        node = colorNode;
+        if (Texture.is(material.map)) {
+          return color.mul(this.getTexture('map'));
+        }
+        return color;
       }
-    } else if (scope === MaterialNode.OPACITY) {
-      const opacityNode = this.getFloat(scope);
+      case Variant.Opacity: {
+        const opacity = this.getF32('opacity');
 
-      if (material.alphaMap && material.alphaMap.isTexture === true) {
-        node = opacityNode.mul(this.getTexture('alpha'));
-      } else {
-        node = opacityNode;
+        if (Texture.is(material.alphaMap)) {
+          return opacity.mul(this.getTexture('alphaMap'));
+        }
+        return opacity;
       }
-    } else if (scope === MaterialNode.SPECULAR_STRENGTH) {
-      if (material.specularMap && material.specularMap.isTexture === true) {
-        node = this.getTexture(scope).r;
-      } else {
-        node = f32(1);
+      case Variant.SpecularStrength: {
+        if (Texture.is(material.specularMap)) {
+          return this.getTexture('specularMap').r;
+        }
+        return f32(1);
       }
-    } else if (scope === MaterialNode.ROUGHNESS) {
-      const roughnessNode = this.getFloat(scope);
+      case Variant.Roughness: {
+        const roughness = this.getF32('roughness');
 
-      if (material.roughnessMap && material.roughnessMap.isTexture === true) {
-        node = roughnessNode.mul(this.getTexture(scope).g);
-      } else {
-        node = roughnessNode;
+        if (Texture.is(material.roughnessMap)) {
+          return roughness.mul(this.getTexture('roughnessMap').g);
+        }
+        return roughness;
       }
-    } else if (scope === MaterialNode.METALNESS) {
-      const metalnessNode = this.getFloat(scope);
+      case Variant.Metalness: {
+        const metalness = this.getF32('metalness');
 
-      if (material.metalnessMap && material.metalnessMap.isTexture === true) {
-        node = metalnessNode.mul(this.getTexture(scope).b);
-      } else {
-        node = metalnessNode;
+        if (Texture.is(material.metalnessMap)) {
+          return metalness.mul(this.getTexture('metalnessMap').b);
+        }
+        return metalness;
       }
-    } else if (scope === MaterialNode.EMISSIVE) {
-      const emissiveNode = this.getColor(scope);
+      case Variant.Emissive: {
+        const emissive = this.getColor('emissive');
 
-      if (material.emissiveMap && material.emissiveMap.isTexture === true) {
-        node = emissiveNode.mul(this.getTexture(scope));
-      } else {
-        node = emissiveNode;
+        if (Texture.is(material.emissiveMap)) {
+          return emissive.mul(this.getTexture('emmisiveMap'));
+        }
+        return emissive;
       }
-    } else if (scope === MaterialNode.NORMAL) {
-      if (material.normalMap) {
-        node = this.getTexture('normal').normalMap(this.getCache('normalScale', 'vec2'));
-      } else if (material.bumpMap) {
-        node = this.getTexture('bump').r.bumpMap(this.getFloat('bumpScale'));
-      } else {
-        node = normalView;
+      case Variant.Normal: {
+        if (Texture.is(material.normalMap)) {
+          return this.getTexture('normalMap').normalMap(this.getCache('normalScale', TypeName.vec2));
+        }
+        if (Texture.is(material.bumpMap)) {
+          return this.getTexture('bumpMap').r.bumpMap(this.getF32('bumpScale'));
+        }
+        return normalView;
       }
-    } else if (scope === MaterialNode.CLEARCOAT) {
-      const clearcoatNode = this.getFloat(scope);
+      case Variant.Clearcoat: {
+        const clearcoat = this.getF32('clearcoat');
 
-      if (material.clearcoatMap && material.clearcoatMap.isTexture === true) {
-        node = clearcoatNode.mul(this.getTexture(scope).r);
-      } else {
-        node = clearcoatNode;
+        if (Texture.is(material.clearcoatMap)) {
+          return clearcoat.mul(this.getTexture('clearcoatMap').r);
+        }
+        return clearcoat;
       }
-    } else if (scope === MaterialNode.CLEARCOAT_ROUGHNESS) {
-      const clearcoatRoughnessNode = this.getFloat(scope);
+      case Variant.ClearcoatRoughness: {
+        const clearcoatRoughness = this.getF32('clearcoatRoughness');
 
-      if (material.clearcoatRoughnessMap && material.clearcoatRoughnessMap.isTexture === true) {
-        node = clearcoatRoughnessNode.mul(this.getTexture(scope).r);
-      } else {
-        node = clearcoatRoughnessNode;
+        if (Texture.is(material.clearcoatRoughnessMap)) {
+          return clearcoatRoughness.mul(this.getTexture('clearcoatRoughnessMap').r);
+        }
+        return clearcoatRoughness;
       }
-    } else if (scope === MaterialNode.CLEARCOAT_NORMAL) {
-      if (material.clearcoatNormalMap) {
-        node = this.getTexture(scope).normalMap(this.getCache(scope + 'Scale', 'vec2'));
-      } else {
-        node = normalView;
+      case Variant.ClearcoatNormal: {
+        if (Texture.is(material.clearcoatNormalMap)) {
+          return this.getTexture('clearcoatNormalMap').normalMap(this.getCache('clearcoatNormalScale', TypeName.vec2));
+        }
+        return normalView;
       }
-    } else if (scope === MaterialNode.SHEEN) {
-      const sheenNode = this.getColor('sheenColor').mul(this.getFloat('sheen'));
+      case Variant.Sheen: {
+        const sheen = this.getColor('sheenColor').mul(this.getF32('sheen'));
 
-      if (material.sheenColorMap && material.sheenColorMap.isTexture === true) {
-        node = sheenNode.mul(this.getTexture('sheenColor').rgb);
-      } else {
-        node = sheenNode;
+        if (Texture.is(material.sheenColorMap)) {
+          return sheen.mul(this.getTexture('sheenColorMap').rgb);
+        }
+        return sheen;
       }
-    } else if (scope === MaterialNode.SHEEN_ROUGHNESS) {
-      const sheenRoughnessNode = this.getFloat(scope);
+      case Variant.SheenRoughness: {
+        const sheenRoughness = this.getF32('sheenRoughness');
 
-      if (material.sheenRoughnessMap && material.sheenRoughnessMap.isTexture === true) {
-        node = sheenRoughnessNode.mul(this.getTexture(scope).a);
-      } else {
-        node = sheenRoughnessNode;
+        if (Texture.is(material.sheenRoughnessMap)) {
+          return sheenRoughness.mul(this.getTexture('sheenRoughnessMap').a);
+        }
+        return sheenRoughness.clamp(0.07, 1.0);
       }
+      case Variant.IridescenceThickness: {
+        const iridescenceThicknessMaximum = reference('1', TypeName.f32, material.iridescenceThicknessRange);
 
-      node = node.clamp(0.07, 1.0);
-    } else if (scope === MaterialNode.IRIDESCENCE_THICKNESS) {
-      const iridescenceThicknessMaximum = reference('1', 'f32', material.iridescenceThicknessRange);
+        if (Texture.is(material.iridescenceThicknessMap)) {
+          const iridescenceThicknessMinimum = reference('0', TypeName.f32, material.iridescenceThicknessRange);
 
-      if (material.iridescenceThicknessMap) {
-        const iridescenceThicknessMinimum = reference('0', 'f32', material.iridescenceThicknessRange);
-
-        node = iridescenceThicknessMaximum
-          .sub(iridescenceThicknessMinimum)
-          .mul(this.getTexture(scope).g)
-          .add(iridescenceThicknessMinimum);
-      } else {
-        node = iridescenceThicknessMaximum;
+          return iridescenceThicknessMaximum
+            .sub(iridescenceThicknessMinimum)
+            .mul(this.getTexture('iridescenceThicknessMap').g)
+            .add(iridescenceThicknessMinimum);
+        }
+        return iridescenceThicknessMaximum;
       }
-    } else {
-      const outputType = this.getNodeType(builder);
-
-      node = this.getCache(scope, outputType);
+      case Variant.AlphaTest:
+      case Variant.Shininess:
+      case Variant.SpecularColor:
+      case Variant.Reflectivity:
+      case Variant.Rotation:
+      case Variant.Iridescence:
+      case Variant.IridescenceIOR:
+      case Variant.LineScale:
+      case Variant.LineDashSize:
+      case Variant.LineGapSize:
+      case Variant.LineWidth:
+      case Variant.LineDashOffset:
+      case Variant.PointWidth:
+        return this.getCache(scope, this.getNodeType(builder));
+      default:
+        throw new Error(`Unknown material scope: ${scope}`);
     }
-
-    return node;
   }
 }
 
-MaterialNode.ALPHA_TEST = 'alphaTest';
-MaterialNode.COLOR = 'color';
-MaterialNode.OPACITY = 'opacity';
-MaterialNode.SHININESS = 'shininess';
-MaterialNode.SPECULAR_COLOR = 'specular';
-MaterialNode.SPECULAR_STRENGTH = 'specularStrength';
-MaterialNode.REFLECTIVITY = 'reflectivity';
-MaterialNode.ROUGHNESS = 'roughness';
-MaterialNode.METALNESS = 'metalness';
-MaterialNode.NORMAL = 'normal';
-MaterialNode.CLEARCOAT = 'clearcoat';
-MaterialNode.CLEARCOAT_ROUGHNESS = 'clearcoatRoughness';
-MaterialNode.CLEARCOAT_NORMAL = 'clearcoatNormal';
-MaterialNode.EMISSIVE = 'emissive';
-MaterialNode.ROTATION = 'rotation';
-MaterialNode.SHEEN = 'sheen';
-MaterialNode.SHEEN_ROUGHNESS = 'sheenRoughness';
-MaterialNode.IRIDESCENCE = 'iridescence';
-MaterialNode.IRIDESCENCE_IOR = 'iridescenceIOR';
-MaterialNode.IRIDESCENCE_THICKNESS = 'iridescenceThickness';
-MaterialNode.LINE_SCALE = 'scale';
-MaterialNode.LINE_DASH_SIZE = 'dashSize';
-MaterialNode.LINE_GAP_SIZE = 'gapSize';
-MaterialNode.LINE_WIDTH = 'linewidth';
-MaterialNode.LINE_DASH_OFFSET = 'dashOffset';
-MaterialNode.POINT_WIDTH = 'pointWidth';
+enum Variant {
+  AlphaTest = 'alphaTest',
+  Color = 'color',
+  Opacity = 'opacity',
+  Shininess = 'shininess',
+  SpecularColor = 'specular',
+  SpecularStrength = 'specularStrength',
+  Reflectivity = 'reflectivity',
+  Roughness = 'roughness',
+  Metalness = 'metalness',
+  Normal = 'normal',
+  Clearcoat = 'clearcoat',
+  ClearcoatRoughness = 'clearcoatRoughness',
+  ClearcoatNormal = 'clearcoatNormal',
+  Emissive = 'emissive',
+  Rotation = 'rotation',
+  Sheen = 'sheen',
+  SheenRoughness = 'sheenRoughness',
+  Iridescence = 'iridescence',
+  IridescenceIOR = 'iridescenceIOR',
+  IridescenceThickness = 'iridescenceThickness',
+  LineScale = 'scale',
+  LineDashSize = 'dashSize',
+  LineGapSize = 'gapSize',
+  LineWidth = 'linewidth',
+  LineDashOffset = 'dashOffset',
+  PointWidth = 'pointWidth',
+}
 
-export const materialAlphaTest = fixedNode(MaterialNode, MaterialNode.ALPHA_TEST);
-export const materialColor = fixedNode(MaterialNode, MaterialNode.COLOR);
-export const materialShininess = fixedNode(MaterialNode, MaterialNode.SHININESS);
-export const materialEmissive = fixedNode(MaterialNode, MaterialNode.EMISSIVE);
-export const materialOpacity = fixedNode(MaterialNode, MaterialNode.OPACITY);
-export const materialSpecularColor = fixedNode(MaterialNode, MaterialNode.SPECULAR_COLOR);
-export const materialSpecularStrength = fixedNode(MaterialNode, MaterialNode.SPECULAR_STRENGTH);
-export const materialReflectivity = fixedNode(MaterialNode, MaterialNode.REFLECTIVITY);
-export const materialRoughness = fixedNode(MaterialNode, MaterialNode.ROUGHNESS);
-export const materialMetalness = fixedNode(MaterialNode, MaterialNode.METALNESS);
-export const materialNormal = fixedNode(MaterialNode, MaterialNode.NORMAL);
-export const materialClearcoat = fixedNode(MaterialNode, MaterialNode.CLEARCOAT);
-export const materialClearcoatRoughness = fixedNode(MaterialNode, MaterialNode.CLEARCOAT_ROUGHNESS);
-export const materialClearcoatNormal = fixedNode(MaterialNode, MaterialNode.CLEARCOAT_NORMAL);
-export const materialRotation = fixedNode(MaterialNode, MaterialNode.ROTATION);
-export const materialSheen = fixedNode(MaterialNode, MaterialNode.SHEEN);
-export const materialSheenRoughness = fixedNode(MaterialNode, MaterialNode.SHEEN_ROUGHNESS);
-export const materialIridescence = fixedNode(MaterialNode, MaterialNode.IRIDESCENCE);
-export const materialIridescenceIOR = fixedNode(MaterialNode, MaterialNode.IRIDESCENCE_IOR);
-export const materialIridescenceThickness = fixedNode(MaterialNode, MaterialNode.IRIDESCENCE_THICKNESS);
-export const materialLineScale = fixedNode(MaterialNode, MaterialNode.LINE_SCALE);
-export const materialLineDashSize = fixedNode(MaterialNode, MaterialNode.LINE_DASH_SIZE);
-export const materialLineGapSize = fixedNode(MaterialNode, MaterialNode.LINE_GAP_SIZE);
-export const materialLineWidth = fixedNode(MaterialNode, MaterialNode.LINE_WIDTH);
-export const materialLineDashOffset = fixedNode(MaterialNode, MaterialNode.LINE_DASH_OFFSET);
-export const materialPointWidth = fixedNode(MaterialNode, MaterialNode.POINT_WIDTH);
+export const materialAlphaTest = new MaterialNode(Variant.AlphaTest);
+export const materialColor = new MaterialNode(Variant.Color);
+export const materialShininess = new MaterialNode(Variant.Shininess);
+export const materialEmissive = new MaterialNode(Variant.Emissive);
+export const materialOpacity = new MaterialNode(Variant.Opacity);
+export const materialSpecularColor = new MaterialNode(Variant.SpecularColor);
+export const materialSpecularStrength = new MaterialNode(Variant.SpecularStrength);
+export const materialReflectivity = new MaterialNode(Variant.Reflectivity);
+export const materialRoughness = new MaterialNode(Variant.Roughness);
+export const materialMetalness = new MaterialNode(Variant.Metalness);
+export const materialNormal = new MaterialNode(Variant.Normal);
+export const materialClearcoat = new MaterialNode(Variant.Clearcoat);
+export const materialClearcoatRoughness = new MaterialNode(Variant.ClearcoatRoughness);
+export const materialClearcoatNormal = new MaterialNode(Variant.ClearcoatNormal);
+export const materialRotation = new MaterialNode(Variant.Rotation);
+export const materialSheen = new MaterialNode(Variant.Sheen);
+export const materialSheenRoughness = new MaterialNode(Variant.SheenRoughness);
+export const materialIridescence = new MaterialNode(Variant.Iridescence);
+export const materialIridescenceIOR = new MaterialNode(Variant.IridescenceIOR);
+export const materialIridescenceThickness = new MaterialNode(Variant.IridescenceThickness);
+export const materialLineScale = new MaterialNode(Variant.LineScale);
+export const materialLineDashSize = new MaterialNode(Variant.LineDashSize);
+export const materialLineGapSize = new MaterialNode(Variant.LineGapSize);
+export const materialLineWidth = new MaterialNode(Variant.LineWidth);
+export const materialLineDashOffset = new MaterialNode(Variant.LineDashOffset);
+export const materialPointWidth = new MaterialNode(Variant.PointWidth);

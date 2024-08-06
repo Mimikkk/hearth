@@ -1,4 +1,3 @@
-import { fixedNode } from '../shadernode/ShaderNodes.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { UniformNode } from '@modules/renderer/engine/nodes/core/UniformNode.js';
@@ -9,11 +8,10 @@ import { NodeFrame } from '@modules/renderer/engine/nodes/core/NodeFrame.js';
 import { Entity } from '@modules/renderer/engine/core/Entity.js';
 
 export class ModelNode extends Node {
-  declare scope: NodeVariant;
-  declare entity: Entity;
-  declare uniform: UniformNode<any>;
+  entity: Entity;
+  uniform: UniformNode;
 
-  constructor() {
+  constructor(public scope: NodeVariant) {
     super();
 
     this.entity = null!;
@@ -83,40 +81,10 @@ enum NodeVariant {
   Direction = 'direction',
 }
 
-export const modelDirection = fixedNode(
-  class extends ModelNode {
-    scope = NodeVariant.Direction;
-  },
-);
-export const modelViewMatrix = fixedNode(
-  class extends ModelNode {
-    scope = NodeVariant.ViewMatrix;
-  },
-)
-  .label('modelViewMatrix')
-  .temp('ModelViewMatrix');
-export const modelNormalMatrix = fixedNode(
-  class extends ModelNode {
-    scope = NodeVariant.NormalMatrix;
-  },
-);
-export const modelWorldMatrix = fixedNode(
-  class extends ModelNode {
-    scope = NodeVariant.WorldMatrix;
-  },
-);
-export const modelPosition = fixedNode(
-  class extends ModelNode {
-    scope = NodeVariant.Position;
-  },
-);
-export const modelScale = fixedNode(
-  class extends ModelNode {
-    scope = NodeVariant.Scale;
-  },
-);
-export const modelViewPosition = fixedNode(
-  class extends ModelNode {
-    scope = NodeVariant.ViewPosition;
-  },
-);
+export const modelDirection = new ModelNode(NodeVariant.Direction);
+export const modelViewMatrix = new ModelNode(NodeVariant.ViewMatrix).label('modelViewMatrix').temp('ModelViewMatrix');
+export const modelNormalMatrix = new ModelNode(NodeVariant.NormalMatrix);
+export const modelWorldMatrix = new ModelNode(NodeVariant.WorldMatrix);
+export const modelPosition = new ModelNode(NodeVariant.Position);
+export const modelScale = new ModelNode(NodeVariant.Scale);
+export const modelViewPosition = new ModelNode(NodeVariant.ViewPosition);

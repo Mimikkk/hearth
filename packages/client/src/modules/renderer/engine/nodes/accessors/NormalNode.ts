@@ -5,53 +5,53 @@ import { property } from '../core/PropertyNode.js';
 import { normalize } from '../math/MathNode.js';
 import { cameraViewMatrix } from './CameraNode.js';
 import { modelNormalMatrix } from './ModelNode.js';
-import { fixedNode } from '../shadernode/ShaderNodes.js';
+import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
+import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 
 export class NormalNode extends Node {
-  constructor(scope = NormalNode.LOCAL) {
-    super('vec3');
-
-    this.scope = scope;
+  constructor(public scope: Variant) {
+    super(TypeName.vec3);
   }
 
-  isGlobal() {
+  isGlobal(): boolean {
     return true;
   }
 
-  getHash() {
+  getHash(): string {
     return `normal-${this.scope}`;
   }
 
-  generate(builder) {
-    const scope = this.scope;
-
-    let outputNode = null;
-
-    if (scope === NormalNode.GEOMETRY) {
-      outputNode = attribute('normal', 'vec3');
-    } else if (scope === NormalNode.LOCAL) {
-      outputNode = varying(normalGeometry);
-    } else if (scope === NormalNode.VIEW) {
-      const vertexNode = modelNormalMatrix.mul(normalLocal);
-      outputNode = normalize(varying(vertexNode));
-    } else if (scope === NormalNode.WORLD) {
-      const vertexNode = normalView.transformDirection(cameraViewMatrix);
-      outputNode = normalize(varying(vertexNode));
+  #output() {
+    switch (this.scope) {
+      case Variant.Geometry:
+        return attribute('normal', TypeName.vec3);
+      case Variant.Local:
+        return varying(normalGeometry);
+      case Variant.View:
+        return normalize(varying(modelNormalMatrix.mul(normalLocal)));
+      case Variant.World:
+        return normalize(varying(normalView.transformDirection(cameraViewMatrix)));
+      default:
+        throw new Error(`Unknown normal scope: ${this.scope}`);
     }
+  }
 
-    return outputNode.build(builder, this.getNodeType(builder));
+  generate(builder: NodeBuilder): string {
+    return this.#output().build(builder, this.getNodeType(builder));
   }
 }
 
-NormalNode.GEOMETRY = 'geometry';
-NormalNode.LOCAL = 'local';
-NormalNode.VIEW = 'view';
-NormalNode.WORLD = 'world';
+enum Variant {
+  Geometry = 'geometry',
+  Local = 'local',
+  View = 'view',
+  World = 'world',
+}
 
-export const normalGeometry = fixedNode(NormalNode, NormalNode.GEOMETRY);
-export const normalLocal = fixedNode(NormalNode, NormalNode.LOCAL).temp('Normal');
-export const normalView = fixedNode(NormalNode, NormalNode.VIEW);
-export const normalWorld = fixedNode(NormalNode, NormalNode.WORLD);
-export const transformedNormalView = property('vec3', 'TransformedNormalView');
+export const normalGeometry = new NormalNode(Variant.Geometry);
+export const normalLocal = new NormalNode(Variant.Local).temp('Normal');
+export const normalView = new NormalNode(Variant.View);
+export const normalWorld = new NormalNode(Variant.World);
+export const transformedNormalView = property(TypeName.vec3, 'TransformedNormalView');
 export const transformedNormalWorld = transformedNormalView.transformDirection(cameraViewMatrix).normalize();
-export const transformedClearcoatNormalView = property('vec3', 'TransformedClearcoatNormalView');
+export const transformedClearcoatNormalView = property(TypeName.vec3, 'TransformedClearcoatNormalView');

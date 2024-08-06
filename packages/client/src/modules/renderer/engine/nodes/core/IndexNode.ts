@@ -1,13 +1,10 @@
 import { Node } from './Node.js';
 import { varying } from './VaryingNode.js';
-import { fixedNode } from '../shadernode/ShaderNodes.js';
 import { ShaderStage, TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 
 export class IndexNode extends Node {
-  scope: Variant;
-
-  constructor() {
+  constructor(public scope: Variant) {
     super(TypeName.u32);
   }
 
@@ -44,13 +41,5 @@ enum Variant {
   Instance = 'Instance',
 }
 
-export const vertexIndex = fixedNode(
-  class extends IndexNode {
-    scope = Variant.Vertex;
-  },
-);
-export const instanceIndex = fixedNode(
-  class extends IndexNode {
-    scope = Variant.Instance;
-  },
-);
+export const vertexIndex = new IndexNode(Variant.Vertex);
+export const instanceIndex = new IndexNode(Variant.Instance);

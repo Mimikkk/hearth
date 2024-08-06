@@ -2,21 +2,19 @@ import { Node } from '../core/Node.js';
 import { cameraViewMatrix } from './CameraNode.js';
 import { transformedNormalView } from './NormalNode.js';
 import { positionViewDirection } from './PositionNode.js';
-import { fixedNode } from '../shadernode/ShaderNodes.js';
+import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 export class ReflectVectorNode extends Node {
   constructor() {
-    super('vec3');
+    super(TypeName.vec3);
   }
 
-  getHash() {
+  getHash(): string {
     return 'reflectVector';
   }
 
-  setup() {
-    const reflectView = positionViewDirection.negate().reflect(transformedNormalView);
-
-    return reflectView.transformDirection(cameraViewMatrix);
+  setup(): Node {
+    return positionViewDirection.negate().reflect(transformedNormalView).transformDirection(cameraViewMatrix);
   }
 }
 

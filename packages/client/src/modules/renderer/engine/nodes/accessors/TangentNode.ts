@@ -5,62 +5,63 @@ import { varying } from '../core/VaryingNode.js';
 import { normalize } from '../math/MathNode.js';
 import { cameraViewMatrix } from './CameraNode.js';
 import { modelViewMatrix } from './ModelNode.js';
-import { fixedNode, vec4 } from '../shadernode/ShaderNodes.js';
+import { vec4 } from '../shadernode/ShaderNodes.js';
+import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
+import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 export class TangentNode extends Node {
-  constructor(scope = TangentNode.LOCAL) {
+  constructor(public scope: Variant) {
     super();
-
-    this.scope = scope;
   }
 
-  getHash() {
+  getHash(): string {
     return `tangent-${this.scope}`;
   }
 
-  getNodeType() {
-    const scope = this.scope;
-
-    if (scope === TangentNode.GEOMETRY) {
-      return 'vec4';
+  getNodeType(): TypeName {
+    if (this.scope === Variant.Geometry) {
+      return TypeName.vec4;
     }
-
-    return 'vec3';
+    return TypeName.vec3;
   }
 
-  generate(builder) {
-    const scope = this.scope;
+  #output(builder: NodeBuilder) {
+    switch (this.scope) {
+      case Variant.Geometry:
+        const output = attribute('tangent', TypeName.vec4);
 
-    let outputNode = null;
+        if (!builder.geometry.hasAttribute('tangent')) {
+          builder.geometry.computeTangents();
+        }
 
-    if (scope === TangentNode.GEOMETRY) {
-      outputNode = attribute('tangent', 'vec4');
+        return output;
 
-      if (builder.geometry.hasAttribute('tangent') === false) {
-        builder.geometry.computeTangents();
-      }
-    } else if (scope === TangentNode.LOCAL) {
-      outputNode = varying(tangentGeometry.xyz);
-    } else if (scope === TangentNode.VIEW) {
-      const vertexNode = modelViewMatrix.mul(vec4(tangentLocal, 0)).xyz;
-      outputNode = normalize(varying(vertexNode));
-    } else if (scope === TangentNode.WORLD) {
-      const vertexNode = tangentView.transformDirection(cameraViewMatrix);
-      outputNode = normalize(varying(vertexNode));
+      case Variant.Local:
+        return varying(tangentGeometry.xyz);
+      case Variant.View:
+        return normalize(varying(modelViewMatrix.mul(vec4(tangentLocal, 0)).xyz));
+      case Variant.World:
+        return normalize(varying(tangentView.transformDirection(cameraViewMatrix)));
+      default:
+        throw new Error(`Unknown tangent scope: ${this.scope}`);
     }
+  }
 
-    return outputNode.build(builder, this.getNodeType(builder));
+  generate(builder: NodeBuilder): string {
+    return this.#output(builder).build(builder, this.getNodeType(builder));
   }
 }
 
-TangentNode.GEOMETRY = 'geometry';
-TangentNode.LOCAL = 'local';
-TangentNode.VIEW = 'view';
-TangentNode.WORLD = 'world';
+enum Variant {
+  Geometry = 'geometry',
+  Local = 'local',
+  View = 'view',
+  World = 'world',
+}
 
-export const tangentGeometry = fixedNode(TangentNode, TangentNode.GEOMETRY);
-export const tangentLocal = fixedNode(TangentNode, TangentNode.LOCAL);
-export const tangentView = fixedNode(TangentNode, TangentNode.VIEW);
-export const tangentWorld = fixedNode(TangentNode, TangentNode.WORLD);
+export const tangentGeometry = new TangentNode(Variant.Geometry);
+export const tangentLocal = new TangentNode(Variant.Local);
+export const tangentView = new TangentNode(Variant.View);
+export const tangentWorld = new TangentNode(Variant.World);
 export const transformedTangentView = temp(tangentView, 'TransformedTangentView');
 export const transformedTangentWorld = normalize(transformedTangentView.transformDirection(cameraViewMatrix));

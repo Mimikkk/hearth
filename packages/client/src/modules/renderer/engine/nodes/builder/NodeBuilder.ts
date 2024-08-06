@@ -58,8 +58,8 @@ import { BindingUniform } from '@modules/renderer/engine/hearth/bindings/Binding
 type ParseFn = (source: string) => WgslFn;
 
 export class NodeBuilder {
-  material: Material | null;
-  geometry: Geometry | null;
+  material: Material;
+  geometry: Geometry;
   isCompute: boolean;
 
   parseFn: ParseFn;

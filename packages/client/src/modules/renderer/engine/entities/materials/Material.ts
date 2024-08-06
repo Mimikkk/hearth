@@ -188,7 +188,6 @@ export class Material {
 
   set alphaTest(value) {
     if (this._alphaTest > 0 !== value > 0) ++this.version;
-
     this._alphaTest = value;
   }
 

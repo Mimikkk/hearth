@@ -3,7 +3,7 @@ import { asConstNode } from '@modules/renderer/engine/nodes/shadernode/utils.js'
 import { ConvertNode } from '@modules/renderer/engine/nodes/utils/ConvertNode.js';
 import { JoinNode } from '@modules/renderer/engine/nodes/utils/JoinNode.js';
 import { ArrayElementNode } from '@modules/renderer/engine/nodes/utils/ArrayElementNode.js';
-import { asNode, asNodes, fixedNode, proxyNode } from './ShaderNode.as.js';
+import { asNode, asNodes, proxyNode } from './ShaderNode.as.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { implCommand, implPrimitive } from '@modules/renderer/engine/nodes/core/Node.commands.js';
 import type { Node } from '@modules/renderer/engine/nodes/core/Node.js';
@@ -95,4 +95,4 @@ implPrimitive('bmat4', bmat4);
 implCommand('element', ArrayElementNode);
 implCommand('convert', ConvertNode);
 
-export { asNode, asNodes, proxyNode, fixedNode };
+export { asNode, asNodes, proxyNode };

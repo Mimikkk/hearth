@@ -108,10 +108,13 @@ export class Texture {
     this.version = 0;
     this.onUpdate = null;
 
-
     this.isRenderTargetTexture = false;
 
     this.needsPMREMUpdate = false;
+  }
+
+  static is(texture: any): texture is Texture {
+    return texture?.isTexture === true;
   }
 
   get image() {

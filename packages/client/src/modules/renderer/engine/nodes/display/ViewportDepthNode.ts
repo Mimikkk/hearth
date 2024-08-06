@@ -1,5 +1,5 @@
 import { Node } from '../core/Node.js';
-import { fixedNode, proxyNode } from '../shadernode/ShaderNodes.js';
+import { f32, proxyNode } from '../shadernode/ShaderNodes.js';
 import { cameraFar, cameraNear } from '../accessors/CameraNode.js';
 import { positionView } from '../accessors/PositionNode.js';
 import { viewportDepthTexture } from './ViewportDepthTextureNode.js';
@@ -14,7 +14,7 @@ export class ViewportDepthNode extends Node {
     super(TypeName.f32);
   }
 
-  generate(builder: NodeBuilder): string | null {
+  generate(builder: NodeBuilder): string {
     if (this.mode === NodeVariant.DepthPixel) return builder.useFragDepth();
     return super.generate(builder);
   }
@@ -42,12 +42,13 @@ enum NodeVariant {
   DepthPixel = 'depthPixel',
 }
 
-export const viewZToOrthographicDepth = (viewZ: Node, near: Node, far: Node) => viewZ.add(near).div(near.sub(far));
-export const orthographicDepthToViewZ = (depth: Node, near: Node, far: Node) => near.sub(far).mul(depth).sub(near);
-export const viewZToPerspectiveDepth = (viewZ: Node, near: Node, far: Node) =>
+export const viewZToOrthographicDepth = (viewZ: number, near: number, far: number) =>
+  viewZ.add(near).div(near.sub(far));
+export const orthographicDepthToViewZ = (depth: number, near: number, far: number) =>
+  near.sub(far).mul(depth).sub(near);
+export const viewZToPerspectiveDepth = (viewZ: number, near: number, far: number) =>
   near.add(viewZ).mul(far).div(near.sub(far).mul(viewZ));
-
-export const perspectiveDepthToViewZ = (depth: Node, near: Node, far: Node) =>
+export const perspectiveDepthToViewZ = (depth: number, near: number, far: number) =>
   near.mul(far).div(far.sub(near).mul(depth).sub(far));
 
 const depthPixelBase = proxyNode(
@@ -55,11 +56,9 @@ const depthPixelBase = proxyNode(
     mode = NodeVariant.DepthPixel;
   },
 );
-export const depth = fixedNode(
-  class extends ViewportDepthNode {
-    mode = NodeVariant.Depth;
-  },
-);
+export const depth = new ViewportDepthNode(f32(0));
+depth.mode = NodeVariant.Depth;
+
 export const depthTexture = proxyNode(
   class extends ViewportDepthNode {
     mode = NodeVariant.DepthTexture;
