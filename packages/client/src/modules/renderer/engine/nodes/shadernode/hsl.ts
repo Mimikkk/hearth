@@ -21,10 +21,7 @@ export interface Hsl<Fn extends (...parameters: any) => any = any> {
   setLayout: (layout: HslLayout) => this;
 }
 
-export const hsl = <Fn extends ((parameters: Node[]) => any) | ((parameters: Record<string, Node>) => any)>(
-  code: Fn,
-  layout: HslLayout,
-): Hsl<Fn> => {
+export const hsl = <Fn extends (...params: any) => any>(code: Fn, layout?: HslLayout): Hsl<Fn> => {
   const node = new ShaderNode<Fn>(code, layout);
 
   const fn: Hsl<Fn> = (...params) => {

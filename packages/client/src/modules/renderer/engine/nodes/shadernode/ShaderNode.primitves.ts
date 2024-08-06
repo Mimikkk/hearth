@@ -3,10 +3,20 @@ import { asConstNode } from '@modules/renderer/engine/nodes/shadernode/utils.js'
 import { ConvertNode } from '@modules/renderer/engine/nodes/utils/ConvertNode.js';
 import { JoinNode } from '@modules/renderer/engine/nodes/utils/JoinNode.js';
 import { ArrayElementNode } from '@modules/renderer/engine/nodes/utils/ArrayElementNode.js';
-import { asNode, asNodes, asCommand } from './ShaderNode.as.js';
+import { asCommand, asNode, asNodes } from './ShaderNode.as.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { implCommand, implPrimitive } from '@modules/renderer/engine/nodes/core/Node.commands.js';
 import type { Node } from '@modules/renderer/engine/nodes/core/Node.js';
+import { ConstNode } from '@modules/renderer/engine/nodes/core/ConstNode.js';
+
+const safeType = (node: ConstNode) => {
+  try {
+    console.log({ node });
+    return node.getNodeType();
+  } catch {
+    return null;
+  }
+};
 
 const primitive = (type: TypeName) => {
   const isComponent = TypeName.isComponent(type);
@@ -18,15 +28,12 @@ const primitive = (type: TypeName) => {
     if (params.length === 1) {
       const node = asConstNode(params[0], type);
 
-      try {
-        if (node.getNodeType() === type) return asNode(node);
-      } catch {}
-
-      return asNode(new ConvertNode(node, type));
+      if (safeType(node) === type) return node;
+      return new ConvertNode(node, type);
     }
 
     const nodes = params.map(param => asConstNode(param));
-    return asNode(new JoinNode(nodes, type));
+    return new JoinNode(nodes, type);
   };
 };
 

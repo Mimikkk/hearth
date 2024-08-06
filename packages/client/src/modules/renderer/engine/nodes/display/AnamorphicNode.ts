@@ -1,5 +1,5 @@
 import { TempNode } from '../core/TempNode.js';
-import { f32, hsl, asCommand, vec2, vec3, vec4 } from '../shadernode/ShaderNodes.js';
+import { asCommand, f32, hsl, vec2, vec3, vec4 } from '../shadernode/ShaderNodes.js';
 import { loop } from '../utils/LoopNode.js';
 import { uniform } from '../core/UniformNode.js';
 import { NodeUpdateStage } from '../core/constants.js';
@@ -9,13 +9,17 @@ import { texturePass } from './PassNode.js';
 import { RenderTarget, Vec2 } from '@modules/renderer/engine/engine.js';
 import { QuadMesh } from '@modules/renderer/engine/entities/QuadMesh.js';
 import { ConstNode } from '@modules/renderer/engine/nodes/core/ConstNode.js';
-import { asConstNode } from '@modules/renderer/engine/nodes/shadernode/utils.js';
 import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
 
 const quadMesh = new QuadMesh();
 
 export class AnamorphicNode extends TempNode {
-  constructor(textureNode, tresholdNode = asConstNode(0.9), scaleNode = asConstNode(3), samples: ConstNode<number>) {
+  constructor(
+    textureNode,
+    tresholdNode = new ConstNode(0.9),
+    scaleNode = new ConstNode(3),
+    samples: ConstNode<number>,
+  ) {
     super('vec4');
 
     this.textureNode = textureNode;
