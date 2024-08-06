@@ -2,7 +2,7 @@ import { Node } from '../core/Node.js';
 import { getValueType } from '../core/NodeUtils.js';
 import { buffer } from '../accessors/BufferNode.js';
 import { instanceIndex } from '../core/IndexNode.js';
-import { f32, proxyNode } from '../shadernode/ShaderNodes.js';
+import { f32, asCommand } from '../shadernode/ShaderNodes.js';
 
 import { InstancedMesh, Vec4 } from '@modules/renderer/engine/engine.js';
 import { lerp } from '../../math/MathUtils.js';
@@ -85,4 +85,4 @@ export class RangeNode extends Node {
   }
 }
 
-export const range = proxyNode(RangeNode);
+export const range = asCommand(RangeNode);

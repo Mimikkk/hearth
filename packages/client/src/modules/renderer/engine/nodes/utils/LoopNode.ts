@@ -148,7 +148,7 @@ export class LoopNode extends Node {
   }
 }
 
-export const loop = (...params) => asNode(new LoopNode(asNodes(params, 'i32'))).append();
+export const loop = (...params) => asNode(new LoopNode(asNodes(params))).append();
 export const Continue = () => expression('continue').append();
 export const Break = () => expression('break').append();
 

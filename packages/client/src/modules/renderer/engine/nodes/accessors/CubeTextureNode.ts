@@ -1,6 +1,6 @@
 import { TextureNode } from './TextureNode.js';
 import { reflectVector } from './ReflectVectorNode.js';
-import { proxyNode, vec3 } from '../shadernode/ShaderNodes.js';
+import { asCommand, vec3 } from '../shadernode/ShaderNodes.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { UVNode } from '@modules/renderer/engine/nodes/accessors/UVNode.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
@@ -34,6 +34,6 @@ export class CubeTextureNode extends TextureNode {
   }
 }
 
-export const cubeTexture = proxyNode(CubeTextureNode);
+export const cubeTexture = asCommand(CubeTextureNode);
 
 implCommand('cubeTexture', CubeTextureNode);

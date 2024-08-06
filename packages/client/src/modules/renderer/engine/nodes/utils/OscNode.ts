@@ -1,6 +1,6 @@
 import { Node } from '../core/Node.js';
 import { timerLocal } from './TimerNode.js';
-import { asNode, proxyNode } from '../shadernode/ShaderNodes.js';
+import { asNode, asCommand } from '../shadernode/ShaderNodes.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
@@ -43,22 +43,22 @@ enum NodeVariant {
   Sawtooth = 'sawtooth',
 }
 
-export const oscSine = proxyNode(
+export const oscSine = asCommand(
   class extends OscNode {
     method = NodeVariant.Sine;
   },
 );
-export const oscSquare = proxyNode(
+export const oscSquare = asCommand(
   class extends OscNode {
     method = NodeVariant.Square;
   },
 );
-export const oscTriangle = proxyNode(
+export const oscTriangle = asCommand(
   class extends OscNode {
     method = NodeVariant.Triangle;
   },
 );
-export const oscSawtooth = proxyNode(
+export const oscSawtooth = asCommand(
   class extends OscNode {
     method = NodeVariant.Sawtooth;
   },

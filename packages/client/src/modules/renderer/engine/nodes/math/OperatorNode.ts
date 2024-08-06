@@ -1,5 +1,5 @@
 import { TempNode } from '../core/TempNode.js';
-import { proxyNode } from '../shadernode/ShaderNodes.js';
+import { asCommand } from '../shadernode/ShaderNodes.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
@@ -241,26 +241,26 @@ export class ShiftRightNode extends OperatorNode {
   op = Operator.BitShiftRight;
 }
 
-export const add = proxyNode(AddNode);
-export const sub = proxyNode(SubNode);
-export const mul = proxyNode(MulNode);
-export const div = proxyNode(DivNode);
-export const remainder = proxyNode(RemainderNode);
-export const equal = proxyNode(EqualNode);
-export const notEqual = proxyNode(NotEqualNode);
-export const lessThan = proxyNode(LessThanNode);
-export const greaterThan = proxyNode(GreaterThanNode);
-export const lessThanEqual = proxyNode(LessThanEqualNode);
-export const greaterThanEqual = proxyNode(GreaterThanEqualNode);
-export const and = proxyNode(AndNode);
-export const or = proxyNode(OrNode);
-export const not = proxyNode(NotNode);
-export const bitAnd = proxyNode(BitAndNode);
-export const bitNot = proxyNode(BitNotNode);
-export const bitOr = proxyNode(BitOrNode);
-export const bitXor = proxyNode(BitXorNode);
-export const shiftLeft = proxyNode(ShiftLeftNode);
-export const shiftRight = proxyNode(ShiftRightNode);
+export const add = asCommand(AddNode);
+export const sub = asCommand(SubNode);
+export const mul = asCommand(MulNode);
+export const div = asCommand(DivNode);
+export const remainder = asCommand(RemainderNode);
+export const equal = asCommand(EqualNode);
+export const notEqual = asCommand(NotEqualNode);
+export const lessThan = asCommand(LessThanNode);
+export const greaterThan = asCommand(GreaterThanNode);
+export const lessThanEqual = asCommand(LessThanEqualNode);
+export const greaterThanEqual = asCommand(GreaterThanEqualNode);
+export const and = asCommand(AndNode);
+export const or = asCommand(OrNode);
+export const not = asCommand(NotNode);
+export const bitAnd = asCommand(BitAndNode);
+export const bitNot = asCommand(BitNotNode);
+export const bitOr = asCommand(BitOrNode);
+export const bitXor = asCommand(BitXorNode);
+export const shiftLeft = asCommand(ShiftLeftNode);
+export const shiftRight = asCommand(ShiftRightNode);
 
 implCommand('add', AddNode);
 implCommand('sub', SubNode);

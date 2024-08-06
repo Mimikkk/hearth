@@ -1,5 +1,5 @@
 import { Node } from '../core/Node.js';
-import { proxyNode } from '../shadernode/ShaderNodes.js';
+import { asCommand } from '../shadernode/ShaderNodes.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
@@ -23,4 +23,4 @@ export class ExpressionNode extends Node {
   }
 }
 
-export const expression = proxyNode(ExpressionNode);
+export const expression = asCommand(ExpressionNode);

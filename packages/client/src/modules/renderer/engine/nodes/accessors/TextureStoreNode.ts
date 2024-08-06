@@ -1,5 +1,5 @@
 import { TextureNode } from './TextureNode.js';
-import { proxyNode } from '../shadernode/ShaderNodes.js';
+import { asCommand } from '../shadernode/ShaderNodes.js';
 
 export class TextureStoreNode extends TextureNode {
   constructor(value, uvNode, storeNode = null) {
@@ -48,7 +48,7 @@ export class TextureStoreNode extends TextureNode {
   }
 }
 
-const textureStoreBase = proxyNode(TextureStoreNode);
+const textureStoreBase = asCommand(TextureStoreNode);
 
 export const textureStore = (value, uvNode, storeNode) => {
   const node = textureStoreBase(value, uvNode, storeNode);

@@ -1,5 +1,5 @@
 import { Node } from '../core/Node.js';
-import { proxyNode } from '../shadernode/ShaderNodes.js';
+import { asCommand } from '../shadernode/ShaderNodes.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
@@ -47,7 +47,7 @@ export class CodeNode extends Node {
 
 CodeNode.prototype.isCodeNode = true;
 
-export const code = proxyNode(CodeNode);
+export const code = asCommand(CodeNode);
 
 export const js = (src: string, includes: any[]) => code(src, includes, 'js');
 export const wgsl = (src: string, includes: any[]) => code(src, includes, 'wgsl');

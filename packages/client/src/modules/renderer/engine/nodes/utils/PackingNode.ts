@@ -1,5 +1,5 @@
 import { TempNode } from '../core/TempNode.js';
-import { proxyNode } from '../shadernode/ShaderNodes.js';
+import { asCommand } from '../shadernode/ShaderNodes.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { Node } from '../core/Node.js';
@@ -39,8 +39,8 @@ export class ColorToDirectionNode extends PackingNode {
   scope = NodeVariant.ColorToDirection;
 }
 
-export const directionToColor = proxyNode(DirectionToColorNode);
-export const colorToDirection = proxyNode(ColorToDirectionNode);
+export const directionToColor = asCommand(DirectionToColorNode);
+export const colorToDirection = asCommand(ColorToDirectionNode);
 
 implCommand('directionToColor', DirectionToColorNode);
 implCommand('colorToDirection', ColorToDirectionNode);

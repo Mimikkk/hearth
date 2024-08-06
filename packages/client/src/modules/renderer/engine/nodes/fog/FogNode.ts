@@ -1,6 +1,6 @@
 import { Node } from '../core/Node.js';
 import { positionView } from '../accessors/PositionNode.js';
-import { proxyNode } from '../shadernode/ShaderNodes.js';
+import { asCommand } from '../shadernode/ShaderNodes.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
@@ -23,4 +23,4 @@ export class FogNode extends Node {
   }
 }
 
-export const fog = proxyNode(FogNode);
+export const fog = asCommand(FogNode);

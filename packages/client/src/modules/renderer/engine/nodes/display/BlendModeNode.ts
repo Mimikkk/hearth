@@ -1,6 +1,6 @@
 import { TempNode } from '../core/TempNode.js';
 import { EPSILON } from '../math/MathNode.js';
-import { hsl, proxyNode, vec3 } from '../shadernode/ShaderNodes.js';
+import { hsl, asCommand, vec3 } from '../shadernode/ShaderNodes.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
 
@@ -59,11 +59,11 @@ export class ScreenBlendModeNode extends BlendModeNode {
   mode = NodeVariant.Screen;
 }
 
-export const burn = proxyNode(BurnBlendModeNode);
-export const dodge = proxyNode(DodgeBlendModeNode);
-export const overlay = proxyNode(OverlayBlendModeNode);
+export const burn = asCommand(BurnBlendModeNode);
+export const dodge = asCommand(DodgeBlendModeNode);
+export const overlay = asCommand(OverlayBlendModeNode);
 
-export const screen = proxyNode(ScreenBlendModeNode);
+export const screen = asCommand(ScreenBlendModeNode);
 
 export const calcBurn = hsl(
   ({ base, blend }: Params) => {

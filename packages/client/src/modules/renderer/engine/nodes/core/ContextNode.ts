@@ -1,5 +1,5 @@
 import { Node } from './Node.js';
-import { proxyNode } from '../shadernode/ShaderNodes.js';
+import { asCommand } from '../shadernode/ShaderNodes.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
@@ -41,7 +41,7 @@ export class ContextNode extends Node {
   }
 }
 
-export const context = proxyNode(ContextNode);
+export const context = asCommand(ContextNode);
 export const label = (node: Node, name: string) => context(node, { label: name });
 
 export class LabelNode extends ContextNode {

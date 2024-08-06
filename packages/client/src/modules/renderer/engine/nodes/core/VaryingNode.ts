@@ -1,5 +1,5 @@
 import { Node } from './Node.js';
-import { proxyNode } from '../shadernode/ShaderNodes.js';
+import { asCommand } from '../shadernode/ShaderNodes.js';
 import { ShaderStage, TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
@@ -40,6 +40,6 @@ export class VaryingNode extends Node {
   }
 }
 
-export const varying = proxyNode(VaryingNode);
+export const varying = asCommand(VaryingNode);
 
 implCommand('varying', VaryingNode);

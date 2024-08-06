@@ -1,5 +1,5 @@
 import { TempNode } from '../core/TempNode.js';
-import { f32, hsl, proxyNode, vec2, vec4 } from '../shadernode/ShaderNodes.js';
+import { f32, hsl, asCommand, vec2, vec4 } from '../shadernode/ShaderNodes.js';
 import { NodeUpdateStage } from '../core/constants.js';
 import { mul } from '../math/OperatorNode.js';
 import { uv } from '../accessors/UVNode.js';
@@ -145,6 +145,6 @@ export class GaussianBlurNode extends TempNode {
   }
 }
 
-export const gaussianBlur = proxyNode(GaussianBlurNode);
+export const gaussianBlur = asCommand(GaussianBlurNode);
 
 implCommand('gaussianBlur', GaussianBlurNode);

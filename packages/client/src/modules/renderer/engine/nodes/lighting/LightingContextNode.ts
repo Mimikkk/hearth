@@ -1,5 +1,5 @@
 import { ContextNode } from '../core/ContextNode.js';
-import { f32, proxyNode, vec3 } from '../shadernode/ShaderNodes.js';
+import { f32, asCommand, vec3 } from '../shadernode/ShaderNodes.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { LightNode } from '@modules/renderer/engine/nodes/lighting/LightNode.js';
 import { LightModel } from '@modules/renderer/engine/nodes/functions/LightModel.js';
@@ -51,6 +51,6 @@ export class LightingContextNode extends ContextNode {
   }
 }
 
-export const lightingContext = proxyNode(LightingContextNode);
+export const lightingContext = asCommand(LightingContextNode);
 
 implCommand('lightingContext', LightingContextNode);

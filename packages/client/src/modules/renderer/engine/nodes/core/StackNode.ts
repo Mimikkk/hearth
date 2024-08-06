@@ -1,5 +1,5 @@
 import { Node } from './Node.js';
-import { NodeStack, proxyNode, ShaderNode } from '../shadernode/ShaderNodes.js';
+import { NodeStack, asCommand, ShaderNode } from '../shadernode/ShaderNodes.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { OperatorNode } from '@modules/renderer/engine/nodes/math/OperatorNode.js';
@@ -74,4 +74,4 @@ export class StackNode extends Node {
 StackNode.prototype.isStackNode = true;
 Node.Stack = StackNode;
 
-export const stack = proxyNode(StackNode);
+export const stack = asCommand(StackNode);

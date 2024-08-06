@@ -1,7 +1,7 @@
 import { TempNode } from '../core/TempNode.js';
 import { dot, mix, MixNode } from '../math/MathNode.js';
 import { add } from '../math/OperatorNode.js';
-import { asNode, f32, hsl, proxyNode, vec3 } from '../shadernode/ShaderNodes.js';
+import { asNode, f32, hsl, asCommand, vec3 } from '../shadernode/ShaderNodes.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
 
@@ -58,7 +58,7 @@ implCommand('saturation', SaturationAdjustmentNode);
 implCommand('vibrance', VibranceAdjustmentNode);
 implCommand('hue', HueAdjustmentNode);
 
-export const saturation = proxyNode(SaturationAdjustmentNode);
+export const saturation = asCommand(SaturationAdjustmentNode);
 
 const calculateVibrance = hsl(({ color, adjustment }) => {
   const average = add(color.r, color.g, color.b).div(3.0);
@@ -68,7 +68,7 @@ const calculateVibrance = hsl(({ color, adjustment }) => {
 
   return mix(color.rgb, mx, amt);
 });
-export const vibrance = proxyNode(VibranceAdjustmentNode);
+export const vibrance = asCommand(VibranceAdjustmentNode);
 
 const k = vec3(0.57735, 0.57735, 0.57735);
 const calculateHue = hsl(({ color, adjustment }) => {
@@ -83,7 +83,7 @@ const calculateHue = hsl(({ color, adjustment }) => {
     ),
   );
 });
-export const hue = proxyNode(HueAdjustmentNode);
+export const hue = asCommand(HueAdjustmentNode);
 
 export const lumaCoeffs = vec3(0.2125, 0.7154, 0.0721);
 export const luminance = (color, luma = lumaCoeffs) => dot(color, luma);
@@ -94,6 +94,6 @@ class ThresholdNode extends MixNode {
   }
 }
 
-export const threshold = proxyNode(ThresholdNode);
+export const threshold = asCommand(ThresholdNode);
 
 implCommand('threshold', ThresholdNode);

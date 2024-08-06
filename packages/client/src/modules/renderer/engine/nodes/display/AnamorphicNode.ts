@@ -1,5 +1,5 @@
 import { TempNode } from '../core/TempNode.js';
-import { f32, hsl, proxyNode, vec2, vec3, vec4 } from '../shadernode/ShaderNodes.js';
+import { f32, hsl, asCommand, vec2, vec3, vec4 } from '../shadernode/ShaderNodes.js';
 import { loop } from '../utils/LoopNode.js';
 import { uniform } from '../core/UniformNode.js';
 import { NodeUpdateStage } from '../core/constants.js';
@@ -113,6 +113,6 @@ export class AnamorphicNode extends TempNode {
   }
 }
 
-export const anamorphic = proxyNode(AnamorphicNode);
+export const anamorphic = asCommand(AnamorphicNode);
 
 implCommand('anamorphic', AnamorphicNode);

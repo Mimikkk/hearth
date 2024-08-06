@@ -1,6 +1,6 @@
 import { Node } from './Node.js';
 import { StructTypeNode } from './StructTypeNode.js';
-import { proxyNode } from '../shadernode/ShaderNodes.js';
+import { asCommand } from '../shadernode/ShaderNodes.js';
 
 export class OutputStructNode extends Node {
   constructor(...members) {
@@ -43,4 +43,4 @@ export class OutputStructNode extends Node {
   }
 }
 
-export const outputStruct = proxyNode(OutputStructNode);
+export const outputStruct = asCommand(OutputStructNode);

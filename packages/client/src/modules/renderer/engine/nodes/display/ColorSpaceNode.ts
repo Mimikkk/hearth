@@ -1,6 +1,6 @@
 import { TempNode } from '../core/TempNode.js';
 import { mix } from '../math/MathNode.js';
-import { hsl, proxyNode, vec4 } from '../shadernode/ShaderNodes.js';
+import { hsl, asCommand, vec4 } from '../shadernode/ShaderNodes.js';
 import { ColorSpace } from '@modules/renderer/engine/engine.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { Node } from '../core/Node.js';
@@ -92,10 +92,10 @@ export class ColorSpaceToLinearNode extends ColorSpaceNode {
   }
 }
 
-export const linearTosRGB = proxyNode(LinearToSRGBNode);
-export const sRGBToLinear = proxyNode(SRGBToLinearNode);
-export const colorSpaceToLinear = proxyNode(ColorSpaceToLinearNode);
-export const linearToColorSpace = proxyNode(LinearToColorSpaceNode);
+export const linearTosRGB = asCommand(LinearToSRGBNode);
+export const sRGBToLinear = asCommand(SRGBToLinearNode);
+export const colorSpaceToLinear = asCommand(ColorSpaceToLinearNode);
+export const linearToColorSpace = asCommand(LinearToColorSpaceNode);
 
 implCommand('linearTosRGB', LinearToSRGBNode);
 implCommand('sRGBToLinear', SRGBToLinearNode);

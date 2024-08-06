@@ -1,5 +1,5 @@
 import { Node } from '../core/Node.js';
-import { proxyNode } from '../shadernode/ShaderNodes.js';
+import { asCommand } from '../shadernode/ShaderNodes.js';
 import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
@@ -25,6 +25,6 @@ export class TextureSizeNode extends Node {
   }
 }
 
-export const textureSize = proxyNode(TextureSizeNode);
+export const textureSize = asCommand(TextureSizeNode);
 
 implCommand('textureSize', TextureSizeNode);

@@ -1,5 +1,5 @@
 import { Node } from '../core/Node.js';
-import { f32, proxyNode } from '../shadernode/ShaderNodes.js';
+import { f32, asCommand } from '../shadernode/ShaderNodes.js';
 import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
 
 export class RemapNode extends Node {
@@ -26,13 +26,13 @@ export class RemapNode extends Node {
   }
 }
 
-export const remap = proxyNode(RemapNode);
+export const remap = asCommand(RemapNode);
 
 export class RemapClampNode extends RemapNode {
   doClamp = true;
 }
 
-export const remapClamp = proxyNode(RemapClampNode);
+export const remapClamp = asCommand(RemapClampNode);
 
 implCommand('remap', RemapNode);
 implCommand('remapClamp', RemapClampNode);

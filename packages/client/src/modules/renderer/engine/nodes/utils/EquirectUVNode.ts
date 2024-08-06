@@ -1,6 +1,6 @@
 import { TempNode } from '../core/TempNode.js';
 import { positionWorldDirection } from '../accessors/PositionNode.js';
-import { proxyNode, vec2 } from '../shadernode/ShaderNodes.js';
+import { asCommand, vec2 } from '../shadernode/ShaderNodes.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 export class EquirectUVNode extends TempNode {
@@ -26,4 +26,4 @@ export class EquirectUVNode extends TempNode {
   }
 }
 
-export const equirectUV = proxyNode(EquirectUVNode);
+export const equirectUV = asCommand(EquirectUVNode);

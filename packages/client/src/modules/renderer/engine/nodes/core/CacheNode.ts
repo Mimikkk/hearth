@@ -1,5 +1,5 @@
 import { Node } from './Node.js';
-import { proxyNode } from '../shadernode/ShaderNodes.js';
+import { asCommand } from '../shadernode/ShaderNodes.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
@@ -27,7 +27,7 @@ export class CacheNode extends Node {
   }
 }
 
-export const cache = proxyNode(CacheNode);
+export const cache = asCommand(CacheNode);
 
 export class GlobalCacheNode extends CacheNode {
   constructor(node: Node) {

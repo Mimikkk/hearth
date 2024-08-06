@@ -1,5 +1,5 @@
 import { TempNode } from '../core/TempNode.js';
-import { proxyNode } from '../shadernode/ShaderNodes.js';
+import { asCommand } from '../shadernode/ShaderNodes.js';
 import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
 
 export class PosterizeNode extends TempNode {
@@ -17,6 +17,6 @@ export class PosterizeNode extends TempNode {
   }
 }
 
-export const posterize = proxyNode(PosterizeNode);
+export const posterize = asCommand(PosterizeNode);
 
 implCommand('posterize', PosterizeNode);

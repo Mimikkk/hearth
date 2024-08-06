@@ -1,5 +1,5 @@
 import { Node } from '../core/Node.js';
-import { proxyNode } from '../shadernode/ShaderNodes.js';
+import { asCommand } from '../shadernode/ShaderNodes.js';
 import { objectPosition } from '../accessors/EntityNode.js';
 import { cameraViewMatrix } from '../accessors/CameraNode.js';
 import type { Light } from '@modules/renderer/engine/entities/lights/Light.js';
@@ -15,4 +15,4 @@ export class LightNode extends Node {
   }
 }
 
-export const lightTargetDirection = proxyNode(LightNode);
+export const lightTargetDirection = asCommand(LightNode);

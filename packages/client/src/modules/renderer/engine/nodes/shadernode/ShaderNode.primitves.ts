@@ -3,7 +3,7 @@ import { asConstNode } from '@modules/renderer/engine/nodes/shadernode/utils.js'
 import { ConvertNode } from '@modules/renderer/engine/nodes/utils/ConvertNode.js';
 import { JoinNode } from '@modules/renderer/engine/nodes/utils/JoinNode.js';
 import { ArrayElementNode } from '@modules/renderer/engine/nodes/utils/ArrayElementNode.js';
-import { asNode, asNodes, proxyNode } from './ShaderNode.as.js';
+import { asNode, asNodes, asCommand } from './ShaderNode.as.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { implCommand, implPrimitive } from '@modules/renderer/engine/nodes/core/Node.commands.js';
 import type { Node } from '@modules/renderer/engine/nodes/core/Node.js';
@@ -60,8 +60,8 @@ export const imat4 = primitive(TypeName.imat4);
 export const umat4 = primitive(TypeName.umat4);
 export const bmat4 = primitive(TypeName.bmat4);
 
-export const element = proxyNode(ArrayElementNode);
-export const convert = proxyNode(ConvertNode);
+export const element = asCommand(ArrayElementNode);
+export const convert = asCommand(ConvertNode);
 
 implPrimitive('color', color);
 implPrimitive('f32', f32);
@@ -95,4 +95,4 @@ implPrimitive('bmat4', bmat4);
 implCommand('element', ArrayElementNode);
 implCommand('convert', ConvertNode);
 
-export { asNode, asNodes, proxyNode };
+export { asNode, asNodes, asCommand };

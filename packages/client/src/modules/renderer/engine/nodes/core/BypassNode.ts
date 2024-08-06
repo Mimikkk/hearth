@@ -1,5 +1,5 @@
 import { Node } from './Node.js';
-import { proxyNode } from '../shadernode/ShaderNodes.js';
+import { asCommand } from '../shadernode/ShaderNodes.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
@@ -25,6 +25,6 @@ export class BypassNode extends Node {
   }
 }
 
-export const bypass = proxyNode(BypassNode);
+export const bypass = asCommand(BypassNode);
 
 implCommand('bypass', BypassNode);

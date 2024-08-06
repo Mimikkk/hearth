@@ -1,7 +1,7 @@
 import { Node } from '../core/Node.js';
 import { NodeUpdateStage } from '../core/constants.js';
 import { UniformNode } from '../core/UniformNode.js';
-import { proxyNode } from '../shadernode/ShaderNodes.js';
+import { asCommand } from '../shadernode/ShaderNodes.js';
 import { Entity, Vec3 } from '@modules/renderer/engine/engine.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { NodeFrame } from '@modules/renderer/engine/nodes/core/NodeFrame.js';
@@ -83,37 +83,37 @@ enum NodeVariant {
   Direction = 'direction',
 }
 
-export const objectDirection = proxyNode(
+export const objectDirection = asCommand(
   class extends EntityNode {
     scope = NodeVariant.Direction;
   },
 );
-export const objectViewMatrix = proxyNode(
+export const objectViewMatrix = asCommand(
   class extends EntityNode {
     scope = NodeVariant.ViewMatrix;
   },
 );
-export const objectNormalMatrix = proxyNode(
+export const objectNormalMatrix = asCommand(
   class extends EntityNode {
     scope = NodeVariant.NormalMatrix;
   },
 );
-export const objectWorldMatrix = proxyNode(
+export const objectWorldMatrix = asCommand(
   class extends EntityNode {
     scope = NodeVariant.WorldMatrix;
   },
 );
-export const objectPosition = proxyNode(
+export const objectPosition = asCommand(
   class extends EntityNode {
     scope = NodeVariant.Position;
   },
 );
-export const objectScale = proxyNode(
+export const objectScale = asCommand(
   class extends EntityNode {
     scope = NodeVariant.Scale;
   },
 );
-export const objectViewPosition = proxyNode(
+export const objectViewPosition = asCommand(
   class extends EntityNode {
     scope = NodeVariant.ViewPosition;
   },

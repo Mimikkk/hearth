@@ -1,5 +1,5 @@
 import { Node } from '../core/Node.js';
-import { f32, proxyNode } from '../shadernode/ShaderNodes.js';
+import { f32, asCommand } from '../shadernode/ShaderNodes.js';
 import { cameraFar, cameraNear } from '../accessors/CameraNode.js';
 import { positionView } from '../accessors/PositionNode.js';
 import { viewportDepthTexture } from './ViewportDepthTextureNode.js';
@@ -51,7 +51,7 @@ export const viewZToPerspectiveDepth = (viewZ: number, near: number, far: number
 export const perspectiveDepthToViewZ = (depth: number, near: number, far: number) =>
   near.mul(far).div(far.sub(near).mul(depth).sub(far));
 
-const depthPixelBase = proxyNode(
+const depthPixelBase = asCommand(
   class extends ViewportDepthNode {
     mode = NodeVariant.DepthPixel;
   },
@@ -59,12 +59,12 @@ const depthPixelBase = proxyNode(
 export const depth = new ViewportDepthNode(f32(0));
 depth.mode = NodeVariant.Depth;
 
-export const depthTexture = proxyNode(
+export const depthTexture = asCommand(
   class extends ViewportDepthNode {
     mode = NodeVariant.DepthTexture;
   },
 );
-export const depthPixel = proxyNode(
+export const depthPixel = asCommand(
   class extends ViewportDepthNode {
     mode = NodeVariant.DepthPixel;
   },

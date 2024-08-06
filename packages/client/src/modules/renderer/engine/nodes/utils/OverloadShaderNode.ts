@@ -1,5 +1,5 @@
 import { Node } from '../core/Node.js';
-import { Hsl, proxyNode, ShaderCallNode } from '../shadernode/ShaderNodes.js';
+import { Hsl, asCommand, ShaderCallNode } from '../shadernode/ShaderNodes.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
@@ -33,7 +33,7 @@ export class OverloadShaderNode extends Node {
   }
 }
 
-const overload = proxyNode(OverloadShaderNode);
+const overload = asCommand(OverloadShaderNode);
 
 export const overloadHsl =
   <Fn extends (...params: any) => any>(shaders: Hsl<Fn>[]) =>

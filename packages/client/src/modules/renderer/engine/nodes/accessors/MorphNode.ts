@@ -1,6 +1,6 @@
 import { Node } from '../core/Node.js';
 import { NodeUpdateStage } from '../core/constants.js';
-import { i32, ivec2, proxyNode, hsl } from '../shadernode/ShaderNodes.js';
+import { i32, ivec2, asCommand, hsl } from '../shadernode/ShaderNodes.js';
 import { uniform } from '../core/UniformNode.js';
 import { reference } from './ReferenceNode.js';
 import { positionLocal } from './PositionNode.js';
@@ -185,6 +185,4 @@ export class MorphNode extends Node {
   }
 }
 
-
-
-export const morphReference = proxyNode(MorphNode);
+export const morphReference = asCommand(MorphNode);

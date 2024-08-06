@@ -1,6 +1,6 @@
 import { TempNode } from '../core/TempNode.js';
 import { uv } from '../accessors/UVNode.js';
-import { hsl, proxyNode } from '../shadernode/ShaderNodes.js';
+import { hsl, asCommand } from '../shadernode/ShaderNodes.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
 
@@ -24,6 +24,6 @@ export class CheckerNode extends TempNode {
   }
 }
 
-export const checker = proxyNode(CheckerNode);
+export const checker = asCommand(CheckerNode);
 
 implCommand('checker', CheckerNode);
