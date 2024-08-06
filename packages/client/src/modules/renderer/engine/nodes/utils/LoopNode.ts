@@ -1,15 +1,18 @@
 import { Node } from '../core/Node.js';
 import { expression } from '../code/ExpressionNode.js';
 import { context } from '../core/ContextNode.js';
-import { asNode, asNodes } from '../shadernode/ShaderNodes.js';
+import { asCommand } from '../shadernode/ShaderNodes.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { StackNode } from '@modules/renderer/engine/nodes/core/StackNode.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
-import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
 
 export class LoopNode extends Node {
-  constructor(public params: Node[] = []) {
+  params: Node[];
+
+  constructor(...params: Node[]) {
     super();
+    this.params = params;
+    this.append();
   }
 
   getVarName(index: number) {
@@ -148,14 +151,6 @@ export class LoopNode extends Node {
   }
 }
 
-export const loop = (...params) => asNode(new LoopNode(asNodes(params))).append();
+export const loop = asCommand(LoopNode);
 export const Continue = () => expression('continue').append();
 export const Break = () => expression('break').append();
-
-export class LoopLoopNode extends LoopNode {
-  constructor(returns, ...params) {
-    super(returns, loop(...params));
-  }
-}
-
-implCommand('loop', LoopLoopNode);

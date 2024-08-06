@@ -1,12 +1,11 @@
 import { TempNode } from '../core/TempNode.js';
 import { div, mul, MulNode, sub } from './OperatorNode.js';
-import { asNode, f32, asCommand, vec3, vec4 } from '../shadernode/ShaderNodes.js';
+import { asCommand, asNode, f32, vec3, vec4 } from '../shadernode/ShaderNodes.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { Node } from '../core/Node.js';
 import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
 import { ConstNode } from '@modules/renderer/engine/nodes/core/ConstNode.js';
-import { asConst } from '@modules/renderer/engine/nodes/shadernode/utils.js';
 
 export class UnaryNode extends TempNode {
   declare method: UnaryVariant | BinaryVariant | TernaryVariant;
@@ -524,7 +523,7 @@ export class SaturateNode extends ClampNode {
 
 export class CbrtNode extends MulNode {
   constructor(a: ConstNode<number>) {
-    super(asNode(new SignNode(a)), pow(abs(a), 1.0 / 3.0));
+    super(new SignNode(a), pow(abs(a), 1.0 / 3.0));
   }
 }
 

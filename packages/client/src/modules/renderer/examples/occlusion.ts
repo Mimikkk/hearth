@@ -1,6 +1,6 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
 import { Camera, Scene } from '@modules/renderer/engine/engine.js';
-import { asNode, MeshPhongNodeMaterial, Node, NodeUpdateStage, uniform } from '@modules/renderer/engine/nodes/Nodes.js';
+import { MeshPhongNodeMaterial, Node, NodeUpdateStage, uniform } from '@modules/renderer/engine/nodes/Nodes.js';
 
 import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
 
@@ -55,9 +55,7 @@ async function init() {
   const plane = new Engine.Mesh(planeGeometry, new MeshPhongNodeMaterial({ color: 0x00ff00 }));
   const sphere = new Engine.Mesh(sphereGeometry, new MeshPhongNodeMaterial({ color: 0xffff00 }));
 
-  const instanceUniform = asNode(new OcclusionNode(sphere, new Engine.Color(0x00ff00), new Engine.Color(0x0000ff)));
-
-  plane.material.colorNode = instanceUniform;
+  plane.material.colorNode = new OcclusionNode(sphere, new Engine.Color(0x00ff00), new Engine.Color(0x0000ff));
 
   sphere.position.z = -1;
   sphere.useOcclusion = true;

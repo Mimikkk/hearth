@@ -79,7 +79,7 @@ export class ShaderNode<Fn extends (...params: any) => any = any> extends Node {
   call(inputs?: Parameters<Fn>[0]): ShaderCallNode {
     for (const name in inputs) inputs[name] = asNode(inputs[name]);
 
-    return asNode(new ShaderCallNode(this, inputs)) as ShaderCallNode;
+    return new ShaderCallNode(this, inputs) as ShaderCallNode;
   }
 
   setup() {

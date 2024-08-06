@@ -1,6 +1,6 @@
 import { Node } from '../core/Node.js';
 import { AnalyticLightNode } from './AnalyticLightNode.js';
-import { asNode, asCommand, vec3 } from '../shadernode/ShaderNodes.js';
+import { asCommand, asNode, vec3 } from '../shadernode/ShaderNodes.js';
 import { LightNodeMap } from '@modules/renderer/engine/nodes/lighting/LightsNodeMap.js';
 import { Light } from '@modules/renderer/engine/entities/lights/Light.js';
 import { LightNode } from '@modules/renderer/engine/nodes/lighting/LightNode.js';
@@ -100,8 +100,8 @@ export class LightsNode extends Node {
       let node = this.byId(light.id);
 
       if (node === null) {
-        const Light = LightNodeMap.get(light.constructor) ?? AnalyticLightNode;
-        node = asNode(new Light(light));
+        const NodeClass = LightNodeMap.get(light.constructor) ?? AnalyticLightNode;
+        node = new NodeClass(light);
       }
 
       this.lightNodes.push(node!);
