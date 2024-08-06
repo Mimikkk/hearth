@@ -1,12 +1,13 @@
 import { AttributeNode } from '../core/AttributeNode.js';
-import { asNode } from '../shadernode/ShaderNodes.js';
+import { asCommand, asNode } from '../shadernode/ShaderNodes.js';
 import { Vec4 } from '@modules/renderer/engine/engine.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
+import { ConstNode } from '@modules/renderer/engine/nodes/core/ConstNode.js';
 
 export class VertexColorNode extends AttributeNode {
-  constructor(public index: number) {
-    super(index > 0 ? 'color' + index : 'color', TypeName.vec4);
+  constructor(public index: ConstNode<number> = asNode(0)) {
+    super(index.value > 0 ? 'color' + index.value : 'color', TypeName.vec4);
   }
 
   generate(builder: NodeBuilder): string {
@@ -17,4 +18,4 @@ export class VertexColorNode extends AttributeNode {
   }
 }
 
-export const vertexColor = (index: number = 0) => asNode(new VertexColorNode(index));
+export const vertexColor = asCommand(VertexColorNode);

@@ -1,15 +1,15 @@
 import { BufferNode } from './BufferNode.js';
-import { asNode } from '../shadernode/ShaderNodes.js';
 import { StorageArrayElementNode, storageElement } from '../utils/StorageArrayElementNode.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
 import { IndexNode } from '@modules/renderer/engine/nodes/core/IndexNode.js';
+import { ConstNode } from '@modules/renderer/engine/nodes/core/ConstNode.js';
+import { asNode } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.as.js';
 
 export class StorageBufferNode<A extends Attribute> extends BufferNode<A> {
   declare isStorageBufferNode: true;
-  bufferObject: boolean = false;
 
-  constructor(value: A, type: TypeName, count: number = 0) {
+  constructor(value: A, type: TypeName, count: ConstNode<number> = asNode(0)) {
     super(value, type, count);
   }
 
@@ -25,11 +25,8 @@ export class StorageBufferNode<A extends Attribute> extends BufferNode<A> {
 StorageBufferNode.prototype.isStorageBufferNode = true;
 
 export const storage = (value: Attribute, type: TypeName.vec2, count: number = 0): StorageBufferNode =>
-  asNode(new StorageBufferNode(value, type, count));
+  new StorageBufferNode(value, type, count);
 
 export const storageObject = (value: Attribute, type: TypeName.vec2, count: number = 0): StorageBufferNode => {
-  const node = new StorageBufferNode(value, type, count);
-  node.bufferObject = true;
-
-  return asNode(node);
+  return new StorageBufferNode(value, type, count);
 };

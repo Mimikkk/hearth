@@ -1,18 +1,23 @@
 import { ReferenceNode } from './ReferenceNode.js';
-import { asNode } from '../shadernode/ShaderNodes.js';
+import { asCommand } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.as.js';
+import NodeFrame from '@modules/renderer/engine/nodes/core/NodeFrame.js';
+import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 
 export class RendererReferenceNode extends ReferenceNode {
-  constructor(property, inputType, hearth = null) {
+  constructor(
+    property: string,
+    inputType: TypeName,
+    public hearth?: Hearth,
+  ) {
     super(property, inputType, hearth);
-
-    this.hearth = hearth;
   }
 
-  updateReference(state) {
-    this.reference = this.hearth !== null ? this.hearth : state.hearth;
+  updateReference(state: NodeFrame) {
+    this.reference = this.hearth ?? state.hearth;
 
     return this.reference;
   }
 }
 
-export const rendererReference = (name, type, hearth) => asNode(new RendererReferenceNode(name, type, hearth));
+export const rendererReference = asCommand(RendererReferenceNode);

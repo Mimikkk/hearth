@@ -75,14 +75,14 @@ export enum Operation {
 }
 
 export enum ToneMapping {
-  None = 0,
-  Linear = 1,
-  Reinhard = 2,
-  Cineon = 3,
-  ACESFilmic = 4,
-  Custom = 5,
-  AgX = 6,
-  Neutral = 7,
+  None = 'none',
+  Linear = 'linear',
+  Reinhard = 'reinhard',
+  Cineon = 'cineon',
+  ACESFilmic = 'aces',
+  Custom = 'custom',
+  AgX = 'agx',
+  Neutral = 'neutral',
 }
 
 export enum BindMode {

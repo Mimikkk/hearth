@@ -1,5 +1,5 @@
 import { getValueFromType } from '@modules/renderer/engine/nodes/core/NodeUtils.js';
-import { asConstNode } from '@modules/renderer/engine/nodes/shadernode/utils.js';
+import { asConst } from '@modules/renderer/engine/nodes/shadernode/utils.js';
 import { ConvertNode } from '@modules/renderer/engine/nodes/utils/ConvertNode.js';
 import { JoinNode } from '@modules/renderer/engine/nodes/utils/JoinNode.js';
 import { ArrayElementNode } from '@modules/renderer/engine/nodes/utils/ArrayElementNode.js';
@@ -25,13 +25,13 @@ const primitive = (type: TypeName) => {
       params = [getValueFromType(type, ...params)];
 
     if (params.length === 1) {
-      const node = asConstNode(params[0], type);
+      const node = asConst(params[0], type);
 
       if (safeType(node) === type) return node;
       return new ConvertNode(node, type);
     }
 
-    const nodes = params.map(param => asConstNode(param));
+    const nodes = params.map(param => asConst(param));
     return new JoinNode(nodes, type);
   };
 };

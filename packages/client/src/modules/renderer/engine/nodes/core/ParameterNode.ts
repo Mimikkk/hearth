@@ -1,20 +1,19 @@
-import { asNode } from '../shadernode/ShaderNodes.js';
+import { asCommand } from '../shadernode/ShaderNodes.js';
 import { PropertyNode } from './PropertyNode.js';
+import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 export class ParameterNode extends PropertyNode {
-  constructor(nodeType, name = null) {
+  constructor(nodeType: TypeName, name: string) {
     super(nodeType, name);
-
-    this.isParameterNode = true;
   }
 
-  getHash() {
+  getHash(): string {
     return this.uuid;
   }
 
-  generate() {
+  generate(): string {
     return this.name;
   }
 }
 
-export const parameter = (type, name) => asNode(new ParameterNode(type, name));
+export const parameter = asCommand(ParameterNode);

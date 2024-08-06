@@ -6,7 +6,7 @@ import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.typ
 import { Node } from '../core/Node.js';
 import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
 import { ConstNode } from '@modules/renderer/engine/nodes/core/ConstNode.js';
-import { asConstNode } from '@modules/renderer/engine/nodes/shadernode/utils.js';
+import { asConst } from '@modules/renderer/engine/nodes/shadernode/utils.js';
 
 export class UnaryNode extends TempNode {
   declare method: UnaryVariant | BinaryVariant | TernaryVariant;
@@ -511,11 +511,7 @@ export class SmoothstepElementNode extends SmoothstepNode {
 export class ClampNode extends TernaryNode {
   method = TernaryVariant.Clamp;
 
-  constructor(
-    value: ConstNode<number>,
-    min: ConstNode<number> = asConstNode(0),
-    max: ConstNode<number> = asConstNode(1),
-  ) {
+  constructor(value: ConstNode<number>, min: ConstNode<number> = asNode(0), max: ConstNode<number> = asNode(1)) {
     super(asNode(value), asNode(min), asNode(max));
   }
 }

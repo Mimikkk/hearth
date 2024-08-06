@@ -39,7 +39,7 @@ async function init() {
 
   const fogFactor = rangeFog(null, 2.7, 4).context({ getViewZ: () => scenePassViewZ });
 
-  const scenePassTM = scenePass.toneMapping(Engine.ToneMapping.ACESFilmic);
+  const scenePassTM = scenePass.toneMapping(ToneMapping.ACESFilmic);
 
   const compose = fogFactor.mix(scenePassTM, backgroundColor);
 

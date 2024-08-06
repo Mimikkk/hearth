@@ -1,6 +1,6 @@
 import { Node } from './Node.js';
 import { varying } from './VaryingNode.js';
-import { asNode } from '../shadernode/ShaderNodes.js';
+import { asCommand } from '../shadernode/ShaderNodes.js';
 import { ShaderStage, TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 
@@ -62,4 +62,4 @@ export class AttributeNode extends Node {
   }
 }
 
-export const attribute = (name: string, nodeType: TypeName) => asNode(new AttributeNode(name, nodeType));
+export const attribute = asCommand(AttributeNode);

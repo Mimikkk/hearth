@@ -1,6 +1,5 @@
 import { Node } from '../core/Node.js';
 import { NodeUpdateStage } from '../core/constants.js';
-import { asNode } from '../shadernode/ShaderNodes.js';
 import { attribute } from '../core/AttributeNode.js';
 import { reference } from './ReferenceNode.js';
 import { add } from '../math/OperatorNode.js';
@@ -29,8 +28,8 @@ export class SkinningNode extends Node {
     super(TypeName.void);
 
     this.stage = NodeUpdateStage.Object;
-    this.skinIndexNode = attribute('skinIndex', 'uvec4');
-    this.skinWeightNode = attribute('skinWeight', 'vec4');
+    this.skinIndexNode = attribute('skinIndex', TypeName.uvec4);
+    this.skinWeightNode = attribute('skinWeight', TypeName.vec4);
 
     if (useReference) {
       this.bindMatrixNode = reference('bindMatrix', TypeName.mat4);
@@ -86,17 +85,16 @@ export class SkinningNode extends Node {
     if (builder.hasGeometryAttribute('tangent')) tangentLocal.assign(skinNormal);
   }
 
-  generate(builder: NodeBuilder, output: TypeName): string | null {
+  generate(builder: NodeBuilder, output: TypeName): string {
     if (output !== TypeName.void) return positionLocal.build(builder, output);
-    return null;
+    return '';
   }
 
   update(frame: NodeFrame): void {
     const object = this.useReference ? frame.object : this.skinnedMesh;
-
     object.skeleton!.update();
   }
 }
 
-export const skinning = (skinnedMesh: SkinnedMesh) => asNode(new SkinningNode(skinnedMesh, false));
-export const skinningReference = (skinnedMesh: SkinnedMesh) => asNode(new SkinningNode(skinnedMesh, true));
+export const skinning = (skinnedMesh: SkinnedMesh) => new SkinningNode(skinnedMesh, false);
+export const skinningReference = (skinnedMesh: SkinnedMesh) => new SkinningNode(skinnedMesh, true);

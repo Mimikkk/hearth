@@ -1,23 +1,31 @@
 import { getValueType } from '@modules/renderer/engine/nodes/core/NodeUtils.js';
-import { asConstNode } from '@modules/renderer/engine/nodes/shadernode/utils.js';
+import { asConst } from '@modules/renderer/engine/nodes/shadernode/utils.js';
 import { Hsl, hsl } from '@modules/renderer/engine/nodes/shadernode/hsl.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { Node } from '@modules/renderer/engine/nodes/core/Node.js';
 import { ConstNode } from '@modules/renderer/engine/nodes/core/ConstNode.js';
+import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
+import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
+import { Mat3 } from '@modules/renderer/engine/math/Mat3.js';
+import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
+import { Color } from '@modules/renderer/engine/math/Color.js';
+import { Vec4 } from '@modules/renderer/engine/math/Vec4.js';
 
 type Coerce<T> = T extends Node
   ? T
   : T extends null
     ? T | null
-    : T extends (...params: any) => any
-      ? Hsl<T>
-      : T extends {}
+    : T extends undefined
+      ? T | undefined
+      : T extends string
         ? T
-        : T extends undefined
-          ? T | undefined
-          : T extends string
-            ? string
-            : ConstNode<T>;
+        : T extends number | boolean | Vec2 | Vec3 | Vec4 | Mat3 | Mat4 | Color
+          ? ConstNode<T>
+          : T extends (...params: any) => any
+            ? Hsl<T>
+            : T extends {}
+              ? T
+              : never;
 
 export const asNode = <T>(value: T): Coerce<T> => {
   switch (getValueType(value)) {
@@ -29,7 +37,7 @@ export const asNode = <T>(value: T): Coerce<T> => {
     case TypeName.shader:
       return hsl(value as any) as unknown as Coerce<T>;
     default:
-      return asConstNode(value) as Coerce<T>;
+      return asConst(value) as Coerce<T>;
   }
 };
 

@@ -1,9 +1,10 @@
-import { asNode } from '../shadernode/ShaderNodes.js';
+import { asCommand, asNode } from '../shadernode/ShaderNodes.js';
 import { NodeUpdateStage } from '../core/constants.js';
 import { getValueType } from '../core/NodeUtils.js';
 import { ArrayElementNode } from '../utils/ArrayElementNode.js';
 import { BufferNode } from './BufferNode.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
+import { ConstNode } from '@modules/renderer/engine/nodes/core/ConstNode.js';
 
 export class UniformsElementNode extends ArrayElementNode {
   constructor(arrayBuffer, indexNode) {
@@ -89,14 +90,14 @@ export class UniformsNode extends BufferNode {
     this._elementLength = TypeName.size(this._elementType);
 
     this.value = new Float32Array(length * 4);
-    this.bufferCount = length;
+    this.bufferCount.value = length;
 
     return super.setup(builder);
   }
 
-  element(indexNode) {
-    return asNode(new UniformsElementNode(this, asNode(indexNode)));
+  element(index: number | ConstNode<number>) {
+    return new UniformsElementNode(this, asNode(index));
   }
 }
 
-export const uniforms = (values, nodeType) => asNode(new UniformsNode(values, nodeType));
+export const uniforms = asCommand(UniformsNode);

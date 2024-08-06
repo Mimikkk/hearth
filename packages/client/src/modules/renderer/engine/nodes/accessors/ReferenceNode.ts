@@ -41,7 +41,7 @@ export class ReferenceNode extends Node {
   constructor(
     public property: string,
     public uniformType: TypeName,
-    public object?: Entity,
+    public object?: any,
     public count?: ConstNode<number>,
   ) {
     super();

@@ -1213,7 +1213,7 @@ export class NodeBuilder {
       } else if (uniform.type === 'buffer' || uniform.type === 'storageBuffer') {
         const bufferNode = uniform.node;
         const bufferType = TypeName.repr(bufferNode.bufferType);
-        const bufferCount = bufferNode.bufferCount;
+        const bufferCount = bufferNode.bufferCount.value;
 
         bufferSnippets.push(
           Snippet.structBinding({

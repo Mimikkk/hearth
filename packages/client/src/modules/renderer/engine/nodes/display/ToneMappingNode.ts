@@ -1,10 +1,10 @@
 import { TempNode } from '../core/TempNode.js';
-import { asNode, f32, hsl, mat3, vec3 } from '../shadernode/ShaderNodes.js';
+import { asCommand, asNode, f32, hsl, mat3, vec3 } from '../shadernode/ShaderNodes.js';
 import { rendererReference } from '../accessors/RendererReferenceNode.js';
 import { clamp, log2, max, pow } from '../math/MathNode.js';
 import { mul } from '../math/OperatorNode.js';
 
-import { ToneMapping } from '@modules/renderer/engine/engine.js';
+import { Color, ToneMapping } from '@modules/renderer/engine/engine.js';
 import { ConstNode } from '@modules/renderer/engine/nodes/core/ConstNode.js';
 import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
@@ -119,10 +119,11 @@ const toneMappingLib = {
 
 export class ToneMappingNode extends TempNode {
   constructor(
-    public toneMapping = ToneMapping.None,
-    public exposureNode = toneMappingExposure,
-    public colorNode: ConstNode | null = null,
+    public toneMapping: ToneMapping = ToneMapping.None,
+    public exposureNode: ConstNode<number> = toneMappingExposure,
+    public colorNode: ConstNode<Color> | null = null,
   ) {
+    console.log({ toneMapping, exposureNode, colorNode, toneMappingLib });
     super(TypeName.vec3);
   }
 
@@ -156,15 +157,14 @@ export class ToneMappingNode extends TempNode {
   }
 }
 
-export const toneMapping = (mapping, exposure, color) =>
-  asNode(new ToneMappingNode(mapping, asNode(exposure), asNode(color)));
+export const toneMapping = asCommand(ToneMappingNode);
 
-export const toneMappingExposure = rendererReference('parameters.toneMappingExposure', 'f32');
+export const toneMappingExposure = rendererReference('parameters.toneMappingExposure', TypeName.vec3);
 
-export class ToneMapNode extends ToneMappingNode {
-  constructor(color: Node, mapping: ConstNode, exposure: ConstNode) {
-    super(mapping.value, exposure, color);
+export class ToneMappingCommandNode extends ToneMappingNode {
+  constructor(color: ConstNode<Color>, mapping: ToneMapping, exposure: ConstNode<number>) {
+    super(mapping, exposure, color);
   }
 }
 
-implCommand('toneMapping', ToneMapNode);
+implCommand('toneMapping', ToneMappingCommandNode);

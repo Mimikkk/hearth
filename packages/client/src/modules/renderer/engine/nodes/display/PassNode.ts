@@ -1,16 +1,27 @@
 import { TempNode } from '../core/TempNode.js';
 import { TextureNode } from '../accessors/TextureNode.js';
 import { NodeUpdateStage } from '../core/constants.js';
-import { asNode } from '../shadernode/ShaderNodes.js';
-import { uniform } from '../core/UniformNode.js';
+import { asCommand } from '../shadernode/ShaderNodes.js';
+import { uniform, UniformNode } from '../core/UniformNode.js';
 import { perspectiveDepthToViewZ, viewZToOrthographicDepth } from './ViewportDepthNode.js';
-import { DepthTexture, RenderTarget, TextureDataType, ToneMapping, Vec2 } from '@modules/renderer/engine/engine.js';
+import {
+  DepthTexture,
+  RenderTarget,
+  Scene,
+  TextureDataType,
+  ToneMapping,
+  Vec2,
+} from '@modules/renderer/engine/engine.js';
+import { Texture } from 'three';
+import { ICamera } from '@modules/renderer/engine/entities/cameras/Camera.js';
+import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
+import { ConstNode } from '@modules/renderer/engine/nodes/core/ConstNode.js';
 
 export class PassTextureNode extends TextureNode {
-  constructor(passNode, texture) {
+  constructor(pass: PassNode, texture: Texture) {
     super(texture);
 
-    this.passNode = passNode;
+    this.passNode = pass;
 
     this.setUpdateMatrix(false);
   }
@@ -27,12 +38,24 @@ export class PassTextureNode extends TextureNode {
 }
 
 export class PassNode extends TempNode {
-  constructor(scope, scene, camera) {
-    super('vec4');
+  scope: Variant;
+  _pixelRatio: number;
+  _width: number;
+  _height: number;
+  renderTarget: RenderTarget;
+  updateBeforeType: NodeUpdateStage;
+  _textureNode: PassTextureNode;
+  _depthTextureNode: PassTextureNode;
+  _depthNode: UniformNode<number>;
+  _viewZNode: UniformNode<number>;
+  _cameraNear: UniformNode<number>;
+  _cameraFar: UniformNode<number>;
 
-    this.scope = scope;
-    this.scene = scene;
-    this.camera = camera;
+  constructor(
+    public scene: Scene,
+    public camera: ICamera,
+  ) {
+    super(TypeName.vec4);
 
     this._pixelRatio = 1;
     this._width = 1;
@@ -40,28 +63,24 @@ export class PassNode extends TempNode {
 
     const depthTexture = new DepthTexture();
     depthTexture.isRenderTargetTexture = true;
-    //depthTexture.type = FloatType;
     depthTexture.name = 'PostProcessingDepth';
 
-    const renderTarget = new RenderTarget(this._width * this._pixelRatio, this._height * this._pixelRatio, {
+    const target = new RenderTarget(this._width * this._pixelRatio, this._height * this._pixelRatio, {
       type: TextureDataType.HalfFloat,
     });
-    renderTarget.texture.name = 'PostProcessing';
-    renderTarget.depthTexture = depthTexture;
+    target.texture.name = 'PostProcessing';
+    target.depthTexture = depthTexture;
 
-    this.renderTarget = renderTarget;
-
+    this.renderTarget = target;
     this.updateBeforeType = NodeUpdateStage.Frame;
 
-    this._textureNode = asNode(new PassTextureNode(this, renderTarget.texture));
-    this._depthTextureNode = asNode(new PassTextureNode(this, depthTexture));
+    this._textureNode = new PassTextureNode(this, target.texture);
+    this._depthTextureNode = new PassTextureNode(this, depthTexture);
 
-    this._depthNode = null;
-    this._viewZNode = null;
+    this._depthNode = null!;
+    this._viewZNode = null!;
     this._cameraNear = uniform(0);
     this._cameraFar = uniform(0);
-
-    this.isPassNode = true;
   }
 
   isGlobal() {
@@ -147,9 +166,19 @@ export class PassNode extends TempNode {
   }
 }
 
-PassNode.COLOR = 'color';
-PassNode.DEPTH = 'depth';
+enum Variant {
+  Color = 'color',
+  Depth = 'depth',
+}
 
-export const pass = (scene, camera) => asNode(new PassNode(PassNode.COLOR, scene, camera));
-export const texturePass = (pass, texture) => asNode(new PassTextureNode(pass, texture));
-export const depthPass = (scene, camera) => asNode(new PassNode(PassNode.DEPTH, scene, camera));
+export class ColorPassNode extends PassNode {
+  scope = Variant.Color;
+}
+
+export class DepthPassNode extends PassNode {
+  scope = Variant.Depth;
+}
+
+export const pass = asCommand(ColorPassNode);
+export const depthPass = asCommand(DepthPassNode);
+export const texturePass = asCommand(PassTextureNode);

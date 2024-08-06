@@ -1,7 +1,6 @@
 import { InputNode } from './InputNode.js';
 import { Node } from '../core/Node.js';
 import { objectGroup } from './UniformGroupNode.js';
-import { asNode } from '../shadernode/ShaderNodes.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { UniformGroupNode } from '@modules/renderer/engine/nodes/Nodes.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
@@ -55,5 +54,5 @@ export const uniform = <T>(v: Uniform<T> | T, maybeType?: TypeName): UniformNode
   const type = getConstNodeType(maybeType ?? v);
   const value = Node.is(v) ? (v.node?.value ?? v.value) : v;
 
-  return asNode(new UniformNode(value, type));
+  return new UniformNode(value, type);
 };

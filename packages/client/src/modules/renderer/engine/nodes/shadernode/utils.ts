@@ -4,7 +4,7 @@ import { Node } from '@modules/renderer/engine/nodes/core/Node.js';
 
 type ValueByType<T> = T extends Node ? Node : T extends number ? ConstNode<number> : ConstNode<boolean>;
 
-export const asConstNode = <T>(value: T, type?: TypeName): ConstNode<ValueByType<T>> => {
+export const asConst = <T>(value: T, type?: TypeName): ConstNode<ValueByType<T>> => {
   if (Node.is(value)) return value as unknown as ConstNode<ValueByType<T>>;
   return new ConstNode(value, type);
 };
