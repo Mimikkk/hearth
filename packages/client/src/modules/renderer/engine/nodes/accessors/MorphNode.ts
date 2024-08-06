@@ -2,7 +2,7 @@ import { Node } from '../core/Node.js';
 import { NodeUpdateStage } from '../core/constants.js';
 import { i32, ivec2, asCommand, hsl } from '../shadernode/ShaderNodes.js';
 import { uniform } from '../core/UniformNode.js';
-import { reference } from './ReferenceNode.js';
+import { ref } from './ReferenceNode.js';
 import { positionLocal } from './PositionNode.js';
 import { normalLocal } from './NormalNode.js';
 import { textureLoad } from './TextureNode.js';
@@ -144,7 +144,7 @@ export class MorphNode extends Node {
     const width = i32(size.width);
 
     loop(morphTargetsCount, ({ i }) => {
-      const influence = reference('morphTargetInfluences', 'f32').element(i);
+      const influence = ref('morphTargetInfluences', 'f32').element(i);
 
       if (hasMorphPosition === true) {
         positionLocal.addAssign(
@@ -185,4 +185,4 @@ export class MorphNode extends Node {
   }
 }
 
-export const morphReference = asCommand(MorphNode);
+export const morphRef = asCommand(MorphNode);

@@ -121,4 +121,4 @@ export class ReferenceNode extends Node {
   }
 }
 
-export const reference = asCommand(ReferenceNode);
+export const ref = asCommand(ReferenceNode);

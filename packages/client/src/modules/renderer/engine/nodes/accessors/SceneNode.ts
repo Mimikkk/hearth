@@ -1,5 +1,5 @@
 import { Node } from '../core/Node.js';
-import { reference } from './ReferenceNode.js';
+import { ref } from './ReferenceNode.js';
 import { Scene } from '@modules/renderer/engine/entities/scenes/Scene.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 
@@ -16,9 +16,9 @@ export class SceneNode extends Node {
 
     switch (this.scope) {
       case NodeVariant.BackgroundBlurriness:
-        return reference('backgroundBlurriness', 'f32', scene);
+        return ref('backgroundBlurriness', 'f32', scene);
       case NodeVariant.BackgroundIntensity:
-        return reference('backgroundIntensity', 'f32', scene);
+        return ref('backgroundIntensity', 'f32', scene);
     }
   }
 }

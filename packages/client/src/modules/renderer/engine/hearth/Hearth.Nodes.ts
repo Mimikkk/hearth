@@ -24,7 +24,7 @@ import {
   objectGroup,
   pmremTexture,
   rangeFog,
-  reference,
+  ref,
   renderGroup,
   texture,
   toneMapping,
@@ -293,13 +293,9 @@ export class HearthNodes extends DataMap<any, any> {
         let fogNode = null;
 
         if (fog instanceof FogExp2) {
-          fogNode = densityFog(reference('color', 'color', fog), reference('density', 'f32', fog));
+          fogNode = densityFog(ref('color', 'color', fog), ref('density', 'f32', fog));
         } else if (fog instanceof Fog) {
-          fogNode = rangeFog(
-            reference('color', 'color', fog),
-            reference('near', 'f32', fog),
-            reference('far', 'f32', fog),
-          );
+          fogNode = rangeFog(ref('color', 'color', fog), ref('near', 'f32', fog), ref('far', 'f32', fog));
         } else {
           console.error('WebGPUNodes: Unsupported fog configuration.', fog);
         }

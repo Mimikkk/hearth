@@ -1,6 +1,6 @@
 import { Node } from '../core/Node.js';
-import { reference } from './ReferenceNode.js';
-import { materialReference } from './MaterialReferenceNode.js';
+import { ref } from './ReferenceNode.js';
+import { materialRef } from './MaterialReferenceNode.js';
 import { normalView } from './NormalNode.js';
 import { f32 } from '../shadernode/ShaderNodes.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
@@ -18,7 +18,7 @@ export class MaterialNode extends Node {
     let node = _property.get(property);
 
     if (node === undefined) {
-      node = materialReference(property, type);
+      node = materialRef(property, type);
 
       _property.set(property, node);
     }
@@ -138,10 +138,10 @@ export class MaterialNode extends Node {
         return sheenRoughness.clamp(0.07, 1.0);
       }
       case Variant.IridescenceThickness: {
-        const iridescenceThicknessMaximum = reference('1', TypeName.f32, material.iridescenceThicknessRange);
+        const iridescenceThicknessMaximum = ref('1', TypeName.f32, material.iridescenceThicknessRange);
 
         if (Texture.is(material.iridescenceThicknessMap)) {
-          const iridescenceThicknessMinimum = reference('0', TypeName.f32, material.iridescenceThicknessRange);
+          const iridescenceThicknessMinimum = ref('0', TypeName.f32, material.iridescenceThicknessRange);
 
           return iridescenceThicknessMaximum
             .sub(iridescenceThicknessMinimum)

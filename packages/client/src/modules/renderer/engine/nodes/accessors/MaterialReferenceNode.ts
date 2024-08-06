@@ -17,4 +17,4 @@ export class MaterialReferenceNode extends ReferenceNode {
   }
 }
 
-export const materialReference = asCommand(MaterialReferenceNode);
+export const materialRef = asCommand(MaterialReferenceNode);

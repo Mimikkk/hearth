@@ -20,4 +20,4 @@ export class RendererReferenceNode extends ReferenceNode {
   }
 }
 
-export const rendererReference = asCommand(RendererReferenceNode);
+export const rendererRef = asCommand(RendererReferenceNode);

@@ -10,7 +10,7 @@ import {
 } from '../accessors/NormalNode.js';
 import { positionViewDirection } from '../accessors/PositionNode.js';
 import { f32 } from '../shadernode/ShaderNodes.js';
-import { reference } from '../accessors/ReferenceNode.js';
+import { ref } from '../accessors/ReferenceNode.js';
 import { pmremTexture } from '@modules/renderer/engine/nodes/pmrem/PMREMNode.js';
 
 const envNodeCache = new WeakMap();
@@ -37,7 +37,7 @@ export class EnvironmentNode extends LightingNode {
       envNode = cacheEnvNode;
     }
 
-    const intensity = reference('envMapIntensity', 'f32', builder.material);
+    const intensity = ref('envMapIntensity', 'f32', builder.material);
 
     const radiance = context(envNode, createRadianceContext(roughness, transformedNormalView)).mul(intensity);
     const irradiance = context(envNode, createIrradianceContext(transformedNormalWorld)).mul(Math.PI).mul(intensity);

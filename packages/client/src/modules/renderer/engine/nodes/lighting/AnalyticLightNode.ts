@@ -2,7 +2,7 @@ import { LightingNode } from './LightingNode.js';
 import { NodeUpdateStage } from '../core/constants.js';
 import { uniform, UniformNode } from '../core/UniformNode.js';
 import { vec3, vec4 } from '../shadernode/ShaderNodes.js';
-import { reference } from '../accessors/ReferenceNode.js';
+import { ref } from '../accessors/ReferenceNode.js';
 import { texture, TextureNode } from '../accessors/TextureNode.js';
 import { positionWorld } from '../accessors/PositionNode.js';
 import { normalWorld } from '../accessors/NormalNode.js';
@@ -71,8 +71,8 @@ export class AnalyticLightNode extends LightingNode {
 
       shadow.camera.updateProjectionMatrix();
 
-      const bias = reference('bias', TypeName.f32, shadow);
-      const normalBias = reference('normalBias', TypeName.f32, shadow);
+      const bias = ref('bias', TypeName.f32, shadow);
+      const normalBias = ref('normalBias', TypeName.f32, shadow);
 
       let shadowCoord = uniform(shadow.matrix).mul(positionWorld.add(normalWorld.mul(normalBias)));
       shadowCoord = shadowCoord.xyz.div(shadowCoord.w);

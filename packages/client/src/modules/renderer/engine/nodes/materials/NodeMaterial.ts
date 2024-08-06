@@ -14,7 +14,7 @@ import { transformedNormalView } from '../accessors/NormalNode.js';
 import { instance } from '../accessors/InstanceNode.js';
 import { positionLocal, positionView } from '../accessors/PositionNode.js';
 import { skinningReference } from '../accessors/SkinningNode.js';
-import { morphReference } from '../accessors/MorphNode.js';
+import { morphRef } from '../accessors/MorphNode.js';
 import { texture } from '../accessors/TextureNode.js';
 import { cubeTexture } from '../accessors/CubeTextureNode.js';
 import { lightsNode } from '../lighting/LightsNode.js';
@@ -174,7 +174,7 @@ export class NodeMaterial extends ShaderMaterial {
     builder.addStack();
 
     if (geometry.morphAttributes.position || geometry.morphAttributes.normal || geometry.morphAttributes.color) {
-      morphReference(object).append();
+      morphRef(object).append();
     }
 
     if (object.isSkinnedMesh === true) {

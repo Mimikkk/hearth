@@ -6,7 +6,7 @@ import {
   positionLocal,
   positionWorld,
   positionWorldDirection,
-  reference,
+  ref,
   reflectVector,
   toneMapping,
   uniform,
@@ -70,11 +70,11 @@ async function init() {
     saturation: 1,
   };
 
-  const mixNode = reference('mix', 'f32', adjustments);
-  const proceduralNode = reference('procedural', 'f32', adjustments);
-  const intensityNode = reference('intensity', 'f32', adjustments);
-  const hueNode = reference('hue', 'f32', adjustments);
-  const saturationNode = reference('saturation', 'f32', adjustments);
+  const mixNode = ref('mix', 'f32', adjustments);
+  const proceduralNode = ref('procedural', 'f32', adjustments);
+  const intensityNode = ref('intensity', 'f32', adjustments);
+  const hueNode = ref('hue', 'f32', adjustments);
+  const saturationNode = ref('saturation', 'f32', adjustments);
 
   const rotateY1Matrix = new Engine.Mat4();
   const rotateY2Matrix = new Engine.Mat4();

@@ -1,7 +1,7 @@
 import { Node } from '../core/Node.js';
 import { NodeUpdateStage } from '../core/constants.js';
 import { attribute } from '../core/AttributeNode.js';
-import { reference } from './ReferenceNode.js';
+import { ref } from './ReferenceNode.js';
 import { add } from '../math/OperatorNode.js';
 import { normalLocal } from './NormalNode.js';
 import { positionLocal } from './PositionNode.js';
@@ -32,14 +32,9 @@ export class SkinningNode extends Node {
     this.skinWeightNode = attribute('skinWeight', TypeName.vec4);
 
     if (useReference) {
-      this.bindMatrixNode = reference('bindMatrix', TypeName.mat4);
-      this.bindMatrixInverseNode = reference('bindMatrixInverse', TypeName.mat4);
-      this.boneMatricesNode = reference(
-        'skeleton.boneMatrices',
-        TypeName.mat4,
-        undefined,
-        skinnedMesh.skeleton.bones.length,
-      );
+      this.bindMatrixNode = ref('bindMatrix', TypeName.mat4);
+      this.bindMatrixInverseNode = ref('bindMatrixInverse', TypeName.mat4);
+      this.boneMatricesNode = ref('skeleton.boneMatrices', TypeName.mat4, undefined, skinnedMesh.skeleton.bones.length);
     } else {
       this.bindMatrixNode = uniform(skinnedMesh.bindMatrix, TypeName.mat4);
       this.bindMatrixInverseNode = uniform(skinnedMesh.bindMatrixInverse, TypeName.mat4);

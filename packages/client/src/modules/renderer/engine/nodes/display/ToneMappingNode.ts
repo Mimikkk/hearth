@@ -1,6 +1,6 @@
 import { TempNode } from '../core/TempNode.js';
 import { asCommand, asNode, f32, hsl, mat3, vec3 } from '../shadernode/ShaderNodes.js';
-import { rendererReference } from '../accessors/RendererReferenceNode.js';
+import { rendererRef } from '../accessors/RendererReferenceNode.js';
 import { clamp, log2, max, pow } from '../math/MathNode.js';
 import { mul } from '../math/OperatorNode.js';
 
@@ -159,7 +159,7 @@ export class ToneMappingNode extends TempNode {
 
 export const toneMapping = asCommand(ToneMappingNode);
 
-export const toneMappingExposure = rendererReference('parameters.toneMappingExposure', TypeName.vec3);
+export const toneMappingExposure = rendererRef('parameters.toneMappingExposure', TypeName.vec3);
 
 export class ToneMappingCommandNode extends ToneMappingNode {
   constructor(color: ConstNode<Color>, mapping: ToneMapping, exposure: ConstNode<number>) {
