@@ -31,7 +31,6 @@ import {
 } from '@modules/renderer/engine/nodes/Nodes.js';
 import { getFormat } from '@modules/renderer/engine/hearth/Hearth.Textures.js';
 import ChainMap from '@modules/renderer/engine/hearth/memo/ChainMap.js';
-import { NodeKeywords } from '@modules/renderer/engine/nodes/core/NodeKeywords.js';
 import { NodeAttribute } from '@modules/renderer/engine/nodes/core/NodeAttribute.js';
 import { Uniform } from '@modules/renderer/engine/nodes/core/Uniform.js';
 import { NodeVar } from '@modules/renderer/engine/nodes/core/NodeVar.js';
@@ -97,7 +96,6 @@ export class NodeBuilder {
   currentFunctionNode: FunctionNode | null;
   context: {
     getViewZ?: (node: Node) => Node;
-    keywords: NodeKeywords;
     material: Material | null;
     vertex?: Node;
     label?: string;
@@ -155,7 +153,6 @@ export class NodeBuilder {
     this.currentFunctionNode = null;
 
     this.context = {
-      keywords: new NodeKeywords(),
       material: this.material,
     };
 

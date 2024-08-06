@@ -13,7 +13,6 @@ export * from './core/VarNode.js';
 export * from './core/NodeAttribute.js';
 export * from './core/NodeCode.js';
 export * from './core/NodeFrame.js';
-export * from './core/NodeKeywords.js';
 export * from './core/Uniform.js';
 export * from './core/NodeVar.js';
 export * from './core/NodeVarying.js';

@@ -159,7 +159,6 @@ async function init() {
 				`);
 
   const textureNode = texture(uvTexture);
-  //getWGSLTextureSample.keywords = { tex: textureNode, tex_sampler: sampler( textureNode ) };
 
   material = new MeshBasicNodeMaterial();
   material.colorNode = getWGSLTextureSample({ tex: textureNode, tex_sampler: textureNode, uv: uv() });
