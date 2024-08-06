@@ -3,41 +3,49 @@ import { NodeUpdateStage } from '../core/constants.js';
 import { uniform } from '../core/UniformNode.js';
 import { texture } from './TextureNode.js';
 import { buffer } from './BufferNode.js';
-import { asCommand, asNode, asNodes } from '../shadernode/ShaderNodes.js';
+import { asCommand, asNode } from '../shadernode/ShaderNodes.js';
 import { uniforms } from './UniformsNode.js';
 import { ArrayElementNode } from '../utils/ArrayElementNode.js';
 import { ConstNode } from '@modules/renderer/engine/nodes/core/ConstNode.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { Entity } from '@modules/renderer/engine/core/Entity.js';
+import { IndexNode } from '@modules/renderer/engine/nodes/core/IndexNode.js';
+import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 
 export class ReferenceElementNode extends ArrayElementNode {
-  constructor(referenceNode, indexNode) {
-    super(referenceNode, indexNode);
-
-    this.referenceNode = referenceNode;
-
-    this.isReferenceElementNode = true;
+  constructor(
+    public reference: ReferenceNode,
+    index: IndexNode,
+  ) {
+    super(reference, index);
   }
 
-  getNodeType() {
-    return this.referenceNode.uniformType;
+  getNodeType(): TypeName {
+    return this.reference.uniformType;
   }
 
-  generate(builder) {
+  generate(builder: NodeBuilder): string {
     const snippet = super.generate(builder);
-    const arrayType = this.referenceNode.getNodeType();
-    const elementType = this.getNodeType();
+    const arrayType = this.reference.getNodeType(builder);
+    const componentType = this.getNodeType();
 
-    return builder.format(snippet, arrayType, elementType);
+    return builder.format(snippet, arrayType, componentType);
   }
 }
 
 export class ReferenceNode extends Node {
-  constructor(property: string, uniformType: TypeName, object?: Entity, count?: ConstNode<number>) {
+  properties: string[];
+  reference: any;
+  node: Node;
+
+  constructor(
+    public property: string,
+    public uniformType: TypeName,
+    public object?: Entity,
+    public count?: ConstNode<number>,
+  ) {
     super();
 
-    this.property = property;
-    this.uniformType = uniformType;
     this.object = object ?? null;
     this.count = count?.value ?? null;
 
@@ -48,11 +56,11 @@ export class ReferenceNode extends Node {
     this.stage = NodeUpdateStage.Object;
   }
 
-  element(index) {
+  element(index: number): ReferenceElementNode {
     return new ReferenceElementNode(this, asNode(index));
   }
 
-  setNodeType(uniformType) {
+  setNodeType(uniformType: TypeName): void {
     let node = null;
 
     if (this.count !== null) {
@@ -68,7 +76,7 @@ export class ReferenceNode extends Node {
     this.node = node;
   }
 
-  getNodeType(builder) {
+  getNodeType(builder: NodeBuilder): TypeName {
     return this.node.getNodeType(builder);
   }
 
