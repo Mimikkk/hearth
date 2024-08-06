@@ -1,12 +1,11 @@
 import { Node } from './Node.js';
-import { asNode, fixedNode } from '../shadernode/ShaderNodes.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 export class PropertyNode extends Node {
   constructor(
     type: TypeName,
-    public name: string | null = null,
+    public name?: string,
     public varying: boolean = false,
   ) {
     super(type);
@@ -21,35 +20,35 @@ export class PropertyNode extends Node {
   }
 
   generate(builder: NodeBuilder): string {
-    let nodeVar;
+    let node;
 
-    if (this.varying === true) {
-      nodeVar = builder.getVaryingFromNode(this, this.getNodeType(builder));
-      nodeVar.needsInterpolation = true;
+    if (this.varying) {
+      node = builder.getVaryingFromNode(this, this.getNodeType(builder));
+      node.needsInterpolation = true;
     } else {
-      nodeVar = builder.getVarFromNode(this, this.name);
+      node = builder.getVarFromNode(this, this.name);
     }
 
-    return builder.getPropertyName(nodeVar);
+    return builder.getPropertyName(node);
   }
 }
 
-export const property = (type, name) => asNode(new PropertyNode(type, name));
-export const varyingProperty = (type, name) => asNode(new PropertyNode(type, name, true));
+export const property = (type: TypeName, name: string) => new PropertyNode(type, name, false);
+export const varyingProperty = (type: TypeName, name: string) => new PropertyNode(type, name, true);
 
-export const diffuseColor = fixedNode(PropertyNode, 'vec4', 'DiffuseColor');
-export const roughness = fixedNode(PropertyNode, 'f32', 'Roughness');
-export const metalness = fixedNode(PropertyNode, 'f32', 'Metalness');
-export const clearcoat = fixedNode(PropertyNode, 'f32', 'Clearcoat');
-export const clearcoatRoughness = fixedNode(PropertyNode, 'f32', 'ClearcoatRoughness');
-export const sheen = fixedNode(PropertyNode, 'vec3', 'Sheen');
-export const sheenRoughness = fixedNode(PropertyNode, 'f32', 'SheenRoughness');
-export const iridescence = fixedNode(PropertyNode, 'f32', 'Iridescence');
-export const iridescenceIOR = fixedNode(PropertyNode, 'f32', 'IridescenceIOR');
-export const iridescenceThickness = fixedNode(PropertyNode, 'f32', 'IridescenceThickness');
-export const specularColor = fixedNode(PropertyNode, 'color', 'SpecularColor');
-export const shininess = fixedNode(PropertyNode, 'f32', 'Shininess');
-export const output = fixedNode(PropertyNode, 'vec4', 'Output');
-export const dashSize = fixedNode(PropertyNode, 'f32', 'dashSize');
-export const gapSize = fixedNode(PropertyNode, 'f32', 'gapSize');
-export const pointWidth = fixedNode(PropertyNode, 'f32', 'pointWidth');
+export const diffuseColor = new PropertyNode(TypeName.vec4, 'DiffuseColor');
+export const roughness = new PropertyNode(TypeName.f32, 'Roughness');
+export const metalness = new PropertyNode(TypeName.f32, 'Metalness');
+export const clearcoat = new PropertyNode(TypeName.f32, 'Clearcoat');
+export const clearcoatRoughness = new PropertyNode(TypeName.f32, 'ClearcoatRoughness');
+export const sheen = new PropertyNode(TypeName.vec3, 'Sheen');
+export const sheenRoughness = new PropertyNode(TypeName.f32, 'SheenRoughness');
+export const iridescence = new PropertyNode(TypeName.f32, 'Iridescence');
+export const iridescenceIOR = new PropertyNode(TypeName.f32, 'IridescenceIOR');
+export const iridescenceThickness = new PropertyNode(TypeName.f32, 'IridescenceThickness');
+export const specularColor = new PropertyNode(TypeName.color, 'SpecularColor');
+export const shininess = new PropertyNode(TypeName.f32, 'Shininess');
+export const output = new PropertyNode(TypeName.vec4, 'Output');
+export const dashSize = new PropertyNode(TypeName.f32, 'dashSize');
+export const gapSize = new PropertyNode(TypeName.f32, 'gapSize');
+export const pointWidth = new PropertyNode(TypeName.f32, 'pointWidth');

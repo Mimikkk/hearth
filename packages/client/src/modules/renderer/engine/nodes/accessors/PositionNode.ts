@@ -3,60 +3,58 @@ import { attribute } from '../core/AttributeNode.js';
 import { varying } from '../core/VaryingNode.js';
 import { normalize } from '../math/MathNode.js';
 import { modelViewMatrix, modelWorldMatrix } from './ModelNode.js';
-import { fixedNode } from '../shadernode/ShaderNodes.js';
+import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
+import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 export class PositionNode extends Node {
-  constructor(scope = PositionNode.LOCAL) {
-    super('vec3');
-
-    this.scope = scope;
+  constructor(public scope: NodeVariant) {
+    super(TypeName.vec3);
   }
 
-  isGlobal() {
+  isGlobal(): boolean {
     return true;
   }
 
-  getHash() {
+  getHash(): string {
     return `position-${this.scope}`;
   }
 
-  generate(builder) {
-    const scope = this.scope;
-
-    let outputNode = null;
-
-    if (scope === PositionNode.GEOMETRY) {
-      outputNode = attribute('position', 'vec3');
-    } else if (scope === PositionNode.LOCAL) {
-      outputNode = varying(positionGeometry);
-    } else if (scope === PositionNode.WORLD) {
-      const vertexPositionNode = modelWorldMatrix.mul(positionLocal);
-      outputNode = varying(vertexPositionNode);
-    } else if (scope === PositionNode.VIEW) {
-      const vertexPositionNode = modelViewMatrix.mul(positionLocal);
-      outputNode = varying(vertexPositionNode);
-    } else if (scope === PositionNode.VIEW_DIRECTION) {
-      const vertexPositionNode = positionView.negate();
-      outputNode = normalize(varying(vertexPositionNode));
-    } else if (scope === PositionNode.WORLD_DIRECTION) {
-      const vertexPositionNode = positionLocal.transformDirection(modelWorldMatrix);
-      outputNode = normalize(varying(vertexPositionNode));
+  #output(): Node {
+    switch (this.scope) {
+      case NodeVariant.Geometry:
+        return attribute('position', TypeName.vec3);
+      case NodeVariant.Local:
+        return varying(positionGeometry);
+      case NodeVariant.World:
+        return varying(modelWorldMatrix.mul(positionLocal));
+      case NodeVariant.View:
+        return varying(modelViewMatrix.mul(positionLocal));
+      case NodeVariant.ViewDirection:
+        return normalize(varying(positionView.negate()));
+      case NodeVariant.WorldDirection:
+        return normalize(varying(positionLocal.transformDirection(modelWorldMatrix)));
+      default:
+        throw new Error(`Unknown position scope: ${this.scope}`);
     }
+  }
 
-    return outputNode.build(builder, this.getNodeType(builder));
+  generate(builder: NodeBuilder): string {
+    return this.#output().build(builder, this.getNodeType(builder));
   }
 }
 
-PositionNode.GEOMETRY = 'geometry';
-PositionNode.LOCAL = 'local';
-PositionNode.WORLD = 'world';
-PositionNode.WORLD_DIRECTION = 'worldDirection';
-PositionNode.VIEW = 'view';
-PositionNode.VIEW_DIRECTION = 'viewDirection';
+enum NodeVariant {
+  Geometry = 'geometry',
+  Local = 'local',
+  World = 'world',
+  WorldDirection = 'worldDirection',
+  View = 'view',
+  ViewDirection = 'viewDirection',
+}
 
-export const positionGeometry = fixedNode(PositionNode, PositionNode.GEOMETRY);
-export const positionLocal = fixedNode(PositionNode, PositionNode.LOCAL).temp('Position');
-export const positionWorld = fixedNode(PositionNode, PositionNode.WORLD);
-export const positionWorldDirection = fixedNode(PositionNode, PositionNode.WORLD_DIRECTION);
-export const positionView = fixedNode(PositionNode, PositionNode.VIEW);
-export const positionViewDirection = fixedNode(PositionNode, PositionNode.VIEW_DIRECTION);
+export const positionGeometry = new PositionNode(NodeVariant.Geometry);
+export const positionLocal = new PositionNode(NodeVariant.Local).temp('Position');
+export const positionWorld = new PositionNode(NodeVariant.World);
+export const positionWorldDirection = new PositionNode(NodeVariant.WorldDirection);
+export const positionView = new PositionNode(NodeVariant.View);
+export const positionViewDirection = new PositionNode(NodeVariant.ViewDirection);

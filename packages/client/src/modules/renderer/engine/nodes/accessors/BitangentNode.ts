@@ -4,14 +4,11 @@ import { normalize } from '../math/MathNode.js';
 import { cameraViewMatrix } from './CameraNode.js';
 import { normalGeometry, normalLocal, normalView, normalWorld, transformedNormalView } from './NormalNode.js';
 import { tangentGeometry, tangentLocal, tangentView, tangentWorld, transformedTangentView } from './TangentNode.js';
-import { fixedNode } from '../shadernode/ShaderNodes.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 
 export class BitangentNode extends Node {
-  scope: NodeVariant;
-
-  constructor() {
+  constructor(public scope: NodeVariant) {
     super(TypeName.vec3);
   }
 
@@ -47,26 +44,10 @@ enum NodeVariant {
   World = 'world',
 }
 
-export const bitangentGeometry = fixedNode(
-  class extends BitangentNode {
-    scope = NodeVariant.Geometry;
-  },
-);
-export const bitangentLocal = fixedNode(
-  class extends BitangentNode {
-    scope = NodeVariant.Local;
-  },
-);
-export const bitangentView = fixedNode(
-  class extends BitangentNode {
-    scope = NodeVariant.View;
-  },
-);
-export const bitangentWorld = fixedNode(
-  class extends BitangentNode {
-    scope = NodeVariant.World;
-  },
-);
+export const bitangentGeometry = new BitangentNode(NodeVariant.Geometry);
+export const bitangentLocal = new BitangentNode(NodeVariant.Local);
+export const bitangentView = new BitangentNode(NodeVariant.View);
+export const bitangentWorld = new BitangentNode(NodeVariant.World);
 
 export const transformedBitangentView = normalize(
   transformedNormalView.cross(transformedTangentView).mul(tangentGeometry.w),

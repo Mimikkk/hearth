@@ -1,37 +1,32 @@
 import { Node } from '../core/Node.js';
-import { fixedNode } from '../shadernode/ShaderNodes.js';
 import { reference } from './ReferenceNode.js';
+import { Scene } from '@modules/renderer/engine/entities/scenes/Scene.js';
+import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 
 export class SceneNode extends Node {
-  constructor(scope = SceneNode.BACKGROUND_BLURRINESS, scene = null) {
+  constructor(
+    public scope: NodeVariant,
+    public scene?: Scene,
+  ) {
     super();
-
-    this.scope = scope;
-    this.scene = scene;
   }
 
-  setup(builder) {
-    const scope = this.scope;
-    const scene = this.scene !== null ? this.scene : builder.scene;
+  setup(builder: NodeBuilder): Node {
+    const scene = this.scene ?? builder.scene;
 
-    let output;
-
-    if (scope === SceneNode.BACKGROUND_BLURRINESS) {
-      output = reference('backgroundBlurriness', 'f32', scene);
-    } else if (scope === SceneNode.BACKGROUND_INTENSITY) {
-      output = reference('backgroundIntensity', 'f32', scene);
-    } else {
-      console.error('SceneNode: Unknown scope:', scope);
+    switch (this.scope) {
+      case NodeVariant.BackgroundBlurriness:
+        return reference('backgroundBlurriness', 'f32', scene);
+      case NodeVariant.BackgroundIntensity:
+        return reference('backgroundIntensity', 'f32', scene);
     }
-
-    return output;
   }
 }
 
-SceneNode.BACKGROUND_BLURRINESS = 'backgroundBlurriness';
-SceneNode.BACKGROUND_INTENSITY = 'backgroundIntensity';
+enum NodeVariant {
+  BackgroundBlurriness = 'backgroundBlurriness',
+  BackgroundIntensity = 'backgroundIntensity',
+}
 
-
-
-export const backgroundBlurriness = fixedNode(SceneNode, SceneNode.BACKGROUND_BLURRINESS);
-export const backgroundIntensity = fixedNode(SceneNode, SceneNode.BACKGROUND_INTENSITY);
+export const backgroundBlurriness = new SceneNode(NodeVariant.BackgroundBlurriness);
+export const backgroundIntensity = new SceneNode(NodeVariant.BackgroundIntensity);
