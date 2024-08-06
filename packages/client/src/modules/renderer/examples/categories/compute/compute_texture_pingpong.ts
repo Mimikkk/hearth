@@ -1,5 +1,5 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
-import { texture, textureStore, wgslFn, code, instanceIndex, uniform } from '@modules/renderer/engine/nodes/Nodes.js';
+import { texture, textureStore, wgsl, instanceIndex, uniform } from '@modules/renderer/engine/nodes/Nodes.js';
 
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { StorageTexture } from '@modules/renderer/engine/entities/textures/StorageTexture.js';
@@ -38,7 +38,7 @@ async function init() {
 
   const wgslFormat = hdr ? 'rgba16float' : 'rgba8unorm';
 
-  const rand2 = code(`
+  const rand2 = wgsl(`
 					fn rand2( n: vec2f ) -> f32 {
 
 						return fract( sin( dot( n, vec2f( 12.9898, 4.1414 ) ) ) * 43758.5453 );
@@ -67,7 +67,7 @@ async function init() {
 					}
 				`);
 
-  const computeInitWGSL = wgslFn(
+  const computeInitWGSL = wgsl(
     `
 					fn computeInitWGSL( writeTex: texture_storage_2d<${wgslFormat}, write>, index: u32, seed: vec2f ) -> void {
 
@@ -93,7 +93,7 @@ async function init() {
     seed,
   }).compute(width * height);
 
-  const computePingPongWGSL = wgslFn(
+  const computePingPongWGSL = wgsl(
     `
 					fn computePingPongWGSL( readTex: texture_2d<f32>, writeTex: texture_storage_2d<${wgslFormat}, write>, index: u32 ) -> void {
 

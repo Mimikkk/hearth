@@ -1,24 +1,20 @@
 import { CodeNode, CodeNodeInclude } from './CodeNode.js';
-import { asNode } from '../shadernode/ShaderNodes.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
-
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
-import { WgslFn } from '@modules/renderer/engine/nodes/builder/WgslFn.js';
+import { WgslArgument, WgslFn } from '@modules/renderer/engine/nodes/builder/WgslFn.js';
 
 export class FunctionNode extends CodeNode {
-  keywords: Record<string, CodeNode>;
+  keywords: Record<string, CodeNode> = {};
 
   constructor(code: string = '', includes: CodeNodeInclude[] = []) {
     super(code, includes);
-
-    this.keywords = {};
   }
 
   getNodeType(builder: NodeBuilder): TypeName {
     return this.getNodeFunction(builder).type;
   }
 
-  getInputs(builder: NodeBuilder) {
+  getInputs(builder: NodeBuilder): WgslArgument[] {
     return this.getNodeFunction(builder).arguments;
   }
 
@@ -29,14 +25,13 @@ export class FunctionNode extends CodeNode {
 
     if (fn === undefined) {
       fn = builder.parseFn(this.code);
-
       data.nodeFunction = fn;
     }
 
     return fn;
   }
 
-  generate(builder: NodeBuilder, output?: string | 'property') {
+  generate(builder: NodeBuilder, output?: TypeName): string {
     super.generate(builder);
 
     const nodeFunction = this.getNodeFunction(builder);
@@ -77,19 +72,17 @@ export class FunctionNode extends CodeNode {
   }
 }
 
-const nativeFn = (code: string, includes: CodeNodeInclude[] = []) => {
+export const wgsl = (code: string, includes: CodeNodeInclude[] = []) => {
   for (let i = 0; i < includes.length; i++) {
     const include = includes[i];
 
     if (typeof include === 'function') includes[i] = include.functionNode;
   }
 
-  const functionNode = asNode(new FunctionNode(code, includes));
+  const node = new FunctionNode(code, includes);
 
-  const fn = (...params: any) => functionNode.call(...params);
-  fn.functionNode = functionNode;
+  const fn = (...params: any) => node.call(...params);
+  fn.functionNode = node;
 
   return fn;
 };
-
-export const wgslFn = (code: string, includes?: CodeNodeInclude[]) => nativeFn(code, includes);

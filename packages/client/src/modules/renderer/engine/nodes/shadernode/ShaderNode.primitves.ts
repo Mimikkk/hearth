@@ -11,7 +11,6 @@ import { ConstNode } from '@modules/renderer/engine/nodes/core/ConstNode.js';
 
 const safeType = (node: ConstNode) => {
   try {
-    console.log({ node });
     return node.getNodeType();
   } catch {
     return null;

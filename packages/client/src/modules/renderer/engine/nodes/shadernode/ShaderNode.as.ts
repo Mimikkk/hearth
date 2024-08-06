@@ -8,14 +8,16 @@ import { ConstNode } from '@modules/renderer/engine/nodes/core/ConstNode.js';
 type Coerce<T> = T extends Node
   ? T
   : T extends null
-    ? null
-    : T extends undefined
-      ? undefined
-      : T extends string
-        ? string
-        : T extends (...parameters: any) => any
-          ? ReturnType<Hsl<T>>
-          : ConstNode<T>;
+    ? T | null
+    : T extends (...params: any) => any
+      ? Hsl<T>
+      : T extends {}
+        ? T
+        : T extends undefined
+          ? T | undefined
+          : T extends string
+            ? string
+            : ConstNode<T>;
 
 export const asNode = <T>(value: T): Coerce<T> => {
   switch (getValueType(value)) {
@@ -38,7 +40,7 @@ export const asNodes = (array: any[]): Node[] => {
 
 export const asCommand =
   <T extends new (...params: any) => any>(NodeClass: T) =>
-  (...params: any[]): InstanceType<T> =>
+  (...params: ConstructorParameters<T>): InstanceType<T> =>
     new NodeClass(...asNodes(params));
 
 Node.as = asNode;

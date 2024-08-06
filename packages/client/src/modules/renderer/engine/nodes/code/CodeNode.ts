@@ -17,14 +17,8 @@ export class CodeNode extends Node {
     super(TypeName.void);
   }
 
-  isGlobal() {
+  isGlobal(): true {
     return true;
-  }
-
-  setIncludes(includes: any[]) {
-    this.includes = includes;
-
-    return this;
   }
 
   getIncludes(builder: NodeBuilder) {
@@ -48,6 +42,3 @@ export class CodeNode extends Node {
 CodeNode.prototype.isCodeNode = true;
 
 export const code = asCommand(CodeNode);
-
-export const js = (src: string, includes: any[]) => code(src, includes, 'js');
-export const wgsl = (src: string, includes: any[]) => code(src, includes, 'wgsl');

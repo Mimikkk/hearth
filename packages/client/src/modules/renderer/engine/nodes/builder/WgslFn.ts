@@ -62,7 +62,7 @@ const parseWgsl = (
   source: string,
 ): {
   type: TypeName;
-  inputs: Argument[];
+  inputs: WgslArgument[];
   name: string;
   inputsCode: string;
   blockCode: string;
@@ -112,7 +112,7 @@ export class WgslFn {
   declare inputsCode: string;
   declare blockCode: string;
   type: TypeName;
-  arguments: Argument[];
+  arguments: WgslArgument[];
   name: string;
 
   constructor(source: string) {
@@ -132,7 +132,7 @@ export class WgslFn {
   }
 }
 
-export interface Argument {
+export interface WgslArgument {
   type: TypeName;
   name: string;
 }
