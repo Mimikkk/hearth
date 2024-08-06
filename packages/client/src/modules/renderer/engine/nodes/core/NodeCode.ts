@@ -1,11 +1,9 @@
+import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
+
 export class NodeCode {
-  constructor(name, type, code = '') {
-    this.name = name;
-    this.type = type;
-    this.code = code;
-
-    Object.defineProperty(this, 'isNodeCode', { value: true });
-  }
+  constructor(
+    public name: string,
+    public type: TypeName,
+    public code: string = '',
+  ) {}
 }
-
-export default NodeCode;
