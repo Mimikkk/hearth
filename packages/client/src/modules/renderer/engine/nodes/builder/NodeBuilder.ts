@@ -28,6 +28,7 @@ import {
   ShaderNode,
   stack,
   UniformNode,
+  VaryingNode,
 } from '@modules/renderer/engine/nodes/Nodes.js';
 import { getFormat } from '@modules/renderer/engine/hearth/Hearth.Textures.js';
 import ChainMap from '@modules/renderer/engine/hearth/memo/ChainMap.js';
@@ -311,7 +312,7 @@ export class NodeBuilder {
     return lastStack;
   }
 
-  getDataFromNode(node: Node, shaderStage: ShaderStage | null = this.shaderStage, cache = null) {
+  getDataFromNode(node: Node, stage: ShaderStage | null = this.shaderStage, cache: WeakMap<any, any> | null = null) {
     cache = cache === null ? (node.isGlobal(this) ? this.globalCache : this.cache) : cache;
 
     let nodeData = cache.get(node);
@@ -322,9 +323,9 @@ export class NodeBuilder {
       cache.set(node, nodeData);
     }
 
-    if (nodeData[shaderStage] === undefined) nodeData[shaderStage] = {};
+    if (nodeData[stage] === undefined) nodeData[stage] = {};
 
-    return nodeData[shaderStage];
+    return nodeData[stage];
   }
 
   getNodeProperties(node: Node, shaderStage: ShaderStage | null = null) {
@@ -376,8 +377,8 @@ export class NodeBuilder {
     return nodeVar;
   }
 
-  getVaryingFromNode(node: Node, name = null, type = node.getNodeType(this)) {
-    const nodeData = this.getDataFromNode(node, 'any');
+  getVaryingFromNode(node: VaryingNode, type = node.getNodeType(this)) {
+    const nodeData = this.getDataFromNode(node, null);
 
     let nodeVarying = nodeData.varying;
 
@@ -385,9 +386,9 @@ export class NodeBuilder {
       const varyings = this.varyings;
       const index = varyings.length;
 
-      if (!name) name = 'nodeVarying' + index;
+      if (!node.name) node.name = 'nodeVarying' + index;
 
-      nodeVarying = new NodeVarying(name, type);
+      nodeVarying = new NodeVarying(node.name, type);
 
       varyings.push(nodeVarying);
 

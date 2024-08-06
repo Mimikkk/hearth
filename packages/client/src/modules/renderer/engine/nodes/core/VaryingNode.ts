@@ -1,35 +1,34 @@
 import { Node } from './Node.js';
 import { proxyNode } from '../shadernode/ShaderNodes.js';
-import { ShaderStage } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
+import { ShaderStage, TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
+import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 
 export class VaryingNode extends Node {
-  constructor(node, name = null) {
+  constructor(
+    public node: Node,
+    public name: string | null = null,
+  ) {
     super();
-
-    this.node = node;
-    this.name = name;
-
-    this.isVaryingNode = true;
   }
 
-  isGlobal() {
+  isGlobal(): true {
     return true;
   }
 
-  getHash(builder) {
+  getHash(builder: NodeBuilder): string {
     return this.name || super.getHash(builder);
   }
 
-  getNodeType(builder) {
+  getNodeType(builder: NodeBuilder): TypeName {
     return this.node.getNodeType(builder);
   }
 
-  generate(builder) {
+  generate(builder: NodeBuilder): string {
     const { name, node } = this;
     const type = this.getNodeType(builder);
 
-    const nodeVarying = builder.getVaryingFromNode(this, name, type);
+    const nodeVarying = builder.getVaryingFromNode(this, type);
 
     nodeVarying.needsInterpolation || (nodeVarying.needsInterpolation = builder.shaderStage === ShaderStage.Fragment);
 

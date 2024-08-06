@@ -1,29 +1,30 @@
 import { Node } from './Node.js';
 import { asNode, fixedNode } from '../shadernode/ShaderNodes.js';
+import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
+import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 export class PropertyNode extends Node {
-  constructor(nodeType, name = null, varying = false) {
-    super(nodeType);
-
-    this.name = name;
-    this.varying = varying;
-
-    this.isPropertyNode = true;
+  constructor(
+    type: TypeName,
+    public name: string | null = null,
+    public varying: boolean = false,
+  ) {
+    super(type);
   }
 
-  getHash(builder) {
+  getHash(builder: NodeBuilder): string {
     return this.name || super.getHash(builder);
   }
 
-  isGlobal() {
+  isGlobal(): boolean {
     return true;
   }
 
-  generate(builder) {
+  generate(builder: NodeBuilder): string {
     let nodeVar;
 
     if (this.varying === true) {
-      nodeVar = builder.getVaryingFromNode(this, this.name);
+      nodeVar = builder.getVaryingFromNode(this, this.getNodeType(builder));
       nodeVar.needsInterpolation = true;
     } else {
       nodeVar = builder.getVarFromNode(this, this.name);
